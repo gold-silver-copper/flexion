@@ -1,14 +1,16 @@
 //! `cargo xtask <command> <language> [flags]`:
 //!
-//! - `build <lang> --dump <path> [--date YYYY-MM-DD]`: the full pipeline
-//!   (extract, tune on the dev tenth, measure on the held-out tenth, train on
-//!   everything) and write `languages/<lang>`;
-//! - `extract <lang> --dump <path>`: read a dump into the lexeme cache, for
-//!   `probe`;
+//! - `build <lang> --dump <path> [--edition <code>=<path>]… [--date YYYY-MM-DD]`:
+//!   the full pipeline (extract, tune on the dev tenth, measure on the
+//!   held-out tenth, train on everything) and write `languages/<lang>`. Each
+//!   `--edition` reads one of the language's other Wiktionary editions;
+//! - `extract <lang> --dump <path> [--edition <code>=<path>]…`: read the dumps
+//!   into the lexeme cache, for `probe`;
 //! - `probe <lang> [--pos <name>] [--alpha a] [--tau t] [--epsilon e]
-//!   [--syllables depth] [--misses 1] [--attested 1]`: train without the
-//!   held-out tenth with fixed parameters and score it (or, with
-//!   `--attested`, train on everything and score that), for experiments.
+//!   [--syllables depth] [--misses 1] [--attested 1] [--union 1]`: train
+//!   without the held-out tenth with fixed parameters and score it (or, with
+//!   `--attested`, train on everything and score that), for experiments. The
+//!   score counts the main dump's words, or with `--union` every word.
 
 use flexion_train::extract::{self, PosData, Word};
 use flexion_train::learn::Params;
@@ -41,14 +43,25 @@ fn run() -> Result<(), String> {
             .and_then(|w| w.get(1))
             .cloned()
     };
+    // `--edition <code>=<path>`, any number of times.
+    let editions: Vec<(String, PathBuf)> = rest
+        .windows(2)
+        .filter(|w| w.first().is_some_and(|f| f == "--edition"))
+        .filter_map(|w| w.get(1))
+        .map(|v| {
+            v.split_once('=')
+                .map(|(c, p)| (c.to_string(), PathBuf::from(p)))
+                .ok_or(format!("--edition {v}: expected <code>=<path>"))
+        })
+        .collect::<Result<_, _>>()?;
     match cmd.as_str() {
         "build" => {
             let dump = flag("--dump").ok_or("--dump <path> is required")?;
-            build(&lang, Path::new(&dump), flag("--date"))
+            build(&lang, Path::new(&dump), &editions, flag("--date"))
         }
         "extract" => {
             let dump = flag("--dump").ok_or("--dump <path> is required")?;
-            let data = extract_dump(&lang, Path::new(&dump))?;
+            let data = extract_dump(&lang, Path::new(&dump), &editions)?;
             save_cache(&lang, &data)
         }
         "probe" => {
@@ -88,6 +101,7 @@ fn run() -> Result<(), String> {
                 flag("--misses").is_some(),
                 flag("--attested").is_some(),
                 flag("--parts").is_some(),
+                flag("--union").is_some(),
             )
         }
         _ => Err(USAGE.to_string()),
@@ -95,9 +109,14 @@ fn run() -> Result<(), String> {
 }
 
 /// The full pipeline: extract, tune, evaluate, train, write the crate.
-fn build(lang: &Language, dump: &Path, date: Option<String>) -> Result<(), String> {
+fn build(
+    lang: &Language,
+    dump: &Path,
+    editions: &[(String, PathBuf)],
+    date: Option<String>,
+) -> Result<(), String> {
     let t = Instant::now();
-    let data = extract_dump(lang, dump)?;
+    let data = extract_dump(lang, dump, editions)?;
     let rules = |cell: &str, lemma: &str| {
         english_baseline::inflect(english_baseline::Old::Rules, cell, lemma)
     };
@@ -123,10 +142,21 @@ fn build(lang: &Language, dump: &Path, date: Option<String>) -> Result<(), Strin
         .file_name()
         .map(|n| n.to_string_lossy().to_string())
         .unwrap_or_default();
-    let note = match date {
+    let mut note = match date {
         Some(d) => format!("the Kaikki dump `{name}` of {d}"),
         None => format!("the Kaikki dump `{name}`"),
     };
+    for (code, path) in editions {
+        let file = path
+            .file_name()
+            .map(|n| n.to_string_lossy().to_string())
+            .unwrap_or_default();
+        let edition = lang.editions.iter().find(|e| e.code == code);
+        note.push_str(&format!(
+            " and `{file}` from {}",
+            edition.map_or(code.as_str(), |e| e.name)
+        ));
+    }
     let built = flexion_train::pipeline::build(lang, &data, &baselines, THREADS, &note)?;
     let mut report = built.report;
     if lang.name == "english" {
@@ -167,11 +197,23 @@ fn cache_path(lang: &Language) -> PathBuf {
         .join(format!("{}-lexemes.json", lang.name))
 }
 
-fn extract_dump(lang: &Language, dump: &Path) -> Result<Vec<PosData>, String> {
+fn extract_dump(
+    lang: &Language,
+    dump: &Path,
+    editions: &[(String, PathBuf)],
+) -> Result<Vec<PosData>, String> {
     let spec = flexion_train::spelling_spec(lang);
     let sp = flexion_train::view(&spec);
     let t = Instant::now();
-    let data = extract::extract(lang, &sp, dump)?;
+    let mut data = extract::extract(lang, &sp, dump)?;
+    for (code, path) in editions {
+        let index = lang
+            .editions
+            .iter()
+            .position(|e| e.code == code)
+            .ok_or(format!("{} has no edition {code}", lang.name))?;
+        extract::add_edition(lang, &sp, &mut data, index, path)?;
+    }
     eprintln!("extracted in {:.1}s", t.elapsed().as_secs_f64());
     Ok(data)
 }
@@ -203,6 +245,7 @@ fn probe(
     misses: bool,
     attested: bool,
     parts: bool,
+    union: bool,
 ) -> Result<(), String> {
     let shapes = flexion_train::shapes(lang)?;
     let spec = flexion_train::spelling_spec(lang);
@@ -276,7 +319,11 @@ fn probe(
             .collect();
         let marker_names = lang.markers(part);
         let markers: Vec<&[&str]> = marker_names.iter().map(Vec::as_slice).collect();
-        let words: Vec<Word> = extract::words(d)
+        // Scored on the main dump's words alone (comparable with a build
+        // that reads no edition), or with `--union 1` on every word.
+        let main = d.main_only();
+        let scored = if union { d } else { &main };
+        let words: Vec<Word> = extract::words(scored)
             .into_iter()
             .filter(|w| attested || bucket(w.key) == TEST_BUCKET)
             .collect();

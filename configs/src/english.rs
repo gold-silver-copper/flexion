@@ -141,6 +141,7 @@ pub fn language() -> Language {
             ("adjective", "adjective", "flinderish"),
             ("adverb", "adverb", "glorpily"),
         ],
+        editions: vec![],
     }
 }
 

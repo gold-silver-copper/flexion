@@ -264,6 +264,7 @@ pub fn language() -> Language {
             ("verb", "aorist", "γλορπίζω"),
             ("verb", "aorist", "ἀπογλορπίζω"),
         ],
+        editions: vec![],
     }
 }
 

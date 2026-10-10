@@ -158,6 +158,60 @@ pub fn choose_sources(
     best.into_iter().map(|(s, _)| s).collect()
 }
 
+/// What the other Wiktionary editions added, and the held-out score over
+/// every word.
+fn editions_section(s: &mut String, lang: &Language, reports: &[PosReport]) {
+    if reports.iter().all(|r| r.editions.is_empty()) {
+        return;
+    }
+    let names: Vec<&str> = lang.editions.iter().map(|e| e.name).collect();
+    let _ = writeln!(
+        s,
+        "### Other Wiktionary editions
+
+Besides the English Wiktionary, the model learns from {}. The tables above score
+the English Wiktionary's held-out words on its own entries, so they compare with a model
+that reads it alone; a held-out word is held out of every edition (the tenth is a hash of
+the lemma's letters).
+",
+        names.join(" and ")
+    );
+    s.push_str("| | edition | entries | new words | words both have | same first form (marks ignored) | entries trained on |\n|---|---|---:|---:|---:|---:|---:|\n");
+    for r in reports {
+        for e in &r.editions {
+            let _ = writeln!(
+                s,
+                "| {} | {} | {} | {} | {} | {} ({}) | {} |",
+                r.name,
+                e.code,
+                e.entries,
+                e.new_words,
+                e.shared_words,
+                pct(e.same, e.compared),
+                pct(e.same_letters, e.compared),
+                e.kept
+            );
+        }
+    }
+    s.push_str("\n*Same first form*: on the words both editions have, how often the other edition's first\nform of a cell is one the English Wiktionary lists for it.\n\nEvery held-out word, from every edition:\n\n| | lemmas | cells | top-1 | top-1 given citation |\n|---|---:|---:|---:|---:|\n");
+    for r in reports {
+        let Some((n, lemma, citation)) = &r.union else {
+            continue;
+        };
+        let t = lemma.total(&[]);
+        let c = citation.as_ref().map(|x| x.total(&[]));
+        let _ = writeln!(
+            s,
+            "| {} | {n} | {} | {} | {} |",
+            r.name,
+            t.n,
+            pct(t.top1, t.n),
+            c.map_or("–".into(), |x| pct(x.top1, x.n))
+        );
+    }
+    s.push('\n');
+}
+
 /// Run `f` over `items` on up to `threads` threads, keeping order.
 fn par_map<T: Sync, R: Send>(items: &[T], threads: usize, f: impl Fn(&T) -> R + Sync) -> Vec<R> {
     let next = std::sync::atomic::AtomicUsize::new(0);
@@ -211,6 +265,10 @@ struct PosReport {
     errors: Vec<(String, usize, Vec<String>)>,
     cells: Vec<String>,
     unscored: Vec<usize>,
+    editions: Vec<extract::EditionStats>,
+    /// With other editions: every held-out word (lemmas, bare-lemma score,
+    /// citation score).
+    union: Option<(usize, PosScore, Option<PosScore>)>,
 }
 
 /// Build a language end to end.
@@ -251,8 +309,18 @@ pub fn build(
         };
         let train = split(&|b| b != TEST_BUCKET && b != DEV_BUCKET);
         let dev = split(&|b| b == DEV_BUCKET);
-        let test = split(&|b| b == TEST_BUCKET);
         let not_test = split(&|b| b != TEST_BUCKET);
+        // Held-out words are the main dump's, scored on its entries alone, so
+        // the numbers compare with a build that reads no other edition (a
+        // word's tenth is a hash of its key, so it is held out of every
+        // edition alike). Every held-out word is scored too, for the editions'
+        // report.
+        let main = d.main_only();
+        let test: Vec<Word> = extract::words(&main)
+            .into_iter()
+            .filter(|w| bucket(w.key) == TEST_BUCKET)
+            .collect();
+        let test_union = split(&|b| b == TEST_BUCKET);
 
         // How each pair reads as an edit: chosen without the held-out words
         // for every model they score, with them for the shipped one.
@@ -409,6 +477,26 @@ pub fn build(
             })
             .filter(|(_, t)| t.n > 0)
             .collect();
+        let union = (!d.editions.is_empty()).then(|| {
+            let score = |given| {
+                eval::score(
+                    &sp,
+                    &model,
+                    0,
+                    &test_union,
+                    &citation,
+                    &markers,
+                    &shape.unscored,
+                    given,
+                    false,
+                )
+            };
+            (
+                test_union.len(),
+                score(Given::Lemma),
+                (!citation.is_empty()).then(|| score(Given::Citation)),
+            )
+        });
         let inherent_scores = eval::score_inherent(&model, 0, &test, part.inherent.len());
         let exists_test = eval::score_existence(&model, 0, &test, &shape.optional);
         let errors = eval::error_groups(&sp, &test_score.misses, 3);
@@ -481,6 +569,8 @@ pub fn build(
             errors,
             cells: (0..cells.total).map(|c| cells.name(c)).collect(),
             unscored: shape.unscored.clone(),
+            editions: d.editions.clone(),
+            union,
         });
     }
     let blob = blob_of(&spec, final_tables);
@@ -766,6 +856,7 @@ fn render(
         );
     }
     s.push('\n');
+    editions_section(&mut s, lang, reports);
 
     // Per-cell breakdown, collapsed.
     s.push_str("<details><summary>Held-out top-1 per cell</summary>\n\n| cell | n | top-1 | top-3 |\n|---|---:|---:|---:|\n");

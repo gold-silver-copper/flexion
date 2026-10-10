@@ -19,15 +19,49 @@ pub struct Entry {
     pub senses: Vec<Sense>,
     #[serde(default)]
     pub head_templates: Vec<HeadTemplate>,
+    /// Tags of the word itself (other editions put gender and aspect here).
+    #[serde(default)]
+    pub tags: Vec<String>,
+    #[serde(default)]
+    pub categories: Vec<Category>,
+    /// Syllable breaks of the headword (`пры́`, `гать`), which some editions
+    /// write with stress.
+    #[serde(default)]
+    pub hyphenations: Vec<Hyphenation>,
 }
 
+#[derive(Debug, Clone, Default, Deserialize)]
+pub struct Hyphenation {
+    #[serde(default)]
+    pub parts: Vec<String>,
+}
+
+/// A category the entry is in: a plain name, or an object with one.
 #[derive(Debug, Clone, Deserialize)]
+#[serde(untagged)]
+pub enum Category {
+    Name(String),
+    Named { name: String },
+}
+
+impl Category {
+    pub fn name(&self) -> &str {
+        match self {
+            Category::Name(n) | Category::Named { name: n } => n,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Default, Deserialize)]
 pub struct Form {
     pub form: String,
     #[serde(default)]
     pub tags: Vec<String>,
     #[serde(default)]
     pub source: Option<String>,
+    /// Labels other editions leave untranslated (`Nominativ`).
+    #[serde(default)]
+    pub raw_tags: Vec<String>,
 }
 
 #[derive(Debug, Clone, Default, Deserialize)]

@@ -194,6 +194,7 @@ pub fn language() -> Language {
             ("verb", "present", "ग्लोर्पति"),
             ("verb", "imperfect", "ग्लोर्पति"),
         ],
+        editions: vec![],
     }
 }
 

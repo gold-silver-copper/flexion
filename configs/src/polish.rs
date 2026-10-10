@@ -261,6 +261,7 @@ pub fn language() -> Language {
             ("verb", "past", "glorpać"),
             ("verb", "non_past", "budlanąć"),
         ],
+        editions: vec![],
     }
 }
 

@@ -251,6 +251,7 @@ pub fn language() -> Language {
             ("verb", "verb", "blicir"),
             ("verb", "verb", "reglorper"),
         ],
+        editions: vec![],
     }
 }
 

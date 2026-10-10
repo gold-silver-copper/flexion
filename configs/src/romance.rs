@@ -34,7 +34,7 @@ fn form(word: &str, tags: &[&str]) -> Form {
     Form {
         form: word.to_string(),
         tags: tags.iter().map(|t| t.to_string()).collect(),
-        source: None,
+        ..Form::default()
     }
 }
 

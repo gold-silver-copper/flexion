@@ -253,6 +253,7 @@ pub fn language() -> Language {
             ("verb", "participle", "blicken"),
             ("verb", "verb", "anglorpen"),
         ],
+        editions: vec![],
     }
 }
 

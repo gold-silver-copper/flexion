@@ -249,6 +249,7 @@ pub fn language() -> Language {
             ("verb", "infinitive", "glorpo"),
             ("verb", "participle", "blicio"),
         ],
+        editions: vec![],
     }
 }
 

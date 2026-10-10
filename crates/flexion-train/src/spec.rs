@@ -27,6 +27,41 @@ pub struct Language {
     pub readme_intro: &'static str,
     /// Made-up words to show in the evaluation report: `(pos, cell group, word)`.
     pub nonce: Vec<(&'static str, &'static str, &'static str)>,
+    /// Other Wiktionary editions to learn from, after the main dump (which is
+    /// the English Wiktionary's). [`Hooks::adapt`] reads their entries.
+    pub editions: Vec<Edition>,
+}
+
+/// Another Wiktionary edition's entries for the language (the Russian
+/// Wiktionary's Russian entries), from its own Kaikki dump.
+pub struct Edition {
+    /// Kaikki's edition code: `ru` for ru.wiktionary.org.
+    pub code: &'static str,
+    /// For the report: `the Russian Wiktionary`.
+    pub name: &'static str,
+    /// The language's name in that edition, which names Kaikki's dump
+    /// (`https://kaikki.org/ruwiktionary/Русский/kaikki.org-dictionary-Русский.jsonl`).
+    pub dump: &'static str,
+    pub merge: Merge,
+}
+
+/// What an edition adds.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Merge {
+    /// Only words the main dump doesn't have.
+    NewWords,
+    /// Every word: a word the main dump has gets the edition's entry as one
+    /// more homograph, after the main dump's.
+    All,
+}
+
+impl Edition {
+    pub fn url(&self) -> String {
+        format!(
+            "https://kaikki.org/{0}wiktionary/{1}/kaikki.org-dictionary-{1}.jsonl",
+            self.code, self.dump
+        )
+    }
 }
 
 /// A grammatical feature and its values.
@@ -222,6 +257,14 @@ pub trait Hooks: Sync + Send {
     /// head template when the forms don't carry it).
     fn inherent_tags(&self, _entry: &Entry) -> Vec<String> {
         Vec::new()
+    }
+    /// Read an entry of another edition (`edition` is its
+    /// [`Edition::code`]) for a part of speech: turn it into what
+    /// [`Hooks::repair`] makes of a main-dump entry (table forms with
+    /// `source` set and the main dump's tags), or return false to skip it.
+    /// It replaces the template check and `repair` for that edition.
+    fn adapt(&self, _edition: &str, _pos: &str, _entry: &mut Entry) -> bool {
+        false
     }
 }
 

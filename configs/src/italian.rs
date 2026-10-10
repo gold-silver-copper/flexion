@@ -278,6 +278,7 @@ pub fn language() -> Language {
             ("verb", "verb", "fluttire"),
             ("verb", "verb", "riglorpare"),
         ],
+        editions: vec![],
     }
 }
 
@@ -343,7 +344,7 @@ fn table_to_head(entry: &mut Entry) {
                 moved.push(flexion_train::kaikki::Form {
                     form: f.form.clone(),
                     tags,
-                    source: None,
+                    ..Default::default()
                 });
             }
         }

@@ -130,7 +130,10 @@ pub fn restoration(
             ..(*l).clone()
         })
         .collect();
-    let data = extract::PosData { lexemes };
+    let data = extract::PosData {
+        lexemes,
+        editions: Vec::new(),
+    };
     let restore_words = extract::words(&data);
     let shape = learn::Shape {
         cells: 1,
@@ -233,7 +236,10 @@ pub fn part_model(
     if lexemes.is_empty() {
         return None;
     }
-    let data = extract::PosData { lexemes };
+    let data = extract::PosData {
+        lexemes,
+        editions: Vec::new(),
+    };
     let part_words = extract::words(&data);
     let chooser = edit::Chooser::new(sp, &part_words, citation_cell);
     let params = learn::Params {
