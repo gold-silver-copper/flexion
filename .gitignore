@@ -1,4 +1,6 @@
 /target
 /data/
+# Dumps are never committed; the test fixtures are.
 *.jsonl
 *.jsonl.gz
+!configs/tests/fixtures/*.jsonl

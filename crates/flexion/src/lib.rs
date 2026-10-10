@@ -50,14 +50,13 @@ impl Default for Options {
 /// A loaded model: a validated view over a static blob.
 #[derive(Debug, Clone)]
 pub struct Model<'a> {
-    pub(crate) bytes: Bytes<'a>,
     pub(crate) strings: &'a str,
     pub(crate) spelling: Spelling<'a>,
-    parts: Vec<PosHeader>,
+    parts: Vec<PosHeader<'a>>,
 }
 
-#[derive(Debug, Clone, Copy)]
-pub(crate) struct PosHeader {
+#[derive(Debug, Clone)]
+pub(crate) struct PosHeader<'a> {
     pub(crate) cells: usize,
     pub(crate) inherent: usize,
     pub(crate) edits: usize,
@@ -71,6 +70,67 @@ pub(crate) struct PosHeader {
     pub(crate) n_dist: usize,
     pub(crate) lemma_cell: Option<usize>,
     pub(crate) walk: Walk,
+    pub(crate) chars: usize,
+    /// The language's main letter block (`char >> 8`), for child tables.
+    pub(crate) block: u32,
+    /// Every node, decoded once at load so a walk reads plain fields.
+    pub(crate) tree: Vec<NodeRec>,
+    /// The other tables, decoded once at load.
+    pub(crate) edit_list: Vec<pos::Edit<'a>>,
+    /// One edit index per class and cell (stride `cells`).
+    pub(crate) class_edits: Vec<u32>,
+    pub(crate) class_strips: Vec<&'a str>,
+    /// One value per class and inherent feature (stride `inherent`).
+    pub(crate) class_values: Vec<u8>,
+    pub(crate) entries: Vec<(u32, f32)>,
+    /// Per node: 1 + its index in `tables` if it has one, else 0.
+    pub(crate) table_of: Vec<u32>,
+    /// Direct child indexes for nodes with many children, built at load.
+    pub(crate) tables: Vec<ChildTable>,
+}
+
+/// One tree node, decoded.
+#[derive(Debug, Clone, Copy, Default)]
+pub(crate) struct NodeRec {
+    pub(crate) first_child: u32,
+    pub(crate) dist: u32,
+    pub(crate) children: u16,
+    pub(crate) dist_len: u16,
+    /// The label's first character.
+    pub(crate) first: u32,
+    /// The label's length in bytes.
+    pub(crate) label_len: u16,
+    /// The label's offset in the string area.
+    pub(crate) label: u32,
+}
+
+/// Nodes with more children than this get a direct [`ChildTable`].
+const TABLE_MIN_CHILDREN: usize = 8;
+
+/// A direct index of one node's children by symbol, for symbols below 256 or
+/// in the language's main letter block: offset from the first child + 1, 0
+/// for none. A walk's widest nodes (the root, the first letters) get one, so
+/// they cost one lookup instead of a search.
+#[derive(Debug, Clone)]
+pub(crate) struct ChildTable {
+    pub(crate) low: [u16; 256],
+    pub(crate) high: [u16; 256],
+}
+
+impl ChildTable {
+    /// `Some(None)`: the symbol is covered and the node has no such child.
+    /// `None`: the symbol is outside the table.
+    pub(crate) fn get(&self, block: u32, c: char) -> Option<Option<usize>> {
+        let u = u32::from(c);
+        let v = if u < 256 {
+            *self.low.get(usize::try_from(u).ok()?)?
+        } else if u >> 8 == block {
+            *self.high.get(usize::try_from(u & 255).ok()?)?
+        } else {
+            return None;
+        };
+        Some(usize::from(v).checked_sub(1))
+    }
 }
 
 /// How a key is turned into the sequence of symbols the tree is walked with.
@@ -133,17 +193,16 @@ impl<'a> Model<'a> {
         let n_pos = b.usize(16)?;
         let flags = b.u32(20)?;
         let mark = b.str(strings, 24)?;
-        let spelling = Spelling {
-            fold_case: flags & format::FLAG_FOLD_CASE != 0,
-            mark_monosyllables: flags & format::FLAG_MARK_MONOSYLLABLES != 0,
-            stress_mark: mark.chars().next(),
-            vowels: b.str(strings, 32)?,
-            vowel_set: text::VowelSet::new(b.str(strings, 32)?),
-            implicit: b.str(strings, 40)?,
-            fold_from: b.str(strings, 48)?,
-            fold_to: b.str(strings, 56)?,
-            strip_marks: b.str(strings, 64)?,
-        };
+        let spelling = Spelling::new(
+            flags & format::FLAG_FOLD_CASE != 0,
+            flags & format::FLAG_MARK_MONOSYLLABLES != 0,
+            mark.chars().next(),
+            b.str(strings, 32)?,
+            b.str(strings, 40)?,
+            b.str(strings, 48)?,
+            b.str(strings, 56)?,
+            b.str(strings, 64)?,
+        );
         let mut parts = Vec::with_capacity(n_pos);
         for i in 0..n_pos {
             let at = HEADER_LEN.checked_add(i.checked_mul(POS_HEADER_LEN)?)?;
@@ -167,6 +226,16 @@ impl<'a> Model<'a> {
                     .then(|| usize::try_from(lemma).ok())
                     .flatten(),
                 walk: Walk::decode(b.u32(at.checked_add(44)?)?),
+                chars: b.usize(at.checked_add(48)?)?,
+                block: spelling.vowel_set.block(),
+                tree: Vec::new(),
+                edit_list: Vec::new(),
+                class_edits: Vec::new(),
+                class_strips: Vec::new(),
+                class_values: Vec::new(),
+                entries: Vec::new(),
+                table_of: Vec::new(),
+                tables: Vec::new(),
             };
             // Every table must lie inside the blob.
             let ends = [
@@ -175,14 +244,100 @@ impl<'a> Model<'a> {
                     .checked_add(h.n_classes.checked_mul(h.class_len)?)?,
                 h.nodes.checked_add(h.n_nodes.checked_mul(NODE_LEN)?)?,
                 h.dist.checked_add(h.n_dist.checked_mul(DIST_LEN)?)?,
+                h.chars.checked_add(h.n_nodes.checked_mul(4)?)?,
             ];
             if ends.iter().any(|&e| e > bytes.len()) || h.n_nodes == 0 {
                 return None;
             }
+            let mut h = h;
+            h.table_of = vec![0; h.n_nodes];
+            h.tree = Vec::with_capacity(h.n_nodes);
+            for node in 0..h.n_nodes {
+                let at = h.nodes.checked_add(node.checked_mul(NODE_LEN)?)?;
+                let u16_at = |n: usize| -> Option<u16> {
+                    Some(u16::from_le_bytes(
+                        bytes
+                            .get(at.checked_add(n)?..at.checked_add(n.checked_add(2)?)?)?
+                            .try_into()
+                            .ok()?,
+                    ))
+                };
+                let packed = b.u32(h.chars.checked_add(node.checked_mul(4)?)?)?;
+                h.tree.push(NodeRec {
+                    label: b.u32(at)?,
+                    first_child: b.u32(at.checked_add(4)?)?,
+                    dist: b.u32(at.checked_add(8)?)?,
+                    children: u16_at(12)?,
+                    dist_len: u16_at(14)?,
+                    first: packed & ((1 << format::CHAR_BITS) - 1),
+                    label_len: u16::try_from(packed >> format::CHAR_BITS).ok()?,
+                });
+                let first = b.usize(at.checked_add(4)?)?;
+                let count = usize::from(u16_at(12)?);
+                if count <= TABLE_MIN_CHILDREN {
+                    continue;
+                }
+                let mut t = ChildTable {
+                    low: [0; 256],
+                    high: [0; 256],
+                };
+                for i in 0..count {
+                    let idx = first.checked_add(i)?;
+                    let v = b.u32(h.chars.checked_add(idx.checked_mul(4)?)?)?;
+                    let c = v & ((1 << format::CHAR_BITS) - 1);
+                    let slot = if c < 256 {
+                        t.low.get_mut(usize::try_from(c).ok()?)
+                    } else if c >> 8 == h.block {
+                        t.high.get_mut(usize::try_from(c & 255).ok()?)
+                    } else {
+                        None
+                    };
+                    if let Some(slot) = slot {
+                        *slot = u16::try_from(i).ok()?.checked_add(1)?;
+                    }
+                }
+                h.tables.push(t);
+                if let Some(slot) = h.table_of.get_mut(node) {
+                    *slot = u32::try_from(h.tables.len()).ok()?;
+                }
+            }
+            // Edits, classes and distribution entries.
+            for i in 0..h.n_edits {
+                let at = h.edits.checked_add(i.checked_mul(EDIT_LEN)?)?;
+                let byte = |n: usize| b.u8(at.checked_add(n)?);
+                h.edit_list.push(pos::Edit {
+                    prefix: b.str(strings, at)?,
+                    strip: b.str(strings, at.checked_add(8)?)?,
+                    add: b.str(strings, at.checked_add(16)?)?,
+                    stress: format::Stress::decode(byte(24)?, byte(25)?),
+                    strip_chars: usize::from(byte(26)?),
+                    vowels: [
+                        usize::from(byte(27)?),
+                        usize::from(byte(28)?),
+                        usize::from(byte(29)?),
+                    ],
+                });
+            }
+            for c in 0..h.n_classes {
+                let at = h.classes.checked_add(c.checked_mul(h.class_len)?)?;
+                for cell in 0..h.cells {
+                    h.class_edits
+                        .push(b.u32(at.checked_add(cell.checked_mul(4)?)?)?);
+                }
+                let strip_at = at.checked_add(h.cells.checked_mul(4)?)?;
+                h.class_strips.push(b.str(strings, strip_at)?);
+                for f in 0..h.inherent {
+                    h.class_values
+                        .push(b.u8(strip_at.checked_add(8)?.checked_add(f)?)?);
+                }
+            }
+            for i in 0..h.n_dist {
+                let at = h.dist.checked_add(i.checked_mul(DIST_LEN)?)?;
+                h.entries.push((b.u32(at)?, b.f32(at.checked_add(4)?)?));
+            }
             parts.push(h);
         }
         Some(Model {
-            bytes: b,
             strings,
             spelling,
             parts,
@@ -195,7 +350,7 @@ impl<'a> Model<'a> {
 
     /// Part of speech `index`, in the order the language's config declares them.
     pub fn pos(&self, index: usize) -> Option<Pos<'_, 'a>> {
-        Some(Pos::new(self, *self.parts.get(index)?))
+        Some(Pos::new(self, self.parts.get(index)?))
     }
 
     pub fn pos_count(&self) -> usize {

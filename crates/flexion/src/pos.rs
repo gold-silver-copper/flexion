@@ -3,15 +3,17 @@
 //! word and the output string, and stops scanning as soon as the leading form
 //! can no longer be overtaken.
 
-use crate::format::{BOUNDARY, DIST_LEN, EDIT_LEN, NODE_LEN, NONE, Stress, UNKNOWN};
+use crate::format::{BOUNDARY, NONE, Stress, UNKNOWN};
 use crate::text::{Spelling, Word};
 use crate::{Candidate, Model, Options, PosHeader};
 
 /// Deepest tree paths are this long at most; longer words simply stop
 /// descending there.
-const MAX_PATH: usize = 96;
+const MAX_PATH: usize = 64;
 /// Distinct forms tracked per query.
-const MAX_FORMS: usize = 32;
+const MAX_FORMS: usize = 16;
+/// Weight kept by a class that contradicts a caller's marker.
+const MARKER_MISMATCH: f32 = 0.02;
 
 /// One edit: prefix + (lemma minus `strip`) + `add`, stressed by `stress`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -28,28 +30,21 @@ pub struct Edit<'a> {
 
 /// A caller's citation: the lemma plus any principal parts they gave.
 #[derive(Debug, Clone)]
-pub struct Citation {
-    pub lemma: Word,
+pub struct Citation<'s> {
+    pub lemma: Word<'s>,
     /// `(cell, form as read, form as written)` for each extra part.
-    pub parts: Vec<(usize, Word, String)>,
+    pub parts: Vec<(usize, Word<'s>, &'s str)>,
     /// The lemma exactly as written.
-    pub written: String,
-}
-
-#[derive(Debug, Clone, Copy)]
-struct Node<'a> {
-    label: &'a str,
-    first_child: usize,
-    children: usize,
-    dist: usize,
-    dist_len: usize,
+    pub written: &'s str,
+    /// Inherent features the caller marked (`m`, `anim`): `(feature, value)`.
+    pub inherent: Vec<(usize, u8)>,
 }
 
 /// One part of speech of a [`Model`].
 #[derive(Debug, Clone, Copy)]
 pub struct Pos<'m, 'a> {
     model: &'m Model<'a>,
-    h: PosHeader,
+    h: &'m PosHeader<'a>,
 }
 
 /// A form being accumulated: the edit that builds it and the stress it gets.
@@ -60,7 +55,7 @@ struct Key {
 }
 
 impl<'m, 'a> Pos<'m, 'a> {
-    pub(crate) fn new(model: &'m Model<'a>, h: PosHeader) -> Self {
+    pub(crate) fn new(model: &'m Model<'a>, h: &'m PosHeader<'a>) -> Self {
         Pos { model, h }
     }
 
@@ -75,174 +70,164 @@ impl<'m, 'a> Pos<'m, 'a> {
     fn sp(&self) -> &Spelling<'a> {
         &self.model.spelling
     }
-
     pub fn edit(&self, index: usize) -> Option<Edit<'a>> {
-        if index >= self.h.n_edits {
-            return None;
-        }
-        let at = self.h.edits.checked_add(index.checked_mul(EDIT_LEN)?)?;
-        let b = self.model.bytes;
-        let s = self.model.strings;
-        let byte = |n: usize| b.u8(at.checked_add(n)?);
-        Some(Edit {
-            prefix: b.str(s, at)?,
-            strip: b.str(s, at.checked_add(8)?)?,
-            add: b.str(s, at.checked_add(16)?)?,
-            stress: Stress::decode(byte(24)?, byte(25)?),
-            strip_chars: usize::from(byte(26)?),
-            vowels: [
-                usize::from(byte(27)?),
-                usize::from(byte(28)?),
-                usize::from(byte(29)?),
-            ],
-        })
+        self.h.edit_list.get(index).copied()
     }
-
+    /// A class's handle (its index), if it exists.
     fn class_at(&self, class: usize) -> Option<usize> {
-        if class >= self.h.n_classes {
-            return None;
-        }
-        self.h
-            .classes
-            .checked_add(class.checked_mul(self.h.class_len)?)
+        (class < self.h.n_classes).then_some(class)
     }
-
-    fn class_edit_id(&self, at: usize, cell: usize) -> Option<u32> {
+    fn class_edit_id(&self, class: usize, cell: usize) -> Option<u32> {
         if cell >= self.h.cells {
             return None;
         }
-        let e = self
-            .model
-            .bytes
-            .u32(at.checked_add(cell.checked_mul(4)?)?)?;
+        let e = *self
+            .h
+            .class_edits
+            .get(class.checked_mul(self.h.cells)?.checked_add(cell)?)?;
         (e != NONE).then_some(e)
     }
-
-    /// The edit class `class` uses for `cell`, if it has a form there.
-    pub fn class_edit(&self, class: usize, cell: usize) -> Option<Edit<'a>> {
-        let id = self.class_edit_id(self.class_at(class)?, cell)?;
-        self.edit(usize::try_from(id).ok()?)
+    fn class_strip(&self, class: usize) -> Option<&'a str> {
+        self.h.class_strips.get(class).copied()
     }
 
-    fn class_strip(&self, at: usize) -> Option<&'a str> {
-        self.model.bytes.str(
-            self.model.strings,
-            at.checked_add(self.h.cells.checked_mul(4)?)?,
-        )
+    /// How much the caller's inherent-feature markers trust the class at
+    /// `at`: markers are soft evidence, so a class that contradicts one keeps
+    /// a small weight instead of being ruled out (aspect, for one, barely
+    /// changes a verb's paradigm, and ruling classes out would only push the
+    /// lookup back to less specific nodes).
+    fn marker_weight(&self, citation: &Citation, at: usize) -> f32 {
+        let mut w = 1.0;
+        for &(f, v) in &citation.inherent {
+            if self.inherent_at(at, f).is_some_and(|x| x != v) {
+                w *= MARKER_MISMATCH;
+            }
+        }
+        w
     }
-
-    /// Inherent feature `feature`'s value index for `class`.
-    pub fn class_inherent(&self, class: usize, feature: usize) -> Option<u8> {
+    fn inherent_at(&self, class: usize, feature: usize) -> Option<u8> {
         if feature >= self.h.inherent {
             return None;
         }
-        let at = self
-            .class_at(class)?
-            .checked_add(self.h.cells.checked_mul(4)?)?
-            .checked_add(8)?
-            .checked_add(feature)?;
-        self.model.bytes.u8(at).filter(|&v| v != UNKNOWN)
+        let v = *self
+            .h
+            .class_values
+            .get(class.checked_mul(self.h.inherent)?.checked_add(feature)?)?;
+        (v != UNKNOWN).then_some(v)
     }
-
-    fn node(&self, index: usize) -> Option<Node<'a>> {
-        if index >= self.h.n_nodes {
-            return None;
-        }
-        let at = self.h.nodes.checked_add(index.checked_mul(NODE_LEN)?)?;
-        let b = self.model.bytes;
-        Some(Node {
-            label: b.str(self.model.strings, at)?,
-            first_child: b.usize(at.checked_add(8)?)?,
-            children: b.usize(at.checked_add(12)?)?,
-            dist: b.usize(at.checked_add(16)?)?,
-            dist_len: b.usize(at.checked_add(20)?)?,
-        })
+    pub fn class_inherent(&self, class: usize, feature: usize) -> Option<u8> {
+        self.inherent_at(class, feature)
     }
-
-    fn first_char(&self, index: usize) -> Option<u32> {
-        if index >= self.h.n_nodes {
-            return None;
-        }
-        let at = self.h.nodes.checked_add(index.checked_mul(NODE_LEN)?)?;
-        self.model.bytes.u32(at.checked_add(24)?)
-    }
-
     fn entry(&self, index: usize) -> Option<(usize, f32)> {
-        if index >= self.h.n_dist {
-            return None;
-        }
-        let at = self.h.dist.checked_add(index.checked_mul(DIST_LEN)?)?;
-        let b = self.model.bytes;
-        Some((b.usize(at)?, b.f32(at.checked_add(4)?)?))
+        self.h.entries.get(index).map(|&(c, p)| (c as usize, p))
     }
 
     /// The `(first entry, entry count)` of every node with a distribution on
     /// the key's path, root first; returns how many were filled.
-    fn path(&self, key: &str, out: &mut [(usize, usize); MAX_PATH]) -> usize {
+    fn path(&self, key: &str, out: &mut [(u32, u32); MAX_PATH]) -> usize {
         let walk = self.h.walk;
-        let sp = self.sp();
         let token = walk.syllable_depth.map(|d| {
-            let bucket = sp.vowel_groups(key).min(walk.syllable_max);
+            let bucket = self.sp().vowel_groups(key).min(walk.syllable_max);
             let t = u32::try_from(bucket)
                 .ok()
                 .and_then(|b| char::from_u32(crate::format::SYLLABLE_TOKEN.saturating_add(b)))
                 .unwrap_or(BOUNDARY);
-            (d, t)
+            (d.min(key.chars().count()), t)
         });
-        let letters = key.chars().count();
         let mut symbols = Symbols {
             rev: key.chars().rev(),
             index: 0,
-            letters,
             token,
             ended: false,
-        }
-        .peekable();
-        let mut filled = 0usize;
-        let Some(mut node) = self.node(0) else {
-            return 0;
         };
-        loop {
-            if node.dist_len > 0
+        let mut filled = 0usize;
+        let mut node = 0usize;
+        let mut next = symbols.next();
+        let tree = &self.h.tree;
+        while let Some(rec) = tree.get(node) {
+            if rec.dist_len > 0
                 && let Some(slot) = out.get_mut(filled)
             {
-                *slot = (node.dist, node.dist_len);
+                *slot = (rec.dist, u32::from(rec.dist_len));
                 filled = filled.saturating_add(1);
             }
-            let Some(&next) = symbols.peek() else {
+            let Some(c) = next else {
                 break;
             };
-            let Some(child) = self.child(node, next) else {
+            let first_child = rec.first_child as usize;
+            let table = self
+                .h
+                .table_of
+                .get(node)
+                .and_then(|&t| (t as usize).checked_sub(1))
+                .and_then(|t| self.h.tables.get(t))
+                .and_then(|t| t.get(self.h.block, c));
+            let found = match table {
+                Some(offset) => offset.and_then(|o| first_child.checked_add(o)),
+                None => self.child_index(first_child, usize::from(rec.children), c),
+            };
+            let Some(child) = found else {
                 break;
             };
-            let mut matched = true;
-            for c in child.label.chars() {
-                if symbols.next() != Some(c) {
-                    matched = false;
+            let Some(crec) = tree.get(child) else {
+                break;
+            };
+            // The search matched the label's first character; longer labels
+            // must match the following symbols too.
+            next = symbols.next();
+            let label_len = usize::from(crec.label_len);
+            if label_len > c.len_utf8() {
+                let off = crec.label as usize;
+                let Some(label) = off
+                    .checked_add(label_len)
+                    .and_then(|e| self.model.strings.get(off..e))
+                else {
+                    break;
+                };
+                let mut rest = label.chars();
+                rest.next();
+                let mut ok = true;
+                for l in rest {
+                    if next != Some(l) {
+                        ok = false;
+                        break;
+                    }
+                    next = symbols.next();
+                }
+                if !ok {
                     break;
                 }
-            }
-            if !matched {
-                break;
             }
             node = child;
         }
         filled
     }
 
-    /// The child of `node` whose label starts with `c` (children are sorted).
-    fn child(&self, node: Node<'a>, c: char) -> Option<Node<'a>> {
-        let (mut lo, mut hi) = (0usize, node.children);
-        while lo < hi {
-            let mid = lo.checked_add(hi.checked_sub(lo)? / 2)?;
-            let index = node.first_child.checked_add(mid)?;
-            match self.first_char(index)?.cmp(&u32::from(c)) {
-                std::cmp::Ordering::Equal => return self.node(index),
-                std::cmp::Ordering::Less => lo = mid.checked_add(1)?,
-                std::cmp::Ordering::Greater => hi = mid,
+    /// The child (among `count` starting at `first`) whose label starts with `c`.
+    fn child_index(&self, first: usize, count: usize, c: char) -> Option<usize> {
+        let target = u32::from(c);
+        let kids = self.h.tree.get(first..first.checked_add(count)?)?;
+        if count <= 8 {
+            for (i, k) in kids.iter().enumerate() {
+                if k.first == target {
+                    return first.checked_add(i);
+                }
+                if k.first > target {
+                    return None;
+                }
             }
+            return None;
         }
-        None
+        kids.binary_search_by_key(&target, |k| k.first)
+            .ok()
+            .and_then(|i| first.checked_add(i))
+    }
+
+    /// How many nodes with a distribution the key's path passes (for benchmarks).
+    #[doc(hidden)]
+    pub fn path_len(&self, key: &str) -> usize {
+        let mut path = [(0u32, 0u32); MAX_PATH];
+        self.path(key, &mut path)
     }
 
     /// Where `edit`'s stress lands on the citation's lemma.
@@ -281,7 +266,7 @@ impl<'m, 'a> Pos<'m, 'a> {
         let sp = self.sp();
         if !self
             .class_strip(at)
-            .is_some_and(|s| sp.ends_with_folded(&citation.lemma.base, s))
+            .is_some_and(|s| s.is_empty() || sp.ends_with_folded(&citation.lemma.base, s))
         {
             return false;
         }
@@ -315,9 +300,10 @@ impl<'m, 'a> Pos<'m, 'a> {
         quick: bool,
         forms: &mut [(Key, f32); MAX_FORMS],
     ) -> (usize, f32) {
-        let mut path = [(0usize, 0usize); MAX_PATH];
+        let mut path = [(0u32, 0u32); MAX_PATH];
         let depth = self.path(&citation.lemma.key, &mut path);
         for &(start, len) in path.iter().take(depth).rev() {
+            let (start, len) = (start as usize, len as usize);
             let mut n = 0usize;
             let mut total = 0f32;
             let mut seen = 0f32;
@@ -335,12 +321,15 @@ impl<'m, 'a> Pos<'m, 'a> {
                 if !self.fits(citation, at) {
                     continue;
                 }
-                let Some(e) = self.edit(usize::try_from(id).unwrap_or(usize::MAX)) else {
-                    continue;
-                };
+                let p = p * self.marker_weight(citation, at);
                 // The class strip (checked by `fits`) is the longest of its
                 // edits' strips, so this edit fits whenever the class does.
+                // Only stress needs the edit itself; without stress the id is
+                // the whole key.
                 let stress = if self.sp().stress_mark.is_some() {
+                    let Some(e) = self.edit(usize::try_from(id).unwrap_or(usize::MAX)) else {
+                        continue;
+                    };
                     let ls = if e.stress == Stress::SameAsLemma {
                         self.lemma_stress(citation, at)
                     } else {
@@ -393,10 +382,10 @@ impl<'m, 'a> Pos<'m, 'a> {
     /// written.
     pub fn best(&self, citation: &Citation, cell: usize, options: Options) -> String {
         if let Some((_, _, written)) = citation.parts.iter().find(|(c, _, _)| *c == cell) {
-            return written.clone();
+            return (*written).to_string();
         }
         if citation.lemma.base.is_empty() {
-            return citation.written.clone();
+            return citation.written.to_string();
         }
         let mut forms = [(
             Key {
@@ -414,32 +403,32 @@ impl<'m, 'a> Pos<'m, 'a> {
                 _ => Some((k, m)),
             });
         let Some((lead, lead_mass)) = leader else {
-            return citation.written.clone();
+            return citation.written.to_string();
         };
         if lead_mass * 2.0 > total {
             return self
                 .build(citation, lead, options)
-                .unwrap_or_else(|| citation.written.clone());
+                .unwrap_or_else(|| citation.written.to_string());
         }
         // Contested: different edits may write the same form, so merge by
         // string exactly as `candidates` does.
         self.candidates(citation, cell, options)
             .into_iter()
             .next()
-            .map_or_else(|| citation.written.clone(), |c| c.form)
+            .map_or_else(|| citation.written.to_string(), |c| c.form)
     }
 
     /// Every candidate form of `cell` for the citation, best first.
     pub fn candidates(&self, citation: &Citation, cell: usize, options: Options) -> Vec<Candidate> {
         if let Some((_, _, written)) = citation.parts.iter().find(|(c, _, _)| *c == cell) {
             return vec![Candidate {
-                form: written.clone(),
+                form: (*written).to_string(),
                 confidence: 1.0,
             }];
         }
         let fallback = || {
             vec![Candidate {
-                form: citation.written.clone(),
+                form: citation.written.to_string(),
                 confidence: 0.0,
             }]
         };
@@ -477,9 +466,10 @@ impl<'m, 'a> Pos<'m, 'a> {
     /// How likely the word is to have any form in `cell` (for cells many
     /// words lack, like Russian short adjectives).
     pub fn has_cell(&self, citation: &Citation, cell: usize) -> f32 {
-        let mut path = [(0usize, 0usize); MAX_PATH];
+        let mut path = [(0u32, 0u32); MAX_PATH];
         let depth = self.path(&citation.lemma.key, &mut path);
         for &(start, len) in path.iter().take(depth).rev() {
+            let (start, len) = (start as usize, len as usize);
             let (mut with, mut all) = (0f32, 0f32);
             for i in 0..len {
                 let Some((class, p)) = start.checked_add(i).and_then(|i| self.entry(i)) else {
@@ -491,6 +481,7 @@ impl<'m, 'a> Pos<'m, 'a> {
                 if !self.fits(citation, at) {
                     continue;
                 }
+                let p = p * self.marker_weight(citation, at);
                 all += p;
                 if self.class_edit_id(at, cell).is_some() {
                     with += p;
@@ -505,9 +496,10 @@ impl<'m, 'a> Pos<'m, 'a> {
 
     /// The distribution over inherent feature `feature`'s values (by index).
     pub fn inherent(&self, citation: &Citation, feature: usize) -> Vec<(u8, f32)> {
-        let mut path = [(0usize, 0usize); MAX_PATH];
+        let mut path = [(0u32, 0u32); MAX_PATH];
         let depth = self.path(&citation.lemma.key, &mut path);
         for &(start, len) in path.iter().take(depth).rev() {
+            let (start, len) = (start as usize, len as usize);
             let mut out: Vec<(u8, f32)> = Vec::new();
             let mut total = 0f32;
             for i in 0..len {
@@ -520,6 +512,7 @@ impl<'m, 'a> Pos<'m, 'a> {
                 if !self.fits(citation, at) {
                     continue;
                 }
+                let p = p * self.marker_weight(citation, at);
                 let Some(v) = self.class_inherent(class, feature) else {
                     continue;
                 };
@@ -543,32 +536,71 @@ impl<'m, 'a> Pos<'m, 'a> {
     /// Parse a citation (`"lie, lied"`): the lemma, then principal parts for
     /// the cells `parts` lists, in order. Empty parts are skipped; parts
     /// beyond `parts.len()` are ignored.
-    pub fn citation(&self, input: &str, parts: &[usize]) -> Citation {
+    pub fn citation<'s>(&self, input: &'s str, parts: &[usize]) -> Citation<'s> {
+        self.citation_marked(input, parts, &[])
+    }
+
+    /// [`Pos::citation`], also reading inherent-feature markers the way a
+    /// dictionary prints them after a word (`кот, кота m anim`).
+    /// `markers[f][v]` is the marker for value `v` of inherent feature `f`;
+    /// markers are recognized as trailing words of any part.
+    pub fn citation_marked<'s>(
+        &self,
+        input: &'s str,
+        parts: &[usize],
+        markers: &[&[&str]],
+    ) -> Citation<'s> {
         let sp = self.sp();
-        let mut pieces = input.split(',').map(str::trim).filter(|p| !p.is_empty());
+        let mut inherent = Vec::new();
+        let mut strip = |piece: &'s str| -> &'s str {
+            let mut rest = piece.trim();
+            if markers.is_empty() {
+                return rest;
+            }
+            while let Some((head, last)) = rest.rsplit_once(char::is_whitespace) {
+                let found = markers.iter().enumerate().find_map(|(f, names)| {
+                    names
+                        .iter()
+                        .position(|n| n.eq_ignore_ascii_case(last))
+                        .map(|v| (f, v))
+                });
+                let Some((f, v)) = found else {
+                    break;
+                };
+                if let Ok(v) = u8::try_from(v) {
+                    inherent.push((f, v));
+                }
+                rest = head.trim_end();
+            }
+            rest
+        };
+        if !input.contains(',') {
+            let written = strip(input);
+            return Citation {
+                lemma: sp.read(written),
+                parts: Vec::new(),
+                written,
+                inherent,
+            };
+        }
+        let mut pieces = input
+            .split(',')
+            .map(&mut strip)
+            .filter(|p| !p.is_empty())
+            .collect::<Vec<_>>()
+            .into_iter();
         let written = pieces.next().unwrap_or("");
         let lemma = sp.read(written);
         let parts = pieces
             .zip(parts.iter())
-            .map(|(p, &cell)| (cell, sp.read(p), p.to_string()))
+            .map(|(p, &cell)| (cell, sp.read(p), p))
             .collect();
         Citation {
             lemma,
             parts,
-            written: written.to_string(),
+            written,
+            inherent,
         }
-    }
-
-    /// Apply `edit` to a word: the letters and the stressed vowel.
-    pub fn apply(
-        &self,
-        citation: &Citation,
-        edit: Edit<'a>,
-        lemma_stress: Option<usize>,
-    ) -> Option<(String, Option<usize>)> {
-        let kept = self.kept(&citation.lemma.base, edit)?;
-        let letters = format!("{}{}{}", edit.prefix, kept, edit.add);
-        Some((letters, self.stress_of(citation, edit, lemma_stress)))
     }
 }
 
@@ -590,7 +622,6 @@ fn cut(base: &str, n: usize) -> Option<&str> {
 struct Symbols<'k> {
     rev: std::iter::Rev<std::str::Chars<'k>>,
     index: usize,
-    letters: usize,
     token: Option<(usize, char)>,
     ended: bool,
 }
@@ -600,7 +631,7 @@ impl Iterator for Symbols<'_> {
 
     fn next(&mut self) -> Option<char> {
         if let Some((d, t)) = self.token
-            && self.index == d.min(self.letters)
+            && self.index == d
         {
             self.token = None;
             return Some(t);
