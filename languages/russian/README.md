@@ -415,11 +415,11 @@ The model is 4489 KB (1836 KB gzipped).
 
 | | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 2802 | 1794 | 26064 | 1791 | 221642 | 327 (`noun.nom.pl`) |
-| adjective | 546 | 443 | 12544 | 475 | 69242 | 365 (`adjective.nom.m.anim`) |
-| verb | 3203 | 2141 | 8099 | 581 | 77442 | 255 (`non_past.1.sg`) |
-| pronoun | 277 | 59 | 31 | 16 | 360 | 200 (`pronoun.nom.m.anim`) |
-| numeral | 102 | 45 | 36 | 18 | 307 | 244 (`numeral.nom.m.anim`) |
+| noun | 2802 | 1794 | 26064 | 1791 | 221642 | 320 (`noun.nom.pl`) |
+| adjective | 546 | 443 | 12544 | 475 | 69242 | 354 (`adjective.nom.m.anim`) |
+| verb | 3203 | 2141 | 8099 | 581 | 77442 | 250 (`non_past.1.sg`) |
+| pronoun | 277 | 59 | 31 | 16 | 360 | 190 (`pronoun.nom.m.anim`) |
+| numeral | 102 | 45 | 36 | 18 | 307 | 230 (`numeral.nom.m.anim`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,

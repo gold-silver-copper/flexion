@@ -81,7 +81,10 @@ impl<'m, 'a> Pos<'m, 'a> {
         if cell >= self.h.cells {
             return None;
         }
-        let e = *self.h.class_edits.get(class.checked_mul(self.h.cells)?.checked_add(cell)?)?;
+        let e = *self
+            .h
+            .class_edits
+            .get(class.checked_mul(self.h.cells)?.checked_add(cell)?)?;
         (e != NONE).then_some(e)
     }
     fn class_strip(&self, class: usize) -> Option<&'a str> {
@@ -106,7 +109,10 @@ impl<'m, 'a> Pos<'m, 'a> {
         if feature >= self.h.inherent {
             return None;
         }
-        let v = *self.h.class_values.get(class.checked_mul(self.h.inherent)?.checked_add(feature)?)?;
+        let v = *self
+            .h
+            .class_values
+            .get(class.checked_mul(self.h.inherent)?.checked_add(feature)?)?;
         (v != UNKNOWN).then_some(v)
     }
     pub fn class_inherent(&self, class: usize, feature: usize) -> Option<u8> {
@@ -172,7 +178,10 @@ impl<'m, 'a> Pos<'m, 'a> {
             let label_len = usize::from(crec.label_len);
             if label_len > c.len_utf8() {
                 let off = crec.label as usize;
-                let Some(label) = off.checked_add(label_len).and_then(|e| self.model.strings.get(off..e)) else {
+                let Some(label) = off
+                    .checked_add(label_len)
+                    .and_then(|e| self.model.strings.get(off..e))
+                else {
                     break;
                 };
                 let mut rest = label.chars();
@@ -209,7 +218,9 @@ impl<'m, 'a> Pos<'m, 'a> {
             }
             return None;
         }
-        kids.binary_search_by_key(&target, |k| k.first).ok().and_then(|i| first.checked_add(i))
+        kids.binary_search_by_key(&target, |k| k.first)
+            .ok()
+            .and_then(|i| first.checked_add(i))
     }
 
     /// How many nodes with a distribution the key's path passes (for benchmarks).

@@ -127,6 +127,20 @@ fn build(lang: &Language, dump: &Path, date: Option<String>) -> Result<(), Strin
     }
     let dir = workspace_root().join("languages").join(lang.name);
     flexion_train::emit::emit(lang, &built.blob, &report, &dir)?;
+    for license in ["LICENSE-MIT", "LICENSE-APACHE"] {
+        std::fs::copy(workspace_root().join(license), dir.join(license))
+            .map_err(|e| format!("{license}: {e}"))?;
+    }
+    // Generated code is committed, so keep it formatted like the rest
+    // (rustfmt on lib.rs formats its modules too).
+    let status = std::process::Command::new("rustfmt")
+        .args(["--edition", "2024"])
+        .arg(dir.join("src/lib.rs"))
+        .status()
+        .map_err(|e| format!("rustfmt: {e}"))?;
+    if !status.success() {
+        return Err("rustfmt failed on the generated crate".into());
+    }
     eprintln!(
         "wrote {} in {:.0}s",
         dir.display(),
@@ -379,14 +393,33 @@ fn english_comparison(lang: &Language, data: &[PosData], blob: &[u8]) -> Result<
     for (pi, (part, d)) in lang.parts.iter().zip(data).enumerate() {
         let words = extract::words(d);
         let cells = flexion_train::cells::Cells::new(lang, part)?;
-        let citation: Vec<usize> = part.citation.iter().filter_map(|(g, v)| cells.find(g, v)).collect();
-        let lemma_cell = cells.find(part.lemma.0, &part.lemma.1).into_iter().collect::<Vec<_>>();
-        let f = |cell: usize, lemma: &str| english_baseline::inflect(english_baseline::Old::Library, &cells.name(cell), lemma);
+        let citation: Vec<usize> = part
+            .citation
+            .iter()
+            .filter_map(|(g, v)| cells.find(g, v))
+            .collect();
+        let lemma_cell = cells
+            .find(part.lemma.0, &part.lemma.1)
+            .into_iter()
+            .collect::<Vec<_>>();
+        let f = |cell: usize, lemma: &str| {
+            english_baseline::inflect(english_baseline::Old::Library, &cells.name(cell), lemma)
+        };
         let mut old = eval::CellScore::default();
         for c in eval::score_baseline(&sp, &words, cells.total, &lemma_cell, &f) {
             old.add(&c);
         }
-        let new = eval::score(&sp, &model, pi, &words, &citation, &[], eval::Given::Lemma, false).total(&[]);
+        let new = eval::score(
+            &sp,
+            &model,
+            pi,
+            &words,
+            &citation,
+            &[],
+            eval::Given::Lemma,
+            false,
+        )
+        .total(&[]);
         s.push_str(&format!(
             "| {} | {:.2}% | {:.2}% |\n",
             part.name,

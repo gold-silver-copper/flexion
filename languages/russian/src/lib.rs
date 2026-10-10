@@ -61,10 +61,7 @@ pub enum Number {
 
 impl Number {
     /// Every value, in order.
-    pub const ALL: [Number; 2] = [
-        Number::Singular,
-        Number::Plural,
-    ];
+    pub const ALL: [Number; 2] = [Number::Singular, Number::Plural];
 
     /// Short name, as in cell names (`sg`).
     pub const fn short(self) -> &'static str {
@@ -84,10 +81,7 @@ pub enum SecondCase {
 
 impl SecondCase {
     /// Every value, in order.
-    pub const ALL: [SecondCase; 2] = [
-        SecondCase::Partitive,
-        SecondCase::Locative,
-    ];
+    pub const ALL: [SecondCase; 2] = [SecondCase::Partitive, SecondCase::Locative];
 
     /// Short name, as in cell names (`part`).
     pub const fn short(self) -> &'static str {
@@ -108,11 +102,7 @@ pub enum Gender {
 
 impl Gender {
     /// Every value, in order.
-    pub const ALL: [Gender; 3] = [
-        Gender::Masculine,
-        Gender::Feminine,
-        Gender::Neuter,
-    ];
+    pub const ALL: [Gender; 3] = [Gender::Masculine, Gender::Feminine, Gender::Neuter];
 
     /// Short name, as in cell names (`m`).
     pub const fn short(self) -> &'static str {
@@ -133,10 +123,7 @@ pub enum Animacy {
 
 impl Animacy {
     /// Every value, in order.
-    pub const ALL: [Animacy; 2] = [
-        Animacy::Animate,
-        Animacy::Inanimate,
-    ];
+    pub const ALL: [Animacy; 2] = [Animacy::Animate, Animacy::Inanimate];
 
     /// Short name, as in cell names (`anim`).
     pub const fn short(self) -> &'static str {
@@ -185,10 +172,7 @@ pub enum Aspect {
 
 impl Aspect {
     /// Every value, in order.
-    pub const ALL: [Aspect; 2] = [
-        Aspect::Imperfective,
-        Aspect::Perfective,
-    ];
+    pub const ALL: [Aspect; 2] = [Aspect::Imperfective, Aspect::Perfective];
 
     /// Short name, as in cell names (`impf`).
     pub const fn short(self) -> &'static str {
@@ -209,11 +193,7 @@ pub enum Person {
 
 impl Person {
     /// Every value, in order.
-    pub const ALL: [Person; 3] = [
-        Person::First,
-        Person::Second,
-        Person::Third,
-    ];
+    pub const ALL: [Person; 3] = [Person::First, Person::Second, Person::Third];
 
     /// Short name, as in cell names (`1`).
     pub const fn short(self) -> &'static str {
@@ -263,10 +243,7 @@ pub enum Tense {
 
 impl Tense {
     /// Every value, in order.
-    pub const ALL: [Tense; 2] = [
-        Tense::Present,
-        Tense::Past,
-    ];
+    pub const ALL: [Tense; 2] = [Tense::Present, Tense::Past];
 
     /// Short name, as in cell names (`pres`).
     pub const fn short(self) -> &'static str {
@@ -301,7 +278,9 @@ impl Russian {
     }
 
     fn options(&self) -> Options {
-        Options { stress: self.stress }
+        Options {
+            stress: self.stress,
+        }
     }
 
     /// A noun in a case and number.
@@ -311,12 +290,22 @@ impl Russian {
     /// Any part may end with markers of the word's own features (`m`, `f`, `n`, `anim`, `inan`), as a
     /// dictionary prints them.
     pub fn noun(&self, word: &str, case: Case, number: Number) -> String {
-        quick(0, word, (case as usize) * 2 + number as usize, self.options())
+        quick(
+            0,
+            word,
+            (case as usize) * 2 + number as usize,
+            self.options(),
+        )
     }
 
     /// Every candidate for [`Russian::noun`], most likely first; confidences sum to 1.
     pub fn noun_scored(&self, word: &str, case: Case, number: Number) -> Vec<Candidate> {
-        scored(0, word, (case as usize) * 2 + number as usize, self.options())
+        scored(
+            0,
+            word,
+            (case as usize) * 2 + number as usize,
+            self.options(),
+        )
     }
 
     /// The second genitive or second locative singular. Most nouns have neither: the function returns `None` when the noun most likely has no such form.
@@ -336,13 +325,35 @@ impl Russian {
     }
 
     /// The long (attributive) form.
-    pub fn adjective(&self, word: &str, case: Case, agreement: Agreement, animacy: Animacy) -> String {
-        quick(1, word, ((case as usize) * 4 + agreement as usize) * 2 + animacy as usize, self.options())
+    pub fn adjective(
+        &self,
+        word: &str,
+        case: Case,
+        agreement: Agreement,
+        animacy: Animacy,
+    ) -> String {
+        quick(
+            1,
+            word,
+            ((case as usize) * 4 + agreement as usize) * 2 + animacy as usize,
+            self.options(),
+        )
     }
 
     /// Every candidate for [`Russian::adjective`], most likely first; confidences sum to 1.
-    pub fn adjective_scored(&self, word: &str, case: Case, agreement: Agreement, animacy: Animacy) -> Vec<Candidate> {
-        scored(1, word, ((case as usize) * 4 + agreement as usize) * 2 + animacy as usize, self.options())
+    pub fn adjective_scored(
+        &self,
+        word: &str,
+        case: Case,
+        agreement: Agreement,
+        animacy: Animacy,
+    ) -> Vec<Candidate> {
+        scored(
+            1,
+            word,
+            ((case as usize) * 4 + agreement as usize) * 2 + animacy as usize,
+            self.options(),
+        )
     }
 
     /// The short (predicative) form. `None` when the adjective most likely has none.
@@ -378,12 +389,22 @@ impl Russian {
     /// Any part may end with markers of the word's own features (`impf`, `pf`), as a
     /// dictionary prints them.
     pub fn non_past(&self, word: &str, person: Person, number: Number) -> String {
-        quick(2, word, 1 + (person as usize) * 2 + number as usize, self.options())
+        quick(
+            2,
+            word,
+            1 + (person as usize) * 2 + number as usize,
+            self.options(),
+        )
     }
 
     /// Every candidate for [`Russian::non_past`], most likely first; confidences sum to 1.
     pub fn non_past_scored(&self, word: &str, person: Person, number: Number) -> Vec<Candidate> {
-        scored(2, word, 1 + (person as usize) * 2 + number as usize, self.options())
+        scored(
+            2,
+            word,
+            1 + (person as usize) * 2 + number as usize,
+            self.options(),
+        )
     }
 
     /// The past tense.
@@ -449,23 +470,67 @@ impl Russian {
     }
 
     /// A declined pronoun or determiner.
-    pub fn pronoun(&self, word: &str, case: Case, agreement: Agreement, animacy: Animacy) -> String {
-        quick(3, word, ((case as usize) * 4 + agreement as usize) * 2 + animacy as usize, self.options())
+    pub fn pronoun(
+        &self,
+        word: &str,
+        case: Case,
+        agreement: Agreement,
+        animacy: Animacy,
+    ) -> String {
+        quick(
+            3,
+            word,
+            ((case as usize) * 4 + agreement as usize) * 2 + animacy as usize,
+            self.options(),
+        )
     }
 
     /// Every candidate for [`Russian::pronoun`], most likely first; confidences sum to 1.
-    pub fn pronoun_scored(&self, word: &str, case: Case, agreement: Agreement, animacy: Animacy) -> Vec<Candidate> {
-        scored(3, word, ((case as usize) * 4 + agreement as usize) * 2 + animacy as usize, self.options())
+    pub fn pronoun_scored(
+        &self,
+        word: &str,
+        case: Case,
+        agreement: Agreement,
+        animacy: Animacy,
+    ) -> Vec<Candidate> {
+        scored(
+            3,
+            word,
+            ((case as usize) * 4 + agreement as usize) * 2 + animacy as usize,
+            self.options(),
+        )
     }
 
     /// A declined numeral.
-    pub fn numeral(&self, word: &str, case: Case, agreement: Agreement, animacy: Animacy) -> String {
-        quick(4, word, ((case as usize) * 4 + agreement as usize) * 2 + animacy as usize, self.options())
+    pub fn numeral(
+        &self,
+        word: &str,
+        case: Case,
+        agreement: Agreement,
+        animacy: Animacy,
+    ) -> String {
+        quick(
+            4,
+            word,
+            ((case as usize) * 4 + agreement as usize) * 2 + animacy as usize,
+            self.options(),
+        )
     }
 
     /// Every candidate for [`Russian::numeral`], most likely first; confidences sum to 1.
-    pub fn numeral_scored(&self, word: &str, case: Case, agreement: Agreement, animacy: Animacy) -> Vec<Candidate> {
-        scored(4, word, ((case as usize) * 4 + agreement as usize) * 2 + animacy as usize, self.options())
+    pub fn numeral_scored(
+        &self,
+        word: &str,
+        case: Case,
+        agreement: Agreement,
+        animacy: Animacy,
+    ) -> Vec<Candidate> {
+        scored(
+            4,
+            word,
+            ((case as usize) * 4 + agreement as usize) * 2 + animacy as usize,
+            self.options(),
+        )
     }
 }
 
@@ -506,7 +571,12 @@ pub fn adjective(word: &str, case: Case, agreement: Agreement, animacy: Animacy)
 }
 
 /// Every candidate for [`adjective`], most likely first; confidences sum to 1.
-pub fn adjective_scored(word: &str, case: Case, agreement: Agreement, animacy: Animacy) -> Vec<Candidate> {
+pub fn adjective_scored(
+    word: &str,
+    case: Case,
+    agreement: Agreement,
+    animacy: Animacy,
+) -> Vec<Candidate> {
     Russian::new().adjective_scored(word, case, agreement, animacy)
 }
 
@@ -619,7 +689,12 @@ pub fn pronoun(word: &str, case: Case, agreement: Agreement, animacy: Animacy) -
 }
 
 /// Every candidate for [`pronoun`], most likely first; confidences sum to 1.
-pub fn pronoun_scored(word: &str, case: Case, agreement: Agreement, animacy: Animacy) -> Vec<Candidate> {
+pub fn pronoun_scored(
+    word: &str,
+    case: Case,
+    agreement: Agreement,
+    animacy: Animacy,
+) -> Vec<Candidate> {
     Russian::new().pronoun_scored(word, case, agreement, animacy)
 }
 
@@ -629,7 +704,12 @@ pub fn numeral(word: &str, case: Case, agreement: Agreement, animacy: Animacy) -
 }
 
 /// Every candidate for [`numeral`], most likely first; confidences sum to 1.
-pub fn numeral_scored(word: &str, case: Case, agreement: Agreement, animacy: Animacy) -> Vec<Candidate> {
+pub fn numeral_scored(
+    word: &str,
+    case: Case,
+    agreement: Agreement,
+    animacy: Animacy,
+) -> Vec<Candidate> {
     Russian::new().numeral_scored(word, case, agreement, animacy)
 }
 
@@ -664,11 +744,26 @@ struct Part {
 }
 
 const PARTS: [Part; 5] = [
-    Part { citation: &[2], markers: &[&["m", "f", "n"], &["anim", "inan"]] }, // noun
-    Part { citation: &[], markers: &[] }, // adjective
-    Part { citation: &[1, 3], markers: &[&["impf", "pf"]] }, // verb
-    Part { citation: &[], markers: &[] }, // pronoun
-    Part { citation: &[], markers: &[] }, // numeral
+    Part {
+        citation: &[2],
+        markers: &[&["m", "f", "n"], &["anim", "inan"]],
+    }, // noun
+    Part {
+        citation: &[],
+        markers: &[],
+    }, // adjective
+    Part {
+        citation: &[1, 3],
+        markers: &[&["impf", "pf"]],
+    }, // verb
+    Part {
+        citation: &[],
+        markers: &[],
+    }, // pronoun
+    Part {
+        citation: &[],
+        markers: &[],
+    }, // numeral
 ];
 
 fn citation<'s>(p: &flexion::Pos<'_, 'static>, pos: usize, word: &'s str) -> flexion::Citation<'s> {
@@ -688,10 +783,12 @@ fn quick(pos: usize, word: &str, cell: usize, options: Options) -> String {
 fn scored(pos: usize, word: &str, cell: usize, options: Options) -> Vec<Candidate> {
     match model().and_then(|m| m.pos(pos)) {
         Some(p) => p.candidates(&citation(&p, pos, word), cell, options),
-        None => vec![Candidate { form: word.to_string(), confidence: 0.0 }],
+        None => vec![Candidate {
+            form: word.to_string(),
+            confidence: 0.0,
+        }],
     }
 }
-
 
 fn optional(pos: usize, word: &str, cell: usize, options: Options) -> Option<String> {
     let p = model()?.pos(pos)?;
@@ -711,7 +808,6 @@ fn optional_scored(pos: usize, word: &str, cell: usize, options: Options) -> Vec
     }
     out
 }
-
 
 fn inherent<T: Copy>(pos: usize, feature: usize, word: &str, values: &[T]) -> Vec<(T, f32)> {
     let Some(p) = model().and_then(|m| m.pos(pos)) else {

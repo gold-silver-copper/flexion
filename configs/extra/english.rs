@@ -92,8 +92,12 @@ pub fn pronoun(person: Person, number: Number, gender: Gender, case: Case) -> &'
     let row: [&'static str; 5] = match (number, person, gender) {
         (Number::Singular, Person::First, _) => ["I", "me", "myself", "mine", "my"],
         (Number::Singular, Person::Second, _) => ["you", "you", "yourself", "yours", "your"],
-        (Number::Singular, Person::Third, Gender::Masculine) => ["he", "him", "himself", "his", "his"],
-        (Number::Singular, Person::Third, Gender::Feminine) => ["she", "her", "herself", "hers", "her"],
+        (Number::Singular, Person::Third, Gender::Masculine) => {
+            ["he", "him", "himself", "his", "his"]
+        }
+        (Number::Singular, Person::Third, Gender::Feminine) => {
+            ["she", "her", "herself", "hers", "her"]
+        }
         (Number::Singular, Person::Third, Gender::Neuter) => ["it", "it", "itself", "its", "its"],
         (Number::Plural, Person::First, _) => ["we", "us", "ourselves", "ours", "our"],
         (Number::Plural, Person::Second, _) => ["you", "you", "yourselves", "yours", "your"],
@@ -111,7 +115,11 @@ pub fn pronoun(person: Person, number: Number, gender: Gender, case: Case) -> &'
 
 /// `'s`, or a bare `'` after a final `s` (`dog's`, `dogs'`, `James'`).
 pub fn add_possessive(word: &str) -> String {
-    if word.ends_with('s') { format!("{word}'") } else { format!("{word}'s") }
+    if word.ends_with('s') {
+        format!("{word}'")
+    } else {
+        format!("{word}'s")
+    }
 }
 
 /// The first letter uppercased.
@@ -125,7 +133,14 @@ pub fn capitalize_first(s: &str) -> String {
 
 /// The noun for a count: singular for exactly 1, plural otherwise.
 pub fn count(word: &str, count: u32) -> String {
-    noun(word, if count == 1 { Number::Singular } else { Number::Plural })
+    noun(
+        word,
+        if count == 1 {
+            Number::Singular
+        } else {
+            Number::Plural
+        },
+    )
 }
 
 /// `"3 mice"`.

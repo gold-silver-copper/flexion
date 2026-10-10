@@ -255,7 +255,12 @@ impl<'a> Model<'a> {
             for node in 0..h.n_nodes {
                 let at = h.nodes.checked_add(node.checked_mul(NODE_LEN)?)?;
                 let u16_at = |n: usize| -> Option<u16> {
-                    Some(u16::from_le_bytes(bytes.get(at.checked_add(n)?..at.checked_add(n.checked_add(2)?)?)?.try_into().ok()?))
+                    Some(u16::from_le_bytes(
+                        bytes
+                            .get(at.checked_add(n)?..at.checked_add(n.checked_add(2)?)?)?
+                            .try_into()
+                            .ok()?,
+                    ))
                 };
                 let packed = b.u32(h.chars.checked_add(node.checked_mul(4)?)?)?;
                 h.tree.push(NodeRec {
@@ -272,7 +277,10 @@ impl<'a> Model<'a> {
                 if count <= TABLE_MIN_CHILDREN {
                     continue;
                 }
-                let mut t = ChildTable { low: [0; 256], high: [0; 256] };
+                let mut t = ChildTable {
+                    low: [0; 256],
+                    high: [0; 256],
+                };
                 for i in 0..count {
                     let idx = first.checked_add(i)?;
                     let v = b.u32(h.chars.checked_add(idx.checked_mul(4)?)?)?;
@@ -303,18 +311,24 @@ impl<'a> Model<'a> {
                     add: b.str(strings, at.checked_add(16)?)?,
                     stress: format::Stress::decode(byte(24)?, byte(25)?),
                     strip_chars: usize::from(byte(26)?),
-                    vowels: [usize::from(byte(27)?), usize::from(byte(28)?), usize::from(byte(29)?)],
+                    vowels: [
+                        usize::from(byte(27)?),
+                        usize::from(byte(28)?),
+                        usize::from(byte(29)?),
+                    ],
                 });
             }
             for c in 0..h.n_classes {
                 let at = h.classes.checked_add(c.checked_mul(h.class_len)?)?;
                 for cell in 0..h.cells {
-                    h.class_edits.push(b.u32(at.checked_add(cell.checked_mul(4)?)?)?);
+                    h.class_edits
+                        .push(b.u32(at.checked_add(cell.checked_mul(4)?)?)?);
                 }
                 let strip_at = at.checked_add(h.cells.checked_mul(4)?)?;
                 h.class_strips.push(b.str(strings, strip_at)?);
                 for f in 0..h.inherent {
-                    h.class_values.push(b.u8(strip_at.checked_add(8)?.checked_add(f)?)?);
+                    h.class_values
+                        .push(b.u8(strip_at.checked_add(8)?.checked_add(f)?)?);
                 }
             }
             for i in 0..h.n_dist {
