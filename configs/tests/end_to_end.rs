@@ -209,6 +209,62 @@ fn russian_learns_stress_and_inherent_features() {
 }
 
 #[test]
+fn russian_reads_the_russian_wiktionary() {
+    let lang = flexion_configs::russian::language();
+    let spec = flexion_train::spelling_spec(&lang);
+    let sp = flexion_train::view(&spec);
+    let mut data = extract::extract(&lang, &sp, &fixture("russian")).expect("fixture extracts");
+    extract::add_edition(&lang, &sp, &mut data, 0, &fixture("russian-ru")).expect("edition");
+    // A word both editions have is one word, so it lands in one tenth: held
+    // out of both or of neither.
+    let books = extract::words(&data[0])
+        .into_iter()
+        .find(|w| w.key == "книга")
+        .expect("книга");
+    let sources: Vec<u8> = books.lexemes.iter().map(|l| l.source).collect();
+    assert!(sources.contains(&0) && sources.contains(&1), "{sources:?}");
+    let plans: Vec<_> = flexion_train::shapes(&lang)
+        .expect("shapes")
+        .into_iter()
+        .map(|shape| flexion_train::PosPlan {
+            shape,
+            params: flexion_train::learn::Params::default(),
+            citation: Vec::new(),
+            sources: Vec::new(),
+        })
+        .collect();
+    let (blob, _) = flexion_train::train(&lang, &data, &plans, &|_| true);
+    let noun = |word, case| ask(&lang, &blob, "noun", word, "noun", &[case, "Singular"]);
+    // The edition leaves out the forms spelled like the headword; they come
+    // back, stressed like the English Wiktionary's one-syllable nouns.
+    assert_eq!(noun("зонт", "Nominative"), "зо́нт");
+    assert_eq!(noun("зонт", "Accusative"), "зо́нт");
+    assert_eq!(noun("зонт", "Genitive"), "зонта́");
+    // The past plural it tags with all three genders, and the plural
+    // imperative it tags like the singular.
+    assert_eq!(
+        ask(&lang, &blob, "verb", "прыгать", "past", &["Plural"]),
+        "пры́гали"
+    );
+    assert_eq!(
+        ask(&lang, &blob, "verb", "прыгать", "imperative", &["Plural"]),
+        "пры́гайте"
+    );
+    // A participle typed plain is stressed as its verb's table writes it.
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "adjective",
+            "ахнувший",
+            "adjective",
+            &["Nominative", "Masculine", "Inanimate"]
+        ),
+        "а́хнувший"
+    );
+}
+
+#[test]
 fn latin_restores_vowel_length_and_reads_citations() {
     let lang = flexion_configs::latin::language();
     lang.validate().expect("valid config");

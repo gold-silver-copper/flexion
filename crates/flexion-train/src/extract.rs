@@ -229,7 +229,7 @@ pub fn add_edition(
                 continue;
             };
             shared_keys.insert(&l.key);
-            let letters = |f: &str| spelling.read(f).base.to_string();
+            let letters = |f: &str| spelling.unmarked(&spelling.read(f).base);
             for (cell, forms) in l.cells.iter().enumerate().take(c.total) {
                 let Some(first) = forms.first() else {
                     continue;

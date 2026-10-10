@@ -1389,26 +1389,35 @@ impl<'m, 'a> Pos<'m, 'a> {
     }
 
     /// A typed lemma, read as the lexicon writes it in full when it is
-    /// there and typed plain (no stress mark, no marked letter): `ахнувший`
-    /// as `а́хнувший`.
+    /// there and the caller left marks out: the same stress or none, and the
+    /// letters plain or as written there (`ахнувший` is `а́хнувший`,
+    /// `amatus` is `amātus`).
     fn written_in_full<'s>(&self, typed: &'s str) -> (Word<'s>, Cow<'s, str>) {
-        let lemma = self.sp().read(typed);
-        if self.h.lexicon.is_empty() || lemma.stress.is_some() || lemma.base != lemma.key {
+        let sp = self.sp();
+        let lemma = sp.read(typed);
+        let key: &str = &lemma.key;
+        let Some(&(_, full)) = self
+            .h
+            .lexicon
+            .binary_search_by(|(k, _)| (*k).cmp(key))
+            .ok()
+            .and_then(|i| self.h.lexicon.get(i))
+        else {
+            return (lemma, Cow::Borrowed(typed));
+        };
+        let entry = sp.read(full);
+        let stress =
+            lemma.stress.is_none() || (lemma.stress == entry.stress && lemma.kind == entry.kind);
+        let letters = lemma.base == lemma.key
+            || lemma.base == entry.base
+            || lemma.base == sp.unmarked(&entry.base);
+        if !(stress && letters) {
             return (lemma, Cow::Borrowed(typed));
         }
-        let key: &str = &lemma.key;
-        match self.h.lexicon.binary_search_by(|(k, _)| (*k).cmp(key)) {
-            Ok(i) => match self.h.lexicon.get(i) {
-                Some(&(_, full)) => {
-                    // The caller's capitals still apply.
-                    let mut word = owned(self.sp().read(full));
-                    word.casing = lemma.casing;
-                    (word, Cow::Owned(full.to_string()))
-                }
-                None => (lemma, Cow::Borrowed(typed)),
-            },
-            Err(_) => (lemma, Cow::Borrowed(typed)),
-        }
+        // The caller's capitals still apply.
+        let mut word = owned(entry);
+        word.casing = lemma.casing;
+        (word, Cow::Owned(full.to_string()))
     }
 }
 

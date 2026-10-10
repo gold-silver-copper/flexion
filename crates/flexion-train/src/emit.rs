@@ -480,12 +480,7 @@ fn readme(lang: &Language, report: &str) -> String {
     let flags = lang
         .editions
         .iter()
-        .map(|e| {
-            format!(
-                " \\\n    --edition {}=kaikki.org-dictionary-{}.jsonl",
-                e.code, e.dump
-            )
-        })
+        .map(|e| format!(" \\\n    --edition {}={}", e.code, e.file()))
         .collect::<String>();
     let urls = lang
         .editions

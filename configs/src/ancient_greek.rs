@@ -119,7 +119,8 @@ pub fn language() -> Language {
                 ],
                 inherent: vec![],
                 capitalized: false,
-                lemmas_from: vec![],
+                // A participle is a verb's form too, written in full there.
+                lemmas_from: vec![("verb", "participle")],
             },
             PartOfSpeech {
                 name: "verb",

@@ -56,11 +56,20 @@ pub enum Merge {
 }
 
 impl Edition {
+    /// Where Kaikki publishes the dump (its file name drops the spaces of
+    /// the language's name: `Grec ancien` → `Grecancien`).
     pub fn url(&self) -> String {
         format!(
-            "https://kaikki.org/{0}wiktionary/{1}/kaikki.org-dictionary-{1}.jsonl",
-            self.code, self.dump
+            "https://kaikki.org/{}wiktionary/{}/{}",
+            self.code,
+            self.dump.replace(' ', "%20"),
+            self.file()
         )
+    }
+
+    /// The dump's file name.
+    pub fn file(&self) -> String {
+        format!("kaikki.org-dictionary-{}.jsonl", self.dump.replace(' ', ""))
     }
 }
 
