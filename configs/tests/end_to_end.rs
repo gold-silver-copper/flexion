@@ -460,8 +460,15 @@ fn pipeline_reports_and_emits_a_crate() {
     let spec = flexion_train::spelling_spec(&lang);
     let sp = flexion_train::view(&spec);
     let data = extract::extract(&lang, &sp, &fixture("english")).expect("fixture extracts");
-    let built =
-        flexion_train::pipeline::build(&lang, &data, &[], 2, "the test fixture").expect("builds");
+    let built = flexion_train::pipeline::build(
+        &lang,
+        &data,
+        &[],
+        2,
+        flexion_train::pipeline::SIZE_PRICE,
+        "the test fixture",
+    )
+    .expect("builds");
     assert!(built.report.contains("### Words the model never saw"));
     let dir = Path::new(env!("CARGO_TARGET_TMPDIR")).join("emitted-english");
     flexion_train::emit::emit(&lang, &built.blob, &built.report, &dir).expect("emits");
