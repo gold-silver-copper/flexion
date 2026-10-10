@@ -309,7 +309,9 @@ pub fn train_pos(
 /// of them, not only those the model would get wrong: a word missing from
 /// the lexicon must mean the other part of speech doesn't attest it, or the
 /// model's confidence for the words it does attest would be too low. A key
-/// attested with two different written forms gives nothing.
+/// attested with two different written forms gives nothing, and so does a
+/// word of the part of speech's own (its own entry decides: the adjective
+/// `latus`, wide, is no participle `lātus`).
 pub fn lexicon(
     lang: &Language,
     sp: &Spelling<'_>,
@@ -345,8 +347,19 @@ pub fn lexicon(
             }
         }
     }
+    let own: std::collections::BTreeSet<&str> = data
+        .get(pi)
+        .map(|d| {
+            d.lexemes
+                .iter()
+                .filter(|l| keep(&l.key))
+                .map(|l| l.key.as_str())
+                .collect()
+        })
+        .unwrap_or_default();
     found
         .into_iter()
+        .filter(|(key, _)| !own.contains(key.as_str()))
         .filter_map(|(key, written)| match written.as_slice() {
             [one] => Some((key, one.clone())),
             _ => None,
