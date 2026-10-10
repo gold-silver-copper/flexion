@@ -353,7 +353,7 @@ fn bench(model: &flexion::Model, pi: usize, words: &[Word], cells: &flexion_trai
     let path = fastest_ns(lemmas.len(), &mut || {
         let mut sink = 0usize;
         for c in &cits {
-            sink = sink.wrapping_add(p.path_len(&c.lemma.key));
+            sink = sink.wrapping_add(p.path_len(&c.lemma));
         }
         std::hint::black_box(sink);
     });
