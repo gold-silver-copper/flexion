@@ -186,6 +186,47 @@ fn put_str(out: &mut Vec<u8>, strings: &mut Strings, s: &str) {
 
 /// Write a complete model blob.
 pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
+    write_sized(spelling, parts).0
+}
+
+/// Bytes each section of one part of speech takes in a blob.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct Sizes {
+    /// The part of speech's header.
+    pub header: usize,
+    pub edits: usize,
+    /// Class records and the group sub-vectors they share.
+    pub classes: usize,
+    /// Tree nodes and their first-character entries.
+    pub nodes: usize,
+    pub dist: usize,
+    pub joins: usize,
+    /// The parts section (which cells come from which part model).
+    pub parts: usize,
+    pub lexicon: usize,
+}
+
+impl Sizes {
+    pub fn total(&self) -> usize {
+        [
+            self.header,
+            self.edits,
+            self.classes,
+            self.nodes,
+            self.dist,
+            self.joins,
+            self.parts,
+            self.lexicon,
+        ]
+        .into_iter()
+        .fold(0, usize::saturating_add)
+    }
+}
+
+/// [`write`], also returning each part of speech's [`Sizes`] and the bytes of
+/// the string area (shared by all of them).
+pub fn write_sized(spelling: &SpellingSpec, parts: &[PosTables]) -> (Vec<u8>, Vec<Sizes>, usize) {
+    let mut sizes = Vec::with_capacity(parts.len());
     let mut strings = Strings::default();
     let mut header = Vec::with_capacity(format::HEADER_LEN);
     header.extend_from_slice(format::MAGIC);
@@ -335,9 +376,18 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
             put(&mut body, first | (len << format::CHAR_BITS));
         }
         let dist = at(&body);
+        let wide = p.classes.len() > usize::from(u16::MAX) + 1;
         for &(class, prob) in &p.dist {
-            put(&mut body, class);
-            put(&mut body, prob.to_bits());
+            if wide {
+                put(&mut body, class);
+                put(&mut body, prob.to_bits());
+            } else {
+                let class = u16::try_from(class).unwrap_or(u16::MAX);
+                // `as` saturates; the probability is in 0..=1.
+                let q = (prob.clamp(0.0, 1.0) * f32::from(u16::MAX)).round() as u16;
+                body.extend_from_slice(&class.to_le_bytes());
+                body.extend_from_slice(&q.to_le_bytes());
+            }
         }
         let joins_at = at(&body);
         let mut joins: Vec<&JoinSpec> = p.joins.iter().collect();
@@ -387,8 +437,9 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
         lexicon.sort();
         put(&mut body, to_u32(lexicon.len()));
         for (key, written) in lexicon {
-            put_str(&mut body, &mut strings, key);
             put_str(&mut body, &mut strings, written);
+            // The key itself is the written form folded: a hash finds it.
+            put(&mut body, crate::hash(key) as u32);
         }
         let mut h = Vec::with_capacity(format::POS_HEADER_LEN);
         for v in [
@@ -407,7 +458,11 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
             chars,
             groups_at,
             p.restore.map_or(format::NONE, to_u32),
-            u32::from(p.capitalized),
+            if p.capitalized {
+                format::POS_CAPITALIZED
+            } else {
+                0
+            } | if wide { format::POS_WIDE_DIST } else { 0 },
             joins_at,
             parts_at,
             lexicon_at,
@@ -415,6 +470,18 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
             put(&mut h, v);
         }
         pos_headers.extend_from_slice(&h);
+        let span = |a: u32, b: u32| usize::try_from(b.saturating_sub(a)).unwrap_or(0);
+        let end = at(&body);
+        sizes.push(Sizes {
+            header: format::POS_HEADER_LEN,
+            edits: span(edits, groups_at),
+            classes: span(groups_at, nodes),
+            nodes: span(nodes, dist),
+            dist: span(dist, joins_at),
+            joins: span(joins_at, parts_at),
+            parts: span(parts_at, lexicon_at),
+            lexicon: span(lexicon_at, end),
+        });
     }
 
     let mut out = header;
@@ -429,5 +496,6 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
     if let Some(slot) = out.get_mut(12..16) {
         slot.copy_from_slice(&s_len.to_le_bytes());
     }
-    out
+    let n_strings = strings.bytes.len();
+    (out, sizes, n_strings)
 }

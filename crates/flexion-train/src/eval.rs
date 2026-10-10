@@ -57,6 +57,8 @@ pub struct PosScore {
     /// [`MIN_PROBABILITY`], so a form the model never offers costs a finite
     /// amount).
     pub nats: f64,
+    /// The sum of the cells' squared log-losses, for the standard error.
+    pub nats_sq: f64,
 }
 
 /// The least probability log-loss charges a cell with.
@@ -67,6 +69,13 @@ impl PosScore {
     pub fn log_loss(&self) -> f64 {
         let n: usize = self.cells.iter().map(|c| c.n).sum();
         self.nats / n.max(1) as f64
+    }
+
+    /// The standard error of [`PosScore::log_loss`].
+    pub fn log_loss_se(&self) -> f64 {
+        let n = self.cells.iter().map(|c| c.n).sum::<usize>().max(1) as f64;
+        let mean = self.nats / n;
+        ((self.nats_sq / n - mean * mean).max(0.0) / n).sqrt()
     }
 
     pub fn total(&self, skip: &[usize]) -> CellScore {
@@ -169,7 +178,9 @@ pub fn score(
                 .filter(|c| is(&c.form, primary))
                 .map(|c| f64::from(c.confidence))
                 .sum();
-            out.nats -= p.max(MIN_PROBABILITY).ln();
+            let loss = -p.max(MIN_PROBABILITY).ln();
+            out.nats += loss;
+            out.nats_sq += loss * loss;
             let top_primary = top.is_some_and(|t| is(&t.form, primary));
             if top_primary {
                 score.top1 += 1;

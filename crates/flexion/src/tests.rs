@@ -21,6 +21,9 @@ fn node(label: &str, first_child: u32, children: u32, dist: u32, dist_len: u32) 
 fn tiny() -> Vec<u8> {
     let spelling = SpellingSpec {
         fold_case: true,
+        // `ö` is `o` for lookup, so `dög` is the lexicon's `dog` written in full.
+        fold_from: "ö".into(),
+        fold_to: "o".into(),
         ..Default::default()
     };
     let nouns = PosTables {

@@ -126,9 +126,9 @@ pub(crate) struct PosHeader<'a> {
     pub(crate) part_models: Vec<(usize, usize)>,
     /// Per cell: 0, or `k + 1` to build it from part model `k`.
     pub(crate) sources: Vec<u8>,
-    /// Lemmas written in full that another part of speech attests, sorted
-    /// by key: `(key, written)`.
-    pub(crate) lexicon: Vec<(&'a str, &'a str)>,
+    /// Lemmas written in full that another part of speech attests: `(the
+    /// hash of the key, written)`.
+    pub(crate) lexicon: Vec<(u32, &'a str)>,
     /// An open-addressing hash index over `lexicon`, built at load (a
     /// sorted search would touch a dozen far-apart strings per call): per
     /// slot 1 + the entry's index, 0 for empty; a power of two long.
@@ -362,7 +362,7 @@ impl<'a> Model<'a> {
                     let r = b.u32(at.checked_add(56)?)?;
                     (r != NONE).then(|| usize::try_from(r).ok()).flatten()
                 },
-                capitalized: b.u32(at.checked_add(60)?)? & 1 != 0,
+                capitalized: b.u32(at.checked_add(60)?)? & format::POS_CAPITALIZED != 0,
                 block: spelling.vowel_set.block(),
                 tree: Vec::new(),
                 edit_list: Vec::new(),
@@ -388,11 +388,16 @@ impl<'a> Model<'a> {
                 lexicon: Vec::new(),
                 lexicon_index: Vec::new(),
             };
+            let dist_len = if b.u32(at.checked_add(60)?)? & format::POS_WIDE_DIST != 0 {
+                DIST_LEN
+            } else {
+                format::NARROW_DIST_LEN
+            };
             // Every table must lie inside the blob.
             let ends = [
                 h.edits.checked_add(h.n_edits.checked_mul(EDIT_LEN)?)?,
                 h.nodes.checked_add(h.n_nodes.checked_mul(NODE_LEN)?)?,
-                h.dist.checked_add(h.n_dist.checked_mul(DIST_LEN)?)?,
+                h.dist.checked_add(h.n_dist.checked_mul(dist_len)?)?,
                 h.chars.checked_add(h.n_nodes.checked_mul(4)?)?,
             ];
             if ends.iter().any(|&e| e > bytes.len()) || h.n_nodes == 0 {
@@ -543,8 +548,14 @@ impl<'a> Model<'a> {
                 }
             }
             for i in 0..h.n_dist {
-                let at = h.dist.checked_add(i.checked_mul(DIST_LEN)?)?;
-                h.entries.push((b.u32(at)?, b.f32(at.checked_add(4)?)?));
+                let at = h.dist.checked_add(i.checked_mul(dist_len)?)?;
+                h.entries.push(if dist_len == DIST_LEN {
+                    (b.u32(at)?, b.f32(at.checked_add(4)?)?)
+                } else {
+                    let word = b.u32(at)?;
+                    let q = f32::from(u16::try_from(word >> 16).ok()?);
+                    (word & 0xffff, q / f32::from(u16::MAX))
+                });
             }
             h.entry_cum = std::iter::once(0f64)
                 .chain(h.entries.iter().scan(0f64, |acc, &(_, p)| {
@@ -624,23 +635,21 @@ impl<'a> Model<'a> {
             let mut cursor = b.usize(at.checked_add(72)?)?;
             let n_lexicon = b.usize(cursor)?;
             cursor = cursor.checked_add(4)?;
-            if cursor.checked_add(n_lexicon.checked_mul(16)?)? > bytes.len() {
+            if cursor.checked_add(n_lexicon.checked_mul(12)?)? > bytes.len() {
                 return None;
             }
             h.lexicon = Vec::with_capacity(n_lexicon);
             for _ in 0..n_lexicon {
-                h.lexicon.push((
-                    b.str(strings, cursor)?,
-                    b.str(strings, cursor.checked_add(8)?)?,
-                ));
-                cursor = cursor.checked_add(16)?;
+                h.lexicon
+                    .push((b.u32(cursor.checked_add(8)?)?, b.str(strings, cursor)?));
+                cursor = cursor.checked_add(12)?;
             }
             if !h.lexicon.is_empty() {
                 let slots = h.lexicon.len().checked_mul(2)?.next_power_of_two();
                 h.lexicon_index = vec![0; slots];
                 let mask = slots.wrapping_sub(1);
-                for (i, (key, _)) in h.lexicon.iter().enumerate() {
-                    let mut at = usize::try_from(hash(key)).unwrap_or(0) & mask;
+                for (i, &(key_hash, _)) in h.lexicon.iter().enumerate() {
+                    let mut at = usize::try_from(key_hash).unwrap_or(0) & mask;
                     while h.lexicon_index.get(at).is_some_and(|&s| s != 0) {
                         at = at.wrapping_add(1) & mask;
                     }

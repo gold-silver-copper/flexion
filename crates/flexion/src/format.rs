@@ -25,7 +25,8 @@
 //!   first-character array, the offset of the class groups section, the
 //!   index of the part of speech that restores this one's lemmas ([`NONE`]:
 //!   lemmas are taken as typed), flags (bit 0: every word is written with a
-//!   capital), the offset of the join section, the offset of the parts
+//!   capital; bit 1: wide distribution entries), the offset of the join
+//!   section, the offset of the parts
 //!   section, and the offset of the lexicon section
 //! records (edits, classes, nodes, distribution entries) at the offsets the
 //!   part-of-speech headers give
@@ -57,8 +58,10 @@
 //!   bits) and the label's length in bytes (high 11 bits), so a child search
 //!   touches one small dense array. Nodes are laid out depth-first by child
 //!   block, so a walk's successive levels sit close together;
-//! - distribution entry, 8 bytes: class index, probability (`f32` bits).
-//!   Entries of one node are sorted by descending probability.
+//! - distribution entry, 4 bytes: class index (`u16`), probability in
+//!   steps of 1/65535 (`u16`); or, where a part of speech has more than
+//!   65536 classes (flag bit 1), 8 bytes: class index, probability (`f32`
+//!   bits). Entries of one node are sorted by descending probability.
 //! - join section: the number of join classes, each one edit index per cell
 //!   (an edit of the joined word's base form); the number of prefixes, each
 //!   28 bytes (the prefix as a folded string reference, the probability that
@@ -72,10 +75,11 @@
 //!   principal part and the index of its part of speech in the blob; then one
 //!   byte per cell (0: built by this part of speech, `k + 1`: by part model
 //!   `k` when its part is given), padded to 4 bytes.
-//! - lexicon section: the number of entries, then per entry two string
-//!   references, a lookup key and the lemma written in full there (`а́хнувший`,
-//!   `amātus`), sorted by key: lemmas another part of speech attests (a
-//!   verb's participles are adjectives).
+//! - lexicon section: the number of entries, then per entry 12 bytes: a
+//!   string reference to the lemma written in full (`а́хнувший`, `amātus`) and
+//!   the low 32 bits of the FNV-1a hash of its lookup key (the written form
+//!   folded, which a match confirms): lemmas another part of speech attests
+//!   (a verb's participles are adjectives).
 
 pub const MAGIC: &[u8; 4] = b"FLX1";
 pub const VERSION: u32 = 6;
@@ -84,6 +88,11 @@ pub const POS_HEADER_LEN: usize = 76;
 pub const EDIT_LEN: usize = 32;
 pub const NODE_LEN: usize = 16;
 pub const DIST_LEN: usize = 8;
+/// A distribution entry in its narrow form (see the module docs).
+pub const NARROW_DIST_LEN: usize = 4;
+/// Part-of-speech flags.
+pub const POS_CAPITALIZED: u32 = 1;
+pub const POS_WIDE_DIST: u32 = 2;
 /// No edit (the class has no form in this cell), or no lemma cell.
 pub const NONE: u32 = u32::MAX;
 /// Unknown inherent-feature value.
