@@ -54,12 +54,22 @@ pub fn view(s: &SpellingSpec) -> Spelling<'_> {
 /// Which tenth of the data a word belongs to: a hash of its key, so the split
 /// is deterministic and every entry of a word lands in the same tenth.
 pub fn bucket(key: &str) -> u64 {
+    fnv(key) % 10
+}
+
+/// A second, independent split of the words into hundredths, for training
+/// on a fraction of them (learning curves).
+pub fn percentile(key: &str) -> u64 {
+    (fnv(key) / 10) % 100
+}
+
+fn fnv(key: &str) -> u64 {
     let mut h: u64 = 0xcbf2_9ce4_8422_2325;
     for b in key.bytes() {
         h ^= u64::from(b);
         h = h.wrapping_mul(0x0100_0000_01b3);
     }
-    h % 10
+    h
 }
 
 /// Held-out words (scored, never trained on).

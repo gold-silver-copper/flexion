@@ -52,9 +52,23 @@ pub struct PosScore {
     pub misses: Vec<Miss>,
     /// Inherent features: `(correct, scored)` per feature.
     pub inherent: Vec<(usize, usize)>,
+    /// Summed log-loss: per scored cell, minus the natural log of the
+    /// probability the model gives the primary form (at least
+    /// [`MIN_PROBABILITY`], so a form the model never offers costs a finite
+    /// amount).
+    pub nats: f64,
 }
 
+/// The least probability log-loss charges a cell with.
+pub const MIN_PROBABILITY: f64 = 1e-4;
+
 impl PosScore {
+    /// Mean log-loss per scored cell, in nats.
+    pub fn log_loss(&self) -> f64 {
+        let n: usize = self.cells.iter().map(|c| c.n).sum();
+        self.nats / n.max(1) as f64
+    }
+
     pub fn total(&self, skip: &[usize]) -> CellScore {
         let mut t = CellScore::default();
         for (i, c) in self.cells.iter().enumerate() {
@@ -150,6 +164,12 @@ pub fn score(
             let top = cands.first();
             let is = |f: &str, g: &str| same_form(sp, f, g);
             score.n += 1;
+            let p: f64 = cands
+                .iter()
+                .filter(|c| is(&c.form, primary))
+                .map(|c| f64::from(c.confidence))
+                .sum();
+            out.nats -= p.max(MIN_PROBABILITY).ln();
             let top_primary = top.is_some_and(|t| is(&t.form, primary));
             if top_primary {
                 score.top1 += 1;
