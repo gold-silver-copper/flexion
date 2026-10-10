@@ -18,11 +18,16 @@
 //! its first table (a second one repeats the verb with `se`). Personal pronouns are a
 //! small hand-written table (`configs/extra/french.rs`): Wiktionary has no
 //! table for them.
+//!
+//! Verbs are also read from the French Wiktionary's conjugation pages (see
+//! [`edition_verb`]), which conjugate many more verbs.
 
 use crate::romance::{self, group};
 use flexion_train::features;
-use flexion_train::kaikki::Entry;
-use flexion_train::spec::{FormSource, Hooks, Language, PartOfSpeech, Spelling, TagPolicy};
+use flexion_train::kaikki::{Entry, Form};
+use flexion_train::spec::{
+    Edition, FormSource, Hooks, Language, Merge, PartOfSpeech, Spelling, TagPolicy,
+};
 
 /// Real but nonstandard forms: never trained on.
 const SOFT: &[&str] = &[
@@ -251,7 +256,12 @@ pub fn language() -> Language {
             ("verb", "verb", "blicir"),
             ("verb", "verb", "reglorper"),
         ],
-        editions: vec![],
+        editions: vec![Edition {
+            code: "fr",
+            name: "the French Wiktionary",
+            dump: "Français",
+            merge: Merge::All,
+        }],
     }
 }
 
@@ -321,6 +331,169 @@ impl Hooks for FrenchHooks {
     fn inherent_tags(&self, entry: &Entry) -> Vec<String> {
         romance::noun_gender(entry)
     }
+
+    /// The French Wiktionary's verbs (see [`edition_verb`]). Its nouns and
+    /// adjectives agree with the main dump's but made no held-out word
+    /// better, so they are not read.
+    fn adapt(&self, edition: &str, pos: &str, entry: &mut Entry) -> bool {
+        edition == "fr" && pos == "verb" && edition_verb(entry)
+    }
+}
+
+/// Subject pronouns a French Wiktionary conjugation writes before a form,
+/// longest first, with the person and number they mean.
+const SUBJECTS: &[(&str, &str, &str)] = &[
+    ("je ", "first-person", "singular"),
+    ("j’", "first-person", "singular"),
+    ("j'", "first-person", "singular"),
+    ("tu ", "second-person", "singular"),
+    ("ils/elles ", "third-person", "plural"),
+    ("ils ", "third-person", "plural"),
+    ("elles ", "third-person", "plural"),
+    ("il/elle/on ", "third-person", "singular"),
+    ("il/elle ", "third-person", "singular"),
+    ("il ", "third-person", "singular"),
+    ("elle ", "third-person", "singular"),
+    ("on ", "third-person", "singular"),
+    ("nous ", "first-person", "plural"),
+    ("vous ", "second-person", "plural"),
+];
+
+/// A verb of the French Wiktionary, from its conjugation page
+/// (`Conjugaison:français/prendre`). Pronominal verbs are cited without
+/// `se` as in the main dump (`se souvenir` → `souvenir`). The table names no
+/// person: each form carries its subject pronoun (`je prends`, `qu’il/elle/on
+/// prenne`), which gives the person and goes, as does a pronominal verb's
+/// reflexive pronoun (`nous nous souvenons`), and an imperative's
+/// (`souviens-toi`). Only simple tenses are read: compound ones are
+/// auxiliary + participle. A cell may give variants (`je paye ou paie`); a
+/// defective one gives `—`.
+fn edition_verb(entry: &mut Entry) -> bool {
+    if entry.tags.iter().any(|t| t == "form-of") {
+        return false;
+    }
+    let word = without_reflexive(&entry.word);
+    let mut forms: Vec<Form> = Vec::new();
+    for f in &entry.forms {
+        if !f
+            .source
+            .as_deref()
+            .is_some_and(|s| s.starts_with("Conjugaison:"))
+        {
+            continue;
+        }
+        let has = |t: &str| f.tags.iter().any(|x| x == t);
+        if [
+            "multiword-construction",
+            "pluperfect",
+            "anterior",
+            "perfect",
+            "gerund",
+        ]
+        .iter()
+        .any(|t| has(t))
+            || (has("past") && !has("indicative") && !has("participle"))
+        {
+            continue;
+        }
+        let mut text = f.form.trim();
+        let tags: Vec<&str> = if has("infinitive") {
+            vec!["infinitive"]
+        } else if has("participle") {
+            vec!["participle", if has("past") { "past" } else { "present" }]
+        } else if has("imperative") {
+            let (rest, addressee) = [
+                ("-toi", ["second-person", "singular"]),
+                ("-nous", ["first-person", "plural"]),
+                ("-vous", ["second-person", "plural"]),
+            ]
+            .iter()
+            .find_map(|(p, a)| text.strip_suffix(p).map(|r| (r, *a)))
+            .unwrap_or_else(|| {
+                let a = if text.ends_with("ons") {
+                    ["first-person", "plural"]
+                } else if text.ends_with("ez") {
+                    ["second-person", "plural"]
+                } else {
+                    ["second-person", "singular"]
+                };
+                (text, a)
+            });
+            text = rest;
+            vec!["imperative", addressee[0], addressee[1]]
+        } else {
+            let tense: &[&str] = match (has("indicative"), has("subjunctive"), has("conditional")) {
+                (true, _, _) if has("present") => &["indicative", "present"],
+                (true, _, _) if has("imperfect") => &["indicative", "imperfect"],
+                (true, _, _) if has("past") => &["indicative", "historic", "past"],
+                (true, _, _) if has("future") => &["indicative", "future"],
+                (_, true, _) if has("present") => &["subjunctive", "present"],
+                (_, true, _) if has("imperfect") => &["subjunctive", "imperfect"],
+                (_, _, true) if has("present") => &["conditional"],
+                _ => continue,
+            };
+            let clause = ["que ", "qu’", "qu'"]
+                .iter()
+                .find_map(|p| text.strip_prefix(p))
+                .unwrap_or(text);
+            let Some((rest, person, number)) = SUBJECTS.iter().find_map(|(p, person, number)| {
+                clause.strip_prefix(p).map(|r| (r, *person, *number))
+            }) else {
+                continue;
+            };
+            text = rest;
+            let mut t = tense.to_vec();
+            t.extend([person, number]);
+            t
+        };
+        // `me souviens`, `m’absente`; the infinitive's `se souvenir`.
+        let mut variants: Vec<String> = text
+            .split(" ou ")
+            .map(|v| without_reflexive(v.trim()))
+            .filter(|v| !v.is_empty() && !v.contains('—'))
+            .collect();
+        // The future of `céder` is written `céderai ou cèderai`; the main
+        // dump gives the 1990 spelling `cèderai` first.
+        if let [a, b] = variants.as_slice()
+            && a.replace('é', "è") == b.replace('é', "è")
+            && b.matches('è').count() > a.matches('è').count()
+        {
+            variants.reverse();
+        }
+        for v in variants {
+            forms.push(romance::table_form(&v, &tags));
+        }
+    }
+    if forms.is_empty() {
+        return false;
+    }
+    // Kaikki drops a form spelled like the headword.
+    if !forms
+        .iter()
+        .any(|f| f.tags.iter().any(|t| t == "infinitive"))
+    {
+        forms.push(romance::table_form(&word, &["infinitive"]));
+    }
+    entry.word = word;
+    entry.forms = forms;
+    true
+}
+
+/// A form without the reflexive pronoun written before it.
+fn without_reflexive(form: &str) -> String {
+    for p in ["me ", "te ", "se ", "nous ", "vous "] {
+        if let Some(rest) = form.strip_prefix(p)
+            && !rest.is_empty()
+        {
+            return rest.to_string();
+        }
+    }
+    for p in ["m’", "t’", "s’", "m'", "t'", "s'"] {
+        if let Some(rest) = form.strip_prefix(p) {
+            return rest.to_string();
+        }
+    }
+    form.to_string()
 }
 
 const README: &str = "\
