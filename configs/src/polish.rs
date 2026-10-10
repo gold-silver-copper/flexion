@@ -86,6 +86,7 @@ pub fn language() -> Language {
                 citation: vec![("noun", vec!["Genitive", "Singular"])],
                 inherent: vec!["Gender"],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "adjective",
@@ -124,6 +125,7 @@ pub fn language() -> Language {
                 citation: vec![],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "verb",
@@ -188,6 +190,7 @@ pub fn language() -> Language {
                 citation: vec![("non_past", vec!["First", "Singular"]), ("non_past", vec!["Second", "Singular"])],
                 inherent: vec!["Aspect"],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "pronoun",
@@ -206,6 +209,7 @@ pub fn language() -> Language {
                 citation: vec![],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "numeral",
@@ -224,6 +228,7 @@ pub fn language() -> Language {
                 citation: vec![],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
         ],
         spelling: Spelling { fold_case: true, vowels: "aeiouyąęó", ..Spelling::default() },
@@ -261,6 +266,7 @@ pub fn language() -> Language {
             ("verb", "past", "glorpać"),
             ("verb", "non_past", "budlanąć"),
         ],
+        editions: vec![],
     }
 }
 
@@ -316,8 +322,8 @@ impl Hooks for PolishHooks {
     /// - Conjugation tables tag only the third person. The first and second
     ///   persons of a slot share one tag set, the first person's forms listed
     ///   before the second's (`czytam`, `czytasz`; `czytałem`, `-(e)m
-    ///   czytał`, `czytałeś`, `-(e)ś czytał`). Each such group is split in
-    ///   half: first half first person, second half second person.
+    ///   czytał`, `czytałeś`, `-(e)ś czytał`). Each such group of a table is
+    ///   split in half: first half first person, second half second person.
     /// - Declension tables of adjectives (and adjective-like words) write
     ///   `error-unrecognized-form` for the nominative in the singular and for
     ///   non-virile in the plural.
@@ -325,8 +331,14 @@ impl Hooks for PolishHooks {
         let has = |tags: &[String], t: &str| tags.iter().any(|x| x == t);
         // Persons.
         let finite = ["present", "future", "past", "conditional", "imperative"];
+        // A verb of both aspects has two tables (`abrogować`): each is split
+        // on its own.
         let mut groups: Vec<(Vec<String>, Vec<usize>)> = Vec::new();
+        let mut table = 0;
         for (i, f) in entry.forms.iter().enumerate() {
+            if has(&f.tags, "table-tags") {
+                table += 1;
+            }
             if f.source.as_deref() != Some("conjugation")
                 || !finite.iter().any(|t| has(&f.tags, t))
                 || PERSONS.iter().any(|t| has(&f.tags, t))
@@ -337,6 +349,7 @@ impl Hooks for PolishHooks {
             }
             let mut key = f.tags.clone();
             key.sort();
+            key.push(table.to_string());
             match groups.iter_mut().find(|(k, _)| *k == key) {
                 Some((_, v)) => v.push(i),
                 None => groups.push((key, vec![i])),

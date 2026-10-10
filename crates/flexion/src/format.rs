@@ -25,20 +25,22 @@
 //!   first-character array, the offset of the class groups section, the
 //!   index of the part of speech that restores this one's lemmas ([`NONE`]:
 //!   lemmas are taken as typed), flags (bit 0: every word is written with a
-//!   capital), the offset of the join section, and the offset of the parts
-//!   section
+//!   capital), the offset of the join section, the offset of the parts
+//!   section, and the offset of the lexicon section
 //! records (edits, classes, nodes, distribution entries) at the offsets the
 //!   part-of-speech headers give
 //! string area: UTF-8 bytes
 //! ```
 //!
 //! Records:
-//! - edit, 44 bytes: prefix added, suffix stripped, suffix added, start
-//!   stripped (four string references), stress rule (`u8`), stress index
-//!   (`u8`), then (each `u8`, saturating) the stripped suffix's length in
-//!   characters, the vowels in the prefix, the stripped suffix and the added
-//!   suffix, the stripped start's length in characters and its vowels, the
-//!   stress mark (0: the lemma's kind, `k + 1`: kind `k`), three bytes padding;
+//! - edit, 32 bytes: where the prefix added, the suffix stripped, the suffix
+//!   added and the start stripped begin in the string area (four `u32`),
+//!   stress rule (`u8`), stress index (`u8`), then (each `u8`, saturating)
+//!   the stripped suffix's length in characters, the vowels in the prefix, the
+//!   stripped suffix and the added suffix, the stripped start's length in
+//!   characters and its vowels, the stress mark (0: the lemma's kind, `k + 1`:
+//!   kind `k`), then the four strings' lengths in bytes (`u8` each: no form
+//!   the trainer reads is longer than 255 bytes), three bytes padding;
 //! - class groups section: the number of groups, each group's number of
 //!   cells (they sum to the part of speech's cells), then per group the number
 //!   of its sub-vectors followed by the sub-vectors themselves (one edit index
@@ -59,20 +61,27 @@
 //!   Entries of one node are sorted by descending probability.
 //! - join section: the number of join classes, each one edit index per cell
 //!   (an edit of the joined word's base form); the number of prefixes, each
-//!   20 bytes (the prefix as a folded string reference, the probability that
-//!   an unseen word with it joins, its first entry and number of entries),
-//!   sorted by prefix; then the entries, 8 bytes each (join class,
-//!   probability).
+//!   28 bytes (the prefix as a folded string reference, the probability that
+//!   an unseen word with it joins, its first entry and number of entries,
+//!   its first inherent entry and number of them), sorted by prefix; then
+//!   the entries, 8 bytes each (join class, probability); then the inherent
+//!   entries, 8 bytes each (feature, the attested word's value, the joined
+//!   word's value, a padding byte, probability): how a joined word's inherent
+//!   features follow from its attested word's, a value with no entry kept.
 //! - parts section: the number of part models, each the cell of its
 //!   principal part and the index of its part of speech in the blob; then one
 //!   byte per cell (0: built by this part of speech, `k + 1`: by part model
 //!   `k` when its part is given), padded to 4 bytes.
+//! - lexicon section: the number of entries, then per entry two string
+//!   references, a lookup key and the lemma written in full there (`а́хнувший`,
+//!   `amātus`), sorted by key: lemmas another part of speech attests (a
+//!   verb's participles are adjectives).
 
 pub const MAGIC: &[u8; 4] = b"FLX1";
-pub const VERSION: u32 = 5;
+pub const VERSION: u32 = 6;
 pub const HEADER_LEN: usize = 128;
-pub const POS_HEADER_LEN: usize = 72;
-pub const EDIT_LEN: usize = 44;
+pub const POS_HEADER_LEN: usize = 76;
+pub const EDIT_LEN: usize = 32;
 pub const NODE_LEN: usize = 16;
 pub const DIST_LEN: usize = 8;
 /// No edit (the class has no form in this cell), or no lemma cell.

@@ -74,6 +74,7 @@ pub fn language() -> Language {
                 citation: vec![],
                 inherent: vec!["Gender"],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "adjective",
@@ -112,6 +113,7 @@ pub fn language() -> Language {
                 citation: vec![],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "verb",
@@ -150,6 +152,7 @@ pub fn language() -> Language {
                 ],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "pronoun",
@@ -168,6 +171,7 @@ pub fn language() -> Language {
                 citation: vec![],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
         ],
         spelling: Spelling {
@@ -194,6 +198,7 @@ pub fn language() -> Language {
             ("verb", "present", "ग्लोर्पति"),
             ("verb", "imperfect", "ग्लोर्पति"),
         ],
+        editions: vec![],
     }
 }
 

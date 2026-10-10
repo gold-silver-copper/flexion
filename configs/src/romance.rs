@@ -34,7 +34,7 @@ fn form(word: &str, tags: &[&str]) -> Form {
     Form {
         form: word.to_string(),
         tags: tags.iter().map(|t| t.to_string()).collect(),
-        source: None,
+        ..Form::default()
     }
 }
 
@@ -240,4 +240,14 @@ pub fn first_table(entry: &mut Entry) {
         }
         f.source.is_none() || tables <= 1
     });
+}
+
+/// A table form for an entry of another edition (see `Hooks::adapt`): the
+/// main dump's verb tables set `source`, which makes the trainer read the
+/// entry's table rather than its head line.
+pub fn table_form(word: &str, tags: &[&str]) -> Form {
+    Form {
+        source: Some("conjugation".to_string()),
+        ..form(word, tags)
+    }
 }

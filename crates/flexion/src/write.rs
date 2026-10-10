@@ -101,6 +101,11 @@ pub struct JoinSpec {
     pub split: f32,
     /// `(join class, probability)`, most likely first.
     pub classes: Vec<(u32, f32)>,
+    /// How a joined word's inherent features follow from its attested
+    /// word's: `(feature, the attested word's value, the joined word's value,
+    /// probability)`. A value with no entry is kept (Russian `на` makes an
+    /// imperfective verb perfective; German `an` keeps a noun's gender).
+    pub inherent: Vec<(u8, u8, u8, f32)>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -137,6 +142,9 @@ pub struct PosTables {
     /// Per cell, the model it is built from when the caller gives principal
     /// parts: 0 this one, `k + 1` part model `k` (if that part is given).
     pub sources: Vec<u8>,
+    /// Lemmas written in full that another part of speech attests:
+    /// `(lookup key, written form)` (see the format's lexicon section).
+    pub lexicon: Vec<(String, String)>,
     pub walk: crate::Walk,
     pub edits: Vec<EditSpec>,
     pub classes: Vec<ClassSpec>,
@@ -219,10 +227,15 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
         let at = |body: &Vec<u8>| to_u32(tables_start.saturating_add(body.len()));
         let edits = at(&body);
         for e in &p.edits {
-            put_str(&mut body, &mut strings, &e.prefix);
-            put_str(&mut body, &mut strings, &e.strip);
-            put_str(&mut body, &mut strings, &e.add);
-            put_str(&mut body, &mut strings, &e.front);
+            let mut lengths = [0u8; 4];
+            for (s, len) in [&e.prefix, &e.strip, &e.add, &e.front]
+                .into_iter()
+                .zip(&mut lengths)
+            {
+                let (off, l) = strings.add(s);
+                put(&mut body, off);
+                *len = u8::try_from(l).unwrap_or(u8::MAX);
+            }
             let (k, i) = e.stress.encode();
             let vowels = |s: &str| {
                 u8::try_from(s.chars().filter(|c| spelling.vowels.contains(*c)).count())
@@ -239,10 +252,9 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
                 chars(&e.front),
                 vowels(&e.front),
                 e.mark,
-                0,
-                0,
-                0,
             ]);
+            body.extend_from_slice(&lengths);
+            body.extend_from_slice(&[0, 0, 0]);
         }
         // Classes are stored per group: each group's sub-vector of edits is
         // interned, and a class lists one sub-vector per group.
@@ -337,17 +349,26 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
             }
         }
         put(&mut body, to_u32(joins.len()));
-        let mut first = 0u32;
+        let (mut first, mut first_inherent) = (0u32, 0u32);
         for j in &joins {
             put_str(&mut body, &mut strings, &j.prefix);
             put(&mut body, j.split.to_bits());
             put(&mut body, first);
             put(&mut body, to_u32(j.classes.len()));
+            put(&mut body, first_inherent);
+            put(&mut body, to_u32(j.inherent.len()));
             first = first.saturating_add(to_u32(j.classes.len()));
+            first_inherent = first_inherent.saturating_add(to_u32(j.inherent.len()));
         }
         for j in &joins {
             for &(class, prob) in &j.classes {
                 put(&mut body, class);
+                put(&mut body, prob.to_bits());
+            }
+        }
+        for j in &joins {
+            for &(feature, from, to, prob) in &j.inherent {
+                body.extend_from_slice(&[feature, from, to, 0]);
                 put(&mut body, prob.to_bits());
             }
         }
@@ -361,6 +382,14 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
             body.push(p.sources.get(cell).copied().unwrap_or(0));
         }
         body.resize(body.len().saturating_add(3) & !3, 0);
+        let lexicon_at = at(&body);
+        let mut lexicon: Vec<&(String, String)> = p.lexicon.iter().collect();
+        lexicon.sort();
+        put(&mut body, to_u32(lexicon.len()));
+        for (key, written) in lexicon {
+            put_str(&mut body, &mut strings, key);
+            put_str(&mut body, &mut strings, written);
+        }
         let mut h = Vec::with_capacity(format::POS_HEADER_LEN);
         for v in [
             to_u32(p.cells),
@@ -381,6 +410,7 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
             u32::from(p.capitalized),
             joins_at,
             parts_at,
+            lexicon_at,
         ] {
             put(&mut h, v);
         }

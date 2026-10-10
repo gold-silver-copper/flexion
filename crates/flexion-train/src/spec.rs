@@ -27,6 +27,50 @@ pub struct Language {
     pub readme_intro: &'static str,
     /// Made-up words to show in the evaluation report: `(pos, cell group, word)`.
     pub nonce: Vec<(&'static str, &'static str, &'static str)>,
+    /// Other Wiktionary editions to learn from, after the main dump (which is
+    /// the English Wiktionary's). [`Hooks::adapt`] reads their entries.
+    pub editions: Vec<Edition>,
+}
+
+/// Another Wiktionary edition's entries for the language (the Russian
+/// Wiktionary's Russian entries), from its own Kaikki dump.
+pub struct Edition {
+    /// Kaikki's edition code: `ru` for ru.wiktionary.org.
+    pub code: &'static str,
+    /// For the report: `the Russian Wiktionary`.
+    pub name: &'static str,
+    /// The language's name in that edition, which names Kaikki's dump
+    /// (`https://kaikki.org/ruwiktionary/Русский/kaikki.org-dictionary-Русский.jsonl`).
+    pub dump: &'static str,
+    pub merge: Merge,
+}
+
+/// What an edition adds.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Merge {
+    /// Only words the main dump doesn't have.
+    NewWords,
+    /// Every word: a word the main dump has gets the edition's entry as one
+    /// more homograph, after the main dump's.
+    All,
+}
+
+impl Edition {
+    /// Where Kaikki publishes the dump (its file name drops the spaces of
+    /// the language's name: `Grec ancien` → `Grecancien`).
+    pub fn url(&self) -> String {
+        format!(
+            "https://kaikki.org/{}wiktionary/{}/{}",
+            self.code,
+            self.dump.replace(' ', "%20"),
+            self.file()
+        )
+    }
+
+    /// The dump's file name.
+    pub fn file(&self) -> String {
+        format!("kaikki.org-dictionary-{}.jsonl", self.dump.replace(' ', ""))
+    }
 }
 
 /// A grammatical feature and its values.
@@ -82,6 +126,11 @@ pub struct PartOfSpeech {
     /// Every word is written with a capital (German nouns): a lemma typed in
     /// lowercase still gets capitalized forms.
     pub capitalized: bool,
+    /// Groups of other parts of speech whose forms are lemmas of this one,
+    /// written in full: `(part of speech, group)`. Russian adjectives read the
+    /// verb's `participle` group, so a typed `ахнувший` reads as the verb
+    /// table writes it, `а́хнувший`.
+    pub lemmas_from: Vec<(&'static str, &'static str)>,
 }
 
 /// A group of cells that is one generated function: the product of its
@@ -222,6 +271,14 @@ pub trait Hooks: Sync + Send {
     /// head template when the forms don't carry it).
     fn inherent_tags(&self, _entry: &Entry) -> Vec<String> {
         Vec::new()
+    }
+    /// Read an entry of another edition (`edition` is its
+    /// [`Edition::code`]) for a part of speech: turn it into what
+    /// [`Hooks::repair`] makes of a main-dump entry (table forms with
+    /// `source` set and the main dump's tags), or return false to skip it.
+    /// It replaces the template check and `repair` for that edition.
+    fn adapt(&self, _edition: &str, _pos: &str, _entry: &mut Entry) -> bool {
+        false
     }
 }
 

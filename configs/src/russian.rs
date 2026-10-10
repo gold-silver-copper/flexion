@@ -3,8 +3,10 @@
 //! combining acute accent. Pre-reform spellings are tagged `dated` and dropped.
 
 use flexion_train::features;
-use flexion_train::kaikki::Entry;
-use flexion_train::spec::{FormSource, Group, Hooks, Language, PartOfSpeech, Spelling, TagPolicy};
+use flexion_train::kaikki::{Entry, Form};
+use flexion_train::spec::{
+    Edition, FormSource, Group, Hooks, Language, Merge, PartOfSpeech, Spelling, TagPolicy,
+};
 
 pub fn language() -> Language {
     Language {
@@ -86,6 +88,7 @@ pub fn language() -> Language {
                 citation: vec![("noun", vec!["Genitive", "Singular"])],
                 inherent: vec!["Gender", "Animacy"],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "adjective",
@@ -113,6 +116,8 @@ pub fn language() -> Language {
                 citation: vec![],
                 inherent: vec![],
                 capitalized: false,
+                // A participle is a verb's form too, stressed as the verb is.
+                lemmas_from: vec![("verb", "participle")],
             },
             PartOfSpeech {
                 name: "verb",
@@ -153,6 +158,7 @@ pub fn language() -> Language {
                 citation: vec![("non_past", vec!["First", "Singular"]), ("non_past", vec!["Second", "Singular"])],
                 inherent: vec!["Aspect"],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "pronoun",
@@ -171,6 +177,7 @@ pub fn language() -> Language {
                 citation: vec![],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "numeral",
@@ -189,6 +196,7 @@ pub fn language() -> Language {
                 citation: vec![],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
         ],
         spelling: Spelling {
@@ -235,6 +243,12 @@ pub fn language() -> Language {
             ("verb", "non_past", "бузять"),
             ("verb", "past", "бузять"),
         ],
+        editions: vec![Edition {
+            code: "ru",
+            name: "the Russian Wiktionary",
+            dump: "Русский",
+            merge: Merge::All,
+        }],
     }
 }
 
@@ -302,6 +316,252 @@ impl Hooks for RussianHooks {
         }
         out
     }
+
+    /// The Russian Wiktionary's entries: tables without a `source`, the
+    /// word's gender, animacy and aspect in the entry's tags, the stressed
+    /// infinitive only in the hyphenation (`пры́`, `гать`), the past plural
+    /// tagged with all three genders, and both imperatives tagged alike
+    /// (`пры́гай`, `пры́гайте`).
+    fn adapt(&self, edition: &str, pos: &str, entry: &mut Entry) -> bool {
+        if edition != "ru" {
+            return false;
+        }
+        let participle = entry.tags.iter().any(|t| t == "participle");
+        let wanted = match pos {
+            "noun" => entry.pos == "noun",
+            "adjective" => entry.pos == "adj" || (entry.pos == "verb" && participle),
+            "verb" => entry.pos == "verb" && !participle,
+            _ => false,
+        };
+        if !wanted || entry.forms.is_empty() {
+            return false;
+        }
+        let source = if pos == "verb" {
+            "conjugation"
+        } else {
+            "declension"
+        };
+        let mut forms = Vec::with_capacity(entry.forms.len() + 1);
+        for f in &entry.forms {
+            let has = |t: &str| f.tags.iter().any(|x| x == t);
+            let mut tags = f.tags.clone();
+            if has("past") && has("masculine") && has("feminine") && has("neuter") {
+                tags.retain(|t| !matches!(t.as_str(), "masculine" | "feminine" | "neuter"));
+                tags.push("plural".into());
+            }
+            // Irregular tables give the past by person (`был`, first person
+            // singular), which names no gender.
+            if has("past")
+                && ["first-person", "second-person", "third-person"]
+                    .iter()
+                    .any(|p| has(p))
+            {
+                continue;
+            }
+            if has("imperative") {
+                if has("first-person") {
+                    continue;
+                }
+                let plain: String = f.form.chars().filter(|c| *c != '\u{301}').collect();
+                let number = if plain.ends_with("те") || plain.ends_with("тесь") {
+                    "plural"
+                } else {
+                    "singular"
+                };
+                tags.push(number.into());
+            }
+            for form in stress_variants(pos, &f.form) {
+                forms.push(Form {
+                    form,
+                    tags: tags.clone(),
+                    source: Some(source.into()),
+                    ..Form::default()
+                });
+            }
+        }
+        if pos == "verb" {
+            forms.retain(|f| !f.tags.is_empty());
+        }
+        // The headword written with stress, carrying the word's own tags.
+        let plain = |w: &str| -> String {
+            w.chars()
+                .filter(|c| *c != '\u{301}')
+                .collect::<String>()
+                .replace('ё', "е")
+        };
+        let lemma = plain(&entry.word);
+        let stressed = entry
+            .hyphenations
+            .iter()
+            .map(|h| h.parts.concat().replace('·', ""))
+            .find(|w| plain(w) == lemma)
+            .or_else(|| {
+                // The table's own lemma cell, written with stress.
+                let lemma_tags: &[&str] = match pos {
+                    "noun" => &["nominative", "singular"],
+                    "verb" => &["infinitive"],
+                    _ => &["masculine", "nominative", "singular"],
+                };
+                forms
+                    .iter()
+                    .find(|f| {
+                        f.tags.len() == lemma_tags.len()
+                            && lemma_tags.iter().all(|t| f.tags.iter().any(|x| x == t))
+                            && plain(&f.form) == lemma
+                    })
+                    .map(|f| f.form.clone())
+            })
+            .unwrap_or_else(|| entry.word.clone());
+        let Some(stressed) = stress_variants(pos, &stressed).into_iter().next() else {
+            // A headword of several syllables written nowhere with stress.
+            return false;
+        };
+        let mut tags = vec!["canonical".to_string()];
+        tags.extend(entry.tags.iter().filter_map(|t| match t.as_str() {
+            "perfect" => Some("perfective".to_string()),
+            "masculine" | "feminine" | "neuter" | "animate" | "inanimate" | "imperfective" => {
+                Some(t.clone())
+            }
+            _ => None,
+        }));
+        // Kaikki drops a form spelled like the headword (`кот`, the
+        // nominative and accusative of an unmarked one-syllable noun): put
+        // the headword back in the cells that can be it.
+        let missing = |forms: &[Form], tags: &[&str]| {
+            !forms
+                .iter()
+                .any(|f| tags.iter().all(|t| f.tags.iter().any(|x| x == t)))
+        };
+        let mut restored: Vec<Vec<&str>> = Vec::new();
+        match pos {
+            "verb" => restored.push(vec!["infinitive"]),
+            "noun" => {
+                for number in ["singular", "plural"] {
+                    if missing(&forms, &[number]) {
+                        continue;
+                    }
+                    for case in [
+                        "nominative",
+                        "genitive",
+                        "dative",
+                        "accusative",
+                        "instrumental",
+                        "prepositional",
+                    ] {
+                        if missing(&forms, &[case, number]) {
+                            restored.push(vec![case, number]);
+                        }
+                    }
+                }
+            }
+            _ => {
+                if !missing(&forms, &["masculine", "singular"]) {
+                    for tags in [
+                        vec!["masculine", "nominative", "singular"],
+                        vec!["accusative", "inanimate", "masculine", "singular"],
+                    ] {
+                        if missing(&forms, &tags) {
+                            restored.push(tags);
+                        }
+                    }
+                }
+            }
+        }
+        for tags in restored {
+            forms.push(Form {
+                form: stressed.clone(),
+                tags: tags.iter().map(|t| t.to_string()).collect(),
+                source: Some(source.into()),
+                ..Form::default()
+            });
+        }
+        forms.push(Form {
+            form: stressed,
+            tags,
+            ..Form::default()
+        });
+        entry.forms = forms;
+        true
+    }
+}
+
+const ACUTE: char = '\u{301}';
+
+/// A form of the Russian Wiktionary written the way the English one writes
+/// it, part by part of a hyphenated word: an acute after `ё` (`заржё́шь`)
+/// goes, two stresses in one part (`ба́лу́й`: either is right) make two
+/// forms, and a one-syllable part carries the mark in nouns and verbs
+/// (`зо́нт`) but not in adjectives (`злой`). A longer form with no stress at
+/// all gives nothing.
+fn stress_variants(pos: &str, form: &str) -> Vec<String> {
+    let mut out = vec![String::new()];
+    for (i, part) in form.split('-').enumerate() {
+        let variants = part_variants(pos, part);
+        out = out
+            .iter()
+            .flat_map(|head| {
+                variants.iter().map(move |v| {
+                    if i == 0 {
+                        v.clone()
+                    } else {
+                        format!("{head}-{v}")
+                    }
+                })
+            })
+            .collect();
+    }
+    out.retain(|f| {
+        let vowels = f.chars().filter(|c| is_vowel(*c)).count();
+        vowels <= 1 || f.contains(ACUTE) || f.contains(['ё', 'Ё'])
+    });
+    out
+}
+
+fn is_vowel(c: char) -> bool {
+    "аеёиоуыэюяАЕЁИОУЫЭЮЯ".contains(c)
+}
+
+fn part_variants(pos: &str, part: &str) -> Vec<String> {
+    let mut chars: Vec<char> = Vec::with_capacity(part.len());
+    for c in part.chars() {
+        if c == ACUTE && chars.last().is_some_and(|&p| p == 'ё' || p == 'Ё') {
+            continue;
+        }
+        chars.push(c);
+    }
+    let marks: Vec<usize> = chars
+        .iter()
+        .enumerate()
+        .filter(|(_, c)| **c == ACUTE)
+        .map(|(i, _)| i)
+        .collect();
+    if marks.len() > 1 {
+        return marks
+            .iter()
+            .map(|keep| {
+                chars
+                    .iter()
+                    .enumerate()
+                    .filter(|(i, c)| **c != ACUTE || i == keep)
+                    .map(|(_, c)| *c)
+                    .collect()
+            })
+            .collect();
+    }
+    let vowels: Vec<usize> = chars
+        .iter()
+        .enumerate()
+        .filter(|(_, c)| is_vowel(**c))
+        .map(|(i, _)| i)
+        .collect();
+    if let [vowel] = vowels.as_slice() {
+        if pos == "adjective" {
+            chars.retain(|c| *c != ACUTE);
+        } else if marks.is_empty() && !chars.iter().any(|c| *c == 'ё' || *c == 'Ё') {
+            chars.insert(vowel + 1, ACUTE);
+        }
+    }
+    vec![chars.into_iter().collect()]
 }
 
 const README: &str = "\
@@ -337,7 +597,8 @@ assert_eq!(noun(\"путь, пути\", Case::Instrumental, Number::Singular), \
 
 // Markers name what spelling can't show, as a dictionary prints them after the
 // word: gender (`m`, `f`, `n`), animacy (`anim`, `inan`), aspect (`impf`, `pf`).
-assert_eq!(noun(\"кот, кота m anim\", Case::Accusative, Number::Singular), \"кота́\");
-assert_eq!(noun(\"кот, кота m inan\", Case::Accusative, Number::Singular), \"ко́т\");
+// They decide for a word the model doesn't know; an attested word keeps its own.
+assert_eq!(noun(\"бокр, бокра m anim\", Case::Accusative, Number::Singular), \"бо́кра\");
+assert_eq!(noun(\"бокр, бокра m inan\", Case::Accusative, Number::Singular), \"бо́кр\");
 ```
 ";

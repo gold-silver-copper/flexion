@@ -434,6 +434,12 @@ impl<'a> Spelling<'a> {
         }
     }
 
+    /// `s` (lowercase) with the letters the marks setting writes plain
+    /// written plain (`rēx` → `rex`).
+    pub fn unmarked(&self, s: &str) -> String {
+        s.chars().filter_map(|c| self.unmark(c)).collect()
+    }
+
     /// Whether the spelling has letters the marks setting writes plain.
     pub fn has_unmark(&self) -> bool {
         !self.unmark.is_empty()

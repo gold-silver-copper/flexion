@@ -6,11 +6,15 @@
 //! one-word subjunctive II `formal rare` (people often say `würde` instead, but
 //! it is the verb's form). Personal pronouns are a small hand-written table
 //! (see `configs/extra/german.rs`): Wiktionary keeps all of them in one table
-//! whose second-person forms are tagged `error-unrecognized-form`.
+//! whose second-person forms are tagged `error-unrecognized-form`. Nouns and
+//! adjectives are also read from the German Wiktionary (see
+//! [`GermanHooks::adapt`]).
 
 use flexion_train::features;
-use flexion_train::kaikki::Entry;
-use flexion_train::spec::{FormSource, Group, Hooks, Language, PartOfSpeech, Spelling, TagPolicy};
+use flexion_train::kaikki::{Entry, Form};
+use flexion_train::spec::{
+    Edition, FormSource, Group, Hooks, Language, Merge, PartOfSpeech, Spelling, TagPolicy,
+};
 
 pub fn language() -> Language {
     Language {
@@ -89,6 +93,7 @@ pub fn language() -> Language {
                 citation: vec![("noun", vec!["Nominative", "Plural"])],
                 inherent: vec!["Gender"],
                 capitalized: true,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "adjective",
@@ -136,6 +141,7 @@ pub fn language() -> Language {
                 ],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "verb",
@@ -185,6 +191,7 @@ pub fn language() -> Language {
                 ],
                 inherent: vec!["Auxiliary"],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "determiner",
@@ -203,6 +210,7 @@ pub fn language() -> Language {
                 citation: vec![],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
         ],
         spelling: Spelling {
@@ -253,6 +261,12 @@ pub fn language() -> Language {
             ("verb", "participle", "blicken"),
             ("verb", "verb", "anglorpen"),
         ],
+        editions: vec![Edition {
+            code: "de",
+            name: "the German Wiktionary",
+            dump: "Deutsch",
+            merge: Merge::All,
+        }],
     }
 }
 
@@ -390,6 +404,91 @@ impl Hooks for GermanHooks {
         }
         out
     }
+
+    /// The German Wiktionary's nouns: the word's gender in the entry's tags,
+    /// tables without a `source` (see [`de_noun`] for their traps). Its
+    /// adjectives made held-out adjectives worse (99.14% → 99.02%) once the
+    /// model was tuned, so they are not read. Nor are its verbs: their tables
+    /// leave cells out or order a cell's spellings unlike the English
+    /// Wiktionary (`ich kletter, klettere, klettre`), which the join model
+    /// for separable verbs is sensitive to; with them, held-out verbs are
+    /// calibrated worse.
+    fn adapt(&self, edition: &str, pos: &str, entry: &mut Entry) -> bool {
+        if edition != "de" || entry.tags.iter().any(|t| t == "form-of") {
+            return false;
+        }
+        let (forms, inherent) = match (pos, entry.pos.as_str()) {
+            ("noun", "noun") => {
+                let genders: Vec<&String> = entry
+                    .tags
+                    .iter()
+                    .filter(|t| matches!(t.as_str(), "masculine" | "feminine" | "neuter"))
+                    .collect();
+                let gender = match genders.as_slice() {
+                    [g] => Some(g.to_string()),
+                    _ => None,
+                };
+                (de_noun(entry), gender)
+            }
+            _ => return false,
+        };
+        if forms.is_empty() {
+            return false;
+        }
+        let mut tags = vec!["canonical".to_string()];
+        tags.extend(inherent);
+        entry.forms = forms;
+        entry.forms.push(Form {
+            form: entry.word.clone(),
+            tags,
+            ..Form::default()
+        });
+        true
+    }
+}
+
+/// A noun's table. A noun declined like an adjective (`Angestellte`) has
+/// three tables, told apart only by their untranslated labels: the strong
+/// one is bare, the weak and mixed ones write the article (`die
+/// Angestellte`), so only the strong one is read. Nouns that take an
+/// optional article write it in brackets (`(das) Niederländisch`).
+fn de_noun(entry: &Entry) -> Vec<Form> {
+    const CASES: [&str; 4] = ["nominative", "genitive", "dative", "accusative"];
+    let forms: Vec<Form> = entry
+        .forms
+        .iter()
+        .filter(|f| {
+            f.tags.iter().any(|t| CASES.contains(&t.as_str()))
+                && !f
+                    .raw_tags
+                    .iter()
+                    .any(|r| r.starts_with("schwache") || r.starts_with("gemischte"))
+        })
+        .map(|f| {
+            let form = match f.form.split_once(") ") {
+                Some((article, rest)) if article.starts_with('(') => rest,
+                _ => f.form.as_str(),
+            };
+            Form {
+                form: form.to_string(),
+                tags: f.tags.clone(),
+                source: Some("declension".to_string()),
+                ..Form::default()
+            }
+        })
+        .collect();
+    // A genitive in `-es` and `-s` (`Ganges`, `Gangs`) is listed in the
+    // order the edition prefers; the English Wiktionary lists `-es` first.
+    let short: Vec<String> = forms
+        .iter()
+        .filter(|f| f.tags.iter().any(|t| t == "genitive") && f.form.ends_with("es"))
+        .filter_map(|f| f.form.strip_suffix("es").map(|stem| format!("{stem}s")))
+        .collect();
+    let (mut first, later): (Vec<Form>, Vec<Form>) = forms
+        .into_iter()
+        .partition(|f| !(f.tags.iter().any(|t| t == "genitive") && short.contains(&f.form)));
+    first.extend(later);
+    first
 }
 
 const README: &str = "\

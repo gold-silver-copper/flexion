@@ -640,6 +640,12 @@ impl<'m, 'a> Pos<'m, 'a> {
                             }
                             _ => self.stress_on(&r.letters, r.vowels, e, r.stress),
                         };
+                        // A rule that finds no vowel to stress in this word
+                        // (the second vowel of a stem that has one) was
+                        // learned from other words: the class doesn't fit.
+                        if stress.is_none() && e.stress != Stress::Unmarked {
+                            continue;
+                        }
                         (stress, Self::kind_of(e, r.kind))
                     } else {
                         (None, 0)
@@ -1251,7 +1257,8 @@ impl<'m, 'a> Pos<'m, 'a> {
         let Some((join, word)) = self.split(citation) else {
             return plain;
         };
-        // A joined word has its attested word's features.
+        // A joined word has its attested word's features, as the prefix
+        // changes them.
         let s = join.split.clamp(0.0, 1.0);
         let base = Citation {
             lemma: word.clone(),
@@ -1260,10 +1267,23 @@ impl<'m, 'a> Pos<'m, 'a> {
             inherent: citation.inherent.clone(),
         };
         let mut out: Vec<(u8, f32)> = plain.into_iter().map(|(v, p)| (v, p * (1.0 - s))).collect();
+        let changes: Vec<(u8, u8, f32)> = (join.first_inherent
+            ..join.first_inherent.saturating_add(join.count_inherent))
+            .filter_map(|i| self.h.join_inherent.get(i))
+            .filter(|e| usize::from(e.0) == feature)
+            .map(|&(_, from, to, q)| (from, to, q))
+            .collect();
         for (v, p) in self.inherent_plain(&base, feature) {
-            match out.iter_mut().find(|(x, _)| *x == v) {
+            let mut add = |v: u8, p: f32| match out.iter_mut().find(|(x, _)| *x == v) {
                 Some((_, q)) => *q += s * p,
                 None => out.push((v, s * p)),
+            };
+            if changes.iter().any(|c| c.0 == v) {
+                for &(_, to, q) in changes.iter().filter(|c| c.0 == v) {
+                    add(to, p * q);
+                }
+            } else {
+                add(v, p);
             }
         }
         out.sort_by(|a, b| b.1.total_cmp(&a.1));
@@ -1359,10 +1379,11 @@ impl<'m, 'a> Pos<'m, 'a> {
         };
         if !input.contains(',') {
             let written = strip(input);
+            let (lemma, written) = self.written_in_full(written);
             return Citation {
-                lemma: sp.read(written),
+                lemma,
                 parts: Vec::new(),
-                written: Cow::Borrowed(written),
+                written,
                 inherent,
             };
         }
@@ -1371,8 +1392,7 @@ impl<'m, 'a> Pos<'m, 'a> {
             .map(&mut strip)
             .collect::<Vec<_>>()
             .into_iter();
-        let written = pieces.next().unwrap_or("");
-        let lemma = sp.read(written);
+        let (lemma, written) = self.written_in_full(pieces.next().unwrap_or(""));
         // A part written `-` or `—` (as dictionaries mark a missing one) or
         // left empty keeps its place but gives nothing.
         let parts = pieces
@@ -1383,9 +1403,54 @@ impl<'m, 'a> Pos<'m, 'a> {
         Citation {
             lemma,
             parts,
-            written: Cow::Borrowed(written),
+            written,
             inherent,
         }
+    }
+
+    /// The lexicon's written form for `key`.
+    fn lexicon(&self, key: &str) -> Option<&'a str> {
+        let index = &self.h.lexicon_index;
+        if index.is_empty() {
+            return None;
+        }
+        let mask = index.len().wrapping_sub(1);
+        let mut at = usize::try_from(crate::hash(key)).unwrap_or(0) & mask;
+        // The index is at least half empty, so a probe ends at an empty slot.
+        for _ in 0..index.len() {
+            let slot = usize::try_from(*index.get(at)?).ok()?;
+            let &(k, full) = self.h.lexicon.get(slot.checked_sub(1)?)?;
+            if k == key {
+                return Some(full);
+            }
+            at = at.wrapping_add(1) & mask;
+        }
+        None
+    }
+
+    /// A typed lemma, read as the lexicon writes it in full when it is
+    /// there and the caller left marks out: the same stress or none, and the
+    /// letters plain or as written there (`ахнувший` is `а́хнувший`,
+    /// `amatus` is `amātus`).
+    fn written_in_full<'s>(&self, typed: &'s str) -> (Word<'s>, Cow<'s, str>) {
+        let sp = self.sp();
+        let lemma = sp.read(typed);
+        let Some(full) = self.lexicon(&lemma.key) else {
+            return (lemma, Cow::Borrowed(typed));
+        };
+        let entry = sp.read(full);
+        let stress =
+            lemma.stress.is_none() || (lemma.stress == entry.stress && lemma.kind == entry.kind);
+        let letters = lemma.base == lemma.key
+            || lemma.base == entry.base
+            || lemma.base == sp.unmarked(&entry.base);
+        if !(stress && letters) {
+            return (lemma, Cow::Borrowed(typed));
+        }
+        // The caller's capitals still apply.
+        let mut word = owned(entry);
+        word.casing = lemma.casing;
+        (word, Cow::Owned(full.to_string()))
     }
 }
 

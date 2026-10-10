@@ -43,6 +43,7 @@ pub fn language() -> Language {
                 citation: vec![("noun", vec!["Plural"])],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "verb",
@@ -55,6 +56,7 @@ pub fn language() -> Language {
                 citation: vec![("verb", vec!["Past"]), ("verb", vec!["PastParticiple"])],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "adjective",
@@ -74,6 +76,7 @@ pub fn language() -> Language {
                 ],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "adverb",
@@ -93,6 +96,7 @@ pub fn language() -> Language {
                 ],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
         ],
         spelling: Spelling {
@@ -141,6 +145,7 @@ pub fn language() -> Language {
             ("adjective", "adjective", "flinderish"),
             ("adverb", "adverb", "glorpily"),
         ],
+        editions: vec![],
     }
 }
 

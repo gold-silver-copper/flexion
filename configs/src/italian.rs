@@ -135,6 +135,7 @@ pub fn language() -> Language {
                 citation: vec![],
                 inherent: vec!["NounGender"],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "adjective",
@@ -166,6 +167,7 @@ pub fn language() -> Language {
                 ],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "verb",
@@ -215,6 +217,7 @@ pub fn language() -> Language {
                 ],
                 inherent: vec!["Auxiliary"],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "participle",
@@ -233,6 +236,7 @@ pub fn language() -> Language {
                 citation: vec![],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "determiner",
@@ -251,6 +255,7 @@ pub fn language() -> Language {
                 citation: vec![],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
         ],
         spelling: Spelling {
@@ -278,6 +283,7 @@ pub fn language() -> Language {
             ("verb", "verb", "fluttire"),
             ("verb", "verb", "riglorpare"),
         ],
+        editions: vec![],
     }
 }
 
@@ -343,7 +349,7 @@ fn table_to_head(entry: &mut Entry) {
                 moved.push(flexion_train::kaikki::Form {
                     form: f.form.clone(),
                     tags,
-                    source: None,
+                    ..Default::default()
                 });
             }
         }

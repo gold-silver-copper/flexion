@@ -34,6 +34,7 @@ fn tiny() -> Vec<u8> {
         join_classes: vec![],
         part_models: vec![],
         sources: vec![],
+        lexicon: vec![("dog".into(), "dög".into())],
         walk: crate::Walk::default(),
         edits: vec![
             edit("", ""),
@@ -91,6 +92,18 @@ fn walks_to_the_deepest_node_and_applies_edits() {
     // Casing is restored; a Title-case word finds the lowercase entry.
     assert_eq!(ask("Ox")[0].form, "Oxen");
     assert_eq!(ask("CAT")[0].form, "CATS");
+}
+
+#[test]
+fn the_lexicon_writes_a_plain_lemma_in_full() {
+    let blob = tiny();
+    let model = Model::from_bytes(&blob).expect("valid");
+    let nouns = model.pos(0).expect("pos");
+    let ask = |w: &str| nouns.best(&nouns.citation(w, &[1]), 1, Options::default());
+    assert_eq!(ask("dog"), "dögs");
+    assert_eq!(ask("Dog"), "Dögs");
+    assert_eq!(ask("dög"), "dögs");
+    assert_eq!(ask("cat"), "cats");
 }
 
 #[test]

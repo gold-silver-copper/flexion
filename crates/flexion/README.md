@@ -38,7 +38,7 @@ Citations (`"lie, lied"`) keep only classes that agree with the given principal 
 (dropping the last parts while none does); markers (`"кот m anim"`, `"rēx, rēgis m."`)
 weigh classes by the features they name.
 
-Three further models can sit beside a part of speech's own:
+Three further models and a lexicon can sit beside a part of speech's own:
 
 - a **restoration model**, where a language writes marks that people often leave out
   (Latin and Greek vowel length, Greek breathings, Russian `ё`): a one-cell model that
@@ -54,7 +54,12 @@ Three further models can sit beside a part of speech's own:
   inflect through it (`an` + `fangen` → `fängt an`, `angefangen`), with per-cell edits
   from the attested word's form to the joined word's. An unseen word with a known
   prefix and an attested rest is read both ways, weighed by how often the prefix joins
-  the way its class says.
+  the way its class says;
+- a **lexicon** of lemmas written in full that another part of speech attests: a
+  verb's participles are adjectives, written in the verb's table with their stress or
+  vowel length (`а́хнувший`, `amātus`). A lemma typed with those marks left out (`ахнувший`,
+  `amatus`) and found there is read as written there, as if the caller had typed it so.
+  A hash index built at load finds it.
 
 ## Spelling
 

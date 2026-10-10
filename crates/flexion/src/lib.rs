@@ -119,10 +119,30 @@ pub(crate) struct PosHeader<'a> {
     /// The join model's prefixes, sorted.
     pub(crate) joins: Vec<JoinRec<'a>>,
     pub(crate) join_entries: Vec<(u32, f32)>,
+    /// `(feature, attested value, joined value, probability)` (see
+    /// [`write::JoinSpec::inherent`]).
+    pub(crate) join_inherent: Vec<(u8, u8, u8, f32)>,
     /// Part models: `(the principal part's cell, the model's part of speech)`.
     pub(crate) part_models: Vec<(usize, usize)>,
     /// Per cell: 0, or `k + 1` to build it from part model `k`.
     pub(crate) sources: Vec<u8>,
+    /// Lemmas written in full that another part of speech attests, sorted
+    /// by key: `(key, written)`.
+    pub(crate) lexicon: Vec<(&'a str, &'a str)>,
+    /// An open-addressing hash index over `lexicon`, built at load (a
+    /// sorted search would touch a dozen far-apart strings per call): per
+    /// slot 1 + the entry's index, 0 for empty; a power of two long.
+    pub(crate) lexicon_index: Vec<u32>,
+}
+
+/// FNV-1a, for the lexicon's index.
+pub(crate) fn hash(key: &str) -> u64 {
+    let mut h: u64 = 0xcbf2_9ce4_8422_2325;
+    for b in key.bytes() {
+        h ^= u64::from(b);
+        h = h.wrapping_mul(0x0100_0000_01b3);
+    }
+    h
 }
 
 impl PosHeader<'_> {
@@ -151,6 +171,8 @@ pub(crate) struct JoinRec<'a> {
     pub(crate) split: f32,
     pub(crate) first: usize,
     pub(crate) count: usize,
+    pub(crate) first_inherent: usize,
+    pub(crate) count_inherent: usize,
 }
 
 /// One tree node, decoded.
@@ -360,8 +382,11 @@ impl<'a> Model<'a> {
                 join_classes: Vec::new(),
                 joins: Vec::new(),
                 join_entries: Vec::new(),
+                join_inherent: Vec::new(),
                 part_models: Vec::new(),
                 sources: Vec::new(),
+                lexicon: Vec::new(),
+                lexicon_index: Vec::new(),
             };
             // Every table must lie inside the blob.
             let ends = [
@@ -429,17 +454,23 @@ impl<'a> Model<'a> {
             for i in 0..h.n_edits {
                 let at = h.edits.checked_add(i.checked_mul(EDIT_LEN)?)?;
                 let byte = |n: usize| b.u8(at.checked_add(n)?);
+                // A string: its offset at `n`, its length in byte `25 + n / 4`.
+                let text = |n: usize| -> Option<&str> {
+                    let off = b.usize(at.checked_add(n)?)?;
+                    let len = usize::from(byte(25usize.checked_add(n / 4)?)?);
+                    strings.get(off..off.checked_add(len)?)
+                };
                 h.edit_list.push(pos::Edit {
-                    prefix: b.str(strings, at)?,
-                    strip: b.str(strings, at.checked_add(8)?)?,
-                    add: b.str(strings, at.checked_add(16)?)?,
-                    front: b.str(strings, at.checked_add(24)?)?,
-                    stress: format::Stress::decode(byte(32)?, byte(33)?),
-                    strip_chars: byte(34)?,
-                    vowels: [byte(35)?, byte(36)?, byte(37)?],
-                    front_chars: byte(38)?,
-                    front_vowels: byte(39)?,
-                    mark: byte(40)?,
+                    prefix: text(0)?,
+                    strip: text(4)?,
+                    add: text(8)?,
+                    front: text(12)?,
+                    stress: format::Stress::decode(byte(16)?, byte(17)?),
+                    strip_chars: byte(18)?,
+                    vowels: [byte(19)?, byte(20)?, byte(21)?],
+                    front_chars: byte(22)?,
+                    front_vowels: byte(23)?,
+                    mark: byte(24)?,
                 });
             }
             // Groups: their sizes, then each group's shared sub-vectors.
@@ -535,27 +566,41 @@ impl<'a> Model<'a> {
             }
             let n_joins = b.usize(cursor)?;
             cursor = cursor.checked_add(4)?;
-            if cursor.checked_add(n_joins.checked_mul(20)?)? > bytes.len() {
+            if cursor.checked_add(n_joins.checked_mul(28)?)? > bytes.len() {
                 return None;
             }
-            let mut n_entries = 0usize;
+            let (mut n_entries, mut n_inherent) = (0usize, 0usize);
             for _ in 0..n_joins {
                 let j = JoinRec {
                     prefix: b.str(strings, cursor)?,
                     split: b.f32(cursor.checked_add(8)?)?,
                     first: b.usize(cursor.checked_add(12)?)?,
                     count: b.usize(cursor.checked_add(16)?)?,
+                    first_inherent: b.usize(cursor.checked_add(20)?)?,
+                    count_inherent: b.usize(cursor.checked_add(24)?)?,
                 };
                 n_entries = n_entries.max(j.first.checked_add(j.count)?);
+                n_inherent = n_inherent.max(j.first_inherent.checked_add(j.count_inherent)?);
                 h.joins.push(j);
-                cursor = cursor.checked_add(20)?;
+                cursor = cursor.checked_add(28)?;
             }
-            if cursor.checked_add(n_entries.checked_mul(DIST_LEN)?)? > bytes.len() {
+            if cursor.checked_add(n_entries.saturating_add(n_inherent).checked_mul(DIST_LEN)?)?
+                > bytes.len()
+            {
                 return None;
             }
             for _ in 0..n_entries {
                 h.join_entries
                     .push((b.u32(cursor)?, b.f32(cursor.checked_add(4)?)?));
+                cursor = cursor.checked_add(DIST_LEN)?;
+            }
+            for _ in 0..n_inherent {
+                h.join_inherent.push((
+                    b.u8(cursor)?,
+                    b.u8(cursor.checked_add(1)?)?,
+                    b.u8(cursor.checked_add(2)?)?,
+                    b.f32(cursor.checked_add(4)?)?,
+                ));
                 cursor = cursor.checked_add(DIST_LEN)?;
             }
             // Part models.
@@ -575,6 +620,35 @@ impl<'a> Model<'a> {
                 cursor = cursor.checked_add(8)?;
             }
             h.sources = bytes.get(cursor..cursor.checked_add(h.cells)?)?.to_vec();
+            // The lexicon.
+            let mut cursor = b.usize(at.checked_add(72)?)?;
+            let n_lexicon = b.usize(cursor)?;
+            cursor = cursor.checked_add(4)?;
+            if cursor.checked_add(n_lexicon.checked_mul(16)?)? > bytes.len() {
+                return None;
+            }
+            h.lexicon = Vec::with_capacity(n_lexicon);
+            for _ in 0..n_lexicon {
+                h.lexicon.push((
+                    b.str(strings, cursor)?,
+                    b.str(strings, cursor.checked_add(8)?)?,
+                ));
+                cursor = cursor.checked_add(16)?;
+            }
+            if !h.lexicon.is_empty() {
+                let slots = h.lexicon.len().checked_mul(2)?.next_power_of_two();
+                h.lexicon_index = vec![0; slots];
+                let mask = slots.wrapping_sub(1);
+                for (i, (key, _)) in h.lexicon.iter().enumerate() {
+                    let mut at = usize::try_from(hash(key)).unwrap_or(0) & mask;
+                    while h.lexicon_index.get(at).is_some_and(|&s| s != 0) {
+                        at = at.wrapping_add(1) & mask;
+                    }
+                    if let Some(slot) = h.lexicon_index.get_mut(at) {
+                        *slot = u32::try_from(i).ok()?.checked_add(1)?;
+                    }
+                }
+            }
             parts.push(h);
         }
         Some(Model {

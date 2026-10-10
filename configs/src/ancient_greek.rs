@@ -71,6 +71,7 @@ pub fn language() -> Language {
                 citation: vec![("noun", vec!["Genitive", "Singular"])],
                 inherent: vec!["Gender"],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "adjective",
@@ -118,6 +119,8 @@ pub fn language() -> Language {
                 ],
                 inherent: vec![],
                 capitalized: false,
+                // A participle is a verb's form too, written in full there.
+                lemmas_from: vec![("verb", "participle")],
             },
             PartOfSpeech {
                 name: "verb",
@@ -174,6 +177,7 @@ pub fn language() -> Language {
                 ],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "pronoun",
@@ -192,6 +196,7 @@ pub fn language() -> Language {
                 citation: vec![],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "numeral",
@@ -204,6 +209,7 @@ pub fn language() -> Language {
                 citation: vec![],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
         ],
         spelling: Spelling {
@@ -264,6 +270,7 @@ pub fn language() -> Language {
             ("verb", "aorist", "γλορπίζω"),
             ("verb", "aorist", "ἀπογλορπίζω"),
         ],
+        editions: vec![],
     }
 }
 
