@@ -15,6 +15,10 @@ pub struct SpellingSpec {
     pub fold_from: String,
     pub fold_to: String,
     pub strip_marks: String,
+    /// Letters written plain when marks are off (`unmark_from[i]` →
+    /// `unmark_to[i]`).
+    pub unmark_from: String,
+    pub unmark_to: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
@@ -51,6 +55,11 @@ pub struct PosTables {
     pub cells: usize,
     pub inherent: usize,
     pub lemma_cell: Option<usize>,
+    /// Cells per group, summing to `cells` (empty: one group).
+    pub groups: Vec<usize>,
+    /// The part of speech (by index in the blob) whose one-cell model
+    /// restores this one's lemmas from what callers type.
+    pub restore: Option<usize>,
     pub walk: crate::Walk,
     pub edits: Vec<EditSpec>,
     pub classes: Vec<ClassSpec>,
@@ -115,6 +124,8 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
         &spelling.fold_from,
         &spelling.fold_to,
         &spelling.strip_marks,
+        &spelling.unmark_from,
+        &spelling.unmark_to,
     ] {
         put_str(&mut header, &mut strings, s);
     }
@@ -147,15 +158,59 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
                 0,
             ]);
         }
-        let classes = at(&body);
-        let stride = class_len(p.cells, p.inherent);
+        // Classes are stored per group: each group's sub-vector of edits is
+        // interned, and a class lists one sub-vector per group.
+        let groups: Vec<usize> =
+            if p.groups.iter().sum::<usize>() == p.cells && !p.groups.is_empty() {
+                p.groups.clone()
+            } else {
+                vec![p.cells]
+            };
+        /// A group's distinct sub-vectors, and each one's index.
+        type Interned = (Vec<Vec<u32>>, HashMap<Vec<u32>, u32>);
+        let mut subs: Vec<Interned> = groups
+            .iter()
+            .map(|_| (Vec::new(), HashMap::new()))
+            .collect();
+        let mut class_subs: Vec<Vec<u32>> = Vec::with_capacity(p.classes.len());
         for c in &p.classes {
+            let mut ids = Vec::with_capacity(groups.len());
+            let mut offset = 0usize;
+            for (g, &len) in groups.iter().enumerate() {
+                let sub: Vec<u32> = (offset..offset.saturating_add(len))
+                    .map(|cell| c.edits.get(cell).copied().unwrap_or(format::NONE))
+                    .collect();
+                offset = offset.saturating_add(len);
+                let Some((list, seen)) = subs.get_mut(g) else {
+                    continue;
+                };
+                let id = *seen.entry(sub.clone()).or_insert_with(|| {
+                    list.push(sub);
+                    to_u32(list.len().saturating_sub(1))
+                });
+                ids.push(id);
+            }
+            class_subs.push(ids);
+        }
+        let groups_at = at(&body);
+        put(&mut body, to_u32(groups.len()));
+        for &len in &groups {
+            put(&mut body, to_u32(len));
+        }
+        for (list, _) in &subs {
+            put(&mut body, to_u32(list.len()));
+            for sub in list {
+                for &e in sub {
+                    put(&mut body, e);
+                }
+            }
+        }
+        let classes = at(&body);
+        let stride = class_len(groups.len(), p.inherent);
+        for (c, ids) in p.classes.iter().zip(&class_subs) {
             let start = body.len();
-            for cell in 0..p.cells {
-                put(
-                    &mut body,
-                    c.edits.get(cell).copied().unwrap_or(format::NONE),
-                );
+            for &id in ids {
+                put(&mut body, id);
             }
             put_str(&mut body, &mut strings, &c.strip);
             for f in 0..p.inherent {
@@ -200,7 +255,8 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
             p.lemma_cell.map_or(format::NONE, to_u32),
             p.walk.encode(),
             chars,
-            0,
+            groups_at,
+            p.restore.map_or(format::NONE, to_u32),
         ] {
             put(&mut h, v);
         }

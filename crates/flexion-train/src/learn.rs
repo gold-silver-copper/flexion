@@ -79,9 +79,17 @@ pub struct Stats {
 /// One part of speech's shape.
 #[derive(Debug, Clone)]
 pub struct Shape {
+    /// Every cell, the hidden citation cell included (it is the last).
     pub cells: usize,
     pub inherent: usize,
+    /// The hidden citation cell: the lemma written in full.
     pub lemma_cell: usize,
+    /// Cells per group, the citation cell's own group last; they sum to
+    /// `cells`. Classes are stored as one shared sub-vector per group.
+    pub groups: Vec<usize>,
+    /// Cells not scored: the citation cell and the config's lemma cell (the
+    /// word the caller already gave).
+    pub unscored: Vec<usize>,
     /// Per cell: whether it belongs to an optional group (many words have no
     /// form there, and the runtime decides whether this word does).
     pub optional: Vec<bool>,
@@ -163,14 +171,13 @@ impl<'s> Learner<'s> {
             let mut per_cell: Vec<Vec<u32>> = Vec::with_capacity(self.shape.cells);
             for (cell, forms) in lex.cells.iter().enumerate() {
                 let mut ids: Vec<u32> = Vec::new();
+                // Every cell edits the full lemma (restored from what a caller
+                // types by a separate model); the citation cell itself only
+                // places the lemma's stress.
+                let citation = cell == self.shape.lemma_cell;
+                let stress = if citation { None } else { lex.lemma_stress };
                 for f in forms {
-                    let e = crate::edit::edit(
-                        self.sp,
-                        &lex.base,
-                        lex.lemma_stress,
-                        f,
-                        cell == self.shape.lemma_cell,
-                    );
+                    let e = crate::edit::edit(self.sp, &lex.full, stress, f, citation);
                     if e.stress == Stress::Unmarked
                         && self.sp.stress_mark.is_some()
                         && self.sp.read(f).stress.is_some()
@@ -315,7 +322,12 @@ impl<'s> Learner<'s> {
     /// Whether the kept ancestors alone already give every attested primary
     /// form of `word` (so its whole-word node can be pruned).
     fn reproduces(&self, word: &Word, kept_path: &[usize], arena: &[Dist]) -> bool {
-        let read = self.sp.read(word.lemma());
+        let mut read = self.sp.read(word.lemma());
+        // The runtime restores the full lemma first; for attested words that
+        // is the first entry's.
+        if let Some(full) = word.lexemes.first().map(|l| l.full.clone()) {
+            read.base = std::borrow::Cow::Owned(full);
+        }
         for cell in 0..self.shape.cells {
             let Some(primary) = word.primary(cell) else {
                 continue;
@@ -393,14 +405,10 @@ impl<'s> Learner<'s> {
                 let Some(edit) = self.edits.get(e as usize) else {
                     continue;
                 };
-                let lemma_stress = word.stress.or_else(|| {
-                    let le = spec
-                        .edits
-                        .get(self.shape.lemma_cell)
-                        .and_then(|&e| self.edits.get(e as usize))?;
-                    apply(self.sp, &word.base, le, None)?.1
-                });
-                let Some((letters, stress)) = apply(self.sp, &word.base, edit, lemma_stress) else {
+                let Some((full, lemma_stress)) = self.restore(word, spec) else {
+                    continue;
+                };
+                let Some((letters, stress)) = apply(self.sp, &full, edit, lemma_stress) else {
                     continue;
                 };
                 let form = self
@@ -422,6 +430,20 @@ impl<'s> Learner<'s> {
             }
         }
         None
+    }
+
+    /// The (already restored) lemma and its stress under a class: the
+    /// caller's mark if given, else the class's citation-cell rule.
+    fn restore(&self, word: &flexion::Word, spec: &ClassSpec) -> Option<(String, Option<usize>)> {
+        let rule = spec
+            .edits
+            .get(self.shape.lemma_cell)
+            .and_then(|&e| self.edits.get(e as usize));
+        let stress = match rule {
+            Some(e) if word.stress.is_none() => apply(self.sp, &word.base, e, None)?.1,
+            _ => word.stress,
+        };
+        Some((word.base.to_string(), stress))
     }
 
     fn emit_tables(
@@ -518,6 +540,8 @@ impl<'s> Learner<'s> {
             cells: self.shape.cells,
             inherent: self.shape.inherent,
             lemma_cell: Some(self.shape.lemma_cell),
+            groups: self.shape.groups.clone(),
+            restore: None,
             walk: self.params.walk,
             edits: self.edits,
             classes: self.classes,

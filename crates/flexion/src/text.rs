@@ -30,6 +30,10 @@ pub struct Spelling<'a> {
     pub fold_to: &'a str,
     /// Other marks removed from input and data (e.g. a secondary-stress grave).
     pub strip_marks: &'a str,
+    /// Letters written plain when marks are off (`unmark_from[i]` →
+    /// `unmark_to[i]`: Latin `ā` → `a`).
+    pub unmark_from: &'a str,
+    pub unmark_to: &'a str,
 }
 
 /// How the caller wrote a word, so output can be written the same way.
@@ -139,6 +143,8 @@ impl<'a> Spelling<'a> {
         fold_from: &'a str,
         fold_to: &'a str,
         strip_marks: &'a str,
+        unmark_from: &'a str,
+        unmark_to: &'a str,
     ) -> Spelling<'a> {
         let mut special: String = stress_mark.map(String::from).unwrap_or_default();
         special.push_str(strip_marks);
@@ -155,7 +161,23 @@ impl<'a> Spelling<'a> {
             fold_from,
             fold_to,
             strip_marks,
+            unmark_from,
+            unmark_to,
         }
+    }
+
+    /// `c` written plain (marks off).
+    fn unmark(&self, c: char) -> char {
+        match self.unmark_from.chars().position(|f| f == c) {
+            Some(i) => self.unmark_to.chars().nth(i).unwrap_or(c),
+            None => c,
+        }
+    }
+
+    /// Whether `s` has a letter the marks setting would write plain.
+    pub fn has_marks(&self, s: &str) -> bool {
+        s.chars()
+            .any(|c| self.unmark_from.contains(lowercase_char(c)))
     }
 
     /// Whether `c` (lowercase) carries a syllable.
@@ -202,7 +224,8 @@ impl<'a> Spelling<'a> {
             }
             _ => None,
         };
-        if place.is_none() && matches!(casing, Casing::Lower | Casing::Mixed) {
+        let unmark = !mark && !self.unmark_from.is_empty();
+        if place.is_none() && !unmark && matches!(casing, Casing::Lower | Casing::Mixed) {
             for p in parts {
                 out.push_str(p);
             }
@@ -211,6 +234,11 @@ impl<'a> Spelling<'a> {
         let mut vowel = 0usize;
         let mut first = true;
         for c in parts.iter().flat_map(|p| p.chars()) {
+            let c = if unmark {
+                self.unmark(lowercase_char(c))
+            } else {
+                c
+            };
             match casing {
                 Casing::Upper => out.extend(c.to_uppercase()),
                 Casing::Title if first => out.extend(c.to_uppercase()),
@@ -540,6 +568,8 @@ mod tests {
             "ё",
             "е",
             "\u{300}",
+            "",
+            "",
         )
     }
 

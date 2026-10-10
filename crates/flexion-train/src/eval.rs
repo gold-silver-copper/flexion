@@ -71,7 +71,7 @@ impl PosScore {
 pub enum Given {
     /// The bare lemma.
     Lemma,
-    /// The lemma with its stress marked (its attested lemma-cell form).
+    /// The lemma written in full (its citation form: stress, macrons).
     StressedLemma,
     /// The lemma plus every citation part the word attests.
     Citation,
@@ -89,6 +89,7 @@ pub fn score(
     words: &[Word],
     citation_cells: &[usize],
     markers: &[&[&str]],
+    unscored: &[usize],
     given: Given,
     keep_misses: bool,
 ) -> PosScore {
@@ -104,7 +105,7 @@ pub fn score(
         let mut input = word.lemma().to_string();
         if given == Given::StressedLemma
             && let Some(f) = p.lemma_cell().and_then(|c| word.primary(c))
-            && sp.read(f).base == sp.read(&input).base
+            && sp.read(f).key == sp.read(&input).key
         {
             input = f.to_string();
         }
@@ -133,7 +134,7 @@ pub fn score(
         }
         let citation = p.citation_marked(&input, citation_cells, markers);
         for (cell, score) in out.cells.iter_mut().enumerate() {
-            if Some(cell) == p.lemma_cell() || given_cells.contains(&cell) {
+            if unscored.contains(&cell) || given_cells.contains(&cell) {
                 continue;
             }
             let Some(primary) = word.primary(cell) else {
@@ -148,7 +149,8 @@ pub fn score(
             if top_primary {
                 score.top1 += 1;
             }
-            if top.is_some_and(|t| sp.read(&t.form).base == sp.read(primary).base) {
+            // Letters right, marks ignored (stress, macrons, ё).
+            if top.is_some_and(|t| sp.read(&t.form).key == sp.read(primary).key) {
                 score.top1_letters += 1;
             }
             if top.is_some_and(|t| attested.iter().any(|a| is(&t.form, a))) {
@@ -270,7 +272,7 @@ pub fn score_baseline(
             if same_form(sp, &said, primary) {
                 score.top1 += 1;
             }
-            if sp.read(&said).base == sp.read(primary).base {
+            if sp.read(&said).key == sp.read(primary).key {
                 score.top1_letters += 1;
             }
             if word.attested(cell).iter().any(|a| same_form(sp, &said, a)) {

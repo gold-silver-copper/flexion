@@ -6,6 +6,7 @@
 use crate::format::{BOUNDARY, NONE, Stress, UNKNOWN};
 use crate::text::{Spelling, Word};
 use crate::{Candidate, Model, Options, PosHeader};
+use std::borrow::Cow;
 
 /// Deepest tree paths are this long at most; longer words simply stop
 /// descending there.
@@ -14,6 +15,8 @@ const MAX_PATH: usize = 48;
 const MAX_FORMS: usize = 16;
 /// Weight kept by a class that contradicts a caller's marker.
 const MARKER_MISMATCH: f32 = 0.02;
+/// Readings of a lemma less likely than this are not considered.
+const MIN_READING: f32 = 0.01;
 
 /// One edit: prefix + (lemma minus `strip`) + `add`, stressed by `stress`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -53,6 +56,18 @@ struct Key {
     edit: u32,
     /// The stressed vowel, [`NO_STRESS`] for none.
     stress: u16,
+    /// The class whose given-part restoration supplies the lemma, [`NONE`]
+    /// when the query's restored lemma does.
+    via: u32,
+}
+
+/// A class's reading of the caller's lemma: the full lemma (restored once
+/// per query, or by this class from a given principal part) and the stress
+/// the class gives it.
+struct Restored<'f> {
+    letters: Cow<'f, str>,
+    vowels: usize,
+    stress: Option<usize>,
 }
 
 const NO_STRESS: u16 = u16::MAX;
@@ -90,10 +105,6 @@ impl<'m, 'a> Pos<'m, 'a> {
             .get(class.checked_mul(self.h.cells)?.checked_add(cell)?)?;
         (e != NONE).then_some(e)
     }
-    fn class_strip(&self, class: usize) -> Option<&'a str> {
-        self.h.class_strips.get(class).copied()
-    }
-
     /// How much the caller's inherent-feature markers trust the class at
     /// `at`: markers are soft evidence, so a class that contradicts one keeps
     /// a small weight instead of being ruled out (aspect, for one, barely
@@ -234,27 +245,152 @@ impl<'m, 'a> Pos<'m, 'a> {
         self.path(word, &mut path)
     }
 
-    /// Where `edit`'s stress lands on the citation's lemma.
-    fn stress_of(
+    /// Where `edit`'s stress lands on a lemma with `vowels` vowels.
+    fn stress_on(
         &self,
-        citation: &Citation,
+        vowels: usize,
         edit: Edit<'a>,
         lemma_stress: Option<usize>,
     ) -> Option<usize> {
         let [vp, vs, va] = edit.vowels;
-        let vk = citation.lemma.vowels.checked_sub(vs)?;
+        let vk = vowels.checked_sub(vs)?;
         self.sp()
             .place_counts(edit.stress, lemma_stress, vp, vk, va)
     }
 
-    /// The lemma's stress under the class at `at`: the caller's own mark if
-    /// given, otherwise the class's rule for the lemma cell.
-    fn lemma_stress(&self, citation: &Citation, at: usize) -> Option<usize> {
-        if citation.lemma.stress.is_some() || self.sp().stress_mark.is_none() {
-            return citation.lemma.stress;
+    /// The caller's lemma written in full (Latin macrons, Russian ё) by this
+    /// part of speech's restoration model: every reading with its
+    /// probability, most likely first. The word as typed when there is no
+    /// model or it can't tell.
+    fn full_lemmas<'w>(&self, citation: &'w Citation) -> Vec<(Cow<'w, str>, f32)> {
+        let base: &'w str = &citation.lemma.base;
+        let typed = || vec![(Cow::Borrowed(base), 1.0)];
+        let Some(r) = self.h.restore.and_then(|i| self.model.pos(i)) else {
+            return typed();
+        };
+        // The restoration model sees only the lemma: the citation's parts
+        // name the main model's cells.
+        let bare = Citation {
+            lemma: citation.lemma.clone(),
+            parts: Vec::new(),
+            written: citation.written,
+            inherent: Vec::new(),
+        };
+        let mut forms = [(
+            Key {
+                edit: 0,
+                stress: NO_STRESS,
+                via: NONE,
+            },
+            0f32,
+        ); MAX_FORMS];
+        let (n, _, seen) = r.scan(&bare, 0, base, false, &mut forms);
+        let mut out: Vec<(Cow<'w, str>, f32)> = Vec::with_capacity(n);
+        for &(k, m) in forms.iter().take(n) {
+            let Some(e) = usize::try_from(k.edit).ok().and_then(|i| r.edit(i)) else {
+                continue;
+            };
+            let lemma = if e.prefix.is_empty() && e.strip.is_empty() && e.add.is_empty() {
+                Cow::Borrowed(base)
+            } else {
+                let Some(kept) = r.kept(base, e) else {
+                    continue;
+                };
+                Cow::Owned(format!("{}{}{}", e.prefix, kept, e.add))
+            };
+            match out.iter_mut().find(|(l, _)| *l == lemma) {
+                Some((_, q)) => *q += m,
+                None => out.push((lemma, m)),
+            }
         }
-        let e = self.edit(usize::try_from(self.class_edit_id(at, self.h.lemma_cell?)?).ok()?)?;
-        self.stress_of(citation, e, None)
+        // Readings are weighed against every class of the node, fitting or
+        // not: the mass of edits that don't fit (one word's own marks deep in
+        // its stem) is the chance that the word has marks no reading places.
+        if seen <= 0.0 {
+            return typed();
+        }
+        for (_, m) in &mut out {
+            *m /= seen;
+        }
+        out.retain(|&(_, m)| m >= MIN_READING);
+        if out.is_empty() {
+            return typed();
+        }
+        out.sort_by(|a, b| b.1.total_cmp(&a.1));
+        // A lemma typed with marks, or with principal parts (which spell the
+        // stem in full), is read once, as the model reads it best.
+        if !citation.parts.is_empty()
+            || citation.lemma.stress.is_some()
+            || self.sp().has_marks(citation.written)
+        {
+            out.truncate(1);
+            if let Some((_, m)) = out.first_mut() {
+                *m = 1.0;
+            }
+        }
+        out
+    }
+
+    /// The most likely reading of [`Pos::full_lemmas`].
+    fn full_lemma<'w>(&self, citation: &'w Citation) -> Cow<'w, str> {
+        self.full_lemmas(citation)
+            .into_iter()
+            .next()
+            .map_or(Cow::Borrowed(&*citation.lemma.base), |(l, _)| l)
+    }
+
+    /// The lemma's stress under the class at `at`: the caller's own mark if
+    /// given, else the class's rule for the citation cell.
+    fn restore<'f>(&self, citation: &Citation, full: &'f str, at: usize) -> Restored<'f> {
+        // A given principal part spells the stem in full (`rēx, rēgis`): under
+        // this class the lemma is that part minus the class's ending for its
+        // cell, plus the suffix the edit strips.
+        let from_part = citation.parts.first().and_then(|(cell, form, _)| {
+            let e = self.edit(usize::try_from(self.class_edit_id(at, *cell)?).ok()?)?;
+            let stem = form.base.strip_prefix(e.prefix)?.strip_suffix(e.add)?;
+            let lemma = format!("{stem}{}", e.strip);
+            self.sp()
+                .eq_folded([&lemma, "", ""], &citation.lemma.key)
+                .then_some(lemma)
+        });
+        let sp = self.sp();
+        let letters: Cow<'f, str> = match from_part {
+            Some(l) if l != *full => Cow::Owned(l),
+            _ => Cow::Borrowed(full),
+        };
+        // Folding keeps vowels vowels, so a restored lemma has the typed
+        // word's vowel count; only a lemma from a given part is recounted.
+        let vowels = match &letters {
+            Cow::Owned(l) => sp.vowel_count(l),
+            Cow::Borrowed(_) => citation.lemma.vowels,
+        };
+        let word = &citation.lemma;
+        let stress = if word.stress.is_some() || sp.stress_mark.is_none() {
+            word.stress
+        } else {
+            self.h
+                .lemma_cell
+                .and_then(|c| self.class_edit_id(at, c))
+                .and_then(|id| self.edit(usize::try_from(id).ok()?))
+                .and_then(|e| self.stress_on(vowels, e, None))
+        };
+        Restored {
+            letters,
+            vowels,
+            stress,
+        }
+    }
+
+    /// The lemma letters a key's form is built on.
+    fn key_letters<'f>(&self, citation: &Citation, full: &'f str, key: Key) -> Cow<'f, str> {
+        if key.via == NONE {
+            return Cow::Borrowed(full);
+        }
+        let r = self.restore(citation, full, key.via as usize);
+        match r.letters {
+            Cow::Borrowed(b) => Cow::Borrowed(b),
+            Cow::Owned(o) => Cow::Owned(o),
+        }
     }
 
     /// The lemma's letters with `edit.strip` removed, if it ends with it.
@@ -266,18 +402,20 @@ impl<'m, 'a> Pos<'m, 'a> {
     }
 
     /// Whether the class at `at` fits the word and agrees with every given part.
-    fn fits(&self, citation: &Citation, at: usize) -> bool {
+    fn fits(&self, citation: &Citation, full: &str, at: usize) -> bool {
         let sp = self.sp();
         if !self
-            .class_strip(at)
-            .is_some_and(|s| s.is_empty() || sp.ends_with_folded(&citation.lemma.base, s))
+            .h
+            .class_strips_folded
+            .get(at)
+            .is_some_and(|s| citation.lemma.key.ends_with(s.as_str()))
         {
             return false;
         }
         if citation.parts.is_empty() {
             return true;
         }
-        let ls = self.lemma_stress(citation, at);
+        let r = self.restore(citation, full, at);
         citation.parts.iter().all(|(cell, form, _)| {
             let Some(e) = self
                 .class_edit_id(at, *cell)
@@ -285,25 +423,28 @@ impl<'m, 'a> Pos<'m, 'a> {
             else {
                 return false;
             };
-            let Some(kept) = self.kept(&citation.lemma.base, e) else {
+            let Some(kept) = self.kept(&r.letters, e) else {
                 return false;
             };
             sp.eq_folded([e.prefix, kept, e.add], &form.key)
                 && (form.stress.is_none()
                     || sp.stress_mark.is_none()
-                    || self.stress_of(citation, e, ls) == form.stress)
+                    || self.stress_on(r.vowels, e, r.stress) == form.stress)
         })
     }
 
     /// Accumulate form keys for `cell` from the deepest node with a fitting
-    /// class. With `quick`, stop once the leader can't be overtaken.
+    /// class. With `quick`, stop once the leader can't be overtaken. Returns
+    /// the number of keys, their total mass, and the mass of every class
+    /// scanned (fitting or not).
     fn scan(
         &self,
         citation: &Citation,
         cell: usize,
+        full: &str,
         quick: bool,
         forms: &mut [(Key, f32); MAX_FORMS],
-    ) -> (usize, f32) {
+    ) -> (usize, f32, f32) {
         let mut path = [(0u32, 0u32); MAX_PATH];
         let depth = self.path(&citation.lemma, &mut path);
         for &(start, len) in path.iter().take(depth).rev() {
@@ -322,7 +463,7 @@ impl<'m, 'a> Pos<'m, 'a> {
                 let Some(id) = self.class_edit_id(at, cell) else {
                     continue;
                 };
-                if !self.fits(citation, at) {
+                if !self.fits(citation, full, at) {
                     continue;
                 }
                 let p = p * self.marker_weight(citation, at);
@@ -330,16 +471,12 @@ impl<'m, 'a> Pos<'m, 'a> {
                 // edits' strips, so this edit fits whenever the class does.
                 // Only stress needs the edit itself; without stress the id is
                 // the whole key.
+                let r = self.restore(citation, full, at);
                 let stress = if self.sp().stress_mark.is_some() {
                     let Some(e) = self.edit(usize::try_from(id).unwrap_or(usize::MAX)) else {
                         continue;
                     };
-                    let ls = if e.stress == Stress::SameAsLemma {
-                        self.lemma_stress(citation, at)
-                    } else {
-                        None
-                    };
-                    self.stress_of(citation, e, ls)
+                    self.stress_on(r.vowels, e, r.stress)
                 } else {
                     None
                 };
@@ -348,6 +485,10 @@ impl<'m, 'a> Pos<'m, 'a> {
                     stress: stress
                         .and_then(|v| u16::try_from(v).ok())
                         .unwrap_or(NO_STRESS),
+                    via: match r.letters {
+                        Cow::Owned(_) => u32::try_from(at).unwrap_or(NONE),
+                        Cow::Borrowed(_) => NONE,
+                    },
                 };
                 total += p;
                 match forms.iter_mut().take(n).find(|(k, _)| *k == key) {
@@ -364,21 +505,22 @@ impl<'m, 'a> Pos<'m, 'a> {
                 if quick && n > 0 {
                     let best = forms.iter().take(n).map(|&(_, m)| m).fold(0f32, f32::max);
                     if best - (total - best) > 1.0 - seen {
-                        return (n, total);
+                        return (n, total, seen);
                     }
                 }
             }
             if n > 0 {
-                return (n, total);
+                return (n, total, seen);
             }
         }
-        (0, 0.0)
+        (0, 0.0, 0.0)
     }
 
-    fn build(&self, citation: &Citation, key: Key, options: Options) -> Option<String> {
+    fn build(&self, citation: &Citation, full: &str, key: Key, options: Options) -> Option<String> {
         let e = self.edit(usize::try_from(key.edit).ok()?)?;
-        let kept = self.kept(&citation.lemma.base, e)?;
-        let mark = options.stress && self.sp().stress_mark.is_some();
+        let letters = self.key_letters(citation, full, key);
+        let kept = self.kept(&letters, e)?;
+        let mark = options.marks;
         Some(self.sp().render_parts(
             [e.prefix, kept, e.add],
             (key.stress != NO_STRESS).then_some(usize::from(key.stress)),
@@ -396,14 +538,25 @@ impl<'m, 'a> Pos<'m, 'a> {
         if citation.lemma.base.is_empty() {
             return citation.written.to_string();
         }
+        let readings = self.full_lemmas(citation);
+        let [(full, _)] = readings.as_slice() else {
+            // Several readings of the lemma: their forms are summed, as
+            // `candidates` does.
+            return self
+                .weighed(citation, cell, &readings, options)
+                .into_iter()
+                .next()
+                .map_or_else(|| citation.written.to_string(), |c| c.form);
+        };
         let mut forms = [(
             Key {
                 edit: 0,
                 stress: NO_STRESS,
+                via: NONE,
             },
             0f32,
         ); MAX_FORMS];
-        let (n, total) = self.scan(citation, cell, true, &mut forms);
+        let (n, total, _) = self.scan(citation, cell, full, true, &mut forms);
         let leader = forms
             .iter()
             .take(n)
@@ -416,12 +569,12 @@ impl<'m, 'a> Pos<'m, 'a> {
         };
         if lead_mass * 2.0 > total {
             return self
-                .build(citation, lead, options)
+                .build(citation, full, lead, options)
                 .unwrap_or_else(|| citation.written.to_string());
         }
         // Contested: different edits may write the same form, so merge by
         // string exactly as `candidates` does.
-        self.candidates(citation, cell, options)
+        self.merge(citation, full, &forms, n, total, options)
             .into_iter()
             .next()
             .map_or_else(|| citation.written.to_string(), |c| c.form)
@@ -444,20 +597,64 @@ impl<'m, 'a> Pos<'m, 'a> {
         if citation.lemma.base.is_empty() {
             return fallback();
         }
+        let readings = self.full_lemmas(citation);
+        let out = self.weighed(citation, cell, &readings, options);
+        if out.is_empty() { fallback() } else { out }
+    }
+
+    /// The candidates under each reading of the lemma, weighed by the
+    /// reading's probability and merged by string, best first. Confidences
+    /// sum to less than one when no reading may be right.
+    fn weighed(
+        &self,
+        citation: &Citation,
+        cell: usize,
+        readings: &[(Cow<str>, f32)],
+        options: Options,
+    ) -> Vec<Candidate> {
         let mut forms = [(
             Key {
                 edit: 0,
                 stress: NO_STRESS,
+                via: NONE,
             },
             0f32,
         ); MAX_FORMS];
-        let (n, total) = self.scan(citation, cell, false, &mut forms);
+        let mut out: Vec<Candidate> = Vec::new();
+        for (full, w) in readings {
+            let (n, total, _) = self.scan(citation, cell, full, false, &mut forms);
+            let found = self.merge(citation, full, &forms, n, total, options);
+            for c in found {
+                match out.iter_mut().find(|o| o.form == c.form) {
+                    Some(o) => o.confidence += w * c.confidence,
+                    None => out.push(Candidate {
+                        form: c.form,
+                        confidence: w * c.confidence,
+                    }),
+                }
+            }
+        }
+        out.sort_by(|a, b| b.confidence.total_cmp(&a.confidence));
+        out
+    }
+
+    /// Scanned keys to candidates: build each form, merge equal strings,
+    /// normalize, best first.
+    fn merge(
+        &self,
+        citation: &Citation,
+        full: &str,
+        forms: &[(Key, f32); MAX_FORMS],
+        n: usize,
+        total: f32,
+        options: Options,
+    ) -> Vec<Candidate> {
         if n == 0 || total <= 0.0 {
-            return fallback();
+            return Vec::new();
         }
         let mut out: Vec<Candidate> = Vec::with_capacity(n);
         for &(k, m) in forms.iter().take(n) {
-            let Some(form) = self.build(citation, k, options) else {
+            let Some(form) = self.build(citation, full, k, options) else {
                 continue;
             };
             match out.iter_mut().find(|c| c.form == form) {
@@ -469,12 +666,13 @@ impl<'m, 'a> Pos<'m, 'a> {
             }
         }
         out.sort_by(|a, b| b.confidence.total_cmp(&a.confidence));
-        if out.is_empty() { fallback() } else { out }
+        out
     }
 
     /// How likely the word is to have any form in `cell` (for cells many
     /// words lack, like Russian short adjectives).
     pub fn has_cell(&self, citation: &Citation, cell: usize) -> f32 {
+        let full = self.full_lemma(citation);
         let mut path = [(0u32, 0u32); MAX_PATH];
         let depth = self.path(&citation.lemma, &mut path);
         for &(start, len) in path.iter().take(depth).rev() {
@@ -487,7 +685,7 @@ impl<'m, 'a> Pos<'m, 'a> {
                 let Some(at) = self.class_at(class) else {
                     continue;
                 };
-                if !self.fits(citation, at) {
+                if !self.fits(citation, &full, at) {
                     continue;
                 }
                 let p = p * self.marker_weight(citation, at);
@@ -505,6 +703,7 @@ impl<'m, 'a> Pos<'m, 'a> {
 
     /// The distribution over inherent feature `feature`'s values (by index).
     pub fn inherent(&self, citation: &Citation, feature: usize) -> Vec<(u8, f32)> {
+        let full = self.full_lemma(citation);
         let mut path = [(0u32, 0u32); MAX_PATH];
         let depth = self.path(&citation.lemma, &mut path);
         for &(start, len) in path.iter().take(depth).rev() {
@@ -518,7 +717,7 @@ impl<'m, 'a> Pos<'m, 'a> {
                 let Some(at) = self.class_at(class) else {
                     continue;
                 };
-                if !self.fits(citation, at) {
+                if !self.fits(citation, &full, at) {
                     continue;
                 }
                 let p = p * self.marker_weight(citation, at);
@@ -550,7 +749,7 @@ impl<'m, 'a> Pos<'m, 'a> {
     }
 
     /// [`Pos::citation`], also reading inherent-feature markers the way a
-    /// dictionary prints them after a word (`кот, кота m anim`).
+    /// dictionary prints them after a word (`кот, кота m anim`, `rēx, rēgis m.`).
     /// `markers[f][v]` is the marker for value `v` of inherent feature `f`;
     /// markers are recognized as trailing words of any part.
     pub fn citation_marked<'s>(
@@ -567,6 +766,7 @@ impl<'m, 'a> Pos<'m, 'a> {
                 return rest;
             }
             while let Some((head, last)) = rest.rsplit_once(char::is_whitespace) {
+                let last = last.strip_suffix('.').unwrap_or(last);
                 let found = markers.iter().enumerate().find_map(|(f, names)| {
                     names
                         .iter()

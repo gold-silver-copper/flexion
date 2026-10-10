@@ -16,12 +16,16 @@ pub struct Lexeme {
     pub lemma: String,
     /// The headword's letters as the runtime reads them (no stress marks).
     pub base: String,
+    /// The citation form's letters: the headword written in full (Latin
+    /// macrons, Russian ё). Every cell but the citation cell is an edit of
+    /// these; the citation cell is the edit that restores them from `base`.
+    pub full: String,
     /// The lookup key (`base` folded).
     pub key: String,
     /// The lemma's stressed vowel, from its stressed citation form.
     pub lemma_stress: Option<usize>,
-    /// Plain attested forms per cell, in listing order. The lemma cell holds
-    /// the (stressed) lemma itself when the table doesn't list it.
+    /// Plain attested forms per cell, in listing order, then the citation
+    /// form as one extra, last cell.
     pub cells: Vec<Vec<String>>,
     /// One value index per inherent feature (`u8::MAX` if unknown).
     pub inherent: Vec<u8>,
@@ -119,7 +123,14 @@ pub fn extract(
                     .forms
                     .iter()
                     .find(|f| f.tags.iter().any(|t| t == "inflection-template"));
-                if !template.is_some_and(|t| part.templates.contains(&t.form.as_str())) {
+                // A template name ending in `*` matches by prefix.
+                let matches = |t: &str| {
+                    part.templates.iter().any(|p| match p.strip_suffix('*') {
+                        Some(prefix) => t.starts_with(prefix),
+                        None => t == *p,
+                    })
+                };
+                if !template.is_some_and(|t| matches(&t.form)) {
                     continue;
                 }
             }
@@ -166,16 +177,19 @@ fn lexeme(
         return None;
     }
     let policy = &lang.tags;
+    let mut repaired = entry.clone();
+    lang.hooks.repair(part.name, &mut repaired);
+    let entry = &repaired;
     let tables = part.forms == FormSource::Tables && entry.forms.iter().any(|f| f.source.is_some());
-    let mut forms: Vec<Vec<String>> = vec![Vec::new(); cells.total];
+    // One slot per cell, plus the citation form (the lemma written in full)
+    // as a last, hidden cell.
+    let citation_cell = cells.total;
+    let mut forms: Vec<Vec<String>> = vec![Vec::new(); cells.total + 1];
     let mut inherent_tags: Vec<String> = lang.hooks.inherent_tags(entry);
     for f in &entry.forms {
         let has = |t: &str| f.tags.iter().any(|x| x == t);
         if f.source.is_none() && has("canonical") {
             inherent_tags.extend(f.tags.iter().cloned());
-        }
-        if tables && f.source.is_none() {
-            continue;
         }
         if policy.meta.iter().any(|t| has(t))
             || policy.sentinels.contains(&f.form.trim())
@@ -188,7 +202,11 @@ fn lexeme(
         if !lang.hooks.form_ok(part.name, &lemma, &form) {
             continue;
         }
-        for cell in cells.match_tags(&f.tags) {
+        // With a table, table forms fill the table's groups and head-line
+        // forms only the groups that come from the head line.
+        let head = f.source.is_none();
+        let wanted = |g: &crate::spec::Group| !tables || g.from_head == head;
+        for cell in cells.match_tags_where(&f.tags, &wanted) {
             if let Some(slot) = forms.get_mut(cell)
                 && !slot.contains(&form)
             {
@@ -200,28 +218,40 @@ fn lexeme(
     if !forms
         .iter()
         .enumerate()
-        .any(|(i, f)| i != lemma_cell && !f.is_empty())
+        .any(|(i, f)| i != lemma_cell && i != citation_cell && !f.is_empty())
     {
         return None;
     }
-    // The lemma's own stressed form: the table's lemma cell, else the
-    // canonical headword form, else the headword.
+    // The citation form: the lemma as the dictionary writes it in full (with
+    // stress, macrons, ё): the table's lemma cell, else the canonical
+    // headword form, else the headword.
+    let read = spelling.read(&lemma);
+    let same_word = |f: &String| spelling.read(f).key == read.key;
     let canonical = entry
         .forms
         .iter()
         .find(|f| f.source.is_none() && f.tags.iter().any(|t| t == "canonical"))
-        .map(|f| fold(f.form.trim()));
-    let read = spelling.read(&lemma);
-    let stressed = forms
+        .map(|f| fold(f.form.trim()))
+        .filter(same_word);
+    let written = forms
         .get(lemma_cell)
         .and_then(|f| f.first().cloned())
-        .filter(|f| spelling.read(f).base == read.base)
-        .or(canonical.filter(|c| spelling.read(c).base == read.base));
-    let lemma_stress = stressed.as_ref().and_then(|s| spelling.read(s).stress);
-    if let Some(slot) = forms.get_mut(lemma_cell)
+        .filter(same_word)
+        .or(canonical)
+        .unwrap_or_else(|| lemma.clone());
+    let full = spelling.read(&written);
+    let lemma_stress = full.stress;
+    let full_base = full.base.to_string();
+    // Without a table, the lemma cell is the headword itself (English nouns
+    // list only their plural).
+    if !tables
+        && let Some(slot) = forms.get_mut(lemma_cell)
         && slot.is_empty()
     {
-        slot.push(stressed.unwrap_or_else(|| lemma.clone()));
+        slot.push(written.clone());
+    }
+    if let Some(slot) = forms.get_mut(citation_cell) {
+        slot.push(written);
     }
 
     for f in &entry.forms {
@@ -256,6 +286,7 @@ fn lexeme(
     Some(Lexeme {
         key: read.key.to_string(),
         base: read.base.to_string(),
+        full: full_base,
         lemma,
         lemma_stress,
         cells: forms,

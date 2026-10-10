@@ -33,6 +33,8 @@ pub fn spelling_spec(lang: &Language) -> SpellingSpec {
         fold_from: s.fold.iter().map(|(a, _)| *a).collect(),
         fold_to: s.fold.iter().map(|(_, b)| *b).collect(),
         strip_marks: s.strip_marks.to_string(),
+        unmark_from: s.unmark.iter().map(|(a, _)| *a).collect(),
+        unmark_to: s.unmark.iter().map(|(_, b)| *b).collect(),
     }
 }
 
@@ -47,6 +49,8 @@ pub fn view(s: &SpellingSpec) -> Spelling<'_> {
         &s.fold_from,
         &s.fold_to,
         &s.strip_marks,
+        &s.unmark_from,
+        &s.unmark_to,
     )
 }
 
@@ -82,15 +86,80 @@ pub fn shapes(lang: &Language) -> Result<Vec<learn::Shape>, String> {
                 .ok_or("lemma cell not found")?;
             let optional = (0..cells.total)
                 .map(|c| cells.group_of(c).is_some_and(|g| g.group.optional))
+                .chain([false])
                 .collect();
+            let groups = cells.groups.iter().map(|g| g.len()).chain([1]).collect();
             Ok(learn::Shape {
-                cells: cells.total,
+                cells: cells.total + 1,
                 inherent: p.inherent.len(),
-                lemma_cell,
+                lemma_cell: cells.total,
+                groups,
+                unscored: vec![lemma_cell, cells.total],
                 optional,
             })
         })
         .collect()
+}
+
+/// The restoration model of a part of speech, if it needs one: a
+/// one-cell model from the lemma as typed to the lemma as written in full
+/// (Latin `tago` → `tāgō`, Russian `еж` → `ёж`). `None` when every lemma is
+/// already typed in full.
+pub fn restoration(
+    sp: &Spelling<'_>,
+    words: &[Word],
+    params: learn::Params,
+) -> Option<flexion::write::PosTables> {
+    if words
+        .iter()
+        .all(|w| w.lexemes.iter().all(|l| l.base == l.full))
+    {
+        return None;
+    }
+    let lexemes: Vec<extract::Lexeme> = words
+        .iter()
+        .flat_map(|w| w.lexemes.iter())
+        .map(|l| extract::Lexeme {
+            full: l.base.clone(),
+            cells: vec![vec![l.full.clone()]],
+            inherent: Vec::new(),
+            lemma_stress: None,
+            ..(*l).clone()
+        })
+        .collect();
+    let data = extract::PosData { lexemes };
+    let restore_words = extract::words(&data);
+    let shape = learn::Shape {
+        cells: 1,
+        inherent: 0,
+        lemma_cell: 0,
+        groups: vec![1],
+        unscored: Vec::new(),
+        optional: vec![false],
+    };
+    let mut params = params;
+    params.walk.syllable_depth = None;
+    let (t, _) = learn::Learner::new(sp, shape, params).learn(&restore_words);
+    Some(t)
+}
+
+/// Lay out main tables and their restoration models: mains first (so a part
+/// of speech keeps its index), restorations after, each main pointing at its.
+pub fn assemble(
+    parts: Vec<(flexion::write::PosTables, Option<flexion::write::PosTables>)>,
+) -> Vec<flexion::write::PosTables> {
+    let n = parts.len();
+    let mut mains = Vec::with_capacity(n);
+    let mut extras = Vec::new();
+    for (mut main, restore) in parts {
+        if let Some(r) = restore {
+            main.restore = Some(n + extras.len());
+            extras.push(r);
+        }
+        mains.push(main);
+    }
+    mains.extend(extras);
+    mains
 }
 
 /// Train every part of speech on the words `keep` accepts and write a blob.
@@ -109,9 +178,10 @@ pub fn train(
             .into_iter()
             .filter(|w| keep(w.key))
             .collect();
+        let restore = restoration(&sp, &words, plan.params);
         let (t, s) = learn::Learner::new(&sp, plan.shape.clone(), plan.params).learn(&words);
-        tables.push(t);
+        tables.push((t, restore));
         stats.push(s);
     }
-    (flexion::write::write(&spec, &tables), stats)
+    (flexion::write::write(&spec, &assemble(tables)), stats)
 }
