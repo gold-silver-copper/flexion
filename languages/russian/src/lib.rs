@@ -257,7 +257,7 @@ impl Tense {
 /// Output settings. The free functions use [`Russian::default()`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Russian {
-    stress: bool,
+    marks: bool,
 }
 
 impl Default for Russian {
@@ -268,19 +268,17 @@ impl Default for Russian {
 
 impl Russian {
     pub const fn new() -> Self {
-        Russian { stress: true }
+        Russian { marks: true }
     }
 
-    /// Write stress marks (on by default).
+    /// Write stress (on by default); off writes the plain letters.
     pub const fn stress(mut self, on: bool) -> Self {
-        self.stress = on;
+        self.marks = on;
         self
     }
 
     fn options(&self) -> Options {
-        Options {
-            stress: self.stress,
-        }
+        Options { marks: self.marks }
     }
 
     /// A noun in a case and number.

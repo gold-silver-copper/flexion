@@ -109,7 +109,7 @@ mod tests {
     use super::*;
 
     fn en() -> Spelling<'static> {
-        Spelling::new(true, false, None, "aeiouy", "", "", "", "")
+        Spelling::new(true, false, None, "aeiouy", "", "", "", "", "", "")
     }
 
     fn ru() -> Spelling<'static> {
@@ -122,6 +122,8 @@ mod tests {
             "ё",
             "е",
             "\u{300}",
+            "",
+            "",
         )
     }
 

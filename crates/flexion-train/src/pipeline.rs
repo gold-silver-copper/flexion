@@ -52,13 +52,15 @@ fn train_one(
     shape: &Shape,
     params: Params,
     words: &[Word],
-) -> (PosTables, learn::Stats) {
+) -> ((PosTables, Option<PosTables>), learn::Stats) {
     let sp = view(spec);
-    learn::Learner::new(&sp, shape.clone(), params).learn(words)
+    let restore = crate::restoration(&sp, words, params);
+    let (t, s) = learn::Learner::new(&sp, shape.clone(), params).learn(words);
+    ((t, restore), s)
 }
 
-fn blob_of(spec: &SpellingSpec, tables: &[PosTables]) -> Vec<u8> {
-    flexion::write::write(spec, tables)
+fn blob_of(spec: &SpellingSpec, tables: Vec<(PosTables, Option<PosTables>)>) -> Vec<u8> {
+    flexion::write::write(spec, &crate::assemble(tables))
 }
 
 /// Run `f` over `items` on up to `threads` threads, keeping order.
@@ -113,7 +115,7 @@ struct PosReport {
     exists: [(usize, usize); 2],
     errors: Vec<(String, usize, Vec<String>)>,
     cells: Vec<String>,
-    lemma_cell: usize,
+    unscored: Vec<usize>,
 }
 
 /// Build a language end to end.
@@ -130,7 +132,8 @@ pub fn build(
     let t0 = Instant::now();
     let mut reports = Vec::new();
     let mut final_tables = Vec::new();
-    let has_stress = lang.spelling.stress_mark.is_some();
+    // Marks the caller may leave out: stress, macrons, ё.
+    let has_stress = lang.spelling.stress_mark.is_some() || !lang.spelling.fold.is_empty();
     for ((part, d), shape) in lang.parts.iter().zip(data).zip(&shapes) {
         let cells = Cells::new(lang, part)?;
         let citation: Vec<usize> = part
@@ -156,7 +159,7 @@ pub fn build(
         let grid = grid();
         let scores = par_map(&grid, threads, |&params| {
             let (t, _) = train_one(&spec, shape, params, &train);
-            let blob = blob_of(&spec, &[t]);
+            let blob = blob_of(&spec, vec![t]);
             let Some(model) = flexion::Model::from_bytes(&blob) else {
                 return (params, 0.0, blob.len(), 1);
             };
@@ -167,6 +170,7 @@ pub fn build(
                 &dev,
                 &citation,
                 &markers,
+                &shape.unscored,
                 Given::Lemma,
                 false,
             )
@@ -188,7 +192,7 @@ pub fn build(
 
         // 2. Measure on the held-out tenth.
         let (t, _) = train_one(&spec, shape, params, &not_test);
-        let blob = blob_of(&spec, &[t]);
+        let blob = blob_of(&spec, vec![t]);
         let model = flexion::Model::from_bytes(&blob).ok_or("test model failed to load")?;
         let test_score = eval::score(
             &sp,
@@ -197,6 +201,7 @@ pub fn build(
             &test,
             &citation,
             &markers,
+            &shape.unscored,
             Given::Lemma,
             true,
         );
@@ -208,6 +213,7 @@ pub fn build(
                 &test,
                 &citation,
                 &markers,
+                &shape.unscored,
                 Given::StressedLemma,
                 false,
             )
@@ -220,6 +226,7 @@ pub fn build(
                 &test,
                 &citation,
                 &markers,
+                &shape.unscored,
                 Given::Citation,
                 false,
             )
@@ -232,16 +239,16 @@ pub fn build(
                 &test,
                 &citation,
                 &markers,
+                &shape.unscored,
                 Given::Dictionary,
                 false,
             )
         });
-        let lemma_cell = shape.lemma_cell;
         let baseline_scores: Vec<(String, CellScore)> = baselines
             .iter()
             .map(|b| {
                 let f = |cell: usize, lemma: &str| (b.inflect)(&cells.name(cell), lemma);
-                let per = eval::score_baseline(&sp, &test, cells.total, &[lemma_cell], &f);
+                let per = eval::score_baseline(&sp, &test, cells.total, &shape.unscored, &f);
                 let mut t = CellScore::default();
                 per.iter().for_each(|c| t.add(c));
                 (b.name.to_string(), t)
@@ -254,7 +261,7 @@ pub fn build(
 
         // 3. Train on everything and score every attested word.
         let (t, stats) = train_one(&spec, shape, params, &all);
-        let blob = blob_of(&spec, std::slice::from_ref(&t));
+        let blob = blob_of(&spec, vec![t.clone()]);
         let model = flexion::Model::from_bytes(&blob).ok_or("final model failed to load")?;
         let attested = eval::score(
             &sp,
@@ -263,6 +270,7 @@ pub fn build(
             &all,
             &citation,
             &markers,
+            &shape.unscored,
             Given::Lemma,
             false,
         );
@@ -305,10 +313,10 @@ pub fn build(
             exists: [exists_test, exists_all],
             errors,
             cells: (0..cells.total).map(|c| cells.name(c)).collect(),
-            lemma_cell,
+            unscored: shape.unscored.clone(),
         });
     }
-    let blob = blob_of(&spec, &final_tables);
+    let blob = blob_of(&spec, final_tables);
     let model = flexion::Model::from_bytes(&blob).ok_or("shipped model failed to load")?;
     let nonce = nonce_table(lang, &model)?;
     let report = render(
@@ -350,7 +358,7 @@ fn bench(model: &flexion::Model, words: &[Word], shape: &Shape, cells: &Cells) -
     let Some(p) = model.pos(0) else {
         return (0.0, String::new());
     };
-    let Some(cell) = (0..shape.cells).find(|&c| c != shape.lemma_cell) else {
+    let Some(cell) = (0..shape.cells).find(|c| !shape.unscored.contains(c)) else {
         return (0.0, String::new());
     };
     let lemmas: Vec<&str> = words.iter().map(|w| w.lemma()).take(20_000).collect();
@@ -415,10 +423,15 @@ fn nonce_table(lang: &Language, model: &flexion::Model) -> Result<String, String
                 .strip_prefix(&format!("{group}."))
                 .unwrap_or(&label)
                 .to_string();
-            row.push(if g.len() == 1 {
-                shown.join(", ")
+            let answers = if shown.is_empty() {
+                "–".to_string()
             } else {
-                format!("{label}: {}", shown.join(", "))
+                shown.join(", ")
+            };
+            row.push(if g.len() == 1 {
+                answers
+            } else {
+                format!("{label}: {answers}")
             });
         }
         let _ = writeln!(s, "| `{word}` | {group} | {} |", row.join("; "));
@@ -459,7 +472,7 @@ fn render(
     let mut head = "| | lemmas | cells | top-1 |".to_string();
     let mut rule = "|---|---:|---:|---:|".to_string();
     if stress {
-        head.push_str(" letters right (stress ignored) | top-1 with stressed lemma |");
+        head.push_str(" letters right (marks ignored) | top-1, lemma written in full |");
         rule.push_str("---:|---:|");
     }
     head.push_str(" top-3 | top-1 given citation |");
@@ -580,8 +593,9 @@ fn render(
     }
     if stress {
         s.push_str(
-            "*Stressed lemma* gives the lemma with its stress marked, as a dictionary prints it; the\n\
-             plain *top-1* column has to guess the lemma's stress too.\n",
+            "*Lemma written in full* gives the lemma with the marks a dictionary prints (stress,\n\
+             vowel length); the plain *top-1* column has to guess them too. *Letters right* ignores\n\
+             those marks.\n",
         );
     }
     s.push('\n');
@@ -590,7 +604,7 @@ fn render(
     s.push_str("<details><summary>Held-out top-1 per cell</summary>\n\n| cell | n | top-1 | top-3 |\n|---|---:|---:|---:|\n");
     for r in reports {
         for (i, c) in r.test.cells.iter().enumerate() {
-            if c.n == 0 || i == r.lemma_cell {
+            if c.n == 0 || r.unscored.contains(&i) {
                 continue;
             }
             let _ = writeln!(

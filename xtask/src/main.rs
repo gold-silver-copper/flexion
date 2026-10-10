@@ -215,11 +215,15 @@ fn probe(
         t.elapsed().as_secs_f64(),
         blob.len()
     );
+    let _ = std::fs::write(cache_path(lang).with_extension("bin"), &blob);
     let model = flexion::Model::from_bytes(&blob).ok_or("model failed to load")?;
     for (pi, (part, d)) in lang.parts.iter().zip(data).enumerate() {
         if only.is_some_and(|o| o != part.name) {
             continue;
         }
+        let Some(shape) = shapes.get(pi) else {
+            continue;
+        };
         let cells = flexion_train::cells::Cells::new(lang, part)?;
         let citation: Vec<usize> = part
             .citation
@@ -253,11 +257,23 @@ fn probe(
         ] {
             if (given == eval::Given::Dictionary && markers.is_empty())
                 || (given == eval::Given::Citation && citation.is_empty())
-                || (given == eval::Given::StressedLemma && lang.spelling.stress_mark.is_none())
+                || (given == eval::Given::StressedLemma
+                    && lang.spelling.stress_mark.is_none()
+                    && lang.spelling.fold.is_empty())
             {
                 continue;
             }
-            let score = eval::score(&sp, &model, pi, &words, &citation, &markers, given, misses);
+            let score = eval::score(
+                &sp,
+                &model,
+                pi,
+                &words,
+                &citation,
+                &markers,
+                &shape.unscored,
+                given,
+                misses,
+            );
             let total = score.total(&[]);
             let (ece, _) = eval::calibration(&score.calibration);
             println!(
@@ -303,7 +319,7 @@ fn probe(
                 pct(t.top1_any, t.n)
             );
         }
-        bench(&model, pi, &words, &cells);
+        bench(&model, pi, &words, &cells, &shape.unscored);
         let inh = eval::score_inherent(&model, pi, &words, part.inherent.len());
         for (name, (ok, n)) in part.inherent.iter().zip(inh) {
             println!("  inherent {name}: {:.2}% of {n}", pct(ok, n));
@@ -314,12 +330,17 @@ fn probe(
 
 /// Time the quick path (parse the word, walk, build the top form), and check
 /// it agrees with the first scored candidate.
-fn bench(model: &flexion::Model, pi: usize, words: &[Word], cells: &flexion_train::cells::Cells) {
+fn bench(
+    model: &flexion::Model,
+    pi: usize,
+    words: &[Word],
+    cells: &flexion_train::cells::Cells,
+    unscored: &[usize],
+) {
     let Some(p) = model.pos(pi) else {
         return;
     };
-    let lemma = p.lemma_cell();
-    let Some(cell) = (0..p.cells()).find(|&c| Some(c) != lemma) else {
+    let Some(cell) = (0..p.cells()).find(|c| !unscored.contains(c)) else {
         return;
     };
     let lemmas: Vec<&str> = words.iter().map(|w| w.lemma()).take(20_000).collect();
@@ -393,8 +414,12 @@ fn english_comparison(lang: &Language, data: &[PosData], blob: &[u8]) -> Result<
     let spec = flexion_train::spelling_spec(lang);
     let sp = flexion_train::view(&spec);
     s.push_str("Attested words (every word both were built from), primary form from the plain call:\n\n| | `english` 0.4 | this crate |\n|---|---:|---:|\n");
+    let shapes = flexion_train::shapes(lang)?;
     for (pi, (part, d)) in lang.parts.iter().zip(data).enumerate() {
         let words = extract::words(d);
+        let Some(shape) = shapes.get(pi) else {
+            continue;
+        };
         let cells = flexion_train::cells::Cells::new(lang, part)?;
         let citation: Vec<usize> = part
             .citation
@@ -419,6 +444,7 @@ fn english_comparison(lang: &Language, data: &[PosData], blob: &[u8]) -> Result<
             &words,
             &citation,
             &[],
+            &shape.unscored,
             eval::Given::Lemma,
             false,
         )

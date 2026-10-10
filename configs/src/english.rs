@@ -149,6 +149,7 @@ fn group(name: &'static str, doc: &'static str, features: &[&'static str]) -> Gr
         any: vec![],
         none: vec![],
         optional: false,
+        from_head: false,
     }
 }
 

@@ -32,6 +32,8 @@ fn tiny() -> Vec<u8> {
         cells: 2,
         inherent: 0,
         lemma_cell: Some(0),
+        groups: vec![],
+        restore: None,
         walk: crate::Walk::default(),
         edits: vec![
             edit("", ""),

@@ -4,20 +4,23 @@
 //! return `None` or a lookup return nothing, never a panic.
 //!
 //! ```text
-//! header (72 bytes)
+//! header (88 bytes)
 //!   0  magic "FLX1"            4  version
 //!   8  strings offset          12 strings length
 //!   16 number of parts of speech
 //!   20 spelling flags (bit 0: fold case, bit 1: mark stress on monosyllables)
 //!   24 stress mark    32 vowels    40 implicitly stressed letters
 //!   48 fold-from      56 fold-to   64 marks stripped from input
+//!   72 unmark-from    80 unmark-to (letters written plain when marks are off)
 //!      (each a string reference: offset + length into the string area)
-//! part-of-speech headers, 56 bytes each, right after the header: cells,
+//! part-of-speech headers, 60 bytes each, right after the header: cells,
 //!   inherent features, then offset and count of edits, classes, nodes and
 //!   distribution entries, the lemma cell, the walk's feature word
 //!   (bits 0–7: 1 + the depth at which a syllable-count token is inserted,
 //!   0 for none; bits 8–15: the largest syllable bucket), the offset of the
-//!   first-character array, and four bytes of padding
+//!   first-character array, the offset of the class groups section, and the
+//!   index of the part of speech that restores this one's lemmas ([`NONE`]:
+//!   lemmas are taken as typed)
 //! records (edits, classes, nodes, distribution entries) at the offsets the
 //!   part-of-speech headers give
 //! string area: UTF-8 bytes
@@ -29,10 +32,14 @@
 //!   saturating) the stripped suffix's length in characters and the vowels
 //!   in the prefix, the stripped suffix and the added suffix, two bytes
 //!   padding;
-//! - class, `4 * cells + 8 + inherent` bytes rounded up to 4: one edit index
-//!   per cell ([`NONE`] when the class has no form there), a string reference to
-//!   the class's longest stripped suffix, one value index per inherent feature
-//!   ([`UNKNOWN`] when unknown);
+//! - class groups section: the number of groups, each group's number of
+//!   cells (they sum to the part of speech's cells), then per group the number
+//!   of its sub-vectors followed by the sub-vectors themselves (one edit index
+//!   per cell of the group, [`NONE`] when there is no form there). Classes
+//!   share sub-vectors, which keeps big paradigms small;
+//! - class, `4 * groups + 8 + inherent` bytes rounded up to 4: one sub-vector
+//!   index per group, a string reference to the class's longest stripped
+//!   suffix, one value index per inherent feature ([`UNKNOWN`] when unknown);
 //! - node, 16 bytes: the label's offset in the string area, first child,
 //!   first distribution entry (all `u32`), number of children, number of
 //!   distribution entries (both `u16`);
@@ -44,9 +51,9 @@
 //!   Entries of one node are sorted by descending probability.
 
 pub const MAGIC: &[u8; 4] = b"FLX1";
-pub const VERSION: u32 = 1;
-pub const HEADER_LEN: usize = 72;
-pub const POS_HEADER_LEN: usize = 56;
+pub const VERSION: u32 = 4;
+pub const HEADER_LEN: usize = 88;
+pub const POS_HEADER_LEN: usize = 60;
 pub const EDIT_LEN: usize = 32;
 pub const NODE_LEN: usize = 16;
 pub const DIST_LEN: usize = 8;

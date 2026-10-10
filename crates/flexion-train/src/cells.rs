@@ -108,10 +108,22 @@ impl<'a> Cells<'a> {
 
     /// Every cell a form with these tags fills.
     pub fn match_tags(&self, tags: &[String]) -> Vec<usize> {
+        self.match_tags_where(tags, &|_| true)
+    }
+
+    /// [`Cells::match_tags`], in the groups `wanted` accepts.
+    pub fn match_tags_where(
+        &self,
+        tags: &[String],
+        wanted: &dyn Fn(&crate::spec::Group) -> bool,
+    ) -> Vec<usize> {
         let has = |t: &str| tags.iter().any(|x| x == t);
         let mut out = Vec::new();
         for g in &self.groups {
             let spec = g.group;
+            if !wanted(spec) {
+                continue;
+            }
             if !spec.all.iter().all(|t| has(t))
                 || (!spec.any.is_empty() && !spec.any.iter().any(|t| has(t)))
                 || spec.none.iter().any(|t| has(t))

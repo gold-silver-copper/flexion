@@ -67,7 +67,8 @@ pub struct PartOfSpeech {
     pub doc: &'static str,
     /// Kaikki `pos` values read into this part of speech.
     pub wiktionary: Vec<&'static str>,
-    /// When non-empty: only entries whose inflection template is one of these.
+    /// When non-empty: only entries whose inflection template is one of these
+    /// (a name ending in `*` matches by prefix: `pl-decl-noun*`).
     pub templates: Vec<&'static str>,
     pub forms: FormSource,
     pub groups: Vec<Group>,
@@ -96,12 +97,21 @@ pub struct Group {
     /// locatives): the generated function returns `Option`, `None` when the
     /// word most likely has no such form.
     pub optional: bool,
+    /// The group's forms are on the entry's head line rather than in its
+    /// inflection table (Latin comparatives).
+    pub from_head: bool,
 }
 
 impl Group {
     /// Mark the group optional (see [`Group::optional`]).
     pub fn optional(mut self) -> Self {
         self.optional = true;
+        self
+    }
+
+    /// Mark the group as read from the head line (see [`Group::from_head`]).
+    pub fn from_head(mut self) -> Self {
+        self.from_head = true;
         self
     }
 }
@@ -116,6 +126,12 @@ pub struct Spelling {
     pub implicit: &'static str,
     pub fold: Vec<(char, char)>,
     pub strip_marks: &'static str,
+    /// Letters written plain when the caller turns marks off (Latin
+    /// `ā` → `a`). Stress marks are dropped too.
+    pub unmark: Vec<(char, char)>,
+    /// Name of the generated setting that turns marks off (`stress`,
+    /// `macrons`); empty for no setting.
+    pub marks_setting: &'static str,
 }
 
 /// How form tags rank forms.
@@ -169,6 +185,9 @@ pub trait Hooks: Sync + Send {
     fn form_ok(&self, _pos: &str, _lemma: &str, _form: &str) -> bool {
         true
     }
+    /// Fix an entry before it is read: tags a dump gets wrong, forms in the
+    /// wrong place. Runs once per entry and part of speech.
+    fn repair(&self, _pos: &str, _entry: &mut Entry) {}
     /// Extra tags describing the word itself (e.g. gender parsed from the
     /// head template when the forms don't carry it).
     fn inherent_tags(&self, _entry: &Entry) -> Vec<String> {

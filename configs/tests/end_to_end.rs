@@ -51,8 +51,14 @@ fn ask(
         .iter()
         .filter_map(|(g, v)| cells.find(g, v))
         .collect();
+    let markers = lang.markers(part);
+    let markers: Vec<&[&str]> = markers.iter().map(Vec::as_slice).collect();
     let p = model.pos(pi).expect("pos in model");
-    p.best(&p.citation(word, &citation), cell, Options::default())
+    p.best(
+        &p.citation_marked(word, &citation, &markers),
+        cell,
+        Options::default(),
+    )
 }
 
 #[test]
@@ -190,6 +196,193 @@ fn russian_learns_stress_and_inherent_features() {
     let nouns = model.pos(0).expect("nouns");
     let gender = nouns.inherent(&nouns.citation("тетрадь", &[]), 0);
     assert_eq!(gender.first().map(|g| g.0), Some(1), "тетрадь is feminine");
+}
+
+#[test]
+fn latin_restores_vowel_length_and_reads_citations() {
+    let lang = flexion_configs::latin::language();
+    lang.validate().expect("valid config");
+    let (_, blob) = train(&lang);
+    // An unmarked lemma finds the attested word; the output keeps its macrons.
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "noun",
+            "rosa",
+            "noun",
+            &["Ablative", "Plural"]
+        ),
+        "rosīs"
+    );
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "noun",
+            "rex",
+            "noun",
+            &["Genitive", "Singular"]
+        ),
+        "rēgis"
+    );
+    // A dictionary citation with a gender marker.
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "noun",
+            "rēx, rēgis m.",
+            "noun",
+            &["Dative", "Plural"]
+        ),
+        "rēgibus"
+    );
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "verb",
+            "amo",
+            "verb",
+            &["Indicative", "Active", "Perfect", "Third", "Plural"]
+        ),
+        "amāvērunt"
+    );
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "adjective",
+            "bonus",
+            "adjective",
+            &["Dative", "Feminine", "Singular"]
+        ),
+        "bonae"
+    );
+    // The marks setting drops macrons.
+    let model = flexion::Model::from_bytes(&blob).expect("model loads");
+    let nouns = model.pos(0).expect("nouns");
+    let cells = flexion_train::cells::Cells::new(&lang, &lang.parts[0]).expect("cells");
+    let abl_pl = cells.find("noun", &["Ablative", "Plural"]).expect("cell");
+    assert_eq!(
+        nouns.best(
+            &nouns.citation("rosa", &[]),
+            abl_pl,
+            Options { marks: false }
+        ),
+        "rosis"
+    );
+}
+
+#[test]
+fn polish_learns_genitives_persons_and_virility() {
+    let lang = flexion_configs::polish::language();
+    lang.validate().expect("valid config");
+    let (_, blob) = train(&lang);
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "noun",
+            "kot",
+            "noun",
+            &["Genitive", "Singular"]
+        ),
+        "kota"
+    );
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "noun",
+            "pies",
+            "noun",
+            &["Genitive", "Singular"]
+        ),
+        "psa"
+    );
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "noun",
+            "ręka",
+            "noun",
+            &["Nominative", "Plural"]
+        ),
+        "ręce"
+    );
+    // A given genitive is output exactly.
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "noun",
+            "dom, domu",
+            "noun",
+            &["Genitive", "Singular"]
+        ),
+        "domu"
+    );
+    // Wiktionary's conjugation tables leave out person tags; the repair hook
+    // restores them.
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "verb",
+            "czytać",
+            "non_past",
+            &["First", "Singular"]
+        ),
+        "czytam"
+    );
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "verb",
+            "czytać",
+            "non_past",
+            &["Second", "Singular"]
+        ),
+        "czytasz"
+    );
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "verb",
+            "czytać",
+            "past",
+            &["First", "Feminine"]
+        ),
+        "czytałam"
+    );
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "adjective",
+            "dobry",
+            "adjective",
+            &["Nominative", "Virile", "Animate"]
+        ),
+        "dobrzy"
+    );
+    // The three-way masculine comes with the class.
+    let model = flexion::Model::from_bytes(&blob).expect("model loads");
+    let nouns = model.pos(0).expect("nouns");
+    let gender = |w: &str| {
+        nouns
+            .inherent(&nouns.citation(w, &[]), 0)
+            .first()
+            .map(|g| g.0)
+    };
+    assert_eq!(gender("pan"), Some(0), "pan is masculine personal");
+    assert_eq!(gender("kot"), Some(1), "kot is masculine animate");
+    assert_eq!(gender("stół"), Some(2), "stół is masculine inanimate");
 }
 
 #[test]

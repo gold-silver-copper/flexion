@@ -68,11 +68,11 @@ same way) is held out: the model is trained without them, then asked for every f
 attest. Another tenth chose the model's hyperparameters, so the held-out tenth was never
 used for any decision.
 
-| | lemmas | cells | top-1 | letters right (stress ignored) | top-1 with stressed lemma | top-3 | top-1 given citation | top-1 given citation and markers |
+| | lemmas | cells | top-1 | letters right (marks ignored) | top-1, lemma written in full | top-3 | top-1 given citation | top-1 given citation and markers |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 2561 | 27124 | **81.39%** | 94.72% | 89.87% | 96.84% | 94.49% | 96.75% |
-| adjective | 3332 | 161121 | **90.39%** | 99.79% | 99.73% | 98.70% | – | – |
-| verb | 1251 | 19729 | **87.16%** | 95.76% | 92.72% | 96.96% | 98.05% | 98.00% |
+| noun | 2561 | 27124 | **81.39%** | 94.87% | 89.87% | 96.85% | 94.49% | 96.75% |
+| adjective | 3332 | 161121 | **90.39%** | 99.82% | 99.73% | 98.70% | – | – |
+| verb | 1251 | 19729 | **87.16%** | 96.25% | 92.72% | 96.96% | 98.05% | 98.00% |
 | pronoun ¹ | 4 | 188 | **27.13%** | 52.13% | 52.13% | 51.06% | – | – |
 | numeral ¹ | 4 | 153 | **100.00%** | 100.00% | 100.00% | 100.00% | – | – |
 
@@ -84,20 +84,21 @@ it is the attested table below.
 (noun `noun.gen.sg`; verb `non_past.1.sg` and `non_past.2.sg`) and scores the remaining cells.
 *Citation and markers* also gives the word's inherent features, written as markers after
 the word the way a dictionary prints them (noun `m`/`f`/`n`/`anim`/`inan`; verb `impf`/`pf`).
-*Stressed lemma* gives the lemma with its stress marked, as a dictionary prints it; the
-plain *top-1* column has to guess the lemma's stress too.
+*Lemma written in full* gives the lemma with the marks a dictionary prints (stress,
+vowel length); the plain *top-1* column has to guess them too. *Letters right* ignores
+those marks.
 
 <details><summary>Held-out top-1 per cell</summary>
 
 | cell | n | top-1 | top-3 |
 |---|---:|---:|---:|
-| noun.nom.pl | 2419 | 83.51% | 96.94% |
+| noun.nom.pl | 2419 | 83.51% | 96.98% |
 | noun.gen.sg | 2517 | 83.19% | 97.62% |
 | noun.gen.pl | 2417 | 83.12% | 96.98% |
 | noun.dat.sg | 2517 | 83.19% | 97.66% |
 | noun.dat.pl | 2419 | 83.30% | 97.68% |
 | noun.acc.sg | 2517 | 76.72% | 96.34% |
-| noun.acc.pl | 2419 | 69.20% | 91.94% |
+| noun.acc.pl | 2419 | 69.20% | 91.98% |
 | noun.ins.sg | 2517 | 83.15% | 97.02% |
 | noun.ins.pl | 2419 | 83.30% | 97.68% |
 | noun.prep.sg | 2517 | 83.19% | 97.66% |
@@ -303,11 +304,11 @@ All parts of speech together (ECE 0.032):
 | 0.2–0.3 | 0.274 | 0.383 | 60 |
 | 0.3–0.4 | 0.366 | 0.432 | 785 |
 | 0.4–0.5 | 0.463 | 0.570 | 2466 |
-| 0.5–0.6 | 0.550 | 0.545 | 9793 |
-| 0.6–0.7 | 0.654 | 0.773 | 16091 |
-| 0.7–0.8 | 0.751 | 0.794 | 15453 |
-| 0.8–0.9 | 0.852 | 0.848 | 25456 |
-| 0.9–1.0 | 0.980 | 0.953 | 138210 |
+| 0.5–0.6 | 0.550 | 0.545 | 9792 |
+| 0.6–0.7 | 0.654 | 0.773 | 16095 |
+| 0.7–0.8 | 0.751 | 0.794 | 15450 |
+| 0.8–0.9 | 0.852 | 0.848 | 25449 |
+| 0.9–1.0 | 0.980 | 0.953 | 138217 |
 
 ### Forms many words lack
 
@@ -339,7 +340,7 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 | `кракозябра` | noun | nom.sg: кракозя́бра 0.75, крако́зябра 0.24; nom.pl: кракозя́бры 0.76, крако́зябры 0.24; gen.sg: кракозя́бры 0.75, крако́зябры 0.24; gen.pl: кракозя́бр 0.76, крако́зябр 0.24; dat.sg: кракозя́бре 0.75, крако́зябре 0.24; dat.pl: кракозя́брам 0.76, крако́зябрам 0.24; acc.sg: кракозя́бру 0.75, крако́зябру 0.24; acc.pl: кракозя́бры 0.72, крако́зябры 0.24; ins.sg: кракозя́брой 0.50, кракозя́брою 0.25; ins.pl: кракозя́брами 0.76, крако́зябрами 0.24; prep.sg: кракозя́бре 0.75, крако́зябре 0.24; prep.pl: кракозя́брах 0.76, крако́зябрах 0.24 |
 | `глокость` | noun | nom.sg: гло́кость 1.00; nom.pl: гло́кости 1.00; gen.sg: гло́кости 1.00; gen.pl: гло́костей 0.96; dat.sg: гло́кости 1.00; dat.pl: гло́костям 0.96; acc.sg: гло́кость 1.00; acc.pl: гло́кости 1.00; ins.sg: гло́костью 1.00; ins.pl: гло́костями 0.96; prep.sg: гло́кости 1.00; prep.pl: гло́костях 0.96 |
 | `бокр` | noun | nom.sg: бо́кр 0.85, бокр 0.15; nom.pl: бо́кры 0.85, бокры 0.13; gen.sg: бо́кра 0.85, бокра 0.15; gen.pl: бо́кров 0.85, бокров 0.13; dat.sg: бо́кру 0.85, бокру 0.15; dat.pl: бо́крам 0.85, бокрам 0.13; acc.sg: бо́кр 0.56, бо́кра 0.29; acc.pl: бо́кры 0.56, бо́кров 0.29; ins.sg: бо́кром 0.85, бокром 0.15; ins.pl: бо́крами 0.85, бокрами 0.13; prep.sg: бо́кре 0.85, бокре 0.15; prep.pl: бо́крах 0.85, бокрах 0.13 |
-| `бокрёнок` | noun | nom.sg: бокрёнок 0.89, бокрёно́к 0.10; nom.pl: бокря́та 0.87, бокрёнки́ 0.10; gen.sg: бокрёнка 0.90, бокрёнка́ 0.10; gen.pl: бокря́т 0.87, бокрёнко́в 0.10; dat.sg: бокрёнку 0.90, бокрёнку́ 0.10; dat.pl: бокря́там 0.87, бокрёнка́м 0.10; acc.sg: бокрёнка 0.86; acc.pl: бокря́т 0.86; ins.sg: бокрёнком 0.90, бокрёнко́м 0.10; ins.pl: бокря́тами 0.87, бокрёнка́ми 0.10; prep.sg: бокрёнке 0.90, бокрёнке́ 0.10; prep.pl: бокря́тах 0.87, бокрёнка́х 0.10 |
+| `бокрёнок` | noun | nom.sg: бокрёнок 1.00; nom.pl: бокря́та 0.87, бокрёнки́ 0.10; gen.sg: бокрёнка 0.90, бокрёнка́ 0.10; gen.pl: бокря́т 0.87, бокрёнко́в 0.10; dat.sg: бокрёнку 0.90, бокрёнку́ 0.10; dat.pl: бокря́там 0.87, бокрёнка́м 0.10; acc.sg: бокрёнка 0.86; acc.pl: бокря́т 0.86; ins.sg: бокрёнком 0.90, бокрёнко́м 0.10; ins.pl: бокря́тами 0.87, бокрёнка́ми 0.10; prep.sg: бокрёнке 0.90, бокрёнке́ 0.10; prep.pl: бокря́тах 0.87, бокрёнка́х 0.10 |
 | `куздрый` | adjective | nom.m.anim: ку́здрый 1.00; nom.m.inan: ку́здрый 1.00; nom.f.anim: ку́здрая 1.00; nom.f.inan: ку́здрая 1.00; nom.n.anim: ку́здрое 1.00; nom.n.inan: ку́здрое 1.00; nom.pl.anim: ку́здрые 1.00; nom.pl.inan: ку́здрые 1.00; gen.m.anim: ку́здрого 1.00; gen.m.inan: ку́здрого 1.00; gen.f.anim: ку́здрой 1.00; gen.f.inan: ку́здрой 1.00; gen.n.anim: ку́здрого 1.00; gen.n.inan: ку́здрого 1.00; gen.pl.anim: ку́здрых 1.00; gen.pl.inan: ку́здрых 1.00; dat.m.anim: ку́здрому 1.00; dat.m.inan: ку́здрому 1.00; dat.f.anim: ку́здрой 1.00; dat.f.inan: ку́здрой 1.00; dat.n.anim: ку́здрому 1.00; dat.n.inan: ку́здрому 1.00; dat.pl.anim: ку́здрым 1.00; dat.pl.inan: ку́здрым 1.00; acc.m.anim: ку́здрого 1.00; acc.m.inan: ку́здрый 1.00; acc.f.anim: ку́здрую 1.00; acc.f.inan: ку́здрую 1.00; acc.n.anim: ку́здрое 1.00; acc.n.inan: ку́здрое 1.00; acc.pl.anim: ку́здрых 1.00; acc.pl.inan: ку́здрые 1.00; ins.m.anim: ку́здрым 1.00; ins.m.inan: ку́здрым 1.00; ins.f.anim: ку́здрой 0.67, ку́здрою 0.33; ins.f.inan: ку́здрой 0.67, ку́здрою 0.33; ins.n.anim: ку́здрым 1.00; ins.n.inan: ку́здрым 1.00; ins.pl.anim: ку́здрыми 1.00; ins.pl.inan: ку́здрыми 1.00; prep.m.anim: ку́здром 1.00; prep.m.inan: ку́здром 1.00; prep.f.anim: ку́здрой 1.00; prep.f.inan: ку́здрой 1.00; prep.n.anim: ку́здром 1.00; prep.n.inan: ку́здром 1.00; prep.pl.anim: ку́здрых 1.00; prep.pl.inan: ку́здрых 1.00 |
 | `будлануть` | non_past | 1.sg: будлану́ 0.93; 1.pl: будланём 0.86, будла́нем 0.14; 2.sg: будланёшь 0.86, будла́нешь 0.14; 2.pl: будланёте 0.86, будла́нете 0.14; 3.sg: будланёт 0.86, будла́нет 0.14; 3.pl: будлану́т 0.86, будла́нут 0.14 |
 | `бузять` | non_past | 1.sg: буозьму́ 0.70, бузя́ю 0.29; 1.pl: буозьмём 0.70, бузя́ем 0.29; 2.sg: буозьмёшь 0.70, бузя́ешь 0.29; 2.pl: буозьмёте 0.70, бузя́ете 0.29; 3.sg: буозьмёт 0.70, бузя́ет 0.29; 3.pl: буозьму́т 0.70, бузя́ют 0.29 |
@@ -422,15 +423,15 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 4593 KB (1887 KB gzipped).
+The model is 4569 KB (1941 KB gzipped).
 
 | | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 2802 | 1794 | 26126 | 1853 | 221908 | 276 (`noun.nom.pl`) |
-| adjective | 546 | 443 | 12825 | 711 | 70396 | 310 (`adjective.nom.m.anim`) |
-| verb | 3203 | 2141 | 9643 | 1865 | 84437 | 247 (`non_past.1.sg`) |
-| pronoun | 277 | 59 | 31 | 16 | 360 | 167 (`pronoun.nom.m.anim`) |
-| numeral | 102 | 45 | 36 | 18 | 307 | 192 (`numeral.nom.m.anim`) |
+| noun | 2785 | 1792 | 26121 | 1854 | 221603 | 560 (`noun.nom.pl`) |
+| adjective | 521 | 442 | 12818 | 713 | 70380 | 584 (`adjective.nom.m.anim`) |
+| verb | 3204 | 2142 | 9643 | 1865 | 84437 | 278 (`non_past.1.sg`) |
+| pronoun | 277 | 59 | 31 | 16 | 360 | 155 (`pronoun.nom.m.anim`) |
+| numeral | 102 | 45 | 36 | 18 | 307 | 281 (`numeral.nom.m.anim`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,

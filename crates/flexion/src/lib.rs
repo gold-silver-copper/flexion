@@ -36,14 +36,14 @@ pub struct Candidate {
 /// Output options shared by every query.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Options {
-    /// Write stress marks on output (only where the language's data marks
-    /// stress).
-    pub stress: bool,
+    /// Write the language's optional marks: stress marks, and letters the
+    /// spelling can write plain (Latin macrons). Off writes them plain.
+    pub marks: bool,
 }
 
 impl Default for Options {
     fn default() -> Self {
-        Options { stress: true }
+        Options { marks: true }
     }
 }
 
@@ -71,6 +71,8 @@ pub(crate) struct PosHeader<'a> {
     pub(crate) lemma_cell: Option<usize>,
     pub(crate) walk: Walk,
     pub(crate) chars: usize,
+    /// The part of speech whose model restores this one's lemmas.
+    pub(crate) restore: Option<usize>,
     /// The language's main letter block (`char >> 8`), for child tables.
     pub(crate) block: u32,
     /// Every node, decoded once at load so a walk reads plain fields.
@@ -79,7 +81,9 @@ pub(crate) struct PosHeader<'a> {
     pub(crate) edit_list: Vec<pos::Edit<'a>>,
     /// One edit index per class and cell (stride `cells`).
     pub(crate) class_edits: Vec<u32>,
-    pub(crate) class_strips: Vec<&'a str>,
+    /// Each class's longest stripped suffix, folded for lookup: a class fits
+    /// a word whose key ends with it.
+    pub(crate) class_strips_folded: Vec<String>,
     /// One value per class and inherent feature (stride `inherent`).
     pub(crate) class_values: Vec<u8>,
     pub(crate) entries: Vec<(u32, f32)>,
@@ -202,6 +206,8 @@ impl<'a> Model<'a> {
             b.str(strings, 48)?,
             b.str(strings, 56)?,
             b.str(strings, 64)?,
+            b.str(strings, 72)?,
+            b.str(strings, 80)?,
         );
         let mut parts = Vec::with_capacity(n_pos);
         for i in 0..n_pos {
@@ -217,7 +223,7 @@ impl<'a> Model<'a> {
                 n_edits: field(3)?,
                 classes: field(4)?,
                 n_classes: field(5)?,
-                class_len: class_len(cells, inherent),
+                class_len: 0,
                 nodes: field(6)?,
                 n_nodes: field(7)?,
                 dist: field(8)?,
@@ -227,11 +233,15 @@ impl<'a> Model<'a> {
                     .flatten(),
                 walk: Walk::decode(b.u32(at.checked_add(44)?)?),
                 chars: b.usize(at.checked_add(48)?)?,
+                restore: {
+                    let r = b.u32(at.checked_add(56)?)?;
+                    (r != NONE).then(|| usize::try_from(r).ok()).flatten()
+                },
                 block: spelling.vowel_set.block(),
                 tree: Vec::new(),
                 edit_list: Vec::new(),
                 class_edits: Vec::new(),
-                class_strips: Vec::new(),
+                class_strips_folded: Vec::new(),
                 class_values: Vec::new(),
                 entries: Vec::new(),
                 table_of: Vec::new(),
@@ -240,8 +250,6 @@ impl<'a> Model<'a> {
             // Every table must lie inside the blob.
             let ends = [
                 h.edits.checked_add(h.n_edits.checked_mul(EDIT_LEN)?)?,
-                h.classes
-                    .checked_add(h.n_classes.checked_mul(h.class_len)?)?,
                 h.nodes.checked_add(h.n_nodes.checked_mul(NODE_LEN)?)?,
                 h.dist.checked_add(h.n_dist.checked_mul(DIST_LEN)?)?,
                 h.chars.checked_add(h.n_nodes.checked_mul(4)?)?,
@@ -318,14 +326,52 @@ impl<'a> Model<'a> {
                     ],
                 });
             }
+            // Groups: their sizes, then each group's shared sub-vectors.
+            let mut cursor = b.usize(at.checked_add(52)?)?;
+            let n_groups = b.usize(cursor)?;
+            cursor = cursor.checked_add(4)?;
+            let mut sizes = Vec::with_capacity(n_groups);
+            for _ in 0..n_groups {
+                sizes.push(b.usize(cursor)?);
+                cursor = cursor.checked_add(4)?;
+            }
+            if sizes.iter().try_fold(0usize, |a, &x| a.checked_add(x))? != h.cells {
+                return None;
+            }
+            let mut sub_tables = Vec::with_capacity(n_groups);
+            for &len in &sizes {
+                let n = b.usize(cursor)?;
+                cursor = cursor.checked_add(4)?;
+                sub_tables.push((cursor, n, len));
+                cursor = cursor.checked_add(n.checked_mul(len)?.checked_mul(4)?)?;
+            }
+            if cursor > bytes.len() {
+                return None;
+            }
+            h.class_len = class_len(n_groups, h.inherent);
+            if h.classes
+                .checked_add(h.n_classes.checked_mul(h.class_len)?)?
+                > bytes.len()
+            {
+                return None;
+            }
             for c in 0..h.n_classes {
                 let at = h.classes.checked_add(c.checked_mul(h.class_len)?)?;
-                for cell in 0..h.cells {
-                    h.class_edits
-                        .push(b.u32(at.checked_add(cell.checked_mul(4)?)?)?);
+                for (g, &(start, n, len)) in sub_tables.iter().enumerate() {
+                    let id = b.usize(at.checked_add(g.checked_mul(4)?)?)?;
+                    if id >= n {
+                        return None;
+                    }
+                    let sub = start.checked_add(id.checked_mul(len)?.checked_mul(4)?)?;
+                    for cell in 0..len {
+                        h.class_edits
+                            .push(b.u32(sub.checked_add(cell.checked_mul(4)?)?)?);
+                    }
                 }
-                let strip_at = at.checked_add(h.cells.checked_mul(4)?)?;
-                h.class_strips.push(b.str(strings, strip_at)?);
+                let strip_at = at.checked_add(n_groups.checked_mul(4)?)?;
+                let strip = b.str(strings, strip_at)?;
+                h.class_strips_folded
+                    .push(strip.chars().map(|c| spelling.fold_char(c)).collect());
                 for f in 0..h.inherent {
                     h.class_values
                         .push(b.u8(strip_at.checked_add(8)?.checked_add(f)?)?);

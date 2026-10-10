@@ -223,14 +223,14 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 808 KB (338 KB gzipped).
+The model is 818 KB (341 KB gzipped).
 
 | | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 686 | 678 | 11272 | 5358 | 29496 | 128 (`noun.pl`) |
-| verb | 388 | 449 | 3508 | 752 | 10532 | 101 (`verb.3sg`) |
-| adjective | 132 | 85 | 3266 | 2187 | 5677 | 103 (`adjective.comp`) |
-| adverb | 42 | 23 | 270 | 160 | 599 | 88 (`adverb.comp`) |
+| noun | 686 | 678 | 11272 | 5358 | 29496 | 287 (`noun.pl`) |
+| verb | 388 | 449 | 3508 | 752 | 10532 | 151 (`verb.3sg`) |
+| adjective | 132 | 85 | 3266 | 2187 | 5677 | 176 (`adjective.comp`) |
+| adverb | 42 | 23 | 270 | 160 | 599 | 168 (`adverb.comp`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
@@ -250,7 +250,7 @@ release build, fastest of seven runs.
 ### Compared with `english` 0.4
 
 `english` 0.4's generated exception tables are 1026 KB of Rust source (compiled into
-perfect-hash maps); this crate's model is 808 KB.
+perfect-hash maps); this crate's model is 818 KB.
 
 Attested words (every word both were built from), primary form from the plain call:
 
@@ -266,10 +266,10 @@ build, fastest of seven runs, the two libraries measured alternately in the same
 
 | | `english` 0.4 ns per call | this crate ns per call | ratio |
 |---|---:|---:|---:|
-| noun (`noun.pl`) | 77 | 123 | 1.6× |
-| verb (`verb.3sg`) | 60 | 101 | 1.7× |
-| adjective (`adjective.comp`) | 85 | 102 | 1.2× |
-| adverb (`adverb.comp`) | 50 | 88 | 1.8× |
+| noun (`noun.pl`) | 96 | 248 | 2.6× |
+| verb (`verb.3sg`) | 65 | 147 | 2.3× |
+| adjective (`adjective.comp`) | 91 | 177 | 2.0× |
+| adverb (`adverb.comp`) | 54 | 163 | 3.0× |
 
 
 ## Data and license

@@ -117,18 +117,22 @@ fn library(lang: &Language) -> Result<String, String> {
         s,
         "/// Output settings. The free functions use [`{settings}::default()`].\n\
          #[derive(Debug, Clone, Copy, PartialEq, Eq)]\n\
-         pub struct {settings} {{\n    stress: bool,\n}}\n\n\
+         pub struct {settings} {{\n    marks: bool,\n}}\n\n\
          impl Default for {settings} {{\n    fn default() -> Self {{\n        Self::new()\n    }}\n}}\n"
     );
     let _ = writeln!(
         s,
-        "impl {settings} {{\n    pub const fn new() -> Self {{\n        {settings} {{ stress: true }}\n    }}\n"
+        "impl {settings} {{\n    pub const fn new() -> Self {{\n        {settings} {{ marks: true }}\n    }}\n"
     );
-    if stress {
-        s.push_str("    /// Write stress marks (on by default).\n    pub const fn stress(mut self, on: bool) -> Self {\n        self.stress = on;\n        self\n    }\n\n");
+    let setting = lang.spelling.marks_setting;
+    if !setting.is_empty() {
+        let _ = writeln!(
+            s,
+            "    /// Write {setting} (on by default); off writes the plain letters.\n    pub const fn {setting}(mut self, on: bool) -> Self {{\n        self.marks = on;\n        self\n    }}\n"
+        );
     }
     s.push_str(
-        "    fn options(&self) -> Options {\n        Options { stress: self.stress }\n    }\n",
+        "    fn options(&self) -> Options {\n        Options { marks: self.marks }\n    }\n",
     );
     let mut free = String::new();
     for (pi, part) in lang.parts.iter().enumerate() {

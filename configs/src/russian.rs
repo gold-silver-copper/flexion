@@ -128,6 +128,7 @@ pub fn language() -> Language {
                         any: vec!["present", "future"],
                         none: vec!["participle", "adverbial", "imperative"],
                         optional: false,
+                        from_head: false,
                     },
                     group("past", "The past tense.", &["Agreement"], &["past"], &["participle", "adverbial"]),
                     group("imperative", "The imperative.", &["Number"], &["imperative"], &[]),
@@ -193,6 +194,8 @@ pub fn language() -> Language {
             implicit: "ё",
             fold: vec![('ё', 'е')],
             strip_marks: "\u{300}",
+            unmark: vec![],
+            marks_setting: "stress",
         },
         tags: TagPolicy {
             soft: vec![
@@ -245,6 +248,7 @@ fn group(
         any: vec![],
         none: none.to_vec(),
         optional: false,
+        from_head: false,
     }
 }
 
