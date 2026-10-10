@@ -119,6 +119,9 @@ pub(crate) struct PosHeader<'a> {
     /// The join model's prefixes, sorted.
     pub(crate) joins: Vec<JoinRec<'a>>,
     pub(crate) join_entries: Vec<(u32, f32)>,
+    /// `(feature, attested value, joined value, probability)` (see
+    /// [`write::JoinSpec::inherent`]).
+    pub(crate) join_inherent: Vec<(u8, u8, u8, f32)>,
     /// Part models: `(the principal part's cell, the model's part of speech)`.
     pub(crate) part_models: Vec<(usize, usize)>,
     /// Per cell: 0, or `k + 1` to build it from part model `k`.
@@ -168,6 +171,8 @@ pub(crate) struct JoinRec<'a> {
     pub(crate) split: f32,
     pub(crate) first: usize,
     pub(crate) count: usize,
+    pub(crate) first_inherent: usize,
+    pub(crate) count_inherent: usize,
 }
 
 /// One tree node, decoded.
@@ -377,6 +382,7 @@ impl<'a> Model<'a> {
                 join_classes: Vec::new(),
                 joins: Vec::new(),
                 join_entries: Vec::new(),
+                join_inherent: Vec::new(),
                 part_models: Vec::new(),
                 sources: Vec::new(),
                 lexicon: Vec::new(),
@@ -554,27 +560,41 @@ impl<'a> Model<'a> {
             }
             let n_joins = b.usize(cursor)?;
             cursor = cursor.checked_add(4)?;
-            if cursor.checked_add(n_joins.checked_mul(20)?)? > bytes.len() {
+            if cursor.checked_add(n_joins.checked_mul(28)?)? > bytes.len() {
                 return None;
             }
-            let mut n_entries = 0usize;
+            let (mut n_entries, mut n_inherent) = (0usize, 0usize);
             for _ in 0..n_joins {
                 let j = JoinRec {
                     prefix: b.str(strings, cursor)?,
                     split: b.f32(cursor.checked_add(8)?)?,
                     first: b.usize(cursor.checked_add(12)?)?,
                     count: b.usize(cursor.checked_add(16)?)?,
+                    first_inherent: b.usize(cursor.checked_add(20)?)?,
+                    count_inherent: b.usize(cursor.checked_add(24)?)?,
                 };
                 n_entries = n_entries.max(j.first.checked_add(j.count)?);
+                n_inherent = n_inherent.max(j.first_inherent.checked_add(j.count_inherent)?);
                 h.joins.push(j);
-                cursor = cursor.checked_add(20)?;
+                cursor = cursor.checked_add(28)?;
             }
-            if cursor.checked_add(n_entries.checked_mul(DIST_LEN)?)? > bytes.len() {
+            if cursor.checked_add(n_entries.saturating_add(n_inherent).checked_mul(DIST_LEN)?)?
+                > bytes.len()
+            {
                 return None;
             }
             for _ in 0..n_entries {
                 h.join_entries
                     .push((b.u32(cursor)?, b.f32(cursor.checked_add(4)?)?));
+                cursor = cursor.checked_add(DIST_LEN)?;
+            }
+            for _ in 0..n_inherent {
+                h.join_inherent.push((
+                    b.u8(cursor)?,
+                    b.u8(cursor.checked_add(1)?)?,
+                    b.u8(cursor.checked_add(2)?)?,
+                    b.f32(cursor.checked_add(4)?)?,
+                ));
                 cursor = cursor.checked_add(DIST_LEN)?;
             }
             // Part models.

@@ -101,6 +101,11 @@ pub struct JoinSpec {
     pub split: f32,
     /// `(join class, probability)`, most likely first.
     pub classes: Vec<(u32, f32)>,
+    /// How a joined word's inherent features follow from its attested
+    /// word's: `(feature, the attested word's value, the joined word's value,
+    /// probability)`. A value with no entry is kept (Russian `на` makes an
+    /// imperfective verb perfective; German `an` keeps a noun's gender).
+    pub inherent: Vec<(u8, u8, u8, f32)>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -340,17 +345,26 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
             }
         }
         put(&mut body, to_u32(joins.len()));
-        let mut first = 0u32;
+        let (mut first, mut first_inherent) = (0u32, 0u32);
         for j in &joins {
             put_str(&mut body, &mut strings, &j.prefix);
             put(&mut body, j.split.to_bits());
             put(&mut body, first);
             put(&mut body, to_u32(j.classes.len()));
+            put(&mut body, first_inherent);
+            put(&mut body, to_u32(j.inherent.len()));
             first = first.saturating_add(to_u32(j.classes.len()));
+            first_inherent = first_inherent.saturating_add(to_u32(j.inherent.len()));
         }
         for j in &joins {
             for &(class, prob) in &j.classes {
                 put(&mut body, class);
+                put(&mut body, prob.to_bits());
+            }
+        }
+        for j in &joins {
+            for &(feature, from, to, prob) in &j.inherent {
+                body.extend_from_slice(&[feature, from, to, 0]);
                 put(&mut body, prob.to_bits());
             }
         }

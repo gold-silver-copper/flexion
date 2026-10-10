@@ -59,10 +59,13 @@
 //!   Entries of one node are sorted by descending probability.
 //! - join section: the number of join classes, each one edit index per cell
 //!   (an edit of the joined word's base form); the number of prefixes, each
-//!   20 bytes (the prefix as a folded string reference, the probability that
-//!   an unseen word with it joins, its first entry and number of entries),
-//!   sorted by prefix; then the entries, 8 bytes each (join class,
-//!   probability).
+//!   28 bytes (the prefix as a folded string reference, the probability that
+//!   an unseen word with it joins, its first entry and number of entries,
+//!   its first inherent entry and number of them), sorted by prefix; then
+//!   the entries, 8 bytes each (join class, probability); then the inherent
+//!   entries, 8 bytes each (feature, the attested word's value, the joined
+//!   word's value, a padding byte, probability): how a joined word's inherent
+//!   features follow from its attested word's, a value with no entry kept.
 //! - parts section: the number of part models, each the cell of its
 //!   principal part and the index of its part of speech in the blob; then one
 //!   byte per cell (0: built by this part of speech, `k + 1`: by part model

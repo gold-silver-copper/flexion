@@ -353,6 +353,26 @@ impl<'s> Learner<'s> {
         }
         let mut class_ids: HashMap<Vec<u32>, u32> = HashMap::new();
         let mut by_prefix: BTreeMap<&str, BTreeMap<u32, usize>> = BTreeMap::new();
+        // Per prefix: (feature, attested value, joined value) → pairs.
+        let mut features: BTreeMap<&str, BTreeMap<(u8, u8, u8), usize>> = BTreeMap::new();
+        for &(wi, bi, p) in &pairs {
+            let (Some(w), Some(b)) = (
+                words.get(wi).and_then(|w| w.lexemes.first()),
+                words.get(bi).and_then(|b| b.lexemes.first()),
+            ) else {
+                continue;
+            };
+            for (f, (&from, &to)) in b.inherent.iter().zip(&w.inherent).enumerate() {
+                if from != u8::MAX && to != u8::MAX {
+                    let f = u8::try_from(f).unwrap_or(u8::MAX);
+                    *features
+                        .entry(p)
+                        .or_default()
+                        .entry((f, from, to))
+                        .or_default() += 1;
+                }
+            }
+        }
         for (&(_, bi, p), per_cell) in pairs.iter().zip(readings) {
             // Cells the base lacks get no join edit: the joined reading has
             // nothing to say there.
@@ -399,10 +419,25 @@ impl<'s> Learner<'s> {
                 .map(|(c, n)| (c, n as f32 / kept_total as f32))
                 .collect();
             dist.sort_by(|a, b| b.1.total_cmp(&a.1).then(a.0.cmp(&b.0)));
+            // Each attested value's joined values, where they differ from it.
+            let counts = features.get(p).cloned().unwrap_or_default();
+            let mut inherent = Vec::new();
+            for (&(f, from, to), &n) in &counts {
+                let all: usize = counts
+                    .iter()
+                    .filter(|((g, x, _), _)| *g == f && *x == from)
+                    .map(|(_, &m)| m)
+                    .sum();
+                let kept = counts.get(&(f, from, from)).copied().unwrap_or(0);
+                if all >= MIN_JOIN_PAIRS && kept < all {
+                    inherent.push((f, from, to, n as f32 / all as f32));
+                }
+            }
             out.prefixes.push(JoinSpec {
                 prefix: p.to_string(),
                 split: split as f32,
                 classes: dist,
+                inherent,
             });
             out.pairs += total;
         }

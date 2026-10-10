@@ -1257,7 +1257,8 @@ impl<'m, 'a> Pos<'m, 'a> {
         let Some((join, word)) = self.split(citation) else {
             return plain;
         };
-        // A joined word has its attested word's features.
+        // A joined word has its attested word's features, as the prefix
+        // changes them.
         let s = join.split.clamp(0.0, 1.0);
         let base = Citation {
             lemma: word.clone(),
@@ -1266,10 +1267,23 @@ impl<'m, 'a> Pos<'m, 'a> {
             inherent: citation.inherent.clone(),
         };
         let mut out: Vec<(u8, f32)> = plain.into_iter().map(|(v, p)| (v, p * (1.0 - s))).collect();
+        let changes: Vec<(u8, u8, f32)> = (join.first_inherent
+            ..join.first_inherent.saturating_add(join.count_inherent))
+            .filter_map(|i| self.h.join_inherent.get(i))
+            .filter(|e| usize::from(e.0) == feature)
+            .map(|&(_, from, to, q)| (from, to, q))
+            .collect();
         for (v, p) in self.inherent_plain(&base, feature) {
-            match out.iter_mut().find(|(x, _)| *x == v) {
+            let mut add = |v: u8, p: f32| match out.iter_mut().find(|(x, _)| *x == v) {
                 Some((_, q)) => *q += s * p,
                 None => out.push((v, s * p)),
+            };
+            if changes.iter().any(|c| c.0 == v) {
+                for &(_, to, q) in changes.iter().filter(|c| c.0 == v) {
+                    add(to, p * q);
+                }
+            } else {
+                add(v, p);
             }
         }
         out.sort_by(|a, b| b.1.total_cmp(&a.1));
