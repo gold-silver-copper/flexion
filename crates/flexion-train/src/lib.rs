@@ -13,6 +13,7 @@ pub mod eval;
 pub mod extract;
 pub mod kaikki;
 pub mod learn;
+pub mod marks;
 pub mod pipeline;
 pub mod spec;
 
@@ -21,37 +22,33 @@ use flexion::Spelling;
 use flexion::write::SpellingSpec;
 use spec::Language;
 
-/// The runtime spelling spec for a language.
+/// The runtime spelling spec for a language, with the tables its marks
+/// imply derived from Unicode.
 pub fn spelling_spec(lang: &Language) -> SpellingSpec {
     let s = &lang.spelling;
+    let d = marks::derive(s);
     SpellingSpec {
         fold_case: s.fold_case,
         mark_monosyllables: s.mark_monosyllables,
-        stress_mark: s.stress_mark,
-        vowels: s.vowels.to_string(),
+        stress_marks: s.stress_marks.to_string(),
+        stress_table: d.stress_table,
+        vowels: d.vowels,
         implicit: s.implicit.to_string(),
-        fold_from: s.fold.iter().map(|(a, _)| *a).collect(),
-        fold_to: s.fold.iter().map(|(_, b)| *b).collect(),
+        fold_from: d.fold.iter().map(|(a, _)| *a).collect(),
+        fold_to: d.fold.iter().map(|(_, b)| *b).collect(),
         strip_marks: s.strip_marks.to_string(),
-        unmark_from: s.unmark.iter().map(|(a, _)| *a).collect(),
-        unmark_to: s.unmark.iter().map(|(_, b)| *b).collect(),
+        unmark_from: d.unmark.iter().map(|(a, _)| *a).collect(),
+        unmark_to: d.unmark.iter().map(|(_, b)| *b).collect(),
+        syllabic: s.syllabic.to_string(),
+        mute: s.mute.to_string(),
+        diphthongs: s.diphthongs.concat(),
+        hiatus: d.hiatus,
     }
 }
 
 /// A runtime [`Spelling`] view of a spec.
 pub fn view(s: &SpellingSpec) -> Spelling<'_> {
-    Spelling::new(
-        s.fold_case,
-        s.mark_monosyllables,
-        s.stress_mark,
-        &s.vowels,
-        &s.implicit,
-        &s.fold_from,
-        &s.fold_to,
-        &s.strip_marks,
-        &s.unmark_from,
-        &s.unmark_to,
-    )
+    Spelling::new(s.fold_case, s.mark_monosyllables, s.strings())
 }
 
 /// Which tenth of the data a word belongs to: a hash of its key, so the split
@@ -74,6 +71,10 @@ pub const DEV_BUCKET: u64 = 1;
 pub struct PosPlan {
     pub shape: learn::Shape,
     pub params: learn::Params,
+    /// The cells of the citation's principal parts, and per cell which of
+    /// them builds it (see [`train_pos`]); empty for none.
+    pub citation: Vec<usize>,
+    pub sources: Vec<u8>,
 }
 
 pub fn shapes(lang: &Language) -> Result<Vec<learn::Shape>, String> {
@@ -81,9 +82,10 @@ pub fn shapes(lang: &Language) -> Result<Vec<learn::Shape>, String> {
         .iter()
         .map(|p| {
             let cells = cells::Cells::new(lang, p)?;
-            let lemma_cell = cells
-                .find(p.lemma.0, &p.lemma.1)
-                .ok_or("lemma cell not found")?;
+            let lemma_cell = match &p.lemma {
+                Some((g, v)) => Some(cells.find(g, v).ok_or("lemma cell not found")?),
+                None => None,
+            };
             let optional = (0..cells.total)
                 .map(|c| cells.group_of(c).is_some_and(|g| g.group.optional))
                 .chain([false])
@@ -94,8 +96,9 @@ pub fn shapes(lang: &Language) -> Result<Vec<learn::Shape>, String> {
                 inherent: p.inherent.len(),
                 lemma_cell: cells.total,
                 groups,
-                unscored: vec![lemma_cell, cells.total],
+                unscored: lemma_cell.into_iter().chain([cells.total]).collect(),
                 optional,
+                capitalized: p.capitalized,
             })
         })
         .collect()
@@ -136,6 +139,7 @@ pub fn restoration(
         groups: vec![1],
         unscored: Vec::new(),
         optional: vec![false],
+        capitalized: false,
     };
     let mut params = params;
     params.walk.syllable_depth = None;
@@ -143,23 +147,154 @@ pub fn restoration(
     Some(t)
 }
 
-/// Lay out main tables and their restoration models: mains first (so a part
-/// of speech keeps its index), restorations after, each main pointing at its.
-pub fn assemble(
-    parts: Vec<(flexion::write::PosTables, Option<flexion::write::PosTables>)>,
-) -> Vec<flexion::write::PosTables> {
+/// One part of speech, trained: its main model, the model that restores its
+/// typed lemmas, and the models that build cells from principal parts.
+pub struct Trained {
+    pub main: flexion::write::PosTables,
+    pub restore: Option<flexion::write::PosTables>,
+    /// `(the principal part's cell, its model)`.
+    pub parts: Vec<(usize, flexion::write::PosTables)>,
+}
+
+/// Lay out trained parts of speech: mains first (so a part of speech keeps
+/// its index), then restoration models, then part models, each main pointing
+/// at its own.
+pub fn assemble(parts: Vec<Trained>) -> Vec<flexion::write::PosTables> {
     let n = parts.len();
     let mut mains = Vec::with_capacity(n);
-    let mut extras = Vec::new();
-    for (mut main, restore) in parts {
-        if let Some(r) = restore {
-            main.restore = Some(n + extras.len());
-            extras.push(r);
+    let mut restores = Vec::new();
+    let mut part_models = Vec::new();
+    let n_restores = parts.iter().filter(|t| t.restore.is_some()).count();
+    for t in parts {
+        let mut main = t.main;
+        if let Some(r) = t.restore {
+            main.restore = Some(n + restores.len());
+            restores.push(r);
+        }
+        main.part_models.clear();
+        for (cell, model) in t.parts {
+            main.part_models
+                .push((cell, n + n_restores + part_models.len()));
+            part_models.push(model);
         }
         mains.push(main);
     }
-    mains.extend(extras);
+    mains.extend(restores);
+    mains.extend(part_models);
     mains
+}
+
+/// The model that builds cells from principal part `part_cell`: every word's
+/// form in that cell is the lemma, and the cells `keep` marks are its cells
+/// (the others stay empty, which keeps the model small). `None` when no word
+/// has the part.
+pub fn part_model(
+    sp: &Spelling<'_>,
+    shape: &learn::Shape,
+    params: learn::Params,
+    words: &[Word],
+    part_cell: usize,
+    keep: &[bool],
+) -> Option<flexion::write::PosTables> {
+    let citation_cell = shape.lemma_cell;
+    let mut lexemes = Vec::new();
+    for w in words {
+        for lex in &w.lexemes {
+            let Some(form) = lex.cells.get(part_cell).and_then(|c| c.first()) else {
+                continue;
+            };
+            let read = sp.read(form);
+            let cells = lex
+                .cells
+                .iter()
+                .enumerate()
+                .map(|(c, forms)| {
+                    if c == citation_cell {
+                        vec![form.clone()]
+                    } else if keep.get(c).copied().unwrap_or(false) {
+                        forms.clone()
+                    } else {
+                        Vec::new()
+                    }
+                })
+                .collect();
+            lexemes.push(extract::Lexeme {
+                lemma: form.clone(),
+                base: read.base.to_string(),
+                full: read.base.to_string(),
+                key: read.key.to_string(),
+                lemma_stress: read.stress,
+                lemma_kind: read.kind,
+                cells,
+                ..(*lex).clone()
+            });
+        }
+    }
+    if lexemes.is_empty() {
+        return None;
+    }
+    let data = extract::PosData { lexemes };
+    let part_words = extract::words(&data);
+    let chooser = edit::Chooser::new(sp, &part_words, citation_cell);
+    let params = learn::Params {
+        joins: false,
+        ..params
+    };
+    let (t, _) = learn::Learner::new(sp, shape.clone(), params)
+        .with_chooser(&chooser)
+        .learn(&part_words);
+    Some(t)
+}
+
+/// Train one part of speech: the main model (reading pairs as `chooser`
+/// says), its restoration model, and a part model for every principal part
+/// some cell is built from (`sources`, see
+/// [`flexion::write::PosTables::sources`]).
+pub fn train_pos(
+    sp: &Spelling<'_>,
+    shape: &learn::Shape,
+    params: learn::Params,
+    words: &[Word],
+    chooser: &edit::Chooser,
+    citation: &[usize],
+    sources: &[u8],
+) -> (Trained, learn::Stats) {
+    let restore = restoration(sp, words, params);
+    let (mut main, stats) = learn::Learner::new(sp, shape.clone(), params)
+        .with_chooser(chooser)
+        .learn(words);
+    let mut parts = Vec::new();
+    let mut remap = vec![0u8; citation.len().saturating_add(1)];
+    for (k, &cell) in citation.iter().enumerate() {
+        let tag = u8::try_from(k.saturating_add(1)).unwrap_or(0);
+        let keep: Vec<bool> = (0..shape.cells)
+            .map(|c| sources.get(c) == Some(&tag))
+            .collect();
+        if !keep.contains(&true) {
+            continue;
+        }
+        if let Some(t) = part_model(sp, shape, params, words, cell, &keep) {
+            parts.push((cell, t));
+            if let Some(slot) = remap.get_mut(k.saturating_add(1)) {
+                *slot = u8::try_from(parts.len()).unwrap_or(0);
+            }
+        }
+    }
+    // Sources name citation parts; the blob numbers the part models built.
+    main.sources = (0..shape.cells)
+        .map(|c| {
+            let s = usize::from(sources.get(c).copied().unwrap_or(0));
+            remap.get(s).copied().unwrap_or(0)
+        })
+        .collect();
+    (
+        Trained {
+            main,
+            restore,
+            parts,
+        },
+        stats,
+    )
 }
 
 /// Train every part of speech on the words `keep` accepts and write a blob.
@@ -178,9 +313,17 @@ pub fn train(
             .into_iter()
             .filter(|w| keep(w.key))
             .collect();
-        let restore = restoration(&sp, &words, plan.params);
-        let (t, s) = learn::Learner::new(&sp, plan.shape.clone(), plan.params).learn(&words);
-        tables.push((t, restore));
+        let chooser = edit::Chooser::new(&sp, &words, plan.shape.lemma_cell);
+        let (t, s) = train_pos(
+            &sp,
+            &plan.shape,
+            plan.params,
+            &words,
+            &chooser,
+            &plan.citation,
+            &plan.sources,
+        );
+        tables.push(t);
         stats.push(s);
     }
     (flexion::write::write(&spec, &assemble(tables)), stats)

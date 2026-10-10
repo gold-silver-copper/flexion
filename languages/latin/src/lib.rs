@@ -266,6 +266,7 @@ impl Participle {
 /// Output settings. The free functions use [`Latin::default()`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Latin {
+    stress: bool,
     marks: bool,
 }
 
@@ -277,7 +278,10 @@ impl Default for Latin {
 
 impl Latin {
     pub const fn new() -> Self {
-        Latin { marks: true }
+        Latin {
+            stress: true,
+            marks: true,
+        }
     }
 
     /// Write macrons (on by default); off writes the plain letters.
@@ -287,7 +291,10 @@ impl Latin {
     }
 
     fn options(&self) -> Options {
-        Options { marks: self.marks }
+        Options {
+            stress: self.stress,
+            marks: self.marks,
+        }
     }
 
     /// A noun in a case and number.

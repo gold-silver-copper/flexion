@@ -13,7 +13,7 @@
 use flexion_train::extract::{self, PosData, Word};
 use flexion_train::learn::Params;
 use flexion_train::pipeline::{Baseline, fastest_ns};
-use flexion_train::{PosPlan, TEST_BUCKET, bucket, eval, spec::Language};
+use flexion_train::{DEV_BUCKET, PosPlan, TEST_BUCKET, bucket, eval, spec::Language};
 use std::path::{Path, PathBuf};
 use std::time::Instant;
 
@@ -74,6 +74,12 @@ fn run() -> Result<(), String> {
             if let Some(d) = flag("--syllables") {
                 params.walk.syllable_depth = Some(d.parse().map_err(|_| "bad --syllables")?);
             }
+            if flag("--joins").is_some() {
+                params.joins = true;
+            }
+            if let Some(d) = flag("--initial") {
+                params.walk.initial_depth = Some(d.parse().map_err(|_| "bad --initial")?);
+            }
             probe(
                 &lang,
                 &data,
@@ -81,6 +87,7 @@ fn run() -> Result<(), String> {
                 flag("--pos").as_deref(),
                 flag("--misses").is_some(),
                 flag("--attested").is_some(),
+                flag("--parts").is_some(),
             )
         }
         _ => Err(USAGE.to_string()),
@@ -187,6 +194,7 @@ fn load_cache(lang: &Language) -> Result<Vec<PosData>, String> {
     serde_json::from_slice(&bytes).map_err(|e| e.to_string())
 }
 
+#[allow(clippy::too_many_arguments)]
 fn probe(
     lang: &Language,
     data: &[PosData],
@@ -194,17 +202,53 @@ fn probe(
     only: Option<&str>,
     misses: bool,
     attested: bool,
+    parts: bool,
 ) -> Result<(), String> {
     let shapes = flexion_train::shapes(lang)?;
     let spec = flexion_train::spelling_spec(lang);
     let sp = flexion_train::view(&spec);
-    let plans: Vec<PosPlan> = shapes
-        .iter()
-        .map(|shape| PosPlan {
+    let mut plans: Vec<PosPlan> = Vec::new();
+    for ((part, shape), d) in lang.parts.iter().zip(&shapes).zip(data) {
+        let cells = flexion_train::cells::Cells::new(lang, part)?;
+        let citation: Vec<usize> = part
+            .citation
+            .iter()
+            .filter_map(|(g, v)| cells.find(g, v))
+            .collect();
+        // `--parts 1`: choose which cells principal parts build, on the dev tenth.
+        let skip = only.is_some_and(|o| o != part.name);
+        let sources = if parts && !skip {
+            let marker_names = lang.markers(part);
+            let markers: Vec<&[&str]> = marker_names.iter().map(Vec::as_slice).collect();
+            let words = extract::words(d);
+            let train: Vec<Word> = extract::words(d)
+                .into_iter()
+                .filter(|w| bucket(w.key) != TEST_BUCKET && bucket(w.key) != DEV_BUCKET)
+                .collect();
+            let dev: Vec<Word> = words
+                .into_iter()
+                .filter(|w| bucket(w.key) == DEV_BUCKET)
+                .collect();
+            let chooser = flexion_train::edit::Chooser::new(&sp, &train, shape.lemma_cell);
+            let s = flexion_train::pipeline::choose_sources(
+                &spec, shape, params, &train, &dev, &chooser, &citation, &markers,
+            );
+            eprintln!(
+                "{}: {} cells from principal parts",
+                part.name,
+                s.iter().filter(|&&x| x > 0).count()
+            );
+            s
+        } else {
+            Vec::new()
+        };
+        plans.push(PosPlan {
             shape: shape.clone(),
             params,
-        })
-        .collect();
+            citation,
+            sources,
+        });
+    }
     let t = Instant::now();
     // `--attested 1`: train on everything and score the words trained on.
     let (blob, stats) = flexion_train::train(lang, data, &plans, &|k| {
@@ -238,7 +282,7 @@ fn probe(
             .collect();
         let s = stats.get(pi).copied().unwrap_or_default();
         println!(
-            "== {}: {} test words; edits {} classes {} trie {} kept {} (words {}) stored {} dist {}",
+            "== {}: {} test words; edits {} classes {} trie {} kept {} (words {}) stored {} dist {} joins {} ({} pairs)",
             part.name,
             words.len(),
             s.edits,
@@ -247,7 +291,9 @@ fn probe(
             s.kept_nodes,
             s.kept_words,
             s.stored_nodes,
-            s.dist_entries
+            s.dist_entries,
+            s.join_prefixes,
+            s.join_pairs
         );
         for given in [
             eval::Given::Lemma,
@@ -258,8 +304,10 @@ fn probe(
             if (given == eval::Given::Dictionary && markers.is_empty())
                 || (given == eval::Given::Citation && citation.is_empty())
                 || (given == eval::Given::StressedLemma
-                    && lang.spelling.stress_mark.is_none()
-                    && lang.spelling.fold.is_empty())
+                    && lang.spelling.stress_marks.is_empty()
+                    && lang.spelling.fold.is_empty()
+                    && lang.spelling.fold_marks.is_empty()
+                    && lang.spelling.unmark_marks.is_empty())
             {
                 continue;
             }
@@ -286,6 +334,31 @@ fn probe(
                 pct(total.top3_any, total.n),
                 ece,
             );
+            if misses {
+                let mut by_group: Vec<(&str, eval::CellScore)> = Vec::new();
+                for (cell, c) in score.cells.iter().enumerate() {
+                    let Some(g) = cells.group_of(cell) else {
+                        continue;
+                    };
+                    match by_group.iter_mut().find(|(n, _)| *n == g.name) {
+                        Some((_, t)) => t.add(c),
+                        None => by_group.push((g.name, *c)),
+                    }
+                }
+                let groups: Vec<String> = by_group
+                    .iter()
+                    .filter(|(_, t)| t.n > 0)
+                    .map(|(n, t)| {
+                        format!(
+                            "{n} {:.1}% (letters {:.1}%, n {})",
+                            pct(t.top1, t.n),
+                            pct(t.top1_letters, t.n),
+                            t.n
+                        )
+                    })
+                    .collect();
+                println!("    groups: {}", groups.join("; "));
+            }
             if misses && given != eval::Given::StressedLemma {
                 println!("    -- misses for {given:?}");
                 for (label, n, ex) in eval::error_groups(&sp, &score.misses, 4)
@@ -297,7 +370,7 @@ fn probe(
             }
         }
         for (name, which) in baselines(lang) {
-            let lemma_cell = cells.find(part.lemma.0, &part.lemma.1);
+            let lemma_cell = part.lemma.as_ref().and_then(|(g, v)| cells.find(g, v));
             let f = |cell: usize, lemma: &str| {
                 english_baseline::inflect(which, &cells.name(cell), lemma)
             };
@@ -340,7 +413,7 @@ fn bench(
     let Some(p) = model.pos(pi) else {
         return;
     };
-    let Some(cell) = (0..p.cells()).find(|c| !unscored.contains(c)) else {
+    let Some(cell) = eval::common_cell(words, p.cells(), unscored) else {
         return;
     };
     let lemmas: Vec<&str> = words.iter().map(|w| w.lemma()).take(20_000).collect();
@@ -426,8 +499,10 @@ fn english_comparison(lang: &Language, data: &[PosData], blob: &[u8]) -> Result<
             .iter()
             .filter_map(|(g, v)| cells.find(g, v))
             .collect();
-        let lemma_cell = cells
-            .find(part.lemma.0, &part.lemma.1)
+        let lemma_cell = part
+            .lemma
+            .as_ref()
+            .and_then(|(g, v)| cells.find(g, v))
             .into_iter()
             .collect::<Vec<_>>();
         let f = |cell: usize, lemma: &str| {

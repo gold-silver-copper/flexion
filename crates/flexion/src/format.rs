@@ -4,42 +4,50 @@
 //! return `None` or a lookup return nothing, never a panic.
 //!
 //! ```text
-//! header (88 bytes)
+//! header (128 bytes)
 //!   0  magic "FLX1"            4  version
 //!   8  strings offset          12 strings length
 //!   16 number of parts of speech
 //!   20 spelling flags (bit 0: fold case, bit 1: mark stress on monosyllables)
-//!   24 stress mark    32 vowels    40 implicitly stressed letters
+//!   24 stress marks (one per kind)  32 vowels    40 implicitly stressed letters
 //!   48 fold-from      56 fold-to   64 marks stripped from input
 //!   72 unmark-from    80 unmark-to (letters written plain when marks are off)
+//!   88 stressed characters (triples: character, plain letter, kind digit)
+//!   96 letters with an inherent vowel   104 marks that mute it
+//!   112 diphthongs (pairs of folded vowels)   120 letters that never close one
 //!      (each a string reference: offset + length into the string area)
-//! part-of-speech headers, 60 bytes each, right after the header: cells,
+//! part-of-speech headers, 72 bytes each, right after the header: cells,
 //!   inherent features, then offset and count of edits, classes, nodes and
 //!   distribution entries, the lemma cell, the walk's feature word
 //!   (bits 0–7: 1 + the depth at which a syllable-count token is inserted,
-//!   0 for none; bits 8–15: the largest syllable bucket), the offset of the
-//!   first-character array, the offset of the class groups section, and the
+//!   0 for none; bits 8–15: the largest syllable bucket; bits 16–23: 1 + the
+//!   depth at which the word's first letter is inserted), the offset of the
+//!   first-character array, the offset of the class groups section, the
 //!   index of the part of speech that restores this one's lemmas ([`NONE`]:
-//!   lemmas are taken as typed)
+//!   lemmas are taken as typed), flags (bit 0: every word is written with a
+//!   capital), the offset of the join section, and the offset of the parts
+//!   section
 //! records (edits, classes, nodes, distribution entries) at the offsets the
 //!   part-of-speech headers give
 //! string area: UTF-8 bytes
 //! ```
 //!
 //! Records:
-//! - edit, 32 bytes: prefix added, suffix stripped, suffix added (three string
-//!   references), stress kind (`u8`), stress index (`u8`), then (each `u8`,
-//!   saturating) the stripped suffix's length in characters and the vowels
-//!   in the prefix, the stripped suffix and the added suffix, two bytes
-//!   padding;
+//! - edit, 44 bytes: prefix added, suffix stripped, suffix added, start
+//!   stripped (four string references), stress rule (`u8`), stress index
+//!   (`u8`), then (each `u8`, saturating) the stripped suffix's length in
+//!   characters, the vowels in the prefix, the stripped suffix and the added
+//!   suffix, the stripped start's length in characters and its vowels, the
+//!   stress mark (0: the lemma's kind, `k + 1`: kind `k`), three bytes padding;
 //! - class groups section: the number of groups, each group's number of
 //!   cells (they sum to the part of speech's cells), then per group the number
 //!   of its sub-vectors followed by the sub-vectors themselves (one edit index
 //!   per cell of the group, [`NONE`] when there is no form there). Classes
 //!   share sub-vectors, which keeps big paradigms small;
-//! - class, `4 * groups + 8 + inherent` bytes rounded up to 4: one sub-vector
-//!   index per group, a string reference to the class's longest stripped
-//!   suffix, one value index per inherent feature ([`UNKNOWN`] when unknown);
+//! - class, `4 * groups + 16 + inherent` bytes rounded up to 4: one sub-vector
+//!   index per group, string references to the class's longest stripped
+//!   suffix and longest stripped start, one value index per inherent feature
+//!   ([`UNKNOWN`] when unknown);
 //! - node, 16 bytes: the label's offset in the string area, first child,
 //!   first distribution entry (all `u32`), number of children, number of
 //!   distribution entries (both `u16`);
@@ -49,12 +57,22 @@
 //!   block, so a walk's successive levels sit close together;
 //! - distribution entry, 8 bytes: class index, probability (`f32` bits).
 //!   Entries of one node are sorted by descending probability.
+//! - join section: the number of join classes, each one edit index per cell
+//!   (an edit of the joined word's base form); the number of prefixes, each
+//!   20 bytes (the prefix as a folded string reference, the probability that
+//!   an unseen word with it joins, its first entry and number of entries),
+//!   sorted by prefix; then the entries, 8 bytes each (join class,
+//!   probability).
+//! - parts section: the number of part models, each the cell of its
+//!   principal part and the index of its part of speech in the blob; then one
+//!   byte per cell (0: built by this part of speech, `k + 1`: by part model
+//!   `k` when its part is given), padded to 4 bytes.
 
 pub const MAGIC: &[u8; 4] = b"FLX1";
-pub const VERSION: u32 = 4;
-pub const HEADER_LEN: usize = 88;
-pub const POS_HEADER_LEN: usize = 60;
-pub const EDIT_LEN: usize = 32;
+pub const VERSION: u32 = 5;
+pub const HEADER_LEN: usize = 128;
+pub const POS_HEADER_LEN: usize = 72;
+pub const EDIT_LEN: usize = 44;
 pub const NODE_LEN: usize = 16;
 pub const DIST_LEN: usize = 8;
 /// No edit (the class has no form in this cell), or no lemma cell.
@@ -67,6 +85,14 @@ pub const BOUNDARY: char = '\u{1}';
 
 /// The first syllable-count token; bucket `k` is `char::from_u32(SYLLABLE_TOKEN + k)`.
 pub const SYLLABLE_TOKEN: u32 = 0x10;
+/// The first-letter token for letter `c` is `char::from_u32(INITIAL_TOKEN + c)`
+/// (a private-use plane, so it never meets a letter).
+pub const INITIAL_TOKEN: u32 = 0x10_0000;
+/// Entries of one node a query reads once it has found a form: entries are
+/// sorted by weight, and the root of a part of speech with thousands of
+/// word-specific classes would otherwise be read whole for a word no deeper
+/// class fits. The trainer prunes with the same limit.
+pub const MAX_SCAN: usize = 256;
 /// Bits of a first-character entry that hold the character.
 pub const CHAR_BITS: u32 = 21;
 
@@ -74,10 +100,10 @@ pub const FLAG_FOLD_CASE: u32 = 1;
 pub const FLAG_MARK_MONOSYLLABLES: u32 = 2;
 
 /// Bytes a class record occupies.
-pub const fn class_len(cells: usize, inherent: usize) -> usize {
-    let raw = cells
+pub const fn class_len(groups: usize, inherent: usize) -> usize {
+    let raw = groups
         .saturating_mul(4)
-        .saturating_add(8)
+        .saturating_add(16)
         .saturating_add(inherent);
     raw.saturating_add(3) & !3
 }
@@ -97,6 +123,9 @@ pub enum Stress {
     KeptFromStart(u8),
     /// On the n-th vowel of the added prefix.
     Prefix(u8),
+    /// On the n-th vowel from the end of the whole form (0 = last): accents
+    /// counted from the word's end, like a recessive accent.
+    FromEnd(u8),
 }
 
 impl Stress {
@@ -108,6 +137,7 @@ impl Stress {
             Stress::KeptFromEnd(i) => (3, i),
             Stress::KeptFromStart(i) => (4, i),
             Stress::Prefix(i) => (5, i),
+            Stress::FromEnd(i) => (6, i),
         }
     }
 
@@ -118,6 +148,7 @@ impl Stress {
             3 => Stress::KeptFromEnd(index),
             4 => Stress::KeptFromStart(index),
             5 => Stress::Prefix(index),
+            6 => Stress::FromEnd(index),
             _ => Stress::Unmarked,
         }
     }

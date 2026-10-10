@@ -23,7 +23,7 @@ pub mod write;
 
 use format::{Bytes, DIST_LEN, EDIT_LEN, HEADER_LEN, NODE_LEN, NONE, POS_HEADER_LEN, class_len};
 pub use pos::{Citation, Edit, Pos};
-pub use text::{Casing, Spelling, VowelSet, Word};
+pub use text::{Casing, Spelling, SpellingStrings, VowelSet, Word};
 
 /// One possible form, with the model's confidence in it.
 #[derive(Debug, Clone, PartialEq)]
@@ -36,14 +36,19 @@ pub struct Candidate {
 /// Output options shared by every query.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Options {
-    /// Write the language's optional marks: stress marks, and letters the
-    /// spelling can write plain (Latin macrons). Off writes them plain.
+    /// Write stress marks (Russian stress, Greek accents).
+    pub stress: bool,
+    /// Write the letters the spelling can write plain with their marks
+    /// (Latin macrons, Greek length marks). Off writes them plain.
     pub marks: bool,
 }
 
 impl Default for Options {
     fn default() -> Self {
-        Options { marks: true }
+        Options {
+            stress: true,
+            marks: true,
+        }
     }
 }
 
@@ -73,6 +78,8 @@ pub(crate) struct PosHeader<'a> {
     pub(crate) chars: usize,
     /// The part of speech whose model restores this one's lemmas.
     pub(crate) restore: Option<usize>,
+    /// Every word is written with a capital.
+    pub(crate) capitalized: bool,
     /// The language's main letter block (`char >> 8`), for child tables.
     pub(crate) block: u32,
     /// Every node, decoded once at load so a walk reads plain fields.
@@ -80,17 +87,70 @@ pub(crate) struct PosHeader<'a> {
     /// The other tables, decoded once at load.
     pub(crate) edit_list: Vec<pos::Edit<'a>>,
     /// One edit index per class and cell (stride `cells`).
-    pub(crate) class_edits: Vec<u32>,
-    /// Each class's longest stripped suffix, folded for lookup: a class fits
-    /// a word whose key ends with it.
-    pub(crate) class_strips_folded: Vec<String>,
+    /// Classes as stored: per class one sub-vector index per cell group
+    /// (stride `n_groups`); per group, where its sub-vectors start in
+    /// `sub_edits` and how many cells each has; per cell, its group and its
+    /// place in it. Classes share sub-vectors, so this stays small.
+    pub(crate) class_subs: Vec<u32>,
+    pub(crate) n_groups: usize,
+    pub(crate) group_tables: Vec<(usize, usize)>,
+    pub(crate) sub_edits: Vec<u32>,
+    pub(crate) cell_group: Vec<(u32, u32)>,
+    /// Each class's longest stripped suffix and start, folded for lookup: a
+    /// class fits a word whose key ends and starts with them.
+    /// Per class: the `(start, end)` of its folded stripped suffix and of its
+    /// folded stripped start in `class_text`.
+    pub(crate) class_folds: Vec<[(u32, u32); 2]>,
+    pub(crate) class_text: String,
+    /// Per class: the stress rule and mark of its lemma cell (the lemma's own
+    /// stress), when it has one.
+    pub(crate) class_lemma: Vec<(format::Stress, u8)>,
     /// One value per class and inherent feature (stride `inherent`).
     pub(crate) class_values: Vec<u8>,
     pub(crate) entries: Vec<(u32, f32)>,
+    /// Running sums of the entries' probabilities (one more than `entries`).
+    pub(crate) entry_cum: Vec<f64>,
     /// Per node: 1 + its index in `tables` if it has one, else 0.
     pub(crate) table_of: Vec<u32>,
     /// Direct child indexes for nodes with many children, built at load.
     pub(crate) tables: Vec<ChildTable>,
+    /// Join classes: one edit index per cell (stride `cells`).
+    pub(crate) join_classes: Vec<u32>,
+    /// The join model's prefixes, sorted.
+    pub(crate) joins: Vec<JoinRec<'a>>,
+    pub(crate) join_entries: Vec<(u32, f32)>,
+    /// Part models: `(the principal part's cell, the model's part of speech)`.
+    pub(crate) part_models: Vec<(usize, usize)>,
+    /// Per cell: 0, or `k + 1` to build it from part model `k`.
+    pub(crate) sources: Vec<u8>,
+}
+
+impl PosHeader<'_> {
+    /// Class `class`'s edit index for `cell` ([`NONE`] when it has no form
+    /// there).
+    pub(crate) fn class_edit(&self, class: usize, cell: usize) -> Option<u32> {
+        let &(g, off) = self.cell_group.get(cell)?;
+        let g = usize::try_from(g).ok()?;
+        let sub = *self
+            .class_subs
+            .get(class.checked_mul(self.n_groups)?.checked_add(g)?)?;
+        let &(start, len) = self.group_tables.get(g)?;
+        let at = start
+            .checked_add(usize::try_from(sub).ok()?.checked_mul(len)?)?
+            .checked_add(usize::try_from(off).ok()?)?;
+        self.sub_edits.get(at).copied()
+    }
+}
+
+/// One prefix of the join model.
+#[derive(Debug, Clone, Copy)]
+pub(crate) struct JoinRec<'a> {
+    /// Folded, as lookup keys are.
+    pub(crate) prefix: &'a str,
+    /// How likely an unseen word with this prefix and an attested rest joins.
+    pub(crate) split: f32,
+    pub(crate) first: usize,
+    pub(crate) count: usize,
 }
 
 /// One tree node, decoded.
@@ -144,41 +204,78 @@ pub struct Walk {
     pub syllable_depth: Option<usize>,
     /// Syllable counts above this share the last bucket.
     pub syllable_max: usize,
+    /// Insert the word's first letter as a token after this many letters
+    /// (from the end), for classes that change the start of the word.
+    pub initial_depth: Option<usize>,
 }
 
 impl Walk {
     pub fn encode(self) -> u32 {
-        match self.syllable_depth {
-            Some(d) => {
-                (u32::try_from(d).unwrap_or(254).min(254).saturating_add(1))
-                    | (u32::try_from(self.syllable_max).unwrap_or(255).min(255) << 8)
-            }
-            None => 0,
-        }
+        let depth = |d: Option<usize>| {
+            d.map_or(0, |d| {
+                u32::try_from(d).unwrap_or(254).min(254).saturating_add(1)
+            })
+        };
+        depth(self.syllable_depth)
+            | (u32::try_from(self.syllable_max).unwrap_or(255).min(255) << 8)
+            | (depth(self.initial_depth) << 16)
     }
 
     pub fn decode(v: u32) -> Walk {
-        let depth = v & 0xff;
+        let depth = |d: u32| (d != 0).then(|| usize::try_from(d.saturating_sub(1)).unwrap_or(0));
         Walk {
-            syllable_depth: (depth != 0)
-                .then(|| usize::try_from(depth.saturating_sub(1)).unwrap_or(0)),
+            syllable_depth: depth(v & 0xff),
             syllable_max: usize::try_from((v >> 8) & 0xff).unwrap_or(0),
+            initial_depth: depth((v >> 16) & 0xff),
         }
     }
 
+    /// The token for a key's syllable count.
+    pub fn syllable_token(self, groups: usize) -> char {
+        u32::try_from(groups.min(self.syllable_max))
+            .ok()
+            .and_then(|b| char::from_u32(format::SYLLABLE_TOKEN.saturating_add(b)))
+            .unwrap_or(format::BOUNDARY)
+    }
+
+    /// The token for a key's first letter.
+    pub fn initial_token(key: &str) -> char {
+        key.chars()
+            .next()
+            .and_then(|c| char::from_u32(format::INITIAL_TOKEN.saturating_add(u32::from(c))))
+            .unwrap_or(format::BOUNDARY)
+    }
+
     /// The walk for `key`: its letters from the last one back, the syllable
-    /// token where configured, then the start-of-word symbol.
+    /// and first-letter tokens where configured, then the start-of-word
+    /// symbol.
     pub fn symbols(self, sp: &Spelling<'_>, key: &str) -> Vec<char> {
-        let mut out: Vec<char> = key.chars().rev().collect();
+        let letters: Vec<char> = key.chars().rev().collect();
+        let mut tokens: Vec<(usize, char)> = Vec::new();
         if let Some(d) = self.syllable_depth {
-            let bucket = sp.vowel_groups(key).min(self.syllable_max);
-            let token = u32::try_from(bucket)
-                .ok()
-                .and_then(|b| char::from_u32(format::SYLLABLE_TOKEN.saturating_add(b)));
-            if let Some(t) = token {
-                out.insert(d.min(out.len()), t);
-            }
+            tokens.push((
+                d.min(letters.len()),
+                self.syllable_token(sp.vowel_groups(key)),
+            ));
         }
+        if let Some(d) = self.initial_depth {
+            tokens.push((d.min(letters.len()), Walk::initial_token(key)));
+        }
+        // At equal depths the syllable token comes first.
+        tokens.sort_by_key(|t| t.0);
+        let mut out = Vec::with_capacity(letters.len().saturating_add(3));
+        let mut next = tokens.iter().peekable();
+        for (i, &c) in letters.iter().enumerate() {
+            while let Some(&&(d, t)) = next.peek() {
+                if d != i {
+                    break;
+                }
+                out.push(t);
+                next.next();
+            }
+            out.push(c);
+        }
+        out.extend(next.map(|&(_, t)| t));
         out.push(format::BOUNDARY);
         out
     }
@@ -196,18 +293,24 @@ impl<'a> Model<'a> {
         let strings = std::str::from_utf8(bytes.get(s_off..s_off.checked_add(s_len)?)?).ok()?;
         let n_pos = b.usize(16)?;
         let flags = b.u32(20)?;
-        let mark = b.str(strings, 24)?;
         let spelling = Spelling::new(
             flags & format::FLAG_FOLD_CASE != 0,
             flags & format::FLAG_MARK_MONOSYLLABLES != 0,
-            mark.chars().next(),
-            b.str(strings, 32)?,
-            b.str(strings, 40)?,
-            b.str(strings, 48)?,
-            b.str(strings, 56)?,
-            b.str(strings, 64)?,
-            b.str(strings, 72)?,
-            b.str(strings, 80)?,
+            text::SpellingStrings {
+                stress_marks: b.str(strings, 24)?,
+                vowels: b.str(strings, 32)?,
+                implicit: b.str(strings, 40)?,
+                fold_from: b.str(strings, 48)?,
+                fold_to: b.str(strings, 56)?,
+                strip_marks: b.str(strings, 64)?,
+                unmark_from: b.str(strings, 72)?,
+                unmark_to: b.str(strings, 80)?,
+                stress_table: b.str(strings, 88)?,
+                syllabic: b.str(strings, 96)?,
+                mute: b.str(strings, 104)?,
+                diphthongs: b.str(strings, 112)?,
+                hiatus: b.str(strings, 120)?,
+            },
         );
         let mut parts = Vec::with_capacity(n_pos);
         for i in 0..n_pos {
@@ -237,15 +340,28 @@ impl<'a> Model<'a> {
                     let r = b.u32(at.checked_add(56)?)?;
                     (r != NONE).then(|| usize::try_from(r).ok()).flatten()
                 },
+                capitalized: b.u32(at.checked_add(60)?)? & 1 != 0,
                 block: spelling.vowel_set.block(),
                 tree: Vec::new(),
                 edit_list: Vec::new(),
-                class_edits: Vec::new(),
-                class_strips_folded: Vec::new(),
+                class_subs: Vec::new(),
+                n_groups: 0,
+                group_tables: Vec::new(),
+                sub_edits: Vec::new(),
+                cell_group: Vec::new(),
+                class_folds: Vec::new(),
+                class_text: String::new(),
+                class_lemma: Vec::new(),
                 class_values: Vec::new(),
                 entries: Vec::new(),
+                entry_cum: Vec::new(),
                 table_of: Vec::new(),
                 tables: Vec::new(),
+                join_classes: Vec::new(),
+                joins: Vec::new(),
+                join_entries: Vec::new(),
+                part_models: Vec::new(),
+                sources: Vec::new(),
             };
             // Every table must lie inside the blob.
             let ends = [
@@ -317,13 +433,13 @@ impl<'a> Model<'a> {
                     prefix: b.str(strings, at)?,
                     strip: b.str(strings, at.checked_add(8)?)?,
                     add: b.str(strings, at.checked_add(16)?)?,
-                    stress: format::Stress::decode(byte(24)?, byte(25)?),
-                    strip_chars: usize::from(byte(26)?),
-                    vowels: [
-                        usize::from(byte(27)?),
-                        usize::from(byte(28)?),
-                        usize::from(byte(29)?),
-                    ],
+                    front: b.str(strings, at.checked_add(24)?)?,
+                    stress: format::Stress::decode(byte(32)?, byte(33)?),
+                    strip_chars: byte(34)?,
+                    vowels: [byte(35)?, byte(36)?, byte(37)?],
+                    front_chars: byte(38)?,
+                    front_vowels: byte(39)?,
+                    mark: byte(40)?,
                 });
             }
             // Groups: their sizes, then each group's shared sub-vectors.
@@ -338,16 +454,25 @@ impl<'a> Model<'a> {
             if sizes.iter().try_fold(0usize, |a, &x| a.checked_add(x))? != h.cells {
                 return None;
             }
-            let mut sub_tables = Vec::with_capacity(n_groups);
-            for &len in &sizes {
+            let mut counts = Vec::with_capacity(n_groups);
+            for (g, &len) in sizes.iter().enumerate() {
                 let n = b.usize(cursor)?;
                 cursor = cursor.checked_add(4)?;
-                sub_tables.push((cursor, n, len));
-                cursor = cursor.checked_add(n.checked_mul(len)?.checked_mul(4)?)?;
+                if cursor.checked_add(n.checked_mul(len)?.checked_mul(4)?)? > bytes.len() {
+                    return None;
+                }
+                h.group_tables.push((h.sub_edits.len(), len));
+                for _ in 0..n.checked_mul(len)? {
+                    h.sub_edits.push(b.u32(cursor)?);
+                    cursor = cursor.checked_add(4)?;
+                }
+                counts.push(n);
+                for off in 0..len {
+                    h.cell_group
+                        .push((u32::try_from(g).ok()?, u32::try_from(off).ok()?));
+                }
             }
-            if cursor > bytes.len() {
-                return None;
-            }
+            h.n_groups = n_groups;
             h.class_len = class_len(n_groups, h.inherent);
             if h.classes
                 .checked_add(h.n_classes.checked_mul(h.class_len)?)?
@@ -357,30 +482,99 @@ impl<'a> Model<'a> {
             }
             for c in 0..h.n_classes {
                 let at = h.classes.checked_add(c.checked_mul(h.class_len)?)?;
-                for (g, &(start, n, len)) in sub_tables.iter().enumerate() {
-                    let id = b.usize(at.checked_add(g.checked_mul(4)?)?)?;
-                    if id >= n {
+                for (g, &n) in counts.iter().enumerate() {
+                    let id = b.u32(at.checked_add(g.checked_mul(4)?)?)?;
+                    if usize::try_from(id).ok()? >= n {
                         return None;
                     }
-                    let sub = start.checked_add(id.checked_mul(len)?.checked_mul(4)?)?;
-                    for cell in 0..len {
-                        h.class_edits
-                            .push(b.u32(sub.checked_add(cell.checked_mul(4)?)?)?);
-                    }
+                    h.class_subs.push(id);
                 }
                 let strip_at = at.checked_add(n_groups.checked_mul(4)?)?;
                 let strip = b.str(strings, strip_at)?;
-                h.class_strips_folded
-                    .push(strip.chars().map(|c| spelling.fold_char(c)).collect());
+                let mut span = |s: &str| {
+                    let start = u32::try_from(h.class_text.len()).unwrap_or(u32::MAX);
+                    h.class_text.push_str(&spelling.fold_str(s));
+                    (start, u32::try_from(h.class_text.len()).unwrap_or(u32::MAX))
+                };
+                let strip_span = span(strip);
+                let front = b.str(strings, strip_at.checked_add(8)?)?;
+                let front_span = span(front);
+                h.class_folds.push([strip_span, front_span]);
+                let lemma_rule = h
+                    .lemma_cell
+                    .and_then(|cell| h.class_edit(c, cell))
+                    .and_then(|id| h.edit_list.get(usize::try_from(id).ok()?))
+                    .map_or((format::Stress::Unmarked, 0), |e| (e.stress, e.mark));
+                h.class_lemma.push(lemma_rule);
                 for f in 0..h.inherent {
                     h.class_values
-                        .push(b.u8(strip_at.checked_add(8)?.checked_add(f)?)?);
+                        .push(b.u8(strip_at.checked_add(16)?.checked_add(f)?)?);
                 }
             }
             for i in 0..h.n_dist {
                 let at = h.dist.checked_add(i.checked_mul(DIST_LEN)?)?;
                 h.entries.push((b.u32(at)?, b.f32(at.checked_add(4)?)?));
             }
+            h.entry_cum = std::iter::once(0f64)
+                .chain(h.entries.iter().scan(0f64, |acc, &(_, p)| {
+                    *acc += f64::from(p);
+                    Some(*acc)
+                }))
+                .collect();
+            // The join model.
+            let mut cursor = b.usize(at.checked_add(64)?)?;
+            let n_classes = b.usize(cursor)?;
+            cursor = cursor.checked_add(4)?;
+            let class_bytes = n_classes.checked_mul(h.cells)?.checked_mul(4)?;
+            if cursor.checked_add(class_bytes)? > bytes.len() {
+                return None;
+            }
+            for _ in 0..n_classes.checked_mul(h.cells)? {
+                h.join_classes.push(b.u32(cursor)?);
+                cursor = cursor.checked_add(4)?;
+            }
+            let n_joins = b.usize(cursor)?;
+            cursor = cursor.checked_add(4)?;
+            if cursor.checked_add(n_joins.checked_mul(20)?)? > bytes.len() {
+                return None;
+            }
+            let mut n_entries = 0usize;
+            for _ in 0..n_joins {
+                let j = JoinRec {
+                    prefix: b.str(strings, cursor)?,
+                    split: b.f32(cursor.checked_add(8)?)?,
+                    first: b.usize(cursor.checked_add(12)?)?,
+                    count: b.usize(cursor.checked_add(16)?)?,
+                };
+                n_entries = n_entries.max(j.first.checked_add(j.count)?);
+                h.joins.push(j);
+                cursor = cursor.checked_add(20)?;
+            }
+            if cursor.checked_add(n_entries.checked_mul(DIST_LEN)?)? > bytes.len() {
+                return None;
+            }
+            for _ in 0..n_entries {
+                h.join_entries
+                    .push((b.u32(cursor)?, b.f32(cursor.checked_add(4)?)?));
+                cursor = cursor.checked_add(DIST_LEN)?;
+            }
+            // Part models.
+            let mut cursor = b.usize(at.checked_add(68)?)?;
+            let n_models = b.usize(cursor)?;
+            cursor = cursor.checked_add(4)?;
+            if n_models > n_pos {
+                return None;
+            }
+            for _ in 0..n_models {
+                let cell = b.usize(cursor)?;
+                let model = b.usize(cursor.checked_add(4)?)?;
+                if model >= n_pos || model == i {
+                    return None;
+                }
+                h.part_models.push((cell, model));
+                cursor = cursor.checked_add(8)?;
+            }
+            h.sources = bytes.get(cursor..cursor.checked_add(h.cells)?)?.to_vec();
             parts.push(h);
         }
         Some(Model {

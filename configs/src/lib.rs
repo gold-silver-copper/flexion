@@ -1,10 +1,13 @@
 //! One language description per module. A config is everything the trainer
 //! knows about a language; adding a language means adding a module here.
 
+pub mod ancient_greek;
 pub mod english;
+pub mod german;
 pub mod latin;
 pub mod polish;
 pub mod russian;
+pub mod sanskrit;
 
 use flexion_train::spec::Language;
 
@@ -15,6 +18,9 @@ pub fn all() -> Vec<Language> {
         russian::language(),
         latin::language(),
         polish::language(),
+        german::language(),
+        ancient_greek::language(),
+        sanskrit::language(),
     ]
 }
 

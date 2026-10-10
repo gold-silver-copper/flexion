@@ -1,14 +1,9 @@
-use crate::format::{NONE, Stress};
+use crate::format::NONE;
 use crate::write::{ClassSpec, EditSpec, NodeSpec, PosTables, SpellingSpec, write};
 use crate::{Model, Options};
 
 fn edit(strip: &str, add: &str) -> EditSpec {
-    EditSpec {
-        prefix: String::new(),
-        strip: strip.into(),
-        add: add.into(),
-        stress: Stress::Unmarked,
-    }
+    EditSpec::suffix(strip, add)
 }
 
 fn node(label: &str, first_child: u32, children: u32, dist: u32, dist_len: u32) -> NodeSpec {
@@ -34,6 +29,11 @@ fn tiny() -> Vec<u8> {
         lemma_cell: Some(0),
         groups: vec![],
         restore: None,
+        capitalized: false,
+        joins: vec![],
+        join_classes: vec![],
+        part_models: vec![],
+        sources: vec![],
         walk: crate::Walk::default(),
         edits: vec![
             edit("", ""),
@@ -45,21 +45,25 @@ fn tiny() -> Vec<u8> {
             ClassSpec {
                 edits: vec![0, 1],
                 strip: String::new(),
+                front: String::new(),
                 inherent: vec![],
             },
             ClassSpec {
                 edits: vec![0, 2],
                 strip: "y".into(),
+                front: String::new(),
                 inherent: vec![],
             },
             ClassSpec {
                 edits: vec![0, 3],
                 strip: String::new(),
+                front: String::new(),
                 inherent: vec![],
             },
             ClassSpec {
                 edits: vec![0, NONE],
                 strip: String::new(),
+                front: String::new(),
                 inherent: vec![],
             },
         ],

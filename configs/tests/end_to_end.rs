@@ -18,6 +18,14 @@ fn fixture(name: &str) -> std::path::PathBuf {
 
 /// Train on the fixture with default parameters and return the blob.
 fn train(lang: &Language) -> (Vec<extract::PosData>, Vec<u8>) {
+    train_with(lang, flexion_train::learn::Params::default())
+}
+
+/// Train on the fixture with `params` for every part of speech.
+fn train_with(
+    lang: &Language,
+    params: flexion_train::learn::Params,
+) -> (Vec<extract::PosData>, Vec<u8>) {
     let spec = flexion_train::spelling_spec(lang);
     let sp = flexion_train::view(&spec);
     let data = extract::extract(lang, &sp, &fixture(lang.name)).expect("fixture extracts");
@@ -26,7 +34,9 @@ fn train(lang: &Language) -> (Vec<extract::PosData>, Vec<u8>) {
         .into_iter()
         .map(|shape| flexion_train::PosPlan {
             shape,
-            params: Default::default(),
+            params,
+            citation: Vec::new(),
+            sources: Vec::new(),
         })
         .collect();
     let (blob, _) = flexion_train::train(lang, &data, &plans, &|_| true);
@@ -269,7 +279,10 @@ fn latin_restores_vowel_length_and_reads_citations() {
         nouns.best(
             &nouns.citation("rosa", &[]),
             abl_pl,
-            Options { marks: false }
+            Options {
+                stress: true,
+                marks: false
+            }
         ),
         "rosis"
     );
@@ -400,4 +413,223 @@ fn pipeline_reports_and_emits_a_crate() {
     assert!(lib.contains("pub fn noun(word: &str, number: Number) -> String"));
     assert!(lib.contains("pub fn verb_scored(word: &str, verb_form: VerbForm) -> Vec<Candidate>"));
     assert!(dir.join("src/model.bin").exists() && dir.join("DATA-LICENSE.md").exists());
+}
+
+#[test]
+fn german_capitalizes_nouns_and_joins_separable_verbs() {
+    let lang = flexion_configs::german::language();
+    lang.validate().expect("valid config");
+    let (_, blob) = train_with(
+        &lang,
+        flexion_train::learn::Params {
+            joins: true,
+            ..Default::default()
+        },
+    );
+    // Nouns are capitalized however they are typed.
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "noun",
+            "mann",
+            "noun",
+            &["Nominative", "Plural"]
+        ),
+        "Männer"
+    );
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "verb",
+            "geben",
+            "verb",
+            &["Present", "Third", "Singular"]
+        ),
+        "gibt"
+    );
+    // A separable verb: two words in a main clause, one in a subordinate one.
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "verb",
+            "anfangen",
+            "verb",
+            &["Present", "Third", "Singular"]
+        ),
+        "fängt an"
+    );
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "verb",
+            "anfangen",
+            "subordinate",
+            &["Present", "Third", "Singular"]
+        ),
+        "anfängt"
+    );
+    // An unseen separable verb inflects through its attested base (`stehen`).
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "verb",
+            "anstehen",
+            "verb",
+            &["Present", "Third", "Singular"]
+        ),
+        "steht an"
+    );
+    assert_eq!(
+        ask(&lang, &blob, "verb", "anstehen", "participle", &["Past"]),
+        "angestanden"
+    );
+    // Adjective tables write weak forms with their article; the model doesn't.
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "adjective",
+            "schön",
+            "adjective",
+            &["Weak", "Nominative", "Masculine"]
+        ),
+        "schöne"
+    );
+}
+
+#[test]
+fn ancient_greek_writes_accent_kinds_length_and_augments() {
+    let lang = flexion_configs::ancient_greek::language();
+    lang.validate().expect("valid config");
+    let (_, blob) = train(&lang);
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "noun",
+            "λόγος",
+            "noun",
+            &["Genitive", "Plural"]
+        ),
+        "λόγων"
+    );
+    // Found without accents or breathings; written with them.
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "noun",
+            "λογος",
+            "noun",
+            &["Genitive", "Singular"]
+        ),
+        "λόγου"
+    );
+    // The circumflex of the lemma becomes an acute before a long ending.
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "noun",
+            "δῶρον",
+            "noun",
+            &["Genitive", "Singular"]
+        ),
+        "δώρου"
+    );
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "noun",
+            "δῶρον",
+            "noun",
+            &["Nominative", "Plural"]
+        ),
+        "δῶρᾰ"
+    );
+    // Augments: an added ἐ, and a lengthened first vowel.
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "verb",
+            "λύω",
+            "imperfect",
+            &["Active", "Third", "Singular"]
+        ),
+        "ἔλῡε"
+    );
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "verb",
+            "ἀκούω",
+            "aorist",
+            &["Indicative", "Active", "First", "Singular"]
+        ),
+        "ἤκουσᾰ"
+    );
+}
+
+#[test]
+fn sanskrit_declines_stems_in_devanagari() {
+    let lang = flexion_configs::sanskrit::language();
+    lang.validate().expect("valid config");
+    let (_, blob) = train(&lang);
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "noun",
+            "देव",
+            "noun",
+            &["Instrumental", "Singular"]
+        ),
+        "देवेन"
+    );
+    assert_eq!(
+        ask(&lang, &blob, "noun", "देव", "noun", &["Genitive", "Plural"]),
+        "देवानाम्"
+    );
+    // A gender marker decides between masculine and neuter a-stems.
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "noun",
+            "फल n",
+            "noun",
+            &["Nominative", "Plural"]
+        ),
+        "फलानि"
+    );
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "verb",
+            "निन्दति",
+            "present",
+            &["Indicative", "Active", "First", "Singular"]
+        ),
+        "निन्दामि"
+    );
+    assert_eq!(
+        ask(
+            &lang,
+            &blob,
+            "adjective",
+            "नव",
+            "adjective",
+            &["Nominative", "Feminine", "Singular"]
+        ),
+        "नवा"
+    );
 }

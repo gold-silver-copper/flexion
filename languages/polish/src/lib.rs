@@ -279,6 +279,7 @@ impl AdverbialParticiple {
 /// Output settings. The free functions use [`Polish::default()`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Polish {
+    stress: bool,
     marks: bool,
 }
 
@@ -290,11 +291,17 @@ impl Default for Polish {
 
 impl Polish {
     pub const fn new() -> Self {
-        Polish { marks: true }
+        Polish {
+            stress: true,
+            marks: true,
+        }
     }
 
     fn options(&self) -> Options {
-        Options { marks: self.marks }
+        Options {
+            stress: self.stress,
+            marks: self.marks,
+        }
     }
 
     /// A noun in a case and number.

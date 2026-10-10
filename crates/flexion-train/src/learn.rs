@@ -17,7 +17,7 @@
 use crate::extract::Word;
 use flexion::Spelling;
 use flexion::format::{BOUNDARY, NONE, Stress};
-use flexion::write::{ClassSpec, EditSpec, NodeSpec, PosTables};
+use flexion::write::{ClassSpec, EditSpec, JoinSpec, NodeSpec, PosTables};
 use std::collections::{BTreeMap, HashMap};
 
 /// Learner hyperparameters.
@@ -42,6 +42,9 @@ pub struct Params {
     pub homograph_decay: f64,
     /// Where (if anywhere) the walk asks for the syllable count.
     pub walk: flexion::Walk,
+    /// Learn a join model: unseen words made of a known prefix and an
+    /// attested word inflect through that word (`an` + `fangen`).
+    pub joins: bool,
 }
 
 impl Default for Params {
@@ -57,7 +60,9 @@ impl Default for Params {
             walk: flexion::Walk {
                 syllable_depth: None,
                 syllable_max: 3,
+                initial_depth: None,
             },
+            joins: false,
         }
     }
 }
@@ -74,6 +79,9 @@ pub struct Stats {
     pub stored_nodes: usize,
     pub dist_entries: usize,
     pub stress_unexplained: usize,
+    /// Prefixes of the join model, and the attested words they join.
+    pub join_prefixes: usize,
+    pub join_pairs: usize,
 }
 
 /// One part of speech's shape.
@@ -93,6 +101,29 @@ pub struct Shape {
     /// Per cell: whether it belongs to an optional group (many words have no
     /// form there, and the runtime decides whether this word does).
     pub optional: Vec<bool>,
+    /// Every word is written with a capital.
+    pub capitalized: bool,
+}
+
+/// The longest prefix the join model splits off, in characters, and the
+/// shortest word it joins to.
+const MAX_JOIN_PREFIX: usize = 12;
+const MIN_JOIN_BASE: usize = 3;
+/// How much the attested form must outweigh the runner-up before a word's
+/// own node is dropped.
+const PRUNE_MARGIN: f64 = 0.05;
+/// Pairs a prefix needs before the join model uses it.
+const MIN_JOIN_PAIRS: usize = 3;
+
+#[derive(Default)]
+struct Joins {
+    prefixes: Vec<JoinSpec>,
+    classes: Vec<Vec<u32>>,
+    /// Words that are a prefix + another word, and the words joins are built
+    /// on: both are marked as attested in the tree.
+    joined: std::collections::HashSet<usize>,
+    bases: std::collections::HashSet<usize>,
+    pairs: usize,
 }
 
 struct TNode {
@@ -109,6 +140,9 @@ pub struct Learner<'s> {
     pub sp: &'s Spelling<'s>,
     pub shape: Shape,
     pub params: Params,
+    /// How each (lemma, form) pair is read as an edit; the default reading
+    /// when there is none.
+    chooser: Option<&'s crate::edit::Chooser<'s>>,
     edits: Vec<EditSpec>,
     edit_ids: HashMap<EditSpec, u32>,
     classes: Vec<ClassSpec>,
@@ -122,12 +156,19 @@ impl<'s> Learner<'s> {
             sp,
             shape,
             params,
+            chooser: None,
             edits: Vec::new(),
             edit_ids: HashMap::new(),
             classes: Vec::new(),
             class_ids: HashMap::new(),
             stats: Stats::default(),
         }
+    }
+
+    /// Read pairs as the chooser says (see [`crate::edit::Chooser`]).
+    pub fn with_chooser(mut self, chooser: &'s crate::edit::Chooser<'s>) -> Self {
+        self.chooser = Some(chooser);
+        self
     }
 
     fn intern_edit(&mut self, e: EditSpec) -> u32 {
@@ -145,17 +186,21 @@ impl<'s> Learner<'s> {
         if let Some(&id) = self.class_ids.get(&key) {
             return id;
         }
-        let strip = key
-            .0
-            .iter()
-            .filter_map(|&e| self.edits.get(e as usize))
-            .map(|e| e.strip.clone())
-            .max_by_key(|s| s.chars().count())
-            .unwrap_or_default();
+        let longest = |part: fn(&EditSpec) -> &String| {
+            key.0
+                .iter()
+                .filter_map(|&e| self.edits.get(e as usize))
+                .map(|e| part(e).clone())
+                .max_by_key(|s| s.chars().count())
+                .unwrap_or_default()
+        };
+        let strip = longest(|e| &e.strip);
+        let front = longest(|e| &e.front);
         let id = u32::try_from(self.classes.len()).unwrap_or(NONE);
         self.classes.push(ClassSpec {
             edits: key.0.clone(),
             strip,
+            front,
             inherent: key.1.clone(),
         });
         self.class_ids.insert(key, id);
@@ -175,11 +220,18 @@ impl<'s> Learner<'s> {
                 // types by a separate model); the citation cell itself only
                 // places the lemma's stress.
                 let citation = cell == self.shape.lemma_cell;
-                let stress = if citation { None } else { lex.lemma_stress };
+                let stem = crate::edit::Stem {
+                    letters: &lex.full,
+                    stress: if citation { None } else { lex.lemma_stress },
+                    kind: lex.lemma_kind,
+                };
                 for f in forms {
-                    let e = crate::edit::edit(self.sp, &lex.full, stress, f, citation);
+                    let e = match self.chooser {
+                        Some(c) => c.edit(self.sp, stem, f, citation),
+                        None => crate::edit::edit(self.sp, stem, f, citation),
+                    };
                     if e.stress == Stress::Unmarked
-                        && self.sp.stress_mark.is_some()
+                        && self.sp.has_stress()
                         && self.sp.read(f).stress.is_some()
                     {
                         self.stats.stress_unexplained += 1;
@@ -223,8 +275,161 @@ impl<'s> Learner<'s> {
         out
     }
 
+    /// The join model (see [`Params::joins`]): prefixes that, put before an
+    /// attested word, make another attested word; per prefix, the classes of
+    /// per-cell edits from the word's forms to the joined word's, and how
+    /// often joining is right. Also returns the words that are joins and the
+    /// words they join, by index.
+    fn joins(&mut self, words: &[Word]) -> Joins {
+        let mut out = Joins::default();
+        let index: HashMap<&str, usize> =
+            words.iter().enumerate().map(|(i, w)| (w.key, i)).collect();
+        // Every way to read a key as prefix + attested word.
+        let splits = |key: &str| -> Vec<(usize, usize)> {
+            let chars: Vec<(usize, char)> = key.char_indices().collect();
+            let mut v = Vec::new();
+            for n in 1..=MAX_JOIN_PREFIX.min(chars.len().saturating_sub(MIN_JOIN_BASE)) {
+                let Some(&(at, _)) = chars.get(n) else {
+                    continue;
+                };
+                if let Some(&b) = key.get(at..).and_then(|rest| index.get(rest)) {
+                    v.push((at, b));
+                }
+            }
+            v
+        };
+        let mut prefix_count: HashMap<&str, usize> = HashMap::new();
+        for w in words {
+            for (at, _) in splits(w.key) {
+                if let Some(p) = w.key.get(..at) {
+                    *prefix_count.entry(p).or_default() += 1;
+                }
+            }
+        }
+        // Each word joins at its longest known prefix, as the runtime reads it.
+        let mut pairs: Vec<(usize, usize, &str)> = Vec::new();
+        for (wi, w) in words.iter().enumerate() {
+            let best = splits(w.key)
+                .into_iter()
+                .filter_map(|(at, b)| Some((w.key.get(..at)?, b)))
+                .filter(|(p, _)| prefix_count.get(p).copied().unwrap_or(0) >= MIN_JOIN_PAIRS)
+                .max_by_key(|(p, _)| p.len());
+            if let Some((p, b)) = best {
+                pairs.push((wi, b, p));
+            }
+        }
+        // Per pair and cell, the readings of base form → joined form; each
+        // pair takes the reading the most pairs share.
+        let cells = self.shape.cells;
+        let mut readings: Vec<Vec<Option<Vec<EditSpec>>>> = Vec::with_capacity(pairs.len());
+        let mut counts: HashMap<EditSpec, u32> = HashMap::new();
+        for &(wi, bi, _) in &pairs {
+            let (Some(w), Some(b)) = (words.get(wi), words.get(bi)) else {
+                readings.push(Vec::new());
+                continue;
+            };
+            let mut per_cell = Vec::with_capacity(cells);
+            for cell in 0..cells {
+                let r = (cell != self.shape.lemma_cell)
+                    .then(|| Some((b.primary(cell)?, w.primary(cell)?)))
+                    .flatten()
+                    .map(|(fb, fw)| {
+                        let read = self.sp.read(fb);
+                        let stem = crate::edit::Stem {
+                            letters: &read.base,
+                            stress: read.stress,
+                            kind: read.kind,
+                        };
+                        crate::edit::candidates(self.sp, stem, fw, false)
+                    });
+                if let Some(c) = &r {
+                    for e in c {
+                        *counts.entry(e.clone()).or_default() += 1;
+                    }
+                }
+                per_cell.push(r);
+            }
+            readings.push(per_cell);
+        }
+        let mut class_ids: HashMap<Vec<u32>, u32> = HashMap::new();
+        let mut by_prefix: BTreeMap<&str, BTreeMap<u32, usize>> = BTreeMap::new();
+        for (&(_, bi, p), per_cell) in pairs.iter().zip(readings) {
+            // Cells the base lacks get no join edit: the joined reading has
+            // nothing to say there.
+            let mut v = vec![NONE; cells];
+            for (cell, r) in per_cell.into_iter().enumerate() {
+                let Some(c) = r else {
+                    continue;
+                };
+                let best = c
+                    .into_iter()
+                    .enumerate()
+                    .max_by_key(|(i, e)| {
+                        (counts.get(e).copied().unwrap_or(0), std::cmp::Reverse(*i))
+                    })
+                    .map(|(_, e)| e);
+                if let (Some(e), Some(slot)) = (best, v.get_mut(cell)) {
+                    *slot = self.intern_edit(e);
+                }
+            }
+            let n = u32::try_from(out.classes.len()).unwrap_or(NONE);
+            let id = *class_ids.entry(v.clone()).or_insert_with(|| {
+                out.classes.push(v);
+                n
+            });
+            *by_prefix.entry(p).or_default().entry(id).or_default() += 1;
+            out.bases.insert(bi);
+        }
+        for (p, classes) in by_prefix {
+            let total: usize = classes.values().sum();
+            if total < MIN_JOIN_PAIRS {
+                continue;
+            }
+            // How often a word with this prefix joins the way the others do:
+            // the chance that its class is drawn from the others' classes.
+            let shared: usize = classes.values().map(|&n| n * n.saturating_sub(1)).sum();
+            let split = shared as f64 / (total * (total - 1)) as f64;
+            let kept: Vec<(u32, usize)> = classes.into_iter().filter(|&(_, n)| n >= 2).collect();
+            let kept_total: usize = kept.iter().map(|&(_, n)| n).sum();
+            if kept_total == 0 || split <= 0.0 {
+                continue;
+            }
+            let mut dist: Vec<(u32, f32)> = kept
+                .into_iter()
+                .map(|(c, n)| (c, n as f32 / kept_total as f32))
+                .collect();
+            dist.sort_by(|a, b| b.1.total_cmp(&a.1).then(a.0.cmp(&b.0)));
+            out.prefixes.push(JoinSpec {
+                prefix: p.to_string(),
+                split: split as f32,
+                classes: dist,
+            });
+            out.pairs += total;
+        }
+        // Every word the runtime would read as a known prefix + an attested
+        // word is marked as attested: the runtime joins only unseen words.
+        let kept: std::collections::HashSet<&str> =
+            out.prefixes.iter().map(|j| j.prefix.as_str()).collect();
+        for (wi, w) in words.iter().enumerate() {
+            let splits_here = splits(w.key)
+                .into_iter()
+                .any(|(at, _)| w.key.get(..at).is_some_and(|p| kept.contains(p)));
+            if splits_here {
+                out.joined.insert(wi);
+            }
+        }
+        out
+    }
+
     /// Learn tables from words (each word = all entries sharing a key).
     pub fn learn(mut self, words: &[Word]) -> (PosTables, Stats) {
+        let joins = if self.params.joins {
+            self.joins(words)
+        } else {
+            Joins::default()
+        };
+        self.stats.join_prefixes = joins.prefixes.len();
+        self.stats.join_pairs = joins.pairs;
         let mut trie = vec![TNode {
             children: Vec::new(),
             counts: Vec::new(),
@@ -313,7 +518,17 @@ impl<'s> Learner<'s> {
         }
 
         let mut stats = self.stats;
-        let (tables, stored, entries) = self.emit_tables(&trie, &owner, &arena);
+        // The words joins are built on, and the joined words themselves, must
+        // be found as attested words (the runtime joins only unseen ones),
+        // with or without a distribution of their own.
+        let marked: std::collections::HashSet<usize> = word_of
+            .iter()
+            .filter(|(_, wi)| joins.bases.contains(wi) || joins.joined.contains(wi))
+            .map(|(&node, _)| node)
+            .collect();
+        let (mut tables, stored, entries) = self.emit_tables(&trie, &owner, &arena, &marked);
+        tables.joins = joins.prefixes;
+        tables.join_classes = joins.classes;
         stats.stored_nodes = stored;
         stats.dist_entries = entries;
         (tables, stats)
@@ -354,25 +569,29 @@ impl<'s> Learner<'s> {
     /// The runtime's answer to "does this word have a form in `cell`": the
     /// deepest node with a fitting class decides, by majority of its mass.
     fn has_cell(&self, word: &flexion::Word, cell: usize, path: &[usize], arena: &[Dist]) -> bool {
-        for &node in path.iter().rev() {
-            let Some(d) = arena.get(node) else {
-                continue;
-            };
-            let (mut with, mut all) = (0.0, 0.0);
-            for &(class, p) in d {
-                let Some(spec) = self.classes.get(class as usize) else {
+        for &strict in self.passes(word) {
+            // Like the runtime, the strict pass leaves out the root.
+            for &node in path.iter().skip(usize::from(strict)).rev() {
+                let Some(d) = arena.get(node) else {
                     continue;
                 };
-                if !self.sp.ends_with_folded(&word.base, &spec.strip) {
-                    continue;
+                let (mut with, mut all) = (0.0, 0.0);
+                for &(class, p) in d {
+                    let Some(spec) = self.classes.get(class as usize) else {
+                        continue;
+                    };
+                    if !fits(self.sp, &word.base, spec) || (strict && !self.stress_fits(word, spec))
+                    {
+                        continue;
+                    }
+                    all += p;
+                    if spec.edits.get(cell).is_some_and(|&e| e != NONE) {
+                        with += p;
+                    }
                 }
-                all += p;
-                if spec.edits.get(cell).is_some_and(|&e| e != NONE) {
-                    with += p;
+                if all > 0.0 {
+                    return with / all >= 0.5;
                 }
-            }
-            if all > 0.0 {
-                return with / all >= 0.5;
             }
         }
         false
@@ -387,63 +606,115 @@ impl<'s> Learner<'s> {
         path: &[usize],
         arena: &[Dist],
     ) -> Option<String> {
-        for &node in path.iter().rev() {
-            let Some(d) = arena.get(node) else {
-                continue;
-            };
-            let mut forms: Vec<(String, f64)> = Vec::new();
-            for &(class, p) in d {
-                let Some(spec) = self.classes.get(class as usize) else {
+        for &strict in self.passes(word) {
+            // Like the runtime, the strict pass leaves out the root.
+            for &node in path.iter().skip(usize::from(strict)).rev() {
+                let Some(d) = arena.get(node) else {
                     continue;
                 };
-                if !self.sp.ends_with_folded(&word.base, &spec.strip) {
+                let mut forms: Vec<(String, f64)> = Vec::new();
+                // In the runtime's order, and only as far as it reads.
+                let mut sorted: Vec<(u32, f64)> = d.clone();
+                sorted.sort_by(|a, b| b.1.total_cmp(&a.1).then(a.0.cmp(&b.0)));
+                for (i, &(class, p)) in sorted.iter().enumerate() {
+                    if !forms.is_empty() && i >= flexion::format::MAX_SCAN {
+                        break;
+                    }
+                    let Some(spec) = self.classes.get(class as usize) else {
+                        continue;
+                    };
+                    if !fits(self.sp, &word.base, spec) || (strict && !self.stress_fits(word, spec))
+                    {
+                        continue;
+                    }
+                    let Some(&e) = spec.edits.get(cell) else {
+                        continue;
+                    };
+                    let Some(edit) = self.edits.get(e as usize) else {
+                        continue;
+                    };
+                    let Some((full, lemma_stress, lemma_kind)) = self.restore(word, spec) else {
+                        continue;
+                    };
+                    let Some((letters, stress, kind)) =
+                        apply(self.sp, &full, edit, lemma_stress, lemma_kind)
+                    else {
+                        continue;
+                    };
+                    let form = self
+                        .sp
+                        .render(&letters, stress, kind, true, flexion::Casing::Lower);
+                    match forms.iter_mut().find(|(f, _)| *f == form) {
+                        Some((_, x)) => *x += p,
+                        None => forms.push((form, p)),
+                    }
+                }
+                if forms.is_empty() {
                     continue;
                 }
-                let Some(&e) = spec.edits.get(cell) else {
-                    continue;
-                };
-                let Some(edit) = self.edits.get(e as usize) else {
-                    continue;
-                };
-                let Some((full, lemma_stress)) = self.restore(word, spec) else {
-                    continue;
-                };
-                let Some((letters, stress)) = apply(self.sp, &full, edit, lemma_stress) else {
-                    continue;
-                };
-                let form = self
-                    .sp
-                    .render(&letters, stress, true, flexion::Casing::Lower);
-                match forms.iter_mut().find(|(f, _)| *f == form) {
-                    Some((_, x)) => *x += p,
-                    None => forms.push((form, p)),
-                }
-            }
-            if let Some((best, _)) = forms
-                .into_iter()
-                .fold(None::<(String, f64)>, |acc, (f, p)| match acc {
-                    Some((af, ap)) if ap >= p => Some((af, ap)),
-                    _ => Some((f, p)),
-                })
-            {
-                return Some(best);
+                // Only a clear winner counts: a near tie can go either way at
+                // runtime (variants pool differently there), so the word keeps
+                // its own node.
+                forms.sort_by(|a, b| b.1.total_cmp(&a.1));
+                let mut it = forms.into_iter();
+                let (best, p) = it.next()?;
+                let second = it.next().map_or(0.0, |(_, q)| q);
+                return (p > second * (1.0 + PRUNE_MARGIN)).then_some(best);
             }
         }
         None
     }
 
-    /// The (already restored) lemma and its stress under a class: the
-    /// caller's mark if given, else the class's citation-cell rule.
-    fn restore(&self, word: &flexion::Word, spec: &ClassSpec) -> Option<(String, Option<usize>)> {
+    /// Whether a class stresses its lemma where the caller did (see
+    /// `Pos::stress_fits` in the runtime).
+    fn stress_fits(&self, word: &flexion::Word, spec: &ClassSpec) -> bool {
+        let Some(given) = word.stress else {
+            return true;
+        };
+        let Some(rule) = spec
+            .edits
+            .get(self.shape.lemma_cell)
+            .and_then(|&e| self.edits.get(e as usize))
+        else {
+            return true;
+        };
+        if rule.stress == Stress::Unmarked {
+            return true;
+        }
+        let Some((_, own, kind)) = apply(self.sp, &word.base, rule, None, 0) else {
+            return false;
+        };
+        own == Some(given) && (self.sp.stress_kinds() <= 1 || kind == word.kind)
+    }
+
+    /// The runtime's passes: stress-consistent classes first, then any.
+    fn passes(&self, word: &flexion::Word) -> &'static [bool] {
+        if word.stress.is_some() && self.sp.has_stress() {
+            &[true, false]
+        } else {
+            &[false]
+        }
+    }
+
+    /// The (already restored) lemma, its stress and mark kind under a
+    /// class: the caller's mark if given, else the class's citation-cell rule.
+    fn restore(
+        &self,
+        word: &flexion::Word,
+        spec: &ClassSpec,
+    ) -> Option<(String, Option<usize>, u8)> {
         let rule = spec
             .edits
             .get(self.shape.lemma_cell)
             .and_then(|&e| self.edits.get(e as usize));
-        let stress = match rule {
-            Some(e) if word.stress.is_none() => apply(self.sp, &word.base, e, None)?.1,
-            _ => word.stress,
+        let (stress, kind) = match rule {
+            Some(e) if word.stress.is_none() => {
+                let (_, s, k) = apply(self.sp, &word.base, e, None, 0)?;
+                (s, k)
+            }
+            _ => (word.stress, word.kind),
         };
-        Some((word.base.to_string(), stress))
+        Some((word.base.to_string(), stress, kind))
     }
 
     fn emit_tables(
@@ -451,6 +722,7 @@ impl<'s> Learner<'s> {
         trie: &[TNode],
         owner: &[Option<usize>],
         arena: &[Dist],
+        marked: &std::collections::HashSet<usize>,
     ) -> (PosTables, usize, usize) {
         let dist_of = |n: usize| owner.get(n).copied().flatten().and_then(|i| arena.get(i));
         // A node is needed if it or a descendant has a distribution.
@@ -464,7 +736,7 @@ impl<'s> Learner<'s> {
                     .any(|&(_, c)| needed.get(c).copied().unwrap_or(false))
             });
             if let Some(slot) = needed.get_mut(n) {
-                *slot = own || kids || n == 0;
+                *slot = own || kids || n == 0 || marked.contains(&n);
             }
         }
         let has_dist = |n: usize| dist_of(n).is_some();
@@ -542,6 +814,11 @@ impl<'s> Learner<'s> {
             lemma_cell: Some(self.shape.lemma_cell),
             groups: self.shape.groups.clone(),
             restore: None,
+            capitalized: self.shape.capitalized,
+            joins: Vec::new(),
+            join_classes: Vec::new(),
+            part_models: Vec::new(),
+            sources: Vec::new(),
             walk: self.params.walk,
             edits: self.edits,
             classes: self.classes,
@@ -552,26 +829,39 @@ impl<'s> Learner<'s> {
     }
 }
 
-/// Apply an edit the way the runtime does: `(letters, stressed vowel)`.
+/// Whether a class fits a lemma: it ends and starts the way the class's
+/// edits need.
+fn fits(sp: &Spelling<'_>, base: &str, spec: &ClassSpec) -> bool {
+    sp.ends_with_folded(base, &spec.strip) && sp.starts_with_folded(base, &spec.front)
+}
+
+/// Apply an edit the way the runtime does: `(letters, stressed vowel, mark
+/// kind)`.
 pub fn apply(
     sp: &Spelling<'_>,
     base: &str,
     e: &EditSpec,
     lemma_stress: Option<usize>,
-) -> Option<(String, Option<usize>)> {
-    if !sp.ends_with_folded(base, &e.strip) {
-        return None;
-    }
-    let keep = base.chars().count().checked_sub(e.strip.chars().count())?;
-    let kept: String = base.chars().take(keep).collect();
-    let stress = sp.place(e.stress, lemma_stress, &e.prefix, &kept, &e.add);
-    Some((format!("{}{}{}", e.prefix, kept, e.add), stress))
+    lemma_kind: u8,
+) -> Option<(String, Option<usize>, u8)> {
+    // Cut where the folded strings line up, as the runtime does.
+    let end = sp.folded_suffix_start(base, &e.strip)?;
+    let start = if e.front.is_empty() {
+        0
+    } else {
+        sp.folded_prefix_end(base, &e.front)?
+    };
+    let kept = base.get(start..end)?;
+    let lemma_stress = lemma_stress.and_then(|s| s.checked_sub(sp.vowel_count(&e.front)));
+    let stress = sp.place(e.stress, lemma_stress, &e.prefix, kept, &e.add);
+    let kind = e.mark.checked_sub(1).unwrap_or(lemma_kind);
+    Some((format!("{}{}{}", e.prefix, kept, e.add), stress, kind))
 }
 
 /// Same letters and same stress (when both are marked).
 pub fn same_form(sp: &Spelling<'_>, a: &str, b: &str) -> bool {
     let (x, y) = (sp.read(a), sp.read(b));
-    x.base == y.base && x.stress == y.stress
+    x.base == y.base && x.stress == y.stress && x.kind == y.kind
 }
 
 fn child_or_insert(trie: &mut Vec<TNode>, node: usize, c: char) -> usize {

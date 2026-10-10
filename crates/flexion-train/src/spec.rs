@@ -72,12 +72,16 @@ pub struct PartOfSpeech {
     pub templates: Vec<&'static str>,
     pub forms: FormSource,
     pub groups: Vec<Group>,
-    /// The cell the lemma itself fills: `(group, values)`.
-    pub lemma: (&'static str, Vec<&'static str>),
+    /// The cell the lemma itself fills: `(group, values)`. `None` when the
+    /// lemma is no form of the word (Sanskrit nouns are cited by their stem).
+    pub lemma: Option<(&'static str, Vec<&'static str>)>,
     /// Principal parts after the lemma, in dictionary order.
     pub citation: Vec<(&'static str, Vec<&'static str>)>,
     /// Features of the word itself (gender), read from the entry and predicted.
     pub inherent: Vec<&'static str>,
+    /// Every word is written with a capital (German nouns): a lemma typed in
+    /// lowercase still gets capitalized forms.
+    pub capitalized: bool,
 }
 
 /// A group of cells that is one generated function: the product of its
@@ -120,17 +124,43 @@ impl Group {
 #[derive(Debug, Clone, Default)]
 pub struct Spelling {
     pub fold_case: bool,
-    pub stress_mark: Option<char>,
+    /// The combining marks that write stress, one per kind (Russian the
+    /// acute; Ancient Greek acute and circumflex). Precomposed letters that
+    /// carry them are found from Unicode. Empty: the data writes no stress.
+    pub stress_marks: &'static str,
+    /// Marks read as a stress mark: `(mark, as)` (Greek grave as acute).
+    pub stress_aliases: Vec<(char, char)>,
     pub mark_monosyllables: bool,
+    /// Letters that carry a syllable. Letters made of one of these plus
+    /// marks this spelling folds or drops are vowels too.
     pub vowels: &'static str,
     pub implicit: &'static str,
     pub fold: Vec<(char, char)>,
+    /// Combining marks lookup ignores: every letter written with one folds
+    /// to the letter without it (Greek breathings, iota subscript).
+    pub fold_marks: &'static str,
     pub strip_marks: &'static str,
     /// Letters written plain when the caller turns marks off (Latin
-    /// `ā` → `a`). Stress marks are dropped too.
+    /// `ā` → `a`). Lookup ignores them too.
     pub unmark: Vec<(char, char)>,
-    /// Name of the generated setting that turns marks off (`stress`,
-    /// `macrons`); empty for no setting.
+    /// Combining marks the marks setting drops (Greek length marks): every
+    /// letter written with one is written without it. Lookup ignores them.
+    pub unmark_marks: &'static str,
+    /// Letters that carry an inherent vowel (Devanagari consonants), and the
+    /// marks that mute it (the virama): for syllable counts.
+    pub syllabic: &'static str,
+    pub mute: &'static str,
+    /// Pairs of vowels that make one syllable (Greek `αι`, `ευ`), for stress
+    /// counted in syllables from the word's end; lowercase, unmarked.
+    pub diphthongs: Vec<&'static str>,
+    /// The mark that keeps two vowels apart (the diaeresis): letters with it
+    /// never close a diphthong.
+    pub hiatus_mark: Option<char>,
+    /// Name of the generated setting that turns stress marks off (`stress`,
+    /// `accents`); empty for no setting.
+    pub stress_setting: &'static str,
+    /// Name of the generated setting that writes marked letters plain
+    /// (`macrons`); empty for no setting.
     pub marks_setting: &'static str,
 }
 
@@ -236,9 +266,11 @@ impl Language {
                 }
             }
             let cells = crate::cells::Cells::new(self, p)?;
-            cells
-                .find(p.lemma.0, &p.lemma.1)
-                .ok_or(format!("{}: lemma cell not found", p.name))?;
+            if let Some((g, v)) = &p.lemma {
+                cells
+                    .find(g, v)
+                    .ok_or(format!("{}: lemma cell not found", p.name))?;
+            }
             for (g, v) in &p.citation {
                 cells
                     .find(g, v)

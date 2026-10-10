@@ -257,6 +257,7 @@ impl Tense {
 /// Output settings. The free functions use [`Russian::default()`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Russian {
+    stress: bool,
     marks: bool,
 }
 
@@ -268,17 +269,23 @@ impl Default for Russian {
 
 impl Russian {
     pub const fn new() -> Self {
-        Russian { marks: true }
+        Russian {
+            stress: true,
+            marks: true,
+        }
     }
 
-    /// Write stress (on by default); off writes the plain letters.
+    /// Write stress (on by default).
     pub const fn stress(mut self, on: bool) -> Self {
-        self.marks = on;
+        self.stress = on;
         self
     }
 
     fn options(&self) -> Options {
-        Options { marks: self.marks }
+        Options {
+            stress: self.stress,
+            marks: self.marks,
+        }
     }
 
     /// A noun in a case and number.
@@ -731,7 +738,7 @@ pub fn aspect(word: &str) -> Vec<(Aspect, f32)> {
 
 /// `s` without stress marks.
 pub fn without_stress(s: &str) -> String {
-    s.chars().filter(|&c| c != '\u{301}').collect()
+    model().map_or_else(|| s.to_string(), |m| m.spelling().unstressed(s))
 }
 
 /// Per part of speech: the cells a citation's extra parts fill, and the

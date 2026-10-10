@@ -39,9 +39,10 @@ pub fn language() -> Language {
                 templates: vec![],
                 forms: FormSource::All,
                 groups: vec![group("noun", "A noun in the given number.", &["Number"])],
-                lemma: ("noun", vec!["Singular"]),
+                lemma: Some(("noun", vec!["Singular"])),
                 citation: vec![("noun", vec!["Plural"])],
                 inherent: vec![],
+                capitalized: false,
             },
             PartOfSpeech {
                 name: "verb",
@@ -50,9 +51,10 @@ pub fn language() -> Language {
                 templates: vec![],
                 forms: FormSource::All,
                 groups: vec![group("verb", "A verb form.", &["VerbForm"])],
-                lemma: ("verb", vec!["Infinitive"]),
+                lemma: Some(("verb", vec!["Infinitive"])),
                 citation: vec![("verb", vec!["Past"]), ("verb", vec!["PastParticiple"])],
                 inherent: vec![],
+                capitalized: false,
             },
             PartOfSpeech {
                 name: "adjective",
@@ -65,12 +67,13 @@ pub fn language() -> Language {
                     "An adjective in the given degree.",
                     &["Degree"],
                 )],
-                lemma: ("adjective", vec!["Positive"]),
+                lemma: Some(("adjective", vec!["Positive"])),
                 citation: vec![
                     ("adjective", vec!["Comparative"]),
                     ("adjective", vec!["Superlative"]),
                 ],
                 inherent: vec![],
+                capitalized: false,
             },
             PartOfSpeech {
                 name: "adverb",
@@ -83,12 +86,13 @@ pub fn language() -> Language {
                     "An adverb in the given degree.",
                     &["Degree"],
                 )],
-                lemma: ("adverb", vec!["Positive"]),
+                lemma: Some(("adverb", vec!["Positive"])),
                 citation: vec![
                     ("adverb", vec!["Comparative"]),
                     ("adverb", vec!["Superlative"]),
                 ],
                 inherent: vec![],
+                capitalized: false,
             },
         ],
         spelling: Spelling {

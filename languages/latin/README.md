@@ -71,10 +71,10 @@ used for any decision.
 
 | | lemmas | cells | top-1 | letters right (marks ignored) | top-1, lemma written in full | top-3 | top-1 given citation | top-1 given citation and markers |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 1523 | 16448 | **59.08%** | 93.26% | 84.61% | 73.16% | 97.98% | 98.31% |
-| adjective | 2769 | 96924 | **71.79%** | 99.42% | 94.58% | 80.71% | 99.55% | – |
-| verb | 604 | 58798 | **66.49%** | 90.24% | 86.98% | 78.61% | 97.69% | – |
-| pronoun ¹ | 9 | 261 | **24.52%** | 24.52% | 24.52% | 24.90% | – | – |
+| noun | 1523 | 16448 | **59.08%** | 93.26% | 84.61% | 73.16% | 98.12% | 98.47% |
+| adjective | 2769 | 96924 | **71.79%** | 99.42% | 94.58% | 80.68% | 99.60% | – |
+| verb | 604 | 58798 | **66.55%** | 90.30% | 87.04% | 78.61% | 99.55% | – |
+| pronoun ¹ | 9 | 261 | **43.30%** | 44.06% | 44.06% | 46.74% | – | – |
 | numeral ¹ | 11 | 385 | **54.55%** | 100.00% | 100.00% | 63.64% | – | – |
 
 ¹ A closed class: too few held-out lemmas for these numbers to mean much. What matters for
@@ -106,41 +106,41 @@ those marks.
 | noun.voc.pl | 1499 | 58.37% | 72.45% |
 | noun_locative.sg | 1 | 0.00% | 0.00% |
 | noun_locative.pl | 2 | 100.00% | 100.00% |
-| adjective.nom.m.pl | 2766 | 71.87% | 80.73% |
-| adjective.nom.f.sg | 2768 | 71.89% | 80.78% |
-| adjective.nom.f.pl | 2768 | 71.82% | 80.71% |
-| adjective.nom.n.sg | 2764 | 71.89% | 80.79% |
-| adjective.nom.n.pl | 2763 | 71.84% | 80.71% |
-| adjective.gen.m.sg | 2766 | 71.87% | 80.73% |
-| adjective.gen.m.pl | 2766 | 71.80% | 80.66% |
-| adjective.gen.f.sg | 2768 | 71.82% | 80.71% |
-| adjective.gen.f.pl | 2768 | 71.75% | 80.60% |
-| adjective.gen.n.sg | 2764 | 71.89% | 80.75% |
-| adjective.gen.n.pl | 2766 | 71.80% | 80.66% |
-| adjective.dat.m.sg | 2766 | 71.87% | 80.73% |
-| adjective.dat.m.pl | 2766 | 71.87% | 80.73% |
-| adjective.dat.f.sg | 2768 | 71.82% | 80.71% |
-| adjective.dat.f.pl | 2768 | 71.86% | 80.71% |
-| adjective.dat.n.sg | 2764 | 71.89% | 80.75% |
-| adjective.dat.n.pl | 2766 | 71.87% | 80.73% |
-| adjective.acc.m.sg | 2766 | 71.84% | 80.73% |
-| adjective.acc.m.pl | 2766 | 71.44% | 80.62% |
-| adjective.acc.f.sg | 2768 | 71.82% | 80.71% |
-| adjective.acc.f.pl | 2768 | 71.39% | 80.56% |
-| adjective.acc.n.sg | 2764 | 71.89% | 80.79% |
-| adjective.acc.n.pl | 2763 | 71.84% | 80.71% |
-| adjective.abl.m.sg | 2766 | 71.37% | 80.66% |
-| adjective.abl.m.pl | 2766 | 71.87% | 80.73% |
-| adjective.abl.f.sg | 2768 | 71.32% | 80.64% |
-| adjective.abl.f.pl | 2768 | 71.86% | 80.71% |
-| adjective.abl.n.sg | 2764 | 71.38% | 80.68% |
-| adjective.abl.n.pl | 2766 | 71.87% | 80.73% |
-| adjective.voc.m.sg | 2765 | 71.97% | 80.83% |
-| adjective.voc.m.pl | 2765 | 71.90% | 80.76% |
-| adjective.voc.f.sg | 2767 | 71.96% | 80.81% |
-| adjective.voc.f.pl | 2767 | 71.85% | 80.74% |
-| adjective.voc.n.sg | 2763 | 71.91% | 80.82% |
-| adjective.voc.n.pl | 2762 | 71.87% | 80.74% |
+| adjective.nom.m.pl | 2766 | 71.87% | 80.69% |
+| adjective.nom.f.sg | 2768 | 71.89% | 80.74% |
+| adjective.nom.f.pl | 2768 | 71.82% | 80.67% |
+| adjective.nom.n.sg | 2764 | 71.89% | 80.75% |
+| adjective.nom.n.pl | 2763 | 71.84% | 80.67% |
+| adjective.gen.m.sg | 2766 | 71.87% | 80.69% |
+| adjective.gen.m.pl | 2766 | 71.80% | 80.62% |
+| adjective.gen.f.sg | 2768 | 71.82% | 80.67% |
+| adjective.gen.f.pl | 2768 | 71.75% | 80.56% |
+| adjective.gen.n.sg | 2764 | 71.89% | 80.72% |
+| adjective.gen.n.pl | 2766 | 71.80% | 80.62% |
+| adjective.dat.m.sg | 2766 | 71.87% | 80.69% |
+| adjective.dat.m.pl | 2766 | 71.87% | 80.69% |
+| adjective.dat.f.sg | 2768 | 71.82% | 80.67% |
+| adjective.dat.f.pl | 2768 | 71.86% | 80.67% |
+| adjective.dat.n.sg | 2764 | 71.89% | 80.72% |
+| adjective.dat.n.pl | 2766 | 71.87% | 80.69% |
+| adjective.acc.m.sg | 2766 | 71.84% | 80.69% |
+| adjective.acc.m.pl | 2766 | 71.44% | 80.59% |
+| adjective.acc.f.sg | 2768 | 71.82% | 80.67% |
+| adjective.acc.f.pl | 2768 | 71.39% | 80.53% |
+| adjective.acc.n.sg | 2764 | 71.89% | 80.75% |
+| adjective.acc.n.pl | 2763 | 71.84% | 80.67% |
+| adjective.abl.m.sg | 2766 | 71.37% | 80.62% |
+| adjective.abl.m.pl | 2766 | 71.87% | 80.69% |
+| adjective.abl.f.sg | 2768 | 71.32% | 80.60% |
+| adjective.abl.f.pl | 2768 | 71.86% | 80.67% |
+| adjective.abl.n.sg | 2764 | 71.38% | 80.64% |
+| adjective.abl.n.pl | 2766 | 71.87% | 80.69% |
+| adjective.voc.m.sg | 2765 | 71.97% | 80.80% |
+| adjective.voc.m.pl | 2765 | 71.90% | 80.72% |
+| adjective.voc.f.sg | 2767 | 71.96% | 80.77% |
+| adjective.voc.f.pl | 2767 | 71.85% | 80.70% |
+| adjective.voc.n.sg | 2763 | 71.91% | 80.78% |
+| adjective.voc.n.pl | 2762 | 71.87% | 80.70% |
 | comparative | 64 | 70.31% | 78.12% |
 | superlative | 53 | 67.92% | 77.36% |
 | verb.ind.act.pres.1.pl | 601 | 67.89% | 79.70% |
@@ -160,24 +160,24 @@ those marks.
 | verb.ind.act.fut.2.pl | 601 | 67.72% | 79.37% |
 | verb.ind.act.fut.3.sg | 604 | 67.72% | 79.30% |
 | verb.ind.act.fut.3.pl | 604 | 67.72% | 79.30% |
-| verb.ind.act.perf.1.sg | 495 | 63.84% | 76.97% |
-| verb.ind.act.perf.1.pl | 495 | 63.84% | 76.77% |
-| verb.ind.act.perf.2.sg | 495 | 63.84% | 76.77% |
-| verb.ind.act.perf.2.pl | 495 | 63.84% | 76.77% |
-| verb.ind.act.perf.3.sg | 497 | 63.98% | 76.86% |
-| verb.ind.act.perf.3.pl | 497 | 63.78% | 75.45% |
-| verb.ind.act.plup.1.sg | 495 | 63.84% | 76.77% |
-| verb.ind.act.plup.1.pl | 495 | 63.84% | 76.77% |
-| verb.ind.act.plup.2.sg | 495 | 63.84% | 76.77% |
-| verb.ind.act.plup.2.pl | 495 | 63.84% | 76.77% |
-| verb.ind.act.plup.3.sg | 497 | 63.98% | 76.86% |
-| verb.ind.act.plup.3.pl | 497 | 63.98% | 76.86% |
-| verb.ind.act.futp.1.sg | 495 | 63.84% | 76.77% |
-| verb.ind.act.futp.1.pl | 495 | 63.84% | 76.77% |
-| verb.ind.act.futp.2.sg | 495 | 63.84% | 76.77% |
-| verb.ind.act.futp.2.pl | 495 | 63.84% | 76.77% |
-| verb.ind.act.futp.3.sg | 497 | 63.98% | 76.86% |
-| verb.ind.act.futp.3.pl | 497 | 63.98% | 76.86% |
+| verb.ind.act.perf.1.sg | 495 | 64.04% | 76.97% |
+| verb.ind.act.perf.1.pl | 495 | 64.04% | 76.77% |
+| verb.ind.act.perf.2.sg | 495 | 64.04% | 76.77% |
+| verb.ind.act.perf.2.pl | 495 | 64.04% | 76.77% |
+| verb.ind.act.perf.3.sg | 497 | 64.19% | 76.86% |
+| verb.ind.act.perf.3.pl | 497 | 63.98% | 75.45% |
+| verb.ind.act.plup.1.sg | 495 | 64.04% | 76.77% |
+| verb.ind.act.plup.1.pl | 495 | 64.04% | 76.77% |
+| verb.ind.act.plup.2.sg | 495 | 64.04% | 76.77% |
+| verb.ind.act.plup.2.pl | 495 | 64.04% | 76.77% |
+| verb.ind.act.plup.3.sg | 497 | 64.19% | 76.86% |
+| verb.ind.act.plup.3.pl | 497 | 64.19% | 76.86% |
+| verb.ind.act.futp.1.sg | 495 | 64.04% | 76.77% |
+| verb.ind.act.futp.1.pl | 495 | 64.04% | 76.77% |
+| verb.ind.act.futp.2.sg | 495 | 64.04% | 76.77% |
+| verb.ind.act.futp.2.pl | 495 | 64.04% | 76.77% |
+| verb.ind.act.futp.3.sg | 497 | 64.19% | 76.86% |
+| verb.ind.act.futp.3.pl | 497 | 64.19% | 76.86% |
 | verb.ind.pass.pres.1.sg | 451 | 73.17% | 82.04% |
 | verb.ind.pass.pres.1.pl | 451 | 66.74% | 78.94% |
 | verb.ind.pass.pres.2.sg | 451 | 66.74% | 78.27% |
@@ -208,18 +208,18 @@ those marks.
 | verb.subj.act.impf.2.pl | 601 | 67.55% | 79.37% |
 | verb.subj.act.impf.3.sg | 604 | 67.55% | 79.30% |
 | verb.subj.act.impf.3.pl | 604 | 67.55% | 79.30% |
-| verb.subj.act.perf.1.sg | 495 | 63.84% | 76.77% |
-| verb.subj.act.perf.1.pl | 495 | 63.84% | 76.77% |
-| verb.subj.act.perf.2.sg | 495 | 63.84% | 76.77% |
-| verb.subj.act.perf.2.pl | 495 | 63.84% | 76.77% |
-| verb.subj.act.perf.3.sg | 497 | 63.98% | 76.86% |
-| verb.subj.act.perf.3.pl | 497 | 63.98% | 76.86% |
-| verb.subj.act.plup.1.sg | 495 | 63.84% | 76.77% |
-| verb.subj.act.plup.1.pl | 495 | 63.84% | 76.77% |
-| verb.subj.act.plup.2.sg | 495 | 63.84% | 76.77% |
-| verb.subj.act.plup.2.pl | 495 | 63.84% | 76.77% |
-| verb.subj.act.plup.3.sg | 497 | 63.98% | 76.86% |
-| verb.subj.act.plup.3.pl | 497 | 63.98% | 76.86% |
+| verb.subj.act.perf.1.sg | 495 | 64.04% | 76.77% |
+| verb.subj.act.perf.1.pl | 495 | 64.04% | 76.77% |
+| verb.subj.act.perf.2.sg | 495 | 64.04% | 76.77% |
+| verb.subj.act.perf.2.pl | 495 | 64.04% | 76.77% |
+| verb.subj.act.perf.3.sg | 497 | 64.19% | 76.86% |
+| verb.subj.act.perf.3.pl | 497 | 64.19% | 76.86% |
+| verb.subj.act.plup.1.sg | 495 | 64.04% | 76.77% |
+| verb.subj.act.plup.1.pl | 495 | 64.04% | 76.77% |
+| verb.subj.act.plup.2.sg | 495 | 64.04% | 76.77% |
+| verb.subj.act.plup.2.pl | 495 | 64.04% | 76.77% |
+| verb.subj.act.plup.3.sg | 497 | 64.19% | 76.86% |
+| verb.subj.act.plup.3.pl | 497 | 64.19% | 76.86% |
 | verb.subj.pass.pres.1.sg | 451 | 67.63% | 79.38% |
 | verb.subj.pass.pres.1.pl | 451 | 67.63% | 79.38% |
 | verb.subj.pass.pres.2.sg | 451 | 67.63% | 79.16% |
@@ -245,48 +245,48 @@ those marks.
 | imperative.pass.fut.3.sg | 465 | 67.31% | 79.78% |
 | imperative.pass.fut.3.pl | 453 | 66.89% | 79.03% |
 | infinitive.act.pres | 604 | 67.55% | 79.30% |
-| infinitive.act.perf | 497 | 63.98% | 76.86% |
+| infinitive.act.perf | 497 | 64.19% | 76.86% |
 | infinitive.act.fut | 1 | 0.00% | 0.00% |
 | infinitive.pass.pres | 465 | 67.53% | 79.78% |
 | participle.pres.act | 603 | 67.83% | 79.44% |
-| participle.perf.pass | 431 | 63.11% | 77.26% |
-| participle.fut.act | 502 | 64.14% | 77.69% |
+| participle.perf.pass | 431 | 63.34% | 77.26% |
+| participle.fut.act | 502 | 64.34% | 77.69% |
 | participle.fut.pass | 519 | 64.55% | 77.65% |
 | gerund.gen | 602 | 67.94% | 79.57% |
 | gerund.dat | 602 | 67.94% | 79.57% |
 | gerund.acc | 602 | 67.94% | 79.57% |
 | gerund.abl | 602 | 67.94% | 79.57% |
-| supine.acc | 498 | 64.06% | 77.51% |
-| supine.abl | 498 | 64.06% | 77.51% |
-| pronoun.nom.m.pl | 9 | 22.22% | 22.22% |
-| pronoun.nom.f.sg | 9 | 22.22% | 22.22% |
-| pronoun.nom.f.pl | 9 | 22.22% | 22.22% |
-| pronoun.nom.n.sg | 9 | 22.22% | 22.22% |
-| pronoun.nom.n.pl | 9 | 22.22% | 22.22% |
-| pronoun.gen.m.sg | 8 | 25.00% | 25.00% |
-| pronoun.gen.m.pl | 8 | 25.00% | 25.00% |
-| pronoun.gen.f.sg | 8 | 25.00% | 25.00% |
-| pronoun.gen.f.pl | 8 | 25.00% | 25.00% |
-| pronoun.gen.n.sg | 8 | 25.00% | 25.00% |
-| pronoun.gen.n.pl | 8 | 25.00% | 25.00% |
-| pronoun.dat.m.sg | 9 | 22.22% | 22.22% |
-| pronoun.dat.m.pl | 8 | 25.00% | 25.00% |
-| pronoun.dat.f.sg | 9 | 22.22% | 22.22% |
-| pronoun.dat.f.pl | 8 | 25.00% | 25.00% |
-| pronoun.dat.n.sg | 9 | 22.22% | 22.22% |
-| pronoun.dat.n.pl | 8 | 25.00% | 25.00% |
-| pronoun.acc.m.sg | 9 | 22.22% | 22.22% |
-| pronoun.acc.m.pl | 9 | 22.22% | 22.22% |
-| pronoun.acc.f.sg | 9 | 22.22% | 22.22% |
-| pronoun.acc.f.pl | 9 | 22.22% | 22.22% |
-| pronoun.acc.n.sg | 9 | 22.22% | 22.22% |
-| pronoun.acc.n.pl | 9 | 22.22% | 22.22% |
-| pronoun.abl.m.sg | 9 | 22.22% | 22.22% |
-| pronoun.abl.m.pl | 8 | 25.00% | 25.00% |
-| pronoun.abl.f.sg | 9 | 22.22% | 22.22% |
-| pronoun.abl.f.pl | 8 | 25.00% | 25.00% |
-| pronoun.abl.n.sg | 9 | 22.22% | 22.22% |
-| pronoun.abl.n.pl | 8 | 25.00% | 25.00% |
+| supine.acc | 498 | 64.26% | 77.51% |
+| supine.abl | 498 | 64.26% | 77.51% |
+| pronoun.nom.m.pl | 9 | 22.22% | 33.33% |
+| pronoun.nom.f.sg | 9 | 44.44% | 44.44% |
+| pronoun.nom.f.pl | 9 | 44.44% | 44.44% |
+| pronoun.nom.n.sg | 9 | 33.33% | 44.44% |
+| pronoun.nom.n.pl | 9 | 44.44% | 44.44% |
+| pronoun.gen.m.sg | 8 | 50.00% | 50.00% |
+| pronoun.gen.m.pl | 8 | 37.50% | 50.00% |
+| pronoun.gen.f.sg | 8 | 50.00% | 50.00% |
+| pronoun.gen.f.pl | 8 | 37.50% | 50.00% |
+| pronoun.gen.n.sg | 8 | 50.00% | 50.00% |
+| pronoun.gen.n.pl | 8 | 37.50% | 50.00% |
+| pronoun.dat.m.sg | 9 | 44.44% | 44.44% |
+| pronoun.dat.m.pl | 8 | 50.00% | 50.00% |
+| pronoun.dat.f.sg | 9 | 44.44% | 44.44% |
+| pronoun.dat.f.pl | 8 | 50.00% | 50.00% |
+| pronoun.dat.n.sg | 9 | 44.44% | 44.44% |
+| pronoun.dat.n.pl | 8 | 50.00% | 50.00% |
+| pronoun.acc.m.sg | 9 | 33.33% | 44.44% |
+| pronoun.acc.m.pl | 9 | 44.44% | 44.44% |
+| pronoun.acc.f.sg | 9 | 33.33% | 44.44% |
+| pronoun.acc.f.pl | 9 | 44.44% | 44.44% |
+| pronoun.acc.n.sg | 9 | 33.33% | 44.44% |
+| pronoun.acc.n.pl | 9 | 44.44% | 44.44% |
+| pronoun.abl.m.sg | 9 | 44.44% | 44.44% |
+| pronoun.abl.m.pl | 8 | 50.00% | 50.00% |
+| pronoun.abl.f.sg | 9 | 44.44% | 44.44% |
+| pronoun.abl.f.pl | 8 | 50.00% | 50.00% |
+| pronoun.abl.n.sg | 9 | 44.44% | 44.44% |
+| pronoun.abl.n.pl | 8 | 50.00% | 50.00% |
 | pronoun.voc.m.sg | 2 | 50.00% | 100.00% |
 | pronoun.voc.m.pl | 2 | 50.00% | 50.00% |
 | pronoun.voc.f.sg | 2 | 50.00% | 50.00% |
@@ -337,7 +337,7 @@ The shipped model, trained on everything, asked for every attested cell of every
 
 | | lemmas | cells | primary form from the plain call | every attested form among the answers |
 |---|---:|---:|---:|---:|
-| noun | 15893 | 171687 | **99.88%** | 99.27% |
+| noun | 15893 | 171687 | **99.89%** | 99.27% |
 | adjective | 27464 | 961782 | **99.99%** | 98.98% |
 | verb | 6171 | 592904 | **99.86%** | 98.95% |
 | pronoun | 86 | 2328 | **99.61%** | 98.50% |
@@ -351,9 +351,9 @@ Expected calibration error (ECE) is the average gap between confidence and accur
 | | ECE |
 |---|---:|
 | noun | 0.127 |
-| adjective | 0.084 |
+| adjective | 0.083 |
 | verb | 0.075 |
-| pronoun | 0.431 |
+| pronoun | 0.220 |
 | numeral | 0.181 |
 
 All parts of speech together (ECE 0.073):
@@ -363,13 +363,13 @@ All parts of speech together (ECE 0.073):
 | 0.0–0.1 | 0.062 | 0.415 | 1193 |
 | 0.1–0.2 | 0.149 | 0.282 | 2081 |
 | 0.2–0.3 | 0.253 | 0.370 | 6336 |
-| 0.3–0.4 | 0.352 | 0.508 | 11075 |
-| 0.4–0.5 | 0.453 | 0.572 | 18828 |
-| 0.5–0.6 | 0.551 | 0.625 | 25142 |
-| 0.6–0.7 | 0.653 | 0.703 | 27941 |
-| 0.7–0.8 | 0.749 | 0.763 | 31904 |
-| 0.8–0.9 | 0.850 | 0.805 | 29999 |
-| 0.9–1.0 | 0.942 | 0.819 | 18317 |
+| 0.3–0.4 | 0.352 | 0.507 | 11105 |
+| 0.4–0.5 | 0.452 | 0.572 | 18776 |
+| 0.5–0.6 | 0.551 | 0.626 | 25066 |
+| 0.6–0.7 | 0.653 | 0.704 | 27932 |
+| 0.7–0.8 | 0.749 | 0.762 | 31940 |
+| 0.8–0.9 | 0.850 | 0.805 | 30032 |
+| 0.9–1.0 | 0.942 | 0.822 | 18355 |
 
 ### Forms many words lack
 
@@ -459,18 +459,18 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 <details><summary>pronoun</summary>
 
-- 2 × `pronoun.dat.m.sg`: predicted `-+ī`, attested `-quinam+cuinam` — ecquinam → ecquinamī (attested eccuinam); quinam → quinamī (attested cuinam)
-- 2 × `pronoun.dat.f.sg`: predicted `-+ī`, attested `-quinam+cuinam` — ecquinam → ecquinamī (attested eccuinam); quinam → quinamī (attested cuinam)
-- 2 × `pronoun.dat.n.sg`: predicted `-+ī`, attested `-quinam+cuinam` — ecquinam → ecquinamī (attested eccuinam); quinam → quinamī (attested cuinam)
-- 2 × `pronoun.acc.m.sg`: predicted `-+um`, attested `-inam+emnam` — ecquinam → ecquinamum (attested ecquemnam); quinam → quinamum (attested quemnam)
-- 2 × `pronoun.acc.m.pl`: predicted `-+ōs`, attested `-inam+ōsnam` — ecquinam → ecquinamōs (attested ecquōsnam); quinam → quinamōs (attested quōsnam)
-- 2 × `pronoun.nom.m.pl`: predicted `-+ī`, attested `-inam+īnam` — ecquinam → ecquinamī (attested ecquīnam); quinam → quinamī (attested quīnam)
-- 2 × `pronoun.acc.f.sg`: predicted `-+am`, attested `-inam+amnam` — ecquinam → ecquinamam (attested ecquamnam); quinam → quinamam (attested quamnam)
-- 2 × `pronoun.acc.f.pl`: predicted `-+ās`, attested `-inam+āsnam` — ecquinam → ecquinamās (attested ecquāsnam); quinam → quinamās (attested quāsnam)
-- 2 × `pronoun.acc.n.sg`: predicted `-+um`, attested `-inam+odnam` — ecquinam → ecquinamum (attested ecquodnam); quinam → quinamum (attested quodnam)
-- 2 × `pronoun.acc.n.pl`: predicted `-+a`, attested `-inam+aenam` — ecquinam → ecquinama (attested ecquaenam); quinam → quinama (attested quaenam)
-- 2 × `pronoun.abl.m.sg`: predicted `-+ō`, attested `-inam+ōnam` — ecquinam → ecquinamō (attested ecquōnam); quinam → quinamō (attested quōnam)
-- 2 × `pronoun.abl.f.sg`: predicted `-+ā`, attested `-inam+ānam` — ecquinam → ecquinamā (attested ecquānam); quinam → quinamā (attested quānam)
+- 1 × `pronoun.gen.n.sg`: predicted `-+`, attested `-quiviscumque+cuiuscumque` — quiviscumque → quiviscumque (attested cuiuscumque)
+- 1 × `pronoun.gen.n.sg`: predicted `-+īus`, attested `-idem+eiusdem` — idem → idemīus (attested eiusdem)
+- 1 × `pronoun.gen.n.sg`: predicted `-quispiam+cuiusspiam`, attested `-quispiam+cuiuspiam` — quispiam → cuiusspiam (attested cuiuspiam)
+- 1 × `pronoun.gen.n.sg`: predicted `cuiusc-cquidlibet+dlibet`, attested `-quicquidlibet+cuiuscuiuslibet` — quicquidlibet → cuiuscquidlibet (attested cuiuscuiuslibet)
+- 1 × `pronoun.gen.n.pl`: predicted `-+ōrum`, attested `-idem+eōrundem` — idem → idemōrum (attested eōrundem)
+- 1 × `pronoun.gen.n.pl`: predicted `-inam+ōrunnam`, attested `-inam+ōrumnam` — quinam → quōrunnam (attested quōrumnam)
+- 1 × `pronoun.gen.n.pl`: predicted `-ispiam+ōrunspiam`, attested `-ispiam+ōrumpiam` — quispiam → quōrunspiam (attested quōrumpiam)
+- 1 × `pronoun.gen.n.pl`: predicted `-scumque+umcumque`, attested `-iviscumque+ōrumcumque` — quiviscumque → quiviumcumque (attested quōrumcumque)
+- 1 × `pronoun.gen.n.pl`: predicted `quōrumc-cquidlibet+dlibet`, attested `-icquidlibet+ōrumquōrumlibet` — quicquidlibet → quōrumcquidlibet (attested quōrumquōrumlibet)
+- 1 × `pronoun.dat.m.sg`: predicted `-+ī`, attested `-idem+eīdem` — idem → idemī (attested eīdem)
+- 1 × `pronoun.dat.m.sg`: predicted `-+ī`, attested `-quinam+cuinam` — ecquinam → ecquinamī (attested eccuinam)
+- 1 × `pronoun.dat.m.sg`: predicted `-iscumque+īcumque`, attested `-quiviscumque+cuicumque` — quiviscumque → quivīcumque (attested cuicumque)
 
 </details>
 
@@ -493,15 +493,15 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 6782 KB (2470 KB gzipped).
+The model is 7676 KB (2623 KB gzipped).
 
 | | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 1188 | 665 | 4261 | 415 | 20915 | 833 (`noun.nom.pl`) |
-| adjective | 1238 | 432 | 3575 | 611 | 16976 | 725 (`adjective.nom.m.pl`) |
-| verb | 9634 | 1553 | 5567 | 712 | 78511 | 752 (`verb.ind.act.pres.1.pl`) |
-| pronoun | 766 | 228 | 126 | 5 | 2072 | 678 (`pronoun.nom.m.pl`) |
-| numeral | 64 | 14 | 18 | 4 | 82 | 412 (`numeral.nom.m.pl`) |
+| noun | 1179 | 664 | 4285 | 435 | 20992 | 492 (`noun.nom.pl`) |
+| adjective | 1171 | 425 | 3594 | 629 | 17047 | 536 (`adjective.nom.f.sg`) |
+| verb | 9633 | 1553 | 5577 | 722 | 78565 | 547 (`verb.ind.act.pres.3.sg`) |
+| pronoun | 629 | 216 | 129 | 9 | 2054 | 424 (`pronoun.nom.m.pl`) |
+| numeral | 64 | 14 | 18 | 4 | 82 | 309 (`numeral.nom.m.pl`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
