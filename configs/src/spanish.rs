@@ -112,6 +112,7 @@ pub fn language() -> Language {
                 citation: vec![],
                 inherent: vec!["NounGender"],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "adjective",
@@ -151,6 +152,7 @@ pub fn language() -> Language {
                 ],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "verb",
@@ -219,6 +221,7 @@ pub fn language() -> Language {
                 ],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "determiner",
@@ -237,6 +240,7 @@ pub fn language() -> Language {
                 citation: vec![],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
         ],
         spelling: Spelling {

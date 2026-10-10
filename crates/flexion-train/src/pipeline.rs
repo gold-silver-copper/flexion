@@ -158,6 +158,30 @@ pub fn choose_sources(
     best.into_iter().map(|(s, _)| s).collect()
 }
 
+/// Which held-out lemmas another part of speech writes in full.
+fn lexicon_note(s: &mut String, lang: &Language, reports: &[PosReport]) {
+    for (part, r) in lang.parts.iter().zip(reports) {
+        if part.lemmas_from.is_empty() {
+            continue;
+        }
+        let from: Vec<String> = part
+            .lemmas_from
+            .iter()
+            .map(|(pos, group)| format!("`{group}` forms of the {pos}s"))
+            .collect();
+        let _ = writeln!(
+            s,
+            "*{}*: a lemma typed plain that the {} attest is read as they write it ({} such\nlemmas in the shipped model). {} of the {} held-out lemmas ({}) are among the training\nwords' forms, so their stress and length come from those tables; their other forms are\nstill predicted.\n",
+            r.name,
+            from.join(" and "),
+            r.lexicon.0,
+            r.lexicon.1,
+            r.test_words,
+            pct(r.lexicon.1, r.test_words)
+        );
+    }
+}
+
 /// What the other Wiktionary editions added, and the held-out score over
 /// every word.
 fn editions_section(s: &mut String, lang: &Language, reports: &[PosReport]) {
@@ -269,6 +293,9 @@ struct PosReport {
     /// With other editions: every held-out word (lemmas, bare-lemma score,
     /// citation score).
     union: Option<(usize, PosScore, Option<PosScore>)>,
+    /// The shipped lexicon's entries, and the held-out lemmas the test
+    /// model's lexicon has.
+    lexicon: (usize, usize),
 }
 
 /// Build a language end to end.
@@ -291,7 +318,7 @@ pub fn build(
         || !sl.fold.is_empty()
         || !sl.fold_marks.is_empty()
         || !sl.unmark_marks.is_empty();
-    for ((part, d), shape) in lang.parts.iter().zip(data).zip(&shapes) {
+    for (pi, ((part, d), shape)) in lang.parts.iter().zip(data).zip(&shapes).enumerate() {
         let cells = Cells::new(lang, part)?;
         let citation: Vec<usize> = part
             .citation
@@ -413,7 +440,19 @@ pub fn build(
         let from_parts = sources.iter().filter(|&&s| s > 0).count();
 
         // 2. Measure on the held-out tenth.
-        let (t, _) = crate::train_pos(&sp, shape, params, &not_test, &chooser, &citation, &sources);
+        let (mut t, _) =
+            crate::train_pos(&sp, shape, params, &not_test, &chooser, &citation, &sources);
+        // Linked parts of speech give the lexicon only their own training words.
+        t.main.lexicon = crate::lexicon(lang, &sp, data, pi, &|k| bucket(k) != TEST_BUCKET);
+        let in_lexicon = test
+            .iter()
+            .filter(|w| {
+                t.main
+                    .lexicon
+                    .binary_search_by(|(k, _)| k.as_str().cmp(w.key))
+                    .is_ok()
+            })
+            .count();
         let blob = blob_of(&spec, vec![t]);
         let model = flexion::Model::from_bytes(&blob).ok_or("test model failed to load")?;
         let test_score = eval::score(
@@ -502,8 +541,10 @@ pub fn build(
         let errors = eval::error_groups(&sp, &test_score.misses, 3);
 
         // 3. Train on everything and score every attested word.
-        let (t, stats) =
+        let (mut t, stats) =
             crate::train_pos(&sp, shape, params, &all, &chooser_all, &citation, &sources);
+        t.main.lexicon = crate::lexicon(lang, &sp, data, pi, &|_| true);
+        let lexicon = (t.main.lexicon.len(), in_lexicon);
         let blob = blob_of(
             &spec,
             vec![crate::Trained {
@@ -571,6 +612,7 @@ pub fn build(
             unscored: shape.unscored.clone(),
             editions: d.editions.clone(),
             union,
+            lexicon,
         });
     }
     let blob = blob_of(&spec, final_tables);
@@ -856,6 +898,7 @@ fn render(
         );
     }
     s.push('\n');
+    lexicon_note(&mut s, lang, reports);
     editions_section(&mut s, lang, reports);
 
     // Per-cell breakdown, collapsed.

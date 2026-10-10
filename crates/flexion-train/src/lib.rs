@@ -303,6 +303,57 @@ pub fn train_pos(
     )
 }
 
+/// The lexicon of part of speech `pi` (see
+/// [`spec::PartOfSpeech::lemmas_from`]): every form of the linked groups of
+/// other parts of speech, among the words `keep` accepts, by lookup key. All
+/// of them, not only those the model would get wrong: a word missing from
+/// the lexicon must mean the other part of speech doesn't attest it, or the
+/// model's confidence for the words it does attest would be too low. A key
+/// attested with two different written forms gives nothing.
+pub fn lexicon(
+    lang: &Language,
+    sp: &Spelling<'_>,
+    data: &[PosData],
+    pi: usize,
+    keep: &dyn Fn(&str) -> bool,
+) -> Vec<(String, String)> {
+    let Some(part) = lang.parts.get(pi) else {
+        return Vec::new();
+    };
+    let mut found: std::collections::BTreeMap<String, Vec<String>> = Default::default();
+    for (pos, group) in &part.lemmas_from {
+        let Some(qi) = lang.parts.iter().position(|q| q.name == *pos) else {
+            continue;
+        };
+        let (Some(q), Some(d)) = (lang.parts.get(qi), data.get(qi)) else {
+            continue;
+        };
+        let Ok(cells) = cells::Cells::new(lang, q) else {
+            continue;
+        };
+        let Some(g) = cells.groups.iter().find(|g| g.name == *group) else {
+            continue;
+        };
+        for lex in d.lexemes.iter().filter(|l| keep(&l.key)) {
+            for forms in lex.cells.iter().skip(g.offset).take(g.len()) {
+                for f in forms {
+                    let written = found.entry(sp.read(f).key.to_string()).or_default();
+                    if !written.contains(f) {
+                        written.push(f.clone());
+                    }
+                }
+            }
+        }
+    }
+    found
+        .into_iter()
+        .filter_map(|(key, written)| match written.as_slice() {
+            [one] => Some((key, one.clone())),
+            _ => None,
+        })
+        .collect()
+}
+
 /// Train every part of speech on the words `keep` accepts and write a blob.
 pub fn train(
     lang: &Language,
@@ -320,7 +371,7 @@ pub fn train(
             .filter(|w| keep(w.key))
             .collect();
         let chooser = edit::Chooser::new(&sp, &words, plan.shape.lemma_cell);
-        let (t, s) = train_pos(
+        let (mut t, s) = train_pos(
             &sp,
             &plan.shape,
             plan.params,
@@ -329,6 +380,7 @@ pub fn train(
             &plan.citation,
             &plan.sources,
         );
+        t.main.lexicon = lexicon(lang, &sp, data, tables.len(), keep);
         tables.push(t);
         stats.push(s);
     }

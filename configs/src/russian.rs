@@ -88,6 +88,7 @@ pub fn language() -> Language {
                 citation: vec![("noun", vec!["Genitive", "Singular"])],
                 inherent: vec!["Gender", "Animacy"],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "adjective",
@@ -115,6 +116,8 @@ pub fn language() -> Language {
                 citation: vec![],
                 inherent: vec![],
                 capitalized: false,
+                // A participle is a verb's form too, stressed as the verb is.
+                lemmas_from: vec![("verb", "participle")],
             },
             PartOfSpeech {
                 name: "verb",
@@ -155,6 +158,7 @@ pub fn language() -> Language {
                 citation: vec![("non_past", vec!["First", "Singular"]), ("non_past", vec!["Second", "Singular"])],
                 inherent: vec!["Aspect"],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "pronoun",
@@ -173,6 +177,7 @@ pub fn language() -> Language {
                 citation: vec![],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
             PartOfSpeech {
                 name: "numeral",
@@ -191,6 +196,7 @@ pub fn language() -> Language {
                 citation: vec![],
                 inherent: vec![],
                 capitalized: false,
+                lemmas_from: vec![],
             },
         ],
         spelling: Spelling {

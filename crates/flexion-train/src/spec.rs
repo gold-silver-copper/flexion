@@ -117,6 +117,11 @@ pub struct PartOfSpeech {
     /// Every word is written with a capital (German nouns): a lemma typed in
     /// lowercase still gets capitalized forms.
     pub capitalized: bool,
+    /// Groups of other parts of speech whose forms are lemmas of this one,
+    /// written in full: `(part of speech, group)`. Russian adjectives read the
+    /// verb's `participle` group, so a typed `ахнувший` reads as the verb
+    /// table writes it, `а́хнувший`.
+    pub lemmas_from: Vec<(&'static str, &'static str)>,
 }
 
 /// A group of cells that is one generated function: the product of its

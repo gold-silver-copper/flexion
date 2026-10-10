@@ -819,6 +819,7 @@ impl<'s> Learner<'s> {
             join_classes: Vec::new(),
             part_models: Vec::new(),
             sources: Vec::new(),
+            lexicon: Vec::new(),
             walk: self.params.walk,
             edits: self.edits,
             classes: self.classes,

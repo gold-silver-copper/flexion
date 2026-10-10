@@ -137,6 +137,9 @@ pub struct PosTables {
     /// Per cell, the model it is built from when the caller gives principal
     /// parts: 0 this one, `k + 1` part model `k` (if that part is given).
     pub sources: Vec<u8>,
+    /// Lemmas written in full that another part of speech attests:
+    /// `(lookup key, written form)` (see the format's lexicon section).
+    pub lexicon: Vec<(String, String)>,
     pub walk: crate::Walk,
     pub edits: Vec<EditSpec>,
     pub classes: Vec<ClassSpec>,
@@ -361,6 +364,14 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
             body.push(p.sources.get(cell).copied().unwrap_or(0));
         }
         body.resize(body.len().saturating_add(3) & !3, 0);
+        let lexicon_at = at(&body);
+        let mut lexicon: Vec<&(String, String)> = p.lexicon.iter().collect();
+        lexicon.sort();
+        put(&mut body, to_u32(lexicon.len()));
+        for (key, written) in lexicon {
+            put_str(&mut body, &mut strings, key);
+            put_str(&mut body, &mut strings, written);
+        }
         let mut h = Vec::with_capacity(format::POS_HEADER_LEN);
         for v in [
             to_u32(p.cells),
@@ -381,6 +392,7 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
             u32::from(p.capitalized),
             joins_at,
             parts_at,
+            lexicon_at,
         ] {
             put(&mut h, v);
         }

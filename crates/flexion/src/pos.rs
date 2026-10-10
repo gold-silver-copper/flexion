@@ -1359,10 +1359,11 @@ impl<'m, 'a> Pos<'m, 'a> {
         };
         if !input.contains(',') {
             let written = strip(input);
+            let (lemma, written) = self.written_in_full(written);
             return Citation {
-                lemma: sp.read(written),
+                lemma,
                 parts: Vec::new(),
-                written: Cow::Borrowed(written),
+                written,
                 inherent,
             };
         }
@@ -1371,8 +1372,7 @@ impl<'m, 'a> Pos<'m, 'a> {
             .map(&mut strip)
             .collect::<Vec<_>>()
             .into_iter();
-        let written = pieces.next().unwrap_or("");
-        let lemma = sp.read(written);
+        let (lemma, written) = self.written_in_full(pieces.next().unwrap_or(""));
         // A part written `-` or `—` (as dictionaries mark a missing one) or
         // left empty keeps its place but gives nothing.
         let parts = pieces
@@ -1383,8 +1383,31 @@ impl<'m, 'a> Pos<'m, 'a> {
         Citation {
             lemma,
             parts,
-            written: Cow::Borrowed(written),
+            written,
             inherent,
+        }
+    }
+
+    /// A typed lemma, read as the lexicon writes it in full when it is
+    /// there and typed plain (no stress mark, no marked letter): `ахнувший`
+    /// as `а́хнувший`.
+    fn written_in_full<'s>(&self, typed: &'s str) -> (Word<'s>, Cow<'s, str>) {
+        let lemma = self.sp().read(typed);
+        if self.h.lexicon.is_empty() || lemma.stress.is_some() || lemma.base != lemma.key {
+            return (lemma, Cow::Borrowed(typed));
+        }
+        let key: &str = &lemma.key;
+        match self.h.lexicon.binary_search_by(|(k, _)| (*k).cmp(key)) {
+            Ok(i) => match self.h.lexicon.get(i) {
+                Some(&(_, full)) => {
+                    // The caller's capitals still apply.
+                    let mut word = owned(self.sp().read(full));
+                    word.casing = lemma.casing;
+                    (word, Cow::Owned(full.to_string()))
+                }
+                None => (lemma, Cow::Borrowed(typed)),
+            },
+            Err(_) => (lemma, Cow::Borrowed(typed)),
         }
     }
 }

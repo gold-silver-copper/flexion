@@ -7,7 +7,8 @@
 //! - `extract <lang> --dump <path> [--edition <code>=<path>]…`: read the dumps
 //!   into the lexeme cache, for `probe`;
 //! - `probe <lang> [--pos <name>] [--alpha a] [--tau t] [--epsilon e]
-//!   [--syllables depth] [--misses 1] [--attested 1] [--union 1]`: train
+//!   [--syllables depth] [--variant decay] [--misses 1] [--attested 1]
+//!   [--union 1]`: train
 //!   without the held-out tenth with fixed parameters and score it (or, with
 //!   `--attested`, train on everything and score that), for experiments. The
 //!   score counts the main dump's words, or with `--union` every word.
@@ -81,6 +82,9 @@ fn run() -> Result<(), String> {
             if let Some(e) = num("--epsilon")? {
                 params.epsilon = e;
             }
+            if let Some(v) = num("--variant")? {
+                params.variant_decay = v;
+            }
             if let Some(m) = flag("--support") {
                 params.min_support = m.parse().map_err(|_| "bad --support")?;
             }
@@ -152,8 +156,12 @@ fn build(
             .map(|n| n.to_string_lossy().to_string())
             .unwrap_or_default();
         let edition = lang.editions.iter().find(|e| e.code == code);
+        // Kaikki's dumps come with their extraction date beside them.
+        let dated = std::fs::read_to_string(path.with_extension("date"))
+            .map(|d| format!(" of {}", d.trim()))
+            .unwrap_or_default();
         note.push_str(&format!(
-            " and `{file}` from {}",
+            " and `{file}`{dated} from {}",
             edition.map_or(code.as_str(), |e| e.name)
         ));
     }
@@ -382,6 +390,12 @@ fn probe(
                 ece,
             );
             if misses {
+                let (_, bins) = eval::calibration(&score.calibration);
+                let shown: Vec<String> = bins
+                    .iter()
+                    .map(|(conf, acc, n)| format!("{conf:.2}→{acc:.2} ({n})"))
+                    .collect();
+                println!("    calibration: {}", shown.join("; "));
                 let mut by_group: Vec<(&str, eval::CellScore)> = Vec::new();
                 for (cell, c) in score.cells.iter().enumerate() {
                     let Some(g) = cells.group_of(cell) else {

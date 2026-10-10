@@ -123,6 +123,9 @@ pub(crate) struct PosHeader<'a> {
     pub(crate) part_models: Vec<(usize, usize)>,
     /// Per cell: 0, or `k + 1` to build it from part model `k`.
     pub(crate) sources: Vec<u8>,
+    /// Lemmas written in full that another part of speech attests, sorted
+    /// by key: `(key, written)`.
+    pub(crate) lexicon: Vec<(&'a str, &'a str)>,
 }
 
 impl PosHeader<'_> {
@@ -362,6 +365,7 @@ impl<'a> Model<'a> {
                 join_entries: Vec::new(),
                 part_models: Vec::new(),
                 sources: Vec::new(),
+                lexicon: Vec::new(),
             };
             // Every table must lie inside the blob.
             let ends = [
@@ -575,6 +579,21 @@ impl<'a> Model<'a> {
                 cursor = cursor.checked_add(8)?;
             }
             h.sources = bytes.get(cursor..cursor.checked_add(h.cells)?)?.to_vec();
+            // The lexicon.
+            let mut cursor = b.usize(at.checked_add(72)?)?;
+            let n_lexicon = b.usize(cursor)?;
+            cursor = cursor.checked_add(4)?;
+            if cursor.checked_add(n_lexicon.checked_mul(16)?)? > bytes.len() {
+                return None;
+            }
+            h.lexicon = Vec::with_capacity(n_lexicon);
+            for _ in 0..n_lexicon {
+                h.lexicon.push((
+                    b.str(strings, cursor)?,
+                    b.str(strings, cursor.checked_add(8)?)?,
+                ));
+                cursor = cursor.checked_add(16)?;
+            }
             parts.push(h);
         }
         Some(Model {

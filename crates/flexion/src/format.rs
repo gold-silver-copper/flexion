@@ -25,8 +25,8 @@
 //!   first-character array, the offset of the class groups section, the
 //!   index of the part of speech that restores this one's lemmas ([`NONE`]:
 //!   lemmas are taken as typed), flags (bit 0: every word is written with a
-//!   capital), the offset of the join section, and the offset of the parts
-//!   section
+//!   capital), the offset of the join section, the offset of the parts
+//!   section, and the offset of the lexicon section
 //! records (edits, classes, nodes, distribution entries) at the offsets the
 //!   part-of-speech headers give
 //! string area: UTF-8 bytes
@@ -67,11 +67,15 @@
 //!   principal part and the index of its part of speech in the blob; then one
 //!   byte per cell (0: built by this part of speech, `k + 1`: by part model
 //!   `k` when its part is given), padded to 4 bytes.
+//! - lexicon section: the number of entries, then per entry two string
+//!   references, a lookup key and the lemma written in full there (`а́хнувший`,
+//!   `amātus`), sorted by key: lemmas another part of speech attests (a
+//!   verb's participles are adjectives).
 
 pub const MAGIC: &[u8; 4] = b"FLX1";
-pub const VERSION: u32 = 5;
+pub const VERSION: u32 = 6;
 pub const HEADER_LEN: usize = 128;
-pub const POS_HEADER_LEN: usize = 72;
+pub const POS_HEADER_LEN: usize = 76;
 pub const EDIT_LEN: usize = 44;
 pub const NODE_LEN: usize = 16;
 pub const DIST_LEN: usize = 8;
