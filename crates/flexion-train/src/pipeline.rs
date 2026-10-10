@@ -185,7 +185,10 @@ fn lexicon_note(s: &mut String, lang: &Language, reports: &[PosReport]) {
 /// What the other Wiktionary editions added, and the held-out score over
 /// every word.
 fn editions_section(s: &mut String, lang: &Language, reports: &[PosReport]) {
-    if reports.iter().all(|r| r.editions.is_empty()) {
+    if reports
+        .iter()
+        .all(|r| r.editions.iter().all(|e| e.entries == 0))
+    {
         return;
     }
     let names: Vec<&str> = lang.editions.iter().map(|e| e.name).collect();
@@ -202,7 +205,7 @@ the lemma's letters).
     );
     s.push_str("| | edition | entries | new words | words both have | same first form (marks ignored) | entries trained on |\n|---|---|---:|---:|---:|---:|---:|\n");
     for r in reports {
-        for e in &r.editions {
+        for e in r.editions.iter().filter(|e| e.entries > 0) {
             let _ = writeln!(
                 s,
                 "| {} | {} | {} | {} | {} | {} ({}) | {} |",
@@ -516,7 +519,8 @@ pub fn build(
             })
             .filter(|(_, t)| t.n > 0)
             .collect();
-        let union = (!d.editions.is_empty()).then(|| {
+        // Only where an edition adds entries is there more to score.
+        let union = d.editions.iter().any(|e| e.kept > 0).then(|| {
             let score = |given| {
                 eval::score(
                     &sp,
