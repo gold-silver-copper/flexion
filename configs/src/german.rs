@@ -405,13 +405,14 @@ impl Hooks for GermanHooks {
         out
     }
 
-    /// The German Wiktionary's nouns and adjectives: the word's gender in
-    /// the entry's tags, noun tables without a `source`, adjective tables
-    /// from the word's `Flexion:` page. See [`de_noun`] and [`de_adjective`]
-    /// for each table's traps. Its verbs are not read: their tables leave
-    /// cells out or order a cell's spellings unlike the English Wiktionary
-    /// (`ich kletter, klettere, klettre`), which the join model for separable
-    /// verbs is sensitive to; with them, held-out verbs are calibrated worse.
+    /// The German Wiktionary's nouns: the word's gender in the entry's tags,
+    /// tables without a `source` (see [`de_noun`] for their traps). Its
+    /// adjectives made held-out adjectives worse (99.14% → 99.02%) once the
+    /// model was tuned, so they are not read. Nor are its verbs: their tables
+    /// leave cells out or order a cell's spellings unlike the English
+    /// Wiktionary (`ich kletter, klettere, klettre`), which the join model
+    /// for separable verbs is sensitive to; with them, held-out verbs are
+    /// calibrated worse.
     fn adapt(&self, edition: &str, pos: &str, entry: &mut Entry) -> bool {
         if edition != "de" || entry.tags.iter().any(|t| t == "form-of") {
             return false;
@@ -429,7 +430,6 @@ impl Hooks for GermanHooks {
                 };
                 (de_noun(entry), gender)
             }
-            ("adjective", "adj") => (de_adjective(entry), None),
             _ => return false,
         };
         if forms.is_empty() {
@@ -489,35 +489,6 @@ fn de_noun(entry: &Entry) -> Vec<Form> {
         .partition(|f| !(f.tags.iter().any(|t| t == "genitive") && short.contains(&f.form)));
     first.extend(later);
     first
-}
-
-/// An adjective's `Flexion:` table: tagged as the English Wiktionary tags
-/// it, but the predicative forms are written with a subject and verb (`er
-/// ist schön`, `sie sind am schönsten`).
-fn de_adjective(entry: &Entry) -> Vec<Form> {
-    let mut forms = Vec::new();
-    for f in entry.forms.iter().filter(|f| f.source.is_some()) {
-        let has = |t: &str| f.tags.iter().any(|x| x == t);
-        if has("predicative") {
-            let Some((_, form)) = f
-                .form
-                .split_once(" ist ")
-                .or_else(|| f.form.split_once(" sind "))
-            else {
-                continue;
-            };
-            forms.push(Form {
-                form: form.to_string(),
-                ..f.clone()
-            });
-        } else if ["nominative", "genitive", "dative", "accusative"]
-            .iter()
-            .any(|t| has(t))
-        {
-            forms.push(f.clone());
-        }
-    }
-    forms
 }
 
 const README: &str = "\
