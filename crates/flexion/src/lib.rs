@@ -126,6 +126,20 @@ pub(crate) struct PosHeader<'a> {
     /// Lemmas written in full that another part of speech attests, sorted
     /// by key: `(key, written)`.
     pub(crate) lexicon: Vec<(&'a str, &'a str)>,
+    /// An open-addressing hash index over `lexicon`, built at load (a
+    /// sorted search would touch a dozen far-apart strings per call): per
+    /// slot 1 + the entry's index, 0 for empty; a power of two long.
+    pub(crate) lexicon_index: Vec<u32>,
+}
+
+/// FNV-1a, for the lexicon's index.
+pub(crate) fn hash(key: &str) -> u64 {
+    let mut h: u64 = 0xcbf2_9ce4_8422_2325;
+    for b in key.bytes() {
+        h ^= u64::from(b);
+        h = h.wrapping_mul(0x0100_0000_01b3);
+    }
+    h
 }
 
 impl PosHeader<'_> {
@@ -366,6 +380,7 @@ impl<'a> Model<'a> {
                 part_models: Vec::new(),
                 sources: Vec::new(),
                 lexicon: Vec::new(),
+                lexicon_index: Vec::new(),
             };
             // Every table must lie inside the blob.
             let ends = [
@@ -593,6 +608,20 @@ impl<'a> Model<'a> {
                     b.str(strings, cursor.checked_add(8)?)?,
                 ));
                 cursor = cursor.checked_add(16)?;
+            }
+            if !h.lexicon.is_empty() {
+                let slots = h.lexicon.len().checked_mul(2)?.next_power_of_two();
+                h.lexicon_index = vec![0; slots];
+                let mask = slots.wrapping_sub(1);
+                for (i, (key, _)) in h.lexicon.iter().enumerate() {
+                    let mut at = usize::try_from(hash(key)).unwrap_or(0) & mask;
+                    while h.lexicon_index.get(at).is_some_and(|&s| s != 0) {
+                        at = at.wrapping_add(1) & mask;
+                    }
+                    if let Some(slot) = h.lexicon_index.get_mut(at) {
+                        *slot = u32::try_from(i).ok()?.checked_add(1)?;
+                    }
+                }
             }
             parts.push(h);
         }

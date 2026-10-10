@@ -1388,6 +1388,26 @@ impl<'m, 'a> Pos<'m, 'a> {
         }
     }
 
+    /// The lexicon's written form for `key`.
+    fn lexicon(&self, key: &str) -> Option<&'a str> {
+        let index = &self.h.lexicon_index;
+        if index.is_empty() {
+            return None;
+        }
+        let mask = index.len().wrapping_sub(1);
+        let mut at = usize::try_from(crate::hash(key)).unwrap_or(0) & mask;
+        // The index is at least half empty, so a probe ends at an empty slot.
+        for _ in 0..index.len() {
+            let slot = usize::try_from(*index.get(at)?).ok()?;
+            let &(k, full) = self.h.lexicon.get(slot.checked_sub(1)?)?;
+            if k == key {
+                return Some(full);
+            }
+            at = at.wrapping_add(1) & mask;
+        }
+        None
+    }
+
     /// A typed lemma, read as the lexicon writes it in full when it is
     /// there and the caller left marks out: the same stress or none, and the
     /// letters plain or as written there (`ахнувший` is `а́хнувший`,
@@ -1395,14 +1415,7 @@ impl<'m, 'a> Pos<'m, 'a> {
     fn written_in_full<'s>(&self, typed: &'s str) -> (Word<'s>, Cow<'s, str>) {
         let sp = self.sp();
         let lemma = sp.read(typed);
-        let key: &str = &lemma.key;
-        let Some(&(_, full)) = self
-            .h
-            .lexicon
-            .binary_search_by(|(k, _)| (*k).cmp(key))
-            .ok()
-            .and_then(|i| self.h.lexicon.get(i))
-        else {
+        let Some(full) = self.lexicon(&lemma.key) else {
             return (lemma, Cow::Borrowed(typed));
         };
         let entry = sp.read(full);
