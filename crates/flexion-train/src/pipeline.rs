@@ -263,15 +263,82 @@ the lemma's letters).
     s.push('\n');
 }
 
+/// Every setting of the tuning grid, trained on `train` and scored on `dev`
+/// from the bare lemma.
+#[allow(clippy::too_many_arguments)]
+pub fn grid_scores(
+    spec: &SpellingSpec,
+    shape: &Shape,
+    train: &[Word],
+    dev: &[Word],
+    chooser: &crate::edit::Chooser,
+    citation: &[usize],
+    markers: &[&[&str]],
+    threads: usize,
+) -> Vec<GridPoint> {
+    let sp = view(spec);
+    par_map(&grid(chooser.strips_fronts()), threads, |&params| {
+        let (t, _) = train_one(spec, shape, params, train, chooser);
+        let blob = blob_of(spec, vec![t]);
+        let Some(model) = flexion::Model::from_bytes(&blob) else {
+            return GridPoint {
+                params,
+                top1: 0.0,
+                top1_se: 0.0,
+                loss: f64::INFINITY,
+                loss_se: 0.0,
+                bytes: blob.len(),
+            };
+        };
+        let s = eval::score(
+            &sp,
+            &model,
+            0,
+            dev,
+            citation,
+            markers,
+            &shape.unscored,
+            Given::Lemma,
+            false,
+        );
+        let t = s.total(&[]);
+        GridPoint {
+            params,
+            top1: ratio(t.top1, t.n),
+            top1_se: s.top1_se(),
+            loss: s.log_loss(),
+            loss_se: s.log_loss_se(),
+            bytes: blob.len(),
+        }
+    })
+}
+
 /// One setting of the tuning grid, scored on the dev tenth.
 #[derive(Debug, Clone, Copy)]
-struct GridPoint {
-    params: Params,
-    top1: f64,
-    n: usize,
-    loss: f64,
-    loss_se: f64,
-    bytes: usize,
+pub struct GridPoint {
+    pub params: Params,
+    pub top1: f64,
+    /// Standard errors over words (a word's cells move together).
+    pub top1_se: f64,
+    pub loss: f64,
+    pub loss_se: f64,
+    pub bytes: usize,
+}
+
+/// What doubling a model must buy, in nats of dev log-loss per cell (see
+/// [`choose`]): the one knob trading size for fit.
+pub const SIZE_PRICE: f64 = 0.03;
+
+/// Among settings within one standard error of the best dev accuracy (a
+/// difference inside the noise of words buys nothing), the one with the
+/// lowest dev log-loss once each doubling of its size costs `price` nats.
+pub fn choose(scores: &[GridPoint], price: f64) -> Option<&GridPoint> {
+    let top = scores.iter().max_by(|a, b| a.top1.total_cmp(&b.top1))?;
+    let cost = |x: &GridPoint| x.loss + price * (x.bytes.max(1) as f64).log2();
+    scores
+        .iter()
+        .filter(|x| x.top1 >= top.top1 - top.top1_se)
+        .min_by(|a, b| cost(a).total_cmp(&cost(b)))
 }
 
 /// Run `f` over `items` on up to `threads` threads, keeping order.
@@ -354,6 +421,7 @@ pub fn build(
     data: &[PosData],
     baselines: &[Baseline],
     threads: usize,
+    size_price: f64,
     dump_note: &str,
 ) -> Result<Built, String> {
     let spec = spelling_spec(lang);
@@ -405,63 +473,10 @@ pub fn build(
         let chooser_all = crate::edit::Chooser::new(&sp, &all, shape.lemma_cell);
 
         // 1. Tune on dev.
-        let grid = grid(chooser.strips_fronts());
-        let scores: Vec<GridPoint> = par_map(&grid, threads, |&params| {
-            let (t, _) = train_one(&spec, shape, params, &train, &chooser);
-            let blob = blob_of(&spec, vec![t]);
-            let Some(model) = flexion::Model::from_bytes(&blob) else {
-                return GridPoint {
-                    params,
-                    top1: 0.0,
-                    n: 1,
-                    loss: f64::INFINITY,
-                    loss_se: 0.0,
-                    bytes: blob.len(),
-                };
-            };
-            let s = eval::score(
-                &sp,
-                &model,
-                0,
-                &dev,
-                &citation,
-                &markers,
-                &shape.unscored,
-                Given::Lemma,
-                false,
-            );
-            let t = s.total(&[]);
-            GridPoint {
-                params,
-                top1: ratio(t.top1, t.n),
-                n: t.n,
-                loss: s.log_loss(),
-                loss_se: s.log_loss_se(),
-                bytes: blob.len(),
-            }
-        });
-        // The one-standard-error rule, on both measures: among settings
-        // within one standard error of the best dev accuracy and of the best
-        // dev log-loss, take the smallest model. Differences inside the noise
-        // shouldn't buy extra structure.
-        let best = scores.iter().map(|x| x.top1).fold(0.0, f64::max);
-        let n = scores.first().map_or(1, |x| x.n).max(1) as f64;
-        let se = (best * (1.0 - best) / n).sqrt();
-        let lowest = scores
-            .iter()
-            .min_by(|a, b| a.loss.total_cmp(&b.loss))
-            .map_or((0.0, 0.0), |x| (x.loss, x.loss_se));
-        let chosen = scores
-            .iter()
-            .filter(|x| x.top1 >= best - se && x.loss <= lowest.0 + lowest.1)
-            .min_by_key(|x| x.bytes)
-            .or_else(|| {
-                scores
-                    .iter()
-                    .filter(|x| x.top1 >= best - se)
-                    .min_by_key(|x| x.bytes)
-            })
-            .ok_or("empty grid")?;
+        let scores = grid_scores(
+            &spec, shape, &train, &dev, &chooser, &citation, &markers, threads,
+        );
+        let chosen = choose(&scores, size_price).ok_or("empty grid")?;
         let (mut params, mut dev_top1) = (chosen.params, chosen.top1);
         let (base_params, chosen_tau) = (chosen.params, chosen.params.tau);
         // The join model, where it does better on dev: more right answers

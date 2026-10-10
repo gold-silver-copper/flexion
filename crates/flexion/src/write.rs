@@ -170,6 +170,18 @@ impl Strings {
     }
 }
 
+/// A part of speech's flags word (see the format).
+fn pos_flags(capitalized: bool, wide_dist: bool, wide_edits: bool) -> u32 {
+    [
+        (capitalized, format::POS_CAPITALIZED),
+        (wide_dist, format::POS_WIDE_DIST),
+        (wide_edits, format::POS_WIDE_EDITS),
+    ]
+    .into_iter()
+    .filter(|(on, _)| *on)
+    .fold(0, |flags, (_, bit)| flags | bit)
+}
+
 fn to_u32(n: usize) -> u32 {
     u32::try_from(n).unwrap_or(u32::MAX)
 }
@@ -336,11 +348,17 @@ pub fn write_sized(spelling: &SpellingSpec, parts: &[PosTables]) -> (Vec<u8>, Ve
         for &len in &groups {
             put(&mut body, to_u32(len));
         }
+        let wide_edits = p.edits.len() >= usize::from(u16::MAX);
         for (list, _) in &subs {
             put(&mut body, to_u32(list.len()));
             for sub in list {
                 for &e in sub {
-                    put(&mut body, e);
+                    if wide_edits {
+                        put(&mut body, e);
+                    } else {
+                        let e = u16::try_from(e).unwrap_or(u16::MAX);
+                        body.extend_from_slice(&e.to_le_bytes());
+                    }
                 }
             }
         }
@@ -458,11 +476,7 @@ pub fn write_sized(spelling: &SpellingSpec, parts: &[PosTables]) -> (Vec<u8>, Ve
             chars,
             groups_at,
             p.restore.map_or(format::NONE, to_u32),
-            if p.capitalized {
-                format::POS_CAPITALIZED
-            } else {
-                0
-            } | if wide { format::POS_WIDE_DIST } else { 0 },
+            pos_flags(p.capitalized, wide, wide_edits),
             joins_at,
             parts_at,
             lexicon_at,

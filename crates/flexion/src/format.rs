@@ -25,7 +25,8 @@
 //!   first-character array, the offset of the class groups section, the
 //!   index of the part of speech that restores this one's lemmas ([`NONE`]:
 //!   lemmas are taken as typed), flags (bit 0: every word is written with a
-//!   capital; bit 1: wide distribution entries), the offset of the join
+//!   capital; bit 1: wide distribution entries; bit 2: wide edit indices),
+//!   the offset of the join
 //!   section, the offset of the parts
 //!   section, and the offset of the lexicon section
 //! records (edits, classes, nodes, distribution entries) at the offsets the
@@ -45,8 +46,10 @@
 //! - class groups section: the number of groups, each group's number of
 //!   cells (they sum to the part of speech's cells), then per group the number
 //!   of its sub-vectors followed by the sub-vectors themselves (one edit index
-//!   per cell of the group, [`NONE`] when there is no form there). Classes
-//!   share sub-vectors, which keeps big paradigms small;
+//!   per cell of the group, [`NONE`] when there is no form there; a `u16`
+//!   each, `0xFFFF` for none, unless the part of speech has 65535 edits or
+//!   more (flag bit 2): then a `u32`). Classes share sub-vectors, which keeps
+//!   big paradigms small;
 //! - class, `4 * groups + 16 + inherent` bytes rounded up to 4: one sub-vector
 //!   index per group, string references to the class's longest stripped
 //!   suffix and longest stripped start, one value index per inherent feature
@@ -93,6 +96,7 @@ pub const NARROW_DIST_LEN: usize = 4;
 /// Part-of-speech flags.
 pub const POS_CAPITALIZED: u32 = 1;
 pub const POS_WIDE_DIST: u32 = 2;
+pub const POS_WIDE_EDITS: u32 = 4;
 /// No edit (the class has no form in this cell), or no lemma cell.
 pub const NONE: u32 = u32::MAX;
 /// Unknown inherent-feature value.

@@ -490,17 +490,26 @@ impl<'a> Model<'a> {
             if sizes.iter().try_fold(0usize, |a, &x| a.checked_add(x))? != h.cells {
                 return None;
             }
+            let wide_edits = b.u32(at.checked_add(60)?)? & format::POS_WIDE_EDITS != 0;
+            let width = if wide_edits { 4 } else { 2 };
             let mut counts = Vec::with_capacity(n_groups);
             for (g, &len) in sizes.iter().enumerate() {
                 let n = b.usize(cursor)?;
                 cursor = cursor.checked_add(4)?;
-                if cursor.checked_add(n.checked_mul(len)?.checked_mul(4)?)? > bytes.len() {
+                if cursor.checked_add(n.checked_mul(len)?.checked_mul(width)?)? > bytes.len() {
                     return None;
                 }
                 h.group_tables.push((h.sub_edits.len(), len));
                 for _ in 0..n.checked_mul(len)? {
-                    h.sub_edits.push(b.u32(cursor)?);
-                    cursor = cursor.checked_add(4)?;
+                    h.sub_edits.push(if wide_edits {
+                        b.u32(cursor)?
+                    } else {
+                        match u16::from_le_bytes([b.u8(cursor)?, b.u8(cursor.checked_add(1)?)?]) {
+                            u16::MAX => NONE,
+                            e => u32::from(e),
+                        }
+                    });
+                    cursor = cursor.checked_add(width)?;
                 }
                 counts.push(n);
                 for off in 0..len {
