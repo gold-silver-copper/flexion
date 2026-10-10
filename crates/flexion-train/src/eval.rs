@@ -218,6 +218,30 @@ pub fn score_inherent(
     out
 }
 
+/// For cells many words lack: how often the runtime is right about whether
+/// the word has a form there at all, `(correct, scored)`.
+pub fn score_existence(
+    model: &Model<'_>,
+    pos: usize,
+    words: &[Word],
+    optional: &[bool],
+) -> (usize, usize) {
+    let Some(p) = model.pos(pos) else {
+        return (0, 0);
+    };
+    let (mut ok, mut n) = (0, 0);
+    for word in words {
+        let citation = p.citation(word.lemma(), &[]);
+        for (cell, _) in optional.iter().enumerate().filter(|(_, o)| **o) {
+            n += 1;
+            if (p.has_cell(&citation, cell) >= 0.5) == word.primary(cell).is_some() {
+                ok += 1;
+            }
+        }
+    }
+    (ok, n)
+}
+
 /// A baseline: some other inflector's answer for `(cell, lemma)`.
 pub type Baseline<'a> = &'a dyn Fn(usize, &str) -> Option<String>;
 

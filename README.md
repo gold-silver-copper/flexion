@@ -16,7 +16,7 @@ Attested words are the ones the shipped model was trained on. The full reports (
 per-cell numbers, made-up words, the largest groups of mistakes, size and speed) are in
 each crate's README. The English model is 808 KB against `english` 0.4's 1026 KB of tables,
 and a call takes 1.4–2.6× as long as `english` 0.4's (about 100–150 ns). The Russian model is
-4.4 MB (1.8 MB gzipped), 200–370 ns per call.
+4.5 MB (1.9 MB gzipped), 200–370 ns per call.
 
 ```rust
 assert_eq!(english::noun("child", english::Number::Plural), "children");

@@ -200,7 +200,10 @@ fn probe(
     let sp = flexion_train::view(&spec);
     let plans: Vec<PosPlan> = shapes
         .iter()
-        .map(|&shape| PosPlan { shape, params })
+        .map(|shape| PosPlan {
+            shape: shape.clone(),
+            params,
+        })
         .collect();
     let t = Instant::now();
     // `--attested 1`: train on everything and score the words trained on.

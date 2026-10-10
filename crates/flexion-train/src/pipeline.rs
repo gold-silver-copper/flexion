@@ -49,12 +49,12 @@ fn grid() -> Vec<Params> {
 
 fn train_one(
     spec: &SpellingSpec,
-    shape: Shape,
+    shape: &Shape,
     params: Params,
     words: &[Word],
 ) -> (PosTables, learn::Stats) {
     let sp = view(spec);
-    learn::Learner::new(&sp, shape, params).learn(words)
+    learn::Learner::new(&sp, shape.clone(), params).learn(words)
 }
 
 fn blob_of(spec: &SpellingSpec, tables: &[PosTables]) -> Vec<u8> {
@@ -108,6 +108,9 @@ struct PosReport {
     inherent: Vec<(&'static str, usize, usize)>,
     speed_ns: f64,
     speed_cell: String,
+    /// `(correct, scored)` for "does the word have this optional form":
+    /// held out, then attested.
+    exists: [(usize, usize); 2],
     errors: Vec<(String, usize, Vec<String>)>,
     cells: Vec<String>,
     lemma_cell: usize,
@@ -128,7 +131,7 @@ pub fn build(
     let mut reports = Vec::new();
     let mut final_tables = Vec::new();
     let has_stress = lang.spelling.stress_mark.is_some();
-    for ((part, d), &shape) in lang.parts.iter().zip(data).zip(&shapes) {
+    for ((part, d), shape) in lang.parts.iter().zip(data).zip(&shapes) {
         let cells = Cells::new(lang, part)?;
         let citation: Vec<usize> = part
             .citation
@@ -246,6 +249,7 @@ pub fn build(
             .filter(|(_, t)| t.n > 0)
             .collect();
         let inherent_scores = eval::score_inherent(&model, 0, &test, part.inherent.len());
+        let exists_test = eval::score_existence(&model, 0, &test, &shape.optional);
         let errors = eval::error_groups(&sp, &test_score.misses, 3);
 
         // 3. Train on everything and score every attested word.
@@ -262,6 +266,7 @@ pub fn build(
             Given::Lemma,
             false,
         );
+        let exists_all = eval::score_existence(&model, 0, &all, &shape.optional);
         let (speed_ns, speed_cell) = bench(&model, &test, shape, &cells);
         final_tables.push(t);
 
@@ -297,6 +302,7 @@ pub fn build(
                 .collect(),
             speed_ns,
             speed_cell,
+            exists: [exists_test, exists_all],
             errors,
             cells: (0..cells.total).map(|c| cells.name(c)).collect(),
             lemma_cell,
@@ -340,7 +346,7 @@ fn gz_len(blob: &[u8]) -> usize {
 }
 
 /// Nanoseconds per quick call (parse + walk + build) on held-out lemmas.
-fn bench(model: &flexion::Model, words: &[Word], shape: Shape, cells: &Cells) -> (f64, String) {
+fn bench(model: &flexion::Model, words: &[Word], shape: &Shape, cells: &Cells) -> (f64, String) {
     let Some(p) = model.pos(0) else {
         return (0.0, String::new());
     };
@@ -645,6 +651,22 @@ fn render(
     }
     s.push('\n');
 
+    if reports.iter().any(|r| r.exists[1].1 > 0) {
+        s.push_str(
+            "### Forms many words lack\n\nFor the optional functions (they return `None` when the word most likely has no such form):\nhow often the answer to \"does this word have one?\" is right.\n\n| | held-out cells | right | attested cells | right |\n|---|---:|---:|---:|---:|\n",
+        );
+        for r in reports.iter().filter(|r| r.exists[1].1 > 0) {
+            let [(to, tn), (ao, an)] = r.exists;
+            let _ = writeln!(
+                s,
+                "| {} | {tn} | {} | {an} | {} |",
+                r.name,
+                pct(to, tn),
+                pct(ao, an)
+            );
+        }
+        s.push('\n');
+    }
     let inherent: Vec<&(&str, usize, usize)> =
         reports.iter().flat_map(|r| r.inherent.iter()).collect();
     if !inherent.is_empty() {

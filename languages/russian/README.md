@@ -309,6 +309,17 @@ All parts of speech together (ECE 0.032):
 | 0.8–0.9 | 0.852 | 0.848 | 25456 |
 | 0.9–1.0 | 0.980 | 0.953 | 138210 |
 
+### Forms many words lack
+
+For the optional functions (they return `None` when the word most likely has no such form):
+how often the answer to "does this word have one?" is right.
+
+| | held-out cells | right | attested cells | right |
+|---|---:|---:|---:|---:|
+| noun | 5122 | 99.43% | 50648 | 99.98% |
+| adjective | 13328 | 94.33% | 133236 | 99.79% |
+| verb | 7506 | 88.70% | 73824 | 99.67% |
+
 ### Inherent features
 
 Predicted for held-out lemmas from the bare lemma.
@@ -411,15 +422,15 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 4489 KB (1836 KB gzipped).
+The model is 4593 KB (1887 KB gzipped).
 
 | | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 2802 | 1794 | 26064 | 1791 | 221642 | 320 (`noun.nom.pl`) |
-| adjective | 546 | 443 | 12544 | 475 | 69242 | 354 (`adjective.nom.m.anim`) |
-| verb | 3203 | 2141 | 8099 | 581 | 77442 | 250 (`non_past.1.sg`) |
-| pronoun | 277 | 59 | 31 | 16 | 360 | 190 (`pronoun.nom.m.anim`) |
-| numeral | 102 | 45 | 36 | 18 | 307 | 230 (`numeral.nom.m.anim`) |
+| noun | 2802 | 1794 | 26126 | 1853 | 221908 | 323 (`noun.nom.pl`) |
+| adjective | 546 | 443 | 12825 | 711 | 70396 | 356 (`adjective.nom.m.anim`) |
+| verb | 3203 | 2141 | 9643 | 1865 | 84437 | 248 (`non_past.1.sg`) |
+| pronoun | 277 | 59 | 31 | 16 | 360 | 194 (`pronoun.nom.m.anim`) |
+| numeral | 102 | 45 | 36 | 18 | 307 | 232 (`numeral.nom.m.anim`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
