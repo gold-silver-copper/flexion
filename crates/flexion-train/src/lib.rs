@@ -38,17 +38,16 @@ pub fn spelling_spec(lang: &Language) -> SpellingSpec {
 
 /// A runtime [`Spelling`] view of a spec.
 pub fn view(s: &SpellingSpec) -> Spelling<'_> {
-    Spelling {
-        fold_case: s.fold_case,
-        mark_monosyllables: s.mark_monosyllables,
-        stress_mark: s.stress_mark,
-        vowels: &s.vowels,
-        vowel_set: flexion::VowelSet::new(&s.vowels),
-        implicit: &s.implicit,
-        fold_from: &s.fold_from,
-        fold_to: &s.fold_to,
-        strip_marks: &s.strip_marks,
-    }
+    Spelling::new(
+        s.fold_case,
+        s.mark_monosyllables,
+        s.stress_mark,
+        &s.vowels,
+        &s.implicit,
+        &s.fold_from,
+        &s.fold_to,
+        &s.strip_marks,
+    )
 }
 
 /// Which tenth of the data a word belongs to: a hash of its key, so the split

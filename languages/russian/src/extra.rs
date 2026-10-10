@@ -30,38 +30,31 @@ pub fn personal_pronoun(
 ) -> &'static str {
     // nominative, genitive, dative, accusative, instrumental, prepositional
     let (plain, prep): ([&'static str; 6], [&'static str; 6]) = match (person, number, gender) {
-        (Person::First, Number::Singular, _) => (
-            ["я", "меня́", "мне", "меня́", "мной", "мне"],
-            ["я", "меня́", "мне", "меня́", "мной", "мне"],
-        ),
+        (Person::First, Number::Singular, _) => {
+            (["я", "меня́", "мне", "меня́", "мной", "мне"], ["я", "меня́", "мне", "меня́", "мной", "мне"])
+        }
         (Person::Second, Number::Singular, _) => (
             ["ты", "тебя́", "тебе́", "тебя́", "тобо́й", "тебе́"],
             ["ты", "тебя́", "тебе́", "тебя́", "тобо́й", "тебе́"],
         ),
-        (Person::Third, Number::Singular, PronounGender::Masculine) => (
-            ["он", "его́", "ему́", "его́", "им", "нём"],
-            ["он", "него́", "нему́", "него́", "ним", "нём"],
-        ),
-        (Person::Third, Number::Singular, PronounGender::Neuter) => (
-            ["оно́", "его́", "ему́", "его́", "им", "нём"],
-            ["оно́", "него́", "нему́", "него́", "ним", "нём"],
-        ),
-        (Person::Third, Number::Singular, PronounGender::Feminine) => (
-            ["она́", "её", "ей", "её", "ей", "ней"],
-            ["она́", "неё", "ней", "неё", "ней", "ней"],
-        ),
-        (Person::First, Number::Plural, _) => (
-            ["мы", "нас", "нам", "нас", "на́ми", "нас"],
-            ["мы", "нас", "нам", "нас", "на́ми", "нас"],
-        ),
-        (Person::Second, Number::Plural, _) => (
-            ["вы", "вас", "вам", "вас", "ва́ми", "вас"],
-            ["вы", "вас", "вам", "вас", "ва́ми", "вас"],
-        ),
-        (Person::Third, Number::Plural, _) => (
-            ["они́", "их", "им", "их", "и́ми", "них"],
-            ["они́", "них", "ним", "них", "ни́ми", "них"],
-        ),
+        (Person::Third, Number::Singular, PronounGender::Masculine) => {
+            (["он", "его́", "ему́", "его́", "им", "нём"], ["он", "него́", "нему́", "него́", "ним", "нём"])
+        }
+        (Person::Third, Number::Singular, PronounGender::Neuter) => {
+            (["оно́", "его́", "ему́", "его́", "им", "нём"], ["оно́", "него́", "нему́", "него́", "ним", "нём"])
+        }
+        (Person::Third, Number::Singular, PronounGender::Feminine) => {
+            (["она́", "её", "ей", "её", "ей", "ней"], ["она́", "неё", "ней", "неё", "ней", "ней"])
+        }
+        (Person::First, Number::Plural, _) => {
+            (["мы", "нас", "нам", "нас", "на́ми", "нас"], ["мы", "нас", "нам", "нас", "на́ми", "нас"])
+        }
+        (Person::Second, Number::Plural, _) => {
+            (["вы", "вас", "вам", "вас", "ва́ми", "вас"], ["вы", "вас", "вам", "вас", "ва́ми", "вас"])
+        }
+        (Person::Third, Number::Plural, _) => {
+            (["они́", "их", "им", "их", "и́ми", "них"], ["они́", "них", "ним", "них", "ни́ми", "них"])
+        }
     };
     let row = if after_preposition { prep } else { plain };
     let [nom, gen_, dat, acc, ins, prp] = row;

@@ -14,6 +14,8 @@ use std::time::Instant;
 /// Another inflector to compare with: answers `(cell name, lemma)`.
 pub struct Baseline<'a> {
     pub name: &'a str,
+    /// A footnote for the report (what the baseline has and hasn't seen).
+    pub note: &'a str,
     pub inflect: &'a (dyn Fn(&str, &str) -> Option<String> + Sync),
 }
 
@@ -307,6 +309,7 @@ pub fn build(
     let report = render(
         lang,
         &reports,
+        baselines,
         blob.len(),
         gz_len(&blob),
         &nonce,
@@ -346,7 +349,7 @@ fn bench(model: &flexion::Model, words: &[Word], shape: Shape, cells: &Cells) ->
         return (0.0, String::new());
     };
     let lemmas: Vec<&str> = words.iter().map(|w| w.lemma()).take(20_000).collect();
-    let ns = median_ns(lemmas.len(), &mut || {
+    let ns = fastest_ns(lemmas.len(), &mut || {
         let mut sink = 0usize;
         for l in &lemmas {
             sink = sink.wrapping_add(
@@ -360,10 +363,12 @@ fn bench(model: &flexion::Model, words: &[Word], shape: Shape, cells: &Cells) ->
 }
 
 /// Nanoseconds per item of `f` (which processes `items` items): one warm-up
-/// pass, then the median of five passes of at least 100 ms each.
-pub fn median_ns(items: usize, f: &mut dyn FnMut()) -> f64 {
+/// pass, then the fastest of seven passes of at least 100 ms each. The
+/// fastest run is the one least disturbed by whatever else the machine is
+/// doing.
+pub fn fastest_ns(items: usize, f: &mut dyn FnMut()) -> f64 {
     f();
-    let mut runs: Vec<f64> = (0..5)
+    let runs: Vec<f64> = (0..7)
         .map(|_| {
             let t = Instant::now();
             let mut n = 0usize;
@@ -374,8 +379,7 @@ pub fn median_ns(items: usize, f: &mut dyn FnMut()) -> f64 {
             t.elapsed().as_secs_f64() * 1e9 / (n * items).max(1) as f64
         })
         .collect();
-    runs.sort_by(f64::total_cmp);
-    runs.get(2).copied().unwrap_or(0.0)
+    runs.into_iter().fold(f64::INFINITY, f64::min)
 }
 
 fn nonce_table(lang: &Language, model: &flexion::Model) -> Result<String, String> {
@@ -421,6 +425,7 @@ fn nonce_table(lang: &Language, model: &flexion::Model) -> Result<String, String
 fn render(
     lang: &Language,
     reports: &[PosReport],
+    baselines: &[Baseline],
     blob: usize,
     gz: usize,
     nonce: &str,
@@ -517,6 +522,12 @@ fn render(
             let _ = write!(s, " {} |", b.map_or("–".into(), |b| pct(b.top1, b.n)));
         }
         s.push('\n');
+    }
+    if !base_names.is_empty() {
+        s.push('\n');
+        for b in baselines.iter().filter(|b| !b.note.is_empty()) {
+            let _ = writeln!(s, "*{}*: {}", b.name, b.note);
+        }
     }
     if reports.iter().any(|r| r.test_words < 30) {
         s.push_str("\n¹ A closed class: too few held-out lemmas for these numbers to mean much. What matters for\nit is the attested table below.\n");
@@ -699,7 +710,7 @@ fn render(
             r.speed_cell
         );
     }
-    s.push_str("\n*ns per call*: one plain call (parse the word, walk the tree, build the form) on held-out lemmas, single thread, release build.\n\n");
+    s.push_str("\n*ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped\nmodel, for the held-out tenth's lemmas (which the shipped model has seen), single thread,\nrelease build, fastest of seven runs.\n\n");
     s.push_str("<details><summary>Chosen hyperparameters</summary>\n\n| | smoothing α | pruning τ | suffix support | syllable token | dev top-1 |\n|---|---:|---:|---:|---|---:|\n");
     for r in reports {
         let _ = writeln!(

@@ -70,9 +70,9 @@ used for any decision.
 
 | | lemmas | cells | top-1 | letters right (stress ignored) | top-1 with stressed lemma | top-3 | top-1 given citation | top-1 given citation and markers |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 2561 | 27124 | **81.34%** | 94.68% | 89.82% | 96.79% | 94.44% | 96.69% |
-| adjective | 3332 | 161121 | **90.27%** | 99.67% | 99.61% | 98.56% | – | – |
-| verb | 1251 | 19729 | **86.69%** | 95.31% | 92.26% | 96.51% | 97.60% | 97.55% |
+| noun | 2561 | 27124 | **81.39%** | 94.72% | 89.87% | 96.84% | 94.49% | 96.75% |
+| adjective | 3332 | 161121 | **90.39%** | 99.79% | 99.73% | 98.70% | – | – |
+| verb | 1251 | 19729 | **87.16%** | 95.76% | 92.72% | 96.96% | 98.05% | 98.00% |
 | pronoun ¹ | 4 | 188 | **27.13%** | 52.13% | 52.13% | 51.06% | – | – |
 | numeral ¹ | 4 | 153 | **100.00%** | 100.00% | 100.00% | 100.00% | – | – |
 
@@ -91,17 +91,17 @@ plain *top-1* column has to guess the lemma's stress too.
 
 | cell | n | top-1 | top-3 |
 |---|---:|---:|---:|
-| noun.nom.pl | 2419 | 83.42% | 96.86% |
+| noun.nom.pl | 2419 | 83.51% | 96.94% |
 | noun.gen.sg | 2517 | 83.19% | 97.62% |
-| noun.gen.pl | 2417 | 83.16% | 96.90% |
+| noun.gen.pl | 2417 | 83.12% | 96.98% |
 | noun.dat.sg | 2517 | 83.19% | 97.66% |
-| noun.dat.pl | 2419 | 83.22% | 97.60% |
-| noun.acc.sg | 2517 | 76.64% | 96.38% |
-| noun.acc.pl | 2419 | 69.08% | 91.81% |
+| noun.dat.pl | 2419 | 83.30% | 97.68% |
+| noun.acc.sg | 2517 | 76.72% | 96.34% |
+| noun.acc.pl | 2419 | 69.20% | 91.94% |
 | noun.ins.sg | 2517 | 83.15% | 97.02% |
-| noun.ins.pl | 2419 | 83.22% | 97.60% |
-| noun.prep.sg | 2517 | 83.11% | 97.62% |
-| noun.prep.pl | 2419 | 83.22% | 97.60% |
+| noun.ins.pl | 2419 | 83.30% | 97.68% |
+| noun.prep.sg | 2517 | 83.19% | 97.66% |
+| noun.prep.pl | 2419 | 83.30% | 97.68% |
 | noun_second_case.part | 21 | 80.95% | 90.48% |
 | noun_second_case.loc | 6 | 83.33% | 100.00% |
 | adjective.nom.m.anim | 3332 | 90.61% | 98.80% |
@@ -137,8 +137,8 @@ plain *top-1* column has to guess the lemma's stress too.
 | adjective.acc.pl.inan | 3332 | 90.46% | 98.77% |
 | adjective.ins.m.anim | 3332 | 90.49% | 98.80% |
 | adjective.ins.m.inan | 3332 | 90.49% | 98.80% |
-| adjective.ins.f.anim | 3332 | 90.49% | 97.93% |
-| adjective.ins.f.inan | 3332 | 90.49% | 97.93% |
+| adjective.ins.f.anim | 3332 | 90.49% | 97.90% |
+| adjective.ins.f.inan | 3332 | 90.49% | 97.90% |
 | adjective.ins.n.anim | 3332 | 90.49% | 98.80% |
 | adjective.ins.n.inan | 3332 | 90.49% | 98.80% |
 | adjective.ins.pl.anim | 3332 | 90.49% | 98.80% |
@@ -151,28 +151,28 @@ plain *top-1* column has to guess the lemma's stress too.
 | adjective.prep.n.inan | 3332 | 90.49% | 98.77% |
 | adjective.prep.pl.anim | 3332 | 90.49% | 98.80% |
 | adjective.prep.pl.inan | 3332 | 90.49% | 98.80% |
-| short_adjective.m | 1124 | 89.86% | 97.33% |
-| short_adjective.f | 1130 | 79.82% | 90.44% |
-| short_adjective.n | 1131 | 81.17% | 90.72% |
-| short_adjective.pl | 1132 | 80.21% | 90.72% |
-| non_past.1.sg | 1244 | 86.50% | 96.54% |
-| non_past.1.pl | 1246 | 84.99% | 97.27% |
-| non_past.2.sg | 1246 | 84.99% | 97.19% |
-| non_past.2.pl | 1246 | 84.99% | 97.27% |
-| non_past.3.sg | 1249 | 85.03% | 97.28% |
-| non_past.3.pl | 1246 | 85.71% | 96.95% |
-| past.m | 1248 | 86.94% | 94.95% |
-| past.f | 1248 | 88.86% | 97.52% |
-| past.n | 1251 | 88.89% | 97.44% |
-| past.pl | 1248 | 88.94% | 97.52% |
-| imperative.sg | 1244 | 86.66% | 96.78% |
-| imperative.pl | 1244 | 86.66% | 96.70% |
+| short_adjective.m | 1124 | 89.86% | 97.42% |
+| short_adjective.f | 1130 | 85.75% | 96.99% |
+| short_adjective.n | 1131 | 87.09% | 97.26% |
+| short_adjective.pl | 1132 | 86.13% | 97.26% |
+| non_past.1.sg | 1244 | 86.50% | 96.46% |
+| non_past.1.pl | 1246 | 85.07% | 97.27% |
+| non_past.2.sg | 1246 | 85.07% | 97.19% |
+| non_past.2.pl | 1246 | 85.07% | 97.27% |
+| non_past.3.sg | 1249 | 85.11% | 97.28% |
+| non_past.3.pl | 1246 | 85.71% | 96.87% |
+| past.m | 1248 | 89.50% | 97.68% |
+| past.f | 1248 | 89.02% | 97.68% |
+| past.n | 1251 | 89.05% | 97.60% |
+| past.pl | 1248 | 89.10% | 97.68% |
+| imperative.sg | 1244 | 86.66% | 96.70% |
+| imperative.pl | 1244 | 86.66% | 96.62% |
 | participle.pres.act | 728 | 85.03% | 94.23% |
-| participle.past.act | 1246 | 87.96% | 95.59% |
+| participle.past.act | 1246 | 90.13% | 97.75% |
 | participle.pres.pass | 412 | 87.86% | 95.63% |
-| participle.past.pass | 418 | 83.01% | 92.58% |
+| participle.past.pass | 418 | 85.41% | 95.22% |
 | gerund.pres | 717 | 85.77% | 94.84% |
-| gerund.past | 1248 | 88.86% | 95.99% |
+| gerund.past | 1248 | 89.98% | 97.28% |
 | pronoun.nom.m.anim | 4 | 75.00% | 75.00% |
 | pronoun.nom.f.anim | 4 | 25.00% | 50.00% |
 | pronoun.nom.f.inan | 4 | 25.00% | 50.00% |
@@ -276,11 +276,11 @@ The shipped model, trained on everything, asked for every attested cell of every
 
 | | lemmas | cells | primary form from the plain call | every attested form among the answers |
 |---|---:|---:|---:|---:|
-| noun | 25324 | 268653 | **99.59%** | 99.57% |
-| adjective | 33309 | 1609945 | **99.67%** | 99.34% |
-| verb | 12304 | 192707 | **99.37%** | 99.43% |
-| pronoun | 42 | 1974 | **99.80%** | 99.54% |
-| numeral | 77 | 2986 | **98.86%** | 98.86% |
+| noun | 25324 | 268653 | **99.81%** | 99.79% |
+| adjective | 33309 | 1609945 | **99.83%** | 99.49% |
+| verb | 12304 | 192707 | **99.83%** | 99.96% |
+| pronoun | 42 | 1974 | **100.00%** | 99.95% |
+| numeral | 77 | 2986 | **100.00%** | 100.00% |
 
 ### Calibration
 
@@ -291,23 +291,23 @@ Expected calibration error (ECE) is the average gap between confidence and accur
 |---|---:|
 | noun | 0.030 |
 | adjective | 0.034 |
-| verb | 0.042 |
+| verb | 0.040 |
 | pronoun | 0.435 |
 | numeral | 0.089 |
 
-All parts of speech together (ECE 0.033):
+All parts of speech together (ECE 0.032):
 
 | confidence | mean confidence | accuracy | answers |
 |---|---:|---:|---:|
 | 0.1–0.2 | 0.186 | 0.000 | 1 |
-| 0.2–0.3 | 0.273 | 0.407 | 59 |
-| 0.3–0.4 | 0.367 | 0.421 | 779 |
-| 0.4–0.5 | 0.463 | 0.567 | 2480 |
-| 0.5–0.6 | 0.550 | 0.542 | 9897 |
-| 0.6–0.7 | 0.654 | 0.771 | 16090 |
-| 0.7–0.8 | 0.751 | 0.792 | 15406 |
-| 0.8–0.9 | 0.852 | 0.846 | 25463 |
-| 0.9–1.0 | 0.980 | 0.952 | 138140 |
+| 0.2–0.3 | 0.274 | 0.383 | 60 |
+| 0.3–0.4 | 0.366 | 0.432 | 785 |
+| 0.4–0.5 | 0.463 | 0.570 | 2466 |
+| 0.5–0.6 | 0.550 | 0.545 | 9793 |
+| 0.6–0.7 | 0.654 | 0.773 | 16091 |
+| 0.7–0.8 | 0.751 | 0.794 | 15453 |
+| 0.8–0.9 | 0.852 | 0.848 | 25456 |
+| 0.9–1.0 | 0.980 | 0.953 | 138210 |
 
 ### Inherent features
 
@@ -338,7 +338,7 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 <details><summary>noun</summary>
 
-- 361 × `noun.prep.sg`: right letters, wrong stress — абьюзерша → абьюзе́рше (attested абью́зерше); айсберг → айсбе́рге (attested а́йсберге); алеф → але́фе (attested а́лефе)
+- 360 × `noun.prep.sg`: right letters, wrong stress — абьюзерша → абьюзе́рше (attested абью́зерше); айсберг → айсбе́рге (attested а́йсберге); алеф → але́фе (attested а́лефе)
 - 360 × `noun.gen.sg`: right letters, wrong stress — абьюзерша → абьюзе́рши (attested абью́зерши); айсберг → айсбе́рга (attested а́йсберга); алеф → але́фа (attested а́лефа)
 - 360 × `noun.dat.sg`: right letters, wrong stress — абьюзерша → абьюзе́рше (attested абью́зерше); айсберг → айсбе́ргу (attested а́йсбергу); алеф → але́фу (attested а́лефу)
 - 349 × `noun.prep.pl`: right letters, wrong stress — абьюзерша → абьюзе́ршах (attested абью́зершах); айсберг → айсбе́ргах (attested а́йсбергах); алеф → але́фах (attested а́лефах)
@@ -347,8 +347,8 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 - 330 × `noun.ins.sg`: right letters, wrong stress — абьюзерша → абьюзе́ршей (attested абью́зершей); айсберг → айсбе́ргом (attested а́йсбергом); алеф → але́фом (attested а́лефом)
 - 321 × `noun.nom.pl`: right letters, wrong stress — абьюзерша → абьюзе́рши (attested абью́зерши); айсберг → айсбе́рги (attested а́йсберги); алеф → але́фы (attested а́лефы)
 - 307 × `noun.gen.pl`: right letters, wrong stress — абьюзерша → абьюзе́рш (attested абью́зерш); айсберг → айсбе́ргов (attested а́йсбергов); алеф → але́фов (attested а́лефов)
-- 291 × `noun.acc.sg`: right letters, wrong stress — абьюзерша → абьюзе́ршу (attested абью́зершу); айсберг → айсбе́рг (attested а́йсберг); алеф → але́ф (attested а́леф)
-- 239 × `noun.acc.pl`: right letters, wrong stress — абьюзерша → абьюзе́рш (attested абью́зерш); алеф → але́фы (attested а́лефы); аллель → а́ллели (attested алле́ли)
+- 289 × `noun.acc.sg`: right letters, wrong stress — абьюзерша → абьюзе́ршу (attested абью́зершу); айсберг → айсбе́рг (attested а́йсберг); алеф → але́ф (attested а́леф)
+- 238 × `noun.acc.pl`: right letters, wrong stress — абьюзерша → абьюзе́рш (attested абью́зерш); алеф → але́фы (attested а́лефы); аллель → а́ллели (attested алле́ли)
 - 143 × `noun.acc.sg`: predicted `-+`, attested `-+а` — аббат → абба́т (attested абба́та); адвокат → адвока́т (attested адвока́та); адресат → адреса́т (attested адреса́та)
 
 </details>
@@ -375,10 +375,10 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 - 124 × `past.f`: right letters, wrong stress — бабахнуть → бабахну́ла (attested баба́хнула); взять → взя́ла (attested взяла́); вливаться → вливалась (attested влива́лась)
 - 123 × `past.pl`: right letters, wrong stress — бабахнуть → бабахну́ли (attested баба́хнули); вливаться → вливались (attested влива́лись); влиться → вли́лись (attested влили́сь)
 - 123 × `past.n`: right letters, wrong stress — бабахнуть → бабахну́ло (attested баба́хнуло); вливаться → вливалось (attested влива́лось); влиться → вли́лось (attested влило́сь)
-- 117 × `past.m`: right letters, wrong stress — бабахнуть → бабахну́л (attested баба́хнул); вливаться → вливался (attested влива́лся); восхитить → восхи́тил (attested восхити́л)
+- 115 × `past.m`: right letters, wrong stress — бабахнуть → бабахну́л (attested баба́хнул); вливаться → вливался (attested влива́лся); восхитить → восхи́тил (attested восхити́л)
 - 111 × `non_past.3.pl`: right letters, wrong stress — брыкнуть → бры́кнут (attested брыкну́т); вихрить → ви́хрят (attested вихря́т); вливаться → вливаются (attested влива́ются)
-- 110 × `participle.past.act`: right letters, wrong stress — бабахнуть → бабахну́вший (attested баба́хнувший); брыкнуть → бры́кнувший (attested брыкну́вший); вливаться → вливавшийся (attested влива́вшийся)
 - 108 × `gerund.past`: right letters, wrong stress — вливаться → вливавшись (attested влива́вшись); восхитить → восхи́тив (attested восхити́в); всыпать → всыпа́в (attested всы́пав)
+- 107 × `participle.past.act`: right letters, wrong stress — бабахнуть → бабахну́вший (attested баба́хнувший); брыкнуть → бры́кнувший (attested брыкну́вший); вливаться → вливавшийся (attested влива́вшийся)
 - 103 × `non_past.1.sg`: right letters, wrong stress — брыкнуть → бры́кну (attested брыкну́); вливаться → вливаюсь (attested влива́юсь); восхитить → восхи́щу (attested восхищу́)
 - 102 × `non_past.1.pl`: right letters, wrong stress — вихрить → ви́хрим (attested вихри́м); вливаться → вливаемся (attested влива́емся); восхитить → восхи́тим (attested восхити́м)
 - 102 × `non_past.2.pl`: right letters, wrong stress — вихрить → ви́хрите (attested вихри́те); вливаться → вливаетесь (attested влива́етесь); восхитить → восхи́тите (attested восхити́те)
@@ -411,25 +411,27 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 4499 KB (1848 KB gzipped).
+The model is 4489 KB (1836 KB gzipped).
 
 | | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 2536 | 1729 | 26144 | 1899 | 220375 | 488 (`noun.nom.pl`) |
-| adjective | 472 | 411 | 13487 | 1265 | 71722 | 567 (`adjective.nom.m.anim`) |
-| verb | 3139 | 2048 | 8508 | 947 | 78411 | 444 (`non_past.1.sg`) |
-| pronoun | 277 | 59 | 31 | 16 | 360 | 324 (`pronoun.nom.m.anim`) |
-| numeral | 102 | 45 | 36 | 18 | 307 | 435 (`numeral.nom.m.anim`) |
+| noun | 2802 | 1794 | 26064 | 1791 | 221642 | 327 (`noun.nom.pl`) |
+| adjective | 546 | 443 | 12544 | 475 | 69242 | 365 (`adjective.nom.m.anim`) |
+| verb | 3203 | 2141 | 8099 | 581 | 77442 | 255 (`non_past.1.sg`) |
+| pronoun | 277 | 59 | 31 | 16 | 360 | 200 (`pronoun.nom.m.anim`) |
+| numeral | 102 | 45 | 36 | 18 | 307 | 244 (`numeral.nom.m.anim`) |
 
-*ns per call*: one plain call (parse the word, walk the tree, build the form) on held-out lemmas, single thread, release build.
+*ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
+model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
+release build, fastest of seven runs.
 
 <details><summary>Chosen hyperparameters</summary>
 
 | | smoothing α | pruning τ | suffix support | syllable token | dev top-1 |
 |---|---:|---:|---:|---|---:|
-| noun | 2 | 1 | 1 | after 2 letters | 82.50% |
-| adjective | 0.5 | 1 | 1 | after 2 letters | 89.91% |
-| verb | 0.5 | 1 | 1 | none | 85.46% |
+| noun | 2 | 1 | 1 | after 2 letters | 82.67% |
+| adjective | 0.5 | 1 | 1 | after 2 letters | 90.01% |
+| verb | 0.5 | 1 | 1 | none | 85.93% |
 | pronoun | 0.5 | 8 | 1 | after 0 letters | 43.97% |
 | numeral | 0.5 | 8 | 1 | after 0 letters | 94.48% |
 

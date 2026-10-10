@@ -3,7 +3,7 @@
 //! word and the output string, and stops scanning as soon as the leading form
 //! can no longer be overtaken.
 
-use crate::format::{BOUNDARY, CHAR_BITS, DIST_LEN, EDIT_LEN, NODE_LEN, NONE, Stress, UNKNOWN};
+use crate::format::{BOUNDARY, NONE, Stress, UNKNOWN};
 use crate::text::{Spelling, Word};
 use crate::{Candidate, Model, Options, PosHeader};
 
@@ -44,7 +44,7 @@ pub struct Citation<'s> {
 #[derive(Debug, Clone, Copy)]
 pub struct Pos<'m, 'a> {
     model: &'m Model<'a>,
-    h: PosHeader,
+    h: &'m PosHeader<'a>,
 }
 
 /// A form being accumulated: the edit that builds it and the stress it gets.
@@ -55,7 +55,7 @@ struct Key {
 }
 
 impl<'m, 'a> Pos<'m, 'a> {
-    pub(crate) fn new(model: &'m Model<'a>, h: PosHeader) -> Self {
+    pub(crate) fn new(model: &'m Model<'a>, h: &'m PosHeader<'a>) -> Self {
         Pos { model, h }
     }
 
@@ -70,60 +70,22 @@ impl<'m, 'a> Pos<'m, 'a> {
     fn sp(&self) -> &Spelling<'a> {
         &self.model.spelling
     }
-
     pub fn edit(&self, index: usize) -> Option<Edit<'a>> {
-        if index >= self.h.n_edits {
-            return None;
-        }
-        let at = self.h.edits.checked_add(index.checked_mul(EDIT_LEN)?)?;
-        let b = self.model.bytes;
-        let s = self.model.strings;
-        let byte = |n: usize| b.u8(at.checked_add(n)?);
-        Some(Edit {
-            prefix: b.str(s, at)?,
-            strip: b.str(s, at.checked_add(8)?)?,
-            add: b.str(s, at.checked_add(16)?)?,
-            stress: Stress::decode(byte(24)?, byte(25)?),
-            strip_chars: usize::from(byte(26)?),
-            vowels: [
-                usize::from(byte(27)?),
-                usize::from(byte(28)?),
-                usize::from(byte(29)?),
-            ],
-        })
+        self.h.edit_list.get(index).copied()
     }
-
+    /// A class's handle (its index), if it exists.
     fn class_at(&self, class: usize) -> Option<usize> {
-        if class >= self.h.n_classes {
-            return None;
-        }
-        self.h
-            .classes
-            .checked_add(class.checked_mul(self.h.class_len)?)
+        (class < self.h.n_classes).then_some(class)
     }
-
-    fn class_edit_id(&self, at: usize, cell: usize) -> Option<u32> {
+    fn class_edit_id(&self, class: usize, cell: usize) -> Option<u32> {
         if cell >= self.h.cells {
             return None;
         }
-        let e = self
-            .model
-            .bytes
-            .u32(at.checked_add(cell.checked_mul(4)?)?)?;
+        let e = *self.h.class_edits.get(class.checked_mul(self.h.cells)?.checked_add(cell)?)?;
         (e != NONE).then_some(e)
     }
-
-    /// The edit class `class` uses for `cell`, if it has a form there.
-    pub fn class_edit(&self, class: usize, cell: usize) -> Option<Edit<'a>> {
-        let id = self.class_edit_id(self.class_at(class)?, cell)?;
-        self.edit(usize::try_from(id).ok()?)
-    }
-
-    fn class_strip(&self, at: usize) -> Option<&'a str> {
-        self.model.bytes.str(
-            self.model.strings,
-            at.checked_add(self.h.cells.checked_mul(4)?)?,
-        )
+    fn class_strip(&self, class: usize) -> Option<&'a str> {
+        self.h.class_strips.get(class).copied()
     }
 
     /// How much the caller's inherent-feature markers trust the class at
@@ -140,38 +102,18 @@ impl<'m, 'a> Pos<'m, 'a> {
         }
         w
     }
-
-    fn inherent_at(&self, at: usize, feature: usize) -> Option<u8> {
+    fn inherent_at(&self, class: usize, feature: usize) -> Option<u8> {
         if feature >= self.h.inherent {
             return None;
         }
-        let at = at
-            .checked_add(self.h.cells.checked_mul(4)?)?
-            .checked_add(8)?
-            .checked_add(feature)?;
-        self.model.bytes.u8(at).filter(|&v| v != UNKNOWN)
+        let v = *self.h.class_values.get(class.checked_mul(self.h.inherent)?.checked_add(feature)?)?;
+        (v != UNKNOWN).then_some(v)
     }
-
-    /// Inherent feature `feature`'s value index for `class`.
     pub fn class_inherent(&self, class: usize, feature: usize) -> Option<u8> {
-        if feature >= self.h.inherent {
-            return None;
-        }
-        let at = self
-            .class_at(class)?
-            .checked_add(self.h.cells.checked_mul(4)?)?
-            .checked_add(8)?
-            .checked_add(feature)?;
-        self.model.bytes.u8(at).filter(|&v| v != UNKNOWN)
+        self.inherent_at(class, feature)
     }
-
     fn entry(&self, index: usize) -> Option<(usize, f32)> {
-        if index >= self.h.n_dist {
-            return None;
-        }
-        let at = self.h.dist.checked_add(index.checked_mul(DIST_LEN)?)?;
-        let b = self.model.bytes;
-        Some((b.usize(at)?, b.f32(at.checked_add(4)?)?))
+        self.h.entries.get(index).map(|&(c, p)| (c as usize, p))
     }
 
     /// The `(first entry, entry count)` of every node with a distribution on
@@ -192,68 +134,45 @@ impl<'m, 'a> Pos<'m, 'a> {
             token,
             ended: false,
         };
-        let b = self.model.bytes;
         let mut filled = 0usize;
         let mut node = 0usize;
         let mut next = symbols.next();
-        while let Some(at) = node
-            .checked_mul(NODE_LEN)
-            .and_then(|o| self.h.nodes.checked_add(o))
-        {
-            let Some(rec) = at.checked_add(NODE_LEN).and_then(|end| b.0.get(at..end)) else {
-                break;
-            };
-            let w32 = |i: usize| {
-                rec.get(i..i.saturating_add(4))
-                    .and_then(|x| <[u8; 4]>::try_from(x).ok())
-                    .map_or(0, |x| usize::try_from(u32::from_le_bytes(x)).unwrap_or(0))
-            };
-            let w16 = |i: usize| {
-                rec.get(i..i.saturating_add(2))
-                    .and_then(|x| <[u8; 2]>::try_from(x).ok())
-                    .map_or(0, |x| usize::from(u16::from_le_bytes(x)))
-            };
-            let (first_child, dist, children, dist_len) = (w32(4), w32(8), w16(12), w16(14));
-            if dist_len > 0
+        let tree = &self.h.tree;
+        while let Some(rec) = tree.get(node) {
+            if rec.dist_len > 0
                 && let Some(slot) = out.get_mut(filled)
             {
-                *slot = (
-                    u32::try_from(dist).unwrap_or(0),
-                    u32::try_from(dist_len).unwrap_or(0),
-                );
+                *slot = (rec.dist, u32::from(rec.dist_len));
                 filled = filled.saturating_add(1);
             }
             let Some(c) = next else {
                 break;
             };
-            let found = if node == 0 && self.h.root.get(c).is_some() {
-                self.h.root.get(c).and_then(|i| {
-                    let v = b.u32(self.h.chars.checked_add(i.checked_mul(4)?)?)?;
-                    Some((i, usize::try_from(v >> CHAR_BITS).ok()?))
-                })
-            } else if node == 0 && (u32::from(c) < 256 || u32::from(c) >> 8 == self.h.root.block) {
-                None
-            } else {
-                self.child_index(first_child, children, c)
+            let first_child = rec.first_child as usize;
+            let table = self
+                .h
+                .table_of
+                .get(node)
+                .and_then(|&t| (t as usize).checked_sub(1))
+                .and_then(|t| self.h.tables.get(t))
+                .and_then(|t| t.get(self.h.block, c));
+            let found = match table {
+                Some(offset) => offset.and_then(|o| first_child.checked_add(o)),
+                None => self.child_index(first_child, usize::from(rec.children), c),
             };
-            let Some((child, label_len)) = found else {
+            let Some(child) = found else {
+                break;
+            };
+            let Some(crec) = tree.get(child) else {
                 break;
             };
             // The search matched the label's first character; longer labels
             // must match the following symbols too.
             next = symbols.next();
+            let label_len = usize::from(crec.label_len);
             if label_len > c.len_utf8() {
-                let Some(off) = child
-                    .checked_mul(NODE_LEN)
-                    .and_then(|o| self.h.nodes.checked_add(o))
-                    .and_then(|a| b.usize(a))
-                else {
-                    break;
-                };
-                let Some(label) = off
-                    .checked_add(label_len)
-                    .and_then(|e| self.model.strings.get(off..e))
-                else {
+                let off = crec.label as usize;
+                let Some(label) = off.checked_add(label_len).and_then(|e| self.model.strings.get(off..e)) else {
                     break;
                 };
                 let mut rest = label.chars();
@@ -275,47 +194,22 @@ impl<'m, 'a> Pos<'m, 'a> {
         filled
     }
 
-    /// The child (among `count` starting at `first`) whose label starts with
-    /// `c`: its index and its label's length in bytes.
-    fn child_index(&self, first: usize, count: usize, c: char) -> Option<(usize, usize)> {
+    /// The child (among `count` starting at `first`) whose label starts with `c`.
+    fn child_index(&self, first: usize, count: usize, c: char) -> Option<usize> {
         let target = u32::from(c);
-        let start = self.h.chars.checked_add(first.checked_mul(4)?)?;
-        let kids = self
-            .model
-            .bytes
-            .0
-            .get(start..start.checked_add(count.checked_mul(4)?)?)?;
-        let entry = |i: usize| -> Option<(u32, usize)> {
-            let k = kids.get(i.checked_mul(4)?..i.checked_mul(4)?.checked_add(4)?)?;
-            let v = u32::from_le_bytes(<[u8; 4]>::try_from(k).ok()?);
-            Some((
-                v & ((1 << CHAR_BITS) - 1),
-                usize::try_from(v >> CHAR_BITS).ok()?,
-            ))
-        };
-        let (mut lo, mut hi) = (0usize, count);
+        let kids = self.h.tree.get(first..first.checked_add(count)?)?;
         if count <= 8 {
-            for i in 0..count {
-                let (f, len) = entry(i)?;
-                if f == target {
-                    return Some((first.checked_add(i)?, len));
+            for (i, k) in kids.iter().enumerate() {
+                if k.first == target {
+                    return first.checked_add(i);
                 }
-                if f > target {
+                if k.first > target {
                     return None;
                 }
             }
             return None;
         }
-        while lo < hi {
-            let mid = lo.checked_add(hi.checked_sub(lo)? / 2)?;
-            let (f, len) = entry(mid)?;
-            match f.cmp(&target) {
-                std::cmp::Ordering::Equal => return Some((first.checked_add(mid)?, len)),
-                std::cmp::Ordering::Less => lo = mid.checked_add(1)?,
-                std::cmp::Ordering::Greater => hi = mid,
-            }
-        }
-        None
+        kids.binary_search_by_key(&target, |k| k.first).ok().and_then(|i| first.checked_add(i))
     }
 
     /// How many nodes with a distribution the key's path passes (for benchmarks).
@@ -361,7 +255,7 @@ impl<'m, 'a> Pos<'m, 'a> {
         let sp = self.sp();
         if !self
             .class_strip(at)
-            .is_some_and(|s| sp.ends_with_folded(&citation.lemma.base, s))
+            .is_some_and(|s| s.is_empty() || sp.ends_with_folded(&citation.lemma.base, s))
         {
             return false;
         }
@@ -417,12 +311,14 @@ impl<'m, 'a> Pos<'m, 'a> {
                     continue;
                 }
                 let p = p * self.marker_weight(citation, at);
-                let Some(e) = self.edit(usize::try_from(id).unwrap_or(usize::MAX)) else {
-                    continue;
-                };
                 // The class strip (checked by `fits`) is the longest of its
                 // edits' strips, so this edit fits whenever the class does.
+                // Only stress needs the edit itself; without stress the id is
+                // the whole key.
                 let stress = if self.sp().stress_mark.is_some() {
+                    let Some(e) = self.edit(usize::try_from(id).unwrap_or(usize::MAX)) else {
+                        continue;
+                    };
                     let ls = if e.stress == Stress::SameAsLemma {
                         self.lemma_stress(citation, at)
                     } else {
@@ -694,18 +590,6 @@ impl<'m, 'a> Pos<'m, 'a> {
             written,
             inherent,
         }
-    }
-
-    /// Apply `edit` to a word: the letters and the stressed vowel.
-    pub fn apply(
-        &self,
-        citation: &Citation,
-        edit: Edit<'a>,
-        lemma_stress: Option<usize>,
-    ) -> Option<(String, Option<usize>)> {
-        let kept = self.kept(&citation.lemma.base, edit)?;
-        let letters = format!("{}{}{}", edit.prefix, kept, edit.add);
-        Some((letters, self.stress_of(citation, edit, lemma_stress)))
     }
 }
 

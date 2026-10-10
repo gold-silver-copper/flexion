@@ -76,6 +76,9 @@ used for any decision.
 | adjective | 6162 | 12322 | **96.67%** | 99.98% | – | 96.15% | 99.33% |
 | adverb | 1206 | 2412 | **99.00%** | 100.00% | – | 99.00% | 99.17% |
 
+*english 0.4 rules*: the hand-written regular rules of the published `english` 0.4 (`english-core`), no tables.
+*english 0.4 rules + tables*: the whole published `english` 0.4. Its exception tables were built from all of Wiktionary, so it has already seen these "held-out" words: this column is not a measure of generalization.
+
 *Top-3* counts a cell when any attested form is among the three most likely answers.
 *Given citation* gives the model the principal parts a dictionary prints with the lemma
 (noun `noun.pl`; verb `verb.past` and `verb.pp`; adjective `adjective.comp` and `adjective.sup`; adverb `adverb.comp` and `adverb.sup`) and scores the remaining cells.
@@ -224,12 +227,14 @@ The model is 808 KB (338 KB gzipped).
 
 | | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 686 | 678 | 11272 | 5358 | 29496 | 182 (`noun.pl`) |
-| verb | 388 | 449 | 3508 | 752 | 10532 | 124 (`verb.3sg`) |
-| adjective | 132 | 85 | 3266 | 2187 | 5677 | 150 (`adjective.comp`) |
-| adverb | 42 | 23 | 270 | 160 | 599 | 144 (`adverb.comp`) |
+| noun | 686 | 678 | 11272 | 5358 | 29496 | 148 (`noun.pl`) |
+| verb | 388 | 449 | 3508 | 752 | 10532 | 96 (`verb.3sg`) |
+| adjective | 132 | 85 | 3266 | 2187 | 5677 | 129 (`adjective.comp`) |
+| adverb | 42 | 23 | 270 | 160 | 599 | 127 (`adverb.comp`) |
 
-*ns per call*: one plain call (parse the word, walk the tree, build the form) on held-out lemmas, single thread, release build.
+*ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
+model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
+release build, fastest of seven runs.
 
 <details><summary>Chosen hyperparameters</summary>
 
@@ -247,14 +252,24 @@ The model is 808 KB (338 KB gzipped).
 `english` 0.4's generated exception tables are 1026 KB of Rust source (compiled into
 perfect-hash maps); this crate's model is 808 KB.
 
-Plain calls on held-out lemmas, single thread, release build, median of five runs:
+Attested words (every word both were built from), primary form from the plain call:
+
+| | `english` 0.4 | this crate |
+|---|---:|---:|
+| noun | 98.89% | 99.96% |
+| verb | 99.43% | 99.99% |
+| adjective | 99.41% | 99.99% |
+| adverb | 99.05% | 100.00% |
+
+Plain calls with each shipped model for the held-out tenth's lemmas, single thread, release
+build, fastest of seven runs, the two libraries measured alternately in the same process:
 
 | | `english` 0.4 ns per call | this crate ns per call | ratio |
 |---|---:|---:|---:|
-| noun (`noun.pl`) | 75 | 179 | 2.4× |
-| verb (`verb.3sg`) | 60 | 122 | 2.0× |
-| adjective (`adjective.comp`) | 86 | 153 | 1.8× |
-| adverb (`adverb.comp`) | 51 | 145 | 2.8× |
+| noun (`noun.pl`) | 78 | 145 | 1.9× |
+| verb (`verb.3sg`) | 62 | 100 | 1.6× |
+| adjective (`adjective.comp`) | 85 | 126 | 1.5× |
+| adverb (`adverb.comp`) | 50 | 129 | 2.6× |
 
 
 ## Data and license

@@ -7,14 +7,16 @@ Wiktionary dump, and get a Rust crate that inflects **any** word of that languag
 This repository builds two languages from the same trainer, with no language-specific
 code in the trainer or the runtime:
 
-| crate | parts of speech | held-out words, top-1 | attested words, top-1 |
-|---|---|---|---|
-| [`english`](languages/english) | nouns, verbs, adjectives, adverbs | 96.5–99.0% | 99.93–100% |
-| [`russian`](languages/russian) | nouns, adjectives (incl. participles), verbs, pronouns, numerals | 81–90% from the bare lemma, 94.5–97.6% given the dictionary's principal parts | 98.9–99.8% |
+| crate | held-out words (never seen in training), top-1 | attested words, top-1 |
+|---|---|---|
+| [`english`](languages/english) | nouns 97.15%, verbs 97.91%, adjectives 96.67%, adverbs 99.00% (old hand-written rules: 95.76%, 92.51%, 96.15%, 99.00%) | 99.96–100% (`english` 0.4: 98.89–99.43%) |
+| [`russian`](languages/russian) | from the bare lemma: nouns 81.4%, adjectives 90.4%, verbs 87.2% (stress is the hard part: letters alone are right 94.7%, 99.8%, 95.8%); given the dictionary's principal parts: nouns 94.5% (96.8% with gender/animacy markers), verbs 98.1%; adjectives with a stressed lemma 99.7% | 99.8–100% |
 
-"Held-out words" were never seen in training; "attested" are the words the model was
-trained on. The full reports, with calibration, per-cell numbers, made-up words and the
-largest groups of mistakes, are in each crate's README.
+Attested words are the ones the shipped model was trained on. The full reports (calibration,
+per-cell numbers, made-up words, the largest groups of mistakes, size and speed) are in
+each crate's README. The English model is 808 KB against `english` 0.4's 1026 KB of tables,
+and a call takes 1.5–2.6× as long as `english` 0.4's (100–145 ns). The Russian model is
+4.4 MB (1.8 MB gzipped), 200–370 ns per call.
 
 ```rust
 assert_eq!(english::noun("child", english::Number::Plural), "children");

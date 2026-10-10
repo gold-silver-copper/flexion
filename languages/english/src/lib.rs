@@ -26,7 +26,10 @@ pub enum Number {
 
 impl Number {
     /// Every value, in order.
-    pub const ALL: [Number; 2] = [Number::Singular, Number::Plural];
+    pub const ALL: [Number; 2] = [
+        Number::Singular,
+        Number::Plural,
+    ];
 
     /// Short name, as in cell names (`sg`).
     pub const fn short(self) -> &'static str {
@@ -79,7 +82,11 @@ pub enum Degree {
 
 impl Degree {
     /// Every value, in order.
-    pub const ALL: [Degree; 3] = [Degree::Positive, Degree::Comparative, Degree::Superlative];
+    pub const ALL: [Degree; 3] = [
+        Degree::Positive,
+        Degree::Comparative,
+        Degree::Superlative,
+    ];
 
     /// Short name, as in cell names (`pos`).
     pub const fn short(self) -> &'static str {
@@ -109,9 +116,7 @@ impl English {
     }
 
     fn options(&self) -> Options {
-        Options {
-            stress: self.stress,
-        }
+        Options { stress: self.stress }
     }
 
     /// A noun in the given number.
@@ -227,22 +232,10 @@ struct Part {
 }
 
 const PARTS: [Part; 4] = [
-    Part {
-        citation: &[1],
-        markers: &[],
-    }, // noun
-    Part {
-        citation: &[2, 4],
-        markers: &[],
-    }, // verb
-    Part {
-        citation: &[1, 2],
-        markers: &[],
-    }, // adjective
-    Part {
-        citation: &[1, 2],
-        markers: &[],
-    }, // adverb
+    Part { citation: &[1], markers: &[] }, // noun
+    Part { citation: &[2, 4], markers: &[] }, // verb
+    Part { citation: &[1, 2], markers: &[] }, // adjective
+    Part { citation: &[1, 2], markers: &[] }, // adverb
 ];
 
 fn citation<'s>(p: &flexion::Pos<'_, 'static>, pos: usize, word: &'s str) -> flexion::Citation<'s> {
@@ -262,9 +255,7 @@ fn quick(pos: usize, word: &str, cell: usize, options: Options) -> String {
 fn scored(pos: usize, word: &str, cell: usize, options: Options) -> Vec<Candidate> {
     match model().and_then(|m| m.pos(pos)) {
         Some(p) => p.candidates(&citation(&p, pos, word), cell, options),
-        None => vec![Candidate {
-            form: word.to_string(),
-            confidence: 0.0,
-        }],
+        None => vec![Candidate { form: word.to_string(), confidence: 0.0 }],
     }
 }
+

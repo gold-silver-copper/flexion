@@ -16,7 +16,7 @@
 
 use crate::extract::Word;
 use flexion::Spelling;
-use flexion::format::{BOUNDARY, NONE, Stress, UNKNOWN};
+use flexion::format::{BOUNDARY, NONE, Stress};
 use flexion::write::{ClassSpec, EditSpec, NodeSpec, PosTables};
 use std::collections::{BTreeMap, HashMap};
 
@@ -488,10 +488,6 @@ impl<'s> Learner<'s> {
         };
         (tables, stored, n_entries)
     }
-
-    pub fn class_count(&self) -> usize {
-        self.classes.len()
-    }
 }
 
 /// Apply an edit the way the runtime does: `(letters, stressed vowel)`.
@@ -602,6 +598,3 @@ fn preorder(trie: &[TNode]) -> Vec<usize> {
     }
     out
 }
-
-/// Inherent value indices are stored as `u8`, with [`UNKNOWN`] for none.
-pub const UNKNOWN_VALUE: u8 = UNKNOWN;

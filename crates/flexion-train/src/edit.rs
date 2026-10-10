@@ -20,11 +20,10 @@ pub fn edit(
     let read = sp.read(form);
     let l: Vec<char> = base.chars().collect();
     let f: Vec<char> = read.base.chars().collect();
-    let common = l
-        .iter()
-        .zip(&f)
-        .take_while(|(a, b)| sp.fold_char(**a) == sp.fold_char(**b))
-        .count();
+    // Exact letters: folding (ё → е) is for lookup only. An edit that kept
+    // a folded letter would write the lemma's letter where the form has
+    // another (четыре → четырёх).
+    let common = l.iter().zip(&f).take_while(|(a, b)| a == b).count();
 
     // A prefix was added when a long start of the lemma reappears later in
     // the form (beautiful → more beautiful, machen → gemacht).
@@ -110,31 +109,20 @@ mod tests {
     use super::*;
 
     fn en() -> Spelling<'static> {
-        Spelling {
-            fold_case: true,
-            mark_monosyllables: false,
-            stress_mark: None,
-            vowels: "aeiouy",
-            vowel_set: flexion::VowelSet::new("aeiouy"),
-            implicit: "",
-            fold_from: "",
-            fold_to: "",
-            strip_marks: "",
-        }
+        Spelling::new(true, false, None, "aeiouy", "", "", "", "")
     }
 
     fn ru() -> Spelling<'static> {
-        Spelling {
-            fold_case: true,
-            mark_monosyllables: true,
-            stress_mark: Some('\u{301}'),
-            vowels: "аеёиоуыэюя",
-            vowel_set: flexion::VowelSet::new("аеёиоуыэюя"),
-            implicit: "ё",
-            fold_from: "ё",
-            fold_to: "е",
-            strip_marks: "\u{300}",
-        }
+        Spelling::new(
+            true,
+            true,
+            Some('\u{301}'),
+            "аеёиоуыэюя",
+            "ё",
+            "ё",
+            "е",
+            "\u{300}",
+        )
     }
 
     fn e(prefix: &str, strip: &str, add: &str, stress: Stress) -> EditSpec {
@@ -165,6 +153,13 @@ mod tests {
             edit(&sp, "good", None, "better", false),
             e("", "good", "better", Stress::Unmarked)
         );
+    }
+
+    #[test]
+    fn folded_letters_are_still_edits() {
+        // ё folds to е for lookup, but an edit must write the form's own letter.
+        let ed = edit(&ru(), "сестра", Some(1), "сёстры", false);
+        assert_eq!((ed.strip.as_str(), ed.add.as_str()), ("естра", "ёстры"));
     }
 
     #[test]

@@ -18,6 +18,11 @@ pub struct Spelling<'a> {
     pub vowels: &'a str,
     /// `vowels` as a fast set.
     pub vowel_set: VowelSet,
+    /// Characters a word must be rewritten for: the stress mark, stripped
+    /// marks, and letters folded for lookup.
+    pub special: VowelSet,
+    /// `implicit` as a fast set.
+    pub implicit_set: VowelSet,
     /// Letters that are always stressed and never take the mark (Russian ё).
     pub implicit: &'a str,
     /// Letters folded together for lookup (`fold_from[i]` → `fold_to[i]`).
@@ -118,7 +123,37 @@ impl VowelSet {
     }
 }
 
-impl Spelling<'_> {
+impl<'a> Spelling<'a> {
+    /// Spelling conventions, with their lookup sets built.
+    #[allow(clippy::too_many_arguments)]
+    pub fn new(
+        fold_case: bool,
+        mark_monosyllables: bool,
+        stress_mark: Option<char>,
+        vowels: &'a str,
+        implicit: &'a str,
+        fold_from: &'a str,
+        fold_to: &'a str,
+        strip_marks: &'a str,
+    ) -> Spelling<'a> {
+        let mut special: String = stress_mark.map(String::from).unwrap_or_default();
+        special.push_str(strip_marks);
+        special.push_str(fold_from);
+        Spelling {
+            fold_case,
+            mark_monosyllables,
+            stress_mark,
+            vowels,
+            vowel_set: VowelSet::new(vowels),
+            special: VowelSet::new(&special),
+            implicit_set: VowelSet::new(implicit),
+            implicit,
+            fold_from,
+            fold_to,
+            strip_marks,
+        }
+    }
+
     /// Whether `c` (lowercase) carries a syllable.
     pub fn is_vowel(&self, c: char) -> bool {
         self.vowel_set.contains(c)
@@ -183,7 +218,7 @@ impl Spelling<'_> {
                 if self.is_vowel(lower) {
                     if let Some((m, i)) = place
                         && i == vowel
-                        && !self.implicit.contains(lower)
+                        && !self.implicit_set.contains(lower)
                     {
                         out.push(m);
                     }
@@ -192,10 +227,6 @@ impl Spelling<'_> {
             }
         }
         out
-    }
-
-    pub fn fold(&self, s: &str) -> String {
-        s.chars().map(|c| self.fold_char(c)).collect()
     }
 
     /// Split a caller's word into letters, stress and casing.
@@ -224,16 +255,13 @@ impl Spelling<'_> {
         let mut implicit = None;
         let mut plain = true;
         for c in input.chars() {
-            let changes = Some(c) == self.stress_mark
-                || (!self.strip_marks.is_empty() && self.strip_marks.contains(c))
-                || (self.fold_case && lowercase_char(c) != c)
-                || (!self.fold_from.is_empty() && self.fold_from.contains(c));
+            let changes = self.special.contains(c) || (self.fold_case && lowercase_char(c) != c);
             if changes {
                 plain = false;
                 break;
             }
             if self.is_vowel(c) {
-                if implicit.is_none() && !self.implicit.is_empty() && self.implicit.contains(c) {
+                if implicit.is_none() && self.implicit_set.contains(c) {
                     implicit = Some(vowels);
                 }
                 vowels = vowels.saturating_add(1);
@@ -276,8 +304,7 @@ impl Spelling<'_> {
             }
             let lower = lowercase_char(c);
             if self.is_vowel(lower) {
-                if implicit.is_none() && !self.implicit.is_empty() && self.implicit.contains(lower)
-                {
+                if implicit.is_none() && self.implicit_set.contains(lower) {
                     implicit = Some(vowels);
                 }
                 vowels = vowels.saturating_add(1);
@@ -364,7 +391,7 @@ impl Spelling<'_> {
             if self.is_vowel(lower) {
                 if let Some((m, i)) = place
                     && i == vowel
-                    && !self.implicit.contains(lower)
+                    && !self.implicit_set.contains(lower)
                 {
                     out.push(m);
                 }
@@ -486,17 +513,16 @@ mod tests {
     use super::*;
 
     fn russian() -> Spelling<'static> {
-        Spelling {
-            fold_case: true,
-            mark_monosyllables: true,
-            stress_mark: Some('\u{301}'),
-            vowels: "аеёиоуыэюя",
-            vowel_set: VowelSet::new("аеёиоуыэюя"),
-            implicit: "ё",
-            fold_from: "ё",
-            fold_to: "е",
-            strip_marks: "\u{300}",
-        }
+        Spelling::new(
+            true,
+            true,
+            Some('\u{301}'),
+            "аеёиоуыэюя",
+            "ё",
+            "ё",
+            "е",
+            "\u{300}",
+        )
     }
 
     #[test]

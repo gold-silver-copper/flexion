@@ -6,12 +6,13 @@
 //! - `extract <lang> --dump <path>`: read a dump into the lexeme cache, for
 //!   `probe`;
 //! - `probe <lang> [--pos <name>] [--alpha a] [--tau t] [--epsilon e]
-//!   [--syllables depth] [--misses 1]`: train without the held-out tenth with
-//!   fixed parameters and score it (for experiments).
+//!   [--syllables depth] [--misses 1] [--attested 1]`: train without the
+//!   held-out tenth with fixed parameters and score it (or, with
+//!   `--attested`, train on everything and score that), for experiments.
 
 use flexion_train::extract::{self, PosData, Word};
 use flexion_train::learn::Params;
-use flexion_train::pipeline::{Baseline, median_ns};
+use flexion_train::pipeline::{Baseline, fastest_ns};
 use flexion_train::{PosPlan, TEST_BUCKET, bucket, eval, spec::Language};
 use std::path::{Path, PathBuf};
 use std::time::Instant;
@@ -79,6 +80,7 @@ fn run() -> Result<(), String> {
                 params,
                 flag("--pos").as_deref(),
                 flag("--misses").is_some(),
+                flag("--attested").is_some(),
             )
         }
         _ => Err(USAGE.to_string()),
@@ -99,10 +101,12 @@ fn build(lang: &Language, dump: &Path, date: Option<String>) -> Result<(), Strin
         "english" => vec![
             Baseline {
                 name: "english 0.4 rules",
+                note: "the hand-written regular rules of the published `english` 0.4 (`english-core`), no tables.",
                 inflect: &rules,
             },
             Baseline {
                 name: "english 0.4 rules + tables",
+                note: "the whole published `english` 0.4. Its exception tables were built from all of Wiktionary, so it has already seen these \"held-out\" words: this column is not a measure of generalization.",
                 inflect: &library,
             },
         ],
@@ -175,6 +179,7 @@ fn probe(
     params: Params,
     only: Option<&str>,
     misses: bool,
+    attested: bool,
 ) -> Result<(), String> {
     let shapes = flexion_train::shapes(lang)?;
     let spec = flexion_train::spelling_spec(lang);
@@ -184,7 +189,10 @@ fn probe(
         .map(|&shape| PosPlan { shape, params })
         .collect();
     let t = Instant::now();
-    let (blob, stats) = flexion_train::train(lang, data, &plans, &|k| bucket(k) != TEST_BUCKET);
+    // `--attested 1`: train on everything and score the words trained on.
+    let (blob, stats) = flexion_train::train(lang, data, &plans, &|k| {
+        attested || bucket(k) != TEST_BUCKET
+    });
     eprintln!(
         "trained in {:.1}s, blob {} bytes",
         t.elapsed().as_secs_f64(),
@@ -205,7 +213,7 @@ fn probe(
         let markers: Vec<&[&str]> = marker_names.iter().map(Vec::as_slice).collect();
         let words: Vec<Word> = extract::words(d)
             .into_iter()
-            .filter(|w| bucket(w.key) == TEST_BUCKET)
+            .filter(|w| attested || bucket(w.key) == TEST_BUCKET)
             .collect();
         let s = stats.get(pi).copied().unwrap_or_default();
         println!(
@@ -307,7 +315,7 @@ fn bench(model: &flexion::Model, pi: usize, words: &[Word], cells: &flexion_trai
             disagree += 1;
         }
     }
-    let per = median_ns(lemmas.len(), &mut || {
+    let per = fastest_ns(lemmas.len(), &mut || {
         let mut sink = 0usize;
         for l in &lemmas {
             sink = sink.wrapping_add(
@@ -317,7 +325,7 @@ fn bench(model: &flexion::Model, pi: usize, words: &[Word], cells: &flexion_trai
         }
         std::hint::black_box(sink);
     });
-    let parse = median_ns(lemmas.len(), &mut || {
+    let parse = fastest_ns(lemmas.len(), &mut || {
         let mut sink = 0usize;
         for l in &lemmas {
             sink = sink.wrapping_add(p.citation(l, &[]).lemma.base.len());
@@ -325,7 +333,7 @@ fn bench(model: &flexion::Model, pi: usize, words: &[Word], cells: &flexion_trai
         std::hint::black_box(sink);
     });
     let cits: Vec<_> = lemmas.iter().map(|l| p.citation(l, &[])).collect();
-    let path = median_ns(lemmas.len(), &mut || {
+    let path = fastest_ns(lemmas.len(), &mut || {
         let mut sink = 0usize;
         for c in &cits {
             sink = sink.wrapping_add(p.path_len(&c.lemma.key));
@@ -364,8 +372,31 @@ fn english_comparison(lang: &Language, data: &[PosData], blob: &[u8]) -> Result<
         ));
     }
     let model = flexion::Model::from_bytes(blob).ok_or("model failed to load")?;
+    // Attested words, the same question asked of both.
+    let spec = flexion_train::spelling_spec(lang);
+    let sp = flexion_train::view(&spec);
+    s.push_str("Attested words (every word both were built from), primary form from the plain call:\n\n| | `english` 0.4 | this crate |\n|---|---:|---:|\n");
+    for (pi, (part, d)) in lang.parts.iter().zip(data).enumerate() {
+        let words = extract::words(d);
+        let cells = flexion_train::cells::Cells::new(lang, part)?;
+        let citation: Vec<usize> = part.citation.iter().filter_map(|(g, v)| cells.find(g, v)).collect();
+        let lemma_cell = cells.find(part.lemma.0, &part.lemma.1).into_iter().collect::<Vec<_>>();
+        let f = |cell: usize, lemma: &str| english_baseline::inflect(english_baseline::Old::Library, &cells.name(cell), lemma);
+        let mut old = eval::CellScore::default();
+        for c in eval::score_baseline(&sp, &words, cells.total, &lemma_cell, &f) {
+            old.add(&c);
+        }
+        let new = eval::score(&sp, &model, pi, &words, &citation, &[], eval::Given::Lemma, false).total(&[]);
+        s.push_str(&format!(
+            "| {} | {:.2}% | {:.2}% |\n",
+            part.name,
+            pct(old.top1, old.n),
+            pct(new.top1, new.n)
+        ));
+    }
+    s.push('\n');
     s.push_str(
-        "Plain calls on held-out lemmas, single thread, release build, median of five runs:\n\n",
+        "Plain calls with each shipped model for the held-out tenth's lemmas, single thread, release\nbuild, fastest of seven runs, the two libraries measured alternately in the same process:\n\n",
     );
     s.push_str(
         "| | `english` 0.4 ns per call | this crate ns per call | ratio |\n|---|---:|---:|---:|\n",
@@ -389,7 +420,7 @@ fn english_comparison(lang: &Language, data: &[PosData], blob: &[u8]) -> Result<
         ) else {
             continue;
         };
-        let old = median_ns(lemmas.len(), &mut || {
+        let mut run_old = || {
             let mut sink = 0usize;
             for l in &lemmas {
                 sink = sink.wrapping_add(
@@ -398,8 +429,8 @@ fn english_comparison(lang: &Language, data: &[PosData], blob: &[u8]) -> Result<
                 );
             }
             std::hint::black_box(sink);
-        });
-        let new = median_ns(lemmas.len(), &mut || {
+        };
+        let mut run_new = || {
             let mut sink = 0usize;
             for l in &lemmas {
                 sink = sink.wrapping_add(
@@ -408,7 +439,13 @@ fn english_comparison(lang: &Language, data: &[PosData], blob: &[u8]) -> Result<
                 );
             }
             std::hint::black_box(sink);
-        });
+        };
+        // Alternate, so both see the same machine conditions.
+        let (mut old, mut new) = (f64::INFINITY, f64::INFINITY);
+        for _ in 0..3 {
+            old = old.min(fastest_ns(lemmas.len(), &mut run_old));
+            new = new.min(fastest_ns(lemmas.len(), &mut run_new));
+        }
         s.push_str(&format!(
             "| {} (`{name}`) | {old:.0} | {new:.0} | {:.1}× |\n",
             part.name,
