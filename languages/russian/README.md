@@ -32,8 +32,9 @@ assert_eq!(noun("путь, пути", Case::Instrumental, Number::Singular), "п
 
 // Markers name what spelling can't show, as a dictionary prints them after the
 // word: gender (`m`, `f`, `n`), animacy (`anim`, `inan`), aspect (`impf`, `pf`).
-assert_eq!(noun("кот, кота m anim", Case::Accusative, Number::Singular), "кота́");
-assert_eq!(noun("кот, кота m inan", Case::Accusative, Number::Singular), "ко́т");
+// They decide for a word the model doesn't know; an attested word keeps its own.
+assert_eq!(noun("бокр, бокра m anim", Case::Accusative, Number::Singular), "бо́кра");
+assert_eq!(noun("бокр, бокра m inan", Case::Accusative, Number::Singular), "бо́кр");
 ```
 
 ## How it works
