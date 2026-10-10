@@ -27,7 +27,8 @@ Per part of speech a model holds:
 - **a suffix tree** over lemmas, walked from the last letter back to the start of the
   word (a syllable count and the word's first letter can be read at learned depths).
   Each node stores a probability distribution over classes. General patterns live near
-  the root; whole-word nodes hold the words that are real exceptions.
+  the root; whole-word nodes hold the words that are real exceptions, with only their
+  own classes.
 
 A query walks the word as deep as the tree goes, takes the deepest node with a class
 that fits the word (its edits' stripped suffixes and starts must match), and applies it.
@@ -78,7 +79,13 @@ Lookups fold everything a caller may leave out; output writes it back.
 - The quick answer (`Pos::best`) is always the first scored candidate
   (`Pos::candidates`).
 
-The format is documented in [`src/format.rs`](src/format.rs).
+The format is documented in [`src/format.rs`](src/format.rs). It is built to be small:
+a distribution entry is 4 bytes (a 16-bit class and a probability in steps of 1/65535),
+a class's edits are 16-bit indices, and an edit's four strings are offsets into one shared,
+deduplicated string area with their lengths packed into the record's spare bytes. Wider
+fields are used only for a part of speech that needs them (more than 65,536 classes or
+edits). A lexicon entry is its written form and a 32-bit hash of its lookup key; a match
+is confirmed by folding the written form.
 
 ## License
 

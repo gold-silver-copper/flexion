@@ -146,13 +146,19 @@ xtask/                 cargo xtask build | probe | extract
    first letter can be inserted at learned depths (English: `-er` vs `more`). Top-down, each node's counts are
    smoothed toward its nearest kept ancestor, and a node is kept only if it differs from
    that ancestor by a likelihood-ratio test. A whole-word node is kept only if dropping it
-   would change one of the word's attested forms. So general patterns live near the root,
-   exceptions deep down, and nothing is stored twice.
+   would change one of the word's attested forms, and it holds only that word's classes.
+   So general patterns live near the root, exceptions deep down, and nothing is stored
+   twice.
 5. **Tune and measure.** A hash of the lemma splits the words into tenths. One tenth
    chooses the hyperparameters (smoothing, pruning, suffix support, the syllable and
-   first-letter symbols) by the one-standard-error rule, and whether the join model and
-   the part models (below) earn their place; another is held out and only ever scored.
-   The shipped model is then trained on everything.
+   first-letter symbols) and whether the join model and the part models (below) earn
+   their place; another is held out and only ever scored. Among the settings within one
+   standard error of the best dev top-1 (counted over words, since a word's cells move
+   together), the build takes the one with the lowest dev log-loss once **each doubling
+   of the model's size costs 0.03 nats** per cell (`--size-price`): the one knob trading
+   size for fit, set from the size-against-fit curve each crate's report shows. A part
+   model must beat the main model beyond the noise over all the cells it builds, or its
+   whole tree is left out. The shipped model is then trained on everything.
 6. **Emit.** The crate gets typed functions per cell group, a settings value (stress
    marks or macrons on or off), the model as a binary blob, the config's hand-written
    helpers, and a README with the evaluation.

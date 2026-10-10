@@ -60,6 +60,8 @@ pub struct PosScore {
     /// Per scored word: `(cells, top-1 right, log-loss)`. A word's cells
     /// succeed and fail together, so the noise is a word's, not a cell's.
     pub words: Vec<(u32, u32, f64)>,
+    /// Summed log-loss per cell.
+    pub cell_nats: Vec<f64>,
 }
 
 /// The least probability log-loss charges a cell with.
@@ -142,6 +144,7 @@ pub fn score(
     };
     let mut out = PosScore {
         cells: vec![CellScore::default(); p.cells()],
+        cell_nats: vec![0.0; p.cells()],
         inherent: Vec::new(),
         ..PosScore::default()
     };
@@ -202,6 +205,9 @@ pub fn score(
                 .sum();
             let loss = -p.max(MIN_PROBABILITY).ln();
             out.nats += loss;
+            if let Some(x) = out.cell_nats.get_mut(cell) {
+                *x += loss;
+            }
             let top_primary = top.is_some_and(|t| is(&t.form, primary));
             if top_primary {
                 score.top1 += 1;

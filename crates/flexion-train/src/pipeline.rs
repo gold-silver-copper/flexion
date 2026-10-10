@@ -85,6 +85,7 @@ pub fn choose_sources(
     chooser: &crate::edit::Chooser,
     citation: &[usize],
     markers: &[&[&str]],
+    size_price: f64,
 ) -> Vec<u8> {
     if citation.is_empty() {
         return Vec::new();
@@ -105,7 +106,7 @@ pub fn choose_sources(
         .iter()
         .filter_map(|(c, t)| Some((*c, t.clone()?)))
         .collect();
-    let score = |source: u8| -> Vec<(usize, usize)> {
+    let score = |source: u8| -> Vec<(usize, usize, f64)> {
         let mut main = base.main.clone();
         main.sources = vec![source; shape.cells];
         let trained = crate::Trained {
@@ -115,9 +116,9 @@ pub fn choose_sources(
         };
         let blob = blob_of(spec, vec![trained]);
         let Some(model) = flexion::Model::from_bytes(&blob) else {
-            return vec![(0, 0); shape.cells];
+            return vec![(0, 0, 0.0); shape.cells];
         };
-        eval::score(
+        let s = eval::score(
             &sp,
             &model,
             0,
@@ -127,14 +128,18 @@ pub fn choose_sources(
             &shape.unscored,
             Given::Citation,
             false,
-        )
-        .cells
-        .iter()
-        .map(|c| (c.top1, c.n))
-        .collect()
+        );
+        s.cells
+            .iter()
+            .zip(&s.cell_nats)
+            .map(|(c, &nats)| (c.top1, c.n, nats))
+            .collect()
     };
     let main_scores = score(0);
-    let mut best: Vec<(u8, usize)> = main_scores.iter().map(|&(t, _)| (0, t)).collect();
+    let mut best: Vec<(u8, usize, f64)> = main_scores
+        .iter()
+        .map(|&(t, _, nats)| (0, t, nats))
+        .collect();
     // Part models are numbered as built; sources name citation parts.
     let mut model_index = 0u8;
     for (k, (_, t)) in parts.iter().enumerate() {
@@ -143,43 +148,49 @@ pub fn choose_sources(
         }
         model_index = model_index.saturating_add(1);
         let tag = u8::try_from(k.saturating_add(1)).unwrap_or(0);
-        for (cell, (top1, n)) in score(model_index).into_iter().enumerate() {
+        for (cell, (top1, n, nats)) in score(model_index).into_iter().enumerate() {
             // A gain inside the noise doesn't count: one standard error of
             // the main model's count, and at least one answer.
-            let p = main_scores.get(cell).map_or(0.0, |&(t, n)| ratio(t, n));
+            let p = main_scores.get(cell).map_or(0.0, |&(t, n, _)| ratio(t, n));
             let margin = (n as f64 * p * (1.0 - p)).sqrt().max(1.0);
             if let Some(b) = best.get_mut(cell)
                 && top1 as f64 > b.1 as f64 + margin
             {
-                *b = (tag, top1);
+                *b = (tag, top1, nats);
             }
         }
     }
-    // A part model is a whole second tree: it stays only if, over every cell
-    // it would build, it beats the main model beyond the noise of the whole
-    // dev tenth. A gain on a cell or two doesn't pay for it.
-    let (all_top1, all_n) = main_scores
-        .iter()
-        .fold((0usize, 0usize), |(t, n), &(a, b)| (t + a, n + b));
-    let p = ratio(all_top1, all_n);
-    let margin = (all_n as f64 * p * (1.0 - p)).sqrt().max(1.0);
-    let mut tags: Vec<u8> = best.iter().map(|&(s, _)| s).filter(|&s| s > 0).collect();
+    // A part model is a whole second tree: it stays only if the dev log-loss
+    // it saves over all its cells, per scored cell, pays the price of the
+    // bytes it adds (as the grid's settings do: `choose`).
+    let main_bytes = flexion::write::write(spec, std::slice::from_ref(&base.main))
+        .len()
+        .max(1) as f64;
+    let all_cells = main_scores.iter().map(|&(_, n, _)| n).sum::<usize>().max(1) as f64;
+    let mut tags: Vec<u8> = best.iter().map(|b| b.0).filter(|&s| s > 0).collect();
     tags.sort_unstable();
     tags.dedup();
     for tag in tags {
-        let gain: f64 = best
+        let k = usize::from(tag).saturating_sub(1);
+        let part_bytes = parts
+            .get(k)
+            .and_then(|(_, t)| t.clone())
+            .map_or(0, |t| flexion::write::write(spec, &[t]).len()) as f64;
+        let (saved, gained) = best
             .iter()
             .zip(&main_scores)
-            .filter(|((s, _), _)| *s == tag)
-            .map(|((_, t), &(m, _))| *t as f64 - m as f64)
-            .sum();
-        if gain <= margin {
-            for b in best.iter_mut().filter(|(s, _)| *s == tag) {
-                *b = (0, 0);
+            .filter(|(b, _)| b.0 == tag)
+            .fold((0.0, 0i64), |(s, g), (b, m)| {
+                (s + m.2 - b.2, g + b.1 as i64 - m.0 as i64)
+            });
+        let price = size_price * ((main_bytes + part_bytes) / main_bytes).log2();
+        if gained < 0 || saved / all_cells < price {
+            for b in best.iter_mut().filter(|b| b.0 == tag) {
+                *b = (0, 0, 0.0);
             }
         }
     }
-    best.into_iter().map(|(s, _)| s).collect()
+    best.into_iter().map(|b| b.0).collect()
 }
 
 /// Which held-out lemmas another part of speech writes in full.
@@ -479,54 +490,50 @@ pub fn build(
         let chosen = choose(&scores, size_price).ok_or("empty grid")?;
         let (mut params, mut dev_top1) = (chosen.params, chosen.top1);
         let (base_params, chosen_tau) = (chosen.params, chosen.params.tau);
-        // The join model, where it does better on dev: more right answers
-        // (beyond the noise, like the grid), and no fewer letters right or
-        // worse calibration.
+        // The join model, when the same rule picks it: one more setting,
+        // whose extra bytes must buy their price in log-loss.
         {
-            let dev_score = |p: Params| -> Option<(PosScore, usize)> {
-                let (t, s) = train_one(&spec, shape, p, &train, &chooser);
-                let blob = blob_of(&spec, vec![t]);
-                let model = flexion::Model::from_bytes(&blob)?;
-                let score = eval::score(
-                    &sp,
-                    &model,
-                    0,
-                    &dev,
-                    &citation,
-                    &markers,
-                    &shape.unscored,
-                    Given::Lemma,
-                    false,
-                );
-                Some((score, s.join_prefixes))
-            };
             let joined = Params {
                 joins: true,
                 ..params
             };
-            if let (Some((with, prefixes)), Some((without, _))) =
-                (dev_score(joined), dev_score(params))
-                && prefixes > 0
-            {
-                let (a, b) = (with.total(&[]), without.total(&[]));
-                let top1 = ratio(a.top1, a.n);
-                let base = ratio(b.top1, b.n);
-                let se = (base * (1.0 - base) / (b.n.max(1) as f64)).sqrt();
-                let (ece_with, _) = eval::calibration(&with.calibration);
-                let (ece_without, _) = eval::calibration(&without.calibration);
-                if top1 > base + se
-                    && ratio(a.top1_letters, a.n) >= ratio(b.top1_letters, b.n)
-                    && ece_with <= ece_without
-                {
-                    params = joined;
-                    dev_top1 = top1;
+            let (t, stats) = train_one(&spec, shape, joined, &train, &chooser);
+            if stats.join_prefixes > 0 {
+                let blob = blob_of(&spec, vec![t]);
+                if let Some(model) = flexion::Model::from_bytes(&blob) {
+                    let s = eval::score(
+                        &sp,
+                        &model,
+                        0,
+                        &dev,
+                        &citation,
+                        &markers,
+                        &shape.unscored,
+                        Given::Lemma,
+                        false,
+                    );
+                    let t = s.total(&[]);
+                    let point = GridPoint {
+                        params: joined,
+                        top1: ratio(t.top1, t.n),
+                        top1_se: s.top1_se(),
+                        loss: s.log_loss(),
+                        loss_se: s.log_loss_se(),
+                        bytes: blob.len(),
+                    };
+                    let mut all = scores.clone();
+                    all.push(point);
+                    if choose(&all, size_price).is_some_and(|c| c.params == joined) {
+                        params = joined;
+                        dev_top1 = point.top1;
+                    }
                 }
             }
         }
 
         // Cells built from given principal parts, where that does better.
         let sources = choose_sources(
-            &spec, shape, params, &train, &dev, &chooser, &citation, &markers,
+            &spec, shape, params, &train, &dev, &chooser, &citation, &markers, size_price,
         );
         let from_parts = sources.iter().filter(|&&s| s > 0).count();
 

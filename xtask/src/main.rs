@@ -324,7 +324,15 @@ fn probe(
                 .collect();
             let chooser = flexion_train::edit::Chooser::new(&sp, &train, shape.lemma_cell);
             let s = flexion_train::pipeline::choose_sources(
-                &spec, shape, params, &train, &dev, &chooser, &citation, &markers,
+                &spec,
+                shape,
+                params,
+                &train,
+                &dev,
+                &chooser,
+                &citation,
+                &markers,
+                flexion_train::pipeline::SIZE_PRICE,
             );
             eprintln!(
                 "{}: {} cells from principal parts",
