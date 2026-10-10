@@ -641,6 +641,11 @@ impl<'s> Learner<'s> {
                     else {
                         continue;
                     };
+                    // As in the runtime: a stress rule that finds no vowel
+                    // in this word means the class doesn't fit it.
+                    if self.sp.has_stress() && stress.is_none() && edit.stress != Stress::Unmarked {
+                        continue;
+                    }
                     let form = self
                         .sp
                         .render(&letters, stress, kind, true, flexion::Casing::Lower);

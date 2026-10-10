@@ -640,6 +640,12 @@ impl<'m, 'a> Pos<'m, 'a> {
                             }
                             _ => self.stress_on(&r.letters, r.vowels, e, r.stress),
                         };
+                        // A rule that finds no vowel to stress in this word
+                        // (the second vowel of a stem that has one) was
+                        // learned from other words: the class doesn't fit.
+                        if stress.is_none() && e.stress != Stress::Unmarked {
+                            continue;
+                        }
                         (stress, Self::kind_of(e, r.kind))
                     } else {
                         (None, 0)
