@@ -454,17 +454,23 @@ impl<'a> Model<'a> {
             for i in 0..h.n_edits {
                 let at = h.edits.checked_add(i.checked_mul(EDIT_LEN)?)?;
                 let byte = |n: usize| b.u8(at.checked_add(n)?);
+                // A string: its offset at `n`, its length in byte `25 + n / 4`.
+                let text = |n: usize| -> Option<&str> {
+                    let off = b.usize(at.checked_add(n)?)?;
+                    let len = usize::from(byte(25usize.checked_add(n / 4)?)?);
+                    strings.get(off..off.checked_add(len)?)
+                };
                 h.edit_list.push(pos::Edit {
-                    prefix: b.str(strings, at)?,
-                    strip: b.str(strings, at.checked_add(8)?)?,
-                    add: b.str(strings, at.checked_add(16)?)?,
-                    front: b.str(strings, at.checked_add(24)?)?,
-                    stress: format::Stress::decode(byte(32)?, byte(33)?),
-                    strip_chars: byte(34)?,
-                    vowels: [byte(35)?, byte(36)?, byte(37)?],
-                    front_chars: byte(38)?,
-                    front_vowels: byte(39)?,
-                    mark: byte(40)?,
+                    prefix: text(0)?,
+                    strip: text(4)?,
+                    add: text(8)?,
+                    front: text(12)?,
+                    stress: format::Stress::decode(byte(16)?, byte(17)?),
+                    strip_chars: byte(18)?,
+                    vowels: [byte(19)?, byte(20)?, byte(21)?],
+                    front_chars: byte(22)?,
+                    front_vowels: byte(23)?,
+                    mark: byte(24)?,
                 });
             }
             // Groups: their sizes, then each group's shared sub-vectors.

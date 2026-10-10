@@ -9,6 +9,9 @@ use flexion::Spelling;
 use std::collections::BTreeMap;
 use std::path::Path;
 
+/// The longest lemma or form read, in bytes (see the format's edit record).
+const MAX_WORD: usize = 255;
+
 /// One Wiktionary entry, reduced to what the learner needs.
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct Lexeme {
@@ -370,7 +373,9 @@ fn lexeme(
         }
     };
     let lemma = fold(&entry.word);
-    if !lang.hooks.lemma_ok(part.name, &lemma) {
+    // The model writes an edit's strings' lengths in a byte, and no word
+    // comes near 255 bytes.
+    if lemma.len() > MAX_WORD || !lang.hooks.lemma_ok(part.name, &lemma) {
         return None;
     }
     let policy = &lang.tags;
@@ -393,7 +398,7 @@ fn lexeme(
             continue;
         }
         let form = fold(f.form.trim());
-        if !lang.hooks.form_ok(part.name, &lemma, &form) {
+        if form.len() > MAX_WORD || !lang.hooks.form_ok(part.name, &lemma, &form) {
             continue;
         }
         // With a table, table forms fill the table's groups and head-line

@@ -33,12 +33,14 @@
 //! ```
 //!
 //! Records:
-//! - edit, 44 bytes: prefix added, suffix stripped, suffix added, start
-//!   stripped (four string references), stress rule (`u8`), stress index
-//!   (`u8`), then (each `u8`, saturating) the stripped suffix's length in
-//!   characters, the vowels in the prefix, the stripped suffix and the added
-//!   suffix, the stripped start's length in characters and its vowels, the
-//!   stress mark (0: the lemma's kind, `k + 1`: kind `k`), three bytes padding;
+//! - edit, 32 bytes: where the prefix added, the suffix stripped, the suffix
+//!   added and the start stripped begin in the string area (four `u32`),
+//!   stress rule (`u8`), stress index (`u8`), then (each `u8`, saturating)
+//!   the stripped suffix's length in characters, the vowels in the prefix, the
+//!   stripped suffix and the added suffix, the stripped start's length in
+//!   characters and its vowels, the stress mark (0: the lemma's kind, `k + 1`:
+//!   kind `k`), then the four strings' lengths in bytes (`u8` each: no form
+//!   the trainer reads is longer than 255 bytes), three bytes padding;
 //! - class groups section: the number of groups, each group's number of
 //!   cells (they sum to the part of speech's cells), then per group the number
 //!   of its sub-vectors followed by the sub-vectors themselves (one edit index
@@ -79,7 +81,7 @@ pub const MAGIC: &[u8; 4] = b"FLX1";
 pub const VERSION: u32 = 6;
 pub const HEADER_LEN: usize = 128;
 pub const POS_HEADER_LEN: usize = 76;
-pub const EDIT_LEN: usize = 44;
+pub const EDIT_LEN: usize = 32;
 pub const NODE_LEN: usize = 16;
 pub const DIST_LEN: usize = 8;
 /// No edit (the class has no form in this cell), or no lemma cell.

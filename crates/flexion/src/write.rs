@@ -227,10 +227,15 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
         let at = |body: &Vec<u8>| to_u32(tables_start.saturating_add(body.len()));
         let edits = at(&body);
         for e in &p.edits {
-            put_str(&mut body, &mut strings, &e.prefix);
-            put_str(&mut body, &mut strings, &e.strip);
-            put_str(&mut body, &mut strings, &e.add);
-            put_str(&mut body, &mut strings, &e.front);
+            let mut lengths = [0u8; 4];
+            for (s, len) in [&e.prefix, &e.strip, &e.add, &e.front]
+                .into_iter()
+                .zip(&mut lengths)
+            {
+                let (off, l) = strings.add(s);
+                put(&mut body, off);
+                *len = u8::try_from(l).unwrap_or(u8::MAX);
+            }
             let (k, i) = e.stress.encode();
             let vowels = |s: &str| {
                 u8::try_from(s.chars().filter(|c| spelling.vowels.contains(*c)).count())
@@ -247,10 +252,9 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
                 chars(&e.front),
                 vowels(&e.front),
                 e.mark,
-                0,
-                0,
-                0,
             ]);
+            body.extend_from_slice(&lengths);
+            body.extend_from_slice(&[0, 0, 0]);
         }
         // Classes are stored per group: each group's sub-vector of edits is
         // interned, and a class lists one sub-vector per group.
