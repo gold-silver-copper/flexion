@@ -9,7 +9,7 @@ use crate::{Candidate, Model, Options, PosHeader};
 
 /// Deepest tree paths are this long at most; longer words simply stop
 /// descending there.
-const MAX_PATH: usize = 64;
+const MAX_PATH: usize = 48;
 /// Distinct forms tracked per query.
 const MAX_FORMS: usize = 16;
 /// Weight kept by a class that contradicts a caller's marker.
@@ -51,8 +51,11 @@ pub struct Pos<'m, 'a> {
 #[derive(Debug, Clone, Copy, PartialEq)]
 struct Key {
     edit: u32,
-    stress: Option<usize>,
+    /// The stressed vowel, [`NO_STRESS`] for none.
+    stress: u16,
 }
+
+const NO_STRESS: u16 = u16::MAX;
 
 impl<'m, 'a> Pos<'m, 'a> {
     pub(crate) fn new(model: &'m Model<'a>, h: &'m PosHeader<'a>) -> Self {
@@ -124,15 +127,16 @@ impl<'m, 'a> Pos<'m, 'a> {
 
     /// The `(first entry, entry count)` of every node with a distribution on
     /// the key's path, root first; returns how many were filled.
-    fn path(&self, key: &str, out: &mut [(u32, u32); MAX_PATH]) -> usize {
+    fn path(&self, word: &Word, out: &mut [(u32, u32); MAX_PATH]) -> usize {
+        let key: &str = &word.key;
         let walk = self.h.walk;
         let token = walk.syllable_depth.map(|d| {
-            let bucket = self.sp().vowel_groups(key).min(walk.syllable_max);
+            let bucket = word.groups.min(walk.syllable_max);
             let t = u32::try_from(bucket)
                 .ok()
                 .and_then(|b| char::from_u32(crate::format::SYLLABLE_TOKEN.saturating_add(b)))
                 .unwrap_or(BOUNDARY);
-            (d.min(key.chars().count()), t)
+            (d.min(word.letters), t)
         });
         let mut symbols = Symbols {
             rev: key.chars().rev(),
@@ -225,9 +229,9 @@ impl<'m, 'a> Pos<'m, 'a> {
 
     /// How many nodes with a distribution the key's path passes (for benchmarks).
     #[doc(hidden)]
-    pub fn path_len(&self, key: &str) -> usize {
+    pub fn path_len(&self, word: &Word) -> usize {
         let mut path = [(0u32, 0u32); MAX_PATH];
-        self.path(key, &mut path)
+        self.path(word, &mut path)
     }
 
     /// Where `edit`'s stress lands on the citation's lemma.
@@ -301,7 +305,7 @@ impl<'m, 'a> Pos<'m, 'a> {
         forms: &mut [(Key, f32); MAX_FORMS],
     ) -> (usize, f32) {
         let mut path = [(0u32, 0u32); MAX_PATH];
-        let depth = self.path(&citation.lemma.key, &mut path);
+        let depth = self.path(&citation.lemma, &mut path);
         for &(start, len) in path.iter().take(depth).rev() {
             let (start, len) = (start as usize, len as usize);
             let mut n = 0usize;
@@ -339,7 +343,12 @@ impl<'m, 'a> Pos<'m, 'a> {
                 } else {
                     None
                 };
-                let key = Key { edit: id, stress };
+                let key = Key {
+                    edit: id,
+                    stress: stress
+                        .and_then(|v| u16::try_from(v).ok())
+                        .unwrap_or(NO_STRESS),
+                };
                 total += p;
                 match forms.iter_mut().take(n).find(|(k, _)| *k == key) {
                     Some((_, m)) => *m += p,
@@ -372,7 +381,7 @@ impl<'m, 'a> Pos<'m, 'a> {
         let mark = options.stress && self.sp().stress_mark.is_some();
         Some(self.sp().render_parts(
             [e.prefix, kept, e.add],
-            key.stress,
+            (key.stress != NO_STRESS).then_some(usize::from(key.stress)),
             mark,
             citation.lemma.casing,
         ))
@@ -390,7 +399,7 @@ impl<'m, 'a> Pos<'m, 'a> {
         let mut forms = [(
             Key {
                 edit: 0,
-                stress: None,
+                stress: NO_STRESS,
             },
             0f32,
         ); MAX_FORMS];
@@ -438,7 +447,7 @@ impl<'m, 'a> Pos<'m, 'a> {
         let mut forms = [(
             Key {
                 edit: 0,
-                stress: None,
+                stress: NO_STRESS,
             },
             0f32,
         ); MAX_FORMS];
@@ -467,7 +476,7 @@ impl<'m, 'a> Pos<'m, 'a> {
     /// words lack, like Russian short adjectives).
     pub fn has_cell(&self, citation: &Citation, cell: usize) -> f32 {
         let mut path = [(0u32, 0u32); MAX_PATH];
-        let depth = self.path(&citation.lemma.key, &mut path);
+        let depth = self.path(&citation.lemma, &mut path);
         for &(start, len) in path.iter().take(depth).rev() {
             let (start, len) = (start as usize, len as usize);
             let (mut with, mut all) = (0f32, 0f32);
@@ -497,7 +506,7 @@ impl<'m, 'a> Pos<'m, 'a> {
     /// The distribution over inherent feature `feature`'s values (by index).
     pub fn inherent(&self, citation: &Citation, feature: usize) -> Vec<(u8, f32)> {
         let mut path = [(0u32, 0u32); MAX_PATH];
-        let depth = self.path(&citation.lemma.key, &mut path);
+        let depth = self.path(&citation.lemma, &mut path);
         for &(start, len) in path.iter().take(depth).rev() {
             let (start, len) = (start as usize, len as usize);
             let mut out: Vec<(u8, f32)> = Vec::new();
@@ -608,6 +617,9 @@ impl<'m, 'a> Pos<'m, 'a> {
 fn cut(base: &str, n: usize) -> Option<&str> {
     if n == 0 {
         return Some(base);
+    }
+    if base.is_ascii() {
+        return base.get(..base.len().checked_sub(n)?);
     }
     let at = base
         .char_indices()

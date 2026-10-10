@@ -56,6 +56,10 @@ pub struct Word<'s> {
     pub casing: Casing,
     /// Vowels in `base`.
     pub vowels: usize,
+    /// Runs of vowels in `key` (the syllable count the tree may ask for).
+    pub groups: usize,
+    /// Characters in `key`.
+    pub letters: usize,
 }
 
 /// A small, allocation-free character set: a bitmask for ASCII plus a few
@@ -232,40 +236,50 @@ impl<'a> Spelling<'a> {
     /// Split a caller's word into letters, stress and casing.
     pub fn read<'s>(&self, input: &'s str) -> Word<'s> {
         // Fastest path: lowercase ASCII with nothing to fold (marks are never ASCII).
-        if input.is_ascii()
-            && !input.bytes().any(|b| b.is_ascii_uppercase())
-            && self.fold_from.is_empty()
-            && self.strip_marks.is_ascii()
-            && self.strip_marks.is_empty()
-        {
-            let vowels = input
-                .bytes()
-                .filter(|&b| self.vowel_set.contains(char::from(b)))
-                .count();
-            return Word {
-                base: Cow::Borrowed(input),
-                key: Cow::Borrowed(input),
-                stress: None,
-                casing: Casing::Lower,
-                vowels,
-            };
+        if self.fold_from.is_empty() && self.strip_marks.is_empty() && input.is_ascii() {
+            let (mut vowels, mut groups, mut prev, mut upper) = (0usize, 0usize, false, false);
+            for b in input.bytes() {
+                upper |= b.is_ascii_uppercase();
+                let v = self.vowel_set.contains(char::from(b));
+                vowels = vowels.saturating_add(usize::from(v));
+                groups = groups.saturating_add(usize::from(v && !prev));
+                prev = v;
+            }
+            if !upper {
+                return Word {
+                    base: Cow::Borrowed(input),
+                    key: Cow::Borrowed(input),
+                    stress: None,
+                    casing: Casing::Lower,
+                    vowels,
+                    groups,
+                    letters: input.len(),
+                };
+            }
         }
         // Fast path: nothing to remove, lowercase or fold.
         let mut vowels = 0usize;
         let mut implicit = None;
         let mut plain = true;
+        let (mut groups, mut letters, mut prev) = (0usize, 0usize, false);
         for c in input.chars() {
             let changes = self.special.contains(c) || (self.fold_case && lowercase_char(c) != c);
             if changes {
                 plain = false;
                 break;
             }
-            if self.is_vowel(c) {
+            letters = letters.saturating_add(1);
+            let v = self.is_vowel(c);
+            if v {
                 if implicit.is_none() && self.implicit_set.contains(c) {
                     implicit = Some(vowels);
                 }
                 vowels = vowels.saturating_add(1);
+                if !prev {
+                    groups = groups.saturating_add(1);
+                }
             }
+            prev = v;
         }
         if plain {
             let stress = if self.stress_mark.is_some() {
@@ -279,6 +293,8 @@ impl<'a> Spelling<'a> {
                 stress,
                 casing: Casing::Lower,
                 vowels,
+                groups,
+                letters,
             };
         }
         let casing = if self.fold_case {
@@ -318,6 +334,8 @@ impl<'a> Spelling<'a> {
             None
         };
         Word {
+            groups: self.vowel_groups(&key),
+            letters: key.chars().count(),
             base: Cow::Owned(base),
             key: Cow::Owned(key),
             stress,

@@ -15,8 +15,14 @@ code in the trainer or the runtime:
 Attested words are the ones the shipped model was trained on. The full reports (calibration,
 per-cell numbers, made-up words, the largest groups of mistakes, size and speed) are in
 each crate's README. The English model is 808 KB against `english` 0.4's 1026 KB of tables,
-and a call takes 1.4–2.6× as long as `english` 0.4's (about 100–150 ns). The Russian model is
-4.5 MB (1.9 MB gzipped), 200–370 ns per call.
+and a call takes 1.2–1.8× as long as `english` 0.4's (about 90–125 ns). The Russian model is
+4.5 MB (1.9 MB gzipped), 170–310 ns per call.
+
+Russian nouns given only the nominative and genitive singular reach 94.5%, short of the 95%
+the project aimed for. Nearly all remaining misses need facts spelling doesn't carry: the
+accusative follows animacy (`адвоката` vs `айсберг`), and some plurals move the stress
+(`ба́сы` vs `басы́`). Given the markers a dictionary prints with the word (`кот, кота m anim`),
+nouns reach 96.8%.
 
 ```rust
 assert_eq!(english::noun("child", english::Number::Plural), "children");
