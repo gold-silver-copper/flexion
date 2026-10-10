@@ -633,3 +633,254 @@ fn sanskrit_declines_stems_in_devanagari() {
         "नवा"
     );
 }
+
+/// `ask` for a list of `(pos, word, group, values, expected)`.
+fn expect_all(lang: &Language, blob: &[u8], cases: &[(&str, &str, &str, &[&str], &str)]) {
+    for &(pos, word, group, values, want) in cases {
+        assert_eq!(
+            ask(lang, blob, pos, word, group, values),
+            want,
+            "{pos} {word} {group} {values:?}"
+        );
+    }
+}
+
+#[test]
+fn spanish_writes_accents_and_conjugates_through_the_base() {
+    let lang = flexion_configs::spanish::language();
+    lang.validate().expect("valid config");
+    let (data, blob) = train(&lang);
+    assert!(data.iter().all(|d| !d.lexemes.is_empty()));
+    expect_all(
+        &lang,
+        &blob,
+        &[
+            // The accent comes and goes with the plural, and moves.
+            ("noun", "canción", "noun", &["Plural"], "canciones"),
+            ("noun", "carácter", "noun", &["Plural"], "caracteres"),
+            ("noun", "régimen", "noun", &["Plural"], "regímenes"),
+            ("noun", "crisis", "noun", &["Plural"], "crisis"),
+            // An adjective with one form for both genders.
+            (
+                "adjective",
+                "feliz",
+                "adjective",
+                &["Feminine", "Singular"],
+                "feliz",
+            ),
+            ("adjective", "bueno", "before_noun", &[], "buen"),
+            // Stem changes and irregular verbs.
+            (
+                "verb",
+                "contar",
+                "verb",
+                &["Present", "First", "Singular"],
+                "cuento",
+            ),
+            (
+                "verb",
+                "hacer",
+                "verb",
+                &["Preterite", "First", "Singular"],
+                "hice",
+            ),
+            (
+                "verb",
+                "sacar",
+                "verb",
+                &["Preterite", "First", "Singular"],
+                "saqué",
+            ),
+            ("verb", "hacer", "vos", &["Indicative"], "hacés"),
+            (
+                "verb",
+                "hacer",
+                "participle",
+                &["Feminine", "Plural"],
+                "hechas",
+            ),
+            // An unseen prefixed verb inflects like its base.
+            (
+                "verb",
+                "proponer",
+                "verb",
+                &["Preterite", "Third", "Singular"],
+                "propuso",
+            ),
+            (
+                "verb",
+                "proponer",
+                "participle",
+                &["Masculine", "Singular"],
+                "propuesto",
+            ),
+            // A pronominal verb's forms come without the pronoun.
+            (
+                "verb",
+                "quejarse",
+                "verb",
+                &["Present", "First", "Singular"],
+                "quejo",
+            ),
+        ],
+    );
+}
+
+#[test]
+fn french_agrees_participles_and_strips_pronouns() {
+    let lang = flexion_configs::french::language();
+    lang.validate().expect("valid config");
+    let (data, blob) = train(&lang);
+    assert!(data.iter().all(|d| !d.lexemes.is_empty()));
+    expect_all(
+        &lang,
+        &blob,
+        &[
+            ("noun", "cheval", "noun", &["Plural"], "chevaux"),
+            ("noun", "œil", "noun", &["Plural"], "yeux"),
+            (
+                "adjective",
+                "beau",
+                "adjective",
+                &["Feminine", "Singular"],
+                "belle",
+            ),
+            ("adjective", "nouveau", "before_vowel", &[], "nouvel"),
+            (
+                "verb",
+                "appeler",
+                "verb",
+                &["Present", "First", "Singular"],
+                "appelle",
+            ),
+            (
+                "verb",
+                "manger",
+                "verb",
+                &["Present", "First", "Plural"],
+                "mangeons",
+            ),
+            (
+                "verb",
+                "prendre",
+                "verb",
+                &["PastHistoric", "Third", "Singular"],
+                "prit",
+            ),
+            // An unseen prefixed verb inflects like its base.
+            (
+                "verb",
+                "reprendre",
+                "verb",
+                &["Present", "Third", "Plural"],
+                "reprennent",
+            ),
+            // A pronominal verb, cited without `se`.
+            (
+                "verb",
+                "souvenir",
+                "verb",
+                &["Present", "First", "Singular"],
+                "souviens",
+            ),
+            (
+                "participle",
+                "pris",
+                "past_participle",
+                &["Feminine", "Plural"],
+                "prises",
+            ),
+        ],
+    );
+}
+
+#[test]
+fn italian_writes_standard_spelling_and_conjugates_through_the_base() {
+    let lang = flexion_configs::italian::language();
+    lang.validate().expect("valid config");
+    let (data, blob) = train(&lang);
+    assert!(data.iter().all(|d| !d.lexemes.is_empty()));
+    expect_all(
+        &lang,
+        &blob,
+        &[
+            ("noun", "uomo", "noun", &["Plural"], "uomini"),
+            ("noun", "uovo", "noun", &["Plural"], "uova"),
+            ("noun", "città", "noun", &["Plural"], "città"),
+            (
+                "adjective",
+                "bello",
+                "adjective",
+                &["Masculine", "Plural"],
+                "belli",
+            ),
+            // Wiktionary's dictionary marks (`prèndo`, `fà`) are gone; final
+            // and monosyllable accents stay.
+            (
+                "verb",
+                "prendere",
+                "verb",
+                &["Present", "First", "Singular"],
+                "prendo",
+            ),
+            (
+                "verb",
+                "prendere",
+                "verb",
+                &["Future", "First", "Singular"],
+                "prenderò",
+            ),
+            (
+                "verb",
+                "dare",
+                "verb",
+                &["Present", "Third", "Singular"],
+                "dà",
+            ),
+            (
+                "verb",
+                "fare",
+                "verb",
+                &["Present", "Third", "Singular"],
+                "fa",
+            ),
+            (
+                "verb",
+                "finire",
+                "verb",
+                &["Present", "First", "Singular"],
+                "finisco",
+            ),
+            (
+                "verb",
+                "prendere",
+                "verb",
+                &["PastHistoric", "First", "Singular"],
+                "presi",
+            ),
+            // An unseen prefixed verb inflects like its base.
+            (
+                "verb",
+                "riprendere",
+                "verb",
+                &["PastHistoric", "First", "Singular"],
+                "ripresi",
+            ),
+            // A reflexive verb's finite forms come without the pronoun.
+            (
+                "verb",
+                "lavarsi",
+                "verb",
+                &["Present", "First", "Singular"],
+                "lavo",
+            ),
+            (
+                "participle",
+                "preso",
+                "past_participle",
+                &["Feminine", "Plural"],
+                "prese",
+            ),
+        ],
+    );
+}

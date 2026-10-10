@@ -8,7 +8,8 @@ You normally don't use this crate directly. Use a generated one:
 [`english`](https://crates.io/crates/english), [`russian`](https://crates.io/crates/russian),
 [`latin`](https://crates.io/crates/latin), [`polish`](https://crates.io/crates/polish),
 [`german`](https://crates.io/crates/german), [`ancient-greek`](https://crates.io/crates/ancient-greek),
-[`sanskrit`](https://crates.io/crates/sanskrit).
+[`sanskrit`](https://crates.io/crates/sanskrit), [`spanish`](https://crates.io/crates/spanish),
+[`french`](https://crates.io/crates/french), [`italian`](https://crates.io/crates/italian).
 
 ## The model
 

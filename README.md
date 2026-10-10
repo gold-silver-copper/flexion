@@ -4,7 +4,7 @@ Describe a language's grammar, point the trainer at a [Kaikki](https://kaikki.or
 Wiktionary dump, and get a Rust crate that inflects **any** word of that language
 (attested or not) with a calibrated confidence for every answer.
 
-This repository builds seven languages from the same trainer, with no language-specific
+This repository builds ten languages from the same trainer, with no language-specific
 code in the trainer or the runtime:
 
 | crate | held-out words (never seen in training), top-1 | attested words, top-1 |
@@ -16,13 +16,16 @@ code in the trainer or the runtime:
 | [`german`](languages/german) | from the bare lemma: nouns 94.2%, adjectives 99.1%, verbs 93.9% (separable verbs inflect through their base: `anstehen` → `steht an`); given the principal parts: nouns 98.4% (98.6% with the gender marker), verbs 99.2% | 99.95–100% |
 | [`ancient-greek`](languages/ancient-greek) | given the dictionary's principal parts: nouns 96.0%, adjectives 98.5%, verbs 73.8%; with the lemma written in full (accents and vowel length): 81.4%, 86.9%, 53.6%; from the headword (accents, no vowel length): 42.6%, 42.1%, 35.8% (letters right 92.7%, 94.5%, 63.6%) | 99.8–100% (pronouns 97.9%) |
 | [`sanskrit`](languages/sanskrit) | from the stem: nouns 93.0% (97.2% with the gender marker), adjectives 91.5%, verbs 91.0% (92.4% given future, perfect and aorist) | 99.9–100% |
+| [`spanish`](languages/spanish) | from the bare lemma: nouns 98.7%, adjectives 98.6%, verbs 98.9% (prefixed verbs inflect like their base: `deshacer` → `deshizo`); given the principal parts: verbs 99.6% | 99.2–100% |
+| [`french`](languages/french) | from the bare lemma: nouns 97.5%, adjectives 97.7%, verbs 99.1%, past participle agreement 99.7%; given the principal parts: verbs 99.8% | 99.99–100% |
+| [`italian`](languages/italian) | from the bare lemma: nouns 95.9% (96.9% with the gender marker), adjectives 98.4%, verbs 99.2%, past participle agreement 100%; given the principal parts: verbs 99.7% | 99.99–100% |
 
 Attested words are the ones the shipped model was trained on. The full reports (calibration,
 per-cell numbers, made-up words, the largest groups of mistakes, size and speed) are in
 each crate's README. The English model is 846 KB against `english` 0.4's 1026 KB of tables,
 and a call takes about 130–160 ns, about twice as long as `english` 0.4's. The other models
-are 1.1–7.7 MB (0.2–2.9 MB gzipped), and Ancient Greek's is 21.8 MB (3.8 MB gzipped),
-all well under crates.io's 10 MB limit for a packaged crate. Calls take 100–600 ns, except
+are 0.4–7.7 MB (0.1–2.9 MB gzipped), and Ancient Greek's is 21.8 MB (3.8 MB gzipped),
+all well under crates.io's 10 MB limit for a packaged crate. Calls take 100–600 ns (Spanish, French and Italian 100–250 ns), except
 Ancient Greek's: 450–900 ns for nouns and adjectives and 1.3 µs for verbs, whose 600-cell
 classes rarely fit an unseen verb at a deep node.
 
@@ -47,6 +50,14 @@ verbs only 73.8% (the aim was 90%). A verb's principal parts each build their ow
 tenses of a verb with an irregular present, perfects with unpredictable reduplication, and
 an accent that depends on vowel lengths the parts don't always show.
 
+Spanish, French and Italian need only their configs. Their remaining misses are mostly
+words that don't inflect although their ending says they would: French adjectives and
+Italian nouns that are invariable (`antisida`, `abbassalingua`, `allerta`), which nothing
+in the spelling marks, keep French adjectives at 97.7% and Italian nouns at 95.9% (the aims
+were 98% and 97%). Italian `-a` nouns also need their gender: masculine ones take `-i` (`il poeta` →
+`poeti`), feminine ones `-e` (`la casa` → `case`); with the gender marker, Italian nouns
+reach 96.9%.
+
 ```rust
 assert_eq!(english::noun("child", english::Number::Plural), "children");
 assert_eq!(english::noun("glorp", english::Number::Plural), "glorps");
@@ -69,6 +80,15 @@ assert_eq!(german::verb("anfangen", german::Tense::Preterite, german::Person::Fi
 assert_eq!(ancient_greek::noun("λογος", ancient_greek::Case::Genitive, ancient_greek::Number::Singular), "λόγου");
 
 assert_eq!(sanskrit::noun("देव", sanskrit::Case::Instrumental, sanskrit::Number::Singular), "देवेन");
+
+assert_eq!(spanish::noun("canción", spanish::Number::Plural), "canciones");
+assert_eq!(spanish::verb("contar", spanish::Tense::Present, spanish::Person::First, spanish::Number::Singular), "cuento");
+
+assert_eq!(french::verb("prendre", french::Tense::PastHistoric, french::Person::Third, french::Number::Singular), "prit");
+assert_eq!(french::agreeing_participle("prendre", french::Gender::Feminine, french::Number::Plural), "prises");
+
+assert_eq!(italian::noun("uomo", italian::Number::Plural), "uomini");
+assert_eq!(italian::verb("finire", italian::Tense::Present, italian::Person::First, italian::Number::Singular), "finisco");
 ```
 
 ## Layout
@@ -77,7 +97,8 @@ assert_eq!(sanskrit::noun("देव", sanskrit::Case::Instrumental, sanskrit::N
 crates/flexion         the runtime every generated crate depends on (no dependencies)
 crates/flexion-train   extract → learn → evaluate → emit
 configs/               one language description per module: english.rs, russian.rs, latin.rs,
-                       polish.rs, german.rs, ancient_greek.rs, sanskrit.rs
+                       polish.rs, german.rs, ancient_greek.rs, sanskrit.rs, spanish.rs,
+                       french.rs, italian.rs (and romance.rs: head-line helpers they share)
 configs/extra/         hand-written helpers copied into a generated crate
 languages/english      generated (don't edit by hand)
 languages/russian      generated
@@ -86,6 +107,9 @@ languages/polish       generated
 languages/german       generated
 languages/ancient-greek generated
 languages/sanskrit     generated
+languages/spanish      generated
+languages/french       generated
+languages/italian      generated
 tools/english-baseline the published english 0.4, as a baseline for the English report
 xtask/                 cargo xtask build | probe | extract
 ```
@@ -178,7 +202,12 @@ cargo xtask build <name> --dump kaikki.org-dictionary-<Language>.jsonl --date <d
 German, Ancient Greek and Sanskrit needed only configs plus generic changes: edits that
 change the start of a word, the join model, part models, stress marks of several kinds
 counted in syllables, letters with an inherent vowel, capitalized parts of speech, and a
-lemma that is no form of the word. For the next ones:
+lemma that is no form of the word. Spanish, French and Italian needed only configs: their
+nouns and adjectives have no tables, so the configs read the head line (`gratuit (feminine
+gratuite, masculine plural gratuits, …)`) and fill what it leaves implicit (invariable
+words, one form for both genders). Their written accents are letters, not a stress model:
+most lemmas write no accent, so an accent model can't tell a word typed without one from a
+word that has none, and it did worse. For the next ones:
 
 - **Lithuanian, Serbo-Croatian**: pitch accents of several kinds on long and short
   vowels, which the mark kinds already express; the accent classes are the hard part,
@@ -203,6 +232,9 @@ cargo xtask build polish --dump ~/.cache/flexion/dumps/Polish.jsonl --date 2026-
 cargo xtask build german --dump ~/.cache/flexion/dumps/German.jsonl --date 2026-10-03
 cargo xtask build ancient-greek --dump ~/.cache/flexion/dumps/AncientGreek.jsonl --date 2026-10-03
 cargo xtask build sanskrit --dump ~/.cache/flexion/dumps/Sanskrit.jsonl --date 2026-10-03
+cargo xtask build spanish --dump ~/.cache/flexion/dumps/Spanish.jsonl --date 2026-10-03
+cargo xtask build french --dump ~/.cache/flexion/dumps/French.jsonl --date 2026-10-03
+cargo xtask build italian --dump ~/.cache/flexion/dumps/Italian.jsonl --date 2026-10-03
 cargo xtask extract russian --dump ~/.cache/flexion/dumps/Russian.jsonl   # cache lexemes
 cargo xtask probe russian --pos noun --tau 2 --misses 1                   # experiment
 cargo xtask probe ancient-greek --pos verb --parts 1 --joins 1            # with part models, joins
