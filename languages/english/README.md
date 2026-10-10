@@ -227,10 +227,10 @@ The model is 808 KB (338 KB gzipped).
 
 | | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 686 | 678 | 11272 | 5358 | 29496 | 145 (`noun.pl`) |
-| verb | 388 | 449 | 3508 | 752 | 10532 | 96 (`verb.3sg`) |
-| adjective | 132 | 85 | 3266 | 2187 | 5677 | 128 (`adjective.comp`) |
-| adverb | 42 | 23 | 270 | 160 | 599 | 134 (`adverb.comp`) |
+| noun | 686 | 678 | 11272 | 5358 | 29496 | 151 (`noun.pl`) |
+| verb | 388 | 449 | 3508 | 752 | 10532 | 100 (`verb.3sg`) |
+| adjective | 132 | 85 | 3266 | 2187 | 5677 | 134 (`adjective.comp`) |
+| adverb | 42 | 23 | 270 | 160 | 599 | 137 (`adverb.comp`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
@@ -266,10 +266,10 @@ build, fastest of seven runs, the two libraries measured alternately in the same
 
 | | `english` 0.4 ns per call | this crate ns per call | ratio |
 |---|---:|---:|---:|
-| noun (`noun.pl`) | 77 | 143 | 1.9× |
-| verb (`verb.3sg`) | 58 | 94 | 1.6× |
-| adjective (`adjective.comp`) | 85 | 127 | 1.5× |
-| adverb (`adverb.comp`) | 50 | 130 | 2.6× |
+| noun (`noun.pl`) | 79 | 148 | 1.9× |
+| verb (`verb.3sg`) | 62 | 98 | 1.6× |
+| adjective (`adjective.comp`) | 89 | 128 | 1.4× |
+| adverb (`adverb.comp`) | 51 | 128 | 2.5× |
 
 
 ## Data and license

@@ -133,23 +133,9 @@ fn library(lang: &Language) -> Result<String, String> {
     let mut free = String::new();
     for (pi, part) in lang.parts.iter().enumerate() {
         let cells = Cells::new(lang, part)?;
-        let citation: Vec<usize> = part
-            .citation
-            .iter()
-            .filter_map(|(g, v)| cells.find(g, v))
-            .collect();
         let citation_doc = citation_doc(lang, part, &cells);
         for g in &cells.groups {
-            methods(
-                &mut s,
-                &mut free,
-                lang,
-                pi,
-                g,
-                &citation,
-                &citation_doc,
-                &settings,
-            );
+            methods(&mut s, &mut free, pi, g, &citation_doc, &settings);
         }
     }
     s.push_str("}\n\n");
@@ -316,17 +302,13 @@ fn citation_doc(lang: &Language, part: &crate::spec::PartOfSpeech, cells: &Cells
         "\n    ///\n    /// `word` may be a citation: the lemma, then any of {} separated by commas.\n    /// Given parts are output exactly; the rest is predicted to agree with them.{marker_doc}",
         parts.join(", ")
     )
-    .replace("{lang}", lang.display)
 }
 
-#[allow(clippy::too_many_arguments)]
 fn methods(
     s: &mut String,
     free: &mut String,
-    lang: &Language,
     pi: usize,
     g: &GroupCells,
-    citation: &[usize],
     citation_doc: &str,
     settings: &str,
 ) {
@@ -377,10 +359,8 @@ fn methods(
     } else {
         ", cell".to_string()
     };
-    let _ = citation;
     let doc = g.group.doc;
     let name = g.name;
-    let _ = lang;
     if g.group.optional {
         let _ = writeln!(
             s,

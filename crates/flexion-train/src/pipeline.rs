@@ -128,7 +128,7 @@ pub fn build(
     let mut reports = Vec::new();
     let mut final_tables = Vec::new();
     let has_stress = lang.spelling.stress_mark.is_some();
-    for (pi, ((part, d), &shape)) in lang.parts.iter().zip(data).zip(&shapes).enumerate() {
+    for ((part, d), &shape) in lang.parts.iter().zip(data).zip(&shapes) {
         let cells = Cells::new(lang, part)?;
         let citation: Vec<usize> = part
             .citation
@@ -301,7 +301,6 @@ pub fn build(
             cells: (0..cells.total).map(|c| cells.name(c)).collect(),
             lemma_cell,
         });
-        let _ = pi;
     }
     let blob = blob_of(&spec, &final_tables);
     let model = flexion::Model::from_bytes(&blob).ok_or("shipped model failed to load")?;
