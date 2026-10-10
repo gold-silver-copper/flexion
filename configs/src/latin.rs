@@ -88,9 +88,10 @@ pub fn language() -> Language {
                     )
                     .optional(),
                 ],
-                lemma: ("noun", vec!["Nominative", "Singular"]),
+                lemma: Some(("noun", vec!["Nominative", "Singular"])),
                 citation: vec![("noun", vec!["Genitive", "Singular"])],
                 inherent: vec!["Gender"],
+                capitalized: false,
             },
             PartOfSpeech {
                 name: "adjective",
@@ -119,12 +120,13 @@ pub fn language() -> Language {
                     .optional()
                     .from_head(),
                 ],
-                lemma: ("adjective", vec!["Nominative", "Masculine", "Singular"]),
+                lemma: Some(("adjective", vec!["Nominative", "Masculine", "Singular"])),
                 citation: vec![
                     ("adjective", vec!["Nominative", "Feminine", "Singular"]),
                     ("adjective", vec!["Nominative", "Neuter", "Singular"]),
                 ],
                 inherent: vec![],
+                capitalized: false,
             },
             PartOfSpeech {
                 name: "verb",
@@ -168,13 +170,14 @@ pub fn language() -> Language {
                     group("gerund", "The gerund (genitive, dative, accusative, ablative).", &["Case"], &["gerund"], &[]).optional(),
                     group("supine", "The supine (accusative and ablative).", &["Case"], &["supine"], &[]).optional(),
                 ],
-                lemma: ("verb", vec!["Indicative", "Active", "Present", "First", "Singular"]),
+                lemma: Some(("verb", vec!["Indicative", "Active", "Present", "First", "Singular"])),
                 citation: vec![
                     ("infinitive", vec!["Active", "Present"]),
                     ("verb", vec!["Indicative", "Active", "Perfect", "First", "Singular"]),
                     ("supine", vec!["Accusative"]),
                 ],
                 inherent: vec![],
+                capitalized: false,
             },
             PartOfSpeech {
                 name: "pronoun",
@@ -183,9 +186,10 @@ pub fn language() -> Language {
                 templates: vec!["la-adecl", "la-ndecl"],
                 forms: FormSource::Tables,
                 groups: vec![group("pronoun", "A declined pronoun or determiner.", &["Case", "Gender", "Number"], &[], &[])],
-                lemma: ("pronoun", vec!["Nominative", "Masculine", "Singular"]),
+                lemma: Some(("pronoun", vec!["Nominative", "Masculine", "Singular"])),
                 citation: vec![],
                 inherent: vec![],
+                capitalized: false,
             },
             PartOfSpeech {
                 name: "numeral",
@@ -194,9 +198,10 @@ pub fn language() -> Language {
                 templates: vec!["la-adecl", "la-ndecl"],
                 forms: FormSource::Tables,
                 groups: vec![group("numeral", "A declined numeral.", &["Case", "Gender", "Number"], &[], &[])],
-                lemma: ("numeral", vec!["Nominative", "Masculine", "Singular"]),
+                lemma: Some(("numeral", vec!["Nominative", "Masculine", "Singular"])),
                 citation: vec![],
                 inherent: vec![],
+                capitalized: false,
             },
         ],
         spelling: Spelling {

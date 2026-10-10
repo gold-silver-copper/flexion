@@ -111,14 +111,19 @@ pub fn score(
         }
         let mut given_cells = Vec::new();
         if matches!(given, Given::Citation | Given::Dictionary) {
-            for &c in citation_cells {
+            // A part the word lacks is written `—`, as dictionaries do.
+            let last = citation_cells
+                .iter()
+                .rposition(|&c| word.primary(c).is_some())
+                .map_or(0, |i| i.saturating_add(1));
+            for &c in citation_cells.iter().take(last) {
+                input.push_str(", ");
                 match word.primary(c) {
                     Some(f) => {
-                        input.push_str(", ");
                         input.push_str(f);
                         given_cells.push(c);
                     }
-                    None => break,
+                    None => input.push('—'),
                 }
             }
         }
@@ -322,8 +327,17 @@ pub fn error_groups(
     for m in misses {
         let base = sp.read(&m.lemma).base;
         let shape = |f: &str| {
-            let e = crate::edit::edit(sp, &base, None, f, false);
-            let core = format!("{}-{}+{}", e.prefix, e.strip, e.add);
+            let stem = crate::edit::Stem {
+                letters: &base,
+                stress: None,
+                kind: 0,
+            };
+            let e = crate::edit::edit(sp, stem, f, false);
+            let core = if e.front.is_empty() {
+                format!("{}-{}+{}", e.prefix, e.strip, e.add)
+            } else {
+                format!("{}→{}…-{}+{}", e.front, e.prefix, e.strip, e.add)
+            };
             let letters_same = sp.read(f).base == sp.read(&m.primary).base;
             (core, letters_same)
         };
@@ -357,4 +371,17 @@ pub fn error_groups(
         .collect();
     out.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(&b.0)));
     out
+}
+
+/// The scored cell most of `words` attest (the first on a tie): the cell a
+/// benchmark asks for.
+pub fn common_cell(words: &[Word], cells: usize, unscored: &[usize]) -> Option<usize> {
+    (0..cells)
+        .filter(|c| !unscored.contains(c))
+        .map(|c| (c, words.iter().filter(|w| w.primary(c).is_some()).count()))
+        .fold(None::<(usize, usize)>, |best, (c, n)| match best {
+            Some((_, bn)) if bn >= n => best,
+            _ => Some((c, n)),
+        })
+        .map(|(c, _)| c)
 }

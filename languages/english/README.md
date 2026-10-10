@@ -72,8 +72,8 @@ used for any decision.
 | | lemmas | cells | top-1 | top-3 | top-1 given citation | english 0.4 rules | english 0.4 rules + tables |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | noun | 22658 | 22658 | **97.15%** | 99.75% | – | 95.76% | 98.87% |
-| verb | 3955 | 15815 | **97.91%** | 99.85% | 99.38% | 92.51% | 99.38% |
-| adjective | 6162 | 12322 | **96.67%** | 99.98% | – | 96.15% | 99.33% |
+| verb | 3955 | 15815 | **97.91%** | 99.85% | 99.53% | 92.51% | 99.38% |
+| adjective | 6162 | 12322 | **96.69%** | 99.98% | – | 96.15% | 99.33% |
 | adverb | 1206 | 2412 | **99.00%** | 100.00% | – | 99.00% | 99.17% |
 
 *english 0.4 rules*: the hand-written regular rules of the published `english` 0.4 (`english-core`), no tables.
@@ -92,8 +92,8 @@ used for any decision.
 | verb.past | 3954 | 97.09% | 99.77% |
 | verb.prp | 3952 | 98.46% | 99.92% |
 | verb.pp | 3955 | 96.86% | 99.80% |
-| adjective.comp | 6160 | 96.69% | 99.98% |
-| adjective.sup | 6162 | 96.66% | 99.97% |
+| adjective.comp | 6160 | 96.70% | 99.98% |
+| adjective.sup | 6162 | 96.67% | 99.97% |
 | adverb.comp | 1206 | 99.00% | 100.00% |
 | adverb.sup | 1206 | 99.00% | 100.00% |
 
@@ -106,7 +106,7 @@ The shipped model, trained on everything, asked for every attested cell of every
 | | lemmas | cells | primary form from the plain call | every attested form among the answers |
 |---|---:|---:|---:|---:|
 | noun | 228072 | 228072 | **99.96%** | 99.95% |
-| verb | 38230 | 152819 | **99.99%** | 100.00% |
+| verb | 38230 | 152819 | **99.98%** | 100.00% |
 | adjective | 61454 | 122884 | **99.99%** | 99.97% |
 | adverb | 12620 | 25239 | **100.00%** | 99.99% |
 
@@ -120,7 +120,7 @@ Expected calibration error (ECE) is the average gap between confidence and accur
 | noun | 0.009 |
 | verb | 0.006 |
 | adjective | 0.007 |
-| adverb | 0.005 |
+| adverb | 0.006 |
 
 All parts of speech together (ECE 0.006):
 
@@ -129,11 +129,11 @@ All parts of speech together (ECE 0.006):
 | 0.2–0.3 | 0.298 | 1.000 | 1 |
 | 0.3–0.4 | 0.362 | 0.444 | 27 |
 | 0.4–0.5 | 0.463 | 0.442 | 129 |
-| 0.5–0.6 | 0.558 | 0.621 | 819 |
-| 0.6–0.7 | 0.643 | 0.720 | 1149 |
-| 0.7–0.8 | 0.754 | 0.816 | 1077 |
+| 0.5–0.6 | 0.559 | 0.626 | 823 |
+| 0.6–0.7 | 0.643 | 0.721 | 1146 |
+| 0.7–0.8 | 0.754 | 0.814 | 1078 |
 | 0.8–0.9 | 0.858 | 0.901 | 1796 |
-| 0.9–1.0 | 0.993 | 0.993 | 48209 |
+| 0.9–1.0 | 0.993 | 0.993 | 48207 |
 
 ### Made-up words
 
@@ -223,14 +223,14 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 818 KB (341 KB gzipped).
+The model is 846 KB (344 KB gzipped).
 
 | | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 686 | 678 | 11272 | 5358 | 29496 | 287 (`noun.pl`) |
-| verb | 388 | 449 | 3508 | 752 | 10532 | 151 (`verb.3sg`) |
-| adjective | 132 | 85 | 3266 | 2187 | 5677 | 176 (`adjective.comp`) |
-| adverb | 42 | 23 | 270 | 160 | 599 | 168 (`adverb.comp`) |
+| noun | 665 | 657 | 11415 | 5473 | 29813 | 159 (`noun.pl`) |
+| verb | 387 | 450 | 3561 | 796 | 10638 | 134 (`verb.pp`) |
+| adjective | 92 | 65 | 3300 | 2218 | 5696 | 134 (`adjective.sup`) |
+| adverb | 40 | 22 | 270 | 160 | 593 | 126 (`adverb.comp`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
@@ -250,14 +250,14 @@ release build, fastest of seven runs.
 ### Compared with `english` 0.4
 
 `english` 0.4's generated exception tables are 1026 KB of Rust source (compiled into
-perfect-hash maps); this crate's model is 818 KB.
+perfect-hash maps); this crate's model is 846 KB.
 
 Attested words (every word both were built from), primary form from the plain call:
 
 | | `english` 0.4 | this crate |
 |---|---:|---:|
 | noun | 98.89% | 99.96% |
-| verb | 99.43% | 99.99% |
+| verb | 99.43% | 99.98% |
 | adjective | 99.41% | 99.99% |
 | adverb | 99.05% | 100.00% |
 
@@ -266,10 +266,10 @@ build, fastest of seven runs, the two libraries measured alternately in the same
 
 | | `english` 0.4 ns per call | this crate ns per call | ratio |
 |---|---:|---:|---:|
-| noun (`noun.pl`) | 96 | 248 | 2.6× |
-| verb (`verb.3sg`) | 65 | 147 | 2.3× |
-| adjective (`adjective.comp`) | 91 | 177 | 2.0× |
-| adverb (`adverb.comp`) | 54 | 163 | 3.0× |
+| noun (`noun.pl`) | 79 | 163 | 2.1× |
+| verb (`verb.3sg`) | 60 | 133 | 2.2× |
+| adjective (`adjective.comp`) | 88 | 136 | 1.5× |
+| adverb (`adverb.comp`) | 49 | 130 | 2.7× |
 
 
 ## Data and license

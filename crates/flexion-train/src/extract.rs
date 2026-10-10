@@ -24,6 +24,9 @@ pub struct Lexeme {
     pub key: String,
     /// The lemma's stressed vowel, from its stressed citation form.
     pub lemma_stress: Option<usize>,
+    /// The kind of the lemma's stress mark.
+    #[serde(default)]
+    pub lemma_kind: u8,
     /// Plain attested forms per cell, in listing order, then the citation
     /// form as one extra, last cell.
     pub cells: Vec<Vec<String>>,
@@ -214,11 +217,14 @@ fn lexeme(
             }
         }
     }
-    let lemma_cell = cells.find(part.lemma.0, &part.lemma.1)?;
+    let lemma_cell = match &part.lemma {
+        Some((g, v)) => Some(cells.find(g, v)?),
+        None => None,
+    };
     if !forms
         .iter()
         .enumerate()
-        .any(|(i, f)| i != lemma_cell && i != citation_cell && !f.is_empty())
+        .any(|(i, f)| Some(i) != lemma_cell && i != citation_cell && !f.is_empty())
     {
         return None;
     }
@@ -233,19 +239,20 @@ fn lexeme(
         .find(|f| f.source.is_none() && f.tags.iter().any(|t| t == "canonical"))
         .map(|f| fold(f.form.trim()))
         .filter(same_word);
-    let written = forms
-        .get(lemma_cell)
+    let written = lemma_cell
+        .and_then(|c| forms.get(c))
         .and_then(|f| f.first().cloned())
         .filter(same_word)
         .or(canonical)
         .unwrap_or_else(|| lemma.clone());
     let full = spelling.read(&written);
     let lemma_stress = full.stress;
+    let lemma_kind = full.kind;
     let full_base = full.base.to_string();
     // Without a table, the lemma cell is the headword itself (English nouns
     // list only their plural).
     if !tables
-        && let Some(slot) = forms.get_mut(lemma_cell)
+        && let Some(slot) = lemma_cell.and_then(|c| forms.get_mut(c))
         && slot.is_empty()
     {
         slot.push(written.clone());
@@ -255,7 +262,8 @@ fn lexeme(
     }
 
     for f in &entry.forms {
-        if f.source.is_some() && cells.match_tags(&f.tags).contains(&lemma_cell) {
+        if f.source.is_some() && lemma_cell.is_some_and(|c| cells.match_tags(&f.tags).contains(&c))
+        {
             inherent_tags.extend(f.tags.iter().cloned());
         }
     }
@@ -289,6 +297,7 @@ fn lexeme(
         full: full_base,
         lemma,
         lemma_stress,
+        lemma_kind,
         cells: forms,
         inherent,
         weight: if soft_entry {

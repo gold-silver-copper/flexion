@@ -25,21 +25,30 @@ pub struct Built {
     pub report: String,
 }
 
-/// The grid each part of speech is tuned over.
-fn grid() -> Vec<Params> {
+/// The grid each part of speech is tuned over. Where edits change the start
+/// of words, also where (if anywhere) the walk reads the first letter.
+fn grid(fronts: bool) -> Vec<Params> {
+    let initials: &[Option<usize>] = if fronts {
+        &[None, Some(0), Some(2)]
+    } else {
+        &[None]
+    };
     let mut out = Vec::new();
     for alpha in [0.5, 2.0, 8.0] {
         for tau in [1.0, 2.0, 8.0] {
             for min_support in [1, 2] {
                 for depth in [None, Some(0), Some(2)] {
-                    let mut p = Params {
-                        alpha,
-                        tau,
-                        min_support,
-                        ..Params::default()
-                    };
-                    p.walk.syllable_depth = depth;
-                    out.push(p);
+                    for &initial in initials {
+                        let mut p = Params {
+                            alpha,
+                            tau,
+                            min_support,
+                            ..Params::default()
+                        };
+                        p.walk.syllable_depth = depth;
+                        p.walk.initial_depth = initial;
+                        out.push(p);
+                    }
                 }
             }
         }
@@ -52,15 +61,101 @@ fn train_one(
     shape: &Shape,
     params: Params,
     words: &[Word],
-) -> ((PosTables, Option<PosTables>), learn::Stats) {
+    chooser: &crate::edit::Chooser,
+) -> (crate::Trained, learn::Stats) {
     let sp = view(spec);
-    let restore = crate::restoration(&sp, words, params);
-    let (t, s) = learn::Learner::new(&sp, shape.clone(), params).learn(words);
-    ((t, restore), s)
+    crate::train_pos(&sp, shape, params, words, chooser, &[], &[])
 }
 
-fn blob_of(spec: &SpellingSpec, tables: Vec<(PosTables, Option<PosTables>)>) -> Vec<u8> {
+fn blob_of(spec: &SpellingSpec, tables: Vec<crate::Trained>) -> Vec<u8> {
     flexion::write::write(spec, &crate::assemble(tables))
+}
+
+/// For each cell, where to build it from when the caller gives principal
+/// parts: `k + 1` when the model of citation part `k` (that part's form as
+/// the lemma) does better on `dev` than the main model given the citation,
+/// else 0. Empty when the part of speech has no citation.
+#[allow(clippy::too_many_arguments)]
+pub fn choose_sources(
+    spec: &SpellingSpec,
+    shape: &Shape,
+    params: Params,
+    train: &[Word],
+    dev: &[Word],
+    chooser: &crate::edit::Chooser,
+    citation: &[usize],
+    markers: &[&[&str]],
+) -> Vec<u8> {
+    if citation.is_empty() {
+        return Vec::new();
+    }
+    let sp = view(spec);
+    let (base, _) = crate::train_pos(&sp, shape, params, train, chooser, &[], &[]);
+    let keep_all: Vec<bool> = (0..shape.cells).map(|c| c != shape.lemma_cell).collect();
+    let parts: Vec<(usize, Option<PosTables>)> = citation
+        .iter()
+        .map(|&c| {
+            (
+                c,
+                crate::part_model(&sp, shape, params, train, c, &keep_all),
+            )
+        })
+        .collect();
+    let built: Vec<(usize, PosTables)> = parts
+        .iter()
+        .filter_map(|(c, t)| Some((*c, t.clone()?)))
+        .collect();
+    let score = |source: u8| -> Vec<(usize, usize)> {
+        let mut main = base.main.clone();
+        main.sources = vec![source; shape.cells];
+        let trained = crate::Trained {
+            main,
+            restore: base.restore.clone(),
+            parts: built.clone(),
+        };
+        let blob = blob_of(spec, vec![trained]);
+        let Some(model) = flexion::Model::from_bytes(&blob) else {
+            return vec![(0, 0); shape.cells];
+        };
+        eval::score(
+            &sp,
+            &model,
+            0,
+            dev,
+            citation,
+            markers,
+            &shape.unscored,
+            Given::Citation,
+            false,
+        )
+        .cells
+        .iter()
+        .map(|c| (c.top1, c.n))
+        .collect()
+    };
+    let main_scores = score(0);
+    let mut best: Vec<(u8, usize)> = main_scores.iter().map(|&(t, _)| (0, t)).collect();
+    // Part models are numbered as built; sources name citation parts.
+    let mut model_index = 0u8;
+    for (k, (_, t)) in parts.iter().enumerate() {
+        if t.is_none() {
+            continue;
+        }
+        model_index = model_index.saturating_add(1);
+        let tag = u8::try_from(k.saturating_add(1)).unwrap_or(0);
+        for (cell, (top1, n)) in score(model_index).into_iter().enumerate() {
+            // A gain inside the noise doesn't count: one standard error of
+            // the main model's count, and at least one answer.
+            let p = main_scores.get(cell).map_or(0.0, |&(t, n)| ratio(t, n));
+            let margin = (n as f64 * p * (1.0 - p)).sqrt().max(1.0);
+            if let Some(b) = best.get_mut(cell)
+                && top1 as f64 > b.1 as f64 + margin
+            {
+                *b = (tag, top1);
+            }
+        }
+    }
+    best.into_iter().map(|(s, _)| s).collect()
 }
 
 /// Run `f` over `items` on up to `threads` threads, keeping order.
@@ -133,7 +228,11 @@ pub fn build(
     let mut reports = Vec::new();
     let mut final_tables = Vec::new();
     // Marks the caller may leave out: stress, macrons, ё.
-    let has_stress = lang.spelling.stress_mark.is_some() || !lang.spelling.fold.is_empty();
+    let sl = &lang.spelling;
+    let has_stress = !sl.stress_marks.is_empty()
+        || !sl.fold.is_empty()
+        || !sl.fold_marks.is_empty()
+        || !sl.unmark_marks.is_empty();
     for ((part, d), shape) in lang.parts.iter().zip(data).zip(&shapes) {
         let cells = Cells::new(lang, part)?;
         let citation: Vec<usize> = part
@@ -155,10 +254,15 @@ pub fn build(
         let test = split(&|b| b == TEST_BUCKET);
         let not_test = split(&|b| b != TEST_BUCKET);
 
+        // How each pair reads as an edit: chosen without the held-out words
+        // for every model they score, with them for the shipped one.
+        let chooser = crate::edit::Chooser::new(&sp, &not_test, shape.lemma_cell);
+        let chooser_all = crate::edit::Chooser::new(&sp, &all, shape.lemma_cell);
+
         // 1. Tune on dev.
-        let grid = grid();
+        let grid = grid(chooser.strips_fronts());
         let scores = par_map(&grid, threads, |&params| {
-            let (t, _) = train_one(&spec, shape, params, &train);
+            let (t, _) = train_one(&spec, shape, params, &train, &chooser);
             let blob = blob_of(&spec, vec![t]);
             let Some(model) = flexion::Model::from_bytes(&blob) else {
                 return (params, 0.0, blob.len(), 1);
@@ -183,15 +287,65 @@ pub fn build(
         let best = scores.iter().map(|x| x.1).fold(0.0, f64::max);
         let n = scores.first().map_or(1, |x| x.3).max(1) as f64;
         let se = (best * (1.0 - best) / n).sqrt();
-        let (params, dev_top1, _, _) = scores
+        let (mut params, mut dev_top1, _, _) = scores
             .iter()
             .copied()
             .filter(|x| x.1 >= best - se)
             .min_by_key(|x| x.2)
             .ok_or("empty grid")?;
+        // The join model, where it does better on dev: more right answers
+        // (beyond the noise, like the grid), and no fewer letters right or
+        // worse calibration.
+        {
+            let dev_score = |p: Params| -> Option<(PosScore, usize)> {
+                let (t, s) = train_one(&spec, shape, p, &train, &chooser);
+                let blob = blob_of(&spec, vec![t]);
+                let model = flexion::Model::from_bytes(&blob)?;
+                let score = eval::score(
+                    &sp,
+                    &model,
+                    0,
+                    &dev,
+                    &citation,
+                    &markers,
+                    &shape.unscored,
+                    Given::Lemma,
+                    false,
+                );
+                Some((score, s.join_prefixes))
+            };
+            let joined = Params {
+                joins: true,
+                ..params
+            };
+            if let (Some((with, prefixes)), Some((without, _))) =
+                (dev_score(joined), dev_score(params))
+                && prefixes > 0
+            {
+                let (a, b) = (with.total(&[]), without.total(&[]));
+                let top1 = ratio(a.top1, a.n);
+                let base = ratio(b.top1, b.n);
+                let se = (base * (1.0 - base) / (b.n.max(1) as f64)).sqrt();
+                let (ece_with, _) = eval::calibration(&with.calibration);
+                let (ece_without, _) = eval::calibration(&without.calibration);
+                if top1 > base + se
+                    && ratio(a.top1_letters, a.n) >= ratio(b.top1_letters, b.n)
+                    && ece_with <= ece_without
+                {
+                    params = joined;
+                    dev_top1 = top1;
+                }
+            }
+        }
+
+        // Cells built from given principal parts, where that does better.
+        let sources = choose_sources(
+            &spec, shape, params, &train, &dev, &chooser, &citation, &markers,
+        );
+        let from_parts = sources.iter().filter(|&&s| s > 0).count();
 
         // 2. Measure on the held-out tenth.
-        let (t, _) = train_one(&spec, shape, params, &not_test);
+        let (t, _) = crate::train_pos(&sp, shape, params, &not_test, &chooser, &citation, &sources);
         let blob = blob_of(&spec, vec![t]);
         let model = flexion::Model::from_bytes(&blob).ok_or("test model failed to load")?;
         let test_score = eval::score(
@@ -260,8 +414,16 @@ pub fn build(
         let errors = eval::error_groups(&sp, &test_score.misses, 3);
 
         // 3. Train on everything and score every attested word.
-        let (t, stats) = train_one(&spec, shape, params, &all);
-        let blob = blob_of(&spec, vec![t.clone()]);
+        let (t, stats) =
+            crate::train_pos(&sp, shape, params, &all, &chooser_all, &citation, &sources);
+        let blob = blob_of(
+            &spec,
+            vec![crate::Trained {
+                main: t.main.clone(),
+                restore: t.restore.clone(),
+                parts: t.parts.clone(),
+            }],
+        );
         let model = flexion::Model::from_bytes(&blob).ok_or("final model failed to load")?;
         let attested = eval::score(
             &sp,
@@ -279,12 +441,17 @@ pub fn build(
         final_tables.push(t);
 
         eprintln!(
-            "{}: {} params alpha {} tau {} syllables {:?}; dev {:.2}%, test {:.2}% ({:.0}s)",
+            "{}: {} params alpha {} tau {} support {} syllables {:?} initial {:?} joins {} ({} prefixes), {} cells from parts; dev {:.2}%, test {:.2}% ({:.0}s)",
             lang.name,
             part.name,
             params.alpha,
             params.tau,
+            params.min_support,
             params.walk.syllable_depth,
+            params.walk.initial_depth,
+            params.joins,
+            stats.join_prefixes,
+            from_parts,
             100.0 * dev_top1,
             100.0 * ratio(test_score.total(&[]).top1, test_score.total(&[]).n),
             t0.elapsed().as_secs_f64()
@@ -358,7 +525,7 @@ fn bench(model: &flexion::Model, words: &[Word], shape: &Shape, cells: &Cells) -
     let Some(p) = model.pos(0) else {
         return (0.0, String::new());
     };
-    let Some(cell) = (0..shape.cells).find(|c| !shape.unscored.contains(c)) else {
+    let Some(cell) = crate::eval::common_cell(words, shape.cells, &shape.unscored) else {
         return (0.0, String::new());
     };
     let lemmas: Vec<&str> = words.iter().map(|w| w.lemma()).take(20_000).collect();

@@ -6,36 +6,62 @@ for a compact binary model, and the queries a generated crate's typed API is bui
 
 You normally don't use this crate directly. Use a generated one:
 [`english`](https://crates.io/crates/english), [`russian`](https://crates.io/crates/russian),
-[`latin`](https://crates.io/crates/latin), [`polish`](https://crates.io/crates/polish).
+[`latin`](https://crates.io/crates/latin), [`polish`](https://crates.io/crates/polish),
+[`german`](https://crates.io/crates/german), [`ancient-greek`](https://crates.io/crates/ancient-greek),
+[`sanskrit`](https://crates.io/crates/sanskrit).
 
 ## The model
 
 Per part of speech a model holds:
 
-- **edits**: how a lemma becomes a form. An edit strips a suffix, adds a suffix, may
-  add a prefix, and says where the stress goes relative to that split (on the same
-  vowel as the lemma's, on the n-th vowel of the ending, on the stem's last vowel…);
+- **edits**: how a lemma becomes a form. An edit may strip the start of the lemma and
+  add a prefix (`λύω → ἔλυσα` adds `ἐ`, `ἀκούω → ἤκουσα` turns `ἀ` into `ἠ`), strips a
+  suffix and adds one, and says where the stress goes and with which mark: relative to
+  that split (on the same vowel as the lemma's, on the n-th vowel of the ending, on the
+  stem's last vowel…) or on the n-th syllable from the end of the word (a recessive
+  accent), with the lemma's own mark or a given one (Greek acute or circumflex);
 - **inflection classes**: one edit per cell, plus the word's inherent features
   (Russian gender and animacy, verb aspect), plus a hidden cell holding the lemma
   written in full;
 - **a suffix tree** over lemmas, walked from the last letter back to the start of the
-  word. Each node stores a probability distribution over classes. General patterns
-  live near the root; whole-word nodes hold the words that are real exceptions.
+  word (a syllable count and the word's first letter can be read at learned depths).
+  Each node stores a probability distribution over classes. General patterns live near
+  the root; whole-word nodes hold the words that are real exceptions.
 
 A query walks the word as deep as the tree goes, takes the deepest node with a class
-that fits the word (its edits' stripped suffixes must match), and applies it. Classes
-that write the same form pool their probability, which is the confidence the scored
-functions return. Citations (`"lie, lied"`) keep only classes that agree with the given
-principal parts; markers (`"кот m anim"`, `"rēx, rēgis m."`) weigh classes by the
-features they name.
+that fits the word (its edits' stripped suffixes and starts must match), and applies it.
+Classes that write the same form pool their probability, which is the confidence the
+scored functions return. A stress the caller writes on the lemma is a fact about the
+word: classes that stress their lemma elsewhere are passed over while any class agrees.
+Citations (`"lie, lied"`) keep only classes that agree with the given principal parts
+(dropping the last parts while none does); markers (`"кот m anim"`, `"rēx, rēgis m."`)
+weigh classes by the features they name.
 
-Where a language writes marks that people often leave out (Latin vowel length, Russian
-`ё`), a separate one-cell **restoration model** reads the typed lemma (`rosa`) as the
-lemma written in full (`rosa`, `rōsa`, …), each reading with a probability. Forms are
-weighed over the readings; a reading's probability counts the classes that don't fit the
-word too, so a word whose marks no reading can place gets a low confidence rather than a
-confident wrong one. A lemma typed with marks, or given with principal parts, is read
-once.
+Three further models can sit beside a part of speech's own:
+
+- a **restoration model**, where a language writes marks that people often leave out
+  (Latin and Greek vowel length, Greek breathings, Russian `ё`): a one-cell model that
+  reads the typed lemma (`rosa`) as the lemma written in full (`rosa`, `rōsa`, …), each
+  reading with a probability. Forms are weighed over the readings; a reading's
+  probability counts the classes that don't fit the word too, so a word whose marks no
+  reading can place gets a low confidence rather than a confident wrong one. A lemma
+  typed with marks, or given with principal parts, is read once;
+- **part models**, one per principal part of the citation: the same cells, learned
+  from that part instead of the lemma (`ἔλυσα → ἐλύσαμεν`). A cell is built from the
+  part model that did best on held-back words, when the caller gives that part;
+- a **join model**: prefixes that, put before an attested word, make words that
+  inflect through it (`an` + `fangen` → `fängt an`, `angefangen`), with per-cell edits
+  from the attested word's form to the joined word's. An unseen word with a known
+  prefix and an attested rest is read both ways, weighed by how often the prefix joins
+  the way its class says.
+
+## Spelling
+
+The header describes how a language writes: case folding, stress marks (one combining
+mark per kind, and the precomposed letters that carry them), letters folded for lookup
+or written plain when marks are off, letters that carry an inherent vowel (Devanagari
+consonants) and the mark that mutes it, and the diphthongs that count as one syllable.
+Lookups fold everything a caller may leave out; output writes it back.
 
 ## Guarantees
 

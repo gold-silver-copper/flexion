@@ -70,10 +70,10 @@ used for any decision.
 
 | | lemmas | cells | top-1 | letters right (marks ignored) | top-1, lemma written in full | top-3 | top-1 given citation | top-1 given citation and markers |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 2561 | 27124 | **81.39%** | 94.87% | 89.87% | 96.85% | 94.49% | 96.75% |
-| adjective | 3332 | 161121 | **90.39%** | 99.82% | 99.73% | 98.70% | – | – |
-| verb | 1251 | 19729 | **87.16%** | 96.25% | 92.72% | 96.96% | 98.05% | 98.00% |
-| pronoun ¹ | 4 | 188 | **27.13%** | 52.13% | 52.13% | 51.06% | – | – |
+| noun | 2561 | 27124 | **81.47%** | 94.86% | 92.55% | 96.87% | 94.62% | 96.94% |
+| adjective | 3332 | 161121 | **90.41%** | 99.81% | 99.78% | 98.70% | – | – |
+| verb | 1251 | 19729 | **88.05%** | 96.82% | 95.83% | 97.85% | 98.57% | 98.50% |
+| pronoun ¹ | 4 | 188 | **2.13%** | 56.38% | 27.13% | 65.43% | – | – |
 | numeral ¹ | 4 | 153 | **100.00%** | 100.00% | 100.00% | 100.00% | – | – |
 
 ¹ A closed class: too few held-out lemmas for these numbers to mean much. What matters for
@@ -92,19 +92,19 @@ those marks.
 
 | cell | n | top-1 | top-3 |
 |---|---:|---:|---:|
-| noun.nom.pl | 2419 | 83.51% | 96.98% |
-| noun.gen.sg | 2517 | 83.19% | 97.62% |
-| noun.gen.pl | 2417 | 83.12% | 96.98% |
-| noun.dat.sg | 2517 | 83.19% | 97.66% |
-| noun.dat.pl | 2419 | 83.30% | 97.68% |
-| noun.acc.sg | 2517 | 76.72% | 96.34% |
-| noun.acc.pl | 2419 | 69.20% | 91.98% |
-| noun.ins.sg | 2517 | 83.15% | 97.02% |
-| noun.ins.pl | 2419 | 83.30% | 97.68% |
-| noun.prep.sg | 2517 | 83.19% | 97.66% |
-| noun.prep.pl | 2419 | 83.30% | 97.68% |
+| noun.nom.pl | 2419 | 83.63% | 97.02% |
+| noun.gen.sg | 2517 | 83.27% | 97.66% |
+| noun.gen.pl | 2417 | 83.16% | 97.02% |
+| noun.dat.sg | 2517 | 83.27% | 97.70% |
+| noun.dat.pl | 2419 | 83.34% | 97.64% |
+| noun.acc.sg | 2517 | 76.84% | 96.42% |
+| noun.acc.pl | 2419 | 69.33% | 92.10% |
+| noun.ins.sg | 2517 | 83.23% | 97.02% |
+| noun.ins.pl | 2419 | 83.34% | 97.64% |
+| noun.prep.sg | 2517 | 83.27% | 97.70% |
+| noun.prep.pl | 2419 | 83.34% | 97.64% |
 | noun_second_case.part | 21 | 80.95% | 90.48% |
-| noun_second_case.loc | 6 | 83.33% | 100.00% |
+| noun_second_case.loc | 6 | 83.33% | 83.33% |
 | adjective.nom.m.anim | 3332 | 90.61% | 98.80% |
 | adjective.nom.f.anim | 3332 | 90.49% | 98.77% |
 | adjective.nom.f.inan | 3332 | 90.49% | 98.77% |
@@ -152,75 +152,75 @@ those marks.
 | adjective.prep.n.inan | 3332 | 90.49% | 98.77% |
 | adjective.prep.pl.anim | 3332 | 90.49% | 98.80% |
 | adjective.prep.pl.inan | 3332 | 90.49% | 98.80% |
-| short_adjective.m | 1124 | 89.86% | 97.42% |
-| short_adjective.f | 1130 | 85.75% | 96.99% |
-| short_adjective.n | 1131 | 87.09% | 97.26% |
-| short_adjective.pl | 1132 | 86.13% | 97.26% |
-| non_past.1.sg | 1244 | 86.50% | 96.46% |
-| non_past.1.pl | 1246 | 85.07% | 97.27% |
-| non_past.2.sg | 1246 | 85.07% | 97.19% |
-| non_past.2.pl | 1246 | 85.07% | 97.27% |
-| non_past.3.sg | 1249 | 85.11% | 97.28% |
-| non_past.3.pl | 1246 | 85.71% | 96.87% |
-| past.m | 1248 | 89.50% | 97.68% |
-| past.f | 1248 | 89.02% | 97.68% |
-| past.n | 1251 | 89.05% | 97.60% |
-| past.pl | 1248 | 89.10% | 97.68% |
-| imperative.sg | 1244 | 86.66% | 96.70% |
-| imperative.pl | 1244 | 86.66% | 96.62% |
+| short_adjective.m | 1124 | 89.95% | 97.42% |
+| short_adjective.f | 1130 | 86.73% | 96.90% |
+| short_adjective.n | 1131 | 88.06% | 97.17% |
+| short_adjective.pl | 1132 | 87.10% | 97.17% |
+| non_past.1.sg | 1244 | 87.78% | 97.75% |
+| non_past.1.pl | 1246 | 86.76% | 97.99% |
+| non_past.2.sg | 1246 | 86.76% | 97.91% |
+| non_past.2.pl | 1246 | 86.76% | 97.99% |
+| non_past.3.sg | 1249 | 86.71% | 98.00% |
+| non_past.3.pl | 1246 | 86.84% | 98.07% |
+| past.m | 1248 | 89.74% | 98.56% |
+| past.f | 1248 | 89.50% | 98.64% |
+| past.n | 1251 | 89.37% | 98.56% |
+| past.pl | 1248 | 89.42% | 98.64% |
+| imperative.sg | 1244 | 88.18% | 97.91% |
+| imperative.pl | 1244 | 88.18% | 97.99% |
 | participle.pres.act | 728 | 85.03% | 94.23% |
-| participle.past.act | 1246 | 90.13% | 97.75% |
-| participle.pres.pass | 412 | 87.86% | 95.63% |
-| participle.past.pass | 418 | 85.41% | 95.22% |
-| gerund.pres | 717 | 85.77% | 94.84% |
-| gerund.past | 1248 | 89.98% | 97.28% |
-| pronoun.nom.m.anim | 4 | 75.00% | 75.00% |
-| pronoun.nom.f.anim | 4 | 25.00% | 50.00% |
-| pronoun.nom.f.inan | 4 | 25.00% | 50.00% |
-| pronoun.nom.n.anim | 4 | 25.00% | 50.00% |
-| pronoun.nom.n.inan | 4 | 25.00% | 50.00% |
-| pronoun.nom.pl.anim | 4 | 25.00% | 50.00% |
-| pronoun.nom.pl.inan | 4 | 25.00% | 50.00% |
-| pronoun.gen.m.anim | 4 | 25.00% | 50.00% |
-| pronoun.gen.m.inan | 4 | 25.00% | 50.00% |
-| pronoun.gen.f.anim | 4 | 25.00% | 50.00% |
-| pronoun.gen.f.inan | 4 | 25.00% | 50.00% |
-| pronoun.gen.n.anim | 4 | 25.00% | 50.00% |
-| pronoun.gen.n.inan | 4 | 25.00% | 50.00% |
-| pronoun.gen.pl.anim | 4 | 25.00% | 50.00% |
-| pronoun.gen.pl.inan | 4 | 25.00% | 50.00% |
-| pronoun.dat.m.anim | 4 | 25.00% | 50.00% |
-| pronoun.dat.m.inan | 4 | 25.00% | 50.00% |
-| pronoun.dat.f.anim | 4 | 25.00% | 50.00% |
-| pronoun.dat.f.inan | 4 | 25.00% | 50.00% |
-| pronoun.dat.n.anim | 4 | 25.00% | 50.00% |
-| pronoun.dat.n.inan | 4 | 25.00% | 50.00% |
-| pronoun.dat.pl.anim | 4 | 25.00% | 50.00% |
-| pronoun.dat.pl.inan | 4 | 25.00% | 50.00% |
-| pronoun.acc.m.anim | 4 | 25.00% | 50.00% |
-| pronoun.acc.m.inan | 4 | 75.00% | 75.00% |
-| pronoun.acc.f.anim | 4 | 25.00% | 50.00% |
-| pronoun.acc.f.inan | 4 | 25.00% | 50.00% |
-| pronoun.acc.n.anim | 4 | 25.00% | 50.00% |
-| pronoun.acc.n.inan | 4 | 25.00% | 50.00% |
-| pronoun.acc.pl.anim | 4 | 25.00% | 50.00% |
-| pronoun.acc.pl.inan | 4 | 25.00% | 50.00% |
-| pronoun.ins.m.anim | 4 | 25.00% | 50.00% |
-| pronoun.ins.m.inan | 4 | 25.00% | 50.00% |
-| pronoun.ins.f.anim | 4 | 25.00% | 50.00% |
-| pronoun.ins.f.inan | 4 | 25.00% | 50.00% |
-| pronoun.ins.n.anim | 4 | 25.00% | 50.00% |
-| pronoun.ins.n.inan | 4 | 25.00% | 50.00% |
-| pronoun.ins.pl.anim | 4 | 25.00% | 50.00% |
-| pronoun.ins.pl.inan | 4 | 25.00% | 50.00% |
-| pronoun.prep.m.anim | 4 | 25.00% | 50.00% |
-| pronoun.prep.m.inan | 4 | 25.00% | 50.00% |
-| pronoun.prep.f.anim | 4 | 25.00% | 50.00% |
-| pronoun.prep.f.inan | 4 | 25.00% | 50.00% |
-| pronoun.prep.n.anim | 4 | 25.00% | 50.00% |
-| pronoun.prep.n.inan | 4 | 25.00% | 50.00% |
-| pronoun.prep.pl.anim | 4 | 25.00% | 50.00% |
-| pronoun.prep.pl.inan | 4 | 25.00% | 50.00% |
+| participle.past.act | 1246 | 90.37% | 98.64% |
+| participle.pres.pass | 412 | 87.86% | 95.87% |
+| participle.past.pass | 418 | 86.84% | 96.17% |
+| gerund.pres | 717 | 85.63% | 94.98% |
+| gerund.past | 1248 | 89.90% | 98.16% |
+| pronoun.nom.m.anim | 4 | 0.00% | 75.00% |
+| pronoun.nom.f.anim | 4 | 0.00% | 75.00% |
+| pronoun.nom.f.inan | 4 | 0.00% | 75.00% |
+| pronoun.nom.n.anim | 4 | 25.00% | 75.00% |
+| pronoun.nom.n.inan | 4 | 25.00% | 75.00% |
+| pronoun.nom.pl.anim | 4 | 0.00% | 50.00% |
+| pronoun.nom.pl.inan | 4 | 0.00% | 50.00% |
+| pronoun.gen.m.anim | 4 | 0.00% | 75.00% |
+| pronoun.gen.m.inan | 4 | 0.00% | 75.00% |
+| pronoun.gen.f.anim | 4 | 0.00% | 75.00% |
+| pronoun.gen.f.inan | 4 | 0.00% | 75.00% |
+| pronoun.gen.n.anim | 4 | 0.00% | 75.00% |
+| pronoun.gen.n.inan | 4 | 0.00% | 75.00% |
+| pronoun.gen.pl.anim | 4 | 0.00% | 50.00% |
+| pronoun.gen.pl.inan | 4 | 0.00% | 50.00% |
+| pronoun.dat.m.anim | 4 | 0.00% | 75.00% |
+| pronoun.dat.m.inan | 4 | 0.00% | 75.00% |
+| pronoun.dat.f.anim | 4 | 0.00% | 75.00% |
+| pronoun.dat.f.inan | 4 | 0.00% | 75.00% |
+| pronoun.dat.n.anim | 4 | 0.00% | 75.00% |
+| pronoun.dat.n.inan | 4 | 0.00% | 75.00% |
+| pronoun.dat.pl.anim | 4 | 0.00% | 50.00% |
+| pronoun.dat.pl.inan | 4 | 0.00% | 50.00% |
+| pronoun.acc.m.anim | 4 | 0.00% | 75.00% |
+| pronoun.acc.m.inan | 4 | 0.00% | 75.00% |
+| pronoun.acc.f.anim | 4 | 0.00% | 75.00% |
+| pronoun.acc.f.inan | 4 | 0.00% | 75.00% |
+| pronoun.acc.n.anim | 4 | 25.00% | 75.00% |
+| pronoun.acc.n.inan | 4 | 25.00% | 75.00% |
+| pronoun.acc.pl.anim | 4 | 0.00% | 50.00% |
+| pronoun.acc.pl.inan | 4 | 0.00% | 50.00% |
+| pronoun.ins.m.anim | 4 | 0.00% | 50.00% |
+| pronoun.ins.m.inan | 4 | 0.00% | 50.00% |
+| pronoun.ins.f.anim | 4 | 0.00% | 50.00% |
+| pronoun.ins.f.inan | 4 | 0.00% | 50.00% |
+| pronoun.ins.n.anim | 4 | 0.00% | 50.00% |
+| pronoun.ins.n.inan | 4 | 0.00% | 50.00% |
+| pronoun.ins.pl.anim | 4 | 0.00% | 50.00% |
+| pronoun.ins.pl.inan | 4 | 0.00% | 50.00% |
+| pronoun.prep.m.anim | 4 | 0.00% | 75.00% |
+| pronoun.prep.m.inan | 4 | 0.00% | 75.00% |
+| pronoun.prep.f.anim | 4 | 0.00% | 75.00% |
+| pronoun.prep.f.inan | 4 | 0.00% | 75.00% |
+| pronoun.prep.n.anim | 4 | 0.00% | 75.00% |
+| pronoun.prep.n.inan | 4 | 0.00% | 75.00% |
+| pronoun.prep.pl.anim | 4 | 0.00% | 50.00% |
+| pronoun.prep.pl.inan | 4 | 0.00% | 50.00% |
 | numeral.nom.m.anim | 3 | 100.00% | 100.00% |
 | numeral.nom.f.anim | 3 | 100.00% | 100.00% |
 | numeral.nom.f.inan | 3 | 100.00% | 100.00% |
@@ -277,10 +277,10 @@ The shipped model, trained on everything, asked for every attested cell of every
 
 | | lemmas | cells | primary form from the plain call | every attested form among the answers |
 |---|---:|---:|---:|---:|
-| noun | 25324 | 268653 | **99.81%** | 99.79% |
+| noun | 25324 | 268653 | **99.80%** | 99.79% |
 | adjective | 33309 | 1609945 | **99.83%** | 99.49% |
 | verb | 12304 | 192707 | **99.83%** | 99.96% |
-| pronoun | 42 | 1974 | **100.00%** | 99.95% |
+| pronoun | 42 | 1974 | **100.00%** | 100.00% |
 | numeral | 77 | 2986 | **100.00%** | 100.00% |
 
 ### Calibration
@@ -290,25 +290,25 @@ Expected calibration error (ECE) is the average gap between confidence and accur
 
 | | ECE |
 |---|---:|
-| noun | 0.030 |
-| adjective | 0.034 |
-| verb | 0.040 |
-| pronoun | 0.435 |
+| noun | 0.029 |
+| adjective | 0.033 |
+| verb | 0.037 |
+| pronoun | 0.699 |
 | numeral | 0.089 |
 
 All parts of speech together (ECE 0.032):
 
 | confidence | mean confidence | accuracy | answers |
 |---|---:|---:|---:|
-| 0.1–0.2 | 0.186 | 0.000 | 1 |
-| 0.2–0.3 | 0.274 | 0.383 | 60 |
-| 0.3–0.4 | 0.366 | 0.432 | 785 |
-| 0.4–0.5 | 0.463 | 0.570 | 2466 |
-| 0.5–0.6 | 0.550 | 0.545 | 9792 |
-| 0.6–0.7 | 0.654 | 0.773 | 16095 |
-| 0.7–0.8 | 0.751 | 0.794 | 15450 |
-| 0.8–0.9 | 0.852 | 0.848 | 25449 |
-| 0.9–1.0 | 0.980 | 0.953 | 138217 |
+| 0.1–0.2 | 0.185 | 0.000 | 1 |
+| 0.2–0.3 | 0.274 | 0.393 | 56 |
+| 0.3–0.4 | 0.364 | 0.443 | 756 |
+| 0.4–0.5 | 0.463 | 0.557 | 2601 |
+| 0.5–0.6 | 0.550 | 0.555 | 9862 |
+| 0.6–0.7 | 0.655 | 0.779 | 15941 |
+| 0.7–0.8 | 0.751 | 0.795 | 15765 |
+| 0.8–0.9 | 0.852 | 0.843 | 25624 |
+| 0.9–1.0 | 0.979 | 0.955 | 137709 |
 
 ### Forms many words lack
 
@@ -318,8 +318,8 @@ how often the answer to "does this word have one?" is right.
 | | held-out cells | right | attested cells | right |
 |---|---:|---:|---:|---:|
 | noun | 5122 | 99.43% | 50648 | 99.98% |
-| adjective | 13328 | 94.33% | 133236 | 99.79% |
-| verb | 7506 | 88.70% | 73824 | 99.67% |
+| adjective | 13328 | 94.39% | 133236 | 99.71% |
+| verb | 7506 | 88.85% | 73824 | 99.67% |
 
 ### Inherent features
 
@@ -327,9 +327,9 @@ Predicted for held-out lemmas from the bare lemma.
 
 | feature | lemmas | right |
 |---|---:|---:|
-| noun gender | 2559 | 97.19% |
-| noun animacy | 2559 | 82.53% |
-| verb aspect | 1251 | 77.46% |
+| noun gender | 2559 | 97.23% |
+| noun animacy | 2559 | 82.61% |
+| verb aspect | 1251 | 73.70% |
 
 ### Made-up words
 
@@ -337,10 +337,10 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 | word | function | answers |
 |---|---|---|
-| `кракозябра` | noun | nom.sg: кракозя́бра 0.75, крако́зябра 0.24; nom.pl: кракозя́бры 0.76, крако́зябры 0.24; gen.sg: кракозя́бры 0.75, крако́зябры 0.24; gen.pl: кракозя́бр 0.76, крако́зябр 0.24; dat.sg: кракозя́бре 0.75, крако́зябре 0.24; dat.pl: кракозя́брам 0.76, крако́зябрам 0.24; acc.sg: кракозя́бру 0.75, крако́зябру 0.24; acc.pl: кракозя́бры 0.72, крако́зябры 0.24; ins.sg: кракозя́брой 0.50, кракозя́брою 0.25; ins.pl: кракозя́брами 0.76, крако́зябрами 0.24; prep.sg: кракозя́бре 0.75, крако́зябре 0.24; prep.pl: кракозя́брах 0.76, крако́зябрах 0.24 |
+| `кракозябра` | noun | nom.sg: кракозя́бра 0.74, крако́зябра 0.24; nom.pl: кракозя́бры 0.75, крако́зябры 0.24; gen.sg: кракозя́бры 0.74, крако́зябры 0.24; gen.pl: кракозя́бр 0.76, крако́зябр 0.24; dat.sg: кракозя́бре 0.74, крако́зябре 0.24; dat.pl: кракозя́брам 0.75, крако́зябрам 0.24; acc.sg: кракозя́бру 0.74, крако́зябру 0.24; acc.pl: кракозя́бры 0.72, крако́зябры 0.24; ins.sg: кракозя́брой 0.49, кракозя́брою 0.25; ins.pl: кракозя́брами 0.75, крако́зябрами 0.24; prep.sg: кракозя́бре 0.74, крако́зябре 0.24; prep.pl: кракозя́брах 0.75, крако́зябрах 0.24 |
 | `глокость` | noun | nom.sg: гло́кость 1.00; nom.pl: гло́кости 1.00; gen.sg: гло́кости 1.00; gen.pl: гло́костей 0.96; dat.sg: гло́кости 1.00; dat.pl: гло́костям 0.96; acc.sg: гло́кость 1.00; acc.pl: гло́кости 1.00; ins.sg: гло́костью 1.00; ins.pl: гло́костями 0.96; prep.sg: гло́кости 1.00; prep.pl: гло́костях 0.96 |
 | `бокр` | noun | nom.sg: бо́кр 0.85, бокр 0.15; nom.pl: бо́кры 0.85, бокры 0.13; gen.sg: бо́кра 0.85, бокра 0.15; gen.pl: бо́кров 0.85, бокров 0.13; dat.sg: бо́кру 0.85, бокру 0.15; dat.pl: бо́крам 0.85, бокрам 0.13; acc.sg: бо́кр 0.56, бо́кра 0.29; acc.pl: бо́кры 0.56, бо́кров 0.29; ins.sg: бо́кром 0.85, бокром 0.15; ins.pl: бо́крами 0.85, бокрами 0.13; prep.sg: бо́кре 0.85, бокре 0.15; prep.pl: бо́крах 0.85, бокрах 0.13 |
-| `бокрёнок` | noun | nom.sg: бокрёнок 1.00; nom.pl: бокря́та 0.87, бокрёнки́ 0.10; gen.sg: бокрёнка 0.90, бокрёнка́ 0.10; gen.pl: бокря́т 0.87, бокрёнко́в 0.10; dat.sg: бокрёнку 0.90, бокрёнку́ 0.10; dat.pl: бокря́там 0.87, бокрёнка́м 0.10; acc.sg: бокрёнка 0.86; acc.pl: бокря́т 0.86; ins.sg: бокрёнком 0.90, бокрёнко́м 0.10; ins.pl: бокря́тами 0.87, бокрёнка́ми 0.10; prep.sg: бокрёнке 0.90, бокрёнке́ 0.10; prep.pl: бокря́тах 0.87, бокрёнка́х 0.10 |
+| `бокрёнок` | noun | nom.sg: бокрёнок 1.00; nom.pl: бокря́та 0.97; gen.sg: бокрёнка 1.00; gen.pl: бокря́т 0.97; dat.sg: бокрёнку 1.00; dat.pl: бокря́там 0.97; acc.sg: бокрёнка 0.97; acc.pl: бокря́т 0.96; ins.sg: бокрёнком 1.00; ins.pl: бокря́тами 0.97; prep.sg: бокрёнке 1.00; prep.pl: бокря́тах 0.97 |
 | `куздрый` | adjective | nom.m.anim: ку́здрый 1.00; nom.m.inan: ку́здрый 1.00; nom.f.anim: ку́здрая 1.00; nom.f.inan: ку́здрая 1.00; nom.n.anim: ку́здрое 1.00; nom.n.inan: ку́здрое 1.00; nom.pl.anim: ку́здрые 1.00; nom.pl.inan: ку́здрые 1.00; gen.m.anim: ку́здрого 1.00; gen.m.inan: ку́здрого 1.00; gen.f.anim: ку́здрой 1.00; gen.f.inan: ку́здрой 1.00; gen.n.anim: ку́здрого 1.00; gen.n.inan: ку́здрого 1.00; gen.pl.anim: ку́здрых 1.00; gen.pl.inan: ку́здрых 1.00; dat.m.anim: ку́здрому 1.00; dat.m.inan: ку́здрому 1.00; dat.f.anim: ку́здрой 1.00; dat.f.inan: ку́здрой 1.00; dat.n.anim: ку́здрому 1.00; dat.n.inan: ку́здрому 1.00; dat.pl.anim: ку́здрым 1.00; dat.pl.inan: ку́здрым 1.00; acc.m.anim: ку́здрого 1.00; acc.m.inan: ку́здрый 1.00; acc.f.anim: ку́здрую 1.00; acc.f.inan: ку́здрую 1.00; acc.n.anim: ку́здрое 1.00; acc.n.inan: ку́здрое 1.00; acc.pl.anim: ку́здрых 1.00; acc.pl.inan: ку́здрые 1.00; ins.m.anim: ку́здрым 1.00; ins.m.inan: ку́здрым 1.00; ins.f.anim: ку́здрой 0.67, ку́здрою 0.33; ins.f.inan: ку́здрой 0.67, ку́здрою 0.33; ins.n.anim: ку́здрым 1.00; ins.n.inan: ку́здрым 1.00; ins.pl.anim: ку́здрыми 1.00; ins.pl.inan: ку́здрыми 1.00; prep.m.anim: ку́здром 1.00; prep.m.inan: ку́здром 1.00; prep.f.anim: ку́здрой 1.00; prep.f.inan: ку́здрой 1.00; prep.n.anim: ку́здром 1.00; prep.n.inan: ку́здром 1.00; prep.pl.anim: ку́здрых 1.00; prep.pl.inan: ку́здрых 1.00 |
 | `будлануть` | non_past | 1.sg: будлану́ 0.93; 1.pl: будланём 0.86, будла́нем 0.14; 2.sg: будланёшь 0.86, будла́нешь 0.14; 2.pl: будланёте 0.86, будла́нете 0.14; 3.sg: будланёт 0.86, будла́нет 0.14; 3.pl: будлану́т 0.86, будла́нут 0.14 |
 | `бузять` | non_past | 1.sg: буозьму́ 0.70, бузя́ю 0.29; 1.pl: буозьмём 0.70, бузя́ем 0.29; 2.sg: буозьмёшь 0.70, бузя́ешь 0.29; 2.pl: буозьмёте 0.70, бузя́ете 0.29; 3.sg: буозьмёт 0.70, бузя́ет 0.29; 3.pl: буозьму́т 0.70, бузя́ют 0.29 |
@@ -350,18 +350,18 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 <details><summary>noun</summary>
 
-- 360 × `noun.prep.sg`: right letters, wrong stress — абьюзерша → абьюзе́рше (attested абью́зерше); айсберг → айсбе́рге (attested а́йсберге); алеф → але́фе (attested а́лефе)
-- 360 × `noun.gen.sg`: right letters, wrong stress — абьюзерша → абьюзе́рши (attested абью́зерши); айсберг → айсбе́рга (attested а́йсберга); алеф → але́фа (attested а́лефа)
-- 360 × `noun.dat.sg`: right letters, wrong stress — абьюзерша → абьюзе́рше (attested абью́зерше); айсберг → айсбе́ргу (attested а́йсбергу); алеф → але́фу (attested а́лефу)
-- 349 × `noun.prep.pl`: right letters, wrong stress — абьюзерша → абьюзе́ршах (attested абью́зершах); айсберг → айсбе́ргах (attested а́йсбергах); алеф → але́фах (attested а́лефах)
-- 349 × `noun.dat.pl`: right letters, wrong stress — абьюзерша → абьюзе́ршам (attested абью́зершам); айсберг → айсбе́ргам (attested а́йсбергам); алеф → але́фам (attested а́лефам)
-- 349 × `noun.ins.pl`: right letters, wrong stress — абьюзерша → абьюзе́ршами (attested абью́зершами); айсберг → айсбе́ргами (attested а́йсбергами); алеф → але́фами (attested а́лефами)
-- 330 × `noun.ins.sg`: right letters, wrong stress — абьюзерша → абьюзе́ршей (attested абью́зершей); айсберг → айсбе́ргом (attested а́йсбергом); алеф → але́фом (attested а́лефом)
-- 321 × `noun.nom.pl`: right letters, wrong stress — абьюзерша → абьюзе́рши (attested абью́зерши); айсберг → айсбе́рги (attested а́йсберги); алеф → але́фы (attested а́лефы)
-- 307 × `noun.gen.pl`: right letters, wrong stress — абьюзерша → абьюзе́рш (attested абью́зерш); айсберг → айсбе́ргов (attested а́йсбергов); алеф → але́фов (attested а́лефов)
-- 289 × `noun.acc.sg`: right letters, wrong stress — абьюзерша → абьюзе́ршу (attested абью́зершу); айсберг → айсбе́рг (attested а́йсберг); алеф → але́ф (attested а́леф)
-- 238 × `noun.acc.pl`: right letters, wrong stress — абьюзерша → абьюзе́рш (attested абью́зерш); алеф → але́фы (attested а́лефы); аллель → а́ллели (attested алле́ли)
-- 143 × `noun.acc.sg`: predicted `-+`, attested `-+а` — аббат → абба́т (attested абба́та); адвокат → адвока́т (attested адвока́та); адресат → адреса́т (attested адреса́та)
+- 358 × `noun.prep.sg`: right letters, wrong stress — абьюзерша → абьюзе́рше (attested абью́зерше); айсберг → айсбе́рге (attested а́йсберге); алеф → але́фе (attested а́лефе)
+- 358 × `noun.dat.sg`: right letters, wrong stress — абьюзерша → абьюзе́рше (attested абью́зерше); айсберг → айсбе́ргу (attested а́йсбергу); алеф → але́фу (attested а́лефу)
+- 357 × `noun.gen.sg`: right letters, wrong stress — абьюзерша → абьюзе́рши (attested абью́зерши); айсберг → айсбе́рга (attested а́йсберга); алеф → але́фа (attested а́лефа)
+- 348 × `noun.prep.pl`: right letters, wrong stress — абьюзерша → абьюзе́ршах (attested абью́зершах); айсберг → айсбе́ргах (attested а́йсбергах); алеф → але́фах (attested а́лефах)
+- 348 × `noun.dat.pl`: right letters, wrong stress — абьюзерша → абьюзе́ршам (attested абью́зершам); айсберг → айсбе́ргам (attested а́йсбергам); алеф → але́фам (attested а́лефам)
+- 348 × `noun.ins.pl`: right letters, wrong stress — абьюзерша → абьюзе́ршами (attested абью́зершами); айсберг → айсбе́ргами (attested а́йсбергами); алеф → але́фами (attested а́лефами)
+- 328 × `noun.ins.sg`: right letters, wrong stress — абьюзерша → абьюзе́ршей (attested абью́зершей); айсберг → айсбе́ргом (attested а́йсбергом); алеф → але́фом (attested а́лефом)
+- 317 × `noun.nom.pl`: right letters, wrong stress — абьюзерша → абьюзе́рши (attested абью́зерши); айсберг → айсбе́рги (attested а́йсберги); алеф → але́фы (attested а́лефы)
+- 305 × `noun.gen.pl`: right letters, wrong stress — абьюзерша → абьюзе́рш (attested абью́зерш); айсберг → айсбе́ргов (attested а́йсбергов); алеф → але́фов (attested а́лефов)
+- 288 × `noun.acc.sg`: right letters, wrong stress — абьюзерша → абьюзе́ршу (attested абью́зершу); айсберг → айсбе́рг (attested а́йсберг); алеф → але́ф (attested а́леф)
+- 236 × `noun.acc.pl`: right letters, wrong stress — абьюзерша → абьюзе́рш (attested абью́зерш); алеф → але́фы (attested а́лефы); аллель → а́ллели (attested алле́ли)
+- 140 × `noun.acc.sg`: predicted `-+`, attested `-+а` — аббат → абба́т (attested абба́та); адвокат → адвока́т (attested адвока́та); адресат → адреса́т (attested адреса́та)
 
 </details>
 
@@ -384,35 +384,35 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 <details><summary>verb</summary>
 
-- 124 × `past.f`: right letters, wrong stress — бабахнуть → бабахну́ла (attested баба́хнула); взять → взя́ла (attested взяла́); вливаться → вливалась (attested влива́лась)
-- 123 × `past.pl`: right letters, wrong stress — бабахнуть → бабахну́ли (attested баба́хнули); вливаться → вливались (attested влива́лись); влиться → вли́лись (attested влили́сь)
-- 123 × `past.n`: right letters, wrong stress — бабахнуть → бабахну́ло (attested баба́хнуло); вливаться → вливалось (attested влива́лось); влиться → вли́лось (attested влило́сь)
-- 115 × `past.m`: right letters, wrong stress — бабахнуть → бабахну́л (attested баба́хнул); вливаться → вливался (attested влива́лся); восхитить → восхи́тил (attested восхити́л)
-- 111 × `non_past.3.pl`: right letters, wrong stress — брыкнуть → бры́кнут (attested брыкну́т); вихрить → ви́хрят (attested вихря́т); вливаться → вливаются (attested влива́ются)
-- 108 × `gerund.past`: right letters, wrong stress — вливаться → вливавшись (attested влива́вшись); восхитить → восхи́тив (attested восхити́в); всыпать → всыпа́в (attested всы́пав)
-- 107 × `participle.past.act`: right letters, wrong stress — бабахнуть → бабахну́вший (attested баба́хнувший); брыкнуть → бры́кнувший (attested брыкну́вший); вливаться → вливавшийся (attested влива́вшийся)
-- 103 × `non_past.1.sg`: right letters, wrong stress — брыкнуть → бры́кну (attested брыкну́); вливаться → вливаюсь (attested влива́юсь); восхитить → восхи́щу (attested восхищу́)
-- 102 × `non_past.1.pl`: right letters, wrong stress — вихрить → ви́хрим (attested вихри́м); вливаться → вливаемся (attested влива́емся); восхитить → восхи́тим (attested восхити́м)
-- 102 × `non_past.2.pl`: right letters, wrong stress — вихрить → ви́хрите (attested вихри́те); вливаться → вливаетесь (attested влива́етесь); восхитить → восхи́тите (attested восхити́те)
-- 101 × `non_past.2.sg`: right letters, wrong stress — вихрить → ви́хришь (attested вихри́шь); вливаться → вливаешься (attested влива́ешься); восхитить → восхи́тишь (attested восхити́шь)
-- 101 × `non_past.3.sg`: right letters, wrong stress — вихрить → ви́хрит (attested вихри́т); вливаться → вливается (attested влива́ется); восхитить → восхи́тит (attested восхити́т)
+- 120 × `past.pl`: right letters, wrong stress — бабахнуть → бабахну́ли (attested баба́хнули); вливаться → вливались (attested влива́лись); влиться → вли́лись (attested влили́сь)
+- 120 × `past.n`: right letters, wrong stress — бабахнуть → бабахну́ло (attested баба́хнуло); вливаться → вливалось (attested влива́лось); влиться → вли́лось (attested влило́сь)
+- 119 × `past.f`: right letters, wrong stress — бабахнуть → бабахну́ла (attested баба́хнула); взять → взя́ла (attested взяла́); вливаться → вливалась (attested влива́лась)
+- 112 × `past.m`: right letters, wrong stress — бабахнуть → бабахну́л (attested баба́хнул); вливаться → вливался (attested влива́лся); восхитить → восхи́тил (attested восхити́л)
+- 110 × `non_past.3.pl`: right letters, wrong stress — брыкнуть → бры́кнут (attested брыкну́т); вихрить → ви́хрят (attested вихря́т); вливаться → вливаются (attested влива́ются)
+- 105 × `gerund.past`: right letters, wrong stress — вливаться → вливавшись (attested влива́вшись); восхитить → восхи́тив (attested восхити́в); втыкать → вты́кав (attested втыка́в)
+- 104 × `participle.past.act`: right letters, wrong stress — бабахнуть → бабахну́вший (attested баба́хнувший); брыкнуть → бры́кнувший (attested брыкну́вший); вливаться → вливавшийся (attested влива́вшийся)
+- 101 × `non_past.1.sg`: right letters, wrong stress — брыкнуть → бры́кну (attested брыкну́); вливаться → вливаюсь (attested влива́юсь); восхитить → восхи́щу (attested восхищу́)
+- 94 × `non_past.1.pl`: right letters, wrong stress — вихрить → ви́хрим (attested вихри́м); вливаться → вливаемся (attested влива́емся); восхитить → восхи́тим (attested восхити́м)
+- 94 × `non_past.2.pl`: right letters, wrong stress — вихрить → ви́хрите (attested вихри́те); вливаться → вливаетесь (attested влива́етесь); восхитить → восхи́тите (attested восхити́те)
+- 93 × `non_past.2.sg`: right letters, wrong stress — вихрить → ви́хришь (attested вихри́шь); вливаться → вливаешься (attested влива́ешься); восхитить → восхи́тишь (attested восхити́шь)
+- 93 × `non_past.3.sg`: right letters, wrong stress — вихрить → ви́хрит (attested вихри́т); вливаться → вливается (attested влива́ется); восхитить → восхи́тит (attested восхити́т)
 
 </details>
 
 <details><summary>pronoun</summary>
 
-- 2 × `pronoun.gen.f.anim`: predicted `-+ей`, attested `-й+ей` — кой → ко́йей (attested ко́ей); свой → сво́йей (attested свое́й)
-- 2 × `pronoun.gen.f.inan`: predicted `-+ей`, attested `-й+ей` — кой → ко́йей (attested ко́ей); свой → сво́йей (attested свое́й)
-- 2 × `pronoun.gen.n.anim`: predicted `-+его`, attested `-й+его` — кой → ко́йего (attested ко́его); свой → сво́йего (attested своего́)
-- 2 × `pronoun.gen.n.inan`: predicted `-+его`, attested `-й+его` — кой → ко́йего (attested ко́его); свой → сво́йего (attested своего́)
-- 2 × `pronoun.gen.pl.anim`: predicted `-+их`, attested `-й+их` — кой → ко́йих (attested ко́их); свой → сво́йих (attested свои́х)
-- 2 × `pronoun.gen.pl.inan`: predicted `-+их`, attested `-й+их` — кой → ко́йих (attested ко́их); свой → сво́йих (attested свои́х)
-- 2 × `pronoun.dat.m.anim`: predicted `-+ему`, attested `-й+ему` — кой → ко́йему (attested ко́ему); свой → сво́йему (attested своему́)
-- 2 × `pronoun.dat.m.inan`: predicted `-+ему`, attested `-й+ему` — кой → ко́йему (attested ко́ему); свой → сво́йему (attested своему́)
-- 2 × `pronoun.dat.f.anim`: predicted `-+ей`, attested `-й+ей` — кой → ко́йей (attested ко́ей); свой → сво́йей (attested свое́й)
-- 2 × `pronoun.dat.f.inan`: predicted `-+ей`, attested `-й+ей` — кой → ко́йей (attested ко́ей); свой → сво́йей (attested свое́й)
-- 2 × `pronoun.dat.n.anim`: predicted `-+ему`, attested `-й+ему` — кой → ко́йему (attested ко́ему); свой → сво́йему (attested своему́)
-- 2 × `pronoun.dat.n.inan`: predicted `-+ему`, attested `-й+ему` — кой → ко́йему (attested ко́ему); свой → сво́йему (attested своему́)
+- 4 × `pronoun.nom.m.anim`: right letters, wrong stress — кой → ко́й (attested кой); некоторый → некото́рый (attested не́который); свой → сво́й (attested свой)
+- 4 × `pronoun.acc.m.inan`: right letters, wrong stress — кой → ко́й (attested кой); некоторый → некото́рый (attested не́который); свой → сво́й (attested свой)
+- 2 × `pronoun.gen.f.anim`: predicted `-+`, attested `-й+ей` — кой → ко́й (attested ко́ей); свой → сво́й (attested свое́й)
+- 2 × `pronoun.gen.f.anim`: right letters, wrong stress — некоторый → некото́рой (attested не́которой); эдакий → эда́кой (attested э́дакой)
+- 2 × `pronoun.gen.f.inan`: predicted `-+`, attested `-й+ей` — кой → ко́й (attested ко́ей); свой → сво́й (attested свое́й)
+- 2 × `pronoun.gen.f.inan`: right letters, wrong stress — некоторый → некото́рой (attested не́которой); эдакий → эда́кой (attested э́дакой)
+- 2 × `pronoun.gen.n.anim`: predicted `-й+го`, attested `-й+его` — кой → ко́го (attested ко́его); свой → сво́го (attested своего́)
+- 2 × `pronoun.gen.n.anim`: right letters, wrong stress — некоторый → некото́рого (attested не́которого); эдакий → эда́кого (attested э́дакого)
+- 2 × `pronoun.gen.n.inan`: predicted `-й+го`, attested `-й+его` — кой → ко́го (attested ко́его); свой → сво́го (attested своего́)
+- 2 × `pronoun.gen.n.inan`: right letters, wrong stress — некоторый → некото́рого (attested не́которого); эдакий → эда́кого (attested э́дакого)
+- 2 × `pronoun.gen.pl.anim`: predicted `-ой+ых`, attested `-й+их` — кой → кы́х (attested ко́их); свой → свы́х (attested свои́х)
+- 2 × `pronoun.gen.pl.anim`: right letters, wrong stress — некоторый → некото́рых (attested не́которых); эдакий → эда́ких (attested э́даких)
 
 </details>
 
@@ -423,15 +423,15 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 4569 KB (1941 KB gzipped).
+The model is 7155 KB (2851 KB gzipped).
 
 | | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 2785 | 1792 | 26121 | 1854 | 221603 | 560 (`noun.nom.pl`) |
-| adjective | 521 | 442 | 12818 | 713 | 70380 | 584 (`adjective.nom.m.anim`) |
-| verb | 3204 | 2142 | 9643 | 1865 | 84437 | 278 (`non_past.1.sg`) |
-| pronoun | 277 | 59 | 31 | 16 | 360 | 155 (`pronoun.nom.m.anim`) |
-| numeral | 102 | 45 | 36 | 18 | 307 | 281 (`numeral.nom.m.anim`) |
+| noun | 2670 | 1801 | 26223 | 1921 | 223302 | 400 (`noun.gen.sg`) |
+| adjective | 477 | 421 | 12821 | 716 | 70327 | 432 (`adjective.nom.m.anim`) |
+| verb | 9485 | 2023 | 15884 | 1872 | 79472 | 511 (`past.n`) |
+| pronoun | 242 | 57 | 41 | 23 | 469 | 146 (`pronoun.nom.m.anim`) |
+| numeral | 102 | 45 | 39 | 20 | 319 | 193 (`numeral.nom.pl.anim`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
@@ -442,9 +442,9 @@ release build, fastest of seven runs.
 | | smoothing α | pruning τ | suffix support | syllable token | dev top-1 |
 |---|---:|---:|---:|---|---:|
 | noun | 2 | 1 | 1 | after 2 letters | 82.67% |
-| adjective | 0.5 | 1 | 1 | after 2 letters | 90.01% |
-| verb | 0.5 | 1 | 1 | none | 85.93% |
-| pronoun | 0.5 | 8 | 1 | after 0 letters | 43.97% |
+| adjective | 0.5 | 1 | 1 | after 2 letters | 90.03% |
+| verb | 0.5 | 1 | 1 | none | 86.74% |
+| pronoun | 0.5 | 8 | 1 | none | 70.21% |
 | numeral | 0.5 | 8 | 1 | after 0 letters | 94.48% |
 
 </details>

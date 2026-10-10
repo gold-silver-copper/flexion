@@ -53,9 +53,9 @@ used for any decision.
 
 | | lemmas | cells | top-1 | top-3 | top-1 given citation | top-1 given citation and markers |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 3728 | 41739 | **93.85%** | 99.19% | 96.32% | 98.18% |
+| noun | 3728 | 41739 | **93.85%** | 99.19% | 96.34% | 98.21% |
 | adjective | 1366 | 80746 | **99.98%** | 99.99% | – | – |
-| verb | 1221 | 52695 | **96.54%** | 99.02% | 97.80% | 97.74% |
+| verb | 1221 | 52695 | **96.54%** | 99.02% | 98.14% | 98.09% |
 | pronoun ¹ | 6 | 354 | **81.64%** | 81.64% | – | – |
 | numeral ¹ | 4 | 16 | **75.00%** | 75.00% | – | – |
 
@@ -290,10 +290,10 @@ All parts of speech together (ECE 0.008):
 | 0.3–0.4 | 0.372 | 0.381 | 97 |
 | 0.4–0.5 | 0.452 | 0.350 | 257 |
 | 0.5–0.6 | 0.549 | 0.607 | 1975 |
-| 0.6–0.7 | 0.650 | 0.698 | 1978 |
+| 0.6–0.7 | 0.650 | 0.701 | 1971 |
 | 0.7–0.8 | 0.748 | 0.764 | 2470 |
 | 0.8–0.9 | 0.856 | 0.835 | 3879 |
-| 0.9–1.0 | 0.997 | 0.990 | 164894 |
+| 0.9–1.0 | 0.997 | 0.990 | 164901 |
 
 ### Forms many words lack
 
@@ -409,15 +409,15 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 1941 KB (830 KB gzipped).
+The model is 2258 KB (909 KB gzipped).
 
 | | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 1829 | 1533 | 15730 | 5998 | 87412 | 212 (`noun.nom.pl`) |
-| adjective | 200 | 103 | 1413 | 467 | 2895 | 139 (`adjective.nom.m.anim`) |
-| verb | 4644 | 921 | 7573 | 2953 | 33786 | 204 (`non_past.1.sg`) |
-| pronoun | 122 | 21 | 9 | 4 | 103 | 114 (`pronoun.nom.m.anim`) |
-| numeral | 45 | 24 | 15 | 4 | 181 | 231 (`numeral.nom.m.anim`) |
+| noun | 1822 | 1532 | 15995 | 6242 | 88394 | 185 (`noun.acc.sg`) |
+| adjective | 189 | 92 | 1410 | 468 | 2842 | 138 (`adjective.gen.m.anim`) |
+| verb | 4531 | 919 | 7603 | 2979 | 33890 | 169 (`non_past.3.sg`) |
+| pronoun | 122 | 21 | 10 | 5 | 110 | 127 (`pronoun.nom.m.anim`) |
+| numeral | 45 | 24 | 22 | 9 | 217 | 127 (`numeral.nom.vir.anim`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,

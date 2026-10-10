@@ -9,7 +9,10 @@ use std::collections::HashMap;
 pub struct SpellingSpec {
     pub fold_case: bool,
     pub mark_monosyllables: bool,
-    pub stress_mark: Option<char>,
+    /// The combining mark of each stress kind (see [`crate::SpellingStrings`]).
+    pub stress_marks: String,
+    /// Stressed characters as triples (see [`crate::SpellingStrings`]).
+    pub stress_table: String,
     pub vowels: String,
     pub implicit: String,
     pub fold_from: String,
@@ -19,14 +22,60 @@ pub struct SpellingSpec {
     /// `unmark_to[i]`).
     pub unmark_from: String,
     pub unmark_to: String,
+    /// Letters with an inherent vowel, and the marks that mute it.
+    pub syllabic: String,
+    pub mute: String,
+    /// Diphthongs (pairs of folded vowels), and letters that never close one.
+    pub diphthongs: String,
+    pub hiatus: String,
+}
+
+impl SpellingSpec {
+    /// The runtime view of this spec.
+    pub fn strings(&self) -> crate::SpellingStrings<'_> {
+        crate::SpellingStrings {
+            stress_marks: &self.stress_marks,
+            stress_table: &self.stress_table,
+            vowels: &self.vowels,
+            implicit: &self.implicit,
+            fold_from: &self.fold_from,
+            fold_to: &self.fold_to,
+            strip_marks: &self.strip_marks,
+            unmark_from: &self.unmark_from,
+            unmark_to: &self.unmark_to,
+            syllabic: &self.syllabic,
+            mute: &self.mute,
+            diphthongs: &self.diphthongs,
+            hiatus: &self.hiatus,
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct EditSpec {
+    /// Removed from the start of the lemma (Greek `ἀ` in `ἀκούω → ἤκουσα`).
+    pub front: String,
+    /// Added at the start, after `front` is removed.
     pub prefix: String,
     pub strip: String,
     pub add: String,
     pub stress: Stress,
+    /// The stress mark's kind: 0 the lemma's own, `k + 1` kind `k`.
+    pub mark: u8,
+}
+
+impl EditSpec {
+    /// A suffix edit: strip `strip`, add `add`, no stress.
+    pub fn suffix(strip: &str, add: &str) -> EditSpec {
+        EditSpec {
+            front: String::new(),
+            prefix: String::new(),
+            strip: strip.into(),
+            add: add.into(),
+            stress: Stress::Unmarked,
+            mark: 0,
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -35,8 +84,23 @@ pub struct ClassSpec {
     pub edits: Vec<u32>,
     /// The longest suffix any of the class's edits strips.
     pub strip: String,
+    /// The longest start any of the class's edits strips.
+    pub front: String,
     /// One value index per inherent feature, [`format::UNKNOWN`] if unknown.
     pub inherent: Vec<u8>,
+}
+
+/// One prefix of the join model: put before an attested word it makes a
+/// word that inflects through that one (`an` + `fangen`).
+#[derive(Debug, Clone, PartialEq)]
+pub struct JoinSpec {
+    /// The prefix, folded as lookup keys are.
+    pub prefix: String,
+    /// How likely an unseen word with this prefix and an attested rest
+    /// joins this way.
+    pub split: f32,
+    /// `(join class, probability)`, most likely first.
+    pub classes: Vec<(u32, f32)>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -60,6 +124,19 @@ pub struct PosTables {
     /// The part of speech (by index in the blob) whose one-cell model
     /// restores this one's lemmas from what callers type.
     pub restore: Option<usize>,
+    /// Every word is written with a capital (German nouns).
+    pub capitalized: bool,
+    /// The join model, sorted by prefix (see [`JoinSpec`]).
+    pub joins: Vec<JoinSpec>,
+    /// Join classes: one edit index per cell, from a word's form to the
+    /// joined word's ([`format::NONE`]: no form).
+    pub join_classes: Vec<Vec<u32>>,
+    /// Models that build cells from a given principal part: `(the part's
+    /// cell, the model's index in the blob)`.
+    pub part_models: Vec<(usize, usize)>,
+    /// Per cell, the model it is built from when the caller gives principal
+    /// parts: 0 this one, `k + 1` part model `k` (if that part is given).
+    pub sources: Vec<u8>,
     pub walk: crate::Walk,
     pub edits: Vec<EditSpec>,
     pub classes: Vec<ClassSpec>,
@@ -116,9 +193,8 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
         flags |= format::FLAG_MARK_MONOSYLLABLES;
     }
     put(&mut header, flags);
-    let mark: String = spelling.stress_mark.map(String::from).unwrap_or_default();
     for s in [
-        mark.as_str(),
+        &spelling.stress_marks,
         &spelling.vowels,
         &spelling.implicit,
         &spelling.fold_from,
@@ -126,6 +202,11 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
         &spelling.strip_marks,
         &spelling.unmark_from,
         &spelling.unmark_to,
+        &spelling.stress_table,
+        &spelling.syllabic,
+        &spelling.mute,
+        &spelling.diphthongs,
+        &spelling.hiatus,
     ] {
         put_str(&mut header, &mut strings, s);
     }
@@ -141,19 +222,24 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
             put_str(&mut body, &mut strings, &e.prefix);
             put_str(&mut body, &mut strings, &e.strip);
             put_str(&mut body, &mut strings, &e.add);
+            put_str(&mut body, &mut strings, &e.front);
             let (k, i) = e.stress.encode();
             let vowels = |s: &str| {
                 u8::try_from(s.chars().filter(|c| spelling.vowels.contains(*c)).count())
                     .unwrap_or(u8::MAX)
             };
-            let strip_chars = u8::try_from(e.strip.chars().count()).unwrap_or(u8::MAX);
+            let chars = |s: &str| u8::try_from(s.chars().count()).unwrap_or(u8::MAX);
             body.extend_from_slice(&[
                 k,
                 i,
-                strip_chars,
+                chars(&e.strip),
                 vowels(&e.prefix),
                 vowels(&e.strip),
                 vowels(&e.add),
+                chars(&e.front),
+                vowels(&e.front),
+                e.mark,
+                0,
                 0,
                 0,
             ]);
@@ -213,6 +299,7 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
                 put(&mut body, id);
             }
             put_str(&mut body, &mut strings, &c.strip);
+            put_str(&mut body, &mut strings, &c.front);
             for f in 0..p.inherent {
                 body.push(c.inherent.get(f).copied().unwrap_or(format::UNKNOWN));
             }
@@ -240,6 +327,40 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
             put(&mut body, class);
             put(&mut body, prob.to_bits());
         }
+        let joins_at = at(&body);
+        let mut joins: Vec<&JoinSpec> = p.joins.iter().collect();
+        joins.sort_by(|a, b| a.prefix.cmp(&b.prefix));
+        put(&mut body, to_u32(p.join_classes.len()));
+        for class in &p.join_classes {
+            for cell in 0..p.cells {
+                put(&mut body, class.get(cell).copied().unwrap_or(format::NONE));
+            }
+        }
+        put(&mut body, to_u32(joins.len()));
+        let mut first = 0u32;
+        for j in &joins {
+            put_str(&mut body, &mut strings, &j.prefix);
+            put(&mut body, j.split.to_bits());
+            put(&mut body, first);
+            put(&mut body, to_u32(j.classes.len()));
+            first = first.saturating_add(to_u32(j.classes.len()));
+        }
+        for j in &joins {
+            for &(class, prob) in &j.classes {
+                put(&mut body, class);
+                put(&mut body, prob.to_bits());
+            }
+        }
+        let parts_at = at(&body);
+        put(&mut body, to_u32(p.part_models.len()));
+        for &(cell, model) in &p.part_models {
+            put(&mut body, to_u32(cell));
+            put(&mut body, to_u32(model));
+        }
+        for cell in 0..p.cells {
+            body.push(p.sources.get(cell).copied().unwrap_or(0));
+        }
+        body.resize(body.len().saturating_add(3) & !3, 0);
         let mut h = Vec::with_capacity(format::POS_HEADER_LEN);
         for v in [
             to_u32(p.cells),
@@ -257,6 +378,9 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
             chars,
             groups_at,
             p.restore.map_or(format::NONE, to_u32),
+            u32::from(p.capitalized),
+            joins_at,
+            parts_at,
         ] {
             put(&mut h, v);
         }

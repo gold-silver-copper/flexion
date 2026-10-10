@@ -94,6 +94,7 @@ impl Degree {
 /// Output settings. The free functions use [`English::default()`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct English {
+    stress: bool,
     marks: bool,
 }
 
@@ -105,11 +106,17 @@ impl Default for English {
 
 impl English {
     pub const fn new() -> Self {
-        English { marks: true }
+        English {
+            stress: true,
+            marks: true,
+        }
     }
 
     fn options(&self) -> Options {
-        Options { marks: self.marks }
+        Options {
+            stress: self.stress,
+            marks: self.marks,
+        }
     }
 
     /// A noun in the given number.
