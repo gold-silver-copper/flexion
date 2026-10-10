@@ -15,11 +15,16 @@
 //! (`dámelo`, tagged `combined-form`) are left out. Personal
 //! pronouns are a small hand-written table (`configs/extra/spanish.rs`):
 //! Wiktionary has no table for them.
+//!
+//! Verbs are also read from the Spanish Wiktionary's tables (see
+//! [`edition_verb`]), which conjugate many more verbs.
 
 use crate::romance::{self, group};
 use flexion_train::features;
-use flexion_train::kaikki::Entry;
-use flexion_train::spec::{FormSource, Hooks, Language, PartOfSpeech, Spelling, TagPolicy};
+use flexion_train::kaikki::{Entry, Form};
+use flexion_train::spec::{
+    Edition, FormSource, Hooks, Language, Merge, PartOfSpeech, Spelling, TagPolicy,
+};
 
 /// Real but nonstandard forms: never trained on.
 const SOFT: &[&str] = &[
@@ -267,7 +272,12 @@ pub fn language() -> Language {
             ("verb", "verb", "blicer"),
             ("verb", "verb", "desglorpar"),
         ],
-        editions: vec![],
+        editions: vec![Edition {
+            code: "es",
+            name: "the Spanish Wiktionary",
+            dump: "Español",
+            merge: Merge::All,
+        }],
     }
 }
 
@@ -319,6 +329,159 @@ impl Hooks for SpanishHooks {
     fn inherent_tags(&self, entry: &Entry) -> Vec<String> {
         romance::noun_gender(entry)
     }
+
+    /// The Spanish Wiktionary's verbs (see [`edition_verb`]). Its nouns and
+    /// adjectives agree with the main dump's but made no held-out word
+    /// better, so they are not read.
+    fn adapt(&self, edition: &str, pos: &str, entry: &mut Entry) -> bool {
+        edition == "es" && pos == "verb" && edition_verb(entry)
+    }
+}
+
+/// Whether a form of the imperfect subjunctive is the one in `-se`
+/// (`hiciese`, `hiciésemos`), which the table lists after the one in `-ra`
+/// under the same tags.
+fn se_form(form: &str) -> bool {
+    let last = form.rsplit(' ').next().unwrap_or(form);
+    ["se", "ses", "semos", "seis", "sen"]
+        .iter()
+        .any(|e| last.ends_with(e))
+}
+
+/// A verb of the Spanish Wiktionary. Its table differs from the main dump's:
+/// - the preterite is tagged `perfect present` (`hice`), unlike the present
+///   perfect (`he hecho`, also `compound`); compound tenses go;
+/// - both imperfect subjunctives share their tags;
+/// - the future subjunctive is tagged `archaic`, which the main dump doesn't;
+/// - `vos` forms are listed in every tense, where they are the `tú` ones,
+///   and twice in the present subjunctive (`hagas`, `hagás`): only the
+///   present indicative's, the imperative's and the present subjunctive's
+///   own (`hagás`) stay, as in the main dump;
+/// - forms labelled `x` are nonstandard (`hace` as an imperative), `ADJ`
+///   a participle used as an adjective only (`absorto`);
+/// - impersonal verbs give their person as a label (`(ello) atardece`);
+/// - the infinitive, being the headword, is dropped by Kaikki and restored;
+///   the participle is given in the masculine singular only, and its other
+///   forms are written out (`hecho`, `hecha`, `hechos`, `hechas`).
+fn edition_verb(entry: &mut Entry) -> bool {
+    if entry.tags.iter().any(|t| t == "form-of") {
+        return false;
+    }
+    let mut forms: Vec<Form> = Vec::new();
+    for f in &entry.forms {
+        let has = |t: &str| f.tags.iter().any(|x| x == t);
+        let raw = |r: &str| f.raw_tags.iter().any(|x| x == r);
+        if raw("x")
+            || raw("ADJ")
+            || ["compound", "pluperfect", "anterior"]
+                .iter()
+                .any(|t| has(t))
+        {
+            continue;
+        }
+        let mood = has("indicative") || has("subjunctive") || has("imperative");
+        if has("vos-form") && !(has("present") && !has("perfect") && mood) {
+            continue;
+        }
+        if has("participle") {
+            if let Some(stem) = f.form.strip_suffix('o') {
+                for (end, tags) in [
+                    ("o", ["masculine", "singular"]),
+                    ("a", ["feminine", "singular"]),
+                    ("os", ["masculine", "plural"]),
+                    ("as", ["feminine", "plural"]),
+                ] {
+                    let mut t = vec!["participle", "past"];
+                    t.extend(tags);
+                    forms.push(romance::table_form(&format!("{stem}{end}"), &t));
+                }
+            }
+            continue;
+        }
+        let mut tags: Vec<&str> = f
+            .tags
+            .iter()
+            .map(String::as_str)
+            .filter(|t| !matches!(*t, "impersonal" | "archaic"))
+            .collect();
+        if has("indicative") && has("perfect") && has("present") {
+            tags.retain(|t| !matches!(*t, "perfect" | "present"));
+            tags.push("preterite");
+        } else if has("perfect") {
+            continue;
+        }
+        if has("imperfect") {
+            tags.retain(|t| *t != "past");
+            if has("subjunctive") && se_form(&f.form) {
+                tags.push("imperfect-se");
+            }
+        }
+        if raw("(ello)") || raw("(que ello)") {
+            tags.extend(["third-person", "singular"]);
+        } else if raw("(ellos)") || raw("(que ellos)") {
+            tags.extend(["third-person", "plural"]);
+        }
+        forms.push(romance::table_form(&f.form, &tags));
+    }
+    // `que vos hagas`, the `tú` form, next to `que vos hagás`.
+    let tu: Vec<String> = forms
+        .iter()
+        .filter(|f| {
+            let has = |t: &str| f.tags.iter().any(|x| x == t);
+            has("subjunctive")
+                && has("present")
+                && has("second-person")
+                && has("singular")
+                && !has("vos-form")
+        })
+        .map(|f| f.form.clone())
+        .collect();
+    let vos_subjunctive = |f: &Form| {
+        ["vos-form", "subjunctive"]
+            .iter()
+            .all(|t| f.tags.iter().any(|x| x == t))
+    };
+    let own_vos = forms
+        .iter()
+        .any(|f| vos_subjunctive(f) && !tu.contains(&f.form));
+    if own_vos {
+        forms.retain(|f| !vos_subjunctive(f) || !tu.contains(&f.form));
+    }
+    // The table has no negative imperative: it is the present subjunctive
+    // (`no hagas`), for a verb with an imperative.
+    if forms
+        .iter()
+        .any(|f| f.tags.iter().any(|t| t == "imperative"))
+    {
+        let negative: Vec<Form> = forms
+            .iter()
+            .filter(|f| {
+                let has = |t: &str| f.tags.iter().any(|x| x == t);
+                has("subjunctive")
+                    && has("present")
+                    && !has("vos-form")
+                    && !(has("first-person") && has("singular"))
+            })
+            .map(|f| {
+                let mut tags: Vec<&str> = f
+                    .tags
+                    .iter()
+                    .map(String::as_str)
+                    .filter(|t| !matches!(*t, "subjunctive" | "present"))
+                    .collect();
+                tags.extend(["imperative", "negative"]);
+                romance::table_form(&f.form, &tags)
+            })
+            .collect();
+        forms.extend(negative);
+    }
+    if forms.is_empty() {
+        return false;
+    }
+    forms.push(romance::table_form(&entry.word, &["infinitive"]));
+    entry.forms = forms;
+    romance::strip_pronouns(entry, PRONOUNS);
+    true
 }
 
 const README: &str = "\
