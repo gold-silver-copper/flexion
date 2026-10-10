@@ -77,11 +77,14 @@ pub struct Stats {
 }
 
 /// One part of speech's shape.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 pub struct Shape {
     pub cells: usize,
     pub inherent: usize,
     pub lemma_cell: usize,
+    /// Per cell: whether it belongs to an optional group (many words have no
+    /// form there, and the runtime decides whether this word does).
+    pub optional: Vec<bool>,
 }
 
 struct TNode {
@@ -325,7 +328,42 @@ impl<'s> Learner<'s> {
                 return false;
             }
         }
+        // Optional cells: whether the word has a form at all must come out
+        // right too, in both directions.
+        for (cell, _) in self.shape.optional.iter().enumerate().filter(|(_, o)| **o) {
+            let attested = word.primary(cell).is_some();
+            if self.has_cell(&read, cell, kept_path, arena) != attested {
+                return false;
+            }
+        }
         true
+    }
+
+    /// The runtime's answer to "does this word have a form in `cell`": the
+    /// deepest node with a fitting class decides, by majority of its mass.
+    fn has_cell(&self, word: &flexion::Word, cell: usize, path: &[usize], arena: &[Dist]) -> bool {
+        for &node in path.iter().rev() {
+            let Some(d) = arena.get(node) else {
+                continue;
+            };
+            let (mut with, mut all) = (0.0, 0.0);
+            for &(class, p) in d {
+                let Some(spec) = self.classes.get(class as usize) else {
+                    continue;
+                };
+                if !self.sp.ends_with_folded(&word.base, &spec.strip) {
+                    continue;
+                }
+                all += p;
+                if spec.edits.get(cell).is_some_and(|&e| e != NONE) {
+                    with += p;
+                }
+            }
+            if all > 0.0 {
+                return with / all >= 0.5;
+            }
+        }
+        false
     }
 
     /// The runtime's top form for `cell`, from distributions on `path`

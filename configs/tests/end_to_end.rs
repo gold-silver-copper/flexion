@@ -162,6 +162,17 @@ fn russian_learns_stress_and_inherent_features() {
         ),
         "но́вой"
     );
+    // An optional form an attested word has is found, not judged absent.
+    let model = flexion::Model::from_bytes(&blob).expect("model loads");
+    let adjectives = model.pos(1).expect("adjectives");
+    let cells = flexion_train::cells::Cells::new(&lang, &lang.parts[1]).expect("cells");
+    let short_f = cells.find("short_adjective", &["Feminine"]).expect("cell");
+    let c = adjectives.citation("новый", &[]);
+    assert!(
+        adjectives.has_cell(&c, short_f) >= 0.5,
+        "новый has short forms"
+    );
+    assert_eq!(adjectives.best(&c, short_f, Options::default()), "нова́");
     // A given citation part is output exactly.
     assert_eq!(
         ask(

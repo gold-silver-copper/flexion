@@ -80,10 +80,14 @@ pub fn shapes(lang: &Language) -> Result<Vec<learn::Shape>, String> {
             let lemma_cell = cells
                 .find(p.lemma.0, &p.lemma.1)
                 .ok_or("lemma cell not found")?;
+            let optional = (0..cells.total)
+                .map(|c| cells.group_of(c).is_some_and(|g| g.group.optional))
+                .collect();
             Ok(learn::Shape {
                 cells: cells.total,
                 inherent: p.inherent.len(),
                 lemma_cell,
+                optional,
             })
         })
         .collect()
@@ -105,7 +109,7 @@ pub fn train(
             .into_iter()
             .filter(|w| keep(w.key))
             .collect();
-        let (t, s) = learn::Learner::new(&sp, plan.shape, plan.params).learn(&words);
+        let (t, s) = learn::Learner::new(&sp, plan.shape.clone(), plan.params).learn(&words);
         tables.push(t);
         stats.push(s);
     }
