@@ -165,12 +165,20 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
         }
         let nodes = at(&body);
         for n in &p.nodes {
-            put_str(&mut body, &mut strings, &n.label);
+            let (off, _) = strings.add(&n.label);
+            put(&mut body, off);
             put(&mut body, n.first_child);
-            put(&mut body, n.children);
             put(&mut body, n.dist);
-            put(&mut body, n.dist_len);
-            put(&mut body, n.label.chars().next().map_or(0, u32::from));
+            body.extend_from_slice(&u16::try_from(n.children).unwrap_or(u16::MAX).to_le_bytes());
+            body.extend_from_slice(&u16::try_from(n.dist_len).unwrap_or(u16::MAX).to_le_bytes());
+        }
+        let chars = at(&body);
+        for n in &p.nodes {
+            let first = n.label.chars().next().map_or(0, u32::from);
+            let len = u32::try_from(n.label.len())
+                .unwrap_or(0)
+                .min((1 << (32 - format::CHAR_BITS)) - 1);
+            put(&mut body, first | (len << format::CHAR_BITS));
         }
         let dist = at(&body);
         for &(class, prob) in &p.dist {
@@ -191,6 +199,8 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
             to_u32(p.dist.len()),
             p.lemma_cell.map_or(format::NONE, to_u32),
             p.walk.encode(),
+            chars,
+            0,
         ] {
             put(&mut h, v);
         }

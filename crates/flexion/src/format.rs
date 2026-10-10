@@ -12,11 +12,12 @@
 //!   24 stress mark    32 vowels    40 implicitly stressed letters
 //!   48 fold-from      56 fold-to   64 marks stripped from input
 //!      (each a string reference: offset + length into the string area)
-//! part-of-speech headers, 48 bytes each, right after the header: cells,
+//! part-of-speech headers, 56 bytes each, right after the header: cells,
 //!   inherent features, then offset and count of edits, classes, nodes and
-//!   distribution entries, the lemma cell, and the walk's feature word
+//!   distribution entries, the lemma cell, the walk's feature word
 //!   (bits 0–7: 1 + the depth at which a syllable-count token is inserted,
-//!   0 for none; bits 8–15: the largest syllable bucket)
+//!   0 for none; bits 8–15: the largest syllable bucket), the offset of the
+//!   first-character array, and four bytes of padding
 //! records (edits, classes, nodes, distribution entries) at the offsets the
 //!   part-of-speech headers give
 //! string area: UTF-8 bytes
@@ -32,18 +33,22 @@
 //!   per cell ([`NONE`] when the class has no form there), a string reference to
 //!   the class's longest stripped suffix, one value index per inherent feature
 //!   ([`UNKNOWN`] when unknown);
-//! - node, 28 bytes: edge label (string reference), first child, number of
-//!   children, first distribution entry, number of distribution entries, the
-//!   label's first character (for the child search);
+//! - node, 16 bytes: the label's offset in the string area, first child,
+//!   first distribution entry (all `u32`), number of children, number of
+//!   distribution entries (both `u16`);
+//! - one `u32` per node, in node order: its label's first character (low 21
+//!   bits) and the label's length in bytes (high 11 bits), so a child search
+//!   touches one small dense array. Nodes are laid out depth-first by child
+//!   block, so a walk's successive levels sit close together;
 //! - distribution entry, 8 bytes: class index, probability (`f32` bits).
 //!   Entries of one node are sorted by descending probability.
 
 pub const MAGIC: &[u8; 4] = b"FLX1";
 pub const VERSION: u32 = 1;
 pub const HEADER_LEN: usize = 72;
-pub const POS_HEADER_LEN: usize = 48;
+pub const POS_HEADER_LEN: usize = 56;
 pub const EDIT_LEN: usize = 32;
-pub const NODE_LEN: usize = 28;
+pub const NODE_LEN: usize = 16;
 pub const DIST_LEN: usize = 8;
 /// No edit (the class has no form in this cell), or no lemma cell.
 pub const NONE: u32 = u32::MAX;
@@ -55,6 +60,8 @@ pub const BOUNDARY: char = '\u{1}';
 
 /// The first syllable-count token; bucket `k` is `char::from_u32(SYLLABLE_TOKEN + k)`.
 pub const SYLLABLE_TOKEN: u32 = 0x10;
+/// Bits of a first-character entry that hold the character.
+pub const CHAR_BITS: u32 = 21;
 
 pub const FLAG_FOLD_CASE: u32 = 1;
 pub const FLAG_MARK_MONOSYLLABLES: u32 = 2;

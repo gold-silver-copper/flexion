@@ -71,6 +71,32 @@ pub(crate) struct PosHeader {
     pub(crate) n_dist: usize,
     pub(crate) lemma_cell: Option<usize>,
     pub(crate) walk: Walk,
+    pub(crate) chars: usize,
+    /// The root's children by symbol, for symbols below 256 or in the
+    /// language's main letter block: child index + 1, 0 for none.
+    pub(crate) root: RootTable,
+}
+
+/// A direct index of the root's children (every walk starts there).
+#[derive(Debug, Clone, Copy)]
+pub(crate) struct RootTable {
+    pub(crate) low: [u32; 256],
+    pub(crate) block: u32,
+    pub(crate) high: [u32; 256],
+}
+
+impl RootTable {
+    pub(crate) fn get(&self, c: char) -> Option<usize> {
+        let u = u32::from(c);
+        let v = if u < 256 {
+            *self.low.get(usize::try_from(u).ok()?)?
+        } else if u >> 8 == self.block {
+            *self.high.get(usize::try_from(u & 255).ok()?)?
+        } else {
+            return None;
+        };
+        usize::try_from(v.checked_sub(1)?).ok()
+    }
 }
 
 /// How a key is turned into the sequence of symbols the tree is walked with.
@@ -167,6 +193,12 @@ impl<'a> Model<'a> {
                     .then(|| usize::try_from(lemma).ok())
                     .flatten(),
                 walk: Walk::decode(b.u32(at.checked_add(44)?)?),
+                chars: b.usize(at.checked_add(48)?)?,
+                root: RootTable {
+                    low: [0; 256],
+                    block: spelling.vowel_set.block(),
+                    high: [0; 256],
+                },
             };
             // Every table must lie inside the blob.
             let ends = [
@@ -175,9 +207,34 @@ impl<'a> Model<'a> {
                     .checked_add(h.n_classes.checked_mul(h.class_len)?)?,
                 h.nodes.checked_add(h.n_nodes.checked_mul(NODE_LEN)?)?,
                 h.dist.checked_add(h.n_dist.checked_mul(DIST_LEN)?)?,
+                h.chars.checked_add(h.n_nodes.checked_mul(4)?)?,
             ];
             if ends.iter().any(|&e| e > bytes.len()) || h.n_nodes == 0 {
                 return None;
+            }
+            let mut h = h;
+            // Root children: node 0's block.
+            let first = b.usize(h.nodes.checked_add(4)?)?;
+            let count = usize::from(u16::from_le_bytes(
+                bytes
+                    .get(h.nodes.checked_add(12)?..h.nodes.checked_add(14)?)?
+                    .try_into()
+                    .ok()?,
+            ));
+            for i in 0..count {
+                let idx = first.checked_add(i)?;
+                let v = b.u32(h.chars.checked_add(idx.checked_mul(4)?)?)?;
+                let c = v & ((1 << format::CHAR_BITS) - 1);
+                let slot = if c < 256 {
+                    h.root.low.get_mut(usize::try_from(c).ok()?)
+                } else if c >> 8 == h.root.block {
+                    h.root.high.get_mut(usize::try_from(c & 255).ok()?)
+                } else {
+                    None
+                };
+                if let Some(slot) = slot {
+                    *slot = u32::try_from(idx).ok()?.checked_add(1)?;
+                }
             }
             parts.push(h);
         }

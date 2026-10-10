@@ -2,6 +2,7 @@
 //! rendering a built form back into the caller's casing.
 
 use crate::format::Stress;
+use std::borrow::Cow;
 
 /// A language's spelling conventions, read from the model header.
 #[derive(Debug, Clone, Copy)]
@@ -36,14 +37,15 @@ pub enum Casing {
     Mixed,
 }
 
-/// A caller's word, ready for lookup.
+/// A caller's word, ready for lookup. Borrows the input when it needs no
+/// rewriting (the common case: plain lowercase letters).
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Word {
+pub struct Word<'s> {
     /// The letters edits apply to: stress marks removed, lowercased unless
     /// the casing is mixed.
-    pub base: String,
+    pub base: Cow<'s, str>,
     /// `base` folded for lookup (lowercase, folded letters).
-    pub key: String,
+    pub key: Cow<'s, str>,
     /// The stressed vowel's index (0 = first vowel), when the caller marked it.
     pub stress: Option<usize>,
     pub casing: Casing,
@@ -94,6 +96,11 @@ impl VowelSet {
             }
         }
         set
+    }
+
+    /// The 256-character block of the language's non-ASCII vowels.
+    pub fn block(&self) -> u32 {
+        self.block
     }
 
     pub fn contains(&self, c: char) -> bool {
@@ -156,6 +163,12 @@ impl Spelling<'_> {
             }
             _ => None,
         };
+        if place.is_none() && matches!(casing, Casing::Lower | Casing::Mixed) {
+            for p in parts {
+                out.push_str(p);
+            }
+            return out;
+        }
         let mut vowel = 0usize;
         let mut first = true;
         for c in parts.iter().flat_map(|p| p.chars()) {
@@ -186,7 +199,60 @@ impl Spelling<'_> {
     }
 
     /// Split a caller's word into letters, stress and casing.
-    pub fn read(&self, input: &str) -> Word {
+    pub fn read<'s>(&self, input: &'s str) -> Word<'s> {
+        // Fastest path: lowercase ASCII with nothing to fold (marks are never ASCII).
+        if input.is_ascii()
+            && !input.bytes().any(|b| b.is_ascii_uppercase())
+            && self.fold_from.is_empty()
+            && self.strip_marks.is_ascii()
+            && self.strip_marks.is_empty()
+        {
+            let vowels = input
+                .bytes()
+                .filter(|&b| self.vowel_set.contains(char::from(b)))
+                .count();
+            return Word {
+                base: Cow::Borrowed(input),
+                key: Cow::Borrowed(input),
+                stress: None,
+                casing: Casing::Lower,
+                vowels,
+            };
+        }
+        // Fast path: nothing to remove, lowercase or fold.
+        let mut vowels = 0usize;
+        let mut implicit = None;
+        let mut plain = true;
+        for c in input.chars() {
+            let changes = Some(c) == self.stress_mark
+                || (!self.strip_marks.is_empty() && self.strip_marks.contains(c))
+                || (self.fold_case && lowercase_char(c) != c)
+                || (!self.fold_from.is_empty() && self.fold_from.contains(c));
+            if changes {
+                plain = false;
+                break;
+            }
+            if self.is_vowel(c) {
+                if implicit.is_none() && !self.implicit.is_empty() && self.implicit.contains(c) {
+                    implicit = Some(vowels);
+                }
+                vowels = vowels.saturating_add(1);
+            }
+        }
+        if plain {
+            let stress = if self.stress_mark.is_some() {
+                implicit
+            } else {
+                None
+            };
+            return Word {
+                base: Cow::Borrowed(input),
+                key: Cow::Borrowed(input),
+                stress,
+                casing: Casing::Lower,
+                vowels,
+            };
+        }
         let casing = if self.fold_case {
             casing_of(input)
         } else {
@@ -225,8 +291,8 @@ impl Spelling<'_> {
             None
         };
         Word {
-            base,
-            key,
+            base: Cow::Owned(base),
+            key: Cow::Owned(key),
             stress,
             casing,
             vowels,
@@ -266,6 +332,12 @@ impl Spelling<'_> {
 
     /// Whether `s` ends with `suffix` once both are folded.
     pub fn ends_with_folded(&self, s: &str, suffix: &str) -> bool {
+        if s.ends_with(suffix) {
+            return true;
+        }
+        if !self.fold_case && self.fold_from.is_empty() {
+            return false;
+        }
         let mut a = s.chars().rev();
         for b in suffix.chars().rev() {
             match a.next() {
@@ -430,13 +502,10 @@ mod tests {
     #[test]
     fn reads_stress_case_and_folding() {
         let w = russian().read("Ёлка");
-        assert_eq!(
-            (w.base.as_str(), w.key.as_str(), w.stress),
-            ("ёлка", "елка", Some(0))
-        );
+        assert_eq!((&*w.base, &*w.key, w.stress), ("ёлка", "елка", Some(0)));
         assert_eq!(w.casing, Casing::Title);
         let w = russian().read("соба\u{301}ка");
-        assert_eq!((w.base.as_str(), w.stress), ("собака", Some(1)));
+        assert_eq!((&*w.base, w.stress), ("собака", Some(1)));
     }
 
     #[test]
