@@ -345,7 +345,9 @@ impl<'m, 'a> Pos<'m, 'a> {
                 };
                 let key = Key {
                     edit: id,
-                    stress: stress.and_then(|v| u16::try_from(v).ok()).unwrap_or(NO_STRESS),
+                    stress: stress
+                        .and_then(|v| u16::try_from(v).ok())
+                        .unwrap_or(NO_STRESS),
                 };
                 total += p;
                 match forms.iter_mut().take(n).find(|(k, _)| *k == key) {
