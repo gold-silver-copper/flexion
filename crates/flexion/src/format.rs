@@ -16,7 +16,7 @@
 //!   96 letters with an inherent vowel   104 marks that mute it
 //!   112 diphthongs (pairs of folded vowels)   120 letters that never close one
 //!      (each a string reference: offset + length into the string area)
-//! part-of-speech headers, 72 bytes each, right after the header: cells,
+//! part-of-speech headers, 80 bytes each, right after the header: cells,
 //!   inherent features, then offset and count of edits, classes, nodes and
 //!   distribution entries, the lemma cell, the walk's feature word
 //!   (bits 0–7: 1 + the depth at which a syllable-count token is inserted,
@@ -89,7 +89,7 @@
 //!   (a verb's participles are adjectives).
 
 pub const MAGIC: &[u8; 4] = b"FLX1";
-pub const VERSION: u32 = 6;
+pub const VERSION: u32 = 7;
 pub const HEADER_LEN: usize = 128;
 pub const POS_HEADER_LEN: usize = 80;
 pub const EDIT_LEN: usize = 32;

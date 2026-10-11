@@ -54,11 +54,11 @@ used for any decision.
 
 | | lemmas | cells | top-1 | top-3 | top-1 given citation | top-1 given citation and markers |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 3728 | 41739 | **93.85%** | 99.19% | 96.34% | 98.21% |
+| noun | 3728 | 41739 | **94.14%** | 99.30% | 96.36% | 98.36% |
 | adjective | 1366 | 80746 | **99.98%** | 99.99% | – | – |
-| verb | 1221 | 52644 | **97.32%** | 99.11% | 98.35% | 98.26% |
+| verb | 1221 | 52644 | **97.33%** | 99.11% | 98.27% | 98.19% |
 | pronoun ¹ | 6 | 354 | **81.64%** | 81.64% | – | – |
-| numeral ¹ | 4 | 16 | **75.00%** | 75.00% | – | – |
+| numeral ¹ | 4 | 16 | **75.00%** | 100.00% | – | – |
 
 ¹ A closed class: too few held-out lemmas for these numbers to mean much. What matters for
 it is the attested table below.
@@ -73,19 +73,19 @@ the word the way a dictionary prints them (noun `mpers`/`manim`/`minan`/`f`/`n`;
 
 | cell | n | top-1 | top-3 |
 |---|---:|---:|---:|
-| noun.nom.pl | 2835 | 88.82% | 98.62% |
-| noun.gen.sg | 3660 | 90.77% | 99.15% |
-| noun.gen.pl | 2829 | 93.21% | 98.80% |
-| noun.dat.sg | 3652 | 97.56% | 99.34% |
-| noun.dat.pl | 2825 | 97.24% | 99.29% |
-| noun.acc.sg | 3664 | 88.24% | 99.78% |
-| noun.acc.pl | 2832 | 86.33% | 98.76% |
-| noun.ins.sg | 3659 | 98.14% | 99.40% |
-| noun.ins.pl | 2826 | 97.10% | 99.22% |
-| noun.loc.sg | 3657 | 97.46% | 99.29% |
-| noun.loc.pl | 2826 | 97.28% | 99.33% |
-| noun.voc.sg | 3652 | 97.21% | 99.48% |
-| noun.voc.pl | 2822 | 88.91% | 98.69% |
+| noun.nom.pl | 2835 | 88.78% | 98.84% |
+| noun.gen.sg | 3660 | 90.96% | 99.18% |
+| noun.gen.pl | 2829 | 93.96% | 99.22% |
+| noun.dat.sg | 3652 | 97.84% | 99.37% |
+| noun.dat.pl | 2825 | 97.70% | 99.40% |
+| noun.acc.sg | 3664 | 88.67% | 99.73% |
+| noun.acc.pl | 2832 | 86.37% | 98.91% |
+| noun.ins.sg | 3659 | 98.39% | 99.45% |
+| noun.ins.pl | 2826 | 97.56% | 99.29% |
+| noun.loc.sg | 3657 | 97.87% | 99.37% |
+| noun.loc.pl | 2826 | 97.74% | 99.43% |
+| noun.voc.sg | 3652 | 97.34% | 99.53% |
+| noun.voc.pl | 2822 | 88.87% | 98.90% |
 | adjective.nom.m.anim | 1364 | 100.00% | 100.00% |
 | adjective.nom.f.anim | 1364 | 100.00% | 100.00% |
 | adjective.nom.f.inan | 1364 | 100.00% | 100.00% |
@@ -147,12 +147,12 @@ the word the way a dictionary prints them (noun `mpers`/`manim`/`minan`/`f`/`n`;
 | adjective.loc.nvir.inan | 1364 | 100.00% | 100.00% |
 | comparative | 95 | 94.74% | 96.84% |
 | superlative | 95 | 94.74% | 96.84% |
-| non_past.1.sg | 1213 | 96.87% | 99.26% |
-| non_past.1.pl | 1213 | 96.62% | 99.26% |
-| non_past.2.sg | 1213 | 96.62% | 99.26% |
-| non_past.2.pl | 1213 | 96.62% | 99.26% |
-| non_past.3.sg | 1220 | 96.64% | 99.26% |
-| non_past.3.pl | 1220 | 96.80% | 99.26% |
+| non_past.1.sg | 1213 | 96.95% | 99.26% |
+| non_past.1.pl | 1213 | 96.70% | 99.26% |
+| non_past.2.sg | 1213 | 96.70% | 99.26% |
+| non_past.2.pl | 1213 | 96.70% | 99.26% |
+| non_past.3.sg | 1220 | 96.72% | 99.26% |
+| non_past.3.pl | 1220 | 96.89% | 99.26% |
 | past.1.m | 1213 | 97.69% | 99.18% |
 | past.1.f | 1213 | 97.69% | 99.09% |
 | past.1.n | 1213 | 97.69% | 99.09% |
@@ -183,15 +183,15 @@ the word the way a dictionary prints them (noun `mpers`/`manim`/`minan`/`f`/`n`;
 | conditional.3.n | 1220 | 97.70% | 99.10% |
 | conditional.3.vir | 1220 | 97.70% | 99.10% |
 | conditional.3.nvir | 1220 | 97.70% | 99.10% |
-| imperative.1.pl | 1212 | 94.72% | 98.84% |
-| imperative.2.sg | 1211 | 94.72% | 98.84% |
-| imperative.2.pl | 1212 | 94.72% | 98.84% |
-| impersonal | 1217 | 97.95% | 99.18% |
+| imperative.1.pl | 1212 | 94.88% | 98.84% |
+| imperative.2.sg | 1211 | 94.88% | 98.84% |
+| imperative.2.pl | 1212 | 94.88% | 98.84% |
+| impersonal | 1217 | 97.86% | 99.18% |
 | participle.act | 638 | 97.02% | 99.22% |
-| participle.pass | 938 | 97.76% | 99.04% |
+| participle.pass | 938 | 97.65% | 99.04% |
 | adverbial_participle.contemp | 638 | 97.02% | 99.22% |
-| adverbial_participle.ant | 601 | 96.17% | 98.84% |
-| verbal_noun | 1220 | 97.95% | 99.34% |
+| adverbial_participle.ant | 601 | 96.01% | 98.84% |
+| verbal_noun | 1220 | 97.87% | 99.34% |
 | pronoun.nom.m.anim | 6 | 100.00% | 100.00% |
 | pronoun.nom.f.anim | 6 | 83.33% | 83.33% |
 | pronoun.nom.f.inan | 6 | 83.33% | 83.33% |
@@ -251,10 +251,10 @@ the word the way a dictionary prints them (noun `mpers`/`manim`/`minan`/`f`/`n`;
 | pronoun.loc.vir.inan | 6 | 83.33% | 83.33% |
 | pronoun.loc.nvir.anim | 6 | 83.33% | 83.33% |
 | pronoun.loc.nvir.inan | 6 | 83.33% | 83.33% |
-| numeral.nom.vir.anim | 4 | 75.00% | 75.00% |
-| numeral.nom.vir.inan | 4 | 75.00% | 75.00% |
-| numeral.acc.vir.anim | 4 | 75.00% | 75.00% |
-| numeral.acc.vir.inan | 4 | 75.00% | 75.00% |
+| numeral.nom.vir.anim | 4 | 75.00% | 100.00% |
+| numeral.nom.vir.inan | 4 | 75.00% | 100.00% |
+| numeral.acc.vir.anim | 4 | 75.00% | 100.00% |
+| numeral.acc.vir.inan | 4 | 75.00% | 100.00% |
 
 </details>
 
@@ -264,7 +264,7 @@ The shipped model, trained on everything, asked for every attested cell of every
 
 | | lemmas | cells | primary form from the plain call | every attested form among the answers |
 |---|---:|---:|---:|---:|
-| noun | 37480 | 420349 | **99.88%** | 100.00% |
+| noun | 37480 | 420349 | **99.89%** | 100.00% |
 | adjective | 13224 | 781815 | **100.00%** | 100.00% |
 | verb | 12103 | 521628 | **99.98%** | 100.00% |
 | pronoun | 28 | 1550 | **100.00%** | 100.00% |
@@ -277,23 +277,23 @@ Expected calibration error (ECE) is the average gap between confidence and accur
 
 | | ECE |
 |---|---:|
-| noun | 0.014 |
+| noun | 0.009 |
 | adjective | 0.000 |
-| verb | 0.011 |
-| pronoun | 0.245 |
-| numeral | 0.250 |
+| verb | 0.012 |
+| pronoun | 0.237 |
+| numeral | 0.228 |
 
-All parts of speech together (ECE 0.007):
+All parts of speech together (ECE 0.006):
 
 | confidence | mean confidence | accuracy | answers |
 |---|---:|---:|---:|
-| 0.3–0.4 | 0.367 | 0.326 | 46 |
-| 0.4–0.5 | 0.460 | 0.410 | 173 |
-| 0.5–0.6 | 0.549 | 0.552 | 1771 |
-| 0.6–0.7 | 0.650 | 0.699 | 1856 |
-| 0.7–0.8 | 0.749 | 0.735 | 2257 |
-| 0.8–0.9 | 0.858 | 0.835 | 3384 |
-| 0.9–1.0 | 0.997 | 0.991 | 166012 |
+| 0.3–0.4 | 0.367 | 0.406 | 32 |
+| 0.4–0.5 | 0.457 | 0.460 | 198 |
+| 0.5–0.6 | 0.547 | 0.549 | 1901 |
+| 0.6–0.7 | 0.652 | 0.694 | 1910 |
+| 0.7–0.8 | 0.752 | 0.734 | 2144 |
+| 0.8–0.9 | 0.857 | 0.847 | 3364 |
+| 0.9–1.0 | 0.997 | 0.992 | 165950 |
 
 ### Forms many words lack
 
@@ -302,8 +302,8 @@ how often the answer to "does this word have one?" is right.
 
 | | held-out cells | right | attested cells | right |
 |---|---:|---:|---:|---:|
-| adjective | 2732 | 91.65% | 26448 | 99.98% |
-| verb | 14652 | 91.17% | 145236 | 99.93% |
+| adjective | 2732 | 91.36% | 26448 | 99.98% |
+| verb | 14652 | 90.66% | 145236 | 99.93% |
 
 ### Inherent features
 
@@ -311,8 +311,8 @@ Predicted for held-out lemmas from the bare lemma.
 
 | feature | lemmas | right |
 |---|---:|---:|
-| noun gender | 3701 | 86.60% |
-| verb aspect | 1221 | 70.93% |
+| noun gender | 3701 | 86.84% |
+| verb aspect | 1221 | 68.88% |
 
 ### Made-up words
 
@@ -320,9 +320,9 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 | word | function | answers |
 |---|---|---|
-| `glorp` | noun | nom.sg: glorp 1.00; nom.pl: glorpie 0.56, glorpy 0.40; gen.sg: glorpia 0.56, glorpa 0.33; gen.pl: glorpów 0.44, glorpi 0.37; dat.sg: glorpiowi 0.56, glorpowi 0.44; dat.pl: glorpiom 0.56, glorpom 0.44; acc.sg: glorpia 0.43, glorp 0.38; acc.pl: glorpy 0.40, glorpie 0.39; ins.sg: glorpiem 0.56, glorpem 0.44; ins.pl: glorpiami 0.56, glorpami 0.44; loc.sg: glorpiu 0.56, glorpie 0.44; loc.pl: glorpiach 0.56, glorpach 0.44; voc.sg: glorpiu 0.56, glorpie 0.44; voc.pl: glorpie 0.56, glorpy 0.40 |
-| `kuzdra` | noun | nom.sg: kuzdra 1.00; nom.pl: kuzdry 1.00; gen.sg: kuzdry 1.00; gen.pl: kuzdr 0.81, kuzder 0.19; dat.sg: kuzdrze 1.00; dat.pl: kuzdrom 1.00; acc.sg: kuzdrę 1.00; acc.pl: kuzdry 1.00; ins.sg: kuzdrą 1.00; ins.pl: kuzdrami 1.00; loc.sg: kuzdrze 1.00; loc.pl: kuzdrach 1.00; voc.sg: kuzdro 1.00; voc.pl: kuzdry 1.00 |
-| `blicik` | noun | nom.sg: blicik 1.00; nom.pl: bliciki 0.99; gen.sg: blicika 0.79, bliciku 0.21; gen.pl: blicików 1.00; dat.sg: blicikowi 1.00; dat.pl: blicikom 1.00; acc.sg: blicik 0.84, blicika 0.16; acc.pl: bliciki 0.99; ins.sg: blicikiem 1.00; ins.pl: blicikami 1.00; loc.sg: bliciku 1.00; loc.pl: blicikach 1.00; voc.sg: bliciku 1.00; voc.pl: bliciki 0.99 |
+| `glorp` | noun | nom.sg: glorp 1.00; nom.pl: glorpy 0.58, glorpie 0.39; gen.sg: glorpia 0.39, glorpu 0.34; gen.pl: glorpów 0.61, glorpi 0.26; dat.sg: glorpowi 0.61, glorpiowi 0.39; dat.pl: glorpom 0.61, glorpiom 0.39; acc.sg: glorp 0.55, glorpia 0.30; acc.pl: glorpy 0.58, glorpie 0.27; ins.sg: glorpem 0.61, glorpiem 0.39; ins.pl: glorpami 0.61, glorpiami 0.39; loc.sg: glorpie 0.61, glorpiu 0.39; loc.pl: glorpach 0.61, glorpiach 0.39; voc.sg: glorpie 0.61, glorpiu 0.39; voc.pl: glorpy 0.58, glorpie 0.39 |
+| `kuzdra` | noun | nom.sg: kuzdra 1.00; nom.pl: kuzdry 0.99; gen.sg: kuzdry 1.00; gen.pl: kuzdr 0.65, kuzder 0.34; dat.sg: kuzdrze 1.00; dat.pl: kuzdrom 1.00; acc.sg: kuzdrę 1.00; acc.pl: kuzdry 0.99; ins.sg: kuzdrą 1.00; ins.pl: kuzdrami 1.00; loc.sg: kuzdrze 1.00; loc.pl: kuzdrach 1.00; voc.sg: kuzdro 1.00; voc.pl: kuzdry 0.99 |
+| `blicik` | noun | nom.sg: blicik 1.00; nom.pl: bliciki 0.97; gen.sg: blicika 0.66, bliciku 0.34; gen.pl: blicików 1.00; dat.sg: blicikowi 1.00; dat.pl: blicikom 1.00; acc.sg: blicik 0.84, blicika 0.16; acc.pl: bliciki 0.95; ins.sg: blicikiem 1.00; ins.pl: blicikami 1.00; loc.sg: bliciku 1.00; loc.pl: blicikach 1.00; voc.sg: bliciku 1.00; voc.pl: bliciki 0.97 |
 | `glokowy` | adjective | nom.m.anim: glokowy 1.00; nom.m.inan: glokowy 1.00; nom.f.anim: glokowa 1.00; nom.f.inan: glokowa 1.00; nom.n.anim: glokowe 1.00; nom.n.inan: glokowe 1.00; nom.vir.anim: glokowi 1.00; nom.vir.inan: glokowi 1.00; nom.nvir.anim: glokowe 1.00; nom.nvir.inan: glokowe 1.00; gen.m.anim: glokowego 1.00; gen.m.inan: glokowego 1.00; gen.f.anim: glokowej 1.00; gen.f.inan: glokowej 1.00; gen.n.anim: glokowego 1.00; gen.n.inan: glokowego 1.00; gen.vir.anim: glokowych 1.00; gen.vir.inan: glokowych 1.00; gen.nvir.anim: glokowych 1.00; gen.nvir.inan: glokowych 1.00; dat.m.anim: glokowemu 1.00; dat.m.inan: glokowemu 1.00; dat.f.anim: glokowej 1.00; dat.f.inan: glokowej 1.00; dat.n.anim: glokowemu 1.00; dat.n.inan: glokowemu 1.00; dat.vir.anim: glokowym 1.00; dat.vir.inan: glokowym 1.00; dat.nvir.anim: glokowym 1.00; dat.nvir.inan: glokowym 1.00; acc.m.anim: glokowego 1.00; acc.m.inan: glokowy 1.00; acc.f.anim: glokową 1.00; acc.f.inan: glokową 1.00; acc.n.anim: glokowe 1.00; acc.n.inan: glokowe 1.00; acc.vir.anim: glokowych 1.00; acc.vir.inan: glokowych 1.00; acc.nvir.anim: glokowe 1.00; acc.nvir.inan: glokowe 1.00; ins.m.anim: glokowym 1.00; ins.m.inan: glokowym 1.00; ins.f.anim: glokową 1.00; ins.f.inan: glokową 1.00; ins.n.anim: glokowym 1.00; ins.n.inan: glokowym 1.00; ins.vir.anim: glokowymi 1.00; ins.vir.inan: glokowymi 1.00; ins.nvir.anim: glokowymi 1.00; ins.nvir.inan: glokowymi 1.00; loc.m.anim: glokowym 1.00; loc.m.inan: glokowym 1.00; loc.f.anim: glokowej 1.00; loc.f.inan: glokowej 1.00; loc.n.anim: glokowym 1.00; loc.n.inan: glokowym 1.00; loc.vir.anim: glokowych 1.00; loc.vir.inan: glokowych 1.00; loc.nvir.anim: glokowych 1.00; loc.nvir.inan: glokowych 1.00 |
 | `glorpać` | non_past | 1.sg: glorpię 1.00; 1.pl: glorpiemy 1.00; 2.sg: glorpiesz 1.00; 2.pl: glorpiecie 1.00; 3.sg: glorpie 1.00; 3.pl: glorpią 1.00 |
 | `glorpać` | past | 1.m: glorpałem 1.00; 1.f: glorpałam 1.00; 1.n: glorpałom 1.00; 1.vir: glorpaliśmy 1.00; 1.nvir: glorpałyśmy 1.00; 2.m: glorpałeś 1.00; 2.f: glorpałaś 1.00; 2.n: glorpałoś 1.00; 2.vir: glorpaliście 1.00; 2.nvir: glorpałyście 1.00; 3.m: glorpał 1.00; 3.f: glorpała 1.00; 3.n: glorpało 1.00; 3.vir: glorpali 1.00; 3.nvir: glorpały 1.00 |
@@ -332,18 +332,18 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 <details><summary>noun</summary>
 
-- 197 × `noun.acc.sg`: predicted `-+`, attested `-+a` — agrotechnik → agrotechnik (attested agrotechnika); albedometr → albedometr (attested albedometra); antenat → antenat (attested antenata)
-- 122 × `noun.gen.sg`: predicted `-+u`, attested `-+a` — abys → abysu (attested abysa); albedometr → albedometru (attested albedometra); alwar → alwaru (attested alwara)
-- 117 × `noun.acc.sg`: predicted `-+a`, attested `-+` — acetator → acetatora (attested acetator); acydofob → acydofoba (attested acydofob); adamantyn → adamantyna (attested adamantyn)
-- 111 × `noun.gen.sg`: predicted `-+a`, attested `-+u` — ablativus → ablativusa (attested ablativusu); acydofob → acydofoba (attested acydofobu); adamantyn → adamantyna (attested adamantynu)
-- 95 × `noun.acc.pl`: predicted `-+y`, attested `-+ów` — albedometr → albedometry (attested albedometrów); andrus → andrusy (attested andrusów); antenat → antenaty (attested antenatów)
-- 40 × `noun.acc.pl`: predicted `-+i`, attested `-+ów` — agrotechnik → agrotechniki (attested agrotechników); ambitnik → ambitniki (attested ambitników); bartnik → bartniki (attested bartników)
-- 37 × `noun.voc.pl`: predicted `-+i`, attested `-k+cy` — agrotechnik → agrotechniki (attested agrotechnicy); ambitnik → ambitniki (attested ambitnicy); bartnik → bartniki (attested bartnicy)
-- 37 × `noun.nom.pl`: predicted `-+i`, attested `-k+cy` — agrotechnik → agrotechniki (attested agrotechnicy); ambitnik → ambitniki (attested ambitnicy); bartnik → bartniki (attested bartnicy)
-- 29 × `noun.voc.pl`: predicted `-+y`, attested `-+i` — andrus → andrusy (attested andrusi); arcybiskup → arcybiskupy (attested arcybiskupi); arcykapłan → arcykapłany (attested arcykapłani)
-- 29 × `noun.nom.pl`: predicted `-+y`, attested `-+i` — andrus → andrusy (attested andrusi); arcybiskup → arcybiskupy (attested arcybiskupi); arcykapłan → arcykapłany (attested arcykapłani)
-- 22 × `noun.acc.pl`: predicted `-+ów`, attested `-+y` — acetator → acetatorów (attested acetatory); acydofob → acydofobów (attested acydofoby); adamantyn → adamantynów (attested adamantyny)
-- 21 × `noun.acc.sg`: predicted `-+`, attested `-ek+ka` — ancymonek → ancymonek (attested ancymonka); autorek → autorek (attested autorka); bachorek → bachorek (attested bachorka)
+- 183 × `noun.acc.sg`: predicted `-+`, attested `-+a` — albedometr → albedometr (attested albedometra); andrus → andrus (attested andrusa); antenat → antenat (attested antenata)
+- 128 × `noun.gen.sg`: predicted `-+u`, attested `-+a` — abys → abysu (attested abysa); albedometr → albedometru (attested albedometra); alwar → alwaru (attested alwara)
+- 121 × `noun.acc.sg`: predicted `-+a`, attested `-+` — acetator → acetatora (attested acetator); acydofob → acydofoba (attested acydofob); akademik → akademika (attested akademik)
+- 104 × `noun.gen.sg`: predicted `-+a`, attested `-+u` — ablativus → ablativusa (attested ablativusu); acydofob → acydofoba (attested acydofobu); alembik → alembika (attested alembiku)
+- 100 × `noun.acc.pl`: predicted `-+y`, attested `-+ów` — agnat → agnaty (attested agnatów); albedometr → albedometry (attested albedometrów); andrus → andrusy (attested andrusów)
+- 34 × `noun.acc.pl`: predicted `-+i`, attested `-+ów` — bartnik → bartniki (attested bartników); bezecnik → bezecniki (attested bezecników); chłopak → chłopaki (attested chłopaków)
+- 33 × `noun.voc.pl`: predicted `-+i`, attested `-k+cy` — bartnik → bartniki (attested bartnicy); bezecnik → bezecniki (attested bezecnicy); biedniak → biedniaki (attested biedniacy)
+- 33 × `noun.nom.pl`: predicted `-+i`, attested `-k+cy` — bartnik → bartniki (attested bartnicy); bezecnik → bezecniki (attested bezecnicy); biedniak → biedniaki (attested biedniacy)
+- 32 × `noun.voc.pl`: predicted `-+y`, attested `-+i` — andrus → andrusy (attested andrusi); asasyn → asasyny (attested asasyni); bajkopis → bajkopisy (attested bajkopisi)
+- 32 × `noun.nom.pl`: predicted `-+y`, attested `-+i` — andrus → andrusy (attested andrusi); asasyn → asasyny (attested asasyni); bajkopis → bajkopisy (attested bajkopisi)
+- 29 × `noun.acc.pl`: predicted `-+ów`, attested `-+y` — acetator → acetatorów (attested acetatory); acydofob → acydofobów (attested acydofoby); asparagus → asparagusów (attested asparagusy)
+- 20 × `noun.voc.pl`: predicted `-+y`, attested `-+zy` — albedometr → albedometry (attested albedometrzy); arkebuzer → arkebuzery (attested arkebuzerzy); besserwisser → besserwissery (attested besserwisserzy)
 
 </details>
 
@@ -409,29 +409,61 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 2170 KB (908 KB gzipped).
+The model is 1230 KB (532 KB gzipped). Where the bytes are, in KB (the strings, 51 KB, are shared):
+
+| | edits | classes | tree nodes | distributions | joins | lexicon | restoration model | part models | total |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 57 | 79 | 194 | 337 | 0 | 0 | 0 | 0 | 667 |
+| adjective | 6 | 7 | 24 | 14 | 0 | 0 | 0 | 0 | 51 |
+| verb | 142 | 56 | 113 | 137 | 0 | 0 | 0 | 0 | 447 |
+| pronoun | 4 | 3 | 0 | 1 | 0 | 0 | 0 | 0 | 8 |
+| numeral | 1 | 3 | 0 | 1 | 0 | 0 | 0 | 0 | 6 |
 
 | | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 1822 | 1532 | 15995 | 6242 | 88394 | 198 (`noun.acc.sg`) |
-| adjective | 189 | 92 | 1410 | 468 | 2842 | 142 (`adjective.gen.m.anim`) |
-| verb | 4531 | 724 | 7385 | 2860 | 30985 | 183 (`non_past.3.sg`) |
-| pronoun | 122 | 21 | 10 | 5 | 110 | 163 (`pronoun.nom.m.anim`) |
-| numeral | 45 | 24 | 22 | 9 | 217 | 131 (`numeral.nom.vir.anim`) |
+| noun | 1822 | 1532 | 16548 | 4562 | 86272 | 221 (`noun.acc.sg`) |
+| adjective | 189 | 92 | 2020 | 332 | 3589 | 147 (`adjective.gen.m.anim`) |
+| verb | 4531 | 724 | 9622 | 2071 | 35030 | 202 (`non_past.3.sg`) |
+| pronoun | 122 | 21 | 29 | 5 | 226 | 117 (`pronoun.nom.m.anim`) |
+| numeral | 45 | 24 | 21 | 7 | 232 | 172 (`numeral.nom.vir.anim`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
 release build, fastest of seven runs.
 
+<details><summary>Size against fit</summary>
+
+τ is the evidence a tree node needs to be kept (a likelihood-ratio threshold): a bigger τ keeps fewer nodes. Each row trains on the training tenths with the chosen settings but τ, scored on the dev tenth; the chosen τ is the smallest model within one standard error of the best dev top-1 and of the best dev log-loss.
+
+| | τ | model KB | dev top-1 | dev log-loss |
+|---|---:|---:|---:|---:|
+| noun | 1 | 898 | 93.96% | 0.1856 |
+| noun | 2 (chosen) | 575 | 93.97% | 0.1862 |
+| noun | 8 | 341 | 93.41% | 0.1925 |
+| adjective | 1 (chosen) | 43 | 99.99% | 0.0006 |
+| adjective | 2 | 35 | 99.99% | 0.0006 |
+| adjective | 8 | 32 | 99.95% | 0.0024 |
+| verb | 1 (chosen) | 407 | 97.58% | 0.1161 |
+| verb | 2 | 351 | 97.69% | 0.1185 |
+| verb | 8 | 308 | 96.94% | 0.1287 |
+| pronoun | 1 | 6 | 59.43% | 3.7417 |
+| pronoun | 2 (chosen) | 6 | 59.43% | 3.7417 |
+| pronoun | 8 | 5 | 59.43% | 3.7891 |
+| numeral | 1 | 7 | 40.74% | 7.6184 |
+| numeral | 2 | 6 | 40.74% | 7.6184 |
+| numeral | 8 (chosen) | 5 | 40.74% | 7.6184 |
+
+</details>
+
 <details><summary>Chosen hyperparameters</summary>
 
 | | smoothing α | pruning τ | suffix support | syllable token | dev top-1 |
 |---|---:|---:|---:|---|---:|
-| noun | 2 | 1 | 2 | after 2 letters | 93.86% |
-| adjective | 0.5 | 2 | 1 | none | 99.99% |
-| verb | 0.5 | 2 | 1 | none | 97.70% |
-| pronoun | 0.5 | 8 | 1 | after 0 letters | 59.43% |
-| numeral | 0.5 | 8 | 1 | after 0 letters | 40.74% |
+| noun | 2 | 2 | 1 | none | 93.97% |
+| adjective | 0.5 | 1 | 1 | none | 99.99% |
+| verb | 0.5 | 1 | 1 | none | 97.58% |
+| pronoun | 0.5 | 2 | 1 | after 0 letters | 59.43% |
+| numeral | 2 | 8 | 1 | after 0 letters | 40.74% |
 
 </details>
 

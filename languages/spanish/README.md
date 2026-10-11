@@ -59,9 +59,9 @@ used for any decision.
 
 | | lemmas | cells | top-1 | top-3 | top-1 given citation | top-1 given citation and markers |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 5952 | 5952 | **98.67%** | 99.71% | – | 98.57% |
-| adjective | 2398 | 7205 | **98.57%** | 99.78% | 99.67% | – |
-| verb | 928 | 66718 | **99.43%** | 99.90% | 99.87% | – |
+| noun | 5952 | 5952 | **98.74%** | 99.80% | – | 98.64% |
+| adjective | 2398 | 7205 | **98.56%** | 99.72% | 99.67% | – |
+| verb | 928 | 66718 | **99.43%** | 99.90% | 99.90% | – |
 | determiner ¹ | 4 | 12 | **83.33%** | 100.00% | – | – |
 
 ¹ A closed class: too few held-out lemmas for these numbers to mean much. What matters for
@@ -91,16 +91,16 @@ Every held-out word, from every edition:
 
 | | lemmas | cells | top-1 | top-1 given citation |
 |---|---:|---:|---:|---:|
-| verb | 1827 | 131379 | 99.15% | 99.78% |
+| verb | 1827 | 131379 | 99.15% | 99.77% |
 
 <details><summary>Held-out top-1 per cell</summary>
 
 | cell | n | top-1 | top-3 |
 |---|---:|---:|---:|
-| noun.pl | 5952 | 98.67% | 99.71% |
+| noun.pl | 5952 | 98.74% | 99.80% |
 | adjective.m.pl | 2396 | 98.75% | 99.92% |
-| adjective.f.sg | 2397 | 99.00% | 99.92% |
-| adjective.f.pl | 2397 | 98.12% | 99.58% |
+| adjective.f.sg | 2397 | 98.96% | 99.83% |
+| adjective.f.pl | 2397 | 98.12% | 99.50% |
 | superlative | 12 | 66.67% | 83.33% |
 | before_noun | 3 | 100.00% | 100.00% |
 | verb.pres.1.sg | 926 | 97.84% | 99.57% |
@@ -199,8 +199,8 @@ Expected calibration error (ECE) is the average gap between confidence and accur
 
 | | ECE |
 |---|---:|
-| noun | 0.006 |
-| adjective | 0.006 |
+| noun | 0.007 |
+| adjective | 0.007 |
 | verb | 0.002 |
 | determiner | 0.066 |
 
@@ -208,13 +208,13 @@ All parts of speech together (ECE 0.002):
 
 | confidence | mean confidence | accuracy | answers |
 |---|---:|---:|---:|
-| 0.3–0.4 | 0.339 | 0.250 | 4 |
-| 0.4–0.5 | 0.470 | 0.692 | 13 |
-| 0.5–0.6 | 0.560 | 0.526 | 253 |
-| 0.6–0.7 | 0.662 | 0.686 | 280 |
-| 0.7–0.8 | 0.754 | 0.845 | 290 |
-| 0.8–0.9 | 0.857 | 0.928 | 553 |
-| 0.9–1.0 | 0.998 | 0.997 | 78494 |
+| 0.3–0.4 | 0.398 | 0.000 | 4 |
+| 0.4–0.5 | 0.471 | 0.706 | 17 |
+| 0.5–0.6 | 0.557 | 0.520 | 246 |
+| 0.6–0.7 | 0.663 | 0.684 | 301 |
+| 0.7–0.8 | 0.753 | 0.845 | 317 |
+| 0.8–0.9 | 0.859 | 0.940 | 587 |
+| 0.9–1.0 | 0.998 | 0.997 | 78415 |
 
 ### Forms many words lack
 
@@ -223,7 +223,7 @@ how often the answer to "does this word have one?" is right.
 
 | | held-out cells | right | attested cells | right |
 |---|---:|---:|---:|---:|
-| adjective | 4796 | 99.69% | 49104 | 100.00% |
+| adjective | 4796 | 99.73% | 49104 | 100.00% |
 | verb | 9280 | 99.46% | 179750 | 99.98% |
 
 ### Inherent features
@@ -232,7 +232,7 @@ Predicted for held-out lemmas from the bare lemma.
 
 | feature | lemmas | right |
 |---|---:|---:|
-| noun noungender | 5950 | 94.07% |
+| noun noungender | 5950 | 94.13% |
 
 ### Made-up words
 
@@ -242,7 +242,7 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 |---|---|---|
 | `glorpo` | noun | sg: glorpo 1.00; pl: glorpos 1.00 |
 | `blicción` | noun | sg: blicción 1.00; pl: blicciones 1.00 |
-| `flurmen` | noun | sg: flurmen 1.00; pl: flurmenes 1.00 |
+| `flurmen` | noun | sg: flurmen 1.00; pl: flurmenes 0.99 |
 | `glorpudo` | adjective | m.sg: glorpudo 1.00; m.pl: glorpudos 1.00; f.sg: glorpuda 0.99; f.pl: glorpudas 0.99 |
 | `flinderal` | adjective | m.sg: flinderal 1.00; m.pl: flinderales 1.00; f.sg: flinderal 1.00; f.pl: flinderales 1.00 |
 | `glorpar` | verb | pres.1.sg: glorpo 1.00; pres.1.pl: glorpamos 1.00; pres.2.sg: glorpas 1.00; pres.2.pl: glorpáis 1.00; pres.3.sg: glorpa 1.00; pres.3.pl: glorpan 1.00; impf.1.sg: glorpaba 1.00; impf.1.pl: glorpábamos 1.00; impf.2.sg: glorpabas 1.00; impf.2.pl: glorpabais 1.00; impf.3.sg: glorpaba 1.00; impf.3.pl: glorpaban 1.00; pret.1.sg: glorpé 1.00; pret.1.pl: glorpamos 1.00; pret.2.sg: glorpaste 1.00; pret.2.pl: glorpasteis 1.00; pret.3.sg: glorpó 1.00; pret.3.pl: glorparon 1.00; fut.1.sg: glorparé 1.00; fut.1.pl: glorparemos 1.00; fut.2.sg: glorparás 1.00; fut.2.pl: glorparéis 1.00; fut.3.sg: glorpará 1.00; fut.3.pl: glorparán 1.00; cond.1.sg: glorparía 1.00; cond.1.pl: glorparíamos 1.00; cond.2.sg: glorparías 1.00; cond.2.pl: glorparíais 1.00; cond.3.sg: glorparía 1.00; cond.3.pl: glorparían 1.00; subj.1.sg: glorpe 1.00; subj.1.pl: glorpemos 1.00; subj.2.sg: glorpes 1.00; subj.2.pl: glorpéis 1.00; subj.3.sg: glorpe 1.00; subj.3.pl: glorpen 1.00; subj-impf.1.sg: glorpara 1.00; subj-impf.1.pl: glorpáramos 1.00; subj-impf.2.sg: glorparas 1.00; subj-impf.2.pl: glorparais 1.00; subj-impf.3.sg: glorpara 1.00; subj-impf.3.pl: glorparan 1.00; subj-impf-se.1.sg: glorpase 1.00; subj-impf-se.1.pl: glorpásemos 1.00; subj-impf-se.2.sg: glorpases 1.00; subj-impf-se.2.pl: glorpaseis 1.00; subj-impf-se.3.sg: glorpase 1.00; subj-impf-se.3.pl: glorpasen 1.00; subj-fut.1.sg: glorpare 1.00; subj-fut.1.pl: glorpáremos 1.00; subj-fut.2.sg: glorpares 1.00; subj-fut.2.pl: glorpareis 1.00; subj-fut.3.sg: glorpare 1.00; subj-fut.3.pl: glorparen 1.00 |
@@ -253,11 +253,11 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 <details><summary>noun</summary>
 
-- 23 × `noun.pl`: predicted `-+es`, attested `-+s` — bacon → bacones (attested bacons); bulldozer → bulldozeres (attested bulldozers); clown → clownes (attested clowns)
-- 17 × `noun.pl`: predicted `-+s`, attested `-+` — accésit → accésits (attested accésit); animoji → animojis (attested animoji); arnt → arnts (attested arnt)
-- 11 × `noun.pl`: predicted `-+s`, attested `-+es` — alfajor → alfajors (attested alfajores); cácher → cáchers (attested cácheres); eslalom → eslaloms (attested eslalomes)
+- 24 × `noun.pl`: predicted `-+es`, attested `-+s` — bacon → bacones (attested bacons); bulldozer → bulldozeres (attested bulldozers); clown → clownes (attested clowns)
+- 18 × `noun.pl`: predicted `-+s`, attested `-+` — accésit → accésits (attested accésit); animoji → animojis (attested animoji); arnt → arnts (attested arnt)
 - 8 × `noun.pl`: predicted `-+`, attested `-+es` — box → box (attested boxes); crash → crash (attested crashes); dios → dios (attested dioses)
-- 4 × `noun.pl`: predicted `-+es`, attested `-+` — caiss → caisses (attested caiss); híper → híperes (attested híper); mam → mames (attested mam)
+- 6 × `noun.pl`: predicted `-+s`, attested `-+es` — cácher → cáchers (attested cácheres); eslalom → eslaloms (attested eslalomes); estándard → estándards (attested estándardes)
+- 3 × `noun.pl`: predicted `-+es`, attested `-+` — caiss → caisses (attested caiss); híper → híperes (attested híper); zayin → zayines (attested zayin)
 - 2 × `noun.pl`: predicted `-+s`, attested `-d+es` — lord → lords (attested lores); milord → milords (attested milores)
 - 1 × `noun.pl`: predicted `-+`, attested `-+s` — alumnx → alumnx (attested alumnxs)
 - 1 × `noun.pl`: predicted `-+`, attested `-chentas+nly` — ochentas → ochentas (attested only)
@@ -271,7 +271,7 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 <details><summary>adjective</summary>
 
 - 17 × `adjective.m.pl`: predicted `-+s`, attested `-+` — actiacné → actiacnés (attested actiacné); antiblanqueo → antiblanqueos (attested antiblanqueo); antichoque → antichoques (attested antichoque)
-- 15 × `adjective.f.sg`: predicted `-o+a`, attested `-+` — antiblanqueo → antiblanquea (attested antiblanqueo); antirretorno → antirretorna (attested antirretorno); besto → besta (attested besto)
+- 16 × `adjective.f.sg`: predicted `-o+a`, attested `-+` — antiblanqueo → antiblanquea (attested antiblanqueo); antirretorno → antirretorna (attested antirretorno); besto → besta (attested besto)
 - 10 × `adjective.f.pl`: predicted `-+s`, attested `-+` — actiacné → actiacnés (attested actiacné); antichoque → antichoques (attested antichoque); antigripe → antigripes (attested antigripe)
 - 9 × `adjective.f.pl`: predicted `-o+as`, attested `-+s` — antirretorno → antirretornas (attested antirretornos); besto → bestas (attested bestos); contratorpedero → contratorpederas (attested contratorpederos)
 - 7 × `adjective.f.pl`: predicted `-o+as`, attested `-+` — antiblanqueo → antiblanqueas (attested antiblanqueo); intergiro → intergiras (attested intergiro); monotiro → monotiras (attested monotiro)
@@ -310,25 +310,53 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 836 KB (274 KB gzipped).
+The model is 558 KB (192 KB gzipped). Where the bytes are, in KB (the strings, 32 KB, are shared):
+
+| | edits | classes | tree nodes | distributions | joins | lexicon | restoration model | part models | total |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 5 | 6 | 44 | 52 | 0 | 0 | 0 | 0 | 107 |
+| adjective | 3 | 3 | 14 | 10 | 0 | 0 | 0 | 0 | 31 |
+| verb | 193 | 103 | 36 | 52 | 0 | 0 | 0 | 0 | 385 |
+| determiner | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
 
 | | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 163 | 201 | 3586 | 633 | 12321 | 176 (`noun.pl`) |
-| adjective | 103 | 93 | 977 | 613 | 2400 | 152 (`adjective.f.sg`) |
-| verb | 6171 | 999 | 3096 | 202 | 13676 | 137 (`verb.pres.3.sg`) |
-| determiner | 22 | 17 | 32 | 19 | 132 | 115 (`determiner.m.pl`) |
+| noun | 163 | 201 | 3726 | 643 | 13390 | 153 (`noun.pl`) |
+| adjective | 103 | 93 | 1229 | 556 | 2611 | 138 (`adjective.f.sg`) |
+| verb | 6171 | 999 | 3096 | 202 | 13431 | 127 (`verb.pres.3.sg`) |
+| determiner | 22 | 17 | 32 | 19 | 92 | 107 (`determiner.m.pl`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
 release build, fastest of seven runs.
 
+<details><summary>Size against fit</summary>
+
+τ is the evidence a tree node needs to be kept (a likelihood-ratio threshold): a bigger τ keeps fewer nodes. Each row trains on the training tenths with the chosen settings but τ, scored on the dev tenth; the chosen τ is the smallest model within one standard error of the best dev top-1 and of the best dev log-loss.
+
+| | τ | model KB | dev top-1 | dev log-loss |
+|---|---:|---:|---:|---:|
+| noun | 1 | 127 | 98.61% | 0.0706 |
+| noun | 2 (chosen) | 90 | 98.66% | 0.0698 |
+| noun | 8 | 44 | 98.42% | 0.0695 |
+| adjective | 1 | 34 | 98.35% | 0.0799 |
+| adjective | 2 (chosen) | 29 | 98.31% | 0.0758 |
+| adjective | 8 | 23 | 98.29% | 0.0815 |
+| verb | 1 (chosen) | 379 | 98.92% | 0.0602 |
+| verb | 2 | 365 | 98.90% | 0.0614 |
+| verb | 8 | 347 | 98.76% | 0.0653 |
+| determiner | 1 | 2 | 64.71% | 2.0412 |
+| determiner | 2 | 2 | 64.71% | 1.9707 |
+| determiner | 8 (chosen) | 1 | 64.71% | 1.8681 |
+
+</details>
+
 <details><summary>Chosen hyperparameters</summary>
 
 | | smoothing α | pruning τ | suffix support | syllable token | dev top-1 |
 |---|---:|---:|---:|---|---:|
-| noun | 0.5 | 2 | 2 | none | 98.66% |
-| adjective | 0.5 | 8 | 2 | none | 98.30% |
+| noun | 2 | 2 | 2 | none | 98.66% |
+| adjective | 2 | 2 | 2 | none | 98.31% |
 | verb | 0.5 | 1 | 1 | none | 98.92% |
 | determiner | 0.5 | 8 | 1 | none | 64.71% |
 

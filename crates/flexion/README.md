@@ -39,7 +39,7 @@ Citations (`"lie, lied"`) keep only classes that agree with the given principal 
 (dropping the last parts while none does); markers (`"кот m anim"`, `"rēx, rēgis m."`)
 weigh classes by the features they name.
 
-Three further models and a lexicon can sit beside a part of speech's own:
+Four further models and a lexicon can sit beside a part of speech's own:
 
 - a **restoration model**, where a language writes marks that people often leave out
   (Latin and Greek vowel length, Greek breathings, Russian `ё`): a one-cell model that
@@ -48,6 +48,11 @@ Three further models and a lexicon can sit beside a part of speech's own:
   probability counts the classes that don't fit the word too, so a word whose marks no
   reading can place gets a low confidence rather than a confident wrong one. A lemma
   typed with marks, or given with principal parts, is read once;
+- a **start-restoration model** beside it, where the marks a lemma leaves out sit near
+  its start (Latin `cōn-`, `dē-`): the same kind of model over the lemma written
+  backwards, which restores only the first half of the word. Each reading of the
+  restoration model takes its start from the best reading of this one; the middle is
+  kept as typed. It is not used when the caller typed marks or principal parts;
 - **part models**, one per principal part of the citation: the same cells, learned
   from that part instead of the lemma (`ἔλυσα → ἐλύσαμεν`). A cell is built from the
   part model that did best on held-back words, when the caller gives that part;
@@ -82,7 +87,9 @@ Lookups fold everything a caller may leave out; output writes it back.
 The format is documented in [`src/format.rs`](src/format.rs). It is built to be small:
 a distribution entry is 4 bytes (a 16-bit class and a probability in steps of 1/65535),
 a class's edits are 16-bit indices, and an edit's four strings are offsets into one shared,
-deduplicated string area with their lengths packed into the record's spare bytes. Wider
+deduplicated string area with their lengths packed into the record's spare bytes. A tree
+node stores only its label, its child count and its distribution's length (8 bytes); where
+its children and distribution start is summed up at load. Wider
 fields are used only for a part of speech that needs them (more than 65,536 classes or
 edits). A lexicon entry is its written form and a 32-bit hash of its lookup key; a match
 is confirmed by folding the written form.
