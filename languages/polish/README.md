@@ -54,7 +54,7 @@ used for any decision.
 
 | | lemmas | cells | top-1 | top-3 | top-1 given citation | top-1 given citation and markers |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 3728 | 41739 | **94.14%** | 99.30% | 96.36% | 98.36% |
+| noun | 3728 | 41739 | **94.14%** | 99.30% | 96.35% | 98.36% |
 | adjective | 1366 | 80746 | **99.98%** | 99.99% | – | – |
 | verb | 1221 | 52644 | **97.33%** | 99.11% | 98.27% | 98.19% |
 | pronoun ¹ | 6 | 354 | **81.64%** | 81.64% | – | – |
@@ -78,9 +78,9 @@ the word the way a dictionary prints them (noun `mpers`/`manim`/`minan`/`f`/`n`;
 | noun.gen.pl | 2829 | 93.96% | 99.22% |
 | noun.dat.sg | 3652 | 97.84% | 99.37% |
 | noun.dat.pl | 2825 | 97.70% | 99.40% |
-| noun.acc.sg | 3664 | 88.67% | 99.73% |
+| noun.acc.sg | 3664 | 88.65% | 99.73% |
 | noun.acc.pl | 2832 | 86.37% | 98.91% |
-| noun.ins.sg | 3659 | 98.39% | 99.45% |
+| noun.ins.sg | 3659 | 98.41% | 99.45% |
 | noun.ins.pl | 2826 | 97.56% | 99.29% |
 | noun.loc.sg | 3657 | 97.87% | 99.37% |
 | noun.loc.pl | 2826 | 97.74% | 99.43% |
@@ -279,8 +279,8 @@ Expected calibration error (ECE) is the average gap between confidence and accur
 |---|---:|
 | noun | 0.009 |
 | adjective | 0.000 |
-| verb | 0.012 |
-| pronoun | 0.237 |
+| verb | 0.013 |
+| pronoun | 0.173 |
 | numeral | 0.228 |
 
 All parts of speech together (ECE 0.006):
@@ -288,12 +288,12 @@ All parts of speech together (ECE 0.006):
 | confidence | mean confidence | accuracy | answers |
 |---|---:|---:|---:|
 | 0.3–0.4 | 0.367 | 0.406 | 32 |
-| 0.4–0.5 | 0.457 | 0.460 | 198 |
-| 0.5–0.6 | 0.547 | 0.549 | 1901 |
-| 0.6–0.7 | 0.652 | 0.694 | 1910 |
-| 0.7–0.8 | 0.752 | 0.734 | 2144 |
-| 0.8–0.9 | 0.857 | 0.847 | 3364 |
-| 0.9–1.0 | 0.997 | 0.992 | 165950 |
+| 0.4–0.5 | 0.458 | 0.466 | 204 |
+| 0.5–0.6 | 0.547 | 0.551 | 1897 |
+| 0.6–0.7 | 0.652 | 0.685 | 1866 |
+| 0.7–0.8 | 0.752 | 0.733 | 2155 |
+| 0.8–0.9 | 0.857 | 0.846 | 3355 |
+| 0.9–1.0 | 0.997 | 0.992 | 165990 |
 
 ### Forms many words lack
 
@@ -320,7 +320,7 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 | word | function | answers |
 |---|---|---|
-| `glorp` | noun | nom.sg: glorp 1.00; nom.pl: glorpy 0.58, glorpie 0.39; gen.sg: glorpia 0.39, glorpu 0.34; gen.pl: glorpów 0.61, glorpi 0.26; dat.sg: glorpowi 0.61, glorpiowi 0.39; dat.pl: glorpom 0.61, glorpiom 0.39; acc.sg: glorp 0.55, glorpia 0.30; acc.pl: glorpy 0.58, glorpie 0.27; ins.sg: glorpem 0.61, glorpiem 0.39; ins.pl: glorpami 0.61, glorpiami 0.39; loc.sg: glorpie 0.61, glorpiu 0.39; loc.pl: glorpach 0.61, glorpiach 0.39; voc.sg: glorpie 0.61, glorpiu 0.39; voc.pl: glorpy 0.58, glorpie 0.39 |
+| `glorp` | noun | nom.sg: glorp 1.00; nom.pl: glorpy 0.58, glorpie 0.39; gen.sg: glorpia 0.38, glorpu 0.34; gen.pl: glorpów 0.61, glorpi 0.26; dat.sg: glorpowi 0.62, glorpiowi 0.38; dat.pl: glorpom 0.61, glorpiom 0.39; acc.sg: glorp 0.55, glorpia 0.30; acc.pl: glorpy 0.58, glorpie 0.27; ins.sg: glorpem 0.62, glorpiem 0.38; ins.pl: glorpami 0.61, glorpiami 0.39; loc.sg: glorpie 0.62, glorpiu 0.38; loc.pl: glorpach 0.61, glorpiach 0.39; voc.sg: glorpie 0.62, glorpiu 0.38; voc.pl: glorpy 0.58, glorpie 0.39 |
 | `kuzdra` | noun | nom.sg: kuzdra 1.00; nom.pl: kuzdry 0.99; gen.sg: kuzdry 1.00; gen.pl: kuzdr 0.65, kuzder 0.34; dat.sg: kuzdrze 1.00; dat.pl: kuzdrom 1.00; acc.sg: kuzdrę 1.00; acc.pl: kuzdry 0.99; ins.sg: kuzdrą 1.00; ins.pl: kuzdrami 1.00; loc.sg: kuzdrze 1.00; loc.pl: kuzdrach 1.00; voc.sg: kuzdro 1.00; voc.pl: kuzdry 0.99 |
 | `blicik` | noun | nom.sg: blicik 1.00; nom.pl: bliciki 0.97; gen.sg: blicika 0.66, bliciku 0.34; gen.pl: blicików 1.00; dat.sg: blicikowi 1.00; dat.pl: blicikom 1.00; acc.sg: blicik 0.84, blicika 0.16; acc.pl: bliciki 0.95; ins.sg: blicikiem 1.00; ins.pl: blicikami 1.00; loc.sg: bliciku 1.00; loc.pl: blicikach 1.00; voc.sg: bliciku 1.00; voc.pl: bliciki 0.97 |
 | `glokowy` | adjective | nom.m.anim: glokowy 1.00; nom.m.inan: glokowy 1.00; nom.f.anim: glokowa 1.00; nom.f.inan: glokowa 1.00; nom.n.anim: glokowe 1.00; nom.n.inan: glokowe 1.00; nom.vir.anim: glokowi 1.00; nom.vir.inan: glokowi 1.00; nom.nvir.anim: glokowe 1.00; nom.nvir.inan: glokowe 1.00; gen.m.anim: glokowego 1.00; gen.m.inan: glokowego 1.00; gen.f.anim: glokowej 1.00; gen.f.inan: glokowej 1.00; gen.n.anim: glokowego 1.00; gen.n.inan: glokowego 1.00; gen.vir.anim: glokowych 1.00; gen.vir.inan: glokowych 1.00; gen.nvir.anim: glokowych 1.00; gen.nvir.inan: glokowych 1.00; dat.m.anim: glokowemu 1.00; dat.m.inan: glokowemu 1.00; dat.f.anim: glokowej 1.00; dat.f.inan: glokowej 1.00; dat.n.anim: glokowemu 1.00; dat.n.inan: glokowemu 1.00; dat.vir.anim: glokowym 1.00; dat.vir.inan: glokowym 1.00; dat.nvir.anim: glokowym 1.00; dat.nvir.inan: glokowym 1.00; acc.m.anim: glokowego 1.00; acc.m.inan: glokowy 1.00; acc.f.anim: glokową 1.00; acc.f.inan: glokową 1.00; acc.n.anim: glokowe 1.00; acc.n.inan: glokowe 1.00; acc.vir.anim: glokowych 1.00; acc.vir.inan: glokowych 1.00; acc.nvir.anim: glokowe 1.00; acc.nvir.inan: glokowe 1.00; ins.m.anim: glokowym 1.00; ins.m.inan: glokowym 1.00; ins.f.anim: glokową 1.00; ins.f.inan: glokową 1.00; ins.n.anim: glokowym 1.00; ins.n.inan: glokowym 1.00; ins.vir.anim: glokowymi 1.00; ins.vir.inan: glokowymi 1.00; ins.nvir.anim: glokowymi 1.00; ins.nvir.inan: glokowymi 1.00; loc.m.anim: glokowym 1.00; loc.m.inan: glokowym 1.00; loc.f.anim: glokowej 1.00; loc.f.inan: glokowej 1.00; loc.n.anim: glokowym 1.00; loc.n.inan: glokowym 1.00; loc.vir.anim: glokowych 1.00; loc.vir.inan: glokowych 1.00; loc.nvir.anim: glokowych 1.00; loc.nvir.inan: glokowych 1.00 |
@@ -332,7 +332,7 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 <details><summary>noun</summary>
 
-- 183 × `noun.acc.sg`: predicted `-+`, attested `-+a` — albedometr → albedometr (attested albedometra); andrus → andrus (attested andrusa); antenat → antenat (attested antenata)
+- 184 × `noun.acc.sg`: predicted `-+`, attested `-+a` — aerobus → aerobus (attested aerobusa); albedometr → albedometr (attested albedometra); andrus → andrus (attested andrusa)
 - 128 × `noun.gen.sg`: predicted `-+u`, attested `-+a` — abys → abysu (attested abysa); albedometr → albedometru (attested albedometra); alwar → alwaru (attested alwara)
 - 121 × `noun.acc.sg`: predicted `-+a`, attested `-+` — acetator → acetatora (attested acetator); acydofob → acydofoba (attested acydofob); akademik → akademika (attested akademik)
 - 104 × `noun.gen.sg`: predicted `-+a`, attested `-+u` — ablativus → ablativusa (attested ablativusu); acydofob → acydofoba (attested acydofobu); alembik → alembika (attested alembiku)
@@ -409,23 +409,23 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 1230 KB (532 KB gzipped). Where the bytes are, in KB (the strings, 51 KB, are shared):
+The model is 4960 KB of generated Rust (541 KB gzipped). Its tables measure 1051 KB: what a compact binary layout of them would take, the size the build prices when it tunes. Where those bytes are, in KB (the strings, 50 KB, are shared):
 
-| | edits | classes | tree nodes | distributions | joins | lexicon | restoration model | part models | total |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 57 | 79 | 194 | 337 | 0 | 0 | 0 | 0 | 667 |
-| adjective | 6 | 7 | 24 | 14 | 0 | 0 | 0 | 0 | 51 |
-| verb | 142 | 56 | 113 | 137 | 0 | 0 | 0 | 0 | 447 |
-| pronoun | 4 | 3 | 0 | 1 | 0 | 0 | 0 | 0 | 8 |
-| numeral | 1 | 3 | 0 | 1 | 0 | 0 | 0 | 0 | 6 |
+| | edits | classes | tree nodes | their counts | joins | lexicon | sound laws | restoration model | part models | total |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 54 | 76 | 194 | 201 | 0 | 0 | 1 | 0 | 0 | 526 |
+| adjective | 6 | 7 | 24 | 14 | 0 | 0 | 0 | 0 | 0 | 51 |
+| verb | 137 | 56 | 113 | 103 | 0 | 0 | 2 | 0 | 0 | 410 |
+| pronoun | 4 | 3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 8 |
+| numeral | 1 | 3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 6 |
 
-| | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
+| | edits | classes | stored nodes | memorized words | counts stored | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 1822 | 1532 | 16548 | 4562 | 86272 | 221 (`noun.acc.sg`) |
-| adjective | 189 | 92 | 2020 | 332 | 3589 | 147 (`adjective.gen.m.anim`) |
-| verb | 4531 | 724 | 9622 | 2071 | 35030 | 202 (`non_past.3.sg`) |
-| pronoun | 122 | 21 | 29 | 5 | 226 | 117 (`pronoun.nom.m.anim`) |
-| numeral | 45 | 24 | 21 | 7 | 232 | 172 (`numeral.nom.vir.anim`) |
+| noun | 1738 | 1481 | 16549 | 4565 | 34243 | 572 (`noun.acc.sg`) |
+| adjective | 189 | 92 | 2020 | 332 | 2448 | 409 (`adjective.gen.m.anim`) |
+| verb | 4377 | 724 | 9622 | 2071 | 17510 | 556 (`non_past.3.sg`) |
+| pronoun | 122 | 21 | 25 | 1 | 58 | 413 (`pronoun.nom.m.anim`) |
+| numeral | 45 | 24 | 21 | 7 | 82 | 411 (`numeral.nom.vir.anim`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
@@ -437,40 +437,62 @@ release build, fastest of seven runs.
 
 | | τ | model KB | dev top-1 | dev log-loss |
 |---|---:|---:|---:|---:|
-| noun | 1 | 898 | 93.96% | 0.1856 |
-| noun | 2 (chosen) | 575 | 93.97% | 0.1862 |
-| noun | 8 | 341 | 93.41% | 0.1925 |
+| noun | 1 | 621 | 93.96% | 0.1854 |
+| noun | 2 (chosen) | 459 | 93.97% | 0.1860 |
+| noun | 8 | 356 | 93.41% | 0.1925 |
 | adjective | 1 (chosen) | 43 | 99.99% | 0.0006 |
-| adjective | 2 | 35 | 99.99% | 0.0006 |
-| adjective | 8 | 32 | 99.95% | 0.0024 |
-| verb | 1 (chosen) | 407 | 97.58% | 0.1161 |
-| verb | 2 | 351 | 97.69% | 0.1185 |
-| verb | 8 | 308 | 96.94% | 0.1287 |
-| pronoun | 1 | 6 | 59.43% | 3.7417 |
-| pronoun | 2 (chosen) | 6 | 59.43% | 3.7417 |
-| pronoun | 8 | 5 | 59.43% | 3.7891 |
-| numeral | 1 | 7 | 40.74% | 7.6184 |
-| numeral | 2 | 6 | 40.74% | 7.6184 |
+| adjective | 2 | 36 | 99.99% | 0.0006 |
+| adjective | 8 | 34 | 99.95% | 0.0024 |
+| verb | 1 (chosen) | 376 | 97.58% | 0.1160 |
+| verb | 2 | 341 | 97.69% | 0.1185 |
+| verb | 8 | 323 | 96.94% | 0.1287 |
+| pronoun | 1 | 6 | 59.43% | 3.7393 |
+| pronoun | 2 (chosen) | 5 | 59.43% | 3.7393 |
+| pronoun | 8 | 5 | 59.43% | 3.7897 |
+| numeral | 1 | 5 | 40.74% | 7.6184 |
+| numeral | 2 | 5 | 40.74% | 7.6184 |
 | numeral | 8 (chosen) | 5 | 40.74% | 7.6184 |
 
 </details>
 
 <details><summary>Chosen hyperparameters</summary>
 
-| | smoothing α | pruning τ | suffix support | syllable token | dev top-1 |
-|---|---:|---:|---:|---|---:|
-| noun | 2 | 2 | 1 | none | 93.97% |
-| adjective | 0.5 | 1 | 1 | none | 99.99% |
-| verb | 0.5 | 1 | 1 | none | 97.58% |
-| pronoun | 0.5 | 2 | 1 | after 0 letters | 59.43% |
-| numeral | 2 | 8 | 1 | after 0 letters | 40.74% |
+| | smoothing α | pruning τ | suffix support | syllable token | join model | start restoration | sound laws | dev top-1 |
+|---|---:|---:|---:|---|---|---|---|---:|
+| noun | 2 | 2 | 1 | none | no | no | yes | 93.97% |
+| adjective | 0.5 | 1 | 1 | none | no | no | no | 99.99% |
+| verb | 0.5 | 1 | 1 | none | no | no | yes | 97.58% |
+| pronoun | 0.5 | 2 | 1 | after 2 letters | no | no | no | 59.43% |
+| numeral | 2 | 8 | 1 | after 0 letters | no | no | no | 40.74% |
 
 </details>
+
+### Sound laws
+
+Learned from the training words: where edits differ only by a regular change of the stem's edge, they are one edit and a rule, so an unseen word gets the change too.
+
+- **noun**:
+  - the stem's last segment before the ending: c→ć, g→dz, k→c, n→ń, s→ś, st→ści, sł→śl, t→ci, x→ks, z→ź, zd→źdz, ć→ci, ł→l, ń→ni, ś→si, ź→zi (23669 training pairs)
+  - the stem's last segment before the ending: c→ćc, ch→s, n→ńc, s→śc, st→śc, t→c, z→źc, ć→c, ł→l, ń→n, ś→s, ź→z (10731 training pairs)
+  - the stem's last vowel, across its final consonants: ó→o, ą→ę (30 training pairs)
+  - the stem's last segment before the ending: s→śn, z→n (29 training pairs)
+- **verb**:
+  - the stem's last segment before the ending: c→kl, ch→dzi, g→ż, k→cz, n→ły, sn→śli, sp→śpi, sł→śl, t→cz, w→j, z→ż, zd→żdż, zn→źli, ć→l, ść→dl (1776 training pairs)
+  - the stem's last segment before the ending: c→kł, ch→dź, k→czą, n→ńci, sn→śni, sp→śpi, t→czą, w→ją, z→żą, zd→żdż, zn→źni, ć→ł, ść→dł, źć→zł (180883 training pairs)
+  - the stem's last segment before the ending: c→ć, k→c, n→ń, s→ś, sp→śp, sł→śl, t→c, z→ź, ć→j, ść→d, źć→z (6254 training pairs)
+  - the stem's last segment before the ending: c→ż, k→z, n→l, s→śni, sn→śl, t→z, z→źni, zn→źl, ć→j, źć→zi (1704 training pairs)
+  - the stem's last segment before the ending: c→k, s→śn, z→źn, ść→d, źć→z (614 training pairs)
+  - the stem's last segment before the ending: c→gn, ć→n, ść→dłb, źć→złb (194 training pairs)
+  - the stem's last segment before the ending: c→żo, źć→zio (100 training pairs)
+  - the stem's last segment before the ending: c→gn, ść→dn (258 training pairs)
+  - the stem's last segment before the ending: c→g, ść→d (50 training pairs)
+  - the stem's last segment before the ending: c→ćci, z→źci (37 training pairs)
+  - the stem's last segment before the ending: c→ćm, z→źm (37 training pairs)
 
 
 ## Data and license
 
-The code is MIT or Apache-2.0. The model (`src/model.bin`) is derived from
+The code is MIT or Apache-2.0. The model (the code under `src/model/`) is derived from
 [the English Wiktionary](https://en.wiktionary.org/) via [Kaikki](https://kaikki.org/) and
 [wiktextract](https://github.com/tatuylonen/wiktextract), and is licensed under
 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); see `DATA-LICENSE.md`.

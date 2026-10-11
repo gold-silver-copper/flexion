@@ -28,9 +28,8 @@ cd ~/code/flexion && export FLEXION_CACHE=$HOME/.cache/flexion-ceiling \
 ## 1. Learning curves
 
 `xtask probe --fraction f` for f = 1, 0.5, 0.25, 0.1 (default parameters, scored
-on the held-out tenth); Ancient Greek one part of speech at a time. Keeps each
-language's full-data model as `$FLEXION_CACHE/<lang>[-<pos>]-full.bin` for steps
-3 and 4. About 12 minutes for all ten, one probe at a time.
+on the held-out tenth); Ancient Greek one part of speech at a time. About 12
+minutes for all ten, one probe at a time.
 
 ```sh
 cd ~/code/flexion && export FLEXION_CACHE=$HOME/.cache/flexion-ceiling \
@@ -79,22 +78,19 @@ export's train split, checkpoint chosen on dev, scored on the same held-out
 words with the same rule; see [`neural/README.md`](neural/README.md). About ten
 minutes per part of speech.
 
-The tree to compare it with: step 1's default-parameter model, or the
-parameters the shipped build chose (smoothing, pruning, syllable walk, joins,
-part models), which `tuned.sh` probes for the compared parts of speech
-(`$FLEXION_CACHE/<lang>-<pos>-tuned.bin`; about 5 minutes). `ceiling compare`
-puts the two side by side by cell, lemma ending, length and inherent feature,
-with a word-level bootstrap interval for the difference:
+The tree to compare it with is trained by `ceiling compare` itself, with the
+probe flags after its arguments: none for default parameters, or the parameters
+the shipped build chose (smoothing, pruning, syllable walk, joins, part models;
+`tuned.sh` lists them and probes each). `ceiling compare` puts the two side by
+side by cell, lemma ending, length and inherent feature, with a word-level
+bootstrap interval for the difference:
 
 ```sh
 cd ~/code/flexion && export FLEXION_CACHE=$HOME/.cache/flexion-ceiling \
   && tools/ceiling/neural/run.sh russian noun \
-  && tools/ceiling/tuned.sh \
   && target/release/ceiling compare russian noun $FLEXION_CACHE/neural/russian-noun/predictions.tsv \
-       $FLEXION_CACHE/russian-noun-tuned.bin
+       --alpha 2 --tau 1 --support 1 --syllables 2 --parts 1
 ```
-
-Without the last argument `compare` uses step 1's full-data model.
 
 How much of a lemma's vowel length the *whole* spelling predicts (next to step
 3's ending-only predictor): the same model trained to write the lemma in full,

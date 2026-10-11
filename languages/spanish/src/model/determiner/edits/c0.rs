@@ -1,0 +1,26 @@
+use flexion::{Edit, Stress};
+
+pub(crate) static ITEMS: [Edit<'static>; 22] = [
+    Edit::new("", "", "", "", Stress::Unmarked, 0, [0, 0, 0, 0, 0, 0]),
+    Edit::new("", "", "", "s", Stress::Unmarked, 0, [0, 0, 0, 0, 0, 0]),
+    Edit::new("", "", "o", "a", Stress::Unmarked, 0, [1, 0, 1, 1, 0, 0]),
+    Edit::new("", "", "o", "as", Stress::Unmarked, 0, [1, 0, 1, 1, 0, 0]),
+    Edit::new("", "", "", "los", Stress::Unmarked, 0, [0, 0, 0, 1, 0, 0]),
+    Edit::new("", "", "", "la", Stress::Unmarked, 0, [0, 0, 0, 1, 0, 0]),
+    Edit::new("", "", "", "las", Stress::Unmarked, 0, [0, 0, 0, 1, 0, 0]),
+    Edit::new("", "", "e", "os", Stress::Unmarked, 0, [1, 0, 1, 1, 0, 0]),
+    Edit::new("", "", "e", "a", Stress::Unmarked, 0, [1, 0, 1, 1, 0, 0]),
+    Edit::new("", "", "e", "as", Stress::Unmarked, 0, [1, 0, 1, 1, 0, 0]),
+    Edit::new("", "", "os", "as", Stress::Unmarked, 0, [2, 0, 1, 1, 0, 0]),
+    Edit::new("", "", "", "es", Stress::Unmarked, 0, [0, 0, 0, 1, 0, 0]),
+    Edit::new("", "", "el", "los", Stress::Unmarked, 0, [2, 0, 1, 1, 0, 0]),
+    Edit::new("", "", "el", "la", Stress::Unmarked, 0, [2, 0, 1, 1, 0, 0]),
+    Edit::new("", "", "el", "las", Stress::Unmarked, 0, [2, 0, 1, 1, 0, 0]),
+    Edit::new("", "", "la", "el", Stress::Unmarked, 0, [2, 0, 1, 1, 0, 0]),
+    Edit::new("", "", "a", "os", Stress::Unmarked, 0, [1, 0, 1, 1, 0, 0]),
+    Edit::new("", "", "", "os", Stress::Unmarked, 0, [0, 0, 0, 1, 0, 0]),
+    Edit::new("", "", "", "a", Stress::Unmarked, 0, [0, 0, 0, 1, 0, 0]),
+    Edit::new("", "", "", "as", Stress::Unmarked, 0, [0, 0, 0, 1, 0, 0]),
+    Edit::new("", "", "x", "o", Stress::Unmarked, 0, [1, 0, 0, 1, 0, 0]),
+    Edit::new("", "", "x", "a", Stress::Unmarked, 0, [1, 0, 0, 1, 0, 0]),
+];

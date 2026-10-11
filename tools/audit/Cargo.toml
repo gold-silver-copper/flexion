@@ -1,0 +1,26 @@
+[package]
+name = "audit"
+version = "0.0.0"
+description = "Check that every generated language crate answers exactly as the trainer's in-memory model it was written from"
+publish = false
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+flexion = { workspace = true }
+flexion-train = { workspace = true }
+flexion-configs = { workspace = true }
+serde_json = { workspace = true }
+english = { path = "../../languages/english" }
+russian = { path = "../../languages/russian" }
+latin = { path = "../../languages/latin" }
+polish = { path = "../../languages/polish" }
+german = { path = "../../languages/german" }
+ancient-greek = { path = "../../languages/ancient-greek" }
+sanskrit = { path = "../../languages/sanskrit" }
+spanish = { path = "../../languages/spanish" }
+french = { path = "../../languages/french" }
+italian = { path = "../../languages/italian" }
+
+[lints]
+workspace = true

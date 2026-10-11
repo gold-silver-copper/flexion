@@ -63,7 +63,7 @@ used for any decision.
 | | lemmas | cells | top-1 | top-3 | top-1 given citation | top-1 given citation and markers |
 |---|---:|---:|---:|---:|---:|---:|
 | noun | 6283 | 6283 | **95.86%** | 99.30% | – | 96.88% |
-| adjective | 2623 | 7876 | **98.37%** | 99.89% | 99.74% | – |
+| adjective | 2623 | 7876 | **98.39%** | 99.89% | 99.81% | – |
 | verb | 1264 | 69090 | **99.28%** | 99.70% | 99.72% | 99.71% |
 | participle | 820 | 2460 | **100.00%** | 100.00% | – | – |
 | determiner ¹ | 7 | 19 | **94.74%** | 100.00% | – | – |
@@ -82,9 +82,9 @@ the word the way a dictionary prints them (noun `m`/`f`/`mf`; verb `avere`/`esse
 | cell | n | top-1 | top-3 |
 |---|---:|---:|---:|
 | noun.pl | 6283 | 95.86% | 99.30% |
-| adjective.m.pl | 2621 | 98.02% | 99.89% |
-| adjective.f.sg | 2576 | 99.07% | 99.92% |
-| adjective.f.pl | 2623 | 98.13% | 99.92% |
+| adjective.m.pl | 2621 | 98.05% | 99.89% |
+| adjective.f.sg | 2576 | 99.03% | 99.92% |
+| adjective.f.pl | 2623 | 98.17% | 99.92% |
 | superlative | 56 | 94.64% | 96.43% |
 | verb.pres.1.sg | 1255 | 99.04% | 99.68% |
 | verb.pres.1.pl | 1255 | 99.44% | 99.68% |
@@ -170,7 +170,7 @@ Expected calibration error (ECE) is the average gap between confidence and accur
 | | ECE |
 |---|---:|
 | noun | 0.014 |
-| adjective | 0.001 |
+| adjective | 0.002 |
 | verb | 0.007 |
 | participle | 0.000 |
 | determiner | 0.032 |
@@ -180,12 +180,12 @@ All parts of speech together (ECE 0.007):
 | confidence | mean confidence | accuracy | answers |
 |---|---:|---:|---:|
 | 0.3–0.4 | 0.398 | 0.500 | 2 |
-| 0.4–0.5 | 0.463 | 0.463 | 41 |
-| 0.5–0.6 | 0.556 | 0.632 | 402 |
-| 0.6–0.7 | 0.665 | 0.923 | 1115 |
-| 0.7–0.8 | 0.761 | 0.858 | 558 |
-| 0.8–0.9 | 0.851 | 0.905 | 1487 |
-| 0.9–1.0 | 0.997 | 0.995 | 82123 |
+| 0.4–0.5 | 0.464 | 0.452 | 42 |
+| 0.5–0.6 | 0.556 | 0.618 | 393 |
+| 0.6–0.7 | 0.665 | 0.919 | 1120 |
+| 0.7–0.8 | 0.761 | 0.866 | 544 |
+| 0.8–0.9 | 0.852 | 0.907 | 1520 |
+| 0.9–1.0 | 0.997 | 0.995 | 82107 |
 
 ### Forms many words lack
 
@@ -218,7 +218,7 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 | `glorposo` | adjective | m.sg: glorposo 1.00; m.pl: glorposi 1.00; f.sg: glorposa 1.00; f.pl: glorpose 1.00 |
 | `blicale` | adjective | m.sg: blicale 1.00; m.pl: blicali 1.00; f.sg: blicale 1.00; f.pl: blicali 1.00 |
 | `glorpare` | verb | pres.1.sg: glorpo 1.00; pres.1.pl: glorpiamo 1.00; pres.2.sg: glorpi 1.00; pres.2.pl: glorpate 1.00; pres.3.sg: glorpa 1.00; pres.3.pl: glorpano 1.00; impf.1.sg: glorpavo 1.00; impf.1.pl: glorpavamo 1.00; impf.2.sg: glorpavi 1.00; impf.2.pl: glorpavate 1.00; impf.3.sg: glorpava 1.00; impf.3.pl: glorpavano 1.00; past.1.sg: glorpai 1.00; past.1.pl: glorpammo 1.00; past.2.sg: glorpasti 1.00; past.2.pl: glorpaste 1.00; past.3.sg: glorpò 1.00; past.3.pl: glorparono 1.00; fut.1.sg: glorperò 1.00; fut.1.pl: glorperemo 1.00; fut.2.sg: glorperai 1.00; fut.2.pl: glorperete 1.00; fut.3.sg: glorperà 1.00; fut.3.pl: glorperanno 1.00; cond.1.sg: glorperei 1.00; cond.1.pl: glorperemmo 1.00; cond.2.sg: glorperesti 1.00; cond.2.pl: glorpereste 1.00; cond.3.sg: glorperebbe 1.00; cond.3.pl: glorperebbero 1.00; subj.1.sg: glorpi 1.00; subj.1.pl: glorpiamo 1.00; subj.2.sg: glorpi 1.00; subj.2.pl: glorpiate 1.00; subj.3.sg: glorpi 1.00; subj.3.pl: glorpino 1.00; subj-impf.1.sg: glorpassi 1.00; subj-impf.1.pl: glorpassimo 1.00; subj-impf.2.sg: glorpassi 1.00; subj-impf.2.pl: glorpaste 1.00; subj-impf.3.sg: glorpasse 1.00; subj-impf.3.pl: glorpassero 1.00 |
-| `blicere` | verb | pres.1.sg: blico 0.90, bliccio 0.10; pres.1.pl: bliciamo 0.57, blicemo 0.33; pres.2.sg: blici 1.00; pres.2.pl: blicete 0.67, blite 0.33; pres.3.sg: blice 1.00; pres.3.pl: blicono 0.92; impf.1.sg: blicevo 0.89, blivo 0.11; impf.1.pl: blicevamo 0.89, blivamo 0.11; impf.2.sg: blicevi 0.89, blivi 0.11; impf.2.pl: blicevate 0.89, blivate 0.11; impf.3.sg: bliceva 0.89, bliva 0.11; impf.3.pl: blicevano 0.89, blivano 0.11; past.1.sg: blissi 0.55, blisi 0.18; past.1.pl: blicemmo 0.89, blimmo 0.11; past.2.sg: blicesti 0.89, blisti 0.11; past.2.pl: bliceste 0.89, bliste 0.11; past.3.sg: blisse 0.55, blise 0.19; past.3.pl: blissero 0.55, blisero 0.18; fut.1.sg: blicerò 0.67, blirò 0.33; fut.1.pl: bliceremo 0.67, bliremo 0.33; fut.2.sg: blicerai 0.67, blirai 0.33; fut.2.pl: blicerete 0.67, blirete 0.33; fut.3.sg: blicerà 0.67, blirà 0.33; fut.3.pl: bliceranno 0.67, bliranno 0.33; cond.1.sg: blicerei 0.67, blirei 0.33; cond.1.pl: bliceremmo 0.67, bliremmo 0.33; cond.2.sg: bliceresti 0.67, bliresti 0.33; cond.2.pl: blicereste 0.67, blireste 0.33; cond.3.sg: blicerebbe 0.67, blirebbe 0.33; cond.3.pl: blicerebbero 0.67, blirebbero 0.33; subj.1.sg: blica 0.90, bliccia 0.10; subj.1.pl: bliciamo 0.56, blicemo 0.33; subj.2.sg: blica 0.90, bliccia 0.10; subj.2.pl: bliciate 0.56, blicete 0.33; subj.3.sg: blica 0.90, bliccia 0.10; subj.3.pl: blicano 0.90, blicciano 0.10; subj-impf.1.sg: blicessi 1.00; subj-impf.1.pl: blicessimo 1.00; subj-impf.2.sg: blicessi 1.00; subj-impf.2.pl: bliceste 1.00; subj-impf.3.sg: blicesse 1.00; subj-impf.3.pl: blicessero 1.00 |
+| `blicere` | verb | pres.1.sg: blico 0.90, bliccio 0.10; pres.1.pl: bliciamo 0.57, blicemo 0.33; pres.2.sg: blici 1.00; pres.2.pl: blicete 0.67, blite 0.33; pres.3.sg: blice 1.00; pres.3.pl: blicono 0.92; impf.1.sg: blicevo 0.89, blivo 0.11; impf.1.pl: blicevamo 0.89, blivamo 0.11; impf.2.sg: blicevi 0.89, blivi 0.11; impf.2.pl: blicevate 0.89, blivate 0.11; impf.3.sg: bliceva 0.90, bliva 0.10; impf.3.pl: blicevano 0.90, blivano 0.10; past.1.sg: blissi 0.56, blisi 0.18; past.1.pl: blicemmo 0.89, blimmo 0.11; past.2.sg: blicesti 0.89, blisti 0.11; past.2.pl: bliceste 0.89, bliste 0.11; past.3.sg: blisse 0.55, blise 0.19; past.3.pl: blissero 0.56, blisero 0.18; fut.1.sg: blicerò 0.67, blirò 0.33; fut.1.pl: bliceremo 0.67, bliremo 0.33; fut.2.sg: blicerai 0.67, blirai 0.33; fut.2.pl: blicerete 0.67, blirete 0.33; fut.3.sg: blicerà 0.67, blirà 0.33; fut.3.pl: bliceranno 0.67, bliranno 0.33; cond.1.sg: blicerei 0.67, blirei 0.33; cond.1.pl: bliceremmo 0.67, bliremmo 0.33; cond.2.sg: bliceresti 0.67, bliresti 0.33; cond.2.pl: blicereste 0.67, blireste 0.33; cond.3.sg: blicerebbe 0.67, blirebbe 0.33; cond.3.pl: blicerebbero 0.67, blirebbero 0.33; subj.1.sg: blica 0.90, bliccia 0.10; subj.1.pl: bliciamo 0.56, blicemo 0.33; subj.2.sg: blica 0.90, bliccia 0.10; subj.2.pl: bliciate 0.56, blicete 0.33; subj.3.sg: blica 0.90, bliccia 0.10; subj.3.pl: blicano 0.90, blicciano 0.10; subj-impf.1.sg: blicessi 1.00; subj-impf.1.pl: blicessimo 1.00; subj-impf.2.sg: blicessi 1.00; subj-impf.2.pl: bliceste 1.00; subj-impf.3.sg: blicesse 1.00; subj-impf.3.pl: blicessero 1.00 |
 | `fluttire` | verb | pres.1.sg: fluttisco 1.00; pres.1.pl: fluttiamo 1.00; pres.2.sg: fluttisci 1.00; pres.2.pl: fluttite 1.00; pres.3.sg: fluttisce 1.00; pres.3.pl: fluttiscono 1.00; impf.1.sg: fluttivo 1.00; impf.1.pl: fluttivamo 1.00; impf.2.sg: fluttivi 1.00; impf.2.pl: fluttivate 1.00; impf.3.sg: fluttiva 1.00; impf.3.pl: fluttivano 1.00; past.1.sg: fluttii 1.00; past.1.pl: fluttimmo 1.00; past.2.sg: fluttisti 1.00; past.2.pl: fluttiste 1.00; past.3.sg: fluttì 1.00; past.3.pl: fluttirono 1.00; fut.1.sg: fluttirò 1.00; fut.1.pl: fluttiremo 1.00; fut.2.sg: fluttirai 1.00; fut.2.pl: fluttirete 1.00; fut.3.sg: fluttirà 1.00; fut.3.pl: fluttiranno 1.00; cond.1.sg: fluttirei 1.00; cond.1.pl: fluttiremmo 1.00; cond.2.sg: fluttiresti 1.00; cond.2.pl: fluttireste 1.00; cond.3.sg: fluttirebbe 1.00; cond.3.pl: fluttirebbero 1.00; subj.1.sg: fluttisca 1.00; subj.1.pl: fluttiamo 1.00; subj.2.sg: fluttisca 1.00; subj.2.pl: fluttiate 1.00; subj.3.sg: fluttisca 1.00; subj.3.pl: fluttiscano 1.00; subj-impf.1.sg: fluttissi 1.00; subj-impf.1.pl: fluttissimo 1.00; subj-impf.2.sg: fluttissi 1.00; subj-impf.2.pl: fluttiste 1.00; subj-impf.3.sg: fluttisse 1.00; subj-impf.3.pl: fluttissero 1.00 |
 | `riglorpare` | verb | pres.1.sg: riglorpo 1.00; pres.1.pl: riglorpiamo 1.00; pres.2.sg: riglorpi 1.00; pres.2.pl: riglorpate 1.00; pres.3.sg: riglorpa 1.00; pres.3.pl: riglorpano 1.00; impf.1.sg: riglorpavo 1.00; impf.1.pl: riglorpavamo 1.00; impf.2.sg: riglorpavi 1.00; impf.2.pl: riglorpavate 1.00; impf.3.sg: riglorpava 1.00; impf.3.pl: riglorpavano 1.00; past.1.sg: riglorpai 1.00; past.1.pl: riglorpammo 1.00; past.2.sg: riglorpasti 1.00; past.2.pl: riglorpaste 1.00; past.3.sg: riglorpò 1.00; past.3.pl: riglorparono 1.00; fut.1.sg: riglorperò 1.00; fut.1.pl: riglorperemo 1.00; fut.2.sg: riglorperai 1.00; fut.2.pl: riglorperete 1.00; fut.3.sg: riglorperà 1.00; fut.3.pl: riglorperanno 1.00; cond.1.sg: riglorperei 1.00; cond.1.pl: riglorperemmo 1.00; cond.2.sg: riglorperesti 1.00; cond.2.pl: riglorpereste 1.00; cond.3.sg: riglorperebbe 1.00; cond.3.pl: riglorperebbero 1.00; subj.1.sg: riglorpi 1.00; subj.1.pl: riglorpiamo 1.00; subj.2.sg: riglorpi 1.00; subj.2.pl: riglorpiate 1.00; subj.3.sg: riglorpi 1.00; subj.3.pl: riglorpino 1.00; subj-impf.1.sg: riglorpassi 1.00; subj-impf.1.pl: riglorpassimo 1.00; subj-impf.2.sg: riglorpassi 1.00; subj-impf.2.pl: riglorpaste 1.00; subj-impf.3.sg: riglorpasse 1.00; subj-impf.3.pl: riglorpassero 1.00 |
 
@@ -244,15 +244,15 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 <details><summary>adjective</summary>
 
 - 17 × `adjective.f.pl`: predicted `-e+i`, attested `-+` — ammazzasentenze → ammazzasentenzi (attested ammazzasentenze); antideflagrante → antideflagranti (attested antideflagrante); antidolore → antidolori (attested antidolore)
-- 16 × `adjective.f.sg`: predicted `-o+a`, attested `-+` — abbracciafusto → abbracciafusta (attested abbracciafusto); antiriflesso → antiriflessa (attested antiriflesso); antistupro → antistupra (attested antistupro)
-- 15 × `adjective.m.pl`: predicted `-e+i`, attested `-+` — ammazzasentenze → ammazzasentenzi (attested ammazzasentenze); antideflagrante → antideflagranti (attested antideflagrante); antidepressione → antidepressioni (attested antidepressione)
-- 12 × `adjective.f.pl`: predicted `-o+e`, attested `-+` — abbracciafusto → abbracciafuste (attested abbracciafusto); antiriflesso → antiriflesse (attested antiriflesso); antistupro → antistupre (attested antistupro)
-- 11 × `adjective.m.pl`: predicted `-o+i`, attested `-+` — abbracciafusto → abbracciafusti (attested abbracciafusto); antiriflesso → antiriflessi (attested antiriflesso); antistupro → antistupri (attested antistupro)
-- 10 × `adjective.m.pl`: predicted `-o+i`, attested `-o+hi` — carico → carici (attested carichi); ciuco → ciuci (attested ciuchi); fico → fici (attested fichi)
-- 6 × `adjective.f.pl`: predicted `-+`, attested `-a+e` — autolatra → autolatra (attested autolatre); focaia → focaia (attested focaie); industana → industana (attested industane)
+- 15 × `adjective.f.sg`: predicted `-o+a`, attested `-+` — abbracciafusto → abbracciafusta (attested abbracciafusto); antiriflesso → antiriflessa (attested antiriflesso); antistupro → antistupra (attested antistupro)
+- 14 × `adjective.m.pl`: predicted `-e+i`, attested `-+` — ammazzasentenze → ammazzasentenzi (attested ammazzasentenze); antideflagrante → antideflagranti (attested antideflagrante); antidolore → antidolori (attested antidolore)
+- 11 × `adjective.f.pl`: predicted `-o+e`, attested `-+` — abbracciafusto → abbracciafuste (attested abbracciafusto); antiriflesso → antiriflesse (attested antiriflesso); antistupro → antistupre (attested antistupro)
+- 10 × `adjective.m.pl`: predicted `-o+i`, attested `-+` — abbracciafusto → abbracciafusti (attested abbracciafusto); antiriflesso → antiriflessi (attested antiriflesso); antistupro → antistupri (attested antistupro)
+- 9 × `adjective.m.pl`: predicted `-o+i`, attested `-o+hi` — carico → carici (attested carichi); ciuco → ciuci (attested ciuchi); fico → fici (attested fichi)
 - 4 × `adjective.m.pl`: predicted `-+`, attested `-a+i` — autolatra → autolatra (attested autolatri); focaia → focaia (attested focaii); industana → industana (attested industani)
 - 4 × `adjective.m.pl`: predicted `-a+i`, attested `-+` — allerta → allerti (attested allerta); antinausea → antinausei (attested antinausea); magenta → magenti (attested magenta)
 - 4 × `adjective.f.sg`: predicted `-+`, attested `-e+a` — birbone → birbone (attested birbona); guascone → guascone (attested guascona); leggere → leggere (attested leggera)
+- 4 × `adjective.f.pl`: predicted `-+`, attested `-a+e` — autolatra → autolatra (attested autolatre); focaia → focaia (attested focaie); industana → industana (attested industane)
 - 4 × `adjective.f.pl`: predicted `-a+e`, attested `-+` — allerta → allerte (attested allerta); antinausea → antinausee (attested antinausea); magenta → magente (attested magenta)
 - 3 × `adjective.m.pl`: predicted `-o+`, attested `-+` — meglio → megli (attested meglio); salvaspazio → salvaspazi (attested salvaspazio); sottolio → sottoli (attested sottolio)
 
@@ -288,23 +288,23 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 336 KB (123 KB gzipped). Where the bytes are, in KB (the strings, 22 KB, are shared):
+The model is 1680 KB of generated Rust (190 KB gzipped). Its tables measure 367 KB: what a compact binary layout of them would take, the size the build prices when it tunes. Where those bytes are, in KB (the strings, 22 KB, are shared):
 
-| | edits | classes | tree nodes | distributions | joins | lexicon | restoration model | part models | total |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 8 | 9 | 49 | 28 | 0 | 0 | 0 | 0 | 94 |
-| adjective | 1 | 2 | 21 | 10 | 0 | 0 | 0 | 0 | 34 |
-| verb | 58 | 58 | 26 | 40 | 0 | 0 | 0 | 0 | 182 |
-| participle | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
-| determiner | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| | edits | classes | tree nodes | their counts | joins | lexicon | sound laws | restoration model | part models | total |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 8 | 9 | 49 | 42 | 0 | 0 | 0 | 0 | 0 | 108 |
+| adjective | 1 | 2 | 26 | 19 | 0 | 0 | 0 | 0 | 0 | 48 |
+| verb | 54 | 58 | 26 | 46 | 0 | 0 | 2 | 0 | 0 | 186 |
+| participle | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
+| determiner | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 
-| | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
+| | edits | classes | stored nodes | memorized words | counts stored | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 270 | 295 | 4145 | 2329 | 7201 | 160 (`noun.pl`) |
-| adjective | 46 | 50 | 1791 | 1088 | 2551 | 139 (`adjective.f.pl`) |
-| verb | 1857 | 599 | 2238 | 179 | 10159 | 142 (`verb.impf.3.sg`) |
-| participle | 37 | 13 | 14 | 2 | 67 | 108 (`past_participle.m.pl`) |
-| determiner | 11 | 9 | 11 | 4 | 47 | 116 (`determiner.f.sg`) |
+| noun | 270 | 295 | 4145 | 2329 | 7147 | 454 (`noun.pl`) |
+| adjective | 46 | 50 | 2234 | 992 | 3230 | 402 (`adjective.f.pl`) |
+| verb | 1722 | 599 | 2238 | 179 | 7892 | 428 (`verb.impf.3.sg`) |
+| participle | 37 | 13 | 14 | 2 | 39 | 317 (`past_participle.m.pl`) |
+| determiner | 11 | 9 | 11 | 4 | 28 | 288 (`determiner.f.sg`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
@@ -317,14 +317,14 @@ release build, fastest of seven runs.
 | | τ | model KB | dev top-1 | dev log-loss |
 |---|---:|---:|---:|---:|
 | noun | 1 | 178 | 95.78% | 0.1907 |
-| noun | 2 | 136 | 95.85% | 0.1900 |
-| noun | 8 (chosen) | 89 | 95.70% | 0.1894 |
-| adjective | 1 | 111 | 98.09% | 0.0813 |
-| adjective | 2 | 70 | 98.11% | 0.0790 |
-| adjective | 8 (chosen) | 32 | 98.06% | 0.0813 |
-| verb | 1 (chosen) | 167 | 98.87% | 0.0460 |
-| verb | 2 | 153 | 98.84% | 0.0483 |
-| verb | 8 | 135 | 98.82% | 0.0570 |
+| noun | 2 | 141 | 95.85% | 0.1900 |
+| noun | 8 (chosen) | 99 | 95.70% | 0.1894 |
+| adjective | 1 | 54 | 98.09% | 0.0821 |
+| adjective | 2 (chosen) | 43 | 98.09% | 0.0798 |
+| adjective | 8 | 32 | 98.06% | 0.0821 |
+| verb | 1 (chosen) | 171 | 98.87% | 0.0460 |
+| verb | 2 | 161 | 98.84% | 0.0483 |
+| verb | 8 | 150 | 98.82% | 0.0570 |
 | participle | 1 | 2 | 99.88% | 0.0111 |
 | participle | 2 | 2 | 99.88% | 0.0111 |
 | participle | 8 (chosen) | 2 | 99.88% | 0.0111 |
@@ -336,20 +336,34 @@ release build, fastest of seven runs.
 
 <details><summary>Chosen hyperparameters</summary>
 
-| | smoothing α | pruning τ | suffix support | syllable token | dev top-1 |
-|---|---:|---:|---:|---|---:|
-| noun | 2 | 8 | 2 | after 2 letters | 95.70% |
-| adjective | 8 | 8 | 1 | none | 98.06% |
-| verb | 0.5 | 1 | 1 | after 2 letters | 98.87% |
-| participle | 0.5 | 8 | 2 | none | 99.88% |
-| determiner | 0.5 | 2 | 2 | none | 100.00% |
+| | smoothing α | pruning τ | suffix support | syllable token | join model | start restoration | sound laws | dev top-1 |
+|---|---:|---:|---:|---|---|---|---|---:|
+| noun | 2 | 8 | 2 | after 2 letters | no | no | no | 95.70% |
+| adjective | 8 | 2 | 2 | none | no | no | no | 98.09% |
+| verb | 0.5 | 1 | 1 | after 2 letters | no | no | yes | 98.87% |
+| participle | 0.5 | 8 | 2 | none | no | no | no | 99.88% |
+| determiner | 0.5 | 2 | 2 | none | no | no | no | 100.00% |
 
 </details>
+
+### Sound laws
+
+Learned from the training words: where edits differ only by a regular change of the stem's edge, they are one edit and a rule, so an unseen word gets the change too.
+
+- **verb**:
+  - the stem's last segment before the ending: c→s, d→s, g→s, gg→ss, gn→ns, l→s, m→ns, n→s, nd→s, r→s, rr→nes, rs→c, s→r, sc→bb, t→ss, tt→ss, v→ss (43600 training pairs)
+  - the stem's last vowel, across its final consonants: a→e, e→ie, ia→e, o→uo, uo→o (8835 training pairs)
+  - the stem's last segment before the ending: c→se, d→se, g→se, gg→sse, l→rr, n→rr, nd→se, r→c, rr→n, sc→bbe (1525 training pairs)
+  - the stem's last segment before the ending: c→rre, d→g, gg→rre, gn→n, l→rre, n→rre, r→v, rr→n, v→rre (432 training pairs)
+  - the stem's last segment before the ending: c→rr, gg→rr, l→rr, n→rr, v→rr (501 training pairs)
+  - the stem's last segment before the ending: l→r, n→r (34 training pairs)
+  - the stem's last segment before the ending: l→gli, t→ssi, v→bbi (74 training pairs)
+  - the stem's last segment before the ending: l→gl, v→bb (69 training pairs)
 
 
 ## Data and license
 
-The code is MIT or Apache-2.0. The model (`src/model.bin`) is derived from
+The code is MIT or Apache-2.0. The model (the code under `src/model/`) is derived from
 [the English Wiktionary](https://en.wiktionary.org/) via [Kaikki](https://kaikki.org/) and
 [wiktextract](https://github.com/tatuylonen/wiktextract), and is licensed under
 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); see `DATA-LICENSE.md`.

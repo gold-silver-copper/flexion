@@ -7,7 +7,7 @@ use crate::extract::{self, PosData, Word};
 use crate::learn::{self, Params, Shape};
 use crate::spec::Language;
 use crate::{DEV_BUCKET, TEST_BUCKET, bucket, spelling_spec, view};
-use flexion::write::{PosTables, SpellingSpec};
+use flexion::tables::{PosTables, SpellingSpec, measure};
 use std::fmt::Write as _;
 use std::time::Instant;
 
@@ -19,10 +19,14 @@ pub struct Baseline<'a> {
     pub inflect: &'a (dyn Fn(&str, &str) -> Option<String> + Sync),
 }
 
-/// What the build produced.
+/// What the build produced: the model in memory (the crate's code is
+/// written from it) and the report.
 pub struct Built {
-    pub blob: Vec<u8>,
+    pub model: flexion::Built,
     pub report: String,
+    /// What each part of speech was trained with: [`crate::train`] on every
+    /// word with these plans gives `model` again.
+    pub plans: Vec<crate::PosPlan>,
 }
 
 /// The grid each part of speech is tuned over. Where edits change the start
@@ -56,19 +60,33 @@ fn grid(fronts: bool) -> Vec<Params> {
     out
 }
 
+/// One part of speech's model, without part models; `citation` names the
+/// cells sound laws leave alone.
 fn train_one(
     spec: &SpellingSpec,
     shape: &Shape,
     params: Params,
     words: &[Word],
     chooser: &crate::edit::Chooser,
+    citation: &[usize],
 ) -> (crate::Trained, learn::Stats) {
     let sp = view(spec);
-    crate::train_pos(&sp, shape, params, words, chooser, &[], &[])
+    let plan = crate::PosPlan {
+        shape: shape.clone(),
+        params,
+        citation: citation.to_vec(),
+        sources: Vec::new(),
+    };
+    crate::train_pos(&sp, &plan, words, chooser, None)
 }
 
-fn blob_of(spec: &SpellingSpec, tables: Vec<crate::Trained>) -> Vec<u8> {
-    flexion::write::write(spec, &crate::assemble(tables))
+fn built_of(spec: &SpellingSpec, tables: Vec<crate::Trained>) -> Option<flexion::Built> {
+    flexion::Built::new(spec, &crate::assemble(tables))
+}
+
+/// The size measure of these tables (see [`flexion::tables::measure`]).
+fn bytes_of(spec: &SpellingSpec, tables: &[PosTables]) -> usize {
+    measure(spec, tables).2
 }
 
 /// For each cell, where to build it from when the caller gives principal
@@ -91,7 +109,13 @@ pub fn choose_sources(
         return Vec::new();
     }
     let sp = view(spec);
-    let (base, _) = crate::train_pos(&sp, shape, params, train, chooser, &[], &[]);
+    let plan = crate::PosPlan {
+        shape: shape.clone(),
+        params,
+        citation: Vec::new(),
+        sources: Vec::new(),
+    };
+    let (base, _) = crate::train_pos(&sp, &plan, train, chooser, None);
     let keep_all: Vec<bool> = (0..shape.cells).map(|c| c != shape.lemma_cell).collect();
     let parts: Vec<(usize, Option<PosTables>)> = citation
         .iter()
@@ -114,10 +138,10 @@ pub fn choose_sources(
             parts: built.clone(),
             ..base.clone()
         };
-        let blob = blob_of(spec, vec![trained]);
-        let Some(model) = flexion::Model::from_bytes(&blob) else {
+        let Some(built) = built_of(spec, vec![trained]) else {
             return vec![(0, 0, 0.0); shape.cells];
         };
+        let model = built.model();
         let s = eval::score(
             &sp,
             &model,
@@ -163,9 +187,7 @@ pub fn choose_sources(
     // A part model is a whole second tree: it stays only if the dev log-loss
     // it saves over all its cells, per scored cell, pays the price of the
     // bytes it adds (as the grid's settings do: `choose`).
-    let main_bytes = flexion::write::write(spec, std::slice::from_ref(&base.main))
-        .len()
-        .max(1) as f64;
+    let main_bytes = bytes_of(spec, std::slice::from_ref(&base.main)).max(1) as f64;
     let all_cells = main_scores.iter().map(|&(_, n, _)| n).sum::<usize>().max(1) as f64;
     let mut tags: Vec<u8> = best.iter().map(|b| b.0).filter(|&s| s > 0).collect();
     tags.sort_unstable();
@@ -175,7 +197,7 @@ pub fn choose_sources(
         let part_bytes = parts
             .get(k)
             .and_then(|(_, t)| t.clone())
-            .map_or(0, |t| flexion::write::write(spec, &[t]).len()) as f64;
+            .map_or(0, |t| bytes_of(spec, &[t])) as f64;
         let (saved, gained) = best
             .iter()
             .zip(&main_scores)
@@ -214,6 +236,20 @@ fn lexicon_note(s: &mut String, lang: &Language, reports: &[PosReport]) {
             r.test_words,
             pct(r.lexicon.1, r.test_words)
         );
+        if let Some(n) = r.derived {
+            let _ = writeln!(
+                s,
+                "The shipped model reads those lemmas from the {} models instead of storing them (the
+words they lend are marked as attested there) and keeps only the {n} entries reading them
+gets wrong or would wrongly find: it is smaller that way, with the same answers.
+",
+                part.lemmas_from
+                    .iter()
+                    .map(|(pos, _)| *pos)
+                    .collect::<Vec<_>>()
+                    .join(" and "),
+            );
+        }
     }
 }
 
@@ -289,18 +325,20 @@ pub fn grid_scores(
 ) -> Vec<GridPoint> {
     let sp = view(spec);
     par_map(&grid(chooser.strips_fronts()), threads, |&params| {
-        let (t, _) = train_one(spec, shape, params, train, chooser);
-        let blob = blob_of(spec, vec![t]);
-        let Some(model) = flexion::Model::from_bytes(&blob) else {
+        let (t, _) = train_one(spec, shape, params, train, chooser, &[]);
+        let tables = crate::assemble(vec![t]);
+        let bytes = bytes_of(spec, &tables);
+        let Some(built) = flexion::Built::new(spec, &tables) else {
             return GridPoint {
                 params,
                 top1: 0.0,
                 top1_se: 0.0,
                 loss: f64::INFINITY,
                 loss_se: 0.0,
-                bytes: blob.len(),
+                bytes,
             };
         };
+        let model = built.model();
         let s = eval::score(
             &sp,
             &model,
@@ -319,7 +357,7 @@ pub fn grid_scores(
             top1_se: s.top1_se(),
             loss: s.log_loss(),
             loss_se: s.log_loss_se(),
-            bytes: blob.len(),
+            bytes,
         }
     })
 }
@@ -329,6 +367,7 @@ pub fn grid_scores(
 enum Extra {
     Joins,
     FrontRestore,
+    Phonology,
 }
 
 impl Extra {
@@ -340,6 +379,10 @@ impl Extra {
             },
             Extra::FrontRestore => Params {
                 front_restore: true,
+                ..params
+            },
+            Extra::Phonology => Params {
+                phonology: true,
                 ..params
             },
         }
@@ -411,7 +454,7 @@ fn par_map<T: Sync, R: Send>(items: &[T], threads: usize, f: impl Fn(&T) -> R + 
 /// Bytes one part of speech takes in the shipped model.
 #[derive(Debug, Clone, Copy, Default)]
 struct PosSizes {
-    main: flexion::write::Sizes,
+    main: flexion::tables::Sizes,
     restore: usize,
     part_models: usize,
 }
@@ -449,6 +492,11 @@ struct PosReport {
     /// The shipped lexicon's entries, and the held-out lemmas the test
     /// model's lexicon has.
     lexicon: (usize, usize),
+    /// The shipped model's sound laws, one line each.
+    sound_laws: Vec<String>,
+    /// With a derived lexicon, its exceptions (the stored entries
+    /// derivation gets wrong, and the words it would wrongly find).
+    derived: Option<usize>,
 }
 
 /// Build a language end to end.
@@ -466,6 +514,7 @@ pub fn build(
     let t0 = Instant::now();
     let mut reports = Vec::new();
     let mut final_tables = Vec::new();
+    let mut plans = Vec::new();
     // Marks the caller may leave out: stress, macrons, ё.
     let sl = &lang.spelling;
     let has_stress = !sl.stress_marks.is_empty()
@@ -515,24 +564,27 @@ pub fn build(
         let chosen = choose(&scores, size_price).ok_or("empty grid")?;
         let (mut params, mut dev_top1) = (chosen.params, chosen.top1);
         let (base_params, chosen_tau) = (chosen.params, chosen.params.tau);
-        // The join model and the start restoration model, each when the same
-        // rule picks it (one more setting, whose extra bytes must buy their
-        // price in log-loss) and it gets more answers right beyond the noise:
-        // both cost time on every call.
-        for extra in [Extra::Joins, Extra::FrontRestore] {
+        // The join model, the start restoration model and sound laws, each
+        // when the same rule picks it (one more setting, whose extra bytes
+        // must buy their price in log-loss) and it gets more answers right
+        // beyond the noise: each costs time on every call.
+        for extra in [Extra::Joins, Extra::FrontRestore, Extra::Phonology] {
             let with = extra.set(params);
-            let (t, stats) = train_one(&spec, shape, with, &train, &chooser);
+            let (t, stats) = train_one(&spec, shape, with, &train, &chooser, &citation);
             let built = match extra {
                 Extra::Joins => stats.join_prefixes > 0,
                 Extra::FrontRestore => t.restore_front.is_some(),
+                Extra::Phonology => stats.factored_edits > 0,
             };
             if !built {
                 continue;
             }
-            let blob = blob_of(&spec, vec![t]);
-            let Some(model) = flexion::Model::from_bytes(&blob) else {
+            let tables = crate::assemble(vec![t]);
+            let bytes = bytes_of(&spec, &tables);
+            let Some(built) = flexion::Built::new(&spec, &tables) else {
                 continue;
             };
+            let model = built.model();
             let s = eval::score(
                 &sp,
                 &model,
@@ -551,7 +603,7 @@ pub fn build(
                 top1_se: s.top1_se(),
                 loss: s.log_loss(),
                 loss_se: s.log_loss_se(),
-                bytes: blob.len(),
+                bytes,
             };
             let current = GridPoint {
                 params,
@@ -563,9 +615,34 @@ pub fn build(
             if current.params != chosen.params {
                 all.push(current);
             }
-            if choose(&all, size_price).is_some_and(|c| c.params == with)
-                && point.top1 > current.top1 + chosen.top1_se
-            {
+            // Joins and start restoration slow every call: they must beat the
+            // current setting by its own noise. Sound laws touch only the forms
+            // they rewrite and make the model smaller: once the price picks
+            // them, they must not lose top-1 on the same words beyond the noise
+            // of the difference (a paired test).
+            let wins = match extra {
+                Extra::Phonology => {
+                    let (now, _) = train_one(&spec, shape, params, &train, &chooser, &citation);
+                    let tables = crate::assemble(vec![now]);
+                    flexion::Built::new(&spec, &tables).is_some_and(|b| {
+                        let base = eval::score(
+                            &sp,
+                            &b.model(),
+                            0,
+                            &dev,
+                            &citation,
+                            &markers,
+                            &shape.unscored,
+                            Given::Lemma,
+                            false,
+                        );
+                        let (gain, se) = s.top1_gain(&base);
+                        gain >= -se
+                    })
+                }
+                _ => point.top1 > current.top1 + chosen.top1_se,
+            };
+            if choose(&all, size_price).is_some_and(|c| c.params == with) && wins {
                 params = with;
                 dev_top1 = point.top1;
             }
@@ -577,9 +654,14 @@ pub fn build(
         );
         let from_parts = sources.iter().filter(|&&s| s > 0).count();
 
+        let plan = crate::PosPlan {
+            shape: shape.clone(),
+            params,
+            citation: citation.clone(),
+            sources: sources.clone(),
+        };
         // 2. Measure on the held-out tenth.
-        let (mut t, _) =
-            crate::train_pos(&sp, shape, params, &not_test, &chooser, &citation, &sources);
+        let (mut t, _) = crate::train_pos(&sp, &plan, &not_test, &chooser, None);
         // Linked parts of speech give the lexicon only their own training words.
         t.main.lexicon = crate::lexicon(lang, &sp, data, pi, &|k| bucket(k) != TEST_BUCKET);
         let in_lexicon = test
@@ -591,8 +673,8 @@ pub fn build(
                     .is_ok()
             })
             .count();
-        let blob = blob_of(&spec, vec![t]);
-        let model = flexion::Model::from_bytes(&blob).ok_or("test model failed to load")?;
+        let built = built_of(&spec, vec![t]).ok_or("test model failed to load")?;
+        let model = built.model();
         let test_score = eval::score(
             &sp,
             &model,
@@ -680,12 +762,12 @@ pub fn build(
         let errors = eval::error_groups(&sp, &test_score.misses, 3);
 
         // 3. Train on everything and score every attested word.
-        let (mut t, stats) =
-            crate::train_pos(&sp, shape, params, &all, &chooser_all, &citation, &sources);
+        let (mut t, stats) = crate::train_pos(&sp, &plan, &all, &chooser_all, None);
+        plans.push(plan);
         t.main.lexicon = crate::lexicon(lang, &sp, data, pi, &|_| true);
         let lexicon = (t.main.lexicon.len(), in_lexicon);
-        let blob = blob_of(&spec, vec![t.clone()]);
-        let model = flexion::Model::from_bytes(&blob).ok_or("final model failed to load")?;
+        let built = built_of(&spec, vec![t.clone()]).ok_or("final model failed to load")?;
+        let model = built.model();
         let attested = eval::score(
             &sp,
             &model,
@@ -699,6 +781,7 @@ pub fn build(
         );
         let exists_all = eval::score_existence(&model, 0, &all, &shape.optional);
         let (speed_ns, speed_cell) = bench(&model, &test, shape, &cells);
+        let sound_laws = t.sound_laws.clone();
         final_tables.push(t);
 
         eprintln!(
@@ -760,7 +843,55 @@ pub fn build(
             editions: d.editions.clone(),
             union,
             lexicon,
+            sound_laws,
+            derived: None,
         });
+    }
+    // A lexicon read from another part of speech's forms (participles) is
+    // derived from its model where that makes the model smaller: the lending
+    // part of speech is trained again with the words it lends marked, and the
+    // lexicon keeps only what derivation gets wrong, so the answers stay.
+    let deriving: Vec<usize> = (0..lang.parts.len())
+        .filter(|&pi| !crate::lexicon_sources(lang, pi).is_empty())
+        .collect();
+    if !deriving.is_empty() {
+        let marked = crate::lenders(lang, &sp, data, &deriving, &|_| true);
+        let mut derived = final_tables.clone();
+        for (source, m) in marked.iter().enumerate() {
+            let (Some(plan), Some(d), Some(slot)) =
+                (plans.get(source), data.get(source), derived.get_mut(source))
+            else {
+                continue;
+            };
+            if m.is_empty() {
+                continue;
+            }
+            let words = extract::words(d);
+            let chooser = crate::edit::Chooser::new(&sp, &words, plan.shape.lemma_cell);
+            let (mut t, _) = crate::train_pos(&sp, plan, &words, &chooser, Some(m));
+            t.main.lexicon = std::mem::take(&mut slot.main.lexicon);
+            *slot = t;
+        }
+        crate::derive_lexicons(lang, &spec, data, &mut derived, &deriving, &|_| true);
+        let size = |t: &[crate::Trained]| measure(&spec, &crate::assemble(t.to_vec())).2;
+        let (stored_bytes, derived_bytes) = (size(&final_tables), size(&derived));
+        let adopt = derived_bytes < stored_bytes;
+        eprintln!(
+            "{}: derived lexicon {derived_bytes} bytes against stored {stored_bytes}: {}",
+            lang.name,
+            if adopt { "derived" } else { "stored" }
+        );
+        if adopt {
+            for &pi in &deriving {
+                if let (Some(p), Some(r), Some(t)) =
+                    (plans.get_mut(pi), reports.get_mut(pi), derived.get(pi))
+                {
+                    p.params.derive_lexicon = true;
+                    r.derived = Some(t.main.lexicon.len());
+                }
+            }
+            final_tables = derived;
+        }
     }
     // Laid out as `assemble` does: mains, then restoration models, then part
     // models, each counted with its main part of speech.
@@ -773,7 +904,8 @@ pub fn build(
             )
         })
         .collect();
-    let (blob, sizes, strings) = flexion::write::write_sized(&spec, &crate::assemble(final_tables));
+    let tables = crate::assemble(final_tables);
+    let (sizes, strings, total) = measure(&spec, &tables);
     let n = layout.len();
     let mut next_restore = n;
     let mut next_part = n + layout.iter().map(|(r, _)| r).sum::<usize>();
@@ -791,20 +923,37 @@ pub fn build(
             next_part += 1;
         }
     }
-    let model = flexion::Model::from_bytes(&blob).ok_or("shipped model failed to load")?;
-    let nonce = nonce_table(lang, &model)?;
+    let built = flexion::Built::new(&spec, &tables).ok_or("shipped model failed to load")?;
+    let nonce = nonce_table(lang, &built.model())?;
+    let source = crate::codegen::generate(lang, &built);
+    let source_bytes = source.iter().map(|(_, code)| code.len()).sum::<usize>();
+    let source_gz = gz_len(
+        source
+            .iter()
+            .map(|(_, code)| code.as_bytes())
+            .collect::<Vec<_>>()
+            .concat()
+            .as_slice(),
+    );
     let report = render(
         lang,
         &reports,
         baselines,
-        blob.len(),
-        gz_len(&blob),
-        strings,
+        Sizing {
+            measure: total,
+            strings,
+            source: source_bytes,
+            source_gz,
+        },
         &nonce,
         dump_note,
         has_stress,
     );
-    Ok(Built { blob, report })
+    Ok(Built {
+        model: built,
+        report,
+        plans,
+    })
 }
 
 fn ratio(a: usize, b: usize) -> f64 {
@@ -819,10 +968,10 @@ fn pct(a: usize, b: usize) -> String {
     }
 }
 
-fn gz_len(blob: &[u8]) -> usize {
+fn gz_len(bytes: &[u8]) -> usize {
     use std::io::Write;
     let mut e = flate2::write::GzEncoder::new(Vec::new(), flate2::Compression::best());
-    if e.write_all(blob).is_err() {
+    if e.write_all(bytes).is_err() {
         return 0;
     }
     e.finish().map(|v| v.len()).unwrap_or(0)
@@ -914,14 +1063,23 @@ fn nonce_table(lang: &Language, model: &flexion::Model) -> Result<String, String
     Ok(s)
 }
 
+/// The shipped model's sizes, in bytes.
+struct Sizing {
+    /// The size measure of its tables (what tuning prices).
+    measure: usize,
+    /// The measure's shared strings.
+    strings: usize,
+    /// The generated source, and gzipped.
+    source: usize,
+    source_gz: usize,
+}
+
 #[allow(clippy::too_many_arguments)]
 fn render(
     lang: &Language,
     reports: &[PosReport],
     baselines: &[Baseline],
-    blob: usize,
-    gz: usize,
-    strings: usize,
+    sizing: Sizing,
     nonce: &str,
     dump_note: &str,
     stress: bool,
@@ -1203,18 +1361,19 @@ fn render(
     s.push_str("### Size and speed\n\n");
     let _ = writeln!(
         s,
-        "The model is {} KB ({} KB gzipped). Where the bytes are, in KB (the strings, {} KB, are shared):\n",
-        blob / 1024,
-        gz / 1024,
-        strings / 1024
+        "The model is {} KB of generated Rust ({} KB gzipped). Its tables measure {} KB: what a compact binary layout of them would take, the size the build prices when it tunes. Where those bytes are, in KB (the strings, {} KB, are shared):\n",
+        sizing.source / 1024,
+        sizing.source_gz / 1024,
+        sizing.measure / 1024,
+        sizing.strings / 1024
     );
-    s.push_str("| | edits | classes | tree nodes | distributions | joins | lexicon | restoration model | part models | total |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n");
+    s.push_str("| | edits | classes | tree nodes | their counts | joins | lexicon | sound laws | restoration model | part models | total |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n");
     for r in reports {
         let z = &r.sizes;
         let kb = |b: usize| format!("{:.0}", b as f64 / 1024.0);
         let _ = writeln!(
             s,
-            "| {} | {} | {} | {} | {} | {} | {} | {} | {} | {} |",
+            "| {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} |",
             r.name,
             kb(z.main.edits),
             kb(z.main.classes),
@@ -1222,13 +1381,14 @@ fn render(
             kb(z.main.dist),
             kb(z.main.joins),
             kb(z.main.lexicon),
+            kb(z.main.phonology),
             kb(z.restore),
             kb(z.part_models),
             kb(z.main.total() + z.restore + z.part_models)
         );
     }
     s.push('\n');
-    s.push_str("| | edits | classes | stored nodes | memorized words | distribution entries | ns per call |\n|---|---:|---:|---:|---:|---:|---:|\n");
+    s.push_str("| | edits | classes | stored nodes | memorized words | counts stored | ns per call |\n|---|---:|---:|---:|---:|---:|---:|\n");
     for r in reports {
         let st = r.stats;
         let _ = writeln!(
@@ -1265,11 +1425,12 @@ fn render(
         }
     }
     s.push_str("\n</details>\n\n");
-    s.push_str("<details><summary>Chosen hyperparameters</summary>\n\n| | smoothing α | pruning τ | suffix support | syllable token | dev top-1 |\n|---|---:|---:|---:|---|---:|\n");
+    s.push_str("<details><summary>Chosen hyperparameters</summary>\n\n| | smoothing α | pruning τ | suffix support | syllable token | join model | start restoration | sound laws | dev top-1 |\n|---|---:|---:|---:|---|---|---|---|---:|\n");
+    let yes = |b: bool| if b { "yes" } else { "no" };
     for r in reports {
         let _ = writeln!(
             s,
-            "| {} | {} | {} | {} | {} | {:.2}% |",
+            "| {} | {} | {} | {} | {} | {} | {} | {} | {:.2}% |",
             r.name,
             r.params.alpha,
             r.params.tau,
@@ -1278,9 +1439,25 @@ fn render(
                 .walk
                 .syllable_depth
                 .map_or("none".to_string(), |d| format!("after {d} letters")),
+            yes(r.params.joins),
+            yes(r.params.front_restore),
+            yes(r.params.phonology),
             100.0 * r.dev_top1
         );
     }
     s.push_str("\n</details>\n\n");
+    if reports.iter().any(|r| !r.sound_laws.is_empty()) {
+        s.push_str(
+            "### Sound laws\n\nLearned from the training words: where edits differ only by a regular change of \
+             the stem's edge, they are one edit and a rule, so an unseen word gets the change too.\n\n",
+        );
+        for r in reports.iter().filter(|r| !r.sound_laws.is_empty()) {
+            let _ = writeln!(s, "- **{}**:", r.name);
+            for law in &r.sound_laws {
+                let _ = writeln!(s, "  - {law}");
+            }
+        }
+        s.push('\n');
+    }
     s
 }

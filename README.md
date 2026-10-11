@@ -14,7 +14,7 @@ code in the trainer or the runtime:
 | [`latin`](languages/latin) | given the dictionary's principal parts: nouns 98.4% (98.7% with the gender marker), adjectives 99.6%, verbs 99.1%; from the bare lemma 68.9%, 86.8% (participles take their vowel length from their verbs' tables), 75.8% (vowel length is the hard part: letters alone are right 93.6%, 99.3%, 90.7%) | 99.6–100% |
 | [`polish`](languages/polish) | from the bare lemma: nouns 94.1%, adjectives 99.98%, verbs 97.3%; given the principal parts: nouns 96.4% (98.4% with gender markers), verbs 98.3% | 99.9–100% |
 | [`german`](languages/german) | from the bare lemma: nouns 94.9%, adjectives 99.2%, verbs 93.9% (separable verbs inflect through their base: `anstehen` → `steht an`); given the principal parts: nouns 98.4% (98.7% with the gender marker), verbs 99.1% | 99.9–100% |
-| [`ancient-greek`](languages/ancient-greek) | given the dictionary's principal parts: nouns 96.5%, adjectives 98.4%, verbs 82.5%; with the lemma written in full (accents and vowel length): 80.2%, 86.1%, 63.3%; from the headword (accents, no vowel length): 57.8%, 63.9%, 52.4% (letters right 92.5%, 95.1%, 76.6%) | 99.7–100% (pronouns 97.9%) |
+| [`ancient-greek`](languages/ancient-greek) | given the dictionary's principal parts: nouns 96.5%, adjectives 98.4%, verbs 82.9%; with the lemma written in full (accents and vowel length): 80.2%, 86.1%, 65.6%; from the headword (accents, no vowel length): 57.8%, 63.9%, 54.6% (letters right 92.5%, 95.1%, 79.3%) | 99.7–100% (pronouns 97.9%) |
 | [`sanskrit`](languages/sanskrit) | from the stem: nouns 93.4% (97.3% with the gender marker), adjectives 91.8%, verbs 90.0% (91.1% given future, perfect and aorist) | 99.9–100% |
 | [`spanish`](languages/spanish) | from the bare lemma: nouns 98.7%, adjectives 98.6%, verbs 99.4% (prefixed verbs inflect like their base: `deshacer` → `deshizo`); given the principal parts: verbs 99.9% | 99.2–100% |
 | [`french`](languages/french) | from the bare lemma: nouns 97.7%, adjectives 97.4%, verbs 99.1%, past participle agreement 99.0%; given the principal parts: verbs 99.8% | 99.99–100% |
@@ -22,14 +22,14 @@ code in the trainer or the runtime:
 
 Attested words are the ones the shipped model was trained on. The full reports (calibration,
 per-cell numbers, made-up words, the largest groups of mistakes, where the bytes are, size
-against fit, speed) are in each crate's README. The models are 0.3–4.9 MB (0.1–1.7 MB
-gzipped), except Russian's, 11.8 MB (4.7 MB gzipped: four times the words, and the
-participle lexicon), and Ancient Greek's, 17.4 MB (4.4 MB gzipped), all under crates.io's
-10 MB limit for a packaged crate. That is 9–54% smaller than before the size price (Russian
-was 21.4 MB, Greek 20.1 MB); English is 0.5 MB against `english` 0.4's 1 MB of tables. Calls
-take 100–300 ns in English, Polish, German, Spanish, French and Italian, 0.2–0.7 µs in
-Russian and Sanskrit, and 0.5–3 µs in Latin and Ancient Greek, whose start-restoration
-model reads every unseen lemma twice (measured on a busy machine; speed is next on the list).
+against fit, speed) are in each crate's README.
+
+Each crate's model is Rust code (see [The generated code](#the-generated-code)): 2–5 MB of
+source for English and the Romance languages and Sanskrit, 8 MB for Polish, 22 MB for
+German, 30 MB for Latin, 63 MB for Ancient Greek and 67 MB for Russian (0.2–8.4 MB
+gzipped, under crates.io's 10 MB limit for a packaged crate). What the tuning prices is the
+size of the tables underneath: 0.3–4.9 MB, Russian's 11.8 MB and Ancient Greek's 17.4 MB.
+A clean build of all ten crates takes under a minute on 4 cores and peaks at 12 GB.
 
 Russian learns from the Russian Wiktionary too, four times the words of the English one.
 From the bare lemma, the hard part is where the stress falls. A participle typed plain
@@ -51,12 +51,14 @@ verbs 99.1%.
 
 Ancient Greek is the same story twice over: a headword like `λύω` writes the accent but
 not the vowel length the tables mark (`λῡ́ω`), so even its letters are right far more
-often than its marks. Reading the lemma from both ends brings nouns to 57.8%, adjectives
-to 63.9% and verbs to 52.4%. Given the principal parts, nouns reach 96.5% and verbs 82.5%
+often than its marks. Reading the lemma from both ends brings nouns to 57.8% and adjectives
+to 63.9%. Verbs learn their sound laws (reduplication, and the consonant changes before
+the future's `-σ-` and the aorist passive's `-θ-`), which brings them to 54.6% (the
+perfect from 27% to 39%). Given the principal parts, nouns reach 96.5% and verbs 82.9%
 (the aim was 85%). A verb's principal parts each build their own tenses (the part models);
 what the misses still need is an accent that depends on vowel lengths the parts don't always
-show (`ἠγνοήμεθα`, where the model writes `ἠγνόημεθα`), perfect reduplication, and the augment
-after a preverb, in cells that only a few of the 2,700 verbs with tables attest. No other
+show (`ἠγνοήμεθα`, where the model writes `ἠγνόημεθα`) and the augment after a preverb, in
+cells that only a few of the 2,700 verbs with tables attest. No other
 Wiktionary has Greek verb tables the trainer could use.
 
 Spanish, French and Italian need only their configs. Their remaining misses are mostly
@@ -103,8 +105,9 @@ assert_eq!(italian::verb("finire", italian::Tense::Present, italian::Person::Fir
 ## Layout
 
 ```
-crates/flexion         the runtime every generated crate depends on (no dependencies)
-crates/flexion-train   extract → learn → evaluate → emit
+crates/flexion         the runtime every generated crate depends on (and only on sound-law)
+crates/flexion-train   extract → learn → evaluate → write the crate's code
+crates/sound-law       a sound-change engine (moved here from gold-silver-copper/ruthenian)
 configs/               one language description per module: english.rs, russian.rs, latin.rs,
                        polish.rs, german.rs, ancient_greek.rs, sanskrit.rs, spanish.rs,
                        french.rs, italian.rs (and romance.rs: head-line helpers they share)
@@ -120,7 +123,10 @@ languages/spanish      generated
 languages/french       generated
 languages/italian      generated
 tools/english-baseline the published english 0.4, as a baseline for the English report
-xtask/                 cargo xtask build | probe | extract
+tools/audit            every generated crate answers exactly as the model it was written from
+tools/codegen-check    the same, as a test, on code generated from the test fixtures
+tools/ceiling          how close the models are to what their data allows
+xtask/                 cargo xtask build | emit | probe | extract | export | tune
 ```
 
 ## How it learns
@@ -170,7 +176,7 @@ xtask/                 cargo xtask build | probe | extract
    report shows where the bytes are and the size-against-fit curve. The shipped model is
    then trained on everything.
 6. **Emit.** The crate gets typed functions per cell group, a settings value (stress
-   marks or macrons on or off), the model as a binary blob, the config's hand-written
+   marks or macrons on or off), the model as Rust code, the config's hand-written
    helpers, and a README with the evaluation.
 
 Marks that people leave out when they type (Latin macrons, Russian `ё`, Greek accents,
@@ -199,7 +205,25 @@ out (`ахнувший`, `amatus`) and found there is read as written there (`а
 those the model would get wrong: a participle missing from it then means one the verbs
 don't attest, so the model's confidence for the rest stays honest.
 
-Two more models are learned where the data supports them:
+Most of that lexicon repeats what the verb model already knows, so the build also tries
+**deriving** it: a plain lemma is read backwards through the edits of the verb's participle
+cells to a verb the model attests (the verbs that lend a participle are marked as attested
+in the verb tree), and the verb model writes the participle, stress and length included.
+The lexicon then keeps only the exceptions: the participles derivation writes differently
+from the tables, and an empty entry for each one it would find that the tables don't
+attest, so the answers stay those of the stored lexicon. The build keeps whichever model is
+smaller, and all three languages with such a lexicon derive it now:
+
+| | stored entries | exceptions (blocks among them) | tables |
+|---|---:|---:|---:|
+| Russian | 57,877 | 31,823 (29,340) | 13.19 → 11.50 MB |
+| Ancient Greek | 17,196 | 7,601 (753) | 16.13 → 15.81 MB |
+| Latin | 6,819 | 1,933 (46) | 5.43 → 5.36 MB |
+
+The marks are the price, and they take most of the saving back: on the training tenths, Russian's
+lexicon shrinks by 483 KB while its verb tree grows by 392 KB (Latin: 60 KB and 43 KB).
+
+Three more models are learned where the data supports them:
 
 - **Joins.** Prefixes that, put before an attested word, make words that inflect through
   it: German `an` + `fangen` → `fängt an`, `angefangen`, `anzufangen`; Russian `за` +
@@ -210,6 +234,31 @@ Two more models are learned where the data supports them:
 - **Part models.** Where a citation gives principal parts, a part model learns the cells
   from that part instead of the lemma (`ἔλυσα → ἐλύσαμεν`, `नेष्यति → नेष्यामि`). Which
   cells come from which part is decided on the tuning tenth.
+- **Sound laws.** An edit is a string swap learned for every ending it occurs with, so one
+  process becomes many unrelated edits. Where edits differ only by a regular change at the
+  stem's edge, the trainer rewrites them as one edit that carries an invisible trigger
+  and one rule, run by [`sound-law`](crates/sound-law): Polish `ręka → ręce`, `noga →
+  nodze` become `-a → ⟨T⟩e` with `k → c, g → dz / _⟨T⟩`. It looks for three local shapes
+  (local processes are the ones learnable from examples alone, Chandlee, Eyraud & Heinz
+  2014): the stem's last consonants before the ending (`k → c`), its last vowel across
+  final consonants (German umlaut), and a copy of its first consonant before a vowel
+  (Greek reduplication, `λύω → λέλυκα`, `θύω → τέθυκα`). A map entry is kept when it is
+  reliable where it could apply, counting the stems that keep the segment against it
+  (hits over scope by its lower confidence bound, Albright & Hayes 2002), when at least
+  three words and two endings show it, and only for edits it reproduces on every
+  training pair. Rules never touch the lemma cell or the cells principal parts give.
+
+  Rules at the stem's end make the model smaller but rarely change an answer: the suffix
+  tree already reads those letters, so the right class is found either way (Polish nouns'
+  learned palatalization, German nouns' umlaut and Latin verbs' `-s-` perfects leave
+  every number as it was). A rule at the word's start is what a tree read from the end
+  can't learn: Ancient Greek verbs learn reduplication (with the aspirate copied plain,
+  `θ → τ`, `φ → π`, `χ → κ`) and the consonant changes of the future, aorist and perfect,
+  which take the perfect from 27% to 39% of held-out cells right and verbs from 52.4% to
+  54.6%. Sound laws are kept for a part of speech when the size price picks them (they make
+  the model smaller, and often its log-loss lower) and they lose no dev top-1 against the
+  setting without them, on the same words, beyond the standard error of the difference (a
+  paired test: two models this close share most answers).
 
 At runtime a word is walked down the tree; the deepest node with a class that fits it
 (the class's stripped suffixes and starts must match) decides. A stress the caller
@@ -218,6 +267,64 @@ are passed over while any class agrees. A **citation** (`"lie, lied"`, `"кни�
 книги"`) keeps only the classes that agree with the given principal parts (a missing part
 is written `—`), and **markers** (`m`, `anim`, `impf`) weigh classes by the features
 they name.
+
+## The generated code
+
+A crate's model is Rust code under `src/model/`, one module per part of speech (and per
+restoration, start-restoration and part model), each implementing the runtime's
+[`PosModel`](crates/flexion/src/tables.rs) trait:
+
+- the **suffix tree** is functions of `match`es over the word's symbols, read from its last
+  letter back; each node on the way adds its distribution over classes:
+
+  ```rust
+  /// Words ending -а.
+  pub(crate) fn n1(s: &[char], out: &mut Path<'_>) -> bool {
+      super::push(out, 1);
+      match s {
+          [] => true,
+          ['а', s @ ..] => {
+              super::push(out, 32);
+              match s { … }
+          }
+          …
+          _ => false,
+      }
+  }
+  ```
+
+  A node is stored as its class counts and the node it is smoothed toward, in flat tables
+  of numbers per file (`KINDS`, `PARENTS`, `STARTS`, `CLASSES`, `WEIGHTS`): a slice
+  literal or a constructor call per node made rustc take 7.5 GB for Russian, the flat
+  tables 3.5 GB. `push` computes a node's distribution on first use,
+  `(n_c + α·q_c) / (N + α)` with `q` the parent's, cut below ε
+  (`flexion::tables::smooth_node`, which the trainer's in-memory tables use too). Russian's
+  nodes hold 0.30 million counts where they held 0.75 million probabilities: most of a
+  smoothed distribution is its parent's;
+
+- the **classes** and **edits** are statics, each class with a word of it and its first
+  forms (`// 3324: like рука-манипулятор: рука-манипулятор, руки-манипуляторы, …`); classes
+  share their per-group edit vectors as the tables do;
+- the **lexicon** and the **join prefixes** are `match`es on strings.
+
+The trainer never compiles this code while it tunes: it scores an in-memory model of the
+same tables (the runtime's `Tables`), and writes the code from it once the build is done.
+So the two must agree, and [`tools/audit`](tools/audit) checks it: for every language it
+retrains the shipped model from the lexeme cache and the plans the build saved, then asks
+both the same questions (the held-out words in every input mode, a sample of attested
+words, made-up words; every cell with marks on and off, whether each cell exists, every
+inherent feature), and requires the answers to be equal bit for bit. On the shipped crates
+that is 1.6 million answers (French) to 11.4 million (Ancient Greek) per language, 46.7
+million in all, every one equal.
+[`tools/codegen-check`](tools/codegen-check) does the same on the test fixtures, in the test
+suite.
+
+rustc puts limits on what code can look like, and the generator stays inside them: a tree
+function holds at most 256 nodes and nests at most 6 `match`es (a long word's chain of
+nodes overflowed rustc's stack), a file at most 8,192 nodes or 20,000 table entries, and a
+string `match` at most 500 arms (Russian's 56,000-word participle lexicon as one `match`
+overflowed it too). Generated crates build no unit-test harness (`test = false`): their
+tests are their README examples, and the model isn't compiled twice.
 
 ## Other Wiktionary editions
 
@@ -363,6 +470,8 @@ cargo xtask probe russian --pos noun --tau 2 --misses 1                   # expe
 cargo xtask probe ancient-greek --pos verb --parts 1 --joins 1            # with part models, joins
 cargo xtask probe latin --pos noun --front 1                               # with the start-restoration model
 cargo xtask tune russian --pos noun                                       # the grid: size, top-1, log-loss
+cargo xtask emit russian                                                  # rewrite the model's code from the last build's plans
+cargo run --release -p audit -- russian                                   # the generated code answers as the model
 cargo xtask export russian                                                # train/dev/test splits as TSV
 ```
 
@@ -376,5 +485,5 @@ language on 8 threads (Russian's four editions' worth of words and Ancient Greek
 
 ## License
 
-Code: MIT or Apache-2.0. Generated models (`languages/*/src/model.bin`) and the test
+Code: MIT or Apache-2.0. Generated models (`languages/*/src/model/`) and the test
 fixtures are derived from Wiktionary and licensed CC BY-SA 4.0.

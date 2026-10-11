@@ -338,3 +338,16 @@ The Greek extraction artifact is fixed: periphrastic optatives no longer keep th
 auxiliary. The start-restoration model (a restoration tree read from the word's start)
 took most of the Latin and Greek noun gap: from the bare lemma, Latin nouns 59.1% →
 68.9% and Greek nouns 42.6% → 57.8%, against the transformer's 69.7% and 63.0%.
+
+Greek verbs learn sound laws (`crates/flexion-train/src/phonology.rs`), reduplication
+among them, with the aspirate copied plain as the transformer had found it must be: the
+perfect goes from 26.8% to 38.6% of held-out cells right (the transformer: 38.1%), the
+pluperfect from 21.0% to 32.9%, all verb cells from 52.4% to 54.6%.
+
+Two more rule shapes were tried and dropped. One rewrites the ending's first letter
+after some of the stem's last letters (Russian `ы → и` after `к г х ж ш щ ч`). The
+other reads a stem letter the edit keeps (`lipa → lipie` as `p → pi`), which learns
+Polish's second palatalization whole. Each rule had to merge classes to stay. They
+merged few: Russian nouns 3,762 → 3,706 classes and Polish nouns 1,373 → 1,370, with
+the tables no smaller and training 3.6 times slower. These languages' classes are told
+apart by stress pattern and gender far more than by these spellings.

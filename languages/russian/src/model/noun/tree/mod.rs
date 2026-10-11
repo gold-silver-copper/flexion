@@ -1,0 +1,105 @@
+//! The suffix tree: a word's symbols (its letters from the last one back,
+//! the walk's tokens, then the start of the word) choose the arms; each node
+//! on the way adds its distribution over classes. A node stores the classes
+//! of the words under it, counted; its distribution is computed from them on
+//! first use, smoothed toward its nearest ancestor's. The walk returns
+//! whether it reached the word's own node.
+
+use flexion::Path;
+use flexion::tables::{NodeKind, Smoothed, smooth_node};
+use std::sync::OnceLock;
+
+mod nodes;
+mod t0;
+mod t1;
+mod t2;
+mod t3;
+mod t4;
+mod t5;
+mod t6;
+mod t7;
+mod t8;
+mod t9;
+mod t10;
+mod t11;
+mod t12;
+mod t13;
+mod t14;
+mod t15;
+mod t16;
+mod t17;
+mod t18;
+mod t19;
+mod t20;
+mod t21;
+mod t22;
+mod t23;
+mod t24;
+mod t25;
+mod t26;
+mod t27;
+mod t28;
+mod t29;
+mod t30;
+mod t31;
+mod t32;
+mod t33;
+mod t34;
+mod t35;
+mod t36;
+mod t37;
+mod t38;
+mod t39;
+mod t40;
+mod t41;
+mod t42;
+mod t43;
+mod t44;
+mod t45;
+mod t46;
+mod t47;
+mod t48;
+mod t49;
+mod t50;
+mod t51;
+mod t52;
+mod t53;
+mod t54;
+
+pub(crate) use t0::n0 as root;
+
+/// Smoothing strength, the tail cut, and whether probabilities are rounded to
+/// 1/65535 (see `flexion::tables::smooth_node`).
+const ALPHA: f64 = 8.0;
+const EPSILON: f64 = 0.002;
+const NARROW: bool = true;
+
+/// A node with a distribution: how it comes from its counts, and the node it
+/// is smoothed toward (`u32::MAX`: none).
+pub(crate) struct Node {
+    kind: NodeKind,
+    parent: u32,
+}
+
+/// Each node's distribution, computed on first use.
+static CACHE: [OnceLock<Smoothed>; 143502] = [const { OnceLock::new() }; 143502];
+
+fn dist(i: usize) -> Option<&'static Smoothed> {
+    let (node, classes, weights) = nodes::get(i)?;
+    Some(CACHE.get(i)?.get_or_init(|| {
+        let parent = (node.parent != u32::MAX)
+            .then(|| usize::try_from(node.parent).ok())
+            .flatten()
+            .and_then(dist);
+        let q = parent.map_or(&[][..], |p| p.entries.as_slice());
+        let counts: Vec<(u32, f32)> = classes.iter().copied().zip(weights.iter().copied()).collect();
+        smooth_node(node.kind, &counts, q, ALPHA, EPSILON, NARROW)
+    }))
+}
+
+/// Add node `i`'s distribution to the path.
+pub(crate) fn push(out: &mut Path<'_>, i: usize) {
+    if let Some(d) = dist(i).filter(|d| !d.entries.is_empty()) {
+        out.push(&d.entries, d.mass);
+    }
+}

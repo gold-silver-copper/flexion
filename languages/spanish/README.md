@@ -59,9 +59,9 @@ used for any decision.
 
 | | lemmas | cells | top-1 | top-3 | top-1 given citation | top-1 given citation and markers |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 5952 | 5952 | **98.74%** | 99.80% | – | 98.64% |
+| noun | 5952 | 5952 | **98.72%** | 99.80% | – | 98.66% |
 | adjective | 2398 | 7205 | **98.56%** | 99.72% | 99.67% | – |
-| verb | 928 | 66718 | **99.43%** | 99.90% | 99.90% | – |
+| verb | 928 | 66718 | **99.46%** | 99.90% | 99.90% | – |
 | determiner ¹ | 4 | 12 | **83.33%** | 100.00% | – | – |
 
 ¹ A closed class: too few held-out lemmas for these numbers to mean much. What matters for
@@ -91,24 +91,24 @@ Every held-out word, from every edition:
 
 | | lemmas | cells | top-1 | top-1 given citation |
 |---|---:|---:|---:|---:|
-| verb | 1827 | 131379 | 99.15% | 99.77% |
+| verb | 1827 | 131379 | 99.27% | 99.87% |
 
 <details><summary>Held-out top-1 per cell</summary>
 
 | cell | n | top-1 | top-3 |
 |---|---:|---:|---:|
-| noun.pl | 5952 | 98.74% | 99.80% |
+| noun.pl | 5952 | 98.72% | 99.80% |
 | adjective.m.pl | 2396 | 98.75% | 99.92% |
 | adjective.f.sg | 2397 | 98.96% | 99.83% |
 | adjective.f.pl | 2397 | 98.12% | 99.50% |
 | superlative | 12 | 66.67% | 83.33% |
 | before_noun | 3 | 100.00% | 100.00% |
-| verb.pres.1.sg | 926 | 97.84% | 99.57% |
+| verb.pres.1.sg | 926 | 97.95% | 99.57% |
 | verb.pres.1.pl | 926 | 100.00% | 100.00% |
-| verb.pres.2.sg | 926 | 97.95% | 99.57% |
+| verb.pres.2.sg | 926 | 98.06% | 99.57% |
 | verb.pres.2.pl | 926 | 100.00% | 100.00% |
-| verb.pres.3.sg | 928 | 97.95% | 99.57% |
-| verb.pres.3.pl | 928 | 97.95% | 99.57% |
+| verb.pres.3.sg | 928 | 98.06% | 99.57% |
+| verb.pres.3.pl | 928 | 98.06% | 99.57% |
 | verb.impf.1.sg | 926 | 100.00% | 100.00% |
 | verb.impf.1.pl | 926 | 100.00% | 100.00% |
 | verb.impf.2.sg | 926 | 100.00% | 100.00% |
@@ -133,12 +133,12 @@ Every held-out word, from every edition:
 | verb.cond.2.pl | 926 | 99.78% | 100.00% |
 | verb.cond.3.sg | 928 | 99.78% | 100.00% |
 | verb.cond.3.pl | 928 | 99.78% | 100.00% |
-| verb.subj.1.sg | 926 | 97.84% | 99.57% |
+| verb.subj.1.sg | 926 | 97.95% | 99.57% |
 | verb.subj.1.pl | 926 | 99.78% | 100.00% |
-| verb.subj.2.sg | 926 | 97.84% | 99.57% |
+| verb.subj.2.sg | 926 | 97.95% | 99.57% |
 | verb.subj.2.pl | 926 | 99.78% | 100.00% |
-| verb.subj.3.sg | 928 | 97.84% | 99.57% |
-| verb.subj.3.pl | 928 | 97.84% | 99.57% |
+| verb.subj.3.sg | 928 | 97.95% | 99.57% |
+| verb.subj.3.pl | 928 | 97.95% | 99.57% |
 | verb.subj-impf.1.sg | 926 | 99.78% | 100.00% |
 | verb.subj-impf.1.pl | 926 | 99.78% | 100.00% |
 | verb.subj-impf.2.sg | 926 | 99.78% | 100.00% |
@@ -160,16 +160,16 @@ Every held-out word, from every edition:
 | vos.ind | 926 | 100.00% | 100.00% |
 | vos.subj | 926 | 99.78% | 100.00% |
 | vos.imp | 926 | 99.89% | 99.89% |
-| imperative.tu | 926 | 97.62% | 99.35% |
-| imperative.usted | 926 | 97.73% | 99.35% |
+| imperative.tu | 926 | 97.73% | 99.46% |
+| imperative.usted | 926 | 97.84% | 99.46% |
 | imperative.nosotros | 926 | 99.68% | 99.89% |
 | imperative.vosotros | 926 | 99.89% | 99.89% |
-| imperative.ustedes | 926 | 97.73% | 99.35% |
-| negative_imperative.tu | 926 | 97.84% | 99.57% |
-| negative_imperative.usted | 926 | 97.84% | 99.57% |
+| imperative.ustedes | 926 | 97.84% | 99.46% |
+| negative_imperative.tu | 926 | 97.95% | 99.57% |
+| negative_imperative.usted | 926 | 97.95% | 99.57% |
 | negative_imperative.nosotros | 926 | 99.78% | 100.00% |
 | negative_imperative.vosotros | 926 | 99.78% | 100.00% |
-| negative_imperative.ustedes | 926 | 97.84% | 99.57% |
+| negative_imperative.ustedes | 926 | 97.95% | 99.57% |
 | gerund | 928 | 99.68% | 99.78% |
 | participle.m.sg | 928 | 99.78% | 100.00% |
 | participle.m.pl | 928 | 99.78% | 100.00% |
@@ -208,13 +208,13 @@ All parts of speech together (ECE 0.002):
 
 | confidence | mean confidence | accuracy | answers |
 |---|---:|---:|---:|
-| 0.3–0.4 | 0.398 | 0.000 | 4 |
-| 0.4–0.5 | 0.471 | 0.706 | 17 |
-| 0.5–0.6 | 0.557 | 0.520 | 246 |
-| 0.6–0.7 | 0.663 | 0.684 | 301 |
-| 0.7–0.8 | 0.753 | 0.845 | 317 |
+| 0.3–0.4 | 0.393 | 0.000 | 6 |
+| 0.4–0.5 | 0.471 | 0.714 | 14 |
+| 0.5–0.6 | 0.557 | 0.525 | 244 |
+| 0.6–0.7 | 0.662 | 0.683 | 300 |
+| 0.7–0.8 | 0.753 | 0.848 | 335 |
 | 0.8–0.9 | 0.859 | 0.940 | 587 |
-| 0.9–1.0 | 0.998 | 0.997 | 78415 |
+| 0.9–1.0 | 0.998 | 0.997 | 78401 |
 
 ### Forms many words lack
 
@@ -232,7 +232,7 @@ Predicted for held-out lemmas from the bare lemma.
 
 | feature | lemmas | right |
 |---|---:|---:|
-| noun noungender | 5950 | 94.13% |
+| noun noungender | 5950 | 94.12% |
 
 ### Made-up words
 
@@ -253,17 +253,17 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 <details><summary>noun</summary>
 
-- 24 × `noun.pl`: predicted `-+es`, attested `-+s` — bacon → bacones (attested bacons); bulldozer → bulldozeres (attested bulldozers); clown → clownes (attested clowns)
+- 25 × `noun.pl`: predicted `-+es`, attested `-+s` — bacon → bacones (attested bacons); bulldozer → bulldozeres (attested bulldozers); clown → clownes (attested clowns)
 - 18 × `noun.pl`: predicted `-+s`, attested `-+` — accésit → accésits (attested accésit); animoji → animojis (attested animoji); arnt → arnts (attested arnt)
 - 8 × `noun.pl`: predicted `-+`, attested `-+es` — box → box (attested boxes); crash → crash (attested crashes); dios → dios (attested dioses)
 - 6 × `noun.pl`: predicted `-+s`, attested `-+es` — cácher → cáchers (attested cácheres); eslalom → eslaloms (attested eslalomes); estándard → estándards (attested estándardes)
-- 3 × `noun.pl`: predicted `-+es`, attested `-+` — caiss → caisses (attested caiss); híper → híperes (attested híper); zayin → zayines (attested zayin)
+- 4 × `noun.pl`: predicted `-+es`, attested `-+` — caiss → caisses (attested caiss); híper → híperes (attested híper); newton → newtones (attested newton)
 - 2 × `noun.pl`: predicted `-+s`, attested `-d+es` — lord → lords (attested lores); milord → milords (attested milores)
 - 1 × `noun.pl`: predicted `-+`, attested `-+s` — alumnx → alumnx (attested alumnxs)
 - 1 × `noun.pl`: predicted `-+`, attested `-chentas+nly` — ochentas → ochentas (attested only)
-- 1 × `noun.pl`: predicted `-+`, attested `-irgen+írgenes` — virgen → virgen (attested vírgenes)
 - 1 × `noun.pl`: predicted `-+`, attested `-juelos+nly` — ojuelos → ojuelos (attested only)
 - 1 × `noun.pl`: predicted `-+es`, attested `-+les` — val → vales (attested valles)
+- 1 × `noun.pl`: predicted `-+es`, attested `-irgen+írgenes` — virgen → virgenes (attested vírgenes)
 - 1 × `noun.pl`: predicted `-+es`, attested `-itin+ítines` — mitin → mitines (attested mítines)
 
 </details>
@@ -310,21 +310,21 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 558 KB (192 KB gzipped). Where the bytes are, in KB (the strings, 32 KB, are shared):
+The model is 1758 KB of generated Rust (206 KB gzipped). Its tables measure 448 KB: what a compact binary layout of them would take, the size the build prices when it tunes. Where those bytes are, in KB (the strings, 19 KB, are shared):
 
-| | edits | classes | tree nodes | distributions | joins | lexicon | restoration model | part models | total |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 5 | 6 | 44 | 52 | 0 | 0 | 0 | 0 | 107 |
-| adjective | 3 | 3 | 14 | 10 | 0 | 0 | 0 | 0 | 31 |
-| verb | 193 | 103 | 36 | 52 | 0 | 0 | 0 | 0 | 385 |
-| determiner | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
+| | edits | classes | tree nodes | their counts | joins | lexicon | sound laws | restoration model | part models | total |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 5 | 6 | 44 | 46 | 0 | 0 | 0 | 0 | 0 | 101 |
+| adjective | 3 | 3 | 14 | 13 | 0 | 0 | 0 | 0 | 0 | 34 |
+| verb | 128 | 84 | 34 | 44 | 0 | 0 | 1 | 0 | 0 | 292 |
+| determiner | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
 
-| | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
+| | edits | classes | stored nodes | memorized words | counts stored | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 163 | 201 | 3726 | 643 | 13390 | 153 (`noun.pl`) |
-| adjective | 103 | 93 | 1229 | 556 | 2611 | 138 (`adjective.f.sg`) |
-| verb | 6171 | 999 | 3096 | 202 | 13431 | 127 (`verb.pres.3.sg`) |
-| determiner | 22 | 17 | 32 | 19 | 92 | 107 (`determiner.m.pl`) |
+| noun | 151 | 191 | 3720 | 637 | 7835 | 518 (`noun.pl`) |
+| adjective | 103 | 93 | 1229 | 556 | 2142 | 435 (`adjective.f.sg`) |
+| verb | 4106 | 661 | 2934 | 204 | 7545 | 480 (`verb.pres.3.sg`) |
+| determiner | 22 | 17 | 32 | 19 | 67 | 371 (`determiner.m.pl`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
@@ -336,36 +336,53 @@ release build, fastest of seven runs.
 
 | | τ | model KB | dev top-1 | dev log-loss |
 |---|---:|---:|---:|---:|
-| noun | 1 | 127 | 98.61% | 0.0706 |
-| noun | 2 (chosen) | 90 | 98.66% | 0.0698 |
-| noun | 8 | 44 | 98.42% | 0.0695 |
-| adjective | 1 | 34 | 98.35% | 0.0799 |
-| adjective | 2 (chosen) | 29 | 98.31% | 0.0758 |
-| adjective | 8 | 23 | 98.29% | 0.0815 |
-| verb | 1 (chosen) | 379 | 98.92% | 0.0602 |
-| verb | 2 | 365 | 98.90% | 0.0614 |
-| verb | 8 | 347 | 98.76% | 0.0653 |
-| determiner | 1 | 2 | 64.71% | 2.0412 |
-| determiner | 2 | 2 | 64.71% | 1.9707 |
-| determiner | 8 (chosen) | 1 | 64.71% | 1.8681 |
+| noun | 1 | 117 | 98.61% | 0.0706 |
+| noun | 2 (chosen) | 85 | 98.66% | 0.0698 |
+| noun | 8 | 46 | 98.42% | 0.0695 |
+| adjective | 1 | 36 | 98.35% | 0.0799 |
+| adjective | 2 (chosen) | 31 | 98.31% | 0.0758 |
+| adjective | 8 | 25 | 98.29% | 0.0816 |
+| verb | 1 (chosen) | 382 | 98.92% | 0.0602 |
+| verb | 2 | 371 | 98.90% | 0.0614 |
+| verb | 8 | 360 | 98.76% | 0.0653 |
+| determiner | 1 | 2 | 64.71% | 2.0409 |
+| determiner | 2 | 2 | 64.71% | 1.9703 |
+| determiner | 8 (chosen) | 1 | 64.71% | 1.8678 |
 
 </details>
 
 <details><summary>Chosen hyperparameters</summary>
 
-| | smoothing α | pruning τ | suffix support | syllable token | dev top-1 |
-|---|---:|---:|---:|---|---:|
-| noun | 2 | 2 | 2 | none | 98.66% |
-| adjective | 2 | 2 | 2 | none | 98.31% |
-| verb | 0.5 | 1 | 1 | none | 98.92% |
-| determiner | 0.5 | 8 | 1 | none | 64.71% |
+| | smoothing α | pruning τ | suffix support | syllable token | join model | start restoration | sound laws | dev top-1 |
+|---|---:|---:|---:|---|---|---|---|---:|
+| noun | 2 | 2 | 2 | none | no | no | yes | 98.71% |
+| adjective | 2 | 2 | 2 | none | no | no | no | 98.31% |
+| verb | 0.5 | 1 | 1 | none | no | no | yes | 99.13% |
+| determiner | 0.5 | 8 | 1 | none | no | no | no | 64.71% |
 
 </details>
+
+### Sound laws
+
+Learned from the training words: where edits differ only by a regular change of the stem's edge, they are one edit and a rule, so an unseen word gets the change too.
+
+- **noun**:
+  - the stem's last vowel, across its final consonants: a→á, o→ó (49 training pairs)
+- **verb**:
+  - the stem's last vowel, across its final consonants: a→á, ai→ái, au→áu, e→é, ei→éi, eu→éu, eí→ié, i→í, o→ó, u→ú, ui→úi (28383 training pairs)
+  - the stem's last segment before the ending: c→qu, z→c (47763 training pairs)
+  - the stem's last segment before the ending: c→qué, z→cé (8524 training pairs)
+  - the stem's last vowel, across its final consonants: e→ie, eí→ie, i→e, o→ue (12521 training pairs)
+  - the stem's last vowel, across its final consonants: e→ie, i→í, o→ue, u→ú (2958 training pairs)
+  - the stem's last segment before the ending: c→zc, g→j (8837 training pairs)
+  - the stem's last segment before the ending: c→zcá, g→já (1936 training pairs)
+  - the stem's last vowel, across its final consonants: e→i, o→u (6492 training pairs)
+  - the stem's last segment before the ending: c→zca, g→ja (461 training pairs)
 
 
 ## Data and license
 
-The code is MIT or Apache-2.0. The model (`src/model.bin`) is derived from
+The code is MIT or Apache-2.0. The model (the code under `src/model/`) is derived from
 [the English Wiktionary](https://en.wiktionary.org/) and [the Spanish Wiktionary](https://es.wiktionary.org/) via [Kaikki](https://kaikki.org/) and
 [wiktextract](https://github.com/tatuylonen/wiktextract), and is licensed under
 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); see `DATA-LICENSE.md`.

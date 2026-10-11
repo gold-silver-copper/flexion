@@ -1,0 +1,22 @@
+[package]
+name = "codegen-check"
+version = "0.0.0"
+description = "Code generated from the test fixtures, compiled and checked against the in-memory models it was written from"
+publish = false
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+flexion = { workspace = true }
+
+[build-dependencies]
+flexion = { workspace = true }
+flexion-train = { workspace = true }
+flexion-configs = { workspace = true }
+
+[dev-dependencies]
+flexion-train = { workspace = true }
+flexion-configs = { workspace = true }
+
+[lints]
+workspace = true

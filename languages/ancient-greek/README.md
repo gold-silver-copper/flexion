@@ -66,9 +66,9 @@ used for any decision.
 
 | | lemmas | cells | top-1 | letters right (marks ignored) | top-1, lemma written in full | top-3 | top-1 given citation | top-1 given citation and markers |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 807 | 10792 | **57.80%** | 92.52% | 80.20% | 70.04% | 96.47% | 96.42% |
-| adjective | 471 | 21741 | **63.89%** | 95.10% | 86.08% | 71.16% | 98.38% | – |
-| verb | 254 | 63145 | **52.40%** | 76.57% | 63.30% | 63.78% | 82.45% | – |
+| noun | 807 | 10792 | **58.01%** | 93.11% | 80.63% | 70.43% | 96.47% | 96.31% |
+| adjective | 471 | 21741 | **63.59%** | 94.48% | 85.42% | 71.21% | 97.96% | – |
+| verb | 254 | 63145 | **54.57%** | 79.34% | 65.56% | 66.87% | 82.90% | – |
 | pronoun ¹ | 9 | 287 | **44.60%** | 80.84% | 60.63% | 50.52% | – | – |
 | numeral ¹ | 2 | 30 | **50.00%** | 100.00% | 100.00% | 50.00% | – | – |
 
@@ -89,71 +89,75 @@ lemmas in the shipped model). 75 of the 471 held-out lemmas (15.92%) are among t
 words' forms, so their stress and length come from those tables; their other forms are
 still predicted.
 
+The shipped model reads those lemmas from the verb models instead of storing them (the
+words they lend are marked as attested there) and keeps only the 7601 entries reading them
+gets wrong or would wrongly find: it is smaller that way, with the same answers.
+
 <details><summary>Held-out top-1 per cell</summary>
 
 | cell | n | top-1 | top-3 |
 |---|---:|---:|---:|
-| noun.nom.du | 761 | 57.82% | 70.30% |
-| noun.nom.pl | 769 | 56.96% | 69.70% |
-| noun.gen.sg | 771 | 57.46% | 69.52% |
-| noun.gen.du | 761 | 58.48% | 70.30% |
-| noun.gen.pl | 785 | 58.34% | 70.45% |
-| noun.dat.sg | 771 | 57.98% | 69.78% |
-| noun.dat.du | 761 | 58.48% | 70.30% |
-| noun.dat.pl | 778 | 58.23% | 70.18% |
-| noun.acc.sg | 772 | 57.77% | 70.08% |
-| noun.acc.du | 761 | 57.82% | 70.30% |
-| noun.acc.pl | 769 | 57.09% | 69.31% |
-| noun.voc.sg | 787 | 58.07% | 70.52% |
-| noun.voc.du | 761 | 57.82% | 70.30% |
-| noun.voc.pl | 785 | 56.94% | 69.55% |
-| adjective.nom.m.du | 467 | 65.52% | 71.52% |
+| noun.nom.du | 761 | 58.08% | 70.70% |
+| noun.nom.pl | 769 | 57.22% | 70.35% |
+| noun.gen.sg | 771 | 57.85% | 69.78% |
+| noun.gen.du | 761 | 58.74% | 70.57% |
+| noun.gen.pl | 785 | 58.73% | 70.70% |
+| noun.dat.sg | 771 | 58.24% | 70.04% |
+| noun.dat.du | 761 | 58.74% | 70.57% |
+| noun.dat.pl | 778 | 57.97% | 70.57% |
+| noun.acc.sg | 772 | 57.77% | 70.34% |
+| noun.acc.du | 761 | 58.08% | 70.70% |
+| noun.acc.pl | 769 | 57.35% | 69.96% |
+| noun.voc.sg | 787 | 58.07% | 70.90% |
+| noun.voc.du | 761 | 58.08% | 70.70% |
+| noun.voc.pl | 785 | 57.20% | 70.19% |
+| adjective.nom.m.du | 467 | 65.31% | 71.52% |
 | adjective.nom.m.pl | 471 | 64.97% | 71.13% |
-| adjective.nom.f.sg | 469 | 60.98% | 70.36% |
-| adjective.nom.f.du | 467 | 61.24% | 70.88% |
-| adjective.nom.f.pl | 470 | 61.06% | 70.43% |
-| adjective.nom.n.sg | 469 | 64.18% | 71.22% |
-| adjective.nom.n.du | 467 | 65.52% | 71.52% |
+| adjective.nom.f.sg | 469 | 60.13% | 70.79% |
+| adjective.nom.f.du | 467 | 60.60% | 70.88% |
+| adjective.nom.f.pl | 470 | 60.64% | 70.43% |
+| adjective.nom.n.sg | 469 | 64.39% | 71.22% |
+| adjective.nom.n.du | 467 | 65.31% | 71.52% |
 | adjective.nom.n.pl | 470 | 64.68% | 71.28% |
-| adjective.gen.m.sg | 470 | 65.32% | 71.28% |
-| adjective.gen.m.du | 467 | 65.52% | 71.52% |
-| adjective.gen.m.pl | 470 | 65.32% | 71.28% |
-| adjective.gen.f.sg | 469 | 60.55% | 70.36% |
-| adjective.gen.f.du | 467 | 61.24% | 70.88% |
-| adjective.gen.f.pl | 469 | 65.03% | 71.22% |
-| adjective.gen.n.sg | 469 | 65.25% | 71.22% |
-| adjective.gen.n.du | 467 | 65.52% | 71.52% |
-| adjective.gen.n.pl | 469 | 65.25% | 71.22% |
-| adjective.dat.m.sg | 471 | 65.18% | 71.13% |
-| adjective.dat.m.du | 467 | 65.52% | 71.52% |
-| adjective.dat.m.pl | 470 | 65.74% | 71.49% |
-| adjective.dat.f.sg | 470 | 60.43% | 70.21% |
-| adjective.dat.f.du | 467 | 61.24% | 70.88% |
-| adjective.dat.f.pl | 469 | 61.19% | 71.00% |
-| adjective.dat.n.sg | 469 | 65.25% | 71.22% |
-| adjective.dat.n.du | 467 | 65.52% | 71.52% |
-| adjective.dat.n.pl | 469 | 65.67% | 71.43% |
+| adjective.gen.m.sg | 470 | 65.11% | 71.28% |
+| adjective.gen.m.du | 467 | 65.31% | 71.52% |
+| adjective.gen.m.pl | 470 | 65.11% | 71.28% |
+| adjective.gen.f.sg | 469 | 59.70% | 70.79% |
+| adjective.gen.f.du | 467 | 60.60% | 70.88% |
+| adjective.gen.f.pl | 469 | 64.82% | 71.22% |
+| adjective.gen.n.sg | 469 | 65.03% | 71.22% |
+| adjective.gen.n.du | 467 | 65.31% | 71.52% |
+| adjective.gen.n.pl | 469 | 65.03% | 71.22% |
+| adjective.dat.m.sg | 471 | 64.97% | 71.13% |
+| adjective.dat.m.du | 467 | 65.31% | 71.52% |
+| adjective.dat.m.pl | 470 | 65.53% | 71.49% |
+| adjective.dat.f.sg | 470 | 59.57% | 70.64% |
+| adjective.dat.f.du | 467 | 60.60% | 70.88% |
+| adjective.dat.f.pl | 469 | 60.55% | 71.00% |
+| adjective.dat.n.sg | 469 | 65.03% | 71.22% |
+| adjective.dat.n.du | 467 | 65.31% | 71.52% |
+| adjective.dat.n.pl | 469 | 65.46% | 71.43% |
 | adjective.acc.m.sg | 471 | 64.97% | 71.34% |
-| adjective.acc.m.du | 467 | 65.52% | 71.52% |
+| adjective.acc.m.du | 467 | 65.31% | 71.52% |
 | adjective.acc.m.pl | 470 | 65.11% | 71.28% |
-| adjective.acc.f.sg | 470 | 60.43% | 70.00% |
-| adjective.acc.f.du | 467 | 61.24% | 70.88% |
-| adjective.acc.f.pl | 469 | 60.98% | 70.79% |
-| adjective.acc.n.sg | 469 | 64.18% | 71.22% |
-| adjective.acc.n.du | 467 | 65.52% | 71.52% |
+| adjective.acc.f.sg | 470 | 59.79% | 70.43% |
+| adjective.acc.f.du | 467 | 60.60% | 70.88% |
+| adjective.acc.f.pl | 469 | 60.55% | 70.79% |
+| adjective.acc.n.sg | 469 | 64.39% | 71.22% |
+| adjective.acc.n.du | 467 | 65.31% | 71.52% |
 | adjective.acc.n.pl | 470 | 64.68% | 71.28% |
-| adjective.voc.m.sg | 469 | 65.46% | 71.86% |
-| adjective.voc.m.du | 467 | 65.52% | 71.52% |
+| adjective.voc.m.sg | 469 | 65.67% | 71.86% |
+| adjective.voc.m.du | 467 | 65.31% | 71.52% |
 | adjective.voc.m.pl | 469 | 65.25% | 71.43% |
-| adjective.voc.f.sg | 469 | 60.55% | 70.36% |
-| adjective.voc.f.du | 467 | 61.24% | 70.88% |
-| adjective.voc.f.pl | 469 | 61.19% | 70.58% |
-| adjective.voc.n.sg | 468 | 64.32% | 71.37% |
-| adjective.voc.n.du | 467 | 65.52% | 71.52% |
+| adjective.voc.f.sg | 469 | 59.91% | 70.79% |
+| adjective.voc.f.du | 467 | 60.60% | 70.88% |
+| adjective.voc.f.pl | 469 | 60.77% | 70.58% |
+| adjective.voc.n.sg | 468 | 64.53% | 71.37% |
+| adjective.voc.n.du | 467 | 65.31% | 71.52% |
 | adjective.voc.n.pl | 468 | 64.96% | 71.37% |
-| comparative | 339 | 64.60% | 71.98% |
-| superlative | 340 | 64.12% | 71.76% |
-| adverb | 443 | 64.79% | 71.33% |
+| comparative | 339 | 64.01% | 71.98% |
+| superlative | 340 | 63.53% | 71.76% |
+| adverb | 443 | 64.11% | 71.56% |
 | present.ind.act.1.pl | 222 | 66.22% | 78.38% |
 | present.ind.act.2.sg | 222 | 68.92% | 78.83% |
 | present.ind.act.2.du | 222 | 67.57% | 77.93% |
@@ -248,7 +252,7 @@ still predicted.
 | imperfect.act.2.sg | 202 | 41.09% | 55.45% |
 | imperfect.act.2.du | 202 | 42.08% | 57.43% |
 | imperfect.act.2.pl | 202 | 41.58% | 56.93% |
-| imperfect.act.3.sg | 202 | 41.09% | 53.47% |
+| imperfect.act.3.sg | 202 | 40.59% | 53.47% |
 | imperfect.act.3.du | 202 | 42.57% | 57.43% |
 | imperfect.act.3.pl | 202 | 39.60% | 54.46% |
 | imperfect.mid.1.sg | 206 | 42.72% | 54.85% |
@@ -320,7 +324,7 @@ still predicted.
 | aorist.ind.act.2.sg | 186 | 39.78% | 53.23% |
 | aorist.ind.act.2.du | 187 | 41.18% | 52.94% |
 | aorist.ind.act.2.pl | 187 | 41.18% | 52.94% |
-| aorist.ind.act.3.sg | 186 | 39.25% | 51.61% |
+| aorist.ind.act.3.sg | 186 | 38.71% | 51.61% |
 | aorist.ind.act.3.du | 187 | 41.18% | 52.94% |
 | aorist.ind.act.3.pl | 187 | 39.57% | 52.94% |
 | aorist.ind.mid.1.sg | 186 | 39.25% | 50.00% |
@@ -406,119 +410,119 @@ still predicted.
 | aorist.imp.pass.3.du | 154 | 57.14% | 70.13% |
 | aorist.imp.pass.3.pl | 154 | 57.14% | 70.13% |
 | perfect.ind.act.1.sg | 135 | 29.63% | 41.48% |
-| perfect.ind.act.1.pl | 135 | 30.37% | 41.48% |
-| perfect.ind.act.2.sg | 135 | 29.63% | 41.48% |
-| perfect.ind.act.2.du | 135 | 30.37% | 41.48% |
-| perfect.ind.act.2.pl | 135 | 30.37% | 41.48% |
-| perfect.ind.act.3.sg | 135 | 29.63% | 40.00% |
-| perfect.ind.act.3.du | 135 | 30.37% | 41.48% |
-| perfect.ind.act.3.pl | 135 | 30.37% | 40.00% |
+| perfect.ind.act.1.pl | 135 | 40.74% | 60.00% |
+| perfect.ind.act.2.sg | 135 | 40.00% | 59.26% |
+| perfect.ind.act.2.du | 135 | 40.74% | 60.00% |
+| perfect.ind.act.2.pl | 135 | 40.74% | 60.00% |
+| perfect.ind.act.3.sg | 135 | 40.74% | 58.52% |
+| perfect.ind.act.3.du | 135 | 40.74% | 60.00% |
+| perfect.ind.act.3.pl | 135 | 40.74% | 59.26% |
 | perfect.ind.mid.1.sg | 150 | 22.67% | 33.33% |
-| perfect.ind.mid.1.pl | 150 | 22.67% | 33.33% |
-| perfect.ind.mid.2.sg | 150 | 23.33% | 34.67% |
-| perfect.ind.mid.2.du | 150 | 23.33% | 34.67% |
-| perfect.ind.mid.2.pl | 150 | 23.33% | 34.67% |
-| perfect.ind.mid.3.sg | 150 | 22.67% | 33.33% |
-| perfect.ind.mid.3.du | 150 | 23.33% | 34.67% |
-| perfect.ind.mid.3.pl | 150 | 21.33% | 32.00% |
-| perfect.ind.pass.1.sg | 154 | 23.38% | 33.12% |
-| perfect.ind.pass.1.pl | 154 | 23.38% | 33.12% |
-| perfect.ind.pass.2.sg | 154 | 24.03% | 34.42% |
-| perfect.ind.pass.2.du | 154 | 24.03% | 34.42% |
-| perfect.ind.pass.2.pl | 154 | 24.03% | 34.42% |
-| perfect.ind.pass.3.sg | 154 | 23.38% | 33.12% |
-| perfect.ind.pass.3.du | 154 | 24.03% | 34.42% |
-| perfect.ind.pass.3.pl | 154 | 22.08% | 31.82% |
-| perfect.subj.act.1.sg | 135 | 30.37% | 41.48% |
-| perfect.subj.act.1.pl | 135 | 30.37% | 41.48% |
-| perfect.subj.act.2.sg | 135 | 30.37% | 41.48% |
-| perfect.subj.act.2.du | 135 | 30.37% | 41.48% |
-| perfect.subj.act.2.pl | 135 | 30.37% | 41.48% |
-| perfect.subj.act.3.sg | 135 | 31.11% | 42.22% |
-| perfect.subj.act.3.du | 135 | 30.37% | 41.48% |
-| perfect.subj.act.3.pl | 135 | 30.37% | 40.00% |
-| perfect.opt.act.1.sg | 135 | 30.37% | 40.00% |
-| perfect.opt.act.1.pl | 135 | 30.37% | 41.48% |
-| perfect.opt.act.2.sg | 135 | 30.37% | 40.00% |
-| perfect.opt.act.2.du | 135 | 30.37% | 41.48% |
-| perfect.opt.act.2.pl | 135 | 30.37% | 41.48% |
-| perfect.opt.act.3.sg | 135 | 30.37% | 40.00% |
-| perfect.opt.act.3.du | 135 | 30.37% | 41.48% |
-| perfect.opt.act.3.pl | 135 | 30.37% | 41.48% |
-| perfect.imp.act.2.sg | 135 | 29.63% | 41.48% |
-| perfect.imp.act.2.du | 135 | 30.37% | 41.48% |
-| perfect.imp.act.2.pl | 135 | 30.37% | 41.48% |
-| perfect.imp.act.3.sg | 135 | 30.37% | 41.48% |
-| perfect.imp.act.3.du | 135 | 30.37% | 41.48% |
-| perfect.imp.act.3.pl | 135 | 30.37% | 41.48% |
-| perfect.imp.mid.2.sg | 150 | 23.33% | 34.67% |
-| perfect.imp.mid.2.du | 150 | 23.33% | 34.67% |
-| perfect.imp.mid.2.pl | 150 | 23.33% | 34.67% |
-| perfect.imp.mid.3.sg | 150 | 23.33% | 34.67% |
-| perfect.imp.mid.3.du | 150 | 23.33% | 34.67% |
-| perfect.imp.mid.3.pl | 150 | 23.33% | 34.67% |
-| perfect.imp.pass.2.sg | 154 | 24.03% | 34.42% |
-| perfect.imp.pass.2.du | 154 | 24.03% | 34.42% |
-| perfect.imp.pass.2.pl | 154 | 24.03% | 34.42% |
-| perfect.imp.pass.3.sg | 154 | 24.03% | 34.42% |
-| perfect.imp.pass.3.du | 154 | 24.03% | 34.42% |
-| perfect.imp.pass.3.pl | 154 | 24.03% | 34.42% |
-| pluperfect.act.1.sg | 87 | 21.84% | 27.59% |
-| pluperfect.act.1.pl | 87 | 21.84% | 27.59% |
-| pluperfect.act.2.sg | 87 | 21.84% | 27.59% |
-| pluperfect.act.2.du | 87 | 21.84% | 27.59% |
-| pluperfect.act.2.pl | 87 | 21.84% | 27.59% |
-| pluperfect.act.3.sg | 87 | 21.84% | 27.59% |
-| pluperfect.act.3.du | 87 | 21.84% | 27.59% |
-| pluperfect.act.3.pl | 87 | 21.84% | 27.59% |
-| pluperfect.mid.1.sg | 84 | 21.43% | 25.00% |
-| pluperfect.mid.1.pl | 84 | 21.43% | 25.00% |
-| pluperfect.mid.2.sg | 84 | 22.62% | 26.19% |
-| pluperfect.mid.2.du | 84 | 22.62% | 26.19% |
-| pluperfect.mid.2.pl | 84 | 22.62% | 26.19% |
-| pluperfect.mid.3.sg | 84 | 21.43% | 25.00% |
-| pluperfect.mid.3.du | 84 | 22.62% | 26.19% |
-| pluperfect.mid.3.pl | 84 | 21.43% | 25.00% |
-| pluperfect.pass.1.sg | 86 | 18.60% | 23.26% |
-| pluperfect.pass.1.pl | 86 | 18.60% | 23.26% |
-| pluperfect.pass.2.sg | 86 | 19.77% | 24.42% |
-| pluperfect.pass.2.du | 86 | 19.77% | 24.42% |
-| pluperfect.pass.2.pl | 86 | 19.77% | 24.42% |
-| pluperfect.pass.3.sg | 86 | 18.60% | 23.26% |
-| pluperfect.pass.3.du | 86 | 19.77% | 24.42% |
-| pluperfect.pass.3.pl | 86 | 18.60% | 23.26% |
-| future_perfect.ind.mid.1.sg | 8 | 25.00% | 37.50% |
-| future_perfect.ind.mid.1.pl | 8 | 25.00% | 37.50% |
-| future_perfect.ind.mid.2.sg | 8 | 25.00% | 37.50% |
-| future_perfect.ind.mid.2.du | 8 | 25.00% | 37.50% |
-| future_perfect.ind.mid.2.pl | 8 | 25.00% | 37.50% |
-| future_perfect.ind.mid.3.sg | 8 | 25.00% | 37.50% |
-| future_perfect.ind.mid.3.du | 8 | 25.00% | 37.50% |
-| future_perfect.ind.mid.3.pl | 8 | 25.00% | 37.50% |
-| future_perfect.ind.pass.1.sg | 7 | 28.57% | 42.86% |
-| future_perfect.ind.pass.1.pl | 7 | 28.57% | 42.86% |
-| future_perfect.ind.pass.2.sg | 7 | 28.57% | 42.86% |
-| future_perfect.ind.pass.2.du | 7 | 28.57% | 42.86% |
-| future_perfect.ind.pass.2.pl | 7 | 28.57% | 42.86% |
-| future_perfect.ind.pass.3.sg | 7 | 28.57% | 42.86% |
-| future_perfect.ind.pass.3.du | 7 | 28.57% | 42.86% |
-| future_perfect.ind.pass.3.pl | 7 | 28.57% | 42.86% |
-| future_perfect.opt.mid.1.sg | 8 | 25.00% | 37.50% |
-| future_perfect.opt.mid.1.pl | 8 | 25.00% | 37.50% |
-| future_perfect.opt.mid.2.sg | 8 | 25.00% | 37.50% |
-| future_perfect.opt.mid.2.du | 8 | 25.00% | 37.50% |
-| future_perfect.opt.mid.2.pl | 8 | 25.00% | 37.50% |
-| future_perfect.opt.mid.3.sg | 8 | 25.00% | 37.50% |
-| future_perfect.opt.mid.3.du | 8 | 25.00% | 37.50% |
-| future_perfect.opt.mid.3.pl | 8 | 25.00% | 37.50% |
-| future_perfect.opt.pass.1.sg | 7 | 28.57% | 42.86% |
-| future_perfect.opt.pass.1.pl | 7 | 28.57% | 42.86% |
-| future_perfect.opt.pass.2.sg | 7 | 28.57% | 42.86% |
-| future_perfect.opt.pass.2.du | 7 | 28.57% | 42.86% |
-| future_perfect.opt.pass.2.pl | 7 | 28.57% | 42.86% |
-| future_perfect.opt.pass.3.sg | 7 | 28.57% | 42.86% |
-| future_perfect.opt.pass.3.du | 7 | 28.57% | 42.86% |
-| future_perfect.opt.pass.3.pl | 7 | 28.57% | 42.86% |
+| perfect.ind.mid.1.pl | 150 | 36.67% | 48.67% |
+| perfect.ind.mid.2.sg | 150 | 38.00% | 52.67% |
+| perfect.ind.mid.2.du | 150 | 37.33% | 50.67% |
+| perfect.ind.mid.2.pl | 150 | 37.33% | 50.67% |
+| perfect.ind.mid.3.sg | 150 | 37.33% | 50.67% |
+| perfect.ind.mid.3.du | 150 | 37.33% | 50.67% |
+| perfect.ind.mid.3.pl | 150 | 35.33% | 48.00% |
+| perfect.ind.pass.1.sg | 154 | 36.36% | 48.05% |
+| perfect.ind.pass.1.pl | 154 | 37.01% | 48.70% |
+| perfect.ind.pass.2.sg | 154 | 38.31% | 51.95% |
+| perfect.ind.pass.2.du | 154 | 37.66% | 50.00% |
+| perfect.ind.pass.2.pl | 154 | 37.66% | 50.00% |
+| perfect.ind.pass.3.sg | 154 | 37.66% | 50.65% |
+| perfect.ind.pass.3.du | 154 | 37.66% | 50.00% |
+| perfect.ind.pass.3.pl | 154 | 35.06% | 47.40% |
+| perfect.subj.act.1.sg | 135 | 41.48% | 60.74% |
+| perfect.subj.act.1.pl | 135 | 40.74% | 60.00% |
+| perfect.subj.act.2.sg | 135 | 40.74% | 60.00% |
+| perfect.subj.act.2.du | 135 | 40.74% | 60.00% |
+| perfect.subj.act.2.pl | 135 | 40.74% | 60.00% |
+| perfect.subj.act.3.sg | 135 | 41.48% | 60.74% |
+| perfect.subj.act.3.du | 135 | 40.74% | 60.00% |
+| perfect.subj.act.3.pl | 135 | 40.74% | 59.26% |
+| perfect.opt.act.1.sg | 135 | 40.74% | 59.26% |
+| perfect.opt.act.1.pl | 135 | 40.74% | 60.00% |
+| perfect.opt.act.2.sg | 135 | 40.74% | 59.26% |
+| perfect.opt.act.2.du | 135 | 40.74% | 60.00% |
+| perfect.opt.act.2.pl | 135 | 40.74% | 60.00% |
+| perfect.opt.act.3.sg | 135 | 40.74% | 59.26% |
+| perfect.opt.act.3.du | 135 | 40.74% | 60.00% |
+| perfect.opt.act.3.pl | 135 | 40.74% | 60.00% |
+| perfect.imp.act.2.sg | 135 | 40.74% | 60.00% |
+| perfect.imp.act.2.du | 135 | 40.74% | 60.00% |
+| perfect.imp.act.2.pl | 135 | 40.74% | 60.00% |
+| perfect.imp.act.3.sg | 135 | 40.74% | 60.00% |
+| perfect.imp.act.3.du | 135 | 40.74% | 60.00% |
+| perfect.imp.act.3.pl | 135 | 40.74% | 60.00% |
+| perfect.imp.mid.2.sg | 150 | 37.33% | 50.67% |
+| perfect.imp.mid.2.du | 150 | 37.33% | 50.67% |
+| perfect.imp.mid.2.pl | 150 | 37.33% | 50.67% |
+| perfect.imp.mid.3.sg | 150 | 38.00% | 51.33% |
+| perfect.imp.mid.3.du | 150 | 38.00% | 51.33% |
+| perfect.imp.mid.3.pl | 150 | 38.00% | 51.33% |
+| perfect.imp.pass.2.sg | 154 | 37.66% | 50.00% |
+| perfect.imp.pass.2.du | 154 | 37.66% | 50.00% |
+| perfect.imp.pass.2.pl | 154 | 37.66% | 50.00% |
+| perfect.imp.pass.3.sg | 154 | 38.31% | 50.65% |
+| perfect.imp.pass.3.du | 154 | 38.31% | 50.65% |
+| perfect.imp.pass.3.pl | 154 | 38.31% | 50.65% |
+| pluperfect.act.1.sg | 87 | 32.18% | 48.28% |
+| pluperfect.act.1.pl | 87 | 32.18% | 50.57% |
+| pluperfect.act.2.sg | 87 | 32.18% | 48.28% |
+| pluperfect.act.2.du | 87 | 32.18% | 50.57% |
+| pluperfect.act.2.pl | 87 | 32.18% | 50.57% |
+| pluperfect.act.3.sg | 87 | 32.18% | 48.28% |
+| pluperfect.act.3.du | 87 | 32.18% | 50.57% |
+| pluperfect.act.3.pl | 87 | 32.18% | 50.57% |
+| pluperfect.mid.1.sg | 84 | 34.52% | 44.05% |
+| pluperfect.mid.1.pl | 84 | 34.52% | 44.05% |
+| pluperfect.mid.2.sg | 84 | 35.71% | 45.24% |
+| pluperfect.mid.2.du | 84 | 35.71% | 45.24% |
+| pluperfect.mid.2.pl | 84 | 35.71% | 45.24% |
+| pluperfect.mid.3.sg | 84 | 34.52% | 42.86% |
+| pluperfect.mid.3.du | 84 | 35.71% | 46.43% |
+| pluperfect.mid.3.pl | 84 | 32.14% | 41.67% |
+| pluperfect.pass.1.sg | 86 | 31.40% | 43.02% |
+| pluperfect.pass.1.pl | 86 | 31.40% | 43.02% |
+| pluperfect.pass.2.sg | 86 | 32.56% | 43.02% |
+| pluperfect.pass.2.du | 86 | 32.56% | 43.02% |
+| pluperfect.pass.2.pl | 86 | 32.56% | 43.02% |
+| pluperfect.pass.3.sg | 86 | 31.40% | 41.86% |
+| pluperfect.pass.3.du | 86 | 32.56% | 44.19% |
+| pluperfect.pass.3.pl | 86 | 29.07% | 40.70% |
+| future_perfect.ind.mid.1.sg | 8 | 37.50% | 50.00% |
+| future_perfect.ind.mid.1.pl | 8 | 37.50% | 50.00% |
+| future_perfect.ind.mid.2.sg | 8 | 37.50% | 50.00% |
+| future_perfect.ind.mid.2.du | 8 | 37.50% | 50.00% |
+| future_perfect.ind.mid.2.pl | 8 | 37.50% | 50.00% |
+| future_perfect.ind.mid.3.sg | 8 | 37.50% | 50.00% |
+| future_perfect.ind.mid.3.du | 8 | 37.50% | 50.00% |
+| future_perfect.ind.mid.3.pl | 8 | 37.50% | 50.00% |
+| future_perfect.ind.pass.1.sg | 7 | 42.86% | 42.86% |
+| future_perfect.ind.pass.1.pl | 7 | 42.86% | 42.86% |
+| future_perfect.ind.pass.2.sg | 7 | 42.86% | 42.86% |
+| future_perfect.ind.pass.2.du | 7 | 42.86% | 42.86% |
+| future_perfect.ind.pass.2.pl | 7 | 42.86% | 42.86% |
+| future_perfect.ind.pass.3.sg | 7 | 42.86% | 42.86% |
+| future_perfect.ind.pass.3.du | 7 | 42.86% | 42.86% |
+| future_perfect.ind.pass.3.pl | 7 | 42.86% | 42.86% |
+| future_perfect.opt.mid.1.sg | 8 | 37.50% | 50.00% |
+| future_perfect.opt.mid.1.pl | 8 | 37.50% | 50.00% |
+| future_perfect.opt.mid.2.sg | 8 | 37.50% | 50.00% |
+| future_perfect.opt.mid.2.du | 8 | 37.50% | 50.00% |
+| future_perfect.opt.mid.2.pl | 8 | 37.50% | 50.00% |
+| future_perfect.opt.mid.3.sg | 8 | 37.50% | 50.00% |
+| future_perfect.opt.mid.3.du | 8 | 37.50% | 50.00% |
+| future_perfect.opt.mid.3.pl | 8 | 37.50% | 50.00% |
+| future_perfect.opt.pass.1.sg | 7 | 42.86% | 42.86% |
+| future_perfect.opt.pass.1.pl | 7 | 42.86% | 42.86% |
+| future_perfect.opt.pass.2.sg | 7 | 42.86% | 42.86% |
+| future_perfect.opt.pass.2.du | 7 | 42.86% | 42.86% |
+| future_perfect.opt.pass.2.pl | 7 | 42.86% | 42.86% |
+| future_perfect.opt.pass.3.sg | 7 | 42.86% | 42.86% |
+| future_perfect.opt.pass.3.du | 7 | 42.86% | 42.86% |
+| future_perfect.opt.pass.3.pl | 7 | 42.86% | 42.86% |
 | infinitive.pres.act | 222 | 67.57% | 78.38% |
 | infinitive.pres.mid | 219 | 66.67% | 77.17% |
 | infinitive.pres.pass | 219 | 66.67% | 77.17% |
@@ -528,11 +532,11 @@ still predicted.
 | infinitive.aor.act | 187 | 57.75% | 70.05% |
 | infinitive.aor.mid | 186 | 55.38% | 68.82% |
 | infinitive.aor.pass | 154 | 57.14% | 70.13% |
-| infinitive.perf.act | 135 | 30.37% | 41.48% |
-| infinitive.perf.mid | 148 | 22.97% | 33.11% |
-| infinitive.perf.pass | 148 | 22.97% | 33.11% |
-| infinitive.futp.mid | 7 | 28.57% | 42.86% |
-| infinitive.futp.pass | 7 | 28.57% | 42.86% |
+| infinitive.perf.act | 135 | 40.74% | 60.00% |
+| infinitive.perf.mid | 148 | 37.84% | 47.97% |
+| infinitive.perf.pass | 148 | 37.84% | 47.97% |
+| infinitive.futp.mid | 7 | 42.86% | 42.86% |
+| infinitive.futp.pass | 7 | 42.86% | 42.86% |
 | participle.pres.act | 222 | 66.67% | 78.38% |
 | participle.pres.mid | 219 | 66.21% | 77.63% |
 | participle.pres.pass | 219 | 66.21% | 77.63% |
@@ -542,11 +546,11 @@ still predicted.
 | participle.aor.act | 187 | 58.82% | 71.12% |
 | participle.aor.mid | 186 | 55.38% | 68.82% |
 | participle.aor.pass | 154 | 57.14% | 70.13% |
-| participle.perf.act | 135 | 30.37% | 41.48% |
-| participle.perf.mid | 148 | 22.97% | 33.11% |
-| participle.perf.pass | 148 | 22.97% | 33.11% |
-| participle.futp.mid | 7 | 28.57% | 42.86% |
-| participle.futp.pass | 7 | 28.57% | 42.86% |
+| participle.perf.act | 135 | 40.74% | 60.00% |
+| participle.perf.mid | 148 | 36.49% | 47.30% |
+| participle.perf.pass | 148 | 36.49% | 47.30% |
+| participle.futp.mid | 7 | 42.86% | 42.86% |
+| participle.futp.pass | 7 | 42.86% | 42.86% |
 | pronoun.nom.m.du | 6 | 50.00% | 50.00% |
 | pronoun.nom.m.pl | 6 | 50.00% | 50.00% |
 | pronoun.nom.f.sg | 7 | 28.57% | 28.57% |
@@ -615,9 +619,9 @@ The shipped model, trained on everything, asked for every attested cell of every
 
 | | lemmas | cells | primary form from the plain call | every attested form among the answers |
 |---|---:|---:|---:|---:|
-| noun | 8165 | 109674 | **99.80%** | 99.31% |
+| noun | 8165 | 109674 | **99.82%** | 99.33% |
 | adjective | 4699 | 217488 | **99.84%** | 99.42% |
-| verb | 2689 | 646281 | **99.71%** | 99.69% |
+| verb | 2689 | 646281 | **99.71%** | 99.70% |
 | pronoun | 58 | 1769 | **97.91%** | 97.51% |
 | numeral | 19 | 301 | **100.00%** | 100.00% |
 
@@ -628,26 +632,26 @@ Expected calibration error (ECE) is the average gap between confidence and accur
 
 | | ECE |
 |---|---:|
-| noun | 0.175 |
-| adjective | 0.229 |
-| verb | 0.201 |
+| noun | 0.174 |
+| adjective | 0.225 |
+| verb | 0.216 |
 | pronoun | 0.284 |
 | numeral | 0.648 |
 
-All parts of speech together (ECE 0.199):
+All parts of speech together (ECE 0.208):
 
 | confidence | mean confidence | accuracy | answers |
 |---|---:|---:|---:|
-| 0.0–0.1 | 0.059 | 0.507 | 8426 |
-| 0.1–0.2 | 0.152 | 0.451 | 10246 |
-| 0.2–0.3 | 0.253 | 0.481 | 12733 |
-| 0.3–0.4 | 0.348 | 0.512 | 12570 |
-| 0.4–0.5 | 0.452 | 0.573 | 12957 |
-| 0.5–0.6 | 0.545 | 0.641 | 10573 |
-| 0.6–0.7 | 0.653 | 0.597 | 9109 |
-| 0.7–0.8 | 0.752 | 0.573 | 6857 |
-| 0.8–0.9 | 0.848 | 0.660 | 6625 |
-| 0.9–1.0 | 0.957 | 0.671 | 5899 |
+| 0.0–0.1 | 0.061 | 0.564 | 7966 |
+| 0.1–0.2 | 0.152 | 0.515 | 9548 |
+| 0.2–0.3 | 0.254 | 0.486 | 12701 |
+| 0.3–0.4 | 0.350 | 0.513 | 12589 |
+| 0.4–0.5 | 0.452 | 0.574 | 13210 |
+| 0.5–0.6 | 0.545 | 0.648 | 11074 |
+| 0.6–0.7 | 0.654 | 0.598 | 9263 |
+| 0.7–0.8 | 0.752 | 0.572 | 7352 |
+| 0.8–0.9 | 0.849 | 0.662 | 6620 |
+| 0.9–1.0 | 0.955 | 0.663 | 5672 |
 
 ### Forms many words lack
 
@@ -656,8 +660,8 @@ how often the answer to "does this word have one?" is right.
 
 | | held-out cells | right | attested cells | right |
 |---|---:|---:|---:|---:|
-| adjective | 1413 | 91.51% | 14097 | 99.95% |
-| verb | 158496 | 87.20% | 1677936 | 99.92% |
+| adjective | 1413 | 91.79% | 14097 | 99.95% |
+| verb | 158496 | 87.20% | 1677936 | 99.91% |
 
 ### Inherent features
 
@@ -665,7 +669,7 @@ Predicted for held-out lemmas from the bare lemma.
 
 | feature | lemmas | right |
 |---|---:|---:|
-| noun gender | 803 | 92.53% |
+| noun gender | 803 | 93.28% |
 
 ### Made-up words
 
@@ -674,26 +678,26 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 | word | function | answers |
 |---|---|---|
 | `γλορπός` | noun | nom.sg: γλορπός 0.24; nom.du: γλορπώ 0.24; nom.pl: γλορποί 0.24; gen.sg: γλορποῦ 0.24; gen.du: γλορποῖν 0.24; gen.pl: γλορπῶν 0.24; dat.sg: γλορπῷ 0.24; dat.du: γλορποῖν 0.24; dat.pl: γλορποῖς 0.24; acc.sg: γλορπόν 0.24; acc.du: γλορπώ 0.24; acc.pl: γλορπούς 0.24; voc.sg: γλορπέ 0.24; voc.du: γλορπώ 0.24; voc.pl: γλορποί 0.24 |
-| `βλικία` | noun | nom.sg: βλῐκῐ́ᾱ 0.78; nom.du: βλῐκῐ́ᾱ 0.78; nom.pl: βλῐκῐ́αι 0.68; gen.sg: βλῐκῐ́ᾱς 0.78; gen.du: βλῐκῐ́αιν 0.78; gen.pl: βλῐκῐῶν 0.78; dat.sg: βλῐκῐ́ᾳ 0.78; dat.du: βλῐκῐ́αιν 0.78; dat.pl: βλῐκῐ́αις 0.78; acc.sg: βλῐκῐ́ᾱν 0.78; acc.du: βλῐκῐ́ᾱ 0.78; acc.pl: βλῐκῐ́ᾱς 0.78; voc.sg: βλῐκῐ́ᾱ 0.78; voc.du: βλῐκῐ́ᾱ 0.78; voc.pl: βλῐκῐ́αι 0.68 |
-| `φλιρμα` | noun | nom.sg: φλίρμᾰ 0.50; nom.du: φλίρμᾰτε 0.51; nom.pl: φλίρμᾰτᾰ 0.51; gen.sg: φλίρμᾰτος 0.51; gen.du: φλιρμᾰ́τοιν 0.51; gen.pl: φλιρμᾰ́των 0.51; dat.sg: φλίρμᾰτῐ 0.51; dat.du: φλιρμᾰ́τοιν 0.51; dat.pl: φλίρμᾰσῐ 0.34, φλίρμᾰσῐν 0.17; acc.sg: φλίρμᾰ 0.50; acc.du: φλίρμᾰτε 0.51; acc.pl: φλίρμᾰτᾰ 0.51; voc.sg: φλίρμᾰ 0.50; voc.du: φλίρμᾰτε 0.51; voc.pl: φλίρμᾰτᾰ 0.51 |
+| `βλικία` | noun | nom.sg: βλῐκῐ́ᾱ 0.78; nom.du: βλῐκῐ́ᾱ 0.78; nom.pl: βλῐκῐ́αι 0.69; gen.sg: βλῐκῐ́ᾱς 0.78; gen.du: βλῐκῐ́αιν 0.78; gen.pl: βλῐκῐῶν 0.78; dat.sg: βλῐκῐ́ᾳ 0.78; dat.du: βλῐκῐ́αιν 0.78; dat.pl: βλῐκῐ́αις 0.78; acc.sg: βλῐκῐ́ᾱν 0.78; acc.du: βλῐκῐ́ᾱ 0.78; acc.pl: βλῐκῐ́ᾱς 0.78; voc.sg: βλῐκῐ́ᾱ 0.78; voc.du: βλῐκῐ́ᾱ 0.78; voc.pl: βλῐκῐ́αι 0.69 |
+| `φλιρμα` | noun | nom.sg: φλίρμᾰ 0.47; nom.du: φλίρμᾰτε 0.51; nom.pl: φλίρμᾰτᾰ 0.51; gen.sg: φλίρμᾰτος 0.51; gen.du: φλιρμᾰ́τοιν 0.51; gen.pl: φλιρμᾰ́των 0.51; dat.sg: φλίρμᾰτῐ 0.51; dat.du: φλιρμᾰ́τοιν 0.51; dat.pl: φλίρμᾰσῐ 0.34, φλίρμᾰσῐν 0.17; acc.sg: φλίρμᾰ 0.47; acc.du: φλίρμᾰτε 0.51; acc.pl: φλίρμᾰτᾰ 0.51; voc.sg: φλίρμᾰ 0.47; voc.du: φλίρμᾰτε 0.51; voc.pl: φλίρμᾰτᾰ 0.51 |
 | `γλορπικός` | adjective | nom.m.sg: γλορπῐκός 0.56; nom.m.du: γλορπῐκώ 0.56; nom.m.pl: γλορπῐκοί 0.56; nom.f.sg: γλορπῐκή 0.56; nom.f.du: γλορπῐκᾱ́ 0.56; nom.f.pl: γλορπῐκαί 0.56; nom.n.sg: γλορπῐκόν 0.56; nom.n.du: γλορπῐκώ 0.56; nom.n.pl: γλορπῐκᾰ́ 0.56; gen.m.sg: γλορπῐκοῦ 0.56; gen.m.du: γλορπῐκοῖν 0.56; gen.m.pl: γλορπῐκῶν 0.56; gen.f.sg: γλορπῐκῆς 0.56; gen.f.du: γλορπῐκαῖν 0.56; gen.f.pl: γλορπῐκῶν 0.56; gen.n.sg: γλορπῐκοῦ 0.56; gen.n.du: γλορπῐκοῖν 0.56; gen.n.pl: γλορπῐκῶν 0.56; dat.m.sg: γλορπῐκῷ 0.56; dat.m.du: γλορπῐκοῖν 0.56; dat.m.pl: γλορπῐκοῖς 0.56; dat.f.sg: γλορπῐκῇ 0.56; dat.f.du: γλορπῐκαῖν 0.56; dat.f.pl: γλορπῐκαῖς 0.56; dat.n.sg: γλορπῐκῷ 0.56; dat.n.du: γλορπῐκοῖν 0.56; dat.n.pl: γλορπῐκοῖς 0.56; acc.m.sg: γλορπῐκόν 0.56; acc.m.du: γλορπῐκώ 0.56; acc.m.pl: γλορπῐκούς 0.56; acc.f.sg: γλορπῐκήν 0.56; acc.f.du: γλορπῐκᾱ́ 0.56; acc.f.pl: γλορπῐκᾱ́ς 0.56; acc.n.sg: γλορπῐκόν 0.56; acc.n.du: γλορπῐκώ 0.56; acc.n.pl: γλορπῐκᾰ́ 0.56; voc.m.sg: γλορπῐκέ 0.56; voc.m.du: γλορπῐκώ 0.56; voc.m.pl: γλορπῐκοί 0.56; voc.f.sg: γλορπῐκή 0.56; voc.f.du: γλορπῐκᾱ́ 0.56; voc.f.pl: γλορπῐκαί 0.56; voc.n.sg: γλορπῐκόν 0.56; voc.n.du: γλορπῐκώ 0.56; voc.n.pl: γλορπῐκᾰ́ 0.56 |
 | `γλορπίζω` | present | ind.act.1.sg: γλορπῐ́ζω 0.86; ind.act.1.du: –; ind.act.1.pl: γλορπῐ́ζομεν 0.86; ind.act.2.sg: γλορπῐ́ζεις 0.86; ind.act.2.du: γλορπῐ́ζετον 0.86; ind.act.2.pl: γλορπῐ́ζετε 0.86; ind.act.3.sg: γλορπῐ́ζει 0.86; ind.act.3.du: γλορπῐ́ζετον 0.86; ind.act.3.pl: γλορπῐ́ζουσῐ 0.62, γλορπῐ́ζουσῐν 0.24; ind.mid.1.sg: γλορπῐ́ζομαι 0.86; ind.mid.1.du: –; ind.mid.1.pl: γλορπῐζόμεθᾰ 0.86; ind.mid.2.sg: γλορπῐ́ζῃ 0.62, γλορπῐ́ζει 0.24; ind.mid.2.du: γλορπῐ́ζεσθον 0.86; ind.mid.2.pl: γλορπῐ́ζεσθε 0.86; ind.mid.3.sg: γλορπῐ́ζεται 0.86; ind.mid.3.du: γλορπῐ́ζεσθον 0.86; ind.mid.3.pl: γλορπῐ́ζονται 0.86; ind.pass.1.sg: γλορπῐ́ζομαι 0.86; ind.pass.1.du: –; ind.pass.1.pl: γλορπῐζόμεθᾰ 0.86; ind.pass.2.sg: γλορπῐ́ζῃ 0.62, γλορπῐ́ζει 0.24; ind.pass.2.du: γλορπῐ́ζεσθον 0.86; ind.pass.2.pl: γλορπῐ́ζεσθε 0.86; ind.pass.3.sg: γλορπῐ́ζεται 0.86; ind.pass.3.du: γλορπῐ́ζεσθον 0.86; ind.pass.3.pl: γλορπῐ́ζονται 0.86; subj.act.1.sg: γλορπῐ́ζω 0.86; subj.act.1.du: –; subj.act.1.pl: γλορπῐ́ζωμεν 0.86; subj.act.2.sg: γλορπῐ́ζῃς 0.86; subj.act.2.du: γλορπῐ́ζητον 0.86; subj.act.2.pl: γλορπῐ́ζητε 0.86; subj.act.3.sg: γλορπῐ́ζῃ 0.86; subj.act.3.du: γλορπῐ́ζητον 0.86; subj.act.3.pl: γλορπῐ́ζωσῐ 0.62, γλορπῐ́ζωσῐν 0.24; subj.mid.1.sg: γλορπῐ́ζωμαι 0.86; subj.mid.1.du: –; subj.mid.1.pl: γλορπῐζώμεθᾰ 0.86; subj.mid.2.sg: γλορπῐ́ζῃ 0.86; subj.mid.2.du: γλορπῐ́ζησθον 0.86; subj.mid.2.pl: γλορπῐ́ζησθε 0.86; subj.mid.3.sg: γλορπῐ́ζηται 0.86; subj.mid.3.du: γλορπῐ́ζησθον 0.86; subj.mid.3.pl: γλορπῐ́ζωνται 0.86; subj.pass.1.sg: γλορπῐ́ζωμαι 0.86; subj.pass.1.du: –; subj.pass.1.pl: γλορπῐζώμεθᾰ 0.86; subj.pass.2.sg: γλορπῐ́ζῃ 0.86; subj.pass.2.du: γλορπῐ́ζησθον 0.86; subj.pass.2.pl: γλορπῐ́ζησθε 0.86; subj.pass.3.sg: γλορπῐ́ζηται 0.86; subj.pass.3.du: γλορπῐ́ζησθον 0.86; subj.pass.3.pl: γλορπῐ́ζωνται 0.86; opt.act.1.sg: γλορπῐ́ζοιμῐ 0.86; opt.act.1.du: –; opt.act.1.pl: γλορπῐ́ζοιμεν 0.86; opt.act.2.sg: γλορπῐ́ζοις 0.86; opt.act.2.du: γλορπῐ́ζοιτον 0.86; opt.act.2.pl: γλορπῐ́ζοιτε 0.86; opt.act.3.sg: γλορπῐ́ζοι 0.86; opt.act.3.du: γλορπῐζοίτην 0.86; opt.act.3.pl: γλορπῐ́ζοιεν 0.86; opt.mid.1.sg: γλορπῐζοίμην 0.86; opt.mid.1.du: –; opt.mid.1.pl: γλορπῐζοίμεθᾰ 0.86; opt.mid.2.sg: γλορπῐ́ζοιο 0.86; opt.mid.2.du: γλορπῐ́ζοισθον 0.86; opt.mid.2.pl: γλορπῐ́ζοισθε 0.86; opt.mid.3.sg: γλορπῐ́ζοιτο 0.86; opt.mid.3.du: γλορπῐζοίσθην 0.86; opt.mid.3.pl: γλορπῐ́ζοιντο 0.86; opt.pass.1.sg: γλορπῐζοίμην 0.86; opt.pass.1.du: –; opt.pass.1.pl: γλορπῐζοίμεθᾰ 0.86; opt.pass.2.sg: γλορπῐ́ζοιο 0.86; opt.pass.2.du: γλορπῐ́ζοισθον 0.86; opt.pass.2.pl: γλορπῐ́ζοισθε 0.86; opt.pass.3.sg: γλορπῐ́ζοιτο 0.86; opt.pass.3.du: γλορπῐζοίσθην 0.86; opt.pass.3.pl: γλορπῐ́ζοιντο 0.86; imp.act.1.sg: –; imp.act.1.du: –; imp.act.1.pl: –; imp.act.2.sg: γλόρπῐζε 0.77; imp.act.2.du: γλορπῐ́ζετον 0.86; imp.act.2.pl: γλορπῐ́ζετε 0.86; imp.act.3.sg: γλορπῐζέτω 0.86; imp.act.3.du: γλορπῐζέτων 0.86; imp.act.3.pl: γλορπῐζόντων 0.86; imp.mid.1.sg: –; imp.mid.1.du: –; imp.mid.1.pl: –; imp.mid.2.sg: γλορπῐ́ζου 0.86; imp.mid.2.du: γλορπῐ́ζεσθον 0.86; imp.mid.2.pl: γλορπῐ́ζεσθε 0.86; imp.mid.3.sg: γλορπῐζέσθω 0.86; imp.mid.3.du: γλορπῐζέσθων 0.86; imp.mid.3.pl: γλορπῐζέσθων 0.86; imp.pass.1.sg: –; imp.pass.1.du: –; imp.pass.1.pl: –; imp.pass.2.sg: γλορπῐ́ζου 0.86; imp.pass.2.du: γλορπῐ́ζεσθον 0.86; imp.pass.2.pl: γλορπῐ́ζεσθε 0.86; imp.pass.3.sg: γλορπῐζέσθω 0.86; imp.pass.3.du: γλορπῐζέσθων 0.86; imp.pass.3.pl: γλορπῐζέσθων 0.86 |
-| `γλορπίζω` | aorist | ind.act.1.sg: ἐγλόρπῐσᾰ 0.85; ind.act.1.du: –; ind.act.1.pl: ἐγλορπῐ́σᾰμεν 0.85; ind.act.2.sg: ἐγλόρπῐσᾰς 0.85; ind.act.2.du: ἐγλορπῐ́σᾰτον 0.85; ind.act.2.pl: ἐγλορπῐ́σᾰτε 0.85; ind.act.3.sg: ἐγλόρπῐσε 0.62, ἐγλόρπῐσεν 0.23; ind.act.3.du: ἐγλορπῐσᾰ́την 0.85; ind.act.3.pl: ἐγλόρπῐσᾰν 0.85; ind.mid.1.sg: ἐγλορπῐσᾰ́μην 0.85; ind.mid.1.du: –; ind.mid.1.pl: ἐγλορπῐσᾰ́μεθᾰ 0.85; ind.mid.2.sg: ἐγλορπῐ́σω 0.85; ind.mid.2.du: ἐγλορπῐ́σᾰσθον 0.85; ind.mid.2.pl: ἐγλορπῐ́σᾰσθε 0.85; ind.mid.3.sg: ἐγλορπῐ́σᾰτο 0.85; ind.mid.3.du: ἐγλορπῐσᾰ́σθην 0.85; ind.mid.3.pl: ἐγλορπῐ́σᾰντο 0.85; ind.pass.1.sg: ἐγλορπῐ́σθην 0.85; ind.pass.1.du: –; ind.pass.1.pl: ἐγλορπῐ́σθημεν 0.85; ind.pass.2.sg: ἐγλορπῐ́σθης 0.85; ind.pass.2.du: ἐγλορπῐ́σθητον 0.85; ind.pass.2.pl: ἐγλορπῐ́σθητε 0.85; ind.pass.3.sg: ἐγλορπῐ́σθη 0.85; ind.pass.3.du: ἐγλορπῐσθήτην 0.85; ind.pass.3.pl: ἐγλορπῐ́σθησᾰν 0.85; subj.act.1.sg: γλορπῐ́σω 0.86; subj.act.1.du: –; subj.act.1.pl: γλορπῐ́σωμεν 0.86; subj.act.2.sg: γλορπῐ́σῃς 0.86; subj.act.2.du: γλορπῐ́σητον 0.86; subj.act.2.pl: γλορπῐ́σητε 0.86; subj.act.3.sg: γλορπῐ́σῃ 0.86; subj.act.3.du: γλορπῐ́σητον 0.86; subj.act.3.pl: γλορπῐ́σωσῐ 0.63, γλορπῐ́σωσῐν 0.24; subj.mid.1.sg: γλορπῐ́σωμαι 0.86; subj.mid.1.du: –; subj.mid.1.pl: γλορπῐσώμεθᾰ 0.86; subj.mid.2.sg: γλορπῐ́σῃ 0.86; subj.mid.2.du: γλορπῐ́σησθον 0.86; subj.mid.2.pl: γλορπῐ́σησθε 0.86; subj.mid.3.sg: γλορπῐ́σηται 0.86; subj.mid.3.du: γλορπῐ́σησθον 0.86; subj.mid.3.pl: γλορπῐ́σωνται 0.86; subj.pass.1.sg: γλορπῐσθῶ 0.86; subj.pass.1.du: –; subj.pass.1.pl: γλορπῐσθῶμεν 0.86; subj.pass.2.sg: γλορπῐσθῇς 0.86; subj.pass.2.du: γλορπῐσθῆτον 0.86; subj.pass.2.pl: γλορπῐσθῆτε 0.86; subj.pass.3.sg: γλορπῐσθῇ 0.86; subj.pass.3.du: γλορπῐσθῆτον 0.86; subj.pass.3.pl: γλορπῐσθῶσῐ 0.63, γλορπῐσθῶσῐν 0.24; opt.act.1.sg: γλορπῐ́σαιμῐ 0.86; opt.act.1.du: –; opt.act.1.pl: γλορπῐ́σαιμεν 0.86; opt.act.2.sg: γλορπῐ́σειᾰς 0.63, γλορπῐ́σαις 0.24; opt.act.2.du: γλορπῐ́σαιτον 0.86; opt.act.2.pl: γλορπῐ́σαιτε 0.86; opt.act.3.sg: γλορπῐ́σειε 0.51, γλορπῐ́σειεν 0.24; opt.act.3.du: γλορπῐσαίτην 0.86; opt.act.3.pl: γλορπῐ́σειᾰν 0.63, γλορπῐ́σαιεν 0.24; opt.mid.1.sg: γλορπῐσαίμην 0.86; opt.mid.1.du: –; opt.mid.1.pl: γλορπῐσαίμεθᾰ 0.86; opt.mid.2.sg: γλορπῐ́σαιο 0.86; opt.mid.2.du: γλορπῐ́σαισθον 0.86; opt.mid.2.pl: γλορπῐ́σαισθε 0.86; opt.mid.3.sg: γλορπῐ́σαιτο 0.86; opt.mid.3.du: γλορπῐσαίσθην 0.86; opt.mid.3.pl: γλορπῐ́σαιντο 0.86; opt.pass.1.sg: γλορπῐσθείην 0.86; opt.pass.1.du: –; opt.pass.1.pl: γλορπῐσθεῖμεν 0.63, γλορπῐσθείημεν 0.24; opt.pass.2.sg: γλορπῐσθείης 0.86; opt.pass.2.du: γλορπῐσθεῖτον 0.63, γλορπῐσθείητον 0.24; opt.pass.2.pl: γλορπῐσθεῖτε 0.63, γλορπῐσθείητε 0.24; opt.pass.3.sg: γλορπῐσθείη 0.86; opt.pass.3.du: γλορπῐσθείτην 0.63, γλορπῐσθειήτην 0.24; opt.pass.3.pl: γλορπῐσθεῖεν 0.63, γλορπῐσθείησᾰν 0.24; imp.act.1.sg: –; imp.act.1.du: –; imp.act.1.pl: –; imp.act.2.sg: γλόρπῐσον 0.76, γλορπῐ͂σον 0.10; imp.act.2.du: γλορπῐ́σᾰτον 0.86; imp.act.2.pl: γλορπῐ́σᾰτε 0.86; imp.act.3.sg: γλορπῐσᾰ́τω 0.86; imp.act.3.du: γλορπῐσᾰ́των 0.86; imp.act.3.pl: γλορπῐσᾰ́ντων 0.86; imp.mid.1.sg: –; imp.mid.1.du: –; imp.mid.1.pl: –; imp.mid.2.sg: γλόρπῐσαι 0.76, γλορπῐ͂σαι 0.10; imp.mid.2.du: γλορπῐ́σᾰσθον 0.86; imp.mid.2.pl: γλορπῐ́σᾰσθε 0.86; imp.mid.3.sg: γλορπῐσᾰ́σθω 0.86; imp.mid.3.du: γλορπῐσᾰ́σθων 0.86; imp.mid.3.pl: γλορπῐσᾰ́σθων 0.86; imp.pass.1.sg: –; imp.pass.1.du: –; imp.pass.1.pl: –; imp.pass.2.sg: γλορπῐ́σθητῐ 0.86; imp.pass.2.du: γλορπῐ́σθητον 0.86; imp.pass.2.pl: γλορπῐ́σθητε 0.86; imp.pass.3.sg: γλορπῐσθήτω 0.86; imp.pass.3.du: γλορπῐσθήτων 0.86; imp.pass.3.pl: γλορπῐσθέντων 0.86 |
-| `ἀπογλορπίζω` | aorist | ind.act.1.sg: ἐἀπογλόρπῐσᾰ 0.82; ind.act.1.du: –; ind.act.1.pl: ἐἀπογλορπῐ́σᾰμεν 0.82; ind.act.2.sg: ἐἀπογλόρπῐσᾰς 0.82; ind.act.2.du: ἐἀπογλορπῐ́σᾰτον 0.82; ind.act.2.pl: ἐἀπογλορπῐ́σᾰτε 0.82; ind.act.3.sg: ἐἀπογλόρπῐσε 0.60, ἐἀπογλόρπῐσεν 0.22; ind.act.3.du: ἐἀπογλορπῐσᾰ́την 0.82; ind.act.3.pl: ἐἀπογλόρπῐσᾰν 0.82; ind.mid.1.sg: ἐἀπογλορπῐσᾰ́μην 0.82; ind.mid.1.du: –; ind.mid.1.pl: ἐἀπογλορπῐσᾰ́μεθᾰ 0.82; ind.mid.2.sg: ἐἀπογλορπῐ́σω 0.82; ind.mid.2.du: ἐἀπογλορπῐ́σᾰσθον 0.82; ind.mid.2.pl: ἐἀπογλορπῐ́σᾰσθε 0.82; ind.mid.3.sg: ἐἀπογλορπῐ́σᾰτο 0.82; ind.mid.3.du: ἐἀπογλορπῐσᾰ́σθην 0.82; ind.mid.3.pl: ἐἀπογλορπῐ́σᾰντο 0.82; ind.pass.1.sg: ἐἀπογλορπῐ́σθην 0.82; ind.pass.1.du: –; ind.pass.1.pl: ἐἀπογλορπῐ́σθημεν 0.82; ind.pass.2.sg: ἐἀπογλορπῐ́σθης 0.82; ind.pass.2.du: ἐἀπογλορπῐ́σθητον 0.82; ind.pass.2.pl: ἐἀπογλορπῐ́σθητε 0.82; ind.pass.3.sg: ἐἀπογλορπῐ́σθη 0.82; ind.pass.3.du: ἐἀπογλορπῐσθήτην 0.82; ind.pass.3.pl: ἐἀπογλορπῐ́σθησᾰν 0.82; subj.act.1.sg: ἀπογλορπῐ́σω 0.86; subj.act.1.du: –; subj.act.1.pl: ἀπογλορπῐ́σωμεν 0.86; subj.act.2.sg: ἀπογλορπῐ́σῃς 0.86; subj.act.2.du: ἀπογλορπῐ́σητον 0.86; subj.act.2.pl: ἀπογλορπῐ́σητε 0.86; subj.act.3.sg: ἀπογλορπῐ́σῃ 0.86; subj.act.3.du: ἀπογλορπῐ́σητον 0.86; subj.act.3.pl: ἀπογλορπῐ́σωσῐ 0.63, ἀπογλορπῐ́σωσῐν 0.24; subj.mid.1.sg: ἀπογλορπῐ́σωμαι 0.86; subj.mid.1.du: –; subj.mid.1.pl: ἀπογλορπῐσώμεθᾰ 0.86; subj.mid.2.sg: ἀπογλορπῐ́σῃ 0.86; subj.mid.2.du: ἀπογλορπῐ́σησθον 0.86; subj.mid.2.pl: ἀπογλορπῐ́σησθε 0.86; subj.mid.3.sg: ἀπογλορπῐ́σηται 0.86; subj.mid.3.du: ἀπογλορπῐ́σησθον 0.86; subj.mid.3.pl: ἀπογλορπῐ́σωνται 0.86; subj.pass.1.sg: ἀπογλορπῐσθῶ 0.86; subj.pass.1.du: –; subj.pass.1.pl: ἀπογλορπῐσθῶμεν 0.86; subj.pass.2.sg: ἀπογλορπῐσθῇς 0.86; subj.pass.2.du: ἀπογλορπῐσθῆτον 0.86; subj.pass.2.pl: ἀπογλορπῐσθῆτε 0.86; subj.pass.3.sg: ἀπογλορπῐσθῇ 0.86; subj.pass.3.du: ἀπογλορπῐσθῆτον 0.86; subj.pass.3.pl: ἀπογλορπῐσθῶσῐ 0.63, ἀπογλορπῐσθῶσῐν 0.24; opt.act.1.sg: ἀπογλορπῐ́σαιμῐ 0.86; opt.act.1.du: –; opt.act.1.pl: ἀπογλορπῐ́σαιμεν 0.86; opt.act.2.sg: ἀπογλορπῐ́σειᾰς 0.63, ἀπογλορπῐ́σαις 0.24; opt.act.2.du: ἀπογλορπῐ́σαιτον 0.86; opt.act.2.pl: ἀπογλορπῐ́σαιτε 0.86; opt.act.3.sg: ἀπογλορπῐ́σειε 0.51, ἀπογλορπῐ́σειεν 0.24; opt.act.3.du: ἀπογλορπῐσαίτην 0.86; opt.act.3.pl: ἀπογλορπῐ́σειᾰν 0.63, ἀπογλορπῐ́σαιεν 0.24; opt.mid.1.sg: ἀπογλορπῐσαίμην 0.86; opt.mid.1.du: –; opt.mid.1.pl: ἀπογλορπῐσαίμεθᾰ 0.86; opt.mid.2.sg: ἀπογλορπῐ́σαιο 0.86; opt.mid.2.du: ἀπογλορπῐ́σαισθον 0.86; opt.mid.2.pl: ἀπογλορπῐ́σαισθε 0.86; opt.mid.3.sg: ἀπογλορπῐ́σαιτο 0.86; opt.mid.3.du: ἀπογλορπῐσαίσθην 0.86; opt.mid.3.pl: ἀπογλορπῐ́σαιντο 0.86; opt.pass.1.sg: ἀπογλορπῐσθείην 0.86; opt.pass.1.du: –; opt.pass.1.pl: ἀπογλορπῐσθεῖμεν 0.63, ἀπογλορπῐσθείημεν 0.24; opt.pass.2.sg: ἀπογλορπῐσθείης 0.86; opt.pass.2.du: ἀπογλορπῐσθεῖτον 0.63, ἀπογλορπῐσθείητον 0.24; opt.pass.2.pl: ἀπογλορπῐσθεῖτε 0.63, ἀπογλορπῐσθείητε 0.24; opt.pass.3.sg: ἀπογλορπῐσθείη 0.86; opt.pass.3.du: ἀπογλορπῐσθείτην 0.63, ἀπογλορπῐσθειήτην 0.24; opt.pass.3.pl: ἀπογλορπῐσθεῖεν 0.63, ἀπογλορπῐσθείησᾰν 0.24; imp.act.1.sg: –; imp.act.1.du: –; imp.act.1.pl: –; imp.act.2.sg: ἀπογλόρπῐσον 0.76; imp.act.2.du: ἀπογλορπῐ́σᾰτον 0.86; imp.act.2.pl: ἀπογλορπῐ́σᾰτε 0.86; imp.act.3.sg: ἀπογλορπῐσᾰ́τω 0.86; imp.act.3.du: ἀπογλορπῐσᾰ́των 0.86; imp.act.3.pl: ἀπογλορπῐσᾰ́ντων 0.86; imp.mid.1.sg: –; imp.mid.1.du: –; imp.mid.1.pl: –; imp.mid.2.sg: ἀπογλόρπῐσαι 0.76; imp.mid.2.du: ἀπογλορπῐ́σᾰσθον 0.86; imp.mid.2.pl: ἀπογλορπῐ́σᾰσθε 0.86; imp.mid.3.sg: ἀπογλορπῐσᾰ́σθω 0.86; imp.mid.3.du: ἀπογλορπῐσᾰ́σθων 0.86; imp.mid.3.pl: ἀπογλορπῐσᾰ́σθων 0.86; imp.pass.1.sg: –; imp.pass.1.du: –; imp.pass.1.pl: –; imp.pass.2.sg: ἀπογλορπῐ́σθητῐ 0.86; imp.pass.2.du: ἀπογλορπῐ́σθητον 0.86; imp.pass.2.pl: ἀπογλορπῐ́σθητε 0.86; imp.pass.3.sg: ἀπογλορπῐσθήτω 0.86; imp.pass.3.du: ἀπογλορπῐσθήτων 0.86; imp.pass.3.pl: ἀπογλορπῐσθέντων 0.86 |
+| `γλορπίζω` | aorist | ind.act.1.sg: ἐγλόρπῐσᾰ 0.85; ind.act.1.du: –; ind.act.1.pl: ἐγλορπῐ́σᾰμεν 0.85; ind.act.2.sg: ἐγλόρπῐσᾰς 0.85; ind.act.2.du: ἐγλορπῐ́σᾰτον 0.85; ind.act.2.pl: ἐγλορπῐ́σᾰτε 0.85; ind.act.3.sg: ἐγλόρπῐσε 0.62, ἐγλόρπῐσεν 0.24; ind.act.3.du: ἐγλορπῐσᾰ́την 0.85; ind.act.3.pl: ἐγλόρπῐσᾰν 0.85; ind.mid.1.sg: ἐγλορπῐσᾰ́μην 0.85; ind.mid.1.du: –; ind.mid.1.pl: ἐγλορπῐσᾰ́μεθᾰ 0.85; ind.mid.2.sg: ἐγλορπῐ́σω 0.85; ind.mid.2.du: ἐγλορπῐ́σᾰσθον 0.85; ind.mid.2.pl: ἐγλορπῐ́σᾰσθε 0.85; ind.mid.3.sg: ἐγλορπῐ́σᾰτο 0.85; ind.mid.3.du: ἐγλορπῐσᾰ́σθην 0.85; ind.mid.3.pl: ἐγλορπῐ́σᾰντο 0.85; ind.pass.1.sg: ἐγλορπῐ́σθην 0.85; ind.pass.1.du: –; ind.pass.1.pl: ἐγλορπῐ́σθημεν 0.85; ind.pass.2.sg: ἐγλορπῐ́σθης 0.85; ind.pass.2.du: ἐγλορπῐ́σθητον 0.85; ind.pass.2.pl: ἐγλορπῐ́σθητε 0.85; ind.pass.3.sg: ἐγλορπῐ́σθη 0.85; ind.pass.3.du: ἐγλορπῐσθήτην 0.85; ind.pass.3.pl: ἐγλορπῐ́σθησᾰν 0.85; subj.act.1.sg: γλορπῐ́σω 0.86; subj.act.1.du: –; subj.act.1.pl: γλορπῐ́σωμεν 0.86; subj.act.2.sg: γλορπῐ́σῃς 0.86; subj.act.2.du: γλορπῐ́σητον 0.86; subj.act.2.pl: γλορπῐ́σητε 0.86; subj.act.3.sg: γλορπῐ́σῃ 0.86; subj.act.3.du: γλορπῐ́σητον 0.86; subj.act.3.pl: γλορπῐ́σωσῐ 0.62, γλορπῐ́σωσῐν 0.24; subj.mid.1.sg: γλορπῐ́σωμαι 0.86; subj.mid.1.du: –; subj.mid.1.pl: γλορπῐσώμεθᾰ 0.86; subj.mid.2.sg: γλορπῐ́σῃ 0.86; subj.mid.2.du: γλορπῐ́σησθον 0.86; subj.mid.2.pl: γλορπῐ́σησθε 0.86; subj.mid.3.sg: γλορπῐ́σηται 0.86; subj.mid.3.du: γλορπῐ́σησθον 0.86; subj.mid.3.pl: γλορπῐ́σωνται 0.86; subj.pass.1.sg: γλορπῐσθῶ 0.86; subj.pass.1.du: –; subj.pass.1.pl: γλορπῐσθῶμεν 0.86; subj.pass.2.sg: γλορπῐσθῇς 0.86; subj.pass.2.du: γλορπῐσθῆτον 0.86; subj.pass.2.pl: γλορπῐσθῆτε 0.86; subj.pass.3.sg: γλορπῐσθῇ 0.86; subj.pass.3.du: γλορπῐσθῆτον 0.86; subj.pass.3.pl: γλορπῐσθῶσῐ 0.62, γλορπῐσθῶσῐν 0.24; opt.act.1.sg: γλορπῐ́σαιμῐ 0.86; opt.act.1.du: –; opt.act.1.pl: γλορπῐ́σαιμεν 0.86; opt.act.2.sg: γλορπῐ́σειᾰς 0.62, γλορπῐ́σαις 0.24; opt.act.2.du: γλορπῐ́σαιτον 0.86; opt.act.2.pl: γλορπῐ́σαιτε 0.86; opt.act.3.sg: γλορπῐ́σειε 0.51, γλορπῐ́σειεν 0.24; opt.act.3.du: γλορπῐσαίτην 0.86; opt.act.3.pl: γλορπῐ́σειᾰν 0.62, γλορπῐ́σαιεν 0.24; opt.mid.1.sg: γλορπῐσαίμην 0.86; opt.mid.1.du: –; opt.mid.1.pl: γλορπῐσαίμεθᾰ 0.86; opt.mid.2.sg: γλορπῐ́σαιο 0.86; opt.mid.2.du: γλορπῐ́σαισθον 0.86; opt.mid.2.pl: γλορπῐ́σαισθε 0.86; opt.mid.3.sg: γλορπῐ́σαιτο 0.86; opt.mid.3.du: γλορπῐσαίσθην 0.86; opt.mid.3.pl: γλορπῐ́σαιντο 0.86; opt.pass.1.sg: γλορπῐσθείην 0.86; opt.pass.1.du: –; opt.pass.1.pl: γλορπῐσθεῖμεν 0.62, γλορπῐσθείημεν 0.24; opt.pass.2.sg: γλορπῐσθείης 0.86; opt.pass.2.du: γλορπῐσθεῖτον 0.62, γλορπῐσθείητον 0.24; opt.pass.2.pl: γλορπῐσθεῖτε 0.62, γλορπῐσθείητε 0.24; opt.pass.3.sg: γλορπῐσθείη 0.86; opt.pass.3.du: γλορπῐσθείτην 0.62, γλορπῐσθειήτην 0.24; opt.pass.3.pl: γλορπῐσθεῖεν 0.62, γλορπῐσθείησᾰν 0.24; imp.act.1.sg: –; imp.act.1.du: –; imp.act.1.pl: –; imp.act.2.sg: γλόρπῐσον 0.76, γλορπῐ͂σον 0.10; imp.act.2.du: γλορπῐ́σᾰτον 0.86; imp.act.2.pl: γλορπῐ́σᾰτε 0.86; imp.act.3.sg: γλορπῐσᾰ́τω 0.86; imp.act.3.du: γλορπῐσᾰ́των 0.86; imp.act.3.pl: γλορπῐσᾰ́ντων 0.86; imp.mid.1.sg: –; imp.mid.1.du: –; imp.mid.1.pl: –; imp.mid.2.sg: γλόρπῐσαι 0.76, γλορπῐ͂σαι 0.10; imp.mid.2.du: γλορπῐ́σᾰσθον 0.86; imp.mid.2.pl: γλορπῐ́σᾰσθε 0.86; imp.mid.3.sg: γλορπῐσᾰ́σθω 0.86; imp.mid.3.du: γλορπῐσᾰ́σθων 0.86; imp.mid.3.pl: γλορπῐσᾰ́σθων 0.86; imp.pass.1.sg: –; imp.pass.1.du: –; imp.pass.1.pl: –; imp.pass.2.sg: γλορπῐ́σθητῐ 0.86; imp.pass.2.du: γλορπῐ́σθητον 0.86; imp.pass.2.pl: γλορπῐ́σθητε 0.86; imp.pass.3.sg: γλορπῐσθήτω 0.86; imp.pass.3.du: γλορπῐσθήτων 0.86; imp.pass.3.pl: γλορπῐσθέντων 0.86 |
+| `ἀπογλορπίζω` | aorist | ind.act.1.sg: ἐἀπογλόρπῐσᾰ 0.82; ind.act.1.du: –; ind.act.1.pl: ἐἀπογλορπῐ́σᾰμεν 0.82; ind.act.2.sg: ἐἀπογλόρπῐσᾰς 0.82; ind.act.2.du: ἐἀπογλορπῐ́σᾰτον 0.82; ind.act.2.pl: ἐἀπογλορπῐ́σᾰτε 0.82; ind.act.3.sg: ἐἀπογλόρπῐσε 0.59, ἐἀπογλόρπῐσεν 0.23; ind.act.3.du: ἐἀπογλορπῐσᾰ́την 0.82; ind.act.3.pl: ἐἀπογλόρπῐσᾰν 0.82; ind.mid.1.sg: ἐἀπογλορπῐσᾰ́μην 0.82; ind.mid.1.du: –; ind.mid.1.pl: ἐἀπογλορπῐσᾰ́μεθᾰ 0.82; ind.mid.2.sg: ἐἀπογλορπῐ́σω 0.82; ind.mid.2.du: ἐἀπογλορπῐ́σᾰσθον 0.82; ind.mid.2.pl: ἐἀπογλορπῐ́σᾰσθε 0.82; ind.mid.3.sg: ἐἀπογλορπῐ́σᾰτο 0.82; ind.mid.3.du: ἐἀπογλορπῐσᾰ́σθην 0.82; ind.mid.3.pl: ἐἀπογλορπῐ́σᾰντο 0.82; ind.pass.1.sg: ἐἀπογλορπῐ́σθην 0.82; ind.pass.1.du: –; ind.pass.1.pl: ἐἀπογλορπῐ́σθημεν 0.82; ind.pass.2.sg: ἐἀπογλορπῐ́σθης 0.82; ind.pass.2.du: ἐἀπογλορπῐ́σθητον 0.82; ind.pass.2.pl: ἐἀπογλορπῐ́σθητε 0.82; ind.pass.3.sg: ἐἀπογλορπῐ́σθη 0.82; ind.pass.3.du: ἐἀπογλορπῐσθήτην 0.82; ind.pass.3.pl: ἐἀπογλορπῐ́σθησᾰν 0.82; subj.act.1.sg: ἀπογλορπῐ́σω 0.86; subj.act.1.du: –; subj.act.1.pl: ἀπογλορπῐ́σωμεν 0.86; subj.act.2.sg: ἀπογλορπῐ́σῃς 0.86; subj.act.2.du: ἀπογλορπῐ́σητον 0.86; subj.act.2.pl: ἀπογλορπῐ́σητε 0.86; subj.act.3.sg: ἀπογλορπῐ́σῃ 0.86; subj.act.3.du: ἀπογλορπῐ́σητον 0.86; subj.act.3.pl: ἀπογλορπῐ́σωσῐ 0.62, ἀπογλορπῐ́σωσῐν 0.24; subj.mid.1.sg: ἀπογλορπῐ́σωμαι 0.86; subj.mid.1.du: –; subj.mid.1.pl: ἀπογλορπῐσώμεθᾰ 0.86; subj.mid.2.sg: ἀπογλορπῐ́σῃ 0.86; subj.mid.2.du: ἀπογλορπῐ́σησθον 0.86; subj.mid.2.pl: ἀπογλορπῐ́σησθε 0.86; subj.mid.3.sg: ἀπογλορπῐ́σηται 0.86; subj.mid.3.du: ἀπογλορπῐ́σησθον 0.86; subj.mid.3.pl: ἀπογλορπῐ́σωνται 0.86; subj.pass.1.sg: ἀπογλορπῐσθῶ 0.86; subj.pass.1.du: –; subj.pass.1.pl: ἀπογλορπῐσθῶμεν 0.86; subj.pass.2.sg: ἀπογλορπῐσθῇς 0.86; subj.pass.2.du: ἀπογλορπῐσθῆτον 0.86; subj.pass.2.pl: ἀπογλορπῐσθῆτε 0.86; subj.pass.3.sg: ἀπογλορπῐσθῇ 0.86; subj.pass.3.du: ἀπογλορπῐσθῆτον 0.86; subj.pass.3.pl: ἀπογλορπῐσθῶσῐ 0.62, ἀπογλορπῐσθῶσῐν 0.24; opt.act.1.sg: ἀπογλορπῐ́σαιμῐ 0.86; opt.act.1.du: –; opt.act.1.pl: ἀπογλορπῐ́σαιμεν 0.86; opt.act.2.sg: ἀπογλορπῐ́σειᾰς 0.62, ἀπογλορπῐ́σαις 0.24; opt.act.2.du: ἀπογλορπῐ́σαιτον 0.86; opt.act.2.pl: ἀπογλορπῐ́σαιτε 0.86; opt.act.3.sg: ἀπογλορπῐ́σειε 0.51, ἀπογλορπῐ́σειεν 0.24; opt.act.3.du: ἀπογλορπῐσαίτην 0.86; opt.act.3.pl: ἀπογλορπῐ́σειᾰν 0.62, ἀπογλορπῐ́σαιεν 0.24; opt.mid.1.sg: ἀπογλορπῐσαίμην 0.86; opt.mid.1.du: –; opt.mid.1.pl: ἀπογλορπῐσαίμεθᾰ 0.86; opt.mid.2.sg: ἀπογλορπῐ́σαιο 0.86; opt.mid.2.du: ἀπογλορπῐ́σαισθον 0.86; opt.mid.2.pl: ἀπογλορπῐ́σαισθε 0.86; opt.mid.3.sg: ἀπογλορπῐ́σαιτο 0.86; opt.mid.3.du: ἀπογλορπῐσαίσθην 0.86; opt.mid.3.pl: ἀπογλορπῐ́σαιντο 0.86; opt.pass.1.sg: ἀπογλορπῐσθείην 0.86; opt.pass.1.du: –; opt.pass.1.pl: ἀπογλορπῐσθεῖμεν 0.62, ἀπογλορπῐσθείημεν 0.24; opt.pass.2.sg: ἀπογλορπῐσθείης 0.86; opt.pass.2.du: ἀπογλορπῐσθεῖτον 0.62, ἀπογλορπῐσθείητον 0.24; opt.pass.2.pl: ἀπογλορπῐσθεῖτε 0.62, ἀπογλορπῐσθείητε 0.24; opt.pass.3.sg: ἀπογλορπῐσθείη 0.86; opt.pass.3.du: ἀπογλορπῐσθείτην 0.62, ἀπογλορπῐσθειήτην 0.24; opt.pass.3.pl: ἀπογλορπῐσθεῖεν 0.62, ἀπογλορπῐσθείησᾰν 0.24; imp.act.1.sg: –; imp.act.1.du: –; imp.act.1.pl: –; imp.act.2.sg: ἀπογλόρπῐσον 0.76; imp.act.2.du: ἀπογλορπῐ́σᾰτον 0.86; imp.act.2.pl: ἀπογλορπῐ́σᾰτε 0.86; imp.act.3.sg: ἀπογλορπῐσᾰ́τω 0.86; imp.act.3.du: ἀπογλορπῐσᾰ́των 0.86; imp.act.3.pl: ἀπογλορπῐσᾰ́ντων 0.86; imp.mid.1.sg: –; imp.mid.1.du: –; imp.mid.1.pl: –; imp.mid.2.sg: ἀπογλόρπῐσαι 0.76; imp.mid.2.du: ἀπογλορπῐ́σᾰσθον 0.86; imp.mid.2.pl: ἀπογλορπῐ́σᾰσθε 0.86; imp.mid.3.sg: ἀπογλορπῐσᾰ́σθω 0.86; imp.mid.3.du: ἀπογλορπῐσᾰ́σθων 0.86; imp.mid.3.pl: ἀπογλορπῐσᾰ́σθων 0.86; imp.pass.1.sg: –; imp.pass.1.du: –; imp.pass.1.pl: –; imp.pass.2.sg: ἀπογλορπῐ́σθητῐ 0.86; imp.pass.2.du: ἀπογλορπῐ́σθητον 0.86; imp.pass.2.pl: ἀπογλορπῐ́σθητε 0.86; imp.pass.3.sg: ἀπογλορπῐσθήτω 0.86; imp.pass.3.du: ἀπογλορπῐσθήτων 0.86; imp.pass.3.pl: ἀπογλορπῐσθέντων 0.86 |
 
 ### Largest groups of held-out misses
 
 <details><summary>noun</summary>
 
-- 12 × `noun.gen.pl`: right letters, wrong stress — βένθος → βένθων (attested βενθῶν); βρότος → βρότων (attested βροτῶν); ἔθνος → ἔθνων (attested ἐθνῶν)
-- 10 × `noun.gen.du`: right letters, wrong stress — βένθος → βένθοιν (attested βενθοῖν); βρότος → βρότοιν (attested βροτοῖν); ἔθνος → ἔθνοιν (attested ἐθνοῖν)
-- 10 × `noun.dat.du`: right letters, wrong stress — βένθος → βένθοιν (attested βενθοῖν); βρότος → βρότοιν (attested βροτοῖν); ἔθνος → ἔθνοιν (attested ἐθνοῖν)
+- 11 × `noun.gen.pl`: right letters, wrong stress — βένθος → βένθων (attested βενθῶν); βρότος → βρότων (attested βροτῶν); ἔθνος → ἔθνων (attested ἐθνῶν)
+- 9 × `noun.gen.du`: right letters, wrong stress — βένθος → βένθοιν (attested βενθοῖν); βρότος → βρότοιν (attested βροτοῖν); ἔθνος → ἔθνοιν (attested ἐθνοῖν)
+- 9 × `noun.dat.du`: right letters, wrong stress — βένθος → βένθοιν (attested βενθοῖν); βρότος → βρότοιν (attested βροτοῖν); ἔθνος → ἔθνοιν (attested ἐθνοῖν)
+- 8 × `noun.voc.pl`: right letters, wrong stress — αἰγυπτία → αἰγῠπτῐ́αι (attested αἰγῠ́πτῐαι); βρότος → βρότοι (attested βροτοί); καδύτας → κᾰδύται (attested κᾰδῦται)
+- 8 × `noun.nom.pl`: right letters, wrong stress — αἰγυπτία → αἰγῠπτῐ́αι (attested αἰγῠ́πτῐαι); βρότος → βρότοι (attested βροτοί); καδύτας → κᾰδύται (attested κᾰδῦται)
 - 7 × `noun.voc.sg`: right letters, wrong stress — δώτωρ → δώτορ (attested δῶτορ); καδύτας → κᾰδύτᾰ (attested κᾰδῦτᾰ); μήτηρ → μήτερ (attested μῆτερ)
-- 7 × `noun.voc.pl`: right letters, wrong stress — αἰγυπτία → αἰγῠπτῐ́αι (attested αἰγῠ́πτῐαι); βρότος → βρότοι (attested βροτοί); καδύτας → κᾰδύται (attested κᾰδῦται)
-- 7 × `noun.nom.pl`: right letters, wrong stress — αἰγυπτία → αἰγῠπτῐ́αι (attested αἰγῠ́πτῐαι); βρότος → βρότοι (attested βροτοί); καδύτας → κᾰδύται (attested κᾰδῦται)
+- 6 × `noun.voc.sg`: predicted `-ος+ε`, attested `-+` — βένθος → βένθε (attested βένθος); ἔθνος → ἔθνε (attested ἔθνος); εἶρος → εἶρε (attested εἶρος)
 - 6 × `noun.dat.pl`: predicted `-ς+ις`, attested `-ος+εσῐ` — βένθος → βένθοις (attested βένθεσῐ); ἔθνος → ἔθνοις (attested ἔθνεσῐ); εἶρος → εἴροις (attested εἴρεσῐ)
-- 5 × `noun.voc.sg`: predicted `-ος+ε`, attested `-+` — βένθος → βένθε (attested βένθος); ἔθνος → ἔθνε (attested ἔθνος); εἶρος → εἶρε (attested εἶρος)
-- 5 × `noun.acc.sg`: predicted `-ς+ν`, attested `-+` — βένθος → βένθον (attested βένθος); ἔθνος → ἔθνον (attested ἔθνος); εἶρος → εἶρον (attested εἶρος)
+- 6 × `noun.acc.sg`: predicted `-ς+ν`, attested `-+` — βένθος → βένθον (attested βένθος); ἔθνος → ἔθνον (attested ἔθνος); εἶρος → εἶρον (attested εἶρος)
 - 4 × `noun.acc.du`: predicted `-ος+ω`, attested `-ος+ει` — βένθος → βένθω (attested βένθει); ἔθνος → ἔθνω (attested ἔθνει); ἔτος → ἔτω (attested ἔτει)
 - 4 × `noun.acc.pl`: predicted `-ς+υς`, attested `-ος+η` — βένθος → βένθους (attested βένθη); ἔθνος → ἔθνους (attested ἔθνη); ἔτος → ἔτους (attested ἔτη)
 - 4 × `noun.voc.du`: predicted `-ος+ω`, attested `-ος+ει` — βένθος → βένθω (attested βένθει); ἔθνος → ἔθνω (attested ἔθνει); ἔτος → ἔτω (attested ἔτει)
@@ -702,18 +706,18 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 <details><summary>adjective</summary>
 
-- 7 × `adjective.acc.n.sg`: right letters, wrong stress — ἀμήτωρ → ᾰ̓́μητορ (attested ᾰ̓μῆτορ); διδάξας → δῐδᾰ͂ξᾰν (attested δῐδᾰ́ξᾰν); καθίζων → κᾰθίζον (attested κᾰθῖζον)
-- 7 × `adjective.voc.n.sg`: right letters, wrong stress — ἀμήτωρ → ᾰ̓́μητορ (attested ᾰ̓μῆτορ); διδάξας → δῐδᾰ͂ξᾰν (attested δῐδᾰ́ξᾰν); καθίζων → κᾰθίζον (attested κᾰθῖζον)
-- 7 × `adjective.nom.n.sg`: right letters, wrong stress — ἀμήτωρ → ᾰ̓́μητορ (attested ᾰ̓μῆτορ); διδάξας → δῐδᾰ͂ξᾰν (attested δῐδᾰ́ξᾰν); καθίζων → κᾰθίζον (attested κᾰθῖζον)
-- 3 × `adjective.gen.f.sg`: predicted `-ος+ης`, attested `-ς+υ` — γεγωνός → γεγωνῆς (attested γεγωνοῦ); ἐτός → ἐτῆς (attested ἐτοῦ); οἰκητός → οἰκητῆς (attested οἰκητοῦ)
-- 3 × `adjective.gen.f.du`: predicted `-ος+αιν`, attested `-ς+ιν` — γεγωνός → γεγωναῖν (attested γεγωνοῖν); ἐτός → ἐταῖν (attested ἐτοῖν); οἰκητός → οἰκηταῖν (attested οἰκητοῖν)
-- 3 × `adjective.dat.f.sg`: predicted `-ος+ῃ`, attested `-ος+ῳ` — γεγωνός → γεγωνῇ (attested γεγωνῷ); ἐτός → ἐτῇ (attested ἐτῷ); οἰκητός → οἰκητῇ (attested οἰκητῷ)
-- 3 × `adjective.dat.f.du`: predicted `-ος+αιν`, attested `-ς+ιν` — γεγωνός → γεγωναῖν (attested γεγωνοῖν); ἐτός → ἐταῖν (attested ἐτοῖν); οἰκητός → οἰκηταῖν (attested οἰκητοῖν)
-- 3 × `adjective.dat.f.pl`: predicted `-ος+αις`, attested `-ς+ις` — γεγωνός → γεγωναῖς (attested γεγωνοῖς); ἐτός → ἐταῖς (attested ἐτοῖς); οἰκητός → οἰκηταῖς (attested οἰκητοῖς)
-- 3 × `adjective.dat.f.pl`: predicted `-ων+ουσαις`, attested `-ων+οσῐ` — κρείττων → κρειττούσαις (attested κρείττοσῐ); μείζων → μειζούσαις (attested μείζοσῐ); πλείων → πλειούσαις (attested πλείοσῐ)
-- 3 × `adjective.acc.m.sg`: predicted `-ων+οντᾰ`, attested `-ων+ονᾰ` — κρείττων → κρείττοντᾰ (attested κρείττονᾰ); μείζων → μείζοντᾰ (attested μείζονᾰ); πλείων → πλείοντᾰ (attested πλείονᾰ)
-- 3 × `adjective.acc.m.pl`: predicted `-ων+οντᾰς`, attested `-ων+ονᾰς` — κρείττων → κρείττοντᾰς (attested κρείττονᾰς); μείζων → μείζοντᾰς (attested μείζονᾰς); πλείων → πλείοντᾰς (attested πλείονᾰς)
-- 3 × `adjective.nom.m.pl`: predicted `-ων+οντες`, attested `-ων+ονες` — κρείττων → κρείττοντες (attested κρείττονες); μείζων → μείζοντες (attested μείζονες); πλείων → πλείοντες (attested πλείονες)
+- 6 × `adjective.acc.n.sg`: right letters, wrong stress — διδάξας → δῐδᾰ͂ξᾰν (attested δῐδᾰ́ξᾰν); καθίζων → κᾰθίζον (attested κᾰθῖζον); κρείττων → κρείττον (attested κρεῖττον)
+- 6 × `adjective.voc.n.sg`: right letters, wrong stress — διδάξας → δῐδᾰ͂ξᾰν (attested δῐδᾰ́ξᾰν); καθίζων → κᾰθίζον (attested κᾰθῖζον); κρείττων → κρείττον (attested κρεῖττον)
+- 6 × `adjective.nom.n.sg`: right letters, wrong stress — διδάξας → δῐδᾰ͂ξᾰν (attested δῐδᾰ́ξᾰν); καθίζων → κᾰθίζον (attested κᾰθῖζον); κρείττων → κρείττον (attested κρεῖττον)
+- 5 × `adjective.gen.f.du`: predicted `-ος+αιν`, attested `-ς+ιν` — γεγωνός → γεγωναῖν (attested γεγωνοῖν); ἐτός → ἐταῖν (attested ἐτοῖν); ἥμερος → ἡμέραιν (attested ἡμέροιν)
+- 5 × `adjective.dat.f.du`: predicted `-ος+αιν`, attested `-ς+ιν` — γεγωνός → γεγωναῖν (attested γεγωνοῖν); ἐτός → ἐταῖν (attested ἐτοῖν); ἥμερος → ἡμέραιν (attested ἡμέροιν)
+- 5 × `adjective.dat.f.pl`: predicted `-ος+αις`, attested `-ς+ις` — γεγωνός → γεγωναῖς (attested γεγωνοῖς); ἐτός → ἐταῖς (attested ἐτοῖς); ἥμερος → ἡμέραις (attested ἡμέροις)
+- 5 × `adjective.acc.f.du`: predicted `-ος+ᾱ`, attested `-ος+ω` — γεγωνός → γεγωνᾱ́ (attested γεγωνώ); ἐτός → ἐτᾱ́ (attested ἐτώ); ἥμερος → ἡμέρᾱ (attested ἡμέρω)
+- 5 × `adjective.acc.f.pl`: predicted `-ος+ᾱς`, attested `-ς+υς` — γεγωνός → γεγωνᾱ́ς (attested γεγωνούς); ἐτός → ἐτᾱ́ς (attested ἐτούς); ἥμερος → ἡμέρᾱς (attested ἡμέρους)
+- 5 × `adjective.voc.f.du`: predicted `-ος+ᾱ`, attested `-ος+ω` — γεγωνός → γεγωνᾱ́ (attested γεγωνώ); ἐτός → ἐτᾱ́ (attested ἐτώ); ἥμερος → ἡμέρᾱ (attested ἡμέρω)
+- 5 × `adjective.voc.f.pl`: predicted `-ος+αι`, attested `-ς+ι` — γεγωνός → γεγωναί (attested γεγωνοί); ἐτός → ἐταί (attested ἐτοί); ἥμερος → ἥμεραι (attested ἥμεροι)
+- 5 × `adjective.nom.f.du`: predicted `-ος+ᾱ`, attested `-ος+ω` — γεγωνός → γεγωνᾱ́ (attested γεγωνώ); ἐτός → ἐτᾱ́ (attested ἐτώ); ἥμερος → ἡμέρᾱ (attested ἡμέρω)
+- 5 × `adjective.nom.f.pl`: predicted `-ος+αι`, attested `-ς+ι` — γεγωνός → γεγωναί (attested γεγωνοί); ἐτός → ἐταί (attested ἐτοί); ἥμερος → ἥμεραι (attested ἥμεροι)
 
 </details>
 
@@ -723,14 +727,14 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 - 7 × `aorist.imp.mid.2.sg`: right letters, wrong stress — ἀνατέλλω → ἀνᾰτεῖλαι (attested ἀνᾰ́τειλαι); ἐκκλάω → ἐκκλᾰ́σαι (attested ἔκκλᾰσαι); λήγω → λήξαι (attested λῆξαι)
 - 6 × `aorist.imp.act.2.sg`: right letters, wrong stress — ἀνατέλλω → ἀνᾰτεῖλον (attested ἀνᾰ́τειλον); ἐκκλάω → ἐκκλᾰ́σον (attested ἔκκλᾰσον); λήγω → λήξον (attested λῆξον)
 - 4 × `imperfect.act.1.sg`: right letters, wrong stress — διαίρω → δῐ́ῃρον (attested δῐῇρον); καθέλκω → κᾰ́θειλκον (attested κᾰθεῖλκον); πρόσειμι → προσῇᾰ (attested πρόσῃᾰ)
+- 4 × `imperfect.act.3.sg`: right letters, wrong stress — διαίρω → δῐ́ῃρε (attested δῐῇρε); καθέλκω → κᾰ́θειλκε (attested κᾰθεῖλκε); προσήκω → πρόσηκε (attested προσῆκε)
 - 4 × `imperfect.act.3.pl`: right letters, wrong stress — διαίρω → δῐ́ῃρον (attested δῐῇρον); καθέλκω → κᾰ́θειλκον (attested κᾰθεῖλκον); πρόσειμι → προσῇσᾰν (attested πρόσῃσᾰν)
+- 4 × `aorist.ind.act.3.sg`: right letters, wrong stress — ἀναιρέω → ἄνειλε (attested ἀνεῖλε); διαίρω → δῐ́ηρε (attested δῐῆρε); προσήκω → πρόσηξε (attested προσῆξε)
 - 4 × `present.subj.act.1.sg`: predicted `-εω+ω`, attested `-+` — θέω → θῶ (attested θέω); θωέω → θωῶ (attested θωέω); ξέω → ξῶ (attested ξέω)
 - 4 × `present.subj.act.1.pl`: predicted `-εω+ωμεν`, attested `-+μεν` — θέω → θῶμεν (attested θέωμεν); θωέω → θωῶμεν (attested θωέωμεν); ξέω → ξῶμεν (attested ξέωμεν)
 - 4 × `present.ind.act.1.pl`: predicted `-εω+ουμεν`, attested `-ω+ομεν` — θέω → θοῦμεν (attested θέομεν); θωέω → θωοῦμεν (attested θωέομεν); ξέω → ξοῦμεν (attested ξέομεν)
 - 4 × `present.subj.act.3.pl`: predicted `-εω+ωσῐ`, attested `-+σῐ` — θέω → θῶσῐ (attested θέωσῐ); θωέω → θωῶσῐ (attested θωέωσῐ); ξέω → ξῶσῐ (attested ξέωσῐ)
 - 4 × `present.opt.act.1.sg`: predicted `-εω+οιην`, attested `-ω+οιμῐ` — θέω → θοίην (attested θέοιμῐ); θωέω → θωοίην (attested θωέοιμῐ); ξέω → ξοίην (attested ξέοιμῐ)
-- 4 × `present.opt.act.1.pl`: predicted `-εω+οιμεν`, attested `-ω+οιμεν` — θέω → θοῖμεν (attested θέοιμεν); θωέω → θωοῖμεν (attested θωέοιμεν); ξέω → ξοῖμεν (attested ξέοιμεν)
-- 4 × `present.opt.act.2.sg`: predicted `-εω+οιης`, attested `-ω+οις` — θέω → θοίης (attested θέοις); θωέω → θωοίης (attested θωέοις); ξέω → ξοίης (attested ξέοις)
 
 </details>
 
@@ -770,23 +774,23 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 17834 KB (4548 KB gzipped). Where the bytes are, in KB (the strings, 2261 KB, are shared):
+The model is 43847 KB of generated Rust (3419 KB gzipped). Its tables measure 15443 KB: what a compact binary layout of them would take, the size the build prices when it tunes. Where those bytes are, in KB (the strings, 2056 KB, are shared):
 
-| | edits | classes | tree nodes | distributions | joins | lexicon | restoration model | part models | total |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 87 | 67 | 53 | 203 | 0 | 0 | 663 | 0 | 1073 |
-| adjective | 59 | 54 | 22 | 41 | 0 | 202 | 374 | 0 | 752 |
-| verb | 4168 | 4567 | 97 | 1674 | 0 | 0 | 242 | 2964 | 13713 |
-| pronoun | 14 | 9 | 1 | 2 | 0 | 0 | 2 | 0 | 28 |
-| numeral | 2 | 2 | 0 | 0 | 0 | 0 | 1 | 0 | 6 |
+| | edits | classes | tree nodes | their counts | joins | lexicon | sound laws | restoration model | part models | total |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 86 | 67 | 87 | 113 | 0 | 0 | 0 | 567 | 0 | 922 |
+| adjective | 59 | 54 | 28 | 52 | 0 | 89 | 0 | 384 | 108 | 775 |
+| verb | 4000 | 4546 | 118 | 364 | 0 | 18 | 2 | 197 | 2410 | 11656 |
+| pronoun | 14 | 9 | 1 | 2 | 0 | 0 | 0 | 2 | 0 | 27 |
+| numeral | 2 | 2 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 6 |
 
-| | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
+| | edits | classes | stored nodes | memorized words | counts stored | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 2789 | 1285 | 4487 | 258 | 52062 | 1757 (`noun.voc.sg`) |
-| adjective | 1875 | 628 | 1879 | 753 | 10570 | 1489 (`adjective.nom.m.pl`) |
-| verb | 133383 | 6602 | 8241 | 737 | 428642 | 2920 (`present.ind.mid.1.sg`) |
-| pronoun | 459 | 78 | 44 | 14 | 529 | 612 (`pronoun.gen.m.sg`) |
-| numeral | 74 | 21 | 13 | 2 | 119 | 490 (`numeral.nom.m.pl`) |
+| noun | 2764 | 1284 | 7440 | 415 | 19329 | 3421 (`noun.voc.sg`) |
+| adjective | 1873 | 628 | 2430 | 857 | 8896 | 2624 (`adjective.nom.m.pl`) |
+| verb | 128009 | 6605 | 8242 | 738 | 62152 | 6389 (`present.ind.mid.1.sg`) |
+| pronoun | 459 | 78 | 44 | 14 | 317 | 1752 (`pronoun.gen.m.sg`) |
+| numeral | 74 | 21 | 11 | 1 | 62 | 1804 (`numeral.nom.m.pl`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
@@ -798,18 +802,18 @@ release build, fastest of seven runs.
 
 | | τ | model KB | dev top-1 | dev log-loss |
 |---|---:|---:|---:|---:|
-| noun | 1 | 1074 | 43.57% | 4.8148 |
-| noun | 2 (chosen) | 863 | 43.34% | 4.8147 |
-| noun | 8 | 621 | 40.60% | 4.7902 |
-| adjective | 1 | 456 | 40.62% | 5.1667 |
-| adjective | 2 (chosen) | 447 | 40.41% | 5.1707 |
-| adjective | 8 | 406 | 39.41% | 5.1916 |
-| verb | 1 (chosen) | 10360 | 41.38% | 4.8108 |
-| verb | 2 | 10110 | 40.56% | 4.8335 |
-| verb | 8 | 9081 | 36.68% | 4.9739 |
+| noun | 1 | 862 | 43.36% | 4.7878 |
+| noun | 2 (chosen) | 753 | 43.09% | 4.7854 |
+| noun | 8 | 640 | 40.27% | 4.7765 |
+| adjective | 1 | 479 | 40.70% | 5.1482 |
+| adjective | 2 (chosen) | 470 | 40.50% | 5.1535 |
+| adjective | 8 | 444 | 39.54% | 5.1818 |
+| verb | 1 (chosen) | 9181 | 41.39% | 4.8109 |
+| verb | 2 | 9141 | 40.58% | 4.8335 |
+| verb | 8 | 9032 | 36.67% | 4.9741 |
 | pronoun | 1 (chosen) | 27 | 69.47% | 2.9149 |
-| pronoun | 2 | 27 | 69.47% | 2.9938 |
-| pronoun | 8 | 26 | 69.47% | 3.0782 |
+| pronoun | 2 | 27 | 69.47% | 2.9937 |
+| pronoun | 8 | 26 | 69.47% | 3.0781 |
 | numeral | 1 | 7 | 70.45% | 3.1865 |
 | numeral | 2 (chosen) | 6 | 70.45% | 3.1865 |
 | numeral | 8 | 6 | 70.45% | 3.8041 |
@@ -818,20 +822,41 @@ release build, fastest of seven runs.
 
 <details><summary>Chosen hyperparameters</summary>
 
-| | smoothing α | pruning τ | suffix support | syllable token | dev top-1 |
-|---|---:|---:|---:|---|---:|
-| noun | 2 | 2 | 1 | none | 61.74% |
-| adjective | 0.5 | 2 | 2 | after 0 letters | 55.79% |
-| verb | 8 | 1 | 1 | none | 46.55% |
-| pronoun | 0.5 | 1 | 2 | none | 69.47% |
-| numeral | 0.5 | 2 | 1 | after 0 letters | 70.45% |
+| | smoothing α | pruning τ | suffix support | syllable token | join model | start restoration | sound laws | dev top-1 |
+|---|---:|---:|---:|---|---|---|---|---:|
+| noun | 8 | 2 | 1 | none | no | yes | yes | 61.56% |
+| adjective | 8 | 2 | 2 | after 0 letters | no | yes | yes | 55.82% |
+| verb | 8 | 1 | 1 | none | no | yes | yes | 47.42% |
+| pronoun | 0.5 | 1 | 2 | none | no | no | no | 69.47% |
+| numeral | 2 | 2 | 1 | none | no | no | no | 70.45% |
 
 </details>
+
+### Sound laws
+
+Learned from the training words: where edits differ only by a regular change of the stem's edge, they are one edit and a rule, so an unseen word gets the change too.
+
+- **noun**:
+  - the stem's last segment before the ending: ξ→κ, ρ→τ, ς→δ, ψ→π (4070 training pairs)
+  - the stem's last segment before the ending: ν→σ, ς→σ (655 training pairs)
+  - the stem's last segment before the ending: ξ→κ, ς→τ, ψ→π (134 training pairs)
+- **adjective**:
+  - the stem's last segment before the ending: ν→σ, ς→σ (763 training pairs)
+- **verb**:
+  - the stem's last segment before the ending: β→ψ, γ→ξ, γν→ξ, γχ→χ, δ→σ, ζ→σ, θ→σ, κ→ξ, κν→ξ, μβ→β, ν→σ, νν→σ, π→ψ, πτ→ψ, ρχ→λθ, σκ→ξ, σσ→ξ, τ→ξ, φ→ψ, χ→ξ (31546 training pairs)
+  - the stem's last segment before the ending: β→φθ, γ→χθ, ζ→σθ, θ→σθ, κ→χ, λ→θ, μν→τμ, π→φθ, πτ→φθ, ρχ→λθ, σ→θ, σσ→χθ, ττ→χ, χ→σχ (13073 training pairs)
+  - the stem's last segment before the ending: β→φ, γ→χ, δ→σ, ζ→σ, θ→σ, κ→χ, ν→σ, π→φ, πτ→φ, σσ→χ, ττ→χ (7909 training pairs)
+  - the stem's last segment before the ending: β→ψ, δ→σ, ζ→σμ, θ→σ, ν→τ, σσ→γμ, χ→ξ (147 training pairs)
+  - the stem's last segment before the ending: γ→χθ, ζ→σ, θ→τ, κ→χθ, ν→σθ, πτ→φ, σσ→γ, φ→π (1248 training pairs)
+  - the stem's last segment before the ending: ζ→κ, πτ→φ (852 training pairs)
+  - the stem's last segment before the ending: ζ→σ, πτ→μ (107 training pairs)
+  - the stem's last segment before the ending: ζ→γ, κ→γ (175 training pairs)
+  - a copy of the stem's first letter, then ε: β→β, γ→γ, δ→δ, θ→τ, κ→κ, λ→λ, μ→μ, ν→ν, π→π, σ→σ, τ→τ, φ→π, χ→κ (28109 training pairs)
 
 
 ## Data and license
 
-The code is MIT or Apache-2.0. The model (`src/model.bin`) is derived from
+The code is MIT or Apache-2.0. The model (the code under `src/model/`) is derived from
 [the English Wiktionary](https://en.wiktionary.org/) via [Kaikki](https://kaikki.org/) and
 [wiktextract](https://github.com/tatuylonen/wiktextract), and is licensed under
 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); see `DATA-LICENSE.md`.

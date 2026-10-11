@@ -16,9 +16,9 @@
 
 use crate::extract::Word;
 use flexion::Spelling;
-use flexion::format::{BOUNDARY, NONE, Stress};
-use flexion::write::{ClassSpec, EditSpec, JoinSpec, NodeSpec, PosTables};
-use std::collections::{BTreeMap, HashMap};
+use flexion::tables::{ClassSpec, EditSpec, JoinSpec, NodeKind, NodeSpec, PosTables};
+use flexion::{BOUNDARY, NONE, Stress};
+use std::collections::{BTreeMap, HashMap, HashSet};
 
 /// Learner hyperparameters.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -48,6 +48,12 @@ pub struct Params {
     /// Also restore the start of typed lemmas, with a restoration model
     /// trained on them written backwards (Latin `consul` is `cōnsul`).
     pub front_restore: bool,
+    /// Learn sound laws: edits that differ only by a regular change of the
+    /// stem's edge become one edit and a rule (see [`crate::phonology`]).
+    pub phonology: bool,
+    /// Read lemmas another part of speech's forms spell from that part of
+    /// speech's model instead of a stored lexicon.
+    pub derive_lexicon: bool,
 }
 
 impl Default for Params {
@@ -66,6 +72,8 @@ impl Default for Params {
             },
             joins: false,
             front_restore: false,
+            phonology: false,
+            derive_lexicon: false,
         }
     }
 }
@@ -85,6 +93,11 @@ pub struct Stats {
     /// Prefixes of the join model, and the attested words they join.
     pub join_prefixes: usize,
     pub join_pairs: usize,
+    /// Raw edits the sound laws rewrote.
+    pub factored_edits: usize,
+    /// Classes the stored nodes saw themselves (the rest of their
+    /// distributions comes from smoothing toward the ancestor).
+    pub own_entries: usize,
 }
 
 /// One part of speech's shape.
@@ -146,6 +159,11 @@ pub struct Learner<'s> {
     /// How each (lemma, form) pair is read as an edit; the default reading
     /// when there is none.
     chooser: Option<&'s crate::edit::Chooser<'s>>,
+    /// The sound laws edits are rewritten with, if any.
+    phonology: Option<&'s crate::phonology::Phonology>,
+    /// Words kept findable as attested: another part of speech derives
+    /// its lemmas from their forms.
+    marked: Option<&'s HashSet<String>>,
     edits: Vec<EditSpec>,
     edit_ids: HashMap<EditSpec, u32>,
     classes: Vec<ClassSpec>,
@@ -160,6 +178,8 @@ impl<'s> Learner<'s> {
             shape,
             params,
             chooser: None,
+            phonology: None,
+            marked: None,
             edits: Vec::new(),
             edit_ids: HashMap::new(),
             classes: Vec::new(),
@@ -174,6 +194,18 @@ impl<'s> Learner<'s> {
         self
     }
 
+    /// Keep the words `marked` names findable as attested.
+    pub fn with_marked(mut self, marked: Option<&'s HashSet<String>>) -> Self {
+        self.marked = marked;
+        self
+    }
+
+    /// Rewrite edits with `phonology`'s sound laws.
+    pub fn with_phonology(mut self, phonology: Option<&'s crate::phonology::Phonology>) -> Self {
+        self.phonology = phonology;
+        self
+    }
+
     fn intern_edit(&mut self, e: EditSpec) -> u32 {
         if let Some(&id) = self.edit_ids.get(&e) {
             return id;
@@ -184,9 +216,18 @@ impl<'s> Learner<'s> {
         id
     }
 
-    fn intern_class(&mut self, edits: Vec<u32>, inherent: Vec<u8>) -> u32 {
+    /// The class of `edits` and `inherent`; `example` is the lemma it was
+    /// first seen with.
+    fn intern_class(&mut self, edits: Vec<u32>, inherent: Vec<u8>, example: &str) -> u32 {
         let key = (edits, inherent);
         if let Some(&id) = self.class_ids.get(&key) {
+            // The shortest word of a class is the likeliest to be a plain
+            // example of it.
+            if let Some(c) = self.classes.get_mut(id as usize)
+                && example.chars().count() < c.example.chars().count()
+            {
+                c.example = example.to_string();
+            }
             return id;
         }
         let longest = |part: fn(&EditSpec) -> &String| {
@@ -205,6 +246,7 @@ impl<'s> Learner<'s> {
             strip,
             front,
             inherent: key.1.clone(),
+            example: example.to_string(),
         });
         self.class_ids.insert(key, id);
         id
@@ -232,6 +274,13 @@ impl<'s> Learner<'s> {
                     let e = match self.chooser {
                         Some(c) => c.edit(self.sp, stem, f, citation),
                         None => crate::edit::edit(self.sp, stem, f, citation),
+                    };
+                    let e = match self.phonology.and_then(|p| p.factor(cell, &lex.full, &e)) {
+                        Some(factored) => {
+                            self.stats.factored_edits += 1;
+                            factored
+                        }
+                        None => e,
                     };
                     if e.stress == Stress::Unmarked
                         && self.sp.has_stress()
@@ -267,7 +316,7 @@ impl<'s> Learner<'s> {
                     .homograph_decay
                     .powi(i32::try_from(rank).unwrap_or(i32::MAX));
             for (v, w) in vectors {
-                let class = self.intern_class(v, lex.inherent.clone());
+                let class = self.intern_class(v, lex.inherent.clone(), &lex.full);
                 let w = entry_weight * w / sum;
                 match out.iter_mut().find(|(c, _)| *c == class) {
                     Some((_, x)) => *x += w,
@@ -538,6 +587,7 @@ impl<'s> Learner<'s> {
                 let mut path = kept_path.clone();
                 if let Some(d) = new {
                     self.stats.kept_nodes += 1;
+                    self.stats.own_entries += n.counts.iter().filter(|(_, w)| *w > 0.0).count();
                     if c == BOUNDARY {
                         self.stats.kept_words += 1;
                     }
@@ -559,7 +609,13 @@ impl<'s> Learner<'s> {
         // with or without a distribution of their own.
         let marked: std::collections::HashSet<usize> = word_of
             .iter()
-            .filter(|(_, wi)| joins.bases.contains(wi) || joins.joined.contains(wi))
+            .filter(|(_, wi)| {
+                joins.bases.contains(wi)
+                    || joins.joined.contains(wi)
+                    || self
+                        .marked
+                        .is_some_and(|m| words.get(**wi).is_some_and(|w| m.contains(w.key)))
+            })
             .map(|(&node, _)| node)
             .collect();
         let (mut tables, stored, entries) = self.emit_tables(&trie, &owner, &arena, &marked);
@@ -653,7 +709,7 @@ impl<'s> Learner<'s> {
                 let mut sorted: Vec<(u32, f64)> = d.clone();
                 sorted.sort_by(|a, b| b.1.total_cmp(&a.1).then(a.0.cmp(&b.0)));
                 for (i, &(class, p)) in sorted.iter().enumerate() {
-                    if !forms.is_empty() && i >= flexion::format::MAX_SCAN {
+                    if !forms.is_empty() && i >= flexion::MAX_SCAN {
                         break;
                     }
                     let Some(spec) = self.classes.get(class as usize) else {
@@ -677,6 +733,8 @@ impl<'s> Learner<'s> {
                     else {
                         continue;
                     };
+                    let letters = flexion::realize(self.phonology.map(|p| p.program()), &letters)
+                        .into_owned();
                     // As in the runtime: a stress rule that finds no vowel
                     // in this word means the class doesn't fit it.
                     if self.sp.has_stress() && stress.is_none() && edit.stress != Stress::Unmarked {
@@ -823,28 +881,53 @@ impl<'s> Learner<'s> {
         // search) and the shallow levels every walk passes through stay
         // together, small and cached.
         let mut nodes: Vec<NodeSpec> = Vec::new();
-        let mut entries: Vec<(u32, f32)> = Vec::new();
+        let mut n_counts = 0usize;
         let mut queue: std::collections::VecDeque<(usize, String)> =
             std::collections::VecDeque::new();
         queue.push_back((0, String::new()));
         while let Some((n, label)) = queue.pop_front() {
             let kids = stored_children(n);
-            let start = entries.len();
-            if let Some(d) = dist_of(n) {
-                let mut sorted = d.clone();
-                sorted.sort_by(|a, b| b.1.total_cmp(&a.1).then(a.0.cmp(&b.0)));
-                entries.extend(sorted.iter().map(|&(c, p)| (c, p as f32)));
-            }
+            // A node stores its own counts; its distribution (as the arena
+            // holds it) is computed from them, smoothed toward its kept
+            // ancestor's (see `flexion::tables::smooth_node`).
+            let (kind, counts) = match dist_of(n) {
+                Some(_) => {
+                    let kind = if n == 0 {
+                        NodeKind::Root
+                    } else if label.ends_with(BOUNDARY) {
+                        NodeKind::Word
+                    } else {
+                        NodeKind::Inner
+                    };
+                    // Weights to the hundredth (pruning already decided on
+                    // the exact ones): what the model stores and computes from.
+                    #[allow(clippy::cast_possible_truncation)]
+                    let counts: Vec<(u32, f32)> = trie
+                        .get(n)
+                        .map(|t| {
+                            t.counts
+                                .iter()
+                                .filter(|(_, w)| *w > 0.0)
+                                .map(|&(c, w)| (c, ((w * 100.0).round() / 100.0).max(0.01) as f32))
+                                .collect()
+                        })
+                        .unwrap_or_default();
+                    (kind, counts)
+                }
+                None => (NodeKind::Bare, Vec::new()),
+            };
+            n_counts += counts.len();
             nodes.push(NodeSpec {
                 label,
                 children: u32::try_from(kids.len()).unwrap_or(0),
-                dist_len: u32::try_from(entries.len() - start).unwrap_or(0),
+                kind,
+                counts,
             });
             for (l, k) in kids {
                 queue.push_back((k, l));
             }
         }
-        let (stored, n_entries) = (nodes.len(), entries.len());
+        let (stored, n_entries) = (nodes.len(), n_counts);
         let tables = PosTables {
             cells: self.shape.cells,
             inherent: self.shape.inherent,
@@ -858,11 +941,14 @@ impl<'s> Learner<'s> {
             part_models: Vec::new(),
             sources: Vec::new(),
             lexicon: Vec::new(),
+            lexicon_from: Vec::new(),
             walk: self.params.walk,
             edits: self.edits,
             classes: self.classes,
             nodes,
-            dist: entries,
+            alpha: self.params.alpha,
+            epsilon: self.params.epsilon,
+            phonology: self.phonology.map(|p| p.spec.clone()),
         };
         (tables, stored, n_entries)
     }

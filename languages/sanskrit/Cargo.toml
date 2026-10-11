@@ -15,6 +15,11 @@ edition.workspace = true
 repository.workspace = true
 rust-version.workspace = true
 
+# The crate's tests are its README's examples (doctests); without unit tests
+# the big generated model isn't compiled a second time for a test harness.
+[lib]
+test = false
+
 [dependencies]
 flexion = { workspace = true }
 

@@ -3,14 +3,12 @@
 //! word and the output string, and stops scanning as soon as the leading form
 //! can no longer be overtaken.
 
-use crate::format::{BOUNDARY, MAX_SCAN, NONE, Stress, UNKNOWN};
+use crate::tables::{Join, Path, PosModel};
 use crate::text::{Casing, Spelling, Word};
-use crate::{Candidate, JoinRec, Model, Options, PosHeader};
+use crate::{BOUNDARY, MAX_SCAN, NONE, Stress, UNKNOWN};
+use crate::{Candidate, Model, Options};
 use std::borrow::Cow;
 
-/// Deepest tree paths are this long at most; longer words simply stop
-/// descending there.
-const MAX_PATH: usize = 48;
 /// Distinct forms tracked per query.
 const MAX_FORMS: usize = 16;
 /// The shortest attested word the join model reads after a prefix.
@@ -41,6 +39,34 @@ pub struct Edit<'a> {
     pub front_vowels: u8,
 }
 
+impl<'a> Edit<'a> {
+    /// An edit with its counts: `[strip_chars, vowels in prefix, in strip, in
+    /// add, front_chars, front_vowels]`.
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(
+        front: &'a str,
+        prefix: &'a str,
+        strip: &'a str,
+        add: &'a str,
+        stress: Stress,
+        mark: u8,
+        [strip_chars, vp, vs, va, front_chars, front_vowels]: [u8; 6],
+    ) -> Edit<'a> {
+        Edit {
+            front,
+            prefix,
+            strip,
+            add,
+            stress,
+            mark,
+            strip_chars,
+            vowels: [vp, vs, va],
+            front_chars,
+            front_vowels,
+        }
+    }
+}
+
 /// A caller's citation: the lemma plus any principal parts they gave.
 #[derive(Debug, Clone)]
 pub struct Citation<'s> {
@@ -66,10 +92,25 @@ impl<'s> Citation<'s> {
 }
 
 /// One part of speech of a [`Model`].
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Pos<'m, 'a> {
     model: &'m Model<'a>,
-    h: &'m PosHeader<'a>,
+    h: &'a dyn PosModel,
+    /// Its index in the model.
+    index: usize,
+}
+
+/// How a derived lexicon reads a key back to a lemma of the part of speech it
+/// derives from: by the ending an edit of those cells adds (folded), the rest
+/// of the edit and the cells that use it.
+pub(crate) type Readings = std::collections::HashMap<String, Vec<Reading>>;
+
+pub(crate) struct Reading {
+    source: usize,
+    cells: Vec<usize>,
+    front: String,
+    prefix: String,
+    strip: String,
 }
 
 /// A form being accumulated: the edit that builds it and the stress it gets.
@@ -106,27 +147,27 @@ const MIN_FRONT: f32 = 0.05;
 const MAX_READINGS: usize = 4;
 
 impl<'m, 'a> Pos<'m, 'a> {
-    pub(crate) fn new(model: &'m Model<'a>, h: &'m PosHeader<'a>) -> Self {
-        Pos { model, h }
+    pub(crate) fn new(model: &'m Model<'a>, h: &'a dyn PosModel, index: usize) -> Self {
+        Pos { model, h, index }
     }
 
     pub fn cells(&self) -> usize {
-        self.h.cells
+        self.h.cells()
     }
 
     pub fn lemma_cell(&self) -> Option<usize> {
-        self.h.lemma_cell
+        self.h.lemma_cell()
     }
 
     fn sp(&self) -> &Spelling<'a> {
         &self.model.spelling
     }
-    pub fn edit(&self, index: usize) -> Option<&Edit<'a>> {
-        self.h.edit_list.get(index)
+    pub fn edit(&self, index: usize) -> Option<Edit<'a>> {
+        self.h.edit(index)
     }
     /// A class's handle (its index), if it exists.
     fn class_at(&self, class: usize) -> Option<usize> {
-        (class < self.h.n_classes).then_some(class)
+        (class < self.h.classes()).then_some(class)
     }
     fn class_edit_id(&self, class: usize, cell: usize) -> Option<u32> {
         let e = self.h.class_edit(class, cell)?;
@@ -154,7 +195,7 @@ impl<'m, 'a> Pos<'m, 'a> {
         let Some(given) = word.stress else {
             return true;
         };
-        let Some(&(rule, mark)) = self.h.class_lemma.get(at) else {
+        let Some((rule, mark)) = self.h.class(at).map(|c| c.lemma) else {
             return true;
         };
         if rule == Stress::Unmarked {
@@ -176,38 +217,29 @@ impl<'m, 'a> Pos<'m, 'a> {
     }
 
     fn inherent_at(&self, class: usize, feature: usize) -> Option<u8> {
-        if feature >= self.h.inherent {
+        if feature >= self.h.inherent() {
             return None;
         }
-        let v = *self
-            .h
-            .class_values
-            .get(class.checked_mul(self.h.inherent)?.checked_add(feature)?)?;
+        let v = *self.h.class(class)?.values.get(feature)?;
         (v != UNKNOWN).then_some(v)
     }
     pub fn class_inherent(&self, class: usize, feature: usize) -> Option<u8> {
         self.inherent_at(class, feature)
     }
-    fn entry(&self, index: usize) -> Option<(usize, f32)> {
-        self.h.entries.get(index).map(|&(c, p)| (c as usize, p))
-    }
-
-    /// The `(first entry, entry count)` of every node with a distribution on
-    /// the key's path, root first; returns how many were filled.
-    fn path(&self, word: &Word, out: &mut [(u32, u32); MAX_PATH]) -> usize {
-        self.walk(word, out).0
+    /// The distributions on the key's path, root first.
+    fn path(&self, word: &Word) -> Path<'a> {
+        self.walk(word).0
     }
 
     /// Whether the tree holds `word` itself (it was attested).
     fn attested(&self, word: &Word) -> bool {
-        let mut path = [(0u32, 0u32); MAX_PATH];
-        self.walk(word, &mut path).1
+        self.walk(word).1
     }
 
     /// [`Pos::path`], and whether the walk reached the word's own node.
-    fn walk(&self, word: &Word, out: &mut [(u32, u32); MAX_PATH]) -> (usize, bool) {
+    fn walk(&self, word: &Word) -> (Path<'a>, bool) {
         let key: &str = &word.key;
-        let walk = self.h.walk;
+        let walk = self.h.walk();
         let mut tokens = [(usize::MAX, BOUNDARY); 2];
         let mut n_tokens = 0usize;
         if let Some(d) = walk.syllable_depth
@@ -229,108 +261,24 @@ impl<'m, 'a> Pos<'m, 'a> {
         {
             std::mem::swap(a, b);
         }
-        let mut symbols = Symbols {
+        let symbols: Vec<char> = Symbols {
             rev: key.chars().rev(),
             index: 0,
             tokens,
             n_tokens,
             next_token: 0,
             ended: false,
-        };
-        let mut filled = 0usize;
-        let mut node = 0usize;
-        let mut next = symbols.next();
-        let mut whole = false;
-        let tree = &self.h.tree;
-        while let Some(rec) = tree.get(node) {
-            if rec.dist_len > 0
-                && let Some(slot) = out.get_mut(filled)
-            {
-                *slot = (rec.dist, u32::from(rec.dist_len));
-                filled = filled.saturating_add(1);
-            }
-            let Some(c) = next else {
-                break;
-            };
-            let first_child = rec.first_child as usize;
-            let table = self
-                .h
-                .table_of
-                .get(node)
-                .and_then(|&t| (t as usize).checked_sub(1))
-                .and_then(|t| self.h.tables.get(t))
-                .and_then(|t| t.get(self.h.block, c));
-            let found = match table {
-                Some(offset) => offset.and_then(|o| first_child.checked_add(o)),
-                None => self.child_index(first_child, usize::from(rec.children), c),
-            };
-            let Some(child) = found else {
-                break;
-            };
-            let Some(crec) = tree.get(child) else {
-                break;
-            };
-            // The search matched the label's first character; longer labels
-            // must match the following symbols too.
-            next = symbols.next();
-            let label_len = usize::from(crec.label_len);
-            if label_len > c.len_utf8() {
-                let off = crec.label as usize;
-                let Some(label) = off
-                    .checked_add(label_len)
-                    .and_then(|e| self.model.strings.get(off..e))
-                else {
-                    break;
-                };
-                let mut rest = label.chars();
-                rest.next();
-                let mut ok = true;
-                for l in rest {
-                    if next != Some(l) {
-                        ok = false;
-                        break;
-                    }
-                    next = symbols.next();
-                }
-                if !ok {
-                    break;
-                }
-            }
-            node = child;
-            // The start-of-word symbol comes last: past it is the word's own
-            // node.
-            if next.is_none() {
-                whole = true;
-            }
         }
-        (filled, whole)
-    }
-
-    /// The child (among `count` starting at `first`) whose label starts with `c`.
-    fn child_index(&self, first: usize, count: usize, c: char) -> Option<usize> {
-        let target = u32::from(c);
-        let kids = self.h.tree.get(first..first.checked_add(count)?)?;
-        if count <= 8 {
-            for (i, k) in kids.iter().enumerate() {
-                if k.first == target {
-                    return first.checked_add(i);
-                }
-                if k.first > target {
-                    return None;
-                }
-            }
-            return None;
-        }
-        kids.binary_search_by_key(&target, |k| k.first)
-            .ok()
-            .and_then(|i| first.checked_add(i))
+        .collect();
+        let mut path = Path::default();
+        let whole = self.h.path(&symbols, &mut path);
+        (path, whole)
     }
 
     /// How many nodes with a distribution the key's path passes (for benchmarks).
     #[doc(hidden)]
     pub fn path_len(&self, word: &Word) -> usize {
-        let mut path = [(0u32, 0u32); MAX_PATH];
-        self.path(word, &mut path)
+        self.path(word).nodes().len()
     }
 
     /// Where `edit`'s stress lands on `letters`, a lemma with `vowels`
@@ -370,7 +318,7 @@ impl<'m, 'a> Pos<'m, 'a> {
     fn full_lemmas<'w>(&self, citation: &'w Citation) -> Vec<(Cow<'w, str>, f32)> {
         let base: &'w str = &citation.lemma.base;
         let typed = || vec![(Cow::Borrowed(base), 1.0)];
-        let Some(r) = self.h.restore.and_then(|i| self.model.pos(i)) else {
+        let Some(r) = self.h.restore().and_then(|i| self.model.pos(i)) else {
             return typed();
         };
         // The restoration model sees only the lemma: the citation's parts
@@ -407,7 +355,7 @@ impl<'m, 'a> Pos<'m, 'a> {
             let (lemma, end) = if e.prefix.is_empty() && e.strip.is_empty() && e.add.is_empty() {
                 (Cow::Borrowed(base), Some(base.len()))
             } else {
-                let Some(kept) = r.kept(base, e) else {
+                let Some(kept) = r.kept(base, &e) else {
                     continue;
                 };
                 let plain_start = e.prefix.is_empty() && e.front_chars == 0;
@@ -483,7 +431,7 @@ impl<'m, 'a> Pos<'m, 'a> {
     /// many bytes of `base` it replaces, probability)`, from a model trained
     /// on lemmas written backwards. Empty when the part of speech has none.
     fn front_readings(&self, base: &str) -> Vec<(String, usize, f32)> {
-        let Some(f) = self.h.restore_front.and_then(|i| self.model.pos(i)) else {
+        let Some(f) = self.h.restore_front().and_then(|i| self.model.pos(i)) else {
             return Vec::new();
         };
         let backwards = crate::text::reversed(base);
@@ -517,7 +465,7 @@ impl<'m, 'a> Pos<'m, 'a> {
             if !e.prefix.is_empty() || e.front_chars != 0 {
                 continue;
             }
-            let Some(kept) = f.kept(&backwards, e) else {
+            let Some(kept) = f.kept(&backwards, &e) else {
                 continue;
             };
             let start = crate::text::reversed(e.add);
@@ -580,8 +528,8 @@ impl<'m, 'a> Pos<'m, 'a> {
             (word.stress, word.kind)
         } else {
             // The lemma cell's edit only places stress: no letters change.
-            match self.h.class_lemma.get(at) {
-                Some(&(rule, mark)) => (
+            match self.h.class(at).map(|c| c.lemma) {
+                Some((rule, mark)) => (
                     sp.place_counts(rule, None, 0, vowels, 0),
                     mark.saturating_sub(1),
                 ),
@@ -625,17 +573,10 @@ impl<'m, 'a> Pos<'m, 'a> {
     fn fits(&self, citation: &Citation, full: &str, at: usize) -> bool {
         let sp = self.sp();
         let key: &str = &citation.lemma.key;
-        let Some(&[(s0, s1), (f0, f1)]) = self.h.class_folds.get(at) else {
+        let Some(class) = self.h.class(at) else {
             return false;
         };
-        let text = &self.h.class_text;
-        let (Some(strip), Some(front)) = (
-            text.get(s0 as usize..s1 as usize),
-            text.get(f0 as usize..f1 as usize),
-        ) else {
-            return false;
-        };
-        if !key.ends_with(strip) || !key.starts_with(front) {
+        if !key.ends_with(class.strip) || !key.starts_with(class.front) {
             return false;
         }
         if citation.parts.is_empty() {
@@ -649,14 +590,14 @@ impl<'m, 'a> Pos<'m, 'a> {
             else {
                 return false;
             };
-            let Some(kept) = self.kept(&r.letters, e) else {
+            let Some(kept) = self.kept(&r.letters, &e) else {
                 return false;
             };
             sp.eq_folded([e.prefix, kept, e.add], &form.key)
                 && (form.stress.is_none()
                     || !sp.has_stress()
-                    || (self.stress_on(&r.letters, r.vowels, e, r.stress) == form.stress
-                        && Self::kind_of(e, r.kind) == form.kind))
+                    || (self.stress_on(&r.letters, r.vowels, &e, r.stress) == form.stress
+                        && Self::kind_of(&e, r.kind) == form.kind))
         })
     }
 
@@ -688,23 +629,19 @@ impl<'m, 'a> Pos<'m, 'a> {
         floor: f32,
         forms: &mut [(Key, f32); MAX_FORMS],
     ) -> (usize, f32, f32, f32) {
-        let mut path = [(0u32, 0u32); MAX_PATH];
-        let depth = self.path(&citation.lemma, &mut path);
+        let path = self.path(&citation.lemma);
         let mut from_end = [(NONE, None::<usize>); 8];
         let mut cached = 0usize;
         for &strict in self.strict(citation) {
             // The strict pass leaves out the root: it holds every class, so
             // agreeing there with the caller's stress says nothing.
-            for &(start, len) in path.iter().take(depth).skip(usize::from(strict)).rev() {
-                let (start, len) = (start as usize, len as usize);
-                let mass = self.node_mass(start, len);
+            for dist in path.nodes().iter().skip(usize::from(strict)).rev() {
+                let mass = dist.mass;
                 let mut n = 0usize;
                 let mut total = 0f32;
                 let mut seen = 0f32;
-                for i in 0..len {
-                    let Some((class, p)) = start.checked_add(i).and_then(|i| self.entry(i)) else {
-                        continue;
-                    };
+                for (i, &(class, p)) in dist.entries.iter().enumerate() {
+                    let class = class as usize;
                     // Entries are sorted by weight: past the first
                     // `MAX_SCAN` the rest is a long tail of rare classes.
                     if n > 0 && (p < floor || i >= MAX_SCAN) {
@@ -738,7 +675,7 @@ impl<'m, 'a> Pos<'m, 'a> {
                                 match from_end.iter().take(cached).find(|c| c.0 == id) {
                                     Some(&(_, s)) => s,
                                     None => {
-                                        let s = self.stress_on(&r.letters, r.vowels, e, r.stress);
+                                        let s = self.stress_on(&r.letters, r.vowels, &e, r.stress);
                                         if let Some(slot) = from_end.get_mut(cached) {
                                             *slot = (id, s);
                                             cached = cached.saturating_add(1);
@@ -747,7 +684,7 @@ impl<'m, 'a> Pos<'m, 'a> {
                                     }
                                 }
                             }
-                            _ => self.stress_on(&r.letters, r.vowels, e, r.stress),
+                            _ => self.stress_on(&r.letters, r.vowels, &e, r.stress),
                         };
                         // A rule that finds no vowel to stress in this word
                         // (the second vowel of a stem that has one) was
@@ -755,7 +692,7 @@ impl<'m, 'a> Pos<'m, 'a> {
                         if stress.is_none() && e.stress != Stress::Unmarked {
                             continue;
                         }
-                        (stress, Self::kind_of(e, r.kind))
+                        (stress, Self::kind_of(&e, r.kind))
                     } else {
                         (None, 0)
                     };
@@ -797,27 +734,26 @@ impl<'m, 'a> Pos<'m, 'a> {
         (0, 0.0, 0.0, 0.0)
     }
 
-    /// The probability mass of entries `start..start + len` (one node's).
-    fn node_mass(&self, start: usize, len: usize) -> f32 {
-        let cum = &self.h.entry_cum;
-        let end = start.saturating_add(len);
-        match (cum.get(start), cum.get(end)) {
-            #[allow(clippy::cast_possible_truncation)]
-            (Some(a), Some(b)) => (b - a) as f32,
-            _ => 0.0,
-        }
-    }
-
     fn build(&self, citation: &Citation, full: &str, key: Key, options: Options) -> Option<String> {
         let e = self.edit(usize::try_from(key.edit).ok()?)?;
         let letters = self.key_letters(citation, full, key);
-        let kept = self.kept(&letters, e)?;
+        let kept = self.kept(&letters, &e)?;
         let casing = match citation.lemma.casing {
-            Casing::Lower if self.h.capitalized => Casing::Title,
+            Casing::Lower if self.h.capitalized() => Casing::Title,
             c => c,
         };
+        // Sound laws the edit's triggers set off rewrite the letters, never
+        // the number of vowels, so the stress found from the edit holds.
+        let realized;
+        let parts = if (e.prefix.chars().chain(e.add.chars())).any(crate::is_trigger) {
+            realized = crate::realize(self.h.phonology(), &format!("{}{kept}{}", e.prefix, e.add))
+                .into_owned();
+            [realized.as_str(), "", ""]
+        } else {
+            [e.prefix, kept, e.add]
+        };
         Some(self.sp().render_parts(
-            [e.prefix, kept, e.add],
+            parts,
             (key.stress != NO_STRESS).then_some(usize::from(key.stress)),
             key.kind,
             options.stress,
@@ -993,12 +929,10 @@ impl<'m, 'a> Pos<'m, 'a> {
     /// Whether any class on the lemma's path fits it and every given part.
     fn any_fits(&self, citation: &Citation) -> bool {
         let full = self.full_lemma(citation);
-        let mut path = [(0u32, 0u32); MAX_PATH];
-        let depth = self.path(&citation.lemma, &mut path);
-        path.iter().take(depth).any(|&(start, len)| {
-            (start as usize..(start as usize).saturating_add(len as usize)).any(|i| {
-                self.entry(i)
-                    .and_then(|(class, _)| self.class_at(class))
+        let path = self.path(&citation.lemma);
+        path.nodes().iter().any(|dist| {
+            dist.entries.iter().any(|&(class, _)| {
+                self.class_at(class as usize)
                     .is_some_and(|at| self.fits(citation, &full, at))
             })
         })
@@ -1011,12 +945,12 @@ impl<'m, 'a> Pos<'m, 'a> {
         citation: &'c Citation,
         cell: usize,
     ) -> Option<(Pos<'m, 'a>, Citation<'c>)> {
-        let k = usize::from(*self.h.sources.get(cell)?).checked_sub(1)?;
-        let &(part_cell, index) = self.h.part_models.get(k)?;
+        let k = usize::from(self.h.source(cell)).checked_sub(1)?;
+        let &(part_cell, index) = self.h.part_models().get(k)?;
         let (_, word, written) = citation.parts.iter().find(|(c, _, _)| *c == part_cell)?;
         let model = self.model.pos(index)?;
         // One level only: a part model never defers to another.
-        if !model.h.part_models.is_empty() {
+        if !model.h.part_models().is_empty() {
             return None;
         }
         Some((
@@ -1032,44 +966,23 @@ impl<'m, 'a> Pos<'m, 'a> {
 
     /// An unseen word read as a known prefix and an attested word (`auf` +
     /// `machen`): the prefix's join record and the attested word.
-    fn split(&self, citation: &Citation) -> Option<(JoinRec<'a>, Word<'static>)> {
-        if self.h.joins.is_empty() || self.attested(&citation.lemma) {
+    fn split(&self, citation: &Citation) -> Option<(Join<'a>, Word<'static>)> {
+        if !self.h.has_joins() || self.attested(&citation.lemma) {
             return None;
         }
         let sp = self.sp();
         let key: &str = &citation.lemma.key;
-        let joins = &self.h.joins;
-        // Prefixes of the key, longest first. In sorted order the longest
-        // prefix of `key[..end]` is its predecessor, or else the longest
-        // prefix of the part the predecessor shares with it.
-        let mut end = key.len();
-        while end > 0 {
-            let Some(head) = key.get(..end) else {
-                break;
-            };
-            let i = joins.partition_point(|j| j.prefix <= head);
-            let Some(pred) = i.checked_sub(1).and_then(|i| joins.get(i)) else {
-                break;
-            };
-            if !head.starts_with(pred.prefix) {
-                let common = pred
-                    .prefix
-                    .char_indices()
-                    .zip(head.chars())
-                    .take_while(|((_, a), b)| a == b)
-                    .last()
-                    .map_or(0, |((i, a), _)| i.saturating_add(a.len_utf8()));
-                end = common;
-                continue;
-            }
-            let prefix = pred.prefix;
-            let join = *pred;
-            // Shorter prefixes next.
-            end = prefix.char_indices().last().map_or(0, |(i, _)| i);
-            let Some(rest) = key.get(prefix.len()..) else {
+        // The key's prefixes the join model knows, longest first.
+        let mut ends: Vec<usize> = key.char_indices().map(|(i, _)| i).skip(1).collect();
+        ends.push(key.len());
+        for &end in ends.iter().rev() {
+            let (Some(prefix), Some(rest)) = (key.get(..end), key.get(end..)) else {
                 continue;
             };
-            if prefix.is_empty() || rest.chars().count() < MIN_JOIN_BASE {
+            let Some(join) = self.h.join(prefix) else {
+                continue;
+            };
+            if rest.chars().count() < MIN_JOIN_BASE {
                 continue;
             }
             // The same letters off the word as typed (folding may drop marks
@@ -1095,17 +1008,12 @@ impl<'m, 'a> Pos<'m, 'a> {
     }
 
     /// The join classes of a split, with probabilities.
-    fn join_classes(&self, join: JoinRec<'a>) -> impl Iterator<Item = (usize, f32)> + '_ {
-        (join.first..join.first.saturating_add(join.count))
-            .filter_map(|i| self.h.join_entries.get(i))
-            .map(|&(c, q)| (c as usize, q))
+    fn join_classes(&self, join: Join<'a>) -> impl Iterator<Item = (usize, f32)> + 'a {
+        join.classes.iter().map(|&(c, q)| (c as usize, q))
     }
 
-    fn join_edit(&self, class: usize, cell: usize) -> Option<&Edit<'a>> {
-        let id = *self
-            .h
-            .join_classes
-            .get(class.checked_mul(self.h.cells)?.checked_add(cell)?)?;
+    fn join_edit(&self, class: usize, cell: usize) -> Option<Edit<'a>> {
+        let id = self.h.join_edit(class, cell)?;
         (id != NONE).then(|| self.edit(id as usize)).flatten()
     }
 
@@ -1140,7 +1048,7 @@ impl<'m, 'a> Pos<'m, 'a> {
         citation: &Citation,
         cell: usize,
         options: Options,
-        (join, word): &(JoinRec<'a>, Word<'static>),
+        (join, word): &(Join<'a>, Word<'static>),
         plain: Vec<Candidate>,
     ) -> Vec<Candidate> {
         let s = join.split.clamp(0.0, 1.0);
@@ -1152,7 +1060,7 @@ impl<'m, 'a> Pos<'m, 'a> {
             })
             .collect();
         let casing = match citation.lemma.casing {
-            Casing::Lower if self.h.capitalized => Casing::Title,
+            Casing::Lower if self.h.capitalized() => Casing::Title,
             c => c,
         };
         let full = Options {
@@ -1184,7 +1092,7 @@ impl<'m, 'a> Pos<'m, 'a> {
                 }
             };
             for c in cands {
-                let Some(form) = self.join_form(&c.form, e, options, casing) else {
+                let Some(form) = self.join_form(&c.form, &e, options, casing) else {
                     continue;
                 };
                 let p = s * q * c.confidence;
@@ -1326,18 +1234,14 @@ impl<'m, 'a> Pos<'m, 'a> {
 
     fn has_cell_plain(&self, citation: &Citation, cell: usize) -> f32 {
         let full = self.full_lemma(citation);
-        let mut path = [(0u32, 0u32); MAX_PATH];
-        let depth = self.path(&citation.lemma, &mut path);
+        let path = self.path(&citation.lemma);
         for &strict in self.strict(citation) {
             // The strict pass leaves out the root: it holds every class, so
             // agreeing there with the caller's stress says nothing.
-            for &(start, len) in path.iter().take(depth).skip(usize::from(strict)).rev() {
-                let (start, len) = (start as usize, len as usize);
+            for dist in path.nodes().iter().skip(usize::from(strict)).rev() {
                 let (mut with, mut all) = (0f32, 0f32);
-                for i in 0..len {
-                    let Some((class, p)) = start.checked_add(i).and_then(|i| self.entry(i)) else {
-                        continue;
-                    };
+                for &(class, p) in dist.entries {
+                    let class = class as usize;
                     let Some(at) = self.class_at(class) else {
                         continue;
                     };
@@ -1376,9 +1280,9 @@ impl<'m, 'a> Pos<'m, 'a> {
             inherent: citation.inherent.clone(),
         };
         let mut out: Vec<(u8, f32)> = plain.into_iter().map(|(v, p)| (v, p * (1.0 - s))).collect();
-        let changes: Vec<(u8, u8, f32)> = (join.first_inherent
-            ..join.first_inherent.saturating_add(join.count_inherent))
-            .filter_map(|i| self.h.join_inherent.get(i))
+        let changes: Vec<(u8, u8, f32)> = join
+            .inherent
+            .iter()
             .filter(|e| usize::from(e.0) == feature)
             .map(|&(_, from, to, q)| (from, to, q))
             .collect();
@@ -1401,19 +1305,15 @@ impl<'m, 'a> Pos<'m, 'a> {
 
     fn inherent_plain(&self, citation: &Citation, feature: usize) -> Vec<(u8, f32)> {
         let full = self.full_lemma(citation);
-        let mut path = [(0u32, 0u32); MAX_PATH];
-        let depth = self.path(&citation.lemma, &mut path);
+        let path = self.path(&citation.lemma);
         for &strict in self.strict(citation) {
             // The strict pass leaves out the root: it holds every class, so
             // agreeing there with the caller's stress says nothing.
-            for &(start, len) in path.iter().take(depth).skip(usize::from(strict)).rev() {
-                let (start, len) = (start as usize, len as usize);
+            for dist in path.nodes().iter().skip(usize::from(strict)).rev() {
                 let mut out: Vec<(u8, f32)> = Vec::new();
                 let mut total = 0f32;
-                for i in 0..len {
-                    let Some((class, p)) = start.checked_add(i).and_then(|i| self.entry(i)) else {
-                        continue;
-                    };
+                for &(class, p) in dist.entries {
+                    let class = class as usize;
                     let Some(at) = self.class_at(class) else {
                         continue;
                     };
@@ -1519,26 +1419,9 @@ impl<'m, 'a> Pos<'m, 'a> {
 
     /// The lexicon's written form for `key`, read.
     fn lexicon(&self, key: &str) -> Option<(&'a str, Word<'static>)> {
-        let index = &self.h.lexicon_index;
-        if index.is_empty() {
-            return None;
-        }
-        let key_hash = crate::hash(key) as u32;
-        let mask = index.len().wrapping_sub(1);
-        let mut at = usize::try_from(key_hash).unwrap_or(0) & mask;
-        // The index is at least half empty, so a probe ends at an empty slot.
-        for _ in 0..index.len() {
-            let slot = usize::try_from(*index.get(at)?).ok()?;
-            let &(h, full) = self.h.lexicon.get(slot.checked_sub(1)?)?;
-            if h == key_hash {
-                let word = self.sp().read(full);
-                if word.key == key {
-                    return Some((full, owned(word)));
-                }
-            }
-            at = at.wrapping_add(1) & mask;
-        }
-        None
+        let full = self.h.lexicon(key)?;
+        let word = self.sp().read(full);
+        (word.key == key).then(|| (full, owned(word)))
     }
 
     /// A typed lemma, read as the lexicon writes it in full when it is
@@ -1548,7 +1431,20 @@ impl<'m, 'a> Pos<'m, 'a> {
     fn written_in_full<'s>(&self, typed: &'s str) -> (Word<'s>, Cow<'s, str>) {
         let sp = self.sp();
         let lemma = sp.read(typed);
-        let Some((full, entry)) = self.lexicon(&lemma.key) else {
+        // A word of its own is read as its own entry has it. A derived
+        // lexicon stores only what derivation gets wrong, an empty entry
+        // where it finds a word that isn't one.
+        let found = match self.h.lexicon(&lemma.key) {
+            Some("") => None,
+            Some(_) => self
+                .lexicon(&lemma.key)
+                .map(|(full, w)| (full.to_string(), w)),
+            None => self.derives(&lemma.key).map(|full| {
+                let word = owned(sp.read(&full));
+                (full, word)
+            }),
+        };
+        let Some((full, entry)) = found else {
             return (lemma, Cow::Borrowed(typed));
         };
         let stress =
@@ -1562,7 +1458,119 @@ impl<'m, 'a> Pos<'m, 'a> {
         // The caller's capitals still apply.
         let mut word = entry;
         word.casing = lemma.casing;
-        (word, Cow::Owned(full.to_string()))
+        (word, Cow::Owned(full))
+    }
+
+    /// The lemma `key` spells, as the part of speech whose forms it is
+    /// writes it: each edit of those cells read backwards gives a lemma
+    /// there, an attested word whose form in the cell, if it has the cell,
+    /// is asked of its model (a verb's participle, with the verb's stress).
+    /// Nothing when no reading gives `key`, or two give different forms.
+    /// What a lemma whose key is `key` is written as by derivation alone,
+    /// with no lexicon entry: nothing for a word of the part of speech's own.
+    #[doc(hidden)]
+    pub fn derives(&self, key: &str) -> Option<String> {
+        if self.h.lexicon_from(0).is_none() || self.attested(&self.sp().read(key)) {
+            return None;
+        }
+        self.derived(key)
+    }
+
+    fn derived(&self, key: &str) -> Option<String> {
+        let sp = self.sp();
+        let readings = self
+            .model
+            .readings
+            .get(self.index)?
+            .get_or_init(|| self.readings());
+        let mut found: Option<String> = None;
+        // (source, lemma, cell) already asked.
+        let mut asked: Vec<(usize, String, usize)> = Vec::new();
+        let ends = key.char_indices().map(|(i, _)| i).chain([key.len()]);
+        for at in ends {
+            let (Some(start), Some(end)) = (key.get(..at), key.get(at..)) else {
+                continue;
+            };
+            for r in readings.get(end).into_iter().flatten() {
+                let Some(mid) = start.strip_prefix(r.prefix.as_str()) else {
+                    continue;
+                };
+                let lemma = format!("{}{mid}{}", r.front, r.strip);
+                let Some(v) = self.model.pos(r.source) else {
+                    continue;
+                };
+                // Only the forms of words the model knows, in cells they have.
+                if !v.attested(&sp.read(&lemma)) {
+                    continue;
+                }
+                let citation = v.citation(&lemma, &[]);
+                for &cell in &r.cells {
+                    let asking = (r.source, lemma.clone(), cell);
+                    if asked.contains(&asking) {
+                        continue;
+                    }
+                    asked.push(asking);
+                    if v.has_cell(&citation, cell) < 0.5 {
+                        continue;
+                    }
+                    let form = v.best(&citation, cell, Options::default());
+                    if sp.read(&form).key != key {
+                        continue;
+                    }
+                    match &found {
+                        None => found = Some(form),
+                        Some(f) if *f != form => return None,
+                        Some(_) => {}
+                    }
+                }
+            }
+        }
+        found
+    }
+
+    /// The readings of [`Pos::derived`]: every edit of the cells the lexicon
+    /// derives from, folded, by the ending it adds.
+    fn readings(&self) -> Readings {
+        let sp = self.sp();
+        let mut out = Readings::new();
+        let mut i = 0usize;
+        while let Some((source, cells)) = self.h.lexicon_from(i) {
+            i = i.saturating_add(1);
+            let Some(v) = self.model.pos(source) else {
+                continue;
+            };
+            for &cell in cells {
+                for &id in v.h.cell_edits(cell) {
+                    let Some(e) = usize::try_from(id).ok().and_then(|id| v.edit(id)) else {
+                        continue;
+                    };
+                    let (front, prefix, strip) = (
+                        sp.fold_str(e.front),
+                        sp.fold_str(e.prefix),
+                        sp.fold_str(e.strip),
+                    );
+                    let list = out.entry(sp.fold_str(e.add)).or_default();
+                    let same = |r: &&mut Reading| {
+                        r.source == source
+                            && r.front == front
+                            && r.prefix == prefix
+                            && r.strip == strip
+                    };
+                    match list.iter_mut().find(same) {
+                        Some(r) if !r.cells.contains(&cell) => r.cells.push(cell),
+                        Some(_) => {}
+                        None => list.push(Reading {
+                            source,
+                            cells: vec![cell],
+                            front,
+                            prefix,
+                            strip,
+                        }),
+                    }
+                }
+            }
+        }
+        out
     }
 }
 

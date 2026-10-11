@@ -1,7 +1,7 @@
 //! Writing the generated crate: `Cargo.toml`, `src/lib.rs` (feature enums,
-//! typed functions, a settings value), `src/model.bin`, the config's
-//! hand-written `src/extra.rs`, a README with the evaluation report, and the
-//! data license.
+//! typed functions, a settings value), the model as Rust code in
+//! `src/model/` (see [`crate::codegen`]), the config's hand-written
+//! `src/extra.rs`, a README with the evaluation report, and the data license.
 
 use crate::cells::{Cells, GroupCells};
 use crate::spec::{Feature, Language};
@@ -9,20 +9,46 @@ use std::fmt::Write as _;
 use std::path::Path;
 
 /// Write the crate for `lang` into `dir` (created if missing).
-pub fn emit(lang: &Language, blob: &[u8], report: &str, dir: &Path) -> Result<(), String> {
+pub fn emit(
+    lang: &Language,
+    model: &flexion::Built,
+    report: &str,
+    dir: &Path,
+) -> Result<(), String> {
     let src = dir.join("src");
     std::fs::create_dir_all(&src).map_err(|e| format!("{}: {e}", src.display()))?;
     let write = |path: &Path, data: &[u8]| {
+        if let Some(parent) = path.parent() {
+            std::fs::create_dir_all(parent).map_err(|e| format!("{}: {e}", parent.display()))?;
+        }
         std::fs::write(path, data).map_err(|e| format!("{}: {e}", path.display()))
     };
     write(&dir.join("Cargo.toml"), manifest(lang).as_bytes())?;
-    write(&src.join("model.bin"), blob)?;
-    write(&src.join("lib.rs"), library(lang)?.as_bytes())?;
+    emit_model(lang, model, dir)?;
+    let laws = model.parts().iter().any(|p| p.phonology.is_some());
+    write(&src.join("lib.rs"), library(lang, laws)?.as_bytes())?;
     if let Some(extra) = lang.extra {
         write(&src.join("extra.rs"), extra.as_bytes())?;
     }
     write(&dir.join("README.md"), readme(lang, report).as_bytes())?;
     write(&dir.join("DATA-LICENSE.md"), data_license(lang).as_bytes())?;
+    Ok(())
+}
+
+/// Write the model's code (`src/model/`), replacing whatever was there.
+pub fn emit_model(lang: &Language, model: &flexion::Built, dir: &Path) -> Result<(), String> {
+    let src = dir.join("src");
+    let model_dir = src.join("model");
+    if model_dir.exists() {
+        std::fs::remove_dir_all(&model_dir).map_err(|e| format!("{}: {e}", model_dir.display()))?;
+    }
+    for (path, code) in crate::codegen::generate(lang, model) {
+        let path = src.join(path);
+        if let Some(parent) = path.parent() {
+            std::fs::create_dir_all(parent).map_err(|e| format!("{}: {e}", parent.display()))?;
+        }
+        std::fs::write(&path, code).map_err(|e| format!("{}: {e}", path.display()))?;
+    }
     Ok(())
 }
 
@@ -44,6 +70,11 @@ authors.workspace = true
 edition.workspace = true
 repository.workspace = true
 rust-version.workspace = true
+
+# The crate's tests are its README's examples (doctests); without unit tests
+# the big generated model isn't compiled a second time for a test harness.
+[lib]
+test = false
 
 [dependencies]
 flexion = {{ workspace = true }}
@@ -87,7 +118,7 @@ fn settings_name(lang: &Language) -> String {
         .collect()
 }
 
-fn library(lang: &Language) -> Result<String, String> {
+fn library(lang: &Language, laws: bool) -> Result<String, String> {
     let mut s = String::new();
     let settings = settings_name(lang);
     let stress = !lang.spelling.stress_marks.is_empty();
@@ -103,11 +134,25 @@ fn library(lang: &Language) -> Result<String, String> {
         s.push_str("mod extra;\npub use extra::*;\n\n");
     }
     s.push_str(
-        "static BLOB: &[u8] = include_bytes!(\"model.bin\");\n\n\
-         fn model() -> Option<&'static Model<'static>> {\n    \
-         static MODEL: OnceLock<Option<Model<'static>>> = OnceLock::new();\n    \
-         MODEL.get_or_init(|| Model::from_bytes(BLOB)).as_ref()\n}\n\n",
+        "// Generated code: neither formatted nor linted for style.\n\
+         #[rustfmt::skip]\n\
+         #[allow(clippy::approx_constant, clippy::excessive_precision, clippy::unreadable_literal)]\n\
+         mod model;\n\n\
+         /// The model (for tools that compare it with the trainer's).\n\
+         #[doc(hidden)]\n\
+         pub fn model() -> &'static Model<'static> {\n    \
+         static MODEL: OnceLock<Model<'static>> = OnceLock::new();\n    \
+         MODEL.get_or_init(model::build)\n}\n\n",
     );
+    if laws {
+        let _ = writeln!(
+            s,
+            "/// Every sound law of the model compiles (a doctest: the crate has no unit\n\
+             /// tests).\n///\n/// ```\n/// assert!({}::sound_laws_compile());\n/// ```\n\
+             #[doc(hidden)]\npub fn sound_laws_compile() -> bool {{\n    model::sound_laws_compile()\n}}\n",
+            lang.name.replace('-', "_")
+        );
+    }
 
     // Feature enums, for every feature some part of speech uses.
     for f in &lang.features {
@@ -190,7 +235,7 @@ fn library(lang: &Language) -> Result<String, String> {
     }
     if stress {
         s.push_str(
-            "/// `s` without stress marks.\npub fn without_stress(s: &str) -> String {\n    model().map_or_else(|| s.to_string(), |m| m.spelling().unstressed(s))\n}\n\n",
+            "/// `s` without stress marks.\npub fn without_stress(s: &str) -> String {\n    model().spelling().unstressed(s)\n}\n\n",
         );
     }
     s.push_str(
@@ -416,14 +461,14 @@ fn pascal(name: &str) -> String {
 
 const QUICK: &str = r#"
 fn quick(pos: usize, word: &str, cell: usize, options: Options) -> String {
-    match model().and_then(|m| m.pos(pos)) {
+    match model().pos(pos) {
         Some(p) => p.best(&citation(&p, pos, word), cell, options),
         None => word.to_string(),
     }
 }
 
 fn scored(pos: usize, word: &str, cell: usize, options: Options) -> Vec<Candidate> {
-    match model().and_then(|m| m.pos(pos)) {
+    match model().pos(pos) {
         Some(p) => p.candidates(&citation(&p, pos, word), cell, options),
         None => vec![Candidate { form: word.to_string(), confidence: 0.0 }],
     }
@@ -433,13 +478,13 @@ fn scored(pos: usize, word: &str, cell: usize, options: Options) -> Vec<Candidat
 
 const OPTIONAL: &str = r#"
 fn optional(pos: usize, word: &str, cell: usize, options: Options) -> Option<String> {
-    let p = model()?.pos(pos)?;
+    let p = model().pos(pos)?;
     let c = citation(&p, pos, word);
     (p.has_cell(&c, cell) >= 0.5).then(|| p.best(&c, cell, options))
 }
 
 fn optional_scored(pos: usize, word: &str, cell: usize, options: Options) -> Vec<Candidate> {
-    let Some(p) = model().and_then(|m| m.pos(pos)) else {
+    let Some(p) = model().pos(pos) else {
         return Vec::new();
     };
     let c = citation(&p, pos, word);
@@ -455,7 +500,7 @@ fn optional_scored(pos: usize, word: &str, cell: usize, options: Options) -> Vec
 
 const INHERENT: &str = r#"
 fn inherent<T: Copy>(pos: usize, feature: usize, word: &str, values: &[T]) -> Vec<(T, f32)> {
-    let Some(p) = model().and_then(|m| m.pos(pos)) else {
+    let Some(p) = model().pos(pos) else {
         return Vec::new();
     };
     let c = citation(&p, pos, word);
@@ -505,7 +550,7 @@ fn readme(lang: &Language, report: &str) -> String {
          confidences between attested variants reflect Wiktionary's ordering, not measured usage.\n\n\
          {report}\n\
          ## Data and license\n\n\
-         The code is MIT or Apache-2.0. The model (`src/model.bin`) is derived from\n\
+         The code is MIT or Apache-2.0. The model (the code under `src/model/`) is derived from\n\
          [the English Wiktionary](https://en.wiktionary.org/){links} via [Kaikki](https://kaikki.org/) and\n\
          [wiktextract](https://github.com/tatuylonen/wiktextract), and is licensed under\n\
          [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); see `DATA-LICENSE.md`.\n\n\
@@ -532,7 +577,7 @@ fn data_license(lang: &Language) -> String {
     format!(
         "# Data license
 
-`src/model.bin` is derived from [the English Wiktionary](https://en.wiktionary.org/){editions},
+The model, the code under `src/model/`, is derived from [the English Wiktionary](https://en.wiktionary.org/){editions},
 the free dictionary, by way of the [Kaikki](https://kaikki.org/) extraction made with
 [wiktextract](https://github.com/tatuylonen/wiktextract). Wiktionary's text is
 available under the [Creative Commons Attribution-ShareAlike 4.0 International
@@ -541,7 +586,7 @@ model is a derivative work and is distributed under the same license.
 
 Attribution: Wiktionary contributors, <https://en.wiktionary.org/>{attribution}.
 
-The source code of this crate is licensed under MIT OR Apache-2.0.
+The rest of this crate's source code is licensed under MIT OR Apache-2.0.
 "
     )
 }

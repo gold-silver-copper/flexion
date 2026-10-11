@@ -62,7 +62,7 @@ used for any decision.
 
 | | lemmas | cells | top-1 | top-3 | top-1 given citation | top-1 given citation and markers |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 514 | 12329 | **93.43%** | 99.12% | – | 97.32% |
+| noun | 514 | 12329 | **93.53%** | 99.19% | – | 97.42% |
 | adjective | 186 | 13168 | **91.76%** | 99.36% | – | – |
 | verb | 87 | 7084 | **89.96%** | 92.22% | 91.05% | – |
 | pronoun ¹ | 3 | 207 | **67.15%** | 69.57% | – | – |
@@ -80,30 +80,30 @@ the word the way a dictionary prints them (noun `m`/`f`/`n`).
 
 | cell | n | top-1 | top-3 |
 |---|---:|---:|---:|
-| noun.nom.sg | 513 | 83.04% | 99.03% |
-| noun.nom.du | 513 | 83.04% | 99.03% |
-| noun.nom.pl | 513 | 82.46% | 99.03% |
-| noun.acc.sg | 513 | 96.49% | 99.61% |
-| noun.acc.du | 513 | 83.04% | 99.03% |
-| noun.acc.pl | 514 | 80.93% | 99.03% |
+| noun.nom.sg | 513 | 83.04% | 99.22% |
+| noun.nom.du | 513 | 83.24% | 99.03% |
+| noun.nom.pl | 513 | 82.65% | 99.03% |
+| noun.acc.sg | 513 | 96.69% | 99.81% |
+| noun.acc.du | 513 | 83.24% | 99.03% |
+| noun.acc.pl | 514 | 81.13% | 99.22% |
 | noun.ins.sg | 514 | 93.77% | 99.61% |
 | noun.ins.du | 514 | 98.44% | 98.83% |
 | noun.ins.pl | 514 | 98.44% | 98.83% |
-| noun.dat.sg | 514 | 98.64% | 99.42% |
+| noun.dat.sg | 514 | 98.83% | 99.61% |
 | noun.dat.du | 514 | 98.44% | 98.83% |
 | noun.dat.pl | 514 | 98.44% | 98.83% |
 | noun.abl.sg | 514 | 98.64% | 99.22% |
 | noun.abl.du | 514 | 98.44% | 98.83% |
 | noun.abl.pl | 514 | 98.44% | 98.83% |
-| noun.gen.sg | 514 | 98.44% | 99.03% |
-| noun.gen.du | 514 | 98.64% | 99.42% |
-| noun.gen.pl | 514 | 95.53% | 99.42% |
-| noun.loc.sg | 514 | 98.25% | 98.83% |
-| noun.loc.du | 514 | 98.64% | 99.42% |
+| noun.gen.sg | 514 | 98.64% | 99.22% |
+| noun.gen.du | 514 | 98.83% | 99.61% |
+| noun.gen.pl | 514 | 95.72% | 99.61% |
+| noun.loc.sg | 514 | 98.44% | 99.03% |
+| noun.loc.du | 514 | 98.83% | 99.61% |
 | noun.loc.pl | 514 | 98.83% | 99.42% |
-| noun.voc.sg | 514 | 97.67% | 99.03% |
-| noun.voc.du | 513 | 83.04% | 99.22% |
-| noun.voc.pl | 513 | 82.46% | 99.03% |
+| noun.voc.sg | 514 | 97.47% | 99.03% |
+| noun.voc.du | 513 | 83.24% | 99.22% |
+| noun.voc.pl | 513 | 82.65% | 99.03% |
 | adjective.nom.m.sg | 183 | 98.36% | 99.45% |
 | adjective.nom.m.du | 182 | 99.45% | 99.45% |
 | adjective.nom.m.pl | 183 | 97.81% | 98.36% |
@@ -440,24 +440,24 @@ Expected calibration error (ECE) is the average gap between confidence and accur
 
 | | ECE |
 |---|---:|
-| noun | 0.027 |
+| noun | 0.025 |
 | adjective | 0.029 |
 | verb | 0.065 |
 | pronoun | 0.273 |
 
-All parts of speech together (ECE 0.029):
+All parts of speech together (ECE 0.028):
 
 | confidence | mean confidence | accuracy | answers |
 |---|---:|---:|---:|
 | 0.0–0.1 | 0.000 | 0.044 | 45 |
-| 0.2–0.3 | 0.281 | 0.500 | 6 |
-| 0.3–0.4 | 0.348 | 0.306 | 36 |
-| 0.4–0.5 | 0.468 | 0.412 | 233 |
-| 0.5–0.6 | 0.557 | 0.553 | 1457 |
-| 0.6–0.7 | 0.658 | 0.807 | 1606 |
-| 0.7–0.8 | 0.752 | 0.798 | 2354 |
-| 0.8–0.9 | 0.851 | 0.789 | 1602 |
-| 0.9–1.0 | 0.992 | 0.973 | 25449 |
+| 0.2–0.3 | 0.282 | 0.500 | 6 |
+| 0.3–0.4 | 0.349 | 0.306 | 36 |
+| 0.4–0.5 | 0.468 | 0.414 | 232 |
+| 0.5–0.6 | 0.556 | 0.555 | 1453 |
+| 0.6–0.7 | 0.658 | 0.810 | 1612 |
+| 0.7–0.8 | 0.752 | 0.791 | 2362 |
+| 0.8–0.9 | 0.851 | 0.794 | 1671 |
+| 0.9–1.0 | 0.992 | 0.974 | 25371 |
 
 ### Forms many words lack
 
@@ -561,21 +561,21 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 765 KB (204 KB gzipped). Where the bytes are, in KB (the strings, 118 KB, are shared):
+The model is 2245 KB of generated Rust (202 KB gzipped). Its tables measure 681 KB: what a compact binary layout of them would take, the size the build prices when it tunes. Where those bytes are, in KB (the strings, 118 KB, are shared):
 
-| | edits | classes | tree nodes | distributions | joins | lexicon | restoration model | part models | total |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 25 | 22 | 26 | 45 | 0 | 0 | 0 | 0 | 119 |
-| adjective | 31 | 25 | 11 | 22 | 0 | 0 | 0 | 0 | 88 |
-| verb | 225 | 94 | 12 | 77 | 0 | 0 | 0 | 26 | 434 |
-| pronoun | 4 | 2 | 0 | 0 | 0 | 0 | 0 | 0 | 7 |
+| | edits | classes | tree nodes | their counts | joins | lexicon | sound laws | restoration model | part models | total |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 23 | 21 | 26 | 28 | 0 | 0 | 1 | 0 | 0 | 100 |
+| adjective | 30 | 25 | 11 | 11 | 0 | 0 | 1 | 0 | 0 | 77 |
+| verb | 216 | 94 | 12 | 32 | 0 | 0 | 4 | 0 | 22 | 379 |
+| pronoun | 4 | 2 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 7 |
 
-| | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
+| | edits | classes | stored nodes | memorized words | counts stored | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 805 | 321 | 2254 | 670 | 11641 | 183 (`noun.acc.pl`) |
-| adjective | 977 | 182 | 905 | 231 | 5558 | 169 (`adjective.nom.m.sg`) |
-| verb | 7186 | 721 | 1003 | 152 | 19804 | 755 (`present.ind.mid.1.sg`) |
-| pronoun | 128 | 14 | 10 | 5 | 62 | 164 (`pronoun.nom.m.sg`) |
+| noun | 750 | 311 | 2254 | 670 | 4751 | 690 (`noun.acc.pl`) |
+| adjective | 949 | 182 | 905 | 231 | 1833 | 509 (`adjective.nom.m.sg`) |
+| verb | 6906 | 721 | 1003 | 152 | 5415 | 1216 (`present.ind.mid.1.sg`) |
+| pronoun | 128 | 14 | 10 | 5 | 32 | 504 (`pronoun.nom.m.sg`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
@@ -587,15 +587,15 @@ release build, fastest of seven runs.
 
 | | τ | model KB | dev top-1 | dev log-loss |
 |---|---:|---:|---:|---:|
-| noun | 1 | 145 | 92.10% | 0.3032 |
-| noun | 2 (chosen) | 109 | 91.63% | 0.3031 |
-| noun | 8 | 85 | 90.53% | 0.3120 |
-| adjective | 1 | 105 | 92.53% | 0.2738 |
-| adjective | 2 (chosen) | 89 | 92.37% | 0.2709 |
-| adjective | 8 | 79 | 91.90% | 0.2862 |
-| verb | 1 | 475 | 86.06% | 1.0770 |
-| verb | 2 (chosen) | 432 | 86.31% | 1.0756 |
-| verb | 8 | 388 | 85.23% | 1.0853 |
+| noun | 1 | 112 | 92.10% | 0.3032 |
+| noun | 2 (chosen) | 93 | 91.63% | 0.3031 |
+| noun | 8 | 86 | 90.53% | 0.3120 |
+| adjective | 1 | 86 | 92.53% | 0.2738 |
+| adjective | 2 (chosen) | 80 | 92.37% | 0.2709 |
+| adjective | 8 | 77 | 91.90% | 0.2862 |
+| verb | 1 | 402 | 86.10% | 1.0769 |
+| verb | 2 (chosen) | 392 | 86.36% | 1.0755 |
+| verb | 8 | 385 | 85.18% | 1.0852 |
 | pronoun | 1 | 5 | 0.00% | 9.2103 |
 | pronoun | 2 | 5 | 0.00% | 9.2103 |
 | pronoun | 8 (chosen) | 5 | 0.00% | 9.2103 |
@@ -604,19 +604,43 @@ release build, fastest of seven runs.
 
 <details><summary>Chosen hyperparameters</summary>
 
-| | smoothing α | pruning τ | suffix support | syllable token | dev top-1 |
-|---|---:|---:|---:|---|---:|
-| noun | 2 | 2 | 1 | none | 91.63% |
-| adjective | 2 | 2 | 1 | none | 92.37% |
-| verb | 2 | 2 | 1 | none | 86.31% |
-| pronoun | 0.5 | 8 | 1 | none | 0.00% |
+| | smoothing α | pruning τ | suffix support | syllable token | join model | start restoration | sound laws | dev top-1 |
+|---|---:|---:|---:|---|---|---|---|---:|
+| noun | 2 | 2 | 1 | none | no | no | yes | 91.68% |
+| adjective | 2 | 2 | 1 | none | no | no | yes | 92.37% |
+| verb | 2 | 2 | 1 | none | no | no | yes | 86.36% |
+| pronoun | 0.5 | 8 | 1 | none | no | no | no | 0.00% |
 
 </details>
+
+### Sound laws
+
+Learned from the training words: where edits differ only by a regular change of the stem's edge, they are one edit and a rule, so an unseen word gets the change too.
+
+- **noun**:
+  - the stem's last segment before the ending: च→ग्भ, ज→ग्भ, त→द्भ, ध→द्भ, न→भ, भ→ब्भ, ष→ड्भ, स→ोभ, ा→य, ि→ीन, ी→िय, ु→ून, ू→ुव, ौ→ाव (4631 training pairs)
+  - the stem's last segment before the ending: च→क्, ज→क्, द→त्, ध→त्, भ→प्, ष→ट्, ि→ी, ु→ू, ू→ु, ृ→ॄ, ौ→ा (844 training pairs)
+- **adjective**:
+  - the stem's last segment before the ending: क→िका, ज→ग्भ, त→द्भ, न→भ, श→ग्भ, स→ोभ, हन→घ्न, ि→ी, ु→ू, ृ→ॄ (1791 training pairs)
+  - the stem's last segment before the ending: ज→क्, द→त्, न→ा, हन→घ्, ि→ीन, िन→ी, ु→ून (621 training pairs)
+  - the stem's last segment before the ending: ज→क, न→ण, श→क, हन→घ्न (191 training pairs)
+- **verb**:
+  - the stem's last segment before the ending: क→ग, ण→ङ्, णक→ङ्ग, त→न्, ति→ध्, ते→ध्, न→ङ्, नक→ङ्ग, ा→ी, ात→न्, ान→न, ार→र, ाव→ुव, ि→ा, ित→न्, ी→ा, े→िध्, ेत→य, ेद→िद, ो→ु, ोच→ुच, ोत→व, ोह→ुह, ौ→ु, ौत→व (1938 training pairs)
+  - the stem's last segment before the ending: त→ा, ति→न, ते→न, ात→ी, ाव→ुवा, ि→ा, ीत→िष्, े→ा, ेत→ि, ेद→िदा, ोच→ुचा, ोत→ु, ोह→ुहा, ौ→ा, ौत→ु (6499 training pairs)
+  - the stem's last segment before the ending: त→न, ति→ा, ते→ा, ा→ी, ात→न, ार→ृ, ाव→ु, ित→न, े→ि, ो→ु, ोत→ुवन, ौ→ि, ौत→ुवन (11355 training pairs)
+  - the stem's last segment before the ending: त→े, ति→े, ते→े, ात→ी, ित→ा, ी→िष, ीत→ा, े→य, ो→व, ोत→ु, ौ→व, ौत→ु (7642 training pairs)
+  - the stem's last segment before the ending: त→े, ति→न्, ते→न्, ात→ै, ीत→िषा, े→या, ेत→या, ो→वा, ोत→वा (1295 training pairs)
+  - the stem's last segment before the ending: ति→मा, ते→मा, ात→ी, ाव→ुवा, े→ा, ेद→िदा, ोच→ुचा, ोत→ुवी, ौ→ा (844 training pairs)
+  - the stem's last segment before the ending: ति→िष्, ते→िष्, ात→ीध्, ो→ुव, ोत→ुध्, ौ→ुव (4730 training pairs)
+  - the stem's last segment before the ending: त→ा, ति→ि, ते→ि, ित→ा, ेत→या, ोत→वा (987 training pairs)
+  - the stem's last segment before the ending: त→य, ात→ीय, ोत→ुय, ौत→ुय (144 training pairs)
+  - the stem's last segment before the ending: त→न्, ात→ि, ीत→िष (30 training pairs)
+  - the stem's last segment before the ending: त→िष, ोत→ुव (10 training pairs)
 
 
 ## Data and license
 
-The code is MIT or Apache-2.0. The model (`src/model.bin`) is derived from
+The code is MIT or Apache-2.0. The model (the code under `src/model/`) is derived from
 [the English Wiktionary](https://en.wiktionary.org/) via [Kaikki](https://kaikki.org/) and
 [wiktextract](https://github.com/tatuylonen/wiktextract), and is licensed under
 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); see `DATA-LICENSE.md`.

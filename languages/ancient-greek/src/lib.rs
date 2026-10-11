@@ -7,11 +7,27 @@ pub use flexion::Candidate;
 use flexion::{Model, Options};
 use std::sync::OnceLock;
 
-static BLOB: &[u8] = include_bytes!("model.bin");
+// Generated code: neither formatted nor linted for style.
+#[rustfmt::skip]
+#[allow(clippy::approx_constant, clippy::excessive_precision, clippy::unreadable_literal)]
+mod model;
 
-fn model() -> Option<&'static Model<'static>> {
-    static MODEL: OnceLock<Option<Model<'static>>> = OnceLock::new();
-    MODEL.get_or_init(|| Model::from_bytes(BLOB)).as_ref()
+/// The model (for tools that compare it with the trainer's).
+#[doc(hidden)]
+pub fn model() -> &'static Model<'static> {
+    static MODEL: OnceLock<Model<'static>> = OnceLock::new();
+    MODEL.get_or_init(model::build)
+}
+
+/// Every sound law of the model compiles (a doctest: the crate has no unit
+/// tests).
+///
+/// ```
+/// assert!(ancient_greek::sound_laws_compile());
+/// ```
+#[doc(hidden)]
+pub fn sound_laws_compile() -> bool {
+    model::sound_laws_compile()
 }
 
 /// Grammatical case.
@@ -913,7 +929,7 @@ pub fn gender(word: &str) -> Vec<(Gender, f32)> {
 
 /// `s` without stress marks.
 pub fn without_stress(s: &str) -> String {
-    model().map_or_else(|| s.to_string(), |m| m.spelling().unstressed(s))
+    model().spelling().unstressed(s)
 }
 
 /// Per part of speech: the cells a citation's extra parts fill, and the
@@ -954,14 +970,14 @@ fn citation<'s>(p: &flexion::Pos<'_, 'static>, pos: usize, word: &'s str) -> fle
 }
 
 fn quick(pos: usize, word: &str, cell: usize, options: Options) -> String {
-    match model().and_then(|m| m.pos(pos)) {
+    match model().pos(pos) {
         Some(p) => p.best(&citation(&p, pos, word), cell, options),
         None => word.to_string(),
     }
 }
 
 fn scored(pos: usize, word: &str, cell: usize, options: Options) -> Vec<Candidate> {
-    match model().and_then(|m| m.pos(pos)) {
+    match model().pos(pos) {
         Some(p) => p.candidates(&citation(&p, pos, word), cell, options),
         None => vec![Candidate {
             form: word.to_string(),
@@ -971,13 +987,13 @@ fn scored(pos: usize, word: &str, cell: usize, options: Options) -> Vec<Candidat
 }
 
 fn optional(pos: usize, word: &str, cell: usize, options: Options) -> Option<String> {
-    let p = model()?.pos(pos)?;
+    let p = model().pos(pos)?;
     let c = citation(&p, pos, word);
     (p.has_cell(&c, cell) >= 0.5).then(|| p.best(&c, cell, options))
 }
 
 fn optional_scored(pos: usize, word: &str, cell: usize, options: Options) -> Vec<Candidate> {
-    let Some(p) = model().and_then(|m| m.pos(pos)) else {
+    let Some(p) = model().pos(pos) else {
         return Vec::new();
     };
     let c = citation(&p, pos, word);
@@ -990,7 +1006,7 @@ fn optional_scored(pos: usize, word: &str, cell: usize, options: Options) -> Vec
 }
 
 fn inherent<T: Copy>(pos: usize, feature: usize, word: &str, values: &[T]) -> Vec<(T, f32)> {
-    let Some(p) = model().and_then(|m| m.pos(pos)) else {
+    let Some(p) = model().pos(pos) else {
         return Vec::new();
     };
     let c = citation(&p, pos, word);

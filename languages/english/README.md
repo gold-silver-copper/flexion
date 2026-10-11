@@ -131,9 +131,9 @@ All parts of speech together (ECE 0.006):
 | 0.3–0.4 | 0.371 | 0.407 | 27 |
 | 0.4–0.5 | 0.459 | 0.491 | 114 |
 | 0.5–0.6 | 0.557 | 0.600 | 818 |
-| 0.6–0.7 | 0.640 | 0.726 | 1110 |
-| 0.7–0.8 | 0.753 | 0.817 | 1086 |
-| 0.8–0.9 | 0.857 | 0.899 | 1880 |
+| 0.6–0.7 | 0.640 | 0.727 | 1108 |
+| 0.7–0.8 | 0.753 | 0.816 | 1087 |
+| 0.8–0.9 | 0.857 | 0.900 | 1881 |
 | 0.9–1.0 | 0.993 | 0.993 | 48166 |
 
 ### Made-up words
@@ -222,21 +222,21 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 499 KB (208 KB gzipped). Where the bytes are, in KB (the strings, 25 KB, are shared):
+The model is 3008 KB of generated Rust (337 KB gzipped). Its tables measure 537 KB: what a compact binary layout of them would take, the size the build prices when it tunes. Where those bytes are, in KB (the strings, 25 KB, are shared):
 
-| | edits | classes | tree nodes | distributions | joins | lexicon | restoration model | part models | total |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 21 | 18 | 148 | 118 | 0 | 0 | 0 | 0 | 304 |
-| verb | 12 | 15 | 42 | 37 | 0 | 0 | 0 | 0 | 106 |
-| adjective | 3 | 2 | 39 | 13 | 0 | 0 | 0 | 0 | 57 |
-| adverb | 1 | 1 | 3 | 2 | 0 | 0 | 0 | 0 | 7 |
+| | edits | classes | tree nodes | their counts | joins | lexicon | sound laws | restoration model | part models | total |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 21 | 18 | 148 | 144 | 0 | 0 | 0 | 0 | 0 | 330 |
+| verb | 12 | 15 | 42 | 41 | 0 | 0 | 0 | 0 | 0 | 110 |
+| adjective | 3 | 2 | 39 | 20 | 0 | 0 | 0 | 0 | 0 | 64 |
+| adverb | 1 | 1 | 3 | 3 | 0 | 0 | 0 | 0 | 0 | 8 |
 
-| | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
+| | edits | classes | stored nodes | memorized words | counts stored | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 665 | 657 | 12599 | 5843 | 30148 | 158 (`noun.pl`) |
-| verb | 387 | 450 | 3561 | 796 | 9553 | 137 (`verb.pp`) |
-| adjective | 92 | 65 | 3311 | 2210 | 3453 | 140 (`adjective.sup`) |
-| adverb | 40 | 22 | 277 | 175 | 448 | 127 (`adverb.comp`) |
+| noun | 665 | 657 | 12599 | 5843 | 24561 | 559 (`noun.pl`) |
+| verb | 387 | 450 | 3561 | 796 | 6987 | 462 (`verb.pp`) |
+| adjective | 92 | 65 | 3311 | 2210 | 3460 | 499 (`adjective.sup`) |
+| adverb | 40 | 22 | 277 | 175 | 437 | 472 (`adverb.comp`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
@@ -248,15 +248,15 @@ release build, fastest of seven runs.
 
 | | τ | model KB | dev top-1 | dev log-loss |
 |---|---:|---:|---:|---:|
-| noun | 1 | 347 | 97.16% | 0.1041 |
-| noun | 2 (chosen) | 272 | 97.12% | 0.1046 |
-| noun | 8 | 205 | 97.03% | 0.1087 |
-| verb | 1 (chosen) | 93 | 97.78% | 0.0713 |
-| verb | 2 | 78 | 97.66% | 0.0746 |
-| verb | 8 | 69 | 97.17% | 0.0850 |
-| adjective | 1 | 109 | 95.89% | 0.0883 |
-| adjective | 2 | 71 | 95.92% | 0.0882 |
-| adjective | 8 (chosen) | 50 | 95.99% | 0.0884 |
+| noun | 1 | 356 | 97.16% | 0.1041 |
+| noun | 2 (chosen) | 293 | 97.12% | 0.1046 |
+| noun | 8 | 237 | 97.03% | 0.1087 |
+| verb | 1 (chosen) | 95 | 97.78% | 0.0713 |
+| verb | 2 | 83 | 97.66% | 0.0746 |
+| verb | 8 | 78 | 97.17% | 0.0850 |
+| adjective | 1 | 100 | 95.89% | 0.0883 |
+| adjective | 2 | 73 | 95.92% | 0.0882 |
+| adjective | 8 (chosen) | 56 | 95.99% | 0.0884 |
 | adverb | 1 | 11 | 99.20% | 0.0371 |
 | adverb | 2 | 9 | 99.20% | 0.0368 |
 | adverb | 8 (chosen) | 7 | 99.20% | 0.0350 |
@@ -265,19 +265,19 @@ release build, fastest of seven runs.
 
 <details><summary>Chosen hyperparameters</summary>
 
-| | smoothing α | pruning τ | suffix support | syllable token | dev top-1 |
-|---|---:|---:|---:|---|---:|
-| noun | 8 | 2 | 2 | after 2 letters | 97.12% |
-| verb | 0.5 | 1 | 1 | none | 97.78% |
-| adjective | 8 | 8 | 1 | after 0 letters | 95.99% |
-| adverb | 8 | 8 | 2 | after 0 letters | 99.20% |
+| | smoothing α | pruning τ | suffix support | syllable token | join model | start restoration | sound laws | dev top-1 |
+|---|---:|---:|---:|---|---|---|---|---:|
+| noun | 8 | 2 | 2 | after 2 letters | no | no | no | 97.12% |
+| verb | 0.5 | 1 | 1 | none | no | no | no | 97.78% |
+| adjective | 8 | 8 | 1 | after 0 letters | no | no | no | 95.99% |
+| adverb | 8 | 8 | 2 | after 0 letters | no | no | no | 99.20% |
 
 </details>
 
 ### Compared with `english` 0.4
 
 `english` 0.4's generated exception tables are 1026 KB of Rust source (compiled into
-perfect-hash maps); this crate's model is 499 KB.
+perfect-hash maps); this crate's model is 3008 KB of generated Rust source.
 
 Attested words (every word both were built from), primary form from the plain call:
 
@@ -293,15 +293,15 @@ build, fastest of seven runs, the two libraries measured alternately in the same
 
 | | `english` 0.4 ns per call | this crate ns per call | ratio |
 |---|---:|---:|---:|
-| noun (`noun.pl`) | 75 | 166 | 2.2× |
-| verb (`verb.3sg`) | 59 | 134 | 2.3× |
-| adjective (`adjective.comp`) | 85 | 140 | 1.6× |
-| adverb (`adverb.comp`) | 51 | 127 | 2.5× |
+| noun (`noun.pl`) | 82 | 557 | 6.8× |
+| verb (`verb.3sg`) | 64 | 462 | 7.2× |
+| adjective (`adjective.comp`) | 88 | 519 | 5.9× |
+| adverb (`adverb.comp`) | 50 | 488 | 9.8× |
 
 
 ## Data and license
 
-The code is MIT or Apache-2.0. The model (`src/model.bin`) is derived from
+The code is MIT or Apache-2.0. The model (the code under `src/model/`) is derived from
 [the English Wiktionary](https://en.wiktionary.org/) via [Kaikki](https://kaikki.org/) and
 [wiktextract](https://github.com/tatuylonen/wiktextract), and is licensed under
 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); see `DATA-LICENSE.md`.

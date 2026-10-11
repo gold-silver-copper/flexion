@@ -101,6 +101,30 @@ impl PosScore {
         (ss * k / (k - 1.0)).sqrt() / n
     }
 
+    /// How much more top-1 `self` gets than `other` on the same words, and
+    /// the word-level standard error of that difference: each word's
+    /// difference is the unit, so the many answers two close models share
+    /// add no noise (a paired test).
+    pub fn top1_gain(&self, other: &PosScore) -> (f64, f64) {
+        if self.words.len() != other.words.len() || self.words.len() < 2 {
+            return (0.0, f64::INFINITY);
+        }
+        let n: f64 = self.words.iter().map(|w| f64::from(w.0)).sum();
+        if n <= 0.0 {
+            return (0.0, f64::INFINITY);
+        }
+        let k = self.words.len() as f64;
+        let diffs: Vec<(f64, f64)> = self
+            .words
+            .iter()
+            .zip(&other.words)
+            .map(|(a, b)| (f64::from(a.0), f64::from(a.1) - f64::from(b.1)))
+            .collect();
+        let mean = diffs.iter().map(|d| d.1).sum::<f64>() / n;
+        let ss: f64 = diffs.iter().map(|(c, d)| (d - mean * c).powi(2)).sum();
+        (mean, (ss * k / (k - 1.0)).sqrt() / n)
+    }
+
     pub fn total(&self, skip: &[usize]) -> CellScore {
         let mut t = CellScore::default();
         for (i, c) in self.cells.iter().enumerate() {
@@ -126,6 +150,54 @@ pub enum Given {
     Dictionary,
 }
 
+/// What a caller types for `word` in mode `given`, and the cells the
+/// citation in it gives.
+pub fn query(
+    sp: &Spelling<'_>,
+    p: &flexion::Pos<'_, '_>,
+    word: &Word,
+    citation_cells: &[usize],
+    markers: &[&[&str]],
+    given: Given,
+) -> (String, Vec<usize>) {
+    let mut input = word.lemma().to_string();
+    if given == Given::StressedLemma
+        && let Some(f) = p.lemma_cell().and_then(|c| word.primary(c))
+        && sp.read(f).key == sp.read(&input).key
+    {
+        input = f.to_string();
+    }
+    let mut given_cells = Vec::new();
+    if matches!(given, Given::Citation | Given::Dictionary) {
+        // A part the word lacks is written `—`, as dictionaries do.
+        let last = citation_cells
+            .iter()
+            .rposition(|&c| word.primary(c).is_some())
+            .map_or(0, |i| i.saturating_add(1));
+        for &c in citation_cells.iter().take(last) {
+            input.push_str(", ");
+            match word.primary(c) {
+                Some(f) => {
+                    input.push_str(f);
+                    given_cells.push(c);
+                }
+                None => input.push('—'),
+            }
+        }
+    }
+    if given == Given::Dictionary
+        && let Some(lex) = word.lexemes.first()
+    {
+        for (f, &v) in lex.inherent.iter().enumerate() {
+            if let Some(m) = markers.get(f).and_then(|names| names.get(usize::from(v))) {
+                input.push(' ');
+                input.push_str(m);
+            }
+        }
+    }
+    (input, given_cells)
+}
+
 /// Score `words` against `model`'s part of speech `pos`.
 #[allow(clippy::too_many_arguments)]
 pub fn score(
@@ -149,41 +221,7 @@ pub fn score(
         ..PosScore::default()
     };
     for word in words {
-        let mut input = word.lemma().to_string();
-        if given == Given::StressedLemma
-            && let Some(f) = p.lemma_cell().and_then(|c| word.primary(c))
-            && sp.read(f).key == sp.read(&input).key
-        {
-            input = f.to_string();
-        }
-        let mut given_cells = Vec::new();
-        if matches!(given, Given::Citation | Given::Dictionary) {
-            // A part the word lacks is written `—`, as dictionaries do.
-            let last = citation_cells
-                .iter()
-                .rposition(|&c| word.primary(c).is_some())
-                .map_or(0, |i| i.saturating_add(1));
-            for &c in citation_cells.iter().take(last) {
-                input.push_str(", ");
-                match word.primary(c) {
-                    Some(f) => {
-                        input.push_str(f);
-                        given_cells.push(c);
-                    }
-                    None => input.push('—'),
-                }
-            }
-        }
-        if given == Given::Dictionary
-            && let Some(lex) = word.lexemes.first()
-        {
-            for (f, &v) in lex.inherent.iter().enumerate() {
-                if let Some(m) = markers.get(f).and_then(|names| names.get(usize::from(v))) {
-                    input.push(' ');
-                    input.push_str(m);
-                }
-            }
-        }
+        let (input, given_cells) = query(sp, &p, word, citation_cells, markers, given);
         let citation = p.citation_marked(&input, citation_cells, markers);
         let mut word_score = (0u32, 0u32, 0f64);
         for (cell, score) in out.cells.iter_mut().enumerate() {
