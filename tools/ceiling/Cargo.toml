@@ -1,0 +1,17 @@
+[package]
+name = "ceiling"
+version = "0.0.0"
+description = "Measurements of how close flexion's models are to what their data allows"
+publish = false
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+flexion = { workspace = true }
+flexion-train = { workspace = true }
+flexion-configs = { workspace = true }
+serde_json = { workspace = true }
+unicode-normalization = { workspace = true }
+
+[lints]
+workspace = true
