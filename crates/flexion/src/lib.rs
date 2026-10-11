@@ -78,6 +78,9 @@ pub(crate) struct PosHeader<'a> {
     pub(crate) chars: usize,
     /// The part of speech whose model restores this one's lemmas.
     pub(crate) restore: Option<usize>,
+    /// The part of speech whose model restores the start of this one's
+    /// lemmas, read backwards.
+    pub(crate) restore_front: Option<usize>,
     /// Every word is written with a capital.
     pub(crate) capitalized: bool,
     /// The language's main letter block (`char >> 8`), for child tables.
@@ -360,6 +363,10 @@ impl<'a> Model<'a> {
                 chars: b.usize(at.checked_add(48)?)?,
                 restore: {
                     let r = b.u32(at.checked_add(56)?)?;
+                    (r != NONE).then(|| usize::try_from(r).ok()).flatten()
+                },
+                restore_front: {
+                    let r = b.u32(at.checked_add(76)?)?;
                     (r != NONE).then(|| usize::try_from(r).ok()).flatten()
                 },
                 capitalized: b.u32(at.checked_add(60)?)? & format::POS_CAPITALIZED != 0,

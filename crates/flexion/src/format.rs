@@ -26,9 +26,10 @@
 //!   index of the part of speech that restores this one's lemmas ([`NONE`]:
 //!   lemmas are taken as typed), flags (bit 0: every word is written with a
 //!   capital; bit 1: wide distribution entries; bit 2: wide edit indices),
-//!   the offset of the join
-//!   section, the offset of the parts
-//!   section, and the offset of the lexicon section
+//!   the offset of the join section, the offset of the parts section, the
+//!   offset of the lexicon section, and the index of the part of speech that
+//!   restores the start of this one's lemmas, trained on them written
+//!   backwards ([`NONE`]: none)
 //! records (edits, classes, nodes, distribution entries) at the offsets the
 //!   part-of-speech headers give
 //! string area: UTF-8 bytes
@@ -90,7 +91,7 @@
 pub const MAGIC: &[u8; 4] = b"FLX1";
 pub const VERSION: u32 = 6;
 pub const HEADER_LEN: usize = 128;
-pub const POS_HEADER_LEN: usize = 76;
+pub const POS_HEADER_LEN: usize = 80;
 pub const EDIT_LEN: usize = 32;
 pub const NODE_LEN: usize = 8;
 pub const DIST_LEN: usize = 8;

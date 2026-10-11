@@ -45,6 +45,9 @@ pub struct Params {
     /// Learn a join model: unseen words made of a known prefix and an
     /// attested word inflect through that word (`an` + `fangen`).
     pub joins: bool,
+    /// Also restore the start of typed lemmas, with a restoration model
+    /// trained on them written backwards (Latin `consul` is `cōnsul`).
+    pub front_restore: bool,
 }
 
 impl Default for Params {
@@ -62,6 +65,7 @@ impl Default for Params {
                 initial_depth: None,
             },
             joins: false,
+            front_restore: false,
         }
     }
 }
@@ -847,6 +851,7 @@ impl<'s> Learner<'s> {
             lemma_cell: Some(self.shape.lemma_cell),
             groups: self.shape.groups.clone(),
             restore: None,
+            restore_front: None,
             capitalized: self.shape.capitalized,
             joins: Vec::new(),
             join_classes: Vec::new(),

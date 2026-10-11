@@ -98,6 +98,13 @@ struct Restored<'f> {
 
 const NO_STRESS: u16 = u16::MAX;
 
+/// The least weight a start-model reading needs to be read (see
+/// [`Pos::front_readings`]).
+const MIN_FRONT: f32 = 0.05;
+
+/// The most readings of a typed lemma the main model is asked about.
+const MAX_READINGS: usize = 4;
+
 impl<'m, 'a> Pos<'m, 'a> {
     pub(crate) fn new(model: &'m Model<'a>, h: &'m PosHeader<'a>) -> Self {
         Pos { model, h }
@@ -384,38 +391,77 @@ impl<'m, 'a> Pos<'m, 'a> {
             0f32,
         ); MAX_FORMS];
         let (n, _, _, seen) = r.scan_until(&bare, 0, base, false, MIN_READING, &mut forms);
-        let mut out: Vec<(Cow<'w, str>, f32)> = Vec::with_capacity(n);
-        for &(k, m) in forms.iter().take(n) {
-            let Some(e) = usize::try_from(k.edit).ok().and_then(|i| r.edit(i)) else {
-                continue;
-            };
-            let lemma = if e.prefix.is_empty() && e.strip.is_empty() && e.add.is_empty() {
-                Cow::Borrowed(base)
-            } else {
-                let Some(kept) = r.kept(base, e) else {
-                    continue;
-                };
-                Cow::Owned(format!("{}{}{}", e.prefix, kept, e.add))
-            };
-            match out.iter_mut().find(|(l, _)| *l == lemma) {
-                Some((_, q)) => *q += m,
-                None => out.push((lemma, m)),
-            }
-        }
         // Readings are weighed against every class of the node, fitting or
         // not: the mass of edits that don't fit (one word's own marks deep in
         // its stem) is the chance that the word has marks no reading places.
         if seen <= 0.0 {
             return typed();
         }
-        for (_, m) in &mut out {
-            *m /= seen;
+        // Each reading with where its rewritten end begins in `base` (`None`
+        // when the edit also changes the start).
+        let mut ends: Vec<(Cow<'w, str>, f32, Option<usize>)> = Vec::with_capacity(n);
+        for &(k, m) in forms.iter().take(n) {
+            let Some(e) = usize::try_from(k.edit).ok().and_then(|i| r.edit(i)) else {
+                continue;
+            };
+            let (lemma, end) = if e.prefix.is_empty() && e.strip.is_empty() && e.add.is_empty() {
+                (Cow::Borrowed(base), Some(base.len()))
+            } else {
+                let Some(kept) = r.kept(base, e) else {
+                    continue;
+                };
+                let plain_start = e.prefix.is_empty() && e.front_chars == 0;
+                (
+                    Cow::Owned(format!("{}{}{}", e.prefix, kept, e.add)),
+                    plain_start.then_some(kept.len()),
+                )
+            };
+            ends.push((lemma, m / seen, end));
+        }
+        let mut out: Vec<(Cow<'w, str>, f32)> = Vec::with_capacity(ends.len());
+        let mut add = |lemma: Cow<'w, str>, m: f32| match out.iter_mut().find(|(l, _)| *l == lemma)
+        {
+            Some((_, q)) => *q += m,
+            None => out.push((lemma, m)),
+        };
+        // The start model reads only a lemma typed plain: marks the caller
+        // typed, or principal parts, already spell it.
+        let starts = if citation.parts.is_empty() && !self.sp().has_marks(&citation.written) {
+            self.front_readings(base)
+        } else {
+            Vec::new()
+        };
+        for (lemma, m, end) in ends {
+            match (end, starts.is_empty()) {
+                (Some(end), false) => {
+                    // The start model's beginning, the typed middle, this
+                    // reading's end; where the two rewrites overlap, this
+                    // reading alone.
+                    for (start, cut, q) in &starts {
+                        match (base.get(*cut..end), lemma.get(end..)) {
+                            // A start written as typed changes nothing (and the
+                            // typed word itself is the cheapest reading to ask).
+                            _ if base.get(..*cut) == Some(start.as_str()) => {
+                                add(lemma.clone(), m * q);
+                            }
+                            (Some(middle), Some(tail)) if *cut <= end => {
+                                add(Cow::Owned(format!("{start}{middle}{tail}")), m * q);
+                            }
+                            _ => add(lemma.clone(), m * q),
+                        }
+                    }
+                }
+                _ => add(lemma, m),
+            }
         }
         out.retain(|&(_, m)| m >= MIN_READING);
         if out.is_empty() {
             return typed();
         }
         out.sort_by(|a, b| b.1.total_cmp(&a.1));
+        // Every reading costs a walk of the main model: the likeliest few
+        // carry the answer.
+        out.truncate(MAX_READINGS);
         // A lemma typed with marks, or with principal parts (which spell the
         // stem in full), is read once, as the model reads it best. A typed
         // stress counts only where stress is the only mark the restoration
@@ -428,6 +474,69 @@ impl<'m, 'a> Pos<'m, 'a> {
             out.truncate(1);
             if let Some((_, m)) = out.first_mut() {
                 *m = 1.0;
+            }
+        }
+        out
+    }
+
+    /// The start model's readings of `base`: `(the rewritten beginning, how
+    /// many bytes of `base` it replaces, probability)`, from a model trained
+    /// on lemmas written backwards. Empty when the part of speech has none.
+    fn front_readings(&self, base: &str) -> Vec<(String, usize, f32)> {
+        let Some(f) = self.h.restore_front.and_then(|i| self.model.pos(i)) else {
+            return Vec::new();
+        };
+        let backwards = crate::text::reversed(base);
+        let bare = Citation {
+            lemma: self.sp().read(&backwards),
+            parts: Vec::new(),
+            written: Cow::Borrowed(&backwards),
+            inherent: Vec::new(),
+        };
+        let mut forms = [(
+            Key {
+                edit: 0,
+                stress: NO_STRESS,
+                kind: 0,
+                via: NONE,
+            },
+            0f32,
+        ); MAX_FORMS];
+        // Rewrites of word beginnings are many and spread thin: the likeliest
+        // carry the answer, and reading the long tail costs most of a call.
+        let (n, _, _, seen) = f.scan_until(&bare, 0, &backwards, true, MIN_FRONT, &mut forms);
+        if seen <= 0.0 {
+            return Vec::new();
+        }
+        let mut out: Vec<(String, usize, f32)> = Vec::with_capacity(n);
+        for &(k, m) in forms.iter().take(n) {
+            let Some(e) = usize::try_from(k.edit).ok().and_then(|i| f.edit(i)) else {
+                continue;
+            };
+            // Only edits of the backwards word's end: its beginning, here.
+            if !e.prefix.is_empty() || e.front_chars != 0 {
+                continue;
+            }
+            let Some(kept) = f.kept(&backwards, e) else {
+                continue;
+            };
+            let start = crate::text::reversed(e.add);
+            let cut = backwards.len().saturating_sub(kept.len());
+            match out.iter_mut().find(|(s, c, _)| *s == start && *c == cut) {
+                Some((_, _, q)) => *q += m,
+                None => out.push((start, cut, m)),
+            }
+        }
+        // Over the readings that fit: the end model already weighs the
+        // chance of marks no reading places. Only the likeliest is read: each
+        // more would be another walk of the main model for every reading of
+        // the end.
+        let total: f32 = out.iter().map(|r| r.2).sum();
+        out.sort_by(|a, b| b.2.total_cmp(&a.2));
+        out.truncate(1);
+        if total > 0.0 {
+            for r in &mut out {
+                r.2 /= total;
             }
         }
         out

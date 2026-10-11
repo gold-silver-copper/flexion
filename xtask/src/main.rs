@@ -10,7 +10,7 @@
 //!   `probe`;
 //! - `probe <lang> [--pos <name>] [--alpha a] [--tau t] [--epsilon e]
 //!   [--syllables depth] [--variant decay] [--misses 1] [--attested 1]
-//!   [--union 1]`: train
+//!   [--union 1] [--front 1]`: train
 //!   without the held-out tenth with fixed parameters and score it (or, with
 //!   `--attested`, train on everything and score that), for experiments. The
 //!   score counts the main dump's words, or with `--union` every word.
@@ -122,6 +122,9 @@ fn run() -> Result<(), String> {
             }
             if flag("--joins").is_some() {
                 params.joins = true;
+            }
+            if flag("--front").is_some() {
+                params.front_restore = true;
             }
             if let Some(d) = flag("--initial") {
                 params.walk.initial_depth = Some(d.parse().map_err(|_| "bad --initial")?);

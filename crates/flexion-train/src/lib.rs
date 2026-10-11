@@ -114,6 +114,32 @@ pub fn shapes(lang: &Language) -> Result<Vec<learn::Shape>, String> {
         .collect()
 }
 
+/// `base` with `full`'s marks on the letters of its first half (`cōnsul`
+/// for `consul`, `cōnsul`; `rosa` for `rosa`, `rosā`). `full` itself when the
+/// two don't line up letter for letter.
+fn first_half_marked(base: &str, full: &str) -> String {
+    let letters = |s: &str| -> Vec<String> {
+        let mut out: Vec<String> = Vec::new();
+        for c in s.chars() {
+            match out.last_mut() {
+                Some(last) if flexion::text::combining(c) => last.push(c),
+                _ => out.push(c.to_string()),
+            }
+        }
+        out
+    };
+    let (b, f) = (letters(base), letters(full));
+    if b.len() != f.len() {
+        return full.to_string();
+    }
+    let half = b.len() / 2;
+    f.iter()
+        .take(half)
+        .chain(b.iter().skip(half))
+        .map(String::as_str)
+        .collect()
+}
+
 /// The most smoothing a restoration model gets (see [`restoration`]).
 const RESTORATION_ALPHA: f64 = 0.5;
 
@@ -125,6 +151,7 @@ pub fn restoration(
     sp: &Spelling<'_>,
     words: &[Word],
     params: learn::Params,
+    backwards: bool,
 ) -> Option<flexion::write::PosTables> {
     if words
         .iter()
@@ -135,12 +162,33 @@ pub fn restoration(
     let lexemes: Vec<extract::Lexeme> = words
         .iter()
         .flat_map(|w| w.lexemes.iter())
-        .map(|l| extract::Lexeme {
-            full: l.base.clone(),
-            cells: vec![vec![l.full.clone()]],
-            inherent: Vec::new(),
-            lemma_stress: None,
-            ..(*l).clone()
+        .map(|l| {
+            // Written backwards, the start of a word is where the tree reads
+            // first. The start model learns only the marks of the word's
+            // first half; the end is the end model's, and a target reaching
+            // across the whole word would make every rewrite one word's own.
+            let (base, full) = if backwards {
+                (
+                    flexion::text::reversed(&l.base),
+                    flexion::text::reversed(&first_half_marked(&l.base, &l.full)),
+                )
+            } else {
+                (l.base.clone(), l.full.clone())
+            };
+            extract::Lexeme {
+                lemma: if backwards {
+                    flexion::text::reversed(&l.lemma)
+                } else {
+                    l.lemma.clone()
+                },
+                key: sp.read(&base).key.to_string(),
+                full: base.clone(),
+                base,
+                cells: vec![vec![full]],
+                inherent: Vec::new(),
+                lemma_stress: None,
+                ..(*l).clone()
+            }
         })
         .collect();
     let data = extract::PosData {
@@ -169,26 +217,37 @@ pub fn restoration(
 
 /// One part of speech, trained: its main model, the model that restores its
 /// typed lemmas, and the models that build cells from principal parts.
+#[derive(Clone)]
 pub struct Trained {
     pub main: flexion::write::PosTables,
     pub restore: Option<flexion::write::PosTables>,
+    /// The model restoring the start of typed lemmas (read backwards).
+    pub restore_front: Option<flexion::write::PosTables>,
     /// `(the principal part's cell, its model)`.
     pub parts: Vec<(usize, flexion::write::PosTables)>,
 }
 
 /// Lay out trained parts of speech: mains first (so a part of speech keeps
-/// its index), then restoration models, then part models, each main pointing
+/// its index), then restoration models (each main's end model, then its start
+/// model), then part models, each main pointing
 /// at its own.
 pub fn assemble(parts: Vec<Trained>) -> Vec<flexion::write::PosTables> {
     let n = parts.len();
     let mut mains = Vec::with_capacity(n);
     let mut restores = Vec::new();
     let mut part_models = Vec::new();
-    let n_restores = parts.iter().filter(|t| t.restore.is_some()).count();
+    let n_restores = parts
+        .iter()
+        .map(|t| usize::from(t.restore.is_some()) + usize::from(t.restore_front.is_some()))
+        .sum::<usize>();
     for t in parts {
         let mut main = t.main;
         if let Some(r) = t.restore {
             main.restore = Some(n + restores.len());
+            restores.push(r);
+        }
+        if let Some(r) = t.restore_front {
+            main.restore_front = Some(n + restores.len());
             restores.push(r);
         }
         main.part_models.clear();
@@ -282,7 +341,12 @@ pub fn train_pos(
     citation: &[usize],
     sources: &[u8],
 ) -> (Trained, learn::Stats) {
-    let restore = restoration(sp, words, params);
+    let restore = restoration(sp, words, params, false);
+    let restore_front = if params.front_restore {
+        restoration(sp, words, params, true)
+    } else {
+        None
+    };
     let (mut main, stats) = learn::Learner::new(sp, shape.clone(), params)
         .with_chooser(chooser)
         .learn(words);
@@ -314,6 +378,7 @@ pub fn train_pos(
         Trained {
             main,
             restore,
+            restore_front,
             parts,
         },
         stats,

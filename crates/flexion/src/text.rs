@@ -238,6 +238,10 @@ fn lookup(table: &[(char, char)], c: char) -> Option<char> {
 }
 
 /// Whether `c` is a combining diacritic, written after the letter it marks.
+pub fn combining(c: char) -> bool {
+    is_combining(c)
+}
+
 fn is_combining(c: char) -> bool {
     matches!(u32::from(c), 0x300..=0x36f | 0x1dc0..=0x1dff | 0x20d0..=0x20ff)
 }
@@ -1004,6 +1008,25 @@ impl<'a> Spelling<'a> {
 
 /// The lowercase of a character that lowercases to one character (otherwise
 /// the character itself). ASCII, Latin-1, Greek and Cyrillic take a fast path.
+/// `s` written backwards letter by letter, each letter keeping its combining
+/// marks after it (`cōnsul` → `lusnōc`).
+pub fn reversed(s: &str) -> String {
+    let mut letters: Vec<&str> = Vec::new();
+    let mut start = 0;
+    for (i, c) in s.char_indices() {
+        if i > 0 && !is_combining(c) {
+            if let Some(l) = s.get(start..i) {
+                letters.push(l);
+            }
+            start = i;
+        }
+    }
+    if let Some(l) = s.get(start..) {
+        letters.push(l);
+    }
+    letters.into_iter().rev().collect()
+}
+
 pub fn lowercase_char(c: char) -> char {
     let u = u32::from(c);
     let mapped = match u {

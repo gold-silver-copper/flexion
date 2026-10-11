@@ -30,6 +30,7 @@ fn tiny() -> Vec<u8> {
         lemma_cell: Some(0),
         groups: vec![],
         restore: None,
+        restore_front: None,
         capitalized: false,
         joins: vec![],
         join_classes: vec![],

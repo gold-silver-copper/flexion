@@ -128,6 +128,10 @@ pub struct PosTables {
     /// The part of speech (by index in the blob) whose one-cell model
     /// restores this one's lemmas from what callers type.
     pub restore: Option<usize>,
+    /// The part of speech whose model restores the start of this one's
+    /// lemmas: trained on them written backwards, so its suffix tree reads a
+    /// word from its first letter (Latin `con-` is `cōn-`).
+    pub restore_front: Option<usize>,
     /// Every word is written with a capital (German nouns).
     pub capitalized: bool,
     /// The join model, sorted by prefix (see [`JoinSpec`]).
@@ -484,6 +488,7 @@ pub fn write_sized(spelling: &SpellingSpec, parts: &[PosTables]) -> (Vec<u8>, Ve
             joins_at,
             parts_at,
             lexicon_at,
+            p.restore_front.map_or(format::NONE, to_u32),
         ] {
             put(&mut h, v);
         }

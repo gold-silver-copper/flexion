@@ -111,8 +111,8 @@ pub fn choose_sources(
         main.sources = vec![source; shape.cells];
         let trained = crate::Trained {
             main,
-            restore: base.restore.clone(),
             parts: built.clone(),
+            ..base.clone()
         };
         let blob = blob_of(spec, vec![trained]);
         let Some(model) = flexion::Model::from_bytes(&blob) else {
@@ -324,6 +324,28 @@ pub fn grid_scores(
     })
 }
 
+/// A model beside the main one that a part of speech may take on.
+#[derive(Debug, Clone, Copy)]
+enum Extra {
+    Joins,
+    FrontRestore,
+}
+
+impl Extra {
+    fn set(self, params: Params) -> Params {
+        match self {
+            Extra::Joins => Params {
+                joins: true,
+                ..params
+            },
+            Extra::FrontRestore => Params {
+                front_restore: true,
+                ..params
+            },
+        }
+    }
+}
+
 /// One setting of the tuning grid, scored on the dev tenth.
 #[derive(Debug, Clone, Copy)]
 pub struct GridPoint {
@@ -493,48 +515,59 @@ pub fn build(
         let chosen = choose(&scores, size_price).ok_or("empty grid")?;
         let (mut params, mut dev_top1) = (chosen.params, chosen.top1);
         let (base_params, chosen_tau) = (chosen.params, chosen.params.tau);
-        // The join model, when the same rule picks it (one more setting,
-        // whose extra bytes must buy their price in log-loss) and it gets
-        // more answers right beyond the noise: an unseen word with a known
-        // prefix is read both ways, which costs time on every call.
-        {
-            let joined = Params {
-                joins: true,
-                ..params
+        // The join model and the start restoration model, each when the same
+        // rule picks it (one more setting, whose extra bytes must buy their
+        // price in log-loss) and it gets more answers right beyond the noise:
+        // both cost time on every call.
+        for extra in [Extra::Joins, Extra::FrontRestore] {
+            let with = extra.set(params);
+            let (t, stats) = train_one(&spec, shape, with, &train, &chooser);
+            let built = match extra {
+                Extra::Joins => stats.join_prefixes > 0,
+                Extra::FrontRestore => t.restore_front.is_some(),
             };
-            let (t, stats) = train_one(&spec, shape, joined, &train, &chooser);
-            if stats.join_prefixes > 0 {
-                let blob = blob_of(&spec, vec![t]);
-                if let Some(model) = flexion::Model::from_bytes(&blob) {
-                    let s = eval::score(
-                        &sp,
-                        &model,
-                        0,
-                        &dev,
-                        &citation,
-                        &markers,
-                        &shape.unscored,
-                        Given::Lemma,
-                        false,
-                    );
-                    let t = s.total(&[]);
-                    let point = GridPoint {
-                        params: joined,
-                        top1: ratio(t.top1, t.n),
-                        top1_se: s.top1_se(),
-                        loss: s.log_loss(),
-                        loss_se: s.log_loss_se(),
-                        bytes: blob.len(),
-                    };
-                    let mut all = scores.clone();
-                    all.push(point);
-                    if choose(&all, size_price).is_some_and(|c| c.params == joined)
-                        && point.top1 > chosen.top1 + chosen.top1_se
-                    {
-                        params = joined;
-                        dev_top1 = point.top1;
-                    }
-                }
+            if !built {
+                continue;
+            }
+            let blob = blob_of(&spec, vec![t]);
+            let Some(model) = flexion::Model::from_bytes(&blob) else {
+                continue;
+            };
+            let s = eval::score(
+                &sp,
+                &model,
+                0,
+                &dev,
+                &citation,
+                &markers,
+                &shape.unscored,
+                Given::Lemma,
+                false,
+            );
+            let t = s.total(&[]);
+            let point = GridPoint {
+                params: with,
+                top1: ratio(t.top1, t.n),
+                top1_se: s.top1_se(),
+                loss: s.log_loss(),
+                loss_se: s.log_loss_se(),
+                bytes: blob.len(),
+            };
+            let current = GridPoint {
+                params,
+                top1: dev_top1,
+                ..*chosen
+            };
+            let mut all = scores.clone();
+            all.push(point);
+            if current.params != chosen.params {
+                all.push(current);
+            }
+            if choose(&all, size_price).is_some_and(|c| c.params == with)
+                && point.top1 > current.top1 + chosen.top1_se
+            {
+                params = with;
+                dev_top1 = point.top1;
             }
         }
 
@@ -651,14 +684,7 @@ pub fn build(
             crate::train_pos(&sp, shape, params, &all, &chooser_all, &citation, &sources);
         t.main.lexicon = crate::lexicon(lang, &sp, data, pi, &|_| true);
         let lexicon = (t.main.lexicon.len(), in_lexicon);
-        let blob = blob_of(
-            &spec,
-            vec![crate::Trained {
-                main: t.main.clone(),
-                restore: t.restore.clone(),
-                parts: t.parts.clone(),
-            }],
-        );
+        let blob = blob_of(&spec, vec![t.clone()]);
         let model = flexion::Model::from_bytes(&blob).ok_or("final model failed to load")?;
         let attested = eval::score(
             &sp,
@@ -738,21 +764,26 @@ pub fn build(
     }
     // Laid out as `assemble` does: mains, then restoration models, then part
     // models, each counted with its main part of speech.
-    let layout: Vec<(bool, usize)> = final_tables
+    let layout: Vec<(usize, usize)> = final_tables
         .iter()
-        .map(|t| (t.restore.is_some(), t.parts.len()))
+        .map(|t| {
+            (
+                usize::from(t.restore.is_some()) + usize::from(t.restore_front.is_some()),
+                t.parts.len(),
+            )
+        })
         .collect();
     let (blob, sizes, strings) = flexion::write::write_sized(&spec, &crate::assemble(final_tables));
     let n = layout.len();
     let mut next_restore = n;
-    let mut next_part = n + layout.iter().filter(|(r, _)| *r).count();
-    for (i, (restore, parts)) in layout.into_iter().enumerate() {
+    let mut next_part = n + layout.iter().map(|(r, _)| r).sum::<usize>();
+    for (i, (restores, parts)) in layout.into_iter().enumerate() {
         let Some(r) = reports.get_mut(i) else {
             continue;
         };
         r.sizes.main = sizes.get(i).copied().unwrap_or_default();
-        if restore {
-            r.sizes.restore = sizes.get(next_restore).map_or(0, |x| x.total());
+        for _ in 0..restores {
+            r.sizes.restore += sizes.get(next_restore).map_or(0, |x| x.total());
             next_restore += 1;
         }
         for _ in 0..parts {
