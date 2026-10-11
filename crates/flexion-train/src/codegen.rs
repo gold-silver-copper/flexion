@@ -691,46 +691,24 @@ fn tree(files: &mut Vec<(String, String)>, dir: &str, t: &Tables) {
         let _ = writeln!(m, "mod t{k};");
     }
     let narrow = t.classes.len() <= usize::from(u16::MAX).saturating_add(1);
-    // The constructors the nodes use.
-    let has = |k: NodeKind| t.nodes.iter().any(|n| n.kind == k);
-    let mut ctors = String::new();
-    if has(NodeKind::Root) {
-        ctors.push_str(
-            "    pub(crate) const fn root(counts: &'static [(u32, f32)]) -> Node {\n        \
-             Node { kind: NodeKind::Root, parent: u32::MAX, counts }\n    }\n",
-        );
-    }
-    if has(NodeKind::Word) {
-        ctors.push_str(
-            "    pub(crate) const fn word(counts: &'static [(u32, f32)]) -> Node {\n        \
-             Node { kind: NodeKind::Word, parent: u32::MAX, counts }\n    }\n",
-        );
-    }
-    if has(NodeKind::Inner) {
-        ctors.push_str(
-            "    pub(crate) const fn inner(parent: u32, counts: &'static [(u32, f32)]) -> Node {\n        \
-             Node { kind: NodeKind::Inner, parent, counts }\n    }\n",
-        );
-    }
     let _ = write!(
         m,
         "\npub(crate) use t0::n0 as root;\n\n\
          /// Smoothing strength, the tail cut, and whether probabilities are rounded to\n\
          /// 1/65535 (see `flexion::tables::smooth_node`).\n\
          const ALPHA: f64 = {:?};\nconst EPSILON: f64 = {:?};\nconst NARROW: bool = {narrow};\n\n\
-         /// A node with a distribution: how it comes from its counts, the node it is\n\
-         /// smoothed toward (`u32::MAX`: none), and its counts `(class, weight)`.\n\
-         pub(crate) struct Node {{\n    kind: NodeKind,\n    parent: u32,\n    \
-         counts: &'static [(u32, f32)],\n}}\n\n\
-         impl Node {{\n{ctors}}}\n\n\
+         /// A node with a distribution: how it comes from its counts, and the node it\n\
+         /// is smoothed toward (`u32::MAX`: none).\n\
+         pub(crate) struct Node {{\n    kind: NodeKind,\n    parent: u32,\n}}\n\n\
          /// Each node's distribution, computed on first use.\n\
          static CACHE: [OnceLock<Smoothed>; {next_def}] = [const {{ OnceLock::new() }}; {next_def}];\n\n\
          fn dist(i: usize) -> Option<&'static Smoothed> {{\n    \
-         let node = nodes::get(i)?;\n    \
+         let (node, classes, weights) = nodes::get(i)?;\n    \
          Some(CACHE.get(i)?.get_or_init(|| {{\n        \
          let parent = (node.parent != u32::MAX)\n            .then(|| usize::try_from(node.parent).ok())\n            .flatten()\n            .and_then(dist);\n        \
          let q = parent.map_or(&[][..], |p| p.entries.as_slice());\n        \
-         smooth_node(node.kind, node.counts, q, ALPHA, EPSILON, NARROW)\n    }}))\n}}\n\n\
+         let counts: Vec<(u32, f32)> = classes.iter().copied().zip(weights.iter().copied()).collect();\n        \
+         smooth_node(node.kind, &counts, q, ALPHA, EPSILON, NARROW)\n    }}))\n}}\n\n\
          /// Add node `i`'s distribution to the path.\n\
          pub(crate) fn push(out: &mut Path<'_>, i: usize) {{\n    \
          if let Some(d) = dist(i).filter(|d| !d.entries.is_empty()) {{\n        \
@@ -738,42 +716,105 @@ fn tree(files: &mut Vec<(String, String)>, dir: &str, t: &Tables) {
         t.alpha, t.epsilon
     );
     files.push((format!("{dir}/mod.rs"), m));
-    let table: Vec<(Option<String>, String)> = t
-        .nodes
-        .iter()
-        .filter(|n| n.kind != NodeKind::Bare)
-        .map(|n| {
-            let counts: Vec<String> = n
-                .counts
-                .iter()
-                .map(|&(c, w)| format!("({c}, {})", f(w)))
-                .collect();
-            let counts = counts.join(", ");
-            let parent = n.parent.and_then(|p| defs.get(p).copied().flatten());
-            let code = match (n.kind, parent) {
-                (NodeKind::Root, _) => format!("Node::root(&[{counts}])"),
-                (NodeKind::Word, _) => format!("Node::word(&[{counts}])"),
-                (_, Some(p)) => format!("Node::inner({p}, &[{counts}])"),
-                (_, None) => format!("Node::inner(u32::MAX, &[{counts}])"),
-            };
-            (None, code)
-        })
-        .collect();
-    chunked(
-        files,
-        &format!("{dir}/nodes"),
-        "//! Every tree node with a distribution, in the order the tree functions\n\
-         //! number them.",
-        "Node",
-        "use super::Node;",
-        "use super::super::Node;",
-        &table,
-    );
+    nodes(files, &format!("{dir}/nodes"), t, &defs);
     for (k, text) in by_file.into_iter().enumerate() {
         files.push((
             format!("{dir}/t{k}.rs"),
             format!("use flexion::Path;\n\n{text}"),
         ));
+    }
+}
+
+/// The tree's nodes with a distribution, in the order the tree functions
+/// number them, [`FILE_ITEMS`] to a file. A file holds them as flat tables of
+/// numbers: each node's kind and parent, where its counts start, and the
+/// counts' classes and weights (a `&[…]` or a constructor call per node costs
+/// rustc gigabytes).
+fn nodes(files: &mut Vec<(String, String)>, dir: &str, t: &Tables, defs: &[Option<usize>]) {
+    let kept: Vec<&_> = t.nodes.iter().filter(|n| n.kind != NodeKind::Bare).collect();
+    let chunks: Vec<&[&_]> = if kept.is_empty() {
+        vec![&[]]
+    } else {
+        kept.chunks(FILE_ITEMS).collect()
+    };
+    let ret = "Option<(Node, &'static [u32], &'static [f32])>";
+    let mut m = String::new();
+    m.push_str(
+        "//! Every tree node with a distribution, in the order the tree functions\n\
+         //! number them, and its counts.\n\nuse super::Node;\n\n",
+    );
+    for k in 0..chunks.len() {
+        let _ = writeln!(m, "mod c{k};");
+    }
+    let _ = writeln!(
+        m,
+        "\n/// Node `i` and its counts: its classes and their weights.\n\
+         pub(crate) fn get(i: usize) -> {ret} {{\n    match i / {FILE_ITEMS} {{"
+    );
+    for k in 0..chunks.len() {
+        let _ = writeln!(m, "        {k} => c{k}::get(i % {FILE_ITEMS}),");
+    }
+    m.push_str("        _ => None,\n    }\n}\n");
+    files.push((format!("{dir}/mod.rs"), m));
+    let rows = |v: &[String]| -> String {
+        v.chunks(16)
+            .map(|row| format!("    {},\n", row.join(", ")))
+            .collect()
+    };
+    for (k, chunk) in chunks.iter().enumerate() {
+        let mut kinds = Vec::new();
+        let mut parents = Vec::new();
+        let mut starts = Vec::new();
+        let (mut classes, mut weights): (Vec<String>, Vec<String>) = (Vec::new(), Vec::new());
+        for n in chunk.iter() {
+            starts.push(classes.len().to_string());
+            for &(c, w) in &n.counts {
+                classes.push(c.to_string());
+                weights.push(f(w));
+            }
+            kinds.push(match n.kind {
+                NodeKind::Root => "R",
+                NodeKind::Word => "W",
+                _ => "I",
+            });
+            let parent = n.parent.and_then(|p| defs.get(p).copied().flatten());
+            parents.push(parent.map_or_else(|| "u32::MAX".to_string(), |p| p.to_string()));
+        }
+        starts.push(classes.len().to_string());
+        let mut c = String::new();
+        c.push_str("use super::super::Node;\nuse flexion::tables::NodeKind;\n\n");
+        let used = [("R", "Root"), ("W", "Word"), ("I", "Inner")]
+            .into_iter()
+            .filter(|(a, _)| kinds.contains(a));
+        for (a, kind) in used {
+            let _ = writeln!(c, "const {a}: NodeKind = NodeKind::{kind};");
+        }
+        let kinds: Vec<String> = kinds.iter().map(|k| (*k).to_string()).collect();
+        let _ = write!(
+            c,
+            "\nstatic KINDS: [NodeKind; {}] = [\n{}];\n\n\
+             static PARENTS: [u32; {}] = [\n{}];\n\n\
+             /// Where each node's counts start; the last entry ends the last node's.\n\
+             static STARTS: [u32; {}] = [\n{}];\n\n\
+             static CLASSES: [u32; {}] = [\n{}];\n\n\
+             static WEIGHTS: [f32; {}] = [\n{}];\n\n\
+             pub(super) fn get(i: usize) -> {ret} {{\n    \
+             let start = usize::try_from(*STARTS.get(i)?).ok()?;\n    \
+             let end = usize::try_from(*STARTS.get(i.checked_add(1)?)?).ok()?;\n    \
+             let node = Node {{\n        kind: *KINDS.get(i)?,\n        parent: *PARENTS.get(i)?,\n    }};\n    \
+             Some((node, CLASSES.get(start..end)?, WEIGHTS.get(start..end)?))\n}}\n",
+            kinds.len(),
+            rows(&kinds),
+            parents.len(),
+            rows(&parents),
+            starts.len(),
+            rows(&starts),
+            classes.len(),
+            rows(&classes),
+            weights.len(),
+            rows(&weights),
+        );
+        files.push((format!("{dir}/c{k}.rs"), c));
     }
 }
 

@@ -293,9 +293,11 @@ restoration, start-restoration and part model), each implementing the runtime's
   }
   ```
 
-  A node is stored as its class counts and the node it is smoothed toward
-  (`Node::inner(1, &[(1, 1.0), (110, 2.0)])`); `push` computes its distribution on first
-  use, `(n_c + α·q_c) / (N + α)` with `q` the parent's, cut below ε
+  A node is stored as its class counts and the node it is smoothed toward, in flat tables
+  of numbers per file (`KINDS`, `PARENTS`, `STARTS`, `CLASSES`, `WEIGHTS`): a slice
+  literal or a constructor call per node made rustc take 7.5 GB for Russian, the flat
+  tables 3.5 GB. `push` computes a node's distribution on first use,
+  `(n_c + α·q_c) / (N + α)` with `q` the parent's, cut below ε
   (`flexion::tables::smooth_node`, which the trainer's in-memory tables use too). Russian's
   nodes hold 0.30 million counts where they held 0.75 million probabilities: most of a
   smoothed distribution is its parent's;

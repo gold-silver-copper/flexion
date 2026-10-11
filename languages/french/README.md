@@ -286,7 +286,7 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 1626 KB of generated Rust (163 KB gzipped). Its tables measure 319 KB: what a compact binary layout of them would take, the size the build prices when it tunes. Where those bytes are, in KB (the strings, 20 KB, are shared):
+The model is 1537 KB of generated Rust (182 KB gzipped). Its tables measure 319 KB: what a compact binary layout of them would take, the size the build prices when it tunes. Where those bytes are, in KB (the strings, 20 KB, are shared):
 
 | | edits | classes | tree nodes | their counts | joins | lexicon | sound laws | restoration model | part models | total |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -298,11 +298,11 @@ The model is 1626 KB of generated Rust (163 KB gzipped). Its tables measure 319 
 
 | | edits | classes | stored nodes | memorized words | counts stored | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 469 | 507 | 5662 | 990 | 12549 | 614 (`noun.pl`) |
-| adjective | 145 | 84 | 1480 | 521 | 2524 | 524 (`adjective.m.pl`) |
-| verb | 1343 | 201 | 702 | 173 | 1871 | 377 (`participle.past`) |
-| participle | 9 | 6 | 101 | 5 | 155 | 474 (`past_participle.m.pl`) |
-| determiner | 33 | 21 | 30 | 9 | 82 | 407 (`determiner.f.pl`) |
+| noun | 469 | 507 | 5662 | 990 | 12549 | 550 (`noun.pl`) |
+| adjective | 145 | 84 | 1480 | 521 | 2524 | 498 (`adjective.m.pl`) |
+| verb | 1343 | 201 | 702 | 173 | 1871 | 369 (`participle.past`) |
+| participle | 9 | 6 | 101 | 5 | 155 | 475 (`past_participle.m.pl`) |
+| determiner | 33 | 21 | 30 | 9 | 82 | 376 (`determiner.f.pl`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,

@@ -222,7 +222,7 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 3168 KB of generated Rust (290 KB gzipped). Its tables measure 537 KB: what a compact binary layout of them would take, the size the build prices when it tunes. Where those bytes are, in KB (the strings, 25 KB, are shared):
+The model is 3008 KB of generated Rust (337 KB gzipped). Its tables measure 537 KB: what a compact binary layout of them would take, the size the build prices when it tunes. Where those bytes are, in KB (the strings, 25 KB, are shared):
 
 | | edits | classes | tree nodes | their counts | joins | lexicon | sound laws | restoration model | part models | total |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -233,10 +233,10 @@ The model is 3168 KB of generated Rust (290 KB gzipped). Its tables measure 537 
 
 | | edits | classes | stored nodes | memorized words | counts stored | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 665 | 657 | 12599 | 5843 | 24561 | 566 (`noun.pl`) |
-| verb | 387 | 450 | 3561 | 796 | 6987 | 449 (`verb.pp`) |
-| adjective | 92 | 65 | 3311 | 2210 | 3460 | 473 (`adjective.sup`) |
-| adverb | 40 | 22 | 277 | 175 | 437 | 468 (`adverb.comp`) |
+| noun | 665 | 657 | 12599 | 5843 | 24561 | 559 (`noun.pl`) |
+| verb | 387 | 450 | 3561 | 796 | 6987 | 462 (`verb.pp`) |
+| adjective | 92 | 65 | 3311 | 2210 | 3460 | 499 (`adjective.sup`) |
+| adverb | 40 | 22 | 277 | 175 | 437 | 472 (`adverb.comp`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
@@ -277,7 +277,7 @@ release build, fastest of seven runs.
 ### Compared with `english` 0.4
 
 `english` 0.4's generated exception tables are 1026 KB of Rust source (compiled into
-perfect-hash maps); this crate's model is 3168 KB of generated Rust source.
+perfect-hash maps); this crate's model is 3008 KB of generated Rust source.
 
 Attested words (every word both were built from), primary form from the plain call:
 
@@ -293,10 +293,10 @@ build, fastest of seven runs, the two libraries measured alternately in the same
 
 | | `english` 0.4 ns per call | this crate ns per call | ratio |
 |---|---:|---:|---:|
-| noun (`noun.pl`) | 84 | 572 | 6.9× |
-| verb (`verb.3sg`) | 65 | 473 | 7.3× |
-| adjective (`adjective.comp`) | 88 | 523 | 6.0× |
-| adverb (`adverb.comp`) | 50 | 480 | 9.5× |
+| noun (`noun.pl`) | 82 | 557 | 6.8× |
+| verb (`verb.3sg`) | 64 | 462 | 7.2× |
+| adjective (`adjective.comp`) | 88 | 519 | 5.9× |
+| adverb (`adverb.comp`) | 50 | 488 | 9.8× |
 
 
 ## Data and license
