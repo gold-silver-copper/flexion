@@ -43,7 +43,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       # A clean debug build of each generated crate, one at a time: wall time, peak
-      # memory (the largest rustc) and .rlib size, in the job summary. Code
+      # memory (the largest rustc) and .rlib size, in the log and the job summary. Code
       # generation keeps these inside CI's 4 cores and 16 GB.
       - run: |
           command -v /usr/bin/time || sudo apt-get install -y time
@@ -56,5 +56,5 @@ jobs:
             /usr/bin/time -f "%e %M" -o time.txt cargo build -q -p "$l"
             read -r s kb < time.txt
             rlib=$(find target/debug/deps -name "lib${l//-/_}-*.rlib" -printf "%s\n" | head -1)
-            echo "| $l | $s | $((kb / 1024)) | $((rlib / 1048576)) |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| $l | $s | $((kb / 1024)) | $((rlib / 1048576)) |" | tee -a "$GITHUB_STEP_SUMMARY"
           done
