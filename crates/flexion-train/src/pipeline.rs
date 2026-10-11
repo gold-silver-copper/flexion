@@ -493,8 +493,10 @@ pub fn build(
         let chosen = choose(&scores, size_price).ok_or("empty grid")?;
         let (mut params, mut dev_top1) = (chosen.params, chosen.top1);
         let (base_params, chosen_tau) = (chosen.params, chosen.params.tau);
-        // The join model, when the same rule picks it: one more setting,
-        // whose extra bytes must buy their price in log-loss.
+        // The join model, when the same rule picks it (one more setting,
+        // whose extra bytes must buy their price in log-loss) and it gets
+        // more answers right beyond the noise: an unseen word with a known
+        // prefix is read both ways, which costs time on every call.
         {
             let joined = Params {
                 joins: true,
@@ -526,7 +528,9 @@ pub fn build(
                     };
                     let mut all = scores.clone();
                     all.push(point);
-                    if choose(&all, size_price).is_some_and(|c| c.params == joined) {
+                    if choose(&all, size_price).is_some_and(|c| c.params == joined)
+                        && point.top1 > chosen.top1 + chosen.top1_se
+                    {
                         params = joined;
                         dev_top1 = point.top1;
                     }
