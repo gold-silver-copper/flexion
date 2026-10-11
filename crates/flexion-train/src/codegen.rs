@@ -731,7 +731,11 @@ fn tree(files: &mut Vec<(String, String)>, dir: &str, t: &Tables) {
 /// counts' classes and weights (a `&[…]` or a constructor call per node costs
 /// rustc gigabytes).
 fn nodes(files: &mut Vec<(String, String)>, dir: &str, t: &Tables, defs: &[Option<usize>]) {
-    let kept: Vec<&_> = t.nodes.iter().filter(|n| n.kind != NodeKind::Bare).collect();
+    let kept: Vec<&_> = t
+        .nodes
+        .iter()
+        .filter(|n| n.kind != NodeKind::Bare)
+        .collect();
     let chunks: Vec<&[&_]> = if kept.is_empty() {
         vec![&[]]
     } else {
