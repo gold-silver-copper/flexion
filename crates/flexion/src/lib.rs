@@ -406,6 +406,9 @@ impl<'a> Model<'a> {
             let mut h = h;
             h.table_of = vec![0; h.n_nodes];
             h.tree = Vec::with_capacity(h.n_nodes);
+            // Breadth-first layout: first children and first entries are
+            // running sums.
+            let (mut next_child, mut next_entry) = (1u32, 0u32);
             for node in 0..h.n_nodes {
                 let at = h.nodes.checked_add(node.checked_mul(NODE_LEN)?)?;
                 let u16_at = |n: usize| -> Option<u16> {
@@ -417,17 +420,20 @@ impl<'a> Model<'a> {
                     ))
                 };
                 let packed = b.u32(h.chars.checked_add(node.checked_mul(4)?)?)?;
+                let (children, dist_len) = (u16_at(4)?, u16_at(6)?);
                 h.tree.push(NodeRec {
                     label: b.u32(at)?,
-                    first_child: b.u32(at.checked_add(4)?)?,
-                    dist: b.u32(at.checked_add(8)?)?,
-                    children: u16_at(12)?,
-                    dist_len: u16_at(14)?,
+                    first_child: next_child,
+                    dist: next_entry,
+                    children,
+                    dist_len,
                     first: packed & ((1 << format::CHAR_BITS) - 1),
                     label_len: u16::try_from(packed >> format::CHAR_BITS).ok()?,
                 });
-                let first = b.usize(at.checked_add(4)?)?;
-                let count = usize::from(u16_at(12)?);
+                let first = usize::try_from(next_child).ok()?;
+                next_child = next_child.checked_add(u32::from(children))?;
+                next_entry = next_entry.checked_add(u32::from(dist_len))?;
+                let count = usize::from(children);
                 if count <= TABLE_MIN_CHILDREN {
                     continue;
                 }
@@ -576,13 +582,20 @@ impl<'a> Model<'a> {
             let mut cursor = b.usize(at.checked_add(64)?)?;
             let n_classes = b.usize(cursor)?;
             cursor = cursor.checked_add(4)?;
-            let class_bytes = n_classes.checked_mul(h.cells)?.checked_mul(4)?;
+            let class_bytes = n_classes.checked_mul(h.cells)?.checked_mul(width)?;
             if cursor.checked_add(class_bytes)? > bytes.len() {
                 return None;
             }
             for _ in 0..n_classes.checked_mul(h.cells)? {
-                h.join_classes.push(b.u32(cursor)?);
-                cursor = cursor.checked_add(4)?;
+                h.join_classes.push(if wide_edits {
+                    b.u32(cursor)?
+                } else {
+                    match u16::from_le_bytes([b.u8(cursor)?, b.u8(cursor.checked_add(1)?)?]) {
+                        u16::MAX => NONE,
+                        e => u32::from(e),
+                    }
+                });
+                cursor = cursor.checked_add(width)?;
             }
             let n_joins = b.usize(cursor)?;
             cursor = cursor.checked_add(4)?;

@@ -823,7 +823,6 @@ impl<'s> Learner<'s> {
         let mut queue: std::collections::VecDeque<(usize, String)> =
             std::collections::VecDeque::new();
         queue.push_back((0, String::new()));
-        let mut next_index = 1usize;
         while let Some((n, label)) = queue.pop_front() {
             let kids = stored_children(n);
             let start = entries.len();
@@ -834,12 +833,9 @@ impl<'s> Learner<'s> {
             }
             nodes.push(NodeSpec {
                 label,
-                first_child: u32::try_from(next_index).unwrap_or(0),
                 children: u32::try_from(kids.len()).unwrap_or(0),
-                dist: u32::try_from(start).unwrap_or(0),
                 dist_len: u32::try_from(entries.len() - start).unwrap_or(0),
             });
-            next_index += kids.len();
             for (l, k) in kids {
                 queue.push_back((k, l));
             }

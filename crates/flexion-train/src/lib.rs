@@ -114,6 +114,9 @@ pub fn shapes(lang: &Language) -> Result<Vec<learn::Shape>, String> {
         .collect()
 }
 
+/// The most smoothing a restoration model gets (see [`restoration`]).
+const RESTORATION_ALPHA: f64 = 0.5;
+
 /// The restoration model of a part of speech, if it needs one: a
 /// one-cell model from the lemma as typed to the lemma as written in full
 /// (Latin `tago` → `tāgō`, Russian `еж` → `ёж`). `None` when every lemma is
@@ -156,6 +159,10 @@ pub fn restoration(
     };
     let mut params = params;
     params.walk.syllable_depth = None;
+    // Its job is to read attested lemmas back exactly: heavy smoothing would
+    // leave near ties between readings that the runtime weighs together, so
+    // an attested word could come back with the wrong marks.
+    params.alpha = params.alpha.min(RESTORATION_ALPHA);
     let (t, _) = learn::Learner::new(sp, shape, params).learn(&restore_words);
     Some(t)
 }

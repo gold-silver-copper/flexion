@@ -6,12 +6,10 @@ fn edit(strip: &str, add: &str) -> EditSpec {
     EditSpec::suffix(strip, add)
 }
 
-fn node(label: &str, first_child: u32, children: u32, dist: u32, dist_len: u32) -> NodeSpec {
+fn node(label: &str, children: u32, dist_len: u32) -> NodeSpec {
     NodeSpec {
         label: label.into(),
-        first_child,
         children,
-        dist,
         dist_len,
     }
 }
@@ -72,11 +70,7 @@ fn tiny() -> Vec<u8> {
             },
         ],
         // root → "y" (child 1), "xo\u{1}" (child 2)
-        nodes: vec![
-            node("", 1, 2, 0, 2),
-            node("xo\u{1}", 0, 0, 2, 1),
-            node("y", 0, 0, 3, 2),
-        ],
+        nodes: vec![node("", 2, 2), node("xo\u{1}", 0, 1), node("y", 0, 2)],
         dist: vec![(0, 0.9), (1, 0.1), (2, 1.0), (1, 0.8), (0, 0.2)],
     };
     write(&spelling, &[nouns])

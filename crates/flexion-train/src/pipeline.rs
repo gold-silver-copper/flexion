@@ -336,16 +336,19 @@ pub struct GridPoint {
     pub bytes: usize,
 }
 
-/// What doubling a model must buy, in nats of dev log-loss per cell (see
-/// [`choose`]): the one knob trading size for fit.
-pub const SIZE_PRICE: f64 = 0.03;
+/// What doubling a model must buy (see [`choose`]): this share of its dev
+/// log-loss. The one knob trading size for fit. A share, not a number of
+/// nats, because log-loss runs ten times higher for Ancient Greek than for
+/// Russian.
+pub const SIZE_PRICE: f64 = 0.05;
 
 /// Among settings within one standard error of the best dev accuracy (a
 /// difference inside the noise of words buys nothing), the one with the
-/// lowest dev log-loss once each doubling of its size costs `price` nats.
+/// lowest dev log-loss once each doubling of its size costs `price` of it:
+/// the least `ln(loss) + price · log2(bytes)`.
 pub fn choose(scores: &[GridPoint], price: f64) -> Option<&GridPoint> {
     let top = scores.iter().max_by(|a, b| a.top1.total_cmp(&b.top1))?;
-    let cost = |x: &GridPoint| x.loss + price * (x.bytes.max(1) as f64).log2();
+    let cost = |x: &GridPoint| x.loss.max(1e-9).ln() + price * (x.bytes.max(1) as f64).log2();
     scores
         .iter()
         .filter(|x| x.top1 >= top.top1 - top.top1_se)

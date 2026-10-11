@@ -551,7 +551,7 @@ fn tune(
         );
         let chosen = flexion_train::pipeline::choose(&scores, size_price).map(|c| c.params);
         println!("== {}", part.name);
-        for price in [0.0, 0.01, 0.02, 0.03, 0.05, 0.1] {
+        for price in [0.0, 0.02, 0.05, 0.1, 0.2] {
             if let Some(g) = flexion_train::pipeline::choose(&scores, price) {
                 println!(
                     "  price {price}: alpha {} tau {} support {}: {} KB, top1 {:.2}%, loss {:.4}",

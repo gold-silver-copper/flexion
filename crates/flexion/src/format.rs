@@ -54,9 +54,11 @@
 //!   index per group, string references to the class's longest stripped
 //!   suffix and longest stripped start, one value index per inherent feature
 //!   ([`UNKNOWN`] when unknown);
-//! - node, 16 bytes: the label's offset in the string area, first child,
-//!   first distribution entry (all `u32`), number of children, number of
-//!   distribution entries (both `u16`);
+//! - node, 8 bytes: the label's offset in the string area (`u32`), number
+//!   of children, number of distribution entries (both `u16`). Nodes are laid
+//!   out breadth-first, each node's children together and its distribution
+//!   entries after the previous node's, so a node's first child and first
+//!   entry are running sums the loader computes;
 //! - one `u32` per node, in node order: its label's first character (low 21
 //!   bits) and the label's length in bytes (high 11 bits), so a child search
 //!   touches one small dense array. Nodes are laid out depth-first by child
@@ -66,7 +68,8 @@
 //!   65536 classes (flag bit 1), 8 bytes: class index, probability (`f32`
 //!   bits). Entries of one node are sorted by descending probability.
 //! - join section: the number of join classes, each one edit index per cell
-//!   (an edit of the joined word's base form); the number of prefixes, each
+//!   (an edit of the joined word's base form; as wide as the class groups'
+//!   edit indices); the number of prefixes, each
 //!   28 bytes (the prefix as a folded string reference, the probability that
 //!   an unseen word with it joins, its first entry and number of entries,
 //!   its first inherent entry and number of them), sorted by prefix; then
@@ -89,7 +92,7 @@ pub const VERSION: u32 = 6;
 pub const HEADER_LEN: usize = 128;
 pub const POS_HEADER_LEN: usize = 76;
 pub const EDIT_LEN: usize = 32;
-pub const NODE_LEN: usize = 16;
+pub const NODE_LEN: usize = 8;
 pub const DIST_LEN: usize = 8;
 /// A distribution entry in its narrow form (see the module docs).
 pub const NARROW_DIST_LEN: usize = 4;

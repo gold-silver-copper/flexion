@@ -111,14 +111,13 @@ pub struct JoinSpec {
 #[derive(Debug, Clone, PartialEq)]
 pub struct NodeSpec {
     pub label: String,
-    pub first_child: u32,
     pub children: u32,
-    pub dist: u32,
     pub dist_len: u32,
 }
 
-/// One part of speech's tables. Node 0 is the root; each node's children are
-/// contiguous and sorted by the first character of their labels.
+/// One part of speech's tables. Nodes are breadth-first from the root: each
+/// node's children together, sorted by the first character of their labels,
+/// and each node's distribution entries after the previous node's.
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct PosTables {
     pub cells: usize,
@@ -377,11 +376,10 @@ pub fn write_sized(spelling: &SpellingSpec, parts: &[PosTables]) -> (Vec<u8>, Ve
             body.resize(start.saturating_add(stride), 0);
         }
         let nodes = at(&body);
+        // First children and first entries are running sums (see the format).
         for n in &p.nodes {
             let (off, _) = strings.add(&n.label);
             put(&mut body, off);
-            put(&mut body, n.first_child);
-            put(&mut body, n.dist);
             body.extend_from_slice(&u16::try_from(n.children).unwrap_or(u16::MAX).to_le_bytes());
             body.extend_from_slice(&u16::try_from(n.dist_len).unwrap_or(u16::MAX).to_le_bytes());
         }
@@ -413,7 +411,13 @@ pub fn write_sized(spelling: &SpellingSpec, parts: &[PosTables]) -> (Vec<u8>, Ve
         put(&mut body, to_u32(p.join_classes.len()));
         for class in &p.join_classes {
             for cell in 0..p.cells {
-                put(&mut body, class.get(cell).copied().unwrap_or(format::NONE));
+                let e = class.get(cell).copied().unwrap_or(format::NONE);
+                if wide_edits {
+                    put(&mut body, e);
+                } else {
+                    let e = u16::try_from(e).unwrap_or(u16::MAX);
+                    body.extend_from_slice(&e.to_le_bytes());
+                }
             }
         }
         put(&mut body, to_u32(joins.len()));
