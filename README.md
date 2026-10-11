@@ -9,58 +9,60 @@ code in the trainer or the runtime:
 
 | crate | held-out words (never seen in training), top-1 | attested words, top-1 |
 |---|---|---|
-| [`english`](languages/english) | nouns 97.15%, verbs 97.91% (99.53% given the past tense), adjectives 96.69%, adverbs 99.00% (old hand-written rules: 95.76%, 92.51%, 96.15%, 99.00%) | 99.96–100% (`english` 0.4: 98.89–99.43%) |
-| [`russian`](languages/russian) | from the bare lemma: nouns 84.5%, adjectives 96.6% (participles are stressed as their verbs' tables write them), verbs 91.9% (stress is the hard part: letters alone are right 95.1%, 99.8%, 97.3%); given the dictionary's principal parts: nouns 95.3% (97.4% with gender/animacy markers), verbs 98.9%; with a stressed lemma, nouns 93.2%, adjectives 99.8% | 99.5–100% |
-| [`latin`](languages/latin) | given the dictionary's principal parts: nouns 98.1% (98.5% with the gender marker), adjectives 99.6%, verbs 99.6%; from the bare lemma 59.1%, 82.0% (participles take their vowel length from their verbs' tables), 66.6% (vowel length is the hard part: letters alone are right 93.3%, 99.4%, 90.3%) | 99.6–100% |
-| [`polish`](languages/polish) | from the bare lemma: nouns 93.9%, adjectives 99.98%, verbs 97.3%; given the principal parts: nouns 96.3% (98.2% with gender markers), verbs 98.4% | 99.9–100% |
-| [`german`](languages/german) | from the bare lemma: nouns 94.9%, adjectives 99.1%, verbs 93.9% (separable verbs inflect through their base: `anstehen` → `steht an`); given the principal parts: nouns 98.4% (98.7% with the gender marker), verbs 99.2% | 99.9–100% |
-| [`ancient-greek`](languages/ancient-greek) | given the dictionary's principal parts: nouns 96.0%, adjectives 98.5%, verbs 73.8%; with the lemma written in full (accents and vowel length): 81.4%, 86.8%, 53.6%; from the headword (accents, no vowel length): 42.6%, 47.0%, 35.8% (letters right 92.6%, 94.5%, 63.6%) | 99.8–100% (pronouns 97.9%) |
-| [`sanskrit`](languages/sanskrit) | from the stem: nouns 93.0% (97.2% with the gender marker), adjectives 91.5%, verbs 91.0% (92.4% given future, perfect and aorist) | 99.9–100% |
+| [`english`](languages/english) | nouns 97.14%, verbs 97.91% (99.53% given the past tense), adjectives 96.71%, adverbs 99.00% (old hand-written rules: 95.76%, 92.51%, 96.15%, 99.00%) | 99.96–100% (`english` 0.4: 98.89–99.43%) |
+| [`russian`](languages/russian) | from the bare lemma: nouns 84.5%, adjectives 96.6% (participles are stressed as their verbs' tables write them), verbs 92.1% (stress is the hard part: letters alone are right 95.1%, 99.8%, 97.5%); given the dictionary's principal parts: nouns 95.3% (97.4% with gender/animacy markers), verbs 98.9%; with a stressed lemma, nouns 93.2%, adjectives 99.8% | 99.5–100% |
+| [`latin`](languages/latin) | given the dictionary's principal parts: nouns 98.4% (98.7% with the gender marker), adjectives 99.6%, verbs 99.1%; from the bare lemma 68.9%, 86.8% (participles take their vowel length from their verbs' tables), 75.8% (vowel length is the hard part: letters alone are right 93.6%, 99.3%, 90.7%) | 99.6–100% |
+| [`polish`](languages/polish) | from the bare lemma: nouns 94.1%, adjectives 99.98%, verbs 97.3%; given the principal parts: nouns 96.4% (98.4% with gender markers), verbs 98.3% | 99.9–100% |
+| [`german`](languages/german) | from the bare lemma: nouns 94.9%, adjectives 99.2%, verbs 93.9% (separable verbs inflect through their base: `anstehen` → `steht an`); given the principal parts: nouns 98.4% (98.7% with the gender marker), verbs 99.1% | 99.9–100% |
+| [`ancient-greek`](languages/ancient-greek) | given the dictionary's principal parts: nouns 96.5%, adjectives 98.4%, verbs 82.5%; with the lemma written in full (accents and vowel length): 80.2%, 86.1%, 63.3%; from the headword (accents, no vowel length): 57.8%, 63.9%, 52.4% (letters right 92.5%, 95.1%, 76.6%) | 99.7–100% (pronouns 97.9%) |
+| [`sanskrit`](languages/sanskrit) | from the stem: nouns 93.4% (97.3% with the gender marker), adjectives 91.8%, verbs 90.0% (91.1% given future, perfect and aorist) | 99.9–100% |
 | [`spanish`](languages/spanish) | from the bare lemma: nouns 98.7%, adjectives 98.6%, verbs 99.4% (prefixed verbs inflect like their base: `deshacer` → `deshizo`); given the principal parts: verbs 99.9% | 99.2–100% |
-| [`french`](languages/french) | from the bare lemma: nouns 97.5%, adjectives 97.7%, verbs 99.1%, past participle agreement 99.7%; given the principal parts: verbs 99.8% | 99.99–100% |
+| [`french`](languages/french) | from the bare lemma: nouns 97.7%, adjectives 97.4%, verbs 99.1%, past participle agreement 99.0%; given the principal parts: verbs 99.8% | 99.99–100% |
 | [`italian`](languages/italian) | from the bare lemma: nouns 95.9% (96.9% with the gender marker), adjectives 98.4%, verbs 99.2%, past participle agreement 100%; given the principal parts: verbs 99.7% | 99.99–100% |
 
 Attested words are the ones the shipped model was trained on. The full reports (calibration,
-per-cell numbers, made-up words, the largest groups of mistakes, size and speed) are in
-each crate's README. The English model is 832 KB against `english` 0.4's 1026 KB of tables,
-and a call takes about 130–160 ns, about twice as long as `english` 0.4's. The other models
-are 0.3–7.4 MB (0.1–2.6 MB gzipped), except Russian's, 21.4 MB (7.7 MB gzipped: four times
-the words, and the participle lexicon), and Ancient Greek's, 20.1 MB (3.9 MB gzipped), all
-under crates.io's 10 MB limit for a packaged crate. Calls take 100–600 ns (Spanish, French
-and Italian 100–250 ns), except Ancient Greek's: 450–900 ns for nouns and adjectives and
-1.4 µs for verbs, whose 600-cell classes rarely fit an unseen verb at a deep node.
+per-cell numbers, made-up words, the largest groups of mistakes, where the bytes are, size
+against fit, speed) are in each crate's README. The models are 0.3–4.9 MB (0.1–1.7 MB
+gzipped), except Russian's, 11.8 MB (4.7 MB gzipped: four times the words, and the
+participle lexicon), and Ancient Greek's, 17.4 MB (4.4 MB gzipped), all under crates.io's
+10 MB limit for a packaged crate. That is 9–54% smaller than before the size price (Russian
+was 21.4 MB, Greek 20.1 MB); English is 0.5 MB against `english` 0.4's 1 MB of tables. Calls
+take 100–300 ns in English, Polish, German, Spanish, French and Italian, 0.2–0.7 µs in
+Russian and Sanskrit, and 0.5–3 µs in Latin and Ancient Greek, whose start-restoration
+model reads every unseen lemma twice (measured on a busy machine; speed is next on the list).
 
 Russian learns from the Russian Wiktionary too, four times the words of the English one.
 From the bare lemma, the hard part is where the stress falls. A participle typed plain
 (`ахнувший`) takes its stress from its verb's table, so adjectives reach 96.6%. Nouns
-(84.5%) and verbs (91.9%) mostly miss on a lemma's stress that nothing in the spelling
+(84.5%) and verbs (92.1%) mostly miss on a lemma's stress that nothing in the spelling
 shows, and on animacy, which decides whether the accusative looks like the genitive
 (`адвоката`) or the nominative (`айсберг`). Given the nominative and genitive singular,
 nouns reach 95.3%; with the markers a dictionary prints (`кот, кота m anim`), 97.4%.
 
-A Latin lemma as people type it (`rosa`, `rex`) doesn't say which vowels are long, and
-for a word the model never saw that can't be told from the spelling. So a bare unseen
-lemma gets its letters right 90–99% of the time, but its macrons only 59% (nouns) to 67%
-(verbs). Adjectives reach 82.0%, because many are participles whose verbs' tables write
-them in full (`amatus` → `amātus`). The confidences say so, and the second guess is often
-the right one: top-3 is 73–88%. Given the citation a dictionary prints (`rēx, rēgis m.`,
-`amō, amāre, amāvī, amātum`), whose parts spell the stem in full, nouns reach 98.1% and
-verbs 99.6%.
+A Latin lemma as people type it (`rosa`, `rex`) doesn't say which vowels are long. A bare
+unseen lemma gets its letters right 91–99% of the time, but its macrons less often. The
+restoration models read the lemma from both ends, the start for prefixes like `cōn-` and
+`dē-`, which brings nouns to 68.9%, adjectives to 86.8% (many are participles whose verbs'
+tables write them in full: `amatus` → `amātus`) and verbs to 75.8%. The rest is a word's own
+vowel lengths, which its spelling doesn't show. The confidences say so, and the second guess
+is often the right one: top-3 is 83–93%. Given the citation a dictionary prints (`rēx, rēgis
+m.`, `amō, amāre, amāvī, amātum`), whose parts spell the stem in full, nouns reach 98.4% and
+verbs 99.1%.
 
 Ancient Greek is the same story twice over: a headword like `λύω` writes the accent but
 not the vowel length the tables mark (`λῡ́ω`), so even its letters are right far more
-often than its marks (participles take theirs from their verbs, so adjectives reach
-47.0%). Given the principal parts, nouns reach 96.0% but verbs only 73.8% (the aim was
-85%). A verb's principal parts each build their own tenses (the part models); what the
-misses still need is an accent that depends on vowel lengths the parts don't always show
-(`ἠγνοήμεθα`, `ἠγνοῆσθαι`, where the model writes `ἠγνόημεθα`, `ἠγνοήσθαι`), in cells that
-only a few of the 2,700 verbs with tables attest. No other Wiktionary has Greek verb
-tables the trainer could use.
+often than its marks. Reading the lemma from both ends brings nouns to 57.8%, adjectives
+to 63.9% and verbs to 52.4%. Given the principal parts, nouns reach 96.5% and verbs 82.5%
+(the aim was 85%). A verb's principal parts each build their own tenses (the part models);
+what the misses still need is an accent that depends on vowel lengths the parts don't always
+show (`ἠγνοήμεθα`, where the model writes `ἠγνόημεθα`), perfect reduplication, and the augment
+after a preverb, in cells that only a few of the 2,700 verbs with tables attest. No other
+Wiktionary has Greek verb tables the trainer could use.
 
 Spanish, French and Italian need only their configs. Their remaining misses are mostly
 words that don't inflect although their ending says they would: French adjectives and
 Italian nouns that are invariable (`antisida`, `abbassalingua`, `allerta`), which nothing
-in the spelling marks, keep French adjectives at 97.7% and Italian nouns at 95.9% (the aims
+in the spelling marks, keep French adjectives at 97.4% and Italian nouns at 95.9% (the aims
 were 98% and 97%). Italian `-a` nouns also need their gender: masculine ones take `-i` (`il poeta` →
 `poeti`), feminine ones `-e` (`la casa` → `case`); with the gender marker, Italian nouns
 reach 96.9%.
@@ -146,13 +148,27 @@ xtask/                 cargo xtask build | probe | extract
    first letter can be inserted at learned depths (English: `-er` vs `more`). Top-down, each node's counts are
    smoothed toward its nearest kept ancestor, and a node is kept only if it differs from
    that ancestor by a likelihood-ratio test. A whole-word node is kept only if dropping it
-   would change one of the word's attested forms. So general patterns live near the root,
-   exceptions deep down, and nothing is stored twice.
+   would change one of the word's attested forms, and it holds only that word's classes
+   (smoothing it toward its parent only cost bytes: a word's own forms decide). So general
+   patterns live near the root, exceptions deep down, and nothing is stored twice.
 5. **Tune and measure.** A hash of the lemma splits the words into tenths. One tenth
    chooses the hyperparameters (smoothing, pruning, suffix support, the syllable and
-   first-letter symbols) by the one-standard-error rule, and whether the join model and
-   the part models (below) earn their place; another is held out and only ever scored.
-   The shipped model is then trained on everything.
+   first-letter symbols) and whether the join model, the start-restoration model and the
+   part models (below) earn their place; another is held out and only ever scored.
+   Every setting is scored by top-1 and by **log-loss** (minus the log of the probability
+   the model gave the right form, in nats per cell), with standard errors counted over
+   words, since a word's cells move together. Among the settings within one standard
+   error of the best dev top-1, the build takes the one with the lowest log-loss once
+   **each doubling of the model's size costs 5% of it** (`--size-price 0.05`: it
+   minimizes `ln(log-loss) + 0.05 · log2(bytes)`). That is the one knob trading size for
+   fit, and it pays for everything the model stores: the tree, the restoration models,
+   the join model, the part models. A price relative to the log-loss treats Greek, which
+   loses 5 nats a cell, and Spanish, which loses 0.1, alike. The join and start-restoration
+   models also cost time on every call, so they are added only if the price picks them
+   and they win top-1 beyond the noise. A part model is kept if the nats it saves over
+   the main model across all cells pay for its bytes and it loses no top-1. Each crate's
+   report shows where the bytes are and the size-against-fit curve. The shipped model is
+   then trained on everything.
 6. **Emit.** The crate gets typed functions per cell group, a settings value (stress
    marks or macrons on or off), the model as a binary blob, the config's hand-written
    helpers, and a README with the evaluation.
@@ -165,6 +181,15 @@ learns how a typed lemma is written in full (`rex → rēx`). Forms are weighed 
 readings, so a word whose vowel length can't be known gets a low confidence instead of a
 confident guess. A principal part given in a citation spells the stem in full, so it
 decides the reading itself.
+
+The restoration model reads the end of the word, but in Latin and Greek much of what it
+has to restore sits at the start: a prefix (`cōn-`, `dē-`, `ἐκ-`) or a vowel before `ns`.
+So these languages also learn a **start-restoration model**: the same kind of tree, over
+lemmas written backwards, which learns only the marks in the first half of the word. At
+runtime each reading of the end model is joined with the best reading of the start model
+(start from one, middle as typed, end from the other). It is skipped when the caller
+types marks or principal parts, which already say how the word is written. From the bare
+lemma, Latin nouns go from 59.1% to 68.9%, Greek nouns from 42.6% to 57.8%.
 
 A part of speech can also read its lemmas written in full from another part of speech's
 tables: a verb's participles are adjectives, and the verb's table writes them with their
@@ -225,6 +250,42 @@ noise, without worse calibration):
     Russian and Czech Latin tables leave out many stem macrons, which teaches the model to
     leave them out too. The other editions' Ancient Greek tables write no vowel length, and
     none has Sanskrit tables.
+
+## How close to the ceiling
+
+[`tools/ceiling`](tools/ceiling) measures how much better any model could do, four ways:
+
+- **Learning curves**: each language trained on 10%, 25%, 50% and 100% of its words.
+- **The noise in the labels**: where two editions both have a word, how often they
+  disagree.
+- **What the ending can tell**: the best predictor that sees only a word's last letters.
+- **A neural baseline**: a 5.6M-parameter character transformer, run in Docker on
+  8 CPU threads for about 10 minutes per part of speech, scored on the same held-out
+  cells.
+
+| language | near its ceiling? | where the room is |
+|---|---|---|
+| Russian | Yes, for what a lemma's spelling can tell. | The lemma's stress: the best ending-only predictor gets it 84% right on nouns and the tree 87%. A transformer reading the whole word is worse than the tree (nouns −3.8 points, verbs −3.5). More data adds about 1.7 (nouns) and 2.7 (verbs) points per doubling. |
+| Latin, Ancient Greek | Closer, for nouns. | Vowel length inside the stem. The transformer beat the tree by 10.6 points on Latin nouns and 20.4 on Greek nouns, mostly on prefixes and stems the ending can't show. The start-restoration model closes most of that gap: Latin nouns 59.1% → 68.9% (transformer 69.7%), Greek nouns 42.6% → 57.8% (63.0%). The rest of the stem's lengths isn't in the spelling at all: even the whole word predicts a Latin noun's lengths only 71% of the time. |
+| German | Yes. | The transformer is worse (nouns −8.4, verbs −2.0). More data adds about 1 point per doubling. |
+| Polish, Sanskrit | Probably (no neural run). | About 0.5–1.4 points per doubling of the data. |
+| English, French, Spanish, Italian | Yes. | Nouns and adjectives gain at most 0.3 points per doubling; verbs 0.4–0.8. |
+
+Label noise is about half the rate at which two editions disagree: 0.5–0.8% of cells
+for Russian, 0.15–0.75% for German nouns, under 0.1% for Spanish verbs. So even a
+perfect model would stop at about 99–99.5% top-1. That limit matters only where models
+already stand at 98–99.5%: Romance verbs, and every language given principal parts.
+The full measurements are in [`tools/ceiling/RESULTS.md`](tools/ceiling/RESULTS.md).
+
+These were tried and are not used, because they made models bigger or no better:
+
+- **A size cost per tree node** (keep a node if its likelihood gain beats its size in
+  bits). It made the same trees as the likelihood-ratio test, or worse ones for German
+  and Latin.
+- **Cutting the rarest classes from each node's distribution.** Those tails are rare
+  words' real inflections, and citations need them.
+- **Word neighbours sharing a root**, for Russian stress. At best they added 0.8 points,
+  and they would need a large index of words.
 
 ## Adding a language
 
@@ -294,19 +355,24 @@ cargo xtask build german --dump ~/.cache/flexion/dumps/German.jsonl --edition de
 cargo xtask build ancient-greek --dump ~/.cache/flexion/dumps/AncientGreek.jsonl --date 2026-10-03
 cargo xtask build sanskrit --dump ~/.cache/flexion/dumps/Sanskrit.jsonl --date 2026-10-03
 cargo xtask build spanish --dump ~/.cache/flexion/dumps/Spanish.jsonl --edition es=~/.cache/kaikki/es/Español.jsonl --date 2026-10-03
-cargo xtask build french --dump ~/.cache/flexion/dumps/French.jsonl --edition fr=~/.cache/kaikki/fr/Français.jsonl --date 2026-10-03
+cargo xtask build french --dump ~/.cache/flexion/dumps/French.jsonl --date 2026-10-03
 cargo xtask build italian --dump ~/.cache/flexion/dumps/Italian.jsonl --date 2026-10-03
 cargo xtask extract russian --dump ~/.cache/flexion/dumps/Russian.jsonl \
     --edition ru=~/.cache/kaikki/ru/Русский.jsonl                       # cache lexemes
 cargo xtask probe russian --pos noun --tau 2 --misses 1                   # experiment
 cargo xtask probe ancient-greek --pos verb --parts 1 --joins 1            # with part models, joins
+cargo xtask probe latin --pos noun --front 1                               # with the start-restoration model
+cargo xtask tune russian --pos noun                                       # the grid: size, top-1, log-loss
+cargo xtask export russian                                                # train/dev/test splits as TSV
 ```
 
 Dumps: `https://kaikki.org/dictionary/<Language>/kaikki.org-dictionary-<Language>.jsonl.gz`;
 another edition's: `https://kaikki.org/<code>wiktionary/<Language>/kaikki.org-dictionary-<Language>.jsonl`
 (the language named in that edition: `ruwiktionary/Русский`), read with `--edition <code>=<path>`.
-A build streams the dump (it is never loaded whole) and takes one to ten minutes per
-language on 8 threads (Ancient Greek's 600-cell verbs are the slowest).
+A build streams the dump (it is never loaded whole) and takes one to fifteen minutes per
+language on 8 threads (Russian's four editions' worth of words and Ancient Greek's
+600-cell verbs are the slowest). `--size-price` (default 0.05) sets the size knob;
+`cargo xtask tune <lang>` shows what other prices would choose.
 
 ## License
 

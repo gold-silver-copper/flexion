@@ -52,9 +52,55 @@ pub struct PosScore {
     pub misses: Vec<Miss>,
     /// Inherent features: `(correct, scored)` per feature.
     pub inherent: Vec<(usize, usize)>,
+    /// Summed log-loss: per scored cell, minus the natural log of the
+    /// probability the model gives the primary form (at least
+    /// [`MIN_PROBABILITY`], so a form the model never offers costs a finite
+    /// amount).
+    pub nats: f64,
+    /// Per scored word: `(cells, top-1 right, log-loss)`. A word's cells
+    /// succeed and fail together, so the noise is a word's, not a cell's.
+    pub words: Vec<(u32, u32, f64)>,
+    /// Summed log-loss per cell.
+    pub cell_nats: Vec<f64>,
 }
 
+/// The least probability log-loss charges a cell with.
+pub const MIN_PROBABILITY: f64 = 1e-4;
+
 impl PosScore {
+    /// Mean log-loss per scored cell, in nats.
+    pub fn log_loss(&self) -> f64 {
+        let n: usize = self.cells.iter().map(|c| c.n).sum();
+        self.nats / n.max(1) as f64
+    }
+
+    /// The standard error of [`PosScore::log_loss`], over words.
+    pub fn log_loss_se(&self) -> f64 {
+        self.word_se(|&(_, _, nats)| nats)
+    }
+
+    /// The standard error of the top-1 share, over words.
+    pub fn top1_se(&self) -> f64 {
+        self.word_se(|&(_, top1, _)| f64::from(top1))
+    }
+
+    /// The standard error of a per-cell mean whose per-word sums `x` gives:
+    /// the words are the independent units (a ratio estimator).
+    fn word_se(&self, x: impl Fn(&(u32, u32, f64)) -> f64) -> f64 {
+        let n: f64 = self.words.iter().map(|w| f64::from(w.0)).sum();
+        let k = self.words.len() as f64;
+        if n <= 0.0 || k < 2.0 {
+            return 0.0;
+        }
+        let mean = self.words.iter().map(&x).sum::<f64>() / n;
+        let ss: f64 = self
+            .words
+            .iter()
+            .map(|w| (x(w) - mean * f64::from(w.0)).powi(2))
+            .sum();
+        (ss * k / (k - 1.0)).sqrt() / n
+    }
+
     pub fn total(&self, skip: &[usize]) -> CellScore {
         let mut t = CellScore::default();
         for (i, c) in self.cells.iter().enumerate() {
@@ -98,6 +144,7 @@ pub fn score(
     };
     let mut out = PosScore {
         cells: vec![CellScore::default(); p.cells()],
+        cell_nats: vec![0.0; p.cells()],
         inherent: Vec::new(),
         ..PosScore::default()
     };
@@ -138,6 +185,7 @@ pub fn score(
             }
         }
         let citation = p.citation_marked(&input, citation_cells, markers);
+        let mut word_score = (0u32, 0u32, 0f64);
         for (cell, score) in out.cells.iter_mut().enumerate() {
             if unscored.contains(&cell) || given_cells.contains(&cell) {
                 continue;
@@ -150,10 +198,23 @@ pub fn score(
             let top = cands.first();
             let is = |f: &str, g: &str| same_form(sp, f, g);
             score.n += 1;
+            let p: f64 = cands
+                .iter()
+                .filter(|c| is(&c.form, primary))
+                .map(|c| f64::from(c.confidence))
+                .sum();
+            let loss = -p.max(MIN_PROBABILITY).ln();
+            out.nats += loss;
+            if let Some(x) = out.cell_nats.get_mut(cell) {
+                *x += loss;
+            }
             let top_primary = top.is_some_and(|t| is(&t.form, primary));
             if top_primary {
                 score.top1 += 1;
             }
+            word_score.0 = word_score.0.saturating_add(1);
+            word_score.1 = word_score.1.saturating_add(u32::from(top_primary));
+            word_score.2 += loss;
             // Letters right, marks ignored (stress, macrons, ё).
             if top.is_some_and(|t| sp.read(&t.form).key == sp.read(primary).key) {
                 score.top1_letters += 1;
@@ -185,6 +246,9 @@ pub fn score(
                     });
                 }
             }
+        }
+        if word_score.0 > 0 {
+            out.words.push(word_score);
         }
     }
     out

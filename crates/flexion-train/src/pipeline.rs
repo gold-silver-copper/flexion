@@ -85,6 +85,7 @@ pub fn choose_sources(
     chooser: &crate::edit::Chooser,
     citation: &[usize],
     markers: &[&[&str]],
+    size_price: f64,
 ) -> Vec<u8> {
     if citation.is_empty() {
         return Vec::new();
@@ -105,19 +106,19 @@ pub fn choose_sources(
         .iter()
         .filter_map(|(c, t)| Some((*c, t.clone()?)))
         .collect();
-    let score = |source: u8| -> Vec<(usize, usize)> {
+    let score = |source: u8| -> Vec<(usize, usize, f64)> {
         let mut main = base.main.clone();
         main.sources = vec![source; shape.cells];
         let trained = crate::Trained {
             main,
-            restore: base.restore.clone(),
             parts: built.clone(),
+            ..base.clone()
         };
         let blob = blob_of(spec, vec![trained]);
         let Some(model) = flexion::Model::from_bytes(&blob) else {
-            return vec![(0, 0); shape.cells];
+            return vec![(0, 0, 0.0); shape.cells];
         };
-        eval::score(
+        let s = eval::score(
             &sp,
             &model,
             0,
@@ -127,14 +128,18 @@ pub fn choose_sources(
             &shape.unscored,
             Given::Citation,
             false,
-        )
-        .cells
-        .iter()
-        .map(|c| (c.top1, c.n))
-        .collect()
+        );
+        s.cells
+            .iter()
+            .zip(&s.cell_nats)
+            .map(|(c, &nats)| (c.top1, c.n, nats))
+            .collect()
     };
     let main_scores = score(0);
-    let mut best: Vec<(u8, usize)> = main_scores.iter().map(|&(t, _)| (0, t)).collect();
+    let mut best: Vec<(u8, usize, f64)> = main_scores
+        .iter()
+        .map(|&(t, _, nats)| (0, t, nats))
+        .collect();
     // Part models are numbered as built; sources name citation parts.
     let mut model_index = 0u8;
     for (k, (_, t)) in parts.iter().enumerate() {
@@ -143,19 +148,49 @@ pub fn choose_sources(
         }
         model_index = model_index.saturating_add(1);
         let tag = u8::try_from(k.saturating_add(1)).unwrap_or(0);
-        for (cell, (top1, n)) in score(model_index).into_iter().enumerate() {
+        for (cell, (top1, n, nats)) in score(model_index).into_iter().enumerate() {
             // A gain inside the noise doesn't count: one standard error of
             // the main model's count, and at least one answer.
-            let p = main_scores.get(cell).map_or(0.0, |&(t, n)| ratio(t, n));
+            let p = main_scores.get(cell).map_or(0.0, |&(t, n, _)| ratio(t, n));
             let margin = (n as f64 * p * (1.0 - p)).sqrt().max(1.0);
             if let Some(b) = best.get_mut(cell)
                 && top1 as f64 > b.1 as f64 + margin
             {
-                *b = (tag, top1);
+                *b = (tag, top1, nats);
             }
         }
     }
-    best.into_iter().map(|(s, _)| s).collect()
+    // A part model is a whole second tree: it stays only if the dev log-loss
+    // it saves over all its cells, per scored cell, pays the price of the
+    // bytes it adds (as the grid's settings do: `choose`).
+    let main_bytes = flexion::write::write(spec, std::slice::from_ref(&base.main))
+        .len()
+        .max(1) as f64;
+    let all_cells = main_scores.iter().map(|&(_, n, _)| n).sum::<usize>().max(1) as f64;
+    let mut tags: Vec<u8> = best.iter().map(|b| b.0).filter(|&s| s > 0).collect();
+    tags.sort_unstable();
+    tags.dedup();
+    for tag in tags {
+        let k = usize::from(tag).saturating_sub(1);
+        let part_bytes = parts
+            .get(k)
+            .and_then(|(_, t)| t.clone())
+            .map_or(0, |t| flexion::write::write(spec, &[t]).len()) as f64;
+        let (saved, gained) = best
+            .iter()
+            .zip(&main_scores)
+            .filter(|(b, _)| b.0 == tag)
+            .fold((0.0, 0i64), |(s, g), (b, m)| {
+                (s + m.2 - b.2, g + b.1 as i64 - m.0 as i64)
+            });
+        let price = size_price * ((main_bytes + part_bytes) / main_bytes).log2();
+        if gained < 0 || saved / all_cells < price {
+            for b in best.iter_mut().filter(|b| b.0 == tag) {
+                *b = (0, 0, 0.0);
+            }
+        }
+    }
+    best.into_iter().map(|b| b.0).collect()
 }
 
 /// Which held-out lemmas another part of speech writes in full.
@@ -239,6 +274,109 @@ the lemma's letters).
     s.push('\n');
 }
 
+/// Every setting of the tuning grid, trained on `train` and scored on `dev`
+/// from the bare lemma.
+#[allow(clippy::too_many_arguments)]
+pub fn grid_scores(
+    spec: &SpellingSpec,
+    shape: &Shape,
+    train: &[Word],
+    dev: &[Word],
+    chooser: &crate::edit::Chooser,
+    citation: &[usize],
+    markers: &[&[&str]],
+    threads: usize,
+) -> Vec<GridPoint> {
+    let sp = view(spec);
+    par_map(&grid(chooser.strips_fronts()), threads, |&params| {
+        let (t, _) = train_one(spec, shape, params, train, chooser);
+        let blob = blob_of(spec, vec![t]);
+        let Some(model) = flexion::Model::from_bytes(&blob) else {
+            return GridPoint {
+                params,
+                top1: 0.0,
+                top1_se: 0.0,
+                loss: f64::INFINITY,
+                loss_se: 0.0,
+                bytes: blob.len(),
+            };
+        };
+        let s = eval::score(
+            &sp,
+            &model,
+            0,
+            dev,
+            citation,
+            markers,
+            &shape.unscored,
+            Given::Lemma,
+            false,
+        );
+        let t = s.total(&[]);
+        GridPoint {
+            params,
+            top1: ratio(t.top1, t.n),
+            top1_se: s.top1_se(),
+            loss: s.log_loss(),
+            loss_se: s.log_loss_se(),
+            bytes: blob.len(),
+        }
+    })
+}
+
+/// A model beside the main one that a part of speech may take on.
+#[derive(Debug, Clone, Copy)]
+enum Extra {
+    Joins,
+    FrontRestore,
+}
+
+impl Extra {
+    fn set(self, params: Params) -> Params {
+        match self {
+            Extra::Joins => Params {
+                joins: true,
+                ..params
+            },
+            Extra::FrontRestore => Params {
+                front_restore: true,
+                ..params
+            },
+        }
+    }
+}
+
+/// One setting of the tuning grid, scored on the dev tenth.
+#[derive(Debug, Clone, Copy)]
+pub struct GridPoint {
+    pub params: Params,
+    pub top1: f64,
+    /// Standard errors over words (a word's cells move together).
+    pub top1_se: f64,
+    pub loss: f64,
+    pub loss_se: f64,
+    pub bytes: usize,
+}
+
+/// What doubling a model must buy (see [`choose`]): this share of its dev
+/// log-loss. The one knob trading size for fit. A share, not a number of
+/// nats, because log-loss runs ten times higher for Ancient Greek than for
+/// Russian.
+pub const SIZE_PRICE: f64 = 0.05;
+
+/// Among settings within one standard error of the best dev accuracy (a
+/// difference inside the noise of words buys nothing), the one with the
+/// lowest dev log-loss once each doubling of its size costs `price` of it:
+/// the least `ln(loss) + price · log2(bytes)`.
+pub fn choose(scores: &[GridPoint], price: f64) -> Option<&GridPoint> {
+    let top = scores.iter().max_by(|a, b| a.top1.total_cmp(&b.top1))?;
+    let cost = |x: &GridPoint| x.loss.max(1e-9).ln() + price * (x.bytes.max(1) as f64).log2();
+    scores
+        .iter()
+        .filter(|x| x.top1 >= top.top1 - top.top1_se)
+        .min_by(|a, b| cost(a).total_cmp(&cost(b)))
+}
+
 /// Run `f` over `items` on up to `threads` threads, keeping order.
 fn par_map<T: Sync, R: Send>(items: &[T], threads: usize, f: impl Fn(&T) -> R + Sync) -> Vec<R> {
     let next = std::sync::atomic::AtomicUsize::new(0);
@@ -270,8 +408,20 @@ fn par_map<T: Sync, R: Send>(items: &[T], threads: usize, f: impl Fn(&T) -> R + 
         .collect()
 }
 
+/// Bytes one part of speech takes in the shipped model.
+#[derive(Debug, Clone, Copy, Default)]
+struct PosSizes {
+    main: flexion::write::Sizes,
+    restore: usize,
+    part_models: usize,
+}
+
 struct PosReport {
     name: &'static str,
+    sizes: PosSizes,
+    /// The tuning grid's settings that differ from the chosen one only in
+    /// τ: the size against fit curve.
+    curve: Vec<GridPoint>,
     params: Params,
     dev_top1: f64,
     test_words: usize,
@@ -307,6 +457,7 @@ pub fn build(
     data: &[PosData],
     baselines: &[Baseline],
     threads: usize,
+    size_price: f64,
     dump_note: &str,
 ) -> Result<Built, String> {
     let spec = spelling_spec(lang);
@@ -358,12 +509,29 @@ pub fn build(
         let chooser_all = crate::edit::Chooser::new(&sp, &all, shape.lemma_cell);
 
         // 1. Tune on dev.
-        let grid = grid(chooser.strips_fronts());
-        let scores = par_map(&grid, threads, |&params| {
-            let (t, _) = train_one(&spec, shape, params, &train, &chooser);
+        let scores = grid_scores(
+            &spec, shape, &train, &dev, &chooser, &citation, &markers, threads,
+        );
+        let chosen = choose(&scores, size_price).ok_or("empty grid")?;
+        let (mut params, mut dev_top1) = (chosen.params, chosen.top1);
+        let (base_params, chosen_tau) = (chosen.params, chosen.params.tau);
+        // The join model and the start restoration model, each when the same
+        // rule picks it (one more setting, whose extra bytes must buy their
+        // price in log-loss) and it gets more answers right beyond the noise:
+        // both cost time on every call.
+        for extra in [Extra::Joins, Extra::FrontRestore] {
+            let with = extra.set(params);
+            let (t, stats) = train_one(&spec, shape, with, &train, &chooser);
+            let built = match extra {
+                Extra::Joins => stats.join_prefixes > 0,
+                Extra::FrontRestore => t.restore_front.is_some(),
+            };
+            if !built {
+                continue;
+            }
             let blob = blob_of(&spec, vec![t]);
             let Some(model) = flexion::Model::from_bytes(&blob) else {
-                return (params, 0.0, blob.len(), 1);
+                continue;
             };
             let s = eval::score(
                 &sp,
@@ -375,70 +543,37 @@ pub fn build(
                 &shape.unscored,
                 Given::Lemma,
                 false,
-            )
-            .total(&[]);
-            (params, ratio(s.top1, s.n), blob.len(), s.n)
-        });
-        // The one-standard-error rule: among settings within one standard
-        // error of the best dev accuracy, take the smallest model. Differences
-        // inside the noise shouldn't buy extra structure.
-        let best = scores.iter().map(|x| x.1).fold(0.0, f64::max);
-        let n = scores.first().map_or(1, |x| x.3).max(1) as f64;
-        let se = (best * (1.0 - best) / n).sqrt();
-        let (mut params, mut dev_top1, _, _) = scores
-            .iter()
-            .copied()
-            .filter(|x| x.1 >= best - se)
-            .min_by_key(|x| x.2)
-            .ok_or("empty grid")?;
-        // The join model, where it does better on dev: more right answers
-        // (beyond the noise, like the grid), and no fewer letters right or
-        // worse calibration.
-        {
-            let dev_score = |p: Params| -> Option<(PosScore, usize)> {
-                let (t, s) = train_one(&spec, shape, p, &train, &chooser);
-                let blob = blob_of(&spec, vec![t]);
-                let model = flexion::Model::from_bytes(&blob)?;
-                let score = eval::score(
-                    &sp,
-                    &model,
-                    0,
-                    &dev,
-                    &citation,
-                    &markers,
-                    &shape.unscored,
-                    Given::Lemma,
-                    false,
-                );
-                Some((score, s.join_prefixes))
+            );
+            let t = s.total(&[]);
+            let point = GridPoint {
+                params: with,
+                top1: ratio(t.top1, t.n),
+                top1_se: s.top1_se(),
+                loss: s.log_loss(),
+                loss_se: s.log_loss_se(),
+                bytes: blob.len(),
             };
-            let joined = Params {
-                joins: true,
-                ..params
+            let current = GridPoint {
+                params,
+                top1: dev_top1,
+                ..*chosen
             };
-            if let (Some((with, prefixes)), Some((without, _))) =
-                (dev_score(joined), dev_score(params))
-                && prefixes > 0
+            let mut all = scores.clone();
+            all.push(point);
+            if current.params != chosen.params {
+                all.push(current);
+            }
+            if choose(&all, size_price).is_some_and(|c| c.params == with)
+                && point.top1 > current.top1 + chosen.top1_se
             {
-                let (a, b) = (with.total(&[]), without.total(&[]));
-                let top1 = ratio(a.top1, a.n);
-                let base = ratio(b.top1, b.n);
-                let se = (base * (1.0 - base) / (b.n.max(1) as f64)).sqrt();
-                let (ece_with, _) = eval::calibration(&with.calibration);
-                let (ece_without, _) = eval::calibration(&without.calibration);
-                if top1 > base + se
-                    && ratio(a.top1_letters, a.n) >= ratio(b.top1_letters, b.n)
-                    && ece_with <= ece_without
-                {
-                    params = joined;
-                    dev_top1 = top1;
-                }
+                params = with;
+                dev_top1 = point.top1;
             }
         }
 
         // Cells built from given principal parts, where that does better.
         let sources = choose_sources(
-            &spec, shape, params, &train, &dev, &chooser, &citation, &markers,
+            &spec, shape, params, &train, &dev, &chooser, &citation, &markers, size_price,
         );
         let from_parts = sources.iter().filter(|&&s| s > 0).count();
 
@@ -549,14 +684,7 @@ pub fn build(
             crate::train_pos(&sp, shape, params, &all, &chooser_all, &citation, &sources);
         t.main.lexicon = crate::lexicon(lang, &sp, data, pi, &|_| true);
         let lexicon = (t.main.lexicon.len(), in_lexicon);
-        let blob = blob_of(
-            &spec,
-            vec![crate::Trained {
-                main: t.main.clone(),
-                restore: t.restore.clone(),
-                parts: t.parts.clone(),
-            }],
-        );
+        let blob = blob_of(&spec, vec![t.clone()]);
         let model = flexion::Model::from_bytes(&blob).ok_or("final model failed to load")?;
         let attested = eval::score(
             &sp,
@@ -589,8 +717,23 @@ pub fn build(
             100.0 * ratio(test_score.total(&[]).top1, test_score.total(&[]).n),
             t0.elapsed().as_secs_f64()
         );
+        let curve: Vec<GridPoint> = scores
+            .iter()
+            .filter(|x| {
+                Params {
+                    tau: chosen_tau,
+                    ..x.params
+                } == Params {
+                    tau: chosen_tau,
+                    ..base_params
+                }
+            })
+            .copied()
+            .collect();
         reports.push(PosReport {
             name: part.name,
+            sizes: PosSizes::default(),
+            curve,
             params,
             dev_top1,
             test_words: test.len(),
@@ -619,7 +762,35 @@ pub fn build(
             lexicon,
         });
     }
-    let blob = blob_of(&spec, final_tables);
+    // Laid out as `assemble` does: mains, then restoration models, then part
+    // models, each counted with its main part of speech.
+    let layout: Vec<(usize, usize)> = final_tables
+        .iter()
+        .map(|t| {
+            (
+                usize::from(t.restore.is_some()) + usize::from(t.restore_front.is_some()),
+                t.parts.len(),
+            )
+        })
+        .collect();
+    let (blob, sizes, strings) = flexion::write::write_sized(&spec, &crate::assemble(final_tables));
+    let n = layout.len();
+    let mut next_restore = n;
+    let mut next_part = n + layout.iter().map(|(r, _)| r).sum::<usize>();
+    for (i, (restores, parts)) in layout.into_iter().enumerate() {
+        let Some(r) = reports.get_mut(i) else {
+            continue;
+        };
+        r.sizes.main = sizes.get(i).copied().unwrap_or_default();
+        for _ in 0..restores {
+            r.sizes.restore += sizes.get(next_restore).map_or(0, |x| x.total());
+            next_restore += 1;
+        }
+        for _ in 0..parts {
+            r.sizes.part_models += sizes.get(next_part).map_or(0, |x| x.total());
+            next_part += 1;
+        }
+    }
     let model = flexion::Model::from_bytes(&blob).ok_or("shipped model failed to load")?;
     let nonce = nonce_table(lang, &model)?;
     let report = render(
@@ -628,6 +799,7 @@ pub fn build(
         baselines,
         blob.len(),
         gz_len(&blob),
+        strings,
         &nonce,
         dump_note,
         has_stress,
@@ -749,6 +921,7 @@ fn render(
     baselines: &[Baseline],
     blob: usize,
     gz: usize,
+    strings: usize,
     nonce: &str,
     dump_note: &str,
     stress: bool,
@@ -1030,10 +1203,31 @@ fn render(
     s.push_str("### Size and speed\n\n");
     let _ = writeln!(
         s,
-        "The model is {} KB ({} KB gzipped).\n",
+        "The model is {} KB ({} KB gzipped). Where the bytes are, in KB (the strings, {} KB, are shared):\n",
         blob / 1024,
-        gz / 1024
+        gz / 1024,
+        strings / 1024
     );
+    s.push_str("| | edits | classes | tree nodes | distributions | joins | lexicon | restoration model | part models | total |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n");
+    for r in reports {
+        let z = &r.sizes;
+        let kb = |b: usize| format!("{:.0}", b as f64 / 1024.0);
+        let _ = writeln!(
+            s,
+            "| {} | {} | {} | {} | {} | {} | {} | {} | {} | {} |",
+            r.name,
+            kb(z.main.edits),
+            kb(z.main.classes),
+            kb(z.main.nodes),
+            kb(z.main.dist),
+            kb(z.main.joins),
+            kb(z.main.lexicon),
+            kb(z.restore),
+            kb(z.part_models),
+            kb(z.main.total() + z.restore + z.part_models)
+        );
+    }
+    s.push('\n');
     s.push_str("| | edits | classes | stored nodes | memorized words | distribution entries | ns per call |\n|---|---:|---:|---:|---:|---:|---:|\n");
     for r in reports {
         let st = r.stats;
@@ -1051,6 +1245,26 @@ fn render(
         );
     }
     s.push_str("\n*ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped\nmodel, for the held-out tenth's lemmas (which the shipped model has seen), single thread,\nrelease build, fastest of seven runs.\n\n");
+    s.push_str("<details><summary>Size against fit</summary>\n\nτ is the evidence a tree node needs to be kept (a likelihood-ratio threshold): a bigger τ keeps fewer nodes. Each row trains on the training tenths with the chosen settings but τ, scored on the dev tenth; the chosen τ is the smallest model within one standard error of the best dev top-1 and of the best dev log-loss.\n\n| | τ | model KB | dev top-1 | dev log-loss |\n|---|---:|---:|---:|---:|\n");
+    for r in reports {
+        for g in &r.curve {
+            let mark = if g.params.tau == r.params.tau {
+                " (chosen)"
+            } else {
+                ""
+            };
+            let _ = writeln!(
+                s,
+                "| {} | {}{mark} | {} | {:.2}% | {:.4} |",
+                r.name,
+                g.params.tau,
+                g.bytes / 1024,
+                100.0 * g.top1,
+                g.loss
+            );
+        }
+    }
+    s.push_str("\n</details>\n\n");
     s.push_str("<details><summary>Chosen hyperparameters</summary>\n\n| | smoothing α | pruning τ | suffix support | syllable token | dev top-1 |\n|---|---:|---:|---:|---|---:|\n");
     for r in reports {
         let _ = writeln!(

@@ -6,12 +6,10 @@ fn edit(strip: &str, add: &str) -> EditSpec {
     EditSpec::suffix(strip, add)
 }
 
-fn node(label: &str, first_child: u32, children: u32, dist: u32, dist_len: u32) -> NodeSpec {
+fn node(label: &str, children: u32, dist_len: u32) -> NodeSpec {
     NodeSpec {
         label: label.into(),
-        first_child,
         children,
-        dist,
         dist_len,
     }
 }
@@ -21,6 +19,9 @@ fn node(label: &str, first_child: u32, children: u32, dist: u32, dist_len: u32) 
 fn tiny() -> Vec<u8> {
     let spelling = SpellingSpec {
         fold_case: true,
+        // `ö` is `o` for lookup, so `dög` is the lexicon's `dog` written in full.
+        fold_from: "ö".into(),
+        fold_to: "o".into(),
         ..Default::default()
     };
     let nouns = PosTables {
@@ -29,6 +30,7 @@ fn tiny() -> Vec<u8> {
         lemma_cell: Some(0),
         groups: vec![],
         restore: None,
+        restore_front: None,
         capitalized: false,
         joins: vec![],
         join_classes: vec![],
@@ -69,11 +71,7 @@ fn tiny() -> Vec<u8> {
             },
         ],
         // root → "y" (child 1), "xo\u{1}" (child 2)
-        nodes: vec![
-            node("", 1, 2, 0, 2),
-            node("xo\u{1}", 0, 0, 2, 1),
-            node("y", 0, 0, 3, 2),
-        ],
+        nodes: vec![node("", 2, 2), node("xo\u{1}", 0, 1), node("y", 0, 2)],
         dist: vec![(0, 0.9), (1, 0.1), (2, 1.0), (1, 0.8), (0, 0.2)],
     };
     write(&spelling, &[nouns])
@@ -125,4 +123,74 @@ fn corrupt_blobs_are_rejected() {
     for cut in [0, 3, 20, 71, blob.len() / 2] {
         assert!(Model::from_bytes(&blob[..cut]).is_none(), "cut at {cut}");
     }
+}
+
+/// Nouns read through two restoration models: the end model writes `-us` as
+/// `-ūs`, the start model (over the word written backwards) writes `cons-`
+/// as `cōns-`.
+fn restored() -> Vec<u8> {
+    let spelling = SpellingSpec {
+        fold_case: true,
+        fold_from: "ōū".into(),
+        fold_to: "ou".into(),
+        ..Default::default()
+    };
+    let one = |edits: Vec<EditSpec>, classes: Vec<ClassSpec>, dist: Vec<(u32, f32)>| PosTables {
+        cells: 1,
+        inherent: 0,
+        lemma_cell: Some(0),
+        groups: vec![],
+        restore: None,
+        restore_front: None,
+        capitalized: false,
+        joins: vec![],
+        join_classes: vec![],
+        part_models: vec![],
+        sources: vec![],
+        lexicon: vec![],
+        walk: crate::Walk::default(),
+        edits,
+        classes,
+        nodes: vec![node("", 0, u32::try_from(dist.len()).unwrap_or(0))],
+        dist,
+    };
+    let class = |edit: u32, strip: &str| ClassSpec {
+        edits: vec![edit],
+        strip: strip.into(),
+        front: String::new(),
+        inherent: vec![],
+    };
+    let mut nouns = one(
+        vec![edit("", ""), edit("", "s")],
+        vec![ClassSpec {
+            edits: vec![0, 1],
+            strip: String::new(),
+            front: String::new(),
+            inherent: vec![],
+        }],
+        vec![(0, 1.0)],
+    );
+    nouns.cells = 2;
+    nouns.restore = Some(1);
+    nouns.restore_front = Some(2);
+    let end = one(vec![edit("us", "ūs")], vec![class(0, "us")], vec![(0, 1.0)]);
+    // Backwards: `susnoc` → `susnōc`, or left as typed.
+    let start = one(
+        vec![edit("snoc", "snōc"), edit("", "")],
+        vec![class(0, "snoc"), class(1, "")],
+        vec![(0, 0.6), (1, 0.4)],
+    );
+    write(&spelling, &[nouns, end, start])
+}
+
+#[test]
+fn the_start_model_restores_the_beginning_of_a_plain_lemma() {
+    let blob = restored();
+    let model = Model::from_bytes(&blob).expect("valid");
+    let nouns = model.pos(0).expect("pos");
+    let ask = |w: &str, cell| nouns.best(&nouns.citation(w, &[1]), cell, Options::default());
+    assert_eq!(ask("consus", 0), "cōnsūs");
+    assert_eq!(ask("consus", 1), "cōnsūss");
+    // A principal part spells the word as written: neither model rewrites it.
+    assert_eq!(ask("consus, consuss", 0), "consus");
 }

@@ -407,6 +407,13 @@ impl Hooks for GreekHooks {
                 }
             }
         }
+        // The perfect optative middle is two words (`λελυμένοι εἶμεν`), of
+        // which the dump keeps only the auxiliary: a bare form of `εἰμί` is
+        // no form of this verb.
+        entry.forms.retain(|f| {
+            f.source.is_none()
+                || !(f.tags.iter().any(|t| t == "optative") && AUXILIARY.contains(&f.form.trim()))
+        });
     }
 
     /// Gender from the head line (`λόγος • (lógos) m (genitive λόγου)`).
@@ -433,6 +440,23 @@ impl Hooks for GreekHooks {
         out
     }
 }
+
+/// The optative of `εἰμί`, the auxiliary of periphrastic forms.
+const AUXILIARY: &[&str] = &[
+    "εἴην",
+    "εἴης",
+    "εἴη",
+    "εἶτον",
+    "εἴτην",
+    "εἶμεν",
+    "εἶτε",
+    "εἶεν",
+    "εἴημεν",
+    "εἴητε",
+    "εἴησαν",
+    "εἴητον",
+    "εἰήτην",
+];
 
 const README: &str = "\
 Ancient Greek (Attic) inflection for **any** word, attested or not: nouns,

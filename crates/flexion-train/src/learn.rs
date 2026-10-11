@@ -25,7 +25,9 @@ use std::collections::{BTreeMap, HashMap};
 pub struct Params {
     /// Smoothing strength: pseudo-counts drawn from the parent distribution.
     pub alpha: f64,
-    /// G-test threshold for keeping a non-word node.
+    /// G-test threshold for keeping a non-word node: the one knob trading
+    /// size for fit. (Pricing a node by the bytes it takes instead, minimum
+    /// description length, did no better: see the README.)
     pub tau: f64,
     /// Lexemes a non-word (suffix) node needs before it can speak for
     /// unseen words. One lexeme's quirks belong at its whole-word node, not
@@ -33,8 +35,6 @@ pub struct Params {
     pub min_support: usize,
     /// Probabilities below this are dropped from stored distributions.
     pub epsilon: f64,
-    /// Smoothing strength at whole-word nodes (memorized words).
-    pub alpha_word: f64,
     /// Weight ratio between consecutive listed variants.
     pub variant_decay: f64,
     /// Weight ratio between consecutive homograph entries of one word, so
@@ -45,6 +45,9 @@ pub struct Params {
     /// Learn a join model: unseen words made of a known prefix and an
     /// attested word inflect through that word (`an` + `fangen`).
     pub joins: bool,
+    /// Also restore the start of typed lemmas, with a restoration model
+    /// trained on them written backwards (Latin `consul` is `cōnsul`).
+    pub front_restore: bool,
 }
 
 impl Default for Params {
@@ -54,7 +57,6 @@ impl Default for Params {
             tau: 8.0,
             min_support: 2,
             epsilon: 0.002,
-            alpha_word: 0.05,
             variant_decay: 0.5,
             homograph_decay: 0.9,
             walk: flexion::Walk {
@@ -63,6 +65,7 @@ impl Default for Params {
                 initial_depth: None,
             },
             joins: false,
+            front_restore: false,
         }
     }
 }
@@ -518,21 +521,19 @@ impl<'s> Learner<'s> {
                     let Some(q) = arena.get(q_index) else {
                         continue;
                     };
-                    let keep = if c == BOUNDARY {
+                    // A memorized word stores only its own classes: it is
+                    // asked only for itself, and a citation none of them
+                    // fits falls back to the ancestors anyway.
+                    if c == BOUNDARY {
                         let word = word_of.get(&child).and_then(|&wi| words.get(wi));
                         word.is_some_and(|w| !self.reproduces(w, &kept_path, &arena))
+                            .then(|| smooth(&n.counts, &[], 0.0, self.params.epsilon))
+                    } else if n.words < self.params.min_support {
+                        None
                     } else {
-                        n.words >= self.params.min_support
-                            && g_stat(&n.counts, n.total, q) > self.params.tau
-                    };
-                    keep.then(|| {
-                        let a = if c == BOUNDARY {
-                            self.params.alpha_word
-                        } else {
-                            self.params.alpha
-                        };
-                        smooth(&n.counts, q, a, self.params.epsilon)
-                    })
+                        (g_stat(&n.counts, n.total, q) > self.params.tau)
+                            .then(|| smooth(&n.counts, q, self.params.alpha, self.params.epsilon))
+                    }
                 };
                 let mut path = kept_path.clone();
                 if let Some(d) = new {
@@ -826,7 +827,6 @@ impl<'s> Learner<'s> {
         let mut queue: std::collections::VecDeque<(usize, String)> =
             std::collections::VecDeque::new();
         queue.push_back((0, String::new()));
-        let mut next_index = 1usize;
         while let Some((n, label)) = queue.pop_front() {
             let kids = stored_children(n);
             let start = entries.len();
@@ -837,12 +837,9 @@ impl<'s> Learner<'s> {
             }
             nodes.push(NodeSpec {
                 label,
-                first_child: u32::try_from(next_index).unwrap_or(0),
                 children: u32::try_from(kids.len()).unwrap_or(0),
-                dist: u32::try_from(start).unwrap_or(0),
                 dist_len: u32::try_from(entries.len() - start).unwrap_or(0),
             });
-            next_index += kids.len();
             for (l, k) in kids {
                 queue.push_back((k, l));
             }
@@ -854,6 +851,7 @@ impl<'s> Learner<'s> {
             lemma_cell: Some(self.shape.lemma_cell),
             groups: self.shape.groups.clone(),
             restore: None,
+            restore_front: None,
             capitalized: self.shape.capitalized,
             joins: Vec::new(),
             join_classes: Vec::new(),

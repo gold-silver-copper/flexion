@@ -78,6 +78,9 @@ pub(crate) struct PosHeader<'a> {
     pub(crate) chars: usize,
     /// The part of speech whose model restores this one's lemmas.
     pub(crate) restore: Option<usize>,
+    /// The part of speech whose model restores the start of this one's
+    /// lemmas, read backwards.
+    pub(crate) restore_front: Option<usize>,
     /// Every word is written with a capital.
     pub(crate) capitalized: bool,
     /// The language's main letter block (`char >> 8`), for child tables.
@@ -126,9 +129,9 @@ pub(crate) struct PosHeader<'a> {
     pub(crate) part_models: Vec<(usize, usize)>,
     /// Per cell: 0, or `k + 1` to build it from part model `k`.
     pub(crate) sources: Vec<u8>,
-    /// Lemmas written in full that another part of speech attests, sorted
-    /// by key: `(key, written)`.
-    pub(crate) lexicon: Vec<(&'a str, &'a str)>,
+    /// Lemmas written in full that another part of speech attests: `(the
+    /// hash of the key, written)`.
+    pub(crate) lexicon: Vec<(u32, &'a str)>,
     /// An open-addressing hash index over `lexicon`, built at load (a
     /// sorted search would touch a dozen far-apart strings per call): per
     /// slot 1 + the entry's index, 0 for empty; a power of two long.
@@ -362,7 +365,11 @@ impl<'a> Model<'a> {
                     let r = b.u32(at.checked_add(56)?)?;
                     (r != NONE).then(|| usize::try_from(r).ok()).flatten()
                 },
-                capitalized: b.u32(at.checked_add(60)?)? & 1 != 0,
+                restore_front: {
+                    let r = b.u32(at.checked_add(76)?)?;
+                    (r != NONE).then(|| usize::try_from(r).ok()).flatten()
+                },
+                capitalized: b.u32(at.checked_add(60)?)? & format::POS_CAPITALIZED != 0,
                 block: spelling.vowel_set.block(),
                 tree: Vec::new(),
                 edit_list: Vec::new(),
@@ -388,11 +395,16 @@ impl<'a> Model<'a> {
                 lexicon: Vec::new(),
                 lexicon_index: Vec::new(),
             };
+            let dist_len = if b.u32(at.checked_add(60)?)? & format::POS_WIDE_DIST != 0 {
+                DIST_LEN
+            } else {
+                format::NARROW_DIST_LEN
+            };
             // Every table must lie inside the blob.
             let ends = [
                 h.edits.checked_add(h.n_edits.checked_mul(EDIT_LEN)?)?,
                 h.nodes.checked_add(h.n_nodes.checked_mul(NODE_LEN)?)?,
-                h.dist.checked_add(h.n_dist.checked_mul(DIST_LEN)?)?,
+                h.dist.checked_add(h.n_dist.checked_mul(dist_len)?)?,
                 h.chars.checked_add(h.n_nodes.checked_mul(4)?)?,
             ];
             if ends.iter().any(|&e| e > bytes.len()) || h.n_nodes == 0 {
@@ -401,6 +413,9 @@ impl<'a> Model<'a> {
             let mut h = h;
             h.table_of = vec![0; h.n_nodes];
             h.tree = Vec::with_capacity(h.n_nodes);
+            // Breadth-first layout: first children and first entries are
+            // running sums.
+            let (mut next_child, mut next_entry) = (1u32, 0u32);
             for node in 0..h.n_nodes {
                 let at = h.nodes.checked_add(node.checked_mul(NODE_LEN)?)?;
                 let u16_at = |n: usize| -> Option<u16> {
@@ -412,17 +427,20 @@ impl<'a> Model<'a> {
                     ))
                 };
                 let packed = b.u32(h.chars.checked_add(node.checked_mul(4)?)?)?;
+                let (children, dist_len) = (u16_at(4)?, u16_at(6)?);
                 h.tree.push(NodeRec {
                     label: b.u32(at)?,
-                    first_child: b.u32(at.checked_add(4)?)?,
-                    dist: b.u32(at.checked_add(8)?)?,
-                    children: u16_at(12)?,
-                    dist_len: u16_at(14)?,
+                    first_child: next_child,
+                    dist: next_entry,
+                    children,
+                    dist_len,
                     first: packed & ((1 << format::CHAR_BITS) - 1),
                     label_len: u16::try_from(packed >> format::CHAR_BITS).ok()?,
                 });
-                let first = b.usize(at.checked_add(4)?)?;
-                let count = usize::from(u16_at(12)?);
+                let first = usize::try_from(next_child).ok()?;
+                next_child = next_child.checked_add(u32::from(children))?;
+                next_entry = next_entry.checked_add(u32::from(dist_len))?;
+                let count = usize::from(children);
                 if count <= TABLE_MIN_CHILDREN {
                     continue;
                 }
@@ -485,17 +503,26 @@ impl<'a> Model<'a> {
             if sizes.iter().try_fold(0usize, |a, &x| a.checked_add(x))? != h.cells {
                 return None;
             }
+            let wide_edits = b.u32(at.checked_add(60)?)? & format::POS_WIDE_EDITS != 0;
+            let width = if wide_edits { 4 } else { 2 };
             let mut counts = Vec::with_capacity(n_groups);
             for (g, &len) in sizes.iter().enumerate() {
                 let n = b.usize(cursor)?;
                 cursor = cursor.checked_add(4)?;
-                if cursor.checked_add(n.checked_mul(len)?.checked_mul(4)?)? > bytes.len() {
+                if cursor.checked_add(n.checked_mul(len)?.checked_mul(width)?)? > bytes.len() {
                     return None;
                 }
                 h.group_tables.push((h.sub_edits.len(), len));
                 for _ in 0..n.checked_mul(len)? {
-                    h.sub_edits.push(b.u32(cursor)?);
-                    cursor = cursor.checked_add(4)?;
+                    h.sub_edits.push(if wide_edits {
+                        b.u32(cursor)?
+                    } else {
+                        match u16::from_le_bytes([b.u8(cursor)?, b.u8(cursor.checked_add(1)?)?]) {
+                            u16::MAX => NONE,
+                            e => u32::from(e),
+                        }
+                    });
+                    cursor = cursor.checked_add(width)?;
                 }
                 counts.push(n);
                 for off in 0..len {
@@ -543,8 +570,14 @@ impl<'a> Model<'a> {
                 }
             }
             for i in 0..h.n_dist {
-                let at = h.dist.checked_add(i.checked_mul(DIST_LEN)?)?;
-                h.entries.push((b.u32(at)?, b.f32(at.checked_add(4)?)?));
+                let at = h.dist.checked_add(i.checked_mul(dist_len)?)?;
+                h.entries.push(if dist_len == DIST_LEN {
+                    (b.u32(at)?, b.f32(at.checked_add(4)?)?)
+                } else {
+                    let word = b.u32(at)?;
+                    let q = f32::from(u16::try_from(word >> 16).ok()?);
+                    (word & 0xffff, q / f32::from(u16::MAX))
+                });
             }
             h.entry_cum = std::iter::once(0f64)
                 .chain(h.entries.iter().scan(0f64, |acc, &(_, p)| {
@@ -556,13 +589,20 @@ impl<'a> Model<'a> {
             let mut cursor = b.usize(at.checked_add(64)?)?;
             let n_classes = b.usize(cursor)?;
             cursor = cursor.checked_add(4)?;
-            let class_bytes = n_classes.checked_mul(h.cells)?.checked_mul(4)?;
+            let class_bytes = n_classes.checked_mul(h.cells)?.checked_mul(width)?;
             if cursor.checked_add(class_bytes)? > bytes.len() {
                 return None;
             }
             for _ in 0..n_classes.checked_mul(h.cells)? {
-                h.join_classes.push(b.u32(cursor)?);
-                cursor = cursor.checked_add(4)?;
+                h.join_classes.push(if wide_edits {
+                    b.u32(cursor)?
+                } else {
+                    match u16::from_le_bytes([b.u8(cursor)?, b.u8(cursor.checked_add(1)?)?]) {
+                        u16::MAX => NONE,
+                        e => u32::from(e),
+                    }
+                });
+                cursor = cursor.checked_add(width)?;
             }
             let n_joins = b.usize(cursor)?;
             cursor = cursor.checked_add(4)?;
@@ -624,23 +664,21 @@ impl<'a> Model<'a> {
             let mut cursor = b.usize(at.checked_add(72)?)?;
             let n_lexicon = b.usize(cursor)?;
             cursor = cursor.checked_add(4)?;
-            if cursor.checked_add(n_lexicon.checked_mul(16)?)? > bytes.len() {
+            if cursor.checked_add(n_lexicon.checked_mul(12)?)? > bytes.len() {
                 return None;
             }
             h.lexicon = Vec::with_capacity(n_lexicon);
             for _ in 0..n_lexicon {
-                h.lexicon.push((
-                    b.str(strings, cursor)?,
-                    b.str(strings, cursor.checked_add(8)?)?,
-                ));
-                cursor = cursor.checked_add(16)?;
+                h.lexicon
+                    .push((b.u32(cursor.checked_add(8)?)?, b.str(strings, cursor)?));
+                cursor = cursor.checked_add(12)?;
             }
             if !h.lexicon.is_empty() {
                 let slots = h.lexicon.len().checked_mul(2)?.next_power_of_two();
                 h.lexicon_index = vec![0; slots];
                 let mask = slots.wrapping_sub(1);
-                for (i, (key, _)) in h.lexicon.iter().enumerate() {
-                    let mut at = usize::try_from(hash(key)).unwrap_or(0) & mask;
+                for (i, &(key_hash, _)) in h.lexicon.iter().enumerate() {
+                    let mut at = usize::try_from(key_hash).unwrap_or(0) & mask;
                     while h.lexicon_index.get(at).is_some_and(|&s| s != 0) {
                         at = at.wrapping_add(1) & mask;
                     }

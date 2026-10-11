@@ -16,6 +16,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "ceiling"
+version = "0.0.0"
+dependencies = [
+ "flexion",
+ "flexion-configs",
+ "flexion-train",
+ "serde_json",
+ "unicode-normalization",
+]
+
+[[package]]
 name = "cfg-if"
 version = "1.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"

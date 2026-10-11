@@ -59,11 +59,11 @@ used for any decision.
 
 | | lemmas | cells | top-1 | top-3 | top-1 given citation | top-1 given citation and markers |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 4225 | 4225 | **97.49%** | 98.96% | – | 97.40% |
-| adjective | 1838 | 5514 | **97.73%** | 99.58% | 99.73% | – |
+| noun | 4225 | 4225 | **97.68%** | 99.03% | – | 97.70% |
+| adjective | 1838 | 5514 | **97.37%** | 99.53% | 99.73% | – |
 | verb | 738 | 34572 | **99.06%** | 99.76% | 99.80% | – |
-| participle | 626 | 1878 | **99.68%** | 100.00% | – | – |
-| determiner ¹ | 6 | 13 | **61.54%** | 69.23% | – | – |
+| participle | 626 | 1878 | **99.04%** | 100.00% | – | – |
+| determiner ¹ | 6 | 13 | **69.23%** | 69.23% | – | – |
 
 ¹ A closed class: too few held-out lemmas for these numbers to mean much. What matters for
 it is the attested table below.
@@ -78,10 +78,10 @@ the word the way a dictionary prints them (noun `m`/`f`/`mf`).
 
 | cell | n | top-1 | top-3 |
 |---|---:|---:|---:|
-| noun.pl | 4225 | 97.49% | 98.96% |
-| adjective.m.pl | 1838 | 98.37% | 99.84% |
-| adjective.f.sg | 1837 | 97.77% | 99.62% |
-| adjective.f.pl | 1837 | 97.11% | 99.35% |
+| noun.pl | 4225 | 97.68% | 99.03% |
+| adjective.m.pl | 1838 | 98.20% | 99.89% |
+| adjective.f.sg | 1837 | 97.39% | 99.51% |
+| adjective.f.pl | 1837 | 96.57% | 99.24% |
 | before_vowel | 2 | 50.00% | 50.00% |
 | verb.pres.1.sg | 736 | 98.64% | 99.73% |
 | verb.pres.1.pl | 736 | 99.46% | 99.73% |
@@ -130,10 +130,10 @@ the word the way a dictionary prints them (noun `m`/`f`/`mf`).
 | imperative.vous | 733 | 99.32% | 99.73% |
 | participle.pres | 737 | 99.46% | 99.73% |
 | participle.past | 738 | 99.19% | 99.73% |
-| past_participle.m.pl | 626 | 99.68% | 100.00% |
-| past_participle.f.sg | 626 | 99.68% | 100.00% |
-| past_participle.f.pl | 626 | 99.68% | 100.00% |
-| determiner.m.pl | 4 | 25.00% | 50.00% |
+| past_participle.m.pl | 626 | 99.04% | 100.00% |
+| past_participle.f.sg | 626 | 99.04% | 100.00% |
+| past_participle.f.pl | 626 | 99.04% | 100.00% |
+| determiner.m.pl | 4 | 50.00% | 50.00% |
 | determiner.f.sg | 4 | 100.00% | 100.00% |
 | determiner.f.pl | 5 | 60.00% | 60.00% |
 
@@ -145,7 +145,7 @@ The shipped model, trained on everything, asked for every attested cell of every
 
 | | lemmas | cells | primary form from the plain call | every attested form among the answers |
 |---|---:|---:|---:|---:|
-| noun | 43092 | 43092 | **99.99%** | 99.97% |
+| noun | 43092 | 43092 | **99.99%** | 100.00% |
 | adjective | 18164 | 54478 | **100.00%** | 99.99% |
 | verb | 7295 | 341454 | **99.99%** | 100.00% |
 | participle | 6504 | 19512 | **100.00%** | 100.00% |
@@ -158,24 +158,25 @@ Expected calibration error (ECE) is the average gap between confidence and accur
 
 | | ECE |
 |---|---:|
-| noun | 0.012 |
+| noun | 0.011 |
 | adjective | 0.007 |
 | verb | 0.007 |
 | participle | 0.008 |
-| determiner | 0.312 |
+| determiner | 0.321 |
 
 All parts of speech together (ECE 0.006):
 
 | confidence | mean confidence | accuracy | answers |
 |---|---:|---:|---:|
 | 0.0–0.1 | 0.000 | 0.000 | 1 |
-| 0.3–0.4 | 0.361 | 0.444 | 9 |
-| 0.4–0.5 | 0.449 | 0.462 | 13 |
-| 0.5–0.6 | 0.538 | 0.394 | 378 |
-| 0.6–0.7 | 0.655 | 0.961 | 382 |
-| 0.7–0.8 | 0.742 | 0.865 | 171 |
-| 0.8–0.9 | 0.868 | 0.836 | 434 |
-| 0.9–1.0 | 0.997 | 0.995 | 44814 |
+| 0.2–0.3 | 0.246 | 0.000 | 2 |
+| 0.3–0.4 | 0.357 | 0.333 | 6 |
+| 0.4–0.5 | 0.458 | 0.333 | 33 |
+| 0.5–0.6 | 0.527 | 0.387 | 377 |
+| 0.6–0.7 | 0.656 | 0.918 | 462 |
+| 0.7–0.8 | 0.750 | 0.891 | 184 |
+| 0.8–0.9 | 0.862 | 0.845 | 439 |
+| 0.9–1.0 | 0.997 | 0.995 | 44698 |
 
 ### Forms many words lack
 
@@ -185,7 +186,7 @@ how often the answer to "does this word have one?" is right.
 | | held-out cells | right | attested cells | right |
 |---|---:|---:|---:|---:|
 | adjective | 1838 | 99.89% | 18164 | 100.00% |
-| verb | 2214 | 99.19% | 21885 | 99.99% |
+| verb | 2214 | 99.05% | 21885 | 99.99% |
 
 ### Inherent features
 
@@ -193,7 +194,7 @@ Predicted for held-out lemmas from the bare lemma.
 
 | feature | lemmas | right |
 |---|---:|---:|
-| noun noungender | 4223 | 88.61% |
+| noun noungender | 4223 | 88.73% |
 
 ### Made-up words
 
@@ -201,7 +202,7 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 | word | function | answers |
 |---|---|---|
-| `glorpal` | noun | sg: glorpal 1.00; pl: glorpaux 0.72, glorpals 0.26 |
+| `glorpal` | noun | sg: glorpal 1.00; pl: glorpaux 0.58, glorpals 0.40 |
 | `blicheau` | noun | sg: blicheau 1.00; pl: blicheaux 1.00 |
 | `flurmeur` | noun | sg: flurmeur 1.00; pl: flurmeurs 1.00 |
 | `glorpeux` | adjective | m.sg: glorpeux 1.00; m.pl: glorpeux 1.00; f.sg: glorpeuse 1.00; f.pl: glorpeuses 1.00 |
@@ -214,12 +215,12 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 <details><summary>noun</summary>
 
-- 41 × `noun.pl`: predicted `-+s`, attested `-+` — aide-mémoire → aide-mémoires (attested aide-mémoire); arrête-bœuf → arrête-bœufs (attested arrête-bœuf); baise-en-ville → baise-en-villes (attested baise-en-ville)
-- 6 × `noun.pl`: predicted `-l+ux`, attested `-+s` — acétal → acétaux (attested acétals); corral → corraux (attested corrals); célestial → célestiaux (attested célestials)
-- 3 × `noun.pl`: predicted `-+`, attested `-+s` — dev → dev (attested devs); pebd → pebd (attested pebds); sas → sas (attested sass)
-- 3 × `noun.pl`: predicted `-+s`, attested `-l+ux` — cheval → chevals (attested chevaux); revival → revivals (attested revivaux); val → vals (attested vaux)
+- 36 × `noun.pl`: predicted `-+s`, attested `-+` — aide-mémoire → aide-mémoires (attested aide-mémoire); arrête-bœuf → arrête-bœufs (attested arrête-bœuf); baise-en-ville → baise-en-villes (attested baise-en-ville)
+- 5 × `noun.pl`: predicted `-l+ux`, attested `-+s` — acétal → acétaux (attested acétals); corral → corraux (attested corrals); célestial → célestiaux (attested célestials)
+- 3 × `noun.pl`: predicted `-+s`, attested `-l+ux` — revival → revivals (attested revivaux); réal → réals (attested réaux); val → vals (attested vaux)
+- 3 × `noun.pl`: predicted `-+x`, attested `-+s` — nu → nux (attested nus); sudoku → sudokux (attested sudokus); émeu → émeux (attested émeus)
+- 2 × `noun.pl`: predicted `-+`, attested `-+s` — cf → cf (attested cfs); sas → sas (attested sass)
 - 2 × `noun.pl`: predicted `-+s`, attested `--homme+s-hommes` — année-homme → année-hommes (attested années-hommes); sage-homme → sage-hommes (attested sages-hommes)
-- 1 × `noun.pl`: predicted `-+`, attested `-+x` — demi-dieu → demi-dieu (attested demi-dieux)
 - 1 × `noun.pl`: predicted `-+`, attested `--levis+s-levis` — pont-levis → pont-levis (attested ponts-levis)
 - 1 × `noun.pl`: predicted `-+`, attested `--ongles+s-ongles` — coupe-ongles → coupe-ongles (attested coupes-ongles)
 - 1 × `noun.pl`: predicted `-+`, attested `--sens+s-sens` — double-sens → double-sens (attested doubles-sens)
@@ -231,84 +232,115 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 <details><summary>adjective</summary>
 
-- 24 × `adjective.m.pl`: predicted `-+s`, attested `-+` — antiblanchiment → antiblanchiments (attested antiblanchiment); antimendicité → antimendicités (attested antimendicité); antisida → antisidas (attested antisida)
-- 21 × `adjective.f.sg`: predicted `-+e`, attested `-+` — antiblanchiment → antiblanchimente (attested antiblanchiment); anticasseurs → anticasseurse (attested anticasseurs); antimendicité → antimendicitée (attested antimendicité)
-- 14 × `adjective.f.pl`: predicted `-+es`, attested `-+` — antiblanchiment → antiblanchimentes (attested antiblanchiment); anticasseurs → anticasseurses (attested anticasseurs); antimendicité → antimendicitées (attested antimendicité)
-- 10 × `adjective.f.pl`: predicted `-+s`, attested `-+` — antisida → antisidas (attested antisida); burkinabè → burkinabès (attested burkinabè); casse-gueule → casse-gueules (attested casse-gueule)
+- 28 × `adjective.m.pl`: predicted `-+s`, attested `-+` — antiblanchiment → antiblanchiments (attested antiblanchiment); antimendicité → antimendicités (attested antimendicité); antisida → antisidas (attested antisida)
+- 22 × `adjective.f.sg`: predicted `-+e`, attested `-+` — antiblanchiment → antiblanchimente (attested antiblanchiment); anticasseurs → anticasseurse (attested anticasseurs); antimendicité → antimendicitée (attested antimendicité)
+- 15 × `adjective.f.pl`: predicted `-+es`, attested `-+` — antiblanchiment → antiblanchimentes (attested antiblanchiment); anticasseurs → anticasseurses (attested anticasseurs); antimendicité → antimendicitées (attested antimendicité)
+- 12 × `adjective.f.pl`: predicted `-+s`, attested `-+` — antisida → antisidas (attested antisida); burkinabè → burkinabès (attested burkinabè); camp → camps (attested camp)
 - 7 × `adjective.f.pl`: predicted `-+es`, attested `-+s` — chanmé → chanmées (attested chanmés); expansé → expansées (attested expansés); fauché → fauchées (attested fauchés)
-- 2 × `adjective.m.pl`: predicted `-+`, attested `-+s` — multifonction → multifonction (attested multifonctions); top → top (attested tops)
+- 3 × `adjective.f.sg`: predicted `-r+se`, attested `-+e` — impur → impuse (attested impure); mûr → mûse (attested mûre); ouïgour → ouïgouse (attested ouïgoure)
+- 3 × `adjective.f.pl`: predicted `-+`, attested `-+s` — antitabac → antitabac (attested antitabacs); multifonction → multifonction (attested multifonctions); top → top (attested tops)
+- 3 × `adjective.f.pl`: predicted `-r+ses`, attested `-+es` — impur → impuses (attested impures); mûr → mûses (attested mûres); ouïgour → ouïgouses (attested ouïgoures)
 - 2 × `adjective.m.pl`: predicted `-l+ux`, attested `-+s` — fractal → fractaux (attested fractals); tombal → tombaux (attested tombals)
+- 2 × `adjective.f.sg`: predicted `-+`, attested `-+e` — chinook → chinook (attested chinooke); tadjik → tadjik (attested tadjike)
+- 2 × `adjective.f.sg`: predicted `-+e`, attested `-+se` — gras → grase (attested grasse); épais → épaise (attested épaisse)
 - 2 × `adjective.f.sg`: predicted `-+ne`, attested `-+` — céladon → céladonne (attested céladon); jacksonien → jacksonienne (attested jacksonien)
-- 2 × `adjective.f.sg`: predicted `-c+que`, attested `-+` — antitabac → antitabaque (attested antitabac); chic → chique (attested chic)
-- 2 × `adjective.f.sg`: predicted `-r+se`, attested `-+e` — impur → impuse (attested impure); mûr → mûse (attested mûre)
-- 2 × `adjective.f.pl`: predicted `-+`, attested `-+s` — multifonction → multifonction (attested multifonctions); top → top (attested tops)
-- 2 × `adjective.f.pl`: predicted `-r+ses`, attested `-+es` — impur → impuses (attested impures); mûr → mûses (attested mûres)
 
 </details>
 
 <details><summary>verb</summary>
 
-- 3 × `verb.pres.1.sg`: predicted `-eter+ète`, attested `-er+te` — banqueter → banquète (attested banquette); biqueter → biquète (attested biquette); hoqueter → hoquète (attested hoquette)
-- 3 × `verb.fut.1.sg`: predicted `-eter+èterai`, attested `-er+terai` — banqueter → banquèterai (attested banquetterai); biqueter → biquèterai (attested biquetterai); hoqueter → hoquèterai (attested hoquetterai)
-- 3 × `verb.fut.1.pl`: predicted `-eter+èterons`, attested `-er+terons` — banqueter → banquèterons (attested banquetterons); biqueter → biquèterons (attested biquetterons); hoqueter → hoquèterons (attested hoquetterons)
-- 3 × `verb.fut.2.sg`: predicted `-eter+èteras`, attested `-er+teras` — banqueter → banquèteras (attested banquetteras); biqueter → biquèteras (attested biquetteras); hoqueter → hoquèteras (attested hoquetteras)
-- 3 × `verb.fut.2.pl`: predicted `-eter+èterez`, attested `-er+terez` — banqueter → banquèterez (attested banquetterez); biqueter → biquèterez (attested biquetterez); hoqueter → hoquèterez (attested hoquetterez)
-- 3 × `verb.fut.3.sg`: predicted `-eter+ètera`, attested `-er+tera` — banqueter → banquètera (attested banquettera); biqueter → biquètera (attested biquettera); hoqueter → hoquètera (attested hoquettera)
-- 3 × `verb.fut.3.pl`: predicted `-eter+èteront`, attested `-er+teront` — banqueter → banquèteront (attested banquetteront); biqueter → biquèteront (attested biquetteront); hoqueter → hoquèteront (attested hoquetteront)
-- 3 × `verb.cond.1.sg`: predicted `-eter+èterais`, attested `-er+terais` — banqueter → banquèterais (attested banquetterais); biqueter → biquèterais (attested biquetterais); hoqueter → hoquèterais (attested hoquetterais)
-- 3 × `verb.cond.1.pl`: predicted `-eter+èterions`, attested `-er+terions` — banqueter → banquèterions (attested banquetterions); biqueter → biquèterions (attested biquetterions); hoqueter → hoquèterions (attested hoquetterions)
-- 3 × `verb.cond.2.sg`: predicted `-eter+èterais`, attested `-er+terais` — banqueter → banquèterais (attested banquetterais); biqueter → biquèterais (attested biquetterais); hoqueter → hoquèterais (attested hoquetterais)
-- 3 × `verb.cond.2.pl`: predicted `-eter+èteriez`, attested `-er+teriez` — banqueter → banquèteriez (attested banquetteriez); biqueter → biquèteriez (attested biquetteriez); hoqueter → hoquèteriez (attested hoquetteriez)
-- 3 × `verb.cond.3.sg`: predicted `-eter+èterait`, attested `-er+terait` — banqueter → banquèterait (attested banquetterait); biqueter → biquèterait (attested biquetterait); hoqueter → hoquèterait (attested hoquetterait)
+- 4 × `verb.pres.1.sg`: predicted `-eter+ète`, attested `-er+te` — banqueter → banquète (attested banquette); biqueter → biquète (attested biquette); feuilleter → feuillète (attested feuillette)
+- 4 × `verb.fut.1.sg`: predicted `-eter+èterai`, attested `-er+terai` — banqueter → banquèterai (attested banquetterai); biqueter → biquèterai (attested biquetterai); feuilleter → feuillèterai (attested feuilletterai)
+- 4 × `verb.fut.1.pl`: predicted `-eter+èterons`, attested `-er+terons` — banqueter → banquèterons (attested banquetterons); biqueter → biquèterons (attested biquetterons); feuilleter → feuillèterons (attested feuilletterons)
+- 4 × `verb.fut.2.sg`: predicted `-eter+èteras`, attested `-er+teras` — banqueter → banquèteras (attested banquetteras); biqueter → biquèteras (attested biquetteras); feuilleter → feuillèteras (attested feuilletteras)
+- 4 × `verb.fut.2.pl`: predicted `-eter+èterez`, attested `-er+terez` — banqueter → banquèterez (attested banquetterez); biqueter → biquèterez (attested biquetterez); feuilleter → feuillèterez (attested feuilletterez)
+- 4 × `verb.fut.3.sg`: predicted `-eter+ètera`, attested `-er+tera` — banqueter → banquètera (attested banquettera); biqueter → biquètera (attested biquettera); feuilleter → feuillètera (attested feuillettera)
+- 4 × `verb.fut.3.pl`: predicted `-eter+èteront`, attested `-er+teront` — banqueter → banquèteront (attested banquetteront); biqueter → biquèteront (attested biquetteront); feuilleter → feuillèteront (attested feuilletteront)
+- 4 × `verb.cond.1.sg`: predicted `-eter+èterais`, attested `-er+terais` — banqueter → banquèterais (attested banquetterais); biqueter → biquèterais (attested biquetterais); feuilleter → feuillèterais (attested feuilletterais)
+- 4 × `verb.cond.1.pl`: predicted `-eter+èterions`, attested `-er+terions` — banqueter → banquèterions (attested banquetterions); biqueter → biquèterions (attested biquetterions); feuilleter → feuillèterions (attested feuilletterions)
+- 4 × `verb.cond.2.sg`: predicted `-eter+èterais`, attested `-er+terais` — banqueter → banquèterais (attested banquetterais); biqueter → biquèterais (attested biquetterais); feuilleter → feuillèterais (attested feuilletterais)
+- 4 × `verb.cond.2.pl`: predicted `-eter+èteriez`, attested `-er+teriez` — banqueter → banquèteriez (attested banquetteriez); biqueter → biquèteriez (attested biquetteriez); feuilleter → feuillèteriez (attested feuilletteriez)
+- 4 × `verb.cond.3.sg`: predicted `-eter+èterait`, attested `-er+terait` — banqueter → banquèterait (attested banquetterait); biqueter → biquèterait (attested biquetterait); feuilleter → feuillèterait (attested feuilletterait)
 
 </details>
 
 <details><summary>participle</summary>
 
-- 1 × `past_participle.m.pl`: predicted `-+`, attested `-+s` — préexisté → préexisté (attested préexistés)
+- 5 × `past_participle.m.pl`: predicted `-+`, attested `-+s` — chaulé → chaulé (attested chaulés); foui → foui (attested fouis); piaulé → piaulé (attested piaulés)
+- 5 × `past_participle.f.sg`: predicted `-+`, attested `-+e` — chaulé → chaulé (attested chaulée); foui → foui (attested fouie); piaulé → piaulé (attested piaulée)
+- 5 × `past_participle.f.pl`: predicted `-+`, attested `-+es` — chaulé → chaulé (attested chaulées); foui → foui (attested fouies); piaulé → piaulé (attested piaulées)
 - 1 × `past_participle.m.pl`: predicted `-+s`, attested `-+` — relui → reluis (attested relui)
-- 1 × `past_participle.f.sg`: predicted `-+`, attested `-+e` — préexisté → préexisté (attested préexistée)
 - 1 × `past_participle.f.sg`: predicted `-+e`, attested `-+` — relui → reluie (attested relui)
-- 1 × `past_participle.f.pl`: predicted `-+`, attested `-+es` — préexisté → préexisté (attested préexistées)
 - 1 × `past_participle.f.pl`: predicted `-+es`, attested `-+` — relui → reluies (attested relui)
 
 </details>
 
 <details><summary>determiner</summary>
 
+- 1 × `determiner.m.pl`: predicted `-+s`, attested `-dit+sdits` — leurdit → leurdits (attested leursdits)
 - 1 × `determiner.m.pl`: predicted `-+s`, attested `-u+es` — du → dus (attested des)
-- 1 × `determiner.m.pl`: predicted `-t+s`, attested `-+s` — maint → mains (attested maints)
-- 1 × `determiner.m.pl`: predicted `-t+s`, attested `-dit+sdits` — leurdit → leurdis (attested leursdits)
 - 1 × `determiner.f.pl`: predicted `-+es`, attested `-dit+sdites` — leurdit → leurdites (attested leursdites)
-- 1 × `determiner.f.pl`: predicted `-+es`, attested `-u+es` — du → dues (attested des)
+- 1 × `determiner.f.pl`: predicted `-+les`, attested `-u+es` — du → dules (attested des)
 
 </details>
 
 ### Size and speed
 
-The model is 333 KB (120 KB gzipped).
+The model is 303 KB (124 KB gzipped). Where the bytes are, in KB (the strings, 22 KB, are shared):
+
+| | edits | classes | tree nodes | distributions | joins | lexicon | restoration model | part models | total |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 15 | 16 | 56 | 60 | 0 | 0 | 0 | 0 | 147 |
+| adjective | 5 | 3 | 14 | 15 | 0 | 0 | 0 | 0 | 37 |
+| verb | 53 | 22 | 8 | 10 | 0 | 0 | 0 | 0 | 93 |
+| participle | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 3 |
+| determiner | 1 | 1 | 0 | 1 | 0 | 0 | 0 | 0 | 3 |
 
 | | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 469 | 507 | 2186 | 991 | 7346 | 159 (`noun.pl`) |
-| adjective | 145 | 84 | 819 | 523 | 2245 | 144 (`adjective.m.pl`) |
-| verb | 1683 | 201 | 861 | 123 | 3099 | 137 (`participle.past`) |
-| participle | 9 | 6 | 42 | 23 | 81 | 146 (`past_participle.m.pl`) |
-| determiner | 33 | 21 | 25 | 10 | 188 | 116 (`determiner.f.pl`) |
+| noun | 469 | 507 | 4792 | 884 | 15351 | 207 (`noun.pl`) |
+| adjective | 145 | 84 | 1199 | 523 | 3844 | 164 (`adjective.m.pl`) |
+| verb | 1683 | 201 | 702 | 173 | 2477 | 133 (`participle.past`) |
+| participle | 9 | 6 | 101 | 5 | 188 | 140 (`past_participle.m.pl`) |
+| determiner | 33 | 21 | 30 | 9 | 187 | 136 (`determiner.f.pl`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
 release build, fastest of seven runs.
 
+<details><summary>Size against fit</summary>
+
+τ is the evidence a tree node needs to be kept (a likelihood-ratio threshold): a bigger τ keeps fewer nodes. Each row trains on the training tenths with the chosen settings but τ, scored on the dev tenth; the chosen τ is the smallest model within one standard error of the best dev top-1 and of the best dev log-loss.
+
+| | τ | model KB | dev top-1 | dev log-loss |
+|---|---:|---:|---:|---:|
+| noun | 1 | 174 | 97.60% | 0.1375 |
+| noun | 2 (chosen) | 130 | 97.58% | 0.1373 |
+| noun | 8 | 77 | 97.36% | 0.1420 |
+| adjective | 1 | 41 | 97.33% | 0.1067 |
+| adjective | 2 (chosen) | 34 | 97.32% | 0.1078 |
+| adjective | 8 | 25 | 97.17% | 0.1107 |
+| verb | 1 | 97 | 98.87% | 0.0382 |
+| verb | 2 (chosen) | 93 | 98.72% | 0.0343 |
+| verb | 8 | 89 | 98.28% | 0.0453 |
+| participle | 1 (chosen) | 2 | 99.56% | 0.0224 |
+| participle | 2 | 2 | 99.56% | 0.0230 |
+| participle | 8 | 1 | 99.56% | 0.0235 |
+| determiner | 1 (chosen) | 3 | 100.00% | 0.0892 |
+| determiner | 2 | 2 | 100.00% | 0.2282 |
+| determiner | 8 | 2 | 40.00% | 0.7985 |
+
+</details>
+
 <details><summary>Chosen hyperparameters</summary>
 
 | | smoothing α | pruning τ | suffix support | syllable token | dev top-1 |
 |---|---:|---:|---:|---|---:|
-| noun | 0.5 | 8 | 2 | none | 97.39% |
-| adjective | 0.5 | 8 | 2 | none | 97.39% |
-| verb | 0.5 | 1 | 1 | none | 98.87% |
-| participle | 0.5 | 8 | 2 | none | 99.56% |
-| determiner | 0.5 | 2 | 2 | after 2 letters | 100.00% |
+| noun | 2 | 2 | 2 | after 0 letters | 97.58% |
+| adjective | 8 | 2 | 2 | after 2 letters | 97.32% |
+| verb | 0.5 | 2 | 1 | none | 98.72% |
+| participle | 0.5 | 1 | 1 | after 0 letters | 99.56% |
+| determiner | 0.5 | 1 | 2 | after 0 letters | 100.00% |
 
 </details>
 

@@ -16,7 +16,7 @@
 //!   96 letters with an inherent vowel   104 marks that mute it
 //!   112 diphthongs (pairs of folded vowels)   120 letters that never close one
 //!      (each a string reference: offset + length into the string area)
-//! part-of-speech headers, 72 bytes each, right after the header: cells,
+//! part-of-speech headers, 80 bytes each, right after the header: cells,
 //!   inherent features, then offset and count of edits, classes, nodes and
 //!   distribution entries, the lemma cell, the walk's feature word
 //!   (bits 0–7: 1 + the depth at which a syllable-count token is inserted,
@@ -25,8 +25,11 @@
 //!   first-character array, the offset of the class groups section, the
 //!   index of the part of speech that restores this one's lemmas ([`NONE`]:
 //!   lemmas are taken as typed), flags (bit 0: every word is written with a
-//!   capital), the offset of the join section, the offset of the parts
-//!   section, and the offset of the lexicon section
+//!   capital; bit 1: wide distribution entries; bit 2: wide edit indices),
+//!   the offset of the join section, the offset of the parts section, the
+//!   offset of the lexicon section, and the index of the part of speech that
+//!   restores the start of this one's lemmas, trained on them written
+//!   backwards ([`NONE`]: none)
 //! records (edits, classes, nodes, distribution entries) at the offsets the
 //!   part-of-speech headers give
 //! string area: UTF-8 bytes
@@ -44,23 +47,30 @@
 //! - class groups section: the number of groups, each group's number of
 //!   cells (they sum to the part of speech's cells), then per group the number
 //!   of its sub-vectors followed by the sub-vectors themselves (one edit index
-//!   per cell of the group, [`NONE`] when there is no form there). Classes
-//!   share sub-vectors, which keeps big paradigms small;
+//!   per cell of the group, [`NONE`] when there is no form there; a `u16`
+//!   each, `0xFFFF` for none, unless the part of speech has 65535 edits or
+//!   more (flag bit 2): then a `u32`). Classes share sub-vectors, which keeps
+//!   big paradigms small;
 //! - class, `4 * groups + 16 + inherent` bytes rounded up to 4: one sub-vector
 //!   index per group, string references to the class's longest stripped
 //!   suffix and longest stripped start, one value index per inherent feature
 //!   ([`UNKNOWN`] when unknown);
-//! - node, 16 bytes: the label's offset in the string area, first child,
-//!   first distribution entry (all `u32`), number of children, number of
-//!   distribution entries (both `u16`);
+//! - node, 8 bytes: the label's offset in the string area (`u32`), number
+//!   of children, number of distribution entries (both `u16`). Nodes are laid
+//!   out breadth-first, each node's children together and its distribution
+//!   entries after the previous node's, so a node's first child and first
+//!   entry are running sums the loader computes;
 //! - one `u32` per node, in node order: its label's first character (low 21
 //!   bits) and the label's length in bytes (high 11 bits), so a child search
 //!   touches one small dense array. Nodes are laid out depth-first by child
 //!   block, so a walk's successive levels sit close together;
-//! - distribution entry, 8 bytes: class index, probability (`f32` bits).
-//!   Entries of one node are sorted by descending probability.
+//! - distribution entry, 4 bytes: class index (`u16`), probability in
+//!   steps of 1/65535 (`u16`); or, where a part of speech has more than
+//!   65536 classes (flag bit 1), 8 bytes: class index, probability (`f32`
+//!   bits). Entries of one node are sorted by descending probability.
 //! - join section: the number of join classes, each one edit index per cell
-//!   (an edit of the joined word's base form); the number of prefixes, each
+//!   (an edit of the joined word's base form; as wide as the class groups'
+//!   edit indices); the number of prefixes, each
 //!   28 bytes (the prefix as a folded string reference, the probability that
 //!   an unseen word with it joins, its first entry and number of entries,
 //!   its first inherent entry and number of them), sorted by prefix; then
@@ -72,18 +82,25 @@
 //!   principal part and the index of its part of speech in the blob; then one
 //!   byte per cell (0: built by this part of speech, `k + 1`: by part model
 //!   `k` when its part is given), padded to 4 bytes.
-//! - lexicon section: the number of entries, then per entry two string
-//!   references, a lookup key and the lemma written in full there (`а́хнувший`,
-//!   `amātus`), sorted by key: lemmas another part of speech attests (a
-//!   verb's participles are adjectives).
+//! - lexicon section: the number of entries, then per entry 12 bytes: a
+//!   string reference to the lemma written in full (`а́хнувший`, `amātus`) and
+//!   the low 32 bits of the FNV-1a hash of its lookup key (the written form
+//!   folded, which a match confirms): lemmas another part of speech attests
+//!   (a verb's participles are adjectives).
 
 pub const MAGIC: &[u8; 4] = b"FLX1";
-pub const VERSION: u32 = 6;
+pub const VERSION: u32 = 7;
 pub const HEADER_LEN: usize = 128;
-pub const POS_HEADER_LEN: usize = 76;
+pub const POS_HEADER_LEN: usize = 80;
 pub const EDIT_LEN: usize = 32;
-pub const NODE_LEN: usize = 16;
+pub const NODE_LEN: usize = 8;
 pub const DIST_LEN: usize = 8;
+/// A distribution entry in its narrow form (see the module docs).
+pub const NARROW_DIST_LEN: usize = 4;
+/// Part-of-speech flags.
+pub const POS_CAPITALIZED: u32 = 1;
+pub const POS_WIDE_DIST: u32 = 2;
+pub const POS_WIDE_EDITS: u32 = 4;
 /// No edit (the class has no form in this cell), or no lemma cell.
 pub const NONE: u32 = u32::MAX;
 /// Unknown inherent-feature value.

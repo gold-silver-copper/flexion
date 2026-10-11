@@ -1,26 +1,36 @@
 //! `cargo xtask <command> <language> [flags]`:
 //!
-//! - `build <lang> --dump <path> [--edition <code>=<path>]… [--date YYYY-MM-DD]`:
+//! - `build <lang> --dump <path> [--edition <code>=<path>]… [--date YYYY-MM-DD]
+//!   [--size-price p]`:
 //!   the full pipeline (extract, tune on the dev tenth, measure on the
 //!   held-out tenth, train on everything) and write `languages/<lang>`. Each
 //!   `--edition` reads one of the language's other Wiktionary editions;
 //! - `extract <lang> --dump <path> [--edition <code>=<path>]…`: read the dumps
-//!   into the lexeme cache, for `probe`;
+//!   into the lexeme cache (`$FLEXION_CACHE`, else `~/.cache/flexion`), for
+//!   `probe`;
 //! - `probe <lang> [--pos <name>] [--alpha a] [--tau t] [--epsilon e]
 //!   [--syllables depth] [--variant decay] [--misses 1] [--attested 1]
-//!   [--union 1]`: train
+//!   [--union 1] [--front 1]`: train
 //!   without the held-out tenth with fixed parameters and score it (or, with
 //!   `--attested`, train on everything and score that), for experiments. The
 //!   score counts the main dump's words, or with `--union` every word.
+//!   `--fraction f` trains on that share of the training words;
+//! - `tune <lang> [--pos <name>] [--size-price p]`: score the build's whole
+//!   tuning grid on the
+//!   dev tenth and show which setting the build would choose;
+//! - `export <lang>`: write the cached lexemes as the evaluation splits them,
+//!   one TSV per part of speech under `<cache>/export/<lang>/`
+//!   (`split, lemma, lemma in full, cell, primary form, attested forms,
+//!   source`), for models outside this repository (the neural baseline).
 
 use flexion_train::extract::{self, PosData, Word};
 use flexion_train::learn::Params;
 use flexion_train::pipeline::{Baseline, fastest_ns};
-use flexion_train::{DEV_BUCKET, PosPlan, TEST_BUCKET, bucket, eval, spec::Language};
+use flexion_train::{DEV_BUCKET, PosPlan, TEST_BUCKET, bucket, eval, percentile, spec::Language};
 use std::path::{Path, PathBuf};
 use std::time::Instant;
 
-const USAGE: &str = "usage: cargo xtask <build|extract|probe> <language> [flags]";
+const USAGE: &str = "usage: cargo xtask <build|extract|probe|export|tune> <language> [flags]";
 
 /// Threads for tuning: the machine is shared, so never all of it.
 const THREADS: usize = 8;
@@ -44,6 +54,12 @@ fn run() -> Result<(), String> {
             .and_then(|w| w.get(1))
             .cloned()
     };
+    // `--size-price p`: what doubling a model must buy (see `choose`).
+    let size_price = || -> Result<f64, String> {
+        flag("--size-price").map_or(Ok(flexion_train::pipeline::SIZE_PRICE), |v| {
+            v.parse().map_err(|_| "bad --size-price".to_string())
+        })
+    };
     // `--edition <code>=<path>`, any number of times.
     let editions: Vec<(String, PathBuf)> = rest
         .windows(2)
@@ -58,8 +74,21 @@ fn run() -> Result<(), String> {
     match cmd.as_str() {
         "build" => {
             let dump = flag("--dump").ok_or("--dump <path> is required")?;
-            build(&lang, Path::new(&dump), &editions, flag("--date"))
+            build(
+                &lang,
+                Path::new(&dump),
+                &editions,
+                flag("--date"),
+                size_price()?,
+            )
         }
+        "export" => export(&lang, &load_cache(&lang)?),
+        "tune" => tune(
+            &lang,
+            &load_cache(&lang)?,
+            flag("--pos").as_deref(),
+            size_price()?,
+        ),
         "extract" => {
             let dump = flag("--dump").ok_or("--dump <path> is required")?;
             let data = extract_dump(&lang, Path::new(&dump), &editions)?;
@@ -94,13 +123,18 @@ fn run() -> Result<(), String> {
             if flag("--joins").is_some() {
                 params.joins = true;
             }
+            if flag("--front").is_some() {
+                params.front_restore = true;
+            }
             if let Some(d) = flag("--initial") {
                 params.walk.initial_depth = Some(d.parse().map_err(|_| "bad --initial")?);
             }
+            let fraction = num("--fraction")?.unwrap_or(1.0);
             probe(
                 &lang,
                 &data,
                 params,
+                fraction,
                 flag("--pos").as_deref(),
                 flag("--misses").is_some(),
                 flag("--attested").is_some(),
@@ -118,6 +152,7 @@ fn build(
     dump: &Path,
     editions: &[(String, PathBuf)],
     date: Option<String>,
+    size_price: f64,
 ) -> Result<(), String> {
     let t = Instant::now();
     let data = extract_dump(lang, dump, editions)?;
@@ -165,7 +200,8 @@ fn build(
             edition.map_or(code.as_str(), |e| e.name)
         ));
     }
-    let built = flexion_train::pipeline::build(lang, &data, &baselines, THREADS, &note)?;
+    let built =
+        flexion_train::pipeline::build(lang, &data, &baselines, THREADS, size_price, &note)?;
     let mut report = built.report;
     if lang.name == "english" {
         report.push_str(&english_comparison(lang, &data, &built.blob)?);
@@ -198,11 +234,19 @@ fn workspace_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("..")
 }
 
+/// The lexeme cache: under `$FLEXION_CACHE`, else `~/.cache/flexion`.
+fn cache_dir() -> PathBuf {
+    match std::env::var("FLEXION_CACHE") {
+        Ok(dir) => PathBuf::from(dir),
+        Err(_) => {
+            let home = std::env::var("HOME").unwrap_or_else(|_| ".".into());
+            PathBuf::from(home).join(".cache/flexion")
+        }
+    }
+}
+
 fn cache_path(lang: &Language) -> PathBuf {
-    let home = std::env::var("HOME").unwrap_or_else(|_| ".".into());
-    PathBuf::from(home)
-        .join(".cache/flexion")
-        .join(format!("{}-lexemes.json", lang.name))
+    cache_dir().join(format!("{}-lexemes.json", lang.name))
 }
 
 fn extract_dump(
@@ -249,6 +293,7 @@ fn probe(
     lang: &Language,
     data: &[PosData],
     params: Params,
+    fraction: f64,
     only: Option<&str>,
     misses: bool,
     attested: bool,
@@ -282,7 +327,15 @@ fn probe(
                 .collect();
             let chooser = flexion_train::edit::Chooser::new(&sp, &train, shape.lemma_cell);
             let s = flexion_train::pipeline::choose_sources(
-                &spec, shape, params, &train, &dev, &chooser, &citation, &markers,
+                &spec,
+                shape,
+                params,
+                &train,
+                &dev,
+                &chooser,
+                &citation,
+                &markers,
+                flexion_train::pipeline::SIZE_PRICE,
             );
             eprintln!(
                 "{}: {} cells from principal parts",
@@ -302,8 +355,10 @@ fn probe(
     }
     let t = Instant::now();
     // `--attested 1`: train on everything and score the words trained on.
+    // `--fraction f`: train on that share of the training words only.
+    let share = (fraction * 100.0).round() as u64;
     let (blob, stats) = flexion_train::train(lang, data, &plans, &|k| {
-        attested || bucket(k) != TEST_BUCKET
+        attested || (bucket(k) != TEST_BUCKET && percentile(k) < share)
     });
     eprintln!(
         "trained in {:.1}s, blob {} bytes",
@@ -380,7 +435,7 @@ fn probe(
             let total = score.total(&[]);
             let (ece, _) = eval::calibration(&score.calibration);
             println!(
-                "  {:?}: n {} top1 {:.2}% letters {:.2}% any {:.2}% top3 {:.2}% ece {:.4}",
+                "  {:?}: n {} top1 {:.2}% letters {:.2}% any {:.2}% top3 {:.2}% ece {:.4} loss {:.4}",
                 given,
                 total.n,
                 pct(total.top1, total.n),
@@ -388,6 +443,7 @@ fn probe(
                 pct(total.top1_any, total.n),
                 pct(total.top3_any, total.n),
                 ece,
+                score.log_loss(),
             );
             if misses {
                 let (_, bins) = eval::calibration(&score.calibration);
@@ -458,6 +514,119 @@ fn probe(
         for (name, (ok, n)) in part.inherent.iter().zip(inh) {
             println!("  inherent {name}: {:.2}% of {n}", pct(ok, n));
         }
+    }
+    Ok(())
+}
+
+fn tune(
+    lang: &Language,
+    data: &[PosData],
+    only: Option<&str>,
+    size_price: f64,
+) -> Result<(), String> {
+    let spec = flexion_train::spelling_spec(lang);
+    let sp = flexion_train::view(&spec);
+    let shapes = flexion_train::shapes(lang)?;
+    for ((part, d), shape) in lang.parts.iter().zip(data).zip(&shapes) {
+        if only.is_some_and(|o| o != part.name) {
+            continue;
+        }
+        let cells = flexion_train::cells::Cells::new(lang, part)?;
+        let citation: Vec<usize> = part
+            .citation
+            .iter()
+            .filter_map(|(g, v)| cells.find(g, v))
+            .collect();
+        let marker_names = lang.markers(part);
+        let markers: Vec<&[&str]> = marker_names.iter().map(Vec::as_slice).collect();
+        let split = |keep: &dyn Fn(u64) -> bool| -> Vec<Word> {
+            extract::words(d)
+                .into_iter()
+                .filter(|w| keep(bucket(w.key)))
+                .collect()
+        };
+        let train = split(&|b| b != TEST_BUCKET && b != DEV_BUCKET);
+        let dev = split(&|b| b == DEV_BUCKET);
+        let not_test = split(&|b| b != TEST_BUCKET);
+        let chooser = flexion_train::edit::Chooser::new(&sp, &not_test, shape.lemma_cell);
+        let scores = flexion_train::pipeline::grid_scores(
+            &spec, shape, &train, &dev, &chooser, &citation, &markers, THREADS,
+        );
+        let chosen = flexion_train::pipeline::choose(&scores, size_price).map(|c| c.params);
+        println!("== {}", part.name);
+        for price in [0.0, 0.02, 0.05, 0.1, 0.2] {
+            if let Some(g) = flexion_train::pipeline::choose(&scores, price) {
+                println!(
+                    "  price {price}: alpha {} tau {} support {}: {} KB, top1 {:.2}%, loss {:.4}",
+                    g.params.alpha,
+                    g.params.tau,
+                    g.params.min_support,
+                    g.bytes / 1024,
+                    100.0 * g.top1,
+                    g.loss
+                );
+            }
+        }
+        for g in &scores {
+            let p = g.params;
+            println!(
+                "  alpha {} tau {} support {} syllables {:?} initial {:?}: {} KB, top1 {:.2}% ± {:.2}, loss {:.4} ± {:.4}{}",
+                p.alpha,
+                p.tau,
+                p.min_support,
+                p.walk.syllable_depth,
+                p.walk.initial_depth,
+                g.bytes / 1024,
+                100.0 * g.top1,
+                100.0 * g.top1_se,
+                g.loss,
+                g.loss_se,
+                if Some(p) == chosen { "  <- chosen" } else { "" }
+            );
+        }
+    }
+    Ok(())
+}
+
+fn export(lang: &Language, data: &[PosData]) -> Result<(), String> {
+    let dir = cache_dir().join("export").join(lang.name);
+    std::fs::create_dir_all(&dir).map_err(|e| format!("{}: {e}", dir.display()))?;
+    let shapes = flexion_train::shapes(lang)?;
+    for ((part, d), shape) in lang.parts.iter().zip(data).zip(&shapes) {
+        let cells = flexion_train::cells::Cells::new(lang, part)?;
+        let mut out = String::new();
+        // Held-out words count on the main dump's entries, as the reports do.
+        let main = d.main_only();
+        for (split, words) in [
+            ("test", extract::words(&main)),
+            ("train", extract::words(d)),
+        ] {
+            for w in words {
+                let b = bucket(w.key);
+                let name = match (split, b) {
+                    ("test", TEST_BUCKET) => "test",
+                    ("train", DEV_BUCKET) => "dev",
+                    ("train", b) if b != TEST_BUCKET => "train",
+                    _ => continue,
+                };
+                let full = w.lexemes.first().map_or("", |l| l.full.as_str());
+                let source = w.lexemes.first().map_or(0, |l| l.source);
+                for cell in (0..cells.total).filter(|c| !shape.unscored.contains(c)) {
+                    let Some(primary) = w.primary(cell) else {
+                        continue;
+                    };
+                    out.push_str(&format!(
+                        "{name}\t{}\t{full}\t{}\t{primary}\t{}\t{source}\n",
+                        w.lemma(),
+                        cells.name(cell),
+                        w.attested(cell).join("|")
+                    ));
+                }
+            }
+        }
+        let path = dir.join(format!("{}.tsv", part.name));
+        std::fs::write(&path, out).map_err(|e| format!("{}: {e}", path.display()))?;
+        eprintln!("wrote {}", path.display());
     }
     Ok(())
 }

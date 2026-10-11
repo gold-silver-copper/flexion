@@ -72,9 +72,9 @@ used for any decision.
 
 | | lemmas | cells | top-1 | top-3 | top-1 given citation | english 0.4 rules | english 0.4 rules + tables |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| noun | 22658 | 22658 | **97.15%** | 99.75% | – | 95.76% | 98.87% |
+| noun | 22658 | 22658 | **97.14%** | 99.77% | – | 95.76% | 98.87% |
 | verb | 3955 | 15815 | **97.91%** | 99.85% | 99.53% | 92.51% | 99.38% |
-| adjective | 6162 | 12322 | **96.69%** | 99.98% | – | 96.15% | 99.33% |
+| adjective | 6162 | 12322 | **96.71%** | 99.98% | – | 96.15% | 99.33% |
 | adverb | 1206 | 2412 | **99.00%** | 100.00% | – | 99.00% | 99.17% |
 
 *english 0.4 rules*: the hand-written regular rules of the published `english` 0.4 (`english-core`), no tables.
@@ -88,13 +88,13 @@ used for any decision.
 
 | cell | n | top-1 | top-3 |
 |---|---:|---:|---:|
-| noun.pl | 22658 | 97.15% | 99.75% |
+| noun.pl | 22658 | 97.14% | 99.77% |
 | verb.3sg | 3954 | 99.22% | 99.92% |
 | verb.past | 3954 | 97.09% | 99.77% |
 | verb.prp | 3952 | 98.46% | 99.92% |
 | verb.pp | 3955 | 96.86% | 99.80% |
-| adjective.comp | 6160 | 96.70% | 99.98% |
-| adjective.sup | 6162 | 96.67% | 99.97% |
+| adjective.comp | 6160 | 96.72% | 99.98% |
+| adjective.sup | 6162 | 96.69% | 99.97% |
 | adverb.comp | 1206 | 99.00% | 100.00% |
 | adverb.sup | 1206 | 99.00% | 100.00% |
 
@@ -107,7 +107,7 @@ The shipped model, trained on everything, asked for every attested cell of every
 | | lemmas | cells | primary form from the plain call | every attested form among the answers |
 |---|---:|---:|---:|---:|
 | noun | 228072 | 228072 | **99.96%** | 99.95% |
-| verb | 38230 | 152819 | **99.98%** | 100.00% |
+| verb | 38230 | 152819 | **99.99%** | 100.00% |
 | adjective | 61454 | 122884 | **99.99%** | 99.97% |
 | adverb | 12620 | 25239 | **100.00%** | 99.99% |
 
@@ -120,21 +120,21 @@ Expected calibration error (ECE) is the average gap between confidence and accur
 |---|---:|
 | noun | 0.009 |
 | verb | 0.006 |
-| adjective | 0.007 |
-| adverb | 0.006 |
+| adjective | 0.006 |
+| adverb | 0.003 |
 
 All parts of speech together (ECE 0.006):
 
 | confidence | mean confidence | accuracy | answers |
 |---|---:|---:|---:|
-| 0.2–0.3 | 0.298 | 1.000 | 1 |
-| 0.3–0.4 | 0.362 | 0.444 | 27 |
-| 0.4–0.5 | 0.463 | 0.442 | 129 |
-| 0.5–0.6 | 0.559 | 0.626 | 823 |
-| 0.6–0.7 | 0.643 | 0.721 | 1146 |
-| 0.7–0.8 | 0.754 | 0.814 | 1078 |
-| 0.8–0.9 | 0.858 | 0.901 | 1796 |
-| 0.9–1.0 | 0.993 | 0.993 | 48207 |
+| 0.2–0.3 | 0.293 | 0.500 | 6 |
+| 0.3–0.4 | 0.371 | 0.407 | 27 |
+| 0.4–0.5 | 0.459 | 0.491 | 114 |
+| 0.5–0.6 | 0.557 | 0.600 | 818 |
+| 0.6–0.7 | 0.640 | 0.726 | 1110 |
+| 0.7–0.8 | 0.753 | 0.817 | 1086 |
+| 0.8–0.9 | 0.857 | 0.899 | 1880 |
+| 0.9–1.0 | 0.993 | 0.993 | 48166 |
 
 ### Made-up words
 
@@ -142,17 +142,17 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 | word | function | answers |
 |---|---|---|
-| `glorp` | noun | sg: glorp 1.00; pl: glorps 0.97 |
+| `glorp` | noun | sg: glorp 1.00; pl: glorps 0.98 |
 | `wug` | noun | sg: wug 1.00; pl: wugs 1.00 |
-| `blick` | noun | sg: blick 1.00; pl: blicks 1.00 |
+| `blick` | noun | sg: blick 1.00; pl: blicks 0.99 |
 | `fireman` | noun | sg: fireman 1.00; pl: firemen 0.99 |
-| `octopus` | noun | sg: octopus 1.00; pl: octopuses 0.72, octopi 0.24 |
+| `octopus` | noun | sg: octopus 1.00; pl: octopuses 0.65, octopi 0.30 |
 | `spling` | verb | inf: spling 1.00; 3sg: splings 1.00; past: splinged 0.72, splung 0.27; prp: splinging 1.00; pp: splinged 0.72, splung 0.27 |
 | `frobnicate` | verb | inf: frobnicate 1.00; 3sg: frobnicates 1.00; past: frobnicated 1.00; prp: frobnicating 1.00; pp: frobnicated 1.00 |
 | `blick` | verb | inf: blick 1.00; 3sg: blicks 1.00; past: blicked 1.00; prp: blicking 1.00; pp: blicked 1.00 |
 | `vomit` | verb | inf: vomit 1.00; 3sg: vomits 1.00; past: vomited 0.96; prp: vomiting 0.96; pp: vomited 0.96 |
 | `lie` | verb | inf: lie 1.00; 3sg: lies 1.00; past: lay 0.54, lied 0.46; prp: lying 0.88, lieing 0.12; pp: lain 0.54, lied 0.46 |
-| `glorpy` | adjective | pos: glorpy 1.00; comp: glorpier 0.71, more glorpy 0.29; sup: glorpiest 0.71, most glorpy 0.29 |
+| `glorpy` | adjective | pos: glorpy 1.00; comp: glorpier 0.70, more glorpy 0.30; sup: glorpiest 0.70, most glorpy 0.30 |
 | `flinderish` | adjective | pos: flinderish 1.00; comp: more flinderish 1.00; sup: most flinderish 1.00 |
 | `glorpily` | adverb | pos: glorpily 1.00; comp: more glorpily 1.00; sup: most glorpily 1.00 |
 
@@ -160,18 +160,18 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 <details><summary>noun</summary>
 
-- 128 × `noun.pl`: predicted `-+s`, attested `-+` — abovesigned → abovesigneds (attested abovesigned); accaophori → accaophoris (attested accaophori); ainu → ainus (attested ainu)
-- 46 × `noun.pl`: predicted `-um+a`, attested `-+s` — acetum → aceta (attested acetums); adiantum → adianta (attested adiantums); alodium → alodia (attested alodiums)
-- 43 × `noun.pl`: predicted `-+s`, attested `-+e` — amenorrhoea → amenorrhoeas (attested amenorrhoeae); antlia → antlias (attested antliae); epipuncta → epipunctas (attested epipunctae)
-- 33 × `noun.pl`: predicted `-+s`, attested `-+es` — alfajor → alfajors (attested alfajores); bastinado → bastinados (attested bastinadoes); cabron → cabrons (attested cabrones)
-- 32 × `noun.pl`: predicted `-+s`, attested `-on+a` — analogon → analogons (attested analoga); anangeon → anangeons (attested anangea); apocryphon → apocryphons (attested apocrypha)
-- 28 × `noun.pl`: predicted `-+es`, attested `-+` — abx → abxes (attested abx); alumnx → alumnxes (attested alumnx); chupacabras → chupacabrases (attested chupacabras)
-- 28 × `noun.pl`: predicted `-+s`, attested `-um+a` — achaenium → achaeniums (attested achaenia); arolium → aroliums (attested arolia); bronchium → bronchiums (attested bronchia)
-- 27 × `noun.pl`: predicted `-+es`, attested `-us+i` — acarus → acaruses (attested acari); alumnus → alumnuses (attested alumni); amorphus → amorphuses (attested amorphi)
-- 21 × `noun.pl`: predicted `-+`, attested `-+s` — babuji → babuji (attested babujis); bektashi → bektashi (attested bektashis); ennaphi → ennaphi (attested ennaphis)
-- 21 × `noun.pl`: predicted `-+es`, attested `-+s` — agitato → agitatoes (attested agitatos); ais → aises (attested aiss); aristarch → aristarches (attested aristarchs)
-- 21 × `noun.pl`: predicted `-us+i`, attested `-+es` — ailantus → ailanti (attested ailantuses); angelus → angeli (attested angeluses); bolus → boli (attested boluses)
-- 11 × `noun.pl`: predicted `-+`, attested `-+es` — allantois → allantois (attested allantoises); bavarois → bavarois (attested bavaroises); cokes → cokes (attested cokeses)
+- 134 × `noun.pl`: predicted `-+s`, attested `-+` — abovesigned → abovesigneds (attested abovesigned); accaophori → accaophoris (attested accaophori); ainu → ainus (attested ainu)
+- 51 × `noun.pl`: predicted `-um+a`, attested `-+s` — acetum → aceta (attested acetums); adiantum → adianta (attested adiantums); alodium → alodia (attested alodiums)
+- 45 × `noun.pl`: predicted `-+s`, attested `-+e` — amenorrhoea → amenorrhoeas (attested amenorrhoeae); antlia → antlias (attested antliae); epipuncta → epipunctas (attested epipunctae)
+- 38 × `noun.pl`: predicted `-+s`, attested `-on+a` — analogon → analogons (attested analoga); anangeon → anangeons (attested anangea); anecdoton → anecdotons (attested anecdota)
+- 35 × `noun.pl`: predicted `-+s`, attested `-+es` — alfajor → alfajors (attested alfajores); bastinado → bastinados (attested bastinadoes); beseech → beseechs (attested beseeches)
+- 26 × `noun.pl`: predicted `-+es`, attested `-us+i` — acarus → acaruses (attested acari); amorphus → amorphuses (attested amorphi); anestrus → anestruses (attested anestri)
+- 26 × `noun.pl`: predicted `-+s`, attested `-um+a` — achaenium → achaeniums (attested achaenia); arolium → aroliums (attested arolia); bimillennium → bimillenniums (attested bimillennia)
+- 25 × `noun.pl`: predicted `-+es`, attested `-+` — abx → abxes (attested abx); alumnx → alumnxes (attested alumnx); chupacabras → chupacabrases (attested chupacabras)
+- 22 × `noun.pl`: predicted `-us+i`, attested `-+es` — ailantus → ailanti (attested ailantuses); angelus → angeli (attested angeluses); bolus → boli (attested boluses)
+- 21 × `noun.pl`: predicted `-+es`, attested `-+s` — ais → aises (attested aiss); ausbruch → ausbruches (attested ausbruchs); az → azes (attested azs)
+- 19 × `noun.pl`: predicted `-+`, attested `-+s` — bektashi → bektashi (attested bektashis); ennaphi → ennaphi (attested ennaphis); favori → favori (attested favoris)
+- 14 × `noun.pl`: predicted `-an+en`, attested `-+s` — bildungsroman → bildungsromen (attested bildungsromans); birman → birmen (attested birmans); brahman → brahmen (attested brahmans)
 
 </details>
 
@@ -194,18 +194,18 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 <details><summary>adjective</summary>
 
-- 78 × `adjective.comp`: predicted `-y+ier`, attested `more -+` — awry → awrier (attested more awry); banky → bankier (attested more banky); belchy → belchier (attested more belchy)
-- 78 × `adjective.sup`: predicted `-y+iest`, attested `most -+` — awry → awriest (attested most awry); banky → bankiest (attested most banky); belchy → belchiest (attested most belchy)
-- 38 × `adjective.sup`: predicted `most -+`, attested `-+est` — acerb → most acerb (attested acerbest); apt → most apt (attested aptest); august → most august (attested augustest)
-- 36 × `adjective.comp`: predicted `more -+`, attested `-+er` — acerb → more acerb (attested acerber); apt → more apt (attested apter); august → more august (attested auguster)
+- 77 × `adjective.comp`: predicted `-y+ier`, attested `more -+` — awry → awrier (attested more awry); banky → bankier (attested more banky); belchy → belchier (attested more belchy)
+- 77 × `adjective.sup`: predicted `-y+iest`, attested `most -+` — awry → awriest (attested most awry); banky → bankiest (attested most banky); belchy → belchiest (attested most belchy)
+- 39 × `adjective.sup`: predicted `most -+`, attested `-+est` — acerb → most acerb (attested acerbest); apt → most apt (attested aptest); august → most august (attested augustest)
+- 37 × `adjective.comp`: predicted `more -+`, attested `-+er` — acerb → more acerb (attested acerber); apt → more apt (attested apter); august → more august (attested auguster)
 - 34 × `adjective.comp`: predicted `more -+`, attested `-y+ier` — badassy → more badassy (attested badassier); cabbagy → more cabbagy (attested cabbagier); cobwebby → more cobwebby (attested cobwebbier)
 - 34 × `adjective.sup`: predicted `most -+`, attested `-y+iest` — badassy → most badassy (attested badassiest); cabbagy → most cabbagy (attested cabbagiest); cobwebby → most cobwebby (attested cobwebbiest)
 - 30 × `adjective.comp`: predicted `more -+`, attested `-+r` — austere → more austere (attested austerer); coarse → more coarse (attested coarser); fake → more fake (attested faker)
 - 30 × `adjective.sup`: predicted `most -+`, attested `-+st` — austere → most austere (attested austerest); coarse → most coarse (attested coarsest); fake → most fake (attested fakest)
 - 12 × `adjective.comp`: predicted `more -+`, attested `-ey+ier` — bitey → more bitey (attested bitier); boney → more boney (attested bonier); chocolatey → more chocolatey (attested chocolatier)
 - 12 × `adjective.sup`: predicted `most -+`, attested `-ey+iest` — bitey → most bitey (attested bitiest); boney → most boney (attested boniest); chocolatey → most chocolatey (attested chocolatiest)
-- 9 × `adjective.comp`: predicted `-+er`, attested `more -+` — lacid → lacider (attested more lacid); myall → myaller (attested more myall); null → nuller (attested more null)
-- 9 × `adjective.sup`: predicted `-+est`, attested `most -+` — lacid → lacidest (attested most lacid); myall → myallest (attested most myall); null → nullest (attested most null)
+- 8 × `adjective.comp`: predicted `-+er`, attested `more -+` — myall → myaller (attested more myall); null → nuller (attested more null); quack → quacker (attested more quack)
+- 8 × `adjective.sup`: predicted `-+est`, attested `most -+` — myall → myallest (attested most myall); null → nullest (attested most null); quack → quackest (attested most quack)
 
 </details>
 
@@ -213,52 +213,78 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 - 7 × `adverb.comp`: predicted `more -+`, attested `-y+ier` — brightly → more brightly (attested brightlier); faintly → more faintly (attested faintlier); frankly → more frankly (attested franklier)
 - 7 × `adverb.sup`: predicted `most -+`, attested `-y+iest` — brightly → most brightly (attested brightliest); faintly → most faintly (attested faintliest); frankly → most frankly (attested frankliest)
-- 3 × `adverb.comp`: predicted `more -+`, attested `further -+` — upcountry → more upcountry (attested further upcountry); uptown → more uptown (attested further uptown); west → more west (attested further west)
-- 3 × `adverb.sup`: predicted `most -+`, attested `furthest -+` — upcountry → most upcountry (attested furthest upcountry); uptown → most uptown (attested furthest uptown); west → most west (attested furthest west)
-- 1 × `adverb.comp`: predicted `-+er`, attested `further -+` — north → norther (attested further north)
+- 4 × `adverb.comp`: predicted `more -+`, attested `further -+` — north → more north (attested further north); upcountry → more upcountry (attested further upcountry); uptown → more uptown (attested further uptown)
+- 4 × `adverb.sup`: predicted `most -+`, attested `furthest -+` — north → most north (attested furthest north); upcountry → most upcountry (attested furthest upcountry); uptown → most uptown (attested furthest uptown)
 - 1 × `adverb.comp`: predicted `more -+`, attested `-+er` — thick → more thick (attested thicker)
-- 1 × `adverb.sup`: predicted `-+est`, attested `furthest -+` — north → northest (attested furthest north)
 - 1 × `adverb.sup`: predicted `most -+`, attested `-+est` — thick → most thick (attested thickest)
 
 </details>
 
 ### Size and speed
 
-The model is 832 KB (343 KB gzipped).
+The model is 499 KB (208 KB gzipped). Where the bytes are, in KB (the strings, 25 KB, are shared):
+
+| | edits | classes | tree nodes | distributions | joins | lexicon | restoration model | part models | total |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 21 | 18 | 148 | 118 | 0 | 0 | 0 | 0 | 304 |
+| verb | 12 | 15 | 42 | 37 | 0 | 0 | 0 | 0 | 106 |
+| adjective | 3 | 2 | 39 | 13 | 0 | 0 | 0 | 0 | 57 |
+| adverb | 1 | 1 | 3 | 2 | 0 | 0 | 0 | 0 | 7 |
 
 | | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 665 | 657 | 11415 | 5473 | 29813 | 164 (`noun.pl`) |
-| verb | 387 | 450 | 3561 | 796 | 10638 | 137 (`verb.pp`) |
-| adjective | 92 | 65 | 3300 | 2218 | 5696 | 134 (`adjective.sup`) |
-| adverb | 40 | 22 | 270 | 160 | 593 | 130 (`adverb.comp`) |
+| noun | 665 | 657 | 12599 | 5843 | 30148 | 158 (`noun.pl`) |
+| verb | 387 | 450 | 3561 | 796 | 9553 | 137 (`verb.pp`) |
+| adjective | 92 | 65 | 3311 | 2210 | 3453 | 140 (`adjective.sup`) |
+| adverb | 40 | 22 | 277 | 175 | 448 | 127 (`adverb.comp`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
 release build, fastest of seven runs.
 
+<details><summary>Size against fit</summary>
+
+τ is the evidence a tree node needs to be kept (a likelihood-ratio threshold): a bigger τ keeps fewer nodes. Each row trains on the training tenths with the chosen settings but τ, scored on the dev tenth; the chosen τ is the smallest model within one standard error of the best dev top-1 and of the best dev log-loss.
+
+| | τ | model KB | dev top-1 | dev log-loss |
+|---|---:|---:|---:|---:|
+| noun | 1 | 347 | 97.16% | 0.1041 |
+| noun | 2 (chosen) | 272 | 97.12% | 0.1046 |
+| noun | 8 | 205 | 97.03% | 0.1087 |
+| verb | 1 (chosen) | 93 | 97.78% | 0.0713 |
+| verb | 2 | 78 | 97.66% | 0.0746 |
+| verb | 8 | 69 | 97.17% | 0.0850 |
+| adjective | 1 | 109 | 95.89% | 0.0883 |
+| adjective | 2 | 71 | 95.92% | 0.0882 |
+| adjective | 8 (chosen) | 50 | 95.99% | 0.0884 |
+| adverb | 1 | 11 | 99.20% | 0.0371 |
+| adverb | 2 | 9 | 99.20% | 0.0368 |
+| adverb | 8 (chosen) | 7 | 99.20% | 0.0350 |
+
+</details>
+
 <details><summary>Chosen hyperparameters</summary>
 
 | | smoothing α | pruning τ | suffix support | syllable token | dev top-1 |
 |---|---:|---:|---:|---|---:|
-| noun | 2 | 2 | 2 | after 0 letters | 97.16% |
+| noun | 8 | 2 | 2 | after 2 letters | 97.12% |
 | verb | 0.5 | 1 | 1 | none | 97.78% |
-| adjective | 0.5 | 8 | 2 | after 0 letters | 95.99% |
-| adverb | 0.5 | 8 | 1 | after 2 letters | 99.12% |
+| adjective | 8 | 8 | 1 | after 0 letters | 95.99% |
+| adverb | 8 | 8 | 2 | after 0 letters | 99.20% |
 
 </details>
 
 ### Compared with `english` 0.4
 
 `english` 0.4's generated exception tables are 1026 KB of Rust source (compiled into
-perfect-hash maps); this crate's model is 832 KB.
+perfect-hash maps); this crate's model is 499 KB.
 
 Attested words (every word both were built from), primary form from the plain call:
 
 | | `english` 0.4 | this crate |
 |---|---:|---:|
 | noun | 98.89% | 99.96% |
-| verb | 99.43% | 99.98% |
+| verb | 99.43% | 99.99% |
 | adjective | 99.41% | 99.99% |
 | adverb | 99.05% | 100.00% |
 
@@ -267,10 +293,10 @@ build, fastest of seven runs, the two libraries measured alternately in the same
 
 | | `english` 0.4 ns per call | this crate ns per call | ratio |
 |---|---:|---:|---:|
-| noun (`noun.pl`) | 76 | 156 | 2.0× |
-| verb (`verb.3sg`) | 59 | 131 | 2.2× |
-| adjective (`adjective.comp`) | 84 | 134 | 1.6× |
-| adverb (`adverb.comp`) | 50 | 126 | 2.5× |
+| noun (`noun.pl`) | 75 | 166 | 2.2× |
+| verb (`verb.3sg`) | 59 | 134 | 2.3× |
+| adjective (`adjective.comp`) | 85 | 140 | 1.6× |
+| adverb (`adverb.comp`) | 51 | 127 | 2.5× |
 
 
 ## Data and license

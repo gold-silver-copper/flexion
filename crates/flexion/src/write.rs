@@ -111,14 +111,13 @@ pub struct JoinSpec {
 #[derive(Debug, Clone, PartialEq)]
 pub struct NodeSpec {
     pub label: String,
-    pub first_child: u32,
     pub children: u32,
-    pub dist: u32,
     pub dist_len: u32,
 }
 
-/// One part of speech's tables. Node 0 is the root; each node's children are
-/// contiguous and sorted by the first character of their labels.
+/// One part of speech's tables. Nodes are breadth-first from the root: each
+/// node's children together, sorted by the first character of their labels,
+/// and each node's distribution entries after the previous node's.
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct PosTables {
     pub cells: usize,
@@ -129,6 +128,10 @@ pub struct PosTables {
     /// The part of speech (by index in the blob) whose one-cell model
     /// restores this one's lemmas from what callers type.
     pub restore: Option<usize>,
+    /// The part of speech whose model restores the start of this one's
+    /// lemmas: trained on them written backwards, so its suffix tree reads a
+    /// word from its first letter (Latin `con-` is `cōn-`).
+    pub restore_front: Option<usize>,
     /// Every word is written with a capital (German nouns).
     pub capitalized: bool,
     /// The join model, sorted by prefix (see [`JoinSpec`]).
@@ -170,6 +173,18 @@ impl Strings {
     }
 }
 
+/// A part of speech's flags word (see the format).
+fn pos_flags(capitalized: bool, wide_dist: bool, wide_edits: bool) -> u32 {
+    [
+        (capitalized, format::POS_CAPITALIZED),
+        (wide_dist, format::POS_WIDE_DIST),
+        (wide_edits, format::POS_WIDE_EDITS),
+    ]
+    .into_iter()
+    .filter(|(on, _)| *on)
+    .fold(0, |flags, (_, bit)| flags | bit)
+}
+
 fn to_u32(n: usize) -> u32 {
     u32::try_from(n).unwrap_or(u32::MAX)
 }
@@ -186,6 +201,47 @@ fn put_str(out: &mut Vec<u8>, strings: &mut Strings, s: &str) {
 
 /// Write a complete model blob.
 pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
+    write_sized(spelling, parts).0
+}
+
+/// Bytes each section of one part of speech takes in a blob.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct Sizes {
+    /// The part of speech's header.
+    pub header: usize,
+    pub edits: usize,
+    /// Class records and the group sub-vectors they share.
+    pub classes: usize,
+    /// Tree nodes and their first-character entries.
+    pub nodes: usize,
+    pub dist: usize,
+    pub joins: usize,
+    /// The parts section (which cells come from which part model).
+    pub parts: usize,
+    pub lexicon: usize,
+}
+
+impl Sizes {
+    pub fn total(&self) -> usize {
+        [
+            self.header,
+            self.edits,
+            self.classes,
+            self.nodes,
+            self.dist,
+            self.joins,
+            self.parts,
+            self.lexicon,
+        ]
+        .into_iter()
+        .fold(0, usize::saturating_add)
+    }
+}
+
+/// [`write`], also returning each part of speech's [`Sizes`] and the bytes of
+/// the string area (shared by all of them).
+pub fn write_sized(spelling: &SpellingSpec, parts: &[PosTables]) -> (Vec<u8>, Vec<Sizes>, usize) {
+    let mut sizes = Vec::with_capacity(parts.len());
     let mut strings = Strings::default();
     let mut header = Vec::with_capacity(format::HEADER_LEN);
     header.extend_from_slice(format::MAGIC);
@@ -295,11 +351,17 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
         for &len in &groups {
             put(&mut body, to_u32(len));
         }
+        let wide_edits = p.edits.len() >= usize::from(u16::MAX);
         for (list, _) in &subs {
             put(&mut body, to_u32(list.len()));
             for sub in list {
                 for &e in sub {
-                    put(&mut body, e);
+                    if wide_edits {
+                        put(&mut body, e);
+                    } else {
+                        let e = u16::try_from(e).unwrap_or(u16::MAX);
+                        body.extend_from_slice(&e.to_le_bytes());
+                    }
                 }
             }
         }
@@ -318,11 +380,10 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
             body.resize(start.saturating_add(stride), 0);
         }
         let nodes = at(&body);
+        // First children and first entries are running sums (see the format).
         for n in &p.nodes {
             let (off, _) = strings.add(&n.label);
             put(&mut body, off);
-            put(&mut body, n.first_child);
-            put(&mut body, n.dist);
             body.extend_from_slice(&u16::try_from(n.children).unwrap_or(u16::MAX).to_le_bytes());
             body.extend_from_slice(&u16::try_from(n.dist_len).unwrap_or(u16::MAX).to_le_bytes());
         }
@@ -335,9 +396,18 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
             put(&mut body, first | (len << format::CHAR_BITS));
         }
         let dist = at(&body);
+        let wide = p.classes.len() > usize::from(u16::MAX) + 1;
         for &(class, prob) in &p.dist {
-            put(&mut body, class);
-            put(&mut body, prob.to_bits());
+            if wide {
+                put(&mut body, class);
+                put(&mut body, prob.to_bits());
+            } else {
+                let class = u16::try_from(class).unwrap_or(u16::MAX);
+                // `as` saturates; the probability is in 0..=1.
+                let q = (prob.clamp(0.0, 1.0) * f32::from(u16::MAX)).round() as u16;
+                body.extend_from_slice(&class.to_le_bytes());
+                body.extend_from_slice(&q.to_le_bytes());
+            }
         }
         let joins_at = at(&body);
         let mut joins: Vec<&JoinSpec> = p.joins.iter().collect();
@@ -345,7 +415,13 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
         put(&mut body, to_u32(p.join_classes.len()));
         for class in &p.join_classes {
             for cell in 0..p.cells {
-                put(&mut body, class.get(cell).copied().unwrap_or(format::NONE));
+                let e = class.get(cell).copied().unwrap_or(format::NONE);
+                if wide_edits {
+                    put(&mut body, e);
+                } else {
+                    let e = u16::try_from(e).unwrap_or(u16::MAX);
+                    body.extend_from_slice(&e.to_le_bytes());
+                }
             }
         }
         put(&mut body, to_u32(joins.len()));
@@ -387,8 +463,9 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
         lexicon.sort();
         put(&mut body, to_u32(lexicon.len()));
         for (key, written) in lexicon {
-            put_str(&mut body, &mut strings, key);
             put_str(&mut body, &mut strings, written);
+            // The key itself is the written form folded: a hash finds it.
+            put(&mut body, crate::hash(key) as u32);
         }
         let mut h = Vec::with_capacity(format::POS_HEADER_LEN);
         for v in [
@@ -407,14 +484,27 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
             chars,
             groups_at,
             p.restore.map_or(format::NONE, to_u32),
-            u32::from(p.capitalized),
+            pos_flags(p.capitalized, wide, wide_edits),
             joins_at,
             parts_at,
             lexicon_at,
+            p.restore_front.map_or(format::NONE, to_u32),
         ] {
             put(&mut h, v);
         }
         pos_headers.extend_from_slice(&h);
+        let span = |a: u32, b: u32| usize::try_from(b.saturating_sub(a)).unwrap_or(0);
+        let end = at(&body);
+        sizes.push(Sizes {
+            header: format::POS_HEADER_LEN,
+            edits: span(edits, groups_at),
+            classes: span(groups_at, nodes),
+            nodes: span(nodes, dist),
+            dist: span(dist, joins_at),
+            joins: span(joins_at, parts_at),
+            parts: span(parts_at, lexicon_at),
+            lexicon: span(lexicon_at, end),
+        });
     }
 
     let mut out = header;
@@ -429,5 +519,6 @@ pub fn write(spelling: &SpellingSpec, parts: &[PosTables]) -> Vec<u8> {
     if let Some(slot) = out.get_mut(12..16) {
         slot.copy_from_slice(&s_len.to_le_bytes());
     }
-    out
+    let n_strings = strings.bytes.len();
+    (out, sizes, n_strings)
 }
