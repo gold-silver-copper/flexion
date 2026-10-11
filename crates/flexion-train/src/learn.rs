@@ -16,8 +16,8 @@
 
 use crate::extract::Word;
 use flexion::Spelling;
-use flexion::format::{BOUNDARY, NONE, Stress};
-use flexion::write::{ClassSpec, EditSpec, JoinSpec, NodeSpec, PosTables};
+use flexion::tables::{ClassSpec, EditSpec, JoinSpec, NodeSpec, PosTables};
+use flexion::{BOUNDARY, NONE, Stress};
 use std::collections::{BTreeMap, HashMap};
 
 /// Learner hyperparameters.
@@ -184,7 +184,9 @@ impl<'s> Learner<'s> {
         id
     }
 
-    fn intern_class(&mut self, edits: Vec<u32>, inherent: Vec<u8>) -> u32 {
+    /// The class of `edits` and `inherent`; `example` is the lemma it was
+    /// first seen with.
+    fn intern_class(&mut self, edits: Vec<u32>, inherent: Vec<u8>, example: &str) -> u32 {
         let key = (edits, inherent);
         if let Some(&id) = self.class_ids.get(&key) {
             return id;
@@ -205,6 +207,7 @@ impl<'s> Learner<'s> {
             strip,
             front,
             inherent: key.1.clone(),
+            example: example.to_string(),
         });
         self.class_ids.insert(key, id);
         id
@@ -267,7 +270,7 @@ impl<'s> Learner<'s> {
                     .homograph_decay
                     .powi(i32::try_from(rank).unwrap_or(i32::MAX));
             for (v, w) in vectors {
-                let class = self.intern_class(v, lex.inherent.clone());
+                let class = self.intern_class(v, lex.inherent.clone(), &lex.full);
                 let w = entry_weight * w / sum;
                 match out.iter_mut().find(|(c, _)| *c == class) {
                     Some((_, x)) => *x += w,
@@ -653,7 +656,7 @@ impl<'s> Learner<'s> {
                 let mut sorted: Vec<(u32, f64)> = d.clone();
                 sorted.sort_by(|a, b| b.1.total_cmp(&a.1).then(a.0.cmp(&b.0)));
                 for (i, &(class, p)) in sorted.iter().enumerate() {
-                    if !forms.is_empty() && i >= flexion::format::MAX_SCAN {
+                    if !forms.is_empty() && i >= flexion::MAX_SCAN {
                         break;
                     }
                     let Some(spec) = self.classes.get(class as usize) else {

@@ -76,8 +76,8 @@ test cells (Ancient Greek verbs, 65k cells, take longest).
 and `log.txt`.
 
 To put the answers next to the tree's on the same cells (by cell, lemma
-ending, length and inherent feature), with the probe model from
-`tools/ceiling/curves.sh`:
+ending, length and inherent feature), with a default-parameter tree (add probe
+flags after the path for others, see `../README.md`):
 
 ```sh
 cd ~/code/flexion && export FLEXION_CACHE=$HOME/.cache/flexion-ceiling \

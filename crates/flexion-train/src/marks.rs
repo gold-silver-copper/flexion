@@ -7,7 +7,7 @@
 use crate::spec::Spelling;
 use unicode_normalization::UnicodeNormalization;
 
-/// Tables for [`flexion::write::SpellingSpec`].
+/// Tables for [`flexion::tables::SpellingSpec`].
 #[derive(Debug, Default, PartialEq, Eq)]
 pub struct Derived {
     /// Triples: character, plain letter, kind digit.

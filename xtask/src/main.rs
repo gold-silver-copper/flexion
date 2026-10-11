@@ -24,13 +24,12 @@
 //!   source`), for models outside this repository (the neural baseline).
 
 use flexion_train::extract::{self, PosData, Word};
-use flexion_train::learn::Params;
 use flexion_train::pipeline::{Baseline, fastest_ns};
-use flexion_train::{DEV_BUCKET, PosPlan, TEST_BUCKET, bucket, eval, percentile, spec::Language};
+use flexion_train::{DEV_BUCKET, TEST_BUCKET, bucket, eval, spec::Language};
 use std::path::{Path, PathBuf};
 use std::time::Instant;
 
-const USAGE: &str = "usage: cargo xtask <build|extract|probe|export|tune> <language> [flags]";
+const USAGE: &str = "usage: cargo xtask <build|extract|probe|export|tune|emit> <language> [flags]";
 
 /// Threads for tuning: the machine is shared, so never all of it.
 const THREADS: usize = 8;
@@ -83,6 +82,7 @@ fn run() -> Result<(), String> {
             )
         }
         "export" => export(&lang, &load_cache(&lang)?),
+        "emit" => emit_code(&lang),
         "tune" => tune(
             &lang,
             &load_cache(&lang)?,
@@ -94,54 +94,13 @@ fn run() -> Result<(), String> {
             let data = extract_dump(&lang, Path::new(&dump), &editions)?;
             save_cache(&lang, &data)
         }
-        "probe" => {
-            let data = load_cache(&lang)?;
-            let mut params = Params::default();
-            let num = |name: &str| -> Result<Option<f64>, String> {
-                flag(name)
-                    .map(|v| v.parse().map_err(|_| format!("bad {name}")))
-                    .transpose()
-            };
-            if let Some(a) = num("--alpha")? {
-                params.alpha = a;
-            }
-            if let Some(t) = num("--tau")? {
-                params.tau = t;
-            }
-            if let Some(e) = num("--epsilon")? {
-                params.epsilon = e;
-            }
-            if let Some(v) = num("--variant")? {
-                params.variant_decay = v;
-            }
-            if let Some(m) = flag("--support") {
-                params.min_support = m.parse().map_err(|_| "bad --support")?;
-            }
-            if let Some(d) = flag("--syllables") {
-                params.walk.syllable_depth = Some(d.parse().map_err(|_| "bad --syllables")?);
-            }
-            if flag("--joins").is_some() {
-                params.joins = true;
-            }
-            if flag("--front").is_some() {
-                params.front_restore = true;
-            }
-            if let Some(d) = flag("--initial") {
-                params.walk.initial_depth = Some(d.parse().map_err(|_| "bad --initial")?);
-            }
-            let fraction = num("--fraction")?.unwrap_or(1.0);
-            probe(
-                &lang,
-                &data,
-                params,
-                fraction,
-                flag("--pos").as_deref(),
-                flag("--misses").is_some(),
-                flag("--attested").is_some(),
-                flag("--parts").is_some(),
-                flag("--union").is_some(),
-            )
-        }
+        "probe" => probe(
+            &lang,
+            &load_cache(&lang)?,
+            &flexion_train::probe::Probe::from_args(rest)?,
+            flag("--misses").is_some(),
+            flag("--union").is_some(),
+        ),
         _ => Err(USAGE.to_string()),
     }
 }
@@ -156,6 +115,8 @@ fn build(
 ) -> Result<(), String> {
     let t = Instant::now();
     let data = extract_dump(lang, dump, editions)?;
+    // The audit reads the words the build trained on.
+    save_cache(lang, &data)?;
     let rules = |cell: &str, lemma: &str| {
         english_baseline::inflect(english_baseline::Old::Rules, cell, lemma)
     };
@@ -204,10 +165,14 @@ fn build(
         flexion_train::pipeline::build(lang, &data, &baselines, THREADS, size_price, &note)?;
     let mut report = built.report;
     if lang.name == "english" {
-        report.push_str(&english_comparison(lang, &data, &built.blob)?);
+        report.push_str(&english_comparison(lang, &data, &built.model)?);
     }
     let dir = workspace_root().join("languages").join(lang.name);
-    flexion_train::emit::emit(lang, &built.blob, &report, &dir)?;
+    flexion_train::emit::emit(lang, &built.model, &report, &dir)?;
+    // What the audit retrains the shipped model with.
+    let plans = cache_dir().join(format!("{}-plans.json", lang.name));
+    std::fs::write(&plans, flexion_train::plans_json(&built.plans)?)
+        .map_err(|e| format!("{}: {e}", plans.display()))?;
     for license in ["LICENSE-MIT", "LICENSE-APACHE"] {
         std::fs::copy(workspace_root().join(license), dir.join(license))
             .map_err(|e| format!("{license}: {e}"))?;
@@ -224,6 +189,28 @@ fn build(
     }
     eprintln!(
         "wrote {} in {:.0}s",
+        dir.display(),
+        t.elapsed().as_secs_f64()
+    );
+    Ok(())
+}
+
+/// Rewrite a crate's model code from the shipped model, retrained from the
+/// lexeme cache and the plans its last build saved (no tuning, the report
+/// unchanged).
+fn emit_code(lang: &Language) -> Result<(), String> {
+    let data = load_cache(lang)?;
+    let path = cache_dir().join(format!("{}-plans.json", lang.name));
+    let json = std::fs::read_to_string(&path)
+        .map_err(|e| format!("{}: {e} (run `cargo xtask build` first)", path.display()))?;
+    let plans = flexion_train::plans_from_json(lang, &json)?;
+    let t = Instant::now();
+    let (built, _) = flexion_train::train(lang, &data, &plans, &|_| true);
+    let built = built.ok_or("the tables make no model")?;
+    let dir = workspace_root().join("languages").join(lang.name);
+    flexion_train::emit::emit_model(lang, &built, &dir)?;
+    eprintln!(
+        "wrote {}/src/model in {:.0}s",
         dir.display(),
         t.elapsed().as_secs_f64()
     );
@@ -288,85 +275,26 @@ fn load_cache(lang: &Language) -> Result<Vec<PosData>, String> {
     serde_json::from_slice(&bytes).map_err(|e| e.to_string())
 }
 
-#[allow(clippy::too_many_arguments)]
 fn probe(
     lang: &Language,
     data: &[PosData],
-    params: Params,
-    fraction: f64,
-    only: Option<&str>,
+    p: &flexion_train::probe::Probe,
     misses: bool,
-    attested: bool,
-    parts: bool,
     union: bool,
 ) -> Result<(), String> {
     let shapes = flexion_train::shapes(lang)?;
     let spec = flexion_train::spelling_spec(lang);
     let sp = flexion_train::view(&spec);
-    let mut plans: Vec<PosPlan> = Vec::new();
-    for ((part, shape), d) in lang.parts.iter().zip(&shapes).zip(data) {
-        let cells = flexion_train::cells::Cells::new(lang, part)?;
-        let citation: Vec<usize> = part
-            .citation
-            .iter()
-            .filter_map(|(g, v)| cells.find(g, v))
-            .collect();
-        // `--parts 1`: choose which cells principal parts build, on the dev tenth.
-        let skip = only.is_some_and(|o| o != part.name);
-        let sources = if parts && !skip {
-            let marker_names = lang.markers(part);
-            let markers: Vec<&[&str]> = marker_names.iter().map(Vec::as_slice).collect();
-            let words = extract::words(d);
-            let train: Vec<Word> = extract::words(d)
-                .into_iter()
-                .filter(|w| bucket(w.key) != TEST_BUCKET && bucket(w.key) != DEV_BUCKET)
-                .collect();
-            let dev: Vec<Word> = words
-                .into_iter()
-                .filter(|w| bucket(w.key) == DEV_BUCKET)
-                .collect();
-            let chooser = flexion_train::edit::Chooser::new(&sp, &train, shape.lemma_cell);
-            let s = flexion_train::pipeline::choose_sources(
-                &spec,
-                shape,
-                params,
-                &train,
-                &dev,
-                &chooser,
-                &citation,
-                &markers,
-                flexion_train::pipeline::SIZE_PRICE,
-            );
-            eprintln!(
-                "{}: {} cells from principal parts",
-                part.name,
-                s.iter().filter(|&&x| x > 0).count()
-            );
-            s
-        } else {
-            Vec::new()
-        };
-        plans.push(PosPlan {
-            shape: shape.clone(),
-            params,
-            citation,
-            sources,
-        });
-    }
+    let only = p.only.as_deref();
+    let attested = p.attested;
     let t = Instant::now();
-    // `--attested 1`: train on everything and score the words trained on.
-    // `--fraction f`: train on that share of the training words only.
-    let share = (fraction * 100.0).round() as u64;
-    let (blob, stats) = flexion_train::train(lang, data, &plans, &|k| {
-        attested || (bucket(k) != TEST_BUCKET && percentile(k) < share)
-    });
+    let (built, stats) = flexion_train::probe::train(lang, data, p)?;
+    let (_, _, bytes) = built.measure();
     eprintln!(
-        "trained in {:.1}s, blob {} bytes",
+        "trained in {:.1}s, tables measure {bytes} bytes",
         t.elapsed().as_secs_f64(),
-        blob.len()
     );
-    let _ = std::fs::write(cache_path(lang).with_extension("bin"), &blob);
-    let model = flexion::Model::from_bytes(&blob).ok_or("model failed to load")?;
+    let model = built.model();
     for (pi, (part, d)) in lang.parts.iter().zip(data).enumerate() {
         if only.is_some_and(|o| o != part.name) {
             continue;
@@ -689,7 +617,11 @@ fn bench(
 
 /// Size and speed of the published `english` 0.4, next to the new model,
 /// measured the same way in the same process.
-fn english_comparison(lang: &Language, data: &[PosData], blob: &[u8]) -> Result<String, String> {
+fn english_comparison(
+    lang: &Language,
+    data: &[PosData],
+    built: &flexion::Built,
+) -> Result<String, String> {
     let mut s = String::from("### Compared with `english` 0.4\n\n");
     let home = std::env::var("HOME").unwrap_or_default();
     let registry = PathBuf::from(home).join(".cargo/registry/src");
@@ -707,12 +639,16 @@ fn english_comparison(lang: &Language, data: &[PosData], blob: &[u8]) -> Result<
     }
     if table_bytes > 0 {
         s.push_str(&format!(
-            "`english` 0.4's generated exception tables are {} KB of Rust source (compiled into\nperfect-hash maps); this crate's model is {} KB.\n\n",
+            "`english` 0.4's generated exception tables are {} KB of Rust source (compiled into\nperfect-hash maps); this crate's model is {} KB of generated Rust source.\n\n",
             table_bytes / 1024,
-            blob.len() / 1024
+            flexion_train::codegen::generate(lang, built)
+                .iter()
+                .map(|(_, code)| code.len())
+                .sum::<usize>()
+                / 1024
         ));
     }
-    let model = flexion::Model::from_bytes(blob).ok_or("model failed to load")?;
+    let model = built.model();
     // Attested words, the same question asked of both.
     let spec = flexion_train::spelling_spec(lang);
     let sp = flexion_train::view(&spec);

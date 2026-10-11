@@ -6,7 +6,9 @@
 //! held-out words, and [`emit`] writes the crate. Nothing in here knows any
 //! language; everything language-specific comes from a [`spec::Language`].
 
+pub mod audit;
 pub mod cells;
+pub mod codegen;
 pub mod edit;
 pub mod emit;
 pub mod eval;
@@ -15,11 +17,12 @@ pub mod kaikki;
 pub mod learn;
 pub mod marks;
 pub mod pipeline;
+pub mod probe;
 pub mod spec;
 
 use extract::{PosData, Word};
 use flexion::Spelling;
-use flexion::write::SpellingSpec;
+use flexion::tables::SpellingSpec;
 use spec::Language;
 
 /// The runtime spelling spec for a language, with the tables its marks
@@ -87,6 +90,85 @@ pub struct PosPlan {
     pub sources: Vec<u8>,
 }
 
+/// A plan as a build saves it (`<lang>-plans.json` next to the lexeme
+/// cache), so tools can retrain the shipped model without tuning again.
+#[derive(serde::Serialize, serde::Deserialize)]
+struct SavedPlan {
+    alpha: f64,
+    tau: f64,
+    min_support: usize,
+    epsilon: f64,
+    variant_decay: f64,
+    homograph_decay: f64,
+    syllable_depth: Option<usize>,
+    syllable_max: usize,
+    initial_depth: Option<usize>,
+    joins: bool,
+    front_restore: bool,
+    citation: Vec<usize>,
+    sources: Vec<u8>,
+}
+
+/// `plans` as JSON.
+pub fn plans_json(plans: &[PosPlan]) -> Result<String, String> {
+    let saved: Vec<SavedPlan> = plans
+        .iter()
+        .map(|p| SavedPlan {
+            alpha: p.params.alpha,
+            tau: p.params.tau,
+            min_support: p.params.min_support,
+            epsilon: p.params.epsilon,
+            variant_decay: p.params.variant_decay,
+            homograph_decay: p.params.homograph_decay,
+            syllable_depth: p.params.walk.syllable_depth,
+            syllable_max: p.params.walk.syllable_max,
+            initial_depth: p.params.walk.initial_depth,
+            joins: p.params.joins,
+            front_restore: p.params.front_restore,
+            citation: p.citation.clone(),
+            sources: p.sources.clone(),
+        })
+        .collect();
+    serde_json::to_string_pretty(&saved).map_err(|e| e.to_string())
+}
+
+/// The plans [`plans_json`] wrote, for `lang`'s parts of speech.
+pub fn plans_from_json(lang: &Language, json: &str) -> Result<Vec<PosPlan>, String> {
+    let saved: Vec<SavedPlan> = serde_json::from_str(json).map_err(|e| e.to_string())?;
+    let shapes = shapes(lang)?;
+    if saved.len() != shapes.len() {
+        return Err(format!(
+            "{} plans for {} parts of speech",
+            saved.len(),
+            shapes.len()
+        ));
+    }
+    Ok(shapes
+        .into_iter()
+        .zip(saved)
+        .map(|(shape, s)| PosPlan {
+            shape,
+            params: learn::Params {
+                alpha: s.alpha,
+                tau: s.tau,
+                min_support: s.min_support,
+                epsilon: s.epsilon,
+                variant_decay: s.variant_decay,
+                homograph_decay: s.homograph_decay,
+                walk: flexion::Walk {
+                    syllable_depth: s.syllable_depth,
+                    syllable_max: s.syllable_max,
+                    initial_depth: s.initial_depth,
+                },
+                joins: s.joins,
+                front_restore: s.front_restore,
+            },
+            citation: s.citation,
+            sources: s.sources,
+        })
+        .collect())
+}
+
 pub fn shapes(lang: &Language) -> Result<Vec<learn::Shape>, String> {
     lang.parts
         .iter()
@@ -152,7 +234,7 @@ pub fn restoration(
     words: &[Word],
     params: learn::Params,
     backwards: bool,
-) -> Option<flexion::write::PosTables> {
+) -> Option<flexion::tables::PosTables> {
     if words
         .iter()
         .all(|w| w.lexemes.iter().all(|l| l.base == l.full))
@@ -219,19 +301,19 @@ pub fn restoration(
 /// typed lemmas, and the models that build cells from principal parts.
 #[derive(Clone)]
 pub struct Trained {
-    pub main: flexion::write::PosTables,
-    pub restore: Option<flexion::write::PosTables>,
+    pub main: flexion::tables::PosTables,
+    pub restore: Option<flexion::tables::PosTables>,
     /// The model restoring the start of typed lemmas (read backwards).
-    pub restore_front: Option<flexion::write::PosTables>,
+    pub restore_front: Option<flexion::tables::PosTables>,
     /// `(the principal part's cell, its model)`.
-    pub parts: Vec<(usize, flexion::write::PosTables)>,
+    pub parts: Vec<(usize, flexion::tables::PosTables)>,
 }
 
 /// Lay out trained parts of speech: mains first (so a part of speech keeps
 /// its index), then restoration models (each main's end model, then its start
 /// model), then part models, each main pointing
 /// at its own.
-pub fn assemble(parts: Vec<Trained>) -> Vec<flexion::write::PosTables> {
+pub fn assemble(parts: Vec<Trained>) -> Vec<flexion::tables::PosTables> {
     let n = parts.len();
     let mut mains = Vec::with_capacity(n);
     let mut restores = Vec::new();
@@ -274,7 +356,7 @@ pub fn part_model(
     words: &[Word],
     part_cell: usize,
     keep: &[bool],
-) -> Option<flexion::write::PosTables> {
+) -> Option<flexion::tables::PosTables> {
     let citation_cell = shape.lemma_cell;
     let mut lexemes = Vec::new();
     for w in words {
@@ -331,7 +413,7 @@ pub fn part_model(
 /// Train one part of speech: the main model (reading pairs as `chooser`
 /// says), its restoration model, and a part model for every principal part
 /// some cell is built from (`sources`, see
-/// [`flexion::write::PosTables::sources`]).
+/// [`flexion::tables::PosTables::sources`]).
 pub fn train_pos(
     sp: &Spelling<'_>,
     shape: &learn::Shape,
@@ -449,13 +531,14 @@ pub fn lexicon(
         .collect()
 }
 
-/// Train every part of speech on the words `keep` accepts and write a blob.
+/// Train every part of speech on the words `keep` accepts: the model in
+/// memory (`None` when the tables make none).
 pub fn train(
     lang: &Language,
     data: &[PosData],
     plans: &[PosPlan],
     keep: &dyn Fn(&str) -> bool,
-) -> (Vec<u8>, Vec<learn::Stats>) {
+) -> (Option<flexion::Built>, Vec<learn::Stats>) {
     let spec = spelling_spec(lang);
     let sp = view(&spec);
     let mut tables = Vec::new();
@@ -479,5 +562,5 @@ pub fn train(
         tables.push(t);
         stats.push(s);
     }
-    (flexion::write::write(&spec, &assemble(tables)), stats)
+    (flexion::Built::new(&spec, &assemble(tables)), stats)
 }

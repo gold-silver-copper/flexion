@@ -7,7 +7,7 @@ use crate::extract::{self, PosData, Word};
 use crate::learn::{self, Params, Shape};
 use crate::spec::Language;
 use crate::{DEV_BUCKET, TEST_BUCKET, bucket, spelling_spec, view};
-use flexion::write::{PosTables, SpellingSpec};
+use flexion::tables::{PosTables, SpellingSpec, measure};
 use std::fmt::Write as _;
 use std::time::Instant;
 
@@ -19,10 +19,14 @@ pub struct Baseline<'a> {
     pub inflect: &'a (dyn Fn(&str, &str) -> Option<String> + Sync),
 }
 
-/// What the build produced.
+/// What the build produced: the model in memory (the crate's code is
+/// written from it) and the report.
 pub struct Built {
-    pub blob: Vec<u8>,
+    pub model: flexion::Built,
     pub report: String,
+    /// What each part of speech was trained with: [`crate::train`] on every
+    /// word with these plans gives `model` again.
+    pub plans: Vec<crate::PosPlan>,
 }
 
 /// The grid each part of speech is tuned over. Where edits change the start
@@ -67,8 +71,13 @@ fn train_one(
     crate::train_pos(&sp, shape, params, words, chooser, &[], &[])
 }
 
-fn blob_of(spec: &SpellingSpec, tables: Vec<crate::Trained>) -> Vec<u8> {
-    flexion::write::write(spec, &crate::assemble(tables))
+fn built_of(spec: &SpellingSpec, tables: Vec<crate::Trained>) -> Option<flexion::Built> {
+    flexion::Built::new(spec, &crate::assemble(tables))
+}
+
+/// The size measure of these tables (see [`flexion::tables::measure`]).
+fn bytes_of(spec: &SpellingSpec, tables: &[PosTables]) -> usize {
+    measure(spec, tables).2
 }
 
 /// For each cell, where to build it from when the caller gives principal
@@ -114,10 +123,10 @@ pub fn choose_sources(
             parts: built.clone(),
             ..base.clone()
         };
-        let blob = blob_of(spec, vec![trained]);
-        let Some(model) = flexion::Model::from_bytes(&blob) else {
+        let Some(built) = built_of(spec, vec![trained]) else {
             return vec![(0, 0, 0.0); shape.cells];
         };
+        let model = built.model();
         let s = eval::score(
             &sp,
             &model,
@@ -163,9 +172,7 @@ pub fn choose_sources(
     // A part model is a whole second tree: it stays only if the dev log-loss
     // it saves over all its cells, per scored cell, pays the price of the
     // bytes it adds (as the grid's settings do: `choose`).
-    let main_bytes = flexion::write::write(spec, std::slice::from_ref(&base.main))
-        .len()
-        .max(1) as f64;
+    let main_bytes = bytes_of(spec, std::slice::from_ref(&base.main)).max(1) as f64;
     let all_cells = main_scores.iter().map(|&(_, n, _)| n).sum::<usize>().max(1) as f64;
     let mut tags: Vec<u8> = best.iter().map(|b| b.0).filter(|&s| s > 0).collect();
     tags.sort_unstable();
@@ -175,7 +182,7 @@ pub fn choose_sources(
         let part_bytes = parts
             .get(k)
             .and_then(|(_, t)| t.clone())
-            .map_or(0, |t| flexion::write::write(spec, &[t]).len()) as f64;
+            .map_or(0, |t| bytes_of(spec, &[t])) as f64;
         let (saved, gained) = best
             .iter()
             .zip(&main_scores)
@@ -290,17 +297,19 @@ pub fn grid_scores(
     let sp = view(spec);
     par_map(&grid(chooser.strips_fronts()), threads, |&params| {
         let (t, _) = train_one(spec, shape, params, train, chooser);
-        let blob = blob_of(spec, vec![t]);
-        let Some(model) = flexion::Model::from_bytes(&blob) else {
+        let tables = crate::assemble(vec![t]);
+        let bytes = bytes_of(spec, &tables);
+        let Some(built) = flexion::Built::new(spec, &tables) else {
             return GridPoint {
                 params,
                 top1: 0.0,
                 top1_se: 0.0,
                 loss: f64::INFINITY,
                 loss_se: 0.0,
-                bytes: blob.len(),
+                bytes,
             };
         };
+        let model = built.model();
         let s = eval::score(
             &sp,
             &model,
@@ -319,7 +328,7 @@ pub fn grid_scores(
             top1_se: s.top1_se(),
             loss: s.log_loss(),
             loss_se: s.log_loss_se(),
-            bytes: blob.len(),
+            bytes,
         }
     })
 }
@@ -411,7 +420,7 @@ fn par_map<T: Sync, R: Send>(items: &[T], threads: usize, f: impl Fn(&T) -> R + 
 /// Bytes one part of speech takes in the shipped model.
 #[derive(Debug, Clone, Copy, Default)]
 struct PosSizes {
-    main: flexion::write::Sizes,
+    main: flexion::tables::Sizes,
     restore: usize,
     part_models: usize,
 }
@@ -466,6 +475,7 @@ pub fn build(
     let t0 = Instant::now();
     let mut reports = Vec::new();
     let mut final_tables = Vec::new();
+    let mut plans = Vec::new();
     // Marks the caller may leave out: stress, macrons, ё.
     let sl = &lang.spelling;
     let has_stress = !sl.stress_marks.is_empty()
@@ -529,10 +539,12 @@ pub fn build(
             if !built {
                 continue;
             }
-            let blob = blob_of(&spec, vec![t]);
-            let Some(model) = flexion::Model::from_bytes(&blob) else {
+            let tables = crate::assemble(vec![t]);
+            let bytes = bytes_of(&spec, &tables);
+            let Some(built) = flexion::Built::new(&spec, &tables) else {
                 continue;
             };
+            let model = built.model();
             let s = eval::score(
                 &sp,
                 &model,
@@ -551,7 +563,7 @@ pub fn build(
                 top1_se: s.top1_se(),
                 loss: s.log_loss(),
                 loss_se: s.log_loss_se(),
-                bytes: blob.len(),
+                bytes,
             };
             let current = GridPoint {
                 params,
@@ -591,8 +603,8 @@ pub fn build(
                     .is_ok()
             })
             .count();
-        let blob = blob_of(&spec, vec![t]);
-        let model = flexion::Model::from_bytes(&blob).ok_or("test model failed to load")?;
+        let built = built_of(&spec, vec![t]).ok_or("test model failed to load")?;
+        let model = built.model();
         let test_score = eval::score(
             &sp,
             &model,
@@ -682,10 +694,16 @@ pub fn build(
         // 3. Train on everything and score every attested word.
         let (mut t, stats) =
             crate::train_pos(&sp, shape, params, &all, &chooser_all, &citation, &sources);
+        plans.push(crate::PosPlan {
+            shape: shape.clone(),
+            params,
+            citation: citation.clone(),
+            sources: sources.clone(),
+        });
         t.main.lexicon = crate::lexicon(lang, &sp, data, pi, &|_| true);
         let lexicon = (t.main.lexicon.len(), in_lexicon);
-        let blob = blob_of(&spec, vec![t.clone()]);
-        let model = flexion::Model::from_bytes(&blob).ok_or("final model failed to load")?;
+        let built = built_of(&spec, vec![t.clone()]).ok_or("final model failed to load")?;
+        let model = built.model();
         let attested = eval::score(
             &sp,
             &model,
@@ -773,7 +791,8 @@ pub fn build(
             )
         })
         .collect();
-    let (blob, sizes, strings) = flexion::write::write_sized(&spec, &crate::assemble(final_tables));
+    let tables = crate::assemble(final_tables);
+    let (sizes, strings, total) = measure(&spec, &tables);
     let n = layout.len();
     let mut next_restore = n;
     let mut next_part = n + layout.iter().map(|(r, _)| r).sum::<usize>();
@@ -791,20 +810,37 @@ pub fn build(
             next_part += 1;
         }
     }
-    let model = flexion::Model::from_bytes(&blob).ok_or("shipped model failed to load")?;
-    let nonce = nonce_table(lang, &model)?;
+    let built = flexion::Built::new(&spec, &tables).ok_or("shipped model failed to load")?;
+    let nonce = nonce_table(lang, &built.model())?;
+    let source = crate::codegen::generate(lang, &built);
+    let source_bytes = source.iter().map(|(_, code)| code.len()).sum::<usize>();
+    let source_gz = gz_len(
+        source
+            .iter()
+            .map(|(_, code)| code.as_bytes())
+            .collect::<Vec<_>>()
+            .concat()
+            .as_slice(),
+    );
     let report = render(
         lang,
         &reports,
         baselines,
-        blob.len(),
-        gz_len(&blob),
-        strings,
+        Sizing {
+            measure: total,
+            strings,
+            source: source_bytes,
+            source_gz,
+        },
         &nonce,
         dump_note,
         has_stress,
     );
-    Ok(Built { blob, report })
+    Ok(Built {
+        model: built,
+        report,
+        plans,
+    })
 }
 
 fn ratio(a: usize, b: usize) -> f64 {
@@ -819,10 +855,10 @@ fn pct(a: usize, b: usize) -> String {
     }
 }
 
-fn gz_len(blob: &[u8]) -> usize {
+fn gz_len(bytes: &[u8]) -> usize {
     use std::io::Write;
     let mut e = flate2::write::GzEncoder::new(Vec::new(), flate2::Compression::best());
-    if e.write_all(blob).is_err() {
+    if e.write_all(bytes).is_err() {
         return 0;
     }
     e.finish().map(|v| v.len()).unwrap_or(0)
@@ -914,14 +950,23 @@ fn nonce_table(lang: &Language, model: &flexion::Model) -> Result<String, String
     Ok(s)
 }
 
+/// The shipped model's sizes, in bytes.
+struct Sizing {
+    /// The size measure of its tables (what tuning prices).
+    measure: usize,
+    /// The measure's shared strings.
+    strings: usize,
+    /// The generated source, and gzipped.
+    source: usize,
+    source_gz: usize,
+}
+
 #[allow(clippy::too_many_arguments)]
 fn render(
     lang: &Language,
     reports: &[PosReport],
     baselines: &[Baseline],
-    blob: usize,
-    gz: usize,
-    strings: usize,
+    sizing: Sizing,
     nonce: &str,
     dump_note: &str,
     stress: bool,
@@ -1203,10 +1248,11 @@ fn render(
     s.push_str("### Size and speed\n\n");
     let _ = writeln!(
         s,
-        "The model is {} KB ({} KB gzipped). Where the bytes are, in KB (the strings, {} KB, are shared):\n",
-        blob / 1024,
-        gz / 1024,
-        strings / 1024
+        "The model is {} KB of generated Rust ({} KB gzipped). Its tables measure {} KB: what a compact binary layout of them would take, the size the build prices when it tunes. Where those bytes are, in KB (the strings, {} KB, are shared):\n",
+        sizing.source / 1024,
+        sizing.source_gz / 1024,
+        sizing.measure / 1024,
+        sizing.strings / 1024
     );
     s.push_str("| | edits | classes | tree nodes | distributions | joins | lexicon | restoration model | part models | total |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n");
     for r in reports {

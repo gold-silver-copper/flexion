@@ -1,6 +1,5 @@
-use crate::format::NONE;
-use crate::write::{ClassSpec, EditSpec, NodeSpec, PosTables, SpellingSpec, write};
-use crate::{Model, Options};
+use crate::tables::{Built, ClassSpec, EditSpec, NodeSpec, PosTables, SpellingSpec};
+use crate::{NONE, Options};
 
 fn edit(strip: &str, add: &str) -> EditSpec {
     EditSpec::suffix(strip, add)
@@ -16,7 +15,7 @@ fn node(label: &str, children: u32, dist_len: u32) -> NodeSpec {
 
 /// Nouns with cells [singular, plural]: +s everywhere, y → ies after "y",
 /// and one memorized exception, "ox" → "oxen".
-fn tiny() -> Vec<u8> {
+fn tiny() -> Built {
     let spelling = SpellingSpec {
         fold_case: true,
         // `ö` is `o` for lookup, so `dög` is the lexicon's `dog` written in full.
@@ -50,37 +49,41 @@ fn tiny() -> Vec<u8> {
                 strip: String::new(),
                 front: String::new(),
                 inherent: vec![],
+                example: String::new(),
             },
             ClassSpec {
                 edits: vec![0, 2],
                 strip: "y".into(),
                 front: String::new(),
                 inherent: vec![],
+                example: String::new(),
             },
             ClassSpec {
                 edits: vec![0, 3],
                 strip: String::new(),
                 front: String::new(),
                 inherent: vec![],
+                example: String::new(),
             },
             ClassSpec {
                 edits: vec![0, NONE],
                 strip: String::new(),
                 front: String::new(),
                 inherent: vec![],
+                example: String::new(),
             },
         ],
         // root → "y" (child 1), "xo\u{1}" (child 2)
         nodes: vec![node("", 2, 2), node("xo\u{1}", 0, 1), node("y", 0, 2)],
         dist: vec![(0, 0.9), (1, 0.1), (2, 1.0), (1, 0.8), (0, 0.2)],
     };
-    write(&spelling, &[nouns])
+    Built::new(&spelling, &[nouns]).expect("valid")
 }
 
 #[test]
 fn walks_to_the_deepest_node_and_applies_edits() {
-    let blob = tiny();
-    let model = Model::from_bytes(&blob).expect("valid");
+    let built = tiny();
+    let model = built.model();
     let nouns = model.pos(0).expect("pos");
     let ask = |w: &str| nouns.candidates(&nouns.citation(w, &[1]), 1, Options::default());
     assert_eq!(ask("cat")[0].form, "cats");
@@ -94,8 +97,8 @@ fn walks_to_the_deepest_node_and_applies_edits() {
 
 #[test]
 fn the_lexicon_writes_a_plain_lemma_in_full() {
-    let blob = tiny();
-    let model = Model::from_bytes(&blob).expect("valid");
+    let built = tiny();
+    let model = built.model();
     let nouns = model.pos(0).expect("pos");
     let ask = |w: &str| nouns.best(&nouns.citation(w, &[1]), 1, Options::default());
     assert_eq!(ask("dog"), "dögs");
@@ -106,8 +109,8 @@ fn the_lexicon_writes_a_plain_lemma_in_full() {
 
 #[test]
 fn citations_pin_and_filter() {
-    let blob = tiny();
-    let model = Model::from_bytes(&blob).expect("valid");
+    let built = tiny();
+    let model = built.model();
     let nouns = model.pos(0).expect("pos");
     // A given part is output exactly.
     let c = nouns.citation("city, citys", &[1]);
@@ -118,17 +121,25 @@ fn citations_pin_and_filter() {
 }
 
 #[test]
-fn corrupt_blobs_are_rejected() {
-    let blob = tiny();
-    for cut in [0, 3, 20, 71, blob.len() / 2] {
-        assert!(Model::from_bytes(&blob[..cut]).is_none(), "cut at {cut}");
-    }
+fn tables_that_make_no_model_are_rejected() {
+    let spelling = SpellingSpec::default();
+    // No tree.
+    assert!(Built::new(&spelling, &[PosTables::default()]).is_none());
+    // A part model that points at itself.
+    let mut nouns = PosTables {
+        cells: 1,
+        nodes: vec![node("", 0, 0)],
+        ..Default::default()
+    };
+    assert!(Built::new(&spelling, std::slice::from_ref(&nouns)).is_some());
+    nouns.part_models = vec![(0, 0)];
+    assert!(Built::new(&spelling, &[nouns]).is_none());
 }
 
 /// Nouns read through two restoration models: the end model writes `-us` as
 /// `-ūs`, the start model (over the word written backwards) writes `cons-`
 /// as `cōns-`.
-fn restored() -> Vec<u8> {
+fn restored() -> Built {
     let spelling = SpellingSpec {
         fold_case: true,
         fold_from: "ōū".into(),
@@ -159,6 +170,7 @@ fn restored() -> Vec<u8> {
         strip: strip.into(),
         front: String::new(),
         inherent: vec![],
+        example: String::new(),
     };
     let mut nouns = one(
         vec![edit("", ""), edit("", "s")],
@@ -167,6 +179,7 @@ fn restored() -> Vec<u8> {
             strip: String::new(),
             front: String::new(),
             inherent: vec![],
+            example: String::new(),
         }],
         vec![(0, 1.0)],
     );
@@ -180,13 +193,13 @@ fn restored() -> Vec<u8> {
         vec![class(0, "snoc"), class(1, "")],
         vec![(0, 0.6), (1, 0.4)],
     );
-    write(&spelling, &[nouns, end, start])
+    Built::new(&spelling, &[nouns, end, start]).expect("valid")
 }
 
 #[test]
 fn the_start_model_restores_the_beginning_of_a_plain_lemma() {
-    let blob = restored();
-    let model = Model::from_bytes(&blob).expect("valid");
+    let built = restored();
+    let model = built.model();
     let nouns = model.pos(0).expect("pos");
     let ask = |w: &str, cell| nouns.best(&nouns.citation(w, &[1]), cell, Options::default());
     assert_eq!(ask("consus", 0), "cōnsūs");

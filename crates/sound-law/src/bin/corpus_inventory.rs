@@ -111,12 +111,13 @@ fn inventory_mixtecaso(checkout: &Path) -> Result<(), Box<dyn Error>> {
     let mut representable = 0;
     let mut witnesses = 0;
     for row in &segments.rows {
-        if !row[left].is_empty() || !row[right].is_empty() {
+        let cell = |i: usize| row.get(i).copied().unwrap_or("");
+        if !cell(left).is_empty() || !cell(right).is_empty() {
             continue;
         }
         unconditioned += 1;
-        let target = row[from].strip_prefix('*').unwrap_or(row[from]);
-        let output = normalize_empty_output(row[to]);
+        let target = cell(from).strip_prefix('*').unwrap_or(cell(from));
+        let output = normalize_empty_output(cell(to));
         if !is_conservative_literal(target) || !is_conservative_output(output) {
             continue;
         }
@@ -181,14 +182,11 @@ fn inventory_diachronica(checkout: &Path) -> Result<(), Box<dyn Error>> {
         }
         change_rows += 1;
         let fields: Vec<&str> = line.split('\u{1}').collect();
-        if fields.len() != 5 {
+        let [_, _, from, to, context] = fields.as_slice() else {
             malformed_change_rows += 1;
             continue;
-        }
+        };
         parsed_change_rows += 1;
-        let from = fields[2];
-        let to = fields[3];
-        let context = fields[4];
         rows_with_context += usize::from(!context.is_empty());
         rows_with_excluded_context += usize::from(context.contains('\u{2}'));
         rows_with_parallel_changes += usize::from(from.contains('\u{2}') || to.contains('\u{2}'));

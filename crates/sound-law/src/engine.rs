@@ -71,7 +71,10 @@ impl Program {
                 rule_count: self.rules.len(),
             });
         }
-        Ok(apply_rules(&self.rules[range], input))
+        Ok(apply_rules(
+            self.rules.get(range).unwrap_or_default(),
+            input,
+        ))
     }
 
     /// Apply the inclusive range from `first` through `last` by rule name.
@@ -89,19 +92,28 @@ impl Program {
                 last: last.to_owned(),
             });
         }
-        Ok(apply_rules(&self.rules[start..=end], input))
+        Ok(apply_rules(
+            self.rules.get(start..=end).unwrap_or_default(),
+            input,
+        ))
     }
 
     /// Apply rules from the beginning through `last`, inclusively.
     pub fn apply_through(&self, input: &str, last: &str) -> Result<String, RuleRangeError> {
         let end = self.rule_index(last)?;
-        Ok(apply_rules(&self.rules[..=end], input))
+        Ok(apply_rules(
+            self.rules.get(..=end).unwrap_or_default(),
+            input,
+        ))
     }
 
     /// Apply rules from `first` through the end of the program.
     pub fn apply_from(&self, input: &str, first: &str) -> Result<String, RuleRangeError> {
         let start = self.rule_index(first)?;
-        Ok(apply_rules(&self.rules[start..], input))
+        Ok(apply_rules(
+            self.rules.get(start..).unwrap_or_default(),
+            input,
+        ))
     }
 
     /// Apply every rule while recording only the rules that changed the word.
@@ -169,8 +181,8 @@ impl Program {
 
 fn apply_rules(rules: &[CompiledRule], input: &str) -> String {
     let mut budget = WorkBudget::unlimited();
-    apply_rules_with_budget(rules, input, &mut budget)
-        .expect("an unlimited matcher budget cannot be exhausted")
+    // An unlimited budget is never exhausted; the input unchanged otherwise.
+    apply_rules_with_budget(rules, input, &mut budget).unwrap_or_else(|_| input.to_owned())
 }
 
 fn apply_rules_with_budget(
@@ -710,11 +722,13 @@ fn match_atoms(
         return;
     }
 
-    let atom = &pattern.atoms[atom_index];
+    let Some(atom) = pattern.atoms.get(atom_index) else {
+        return;
+    };
     for end in repetition_ends(atom, input, position, captures, budget) {
         let mut next_captures = captures.to_vec();
-        if let Some(capture) = atom.capture {
-            next_captures[capture] = Some(Span {
+        if let Some(slot) = atom.capture.and_then(|c| next_captures.get_mut(c)) {
+            *slot = Some(Span {
                 start: position,
                 end,
             });
@@ -822,10 +836,14 @@ fn unit_ends(
             .then_some(vec![position])
             .unwrap_or_default(),
         Matcher::Backreference(capture) => {
-            let Some(span) = captures[*capture] else {
+            let Some(captured) = captures
+                .get(*capture)
+                .copied()
+                .flatten()
+                .and_then(|span| input.get(span.start..span.end))
+            else {
                 return Vec::new();
             };
-            let captured = &input[span.start..span.end];
             rest.starts_with(captured)
                 .then_some(vec![position + captured.len()])
                 .unwrap_or_default()
@@ -851,23 +869,29 @@ fn render_replacement(
     for part in &rule.replacement {
         match part {
             ReplacementPart::Literal(literal) => output.push_str(literal),
+            // Every successful match sets the captures a compiled
+            // replacement names, and compiling checks that a map covers its
+            // capture: nothing here is ever missing.
             ReplacementPart::Capture(capture) => {
-                let span = captures[*capture]
-                    .expect("compiled replacement captures are set by every successful match");
-                output.push_str(&input[span.start..span.end]);
+                if let Some(captured) = captured(input, captures, *capture) {
+                    output.push_str(captured);
+                }
             }
             ReplacementPart::MappedCapture { capture, entries } => {
-                let span = captures[*capture]
-                    .expect("compiled replacement captures are set by every successful match");
-                let captured = &input[span.start..span.end];
-                let (_, mapped) = entries
-                    .iter()
-                    .find(|(source, _)| source == captured)
-                    .expect("map coverage is checked while compiling the capture");
-                output.push_str(mapped);
+                if let Some((_, mapped)) = captured(input, captures, *capture)
+                    .and_then(|c| entries.iter().find(|(source, _)| source == c))
+                {
+                    output.push_str(mapped);
+                }
             }
         }
     }
+}
+
+/// The text capture `capture` matched.
+fn captured<'i>(input: &'i str, captures: &[Option<Span>], capture: usize) -> Option<&'i str> {
+    let span = captures.get(capture).copied().flatten()?;
+    input.get(span.start..span.end)
 }
 
 fn boundaries_from(input: &str, from: usize) -> Vec<usize> {

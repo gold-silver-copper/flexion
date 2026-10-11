@@ -9,8 +9,8 @@
 
 use crate::extract::Word;
 use flexion::Spelling;
-use flexion::format::Stress;
-use flexion::write::EditSpec;
+use flexion::Stress;
+use flexion::tables::EditSpec;
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 

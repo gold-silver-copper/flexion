@@ -1,7 +1,7 @@
 //! Spelling: case folding, stress marks, letter folding for lookup, and
 //! rendering a built form back into the caller's casing.
 
-use crate::format::Stress;
+use crate::Stress;
 use std::borrow::Cow;
 
 /// The strings a [`Spelling`] is built from, as the model header stores them.

@@ -499,8 +499,11 @@ fn resolve_class_expression(
     let mut result = Vec::new();
     for term in union_terms {
         let (operands, operators) = split_class_term(term, rule, location)?;
-        let mut term_values = resolve_class_operand(classes, operands[0], rule, location)?;
-        for (operator, operand) in operators.into_iter().zip(&operands[1..]) {
+        let Some((&first, rest)) = operands.split_first() else {
+            return Err(pattern_error(rule, location, "empty class term"));
+        };
+        let mut term_values = resolve_class_operand(classes, first, rule, location)?;
+        for (operator, operand) in operators.into_iter().zip(rest) {
             let right = resolve_class_operand(classes, operand, rule, location)?;
             match operator {
                 '&' => term_values.retain(|value| right.contains(value)),

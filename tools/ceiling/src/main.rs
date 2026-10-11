@@ -1,7 +1,8 @@
 //! How close flexion's models are to what their data allows. Reads the lexeme
-//! cache (`$FLEXION_CACHE`, filled by `xtask extract`) and the models
-//! `curves.sh` keeps (`<lang>[-<pos>]-full.bin`, trained without the held-out
-//! tenth):
+//! cache (`$FLEXION_CACHE`, filled by `xtask extract`); where the tree is
+//! compared, it is trained here without the held-out tenth, with the probe
+//! flags given after the arguments (`--alpha 2 --tau 1 --parts 1`…, as
+//! `xtask probe` takes them; default parameters without):
 //!
 //! - `ceiling noise <lang>`: where two Wiktionary editions both have a word,
 //!   how often their primary forms of a cell differ, per cell;
@@ -9,16 +10,16 @@
 //!   the lemma's stress, vowel length or an inherent feature can be predicted
 //!   from its last (or first) k letters alone, on the held-out tenth, next to
 //!   what the tree gets;
-//! - `ceiling compare <lang> <pos> <predictions.tsv> [model.bin]`: another
+//! - `ceiling compare <lang> <pos> <predictions.tsv> [probe flags]`: another
 //!   model's answers (`lemma, cell, primary, answer`, as `neural/seq2seq.py`
 //!   writes them) next to the tree's on the same held-out cells, by cell,
-//!   ending and word type (the tree: `model.bin`, else the full-data probe
-//!   model).
+//!   ending and word type.
 
-use flexion::{Model, Options, Spelling};
+use flexion::{Options, Spelling};
 use flexion_train::cells::Cells;
 use flexion_train::extract::{self, Lexeme, PosData, Word};
 use flexion_train::learn::same_form;
+use flexion_train::probe::Probe;
 use flexion_train::spec::{Language, PartOfSpeech};
 use flexion_train::{TEST_BUCKET, bucket};
 use std::collections::{BTreeMap, HashMap};
@@ -27,7 +28,7 @@ use unicode_normalization::UnicodeNormalization;
 use unicode_normalization::char::is_combining_mark;
 
 const USAGE: &str = "usage: ceiling noise <lang> | ending <lang> <pos> <stress|length|<feature>> \
-                     | compare <lang> <pos> <predictions.tsv> [model.bin]";
+                     | compare <lang> <pos> <predictions.tsv> [probe flags]";
 
 /// The deepest context the ending (or beginning) predictors read.
 const MAX_DEPTH: usize = 12;
@@ -48,14 +49,8 @@ fn run() -> Result<(), String> {
     let data = load(&lang)?;
     match arg(0)? {
         "noise" => noise(&lang, &data),
-        "ending" => ending(&lang, &data, arg(2)?, arg(3)?),
-        "compare" => compare(
-            &lang,
-            &data,
-            arg(2)?,
-            arg(3)?,
-            args.get(4).map(String::as_str),
-        ),
+        "ending" => ending(&lang, &data, arg(2)?, arg(3)?, &probe(&args, arg(2)?)?),
+        "compare" => compare(&lang, &data, arg(2)?, arg(3)?, &probe(&args, arg(2)?)?),
         _ => Err(USAGE.into()),
     }
 }
@@ -74,14 +69,13 @@ fn load(lang: &Language) -> Result<Vec<PosData>, String> {
     serde_json::from_slice(&bytes).map_err(|e| e.to_string())
 }
 
-/// The full-data probe model `curves.sh` kept for this part of speech.
-fn model_bytes(lang: &Language, pos: &str) -> Result<Vec<u8>, String> {
-    let dir = cache_dir();
-    let own = dir.join(format!("{}-{pos}-full.bin", lang.name));
-    let shared = dir.join(format!("{}-full.bin", lang.name));
-    std::fs::read(&own)
-        .or_else(|_| std::fs::read(&shared))
-        .map_err(|e| format!("{}: {e} (run curves.sh first)", shared.display()))
+/// The probe flags after the arguments, choosing part-model sources for
+/// `pos` only.
+fn probe(args: &[String], pos: &str) -> Result<Probe, String> {
+    let mut p = Probe::from_args(args)?;
+    p.only = Some(pos.to_string());
+    p.attested = false;
+    Ok(p)
 }
 
 fn part<'l>(lang: &'l Language, name: &str) -> Result<(usize, &'l PartOfSpeech), String> {
@@ -395,15 +389,21 @@ impl Contexts {
     }
 }
 
-fn ending(lang: &Language, data: &[PosData], pos: &str, target: &str) -> Result<(), String> {
+fn ending(
+    lang: &Language,
+    data: &[PosData],
+    pos: &str,
+    target: &str,
+    probe: &Probe,
+) -> Result<(), String> {
     let spec = flexion_train::spelling_spec(lang);
     let sp = flexion_train::view(&spec);
     let shapes = flexion_train::shapes(lang)?;
     let (pi, part) = part(lang, pos)?;
     let shape = shapes.get(pi).ok_or("no shape")?;
     let d = data.get(pi).ok_or("no data")?;
-    let bytes = model_bytes(lang, pos)?;
-    let model = Model::from_bytes(&bytes).ok_or("model failed to load")?;
+    let (built, _) = flexion_train::probe::train(lang, data, probe)?;
+    let model = built.model();
     let p = model.pos(pi).ok_or("no such part in the model")?;
 
     let marks: Vec<char> = match target {
@@ -683,7 +683,7 @@ fn compare(
     data: &[PosData],
     pos: &str,
     path: &str,
-    model_path: Option<&str>,
+    probe: &Probe,
 ) -> Result<(), String> {
     let spec = flexion_train::spelling_spec(lang);
     let sp: Spelling = flexion_train::view(&spec);
@@ -692,11 +692,8 @@ fn compare(
     let shape = shapes.get(pi).ok_or("no shape")?;
     let d = data.get(pi).ok_or("no data")?;
     let cells = Cells::new(lang, part)?;
-    let bytes = match model_path {
-        Some(m) => std::fs::read(m).map_err(|e| format!("{m}: {e}"))?,
-        None => model_bytes(lang, pos)?,
-    };
-    let model = Model::from_bytes(&bytes).ok_or("model failed to load")?;
+    let (built, _) = flexion_train::probe::train(lang, data, probe)?;
+    let model = built.model();
     let p = model.pos(pi).ok_or("no such part in the model")?;
     let text = std::fs::read_to_string(path).map_err(|e| format!("{path}: {e}"))?;
     let answers: HashMap<(&str, &str), &str> = text

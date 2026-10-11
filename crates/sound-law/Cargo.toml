@@ -9,3 +9,6 @@ repository.workspace = true
 description = "A declarative, capture-aware sound-change engine"
 
 [dependencies]
+
+[lints]
+workspace = true
