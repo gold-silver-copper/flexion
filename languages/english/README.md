@@ -222,7 +222,7 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 499 KB (208 KB gzipped). Where the bytes are, in KB (the strings, 25 KB, are shared):
+The model is 4622 KB of generated Rust (413 KB gzipped). Its tables measure 499 KB: what a compact binary layout of them would take, the size the build prices when it tunes. Where those bytes are, in KB (the strings, 25 KB, are shared):
 
 | | edits | classes | tree nodes | distributions | joins | lexicon | restoration model | part models | total |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -233,10 +233,10 @@ The model is 499 KB (208 KB gzipped). Where the bytes are, in KB (the strings, 2
 
 | | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 665 | 657 | 12599 | 5843 | 30148 | 158 (`noun.pl`) |
-| verb | 387 | 450 | 3561 | 796 | 9553 | 137 (`verb.pp`) |
-| adjective | 92 | 65 | 3311 | 2210 | 3453 | 140 (`adjective.sup`) |
-| adverb | 40 | 22 | 277 | 175 | 448 | 127 (`adverb.comp`) |
+| noun | 665 | 657 | 12599 | 5843 | 30148 | 470 (`noun.pl`) |
+| verb | 387 | 450 | 3561 | 796 | 9553 | 418 (`verb.pp`) |
+| adjective | 92 | 65 | 3311 | 2210 | 3453 | 446 (`adjective.sup`) |
+| adverb | 40 | 22 | 277 | 175 | 448 | 440 (`adverb.comp`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
@@ -277,7 +277,7 @@ release build, fastest of seven runs.
 ### Compared with `english` 0.4
 
 `english` 0.4's generated exception tables are 1026 KB of Rust source (compiled into
-perfect-hash maps); this crate's model is 499 KB.
+perfect-hash maps); this crate's model is 4622 KB of generated Rust source.
 
 Attested words (every word both were built from), primary form from the plain call:
 
@@ -293,10 +293,10 @@ build, fastest of seven runs, the two libraries measured alternately in the same
 
 | | `english` 0.4 ns per call | this crate ns per call | ratio |
 |---|---:|---:|---:|
-| noun (`noun.pl`) | 75 | 166 | 2.2× |
-| verb (`verb.3sg`) | 59 | 134 | 2.3× |
-| adjective (`adjective.comp`) | 85 | 140 | 1.6× |
-| adverb (`adverb.comp`) | 51 | 127 | 2.5× |
+| noun (`noun.pl`) | 74 | 493 | 6.7× |
+| verb (`verb.3sg`) | 60 | 413 | 6.9× |
+| adjective (`adjective.comp`) | 83 | 445 | 5.4× |
+| adverb (`adverb.comp`) | 50 | 438 | 8.7× |
 
 
 ## Data and license

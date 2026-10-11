@@ -22,14 +22,14 @@ code in the trainer or the runtime:
 
 Attested words are the ones the shipped model was trained on. The full reports (calibration,
 per-cell numbers, made-up words, the largest groups of mistakes, where the bytes are, size
-against fit, speed) are in each crate's README. The models are 0.3–4.9 MB (0.1–1.7 MB
-gzipped), except Russian's, 11.8 MB (4.7 MB gzipped: four times the words, and the
-participle lexicon), and Ancient Greek's, 17.4 MB (4.4 MB gzipped), all under crates.io's
-10 MB limit for a packaged crate. That is 9–54% smaller than before the size price (Russian
-was 21.4 MB, Greek 20.1 MB); English is 0.5 MB against `english` 0.4's 1 MB of tables. Calls
-take 100–300 ns in English, Polish, German, Spanish, French and Italian, 0.2–0.7 µs in
-Russian and Sanskrit, and 0.5–3 µs in Latin and Ancient Greek, whose start-restoration
-model reads every unseen lemma twice (measured on a busy machine; speed is next on the list).
+against fit, speed) are in each crate's README.
+
+Each crate's model is Rust code (see [The generated code](#the-generated-code)): 2–5 MB of
+source for English and the Romance languages and Sanskrit, 8 MB for Polish, 22 MB for
+German, 30 MB for Latin, 63 MB for Ancient Greek and 67 MB for Russian (0.2–8.4 MB
+gzipped, under crates.io's 10 MB limit for a packaged crate). What the tuning prices is the
+size of the tables underneath: 0.3–4.9 MB, Russian's 11.8 MB and Ancient Greek's 17.4 MB.
+A clean build of all ten crates takes under a minute on 4 cores and peaks at 12 GB.
 
 Russian learns from the Russian Wiktionary too, four times the words of the English one.
 From the bare lemma, the hard part is where the stress falls. A participle typed plain
@@ -104,7 +104,8 @@ assert_eq!(italian::verb("finire", italian::Tense::Present, italian::Person::Fir
 
 ```
 crates/flexion         the runtime every generated crate depends on (no dependencies)
-crates/flexion-train   extract → learn → evaluate → emit
+crates/flexion-train   extract → learn → evaluate → write the crate's code
+crates/sound-law       a sound-change engine (moved here from gold-silver-copper/ruthenian)
 configs/               one language description per module: english.rs, russian.rs, latin.rs,
                        polish.rs, german.rs, ancient_greek.rs, sanskrit.rs, spanish.rs,
                        french.rs, italian.rs (and romance.rs: head-line helpers they share)
@@ -120,7 +121,10 @@ languages/spanish      generated
 languages/french       generated
 languages/italian      generated
 tools/english-baseline the published english 0.4, as a baseline for the English report
-xtask/                 cargo xtask build | probe | extract
+tools/audit            every generated crate answers exactly as the model it was written from
+tools/codegen-check    the same, as a test, on code generated from the test fixtures
+tools/ceiling          how close the models are to what their data allows
+xtask/                 cargo xtask build | emit | probe | extract | export | tune
 ```
 
 ## How it learns
@@ -170,7 +174,7 @@ xtask/                 cargo xtask build | probe | extract
    report shows where the bytes are and the size-against-fit curve. The shipped model is
    then trained on everything.
 6. **Emit.** The crate gets typed functions per cell group, a settings value (stress
-   marks or macrons on or off), the model as a binary blob, the config's hand-written
+   marks or macrons on or off), the model as Rust code, the config's hand-written
    helpers, and a README with the evaluation.
 
 Marks that people leave out when they type (Latin macrons, Russian `ё`, Greek accents,
@@ -218,6 +222,53 @@ are passed over while any class agrees. A **citation** (`"lie, lied"`, `"кни�
 книги"`) keeps only the classes that agree with the given principal parts (a missing part
 is written `—`), and **markers** (`m`, `anim`, `impf`) weigh classes by the features
 they name.
+
+## The generated code
+
+A crate's model is Rust code under `src/model/`, one module per part of speech (and per
+restoration, start-restoration and part model), each implementing the runtime's
+[`PosModel`](crates/flexion/src/tables.rs) trait:
+
+- the **suffix tree** is functions of `match`es over the word's symbols, read from its last
+  letter back; each node on the way adds its distribution over classes:
+
+  ```rust
+  /// Words ending -а.
+  pub(crate) fn n1(s: &[char], out: &mut Path<'_>) -> bool {
+      out.push(&[(82, 0.124422066), (40, 0.11540398), …], 0.99…);
+      match s {
+          [] => true,
+          ['а', s @ ..] => { out.push(&[(110, 0.4), (1, 0.2), …], …); match s { … } }
+          ['б', s @ ..] => super::t3::n17(s, out),
+          …
+          _ => false,
+      }
+  }
+  ```
+
+- the **classes** and **edits** are statics, each class with a word of it and its first
+  forms (`// 3324: like рука-манипулятор: рука-манипулятор, руки-манипуляторы, …`); classes
+  share their per-group edit vectors as the tables do;
+- the **lexicon** and the **join prefixes** are `match`es on strings.
+
+The trainer never compiles this code while it tunes: it scores an in-memory model of the
+same tables (the runtime's `Tables`), and writes the code from it once the build is done.
+So the two must agree, and [`tools/audit`](tools/audit) checks it: for every language it
+retrains the shipped model from the lexeme cache and the plans the build saved, then asks
+both the same questions (the held-out words in every input mode, a sample of attested
+words, made-up words; every cell with marks on and off, whether each cell exists, every
+inherent feature), and requires the answers to be equal bit for bit. On the shipped crates
+that is 1.6 million answers (French) to 11.4 million (Ancient Greek) per language, 46.7
+million in all, every one equal.
+[`tools/codegen-check`](tools/codegen-check) does the same on the test fixtures, in the test
+suite.
+
+rustc puts limits on what code can look like, and the generator stays inside them: a tree
+function holds at most 256 nodes and nests at most 6 `match`es (a long word's chain of
+nodes overflowed rustc's stack), a file at most 8,192 nodes or 20,000 table entries, and a
+string `match` at most 500 arms (Russian's 56,000-word participle lexicon as one `match`
+overflowed it too). Generated crates build no unit-test harness (`test = false`): their
+tests are their README examples, and the model isn't compiled twice.
 
 ## Other Wiktionary editions
 
@@ -363,6 +414,8 @@ cargo xtask probe russian --pos noun --tau 2 --misses 1                   # expe
 cargo xtask probe ancient-greek --pos verb --parts 1 --joins 1            # with part models, joins
 cargo xtask probe latin --pos noun --front 1                               # with the start-restoration model
 cargo xtask tune russian --pos noun                                       # the grid: size, top-1, log-loss
+cargo xtask emit russian                                                  # rewrite the model's code from the last build's plans
+cargo run --release -p audit -- russian                                   # the generated code answers as the model
 cargo xtask export russian                                                # train/dev/test splits as TSV
 ```
 
@@ -376,5 +429,5 @@ language on 8 threads (Russian's four editions' worth of words and Ancient Greek
 
 ## License
 
-Code: MIT or Apache-2.0. Generated models (`languages/*/src/model.bin`) and the test
+Code: MIT or Apache-2.0. Generated models (`languages/*/src/model/`) and the test
 fixtures are derived from Wiktionary and licensed CC BY-SA 4.0.

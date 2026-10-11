@@ -10,11 +10,16 @@ use std::sync::OnceLock;
 mod extra;
 pub use extra::*;
 
-static BLOB: &[u8] = include_bytes!("model.bin");
+// Generated code: neither formatted nor linted for style.
+#[rustfmt::skip]
+#[allow(clippy::approx_constant, clippy::excessive_precision, clippy::unreadable_literal)]
+mod model;
 
-fn model() -> Option<&'static Model<'static>> {
-    static MODEL: OnceLock<Option<Model<'static>>> = OnceLock::new();
-    MODEL.get_or_init(|| Model::from_bytes(BLOB)).as_ref()
+/// The model (for tools that compare it with the trainer's).
+#[doc(hidden)]
+pub fn model() -> &'static Model<'static> {
+    static MODEL: OnceLock<Model<'static>> = OnceLock::new();
+    MODEL.get_or_init(model::build)
 }
 
 /// Grammatical number.
@@ -258,14 +263,14 @@ fn citation<'s>(p: &flexion::Pos<'_, 'static>, pos: usize, word: &'s str) -> fle
 }
 
 fn quick(pos: usize, word: &str, cell: usize, options: Options) -> String {
-    match model().and_then(|m| m.pos(pos)) {
+    match model().pos(pos) {
         Some(p) => p.best(&citation(&p, pos, word), cell, options),
         None => word.to_string(),
     }
 }
 
 fn scored(pos: usize, word: &str, cell: usize, options: Options) -> Vec<Candidate> {
-    match model().and_then(|m| m.pos(pos)) {
+    match model().pos(pos) {
         Some(p) => p.candidates(&citation(&p, pos, word), cell, options),
         None => vec![Candidate {
             form: word.to_string(),

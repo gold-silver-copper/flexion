@@ -499,7 +499,7 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 5005 KB (1737 KB gzipped). Where the bytes are, in KB (the strings, 470 KB, are shared):
+The model is 29746 KB of generated Rust (2887 KB gzipped). Its tables measure 5005 KB: what a compact binary layout of them would take, the size the build prices when it tunes. Where those bytes are, in KB (the strings, 470 KB, are shared):
 
 | | edits | classes | tree nodes | distributions | joins | lexicon | restoration model | part models | total |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -511,11 +511,11 @@ The model is 5005 KB (1737 KB gzipped). Where the bytes are, in KB (the strings,
 
 | | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 1179 | 664 | 3446 | 1186 | 16786 | 965 (`noun.nom.pl`) |
-| adjective | 9915 | 425 | 24248 | 712 | 7753 | 3040 (`adjective.nom.f.sg`) |
-| verb | 9633 | 1553 | 4141 | 611 | 38827 | 812 (`verb.ind.act.pres.3.sg`) |
-| pronoun | 629 | 216 | 129 | 9 | 2036 | 500 (`pronoun.nom.m.pl`) |
-| numeral | 64 | 14 | 15 | 4 | 55 | 379 (`numeral.nom.m.pl`) |
+| noun | 1179 | 664 | 3446 | 1186 | 16786 | 1817 (`noun.nom.pl`) |
+| adjective | 9915 | 425 | 24248 | 712 | 7753 | 3810 (`adjective.nom.f.sg`) |
+| verb | 9633 | 1553 | 4141 | 611 | 38827 | 1859 (`verb.ind.act.pres.3.sg`) |
+| pronoun | 629 | 216 | 129 | 9 | 2036 | 1645 (`pronoun.nom.m.pl`) |
+| numeral | 64 | 14 | 15 | 4 | 55 | 963 (`numeral.nom.m.pl`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,

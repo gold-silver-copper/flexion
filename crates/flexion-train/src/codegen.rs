@@ -434,7 +434,11 @@ fn classes(files: &mut Vec<(String, String)>, dir: &str, t: &Tables, id_ty: &str
         "//! The classes: per class its record and, per group of cells, which of\n\
          //! the group's shared edit vectors it has (`{none}`: no form in that cell).\n"
     );
-    m.push_str("use flexion::{Class, NONE};\n\n");
+    m.push_str(if none == "u32::MAX" {
+        "use flexion::Class;\n\n"
+    } else {
+        "use flexion::{Class, NONE};\n\n"
+    });
     for g in 0..n_groups {
         let _ = writeln!(m, "mod g{g};");
     }
@@ -468,7 +472,8 @@ fn classes(files: &mut Vec<(String, String)>, dir: &str, t: &Tables, id_ty: &str
     }
     let _ = writeln!(
         m,
-        "        _ => return None,\n    }};\n    Some(if e == {none} {{ NONE }} else {{ u32::from(e) }})\n}}"
+        "        _ => return None,\n    }};\n    {}\n}}",
+        widen(none)
     );
     files.push((format!("{dir}/classes/mod.rs"), m));
     for (g, (list, _)) in subs.iter().enumerate() {
@@ -833,13 +838,28 @@ fn lexicon(files: &mut Vec<(String, String)>, dir: &str, t: &Tables) {
     }
 }
 
+/// The code that turns a stored edit index `e` into the engine's: 16-bit
+/// indices mark "no form" with their own maximum, 32-bit ones are as is.
+fn widen(none: &str) -> String {
+    if none == "u32::MAX" {
+        "Some(e)".to_string()
+    } else {
+        format!("Some(if e == {none} {{ NONE }} else {{ u32::from(e) }})")
+    }
+}
+
 /// The join model: a `match` on the prefix, and the join classes' edits.
 fn joins(files: &mut Vec<(String, String)>, path: &str, t: &Tables, id_ty: &str, none: &str) {
     let mut m = String::new();
     m.push_str(
         "//! The join model: prefixes that, put before an attested word, make a word\n\
-         //! that inflects through it.\n\nuse flexion::{Join, NONE};\n\n",
+         //! that inflects through it.\n\n",
     );
+    m.push_str(if none == "u32::MAX" {
+        "use flexion::Join;\n\n"
+    } else {
+        "use flexion::{Join, NONE};\n\n"
+    });
     m.push_str(
         "pub(crate) fn join(prefix: &str) -> Option<Join<'static>> {\n    Some(match prefix {\n",
     );
@@ -896,7 +916,8 @@ fn joins(files: &mut Vec<(String, String)>, path: &str, t: &Tables, id_ty: &str,
     let _ = writeln!(
         m,
         "pub(crate) fn edit(class: usize, cell: usize) -> Option<u32> {{\n    \
-         let e = *CLASSES.get(class)?.get(cell)?;\n    Some(if e == {none} {{ NONE }} else {{ u32::from(e) }})\n}}"
+         let e = *CLASSES.get(class)?.get(cell)?;\n    {}\n}}",
+        widen(none)
     );
     files.push((path.to_string(), m));
 }

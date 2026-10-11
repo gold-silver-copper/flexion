@@ -465,7 +465,7 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 3412 KB (1528 KB gzipped). Where the bytes are, in KB (the strings, 155 KB, are shared):
+The model is 22348 KB of generated Rust (2896 KB gzipped). Its tables measure 3412 KB: what a compact binary layout of them would take, the size the build prices when it tunes. Where those bytes are, in KB (the strings, 155 KB, are shared):
 
 | | edits | classes | tree nodes | distributions | joins | lexicon | restoration model | part models | total |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -476,10 +476,10 @@ The model is 3412 KB (1528 KB gzipped). Where the bytes are, in KB (the strings,
 
 | | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 800 | 1625 | 48089 | 7493 | 299089 | 270 (`noun.gen.sg`) |
-| adjective | 676 | 103 | 6731 | 1898 | 14485 | 167 (`adjective.strong.nom.m`) |
-| verb | 14093 | 3840 | 10838 | 2144 | 69096 | 340 (`participle.pres`) |
-| determiner | 45 | 33 | 34 | 4 | 314 | 127 (`determiner.nom.f`) |
+| noun | 800 | 1625 | 48089 | 7493 | 299089 | 662 (`noun.gen.sg`) |
+| adjective | 676 | 103 | 6731 | 1898 | 14485 | 524 (`adjective.strong.nom.m`) |
+| verb | 14093 | 3840 | 10838 | 2144 | 69096 | 1093 (`participle.pres`) |
+| determiner | 45 | 33 | 34 | 4 | 314 | 441 (`determiner.nom.f`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
