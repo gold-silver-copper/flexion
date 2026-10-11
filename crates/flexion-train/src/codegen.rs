@@ -24,6 +24,9 @@ const MAX_NESTING: usize = 6;
 const FILE_NODES: usize = 8192;
 /// Table entries (edits, classes, lexicon words) one file holds at most.
 const FILE_ITEMS: usize = 20_000;
+/// Arms one generated string `match` holds at most: rustc lowers a match on
+/// strings to a chain of tests and overflows its stack on long ones.
+const MATCH_ARMS: usize = 500;
 
 /// The files of `src/model/`: `(path under src/, contents)`.
 pub fn generate(lang: &Language, built: &Built) -> Vec<(String, String)> {
@@ -619,16 +622,11 @@ fn tree_pass(
     let mut next = 0usize;
     while let Some((node, path)) = roots.get(next).cloned() {
         next = next.saturating_add(1);
-        let mut body = String::new();
-        let _ = writeln!(body, "/// {}.", describe(&path));
-        let _ = writeln!(
-            body,
-            "pub(crate) fn n{node}(s: &[char], out: &mut Path<'_>) -> bool {{"
-        );
+        let mut code = String::new();
         let mut budget = FN_NODES.saturating_sub(1);
         let mut deferred = Vec::new();
         node_code(
-            &mut body,
+            &mut code,
             &Ctx { t, size, file_of },
             node,
             node == 0,
@@ -637,6 +635,16 @@ fn tree_pass(
             &mut budget,
             &mut deferred,
         );
+        // A function whose nodes hold no distribution and call nothing
+        // leaves `out` alone.
+        let out = if code.contains("out") { "out" } else { "_out" };
+        let mut body = String::new();
+        let _ = writeln!(body, "/// {}.", describe(&path));
+        let _ = writeln!(
+            body,
+            "pub(crate) fn n{node}(s: &[char], {out}: &mut Path<'_>) -> bool {{"
+        );
+        body.push_str(&code);
         body.push_str("}\n");
         order.push((node, FN_NODES.saturating_sub(budget)));
         if file_of.is_some() {
@@ -687,8 +695,7 @@ fn node_code(
     let kids: &[NodeRec] = t.children(node);
     if kids.is_empty() {
         if is_root {
-            let unused = if node.dist_len > 0 { "s" } else { "(s, out)" };
-            let _ = writeln!(out, "{pad}let _ = {unused};\n{pad}false");
+            let _ = writeln!(out, "{pad}let _ = s;\n{pad}false");
         } else {
             let _ = writeln!(out, "{pad}s.is_empty()");
         }
@@ -798,14 +805,30 @@ fn lexicon(files: &mut Vec<(String, String)>, dir: &str, t: &Tables) {
     m.push_str("}\n");
     files.push((format!("{dir}/mod.rs"), m));
     for (k, chunk) in chunks.iter().enumerate() {
+        // Keys are sorted: each `match` holds a run of them, and the first
+        // key of the next run says where to look.
+        let runs: Vec<&[(String, String)]> = chunk.chunks(MATCH_ARMS).collect();
         let mut c = String::new();
-        c.push_str(
-            "pub(crate) fn find(key: &str) -> Option<&'static str> {\n    Some(match key {\n",
-        );
-        for (key, written) in chunk.iter() {
-            let _ = writeln!(c, "        {key:?} => {written:?},");
+        c.push_str("pub(crate) fn find(key: &str) -> Option<&'static str> {\n");
+        for (r, run) in runs.iter().enumerate().skip(1).rev() {
+            if let Some((first, _)) = run.first() {
+                let _ = writeln!(
+                    c,
+                    "    if key >= {first:?} {{\n        return m{r}(key);\n    }}"
+                );
+            }
         }
-        c.push_str("        _ => return None,\n    })\n}\n");
+        c.push_str("    m0(key)\n}\n");
+        for (r, run) in runs.iter().enumerate() {
+            let _ = writeln!(
+                c,
+                "\nfn m{r}(key: &str) -> Option<&'static str> {{\n    Some(match key {{"
+            );
+            for (key, written) in run.iter() {
+                let _ = writeln!(c, "        {key:?} => {written:?},");
+            }
+            c.push_str("        _ => return None,\n    })\n}\n");
+        }
         files.push((format!("{dir}/c{k}.rs"), c));
     }
 }
