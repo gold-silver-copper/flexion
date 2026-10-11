@@ -1,4 +1,4 @@
-//! adjective_restore_front: 1 cells, 2470 edits, 2470 classes, 10443 tree nodes.
+//! adjective_restore_front: 1 cells, 2470 edits, 2470 classes, 14314 tree nodes.
 
 use flexion::{Class, Edit, Join, Path, PosModel, Walk};
 

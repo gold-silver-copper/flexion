@@ -1,4 +1,4 @@
-//! adjective: 39 cells, 9915 edits, 425 classes, 24248 tree nodes.
+//! adjective: 39 cells, 9897 edits, 416 classes, 24833 tree nodes.
 
 use flexion::{Class, Edit, Join, Path, PosModel, Walk};
 
@@ -7,6 +7,7 @@ mod edits;
 mod tree;
 mod lexicon;
 mod joins;
+mod phonology;
 
 /// Per cell, which model builds it when the caller gives principal parts:
 /// 0 this one, `k + 1` part model `k`.
@@ -44,7 +45,7 @@ impl PosModel for Adjective {
         edits::get(id).copied()
     }
     fn classes(&self) -> usize {
-        425
+        416
     }
     fn class(&self, class: usize) -> Option<Class<'_>> {
         classes::get(class).map(|c| c.class)
@@ -73,4 +74,18 @@ impl PosModel for Adjective {
     fn lexicon(&self, key: &str) -> Option<&str> {
         lexicon::find(key)
     }
+    fn lexicon_from(&self, i: usize) -> Option<(usize, &[usize])> {
+        match i {
+            0 => Some((2, &[174, 175, 176, 177])),
+            _ => None,
+        }
+    }
+    fn phonology(&self) -> Option<&flexion::sound_law::Program> {
+        phonology::program()
+    }
+}
+
+/// Whether the sound laws compile.
+pub(crate) fn sound_laws_compile() -> bool {
+    phonology::program().is_some()
 }

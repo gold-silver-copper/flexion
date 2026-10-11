@@ -10,7 +10,7 @@
 //! own), a file at most [`FILE_NODES`] nodes or [`FILE_ITEMS`] table entries.
 
 use crate::spec::Language;
-use flexion::tables::{Built, NodeRec, Tables};
+use flexion::tables::{Built, NodeKind, NodeRec, Tables};
 use flexion::{BOUNDARY, INITIAL_TOKEN, NONE, SYLLABLE_TOKEN};
 use std::collections::HashMap;
 use std::fmt::Write as _;
@@ -83,9 +83,35 @@ pub fn generate(lang: &Language, built: &Built) -> Vec<(String, String)> {
         );
     }
     root.push_str("        ],\n    )\n}\n");
+    let with_laws: Vec<&String> = names
+        .iter()
+        .zip(tables)
+        .filter(|(_, t)| t.phonology.is_some())
+        .map(|(n, _)| n)
+        .collect();
+    if !with_laws.is_empty() {
+        let checks: Vec<String> = with_laws
+            .iter()
+            .map(|n| format!("{n}::sound_laws_compile()"))
+            .collect();
+        let _ = writeln!(
+            root,
+            "\n/// Whether every part of speech's sound laws compile.\npub(crate) fn sound_laws_compile() -> bool {{\n    {}\n}}",
+            checks.join(" && ")
+        );
+    }
     files.push(("model/mod.rs".to_string(), root));
-    for (t, name) in tables.iter().zip(&names) {
-        part(&mut files, &format!("model/{name}"), name, t);
+    // The cells another part of speech derives its lemmas from.
+    let mut lent: Vec<std::collections::BTreeSet<usize>> = vec![Default::default(); tables.len()];
+    for t in tables {
+        for (source, cells) in &t.lexicon_from {
+            if let Some(l) = lent.get_mut(*source) {
+                l.extend(cells);
+            }
+        }
+    }
+    for ((t, name), lent) in tables.iter().zip(&names).zip(&lent) {
+        part(&mut files, &format!("model/{name}"), name, t, lent);
     }
     files
 }
@@ -186,7 +212,13 @@ fn f(x: f32) -> String {
 }
 
 /// One part of speech's module.
-fn part(files: &mut Vec<(String, String)>, dir: &str, name: &str, t: &Tables) {
+fn part(
+    files: &mut Vec<(String, String)>,
+    dir: &str,
+    name: &str,
+    t: &Tables,
+    lent: &std::collections::BTreeSet<usize>,
+) {
     let ty = camel(name);
     let wide = t.edits.len() >= usize::from(u16::MAX);
     let (id_ty, none) = if wide {
@@ -212,6 +244,10 @@ fn part(files: &mut Vec<(String, String)>, dir: &str, name: &str, t: &Tables) {
     }
     if has_joins {
         m.push_str("mod joins;\n");
+    }
+    let laws = t.phonology.as_ref().map(|(spec, _)| spec);
+    if laws.is_some() {
+        m.push_str("mod phonology;\n");
     }
     let sources: Vec<String> = t.sources.iter().map(u8::to_string).collect();
     let _ = writeln!(
@@ -281,8 +317,43 @@ fn part(files: &mut Vec<(String, String)>, dir: &str, name: &str, t: &Tables) {
     } else {
         m.push_str("    fn lexicon(&self, _key: &str) -> Option<&str> {\n        None\n    }\n");
     }
+    if !t.lexicon_from.is_empty() {
+        m.push_str("    fn lexicon_from(&self, i: usize) -> Option<(usize, &[usize])> {\n        match i {\n");
+        for (i, (source, cells)) in t.lexicon_from.iter().enumerate() {
+            let cells: Vec<String> = cells.iter().map(usize::to_string).collect();
+            let _ = writeln!(
+                m,
+                "            {i} => Some(({source}, &[{}])),",
+                cells.join(", ")
+            );
+        }
+        m.push_str("            _ => None,\n        }\n    }\n");
+    }
+    if !lent.is_empty() {
+        m.push_str("    fn cell_edits(&self, cell: usize) -> &[u32] {\n        match cell {\n");
+        for &cell in lent {
+            let ids: Vec<String> = t
+                .cell_edits
+                .get(cell)
+                .map(|ids| ids.iter().map(u32::to_string).collect())
+                .unwrap_or_default();
+            let _ = writeln!(m, "            {cell} => &[{}],", ids.join(", "));
+        }
+        m.push_str("            _ => &[],\n        }\n    }\n");
+    }
+    if laws.is_some() {
+        m.push_str("    fn phonology(&self) -> Option<&flexion::sound_law::Program> {\n        phonology::program()\n    }\n");
+    }
     m.push_str("}\n");
+    if laws.is_some() {
+        m.push_str(
+            "\n/// Whether the sound laws compile.\npub(crate) fn sound_laws_compile() -> bool {\n    phonology::program().is_some()\n}\n",
+        );
+    }
     files.push((format!("{dir}/mod.rs"), m));
+    if let Some(spec) = laws {
+        phonology(files, &format!("{dir}/phonology.rs"), spec);
+    }
 
     // Edits.
     let edits: Vec<(Option<String>, String)> = t
@@ -573,7 +644,18 @@ fn tree(files: &mut Vec<(String, String)>, dir: &str, t: &Tables) {
     }
     // Plan, then write: which nodes start a function (each inlines whole
     // child subtrees while they fit its budget) and which file each is in.
-    let (order, _) = tree_pass(t, &size, None);
+    // The nodes with a distribution, numbered densely.
+    let mut defs: Vec<Option<usize>> = vec![None; n];
+    let mut next_def = 0usize;
+    for (i, node) in t.nodes.iter().enumerate() {
+        if node.kind != NodeKind::Bare
+            && let Some(slot) = defs.get_mut(i)
+        {
+            *slot = Some(next_def);
+            next_def = next_def.saturating_add(1);
+        }
+    }
+    let (order, _) = tree_pass(t, &size, None, &defs);
     let mut file_of: HashMap<usize, usize> = HashMap::new();
     let (mut file, mut in_file) = (0usize, 0usize);
     for &(node, nodes) in &order {
@@ -584,7 +666,7 @@ fn tree(files: &mut Vec<(String, String)>, dir: &str, t: &Tables) {
         in_file = in_file.saturating_add(nodes);
         file_of.insert(node, file);
     }
-    let (_, bodies) = tree_pass(t, &size, Some(&file_of));
+    let (_, bodies) = tree_pass(t, &size, Some(&file_of), &defs);
     let files_n = file.saturating_add(1);
     let mut by_file: Vec<String> = vec![String::new(); files_n];
     for ((node, _), body) in order.iter().zip(bodies) {
@@ -598,14 +680,95 @@ fn tree(files: &mut Vec<(String, String)>, dir: &str, t: &Tables) {
     m.push_str(
         "//! The suffix tree: a word's symbols (its letters from the last one back,\n\
          //! the walk's tokens, then the start of the word) choose the arms; each node\n\
-         //! on the way adds its distribution over classes, `(class, probability)`,\n\
-         //! and its total mass. Returns whether the walk reached the word's own node.\n\n",
+         //! on the way adds its distribution over classes. A node stores the classes\n\
+         //! of the words under it, counted; its distribution is computed from them on\n\
+         //! first use, smoothed toward its nearest ancestor's. The walk returns\n\
+         //! whether it reached the word's own node.\n\n\
+         use flexion::Path;\nuse flexion::tables::{NodeKind, Smoothed, smooth_node};\nuse std::sync::OnceLock;\n\n\
+         mod nodes;\n",
     );
     for k in 0..files_n {
         let _ = writeln!(m, "mod t{k};");
     }
-    m.push_str("\npub(crate) use t0::n0 as root;\n");
+    let narrow = t.classes.len() <= usize::from(u16::MAX).saturating_add(1);
+    // The constructors the nodes use.
+    let has = |k: NodeKind| t.nodes.iter().any(|n| n.kind == k);
+    let mut ctors = String::new();
+    if has(NodeKind::Root) {
+        ctors.push_str(
+            "    pub(crate) const fn root(counts: &'static [(u32, f32)]) -> Node {\n        \
+             Node { kind: NodeKind::Root, parent: u32::MAX, counts }\n    }\n",
+        );
+    }
+    if has(NodeKind::Word) {
+        ctors.push_str(
+            "    pub(crate) const fn word(counts: &'static [(u32, f32)]) -> Node {\n        \
+             Node { kind: NodeKind::Word, parent: u32::MAX, counts }\n    }\n",
+        );
+    }
+    if has(NodeKind::Inner) {
+        ctors.push_str(
+            "    pub(crate) const fn inner(parent: u32, counts: &'static [(u32, f32)]) -> Node {\n        \
+             Node { kind: NodeKind::Inner, parent, counts }\n    }\n",
+        );
+    }
+    let _ = write!(
+        m,
+        "\npub(crate) use t0::n0 as root;\n\n\
+         /// Smoothing strength, the tail cut, and whether probabilities are rounded to\n\
+         /// 1/65535 (see `flexion::tables::smooth_node`).\n\
+         const ALPHA: f64 = {:?};\nconst EPSILON: f64 = {:?};\nconst NARROW: bool = {narrow};\n\n\
+         /// A node with a distribution: how it comes from its counts, the node it is\n\
+         /// smoothed toward (`u32::MAX`: none), and its counts `(class, weight)`.\n\
+         pub(crate) struct Node {{\n    kind: NodeKind,\n    parent: u32,\n    \
+         counts: &'static [(u32, f32)],\n}}\n\n\
+         impl Node {{\n{ctors}}}\n\n\
+         /// Each node's distribution, computed on first use.\n\
+         static CACHE: [OnceLock<Smoothed>; {next_def}] = [const {{ OnceLock::new() }}; {next_def}];\n\n\
+         fn dist(i: usize) -> Option<&'static Smoothed> {{\n    \
+         let node = nodes::get(i)?;\n    \
+         Some(CACHE.get(i)?.get_or_init(|| {{\n        \
+         let parent = (node.parent != u32::MAX)\n            .then(|| usize::try_from(node.parent).ok())\n            .flatten()\n            .and_then(dist);\n        \
+         let q = parent.map_or(&[][..], |p| p.entries.as_slice());\n        \
+         smooth_node(node.kind, node.counts, q, ALPHA, EPSILON, NARROW)\n    }}))\n}}\n\n\
+         /// Add node `i`'s distribution to the path.\n\
+         pub(crate) fn push(out: &mut Path<'_>, i: usize) {{\n    \
+         if let Some(d) = dist(i).filter(|d| !d.entries.is_empty()) {{\n        \
+         out.push(&d.entries, d.mass);\n    }}\n}}\n",
+        t.alpha, t.epsilon
+    );
     files.push((format!("{dir}/mod.rs"), m));
+    let table: Vec<(Option<String>, String)> = t
+        .nodes
+        .iter()
+        .filter(|n| n.kind != NodeKind::Bare)
+        .map(|n| {
+            let counts: Vec<String> = n
+                .counts
+                .iter()
+                .map(|&(c, w)| format!("({c}, {})", f(w)))
+                .collect();
+            let counts = counts.join(", ");
+            let parent = n.parent.and_then(|p| defs.get(p).copied().flatten());
+            let code = match (n.kind, parent) {
+                (NodeKind::Root, _) => format!("Node::root(&[{counts}])"),
+                (NodeKind::Word, _) => format!("Node::word(&[{counts}])"),
+                (_, Some(p)) => format!("Node::inner({p}, &[{counts}])"),
+                (_, None) => format!("Node::inner(u32::MAX, &[{counts}])"),
+            };
+            (None, code)
+        })
+        .collect();
+    chunked(
+        files,
+        &format!("{dir}/nodes"),
+        "//! Every tree node with a distribution, in the order the tree functions\n\
+         //! number them.",
+        "Node",
+        "use super::Node;",
+        "use super::super::Node;",
+        &table,
+    );
     for (k, text) in by_file.into_iter().enumerate() {
         files.push((
             format!("{dir}/t{k}.rs"),
@@ -620,6 +783,7 @@ fn tree_pass(
     t: &Tables,
     size: &[usize],
     file_of: Option<&HashMap<usize, usize>>,
+    defs: &[Option<usize>],
 ) -> (Vec<(usize, usize)>, Vec<String>) {
     let mut roots: Vec<(usize, Vec<char>)> = vec![(0, Vec::new())];
     let mut order = Vec::new();
@@ -632,7 +796,12 @@ fn tree_pass(
         let mut deferred = Vec::new();
         node_code(
             &mut code,
-            &Ctx { t, size, file_of },
+            &Ctx {
+                t,
+                size,
+                file_of,
+                defs,
+            },
             node,
             node == 0,
             1,
@@ -664,6 +833,9 @@ struct Ctx<'a> {
     t: &'a Tables,
     size: &'a [usize],
     file_of: Option<&'a HashMap<usize, usize>>,
+    /// Per node, its place in the node table (nodes without a distribution
+    /// have none).
+    defs: &'a [Option<usize>],
 }
 
 /// Code for `node`: its distribution, then a `match` on the next symbol.
@@ -679,23 +851,15 @@ fn node_code(
     deferred: &mut Vec<(usize, Vec<char>)>,
 ) {
     let t = cx.t;
-    let pad = "    ".repeat(depth);
+    // One tab per level: the tree nests deep, and four spaces a level were
+    // most of its bytes.
+    let pad = "\t".repeat(depth);
     let Some(node) = t.nodes.get(index) else {
         let _ = writeln!(out, "{pad}false");
         return;
     };
-    if node.dist_len > 0 {
-        let entries: Vec<String> = t
-            .node_entries(node)
-            .iter()
-            .map(|&(c, p)| format!("({c}, {})", f(p)))
-            .collect();
-        let _ = writeln!(
-            out,
-            "{pad}out.push(&[{}], {});",
-            entries.join(", "),
-            f(node.mass)
-        );
+    if let Some(d) = cx.defs.get(index).copied().flatten() {
+        let _ = writeln!(out, "{pad}super::push(out, {d});");
     }
     let kids: &[NodeRec] = t.children(node);
     if kids.is_empty() {
@@ -708,7 +872,7 @@ fn node_code(
     }
     let _ = writeln!(out, "{pad}match s {{");
     if !is_root {
-        let _ = writeln!(out, "{pad}    [] => true,");
+        let _ = writeln!(out, "{pad}\t[] => true,");
     }
     for (i, kid) in kids.iter().enumerate() {
         let child = node.first_child.saturating_add(i);
@@ -719,7 +883,7 @@ fn node_code(
         let kid_size = cx.size.get(child).copied().unwrap_or(1);
         if kid_size <= *budget && depth / 2 < MAX_NESTING {
             *budget = budget.saturating_sub(kid_size);
-            let _ = writeln!(out, "{pad}    {pattern} => {{");
+            let _ = writeln!(out, "{pad}\t{pattern} => {{");
             node_code(
                 out,
                 cx,
@@ -730,17 +894,14 @@ fn node_code(
                 budget,
                 deferred,
             );
-            let _ = writeln!(out, "{pad}    }}");
+            let _ = writeln!(out, "{pad}\t}}");
         } else {
             let file = cx.file_of.and_then(|m| m.get(&child)).copied().unwrap_or(0);
-            let _ = writeln!(
-                out,
-                "{pad}    {pattern} => super::t{file}::n{child}(s, out),"
-            );
+            let _ = writeln!(out, "{pad}\t{pattern} => super::t{file}::n{child}(s, out),");
             deferred.push((child, kid_path));
         }
     }
-    let _ = writeln!(out, "{pad}    _ => false,\n{pad}}}");
+    let _ = writeln!(out, "{pad}\t_ => false,\n{pad}}}");
 }
 
 /// What a tree path means, for a function's doc comment: "Words ending
@@ -846,6 +1007,53 @@ fn widen(none: &str) -> String {
     } else {
         format!("Some(if e == {none} {{ NONE }} else {{ u32::from(e) }})")
     }
+}
+
+/// The sound laws, in `sound-law`'s notation, compiled once on first use.
+fn phonology(files: &mut Vec<(String, String)>, path: &str, spec: &flexion::tables::PhonologySpec) {
+    let mut m = String::new();
+    m.push_str(
+        "//! The sound laws: edits carry trigger characters that set them off;\n\
+         //! the last rule deletes any trigger left.\n\n\
+         use flexion::sound_law::{Program, RuleSet, sound_laws};\nuse std::sync::OnceLock;\n\n\
+         const LAWS: RuleSet<'static> = sound_laws! {\n    classes {\n",
+    );
+    for (name, members) in &spec.classes {
+        let members: Vec<String> = members.iter().map(|x| format!("{x:?}")).collect();
+        let _ = writeln!(m, "        {name} = [{}];", members.join(", "));
+    }
+    m.push_str("    }\n");
+    if !spec.maps.is_empty() {
+        m.push_str("    maps {\n");
+        for (name, entries) in &spec.maps {
+            let entries: Vec<String> = entries
+                .iter()
+                .map(|(a, b)| format!("{a:?} => {b:?}"))
+                .collect();
+            let _ = writeln!(m, "        {name} = [{}];", entries.join(", "));
+        }
+        m.push_str("    }\n");
+    }
+    m.push_str("    rules {\n");
+    for r in &spec.rules {
+        let context = if r.left.is_empty() && r.right.is_empty() {
+            String::new()
+        } else {
+            format!(" / {:?} _ {:?}", r.left, r.right)
+        };
+        let _ = writeln!(
+            m,
+            "        {}: {:?} => {:?}{context};",
+            r.name, r.target, r.replacement
+        );
+    }
+    m.push_str(
+        "    }\n};\n\n\
+         pub(crate) fn program() -> Option<&'static Program> {\n    \
+         static PROGRAM: OnceLock<Option<Program>> = OnceLock::new();\n    \
+         PROGRAM.get_or_init(|| LAWS.compile().ok()).as_ref()\n}\n",
+    );
+    files.push((path.to_string(), m));
 }
 
 /// The join model: a `match` on the prefix, and the join classes' edits.

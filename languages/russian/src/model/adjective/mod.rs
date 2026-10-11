@@ -72,4 +72,10 @@ impl PosModel for Adjective {
     fn lexicon(&self, key: &str) -> Option<&str> {
         lexicon::find(key)
     }
+    fn lexicon_from(&self, i: usize) -> Option<(usize, &[usize])> {
+        match i {
+            0 => Some((2, &[13, 14, 15, 16])),
+            _ => None,
+        }
+    }
 }

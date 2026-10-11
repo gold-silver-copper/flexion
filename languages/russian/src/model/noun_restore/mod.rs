@@ -1,4 +1,4 @@
-//! noun_restore: 1 cells, 10 edits, 10 classes, 4419 tree nodes.
+//! noun_restore: 1 cells, 10 edits, 10 classes, 6644 tree nodes.
 
 use flexion::{Class, Edit, Join, Path, PosModel, Walk};
 

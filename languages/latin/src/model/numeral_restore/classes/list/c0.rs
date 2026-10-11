@@ -4,11 +4,11 @@ use flexion::{Class, Stress};
 pub(crate) static ITEMS: [ClassDef; 63] = [
     // 0: like binus
     ClassDef { class: Class { strip: "inus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [0] },
-    // 1: like centenus
+    // 1: like denus
     ClassDef { class: Class { strip: "enus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1] },
     // 2: like centesimus
     ClassDef { class: Class { strip: "esimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2] },
-    // 3: like decimus
+    // 3: like duo
     ClassDef { class: Class { strip: "", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3] },
     // 4: like ducenti
     ClassDef { class: Class { strip: "i", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4] },
@@ -28,7 +28,7 @@ pub(crate) static ITEMS: [ClassDef; 63] = [
     ClassDef { class: Class { strip: "etricesimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [11] },
     // 12: like duodevicesimus
     ClassDef { class: Class { strip: "evicesimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [12] },
-    // 13: like duoetvicesimus
+    // 13: like vicesimus
     ClassDef { class: Class { strip: "icesimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [13] },
     // 14: like infinitesimus
     ClassDef { class: Class { strip: "infinitesimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [14] },
@@ -68,9 +68,9 @@ pub(crate) static ITEMS: [ClassDef; 63] = [
     ClassDef { class: Class { strip: "ogenus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [31] },
     // 32: like octogesimus
     ClassDef { class: Class { strip: "ogesimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [32] },
-    // 33: like quadragenus
+    // 33: like sexagenus
     ClassDef { class: Class { strip: "agenus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [33] },
-    // 34: like quadragesimus
+    // 34: like sexagesimus
     ClassDef { class: Class { strip: "agesimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [34] },
     // 35: like quartus
     ClassDef { class: Class { strip: "artus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [35] },
@@ -98,9 +98,9 @@ pub(crate) static ITEMS: [ClassDef; 63] = [
     ClassDef { class: Class { strip: "esquimille", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [46] },
     // 47: like tres
     ClassDef { class: Class { strip: "es", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [47] },
-    // 48: like tricensimus
+    // 48: like vicensimus
     ClassDef { class: Class { strip: "icensimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [48] },
-    // 49: like tricenus
+    // 49: like vicenus
     ClassDef { class: Class { strip: "icenus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [49] },
     // 50: like undecentesimus
     ClassDef { class: Class { strip: "undecentesimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [50] },

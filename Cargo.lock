@@ -121,6 +121,9 @@ dependencies = [
 [[package]]
 name = "flexion"
 version = "0.1.0"
+dependencies = [
+ "sound-law",
+]
 
 [[package]]
 name = "flexion-configs"

@@ -1,4 +1,4 @@
-//! noun: 15 cells, 9669 edits, 4053 classes, 57464 tree nodes.
+//! noun: 15 cells, 9669 edits, 4053 classes, 144955 tree nodes.
 
 use flexion::{Class, Edit, Join, Path, PosModel, Walk};
 

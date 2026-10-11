@@ -1,4 +1,4 @@
-//! pronoun: 61 cells, 122 edits, 21 classes, 29 tree nodes.
+//! pronoun: 61 cells, 122 edits, 21 classes, 25 tree nodes.
 
 use flexion::{Class, Edit, Join, Path, PosModel, Walk};
 
@@ -27,7 +27,7 @@ impl PosModel for Pronoun {
     }
     fn walk(&self) -> Walk {
         Walk {
-            syllable_depth: Some(0),
+            syllable_depth: Some(2),
             syllable_max: 3,
             initial_depth: None,
         }

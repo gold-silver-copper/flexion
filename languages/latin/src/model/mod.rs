@@ -17,6 +17,7 @@ mod verb_restore;
 mod verb_restore_front;
 mod pronoun_restore;
 mod numeral_restore;
+mod noun_from_cell_2;
 
 static STRINGS: SpellingStrings<'static> = SpellingStrings {
     stress_marks: "",
@@ -53,6 +54,12 @@ pub(crate) fn build() -> Model<'static> {
             &verb_restore_front::VerbRestoreFront as &dyn PosModel,
             &pronoun_restore::PronounRestore as &dyn PosModel,
             &numeral_restore::NumeralRestore as &dyn PosModel,
+            &noun_from_cell_2::NounFromCell2 as &dyn PosModel,
         ],
     )
+}
+
+/// Whether every part of speech's sound laws compile.
+pub(crate) fn sound_laws_compile() -> bool {
+    noun::sound_laws_compile() && adjective::sound_laws_compile() && verb::sound_laws_compile()
 }

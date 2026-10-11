@@ -419,6 +419,9 @@ struct FoundMatch {
 }
 
 fn apply_rule(rule: &CompiledRule, input: &str, budget: &mut WorkBudget) -> String {
+    if !rule.required.iter().all(|s| input.contains(s.as_str())) {
+        return input.to_owned();
+    }
     if rule.target.atoms.is_empty() {
         return apply_insertion_rule(rule, input, budget);
     }

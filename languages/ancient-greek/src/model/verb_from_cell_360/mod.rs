@@ -1,4 +1,4 @@
-//! verb_from_cell_360: 625 cells, 1585 edits, 356 classes, 4239 tree nodes.
+//! verb_from_cell_360: 625 cells, 1168 edits, 356 classes, 4239 tree nodes.
 
 use flexion::{Class, Edit, Join, Path, PosModel, Walk};
 

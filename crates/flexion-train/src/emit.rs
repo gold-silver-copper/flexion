@@ -25,7 +25,8 @@ pub fn emit(
     };
     write(&dir.join("Cargo.toml"), manifest(lang).as_bytes())?;
     emit_model(lang, model, dir)?;
-    write(&src.join("lib.rs"), library(lang)?.as_bytes())?;
+    let laws = model.parts().iter().any(|p| p.phonology.is_some());
+    write(&src.join("lib.rs"), library(lang, laws)?.as_bytes())?;
     if let Some(extra) = lang.extra {
         write(&src.join("extra.rs"), extra.as_bytes())?;
     }
@@ -40,10 +41,6 @@ pub fn emit_model(lang: &Language, model: &flexion::Built, dir: &Path) -> Result
     let model_dir = src.join("model");
     if model_dir.exists() {
         std::fs::remove_dir_all(&model_dir).map_err(|e| format!("{}: {e}", model_dir.display()))?;
-    }
-    let old_blob = src.join("model.bin");
-    if old_blob.exists() {
-        std::fs::remove_file(&old_blob).map_err(|e| format!("{}: {e}", old_blob.display()))?;
     }
     for (path, code) in crate::codegen::generate(lang, model) {
         let path = src.join(path);
@@ -121,7 +118,7 @@ fn settings_name(lang: &Language) -> String {
         .collect()
 }
 
-fn library(lang: &Language) -> Result<String, String> {
+fn library(lang: &Language, laws: bool) -> Result<String, String> {
     let mut s = String::new();
     let settings = settings_name(lang);
     let stress = !lang.spelling.stress_marks.is_empty();
@@ -147,6 +144,15 @@ fn library(lang: &Language) -> Result<String, String> {
          static MODEL: OnceLock<Model<'static>> = OnceLock::new();\n    \
          MODEL.get_or_init(model::build)\n}\n\n",
     );
+    if laws {
+        let _ = writeln!(
+            s,
+            "/// Every sound law of the model compiles (a doctest: the crate has no unit\n\
+             /// tests).\n///\n/// ```\n/// assert!({}::sound_laws_compile());\n/// ```\n\
+             #[doc(hidden)]\npub fn sound_laws_compile() -> bool {{\n    model::sound_laws_compile()\n}}\n",
+            lang.name.replace('-', "_")
+        );
+    }
 
     // Feature enums, for every feature some part of speech uses.
     for f in &lang.features {
@@ -544,7 +550,7 @@ fn readme(lang: &Language, report: &str) -> String {
          confidences between attested variants reflect Wiktionary's ordering, not measured usage.\n\n\
          {report}\n\
          ## Data and license\n\n\
-         The code is MIT or Apache-2.0. The model (`src/model.bin`) is derived from\n\
+         The code is MIT or Apache-2.0. The model (the code under `src/model/`) is derived from\n\
          [the English Wiktionary](https://en.wiktionary.org/){links} via [Kaikki](https://kaikki.org/) and\n\
          [wiktextract](https://github.com/tatuylonen/wiktextract), and is licensed under\n\
          [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); see `DATA-LICENSE.md`.\n\n\
@@ -571,7 +577,7 @@ fn data_license(lang: &Language) -> String {
     format!(
         "# Data license
 
-`src/model.bin` is derived from [the English Wiktionary](https://en.wiktionary.org/){editions},
+The model, the code under `src/model/`, is derived from [the English Wiktionary](https://en.wiktionary.org/){editions},
 the free dictionary, by way of the [Kaikki](https://kaikki.org/) extraction made with
 [wiktextract](https://github.com/tatuylonen/wiktextract). Wiktionary's text is
 available under the [Creative Commons Attribution-ShareAlike 4.0 International
@@ -580,7 +586,7 @@ model is a derivative work and is distributed under the same license.
 
 Attribution: Wiktionary contributors, <https://en.wiktionary.org/>{attribution}.
 
-The source code of this crate is licensed under MIT OR Apache-2.0.
+The rest of this crate's source code is licensed under MIT OR Apache-2.0.
 "
     )
 }

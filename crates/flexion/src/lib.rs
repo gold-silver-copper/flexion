@@ -22,6 +22,7 @@ pub mod tables;
 pub mod text;
 
 pub use pos::{Citation, Edit, Pos};
+pub use sound_law;
 pub use tables::{Built, Class, Dist, Join, Path, PosModel, Tables};
 pub use text::{Casing, Spelling, SpellingStrings, VowelSet, Word};
 
@@ -42,6 +43,30 @@ pub const INITIAL_TOKEN: u32 = 0x10_0000;
 /// word-specific classes would otherwise be read whole for a word no deeper
 /// class fits. The trainer prunes with the same limit.
 pub const MAX_SCAN: usize = 256;
+
+/// The first of the characters edits carry to set off a part of speech's
+/// sound laws (see [`PosModel::phonology`]); they are never written.
+pub const TRIGGER_FIRST: char = '\u{E000}';
+/// The last trigger character.
+pub const TRIGGER_LAST: char = '\u{E0FF}';
+
+/// Whether `c` is a trigger character.
+pub fn is_trigger(c: char) -> bool {
+    (TRIGGER_FIRST..=TRIGGER_LAST).contains(&c)
+}
+
+/// A form as written: `built` (an edit's prefix, the kept stem and its
+/// suffix) with the sound laws its triggers set off applied. Without
+/// triggers, or without sound laws, `built` itself.
+pub fn realize<'b>(
+    phonology: Option<&sound_law::Program>,
+    built: &'b str,
+) -> std::borrow::Cow<'b, str> {
+    match phonology {
+        Some(p) if built.chars().any(is_trigger) => std::borrow::Cow::Owned(p.apply(built)),
+        _ => std::borrow::Cow::Borrowed(built),
+    }
+}
 
 /// How a form's stress is placed, relative to the edit that built it.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
@@ -94,6 +119,9 @@ impl Default for Options {
 pub struct Model<'a> {
     pub(crate) spelling: Spelling<'a>,
     parts: Vec<&'a dyn PosModel>,
+    /// Per part of speech, the readings its derived lexicon reads keys with,
+    /// built on first use.
+    readings: Vec<std::sync::OnceLock<pos::Readings>>,
 }
 
 impl std::fmt::Debug for Model<'_> {
@@ -173,7 +201,12 @@ impl<'a> Model<'a> {
     /// A model over `parts`, in the order the language's config declares
     /// them (helper models after).
     pub fn new(spelling: Spelling<'a>, parts: Vec<&'a dyn PosModel>) -> Model<'a> {
-        Model { spelling, parts }
+        let readings = parts.iter().map(|_| std::sync::OnceLock::new()).collect();
+        Model {
+            spelling,
+            parts,
+            readings,
+        }
     }
 
     pub fn spelling(&self) -> &Spelling<'a> {
@@ -182,7 +215,7 @@ impl<'a> Model<'a> {
 
     /// Part of speech `index`, in the order the language's config declares them.
     pub fn pos(&self, index: usize) -> Option<Pos<'_, 'a>> {
-        Some(Pos::new(self, *self.parts.get(index)?))
+        Some(Pos::new(self, *self.parts.get(index)?, index))
     }
 
     pub fn pos_count(&self) -> usize {

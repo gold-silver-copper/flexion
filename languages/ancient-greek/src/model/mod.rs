@@ -17,6 +17,7 @@ mod verb_restore;
 mod verb_restore_front;
 mod pronoun_restore;
 mod numeral_restore;
+mod adjective_from_cell_3;
 mod verb_from_cell_135;
 mod verb_from_cell_243;
 mod verb_from_cell_351;
@@ -58,6 +59,7 @@ pub(crate) fn build() -> Model<'static> {
             &verb_restore_front::VerbRestoreFront as &dyn PosModel,
             &pronoun_restore::PronounRestore as &dyn PosModel,
             &numeral_restore::NumeralRestore as &dyn PosModel,
+            &adjective_from_cell_3::AdjectiveFromCell3 as &dyn PosModel,
             &verb_from_cell_135::VerbFromCell135 as &dyn PosModel,
             &verb_from_cell_243::VerbFromCell243 as &dyn PosModel,
             &verb_from_cell_351::VerbFromCell351 as &dyn PosModel,
@@ -65,4 +67,9 @@ pub(crate) fn build() -> Model<'static> {
             &verb_from_cell_261::VerbFromCell261 as &dyn PosModel,
         ],
     )
+}
+
+/// Whether every part of speech's sound laws compile.
+pub(crate) fn sound_laws_compile() -> bool {
+    noun::sound_laws_compile() && adjective::sound_laws_compile() && verb::sound_laws_compile()
 }

@@ -39,18 +39,23 @@ Per part of speech a model holds:
   written in full;
 - **a suffix tree** over lemmas, walked from the last letter back to the start of the
   word (a syllable count and the word's first letter can be read at learned depths).
-  Each node stores a probability distribution over classes. General patterns live near
-  the root; whole-word nodes hold the words that are real exceptions, with only their
-  own classes. In a generated crate the tree is `match`es over the word's symbols:
+  Each node stores its counts of training words per class (`NodeSpec::counts`), and its
+  probability distribution is computed from them, smoothed toward its nearest ancestor's
+  (`tables::smooth_node`: `(n_c + α·q_c) / (N + α)`, then a tail cut). General patterns
+  live near the root; whole-word nodes hold the words that are real exceptions, with
+  only their own classes. In a generated crate the tree is `match`es over the word's
+  symbols, and each node's distribution is computed on first use:
 
   ```rust
   /// Words ending -а.
   pub(crate) fn n1(s: &[char], out: &mut Path<'_>) -> bool {
-      out.push(&[(82, 0.124422066), (40, 0.11540398), …], 0.99…);
+      super::push(out, 1);
       match s {
           [] => true,
-          ['а', s @ ..] => { out.push(&[(110, 0.4), (1, 0.2), …], …); match s { … } }
-          ['б', s @ ..] => super::t3::n17(s, out),
+          ['а', s @ ..] => {
+              super::push(out, 32);
+              match s { … }
+          }
           …
           _ => false,
       }
@@ -66,7 +71,7 @@ Citations (`"lie, lied"`) keep only classes that agree with the given principal 
 (dropping the last parts while none does); markers (`"кот m anim"`, `"rēx, rēgis m."`)
 weigh classes by the features they name.
 
-Four further models and a lexicon can sit beside a part of speech's own:
+Four further models, sound laws and a lexicon can sit beside a part of speech's own:
 
 - a **restoration model**, where a language writes marks that people often leave out
   (Latin and Greek vowel length, Greek breathings, Russian `ё`): a one-cell model that
@@ -88,11 +93,22 @@ Four further models and a lexicon can sit beside a part of speech's own:
   from the attested word's form to the joined word's. An unseen word with a known
   prefix and an attested rest is read both ways, weighed by how often the prefix joins
   the way its class says;
+- **sound laws**: ordered rewrite rules in [`sound-law`](../sound-law)'s notation that an
+  edit's trigger characters set off: `-a → ⟨T⟩e` with `k → c, g → dz / _⟨T⟩` writes
+  `ręka → ręce`, `noga → nodze`. A built form with a trigger in it is rewritten before it
+  is written; rules change letters, never the number of vowels where stress is written,
+  so the stress the edit placed holds. A generated crate holds them as a `sound_laws!`
+  block, compiled once on first use;
 - a **lexicon** of lemmas written in full that another part of speech attests: a
   verb's participles are adjectives, written in the verb's table with their stress or
   vowel length (`а́хнувший`, `amātus`). A lemma typed with those marks left out (`ахнувший`,
   `amatus`) and found there is read as written there, as if the caller had typed it so.
-  In a generated crate it is `match`es on the lookup key.
+  In a generated crate it is `match`es on the lookup key. A lexicon can instead be
+  **derived** (`PosModel::lexicon_from`): the lemma is read backwards through the edits the
+  other part of speech uses in those cells (`PosModel::cell_edits`) to a word of it that the
+  model attests, and that model writes the form. The lexicon then holds only the exceptions:
+  forms derivation writes differently, and an empty entry for a form it would find that the
+  tables don't attest.
 
 ## Spelling
 
@@ -104,7 +120,7 @@ Lookups fold everything a caller may leave out; output writes it back.
 
 ## Guarantees
 
-- No `unsafe`, no dependencies, no I/O.
+- No `unsafe`, no I/O, and one dependency: `sound-law`, which has none.
 - Total: every query returns something, and no input makes it panic; every table read is
   bounds-checked, in the engine and in generated code alike.
 - The quick answer (`Pos::best`) is always the first scored candidate

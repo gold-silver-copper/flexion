@@ -1,4 +1,4 @@
-//! adjective: 49 cells, 1875 edits, 628 classes, 1879 tree nodes.
+//! adjective: 49 cells, 1873 edits, 628 classes, 2430 tree nodes.
 
 use flexion::{Class, Edit, Join, Path, PosModel, Walk};
 
@@ -6,10 +6,11 @@ mod classes;
 mod edits;
 mod tree;
 mod lexicon;
+mod phonology;
 
 /// Per cell, which model builds it when the caller gives principal parts:
 /// 0 this one, `k + 1` part model `k`.
-static SOURCES: [u8; 49] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+static SOURCES: [u8; 49] = [0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0];
 
 pub(crate) struct Adjective;
 
@@ -64,7 +65,7 @@ impl PosModel for Adjective {
         None
     }
     fn part_models(&self) -> &[(usize, usize)] {
-        &[]
+        &[(3, 13)]
     }
     fn source(&self, cell: usize) -> u8 {
         SOURCES.get(cell).copied().unwrap_or(0)
@@ -72,4 +73,18 @@ impl PosModel for Adjective {
     fn lexicon(&self, key: &str) -> Option<&str> {
         lexicon::find(key)
     }
+    fn lexicon_from(&self, i: usize) -> Option<(usize, &[usize])> {
+        match i {
+            0 => Some((2, &[609, 610, 611, 612, 613, 614, 615, 616, 617, 618, 619, 620, 621, 622, 623])),
+            _ => None,
+        }
+    }
+    fn phonology(&self) -> Option<&flexion::sound_law::Program> {
+        phonology::program()
+    }
+}
+
+/// Whether the sound laws compile.
+pub(crate) fn sound_laws_compile() -> bool {
+    phonology::program().is_some()
 }

@@ -101,6 +101,30 @@ impl PosScore {
         (ss * k / (k - 1.0)).sqrt() / n
     }
 
+    /// How much more top-1 `self` gets than `other` on the same words, and
+    /// the word-level standard error of that difference: each word's
+    /// difference is the unit, so the many answers two close models share
+    /// add no noise (a paired test).
+    pub fn top1_gain(&self, other: &PosScore) -> (f64, f64) {
+        if self.words.len() != other.words.len() || self.words.len() < 2 {
+            return (0.0, f64::INFINITY);
+        }
+        let n: f64 = self.words.iter().map(|w| f64::from(w.0)).sum();
+        if n <= 0.0 {
+            return (0.0, f64::INFINITY);
+        }
+        let k = self.words.len() as f64;
+        let diffs: Vec<(f64, f64)> = self
+            .words
+            .iter()
+            .zip(&other.words)
+            .map(|(a, b)| (f64::from(a.0), f64::from(a.1) - f64::from(b.1)))
+            .collect();
+        let mean = diffs.iter().map(|d| d.1).sum::<f64>() / n;
+        let ss: f64 = diffs.iter().map(|(c, d)| (d - mean * c).powi(2)).sum();
+        (mean, (ss * k / (k - 1.0)).sqrt() / n)
+    }
+
     pub fn total(&self, skip: &[usize]) -> CellScore {
         let mut t = CellScore::default();
         for (i, c) in self.cells.iter().enumerate() {

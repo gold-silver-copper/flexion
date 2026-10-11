@@ -134,6 +134,19 @@ pub fn compare(
             }
         }
         inputs.extend(made_up.iter().cloned());
+        // The lemmas another part of speech's forms spell, typed plain (what
+        // a derived lexicon reads).
+        for (source, cells) in crate::lexicon_sources(lang, pi) {
+            let Some(sd) = data.get(source) else {
+                continue;
+            };
+            let step = sd.lexemes.len().div_ceil(sample.max(1)).max(1);
+            for lex in sd.lexemes.iter().step_by(step) {
+                for f in cells.iter().filter_map(|&c| lex.cells.get(c)).flatten() {
+                    inputs.push(sp.read(f).key.to_string());
+                }
+            }
+        }
         inputs.sort();
         inputs.dedup();
         let off = Options {

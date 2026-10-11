@@ -62,7 +62,7 @@ used for any decision.
 |---|---:|---:|---:|---:|---:|---:|
 | noun | 6239 | 39525 | **94.90%** | 99.08% | 98.37% | 98.67% |
 | adjective | 1479 | 124793 | **99.18%** | 99.80% | 99.73% | – |
-| verb | 940 | 49015 | **93.93%** | 98.08% | 99.14% | 99.14% |
+| verb | 940 | 49015 | **93.54%** | 98.23% | 99.18% | 99.18% |
 | determiner ¹ | 3 | 45 | **40.00%** | 73.33% | – | – |
 
 ¹ A closed class: too few held-out lemmas for these numbers to mean much. What matters for
@@ -251,59 +251,59 @@ Every held-out word, from every edition:
 | superlative.mixed.acc.pl | 549 | 97.81% | 99.27% |
 | predicative.comp | 549 | 98.72% | 99.82% |
 | predicative.sup | 548 | 97.81% | 99.27% |
-| verb.pres.1.sg | 935 | 92.30% | 96.47% |
-| verb.pres.1.pl | 935 | 92.41% | 97.97% |
-| verb.pres.2.sg | 935 | 91.12% | 97.22% |
-| verb.pres.2.pl | 935 | 92.19% | 97.97% |
-| verb.pres.3.sg | 938 | 90.94% | 97.55% |
-| verb.pres.3.pl | 938 | 92.32% | 98.08% |
-| verb.pret.1.sg | 935 | 88.77% | 96.26% |
-| verb.pret.1.pl | 935 | 88.77% | 96.26% |
-| verb.pret.2.sg | 935 | 88.77% | 96.15% |
-| verb.pret.2.pl | 935 | 88.77% | 96.26% |
-| verb.pret.3.sg | 938 | 88.59% | 96.38% |
-| verb.pret.3.pl | 938 | 88.59% | 96.38% |
-| verb.subj1.1.sg | 935 | 92.41% | 97.97% |
-| verb.subj1.1.pl | 935 | 92.41% | 97.97% |
-| verb.subj1.2.sg | 935 | 92.41% | 97.97% |
-| verb.subj1.2.pl | 935 | 92.41% | 97.97% |
-| verb.subj1.3.sg | 938 | 92.32% | 98.08% |
-| verb.subj1.3.pl | 938 | 92.32% | 98.08% |
-| verb.subj2.1.sg | 935 | 88.98% | 96.36% |
-| verb.subj2.1.pl | 935 | 88.98% | 96.36% |
-| verb.subj2.2.sg | 935 | 88.88% | 96.04% |
-| verb.subj2.2.pl | 935 | 88.88% | 96.04% |
-| verb.subj2.3.sg | 938 | 88.81% | 96.38% |
-| verb.subj2.3.pl | 938 | 88.81% | 96.38% |
-| subordinate.pres.1.sg | 935 | 99.79% | 99.79% |
+| verb.pres.1.sg | 935 | 91.02% | 96.58% |
+| verb.pres.1.pl | 935 | 91.12% | 97.43% |
+| verb.pres.2.sg | 935 | 89.95% | 96.79% |
+| verb.pres.2.pl | 935 | 91.02% | 97.43% |
+| verb.pres.3.sg | 938 | 89.87% | 97.12% |
+| verb.pres.3.pl | 938 | 91.04% | 97.55% |
+| verb.pret.1.sg | 935 | 88.45% | 96.58% |
+| verb.pret.1.pl | 935 | 88.45% | 96.58% |
+| verb.pret.2.sg | 935 | 88.56% | 96.47% |
+| verb.pret.2.pl | 935 | 88.45% | 96.58% |
+| verb.pret.3.sg | 938 | 88.27% | 96.70% |
+| verb.pret.3.pl | 938 | 88.27% | 96.70% |
+| verb.subj1.1.sg | 935 | 91.12% | 97.43% |
+| verb.subj1.1.pl | 935 | 91.12% | 97.43% |
+| verb.subj1.2.sg | 935 | 91.12% | 97.43% |
+| verb.subj1.2.pl | 935 | 91.12% | 97.43% |
+| verb.subj1.3.sg | 938 | 91.04% | 97.55% |
+| verb.subj1.3.pl | 938 | 91.04% | 97.55% |
+| verb.subj2.1.sg | 935 | 88.45% | 96.79% |
+| verb.subj2.1.pl | 935 | 88.45% | 96.68% |
+| verb.subj2.2.sg | 935 | 88.34% | 96.15% |
+| verb.subj2.2.pl | 935 | 88.34% | 96.15% |
+| verb.subj2.3.sg | 938 | 88.27% | 96.91% |
+| verb.subj2.3.pl | 938 | 88.27% | 96.80% |
+| subordinate.pres.1.sg | 935 | 99.89% | 99.89% |
 | subordinate.pres.1.pl | 935 | 99.89% | 99.89% |
-| subordinate.pres.2.sg | 935 | 98.18% | 99.57% |
-| subordinate.pres.2.pl | 935 | 99.68% | 99.89% |
-| subordinate.pres.3.sg | 938 | 98.19% | 99.57% |
+| subordinate.pres.2.sg | 935 | 98.40% | 99.68% |
+| subordinate.pres.2.pl | 935 | 99.79% | 99.89% |
+| subordinate.pres.3.sg | 938 | 98.40% | 99.68% |
 | subordinate.pres.3.pl | 938 | 99.89% | 99.89% |
-| subordinate.pret.1.sg | 935 | 95.61% | 98.72% |
-| subordinate.pret.1.pl | 935 | 95.61% | 98.72% |
-| subordinate.pret.2.sg | 935 | 95.72% | 98.72% |
-| subordinate.pret.2.pl | 935 | 95.61% | 98.72% |
-| subordinate.pret.3.sg | 938 | 95.63% | 98.72% |
-| subordinate.pret.3.pl | 938 | 95.63% | 98.72% |
+| subordinate.pret.1.sg | 935 | 96.79% | 99.68% |
+| subordinate.pret.1.pl | 935 | 96.79% | 99.68% |
+| subordinate.pret.2.sg | 935 | 96.90% | 99.68% |
+| subordinate.pret.2.pl | 935 | 96.79% | 99.68% |
+| subordinate.pret.3.sg | 938 | 96.80% | 99.68% |
+| subordinate.pret.3.pl | 938 | 96.80% | 99.68% |
 | subordinate.subj1.1.sg | 935 | 99.89% | 99.89% |
 | subordinate.subj1.1.pl | 935 | 99.89% | 99.89% |
 | subordinate.subj1.2.sg | 935 | 99.89% | 99.89% |
 | subordinate.subj1.2.pl | 935 | 99.89% | 99.89% |
 | subordinate.subj1.3.sg | 938 | 99.89% | 99.89% |
 | subordinate.subj1.3.pl | 938 | 99.89% | 99.89% |
-| subordinate.subj2.1.sg | 935 | 95.72% | 98.82% |
-| subordinate.subj2.1.pl | 935 | 95.72% | 98.82% |
-| subordinate.subj2.2.sg | 935 | 95.61% | 98.72% |
-| subordinate.subj2.2.pl | 935 | 95.61% | 98.72% |
-| subordinate.subj2.3.sg | 938 | 95.74% | 98.83% |
-| subordinate.subj2.3.pl | 938 | 95.74% | 98.83% |
-| imperative.sg | 928 | 91.49% | 96.55% |
-| imperative.pl | 928 | 92.13% | 97.95% |
-| zu_infinitive | 351 | 90.88% | 91.74% |
+| subordinate.subj2.1.sg | 935 | 96.79% | 99.68% |
+| subordinate.subj2.1.pl | 935 | 96.79% | 99.68% |
+| subordinate.subj2.2.sg | 935 | 96.68% | 99.47% |
+| subordinate.subj2.2.pl | 935 | 96.68% | 99.47% |
+| subordinate.subj2.3.sg | 938 | 96.80% | 99.68% |
+| subordinate.subj2.3.pl | 938 | 96.80% | 99.68% |
+| imperative.sg | 928 | 90.30% | 96.66% |
+| imperative.pl | 928 | 90.95% | 97.41% |
+| zu_infinitive | 351 | 90.60% | 91.45% |
 | participle.pres | 940 | 99.89% | 99.89% |
-| participle.past | 940 | 87.87% | 96.60% |
+| participle.past | 940 | 75.74% | 95.64% |
 | determiner.nom.f | 3 | 33.33% | 66.67% |
 | determiner.nom.n | 3 | 33.33% | 66.67% |
 | determiner.nom.pl | 3 | 33.33% | 66.67% |
@@ -329,8 +329,8 @@ The shipped model, trained on everything, asked for every attested cell of every
 | | lemmas | cells | primary form from the plain call | every attested form among the answers |
 |---|---:|---:|---:|---:|
 | noun | 143828 | 923295 | **99.89%** | 99.99% |
-| adjective | 14840 | 1270277 | **100.00%** | 100.00% |
-| verb | 9323 | 486448 | **99.98%** | 99.99% |
+| adjective | 14840 | 1270277 | **100.00%** | 99.99% |
+| verb | 9323 | 486448 | **99.98%** | 100.00% |
 | determiner | 37 | 547 | **99.63%** | 100.00% |
 
 ### Calibration
@@ -342,23 +342,23 @@ Expected calibration error (ECE) is the average gap between confidence and accur
 |---|---:|
 | noun | 0.021 |
 | adjective | 0.007 |
-| verb | 0.048 |
+| verb | 0.056 |
 | determiner | 0.511 |
 
-All parts of speech together (ECE 0.018):
+All parts of speech together (ECE 0.021):
 
 | confidence | mean confidence | accuracy | answers |
 |---|---:|---:|---:|
-| 0.0–0.1 | 0.063 | 0.885 | 165 |
-| 0.1–0.2 | 0.123 | 0.935 | 31 |
-| 0.2–0.3 | 0.265 | 0.486 | 35 |
-| 0.3–0.4 | 0.363 | 0.544 | 206 |
-| 0.4–0.5 | 0.454 | 0.498 | 785 |
-| 0.5–0.6 | 0.555 | 0.701 | 3339 |
-| 0.6–0.7 | 0.654 | 0.861 | 4825 |
-| 0.7–0.8 | 0.743 | 0.847 | 4898 |
-| 0.8–0.9 | 0.856 | 0.857 | 4541 |
-| 0.9–1.0 | 0.996 | 0.987 | 194553 |
+| 0.0–0.1 | 0.064 | 0.886 | 166 |
+| 0.1–0.2 | 0.124 | 0.933 | 30 |
+| 0.2–0.3 | 0.266 | 0.531 | 49 |
+| 0.3–0.4 | 0.360 | 0.585 | 330 |
+| 0.4–0.5 | 0.456 | 0.610 | 1073 |
+| 0.5–0.6 | 0.554 | 0.713 | 4424 |
+| 0.6–0.7 | 0.652 | 0.841 | 5074 |
+| 0.7–0.8 | 0.746 | 0.864 | 5125 |
+| 0.8–0.9 | 0.854 | 0.873 | 4307 |
+| 0.9–1.0 | 0.997 | 0.988 | 192800 |
 
 ### Forms many words lack
 
@@ -368,7 +368,7 @@ how often the answer to "does this word have one?" is right.
 | | held-out cells | right | attested cells | right |
 |---|---:|---:|---:|---:|
 | adjective | 146421 | 71.95% | 1469160 | 99.77% |
-| verb | 2820 | 88.69% | 27969 | 99.89% |
+| verb | 2820 | 88.26% | 27969 | 99.89% |
 
 ### Inherent features
 
@@ -377,7 +377,7 @@ Predicted for held-out lemmas from the bare lemma.
 | feature | lemmas | right |
 |---|---:|---:|
 | noun gender | 6221 | 94.28% |
-| verb auxiliary | 940 | 93.62% |
+| verb auxiliary | 940 | 93.72% |
 
 ### Made-up words
 
@@ -389,9 +389,9 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 | `Blickler` | noun | nom.sg: Blickler 1.00; nom.pl: Blickler 1.00; gen.sg: Blicklers 1.00; gen.pl: Blickler 1.00; dat.sg: Blickler 1.00; dat.pl: Blicklern 1.00; acc.sg: Blickler 1.00; acc.pl: Blickler 1.00 |
 | `Fliebchen` | noun | nom.sg: Fliebchen 1.00; nom.pl: Fliebchen 1.00; gen.sg: Fliebchens 1.00; gen.pl: Fliebchen 1.00; dat.sg: Fliebchen 1.00; dat.pl: Fliebchen 1.00; acc.sg: Fliebchen 1.00; acc.pl: Fliebchen 1.00 |
 | `glorpig` | adjective | strong.nom.m: glorpiger 1.00; strong.nom.f: glorpige 1.00; strong.nom.n: glorpiges 1.00; strong.nom.pl: glorpige 1.00; strong.gen.m: glorpigen 1.00; strong.gen.f: glorpiger 1.00; strong.gen.n: glorpigen 1.00; strong.gen.pl: glorpiger 1.00; strong.dat.m: glorpigem 1.00; strong.dat.f: glorpiger 1.00; strong.dat.n: glorpigem 1.00; strong.dat.pl: glorpigen 1.00; strong.acc.m: glorpigen 1.00; strong.acc.f: glorpige 1.00; strong.acc.n: glorpiges 1.00; strong.acc.pl: glorpige 1.00; weak.nom.m: glorpige 1.00; weak.nom.f: glorpige 1.00; weak.nom.n: glorpige 1.00; weak.nom.pl: glorpigen 1.00; weak.gen.m: glorpigen 1.00; weak.gen.f: glorpigen 1.00; weak.gen.n: glorpigen 1.00; weak.gen.pl: glorpigen 1.00; weak.dat.m: glorpigen 1.00; weak.dat.f: glorpigen 1.00; weak.dat.n: glorpigen 1.00; weak.dat.pl: glorpigen 1.00; weak.acc.m: glorpigen 1.00; weak.acc.f: glorpige 1.00; weak.acc.n: glorpige 1.00; weak.acc.pl: glorpigen 1.00; mixed.nom.m: glorpiger 1.00; mixed.nom.f: glorpige 1.00; mixed.nom.n: glorpiges 1.00; mixed.nom.pl: glorpigen 1.00; mixed.gen.m: glorpigen 1.00; mixed.gen.f: glorpigen 1.00; mixed.gen.n: glorpigen 1.00; mixed.gen.pl: glorpigen 1.00; mixed.dat.m: glorpigen 1.00; mixed.dat.f: glorpigen 1.00; mixed.dat.n: glorpigen 1.00; mixed.dat.pl: glorpigen 1.00; mixed.acc.m: glorpigen 1.00; mixed.acc.f: glorpige 1.00; mixed.acc.n: glorpiges 1.00; mixed.acc.pl: glorpigen 1.00 |
-| `glorpen` | verb | pres.1.sg: glorpe 1.00; pres.1.pl: glorpen 1.00; pres.2.sg: glorpst 0.99; pres.2.pl: glorpt 0.99; pres.3.sg: glorpt 1.00; pres.3.pl: glorpen 1.00; pret.1.sg: glorpte 1.00; pret.1.pl: glorpten 1.00; pret.2.sg: glorptest 1.00; pret.2.pl: glorptet 1.00; pret.3.sg: glorpte 1.00; pret.3.pl: glorpten 1.00; subj1.1.sg: glorpe 1.00; subj1.1.pl: glorpen 1.00; subj1.2.sg: glorpest 1.00; subj1.2.pl: glorpet 1.00; subj1.3.sg: glorpe 1.00; subj1.3.pl: glorpen 1.00; subj2.1.sg: glorpte 1.00; subj2.1.pl: glorpten 1.00; subj2.2.sg: glorptest 1.00; subj2.2.pl: glorptet 1.00; subj2.3.sg: glorpte 1.00; subj2.3.pl: glorpten 1.00 |
-| `blicken` | participle | pres: blickend 1.00; past: geblickt 0.99 |
-| `anglorpen` | verb | pres.1.sg: anglorpe 0.86, glorpe an 0.14; pres.1.pl: anglorpen 0.86, glorpen an 0.14; pres.2.sg: anglorpst 0.86, glorpst an 0.14; pres.2.pl: anglorpt 0.86, glorpt an 0.14; pres.3.sg: anglorpt 0.86, glorpt an 0.14; pres.3.pl: anglorpen 0.86, glorpen an 0.14; pret.1.sg: anglorpte 0.86, glorpte an 0.14; pret.1.pl: anglorpten 0.86, glorpten an 0.14; pret.2.sg: anglorptest 0.86, glorptest an 0.14; pret.2.pl: anglorptet 0.86, glorptet an 0.14; pret.3.sg: anglorpte 0.86, glorpte an 0.14; pret.3.pl: anglorpten 0.86, glorpten an 0.14; subj1.1.sg: anglorpe 0.86, glorpe an 0.14; subj1.1.pl: anglorpen 0.86, glorpen an 0.14; subj1.2.sg: anglorpest 0.86, glorpest an 0.14; subj1.2.pl: anglorpet 0.86, glorpet an 0.14; subj1.3.sg: anglorpe 0.86, glorpe an 0.14; subj1.3.pl: anglorpen 0.86, glorpen an 0.14; subj2.1.sg: anglorpte 0.86, glorpte an 0.14; subj2.1.pl: anglorpten 0.86, glorpten an 0.14; subj2.2.sg: anglorptest 0.86, glorptest an 0.14; subj2.2.pl: anglorptet 0.86, glorptet an 0.14; subj2.3.sg: anglorpte 0.86, glorpte an 0.14; subj2.3.pl: anglorpten 0.86, glorpten an 0.14 |
+| `glorpen` | verb | pres.1.sg: glorpe 1.00; pres.1.pl: glorpen 1.00; pres.2.sg: glorpst 1.00; pres.2.pl: glorpt 1.00; pres.3.sg: glorpt 1.00; pres.3.pl: glorpen 1.00; pret.1.sg: glorpte 1.00; pret.1.pl: glorpten 1.00; pret.2.sg: glorptest 1.00; pret.2.pl: glorptet 1.00; pret.3.sg: glorpte 1.00; pret.3.pl: glorpten 1.00; subj1.1.sg: glorpe 1.00; subj1.1.pl: glorpen 1.00; subj1.2.sg: glorpest 1.00; subj1.2.pl: glorpet 1.00; subj1.3.sg: glorpe 1.00; subj1.3.pl: glorpen 1.00; subj2.1.sg: glorpte 1.00; subj2.1.pl: glorpten 1.00; subj2.2.sg: glorptest 1.00; subj2.2.pl: glorptet 1.00; subj2.3.sg: glorpte 1.00; subj2.3.pl: glorpten 1.00 |
+| `blicken` | participle | pres: blickend 1.00; past: geblickt 1.00 |
+| `anglorpen` | verb | pres.1.sg: anglorpe 0.97; pres.1.pl: anglorpen 0.97; pres.2.sg: anglorpst 0.97; pres.2.pl: anglorpt 0.97; pres.3.sg: anglorpt 0.97; pres.3.pl: anglorpen 0.97; pret.1.sg: anglorpte 0.97; pret.1.pl: anglorpten 0.97; pret.2.sg: anglorptest 0.97; pret.2.pl: anglorptet 0.97; pret.3.sg: anglorpte 0.97; pret.3.pl: anglorpten 0.97; subj1.1.sg: anglorpe 0.97; subj1.1.pl: anglorpen 0.97; subj1.2.sg: anglorpest 0.97; subj1.2.pl: anglorpet 0.97; subj1.3.sg: anglorpe 0.97; subj1.3.pl: anglorpen 0.97; subj2.1.sg: anglorpte 0.97; subj2.1.pl: anglorpten 0.97; subj2.2.sg: anglorptest 0.97; subj2.2.pl: anglorptet 0.97; subj2.3.sg: anglorpte 0.97; subj2.3.pl: anglorpten 0.97 |
 
 ### Largest groups of held-out misses
 
@@ -431,18 +431,18 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 <details><summary>verb</summary>
 
-- 5 × `participle.past`: predicted `-en+t`, attested `ge-en+t` — emailen → emailt (attested geemailt); facebooken → facebookt (attested gefacebookt); kräftigen → kräftigt (attested gekräftigt)
-- 4 × `participle.past`: predicted `ge-en+t`, attested `ge-+` — blasen → geblast (attested geblasen); heißen → geheißt (attested geheißen); kommen → gekommt (attested gekommen)
-- 3 × `subordinate.pres.2.sg`: predicted `-esen+iest`, attested `-en+t` — entwesen → entwiest (attested entwest); genesen → geniest (attested genest); verwesen → verwiest (attested verwest)
-- 3 × `subordinate.pres.3.sg`: predicted `-esen+iest`, attested `-en+t` — entwesen → entwiest (attested entwest); genesen → geniest (attested genest); verwesen → verwiest (attested verwest)
-- 3 × `verb.pres.2.sg`: predicted `-esen+iest`, attested `-en+t` — entwesen → entwiest (attested entwest); genesen → geniest (attested genest); verwesen → verwiest (attested verwest)
-- 3 × `imperative.sg`: predicted `-esen+ies`, attested `-en+` — entwesen → entwies (attested entwes); genesen → genies (attested genes); verwesen → verwies (attested verwes)
-- 3 × `verb.pres.3.sg`: predicted `-esen+iest`, attested `-en+t` — entwesen → entwiest (attested entwest); genesen → geniest (attested genest); verwesen → verwiest (attested verwest)
-- 3 × `participle.past`: predicted `-ehen+anden`, attested `-stehen+gestanden` — bevorstehen → bevorstanden (attested bevorgestanden); dafürstehen → dafürstanden (attested dafürgestanden); näherstehen → näherstanden (attested nähergestanden)
-- 2 × `verb.pres.1.sg`: predicted `-n+`, attested `checke -checken+` — einchecken → einchecke (attested checke ein); gegenchecken → gegenchecke (attested checke gegen)
-- 2 × `verb.pres.1.sg`: predicted `-n+`, attested `stehe -stehen+` — dafürstehen → dafürstehe (attested stehe dafür); näherstehen → näherstehe (attested stehe näher)
-- 2 × `verb.pret.3.sg`: predicted `-ehen+and`, attested `stand -stehen+` — dafürstehen → dafürstand (attested stand dafür); näherstehen → näherstand (attested stand näher)
-- 2 × `verb.pret.3.sg`: predicted `-en+te`, attested `-eichen+ich` — streichen → streichte (attested strich); weichen → weichte (attested wich)
+- 46 × `participle.past`: predicted `-en+t`, attested `ge-en+t` — blinken → blinkt (attested geblinkt); borgen → borgt (attested geborgt); checken → checkt (attested gecheckt)
+- 46 × `participle.past`: predicted `-n+t`, attested `ge-n+t` — achten → achtet (attested geachtet); craften → craftet (attested gecraftet); dichten → dichtet (attested gedichtet)
+- 20 × `participle.past`: predicted `ge-en+t`, attested `-en+t` — behufen → gebehuft (attested behuft); beurteilen → gebeurteilt (attested beurteilt); entthronen → geentthront (attested entthront)
+- 15 × `verb.subj1.1.pl`: predicted `-+ `, attested `-+` — bewegen → bewegen  (attested bewegen); brechen → brechen  (attested brechen); bügeln → bügeln  (attested bügeln)
+- 15 × `verb.subj1.3.pl`: predicted `-+ `, attested `-+` — bewegen → bewegen  (attested bewegen); brechen → brechen  (attested brechen); bügeln → bügeln  (attested bügeln)
+- 15 × `verb.pres.1.pl`: predicted `-+ `, attested `-+` — bewegen → bewegen  (attested bewegen); brechen → brechen  (attested brechen); bügeln → bügeln  (attested bügeln)
+- 15 × `verb.pres.3.pl`: predicted `-+ `, attested `-+` — bewegen → bewegen  (attested bewegen); brechen → brechen  (attested brechen); bügeln → bügeln  (attested bügeln)
+- 14 × `participle.past`: predicted `ge-n+t`, attested `-n+t` — bebildern → gebebildert (attested bebildert); befummeln → gebefummelt (attested befummelt); bereichern → gebereichert (attested bereichert)
+- 11 × `verb.subj1.1.sg`: predicted `-n+ `, attested `-n+` — bewegen → bewege  (attested bewege); brechen → breche  (attested breche); haken → hake  (attested hake)
+- 11 × `verb.subj1.2.sg`: predicted `-n+st `, attested `-n+st` — bewegen → bewegest  (attested bewegest); brechen → brechest  (attested brechest); haken → hakest  (attested hakest)
+- 11 × `verb.subj1.2.pl`: predicted `-n+t `, attested `-n+t` — bewegen → beweget  (attested beweget); brechen → brechet  (attested brechet); haken → haket  (attested haket)
+- 11 × `verb.subj1.3.sg`: predicted `-n+ `, attested `-n+` — bewegen → bewege  (attested bewege); brechen → breche  (attested breche); haken → hake  (attested hake)
 
 </details>
 
@@ -465,21 +465,21 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 22348 KB of generated Rust (2896 KB gzipped). Its tables measure 3412 KB: what a compact binary layout of them would take, the size the build prices when it tunes. Where those bytes are, in KB (the strings, 155 KB, are shared):
+The model is 13935 KB of generated Rust (1328 KB gzipped). Its tables measure 3001 KB: what a compact binary layout of them would take, the size the build prices when it tunes. Where those bytes are, in KB (the strings, 152 KB, are shared):
 
-| | edits | classes | tree nodes | distributions | joins | lexicon | restoration model | part models | total |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 25 | 65 | 564 | 1168 | 0 | 0 | 0 | 0 | 1822 |
-| adjective | 21 | 15 | 79 | 57 | 0 | 0 | 0 | 0 | 172 |
-| verb | 440 | 330 | 127 | 270 | 90 | 0 | 0 | 0 | 1258 |
-| determiner | 1 | 2 | 0 | 1 | 0 | 0 | 0 | 0 | 5 |
+| | edits | classes | tree nodes | their counts | joins | lexicon | sound laws | restoration model | part models | total |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 23 | 65 | 564 | 674 | 0 | 0 | 1 | 0 | 0 | 1326 |
+| adjective | 21 | 15 | 79 | 53 | 0 | 0 | 0 | 0 | 0 | 169 |
+| verb | 436 | 330 | 168 | 323 | 90 | 0 | 1 | 0 | 0 | 1349 |
+| determiner | 1 | 2 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 5 |
 
-| | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
+| | edits | classes | stored nodes | memorized words | counts stored | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 800 | 1625 | 48089 | 7493 | 299089 | 662 (`noun.gen.sg`) |
-| adjective | 676 | 103 | 6731 | 1898 | 14485 | 524 (`adjective.strong.nom.m`) |
-| verb | 14093 | 3840 | 10838 | 2144 | 69096 | 1093 (`participle.pres`) |
-| determiner | 45 | 33 | 34 | 4 | 314 | 441 (`determiner.nom.f`) |
+| noun | 744 | 1625 | 48089 | 7493 | 115050 | 849 (`noun.gen.sg`) |
+| adjective | 676 | 103 | 6731 | 1898 | 9037 | 617 (`adjective.strong.nom.m`) |
+| verb | 13954 | 3840 | 14339 | 1571 | 55205 | 1147 (`participle.pres`) |
+| determiner | 45 | 33 | 34 | 4 | 183 | 624 (`determiner.nom.f`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
@@ -491,36 +491,48 @@ release build, fastest of seven runs.
 
 | | τ | model KB | dev top-1 | dev log-loss |
 |---|---:|---:|---:|---:|
-| noun | 1 | 2482 | 95.70% | 0.1769 |
-| noun | 2 (chosen) | 1573 | 95.62% | 0.1784 |
-| noun | 8 | 757 | 95.18% | 0.1907 |
-| adjective | 1 | 202 | 99.02% | 0.0364 |
-| adjective | 2 (chosen) | 155 | 98.94% | 0.0319 |
-| adjective | 8 | 145 | 98.60% | 0.0449 |
-| verb | 1 | 962 | 84.59% | 0.7629 |
-| verb | 2 (chosen) | 918 | 84.59% | 0.7540 |
-| verb | 8 | 816 | 84.03% | 0.7423 |
-| determiner | 1 (chosen) | 4 | 100.00% | 0.1631 |
-| determiner | 2 | 4 | 100.00% | 0.2411 |
-| determiner | 8 | 3 | 100.00% | 0.5419 |
+| noun | 1 | 1670 | 95.71% | 0.1769 |
+| noun | 2 (chosen) | 1147 | 95.62% | 0.1784 |
+| noun | 8 | 740 | 95.18% | 0.1907 |
+| adjective | 1 | 188 | 99.02% | 0.0364 |
+| adjective | 2 (chosen) | 152 | 98.94% | 0.0319 |
+| adjective | 8 | 156 | 98.60% | 0.0449 |
+| verb | 1 | 1104 | 84.47% | 0.7516 |
+| verb | 2 (chosen) | 989 | 84.33% | 0.7428 |
+| verb | 8 | 913 | 82.74% | 0.7411 |
+| determiner | 1 (chosen) | 4 | 100.00% | 0.1634 |
+| determiner | 2 | 4 | 100.00% | 0.2414 |
+| determiner | 8 | 3 | 100.00% | 0.5421 |
 
 </details>
 
 <details><summary>Chosen hyperparameters</summary>
 
-| | smoothing α | pruning τ | suffix support | syllable token | dev top-1 |
-|---|---:|---:|---:|---|---:|
-| noun | 2 | 2 | 1 | none | 95.62% |
-| adjective | 0.5 | 2 | 1 | none | 98.94% |
-| verb | 2 | 2 | 2 | after 0 letters | 91.71% |
-| determiner | 0.5 | 1 | 1 | after 2 letters | 100.00% |
+| | smoothing α | pruning τ | suffix support | syllable token | join model | start restoration | sound laws | dev top-1 |
+|---|---:|---:|---:|---|---|---|---|---:|
+| noun | 2 | 2 | 1 | none | no | no | yes | 95.62% |
+| adjective | 0.5 | 2 | 1 | none | no | no | no | 98.94% |
+| verb | 2 | 2 | 1 | none | yes | no | yes | 92.12% |
+| determiner | 0.5 | 1 | 1 | after 2 letters | no | no | no | 100.00% |
 
 </details>
+
+### Sound laws
+
+Learned from the training words: where edits differ only by a regular change of the stem's edge, they are one edit and a rule, so an unseen word gets the change too.
+
+- **noun**:
+  - the stem's last vowel, across its final consonants: a→ä, au→äu, o→ö, oo→ö, u→ü (16774 training pairs)
+- **verb**:
+  - the stem's last vowel, across its final consonants: au→ie, e→ä, ei→ie, i→ä, ie→ö, o→ie, u→ie, ö→ü, ü→ö (5579 training pairs)
+  - the stem's last segment before the ending: b→zub, f→zuf, g→zug, h→zuh, l→zul, r→zur, s→zus (148 training pairs)
+  - the stem's last vowel, across its final consonants: au→ö, ei→i (204 training pairs)
+  - the stem's last segment before the ending: b→tt, g→cht (190 training pairs)
 
 
 ## Data and license
 
-The code is MIT or Apache-2.0. The model (`src/model.bin`) is derived from
+The code is MIT or Apache-2.0. The model (the code under `src/model/`) is derived from
 [the English Wiktionary](https://en.wiktionary.org/) and [the German Wiktionary](https://de.wiktionary.org/) via [Kaikki](https://kaikki.org/) and
 [wiktextract](https://github.com/tatuylonen/wiktextract), and is licensed under
 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); see `DATA-LICENSE.md`.

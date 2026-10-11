@@ -40,3 +40,8 @@ pub(crate) fn build() -> Model<'static> {
         ],
     )
 }
+
+/// Whether every part of speech's sound laws compile.
+pub(crate) fn sound_laws_compile() -> bool {
+    noun::sound_laws_compile() && verb::sound_laws_compile()
+}

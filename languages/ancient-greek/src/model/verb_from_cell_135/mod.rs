@@ -1,4 +1,4 @@
-//! verb_from_cell_135: 625 cells, 7578 edits, 1464 classes, 3252 tree nodes.
+//! verb_from_cell_135: 625 cells, 17126 edits, 1880 classes, 3515 tree nodes.
 
 use flexion::{Class, Edit, Join, Path, PosModel, Walk};
 
@@ -42,7 +42,7 @@ impl PosModel for VerbFromCell135 {
         edits::get(id).copied()
     }
     fn classes(&self) -> usize {
-        1464
+        1880
     }
     fn class(&self, class: usize) -> Option<Class<'_>> {
         classes::get(class).map(|c| c.class)

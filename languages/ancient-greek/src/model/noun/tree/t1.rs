@@ -1,4873 +1,18473 @@
 use flexion::Path;
 
-/// Words ending -λοσ.
+/// Words ending -δια.
+pub(crate) fn n147(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 145);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 780);
+			match s {
+				[] => true,
+				['γ', s @ ..] => {
+					super::push(out, 2360);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4579);
+							match s {
+								[] => true,
+								['μ', s @ ..] => {
+									super::push(out, 6219);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 781);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 2361);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 4580);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 782);
+			match s {
+				[] => true,
+				['π', s @ ..] => {
+					super::push(out, 2362);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 4581);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ω', s @ ..] => {
+			super::push(out, 783);
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 2363);
+					match s {
+						[] => true,
+						['υ', s @ ..] => {
+							super::push(out, 4582);
+							match s {
+								[] => true,
+								['μ', s @ ..] => {
+									super::push(out, 6220);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -εια.
+pub(crate) fn n148(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 146);
+	match s {
+		[] => true,
+		['β', s @ ..] => {
+			super::push(out, 784);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 2364);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 4583);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['γ', s @ ..] => {
+			super::push(out, 785);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 2365);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 4584);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 2366);
+					s.is_empty()
+				}
+				['ο', s @ ..] => {
+					super::push(out, 2367);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 2368);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['δ', s @ ..] => {
+			super::push(out, 786);
+			match s {
+				[] => true,
+				['η', s @ ..] => {
+					super::push(out, 2369);
+					match s {
+						[] => true,
+						['τ', 'ι', 'π', 'ε', '\u{1}', s @ ..] => {
+							super::push(out, 4585);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ζ', s @ ..] => {
+			super::push(out, 787);
+			s.is_empty()
+		}
+		['θ', s @ ..] => {
+			super::push(out, 788);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 2370);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 4586);
+							s.is_empty()
+						}
+						['π', s @ ..] => {
+							super::push(out, 4587);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6221);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['η', s @ ..] => {
+					super::push(out, 2371);
+					s.is_empty()
+				}
+				['λ', s @ ..] => {
+					super::push(out, 2372);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4588);
+							match s {
+								[] => true,
+								['μ', s @ ..] => {
+									super::push(out, 6222);
+									match s {
+										[] => true,
+										['α', s @ ..] => {
+											super::push(out, 7013);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['κ', s @ ..] => {
+			super::push(out, 789);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 2373);
+					match s {
+						[] => true,
+						['ν', s @ ..] => {
+							super::push(out, 4589);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6223);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 2374);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 4590);
+							match s {
+								[] => true,
+								['ι', s @ ..] => {
+									super::push(out, 6224);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 2375);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4591);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['σ', s @ ..] => {
+					super::push(out, 2376);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['λ', s @ ..] => {
+			super::push(out, 790);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 2377);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 4592);
+							s.is_empty()
+						}
+						['τ', s @ ..] => {
+							super::push(out, 4593);
+							match s {
+								[] => true,
+								['ν', s @ ..] => {
+									super::push(out, 6225);
+									match s {
+										[] => true,
+										['ε', s @ ..] => {
+											super::push(out, 7014);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													super::push(out, 7301);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										['υ', s @ ..] => {
+											super::push(out, 7015);
+											match s {
+												[] => true,
+												['σ', s @ ..] => {
+													super::push(out, 7302);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 2378);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['μ', s @ ..] => {
+			super::push(out, 791);
+			s.is_empty()
+		}
+		['ν', s @ ..] => {
+			super::push(out, 792);
+			match s {
+				[] => true,
+				['α', 'τ', s @ ..] => {
+					super::push(out, 2379);
+					match s {
+						[] => true,
+						['σ', 'α', 'κ', '\u{1}', s @ ..] => {
+							super::push(out, 4594);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['γ', s @ ..] => {
+					super::push(out, 2380);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4595);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 2381);
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 4596);
+							match s {
+								[] => true,
+								['γ', 'υ', 'ξ', '\u{1}', s @ ..] => {
+									super::push(out, 6226);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ξ', s @ ..] => {
+			super::push(out, 793);
+			match s {
+				[] => true,
+				['ο', s @ ..] => {
+					super::push(out, 2382);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['π', s @ ..] => {
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 2383);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 4597);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 2384);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 794);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 2385);
+					match s {
+						[] => true,
+						['β', s @ ..] => {
+							super::push(out, 4598);
+							s.is_empty()
+						}
+						['γ', s @ ..] => {
+							super::push(out, 4599);
+							match s {
+								[] => true,
+								['γ', s @ ..] => {
+									super::push(out, 6227);
+									match s {
+										[] => true,
+										['α', s @ ..] => {
+											super::push(out, 7016);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['π', s @ ..] => {
+							super::push(out, 4600);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['β', s @ ..] => {
+					super::push(out, 2386);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 4601);
+							match s {
+								[] => true,
+								['ν', s @ ..] => {
+									super::push(out, 6228);
+									match s {
+										[] => true,
+										['ε', s @ ..] => {
+											super::push(out, 7017);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 2387);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 4602);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['η', s @ ..] => {
+					super::push(out, 2388);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 4603);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 2389);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4604);
+							match s {
+								[] => true,
+								['τ', s @ ..] => {
+									super::push(out, 6229);
+									match s {
+										[] => true,
+										['ε', s @ ..] => {
+											super::push(out, 7018);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 2390);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4605);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['τ', s @ ..] => {
+			super::push(out, 795);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 4606);
+							match s {
+								[] => true,
+								['π', s @ ..] => {
+									super::push(out, 6230);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ρ', 'κ', s @ ..] => {
+							super::push(out, 4607);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ε', 'π', s @ ..] => {
+					super::push(out, 2391);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 4608);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ν', s @ ..] => {
+					super::push(out, 2392);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4609);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 2393);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 4610);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['σ', s @ ..] => {
+					super::push(out, 2394);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['χ', s @ ..] => {
+			super::push(out, 796);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 2395);
+					s.is_empty()
+				}
+				['κ', s @ ..] => {
+					super::push(out, 2396);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -θια.
+pub(crate) fn n149(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 147);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 797);
+			s.is_empty()
+		}
+		['υ', s @ ..] => {
+			super::push(out, 798);
+			match s {
+				[] => true,
+				['π', s @ ..] => {
+					super::push(out, 2397);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ιια.
+pub(crate) fn n150(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 148);
+	match s {
+		[] => true,
+		['ο', s @ ..] => {
+			super::push(out, 799);
+			match s {
+				[] => true,
+				['π', 'ο', 'σ', s @ ..] => {
+					super::push(out, 2398);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 4611);
+							match s {
+								[] => true,
+								['ω', s @ ..] => {
+									super::push(out, 6231);
+									match s {
+										[] => true,
+										['λ', s @ ..] => {
+											super::push(out, 7019);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -κια.
+pub(crate) fn n151(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 149);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 800);
+			match s {
+				[] => true,
+				['κ', 'α', s @ ..] => {
+					super::push(out, 2399);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 2400);
+					match s {
+						[] => true,
+						['θ', s @ ..] => {
+							super::push(out, 4612);
+							match s {
+								[] => true,
+								['ν', s @ ..] => {
+									super::push(out, 6232);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 2401);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 4613);
+							match s {
+								[] => true,
+								['υ', s @ ..] => {
+									super::push(out, 6233);
+									match s {
+										[] => true,
+										['ο', s @ ..] => {
+											super::push(out, 7020);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 801);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 2402);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 4614);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ν', s @ ..] => {
+					super::push(out, 2403);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 4615);
+							match s {
+								[] => true,
+								['λ', s @ ..] => {
+									super::push(out, 6234);
+									match s {
+										[] => true,
+										['ι', s @ ..] => {
+											super::push(out, 7021);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 2404);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['κ', s @ ..] => {
+			super::push(out, 802);
+			match s {
+				[] => true,
+				['ο', s @ ..] => {
+					super::push(out, 2405);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 4616);
+							match s {
+								[] => true,
+								['ι', s @ ..] => {
+									super::push(out, 6235);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 803);
+			match s {
+				[] => true,
+				['τ', s @ ..] => {
+					super::push(out, 2406);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 4617);
+							match s {
+								[] => true,
+								['τ', s @ ..] => {
+									super::push(out, 6236);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['σ', s @ ..] => {
+			super::push(out, 804);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -λια.
+pub(crate) fn n152(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 150);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 805);
+			match s {
+				[] => true,
+				['γ', s @ ..] => {
+					super::push(out, 2407);
+					match s {
+						[] => true,
+						['ω', s @ ..] => {
+							super::push(out, 4618);
+							match s {
+								[] => true,
+								['ρ', s @ ..] => {
+									super::push(out, 6237);
+									match s {
+										[] => true,
+										['τ', s @ ..] => {
+											super::push(out, 7022);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 2408);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 806);
+			s.is_empty()
+		}
+		['η', s @ ..] => {
+			super::push(out, 807);
+			match s {
+				[] => true,
+				['δ', s @ ..] => {
+					super::push(out, 2409);
+					s.is_empty()
+				}
+				['ζ', s @ ..] => {
+					super::push(out, 2410);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 4619);
+							match s {
+								[] => true,
+								['κ', 'α', 'κ', '\u{1}', s @ ..] => {
+									super::push(out, 6238);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['υ', s @ ..] => {
+							super::push(out, 4620);
+							match s {
+								[] => true,
+								['ε', '\u{1}', s @ ..] => {
+									super::push(out, 6239);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['θ', s @ ..] => {
+					super::push(out, 2411);
+					match s {
+						[] => true,
+						['ν', s @ ..] => {
+							super::push(out, 4621);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6240);
+									match s {
+										[] => true,
+										['κ', s @ ..] => {
+											super::push(out, 7023);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 2412);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4622);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 808);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 2413);
+					match s {
+						[] => true,
+						['δ', s @ ..] => {
+							super::push(out, 4623);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 2414);
+					match s {
+						[] => true,
+						['κ', 'γ', s @ ..] => {
+							super::push(out, 4624);
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6241);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 809);
+			s.is_empty()
+		}
+		['υ', s @ ..] => {
+			super::push(out, 810);
+			match s {
+				[] => true,
+				['φ', s @ ..] => {
+					super::push(out, 2415);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 4625);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['φ', s @ ..] => {
+			super::push(out, 811);
+			s.is_empty()
+		}
+		['ω', s @ ..] => {
+			super::push(out, 812);
+			match s {
+				[] => true,
+				['δ', s @ ..] => {
+					super::push(out, 2416);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 4626);
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6242);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -μια.
+pub(crate) fn n153(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 151);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 813);
+			match s {
+				[] => true,
+				['γ', 'ο', s @ ..] => {
+					super::push(out, 2417);
+					match s {
+						[] => true,
+						['ν', s @ ..] => {
+							super::push(out, 4627);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6243);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 2418);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['η', 'δ', 'ν', s @ ..] => {
+			super::push(out, 814);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 2419);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 4628);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['θ', 'υ', 'ρ', 'υ', s @ ..] => {
+			super::push(out, 815);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 2420);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ι', 'α', s @ ..] => {
+			super::push(out, 816);
+			match s {
+				[] => true,
+				['ν', s @ ..] => {
+					super::push(out, 2421);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4629);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['μ', s @ ..] => {
+			super::push(out, 817);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 2422);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 4630);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 818);
+			match s {
+				[] => true,
+				['ν', s @ ..] => {
+					super::push(out, 2423);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4631);
+							match s {
+								[] => true,
+								['ρ', s @ ..] => {
+									super::push(out, 6244);
+									match s {
+										[] => true,
+										['ο', s @ ..] => {
+											super::push(out, 7024);
+											match s {
+												[] => true,
+												['γ', s @ ..] => {
+													super::push(out, 7303);
+													match s {
+														[] => true,
+														['α', '\u{1}', s @ ..] => super::t2::n7422(s, out),
+														_ => false,
+													}
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['ο', 'ρ', 'τ', s @ ..] => {
+							super::push(out, 4632);
+							match s {
+								[] => true,
+								['σ', s @ ..] => {
+									super::push(out, 6245);
+									match s {
+										[] => true,
+										['α', s @ ..] => {
+											super::push(out, 7025);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 2424);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 4633);
+							match s {
+								[] => true,
+								['ο', 'π', s @ ..] => {
+									super::push(out, 6246);
+									match s {
+										[] => true,
+										['υ', s @ ..] => {
+											super::push(out, 7026);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 819);
+			s.is_empty()
+		}
+		['ω', 'ν', s @ ..] => {
+			super::push(out, 820);
+			match s {
+				[] => true,
+				['γ', s @ ..] => {
+					super::push(out, 2425);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 4634);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -νια.
+pub(crate) fn n154(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 152);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 821);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 2426);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 2427);
+					match s {
+						[] => true,
+						['υ', s @ ..] => {
+							super::push(out, 4635);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6247);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 822);
+			s.is_empty()
+		}
+		['η', s @ ..] => {
+			super::push(out, 823);
+			match s {
+				[] => true,
+				['χ', s @ ..] => {
+					super::push(out, 2428);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 4636);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 824);
+			match s {
+				[] => true,
+				['α', 'κ', s @ ..] => {
+					super::push(out, 2429);
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 4637);
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6248);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['μ', s @ ..] => {
+			super::push(out, 825);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 2430);
+					match s {
+						[] => true,
+						['δ', s @ ..] => {
+							super::push(out, 4638);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 826);
+			match s {
+				[] => true,
+				['γ', 'ο', 'μ', s @ ..] => {
+					super::push(out, 2431);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 4639);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6249);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 2432);
+					match s {
+						[] => true,
+						['η', 'δ', 'α', '\u{1}', s @ ..] => {
+							super::push(out, 4640);
+							s.is_empty()
+						}
+						['ι', s @ ..] => {
+							super::push(out, 4641);
+							s.is_empty()
+						}
+						['υ', s @ ..] => {
+							super::push(out, 4642);
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6250);
+									match s {
+										[] => true,
+										['ν', s @ ..] => {
+											super::push(out, 7027);
+											match s {
+												[] => true,
+												['π', s @ ..] => {
+													super::push(out, 7304);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['ω', s @ ..] => {
+							super::push(out, 4643);
+							match s {
+								[] => true,
+								['ν', s @ ..] => {
+									super::push(out, 6251);
+									match s {
+										[] => true,
+										['γ', s @ ..] => {
+											super::push(out, 7028);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 4644);
+							s.is_empty()
+						}
+						['ν', s @ ..] => {
+							super::push(out, 4645);
+							match s {
+								[] => true,
+								['υ', s @ ..] => {
+									super::push(out, 6252);
+									match s {
+										[] => true,
+										['σ', s @ ..] => {
+											super::push(out, 7029);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['τ', s @ ..] => {
+			super::push(out, 827);
+			match s {
+				[] => true,
+				['ο', s @ ..] => {
+					super::push(out, 2433);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 4646);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ω', s @ ..] => {
+			super::push(out, 828);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ξια.
+pub(crate) fn n155(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 153);
+	match s {
+		[] => true,
+		['α', 'ρ', 'α', s @ ..] => {
+			super::push(out, 829);
+			match s {
+				[] => true,
+				['τ', s @ ..] => {
+					super::push(out, 2434);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4647);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ο', 'δ', 'α', s @ ..] => {
+			super::push(out, 830);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -οια.
+pub(crate) fn n156(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 154);
+	match s {
+		[] => true,
+		['λ', s @ ..] => {
+			super::push(out, 831);
+			s.is_empty()
+		}
+		['ν', s @ ..] => {
+			super::push(out, 832);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 2435);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 4648);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ῥ', s @ ..] => {
+			super::push(out, 833);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -πια.
+pub(crate) fn n157(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 155);
+	match s {
+		[] => true,
+		['ο', s @ ..] => {
+			super::push(out, 834);
+			match s {
+				[] => true,
+				['κ', s @ ..] => {
+					super::push(out, 2436);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 4649);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ω', s @ ..] => {
+			super::push(out, 835);
+			match s {
+				[] => true,
+				['ρ', 'θ', 'ν', 'α', 'σ', s @ ..] => {
+					super::push(out, 2437);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 4650);
+							match s {
+								[] => true,
+								['μ', s @ ..] => {
+									super::push(out, 6253);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ρια.
+pub(crate) fn n158(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 156);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 836);
+			match s {
+				[] => true,
+				['κ', s @ ..] => {
+					super::push(out, 2438);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4651);
+							match s {
+								[] => true,
+								['μ', s @ ..] => {
+									super::push(out, 6254);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['β', s @ ..] => {
+			super::push(out, 837);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 2439);
+					s.is_empty()
+				}
+				['ο', s @ ..] => {
+					super::push(out, 2440);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['δ', s @ ..] => {
+			super::push(out, 838);
+			match s {
+				[] => true,
+				['ν', s @ ..] => {
+					super::push(out, 2441);
+					match s {
+						[] => true,
+						['α', 'ν', s @ ..] => {
+							super::push(out, 4652);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6255);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 839);
+			s.is_empty()
+		}
+		['η', s @ ..] => {
+			super::push(out, 840);
+			match s {
+				[] => true,
+				['μ', s @ ..] => {
+					super::push(out, 2442);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 4653);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 2443);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 4654);
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6256);
+									match s {
+										[] => true,
+										['θ', s @ ..] => {
+											super::push(out, 7030);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 841);
+			s.is_empty()
+		}
+		['κ', s @ ..] => {
+			super::push(out, 842);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 2444);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 843);
+			match s {
+				[] => true,
+				['γ', s @ ..] => {
+					super::push(out, 2445);
+					match s {
+						[] => true,
+						['η', 'σ', 'ι', s @ ..] => {
+							super::push(out, 4655);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 844);
+			match s {
+				[] => true,
+				['ο', s @ ..] => {
+					super::push(out, 2446);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 4656);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['τ', s @ ..] => {
+			super::push(out, 845);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 2447);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 4657);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 2448);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 4658);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['η', s @ ..] => {
+					super::push(out, 2449);
+					match s {
+						[] => true,
+						['θ', s @ ..] => {
+							super::push(out, 4659);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['κ', s @ ..] => {
+					super::push(out, 2450);
+					s.is_empty()
+				}
+				['υ', s @ ..] => {
+					super::push(out, 2451);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 4660);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 846);
+			match s {
+				[] => true,
+				['φ', s @ ..] => {
+					super::push(out, 2452);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 4661);
+							match s {
+								[] => true,
+								['ι', s @ ..] => {
+									super::push(out, 6257);
+									match s {
+										[] => true,
+										['π', s @ ..] => {
+											super::push(out, 7031);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ω', s @ ..] => {
+			super::push(out, 847);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -σια.
+pub(crate) fn n159(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 157);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 848);
+			match s {
+				[] => true,
+				['μ', s @ ..] => {
+					super::push(out, 2453);
+					match s {
+						[] => true,
+						['ι', 'α', s @ ..] => {
+							super::push(out, 4662);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ν', s @ ..] => {
+					super::push(out, 2454);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4663);
+							match s {
+								[] => true,
+								['θ', s @ ..] => {
+									super::push(out, 6258);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 4664);
+							match s {
+								[] => true,
+								['υ', s @ ..] => {
+									super::push(out, 6259);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['τ', s @ ..] => {
+							super::push(out, 4665);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['φ', s @ ..] => {
+					super::push(out, 2455);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4666);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 849);
+			match s {
+				[] => true,
+				['κ', 'ι', 'ο', 'τ', 'α', 'κ', '\u{1}', s @ ..] => {
+					super::push(out, 2456);
+					s.is_empty()
+				}
+				['ν', s @ ..] => {
+					super::push(out, 2457);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 4667);
+							match s {
+								[] => true,
+								['γ', s @ ..] => {
+									super::push(out, 6260);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ρ', 'ι', s @ ..] => {
+					super::push(out, 2458);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4668);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 850);
+			match s {
+				[] => true,
+				['ν', 'γ', s @ ..] => {
+					super::push(out, 2459);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4669);
+							match s {
+								[] => true,
+								['μ', s @ ..] => {
+									super::push(out, 6261);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ι', 'α', s @ ..] => {
+			super::push(out, 851);
+			match s {
+				[] => true,
+				['δ', s @ ..] => {
+					super::push(out, 2460);
+					match s {
+						[] => true,
+						['ω', s @ ..] => {
+							super::push(out, 4670);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 852);
+			match s {
+				[] => true,
+				['ν', s @ ..] => {
+					super::push(out, 2461);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 4671);
+							match s {
+								[] => true,
+								['ι', s @ ..] => {
+									super::push(out, 6262);
+									match s {
+										[] => true,
+										['δ', s @ ..] => {
+											super::push(out, 7032);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ο', 'π', s @ ..] => {
+					super::push(out, 2462);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4672);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ω', 'ῥ', s @ ..] => {
+			super::push(out, 853);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -τια.
+pub(crate) fn n160(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 158);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 854);
+			match s {
+				[] => true,
+				['μ', s @ ..] => {
+					super::push(out, 2463);
+					match s {
+						[] => true,
+						['η', s @ ..] => {
+							super::push(out, 4673);
+							match s {
+								[] => true,
+								['ρ', s @ ..] => {
+									super::push(out, 6263);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 4674);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6264);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['κ', s @ ..] => {
+							super::push(out, 4675);
+							match s {
+								[] => true,
+								['ο', 'τ', s @ ..] => {
+									super::push(out, 6265);
+									match s {
+										[] => true,
+										['σ', s @ ..] => {
+											super::push(out, 7033);
+											match s {
+												[] => true,
+												['ι', s @ ..] => {
+													super::push(out, 7305);
+													match s {
+														[] => true,
+														['ρ', s @ ..] => super::t2::n7423(s, out),
+														_ => false,
+													}
+												}
+												_ => false,
+											}
+										}
+										['υ', s @ ..] => {
+											super::push(out, 7034);
+											match s {
+												[] => true,
+												['α', s @ ..] => {
+													super::push(out, 7306);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['τ', s @ ..] => {
+							super::push(out, 4676);
+							match s {
+								[] => true,
+								['σ', s @ ..] => {
+									super::push(out, 6266);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['χ', s @ ..] => {
+					super::push(out, 2464);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 4677);
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6267);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['π', s @ ..] => {
+			super::push(out, 855);
+			match s {
+				[] => true,
+				['υ', s @ ..] => {
+					super::push(out, 2465);
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 4678);
+							match s {
+								[] => true,
+								['ι', s @ ..] => {
+									super::push(out, 6268);
+									match s {
+										[] => true,
+										['α', '\u{1}', s @ ..] => {
+											super::push(out, 7035);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['σ', s @ ..] => {
+			super::push(out, 856);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 2466);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 4679);
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6269);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 2467);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 857);
+			match s {
+				[] => true,
+				['ο', s @ ..] => {
+					super::push(out, 2468);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 4680);
+							match s {
+								[] => true,
+								['γ', s @ ..] => {
+									super::push(out, 6270);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -υια.
+pub(crate) fn n161(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 159);
+	match s {
+		[] => true,
+		['γ', s @ ..] => {
+			super::push(out, 858);
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 2469);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['θ', s @ ..] => {
+			super::push(out, 859);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 2470);
+					s.is_empty()
+				}
+				['ι', s @ ..] => {
+					super::push(out, 2471);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['μ', s @ ..] => {
+			super::push(out, 860);
+			s.is_empty()
+		}
+		['π', s @ ..] => {
+			super::push(out, 861);
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 2472);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 862);
+			match s {
+				[] => true,
+				['τ', s @ ..] => {
+					super::push(out, 2473);
+					match s {
+						[] => true,
+						['η', s @ ..] => {
+							super::push(out, 4681);
+							match s {
+								[] => true,
+								['μ', s @ ..] => {
+									super::push(out, 6271);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -φια.
+pub(crate) fn n162(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 160);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 863);
+			match s {
+				[] => true,
+				['ρ', 'γ', s @ ..] => {
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 4682);
+							match s {
+								[] => true,
+								['λ', s @ ..] => {
+									super::push(out, 6272);
+									match s {
+										[] => true,
+										['λ', s @ ..] => {
+											super::push(out, 7036);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['ο', 'ρ', s @ ..] => {
+							super::push(out, 4683);
+							match s {
+								[] => true,
+								['ω', s @ ..] => {
+									super::push(out, 6273);
+									match s {
+										[] => true,
+										['χ', s @ ..] => {
+											super::push(out, 7037);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ο', 'ρ', s @ ..] => {
+			super::push(out, 864);
+			match s {
+				[] => true,
+				['τ', 'α', s @ ..] => {
+					super::push(out, 2474);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -χια.
+pub(crate) fn n163(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 161);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 865);
+			s.is_empty()
+		}
+		['γ', s @ ..] => {
+			super::push(out, 866);
+			match s {
+				[] => true,
+				['ο', s @ ..] => {
+					super::push(out, 2475);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 4684);
+							match s {
+								[] => true,
+								['β', s @ ..] => {
+									super::push(out, 6274);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 867);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ψια.
+pub(crate) fn n164(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 162);
+	match s {
+		[] => true,
+		['ε', s @ ..] => {
+			super::push(out, 868);
+			match s {
+				[] => true,
+				['λ', s @ ..] => {
+					super::push(out, 2476);
+					match s {
+						[] => true,
+						['β', s @ ..] => {
+							super::push(out, 4685);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6275);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 869);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// The word κατοικημα.
+pub(crate) fn n7349(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 7307);
+	s.is_empty()
+}
+
+/// Words ending -μμα.
+pub(crate) fn n185(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 183);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 917);
+			s.is_empty()
+		}
+		['ε', s @ ..] => {
+			super::push(out, 918);
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 2533);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 919);
+			match s {
+				[] => true,
+				['λ', s @ ..] => {
+					super::push(out, 2534);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 920);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 2535);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 4715);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6284);
+									match s {
+										[] => true,
+										['ι', s @ ..] => {
+											super::push(out, 7041);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ν', s @ ..] => {
+					super::push(out, 2536);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 2537);
+					match s {
+						[] => true,
+						['τ', s @ ..] => {
+							super::push(out, 4716);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6285);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ῥ', s @ ..] => {
+					super::push(out, 2538);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ο', 'κ', 'ι', s @ ..] => {
+			super::push(out, 921);
+			s.is_empty()
+		}
+		['υ', s @ ..] => {
+			super::push(out, 922);
+			match s {
+				[] => true,
+				['λ', 'α', s @ ..] => {
+					super::push(out, 2539);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 4717);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 2540);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 4718);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ω', s @ ..] => {
+			super::push(out, 923);
+			match s {
+				[] => true,
+				['κ', s @ ..] => {
+					super::push(out, 2541);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 4719);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ρμα.
+pub(crate) fn n187(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 185);
+	match s {
+		[] => true,
+		['α', 'θ', s @ ..] => {
+			super::push(out, 926);
+			s.is_empty()
+		}
+		['ε', s @ ..] => {
+			super::push(out, 927);
+			s.is_empty()
+		}
+		['υ', 'θ', s @ ..] => {
+			super::push(out, 928);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -σμα.
+pub(crate) fn n188(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 186);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 929);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 2544);
+					s.is_empty()
+				}
+				['λ', s @ ..] => {
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 4721);
+							s.is_empty()
+						}
+						['θ', s @ ..] => {
+							super::push(out, 4722);
+							s.is_empty()
+						}
+						['κ', s @ ..] => {
+							super::push(out, 4723);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ρ', 'β', s @ ..] => {
+					super::push(out, 2545);
+					s.is_empty()
+				}
+				['χ', s @ ..] => {
+					super::push(out, 2546);
+					s.is_empty()
+				}
+				['ῥ', s @ ..] => {
+					super::push(out, 2547);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ε', 'δ', 'β', s @ ..] => {
+			super::push(out, 930);
+			s.is_empty()
+		}
+		['η', s @ ..] => {
+			super::push(out, 931);
+			match s {
+				[] => true,
+				['λ', s @ ..] => {
+					super::push(out, 2548);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 4724);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 932);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 2549);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 4725);
+							s.is_empty()
+						}
+						['σ', s @ ..] => {
+							super::push(out, 4726);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ν', s @ ..] => {
+					super::push(out, 2550);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 2551);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 4727);
+							match s {
+								[] => true,
+								['μ', s @ ..] => {
+									super::push(out, 6286);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 7042);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['π', s @ ..] => {
+							super::push(out, 4728);
+							s.is_empty()
+						}
+						['χ', s @ ..] => {
+							super::push(out, 4729);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['τ', 'κ', s @ ..] => {
+					super::push(out, 2552);
+					s.is_empty()
+				}
+				['χ', s @ ..] => {
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 4730);
+							s.is_empty()
+						}
+						['σ', s @ ..] => {
+							super::push(out, 4731);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 933);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 2553);
+					match s {
+						[] => true,
+						['ψ', s @ ..] => {
+							super::push(out, 4732);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['β', s @ ..] => {
+					super::push(out, 2554);
+					s.is_empty()
+				}
+				['ε', s @ ..] => {
+					super::push(out, 2555);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 4733);
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6287);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 2556);
+					s.is_empty()
+				}
+				['ο', s @ ..] => {
+					super::push(out, 2557);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 4734);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6288);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['τ', 'π', s @ ..] => {
+					super::push(out, 2558);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -υμα.
+pub(crate) fn n189(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 187);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 934);
+			match s {
+				[] => true,
+				['κ', 'γ', s @ ..] => {
+					super::push(out, 2559);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 4735);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 2560);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['δ', s @ ..] => {
+			super::push(out, 935);
+			match s {
+				[] => true,
+				['ν', s @ ..] => {
+					super::push(out, 2561);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 4736);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 936);
+			match s {
+				[] => true,
+				['γ', s @ ..] => {
+					super::push(out, 2562);
+					s.is_empty()
+				}
+				['ν', s @ ..] => {
+					super::push(out, 2563);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 2564);
+					match s {
+						[] => true,
+						['υ', s @ ..] => {
+							super::push(out, 4737);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 2565);
+					s.is_empty()
+				}
+				['ῥ', s @ ..] => {
+					super::push(out, 2566);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['θ', s @ ..] => {
+			super::push(out, 937);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 2567);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['κ', s @ ..] => {
+			super::push(out, 938);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 2568);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['λ', s @ ..] => {
+			super::push(out, 939);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 2569);
+					s.is_empty()
+				}
+				['α', s @ ..] => {
+					super::push(out, 2570);
+					match s {
+						[] => true,
+						['ν', s @ ..] => {
+							super::push(out, 4738);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6289);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['π', s @ ..] => {
+					super::push(out, 2571);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ν', s @ ..] => {
+			super::push(out, 940);
+			s.is_empty()
+		}
+		['ο', s @ ..] => {
+			super::push(out, 941);
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 2572);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 942);
+			s.is_empty()
+		}
+		['σ', s @ ..] => {
+			super::push(out, 943);
+			s.is_empty()
+		}
+		['τ', s @ ..] => {
+			super::push(out, 944);
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 2573);
+					s.is_empty()
+				}
+				['σ', s @ ..] => {
+					super::push(out, 2574);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['φ', s @ ..] => {
+			super::push(out, 945);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 2575);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['χ', s @ ..] => {
+			super::push(out, 946);
+			match s {
+				[] => true,
+				['γ', s @ ..] => {
+					super::push(out, 2576);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 4739);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -χμα.
+pub(crate) fn n190(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 188);
+	match s {
+		[] => true,
+		['ε', s @ ..] => {
+			super::push(out, 947);
+			s.is_empty()
+		}
+		['ι', s @ ..] => {
+			super::push(out, 948);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 2577);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 4740);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ωμα.
+pub(crate) fn n191(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 189);
+	match s {
+		[] => true,
+		['ι', s @ ..] => {
+			super::push(out, 949);
+			s.is_empty()
+		}
+		['ν', 'γ', s @ ..] => {
+			super::push(out, 950);
+			s.is_empty()
+		}
+		['ρ', s @ ..] => {
+			match s {
+				[] => true,
+				['β', s @ ..] => {
+					super::push(out, 2578);
+					s.is_empty()
+				}
+				['χ', s @ ..] => {
+					super::push(out, 2579);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['σ', s @ ..] => {
+			super::push(out, 951);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ρεμαθρα.
+pub(crate) fn n6338(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 6300);
+	s.is_empty()
+}
+
+/// Words ending -ηθρα.
+pub(crate) fn n1021(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1014);
+	match s {
+		[] => true,
+		['π', s @ ..] => {
+			super::push(out, 2631);
+			match s {
+				[] => true,
+				['λ', s @ ..] => {
+					super::push(out, 4771);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 6301);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 2632);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ιθρα.
+pub(crate) fn n1022(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1015);
+	match s {
+		[] => true,
+		['ρ', s @ ..] => {
+			super::push(out, 2633);
+			match s {
+				[] => true,
+				['υ', s @ ..] => {
+					super::push(out, 4772);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 6302);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ρθρα.
+pub(crate) fn n1023(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1016);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 2634);
+			match s {
+				[] => true,
+				['κ', s @ ..] => {
+					super::push(out, 4773);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 6303);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -χθρα.
+pub(crate) fn n1024(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1017);
+	match s {
+		[] => true,
+		['ε', s @ ..] => {
+			super::push(out, 2635);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ιρα.
+pub(crate) fn n219(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 217);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1018);
+			match s {
+				[] => true,
+				['τ', s @ ..] => {
+					super::push(out, 2636);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 4774);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['φ', s @ ..] => {
+					super::push(out, 2637);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 4775);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['χ', s @ ..] => {
+					super::push(out, 2638);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4776);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 1019);
+			match s {
+				[] => true,
+				['ζ', s @ ..] => {
+					super::push(out, 2639);
+					s.is_empty()
+				}
+				['π', s @ ..] => {
+					super::push(out, 2640);
+					s.is_empty()
+				}
+				['σ', s @ ..] => {
+					super::push(out, 2641);
+					s.is_empty()
+				}
+				['τ', s @ ..] => {
+					super::push(out, 2642);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4777);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 1020);
+			match s {
+				[] => true,
+				['μ', s @ ..] => {
+					super::push(out, 2643);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -κρα.
+pub(crate) fn n220(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 218);
+	s.is_empty()
+}
+
+/// Words ending -ορα.
+pub(crate) fn n221(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 219);
+	match s {
+		[] => true,
+		['μ', s @ ..] => {
+			super::push(out, 1021);
+			s.is_empty()
+		}
+		['φ', s @ ..] => {
+			super::push(out, 1022);
+			s.is_empty()
+		}
+		['χ', s @ ..] => {
+			super::push(out, 1023);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 2644);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 4778);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -πρα.
+pub(crate) fn n222(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 220);
+	match s {
+		[] => true,
+		['ε', s @ ..] => {
+			super::push(out, 1024);
+			s.is_empty()
+		}
+		['ι', s @ ..] => {
+			super::push(out, 1025);
+			match s {
+				[] => true,
+				['π', s @ ..] => {
+					super::push(out, 2645);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 4779);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ρρα.
+pub(crate) fn n223(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 221);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1026);
+			match s {
+				[] => true,
+				['γ', s @ ..] => {
+					super::push(out, 2646);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 4780);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1027);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -τρα.
+pub(crate) fn n224(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 222);
+	match s {
+		[] => true,
+		['ε', s @ ..] => {
+			super::push(out, 1028);
+			match s {
+				[] => true,
+				['π', s @ ..] => {
+					super::push(out, 2647);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 2648);
+					match s {
+						[] => true,
+						['υ', s @ ..] => {
+							super::push(out, 4781);
+							match s {
+								[] => true,
+								['θ', s @ ..] => {
+									super::push(out, 6304);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 1029);
+			match s {
+				[] => true,
+				['μ', s @ ..] => {
+					super::push(out, 2649);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 4782);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 1030);
+			match s {
+				[] => true,
+				['λ', s @ ..] => {
+					super::push(out, 2650);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 4783);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 2651);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 4784);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['κ', s @ ..] => {
+			super::push(out, 1031);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 2652);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 4785);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6305);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['η', s @ ..] => {
+					super::push(out, 2653);
+					match s {
+						[] => true,
+						['ψ', s @ ..] => {
+							super::push(out, 4786);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6306);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['π', s @ ..] => {
+			super::push(out, 1032);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 2654);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 4787);
+							match s {
+								[] => true,
+								['θ', s @ ..] => {
+									super::push(out, 6307);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 7045);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['σ', s @ ..] => {
+			super::push(out, 1033);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 2655);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 4788);
+							match s {
+								[] => true,
+								['λ', s @ ..] => {
+									super::push(out, 6308);
+									match s {
+										[] => true,
+										['ε', 'δ', '\u{1}', s @ ..] => {
+											super::push(out, 7046);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 2656);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 4789);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6309);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['η', s @ ..] => {
+					super::push(out, 2657);
+					match s {
+						[] => true,
+						['χ', s @ ..] => {
+							super::push(out, 4790);
+							match s {
+								[] => true,
+								['ρ', s @ ..] => {
+									super::push(out, 6310);
+									match s {
+										[] => true,
+										['ο', '\u{1}', s @ ..] => {
+											super::push(out, 7047);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 2658);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4791);
+							match s {
+								[] => true,
+								['λ', s @ ..] => {
+									super::push(out, 6311);
+									match s {
+										[] => true,
+										['α', 'π', '\u{1}', s @ ..] => {
+											super::push(out, 7048);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ω', s @ ..] => {
+					super::push(out, 2659);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 4792);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1034);
+			match s {
+				[] => true,
+				['λ', s @ ..] => {
+					super::push(out, 2660);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 4793);
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6312);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -υρα.
+pub(crate) fn n225(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 223);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1035);
+			match s {
+				[] => true,
+				['λ', s @ ..] => {
+					super::push(out, 2661);
+					s.is_empty()
+				}
+				['σ', s @ ..] => {
+					super::push(out, 2662);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['γ', s @ ..] => {
+			super::push(out, 1036);
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 2663);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 4794);
+							match s {
+								[] => true,
+								['γ', s @ ..] => {
+									super::push(out, 6313);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 1037);
+			s.is_empty()
+		}
+		['θ', s @ ..] => {
+			super::push(out, 1038);
+			s.is_empty()
+		}
+		['κ', s @ ..] => {
+			super::push(out, 1039);
+			match s {
+				[] => true,
+				['γ', s @ ..] => {
+					super::push(out, 2664);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4795);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['λ', s @ ..] => {
+			super::push(out, 1040);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 2665);
+					s.is_empty()
+				}
+				['λ', s @ ..] => {
+					super::push(out, 2666);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 4796);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6314);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 2667);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ν', s @ ..] => {
+			super::push(out, 1041);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 2668);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 1042);
+			match s {
+				[] => true,
+				['δ', s @ ..] => {
+					super::push(out, 2669);
+					match s {
+						[] => true,
+						['ν', s @ ..] => {
+							super::push(out, 4797);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6315);
+									match s {
+										[] => true,
+										['π', s @ ..] => {
+											super::push(out, 7049);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 2670);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4798);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['π', s @ ..] => {
+			super::push(out, 1043);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 2671);
+					s.is_empty()
+				}
+				['ω', s @ ..] => {
+					super::push(out, 2672);
+					match s {
+						[] => true,
+						['ζ', s @ ..] => {
+							super::push(out, 4799);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['σ', s @ ..] => {
+			super::push(out, 1044);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 2673);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['φ', s @ ..] => {
+			super::push(out, 1045);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 2674);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 4800);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 2675);
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 4801);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 2676);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 4802);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['σ', s @ ..] => {
+					super::push(out, 2677);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -φρα.
+pub(crate) fn n226(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 224);
+	s.is_empty()
+}
+
+/// Words ending -χρα.
+pub(crate) fn n227(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 225);
+	match s {
+		[] => true,
+		['ω', s @ ..] => {
+			super::push(out, 1046);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ωρα.
+pub(crate) fn n228(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 226);
+	match s {
+		[] => true,
+		['ι', s @ ..] => {
+			super::push(out, 1047);
+			s.is_empty()
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 1048);
+			match s {
+				[] => true,
+				['π', s @ ..] => {
+					super::push(out, 2678);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// The word περισπωμενη.
+pub(crate) fn n7350(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 7308);
+	s.is_empty()
+}
+
+/// Words ending -ρυνη.
+pub(crate) fn n1222(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1213);
+	match s {
+		[] => true,
+		['ο', 'τ', s @ ..] => {
+			super::push(out, 2781);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 4843);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['φ', s @ ..] => {
+			super::push(out, 2782);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 4844);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -συνη.
+pub(crate) fn n1223(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1214);
+	match s {
+		[] => true,
+		['ο', s @ ..] => {
+			super::push(out, 2783);
+			match s {
+				[] => true,
+				['μ', 'γ', s @ ..] => {
+					super::push(out, 4845);
+					match s {
+						[] => true,
+						['α', 'ρ', 'π', 'α', s @ ..] => {
+							super::push(out, 6330);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ω', s @ ..] => {
+			super::push(out, 2784);
+			match s {
+				[] => true,
+				['θ', s @ ..] => {
+					super::push(out, 4846);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 6331);
+							match s {
+								[] => true,
+								['γ', s @ ..] => {
+									super::push(out, 7053);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -χυνη.
+pub(crate) fn n1224(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1215);
+	match s {
+		[] => true,
+		['σ', s @ ..] => {
+			super::push(out, 2785);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 4847);
+					match s {
+						[] => true,
+						['α', '\u{1}', s @ ..] => {
+							super::push(out, 6332);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -χνη.
+pub(crate) fn n329(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 326);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1217);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ωνη.
+pub(crate) fn n330(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 327);
+	match s {
+		[] => true,
+		['δ', s @ ..] => {
+			super::push(out, 1218);
+			s.is_empty()
+		}
+		['λ', s @ ..] => {
+			super::push(out, 1219);
+			s.is_empty()
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 1220);
+			s.is_empty()
+		}
+		['τ', s @ ..] => {
+			super::push(out, 1221);
+			match s {
+				[] => true,
+				['υ', s @ ..] => {
+					super::push(out, 2786);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 4848);
+							match s {
+								[] => true,
+								['τ', s @ ..] => {
+									super::push(out, 6333);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['φ', s @ ..] => {
+			super::push(out, 1222);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// The word βυσναιοι.
+pub(crate) fn n7351(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 7309);
+	s.is_empty()
+}
+
+/// Words ending -ροι.
+pub(crate) fn n409(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 404);
+	match s {
+		[] => true,
+		['β', s @ ..] => {
+			super::push(out, 1323);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 2850);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 1324);
+			match s {
+				[] => true,
+				['τ', s @ ..] => {
+					super::push(out, 2851);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4890);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 1325);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 2852);
+					match s {
+						[] => true,
+						['β', s @ ..] => {
+							super::push(out, 4891);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['τ', s @ ..] => {
+			super::push(out, 1326);
+			match s {
+				[] => true,
+				['σ', s @ ..] => {
+					super::push(out, 2853);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 4892);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1327);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 2854);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ζαντοι.
+pub(crate) fn n1339(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1330);
+	s.is_empty()
+}
+
+/// Words ending -χοι.
+pub(crate) fn n412(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 407);
+	match s {
+		[] => true,
+		['γ', s @ ..] => {
+			super::push(out, 1331);
+			s.is_empty()
+		}
+		['η', s @ ..] => {
+			super::push(out, 1332);
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 2856);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 1333);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 2857);
+					s.is_empty()
+				}
+				['τ', s @ ..] => {
+					super::push(out, 2858);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 4893);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ιον.
+pub(crate) fn n454(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 449);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1379);
+			match s {
+				[] => true,
+				['κ', s @ ..] => {
+					super::push(out, 2888);
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 4908);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6349);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 2889);
+					s.is_empty()
+				}
+				['ν', s @ ..] => {
+					super::push(out, 2890);
+					s.is_empty()
+				}
+				['π', s @ ..] => {
+					super::push(out, 2891);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 2892);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 4909);
+							match s {
+								[] => true,
+								['δ', 'ι', s @ ..] => {
+									super::push(out, 6350);
+									match s {
+										[] => true,
+										['ρ', s @ ..] => {
+											super::push(out, 7061);
+											match s {
+												[] => true,
+												['ε', s @ ..] => {
+													super::push(out, 7310);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['σ', s @ ..] => {
+					super::push(out, 2893);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 4910);
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6351);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['φ', s @ ..] => {
+					super::push(out, 2894);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 4911);
+							match s {
+								[] => true,
+								['υ', s @ ..] => {
+									super::push(out, 6352);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['β', s @ ..] => {
+			super::push(out, 1380);
+			match s {
+				[] => true,
+				['ω', s @ ..] => {
+					super::push(out, 2895);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 4912);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6353);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['γ', s @ ..] => {
+			super::push(out, 1381);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 2896);
+					s.is_empty()
+				}
+				['γ', s @ ..] => {
+					super::push(out, 2897);
+					s.is_empty()
+				}
+				['ο', s @ ..] => {
+					super::push(out, 2898);
+					match s {
+						[] => true,
+						['λ', 'ο', 'ν', s @ ..] => {
+							super::push(out, 4913);
+							match s {
+								[] => true,
+								['η', s @ ..] => {
+									super::push(out, 6354);
+									match s {
+										[] => true,
+										['μ', s @ ..] => {
+											super::push(out, 7062);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['δ', s @ ..] => {
+			super::push(out, 1382);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 2899);
+					s.is_empty()
+				}
+				['ε', s @ ..] => {
+					super::push(out, 2900);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 4914);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 2901);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 4915);
+							match s {
+								[] => true,
+								['π', s @ ..] => {
+									super::push(out, 6355);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['γ', s @ ..] => {
+							super::push(out, 4916);
+							match s {
+								[] => true,
+								['σ', s @ ..] => {
+									super::push(out, 6356);
+									match s {
+										[] => true,
+										['α', s @ ..] => {
+											super::push(out, 7063);
+											match s {
+												[] => true,
+												['μ', s @ ..] => {
+													super::push(out, 7311);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['ε', 'λ', s @ ..] => {
+							super::push(out, 4917);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6357);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 2902);
+					s.is_empty()
+				}
+				['ω', s @ ..] => {
+					super::push(out, 2903);
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 4918);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6358);
+									match s {
+										[] => true,
+										['ρ', s @ ..] => {
+											super::push(out, 7064);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 1383);
+			match s {
+				[] => true,
+				['γ', 'ο', s @ ..] => {
+					super::push(out, 2904);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 4919);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['δ', 'α', 'ι', s @ ..] => {
+					super::push(out, 2905);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 4920);
+							match s {
+								[] => true,
+								['σ', s @ ..] => {
+									super::push(out, 6359);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['κ', 'υ', s @ ..] => {
+					super::push(out, 2906);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 4921);
+							match s {
+								[] => true,
+								['η', s @ ..] => {
+									super::push(out, 6360);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['λ', 'ι', s @ ..] => {
+					super::push(out, 2907);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 4922);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6361);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 2908);
+					s.is_empty()
+				}
+				['ν', s @ ..] => {
+					super::push(out, 2909);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 4923);
+							match s {
+								[] => true,
+								['γ', s @ ..] => {
+									super::push(out, 6362);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ω', s @ ..] => {
+							super::push(out, 4924);
+							match s {
+								[] => true,
+								['λ', s @ ..] => {
+									super::push(out, 6363);
+									match s {
+										[] => true,
+										['ε', s @ ..] => {
+											super::push(out, 7065);
+											match s {
+												[] => true,
+												['τ', s @ ..] => {
+													super::push(out, 7312);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['π', s @ ..] => {
+					super::push(out, 2910);
+					s.is_empty()
+				}
+				['ρ', 'υ', 'α', s @ ..] => {
+					super::push(out, 2911);
+					match s {
+						[] => true,
+						['τ', s @ ..] => {
+							super::push(out, 4925);
+							match s {
+								[] => true,
+								['ν', s @ ..] => {
+									super::push(out, 6364);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['σ', 'ι', s @ ..] => {
+					super::push(out, 2912);
+					s.is_empty()
+				}
+				['τ', s @ ..] => {
+					super::push(out, 2913);
+					s.is_empty()
+				}
+				['φ', s @ ..] => {
+					super::push(out, 2914);
+					s.is_empty()
+				}
+				['χ', 'α', s @ ..] => {
+					super::push(out, 2915);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 4926);
+							match s {
+								[] => true,
+								['ι', s @ ..] => {
+									super::push(out, 6365);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ζ', s @ ..] => {
+			super::push(out, 1384);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 2916);
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 4927);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6366);
+									match s {
+										[] => true,
+										['μ', s @ ..] => {
+											super::push(out, 7066);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 1385);
+			match s {
+				[] => true,
+				['ν', s @ ..] => {
+					super::push(out, 2917);
+					match s {
+						[] => true,
+						['ν', s @ ..] => super::t2::n4959(s, out),
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['θ', s @ ..] => super::t2::n1395(s, out),
+		['κ', s @ ..] => super::t2::n1396(s, out),
+		['λ', s @ ..] => super::t2::n1397(s, out),
+		['μ', s @ ..] => {
+			super::push(out, 1389);
+			s.is_empty()
+		}
+		['ν', s @ ..] => super::t2::n1399(s, out),
+		['ξ', s @ ..] => super::t2::n1400(s, out),
+		['ο', s @ ..] => super::t2::n1401(s, out),
+		['π', s @ ..] => super::t2::n1402(s, out),
+		['ρ', s @ ..] => super::t2::n1403(s, out),
+		['σ', s @ ..] => super::t2::n1404(s, out),
+		['τ', s @ ..] => super::t2::n1405(s, out),
+		['φ', s @ ..] => super::t2::n1406(s, out),
+		['χ', s @ ..] => super::t2::n1407(s, out),
+		['ῥ', s @ ..] => {
+			super::push(out, 1399);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -λλον.
+pub(crate) fn n1419(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1410);
+	match s {
+		[] => true,
+		['α', 'β', s @ ..] => {
+			super::push(out, 2980);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 4983);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 6399);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', 'φ', s @ ..] => {
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4984);
+					match s {
+						[] => true,
+						['τ', 'ν', 'α', s @ ..] => {
+							super::push(out, 6400);
+							match s {
+								[] => true,
+								['ι', s @ ..] => {
+									super::push(out, 7086);
+									match s {
+										[] => true,
+										['ρ', s @ ..] => {
+											super::push(out, 7319);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 4985);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -τλον.
+pub(crate) fn n1422(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1413);
+	match s {
+		[] => true,
+		['υ', 'ε', s @ ..] => {
+			super::push(out, 2983);
+			match s {
+				[] => true,
+				['τ', s @ ..] => {
+					super::push(out, 4986);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -υλον.
+pub(crate) fn n1423(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1414);
+	match s {
+		[] => true,
+		['ξ', s @ ..] => {
+			super::push(out, 2984);
+			s.is_empty()
+		}
+		['ο', s @ ..] => {
+			super::push(out, 2985);
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 4987);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['φ', s @ ..] => {
+			super::push(out, 2986);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ωλον.
+pub(crate) fn n1424(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1415);
+	match s {
+		[] => true,
+		['κ', s @ ..] => {
+			super::push(out, 2987);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -μον.
+pub(crate) fn n457(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 452);
+	match s {
+		[] => true,
+		['θ', s @ ..] => {
+			super::push(out, 1416);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 2988);
+					s.is_empty()
+				}
+				['η', s @ ..] => {
+					super::push(out, 2989);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 4988);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6401);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 1417);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 2990);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 4989);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6402);
+									match s {
+										[] => true,
+										['ρ', s @ ..] => {
+											super::push(out, 7087);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1418);
+			match s {
+				[] => true,
+				['θ', s @ ..] => {
+					super::push(out, 2991);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -νον.
+pub(crate) fn n458(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 453);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1419);
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 2992);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['γ', s @ ..] => {
+			super::push(out, 1420);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 2993);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 4990);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 2994);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 4991);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['δ', s @ ..] => {
+			super::push(out, 1421);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 2995);
+					s.is_empty()
+				}
+				['υ', s @ ..] => {
+					super::push(out, 2996);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 1422);
+			match s {
+				[] => true,
+				['κ', s @ ..] => {
+					super::push(out, 2997);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 1423);
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 2998);
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 4992);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6403);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 1424);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 2999);
+					match s {
+						[] => true,
+						['δ', s @ ..] => {
+							super::push(out, 4993);
+							s.is_empty()
+						}
+						['τ', s @ ..] => {
+							super::push(out, 4994);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['κ', s @ ..] => {
+					super::push(out, 3000);
+					s.is_empty()
+				}
+				['λ', s @ ..] => {
+					super::push(out, 3001);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 4995);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ν', s @ ..] => {
+					super::push(out, 3002);
+					s.is_empty()
+				}
+				['ο', s @ ..] => {
+					super::push(out, 3003);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 4996);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6404);
+									match s {
+										[] => true,
+										['κ', s @ ..] => {
+											super::push(out, 7088);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ῥ', s @ ..] => {
+					super::push(out, 3004);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['κ', s @ ..] => {
+			super::push(out, 1425);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3005);
+					s.is_empty()
+				}
+				['ι', s @ ..] => {
+					super::push(out, 3006);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['μ', s @ ..] => {
+			super::push(out, 1426);
+			match s {
+				[] => true,
+				['ε', 'ρ', s @ ..] => {
+					super::push(out, 3007);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 4997);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ι', 'ρ', s @ ..] => {
+					super::push(out, 3008);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 4998);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3009);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 4999);
+							match s {
+								[] => true,
+								['ρ', s @ ..] => {
+									super::push(out, 6405);
+									match s {
+										[] => true,
+										['π', s @ ..] => {
+											super::push(out, 7089);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 1427);
+			match s {
+				[] => true,
+				['γ', s @ ..] => {
+					super::push(out, 3010);
+					s.is_empty()
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3011);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5000);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6406);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['π', s @ ..] => {
+			super::push(out, 1428);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 3012);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5001);
+							match s {
+								[] => true,
+								['δ', s @ ..] => {
+									super::push(out, 6407);
+									match s {
+										[] => true,
+										['ι', s @ ..] => {
+											super::push(out, 7090);
+											match s {
+												[] => true,
+												['ρ', s @ ..] => {
+													super::push(out, 7320);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3013);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 1429);
+			match s {
+				[] => true,
+				['α', 'κ', s @ ..] => {
+					super::push(out, 3014);
+					s.is_empty()
+				}
+				['ε', s @ ..] => {
+					super::push(out, 3015);
+					s.is_empty()
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3016);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['χ', s @ ..] => {
+			super::push(out, 1430);
+			match s {
+				[] => true,
+				['γ', s @ ..] => {
+					super::push(out, 3017);
+					s.is_empty()
+				}
+				['η', s @ ..] => {
+					super::push(out, 3018);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5002);
+							match s {
+								[] => true,
+								['β', s @ ..] => {
+									super::push(out, 6408);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3019);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ω', s @ ..] => {
+			super::push(out, 1431);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ξον.
+pub(crate) fn n459(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 454);
+	match s {
+		[] => true,
+		['ο', s @ ..] => {
+			super::push(out, 1432);
+			match s {
+				[] => true,
+				['τ', s @ ..] => {
+					super::push(out, 3020);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -πον.
+pub(crate) fn n461(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 456);
+	match s {
+		[] => true,
+		['ε', s @ ..] => {
+			super::push(out, 1433);
+			match s {
+				[] => true,
+				['λ', 'β', 'ω', 'τ', 'α', 'κ', '\u{1}', s @ ..] => {
+					super::push(out, 3021);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ρον.
+pub(crate) fn n462(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 457);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1434);
+			match s {
+				[] => true,
+				['γ', s @ ..] => {
+					super::push(out, 3022);
+					s.is_empty()
+				}
+				['κ', s @ ..] => {
+					super::push(out, 3023);
+					s.is_empty()
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3024);
+					s.is_empty()
+				}
+				['π', s @ ..] => {
+					super::push(out, 3025);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 5003);
+							match s {
+								[] => true,
+								['λ', s @ ..] => {
+									super::push(out, 6409);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['σ', s @ ..] => {
+					super::push(out, 3026);
+					s.is_empty()
+				}
+				['χ', s @ ..] => {
+					super::push(out, 3027);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['δ', s @ ..] => {
+			super::push(out, 1435);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 3028);
+					match s {
+						[] => true,
+						['χ', s @ ..] => {
+							super::push(out, 5004);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ν', 'ε', 'δ', 'ο', s @ ..] => {
+					super::push(out, 3029);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 1436);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 3030);
+					s.is_empty()
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3031);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 1437);
+			match s {
+				[] => true,
+				['χ', 'α', '\u{1}', s @ ..] => {
+					super::push(out, 3032);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['θ', s @ ..] => {
+			super::push(out, 1438);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3033);
+					s.is_empty()
+				}
+				['ε', 'λ', 'π', s @ ..] => {
+					super::push(out, 3034);
+					s.is_empty()
+				}
+				['η', s @ ..] => {
+					super::push(out, 3035);
+					s.is_empty()
+				}
+				['ι', s @ ..] => {
+					super::push(out, 3036);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5005);
+							match s {
+								[] => true,
+								['λ', s @ ..] => {
+									super::push(out, 6410);
+									match s {
+										[] => true,
+										['κ', s @ ..] => {
+											super::push(out, 7091);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['ῥ', s @ ..] => {
+									super::push(out, 6411);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3037);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 1439);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3038);
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 5006);
+							s.is_empty()
+						}
+						['π', s @ ..] => {
+							super::push(out, 5007);
+							match s {
+								[] => true,
+								['σ', s @ ..] => {
+									super::push(out, 6412);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['κ', s @ ..] => {
+					super::push(out, 3039);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5008);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['κ', s @ ..] => {
+			super::push(out, 1440);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3040);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 1441);
+			match s {
+				[] => true,
+				['κ', s @ ..] => {
+					super::push(out, 3041);
+					s.is_empty()
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3042);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 1442);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3043);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['τ', s @ ..] => {
+			super::push(out, 1443);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5009);
+							s.is_empty()
+						}
+						['λ', s @ ..] => {
+							super::push(out, 5010);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 3044);
+					s.is_empty()
+				}
+				['η', s @ ..] => {
+					super::push(out, 3045);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5011);
+							s.is_empty()
+						}
+						['ν', 'ι', s @ ..] => {
+							super::push(out, 5012);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ι', 'ν', s @ ..] => {
+					super::push(out, 3046);
+					s.is_empty()
+				}
+				['κ', s @ ..] => {
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5013);
+							match s {
+								[] => true,
+								['β', s @ ..] => {
+									super::push(out, 6413);
+									s.is_empty()
+								}
+								['μ', s @ ..] => {
+									super::push(out, 6414);
+									match s {
+										[] => true,
+										['ο', s @ ..] => {
+											super::push(out, 7092);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['φ', s @ ..] => {
+									super::push(out, 6415);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['η', s @ ..] => {
+							super::push(out, 5014);
+							match s {
+								[] => true,
+								['λ', s @ ..] => {
+									super::push(out, 6416);
+									match s {
+										[] => true,
+										['π', s @ ..] => {
+											super::push(out, 7093);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 3047);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 5015);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['π', s @ ..] => {
+					match s {
+						[] => true,
+						['η', s @ ..] => {
+							super::push(out, 5016);
+							s.is_empty()
+						}
+						['ι', s @ ..] => {
+							super::push(out, 5017);
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6417);
+									match s {
+										[] => true,
+										['λ', s @ ..] => {
+											super::push(out, 7094);
+											match s {
+												[] => true,
+												['α', s @ ..] => {
+													super::push(out, 7321);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['ο', 'ῥ', s @ ..] => {
+							super::push(out, 5018);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3048);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5019);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['σ', s @ ..] => {
+					super::push(out, 3049);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5020);
+							match s {
+								[] => true,
+								['γ', s @ ..] => {
+									super::push(out, 6418);
+									s.is_empty()
+								}
+								['κ', s @ ..] => {
+									super::push(out, 6419);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ε', s @ ..] => {
+							super::push(out, 5021);
+							s.is_empty()
+						}
+						['η', s @ ..] => {
+							super::push(out, 5022);
+							match s {
+								[] => true,
+								['σ', s @ ..] => {
+									super::push(out, 6420);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ι', s @ ..] => {
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6421);
+									match s {
+										[] => true,
+										['σ', s @ ..] => {
+											super::push(out, 7095);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['λ', s @ ..] => {
+									super::push(out, 6422);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['υ', 'μ', s @ ..] => {
+							super::push(out, 5023);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3050);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5024);
+							match s {
+								[] => true,
+								['λ', s @ ..] => {
+									super::push(out, 6423);
+									match s {
+										[] => true,
+										['ι', s @ ..] => {
+											super::push(out, 7096);
+											match s {
+												[] => true,
+												['π', s @ ..] => {
+													super::push(out, 7322);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ω', s @ ..] => {
+					super::push(out, 3051);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => super::t2::n1453(s, out),
+		['ω', s @ ..] => {
+			super::push(out, 1445);
+			match s {
+				[] => true,
+				['δ', s @ ..] => {
+					super::push(out, 3060);
+					s.is_empty()
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3061);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -σον.
+pub(crate) fn n463(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 458);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1446);
+			s.is_empty()
+		}
+		['ε', s @ ..] => {
+			super::push(out, 1447);
+			match s {
+				[] => true,
+				['μ', s @ ..] => {
+					super::push(out, 3062);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 1448);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3063);
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 5032);
+							s.is_empty()
+						}
+						['λ', s @ ..] => {
+							super::push(out, 5033);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6426);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['λ', s @ ..] => {
+			super::push(out, 1449);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3064);
+					match s {
+						[] => true,
+						['τ', s @ ..] => {
+							super::push(out, 5034);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['σ', s @ ..] => {
+			super::push(out, 1450);
+			match s {
+				[] => true,
+				['υ', s @ ..] => {
+					super::push(out, 3065);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5035);
+							match s {
+								[] => true,
+								['λ', s @ ..] => {
+									super::push(out, 6427);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ω', s @ ..] => {
+					super::push(out, 3066);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5036);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1451);
+			match s {
+				[] => true,
+				['ο', s @ ..] => {
+					super::push(out, 3067);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -τον.
+pub(crate) fn n464(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 459);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1452);
+			match s {
+				[] => true,
+				['β', s @ ..] => {
+					super::push(out, 3068);
+					match s {
+						[] => true,
+						['β', s @ ..] => {
+							super::push(out, 5037);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6428);
+									match s {
+										[] => true,
+										['σ', s @ ..] => {
+											super::push(out, 7098);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													super::push(out, 7323);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 3069);
+					s.is_empty()
+				}
+				['λ', s @ ..] => {
+					super::push(out, 3070);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5038);
+							match s {
+								[] => true,
+								['ι', s @ ..] => {
+									super::push(out, 6429);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['σ', s @ ..] => {
+					super::push(out, 3071);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 1453);
+			match s {
+				[] => true,
+				['μ', s @ ..] => {
+					super::push(out, 3072);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5039);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['π', 'ρ', s @ ..] => {
+					super::push(out, 3073);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5040);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 1454);
+			match s {
+				[] => true,
+				['β', s @ ..] => {
+					super::push(out, 3074);
+					s.is_empty()
+				}
+				['λ', s @ ..] => {
+					super::push(out, 3075);
+					match s {
+						[] => true,
+						['β', s @ ..] => {
+							super::push(out, 5041);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['κ', s @ ..] => {
+			super::push(out, 1455);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3076);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5042);
+							match s {
+								[] => true,
+								['τ', s @ ..] => {
+									super::push(out, 6430);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['λ', s @ ..] => {
+			super::push(out, 1456);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3077);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 5043);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ν', s @ ..] => {
+			super::push(out, 1457);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3078);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 1458);
+			match s {
+				[] => true,
+				['π', s @ ..] => {
+					super::push(out, 3079);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['π', s @ ..] => {
+			super::push(out, 1459);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3080);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5044);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 1460);
+			match s {
+				[] => true,
+				['α', 'π', s @ ..] => {
+					super::push(out, 3081);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5045);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['σ', s @ ..] => {
+			super::push(out, 1461);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3082);
+					match s {
+						[] => true,
+						['π', 'ρ', s @ ..] => {
+							super::push(out, 5046);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6431);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 3083);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5047);
+							match s {
+								[] => true,
+								['φ', s @ ..] => {
+									super::push(out, 6432);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3084);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5048);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6433);
+									match s {
+										[] => true,
+										['ο', s @ ..] => {
+											super::push(out, 7099);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['ξ', s @ ..] => {
+							super::push(out, 5049);
+							s.is_empty()
+						}
+						['ο', s @ ..] => {
+							super::push(out, 5050);
+							match s {
+								[] => true,
+								['β', s @ ..] => {
+									super::push(out, 6434);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1462);
+			match s {
+				[] => true,
+				['ρ', 'β', '\u{1}', s @ ..] => {
+					super::push(out, 3085);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ω', s @ ..] => {
+			super::push(out, 1463);
+			match s {
+				[] => true,
+				['ν', s @ ..] => {
+					super::push(out, 3086);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3087);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5051);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6435);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -υον.
+pub(crate) fn n465(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 460);
+	match s {
+		[] => true,
+		['ρ', 'θ', s @ ..] => {
+			super::push(out, 1464);
+			s.is_empty()
+		}
+		['τ', 'π', s @ ..] => {
+			super::push(out, 1465);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -φον.
+pub(crate) fn n466(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 461);
+	s.is_empty()
+}
+
+/// Words ending -χον.
+pub(crate) fn n467(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 462);
+	match s {
+		[] => true,
+		['η', s @ ..] => {
+			super::push(out, 1466);
+			s.is_empty()
+		}
+		['ο', s @ ..] => {
+			super::push(out, 1467);
+			match s {
+				[] => true,
+				['λ', s @ ..] => {
+					super::push(out, 3088);
+					match s {
+						[] => true,
+						['β', s @ ..] => {
+							super::push(out, 5052);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3089);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5053);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1468);
+			match s {
+				[] => true,
+				['ο', s @ ..] => {
+					super::push(out, 3090);
+					match s {
+						[] => true,
+						['ψ', s @ ..] => {
+							super::push(out, 5054);
+							match s {
+								[] => true,
+								['μ', s @ ..] => {
+									super::push(out, 6436);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ψον.
+pub(crate) fn n468(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 463);
+	match s {
+		[] => true,
+		['ο', s @ ..] => {
+			super::push(out, 1469);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ωον.
+pub(crate) fn n469(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 464);
+	match s {
+		[] => true,
+		['ρ', s @ ..] => {
+			super::push(out, 1470);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -αμαζων.
+pub(crate) fn n5105(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 5073);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 6443);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ιζων.
+pub(crate) fn n1506(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1497);
+	match s {
+		[] => true,
+		['ε', 'μ', '\u{1}', s @ ..] => {
+			super::push(out, 3119);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -θων.
+pub(crate) fn n478(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 473);
+	match s {
+		[] => true,
+		['ι', s @ ..] => {
+			super::push(out, 1498);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3120);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 1499);
+			match s {
+				[] => true,
+				['μ', s @ ..] => {
+					super::push(out, 3121);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['χ', s @ ..] => {
+			super::push(out, 1500);
+			match s {
+				[] => true,
+				['ο', s @ ..] => {
+					super::push(out, 3122);
+					match s {
+						[] => true,
+						['τ', s @ ..] => {
+							super::push(out, 5074);
+							match s {
+								[] => true,
+								['υ', s @ ..] => {
+									super::push(out, 6444);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ω', s @ ..] => {
+			super::push(out, 1501);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ιων.
+pub(crate) fn n479(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 474);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 1502);
+			s.is_empty()
+		}
+		['α', s @ ..] => {
+			super::push(out, 1503);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 3123);
+					s.is_empty()
+				}
+				['γ', s @ ..] => {
+					super::push(out, 3124);
+					s.is_empty()
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3125);
+					s.is_empty()
+				}
+				['π', s @ ..] => {
+					super::push(out, 3126);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['δ', s @ ..] => {
+			super::push(out, 1504);
+			match s {
+				[] => true,
+				['υ', s @ ..] => {
+					super::push(out, 3127);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 1505);
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 3128);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5075);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 1506);
+			s.is_empty()
+		}
+		['θ', s @ ..] => {
+			super::push(out, 1507);
+			match s {
+				[] => true,
+				['ν', s @ ..] => {
+					super::push(out, 3129);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5076);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3130);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5077);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['κ', s @ ..] => {
+			super::push(out, 1508);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 3131);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3132);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5078);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['λ', s @ ..] => {
+			super::push(out, 1509);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3133);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 1510);
+			match s {
+				[] => true,
+				['η', s @ ..] => {
+					super::push(out, 3134);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5079);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['π', s @ ..] => {
+					super::push(out, 3135);
+					s.is_empty()
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3136);
+					match s {
+						[] => true,
+						['φ', s @ ..] => {
+							super::push(out, 5080);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['σ', s @ ..] => {
+			super::push(out, 1511);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3137);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5081);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['τ', s @ ..] => {
+			super::push(out, 1512);
+			match s {
+				[] => true,
+				['π', s @ ..] => {
+					super::push(out, 3138);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5082);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['χ', s @ ..] => {
+			super::push(out, 1513);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3139);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5083);
+							match s {
+								[] => true,
+								['β', s @ ..] => {
+									super::push(out, 6445);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -κων.
+pub(crate) fn n480(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 475);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1514);
+			match s {
+				[] => true,
+				['λ', s @ ..] => {
+					super::push(out, 3140);
+					s.is_empty()
+				}
+				['ν', s @ ..] => {
+					super::push(out, 3141);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3142);
+					match s {
+						[] => true,
+						['δ', s @ ..] => {
+							super::push(out, 5084);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 1515);
+			match s {
+				[] => true,
+				['μ', s @ ..] => {
+					super::push(out, 3143);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 1516);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3144);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5085);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -λων.
+pub(crate) fn n481(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 476);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1517);
+			match s {
+				[] => true,
+				['σ', s @ ..] => {
+					super::push(out, 3145);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 1518);
+			s.is_empty()
+		}
+		['η', s @ ..] => {
+			super::push(out, 1519);
+			match s {
+				[] => true,
+				['κ', s @ ..] => {
+					super::push(out, 3146);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['κ', s @ ..] => {
+			super::push(out, 1520);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 3147);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1521);
+			match s {
+				[] => true,
+				['τ', s @ ..] => {
+					super::push(out, 3148);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -μων.
+pub(crate) fn n482(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 477);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1522);
+			match s {
+				[] => true,
+				['λ', s @ ..] => {
+					super::push(out, 3149);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5086);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['γ', s @ ..] => {
+			super::push(out, 1523);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3150);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5087);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 1524);
+			match s {
+				[] => true,
+				['γ', s @ ..] => {
+					super::push(out, 3151);
+					match s {
+						[] => true,
+						['η', s @ ..] => {
+							super::push(out, 5088);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3152);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5089);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6446);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3153);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5090);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6447);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 1525);
+			match s {
+				[] => true,
+				['θ', s @ ..] => {
+					super::push(out, 3154);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 1526);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3155);
+					match s {
+						[] => true,
+						['δ', s @ ..] => {
+							super::push(out, 5091);
+							match s {
+								[] => true,
+								['ο', 'κ', 'α', 'κ', '\u{1}', s @ ..] => {
+									super::push(out, 6448);
+									s.is_empty()
+								}
+								['υ', 'ε', '\u{1}', s @ ..] => {
+									super::push(out, 6449);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 3156);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['κ', s @ ..] => {
+			super::push(out, 1527);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3157);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['σ', s @ ..] => {
+			super::push(out, 1528);
+			match s {
+				[] => true,
+				['υ', s @ ..] => {
+					super::push(out, 3158);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1529);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3159);
+					match s {
+						[] => true,
+						['ν', s @ ..] => {
+							super::push(out, 5092);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3160);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 5093);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6450);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ω', s @ ..] => {
+			super::push(out, 1530);
+			match s {
+				[] => true,
+				['ν', s @ ..] => {
+					super::push(out, 3161);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -νων.
+pub(crate) fn n483(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 478);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1531);
+			match s {
+				[] => true,
+				['κ', s @ ..] => {
+					super::push(out, 3162);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 1532);
+			match s {
+				[] => true,
+				['γ', s @ ..] => {
+					super::push(out, 3163);
+					s.is_empty()
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3164);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 1533);
+			match s {
+				[] => true,
+				['ο', s @ ..] => {
+					super::push(out, 3165);
+					s.is_empty()
+				}
+				['σ', s @ ..] => {
+					super::push(out, 3166);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ξων.
+pub(crate) fn n484(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 479);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1534);
+			s.is_empty()
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1535);
+			match s {
+				[] => true,
+				['μ', s @ ..] => {
+					super::push(out, 3167);
+					s.is_empty()
+				}
+				['π', s @ ..] => {
+					super::push(out, 3168);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -πων.
+pub(crate) fn n485(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 480);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 3169);
+					s.is_empty()
+				}
+				['σ', '\u{1}', s @ ..] => {
+					super::push(out, 3170);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 1536);
+			match s {
+				[] => true,
+				['π', 'ο', 'λ', 'η', 'μ', '\u{1}', s @ ..] => {
+					super::push(out, 3171);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 1537);
+			match s {
+				[] => true,
+				['κ', s @ ..] => {
+					super::push(out, 3172);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ρων.
+pub(crate) fn n486(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 481);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1538);
+			s.is_empty()
+		}
+		['δ', s @ ..] => {
+			super::push(out, 1539);
+			s.is_empty()
+		}
+		['ε', s @ ..] => {
+			super::push(out, 1540);
+			match s {
+				[] => true,
+				['γ', s @ ..] => {
+					super::push(out, 3173);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 1541);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3174);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['κ', s @ ..] => {
+			super::push(out, 1542);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3175);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 5094);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1543);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -σων.
+pub(crate) fn n487(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 482);
+	match s {
+		[] => true,
+		['ι', s @ ..] => {
+			super::push(out, 1544);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3176);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5095);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['σ', s @ ..] => {
+			super::push(out, 1545);
+			s.is_empty()
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1546);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -των.
+pub(crate) fn n488(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 483);
+	match s {
+		[] => true,
+		['ι', s @ ..] => {
+			super::push(out, 1547);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3177);
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 5096);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6451);
+									match s {
+										[] => true,
+										['μ', s @ ..] => {
+											super::push(out, 7102);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['υ', s @ ..] => {
+									super::push(out, 6452);
+									match s {
+										[] => true,
+										['τ', s @ ..] => {
+											super::push(out, 7103);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['χ', s @ ..] => {
+					super::push(out, 3178);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['κ', s @ ..] => {
+			super::push(out, 1548);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3179);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 5097);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6453);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 3180);
+					match s {
+						[] => true,
+						['τ', s @ ..] => {
+							super::push(out, 5098);
+							match s {
+								[] => true,
+								['ι', s @ ..] => {
+									super::push(out, 6454);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 1549);
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 3181);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['σ', s @ ..] => {
+			super::push(out, 1550);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 3182);
+					match s {
+						[] => true,
+						['β', s @ ..] => {
+							super::push(out, 5099);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1551);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3183);
+					match s {
+						[] => true,
+						['τ', s @ ..] => {
+							super::push(out, 5100);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -υων.
+pub(crate) fn n489(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 484);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1552);
+			match s {
+				[] => true,
+				['χ', s @ ..] => {
+					super::push(out, 3184);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['κ', s @ ..] => {
+			super::push(out, 1553);
+			match s {
+				[] => true,
+				['λ', s @ ..] => {
+					super::push(out, 3185);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5101);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 1554);
+			match s {
+				[] => true,
+				['τ', s @ ..] => {
+					super::push(out, 3186);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5102);
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6455);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -φων.
+pub(crate) fn n490(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 485);
+	match s {
+		[] => true,
+		['ι', s @ ..] => {
+			super::push(out, 1555);
+			match s {
+				[] => true,
+				['σ', s @ ..] => {
+					super::push(out, 3187);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['μ', s @ ..] => {
+			super::push(out, 1556);
+			match s {
+				[] => true,
+				['υ', s @ ..] => {
+					super::push(out, 3188);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 1557);
+			match s {
+				[] => true,
+				['λ', s @ ..] => {
+					super::push(out, 3189);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1558);
+			match s {
+				[] => true,
+				['κ', s @ ..] => {
+					super::push(out, 3190);
+					s.is_empty()
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3191);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -χων.
+pub(crate) fn n491(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 486);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1559);
+			match s {
+				[] => true,
+				['μ', s @ ..] => {
+					super::push(out, 3192);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 1560);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 3193);
+					s.is_empty()
+				}
+				['λ', s @ ..] => {
+					super::push(out, 3194);
+					match s {
+						[] => true,
+						['β', s @ ..] => {
+							super::push(out, 5103);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 1561);
+			match s {
+				[] => true,
+				['τ', s @ ..] => {
+					super::push(out, 3195);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5104);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 1562);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3196);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// The word συροπερδιξ.
+pub(crate) fn n7366(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 7324);
+	s.is_empty()
+}
+
+/// The word βιβλιοπωλησ.
+pub(crate) fn n7368(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 7326);
+	s.is_empty()
+}
+
+/// Words ending -ουμνησ.
+pub(crate) fn n5283(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 5250);
+	match s {
+		[] => true,
+		['μ', s @ ..] => {
+			super::push(out, 6504);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ρνησ.
+pub(crate) fn n1830(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1818);
+	match s {
+		[] => true,
+		['ε', s @ ..] => {
+			super::push(out, 3438);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -υνησ.
+pub(crate) fn n1831(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1819);
+	match s {
+		[] => true,
+		['γ', s @ ..] => {
+			super::push(out, 3439);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 5251);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 6505);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 5252);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 3440);
+			match s {
+				[] => true,
+				['δ', s @ ..] => {
+					super::push(out, 5253);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 3441);
+			match s {
+				[] => true,
+				['λ', s @ ..] => {
+					super::push(out, 5254);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -χνησ.
+pub(crate) fn n1832(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1820);
+	match s {
+		[] => true,
+		['ε', s @ ..] => {
+			super::push(out, 3442);
+			match s {
+				[] => true,
+				['τ', s @ ..] => {
+					super::push(out, 5255);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ωνησ.
+pub(crate) fn n1833(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1821);
+	match s {
+		[] => true,
+		['λ', s @ ..] => {
+			super::push(out, 3443);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 5256);
+					match s {
+						[] => true,
+						['τ', s @ ..] => {
+							super::push(out, 6506);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -οησ.
+pub(crate) fn n609(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 604);
+	match s {
+		[] => true,
+		['γ', s @ ..] => {
+			super::push(out, 1822);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 3444);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -πησ.
+pub(crate) fn n610(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 605);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1823);
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 3445);
+					match s {
+						[] => true,
+						['τ', s @ ..] => {
+							super::push(out, 5257);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6507);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3446);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 1824);
+			match s {
+				[] => true,
+				['π', s @ ..] => {
+					super::push(out, 3447);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5258);
+							match s {
+								[] => true,
+								['ν', s @ ..] => {
+									super::push(out, 6508);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 1825);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3448);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ρησ.
+pub(crate) fn n611(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 606);
+	match s {
+		[] => true,
+		['η', s @ ..] => {
+			super::push(out, 1826);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 3449);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5259);
+							match s {
+								[] => true,
+								['τ', s @ ..] => {
+									super::push(out, 6509);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 7116);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['κ', s @ ..] => {
+			super::push(out, 1827);
+			s.is_empty()
+		}
+		['τ', s @ ..] => {
+			super::push(out, 1828);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3450);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5260);
+							match s {
+								[] => true,
+								['ο', 'λ', s @ ..] => {
+									super::push(out, 6510);
+									match s {
+										[] => true,
+										['ω', s @ ..] => {
+											super::push(out, 7117);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 3451);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 5261);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6511);
+									match s {
+										[] => true,
+										['ρ', 'υ', 'π', '\u{1}', s @ ..] => {
+											super::push(out, 7118);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -σησ.
+pub(crate) fn n612(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 607);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 1829);
+			s.is_empty()
+		}
+		['ρ', 'ε', 'π', '\u{1}', s @ ..] => {
+			super::push(out, 1830);
+			s.is_empty()
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1831);
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 3452);
+					match s {
+						[] => true,
+						['δ', s @ ..] => {
+							super::push(out, 5262);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -τησ.
+pub(crate) fn n613(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 608);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1832);
+			match s {
+				[] => true,
+				['β', s @ ..] => {
+					super::push(out, 3453);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5263);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 3454);
+					s.is_empty()
+				}
+				['ι', s @ ..] => {
+					super::push(out, 3455);
+					match s {
+						[] => true,
+						['ν', s @ ..] => {
+							super::push(out, 5264);
+							match s {
+								[] => true,
+								['ω', s @ ..] => {
+									super::push(out, 6512);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['τ', s @ ..] => {
+							super::push(out, 5265);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 3456);
+					s.is_empty()
+				}
+				['ν', 'η', s @ ..] => {
+					super::push(out, 3457);
+					match s {
+						[] => true,
+						['δ', 'ι', 'φ', '\u{1}', s @ ..] => {
+							super::push(out, 5266);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3458);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5267);
+							match s {
+								[] => true,
+								['ο', 'π', s @ ..] => {
+									super::push(out, 6513);
+									match s {
+										[] => true,
+										['ρ', s @ ..] => {
+											super::push(out, 7119);
+											match s {
+												[] => true,
+												['α', s @ ..] => {
+													super::push(out, 7327);
+													match s {
+														[] => true,
+														['\u{1}', s @ ..] => super::t2::n7426(s, out),
+														_ => false,
+													}
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['σ', s @ ..] => {
+					super::push(out, 3459);
+					match s {
+						[] => true,
+						['ι', 'π', '\u{1}', s @ ..] => {
+							super::push(out, 5268);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3460);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5269);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['χ', s @ ..] => {
+					super::push(out, 3461);
+					match s {
+						[] => true,
+						['α', '\u{1}', s @ ..] => {
+							super::push(out, 5270);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 1833);
+			match s {
+				[] => true,
+				['γ', s @ ..] => {
+					super::push(out, 3462);
+					s.is_empty()
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3463);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5271);
+							match s {
+								[] => true,
+								['ρ', s @ ..] => {
+									super::push(out, 6514);
+									match s {
+										[] => true,
+										['β', s @ ..] => {
+											super::push(out, 7120);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3464);
+					match s {
+						[] => true,
+						['υ', s @ ..] => {
+							super::push(out, 5272);
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6515);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 1834);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3465);
+					s.is_empty()
+				}
+				['β', s @ ..] => {
+					super::push(out, 3466);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5273);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['κ', s @ ..] => {
+					super::push(out, 3467);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 5274);
+							match s {
+								[] => true,
+								['ο', 'τ', s @ ..] => {
+									super::push(out, 6516);
+									match s {
+										[] => true,
+										['α', s @ ..] => {
+											super::push(out, 7121);
+											match s {
+												[] => true,
+												['κ', s @ ..] => {
+													super::push(out, 7328);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 3468);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5275);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3469);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5276);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6517);
+									match s {
+										[] => true,
+										['κ', s @ ..] => {
+											super::push(out, 7122);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													super::push(out, 7329);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['ω', s @ ..] => {
+							super::push(out, 5277);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6518);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ν', s @ ..] => {
+					super::push(out, 3470);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5278);
+							s.is_empty()
+						}
+						['ι', s @ ..] => {
+							super::push(out, 5279);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3471);
+					s.is_empty()
+				}
+				['φ', s @ ..] => {
+					super::push(out, 3472);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5280);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['χ', s @ ..] => {
+					super::push(out, 3473);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 1835);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3474);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5281);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6519);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 3475);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5282);
+							s.is_empty()
+						}
+						['ρ', s @ ..] => {
+							super::push(out, 5283);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 3476);
+					match s {
+						[] => true,
+						['ο', 'π', 'υ', s @ ..] => {
+							super::push(out, 5284);
+							match s {
+								[] => true,
+								['ο', 'ν', 'α', s @ ..] => {
+									super::push(out, 6520);
+									match s {
+										[] => true,
+										['ι', s @ ..] => {
+											super::push(out, 7123);
+											match s {
+												[] => true,
+												['ρ', s @ ..] => {
+													super::push(out, 7330);
+													match s {
+														[] => true,
+														['δ', 'α', '\u{1}', s @ ..] => super::t2::n7427(s, out),
+														_ => false,
+													}
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3477);
+					s.is_empty()
+				}
+				['ν', s @ ..] => super::t2::n3505(s, out),
+				['ο', s @ ..] => {
+					super::push(out, 3479);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5288);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6525);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => super::t2::n3507(s, out),
+				_ => false,
+			}
+		}
+		['κ', s @ ..] => super::t2::n1848(s, out),
+		['λ', s @ ..] => {
+			super::push(out, 1837);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3487);
+					s.is_empty()
+				}
+				['ε', s @ ..] => {
+					super::push(out, 3488);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ν', s @ ..] => super::t2::n1850(s, out),
+		['ο', s @ ..] => super::t2::n1851(s, out),
+		['π', s @ ..] => super::t2::n1852(s, out),
+		['ρ', s @ ..] => super::t2::n1853(s, out),
+		['σ', s @ ..] => super::t2::n1854(s, out),
+		['υ', s @ ..] => super::t2::n1855(s, out),
+		['ω', s @ ..] => super::t2::n1856(s, out),
+		_ => false,
+	}
+}
+
+/// Words ending -υησ.
+pub(crate) fn n614(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 609);
+	match s {
+		[] => true,
+		['ν', s @ ..] => {
+			super::push(out, 1845);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 3520);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -χησ.
+pub(crate) fn n615(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 610);
+	match s {
+		[] => true,
+		['ρ', s @ ..] => {
+			super::push(out, 1846);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3521);
+					match s {
+						[] => true,
+						['γ', 'ι', 'λ', 'ο', '\u{1}', s @ ..] => {
+							super::push(out, 5337);
+							s.is_empty()
+						}
+						['ι', s @ ..] => {
+							super::push(out, 5338);
+							match s {
+								[] => true,
+								['ρ', s @ ..] => {
+									super::push(out, 6558);
+									s.is_empty()
+								}
+								['σ', s @ ..] => {
+									match s {
+										[] => true,
+										['α', 'τ', 'σ', '\u{1}', s @ ..] => {
+											super::push(out, 7142);
+											s.is_empty()
+										}
+										['ε', 'ρ', 'ι', 'α', '\u{1}', s @ ..] => {
+											super::push(out, 7143);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['λ', s @ ..] => {
+							super::push(out, 5339);
+							s.is_empty()
+						}
+						['ν', s @ ..] => {
+							super::push(out, 5340);
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6559);
+									match s {
+										[] => true,
+										['μ', s @ ..] => {
+											super::push(out, 7144);
+											match s {
+												[] => true,
+												['ι', s @ ..] => {
+													super::push(out, 7341);
+													match s {
+														[] => true,
+														['λ', '\u{1}', s @ ..] => super::t2::n7430(s, out),
+														_ => false,
+													}
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['θ', 'ε', '\u{1}', s @ ..] => {
+									super::push(out, 6560);
+									s.is_empty()
+								}
+								['ο', 'μ', '\u{1}', s @ ..] => {
+									super::push(out, 6561);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ρ', 'ε', 'ι', '\u{1}', s @ ..] => {
+							super::push(out, 5341);
+							s.is_empty()
+						}
+						['τ', 'ο', 'μ', 'ω', 'ν', 'ε', '\u{1}', s @ ..] => {
+							super::push(out, 5342);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -αρακισ.
+pub(crate) fn n5390(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 5356);
+	s.is_empty()
+}
+
+/// Words ending -ηκισ.
+pub(crate) fn n1887(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1875);
+	match s {
+		[] => true,
+		['κ', s @ ..] => {
+			super::push(out, 3547);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 5357);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ικισ.
+pub(crate) fn n1888(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1876);
+	match s {
+		[] => true,
+		['ο', s @ ..] => {
+			super::push(out, 3548);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -οκισ.
+pub(crate) fn n1889(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1877);
+	match s {
+		[] => true,
+		['δ', s @ ..] => {
+			super::push(out, 3549);
+			match s {
+				[] => true,
+				['ο', s @ ..] => {
+					super::push(out, 5358);
+					match s {
+						[] => true,
+						['τ', s @ ..] => {
+							super::push(out, 6570);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ρκισ.
+pub(crate) fn n1890(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1878);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 3550);
+			match s {
+				[] => true,
+				['φ', s @ ..] => {
+					super::push(out, 5359);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 6571);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -λισ.
+pub(crate) fn n626(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 621);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1879);
+			match s {
+				[] => true,
+				['δ', s @ ..] => {
+					super::push(out, 3551);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5360);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6572);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['κ', s @ ..] => {
+					super::push(out, 3552);
+					match s {
+						[] => true,
+						['υ', s @ ..] => {
+							super::push(out, 5361);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6573);
+									match s {
+										[] => true,
+										['β', s @ ..] => {
+											super::push(out, 7146);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3553);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5362);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3554);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['γ', s @ ..] => {
+			super::push(out, 1880);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3555);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ε', 'σ', 'ε', s @ ..] => {
+			super::push(out, 1881);
+			match s {
+				[] => true,
+				['σ', s @ ..] => {
+					super::push(out, 3556);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 1882);
+			match s {
+				[] => true,
+				['β', s @ ..] => {
+					super::push(out, 3557);
+					match s {
+						[] => true,
+						['υ', s @ ..] => {
+							super::push(out, 5363);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6574);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['κ', s @ ..] => {
+					super::push(out, 3558);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5364);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3559);
+					s.is_empty()
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3560);
+					s.is_empty()
+				}
+				['φ', s @ ..] => {
+					super::push(out, 3561);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5365);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['λ', s @ ..] => {
+			super::push(out, 1883);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3562);
+					match s {
+						[] => true,
+						['β', s @ ..] => {
+							super::push(out, 5366);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 3563);
+					match s {
+						[] => true,
+						['δ', s @ ..] => {
+							super::push(out, 5367);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 1884);
+			match s {
+				[] => true,
+				['π', s @ ..] => {
+					super::push(out, 3564);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5368);
+							match s {
+								[] => true,
+								['ρ', s @ ..] => {
+									super::push(out, 6575);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1885);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 3565);
+					s.is_empty()
+				}
+				['α', s @ ..] => {
+					super::push(out, 3566);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5369);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 3567);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 5370);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -μισ.
+pub(crate) fn n627(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 622);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1886);
+			match s {
+				[] => true,
+				['ν', s @ ..] => {
+					super::push(out, 3568);
+					match s {
+						[] => true,
+						['υ', s @ ..] => {
+							super::push(out, 5371);
+							match s {
+								[] => true,
+								['δ', s @ ..] => {
+									super::push(out, 6576);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3569);
+					s.is_empty()
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3570);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5372);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6577);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 1887);
+			match s {
+				[] => true,
+				['θ', s @ ..] => {
+					super::push(out, 3571);
+					match s {
+						[] => true,
+						['ν', s @ ..] => {
+							super::push(out, 5373);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 1888);
+			match s {
+				[] => true,
+				['ν', s @ ..] => {
+					super::push(out, 3572);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5374);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6578);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['θ', s @ ..] => {
+			super::push(out, 1889);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3573);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['λ', s @ ..] => {
+			super::push(out, 1890);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3574);
+					match s {
+						[] => true,
+						['τ', s @ ..] => {
+							super::push(out, 5375);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6579);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 1891);
+			s.is_empty()
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 1892);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3575);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5376);
+							s.is_empty()
+						}
+						['μ', s @ ..] => {
+							super::push(out, 5377);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1893);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -νισ.
+pub(crate) fn n628(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 623);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1894);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3576);
+					match s {
+						[] => true,
+						['ν', s @ ..] => {
+							super::push(out, 5378);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['π', s @ ..] => {
+					super::push(out, 3577);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5379);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3578);
+					match s {
+						[] => true,
+						['υ', s @ ..] => {
+							super::push(out, 5380);
+							match s {
+								[] => true,
+								['ρ', s @ ..] => {
+									super::push(out, 6580);
+									match s {
+										[] => true,
+										['π', s @ ..] => {
+											super::push(out, 7147);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['φ', s @ ..] => {
+					super::push(out, 3579);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5381);
+							match s {
+								[] => true,
+								['ῥ', s @ ..] => {
+									super::push(out, 6581);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 1895);
+			match s {
+				[] => true,
+				['μ', s @ ..] => {
+					super::push(out, 3580);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ν', s @ ..] => {
+			super::push(out, 1896);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3581);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5382);
+							match s {
+								[] => true,
+								['υ', s @ ..] => {
+									super::push(out, 6582);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 1897);
+			match s {
+				[] => true,
+				['κ', s @ ..] => {
+					super::push(out, 3582);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5383);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 1898);
+			match s {
+				[] => true,
+				['ο', s @ ..] => {
+					super::push(out, 3583);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1899);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3584);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5384);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ω', s @ ..] => {
+			super::push(out, 1900);
+			match s {
+				[] => true,
+				['ν', s @ ..] => {
+					super::push(out, 3585);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5385);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ξισ.
+pub(crate) fn n629(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 624);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1901);
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 3586);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 5386);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3587);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 1902);
+			match s {
+				[] => true,
+				['θ', s @ ..] => {
+					super::push(out, 3588);
+					s.is_empty()
+				}
+				['λ', 'π', s @ ..] => {
+					super::push(out, 3589);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 1903);
+			s.is_empty()
+		}
+		['ι', s @ ..] => {
+			super::push(out, 1904);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3590);
+					match s {
+						[] => true,
+						['δ', s @ ..] => {
+							super::push(out, 5387);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['θ', s @ ..] => {
+					super::push(out, 3591);
+					s.is_empty()
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3592);
+					s.is_empty()
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3593);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5388);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 1905);
+			match s {
+				[] => true,
+				['δ', s @ ..] => {
+					super::push(out, 3594);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1906);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3595);
+					match s {
+						[] => true,
+						['ζ', s @ ..] => {
+							super::push(out, 5389);
+							s.is_empty()
+						}
+						['τ', s @ ..] => {
+							super::push(out, 5390);
+							match s {
+								[] => true,
+								['ν', s @ ..] => {
+									super::push(out, 6583);
+									match s {
+										[] => true,
+										['ε', s @ ..] => {
+											super::push(out, 7148);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['π', s @ ..] => {
+					super::push(out, 3596);
+					s.is_empty()
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3597);
+					s.is_empty()
+				}
+				['φ', s @ ..] => {
+					super::push(out, 3598);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5391);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ψ', s @ ..] => {
+					super::push(out, 3599);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -οισ.
 pub(crate) fn n630(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(13, 0.4186923), (0, 0.19357595), (31, 0.13601892), (16, 0.038788434), (102, 0.0355993), (55, 0.032181278), (26, 0.023163196), (43, 0.015625238), (482, 0.014724956), (27, 0.011581598), (93, 0.011215381), (619, 0.009811551), (14, 0.005004959), (423, 0.0049591823), (94, 0.004943923), (626, 0.004943923), (314, 0.004943923), (352, 0.0049286643), (90, 0.004913405), (339, 0.004913405), (689, 0.004913405), (115, 0.0033417258), (286, 0.0033112078)], 0.9920958);
-    match s {
-        [] => true,
-        ['α', s @ ..] => {
-            out.push(&[(13, 0.75295645), (31, 0.1250019), (0, 0.07330434), (16, 0.02995346), (93, 0.007568475)], 0.9887846);
-            match s {
-                [] => true,
-                ['δ', s @ ..] => {
-                    out.push(&[(13, 0.920943), (31, 0.039993897), (0, 0.023453116), (16, 0.009582666), (93, 0.0024261845)], 0.99639887);
-                    s.is_empty()
-                }
-                ['ι', 'γ', s @ ..] => {
-                    out.push(&[(13, 0.5019608), (31, 0.41666284), (0, 0.048874646), (16, 0.01997406), (93, 0.0050507365)], 0.9925231);
-                    s.is_empty()
-                }
-                ['σ', s @ ..] => {
-                    out.push(&[(13, 0.50118256), (31, 0.2500038), (0, 0.22932784), (16, 0.011978332), (93, 0.0030365454)], 0.9955291);
-                    match s {
-                        [] => true,
-                        ['σ', 'ε', s @ ..] => {
-                            out.push(&[(31, 0.5000076), (13, 0.3341268), (0, 0.15288015), (16, 0.007980469), (93, 0.002014191)], 0.9970092);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['τ', 'ι', s @ ..] => {
-                    out.push(&[(13, 0.5019608), (31, 0.41666284), (0, 0.048874646), (16, 0.01997406), (93, 0.0050507365)], 0.9925231);
-                    s.is_empty()
-                }
-                ['υ', s @ ..] => {
-                    out.push(&[(13, 0.5019608), (16, 0.3533074), (31, 0.08332952), (0, 0.048874646), (93, 0.0050507365)], 0.99252313);
-                    s.is_empty()
-                }
-                ['φ', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['ε', s @ ..] => {
-                            out.push(&[(13, 0.92941177), (31, 0.03572137), (0, 0.020950638), (16, 0.008560311), (93, 0.002166781)], 0.99681085);
-                            s.is_empty()
-                        }
-                        ['μ', s @ ..] => {
-                            out.push(&[(13, 0.5019608), (31, 0.41666284), (0, 0.048874646), (16, 0.01997406), (93, 0.0050507365)], 0.9925231);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['β', s @ ..] => {
-            out.push(&[(43, 0.30147249), (314, 0.23761348), (13, 0.1970245), (0, 0.091096364), (31, 0.064011596), (16, 0.018249791), (102, 0.016754406), (55, 0.01513695), (26, 0.010894942), (482, 0.006927596), (27, 0.005447471), (93, 0.0052796216), (619, 0.004623484), (14, 0.0023498894), (423, 0.0023346303), (94, 0.0023346303), (626, 0.0023346303), (352, 0.0023193713), (90, 0.0023041123), (339, 0.0023041123), (689, 0.0023041123)], 0.99311817);
-            match s {
-                [] => true,
-                ['μ', s @ ..] => {
-                    out.push(&[(314, 0.4917525), (43, 0.20097658), (13, 0.13134967), (0, 0.060730908), (31, 0.042664226), (16, 0.0121767), (102, 0.011169604), (55, 0.010101473), (26, 0.0072632944), (482, 0.004623484), (27, 0.0036316472), (93, 0.003524834), (619, 0.0030823224)], 0.98304725);
-                    s.is_empty()
-                }
-                ['υ', s @ ..] => {
-                    out.push(&[(43, 0.5343099), (314, 0.15841916), (13, 0.13134967), (0, 0.060730908), (31, 0.042664226), (16, 0.0121767), (102, 0.011169604), (55, 0.010101473), (26, 0.0072632944), (482, 0.004623484), (27, 0.0036316472), (93, 0.003524834), (619, 0.0030823224)], 0.98304725);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['γ', s @ ..] => {
-            out.push(&[(0, 0.4623789), (13, 0.2791333), (31, 0.09066911), (16, 0.025864042), (102, 0.023727778), (55, 0.021454185), (26, 0.01544213), (43, 0.010421912), (482, 0.009811551), (27, 0.007721065), (93, 0.0074769207), (619, 0.0065461206), (14, 0.0033417258), (423, 0.0033112078), (94, 0.0032959487), (626, 0.0032959487), (314, 0.0032959487), (352, 0.0032959487), (90, 0.0032654307), (339, 0.0032654307), (689, 0.0032654307), (115, 0.0022278172), (286, 0.0022125582)], 0.9947204);
-            s.is_empty()
-        }
-        ['ε', s @ ..] => {
-            out.push(&[(13, 0.48023194), (26, 0.14442664), (31, 0.13983367), (27, 0.07222095), (16, 0.07046616), (286, 0.028778516), (0, 0.01654078), (287, 0.014251927), (197, 0.0122072175), (198, 0.0061036088), (102, 0.0030365454), (55, 0.002746624)], 0.9908446);
-            match s {
-                [] => true,
-                ['β', s @ ..] => {
-                    out.push(&[(31, 0.31992066), (13, 0.24011597), (26, 0.23888), (27, 0.119447626), (16, 0.03523308), (286, 0.014389258), (0, 0.00827039), (287, 0.0071259635), (197, 0.0061036088), (198, 0.0030518044)], 0.99253833);
-                    match s {
-                        [] => true,
-                        ['ο', s @ ..] => {
-                            out.push(&[(31, 0.5466087), (13, 0.1600824), (26, 0.15925841), (27, 0.079621576), (16, 0.023483634), (286, 0.009597925), (0, 0.005508507), (287, 0.004745556), (197, 0.004074159), (198, 0.00202945)], 0.9950103);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['γ', s @ ..] => {
-                    out.push(&[(13, 0.8019989), (26, 0.05502403), (31, 0.053269245), (27, 0.027512016), (16, 0.02684062), (286, 0.010955978), (0, 0.0063019763), (287, 0.005432212), (197, 0.004654002), (198, 0.0023193713)], 0.99430835);
-                    s.is_empty()
-                }
-                ['κ', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['α', s @ ..] => {
-                            out.push(&[(13, 0.78785384), (26, 0.0589456), (31, 0.057068743), (27, 0.029480431), (16, 0.028763257), (286, 0.011749447), (0, 0.006759747), (287, 0.0058136876), (197, 0.0049897004), (198, 0.0024872206)], 0.9939117);
-                            s.is_empty()
-                        }
-                        ['ι', s @ ..] => {
-                            out.push(&[(31, 0.4265507), (13, 0.32014954), (26, 0.09628443), (27, 0.048142213), (16, 0.046982527), (286, 0.01918059), (0, 0.011032273), (287, 0.009491112), (197, 0.008133058), (198, 0.004074159), (102, 0.00202945)], 0.99205005);
-                            s.is_empty()
-                        }
-                        ['σ', s @ ..] => {
-                            out.push(&[(13, 0.32014954), (26, 0.31850156), (27, 0.15925841), (31, 0.093217365), (16, 0.046982527), (286, 0.01918059), (0, 0.011032273), (287, 0.009491112), (197, 0.008133058), (198, 0.004074159), (102, 0.00202945)], 0.99205005);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['μ', s @ ..] => {
-                    out.push(&[(13, 0.32014954), (26, 0.31850156), (27, 0.15925841), (31, 0.093217365), (16, 0.046982527), (286, 0.01918059), (0, 0.011032273), (287, 0.009491112), (197, 0.008133058), (198, 0.004074159), (102, 0.00202945)], 0.99205005);
-                    s.is_empty()
-                }
-                ['π', s @ ..] => {
-                    out.push(&[(13, 0.59209585), (16, 0.14247349), (197, 0.062027924), (26, 0.05777066), (31, 0.055939574), (198, 0.031006332), (27, 0.02888533), (286, 0.011505303), (0, 0.0066224155), (287, 0.0056916154)], 0.9940185);
-                    s.is_empty()
-                }
-                ['τ', s @ ..] => {
-                    out.push(&[(13, 0.32014954), (26, 0.31850156), (27, 0.15925841), (31, 0.093217365), (16, 0.046982527), (286, 0.01918059), (0, 0.011032273), (287, 0.009491112), (197, 0.008133058), (198, 0.004074159), (102, 0.00202945)], 0.99205005);
-                    s.is_empty()
-                }
-                ['υ', s @ ..] => {
-                    out.push(&[(31, 0.31992066), (16, 0.2852369), (13, 0.24011597), (26, 0.07222095), (27, 0.036102846), (286, 0.014389258), (0, 0.00827039), (287, 0.0071259635), (197, 0.0061036088), (198, 0.0030518044)], 0.99253833);
-                    match s {
-                        [] => true,
-                        ['μ', s @ ..] => {
-                            out.push(&[(31, 0.5466087), (16, 0.19015794), (13, 0.1600824), (26, 0.048142213), (27, 0.024078736), (286, 0.009597925), (0, 0.005508507), (287, 0.004745556), (197, 0.004074159), (198, 0.00202945)], 0.9950256);
-                            s.is_empty()
-                        }
-                        ['π', s @ ..] => {
-                            out.push(&[(16, 0.52349126), (31, 0.21327534), (13, 0.1600824), (26, 0.048142213), (27, 0.024078736), (286, 0.009597925), (0, 0.005508507), (287, 0.004745556), (197, 0.004074159), (198, 0.00202945)], 0.9950256);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['φ', s @ ..] => {
-                    out.push(&[(13, 0.32014954), (286, 0.24139772), (287, 0.12060731), (26, 0.09628443), (31, 0.093217365), (27, 0.048142213), (16, 0.046982527), (0, 0.011032273), (197, 0.008133058), (198, 0.004074159), (102, 0.00202945)], 0.99205005);
-                    match s {
-                        [] => true,
-                        ['ο', s @ ..] => {
-                            out.push(&[(286, 0.38315403), (13, 0.2134432), (287, 0.19151598), (26, 0.0641947), (31, 0.062149998), (27, 0.03208972), (16, 0.03132677), (0, 0.0073548486), (197, 0.005432212), (198, 0.002716106)], 0.99337757);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['η', s @ ..] => {
-            out.push(&[(13, 0.4979324), (102, 0.1134966), (93, 0.11081102), (31, 0.069703214), (14, 0.055344474), (626, 0.055329215), (689, 0.055329215), (0, 0.02121004), (16, 0.0042572673), (55, 0.003524834), (26, 0.0025329976)], 0.98947126);
-            match s {
-                [] => true,
-                ['β', s @ ..] => {
-                    out.push(&[(13, 0.599176), (31, 0.22787823), (102, 0.04539559), (93, 0.04432746), (14, 0.02214084), (626, 0.02214084), (689, 0.022125581), (0, 0.008484016)], 0.9916685);
-                    s.is_empty()
-                }
-                ['ζ', s @ ..] => {
-                    out.push(&[(13, 0.49897), (102, 0.30675212), (93, 0.05540551), (31, 0.034851607), (14, 0.027664607), (626, 0.027664607), (689, 0.027664607), (0, 0.01060502), (16, 0.002121004)], 0.9916991);
-                    s.is_empty()
-                }
-                ['κ', s @ ..] => {
-                    out.push(&[(13, 0.74897385), (102, 0.0567483), (93, 0.05540551), (31, 0.034851607), (14, 0.027664607), (626, 0.027664607), (689, 0.027664607), (0, 0.01060502), (16, 0.002121004)], 0.9916991);
-                    s.is_empty()
-                }
-                ['μ', s @ ..] => {
-                    out.push(&[(93, 0.5554131), (13, 0.2489662), (102, 0.0567483), (31, 0.034851607), (14, 0.027664607), (626, 0.027664607), (689, 0.027664607), (0, 0.01060502), (16, 0.002121004)], 0.9916991);
-                    match s {
-                        [] => true,
-                        ['α', s @ ..] => {
-                            out.push(&[(93, 0.77770656), (13, 0.1244831), (102, 0.028366521), (31, 0.017425803), (14, 0.013839933), (626, 0.013839933), (689, 0.013839933), (0, 0.0053101396)], 0.99481195);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['π', s @ ..] => {
-                    out.push(&[(13, 0.49930573), (626, 0.1851072), (689, 0.1851072), (102, 0.037827116), (93, 0.03694209), (31, 0.02323949), (14, 0.018448157), (0, 0.0070649274)], 0.99304193);
-                    match s {
-                        [] => true,
-                        ['α', s @ ..] => {
-                            out.push(&[(13, 0.59972537), (689, 0.27403677), (626, 0.074052036), (102, 0.01513695), (93, 0.014770733), (31, 0.009292744), (14, 0.0073853666), (0, 0.002822919)], 0.9972229);
-                            match s {
-                                [] => true,
-                                ['κ', '\u{1}', s @ ..] => {
-                                    out.push(&[(689, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['χ', s @ ..] => {
-                    out.push(&[(13, 0.3833524), (14, 0.3417563), (102, 0.06984054), (93, 0.06819257), (31, 0.04289311), (626, 0.03405814), (689, 0.03405814), (0, 0.013061723), (16, 0.0026092927), (55, 0.002166781)], 0.991989);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['θ', s @ ..] => {
-            out.push(&[(0, 0.3467918), (90, 0.2524605), (13, 0.20933852), (31, 0.06800946), (16, 0.019394217), (102, 0.01779202), (55, 0.01608301), (26, 0.011581598), (43, 0.007812619), (482, 0.007370108), (27, 0.0057984283), (93, 0.00561532), (619, 0.004913405), (14, 0.0025024796), (423, 0.0024872206), (94, 0.0024719615), (626, 0.0024719615), (314, 0.0024719615), (352, 0.0024719615), (339, 0.0024567025), (689, 0.0024567025)], 0.99275196);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(90, 0.5016403), (0, 0.23118944), (13, 0.13955902), (31, 0.045334555), (16, 0.012924392), (102, 0.0118715195), (55, 0.010727093), (26, 0.007721065), (43, 0.0052033267), (482, 0.004913405), (27, 0.0038605325), (93, 0.0037384604), (619, 0.0032654307)], 0.98194855);
-                    s.is_empty()
-                }
-                ['υ', s @ ..] => {
-                    out.push(&[(0, 0.5645228), (90, 0.168307), (13, 0.13955902), (31, 0.045334555), (16, 0.012924392), (102, 0.0118715195), (55, 0.010727093), (26, 0.007721065), (43, 0.0052033267), (482, 0.004913405), (27, 0.0038605325), (93, 0.0037384604), (619, 0.0032654307)], 0.9819486);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ι', s @ ..] => {
-            out.push(&[(0, 0.32172123), (13, 0.27978942), (482, 0.13374533), (31, 0.0561532), (55, 0.04699779), (43, 0.045532923), (94, 0.044586863), (115, 0.029724576), (116, 0.014709697), (16, 0.014465553), (102, 0.0031433585), (26, 0.002044709)], 0.9926146);
-            match s {
-                [] => true,
-                ['β', s @ ..] => {
-                    out.push(&[(13, 0.5198596), (0, 0.21448082), (482, 0.08917373), (31, 0.03744564), (55, 0.03132677), (43, 0.030350195), (94, 0.029724576), (115, 0.019821469), (116, 0.009811551), (16, 0.009643702), (102, 0.002090486)], 0.9937285);
-                    s.is_empty()
-                }
-                ['γ', s @ ..] => {
-                    out.push(&[(0, 0.50568396), (13, 0.1721828), (16, 0.08581674), (482, 0.08230717), (31, 0.034561686), (55, 0.028915847), (43, 0.028015565), (94, 0.027435722), (115, 0.018295567), (116, 0.0090638595)], 0.99227893);
-                    s.is_empty()
-                }
-                ['ε', s @ ..] => {
-                    out.push(&[(55, 0.21879911), (94, 0.2178378), (115, 0.14522012), (0, 0.1286946), (13, 0.111924924), (116, 0.07255665), (482, 0.05349813), (31, 0.02246128), (43, 0.018219272), (16, 0.0057831695)], 0.99499506);
-                    match s {
-                        [] => true,
-                        ['δ', s @ ..] => {
-                            out.push(&[(55, 0.4791943), (94, 0.14522012), (115, 0.09681849), (0, 0.08580148), (13, 0.07461662), (116, 0.0483711), (482, 0.035660334), (31, 0.0149691), (43, 0.012146181), (16, 0.0038605325)], 0.99665827);
-                            s.is_empty()
-                        }
-                        ['χ', s @ ..] => {
-                            out.push(&[(94, 0.35892272), (115, 0.23927672), (116, 0.11961547), (55, 0.10939193), (0, 0.0643473), (13, 0.055954833), (482, 0.026749065), (31, 0.01123064), (43, 0.009109636), (16, 0.0028992142)], 0.9974975);
-                            match s {
-                                [] => true,
-                                ['ο', s @ ..] => {
-                                    out.push(&[(94, 0.5726101), (115, 0.15951781), (116, 0.079743646), (55, 0.07293812), (0, 0.04289311), (13, 0.03730831), (482, 0.017837796), (31, 0.00749218), (43, 0.0060730907)], 0.9964141);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['θ', s @ ..] => {
-                    out.push(&[(13, 0.5198596), (0, 0.21448082), (482, 0.08917373), (31, 0.03744564), (55, 0.03132677), (43, 0.030350195), (94, 0.029724576), (115, 0.019821469), (116, 0.009811551), (16, 0.009643702), (102, 0.002090486)], 0.9937285);
-                    s.is_empty()
-                }
-                ['μ', s @ ..] => {
-                    out.push(&[(13, 0.55680174), (0, 0.19798581), (482, 0.08230717), (31, 0.034561686), (55, 0.028915847), (43, 0.028015565), (94, 0.027435722), (115, 0.018295567), (116, 0.0090638595), (16, 0.00889601)], 0.992279);
-                    s.is_empty()
-                }
-                ['π', s @ ..] => {
-                    out.push(&[(0, 0.4310979), (482, 0.21483177), (43, 0.18492408), (13, 0.09485008), (31, 0.01904326), (55, 0.01593042), (94, 0.015121691), (115, 0.010070954), (116, 0.0049897004), (16, 0.0048981463)], 0.995758);
-                    match s {
-                        [] => true,
-                        ['σ', s @ ..] => {
-                            out.push(&[(0, 0.45185015), (43, 0.35124743), (482, 0.11017014), (13, 0.04864576), (31, 0.009765774), (55, 0.008163577), (94, 0.007751583), (115, 0.0051728087), (116, 0.0025635157), (16, 0.0025177386)], 0.99784845);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(482, 0.42250705), (0, 0.21448082), (13, 0.18652628), (31, 0.03744564), (55, 0.03132677), (43, 0.030350195), (94, 0.029724576), (115, 0.019821469), (116, 0.009811551), (16, 0.009643702), (102, 0.002090486)], 0.9937285);
-                    s.is_empty()
-                }
-                ['σ', s @ ..] => {
-                    out.push(&[(13, 0.5198596), (0, 0.21448082), (482, 0.08917373), (31, 0.03744564), (55, 0.03132677), (43, 0.030350195), (94, 0.029724576), (115, 0.019821469), (116, 0.009811551), (16, 0.009643702), (102, 0.002090486)], 0.9937285);
-                    s.is_empty()
-                }
-                ['τ', s @ ..] => {
-                    out.push(&[(0, 0.44057375), (13, 0.25993744), (482, 0.2112459), (31, 0.01872282), (55, 0.015671015), (43, 0.015182727), (94, 0.014862288), (115, 0.009903105), (116, 0.0048981463), (16, 0.004821851)], 0.99581903);
-                    match s {
-                        [] => true,
-                        ['ο', s @ ..] => {
-                            out.push(&[(13, 0.5066148), (0, 0.2937209), (482, 0.14084077), (31, 0.01248188), (55, 0.010437171), (43, 0.010116732), (94, 0.009903105), (115, 0.0066071567), (116, 0.0032654307), (16, 0.0032196536)], 0.9972076);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['φ', s @ ..] => {
-                    out.push(&[(0, 0.54781413), (13, 0.18652628), (482, 0.08917373), (31, 0.03744564), (55, 0.03132677), (43, 0.030350195), (94, 0.029724576), (115, 0.019821469), (116, 0.009811551), (16, 0.009643702), (102, 0.002090486)], 0.9937285);
-                    s.is_empty()
-                }
-                ['χ', s @ ..] => {
-                    out.push(&[(0, 0.4108644), (31, 0.2780804), (13, 0.13989471), (482, 0.06688029), (55, 0.023498895), (43, 0.022766462), (94, 0.022293432), (115, 0.014862288), (116, 0.0073548486), (16, 0.0072327764)], 0.9937285);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['κ', s @ ..] => {
-            out.push(&[(0, 0.49137104), (13, 0.37422752), (692, 0.04040589), (31, 0.032974746), (16, 0.0093995575), (102, 0.008636607), (55, 0.0077973604), (26, 0.00561532), (43, 0.0037842374), (482, 0.0035706111), (27, 0.00280766), (93, 0.002716106), (619, 0.0023804074)], 0.9856871);
-            match s {
-                [] => true,
-                ['ι', s @ ..] => {
-                    out.push(&[(13, 0.61490804), (0, 0.30238804), (692, 0.024856947), (31, 0.020294499), (16, 0.0057831695), (102, 0.0053101396), (55, 0.004806592), (26, 0.003448539), (43, 0.0023346303), (482, 0.0021972992)], 0.9863279);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['λ', s @ ..] => {
-            out.push(&[(13, 0.48279545), (31, 0.23270008), (0, 0.140383), (16, 0.09848173), (26, 0.022812238), (27, 0.011413748), (102, 0.0022735943), (55, 0.002059968)], 0.9929198);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(13, 0.5342336), (31, 0.31683832), (0, 0.0742504), (26, 0.041290913), (27, 0.020645456), (16, 0.011413748)], 0.9986725);
-                    match s {
-                        [] => true,
-                        ['β', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['ι', 'ρ', 'τ', s @ ..] => {
-                                    out.push(&[(31, 0.54456395), (13, 0.35616082), (0, 0.049500268), (26, 0.027527276), (27, 0.013763638), (16, 0.007614252)], 0.9991302);
-                                    s.is_empty()
-                                }
-                                ['ο', s @ ..] => {
-                                    out.push(&[(31, 0.54456395), (13, 0.35616082), (0, 0.049500268), (26, 0.027527276), (27, 0.013763638), (16, 0.007614252)], 0.9991302);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['γ', s @ ..] => {
-                            out.push(&[(0, 0.3828336), (13, 0.35616082), (31, 0.21123064), (26, 0.027527276), (27, 0.013763638), (16, 0.007614252)], 0.99913025);
-                            s.is_empty()
-                        }
-                        ['θ', s @ ..] => {
-                            out.push(&[(31, 0.54456395), (13, 0.35616082), (0, 0.049500268), (26, 0.027527276), (27, 0.013763638), (16, 0.007614252)], 0.9991302);
-                            s.is_empty()
-                        }
-                        ['κ', s @ ..] => {
-                            out.push(&[(13, 0.35616082), (26, 0.24974442), (31, 0.21123064), (27, 0.12487984), (0, 0.049500268), (16, 0.007614252)], 0.99913025);
-                            s.is_empty()
-                        }
-                        ['μ', 'υ', s @ ..] => {
-                            out.push(&[(13, 0.7671168), (31, 0.15841916), (0, 0.0371252), (26, 0.020645456), (27, 0.010330358), (16, 0.005706874)], 0.9993438);
-                            s.is_empty()
-                        }
-                        ['τ', s @ ..] => {
-                            out.push(&[(13, 0.7671168), (31, 0.15841916), (0, 0.0371252), (26, 0.020645456), (27, 0.010330358), (16, 0.005706874)], 0.9993438);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ε', s @ ..] => {
-                    out.push(&[(31, 0.49308002), (13, 0.39311817), (0, 0.0561532), (16, 0.039398793), (26, 0.009124896), (27, 0.004562448)], 0.9954375);
-                    s.is_empty()
-                }
-                ['ι', s @ ..] => {
-                    out.push(&[(13, 0.49140155), (16, 0.29924467), (31, 0.11635004), (0, 0.0701915), (26, 0.011413748), (27, 0.005706874)], 0.9943084);
-                    match s {
-                        [] => true,
-                        ['γ', s @ ..] => {
-                            out.push(&[(16, 0.53282976), (13, 0.32759595), (31, 0.07756161), (0, 0.04679942), (26, 0.007598993), (27, 0.0037994965)], 0.99618524);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['υ', s @ ..] => {
-                    out.push(&[(13, 0.4514229), (0, 0.29825285), (16, 0.19972534), (31, 0.042313267), (26, 0.004150454), (27, 0.002075227)], 0.99794006);
-                    match s {
-                        [] => true,
-                        ['μ', s @ ..] => {
-                            out.push(&[(0, 0.53217363), (13, 0.30093843), (16, 0.13315022), (31, 0.028213931), (26, 0.002761883)], 0.9972381);
-                            s.is_empty()
-                        }
-                        ['ρ', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['γ', s @ ..] => {
-                                    out.push(&[(0, 0.53217363), (13, 0.30093843), (16, 0.13315022), (31, 0.028213931), (26, 0.002761883)], 0.9972381);
-                                    s.is_empty()
-                                }
-                                ['η', s @ ..] => {
-                                    out.push(&[(16, 0.46648356), (13, 0.30093843), (0, 0.19884032), (31, 0.028213931), (26, 0.002761883)], 0.9972381);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['φ', s @ ..] => {
-                            out.push(&[(13, 0.47571528), (16, 0.34985885), (0, 0.14912643), (31, 0.021149004), (26, 0.002075227)], 0.9979248);
-                            match s {
-                                [] => true,
-                                ['α', s @ ..] => {
-                                    out.push(&[(16, 0.5665675), (13, 0.3171435), (0, 0.09941253), (31, 0.014099336)], 0.99722284);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['ψ', s @ ..] => {
-                            out.push(&[(0, 0.53217363), (13, 0.30093843), (16, 0.13315022), (31, 0.028213931), (26, 0.002761883)], 0.9972381);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['ο', s @ ..] => {
-            out.push(&[(0, 0.40355536), (13, 0.2949569), (31, 0.11371023), (16, 0.07220569), (423, 0.03509575), (339, 0.03509575), (43, 0.032364387), (102, 0.0024719615), (55, 0.0022430762)], 0.9916991);
-            match s {
-                [] => true,
-                ['β', s @ ..] => {
-                    out.push(&[(13, 0.45685512), (0, 0.29225606), (31, 0.118303195), (16, 0.11030747), (423, 0.006759747), (339, 0.006759747), (43, 0.00624094)], 0.9974823);
-                    match s {
-                        [] => true,
-                        ['ι', s @ ..] => {
-                            out.push(&[(13, 0.72146183), (0, 0.1498741), (31, 0.060669873), (16, 0.056565195), (423, 0.003463798), (339, 0.003463798), (43, 0.0032043946)], 0.998703);
-                            s.is_empty()
-                        }
-                        ['ο', s @ ..] => {
-                            out.push(&[(0, 0.3961242), (31, 0.30914778), (13, 0.22842756), (16, 0.055146106), (423, 0.0033875029), (339, 0.0033875029), (43, 0.0031128405)], 0.9987335);
-                            s.is_empty()
-                        }
-                        ['σ', s @ ..] => {
-                            out.push(&[(16, 0.40686655), (13, 0.30457008), (0, 0.1948272), (31, 0.07887389), (423, 0.0045166705), (339, 0.0045166705), (43, 0.004165713)], 0.9983368);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['θ', s @ ..] => {
-                    out.push(&[(31, 0.31471732), (43, 0.247364), (0, 0.20694286), (13, 0.15126269), (16, 0.037033647), (423, 0.018005647), (339, 0.017990386)], 0.99331653);
-                    s.is_empty()
-                }
-                ['ι', s @ ..] => {
-                    out.push(&[(13, 0.566125), (0, 0.24834058), (31, 0.06997787), (16, 0.04443427), (423, 0.021591516), (339, 0.021591516), (43, 0.019913023)], 0.99197376);
-                    s.is_empty()
-                }
-                ['κ', s @ ..] => {
-                    out.push(&[(0, 0.45177385), (16, 0.28610665), (13, 0.14747845), (31, 0.056855116), (423, 0.017547876), (339, 0.017547876), (43, 0.016174564)], 0.9934844);
-                    match s {
-                        [] => true,
-                        ['α', s @ ..] => {
-                            out.push(&[(16, 0.5240711), (0, 0.30118257), (13, 0.098313875), (31, 0.03790341), (423, 0.01170367), (339, 0.01170367), (43, 0.010788129)], 0.99566644);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['π', s @ ..] => {
-                    out.push(&[(0, 0.6867323), (423, 0.15288015), (13, 0.08427558), (31, 0.032486457), (16, 0.020630198), (339, 0.010025177), (43, 0.009246968)], 0.9962768);
-                    match s {
-                        [] => true,
-                        ['η', s @ ..] => {
-                            out.push(&[(0, 0.45781642), (423, 0.4352636), (13, 0.05618372), (31, 0.021652551), (16, 0.0137483785), (339, 0.0066834516), (43, 0.006164645)], 0.99751276);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['τ', 'σ', 'ο', s @ ..] => {
-                    out.push(&[(13, 0.52997637), (0, 0.26903182), (31, 0.07580682), (16, 0.048126955), (423, 0.023392081), (339, 0.023392081), (43, 0.021576257)], 0.9913024);
-                    s.is_empty()
-                }
-                ['χ', s @ ..] => {
-                    out.push(&[(13, 0.39748228), (339, 0.2675517), (0, 0.20177005), (31, 0.056855116), (16, 0.036102846), (423, 0.017547876), (43, 0.016174564)], 0.99348444);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['π', s @ ..] => {
-            out.push(&[(0, 0.4623789), (13, 0.2791333), (31, 0.09066911), (16, 0.025864042), (102, 0.023727778), (55, 0.021454185), (26, 0.01544213), (43, 0.010421912), (482, 0.009811551), (27, 0.007721065), (93, 0.0074769207), (619, 0.0065461206), (14, 0.0033417258), (423, 0.0033112078), (94, 0.0032959487), (626, 0.0032959487), (314, 0.0032959487), (352, 0.0032959487), (90, 0.0032654307), (339, 0.0032654307), (689, 0.0032654307), (115, 0.0022278172), (286, 0.0022125582)], 0.9947204);
-            s.is_empty()
-        }
-        ['τ', s @ ..] => {
-            out.push(&[(0, 0.59678036), (13, 0.20933852), (31, 0.06800946), (16, 0.019394217), (102, 0.01779202), (55, 0.01608301), (26, 0.011581598), (43, 0.007812619), (482, 0.007370108), (27, 0.0057984283), (93, 0.00561532), (619, 0.004913405), (14, 0.0025024796), (423, 0.0024872206), (94, 0.0024719615), (626, 0.0024719615), (314, 0.0024719615), (352, 0.0024719615), (90, 0.0024567025), (339, 0.0024567025), (689, 0.0024567025)], 0.9927367);
-            s.is_empty()
-        }
-        ['υ', s @ ..] => {
-            out.push(&[(13, 0.3257191), (55, 0.19943541), (0, 0.15724422), (31, 0.11728084), (102, 0.07960632), (619, 0.0723888), (26, 0.025558861), (27, 0.012771801), (16, 0.002777142)], 0.9927825);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(55, 0.30365452), (31, 0.2828565), (102, 0.2606546), (13, 0.082459755), (0, 0.039810788), (619, 0.018326085), (26, 0.0064698253), (27, 0.0032349126)], 0.997467);
-                    match s {
-                        [] => true,
-                        ['γ', s @ ..] => super::t1::n4076(s, out),
-                        ['ι', s @ ..] => super::t1::n4077(s, out),
-                        ['ν', s @ ..] => super::t1::n4078(s, out),
-                        _ => false,
-                    }
-                }
-                ['β', s @ ..] => super::t1::n3234(s, out),
-                ['δ', s @ ..] => super::t1::n3235(s, out),
-                ['κ', s @ ..] => super::t1::n3236(s, out),
-                ['μ', s @ ..] => super::t1::n3237(s, out),
-                ['ο', s @ ..] => super::t1::n3238(s, out),
-                ['ρ', s @ ..] => super::t1::n3239(s, out),
-                ['τ', s @ ..] => super::t1::n3240(s, out),
-                ['φ', s @ ..] => super::t1::n3241(s, out),
-                ['χ', s @ ..] => super::t1::n3242(s, out),
-                _ => false,
-            }
-        }
-        ['χ', s @ ..] => super::t1::n1852(s, out),
-        ['ω', s @ ..] => super::t1::n1853(s, out),
-        _ => false,
-    }
+	super::push(out, 625);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 1907);
+			s.is_empty()
+		}
+		['δ', s @ ..] => {
+			super::push(out, 1908);
+			match s {
+				[] => true,
+				['ο', s @ ..] => {
+					super::push(out, 3600);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 1909);
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 3601);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['τ', s @ ..] => {
+			super::push(out, 1910);
+			match s {
+				[] => true,
+				['ο', s @ ..] => {
+					super::push(out, 3602);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5392);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['χ', s @ ..] => {
+			super::push(out, 1911);
+			match s {
+				[] => true,
+				['η', s @ ..] => {
+					super::push(out, 3603);
+					s.is_empty()
+				}
+				['ο', s @ ..] => {
+					super::push(out, 3604);
+					match s {
+						[] => true,
+						['τ', s @ ..] => {
+							super::push(out, 5393);
+							match s {
+								[] => true,
+								['σ', s @ ..] => {
+									super::push(out, 6584);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -πισ.
+pub(crate) fn n631(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 626);
+	match s {
+		[] => true,
+		['η', s @ ..] => {
+			super::push(out, 1912);
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 3605);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5394);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['λ', s @ ..] => {
+			super::push(out, 1913);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3606);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5395);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['μ', s @ ..] => {
+			super::push(out, 1914);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3607);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5396);
+							match s {
+								[] => true,
+								['τ', s @ ..] => {
+									super::push(out, 6585);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 1915);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 3608);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3609);
+					match s {
+						[] => true,
+						['τ', s @ ..] => {
+							super::push(out, 5397);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 1916);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3610);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5398);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['σ', s @ ..] => {
+			super::push(out, 1917);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3611);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 5399);
+							s.is_empty()
+						}
+						['λ', s @ ..] => {
+							super::push(out, 5400);
+							match s {
+								[] => true,
+								['θ', s @ ..] => {
+									super::push(out, 6586);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 3612);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5401);
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6587);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ρισ.
+pub(crate) fn n632(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 627);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1918);
+			match s {
+				[] => true,
+				['β', s @ ..] => {
+					super::push(out, 3613);
+					match s {
+						[] => true,
+						['υ', s @ ..] => {
+							super::push(out, 5402);
+							match s {
+								[] => true,
+								['ξ', s @ ..] => {
+									super::push(out, 6588);
+									match s {
+										[] => true,
+										['ο', s @ ..] => {
+											super::push(out, 7149);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['ο', s @ ..] => {
+									super::push(out, 6589);
+									s.is_empty()
+								}
+								['τ', s @ ..] => {
+									super::push(out, 6590);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 7150);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['γ', s @ ..] => {
+					super::push(out, 3614);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5403);
+							match s {
+								[] => true,
+								['σ', s @ ..] => {
+									super::push(out, 6591);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['δ', s @ ..] => {
+					super::push(out, 3615);
+					match s {
+						[] => true,
+						['υ', s @ ..] => {
+							super::push(out, 5404);
+							match s {
+								[] => true,
+								['γ', s @ ..] => {
+									super::push(out, 6592);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['κ', s @ ..] => {
+					super::push(out, 3616);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5405);
+							s.is_empty()
+						}
+						['κ', s @ ..] => {
+							super::push(out, 5406);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6593);
+									match s {
+										[] => true,
+										['β', s @ ..] => {
+											super::push(out, 7151);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 3617);
+					s.is_empty()
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3618);
+					s.is_empty()
+				}
+				['π', s @ ..] => {
+					super::push(out, 3619);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 5407);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6594);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['χ', s @ ..] => {
+					super::push(out, 3620);
+					match s {
+						[] => true,
+						['α', 'ζ', '\u{1}', s @ ..] => {
+							super::push(out, 5408);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['β', s @ ..] => {
+			super::push(out, 1919);
+			match s {
+				[] => true,
+				['υ', s @ ..] => {
+					super::push(out, 3621);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['γ', s @ ..] => {
+			super::push(out, 1920);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 3622);
+					match s {
+						[] => true,
+						['τ', s @ ..] => {
+							super::push(out, 5409);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['δ', s @ ..] => {
+			super::push(out, 1921);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 3623);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5410);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6595);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3624);
+					match s {
+						[] => true,
+						['ν', s @ ..] => {
+							super::push(out, 5411);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 1922);
+			match s {
+				[] => true,
+				['β', s @ ..] => {
+					super::push(out, 3625);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 5412);
+							match s {
+								[] => true,
+								['γ', s @ ..] => {
+									super::push(out, 6596);
+									match s {
+										[] => true,
+										['γ', s @ ..] => {
+											super::push(out, 7152);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3626);
+					s.is_empty()
+				}
+				['π', s @ ..] => {
+					super::push(out, 3627);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5413);
+							match s {
+								[] => true,
+								['π', s @ ..] => {
+									super::push(out, 6597);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['σ', s @ ..] => {
+					super::push(out, 3628);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5414);
+							match s {
+								[] => true,
+								['υ', s @ ..] => {
+									super::push(out, 6598);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3629);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 5415);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 1923);
+			match s {
+				[] => true,
+				['β', s @ ..] => {
+					super::push(out, 3630);
+					s.is_empty()
+				}
+				['δ', s @ ..] => {
+					super::push(out, 3631);
+					s.is_empty()
+				}
+				['κ', s @ ..] => {
+					super::push(out, 3632);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5416);
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6599);
+									match s {
+										[] => true,
+										['κ', s @ ..] => {
+											super::push(out, 7153);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['σ', s @ ..] => {
+					super::push(out, 3633);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 5417);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6600);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 1924);
+			match s {
+				[] => true,
+				['σ', s @ ..] => {
+					super::push(out, 3634);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5418);
+							match s {
+								[] => true,
+								['λ', s @ ..] => {
+									super::push(out, 6601);
+									match s {
+										[] => true,
+										['α', s @ ..] => {
+											super::push(out, 7154);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['ο', s @ ..] => {
+							super::push(out, 5419);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['κ', s @ ..] => {
+			super::push(out, 1925);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3635);
+					s.is_empty()
+				}
+				['ο', s @ ..] => {
+					super::push(out, 3636);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 1926);
+			match s {
+				[] => true,
+				['κ', s @ ..] => {
+					super::push(out, 3637);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['π', s @ ..] => {
+			super::push(out, 1927);
+			match s {
+				[] => true,
+				['σ', s @ ..] => {
+					super::push(out, 3638);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5420);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 1928);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3639);
+					match s {
+						[] => true,
+						['δ', s @ ..] => {
+							super::push(out, 5421);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['τ', s @ ..] => {
+			super::push(out, 1929);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3640);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5422);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1930);
+			match s {
+				[] => true,
+				['γ', s @ ..] => {
+					super::push(out, 3641);
+					match s {
+						[] => true,
+						['η', s @ ..] => {
+							super::push(out, 5423);
+							match s {
+								[] => true,
+								['ν', s @ ..] => {
+									super::push(out, 6602);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['θ', s @ ..] => {
+					super::push(out, 3642);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5424);
+							match s {
+								[] => true,
+								['λ', s @ ..] => {
+									super::push(out, 6603);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 7155);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3643);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5425);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => super::t2::n3671(s, out),
+				['π', s @ ..] => super::t2::n3672(s, out),
+				_ => false,
+			}
+		}
+		['ω', s @ ..] => {
+			super::push(out, 1931);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -σισ.
+pub(crate) fn n633(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 628);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1932);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 3646);
+					s.is_empty()
+				}
+				['β', s @ ..] => {
+					super::push(out, 3647);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 5428);
+							match s {
+								[] => true,
+								['υ', s @ ..] => {
+									super::push(out, 6606);
+									match s {
+										[] => true,
+										['σ', s @ ..] => {
+											super::push(out, 7158);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 3648);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5429);
+							match s {
+								[] => true,
+								['λ', s @ ..] => {
+									super::push(out, 6607);
+									match s {
+										[] => true,
+										['α', s @ ..] => {
+											super::push(out, 7159);
+											match s {
+												[] => true,
+												['γ', s @ ..] => {
+													super::push(out, 7342);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['ρ', 'τ', s @ ..] => {
+							super::push(out, 5430);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6608);
+									match s {
+										[] => true,
+										['ρ', s @ ..] => {
+											super::push(out, 7160);
+											match s {
+												[] => true,
+												['α', '\u{1}', s @ ..] => {
+													super::push(out, 7343);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 3649);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 5431);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['π', s @ ..] => {
+					super::push(out, 3650);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5432);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3651);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5433);
+							s.is_empty()
+						}
+						['π', s @ ..] => {
+							super::push(out, 5434);
+							s.is_empty()
+						}
+						['φ', s @ ..] => {
+							super::push(out, 5435);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3652);
+					s.is_empty()
+				}
+				['φ', s @ ..] => {
+					super::push(out, 3653);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 1933);
+			match s {
+				[] => true,
+				['ζ', s @ ..] => {
+					super::push(out, 3654);
+					s.is_empty()
+				}
+				['θ', s @ ..] => {
+					super::push(out, 3655);
+					s.is_empty()
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3656);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5436);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ν', s @ ..] => {
+					super::push(out, 3657);
+					s.is_empty()
+				}
+				['ξ', s @ ..] => {
+					super::push(out, 3658);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3659);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 1934);
+			match s {
+				[] => true,
+				['γ', s @ ..] => {
+					super::push(out, 3660);
+					s.is_empty()
+				}
+				['θ', s @ ..] => {
+					super::push(out, 3661);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5437);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6609);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 7161);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['κ', s @ ..] => {
+					super::push(out, 3662);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 5438);
+							match s {
+								[] => true,
+								['δ', s @ ..] => {
+									super::push(out, 6610);
+									match s {
+										[] => true,
+										['κ', s @ ..] => {
+											super::push(out, 7162);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['ο', 'ν', s @ ..] => {
+									super::push(out, 6611);
+									match s {
+										[] => true,
+										['ε', s @ ..] => {
+											super::push(out, 7163);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['μ', 'τ', s @ ..] => {
+					super::push(out, 3663);
+					s.is_empty()
+				}
+				['ν', s @ ..] => {
+					super::push(out, 3664);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3665);
+					match s {
+						[] => true,
+						['χ', s @ ..] => {
+							super::push(out, 5439);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3666);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5440);
+							s.is_empty()
+						}
+						['π', s @ ..] => {
+							super::push(out, 5441);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ῥ', s @ ..] => {
+					super::push(out, 3667);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 1935);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3668);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 5442);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['θ', s @ ..] => {
+					super::push(out, 3669);
+					match s {
+						[] => true,
+						['φ', s @ ..] => {
+							super::push(out, 5443);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3670);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 5444);
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6612);
+									match s {
+										[] => true,
+										['χ', s @ ..] => {
+											super::push(out, 7164);
+											match s {
+												[] => true,
+												['α', s @ ..] => {
+													super::push(out, 7344);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['κ', s @ ..] => {
+							super::push(out, 5445);
+							s.is_empty()
+						}
+						['χ', s @ ..] => {
+							super::push(out, 5446);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3671);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5447);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['χ', 'σ', s @ ..] => {
+					super::push(out, 3672);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['λ', s @ ..] => {
+			super::push(out, 1936);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3673);
+					match s {
+						[] => true,
+						['φ', s @ ..] => {
+							super::push(out, 5448);
+							match s {
+								[] => true,
+								['σ', s @ ..] => {
+									super::push(out, 6613);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ν', s @ ..] => {
+			super::push(out, 1937);
+			match s {
+				[] => true,
+				['α', 'π', s @ ..] => {
+					super::push(out, 3674);
+					match s {
+						[] => true,
+						['υ', s @ ..] => {
+							super::push(out, 5449);
+							match s {
+								[] => true,
+								['ῥ', s @ ..] => {
+									super::push(out, 6614);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 1938);
+			match s {
+				[] => true,
+				['π', s @ ..] => {
+					super::push(out, 3675);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 1939);
+			match s {
+				[] => true,
+				['ε', 'π', s @ ..] => {
+					super::push(out, 3676);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['σ', s @ ..] => {
+			super::push(out, 1940);
+			match s {
+				[] => true,
+				['ω', s @ ..] => {
+					super::push(out, 3677);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5450);
+							match s {
+								[] => true,
+								['γ', s @ ..] => {
+									super::push(out, 6615);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => super::t2::n1953(s, out),
+		['ω', s @ ..] => super::t2::n1954(s, out),
+		_ => false,
+	}
+}
+
+/// Words ending -τισ.
+pub(crate) fn n634(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 629);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1943);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 3696);
+					match s {
+						[] => true,
+						['τ', s @ ..] => {
+							super::push(out, 5472);
+							match s {
+								[] => true,
+								['ρ', s @ ..] => {
+									super::push(out, 6623);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['σ', s @ ..] => {
+					super::push(out, 3697);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 5473);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3698);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5474);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6624);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 1944);
+			match s {
+				[] => true,
+				['γ', s @ ..] => {
+					super::push(out, 3699);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5475);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['κ', s @ ..] => {
+					super::push(out, 3700);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 5476);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['π', s @ ..] => {
+					super::push(out, 3701);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5477);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6625);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 1945);
+			match s {
+				[] => true,
+				['γ', s @ ..] => {
+					super::push(out, 3702);
+					match s {
+						[] => true,
+						['ω', s @ ..] => {
+							super::push(out, 5478);
+							match s {
+								[] => true,
+								['ρ', s @ ..] => {
+									super::push(out, 6626);
+									match s {
+										[] => true,
+										['τ', s @ ..] => {
+											super::push(out, 7168);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['κ', s @ ..] => {
+					super::push(out, 3703);
+					s.is_empty()
+				}
+				['ν', s @ ..] => {
+					super::push(out, 3704);
+					s.is_empty()
+				}
+				['ο', s @ ..] => {
+					super::push(out, 3705);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5479);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6627);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['λ', s @ ..] => {
+							super::push(out, 5480);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6628);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 7169);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3706);
+					match s {
+						[] => true,
+						['υ', s @ ..] => {
+							super::push(out, 5481);
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6629);
+									match s {
+										[] => true,
+										['λ', s @ ..] => {
+											super::push(out, 7170);
+											match s {
+												[] => true,
+												['π', s @ ..] => {
+													super::push(out, 7345);
+													match s {
+														[] => true,
+														['\u{1}', s @ ..] => super::t2::n7431(s, out),
+														_ => false,
+													}
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3707);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['κ', s @ ..] => {
+			super::push(out, 1946);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3708);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5482);
+							s.is_empty()
+						}
+						['λ', s @ ..] => {
+							super::push(out, 5483);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 3709);
+					s.is_empty()
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3710);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ν', s @ ..] => {
+			super::push(out, 1947);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3711);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 5484);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6630);
+									match s {
+										[] => true,
+										['ν', s @ ..] => {
+											super::push(out, 7171);
+											match s {
+												[] => true,
+												['ω', s @ ..] => {
+													super::push(out, 7346);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										['ρ', 'κ', 'ε', 'ν', '\u{1}', s @ ..] => {
+											super::push(out, 7172);
+											s.is_empty()
+										}
+										['υ', 'θ', 'χ', 'ι', '\u{1}', s @ ..] => {
+											super::push(out, 7173);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 3712);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5485);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 1948);
+			match s {
+				[] => true,
+				['ο', s @ ..] => {
+					super::push(out, 3713);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 5486);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3714);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5487);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['σ', s @ ..] => {
+			super::push(out, 1949);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3715);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5488);
+							match s {
+								[] => true,
+								['λ', s @ ..] => {
+									super::push(out, 6631);
+									match s {
+										[] => true,
+										['υ', s @ ..] => {
+											super::push(out, 7174);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['ρ', s @ ..] => {
+							super::push(out, 5489);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6632);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['η', s @ ..] => {
+					super::push(out, 3716);
+					match s {
+						[] => true,
+						['ν', s @ ..] => {
+							super::push(out, 5490);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6633);
+									match s {
+										[] => true,
+										['ο', s @ ..] => {
+											super::push(out, 7175);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['μ', s @ ..] => {
+									super::push(out, 6634);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ρ', s @ ..] => {
+							super::push(out, 5491);
+							match s {
+								[] => true,
+								['π', s @ ..] => {
+									super::push(out, 6635);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 3717);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5492);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6636);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['π', s @ ..] => {
+							super::push(out, 5493);
+							s.is_empty()
+						}
+						['ρ', s @ ..] => {
+							super::push(out, 5494);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3718);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5495);
+							s.is_empty()
+						}
+						['μ', s @ ..] => super::t2::n5530(s, out),
+						['ξ', s @ ..] => super::t2::n5531(s, out),
+						['π', s @ ..] => super::t2::n5532(s, out),
+						_ => false,
+					}
+				}
+				['ω', s @ ..] => super::t2::n3746(s, out),
+				_ => false,
+			}
+		}
+		['τ', s @ ..] => super::t2::n1962(s, out),
+		['υ', s @ ..] => super::t2::n1963(s, out),
+		['ω', s @ ..] => super::t2::n1964(s, out),
+		_ => false,
+	}
+}
+
+/// Words ending -φισ.
+pub(crate) fn n635(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 630);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1953);
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 3730);
+					s.is_empty()
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3731);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5503);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6642);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['λ', s @ ..] => {
+			super::push(out, 1954);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3732);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 1955);
+			s.is_empty()
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1956);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -χισ.
+pub(crate) fn n636(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 631);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1957);
+			match s {
+				[] => true,
+				['ῥ', s @ ..] => {
+					super::push(out, 3733);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['γ', s @ ..] => {
+			super::push(out, 1958);
+			s.is_empty()
+		}
+		['ε', s @ ..] => {
+			super::push(out, 1959);
+			s.is_empty()
+		}
+		['ι', s @ ..] => {
+			super::push(out, 1960);
+			s.is_empty()
+		}
+		['ο', s @ ..] => {
+			super::push(out, 1961);
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 3734);
+					match s {
+						[] => true,
+						['τ', s @ ..] => {
+							super::push(out, 5504);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 1962);
+			match s {
+				[] => true,
+				['ο', s @ ..] => {
+					super::push(out, 3735);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1963);
+			s.is_empty()
+		}
+		['ω', s @ ..] => {
+			super::push(out, 1964);
+			match s {
+				[] => true,
+				['λ', s @ ..] => {
+					super::push(out, 3736);
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 5505);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ψισ.
+pub(crate) fn n637(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 632);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1965);
+			match s {
+				[] => true,
+				['κ', s @ ..] => {
+					super::push(out, 3737);
+					s.is_empty()
+				}
+				['ῥ', s @ ..] => {
+					super::push(out, 3738);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 1966);
+			s.is_empty()
+		}
+		['η', s @ ..] => {
+			super::push(out, 1967);
+			match s {
+				[] => true,
+				['κ', s @ ..] => {
+					super::push(out, 3739);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5506);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 3740);
+					s.is_empty()
+				}
+				['ν', s @ ..] => {
+					super::push(out, 3741);
+					s.is_empty()
+				}
+				['σ', s @ ..] => {
+					super::push(out, 3742);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 1968);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3743);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5507);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 3744);
+					match s {
+						[] => true,
+						['θ', s @ ..] => {
+							super::push(out, 5508);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ν', s @ ..] => {
+					super::push(out, 3745);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3746);
+					match s {
+						[] => true,
+						['τ', s @ ..] => {
+							super::push(out, 5509);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ῥ', s @ ..] => {
+					super::push(out, 3747);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['λ', s @ ..] => {
+			super::push(out, 1969);
+			s.is_empty()
+		}
+		['μ', 'α', 'κ', s @ ..] => {
+			super::push(out, 1970);
+			s.is_empty()
+		}
+		['ο', s @ ..] => {
+			super::push(out, 1971);
+			match s {
+				[] => true,
+				['π', s @ ..] => {
+					super::push(out, 3748);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 1972);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3749);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 1973);
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 3750);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5510);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3751);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5511);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ωισ.
+pub(crate) fn n638(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 633);
+	match s {
+		[] => true,
+		['ρ', s @ ..] => {
+			super::push(out, 1974);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3752);
+					match s {
+						[] => true,
+						['χ', s @ ..] => {
+							super::push(out, 5512);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6643);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['η', s @ ..] => {
+					super::push(out, 3753);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ϝισ.
+pub(crate) fn n639(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 634);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 1975);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ῥισ.
+pub(crate) fn n640(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 635);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 1976);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -γοσ.
+pub(crate) fn n645(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 640);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 1994);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 3776);
+					s.is_empty()
+				}
+				['λ', s @ ..] => {
+					super::push(out, 3777);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5530);
+							match s {
+								[] => true,
+								['π', s @ ..] => {
+									super::push(out, 6651);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['π', s @ ..] => {
+							super::push(out, 5531);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6652);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3778);
+					s.is_empty()
+				}
+				['ν', s @ ..] => {
+					super::push(out, 3779);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5532);
+							match s {
+								[] => true,
+								['τ', s @ ..] => {
+									super::push(out, 6653);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['π', s @ ..] => {
+					super::push(out, 3780);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3781);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5533);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3782);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5534);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['φ', s @ ..] => {
+					super::push(out, 3783);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5535);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['χ', s @ ..] => {
+					super::push(out, 3784);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5536);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6654);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['γ', s @ ..] => {
+			super::push(out, 1995);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3785);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5537);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 3786);
+					match s {
+						[] => true,
+						['φ', s @ ..] => {
+							super::push(out, 5538);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6655);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 3787);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5539);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6656);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 3788);
+					match s {
+						[] => true,
+						['θ', s @ ..] => {
+							super::push(out, 5540);
+							match s {
+								[] => true,
+								['φ', s @ ..] => {
+									super::push(out, 6657);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['π', s @ ..] => {
+							super::push(out, 5541);
+							match s {
+								[] => true,
+								['σ', 'ο', s @ ..] => {
+									super::push(out, 6658);
+									match s {
+										[] => true,
+										['λ', s @ ..] => {
+											super::push(out, 7178);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3789);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5542);
+							match s {
+								[] => true,
+								['η', s @ ..] => {
+									super::push(out, 6659);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['σ', s @ ..] => {
+							super::push(out, 5543);
+							match s {
+								[] => true,
+								['ι', s @ ..] => {
+									super::push(out, 6660);
+									match s {
+										[] => true,
+										['π', s @ ..] => {
+											super::push(out, 7179);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 1996);
+			match s {
+				[] => true,
+				['λ', s @ ..] => {
+					super::push(out, 3790);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5544);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3791);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 1997);
+			match s {
+				[] => true,
+				['ν', s @ ..] => {
+					super::push(out, 3792);
+					match s {
+						[] => true,
+						['υ', s @ ..] => {
+							super::push(out, 5545);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6661);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3793);
+					match s {
+						[] => true,
+						['α', 'ρ', 'τ', 'σ', 'ο', s @ ..] => {
+							super::push(out, 5546);
+							match s {
+								[] => true,
+								['π', s @ ..] => {
+									super::push(out, 6662);
+									match s {
+										[] => true,
+										['υ', s @ ..] => {
+											super::push(out, 7180);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['φ', s @ ..] => {
+					super::push(out, 3794);
+					s.is_empty()
+				}
+				['χ', s @ ..] => {
+					super::push(out, 3795);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5547);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6663);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ῥ', s @ ..] => {
+					super::push(out, 3796);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 1998);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3797);
+					match s {
+						[] => true,
+						['τ', s @ ..] => {
+							super::push(out, 5548);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6664);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 3798);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['λ', s @ ..] => {
+			super::push(out, 1999);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3799);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5549);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 3800);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 5550);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 2000);
+			match s {
+				[] => true,
+				['λ', s @ ..] => {
+					super::push(out, 3801);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5551);
+							s.is_empty()
+						}
+						['ο', s @ ..] => {
+							super::push(out, 5552);
+							match s {
+								[] => true,
+								['μ', 'υ', s @ ..] => {
+									super::push(out, 6665);
+									s.is_empty()
+								}
+								['ν', s @ ..] => {
+									super::push(out, 6666);
+									match s {
+										[] => true,
+										['ο', s @ ..] => {
+											super::push(out, 7181);
+											match s {
+												[] => true,
+												['μ', s @ ..] => {
+													super::push(out, 7349);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['π', 'α', s @ ..] => {
+									super::push(out, 6667);
+									s.is_empty()
+								}
+								['ρ', s @ ..] => {
+									super::push(out, 6668);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 2001);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3802);
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 5553);
+							match s {
+								[] => true,
+								['υ', s @ ..] => {
+									super::push(out, 6669);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['θ', s @ ..] => {
+							super::push(out, 5554);
+							match s {
+								[] => true,
+								['η', s @ ..] => {
+									super::push(out, 6670);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 3803);
+					match s {
+						[] => true,
+						['μ', s @ ..] => super::t2::n5590(s, out),
+						['τ', s @ ..] => super::t2::n5591(s, out),
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => super::t2::n3831(s, out),
+				_ => false,
+			}
+		}
+		['σ', s @ ..] => super::t2::n2014(s, out),
+		['υ', s @ ..] => super::t2::n2015(s, out),
+		['ω', s @ ..] => super::t2::n2016(s, out),
+		_ => false,
+	}
+}
+
+/// Words ending -δοσ.
+pub(crate) fn n646(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 641);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 2005);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 3808);
+					s.is_empty()
+				}
+				['γ', s @ ..] => {
+					super::push(out, 3809);
+					s.is_empty()
+				}
+				['δ', s @ ..] => {
+					super::push(out, 3810);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5561);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['κ', s @ ..] => {
+					super::push(out, 3811);
+					s.is_empty()
+				}
+				['λ', s @ ..] => {
+					super::push(out, 3812);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5562);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6673);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['κ', s @ ..] => {
+							super::push(out, 5563);
+							s.is_empty()
+						}
+						['π', s @ ..] => {
+							super::push(out, 5564);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3813);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5565);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['π', s @ ..] => {
+					super::push(out, 3814);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3815);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5566);
+							s.is_empty()
+						}
+						['ε', s @ ..] => {
+							super::push(out, 5567);
+							match s {
+								[] => true,
+								['χ', s @ ..] => {
+									super::push(out, 6674);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 7184);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['β', s @ ..] => {
+			super::push(out, 2006);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3816);
+					match s {
+						[] => true,
+						['ῥ', s @ ..] => {
+							super::push(out, 5568);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 3817);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5569);
+							s.is_empty()
+						}
+						['ο', s @ ..] => {
+							super::push(out, 5570);
+							match s {
+								[] => true,
+								['ῥ', s @ ..] => {
+									super::push(out, 6675);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3818);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5571);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6676);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['γ', s @ ..] => {
+			super::push(out, 2007);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3819);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 5572);
+							match s {
+								[] => true,
+								['υ', s @ ..] => {
+									super::push(out, 6677);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ρ', s @ ..] => {
+							super::push(out, 5573);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6678);
+									match s {
+										[] => true,
+										['μ', s @ ..] => {
+											super::push(out, 7185);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 3820);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5574);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3821);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5575);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 2008);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 3822);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3823);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5576);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 2009);
+			match s {
+				[] => true,
+				['κ', s @ ..] => {
+					super::push(out, 3824);
+					s.is_empty()
+				}
+				['λ', s @ ..] => {
+					super::push(out, 3825);
+					s.is_empty()
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3826);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5577);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['π', s @ ..] => {
+					super::push(out, 3827);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5578);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 2010);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3828);
+					match s {
+						[] => true,
+						['ν', s @ ..] => {
+							super::push(out, 5579);
+							match s {
+								[] => true,
+								['ι', s @ ..] => {
+									super::push(out, 6679);
+									match s {
+										[] => true,
+										['κ', s @ ..] => {
+											super::push(out, 7186);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 3829);
+					match s {
+						[] => true,
+						['ν', s @ ..] => {
+							super::push(out, 5580);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6680);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 3830);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5581);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ν', s @ ..] => {
+			super::push(out, 2011);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3831);
+					s.is_empty()
+				}
+				['ε', s @ ..] => {
+					super::push(out, 3832);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5582);
+							match s {
+								[] => true,
+								['β', s @ ..] => {
+									super::push(out, 6681);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 3833);
+					s.is_empty()
+				}
+				['ο', s @ ..] => {
+					super::push(out, 3834);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 2012);
+			match s {
+				[] => true,
+				['θ', s @ ..] => {
+					super::push(out, 3835);
+					s.is_empty()
+				}
+				['ι', s @ ..] => {
+					super::push(out, 3836);
+					s.is_empty()
+				}
+				['ν', s @ ..] => {
+					super::push(out, 3837);
+					s.is_empty()
+				}
+				['π', s @ ..] => {
+					super::push(out, 3838);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5583);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['σ', s @ ..] => {
+					super::push(out, 3839);
+					s.is_empty()
+				}
+				['φ', s @ ..] => {
+					super::push(out, 3840);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5584);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 2013);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3841);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 5585);
+							s.is_empty()
+						}
+						['ν', s @ ..] => {
+							super::push(out, 5586);
+							s.is_empty()
+						}
+						['π', s @ ..] => {
+							super::push(out, 5587);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6682);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 3842);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5588);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6683);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['χ', s @ ..] => {
+							super::push(out, 5589);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6684);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 2014);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3843);
+					match s {
+						[] => true,
+						['ψ', s @ ..] => {
+							super::push(out, 5590);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['κ', s @ ..] => {
+					super::push(out, 3844);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5591);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 3845);
+					s.is_empty()
+				}
+				['ο', s @ ..] => {
+					super::push(out, 3846);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3847);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5592);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6685);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ω', s @ ..] => {
+			super::push(out, 2015);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -θοσ.
+pub(crate) fn n649(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 644);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 2026);
+			match s {
+				[] => true,
+				['β', s @ ..] => {
+					super::push(out, 3857);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5595);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['γ', s @ ..] => {
+					super::push(out, 3858);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5596);
+							match s {
+								[] => true,
+								['υ', s @ ..] => {
+									super::push(out, 6686);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 3859);
+					match s {
+						[] => true,
+						['ψ', s @ ..] => {
+							super::push(out, 5597);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 3860);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5598);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6687);
+									s.is_empty()
+								}
+								['π', s @ ..] => {
+									super::push(out, 6688);
+									match s {
+										[] => true,
+										['σ', s @ ..] => {
+											super::push(out, 7187);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['π', s @ ..] => {
+							super::push(out, 5599);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6689);
+									match s {
+										[] => true,
+										['ρ', s @ ..] => {
+											super::push(out, 7188);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3861);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5600);
+							s.is_empty()
+						}
+						['α', s @ ..] => {
+							super::push(out, 5601);
+							s.is_empty()
+						}
+						['ρ', s @ ..] => {
+							super::push(out, 5602);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6690);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ν', s @ ..] => {
+					super::push(out, 3862);
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 5603);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['π', s @ ..] => {
+					super::push(out, 3863);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5604);
+							s.is_empty()
+						}
+						['α', s @ ..] => {
+							super::push(out, 5605);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3864);
+					match s {
+						[] => true,
+						['υ', s @ ..] => {
+							super::push(out, 5606);
+							match s {
+								[] => true,
+								['π', s @ ..] => {
+									super::push(out, 6691);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3865);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5607);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 2027);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 3866);
+					s.is_empty()
+				}
+				['γ', s @ ..] => {
+					super::push(out, 3867);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5608);
+							match s {
+								[] => true,
+								['μ', s @ ..] => {
+									super::push(out, 6692);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 3868);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5609);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ῥ', s @ ..] => {
+					super::push(out, 3869);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 2028);
+			match s {
+				[] => true,
+				['λ', s @ ..] => {
+					super::push(out, 3870);
+					s.is_empty()
+				}
+				['ο', s @ ..] => {
+					super::push(out, 3871);
+					match s {
+						[] => true,
+						['β', s @ ..] => {
+							super::push(out, 5610);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3872);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5611);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 2029);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3873);
+					s.is_empty()
+				}
+				['γ', s @ ..] => {
+					super::push(out, 3874);
+					s.is_empty()
+				}
+				['κ', s @ ..] => {
+					super::push(out, 3875);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5612);
+							match s {
+								[] => true,
+								['λ', s @ ..] => {
+									super::push(out, 6693);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 3876);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5613);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['π', s @ ..] => {
+					super::push(out, 3877);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3878);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5614);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['λ', s @ ..] => {
+			super::push(out, 2030);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3879);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ν', s @ ..] => {
+			super::push(out, 2031);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3880);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5615);
+							s.is_empty()
+						}
+						['κ', s @ ..] => {
+							super::push(out, 5616);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6694);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ν', s @ ..] => {
+							super::push(out, 5617);
+							match s {
+								[] => true,
+								['η', s @ ..] => {
+									super::push(out, 6695);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 3881);
+					match s {
+						[] => true,
+						['β', s @ ..] => {
+							super::push(out, 5618);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6696);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['π', s @ ..] => {
+							super::push(out, 5619);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6697);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ρ', s @ ..] => {
+							super::push(out, 5620);
+							match s {
+								[] => true,
+								['β', s @ ..] => {
+									super::push(out, 6698);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 3882);
+					match s {
+						[] => true,
+						['β', s @ ..] => {
+							super::push(out, 5621);
+							match s {
+								[] => true,
+								['ε', 'ρ', 'ε', 'τ', s @ ..] => {
+									super::push(out, 6699);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['λ', s @ ..] => {
+							super::push(out, 5622);
+							match s {
+								[] => true,
+								['π', s @ ..] => {
+									super::push(out, 6700);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['μ', s @ ..] => {
+							super::push(out, 5623);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6701);
+									s.is_empty()
+								}
+								['ρ', s @ ..] => {
+									super::push(out, 6702);
+									s.is_empty()
+								}
+								['σ', s @ ..] => {
+									super::push(out, 6703);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ρ', s @ ..] => {
+							super::push(out, 5624);
+							match s {
+								[] => true,
+								['η', 'μ', s @ ..] => {
+									super::push(out, 6704);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['τ', s @ ..] => {
+							super::push(out, 5625);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 3883);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 5626);
+							s.is_empty()
+						}
+						['ρ', s @ ..] => {
+							super::push(out, 5627);
+							match s {
+								[] => true,
+								['γ', s @ ..] => {
+									super::push(out, 6705);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3884);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 2032);
+			s.is_empty()
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 2033);
+			s.is_empty()
+		}
+		['σ', s @ ..] => super::t2::n2046(s, out),
+		['τ', s @ ..] => super::t2::n2047(s, out),
+		['υ', s @ ..] => super::t2::n2048(s, out),
+		['χ', s @ ..] => super::t2::n2049(s, out),
+		_ => false,
+	}
+}
+
+/// Words ending -ιοσ.
+pub(crate) fn n650(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 645);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 2038);
+			match s {
+				[] => true,
+				['δ', s @ ..] => {
+					super::push(out, 3900);
+					s.is_empty()
+				}
+				['λ', s @ ..] => {
+					super::push(out, 3901);
+					s.is_empty()
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3902);
+					s.is_empty()
+				}
+				['ν', s @ ..] => {
+					super::push(out, 3903);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5642);
+							match s {
+								[] => true,
+								['μ', s @ ..] => {
+									super::push(out, 6712);
+									match s {
+										[] => true,
+										['υ', s @ ..] => {
+											super::push(out, 7190);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3904);
+					s.is_empty()
+				}
+				['σ', s @ ..] => {
+					super::push(out, 3905);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5643);
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6713);
+									match s {
+										[] => true,
+										['χ', s @ ..] => {
+											super::push(out, 7191);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['χ', s @ ..] => {
+					super::push(out, 3906);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5644);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['β', s @ ..] => {
+			super::push(out, 2039);
+			match s {
+				[] => true,
+				['μ', s @ ..] => {
+					super::push(out, 3907);
+					match s {
+						[] => true,
+						['υ', s @ ..] => {
+							super::push(out, 5645);
+							match s {
+								[] => true,
+								['σ', s @ ..] => {
+									super::push(out, 6714);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ω', s @ ..] => {
+					super::push(out, 3908);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5646);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['δ', s @ ..] => {
+			super::push(out, 2040);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 3909);
+					s.is_empty()
+				}
+				['ω', s @ ..] => {
+					super::push(out, 3910);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5647);
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6715);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 2041);
+			match s {
+				[] => true,
+				['λ', s @ ..] => {
+					super::push(out, 3911);
+					s.is_empty()
+				}
+				['ν', s @ ..] => {
+					super::push(out, 3912);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5648);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6716);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['θ', s @ ..] => {
+			super::push(out, 2042);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 3913);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['λ', s @ ..] => {
+			super::push(out, 2043);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3914);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5649);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['η', s @ ..] => {
+					super::push(out, 3915);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 5650);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 3916);
+					s.is_empty()
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3917);
+					match s {
+						[] => true,
+						['β', s @ ..] => {
+							super::push(out, 5651);
+							s.is_empty()
+						}
+						['γ', s @ ..] => {
+							super::push(out, 5652);
+							s.is_empty()
+						}
+						['ο', s @ ..] => {
+							super::push(out, 5653);
+							match s {
+								[] => true,
+								['γ', s @ ..] => {
+									super::push(out, 6717);
+									match s {
+										[] => true,
+										['υ', s @ ..] => {
+											super::push(out, 7192);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ω', s @ ..] => {
+					super::push(out, 3918);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ν', s @ ..] => {
+			super::push(out, 2044);
+			match s {
+				[] => true,
+				['η', s @ ..] => {
+					super::push(out, 3919);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5654);
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6718);
+									match s {
+										[] => true,
+										['γ', s @ ..] => {
+											super::push(out, 7193);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 2045);
+			match s {
+				[] => true,
+				['λ', s @ ..] => {
+					super::push(out, 3920);
+					s.is_empty()
+				}
+				['π', s @ ..] => {
+					super::push(out, 3921);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['π', s @ ..] => {
+			super::push(out, 2046);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3922);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3923);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5655);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6719);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3924);
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 5656);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 2047);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3925);
+					match s {
+						[] => true,
+						['δ', s @ ..] => {
+							super::push(out, 5657);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6720);
+									match s {
+										[] => true,
+										['π', s @ ..] => {
+											super::push(out, 7194);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['δ', s @ ..] => {
+					super::push(out, 3926);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5658);
+							match s {
+								[] => true,
+								['ρ', s @ ..] => {
+									super::push(out, 6721);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 3927);
+					s.is_empty()
+				}
+				['κ', s @ ..] => {
+					super::push(out, 3928);
+					s.is_empty()
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3929);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5659);
+							s.is_empty()
+						}
+						['σ', s @ ..] => {
+							super::push(out, 5660);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ω', s @ ..] => {
+					super::push(out, 3930);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 5661);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['σ', s @ ..] => {
+			super::push(out, 2048);
+			s.is_empty()
+		}
+		['τ', s @ ..] => {
+			super::push(out, 2049);
+			match s {
+				[] => true,
+				['ν', s @ ..] => {
+					super::push(out, 3931);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 2050);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 3932);
+					s.is_empty()
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3933);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5662);
+							match s {
+								[] => true,
+								['π', s @ ..] => {
+									super::push(out, 6722);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['φ', s @ ..] => {
+			super::push(out, 2051);
+			match s {
+				[] => true,
+				['μ', s @ ..] => {
+					super::push(out, 3934);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5663);
+							s.is_empty()
+						}
+						['υ', s @ ..] => {
+							super::push(out, 5664);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ψ', s @ ..] => {
+			super::push(out, 2052);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 3935);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -κοσ.
+pub(crate) fn n651(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 646);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 2053);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 3936);
+					s.is_empty()
+				}
+				['δ', s @ ..] => {
+					super::push(out, 3937);
+					s.is_empty()
+				}
+				['θ', s @ ..] => {
+					super::push(out, 3938);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 5665);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 3939);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5666);
+							match s {
+								[] => true,
+								['μ', s @ ..] => {
+									super::push(out, 6723);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['υ', s @ ..] => {
+							super::push(out, 5667);
+							match s {
+								[] => true,
+								['θ', s @ ..] => {
+									super::push(out, 6724);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3940);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5668);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6725);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3941);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5669);
+							s.is_empty()
+						}
+						['δ', s @ ..] => {
+							super::push(out, 5670);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['σ', s @ ..] => {
+					super::push(out, 3942);
+					s.is_empty()
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3943);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5671);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6726);
+									match s {
+										[] => true,
+										['π', s @ ..] => {
+											super::push(out, 7195);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['σ', s @ ..] => {
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6727);
+									s.is_empty()
+								}
+								['ι', s @ ..] => {
+									super::push(out, 6728);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['τ', s @ ..] => {
+							super::push(out, 5672);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['φ', s @ ..] => {
+					super::push(out, 3944);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5673);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ψ', s @ ..] => {
+					super::push(out, 3945);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['γ', s @ ..] => {
+			super::push(out, 2054);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3946);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5674);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 3947);
+					match s {
+						[] => true,
+						['ῥ', s @ ..] => {
+							super::push(out, 5675);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6729);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ι', 'ρ', s @ ..] => {
+					super::push(out, 3948);
+					match s {
+						[] => true,
+						['θ', s @ ..] => {
+							super::push(out, 5676);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 3949);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5677);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6730);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 2055);
+			match s {
+				[] => true,
+				['λ', s @ ..] => {
+					super::push(out, 3950);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5678);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 2056);
+			match s {
+				[] => true,
+				['β', s @ ..] => {
+					super::push(out, 3951);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5679);
+							match s {
+								[] => true,
+								['β', s @ ..] => {
+									super::push(out, 6731);
+									match s {
+										[] => true,
+										['μ', s @ ..] => {
+											super::push(out, 7196);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['θ', s @ ..] => {
+					super::push(out, 3952);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 5680);
+							match s {
+								[] => true,
+								['π', s @ ..] => {
+									super::push(out, 6732);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3953);
+					s.is_empty()
+				}
+				['ν', s @ ..] => {
+					super::push(out, 3954);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5681);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['σ', s @ ..] => {
+					super::push(out, 3955);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 2057);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3956);
+					s.is_empty()
+				}
+				['β', s @ ..] => {
+					super::push(out, 3957);
+					s.is_empty()
+				}
+				['δ', s @ ..] => {
+					super::push(out, 3958);
+					match s {
+						[] => true,
+						['ν', s @ ..] => {
+							super::push(out, 5682);
+							match s {
+								[] => true,
+								['υ', s @ ..] => {
+									super::push(out, 6733);
+									match s {
+										[] => true,
+										['σ', s @ ..] => {
+											super::push(out, 7197);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 3959);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5683);
+							s.is_empty()
+						}
+						['ν', s @ ..] => {
+							super::push(out, 5684);
+							s.is_empty()
+						}
+						['ρ', s @ ..] => {
+							super::push(out, 5685);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6734);
+									s.is_empty()
+								}
+								['ε', s @ ..] => {
+									super::push(out, 6735);
+									match s {
+										[] => true,
+										['π', s @ ..] => {
+											super::push(out, 7198);
+											match s {
+												[] => true,
+												['υ', s @ ..] => {
+													super::push(out, 7352);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ν', s @ ..] => {
+					super::push(out, 3960);
+					s.is_empty()
+				}
+				['ο', s @ ..] => {
+					super::push(out, 3961);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5686);
+							s.is_empty()
+						}
+						['τ', s @ ..] => {
+							super::push(out, 5687);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 3962);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5688);
+							match s {
+								[] => true,
+								['τ', s @ ..] => {
+									super::push(out, 6736);
+									match s {
+										[] => true,
+										['σ', s @ ..] => {
+											super::push(out, 7199);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3963);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5689);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['κ', s @ ..] => {
+			super::push(out, 2058);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3964);
+					s.is_empty()
+				}
+				['ε', s @ ..] => {
+					super::push(out, 3965);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5690);
+							match s {
+								[] => true,
+								['ε', s @ ..] => {
+									super::push(out, 6737);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['λ', s @ ..] => {
+			super::push(out, 2059);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 3966);
+					match s {
+						[] => true,
+						['χ', s @ ..] => super::t2::n5727(s, out),
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => super::t2::n3994(s, out),
+				['ο', s @ ..] => {
+					super::push(out, 3968);
+					s.is_empty()
+				}
+				['υ', s @ ..] => super::t2::n3996(s, out),
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => super::t2::n2072(s, out),
+		['ρ', s @ ..] => super::t2::n2073(s, out),
+		['σ', s @ ..] => super::t2::n2074(s, out),
+		['υ', s @ ..] => super::t2::n2075(s, out),
+		_ => false,
+	}
+}
+
+/// Words ending -λοσ.
+pub(crate) fn n652(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 647);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 2064);
+			match s {
+				[] => true,
+				['γ', s @ ..] => {
+					super::push(out, 3985);
+					s.is_empty()
+				}
+				['δ', s @ ..] => {
+					super::push(out, 3986);
+					s.is_empty()
+				}
+				['ι', 'γ', s @ ..] => {
+					super::push(out, 3987);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 5707);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6748);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['σ', s @ ..] => {
+					super::push(out, 3988);
+					match s {
+						[] => true,
+						['σ', 'ε', s @ ..] => {
+							super::push(out, 5708);
+							match s {
+								[] => true,
+								['θ', s @ ..] => {
+									super::push(out, 6749);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['τ', 'ι', s @ ..] => {
+					super::push(out, 3989);
+					s.is_empty()
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3990);
+					s.is_empty()
+				}
+				['φ', s @ ..] => {
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5709);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6750);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['μ', s @ ..] => {
+							super::push(out, 5710);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6751);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['β', s @ ..] => {
+			super::push(out, 2065);
+			match s {
+				[] => true,
+				['μ', s @ ..] => {
+					super::push(out, 3991);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 5711);
+							match s {
+								[] => true,
+								['σ', s @ ..] => {
+									super::push(out, 6752);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 3992);
+					match s {
+						[] => true,
+						['β', s @ ..] => {
+							super::push(out, 5712);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['γ', s @ ..] => {
+			super::push(out, 2066);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 3993);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5713);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 2067);
+			match s {
+				[] => true,
+				['β', s @ ..] => {
+					super::push(out, 3994);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5714);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['γ', s @ ..] => {
+					super::push(out, 3995);
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 5715);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6753);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['κ', s @ ..] => {
+					super::push(out, 3996);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5716);
+							match s {
+								[] => true,
+								['φ', s @ ..] => {
+									super::push(out, 6754);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ι', s @ ..] => {
+							super::push(out, 5717);
+							match s {
+								[] => true,
+								['σ', s @ ..] => {
+									super::push(out, 6755);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['σ', s @ ..] => {
+							super::push(out, 5718);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 3997);
+					s.is_empty()
+				}
+				['π', s @ ..] => {
+					super::push(out, 3998);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 5719);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 3999);
+					s.is_empty()
+				}
+				['υ', s @ ..] => {
+					super::push(out, 4000);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 5720);
+							s.is_empty()
+						}
+						['π', s @ ..] => {
+							super::push(out, 5721);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['φ', s @ ..] => {
+					super::push(out, 4001);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5722);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6756);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 2068);
+			match s {
+				[] => true,
+				['β', s @ ..] => {
+					super::push(out, 4002);
+					s.is_empty()
+				}
+				['ζ', s @ ..] => {
+					super::push(out, 4003);
+					s.is_empty()
+				}
+				['κ', s @ ..] => {
+					super::push(out, 4004);
+					s.is_empty()
+				}
+				['μ', s @ ..] => {
+					super::push(out, 4005);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5723);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6757);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['π', s @ ..] => {
+					super::push(out, 4006);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5724);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6758);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 7202);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['χ', s @ ..] => {
+					super::push(out, 4007);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['θ', s @ ..] => {
+			super::push(out, 2069);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4008);
+					s.is_empty()
+				}
+				['υ', s @ ..] => {
+					super::push(out, 4009);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 2070);
+			match s {
+				[] => true,
+				['β', s @ ..] => {
+					super::push(out, 4010);
+					s.is_empty()
+				}
+				['γ', s @ ..] => {
+					super::push(out, 4011);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5725);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 4012);
+					match s {
+						[] => true,
+						['δ', s @ ..] => {
+							super::push(out, 5726);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6759);
+									match s {
+										[] => true,
+										['κ', s @ ..] => {
+											super::push(out, 7203);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['χ', s @ ..] => {
+							super::push(out, 5727);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6760);
+									match s {
+										[] => true,
+										['ν', s @ ..] => {
+											super::push(out, 7204);
+											match s {
+												[] => true,
+												['ο', s @ ..] => {
+													super::push(out, 7353);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['θ', s @ ..] => {
+					super::push(out, 4013);
+					s.is_empty()
+				}
+				['μ', s @ ..] => {
+					super::push(out, 4014);
+					s.is_empty()
+				}
+				['π', s @ ..] => {
+					super::push(out, 4015);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 5728);
+							s.is_empty()
+						}
+						['σ', s @ ..] => {
+							super::push(out, 5729);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 4016);
+					match s {
+						[] => true,
+						['δ', s @ ..] => {
+							super::push(out, 5730);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['σ', s @ ..] => {
+					super::push(out, 4017);
+					s.is_empty()
+				}
+				['τ', s @ ..] => {
+					super::push(out, 4018);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5731);
+							s.is_empty()
+						}
+						['ο', s @ ..] => {
+							super::push(out, 5732);
+							match s {
+								[] => true,
+								['π', s @ ..] => {
+									super::push(out, 6761);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['υ', s @ ..] => {
+							super::push(out, 5733);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['φ', s @ ..] => {
+					super::push(out, 4019);
+					s.is_empty()
+				}
+				['χ', s @ ..] => {
+					super::push(out, 4020);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5734);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['κ', s @ ..] => {
+			super::push(out, 2071);
+			match s {
+				[] => true,
+				['γ', s @ ..] => {
+					super::push(out, 4021);
+					s.is_empty()
+				}
+				['ι', s @ ..] => {
+					super::push(out, 4022);
+					s.is_empty()
+				}
+				['σ', s @ ..] => {
+					super::push(out, 4023);
+					s.is_empty()
+				}
+				['υ', s @ ..] => {
+					super::push(out, 4024);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['λ', s @ ..] => super::t2::n2084(s, out),
+		['ο', s @ ..] => super::t2::n2085(s, out),
+		['π', s @ ..] => {
+			super::push(out, 2074);
+			match s {
+				[] => true,
+				['ε', s @ ..] => super::t2::n4067(s, out),
+				_ => false,
+			}
+		}
+		['τ', s @ ..] => super::t2::n2087(s, out),
+		['υ', s @ ..] => super::t2::n2088(s, out),
+		['χ', s @ ..] => super::t2::n2089(s, out),
+		['ω', s @ ..] => super::t2::n2090(s, out),
+		_ => false,
+	}
 }
 
 /// Words ending -μοσ.
-pub(crate) fn n631(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(31, 0.5759365), (13, 0.16992447), (0, 0.1416495), (102, 0.026672771), (321, 0.01965362), (16, 0.00952163), (859, 0.009155413), (93, 0.004745556), (43, 0.004730297), (14, 0.0046692607), (626, 0.0046082246), (314, 0.0046082246), (632, 0.0045777066), (876, 0.0045777066), (26, 0.0032806897), (440, 0.0026092927)], 0.99092084);
-    match s {
-        [] => true,
-        ['α', s @ ..] => {
-            out.push(&[(13, 0.6410315), (31, 0.16372931), (0, 0.07965209), (14, 0.05243), (440, 0.02995346), (441, 0.014847028), (442, 0.0074158846), (102, 0.002777142), (321, 0.002044709)], 0.9938811);
-            match s {
-                [] => true,
-                ['δ', s @ ..] => {
-                    out.push(&[(13, 0.57051957), (440, 0.15783933), (31, 0.081864655), (441, 0.07884336), (0, 0.039826047), (442, 0.039429314), (14, 0.026215)], 0.9945373);
-                    s.is_empty()
-                }
-                ['λ', s @ ..] => {
-                    out.push(&[(13, 0.5470054), (31, 0.22124057), (0, 0.19320974), (14, 0.01747158), (440, 0.009979401), (441, 0.004943923), (442, 0.0024719615)], 0.9963226);
-                    match s {
-                        [] => true,
-                        ['α', s @ ..] => {
-                            out.push(&[(13, 0.77351034), (31, 0.11062791), (0, 0.09660487), (14, 0.008743419), (440, 0.0049897004), (441, 0.0024719615)], 0.9969482);
-                            s.is_empty()
-                        }
-                        ['υ', s @ ..] => {
-                            out.push(&[(31, 0.48082703), (13, 0.36467537), (0, 0.12881666), (14, 0.011657893), (440, 0.0066529335), (441, 0.0032959487)], 0.99592584);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(13, 0.71367973), (14, 0.18414588), (31, 0.054581523), (0, 0.026550699), (440, 0.009979401), (441, 0.004943923), (442, 0.0024719615)], 0.99635315);
-                    match s {
-                        [] => true,
-                        ['η', s @ ..] => {
-                            out.push(&[(13, 0.47579157), (14, 0.45609218), (31, 0.036392767), (0, 0.017700465), (440, 0.0066529335), (441, 0.0032959487)], 0.99592584);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['γ', s @ ..] => {
-            out.push(&[(31, 0.8767986), (0, 0.085557334), (13, 0.022659648), (102, 0.003555352), (321, 0.0026245518)], 0.9911955);
-            match s {
-                [] => true,
-                ['ο', s @ ..] => {
-                    out.push(&[(31, 0.5845274), (0, 0.39037156), (13, 0.015106432), (102, 0.0023651484)], 0.9923705);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ε', s @ ..] => {
-            out.push(&[(13, 0.414374), (31, 0.18429847), (632, 0.16147096), (26, 0.10771344), (27, 0.05333028), (0, 0.045319296), (102, 0.0085297935), (321, 0.006286717), (16, 0.0030518044), (859, 0.0029297322)], 0.9873045);
-            match s {
-                [] => true,
-                ['λ', s @ ..] => {
-                    out.push(&[(13, 0.5657435), (632, 0.26459143), (31, 0.073716335), (26, 0.04309148), (27, 0.021332113), (0, 0.018127719), (102, 0.003418021), (321, 0.0025177386)], 0.99253833);
-                    match s {
-                        [] => true,
-                        ['α', 'ι', s @ ..] => {
-                            out.push(&[(632, 0.5097276), (13, 0.3771725), (31, 0.04914931), (26, 0.028717479), (27, 0.014221408), (0, 0.012085145), (102, 0.0022735943)], 0.99334705);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ν', s @ ..] => {
-                    out.push(&[(13, 0.3319295), (26, 0.27141222), (27, 0.13537805), (31, 0.11342031), (632, 0.099366754), (0, 0.027893493), (102, 0.0052491035), (321, 0.0038757916)], 0.9885252);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['η', s @ ..] => {
-            out.push(&[(31, 0.59638363), (321, 0.16069277), (102, 0.09997711), (13, 0.06430152), (0, 0.053604946), (16, 0.0036011292), (859, 0.003463798)], 0.9820249);
-            match s {
-                [] => true,
-                ['δ', s @ ..] => {
-                    out.push(&[(31, 0.36308843), (321, 0.34441137), (102, 0.20546272), (13, 0.03915465), (0, 0.03263905), (16, 0.0021972992), (859, 0.002105745)], 0.98905927);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['θ', s @ ..] => {
-            out.push(&[(31, 0.91071945), (13, 0.03576715), (0, 0.029816128), (102, 0.00561532), (321, 0.004135195), (16, 0.0019989319)], 0.9880522);
-            s.is_empty()
-        }
-        ['ι', s @ ..] => {
-            out.push(&[(31, 0.43941405), (13, 0.23855954), (859, 0.14416724), (102, 0.075242236), (626, 0.07208362), (0, 0.020233463), (321, 0.00280766)], 0.9925078);
-            match s {
-                [] => true,
-                ['λ', s @ ..] => {
-                    out.push(&[(13, 0.3692836), (626, 0.2860456), (31, 0.21971466), (859, 0.07208362), (102, 0.03761349), (0, 0.010116732)], 0.99485767);
-                    s.is_empty()
-                }
-                ['μ', s @ ..] => {
-                    out.push(&[(859, 0.42944992), (31, 0.2929427), (13, 0.15904479), (102, 0.050156403), (626, 0.04806592), (0, 0.013488975)], 0.9931487);
-                    s.is_empty()
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(31, 0.57576865), (102, 0.2300908), (13, 0.09542992), (859, 0.057663843), (626, 0.02883955), (0, 0.008087282)], 0.99588007);
-                    s.is_empty()
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(13, 0.49237812), (31, 0.2929427), (859, 0.09611658), (102, 0.050156403), (626, 0.04806592), (0, 0.013488975)], 0.9931487);
-                    s.is_empty()
-                }
-                ['σ', s @ ..] => {
-                    out.push(&[(859, 0.42944992), (31, 0.2929427), (13, 0.15904479), (102, 0.050156403), (626, 0.04806592), (0, 0.013488975)], 0.9931487);
-                    s.is_empty()
-                }
-                ['χ', s @ ..] => {
-                    out.push(&[(13, 0.49237812), (31, 0.2929427), (859, 0.09611658), (102, 0.050156403), (626, 0.04806592), (0, 0.013488975)], 0.9931487);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['λ', s @ ..] => {
-            out.push(&[(31, 0.572427), (13, 0.14886701), (0, 0.14259556), (16, 0.11322194), (102, 0.0059205005), (321, 0.0043640803), (859, 0.00202945)], 0.98942554);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(31, 0.64310676), (13, 0.16221866), (16, 0.1533074), (0, 0.035645075)], 0.9942779);
-                    match s {
-                        [] => true,
-                        ['θ', 'φ', 'ο', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['κ', s @ ..] => {
-                                    out.push(&[(16, 0.43553826), (31, 0.42873275), (13, 0.108140685), (0, 0.023758298)], 0.99617);
-                                    s.is_empty()
-                                }
-                                ['υ', s @ ..] => {
-                                    out.push(&[(13, 0.44147402), (31, 0.42873275), (16, 0.10220493), (0, 0.023758298)], 0.99617);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(0, 0.42839703), (31, 0.38162813), (13, 0.09924468), (16, 0.075486384), (102, 0.003952087), (321, 0.0029144732)], 0.9916228);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['μ', s @ ..] => {
-            out.push(&[(31, 0.3291066), (43, 0.28841078), (13, 0.09709316), (102, 0.08667125), (0, 0.080933854), (423, 0.07142748), (321, 0.01123064), (16, 0.005447471), (859, 0.0052338447), (93, 0.002716106), (14, 0.0026703288), (626, 0.0026398108), (314, 0.0026398108), (632, 0.0026092927), (876, 0.0026092927)], 0.9914397);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(43, 0.48517585), (31, 0.20253299), (423, 0.120881975), (13, 0.05975433), (102, 0.05333028), (0, 0.049805447), (321, 0.006912337), (16, 0.0033569848), (859, 0.0032196536)], 0.98496985);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ο', s @ ..] => {
-            out.push(&[(0, 0.66857404), (13, 0.23793393), (31, 0.058548868), (314, 0.028793775)], 0.9938506);
-            match s {
-                [] => true,
-                ['δ', 'ο', 'ρ', s @ ..] => {
-                    out.push(&[(13, 0.49196613), (0, 0.44571602), (31, 0.03903258), (314, 0.01919585)], 0.9959106);
-                    s.is_empty()
-                }
-                ['λ', 'φ', 'ο', s @ ..] => {
-                    out.push(&[(13, 0.49196613), (0, 0.44571602), (31, 0.03903258), (314, 0.01919585)], 0.9959106);
-                    s.is_empty()
-                }
-                ['ν', s @ ..] => {
-                    out.push(&[(0, 0.8013275), (13, 0.114412144), (31, 0.07884336), (314, 0.0044708936)], 0.99905396);
-                    match s {
-                        [] => true,
-                        ['ο', 'π', s @ ..] => {
-                            out.push(&[(0, 0.5342184), (13, 0.4096132), (31, 0.05256733), (314, 0.0029755093)], 0.9993744);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(0, 0.58181125), (13, 0.31174183), (314, 0.09485008), (31, 0.010498207)], 0.99890137);
-                    match s {
-                        [] => true,
-                        ['β', s @ ..] => {
-                            out.push(&[(0, 0.78553444), (13, 0.15986878), (314, 0.04864576), (31, 0.005386435)], 0.9994354);
-                            s.is_empty()
-                        }
-                        ['δ', s @ ..] => {
-                            out.push(&[(13, 0.57975125), (0, 0.38617533), (314, 0.030350195), (31, 0.0033569848)], 0.9996338);
-                            s.is_empty()
-                        }
-                        ['τ', s @ ..] => {
-                            out.push(&[(314, 0.39656672), (0, 0.3878691), (13, 0.20782788), (31, 0.0070038913)], 0.9992676);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['τ', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['ο', 'ι', s @ ..] => {
-                            out.push(&[(13, 0.49196613), (0, 0.44571602), (31, 0.03903258), (314, 0.01919585)], 0.9959106);
-                            s.is_empty()
-                        }
-                        ['σ', s @ ..] => {
-                            out.push(&[(13, 0.49196613), (0, 0.44571602), (31, 0.03903258), (314, 0.01919585)], 0.9959106);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['ρ', s @ ..] => {
-            out.push(&[(31, 0.6920882), (0, 0.2468452), (13, 0.036743727), (102, 0.0057679103), (321, 0.004242008), (16, 0.002059968)], 0.987747);
-            match s {
-                [] => true,
-                ['ο', 'τ', s @ ..] => {
-                    out.push(&[(0, 0.4979019), (31, 0.4614023), (13, 0.02449073), (102, 0.0038452735), (321, 0.002838178)], 0.99047834);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['σ', s @ ..] => {
-            out.push(&[(31, 0.89330894), (13, 0.047989625), (321, 0.04209964), (0, 0.0063935304), (455, 0.0039978637), (923, 0.0039978637)], 0.9977875);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(31, 0.9893339), (13, 0.004806592), (321, 0.00421149)], 0.998352);
-                    s.is_empty()
-                }
-                ['ε', s @ ..] => {
-                    out.push(&[(31, 0.54532695), (13, 0.37627223), (455, 0.034134433), (923, 0.034134433), (321, 0.00842298)], 0.998291);
-                    match s {
-                        [] => true,
-                        ['δ', s @ ..] => {
-                            out.push(&[(13, 0.63131154), (31, 0.25104144), (455, 0.057373922), (923, 0.057373922), (321, 0.0024109255)], 0.9995117);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ι', s @ ..] => {
-                    out.push(&[(31, 0.9350881), (321, 0.062470436)], 0.99755853);
-                    match s {
-                        [] => true,
-                        ['δ', s @ ..] => {
-                            out.push(&[(31, 0.71754026), (321, 0.28123903)], 0.9987793);
-                            match s {
-                                [] => true,
-                                ['η', s @ ..] => {
-                                    out.push(&[(321, 0.5208209), (31, 0.47837034)], 0.9991913);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['ν', 'α', s @ ..] => {
-                            out.push(&[(31, 0.67933166), (321, 0.31950867)], 0.99884033);
-                            match s {
-                                [] => true,
-                                ['ι', s @ ..] => {
-                                    out.push(&[(321, 0.5779965), (31, 0.42128634)], 0.99928284);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['π', s @ ..] => {
-                            out.push(&[(31, 0.6233921), (321, 0.3749752)], 0.9983673);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(31, 0.79404896), (0, 0.11679255), (13, 0.042664226), (321, 0.03741512), (455, 0.003555352), (923, 0.003555352)], 0.99803156);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['τ', s @ ..] => {
-            out.push(&[(31, 0.5379721), (0, 0.32082093), (13, 0.084962234), (102, 0.013336386), (321, 0.00982681), (16, 0.004760815), (859, 0.0045777066), (93, 0.0023651484), (43, 0.0023651484), (14, 0.0023346303), (626, 0.0023041123), (314, 0.0023041123), (632, 0.0022888533), (876, 0.0022888533)], 0.9925078);
-            match s {
-                [] => true,
-                ['ο', s @ ..] => {
-                    out.push(&[(0, 0.54721904), (31, 0.35864806), (13, 0.05664149), (102, 0.00889601), (321, 0.0065461206), (16, 0.0031738766), (859, 0.0030518044)], 0.9841764);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['υ', s @ ..] => {
-            out.push(&[(13, 0.4003357), (31, 0.34934005), (0, 0.067200735), (102, 0.059815366), (16, 0.05786221), (93, 0.057328146), (321, 0.0022278172)], 0.99411005);
-            match s {
-                [] => true,
-                ['θ', s @ ..] => {
-                    out.push(&[(13, 0.36748302), (31, 0.3466697), (0, 0.2110933), (102, 0.024414435), (16, 0.023620967), (93, 0.023392081)], 0.9966735);
-                    match s {
-                        [] => true,
-                        ['υ', s @ ..] => {
-                            out.push(&[(13, 0.5783169), (31, 0.23111315), (0, 0.14073396), (102, 0.016281376), (16, 0.01574731), (93, 0.015594721)], 0.9977874);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['λ', s @ ..] => {
-                    out.push(&[(13, 0.61483175), (93, 0.19520867), (31, 0.1223621), (0, 0.023529412), (102, 0.020950638), (16, 0.020263981)], 0.99714655);
-                    match s {
-                        [] => true,
-                        ['ε', s @ ..] => {
-                            out.push(&[(13, 0.83643854), (93, 0.08288701), (31, 0.05195697), (0, 0.00999466), (102, 0.00889601), (16, 0.008606088)], 0.9987793);
-                            s.is_empty()
-                        }
-                        ['ο', s @ ..] => {
-                            out.push(&[(93, 0.46347752), (13, 0.40988785), (31, 0.08157473), (0, 0.015686275), (102, 0.013962005), (16, 0.013519494)], 0.99810785);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ν', s @ ..] => {
-                    out.push(&[(13, 0.56012815), (16, 0.22314794), (31, 0.13974212), (0, 0.026871137), (102, 0.023926146), (93, 0.02293431)], 0.9967498);
-                    match s {
-                        [] => true,
-                        ['ω', 'υ', s @ ..] => {
-                            out.push(&[(16, 0.48209354), (13, 0.37341878), (31, 0.09315633), (0, 0.017914092), (102, 0.015945679), (93, 0.01528954)], 0.99781793);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(102, 0.37320516), (13, 0.2668803), (31, 0.23289844), (0, 0.04480049), (16, 0.038574807), (93, 0.03822385)], 0.9945831);
-                    s.is_empty()
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(31, 0.67467767), (13, 0.20016785), (0, 0.033600368), (102, 0.029907683), (16, 0.028931106), (93, 0.028656444)], 0.9959411);
-                    s.is_empty()
-                }
-                ['χ', s @ ..] => {
-                    out.push(&[(31, 0.5662318), (13, 0.2668803), (0, 0.04480049), (102, 0.039871823), (16, 0.038574807), (93, 0.03822385)], 0.9945831);
-                    s.is_empty()
-                }
-                ['ῥ', s @ ..] => {
-                    out.push(&[(31, 0.5662318), (13, 0.2668803), (0, 0.04480049), (102, 0.039871823), (16, 0.038574807), (93, 0.03822385)], 0.9945831);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['χ', s @ ..] => {
-            out.push(&[(31, 0.83038074), (13, 0.06796368), (0, 0.056656748), (102, 0.010666057), (321, 0.0078583965), (16, 0.0038147555), (859, 0.0036621653)], 0.98100257);
-            s.is_empty()
-        }
-        ['ω', s @ ..] => {
-            out.push(&[(31, 0.5270161), (102, 0.29788664), (876, 0.09845121), (13, 0.033157855), (0, 0.027634088), (321, 0.0038300145)], 0.9879759);
-            match s {
-                [] => true,
-                ['κ', s @ ..] => {
-                    out.push(&[(102, 0.5319295), (31, 0.35133898), (876, 0.06562905), (13, 0.022110322), (0, 0.018432898), (321, 0.0025635157)], 0.9920043);
-                    s.is_empty()
-                }
-                ['μ', s @ ..] => {
-                    out.push(&[(876, 0.39896238), (31, 0.35133898), (102, 0.19859616), (13, 0.022110322), (0, 0.018432898), (321, 0.0025635157)], 0.9920043);
-                    s.is_empty()
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(102, 0.5319295), (31, 0.35133898), (876, 0.06562905), (13, 0.022110322), (0, 0.018432898), (321, 0.0025635157)], 0.9920043);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n653(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 648);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 2079);
+			match s {
+				[] => true,
+				['δ', s @ ..] => {
+					super::push(out, 4061);
+					s.is_empty()
+				}
+				['λ', s @ ..] => {
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5770);
+							s.is_empty()
+						}
+						['υ', s @ ..] => {
+							super::push(out, 5771);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6778);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 4062);
+					match s {
+						[] => true,
+						['η', s @ ..] => {
+							super::push(out, 5772);
+							match s {
+								[] => true,
+								['χ', s @ ..] => {
+									super::push(out, 6779);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 4063);
+					match s {
+						[] => true,
+						['ο', 'π', 'ο', s @ ..] => {
+							super::push(out, 5773);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 4064);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['γ', s @ ..] => {
+			super::push(out, 2080);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4065);
+					s.is_empty()
+				}
+				['ο', s @ ..] => {
+					super::push(out, 4066);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 2081);
+			match s {
+				[] => true,
+				['λ', s @ ..] => {
+					super::push(out, 4067);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5774);
+							match s {
+								[] => true,
+								['ι', s @ ..] => {
+									super::push(out, 6780);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 7209);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ν', s @ ..] => {
+					super::push(out, 4068);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 2082);
+			match s {
+				[] => true,
+				['δ', s @ ..] => {
+					super::push(out, 4069);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['θ', s @ ..] => {
+			super::push(out, 2083);
+			s.is_empty()
+		}
+		['ι', s @ ..] => {
+			super::push(out, 2084);
+			match s {
+				[] => true,
+				['λ', s @ ..] => {
+					super::push(out, 4070);
+					match s {
+						[] => true,
+						['υ', s @ ..] => {
+							super::push(out, 5775);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6781);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 4071);
+					s.is_empty()
+				}
+				['ο', s @ ..] => {
+					super::push(out, 4072);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 4073);
+					match s {
+						[] => true,
+						['ω', s @ ..] => {
+							super::push(out, 5776);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['σ', s @ ..] => {
+					super::push(out, 4074);
+					s.is_empty()
+				}
+				['χ', s @ ..] => {
+					super::push(out, 4075);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5777);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['λ', s @ ..] => {
+			super::push(out, 2085);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4076);
+					match s {
+						[] => true,
+						['θ', s @ ..] => {
+							super::push(out, 5778);
+							match s {
+								[] => true,
+								['φ', 'ο', s @ ..] => {
+									match s {
+										[] => true,
+										['κ', s @ ..] => {
+											super::push(out, 7210);
+											match s {
+												[] => true,
+												['υ', s @ ..] => {
+													super::push(out, 7355);
+													match s {
+														[] => true,
+														['ε', s @ ..] => super::t2::n7432(s, out),
+														_ => false,
+													}
+												}
+												_ => false,
+											}
+										}
+										['υ', s @ ..] => {
+											super::push(out, 7211);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 4077);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['μ', s @ ..] => {
+			super::push(out, 2086);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4078);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 2087);
+			match s {
+				[] => true,
+				['δ', 'ο', 'ρ', s @ ..] => {
+					super::push(out, 4079);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 5779);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['λ', 'φ', 'ο', s @ ..] => {
+					super::push(out, 4080);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 5780);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ν', s @ ..] => {
+					super::push(out, 4081);
+					match s {
+						[] => true,
+						['ο', 'π', s @ ..] => {
+							super::push(out, 5781);
+							match s {
+								[] => true,
+								['υ', s @ ..] => {
+									super::push(out, 6782);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 4082);
+					match s {
+						[] => true,
+						['β', s @ ..] => {
+							super::push(out, 5782);
+							s.is_empty()
+						}
+						['δ', s @ ..] => {
+							super::push(out, 5783);
+							s.is_empty()
+						}
+						['τ', s @ ..] => {
+							super::push(out, 5784);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 4083);
+					match s {
+						[] => true,
+						['ο', 'ι', s @ ..] => {
+							super::push(out, 5785);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6783);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['σ', s @ ..] => {
+							super::push(out, 5786);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6784);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 2088);
+			match s {
+				[] => true,
+				['ο', s @ ..] => {
+					super::push(out, 4084);
+					match s {
+						[] => true,
+						['τ', s @ ..] => {
+							super::push(out, 5787);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['σ', s @ ..] => {
+			super::push(out, 2089);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4085);
+					s.is_empty()
+				}
+				['ε', s @ ..] => {
+					super::push(out, 4086);
+					match s {
+						[] => true,
+						['δ', s @ ..] => {
+							super::push(out, 5788);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6785);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 4087);
+					match s {
+						[] => true,
+						['δ', s @ ..] => {
+							super::push(out, 5789);
+							match s {
+								[] => true,
+								['η', s @ ..] => {
+									super::push(out, 6786);
+									match s {
+										[] => true,
+										['μ', s @ ..] => {
+											super::push(out, 7212);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['ν', 'α', s @ ..] => {
+							super::push(out, 5790);
+							match s {
+								[] => true,
+								['ι', s @ ..] => {
+									super::push(out, 6787);
+									match s {
+										[] => true,
+										['τ', s @ ..] => {
+											super::push(out, 7213);
+											match s {
+												[] => true,
+												['σ', s @ ..] => {
+													super::push(out, 7356);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['π', s @ ..] => {
+							super::push(out, 5791);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6788);
+									match s {
+										[] => true,
+										['ι', s @ ..] => {
+											super::push(out, 7214);
+											match s {
+												[] => true,
+												['ρ', s @ ..] => {
+													super::push(out, 7357);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 4088);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['τ', s @ ..] => {
+			super::push(out, 2090);
+			match s {
+				[] => true,
+				['ο', s @ ..] => {
+					super::push(out, 4089);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 5792);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => super::t2::n2103(s, out),
+		['χ', s @ ..] => {
+			super::push(out, 2092);
+			s.is_empty()
+		}
+		['ω', s @ ..] => {
+			super::push(out, 2093);
+			match s {
+				[] => true,
+				['κ', s @ ..] => {
+					super::push(out, 4096);
+					s.is_empty()
+				}
+				['μ', s @ ..] => {
+					super::push(out, 4097);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 4098);
+					match s {
+						[] => true,
+						['β', s @ ..] => {
+							super::push(out, 5797);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -νοσ.
-pub(crate) fn n632(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(31, 0.24170291), (13, 0.1944152), (0, 0.1506218), (275, 0.10119783), (16, 0.061417565), (102, 0.035172045), (93, 0.029633021), (26, 0.019867247), (606, 0.016861219), (74, 0.016662853), (14, 0.016510261), (55, 0.013916228), (43, 0.012771801), (27, 0.0099336235), (423, 0.008468757), (75, 0.008316167), (286, 0.005645838), (321, 0.004242008), (692, 0.00421149), (796, 0.00421149), (1012, 0.00421149), (1040, 0.00421149), (1052, 0.00421149), (1099, 0.00421149), (115, 0.0035706111), (410, 0.002822919), (287, 0.002822919), (195, 0.00280766), (1057, 0.00280766)], 0.9874571);
-    match s {
-        [] => true,
-        ['α', s @ ..] => {
-            out.push(&[(31, 0.3632105), (13, 0.30774397), (16, 0.13289082), (606, 0.064026855), (93, 0.032684825), (74, 0.03121996), (0, 0.023865111), (75, 0.01560998), (26, 0.011215381), (27, 0.0056000613), (275, 0.0032196536), (941, 0.0026398108)], 0.99392694);
-            match s {
-                [] => true,
-                ['β', s @ ..] => {
-                    out.push(&[(13, 0.5165026), (31, 0.24663158), (93, 0.15219349), (16, 0.03796445), (606, 0.018295567), (74, 0.008911269), (0, 0.006820783), (75, 0.0044556344), (26, 0.0032043946)], 0.9949798);
-                    match s {
-                        [] => true,
-                        ['ι', s @ ..] => {
-                            out.push(&[(13, 0.6721599), (93, 0.21739529), (31, 0.08221561), (16, 0.012649729), (606, 0.0061036088), (74, 0.0029755093), (0, 0.0022735943)], 0.99577326);
-                            s.is_empty()
-                        }
-                        ['λ', s @ ..] => {
-                            out.push(&[(31, 0.4977493), (13, 0.34433508), (93, 0.10145724), (16, 0.025314717), (606, 0.012191959), (74, 0.0059510185), (0, 0.0045471885), (75, 0.0029755093), (26, 0.002136263)], 0.99665827);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['γ', s @ ..] => {
-                    out.push(&[(31, 0.28290227), (74, 0.21779202), (606, 0.18484779), (75, 0.10890364), (13, 0.10086214), (16, 0.043549247), (0, 0.041000992), (93, 0.010711834), (26, 0.0036774243)], 0.9942474);
-                    match s {
-                        [] => true,
-                        ['α', s @ ..] => {
-                            out.push(&[(31, 0.39145494), (606, 0.3424277), (74, 0.10890364), (75, 0.05444419), (13, 0.05043107), (16, 0.021774624), (0, 0.020508125), (93, 0.005355917)], 0.9953002);
-                            match s {
-                                [] => true,
-                                ['χ', s @ ..] => {
-                                    out.push(&[(606, 0.5616236), (31, 0.26097506), (74, 0.07260243), (75, 0.036301214), (13, 0.033615626), (16, 0.01451133), (0, 0.013672084), (93, 0.0035706111)], 0.99687195);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['δ', s @ ..] => {
-                    out.push(&[(13, 0.4970779), (31, 0.22351415), (16, 0.1587091), (606, 0.039398793), (93, 0.020111391), (74, 0.019211108), (0, 0.014694438), (75, 0.009597925), (26, 0.006897078), (27, 0.003448539)], 0.9926604);
-                    s.is_empty()
-                }
-                ['ε', s @ ..] => {
-                    out.push(&[(31, 0.6816052), (13, 0.15387198), (16, 0.06645304), (606, 0.032013427), (93, 0.016342413), (74, 0.01560998), (0, 0.011932556), (75, 0.0077973604), (26, 0.0056000613), (27, 0.00280766)], 0.9940337);
-                    s.is_empty()
-                }
-                ['ι', s @ ..] => {
-                    out.push(&[(31, 0.84373236), (13, 0.0755169), (16, 0.03260853), (606, 0.015716793), (93, 0.008026246), (74, 0.007660029), (0, 0.0058594644), (75, 0.0038300145), (26, 0.002746624)], 0.99569696);
-                    s.is_empty()
-                }
-                ['κ', s @ ..] => {
-                    out.push(&[(31, 0.6210727), (13, 0.26924545), (16, 0.04429694), (606, 0.021347372), (93, 0.010894942), (74, 0.010406653), (0, 0.00794995), (75, 0.0052033267), (26, 0.0037384604)], 0.9941558);
-                    match s {
-                        [] => true,
-                        ['σ', s @ ..] => {
-                            out.push(&[(13, 0.5128252), (31, 0.41405356), (16, 0.029526208), (606, 0.014221408), (93, 0.0072632944), (74, 0.006942855), (0, 0.0053101396), (75, 0.003463798), (26, 0.0024872206)], 0.9960937);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['λ', s @ ..] => {
-                    out.push(&[(16, 0.4265812), (31, 0.17264058), (13, 0.16154726), (606, 0.11280995), (0, 0.10476845), (93, 0.0065308614), (74, 0.00624094), (75, 0.0031280995), (26, 0.0022430762)], 0.9964904);
-                    match s {
-                        [] => true,
-                        ['α', s @ ..] => {
-                            out.push(&[(16, 0.8088655), (31, 0.057541773), (13, 0.05384909), (606, 0.03759823), (0, 0.0349279), (93, 0.0021820401), (74, 0.002075227)], 0.99703974);
-                            s.is_empty()
-                        }
-                        ['γ', s @ ..] => {
-                            out.push(&[(0, 0.40318912), (16, 0.2843824), (31, 0.115098804), (13, 0.10769818), (606, 0.07519646), (93, 0.0043640803), (74, 0.004165713), (75, 0.002075227)], 0.99617);
-                            s.is_empty()
-                        }
-                        ['ε', s @ ..] => {
-                            out.push(&[(13, 0.44103152), (16, 0.2843824), (31, 0.115098804), (606, 0.07519646), (0, 0.0698558), (93, 0.0043640803), (74, 0.004165713), (75, 0.002075227)], 0.99617);
-                            s.is_empty()
-                        }
-                        ['κ', s @ ..] => {
-                            out.push(&[(606, 0.4085298), (16, 0.2843824), (31, 0.115098804), (13, 0.10769818), (0, 0.0698558), (93, 0.0043640803), (74, 0.004165713), (75, 0.002075227)], 0.99617);
-                            s.is_empty()
-                        }
-                        ['ω', s @ ..] => {
-                            out.push(&[(31, 0.44843215), (16, 0.2843824), (13, 0.10769818), (606, 0.07519646), (0, 0.0698558), (93, 0.0043640803), (74, 0.004165713), (75, 0.002075227)], 0.99617);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['μ', s @ ..] => {
-                    out.push(&[(31, 0.6816052), (13, 0.15387198), (16, 0.06645304), (606, 0.032013427), (93, 0.016342413), (74, 0.01560998), (0, 0.011932556), (75, 0.0077973604), (26, 0.0056000613), (27, 0.00280766)], 0.9940337);
-                    s.is_empty()
-                }
-                ['ν', s @ ..] => {
-                    out.push(&[(606, 0.37601283), (31, 0.24214542), (13, 0.20515755), (16, 0.08859388), (93, 0.021789884), (74, 0.020813307), (0, 0.01591516), (75, 0.010406653), (26, 0.0074769207), (27, 0.0037384604), (275, 0.002136263)], 0.99418634);
-                    s.is_empty()
-                }
-                ['ο', 'χ', s @ ..] => {
-                    out.push(&[(13, 0.5384909), (31, 0.24214542), (16, 0.08859388), (606, 0.042679485), (93, 0.021789884), (74, 0.020813307), (0, 0.01591516), (75, 0.010406653), (26, 0.0074769207), (27, 0.0037384604), (275, 0.002136263)], 0.99418634);
-                    s.is_empty()
-                }
-                ['π', s @ ..] => {
-                    out.push(&[(31, 0.5452812), (13, 0.32309452), (16, 0.053162433), (606, 0.02560464), (93, 0.0130769815), (74, 0.01248188), (0, 0.009552148), (75, 0.00624094), (26, 0.0044861524), (27, 0.0022430762)], 0.99522394);
-                    match s {
-                        [] => true,
-                        ['ε', s @ ..] => {
-                            out.push(&[(13, 0.54872966), (31, 0.36353093), (16, 0.035446707), (606, 0.017074846), (93, 0.008712902), (74, 0.008331426), (0, 0.0063630124), (75, 0.004165713), (26, 0.0029907683)], 0.99534595);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(13, 0.39085984), (31, 0.18664835), (606, 0.121950105), (93, 0.1151751), (26, 0.07449455), (27, 0.037247274), (16, 0.028732738), (941, 0.018585488), (942, 0.009002823), (74, 0.0067444877), (0, 0.0051575494), (75, 0.0033722438)], 0.9979706);
-                    match s {
-                        [] => true,
-                        ['ε', s @ ..] => {
-                            out.push(&[(13, 0.4454261), (93, 0.30759135), (31, 0.09332418), (606, 0.060975052), (26, 0.037247274), (27, 0.018631266), (16, 0.014373999), (941, 0.009292744), (942, 0.0045014117), (74, 0.0033722438), (0, 0.0025787747)], 0.9973144);
-                            match s {
-                                [] => true,
-                                ['γ', s @ ..] => {
-                                    out.push(&[(93, 0.53839934), (13, 0.29695582), (31, 0.062211033), (606, 0.040650036), (26, 0.024826428), (27, 0.012420844), (16, 0.009582666), (941, 0.006195163), (942, 0.0030060273), (74, 0.0022430762)], 0.9964904);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['θ', s @ ..] => {
-                            out.push(&[(606, 0.4146334), (13, 0.2605783), (31, 0.124422066), (93, 0.0767834), (26, 0.049668115), (27, 0.024826428), (16, 0.019150073), (941, 0.012390326), (942, 0.0060120546), (74, 0.0045014117), (0, 0.00343328), (75, 0.0022430762)], 0.9986419);
-                            s.is_empty()
-                        }
-                        ['κ', s @ ..] => {
-                            out.push(&[(26, 0.27188525), (13, 0.2605783), (27, 0.13594262), (31, 0.124422066), (606, 0.08130007), (93, 0.0767834), (16, 0.019150073), (941, 0.012390326), (942, 0.0060120546), (74, 0.0045014117), (0, 0.00343328), (75, 0.0022430762)], 0.9986419);
-                            s.is_empty()
-                        }
-                        ['ο', '\u{1}', s @ ..] => {
-                            out.push(&[(941, 0.6666667), (942, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['υ', s @ ..] => {
-                            out.push(&[(31, 0.4577554), (13, 0.2605783), (606, 0.08130007), (93, 0.0767834), (26, 0.049668115), (27, 0.024826428), (16, 0.019150073), (941, 0.012390326), (942, 0.0060120546), (74, 0.0045014117), (0, 0.00343328), (75, 0.0022430762)], 0.9986419);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['σ', s @ ..] => {
-                    out.push(&[(13, 0.4038758), (16, 0.3164416), (31, 0.18161288), (606, 0.032013427), (93, 0.016342413), (74, 0.01560998), (0, 0.011932556), (75, 0.0077973604), (26, 0.0056000613), (27, 0.00280766)], 0.99403375);
-                    match s {
-                        [] => true,
-                        ['α', s @ ..] => {
-                            out.push(&[(16, 0.54430455), (13, 0.26924545), (31, 0.12106508), (606, 0.021347372), (93, 0.010894942), (74, 0.010406653), (0, 0.00794995), (75, 0.0052033267), (26, 0.0037384604)], 0.99415576);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['τ', s @ ..] => {
-                    out.push(&[(13, 0.37364766), (16, 0.32368964), (31, 0.24663158), (606, 0.018295567), (93, 0.009338521), (74, 0.008911269), (0, 0.006820783), (75, 0.0044556344), (26, 0.0032043946)], 0.99499506);
-                    match s {
-                        [] => true,
-                        ['ι', s @ ..] => {
-                            out.push(&[(16, 0.54912645), (13, 0.24908827), (31, 0.16441596), (606, 0.012191959), (93, 0.006225681), (74, 0.0059510185), (0, 0.0045471885), (75, 0.0029755093), (26, 0.002136263)], 0.99665827);
-                            s.is_empty()
-                        }
-                        ['τ', s @ ..] => {
-                            out.push(&[(31, 0.4977493), (13, 0.24908827), (16, 0.21579309), (606, 0.012191959), (93, 0.006225681), (74, 0.0059510185), (0, 0.0045471885), (75, 0.0029755093), (26, 0.002136263)], 0.99665827);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['υ', s @ ..] => {
-                    out.push(&[(13, 0.52309453), (31, 0.34528115), (16, 0.053162433), (606, 0.02560464), (93, 0.0130769815), (74, 0.01248188), (0, 0.009552148), (75, 0.00624094), (26, 0.0044861524), (27, 0.0022430762)], 0.99522394);
-                    match s {
-                        [] => true,
-                        ['ο', s @ ..] => {
-                            out.push(&[(31, 0.5635309), (13, 0.3487297), (16, 0.035446707), (606, 0.017074846), (93, 0.008712902), (74, 0.008331426), (0, 0.0063630124), (75, 0.004165713), (26, 0.0029907683)], 0.995346);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['φ', s @ ..] => {
-                    out.push(&[(13, 0.43591973), (31, 0.28773937), (16, 0.21097124), (606, 0.021347372), (93, 0.010894942), (74, 0.010406653), (0, 0.00794995), (75, 0.0052033267), (26, 0.0037384604)], 0.994171);
-                    match s {
-                        [] => true,
-                        ['α', s @ ..] => {
-                            out.push(&[(13, 0.4679637), (16, 0.35548943), (31, 0.14386205), (606, 0.010666057), (93, 0.005447471), (74, 0.0052033267), (0, 0.003982605), (75, 0.0025940337)], 0.9952087);
-                            match s {
-                                [] => true,
-                                ['ῥ', s @ ..] => {
-                                    out.push(&[(16, 0.5703212), (13, 0.3119707), (31, 0.09591821), (606, 0.007110704), (93, 0.0036316472), (74, 0.003463798), (0, 0.0026550698)], 0.99507135);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['χ', s @ ..] => {
-                    out.push(&[(13, 0.4038758), (74, 0.18226902), (31, 0.18161288), (75, 0.09114214), (16, 0.06645304), (606, 0.032013427), (93, 0.016342413), (0, 0.011932556), (26, 0.0056000613), (27, 0.00280766)], 0.994049);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['γ', s @ ..] => {
-            out.push(&[(0, 0.3253071), (43, 0.25638208), (31, 0.12085146), (13, 0.09719997), (275, 0.050598916), (16, 0.030701153), (102, 0.017593652), (93, 0.0148165105), (26, 0.0099336235), (606, 0.008438239), (74, 0.008331426), (14, 0.008255131), (55, 0.006958114), (27, 0.004974441), (423, 0.004242008), (75, 0.004165713), (286, 0.002822919), (321, 0.002121004), (692, 0.002105745), (796, 0.002105745), (1012, 0.002105745), (1040, 0.002105745), (1052, 0.002105745), (1099, 0.002105745)], 0.98632795);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(0, 0.41264972), (43, 0.37819487), (31, 0.06042573), (13, 0.048599984), (275, 0.025299458), (16, 0.0153505765), (102, 0.008789197), (93, 0.0074158846), (26, 0.004974441), (606, 0.00421149), (74, 0.004165713), (14, 0.004119936), (55, 0.003479057), (27, 0.0024872206), (423, 0.002121004), (75, 0.002075227)], 0.9843595);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['δ', s @ ..] => {
-            out.push(&[(13, 0.46294346), (31, 0.16113527), (0, 0.100419626), (275, 0.067460135), (16, 0.040939957), (102, 0.023453116), (93, 0.019760434), (26, 0.013244831), (606, 0.011245899), (74, 0.011108568), (14, 0.011001755), (55, 0.009277485), (43, 0.008514535), (27, 0.0066224155), (423, 0.005645838), (75, 0.005554284), (286, 0.0037689784), (321, 0.002822919), (692, 0.00280766), (796, 0.00280766), (1012, 0.00280766), (1040, 0.00280766), (1052, 0.00280766), (1099, 0.00280766), (115, 0.0023804074)], 0.9841459);
-            s.is_empty()
-        }
-        ['ε', s @ ..] => {
-            out.push(&[(13, 0.35494012), (26, 0.07627985), (286, 0.07470817), (0, 0.072297245), (16, 0.062378883), (93, 0.058854047), (43, 0.056977186), (1040, 0.05603113), (74, 0.038895246), (27, 0.038147554), (287, 0.037354086), (31, 0.026855879), (75, 0.019439993), (275, 0.011245899), (102, 0.0039063096)], 0.9883116);
-            match s {
-                [] => true,
-                ['β', s @ ..] => {
-                    out.push(&[(13, 0.569955), (26, 0.05085832), (286, 0.049805447), (0, 0.04818799), (16, 0.041580833), (93, 0.039230946), (43, 0.037979707), (1040, 0.037354086), (74, 0.025925077), (27, 0.02542153), (287, 0.024902724), (31, 0.017898833), (75, 0.012954909), (275, 0.00749218), (102, 0.0026092927)], 0.99215686);
-                    s.is_empty()
-                }
-                ['γ', s @ ..] => {
-                    out.push(&[(26, 0.27307546), (13, 0.23662165), (27, 0.13653773), (286, 0.049805447), (0, 0.04818799), (16, 0.041580833), (93, 0.039230946), (43, 0.037979707), (1040, 0.037354086), (74, 0.025925077), (287, 0.024902724), (31, 0.017898833), (75, 0.012954909), (275, 0.00749218), (102, 0.0026092927)], 0.99215686);
-                    s.is_empty()
-                }
-                ['θ', s @ ..] => {
-                    out.push(&[(16, 0.2249485), (43, 0.22279698), (1040, 0.2224155), (13, 0.14196993), (26, 0.030518044), (286, 0.029877165), (0, 0.028915847), (93, 0.023544671), (74, 0.015548944), (27, 0.015259022), (287, 0.014938583), (31, 0.010742351), (75, 0.007782101), (275, 0.0045014117)], 0.99375904);
-                    match s {
-                        [] => true,
-                        ['ρ', s @ ..] => {
-                            out.push(&[(16, 0.36247808), (43, 0.36139467), (1040, 0.11120775), (13, 0.07098497), (26, 0.015259022), (286, 0.014938583), (0, 0.014465553), (93, 0.011764706), (74, 0.007782101), (27, 0.007629511), (287, 0.0074769207), (31, 0.0053711757), (75, 0.0038910506), (275, 0.0022430762)], 0.99688715);
-                            match s {
-                                [] => true,
-                                ['α', 'π', 'ο', s @ ..] => {
-                                    out.push(&[(16, 0.57499045), (43, 0.2409247), (1040, 0.07414359), (13, 0.047318228), (26, 0.010177768), (286, 0.009964141), (0, 0.009643702), (93, 0.007843138), (74, 0.0051880674), (27, 0.0050812545), (287, 0.004974441), (31, 0.0035858701), (75, 0.0025940337)], 0.9964294);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['σ', s @ ..] => {
-                            out.push(&[(1040, 0.48160526), (16, 0.14996567), (43, 0.14853132), (13, 0.094651714), (26, 0.020340277), (286, 0.019913023), (0, 0.019272145), (93, 0.015686275), (74, 0.010376135), (27, 0.010177768), (287, 0.009964141), (31, 0.0071564815), (75, 0.0051880674), (275, 0.0030060273)], 0.9958343);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['μ', s @ ..] => {
-                    out.push(&[(13, 0.6344243), (26, 0.09102006), (286, 0.09066911), (27, 0.04551766), (287, 0.045334555), (0, 0.01606775), (16, 0.013855192), (93, 0.0130769815), (43, 0.012664989), (1040, 0.012451362), (74, 0.008636607), (31, 0.005966278), (75, 0.0043183034), (275, 0.0025024796)], 0.9965057);
-                    match s {
-                        [] => true,
-                        ['ε', s @ ..] => {
-                            out.push(&[(13, 0.42294958), (286, 0.2826734), (287, 0.14132906), (26, 0.06068513), (27, 0.030334936), (0, 0.010711834), (16, 0.009246968), (93, 0.008712902), (43, 0.008438239), (1040, 0.008300908), (74, 0.0057679103), (31, 0.003982605), (75, 0.0028839551)], 0.9960174);
-                            match s {
-                                [] => true,
-                                ['τ', '\u{1}', s @ ..] => {
-                                    out.push(&[(286, 0.6666667), (287, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['ξ', s @ ..] => {
-                    out.push(&[(0, 0.28615245), (93, 0.2794232), (13, 0.17746243), (26, 0.038147554), (286, 0.037354086), (16, 0.031189442), (43, 0.028488593), (1040, 0.028015565), (74, 0.019439993), (27, 0.019073777), (287, 0.018677043), (31, 0.013427939), (75, 0.009719997), (275, 0.00561532)], 0.9921874);
-                    match s {
-                        [] => true,
-                        ['ο', s @ ..] => {
-                            out.push(&[(93, 0.5196155), (0, 0.19076829), (13, 0.11831845), (26, 0.02542153), (286, 0.024902724), (16, 0.020798046), (43, 0.018997483), (1040, 0.018677043), (74, 0.012970169), (27, 0.012710765), (287, 0.012451362), (31, 0.008957046), (75, 0.0064850845), (275, 0.0037537194)], 0.9948272);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['τ', s @ ..] => {
-                    out.push(&[(74, 0.24814221), (13, 0.23662165), (75, 0.12407111), (26, 0.05085832), (286, 0.049805447), (0, 0.04818799), (16, 0.041580833), (93, 0.039230946), (43, 0.037979707), (1040, 0.037354086), (27, 0.02542153), (287, 0.024902724), (31, 0.017898833), (275, 0.00749218), (102, 0.0026092927)], 0.99215686);
-                    s.is_empty()
-                }
-                ['φ', s @ ..] => {
-                    out.push(&[(286, 0.27202258), (13, 0.23662165), (287, 0.13601892), (26, 0.05085832), (0, 0.04818799), (16, 0.041580833), (93, 0.039230946), (43, 0.037979707), (1040, 0.037354086), (74, 0.025925077), (27, 0.02542153), (31, 0.017898833), (75, 0.012954909), (275, 0.00749218), (102, 0.0026092927)], 0.99215686);
-                    match s {
-                        [] => true,
-                        ['α', '\u{1}', s @ ..] => {
-                            out.push(&[(286, 0.6666667), (287, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['η', s @ ..] => {
-            out.push(&[(31, 0.6269169), (102, 0.086625464), (14, 0.08087282), (115, 0.035172045), (410, 0.028137637), (1057, 0.028122377), (116, 0.017441062), (13, 0.016266117), (16, 0.015594721), (411, 0.0139467465), (1058, 0.0139467465), (0, 0.012603953), (275, 0.008468757), (93, 0.0024872206)], 0.98660254);
-            match s {
-                [] => true,
-                ['γ', s @ ..] => {
-                    out.push(&[(31, 0.5572595), (16, 0.12497139), (102, 0.07699703), (14, 0.07188525), (115, 0.031265736), (410, 0.025009537), (1057, 0.025009537), (116, 0.015503166), (13, 0.014465553), (411, 0.012390326), (1058, 0.012390326), (0, 0.011200123), (275, 0.007522698), (93, 0.0021972992)], 0.98806745);
-                    s.is_empty()
-                }
-                ['δ', s @ ..] => {
-                    out.push(&[(31, 0.4179446), (14, 0.3872587), (102, 0.0577554), (115, 0.023437858), (410, 0.018753339), (1057, 0.018753339), (116, 0.011627375), (13, 0.010849165), (16, 0.010406653), (411, 0.009292744), (1058, 0.009292744), (0, 0.008407721), (275, 0.005645838)], 0.9894255);
-                    s.is_empty()
-                }
-                ['κ', s @ ..] => {
-                    out.push(&[(31, 0.90673685), (102, 0.021652551), (14, 0.020218205), (115, 0.008789197), (410, 0.0070344093), (1057, 0.0070344093), (116, 0.0043640803), (13, 0.004074159), (16, 0.0039063096), (411, 0.003494316), (1058, 0.003494316), (0, 0.0031586175), (275, 0.002121004)], 0.99607843);
-                    s.is_empty()
-                }
-                ['λ', s @ ..] => {
-                    out.push(&[(31, 0.25587854), (14, 0.21667811), (115, 0.15040818), (410, 0.14753948), (116, 0.075135425), (411, 0.073716335), (102, 0.035355154), (1057, 0.011474784), (13, 0.0066376748), (16, 0.0063630124), (1058, 0.0056916154), (0, 0.0051422906), (275, 0.003463798)], 0.9934844);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(14, 0.47368583), (115, 0.35088122), (116, 0.17543298)], 1.0);
-                            s.is_empty()
-                        }
-                        ['γ', s @ ..] => {
-                            out.push(&[(410, 0.3205768), (31, 0.17059587), (411, 0.16025025), (14, 0.14445716), (115, 0.10026703), (116, 0.05009537), (102, 0.023575189), (1057, 0.007660029), (13, 0.0044251163), (16, 0.004242008), (1058, 0.0037994965), (0, 0.00343328), (275, 0.0023041123)], 0.9956817);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['μ', s @ ..] => {
-                    out.push(&[(31, 0.4179446), (1057, 0.24097048), (1058, 0.120408945), (102, 0.0577554), (14, 0.053925384), (115, 0.023437858), (410, 0.018753339), (116, 0.011627375), (13, 0.010849165), (16, 0.010406653), (411, 0.009292744), (0, 0.008407721), (275, 0.005645838)], 0.9894255);
-                    match s {
-                        [] => true,
-                        ['σ', s @ ..] => {
-                            out.push(&[(1057, 0.38287938), (31, 0.27862975), (1058, 0.19137865), (102, 0.038498513), (14, 0.035950255), (115, 0.015625238), (410, 0.012497139), (116, 0.007751583), (13, 0.0072327764), (16, 0.006927596), (411, 0.006195163), (0, 0.0056000613), (275, 0.0037689784)], 0.99293506);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['π', s @ ..] => {
-                    out.push(&[(31, 0.4179446), (102, 0.39108872), (14, 0.053925384), (115, 0.023437858), (410, 0.018753339), (1057, 0.018753339), (116, 0.011627375), (13, 0.010849165), (16, 0.010406653), (411, 0.009292744), (1058, 0.009292744), (0, 0.008407721), (275, 0.005645838)], 0.9894255);
-                    s.is_empty()
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(31, 0.7089799), (102, 0.19554436), (14, 0.026962692), (115, 0.011718929), (410, 0.009384299), (1057, 0.00936904), (116, 0.0058136876), (13, 0.005416953), (16, 0.0052033267), (411, 0.004654002), (1058, 0.004654002), (0, 0.0041962313), (275, 0.002822919)], 0.99472034);
-                    match s {
-                        [] => true,
-                        ['θ', s @ ..] => {
-                            out.push(&[(31, 0.4726482), (102, 0.46369115), (14, 0.017975127), (115, 0.007812619), (410, 0.006256199), (1057, 0.006256199), (116, 0.0038757916), (13, 0.0036163882), (16, 0.003463798), (411, 0.0030975814), (1058, 0.0030975814), (0, 0.00280766)], 0.99459827);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['σ', s @ ..] => {
-                    out.push(&[(31, 0.864332), (102, 0.03149462), (14, 0.029404135), (115, 0.012787061), (410, 0.010223545), (1057, 0.010223545), (116, 0.0063324943), (13, 0.0059205005), (16, 0.005676356), (411, 0.0050659953), (1058, 0.0050659953), (0, 0.0045777066), (275, 0.0030823224)], 0.9941863);
-                    s.is_empty()
-                }
-                ['τ', 'κ', '\u{1}', s @ ..] => {
-                    out.push(&[(115, 0.6666667), (116, 0.33333334)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['θ', s @ ..] => {
-            out.push(&[(26, 0.23546197), (31, 0.16113527), (13, 0.12961014), (27, 0.11773861), (0, 0.100419626), (275, 0.067460135), (16, 0.040939957), (102, 0.023453116), (93, 0.019760434), (606, 0.011245899), (74, 0.011108568), (14, 0.011001755), (55, 0.009277485), (43, 0.008514535), (423, 0.005645838), (75, 0.005554284), (286, 0.0037689784), (321, 0.002822919), (692, 0.00280766), (796, 0.00280766), (1012, 0.00280766), (1040, 0.00280766), (1052, 0.00280766), (1099, 0.00280766), (115, 0.0023804074)], 0.9841459);
-            match s {
-                [] => true,
-                ['ε', s @ ..] => {
-                    out.push(&[(26, 0.37920195), (27, 0.1896086), (31, 0.107423514), (13, 0.08641184), (0, 0.06694133), (275, 0.044983596), (16, 0.02729839), (102, 0.015640497), (93, 0.013168536), (606, 0.00749218), (74, 0.007400626), (14, 0.0073395898), (55, 0.006179904), (43, 0.005676356), (423, 0.0037689784), (75, 0.0036926833), (286, 0.0025177386)], 0.9747463);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ι', s @ ..] => {
-            out.push(&[(275, 0.47925535), (13, 0.14631876), (31, 0.06897078), (102, 0.060791943), (55, 0.04510567), (16, 0.042038605), (0, 0.025772488), (93, 0.020981155), (14, 0.020462349), (321, 0.01997406), (692, 0.01997406), (1012, 0.01997406), (1099, 0.01997406), (32, 0.004943923)], 0.99453723);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(102, 0.3451133), (275, 0.29492638), (55, 0.10467689), (13, 0.090043485), (31, 0.0424506), (16, 0.025864042), (0, 0.015854124), (93, 0.012909133), (14, 0.012588693), (321, 0.012283512), (692, 0.012283512), (1012, 0.012283512), (1099, 0.012283512), (32, 0.0030518044)], 0.9966125);
-                    s.is_empty()
-                }
-                ['γ', s @ ..] => {
-                    out.push(&[(275, 0.7396353), (13, 0.07315175), (31, 0.03448539), (102, 0.030395972), (55, 0.022552835), (16, 0.021011673), (0, 0.0128786145), (93, 0.010482948), (14, 0.010223545), (321, 0.009979401), (692, 0.009979401), (1012, 0.009979401), (1099, 0.009979401), (32, 0.0024719615)], 0.9972076);
-                    s.is_empty()
-                }
-                ['ε', s @ ..] => {
-                    out.push(&[(321, 0.3466392), (275, 0.31950867), (13, 0.09753567), (31, 0.04599069), (102, 0.040527962), (55, 0.030075531), (16, 0.028030824), (0, 0.01718166), (93, 0.013977264), (14, 0.013641566), (692, 0.013305867), (1012, 0.013305867), (1099, 0.013305867), (32, 0.0032959487)], 0.9963226);
-                    match s {
-                        [] => true,
-                        ['τ', s @ ..] => {
-                            out.push(&[(321, 0.5644312), (275, 0.21300068), (13, 0.06503395), (31, 0.030655375), (102, 0.027023727), (55, 0.020050354), (16, 0.018677043), (0, 0.011459526), (93, 0.009323263), (14, 0.009094377), (692, 0.008880751), (1012, 0.008880751), (1099, 0.008880751), (32, 0.0021972992)], 0.99758905);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['κ', s @ ..] => {
-                    out.push(&[(275, 0.47981995), (13, 0.2778973), (692, 0.12605478), (32, 0.03150988), (31, 0.016723888), (102, 0.014740216), (55, 0.010940718), (16, 0.010193027), (0, 0.00624094), (93, 0.0050812545), (14, 0.0049591823), (321, 0.00483711), (1012, 0.00483711), (1099, 0.00483711)], 0.9986725);
-                    match s {
-                        [] => true,
-                        ['γ', s @ ..] => {
-                            out.push(&[(13, 0.51859313), (275, 0.31987488), (692, 0.08403143), (32, 0.020996414), (31, 0.011154345), (102, 0.00982681), (55, 0.0072938125), (16, 0.006790265), (0, 0.004165713), (93, 0.0033875029), (14, 0.0033112078), (321, 0.0032349126), (1012, 0.0032196536), (1099, 0.0032196536)], 0.99909973);
-                            s.is_empty()
-                        }
-                        ['ρ', s @ ..] => {
-                            out.push(&[(692, 0.38525978), (275, 0.29527733), (13, 0.17100786), (32, 0.096314944), (31, 0.010284581), (102, 0.0090638595), (55, 0.006729229), (16, 0.006271458), (0, 0.0038452735), (93, 0.0031280995), (14, 0.0030518044), (321, 0.0029755093), (1012, 0.0029755093), (1099, 0.0029755093)], 0.99916077);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['λ', s @ ..] => {
-                    out.push(&[(275, 0.74480814), (31, 0.1422446), (13, 0.036575876), (102, 0.015197986), (55, 0.011276417), (16, 0.010513466), (0, 0.0064393072), (93, 0.0052491035), (14, 0.0051117726), (321, 0.0049897004), (692, 0.0049897004), (1012, 0.0049897004), (1099, 0.0049897004)], 0.9973755);
-                    match s {
-                        [] => true,
-                        ['α', 'χ', s @ ..] => {
-                            out.push(&[(275, 0.49654382), (31, 0.42816815), (13, 0.024383917), (102, 0.010131991), (55, 0.007522698), (16, 0.0070038913), (0, 0.0042877854), (93, 0.003494316), (14, 0.0034027619), (321, 0.0033264668), (692, 0.0033264668), (1012, 0.0033264668), (1099, 0.0033264668)], 0.9982452);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['μ', s @ ..] => {
-                    out.push(&[(13, 0.25851834), (16, 0.21681544), (93, 0.20839246), (275, 0.19169909), (31, 0.027588312), (102, 0.02432288), (55, 0.018036164), (0, 0.01029984), (14, 0.008178836), (321, 0.007980469), (692, 0.007980469), (1012, 0.007980469), (1099, 0.007980469)], 0.99577326);
-                    match s {
-                        [] => true,
-                        ['α', s @ ..] => {
-                            out.push(&[(13, 0.30341038), (16, 0.2867323), (93, 0.28336003), (275, 0.076676585), (31, 0.011032273), (102, 0.009735256), (55, 0.0072175176), (0, 0.004119936), (14, 0.0032654307), (321, 0.0031891356), (692, 0.0031891356), (1012, 0.0031891356), (1099, 0.0031891356)], 0.9983062);
-                            match s {
-                                [] => true,
-                                ['κ', s @ ..] => {
-                                    out.push(&[(13, 0.40170902), (16, 0.3933623), (93, 0.14168002), (275, 0.03834592), (31, 0.005523766), (102, 0.004867628), (55, 0.0036011292), (0, 0.002059968)], 0.9911498);
-                                    s.is_empty()
-                                }
-                                ['λ', s @ ..] => {
-                                    out.push(&[(93, 0.52224004), (13, 0.20227359), (16, 0.19114977), (275, 0.051117722), (31, 0.0073548486), (102, 0.0064850845), (55, 0.004806592), (0, 0.002746624), (14, 0.0021820401), (321, 0.002136263), (692, 0.002136263), (1012, 0.002136263), (1099, 0.002136263)], 0.99890137);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['ξ', s @ ..] => {
-                    out.push(&[(275, 0.7396353), (13, 0.07315175), (31, 0.03448539), (102, 0.030395972), (55, 0.022552835), (16, 0.021011673), (0, 0.0128786145), (93, 0.010482948), (14, 0.010223545), (321, 0.009979401), (692, 0.009979401), (1012, 0.009979401), (1099, 0.009979401), (32, 0.0024719615)], 0.9972076);
-                    s.is_empty()
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(102, 0.3535973), (55, 0.34836346), (275, 0.1597467), (13, 0.048767835), (31, 0.022995345), (16, 0.014007783), (0, 0.00859083), (93, 0.006988632), (14, 0.006820783), (321, 0.0066529335), (692, 0.0066529335), (1012, 0.0066529335), (1099, 0.0066529335)], 0.9964904);
-                    match s {
-                        [] => true,
-                        ['χ', s @ ..] => {
-                            out.push(&[(55, 0.5393454), (102, 0.34143588), (275, 0.063904785), (13, 0.01950103), (31, 0.00920119), (16, 0.0056000613), (0, 0.00343328), (93, 0.002792401), (14, 0.002731365), (321, 0.0026550698), (692, 0.0026550698), (1012, 0.0026550698), (1099, 0.0026550698)], 0.9985657);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['π', s @ ..] => {
-                    out.push(&[(0, 0.35051498), (275, 0.31950867), (13, 0.09753567), (31, 0.04599069), (102, 0.040527962), (55, 0.030075531), (16, 0.028030824), (93, 0.013977264), (14, 0.013641566), (321, 0.013305867), (692, 0.013305867), (1012, 0.013305867), (1099, 0.013305867), (32, 0.0032959487)], 0.9963226);
-                    match s {
-                        [] => true,
-                        ['σ', s @ ..] => {
-                            out.push(&[(0, 0.56701), (275, 0.21300068), (13, 0.06503395), (31, 0.030655375), (102, 0.027023727), (55, 0.020050354), (16, 0.018677043), (93, 0.009323263), (14, 0.009094377), (321, 0.008880751), (692, 0.008880751), (1012, 0.008880751), (1099, 0.008880751), (32, 0.0021972992)], 0.99758905);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(275, 0.5958496), (31, 0.113801785), (16, 0.10840009), (1012, 0.103990234), (13, 0.029266804), (102, 0.01216144), (55, 0.009018082), (0, 0.0051575494), (93, 0.0041962313), (14, 0.004089418), (321, 0.0039978637), (692, 0.0039978637), (1099, 0.0039978637)], 0.9979248);
-                    match s {
-                        [] => true,
-                        ['ε', s @ ..] => {
-                            out.push(&[(275, 0.54792094), (31, 0.3069047), (16, 0.054200046), (1012, 0.052002747), (13, 0.014633402), (102, 0.0060730907), (55, 0.0045166705), (0, 0.0025787747), (93, 0.002090486), (14, 0.002044709)], 0.9929656);
-                            match s {
-                                [] => true,
-                                ['τ', s @ ..] => {
-                                    out.push(&[(31, 0.5379263), (275, 0.36528572), (16, 0.036133364), (1012, 0.034668498), (13, 0.009750515), (102, 0.0040589), (55, 0.0030060273)], 0.99082935);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['π', s @ ..] => super::t1::n4142(s, out),
-                        _ => false,
-                    }
-                }
-                ['τ', s @ ..] => super::t1::n3332(s, out),
-                ['φ', s @ ..] => super::t1::n3333(s, out),
-                ['χ', s @ ..] => super::t1::n3334(s, out),
-                ['ῥ', s @ ..] => super::t1::n3335(s, out),
-                _ => false,
-            }
-        }
-        ['κ', s @ ..] => super::t1::n1876(s, out),
-        ['μ', s @ ..] => super::t1::n1877(s, out),
-        ['ν', s @ ..] => super::t1::n1878(s, out),
-        ['ο', s @ ..] => super::t1::n1879(s, out),
-        ['π', s @ ..] => super::t1::n1880(s, out),
-        ['ρ', s @ ..] => super::t1::n1881(s, out),
-        ['τ', s @ ..] => super::t1::n1882(s, out),
-        ['υ', s @ ..] => super::t1::n1883(s, out),
-        ['φ', s @ ..] => super::t1::n1884(s, out),
-        ['χ', s @ ..] => super::t1::n1885(s, out),
-        ['ω', s @ ..] => super::t1::n1886(s, out),
-        _ => false,
-    }
+pub(crate) fn n654(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 649);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 2094);
+			match s {
+				[] => true,
+				['β', s @ ..] => {
+					super::push(out, 4099);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 5798);
+							match s {
+								[] => true,
+								['λ', s @ ..] => {
+									super::push(out, 6791);
+									s.is_empty()
+								}
+								['ρ', s @ ..] => {
+									super::push(out, 6792);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['λ', s @ ..] => {
+							super::push(out, 5799);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['γ', s @ ..] => {
+					super::push(out, 4100);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5800);
+							match s {
+								[] => true,
+								['ρ', s @ ..] => {
+									super::push(out, 6793);
+									s.is_empty()
+								}
+								['χ', s @ ..] => {
+									super::push(out, 6794);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['δ', s @ ..] => {
+					super::push(out, 4101);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5801);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 4102);
+					s.is_empty()
+				}
+				['ι', s @ ..] => {
+					super::push(out, 4103);
+					s.is_empty()
+				}
+				['κ', s @ ..] => {
+					super::push(out, 4104);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5802);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6795);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 4105);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5803);
+							match s {
+								[] => true,
+								['β', s @ ..] => {
+									super::push(out, 6796);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['γ', s @ ..] => {
+							super::push(out, 5804);
+							s.is_empty()
+						}
+						['ε', s @ ..] => {
+							super::push(out, 5805);
+							match s {
+								[] => true,
+								['π', s @ ..] => {
+									super::push(out, 6797);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['κ', s @ ..] => {
+							super::push(out, 5806);
+							match s {
+								[] => true,
+								['σ', s @ ..] => {
+									super::push(out, 6798);
+									match s {
+										[] => true,
+										['υ', s @ ..] => {
+											super::push(out, 7217);
+											match s {
+												[] => true,
+												['ο', s @ ..] => {
+													super::push(out, 7358);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['ω', s @ ..] => {
+							super::push(out, 5807);
+							match s {
+								[] => true,
+								['ν', s @ ..] => {
+									super::push(out, 6799);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 4106);
+					s.is_empty()
+				}
+				['ν', s @ ..] => {
+					super::push(out, 4107);
+					s.is_empty()
+				}
+				['ο', 'χ', s @ ..] => {
+					super::push(out, 4108);
+					s.is_empty()
+				}
+				['π', s @ ..] => {
+					super::push(out, 4109);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5808);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 4110);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5809);
+							match s {
+								[] => true,
+								['γ', s @ ..] => {
+									super::push(out, 6800);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['η', s @ ..] => {
+							super::push(out, 5810);
+							s.is_empty()
+						}
+						['θ', s @ ..] => {
+							super::push(out, 5811);
+							s.is_empty()
+						}
+						['ι', s @ ..] => {
+							super::push(out, 5812);
+							s.is_empty()
+						}
+						['κ', s @ ..] => {
+							super::push(out, 5813);
+							s.is_empty()
+						}
+						['ο', s @ ..] => {
+							super::push(out, 5814);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6801);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['υ', s @ ..] => {
+							super::push(out, 5815);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6802);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['σ', s @ ..] => {
+					super::push(out, 4111);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5816);
+							match s {
+								[] => true,
+								['β', s @ ..] => {
+									super::push(out, 6803);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['υ', s @ ..] => {
+							super::push(out, 5817);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 4112);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5818);
+							s.is_empty()
+						}
+						['ε', s @ ..] => {
+							super::push(out, 5819);
+							s.is_empty()
+						}
+						['ι', s @ ..] => {
+							super::push(out, 5820);
+							match s {
+								[] => true,
+								['τ', s @ ..] => {
+									super::push(out, 6804);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['τ', s @ ..] => {
+							super::push(out, 5821);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 4113);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5822);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['φ', s @ ..] => {
+					super::push(out, 4114);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5823);
+							match s {
+								[] => true,
+								['ῥ', s @ ..] => {
+									super::push(out, 6805);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ε', s @ ..] => {
+							super::push(out, 5824);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['χ', s @ ..] => {
+					super::push(out, 4115);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5825);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['γ', s @ ..] => {
+			super::push(out, 2095);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4116);
+					match s {
+						[] => true,
+						['φ', s @ ..] => {
+							super::push(out, 5826);
+							match s {
+								[] => true,
+								['σ', s @ ..] => {
+									super::push(out, 6806);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['δ', s @ ..] => {
+			super::push(out, 2096);
+			match s {
+				[] => true,
+				['υ', s @ ..] => {
+					super::push(out, 4117);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5827);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 2097);
+			match s {
+				[] => true,
+				['β', s @ ..] => {
+					super::push(out, 4118);
+					s.is_empty()
+				}
+				['γ', s @ ..] => {
+					super::push(out, 4119);
+					s.is_empty()
+				}
+				['θ', s @ ..] => {
+					super::push(out, 4120);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5828);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6807);
+									match s {
+										[] => true,
+										['π', s @ ..] => {
+											super::push(out, 7218);
+											match s {
+												[] => true,
+												['ο', s @ ..] => {
+													super::push(out, 7359);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['σ', s @ ..] => {
+							super::push(out, 5829);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 4121);
+					match s {
+						[] => true,
+						['ε', s @ ..] => super::t2::n5867(s, out),
+						['υ', s @ ..] => super::t2::n5868(s, out),
+						_ => false,
+					}
+				}
+				['ξ', s @ ..] => super::t2::n4151(s, out),
+				['τ', s @ ..] => super::t2::n4152(s, out),
+				['φ', s @ ..] => super::t2::n4153(s, out),
+				_ => false,
+			}
+		}
+		['η', s @ ..] => super::t2::n2110(s, out),
+		['θ', s @ ..] => super::t2::n2111(s, out),
+		['ι', s @ ..] => super::t2::n2112(s, out),
+		['κ', s @ ..] => super::t2::n2113(s, out),
+		['μ', s @ ..] => super::t2::n2114(s, out),
+		['ν', s @ ..] => super::t2::n2115(s, out),
+		['ο', s @ ..] => super::t2::n2116(s, out),
+		['π', s @ ..] => super::t2::n2117(s, out),
+		['ρ', s @ ..] => super::t2::n2118(s, out),
+		['τ', s @ ..] => super::t2::n2119(s, out),
+		['υ', s @ ..] => super::t2::n2120(s, out),
+		['φ', s @ ..] => super::t2::n2121(s, out),
+		['χ', s @ ..] => super::t2::n2122(s, out),
+		['ω', s @ ..] => super::t2::n2123(s, out),
+		_ => false,
+	}
 }
 
 /// Words ending -ξοσ.
-pub(crate) fn n633(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(31, 0.26921493), (43, 0.18779278), (13, 0.13408102), (26, 0.13038835), (0, 0.11606012), (933, 0.060608834), (102, 0.018341344), (16, 0.01466392), (55, 0.009887846), (93, 0.0064545665), (27, 0.004867628), (275, 0.0046082246), (74, 0.003982605), (14, 0.00343328), (115, 0.002746624), (423, 0.002014191)], 0.96914625);
-    match s {
-        [] => true,
-        ['ι', s @ ..] => {
-            out.push(&[(31, 0.51280993), (43, 0.12520027), (13, 0.08938735), (26, 0.08693065), (0, 0.0773785), (933, 0.04040589), (102, 0.012222476), (16, 0.009781033), (55, 0.0065918975), (93, 0.004303044), (27, 0.0032349126), (275, 0.0030670634), (74, 0.0026550698), (14, 0.0022888533)], 0.97625697);
-            s.is_empty()
-        }
-        ['ο', s @ ..] => {
-            out.push(&[(26, 0.28537422), (31, 0.1656672), (13, 0.15942626), (933, 0.13986419), (43, 0.115571834), (0, 0.07141222), (102, 0.011291676), (16, 0.009033341), (55, 0.00608835), (93, 0.003982605), (27, 0.0029907683), (275, 0.002838178), (74, 0.0024567025), (14, 0.002121004)], 0.97811854);
-            s.is_empty()
-        }
-        ['υ', s @ ..] => {
-            out.push(&[(43, 0.4585336), (31, 0.17947662), (13, 0.08938735), (26, 0.08693065), (0, 0.0773785), (933, 0.04040589), (102, 0.012222476), (16, 0.009781033), (55, 0.0065918975), (93, 0.004303044), (27, 0.0032349126), (275, 0.0030670634), (74, 0.0026550698), (14, 0.0022888533)], 0.97625697);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n655(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 650);
+	match s {
+		[] => true,
+		['ι', s @ ..] => {
+			super::push(out, 2112);
+			s.is_empty()
+		}
+		['ο', s @ ..] => {
+			super::push(out, 2113);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 4185);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 2114);
+			match s {
+				[] => true,
+				['π', s @ ..] => {
+					super::push(out, 4186);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -οοσ.
-pub(crate) fn n634(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(13, 0.39540702), (0, 0.39311817), (1179, 0.057969023), (463, 0.0386511), (892, 0.033127338), (31, 0.027862974), (893, 0.01655604), (102, 0.0058442056), (16, 0.00468452), (55, 0.0031586175), (26, 0.0029297322), (93, 0.002059968)], 0.9813687);
-    match s {
-        [] => true,
-        ['λ', s @ ..] => {
-            out.push(&[(13, 0.5532006), (1179, 0.17854582), (0, 0.16578928), (463, 0.06570535), (892, 0.01060502), (31, 0.008911269), (893, 0.005294881)], 0.9880522);
-            match s {
-                [] => true,
-                ['π', s @ ..] => {
-                    out.push(&[(13, 0.7186847), (0, 0.1107805), (463, 0.088517584), (1179, 0.06802472), (892, 0.004043641), (31, 0.0034027619), (893, 0.002014191)], 0.9954681);
-                    s.is_empty()
-                }
-                ['φ', s @ ..] => {
-                    out.push(&[(1179, 0.45236897), (13, 0.3687953), (0, 0.11053635), (463, 0.04379339), (892, 0.0070649274), (31, 0.0059510185), (893, 0.003540093)], 0.99205005);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ν', 'π', s @ ..] => {
-            out.push(&[(13, 0.485832), (0, 0.2620737), (463, 0.13687342), (1179, 0.0386511), (892, 0.022079805), (31, 0.01857023), (893, 0.011047532), (102, 0.0039063096), (16, 0.0031128405), (55, 0.002105745)], 0.9842527);
-            s.is_empty()
-        }
-        ['ῥ', s @ ..] => {
-            out.push(&[(0, 0.45255208), (13, 0.2635996), (892, 0.11732662), (893, 0.05865568), (1179, 0.0386511), (463, 0.025772488), (31, 0.01857023), (102, 0.0039063096), (16, 0.0031128405), (55, 0.002105745)], 0.9842527);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n656(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 651);
+	match s {
+		[] => true,
+		['γ', s @ ..] => {
+			super::push(out, 2115);
+			s.is_empty()
+		}
+		['λ', s @ ..] => {
+			super::push(out, 2116);
+			match s {
+				[] => true,
+				['π', s @ ..] => {
+					super::push(out, 4187);
+					s.is_empty()
+				}
+				['φ', s @ ..] => {
+					super::push(out, 4188);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5893);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ν', s @ ..] => {
+			super::push(out, 2117);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 4189);
+					s.is_empty()
+				}
+				['π', s @ ..] => {
+					super::push(out, 4190);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			match s {
+				[] => true,
+				['θ', s @ ..] => {
+					super::push(out, 4191);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 4192);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['χ', 'ο', 'ρ', s @ ..] => {
+			match s {
+				[] => true,
+				['δ', s @ ..] => {
+					super::push(out, 4193);
+					s.is_empty()
+				}
+				['π', s @ ..] => {
+					super::push(out, 4194);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ῥ', s @ ..] => {
+			super::push(out, 2118);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -ποσ.
-pub(crate) fn n635(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.27936217), (13, 0.18870832), (31, 0.16704051), (26, 0.057053484), (102, 0.044113833), (16, 0.04368658), (27, 0.035553522), (74, 0.028458076), (93, 0.024750134), (55, 0.02214084), (626, 0.021149004), (428, 0.020996414), (652, 0.020996414), (314, 0.019028), (75, 0.0071869995), (692, 0.0070038913), (423, 0.005477989)], 0.9927062);
-    match s {
-        [] => true,
-        ['ε', s @ ..] => {
-            out.push(&[(26, 0.19519341), (74, 0.1808957), (0, 0.13968109), (27, 0.10110628), (13, 0.09436179), (75, 0.08693065), (31, 0.083527885), (102, 0.022049287), (16, 0.02185092), (93, 0.012375067), (55, 0.011062791), (626, 0.010574502), (428, 0.010498207), (652, 0.010498207), (314, 0.00952163), (692, 0.003494316), (423, 0.002746624)], 0.99636835);
-            match s {
-                [] => true,
-                ['λ', s @ ..] => {
-                    out.push(&[(74, 0.34282446), (75, 0.16906996), (26, 0.13012893), (0, 0.09312581), (27, 0.06741436), (13, 0.06289769), (31, 0.05568017), (102, 0.014709697), (16, 0.014557107), (93, 0.008255131), (55, 0.0073853666), (626, 0.007049668), (428, 0.0070038913), (652, 0.0070038913), (314, 0.006347753), (692, 0.0023346303)], 0.9957885);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['η', s @ ..] => {
-            out.push(&[(102, 0.36273748), (0, 0.18625163), (13, 0.12581064), (31, 0.11136034), (26, 0.038040742), (16, 0.029129473), (27, 0.02369726), (74, 0.018966964), (93, 0.016495002), (55, 0.014755474), (626, 0.014099336), (428, 0.013992523), (652, 0.013992523), (314, 0.012680247), (75, 0.004791333), (692, 0.0046692607), (423, 0.0036621653)], 0.9951324);
-            match s {
-                [] => true,
-                ['κ', s @ ..] => {
-                    out.push(&[(102, 0.5751583), (0, 0.12416266), (13, 0.083878845), (31, 0.0742504), (26, 0.025360495), (16, 0.019424735), (27, 0.015808348), (74, 0.012649729), (93, 0.011001755), (55, 0.009842069), (626, 0.0093995575), (428, 0.009338521), (652, 0.009338521), (314, 0.008453499), (75, 0.0031891356), (692, 0.0031128405), (423, 0.0024414435)], 0.99681085);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ι', s @ ..] => {
-            out.push(&[(55, 0.1740444), (428, 0.17366293), (652, 0.17366293), (26, 0.13012893), (0, 0.09312581), (27, 0.06741436), (13, 0.06289769), (31, 0.05568017), (102, 0.014709697), (16, 0.014557107), (74, 0.009491112), (93, 0.008255131), (626, 0.007049668), (314, 0.006347753), (75, 0.0023956664), (692, 0.0023346303)], 0.995758);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(652, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['λ', s @ ..] => {
-                    out.push(&[(26, 0.30897993), (27, 0.15605402), (55, 0.116029605), (428, 0.1157702), (652, 0.1157702), (0, 0.06208896), (13, 0.041931793), (31, 0.0371252), (102, 0.0097962925), (16, 0.009704738), (74, 0.006317235), (93, 0.005493248), (626, 0.0046997787), (314, 0.0042267493)], 0.9939879);
-                    s.is_empty()
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(55, 0.44936293), (428, 0.1157702), (652, 0.1157702), (26, 0.08674754), (0, 0.06208896), (27, 0.04493782), (13, 0.041931793), (31, 0.0371252), (102, 0.0097962925), (16, 0.009704738), (74, 0.006317235), (93, 0.005493248), (626, 0.0046997787), (314, 0.0042267493)], 0.99397266);
-                    s.is_empty()
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(428, 0.44910353), (55, 0.116029605), (652, 0.1157702), (26, 0.08674754), (0, 0.06208896), (27, 0.04493782), (13, 0.041931793), (31, 0.0371252), (102, 0.0097962925), (16, 0.009704738), (74, 0.006317235), (93, 0.005493248), (626, 0.0046997787), (314, 0.0042267493)], 0.9939727);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['λ', s @ ..] => {
-            out.push(&[(0, 0.24884413), (26, 0.24023804), (27, 0.12445258), (13, 0.11613642), (31, 0.102800034), (102, 0.0271458), (16, 0.026886396), (74, 0.017517358), (93, 0.015228504), (55, 0.013626306), (626, 0.013015945), (428, 0.012924392), (652, 0.012924392), (314, 0.01170367), (75, 0.0044251163), (692, 0.004303044), (423, 0.0033722438)], 0.9955444);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(26, 0.38237584), (27, 0.1940795), (0, 0.16589609), (13, 0.07742428), (31, 0.068528265), (102, 0.0180972), (16, 0.017929351), (74, 0.0116731515), (93, 0.010147249), (55, 0.009079118), (626, 0.008682383), (428, 0.008621347), (652, 0.008621347), (314, 0.007812619), (75, 0.0029449912), (692, 0.002868696), (423, 0.0022430762)], 0.9970245);
-                    s.is_empty()
-                }
-                ['ο', 'κ', '\u{1}', s @ ..] => {
-                    out.push(&[(0, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['μ', s @ ..] => {
-            out.push(&[(31, 0.37462425), (0, 0.17514305), (13, 0.15477225), (314, 0.105394065), (74, 0.08130007), (27, 0.045441367), (26, 0.012817578), (102, 0.009918365), (16, 0.009811551), (93, 0.005554284), (55, 0.004974441), (626, 0.004760815), (428, 0.004715038), (652, 0.004715038)], 0.99394214);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(13, 0.2672465), (314, 0.22668803), (74, 0.1692378), (31, 0.15291066), (27, 0.08657969), (0, 0.071488515), (26, 0.0052338447), (102, 0.004043641), (16, 0.004013123), (93, 0.0022735943), (55, 0.00202945)], 0.9917449);
-                    match s {
-                        [] => true,
-                        ['κ', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(314, 0.47368583), (74, 0.35088122), (27, 0.17543298)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['ο', s @ ..] => {
-                                    out.push(&[(13, 0.5114977), (314, 0.15112536), (74, 0.11282521), (31, 0.10193027), (27, 0.05770962), (0, 0.047653925), (26, 0.003494316), (102, 0.0027008469), (16, 0.0026703288)], 0.99160755);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(31, 0.6248722), (0, 0.22504005), (13, 0.05159075), (314, 0.03512627), (74, 0.027100023), (27, 0.0151522085), (26, 0.004272526), (102, 0.0033112078), (16, 0.0032654307)], 0.98973066);
-                    match s {
-                        [] => true,
-                        ['κ', s @ ..] => {
-                            out.push(&[(0, 0.48336002), (31, 0.41658655), (13, 0.034393836), (314, 0.023422599), (74, 0.018066682), (27, 0.010101473), (26, 0.002853437), (102, 0.0021972992), (16, 0.0021820401)], 0.99316394);
-                            s.is_empty()
-                        }
-                        ['π', s @ ..] => {
-                            out.push(&[(31, 0.8499428), (0, 0.09001297), (13, 0.020630198), (314, 0.014053559), (74, 0.010833906), (27, 0.006057832)], 0.99153125);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['ο', s @ ..] => {
-            out.push(&[(0, 0.47548637), (13, 0.18764019), (31, 0.18522927), (16, 0.060410466), (626, 0.057907987), (26, 0.0063324943), (102, 0.0048981463), (27, 0.003952087), (74, 0.0031586175), (93, 0.002746624), (55, 0.0024567025), (428, 0.0023346303), (652, 0.0023346303), (314, 0.002121004)], 0.9970092);
-            match s {
-                [] => true,
-                ['δ', s @ ..] => {
-                    out.push(&[(16, 0.37360188), (0, 0.3169909), (13, 0.12509346), (31, 0.123491265), (626, 0.038605325), (26, 0.0042267493), (102, 0.0032654307), (27, 0.0026398108), (74, 0.002105745)], 0.9900206);
-                    s.is_empty()
-                }
-                ['ι', s @ ..] => {
-                    out.push(&[(13, 0.4584268), (0, 0.3169909), (31, 0.123491265), (16, 0.04026856), (626, 0.038605325), (26, 0.0042267493), (102, 0.0032654307), (27, 0.0026398108), (74, 0.002105745)], 0.9900206);
-                    s.is_empty()
-                }
-                ['κ', s @ ..] => {
-                    out.push(&[(0, 0.6950942), (13, 0.13752957), (31, 0.13704127), (16, 0.012085145), (626, 0.011581598)], 0.9933318);
-                    match s {
-                        [] => true,
-                        ['σ', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['ι', s @ ..] => {
-                                    out.push(&[(0, 0.46340123), (13, 0.4250248), (31, 0.09137102), (16, 0.008056764), (626, 0.007721065)], 0.9955749);
-                                    s.is_empty()
-                                }
-                                ['ο', s @ ..] => {
-                                    out.push(&[(0, 0.87803465), (13, 0.055008773), (31, 0.054825667), (16, 0.00483711), (626, 0.0046387427)], 0.997345);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['λ', s @ ..] => {
-                    out.push(&[(31, 0.4568246), (0, 0.3169909), (13, 0.12509346), (16, 0.04026856), (626, 0.038605325), (26, 0.0042267493), (102, 0.0032654307), (27, 0.0026398108), (74, 0.002105745)], 0.9900206);
-                    s.is_empty()
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(0, 0.39018846), (13, 0.27505913), (626, 0.2231632), (31, 0.07409781), (16, 0.02417029), (26, 0.0025329976)], 0.9892119);
-                    match s {
-                        [] => true,
-                        ['τ', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['ι', s @ ..] => {
-                                    out.push(&[(13, 0.516701), (0, 0.2601358), (626, 0.14877546), (31, 0.049393453), (16, 0.016113527)], 0.9911192);
-                                    s.is_empty()
-                                }
-                                ['σ', s @ ..] => {
-                                    out.push(&[(626, 0.4821088), (0, 0.2601358), (13, 0.18336767), (31, 0.049393453), (16, 0.016113527)], 0.99111927);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['π', s @ ..] => {
-            out.push(&[(13, 0.540383), (0, 0.24939345), (31, 0.053452354), (423, 0.041748684), (26, 0.018249791), (102, 0.014114595), (16, 0.013977264), (27, 0.011383231), (74, 0.009109636), (93, 0.007919433), (55, 0.007080186), (626, 0.0067750057), (428, 0.0067139696), (652, 0.0067139696), (314, 0.00608835), (75, 0.0023041123), (692, 0.0022430762)], 0.9976501);
-            match s {
-                [] => true,
-                ['ι', s @ ..] => {
-                    out.push(&[(13, 0.7248951), (0, 0.117357135), (423, 0.07847715), (31, 0.025162127), (26, 0.00859083), (102, 0.0066376748), (16, 0.0065766387), (27, 0.005355917), (74, 0.0042877854), (93, 0.0037232013), (55, 0.0033264668), (626, 0.0031891356), (428, 0.0031586175), (652, 0.0031586175), (314, 0.002868696)], 0.99676514);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['σ', s @ ..] => {
-            out.push(&[(31, 0.44469368), (0, 0.18625163), (13, 0.12581064), (26, 0.038040742), (102, 0.029404135), (16, 0.029129473), (27, 0.02369726), (74, 0.018966964), (93, 0.016495002), (55, 0.014755474), (626, 0.014099336), (428, 0.013992523), (652, 0.013992523), (314, 0.012680247), (75, 0.004791333), (692, 0.0046692607), (423, 0.0036621653)], 0.9951324);
-            s.is_empty()
-        }
-        ['υ', s @ ..] => {
-            out.push(&[(0, 0.43006027), (102, 0.14509805), (13, 0.116990924), (26, 0.104097046), (27, 0.053925384), (692, 0.046311133), (31, 0.044541083), (16, 0.011657893), (74, 0.007583734), (93, 0.0065918975), (55, 0.0059052417), (626, 0.005645838), (428, 0.0056000613), (652, 0.0056000613), (314, 0.0050812545)], 0.9946899);
-            match s {
-                [] => true,
-                ['ο', s @ ..] => {
-                    out.push(&[(102, 0.43006027), (0, 0.28670177), (13, 0.07798886), (26, 0.06939803), (27, 0.035950255), (692, 0.030869002), (31, 0.029694056), (16, 0.0077668424), (74, 0.0050659953), (93, 0.0043945983), (55, 0.0039368276), (626, 0.0037537194), (428, 0.0037384604), (652, 0.0037384604), (314, 0.0033875029)], 0.99644464);
-                    s.is_empty()
-                }
-                ['τ', s @ ..] => {
-                    out.push(&[(0, 0.5447776), (26, 0.16664378), (13, 0.09217975), (27, 0.08403143), (102, 0.055268176), (692, 0.01763943), (31, 0.016968032), (16, 0.0044403756), (74, 0.0028839551), (93, 0.0025177386), (55, 0.0022430762), (626, 0.002151522), (428, 0.002136263), (652, 0.002136263)], 0.9960174);
-                    match s {
-                        [] => true,
-                        ['σ', s @ ..] => {
-                            out.push(&[(0, 0.36319524), (26, 0.33331808), (27, 0.16713206), (13, 0.06146334), (102, 0.036850538), (692, 0.011764706), (31, 0.011306935), (16, 0.0029602502)], 0.98799115);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(26, 0.6666667), (27, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['ω', s @ ..] => {
-            out.push(&[(13, 0.2623636), (93, 0.22711529), (16, 0.20712596), (0, 0.10643168), (31, 0.06363012), (26, 0.021728847), (102, 0.016800184), (224, 0.0136110475), (27, 0.013550011), (74, 0.010833906), (55, 0.008438239), (626, 0.008056764), (428, 0.0079957275), (652, 0.0079957275), (314, 0.0072480356), (225, 0.0068055238), (75, 0.002746624), (692, 0.0026703288), (423, 0.002090486)], 0.9972381);
-            match s {
-                [] => true,
-                ['κ', s @ ..] => {
-                    out.push(&[(13, 0.5082475), (93, 0.15141527), (16, 0.13807888), (0, 0.07095445), (31, 0.04242008), (26, 0.014496071), (102, 0.011200123), (224, 0.0090638595), (27, 0.009033341), (74, 0.0072327764), (55, 0.00561532), (626, 0.0053711757), (428, 0.005325399), (652, 0.005325399), (314, 0.00483711), (225, 0.0045319297)], 0.9931487);
-                    s.is_empty()
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(93, 0.4914168), (13, 0.1614557), (16, 0.12745862), (0, 0.06549172), (31, 0.03915465), (224, 0.030350195), (225, 0.015182727), (26, 0.013382162), (102, 0.010345617), (27, 0.008331426), (74, 0.006668193), (55, 0.0051880674), (626, 0.0049591823), (428, 0.0049286643), (652, 0.0049286643), (314, 0.0044556344)], 0.99369806);
-                    s.is_empty()
-                }
-                ['σ', s @ ..] => {
-                    out.push(&[(16, 0.4714122), (13, 0.17491417), (93, 0.15141527), (0, 0.07095445), (31, 0.04242008), (26, 0.014496071), (102, 0.011200123), (224, 0.0090638595), (27, 0.009033341), (74, 0.0072327764), (55, 0.00561532), (626, 0.0053711757), (428, 0.005325399), (652, 0.005325399), (314, 0.00483711), (225, 0.0045319297)], 0.9931487);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n657(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 652);
+	match s {
+		[] => true,
+		['ε', s @ ..] => {
+			super::push(out, 2119);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 4195);
+					s.is_empty()
+				}
+				['λ', s @ ..] => {
+					super::push(out, 4196);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 2120);
+			match s {
+				[] => true,
+				['κ', s @ ..] => {
+					super::push(out, 4197);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 2121);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 4198);
+					s.is_empty()
+				}
+				['λ', s @ ..] => {
+					super::push(out, 4199);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5894);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 4200);
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 5895);
+							match s {
+								[] => true,
+								['υ', s @ ..] => {
+									super::push(out, 6851);
+									match s {
+										[] => true,
+										['ρ', s @ ..] => {
+											super::push(out, 7238);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 4201);
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 5896);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['λ', s @ ..] => {
+			super::push(out, 2122);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4202);
+					match s {
+						[] => true,
+						['θ', s @ ..] => {
+							super::push(out, 5897);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['μ', s @ ..] => {
+			super::push(out, 2123);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4203);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5898);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6852);
+									s.is_empty()
+								}
+								['ο', s @ ..] => {
+									super::push(out, 6853);
+									match s {
+										[] => true,
+										['π', s @ ..] => {
+											super::push(out, 7239);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 4204);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5899);
+							s.is_empty()
+						}
+						['π', s @ ..] => {
+							super::push(out, 5900);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6854);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 2124);
+			match s {
+				[] => true,
+				['δ', s @ ..] => {
+					super::push(out, 4205);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5901);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6855);
+									match s {
+										[] => true,
+										['κ', s @ ..] => {
+											super::push(out, 7240);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 4206);
+					match s {
+						[] => true,
+						['δ', s @ ..] => {
+							super::push(out, 5902);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['κ', s @ ..] => {
+					super::push(out, 4207);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5903);
+							s.is_empty()
+						}
+						['σ', s @ ..] => {
+							match s {
+								[] => true,
+								['ι', s @ ..] => {
+									super::push(out, 6856);
+									match s {
+										[] => true,
+										['π', s @ ..] => {
+											super::push(out, 7241);
+											match s {
+												[] => true,
+												['ε', s @ ..] => {
+													super::push(out, 7366);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['ο', s @ ..] => {
+									super::push(out, 6857);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 4208);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 4209);
+					match s {
+						[] => true,
+						['τ', s @ ..] => {
+							super::push(out, 5904);
+							match s {
+								[] => true,
+								['ι', s @ ..] => {
+									super::push(out, 6858);
+									match s {
+										[] => true,
+										['π', s @ ..] => {
+											super::push(out, 7242);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['σ', s @ ..] => {
+									super::push(out, 6859);
+									match s {
+										[] => true,
+										['α', s @ ..] => {
+											super::push(out, 7243);
+											match s {
+												[] => true,
+												['μ', s @ ..] => {
+													super::push(out, 7367);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['π', s @ ..] => {
+			super::push(out, 2125);
+			match s {
+				[] => true,
+				['ι', s @ ..] => {
+					super::push(out, 4210);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['σ', s @ ..] => {
+			super::push(out, 2126);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4211);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 5905);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 2127);
+			match s {
+				[] => true,
+				['ο', s @ ..] => {
+					super::push(out, 4212);
+					match s {
+						[] => true,
+						['δ', s @ ..] => {
+							super::push(out, 5906);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 4213);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5907);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6860);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ῥ', s @ ..] => {
+					super::push(out, 4214);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ω', s @ ..] => {
+			super::push(out, 2128);
+			match s {
+				[] => true,
+				['κ', s @ ..] => {
+					super::push(out, 4215);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5908);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 4216);
+					match s {
+						[] => true,
+						['θ', s @ ..] => {
+							super::push(out, 5909);
+							match s {
+								[] => true,
+								['ν', s @ ..] => {
+									super::push(out, 6861);
+									match s {
+										[] => true,
+										['α', s @ ..] => {
+											super::push(out, 7244);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['σ', s @ ..] => {
+					super::push(out, 4217);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5910);
+							match s {
+								[] => true,
+								['υ', s @ ..] => {
+									super::push(out, 6862);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -ροσ.
-pub(crate) fn n636(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(13, 0.24380866), (0, 0.21092546), (31, 0.16917677), (55, 0.11186389), (102, 0.066804), (16, 0.040146485), (43, 0.022247653), (93, 0.017837796), (94, 0.017715724), (26, 0.015701534), (435, 0.01326009), (423, 0.00889601), (108, 0.008834974), (27, 0.008178836), (14, 0.0045014117), (626, 0.0044556344), (670, 0.0044251163), (961, 0.0044251163), (1048, 0.0044251163), (115, 0.0030212863), (410, 0.0029755093), (787, 0.0029449912), (1168, 0.0023804074)], 0.98895246);
-    match s {
-        [] => true,
-        ['α', s @ ..] => {
-            out.push(&[(13, 0.60903335), (0, 0.25128558), (26, 0.046204317), (27, 0.025665674), (1168, 0.018448157), (31, 0.011459526), (1169, 0.009140154), (55, 0.007568475), (74, 0.0050812545), (102, 0.0045166705), (16, 0.002716106)], 0.99111927);
-            match s {
-                [] => true,
-                ['β', s @ ..] => {
-                    out.push(&[(13, 0.40601206), (26, 0.2530251), (0, 0.16752881), (27, 0.12822156), (1168, 0.012298772), (31, 0.007629511), (1169, 0.00608835), (55, 0.0050507365), (74, 0.0033875029), (102, 0.0030212863)], 0.9922637);
-                    s.is_empty()
-                }
-                ['δ', s @ ..] => {
-                    out.push(&[(13, 0.8160067), (0, 0.11825742), (26, 0.021744106), (27, 0.012085145), (1168, 0.008682383), (31, 0.005386435), (1169, 0.004303044), (55, 0.0035706111), (74, 0.0023956664), (102, 0.002121004)], 0.99455255);
-                    s.is_empty()
-                }
-                ['ζ', s @ ..] => {
-                    out.push(&[(0, 0.5008621), (13, 0.40601206), (26, 0.030807965), (27, 0.017105363), (1168, 0.012298772), (31, 0.007629511), (1169, 0.00608835), (55, 0.0050507365), (74, 0.0033875029), (102, 0.0030212863)], 0.9922637);
-                    s.is_empty()
-                }
-                ['θ', s @ ..] => {
-                    out.push(&[(13, 0.8436103), (0, 0.10051118), (26, 0.018478675), (27, 0.0102693215), (1168, 0.0073853666), (31, 0.0045777066), (1169, 0.0036621653), (55, 0.0030365454), (74, 0.00202945)], 0.9935607);
-                    s.is_empty()
-                }
-                ['μ', s @ ..] => {
-                    out.push(&[(13, 0.8696727), (0, 0.083756775), (26, 0.015396353), (27, 0.008560311), (1168, 0.006149386), (31, 0.0038147555), (1169, 0.0030518044), (55, 0.0025177386)], 0.99291986);
-                    s.is_empty()
-                }
-                ['π', s @ ..] => {
-                    out.push(&[(0, 0.5008621), (13, 0.40601206), (26, 0.030807965), (27, 0.017105363), (1168, 0.012298772), (31, 0.007629511), (1169, 0.00608835), (55, 0.0050507365), (74, 0.0033875029), (102, 0.0030212863)], 0.9922637);
-                    s.is_empty()
-                }
-                ['σ', s @ ..] => {
-                    out.push(&[(0, 0.5008621), (13, 0.40601206), (26, 0.030807965), (27, 0.017105363), (1168, 0.012298772), (31, 0.007629511), (1169, 0.00608835), (55, 0.0050507365), (74, 0.0033875029), (102, 0.0030212863)], 0.9922637);
-                    s.is_empty()
-                }
-                ['φ', s @ ..] => {
-                    out.push(&[(13, 0.30186924), (26, 0.18812849), (1168, 0.14297703), (0, 0.124559395), (27, 0.113923855), (1169, 0.07144274), (74, 0.039688718), (31, 0.005676356), (55, 0.0037537194), (102, 0.0022430762)], 0.99426264);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['β', s @ ..] => {
-            out.push(&[(0, 0.44219118), (31, 0.33383688), (55, 0.12237736), (13, 0.048767835), (102, 0.013366903), (16, 0.008026246), (43, 0.0044556344), (93, 0.0035706111), (94, 0.003540093), (26, 0.0031433585), (435, 0.0026550698)], 0.98593116);
-            match s {
-                [] => true,
-                ['ε', 'ν', s @ ..] => {
-                    out.push(&[(31, 0.55588615), (0, 0.29478905), (55, 0.08157473), (13, 0.032501716), (102, 0.008911269), (16, 0.005355917), (43, 0.0029602502), (93, 0.0023804074), (94, 0.0023651484), (26, 0.002090486)], 0.9888151);
-                    s.is_empty()
-                }
-                ['μ', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['α', s @ ..] => {
-                            out.push(&[(31, 0.55588615), (0, 0.29478905), (55, 0.08157473), (13, 0.032501716), (102, 0.008911269), (16, 0.005355917), (43, 0.0029602502), (93, 0.0023804074), (94, 0.0023651484), (26, 0.002090486)], 0.9888151);
-                            s.is_empty()
-                        }
-                        ['ο', s @ ..] => {
-                            out.push(&[(0, 0.7210956), (31, 0.16691844), (55, 0.06118868), (13, 0.024383917), (102, 0.0066834516), (16, 0.004013123), (43, 0.0022278172)], 0.98651105);
-                            s.is_empty()
-                        }
-                        ['υ', s @ ..] => {
-                            out.push(&[(55, 0.41490805), (0, 0.29478905), (31, 0.22255284), (13, 0.032501716), (102, 0.008911269), (16, 0.005355917), (43, 0.0029602502), (93, 0.0023804074), (94, 0.0023651484), (26, 0.002090486)], 0.9888151);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(31, 0.55588615), (0, 0.29478905), (55, 0.08157473), (13, 0.032501716), (102, 0.008911269), (16, 0.005355917), (43, 0.0029602502), (93, 0.0023804074), (94, 0.0023651484), (26, 0.002090486)], 0.9888151);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['γ', s @ ..] => {
-            out.push(&[(0, 0.40375373), (13, 0.29352254), (93, 0.122209504), (31, 0.06941329), (1163, 0.026550699), (55, 0.026398107), (102, 0.01576257), (16, 0.009475852), (43, 0.0052491035), (94, 0.004180972), (26, 0.0037079423), (435, 0.0031280995), (423, 0.002090486), (108, 0.002090486)], 0.9875334);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['γ', s @ ..] => {
-                            out.push(&[(93, 0.41480124), (0, 0.26916915), (13, 0.19568169), (31, 0.046280615), (1163, 0.017700465), (55, 0.017593652), (102, 0.010513466), (16, 0.006317235), (43, 0.003494316), (94, 0.002792401), (26, 0.0024719615), (435, 0.002090486)], 0.9889067);
-                            s.is_empty()
-                        }
-                        ['λ', s @ ..] => {
-                            out.push(&[(13, 0.529015), (0, 0.26916915), (93, 0.08146792), (31, 0.046280615), (1163, 0.017700465), (55, 0.017593652), (102, 0.010513466), (16, 0.006317235), (43, 0.003494316), (94, 0.002792401), (26, 0.0024719615), (435, 0.002090486)], 0.9889067);
-                            s.is_empty()
-                        }
-                        ['ν', s @ ..] => {
-                            out.push(&[(13, 0.529015), (0, 0.26916915), (93, 0.08146792), (31, 0.046280615), (1163, 0.017700465), (55, 0.017593652), (102, 0.010513466), (16, 0.006317235), (43, 0.003494316), (94, 0.002792401), (26, 0.0024719615), (435, 0.002090486)], 0.9889067);
-                            s.is_empty()
-                        }
-                        ['φ', s @ ..] => {
-                            out.push(&[(0, 0.56046385), (13, 0.18202487), (1163, 0.086228736), (93, 0.07579156), (31, 0.0430457), (55, 0.01637293), (102, 0.009781033), (16, 0.0058747237), (43, 0.0032501717), (94, 0.0025940337), (26, 0.0023041123)], 0.9877317);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['γ', s @ ..] => {
-                    out.push(&[(0, 0.7018845), (13, 0.14676127), (93, 0.061097123), (31, 0.034714274), (1163, 0.0132753495), (55, 0.013199054), (102, 0.007888914), (16, 0.004730297), (43, 0.0026245518), (94, 0.002090486)], 0.9882658);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['δ', s @ ..] => {
-            out.push(&[(13, 0.3739681), (0, 0.2851606), (16, 0.09002823), (43, 0.08703746), (93, 0.08630503), (31, 0.028198672), (55, 0.018646525), (102, 0.011139086), (94, 0.0029449912), (26, 0.0026092927), (435, 0.0022125582)], 0.98825055);
-            match s {
-                [] => true,
-                ['ε', s @ ..] => {
-                    out.push(&[(13, 0.29132524), (16, 0.19667353), (43, 0.19568169), (93, 0.19543755), (0, 0.09504845), (31, 0.0093995575), (55, 0.006210422), (102, 0.0037079423)], 0.9934844);
-                    match s {
-                        [] => true,
-                        ['κ', s @ ..] => {
-                            out.push(&[(16, 0.34833294), (43, 0.34784466), (13, 0.14566262), (93, 0.097718775), (0, 0.047531854), (31, 0.0046997787), (55, 0.0031128405)], 0.99490345);
-                            match s {
-                                [] => true,
-                                ['υ', s @ ..] => {
-                                    out.push(&[(16, 0.5655604), (43, 0.23189135), (13, 0.097108416), (93, 0.06514076), (0, 0.03167773), (31, 0.0031280995), (55, 0.002075227)], 0.996582);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['ν', s @ ..] => {
-                            out.push(&[(93, 0.4636301), (13, 0.19421683), (16, 0.13112077), (43, 0.13044938), (0, 0.06337072), (31, 0.006271458), (55, 0.004150454), (102, 0.0024719615)], 0.9956817);
-                            s.is_empty()
-                        }
-                        ['ρ', s @ ..] => {
-                            out.push(&[(13, 0.52755016), (16, 0.13112077), (43, 0.13044938), (93, 0.13029678), (0, 0.06337072), (31, 0.006271458), (55, 0.004150454), (102, 0.0024719615)], 0.9956817);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ν', s @ ..] => {
-                    out.push(&[(13, 0.5495842), (0, 0.3140612), (16, 0.036011294), (43, 0.03482109), (93, 0.034515906), (31, 0.011276417), (55, 0.007461662), (102, 0.0044556344)], 0.9921874);
-                    match s {
-                        [] => true,
-                        ['ο', s @ ..] => {
-                            out.push(&[(0, 0.5427024), (13, 0.3663844), (16, 0.024002442), (43, 0.023208972), (93, 0.023010606), (31, 0.007522698), (55, 0.004974441), (102, 0.0029755093)], 0.99478143);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['υ', s @ ..] => {
-                    out.push(&[(0, 0.5140612), (13, 0.3495842), (16, 0.036011294), (43, 0.03482109), (93, 0.034515906), (31, 0.011276417), (55, 0.007461662), (102, 0.0044556344)], 0.9921874);
-                    match s {
-                        [] => true,
-                        ['λ', s @ ..] => {
-                            out.push(&[(13, 0.5663844), (0, 0.34270236), (16, 0.024002442), (43, 0.023208972), (93, 0.023010606), (31, 0.007522698), (55, 0.004974441), (102, 0.0029755093)], 0.9947814);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['ε', s @ ..] => {
-            out.push(&[(13, 0.60460824), (31, 0.17570764), (0, 0.07483024), (26, 0.071824215), (27, 0.035950255), (55, 0.011779965), (102, 0.0070344093), (16, 0.0042267493), (43, 0.0023346303)], 0.98829633);
-            match s {
-                [] => true,
-                ['θ', '\u{1}', s @ ..] => {
-                    out.push(&[(26, 0.6666667), (27, 0.33333334)], 1.0);
-                    s.is_empty()
-                }
-                ['ι', s @ ..] => {
-                    out.push(&[(31, 0.4504616), (13, 0.40306705), (0, 0.049897), (26, 0.04788281), (27, 0.023971923), (55, 0.007843138), (102, 0.00468452), (16, 0.002822919)], 0.990631);
-                    s.is_empty()
-                }
-                ['λ', s @ ..] => {
-                    out.push(&[(13, 0.40306705), (0, 0.38323033), (31, 0.11712825), (26, 0.04788281), (27, 0.023971923), (55, 0.007843138), (102, 0.00468452), (16, 0.002822919)], 0.9906309);
-                    s.is_empty()
-                }
-                ['μ', s @ ..] => {
-                    out.push(&[(13, 0.5523003), (26, 0.20257877), (27, 0.10130464), (31, 0.08784619), (0, 0.03741512), (55, 0.0058899825), (102, 0.003509575), (16, 0.002105745)], 0.9929503);
-                    s.is_empty()
-                }
-                ['π', s @ ..] => {
-                    out.push(&[(13, 0.8023041), (31, 0.08784619), (0, 0.03741512), (26, 0.035919737), (27, 0.017975127), (55, 0.0058899825), (102, 0.003509575), (16, 0.002105745)], 0.9929656);
-                    s.is_empty()
-                }
-                ['τ', s @ ..] => {
-                    out.push(&[(13, 0.74416727), (31, 0.19305715), (0, 0.02137789), (26, 0.020523384), (27, 0.0102693215), (55, 0.0033569848), (102, 0.002014191)], 0.9947662);
-                    match s {
-                        [] => true,
-                        ['σ', s @ ..] => {
-                            out.push(&[(13, 0.49611658), (31, 0.4620432), (0, 0.014251927), (26, 0.013687342), (27, 0.006851301), (55, 0.0022430762)], 0.9951934);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['η', s @ ..] => {
-            out.push(&[(31, 0.33693448), (13, 0.319646), (102, 0.21441978), (0, 0.03961242), (923, 0.031296253), (55, 0.021011673), (16, 0.007537957), (43, 0.004180972), (93, 0.0033569848), (94, 0.0033264668), (26, 0.0029449912), (435, 0.0024872206)], 0.9867552);
-            match s {
-                [] => true,
-                ['δ', s @ ..] => {
-                    out.push(&[(13, 0.54644084), (31, 0.22462806), (102, 0.14294651), (0, 0.026413366), (923, 0.020859083), (55, 0.014007783), (16, 0.0050202184), (43, 0.002792401), (93, 0.0022278172), (94, 0.0022125582)], 0.98754865);
-                    s.is_empty()
-                }
-                ['κ', s @ ..] => {
-                    out.push(&[(31, 0.5579614), (13, 0.2131075), (102, 0.14294651), (0, 0.026413366), (923, 0.020859083), (55, 0.014007783), (16, 0.0050202184), (43, 0.002792401), (93, 0.0022278172), (94, 0.0022125582)], 0.98754865);
-                    s.is_empty()
-                }
-                ['λ', s @ ..] => {
-                    out.push(&[(102, 0.50074005), (13, 0.31831846), (31, 0.13084611), (0, 0.015381094), (923, 0.01216144), (55, 0.008163577), (16, 0.0029297322)], 0.9885405);
-                    match s {
-                        [] => true,
-                        ['κ', 'υ', s @ ..] => {
-                            out.push(&[(13, 0.5455406), (102, 0.33383688), (31, 0.08723583), (0, 0.010254063), (923, 0.008102541), (55, 0.005432212)], 0.9904021);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['μ', 'ο', s @ ..] => {
-                    out.push(&[(13, 0.43532464), (31, 0.22462806), (102, 0.14294651), (923, 0.13197528), (0, 0.026413366), (55, 0.014007783), (16, 0.0050202184), (43, 0.002792401), (93, 0.0022278172), (94, 0.0022125582)], 0.98754865);
-                    s.is_empty()
-                }
-                ['τ', s @ ..] => {
-                    out.push(&[(31, 0.5579614), (13, 0.2131075), (102, 0.14294651), (0, 0.026413366), (923, 0.020859083), (55, 0.014007783), (16, 0.0050202184), (43, 0.002792401), (93, 0.0022278172), (94, 0.0022125582)], 0.98754865);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['θ', s @ ..] => {
-            out.push(&[(13, 0.31094834), (0, 0.30272374), (31, 0.16729991), (102, 0.14169528), (55, 0.027969787), (16, 0.010040437), (43, 0.005569543), (93, 0.0044556344), (94, 0.0044251163), (26, 0.003921569), (435, 0.0033112078), (423, 0.0022278172), (108, 0.0022125582), (27, 0.002044709)], 0.98884565);
-            match s {
-                [] => true,
-                ['ε', s @ ..] => {
-                    out.push(&[(13, 0.6554818), (0, 0.1513695), (31, 0.083649956), (102, 0.07084764), (55, 0.013977264), (16, 0.0050202184), (43, 0.002777142), (93, 0.0022278172), (94, 0.0022125582)], 0.9875639);
-                    s.is_empty()
-                }
-                ['ι', s @ ..] => {
-                    out.push(&[(102, 0.42780194), (13, 0.20729381), (0, 0.20181583), (31, 0.11152819), (55, 0.018646525), (16, 0.0066834516), (43, 0.0037079423), (93, 0.0029755093), (94, 0.0029449912), (26, 0.0026092927), (435, 0.0022125582)], 0.98822004);
-                    s.is_empty()
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(0, 0.53514916), (13, 0.20729381), (31, 0.11152819), (102, 0.0944686), (55, 0.018646525), (16, 0.0066834516), (43, 0.0037079423), (93, 0.0029755093), (94, 0.0029449912), (26, 0.0026092927), (435, 0.0022125582)], 0.98822004);
-                    s.is_empty()
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(0, 0.53514916), (13, 0.20729381), (31, 0.11152819), (102, 0.0944686), (55, 0.018646525), (16, 0.0066834516), (43, 0.0037079423), (93, 0.0029755093), (94, 0.0029449912), (26, 0.0026092927), (435, 0.0022125582)], 0.98822004);
-                    s.is_empty()
-                }
-                ['χ', s @ ..] => {
-                    out.push(&[(31, 0.44486153), (13, 0.20729381), (0, 0.20181583), (102, 0.0944686), (55, 0.018646525), (16, 0.0066834516), (43, 0.0037079423), (93, 0.0029755093), (94, 0.0029449912), (26, 0.0026092927), (435, 0.0022125582)], 0.98822004);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ι', s @ ..] => {
-            out.push(&[(55, 0.2858625), (94, 0.19395743), (31, 0.16539253), (102, 0.14592202), (1048, 0.06446937), (410, 0.042984664), (13, 0.031158922), (0, 0.026962692), (411, 0.021301595), (16, 0.0051270314), (43, 0.002838178), (93, 0.0022735943), (26, 0.0019989319)], 0.99024945);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(31, 0.29274434), (55, 0.29106584), (102, 0.26700237), (94, 0.071839474), (1048, 0.02388037), (410, 0.01591516), (13, 0.011535821), (0, 0.009979401), (411, 0.007888914)], 0.9918517);
-                    match s {
-                        [] => true,
-                        ['θ', s @ ..] => {
-                            out.push(&[(31, 0.5284962), (55, 0.19403373), (102, 0.17799649), (94, 0.04789807), (1048, 0.01591516), (410, 0.01060502), (13, 0.007690547), (0, 0.0066529335), (411, 0.005264363)], 0.9945525);
-                            s.is_empty()
-                        }
-                        ['κ', 'ο', s @ ..] => {
-                            out.push(&[(55, 0.52736706), (31, 0.19516289), (102, 0.17799649), (94, 0.04789807), (1048, 0.01591516), (410, 0.01060502), (13, 0.007690547), (0, 0.0066529335), (411, 0.005264363)], 0.99455255);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ε', s @ ..] => {
-                    out.push(&[(55, 0.4131533), (94, 0.36626232), (410, 0.08136111), (411, 0.040634774), (31, 0.03576715), (102, 0.031555656), (1048, 0.013931487), (13, 0.006729229), (0, 0.0058289464)], 0.99522394);
-                    match s {
-                        [] => true,
-                        ['γ', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['α', s @ ..] => {
-                                    out.push(&[(55, 0.7065843), (94, 0.18312353), (410, 0.040680554), (411, 0.020325018), (31, 0.017883575), (102, 0.015777828), (1048, 0.0069733732), (13, 0.0033722438), (0, 0.0029144732)], 0.9976349);
-                                    s.is_empty()
-                                }
-                                ['ι', s @ ..] => {
-                                    out.push(&[(94, 0.5775082), (55, 0.2754406), (410, 0.054245822), (411, 0.027100023), (31, 0.023834592), (102, 0.021026932), (1048, 0.009292744), (13, 0.0044861524), (0, 0.0038910506)], 0.9968261);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['π', 'η', s @ ..] => {
-                            out.push(&[(94, 0.5775082), (55, 0.2754406), (410, 0.054245822), (411, 0.027100023), (31, 0.023834592), (102, 0.021026932), (1048, 0.009292744), (13, 0.0044861524), (0, 0.0038910506)], 0.9968261);
-                            s.is_empty()
-                        }
-                        ['φ', s @ ..] => {
-                            out.push(&[(94, 0.5775082), (55, 0.2754406), (410, 0.054245822), (411, 0.027100023), (31, 0.023834592), (102, 0.021026932), (1048, 0.009292744), (13, 0.0044861524), (0, 0.0038910506)], 0.9968261);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['κ', s @ ..] => {
-                    out.push(&[(1048, 0.37630275), (55, 0.19056992), (94, 0.12930495), (31, 0.11026169), (102, 0.09727626), (410, 0.028656444), (13, 0.020767529), (0, 0.017975127), (411, 0.01420615), (16, 0.003418021)], 0.98873883);
-                    s.is_empty()
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(102, 0.43060958), (55, 0.19056992), (94, 0.12930495), (31, 0.11026169), (1048, 0.042969406), (410, 0.028656444), (13, 0.020767529), (0, 0.017975127), (411, 0.01420615), (16, 0.003418021)], 0.98873883);
-                    s.is_empty()
-                }
-                ['σ', s @ ..] => {
-                    out.push(&[(31, 0.44359502), (55, 0.19056992), (94, 0.12930495), (102, 0.09727626), (1048, 0.042969406), (410, 0.028656444), (13, 0.020767529), (0, 0.017975127), (411, 0.01420615), (16, 0.003418021)], 0.98873883);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['κ', s @ ..] => {
-            out.push(&[(31, 0.66767377), (13, 0.09752041), (0, 0.08436713), (55, 0.04473945), (102, 0.026718548), (16, 0.016052492), (43, 0.00889601), (93, 0.0071412222), (94, 0.007080186), (26, 0.006271458), (435, 0.0053101396), (423, 0.003555352), (108, 0.003540093), (27, 0.0032806897)], 0.982147);
-            s.is_empty()
-        }
-        ['ο', s @ ..] => {
-            out.push(&[(0, 0.4551156), (13, 0.19884032), (31, 0.103273064), (16, 0.076676585), (93, 0.050675213), (43, 0.026001373), (423, 0.025329977), (14, 0.02511635), (26, 0.017380025), (27, 0.008712902), (55, 0.005569543), (102, 0.0033264668)], 0.9960174);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(0, 0.33209735), (31, 0.29889372), (26, 0.24600595), (27, 0.123002976)], 1.0);
-                    s.is_empty()
-                }
-                ['β', s @ ..] => {
-                    out.push(&[(13, 0.59942013), (0, 0.2275578), (31, 0.051636532), (16, 0.03834592), (93, 0.025345236), (43, 0.013000687), (423, 0.012664989), (14, 0.012558175), (26, 0.008682383), (27, 0.0043488215), (55, 0.002777142)], 0.99633783);
-                    s.is_empty()
-                }
-                ['δ', s @ ..] => {
-                    out.push(&[(13, 0.4795453), (31, 0.24130617), (0, 0.18204013), (16, 0.030670634), (93, 0.020263981), (43, 0.010406653), (423, 0.010131991), (14, 0.010040437), (26, 0.006958114), (27, 0.003479057), (55, 0.0022278172)], 0.99707025);
-                    s.is_empty()
-                }
-                ['η', s @ ..] => {
-                    out.push(&[(93, 0.3671168), (0, 0.30341038), (13, 0.13257039), (31, 0.06884871), (16, 0.051117722), (43, 0.017334249), (423, 0.016891737), (14, 0.016739147), (26, 0.011581598), (27, 0.0057984283), (55, 0.0037079423), (102, 0.0022125582)], 0.99732965);
-                    match s {
-                        [] => true,
-                        ['ν', s @ ..] => {
-                            out.push(&[(93, 0.5780728), (0, 0.20227359), (13, 0.088380255), (31, 0.045899138), (16, 0.034073398), (43, 0.011551079), (423, 0.011261159), (14, 0.011169604), (26, 0.007721065), (27, 0.0038757916), (55, 0.0024719615)], 0.9967498);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['θ', s @ ..] => {
-                    out.push(&[(31, 0.40218204), (0, 0.30341038), (13, 0.13257039), (16, 0.051117722), (93, 0.033783473), (43, 0.017334249), (423, 0.016891737), (14, 0.016739147), (26, 0.011581598), (27, 0.0057984283), (55, 0.0037079423), (102, 0.0022125582)], 0.99732965);
-                    s.is_empty()
-                }
-                ['κ', s @ ..] => {
-                    out.push(&[(0, 0.4695506), (13, 0.18127719), (16, 0.14959945), (93, 0.14285496), (31, 0.026794843), (43, 0.0067444877), (423, 0.0065766387), (14, 0.0065156026), (26, 0.0045014117), (27, 0.0022583352)], 0.9966735);
-                    match s {
-                        [] => true,
-                        ['α', s @ ..] => {
-                            out.push(&[(13, 0.2725109), (16, 0.25983062), (93, 0.25714505), (0, 0.1878233), (31, 0.010711834), (43, 0.0027008469), (423, 0.0026245518), (14, 0.0026092927)], 0.99595636);
-                            match s {
-                                [] => true,
-                                ['ζ', s @ ..] => {
-                                    out.push(&[(13, 0.38625163), (93, 0.37857634), (16, 0.12991531), (0, 0.09390402), (31, 0.005355917)], 0.99400324);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['μ', s @ ..] => {
-                    out.push(&[(0, 0.58204013), (16, 0.23067063), (13, 0.07954528), (31, 0.04130617), (93, 0.020263981), (43, 0.010406653), (423, 0.010131991), (14, 0.010040437), (26, 0.006958114), (27, 0.003479057), (55, 0.0022278172)], 0.99707025);
-                    match s {
-                        [] => true,
-                        ['ο', s @ ..] => {
-                            out.push(&[(16, 0.48711374), (0, 0.38803694), (13, 0.0530251), (31, 0.027542535), (93, 0.013519494), (43, 0.006927596), (423, 0.006759747), (14, 0.006698711), (26, 0.0046387427), (27, 0.0023193713)], 0.996582);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['π', s @ ..] => {
-                    out.push(&[(0, 0.74480814), (13, 0.123369195), (31, 0.039337758), (16, 0.029205767), (93, 0.019302662), (43, 0.009903105), (423, 0.009658961), (14, 0.009567407), (26, 0.0066224155), (27, 0.0033112078), (55, 0.002121004)], 0.99720764);
-                    s.is_empty()
-                }
-                ['σ', s @ ..] => {
-                    out.push(&[(14, 0.35007247), (0, 0.30341038), (13, 0.13257039), (31, 0.06884871), (16, 0.051117722), (93, 0.033783473), (43, 0.017334249), (423, 0.016891737), (26, 0.011581598), (27, 0.0057984283), (55, 0.0037079423), (102, 0.0022125582)], 0.99732965);
-                    s.is_empty()
-                }
-                ['τ', s @ ..] => {
-                    out.push(&[(16, 0.38445106), (0, 0.30341038), (13, 0.13257039), (31, 0.06884871), (93, 0.033783473), (43, 0.017334249), (423, 0.016891737), (14, 0.016739147), (26, 0.011581598), (27, 0.0057984283), (55, 0.0037079423), (102, 0.0022125582)], 0.99732965);
-                    s.is_empty()
-                }
-                ['φ', s @ ..] => {
-                    out.push(&[(0, 0.7129931), (13, 0.09808499), (43, 0.07382315), (423, 0.073731594), (31, 0.014496071), (16, 0.01075761), (93, 0.007110704), (14, 0.003524834), (26, 0.0024414435)], 0.9969635);
-                    match s {
-                        [] => true,
-                        ['ε', s @ ..] => {
-                            out.push(&[(0, 0.47533378), (13, 0.39871824), (43, 0.049210347), (423, 0.04914931), (31, 0.009658961), (16, 0.0071717403), (93, 0.004745556), (14, 0.0023498894)], 0.99633783);
-                            s.is_empty()
-                        }
-                        ['η', s @ ..] => {
-                            out.push(&[(0, 0.8852064), (13, 0.039230946), (43, 0.029526208), (423, 0.02949569), (31, 0.0057984283), (16, 0.004303044), (93, 0.002838178)], 0.9963989);
-                            s.is_empty()
-                        }
-                        ['ο', s @ ..] => {
-                            out.push(&[(0, 0.9282521), (13, 0.024521248), (43, 0.018463416), (423, 0.018432898), (31, 0.0036163882), (16, 0.0026855879)], 0.9959716);
-                            s.is_empty()
-                        }
-                        ['υ', s @ ..] => {
-                            out.push(&[(0, 0.47533378), (423, 0.38248265), (13, 0.06538491), (43, 0.049210347), (31, 0.009658961), (16, 0.0071717403), (93, 0.004745556), (14, 0.0023498894)], 0.99633783);
-                            s.is_empty()
-                        }
-                        ['ω', s @ ..] => {
-                            out.push(&[(0, 0.47533378), (43, 0.38254368), (13, 0.06538491), (423, 0.04914931), (31, 0.009658961), (16, 0.0071717403), (93, 0.004745556), (14, 0.0023498894)], 0.99633783);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['χ', s @ ..] => {
-                    out.push(&[(13, 0.34941635), (31, 0.30164033), (0, 0.2275578), (16, 0.03834592), (93, 0.025345236), (43, 0.013000687), (423, 0.012664989), (14, 0.012558175), (26, 0.008682383), (27, 0.0043488215), (55, 0.002777142)], 0.99633783);
-                    match s {
-                        [] => true,
-                        ['ρ', s @ ..] => {
-                            out.push(&[(13, 0.56627756), (31, 0.20108339), (0, 0.15170519), (16, 0.025558861), (93, 0.016891737), (43, 0.008667124), (423, 0.008438239), (14, 0.008377203), (26, 0.0057984283), (27, 0.0028992142)], 0.99569696);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['π', s @ ..] => {
-            out.push(&[(43, 0.3407492), (0, 0.23697262), (31, 0.22305638), (13, 0.08126955), (55, 0.03729305), (102, 0.022262912), (16, 0.013382162), (93, 0.0059510185), (94, 0.0059052417), (26, 0.0052338447), (435, 0.0044251163), (423, 0.0029602502), (108, 0.0029449912), (27, 0.002731365)], 0.9851377);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(0, 0.49131), (43, 0.22716106), (31, 0.14869916), (13, 0.054184787), (55, 0.024856947), (102, 0.014847028), (16, 0.008926528), (93, 0.0039673457), (94, 0.0039368276), (26, 0.003494316), (435, 0.0029449912)], 0.984329);
-                    s.is_empty()
-                }
-                ['ι', s @ ..] => {
-                    out.push(&[(31, 0.4820325), (43, 0.22716106), (0, 0.15797666), (13, 0.054184787), (55, 0.024856947), (102, 0.014847028), (16, 0.008926528), (93, 0.0039673457), (94, 0.0039368276), (26, 0.003494316), (435, 0.0029449912)], 0.984329);
-                    s.is_empty()
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(43, 0.56049436), (0, 0.15797666), (31, 0.14869916), (13, 0.054184787), (55, 0.024856947), (102, 0.014847028), (16, 0.008926528), (93, 0.0039673457), (94, 0.0039368276), (26, 0.003494316), (435, 0.0029449912)], 0.984329);
-                    s.is_empty()
-                }
-                ['υ', s @ ..] => {
-                    out.push(&[(43, 0.56049436), (0, 0.15797666), (31, 0.14869916), (13, 0.054184787), (55, 0.024856947), (102, 0.014847028), (16, 0.008926528), (93, 0.0039673457), (94, 0.0039368276), (26, 0.003494316), (435, 0.0029449912)], 0.984329);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ρ', s @ ..] => {
-            out.push(&[(0, 0.6450141), (13, 0.09468223), (31, 0.06569009), (55, 0.043442436), (26, 0.038452737), (102, 0.025940338), (27, 0.0193637), (16, 0.015594721), (43, 0.008636607), (93, 0.006927596), (94, 0.006881819), (435, 0.0051575494), (423, 0.003448539), (108, 0.00343328)], 0.9826658);
-            match s {
-                [] => true,
-                ['α', 'θ', '\u{1}', s @ ..] => {
-                    out.push(&[(26, 0.6666667), (27, 0.33333334)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['τ', s @ ..] => {
-            out.push(&[(31, 0.33987945), (16, 0.22816816), (13, 0.12870985), (0, 0.10531777), (102, 0.0839704), (423, 0.075394824), (55, 0.016571298), (43, 0.0032959487), (93, 0.0026398108), (94, 0.0026245518), (26, 0.0023193713)], 0.9888914);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(31, 0.55805296), (13, 0.2395056), (16, 0.08691539), (0, 0.040115967), (102, 0.03198291), (423, 0.028717479), (55, 0.006317235)], 0.99160755);
-                    match s {
-                        [] => true,
-                        ['ι', s @ ..] => {
-                            out.push(&[(31, 0.79201955), (13, 0.11270314), (16, 0.04090944), (0, 0.01887541), (102, 0.015060655), (423, 0.013519494), (55, 0.0029755093)], 0.9960632);
-                            s.is_empty()
-                        }
-                        ['π', s @ ..] => {
-                            out.push(&[(13, 0.49300373), (31, 0.3720302), (16, 0.057953764), (0, 0.026749065), (102, 0.021332113), (423, 0.019150073), (55, 0.00421149)], 0.9944304);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ε', s @ ..] => {
-                    out.push(&[(16, 0.36408025), (423, 0.2876936), (31, 0.16993973), (13, 0.064362556), (0, 0.052658886), (102, 0.04197757), (55, 0.008285649)], 0.98899823);
-                    match s {
-                        [] => true,
-                        ['μ', s @ ..] => {
-                            out.push(&[(16, 0.57605857), (423, 0.19179064), (31, 0.11329824), (13, 0.04290837), (0, 0.03511101), (102, 0.027985046), (55, 0.005523766)], 0.99267566);
-                            s.is_empty()
-                        }
-                        ['π', s @ ..] => {
-                            out.push(&[(423, 0.52512395), (16, 0.24272527), (31, 0.11329824), (13, 0.04290837), (0, 0.03511101), (102, 0.027985046), (55, 0.005523766)], 0.99267566);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ι', s @ ..] => {
-                    out.push(&[(31, 0.6699321), (16, 0.11409171), (13, 0.064362556), (0, 0.052658886), (102, 0.04197757), (423, 0.037689783), (55, 0.008285649)], 0.9889983);
-                    s.is_empty()
-                }
-                ['σ', s @ ..] => {
-                    out.push(&[(16, 0.39301136), (0, 0.19369802), (102, 0.18687724), (31, 0.10876631), (13, 0.08119325), (423, 0.024124514), (55, 0.0053101396)], 0.99298084);
-                    match s {
-                        [] => true,
-                        ['α', s @ ..] => {
-                            out.push(&[(16, 0.65554285), (13, 0.09703212), (0, 0.0911574), (102, 0.08793774), (31, 0.05117876), (423, 0.011352712), (55, 0.0025024796)], 0.99670404);
-                            s.is_empty()
-                        }
-                        ['ε', s @ ..] => {
-                            out.push(&[(0, 0.46247044), (16, 0.26201266), (102, 0.124574654), (31, 0.072510876), (13, 0.05412375), (423, 0.01608301), (55, 0.003540093)], 0.9953155);
-                            s.is_empty()
-                        }
-                        ['ι', s @ ..] => {
-                            out.push(&[(102, 0.45790797), (16, 0.26201266), (0, 0.1291371), (31, 0.072510876), (13, 0.05412375), (423, 0.01608301), (55, 0.003540093)], 0.9953155);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['υ', s @ ..] => super::t1::n1916(s, out),
-        ['φ', s @ ..] => {
-            out.push(&[(31, 0.3897307), (0, 0.18141451), (43, 0.17409018), (13, 0.08126955), (464, 0.0555581), (55, 0.03729305), (102, 0.022262912), (16, 0.013382162), (93, 0.0059510185), (94, 0.0059052417), (26, 0.0052338447), (435, 0.0044251163), (423, 0.0029602502), (108, 0.0029449912), (27, 0.002731365)], 0.98515296);
-            match s {
-                [] => true,
-                ['α', s @ ..] => super::t1::n3458(s, out),
-                ['ι', s @ ..] => {
-                    out.push(&[(0, 0.3431754), (31, 0.25981537), (464, 0.14814985), (43, 0.11606012), (13, 0.054184787), (55, 0.024856947), (102, 0.014847028), (16, 0.008926528), (93, 0.0039673457), (94, 0.0039368276), (26, 0.003494316), (435, 0.0029449912)], 0.9843595);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['χ', s @ ..] => super::t1::n1918(s, out),
-        ['ω', s @ ..] => super::t1::n1919(s, out),
-        _ => false,
-    }
+pub(crate) fn n658(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 653);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 2129);
+			match s {
+				[] => true,
+				['β', s @ ..] => {
+					super::push(out, 4218);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5911);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['δ', s @ ..] => {
+					super::push(out, 4219);
+					s.is_empty()
+				}
+				['ζ', s @ ..] => {
+					super::push(out, 4220);
+					s.is_empty()
+				}
+				['θ', s @ ..] => {
+					super::push(out, 4221);
+					match s {
+						[] => true,
+						['ν', s @ ..] => {
+							super::push(out, 5912);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['κ', s @ ..] => {
+					super::push(out, 4222);
+					s.is_empty()
+				}
+				['μ', s @ ..] => {
+					super::push(out, 4223);
+					s.is_empty()
+				}
+				['π', s @ ..] => {
+					super::push(out, 4224);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5913);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['σ', s @ ..] => {
+					super::push(out, 4225);
+					s.is_empty()
+				}
+				['φ', s @ ..] => {
+					super::push(out, 4226);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5914);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['β', s @ ..] => {
+			super::push(out, 2130);
+			match s {
+				[] => true,
+				['ε', 'ν', s @ ..] => {
+					super::push(out, 4227);
+					s.is_empty()
+				}
+				['μ', s @ ..] => {
+					super::push(out, 4228);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5915);
+							match s {
+								[] => true,
+								['γ', s @ ..] => {
+									super::push(out, 6863);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ο', s @ ..] => {
+							super::push(out, 5916);
+							s.is_empty()
+						}
+						['υ', s @ ..] => {
+							super::push(out, 5917);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6864);
+									match s {
+										[] => true,
+										['γ', s @ ..] => {
+											super::push(out, 7245);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 4229);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5918);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['γ', s @ ..] => {
+			super::push(out, 2131);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4230);
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 5919);
+							match s {
+								[] => true,
+								['ι', s @ ..] => {
+									super::push(out, 6865);
+									match s {
+										[] => true,
+										['α', s @ ..] => {
+											super::push(out, 7246);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['λ', s @ ..] => {
+							super::push(out, 5920);
+							s.is_empty()
+						}
+						['ν', s @ ..] => {
+							super::push(out, 5921);
+							s.is_empty()
+						}
+						['φ', s @ ..] => {
+							super::push(out, 5922);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['γ', s @ ..] => {
+					super::push(out, 4231);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['δ', s @ ..] => {
+			super::push(out, 2132);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 4232);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 5923);
+							match s {
+								[] => true,
+								['υ', s @ ..] => {
+									super::push(out, 6866);
+									match s {
+										[] => true,
+										['ξ', s @ ..] => {
+											super::push(out, 7247);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['ν', s @ ..] => {
+							super::push(out, 5924);
+							match s {
+								[] => true,
+								['υ', s @ ..] => {
+									super::push(out, 6867);
+									match s {
+										[] => true,
+										['σ', s @ ..] => {
+											super::push(out, 7248);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['ρ', s @ ..] => {
+							super::push(out, 5925);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ν', s @ ..] => {
+					super::push(out, 4233);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5926);
+							match s {
+								[] => true,
+								['χ', s @ ..] => {
+									super::push(out, 6868);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 4234);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5927);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 2133);
+			match s {
+				[] => true,
+				['θ', s @ ..] => {
+					super::push(out, 4235);
+					s.is_empty()
+				}
+				['ι', s @ ..] => {
+					super::push(out, 4236);
+					s.is_empty()
+				}
+				['λ', s @ ..] => {
+					super::push(out, 4237);
+					s.is_empty()
+				}
+				['μ', s @ ..] => {
+					super::push(out, 4238);
+					s.is_empty()
+				}
+				['π', s @ ..] => {
+					super::push(out, 4239);
+					s.is_empty()
+				}
+				['τ', s @ ..] => {
+					super::push(out, 4240);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 5928);
+							match s {
+								[] => true,
+								['ι', s @ ..] => {
+									super::push(out, 6869);
+									match s {
+										[] => true,
+										['ρ', s @ ..] => {
+											super::push(out, 7249);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 2134);
+			match s {
+				[] => true,
+				['δ', s @ ..] => {
+					super::push(out, 4241);
+					s.is_empty()
+				}
+				['κ', s @ ..] => {
+					super::push(out, 4242);
+					s.is_empty()
+				}
+				['λ', s @ ..] => {
+					super::push(out, 4243);
+					match s {
+						[] => true,
+						['κ', 'υ', s @ ..] => {
+							super::push(out, 5929);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 4244);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5930);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 4245);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['θ', s @ ..] => {
+			super::push(out, 2135);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 4246);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 5931);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6870);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 4247);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 5932);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 4248);
+					match s {
+						[] => true,
+						['β', s @ ..] => {
+							super::push(out, 5933);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 4249);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5934);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['χ', s @ ..] => {
+					super::push(out, 4250);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5935);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 2136);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4251);
+					match s {
+						[] => true,
+						['θ', s @ ..] => {
+							super::push(out, 5936);
+							s.is_empty()
+						}
+						['κ', s @ ..] => {
+							super::push(out, 5937);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6871);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 4252);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 5938);
+							s.is_empty()
+						}
+						['γ', s @ ..] => {
+							super::push(out, 5939);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6872);
+									match s {
+										[] => true,
+										['μ', s @ ..] => {
+											super::push(out, 7250);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['ι', s @ ..] => {
+									super::push(out, 6873);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ν', s @ ..] => {
+							super::push(out, 5940);
+							s.is_empty()
+						}
+						['π', 'η', s @ ..] => {
+							super::push(out, 5941);
+							s.is_empty()
+						}
+						['φ', s @ ..] => super::t2::n5980(s, out),
+						_ => false,
+					}
+				}
+				['κ', s @ ..] => super::t2::n4282(s, out),
+				['ο', s @ ..] => super::t2::n4283(s, out),
+				['σ', s @ ..] => {
+					super::push(out, 4255);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['κ', s @ ..] => super::t2::n2151(s, out),
+		['ο', s @ ..] => super::t2::n2152(s, out),
+		['π', s @ ..] => super::t2::n2153(s, out),
+		['ρ', s @ ..] => super::t2::n2154(s, out),
+		['τ', s @ ..] => super::t2::n2155(s, out),
+		['υ', s @ ..] => super::t2::n2156(s, out),
+		['φ', s @ ..] => super::t2::n2157(s, out),
+		['χ', s @ ..] => super::t2::n2158(s, out),
+		['ω', s @ ..] => super::t2::n2159(s, out),
+		_ => false,
+	}
 }
 
 /// Words ending -σοσ.
-pub(crate) fn n637(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(31, 0.2471809), (13, 0.17865263), (16, 0.102922104), (0, 0.08218509), (26, 0.050598916), (102, 0.04730297), (55, 0.046585795), (93, 0.046295874), (43, 0.046265356), (27, 0.025314717), (861, 0.01840238), (423, 0.015426871), (352, 0.015335317), (67, 0.015320058), (327, 0.015259022), (351, 0.01373312), (74, 0.010498207), (862, 0.00920119), (75, 0.0052185855), (694, 0.0050812545)], 0.99678034);
-    match s {
-        [] => true,
-        ['α', s @ ..] => {
-            out.push(&[(13, 0.37483788), (31, 0.12224002), (93, 0.08937209), (67, 0.0843061), (16, 0.071366444), (26, 0.06280614), (74, 0.056244753), (27, 0.03140307), (75, 0.028122377), (694, 0.02809186), (0, 0.013443198), (102, 0.0077363243), (55, 0.007629511), (43, 0.007568475), (861, 0.0030060273), (423, 0.0025177386), (352, 0.0025024796), (327, 0.0025024796), (351, 0.0022430762)], 0.99794006);
-            match s {
-                [] => true,
-                ['δ', s @ ..] => {
-                    out.push(&[(74, 0.2597238), (13, 0.24988174), (75, 0.12985428), (31, 0.08149844), (93, 0.05958648), (67, 0.056198977), (16, 0.04757763), (26, 0.041870758), (27, 0.020935379), (694, 0.01873808), (0, 0.008957046), (102, 0.0051575494), (55, 0.0050812545), (43, 0.0050507365), (861, 0.002014191)], 0.99212635);
-                    s.is_empty()
-                }
-                ['π', s @ ..] => {
-                    out.push(&[(16, 0.26981002), (13, 0.24988174), (694, 0.12983902), (31, 0.08149844), (93, 0.05958648), (67, 0.056198977), (26, 0.041870758), (74, 0.037506677), (27, 0.020935379), (75, 0.018753339), (0, 0.008957046), (102, 0.0051575494), (55, 0.0050812545), (43, 0.0050507365), (861, 0.002014191)], 0.9921416);
-                    s.is_empty()
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(13, 0.3172198), (31, 0.19992371), (67, 0.18773174), (26, 0.1272755), (27, 0.06364538), (93, 0.028717479), (16, 0.02293431), (74, 0.018066682), (75, 0.009033341), (694, 0.009033341), (0, 0.0043183034), (102, 0.0024872206), (55, 0.0024414435), (43, 0.0024261845)], 0.9952544);
-                    match s {
-                        [] => true,
-                        ['ε', s @ ..] => {
-                            out.push(&[(13, 0.4401007), (31, 0.33131915), (67, 0.08886854), (26, 0.06024262), (27, 0.03012131), (93, 0.013595789), (16, 0.010849165), (74, 0.008560311), (75, 0.004272526), (694, 0.004272526), (0, 0.002044709)], 0.9942474);
-                            s.is_empty()
-                        }
-                        ['θ', s @ ..] => {
-                            out.push(&[(26, 0.30707255), (13, 0.21147479), (27, 0.15353628), (31, 0.13327229), (67, 0.1251545), (93, 0.019150073), (16, 0.01528954), (74, 0.012054628), (75, 0.006027314), (694, 0.0060120546), (0, 0.0028839551)], 0.991928);
-                            s.is_empty()
-                        }
-                        ['π', s @ ..] => {
-                            out.push(&[(67, 0.45848784), (13, 0.21147479), (31, 0.13327229), (26, 0.08485542), (27, 0.04242008), (93, 0.019150073), (16, 0.01528954), (74, 0.012054628), (75, 0.006027314), (694, 0.0060120546), (0, 0.0028839551)], 0.991928);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['τ', s @ ..] => {
-                    out.push(&[(93, 0.3929198), (13, 0.24988174), (31, 0.08149844), (67, 0.056198977), (16, 0.04757763), (26, 0.041870758), (74, 0.037506677), (27, 0.020935379), (75, 0.018753339), (694, 0.01873808), (0, 0.008957046), (102, 0.0051575494), (55, 0.0050812545), (43, 0.0050507365), (861, 0.002014191)], 0.9921416);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ε', s @ ..] => {
-            out.push(&[(0, 0.3881285), (31, 0.16479744), (13, 0.11909667), (16, 0.068619825), (26, 0.033737697), (102, 0.03152514), (55, 0.031052109), (93, 0.030869002), (43, 0.030838484), (27, 0.016876478), (861, 0.012268254), (423, 0.010284581), (352, 0.010223545), (67, 0.010208285), (327, 0.010162509), (351, 0.009155413), (74, 0.0070038913), (862, 0.006134127), (75, 0.003479057), (694, 0.0033875029)], 0.9978485);
-            s.is_empty()
-        }
-        ['η', s @ ..] => {
-            out.push(&[(16, 0.30145723), (352, 0.25766385), (31, 0.12359808), (13, 0.089326315), (0, 0.041092545), (26, 0.025299458), (102, 0.023651484), (55, 0.023300527), (93, 0.023147937), (43, 0.023132678), (27, 0.012664989), (861, 0.00920119), (423, 0.0077058063), (67, 0.007660029), (327, 0.007629511), (351, 0.00686656), (74, 0.0052491035), (862, 0.0046082246), (75, 0.0026092927), (694, 0.0025482567)], 0.998413);
-            match s {
-                [] => true,
-                ['ν', s @ ..] => {
-                    out.push(&[(16, 0.40073243), (352, 0.37883574), (31, 0.06179904), (13, 0.044663157), (0, 0.020553902), (26, 0.012649729), (102, 0.011825742), (55, 0.011642634), (93, 0.011581598), (43, 0.011566339), (27, 0.0063324943), (861, 0.0046082246), (423, 0.0038605325), (67, 0.0038300145), (327, 0.0038147555), (351, 0.00343328), (74, 0.0026245518), (862, 0.0023041123)], 0.99665827);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ι', s @ ..] => {
-            out.push(&[(102, 0.1740444), (55, 0.17392233), (861, 0.10331884), (16, 0.10019074), (0, 0.0967422), (93, 0.09079118), (423, 0.08564889), (31, 0.05976959), (862, 0.05166705), (13, 0.029694056), (26, 0.008407721), (43, 0.007690547), (27, 0.00421149), (352, 0.0025482567), (67, 0.0025482567), (327, 0.0025329976), (351, 0.0022888533)], 0.9960174);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(102, 0.33702603), (55, 0.336965), (861, 0.05166705), (16, 0.05009537), (0, 0.0483711), (93, 0.04539559), (423, 0.042832073), (31, 0.029892424), (862, 0.025833525), (13, 0.014847028), (26, 0.00421149), (43, 0.0038452735), (27, 0.002105745)], 0.9930877);
-                    match s {
-                        [] => true,
-                        ['β', s @ ..] => {
-                            out.push(&[(55, 0.55797666), (102, 0.22467384), (861, 0.034439612), (16, 0.033402), (0, 0.032242313), (93, 0.03025864), (423, 0.02854963), (31, 0.019928282), (862, 0.017227435), (13, 0.009903105), (26, 0.00280766), (43, 0.0025635157)], 0.9939727);
-                            s.is_empty()
-                        }
-                        ['γ', s @ ..] => {
-                            out.push(&[(102, 0.5580072), (55, 0.22464332), (861, 0.034439612), (16, 0.033402), (0, 0.032242313), (93, 0.03025864), (423, 0.02854963), (31, 0.019928282), (862, 0.017227435), (13, 0.009903105), (26, 0.00280766), (43, 0.0025635157)], 0.9939727);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ε', s @ ..] => {
-                    out.push(&[(55, 0.44928664), (102, 0.116029605), (861, 0.068879224), (16, 0.06678874), (0, 0.064499885), (93, 0.06051728), (423, 0.05709926), (31, 0.039856564), (862, 0.034439612), (13, 0.019790951), (26, 0.0056000613), (43, 0.0051270314), (27, 0.00280766)], 0.99072254);
-                    s.is_empty()
-                }
-                ['μ', s @ ..] => {
-                    out.push(&[(16, 0.3000992), (861, 0.21832609), (862, 0.109163046), (102, 0.0870222), (55, 0.086961165), (0, 0.0483711), (93, 0.04539559), (423, 0.042832073), (31, 0.029892424), (13, 0.014847028), (26, 0.00421149), (43, 0.0038452735), (27, 0.002105745)], 0.9930724);
-                    match s {
-                        [] => true,
-                        ['α', s @ ..] => {
-                            out.push(&[(16, 0.5333944), (861, 0.14555581), (862, 0.072770275), (102, 0.058014803), (55, 0.057969023), (0, 0.032242313), (93, 0.03025864), (423, 0.02854963), (31, 0.019928282), (13, 0.009903105), (26, 0.00280766), (43, 0.0025635157)], 0.99395746);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(102, 0.44936293), (55, 0.115953304), (861, 0.068879224), (16, 0.06678874), (0, 0.064499885), (93, 0.06051728), (423, 0.05709926), (31, 0.039856564), (862, 0.034439612), (13, 0.019790951), (26, 0.0056000613), (43, 0.0051270314), (27, 0.00280766)], 0.99072254);
-                    s.is_empty()
-                }
-                ['π', s @ ..] => {
-                    out.push(&[(0, 0.29578087), (861, 0.18504615), (862, 0.092515446), (102, 0.08625925), (55, 0.08621348), (31, 0.08538949), (16, 0.049668115), (93, 0.044998854), (423, 0.0424506), (13, 0.014709697), (26, 0.004165713), (43, 0.0038147555), (27, 0.002090486)], 0.9931029);
-                    s.is_empty()
-                }
-                ['τ', s @ ..] => {
-                    out.push(&[(93, 0.39385062), (102, 0.116029605), (55, 0.115953304), (861, 0.068879224), (16, 0.06678874), (0, 0.064499885), (423, 0.05709926), (31, 0.039856564), (862, 0.034439612), (13, 0.019790951), (26, 0.0056000613), (43, 0.0051270314), (27, 0.00280766)], 0.99072254);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['λ', s @ ..] => {
-            out.push(&[(26, 0.25595483), (31, 0.16479744), (27, 0.12799267), (13, 0.11909667), (16, 0.068619825), (0, 0.054795146), (102, 0.03152514), (55, 0.031052109), (93, 0.030869002), (43, 0.030838484), (861, 0.012268254), (423, 0.010284581), (352, 0.010223545), (67, 0.010208285), (327, 0.010162509), (351, 0.009155413), (74, 0.0070038913), (862, 0.006134127), (75, 0.003479057), (694, 0.0033875029)], 0.9978485);
-            s.is_empty()
-        }
-        ['ο', s @ ..] => {
-            out.push(&[(43, 0.52312505), (31, 0.12359808), (13, 0.089326315), (16, 0.051453423), (0, 0.041092545), (26, 0.025299458), (102, 0.023651484), (55, 0.023300527), (93, 0.023147937), (27, 0.012664989), (861, 0.00920119), (423, 0.0077058063), (352, 0.007660029), (67, 0.007660029), (327, 0.007629511), (351, 0.00686656), (74, 0.0052491035), (862, 0.0046082246), (75, 0.0026092927), (694, 0.0025482567)], 0.9983978);
-            s.is_empty()
-        }
-        ['ρ', s @ ..] => {
-            out.push(&[(31, 0.36530098), (0, 0.21115434), (26, 0.13995574), (43, 0.106584266), (27, 0.06997787), (13, 0.034851607), (16, 0.020080874), (102, 0.009231708), (55, 0.009094377), (93, 0.009033341), (861, 0.0035858701), (423, 0.0030060273), (352, 0.0029907683), (67, 0.0029907683), (327, 0.0029755093), (351, 0.0026855879), (74, 0.002044709)], 0.9955444);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(31, 0.45510033), (26, 0.26887923), (27, 0.13443199), (0, 0.07038987), (43, 0.035523005), (13, 0.011612115), (16, 0.006698711), (102, 0.0030823224), (55, 0.0030365454), (93, 0.0030060273)], 0.99176013);
-                    s.is_empty()
-                }
-                ['ε', s @ ..] => {
-                    out.push(&[(43, 0.4043946), (31, 0.24353398), (0, 0.14077973), (26, 0.09330892), (27, 0.04664683), (13, 0.02323949), (16, 0.013382162), (102, 0.006149386), (55, 0.006057832), (93, 0.006027314), (861, 0.0023956664), (423, 0.0019989319)], 0.98791486);
-                    s.is_empty()
-                }
-                ['υ', s @ ..] => {
-                    out.push(&[(0, 0.48445868), (31, 0.3461204), (26, 0.05598535), (43, 0.04263371), (27, 0.027985046), (13, 0.0139467465), (16, 0.008026246), (102, 0.0036926833), (55, 0.0036316472), (93, 0.0036163882)], 0.99009687);
-                    match s {
-                        [] => true,
-                        ['π', s @ ..] => {
-                            out.push(&[(31, 0.56408024), (0, 0.32297245), (26, 0.037323568), (43, 0.028427558), (27, 0.018661784), (13, 0.009292744), (16, 0.005355917), (102, 0.0024567025), (55, 0.0024261845), (93, 0.0024109255)], 0.9934081);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['σ', s @ ..] => {
-            out.push(&[(31, 0.48358893), (16, 0.15910582), (13, 0.116990924), (0, 0.057785917), (102, 0.05432212), (93, 0.054230563), (351, 0.046021212), (26, 0.0050202184), (55, 0.004623484), (43, 0.004592966), (27, 0.0025177386)], 0.98879987);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(13, 0.4113222), (31, 0.3223926), (16, 0.10606546), (0, 0.03852903), (102, 0.036209658), (93, 0.036148623), (351, 0.030685892), (26, 0.0033417258), (55, 0.0030823224), (43, 0.0030670634)], 0.9908446);
-                    s.is_empty()
-                }
-                ['ι', s @ ..] => {
-                    out.push(&[(31, 0.37090105), (16, 0.28976882), (13, 0.15425345), (93, 0.13855192), (0, 0.014450294), (102, 0.01358053), (351, 0.011505303)], 0.99301136);
-                    match s {
-                        [] => true,
-                        ['κ', s @ ..] => {
-                            out.push(&[(31, 0.34836346), (13, 0.26169223), (93, 0.25542077), (16, 0.11590753), (0, 0.0057831695), (102, 0.005432212), (351, 0.0046082246)], 0.9972076);
-                            match s {
-                                [] => true,
-                                ['ι', s @ ..] => {
-                                    out.push(&[(13, 0.507805), (31, 0.23224232), (93, 0.17027542), (16, 0.077271685), (0, 0.0038452735), (102, 0.0036163882), (351, 0.0030670634)], 0.9981231);
-                                    s.is_empty()
-                                }
-                                ['ρ', s @ ..] => {
-                                    out.push(&[(93, 0.50360876), (31, 0.23224232), (13, 0.17447166), (16, 0.077271685), (0, 0.0038452735), (102, 0.0036163882), (351, 0.0030670634)], 0.99812317);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['ρ', s @ ..] => {
-                            out.push(&[(16, 0.5159075), (31, 0.34836346), (13, 0.061692227), (93, 0.055420768), (0, 0.0057831695), (102, 0.005432212), (351, 0.0046082246)], 0.9972076);
-                            match s {
-                                [] => true,
-                                ['α', s @ ..] => {
-                                    out.push(&[(16, 0.7579614), (31, 0.17418173), (13, 0.030853743), (93, 0.027710384), (0, 0.0028839551), (102, 0.002716106), (351, 0.0023041123)], 0.99861145);
-                                    s.is_empty()
-                                }
-                                ['ε', s @ ..] => {
-                                    out.push(&[(31, 0.56557566), (16, 0.34393835), (13, 0.041138325), (93, 0.03694209), (0, 0.0038452735), (102, 0.0036163882), (351, 0.0030670634)], 0.99812317);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(31, 0.827863), (16, 0.05304036), (13, 0.03900206), (0, 0.019256886), (102, 0.018112458), (93, 0.01808194), (351, 0.015335317)], 0.990692);
-                    s.is_empty()
-                }
-                ['υ', s @ ..] => {
-                    out.push(&[(31, 0.36052492), (16, 0.21434347), (0, 0.18139926), (351, 0.16130312), (13, 0.038040742), (102, 0.017669948), (93, 0.01763943)], 0.9909209);
-                    match s {
-                        [] => true,
-                        ['β', s @ ..] => {
-                            out.push(&[(16, 0.3442588), (351, 0.29460594), (31, 0.23398185), (0, 0.087418936), (13, 0.018341344), (102, 0.008514535), (93, 0.008499275)], 0.99562067);
-                            match s {
-                                [] => true,
-                                ['α', s @ ..] => {
-                                    out.push(&[(16, 0.5628443), (351, 0.19639887), (31, 0.15599298), (0, 0.058274206), (13, 0.012222476), (102, 0.005676356), (93, 0.0056610974)], 0.99707025);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['ρ', s @ ..] => {
-                            out.push(&[(0, 0.4542611), (31, 0.24034485), (16, 0.14290074), (351, 0.107545584), (13, 0.025360495), (102, 0.011779965), (93, 0.011749447)], 0.9939422);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ω', s @ ..] => {
-                    out.push(&[(31, 0.49179828), (102, 0.27716488), (16, 0.07954528), (13, 0.058487833), (0, 0.02888533), (93, 0.027115282), (351, 0.023010606), (26, 0.0025177386), (55, 0.0023193713), (43, 0.0022888533)], 0.9931334);
-                    match s {
-                        [] => true,
-                        ['σ', s @ ..] => {
-                            out.push(&[(102, 0.51810485), (31, 0.3278706), (16, 0.05304036), (13, 0.03900206), (0, 0.019256886), (93, 0.01808194), (351, 0.015335317)], 0.990692);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['υ', s @ ..] => {
-            out.push(&[(13, 0.41528955), (31, 0.19336233), (16, 0.093476765), (55, 0.08474861), (327, 0.07988098), (26, 0.054352637), (27, 0.027176319), (0, 0.0127412835), (102, 0.0073395898), (93, 0.0071717403), (43, 0.0071717403), (861, 0.002853437), (423, 0.0023956664), (352, 0.0023804074), (67, 0.0023804074), (351, 0.002121004)], 0.99484247);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(55, 0.38982224), (13, 0.2768597), (31, 0.12890822), (16, 0.062317844), (327, 0.053253986), (26, 0.036240175), (27, 0.018127719), (0, 0.008499275), (102, 0.004882887), (93, 0.004791333), (43, 0.004776074)], 0.98847944);
-                    s.is_empty()
-                }
-                ['μ', s @ ..] => {
-                    out.push(&[(31, 0.35556573), (13, 0.21297017), (26, 0.18171969), (27, 0.090867475), (16, 0.047943845), (55, 0.043457694), (327, 0.040970474), (0, 0.0065308614), (102, 0.0037537194), (93, 0.0036774243), (43, 0.0036774243)], 0.9911345);
-                    s.is_empty()
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(327, 0.38658732), (13, 0.2768597), (31, 0.12890822), (16, 0.062317844), (55, 0.056488898), (26, 0.036240175), (27, 0.018127719), (0, 0.008499275), (102, 0.004882887), (93, 0.004791333), (43, 0.004776074)], 0.98847944);
-                    s.is_empty()
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(13, 0.60383004), (31, 0.1733425), (16, 0.14836347), (55, 0.021179523), (327, 0.01997406), (26, 0.013595789), (27, 0.006790265), (0, 0.0031891356)], 0.9902648);
-                    match s {
-                        [] => true,
-                        ['χ', 'ο', s @ ..] => {
-                            out.push(&[(13, 0.5519188), (16, 0.32417792), (31, 0.08667125), (55, 0.010589762), (327, 0.009979401), (26, 0.006790265), (27, 0.0034027619)], 0.99353015);
-                            match s {
-                                [] => true,
-                                ['κ', s @ ..] => {
-                                    out.push(&[(16, 0.54946214), (13, 0.36794078), (31, 0.057785917), (55, 0.0070649274), (327, 0.0066529335), (26, 0.0045319297), (27, 0.0022583352)], 0.99569696);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n659(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 654);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 2146);
+			match s {
+				[] => true,
+				['δ', s @ ..] => {
+					super::push(out, 4300);
+					s.is_empty()
+				}
+				['ι', s @ ..] => {
+					super::push(out, 4301);
+					s.is_empty()
+				}
+				['ν', s @ ..] => {
+					super::push(out, 4302);
+					s.is_empty()
+				}
+				['π', s @ ..] => {
+					super::push(out, 4303);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 5994);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6907);
+									match s {
+										[] => true,
+										['κ', s @ ..] => {
+											super::push(out, 7265);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 4304);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5995);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6908);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['θ', s @ ..] => {
+							super::push(out, 5996);
+							s.is_empty()
+						}
+						['π', s @ ..] => {
+							super::push(out, 5997);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6909);
+									match s {
+										[] => true,
+										['σ', s @ ..] => {
+											super::push(out, 7266);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 4305);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 5998);
+							match s {
+								[] => true,
+								['π', s @ ..] => {
+									super::push(out, 6910);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 4306);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 2147);
+			match s {
+				[] => true,
+				['μ', s @ ..] => {
+					super::push(out, 4307);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 2148);
+			match s {
+				[] => true,
+				['ν', s @ ..] => {
+					super::push(out, 4308);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 5999);
+							match s {
+								[] => true,
+								['σ', s @ ..] => {
+									super::push(out, 6911);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 2149);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4309);
+					match s {
+						[] => true,
+						['β', s @ ..] => {
+							super::push(out, 6000);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6912);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['γ', s @ ..] => {
+							super::push(out, 6001);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 4310);
+					match s {
+						[] => true,
+						['δ', s @ ..] => {
+							super::push(out, 6002);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6913);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 4311);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 6003);
+							match s {
+								[] => true,
+								['τ', s @ ..] => {
+									super::push(out, 6914);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 4312);
+					s.is_empty()
+				}
+				['π', s @ ..] => {
+					super::push(out, 4313);
+					s.is_empty()
+				}
+				['τ', s @ ..] => {
+					super::push(out, 4314);
+					match s {
+						[] => true,
+						['υ', s @ ..] => {
+							super::push(out, 6004);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6915);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['λ', s @ ..] => {
+			super::push(out, 2150);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4315);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 2151);
+			match s {
+				[] => true,
+				['ν', s @ ..] => {
+					super::push(out, 4316);
+					s.is_empty()
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 4317);
+					match s {
+						[] => true,
+						['δ', s @ ..] => {
+							super::push(out, 6005);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 2152);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4318);
+					match s {
+						[] => true,
+						['θ', s @ ..] => {
+							super::push(out, 6006);
+							s.is_empty()
+						}
+						['φ', s @ ..] => {
+							super::push(out, 6007);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 4319);
+					match s {
+						[] => true,
+						['χ', s @ ..] => {
+							super::push(out, 6008);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 4320);
+					match s {
+						[] => true,
+						['θ', s @ ..] => {
+							super::push(out, 6009);
+							s.is_empty()
+						}
+						['μ', s @ ..] => {
+							super::push(out, 6010);
+							s.is_empty()
+						}
+						['π', s @ ..] => {
+							super::push(out, 6011);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['σ', s @ ..] => {
+			super::push(out, 2153);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4321);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 6012);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6916);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 4322);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 6013);
+							match s {
+								[] => true,
+								['ι', s @ ..] => {
+									super::push(out, 6917);
+									match s {
+										[] => true,
+										['α', s @ ..] => {
+											super::push(out, 7267);
+											match s {
+												[] => true,
+												['μ', s @ ..] => {
+													super::push(out, 7372);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['ρ', s @ ..] => {
+									super::push(out, 6918);
+									match s {
+										[] => true,
+										['α', s @ ..] => {
+											super::push(out, 7268);
+											match s {
+												[] => true,
+												['ν', s @ ..] => {
+													super::push(out, 7373);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['ρ', s @ ..] => {
+							super::push(out, 6014);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6919);
+									match s {
+										[] => true,
+										['π', s @ ..] => {
+											super::push(out, 7269);
+											match s {
+												[] => true,
+												['υ', s @ ..] => {
+													super::push(out, 7374);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 4323);
+					s.is_empty()
+				}
+				['υ', s @ ..] => {
+					super::push(out, 4324);
+					match s {
+						[] => true,
+						['β', s @ ..] => {
+							super::push(out, 6015);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6920);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ρ', s @ ..] => {
+							super::push(out, 6016);
+							match s {
+								[] => true,
+								['β', s @ ..] => {
+									super::push(out, 6921);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ω', s @ ..] => {
+					super::push(out, 4325);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 6017);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 2154);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4326);
+					match s {
+						[] => true,
+						['ν', s @ ..] => super::t2::n6056(s, out),
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 4327);
+					s.is_empty()
+				}
+				['μ', s @ ..] => {
+					super::push(out, 4328);
+					s.is_empty()
+				}
+				['ο', s @ ..] => super::t2::n4358(s, out),
+				['ρ', s @ ..] => super::t2::n4359(s, out),
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -τοσ.
-pub(crate) fn n638(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(31, 0.32730603), (13, 0.18533608), (0, 0.14100862), (16, 0.05900664), (102, 0.04727245), (43, 0.041947052), (93, 0.03572137), (26, 0.029037919), (27, 0.011749447), (321, 0.010482948), (55, 0.008789197), (14, 0.008499275), (423, 0.00842298), (314, 0.0083924625), (339, 0.008331426), (347, 0.008331426), (699, 0.008331426), (763, 0.008331426), (1044, 0.008331426), (115, 0.005676356), (1053, 0.005554284), (116, 0.002838178), (412, 0.002777142), (535, 0.002777142), (1054, 0.002777142), (103, 0.0023804074), (771, 0.0023804074), (887, 0.002090486)], 0.99388117);
-    match s {
-        [] => true,
-        ['α', s @ ..] => {
-            out.push(&[(13, 0.3103685), (0, 0.27565423), (16, 0.11696041), (26, 0.10995651), (43, 0.059845883), (27, 0.054673076), (31, 0.04995804), (102, 0.0052185855), (93, 0.003952087)], 0.98658735);
-            match s {
-                [] => true,
-                ['β', s @ ..] => {
-                    out.push(&[(0, 0.42299536), (13, 0.21020828), (16, 0.16003662), (43, 0.14522012), (26, 0.028519113), (27, 0.014175631), (31, 0.012954909)], 0.99411005);
-                    match s {
-                        [] => true,
-                        ['β', s @ ..] => {
-                            out.push(&[(13, 0.47347218), (0, 0.28200197), (16, 0.106691085), (43, 0.09681849), (26, 0.019012742), (27, 0.009460594), (31, 0.008636607)], 0.9960937);
-                            s.is_empty()
-                        }
-                        ['σ', s @ ..] => {
-                            out.push(&[(16, 0.4400244), (0, 0.28200197), (13, 0.14013886), (43, 0.09681849), (26, 0.019012742), (27, 0.009460594), (31, 0.008636607)], 0.9960937);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['κ', s @ ..] => {
-                    out.push(&[(16, 0.41130695), (13, 0.20691234), (0, 0.1837644), (26, 0.07330434), (43, 0.03990234), (27, 0.036453802), (31, 0.033295184), (102, 0.003479057), (93, 0.0026245518)], 0.991043);
-                    s.is_empty()
-                }
-                ['λ', s @ ..] => {
-                    out.push(&[(0, 0.3878233), (26, 0.22165255), (13, 0.15518425), (27, 0.11067369), (16, 0.058472574), (43, 0.029922942), (31, 0.02497902), (102, 0.0026092927)], 0.99131763);
-                    match s {
-                        [] => true,
-                        ['π', s @ ..] => {
-                            out.push(&[(26, 0.3699855), (0, 0.25854886), (27, 0.18489356), (13, 0.10345617), (16, 0.038986802), (43, 0.01994354), (31, 0.016647592)], 0.99246204);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['μ', s @ ..] => {
-                    out.push(&[(13, 0.54024565), (0, 0.1837644), (16, 0.077973604), (26, 0.07330434), (43, 0.03990234), (27, 0.036453802), (31, 0.033295184), (102, 0.003479057), (93, 0.0026245518)], 0.9910429);
-                    s.is_empty()
-                }
-                ['π', s @ ..] => {
-                    out.push(&[(13, 0.5247425), (0, 0.22482643), (26, 0.118822), (27, 0.059327077), (16, 0.033905547), (43, 0.017349508), (31, 0.014480812)], 0.99345386);
-                    match s {
-                        [] => true,
-                        ['υ', s @ ..] => {
-                            out.push(&[(13, 0.76237124), (0, 0.11241321), (26, 0.05941863), (27, 0.029663539), (16, 0.016952774), (43, 0.008667124), (31, 0.0072327764)], 0.9967193);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(26, 0.2728008), (13, 0.19099718), (0, 0.16963455), (27, 0.13621728), (31, 0.10766766), (16, 0.0719768), (43, 0.03683528), (102, 0.0032196536), (93, 0.0024261845)], 0.9917754);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ε', s @ ..] => {
-            out.push(&[(31, 0.55968565), (13, 0.26787212), (16, 0.06482033), (26, 0.042008087), (535, 0.019638361), (0, 0.016342413), (102, 0.005477989), (43, 0.004867628), (93, 0.004135195)], 0.9848478);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(13, 0.50714886), (31, 0.42388037), (16, 0.025925077), (26, 0.016800184), (535, 0.0078583965), (0, 0.0065461206), (102, 0.0021972992)], 0.9903563);
-                    s.is_empty()
-                }
-                ['μ', s @ ..] => {
-                    out.push(&[(13, 0.51190966), (31, 0.37312886), (16, 0.04321355), (26, 0.028015565), (535, 0.013092241), (0, 0.010894942), (102, 0.0036469062), (43, 0.0032349126), (93, 0.002761883)], 0.9898985);
-                    s.is_empty()
-                }
-                ['π', s @ ..] => {
-                    out.push(&[(13, 0.38393226), (16, 0.282414), (31, 0.27985045), (26, 0.021011673), (535, 0.00982681), (0, 0.008178836), (102, 0.002746624), (43, 0.0024261845), (93, 0.002075227)], 0.99246204);
-                    match s {
-                        [] => true,
-                        ['α', s @ ..] => {
-                            out.push(&[(16, 0.5215992), (13, 0.25595483), (31, 0.1865568), (26, 0.014007783), (535, 0.0065461206), (0, 0.005447471)], 0.9901122);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['η', s @ ..] => {
-            out.push(&[(13, 0.33867398), (31, 0.2363775), (699, 0.14523537), (115, 0.09686427), (116, 0.048432134), (0, 0.040283818), (16, 0.016861219), (102, 0.013504234), (43, 0.011978332), (93, 0.010208285), (26, 0.008300908), (27, 0.0033569848), (321, 0.0029907683), (55, 0.0025177386), (14, 0.0024261845), (423, 0.0024109255), (314, 0.0023956664), (339, 0.0023804074), (347, 0.0023804074), (763, 0.0023804074), (1044, 0.0023804074)], 0.99233997);
-            match s {
-                [] => true,
-                ['β', s @ ..] => {
-                    out.push(&[(13, 0.5591058), (31, 0.15757991), (699, 0.09681849), (115, 0.06457618), (116, 0.03228809), (0, 0.026855879), (16, 0.011245899), (102, 0.009002823), (43, 0.0079957275), (93, 0.0068055238), (26, 0.005523766), (27, 0.0022430762)], 0.9800412);
-                    s.is_empty()
-                }
-                ['κ', s @ ..] => {
-                    out.push(&[(115, 0.28679332), (13, 0.22577249), (31, 0.15757991), (116, 0.14340429), (699, 0.09681849), (0, 0.026855879), (16, 0.011245899), (102, 0.009002823), (43, 0.0079957275), (93, 0.0068055238), (26, 0.005523766), (27, 0.0022430762)], 0.9800412);
-                    s.is_empty()
-                }
-                ['λ', s @ ..] => {
-                    out.push(&[(31, 0.49091324), (13, 0.22577249), (699, 0.09681849), (115, 0.06457618), (116, 0.03228809), (0, 0.026855879), (16, 0.011245899), (102, 0.009002823), (43, 0.0079957275), (93, 0.0068055238), (26, 0.005523766), (27, 0.0022430762)], 0.9800412);
-                    s.is_empty()
-                }
-                ['μ', s @ ..] => {
-                    out.push(&[(13, 0.5591058), (31, 0.15757991), (699, 0.09681849), (115, 0.06457618), (116, 0.03228809), (0, 0.026855879), (16, 0.011245899), (102, 0.009002823), (43, 0.0079957275), (93, 0.0068055238), (26, 0.005523766), (27, 0.0022430762)], 0.9800412);
-                    s.is_empty()
-                }
-                ['ν', s @ ..] => {
-                    out.push(&[(699, 0.43015182), (13, 0.22577249), (31, 0.15757991), (115, 0.06457618), (116, 0.03228809), (0, 0.026855879), (16, 0.011245899), (102, 0.009002823), (43, 0.0079957275), (93, 0.0068055238), (26, 0.005523766), (27, 0.0022430762)], 0.9800412);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ι', s @ ..] => {
-            out.push(&[(102, 0.25787747), (13, 0.19755855), (31, 0.13788052), (0, 0.106828414), (93, 0.08928054), (55, 0.08479439), (1044, 0.08471809), (16, 0.009842069), (43, 0.006988632), (26, 0.00483711)], 0.9806058);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(31, 0.4252537), (102, 0.1719234), (13, 0.13170062), (0, 0.071229115), (93, 0.059525445), (55, 0.056534678), (1044, 0.056488898), (16, 0.0065613794), (43, 0.004654002), (26, 0.0032196536)], 0.9870909);
-                    s.is_empty()
-                }
-                ['β', s @ ..] => {
-                    out.push(&[(93, 0.39285877), (102, 0.1719234), (13, 0.13170062), (31, 0.091920346), (0, 0.071229115), (55, 0.056534678), (1044, 0.056488898), (16, 0.0065613794), (43, 0.004654002), (26, 0.0032196536)], 0.9870909);
-                    s.is_empty()
-                }
-                ['μ', s @ ..] => {
-                    out.push(&[(13, 0.34877548), (0, 0.30341038), (102, 0.12893873), (31, 0.06894026), (93, 0.0446479), (55, 0.042404823), (1044, 0.042359047), (16, 0.004913405), (43, 0.003494316), (26, 0.0024261845)], 0.99031055);
-                    match s {
-                        [] => true,
-                        ['ι', s @ ..] => {
-                            out.push(&[(13, 0.5658503), (0, 0.20227359), (102, 0.08595407), (31, 0.045960173), (93, 0.029755093), (55, 0.02825971), (1044, 0.028244449), (16, 0.0032806897), (43, 0.0023346303)], 0.9919127);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(102, 0.5859617), (55, 0.19493401), (13, 0.06585794), (31, 0.045960173), (0, 0.035614558), (93, 0.029755093), (1044, 0.028244449), (16, 0.0032806897), (43, 0.0023346303)], 0.99194324);
-                    match s {
-                        [] => true,
-                        ['κ', 'ω', s @ ..] => {
-                            out.push(&[(55, 0.46329442), (102, 0.39064622), (13, 0.043900207), (31, 0.030640116), (0, 0.023743039), (93, 0.01983673), (1044, 0.018829633), (16, 0.0021820401)], 0.9930724);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['σ', s @ ..] => {
-                    out.push(&[(13, 0.34877548), (1044, 0.29236287), (102, 0.12893873), (31, 0.06894026), (0, 0.053421836), (93, 0.0446479), (55, 0.042404823), (16, 0.004913405), (43, 0.003494316), (26, 0.0024261845)], 0.9903258);
-                    match s {
-                        [] => true,
-                        ['α', s @ ..] => {
-                            out.push(&[(13, 0.5658503), (1044, 0.1949035), (102, 0.08595407), (31, 0.045960173), (0, 0.035614558), (93, 0.029755093), (55, 0.02825971), (16, 0.0032806897), (43, 0.0023346303)], 0.9919127);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['κ', s @ ..] => {
-            out.push(&[(31, 0.3318227), (16, 0.13975738), (43, 0.13548486), (93, 0.13392843), (423, 0.12710765), (13, 0.04632639), (0, 0.03524834), (102, 0.011825742), (26, 0.0072632944), (27, 0.0029449912), (321, 0.0026245518), (55, 0.0021972992), (14, 0.002121004), (314, 0.002090486), (339, 0.002090486), (347, 0.002090486), (699, 0.002090486), (763, 0.002090486), (1044, 0.002090486)], 0.99119556);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(93, 0.3169604), (423, 0.31355765), (31, 0.16591135), (16, 0.06987106), (43, 0.06775006), (13, 0.023163196), (0, 0.01762417), (102, 0.0059052417), (26, 0.0036316472)], 0.98437476);
-                    match s {
-                        [] => true,
-                        ['κ', s @ ..] => {
-                            out.push(&[(423, 0.5423667), (93, 0.21130693), (31, 0.11061265), (16, 0.046585795), (43, 0.045166705), (13, 0.01544213), (0, 0.011749447), (102, 0.0039368276), (26, 0.0024261845)], 0.9895933);
-                            s.is_empty()
-                        }
-                        ['ρ', s @ ..] => {
-                            out.push(&[(93, 0.54464024), (423, 0.20903334), (31, 0.11061265), (16, 0.046585795), (43, 0.045166705), (13, 0.01544213), (0, 0.011749447), (102, 0.0039368276), (26, 0.0024261845)], 0.9895933);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ε', s @ ..] => {
-                    out.push(&[(16, 0.4265049), (31, 0.2212253), (43, 0.09031815), (93, 0.08928054), (423, 0.08473335), (13, 0.03088426), (0, 0.023498895), (102, 0.007873655), (26, 0.00483711)], 0.9791562);
-                    s.is_empty()
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(43, 0.4236515), (31, 0.2212253), (16, 0.09317159), (93, 0.08928054), (423, 0.08473335), (13, 0.03088426), (0, 0.023498895), (102, 0.007873655), (26, 0.00483711)], 0.9791562);
-                    s.is_empty()
-                }
-                ['υ', s @ ..] => {
-                    out.push(&[(31, 0.55455863), (16, 0.09317159), (43, 0.09031815), (93, 0.08928054), (423, 0.08473335), (13, 0.03088426), (0, 0.023498895), (102, 0.007873655), (26, 0.00483711)], 0.9791562);
-                    s.is_empty()
-                }
-                ['ω', s @ ..] => {
-                    out.push(&[(31, 0.55455863), (16, 0.09317159), (43, 0.09031815), (93, 0.08928054), (423, 0.08473335), (13, 0.03088426), (0, 0.023498895), (102, 0.007873655), (26, 0.00483711)], 0.9791562);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['λ', s @ ..] => {
-            out.push(&[(43, 0.2977035), (31, 0.2363775), (0, 0.18315405), (93, 0.15306325), (13, 0.052948806), (16, 0.016861219), (102, 0.013504234), (26, 0.008300908), (27, 0.0033569848), (321, 0.0029907683), (55, 0.0025177386), (14, 0.0024261845), (423, 0.0024109255), (314, 0.0023956664), (339, 0.0023804074), (347, 0.0023804074), (699, 0.0023804074), (763, 0.0023804074), (1044, 0.0023804074)], 0.98991376);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(93, 0.43537042), (43, 0.19845884), (31, 0.15757991), (0, 0.12210269), (13, 0.035309378), (16, 0.011245899), (102, 0.009002823), (26, 0.005523766), (27, 0.0022430762)], 0.9768368);
-                    s.is_empty()
-                }
-                ['ε', s @ ..] => {
-                    out.push(&[(43, 0.39885557), (31, 0.36818495), (0, 0.091569394), (93, 0.076524), (13, 0.026474403), (16, 0.00842298), (102, 0.006759747), (26, 0.004150454)], 0.9809415);
-                    s.is_empty()
-                }
-                ['ι', s @ ..] => {
-                    out.push(&[(43, 0.53179216), (31, 0.15757991), (0, 0.12210269), (93, 0.10203708), (13, 0.035309378), (16, 0.011245899), (102, 0.009002823), (26, 0.005523766), (27, 0.0022430762)], 0.9768368);
-                    s.is_empty()
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(0, 0.45543602), (43, 0.19845884), (31, 0.15757991), (93, 0.10203708), (13, 0.035309378), (16, 0.011245899), (102, 0.009002823), (26, 0.005523766), (27, 0.0022430762)], 0.9768368);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ν', s @ ..] => {
-            out.push(&[(31, 0.4481422), (0, 0.3016556), (13, 0.08722057), (16, 0.02777142), (102, 0.022247653), (43, 0.019745175), (93, 0.016815443), (26, 0.013656825), (27, 0.005523766), (321, 0.0049286643), (55, 0.004135195), (14, 0.0039978637), (423, 0.0039673457), (314, 0.003952087), (339, 0.003921569), (347, 0.003921569), (699, 0.003921569), (763, 0.003921569), (1044, 0.003921569), (115, 0.0026703288), (1053, 0.0026092927)], 0.9886473);
-            match s {
-                [] => true,
-                ['ο', 'π', s @ ..] => {
-                    out.push(&[(0, 0.534432), (31, 0.2987564), (13, 0.058136873), (16, 0.018509194), (102, 0.014831769), (43, 0.013153277), (93, 0.011200123), (26, 0.009109636), (27, 0.0036926833), (321, 0.0032806897), (55, 0.002761883), (14, 0.0026703288), (423, 0.0026398108), (314, 0.0026245518), (339, 0.0026092927), (347, 0.0026092927), (699, 0.0026092927), (763, 0.0026092927), (1044, 0.0026092927)], 0.98884565);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ο', s @ ..] => {
-            out.push(&[(0, 0.3678645), (13, 0.15471122), (93, 0.10228122), (314, 0.09706264), (339, 0.09706264), (31, 0.0839704), (771, 0.027725643), (772, 0.013641566), (16, 0.011261159), (102, 0.009033341), (43, 0.008010986), (26, 0.005539025), (27, 0.0022430762), (321, 0.0019989319)], 0.9824063);
-            match s {
-                [] => true,
-                ['ι', s @ ..] => {
-                    out.push(&[(13, 0.4364843), (0, 0.245243), (93, 0.06819257), (314, 0.064713515), (339, 0.06469826), (31, 0.05598535), (771, 0.018493935), (772, 0.009094377), (16, 0.007507439), (102, 0.0060120546), (43, 0.0053406577), (26, 0.0036926833)], 0.98545814);
-                    s.is_empty()
-                }
-                ['κ', s @ ..] => {
-                    out.push(&[(0, 0.57679105), (771, 0.085297935), (13, 0.07736324), (93, 0.051148243), (314, 0.04853895), (339, 0.04852369), (772, 0.042526893), (31, 0.04199283), (16, 0.0056305793), (102, 0.0045166705), (43, 0.0039978637), (26, 0.002777142)], 0.9891051);
-                    s.is_empty()
-                }
-                ['ν', s @ ..] => {
-                    out.push(&[(0, 0.43393606), (93, 0.3011368), (13, 0.07736324), (314, 0.04853895), (339, 0.04852369), (31, 0.04199283), (771, 0.013870451), (772, 0.006820783), (16, 0.0056305793), (102, 0.0045166705), (43, 0.0039978637), (26, 0.002777142)], 0.98910505);
-                    match s {
-                        [] => true,
-                        ['ο', s @ ..] => {
-                            out.push(&[(93, 0.5340963), (0, 0.2892958), (13, 0.051575493), (314, 0.03234913), (339, 0.03234913), (31, 0.027985046), (771, 0.009246968), (772, 0.0045471885), (16, 0.0037537194), (102, 0.0030060273), (43, 0.0026703288)], 0.9908751);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['π', s @ ..] => {
-                    out.push(&[(314, 0.39804685), (0, 0.245243), (13, 0.103150986), (93, 0.06819257), (339, 0.06469826), (31, 0.05598535), (771, 0.018493935), (772, 0.009094377), (16, 0.007507439), (102, 0.0060120546), (43, 0.0053406577), (26, 0.0036926833)], 0.98545814);
-                    s.is_empty()
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(0, 0.3878691), (339, 0.26683453), (13, 0.12501717), (31, 0.08781567), (93, 0.04571603), (314, 0.0433814), (771, 0.012390326), (772, 0.00608835), (16, 0.005035477), (102, 0.004028382), (43, 0.0035858701), (26, 0.0024719615)], 0.99023426);
-                    match s {
-                        [] => true,
-                        ['β', s @ ..] => {
-                            out.push(&[(339, 0.44135195), (0, 0.2232395), (13, 0.14389257), (31, 0.11528191), (93, 0.026306555), (314, 0.02496376), (771, 0.0071259635), (772, 0.003509575), (16, 0.0028992142), (102, 0.0023193713), (43, 0.002059968)], 0.9929503);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(339, 0.81632715), (31, 0.18367285)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['π', s @ ..] => {
-            out.push(&[(31, 0.41365683), (13, 0.34267184), (0, 0.07051194), (16, 0.029510949), (102, 0.023636226), (43, 0.020965897), (93, 0.017853055), (26, 0.01451133), (27, 0.0058747237), (321, 0.0052338447), (55, 0.0043945983), (14, 0.004242008), (423, 0.00421149), (314, 0.0041962313), (339, 0.004165713), (347, 0.004165713), (699, 0.004165713), (763, 0.004165713), (1044, 0.004165713), (115, 0.002838178), (1053, 0.002777142)], 0.98791486);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(13, 0.56177616), (31, 0.2757763), (0, 0.04699779), (16, 0.019668879), (102, 0.01576257), (43, 0.013977264), (93, 0.011902037), (26, 0.00967422), (27, 0.003921569), (321, 0.003494316), (55, 0.0029297322), (14, 0.002838178), (423, 0.00280766), (314, 0.002792401), (339, 0.002777142), (347, 0.002777142), (699, 0.002777142), (763, 0.002777142), (1044, 0.002777142)], 0.9882048);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ρ', s @ ..] => {
-            out.push(&[(31, 0.35654232), (0, 0.32019532), (16, 0.109071486), (43, 0.105745025), (13, 0.03616388), (26, 0.021927215), (27, 0.010421912), (102, 0.009231708), (93, 0.0069733732), (321, 0.002044709)], 0.97831696);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(0, 0.5047379), (31, 0.21940948), (16, 0.067124434), (43, 0.06507973), (26, 0.06477455), (27, 0.032059204), (13, 0.022247653), (102, 0.005676356), (93, 0.0042877854)], 0.9853971);
-                    match s {
-                        [] => true,
-                        ['κ', '\u{1}', s @ ..] => {
-                            out.push(&[(26, 0.6666667), (27, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(0, 0.5280842), (31, 0.34262607), (16, 0.043625545), (43, 0.042298008), (13, 0.014465553), (26, 0.008773938), (27, 0.004165713), (102, 0.0036926833), (93, 0.002792401)], 0.9905241);
-                    match s {
-                        [] => true,
-                        ['ι', s @ ..] => {
-                            out.push(&[(31, 0.56174564), (0, 0.35205615), (16, 0.029083695), (43, 0.028198672), (13, 0.009643702), (26, 0.0058442056), (27, 0.002777142), (102, 0.0024567025)], 0.9918059);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['υ', s @ ..] => {
-                    out.push(&[(31, 0.45218587), (16, 0.20302129), (43, 0.20192264), (0, 0.10673686), (13, 0.012054628), (26, 0.0073090717), (27, 0.003479057), (102, 0.0030823224), (93, 0.0023193713)], 0.9921111);
-                    match s {
-                        [] => true,
-                        ['μ', s @ ..] => {
-                            out.push(&[(16, 0.35150683), (43, 0.3509575), (31, 0.22609293), (0, 0.0533608), (13, 0.006027314), (26, 0.0036469062)], 0.9915923);
-                            match s {
-                                [] => true,
-                                ['ο', s @ ..] => {
-                                    out.push(&[(16, 0.5676814), (43, 0.23396659), (31, 0.15072861), (0, 0.03558404), (13, 0.004013123), (26, 0.0024414435)], 0.99441516);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['σ', s @ ..] => {
-            out.push(&[(31, 0.4879225), (13, 0.1846952), (0, 0.12504768), (16, 0.11606012), (102, 0.059967957), (43, 0.004592966), (93, 0.003921569), (26, 0.0031891356)], 0.9853971);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(31, 0.58287936), (13, 0.32681772), (0, 0.034500647), (16, 0.032013427), (102, 0.01654078)], 0.99275196);
-                    match s {
-                        [] => true,
-                        ['β', s @ ..] => {
-                            out.push(&[(13, 0.55120164), (31, 0.38858625), (0, 0.022995345), (16, 0.021347372), (102, 0.011032273)], 0.9951629);
-                            s.is_empty()
-                        }
-                        ['κ', s @ ..] => {
-                            out.push(&[(13, 0.55120164), (31, 0.38858625), (0, 0.022995345), (16, 0.021347372), (102, 0.011032273)], 0.9951629);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ε', s @ ..] => {
-                    out.push(&[(31, 0.49396506), (16, 0.30803388), (13, 0.0923476), (0, 0.06251621), (102, 0.029983979), (43, 0.0023041123)], 0.9891508);
-                    match s {
-                        [] => true,
-                        ['β', s @ ..] => {
-                            out.push(&[(16, 0.53868926), (31, 0.32930496), (13, 0.061570153), (0, 0.04168765), (102, 0.01998932)], 0.99124134);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ι', s @ ..] => {
-                    out.push(&[(31, 0.59516287), (13, 0.27388418), (0, 0.050019074), (16, 0.046417944), (102, 0.023987183)], 0.98947126);
-                    match s {
-                        [] => true,
-                        ['ρ', s @ ..] => {
-                            out.push(&[(13, 0.5159228), (31, 0.39678034), (0, 0.033340964), (16, 0.030945297), (102, 0.015991455)], 0.99298084);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(0, 0.45001906), (31, 0.39516288), (13, 0.07388418), (16, 0.046417944), (102, 0.023987183)], 0.98947126);
-                    s.is_empty()
-                }
-                ['υ', s @ ..] => {
-                    out.push(&[(31, 0.39516288), (16, 0.24641794), (102, 0.22398718), (13, 0.07388418), (0, 0.050019074)], 0.98947126);
-                    match s {
-                        [] => true,
-                        ['θ', s @ ..] => {
-                            out.push(&[(16, 0.49761197), (31, 0.26344702), (102, 0.14932479), (13, 0.049256124), (0, 0.033340964)], 0.99298084);
-                            s.is_empty()
-                        }
-                        ['ο', s @ ..] => {
-                            out.push(&[(102, 0.48265812), (31, 0.26344702), (16, 0.16427863), (13, 0.049256124), (0, 0.033340964)], 0.99298084);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['τ', s @ ..] => {
-            out.push(&[(13, 0.45156023), (763, 0.19365224), (31, 0.124696724), (0, 0.10133517), (16, 0.022476539), (102, 0.018005647), (43, 0.015976196), (93, 0.0136110475), (26, 0.011062791), (27, 0.0044708936), (321, 0.0039978637), (55, 0.0033417258), (14, 0.0032349126), (423, 0.0032043946), (314, 0.0031891356), (339, 0.0031738766), (347, 0.0031738766), (699, 0.0031738766), (1044, 0.0031738766), (115, 0.002166781), (1053, 0.002121004)], 0.9907988);
-            match s {
-                [] => true,
-                ['α', 'φ', '\u{1}', s @ ..] => {
-                    out.push(&[(0, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(763, 0.46243992), (13, 0.30102998), (31, 0.08313115), (0, 0.067566946), (16, 0.01498436), (102, 0.01200885), (43, 0.010650798), (93, 0.0090638595), (26, 0.007370108), (27, 0.0029907683), (321, 0.0026550698), (55, 0.0022278172), (14, 0.002151522), (423, 0.002136263), (314, 0.002136263), (339, 0.002121004), (347, 0.002121004), (699, 0.002121004), (1044, 0.002121004)], 0.9910277);
-                    s.is_empty()
-                }
-                ['ω', s @ ..] => {
-                    out.push(&[(13, 0.7257801), (763, 0.09681849), (31, 0.062348362), (0, 0.050675213), (16, 0.011245899), (102, 0.009002823), (43, 0.0079957275), (93, 0.0068055238), (26, 0.005523766), (27, 0.0022430762)], 0.97843903);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['υ', s @ ..] => {
-            out.push(&[(31, 0.39362174), (13, 0.0986038), (321, 0.09143206), (347, 0.07313649), (26, 0.05214008), (1053, 0.048767835), (102, 0.047913328), (27, 0.025665674), (412, 0.024383917), (1054, 0.024383917), (103, 0.02090486), (0, 0.020294499), (887, 0.018280309), (104, 0.010284581), (551, 0.010284581), (16, 0.008484016), (43, 0.0060425727), (93, 0.0051422906), (552, 0.0051422906), (553, 0.0025635157)], 0.98747236);
-            match s {
-                [] => true,
-                ['ζ', s @ ..] => {
-                    out.push(&[(31, 0.34988937), (13, 0.087647825), (321, 0.08126955), (551, 0.072632946), (347, 0.06501869), (26, 0.04634165), (1053, 0.043335624), (102, 0.04258793), (552, 0.036316473), (27, 0.022812238), (412, 0.021667812), (1054, 0.021667812), (103, 0.01857023), (553, 0.018158237), (0, 0.018036164), (887, 0.016250858), (104, 0.009140154), (16, 0.007553216), (43, 0.0053711757), (93, 0.004562448)], 0.9888304);
-                    s.is_empty()
-                }
-                ['κ', s @ ..] => {
-                    out.push(&[(31, 0.28596932), (321, 0.20048828), (26, 0.13066301), (1053, 0.12951858), (27, 0.065201804), (1054, 0.06475929), (13, 0.033432517), (347, 0.02479591), (102, 0.0162356), (412, 0.00827039), (103, 0.007080186), (0, 0.006881819), (887, 0.006195163), (104, 0.003479057), (551, 0.003479057), (16, 0.0028839551), (43, 0.002044709)], 0.99137866);
-                    match s {
-                        [] => true,
-                        ['σ', s @ ..] => {
-                            out.push(&[(1053, 0.30856794), (31, 0.19064622), (1054, 0.15428397), (321, 0.13365377), (26, 0.08711375), (27, 0.043472953), (13, 0.022278173), (347, 0.01652552), (102, 0.010833906), (412, 0.005508507), (103, 0.004715038), (0, 0.0045777066), (887, 0.004135195), (104, 0.0023193713), (551, 0.0023193713)], 0.9909514);
-                            s.is_empty()
-                        }
-                        ['ω', s @ ..] => {
-                            out.push(&[(31, 0.37741664), (321, 0.3592279), (26, 0.06700236), (1053, 0.06642252), (27, 0.033432517), (1054, 0.03320363), (13, 0.01713588), (347, 0.012710765), (102, 0.008331426), (412, 0.004242008), (103, 0.0036316472), (0, 0.003524834), (887, 0.0031738766)], 0.989456);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['λ', s @ ..] => {
-                    out.push(&[(13, 0.36836806), (31, 0.24222171), (321, 0.133196), (347, 0.045014113), (26, 0.03208972), (1053, 0.029999238), (102, 0.029480431), (27, 0.015793087), (412, 0.014999619), (1054, 0.014999619), (103, 0.012863356), (0, 0.01248188), (887, 0.011245899), (104, 0.006317235), (551, 0.006317235), (16, 0.0052185855), (43, 0.0037079423), (93, 0.0031586175), (552, 0.0031586175)], 0.990631);
-                    s.is_empty()
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(31, 0.4907759), (102, 0.13345541), (412, 0.076417185), (103, 0.06550698), (13, 0.039444573), (321, 0.036575876), (104, 0.032684825), (347, 0.029251546), (26, 0.020859083), (1053, 0.01950103), (27, 0.0102693215), (1054, 0.009750515), (0, 0.0081178), (887, 0.0073090717), (551, 0.004104677), (16, 0.0034027619), (43, 0.0024109255), (93, 0.002059968), (552, 0.002059968)], 0.99395746);
-                    match s {
-                        [] => true,
-                        ['λ', 'π', s @ ..] => {
-                            out.push(&[(31, 0.32718396), (102, 0.27943847), (103, 0.13890287), (104, 0.06941329), (412, 0.050949875), (13, 0.026291294), (321, 0.024383917), (347, 0.01950103), (26, 0.013900969), (1053, 0.013000687), (27, 0.006851301), (1054, 0.0065003433), (0, 0.005416953), (887, 0.004882887), (551, 0.002746624), (16, 0.0022583352)], 0.9916228);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(31, 0.5574426), (347, 0.22925155), (13, 0.039444573), (321, 0.036575876), (26, 0.020859083), (1053, 0.01950103), (102, 0.019165331), (27, 0.0102693215), (412, 0.009750515), (1054, 0.009750515), (103, 0.008361944), (0, 0.0081178), (887, 0.0073090717), (104, 0.004104677), (551, 0.004104677), (16, 0.0034027619), (43, 0.0024109255), (93, 0.002059968), (552, 0.002059968)], 0.9939422);
-                    match s {
-                        [] => true,
-                        ['β', s @ ..] => {
-                            out.push(&[(347, 0.4861677), (31, 0.37163347), (13, 0.026291294), (321, 0.024383917), (26, 0.013900969), (1053, 0.013000687), (102, 0.012771801), (27, 0.006851301), (412, 0.0065003433), (1054, 0.0065003433), (103, 0.005569543), (0, 0.005416953), (887, 0.004882887), (104, 0.002746624), (551, 0.002746624), (16, 0.0022583352)], 0.9916228);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['φ', s @ ..] => {
-                    out.push(&[(31, 0.34988937), (887, 0.12736705), (13, 0.087647825), (321, 0.08126955), (347, 0.06501869), (26, 0.04634165), (1053, 0.043335624), (102, 0.04258793), (27, 0.022812238), (412, 0.021667812), (1054, 0.021667812), (103, 0.01857023), (0, 0.018036164), (104, 0.009140154), (551, 0.009140154), (16, 0.007553216), (43, 0.0053711757), (93, 0.004562448), (552, 0.004562448), (553, 0.0022888533)], 0.9888304);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ω', s @ ..] => {
-            out.push(&[(31, 0.6492256), (102, 0.10678264), (14, 0.09921416), (13, 0.03616388), (93, 0.03135729), (0, 0.027512016), (16, 0.011520562), (43, 0.008178836), (26, 0.0056610974), (27, 0.0022888533), (321, 0.002044709)], 0.97994965);
-            match s {
-                [] => true,
-                ['β', s @ ..] => {
-                    out.push(&[(31, 0.43282217), (14, 0.3994812), (102, 0.07118334), (13, 0.024109256), (93, 0.02090486), (0, 0.018341344), (16, 0.0076752882), (43, 0.00546273), (26, 0.0037842374)], 0.9837644);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n660(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 655);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 2155);
+			match s {
+				[] => true,
+				['β', s @ ..] => {
+					super::push(out, 4331);
+					match s {
+						[] => true,
+						['β', s @ ..] => {
+							super::push(out, 6021);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6924);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['σ', s @ ..] => {
+							super::push(out, 6022);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									super::push(out, 6925);
+									match s {
+										[] => true,
+										['ν', s @ ..] => {
+											super::push(out, 7272);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['ω', s @ ..] => {
+							super::push(out, 6023);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['κ', s @ ..] => {
+					super::push(out, 4332);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 6024);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 4333);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 6025);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6926);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 4334);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 6026);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['π', s @ ..] => {
+					super::push(out, 4335);
+					match s {
+						[] => true,
+						['υ', s @ ..] => {
+							super::push(out, 6027);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 4336);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 6028);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6927);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 2156);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 4337);
+					s.is_empty()
+				}
+				['α', s @ ..] => {
+					super::push(out, 4338);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 6029);
+							s.is_empty()
+						}
+						['σ', s @ ..] => {
+							super::push(out, 6030);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 4339);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 6031);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['π', s @ ..] => {
+					super::push(out, 4340);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 6032);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6928);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ε', s @ ..] => {
+							super::push(out, 6033);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 2157);
+			match s {
+				[] => true,
+				['β', s @ ..] => {
+					super::push(out, 4341);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 6034);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['κ', s @ ..] => {
+					super::push(out, 4342);
+					s.is_empty()
+				}
+				['λ', s @ ..] => {
+					super::push(out, 4343);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 6035);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 4344);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 6036);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ν', s @ ..] => {
+					super::push(out, 4345);
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 6037);
+							match s {
+								[] => true,
+								['ι', s @ ..] => {
+									super::push(out, 6929);
+									match s {
+										[] => true,
+										['σ', s @ ..] => {
+											super::push(out, 7273);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 2158);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4346);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 6038);
+							match s {
+								[] => true,
+								['δ', s @ ..] => {
+									super::push(out, 6930);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['β', s @ ..] => {
+					super::push(out, 4347);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 6039);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6931);
+									match s {
+										[] => true,
+										['β', s @ ..] => {
+											super::push(out, 7274);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['μ', s @ ..] => {
+					super::push(out, 4348);
+					match s {
+						[] => true,
+						['ι', s @ ..] => {
+							super::push(out, 6040);
+							match s {
+								[] => true,
+								['ρ', s @ ..] => {
+									super::push(out, 6932);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 4349);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 6041);
+							match s {
+								[] => true,
+								['ω', s @ ..] => {
+									super::push(out, 6933);
+									match s {
+										[] => true,
+										['ξ', s @ ..] => {
+											super::push(out, 7275);
+											match s {
+												[] => true,
+												['ε', s @ ..] => {
+													super::push(out, 7376);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['σ', s @ ..] => {
+					super::push(out, 4350);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 6042);
+							s.is_empty()
+						}
+						['α', s @ ..] => {
+							super::push(out, 6043);
+							match s {
+								[] => true,
+								['ρ', s @ ..] => {
+									super::push(out, 6934);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['κ', s @ ..] => {
+			super::push(out, 2159);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4351);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 6044);
+							s.is_empty()
+						}
+						['ρ', s @ ..] => {
+							super::push(out, 6045);
+							match s {
+								[] => true,
+								['τ', s @ ..] => {
+									super::push(out, 6935);
+									match s {
+										[] => true,
+										['α', s @ ..] => {
+											super::push(out, 7276);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 4352);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 6046);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6936);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 4353);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 6047);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 4354);
+					s.is_empty()
+				}
+				['ω', s @ ..] => {
+					super::push(out, 4355);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['λ', s @ ..] => {
+			super::push(out, 2160);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4356);
+					match s {
+						[] => true,
+						['φ', s @ ..] => {
+							super::push(out, 6048);
+							match s {
+								[] => true,
+								['σ', s @ ..] => {
+									super::push(out, 6937);
+									match s {
+										[] => true,
+										['α', s @ ..] => {
+											super::push(out, 7277);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 4357);
+					match s {
+						[] => true,
+						['δ', s @ ..] => {
+							super::push(out, 6049);
+							s.is_empty()
+						}
+						['κ', s @ ..] => {
+							super::push(out, 6050);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 4358);
+					match s {
+						[] => true,
+						['μ', s @ ..] => {
+							super::push(out, 6051);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 4359);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 6052);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ν', s @ ..] => {
+			super::push(out, 2161);
+			match s {
+				[] => true,
+				['ο', s @ ..] => super::t2::n4389(s, out),
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => super::t2::n2176(s, out),
+		['π', s @ ..] => super::t2::n2177(s, out),
+		['ρ', s @ ..] => super::t2::n2178(s, out),
+		['σ', s @ ..] => super::t2::n2179(s, out),
+		['τ', s @ ..] => super::t2::n2180(s, out),
+		['υ', s @ ..] => super::t2::n2181(s, out),
+		['ω', s @ ..] => super::t2::n2182(s, out),
+		_ => false,
+	}
 }
 
 /// Words ending -υοσ.
-pub(crate) fn n639(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(13, 0.26964217), (31, 0.18489356), (14, 0.1104448), (74, 0.074647136), (115, 0.0739147), (771, 0.06193637), (0, 0.04209964), (75, 0.0371252), (116, 0.03695735), (772, 0.030975815), (773, 0.015487907), (102, 0.010940718), (16, 0.008743419), (55, 0.0058899825), (26, 0.005477989), (93, 0.0038452735), (43, 0.0035706111), (27, 0.0028992142), (275, 0.002746624)], 0.9822385);
-    match s {
-        [] => true,
-        ['ε', s @ ..] => {
-            out.push(&[(115, 0.27148852), (13, 0.17976654), (116, 0.13574426), (31, 0.123262376), (14, 0.07364004), (74, 0.04975967), (771, 0.041290913), (0, 0.028061341), (75, 0.024750134), (772, 0.020645456), (773, 0.010330358), (102, 0.0072938125), (16, 0.0058289464), (55, 0.0039368276), (26, 0.0036469062), (93, 0.0025635157), (43, 0.0023804074)], 0.98439);
-            s.is_empty()
-        }
-        ['θ', s @ ..] => {
-            out.push(&[(74, 0.2719768), (13, 0.17976654), (75, 0.13586633), (31, 0.123262376), (14, 0.07364004), (115, 0.049271382), (771, 0.041290913), (0, 0.028061341), (116, 0.02464332), (772, 0.020645456), (773, 0.010330358), (102, 0.0072938125), (16, 0.0058289464), (55, 0.0039368276), (26, 0.0036469062), (93, 0.0025635157), (43, 0.0023804074)], 0.9844053);
-            s.is_empty()
-        }
-        ['κ', s @ ..] => {
-            out.push(&[(13, 0.4773022), (31, 0.1844358), (14, 0.06849775), (74, 0.046295874), (115, 0.045838103), (771, 0.038406957), (0, 0.026108187), (75, 0.023025865), (116, 0.022919051), (772, 0.019211108), (773, 0.009597925), (102, 0.006790265), (16, 0.005416953), (55, 0.0036621653), (26, 0.0033875029), (93, 0.0023956664), (43, 0.0022125582)], 0.9855039);
-            s.is_empty()
-        }
-        ['ν', s @ ..] => {
-            out.push(&[(14, 0.40697336), (13, 0.17976654), (31, 0.123262376), (74, 0.04975967), (115, 0.049271382), (771, 0.041290913), (0, 0.028061341), (75, 0.024750134), (116, 0.02464332), (772, 0.020645456), (773, 0.010330358), (102, 0.0072938125), (16, 0.0058289464), (55, 0.0039368276), (26, 0.0036469062), (93, 0.0025635157), (43, 0.0023804074)], 0.9844053);
-            s.is_empty()
-        }
-        ['π', s @ ..] => {
-            out.push(&[(31, 0.45659572), (13, 0.17976654), (14, 0.07364004), (74, 0.04975967), (115, 0.049271382), (771, 0.041290913), (0, 0.028061341), (75, 0.024750134), (116, 0.02464332), (772, 0.020645456), (773, 0.010330358), (102, 0.0072938125), (16, 0.0058289464), (55, 0.0039368276), (26, 0.0036469062), (93, 0.0025635157), (43, 0.0023804074)], 0.9844053);
-            s.is_empty()
-        }
-        ['ρ', s @ ..] => {
-            out.push(&[(771, 0.23176928), (13, 0.17976654), (31, 0.123262376), (772, 0.11589227), (14, 0.07364004), (773, 0.057938505), (74, 0.04975967), (115, 0.049271382), (0, 0.028061341), (75, 0.024750134), (116, 0.02464332), (102, 0.0072938125), (16, 0.0058289464), (55, 0.0039368276), (26, 0.0036469062), (93, 0.0025635157), (43, 0.0023804074)], 0.9844053);
-            s.is_empty()
-        }
-        ['τ', s @ ..] => {
-            out.push(&[(13, 0.51309985), (31, 0.123262376), (14, 0.07364004), (74, 0.04975967), (115, 0.049271382), (771, 0.041290913), (0, 0.028061341), (75, 0.024750134), (116, 0.02464332), (772, 0.020645456), (773, 0.010330358), (102, 0.0072938125), (16, 0.0058289464), (55, 0.0039368276), (26, 0.0036469062), (93, 0.0025635157), (43, 0.0023804074)], 0.9844053);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n661(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 656);
+	match s {
+		[] => true,
+		['ε', s @ ..] => {
+			super::push(out, 2169);
+			match s {
+				[] => true,
+				['κ', s @ ..] => {
+					super::push(out, 4386);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 6081);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['θ', s @ ..] => {
+			super::push(out, 2170);
+			s.is_empty()
+		}
+		['κ', s @ ..] => {
+			super::push(out, 2171);
+			s.is_empty()
+		}
+		['ν', s @ ..] => {
+			super::push(out, 2172);
+			s.is_empty()
+		}
+		['π', s @ ..] => {
+			super::push(out, 2173);
+			s.is_empty()
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 2174);
+			match s {
+				[] => true,
+				['κ', s @ ..] => {
+					super::push(out, 4387);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['τ', s @ ..] => {
+			super::push(out, 2175);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4388);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -φοσ.
-pub(crate) fn n640(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.43628594), (13, 0.16784924), (31, 0.0826276), (26, 0.053543907), (93, 0.040802624), (74, 0.027176319), (27, 0.02230869), (75, 0.018036164), (286, 0.018036164), (102, 0.014801252), (16, 0.014526589), (14, 0.013702602), (314, 0.013519494), (352, 0.013504234), (429, 0.013443198), (943, 0.013443198), (1138, 0.013443198), (287, 0.009018082), (72, 0.0044861524), (771, 0.0038452735)], 0.9943999);
-    match s {
-        [] => true,
-        ['α', s @ ..] => {
-            out.push(&[(0, 0.6649729), (13, 0.17648585), (93, 0.03012131), (943, 0.028610665), (74, 0.020080874), (26, 0.019699397), (286, 0.019577324), (75, 0.010284581), (287, 0.009781033), (27, 0.009597925), (31, 0.0046082246)], 0.9938201);
-            match s {
-                [] => true,
-                ['δ', s @ ..] => {
-                    out.push(&[(0, 0.44332036), (286, 0.23527886), (13, 0.11764706), (287, 0.1176318), (93, 0.020080874), (943, 0.019073777), (74, 0.013382162), (26, 0.013138018), (75, 0.00686656), (27, 0.0063935304), (31, 0.0030670634)], 0.99588007);
-                    match s {
-                        [] => true,
-                        ['ε', s @ ..] => {
-                            out.push(&[(286, 0.37906462), (0, 0.29553673), (287, 0.18953231), (13, 0.078431375), (93, 0.013397422), (943, 0.012710765), (74, 0.008926528), (26, 0.008758679), (75, 0.0045777066), (27, 0.004272526), (31, 0.002044709)], 0.99725336);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['κ', s @ ..] => {
-                    out.push(&[(0, 0.44332036), (74, 0.23561455), (75, 0.1179675), (13, 0.11764706), (93, 0.020080874), (943, 0.019073777), (26, 0.013138018), (286, 0.013046464), (287, 0.0065308614), (27, 0.0063935304), (31, 0.0030670634)], 0.99588007);
-                    match s {
-                        [] => true,
-                        ['σ', s @ ..] => {
-                            out.push(&[(74, 0.3792935), (0, 0.29553673), (75, 0.18976119), (13, 0.078431375), (93, 0.013397422), (943, 0.012710765), (26, 0.008758679), (286, 0.008697643), (287, 0.0043488215), (27, 0.004272526), (31, 0.002044709)], 0.99725336);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['λ', s @ ..] => {
-                    out.push(&[(13, 0.55883116), (0, 0.22165255), (93, 0.17671473), (943, 0.009536888), (74, 0.006698711), (26, 0.0065613794), (286, 0.0065308614), (75, 0.00343328), (287, 0.0032654307), (27, 0.0032043946)], 0.9964294);
-                    s.is_empty()
-                }
-                ['ν', 'η', s @ ..] => {
-                    out.push(&[(13, 0.4509804), (0, 0.44332036), (93, 0.020080874), (943, 0.019073777), (74, 0.013382162), (26, 0.013138018), (286, 0.013046464), (75, 0.00686656), (287, 0.0065308614), (27, 0.0063935304), (31, 0.0030670634)], 0.99588007);
-                    s.is_empty()
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(0, 0.8932021), (13, 0.05412375), (943, 0.04228275), (93, 0.0024109255)], 0.99201953);
-                    match s {
-                        [] => true,
-                        ['γ', 'ο', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['θ', s @ ..] => {
-                                    out.push(&[(0, 0.59546804), (943, 0.361532), (13, 0.03607233)], 0.9930724);
-                                    match s {
-                                        [] => true,
-                                        ['ρ', s @ ..] => {
-                                            out.push(&[(943, 0.5743496), (0, 0.3969787), (13, 0.024048219)], 0.9953765);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['κ', s @ ..] => {
-                                    out.push(&[(0, 0.59546804), (13, 0.36940566), (943, 0.028198672)], 0.9930724);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['τ', s @ ..] => {
-                    out.push(&[(0, 0.47550163), (13, 0.276112), (26, 0.13049516), (27, 0.06514076), (93, 0.012298772), (943, 0.0116731515), (74, 0.0081940945), (286, 0.0079957275), (75, 0.0041962313), (287, 0.0039978637)], 0.9956054);
-                    match s {
-                        [] => true,
-                        ['ο', s @ ..] => {
-                            out.push(&[(13, 0.5174029), (0, 0.31700617), (26, 0.08699168), (27, 0.043427177), (93, 0.0081940945), (943, 0.007782101), (74, 0.00546273), (286, 0.005325399), (75, 0.00280766), (287, 0.0026703288)], 0.99707025);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['ε', s @ ..] => {
-            out.push(&[(26, 0.3601129), (0, 0.21814297), (27, 0.17782864), (13, 0.08392462), (31, 0.04130617), (93, 0.020401312), (74, 0.01358053), (75, 0.009018082), (286, 0.009018082), (102, 0.007400626), (16, 0.0072632944), (14, 0.006851301), (314, 0.006759747), (352, 0.006759747), (429, 0.0067139696), (943, 0.0067139696), (1138, 0.0067139696), (287, 0.0045014117), (72, 0.0022430762)], 0.99525446);
-            s.is_empty()
-        }
-        ['η', s @ ..] => {
-            out.push(&[(352, 0.34233615), (0, 0.29085222), (13, 0.11189441), (31, 0.05508507), (26, 0.03569085), (93, 0.027206836), (74, 0.018112458), (27, 0.014877547), (75, 0.012024109), (286, 0.012024109), (102, 0.009857329), (16, 0.009689479), (14, 0.009124896), (314, 0.009018082), (429, 0.008957046), (943, 0.008957046), (1138, 0.008957046), (287, 0.0060120546), (72, 0.0029907683), (771, 0.0025635157)], 0.996231);
-            match s {
-                [] => true,
-                ['ψ', s @ ..] => {
-                    out.push(&[(352, 0.56156254), (0, 0.19391166), (13, 0.07460136), (31, 0.036728464), (26, 0.023804074), (93, 0.018127719), (74, 0.012085145), (27, 0.009918365), (75, 0.008026246), (286, 0.008010986), (102, 0.0065766387), (16, 0.0064545665), (14, 0.00608835), (314, 0.0060120546), (429, 0.005966278), (943, 0.005966278), (1138, 0.005966278), (287, 0.004013123)], 0.99382013);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ι', s @ ..] => {
-            out.push(&[(13, 0.22261387), (93, 0.18027009), (429, 0.17114519), (0, 0.14543374), (26, 0.128954), (27, 0.06298924), (31, 0.027542535), (74, 0.0090638595), (75, 0.0060120546), (286, 0.0060120546), (102, 0.0049286643), (16, 0.00483711), (14, 0.004562448), (314, 0.0045014117), (352, 0.0045014117), (943, 0.0044861524), (1138, 0.0044861524), (287, 0.0030060273)], 0.995346);
-            match s {
-                [] => true,
-                ['ξ', s @ ..] => {
-                    out.push(&[(26, 0.30820173), (27, 0.15310903), (13, 0.14840925), (93, 0.120180055), (429, 0.11409171), (0, 0.09695583), (31, 0.018356603), (74, 0.0060425727), (75, 0.004013123), (286, 0.004013123), (102, 0.0032806897), (16, 0.0032349126), (14, 0.0030365454), (314, 0.0030060273), (352, 0.0030060273), (943, 0.0029907683), (1138, 0.0029907683), (287, 0.0019989319)], 0.99691767);
-                    s.is_empty()
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(13, 0.28905165), (93, 0.27211413), (429, 0.26845196), (0, 0.05816739), (26, 0.05159075), (27, 0.025192644), (31, 0.011017014), (74, 0.0036163882), (75, 0.0024109255), (286, 0.0024109255)], 0.98402375);
-                    match s {
-                        [] => true,
-                        ['α', s @ ..] => {
-                            out.push(&[(13, 0.5260243), (93, 0.18139926), (429, 0.17897306), (0, 0.038788434), (26, 0.034393836), (27, 0.016800184), (31, 0.0073395898), (74, 0.0024109255)], 0.9861296);
-                            s.is_empty()
-                        }
-                        ['γ', s @ ..] => {
-                            out.push(&[(429, 0.5123064), (13, 0.19269092), (93, 0.18139926), (0, 0.038788434), (26, 0.034393836), (27, 0.016800184), (31, 0.0073395898), (74, 0.0024109255)], 0.9861295);
-                            s.is_empty()
-                        }
-                        ['ε', s @ ..] => {
-                            out.push(&[(93, 0.5147326), (13, 0.19269092), (429, 0.17897306), (0, 0.038788434), (26, 0.034393836), (27, 0.016800184), (31, 0.0073395898), (74, 0.0024109255)], 0.9861296);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['λ', s @ ..] => {
-            out.push(&[(31, 0.6386511), (0, 0.14543374), (72, 0.057053484), (13, 0.055954833), (26, 0.017853055), (93, 0.013595789), (74, 0.0090638595), (27, 0.007431144), (75, 0.0060120546), (286, 0.0060120546), (102, 0.0049286643), (16, 0.00483711), (14, 0.004562448), (314, 0.0045014117), (352, 0.0045014117), (429, 0.0044861524), (943, 0.0044861524), (1138, 0.0044861524), (287, 0.0030060273)], 0.99685663);
-            s.is_empty()
-        }
-        ['μ', s @ ..] => {
-            out.push(&[(0, 0.3590753), (31, 0.27064928), (93, 0.13519493), (74, 0.09011979), (75, 0.0461738), (13, 0.04196231), (26, 0.013382162), (27, 0.005584802), (286, 0.0045014117), (102, 0.0036926833), (16, 0.0036316472), (14, 0.003418021), (314, 0.0033875029), (352, 0.0033722438), (429, 0.0033569848), (943, 0.0033569848), (1138, 0.0033569848), (287, 0.0022583352)], 0.99647516);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(74, 0.28230718), (0, 0.23938353), (31, 0.18043794), (75, 0.14189364), (93, 0.090135045), (13, 0.027969787), (26, 0.008926528), (27, 0.0037232013), (286, 0.0030060273), (102, 0.0024719615), (16, 0.0024261845), (14, 0.0022888533), (314, 0.0022583352), (352, 0.0022583352), (429, 0.0022430762), (943, 0.0022430762), (1138, 0.0022430762)], 0.99621576);
-                    s.is_empty()
-                }
-                ['ε', s @ ..] => {
-                    out.push(&[(0, 0.5727169), (31, 0.18043794), (93, 0.090135045), (74, 0.060090028), (75, 0.030777447), (13, 0.027969787), (26, 0.008926528), (27, 0.0037232013), (286, 0.0030060273), (102, 0.0024719615), (16, 0.0024261845), (14, 0.0022888533), (314, 0.0022583352), (352, 0.0022583352), (429, 0.0022430762), (943, 0.0022430762), (1138, 0.0022430762)], 0.9962158);
-                    s.is_empty()
-                }
-                ['ι', s @ ..] => {
-                    out.push(&[(31, 0.5137713), (0, 0.23938353), (93, 0.090135045), (74, 0.060090028), (75, 0.030777447), (13, 0.027969787), (26, 0.008926528), (27, 0.0037232013), (286, 0.0030060273), (102, 0.0024719615), (16, 0.0024261845), (14, 0.0022888533), (314, 0.0022583352), (352, 0.0022583352), (429, 0.0022430762), (943, 0.0022430762), (1138, 0.0022430762)], 0.9962158);
-                    s.is_empty()
-                }
-                ['ο', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['γ', s @ ..] => {
-                            out.push(&[(0, 0.5727169), (31, 0.18043794), (93, 0.090135045), (74, 0.060090028), (75, 0.030777447), (13, 0.027969787), (26, 0.008926528), (27, 0.0037232013), (286, 0.0030060273), (102, 0.0024719615), (16, 0.0024261845), (14, 0.0022888533), (314, 0.0022583352), (352, 0.0022583352), (429, 0.0022430762), (943, 0.0022430762), (1138, 0.0022430762)], 0.9962158);
-                            s.is_empty()
-                        }
-                        ['π', s @ ..] => {
-                            out.push(&[(31, 0.5137713), (0, 0.23938353), (93, 0.090135045), (74, 0.060090028), (75, 0.030777447), (13, 0.027969787), (26, 0.008926528), (27, 0.0037232013), (286, 0.0030060273), (102, 0.0024719615), (16, 0.0024261845), (14, 0.0022888533), (314, 0.0022583352), (352, 0.0022583352), (429, 0.0022430762), (943, 0.0022430762), (1138, 0.0022430762)], 0.9962158);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['υ', s @ ..] => {
-                    out.push(&[(93, 0.42346838), (0, 0.23938353), (31, 0.18043794), (74, 0.060090028), (75, 0.030777447), (13, 0.027969787), (26, 0.008926528), (27, 0.0037232013), (286, 0.0030060273), (102, 0.0024719615), (16, 0.0024261845), (14, 0.0022888533), (314, 0.0022583352), (352, 0.0022583352), (429, 0.0022430762), (943, 0.0022430762), (1138, 0.0022430762)], 0.99621576);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ο', s @ ..] => {
-            out.push(&[(0, 0.5537957), (13, 0.2525063), (14, 0.11107042), (31, 0.017868314), (26, 0.011581598), (93, 0.008819715), (74, 0.0058747237), (27, 0.004821851), (75, 0.0039063096), (286, 0.0039063096), (102, 0.0032043946), (16, 0.0031433585), (314, 0.0029297322), (352, 0.0029144732), (429, 0.0028992142), (943, 0.0028992142), (1138, 0.0028992142)], 0.99504083);
-            match s {
-                [] => true,
-                ['ρ', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['ο', s @ ..] => {
-                            out.push(&[(13, 0.50167084), (0, 0.36919203), (14, 0.074052036), (31, 0.011917296), (26, 0.007721065), (93, 0.0058747237), (74, 0.003921569), (27, 0.0032196536), (75, 0.0025940337), (286, 0.0025940337), (102, 0.002136263), (16, 0.002090486)], 0.986984);
-                            s.is_empty()
-                        }
-                        ['τ', s @ ..] => {
-                            out.push(&[(0, 0.52689403), (14, 0.30553138), (13, 0.12625314), (31, 0.008926528), (26, 0.0057831695), (93, 0.0044098576), (74, 0.0029449912), (27, 0.0024109255)], 0.98315406);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['σ', s @ ..] => {
-                    out.push(&[(13, 0.50167084), (0, 0.36919203), (14, 0.074052036), (31, 0.011917296), (26, 0.007721065), (93, 0.0058747237), (74, 0.003921569), (27, 0.0032196536), (75, 0.0025940337), (286, 0.0025940337), (102, 0.002136263), (16, 0.002090486)], 0.986984);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ρ', s @ ..] => {
-            out.push(&[(0, 0.40430304), (26, 0.27437246), (27, 0.07199206), (75, 0.07035935), (13, 0.0639353), (31, 0.031479362), (93, 0.015548944), (74, 0.010345617), (286, 0.00686656), (102, 0.0056305793), (16, 0.005539025), (14, 0.0052185855), (314, 0.0051575494), (352, 0.0051422906), (429, 0.0051270314), (943, 0.0051270314), (1138, 0.0051270314), (287, 0.00343328)], 0.9947051);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(26, 0.40512702), (0, 0.26953536), (27, 0.15910582), (75, 0.046906233), (13, 0.04263371), (31, 0.020981155), (93, 0.010360876), (74, 0.006897078), (286, 0.0045777066), (102, 0.0037537194), (16, 0.0036926833), (14, 0.003479057), (314, 0.00343328), (352, 0.00343328), (429, 0.003418021), (943, 0.003418021), (1138, 0.003418021), (287, 0.0022888533)], 0.9964599);
-                    s.is_empty()
-                }
-                ['ε', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(26, 0.6666667), (75, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['σ', '\u{1}', s @ ..] => {
-                            out.push(&[(0, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['υ', 'σ', '\u{1}', s @ ..] => {
-                    out.push(&[(0, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['σ', s @ ..] => {
-            out.push(&[(314, 0.3423514), (0, 0.29085222), (13, 0.11189441), (31, 0.05508507), (26, 0.03569085), (93, 0.027206836), (74, 0.018112458), (27, 0.014877547), (75, 0.012024109), (286, 0.012024109), (102, 0.009857329), (16, 0.009689479), (14, 0.009124896), (352, 0.009002823), (429, 0.008957046), (943, 0.008957046), (1138, 0.008957046), (287, 0.0060120546), (72, 0.0029907683), (771, 0.0025635157)], 0.996231);
-            match s {
-                [] => true,
-                ['ο', s @ ..] => {
-                    out.push(&[(314, 0.56156254), (0, 0.19391166), (13, 0.07460136), (31, 0.036728464), (26, 0.023804074), (93, 0.018127719), (74, 0.012085145), (27, 0.009918365), (75, 0.008026246), (286, 0.008010986), (102, 0.0065766387), (16, 0.0064545665), (14, 0.00608835), (352, 0.0060120546), (429, 0.005966278), (943, 0.005966278), (1138, 0.005966278), (287, 0.004013123)], 0.99382013);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['υ', s @ ..] => {
-            out.push(&[(13, 0.30324253), (0, 0.13127336), (102, 0.09359884), (16, 0.093553066), (1138, 0.093354695), (74, 0.065552756), (286, 0.063889526), (75, 0.03358511), (287, 0.031937134), (771, 0.026672771), (31, 0.015030136), (772, 0.012985428), (26, 0.009735256), (93, 0.0074158846), (27, 0.0040589), (14, 0.0024872206), (314, 0.0024567025), (352, 0.0024567025), (429, 0.0024414435), (943, 0.0024414435)], 0.9981689);
-            match s {
-                [] => true,
-                ['κ', s @ ..] => {
-                    out.push(&[(0, 0.27798885), (13, 0.20216678), (771, 0.11302357), (102, 0.062394142), (16, 0.06236362), (1138, 0.06224155), (772, 0.056275275), (74, 0.04370184), (286, 0.04258793), (75, 0.022384984), (287, 0.021301595), (31, 0.010009918), (26, 0.0064850845), (93, 0.004943923), (27, 0.0027008469)], 0.9905699);
-                    s.is_empty()
-                }
-                ['λ', s @ ..] => {
-                    out.push(&[(13, 0.32129398), (16, 0.23741512), (286, 0.1588922), (287, 0.07943847), (0, 0.052506294), (102, 0.03744564), (1138, 0.037338827), (74, 0.026215), (75, 0.013427939), (771, 0.010666057), (31, 0.0060120546), (772, 0.0051880674), (26, 0.0038910506), (93, 0.0029602502)], 0.9926909);
-                    match s {
-                        [] => true,
-                        ['γ', s @ ..] => {
-                            out.push(&[(13, 0.4106508), (16, 0.36870375), (286, 0.07943847), (287, 0.039719235), (0, 0.026260776), (102, 0.01872282), (1138, 0.018677043), (74, 0.0131075), (75, 0.0067139696), (771, 0.0053406577), (31, 0.0030060273), (772, 0.0025940337)], 0.99293506);
-                            s.is_empty()
-                        }
-                        ['ε', s @ ..] => {
-                            out.push(&[(286, 0.32814527), (13, 0.21419089), (287, 0.16408026), (16, 0.15828183), (0, 0.035004195), (102, 0.02496376), (1138, 0.024887465), (74, 0.017486839), (75, 0.008957046), (771, 0.007110704), (31, 0.004013123), (772, 0.003463798), (26, 0.0025940337)], 0.9931792);
-                            match s {
-                                [] => true,
-                                ['κ', '\u{1}', s @ ..] => {
-                                    out.push(&[(286, 0.6666667), (287, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(102, 0.3957275), (13, 0.20216678), (0, 0.08751049), (16, 0.06236362), (1138, 0.06224155), (74, 0.04370184), (286, 0.04258793), (75, 0.022384984), (287, 0.021301595), (771, 0.017776761), (31, 0.010009918), (772, 0.008651866), (26, 0.0064850845), (93, 0.004943923), (27, 0.0027008469)], 0.9905547);
-                    s.is_empty()
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(13, 0.40161747), (74, 0.19943541), (75, 0.1001297), (0, 0.06562905), (102, 0.04679942), (16, 0.046768904), (1138, 0.046677347), (286, 0.031937134), (287, 0.015976196), (771, 0.013336386), (31, 0.007507439), (772, 0.0065003433), (26, 0.004867628), (93, 0.0037079423), (27, 0.00202945)], 0.9929198);
-                    match s {
-                        [] => true,
-                        ['τ', s @ ..] => {
-                            out.push(&[(74, 0.35518426), (13, 0.26775005), (75, 0.17785916), (0, 0.043762874), (102, 0.0312047), (16, 0.031189442), (1138, 0.031113146), (286, 0.021301595), (287, 0.010650798), (771, 0.00889601), (31, 0.005004959), (772, 0.004333562), (26, 0.0032501717), (93, 0.0024719615)], 0.99397266);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['σ', s @ ..] => {
-                    out.push(&[(13, 0.5355001), (0, 0.08751049), (102, 0.062394142), (16, 0.06236362), (1138, 0.06224155), (74, 0.04370184), (286, 0.04258793), (75, 0.022384984), (287, 0.021301595), (771, 0.017776761), (31, 0.010009918), (772, 0.008651866), (26, 0.0064850845), (93, 0.004943923), (27, 0.0027008469)], 0.99055463);
-                    s.is_empty()
-                }
-                ['τ', s @ ..] => {
-                    out.push(&[(1138, 0.3955749), (13, 0.20216678), (0, 0.08751049), (102, 0.062394142), (16, 0.06236362), (74, 0.04370184), (286, 0.04258793), (75, 0.022384984), (287, 0.021301595), (771, 0.017776761), (31, 0.010009918), (772, 0.008651866), (26, 0.0064850845), (93, 0.004943923), (27, 0.0027008469)], 0.9905547);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -χοσ.
-pub(crate) fn n641(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(13, 0.26930648), (0, 0.18242161), (102, 0.13981842), (31, 0.1288014), (26, 0.039093614), (115, 0.03868162), (286, 0.030914778), (27, 0.023422599), (16, 0.022888534), (116, 0.01934844), (74, 0.015655756), (287, 0.015457389), (14, 0.011779965), (314, 0.011627375), (1266, 0.011551079), (1124, 0.0077058063), (1260, 0.0077058063), (75, 0.003952087), (412, 0.0038452735), (1125, 0.0038452735), (1261, 0.0038452735), (513, 0.0032959487)], 0.99496454);
-    match s {
-        [] => true,
-        ['α', s @ ..] => {
-            out.push(&[(13, 0.34413671), (31, 0.118822), (26, 0.07429618), (286, 0.07342641), (0, 0.071839474), (74, 0.071824215), (27, 0.05510033), (14, 0.05386435), (314, 0.05384909), (287, 0.036713205), (75, 0.017959869), (102, 0.014709697), (115, 0.004074159), (16, 0.0024109255), (116, 0.00202945)], 0.9950561);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(26, 0.6666667), (27, 0.33333334)], 1.0);
-                    s.is_empty()
-                }
-                ['β', s @ ..] => {
-                    out.push(&[(13, 0.5627527), (31, 0.07920958), (26, 0.049530786), (286, 0.048950944), (0, 0.04788281), (74, 0.04788281), (27, 0.036728464), (14, 0.035919737), (314, 0.03590448), (287, 0.024475472), (75, 0.011978332), (102, 0.009811551), (115, 0.002716106)], 0.9937438);
-                    s.is_empty()
-                }
-                ['ι', s @ ..] => {
-                    out.push(&[(13, 0.5627527), (31, 0.07920958), (26, 0.049530786), (286, 0.048950944), (0, 0.04788281), (74, 0.04788281), (27, 0.036728464), (14, 0.035919737), (314, 0.03590448), (287, 0.024475472), (75, 0.011978332), (102, 0.009811551), (115, 0.002716106)], 0.9937438);
-                    s.is_empty()
-                }
-                ['λ', s @ ..] => {
-                    out.push(&[(314, 0.22154574), (286, 0.16270696), (74, 0.16206607), (13, 0.13765164), (287, 0.08134585), (75, 0.073853664), (31, 0.047531854), (26, 0.029709315), (0, 0.028732738), (27, 0.022034029), (14, 0.02154574), (102, 0.0058899825)], 0.9946136);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(74, 0.6666667), (75, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['β', s @ ..] => {
-                            out.push(&[(314, 0.4810254), (286, 0.108476385), (74, 0.10804913), (13, 0.09176776), (287, 0.054230563), (75, 0.049240865), (31, 0.03169299), (26, 0.01980621), (0, 0.019150073), (27, 0.014694438), (14, 0.014358739), (102, 0.003921569)], 0.9964141);
-                            s.is_empty()
-                        }
-                        ['ε', s @ ..] => {
-                            out.push(&[(286, 0.3306935), (287, 0.16534676), (314, 0.14769207), (74, 0.10804913), (13, 0.09176776), (75, 0.049240865), (31, 0.03169299), (26, 0.01980621), (0, 0.019150073), (27, 0.014694438), (14, 0.014358739), (102, 0.003921569)], 0.9964141);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['μ', s @ ..] => {
-                    out.push(&[(13, 0.44805065), (0, 0.1906157), (286, 0.13559167), (287, 0.067795835), (31, 0.03961242), (26, 0.024765393), (74, 0.023941405), (27, 0.018371863), (14, 0.017959869), (314, 0.01794461), (75, 0.0059815366), (102, 0.0048981463)], 0.9955291);
-                    match s {
-                        [] => true,
-                        ['ε', s @ ..] => {
-                            out.push(&[(286, 0.31261158), (13, 0.29869536), (287, 0.15631342), (0, 0.12707713), (31, 0.026398107), (26, 0.016510261), (74, 0.015960937), (27, 0.012237736), (14, 0.011978332), (314, 0.011963073), (75, 0.0039978637), (102, 0.0032654307)], 0.9970092);
-                            match s {
-                                [] => true,
-                                ['τ', '\u{1}', s @ ..] => {
-                                    out.push(&[(286, 0.6666667), (287, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['ο', s @ ..] => {
-                            out.push(&[(13, 0.5792172), (0, 0.27624932), (286, 0.054230563), (287, 0.027115282), (31, 0.015838865), (26, 0.009903105), (74, 0.009582666), (27, 0.0073395898), (14, 0.0071869995), (314, 0.0071869995), (75, 0.0023956664)], 0.9962463);
-                            match s {
-                                [] => true,
-                                ['ν', s @ ..] => {
-                                    out.push(&[(0, 0.51749444), (13, 0.38614482), (286, 0.03616388), (287, 0.01808194), (31, 0.010559243), (26, 0.0066071567), (74, 0.006378271), (27, 0.0048981463), (14, 0.004791333), (314, 0.004791333)], 0.9959106);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['ν', s @ ..] => {
-                    out.push(&[(31, 0.4125429), (13, 0.2294194), (26, 0.049530786), (286, 0.048950944), (0, 0.04788281), (74, 0.04788281), (27, 0.036728464), (14, 0.035919737), (314, 0.03590448), (287, 0.024475472), (75, 0.011978332), (102, 0.009811551), (115, 0.002716106)], 0.9937438);
-                    s.is_empty()
-                }
-                ['π', s @ ..] => {
-                    out.push(&[(74, 0.27009994), (13, 0.2294194), (27, 0.14784466), (31, 0.07920958), (26, 0.049530786), (286, 0.048950944), (0, 0.04788281), (14, 0.035919737), (314, 0.03590448), (287, 0.024475472), (75, 0.011978332), (102, 0.009811551), (115, 0.002716106)], 0.9937438);
-                    s.is_empty()
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(13, 0.42206454), (31, 0.30940717), (26, 0.03714046), (286, 0.036713205), (0, 0.035919737), (74, 0.03590448), (27, 0.027542535), (14, 0.026932174), (314, 0.026932174), (287, 0.018356603), (75, 0.008987564), (102, 0.0073548486), (115, 0.00202945)], 0.995285);
-                    match s {
-                        [] => true,
-                        ['υ', s @ ..] => {
-                            out.push(&[(31, 0.5396048), (13, 0.28137636), (26, 0.024765393), (286, 0.024475472), (0, 0.023941405), (74, 0.023941405), (27, 0.018371863), (14, 0.017959869), (314, 0.01794461), (287, 0.012237736), (75, 0.0059815366), (102, 0.0048981463)], 0.9954986);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['σ', s @ ..] => {
-                    out.push(&[(13, 0.5627527), (31, 0.07920958), (26, 0.049530786), (286, 0.048950944), (0, 0.04788281), (74, 0.04788281), (27, 0.036728464), (14, 0.035919737), (314, 0.03590448), (287, 0.024475472), (75, 0.011978332), (102, 0.009811551), (115, 0.002716106)], 0.9937438);
-                    s.is_empty()
-                }
-                ['τ', s @ ..] => {
-                    out.push(&[(26, 0.27174792), (13, 0.2294194), (27, 0.14784466), (31, 0.07920958), (286, 0.048950944), (0, 0.04788281), (74, 0.04788281), (14, 0.035919737), (314, 0.03590448), (287, 0.024475472), (75, 0.011978332), (102, 0.009811551), (115, 0.002716106)], 0.9937438);
-                    s.is_empty()
-                }
-                ['ῥ', s @ ..] => {
-                    out.push(&[(14, 0.36925307), (13, 0.2294194), (31, 0.07920958), (26, 0.049530786), (286, 0.048950944), (0, 0.04788281), (74, 0.04788281), (27, 0.036728464), (314, 0.03590448), (287, 0.024475472), (75, 0.011978332), (102, 0.009811551), (115, 0.002716106)], 0.9937438);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['γ', s @ ..] => {
-            out.push(&[(0, 0.4502327), (13, 0.150103), (26, 0.13771267), (286, 0.07107653), (27, 0.06961166), (287, 0.035538264), (102, 0.027283132), (31, 0.02513161), (115, 0.007553216), (16, 0.0044708936), (116, 0.0037689784), (74, 0.0030518044), (14, 0.0023041123), (314, 0.0022735943), (1266, 0.0022583352)], 0.99237055);
-            match s {
-                [] => true,
-                ['ε', s @ ..] => {
-                    out.push(&[(26, 0.235523), (0, 0.22511636), (286, 0.2021973), (27, 0.11813535), (287, 0.10110628), (13, 0.07505913), (102, 0.013641566), (31, 0.012558175), (115, 0.0037689784), (16, 0.0022278172)], 0.9893339);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(26, 0.6666667), (27, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['λ', s @ ..] => {
-                            out.push(&[(286, 0.3570306), (287, 0.1785153), (26, 0.15701534), (0, 0.15007249), (27, 0.07875181), (13, 0.050034333), (102, 0.009094377), (31, 0.008377203), (115, 0.0025177386)], 0.9914092);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(0, 0.7905699), (13, 0.057190813), (26, 0.052460518), (286, 0.027069505), (27, 0.02652018), (287, 0.013534753), (102, 0.010391394), (31, 0.009567407), (115, 0.002868696)], 0.99017316);
-                    s.is_empty()
-                }
-                ['υ', s @ ..] => {
-                    out.push(&[(13, 0.32504767), (26, 0.235523), (0, 0.22511636), (27, 0.11813535), (286, 0.035538264), (287, 0.017761502), (102, 0.013641566), (31, 0.012558175), (115, 0.0037689784), (16, 0.0022278172)], 0.98931867);
-                    match s {
-                        [] => true,
-                        ['ρ', s @ ..] => {
-                            out.push(&[(13, 0.550042), (26, 0.15701534), (0, 0.15007249), (27, 0.07875181), (286, 0.02369726), (287, 0.011841001), (102, 0.009094377), (31, 0.008377203), (115, 0.0025177386)], 0.9914092);
-                            s.is_empty()
-                        }
-                        ['ῥ', s @ ..] => {
-                            out.push(&[(26, 0.37923247), (13, 0.21670863), (27, 0.189868), (0, 0.15007249), (286, 0.02369726), (287, 0.011841001), (102, 0.009094377), (31, 0.008377203), (115, 0.0025177386)], 0.9914092);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['ε', s @ ..] => {
-            out.push(&[(26, 0.18622111), (286, 0.18211642), (13, 0.13466087), (27, 0.09504845), (0, 0.091203175), (287, 0.09106585), (102, 0.06990158), (31, 0.06439307), (115, 0.01934844), (16, 0.011444267), (116, 0.00967422), (74, 0.007827878), (14, 0.0058899825), (314, 0.0058136876), (1266, 0.0057831695), (1124, 0.0038452735), (1260, 0.0038452735)], 0.9880827);
-            match s {
-                [] => true,
-                ['λ', s @ ..] => {
-                    out.push(&[(26, 0.2597696), (286, 0.25772488), (27, 0.13086137), (287, 0.12886244), (13, 0.067322806), (0, 0.045609217), (102, 0.03495842), (31, 0.032196537), (115, 0.00967422), (16, 0.0057221334), (116, 0.00483711), (74, 0.003921569), (14, 0.0029449912), (314, 0.0028992142), (1266, 0.0028839551)], 0.9901885);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['η', s @ ..] => {
-            out.push(&[(102, 0.3199054), (115, 0.18600747), (13, 0.13466087), (116, 0.093003735), (0, 0.091203175), (31, 0.06439307), (26, 0.019546807), (286, 0.015457389), (27, 0.01170367), (16, 0.011444267), (74, 0.007827878), (287, 0.007721065), (14, 0.0058899825), (314, 0.0058136876), (1266, 0.0057831695), (1124, 0.0038452735), (1260, 0.0038452735)], 0.9880522);
-            match s {
-                [] => true,
-                ['μ', s @ ..] => {
-                    out.push(&[(115, 0.3462272), (102, 0.21327534), (116, 0.1731136), (13, 0.08976883), (0, 0.060807202), (31, 0.042938888), (26, 0.013031205), (286, 0.01029984), (27, 0.007812619), (16, 0.007629511), (74, 0.0052185855), (287, 0.0051575494), (14, 0.003921569), (314, 0.0038757916), (1266, 0.0038452735), (1124, 0.0025635157), (1260, 0.0025635157)], 0.99205005);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ι', s @ ..] => {
-            out.push(&[(102, 0.20723277), (31, 0.20523384), (13, 0.19182116), (0, 0.12407111), (1266, 0.093003735), (115, 0.06764325), (116, 0.033813994), (513, 0.026581217), (514, 0.012985428), (26, 0.007110704), (286, 0.00561532), (27, 0.0042572673), (16, 0.004165713), (74, 0.002853437), (287, 0.00280766), (14, 0.002136263), (314, 0.002121004)], 0.99345386);
-            match s {
-                [] => true,
-                ['ε', s @ ..] => {
-                    out.push(&[(115, 0.2673228), (102, 0.13815518), (31, 0.13682765), (116, 0.13365377), (13, 0.12788586), (0, 0.082719155), (1266, 0.062012665), (513, 0.017715724), (514, 0.008651866), (26, 0.004745556), (286, 0.0037537194), (27, 0.002838178), (16, 0.002777142)], 0.98905927);
-                    s.is_empty()
-                }
-                ['λ', s @ ..] => {
-                    out.push(&[(13, 0.4612192), (102, 0.13815518), (31, 0.13682765), (0, 0.082719155), (1266, 0.062012665), (115, 0.04509041), (116, 0.022552835), (513, 0.017715724), (514, 0.008651866), (26, 0.004745556), (286, 0.0037537194), (27, 0.002838178), (16, 0.002777142)], 0.98905927);
-                    s.is_empty()
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(102, 0.48290226), (31, 0.28209352), (13, 0.07672236), (0, 0.049637597), (1266, 0.037201494), (115, 0.027054247), (116, 0.013534753), (513, 0.010635538), (514, 0.0051880674), (26, 0.002838178), (286, 0.0022430762)], 0.9900511);
-                    match s {
-                        [] => true,
-                        ['μ', s @ ..] => {
-                            out.push(&[(31, 0.52140075), (102, 0.32193485), (13, 0.051148243), (0, 0.03308156), (1266, 0.02479591), (115, 0.018036164), (116, 0.009018082), (513, 0.007080186), (514, 0.003463798)], 0.98995954);
-                            s.is_empty()
-                        }
-                        ['τ', s @ ..] => {
-                            out.push(&[(102, 0.74145114), (31, 0.14105439), (13, 0.03836118), (0, 0.02481117), (1266, 0.018600747), (115, 0.013534753), (116, 0.006759747), (513, 0.0053101396), (514, 0.0025940337)], 0.9924773);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(31, 0.28209352), (1266, 0.2372015), (13, 0.19101244), (102, 0.08290227), (513, 0.06776532), (0, 0.049637597), (514, 0.033768214), (115, 0.027054247), (116, 0.013534753), (26, 0.002838178), (286, 0.0022430762)], 0.9900511);
-                    match s {
-                        [] => true,
-                        ['α', s @ ..] => {
-                            out.push(&[(1266, 0.36859694), (13, 0.23836118), (31, 0.14105439), (513, 0.10531777), (514, 0.052597847), (102, 0.041443504), (0, 0.02481117), (115, 0.013534753), (116, 0.006759747)], 0.9924773);
-                            s.is_empty()
-                        }
-                        ['υ', s @ ..] => {
-                            out.push(&[(31, 0.52140075), (1266, 0.15812925), (13, 0.12733653), (102, 0.055268176), (513, 0.045181964), (0, 0.03308156), (514, 0.022507057), (115, 0.018036164), (116, 0.009018082)], 0.98995954);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['τ', s @ ..] => {
-                    out.push(&[(0, 0.4160525), (102, 0.13815518), (31, 0.13682765), (13, 0.12788586), (1266, 0.062012665), (115, 0.04509041), (116, 0.022552835), (513, 0.017715724), (514, 0.008651866), (26, 0.004745556), (286, 0.0037537194), (27, 0.002838178), (16, 0.002777142)], 0.98905927);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['κ', s @ ..] => {
-            out.push(&[(31, 0.38695353), (0, 0.18918136), (13, 0.16572824), (102, 0.08604562), (26, 0.024063477), (115, 0.023804074), (286, 0.019028), (27, 0.014404517), (16, 0.014084077), (116, 0.011902037), (74, 0.009628443), (287, 0.009506371), (14, 0.0072480356), (314, 0.0071564815), (1266, 0.007110704), (1124, 0.004745556), (1260, 0.004745556), (75, 0.0024414435), (412, 0.0023651484), (1125, 0.0023651484), (1261, 0.0023651484), (513, 0.00202945)], 0.9969024);
-            s.is_empty()
-        }
-        ['λ', s @ ..] => {
-            out.push(&[(31, 0.41919586), (13, 0.17953765), (0, 0.121614404), (102, 0.09320211), (26, 0.02606241), (115, 0.025787747), (286, 0.02059968), (27, 0.01560998), (16, 0.015259022), (116, 0.012893873), (74, 0.010437171), (287, 0.01029984), (14, 0.007843138), (314, 0.007751583), (1266, 0.0077058063), (1124, 0.0051422906), (1260, 0.0051422906), (75, 0.0026398108), (412, 0.0025635157), (1125, 0.0025635157), (1261, 0.0025635157), (513, 0.0021972992)], 0.9966125);
-            s.is_empty()
-        }
-        ['ο', s @ ..] => {
-            out.push(&[(13, 0.35182726), (0, 0.33835354), (16, 0.15083542), (31, 0.09748989), (102, 0.02168307), (26, 0.006057832), (115, 0.005996796), (286, 0.004791333), (27, 0.0036316472), (116, 0.0030060273), (74, 0.0024261845), (287, 0.0023956664)], 0.9884947);
-            match s {
-                [] => true,
-                ['δ', s @ ..] => {
-                    out.push(&[(13, 0.567895), (0, 0.22557412), (16, 0.100556955), (31, 0.06498817), (102, 0.014450294), (26, 0.004043641), (115, 0.0039978637), (286, 0.0031891356), (27, 0.0024261845)], 0.98712134);
-                    s.is_empty()
-                }
-                ['ι', s @ ..] => {
-                    out.push(&[(13, 0.567895), (0, 0.22557412), (16, 0.100556955), (31, 0.06498817), (102, 0.014450294), (26, 0.004043641), (115, 0.0039978637), (286, 0.0031891356), (27, 0.0024261845)], 0.98712134);
-                    s.is_empty()
-                }
-                ['λ', s @ ..] => {
-                    out.push(&[(16, 0.37315938), (13, 0.28876173), (0, 0.28418404), (31, 0.03305104), (102, 0.0073548486), (26, 0.002059968), (115, 0.00202945)], 0.99060047);
-                    match s {
-                        [] => true,
-                        ['α', s @ ..] => {
-                            out.push(&[(16, 0.67855346), (13, 0.14807355), (0, 0.14573891), (31, 0.016952774), (102, 0.0037689784)], 0.9930877);
-                            s.is_empty()
-                        }
-                        ['ι', s @ ..] => {
-                            out.push(&[(13, 0.5258412), (16, 0.2487831), (0, 0.18945602), (31, 0.022034029), (102, 0.0048981463)], 0.99101245);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(0, 0.4191806), (31, 0.29874113), (13, 0.17592126), (16, 0.07541008), (102, 0.010833906), (26, 0.0030365454), (115, 0.0030060273), (286, 0.0023956664)], 0.9885252);
-                    match s {
-                        [] => true,
-                        ['τ', s @ ..] => {
-                            out.push(&[(31, 0.53249407), (0, 0.27945372), (13, 0.11728084), (16, 0.050278477), (102, 0.0072327764), (26, 0.002014191)], 0.9887541);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['τ', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['ε', s @ ..] => {
-                            out.push(&[(13, 0.567895), (0, 0.22557412), (16, 0.100556955), (31, 0.06498817), (102, 0.014450294), (26, 0.004043641), (115, 0.0039978637), (286, 0.0031891356), (27, 0.0024261845)], 0.98712134);
-                            s.is_empty()
-                        }
-                        ['σ', s @ ..] => {
-                            out.push(&[(0, 0.55890745), (13, 0.23456168), (16, 0.100556955), (31, 0.06498817), (102, 0.014450294), (26, 0.004043641), (115, 0.0039978637), (286, 0.0031891356), (27, 0.0024261845)], 0.9871214);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['ρ', s @ ..] => {
-            out.push(&[(13, 0.73876554), (0, 0.10301366), (31, 0.09491111), (102, 0.021103228), (26, 0.0059052417), (115, 0.0058442056), (286, 0.0046692607), (27, 0.003540093), (16, 0.003448539), (116, 0.0029144732), (74, 0.0023651484), (287, 0.0023346303)], 0.9888151);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(13, 0.87571526), (31, 0.097123675), (0, 0.016815443), (102, 0.003448539)], 0.9931029);
-                    s.is_empty()
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(13, 0.49251544), (0, 0.40199894), (31, 0.06327917), (102, 0.014068819), (26, 0.0039368276), (115, 0.0038910506), (286, 0.0031128405), (27, 0.0023498894), (16, 0.0023041123)], 0.9874571);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['σ', s @ ..] => {
-            out.push(&[(0, 0.473167), (31, 0.18225376), (115, 0.10783551), (13, 0.07806516), (116, 0.053910125), (102, 0.040527962), (26, 0.0113374535), (286, 0.008957046), (27, 0.006790265), (16, 0.0066376748), (74, 0.0045319297), (287, 0.0044861524), (14, 0.003418021), (314, 0.0033722438), (1266, 0.0033417258), (1124, 0.0022278172), (1260, 0.0022278172)], 0.99308765);
-            match s {
-                [] => true,
-                ['ι', s @ ..] => {
-                    out.push(&[(0, 0.4865797), (115, 0.22058442), (116, 0.11029221), (31, 0.09112688), (13, 0.03903258), (102, 0.020263981), (26, 0.0056610974), (286, 0.0044861524), (27, 0.0033875029), (16, 0.0033112078), (74, 0.0022735943), (287, 0.0022430762)], 0.9892424);
-                    match s {
-                        [] => true,
-                        ['α', s @ ..] => {
-                            out.push(&[(115, 0.3692836), (0, 0.32439154), (116, 0.18463416), (31, 0.060746167), (13, 0.026016632), (102, 0.013504234), (26, 0.0037842374), (286, 0.0029907683), (27, 0.0022583352), (16, 0.0022125582)], 0.9898222);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(0, 0.72982377), (31, 0.093461506), (115, 0.055298697), (13, 0.040024415), (116, 0.027649349), (102, 0.020782787), (26, 0.0058136876), (286, 0.004592966), (27, 0.003479057), (16, 0.0034027619), (74, 0.0023346303), (287, 0.0023041123)], 0.9889677);
-                    s.is_empty()
-                }
-                ['ω', s @ ..] => {
-                    out.push(&[(31, 0.45484093), (0, 0.31544977), (115, 0.07188525), (13, 0.052033264), (116, 0.035950255), (102, 0.027023727), (26, 0.007553216), (286, 0.005966278), (27, 0.0045319297), (16, 0.0044251163), (74, 0.0030212863), (287, 0.0029907683), (14, 0.0022735943), (314, 0.0022430762), (1266, 0.0022278172)], 0.99241626);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['υ', s @ ..] => {
-            out.push(&[(102, 0.5155413), (13, 0.08548104), (115, 0.07837034), (0, 0.07582208), (31, 0.051346608), (116, 0.03918517), (1124, 0.03788815), (1260, 0.03788815), (412, 0.018951705), (1125, 0.018951705), (1261, 0.018951705), (26, 0.0043488215), (286, 0.00343328), (27, 0.0026092927), (16, 0.0025482567)], 0.99131763);
-            match s {
-                [] => true,
-                ['ε', s @ ..] => {
-                    out.push(&[(115, 0.3725185), (102, 0.25777066), (116, 0.18626688), (13, 0.04274052), (0, 0.03791867), (31, 0.025680933), (1124, 0.018951705), (1260, 0.018951705), (412, 0.009475852), (1125, 0.009475852), (1261, 0.009475852), (26, 0.002166781)], 0.9913939);
-                    s.is_empty()
-                }
-                ['μ', s @ ..] => {
-                    out.push(&[(102, 0.3436942), (31, 0.25645837), (412, 0.123735406), (13, 0.056992445), (115, 0.05224689), (0, 0.05055314), (116, 0.026123445), (1124, 0.02526894), (1260, 0.02526894), (1125, 0.01263447), (1261, 0.01263447), (26, 0.0028992142), (286, 0.0022888533)], 0.9907988);
-                    s.is_empty()
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(102, 0.91190964), (13, 0.015548944), (115, 0.014251927), (0, 0.013778897), (31, 0.009338521), (116, 0.0071259635), (1124, 0.006897078), (1260, 0.006897078), (412, 0.003448539), (1125, 0.003448539), (1261, 0.003448539)], 0.9960937);
-                    s.is_empty()
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(13, 0.23419547), (0, 0.23033494), (102, 0.20621042), (1124, 0.14848554), (1125, 0.0742504), (115, 0.03134203), (31, 0.020538643), (116, 0.015671015), (1260, 0.0151522085), (412, 0.007583734), (1261, 0.007583734)], 0.99134815);
-                    match s {
-                        [] => true,
-                        ['τ', s @ ..] => {
-                            out.push(&[(13, 0.36710155), (1124, 0.24090944), (1125, 0.12045472), (0, 0.11515984), (102, 0.10310521), (115, 0.015671015), (31, 0.0102693215), (116, 0.007843138), (1260, 0.007583734), (412, 0.0037842374), (1261, 0.0037842374)], 0.99566644);
-                            match s {
-                                [] => true,
-                                ['σ', s @ ..] => {
-                                    out.push(&[(13, 0.5780575), (1124, 0.1606012), (1125, 0.08030823), (0, 0.0767834), (102, 0.068741895), (115, 0.01045243), (31, 0.006851301), (116, 0.0052185855), (1260, 0.0050507365), (412, 0.0025329976), (1261, 0.0025329976)], 0.9971313);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['ω', s @ ..] => {
-                            out.push(&[(0, 0.48688486), (13, 0.15613031), (102, 0.13746853), (1124, 0.099000536), (1125, 0.049500268), (115, 0.02090486), (31, 0.013687342), (116, 0.01045243), (1260, 0.010101473), (412, 0.0050507365), (1261, 0.0050507365)], 0.9942321);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ψ', s @ ..] => {
-                    out.push(&[(102, 0.3436942), (1260, 0.24748607), (1261, 0.123735406), (13, 0.056992445), (115, 0.05224689), (0, 0.05055314), (31, 0.034225985), (116, 0.026123445), (1124, 0.02526894), (412, 0.01263447), (1125, 0.01263447), (26, 0.0028992142), (286, 0.0022888533)], 0.9907835);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(1260, 0.6666667), (1261, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['ω', s @ ..] => {
-            out.push(&[(31, 0.41919586), (13, 0.17953765), (0, 0.121614404), (102, 0.09320211), (26, 0.02606241), (115, 0.025787747), (286, 0.02059968), (27, 0.01560998), (16, 0.015259022), (116, 0.012893873), (74, 0.010437171), (287, 0.01029984), (14, 0.007843138), (314, 0.007751583), (1266, 0.0077058063), (1124, 0.0051422906), (1260, 0.0051422906), (75, 0.0026398108), (412, 0.0025635157), (1125, 0.0025635157), (1261, 0.0025635157), (513, 0.0021972992)], 0.9966125);
-            s.is_empty()
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -ψοσ.
-pub(crate) fn n642(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(43, 0.20329595), (13, 0.14874494), (31, 0.1480583), (0, 0.13882658), (14, 0.10188449), (26, 0.071717404), (74, 0.068863966), (27, 0.036011294), (75, 0.034241244), (102, 0.010086213), (16, 0.008072022), (55, 0.005432212), (93, 0.003555352), (275, 0.0025329976)], 0.98132294);
-    match s {
-        [] => true,
-        ['α', s @ ..] => {
-            out.push(&[(43, 0.23442435), (13, 0.21625085), (31, 0.21602197), (74, 0.13406576), (75, 0.066971846), (0, 0.046280615), (14, 0.033966582), (26, 0.023910888), (27, 0.01200885), (102, 0.0033569848), (16, 0.0026855879)], 0.9899443);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(74, 0.6666667), (75, 0.33333334)], 1.0);
-                    s.is_empty()
-                }
-                ['δ', s @ ..] => {
-                    out.push(&[(31, 0.47734797), (43, 0.1562829), (13, 0.14416724), (74, 0.08937209), (75, 0.0446479), (0, 0.030853743), (14, 0.02264439), (26, 0.01593042), (27, 0.0079957275), (102, 0.0022430762)], 0.9914855);
-                    s.is_empty()
-                }
-                ['θ', s @ ..] => {
-                    out.push(&[(43, 0.48961625), (13, 0.14416724), (31, 0.14401464), (74, 0.08937209), (75, 0.0446479), (0, 0.030853743), (14, 0.02264439), (26, 0.01593042), (27, 0.0079957275), (102, 0.0022430762)], 0.9914855);
-                    s.is_empty()
-                }
-                ['κ', s @ ..] => {
-                    out.push(&[(13, 0.47750056), (43, 0.1562829), (31, 0.14401464), (74, 0.08937209), (75, 0.0446479), (0, 0.030853743), (14, 0.02264439), (26, 0.01593042), (27, 0.0079957275), (102, 0.0022430762)], 0.9914854);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['η', s @ ..] => {
-            out.push(&[(14, 0.4012665), (43, 0.13553064), (13, 0.09916838), (31, 0.09871061), (0, 0.09256123), (26, 0.047806516), (74, 0.045899138), (27, 0.024002442), (75, 0.022827497), (102, 0.006729229), (16, 0.0053711757), (55, 0.0036316472), (93, 0.0023651484)], 0.9858701);
-            s.is_empty()
-        }
-        ['ι', s @ ..] => {
-            out.push(&[(0, 0.42589456), (43, 0.13553064), (13, 0.09916838), (31, 0.09871061), (14, 0.067933165), (26, 0.047806516), (74, 0.045899138), (27, 0.024002442), (75, 0.022827497), (102, 0.006729229), (16, 0.0053711757), (55, 0.0036316472), (93, 0.0023651484)], 0.9858701);
-            s.is_empty()
-        }
-        ['υ', s @ ..] => {
-            out.push(&[(43, 0.35164416), (26, 0.20251773), (27, 0.10133517), (13, 0.07437247), (31, 0.07403678), (0, 0.06941329), (14, 0.050949875), (74, 0.034424353), (75, 0.017120622), (102, 0.0050507365), (16, 0.004028382), (55, 0.002716106)], 0.9876097);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(26, 0.6666667), (27, 0.33333334)], 1.0);
-                    s.is_empty()
-                }
-                ['γ', s @ ..] => {
-                    out.push(&[(43, 0.56775767), (26, 0.13501182), (27, 0.06755169), (13, 0.049576562), (31, 0.049347676), (0, 0.046280615), (14, 0.033966582), (74, 0.022949569), (75, 0.011413748), (102, 0.0033569848), (16, 0.0026855879)], 0.9898985);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -ωοσ.
-pub(crate) fn n643(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(31, 0.6201572), (13, 0.12185855), (0, 0.0970779), (102, 0.025223164), (16, 0.020172426), (55, 0.013595789), (26, 0.012619211), (93, 0.008880751), (43, 0.008224613), (27, 0.0066834516), (275, 0.0063324943), (74, 0.005477989), (14, 0.004730297), (115, 0.0037842374), (423, 0.002777142), (75, 0.0022735943), (286, 0.002105745)], 0.96197456);
-    s.is_empty()
-}
-
-/// Words ending -αχυσ.
-pub(crate) fn n2035(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(181, 0.14148165), (189, 0.1406424), (202, 0.13948272), (1111, 0.13917755), (182, 0.07074083), (190, 0.07032883), (203, 0.06973373), (1112, 0.06944381), (293, 0.030777447), (983, 0.0280766), (52, 0.023865111), (294, 0.015381094), (984, 0.01388571), (53, 0.010162509), (235, 0.004760815), (248, 0.0030823224), (236, 0.0023804074)], 0.9734035);
-    match s {
-        [] => true,
-        ['ρ', s @ ..] => {
-            out.push(&[(202, 0.23640803), (1111, 0.23625544), (203, 0.11819638), (1112, 0.118059054), (181, 0.07074083), (189, 0.07032883), (182, 0.035370413), (190, 0.035156786), (293, 0.015381094), (983, 0.0140383), (52, 0.011932556), (294, 0.007690547), (984, 0.006942855), (53, 0.0050812545), (235, 0.0023804074)], 0.9839628);
-            match s {
-                [] => true,
-                ['β', 'ι', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['ρ', s @ ..] => {
-                            out.push(&[(1111, 0.37972075), (1112, 0.18982223), (202, 0.15761043), (203, 0.078797586), (181, 0.047165636), (189, 0.046875715), (182, 0.023575189), (190, 0.023437858), (293, 0.010254063), (983, 0.00935378), (52, 0.00794995), (294, 0.0051270314), (984, 0.004623484), (53, 0.0033875029)], 0.9877012);
-                            s.is_empty()
-                        }
-                        ['φ', s @ ..] => {
-                            out.push(&[(202, 0.37982756), (203, 0.18991378), (1111, 0.15750362), (1112, 0.07870603), (181, 0.047165636), (189, 0.046875715), (182, 0.023575189), (190, 0.023437858), (293, 0.010254063), (983, 0.00935378), (52, 0.00794995), (294, 0.0051270314), (984, 0.004623484), (53, 0.0033875029)], 0.9877012);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['τ', s @ ..] => {
-            out.push(&[(181, 0.23741512), (189, 0.23698787), (182, 0.11869993), (190, 0.11850157), (202, 0.06973373), (1111, 0.0695964), (203, 0.034866866), (1112, 0.034729533), (293, 0.015381094), (983, 0.0140383), (52, 0.011932556), (294, 0.007690547), (984, 0.006942855), (53, 0.0050812545), (235, 0.0023804074)], 0.98397803);
-            match s {
-                [] => true,
-                ['σ', 'α', s @ ..] => {
-                    out.push(&[(189, 0.38020906), (190, 0.19011216), (181, 0.15826657), (182, 0.07913329), (202, 0.046494238), (1111, 0.046387427), (203, 0.02323949), (1112, 0.023147937), (293, 0.010254063), (983, 0.00935378), (52, 0.00794995), (294, 0.0051270314), (984, 0.004623484), (53, 0.0033875029)], 0.987686);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -ωστησ.
-pub(crate) fn n2782(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(87, 0.5520714), (50, 0.37891203), (56, 0.06276036), (6, 0.0025787747)], 0.9963226);
-    s.is_empty()
-}
-
-/// Words ending -υτησ.
-pub(crate) fn n1628(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(50, 0.3467918), (56, 0.21785305), (44, 0.1185626), (87, 0.0920119), (45, 0.0592813), (330, 0.038101777), (267, 0.028747998), (701, 0.025879301), (1009, 0.025711453), (331, 0.018936446), (906, 0.010147249), (6, 0.008773938), (907, 0.0050659953), (226, 0.002044709)], 0.99790955);
-    match s {
-        [] => true,
-        ['α', s @ ..] => {
-            out.push(&[(87, 0.5460136), (50, 0.17340353), (56, 0.10893416), (44, 0.0592813), (45, 0.02964828), (330, 0.019058518), (267, 0.014373999), (701, 0.012939651), (1009, 0.012863356), (331, 0.009475852), (906, 0.0050659953), (6, 0.0043945983), (907, 0.0025329976)], 0.99798584);
-            match s {
-                [] => true,
-                ['ν', s @ ..] => {
-                    out.push(&[(87, 0.7730068), (50, 0.086701766), (56, 0.05445945), (44, 0.02964828), (45, 0.0148165105), (330, 0.00952163), (267, 0.0071869995), (701, 0.0064698253), (1009, 0.0064240484), (331, 0.004730297), (906, 0.0025329976), (6, 0.0021972992)], 0.9976959);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['β', s @ ..] => {
-            out.push(&[(1009, 0.24396124), (44, 0.23173876), (50, 0.1778439), (45, 0.11587701), (56, 0.11172656), (87, 0.047180895), (330, 0.019546807), (267, 0.014740216), (701, 0.0132753495), (331, 0.009719997), (906, 0.0052033267), (6, 0.0045014117), (907, 0.0025940337)], 0.9979095);
-            match s {
-                [] => true,
-                ['σ', s @ ..] => {
-                    out.push(&[(1009, 0.3558709), (44, 0.28978407), (45, 0.14488441), (50, 0.091203175), (56, 0.05729763), (87, 0.024200808), (330, 0.010025177), (267, 0.007553216), (701, 0.0068055238), (331, 0.004974441), (906, 0.0026703288), (6, 0.0023041123)], 0.9975738);
-                    match s {
-                        [] => true,
-                        ['ε', 'ρ', 'π', '\u{1}', s @ ..] => {
-                            out.push(&[(1009, 0.47368583), (44, 0.35088122), (45, 0.17543298)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['δ', s @ ..] => {
-            out.push(&[(56, 0.63367665), (330, 0.106126495), (50, 0.09907683), (331, 0.0530251), (44, 0.03387503), (87, 0.026291294), (45, 0.016937515), (267, 0.008209354), (701, 0.007400626), (1009, 0.0073548486), (906, 0.0028992142), (6, 0.0025024796)], 0.9973754);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(56, 0.422446), (330, 0.29297322), (331, 0.14647135), (50, 0.0660563), (44, 0.022583352), (87, 0.017532617), (45, 0.011291676), (267, 0.005477989), (701, 0.0049286643), (1009, 0.0048981463)], 0.9946593);
-                    s.is_empty()
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(56, 0.8534676), (330, 0.0424506), (50, 0.03962768), (331, 0.02121004), (44, 0.013550011), (87, 0.010513466), (45, 0.0067750057), (267, 0.0032806897), (701, 0.0029602502), (1009, 0.0029449912)], 0.99678034);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ε', s @ ..] => {
-            out.push(&[(50, 0.7855039), (87, 0.08935683), (56, 0.032883193), (906, 0.028488593), (44, 0.017898833), (907, 0.014236667), (45, 0.008941787), (330, 0.0057526515), (267, 0.004333562), (701, 0.0039063096), (1009, 0.0038757916), (331, 0.002853437)], 0.99803156);
-            match s {
-                [] => true,
-                ['β', s @ ..] => {
-                    out.push(&[(50, 0.70316625), (906, 0.12741283), (907, 0.06370641), (87, 0.054993514), (56, 0.020233463), (44, 0.011017014), (45, 0.005508507), (330, 0.003540093), (267, 0.0026703288), (701, 0.0024109255), (1009, 0.0023956664)], 0.997055);
-                    s.is_empty()
-                }
-                ['τ', s @ ..] => {
-                    out.push(&[(50, 0.5236591), (87, 0.39290455), (56, 0.021927215), (906, 0.018997483), (44, 0.011932556), (907, 0.009491112), (45, 0.005966278), (330, 0.0038300145), (267, 0.0028992142), (701, 0.0026092927), (1009, 0.0025940337)], 0.99681085);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['λ', s @ ..] => {
-            out.push(&[(56, 0.39621577), (50, 0.2976272), (267, 0.11685359), (701, 0.105165176), (44, 0.026199741), (87, 0.020340277), (45, 0.0131075), (330, 0.00842298), (1009, 0.005676356), (331, 0.004180972), (906, 0.0022430762)], 0.99603266);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(56, 0.54300755), (50, 0.2345922), (701, 0.16328679), (267, 0.03436332), (44, 0.0077058063), (87, 0.0059815366), (45, 0.0038605325), (330, 0.0024719615)], 0.9952697);
-                    s.is_empty()
-                }
-                ['ι', s @ ..] => {
-                    out.push(&[(267, 0.41123065), (56, 0.26413366), (50, 0.19842832), (701, 0.07011521), (44, 0.01747158), (87, 0.013550011), (45, 0.0087281605), (330, 0.00561532), (1009, 0.0037842374), (331, 0.002792401)], 0.99584955);
-                    s.is_empty()
-                }
-                ['ω', s @ ..] => {
-                    out.push(&[(50, 0.53176165), (56, 0.26413366), (267, 0.07789731), (701, 0.07011521), (44, 0.01747158), (87, 0.013550011), (45, 0.0087281605), (330, 0.00561532), (1009, 0.0037842374), (331, 0.002792401)], 0.99584955);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ξ', s @ ..] => {
-            out.push(&[(44, 0.30125886), (50, 0.23118944), (45, 0.15063706), (56, 0.14523537), (87, 0.061341267), (330, 0.025406271), (267, 0.019165331), (701, 0.017257953), (1009, 0.017151142), (331, 0.012619211), (906, 0.006759747), (6, 0.0058442056), (907, 0.0033875029)], 0.99725336);
-            s.is_empty()
-        }
-        ['ρ', s @ ..] => {
-            out.push(&[(44, 0.30125886), (50, 0.23118944), (45, 0.15063706), (56, 0.14523537), (87, 0.061341267), (330, 0.025406271), (267, 0.019165331), (701, 0.017257953), (1009, 0.017151142), (331, 0.012619211), (906, 0.006759747), (6, 0.0058442056), (907, 0.0033875029)], 0.99725336);
-            s.is_empty()
-        }
-        ['σ', s @ ..] => {
-            out.push(&[(44, 0.30125886), (50, 0.23118944), (45, 0.15063706), (56, 0.14523537), (87, 0.061341267), (330, 0.025406271), (267, 0.019165331), (701, 0.017257953), (1009, 0.017151142), (331, 0.012619211), (906, 0.006759747), (6, 0.0058442056), (907, 0.0033875029)], 0.99725336);
-            s.is_empty()
-        }
-        ['χ', s @ ..] => {
-            out.push(&[(44, 0.3140917), (45, 0.15704586), (330, 0.1485771), (50, 0.13871977), (56, 0.08714427), (331, 0.07423514), (87, 0.03680476), (267, 0.011490043), (701, 0.010360876), (1009, 0.010284581), (906, 0.0040589), (6, 0.003509575), (907, 0.00202945)], 0.99835205);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(44, 0.39230946), (45, 0.19615473), (330, 0.19276722), (331, 0.09636072), (50, 0.055481803), (56, 0.034851607), (87, 0.014724956), (267, 0.004592966), (701, 0.004135195), (1009, 0.004119936)], 0.9954986);
-                    match s {
-                        [] => true,
-                        ['ρ', s @ ..] => {
-                            out.push(&[(44, 0.5294881), (45, 0.26474404), (330, 0.09637598), (331, 0.04818799), (50, 0.027740901), (56, 0.017425803), (87, 0.0073548486), (267, 0.0023041123), (701, 0.002075227), (1009, 0.002059968)], 0.99775696);
-                            s.is_empty()
-                        }
-                        ['τ', s @ ..] => {
-                            out.push(&[(330, 0.35072863), (44, 0.26153964), (331, 0.17535669), (45, 0.13076982), (50, 0.03698787), (56, 0.02323949), (87, 0.009811551), (267, 0.0030670634), (701, 0.002761883), (1009, 0.002746624)], 0.9970093);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -ωτησ.
-pub(crate) fn n1629(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(87, 0.6912795), (50, 0.25081253), (56, 0.023682002), (6, 0.014099336), (44, 0.007919433), (45, 0.003952087), (226, 0.0032806897)], 0.9950256);
-    match s {
-        [] => true,
-        ['ι', s @ ..] => {
-            out.push(&[(87, 0.8823682), (50, 0.10920882), (56, 0.003448539), (6, 0.002044709)], 0.99707025);
-            match s {
-                [] => true,
-                ['ε', s @ ..] => {
-                    out.push(&[(87, 0.5882506), (50, 0.40613413), (56, 0.0022888533)], 0.9966736);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['λ', 'η', s @ ..] => {
-            out.push(&[(50, 0.5005417), (87, 0.46085298), (56, 0.015777828), (6, 0.0093995575), (44, 0.0052796216), (45, 0.0026398108), (226, 0.0021972992)], 0.9966888);
-            s.is_empty()
-        }
-        ['μ', s @ ..] => {
-            out.push(&[(50, 0.5005417), (87, 0.46085298), (56, 0.015777828), (6, 0.0093995575), (44, 0.0052796216), (45, 0.0026398108), (226, 0.0021972992)], 0.9966888);
-            s.is_empty()
-        }
-        ['ρ', s @ ..] => {
-            match s {
-                [] => true,
-                ['ε', s @ ..] => {
-                    out.push(&[(50, 0.5005417), (87, 0.46085298), (56, 0.015777828), (6, 0.0093995575), (44, 0.0052796216), (45, 0.0026398108), (226, 0.0021972992)], 0.9966888);
-                    s.is_empty()
-                }
-                ['τ', s @ ..] => {
-                    out.push(&[(50, 0.5005417), (87, 0.46085298), (56, 0.015777828), (6, 0.0093995575), (44, 0.0052796216), (45, 0.0026398108), (226, 0.0021972992)], 0.9966888);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -γαυλοσ.
-pub(crate) fn n4076(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(31, 0.40146488), (102, 0.3644465), (55, 0.15571831), (13, 0.04228275), (0, 0.02041657), (619, 0.0093995575), (26, 0.0033112078)], 0.9970398);
-    s.is_empty()
-}
-
-/// Words ending -ιαυλοσ.
-pub(crate) fn n4077(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(55, 0.53577477), (31, 0.18857099), (102, 0.17376974), (13, 0.054978255), (0, 0.026535438), (619, 0.012222476), (26, 0.0043183034), (27, 0.002151522)], 0.9983215);
-    s.is_empty()
-}
-
-/// Words ending -ναυλοσ.
-pub(crate) fn n4078(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(55, 0.4018311), (102, 0.38033113), (31, 0.14142062), (13, 0.041229878), (0, 0.019897765), (619, 0.009170672), (26, 0.0032349126)], 0.9971161);
-    s.is_empty()
-}
-
-/// Words ending -βυλοσ.
-pub(crate) fn n3234(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.4381628), (13, 0.21713588), (55, 0.13295186), (31, 0.07818723), (102, 0.053070877), (619, 0.048264287), (26, 0.01702907), (27, 0.008514535)], 0.99331653);
-    s.is_empty()
-}
-
-/// Words ending -δυλοσ.
-pub(crate) fn n3235(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(13, 0.5526512), (0, 0.25038528), (55, 0.07597467), (31, 0.044678416), (102, 0.030334936), (619, 0.027573053), (26, 0.009735256), (27, 0.004867628)], 0.9962005);
-    match s {
-        [] => true,
-        ['ν', s @ ..] => {
-            out.push(&[(13, 0.7894865), (0, 0.117830165), (55, 0.035751887), (31, 0.021026932), (102, 0.014267186), (619, 0.012970169), (26, 0.0045777066), (27, 0.0022888533)], 0.9981994);
-            s.is_empty()
-        }
-        ['ρ', s @ ..] => {
-            out.push(&[(0, 0.50025177), (13, 0.3684291), (55, 0.050644692), (31, 0.02978561), (102, 0.020218205), (619, 0.018387122), (26, 0.0064850845), (27, 0.0032501717)], 0.9974517);
-            s.is_empty()
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -κυλοσ.
-pub(crate) fn n3236(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(13, 0.41286334), (26, 0.1794461), (55, 0.09971771), (27, 0.08972305), (0, 0.07862974), (31, 0.05864042), (102, 0.039810788), (619, 0.0361944)], 0.9950256);
-    match s {
-        [] => true,
-        ['σ', s @ ..] => {
-            out.push(&[(26, 0.34184787), (13, 0.27524224), (27, 0.17093156), (55, 0.06648356), (0, 0.05241474), (31, 0.039093614), (102, 0.026535438), (619, 0.024124514)], 0.9966735);
-            s.is_empty()
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -μυλοσ.
-pub(crate) fn n3237(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(13, 0.5504692), (55, 0.13295186), (0, 0.10482948), (31, 0.07818723), (102, 0.053070877), (619, 0.048264287), (26, 0.01702907), (27, 0.008514535)], 0.99331653);
-    s.is_empty()
-}
-
-/// Words ending -ουλοσ.
-pub(crate) fn n3238(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(55, 0.6780652), (13, 0.11329824), (102, 0.07116808), (0, 0.054688334), (31, 0.040787365), (619, 0.025177386), (26, 0.00889601), (27, 0.0044403756)], 0.996521);
-    s.is_empty()
-}
-
-/// Words ending -ρυλοσ.
-pub(crate) fn n3239(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.3286183), (619, 0.28619823), (13, 0.16285954), (55, 0.09971771), (31, 0.05864042), (102, 0.039810788), (26, 0.012771801), (27, 0.0063935304)], 0.9950103);
-    match s {
-        [] => true,
-        ['η', s @ ..] => {
-            out.push(&[(0, 0.55242234), (619, 0.1907988), (13, 0.10856794), (55, 0.06648356), (31, 0.039093614), (102, 0.026535438), (26, 0.008514535), (27, 0.0042572673)], 0.9966735);
-            s.is_empty()
-        }
-        ['θ', s @ ..] => {
-            out.push(&[(619, 0.52413213), (0, 0.21908903), (13, 0.10856794), (55, 0.06648356), (31, 0.039093614), (102, 0.026535438), (26, 0.008514535), (27, 0.0042572673)], 0.9966735);
-            s.is_empty()
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -τυλοσ.
-pub(crate) fn n3240(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(13, 0.5216297), (0, 0.18777752), (619, 0.16354619), (55, 0.056977186), (31, 0.03350881), (102, 0.022751201), (26, 0.0072938125), (27, 0.0036469062)], 0.9971313);
-    match s {
-        [] => true,
-        ['ι', s @ ..] => {
-            out.push(&[(13, 0.76081485), (0, 0.09388876), (619, 0.081773095), (55, 0.028488593), (31, 0.016754406), (102, 0.011367971), (26, 0.0036469062)], 0.99673456);
-            s.is_empty()
-        }
-        ['σ', s @ ..] => {
-            out.push(&[(619, 0.44235903), (13, 0.3477531), (0, 0.12518501), (55, 0.037994966), (31, 0.022339208), (102, 0.015167468), (26, 0.004867628), (27, 0.0024414435)], 0.99810785);
-            s.is_empty()
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -φυλοσ.
-pub(crate) fn n3241(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(13, 0.5504692), (55, 0.13295186), (0, 0.10482948), (31, 0.07818723), (102, 0.053070877), (619, 0.048264287), (26, 0.01702907), (27, 0.008514535)], 0.99331653);
-    s.is_empty()
-}
-
-/// Words ending -χυλοσ.
-pub(crate) fn n3242(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(31, 0.41152057), (13, 0.21713588), (55, 0.13295186), (0, 0.10482948), (102, 0.053070877), (619, 0.048264287), (26, 0.01702907), (27, 0.008514535)], 0.99331653);
-    s.is_empty()
-}
-
-/// Words ending -χλοσ.
-pub(crate) fn n1852(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.39786375), (31, 0.3786679), (13, 0.13955902), (16, 0.012924392), (102, 0.0118715195), (55, 0.010727093), (26, 0.007721065), (43, 0.0052033267), (482, 0.004913405), (27, 0.0038605325), (93, 0.0037384604), (619, 0.0032654307)], 0.98031586);
-    s.is_empty()
-}
-
-/// Words ending -ωλοσ.
-pub(crate) fn n1853(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(31, 0.29745936), (102, 0.27919433), (13, 0.2579385), (352, 0.091813534), (0, 0.035187304), (16, 0.007049668), (55, 0.0058442056), (26, 0.00421149), (43, 0.002838178), (482, 0.0026703288), (27, 0.002105745), (93, 0.002044709)], 0.98835737);
-    match s {
-        [] => true,
-        ['β', s @ ..] => {
-            out.push(&[(352, 0.39453727), (31, 0.19830625), (102, 0.18612956), (13, 0.17196918), (0, 0.023468375), (16, 0.0046997787), (55, 0.0039063096), (26, 0.00280766)], 0.98582435);
-            s.is_empty()
-        }
-        ['δ', s @ ..] => {
-            out.push(&[(13, 0.5053025), (31, 0.19830625), (102, 0.18612956), (352, 0.061203938), (0, 0.023468375), (16, 0.0046997787), (55, 0.0039063096), (26, 0.00280766)], 0.98582435);
-            s.is_empty()
-        }
-        ['κ', s @ ..] => {
-            out.push(&[(102, 0.38959333), (13, 0.37897307), (31, 0.14872968), (352, 0.045899138), (0, 0.017593652), (16, 0.003524834), (55, 0.0029297322), (26, 0.002105745)], 0.9893492);
-            s.is_empty()
-        }
-        ['μ', s @ ..] => {
-            out.push(&[(102, 0.5194629), (31, 0.19830625), (13, 0.17196918), (352, 0.061203938), (0, 0.023468375), (16, 0.0046997787), (55, 0.0039063096), (26, 0.00280766)], 0.98582435);
-            s.is_empty()
-        }
-        ['π', s @ ..] => {
-            out.push(&[(102, 0.5194629), (31, 0.19830625), (13, 0.17196918), (352, 0.061203938), (0, 0.023468375), (16, 0.0046997787), (55, 0.0039063096), (26, 0.00280766)], 0.98582435);
-            s.is_empty()
-        }
-        ['τ', s @ ..] => {
-            out.push(&[(31, 0.64872205), (102, 0.13960479), (13, 0.12896925), (352, 0.045899138), (0, 0.017593652), (16, 0.003524834), (55, 0.0029297322), (26, 0.002105745)], 0.9893492);
-            s.is_empty()
-        }
-        ['ψ', s @ ..] => {
-            out.push(&[(31, 0.5316396), (102, 0.18612956), (13, 0.17196918), (352, 0.061203938), (0, 0.023468375), (16, 0.0046997787), (55, 0.0039063096), (26, 0.00280766)], 0.98582435);
-            s.is_empty()
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -πρινοσ.
-pub(crate) fn n4142(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(275, 0.4383459), (16, 0.24336614), (1012, 0.24159609), (31, 0.04551766), (13, 0.01170367), (102, 0.004867628), (55, 0.0036011292), (0, 0.002059968)], 0.9910582);
-    match s {
-        [] => true,
-        ['υ', 'λ', s @ ..] => {
-            out.push(&[(16, 0.49558252), (275, 0.29222554), (1012, 0.16105898), (31, 0.030350195), (13, 0.0077973604), (102, 0.0032501717), (55, 0.0024109255)], 0.99267566);
-            s.is_empty()
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -τινοσ.
-pub(crate) fn n3332(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(275, 0.54168004), (13, 0.29933622), (31, 0.10345617), (102, 0.011047532), (55, 0.0081940945), (16, 0.00764477), (0, 0.00468452), (93, 0.0038147555), (14, 0.0037232013), (321, 0.0036316472), (692, 0.0036316472), (1012, 0.0036316472), (1099, 0.0036316472)], 0.9981079);
-    match s {
-        [] => true,
-        ['κ', s @ ..] => {
-            out.push(&[(13, 0.5328908), (275, 0.36112002), (31, 0.06897078), (102, 0.007370108), (55, 0.00546273), (16, 0.0050965133), (0, 0.0031280995), (93, 0.0025482567), (14, 0.0024719615), (321, 0.0024261845), (692, 0.0024261845), (1012, 0.0024261845), (1099, 0.0024261845)], 0.998764);
-            s.is_empty()
-        }
-        ['ν', s @ ..] => {
-            out.push(&[(275, 0.8166781), (13, 0.11973754), (31, 0.04138247), (102, 0.0044251163), (55, 0.0032806897), (16, 0.0030518044)], 0.9885557);
-            s.is_empty()
-        }
-        ['ο', s @ ..] => {
-            out.push(&[(13, 0.5328908), (275, 0.36112002), (31, 0.06897078), (102, 0.007370108), (55, 0.00546273), (16, 0.0050965133), (0, 0.0031280995), (93, 0.0025482567), (14, 0.0024719615), (321, 0.0024261845), (692, 0.0024261845), (1012, 0.0024261845), (1099, 0.0024261845)], 0.998764);
-            s.is_empty()
-        }
-        ['σ', s @ ..] => {
-            out.push(&[(275, 0.5208362), (31, 0.30173188), (13, 0.14966048), (102, 0.005523766), (55, 0.004104677), (16, 0.0038147555), (0, 0.0023498894)], 0.9880216);
-            match s {
-                [] => true,
-                ['ι', s @ ..] => {
-                    out.push(&[(31, 0.5344778), (275, 0.3472343), (13, 0.09977874), (102, 0.0036774243), (55, 0.002731365), (16, 0.0025482567)], 0.9904479);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['υ', s @ ..] => {
-            out.push(&[(13, 0.5328908), (275, 0.36112002), (31, 0.06897078), (102, 0.007370108), (55, 0.00546273), (16, 0.0050965133), (0, 0.0031280995), (93, 0.0025482567), (14, 0.0024719615), (321, 0.0024261845), (692, 0.0024261845), (1012, 0.0024261845), (1099, 0.0024261845)], 0.998764);
-            s.is_empty()
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -φινοσ.
-pub(crate) fn n3333(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(13, 0.430869), (275, 0.31950867), (31, 0.04599069), (102, 0.040527962), (55, 0.030075531), (16, 0.028030824), (0, 0.01718166), (93, 0.013977264), (14, 0.013641566), (321, 0.013305867), (692, 0.013305867), (1012, 0.013305867), (1099, 0.013305867), (32, 0.0032959487)], 0.9963226);
-    s.is_empty()
-}
-
-/// Words ending -χινοσ.
-pub(crate) fn n3334(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(275, 0.4896315), (1099, 0.2599832), (13, 0.07315175), (31, 0.03448539), (102, 0.030395972), (55, 0.022552835), (16, 0.021011673), (0, 0.0128786145), (93, 0.010482948), (14, 0.010223545), (321, 0.009979401), (692, 0.009979401), (1012, 0.009979401), (32, 0.0024719615)], 0.9972076);
-    match s {
-        [] => true,
-        ['σ', s @ ..] => {
-            out.push(&[(1099, 0.5066606), (275, 0.326421), (13, 0.048767835), (31, 0.022995345), (102, 0.020263981), (55, 0.015030136), (16, 0.014007783), (0, 0.00859083), (93, 0.006988632), (14, 0.006820783), (321, 0.0066529335), (692, 0.0066529335), (1012, 0.0066529335)], 0.9965057);
-            s.is_empty()
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -ῥινοσ.
-pub(crate) fn n3335(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(14, 0.3469749), (275, 0.31950867), (13, 0.09753567), (31, 0.04599069), (102, 0.040527962), (55, 0.030075531), (16, 0.028030824), (0, 0.01718166), (93, 0.013977264), (321, 0.013305867), (692, 0.013305867), (1012, 0.013305867), (1099, 0.013305867), (32, 0.0032959487)], 0.9963226);
-    s.is_empty()
-}
-
-/// Words ending -κνοσ.
-pub(crate) fn n1876(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.5753109), (31, 0.12085146), (13, 0.09719997), (275, 0.050598916), (16, 0.030701153), (102, 0.017593652), (93, 0.0148165105), (26, 0.0099336235), (606, 0.008438239), (74, 0.008331426), (14, 0.008255131), (55, 0.006958114), (43, 0.0063935304), (27, 0.004974441), (423, 0.004242008), (75, 0.004165713), (286, 0.002822919), (321, 0.002121004), (692, 0.002105745), (796, 0.002105745), (1012, 0.002105745), (1040, 0.002105745), (1052, 0.002105745), (1099, 0.002105745)], 0.98634315);
-    s.is_empty()
-}
-
-/// Words ending -μνοσ.
-pub(crate) fn n1877(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.28674755), (13, 0.22592507), (31, 0.098893724), (16, 0.07486076), (14, 0.068863966), (43, 0.06837568), (1052, 0.06723125), (195, 0.04481575), (196, 0.022217136), (275, 0.013488975), (102, 0.00468452), (93, 0.003952087), (26, 0.0026550698), (606, 0.0022430762), (74, 0.0022278172)], 0.98718244);
-    match s {
-        [] => true,
-        ['α', s @ ..] => {
-            out.push(&[(0, 0.3216907), (13, 0.18147555), (16, 0.14370947), (43, 0.14209202), (195, 0.0945449), (196, 0.04722667), (31, 0.024719616), (14, 0.017212177), (1052, 0.016800184), (275, 0.0033722438)], 0.9928435);
-            match s {
-                [] => true,
-                ['δ', s @ ..] => {
-                    out.push(&[(13, 0.34073395), (16, 0.32185856), (0, 0.16084535), (43, 0.07104601), (195, 0.04727245), (196, 0.023605706), (31, 0.012359808), (14, 0.008606088), (1052, 0.008407721)], 0.99473566);
-                    match s {
-                        [] => true,
-                        ['ν', s @ ..] => {
-                            out.push(&[(16, 0.5479057), (13, 0.22716106), (0, 0.10722515), (43, 0.047364004), (195, 0.03150988), (196, 0.01574731), (31, 0.008239872), (14, 0.005737392), (1052, 0.0056000613)], 0.9964904);
-                            s.is_empty()
-                        }
-                        ['ο', s @ ..] => {
-                            out.push(&[(13, 0.56049436), (16, 0.21457237), (0, 0.10722515), (43, 0.047364004), (195, 0.03150988), (196, 0.01574731), (31, 0.008239872), (14, 0.005737392), (1052, 0.0056000613)], 0.9964904);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['θ', s @ ..] => {
-                    out.push(&[(0, 0.5477989), (13, 0.120988786), (16, 0.0958114), (43, 0.09472801), (195, 0.06301976), (196, 0.031479362), (31, 0.016479744), (14, 0.011474784), (1052, 0.011200123), (275, 0.0022430762)], 0.99522394);
-                    s.is_empty()
-                }
-                ['τ', s @ ..] => {
-                    out.push(&[(0, 0.5477989), (13, 0.120988786), (16, 0.0958114), (43, 0.09472801), (195, 0.06301976), (196, 0.031479362), (31, 0.016479744), (14, 0.011474784), (1052, 0.011200123), (275, 0.0022430762)], 0.99522394);
-                    s.is_empty()
-                }
-                ['ῥ', s @ ..] => {
-                    out.push(&[(43, 0.42806134), (0, 0.21446556), (13, 0.120988786), (16, 0.0958114), (195, 0.06301976), (196, 0.031479362), (31, 0.016479744), (14, 0.011474784), (1052, 0.011200123), (275, 0.0022430762)], 0.99522394);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['η', s @ ..] => {
-            out.push(&[(31, 0.39926755), (0, 0.19116503), (13, 0.1506218), (16, 0.049897), (14, 0.045914397), (43, 0.0455787), (1052, 0.04481575), (195, 0.029877165), (196, 0.0148165105), (275, 0.009002823), (102, 0.0031280995), (93, 0.0026398108)], 0.9867246);
-            s.is_empty()
-        }
-        ['ι', s @ ..] => {
-            out.push(&[(13, 0.49036393), (14, 0.22754253), (0, 0.11470207), (31, 0.039551385), (16, 0.0299382), (43, 0.027344167), (1052, 0.026886396), (195, 0.017929351), (196, 0.00889601), (275, 0.0054016938)], 0.9885557);
-            match s {
-                [] => true,
-                ['δ', s @ ..] => {
-                    out.push(&[(13, 0.7451896), (14, 0.11377127), (0, 0.057343405), (31, 0.019775692), (16, 0.0149691), (43, 0.013672084), (1052, 0.013443198), (195, 0.008957046), (196, 0.0044403756), (275, 0.0027008469)], 0.99426264);
-                    s.is_empty()
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(14, 0.48503852), (13, 0.32690927), (0, 0.07646296), (31, 0.02636759), (16, 0.019958802), (43, 0.01823453), (1052, 0.017929351), (195, 0.011947814), (196, 0.0059205005), (275, 0.0036011292)], 0.9923705);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ρ', s @ ..] => {
-            out.push(&[(0, 0.52449834), (13, 0.1506218), (31, 0.06593423), (16, 0.049897), (14, 0.045914397), (43, 0.0455787), (1052, 0.04481575), (195, 0.029877165), (196, 0.0148165105), (275, 0.009002823), (102, 0.0031280995), (93, 0.0026398108)], 0.9867246);
-            s.is_empty()
-        }
-        ['υ', s @ ..] => {
-            out.push(&[(0, 0.39337757), (1052, 0.28361943), (13, 0.11296254), (31, 0.049439233), (16, 0.03743038), (14, 0.034439612), (43, 0.03418021), (195, 0.022415504), (196, 0.011108568), (275, 0.0067444877), (102, 0.0023498894)], 0.98806745);
-            match s {
-                [] => true,
-                ['κ', s @ ..] => {
-                    out.push(&[(1052, 0.5224079), (0, 0.2622568), (13, 0.07530327), (31, 0.032959487), (16, 0.0249485), (14, 0.022949569), (43, 0.02279698), (195, 0.014938583), (196, 0.007400626), (275, 0.0045014117)], 0.99046314);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -ννοσ.
-pub(crate) fn n1878(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.46097505), (13, 0.20772107), (102, 0.11480888), (93, 0.09210346), (31, 0.042038605), (275, 0.017593652), (896, 0.014496071), (16, 0.010681315), (897, 0.0072480356), (26, 0.003448539), (606, 0.0029297322), (74, 0.0028992142), (14, 0.002868696), (55, 0.0024261845), (43, 0.0022278172)], 0.9844663);
-    match s {
-        [] => true,
-        ['α', s @ ..] => {
-            out.push(&[(13, 0.3538567), (93, 0.29605556), (0, 0.23048753), (102, 0.05740444), (31, 0.021011673), (275, 0.008804455), (896, 0.0072480356), (16, 0.0053406577), (897, 0.0036163882)], 0.98382545);
-            match s {
-                [] => true,
-                ['ρ', 'υ', 'τ', 'ο', s @ ..] => {
-                    out.push(&[(13, 0.5692378), (93, 0.19737545), (0, 0.15365835), (102, 0.038269628), (31, 0.014007783), (275, 0.0058594644), (896, 0.00483711), (16, 0.003555352), (897, 0.0024109255)], 0.98921186);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ε', s @ ..] => {
-            out.push(&[(0, 0.5913634), (13, 0.12782483), (102, 0.07064927), (896, 0.060196843), (93, 0.056687266), (897, 0.03010605), (31, 0.025864042), (275, 0.010833906), (16, 0.0065766387), (26, 0.002121004)], 0.9822232);
-            match s {
-                [] => true,
-                ['ξ', '\u{1}', s @ ..] => {
-                    out.push(&[(896, 0.6666667), (897, 0.33333334)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ι', s @ ..] => {
-            out.push(&[(0, 0.58439004), (13, 0.28308538), (102, 0.045929655), (93, 0.036850538), (31, 0.016815443), (275, 0.0070344093), (896, 0.0057984283), (16, 0.004272526), (897, 0.0028992142)], 0.9870756);
-            match s {
-                [] => true,
-                ['κ', s @ ..] => {
-                    out.push(&[(13, 0.52205694), (0, 0.38959333), (102, 0.030609598), (93, 0.024567025), (31, 0.011215381), (275, 0.0046997787), (896, 0.0038605325), (16, 0.002853437)], 0.989456);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['υ', s @ ..] => {
-            out.push(&[(0, 0.45223165), (102, 0.34814984), (13, 0.09774929), (93, 0.043350883), (31, 0.019775692), (275, 0.008285649), (896, 0.006820783), (16, 0.0050202184), (897, 0.0034027619)], 0.98478675);
-            match s {
-                [] => true,
-                ['ο', s @ ..] => {
-                    out.push(&[(102, 0.59885556), (0, 0.27829403), (13, 0.060151063), (93, 0.026672771), (31, 0.0121767), (275, 0.0050965133), (896, 0.0041962313), (16, 0.0030975814), (897, 0.002105745)], 0.9906462);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -ονοσ.
-pub(crate) fn n1879(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.5770657), (13, 0.17878996), (423, 0.09272908), (16, 0.05162127), (93, 0.0487068), (31, 0.022232395), (275, 0.009308004), (102, 0.0032349126)], 0.9836881);
-    match s {
-        [] => true,
-        ['γ', s @ ..] => {
-            out.push(&[(13, 0.3377432), (423, 0.21553369), (0, 0.20984207), (93, 0.19952697), (16, 0.018768597), (31, 0.008087282), (275, 0.0033875029)], 0.9928893);
-            match s {
-                [] => true,
-                ['γ', s @ ..] => {
-                    out.push(&[(93, 0.46634623), (13, 0.22516213), (423, 0.1436942), (0, 0.13989471), (16, 0.012512398), (31, 0.005386435), (275, 0.0022583352)], 0.99525446);
-                    s.is_empty()
-                }
-                ['ι', s @ ..] => {
-                    out.push(&[(13, 0.55849546), (423, 0.1436942), (0, 0.13989471), (93, 0.13301289), (16, 0.012512398), (31, 0.005386435), (275, 0.0022583352)], 0.99525446);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ι', s @ ..] => {
-            out.push(&[(0, 0.38471046), (16, 0.36774242), (13, 0.11920348), (423, 0.061829556), (93, 0.0324712), (31, 0.0148165105), (275, 0.006210422), (102, 0.002151522)], 0.98913556);
-            match s {
-                [] => true,
-                ['μ', s @ ..] => {
-                    out.push(&[(16, 0.57850003), (0, 0.25647363), (13, 0.07946899), (423, 0.04121462), (93, 0.021652551), (31, 0.009872587), (275, 0.004135195)], 0.99131763);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['κ', s @ ..] => {
-            out.push(&[(13, 0.589395), (0, 0.28853285), (423, 0.046372168), (16, 0.025818266), (93, 0.0243534), (31, 0.011108568), (275, 0.004654002)], 0.99023426);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(13, 0.7947051), (0, 0.14427406), (423, 0.023178454), (16, 0.012909133), (93, 0.0121767), (31, 0.005554284), (275, 0.0023193713)], 0.99511707);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['τ', s @ ..] => {
-            out.push(&[(0, 0.7363088), (423, 0.16935988), (13, 0.051087204), (16, 0.014755474), (93, 0.013916228), (31, 0.006347753), (275, 0.0026550698)], 0.9944304);
-            match s {
-                [] => true,
-                ['κ', 'ο', 'ν', s @ ..] => {
-                    out.push(&[(0, 0.49086747), (423, 0.44623482), (13, 0.03405814), (16, 0.00982681), (93, 0.009277485), (31, 0.0042267493)], 0.99449146);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['φ', s @ ..] => {
-            out.push(&[(0, 0.83082324), (13, 0.07151903), (423, 0.037094682), (16, 0.020645456), (93, 0.019485772), (31, 0.00889601), (275, 0.0037232013)], 0.9921874);
-            s.is_empty()
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -πνοσ.
-pub(crate) fn n1880(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(31, 0.49668115), (0, 0.2602426), (13, 0.07775997), (275, 0.040482186), (16, 0.024567025), (102, 0.014068819), (93, 0.01185626), (26, 0.00794995), (606, 0.0067444877), (74, 0.006668193), (14, 0.0066071567), (55, 0.005569543), (43, 0.0051117726), (27, 0.003982605), (423, 0.0033875029), (75, 0.0033264668), (286, 0.0022583352)], 0.97726405);
-    match s {
-        [] => true,
-        ['υ', s @ ..] => {
-            out.push(&[(0, 0.5068284), (31, 0.3311208), (13, 0.051850155), (275, 0.02699321), (16, 0.01637293), (102, 0.009384299), (93, 0.007904174), (26, 0.005294881), (606, 0.0045014117), (74, 0.0044403756), (14, 0.0043945983), (55, 0.0037079423), (43, 0.0034027619), (27, 0.0026550698), (423, 0.0022583352), (75, 0.0022125582)], 0.9833219);
-            s.is_empty()
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -ρνοσ.
-pub(crate) fn n1881(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.38233006), (13, 0.21234454), (31, 0.13185321), (26, 0.06279088), (74, 0.06222629), (27, 0.03140307), (75, 0.031113146), (250, 0.022217136), (275, 0.017990386), (16, 0.01092546), (102, 0.006256199), (93, 0.005264363), (606, 0.0030060273), (14, 0.0029297322), (55, 0.0024719615), (43, 0.0022735943)], 0.98739606);
-    match s {
-        [] => true,
-        ['α', s @ ..] => {
-            out.push(&[(0, 0.54297704), (13, 0.13067827), (250, 0.09059282), (31, 0.08114748), (26, 0.038635843), (74, 0.038284887), (27, 0.019317921), (75, 0.019150073), (275, 0.01107805), (16, 0.0067139696), (102, 0.0038452735), (93, 0.0032349126)], 0.9856565);
-            s.is_empty()
-        }
-        ['ε', s @ ..] => {
-            out.push(&[(13, 0.28493172), (26, 0.15844968), (74, 0.1582208), (0, 0.15292592), (27, 0.07922484), (75, 0.07910277), (31, 0.05275044), (250, 0.00889601), (275, 0.0072022583), (16, 0.0043640803), (102, 0.0025024796), (93, 0.002105745)], 0.99067676);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(26, 0.6666667), (27, 0.33333334)], 1.0);
-                    s.is_empty()
-                }
-                ['β', s @ ..] => {
-                    out.push(&[(13, 0.5232929), (26, 0.105638206), (74, 0.10548562), (0, 0.101960786), (27, 0.052811474), (75, 0.05273518), (31, 0.035156786), (250, 0.0059205005), (275, 0.004791333), (16, 0.0029144732)], 0.9907073);
-                    s.is_empty()
-                }
-                ['κ', s @ ..] => {
-                    out.push(&[(74, 0.32770276), (13, 0.18995957), (75, 0.16385138), (26, 0.105638206), (0, 0.101960786), (27, 0.052811474), (31, 0.035156786), (250, 0.0059205005), (275, 0.004791333), (16, 0.0029144732)], 0.9907073);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ο', s @ ..] => {
-            out.push(&[(0, 0.55292594), (13, 0.28493172), (31, 0.05275044), (26, 0.02511635), (74, 0.024887465), (27, 0.012558175), (75, 0.012436103), (250, 0.00889601), (275, 0.0072022583), (16, 0.0043640803), (102, 0.0025024796), (93, 0.002105745)], 0.99067676);
-            match s {
-                [] => true,
-                ['θ', s @ ..] => {
-                    out.push(&[(13, 0.5232929), (0, 0.36862746), (31, 0.035156786), (26, 0.016739147), (74, 0.016586557), (27, 0.008377203), (75, 0.008300908), (250, 0.0059205005), (275, 0.004791333), (16, 0.0029144732)], 0.9907073);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['υ', s @ ..] => {
-            out.push(&[(0, 0.44116884), (31, 0.3159228), (13, 0.10617227), (26, 0.03140307), (74, 0.031113146), (27, 0.015701534), (75, 0.015548944), (250, 0.011108568), (275, 0.009002823), (16, 0.00546273), (102, 0.0031280995), (93, 0.0026398108)], 0.9883726);
-            match s {
-                [] => true,
-                ['β', s @ ..] => {
-                    out.push(&[(31, 0.5439536), (0, 0.29411766), (13, 0.0707866), (26, 0.020935379), (74, 0.020737011), (27, 0.0104676895), (75, 0.010376135), (250, 0.007400626), (275, 0.005996796), (16, 0.0036469062), (102, 0.002090486)], 0.9905089);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -τνοσ.
-pub(crate) fn n1882(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(26, 0.23546197), (31, 0.16113527), (13, 0.12961014), (27, 0.11773861), (0, 0.100419626), (275, 0.067460135), (16, 0.040939957), (102, 0.023453116), (93, 0.019760434), (606, 0.011245899), (74, 0.011108568), (14, 0.011001755), (55, 0.009277485), (43, 0.008514535), (423, 0.005645838), (75, 0.005554284), (286, 0.0037689784), (321, 0.002822919), (692, 0.00280766), (796, 0.00280766), (1012, 0.00280766), (1040, 0.00280766), (1052, 0.00280766), (1099, 0.00280766), (115, 0.0023804074)], 0.9841459);
-    match s {
-        [] => true,
-        ['ε', s @ ..] => {
-            out.push(&[(26, 0.37920195), (27, 0.1896086), (31, 0.107423514), (13, 0.08641184), (0, 0.06694133), (275, 0.044983596), (16, 0.02729839), (102, 0.015640497), (93, 0.013168536), (606, 0.00749218), (74, 0.007400626), (14, 0.0073395898), (55, 0.006179904), (43, 0.005676356), (423, 0.0037689784), (75, 0.0036926833), (286, 0.0025177386)], 0.9747463);
-            s.is_empty()
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -υνοσ.
-pub(crate) fn n1883(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(31, 0.5953307), (13, 0.109163046), (102, 0.07510491), (93, 0.07434195), (55, 0.0721294), (0, 0.021133745), (275, 0.01420615), (16, 0.008621347), (727, 0.0058442056), (26, 0.002792401), (606, 0.0023651484), (74, 0.0023346303), (14, 0.0023193713)], 0.985687);
-    match s {
-        [] => true,
-        ['α', s @ ..] => {
-            out.push(&[(31, 0.4381323), (102, 0.23004502), (55, 0.2288548), (13, 0.043656062), (93, 0.029739834), (0, 0.008453499), (275, 0.005676356), (16, 0.003448539), (727, 0.0023346303)], 0.990341);
-            match s {
-                [] => true,
-                ['β', s @ ..] => {
-                    out.push(&[(102, 0.48670176), (31, 0.2920882), (55, 0.15257496), (13, 0.029114215), (93, 0.019821469), (0, 0.0056305793), (275, 0.0037842374), (16, 0.0023041123)], 0.99201953);
-                    s.is_empty()
-                }
-                ['ρ', 'υ', s @ ..] => {
-                    out.push(&[(55, 0.4859083), (31, 0.2920882), (102, 0.15336843), (13, 0.029114215), (93, 0.019821469), (0, 0.0056305793), (275, 0.0037842374), (16, 0.0023041123)], 0.99201953);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['γ', s @ ..] => {
-            out.push(&[(13, 0.30458534), (31, 0.29765773), (93, 0.2871748), (102, 0.037552454), (55, 0.03605707), (0, 0.010574502), (275, 0.0070954454), (16, 0.004303044), (727, 0.0029297322)], 0.9879301);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(93, 0.524773), (13, 0.2030518), (31, 0.19844358), (102, 0.025040055), (55, 0.024048219), (0, 0.007049668), (275, 0.004730297), (16, 0.002868696)], 0.9900053);
-                    s.is_empty()
-                }
-                ['ο', s @ ..] => {
-                    out.push(&[(13, 0.5363851), (31, 0.19844358), (93, 0.19143969), (102, 0.025040055), (55, 0.024048219), (0, 0.007049668), (275, 0.004730297), (16, 0.002868696)], 0.9900053);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['θ', s @ ..] => {
-            out.push(&[(31, 0.79766536), (13, 0.054581523), (102, 0.037552454), (93, 0.037170976), (55, 0.03605707), (0, 0.010574502), (275, 0.0070954454), (16, 0.004303044), (727, 0.0029297322)], 0.9879301);
-            s.is_empty()
-        }
-        ['ο', s @ ..] => {
-            out.push(&[(31, 0.8381323), (13, 0.043656062), (102, 0.030045014), (93, 0.029739834), (55, 0.02885481), (0, 0.008453499), (275, 0.005676356), (16, 0.003448539), (727, 0.0023346303)], 0.99034107);
-            s.is_empty()
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -φνοσ.
-pub(crate) fn n1884(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.43375295), (31, 0.16113527), (13, 0.12961014), (275, 0.067460135), (16, 0.040939957), (102, 0.023453116), (93, 0.019760434), (26, 0.013244831), (606, 0.011245899), (74, 0.011108568), (14, 0.011001755), (55, 0.009277485), (43, 0.008514535), (27, 0.0066224155), (423, 0.005645838), (75, 0.005554284), (286, 0.0037689784), (321, 0.002822919), (692, 0.00280766), (796, 0.00280766), (1012, 0.00280766), (1040, 0.00280766), (1052, 0.00280766), (1099, 0.00280766), (115, 0.0023804074)], 0.9841459);
-    s.is_empty()
-}
-
-/// Words ending -χνοσ.
-pub(crate) fn n1885(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.35486382), (26, 0.11302357), (74, 0.11200122), (31, 0.07734798), (13, 0.062211033), (27, 0.05651942), (75, 0.05600061), (464, 0.05333028), (275, 0.032379646), (16, 0.01965362), (102, 0.011261159), (93, 0.009475852), (606, 0.0054016938), (14, 0.0052796216), (55, 0.0044556344), (43, 0.004089418), (423, 0.002716106)], 0.9800107);
-    match s {
-        [] => true,
-        ['ι', s @ ..] => {
-            out.push(&[(26, 0.29756618), (0, 0.23657587), (27, 0.14879072), (74, 0.074662395), (31, 0.051560234), (13, 0.041474022), (75, 0.037323568), (464, 0.035553522), (275, 0.021591516), (16, 0.0131075), (102, 0.007507439), (93, 0.006317235), (606, 0.0036011292), (14, 0.003524834), (55, 0.0029755093), (43, 0.002731365)], 0.98486304);
-            s.is_empty()
-        }
-        ['ρ', s @ ..] => {
-            out.push(&[(0, 0.42743573), (74, 0.22265965), (75, 0.111329824), (26, 0.05651942), (31, 0.03866636), (13, 0.031113146), (27, 0.02825971), (464, 0.026672771), (275, 0.016189823), (16, 0.00982681), (102, 0.0056305793), (93, 0.004745556), (606, 0.0027008469), (14, 0.0026398108), (55, 0.0022278172), (43, 0.002044709)], 0.98866254);
-            match s {
-                [] => true,
-                ['ε', 'τ', s @ ..] => {
-                    out.push(&[(74, 0.37067217), (0, 0.28496224), (75, 0.18533608), (26, 0.037674524), (31, 0.025787747), (13, 0.020737011), (27, 0.018844891), (464, 0.017776761), (275, 0.010788129), (16, 0.0065461206), (102, 0.0037537194), (93, 0.0031586175)], 0.986038);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['υ', s @ ..] => {
-            out.push(&[(0, 0.5004349), (464, 0.13537805), (26, 0.06955062), (74, 0.068925), (31, 0.04759289), (13, 0.038284887), (27, 0.03477531), (75, 0.03445487), (275, 0.019928282), (16, 0.012100404), (102, 0.006927596), (93, 0.0058289464), (606, 0.0033264668), (14, 0.0032501717), (55, 0.002746624), (43, 0.0025177386)], 0.9860227);
-            s.is_empty()
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -ωνοσ.
-pub(crate) fn n1886(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(31, 0.49849698), (13, 0.12625314), (16, 0.102082856), (102, 0.09730678), (796, 0.091676205), (0, 0.027389944), (275, 0.01840238), (93, 0.005386435), (26, 0.0036163882), (606, 0.0030670634), (74, 0.0030365454), (14, 0.0030060273), (55, 0.0025329976), (43, 0.0023193713)], 0.9845731);
-    match s {
-        [] => true,
-        ['ζ', s @ ..] => {
-            out.push(&[(13, 0.4175021), (31, 0.33232623), (16, 0.068055235), (102, 0.0648661), (796, 0.06111238), (0, 0.018249791), (275, 0.012268254), (93, 0.0035858701), (26, 0.0024109255), (606, 0.002044709), (74, 0.002014191), (14, 0.0019989319)], 0.98643476);
-            s.is_empty()
-        }
-        ['ι', s @ ..] => {
-            out.push(&[(31, 0.79938966), (13, 0.050507363), (16, 0.04083314), (102, 0.038925763), (796, 0.03666743), (0, 0.010955978), (275, 0.0073548486), (93, 0.002151522)], 0.9867857);
-            s.is_empty()
-        }
-        ['κ', s @ ..] => {
-            out.push(&[(796, 0.39444572), (31, 0.33232623), (13, 0.08416876), (16, 0.068055235), (102, 0.0648661), (0, 0.018249791), (275, 0.012268254), (93, 0.0035858701), (26, 0.0024109255), (606, 0.002044709), (74, 0.002014191), (14, 0.0019989319)], 0.9864347);
-            s.is_empty()
-        }
-        ['φ', s @ ..] => {
-            out.push(&[(16, 0.4013886), (31, 0.33232623), (13, 0.08416876), (102, 0.0648661), (796, 0.06111238), (0, 0.018249791), (275, 0.012268254), (93, 0.0035858701), (26, 0.0024109255), (606, 0.002044709), (74, 0.002014191), (14, 0.0019989319)], 0.98643476);
-            s.is_empty()
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -υροσ.
-pub(crate) fn n1916(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(55, 0.3671168), (31, 0.13282979), (13, 0.12684825), (102, 0.08792248), (0, 0.060303655), (435, 0.05493248), (16, 0.03776608), (108, 0.036621653), (94, 0.018799115), (670, 0.018310826), (961, 0.018310826), (115, 0.0122072175), (787, 0.0122072175), (116, 0.006057832), (788, 0.006057832)], 0.99629205);
-    match s {
-        [] => true,
-        ['α', s @ ..] => {
-            out.push(&[(55, 0.47785154), (31, 0.18879987), (102, 0.18132296), (108, 0.089433126), (13, 0.021133745), (0, 0.010055696), (435, 0.009155413), (16, 0.006286717), (94, 0.0031280995), (670, 0.0030518044), (961, 0.0030518044), (115, 0.00202945), (787, 0.00202945)], 0.99732965);
-            match s {
-                [] => true,
-                ['σ', s @ ..] => {
-                    out.push(&[(31, 0.3443961), (102, 0.34065765), (55, 0.23892577), (108, 0.044724192), (13, 0.010574502), (0, 0.0050202184), (435, 0.0045777066), (16, 0.0031433585)], 0.99201953);
-                    match s {
-                        [] => true,
-                        ['η', s @ ..] => {
-                            out.push(&[(31, 0.5629358), (102, 0.22710003), (55, 0.15928893), (108, 0.029816128), (13, 0.007049668), (0, 0.0033569848), (435, 0.0030518044), (16, 0.002090486)], 0.9946899);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['τ', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['ν', s @ ..] => {
-                            out.push(&[(55, 0.6592813), (108, 0.19647516), (31, 0.06292821), (102, 0.060440987), (13, 0.007049668), (0, 0.0033569848), (435, 0.0030518044), (16, 0.002090486)], 0.9946746);
-                            match s {
-                                [] => true,
-                                ['ε', 'κ', 'ο', 'υ', s @ ..] => {
-                                    out.push(&[(108, 0.4643168), (55, 0.43952087), (31, 0.04196231), (102, 0.040299077), (13, 0.0046997787), (0, 0.0022278172), (435, 0.00202945)], 0.9950561);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['σ', s @ ..] => {
-                            out.push(&[(55, 0.48892957), (31, 0.3443961), (102, 0.09065385), (108, 0.044724192), (13, 0.010574502), (0, 0.0050202184), (435, 0.0045777066), (16, 0.0031433585)], 0.99201953);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['γ', s @ ..] => {
-            out.push(&[(13, 0.3453422), (16, 0.28627452), (435, 0.15309377), (55, 0.101274125), (31, 0.03663691), (102, 0.024261845), (0, 0.016632333), (108, 0.010101473), (94, 0.0051880674), (670, 0.0050507365), (961, 0.0050507365), (115, 0.0033722438), (787, 0.0033722438)], 0.9956512);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(13, 0.56356144), (16, 0.19085984), (435, 0.10205234), (55, 0.06752117), (31, 0.024429694), (102, 0.016174564), (0, 0.011093309), (108, 0.006729229), (94, 0.003463798), (670, 0.0033722438), (961, 0.0033722438), (115, 0.0022430762), (787, 0.0022430762)], 0.997116);
-                    s.is_empty()
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(16, 0.49001297), (13, 0.3696498), (435, 0.058319982), (55, 0.038574807), (31, 0.013962005), (102, 0.009246968), (0, 0.0063324943), (108, 0.0038452735)], 0.9899443);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ε', s @ ..] => {
-            out.push(&[(94, 0.25940338), (55, 0.18355078), (115, 0.1727779), (116, 0.086366065), (31, 0.06640726), (13, 0.063416496), (102, 0.04396124), (0, 0.030151827), (435, 0.02746624), (16, 0.01887541), (108, 0.018310826), (670, 0.009155413), (961, 0.009155413), (787, 0.0061036088), (788, 0.0030212863)], 0.99812317);
-            match s {
-                [] => true,
-                ['λ', s @ ..] => {
-                    out.push(&[(94, 0.50626385), (55, 0.12237736), (115, 0.1151751), (116, 0.05757229), (31, 0.04428168), (13, 0.04228275), (102, 0.02931258), (0, 0.020096133), (435, 0.018310826), (16, 0.012588693), (108, 0.0122072175), (670, 0.0061036088), (961, 0.0061036088), (787, 0.004074159), (788, 0.002014191)], 0.99876404);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['θ', s @ ..] => {
-            out.push(&[(13, 0.41789883), (55, 0.24473946), (31, 0.0885481), (102, 0.058609903), (0, 0.040192265), (435, 0.036621653), (16, 0.025177386), (108, 0.024414435), (94, 0.012527657), (670, 0.0122072175), (961, 0.0122072175), (115, 0.008148318), (787, 0.008133058), (116, 0.004028382), (788, 0.004028382)], 0.99748224);
-            s.is_empty()
-        }
-        ['κ', s @ ..] => {
-            out.push(&[(13, 0.2388037), (435, 0.21139848), (55, 0.13984893), (787, 0.13163958), (31, 0.09822232), (788, 0.065796904), (102, 0.033493552), (0, 0.022964828), (16, 0.014389258), (108, 0.0139467465), (94, 0.0071564815), (670, 0.0069733732), (961, 0.0069733732), (115, 0.004654002), (116, 0.0023041123)], 0.9985657);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(787, 0.6666667), (788, 0.33333334)], 1.0);
-                    s.is_empty()
-                }
-                ['σ', s @ ..] => {
-                    out.push(&[(13, 0.36940566), (435, 0.35570306), (55, 0.069932096), (787, 0.06581216), (31, 0.049103532), (788, 0.032898452), (102, 0.016754406), (0, 0.011490043), (16, 0.0071869995), (108, 0.0069733732), (94, 0.0035858701), (670, 0.003494316), (961, 0.003494316), (115, 0.0023193713)], 0.9981536);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['μ', s @ ..] => {
-            out.push(&[(0, 0.28015563), (435, 0.27747005), (55, 0.18355078), (31, 0.06640726), (13, 0.063416496), (102, 0.04396124), (16, 0.01887541), (108, 0.018310826), (94, 0.0093995575), (670, 0.009155413), (961, 0.009155413), (115, 0.0061036088), (787, 0.0061036088), (116, 0.0030212863), (788, 0.0030212863)], 0.99810785);
-            match s {
-                [] => true,
-                ['ρ', s @ ..] => {
-                    out.push(&[(0, 0.52010375), (435, 0.18498512), (55, 0.12237736), (31, 0.04428168), (13, 0.04228275), (102, 0.02931258), (16, 0.012588693), (108, 0.0122072175), (94, 0.006271458), (670, 0.0061036088), (961, 0.0061036088), (115, 0.004074159), (787, 0.004074159), (116, 0.002014191), (788, 0.002014191)], 0.9987945);
-                    s.is_empty()
-                }
-                ['σ', s @ ..] => {
-                    out.push(&[(435, 0.5183185), (0, 0.18677042), (55, 0.12237736), (31, 0.04428168), (13, 0.04228275), (102, 0.02931258), (16, 0.012588693), (108, 0.0122072175), (94, 0.006271458), (670, 0.0061036088), (961, 0.0061036088), (115, 0.004074159), (787, 0.004074159), (116, 0.002014191), (788, 0.002014191)], 0.99879456);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ο', s @ ..] => {
-            out.push(&[(55, 0.6185092), (31, 0.11772335), (102, 0.11343557), (108, 0.042191196), (670, 0.040756848), (961, 0.040756848), (13, 0.009979401), (0, 0.004745556), (435, 0.0043183034), (16, 0.0029755093)], 0.9953917);
-            match s {
-                [] => true,
-                ['β', s @ ..] => {
-                    out.push(&[(55, 0.5592584), (670, 0.2703746), (31, 0.058854047), (102, 0.056717783), (108, 0.021087969), (961, 0.020370794), (13, 0.0049897004), (0, 0.0023651484), (435, 0.002166781)], 0.99618524);
-                    match s {
-                        [] => true,
-                        ['α', s @ ..] => {
-                            out.push(&[(670, 0.51358813), (55, 0.37283894), (31, 0.039246205), (102, 0.037811857), (108, 0.014068819), (961, 0.01358053), (13, 0.0033264668)], 0.99446094);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ι', s @ ..] => {
-                    out.push(&[(55, 0.6474098), (961, 0.21629663), (31, 0.047089342), (102, 0.04538033), (108, 0.016876478), (670, 0.016296636), (13, 0.003982605)], 0.9933318);
-                    match s {
-                        [] => true,
-                        ['λ', s @ ..] => {
-                            out.push(&[(961, 0.47753108), (55, 0.43160143), (31, 0.03138781), (102, 0.03025864), (108, 0.011245899), (670, 0.010864424), (13, 0.0026550698)], 0.9955444);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['κ', s @ ..] => {
-                    out.push(&[(55, 0.8474098), (31, 0.047089342), (102, 0.04538033), (108, 0.016876478), (670, 0.016296636), (961, 0.016296636), (13, 0.003982605)], 0.9933318);
-                    s.is_empty()
-                }
-                ['λ', s @ ..] => {
-                    out.push(&[(55, 0.6052949), (31, 0.17648585), (108, 0.1549096), (102, 0.032410163), (670, 0.011642634), (961, 0.011642634), (13, 0.002853437)], 0.9952392);
-                    match s {
-                        [] => true,
-                        ['γ', s @ ..] => {
-                            out.push(&[(31, 0.45099565), (55, 0.40352485), (108, 0.103273064), (102, 0.021606775), (670, 0.0077668424), (961, 0.0077668424)], 0.994934);
-                            s.is_empty()
-                        }
-                        ['ι', 'α', s @ ..] => {
-                            out.push(&[(108, 0.4366064), (55, 0.40352485), (31, 0.11766232), (102, 0.021606775), (670, 0.0077668424), (961, 0.0077668424)], 0.994934);
-                            s.is_empty()
-                        }
-                        ['ο', s @ ..] => {
-                            out.push(&[(55, 0.8026398), (31, 0.088242926), (108, 0.0774548), (102, 0.016205082), (670, 0.0058289464), (961, 0.0058289464)], 0.9962005);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ρ', s @ ..] => {
-                    out.push(&[(55, 0.41234455), (31, 0.4118105), (102, 0.07562371), (108, 0.028122377), (670, 0.02716106), (961, 0.02716106), (13, 0.0066529335), (0, 0.0031586175), (435, 0.0028839551)], 0.99491876);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['π', s @ ..] => {
-            out.push(&[(31, 0.31641108), (13, 0.3134203), (55, 0.18355078), (102, 0.04396124), (0, 0.030151827), (435, 0.02746624), (16, 0.01887541), (108, 0.018310826), (94, 0.0093995575), (670, 0.009155413), (961, 0.009155413), (115, 0.0061036088), (787, 0.0061036088), (116, 0.0030212863), (788, 0.0030212863)], 0.99810785);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(13, 0.54227513), (31, 0.21094072), (55, 0.12237736), (102, 0.02931258), (0, 0.020096133), (435, 0.018310826), (16, 0.012588693), (108, 0.0122072175), (94, 0.006271458), (670, 0.0061036088), (961, 0.0061036088), (115, 0.004074159), (787, 0.004074159), (116, 0.002014191), (788, 0.002014191)], 0.99876404);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['σ', s @ ..] => {
-            out.push(&[(0, 0.51810485), (55, 0.18826582), (31, 0.06811628), (13, 0.06504921), (102, 0.04509041), (435, 0.028168155), (16, 0.0193637), (108, 0.018783856), (94, 0.009643702), (670, 0.009384299), (961, 0.009384299), (115, 0.006256199), (787, 0.006256199), (116, 0.0030975814), (788, 0.0030975814)], 0.99806213);
-            s.is_empty()
-        }
-        ['τ', s @ ..] => {
-            out.push(&[(13, 0.35381094), (31, 0.29779506), (55, 0.17276265), (102, 0.04138247), (0, 0.028381782), (435, 0.025848784), (16, 0.017776761), (108, 0.017242694), (94, 0.008850233), (670, 0.008621347), (961, 0.008621347), (115, 0.0057526515), (787, 0.0057526515), (116, 0.002853437), (788, 0.002853437)], 0.9983062);
-            match s {
-                [] => true,
-                ['α', s @ ..] => {
-                    out.push(&[(13, 0.5692073), (31, 0.19853513), (55, 0.1151751), (102, 0.027588312), (0, 0.018921187), (435, 0.017242694), (16, 0.011841001), (108, 0.011490043), (94, 0.0058899825), (670, 0.0057526515), (961, 0.0057526515), (115, 0.0038300145), (787, 0.0038300145)], 0.9950561);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -αφροσ.
-pub(crate) fn n3458(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(31, 0.44486153), (43, 0.3370413), (0, 0.09071489), (13, 0.040634774), (464, 0.02777142), (55, 0.018646525), (102, 0.011139086), (16, 0.0066834516), (93, 0.0029755093), (94, 0.0029449912), (26, 0.0026092927), (435, 0.0022125582)], 0.9882353);
-    match s {
-        [] => true,
-        ['τ', s @ ..] => {
-            out.push(&[(43, 0.55802244), (31, 0.29657435), (0, 0.060471505), (13, 0.027084764), (464, 0.018524453), (55, 0.012436103), (102, 0.0074158846), (16, 0.0044556344)], 0.9849851);
-            s.is_empty()
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -χροσ.
-pub(crate) fn n1918(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.35545892), (102, 0.2834058), (13, 0.12190433), (31, 0.08458076), (55, 0.055924315), (16, 0.020065613), (43, 0.011123827), (93, 0.008926528), (94, 0.008850233), (26, 0.007843138), (435, 0.0066376748), (423, 0.0044403756), (108, 0.0044251163), (27, 0.004089418), (14, 0.0022583352), (626, 0.0022278172), (670, 0.0022125582), (961, 0.0022125582), (1048, 0.0022125582)], 0.98879987);
-    match s {
-        [] => true,
-        ['γ', s @ ..] => {
-            out.push(&[(0, 0.57030594), (102, 0.1889372), (13, 0.08126955), (31, 0.056397345), (55, 0.03729305), (16, 0.013382162), (43, 0.0074158846), (93, 0.0059510185), (94, 0.0059052417), (26, 0.0052338447), (435, 0.0044251163), (423, 0.0029602502), (108, 0.0029449912), (27, 0.002731365)], 0.98515296);
-            s.is_empty()
-        }
-        ['ω', s @ ..] => {
-            out.push(&[(102, 0.52227056), (0, 0.23697262), (13, 0.08126955), (31, 0.056397345), (55, 0.03729305), (16, 0.013382162), (43, 0.0074158846), (93, 0.0059510185), (94, 0.0059052417), (26, 0.0052338447), (435, 0.0044251163), (423, 0.0029602502), (108, 0.0029449912), (27, 0.002731365)], 0.985153);
-            s.is_empty()
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -ωροσ.
-pub(crate) fn n1919(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(31, 0.43382925), (102, 0.31335926), (626, 0.100892656), (13, 0.048767835), (0, 0.042191196), (55, 0.022369726), (16, 0.008026246), (43, 0.0044556344), (93, 0.0035706111), (94, 0.003540093), (26, 0.0031433585), (435, 0.0026550698)], 0.9868009);
-    match s {
-        [] => true,
-        ['π', s @ ..] => {
-            out.push(&[(102, 0.5422446), (31, 0.2892195), (626, 0.06726177), (13, 0.032501716), (0, 0.028122377), (55, 0.014908064), (16, 0.005355917), (43, 0.0029602502), (93, 0.0023804074), (94, 0.0023651484), (26, 0.002090486)], 0.9894102);
-            s.is_empty()
-        }
-        ['ρ', s @ ..] => {
-            out.push(&[(626, 0.4005951), (31, 0.2892195), (102, 0.20891127), (13, 0.032501716), (0, 0.028122377), (55, 0.014908064), (16, 0.005355917), (43, 0.0029602502), (93, 0.0023804074), (94, 0.0023651484), (26, 0.002090486)], 0.9894102);
-            s.is_empty()
-        }
-        ['χ', s @ ..] => {
-            out.push(&[(102, 0.5422446), (31, 0.2892195), (626, 0.06726177), (13, 0.032501716), (0, 0.028122377), (55, 0.014908064), (16, 0.005355917), (43, 0.0029602502), (93, 0.0023804074), (94, 0.0023651484), (26, 0.002090486)], 0.9894102);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n662(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 657);
+	match s {
+		[] => true,
+		['α', s @ ..] => {
+			super::push(out, 2176);
+			match s {
+				[] => true,
+				['δ', s @ ..] => {
+					super::push(out, 4389);
+					match s {
+						[] => true,
+						['ε', s @ ..] => {
+							super::push(out, 6082);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['κ', s @ ..] => {
+					super::push(out, 4390);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 6083);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6952);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 4391);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 6084);
+							s.is_empty()
+						}
+						['ε', s @ ..] => {
+							super::push(out, 6085);
+							s.is_empty()
+						}
+						['ο', s @ ..] => {
+							super::push(out, 6086);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ν', 'η', s @ ..] => {
+					super::push(out, 4392);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 6087);
+							match s {
+								[] => true,
+								['φ', s @ ..] => {
+									super::push(out, 6953);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 4393);
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 6088);
+							match s {
+								[] => true,
+								['ο', s @ ..] => {
+									match s {
+										[] => true,
+										['θ', s @ ..] => {
+											super::push(out, 7282);
+											match s {
+												[] => true,
+												['ρ', s @ ..] => {
+													super::push(out, 7377);
+													match s {
+														[] => true,
+														['ο', s @ ..] => super::t2::n7435(s, out),
+														_ => false,
+													}
+												}
+												_ => false,
+											}
+										}
+										['κ', s @ ..] => {
+											super::push(out, 7283);
+											match s {
+												[] => true,
+												['α', s @ ..] => {
+													super::push(out, 7378);
+													match s {
+														[] => true,
+														['ν', s @ ..] => super::t2::n7436(s, out),
+														_ => false,
+													}
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['τ', s @ ..] => {
+					super::push(out, 4394);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 6089);
+							match s {
+								[] => true,
+								['ρ', s @ ..] => {
+									super::push(out, 6954);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ε', s @ ..] => {
+			super::push(out, 2177);
+			match s {
+				[] => true,
+				['ν', s @ ..] => {
+					super::push(out, 4395);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 6090);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 4396);
+					match s {
+						[] => true,
+						['β', s @ ..] => {
+							super::push(out, 6091);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['η', s @ ..] => {
+			super::push(out, 2178);
+			match s {
+				[] => true,
+				['ψ', s @ ..] => {
+					super::push(out, 4397);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ι', s @ ..] => {
+			super::push(out, 2179);
+			match s {
+				[] => true,
+				['ξ', s @ ..] => {
+					super::push(out, 4398);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 6092);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ρ', s @ ..] => {
+					super::push(out, 4399);
+					match s {
+						[] => true,
+						['α', s @ ..] => {
+							super::push(out, 6093);
+							match s {
+								[] => true,
+								['κ', s @ ..] => {
+									super::push(out, 6955);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['γ', s @ ..] => {
+							super::push(out, 6094);
+							s.is_empty()
+						}
+						['ε', s @ ..] => {
+							super::push(out, 6095);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['λ', s @ ..] => {
+			super::push(out, 2180);
+			match s {
+				[] => true,
+				['ε', s @ ..] => {
+					super::push(out, 4400);
+					match s {
+						[] => true,
+						['δ', s @ ..] => {
+							super::push(out, 6096);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['μ', s @ ..] => {
+			super::push(out, 2181);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4401);
+					match s {
+						[] => true,
+						['ῥ', s @ ..] => {
+							super::push(out, 6097);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6956);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ι', s @ ..] => {
+					super::push(out, 4402);
+					match s {
+						[] => true,
+						['λ', s @ ..] => {
+							super::push(out, 6098);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => {
+					super::push(out, 4403);
+					match s {
+						[] => true,
+						['π', s @ ..] => {
+							super::push(out, 6099);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['υ', s @ ..] => {
+					super::push(out, 4404);
+					match s {
+						[] => true,
+						['ν', s @ ..] => {
+							super::push(out, 6100);
+							match s {
+								[] => true,
+								['α', s @ ..] => {
+									super::push(out, 6957);
+									match s {
+										[] => true,
+										['ρ', s @ ..] => {
+											super::push(out, 7284);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ο', s @ ..] => {
+			super::push(out, 2182);
+			match s {
+				[] => true,
+				['ρ', s @ ..] => {
+					super::push(out, 4405);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 6101);
+							s.is_empty()
+						}
+						['τ', s @ ..] => {
+							super::push(out, 6102);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['σ', s @ ..] => {
+					super::push(out, 4406);
+					match s {
+						[] => true,
+						['ο', s @ ..] => {
+							super::push(out, 6103);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ρ', s @ ..] => {
+			super::push(out, 2183);
+			match s {
+				[] => true,
+				['α', s @ ..] => {
+					super::push(out, 4407);
+					match s {
+						[] => true,
+						['κ', s @ ..] => {
+							super::push(out, 6104);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 6958);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ε', s @ ..] => {
+					super::push(out, 4408);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 6105);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['σ', s @ ..] => {
+			super::push(out, 2184);
+			match s {
+				[] => true,
+				['ο', s @ ..] => {
+					super::push(out, 4409);
+					match s {
+						[] => true,
+						['ρ', s @ ..] => {
+							super::push(out, 6106);
+							match s {
+								[] => true,
+								['γ', s @ ..] => {
+									super::push(out, 6959);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['υ', s @ ..] => {
+			super::push(out, 2185);
+			match s {
+				[] => true,
+				['κ', s @ ..] => {
+					super::push(out, 4410);
+					match s {
+						[] => true,
+						['σ', s @ ..] => {
+							super::push(out, 6107);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['λ', s @ ..] => {
+					super::push(out, 4411);
+					match s {
+						[] => true,
+						['γ', s @ ..] => {
+							super::push(out, 6108);
+							match s {
+								[] => true,
+								['ι', s @ ..] => {
+									super::push(out, 6960);
+									match s {
+										[] => true,
+										['ρ', s @ ..] => {
+											super::push(out, 7285);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['ο', s @ ..] => {
+									super::push(out, 6961);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ε', s @ ..] => {
+							super::push(out, 6109);
+							match s {
+								[] => true,
+								['κ', s @ ..] => super::t2::n7003(s, out),
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ο', s @ ..] => super::t2::n4441(s, out),
+				['ρ', s @ ..] => super::t2::n4442(s, out),
+				['σ', s @ ..] => super::t2::n4443(s, out),
+				['τ', s @ ..] => {
+					super::push(out, 4415);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 

@@ -4,7 +4,7 @@ use flexion::{Class, Stress};
 pub(crate) static ITEMS: [ClassDef; 9] = [
     // 0: like δεκατεσσαρες
     ClassDef { class: Class { strip: "ατεσσαρεσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [0] },
-    // 1: like δευτερος
+    // 1: like εἱς
     ClassDef { class: Class { strip: "", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1] },
     // 2: like διακοσιοι
     ClassDef { class: Class { strip: "ιακοσιοι", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2] },

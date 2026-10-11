@@ -2,159 +2,159 @@ use super::super::ClassDef;
 use flexion::{Class, Stress};
 
 pub(crate) static ITEMS: [ClassDef; 6462] = [
-    // 0: like abacinandus
+    // 0: like exos
     ClassDef { class: Class { strip: "", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [0] },
-    // 1: like abacinans
+    // 1: like dans
     ClassDef { class: Class { strip: "ans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1] },
-    // 2: like abacinaturus
+    // 2: like faturus
     ClassDef { class: Class { strip: "aturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2] },
-    // 3: like abacinatus
+    // 3: like fatus
     ClassDef { class: Class { strip: "atus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3] },
-    // 4: like abacinus
+    // 4: like aninus
     ClassDef { class: Class { strip: "inus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4] },
     // 5: like abactius
     ClassDef { class: Class { strip: "actius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5] },
-    // 6: like abacturus
+    // 6: like acturus
     ClassDef { class: Class { strip: "acturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [6] },
-    // 7: like abactus
+    // 7: like actus
     ClassDef { class: Class { strip: "actus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [7] },
     // 8: like abaetens
     ClassDef { class: Class { strip: "abaetens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [8] },
-    // 9: like abalienandus
+    // 9: like cenandus
     ClassDef { class: Class { strip: "enandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [9] },
-    // 10: like abalienans
+    // 10: like cenans
     ClassDef { class: Class { strip: "enans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [10] },
-    // 11: like abalienaturus
+    // 11: like enaturus
     ClassDef { class: Class { strip: "enaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [11] },
-    // 12: like abalienatus
+    // 12: like enatus
     ClassDef { class: Class { strip: "enatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [12] },
-    // 13: like abanteus
+    // 13: like aegeus
     ClassDef { class: Class { strip: "eus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [13] },
-    // 14: like abarcens
+    // 14: like ens
     ClassDef { class: Class { strip: "ens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [14] },
-    // 15: like abaritanus
+    // 15: like canus
     ClassDef { class: Class { strip: "anus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [15] },
     // 16: like abbatialis
     ClassDef { class: Class { strip: "atialis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [16] },
     // 17: like abbatizans
     ClassDef { class: Class { strip: "atizans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [17] },
-    // 18: like abbreviatellus
+    // 18: like striatellus
     ClassDef { class: Class { strip: "atellus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [18] },
-    // 19: like abbreviatulus
+    // 19: like beatulus
     ClassDef { class: Class { strip: "atulus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [19] },
     // 20: like abderitanus
     ClassDef { class: Class { strip: "eritanus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [20] },
-    // 21: like abdicativus
+    // 21: like nativus
     ClassDef { class: Class { strip: "ativus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [21] },
-    // 22: like abdicatorius
+    // 22: like amatorius
     ClassDef { class: Class { strip: "atorius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [22] },
-    // 23: like abdicendus
+    // 23: like icendus
     ClassDef { class: Class { strip: "icendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [23] },
-    // 24: like abdicens
+    // 24: like icens
     ClassDef { class: Class { strip: "icens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [24] },
-    // 25: like abdicturus
+    // 25: like durus
     ClassDef { class: Class { strip: "urus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [25] },
-    // 26: like abdicundus
+    // 26: like dicundus
     ClassDef { class: Class { strip: "icundus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [26] },
-    // 27: like abditivus
+    // 27: like divus
     ClassDef { class: Class { strip: "ivus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [27] },
-    // 28: like abdominalis
+    // 28: like nominalis
     ClassDef { class: Class { strip: "ominalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [28] },
-    // 29: like abducendus
+    // 29: like ducendus
     ClassDef { class: Class { strip: "ucendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [29] },
-    // 30: like abducens
+    // 30: like ducens
     ClassDef { class: Class { strip: "ucens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [30] },
-    // 31: like abductorius
+    // 31: like uxorius
     ClassDef { class: Class { strip: "orius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [31] },
-    // 32: like abducundus
+    // 32: like ducundus
     ClassDef { class: Class { strip: "ucundus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [32] },
-    // 33: like abecedarius
+    // 33: like larius
     ClassDef { class: Class { strip: "arius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [33] },
-    // 34: like aberdeenensis
+    // 34: like ajoensis
     ClassDef { class: Class { strip: "ensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [34] },
-    // 35: like abexcommunicatus
+    // 35: like communicatus
     ClassDef { class: Class { strip: "unicatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [35] },
-    // 36: like abhorrescens
+    // 36: like vescens
     ClassDef { class: Class { strip: "escens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [36] },
     // 37: like abiegnus
     ClassDef { class: Class { strip: "egnus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [37] },
-    // 38: like abilenus
+    // 38: like aenus
     ClassDef { class: Class { strip: "enus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [38] },
     // 39: like abitens
     ClassDef { class: Class { strip: "abitens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [39] },
-    // 40: like abiudicandus
+    // 40: like iudicandus
     ClassDef { class: Class { strip: "udicandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [40] },
-    // 41: like abiudicans
+    // 41: like iudicans
     ClassDef { class: Class { strip: "udicans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [41] },
-    // 42: like abiudicativus
+    // 42: like iudicativus
     ClassDef { class: Class { strip: "udicativus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [42] },
-    // 43: like abiudicaturus
+    // 43: like iudicaturus
     ClassDef { class: Class { strip: "udicaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [43] },
-    // 44: like abiudicatus
+    // 44: like iudicatus
     ClassDef { class: Class { strip: "udicatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [44] },
-    // 45: like abjuncturus
+    // 45: like uncturus
     ClassDef { class: Class { strip: "uncturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [45] },
-    // 46: like abiunctus
+    // 46: like unctus
     ClassDef { class: Class { strip: "unctus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [46] },
-    // 47: like abiurandus
+    // 47: like curandus
     ClassDef { class: Class { strip: "urandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [47] },
-    // 48: like abiurans
+    // 48: like curans
     ClassDef { class: Class { strip: "urans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [48] },
-    // 49: like abiuraturus
+    // 49: like curaturus
     ClassDef { class: Class { strip: "uraturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [49] },
-    // 50: like abiuratus
+    // 50: like curatus
     ClassDef { class: Class { strip: "uratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [50] },
-    // 51: like abiurgandus
+    // 51: like iurgandus
     ClassDef { class: Class { strip: "urgandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [51] },
-    // 52: like abiurgans
+    // 52: like iurgans
     ClassDef { class: Class { strip: "urgans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [52] },
-    // 53: like abiurgaturus
+    // 53: like iurgaturus
     ClassDef { class: Class { strip: "urgaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [53] },
-    // 54: like abiurgatus
+    // 54: like iurgatus
     ClassDef { class: Class { strip: "urgatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [54] },
-    // 55: like ablegandus
+    // 55: like legandus
     ClassDef { class: Class { strip: "egandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [55] },
-    // 56: like ablegans
+    // 56: like legans
     ClassDef { class: Class { strip: "egans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [56] },
-    // 57: like ablegaturus
+    // 57: like legaturus
     ClassDef { class: Class { strip: "egaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [57] },
-    // 58: like ablegatus
+    // 58: like legatus
     ClassDef { class: Class { strip: "egatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [58] },
-    // 59: like abliguriendus
+    // 59: like liguriendus
     ClassDef { class: Class { strip: "uriendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [59] },
-    // 60: like abliguriens
+    // 60: like pruriens
     ClassDef { class: Class { strip: "uriens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [60] },
-    // 61: like abliguriturus
+    // 61: like liguriturus
     ClassDef { class: Class { strip: "uriturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [61] },
-    // 62: like abliguritus
+    // 62: like liguritus
     ClassDef { class: Class { strip: "uritus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [62] },
     // 63: like abliguriundus
     ClassDef { class: Class { strip: "uriundus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [63] },
-    // 64: like abligurriturus
+    // 64: like sciturus
     ClassDef { class: Class { strip: "iturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [64] },
-    // 65: like abligurritus
+    // 65: like avitus
     ClassDef { class: Class { strip: "itus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [65] },
-    // 66: like abludens
+    // 66: like cudens
     ClassDef { class: Class { strip: "udens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [66] },
     // 67: like ablutivus
     ClassDef { class: Class { strip: "utivus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [67] },
-    // 68: like abluturus
+    // 68: like iuturus
     ClassDef { class: Class { strip: "uturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [68] },
-    // 69: like ablutus
+    // 69: like iutus
     ClassDef { class: Class { strip: "utus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [69] },
-    // 70: like abnodandus
+    // 70: like nodandus
     ClassDef { class: Class { strip: "odandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [70] },
-    // 71: like abnodans
+    // 71: like nodans
     ClassDef { class: Class { strip: "odans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [71] },
-    // 72: like abnodaturus
+    // 72: like nodaturus
     ClassDef { class: Class { strip: "odaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [72] },
-    // 73: like abnodatus
+    // 73: like nodatus
     ClassDef { class: Class { strip: "odatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [73] },
     // 74: like abnormis
     ClassDef { class: Class { strip: "ormis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [74] },
-    // 75: like abnutans
+    // 75: like mutans
     ClassDef { class: Class { strip: "utans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [75] },
-    // 76: like abnutaturus
+    // 76: like mutaturus
     ClassDef { class: Class { strip: "utaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [76] },
     // 77: like abolefaciendus
     ClassDef { class: Class { strip: "efaciendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [77] },
@@ -164,169 +164,169 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "efaciundus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [79] },
     // 80: like abolefacturus
     ClassDef { class: Class { strip: "efacturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [80] },
-    // 81: like abolefactus
+    // 81: like defactus
     ClassDef { class: Class { strip: "efactus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [81] },
-    // 82: like abominabilis
+    // 82: like nominabilis
     ClassDef { class: Class { strip: "ominabilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [82] },
-    // 83: like abominandus
+    // 83: like ominandus
     ClassDef { class: Class { strip: "ominandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [83] },
-    // 84: like abominans
+    // 84: like ominans
     ClassDef { class: Class { strip: "ominans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [84] },
-    // 85: like abominaturus
+    // 85: like ominaturus
     ClassDef { class: Class { strip: "ominaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [85] },
-    // 86: like abominatus
+    // 86: like ominatus
     ClassDef { class: Class { strip: "ominatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [86] },
-    // 87: like abominosus
+    // 87: like ominosus
     ClassDef { class: Class { strip: "ominosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [87] },
-    // 88: like aborigineus
+    // 88: like aurigineus
     ClassDef { class: Class { strip: "igineus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [88] },
-    // 89: like aboriscendus
+    // 89: like hiscendus
     ClassDef { class: Class { strip: "iscendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [89] },
-    // 90: like aboriscens
+    // 90: like hiscens
     ClassDef { class: Class { strip: "iscens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [90] },
-    // 91: like abradendus
+    // 91: like radendus
     ClassDef { class: Class { strip: "adendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [91] },
-    // 92: like abradens
+    // 92: like radens
     ClassDef { class: Class { strip: "adens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [92] },
-    // 93: like abrasurus
+    // 93: like casurus
     ClassDef { class: Class { strip: "asurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [93] },
-    // 94: like abrasus
+    // 94: like rasus
     ClassDef { class: Class { strip: "asus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [94] },
-    // 95: like abrenuntians
+    // 95: like nuntians
     ClassDef { class: Class { strip: "untians", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [95] },
-    // 96: like abrodendus
+    // 96: like rodendus
     ClassDef { class: Class { strip: "odendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [96] },
-    // 97: like abrodens
+    // 97: like rodens
     ClassDef { class: Class { strip: "odens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [97] },
     // 98: like abronius
     ClassDef { class: Class { strip: "onius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [98] },
-    // 99: like abrosurus
+    // 99: like osurus
     ClassDef { class: Class { strip: "osurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [99] },
-    // 100: like abrosus
+    // 100: like osus
     ClassDef { class: Class { strip: "osus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [100] },
-    // 101: like abscedendus
+    // 101: like edendus
     ClassDef { class: Class { strip: "edendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [101] },
-    // 102: like abscedens
+    // 102: like edens
     ClassDef { class: Class { strip: "edens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [102] },
-    // 103: like abscedundus
+    // 103: like edundus
     ClassDef { class: Class { strip: "edundus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [103] },
-    // 104: like abscidendus
+    // 104: like didendus
     ClassDef { class: Class { strip: "idendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [104] },
-    // 105: like abscidens
+    // 105: like didens
     ClassDef { class: Class { strip: "idens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [105] },
-    // 106: like abscisurus
+    // 106: like fisurus
     ClassDef { class: Class { strip: "isurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [106] },
-    // 107: like abscisus
+    // 107: like fisus
     ClassDef { class: Class { strip: "isus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [107] },
-    // 108: like absconsus
+    // 108: like tonsus
     ClassDef { class: Class { strip: "onsus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [108] },
     // 109: like absidatus
     ClassDef { class: Class { strip: "idatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [109] },
-    // 110: like absolutissimus
+    // 110: like tutissimus
     ClassDef { class: Class { strip: "utissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [110] },
-    // 111: like absolutorius
+    // 111: like sutorius
     ClassDef { class: Class { strip: "utorius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [111] },
     // 112: like abstemius
     ClassDef { class: Class { strip: "emius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [112] },
-    // 113: like abstinax
+    // 113: like edax
     ClassDef { class: Class { strip: "ax", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [113] },
-    // 114: like abstrudendus
+    // 114: like cudendus
     ClassDef { class: Class { strip: "udendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [114] },
-    // 115: like abstrusior
+    // 115: like fusior
     ClassDef { class: Class { strip: "usior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [115] },
-    // 116: like abstrusurus
+    // 116: like usurus
     ClassDef { class: Class { strip: "usurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [116] },
-    // 117: like abstrusus
+    // 117: like usus
     ClassDef { class: Class { strip: "usus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [117] },
-    // 118: like absumendus
+    // 118: like sumendus
     ClassDef { class: Class { strip: "umendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [118] },
-    // 119: like absumens
+    // 119: like umens
     ClassDef { class: Class { strip: "umens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [119] },
-    // 120: like absumpturus
+    // 120: like sumpturus
     ClassDef { class: Class { strip: "umpturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [120] },
-    // 121: like absumptus
+    // 121: like sumptus
     ClassDef { class: Class { strip: "umptus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [121] },
-    // 122: like abundiflorus
+    // 122: like morus
     ClassDef { class: Class { strip: "orus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [122] },
     // 123: like abusivus
     ClassDef { class: Class { strip: "usivus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [123] },
-    // 124: like abutendus
+    // 124: like utendus
     ClassDef { class: Class { strip: "utendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [124] },
-    // 125: like abutens
+    // 125: like utens
     ClassDef { class: Class { strip: "utens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [125] },
     // 126: like abydenus
     ClassDef { class: Class { strip: "ydenus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [126] },
-    // 127: like abyssalis
+    // 127: like talis
     ClassDef { class: Class { strip: "alis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [127] },
     // 128: like acaciiformis
     ClassDef { class: Class { strip: "aciiformis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [128] },
     // 129: like acacioides
     ClassDef { class: Class { strip: "acioides", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [129] },
-    // 130: like academicus
+    // 130: like chemicus
     ClassDef { class: Class { strip: "emicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [130] },
-    // 131: like acalyphaceus
+    // 131: like fabaceus
     ClassDef { class: Class { strip: "aceus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [131] },
-    // 132: like acarnanicus
+    // 132: like danicus
     ClassDef { class: Class { strip: "anicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [132] },
-    // 133: like acceleratrix
+    // 133: like negatrix
     ClassDef { class: Class { strip: "atrix", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [133] },
-    // 134: like accensendus
+    // 134: like censendus
     ClassDef { class: Class { strip: "ensendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [134] },
-    // 135: like accensens
+    // 135: like censens
     ClassDef { class: Class { strip: "ensens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [135] },
-    // 136: like accensibilis
+    // 136: like sensibilis
     ClassDef { class: Class { strip: "ensibilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [136] },
-    // 137: like accensurus
+    // 137: like censurus
     ClassDef { class: Class { strip: "ensurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [137] },
-    // 138: like accensus
+    // 138: like census
     ClassDef { class: Class { strip: "ensus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [138] },
-    // 139: like acceptabilis
+    // 139: like labilis
     ClassDef { class: Class { strip: "abilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [139] },
     // 140: like accidentalis
     ClassDef { class: Class { strip: "entalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [140] },
     // 141: like accidundus
     ClassDef { class: Class { strip: "idundus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [141] },
-    // 142: like accincturus
+    // 142: like cincturus
     ClassDef { class: Class { strip: "incturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [142] },
-    // 143: like accinctus
+    // 143: like cinctus
     ClassDef { class: Class { strip: "inctus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [143] },
-    // 144: like acclamandus
+    // 144: like clamandus
     ClassDef { class: Class { strip: "amandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [144] },
-    // 145: like acclamans
+    // 145: like clamans
     ClassDef { class: Class { strip: "amans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [145] },
-    // 146: like acclamaturus
+    // 146: like clamaturus
     ClassDef { class: Class { strip: "amaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [146] },
-    // 147: like acclamatus
+    // 147: like hamatus
     ClassDef { class: Class { strip: "amatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [147] },
-    // 148: like acclarandus
+    // 148: like clarandus
     ClassDef { class: Class { strip: "arandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [148] },
-    // 149: like acclarans
+    // 149: like clarans
     ClassDef { class: Class { strip: "arans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [149] },
-    // 150: like acclaraturus
+    // 150: like claraturus
     ClassDef { class: Class { strip: "araturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [150] },
-    // 151: like acclaratus
+    // 151: like claratus
     ClassDef { class: Class { strip: "aratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [151] },
-    // 152: like acclinandus
+    // 152: like clinandus
     ClassDef { class: Class { strip: "inandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [152] },
-    // 153: like acclinans
+    // 153: like clinans
     ClassDef { class: Class { strip: "inans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [153] },
-    // 154: like acclinaturus
+    // 154: like clinaturus
     ClassDef { class: Class { strip: "inaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [154] },
-    // 155: like acclinatus
+    // 155: like clinatus
     ClassDef { class: Class { strip: "inatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [155] },
-    // 156: like acclinis
+    // 156: like adfinis
     ClassDef { class: Class { strip: "inis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [156] },
     // 157: like acclivis
     ClassDef { class: Class { strip: "ivis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [157] },
-    // 158: like accommodatior
+    // 158: like latior
     ClassDef { class: Class { strip: "atior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [158] },
-    // 159: like accommodatissimus
+    // 159: like latissimus
     ClassDef { class: Class { strip: "atissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [159] },
-    // 160: like accrescendus
+    // 160: like vescendus
     ClassDef { class: Class { strip: "escendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [160] },
-    // 161: like accreturus
+    // 161: like neturus
     ClassDef { class: Class { strip: "eturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [161] },
-    // 162: like accretus
+    // 162: like fetus
     ClassDef { class: Class { strip: "etus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [162] },
     // 163: like accuratior
     ClassDef { class: Class { strip: "uratior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [163] },
@@ -344,13 +344,13 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "usaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [169] },
     // 170: like accusatus
     ClassDef { class: Class { strip: "usatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [170] },
-    // 171: like accusitandus
+    // 171: like usitandus
     ClassDef { class: Class { strip: "usitandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [171] },
-    // 172: like accusitans
+    // 172: like usitans
     ClassDef { class: Class { strip: "usitans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [172] },
-    // 173: like accusitaturus
+    // 173: like usitaturus
     ClassDef { class: Class { strip: "usitaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [173] },
-    // 174: like accusitatus
+    // 174: like usitatus
     ClassDef { class: Class { strip: "usitatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [174] },
     // 175: like accussandus
     ClassDef { class: Class { strip: "ussandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [175] },
@@ -372,7 +372,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "acer", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [183] },
     // 184: like acerrimus
     ClassDef { class: Class { strip: "acerrimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [184] },
-    // 185: like acerus
+    // 185: like serus
     ClassDef { class: Class { strip: "erus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [185] },
     // 186: like acetabularis
     ClassDef { class: Class { strip: "etabularis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [186] },
@@ -380,21 +380,21 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "etabuliformis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [187] },
     // 188: like acetabulosus
     ClassDef { class: Class { strip: "etabulosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [188] },
-    // 189: like acetosus
+    // 189: like fetosus
     ClassDef { class: Class { strip: "etosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [189] },
-    // 190: like achaicus
+    // 190: like laicus
     ClassDef { class: Class { strip: "aicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [190] },
-    // 191: like achatinus
+    // 191: like reatinus
     ClassDef { class: Class { strip: "atinus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [191] },
-    // 192: like acheloius
+    // 192: like troius
     ClassDef { class: Class { strip: "oius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [192] },
-    // 193: like acherusius
+    // 193: like maurusius
     ClassDef { class: Class { strip: "usius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [193] },
     // 194: like achilleifolius
     ClassDef { class: Class { strip: "eifolius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [194] },
     // 195: like achromians
     ClassDef { class: Class { strip: "omians", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [195] },
-    // 196: like acicularis
+    // 196: like gularis
     ClassDef { class: Class { strip: "aris", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [196] },
     // 197: like acidalius
     ClassDef { class: Class { strip: "alius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [197] },
@@ -406,9 +406,9 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "inaceus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [200] },
     // 201: like acinaciformis
     ClassDef { class: Class { strip: "naciformis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [201] },
-    // 202: like acmonensis
+    // 202: like ionensis
     ClassDef { class: Class { strip: "onensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [202] },
-    // 203: like acoroides
+    // 203: like monoides
     ClassDef { class: Class { strip: "ides", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [203] },
     // 204: like acquirendus
     ClassDef { class: Class { strip: "irendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [204] },
@@ -434,15 +434,15 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "acrisioneus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [214] },
     // 215: like acrissimus
     ClassDef { class: Class { strip: "acrissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [215] },
-    // 216: like acroconus
+    // 216: like pronus
     ClassDef { class: Class { strip: "onus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [216] },
     // 217: like acrocyaneus
     ClassDef { class: Class { strip: "ocyaneus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [217] },
-    // 218: like acroglossus
+    // 218: like hyoglossus
     ClassDef { class: Class { strip: "ossus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [218] },
-    // 219: like acronematicus
+    // 219: like mathematicus
     ClassDef { class: Class { strip: "ematicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [219] },
-    // 220: like acrozymus
+    // 220: like azymus
     ClassDef { class: Class { strip: "ymus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [220] },
     // 221: like acrus
     ClassDef { class: Class { strip: "acrus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [221] },
@@ -476,27 +476,27 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "uleatiflorus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [235] },
     // 236: like aculeatissimus
     ClassDef { class: Class { strip: "uleatissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [236] },
-    // 237: like acuminandus
+    // 237: like luminandus
     ClassDef { class: Class { strip: "uminandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [237] },
-    // 238: like acuminans
+    // 238: like luminans
     ClassDef { class: Class { strip: "uminans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [238] },
     // 239: like acuminatissimus
     ClassDef { class: Class { strip: "uminatissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [239] },
-    // 240: like acuminaturus
+    // 240: like luminaturus
     ClassDef { class: Class { strip: "uminaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [240] },
-    // 241: like acuminatus
+    // 241: like luminatus
     ClassDef { class: Class { strip: "uminatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [241] },
-    // 242: like acuminosus
+    // 242: like luminosus
     ClassDef { class: Class { strip: "uminosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [242] },
     // 243: like acupedius
     ClassDef { class: Class { strip: "upedius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [243] },
-    // 244: like acusticus
+    // 244: like rusticus
     ClassDef { class: Class { strip: "usticus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [244] },
     // 245: like acutalis
     ClassDef { class: Class { strip: "utalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [245] },
     // 246: like acutangulus
     ClassDef { class: Class { strip: "utangulus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [246] },
-    // 247: like acutatus
+    // 247: like mutatus
     ClassDef { class: Class { strip: "utatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [247] },
     // 248: like acuticarpus
     ClassDef { class: Class { strip: "uticarpus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [248] },
@@ -516,7 +516,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "utiglumus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [255] },
     // 256: like acutilobus
     ClassDef { class: Class { strip: "utilobus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [256] },
-    // 257: like acutior
+    // 257: like tutior
     ClassDef { class: Class { strip: "utior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [257] },
     // 258: like acutipennis
     ClassDef { class: Class { strip: "utipennis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [258] },
@@ -534,19 +534,19 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "utivalvis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [264] },
     // 265: like acutulus
     ClassDef { class: Class { strip: "utulus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [265] },
-    // 266: like adbitens
+    // 266: like nitens
     ClassDef { class: Class { strip: "itens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [266] },
-    // 267: like addensandus
+    // 267: like densandus
     ClassDef { class: Class { strip: "ensandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [267] },
-    // 268: like addensans
+    // 268: like densans
     ClassDef { class: Class { strip: "ensans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [268] },
-    // 269: like addensaturus
+    // 269: like densaturus
     ClassDef { class: Class { strip: "ensaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [269] },
-    // 270: like addensatus
+    // 270: like densatus
     ClassDef { class: Class { strip: "ensatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [270] },
-    // 271: like adempturus
+    // 271: like empturus
     ClassDef { class: Class { strip: "empturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [271] },
-    // 272: like ademptus
+    // 272: like emptus
     ClassDef { class: Class { strip: "emptus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [272] },
     // 273: like adescandus
     ClassDef { class: Class { strip: "escandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [273] },
@@ -556,19 +556,19 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "escaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [275] },
     // 276: like adescatus
     ClassDef { class: Class { strip: "escatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [276] },
-    // 277: like adesuriens
+    // 277: like esuriens
     ClassDef { class: Class { strip: "esuriens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [277] },
-    // 278: like adesurus
+    // 278: like esurus
     ClassDef { class: Class { strip: "esurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [278] },
-    // 279: like adesus
+    // 279: like esus
     ClassDef { class: Class { strip: "esus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [279] },
-    // 280: like adfigendus
+    // 280: like figendus
     ClassDef { class: Class { strip: "igendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [280] },
-    // 281: like adfigens
+    // 281: like figens
     ClassDef { class: Class { strip: "igens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [281] },
-    // 282: like adfixurus
+    // 282: like fixurus
     ClassDef { class: Class { strip: "ixurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [282] },
-    // 283: like adfixus
+    // 283: like fixus
     ClassDef { class: Class { strip: "ixus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [283] },
     // 284: like adflictandus
     ClassDef { class: Class { strip: "ictandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [284] },
@@ -578,231 +578,231 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ictaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [286] },
     // 287: like adflictatus
     ClassDef { class: Class { strip: "ictatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [287] },
-    // 288: like adflicturus
+    // 288: like icturus
     ClassDef { class: Class { strip: "icturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [288] },
-    // 289: like adflictus
+    // 289: like fictus
     ClassDef { class: Class { strip: "ictus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [289] },
-    // 290: like adfluxurus
+    // 290: like fluxurus
     ClassDef { class: Class { strip: "uxurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [290] },
-    // 291: like adgavisurus
+    // 291: like gavisurus
     ClassDef { class: Class { strip: "avisurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [291] },
-    // 292: like adgavisus
+    // 292: like gavisus
     ClassDef { class: Class { strip: "avisus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [292] },
-    // 293: like adglutinandus
+    // 293: like glutinandus
     ClassDef { class: Class { strip: "utinandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [293] },
-    // 294: like adglutinans
+    // 294: like glutinans
     ClassDef { class: Class { strip: "utinans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [294] },
-    // 295: like adglutinaturus
+    // 295: like glutinaturus
     ClassDef { class: Class { strip: "utinaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [295] },
-    // 296: like adglutinatus
+    // 296: like glutinatus
     ClassDef { class: Class { strip: "utinatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [296] },
-    // 297: like adgnoscendus
+    // 297: like noscendus
     ClassDef { class: Class { strip: "oscendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [297] },
-    // 298: like adgnoscens
+    // 298: like noscens
     ClassDef { class: Class { strip: "oscens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [298] },
-    // 299: like adhalandus
+    // 299: like halandus
     ClassDef { class: Class { strip: "alandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [299] },
-    // 300: like adhalans
+    // 300: like balans
     ClassDef { class: Class { strip: "alans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [300] },
-    // 301: like adhalaturus
+    // 301: like balaturus
     ClassDef { class: Class { strip: "alaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [301] },
-    // 302: like adhalatus
+    // 302: like alatus
     ClassDef { class: Class { strip: "alatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [302] },
-    // 303: like adherendus
+    // 303: like herendus
     ClassDef { class: Class { strip: "erendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [303] },
-    // 304: like adherens
+    // 304: like herens
     ClassDef { class: Class { strip: "erens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [304] },
     // 305: like adherescens
     ClassDef { class: Class { strip: "erescens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [305] },
-    // 306: like adiecticius
+    // 306: like novicius
     ClassDef { class: Class { strip: "icius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [306] },
-    // 307: like adiectivalis
+    // 307: like rivalis
     ClassDef { class: Class { strip: "ivalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [307] },
-    // 308: like adinspectandus
+    // 308: like inspectandus
     ClassDef { class: Class { strip: "inspectandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [308] },
-    // 309: like adinspectans
+    // 309: like inspectans
     ClassDef { class: Class { strip: "inspectans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [309] },
-    // 310: like adinspectaturus
+    // 310: like inspectaturus
     ClassDef { class: Class { strip: "inspectaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [310] },
-    // 311: like adinspectatus
+    // 311: like inspectatus
     ClassDef { class: Class { strip: "inspectatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [311] },
-    // 312: like adiunctior
+    // 312: like unctior
     ClassDef { class: Class { strip: "unctior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [312] },
     // 313: like adiunctivus
     ClassDef { class: Class { strip: "unctivus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [313] },
-    // 314: like adiuratorius
+    // 314: like iuratorius
     ClassDef { class: Class { strip: "uratorius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [314] },
-    // 315: like adiutabilis
+    // 315: like mutabilis
     ClassDef { class: Class { strip: "utabilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [315] },
-    // 316: like adiutandus
+    // 316: like mutandus
     ClassDef { class: Class { strip: "utandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [316] },
-    // 317: like adlaborandus
+    // 317: like orandus
     ClassDef { class: Class { strip: "orandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [317] },
-    // 318: like adlaborans
+    // 318: like orans
     ClassDef { class: Class { strip: "orans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [318] },
-    // 319: like adlaboraturus
+    // 319: like oraturus
     ClassDef { class: Class { strip: "oraturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [319] },
-    // 320: like adlaboratus
+    // 320: like oratus
     ClassDef { class: Class { strip: "oratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [320] },
-    // 321: like adlatrandus
+    // 321: like latrandus
     ClassDef { class: Class { strip: "atrandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [321] },
-    // 322: like adlatrans
+    // 322: like latrans
     ClassDef { class: Class { strip: "atrans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [322] },
-    // 323: like adlatraturus
+    // 323: like latraturus
     ClassDef { class: Class { strip: "atraturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [323] },
-    // 324: like adlatratus
+    // 324: like atratus
     ClassDef { class: Class { strip: "atratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [324] },
-    // 325: like adlecturus
+    // 325: like lecturus
     ClassDef { class: Class { strip: "ecturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [325] },
-    // 326: like adlectus
+    // 326: like lectus
     ClassDef { class: Class { strip: "ectus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [326] },
     // 327: like adlevandus
     ClassDef { class: Class { strip: "evandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [327] },
-    // 328: like adlevans
+    // 328: like levans
     ClassDef { class: Class { strip: "evans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [328] },
-    // 329: like adlevaturus
+    // 329: like levaturus
     ClassDef { class: Class { strip: "evaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [329] },
-    // 330: like adlevatus
+    // 330: like levatus
     ClassDef { class: Class { strip: "evatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [330] },
-    // 331: like adluctandus
+    // 331: like luctandus
     ClassDef { class: Class { strip: "uctandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [331] },
-    // 332: like adluctans
+    // 332: like luctans
     ClassDef { class: Class { strip: "uctans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [332] },
-    // 333: like adluctaturus
+    // 333: like luctaturus
     ClassDef { class: Class { strip: "uctaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [333] },
-    // 334: like adluctatus
+    // 334: like luctatus
     ClassDef { class: Class { strip: "uctatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [334] },
-    // 335: like admaturandus
+    // 335: like maturandus
     ClassDef { class: Class { strip: "aturandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [335] },
-    // 336: like admaturans
+    // 336: like maturans
     ClassDef { class: Class { strip: "aturans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [336] },
-    // 337: like admaturaturus
+    // 337: like maturaturus
     ClassDef { class: Class { strip: "aturaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [337] },
-    // 338: like admaturatus
+    // 338: like maturatus
     ClassDef { class: Class { strip: "aturatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [338] },
-    // 339: like admetiendus
+    // 339: like metiendus
     ClassDef { class: Class { strip: "etiendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [339] },
-    // 340: like admetiens
+    // 340: like metiens
     ClassDef { class: Class { strip: "etiens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [340] },
-    // 341: like adminiculabundus
+    // 341: like labundus
     ClassDef { class: Class { strip: "abundus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [341] },
     // 342: like admirabilior
     ClassDef { class: Class { strip: "irabilior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [342] },
-    // 343: like admirabilis
+    // 343: like mirabilis
     ClassDef { class: Class { strip: "irabilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [343] },
-    // 344: like admirandus
+    // 344: like mirandus
     ClassDef { class: Class { strip: "irandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [344] },
-    // 345: like admirans
+    // 345: like mirans
     ClassDef { class: Class { strip: "irans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [345] },
-    // 346: like admiraturus
+    // 346: like iraturus
     ClassDef { class: Class { strip: "iraturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [346] },
-    // 347: like admiratus
+    // 347: like iratus
     ClassDef { class: Class { strip: "iratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [347] },
-    // 348: like admoturus
+    // 348: like foturus
     ClassDef { class: Class { strip: "oturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [348] },
-    // 349: like admotus
+    // 349: like fotus
     ClassDef { class: Class { strip: "otus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [349] },
-    // 350: like adnavigans
+    // 350: like navigans
     ClassDef { class: Class { strip: "avigans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [350] },
-    // 351: like adnavigaturus
+    // 351: like navigaturus
     ClassDef { class: Class { strip: "avigaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [351] },
-    // 352: like adnitendus
+    // 352: like nitendus
     ClassDef { class: Class { strip: "itendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [352] },
     // 353: like adnullans
     ClassDef { class: Class { strip: "ullans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [353] },
-    // 354: like adnuntiandus
+    // 354: like nuntiandus
     ClassDef { class: Class { strip: "untiandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [354] },
-    // 355: like adnuntiaturus
+    // 355: like nuntiaturus
     ClassDef { class: Class { strip: "untiaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [355] },
-    // 356: like adnuntiatus
+    // 356: like nuntiatus
     ClassDef { class: Class { strip: "untiatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [356] },
-    // 357: like adnutriendus
+    // 357: like nutriendus
     ClassDef { class: Class { strip: "utriendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [357] },
-    // 358: like adnutriens
+    // 358: like nutriens
     ClassDef { class: Class { strip: "utriens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [358] },
     // 359: like adorabilis
     ClassDef { class: Class { strip: "orabilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [359] },
-    // 360: like adordinandus
+    // 360: like ordinandus
     ClassDef { class: Class { strip: "ordinandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [360] },
-    // 361: like adordinans
+    // 361: like ordinans
     ClassDef { class: Class { strip: "ordinans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [361] },
-    // 362: like adordinaturus
+    // 362: like ordinaturus
     ClassDef { class: Class { strip: "ordinaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [362] },
-    // 363: like adordinatus
+    // 363: like ordinatus
     ClassDef { class: Class { strip: "ordinatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [363] },
     // 364: like adoreus
     ClassDef { class: Class { strip: "oreus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [364] },
-    // 365: like adornandus
+    // 365: like ornandus
     ClassDef { class: Class { strip: "ornandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [365] },
-    // 366: like adornans
+    // 366: like ornans
     ClassDef { class: Class { strip: "ornans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [366] },
-    // 367: like adornaturus
+    // 367: like ornaturus
     ClassDef { class: Class { strip: "ornaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [367] },
-    // 368: like adornatus
+    // 368: like ornatus
     ClassDef { class: Class { strip: "ornatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [368] },
-    // 369: like adosculandus
+    // 369: like osculandus
     ClassDef { class: Class { strip: "osculandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [369] },
-    // 370: like adosculans
+    // 370: like osculans
     ClassDef { class: Class { strip: "osculans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [370] },
-    // 371: like adosculaturus
+    // 371: like osculaturus
     ClassDef { class: Class { strip: "osculaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [371] },
-    // 372: like adosculatus
+    // 372: like osculatus
     ClassDef { class: Class { strip: "osculatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [372] },
-    // 373: like adparendus
+    // 373: like parendus
     ClassDef { class: Class { strip: "arendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [373] },
-    // 374: like adparens
+    // 374: like arens
     ClassDef { class: Class { strip: "arens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [374] },
-    // 375: like adpariturus
+    // 375: like pariturus
     ClassDef { class: Class { strip: "ariturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [375] },
     // 376: like adparitus
     ClassDef { class: Class { strip: "aritus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [376] },
-    // 377: like adpetibilis
+    // 377: like audibilis
     ClassDef { class: Class { strip: "ibilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [377] },
-    // 378: like adponendus
+    // 378: like ponendus
     ClassDef { class: Class { strip: "onendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [378] },
-    // 379: like adponens
+    // 379: like ponens
     ClassDef { class: Class { strip: "onens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [379] },
-    // 380: like adpronandus
+    // 380: like conandus
     ClassDef { class: Class { strip: "onandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [380] },
-    // 381: like adpronans
+    // 381: like conans
     ClassDef { class: Class { strip: "onans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [381] },
-    // 382: like adpronaturus
+    // 382: like conaturus
     ClassDef { class: Class { strip: "onaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [382] },
-    // 383: like adpronatus
+    // 383: like conatus
     ClassDef { class: Class { strip: "onatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [383] },
-    // 384: like adremigans
+    // 384: like remigans
     ClassDef { class: Class { strip: "emigans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [384] },
-    // 385: like adrepens
+    // 385: like repens
     ClassDef { class: Class { strip: "epens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [385] },
-    // 386: like adscribendus
+    // 386: like scribendus
     ClassDef { class: Class { strip: "ibendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [386] },
-    // 387: like adscribens
+    // 387: like scribens
     ClassDef { class: Class { strip: "ibens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [387] },
-    // 388: like adscripturus
+    // 388: like scripturus
     ClassDef { class: Class { strip: "ipturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [388] },
-    // 389: like adscriptus
+    // 389: like scriptus
     ClassDef { class: Class { strip: "iptus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [389] },
-    // 390: like adseverandus
+    // 390: like cerandus
     ClassDef { class: Class { strip: "erandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [390] },
-    // 391: like adseverans
+    // 391: like cerans
     ClassDef { class: Class { strip: "erans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [391] },
-    // 392: like adseveraturus
+    // 392: like ceraturus
     ClassDef { class: Class { strip: "eraturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [392] },
-    // 393: like adseveratus
+    // 393: like ceratus
     ClassDef { class: Class { strip: "eratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [393] },
-    // 394: like adsibilans
+    // 394: like sibilans
     ClassDef { class: Class { strip: "ibilans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [394] },
     // 395: like adsumptivus
     ClassDef { class: Class { strip: "umptivus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [395] },
-    // 396: like adtaminandus
+    // 396: like examinandus
     ClassDef { class: Class { strip: "aminandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [396] },
-    // 397: like adtaminans
+    // 397: like examinans
     ClassDef { class: Class { strip: "aminans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [397] },
-    // 398: like adtaminaturus
+    // 398: like examinaturus
     ClassDef { class: Class { strip: "aminaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [398] },
-    // 399: like adtaminatus
+    // 399: like examinatus
     ClassDef { class: Class { strip: "aminatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [399] },
-    // 400: like adtonsurus
+    // 400: like tonsurus
     ClassDef { class: Class { strip: "onsurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [400] },
     // 401: like adulandus
     ClassDef { class: Class { strip: "ulandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [401] },
@@ -824,43 +824,43 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "escentiatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [409] },
     // 410: like adulescentior
     ClassDef { class: Class { strip: "escentior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [410] },
-    // 411: like adunandus
+    // 411: like lunandus
     ClassDef { class: Class { strip: "unandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [411] },
-    // 412: like adunans
+    // 412: like lunans
     ClassDef { class: Class { strip: "unans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [412] },
-    // 413: like adunaturus
+    // 413: like lunaturus
     ClassDef { class: Class { strip: "unaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [413] },
-    // 414: like adunatus
+    // 414: like lunatus
     ClassDef { class: Class { strip: "unatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [414] },
-    // 415: like adurendus
+    // 415: like urendus
     ClassDef { class: Class { strip: "urendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [415] },
-    // 416: like adurens
+    // 416: like urens
     ClassDef { class: Class { strip: "urens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [416] },
-    // 417: like advelandus
+    // 417: like celandus
     ClassDef { class: Class { strip: "elandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [417] },
-    // 418: like advelans
+    // 418: like celans
     ClassDef { class: Class { strip: "elans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [418] },
-    // 419: like advelaturus
+    // 419: like elaturus
     ClassDef { class: Class { strip: "elaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [419] },
-    // 420: like advelatus
+    // 420: like elatus
     ClassDef { class: Class { strip: "elatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [420] },
-    // 421: like adventitius
+    // 421: like potitius
     ClassDef { class: Class { strip: "itius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [421] },
-    // 422: like advesperascens
+    // 422: like nascens
     ClassDef { class: Class { strip: "ascens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [422] },
-    // 423: like advivendus
+    // 423: like livendus
     ClassDef { class: Class { strip: "ivendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [423] },
-    // 424: like advivens
+    // 424: like livens
     ClassDef { class: Class { strip: "ivens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [424] },
     // 425: like aebutius
     ClassDef { class: Class { strip: "utius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [425] },
     // 426: like aedilicius
     ClassDef { class: Class { strip: "ilicius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [426] },
-    // 427: like aegrotans
+    // 427: like dotans
     ClassDef { class: Class { strip: "otans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [427] },
     // 428: like aegrotaticius
     ClassDef { class: Class { strip: "otaticius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [428] },
-    // 429: like aegrotaturus
+    // 429: like dotaturus
     ClassDef { class: Class { strip: "otaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [429] },
     // 430: like aenescens
     ClassDef { class: Class { strip: "enescens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [430] },
@@ -876,17 +876,17 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "atorialis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [435] },
     // 436: like aequatoriensis
     ClassDef { class: Class { strip: "atoriensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [436] },
-    // 437: like aequicrurius
+    // 437: like furius
     ClassDef { class: Class { strip: "urius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [437] },
-    // 438: like aequilibris
+    // 438: like bilibris
     ClassDef { class: Class { strip: "ibris", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [438] },
-    // 439: like aequipar
+    // 439: like par
     ClassDef { class: Class { strip: "ar", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [439] },
     // 440: like aeriformis
     ClassDef { class: Class { strip: "aeriformis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [440] },
     // 441: like aerinus
     ClassDef { class: Class { strip: "aerinus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [441] },
-    // 442: like aeripes
+    // 442: like bipes
     ClassDef { class: Class { strip: "es", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [442] },
     // 443: like aerius
     ClassDef { class: Class { strip: "aerius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [443] },
@@ -904,17 +904,17 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "uginaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [449] },
     // 450: like aeruginosus
     ClassDef { class: Class { strip: "uginosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [450] },
-    // 451: like aerumnosissimus
+    // 451: like morosissimus
     ClassDef { class: Class { strip: "osissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [451] },
     // 452: like aesopicus
     ClassDef { class: Class { strip: "opicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [452] },
-    // 453: like aestheticus
+    // 453: like creticus
     ClassDef { class: Class { strip: "eticus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [453] },
-    // 454: like aestivans
+    // 454: like rivans
     ClassDef { class: Class { strip: "ivans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [454] },
-    // 455: like aestivaturus
+    // 455: like rivaturus
     ClassDef { class: Class { strip: "ivaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [455] },
-    // 456: like aestuarianus
+    // 456: like vicarianus
     ClassDef { class: Class { strip: "arianus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [456] },
     // 457: like afarensis
     ClassDef { class: Class { strip: "afarensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [457] },
@@ -936,15 +936,15 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "afroasiaticus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [465] },
     // 466: like afuturus
     ClassDef { class: Class { strip: "afuturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [466] },
-    // 467: like agnascendus
+    // 467: like nascendus
     ClassDef { class: Class { strip: "ascendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [467] },
-    // 468: like agriculturalis
+    // 468: like muralis
     ClassDef { class: Class { strip: "uralis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [468] },
     // 469: like alaris
     ClassDef { class: Class { strip: "alaris", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [469] },
     // 470: like alarius
     ClassDef { class: Class { strip: "alarius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [470] },
-    // 471: like albipunctatus
+    // 471: like cunctatus
     ClassDef { class: Class { strip: "unctatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [471] },
     // 472: like albirostris
     ClassDef { class: Class { strip: "ostris", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [472] },
@@ -960,17 +960,17 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "aleatorius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [477] },
     // 478: like ales
     ClassDef { class: Class { strip: "ales", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [478] },
-    // 479: like aletrinas
+    // 479: like altinas
     ClassDef { class: Class { strip: "inas", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [479] },
-    // 480: like aletrinensis
+    // 480: like sinensis
     ClassDef { class: Class { strip: "inensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [480] },
     // 481: like alienigena
     ClassDef { class: Class { strip: "enigena", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [481] },
     // 482: like alienigenus
     ClassDef { class: Class { strip: "enigenus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [482] },
-    // 483: like alienior
+    // 483: like lenior
     ClassDef { class: Class { strip: "enior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [483] },
-    // 484: like alienissimus
+    // 484: like lenissimus
     ClassDef { class: Class { strip: "enissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [484] },
     // 485: like aliger
     ClassDef { class: Class { strip: "aliger", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [485] },
@@ -978,11 +978,11 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "alipes", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [486] },
     // 487: like allabendus
     ClassDef { class: Class { strip: "abendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [487] },
-    // 488: like allabens
+    // 488: like labens
     ClassDef { class: Class { strip: "abens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [488] },
-    // 489: like allapsurus
+    // 489: like lapsurus
     ClassDef { class: Class { strip: "apsurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [489] },
-    // 490: like allapsus
+    // 490: like lapsus
     ClassDef { class: Class { strip: "apsus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [490] },
     // 491: like allectivus
     ClassDef { class: Class { strip: "ectivus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [491] },
@@ -994,13 +994,13 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "odialis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [494] },
     // 495: like alpestrus
     ClassDef { class: Class { strip: "estrus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [495] },
-    // 496: like alpinalis
+    // 496: like finalis
     ClassDef { class: Class { strip: "inalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [496] },
-    // 497: like altispinosus
+    // 497: like vinosus
     ClassDef { class: Class { strip: "inosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [497] },
     // 498: like altithorax
     ClassDef { class: Class { strip: "orax", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [498] },
-    // 499: like altrix
+    // 499: like bilix
     ClassDef { class: Class { strip: "ix", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [499] },
     // 500: like alucinandus
     ClassDef { class: Class { strip: "alucinandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [500] },
@@ -1020,7 +1020,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "amandaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [507] },
     // 508: like amandatus
     ClassDef { class: Class { strip: "amandatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [508] },
-    // 509: like amarescens
+    // 509: like arescens
     ClassDef { class: Class { strip: "arescens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [509] },
     // 510: like amaricandus
     ClassDef { class: Class { strip: "aricandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [510] },
@@ -1030,13 +1030,13 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "aricaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [512] },
     // 513: like amaricatus
     ClassDef { class: Class { strip: "aricatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [513] },
-    // 514: like amarior
+    // 514: like carior
     ClassDef { class: Class { strip: "arior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [514] },
-    // 515: like amarissimus
+    // 515: like carissimus
     ClassDef { class: Class { strip: "arissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [515] },
     // 516: like amarulentus
     ClassDef { class: Class { strip: "arulentus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [516] },
-    // 517: like amarus
+    // 517: like carus
     ClassDef { class: Class { strip: "arus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [517] },
     // 518: like amazonensis
     ClassDef { class: Class { strip: "azonensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [518] },
@@ -1044,9 +1044,9 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "azonicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [519] },
     // 520: like ambagiosus
     ClassDef { class: Class { strip: "agiosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [520] },
-    // 521: like ambitiosior
+    // 521: like morosior
     ClassDef { class: Class { strip: "osior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [521] },
-    // 522: like ambulatilis
+    // 522: like aquatilis
     ClassDef { class: Class { strip: "atilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [522] },
     // 523: like amens
     ClassDef { class: Class { strip: "amens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [523] },
@@ -1062,7 +1062,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "amentior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [528] },
     // 529: like amentissimus
     ClassDef { class: Class { strip: "amentissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [529] },
-    // 530: like americanus
+    // 530: like vicanus
     ClassDef { class: Class { strip: "icanus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [530] },
     // 531: like amicabilis
     ClassDef { class: Class { strip: "icabilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [531] },
@@ -1112,7 +1112,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "amovens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [553] },
     // 554: like amphemerinos
     ClassDef { class: Class { strip: "emerinos", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [554] },
-    // 555: like anachoreticus
+    // 555: like theoreticus
     ClassDef { class: Class { strip: "oreticus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [555] },
     // 556: like analis
     ClassDef { class: Class { strip: "analis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [556] },
@@ -1126,27 +1126,27 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "anctus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [560] },
     // 561: like andecavensis
     ClassDef { class: Class { strip: "avensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [561] },
-    // 562: like aneponymus
+    // 562: like anonymus
     ClassDef { class: Class { strip: "onymus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [562] },
     // 563: like anfractuosus
     ClassDef { class: Class { strip: "anfractuosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [563] },
     // 564: like anfractus
     ClassDef { class: Class { strip: "anfractus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [564] },
-    // 565: like anglosaxonicus
+    // 565: like conicus
     ClassDef { class: Class { strip: "onicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [565] },
     // 566: like angolanus
     ClassDef { class: Class { strip: "olanus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [566] },
-    // 567: like angusticlavius
+    // 567: like avius
     ClassDef { class: Class { strip: "avius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [567] },
-    // 568: like angustifrons
+    // 568: like sons
     ClassDef { class: Class { strip: "ons", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [568] },
     // 569: like anhelus
     ClassDef { class: Class { strip: "elus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [569] },
-    // 570: like anilis
+    // 570: like vilis
     ClassDef { class: Class { strip: "ilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [570] },
-    // 571: like annamiticus
+    // 571: like politicus
     ClassDef { class: Class { strip: "iticus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [571] },
-    // 572: like annonarius
+    // 572: like zonarius
     ClassDef { class: Class { strip: "onarius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [572] },
     // 573: like annotinus
     ClassDef { class: Class { strip: "otinus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [573] },
@@ -1158,7 +1158,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "omalos", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [576] },
     // 577: like anomalus
     ClassDef { class: Class { strip: "omalus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [577] },
-    // 578: like anormalis
+    // 578: like formalis
     ClassDef { class: Class { strip: "ormalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [578] },
     // 579: like anormalus
     ClassDef { class: Class { strip: "ormalus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [579] },
@@ -1166,11 +1166,11 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "anserinus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [580] },
     // 581: like antelucanus
     ClassDef { class: Class { strip: "ucanus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [581] },
-    // 582: like antemeridianus
+    // 582: like cotidianus
     ClassDef { class: Class { strip: "idianus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [582] },
-    // 583: like antepenultimus
+    // 583: like penultimus
     ClassDef { class: Class { strip: "enultimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [583] },
-    // 584: like antichristianus
+    // 584: like christianus
     ClassDef { class: Class { strip: "istianus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [584] },
     // 585: like antiquandus
     ClassDef { class: Class { strip: "iquandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [585] },
@@ -1182,11 +1182,11 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "iquaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [588] },
     // 589: like antiquatus
     ClassDef { class: Class { strip: "iquatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [589] },
-    // 590: like antiquior
+    // 590: like iniquior
     ClassDef { class: Class { strip: "iquior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [590] },
-    // 591: like antiquissimus
+    // 591: like iniquissimus
     ClassDef { class: Class { strip: "iquissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [591] },
-    // 592: like antiquus
+    // 592: like iniquus
     ClassDef { class: Class { strip: "iquus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [592] },
     // 593: like anularis
     ClassDef { class: Class { strip: "anularis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [593] },
@@ -1202,31 +1202,31 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "apetalus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [598] },
     // 599: like apodicticus
     ClassDef { class: Class { strip: "icticus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [599] },
-    // 600: like aponeuroticus
+    // 600: like eroticus
     ClassDef { class: Class { strip: "oticus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [600] },
-    // 601: like apoplecticus
+    // 601: like smecticus
     ClassDef { class: Class { strip: "ecticus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [601] },
     // 602: like appetitivus
     ClassDef { class: Class { strip: "itivus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [602] },
-    // 603: like apprendendus
+    // 603: like vendendus
     ClassDef { class: Class { strip: "endendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [603] },
-    // 604: like apprendens
+    // 604: like vendens
     ClassDef { class: Class { strip: "endens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [604] },
-    // 605: like apprimus
+    // 605: like imus
     ClassDef { class: Class { strip: "imus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [605] },
-    // 606: like appromissurus
+    // 606: like promissurus
     ClassDef { class: Class { strip: "omissurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [606] },
-    // 607: like appromissus
+    // 607: like promissus
     ClassDef { class: Class { strip: "omissus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [607] },
-    // 608: like appromittendus
+    // 608: like promittendus
     ClassDef { class: Class { strip: "omittendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [608] },
-    // 609: like appromittens
+    // 609: like promittens
     ClassDef { class: Class { strip: "omittens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [609] },
     // 610: like appuleius
     ClassDef { class: Class { strip: "uleius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [610] },
     // 611: like aprugnus
     ClassDef { class: Class { strip: "ugnus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [611] },
-    // 612: like aquaticus
+    // 612: like viaticus
     ClassDef { class: Class { strip: "aticus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [612] },
     // 613: like aquitanus
     ClassDef { class: Class { strip: "itanus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [613] },
@@ -1234,7 +1234,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "aneans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [614] },
     // 615: like araneosus
     ClassDef { class: Class { strip: "aneosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [615] },
-    // 616: like araneus
+    // 616: like laneus
     ClassDef { class: Class { strip: "aneus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [616] },
     // 617: like archimedeus
     ClassDef { class: Class { strip: "edeus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [617] },
@@ -1264,23 +1264,23 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "emoricus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [629] },
     // 630: like arenaceus
     ClassDef { class: Class { strip: "enaceus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [630] },
-    // 631: like arenarius
+    // 631: like denarius
     ClassDef { class: Class { strip: "enarius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [631] },
     // 632: like arenivagus
     ClassDef { class: Class { strip: "enivagus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [632] },
-    // 633: like arenosus
+    // 633: like venosus
     ClassDef { class: Class { strip: "enosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [633] },
     // 634: like areolatus
     ClassDef { class: Class { strip: "areolatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [634] },
     // 635: like argous
     ClassDef { class: Class { strip: "ous", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [635] },
-    // 636: like argumentandus
+    // 636: like frumentandus
     ClassDef { class: Class { strip: "umentandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [636] },
-    // 637: like argumentans
+    // 637: like frumentans
     ClassDef { class: Class { strip: "umentans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [637] },
-    // 638: like argumentaturus
+    // 638: like frumentaturus
     ClassDef { class: Class { strip: "umentaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [638] },
-    // 639: like argumentatus
+    // 639: like frumentatus
     ClassDef { class: Class { strip: "umentatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [639] },
     // 640: like argumentosus
     ClassDef { class: Class { strip: "umentosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [640] },
@@ -1292,9 +1292,9 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "aridulus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [643] },
     // 644: like aridus
     ClassDef { class: Class { strip: "aridus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [644] },
-    // 645: like aristoneus
+    // 645: like coloneus
     ClassDef { class: Class { strip: "oneus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [645] },
-    // 646: like aristophanius
+    // 646: like dius
     ClassDef { class: Class { strip: "ius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [646] },
     // 647: like aromaticus
     ClassDef { class: Class { strip: "omaticus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [647] },
@@ -1306,7 +1306,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "omatizaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [650] },
     // 651: like aromatizatus
     ClassDef { class: Class { strip: "omatizatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [651] },
-    // 652: like arteriosus
+    // 652: like seriosus
     ClassDef { class: Class { strip: "eriosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [652] },
     // 653: like arytenoideus
     ClassDef { class: Class { strip: "enoideus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [653] },
@@ -1340,15 +1340,15 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "umundus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [667] },
     // 668: like asthmaticus
     ClassDef { class: Class { strip: "asthmaticus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [668] },
-    // 669: like astructurus
+    // 669: like lucturus
     ClassDef { class: Class { strip: "ucturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [669] },
-    // 670: like astructus
+    // 670: like luctus
     ClassDef { class: Class { strip: "uctus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [670] },
     // 671: like astutus
     ClassDef { class: Class { strip: "astutus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [671] },
-    // 672: like astypaleius
+    // 672: like danaeius
     ClassDef { class: Class { strip: "eius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [672] },
-    // 673: like asymmetricus
+    // 673: like symmetricus
     ClassDef { class: Class { strip: "etricus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [673] },
     // 674: like ater
     ClassDef { class: Class { strip: "ater", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [674] },
@@ -1378,7 +1378,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "atripectoralis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [686] },
     // 687: like atripes
     ClassDef { class: Class { strip: "atripes", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [687] },
-    // 688: like atrocior
+    // 688: like ocior
     ClassDef { class: Class { strip: "ocior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [688] },
     // 689: like atrocissimus
     ClassDef { class: Class { strip: "ocissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [689] },
@@ -1392,7 +1392,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "atroviridis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [693] },
     // 694: like atrox
     ClassDef { class: Class { strip: "ox", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [694] },
-    // 695: like attritior
+    // 695: like ditior
     ClassDef { class: Class { strip: "itior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [695] },
     // 696: like auctorizandus
     ClassDef { class: Class { strip: "orizandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [696] },
@@ -1420,21 +1420,21 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "igans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [707] },
     // 708: like aurigaturus
     ClassDef { class: Class { strip: "igaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [708] },
-    // 709: like aurigatus
+    // 709: like bigatus
     ClassDef { class: Class { strip: "igatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [709] },
     // 710: like auriginosus
     ClassDef { class: Class { strip: "iginosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [710] },
     // 711: like aurugineus
     ClassDef { class: Class { strip: "ugineus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [711] },
-    // 712: like austerior
+    // 712: like verior
     ClassDef { class: Class { strip: "erior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [712] },
     // 713: like australianus
     ClassDef { class: Class { strip: "alianus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [713] },
-    // 714: like australiensis
+    // 714: like canaliensis
     ClassDef { class: Class { strip: "aliensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [714] },
     // 715: like austronesianus
     ClassDef { class: Class { strip: "esianus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [715] },
-    // 716: like austronesicus
+    // 716: like indonesicus
     ClassDef { class: Class { strip: "esicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [716] },
     // 717: like avecturus
     ClassDef { class: Class { strip: "avecturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [717] },
@@ -1502,7 +1502,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "acatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [748] },
     // 749: like bacifer
     ClassDef { class: Class { strip: "acifer", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [749] },
-    // 750: like baconalis
+    // 750: like zonalis
     ClassDef { class: Class { strip: "onalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [750] },
     // 751: like baiulandus
     ClassDef { class: Class { strip: "aiulandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [751] },
@@ -1526,11 +1526,11 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "alitans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [760] },
     // 761: like baptisandus
     ClassDef { class: Class { strip: "isandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [761] },
-    // 762: like baptisans
+    // 762: like crisans
     ClassDef { class: Class { strip: "isans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [762] },
-    // 763: like baptisaturus
+    // 763: like crisaturus
     ClassDef { class: Class { strip: "isaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [763] },
-    // 764: like baptisatus
+    // 764: like crisatus
     ClassDef { class: Class { strip: "isatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [764] },
     // 765: like basiandus
     ClassDef { class: Class { strip: "asiandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [765] },
@@ -1542,7 +1542,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "asiatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [768] },
     // 769: like batavicus
     ClassDef { class: Class { strip: "avicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [769] },
-    // 770: like batavus
+    // 770: like navus
     ClassDef { class: Class { strip: "avus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [770] },
     // 771: like beatificandus
     ClassDef { class: Class { strip: "atificandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [771] },
@@ -1602,7 +1602,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "iliaris", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [798] },
     // 799: like bilifer
     ClassDef { class: Class { strip: "ilifer", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [799] },
-    // 800: like bilineatus
+    // 800: like lineatus
     ClassDef { class: Class { strip: "ineatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [800] },
     // 801: like biliosus
     ClassDef { class: Class { strip: "iliosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [801] },
@@ -1610,7 +1610,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ustris", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [802] },
     // 803: like bimestris
     ClassDef { class: Class { strip: "estris", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [803] },
-    // 804: like bimulus
+    // 804: like imulus
     ClassDef { class: Class { strip: "imulus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [804] },
     // 805: like binarius
     ClassDef { class: Class { strip: "inarius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [805] },
@@ -1620,19 +1620,19 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "emis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [807] },
     // 808: like bisetis
     ClassDef { class: Class { strip: "etis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [808] },
-    // 809: like bituberculatus
+    // 809: like tuberculatus
     ClassDef { class: Class { strip: "uberculatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [809] },
     // 810: like blasphemabilis
     ClassDef { class: Class { strip: "emabilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [810] },
-    // 811: like blasphemandus
+    // 811: like racemandus
     ClassDef { class: Class { strip: "emandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [811] },
-    // 812: like blasphemans
+    // 812: like racemans
     ClassDef { class: Class { strip: "emans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [812] },
-    // 813: like blasphematurus
+    // 813: like racematurus
     ClassDef { class: Class { strip: "ematurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [813] },
-    // 814: like blasphematus
+    // 814: like racematus
     ClassDef { class: Class { strip: "ematus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [814] },
-    // 815: like blasphemus
+    // 815: like eremus
     ClassDef { class: Class { strip: "emus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [815] },
     // 816: like blaveus
     ClassDef { class: Class { strip: "aveus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [816] },
@@ -1646,27 +1646,27 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "olus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [820] },
     // 821: like bombycinus
     ClassDef { class: Class { strip: "ycinus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [821] },
-    // 822: like bononiensis
+    // 822: like oxoniensis
     ClassDef { class: Class { strip: "oniensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [822] },
-    // 823: like bovillus
+    // 823: like ovillus
     ClassDef { class: Class { strip: "illus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [823] },
     // 824: like brachiatus
     ClassDef { class: Class { strip: "achiatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [824] },
     // 825: like brasiliensis
     ClassDef { class: Class { strip: "iliensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [825] },
-    // 826: like bromosus
+    // 826: like pomosus
     ClassDef { class: Class { strip: "omosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [826] },
-    // 827: like bronchialus
+    // 827: like squalus
     ClassDef { class: Class { strip: "alus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [827] },
     // 828: like brumalis
     ClassDef { class: Class { strip: "umalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [828] },
-    // 829: like brumosus
+    // 829: like dumosus
     ClassDef { class: Class { strip: "umosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [829] },
     // 830: like bruneus
     ClassDef { class: Class { strip: "uneus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [830] },
     // 831: like brunsvicensis
     ClassDef { class: Class { strip: "unsvicensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [831] },
-    // 832: like brunus
+    // 832: like unus
     ClassDef { class: Class { strip: "unus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [832] },
     // 833: like bubastius
     ClassDef { class: Class { strip: "ubastius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [833] },
@@ -1704,9 +1704,9 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ucus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [849] },
     // 850: like caerimonialis
     ClassDef { class: Class { strip: "onialis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [850] },
-    // 851: like caesariacus
+    // 851: like opacus
     ClassDef { class: Class { strip: "acus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [851] },
-    // 852: like caietanus
+    // 852: like cretanus
     ClassDef { class: Class { strip: "etanus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [852] },
     // 853: like calcareus
     ClassDef { class: Class { strip: "areus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [853] },
@@ -1738,7 +1738,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ygos", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [866] },
     // 867: like calorificus
     ClassDef { class: Class { strip: "orificus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [867] },
-    // 868: like camenalis
+    // 868: like renalis
     ClassDef { class: Class { strip: "enalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [868] },
     // 869: like canadensis
     ClassDef { class: Class { strip: "adensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [869] },
@@ -1760,19 +1760,19 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "anutus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [877] },
     // 878: like capenas
     ClassDef { class: Class { strip: "enas", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [878] },
-    // 879: like caphereus
+    // 879: like cereus
     ClassDef { class: Class { strip: "ereus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [879] },
     // 880: like capitolinus
     ClassDef { class: Class { strip: "olinus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [880] },
-    // 881: like captivandus
+    // 881: like rivandus
     ClassDef { class: Class { strip: "ivandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [881] },
-    // 882: like captivatus
+    // 882: like rivatus
     ClassDef { class: Class { strip: "ivatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [882] },
-    // 883: like carelicus
+    // 883: like delicus
     ClassDef { class: Class { strip: "elicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [883] },
     // 884: like careliensis
     ClassDef { class: Class { strip: "eliensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [884] },
-    // 885: like carolinianus
+    // 885: like orcinianus
     ClassDef { class: Class { strip: "inianus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [885] },
     // 886: like caroliniensis
     ClassDef { class: Class { strip: "iniensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [886] },
@@ -1780,9 +1780,9 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "aginensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [887] },
     // 888: like carthaginiensis
     ClassDef { class: Class { strip: "aginiensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [888] },
-    // 889: like cartilagineus
+    // 889: like fagineus
     ClassDef { class: Class { strip: "agineus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [889] },
-    // 890: like cartilaginosus
+    // 890: like imaginosus
     ClassDef { class: Class { strip: "aginosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [890] },
     // 891: like casabundus
     ClassDef { class: Class { strip: "asabundus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [891] },
@@ -1790,13 +1790,13 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "asearius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [892] },
     // 893: like casiarius
     ClassDef { class: Class { strip: "asiarius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [893] },
-    // 894: like castrametandus
+    // 894: like fetandus
     ClassDef { class: Class { strip: "etandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [894] },
-    // 895: like castrametans
+    // 895: like fetans
     ClassDef { class: Class { strip: "etans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [895] },
-    // 896: like castrametaturus
+    // 896: like fetaturus
     ClassDef { class: Class { strip: "etaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [896] },
-    // 897: like castrametatus
+    // 897: like fetatus
     ClassDef { class: Class { strip: "etatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [897] },
     // 898: like casualis
     ClassDef { class: Class { strip: "asualis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [898] },
@@ -1824,11 +1824,11 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "uloticus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [909] },
     // 910: like cauteriandus
     ClassDef { class: Class { strip: "eriandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [910] },
-    // 911: like cauterians
+    // 911: like ferians
     ClassDef { class: Class { strip: "erians", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [911] },
-    // 912: like cauteriaturus
+    // 912: like feriaturus
     ClassDef { class: Class { strip: "eriaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [912] },
-    // 913: like cauteriatus
+    // 913: like feriatus
     ClassDef { class: Class { strip: "eriatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [913] },
     // 914: like cebuanus
     ClassDef { class: Class { strip: "ebuanus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [914] },
@@ -1850,7 +1850,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "enitatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [922] },
     // 923: like censivus
     ClassDef { class: Class { strip: "ensivus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [923] },
-    // 924: like censorinus
+    // 924: like olorinus
     ClassDef { class: Class { strip: "orinus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [924] },
     // 925: like censorius
     ClassDef { class: Class { strip: "ensorius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [925] },
@@ -1880,7 +1880,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ereolus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [937] },
     // 938: like ceromaticus
     ClassDef { class: Class { strip: "eromaticus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [938] },
-    // 939: like cerosus
+    // 939: like erosus
     ClassDef { class: Class { strip: "erosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [939] },
     // 940: like cerussatus
     ClassDef { class: Class { strip: "erussatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [940] },
@@ -1934,41 +1934,41 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "omeus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [964] },
     // 965: like cinnamominus
     ClassDef { class: Class { strip: "ominus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [965] },
-    // 966: like cinnamomus
+    // 966: like promus
     ClassDef { class: Class { strip: "omus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [966] },
-    // 967: like circumfluxus
+    // 967: like luxus
     ClassDef { class: Class { strip: "uxus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [967] },
-    // 968: like circummuniendus
+    // 968: like uniendus
     ClassDef { class: Class { strip: "uniendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [968] },
-    // 969: like circummuniens
+    // 969: like uniens
     ClassDef { class: Class { strip: "uniens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [969] },
-    // 970: like circummuniturus
+    // 970: like uniturus
     ClassDef { class: Class { strip: "uniturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [970] },
-    // 971: like circummunitus
+    // 971: like unitus
     ClassDef { class: Class { strip: "unitus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [971] },
-    // 972: like circumnavigandus
+    // 972: like navigandus
     ClassDef { class: Class { strip: "avigandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [972] },
-    // 973: like circumnavigatus
+    // 973: like navigatus
     ClassDef { class: Class { strip: "avigatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [973] },
-    // 974: like circumretiturus
+    // 974: like metiturus
     ClassDef { class: Class { strip: "etiturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [974] },
-    // 975: like circumretitus
+    // 975: like metitus
     ClassDef { class: Class { strip: "etitus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [975] },
-    // 976: like circumsepiendus
+    // 976: like sepiendus
     ClassDef { class: Class { strip: "epiendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [976] },
-    // 977: like circumsepiens
+    // 977: like sepiens
     ClassDef { class: Class { strip: "epiens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [977] },
-    // 978: like circumsepturus
+    // 978: like septurus
     ClassDef { class: Class { strip: "epturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [978] },
-    // 979: like circumseptus
+    // 979: like septus
     ClassDef { class: Class { strip: "eptus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [979] },
-    // 980: like circumvallandus
+    // 980: like vallandus
     ClassDef { class: Class { strip: "allandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [980] },
-    // 981: like circumvallans
+    // 981: like vallans
     ClassDef { class: Class { strip: "allans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [981] },
-    // 982: like circumvallaturus
+    // 982: like vallaturus
     ClassDef { class: Class { strip: "allaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [982] },
-    // 983: like circumvallatus
+    // 983: like vallatus
     ClassDef { class: Class { strip: "allatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [983] },
     // 984: like citratus
     ClassDef { class: Class { strip: "itratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [984] },
@@ -1986,7 +1986,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "amitaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [990] },
     // 991: like clamitatus
     ClassDef { class: Class { strip: "amitatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [991] },
-    // 992: like clamosus
+    // 992: like famosus
     ClassDef { class: Class { strip: "amosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [992] },
     // 993: like clarificandus
     ClassDef { class: Class { strip: "arificandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [993] },
@@ -2002,7 +2002,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "arisonus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [998] },
     // 999: like clathratus
     ClassDef { class: Class { strip: "athratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [999] },
-    // 1000: like clavatus
+    // 1000: like navatus
     ClassDef { class: Class { strip: "avatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1000] },
     // 1001: like clavellatus
     ClassDef { class: Class { strip: "avellatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1001] },
@@ -2010,15 +2010,15 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "avicornis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1002] },
     // 1003: like claviformis
     ClassDef { class: Class { strip: "aviformis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1003] },
-    // 1004: like claviger
+    // 1004: like naviger
     ClassDef { class: Class { strip: "aviger", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1004] },
     // 1005: like clavuligerus
     ClassDef { class: Class { strip: "avuligerus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1005] },
-    // 1006: like clemens
+    // 1006: like demens
     ClassDef { class: Class { strip: "emens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1006] },
-    // 1007: like clementior
+    // 1007: like dementior
     ClassDef { class: Class { strip: "ementior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1007] },
-    // 1008: like clementissimus
+    // 1008: like dementissimus
     ClassDef { class: Class { strip: "ementissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1008] },
     // 1009: like clericalis
     ClassDef { class: Class { strip: "ericalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1009] },
@@ -2028,7 +2028,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "itellarius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1011] },
     // 1012: like clitumnus
     ClassDef { class: Class { strip: "itumnus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1012] },
-    // 1013: like clivinus
+    // 1013: like divinus
     ClassDef { class: Class { strip: "ivinus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1013] },
     // 1014: like clivius
     ClassDef { class: Class { strip: "ivius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1014] },
@@ -2044,9 +2044,9 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "odicatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1019] },
     // 1020: like clodus
     ClassDef { class: Class { strip: "odus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1020] },
-    // 1021: like clunalis
+    // 1021: like funalis
     ClassDef { class: Class { strip: "unalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1021] },
-    // 1022: like clunarius
+    // 1022: like funarius
     ClassDef { class: Class { strip: "unarius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1022] },
     // 1023: like cnosius
     ClassDef { class: Class { strip: "osius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1023] },
@@ -2084,7 +2084,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ogitaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1039] },
     // 1040: like cogitatus
     ClassDef { class: Class { strip: "ogitatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1040] },
-    // 1041: like cognoscibilis
+    // 1041: like noscibilis
     ClassDef { class: Class { strip: "oscibilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1041] },
     // 1042: like colandus
     ClassDef { class: Class { strip: "olandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1042] },
@@ -2098,23 +2098,23 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "oleatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1046] },
     // 1047: like collaborativus
     ClassDef { class: Class { strip: "orativus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1047] },
-    // 1048: like collaticius
+    // 1048: like craticius
     ClassDef { class: Class { strip: "aticius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1048] },
     // 1049: like collegialis
     ClassDef { class: Class { strip: "egialis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1049] },
     // 1050: like collegiatus
     ClassDef { class: Class { strip: "egiatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1050] },
-    // 1051: like collineandus
+    // 1051: like lineandus
     ClassDef { class: Class { strip: "ineandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1051] },
-    // 1052: like collineans
+    // 1052: like lineans
     ClassDef { class: Class { strip: "ineans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1052] },
-    // 1053: like collustrandus
+    // 1053: like lustrandus
     ClassDef { class: Class { strip: "ustrandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1053] },
-    // 1054: like collustrans
+    // 1054: like lustrans
     ClassDef { class: Class { strip: "ustrans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1054] },
-    // 1055: like collustraturus
+    // 1055: like lustraturus
     ClassDef { class: Class { strip: "ustraturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1055] },
-    // 1056: like collustratus
+    // 1056: like lustratus
     ClassDef { class: Class { strip: "ustratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1056] },
     // 1057: like coloniarius
     ClassDef { class: Class { strip: "oniarius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1057] },
@@ -2124,7 +2124,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "omens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1059] },
     // 1060: like comessabundus
     ClassDef { class: Class { strip: "omessabundus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1060] },
-    // 1061: like comestus
+    // 1061: like estus
     ClassDef { class: Class { strip: "estus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1061] },
     // 1062: like comicus
     ClassDef { class: Class { strip: "omicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1062] },
@@ -2142,29 +2142,29 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "omissaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1068] },
     // 1069: like comissatus
     ClassDef { class: Class { strip: "omissatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1069] },
-    // 1070: like commanducandus
+    // 1070: like fucandus
     ClassDef { class: Class { strip: "ucandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1070] },
-    // 1071: like commanducans
+    // 1071: like fucans
     ClassDef { class: Class { strip: "ucans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1071] },
-    // 1072: like commanducaturus
+    // 1072: like fucaturus
     ClassDef { class: Class { strip: "ucaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1072] },
-    // 1073: like commanducatus
+    // 1073: like fucatus
     ClassDef { class: Class { strip: "ucatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1073] },
-    // 1074: like commansurus
+    // 1074: like mansurus
     ClassDef { class: Class { strip: "ansurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1074] },
-    // 1075: like commansus
+    // 1075: like mansus
     ClassDef { class: Class { strip: "ansus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1075] },
     // 1076: like commendatitius
     ClassDef { class: Class { strip: "atitius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1076] },
-    // 1077: like commensurabilis
+    // 1077: like mensurabilis
     ClassDef { class: Class { strip: "ensurabilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1077] },
-    // 1078: like commonstrandus
+    // 1078: like monstrandus
     ClassDef { class: Class { strip: "onstrandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1078] },
-    // 1079: like commonstrans
+    // 1079: like monstrans
     ClassDef { class: Class { strip: "onstrans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1079] },
-    // 1080: like commonstraturus
+    // 1080: like constraturus
     ClassDef { class: Class { strip: "onstraturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1080] },
-    // 1081: like commonstratus
+    // 1081: like constratus
     ClassDef { class: Class { strip: "onstratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1081] },
     // 1082: like communicabilis
     ClassDef { class: Class { strip: "unicabilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1082] },
@@ -2178,9 +2178,9 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "unicativus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1086] },
     // 1087: like communicaturus
     ClassDef { class: Class { strip: "unicaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1087] },
-    // 1088: like communior
+    // 1088: like junior
     ClassDef { class: Class { strip: "unior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1088] },
-    // 1089: like communis
+    // 1089: like munis
     ClassDef { class: Class { strip: "unis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1089] },
     // 1090: like communisticus
     ClassDef { class: Class { strip: "unisticus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1090] },
@@ -2190,37 +2190,37 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "omoedus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1092] },
     // 1093: like compactissimus
     ClassDef { class: Class { strip: "actissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1093] },
-    // 1094: like compascuus
+    // 1094: like pascuus
     ClassDef { class: Class { strip: "ascuus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1094] },
     // 1095: like compensativus
     ClassDef { class: Class { strip: "ensativus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1095] },
-    // 1096: like compilandus
+    // 1096: like pilandus
     ClassDef { class: Class { strip: "ilandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1096] },
-    // 1097: like compilans
+    // 1097: like pilans
     ClassDef { class: Class { strip: "ilans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1097] },
-    // 1098: like compilaturus
+    // 1098: like dilaturus
     ClassDef { class: Class { strip: "ilaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1098] },
-    // 1099: like compilatus
+    // 1099: like dilatus
     ClassDef { class: Class { strip: "ilatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1099] },
-    // 1100: like complanandus
+    // 1100: like manandus
     ClassDef { class: Class { strip: "anandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1100] },
-    // 1101: like complanans
+    // 1101: like manans
     ClassDef { class: Class { strip: "anans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1101] },
-    // 1102: like complanaturus
+    // 1102: like manaturus
     ClassDef { class: Class { strip: "anaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1102] },
-    // 1103: like complanatus
+    // 1103: like lanatus
     ClassDef { class: Class { strip: "anatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1103] },
     // 1104: like complementarius
     ClassDef { class: Class { strip: "ementarius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1104] },
-    // 1105: like completivus
+    // 1105: like expletivus
     ClassDef { class: Class { strip: "etivus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1105] },
-    // 1106: like comprovincialis
+    // 1106: like provincialis
     ClassDef { class: Class { strip: "ovincialis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1106] },
     // 1107: like compturus
     ClassDef { class: Class { strip: "ompturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1107] },
     // 1108: like comptus
     ClassDef { class: Class { strip: "omptus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1108] },
-    // 1109: like computatralis
+    // 1109: like matralis
     ClassDef { class: Class { strip: "atralis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1109] },
     // 1110: like conabilis
     ClassDef { class: Class { strip: "onabilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1110] },
@@ -2230,43 +2230,43 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ebrans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1112] },
     // 1113: like concelebraturus
     ClassDef { class: Class { strip: "ebraturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1113] },
-    // 1114: like concelebratus
+    // 1114: like zebratus
     ClassDef { class: Class { strip: "ebratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1114] },
     // 1115: like conchyliatus
     ClassDef { class: Class { strip: "yliatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1115] },
     // 1116: like concisior
     ClassDef { class: Class { strip: "isior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1116] },
-    // 1117: like concrediturus
+    // 1117: like editurus
     ClassDef { class: Class { strip: "editurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1117] },
-    // 1118: like concreditus
+    // 1118: like editus
     ClassDef { class: Class { strip: "editus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1118] },
     // 1119: like concupiscibilis
     ClassDef { class: Class { strip: "iscibilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1119] },
-    // 1120: like condecernendus
+    // 1120: like decernendus
     ClassDef { class: Class { strip: "ecernendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1120] },
-    // 1121: like condecernens
+    // 1121: like decernens
     ClassDef { class: Class { strip: "ecernens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1121] },
-    // 1122: like condecreturus
+    // 1122: like decreturus
     ClassDef { class: Class { strip: "ecreturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1122] },
-    // 1123: like condecretus
+    // 1123: like decretus
     ClassDef { class: Class { strip: "ecretus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1123] },
-    // 1124: like condelectandus
+    // 1124: like delectandus
     ClassDef { class: Class { strip: "electandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1124] },
-    // 1125: like condelectans
+    // 1125: like delectans
     ClassDef { class: Class { strip: "electans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1125] },
-    // 1126: like condelectaturus
+    // 1126: like delectaturus
     ClassDef { class: Class { strip: "electaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1126] },
-    // 1127: like condelectatus
+    // 1127: like delectatus
     ClassDef { class: Class { strip: "electatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1127] },
-    // 1128: like condescendendus
+    // 1128: like descendendus
     ClassDef { class: Class { strip: "escendendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1128] },
-    // 1129: like condescendens
+    // 1129: like descendens
     ClassDef { class: Class { strip: "escendens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1129] },
-    // 1130: like condescensurus
+    // 1130: like descensurus
     ClassDef { class: Class { strip: "escensurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1130] },
-    // 1131: like condescensus
+    // 1131: like descensus
     ClassDef { class: Class { strip: "escensus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1131] },
-    // 1132: like conducibilis
+    // 1132: like lucibilis
     ClassDef { class: Class { strip: "ucibilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1132] },
     // 1133: like conectendus
     ClassDef { class: Class { strip: "onectendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1133] },
@@ -2524,29 +2524,29 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "onfututurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1259] },
     // 1260: like confututus
     ClassDef { class: Class { strip: "onfututus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1260] },
-    // 1261: like conglorificandus
+    // 1261: like glorificandus
     ClassDef { class: Class { strip: "orificandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1261] },
-    // 1262: like conglorificans
+    // 1262: like glorificans
     ClassDef { class: Class { strip: "orificans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1262] },
-    // 1263: like conglorificaturus
+    // 1263: like glorificaturus
     ClassDef { class: Class { strip: "orificaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1263] },
-    // 1264: like conglorificatus
+    // 1264: like glorificatus
     ClassDef { class: Class { strip: "orificatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1264] },
-    // 1265: like congratulandus
+    // 1265: like gratulandus
     ClassDef { class: Class { strip: "atulandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1265] },
-    // 1266: like congratulans
+    // 1266: like gratulans
     ClassDef { class: Class { strip: "atulans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1266] },
-    // 1267: like congratulaturus
+    // 1267: like gratulaturus
     ClassDef { class: Class { strip: "atulaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1267] },
-    // 1268: like congratulatus
+    // 1268: like gratulatus
     ClassDef { class: Class { strip: "atulatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1268] },
-    // 1269: like congyrandus
+    // 1269: like gyrandus
     ClassDef { class: Class { strip: "yrandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1269] },
-    // 1270: like congyrans
+    // 1270: like gyrans
     ClassDef { class: Class { strip: "yrans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1270] },
-    // 1271: like congyraturus
+    // 1271: like gyraturus
     ClassDef { class: Class { strip: "yraturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1271] },
-    // 1272: like congyratus
+    // 1272: like gyratus
     ClassDef { class: Class { strip: "yratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1272] },
     // 1273: like conifer
     ClassDef { class: Class { strip: "onifer", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1273] },
@@ -2560,13 +2560,13 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "onitendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1277] },
     // 1278: like conitens
     ClassDef { class: Class { strip: "onitens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1278] },
-    // 1279: like coniucundandus
+    // 1279: like iucundandus
     ClassDef { class: Class { strip: "ucundandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1279] },
-    // 1280: like coniucundans
+    // 1280: like iucundans
     ClassDef { class: Class { strip: "ucundans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1280] },
-    // 1281: like coniucundaturus
+    // 1281: like iucundaturus
     ClassDef { class: Class { strip: "ucundaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1281] },
-    // 1282: like coniucundatus
+    // 1282: like iucundatus
     ClassDef { class: Class { strip: "ucundatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1282] },
     // 1283: like coniunctissimus
     ClassDef { class: Class { strip: "unctissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1283] },
@@ -2578,21 +2578,21 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "onoideus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1286] },
     // 1287: like conquirundus
     ClassDef { class: Class { strip: "irundus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1287] },
-    // 1288: like conregnandus
+    // 1288: like regnandus
     ClassDef { class: Class { strip: "egnandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1288] },
-    // 1289: like conregnans
+    // 1289: like regnans
     ClassDef { class: Class { strip: "egnans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1289] },
-    // 1290: like conregnaturus
+    // 1290: like regnaturus
     ClassDef { class: Class { strip: "egnaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1290] },
-    // 1291: like conregnatus
+    // 1291: like regnatus
     ClassDef { class: Class { strip: "egnatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1291] },
-    // 1292: like conroborandus
+    // 1292: like roborandus
     ClassDef { class: Class { strip: "oborandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1292] },
-    // 1293: like conroborans
+    // 1293: like roborans
     ClassDef { class: Class { strip: "oborans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1293] },
-    // 1294: like conroboraturus
+    // 1294: like roboraturus
     ClassDef { class: Class { strip: "oboraturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1294] },
-    // 1295: like conroboratus
+    // 1295: like roboratus
     ClassDef { class: Class { strip: "oboratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1295] },
     // 1296: like consacrandus
     ClassDef { class: Class { strip: "onsacrandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1296] },
@@ -3152,7 +3152,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "onsuturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1573] },
     // 1574: like consutus
     ClassDef { class: Class { strip: "onsutus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1574] },
-    // 1575: like contabescens
+    // 1575: like tabescens
     ClassDef { class: Class { strip: "abescens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1575] },
     // 1576: like contabundus
     ClassDef { class: Class { strip: "ontabundus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1576] },
@@ -3172,17 +3172,17 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ontionaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1583] },
     // 1584: like contionatus
     ClassDef { class: Class { strip: "ontionatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1584] },
-    // 1585: like contradicendus
+    // 1585: like supradicendus
     ClassDef { class: Class { strip: "adicendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1585] },
-    // 1586: like contradicens
+    // 1586: like supradicens
     ClassDef { class: Class { strip: "adicens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1586] },
     // 1587: like contradicibilis
     ClassDef { class: Class { strip: "adicibilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1587] },
     // 1588: like contradictorius
     ClassDef { class: Class { strip: "adictorius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1588] },
-    // 1589: like contradicturus
+    // 1589: like supradicturus
     ClassDef { class: Class { strip: "adicturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1589] },
-    // 1590: like contradictus
+    // 1590: like supradictus
     ClassDef { class: Class { strip: "adictus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1590] },
     // 1591: like contraveniendus
     ClassDef { class: Class { strip: "aveniendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1591] },
@@ -3192,29 +3192,29 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "aventurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1593] },
     // 1594: like contraventus
     ClassDef { class: Class { strip: "aventus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1594] },
-    // 1595: like contribulis
+    // 1595: like edulis
     ClassDef { class: Class { strip: "ulis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1595] },
-    // 1596: like contristandus
+    // 1596: like tristandus
     ClassDef { class: Class { strip: "istandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1596] },
-    // 1597: like contristans
+    // 1597: like tristans
     ClassDef { class: Class { strip: "istans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1597] },
-    // 1598: like contristaturus
+    // 1598: like tristaturus
     ClassDef { class: Class { strip: "istaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1598] },
-    // 1599: like contristatus
+    // 1599: like tristatus
     ClassDef { class: Class { strip: "istatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1599] },
     // 1600: like controversiosus
     ClassDef { class: Class { strip: "oversiosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1600] },
     // 1601: like controversus
     ClassDef { class: Class { strip: "oversus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1601] },
-    // 1602: like contrucidaturus
+    // 1602: like formidaturus
     ClassDef { class: Class { strip: "idaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1602] },
     // 1603: like contumeliosissimus
     ClassDef { class: Class { strip: "eliosissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1603] },
     // 1604: like contumeliosus
     ClassDef { class: Class { strip: "eliosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1604] },
-    // 1605: like contunsurus
+    // 1605: like tunsurus
     ClassDef { class: Class { strip: "unsurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1605] },
-    // 1606: like contunsus
+    // 1606: like tunsus
     ClassDef { class: Class { strip: "unsus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1606] },
     // 1607: like conubialis
     ClassDef { class: Class { strip: "onubialis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1607] },
@@ -3226,13 +3226,13 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "iciaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1610] },
     // 1611: like conviciatus
     ClassDef { class: Class { strip: "iciatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1611] },
-    // 1612: like convivificandus
+    // 1612: like vivificandus
     ClassDef { class: Class { strip: "ivificandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1612] },
-    // 1613: like convivificans
+    // 1613: like vivificans
     ClassDef { class: Class { strip: "ivificans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1613] },
-    // 1614: like convivificaturus
+    // 1614: like vivificaturus
     ClassDef { class: Class { strip: "ivificaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1614] },
-    // 1615: like convivificatus
+    // 1615: like vivificatus
     ClassDef { class: Class { strip: "ivificatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1615] },
     // 1616: like copiosior
     ClassDef { class: Class { strip: "opiosior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1616] },
@@ -3260,19 +3260,19 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ectivus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1627] },
     // 1628: like corrosivus
     ClassDef { class: Class { strip: "osivus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1628] },
-    // 1629: like corrugandus
+    // 1629: like nugandus
     ClassDef { class: Class { strip: "ugandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1629] },
-    // 1630: like corrugans
+    // 1630: like nugans
     ClassDef { class: Class { strip: "ugans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1630] },
-    // 1631: like corrugaturus
+    // 1631: like nugaturus
     ClassDef { class: Class { strip: "ugaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1631] },
-    // 1632: like corrugatus
+    // 1632: like nugatus
     ClassDef { class: Class { strip: "ugatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1632] },
     // 1633: like cortinipotens
     ClassDef { class: Class { strip: "inipotens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1633] },
     // 1634: like costaricensis
     ClassDef { class: Class { strip: "icensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1634] },
-    // 1635: like cotoneus
+    // 1635: like idoneus
     ClassDef { class: Class { strip: "oneus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1635] },
     // 1636: like cracoviensis
     ClassDef { class: Class { strip: "oviensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1636] },
@@ -3298,7 +3298,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ebrior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1646] },
     // 1647: like credibilis
     ClassDef { class: Class { strip: "edibilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1647] },
-    // 1648: like credulus
+    // 1648: like sedulus
     ClassDef { class: Class { strip: "edulus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1648] },
     // 1649: like crenatissimus
     ClassDef { class: Class { strip: "enatissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1649] },
@@ -3306,21 +3306,21 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "enulatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1650] },
     // 1651: like crescentus
     ClassDef { class: Class { strip: "escentus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1651] },
-    // 1652: like cribrandus
+    // 1652: like librandus
     ClassDef { class: Class { strip: "ibrandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1652] },
-    // 1653: like cribrans
+    // 1653: like librans
     ClassDef { class: Class { strip: "ibrans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1653] },
-    // 1654: like cribraturus
+    // 1654: like libraturus
     ClassDef { class: Class { strip: "ibraturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1654] },
-    // 1655: like cribratus
+    // 1655: like libratus
     ClassDef { class: Class { strip: "ibratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1655] },
     // 1656: like cribricollis
     ClassDef { class: Class { strip: "ibricollis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1656] },
     // 1657: like cribrosus
     ClassDef { class: Class { strip: "ibrosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1657] },
-    // 1658: like cricoarytenoideus
+    // 1658: like sphenoideus
     ClassDef { class: Class { strip: "enoideus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1658] },
-    // 1659: like criminalis
+    // 1659: like viminalis
     ClassDef { class: Class { strip: "iminalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1659] },
     // 1660: like criminandus
     ClassDef { class: Class { strip: "iminandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1660] },
@@ -3334,9 +3334,9 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "iminosissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1664] },
     // 1665: like criminosus
     ClassDef { class: Class { strip: "iminosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1665] },
-    // 1666: like criniger
+    // 1666: like liniger
     ClassDef { class: Class { strip: "iniger", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1666] },
-    // 1667: like crinitus
+    // 1667: like finitus
     ClassDef { class: Class { strip: "initus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1667] },
     // 1668: like crispandus
     ClassDef { class: Class { strip: "ispandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1668] },
@@ -3358,13 +3358,13 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "udior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1676] },
     // 1677: like crudissimus
     ClassDef { class: Class { strip: "udissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1677] },
-    // 1678: like crudus
+    // 1678: like udus
     ClassDef { class: Class { strip: "udus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1678] },
     // 1679: like cubanus
     ClassDef { class: Class { strip: "ubanus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1679] },
     // 1680: like cucullatus
     ClassDef { class: Class { strip: "ullatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1680] },
-    // 1681: like cuias
+    // 1681: like mas
     ClassDef { class: Class { strip: "as", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1681] },
     // 1682: like culibonius
     ClassDef { class: Class { strip: "ulibonius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1682] },
@@ -3398,11 +3398,11 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "uriosior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1696] },
     // 1697: like curiosus
     ClassDef { class: Class { strip: "uriosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1697] },
-    // 1698: like curvilineus
+    // 1698: like lineus
     ClassDef { class: Class { strip: "ineus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1698] },
     // 1699: like custodiendus
     ClassDef { class: Class { strip: "odiendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1699] },
-    // 1700: like custodiens
+    // 1700: like prodiens
     ClassDef { class: Class { strip: "odiens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1700] },
     // 1701: like custoditurus
     ClassDef { class: Class { strip: "oditurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1701] },
@@ -3430,7 +3430,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "acicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1712] },
     // 1713: like dacoromanicus
     ClassDef { class: Class { strip: "acoromanicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1713] },
-    // 1714: like dahuricus
+    // 1714: like dauricus
     ClassDef { class: Class { strip: "uricus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1714] },
     // 1715: like danisticus
     ClassDef { class: Class { strip: "isticus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1715] },
@@ -3672,19 +3672,19 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "edicaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1833] },
     // 1834: like dedicatus
     ClassDef { class: Class { strip: "edicatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1834] },
-    // 1835: like dediscens
+    // 1835: like ediscens
     ClassDef { class: Class { strip: "ediscens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1835] },
-    // 1836: like dediticius
+    // 1836: like editicius
     ClassDef { class: Class { strip: "editicius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1836] },
     // 1837: like dedititius
     ClassDef { class: Class { strip: "edititius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1837] },
-    // 1838: like dedocendus
+    // 1838: like edocendus
     ClassDef { class: Class { strip: "edocendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1838] },
-    // 1839: like dedocens
+    // 1839: like edocens
     ClassDef { class: Class { strip: "edocens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1839] },
-    // 1840: like dedocturus
+    // 1840: like edocturus
     ClassDef { class: Class { strip: "edocturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1840] },
-    // 1841: like dedoctus
+    // 1841: like edoctus
     ClassDef { class: Class { strip: "edoctus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1841] },
     // 1842: like dedolandus
     ClassDef { class: Class { strip: "edolandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1842] },
@@ -3696,9 +3696,9 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "edolatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1845] },
     // 1846: like dedolens
     ClassDef { class: Class { strip: "edolens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1846] },
-    // 1847: like deducendus
+    // 1847: like educendus
     ClassDef { class: Class { strip: "educendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1847] },
-    // 1848: like deducens
+    // 1848: like educens
     ClassDef { class: Class { strip: "educens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1848] },
     // 1849: like deductior
     ClassDef { class: Class { strip: "eductior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1849] },
@@ -3706,9 +3706,9 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "eductivus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1850] },
     // 1851: like deductorius
     ClassDef { class: Class { strip: "eductorius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1851] },
-    // 1852: like deducturus
+    // 1852: like educturus
     ClassDef { class: Class { strip: "educturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1852] },
-    // 1853: like deductus
+    // 1853: like eductus
     ClassDef { class: Class { strip: "eductus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1853] },
     // 1854: like dedux
     ClassDef { class: Class { strip: "edux", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1854] },
@@ -3924,13 +3924,13 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "egluttiendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1959] },
     // 1960: like degluttiens
     ClassDef { class: Class { strip: "egluttiens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1960] },
-    // 1961: like degrediendus
+    // 1961: like egrediendus
     ClassDef { class: Class { strip: "egrediendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1961] },
-    // 1962: like degrediens
+    // 1962: like egrediens
     ClassDef { class: Class { strip: "egrediens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1962] },
-    // 1963: like degressurus
+    // 1963: like egressurus
     ClassDef { class: Class { strip: "egressurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1963] },
-    // 1964: like degressus
+    // 1964: like egressus
     ClassDef { class: Class { strip: "egressus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1964] },
     // 1965: like degustandus
     ClassDef { class: Class { strip: "egustandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1965] },
@@ -3940,37 +3940,37 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "egustaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1967] },
     // 1968: like degustatus
     ClassDef { class: Class { strip: "egustatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1968] },
-    // 1969: like deiciendus
+    // 1969: like eiciendus
     ClassDef { class: Class { strip: "eiciendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1969] },
-    // 1970: like deiciens
+    // 1970: like eiciens
     ClassDef { class: Class { strip: "eiciens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1970] },
-    // 1971: like deiecturus
+    // 1971: like eiecturus
     ClassDef { class: Class { strip: "eiecturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1971] },
-    // 1972: like dejecturus
+    // 1972: like ejecturus
     ClassDef { class: Class { strip: "eiecturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1972] },
-    // 1973: like deiectus
+    // 1973: like eiectus
     ClassDef { class: Class { strip: "eiectus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1973] },
-    // 1974: like dejectus
+    // 1974: like ejectus
     ClassDef { class: Class { strip: "eiectus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1974] },
-    // 1975: like deierandus
+    // 1975: like eierandus
     ClassDef { class: Class { strip: "eierandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1975] },
     // 1976: like dejerandus
     ClassDef { class: Class { strip: "eierandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1976] },
-    // 1977: like deierans
+    // 1977: like eierans
     ClassDef { class: Class { strip: "eierans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1977] },
     // 1978: like dejerans
     ClassDef { class: Class { strip: "eierans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1978] },
-    // 1979: like deieraturus
+    // 1979: like eieraturus
     ClassDef { class: Class { strip: "eieraturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1979] },
     // 1980: like dejeraturus
     ClassDef { class: Class { strip: "eieraturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1980] },
-    // 1981: like deieratus
+    // 1981: like eieratus
     ClassDef { class: Class { strip: "eieratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1981] },
     // 1982: like dejeratus
     ClassDef { class: Class { strip: "eieratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1982] },
-    // 1983: like dejiciendus
+    // 1983: like ejiciendus
     ClassDef { class: Class { strip: "eiiciendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1983] },
-    // 1984: like dejiciens
+    // 1984: like ejiciens
     ClassDef { class: Class { strip: "eiiciens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1984] },
     // 1985: like deiudicandus
     ClassDef { class: Class { strip: "eiudicandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1985] },
@@ -4016,19 +4016,19 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "eiungens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2005] },
     // 2006: like dejungens
     ClassDef { class: Class { strip: "eiungens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2006] },
-    // 2007: like deiurandus
+    // 2007: like eiurandus
     ClassDef { class: Class { strip: "eiurandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2007] },
     // 2008: like dejurandus
     ClassDef { class: Class { strip: "eiurandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2008] },
-    // 2009: like deiurans
+    // 2009: like eiurans
     ClassDef { class: Class { strip: "eiurans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2009] },
     // 2010: like dejurans
     ClassDef { class: Class { strip: "eiurans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2010] },
-    // 2011: like deiuraturus
+    // 2011: like eiuraturus
     ClassDef { class: Class { strip: "eiuraturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2011] },
     // 2012: like dejuraturus
     ClassDef { class: Class { strip: "eiuraturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2012] },
-    // 2013: like deiuratus
+    // 2013: like eiuratus
     ClassDef { class: Class { strip: "eiuratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2013] },
     // 2014: like dejuratus
     ClassDef { class: Class { strip: "eiuratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2014] },
@@ -4048,17 +4048,17 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "eiuvatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2021] },
     // 2022: like dejuvatus
     ClassDef { class: Class { strip: "eiuvatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2022] },
-    // 2023: like delabendus
+    // 2023: like elabendus
     ClassDef { class: Class { strip: "elabendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2023] },
-    // 2024: like delabens
+    // 2024: like elabens
     ClassDef { class: Class { strip: "elabens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2024] },
     // 2025: like delambendus
     ClassDef { class: Class { strip: "elambendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2025] },
     // 2026: like delambens
     ClassDef { class: Class { strip: "elambens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2026] },
-    // 2027: like delapsurus
+    // 2027: like elapsurus
     ClassDef { class: Class { strip: "elapsurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2027] },
-    // 2028: like delapsus
+    // 2028: like elapsus
     ClassDef { class: Class { strip: "elapsus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2028] },
     // 2029: like delatorius
     ClassDef { class: Class { strip: "elatorius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2029] },
@@ -4066,13 +4066,13 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "elebilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2030] },
     // 2031: like delectabilis
     ClassDef { class: Class { strip: "electabilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2031] },
-    // 2032: like delecturus
+    // 2032: like electurus
     ClassDef { class: Class { strip: "electurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2032] },
-    // 2033: like delectus
+    // 2033: like electus
     ClassDef { class: Class { strip: "electus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2033] },
-    // 2034: like delegandus
+    // 2034: like elegandus
     ClassDef { class: Class { strip: "elegandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2034] },
-    // 2035: like delegans
+    // 2035: like elegans
     ClassDef { class: Class { strip: "elegans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2035] },
     // 2036: like delegaturus
     ClassDef { class: Class { strip: "elegaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2036] },
@@ -4156,19 +4156,19 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "eliculus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2075] },
     // 2076: like deligandus
     ClassDef { class: Class { strip: "eligandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2076] },
-    // 2077: like deligans
+    // 2077: like eligans
     ClassDef { class: Class { strip: "eligans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2077] },
     // 2078: like deligaturus
     ClassDef { class: Class { strip: "eligaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2078] },
     // 2079: like deligatus
     ClassDef { class: Class { strip: "eligatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2079] },
-    // 2080: like deligendus
+    // 2080: like eligendus
     ClassDef { class: Class { strip: "eligendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2080] },
-    // 2081: like deligens
+    // 2081: like eligens
     ClassDef { class: Class { strip: "eligens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2081] },
-    // 2082: like delincturus
+    // 2082: like elincturus
     ClassDef { class: Class { strip: "elincturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2082] },
-    // 2083: like delinctus
+    // 2083: like elinctus
     ClassDef { class: Class { strip: "elinctus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2083] },
     // 2084: like delineandus
     ClassDef { class: Class { strip: "elineandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2084] },
@@ -4182,9 +4182,9 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "elinendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2088] },
     // 2089: like delinens
     ClassDef { class: Class { strip: "elinens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2089] },
-    // 2090: like delingendus
+    // 2090: like elingendus
     ClassDef { class: Class { strip: "elingendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2090] },
-    // 2091: like delingens
+    // 2091: like elingens
     ClassDef { class: Class { strip: "elingens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2091] },
     // 2092: like deliniandus
     ClassDef { class: Class { strip: "eliniandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2092] },
@@ -4230,15 +4230,15 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "elitus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2112] },
     // 2113: like delphinatensis
     ClassDef { class: Class { strip: "inatensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2113] },
-    // 2114: like deludendus
+    // 2114: like eludendus
     ClassDef { class: Class { strip: "eludendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2114] },
-    // 2115: like deludens
+    // 2115: like eludens
     ClassDef { class: Class { strip: "eludens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2115] },
-    // 2116: like delumbis
+    // 2116: like elumbis
     ClassDef { class: Class { strip: "elumbis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2116] },
-    // 2117: like delusurus
+    // 2117: like elusurus
     ClassDef { class: Class { strip: "elusurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2117] },
-    // 2118: like delusus
+    // 2118: like elusus
     ClassDef { class: Class { strip: "elusus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2118] },
     // 2119: like demandandus
     ClassDef { class: Class { strip: "emandandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2119] },
@@ -4250,9 +4250,9 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "emandatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2122] },
     // 2123: like demendus
     ClassDef { class: Class { strip: "emendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2123] },
-    // 2124: like demensurus
+    // 2124: like emensurus
     ClassDef { class: Class { strip: "emensurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2124] },
-    // 2125: like demensus
+    // 2125: like emensus
     ClassDef { class: Class { strip: "emensus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2125] },
     // 2126: like dementandus
     ClassDef { class: Class { strip: "ementandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2126] },
@@ -4262,21 +4262,21 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ementaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2128] },
     // 2129: like dementatus
     ClassDef { class: Class { strip: "ementatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2129] },
-    // 2130: like demerendus
+    // 2130: like emerendus
     ClassDef { class: Class { strip: "emerendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2130] },
-    // 2131: like demerens
+    // 2131: like emerens
     ClassDef { class: Class { strip: "emerens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2131] },
-    // 2132: like demergendus
+    // 2132: like emergendus
     ClassDef { class: Class { strip: "emergendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2132] },
-    // 2133: like demergens
+    // 2133: like emergens
     ClassDef { class: Class { strip: "emergens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2133] },
-    // 2134: like demeriturus
+    // 2134: like emeriturus
     ClassDef { class: Class { strip: "emeriturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2134] },
-    // 2135: like demeritus
+    // 2135: like emeritus
     ClassDef { class: Class { strip: "emeritus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2135] },
-    // 2136: like demersurus
+    // 2136: like emersurus
     ClassDef { class: Class { strip: "emersurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2136] },
-    // 2137: like demersus
+    // 2137: like emersus
     ClassDef { class: Class { strip: "emersus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2137] },
     // 2138: like demessurus
     ClassDef { class: Class { strip: "emessurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2138] },
@@ -4286,17 +4286,17 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "emetendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2140] },
     // 2141: like demetens
     ClassDef { class: Class { strip: "emetens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2141] },
-    // 2142: like demetiendus
+    // 2142: like emetiendus
     ClassDef { class: Class { strip: "emetiendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2142] },
-    // 2143: like demetiens
+    // 2143: like emetiens
     ClassDef { class: Class { strip: "emetiens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2143] },
-    // 2144: like demigrandus
+    // 2144: like emigrandus
     ClassDef { class: Class { strip: "emigrandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2144] },
-    // 2145: like demigrans
+    // 2145: like emigrans
     ClassDef { class: Class { strip: "emigrans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2145] },
-    // 2146: like demigraturus
+    // 2146: like emigraturus
     ClassDef { class: Class { strip: "emigraturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2146] },
-    // 2147: like demigratus
+    // 2147: like emigratus
     ClassDef { class: Class { strip: "emigratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2147] },
     // 2148: like deminuendus
     ClassDef { class: Class { strip: "eminuendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2148] },
@@ -4318,13 +4318,13 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "emiratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2156] },
     // 2157: like demissior
     ClassDef { class: Class { strip: "emissior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2157] },
-    // 2158: like demissurus
+    // 2158: like emissurus
     ClassDef { class: Class { strip: "emissurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2158] },
-    // 2159: like demissus
+    // 2159: like emissus
     ClassDef { class: Class { strip: "emissus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2159] },
-    // 2160: like demittendus
+    // 2160: like emittendus
     ClassDef { class: Class { strip: "emittendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2160] },
-    // 2161: like demittens
+    // 2161: like emittens
     ClassDef { class: Class { strip: "emittens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2161] },
     // 2162: like demoliendus
     ClassDef { class: Class { strip: "emoliendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2162] },
@@ -4358,23 +4358,23 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "emordendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2176] },
     // 2177: like demordens
     ClassDef { class: Class { strip: "emordens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2177] },
-    // 2178: like demoriendus
+    // 2178: like emoriendus
     ClassDef { class: Class { strip: "emoriendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2178] },
-    // 2179: like demoriens
+    // 2179: like emoriens
     ClassDef { class: Class { strip: "emoriens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2179] },
-    // 2180: like demoriturus
+    // 2180: like emoriturus
     ClassDef { class: Class { strip: "emoriturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2180] },
-    // 2181: like demortuus
+    // 2181: like emortuus
     ClassDef { class: Class { strip: "emortuus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2181] },
     // 2182: like demoticus
     ClassDef { class: Class { strip: "emoticus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2182] },
-    // 2183: like demoturus
+    // 2183: like emoturus
     ClassDef { class: Class { strip: "emoturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2183] },
-    // 2184: like demotus
+    // 2184: like emotus
     ClassDef { class: Class { strip: "emotus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2184] },
-    // 2185: like demovendus
+    // 2185: like emovendus
     ClassDef { class: Class { strip: "emovendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2185] },
-    // 2186: like demovens
+    // 2186: like emovens
     ClassDef { class: Class { strip: "emovens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2186] },
     // 2187: like demulcendus
     ClassDef { class: Class { strip: "emulcendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2187] },
@@ -4384,13 +4384,13 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "emulcturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2189] },
     // 2190: like demulctus
     ClassDef { class: Class { strip: "emulctus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2190] },
-    // 2191: like demutandus
+    // 2191: like emutandus
     ClassDef { class: Class { strip: "emutandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2191] },
-    // 2192: like demutans
+    // 2192: like emutans
     ClassDef { class: Class { strip: "emutans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2192] },
-    // 2193: like demutaturus
+    // 2193: like emutaturus
     ClassDef { class: Class { strip: "emutaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2193] },
-    // 2194: like demutatus
+    // 2194: like emutatus
     ClassDef { class: Class { strip: "emutatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2194] },
     // 2195: like denegandus
     ClassDef { class: Class { strip: "enegandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2195] },
@@ -4420,13 +4420,13 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "enominaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2207] },
     // 2208: like denominatus
     ClassDef { class: Class { strip: "enominatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2208] },
-    // 2209: like denotandus
+    // 2209: like enotandus
     ClassDef { class: Class { strip: "enotandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2209] },
-    // 2210: like denotans
+    // 2210: like enotans
     ClassDef { class: Class { strip: "enotans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2210] },
-    // 2211: like denotaturus
+    // 2211: like enotaturus
     ClassDef { class: Class { strip: "enotaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2211] },
-    // 2212: like denotatus
+    // 2212: like enotatus
     ClassDef { class: Class { strip: "enotatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2212] },
     // 2213: like densabilis
     ClassDef { class: Class { strip: "ensabilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2213] },
@@ -4444,13 +4444,13 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "enudaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2219] },
     // 2220: like denudatus
     ClassDef { class: Class { strip: "enudatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2220] },
-    // 2221: like denuntiandus
+    // 2221: like enuntiandus
     ClassDef { class: Class { strip: "enuntiandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2221] },
-    // 2222: like denuntians
+    // 2222: like enuntians
     ClassDef { class: Class { strip: "enuntians", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2222] },
-    // 2223: like denuntiaturus
+    // 2223: like enuntiaturus
     ClassDef { class: Class { strip: "enuntiaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2223] },
-    // 2224: like denuntiatus
+    // 2224: like enuntiatus
     ClassDef { class: Class { strip: "enuntiatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2224] },
     // 2225: like depacturus
     ClassDef { class: Class { strip: "epacturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2225] },
@@ -4704,17 +4704,17 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "eputaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2349] },
     // 2350: like deputatus
     ClassDef { class: Class { strip: "eputatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2350] },
-    // 2351: like deradendus
+    // 2351: like eradendus
     ClassDef { class: Class { strip: "eradendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2351] },
-    // 2352: like deradens
+    // 2352: like eradens
     ClassDef { class: Class { strip: "eradens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2352] },
-    // 2353: like derasurus
+    // 2353: like erasurus
     ClassDef { class: Class { strip: "erasurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2353] },
-    // 2354: like derasus
+    // 2354: like erasus
     ClassDef { class: Class { strip: "erasus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2354] },
-    // 2355: like derecturus
+    // 2355: like erecturus
     ClassDef { class: Class { strip: "erecturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2355] },
-    // 2356: like derectus
+    // 2356: like erectus
     ClassDef { class: Class { strip: "erectus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2356] },
     // 2357: like derelicturus
     ClassDef { class: Class { strip: "erelicturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2357] },
@@ -4724,9 +4724,9 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "erelinquendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2359] },
     // 2360: like derelinquens
     ClassDef { class: Class { strip: "erelinquens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2360] },
-    // 2361: like derepturus
+    // 2361: like erepturus
     ClassDef { class: Class { strip: "erepturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2361] },
-    // 2362: like dereptus
+    // 2362: like ereptus
     ClassDef { class: Class { strip: "ereptus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2362] },
     // 2363: like deridendus
     ClassDef { class: Class { strip: "eridendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2363] },
@@ -4734,13 +4734,13 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "eridens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2364] },
     // 2365: like deridiculus
     ClassDef { class: Class { strip: "eridiculus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2365] },
-    // 2366: like derigendus
+    // 2366: like erigendus
     ClassDef { class: Class { strip: "erigendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2366] },
-    // 2367: like derigens
+    // 2367: like erigens
     ClassDef { class: Class { strip: "erigens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2367] },
-    // 2368: like deripiendus
+    // 2368: like eripiendus
     ClassDef { class: Class { strip: "eripiendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2368] },
-    // 2369: like deripiens
+    // 2369: like eripiens
     ClassDef { class: Class { strip: "eripiens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2369] },
     // 2370: like derisorius
     ClassDef { class: Class { strip: "erisorius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2370] },
@@ -4756,17 +4756,17 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "erivaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2375] },
     // 2376: like derivatus
     ClassDef { class: Class { strip: "erivatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2376] },
-    // 2377: like derogandus
+    // 2377: like erogandus
     ClassDef { class: Class { strip: "erogandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2377] },
-    // 2378: like derogans
+    // 2378: like erogans
     ClassDef { class: Class { strip: "erogans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2378] },
-    // 2379: like derogatorius
+    // 2379: like erogatorius
     ClassDef { class: Class { strip: "erogatorius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2379] },
-    // 2380: like derogaturus
+    // 2380: like erogaturus
     ClassDef { class: Class { strip: "erogaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2380] },
-    // 2381: like derogatus
+    // 2381: like erogatus
     ClassDef { class: Class { strip: "erogatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2381] },
-    // 2382: like deruptus
+    // 2382: like eruptus
     ClassDef { class: Class { strip: "eruptus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2382] },
     // 2383: like desacrandus
     ClassDef { class: Class { strip: "esacrandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2383] },
@@ -5210,25 +5210,25 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "evastaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2602] },
     // 2603: like devastatus
     ClassDef { class: Class { strip: "evastatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2603] },
-    // 2604: like devecturus
+    // 2604: like evecturus
     ClassDef { class: Class { strip: "evecturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2604] },
-    // 2605: like devectus
+    // 2605: like evectus
     ClassDef { class: Class { strip: "evectus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2605] },
-    // 2606: like devehendus
+    // 2606: like evehendus
     ClassDef { class: Class { strip: "evehendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2606] },
-    // 2607: like devehens
+    // 2607: like evehens
     ClassDef { class: Class { strip: "evehens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2607] },
-    // 2608: like deveniendus
+    // 2608: like eveniendus
     ClassDef { class: Class { strip: "eveniendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2608] },
-    // 2609: like deveniens
+    // 2609: like eveniens
     ClassDef { class: Class { strip: "eveniens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2609] },
-    // 2610: like deventurus
+    // 2610: like eventurus
     ClassDef { class: Class { strip: "eventurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2610] },
     // 2611: like deventus
     ClassDef { class: Class { strip: "eventus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2611] },
-    // 2612: like deverrendus
+    // 2612: like everrendus
     ClassDef { class: Class { strip: "everrendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2612] },
-    // 2613: like deverrens
+    // 2613: like everrens
     ClassDef { class: Class { strip: "everrens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2613] },
     // 2614: like deversandus
     ClassDef { class: Class { strip: "eversandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2614] },
@@ -5240,15 +5240,15 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "eversatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2617] },
     // 2618: like deversorius
     ClassDef { class: Class { strip: "eversorius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2618] },
-    // 2619: like deversurus
+    // 2619: like eversurus
     ClassDef { class: Class { strip: "eversurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2619] },
-    // 2620: like deversus
+    // 2620: like eversus
     ClassDef { class: Class { strip: "eversus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2620] },
-    // 2621: like devertendus
+    // 2621: like evertendus
     ClassDef { class: Class { strip: "evertendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2621] },
-    // 2622: like devertens
+    // 2622: like evertens
     ClassDef { class: Class { strip: "evertens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2622] },
-    // 2623: like devexus
+    // 2623: like evexus
     ClassDef { class: Class { strip: "evexus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2623] },
     // 2624: like deviandus
     ClassDef { class: Class { strip: "eviandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2624] },
@@ -5258,21 +5258,21 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "eviaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2626] },
     // 2627: like deviatus
     ClassDef { class: Class { strip: "eviatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2627] },
-    // 2628: like devicturus
+    // 2628: like evicturus
     ClassDef { class: Class { strip: "evicturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2628] },
-    // 2629: like devictus
+    // 2629: like evictus
     ClassDef { class: Class { strip: "evictus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2629] },
-    // 2630: like devincendus
+    // 2630: like evincendus
     ClassDef { class: Class { strip: "evincendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2630] },
-    // 2631: like devincens
+    // 2631: like evincens
     ClassDef { class: Class { strip: "evincens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2631] },
-    // 2632: like devinciendus
+    // 2632: like evinciendus
     ClassDef { class: Class { strip: "evinciendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2632] },
-    // 2633: like devinciens
+    // 2633: like evinciens
     ClassDef { class: Class { strip: "evinciens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2633] },
-    // 2634: like devincturus
+    // 2634: like evincturus
     ClassDef { class: Class { strip: "evincturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2634] },
-    // 2635: like devinctus
+    // 2635: like evinctus
     ClassDef { class: Class { strip: "evinctus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2635] },
     // 2636: like devirginandus
     ClassDef { class: Class { strip: "evirginandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2636] },
@@ -5282,39 +5282,39 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "evirginaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2638] },
     // 2639: like devirginatus
     ClassDef { class: Class { strip: "evirginatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2639] },
-    // 2640: like devitandus
+    // 2640: like evitandus
     ClassDef { class: Class { strip: "evitandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2640] },
-    // 2641: like devitans
+    // 2641: like evitans
     ClassDef { class: Class { strip: "evitans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2641] },
-    // 2642: like devitaturus
+    // 2642: like evitaturus
     ClassDef { class: Class { strip: "evitaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2642] },
-    // 2643: like devitatus
+    // 2643: like evitatus
     ClassDef { class: Class { strip: "evitatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2643] },
     // 2644: like devius
     ClassDef { class: Class { strip: "evius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2644] },
-    // 2645: like devocandus
+    // 2645: like evocandus
     ClassDef { class: Class { strip: "evocandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2645] },
-    // 2646: like devocans
+    // 2646: like evocans
     ClassDef { class: Class { strip: "evocans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2646] },
-    // 2647: like devocaturus
+    // 2647: like evocaturus
     ClassDef { class: Class { strip: "evocaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2647] },
-    // 2648: like devocatus
+    // 2648: like evocatus
     ClassDef { class: Class { strip: "evocatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2648] },
-    // 2649: like devolandus
+    // 2649: like evolandus
     ClassDef { class: Class { strip: "evolandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2649] },
-    // 2650: like devolans
+    // 2650: like evolans
     ClassDef { class: Class { strip: "evolans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2650] },
-    // 2651: like devolaturus
+    // 2651: like evolaturus
     ClassDef { class: Class { strip: "evolaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2651] },
-    // 2652: like devolatus
+    // 2652: like evolatus
     ClassDef { class: Class { strip: "evolatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2652] },
-    // 2653: like devoluturus
+    // 2653: like evoluturus
     ClassDef { class: Class { strip: "evoluturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2653] },
-    // 2654: like devolutus
+    // 2654: like evolutus
     ClassDef { class: Class { strip: "evolutus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2654] },
-    // 2655: like devolvendus
+    // 2655: like evolvendus
     ClassDef { class: Class { strip: "evolvendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2655] },
-    // 2656: like devolvens
+    // 2656: like evolvens
     ClassDef { class: Class { strip: "evolvens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2656] },
     // 2657: like devorandus
     ClassDef { class: Class { strip: "evorandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2657] },
@@ -5590,7 +5590,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "inumeraturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2792] },
     // 2793: like dinumeratus
     ClassDef { class: Class { strip: "inumeratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2793] },
-    // 2794: like dioecesanus
+    // 2794: like vesanus
     ClassDef { class: Class { strip: "esanus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2794] },
     // 2795: like dionysiacus
     ClassDef { class: Class { strip: "ysiacus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2795] },
@@ -5638,29 +5638,29 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "is", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2816] },
     // 2817: like disciformus
     ClassDef { class: Class { strip: "ormus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2817] },
-    // 2818: like discoidalis
+    // 2818: like formidalis
     ClassDef { class: Class { strip: "idalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2818] },
     // 2819: like disenbergensis
     ClassDef { class: Class { strip: "isenbergensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2819] },
     // 2820: like disponibilis
     ClassDef { class: Class { strip: "onibilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2820] },
-    // 2821: like disseminandus
+    // 2821: like seminandus
     ClassDef { class: Class { strip: "eminandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2821] },
-    // 2822: like disseminans
+    // 2822: like feminans
     ClassDef { class: Class { strip: "eminans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2822] },
-    // 2823: like disseminaturus
+    // 2823: like seminaturus
     ClassDef { class: Class { strip: "eminaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2823] },
-    // 2824: like disseminatus
+    // 2824: like feminatus
     ClassDef { class: Class { strip: "eminatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2824] },
-    // 2825: like dissolubilis
+    // 2825: like nubilis
     ClassDef { class: Class { strip: "ubilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2825] },
-    // 2826: like distillandus
+    // 2826: like stillandus
     ClassDef { class: Class { strip: "illandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2826] },
-    // 2827: like distillans
+    // 2827: like stillans
     ClassDef { class: Class { strip: "illans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2827] },
-    // 2828: like distillaturus
+    // 2828: like stillaturus
     ClassDef { class: Class { strip: "illaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2828] },
-    // 2829: like distillatus
+    // 2829: like stillatus
     ClassDef { class: Class { strip: "illatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2829] },
     // 2830: like distinctior
     ClassDef { class: Class { strip: "inctior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2830] },
@@ -5796,7 +5796,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "abratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2895] },
     // 2896: like doliarius
     ClassDef { class: Class { strip: "oliarius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2896] },
-    // 2897: like dolorosus
+    // 2897: like morosus
     ClassDef { class: Class { strip: "orosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2897] },
     // 2898: like doricus
     ClassDef { class: Class { strip: "oricus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2898] },
@@ -5934,25 +5934,25 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "educaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2964] },
     // 2965: like educatus
     ClassDef { class: Class { strip: "educatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2965] },
-    // 2966: like efflagitandus
+    // 2966: like flagitandus
     ClassDef { class: Class { strip: "agitandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2966] },
-    // 2967: like efflagitans
+    // 2967: like flagitans
     ClassDef { class: Class { strip: "agitans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2967] },
-    // 2968: like efflagitaturus
+    // 2968: like flagitaturus
     ClassDef { class: Class { strip: "agitaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2968] },
-    // 2969: like efflagitatus
+    // 2969: like flagitatus
     ClassDef { class: Class { strip: "agitatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2969] },
-    // 2970: like efflorens
+    // 2970: like florens
     ClassDef { class: Class { strip: "orens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2970] },
-    // 2971: like efflorescens
+    // 2971: like florescens
     ClassDef { class: Class { strip: "orescens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2971] },
-    // 2972: like efformandus
+    // 2972: like formandus
     ClassDef { class: Class { strip: "ormandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2972] },
-    // 2973: like efformans
+    // 2973: like formans
     ClassDef { class: Class { strip: "ormans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2973] },
-    // 2974: like efformaturus
+    // 2974: like formaturus
     ClassDef { class: Class { strip: "ormaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2974] },
-    // 2975: like efformatus
+    // 2975: like formatus
     ClassDef { class: Class { strip: "ormatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2975] },
     // 2976: like egelidus
     ClassDef { class: Class { strip: "egelidus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2976] },
@@ -6426,7 +6426,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "aimiticus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3210] },
     // 3211: like epicopus
     ClassDef { class: Class { strip: "opus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3211] },
-    // 3212: like epilepticus
+    // 3212: like septicus
     ClassDef { class: Class { strip: "epticus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3212] },
     // 3213: like epiroticus
     ClassDef { class: Class { strip: "epiroticus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3213] },
@@ -6672,13 +6672,13 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "eredatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3333] },
     // 3334: like exheres
     ClassDef { class: Class { strip: "eres", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3334] },
-    // 3335: like exinaniendus
+    // 3335: like inaniendus
     ClassDef { class: Class { strip: "aniendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3335] },
-    // 3336: like exinaniens
+    // 3336: like inaniens
     ClassDef { class: Class { strip: "aniens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3336] },
-    // 3337: like exinaniturus
+    // 3337: like inaniturus
     ClassDef { class: Class { strip: "aniturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3337] },
-    // 3338: like exinanitus
+    // 3338: like inanitus
     ClassDef { class: Class { strip: "anitus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3338] },
     // 3339: like existimandus
     ClassDef { class: Class { strip: "istimandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3339] },
@@ -6692,13 +6692,13 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ex", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3343] },
     // 3344: like exorabilior
     ClassDef { class: Class { strip: "orabilior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3344] },
-    // 3345: like exordiendus
+    // 3345: like ordiendus
     ClassDef { class: Class { strip: "ordiendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3345] },
-    // 3346: like exordiens
+    // 3346: like ordiens
     ClassDef { class: Class { strip: "ordiens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3346] },
-    // 3347: like exorsurus
+    // 3347: like orsurus
     ClassDef { class: Class { strip: "orsurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3347] },
-    // 3348: like exorsus
+    // 3348: like orsus
     ClassDef { class: Class { strip: "orsus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3348] },
     // 3349: like expansivus
     ClassDef { class: Class { strip: "ansivus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3349] },
@@ -6720,11 +6720,11 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ugnax", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3357] },
     // 3358: like exquisitissimus
     ClassDef { class: Class { strip: "isitissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3358] },
-    // 3359: like exsibilandus
+    // 3359: like sibilandus
     ClassDef { class: Class { strip: "ibilandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3359] },
-    // 3360: like exsibilaturus
+    // 3360: like sibilaturus
     ClassDef { class: Class { strip: "ibilaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3360] },
-    // 3361: like exsibilatus
+    // 3361: like sibilatus
     ClassDef { class: Class { strip: "ibilatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3361] },
     // 3362: like extaliosus
     ClassDef { class: Class { strip: "aliosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3362] },
@@ -6734,15 +6734,15 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "emadurianus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3364] },
     // 3365: like extrinsecus
     ClassDef { class: Class { strip: "insecus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3365] },
-    // 3366: like exuberandus
+    // 3366: like uberandus
     ClassDef { class: Class { strip: "uberandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3366] },
-    // 3367: like exuberans
+    // 3367: like uberans
     ClassDef { class: Class { strip: "uberans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3367] },
-    // 3368: like exuberaturus
+    // 3368: like uberaturus
     ClassDef { class: Class { strip: "uberaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3368] },
-    // 3369: like exuberatus
+    // 3369: like uberatus
     ClassDef { class: Class { strip: "uberatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3369] },
-    // 3370: like fabaginus
+    // 3370: like faginus
     ClassDef { class: Class { strip: "aginus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3370] },
     // 3371: like fabricabilis
     ClassDef { class: Class { strip: "abricabilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3371] },
@@ -6780,7 +6780,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "anaticus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3387] },
     // 3388: like fanitalis
     ClassDef { class: Class { strip: "anitalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3388] },
-    // 3389: like farinulentus
+    // 3389: like vinulentus
     ClassDef { class: Class { strip: "inulentus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3389] },
     // 3390: like fastidiendus
     ClassDef { class: Class { strip: "idiendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3390] },
@@ -6836,7 +6836,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "emineus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3415] },
     // 3416: like femininus
     ClassDef { class: Class { strip: "emininus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3416] },
-    // 3417: like feodatarius
+    // 3417: like stlatarius
     ClassDef { class: Class { strip: "atarius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3417] },
     // 3418: like feralis
     ClassDef { class: Class { strip: "eralis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3418] },
@@ -6908,7 +6908,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "iendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3451] },
     // 3452: like fiens
     ClassDef { class: Class { strip: "iens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3452] },
-    // 3453: like figurativus
+    // 3453: like iurativus
     ClassDef { class: Class { strip: "urativus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3453] },
     // 3454: like filamentosus
     ClassDef { class: Class { strip: "ilamentosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3454] },
@@ -6948,7 +6948,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "atatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3471] },
     // 3472: like flatulentarus
     ClassDef { class: Class { strip: "atulentarus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3472] },
-    // 3473: like flaturalis
+    // 3473: like naturalis
     ClassDef { class: Class { strip: "aturalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3473] },
     // 3474: like flavens
     ClassDef { class: Class { strip: "avens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3474] },
@@ -6974,7 +6974,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "avifrons", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3484] },
     // 3485: like flavimanus
     ClassDef { class: Class { strip: "avimanus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3485] },
-    // 3486: like flavior
+    // 3486: like navior
     ClassDef { class: Class { strip: "avior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3486] },
     // 3487: like flavipalpus
     ClassDef { class: Class { strip: "avipalpus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3487] },
@@ -6988,7 +6988,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "avipunctatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3491] },
     // 3492: like flavirostris
     ClassDef { class: Class { strip: "avirostris", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3492] },
-    // 3493: like flavissimus
+    // 3493: like navissimus
     ClassDef { class: Class { strip: "avissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3493] },
     // 3494: like flavitarsis
     ClassDef { class: Class { strip: "avitarsis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3494] },
@@ -7024,17 +7024,17 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "oridensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3509] },
     // 3510: like floridulus
     ClassDef { class: Class { strip: "oridulus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3510] },
-    // 3511: like floridus
+    // 3511: like roridus
     ClassDef { class: Class { strip: "oridus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3511] },
     // 3512: like florigenus
     ClassDef { class: Class { strip: "origenus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3512] },
-    // 3513: like floriger
+    // 3513: like roriger
     ClassDef { class: Class { strip: "origer", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3513] },
     // 3514: like florilegus
     ClassDef { class: Class { strip: "orilegus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3514] },
     // 3515: like floriparus
     ClassDef { class: Class { strip: "oriparus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3515] },
-    // 3516: like florulentus
+    // 3516: like rorulentus
     ClassDef { class: Class { strip: "orulentus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3516] },
     // 3517: like flucticolor
     ClassDef { class: Class { strip: "ucticolor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3517] },
@@ -7058,9 +7058,9 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "uctuaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3526] },
     // 3527: like fluctuatus
     ClassDef { class: Class { strip: "uctuatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3527] },
-    // 3528: like fluctuosus
+    // 3528: like luctuosus
     ClassDef { class: Class { strip: "uctuosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3528] },
-    // 3529: like fluminalis
+    // 3529: like ruminalis
     ClassDef { class: Class { strip: "uminalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3529] },
     // 3530: like fluminensis
     ClassDef { class: Class { strip: "uminensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3530] },
@@ -7086,7 +7086,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "aminosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3540] },
     // 3541: like formaceus
     ClassDef { class: Class { strip: "ormaceus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3541] },
-    // 3542: like formicinus
+    // 3542: like vicinus
     ClassDef { class: Class { strip: "icinus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3542] },
     // 3543: like formidabilis
     ClassDef { class: Class { strip: "idabilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3543] },
@@ -7126,9 +7126,9 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "agraturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3560] },
     // 3561: like fragratus
     ClassDef { class: Class { strip: "agratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3561] },
-    // 3562: like fraternalis
+    // 3562: like maternalis
     ClassDef { class: Class { strip: "aternalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3562] },
-    // 3563: like fraternus
+    // 3563: like maternus
     ClassDef { class: Class { strip: "aternus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3563] },
     // 3564: like fraxineus
     ClassDef { class: Class { strip: "axineus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3564] },
@@ -7180,9 +7180,9 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "uctificatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3587] },
     // 3588: like fructuarius
     ClassDef { class: Class { strip: "uctuarius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3588] },
-    // 3589: like fructuosissimus
+    // 3589: like luctuosissimus
     ClassDef { class: Class { strip: "uctuosissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3589] },
-    // 3590: like frugalis
+    // 3590: like nugalis
     ClassDef { class: Class { strip: "ugalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3590] },
     // 3591: like frugalissimus
     ClassDef { class: Class { strip: "ugalissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3591] },
@@ -7216,9 +7216,9 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ustratorius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3605] },
     // 3606: like fucosus
     ClassDef { class: Class { strip: "ucosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3606] },
-    // 3607: like fugitivarius
+    // 3607: like olivarius
     ClassDef { class: Class { strip: "ivarius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3607] },
-    // 3608: like fuliginosus
+    // 3608: like uliginosus
     ClassDef { class: Class { strip: "uliginosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3608] },
     // 3609: like fumandus
     ClassDef { class: Class { strip: "umandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3609] },
@@ -7230,7 +7230,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "umatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3612] },
     // 3613: like fumeus
     ClassDef { class: Class { strip: "umeus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3613] },
-    // 3614: like fumidus
+    // 3614: like umidus
     ClassDef { class: Class { strip: "umidus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3614] },
     // 3615: like fumifer
     ClassDef { class: Class { strip: "umifer", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3615] },
@@ -7306,7 +7306,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ustigaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3650] },
     // 3651: like fustigatus
     ClassDef { class: Class { strip: "ustigatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3651] },
-    // 3652: like futilis
+    // 3652: like utilis
     ClassDef { class: Class { strip: "utilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3652] },
     // 3653: like gaditanus
     ClassDef { class: Class { strip: "aditanus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3653] },
@@ -7314,13 +7314,13 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "eritus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3654] },
     // 3655: like galilaeus
     ClassDef { class: Class { strip: "ilaeus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3655] },
-    // 3656: like gallinaceus
+    // 3656: like vinaceus
     ClassDef { class: Class { strip: "inaceus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3656] },
     // 3657: like gallinacius
     ClassDef { class: Class { strip: "inacius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3657] },
     // 3658: like gansuensis
     ClassDef { class: Class { strip: "ansuensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3658] },
-    // 3659: like gedanensis
+    // 3659: like omanensis
     ClassDef { class: Class { strip: "anensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3659] },
     // 3660: like genioglossus
     ClassDef { class: Class { strip: "ioglossus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3660] },
@@ -7368,15 +7368,15 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "oriosissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3681] },
     // 3682: like gloriosus
     ClassDef { class: Class { strip: "oriosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3682] },
-    // 3683: like glubendus
+    // 3683: like nubendus
     ClassDef { class: Class { strip: "ubendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3683] },
-    // 3684: like glubens
+    // 3684: like nubens
     ClassDef { class: Class { strip: "ubens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3684] },
     // 3685: like glubundus
     ClassDef { class: Class { strip: "ubundus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3685] },
-    // 3686: like glupturus
+    // 3686: like nupturus
     ClassDef { class: Class { strip: "upturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3686] },
-    // 3687: like gluptus
+    // 3687: like nuptus
     ClassDef { class: Class { strip: "uptus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3687] },
     // 3688: like glutamicus
     ClassDef { class: Class { strip: "utamicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3688] },
@@ -7384,7 +7384,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "utinosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3689] },
     // 3690: like gnaruris
     ClassDef { class: Class { strip: "aruris", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3690] },
-    // 3691: like gnoscundus
+    // 3691: like noscundus
     ClassDef { class: Class { strip: "oscundus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3691] },
     // 3692: like graius
     ClassDef { class: Class { strip: "aius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3692] },
@@ -7466,7 +7466,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "esiodicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3730] },
     // 3731: like hesiodius
     ClassDef { class: Class { strip: "esiodius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3731] },
-    // 3732: like hibericus
+    // 3732: like sericus
     ClassDef { class: Class { strip: "ericus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3732] },
     // 3733: like hibernalis
     ClassDef { class: Class { strip: "ibernalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3733] },
@@ -7480,7 +7480,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ibernatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3737] },
     // 3738: like hibernus
     ClassDef { class: Class { strip: "ibernus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3738] },
-    // 3739: like hinnibundus
+    // 3739: like scribundus
     ClassDef { class: Class { strip: "ibundus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3739] },
     // 3740: like hirsutissimus
     ClassDef { class: Class { strip: "irsutissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3740] },
@@ -7498,7 +7498,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "aniensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3746] },
     // 3747: like homeriacus
     ClassDef { class: Class { strip: "eriacus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3747] },
-    // 3748: like homerius
+    // 3748: like serius
     ClassDef { class: Class { strip: "erius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3748] },
     // 3749: like homicidialis
     ClassDef { class: Class { strip: "idialis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3749] },
@@ -7524,7 +7524,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "umanissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3759] },
     // 3760: like humanus
     ClassDef { class: Class { strip: "umanus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3760] },
-    // 3761: like humectus
+    // 3761: like umectus
     ClassDef { class: Class { strip: "umectus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3761] },
     // 3762: like hydragogus
     ClassDef { class: Class { strip: "ogus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3762] },
@@ -7562,31 +7562,31 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "entatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3778] },
     // 3779: like ienuarius
     ClassDef { class: Class { strip: "enuarius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3779] },
-    // 3780: like ignobilior
+    // 3780: like mobilior
     ClassDef { class: Class { strip: "obilior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3780] },
-    // 3781: like ignobilis
+    // 3781: like mobilis
     ClassDef { class: Class { strip: "obilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3781] },
     // 3782: like ignominiosus
     ClassDef { class: Class { strip: "ominiosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3782] },
-    // 3783: like ignotissimus
+    // 3783: like notissimus
     ClassDef { class: Class { strip: "otissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3783] },
     // 3784: like iliacus
     ClassDef { class: Class { strip: "iliacus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3784] },
     // 3785: like ilignus
     ClassDef { class: Class { strip: "ilignus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3785] },
-    // 3786: like illegalis
+    // 3786: like legalis
     ClassDef { class: Class { strip: "egalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3786] },
-    // 3787: like illegitimus
+    // 3787: like legitimus
     ClassDef { class: Class { strip: "egitimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3787] },
-    // 3788: like illibatus
+    // 3788: like libatus
     ClassDef { class: Class { strip: "ibatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3788] },
-    // 3789: like illiberalis
+    // 3789: like liberalis
     ClassDef { class: Class { strip: "iberalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3789] },
     // 3790: like illimis
     ClassDef { class: Class { strip: "imis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3790] },
-    // 3791: like illimitatus
+    // 3791: like limitatus
     ClassDef { class: Class { strip: "imitatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3791] },
-    // 3792: like illucescens
+    // 3792: like lucescens
     ClassDef { class: Class { strip: "ucescens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3792] },
     // 3793: like illusorius
     ClassDef { class: Class { strip: "usorius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3793] },
@@ -7608,7 +7608,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "aginativus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3801] },
     // 3802: like imaginaturus
     ClassDef { class: Class { strip: "aginaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3802] },
-    // 3803: like imaginatus
+    // 3803: like paginatus
     ClassDef { class: Class { strip: "aginatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3803] },
     // 3804: like imbecillior
     ClassDef { class: Class { strip: "ecillior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3804] },
@@ -7616,47 +7616,47 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ecillis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3805] },
     // 3806: like imbecillus
     ClassDef { class: Class { strip: "ecillus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3806] },
-    // 3807: like immanior
+    // 3807: like sanior
     ClassDef { class: Class { strip: "anior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3807] },
-    // 3808: like immanis
+    // 3808: like manis
     ClassDef { class: Class { strip: "anis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3808] },
-    // 3809: like immanissimus
+    // 3809: like vanissimus
     ClassDef { class: Class { strip: "anissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3809] },
-    // 3810: like immansuetus
+    // 3810: like mansuetus
     ClassDef { class: Class { strip: "ansuetus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3810] },
     // 3811: like immarcescibilis
     ClassDef { class: Class { strip: "escibilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3811] },
-    // 3812: like immensuratus
+    // 3812: like mensuratus
     ClassDef { class: Class { strip: "ensuratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3812] },
-    // 3813: like impellucidus
+    // 3813: like lucidus
     ClassDef { class: Class { strip: "ucidus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3813] },
-    // 3814: like implacabilis
+    // 3814: like placabilis
     ClassDef { class: Class { strip: "acabilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3814] },
     // 3815: like implumis
     ClassDef { class: Class { strip: "umis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3815] },
-    // 3816: like importunissimus
+    // 3816: like oportunissimus
     ClassDef { class: Class { strip: "unissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3816] },
-    // 3817: like improcerus
+    // 3817: like procerus
     ClassDef { class: Class { strip: "ocerus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3817] },
-    // 3818: like improdictus
+    // 3818: like prodictus
     ClassDef { class: Class { strip: "odictus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3818] },
-    // 3819: like improvidus
+    // 3819: like providus
     ClassDef { class: Class { strip: "ovidus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3819] },
-    // 3820: like improvisus
+    // 3820: like provisus
     ClassDef { class: Class { strip: "ovisus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3820] },
-    // 3821: like impubes
+    // 3821: like pubes
     ClassDef { class: Class { strip: "ubes", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3821] },
     // 3822: like impurgabilis
     ClassDef { class: Class { strip: "urgabilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3822] },
     // 3823: like inamissibilis
     ClassDef { class: Class { strip: "amissibilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3823] },
-    // 3824: like inaniloquus
+    // 3824: like vaniloquus
     ClassDef { class: Class { strip: "aniloquus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3824] },
-    // 3825: like incisivus
+    // 3825: like visivus
     ClassDef { class: Class { strip: "isivus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3825] },
-    // 3826: like inclinabilis
+    // 3826: like opinabilis
     ClassDef { class: Class { strip: "inabilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3826] },
-    // 3827: like incomptior
+    // 3827: like promptior
     ClassDef { class: Class { strip: "omptior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3827] },
     // 3828: like inconivus
     ClassDef { class: Class { strip: "onivus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3828] },
@@ -7672,7 +7672,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "agans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3833] },
     // 3834: like indagaturus
     ClassDef { class: Class { strip: "agaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3834] },
-    // 3835: like indagatus
+    // 3835: like plagatus
     ClassDef { class: Class { strip: "agatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3835] },
     // 3836: like indeclinabilis
     ClassDef { class: Class { strip: "eclinabilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3836] },
@@ -7986,7 +7986,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "infusus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3990] },
     // 3991: like infuturus
     ClassDef { class: Class { strip: "infuturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3991] },
-    // 3992: like ininvestigabilis
+    // 3992: like investigabilis
     ClassDef { class: Class { strip: "igabilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3992] },
     // 3993: like iniuriandus
     ClassDef { class: Class { strip: "uriandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3993] },
@@ -7994,23 +7994,23 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "urians", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3994] },
     // 3995: like iniuriaturus
     ClassDef { class: Class { strip: "uriaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3995] },
-    // 3996: like iniustior
+    // 3996: like iustior
     ClassDef { class: Class { strip: "ustior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3996] },
-    // 3997: like iniustus
+    // 3997: like ustus
     ClassDef { class: Class { strip: "ustus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3997] },
     // 3998: like inlaturus
     ClassDef { class: Class { strip: "inlaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3998] },
-    // 3999: like innavigabilis
+    // 3999: like navigabilis
     ClassDef { class: Class { strip: "avigabilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3999] },
-    // 4000: like innotescens
+    // 4000: like notescens
     ClassDef { class: Class { strip: "otescens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4000] },
     // 4001: like innubis
     ClassDef { class: Class { strip: "ubis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4001] },
-    // 4002: like innutriturus
+    // 4002: like nutriturus
     ClassDef { class: Class { strip: "utriturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4002] },
-    // 4003: like innutritus
+    // 4003: like nutritus
     ClassDef { class: Class { strip: "utritus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4003] },
-    // 4004: like inobliteratus
+    // 4004: like literatus
     ClassDef { class: Class { strip: "iteratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4004] },
     // 4005: like inophyllus
     ClassDef { class: Class { strip: "inophyllus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4005] },
@@ -8470,73 +8470,73 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "insuturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4232] },
     // 4233: like insutus
     ClassDef { class: Class { strip: "insutus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4233] },
-    // 4234: like intactilis
+    // 4234: like pactilis
     ClassDef { class: Class { strip: "actilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4234] },
     // 4235: like intellectualis
     ClassDef { class: Class { strip: "ectualis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4235] },
-    // 4236: like intermenstruus
+    // 4236: like menstruus
     ClassDef { class: Class { strip: "enstruus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4236] },
-    // 4237: like internationalis
+    // 4237: like nationalis
     ClassDef { class: Class { strip: "ationalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4237] },
     // 4238: like internuntius
     ClassDef { class: Class { strip: "untius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4238] },
-    // 4239: like interrasilis
+    // 4239: like rasilis
     ClassDef { class: Class { strip: "asilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4239] },
-    // 4240: like interstellaris
+    // 4240: like stellaris
     ClassDef { class: Class { strip: "ellaris", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4240] },
-    // 4241: like intervisendus
+    // 4241: like visendus
     ClassDef { class: Class { strip: "isendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4241] },
-    // 4242: like intervisens
+    // 4242: like visens
     ClassDef { class: Class { strip: "isens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4242] },
-    // 4243: like intransitivus
+    // 4243: like transitivus
     ClassDef { class: Class { strip: "ansitivus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4243] },
-    // 4244: like introducendus
+    // 4244: like producendus
     ClassDef { class: Class { strip: "oducendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4244] },
-    // 4245: like introducens
+    // 4245: like producens
     ClassDef { class: Class { strip: "oducens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4245] },
     // 4246: like introductorius
     ClassDef { class: Class { strip: "oductorius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4246] },
-    // 4247: like introducturus
+    // 4247: like producturus
     ClassDef { class: Class { strip: "oducturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4247] },
-    // 4248: like introductus
+    // 4248: like productus
     ClassDef { class: Class { strip: "oductus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4248] },
-    // 4249: like introferendus
+    // 4249: like proferendus
     ClassDef { class: Class { strip: "oferendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4249] },
-    // 4250: like introferens
+    // 4250: like proferens
     ClassDef { class: Class { strip: "oferens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4250] },
-    // 4251: like introgrediendus
+    // 4251: like progrediendus
     ClassDef { class: Class { strip: "ogrediendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4251] },
-    // 4252: like introgrediens
+    // 4252: like progrediens
     ClassDef { class: Class { strip: "ogrediens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4252] },
-    // 4253: like introgressurus
+    // 4253: like progressurus
     ClassDef { class: Class { strip: "ogressurus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4253] },
-    // 4254: like introgressus
+    // 4254: like progressus
     ClassDef { class: Class { strip: "ogressus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4254] },
     // 4255: like introiugus
     ClassDef { class: Class { strip: "oiugus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4255] },
     // 4256: like introjugus
     ClassDef { class: Class { strip: "oiugus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4256] },
-    // 4257: like introrumpendus
+    // 4257: like prorumpendus
     ClassDef { class: Class { strip: "orumpendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4257] },
-    // 4258: like introrumpens
+    // 4258: like prorumpens
     ClassDef { class: Class { strip: "orumpens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4258] },
-    // 4259: like introrupturus
+    // 4259: like prorupturus
     ClassDef { class: Class { strip: "orupturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4259] },
-    // 4260: like introruptus
+    // 4260: like proruptus
     ClassDef { class: Class { strip: "oruptus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4260] },
-    // 4261: like introspecturus
+    // 4261: like prospecturus
     ClassDef { class: Class { strip: "ospecturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4261] },
-    // 4262: like introspectus
+    // 4262: like prospectus
     ClassDef { class: Class { strip: "ospectus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4262] },
-    // 4263: like introspiciendus
+    // 4263: like prospiciendus
     ClassDef { class: Class { strip: "ospiciendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4263] },
-    // 4264: like introspiciens
+    // 4264: like prospiciens
     ClassDef { class: Class { strip: "ospiciens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4264] },
-    // 4265: like inusitatior
+    // 4265: like usitatior
     ClassDef { class: Class { strip: "usitatior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4265] },
-    // 4266: like invisibilis
+    // 4266: like risibilis
     ClassDef { class: Class { strip: "isibilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4266] },
-    // 4267: like invisitatus
+    // 4267: like visitatus
     ClassDef { class: Class { strip: "isitatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4267] },
     // 4268: like invitatorius
     ClassDef { class: Class { strip: "itatorius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4268] },
@@ -8566,7 +8566,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "irinus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4280] },
     // 4281: like irrefragabilis
     ClassDef { class: Class { strip: "agabilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4281] },
-    // 4282: like irregularis
+    // 4282: like regularis
     ClassDef { class: Class { strip: "egularis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4282] },
     // 4283: like irritabilis
     ClassDef { class: Class { strip: "itabilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4283] },
@@ -8668,9 +8668,9 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ilonensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4331] },
     // 4332: like labidus
     ClassDef { class: Class { strip: "abidus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4332] },
-    // 4333: like laborifer
+    // 4333: like rorifer
     ClassDef { class: Class { strip: "orifer", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4333] },
-    // 4334: like lacunaris
+    // 4334: like lunaris
     ClassDef { class: Class { strip: "unaris", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4334] },
     // 4335: like lacunosus
     ClassDef { class: Class { strip: "unosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4335] },
@@ -8706,7 +8706,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ivibundus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4350] },
     // 4351: like lasciviens
     ClassDef { class: Class { strip: "iviens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4351] },
-    // 4352: like lasciviosus
+    // 4352: like obliviosus
     ClassDef { class: Class { strip: "iviosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4352] },
     // 4353: like lasciviturus
     ClassDef { class: Class { strip: "iviturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4353] },
@@ -8930,7 +8930,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ividissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4462] },
     // 4463: like locutuleius
     ClassDef { class: Class { strip: "utuleius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4463] },
-    // 4464: like longivivax
+    // 4464: like vivax
     ClassDef { class: Class { strip: "ivax", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4464] },
     // 4465: like loricandus
     ClassDef { class: Class { strip: "oricandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4465] },
@@ -9072,7 +9072,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "achinaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4533] },
     // 4534: like machinatus
     ClassDef { class: Class { strip: "achinatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4534] },
-    // 4535: like macropus
+    // 4535: like plus
     ClassDef { class: Class { strip: "us", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4535] },
     // 4536: like magnesius
     ClassDef { class: Class { strip: "esius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4536] },
@@ -9082,7 +9082,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "icentissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4538] },
     // 4539: like malens
     ClassDef { class: Class { strip: "alens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4539] },
-    // 4540: like malesuadus
+    // 4540: like suadus
     ClassDef { class: Class { strip: "adus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4540] },
     // 4541: like malifer
     ClassDef { class: Class { strip: "alifer", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4541] },
@@ -9146,7 +9146,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "itarius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4570] },
     // 4571: like margaritifer
     ClassDef { class: Class { strip: "itifer", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4571] },
-    // 4572: like maritalis
+    // 4572: like vitalis
     ClassDef { class: Class { strip: "italis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4572] },
     // 4573: like maronitus
     ClassDef { class: Class { strip: "onitus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4573] },
@@ -9216,7 +9216,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "elinoporphyrus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4605] },
     // 4606: like melinus
     ClassDef { class: Class { strip: "elinus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4606] },
-    // 4607: like mellitulus
+    // 4607: like scitulus
     ClassDef { class: Class { strip: "itulus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4607] },
     // 4608: like membranaceus
     ClassDef { class: Class { strip: "anaceus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4608] },
@@ -9266,7 +9266,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "idiatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4630] },
     // 4631: like meridionalis
     ClassDef { class: Class { strip: "idionalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4631] },
-    // 4632: like mesozoicus
+    // 4632: like stoicus
     ClassDef { class: Class { strip: "oicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4632] },
     // 4633: like messapus
     ClassDef { class: Class { strip: "apus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4633] },
@@ -9368,7 +9368,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "onstruosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4681] },
     // 4682: like montanianus
     ClassDef { class: Class { strip: "anianus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4682] },
-    // 4683: like moralis
+    // 4683: like oralis
     ClassDef { class: Class { strip: "oralis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4683] },
     // 4684: like morigerus
     ClassDef { class: Class { strip: "origerus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4684] },
@@ -9512,7 +9512,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "otiaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4753] },
     // 4754: like negotiatus
     ClassDef { class: Class { strip: "otiatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4754] },
-    // 4755: like negotiosus
+    // 4755: like otiosus
     ClassDef { class: Class { strip: "otiosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4755] },
     // 4756: like neocaledonicus
     ClassDef { class: Class { strip: "edonicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4756] },
@@ -9594,13 +9594,13 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "onecuplus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4794] },
     // 4795: like nonnullus
     ClassDef { class: Class { strip: "onnullus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4795] },
-    // 4796: like noscitabundus
+    // 4796: like oscitabundus
     ClassDef { class: Class { strip: "oscitabundus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4796] },
     // 4797: like noscitandus
     ClassDef { class: Class { strip: "oscitandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4797] },
-    // 4798: like noscitans
+    // 4798: like oscitans
     ClassDef { class: Class { strip: "oscitans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4798] },
-    // 4799: like noscitaturus
+    // 4799: like oscitaturus
     ClassDef { class: Class { strip: "oscitaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4799] },
     // 4800: like noscitatus
     ClassDef { class: Class { strip: "oscitatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4800] },
@@ -9706,7 +9706,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "utritius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4850] },
     // 4851: like nutritorius
     ClassDef { class: Class { strip: "utritorius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4851] },
-    // 4852: like obbrutescens
+    // 4852: like obmutescens
     ClassDef { class: Class { strip: "utescens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4852] },
     // 4853: like obdurefaciendus
     ClassDef { class: Class { strip: "urefaciendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4853] },
@@ -9748,7 +9748,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "avarius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4871] },
     // 4872: like october
     ClassDef { class: Class { strip: "ober", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4872] },
-    // 4873: like octobrius
+    // 4873: like sobrius
     ClassDef { class: Class { strip: "obrius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4873] },
     // 4874: like octocarinatus
     ClassDef { class: Class { strip: "ocarinatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4874] },
@@ -9812,7 +9812,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ornatior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4903] },
     // 4904: like ornatissimus
     ClassDef { class: Class { strip: "ornatissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4904] },
-    // 4905: like orthopsilosis
+    // 4905: like parapsilosis
     ClassDef { class: Class { strip: "ilosis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4905] },
     // 4906: like osculabundus
     ClassDef { class: Class { strip: "osculabundus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4906] },
@@ -10024,31 +10024,31 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ucidulus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5009] },
     // 5010: like perreptandus
     ClassDef { class: Class { strip: "eptandus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5010] },
-    // 5011: like perreptans
+    // 5011: like reptans
     ClassDef { class: Class { strip: "eptans", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5011] },
-    // 5012: like perreptaturus
+    // 5012: like reptaturus
     ClassDef { class: Class { strip: "eptaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5012] },
-    // 5013: like perreptatus
+    // 5013: like reptatus
     ClassDef { class: Class { strip: "eptatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5013] },
-    // 5014: like perridiculus
+    // 5014: like ridiculus
     ClassDef { class: Class { strip: "idiculus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5014] },
     // 5015: like persuasibilis
     ClassDef { class: Class { strip: "asibilis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5015] },
-    // 5016: like pertranseundus
+    // 5016: like transeundus
     ClassDef { class: Class { strip: "anseundus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5016] },
-    // 5017: like pertransiens
+    // 5017: like transiens
     ClassDef { class: Class { strip: "ansiens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5017] },
-    // 5018: like pertransiturus
+    // 5018: like transiturus
     ClassDef { class: Class { strip: "ansiturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5018] },
-    // 5019: like pertransitus
+    // 5019: like transitus
     ClassDef { class: Class { strip: "ansitus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5019] },
-    // 5020: like pertristis
+    // 5020: like tristis
     ClassDef { class: Class { strip: "istis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5020] },
     // 5021: like peruvianus
     ClassDef { class: Class { strip: "uvianus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5021] },
     // 5022: like pharoensis
     ClassDef { class: Class { strip: "oensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5022] },
-    // 5023: like philippinicus
+    // 5023: like sinicus
     ClassDef { class: Class { strip: "inicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5023] },
     // 5024: like phineius
     ClassDef { class: Class { strip: "ineius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5024] },
@@ -10058,7 +10058,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ocaicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5026] },
     // 5027: like phoceus
     ClassDef { class: Class { strip: "oceus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5027] },
-    // 5028: like phoeniceus
+    // 5028: like spiceus
     ClassDef { class: Class { strip: "iceus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5028] },
     // 5029: like physodes
     ClassDef { class: Class { strip: "ysodes", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5029] },
@@ -10164,7 +10164,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "onundus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5079] },
     // 5080: like populeus
     ClassDef { class: Class { strip: "opuleus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5080] },
-    // 5081: like postglenoidalis
+    // 5081: like sphenoidalis
     ClassDef { class: Class { strip: "enoidalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5081] },
     // 5082: like postremogenitus
     ClassDef { class: Class { strip: "emogenitus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5082] },
@@ -10184,15 +10184,15 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "utiatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5089] },
     // 5090: like praesagiendus
     ClassDef { class: Class { strip: "agiendus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5090] },
-    // 5091: like praesagiens
+    // 5091: like sagiens
     ClassDef { class: Class { strip: "agiens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5091] },
     // 5092: like praesagiundus
     ClassDef { class: Class { strip: "agiundus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5092] },
-    // 5093: like praesagus
+    // 5093: like sagus
     ClassDef { class: Class { strip: "agus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5093] },
     // 5094: like praestigiosus
     ClassDef { class: Class { strip: "igiosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5094] },
-    // 5095: like praesumptuosus
+    // 5095: like sumptuosus
     ClassDef { class: Class { strip: "umptuosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5095] },
     // 5096: like praetorianus
     ClassDef { class: Class { strip: "orianus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5096] },
@@ -10760,7 +10760,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ostitutus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5377] },
     // 5378: like prostraturus
     ClassDef { class: Class { strip: "ostraturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5378] },
-    // 5379: like prostratus
+    // 5379: like rostratus
     ClassDef { class: Class { strip: "ostratus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5379] },
     // 5380: like prosulturus
     ClassDef { class: Class { strip: "osulturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5380] },
@@ -10918,7 +10918,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "udentissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5456] },
     // 5457: like prunifolius
     ClassDef { class: Class { strip: "unifolius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5457] },
-    // 5458: like pruniformis
+    // 5458: like uniformis
     ClassDef { class: Class { strip: "uniformis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5458] },
     // 5459: like psychicus
     ClassDef { class: Class { strip: "ychicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5459] },
@@ -10940,9 +10940,9 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ublicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5467] },
     // 5468: like pudoricolor
     ClassDef { class: Class { strip: "oricolor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5468] },
-    // 5469: like puerilior
+    // 5469: like vilior
     ClassDef { class: Class { strip: "ilior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5469] },
-    // 5470: like puerilissimus
+    // 5470: like vilissimus
     ClassDef { class: Class { strip: "ilissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5470] },
     // 5471: like pulicarius
     ClassDef { class: Class { strip: "ulicarius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5471] },
@@ -10974,7 +10974,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "unctulatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5484] },
     // 5485: like puniceus
     ClassDef { class: Class { strip: "uniceus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5485] },
-    // 5486: like punicus
+    // 5486: like unicus
     ClassDef { class: Class { strip: "unicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5486] },
     // 5487: like pupillaris
     ClassDef { class: Class { strip: "upillaris", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5487] },
@@ -11014,9 +11014,9 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "ythius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5504] },
     // 5505: like pythonicus
     ClassDef { class: Class { strip: "ythonicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5505] },
-    // 5506: like quadragenarius
+    // 5506: like sexagenarius
     ClassDef { class: Class { strip: "agenarius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5506] },
-    // 5507: like quadrigalis
+    // 5507: like vectigalis
     ClassDef { class: Class { strip: "igalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5507] },
     // 5508: like quadrigarius
     ClassDef { class: Class { strip: "igarius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5508] },
@@ -11106,7 +11106,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "osulus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5550] },
     // 5551: like racemarius
     ClassDef { class: Class { strip: "emarius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5551] },
-    // 5552: like racemifer
+    // 5552: like semifer
     ClassDef { class: Class { strip: "emifer", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5552] },
     // 5553: like racemosus
     ClassDef { class: Class { strip: "emosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5553] },
@@ -11124,7 +11124,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "adicescens", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5559] },
     // 5560: like radicosus
     ClassDef { class: Class { strip: "adicosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5560] },
-    // 5561: like raetoromanicus
+    // 5561: like romanicus
     ClassDef { class: Class { strip: "omanicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5561] },
     // 5562: like rallus
     ClassDef { class: Class { strip: "allus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5562] },
@@ -11204,9 +11204,9 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "esinosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5599] },
     // 5600: like respiratorius
     ClassDef { class: Class { strip: "iratorius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5600] },
-    // 5601: like responsaturus
+    // 5601: like sponsaturus
     ClassDef { class: Class { strip: "onsaturus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5601] },
-    // 5602: like responsatus
+    // 5602: like sponsatus
     ClassDef { class: Class { strip: "onsatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5602] },
     // 5603: like retaliatus
     ClassDef { class: Class { strip: "aliatus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5603] },
@@ -11358,17 +11358,17 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "usticellus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5676] },
     // 5677: like rusticulus
     ClassDef { class: Class { strip: "usticulus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5677] },
-    // 5678: like ruthenicus
+    // 5678: like scenicus
     ClassDef { class: Class { strip: "enicus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5678] },
     // 5679: like sacrococcygeus
     ClassDef { class: Class { strip: "ygeus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5679] },
     // 5680: like sacrosanctus
     ClassDef { class: Class { strip: "osanctus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5680] },
-    // 5681: like saharicus
+    // 5681: like varicus
     ClassDef { class: Class { strip: "aricus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5681] },
-    // 5682: like saluber
+    // 5682: like uber
     ClassDef { class: Class { strip: "uber", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5682] },
-    // 5683: like saluberrimus
+    // 5683: like uberrimus
     ClassDef { class: Class { strip: "uberrimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5683] },
     // 5684: like salutaris
     ClassDef { class: Class { strip: "utaris", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5684] },
@@ -11704,7 +11704,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "etulosus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5849] },
     // 5850: like severianus
     ClassDef { class: Class { strip: "erianus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5850] },
-    // 5851: like severissimus
+    // 5851: like verissimus
     ClassDef { class: Class { strip: "erissimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5851] },
     // 5852: like sideralis
     ClassDef { class: Class { strip: "ideralis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5852] },
@@ -11726,7 +11726,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "itanius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5860] },
     // 5861: like sitistus
     ClassDef { class: Class { strip: "itistus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5861] },
-    // 5862: like siuceuvensis
+    // 5862: like suceuvensis
     ClassDef { class: Class { strip: "uceuvensis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5862] },
     // 5863: like socraticus
     ClassDef { class: Class { strip: "ocraticus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5863] },
@@ -11964,7 +11964,7 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "emulentus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5979] },
     // 5980: like tentacularis
     ClassDef { class: Class { strip: "acularis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5980] },
-    // 5981: like territorialis
+    // 5981: like victorialis
     ClassDef { class: Class { strip: "orialis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5981] },
     // 5982: like testudineus
     ClassDef { class: Class { strip: "udineus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5982] },
@@ -12426,11 +12426,11 @@ pub(crate) static ITEMS: [ClassDef; 6462] = [
     ClassDef { class: Class { strip: "icenarius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [6210] },
     // 6211: like tricennalis
     ClassDef { class: Class { strip: "icennalis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [6211] },
-    // 6212: like tricennis
+    // 6212: like vicennis
     ClassDef { class: Class { strip: "icennis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [6212] },
     // 6213: like trieris
     ClassDef { class: Class { strip: "eris", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [6213] },
-    // 6214: like trigesimus
+    // 6214: like vigesimus
     ClassDef { class: Class { strip: "igesimus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [6214] },
     // 6215: like trinitarius
     ClassDef { class: Class { strip: "initarius", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [6215] },

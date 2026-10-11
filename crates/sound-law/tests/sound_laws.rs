@@ -454,18 +454,24 @@ fn matcher_work_limits_are_deterministic_and_identify_the_rule() {
         rules { search: "{A*}{A*}{A*}{A*}{A*}b" => "x"; }
     };
     let program = AMBIGUOUS.compile().unwrap();
+    // A `b` the search can't reach without backtracking (a word without one
+    // isn't searched at all).
     let error = program
-        .apply_with_limit("aaaaaaaaaaaaaaaa", 25)
+        .apply_with_limit("aaaaaaaaaaaaaaaacb", 25)
         .unwrap_err();
     assert_eq!(error.max_steps(), 25);
     assert_eq!(error.rule(), "search");
     assert_eq!(
         error,
         program
-            .apply_with_limit("aaaaaaaaaaaaaaaa", 25)
+            .apply_with_limit("aaaaaaaaaaaaaaaacb", 25)
             .unwrap_err()
     );
     assert_eq!(program.apply_with_limit("aaab", 10_000).unwrap(), "x");
+    assert_eq!(
+        program.apply_with_limit("aaaaaaaaaaaaaaaa", 25).unwrap(),
+        "aaaaaaaaaaaaaaaa"
+    );
 }
 
 #[test]

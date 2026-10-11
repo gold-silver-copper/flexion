@@ -3,8 +3,7 @@
 
 mod c0;
 mod c1;
-mod c2;
 
 pub(crate) fn find(key: &str) -> Option<&'static str> {
-    c0::find(key).or_else(|| c1::find(key)).or_else(|| c2::find(key))
+    c0::find(key).or_else(|| c1::find(key))
 }

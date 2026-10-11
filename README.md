@@ -14,7 +14,7 @@ code in the trainer or the runtime:
 | [`latin`](languages/latin) | given the dictionary's principal parts: nouns 98.4% (98.7% with the gender marker), adjectives 99.6%, verbs 99.1%; from the bare lemma 68.9%, 86.8% (participles take their vowel length from their verbs' tables), 75.8% (vowel length is the hard part: letters alone are right 93.6%, 99.3%, 90.7%) | 99.6–100% |
 | [`polish`](languages/polish) | from the bare lemma: nouns 94.1%, adjectives 99.98%, verbs 97.3%; given the principal parts: nouns 96.4% (98.4% with gender markers), verbs 98.3% | 99.9–100% |
 | [`german`](languages/german) | from the bare lemma: nouns 94.9%, adjectives 99.2%, verbs 93.9% (separable verbs inflect through their base: `anstehen` → `steht an`); given the principal parts: nouns 98.4% (98.7% with the gender marker), verbs 99.1% | 99.9–100% |
-| [`ancient-greek`](languages/ancient-greek) | given the dictionary's principal parts: nouns 96.5%, adjectives 98.4%, verbs 82.5%; with the lemma written in full (accents and vowel length): 80.2%, 86.1%, 63.3%; from the headword (accents, no vowel length): 57.8%, 63.9%, 52.4% (letters right 92.5%, 95.1%, 76.6%) | 99.7–100% (pronouns 97.9%) |
+| [`ancient-greek`](languages/ancient-greek) | given the dictionary's principal parts: nouns 96.5%, adjectives 98.4%, verbs 82.9%; with the lemma written in full (accents and vowel length): 80.2%, 86.1%, 65.6%; from the headword (accents, no vowel length): 57.8%, 63.9%, 54.6% (letters right 92.5%, 95.1%, 79.3%) | 99.7–100% (pronouns 97.9%) |
 | [`sanskrit`](languages/sanskrit) | from the stem: nouns 93.4% (97.3% with the gender marker), adjectives 91.8%, verbs 90.0% (91.1% given future, perfect and aorist) | 99.9–100% |
 | [`spanish`](languages/spanish) | from the bare lemma: nouns 98.7%, adjectives 98.6%, verbs 99.4% (prefixed verbs inflect like their base: `deshacer` → `deshizo`); given the principal parts: verbs 99.9% | 99.2–100% |
 | [`french`](languages/french) | from the bare lemma: nouns 97.7%, adjectives 97.4%, verbs 99.1%, past participle agreement 99.0%; given the principal parts: verbs 99.8% | 99.99–100% |
@@ -51,12 +51,14 @@ verbs 99.1%.
 
 Ancient Greek is the same story twice over: a headword like `λύω` writes the accent but
 not the vowel length the tables mark (`λῡ́ω`), so even its letters are right far more
-often than its marks. Reading the lemma from both ends brings nouns to 57.8%, adjectives
-to 63.9% and verbs to 52.4%. Given the principal parts, nouns reach 96.5% and verbs 82.5%
+often than its marks. Reading the lemma from both ends brings nouns to 57.8% and adjectives
+to 63.9%. Verbs learn their sound laws (reduplication, and the consonant changes before
+the future's `-σ-` and the aorist passive's `-θ-`), which brings them to 54.6% (the
+perfect from 27% to 39%). Given the principal parts, nouns reach 96.5% and verbs 82.9%
 (the aim was 85%). A verb's principal parts each build their own tenses (the part models);
 what the misses still need is an accent that depends on vowel lengths the parts don't always
-show (`ἠγνοήμεθα`, where the model writes `ἠγνόημεθα`), perfect reduplication, and the augment
-after a preverb, in cells that only a few of the 2,700 verbs with tables attest. No other
+show (`ἠγνοήμεθα`, where the model writes `ἠγνόημεθα`) and the augment after a preverb, in
+cells that only a few of the 2,700 verbs with tables attest. No other
 Wiktionary has Greek verb tables the trainer could use.
 
 Spanish, French and Italian need only their configs. Their remaining misses are mostly
@@ -103,7 +105,7 @@ assert_eq!(italian::verb("finire", italian::Tense::Present, italian::Person::Fir
 ## Layout
 
 ```
-crates/flexion         the runtime every generated crate depends on (no dependencies)
+crates/flexion         the runtime every generated crate depends on (and only on sound-law)
 crates/flexion-train   extract → learn → evaluate → write the crate's code
 crates/sound-law       a sound-change engine (moved here from gold-silver-copper/ruthenian)
 configs/               one language description per module: english.rs, russian.rs, latin.rs,
@@ -203,7 +205,25 @@ out (`ахнувший`, `amatus`) and found there is read as written there (`а
 those the model would get wrong: a participle missing from it then means one the verbs
 don't attest, so the model's confidence for the rest stays honest.
 
-Two more models are learned where the data supports them:
+Most of that lexicon repeats what the verb model already knows, so the build also tries
+**deriving** it: a plain lemma is read backwards through the edits of the verb's participle
+cells to a verb the model attests (the verbs that lend a participle are marked as attested
+in the verb tree), and the verb model writes the participle, stress and length included.
+The lexicon then keeps only the exceptions: the participles derivation writes differently
+from the tables, and an empty entry for each one it would find that the tables don't
+attest, so the answers stay those of the stored lexicon. The build keeps whichever model is
+smaller, and all three languages with such a lexicon derive it now:
+
+| | stored entries | exceptions (blocks among them) | tables |
+|---|---:|---:|---:|
+| Russian | 57,877 | 31,823 (29,340) | 13.19 → 11.50 MB |
+| Ancient Greek | 17,196 | 7,601 (753) | 16.13 → 15.81 MB |
+| Latin | 6,819 | 1,933 (46) | 5.43 → 5.36 MB |
+
+The marks are the price, and they take most of the saving back: on the training tenths, Russian's
+lexicon shrinks by 483 KB while its verb tree grows by 392 KB (Latin: 60 KB and 43 KB).
+
+Three more models are learned where the data supports them:
 
 - **Joins.** Prefixes that, put before an attested word, make words that inflect through
   it: German `an` + `fangen` → `fängt an`, `angefangen`, `anzufangen`; Russian `за` +
@@ -214,6 +234,31 @@ Two more models are learned where the data supports them:
 - **Part models.** Where a citation gives principal parts, a part model learns the cells
   from that part instead of the lemma (`ἔλυσα → ἐλύσαμεν`, `नेष्यति → नेष्यामि`). Which
   cells come from which part is decided on the tuning tenth.
+- **Sound laws.** An edit is a string swap learned for every ending it occurs with, so one
+  process becomes many unrelated edits. Where edits differ only by a regular change at the
+  stem's edge, the trainer rewrites them as one edit that carries an invisible trigger
+  and one rule, run by [`sound-law`](crates/sound-law): Polish `ręka → ręce`, `noga →
+  nodze` become `-a → ⟨T⟩e` with `k → c, g → dz / _⟨T⟩`. It looks for three local shapes
+  (local processes are the ones learnable from examples alone, Chandlee, Eyraud & Heinz
+  2014): the stem's last consonants before the ending (`k → c`), its last vowel across
+  final consonants (German umlaut), and a copy of its first consonant before a vowel
+  (Greek reduplication, `λύω → λέλυκα`, `θύω → τέθυκα`). A map entry is kept when it is
+  reliable where it could apply, counting the stems that keep the segment against it
+  (hits over scope by its lower confidence bound, Albright & Hayes 2002), when at least
+  three words and two endings show it, and only for edits it reproduces on every
+  training pair. Rules never touch the lemma cell or the cells principal parts give.
+
+  Rules at the stem's end make the model smaller but rarely change an answer: the suffix
+  tree already reads those letters, so the right class is found either way (Polish nouns'
+  learned palatalization, German nouns' umlaut and Latin verbs' `-s-` perfects leave
+  every number as it was). A rule at the word's start is what a tree read from the end
+  can't learn: Ancient Greek verbs learn reduplication (with the aspirate copied plain,
+  `θ → τ`, `φ → π`, `χ → κ`) and the consonant changes of the future, aorist and perfect,
+  which take the perfect from 27% to 39% of held-out cells right and verbs from 52.4% to
+  54.6%. Sound laws are kept for a part of speech when the size price picks them (they make
+  the model smaller, and often its log-loss lower) and they lose no dev top-1 against the
+  setting without them, on the same words, beyond the standard error of the difference (a
+  paired test: two models this close share most answers).
 
 At runtime a word is walked down the tree; the deepest node with a class that fits it
 (the class's stripped suffixes and starts must match) decides. A stress the caller
@@ -235,16 +280,25 @@ restoration, start-restoration and part model), each implementing the runtime's
   ```rust
   /// Words ending -а.
   pub(crate) fn n1(s: &[char], out: &mut Path<'_>) -> bool {
-      out.push(&[(82, 0.124422066), (40, 0.11540398), …], 0.99…);
+      super::push(out, 1);
       match s {
           [] => true,
-          ['а', s @ ..] => { out.push(&[(110, 0.4), (1, 0.2), …], …); match s { … } }
-          ['б', s @ ..] => super::t3::n17(s, out),
+          ['а', s @ ..] => {
+              super::push(out, 32);
+              match s { … }
+          }
           …
           _ => false,
       }
   }
   ```
+
+  A node is stored as its class counts and the node it is smoothed toward
+  (`Node::inner(1, &[(1, 1.0), (110, 2.0)])`); `push` computes its distribution on first
+  use, `(n_c + α·q_c) / (N + α)` with `q` the parent's, cut below ε
+  (`flexion::tables::smooth_node`, which the trainer's in-memory tables use too). Russian's
+  nodes hold 0.30 million counts where they held 0.75 million probabilities: most of a
+  smoothed distribution is its parent's;
 
 - the **classes** and **edits** are statics, each class with a word of it and its first
   forms (`// 3324: like рука-манипулятор: рука-манипулятор, руки-манипуляторы, …`); classes

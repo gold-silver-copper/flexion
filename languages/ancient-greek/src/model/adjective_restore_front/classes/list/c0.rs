@@ -2,63 +2,63 @@ use super::super::ClassDef;
 use flexion::{Class, Stress};
 
 pub(crate) static ITEMS: [ClassDef; 828] = [
-    // 0: like αηρεχ
+    // 0: like νὠ
     ClassDef { class: Class { strip: "", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [0] },
-    // 1: like ατνασιναφαξἐ
+    // 1: like νωζιναφαξἐ
     ClassDef { class: Class { strip: "αφαξε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1] },
     // 2: like εδσοκιλητ
     ClassDef { class: Class { strip: "ιλητ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2] },
-    // 3: like ηνεμουλ
+    // 3: like νωυλ
     ClassDef { class: Class { strip: "υλ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3] },
-    // 4: like νηρρἀ
+    // 4: like νωγἀ
     ClassDef { class: Class { strip: "α", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4] },
-    // 5: like νοιρητυλκἐ
+    // 5: like ςοετυλκἐ
     ClassDef { class: Class { strip: "υλκε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5] },
-    // 6: like νωαδαρκ
+    // 6: like νωταρκ
     ClassDef { class: Class { strip: "αρκ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [6] },
     // 7: like νωαλἱ
     ClassDef { class: Class { strip: "ι", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [7] },
-    // 8: like νωαπαγἀ
+    // 8: like νωπαγἀ
     ClassDef { class: Class { strip: "αγα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [8] },
     // 9: like νωβαλ
     ClassDef { class: Class { strip: "αλ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [9] },
-    // 10: like νωβαλαραπ
+    // 10: like ςατσαραπ
     ClassDef { class: Class { strip: "αραπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [10] },
     // 11: like νωβαλατεμ
     ClassDef { class: Class { strip: "ατεμ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [11] },
-    // 12: like νωβαλοπὑ
+    // 12: like ςηιγὑ
     ClassDef { class: Class { strip: "υ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [12] },
-    // 13: like νωγαγανυξ
+    // 13: like νωχρανυξ
     ClassDef { class: Class { strip: "ανυξ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [13] },
     // 14: like νωγαγαξἐ
     ClassDef { class: Class { strip: "αξε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [14] },
-    // 15: like νωγανυξ
+    // 15: like ςαβμυξ
     ClassDef { class: Class { strip: "υξ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [15] },
     // 16: like νωγαφ
     ClassDef { class: Class { strip: "αφ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [16] },
-    // 17: like νωγηταρτσ
+    // 17: like ςογγαρτσ
     ClassDef { class: Class { strip: "αρτσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [17] },
-    // 18: like νωγσιμιπἐ
+    // 18: like ςοκιπἐ
     ClassDef { class: Class { strip: "ιπε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [18] },
-    // 19: like νωγυπατακ
+    // 19: like νωυλατακ
     ClassDef { class: Class { strip: "ατακ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [19] },
     // 20: like νωγυφ
     ClassDef { class: Class { strip: "υφ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [20] },
-    // 21: like νωγωπογαρτ
+    // 21: like ςοκιγαρτ
     ClassDef { class: Class { strip: "αρτ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [21] },
-    // 22: like νωδἰ
+    // 22: like νωἰ
     ClassDef { class: Class { strip: "ι", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [22] },
-    // 23: like νωδιτακ
+    // 23: like ςοκακ
     ClassDef { class: Class { strip: "ακ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [23] },
-    // 24: like νωεγρεοθαγἀ
+    // 24: like ςοθαγἀ
     ClassDef { class: Class { strip: "αγα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [24] },
     // 25: like νωεγυτσ
     ClassDef { class: Class { strip: "υτσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [25] },
-    // 26: like νωελιφ
+    // 26: like ςολιφ
     ClassDef { class: Class { strip: "ιφ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [26] },
-    // 27: like νωελπκειδ
+    // 27: like ςοξιδ
     ClassDef { class: Class { strip: "ιδ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [27] },
-    // 28: like νωεναριοκαιδ
+    // 28: like ςαβαιδ
     ClassDef { class: Class { strip: "αιδ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [28] },
     // 29: like νωενυρτὀ
     ClassDef { class: Class { strip: "υρτο", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [29] },
@@ -68,7 +68,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ακσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [31] },
     // 32: like νωζαλἀ
     ClassDef { class: Class { strip: "αλα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [32] },
-    // 33: like νωζαχυσἡ
+    // 33: like ςοχυσἡ
     ClassDef { class: Class { strip: "υση", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [33] },
     // 34: like νωζἱ
     ClassDef { class: Class { strip: "ι", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [34] },
@@ -76,19 +76,19 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ιαδ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [35] },
     // 36: like νωζιδοπαρδνἀ
     ClassDef { class: Class { strip: "αρδνα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [36] },
-    // 37: like νωζιθιλ
+    // 37: like νωπιλ
     ClassDef { class: Class { strip: "ιλ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [37] },
     // 38: like νωζικιττἀ
     ClassDef { class: Class { strip: "ιττα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [38] },
     // 39: like νωζιταπἡ
     ClassDef { class: Class { strip: "απη", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [39] },
-    // 40: like νωζιταχ
+    // 40: like ςοδναχ
     ClassDef { class: Class { strip: "αχ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [40] },
     // 41: like νωζιτσυθεμἀ
     ClassDef { class: Class { strip: "υθεμα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [41] },
     // 42: like νωζιχανετσ
     ClassDef { class: Class { strip: "ανετσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [42] },
-    // 43: like νωζυμ
+    // 43: like ψωυμ
     ClassDef { class: Class { strip: "υμ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [43] },
     // 44: like νωθαμ
     ClassDef { class: Class { strip: "αμ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [44] },
@@ -98,7 +98,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ιθφ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [46] },
     // 47: like νωιβ
     ClassDef { class: Class { strip: "ιβ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [47] },
-    // 48: like νωιεξαλλαπἀ
+    // 48: like ρωταπἀ
     ClassDef { class: Class { strip: "απα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [48] },
     // 49: like νωικ
     ClassDef { class: Class { strip: "ικ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [49] },
@@ -110,7 +110,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ιπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [52] },
     // 53: like νωισαλπατνοτακειακατνοκημοδβἑ
     ClassDef { class: Class { strip: "ατνοκημοδβε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [53] },
-    // 54: like νωιχαρβ
+    // 54: like ςυδαρβ
     ClassDef { class: Class { strip: "αρβ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [54] },
     // 55: like νωκἀ
     ClassDef { class: Class { strip: "α", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [55] },
@@ -120,21 +120,21 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ιν", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [57] },
     // 58: like νωκροιλοπ
     ClassDef { class: Class { strip: "ιλοπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [58] },
-    // 59: like νωκσωνγιγ
+    // 59: like ςαγιγ
     ClassDef { class: Class { strip: "ιγ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [59] },
     // 60: like νωκσωνγιγαιδ
     ClassDef { class: Class { strip: "ιγαιδ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [60] },
     // 61: like νωλαβ
     ClassDef { class: Class { strip: "αβ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [61] },
-    // 62: like νωλλεγγανἀ
+    // 62: like ςηθλανἀ
     ClassDef { class: Class { strip: "ανα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [62] },
     // 63: like νωματ
     ClassDef { class: Class { strip: "ατ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [63] },
     // 64: like νωμγαρπἀ
     ClassDef { class: Class { strip: "αρπα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [64] },
-    // 65: like νωμγαρπυλοπ
+    // 65: like ςηθαμυλοπ
     ClassDef { class: Class { strip: "υλοπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [65] },
-    // 66: like νωμελοπιτνἀ
+    // 66: like ςατσιτνἀ
     ClassDef { class: Class { strip: "ιτνα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [66] },
     // 67: like νωμηπἀ
     ClassDef { class: Class { strip: "", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [67] },
@@ -152,11 +152,11 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ατακορπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [73] },
     // 74: like νωναθ
     ClassDef { class: Class { strip: "αθ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [74] },
-    // 75: like νωνατραμἁ
+    // 75: like νωτραμἁ
     ClassDef { class: Class { strip: "αμα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [75] },
     // 76: like νωναχγυτσορπ
     ClassDef { class: Class { strip: "υτσορπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [76] },
-    // 77: like νωνιαμυκ
+    // 77: like ςοφυκ
     ClassDef { class: Class { strip: "υκ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [77] },
     // 78: like νωνικ
     ClassDef { class: Class { strip: "ικ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [78] },
@@ -182,27 +182,27 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "αμυαν", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [88] },
     // 89: like νωσσαθ
     ClassDef { class: Class { strip: "αθ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [89] },
-    // 90: like νωσσαλἐ
+    // 90: like ςοταλἐ
     ClassDef { class: Class { strip: "αλε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [90] },
-    // 91: like νωσσανἀ
+    // 91: like ςαβανἀ
     ClassDef { class: Class { strip: "ανα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [91] },
-    // 92: like νωσσαρπ
+    // 92: like ςαξαρπ
     ClassDef { class: Class { strip: "αρπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [92] },
     // 93: like νωσσϊαπἐ
     ClassDef { class: Class { strip: "ιαπε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [93] },
-    // 94: like νωσσυν
+    // 94: like ςαξυν
     ClassDef { class: Class { strip: "υν", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [94] },
-    // 95: like νωσυετιλοπ
+    // 95: like ςοκιτιλοπ
     ClassDef { class: Class { strip: "ιλοπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [95] },
     // 96: like νωτεπυνογ
     ClassDef { class: Class { strip: "υνογ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [96] },
-    // 97: like νωτιεγυτσἀ
+    // 97: like ςομονυτσἀ
     ClassDef { class: Class { strip: "υτσα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [97] },
-    // 98: like νωτπαλβ
+    // 98: like ςαψαλβ
     ClassDef { class: Class { strip: "αλβ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [98] },
     // 99: like νωτπιπκἐ
     ClassDef { class: Class { strip: "ιπκε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [99] },
-    // 100: like νωτπυτ
+    // 100: like νωχυτ
     ClassDef { class: Class { strip: "υτ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [100] },
     // 101: like νωτσιβυκ
     ClassDef { class: Class { strip: "ιβυκ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [101] },
@@ -220,11 +220,11 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "υθ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [107] },
     // 108: like νωυκ
     ClassDef { class: Class { strip: "υκ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [108] },
-    // 109: like νωυρκαδ
+    // 109: like ςυσαδ
     ClassDef { class: Class { strip: "αδ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [109] },
     // 110: like νωφυτ
     ClassDef { class: Class { strip: "υτ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [110] },
-    // 111: like νωχραπὑ
+    // 111: like ςοταπὑ
     ClassDef { class: Class { strip: "απυ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [111] },
     // 112: like νωχσαραπσορπ
     ClassDef { class: Class { strip: "απσορπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [112] },
@@ -234,9 +234,9 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "αλεμ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [114] },
     // 115: like ξιρθοιφὀ
     ClassDef { class: Class { strip: "ιφο", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [115] },
-    // 116: like ξυνωψμαγ
+    // 116: like ςοκιμαγ
     ClassDef { class: Class { strip: "αγ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [116] },
-    // 117: like ξυπμασυρχ
+    // 117: like ςοεσυρχ
     ClassDef { class: Class { strip: "υρχ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [117] },
     // 118: like ρωτηλαγεμ
     ClassDef { class: Class { strip: "αγεμ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [118] },
@@ -256,7 +256,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ιβσε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [125] },
     // 126: like ςασαἐ
     ClassDef { class: Class { strip: "αε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [126] },
-    // 127: like ςασαισατσ
+    // 127: like ςοτατσ
     ClassDef { class: Class { strip: "ατσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [127] },
     // 128: like ςασαιτνἀ
     ClassDef { class: Class { strip: "ιτνα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [128] },
@@ -266,7 +266,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ιδιπε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [130] },
     // 131: like ςασητσατακγἐ
     ClassDef { class: Class { strip: "ακγε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [131] },
-    // 132: like ςασιναπσ
+    // 132: like ςοιναπσ
     ClassDef { class: Class { strip: "απσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [132] },
     // 133: like ςασιρχ
     ClassDef { class: Class { strip: "ιρχ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [133] },
@@ -282,59 +282,59 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "υδ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [138] },
     // 139: like ςηγρανἐ
     ClassDef { class: Class { strip: "ανε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [139] },
-    // 140: like ςηγυαρυπ
+    // 140: like ςονκυπ
     ClassDef { class: Class { strip: "υπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [140] },
     // 141: like ςηδαβἀ
     ClassDef { class: Class { strip: "αβα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [141] },
     // 142: like ςηδαρφ
     ClassDef { class: Class { strip: "αρφ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [142] },
-    // 143: like ςηδαρφιρἀ
+    // 143: like ςοτσιρἀ
     ClassDef { class: Class { strip: "ιρα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [143] },
     // 144: like ςηδϊἀ
     ClassDef { class: Class { strip: "ια", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [144] },
     // 145: like ςηδιεογυρετπ
     ClassDef { class: Class { strip: "υρετπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [145] },
-    // 146: like ςηδιεοερυθ
+    // 146: like ςηδιεορυθ
     ClassDef { class: Class { strip: "υθ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [146] },
     // 147: like ςηδιεοιροχ
     ClassDef { class: Class { strip: "ιροχ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [147] },
-    // 148: like ςηδιεοκιρκ
+    // 148: like ςοτιρκ
     ClassDef { class: Class { strip: "ιρκ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [148] },
     // 149: like ςηδιεολυγγορτσ
     ClassDef { class: Class { strip: "υγγορτσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [149] },
     // 150: like ςηδιεολυτκαδ
     ClassDef { class: Class { strip: "υτκαδ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [150] },
-    // 151: like ςηδιεολυτσ
+    // 151: like ςοκιτπυτσ
     ClassDef { class: Class { strip: "υτσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [151] },
-    // 152: like ςηδιεομγισ
+    // 152: like ςομισ
     ClassDef { class: Class { strip: "ισ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [152] },
     // 153: like ςηδιεονιατυρἀ
     ClassDef { class: Class { strip: "υρα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [153] },
-    // 154: like ςηδιεονχαρἀ
+    // 154: like ςωραρἀ
     ClassDef { class: Class { strip: "αρα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [154] },
-    // 155: like ςηδιεουθχἰ
+    // 155: like ςοκαυθχἰ
     ClassDef { class: Class { strip: "υθχι", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [155] },
     // 156: like ςηδωβμαρυθιδ
     ClassDef { class: Class { strip: "αρυθιδ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [156] },
     // 157: like ςηδωδαπμαλ
     ClassDef { class: Class { strip: "απμαλ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [157] },
-    // 158: like ςηδωθυμ
+    // 158: like ςοιρυμ
     ClassDef { class: Class { strip: "υμ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [158] },
-    // 159: like ςηδωἰ
+    // 159: like ςυθἰ
     ClassDef { class: Class { strip: "ι", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [159] },
-    // 160: like ςηδωιτπυγἰα
+    // 160: like ςοιτπυγἰα
     ClassDef { class: Class { strip: "υγια", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [160] },
-    // 161: like ςηδωκρασ
+    // 161: like ςηφασ
     ClassDef { class: Class { strip: "ασ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [161] },
     // 162: like ςηδωλχιμὀ
     ClassDef { class: Class { strip: "ιμο", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [162] },
     // 163: like ςηδωμαδοεν
     ClassDef { class: Class { strip: "αδοεν", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [163] },
-    // 164: like ςηδωμιλ
+    // 164: like ςοτιλ
     ClassDef { class: Class { strip: "ιλ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [164] },
     // 165: like ςηδωναγυρφ
     ClassDef { class: Class { strip: "αγυρφ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [165] },
-    // 166: like ςηδωταερφ
+    // 166: like ςοιταερφ
     ClassDef { class: Class { strip: "αερφ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [166] },
     // 167: like ςηδωταμην
     ClassDef { class: Class { strip: "αμην", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [167] },
@@ -358,25 +358,25 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ιτοδ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [176] },
     // 177: like ςηνεγαρτετ
     ClassDef { class: Class { strip: "αρτετ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [177] },
-    // 178: like ςηνεγιρτ
+    // 178: like ςοτιρτ
     ClassDef { class: Class { strip: "ιρτ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [178] },
     // 179: like ςηνεθσιρἐ
     ClassDef { class: Class { strip: "ιρε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [179] },
     // 180: like ςηνεθσιροδ
     ClassDef { class: Class { strip: "ιροδ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [180] },
-    // 181: like ςηνεθσυροδ
+    // 181: like ςοροφυροδ
     ClassDef { class: Class { strip: "υροδ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [181] },
     // 182: like ςηνιδιλἁ
     ClassDef { class: Class { strip: "ιλα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [182] },
-    // 183: like ςηνιρκιλἰε
+    // 183: like ςυοπιλἰε
     ClassDef { class: Class { strip: "ιλιε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [183] },
-    // 184: like ςηπεπυρδ
+    // 184: like ςονϊυρδ
     ClassDef { class: Class { strip: "υρδ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [184] },
-    // 185: like ςητεατνοκαιρτ
+    // 185: like ςοτσοκαιρτ
     ClassDef { class: Class { strip: "αιρτ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [185] },
     // 186: like ςητεπιιδ
     ClassDef { class: Class { strip: "ιιδ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [186] },
-    // 187: like ςηυφοιδἰ
+    // 187: like ςοκιδἰ
     ClassDef { class: Class { strip: "ιδι", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [187] },
     // 188: like ςηφαβονιγσὑ
     ClassDef { class: Class { strip: "ιγσυ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [188] },
@@ -384,7 +384,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ασα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [189] },
     // 190: like ςηφαὐε
     ClassDef { class: Class { strip: "αυε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [190] },
-    // 191: like ςηφερηφμἀ
+    // 191: like ςοβρομἀ
     ClassDef { class: Class { strip: "α", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [191] },
     // 192: like ςηχυτἀ
     ClassDef { class: Class { strip: "υτα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [192] },
@@ -396,15 +396,15 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "αα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [195] },
     // 196: like ςιεθσαδεκσ
     ClassDef { class: Class { strip: "αδεκσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [196] },
-    // 197: like ςιεθσαιλ
+    // 197: like ςοραιλ
     ClassDef { class: Class { strip: "αιλ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [197] },
     // 198: like ςιεθσιπλἐ
     ClassDef { class: Class { strip: "ιπλε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [198] },
-    // 199: like ςιεθυλ
+    // 199: like ςοτυλ
     ClassDef { class: Class { strip: "υλ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [199] },
-    // 200: like ςιεθχγαλπμιλαπ
+    // 200: like ςονοτνιλαπ
     ClassDef { class: Class { strip: "ιλαπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [200] },
-    // 201: like ςιεθωνμυγ
+    // 201: like ςονμυγ
     ClassDef { class: Class { strip: "υγ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [201] },
     // 202: like ςιελαφσ
     ClassDef { class: Class { strip: "αφσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [202] },
@@ -412,7 +412,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "απμαλ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [203] },
     // 204: like ςιεοιρκὀ
     ClassDef { class: Class { strip: "ιρκο", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [204] },
-    // 205: like ςιεοκαλπ
+    // 205: like ςοναλπ
     ClassDef { class: Class { strip: "αλπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [205] },
     // 206: like ςιεοκαρθνἀ
     ClassDef { class: Class { strip: "αρθνα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [206] },
@@ -436,11 +436,11 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "αρεφ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [215] },
     // 216: like ςοβαλλυσακεδνἑ
     ClassDef { class: Class { strip: "ακεδνε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [216] },
-    // 217: like ςοβαλλυσατνεπ
+    // 217: like ςονωγατνεπ
     ClassDef { class: Class { strip: "ατνεπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [217] },
     // 218: like ςοβαλλυσιδ
     ClassDef { class: Class { strip: "υσιδ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [218] },
-    // 219: like ςοβαλλυσογιλὀ
+    // 219: like ςογιλὀ
     ClassDef { class: Class { strip: "ιλο", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [219] },
     // 220: like ςοβαλλυσονομ
     ClassDef { class: Class { strip: "υσονομ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [220] },
@@ -448,21 +448,21 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ικσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [221] },
     // 222: like ςοβυβ
     ClassDef { class: Class { strip: "υβ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [222] },
-    // 223: like ςογαφηναλαβ
+    // 223: like ςονιναλαβ
     ClassDef { class: Class { strip: "αλαβ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [223] },
-    // 224: like ςογαφοθνακἀ
+    // 224: like ςοκακἀ
     ClassDef { class: Class { strip: "ακα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [224] },
     // 225: like ςογαφοιαρθαλιτκυν
     ClassDef { class: Class { strip: "αλιτκυν", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [225] },
     // 226: like ςογαφοραπυῥ
     ClassDef { class: Class { strip: "απυῥ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [226] },
-    // 227: like ςογαφοτκαλαγ
+    // 227: like ςοκιτκαλαγ
     ClassDef { class: Class { strip: "αλαγ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [227] },
-    // 228: like ςογγοθφυγιλ
+    // 228: like ςοκιτσυγιλ
     ClassDef { class: Class { strip: "υγιλ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [228] },
-    // 229: like ςογγοθφυκυλγ
+    // 229: like ςορκιπυκυλγ
     ClassDef { class: Class { strip: "υκυλγ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [229] },
-    // 230: like ςογολομυτἐ
+    // 230: like ςομυτἐ
     ClassDef { class: Class { strip: "υτε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [230] },
     // 231: like ςογραθηλ
     ClassDef { class: Class { strip: "αθηλ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [231] },
@@ -472,13 +472,13 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ισελετ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [233] },
     // 234: like ςογυζἀ
     ClassDef { class: Class { strip: "υζα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [234] },
-    // 235: like ςογυζιψὑ
+    // 235: like ςοτσιψὑ
     ClassDef { class: Class { strip: "ιψυ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [235] },
     // 236: like ςογυπἀ
     ClassDef { class: Class { strip: "υπα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [236] },
     // 237: like ςογυπιλλακ
     ClassDef { class: Class { strip: "ιλλακ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [237] },
-    // 238: like ςογωγανυσ
+    // 238: like ςοτπανυσ
     ClassDef { class: Class { strip: "ανυσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [238] },
     // 239: like ςογωγαππἱ
     ClassDef { class: Class { strip: "αππι", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [239] },
@@ -486,7 +486,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ασορπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [240] },
     // 241: like ςογωγατιλπὁ
     ClassDef { class: Class { strip: "ιλπο", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [241] },
-    // 242: like ςοεδιτκ
+    // 242: like ςολιτκ
     ClassDef { class: Class { strip: "ιτκ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [242] },
     // 243: like ςοεθαζ
     ClassDef { class: Class { strip: "αζ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [243] },
@@ -494,7 +494,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "αγρα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [244] },
     // 245: like ςοεναυκ
     ClassDef { class: Class { strip: "αυκ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [245] },
-    // 246: like ςοερηδισ
+    // 246: like ςολφισ
     ClassDef { class: Class { strip: "ισ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [246] },
     // 247: like ςοερυγρἀ
     ClassDef { class: Class { strip: "υγρα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [247] },
@@ -502,7 +502,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ιραπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [248] },
     // 249: like ςοετνοκαρδ
     ClassDef { class: Class { strip: "αρδ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [249] },
-    // 250: like ςοετπυρκ
+    // 250: like ςοιφυρκ
     ClassDef { class: Class { strip: "υρκ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [250] },
     // 251: like ςοετσαιβ
     ClassDef { class: Class { strip: "αιβ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [251] },
@@ -514,9 +514,9 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ιτ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [254] },
     // 255: like ςοθυμοτιρκἀ
     ClassDef { class: Class { strip: "ιρκα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [255] },
-    // 256: like ςοιαγυλἠ
+    // 256: like ςοισυλἠ
     ClassDef { class: Class { strip: "υλη", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [256] },
-    // 257: like ςοιαδυχ
+    // 257: like ςοτυχ
     ClassDef { class: Class { strip: "υχ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [257] },
     // 258: like ςοιαλαφεκ
     ClassDef { class: Class { strip: "αφεκ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [258] },
@@ -544,7 +544,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ια", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [269] },
     // 270: like ςοιδικἰο
     ClassDef { class: Class { strip: "ικιο", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [270] },
-    // 271: like ςοιδιπσ
+    // 271: like ςονιπσ
     ClassDef { class: Class { strip: "ιπσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [271] },
     // 272: like ςοιεδγαραμσ
     ClassDef { class: Class { strip: "αραμσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [272] },
@@ -554,11 +554,11 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ιση", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [274] },
     // 275: like ςοιεκυρηκ
     ClassDef { class: Class { strip: "υρηκ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [275] },
-    // 276: like ςοιεναφοτσιρἀ
+    // 276: like ςοτεκιεδιρἀ
     ClassDef { class: Class { strip: "ιρα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [276] },
-    // 277: like ςοιενοδιλεχ
+    // 277: like ςοινοδιλεχ
     ClassDef { class: Class { strip: "ιλεχ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [277] },
-    // 278: like ςοιεοβατπἑ
+    // 278: like ςονωγατπἑ
     ClassDef { class: Class { strip: "ατπε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [278] },
     // 279: like ςοιθιψ
     ClassDef { class: Class { strip: "ιψ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [279] },
@@ -568,7 +568,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "υκαζ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [281] },
     // 282: like ςοιθσιμ
     ClassDef { class: Class { strip: "ιμ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [282] },
-    // 283: like ςοικσοχιλοδ
+    // 283: like ςολυαχιλοδ
     ClassDef { class: Class { strip: "ιλοδ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [283] },
     // 284: like ςοιλατυφ
     ClassDef { class: Class { strip: "ατυφ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [284] },
@@ -586,7 +586,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "υκιμη", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [290] },
     // 291: like ςοιμαλαθιπἐ
     ClassDef { class: Class { strip: "αθιπε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [291] },
-    // 292: like ςοιμσαρἐ
+    // 292: like ςοταρἐ
     ClassDef { class: Class { strip: "αρε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [292] },
     // 293: like ςοιναρὐο
     ClassDef { class: Class { strip: "αρυο", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [293] },
@@ -618,7 +618,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "αρπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [306] },
     // 307: like ςοισηκαθἰ
     ClassDef { class: Class { strip: "αθι", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [307] },
-    // 308: like ςοισηλιμ
+    // 308: like ςορκιμ
     ClassDef { class: Class { strip: "ιμ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [308] },
     // 309: like ςοισηρατιτ
     ClassDef { class: Class { strip: "ατιτ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [309] },
@@ -632,7 +632,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "αλαθ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [313] },
     // 314: like ςοισσαλαθαραπ
     ClassDef { class: Class { strip: "αθαραπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [314] },
-    // 315: like ςοιτνανἐ
+    // 315: like ςοτανἐ
     ClassDef { class: Class { strip: "ανε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [315] },
     // 316: like ςοιτσυρακ
     ClassDef { class: Class { strip: "υρακ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [316] },
@@ -640,7 +640,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ιδωζ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [317] },
     // 318: like ςοκαιζυρβὀ
     ClassDef { class: Class { strip: "υρβο", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [318] },
-    // 319: like ςοκαιλἡ
+    // 319: like ςοκιλἡ
     ClassDef { class: Class { strip: "ιλη", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [319] },
     // 320: like ςοκαιλυφμαπ
     ClassDef { class: Class { strip: "υφμαπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [320] },
@@ -654,7 +654,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ιδορφα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [324] },
     // 325: like ςοκαιτναζυβ
     ClassDef { class: Class { strip: "αζυβ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [325] },
-    // 326: like ςοκαρτσοκαλαμ
+    // 326: like ςολαλοκαλαμ
     ClassDef { class: Class { strip: "αλαμ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [326] },
     // 327: like ςοκϊακλἀ
     ClassDef { class: Class { strip: "ακλα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [327] },
@@ -662,13 +662,13 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ιαλ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [328] },
     // 329: like ςοκϊαμωῥ
     ClassDef { class: Class { strip: "αμωῥ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [329] },
-    // 330: like ςοκϊανηθαναπ
+    // 330: like ςομωμαναπ
     ClassDef { class: Class { strip: "αναπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [330] },
     // 331: like ςοκϊαχρἀ
     ClassDef { class: Class { strip: "αχρα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [331] },
     // 332: like ςοκιγολαενεγ
     ClassDef { class: Class { strip: "αενεγ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [332] },
-    // 333: like ςοκιγρυοιμηδ
+    // 333: like ςοταρποιμηδ
     ClassDef { class: Class { strip: "ιμηδ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [333] },
     // 334: like ςοκιγωγαδιαπ
     ClassDef { class: Class { strip: "αδιαπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [334] },
@@ -692,7 +692,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "αρπμα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [343] },
     // 344: like ςοκικαρωθ
     ClassDef { class: Class { strip: "αρωθ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [344] },
-    // 345: like ςοκιλακσαδιδ
+    // 345: like ςοτκαδιδ
     ClassDef { class: Class { strip: "αδιδ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [345] },
     // 346: like ςοκιλασσεθ
     ClassDef { class: Class { strip: "ασσεθ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [346] },
@@ -704,11 +704,11 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "αρεκ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [349] },
     // 350: like ςοκιμγυφσ
     ClassDef { class: Class { strip: "υφσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [350] },
-    // 351: like ςοκιμθυῥ
+    // 351: like ςοραπυῥ
     ClassDef { class: Class { strip: "υῥ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [351] },
     // 352: like ςοκιμλαθφὀ
     ClassDef { class: Class { strip: "αθφο", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [352] },
-    // 353: like ςοκιμμαργ
+    // 353: like ςοκιφαργ
     ClassDef { class: Class { strip: "αργ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [353] },
     // 354: like ςοκιναιτσιρχ
     ClassDef { class: Class { strip: "ιτσιρχ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [354] },
@@ -776,7 +776,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ατακγυσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [385] },
     // 386: like ςοκιτεθνυσιπἐ
     ClassDef { class: Class { strip: "υσιπε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [386] },
-    // 387: like ςοκιτεθοταμονὀ
+    // 387: like ςοκιτσαμονὀ
     ClassDef { class: Class { strip: "αμονο", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [387] },
     // 388: like ςοκιτηλιμὁ
     ClassDef { class: Class { strip: "ιμο", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [388] },
@@ -796,7 +796,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "αρπμυσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [395] },
     // 396: like ςοκιτκατοπὑ
     ClassDef { class: Class { strip: "ατοπυ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [396] },
-    // 397: like ςοκιτκυψ
+    // 397: like ςορχυψ
     ClassDef { class: Class { strip: "υψ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [397] },
     // 398: like ςοκιτλαιφἐ
     ClassDef { class: Class { strip: "αιφε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [398] },
@@ -834,13 +834,13 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ιρβυ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [414] },
     // 415: like ςοκιτσιρητκαραχ
     ClassDef { class: Class { strip: "αραχ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [415] },
-    // 416: like ςοκιτσιρυμ
+    // 416: like ςονικιρυμ
     ClassDef { class: Class { strip: "ιρυμ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [416] },
     // 417: like ςοκιτσιφοσ
     ClassDef { class: Class { strip: "ιφοσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [417] },
     // 418: like ςοκιτσυκλεφἐ
     ClassDef { class: Class { strip: "υκλεφε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [418] },
-    // 419: like ςοκιτυεκαμραφ
+    // 419: like ςοροφοκαμραφ
     ClassDef { class: Class { strip: "αμραφ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [419] },
     // 420: like ςοκιτυετυφμἐ
     ClassDef { class: Class { strip: "υφμε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [420] },
@@ -870,7 +870,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ανηριε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [432] },
     // 433: like ςοκϊωζ
     ClassDef { class: Class { strip: "ιωζ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [433] },
-    // 434: like ςοκλυογυζ
+    // 434: like ςονιγυζ
     ClassDef { class: Class { strip: "υζ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [434] },
     // 435: like ςολαμαθχ
     ClassDef { class: Class { strip: "αθχ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [435] },
@@ -878,7 +878,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "αμο", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [436] },
     // 437: like ςολαπἁ
     ClassDef { class: Class { strip: "απα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [437] },
-    // 438: like ςολαφεκυξὀ
+    // 438: like ςομυθυξὀ
     ClassDef { class: Class { strip: "υξο", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [438] },
     // 439: like ςολαφιφμἀ
     ClassDef { class: Class { strip: "ιφμα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [439] },
@@ -890,7 +890,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ινεν", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [442] },
     // 443: like ςοληφυσἀ
     ClassDef { class: Class { strip: "υσα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [443] },
-    // 444: like ςολιδεπυρὐε
+    // 444: like ςορετυρὐε
     ClassDef { class: Class { strip: "υρυε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [444] },
     // 445: like ςολιψ
     ClassDef { class: Class { strip: "ιψ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [445] },
@@ -900,13 +900,13 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "υα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [447] },
     // 448: like ςολυμἀ
     ClassDef { class: Class { strip: "υμα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [448] },
-    // 449: like ςολυοβυθαβ
+    // 449: like ςοορρυθαβ
     ClassDef { class: Class { strip: "υθαβ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [449] },
     // 450: like ςολυσἀ
     ClassDef { class: Class { strip: "υσα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [450] },
     // 451: like ςολυτκαδυχαπ
     ClassDef { class: Class { strip: "αδυχαπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [451] },
-    // 452: like ςολυτκαδυχαρβ
+    // 452: like ςοτατυχαρβ
     ClassDef { class: Class { strip: "υχαρβ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [452] },
     // 453: like ςομανυδοσἰ
     ClassDef { class: Class { strip: "υδοσι", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [453] },
@@ -914,7 +914,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ατι", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [454] },
     // 455: like ςομελαἰ
     ClassDef { class: Class { strip: "αι", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [455] },
-    // 456: like ςομηνκατκὀ
+    // 456: like ςυοπατκὀ
     ClassDef { class: Class { strip: "ατκο", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [456] },
     // 457: like ςομθυρρἀ
     ClassDef { class: Class { strip: "υρρα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [457] },
@@ -932,7 +932,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ιλαψ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [463] },
     // 464: like ςομρεδοκαρτσὀ
     ClassDef { class: Class { strip: "αρτσο", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [464] },
-    // 465: like ςομρεδυχαπ
+    // 465: like ςορετυχαπ
     ClassDef { class: Class { strip: "υχαπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [465] },
     // 466: like ςομυθοιργἀ
     ClassDef { class: Class { strip: "ιργα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [466] },
@@ -952,7 +952,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "αφ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [473] },
     // 474: like ςονδαπαλἀ
     ClassDef { class: Class { strip: "αλα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [474] },
-    // 475: like ςονεμαθφ
+    // 475: like ςοτραθφ
     ClassDef { class: Class { strip: "αθφ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [475] },
     // 476: like ςονεμανιρκοπἀ
     ClassDef { class: Class { strip: "ιρκοπα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [476] },
@@ -994,7 +994,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "αχανα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [494] },
     // 495: like ςονεμασυαπ
     ClassDef { class: Class { strip: "ασυαπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [495] },
-    // 496: like ςονεμασυλατακ
+    // 496: like ςονεμουλατακ
     ClassDef { class: Class { strip: "υλατακ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [496] },
     // 497: like ςονεμασωπἀ
     ClassDef { class: Class { strip: "ασωπα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [497] },
@@ -1012,7 +1012,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ιαδεδ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [503] },
     // 504: like ςονεμειφἐ
     ClassDef { class: Class { strip: "ιφε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [504] },
-    // 505: like ςονεμηλαλἀ
+    // 505: like ςοτσαλἀ
     ClassDef { class: Class { strip: "αλα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [505] },
     // 506: like ςονεμμακσενἀ
     ClassDef { class: Class { strip: "ακσενα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [506] },
@@ -1070,7 +1070,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "υδο", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [532] },
     // 533: like ςονεμορυφολὀ
     ClassDef { class: Class { strip: "υφολο", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [533] },
-    // 534: like ςονεμοχρατακορπ
+    // 534: like ςονεμυολακορπ
     ClassDef { class: Class { strip: "ακορπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [534] },
     // 535: like ςονεμραθφἐ
     ClassDef { class: Class { strip: "αθφε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [535] },
@@ -1084,7 +1084,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "αλελ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [539] },
     // 540: like ςονεμσαμησεσ
     ClassDef { class: Class { strip: "αμησεσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [540] },
-    // 541: like ςονεμσαυεκσεραπορπ
+    // 541: like ςονοτυξοραπορπ
     ClassDef { class: Class { strip: "απορπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [541] },
     // 542: like ςονεμσιθἰε
     ClassDef { class: Class { strip: "ιθιε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [542] },
@@ -1132,11 +1132,11 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "υρτ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [563] },
     // 564: like ςονιδἁ
     ClassDef { class: Class { strip: "ιδα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [564] },
-    // 565: like ςονιδαλκ
+    // 565: like ςοτσαλκ
     ClassDef { class: Class { strip: "αλκ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [565] },
     // 566: like ςονιδαρχἀ
     ClassDef { class: Class { strip: "αρχα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [566] },
-    // 567: like ςονιδαῥ
+    // 567: like ςοτναῥ
     ClassDef { class: Class { strip: "αῥ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [567] },
     // 568: like ςονιδβυλομ
     ClassDef { class: Class { strip: "υλομ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [568] },
@@ -1188,7 +1188,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ακ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [591] },
     // 592: like ςονιλατνασ
     ClassDef { class: Class { strip: "ατνασ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [592] },
-    // 593: like ςονιλιμσ
+    // 593: like ςορκιμσ
     ClassDef { class: Class { strip: "ιμσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [593] },
     // 594: like ςονιλλυπρἑ
     ClassDef { class: Class { strip: "υπρε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [594] },
@@ -1226,7 +1226,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ιχ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [610] },
     // 611: like ςονιπανισ
     ClassDef { class: Class { strip: "ανισ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [611] },
-    // 612: like ςονιπυγ
+    // 612: like ςορυγ
     ClassDef { class: Class { strip: "υγ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [612] },
     // 613: like ςονιραβαννικ
     ClassDef { class: Class { strip: "αννικ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [613] },
@@ -1304,9 +1304,9 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "υρτ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [649] },
     // 650: like ςονοθφιπενἀ
     ClassDef { class: Class { strip: "ιπενα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [650] },
-    // 651: like ςονοιμἡ
+    // 651: like ςυσιμἡ
     ClassDef { class: Class { strip: "ιμη", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [651] },
-    // 652: like ςονορθολικιοπ
+    // 652: like ςορετωλικιοπ
     ClassDef { class: Class { strip: "ικιοπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [652] },
     // 653: like ςονοτυραβ
     ClassDef { class: Class { strip: "υραβ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [653] },
@@ -1318,7 +1318,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "υργα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [656] },
     // 657: like ςοντιλεπ
     ClassDef { class: Class { strip: "ιλεπ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [657] },
-    // 658: like ςονυδνικἀ
+    // 658: like ςοτωδικἀ
     ClassDef { class: Class { strip: "ικα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [658] },
     // 659: like ςονυδνικολιφ
     ClassDef { class: Class { strip: "ικολιφ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [659] },
@@ -1370,7 +1370,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "υψ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [682] },
     // 683: like ςορεἱ
     ClassDef { class: Class { strip: "ι", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [683] },
-    // 684: like ςορεκυλγ
+    // 684: like ςυκυλγ
     ClassDef { class: Class { strip: "υλγ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [684] },
     // 685: like ςορετϊων
     ClassDef { class: Class { strip: "ιων", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [685] },
@@ -1424,7 +1424,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ικλα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [709] },
     // 710: like ςορετωμιλεφὠ
     ClassDef { class: Class { strip: "ιλεφω", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [710] },
-    // 711: like ςορετωρυχἐ
+    // 711: like ςορυχἐ
     ClassDef { class: Class { strip: "υχε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [711] },
     // 712: like ςορετωτιλκἀ
     ClassDef { class: Class { strip: "ιλκα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [712] },
@@ -1436,7 +1436,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "αχαλ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [715] },
     // 716: like ςορικἀ
     ClassDef { class: Class { strip: "ικα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [716] },
-    // 717: like ςοροθφαιδἀ
+    // 717: like ςοροφαιδἀ
     ClassDef { class: Class { strip: "αιδα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [717] },
     // 718: like ςοροτονιῥ
     ClassDef { class: Class { strip: "ιῥ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [718] },
@@ -1498,7 +1498,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "ατακα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [746] },
     // 747: like ςοτατσεναφιπἐ
     ClassDef { class: Class { strip: "αφιπε", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [747] },
-    // 748: like ςοτατωγολοιξἀ
+    // 748: like ςωερχοιξἀ
     ClassDef { class: Class { strip: "ιξα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [748] },
     // 749: like ςοτατωρυγραλιφ
     ClassDef { class: Class { strip: "υγραλιφ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [749] },
@@ -1578,7 +1578,7 @@ pub(crate) static ITEMS: [ClassDef; 828] = [
     ClassDef { class: Class { strip: "αιλα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [786] },
     // 787: like ςοτσαισατσἀ
     ClassDef { class: Class { strip: "ατσα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [787] },
-    // 788: like ςοτσαυεκσαραπἀ
+    // 788: like ςουεκσαραπἀ
     ClassDef { class: Class { strip: "αραπα", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [788] },
     // 789: like ςοτσιγεμ
     ClassDef { class: Class { strip: "ιγεμ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [789] },

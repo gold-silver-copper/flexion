@@ -2,11 +2,11 @@ use super::super::ClassDef;
 use flexion::{Class, Stress};
 
 pub(crate) static ITEMS: [ClassDef; 1315] = [
-    // 0: like abacino
+    // 0: like do
     ClassDef { class: Class { strip: "o", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [0] },
     // 1: like abaeto
     ClassDef { class: Class { strip: "abaeto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1] },
-    // 2: like abalieno
+    // 2: like eno
     ClassDef { class: Class { strip: "eno", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2] },
     // 3: like abbaeto
     ClassDef { class: Class { strip: "abbaeto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3] },
@@ -14,73 +14,73 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "atizo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4] },
     // 5: like abbito
     ClassDef { class: Class { strip: "abbito", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5] },
-    // 6: like abblandior
+    // 6: like for
     ClassDef { class: Class { strip: "", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [6] },
     // 7: like abbæto
     ClassDef { class: Class { strip: "abbæto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [7] },
-    // 8: like abcido
+    // 8: like dido
     ClassDef { class: Class { strip: "ido", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [8] },
-    // 9: like abdico
+    // 9: like ico
     ClassDef { class: Class { strip: "ico", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [9] },
-    // 10: like abduco
+    // 10: like duco
     ClassDef { class: Class { strip: "uco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [10] },
-    // 11: like abhorresco
+    // 11: like acesco
     ClassDef { class: Class { strip: "esco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [11] },
     // 12: like abito
     ClassDef { class: Class { strip: "abito", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [12] },
-    // 13: like abiudico
+    // 13: like iudico
     ClassDef { class: Class { strip: "udico", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [13] },
-    // 14: like abiurgo
+    // 14: like iurgo
     ClassDef { class: Class { strip: "urgo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [14] },
-    // 15: like abiuro
+    // 15: like uro
     ClassDef { class: Class { strip: "uro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [15] },
-    // 16: like ablego
+    // 16: like dego
     ClassDef { class: Class { strip: "ego", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [16] },
-    // 17: like abligurio
+    // 17: like surio
     ClassDef { class: Class { strip: "urio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [17] },
-    // 18: like abludo
+    // 18: like udo
     ClassDef { class: Class { strip: "udo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [18] },
-    // 19: like abnodo
+    // 19: like nodo
     ClassDef { class: Class { strip: "odo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [19] },
-    // 20: like abnuto
+    // 20: like futo
     ClassDef { class: Class { strip: "uto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [20] },
     // 21: like abolefacio
     ClassDef { class: Class { strip: "efacio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [21] },
-    // 22: like abomino
+    // 22: like nomino
     ClassDef { class: Class { strip: "omino", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [22] },
-    // 23: like abominor
+    // 23: like ominor
     ClassDef { class: Class { strip: "ominor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [23] },
-    // 24: like aboriscor
+    // 24: like apiscor
     ClassDef { class: Class { strip: "iscor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [24] },
-    // 25: like abrado
+    // 25: like rado
     ClassDef { class: Class { strip: "ado", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [25] },
-    // 26: like abrenuntio
+    // 26: like nuntio
     ClassDef { class: Class { strip: "untio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [26] },
-    // 27: like abscedo
+    // 27: like edo
     ClassDef { class: Class { strip: "edo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [27] },
-    // 28: like absumo
+    // 28: like fumo
     ClassDef { class: Class { strip: "umo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [28] },
     // 29: like abuio
     ClassDef { class: Class { strip: "abuio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [29] },
     // 30: like abujo
     ClassDef { class: Class { strip: "abuio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [30] },
-    // 31: like abutor
+    // 31: like utor
     ClassDef { class: Class { strip: "utor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [31] },
     // 32: like abæto
     ClassDef { class: Class { strip: "abæto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [32] },
-    // 33: like accenseo
+    // 33: like censeo
     ClassDef { class: Class { strip: "enseo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [33] },
-    // 34: like acclamo
+    // 34: like clamo
     ClassDef { class: Class { strip: "amo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [34] },
-    // 35: like acclaro
+    // 35: like claro
     ClassDef { class: Class { strip: "aro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [35] },
-    // 36: like acclino
+    // 36: like bino
     ClassDef { class: Class { strip: "ino", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [36] },
-    // 37: like accognosco
+    // 37: like nosco
     ClassDef { class: Class { strip: "osco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [37] },
-    // 38: like accusito
+    // 38: like usito
     ClassDef { class: Class { strip: "usito", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [38] },
-    // 39: like accuso
+    // 39: like uso
     ClassDef { class: Class { strip: "uso", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [39] },
     // 40: like accusso
     ClassDef { class: Class { strip: "usso", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [40] },
@@ -88,133 +88,133 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "edior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [41] },
     // 42: like acetasco
     ClassDef { class: Class { strip: "etasco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [42] },
-    // 43: like acquiro
+    // 43: like miro
     ClassDef { class: Class { strip: "iro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [43] },
     // 44: like actito
     ClassDef { class: Class { strip: "actito", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [44] },
     // 45: like actuo
     ClassDef { class: Class { strip: "actuo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [45] },
-    // 46: like acumino
+    // 46: like lumino
     ClassDef { class: Class { strip: "umino", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [46] },
-    // 47: like adaresco
+    // 47: like aresco
     ClassDef { class: Class { strip: "aresco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [47] },
-    // 48: like adbito
+    // 48: like dito
     ClassDef { class: Class { strip: "ito", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [48] },
-    // 49: like addenso
+    // 49: like denso
     ClassDef { class: Class { strip: "enso", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [49] },
-    // 50: like addivino
+    // 50: like divino
     ClassDef { class: Class { strip: "ivino", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [50] },
-    // 51: like addormisco
+    // 51: like hisco
     ClassDef { class: Class { strip: "isco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [51] },
-    // 52: like adesurio
+    // 52: like esurio
     ClassDef { class: Class { strip: "esurio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [52] },
-    // 53: like adfigo
+    // 53: like figo
     ClassDef { class: Class { strip: "igo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [53] },
     // 54: like adflicto
     ClassDef { class: Class { strip: "icto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [54] },
-    // 55: like adglutino
+    // 55: like glutino
     ClassDef { class: Class { strip: "utino", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [55] },
-    // 56: like adgratulor
+    // 56: like gratulor
     ClassDef { class: Class { strip: "atulor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [56] },
-    // 57: like adhalo
+    // 57: like balo
     ClassDef { class: Class { strip: "alo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [57] },
-    // 58: like adhereo
+    // 58: like hereo
     ClassDef { class: Class { strip: "ereo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [58] },
     // 59: like adheresco
     ClassDef { class: Class { strip: "eresco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [59] },
-    // 60: like adinflo
+    // 60: like inflo
     ClassDef { class: Class { strip: "inflo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [60] },
-    // 61: like adinspecto
+    // 61: like inspecto
     ClassDef { class: Class { strip: "inspecto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [61] },
-    // 62: like adlaboro
+    // 62: like oro
     ClassDef { class: Class { strip: "oro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [62] },
-    // 63: like adlatro
+    // 63: like latro
     ClassDef { class: Class { strip: "atro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [63] },
-    // 64: like adlevo
+    // 64: like levo
     ClassDef { class: Class { strip: "evo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [64] },
-    // 65: like adluceo
+    // 65: like luceo
     ClassDef { class: Class { strip: "uceo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [65] },
-    // 66: like adluctor
+    // 66: like luctor
     ClassDef { class: Class { strip: "uctor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [66] },
     // 67: like adludio
     ClassDef { class: Class { strip: "udio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [67] },
-    // 68: like admaturo
+    // 68: like maturo
     ClassDef { class: Class { strip: "aturo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [68] },
-    // 69: like admetior
+    // 69: like metior
     ClassDef { class: Class { strip: "etior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [69] },
-    // 70: like admiror
+    // 70: like miror
     ClassDef { class: Class { strip: "iror", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [70] },
-    // 71: like admolior
+    // 71: like molior
     ClassDef { class: Class { strip: "olior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [71] },
-    // 72: like admugio
+    // 72: like mugio
     ClassDef { class: Class { strip: "ugio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [72] },
-    // 73: like admugito
+    // 73: like mugito
     ClassDef { class: Class { strip: "ugito", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [73] },
-    // 74: like adnavigo
+    // 74: like navigo
     ClassDef { class: Class { strip: "avigo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [74] },
-    // 75: like adnitor
+    // 75: like nitor
     ClassDef { class: Class { strip: "itor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [75] },
-    // 76: like adnubilo
+    // 76: like jubilo
     ClassDef { class: Class { strip: "ubilo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [76] },
     // 77: like adnullo
     ClassDef { class: Class { strip: "ullo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [77] },
-    // 78: like adnutrio
+    // 78: like nutrio
     ClassDef { class: Class { strip: "utrio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [78] },
-    // 79: like adopinor
+    // 79: like opinor
     ClassDef { class: Class { strip: "inor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [79] },
-    // 80: like adordino
+    // 80: like ordino
     ClassDef { class: Class { strip: "ordino", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [80] },
-    // 81: like adorno
+    // 81: like orno
     ClassDef { class: Class { strip: "orno", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [81] },
-    // 82: like adosculor
+    // 82: like osculor
     ClassDef { class: Class { strip: "osculor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [82] },
-    // 83: like adpareo
+    // 83: like areo
     ClassDef { class: Class { strip: "areo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [83] },
-    // 84: like adpono
+    // 84: like dono
     ClassDef { class: Class { strip: "ono", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [84] },
-    // 85: like adremigo
+    // 85: like remigo
     ClassDef { class: Class { strip: "emigo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [85] },
-    // 86: like adrepo
+    // 86: like repo
     ClassDef { class: Class { strip: "epo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [86] },
-    // 87: like adrideo
+    // 87: like rideo
     ClassDef { class: Class { strip: "ideo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [87] },
-    // 88: like adripo
+    // 88: like pipo
     ClassDef { class: Class { strip: "ipo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [88] },
-    // 89: like adscribo
+    // 89: like libo
     ClassDef { class: Class { strip: "ibo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [89] },
-    // 90: like adsevero
+    // 90: like cero
     ClassDef { class: Class { strip: "ero", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [90] },
-    // 91: like adsibilo
+    // 91: like sibilo
     ClassDef { class: Class { strip: "ibilo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [91] },
-    // 92: like adtamino
+    // 92: like examino
     ClassDef { class: Class { strip: "amino", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [92] },
     // 93: like adulescentior
     ClassDef { class: Class { strip: "escentior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [93] },
-    // 94: like adulo
+    // 94: like culo
     ClassDef { class: Class { strip: "ulo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [94] },
     // 95: like adulor
     ClassDef { class: Class { strip: "ulor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [95] },
-    // 96: like aduno
+    // 96: like luno
     ClassDef { class: Class { strip: "uno", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [96] },
-    // 97: like advelo
+    // 97: like celo
     ClassDef { class: Class { strip: "elo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [97] },
-    // 98: like advesperascit
+    // 98: like autumnascit
     ClassDef { class: Class { strip: "ascit", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [98] },
-    // 99: like advivo
+    // 99: like fivo
     ClassDef { class: Class { strip: "ivo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [99] },
     // 100: like adzelor
     ClassDef { class: Class { strip: "elor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [100] },
-    // 101: like aegroto
+    // 101: like doto
     ClassDef { class: Class { strip: "oto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [101] },
     // 102: like aerugino
     ClassDef { class: Class { strip: "ugino", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [102] },
-    // 103: like agnascor
+    // 103: like nascor
     ClassDef { class: Class { strip: "ascor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [103] },
     // 104: like alare
     ClassDef { class: Class { strip: "are", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [104] },
-    // 105: like albicasco
+    // 105: like pasco
     ClassDef { class: Class { strip: "asco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [105] },
-    // 106: like allabor
+    // 106: like labor
     ClassDef { class: Class { strip: "abor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [106] },
     // 107: like allegorizo
     ClassDef { class: Class { strip: "egorizo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [107] },
@@ -224,7 +224,7 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "alucinor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [109] },
     // 110: like amando
     ClassDef { class: Class { strip: "amando", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [110] },
-    // 111: like amarico
+    // 111: like varico
     ClassDef { class: Class { strip: "arico", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [111] },
     // 112: like amento
     ClassDef { class: Class { strip: "amento", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [112] },
@@ -234,7 +234,7 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "amolior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [114] },
     // 115: like amoveo
     ClassDef { class: Class { strip: "amoveo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [115] },
-    // 116: like annonor
+    // 116: like conor
     ClassDef { class: Class { strip: "onor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [116] },
     // 117: like antiquo
     ClassDef { class: Class { strip: "iquo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [117] },
@@ -242,11 +242,11 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "eco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [118] },
     // 119: like apozymo
     ClassDef { class: Class { strip: "ymo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [119] },
-    // 120: like apprendo
+    // 120: like vendo
     ClassDef { class: Class { strip: "endo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [120] },
-    // 121: like appromitto
+    // 121: like promitto
     ClassDef { class: Class { strip: "omitto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [121] },
-    // 122: like apricor
+    // 122: like tricor
     ClassDef { class: Class { strip: "icor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [122] },
     // 123: like ardeo
     ClassDef { class: Class { strip: "ardeo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [123] },
@@ -256,21 +256,21 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "arefacio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [125] },
     // 126: like arfacio
     ClassDef { class: Class { strip: "arfacio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [126] },
-    // 127: like argumentor
+    // 127: like frumentor
     ClassDef { class: Class { strip: "umentor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [127] },
     // 128: like aromatizo
     ClassDef { class: Class { strip: "omatizo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [128] },
     // 129: like aspernor
     ClassDef { class: Class { strip: "aspernor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [129] },
-    // 130: like auctentizo
+    // 130: like lachanizo
     ClassDef { class: Class { strip: "izo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [130] },
     // 131: like auctorico
     ClassDef { class: Class { strip: "orico", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [131] },
     // 132: like auctorizo
     ClassDef { class: Class { strip: "orizo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [132] },
-    // 133: like auroresco
+    // 133: like floresco
     ClassDef { class: Class { strip: "oresco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [133] },
-    // 134: like autumnescit
+    // 134: like licescit
     ClassDef { class: Class { strip: "escit", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [134] },
     // 135: like aveho
     ClassDef { class: Class { strip: "aveho", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [135] },
@@ -286,9 +286,9 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "avoco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [140] },
     // 141: like avolo
     ClassDef { class: Class { strip: "avolo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [141] },
-    // 142: like balbutio
+    // 142: like mutio
     ClassDef { class: Class { strip: "utio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [142] },
-    // 143: like baptiso
+    // 143: like viso
     ClassDef { class: Class { strip: "iso", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [143] },
     // 144: like basio
     ClassDef { class: Class { strip: "asio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [144] },
@@ -302,7 +302,7 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "eplaceo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [148] },
     // 149: like beto
     ClassDef { class: Class { strip: "eto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [149] },
-    // 150: like blasphemo
+    // 150: like demo
     ClassDef { class: Class { strip: "emo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [150] },
     // 151: like bubulo
     ClassDef { class: Class { strip: "ubulo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [151] },
@@ -320,13 +320,13 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "onizo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [157] },
     // 158: like carino
     ClassDef { class: Class { strip: "arino", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [158] },
-    // 159: like castrametor
+    // 159: like metor
     ClassDef { class: Class { strip: "etor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [159] },
     // 160: like catechizo
     ClassDef { class: Class { strip: "echizo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [160] },
     // 161: like catecizo
     ClassDef { class: Class { strip: "ecizo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [161] },
-    // 162: like catillo
+    // 162: like stillo
     ClassDef { class: Class { strip: "illo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [162] },
     // 163: like cauterio
     ClassDef { class: Class { strip: "erio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [163] },
@@ -344,11 +344,11 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "ueo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [169] },
     // 170: like circumfirmo
     ClassDef { class: Class { strip: "irmo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [170] },
-    // 171: like circummunio
+    // 171: like unio
     ClassDef { class: Class { strip: "unio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [171] },
-    // 172: like circumretio
+    // 172: like inretio
     ClassDef { class: Class { strip: "etio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [172] },
-    // 173: like circumsepio
+    // 173: like sepio
     ClassDef { class: Class { strip: "epio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [173] },
     // 174: like circumsigno
     ClassDef { class: Class { strip: "igno", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [174] },
@@ -362,7 +362,7 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "arigo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [178] },
     // 179: like clathro
     ClassDef { class: Class { strip: "athro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [179] },
-    // 180: like clavo
+    // 180: like navo
     ClassDef { class: Class { strip: "avo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [180] },
     // 181: like clodico
     ClassDef { class: Class { strip: "odico", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [181] },
@@ -376,39 +376,39 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "ogito", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [185] },
     // 186: like cogo
     ClassDef { class: Class { strip: "ogo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [186] },
-    // 187: like collineo
+    // 187: like lineo
     ClassDef { class: Class { strip: "ineo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [187] },
-    // 188: like collugeo
+    // 188: like lugeo
     ClassDef { class: Class { strip: "ugeo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [188] },
-    // 189: like collustro
+    // 189: like lustro
     ClassDef { class: Class { strip: "ustro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [189] },
     // 190: like colo
     ClassDef { class: Class { strip: "olo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [190] },
     // 191: like comissor
     ClassDef { class: Class { strip: "omissor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [191] },
-    // 192: like commacero
+    // 192: like macero
     ClassDef { class: Class { strip: "acero", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [192] },
-    // 193: like commitigo
+    // 193: like litigo
     ClassDef { class: Class { strip: "itigo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [193] },
-    // 194: like commonstro
+    // 194: like monstro
     ClassDef { class: Class { strip: "onstro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [194] },
-    // 195: like communico
+    // 195: like munico
     ClassDef { class: Class { strip: "unico", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [195] },
     // 196: like communicor
     ClassDef { class: Class { strip: "unicor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [196] },
     // 197: like como
     ClassDef { class: Class { strip: "omo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [197] },
-    // 198: like compaco
+    // 198: like paco
     ClassDef { class: Class { strip: "aco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [198] },
-    // 199: like compilo
+    // 199: like filo
     ClassDef { class: Class { strip: "ilo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [199] },
-    // 200: like complano
+    // 200: like mano
     ClassDef { class: Class { strip: "ano", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [200] },
-    // 201: like condecerno
+    // 201: like decerno
     ClassDef { class: Class { strip: "ecerno", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [201] },
     // 202: like condelector
     ClassDef { class: Class { strip: "elector", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [202] },
-    // 203: like condescendo
+    // 203: like descendo
     ClassDef { class: Class { strip: "escendo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [203] },
     // 204: like conecto
     ClassDef { class: Class { strip: "onecto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [204] },
@@ -482,21 +482,21 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "onfuto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [238] },
     // 239: like confutuo
     ClassDef { class: Class { strip: "onfutuo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [239] },
-    // 240: like conglorifico
+    // 240: like glorifico
     ClassDef { class: Class { strip: "orifico", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [240] },
-    // 241: like congyro
+    // 241: like gyro
     ClassDef { class: Class { strip: "yro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [241] },
     // 242: like conitor
     ClassDef { class: Class { strip: "onitor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [242] },
-    // 243: like coniucundor
+    // 243: like iucundor
     ClassDef { class: Class { strip: "ucundor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [243] },
     // 244: like coniveo
     ClassDef { class: Class { strip: "oniveo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [244] },
-    // 245: like conniveo
+    // 245: like liveo
     ClassDef { class: Class { strip: "iveo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [245] },
-    // 246: like conregno
+    // 246: like regno
     ClassDef { class: Class { strip: "egno", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [246] },
-    // 247: like conroboro
+    // 247: like roboro
     ClassDef { class: Class { strip: "oboro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [247] },
     // 248: like consacro
     ClassDef { class: Class { strip: "onsacro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [248] },
@@ -580,7 +580,7 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "onsolor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [287] },
     // 288: like consono
     ClassDef { class: Class { strip: "onsono", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [288] },
-    // 289: like consopio
+    // 289: like copio
     ClassDef { class: Class { strip: "opio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [289] },
     // 290: like conspargo
     ClassDef { class: Class { strip: "onspargo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [290] },
@@ -636,7 +636,7 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "onsuo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [315] },
     // 316: like consurgo
     ClassDef { class: Class { strip: "onsurgo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [316] },
-    // 317: like contabesco
+    // 317: like tabesco
     ClassDef { class: Class { strip: "abesco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [317] },
     // 318: like contenebro
     ClassDef { class: Class { strip: "ebro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [318] },
@@ -644,33 +644,33 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "ontionor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [319] },
     // 320: like contradeico
     ClassDef { class: Class { strip: "adeico", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [320] },
-    // 321: like contradico
+    // 321: like radico
     ClassDef { class: Class { strip: "adico", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [321] },
     // 322: like contrapono
     ClassDef { class: Class { strip: "apono", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [322] },
     // 323: like contrascribo
     ClassDef { class: Class { strip: "ascribo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [323] },
-    // 324: like contrasto
+    // 324: like vasto
     ClassDef { class: Class { strip: "asto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [324] },
     // 325: like contravenio
     ClassDef { class: Class { strip: "avenio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [325] },
-    // 326: like contribulo
+    // 326: like fibulo
     ClassDef { class: Class { strip: "ibulo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [326] },
-    // 327: like contristo
+    // 327: like pisto
     ClassDef { class: Class { strip: "isto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [327] },
     // 328: like convaso
     ClassDef { class: Class { strip: "aso", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [328] },
-    // 329: like convescor
+    // 329: like vescor
     ClassDef { class: Class { strip: "escor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [329] },
     // 330: like convicior
     ClassDef { class: Class { strip: "icior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [330] },
-    // 331: like convivifico
+    // 331: like vivifico
     ClassDef { class: Class { strip: "ivifico", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [331] },
     // 332: like convivor
     ClassDef { class: Class { strip: "ivor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [332] },
     // 333: like copulo
     ClassDef { class: Class { strip: "opulo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [333] },
-    // 334: like corrugo
+    // 334: like sugo
     ClassDef { class: Class { strip: "ugo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [334] },
     // 335: like crapulor
     ClassDef { class: Class { strip: "apulor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [335] },
@@ -680,13 +680,13 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "ebesco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [337] },
     // 338: like crebresco
     ClassDef { class: Class { strip: "ebresco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [338] },
-    // 339: like cribro
+    // 339: like libro
     ClassDef { class: Class { strip: "ibro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [339] },
     // 340: like crimino
     ClassDef { class: Class { strip: "imino", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [340] },
     // 341: like criminor
     ClassDef { class: Class { strip: "iminor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [341] },
-    // 342: like crinio
+    // 342: like finio
     ClassDef { class: Class { strip: "inio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [342] },
     // 343: like crudesco
     ClassDef { class: Class { strip: "udesco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [343] },
@@ -694,7 +694,7 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "ucubo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [344] },
     // 345: like cucurio
     ClassDef { class: Class { strip: "ucurio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [345] },
-    // 346: like cuncto
+    // 346: like uncto
     ClassDef { class: Class { strip: "uncto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [346] },
     // 347: like cunctor
     ClassDef { class: Class { strip: "unctor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [347] },
@@ -770,15 +770,15 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "edico", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [382] },
     // 383: like dedignor
     ClassDef { class: Class { strip: "edignor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [383] },
-    // 384: like dedisco
+    // 384: like edisco
     ClassDef { class: Class { strip: "edisco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [384] },
-    // 385: like dedoceo
+    // 385: like edoceo
     ClassDef { class: Class { strip: "edoceo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [385] },
     // 386: like dedoleo
     ClassDef { class: Class { strip: "edoleo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [386] },
-    // 387: like dedolo
+    // 387: like edolo
     ClassDef { class: Class { strip: "edolo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [387] },
-    // 388: like deduco
+    // 388: like educo
     ClassDef { class: Class { strip: "educo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [388] },
     // 389: like defaeco
     ClassDef { class: Class { strip: "efaeco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [389] },
@@ -858,7 +858,7 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "efungor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [426] },
     // 427: like degenero
     ClassDef { class: Class { strip: "egenero", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [427] },
-    // 428: like degero
+    // 428: like egero
     ClassDef { class: Class { strip: "egero", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [428] },
     // 429: like deglubo
     ClassDef { class: Class { strip: "eglubo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [429] },
@@ -868,7 +868,7 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "egluttio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [431] },
     // 432: like degravo
     ClassDef { class: Class { strip: "egravo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [432] },
-    // 433: like degredior
+    // 433: like egredior
     ClassDef { class: Class { strip: "egredior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [433] },
     // 434: like degulo
     ClassDef { class: Class { strip: "egulo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [434] },
@@ -876,13 +876,13 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "eguno", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [435] },
     // 436: like degusto
     ClassDef { class: Class { strip: "egusto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [436] },
-    // 437: like deicio
+    // 437: like eicio
     ClassDef { class: Class { strip: "eicio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [437] },
-    // 438: like deiero
+    // 438: like eiero
     ClassDef { class: Class { strip: "eiero", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [438] },
     // 439: like dejero
     ClassDef { class: Class { strip: "eiero", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [439] },
-    // 440: like dejicio
+    // 440: like ejicio
     ClassDef { class: Class { strip: "eiicio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [440] },
     // 441: like deiudico
     ClassDef { class: Class { strip: "eiudico", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [441] },
@@ -894,7 +894,7 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "eiungo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [444] },
     // 445: like dejungo
     ClassDef { class: Class { strip: "eiungo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [445] },
-    // 446: like deiuro
+    // 446: like eiuro
     ClassDef { class: Class { strip: "eiuro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [446] },
     // 447: like dejuro
     ClassDef { class: Class { strip: "eiuro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [447] },
@@ -902,15 +902,15 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "eiuvo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [448] },
     // 449: like dejuvo
     ClassDef { class: Class { strip: "eiuvo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [449] },
-    // 450: like delabor
+    // 450: like elabor
     ClassDef { class: Class { strip: "elabor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [450] },
-    // 451: like delambo
+    // 451: like elambo
     ClassDef { class: Class { strip: "elambo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [451] },
     // 452: like delasso
     ClassDef { class: Class { strip: "elasso", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [452] },
     // 453: like delecto
     ClassDef { class: Class { strip: "electo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [453] },
-    // 454: like delego
+    // 454: like elego
     ClassDef { class: Class { strip: "elego", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [454] },
     // 455: like delenio
     ClassDef { class: Class { strip: "elenio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [455] },
@@ -926,13 +926,13 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "elibuo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [460] },
     // 461: like delico
     ClassDef { class: Class { strip: "elico", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [461] },
-    // 462: like deligo
+    // 462: like eligo
     ClassDef { class: Class { strip: "eligo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [462] },
     // 463: like delimito
     ClassDef { class: Class { strip: "elimito", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [463] },
     // 464: like delineo
     ClassDef { class: Class { strip: "elineo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [464] },
-    // 465: like delingo
+    // 465: like elingo
     ClassDef { class: Class { strip: "elingo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [465] },
     // 466: like delinio
     ClassDef { class: Class { strip: "elinio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [466] },
@@ -950,55 +950,55 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "elitesco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [472] },
     // 473: like delitisco
     ClassDef { class: Class { strip: "elitisco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [473] },
-    // 474: like deludo
+    // 474: like eludo
     ClassDef { class: Class { strip: "eludo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [474] },
     // 475: like delumbo
     ClassDef { class: Class { strip: "elumbo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [475] },
     // 476: like demando
     ClassDef { class: Class { strip: "emando", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [476] },
-    // 477: like demano
+    // 477: like emano
     ClassDef { class: Class { strip: "emano", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [477] },
     // 478: like demento
     ClassDef { class: Class { strip: "emento", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [478] },
-    // 479: like demereo
+    // 479: like emereo
     ClassDef { class: Class { strip: "emereo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [479] },
-    // 480: like demereor
+    // 480: like emereor
     ClassDef { class: Class { strip: "emereor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [480] },
-    // 481: like demergo
+    // 481: like emergo
     ClassDef { class: Class { strip: "emergo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [481] },
-    // 482: like demetior
+    // 482: like emetior
     ClassDef { class: Class { strip: "emetior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [482] },
-    // 483: like demeto
+    // 483: like emeto
     ClassDef { class: Class { strip: "emeto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [483] },
-    // 484: like demigro
+    // 484: like emigro
     ClassDef { class: Class { strip: "emigro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [484] },
     // 485: like deminuo
     ClassDef { class: Class { strip: "eminuo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [485] },
-    // 486: like demiror
+    // 486: like emiror
     ClassDef { class: Class { strip: "emiror", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [486] },
-    // 487: like demitto
+    // 487: like emitto
     ClassDef { class: Class { strip: "emitto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [487] },
     // 488: like demolio
     ClassDef { class: Class { strip: "emolio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [488] },
-    // 489: like demolior
+    // 489: like emolior
     ClassDef { class: Class { strip: "emolior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [489] },
     // 490: like demonstro
     ClassDef { class: Class { strip: "emonstro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [490] },
     // 491: like demordeo
     ClassDef { class: Class { strip: "emordeo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [491] },
-    // 492: like demorior
+    // 492: like emorior
     ClassDef { class: Class { strip: "emorior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [492] },
     // 493: like demoror
     ClassDef { class: Class { strip: "emoror", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [493] },
-    // 494: like demoveo
+    // 494: like emoveo
     ClassDef { class: Class { strip: "emoveo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [494] },
     // 495: like demulceo
     ClassDef { class: Class { strip: "emulceo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [495] },
-    // 496: like demuto
+    // 496: like emuto
     ClassDef { class: Class { strip: "emuto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [496] },
-    // 497: like denarro
+    // 497: like enarro
     ClassDef { class: Class { strip: "enarro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [497] },
-    // 498: like denascor
+    // 498: like enascor
     ClassDef { class: Class { strip: "enascor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [498] },
     // 499: like denaso
     ClassDef { class: Class { strip: "enaso", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [499] },
@@ -1010,11 +1010,11 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "enomino", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [502] },
     // 503: like denormo
     ClassDef { class: Class { strip: "enormo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [503] },
-    // 504: like denoto
+    // 504: like enoto
     ClassDef { class: Class { strip: "enoto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [504] },
     // 505: like denudo
     ClassDef { class: Class { strip: "enudo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [505] },
-    // 506: like denuntio
+    // 506: like enuntio
     ClassDef { class: Class { strip: "enuntio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [506] },
     // 507: like depaciscor
     ClassDef { class: Class { strip: "epaciscor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [507] },
@@ -1096,11 +1096,11 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "epuro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [545] },
     // 546: like deputo
     ClassDef { class: Class { strip: "eputo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [546] },
-    // 547: like derado
+    // 547: like erado
     ClassDef { class: Class { strip: "erado", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [547] },
     // 548: like derelinquo
     ClassDef { class: Class { strip: "erelinquo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [548] },
-    // 549: like derepo
+    // 549: like erepo
     ClassDef { class: Class { strip: "erepo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [549] },
     // 550: like derideo
     ClassDef { class: Class { strip: "erideo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [550] },
@@ -1108,17 +1108,17 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "erigeo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [551] },
     // 552: like derigesco
     ClassDef { class: Class { strip: "erigesco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [552] },
-    // 553: like derigo
+    // 553: like erigo
     ClassDef { class: Class { strip: "erigo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [553] },
-    // 554: like deripio
+    // 554: like eripio
     ClassDef { class: Class { strip: "eripio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [554] },
     // 555: like derivo
     ClassDef { class: Class { strip: "erivo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [555] },
-    // 556: like derogo
+    // 556: like erogo
     ClassDef { class: Class { strip: "erogo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [556] },
     // 557: like deruncino
     ClassDef { class: Class { strip: "eruncino", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [557] },
-    // 558: like deruo
+    // 558: like eruo
     ClassDef { class: Class { strip: "eruo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [558] },
     // 559: like desacro
     ClassDef { class: Class { strip: "esacro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [559] },
@@ -1252,39 +1252,39 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "eturbo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [623] },
     // 624: like deturpo
     ClassDef { class: Class { strip: "eturpo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [624] },
-    // 625: like devasto
+    // 625: like evasto
     ClassDef { class: Class { strip: "evasto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [625] },
-    // 626: like deveho
+    // 626: like eveho
     ClassDef { class: Class { strip: "eveho", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [626] },
     // 627: like deveneror
     ClassDef { class: Class { strip: "eveneror", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [627] },
-    // 628: like devenio
+    // 628: like evenio
     ClassDef { class: Class { strip: "evenio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [628] },
-    // 629: like deverbero
+    // 629: like everbero
     ClassDef { class: Class { strip: "everbero", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [629] },
-    // 630: like deverro
+    // 630: like everro
     ClassDef { class: Class { strip: "everro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [630] },
     // 631: like deversor
     ClassDef { class: Class { strip: "eversor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [631] },
-    // 632: like deverto
+    // 632: like everto
     ClassDef { class: Class { strip: "everto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [632] },
     // 633: like devigesco
     ClassDef { class: Class { strip: "evigesco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [633] },
-    // 634: like devincio
+    // 634: like evincio
     ClassDef { class: Class { strip: "evincio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [634] },
-    // 635: like devinco
+    // 635: like evinco
     ClassDef { class: Class { strip: "evinco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [635] },
     // 636: like devio
     ClassDef { class: Class { strip: "evio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [636] },
     // 637: like devirgino
     ClassDef { class: Class { strip: "evirgino", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [637] },
-    // 638: like devito
+    // 638: like evito
     ClassDef { class: Class { strip: "evito", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [638] },
-    // 639: like devoco
+    // 639: like evoco
     ClassDef { class: Class { strip: "evoco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [639] },
-    // 640: like devolo
+    // 640: like evolo
     ClassDef { class: Class { strip: "evolo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [640] },
-    // 641: like devolvo
+    // 641: like evolvo
     ClassDef { class: Class { strip: "evolvo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [641] },
     // 642: like devoro
     ClassDef { class: Class { strip: "evoro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [642] },
@@ -1368,13 +1368,13 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "irumpo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [681] },
     // 682: like diruo
     ClassDef { class: Class { strip: "iruo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [682] },
-    // 683: like dispalor
+    // 683: like palor
     ClassDef { class: Class { strip: "alor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [683] },
-    // 684: like dissemino
+    // 684: like femino
     ClassDef { class: Class { strip: "emino", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [684] },
-    // 685: like disseparo
+    // 685: like separo
     ClassDef { class: Class { strip: "eparo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [685] },
-    // 686: like dissuadeo
+    // 686: like suadeo
     ClassDef { class: Class { strip: "adeo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [686] },
     // 687: like ditesco
     ClassDef { class: Class { strip: "itesco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [687] },
@@ -1428,11 +1428,11 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "educo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [711] },
     // 712: like eduro
     ClassDef { class: Class { strip: "eduro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [712] },
-    // 713: like efflagito
+    // 713: like flagito
     ClassDef { class: Class { strip: "agito", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [713] },
-    // 714: like effloreo
+    // 714: like floreo
     ClassDef { class: Class { strip: "oreo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [714] },
-    // 715: like efformo
+    // 715: like formo
     ClassDef { class: Class { strip: "ormo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [715] },
     // 716: like eiaculor
     ClassDef { class: Class { strip: "eiaculor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [716] },
@@ -1620,21 +1620,21 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "eredo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [807] },
     // 808: like exhumoro
     ClassDef { class: Class { strip: "umoro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [808] },
-    // 809: like exinanio
+    // 809: like inanio
     ClassDef { class: Class { strip: "anio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [809] },
     // 810: like existimo
     ClassDef { class: Class { strip: "istimo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [810] },
     // 811: like existumo
     ClassDef { class: Class { strip: "istumo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [811] },
-    // 812: like exordior
+    // 812: like ordior
     ClassDef { class: Class { strip: "ordior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [812] },
-    // 813: like exubero
+    // 813: like ubero
     ClassDef { class: Class { strip: "ubero", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [813] },
     // 814: like fabulo
     ClassDef { class: Class { strip: "abulo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [814] },
     // 815: like fabulor
     ClassDef { class: Class { strip: "abulor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [815] },
-    // 816: like fastidio
+    // 816: like meridio
     ClassDef { class: Class { strip: "idio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [816] },
     // 817: like febricito
     ClassDef { class: Class { strip: "icito", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [817] },
@@ -1650,7 +1650,7 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "enero", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [822] },
     // 823: like ferior
     ClassDef { class: Class { strip: "erior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [823] },
-    // 824: like ferocio
+    // 824: like glocio
     ClassDef { class: Class { strip: "ocio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [824] },
     // 825: like feteo
     ClassDef { class: Class { strip: "eteo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [825] },
@@ -1724,7 +1724,7 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "uflecto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [859] },
     // 860: like glorior
     ClassDef { class: Class { strip: "orior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [860] },
-    // 861: like glubo
+    // 861: like nubo
     ClassDef { class: Class { strip: "ubo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [861] },
     // 862: like gratificor
     ClassDef { class: Class { strip: "atificor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [862] },
@@ -1738,11 +1738,11 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "eredito", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [866] },
     // 867: like hiberno
     ClassDef { class: Class { strip: "iberno", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [867] },
-    // 868: like humeo
+    // 868: like umeo
     ClassDef { class: Class { strip: "umeo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [868] },
     // 869: like icio
     ClassDef { class: Class { strip: "icio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [869] },
-    // 870: like illucesco
+    // 870: like lucesco
     ClassDef { class: Class { strip: "ucesco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [870] },
     // 871: like imaginor
     ClassDef { class: Class { strip: "aginor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [871] },
@@ -1752,7 +1752,7 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "omutuo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [873] },
     // 874: like imprunto
     ClassDef { class: Class { strip: "unto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [874] },
-    // 875: like indago
+    // 875: like tago
     ClassDef { class: Class { strip: "ago", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [875] },
     // 876: like infamo
     ClassDef { class: Class { strip: "infamo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [876] },
@@ -1814,7 +1814,7 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "infusco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [904] },
     // 905: like iniurior
     ClassDef { class: Class { strip: "urior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [905] },
-    // 906: like innotesco
+    // 906: like notesco
     ClassDef { class: Class { strip: "otesco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [906] },
     // 907: like insanio
     ClassDef { class: Class { strip: "insanio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [907] },
@@ -1924,15 +1924,15 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "insurgo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [959] },
     // 960: like insusurro
     ClassDef { class: Class { strip: "insusurro", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [960] },
-    // 961: like introduco
+    // 961: like produco
     ClassDef { class: Class { strip: "oduco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [961] },
-    // 962: like introfero
+    // 962: like profero
     ClassDef { class: Class { strip: "ofero", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [962] },
-    // 963: like introgredior
+    // 963: like progredior
     ClassDef { class: Class { strip: "ogredior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [963] },
-    // 964: like introrumpo
+    // 964: like prorumpo
     ClassDef { class: Class { strip: "orumpo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [964] },
-    // 965: like introspicio
+    // 965: like prospicio
     ClassDef { class: Class { strip: "ospicio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [965] },
     // 966: like irascor
     ClassDef { class: Class { strip: "irascor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [966] },
@@ -2050,7 +2050,7 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "atinor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1022] },
     // 1023: like naviculor
     ClassDef { class: Class { strip: "aviculor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1023] },
-    // 1024: like negotior
+    // 1024: like otior
     ClassDef { class: Class { strip: "otior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1024] },
     // 1025: like nepotor
     ClassDef { class: Class { strip: "otor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1025] },
@@ -2066,7 +2066,7 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "obilito", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1030] },
     // 1031: like nominito
     ClassDef { class: Class { strip: "ominito", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1031] },
-    // 1032: like noscito
+    // 1032: like oscito
     ClassDef { class: Class { strip: "oscito", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1032] },
     // 1033: like noteo
     ClassDef { class: Class { strip: "oteo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1033] },
@@ -2080,7 +2080,7 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "upturio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1037] },
     // 1038: like nutrico
     ClassDef { class: Class { strip: "utrico", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1038] },
-    // 1039: like obbrutesco
+    // 1039: like putesco
     ClassDef { class: Class { strip: "utesco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1039] },
     // 1040: like obdurefacio
     ClassDef { class: Class { strip: "urefacio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1040] },
@@ -2116,9 +2116,9 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "ensito", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1055] },
     // 1056: like periclitor
     ClassDef { class: Class { strip: "iclitor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1056] },
-    // 1057: like perrepto
+    // 1057: like repto
     ClassDef { class: Class { strip: "epto", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1057] },
-    // 1058: like pertranseo
+    // 1058: like transeo
     ClassDef { class: Class { strip: "anseo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1058] },
     // 1059: like petiturio
     ClassDef { class: Class { strip: "iturio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1059] },
@@ -2130,15 +2130,15 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "ipio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1062] },
     // 1063: like pisito
     ClassDef { class: Class { strip: "isito", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1063] },
-    // 1064: like plumesco
+    // 1064: like umesco
     ClassDef { class: Class { strip: "umesco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1064] },
     // 1065: like porceo
     ClassDef { class: Class { strip: "orceo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1065] },
     // 1066: like potiono
     ClassDef { class: Class { strip: "otiono", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1066] },
-    // 1067: like praesagio
+    // 1067: like sagio
     ClassDef { class: Class { strip: "agio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1067] },
-    // 1068: like praestolor
+    // 1068: like solor
     ClassDef { class: Class { strip: "olor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1068] },
     // 1069: like praevaricor
     ClassDef { class: Class { strip: "aricor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1069] },
@@ -2368,17 +2368,17 @@ pub(crate) static ITEMS: [ClassDef; 1315] = [
     ClassDef { class: Class { strip: "agor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1181] },
     // 1182: like renuncio
     ClassDef { class: Class { strip: "uncio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1182] },
-    // 1183: like responso
+    // 1183: like sponso
     ClassDef { class: Class { strip: "onso", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1183] },
-    // 1184: like restagno
+    // 1184: like stagno
     ClassDef { class: Class { strip: "agno", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1184] },
-    // 1185: like retalio
+    // 1185: like talio
     ClassDef { class: Class { strip: "alio", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1185] },
     // 1186: like retrogradior
     ClassDef { class: Class { strip: "ogradior", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1186] },
     // 1187: like retrovendo
     ClassDef { class: Class { strip: "ovendo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1187] },
-    // 1188: like revivesco
+    // 1188: like vivesco
     ClassDef { class: Class { strip: "ivesco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1188] },
     // 1189: like revivisco
     ClassDef { class: Class { strip: "ivisco", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1189] },

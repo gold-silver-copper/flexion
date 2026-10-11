@@ -1,4 +1,4 @@
-//! numeral: 46 cells, 74 edits, 21 classes, 13 tree nodes.
+//! numeral: 46 cells, 74 edits, 21 classes, 11 tree nodes.
 
 use flexion::{Class, Edit, Join, Path, PosModel, Walk};
 
@@ -27,7 +27,7 @@ impl PosModel for Numeral {
     }
     fn walk(&self) -> Walk {
         Walk {
-            syllable_depth: Some(0),
+            syllable_depth: None,
             syllable_max: 3,
             initial_depth: None,
         }

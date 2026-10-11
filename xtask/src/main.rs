@@ -289,11 +289,23 @@ fn probe(
     let attested = p.attested;
     let t = Instant::now();
     let (built, stats) = flexion_train::probe::train(lang, data, p)?;
-    let (_, _, bytes) = built.measure();
+    let (sizes, _, bytes) = built.measure();
     eprintln!(
         "trained in {:.1}s, tables measure {bytes} bytes",
         t.elapsed().as_secs_f64(),
     );
+    for (part, s) in lang.parts.iter().zip(&sizes) {
+        eprintln!(
+            "  {}: {} bytes (tree {}, counts {}, edits {}, classes {}, lexicon {})",
+            part.name,
+            s.total(),
+            s.nodes,
+            s.dist,
+            s.edits,
+            s.classes,
+            s.lexicon
+        );
+    }
     let model = built.model();
     for (pi, (part, d)) in lang.parts.iter().zip(data).enumerate() {
         if only.is_some_and(|o| o != part.name) {
@@ -319,8 +331,20 @@ fn probe(
             .filter(|w| attested || bucket(w.key) == TEST_BUCKET)
             .collect();
         let s = stats.get(pi).copied().unwrap_or_default();
+        if let Some(laws) = built.parts().get(pi).and_then(|t| t.phonology.as_ref()) {
+            for ((name, entries), rule) in laws.maps.iter().zip(&laws.rules) {
+                let shown: Vec<String> = entries.iter().map(|(a, b)| format!("{a}→{b}")).collect();
+                println!(
+                    "  sound law {name} ({} => {} / _ {}): {}",
+                    rule.target,
+                    rule.replacement,
+                    rule.right.escape_unicode(),
+                    shown.join(", ")
+                );
+            }
+        }
         println!(
-            "== {}: {} test words; edits {} classes {} trie {} kept {} (words {}) stored {} dist {} joins {} ({} pairs)",
+            "== {}: {} test words; edits {} classes {} trie {} kept {} (words {}) stored {} dist {} (own {}) joins {} ({} pairs)",
             part.name,
             words.len(),
             s.edits,
@@ -330,6 +354,7 @@ fn probe(
             s.kept_words,
             s.stored_nodes,
             s.dist_entries,
+            s.own_entries,
             s.join_prefixes,
             s.join_pairs
         );

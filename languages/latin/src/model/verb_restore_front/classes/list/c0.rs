@@ -2,33 +2,33 @@ use super::super::ClassDef;
 use flexion::{Class, Stress};
 
 pub(crate) static ITEMS: [ClassDef; 326] = [
-    // 0: like egapa
+    // 0: like od
     ClassDef { class: Class { strip: "", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [0] },
     // 1: like ido
     ClassDef { class: Class { strip: "o", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1] },
-    // 2: like mused
+    // 2: like oded
     ClassDef { class: Class { strip: "ed", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2] },
-    // 3: like musni
+    // 3: like oci
     ClassDef { class: Class { strip: "i", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3] },
     // 4: like musorp
     ClassDef { class: Class { strip: "orp", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [4] },
     // 5: like obeb
     ClassDef { class: Class { strip: "eb", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5] },
-    // 6: like obibe
+    // 6: like ode
     ClassDef { class: Class { strip: "e", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [6] },
     // 7: like obil
     ClassDef { class: Class { strip: "il", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [7] },
     // 8: like obircsartnoc
     ClassDef { class: Class { strip: "artnoc", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [8] },
-    // 9: like obircsnart
+    // 9: like ocudart
     ClassDef { class: Class { strip: "art", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [9] },
-    // 10: like obircsnibus
+    // 10: like orefnibus
     ClassDef { class: Class { strip: "ibus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [10] },
-    // 11: like obircsnoc
+    // 11: like ogoc
     ClassDef { class: Class { strip: "oc", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [11] },
-    // 12: like obuces
+    // 12: like odes
     ClassDef { class: Class { strip: "es", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [12] },
-    // 13: like obucuc
+    // 13: like oduc
     ClassDef { class: Class { strip: "uc", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [13] },
     // 14: like obun
     ClassDef { class: Class { strip: "un", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [14] },
@@ -36,17 +36,17 @@ pub(crate) static ITEMS: [ClassDef; 326] = [
     ClassDef { class: Class { strip: "ap", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [15] },
     // 16: like ocid
     ClassDef { class: Class { strip: "id", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [16] },
-    // 17: like ocidar
+    // 17: like odar
     ClassDef { class: Class { strip: "ar", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [17] },
     // 18: like ocidare
     ClassDef { class: Class { strip: "are", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [18] },
-    // 19: like ocidep
+    // 19: like odep
     ClassDef { class: Class { strip: "ep", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [19] },
     // 20: like ocidolc
     ClassDef { class: Class { strip: "olc", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [20] },
-    // 21: like ocidui
+    // 21: like orui
     ClassDef { class: Class { strip: "ui", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [21] },
-    // 22: like ociduj
+    // 22: like oruj
     ClassDef { class: Class { strip: "ui", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [22] },
     // 23: like ociduiba
     ClassDef { class: Class { strip: "uiba", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [23] },
@@ -60,73 +60,73 @@ pub(crate) static ITEMS: [ClassDef; 326] = [
     ClassDef { class: Class { strip: "uiid", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [27] },
     // 28: like ocidujid
     ClassDef { class: Class { strip: "uiid", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [28] },
-    // 29: like ocifibat
+    // 29: like ogat
     ClassDef { class: Class { strip: "at", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [29] },
     // 30: like ocificov
     ClassDef { class: Class { strip: "ov", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [30] },
-    // 31: like ocifidin
+    // 31: like rotin
     ClassDef { class: Class { strip: "in", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [31] },
-    // 32: like ocifidul
+    // 32: like odul
     ClassDef { class: Class { strip: "ul", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [32] },
     // 33: like ocifilauq
     ClassDef { class: Class { strip: "auq", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [33] },
-    // 34: like ocifiliv
+    // 34: like osiv
     ClassDef { class: Class { strip: "iv", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [34] },
-    // 35: like ocifimuf
+    // 35: like ocuf
     ClassDef { class: Class { strip: "uf", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [35] },
-    // 36: like ocifiralc
+    // 36: like oeralc
     ClassDef { class: Class { strip: "alc", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [36] },
-    // 37: like ocifirev
+    // 37: like olev
     ClassDef { class: Class { strip: "ev", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [37] },
-    // 38: like ocifirim
+    // 38: like onim
     ClassDef { class: Class { strip: "im", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [38] },
-    // 39: like ocifirolg
+    // 39: like oicolg
     ClassDef { class: Class { strip: "olg", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [39] },
     // 40: like ocifirolgnoc
     ClassDef { class: Class { strip: "olgnoc", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [40] },
     // 41: like ocifironoh
     ClassDef { class: Class { strip: "onoh", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [41] },
-    // 42: like ocifirup
+    // 42: like orup
     ClassDef { class: Class { strip: "up", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [42] },
     // 43: like ocifitaeb
     ClassDef { class: Class { strip: "aeb", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [43] },
-    // 44: like ocifitarg
+    // 44: like rotarg
     ClassDef { class: Class { strip: "arg", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [44] },
-    // 45: like ocifitcer
+    // 45: like oper
     ClassDef { class: Class { strip: "er", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [45] },
-    // 46: like ocifitcnas
+    // 46: like onas
     ClassDef { class: Class { strip: "as", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [46] },
-    // 47: like ocifitcurf
+    // 47: like oinurf
     ClassDef { class: Class { strip: "urf", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [47] },
-    // 48: like ocifitef
+    // 48: like otef
     ClassDef { class: Class { strip: "ef", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [48] },
-    // 49: like ocifiton
+    // 49: like odon
     ClassDef { class: Class { strip: "on", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [49] },
     // 50: like ocifivivnoc
     ClassDef { class: Class { strip: "ivnoc", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [50] },
-    // 51: like ocilpiuqniuq
+    // 51: like ocilputniuq
     ClassDef { class: Class { strip: "iuq", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [51] },
-    // 52: like ocinam
+    // 52: like olam
     ClassDef { class: Class { strip: "am", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [52] },
-    // 53: like ocinum
+    // 53: like otum
     ClassDef { class: Class { strip: "um", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [53] },
     // 54: like ocirama
     ClassDef { class: Class { strip: "ama", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [54] },
-    // 55: like ocirav
+    // 55: like odav
     ClassDef { class: Class { strip: "av", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [55] },
     // 56: like ociravid
     ClassDef { class: Class { strip: "avid", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [56] },
-    // 57: like ocirbur
+    // 57: like odur
     ClassDef { class: Class { strip: "ur", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [57] },
     // 58: like ocirol
     ClassDef { class: Class { strip: "ol", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [58] },
     // 59: like ocirolid
     ClassDef { class: Class { strip: "olid", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [59] },
-    // 60: like ocnurreva
+    // 60: like oera
     ClassDef { class: Class { strip: "a", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [60] },
     // 61: like ocsaih
     ClassDef { class: Class { strip: "aih", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [61] },
-    // 62: like ocsateca
+    // 62: like ocseca
     ClassDef { class: Class { strip: "eca", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [62] },
     // 63: like ocsebatni
     ClassDef { class: Class { strip: "atni", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [63] },
@@ -134,31 +134,31 @@ pub(crate) static ITEMS: [ClassDef; 326] = [
     ClassDef { class: Class { strip: "atnoc", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [64] },
     // 65: like ocsebatxe
     ClassDef { class: Class { strip: "atxe", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [65] },
-    // 66: like ocseberc
+    // 66: like ocserc
     ClassDef { class: Class { strip: "erc", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [66] },
     // 67: like ocsebercni
     ClassDef { class: Class { strip: "ercni", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [67] },
     // 68: like ocsecidar
     ClassDef { class: Class { strip: "idar", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [68] },
-    // 69: like ocsecule
+    // 69: like oecule
     ClassDef { class: Class { strip: "ule", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [69] },
     // 70: like ocseculid
     ClassDef { class: Class { strip: "ulid", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [70] },
-    // 71: like ocseculli
+    // 71: like onimulli
     ClassDef { class: Class { strip: "ulli", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [71] },
-    // 72: like ocseculni
+    // 72: like onimulni
     ClassDef { class: Class { strip: "ulni", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [72] },
     // 73: like ocseda
     ClassDef { class: Class { strip: "eda", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [73] },
-    // 74: like ocsedrani
+    // 74: like oinani
     ClassDef { class: Class { strip: "ani", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [74] },
-    // 75: like ocsedraxe
+    // 75: like oedraxe
     ClassDef { class: Class { strip: "axe", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [75] },
     // 76: like ocsedurc
     ClassDef { class: Class { strip: "urc", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [76] },
     // 77: like ocsedurcer
     ClassDef { class: Class { strip: "urcer", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [77] },
-    // 78: like ocsegirf
+    // 78: like oegirf
     ClassDef { class: Class { strip: "irf", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [78] },
     // 79: like ocsegirfer
     ClassDef { class: Class { strip: "irfer", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [79] },
@@ -174,13 +174,13 @@ pub(crate) static ITEMS: [ClassDef; 326] = [
     ClassDef { class: Class { strip: "ulp", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [84] },
     // 85: like ocsemups
     ClassDef { class: Class { strip: "ups", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [85] },
-    // 86: like ocsenac
+    // 86: like oenac
     ClassDef { class: Class { strip: "ac", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [86] },
     // 87: like ocsenacni
     ClassDef { class: Class { strip: "acni", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [87] },
     // 88: like ocsenasnoc
     ClassDef { class: Class { strip: "asnoc", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [88] },
-    // 89: like ocsenave
+    // 89: like otsave
     ClassDef { class: Class { strip: "ave", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [89] },
     // 90: like ocseni
     ClassDef { class: Class { strip: "eni", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [90] },
@@ -198,7 +198,7 @@ pub(crate) static ITEMS: [ClassDef; 326] = [
     ClassDef { class: Class { strip: "ercrep", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [96] },
     // 97: like ocserehda
     ClassDef { class: Class { strip: "ehda", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [97] },
-    // 98: like ocserolf
+    // 98: like oerolf
     ClassDef { class: Class { strip: "olf", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [98] },
     // 99: like ocserolfed
     ClassDef { class: Class { strip: "olfed", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [99] },
@@ -208,7 +208,7 @@ pub(crate) static ITEMS: [ClassDef; 326] = [
     ClassDef { class: Class { strip: "olfni", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [101] },
     // 102: like ocserorua
     ClassDef { class: Class { strip: "orua", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [102] },
-    // 103: like ocserud
+    // 103: like ocud
     ClassDef { class: Class { strip: "ud", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [103] },
     // 104: like ocserudbo
     ClassDef { class: Class { strip: "udbo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [104] },
@@ -218,7 +218,7 @@ pub(crate) static ITEMS: [ClassDef; 326] = [
     ClassDef { class: Class { strip: "utam", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [106] },
     // 107: like ocserutame
     ClassDef { class: Class { strip: "utame", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [107] },
-    // 108: like ocsetal
+    // 108: like ortal
     ClassDef { class: Class { strip: "al", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [108] },
     // 109: like ocsetonni
     ClassDef { class: Class { strip: "onni", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [109] },
@@ -230,7 +230,7 @@ pub(crate) static ITEMS: [ClassDef; 326] = [
     ClassDef { class: Class { strip: "urbbo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [112] },
     // 113: like ocseus
     ClassDef { class: Class { strip: "eus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [113] },
-    // 114: like ocsevalf
+    // 114: like oevalf
     ClassDef { class: Class { strip: "alf", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [114] },
     // 115: like ocseviver
     ClassDef { class: Class { strip: "iver", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [115] },
@@ -252,7 +252,7 @@ pub(crate) static ITEMS: [ClassDef; 326] = [
     ClassDef { class: Class { strip: "ir", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [123] },
     // 124: like odis
     ClassDef { class: Class { strip: "is", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [124] },
-    // 125: like odnecsednoc
+    // 125: like onrecednoc
     ClassDef { class: Class { strip: "ednoc", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [125] },
     // 126: like odnerp
     ClassDef { class: Class { strip: "erp", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [126] },
@@ -268,7 +268,7 @@ pub(crate) static ITEMS: [ClassDef; 326] = [
     ClassDef { class: Class { strip: "edif", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [131] },
     // 132: like oecalpeneb
     ClassDef { class: Class { strip: "eneb", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [132] },
-    // 133: like oecrop
+    // 133: like onop
     ClassDef { class: Class { strip: "op", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [133] },
     // 134: like oedaus
     ClassDef { class: Class { strip: "aus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [134] },
@@ -294,11 +294,11 @@ pub(crate) static ITEMS: [ClassDef; 326] = [
     ClassDef { class: Class { strip: "erda", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [144] },
     // 145: like ogirang
     ClassDef { class: Class { strip: "ang", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [145] },
-    // 146: like ogivan
+    // 146: like ovan
     ClassDef { class: Class { strip: "an", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [146] },
     // 147: like ogivanda
     ClassDef { class: Class { strip: "anda", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [147] },
-    // 148: like ogivane
+    // 148: like orrane
     ClassDef { class: Class { strip: "ane", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [148] },
     // 149: like ogivaner
     ClassDef { class: Class { strip: "aner", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [149] },
@@ -324,17 +324,17 @@ pub(crate) static ITEMS: [ClassDef; 326] = [
     ClassDef { class: Class { strip: "evref", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [159] },
     // 160: like oicifedbus
     ClassDef { class: Class { strip: "edbus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [160] },
-    // 161: like oicipsortni
+    // 161: like opmurortni
     ClassDef { class: Class { strip: "ortni", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [161] },
     // 162: like oicnuner
     ClassDef { class: Class { strip: "uner", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [162] },
     // 163: like oidebo
     ClassDef { class: Class { strip: "ebo", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [163] },
-    // 164: like oidnepits
+    // 164: like ollits
     ClassDef { class: Class { strip: "its", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [164] },
     // 165: like oiem
     ClassDef { class: Class { strip: "em", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [165] },
-    // 166: like oilom
+    // 166: like otom
     ClassDef { class: Class { strip: "om", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [166] },
     // 167: like oinirc
     ClassDef { class: Class { strip: "irc", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [167] },
@@ -342,11 +342,11 @@ pub(crate) static ITEMS: [ClassDef; 326] = [
     ClassDef { class: Class { strip: "uer", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [168] },
     // 169: like oinume
     ClassDef { class: Class { strip: "ume", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [169] },
-    // 170: like oipacusu
+    // 170: like oprusu
     ClassDef { class: Class { strip: "usu", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [170] },
     // 171: like oipicedrep
     ClassDef { class: Class { strip: "edrep", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [171] },
-    // 172: like oipip
+    // 172: like olip
     ClassDef { class: Class { strip: "ip", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [172] },
     // 173: like oipos
     ClassDef { class: Class { strip: "os", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [173] },
@@ -368,9 +368,9 @@ pub(crate) static ITEMS: [ClassDef; 326] = [
     ClassDef { class: Class { strip: "anec", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [181] },
     // 182: like oirutitep
     ClassDef { class: Class { strip: "itep", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [182] },
-    // 183: like oirutpircs
+    // 183: like ollibircs
     ClassDef { class: Class { strip: "ircs", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [183] },
-    // 184: like oisab
+    // 184: like olab
     ClassDef { class: Class { strip: "ab", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [184] },
     // 185: like oitarc
     ClassDef { class: Class { strip: "arc", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [185] },
@@ -396,7 +396,7 @@ pub(crate) static ITEMS: [ClassDef; 326] = [
     ClassDef { class: Class { strip: "issa", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [195] },
     // 196: like olibisxe
     ClassDef { class: Class { strip: "isxe", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [196] },
-    // 197: like olicof
+    // 197: like omrof
     ClassDef { class: Class { strip: "of", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [197] },
     // 198: like olicofer
     ClassDef { class: Class { strip: "ofer", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [198] },
@@ -406,7 +406,7 @@ pub(crate) static ITEMS: [ClassDef; 326] = [
     ClassDef { class: Class { strip: "it", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [200] },
     // 201: like olubaf
     ClassDef { class: Class { strip: "af", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [201] },
-    // 202: like olubirt
+    // 202: like rocirt
     ClassDef { class: Class { strip: "irt", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [202] },
     // 203: like olubub
     ClassDef { class: Class { strip: "ub", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [203] },
@@ -416,7 +416,7 @@ pub(crate) static ITEMS: [ClassDef; 326] = [
     ClassDef { class: Class { strip: "ammi", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [205] },
     // 206: like olucretarf
     ClassDef { class: Class { strip: "arf", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [206] },
-    // 207: like olugaoc
+    // 207: like otcaoc
     ClassDef { class: Class { strip: "aoc", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [207] },
     // 208: like omitsixe
     ClassDef { class: Class { strip: "ixe", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [208] },
@@ -428,7 +428,7 @@ pub(crate) static ITEMS: [ClassDef; 326] = [
     ClassDef { class: Class { strip: "ibit", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [211] },
     // 212: like onidrobus
     ClassDef { class: Class { strip: "obus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [212] },
-    // 213: like onidroda
+    // 213: like onroda
     ClassDef { class: Class { strip: "oda", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [213] },
     // 214: like onidroearp
     ClassDef { class: Class { strip: "oearp", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [214] },
@@ -436,7 +436,7 @@ pub(crate) static ITEMS: [ClassDef; 326] = [
     ClassDef { class: Class { strip: "ibor", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [215] },
     // 216: like onigibur
     ClassDef { class: Class { strip: "ibur", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [216] },
-    // 217: like onigure
+    // 217: like otcure
     ClassDef { class: Class { strip: "ure", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [217] },
     // 218: like onigurea
     ClassDef { class: Class { strip: "urea", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [218] },
@@ -484,9 +484,9 @@ pub(crate) static ITEMS: [ClassDef; 326] = [
     ClassDef { class: Class { strip: "uhxe", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [239] },
     // 240: like ortale
     ClassDef { class: Class { strip: "ale", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [240] },
-    // 241: like ortsnomed
+    // 241: like roilomed
     ClassDef { class: Class { strip: "omed", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [241] },
-    // 242: like ortsnomer
+    // 242: like roilomer
     ClassDef { class: Class { strip: "omer", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [242] },
     // 243: like ortsnommoc
     ClassDef { class: Class { strip: "ommoc", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [243] },

@@ -32,7 +32,18 @@ assert_eq!(program.apply("stra"), "astr");
 
 Rules are global and ordered. Every match of one rule is selected from the same
 input form, so newly emitted text is not fed back into that rule. The next rule
-sees the complete result.
+sees the complete result. A rule that needs a literal the word doesn't contain
+(anywhere outside its optional and `*` parts) leaves the word as it is without
+searching it.
+
+## In flexion
+
+[flexion](../../README.md) learns each part of speech's sound laws from its inflection
+tables and runs them with this crate: an edit carries a trigger character (U+E000…), and a
+rule rewrites the stem's edge next to it, `"{x:S0}" => "{x|M0}" / "" _ "⟨T⟩"`, or copies the
+stem's first consonant after it (Greek reduplication). The trainer builds rule sets at
+runtime from `Class`, `Map` and `Rule` values; a generated crate holds them as a
+`sound_laws!` block and compiles it once on first use.
 
 ## Correspondence maps
 

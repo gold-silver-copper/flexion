@@ -121,6 +121,121 @@ pub trait PosModel: Sync {
     fn source(&self, cell: usize) -> u8;
     /// The lexicon's lemma written in full for a lookup key.
     fn lexicon(&self, key: &str) -> Option<&str>;
+    /// The `i`-th part of speech whose forms are this one's lemmas, and the
+    /// cells that hold them (a verb's participles are adjectives): a lemma
+    /// such a form spells is read as that part of speech writes it. None by
+    /// default.
+    fn lexicon_from(&self, _i: usize) -> Option<(usize, &[usize])> {
+        None
+    }
+    /// The edits classes use in `cell`, each once.
+    fn cell_edits(&self, _cell: usize) -> &[u32] {
+        &[]
+    }
+    /// The sound laws the edits' triggers set off (see [`crate::realize`]);
+    /// none by default.
+    fn phonology(&self) -> Option<&sound_law::Program> {
+        None
+    }
+}
+
+/// A part of speech's sound laws: ordered rewrite rules in `sound-law`'s
+/// notation. Edits that need them carry trigger characters
+/// ([`crate::TRIGGER_FIRST`]…); the last rule deletes any trigger left.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct PhonologySpec {
+    /// `(name, members)`.
+    pub classes: Vec<(String, Vec<String>)>,
+    /// `(name, [(from, to)])`.
+    pub maps: Vec<(String, Vec<(String, String)>)>,
+    pub rules: Vec<RuleSpec>,
+}
+
+/// One rule: `target => replacement / left _ right`.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct RuleSpec {
+    pub name: String,
+    pub target: String,
+    pub replacement: String,
+    pub left: String,
+    pub right: String,
+}
+
+impl PhonologySpec {
+    /// The rules, validated and ready to apply.
+    pub fn compile(&self) -> Result<sound_law::Program, sound_law::CompileError> {
+        let members: Vec<Vec<&str>> = self
+            .classes
+            .iter()
+            .map(|(_, m)| m.iter().map(String::as_str).collect())
+            .collect();
+        let classes: Vec<sound_law::Class> = self
+            .classes
+            .iter()
+            .zip(&members)
+            .map(|((name, _), m)| sound_law::Class::new(name, m))
+            .collect();
+        let entries: Vec<Vec<(&str, &str)>> = self
+            .maps
+            .iter()
+            .map(|(_, e)| e.iter().map(|(a, b)| (a.as_str(), b.as_str())).collect())
+            .collect();
+        let maps: Vec<sound_law::Map> = self
+            .maps
+            .iter()
+            .zip(&entries)
+            .map(|((name, _), e)| sound_law::Map::new(name, e))
+            .collect();
+        let rules: Vec<sound_law::Rule> = self
+            .rules
+            .iter()
+            .map(|r| {
+                let rule = sound_law::Rule::new(&r.name, &r.target, &r.replacement);
+                if r.left.is_empty() && r.right.is_empty() {
+                    rule
+                } else {
+                    rule.in_context(&r.left, &r.right)
+                }
+            })
+            .collect();
+        sound_law::RuleSet::new_with_maps(&classes, &maps, &rules).compile()
+    }
+
+    /// Bytes the rules take in the size measure: every string, and 8 per
+    /// class member, map entry and rule.
+    fn size(&self) -> usize {
+        let class_bytes: usize = self
+            .classes
+            .iter()
+            .flat_map(|(n, m)| {
+                std::iter::once(n.len()).chain(m.iter().map(|x| x.len().saturating_add(8)))
+            })
+            .fold(0, usize::saturating_add);
+        let map_bytes: usize = self
+            .maps
+            .iter()
+            .flat_map(|(n, e)| {
+                std::iter::once(n.len()).chain(
+                    e.iter()
+                        .map(|(a, b)| a.len().saturating_add(b.len()).saturating_add(8)),
+                )
+            })
+            .fold(0, usize::saturating_add);
+        let rule_bytes: usize = self
+            .rules
+            .iter()
+            .map(|r| {
+                [&r.name, &r.target, &r.replacement, &r.left, &r.right]
+                    .iter()
+                    .map(|x| x.len())
+                    .fold(8, usize::saturating_add)
+            })
+            .fold(0, usize::saturating_add);
+        class_bytes
+            .saturating_add(map_bytes)
+            .saturating_add(rule_bytes)
+            .saturating_add(8)
+    }
 }
 
 /// Spelling conventions of a model.
@@ -252,11 +367,99 @@ pub struct JoinSpec {
     pub inherent: Vec<(u8, u8, u8, f32)>,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+/// How a tree node's distribution comes from its counts (see
+/// [`smooth_node`]).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
+pub enum NodeKind {
+    /// No distribution: a node on the way to deeper ones.
+    #[default]
+    Bare,
+    /// The root: its counts, normalized.
+    Root,
+    /// A suffix: its counts smoothed toward the distribution of the nearest
+    /// ancestor that has one.
+    Inner,
+    /// A memorized word: its own counts only.
+    Word,
+}
+
+#[derive(Debug, Clone, PartialEq, Default)]
 pub struct NodeSpec {
     pub label: String,
     pub children: u32,
-    pub dist_len: u32,
+    pub kind: NodeKind,
+    /// `(class, weight)`: the classes of the words under the node, as the
+    /// trainer counted them.
+    pub counts: Vec<(u32, f32)>,
+}
+
+/// A node's distribution: `(class, probability)`, most likely first, and its
+/// total mass.
+#[derive(Debug, Clone, Default)]
+pub struct Smoothed {
+    pub entries: Vec<(u32, f32)>,
+    pub mass: f32,
+}
+
+/// A node's distribution from its counts: `(n_c + α q_c) / (N + α)`, where
+/// `q` is the nearest ancestor's distribution (an inner node; the root and a
+/// memorized word use their counts alone), the classes below `epsilon` left
+/// out (below `epsilon / 100` at the root), most likely first. With `narrow`,
+/// probabilities are rounded to 1/65535 (as the size measure stores them).
+/// The trainer's tables and generated code both call this, so they hold the
+/// same distributions; a generated crate computes a node's on first use.
+pub fn smooth_node(
+    kind: NodeKind,
+    counts: &[(u32, f32)],
+    parent: &[(u32, f32)],
+    alpha: f64,
+    epsilon: f64,
+    narrow: bool,
+) -> Smoothed {
+    let (q, a, floor) = match kind {
+        NodeKind::Bare => return Smoothed::default(),
+        NodeKind::Root => (&[][..], 0.0, epsilon * 0.01),
+        NodeKind::Word => (&[][..], 0.0, epsilon),
+        NodeKind::Inner => (parent, alpha, epsilon),
+    };
+    let total: f64 = counts.iter().map(|&(_, w)| f64::from(w)).sum();
+    let mut m: std::collections::BTreeMap<u32, f64> = std::collections::BTreeMap::new();
+    for &(c, w) in counts {
+        *m.entry(c).or_default() += f64::from(w);
+    }
+    for &(c, p) in q {
+        *m.entry(c).or_default() += a * f64::from(p);
+    }
+    let denom = total + a;
+    if denom <= 0.0 {
+        return Smoothed::default();
+    }
+    let mut out: Vec<(u32, f64)> = m
+        .into_iter()
+        .map(|(c, x)| (c, x / denom))
+        .filter(|&(_, p)| p >= floor)
+        .collect();
+    out.sort_by(|a, b| b.1.total_cmp(&a.1).then(a.0.cmp(&b.0)));
+    #[allow(clippy::cast_possible_truncation)]
+    let entries: Vec<(u32, f32)> = out
+        .into_iter()
+        .map(|(c, p)| {
+            let p = p as f32;
+            if narrow {
+                // `as` saturates; the probability is in 0..=1.
+                let q = (p.clamp(0.0, 1.0) * f32::from(u16::MAX)).round() as u16;
+                (
+                    u32::from(u16::try_from(c).unwrap_or(u16::MAX)),
+                    f32::from(q) / f32::from(u16::MAX),
+                )
+            } else {
+                (c, p)
+            }
+        })
+        .collect();
+    #[allow(clippy::cast_possible_truncation)]
+    let mass = entries.iter().map(|&(_, p)| f64::from(p)).sum::<f64>() as f32;
+    Smoothed { entries, mass }
 }
 
 /// One part of speech's tables, as the trainer learns them. Nodes are
@@ -293,11 +496,19 @@ pub struct PosTables {
     /// Lemmas written in full that another part of speech attests:
     /// `(lookup key, written form)`.
     pub lexicon: Vec<(String, String)>,
+    /// Parts of speech (by index in the model) whose forms in these cells are
+    /// this one's lemmas, read from their models instead of a stored lexicon.
+    pub lexicon_from: Vec<(usize, Vec<usize>)>,
     pub walk: Walk,
     pub edits: Vec<EditSpec>,
     pub classes: Vec<ClassSpec>,
     pub nodes: Vec<NodeSpec>,
-    pub dist: Vec<(u32, f32)>,
+    /// Smoothing strength and the tail cut of the nodes' distributions (see
+    /// [`smooth_node`]).
+    pub alpha: f64,
+    pub epsilon: f64,
+    /// The sound laws the edits' triggers set off, if any.
+    pub phonology: Option<PhonologySpec>,
 }
 
 impl PosTables {
@@ -355,6 +566,11 @@ pub struct NodeRec {
     pub dist: usize,
     pub dist_len: usize,
     pub mass: f32,
+    pub kind: NodeKind,
+    pub counts: Vec<(u32, f32)>,
+    /// The nearest ancestor with a distribution (an inner node smooths
+    /// toward it).
+    pub parent: Option<usize>,
 }
 
 #[doc(hidden)]
@@ -387,6 +603,11 @@ pub struct Tables {
     pub restore_front: Option<usize>,
     #[doc(hidden)]
     pub groups: Vec<usize>,
+    /// Smoothing strength and tail cut (see [`smooth_node`]).
+    #[doc(hidden)]
+    pub alpha: f64,
+    #[doc(hidden)]
+    pub epsilon: f64,
     #[doc(hidden)]
     pub edits: Vec<EditRec>,
     #[doc(hidden)]
@@ -413,6 +634,14 @@ pub struct Tables {
     #[doc(hidden)]
     pub lexicon: Vec<(String, String)>,
     lexicon_index: HashMap<String, usize>,
+    #[doc(hidden)]
+    pub lexicon_from: Vec<(usize, Vec<usize>)>,
+    /// Per cell, the edits classes use there.
+    #[doc(hidden)]
+    pub cell_edits: Vec<Vec<u32>>,
+    /// The sound laws, as specified and compiled.
+    #[doc(hidden)]
+    pub phonology: Option<(PhonologySpec, sound_law::Program)>,
 }
 
 impl Tables {
@@ -420,6 +649,10 @@ impl Tables {
     /// the tables can't make a model (no tree, or a part model that points
     /// nowhere; `count` is the number of parts of speech, `index` this one's).
     pub fn new(sp: &Spelling, p: &PosTables, index: usize, count: usize) -> Option<Tables> {
+        let phonology = match &p.phonology {
+            Some(spec) => Some((spec.clone(), spec.compile().ok()?)),
+            None => None,
+        };
         if p.nodes.is_empty()
             || p.part_models.len() > count
             || p.part_models.iter().any(|&(_, m)| m >= count || m == index)
@@ -477,53 +710,47 @@ impl Tables {
                 }
             })
             .collect();
-        let wide = p.wide_dist();
-        let entries: Vec<(u32, f32)> = p
-            .dist
-            .iter()
-            .map(|&(class, prob)| {
-                if wide {
-                    (class, prob)
-                } else {
-                    // Stored as 16 bits each (`as` saturates; the
-                    // probability is in 0..=1).
-                    let q = (prob.clamp(0.0, 1.0) * f32::from(u16::MAX)).round() as u16;
-                    (
-                        u32::from(u16::try_from(class).unwrap_or(u16::MAX)),
-                        f32::from(q) / f32::from(u16::MAX),
-                    )
-                }
-            })
-            .collect();
-        let cum: Vec<f64> = std::iter::once(0f64)
-            .chain(entries.iter().scan(0f64, |acc, &(_, p)| {
-                *acc += f64::from(p);
-                Some(*acc)
-            }))
-            .collect();
-        // Breadth-first: first children and first entries are running sums.
-        let mut nodes = Vec::with_capacity(p.nodes.len());
-        let (mut next_child, mut next_entry) = (1usize, 0usize);
-        for n in &p.nodes {
+        let narrow_dist = !p.wide_dist();
+        // Breadth-first: first children are running sums, and parents come
+        // before their children, so a node's ancestor is smoothed first.
+        let mut nodes: Vec<NodeRec> = Vec::with_capacity(p.nodes.len());
+        let mut entries: Vec<(u32, f32)> = Vec::new();
+        let mut up: Vec<Option<usize>> = vec![None; p.nodes.len()];
+        let mut next_child = 1usize;
+        for (i, n) in p.nodes.iter().enumerate() {
             let children = usize::try_from(n.children).ok()?;
-            let dist_len = usize::try_from(n.dist_len).ok()?;
-            let end = next_entry.checked_add(dist_len)?;
-            #[allow(clippy::cast_possible_truncation)]
-            let mass = match (cum.get(next_entry), cum.get(end)) {
-                (Some(a), Some(b)) => (b - a) as f32,
-                _ => return None,
-            };
+            // The nearest ancestor with a distribution.
+            let parent = up.get(i).copied().flatten();
+            let q = parent
+                .and_then(|a| nodes.get(a))
+                .map_or(&[][..], |r: &NodeRec| {
+                    entries
+                        .get(r.dist..r.dist.saturating_add(r.dist_len))
+                        .unwrap_or(&[])
+                });
+            let d = smooth_node(n.kind, &n.counts, q, p.alpha, p.epsilon, narrow_dist);
+            let start = entries.len();
+            let dist_len = d.entries.len();
+            entries.extend(d.entries);
+            let own = if dist_len > 0 { Some(i) } else { parent };
+            for c in next_child..next_child.checked_add(children)? {
+                if let Some(slot) = up.get_mut(c) {
+                    *slot = own;
+                }
+            }
             nodes.push(NodeRec {
                 label: n.label.clone(),
                 first: n.label.chars().next().unwrap_or('\0'),
                 first_child: next_child,
                 children,
-                dist: next_entry,
+                dist: start,
                 dist_len,
-                mass,
+                mass: d.mass,
+                kind: n.kind,
+                counts: n.counts.clone(),
+                parent,
             });
             next_child = next_child.checked_add(children)?;
-            next_entry = end;
         }
         let mut joins: Vec<&JoinSpec> = p.joins.iter().collect();
         joins.sort_by(|a, b| a.prefix.cmp(&b.prefix));
@@ -547,17 +774,31 @@ impl Tables {
             }
         }
         // A lexicon entry is found by its key only when the key is its
-        // written form read; of entries with one key the first (sorted) is.
+        // written form read, or when it is empty (a derived lexicon's word
+        // that isn't one); of entries with one key the first (sorted) is.
         let mut sorted: Vec<&(String, String)> = p.lexicon.iter().collect();
         sorted.sort();
         let mut lexicon: Vec<(String, String)> = Vec::new();
         let mut lexicon_index = HashMap::new();
         for (key, written) in sorted {
-            if sp.read(written).key == key.as_str() && !lexicon_index.contains_key(key) {
+            let found = written.is_empty() || sp.read(written).key == key.as_str();
+            if found && !lexicon_index.contains_key(key) {
                 lexicon_index.insert(key.clone(), lexicon.len());
                 lexicon.push((key.clone(), written.clone()));
             }
         }
+        let cell_edits: Vec<Vec<u32>> = (0..p.cells)
+            .map(|cell| {
+                let mut ids: Vec<u32> = (0..p.classes.len())
+                    .filter_map(|c| class_edits.get(c.checked_mul(p.cells)?.checked_add(cell)?))
+                    .copied()
+                    .filter(|&e| e != NONE)
+                    .collect();
+                ids.sort_unstable();
+                ids.dedup();
+                ids
+            })
+            .collect();
         Some(Tables {
             cells: p.cells,
             inherent: p.inherent,
@@ -567,6 +808,8 @@ impl Tables {
             restore: p.restore,
             restore_front: p.restore_front,
             groups: p.group_sizes(),
+            alpha: p.alpha,
+            epsilon: p.epsilon,
             edits,
             classes,
             class_edits,
@@ -581,6 +824,9 @@ impl Tables {
                 .collect(),
             lexicon,
             lexicon_index,
+            lexicon_from: p.lexicon_from.clone(),
+            cell_edits,
+            phonology,
         })
     }
 
@@ -724,6 +970,17 @@ impl PosModel for Tables {
         let i = *self.lexicon_index.get(key)?;
         self.lexicon.get(i).map(|(_, w)| w.as_str())
     }
+    fn phonology(&self) -> Option<&sound_law::Program> {
+        self.phonology.as_ref().map(|(_, p)| p)
+    }
+    fn lexicon_from(&self, i: usize) -> Option<(usize, &[usize])> {
+        self.lexicon_from
+            .get(i)
+            .map(|(p, cells)| (*p, cells.as_slice()))
+    }
+    fn cell_edits(&self, cell: usize) -> &[u32] {
+        self.cell_edits.get(cell).map_or(&[], Vec::as_slice)
+    }
 }
 
 /// A whole model in memory: its spelling and its parts of speech.
@@ -795,6 +1052,8 @@ pub struct Sizes {
     /// Which cells come from which part model.
     pub parts: usize,
     pub lexicon: usize,
+    /// The sound laws.
+    pub phonology: usize,
 }
 
 impl Sizes {
@@ -808,6 +1067,7 @@ impl Sizes {
             self.joins,
             self.parts,
             self.lexicon,
+            self.phonology,
         ]
         .into_iter()
         .fold(0, usize::saturating_add)
@@ -830,7 +1090,16 @@ pub fn measure(spelling: &SpellingSpec, parts: &[PosTables]) -> (Vec<Sizes>, usi
     let mut sizes = Vec::with_capacity(parts.len());
     let mut body = 0usize;
     let grow = |body: &mut usize, n: usize| *body = body.saturating_add(n);
+    // The cells another part of speech derives its lemmas from.
+    let mut lent: Vec<std::collections::BTreeSet<usize>> = vec![Default::default(); parts.len()];
     for p in parts {
+        for (source, cells) in &p.lexicon_from {
+            if let Some(l) = lent.get_mut(*source) {
+                l.extend(cells);
+            }
+        }
+    }
+    for (pi, p) in parts.iter().enumerate() {
         let edits_at = body;
         for e in &p.edits {
             for s in [&e.prefix, &e.strip, &e.add, &e.front] {
@@ -883,13 +1152,16 @@ pub fn measure(spelling: &SpellingSpec, parts: &[PosTables]) -> (Vec<Sizes>, usi
         for n in &p.nodes {
             strings.add(&n.label);
         }
-        grow(&mut body, NODE.saturating_mul(p.nodes.len()));
-        let dist_at = body;
         grow(
             &mut body,
-            p.dist
-                .len()
-                .saturating_mul(if p.wide_dist() { 8 } else { 4 }),
+            NODE.saturating_mul(p.nodes.len()).saturating_add(16),
+        );
+        // A node's own counts: a class and a weight each.
+        let dist_at = body;
+        let counts: usize = p.nodes.iter().map(|n| n.counts.len()).sum();
+        grow(
+            &mut body,
+            counts.saturating_mul(if p.wide_dist() { 8 } else { 6 }),
         );
         let joins_at = body;
         grow(
@@ -929,6 +1201,25 @@ pub fn measure(spelling: &SpellingSpec, parts: &[PosTables]) -> (Vec<Sizes>, usi
             &mut body,
             p.lexicon.len().saturating_mul(12).saturating_add(4),
         );
+        // A derived lexicon's links, and the edits of the cells it reads.
+        for (_, cells) in &p.lexicon_from {
+            grow(
+                &mut body,
+                4usize.saturating_mul(cells.len().saturating_add(1)),
+            );
+        }
+        for &cell in lent.get(pi).into_iter().flatten() {
+            let edits: HashSet<u32> = p
+                .classes
+                .iter()
+                .filter_map(|c| c.edits.get(cell).copied())
+                .filter(|&e| e != NONE)
+                .collect();
+            grow(
+                &mut body,
+                4usize.saturating_mul(edits.len().saturating_add(1)),
+            );
+        }
         let span = |a: usize, b: usize| b.saturating_sub(a);
         sizes.push(Sizes {
             header: POS_HEADER,
@@ -939,12 +1230,18 @@ pub fn measure(spelling: &SpellingSpec, parts: &[PosTables]) -> (Vec<Sizes>, usi
             joins: span(joins_at, parts_at),
             parts: span(parts_at, lexicon_at),
             lexicon: span(lexicon_at, body),
+            phonology: p.phonology.as_ref().map_or(0, PhonologySpec::size),
         });
     }
+    let phonology = sizes
+        .iter()
+        .map(|s| s.phonology)
+        .fold(0, usize::saturating_add);
     let total = HEADER
         .saturating_add(POS_HEADER.saturating_mul(parts.len()))
         .saturating_add(body)
-        .saturating_add(strings.bytes);
+        .saturating_add(strings.bytes)
+        .saturating_add(phonology);
     (sizes, strings.bytes, total)
 }
 

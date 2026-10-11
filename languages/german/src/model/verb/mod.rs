@@ -1,4 +1,4 @@
-//! verb: 55 cells, 14093 edits, 3840 classes, 10838 tree nodes.
+//! verb: 55 cells, 13954 edits, 3840 classes, 14339 tree nodes.
 
 use flexion::{Class, Edit, Join, Path, PosModel, Walk};
 
@@ -6,6 +6,7 @@ mod classes;
 mod edits;
 mod tree;
 mod joins;
+mod phonology;
 
 /// Per cell, which model builds it when the caller gives principal parts:
 /// 0 this one, `k + 1` part model `k`.
@@ -28,7 +29,7 @@ impl PosModel for Verb {
     }
     fn walk(&self) -> Walk {
         Walk {
-            syllable_depth: Some(0),
+            syllable_depth: None,
             syllable_max: 3,
             initial_depth: None,
         }
@@ -72,4 +73,12 @@ impl PosModel for Verb {
     fn lexicon(&self, _key: &str) -> Option<&str> {
         None
     }
+    fn phonology(&self) -> Option<&flexion::sound_law::Program> {
+        phonology::program()
+    }
+}
+
+/// Whether the sound laws compile.
+pub(crate) fn sound_laws_compile() -> bool {
+    phonology::program().is_some()
 }

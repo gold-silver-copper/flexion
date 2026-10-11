@@ -16,6 +16,7 @@ pub mod extract;
 pub mod kaikki;
 pub mod learn;
 pub mod marks;
+pub mod phonology;
 pub mod pipeline;
 pub mod probe;
 pub mod spec;
@@ -81,6 +82,7 @@ pub const TEST_BUCKET: u64 = 0;
 pub const DEV_BUCKET: u64 = 1;
 
 /// Per part of speech: its shape and its learner parameters.
+#[derive(Clone)]
 pub struct PosPlan {
     pub shape: learn::Shape,
     pub params: learn::Params,
@@ -105,6 +107,10 @@ struct SavedPlan {
     initial_depth: Option<usize>,
     joins: bool,
     front_restore: bool,
+    #[serde(default)]
+    phonology: bool,
+    #[serde(default)]
+    derive_lexicon: bool,
     citation: Vec<usize>,
     sources: Vec<u8>,
 }
@@ -125,6 +131,8 @@ pub fn plans_json(plans: &[PosPlan]) -> Result<String, String> {
             initial_depth: p.params.walk.initial_depth,
             joins: p.params.joins,
             front_restore: p.params.front_restore,
+            phonology: p.params.phonology,
+            derive_lexicon: p.params.derive_lexicon,
             citation: p.citation.clone(),
             sources: p.sources.clone(),
         })
@@ -162,6 +170,8 @@ pub fn plans_from_json(lang: &Language, json: &str) -> Result<Vec<PosPlan>, Stri
                 },
                 joins: s.joins,
                 front_restore: s.front_restore,
+                phonology: s.phonology,
+                derive_lexicon: s.derive_lexicon,
             },
             citation: s.citation,
             sources: s.sources,
@@ -307,6 +317,8 @@ pub struct Trained {
     pub restore_front: Option<flexion::tables::PosTables>,
     /// `(the principal part's cell, its model)`.
     pub parts: Vec<(usize, flexion::tables::PosTables)>,
+    /// The sound laws learned, one line each (for the report).
+    pub sound_laws: Vec<String>,
 }
 
 /// Lay out trained parts of speech: mains first (so a part of speech keeps
@@ -410,27 +422,41 @@ pub fn part_model(
     Some(t)
 }
 
-/// Train one part of speech: the main model (reading pairs as `chooser`
-/// says), its restoration model, and a part model for every principal part
-/// some cell is built from (`sources`, see
-/// [`flexion::tables::PosTables::sources`]).
+/// Train one part of speech as `plan` says: the main model (reading pairs
+/// as `chooser` says, with the words `marked` names kept findable), its
+/// restoration model, and a part model for every principal part some cell is
+/// built from (`plan.sources`, see [`flexion::tables::PosTables::sources`]).
 pub fn train_pos(
     sp: &Spelling<'_>,
-    shape: &learn::Shape,
-    params: learn::Params,
+    plan: &PosPlan,
     words: &[Word],
     chooser: &edit::Chooser,
-    citation: &[usize],
-    sources: &[u8],
+    marked: Option<&std::collections::HashSet<String>>,
 ) -> (Trained, learn::Stats) {
+    let PosPlan {
+        shape,
+        params,
+        citation,
+        sources,
+    } = plan;
+    let params = *params;
     let restore = restoration(sp, words, params, false);
     let restore_front = if params.front_restore {
         restoration(sp, words, params, true)
     } else {
         None
     };
+    // Sound laws never rewrite the cells principal parts give: nothing
+    // has to undo them.
+    let phonology = if params.phonology {
+        phonology::learn(sp, shape, words, chooser, citation)
+    } else {
+        None
+    };
     let (mut main, stats) = learn::Learner::new(sp, shape.clone(), params)
         .with_chooser(chooser)
+        .with_phonology(phonology.as_ref())
+        .with_marked(marked)
         .learn(words);
     let mut parts = Vec::new();
     let mut remap = vec![0u8; citation.len().saturating_add(1)];
@@ -462,9 +488,27 @@ pub fn train_pos(
             restore,
             restore_front,
             parts,
+            sound_laws: phonology.map(|p| p.described).unwrap_or_default(),
         },
         stats,
     )
+}
+
+/// The parts of speech (by index) and cells whose forms are part of speech
+/// `pi`'s lemmas (see [`spec::PartOfSpeech::lemmas_from`]).
+pub fn lexicon_sources(lang: &Language, pi: usize) -> Vec<(usize, Vec<usize>)> {
+    let Some(part) = lang.parts.get(pi) else {
+        return Vec::new();
+    };
+    part.lemmas_from
+        .iter()
+        .filter_map(|(pos, group)| {
+            let qi = lang.parts.iter().position(|q| q.name == *pos)?;
+            let cells = cells::Cells::new(lang, lang.parts.get(qi)?).ok()?;
+            let g = cells.groups.iter().find(|g| g.name == *group)?;
+            Some((qi, (g.offset..g.offset.saturating_add(g.len())).collect()))
+        })
+        .collect()
 }
 
 /// The lexicon of part of speech `pi` (see
@@ -543,7 +587,11 @@ pub fn train(
     let sp = view(&spec);
     let mut tables = Vec::new();
     let mut stats = Vec::new();
-    for (d, plan) in data.iter().zip(plans) {
+    let deriving: Vec<usize> = (0..plans.len())
+        .filter(|&pi| plans.get(pi).is_some_and(|p| p.params.derive_lexicon))
+        .collect();
+    let marked = lenders(lang, &sp, data, &deriving, keep);
+    for (pi, (d, plan)) in data.iter().zip(plans).enumerate() {
         let words: Vec<Word> = extract::words(d)
             .into_iter()
             .filter(|w| keep(w.key))
@@ -551,16 +599,150 @@ pub fn train(
         let chooser = edit::Chooser::new(&sp, &words, plan.shape.lemma_cell);
         let (mut t, s) = train_pos(
             &sp,
-            &plan.shape,
-            plan.params,
+            plan,
             &words,
             &chooser,
-            &plan.citation,
-            &plan.sources,
+            marked.get(pi).filter(|m| !m.is_empty()),
         );
-        t.main.lexicon = lexicon(lang, &sp, data, tables.len(), keep);
+        t.main.lexicon = lexicon(lang, &sp, data, pi, keep);
         tables.push(t);
         stats.push(s);
     }
+    derive_lexicons(lang, &spec, data, &mut tables, &deriving, keep);
     (flexion::Built::new(&spec, &assemble(tables)), stats)
+}
+
+/// Make the lexicon of each of `deriving` (trained, as are the parts of
+/// speech they derive from, with [`lenders`] marked) a derived one: its
+/// lemmas are read from the lending parts of speech's models, and it keeps
+/// only the entries derivation gets wrong.
+pub fn derive_lexicons(
+    lang: &Language,
+    spec: &SpellingSpec,
+    data: &[PosData],
+    tables: &mut [Trained],
+    deriving: &[usize],
+    keep: &dyn Fn(&str) -> bool,
+) {
+    let sp = view(spec);
+    for &pi in deriving {
+        if let Some(t) = tables.get_mut(pi) {
+            t.main.lexicon_from = lexicon_sources(lang, pi);
+        }
+    }
+    let Some(built) = flexion::Built::new(spec, &assemble(tables.to_vec())) else {
+        return;
+    };
+    let model = built.model();
+    for &pi in deriving {
+        let (Some(t), Some(pos)) = (tables.get_mut(pi), model.pos(pi)) else {
+            continue;
+        };
+        let keys = derivable(lang, &sp, data, &model, pi, keep);
+        let own: std::collections::BTreeMap<String, String> = data
+            .get(pi)
+            .map(|d| {
+                d.lexemes
+                    .iter()
+                    .filter(|l| keep(&l.key))
+                    .map(|l| (l.key.clone(), l.full.clone()))
+                    .collect()
+            })
+            .unwrap_or_default();
+        t.main.lexicon = exceptions(&pos, &t.main.lexicon, &own, keys);
+    }
+}
+
+/// Per part of speech, the words (by key) of it that a part of speech
+/// deriving its lexicon (see [`learn::Params::derive_lexicon`]) needs found
+/// as attested: those whose forms are in its stored lexicon.
+pub fn lenders(
+    lang: &Language,
+    sp: &Spelling<'_>,
+    data: &[PosData],
+    deriving: &[usize],
+    keep: &dyn Fn(&str) -> bool,
+) -> Vec<std::collections::HashSet<String>> {
+    let mut marked = vec![std::collections::HashSet::new(); data.len()];
+    for &pi in deriving {
+        let stored: std::collections::HashSet<String> = lexicon(lang, sp, data, pi, keep)
+            .into_iter()
+            .map(|(k, _)| k)
+            .collect();
+        for (source, cells) in lexicon_sources(lang, pi) {
+            let (Some(d), Some(m)) = (data.get(source), marked.get_mut(source)) else {
+                continue;
+            };
+            for lex in d.lexemes.iter().filter(|l| keep(&l.key)) {
+                let lends = cells.iter().any(|&c| {
+                    lex.cells
+                        .get(c)
+                        .into_iter()
+                        .flatten()
+                        .any(|f| stored.contains(sp.read(f).key.as_ref()))
+                });
+                if lends {
+                    m.insert(lex.key.clone());
+                }
+            }
+        }
+    }
+    marked
+}
+
+/// The keys derivation can give part of speech `pi` a lemma for: every
+/// form, as `model` predicts it, of the lending parts of speech's words in
+/// the cells it reads and they have.
+fn derivable(
+    lang: &Language,
+    sp: &Spelling<'_>,
+    data: &[PosData],
+    model: &flexion::Model<'_>,
+    pi: usize,
+    keep: &dyn Fn(&str) -> bool,
+) -> std::collections::BTreeSet<String> {
+    let mut keys = std::collections::BTreeSet::new();
+    for (source, cells) in lexicon_sources(lang, pi) {
+        let (Some(v), Some(d)) = (model.pos(source), data.get(source)) else {
+            continue;
+        };
+        for lex in d.lexemes.iter().filter(|l| keep(&l.key)) {
+            let lemma = sp.read(&lex.full).key.to_string();
+            let citation = v.citation(&lemma, &[]);
+            for &cell in &cells {
+                if v.has_cell(&citation, cell) < 0.5 {
+                    continue;
+                }
+                let form = v.best(&citation, cell, flexion::Options::default());
+                keys.insert(sp.read(&form).key.to_string());
+            }
+        }
+    }
+    keys
+}
+
+/// The entries of `stored` that derivation in `pos` doesn't give, and an
+/// empty entry for each of `derivable` it gives a lemma that `stored` lacks,
+/// unless it writes a word of the part of speech's `own` as its entry does.
+fn exceptions(
+    pos: &flexion::Pos<'_, '_>,
+    stored: &[(String, String)],
+    own: &std::collections::BTreeMap<String, String>,
+    derivable: std::collections::BTreeSet<String>,
+) -> Vec<(String, String)> {
+    let by_key: std::collections::BTreeMap<&str, &str> = stored
+        .iter()
+        .map(|(k, f)| (k.as_str(), f.as_str()))
+        .collect();
+    let mut keys = derivable;
+    keys.extend(stored.iter().map(|(k, _)| k.clone()));
+    keys.into_iter()
+        .filter_map(|key| {
+            let want = by_key.get(key.as_str()).copied();
+            let derived = pos.derives(&key);
+            let same = derived.as_deref() == want
+                || (want.is_none() && derived.is_some() && derived.as_ref() == own.get(&key));
+            (!same).then(|| (key.clone(), want.unwrap_or("").to_string()))
+        })
+        .collect()
 }

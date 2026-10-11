@@ -1,4 +1,4 @@
-//! adjective: 6 cells, 145 edits, 84 classes, 1199 tree nodes.
+//! adjective: 6 cells, 145 edits, 84 classes, 1480 tree nodes.
 
 use flexion::{Class, Edit, Join, Path, PosModel, Walk};
 

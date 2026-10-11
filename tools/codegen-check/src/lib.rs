@@ -61,6 +61,46 @@ mod french {
 mod italian {
     include!(concat!(env!("OUT_DIR"), "/italian.rs"));
 }
+#[allow(clippy::approx_constant, clippy::excessive_precision, clippy::unreadable_literal, dead_code)]
+#[rustfmt::skip]
+mod russian_laws {
+    include!(concat!(env!("OUT_DIR"), "/russian_laws.rs"));
+}
+#[allow(clippy::approx_constant, clippy::excessive_precision, clippy::unreadable_literal, dead_code)]
+#[rustfmt::skip]
+mod polish_laws {
+    include!(concat!(env!("OUT_DIR"), "/polish_laws.rs"));
+}
+#[allow(clippy::approx_constant, clippy::excessive_precision, clippy::unreadable_literal, dead_code)]
+#[rustfmt::skip]
+mod german_laws {
+    include!(concat!(env!("OUT_DIR"), "/german_laws.rs"));
+}
+#[allow(clippy::approx_constant, clippy::excessive_precision, clippy::unreadable_literal, dead_code)]
+#[rustfmt::skip]
+mod ancient_greek_laws {
+    include!(concat!(env!("OUT_DIR"), "/ancient_greek_laws.rs"));
+}
+#[allow(clippy::approx_constant, clippy::excessive_precision, clippy::unreadable_literal, dead_code)]
+#[rustfmt::skip]
+mod russian_derived {
+    include!(concat!(env!("OUT_DIR"), "/russian_derived.rs"));
+}
+#[allow(clippy::approx_constant, clippy::excessive_precision, clippy::unreadable_literal, dead_code)]
+#[rustfmt::skip]
+mod latin_derived {
+    include!(concat!(env!("OUT_DIR"), "/latin_derived.rs"));
+}
+#[allow(clippy::approx_constant, clippy::excessive_precision, clippy::unreadable_literal, dead_code)]
+#[rustfmt::skip]
+mod ancient_greek_derived {
+    include!(concat!(env!("OUT_DIR"), "/ancient_greek_derived.rs"));
+}
+#[allow(clippy::approx_constant, clippy::excessive_precision, clippy::unreadable_literal, dead_code)]
+#[rustfmt::skip]
+mod handmade {
+    include!(concat!(env!("OUT_DIR"), "/handmade.rs"));
+}
 
 /// The generated model of fixture case `module`.
 pub fn model(module: &str) -> Option<&'static flexion::Model<'static>> {
@@ -80,6 +120,14 @@ pub fn model(module: &str) -> Option<&'static flexion::Model<'static>> {
             ("spanish", spanish::build()),
             ("french", french::build()),
             ("italian", italian::build()),
+            ("russian_laws", russian_laws::build()),
+            ("polish_laws", polish_laws::build()),
+            ("german_laws", german_laws::build()),
+            ("ancient_greek_laws", ancient_greek_laws::build()),
+            ("russian_derived", russian_derived::build()),
+            ("latin_derived", latin_derived::build()),
+            ("ancient_greek_derived", ancient_greek_derived::build()),
+            ("handmade", handmade::build()),
         ]
     });
     models.iter().find(|(m, _)| *m == module).map(|(_, m)| m)

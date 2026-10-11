@@ -13,6 +13,7 @@ rust-version = "1.88"
 flexion = { path = "crates/flexion", version = "0.1.0" }
 flexion-train = { path = "crates/flexion-train", version = "0.1.0" }
 flexion-configs = { path = "configs", version = "0.1.0" }
+sound-law = { path = "crates/sound-law", version = "0.1.0" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 flate2 = "1"

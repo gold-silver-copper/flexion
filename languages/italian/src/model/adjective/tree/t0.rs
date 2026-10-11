@@ -2,9189 +2,12395 @@ use flexion::Path;
 
 /// Every word.
 pub(crate) fn n0(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.37289998), (1, 0.28186464), (2, 0.20703441), (9, 0.033722438), (5, 0.029159991), (8, 0.019104296), (4, 0.015533685), (3, 0.015259022), (10, 0.01263447), (6, 0.004562448), (7, 0.0045471885), (20, 0.0009613184), (24, 0.0005035477), (15, 0.0004882887), (13, 0.00032043946), (11, 0.00012207218), (25, 0.00012207218), (22, 7.629511e-5), (27, 6.103609e-5), (46, 4.5777066e-5), (12, 4.5777066e-5), (14, 4.5777066e-5), (16, 4.5777066e-5), (17, 4.5777066e-5), (18, 4.5777066e-5), (19, 4.5777066e-5), (21, 4.5777066e-5), (23, 4.5777066e-5), (26, 4.5777066e-5), (28, 4.5777066e-5), (29, 4.5777066e-5), (32, 4.5777066e-5), (34, 4.5777066e-5), (39, 4.5777066e-5), (41, 4.5777066e-5), (42, 4.5777066e-5), (43, 4.5777066e-5), (44, 4.5777066e-5), (45, 4.5777066e-5), (49, 4.5777066e-5), (30, 3.0518044e-5), (33, 3.0518044e-5), (31, 3.0518044e-5), (40, 3.0518044e-5), (36, 3.0518044e-5)], 1.0000916);
-    match s {
-        ['a', s @ ..] => {
-            out.push(&[(8, 0.7094835), (5, 0.24905775), (24, 0.01855497), (0, 0.0044251163), (1, 0.0033417258), (2, 0.0024567025)], 0.98731977);
-            match s {
-                [] => true,
-                ['b', s @ ..] => {
-                    out.push(&[(8, 0.5045243), (5, 0.44377813), (24, 0.03541619), (0, 0.0031433585), (1, 0.0023804074)], 0.9892424);
-                    match s {
-                        [] => true,
-                        ['o', 's', 'i', 'k', 'a', 'y', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['r', 'a', 'b', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['a', 'l', 'o', 'g', 'e', 'r', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['e', 'r', 'p', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['c', s @ ..] => {
-                    out.push(&[(5, 0.6953231), (8, 0.24678417), (17, 0.043472953), (24, 0.0064545665)], 0.9920348);
-                    match s {
-                        [] => true,
-                        ['i', 'r', 'u', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(17, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['d', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', 'd', 'o', 'e', 'n', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['d', 'e', 'v', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['i', s @ ..] => {
-                            out.push(&[(8, 0.9345388), (5, 0.056122683), (24, 0.004180972)], 0.9948424);
-                            s.is_empty()
-                        }
-                        ['n', s @ ..] => {
-                            out.push(&[(8, 0.5159991), (5, 0.45386434), (24, 0.013488975), (0, 0.0032196536), (1, 0.0024261845)], 0.98899823);
-                            match s {
-                                [] => true,
-                                ['a', 'b', 'a', 's', 's', 'a', 'p', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['e', 'v', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['o', 'i', 'r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['o', 'm', 'i', 'r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['e', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['r', 'u', 'a', 'l', 't', 's', 'o', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['s', 'u', 'a', 'n', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['f', s @ ..] => {
-                    out.push(&[(8, 0.61361104), (5, 0.32350653), (36, 0.027023727), (24, 0.016037231), (0, 0.0038300145), (1, 0.0028992142), (2, 0.002121004)], 0.98902875);
-                    match s {
-                        [] => true,
-                        ['f', 'u', 'm', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', 'i', '\u{1}', s @ ..] => {
-                            out.push(&[(36, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['g', s @ ..] => {
-                    out.push(&[(8, 0.47299916), (5, 0.41603723), (19, 0.08332952), (24, 0.012359808), (0, 0.0029449912), (1, 0.0022278172)], 0.9898985);
-                    match s {
-                        [] => true,
-                        ['e', 'i', 'p', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['l', 'e', 'b', '\u{1}', s @ ..] => {
-                            out.push(&[(19, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['n', 'u', 'l', 'a', 'd', 'o', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', 'r', 'd', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['i', s @ ..] => {
-                    out.push(&[(5, 0.7167925), (8, 0.19310293), (46, 0.031448845), (24, 0.02888533), (32, 0.025162127)], 0.9953917);
-                    match s {
-                        [] => true,
-                        ['a', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['c', 'o', 'f', '\u{1}', s @ ..] => {
-                                    out.push(&[(8, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['t', 'o', 'r', 'o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
-                                    out.push(&[(8, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['r', 'a', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['c', 'i', 'c', 's', 'e', 'v', '\u{1}', s @ ..] => {
-                                    out.push(&[(24, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['t', 'n', 'a', 'u', 'g', '\u{1}', s @ ..] => {
-                                    out.push(&[(32, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['s', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['i', 's', 'l', 'a', 'u', 'q', '\u{1}', s @ ..] => {
-                                    out.push(&[(46, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['l', 'a', 'u', 'q', '\u{1}', s @ ..] => {
-                                    out.push(&[(46, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['l', s @ ..] => {
-                    out.push(&[(5, 0.63068587), (8, 0.27414358), (24, 0.07672236), (36, 0.011902037)], 0.99345386);
-                    match s {
-                        [] => true,
-                        ['i', 'b', 'a', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(8, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['l', 'e', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['n', 'e', 'r', '\u{1}', s @ ..] => {
-                                    out.push(&[(24, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['r', 'o', 's', 'n', 'o', 'c', '\u{1}', s @ ..] => {
-                                    out.push(&[(24, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['o', 'i', 'a', 'm', 'i', 'r', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(8, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['m', s @ ..] => {
-                    out.push(&[(5, 0.5830167), (8, 0.4031586), (24, 0.006179904)], 0.9923552);
-                    match s {
-                        [] => true,
-                        ['a', 'l', 'i', 'b', '\u{1}', s @ ..] => {
-                            out.push(&[(8, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['m', 'a', 'i', 'f', 'a', 'i', 'l', 'g', 'a', 't', '\u{1}', s @ ..] => {
-                            out.push(&[(8, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['r', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['a', 'i', 'r', 'u', 'l', 'p', '\u{1}', s @ ..] => {
-                                    out.push(&[(8, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['o', 'f', 'n', 'i', 's', '\u{1}', s @ ..] => {
-                                    out.push(&[(8, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['n', s @ ..] => {
-                    out.push(&[(5, 0.6484474), (8, 0.20746166), (24, 0.112123296), (30, 0.018020906), (31, 0.009002823)], 0.9950561);
-                    match s {
-                        [] => true,
-                        ['a', 't', 's', 'u', 'd', 'n', 'i', '\u{1}', s @ ..] => {
-                            out.push(&[(8, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['e', 'm', 'i', 'h', 'c', 'o', 's', 'i', '\u{1}', s @ ..] => {
-                            out.push(&[(24, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['i', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['m', 'm', 'e', 'f', '\u{1}', s @ ..] => {
-                                    out.push(&[(30, 0.6666667), (31, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['r', 'a', 'm', 'o', 'e', 't', 'e', 'm', '\u{1}', s @ ..] => {
-                                    out.push(&[(8, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['o', s @ ..] => {
-                            out.push(&[(5, 0.51563287), (24, 0.3247425), (8, 0.13830778), (30, 0.01200885), (31, 0.0060120546)], 0.99670404);
-                            match s {
-                                [] => true,
-                                ['d', 'a', 'p', 's', '\u{1}', s @ ..] => {
-                                    out.push(&[(24, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['i', 'h', 'c', 'c', 'o', '\u{1}', s @ ..] => {
-                                    out.push(&[(24, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['r', 'u', 'd', '\u{1}', s @ ..] => {
-                                    out.push(&[(24, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['p', 'm', 'a', 't', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', s @ ..] => {
-                    out.push(&[(5, 0.6129244), (8, 0.3117113), (24, 0.07002365)], 0.99465936);
-                    match s {
-                        [] => true,
-                        ['a', s @ ..] => super::t0::n111(s, out),
-                        ['e', 'i', 'd', 'o', 'r', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(8, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['t', 'a', 'l', 'o', s @ ..] => super::t0::n113(s, out),
-                        _ => false,
-                    }
-                }
-                ['s', s @ ..] => super::t0::n38(s, out),
-                ['t', s @ ..] => super::t0::n39(s, out),
-                ['u', s @ ..] => {
-                    out.push(&[(5, 0.53788054), (8, 0.4366064), (24, 0.011413748), (0, 0.002716106), (1, 0.002059968)], 0.99067676);
-                    s.is_empty()
-                }
-                ['v', s @ ..] => super::t0::n41(s, out),
-                ['z', s @ ..] => super::t0::n42(s, out),
-                _ => false,
-            }
-        }
-        ['c', s @ ..] => super::t0::n2(s, out),
-        ['d', s @ ..] => super::t0::n3(s, out),
-        ['e', s @ ..] => super::t0::n4(s, out),
-        ['f', s @ ..] => super::t0::n5(s, out),
-        ['g', s @ ..] => super::t0::n6(s, out),
-        ['h', s @ ..] => super::t0::n7(s, out),
-        ['i', s @ ..] => super::t0::n8(s, out),
-        ['k', s @ ..] => super::t0::n9(s, out),
-        ['l', s @ ..] => super::t0::n10(s, out),
-        ['m', s @ ..] => super::t0::n11(s, out),
-        ['n', s @ ..] => super::t0::n12(s, out),
-        ['o', s @ ..] => super::t0::n13(s, out),
-        ['r', s @ ..] => super::t0::n14(s, out),
-        ['s', s @ ..] => super::t0::n15(s, out),
-        ['t', s @ ..] => super::t0::n16(s, out),
-        ['u', s @ ..] => super::t0::n17(s, out),
-        ['x', s @ ..] => super::t0::n18(s, out),
-        ['y', s @ ..] => super::t0::n19(s, out),
-        ['à', s @ ..] => super::t0::n20(s, out),
-        ['è', s @ ..] => super::t0::n21(s, out),
-        ['é', s @ ..] => super::t0::n22(s, out),
-        ['ì', s @ ..] => super::t0::n23(s, out),
-        ['ò', s @ ..] => super::t0::n24(s, out),
-        ['ù', s @ ..] => super::t0::n25(s, out),
-        _ => false,
-    }
+	super::push(out, 0);
+	match s {
+		['a', s @ ..] => {
+			super::push(out, 1);
+			match s {
+				[] => true,
+				['b', s @ ..] => {
+					super::push(out, 26);
+					match s {
+						[] => true,
+						['o', 's', 'i', 'k', 'a', 'y', '\u{1}', s @ ..] => {
+							super::push(out, 112);
+							s.is_empty()
+						}
+						['r', s @ ..] => {
+							super::push(out, 113);
+							match s {
+								[] => true,
+								['a', s @ ..] => {
+									super::push(out, 353);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['c', s @ ..] => {
+					super::push(out, 27);
+					match s {
+						[] => true,
+						['c', s @ ..] => {
+							super::push(out, 114);
+							s.is_empty()
+						}
+						['i', s @ ..] => {
+							super::push(out, 115);
+							match s {
+								[] => true,
+								['r', 'u', 'a', '\u{1}', s @ ..] => {
+									super::push(out, 354);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['n', s @ ..] => {
+							super::push(out, 116);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['d', s @ ..] => {
+					super::push(out, 28);
+					match s {
+						[] => true,
+						['a', 'd', 'o', 'e', 'n', '\u{1}', s @ ..] => {
+							super::push(out, 117);
+							s.is_empty()
+						}
+						['d', 'e', 'v', '\u{1}', s @ ..] => {
+							super::push(out, 118);
+							s.is_empty()
+						}
+						['i', s @ ..] => {
+							super::push(out, 119);
+							match s {
+								[] => true,
+								['c', s @ ..] => {
+									super::push(out, 355);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['n', s @ ..] => {
+							super::push(out, 120);
+							match s {
+								[] => true,
+								['a', 'b', 'a', 's', 's', 'a', 'p', '\u{1}', s @ ..] => {
+									super::push(out, 356);
+									s.is_empty()
+								}
+								['e', 'v', '\u{1}', s @ ..] => {
+									super::push(out, 357);
+									s.is_empty()
+								}
+								['o', 'i', 'r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
+									super::push(out, 358);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['o', 'm', 'i', 'r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
+							super::push(out, 121);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['e', s @ ..] => {
+					super::push(out, 29);
+					match s {
+						[] => true,
+						['r', 'u', 'a', 'l', 't', 's', 'o', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 122);
+							s.is_empty()
+						}
+						['s', 'u', 'a', 'n', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 123);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['f', s @ ..] => {
+					super::push(out, 30);
+					match s {
+						[] => true,
+						['f', 'u', 'm', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 124);
+							s.is_empty()
+						}
+						['o', 'i', '\u{1}', s @ ..] => {
+							super::push(out, 125);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['g', s @ ..] => {
+					super::push(out, 31);
+					match s {
+						[] => true,
+						['e', 'i', 'p', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 126);
+							s.is_empty()
+						}
+						['l', 'e', 'b', '\u{1}', s @ ..] => {
+							super::push(out, 127);
+							s.is_empty()
+						}
+						['n', 'u', 'l', 'a', 'd', 'o', 'c', '\u{1}', s @ ..] => {
+							super::push(out, 128);
+							s.is_empty()
+						}
+						['o', 'r', 'd', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 129);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['i', s @ ..] => {
+					super::push(out, 32);
+					match s {
+						[] => true,
+						['a', s @ ..] => {
+							super::push(out, 130);
+							match s {
+								[] => true,
+								['c', 'o', 'f', '\u{1}', s @ ..] => {
+									super::push(out, 359);
+									s.is_empty()
+								}
+								['t', 'o', 'r', 'o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
+									super::push(out, 360);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['c', s @ ..] => {
+							super::push(out, 131);
+							s.is_empty()
+						}
+						['p', s @ ..] => {
+							super::push(out, 132);
+							s.is_empty()
+						}
+						['r', s @ ..] => {
+							super::push(out, 133);
+							match s {
+								[] => true,
+								['a', s @ ..] => {
+									super::push(out, 361);
+									match s {
+										[] => true,
+										['-', s @ ..] => {
+											super::push(out, 803);
+											s.is_empty()
+										}
+										['c', 'i', 'c', 's', 'e', 'v', '\u{1}', s @ ..] => {
+											super::push(out, 804);
+											s.is_empty()
+										}
+										['t', 'n', 'a', 'u', 'g', '\u{1}', s @ ..] => {
+											super::push(out, 805);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['s', s @ ..] => {
+							super::push(out, 134);
+							match s {
+								[] => true,
+								['i', 's', 'l', 'a', 'u', 'q', '\u{1}', s @ ..] => {
+									super::push(out, 362);
+									s.is_empty()
+								}
+								['l', 'a', 'u', 'q', '\u{1}', s @ ..] => {
+									super::push(out, 363);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['l', s @ ..] => super::t0::n33(s, out),
+				['m', s @ ..] => super::t0::n34(s, out),
+				['n', s @ ..] => super::t0::n35(s, out),
+				['p', 'm', 'a', 't', 's', '\u{1}', s @ ..] => {
+					super::push(out, 36);
+					s.is_empty()
+				}
+				['r', s @ ..] => super::t0::n37(s, out),
+				['s', s @ ..] => super::t0::n38(s, out),
+				['t', s @ ..] => super::t0::n39(s, out),
+				['u', s @ ..] => {
+					super::push(out, 40);
+					match s {
+						[] => true,
+						['q', s @ ..] => {
+							super::push(out, 162);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['v', s @ ..] => {
+					super::push(out, 41);
+					match s {
+						[] => true,
+						['i', s @ ..] => super::t0::n167(s, out),
+						_ => false,
+					}
+				}
+				['z', s @ ..] => super::t0::n42(s, out),
+				_ => false,
+			}
+		}
+		['c', s @ ..] => super::t0::n2(s, out),
+		['d', s @ ..] => super::t0::n3(s, out),
+		['e', s @ ..] => super::t0::n4(s, out),
+		['f', s @ ..] => super::t0::n5(s, out),
+		['g', s @ ..] => super::t0::n6(s, out),
+		['h', s @ ..] => super::t0::n7(s, out),
+		['i', s @ ..] => super::t0::n8(s, out),
+		['k', s @ ..] => super::t0::n9(s, out),
+		['l', s @ ..] => super::t0::n10(s, out),
+		['m', s @ ..] => super::t0::n11(s, out),
+		['n', s @ ..] => super::t0::n12(s, out),
+		['o', s @ ..] => super::t0::n13(s, out),
+		['r', s @ ..] => super::t0::n14(s, out),
+		['s', s @ ..] => super::t0::n15(s, out),
+		['t', s @ ..] => super::t0::n16(s, out),
+		['u', s @ ..] => super::t0::n17(s, out),
+		['x', s @ ..] => super::t0::n18(s, out),
+		['y', s @ ..] => super::t0::n19(s, out),
+		['à', s @ ..] => super::t0::n20(s, out),
+		['è', s @ ..] => super::t0::n21(s, out),
+		['é', s @ ..] => super::t0::n22(s, out),
+		['ì', s @ ..] => super::t0::n23(s, out),
+		['ò', s @ ..] => super::t0::n24(s, out),
+		['ù', s @ ..] => super::t0::n25(s, out),
+		_ => false,
+	}
 }
 
-/// Words ending -ara.
-pub(crate) fn n111(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.40027466), (8, 0.3668269), (24, 0.22940414)], 0.9965057);
-    match s {
-        [] => true,
-        ['p', 'i', s @ ..] => {
-            match s {
-                [] => true,
-                ['c', 'u', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(8, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', 'u', 'l', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(8, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+/// Words ending -la.
+pub(crate) fn n33(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 33);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 135);
+			match s {
+				[] => true,
+				['p', s @ ..] => {
+					super::push(out, 364);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['i', 'b', 'a', 'c', '\u{1}', s @ ..] => {
+			super::push(out, 136);
+			s.is_empty()
+		}
+		['l', s @ ..] => {
+			super::push(out, 137);
+			match s {
+				[] => true,
+				['e', s @ ..] => {
+					super::push(out, 365);
+					match s {
+						[] => true,
+						['n', 'e', 'r', '\u{1}', s @ ..] => {
+							super::push(out, 806);
+							s.is_empty()
+						}
+						['r', 'o', 's', 'n', 'o', 'c', '\u{1}', s @ ..] => {
+							super::push(out, 807);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['o', s @ ..] => {
+			super::push(out, 138);
+			match s {
+				[] => true,
+				['i', 'a', 'm', 'i', 'r', 'p', '\u{1}', s @ ..] => {
+					super::push(out, 366);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
-/// Words ending -olatra.
-pub(crate) fn n113(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['d', 'i', '\u{1}', s @ ..] => {
-            out.push(&[(8, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['t', 'u', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(8, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+/// Words ending -ma.
+pub(crate) fn n34(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 34);
+	match s {
+		[] => true,
+		['a', 'l', 'i', 'b', '\u{1}', s @ ..] => {
+			super::push(out, 139);
+			s.is_empty()
+		}
+		['e', s @ ..] => {
+			super::push(out, 140);
+			match s {
+				[] => true,
+				['t', s @ ..] => {
+					super::push(out, 367);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['m', 'a', 'i', 'f', 'a', 'i', 'l', 'g', 'a', 't', '\u{1}', s @ ..] => {
+			super::push(out, 141);
+			s.is_empty()
+		}
+		['r', s @ ..] => {
+			match s {
+				[] => true,
+				['a', 'i', 'r', 'u', 'l', 'p', '\u{1}', s @ ..] => {
+					super::push(out, 368);
+					s.is_empty()
+				}
+				['o', 'f', s @ ..] => {
+					match s {
+						[] => true,
+						['a', s @ ..] => {
+							super::push(out, 808);
+							s.is_empty()
+						}
+						['n', 'i', 's', '\u{1}', s @ ..] => {
+							super::push(out, 809);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -na.
+pub(crate) fn n35(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 35);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			match s {
+				[] => true,
+				['r', s @ ..] => {
+					super::push(out, 369);
+					s.is_empty()
+				}
+				['t', 's', 'u', 'd', 'n', 'i', '\u{1}', s @ ..] => {
+					super::push(out, 370);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['e', s @ ..] => {
+			super::push(out, 142);
+			match s {
+				[] => true,
+				['m', 'i', 'h', 'c', 'o', 's', 'i', '\u{1}', s @ ..] => {
+					super::push(out, 371);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['i', s @ ..] => {
+			super::push(out, 143);
+			match s {
+				[] => true,
+				['m', 'm', 'e', 'f', '\u{1}', s @ ..] => {
+					super::push(out, 372);
+					s.is_empty()
+				}
+				['r', 'a', 'm', 'o', 'e', 't', 'e', 'm', '\u{1}', s @ ..] => {
+					super::push(out, 373);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['n', s @ ..] => {
+			super::push(out, 144);
+			s.is_empty()
+		}
+		['o', s @ ..] => {
+			super::push(out, 145);
+			match s {
+				[] => true,
+				['d', 'a', 'p', 's', '\u{1}', s @ ..] => {
+					super::push(out, 374);
+					s.is_empty()
+				}
+				['i', 'h', 'c', 'c', 'o', '\u{1}', s @ ..] => {
+					super::push(out, 375);
+					s.is_empty()
+				}
+				['r', 'u', 'd', '\u{1}', s @ ..] => {
+					super::push(out, 376);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['u', s @ ..] => {
+			super::push(out, 146);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ra.
+pub(crate) fn n37(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 37);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 147);
+			match s {
+				[] => true,
+				['p', s @ ..] => {
+					super::push(out, 377);
+					match s {
+						[] => true,
+						['i', s @ ..] => {
+							super::push(out, 810);
+							match s {
+								[] => true,
+								['t', s @ ..] => {
+									super::push(out, 1366);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['e', 'i', 'd', 'o', 'r', 'p', '\u{1}', s @ ..] => {
+			super::push(out, 148);
+			s.is_empty()
+		}
+		['o', s @ ..] => {
+			super::push(out, 149);
+			s.is_empty()
+		}
+		['r', s @ ..] => {
+			super::push(out, 150);
+			match s {
+				[] => true,
+				['e', s @ ..] => {
+					super::push(out, 378);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['t', 'a', s @ ..] => {
+			super::push(out, 151);
+			match s {
+				[] => true,
+				['l', s @ ..] => {
+					super::push(out, 379);
+					match s {
+						[] => true,
+						['o', s @ ..] => {
+							super::push(out, 811);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['u', s @ ..] => {
+			super::push(out, 152);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -sa.
 pub(crate) fn n38(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.5533837), (8, 0.426215), (24, 0.009124896), (0, 0.0021820401)], 0.99090564);
-    match s {
-        [] => true,
-        ['r', 'e', 'p', '\u{1}', s @ ..] => {
-            out.push(&[(8, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['s', 'i', 'r', 'a', 'l', 'c', '\u{1}', s @ ..] => {
-            out.push(&[(8, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+	super::push(out, 38);
+	match s {
+		[] => true,
+		['o', s @ ..] => {
+			super::push(out, 153);
+			s.is_empty()
+		}
+		['r', 'e', 'p', '\u{1}', s @ ..] => {
+			super::push(out, 154);
+			s.is_empty()
+		}
+		['s', s @ ..] => {
+			match s {
+				[] => true,
+				['i', 'r', 'a', 'l', 'c', '\u{1}', s @ ..] => {
+					super::push(out, 380);
+					s.is_empty()
+				}
+				['o', s @ ..] => {
+					super::push(out, 381);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -ta.
 pub(crate) fn n39(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(8, 0.9470054), (5, 0.043656062), (24, 0.0046387427), (29, 0.002151522), (39, 0.002151522)], 0.9996032);
-    match s {
-        [] => true,
-        ['a', s @ ..] => {
-            match s {
-                [] => true,
-                ['r', 'i', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['t', 'i', 'r', 'a', 'm', 'l', 'a', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['i', s @ ..] => {
-            match s {
-                [] => true,
-                ['d', 'n', 'e', 'v', 't', 's', 'o', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', 'e', s @ ..] => {
-                    out.push(&[(8, 0.85760283), (24, 0.10370031), (5, 0.0349279)], 0.996231);
-                    s.is_empty()
-                }
-                ['v', 'a', 'v', 'l', 'a', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['n', 'e', 'g', 'a', 'm', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['o', s @ ..] => {
-            match s {
-                [] => true,
-                ['l', 'i', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', 'a', 'c', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['r', s @ ..] => {
-            out.push(&[(8, 0.6887312), (5, 0.21356528), (24, 0.094285496)], 0.996582);
-            match s {
-                [] => true,
-                ['e', 'l', 'l', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['o', 'p', 'i', 'r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['s', s @ ..] => {
-            out.push(&[(8, 0.97666895), (5, 0.017746242), (29, 0.002731365), (39, 0.002731365)], 0.9998779);
-            match s {
-                [] => true,
-                ['a', s @ ..] => {
-                    out.push(&[(8, 0.7875639), (5, 0.20946059)], 0.99702454);
-                    match s {
-                        [] => true,
-                        ['c', 'i', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['t', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['p', 'a', 'i', 'l', 'g', 'a', 't', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['i', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['c', 's', 'a', 'f', '\u{1}', s @ ..] => {
-                            out.push(&[(29, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['n', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['i', 'n', s @ ..] => {
-                                    out.push(&[(8, 0.88134587), (39, 0.10218967), (5, 0.014190891), (29, 0.0021820401)], 0.99990845);
-                                    match s {
-                                        [] => true,
-                                        ['e', 'l', '-', 'a', 't', 's', 'i', 'x', 'r', 'a', 'm', '\u{1}', s @ ..] => {
-                                            out.push(&[(39, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['r', 'e', 'v', s @ ..] => {
-                                    out.push(&[(8, 0.86816204), (5, 0.12687877), (29, 0.0024261845), (39, 0.0024261845)], 0.9998932);
-                                    match s {
-                                        [] => true,
-                                        ['o', 'g', '\u{1}', s @ ..] => {
-                                            out.push(&[(5, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['o', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['g', s @ ..] => {
-                            out.push(&[(8, 0.86816204), (5, 0.12687877), (29, 0.0024261845), (39, 0.0024261845)], 0.9998932);
-                            match s {
-                                [] => true,
-                                ['a', 'r', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['p', 'p', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['u', s @ ..] => {
-                    out.push(&[(8, 0.86816204), (5, 0.12687877), (29, 0.0024261845), (39, 0.0024261845)], 0.9998932);
-                    match s {
-                        [] => true,
-                        ['b', 'i', 'r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['t', s @ ..] => {
-            out.push(&[(8, 0.7575952), (5, 0.23492791), (24, 0.0037079423)], 0.996231);
-            match s {
-                [] => true,
-                ['e', 'v', 'a', 'n', 'a', 'r', 'a', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['o', 'c', 'a', 'r', 'r', 'e', 't', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['u', 'd', 'a', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+	super::push(out, 39);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 155);
+			match s {
+				[] => true,
+				['r', 'i', 'p', '\u{1}', s @ ..] => {
+					super::push(out, 382);
+					s.is_empty()
+				}
+				['t', 'i', 'r', 'a', 'm', 'l', 'a', 'm', '\u{1}', s @ ..] => {
+					super::push(out, 383);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['i', s @ ..] => {
+			match s {
+				[] => true,
+				['d', 'n', 'e', 'v', 't', 's', 'o', 'p', '\u{1}', s @ ..] => {
+					super::push(out, 384);
+					s.is_empty()
+				}
+				['r', s @ ..] => {
+					super::push(out, 385);
+					match s {
+						[] => true,
+						['e', s @ ..] => {
+							super::push(out, 812);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['v', s @ ..] => {
+					super::push(out, 386);
+					match s {
+						[] => true,
+						['a', 'v', 'l', 'a', 's', '\u{1}', s @ ..] => {
+							super::push(out, 813);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['n', 'e', 'g', 'a', 'm', '\u{1}', s @ ..] => {
+			super::push(out, 156);
+			s.is_empty()
+		}
+		['o', s @ ..] => {
+			super::push(out, 157);
+			match s {
+				[] => true,
+				['l', 'i', 'p', '\u{1}', s @ ..] => {
+					super::push(out, 387);
+					s.is_empty()
+				}
+				['r', 'a', 'c', '\u{1}', s @ ..] => {
+					super::push(out, 388);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['r', s @ ..] => {
+			super::push(out, 158);
+			match s {
+				[] => true,
+				['e', s @ ..] => {
+					super::push(out, 389);
+					match s {
+						[] => true,
+						['l', 'l', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 814);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['o', 'p', 'i', 'r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
+					super::push(out, 390);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['s', s @ ..] => {
+			super::push(out, 159);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 391);
+					match s {
+						[] => true,
+						['c', s @ ..] => {
+							super::push(out, 815);
+							match s {
+								[] => true,
+								['i', s @ ..] => {
+									super::push(out, 1367);
+									match s {
+										[] => true,
+										['r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
+											super::push(out, 1780);
+											s.is_empty()
+										}
+										['t', 'n', 'a', '\u{1}', s @ ..] => {
+											super::push(out, 1781);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['p', 'a', 'i', 'l', 'g', 'a', 't', '\u{1}', s @ ..] => {
+							super::push(out, 816);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['i', s @ ..] => {
+					super::push(out, 392);
+					match s {
+						[] => true,
+						['c', s @ ..] => {
+							super::push(out, 817);
+							match s {
+								[] => true,
+								['s', 'a', 'f', '\u{1}', s @ ..] => {
+									super::push(out, 1368);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['n', s @ ..] => {
+							super::push(out, 818);
+							match s {
+								[] => true,
+								['i', s @ ..] => {
+									super::push(out, 1369);
+									match s {
+										[] => true,
+										['n', s @ ..] => {
+											super::push(out, 1782);
+											match s {
+												[] => true,
+												['e', 'l', '-', 'a', 't', 's', 'i', 'x', 'r', 'a', 'm', '\u{1}', s @ ..] => {
+													super::push(out, 2015);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['r', s @ ..] => {
+									super::push(out, 1370);
+									match s {
+										[] => true,
+										['e', 'v', 'o', 'g', '\u{1}', s @ ..] => {
+											super::push(out, 1783);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['o', s @ ..] => {
+					super::push(out, 393);
+					match s {
+						[] => true,
+						['g', 'a', 'r', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 819);
+							s.is_empty()
+						}
+						['p', 'p', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 820);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['u', 'b', 'i', 'r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
+					super::push(out, 394);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['t', s @ ..] => {
+			super::push(out, 160);
+			match s {
+				[] => true,
+				['e', 'v', 'a', 'n', 'a', 'r', 'a', 'p', '\u{1}', s @ ..] => {
+					super::push(out, 395);
+					s.is_empty()
+				}
+				['o', 'c', 'a', 'r', 'r', 'e', 't', '\u{1}', s @ ..] => {
+					super::push(out, 396);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['u', 'd', 'a', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+			super::push(out, 161);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
-/// Words ending -va.
-pub(crate) fn n41(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.50959027), (8, 0.4633402), (24, 0.012115664), (0, 0.0028839551), (1, 0.0021820401)], 0.9901121);
-    s.is_empty()
+/// Words ending -iva.
+pub(crate) fn n167(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 163);
+	s.is_empty()
 }
 
 /// Words ending -za.
 pub(crate) fn n42(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.58779275), (8, 0.33388266), (24, 0.06755169), (0, 0.002075227)], 0.9913023);
-    match s {
-        [] => true,
-        ['r', 'e', 't', 't', 'e', 'm', '\u{1}', s @ ..] => {
-            out.push(&[(24, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+	super::push(out, 42);
+	match s {
+		[] => true,
+		['n', s @ ..] => {
+			super::push(out, 164);
+			match s {
+				[] => true,
+				['e', s @ ..] => {
+					super::push(out, 397);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['r', 'e', 't', 't', 'e', 'm', '\u{1}', s @ ..] => {
+			super::push(out, 165);
+			s.is_empty()
+		}
+		['z', s @ ..] => {
+			super::push(out, 166);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -c.
 pub(crate) fn n2(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.4025635), (0, 0.22948043), (1, 0.17344931), (2, 0.12741283), (9, 0.02075227), (8, 0.011764706), (4, 0.009567407), (3, 0.009384299), (10, 0.0077668424), (6, 0.00280766), (7, 0.00280766)], 0.9977569);
-    s.is_empty()
+	super::push(out, 2);
+	match s {
+		[] => true,
+		['i', s @ ..] => {
+			super::push(out, 43);
+			match s {
+				[] => true,
+				['h', s @ ..] => {
+					super::push(out, 167);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -d.
 pub(crate) fn n3(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.35277334), (0, 0.24859999), (1, 0.18791485), (2, 0.13801785), (9, 0.022476539), (8, 0.0127412835), (4, 0.010360876), (3, 0.010177768), (10, 0.00842298), (6, 0.0030365454), (7, 0.0030365454)], 0.99755853);
-    s.is_empty()
+	super::push(out, 3);
+	match s {
+		[] => true,
+		['r', s @ ..] => {
+			super::push(out, 44);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 168);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -e.
 pub(crate) fn n4(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1, 0.91392386), (3, 0.04948501), (5, 0.016937515), (6, 0.014785992), (20, 0.0031128405)], 0.99824524);
-    match s {
-        [] => true,
-        ['c', s @ ..] => {
-            out.push(&[(1, 0.7349508), (6, 0.17871366), (5, 0.06817731), (18, 0.012664989), (3, 0.005004959)], 0.9995117);
-            match s {
-                [] => true,
-                ['a', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['c', 'i', 'f', 'f', 'e', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['f', '-', 'e', 'l', 'b', 'u', 'o', 'd', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['g', 'a', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['l', 'a', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['n', 'e', 't', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['p', 'a', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['v', 'i', 'v', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['i', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['l', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['a', 'r', 't', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['e', 'f', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            out.push(&[(6, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['n', 'i', '\u{1}', s @ ..] => {
-                                            out.push(&[(6, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['p', 'm', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['e', 's', '\u{1}', s @ ..] => {
-                                            out.push(&[(6, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['o', 'c', '\u{1}', s @ ..] => {
-                                            out.push(&[(5, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['r', 't', 'a', s @ ..] => {
-                            out.push(&[(1, 0.65329975), (6, 0.15886168), (18, 0.1223621), (5, 0.060593575), (3, 0.0044556344)], 0.99957275);
-                            s.is_empty()
-                        }
-                        ['v', 'r', 'e', 's', '-', 'f', 'l', 'e', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['l', 'o', 'd', '\u{1}', s @ ..] => {
-                    out.push(&[(6, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['o', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['c', 'e', 'r', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['l', 'e', 'v', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['n', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['r', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['e', 'f', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['t', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['v', 'a', 'v', 'i', 'v', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['d', s @ ..] => {
-            out.push(&[(1, 0.9568475), (5, 0.039581902), (3, 0.0025482567)], 0.99897766);
-            match s {
-                [] => true,
-                ['a', 'r', 'g', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['e', 's', 'i', 'r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['i', s @ ..] => {
-                    out.push(&[(1, 0.997116), (5, 0.0026550698)], 0.9997711);
-                    s.is_empty()
-                }
-                ['o', 'c', s @ ..] => {
-                    out.push(&[(1, 0.7654841), (5, 0.23166247), (3, 0.002044709)], 0.9991913);
-                    match s {
-                        [] => true,
-                        ['a', 'i', 'l', 'g', 'a', 't', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['r', 'e', 'v', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['u', 'r', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['e', s @ ..] => {
-            out.push(&[(1, 0.81237507), (5, 0.12617685), (3, 0.0439765), (6, 0.013153277), (20, 0.002761883)], 0.9984436);
-            match s {
-                [] => true,
-                ['k', 'n', 'a', 'y', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['g', s @ ..] => {
-            out.push(&[(1, 0.8161898), (26, 0.09091325), (5, 0.04261845), (3, 0.035980772), (6, 0.01075761), (20, 0.0022583352)], 0.99871826);
-            match s {
-                [] => true,
-                ['n', 'i', 'r', 'c', '\u{1}', s @ ..] => {
-                    out.push(&[(26, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['h', s @ ..] => {
-            out.push(&[(1, 0.5968414), (5, 0.35800716), (3, 0.032318607), (6, 0.009658961), (20, 0.00202945)], 0.9988556);
-            match s {
-                [] => true,
-                ['c', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['c', 'i', 'c', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['n', 'u', 'l', 'a', 'u', 'q', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['g', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['l', 'a', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['u', 'r', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['i', s @ ..] => {
-            out.push(&[(1, 0.6092775), (5, 0.344625), (3, 0.032990005), (6, 0.009857329), (20, 0.002075227)], 0.9988251);
-            match s {
-                [] => true,
-                ['c', 'i', 'f', 'r', 'e', 'p', 'u', 's', '-', 'e', 'i', 'c', 'i', 'f', 'r', 'e', 'p', 'u', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['d', 'n', 'i', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['e', 's', 'i', 'r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['l', s @ ..] => super::t0::n49(s, out),
-        ['m', s @ ..] => {
-            out.push(&[(1, 0.97752345), (5, 0.018249791), (3, 0.0030212863)], 0.9987945);
-            match s {
-                [] => true,
-                ['i', 'r', s @ ..] => {
-                    out.push(&[(1, 0.8689097), (5, 0.12733653), (3, 0.0026855879)], 0.9989318);
-                    match s {
-                        [] => true,
-                        ['c', 'a', 'l', 'a', 'p', 'p', 'a', 'r', 't', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['m', 'a', 'i', 'f', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['u', 'l', 'o', 'v', s @ ..] => {
-                    out.push(&[(1, 0.8689097), (5, 0.12733653), (3, 0.0026855879)], 0.9989318);
-                    match s {
-                        [] => true,
-                        ['o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['n', s @ ..] => super::t0::n51(s, out),
-        ['r', s @ ..] => {
-            out.push(&[(1, 0.58638895), (3, 0.38062105), (5, 0.019302662), (6, 0.00608835), (11, 0.0029907683)], 0.9953918);
-            match s {
-                [] => true,
-                ['a', s @ ..] => super::t0::n158(s, out),
-                ['b', s @ ..] => {
-                    out.push(&[(1, 0.68235296), (3, 0.17399862), (11, 0.11564813), (5, 0.023102159), (6, 0.002777142)], 0.997879);
-                    match s {
-                        [] => true,
-                        ['a', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['e', 'l', 'e', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(11, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['u', 'l', 'a', 's', '\u{1}', s @ ..] => super::t0::n415(s, out),
-                        _ => false,
-                    }
-                }
-                ['c', s @ ..] => super::t0::n160(s, out),
-                ['e', s @ ..] => super::t0::n161(s, out),
-                ['i', 'n', 'e', 'v', 'v', 'a', '\u{1}', s @ ..] => super::t0::n162(s, out),
-                ['o', s @ ..] => super::t0::n163(s, out),
-                ['t', s @ ..] => super::t0::n164(s, out),
-                ['u', 't', 'a', 'n', '\u{1}', s @ ..] => super::t0::n165(s, out),
-                _ => false,
-            }
-        }
-        ['s', s @ ..] => super::t0::n53(s, out),
-        ['t', s @ ..] => super::t0::n54(s, out),
-        ['u', s @ ..] => super::t0::n55(s, out),
-        ['v', s @ ..] => super::t0::n56(s, out),
-        ['z', s @ ..] => super::t0::n57(s, out),
-        ['ù', 'i', 'p', '\u{1}', s @ ..] => super::t0::n58(s, out),
-        _ => false,
-    }
+	super::push(out, 4);
+	match s {
+		[] => true,
+		['c', s @ ..] => {
+			super::push(out, 45);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 169);
+					match s {
+						[] => true,
+						['c', 'i', 'f', 'f', 'e', '\u{1}', s @ ..] => {
+							super::push(out, 398);
+							s.is_empty()
+						}
+						['f', '-', 'e', 'l', 'b', 'u', 'o', 'd', '\u{1}', s @ ..] => {
+							super::push(out, 399);
+							s.is_empty()
+						}
+						['g', 'a', 's', '\u{1}', s @ ..] => {
+							super::push(out, 400);
+							s.is_empty()
+						}
+						['l', 'a', 's', '\u{1}', s @ ..] => {
+							super::push(out, 401);
+							s.is_empty()
+						}
+						['n', 'e', s @ ..] => {
+							super::push(out, 402);
+							match s {
+								[] => true,
+								['t', '\u{1}', s @ ..] => {
+									super::push(out, 821);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['p', 'a', 'c', '\u{1}', s @ ..] => {
+							super::push(out, 403);
+							s.is_empty()
+						}
+						['v', 'i', 'v', '\u{1}', s @ ..] => {
+							super::push(out, 404);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['i', s @ ..] => {
+					super::push(out, 170);
+					match s {
+						[] => true,
+						['l', s @ ..] => {
+							match s {
+								[] => true,
+								['a', 'r', 't', '\u{1}', s @ ..] => {
+									super::push(out, 822);
+									s.is_empty()
+								}
+								['e', s @ ..] => {
+									super::push(out, 823);
+									match s {
+										[] => true,
+										['f', s @ ..] => {
+											super::push(out, 1371);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													super::push(out, 1784);
+													s.is_empty()
+												}
+												['n', 'i', '\u{1}', s @ ..] => {
+													super::push(out, 1785);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['p', s @ ..] => {
+									match s {
+										[] => true,
+										['m', s @ ..] => {
+											super::push(out, 1372);
+											match s {
+												[] => true,
+												['e', 's', '\u{1}', s @ ..] => {
+													super::push(out, 1786);
+													s.is_empty()
+												}
+												['o', 'c', '\u{1}', s @ ..] => {
+													super::push(out, 1787);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										['u', s @ ..] => {
+											super::push(out, 1373);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['r', s @ ..] => {
+							super::push(out, 405);
+							s.is_empty()
+						}
+						['v', 'r', 'e', 's', '-', 'f', 'l', 'e', 's', '\u{1}', s @ ..] => {
+							super::push(out, 406);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['l', 'o', 'd', '\u{1}', s @ ..] => {
+					super::push(out, 171);
+					s.is_empty()
+				}
+				['o', s @ ..] => {
+					super::push(out, 172);
+					match s {
+						[] => true,
+						['c', 'e', 'r', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 407);
+							s.is_empty()
+						}
+						['l', 'e', 'v', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 824);
+									s.is_empty()
+								}
+								['r', s @ ..] => {
+									super::push(out, 825);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['n', '\u{1}', s @ ..] => {
+							super::push(out, 408);
+							s.is_empty()
+						}
+						['r', s @ ..] => {
+							super::push(out, 409);
+							match s {
+								[] => true,
+								['e', 'f', '\u{1}', s @ ..] => {
+									super::push(out, 826);
+									s.is_empty()
+								}
+								['t', 'a', '\u{1}', s @ ..] => {
+									super::push(out, 827);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['v', 'a', 'v', 'i', 'v', '\u{1}', s @ ..] => {
+							super::push(out, 410);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['d', s @ ..] => {
+			super::push(out, 46);
+			match s {
+				[] => true,
+				['a', 'r', 'g', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
+					super::push(out, 173);
+					s.is_empty()
+				}
+				['e', 's', 'i', 'r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
+					super::push(out, 174);
+					s.is_empty()
+				}
+				['i', s @ ..] => {
+					super::push(out, 175);
+					s.is_empty()
+				}
+				['o', s @ ..] => {
+					super::push(out, 176);
+					match s {
+						[] => true,
+						['c', s @ ..] => {
+							super::push(out, 411);
+							match s {
+								[] => true,
+								['a', 'i', 'l', 'g', 'a', 't', '\u{1}', s @ ..] => {
+									super::push(out, 828);
+									s.is_empty()
+								}
+								['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+									super::push(out, 829);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['r', 'e', 'v', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 177);
+					s.is_empty()
+				}
+				['u', s @ ..] => {
+					super::push(out, 178);
+					match s {
+						[] => true,
+						['r', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 412);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['e', 'k', 'n', 'a', 'y', '\u{1}', s @ ..] => {
+			super::push(out, 47);
+			s.is_empty()
+		}
+		['g', s @ ..] => {
+			super::push(out, 48);
+			match s {
+				[] => true,
+				['n', 'i', 'r', 'c', '\u{1}', s @ ..] => {
+					super::push(out, 179);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['h', s @ ..] => {
+			super::push(out, 49);
+			match s {
+				[] => true,
+				['c', s @ ..] => {
+					super::push(out, 180);
+					s.is_empty()
+				}
+				['g', s @ ..] => {
+					super::push(out, 181);
+					match s {
+						[] => true,
+						['l', 'a', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 413);
+							s.is_empty()
+						}
+						['u', 'r', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 414);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['i', s @ ..] => {
+			super::push(out, 50);
+			match s {
+				[] => true,
+				['c', 'i', 'f', 'r', 'e', 'p', 'u', 's', '-', 'e', 'i', 'c', 'i', 'f', 'r', 'e', 'p', 'u', 's', '\u{1}', s @ ..] => {
+					super::push(out, 182);
+					s.is_empty()
+				}
+				['d', 'n', 'i', '\u{1}', s @ ..] => {
+					super::push(out, 183);
+					s.is_empty()
+				}
+				['r', s @ ..] => {
+					super::push(out, 184);
+					match s {
+						[] => true,
+						['a', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 415);
+							s.is_empty()
+						}
+						['e', 's', 'i', 'r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
+							super::push(out, 416);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['l', s @ ..] => super::t0::n51(s, out),
+		['m', s @ ..] => {
+			super::push(out, 52);
+			match s {
+				[] => true,
+				['i', s @ ..] => {
+					super::push(out, 190);
+					match s {
+						[] => true,
+						['r', 'c', 'a', 'l', 'a', 'p', 'p', 'a', 'r', 't', 's', '\u{1}', s @ ..] => {
+							super::push(out, 433);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['m', 'a', 'i', 'f', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 191);
+					s.is_empty()
+				}
+				['r', s @ ..] => {
+					super::push(out, 192);
+					s.is_empty()
+				}
+				['u', s @ ..] => {
+					super::push(out, 193);
+					match s {
+						[] => true,
+						['l', 'o', 'v', 'o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
+							super::push(out, 434);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['n', s @ ..] => super::t0::n53(s, out),
+		['r', s @ ..] => super::t0::n54(s, out),
+		['s', s @ ..] => {
+			super::push(out, 55);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 209);
+					match s {
+						[] => true,
+						['f', s @ ..] => {
+							super::push(out, 482);
+							match s {
+								[] => true,
+								['a', 'r', 't', 'e', 't', '\u{1}', s @ ..] => {
+									super::push(out, 934);
+									s.is_empty()
+								}
+								['i', s @ ..] => {
+									match s {
+										[] => true,
+										['l', 'o', 'p', '\u{1}', s @ ..] => {
+											super::push(out, 1447);
+											s.is_empty()
+										}
+										['r', 'u', 'l', 'p', '\u{1}', s @ ..] => {
+											super::push(out, 1448);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['e', s @ ..] => {
+					super::push(out, 210);
+					match s {
+						[] => true,
+						['h', s @ ..] => {
+							super::push(out, 483);
+							match s {
+								[] => true,
+								['g', 'r', 'o', s @ ..] => {
+									super::push(out, 935);
+									match s {
+										[] => true,
+										['b', '\u{1}', s @ ..] => super::t0::n1579(s, out),
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['n', s @ ..] => super::t0::n508(s, out),
+						['p', 's', 'a', 'i', 'l', 'g', 'a', 't', '\u{1}', s @ ..] => super::t0::n509(s, out),
+						['t', s @ ..] => super::t0::n510(s, out),
+						_ => false,
+					}
+				}
+				['n', s @ ..] => super::t0::n216(s, out),
+				['o', s @ ..] => super::t0::n217(s, out),
+				['r', 'o', 'b', 'a', 't', 'o', 'v', '\u{1}', s @ ..] => super::t0::n218(s, out),
+				['s', s @ ..] => super::t0::n219(s, out),
+				['t', '-', 'e', 's', 't', '\u{1}', s @ ..] => super::t0::n220(s, out),
+				_ => false,
+			}
+		}
+		['t', s @ ..] => super::t0::n56(s, out),
+		['u', s @ ..] => super::t0::n57(s, out),
+		['v', s @ ..] => super::t0::n58(s, out),
+		['z', s @ ..] => super::t0::n59(s, out),
+		['ù', 'i', 'p', '\u{1}', s @ ..] => super::t0::n60(s, out),
+		_ => false,
+	}
 }
 
 /// Words ending -f.
 pub(crate) fn n5(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.2983139), (1, 0.22549783), (5, 0.22333105), (2, 0.16562143), (9, 0.02697795), (8, 0.01528954), (4, 0.012436103), (3, 0.0122072175), (10, 0.010101473), (6, 0.0036469062), (7, 0.0036469062)], 0.9970703);
-    s.is_empty()
+	super::push(out, 5);
+	s.is_empty()
 }
 
 /// Words ending -g.
 pub(crate) fn n6(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.41383994), (0, 0.22514687), (1, 0.17018387), (2, 0.1250019), (9, 0.020355536), (8, 0.011535821), (4, 0.009384299), (3, 0.009216449), (10, 0.007629511), (6, 0.002761883), (7, 0.002746624)], 0.99780273);
-    s.is_empty()
+	super::push(out, 6);
+	match s {
+		[] => true,
+		['n', s @ ..] => {
+			super::push(out, 61);
+			match s {
+				[] => true,
+				['i', s @ ..] => {
+					super::push(out, 231);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -h.
 pub(crate) fn n7(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.3256428), (0, 0.22948043), (1, 0.17344931), (2, 0.12741283), (16, 0.07695125), (9, 0.02075227), (8, 0.011764706), (4, 0.009567407), (3, 0.009384299), (10, 0.0077668424), (6, 0.00280766), (7, 0.00280766)], 0.9977875);
-    match s {
-        [] => true,
-        ['s', 'e', 'r', 'ë', 'b', 'r', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(16, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+	super::push(out, 7);
+	match s {
+		[] => true,
+		['c', s @ ..] => {
+			super::push(out, 62);
+			s.is_empty()
+		}
+		['s', s @ ..] => {
+			super::push(out, 63);
+			match s {
+				[] => true,
+				['e', 'r', 'ë', 'b', 'r', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 232);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -i.
 pub(crate) fn n8(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.88268864), (0, 0.035828184), (1, 0.027084764), (2, 0.019897765), (12, 0.01200885), (49, 0.01200885), (9, 0.0032349126)], 0.99275196);
-    match s {
-        [] => true,
-        ['n', 'u', s @ ..] => {
-            out.push(&[(5, 0.78460366), (12, 0.12179751), (0, 0.031845577), (1, 0.024078736), (2, 0.017685207), (49, 0.010681315), (9, 0.0028839551)], 0.99357593);
-            match s {
-                [] => true,
-                ['c', 'l', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(12, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['s', 'o', 't', s @ ..] => {
-            out.push(&[(5, 0.78460366), (49, 0.12179751), (0, 0.031845577), (1, 0.024078736), (2, 0.017685207), (12, 0.010681315), (9, 0.0028839551)], 0.99357593);
-            match s {
-                [] => true,
-                ['a', 'n', 'e', 't', 'a', 'c', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(49, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+	super::push(out, 8);
+	match s {
+		[] => true,
+		['l', s @ ..] => {
+			super::push(out, 64);
+			s.is_empty()
+		}
+		['n', s @ ..] => {
+			super::push(out, 65);
+			match s {
+				[] => true,
+				['u', 'c', 'l', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 233);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['r', s @ ..] => {
+			super::push(out, 66);
+			s.is_empty()
+		}
+		['s', s @ ..] => {
+			super::push(out, 67);
+			match s {
+				[] => true,
+				['o', s @ ..] => {
+					super::push(out, 234);
+					match s {
+						[] => true,
+						['t', 'a', 'n', 'e', 't', 'a', 'c', 's', '\u{1}', s @ ..] => {
+							super::push(out, 513);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['t', s @ ..] => {
+			super::push(out, 68);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -k.
 pub(crate) fn n9(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.29393452), (0, 0.2711986), (1, 0.2049897), (2, 0.15057603), (9, 0.024521248), (8, 0.013900969), (4, 0.011306935), (3, 0.011093309), (10, 0.009185932), (6, 0.0033112078), (7, 0.0033112078)], 0.99732965);
-    s.is_empty()
+	super::push(out, 9);
+	match s {
+		[] => true,
+		['o', s @ ..] => {
+			super::push(out, 69);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -l.
 pub(crate) fn n10(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.30962083), (0, 0.2651713), (1, 0.20044251), (2, 0.14721905), (9, 0.023971923), (8, 0.01358053), (4, 0.011047532), (3, 0.010849165), (10, 0.008972305), (6, 0.0032501717), (7, 0.0032349126)], 0.9973602);
-    s.is_empty()
+	super::push(out, 10);
+	match s {
+		[] => true,
+		['o', s @ ..] => {
+			super::push(out, 70);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -m.
 pub(crate) fn n11(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.2983139), (1, 0.22549783), (5, 0.22333105), (2, 0.16562143), (9, 0.02697795), (8, 0.01528954), (4, 0.012436103), (3, 0.0122072175), (10, 0.010101473), (6, 0.0036469062), (7, 0.0036469062)], 0.9970703);
-    s.is_empty()
+	super::push(out, 11);
+	s.is_empty()
 }
 
 /// Words ending -n.
 pub(crate) fn n12(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.54975206), (0, 0.17294575), (1, 0.13072404), (2, 0.09600977), (9, 0.015640497), (8, 0.0088654915), (4, 0.0072022583), (3, 0.007080186), (10, 0.0058594644), (6, 0.002121004), (7, 0.002105745)], 0.9983063);
-    s.is_empty()
+	super::push(out, 12);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 71);
+			s.is_empty()
+		}
+		['e', s @ ..] => {
+			super::push(out, 72);
+			s.is_empty()
+		}
+		['i', s @ ..] => {
+			super::push(out, 73);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -o.
 pub(crate) fn n13(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.56791025), (2, 0.31531242), (9, 0.051346608), (4, 0.023666743), (10, 0.019226369), (5, 0.013229572), (7, 0.006942855)], 0.9976348);
-    match s {
-        [] => true,
-        ['b', s @ ..] => {
-            out.push(&[(0, 0.87653923), (5, 0.045334555), (2, 0.03682002), (10, 0.031448845), (9, 0.005996796), (4, 0.002761883)], 0.9989013);
-            match s {
-                [] => true,
-                ['m', 'o', 'r', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', s @ ..] => {
-                    out.push(&[(0, 0.69306475), (5, 0.14540322), (10, 0.13855192), (2, 0.018127719), (9, 0.0029449912)], 0.9980926);
-                    match s {
-                        [] => true,
-                        ['e', 'c', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['u', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['f', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['t', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['i', 'b', '\u{1}', s @ ..] => {
-                                            out.push(&[(5, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['s', 'i', 'd', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                            out.push(&[(5, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['c', s @ ..] => {
-            out.push(&[(2, 0.9331655), (4, 0.05912871), (5, 0.0033264668)], 0.99562067);
-            match s {
-                [] => true,
-                ['a', s @ ..] => {
-                    out.push(&[(2, 0.85307086), (4, 0.1031815), (5, 0.043244068)], 0.9994964);
-                    match s {
-                        [] => true,
-                        ['d', 'n', 'i', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['i', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['r', 'b', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            out.push(&[(4, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['b', 'u', '\u{1}', s @ ..] => {
-                                            out.push(&[(4, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['m', 'i', '\u{1}', s @ ..] => {
-                                            out.push(&[(4, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['u', '\u{1}', s @ ..] => {
-                                            out.push(&[(4, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['t', 'o', 'v', '\u{1}', s @ ..] => {
-                                    out.push(&[(4, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['m', 'r', 'a', 'f', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['p', s @ ..] => {
-                            out.push(&[(2, 0.6288548), (4, 0.3400473), (5, 0.03074693)], 0.99964905);
-                            match s {
-                                [] => true,
-                                ['o', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            out.push(&[(4, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['i', 'm', 'e', 's', '\u{1}', s @ ..] => {
-                                            out.push(&[(4, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['o', 'i', 'd', 'a', 'r', '\u{1}', s @ ..] => {
-                                            out.push(&[(4, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['r', 'b', 'i', 'r', 't', '\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['t', 'a', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['c', s @ ..] => {
-                    out.push(&[(4, 0.66941327), (2, 0.17737088), (5, 0.11056687), (15, 0.041901276)], 0.9992523);
-                    match s {
-                        [] => true,
-                        ['a', 's', 'i', 'r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['i', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['g', 'a', 't', '\u{1}', s @ ..] => {
-                                    out.push(&[(2, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['p', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['r', '\u{1}', s @ ..] => {
-                                    out.push(&[(15, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['o', s @ ..] => super::t0::n472(s, out),
-                        _ => false,
-                    }
-                }
-                ['e', s @ ..] => super::t0::n193(s, out),
-                ['i', s @ ..] => super::t0::n194(s, out),
-                ['l', s @ ..] => super::t0::n195(s, out),
-                ['n', s @ ..] => {
-                    out.push(&[(4, 0.4987106), (2, 0.35548943), (15, 0.095231555), (5, 0.048889905)], 0.9983215);
-                    match s {
-                        [] => true,
-                        ['a', s @ ..] => super::t0::n490(s, out),
-                        ['i', 'r', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['o', s @ ..] => super::t0::n197(s, out),
-                ['r', s @ ..] => super::t0::n198(s, out),
-                ['s', s @ ..] => super::t0::n199(s, out),
-                ['u', s @ ..] => super::t0::n200(s, out),
-                _ => false,
-            }
-        }
-        ['d', s @ ..] => super::t0::n64(s, out),
-        ['e', s @ ..] => super::t0::n65(s, out),
-        ['f', s @ ..] => super::t0::n66(s, out),
-        ['g', s @ ..] => super::t0::n67(s, out),
-        ['h', s @ ..] => super::t0::n68(s, out),
-        ['i', s @ ..] => super::t0::n69(s, out),
-        ['l', s @ ..] => super::t0::n70(s, out),
-        ['m', s @ ..] => super::t0::n71(s, out),
-        ['n', s @ ..] => super::t0::n72(s, out),
-        ['o', 'd', 'o', 'o', 'v', '\u{1}', s @ ..] => super::t0::n73(s, out),
-        ['p', s @ ..] => super::t0::n74(s, out),
-        ['r', s @ ..] => super::t0::n75(s, out),
-        ['s', s @ ..] => super::t0::n76(s, out),
-        ['t', s @ ..] => super::t0::n77(s, out),
-        ['u', s @ ..] => super::t0::n78(s, out),
-        ['v', s @ ..] => super::t0::n79(s, out),
-        ['z', s @ ..] => super::t0::n80(s, out),
-        _ => false,
-    }
+	super::push(out, 13);
+	match s {
+		[] => true,
+		['b', s @ ..] => {
+			super::push(out, 74);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 235);
+					s.is_empty()
+				}
+				['m', s @ ..] => {
+					super::push(out, 236);
+					match s {
+						[] => true,
+						['o', 'r', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 514);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['o', s @ ..] => {
+					super::push(out, 237);
+					s.is_empty()
+				}
+				['r', s @ ..] => {
+					super::push(out, 238);
+					match s {
+						[] => true,
+						['e', 'c', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 515);
+							s.is_empty()
+						}
+						['u', s @ ..] => {
+							super::push(out, 516);
+							match s {
+								[] => true,
+								['f', '\u{1}', s @ ..] => {
+									super::push(out, 967);
+									s.is_empty()
+								}
+								['t', s @ ..] => {
+									super::push(out, 968);
+									match s {
+										[] => true,
+										['i', 'b', '\u{1}', s @ ..] => {
+											super::push(out, 1495);
+											s.is_empty()
+										}
+										['s', 'i', 'd', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+											super::push(out, 1496);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['c', s @ ..] => {
+			super::push(out, 75);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 239);
+					match s {
+						[] => true,
+						['d', s @ ..] => {
+							super::push(out, 517);
+							match s {
+								[] => true,
+								['n', 'i', '\u{1}', s @ ..] => {
+									super::push(out, 969);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['i', s @ ..] => {
+							super::push(out, 518);
+							match s {
+								[] => true,
+								['r', s @ ..] => {
+									super::push(out, 970);
+									match s {
+										[] => true,
+										['b', s @ ..] => {
+											super::push(out, 1497);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => super::t0::n2018(s, out),
+												['b', 'u', '\u{1}', s @ ..] => super::t0::n2019(s, out),
+												['m', 'i', '\u{1}', s @ ..] => super::t0::n2020(s, out),
+												['u', '\u{1}', s @ ..] => super::t0::n2021(s, out),
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['t', s @ ..] => super::t0::n1059(s, out),
+								_ => false,
+							}
+						}
+						['m', s @ ..] => super::t0::n544(s, out),
+						['p', s @ ..] => super::t0::n545(s, out),
+						['r', 'b', 'i', 'r', 't', '\u{1}', s @ ..] => super::t0::n546(s, out),
+						['t', 'a', 'm', '\u{1}', s @ ..] => super::t0::n547(s, out),
+						_ => false,
+					}
+				}
+				['c', s @ ..] => super::t0::n246(s, out),
+				['e', s @ ..] => super::t0::n247(s, out),
+				['i', s @ ..] => super::t0::n248(s, out),
+				['l', s @ ..] => super::t0::n249(s, out),
+				['n', s @ ..] => super::t0::n250(s, out),
+				['o', s @ ..] => super::t0::n251(s, out),
+				['r', s @ ..] => super::t0::n252(s, out),
+				['s', s @ ..] => super::t0::n253(s, out),
+				['u', s @ ..] => super::t0::n254(s, out),
+				_ => false,
+			}
+		}
+		['d', s @ ..] => super::t0::n76(s, out),
+		['e', s @ ..] => super::t0::n77(s, out),
+		['f', s @ ..] => super::t0::n78(s, out),
+		['g', s @ ..] => super::t0::n79(s, out),
+		['h', 'c', 'a', 'm', '\u{1}', s @ ..] => super::t0::n80(s, out),
+		['i', s @ ..] => super::t0::n81(s, out),
+		['k', s @ ..] => super::t0::n82(s, out),
+		['l', s @ ..] => super::t0::n83(s, out),
+		['m', s @ ..] => super::t0::n84(s, out),
+		['n', s @ ..] => super::t0::n85(s, out),
+		['o', s @ ..] => super::t0::n86(s, out),
+		['p', s @ ..] => super::t0::n87(s, out),
+		['r', s @ ..] => super::t0::n88(s, out),
+		['s', s @ ..] => super::t0::n89(s, out),
+		['t', s @ ..] => super::t0::n90(s, out),
+		['u', s @ ..] => super::t0::n91(s, out),
+		['v', s @ ..] => super::t0::n92(s, out),
+		['z', s @ ..] => super::t0::n93(s, out),
+		_ => false,
+	}
 }
 
 /// Words ending -r.
 pub(crate) fn n14(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.5431296), (0, 0.17547876), (1, 0.13264668), (2, 0.09742886), (9, 0.015869383), (8, 0.008987564), (4, 0.0073090717), (3, 0.0071869995), (10, 0.0059357597), (6, 0.002151522), (7, 0.002136263)], 0.9982605);
-    match s {
-        [] => true,
-        ['e', s @ ..] => {
-            out.push(&[(5, 0.75634396), (0, 0.093583584), (1, 0.07074083), (2, 0.05195697), (9, 0.008468757), (8, 0.004791333), (4, 0.0039063096), (3, 0.0038300145), (10, 0.0031738766)], 0.99679565);
-            s.is_empty()
-        }
-        _ => false,
-    }
+	super::push(out, 14);
+	match s {
+		[] => true,
+		['e', s @ ..] => {
+			super::push(out, 94);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -s.
 pub(crate) fn n15(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.5431296), (0, 0.17547876), (1, 0.13264668), (2, 0.09742886), (9, 0.015869383), (8, 0.008987564), (4, 0.0073090717), (3, 0.0071869995), (10, 0.0059357597), (6, 0.002151522), (7, 0.002136263)], 0.9982605);
-    s.is_empty()
+	super::push(out, 15);
+	match s {
+		[] => true,
+		['e', s @ ..] => {
+			super::push(out, 95);
+			s.is_empty()
+		}
+		['i', s @ ..] => {
+			super::push(out, 96);
+			s.is_empty()
+		}
+		['s', s @ ..] => {
+			super::push(out, 97);
+			match s {
+				[] => true,
+				['e', s @ ..] => {
+					super::push(out, 349);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -t.
 pub(crate) fn n16(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.56852067), (0, 0.16572824), (1, 0.12527657), (2, 0.0920119), (9, 0.01498436), (8, 0.008484016), (4, 0.006912337), (3, 0.0067750057), (10, 0.00561532), (6, 0.00202945), (7, 0.00202945)], 0.9983673);
-    s.is_empty()
+	super::push(out, 16);
+	match s {
+		[] => true,
+		['e', s @ ..] => {
+			super::push(out, 98);
+			s.is_empty()
+		}
+		['i', s @ ..] => {
+			super::push(out, 99);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -u.
 pub(crate) fn n17(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.6429084), (0, 0.13716334), (1, 0.10366979), (2, 0.07615778), (9, 0.012405585), (8, 0.0070344093), (4, 0.0057221334), (3, 0.00561532), (10, 0.0046387427)], 0.9953155);
-    s.is_empty()
+	super::push(out, 17);
+	match s {
+		[] => true,
+		['l', s @ ..] => {
+			super::push(out, 100);
+			match s {
+				[] => true,
+				['b', s @ ..] => {
+					super::push(out, 350);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -x.
 pub(crate) fn n18(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.5431296), (0, 0.17547876), (1, 0.13264668), (2, 0.09742886), (9, 0.015869383), (8, 0.008987564), (4, 0.0073090717), (3, 0.0071869995), (10, 0.0059357597), (6, 0.002151522), (7, 0.002136263)], 0.9982605);
-    s.is_empty()
+	super::push(out, 18);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 101);
+			s.is_empty()
+		}
+		['e', s @ ..] => {
+			super::push(out, 102);
+			match s {
+				[] => true,
+				['s', s @ ..] => {
+					super::push(out, 351);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -y.
 pub(crate) fn n19(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.4025635), (0, 0.22948043), (1, 0.17344931), (2, 0.12741283), (9, 0.02075227), (8, 0.011764706), (4, 0.009567407), (3, 0.009384299), (10, 0.0077668424), (6, 0.00280766), (7, 0.00280766)], 0.9977569);
-    s.is_empty()
+	super::push(out, 19);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 103);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -à.
 pub(crate) fn n20(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.49071488), (0, 0.19562066), (1, 0.14785992), (2, 0.108613715), (9, 0.017685207), (8, 0.010025177), (4, 0.008148318), (3, 0.008010986), (10, 0.0066224155), (6, 0.0023956664), (7, 0.0023956664)], 0.9980926);
-    s.is_empty()
+	super::push(out, 20);
+	match s {
+		[] => true,
+		['t', s @ ..] => {
+			super::push(out, 104);
+			match s {
+				[] => true,
+				['i', s @ ..] => {
+					super::push(out, 352);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -è.
 pub(crate) fn n21(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.30962083), (0, 0.2651713), (1, 0.20044251), (2, 0.14721905), (9, 0.023971923), (8, 0.01358053), (4, 0.011047532), (3, 0.010849165), (10, 0.008972305), (6, 0.0032501717), (7, 0.0032349126)], 0.9973602);
-    s.is_empty()
+	super::push(out, 21);
+	match s {
+		[] => true,
+		['l', s @ ..] => {
+			super::push(out, 105);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -é.
 pub(crate) fn n22(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.71235216), (0, 0.110490575), (1, 0.08351263), (2, 0.061341267), (9, 0.00999466), (8, 0.0056610974), (4, 0.0046082246), (3, 0.0045166705), (10, 0.0037384604)], 0.99621576);
-    s.is_empty()
+	super::push(out, 22);
+	match s {
+		[] => true,
+		['l', s @ ..] => {
+			super::push(out, 106);
+			s.is_empty()
+		}
+		['s', s @ ..] => {
+			super::push(out, 107);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -ì.
 pub(crate) fn n23(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.30962083), (0, 0.2651713), (1, 0.20044251), (2, 0.14721905), (9, 0.023971923), (8, 0.01358053), (4, 0.011047532), (3, 0.010849165), (10, 0.008972305), (6, 0.0032501717), (7, 0.0032349126)], 0.9973602);
-    s.is_empty()
+	super::push(out, 23);
+	match s {
+		[] => true,
+		['c', s @ ..] => {
+			super::push(out, 108);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -ò.
 pub(crate) fn n24(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.32463568), (0, 0.25940338), (1, 0.19607843), (2, 0.1440299), (9, 0.023453116), (8, 0.013290608), (4, 0.0108033875), (3, 0.010620279), (10, 0.008789197), (6, 0.0031738766), (7, 0.0031738766)], 0.9974517);
-    s.is_empty()
+	super::push(out, 24);
+	s.is_empty()
 }
 
 /// Words ending -ù.
 pub(crate) fn n25(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 0.49071488), (0, 0.19562066), (1, 0.14785992), (2, 0.108613715), (9, 0.017685207), (8, 0.010025177), (4, 0.008148318), (3, 0.008010986), (10, 0.0066224155), (6, 0.0023956664), (7, 0.0023956664)], 0.9980926);
-    s.is_empty()
+	super::push(out, 25);
+	match s {
+		[] => true,
+		['d', s @ ..] => {
+			super::push(out, 109);
+			s.is_empty()
+		}
+		['i', s @ ..] => {
+			super::push(out, 110);
+			s.is_empty()
+		}
+		['l', s @ ..] => {
+			super::push(out, 111);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -le.
-pub(crate) fn n49(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1, 0.98519874), (6, 0.011902037), (5, 0.002792401)], 0.9998932);
-    match s {
-        [] => true,
-        ['a', s @ ..] => {
-            match s {
-                [] => true,
-                ['i', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['c', 'e', s @ ..] => {
-                            out.push(&[(1, 0.8757305), (6, 0.1216907), (5, 0.0024872206)], 0.99990845);
-                            match s {
-                                [] => true,
-                                ['p', 's', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['d', 'r', 'o', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['r', 'e', 't', 'a', 'm', 'i', s @ ..] => {
-                            out.push(&[(1, 0.8757305), (5, 0.11360342), (6, 0.010574502)], 0.99990845);
-                            match s {
-                                [] => true,
-                                ['t', 'l', 'u', 'm', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['z', 'n', 'e', 's', 's', 'e', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['m', 'r', 'o', 'n', '\u{1}', s @ ..] => {
-                    out.push(&[(6, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['n', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', 'b', s @ ..] => {
-                            out.push(&[(1, 0.8757305), (6, 0.1216907), (5, 0.0024872206)], 0.99990845);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['i', 'g', s @ ..] => {
-                            out.push(&[(1, 0.86108184), (6, 0.13739224)], 0.99847406);
-                            match s {
-                                [] => true,
-                                ['i', 'r', 'o', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['r', 'a', 'm', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['o', 's', 'r', 'e', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['p', 'i', 'c', 'n', 'i', s @ ..] => {
-                    out.push(&[(1, 0.8757305), (6, 0.1216907), (5, 0.0024872206)], 0.99990845);
-                    match s {
-                        [] => true,
-                        ['r', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['r', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['t', 'n', 'e', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['u', 't', 'a', 'n', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['t', 'i', 'v', s @ ..] => {
-                    out.push(&[(1, 0.8757305), (6, 0.1216907), (5, 0.0024872206)], 0.99990845);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['u', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['s', 'n', 'e', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['t', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['n', 'u', s @ ..] => {
-                                    out.push(&[(1, 0.8757305), (6, 0.1216907), (5, 0.0024872206)], 0.99990845);
-                                    match s {
-                                        [] => true,
-                                        ['p', '\u{1}', s @ ..] => {
-                                            out.push(&[(6, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['t', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['e', s @ ..] => {
-            out.push(&[(1, 0.8270695), (6, 0.17103837)], 0.9981079);
-            match s {
-                [] => true,
-                ['d', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['e', 'f', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['u', 'r', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['g', s @ ..] => {
-            out.push(&[(1, 0.8757305), (5, 0.11360342), (6, 0.010574502)], 0.99990845);
-            match s {
-                [] => true,
-                ['n', 'i', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['i', s @ ..] => {
-            match s {
-                [] => true,
-                ['b', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', s @ ..] => {
-                            out.push(&[(1, 0.9958343), (6, 0.002792401)], 0.9986267);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['r', 'u', 'c', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['t', s @ ..] => {
-                                    out.push(&[(1, 0.9850919), (6, 0.0074769207), (5, 0.0073853666)], 0.9999542);
-                                    match s {
-                                        [] => true,
-                                        ['n', 'o', s @ ..] => {
-                                            out.push(&[(1, 0.9088579), (5, 0.08856336), (6, 0.0025635157)], 0.99998474);
-                                            match s {
-                                                [] => true,
-                                                ['m', s @ ..] => {
-                                                    match s {
-                                                        [] => true,
-                                                        ['\u{1}', s @ ..] => super::t0::n1781(s, out),
-                                                        ['i', 'r', '\u{1}', s @ ..] => super::t0::n1782(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        ['s', '\u{1}', s @ ..] => {
-                                            out.push(&[(6, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['t', 'e', 'p', 's', 'i', s @ ..] => {
-                                            out.push(&[(1, 0.87563896), (6, 0.11775387), (5, 0.0065613794)], 0.9999542);
-                                            match s {
-                                                [] => true,
-                                                ['r', '\u{1}', s @ ..] => {
-                                                    out.push(&[(6, 1.0)], 1.0);
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['i', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['d', 'o', 'g', s @ ..] => {
-                                    out.push(&[(1, 0.8757305), (6, 0.1216907), (5, 0.0024872206)], 0.99990845);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            out.push(&[(6, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['g', 'r', 'e', 'm', 'm', 'o', 's', 'i', s @ ..] => {
-                                    out.push(&[(1, 0.88815135), (5, 0.102235444), (6, 0.00952163)], 0.99990845);
-                                    match s {
-                                        [] => true,
-                                        ['t', 'n', 'a', '\u{1}', s @ ..] => {
-                                            out.push(&[(5, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['m', 'e', 't', s @ ..] => {
-                                    out.push(&[(1, 0.8757305), (6, 0.1216907), (5, 0.0024872206)], 0.99990845);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            out.push(&[(6, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['r', 'e', 'p', 'e', 'd', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['s', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['n', 'e', s @ ..] => {
-                                            match s {
-                                                [] => true,
-                                                ['r', 'p', 'm', 'o', 'c', '\u{1}', s @ ..] => {
-                                                    out.push(&[(6, 1.0)], 1.0);
-                                                    s.is_empty()
-                                                }
-                                                ['s', '\u{1}', s @ ..] => {
-                                                    out.push(&[(6, 1.0)], 1.0);
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        ['s', 'o', 'p', '\u{1}', s @ ..] => {
-                                            out.push(&[(6, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['t', 'u', 'c', 's', 'i', 'd', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['o', s @ ..] => {
-                            out.push(&[(1, 0.8234684), (6, 0.17459373)], 0.99806213);
-                            match s {
-                                [] => true,
-                                ['m', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['n', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['c', s @ ..] => {
-                    out.push(&[(1, 0.8370489), (6, 0.16116579)], 0.99821466);
-                    match s {
-                        [] => true,
-                        ['a', 'f', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['i', 'f', 'f', 'i', 'd', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['g', s @ ..] => super::t0::n370(s, out),
-                ['m', 'u', s @ ..] => {
-                    out.push(&[(1, 0.8757305), (6, 0.1216907), (5, 0.0024872206)], 0.99990845);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['t', s @ ..] => super::t0::n372(s, out),
-                ['v', 'i', 'c', '\u{1}', s @ ..] => super::t0::n373(s, out),
-                _ => false,
-            }
-        }
-        ['l', s @ ..] => super::t0::n146(s, out),
-        ['o', s @ ..] => super::t0::n147(s, out),
-        _ => false,
-    }
+pub(crate) fn n51(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 51);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 185);
+			match s {
+				[] => true,
+				['i', s @ ..] => {
+					super::push(out, 417);
+					match s {
+						[] => true,
+						['c', 'e', 'p', 's', '\u{1}', s @ ..] => {
+							super::push(out, 830);
+							s.is_empty()
+						}
+						['d', 'r', s @ ..] => {
+							super::push(out, 831);
+							match s {
+								[] => true,
+								['o', 'c', s @ ..] => {
+									super::push(out, 1374);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 1788);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['r', s @ ..] => {
+							super::push(out, 832);
+							match s {
+								[] => true,
+								['e', 't', s @ ..] => {
+									super::push(out, 1375);
+									match s {
+										[] => true,
+										['a', s @ ..] => {
+											super::push(out, 1789);
+											match s {
+												[] => true,
+												['m', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
+													super::push(out, 2016);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['z', 'n', 'e', 's', s @ ..] => {
+							super::push(out, 833);
+							match s {
+								[] => true,
+								['s', 'e', '\u{1}', s @ ..] => {
+									super::push(out, 1376);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['m', 'r', s @ ..] => {
+					super::push(out, 418);
+					match s {
+						[] => true,
+						['o', 'n', '\u{1}', s @ ..] => {
+							super::push(out, 834);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['n', s @ ..] => {
+					match s {
+						[] => true,
+						['a', s @ ..] => {
+							super::push(out, 835);
+							match s {
+								[] => true,
+								['b', '\u{1}', s @ ..] => {
+									super::push(out, 1377);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['i', s @ ..] => {
+							super::push(out, 836);
+							match s {
+								[] => true,
+								['g', s @ ..] => {
+									super::push(out, 1378);
+									match s {
+										[] => true,
+										['i', 'r', 'o', '\u{1}', s @ ..] => {
+											super::push(out, 1790);
+											s.is_empty()
+										}
+										['r', 'a', 'm', '\u{1}', s @ ..] => {
+											super::push(out, 1791);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['o', s @ ..] => {
+							match s {
+								[] => true,
+								['i', s @ ..] => {
+									super::push(out, 1379);
+									s.is_empty()
+								}
+								['s', s @ ..] => {
+									super::push(out, 1380);
+									match s {
+										[] => true,
+										['r', 'e', 'p', '\u{1}', s @ ..] => {
+											super::push(out, 1792);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['p', s @ ..] => {
+					super::push(out, 419);
+					match s {
+						[] => true,
+						['i', 'c', s @ ..] => {
+							super::push(out, 837);
+							match s {
+								[] => true,
+								['n', s @ ..] => {
+									super::push(out, 1381);
+									match s {
+										[] => true,
+										['i', 'r', 'p', '\u{1}', s @ ..] => {
+											super::push(out, 1793);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['r', s @ ..] => {
+					match s {
+						[] => true,
+						['t', 'n', s @ ..] => {
+							super::push(out, 838);
+							match s {
+								[] => true,
+								['e', 'c', s @ ..] => {
+									super::push(out, 1382);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 1794);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['u', 't', 'a', s @ ..] => {
+							super::push(out, 839);
+							match s {
+								[] => true,
+								['n', '\u{1}', s @ ..] => {
+									super::push(out, 1383);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['t', 'i', 'v', '\u{1}', s @ ..] => {
+					super::push(out, 420);
+					s.is_empty()
+				}
+				['u', s @ ..] => {
+					super::push(out, 421);
+					match s {
+						[] => true,
+						['s', 'n', s @ ..] => {
+							super::push(out, 840);
+							match s {
+								[] => true,
+								['e', 's', '\u{1}', s @ ..] => {
+									super::push(out, 1384);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['t', s @ ..] => {
+							match s {
+								[] => true,
+								['n', 'u', 'p', '\u{1}', s @ ..] => {
+									super::push(out, 1385);
+									s.is_empty()
+								}
+								['t', 'a', '\u{1}', s @ ..] => {
+									super::push(out, 1386);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['e', s @ ..] => {
+			super::push(out, 186);
+			match s {
+				[] => true,
+				['d', s @ ..] => {
+					super::push(out, 422);
+					match s {
+						[] => true,
+						['e', 'f', '\u{1}', s @ ..] => {
+							super::push(out, 841);
+							s.is_empty()
+						}
+						['u', 'r', 'c', '\u{1}', s @ ..] => {
+							super::push(out, 842);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['g', 'n', 'i', 's', '\u{1}', s @ ..] => {
+			super::push(out, 187);
+			s.is_empty()
+		}
+		['i', s @ ..] => {
+			match s {
+				[] => true,
+				['b', s @ ..] => super::t0::n439(s, out),
+				['c', s @ ..] => {
+					super::push(out, 424);
+					match s {
+						[] => true,
+						['a', 'f', '\u{1}', s @ ..] => {
+							super::push(out, 846);
+							s.is_empty()
+						}
+						['i', 'f', 'f', 'i', 'd', '\u{1}', s @ ..] => {
+							super::push(out, 847);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['g', s @ ..] => {
+					super::push(out, 425);
+					match s {
+						[] => true,
+						['a', s @ ..] => {
+							super::push(out, 848);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 1398);
+									s.is_empty()
+								}
+								['r', 'f', '\u{1}', s @ ..] => {
+									super::push(out, 1399);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['m', s @ ..] => {
+					super::push(out, 426);
+					match s {
+						[] => true,
+						['u', '\u{1}', s @ ..] => {
+							super::push(out, 849);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['t', s @ ..] => {
+					super::push(out, 427);
+					match s {
+						[] => true,
+						['n', 'e', 'g', '\u{1}', s @ ..] => {
+							super::push(out, 850);
+							s.is_empty()
+						}
+						['t', s @ ..] => {
+							match s {
+								[] => true,
+								['e', s @ ..] => {
+									super::push(out, 1400);
+									match s {
+										[] => true,
+										['i', s @ ..] => super::t0::n1951(s, out),
+										_ => false,
+									}
+								}
+								['o', s @ ..] => super::t0::n1526(s, out),
+								_ => false,
+							}
+						}
+						['u', '\u{1}', s @ ..] => super::t0::n924(s, out),
+						_ => false,
+					}
+				}
+				['v', s @ ..] => super::t0::n444(s, out),
+				_ => false,
+			}
+		}
+		['l', s @ ..] => super::t0::n193(s, out),
+		['o', s @ ..] => super::t0::n194(s, out),
+		_ => false,
+	}
 }
 
 /// Words ending -ne.
-pub(crate) fn n51(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1, 0.73124284), (5, 0.1581445), (20, 0.09549096), (6, 0.013366903)], 0.9982452);
-    match s {
-        [] => true,
-        ['a', s @ ..] => {
-            match s {
-                [] => true,
-                ['c', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['m', s @ ..] => {
-                    out.push(&[(1, 0.8988174), (5, 0.059540704), (20, 0.035950255), (6, 0.005035477)], 0.9993439);
-                    s.is_empty()
-                }
-                ['v', s @ ..] => {
-                    out.push(&[(1, 0.64998853), (5, 0.14056611), (6, 0.12298772), (20, 0.08488594)], 0.9984283);
-                    match s {
-                        [] => true,
-                        ['o', 'i', 'g', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['e', 'b', s @ ..] => {
-            out.push(&[(1, 0.5318074), (5, 0.38773176), (20, 0.069459066), (6, 0.009719997)], 0.99871826);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['b', 'a', 'd', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', 'e', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['g', 'a', 'p', 'm', 'a', 'h', 'c', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['i', s @ ..] => {
-            out.push(&[(1, 0.60582894), (5, 0.35980773), (20, 0.029663539), (6, 0.004150454)], 0.9994507);
-            match s {
-                [] => true,
-                ['d', 'n', 'a', 'r', 'g', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['f', 'n', 'o', 'c', 'e', 'r', 't', 'l', 'o', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['g', 'g', 'u', 'r', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['l', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['l', 'o', 'p', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['n', 'o', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['m', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['i', 'r', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['r', 'e', 't', 'e', 'r', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['t', 'u', 'l', 'g', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['n', s @ ..] => {
-            out.push(&[(1, 0.960235), (5, 0.017715724), (6, 0.012939651), (20, 0.008941787)], 0.99983215);
-            match s {
-                [] => true,
-                ['e', 'l', 'o', s @ ..] => {
-                    out.push(&[(1, 0.85354394), (6, 0.1226215), (5, 0.01574731), (20, 0.00794995)], 0.9998627);
-                    match s {
-                        [] => true,
-                        ['s', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['o', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['o', s @ ..] => {
-            out.push(&[(1, 0.56255436), (5, 0.22616923), (20, 0.21017776)], 0.99890137);
-            match s {
-                [] => true,
-                ['b', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['b', 'o', 'g', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(20, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['r', 'i', 'b', '\u{1}', s @ ..] => {
-                            out.push(&[(20, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['c', s @ ..] => {
-                    out.push(&[(1, 0.46157014), (20, 0.4265507), (5, 0.11134508)], 0.99946594);
-                    match s {
-                        [] => true,
-                        ['c', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['a', 'b', 'a', 't', '\u{1}', s @ ..] => {
-                                    out.push(&[(20, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['o', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['i', 'c', 'a', 'p', '\u{1}', s @ ..] => {
-                                            out.push(&[(20, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['s', 'e', 'm', '\u{1}', s @ ..] => {
-                                            out.push(&[(1, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['u', 'z', '\u{1}', s @ ..] => {
-                                    out.push(&[(20, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['e', 'r', 'p', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(20, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['i', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['t', 'a', 'p', 'm', 'i', 's', '\u{1}', s @ ..] => {
-                                    out.push(&[(1, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['z', 'z', 'u', 'b', '\u{1}', s @ ..] => {
-                                    out.push(&[(20, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['n', 'a', 'r', 'f', '\u{1}', s @ ..] => {
-                            out.push(&[(1, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['s', 'a', 'u', 'g', '\u{1}', s @ ..] => {
-                            out.push(&[(20, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['d', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['e', s @ ..] => {
-                            out.push(&[(1, 0.76668954), (5, 0.12062257), (20, 0.11209278)], 0.9994049);
-                            s.is_empty()
-                        }
-                        ['i', 'm', 'i', 't', '\u{1}', s @ ..] => {
-                            out.push(&[(20, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['n', 'a', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(20, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['f', 'i', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['i', s @ ..] => super::t0::n399(s, out),
-                ['l', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['l', 'a', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['i', 'g', '\u{1}', s @ ..] => {
-                                    out.push(&[(20, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['s', 's', 'a', 'v', '\u{1}', s @ ..] => {
-                                    out.push(&[(20, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['o', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['i', 'c', 'c', 'o', 'g', '\u{1}', s @ ..] => {
-                                    out.push(&[(20, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['t', 'n', 'o', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['r', 'b', '\u{1}', s @ ..] => {
-                                            out.push(&[(20, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['t', '\u{1}', s @ ..] => {
-                                            out.push(&[(20, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['u', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['d', 'e', 'r', 'c', '\u{1}', s @ ..] => {
-                                    out.push(&[(20, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['p', 'a', 'r', 'c', '\u{1}', s @ ..] => {
-                                    out.push(&[(20, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['m', 'l', 'a', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['n', 'n', 'a', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(20, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', 'i', 'c', 'a', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(20, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['e', 'i', 'h', 'c', 'c', 'a', 'i', 'h', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(20, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['t', 'l', 'o', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(20, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['s', 'o', 't', 'i', 'r', 'i', 'p', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(20, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['t', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['l', 'a', 'b', 'i', 'r', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['t', 'o', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(20, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['z', 'z', 'o', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(20, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['u', 'm', 'o', s @ ..] => super::t0::n157(s, out),
-        _ => false,
-    }
-}
-
-/// Words ending -are.
-pub(crate) fn n158(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1, 0.9773251), (6, 0.010116732), (5, 0.0063324943), (3, 0.0061036088)], 0.9998779);
-    match s {
-        [] => true,
-        ['g', s @ ..] => {
-            out.push(&[(1, 0.8687266), (6, 0.12010376), (5, 0.00561532), (3, 0.005432212)], 0.9998779);
-            match s {
-                [] => true,
-                ['l', 'o', 'v', '\u{1}', s @ ..] => {
-                    out.push(&[(6, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['i', 'l', 'i', 'm', 'a', 'f', '\u{1}', s @ ..] => {
-            out.push(&[(6, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['l', s @ ..] => {
-            out.push(&[(1, 0.99105823), (6, 0.008667124)], 0.99972534);
-            match s {
-                [] => true,
-                ['o', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['c', 'i', 't', 'r', 'a', 'p', s @ ..] => {
-                            out.push(&[(1, 0.8809339), (6, 0.11880674)], 0.9997406);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['g', 'n', 'i', s @ ..] => {
-                            out.push(&[(1, 0.8809339), (6, 0.11880674)], 0.9997406);
-                            match s {
-                                [] => true,
-                                ['s', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['p', 'o', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['m', s @ ..] => {
-            out.push(&[(1, 0.8060883), (5, 0.18226902), (6, 0.0072022583), (3, 0.0043488215)], 0.99990845);
-            match s {
-                [] => true,
-                ['e', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['d', 'r', 'e', 'v', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['r', 't', 'l', 'o', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['z', s @ ..] => {
-            out.push(&[(1, 0.8687266), (5, 0.11673152), (6, 0.009002823), (3, 0.005432212)], 0.9998932);
-            match s {
-                [] => true,
-                ['n', 'a', 'z', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
-}
-
-/// The word salubre.
-pub(crate) fn n415(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(11, 1.0)], 1.0);
-    s.is_empty()
-}
-
-/// Words ending -cre.
-pub(crate) fn n160(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1, 0.5796292), (3, 0.2970779), (11, 0.09988556), (5, 0.015060655), (6, 0.004760815)], 0.9964141);
-    match s {
-        [] => true,
-        ['a', '\u{1}', s @ ..] => {
-            out.push(&[(11, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -ere.
-pub(crate) fn n161(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1, 0.70357823), (5, 0.16292058), (3, 0.11941711), (20, 0.009811551)], 0.9957275);
-    match s {
-        [] => true,
-        ['d', 'e', 'v', 'l', 'e', 'b', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['g', 'g', 'e', 'l', '\u{1}', s @ ..] => {
-            out.push(&[(20, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['m', 'a', 'c', 'i', s @ ..] => {
-            match s {
-                [] => true,
-                ['b', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', 't', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['v', 'l', 'o', 'p', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
-}
-
-/// The word avvenire.
-pub(crate) fn n162(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 1.0)], 1.0);
-    s.is_empty()
-}
-
-/// Words ending -ore.
-pub(crate) fn n163(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(3, 0.8428321), (1, 0.12739757), (5, 0.020035096), (27, 0.00343328), (20, 0.0032349126), (23, 0.0021820401)], 0.999115);
-    match s {
-        [] => true,
-        ['d', s @ ..] => {
-            match s {
-                [] => true,
-                ['i', 'r', 'r', 'o', 'c', '\u{1}', s @ ..] => {
-                    out.push(&[(1, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['o', 'n', 'i', '\u{1}', s @ ..] => {
-                    out.push(&[(1, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['i', s @ ..] => {
-            out.push(&[(1, 0.7528954), (3, 0.23868161), (5, 0.005676356)], 0.99725336);
-            s.is_empty()
-        }
-        ['l', s @ ..] => {
-            out.push(&[(1, 0.55651176), (3, 0.3329671), (5, 0.106691085)], 0.9961699);
-            match s {
-                [] => true,
-                ['a', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['o', s @ ..] => {
-                    out.push(&[(1, 0.7637446), (3, 0.13838407), (5, 0.09628443)], 0.9984131);
-                    match s {
-                        [] => true,
-                        ['d', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['m', s @ ..] => {
-            out.push(&[(3, 0.561883), (1, 0.25160602), (5, 0.18002594), (27, 0.0022888533), (20, 0.002151522)], 0.9979553);
-            match s {
-                [] => true,
-                ['e', 'm', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(1, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['m', 'i', '\u{1}', s @ ..] => {
-                            out.push(&[(1, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['u', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['r', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['t', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['n', s @ ..] => {
-            out.push(&[(3, 0.74918747), (20, 0.11398489), (1, 0.11325246), (5, 0.017822538), (27, 0.0030518044)], 0.99729913);
-            match s {
-                [] => true,
-                ['g', 'i', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(20, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['p', 'a', 's', 'n', 'i', '\u{1}', s @ ..] => {
-            out.push(&[(1, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['s', s @ ..] => {
-            out.push(&[(1, 0.5008774), (3, 0.30647746), (27, 0.07267872), (5, 0.05273518), (23, 0.046250094), (35, 0.012985428), (20, 0.0076752882)], 0.99967957);
-            match s {
-                [] => true,
-                ['a', 'v', 'n', 'i', '\u{1}', s @ ..] => {
-                    out.push(&[(27, 0.5714351), (35, 0.28570992), (20, 0.14285496)], 1.0);
-                    s.is_empty()
-                }
-                ['n', s @ ..] => {
-                    out.push(&[(1, 0.4007019), (3, 0.24518196), (27, 0.1581445), (5, 0.14219883), (23, 0.03700313), (35, 0.010391394), (20, 0.006134127)], 0.99975586);
-                    match s {
-                        [] => true,
-                        ['e', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['f', 'i', 'd', '\u{1}', s @ ..] => {
-                                    out.push(&[(27, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['s', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['s', 'e', 'r', 'p', 'm', 'o', 'c', '\u{1}', s @ ..] => {
-                    out.push(&[(23, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['t', s @ ..] => {
-            out.push(&[(3, 0.97102314), (1, 0.020050354), (5, 0.007904174)], 0.99897766);
-            match s {
-                [] => true,
-                ['a', s @ ..] => {
-                    out.push(&[(3, 0.9914397), (1, 0.0038757916), (5, 0.003555352)], 0.99887085);
-                    match s {
-                        [] => true,
-                        ['c', 'o', 'i', s @ ..] => {
-                            out.push(&[(3, 0.8812696), (5, 0.114259556), (1, 0.003448539)], 0.99897766);
-                            match s {
-                                [] => true,
-                                ['g', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['r', 'c', s @ ..] => {
-                            out.push(&[(3, 0.8931411), (1, 0.10310521), (5, 0.002838178)], 0.9990845);
-                            match s {
-                                [] => true,
-                                ['o', 't', 'n', 'a', 'p', '\u{1}', s @ ..] => {
-                                    out.push(&[(1, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['o', s @ ..] => {
-                    out.push(&[(3, 0.79877925), (1, 0.16002136), (5, 0.04089418)], 0.9996948);
-                    match s {
-                        [] => true,
-                        ['m', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['a', 's', 'e', '\u{1}', s @ ..] => {
-                                    out.push(&[(1, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['i', 'r', 't', '\u{1}', s @ ..] => {
-                                    out.push(&[(1, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['o', 'l', 'u', 'c', 'o', '\u{1}', s @ ..] => {
-                                    out.push(&[(1, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['r', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['i', 'b', '\u{1}', s @ ..] => {
-                                    out.push(&[(1, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['t', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', 'e', 'r', 'i', 'r', 'u', 'l', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(1, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['e', 's', 'a', 'r', 't', 'x', 'e', '\u{1}', s @ ..] => {
-                            out.push(&[(1, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['u', 'a', s @ ..] => {
-                    out.push(&[(3, 0.8631266), (5, 0.11813535), (1, 0.017822538)], 0.9990845);
-                    match s {
-                        [] => true,
-                        ['i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['u', 'c', 'a', 'v', 'l', 'a', 's', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['v', 'a', 't', 's', 'i', 'd', '\u{1}', s @ ..] => {
-            out.push(&[(1, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -tre.
-pub(crate) fn n164(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1, 0.8215457), (3, 0.10235752), (5, 0.038803693), (6, 0.03524834)], 0.99795526);
-    match s {
-        [] => true,
-        ['s', s @ ..] => {
-            match s {
-                [] => true,
-                ['n', 'o', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['u', 'l', 'l', 'i', '\u{1}', s @ ..] => {
-                    out.push(&[(6, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
-}
-
-/// The word nature.
-pub(crate) fn n165(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 1.0)], 1.0);
-    s.is_empty()
-}
-
-/// Words ending -se.
 pub(crate) fn n53(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1, 0.97154194), (5, 0.023956664), (6, 0.0037232013)], 0.9992218);
-    match s {
-        [] => true,
-        ['a', s @ ..] => {
-            out.push(&[(1, 0.76945144), (5, 0.22798504), (6, 0.002121004)], 0.9995575);
-            match s {
-                [] => true,
-                ['f', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', 'r', 't', 'e', 't', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['i', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['l', 'o', 'p', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['r', 'u', 'l', 'p', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['e', s @ ..] => {
-            out.push(&[(1, 0.9934081), (6, 0.004150454), (5, 0.0024261845)], 0.99998474);
-            match s {
-                [] => true,
-                ['h', 'g', 'r', 'o', 'b', '\u{1}', s @ ..] => {
-                    out.push(&[(6, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['p', s @ ..] => {
-                    out.push(&[(1, 0.88302433), (5, 0.11326772), (6, 0.0036774243)], 0.9999695);
-                    match s {
-                        [] => true,
-                        ['s', 'a', 'i', 'l', 'g', 'a', 't', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['t', 'r', 'o', s @ ..] => {
-                    out.push(&[(1, 0.894728), (6, 0.10331884)], 0.9980469);
-                    match s {
-                        [] => true,
-                        ['c', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['o', s @ ..] => {
-            out.push(&[(1, 0.77723354), (5, 0.21916533), (6, 0.0029755093)], 0.9993744);
-            match s {
-                [] => true,
-                ['d', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['i', 'n', 'u', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['r', 'o', 'b', 'a', 't', 'o', 'v', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['s', s @ ..] => {
-            out.push(&[(1, 0.54543376), (5, 0.4520485), (6, 0.002090486)], 0.99957275);
-            match s {
-                [] => true,
-                ['a', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['i', 'n', 'u', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['l', 'c', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['i', 'r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['t', 'n', 'e', 's', 'e', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['e', 'c', 'e', 'n', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['o', 't', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['t', '-', 'e', 's', 't', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+	super::push(out, 53);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 194);
+			match s {
+				[] => true,
+				['c', '\u{1}', s @ ..] => {
+					super::push(out, 435);
+					s.is_empty()
+				}
+				['m', s @ ..] => {
+					super::push(out, 436);
+					s.is_empty()
+				}
+				['v', 'o', 'i', 'g', '\u{1}', s @ ..] => {
+					super::push(out, 437);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['e', s @ ..] => {
+			super::push(out, 195);
+			match s {
+				[] => true,
+				['b', s @ ..] => {
+					super::push(out, 438);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 860);
+							s.is_empty()
+						}
+						['b', 'a', 'd', '\u{1}', s @ ..] => {
+							super::push(out, 861);
+							s.is_empty()
+						}
+						['r', 'e', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 862);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['g', 'a', 'p', 'm', 'a', 'h', 'c', '\u{1}', s @ ..] => {
+			super::push(out, 196);
+			s.is_empty()
+		}
+		['i', s @ ..] => {
+			super::push(out, 197);
+			match s {
+				[] => true,
+				['d', 'n', 'a', 'r', 'g', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 439);
+					s.is_empty()
+				}
+				['f', s @ ..] => {
+					match s {
+						[] => true,
+						['f', s @ ..] => {
+							super::push(out, 863);
+							s.is_empty()
+						}
+						['n', 'o', 'c', 'e', 'r', 't', 'l', 'o', '\u{1}', s @ ..] => {
+							super::push(out, 864);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['g', s @ ..] => {
+					match s {
+						[] => true,
+						['g', 'u', 'r', '\u{1}', s @ ..] => {
+							super::push(out, 865);
+							s.is_empty()
+						}
+						['r', s @ ..] => {
+							super::push(out, 866);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['l', s @ ..] => {
+					match s {
+						[] => true,
+						['c', s @ ..] => {
+							super::push(out, 867);
+							s.is_empty()
+						}
+						['l', 'o', 'p', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 868);
+							s.is_empty()
+						}
+						['n', 'o', '\u{1}', s @ ..] => {
+							super::push(out, 869);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['m', s @ ..] => {
+					match s {
+						[] => true,
+						['i', 'r', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 870);
+							s.is_empty()
+						}
+						['r', 'e', 't', 'e', 'r', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 871);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['t', 'u', 'l', 'g', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 440);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['n', s @ ..] => {
+			super::push(out, 198);
+			match s {
+				[] => true,
+				['e', s @ ..] => {
+					super::push(out, 441);
+					match s {
+						[] => true,
+						['l', s @ ..] => {
+							super::push(out, 872);
+							match s {
+								[] => true,
+								['o', 's', '\u{1}', s @ ..] => {
+									super::push(out, 1410);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['o', '\u{1}', s @ ..] => {
+					super::push(out, 442);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['o', s @ ..] => {
+			super::push(out, 199);
+			match s {
+				[] => true,
+				['b', s @ ..] => {
+					match s {
+						[] => true,
+						['b', 'o', 'g', 's', '\u{1}', s @ ..] => {
+							super::push(out, 873);
+							s.is_empty()
+						}
+						['r', 'i', 'b', '\u{1}', s @ ..] => {
+							super::push(out, 874);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['c', s @ ..] => {
+					super::push(out, 443);
+					match s {
+						[] => true,
+						['c', s @ ..] => {
+							super::push(out, 875);
+							match s {
+								[] => true,
+								['o', 's', 'e', 'm', '\u{1}', s @ ..] => {
+									super::push(out, 1411);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['e', 'r', 'p', 's', '\u{1}', s @ ..] => {
+							super::push(out, 876);
+							s.is_empty()
+						}
+						['i', s @ ..] => {
+							match s {
+								[] => true,
+								['t', 'a', 'p', 'm', 'i', 's', '\u{1}', s @ ..] => {
+									super::push(out, 1412);
+									s.is_empty()
+								}
+								['z', 'z', 'u', 'b', '\u{1}', s @ ..] => {
+									super::push(out, 1413);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['n', 'a', 'r', 'f', '\u{1}', s @ ..] => {
+							super::push(out, 877);
+							s.is_empty()
+						}
+						['s', 'a', 'u', 'g', '\u{1}', s @ ..] => {
+							super::push(out, 878);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['d', s @ ..] => {
+					super::push(out, 444);
+					match s {
+						[] => true,
+						['e', s @ ..] => {
+							super::push(out, 879);
+							s.is_empty()
+						}
+						['i', 'm', 'i', 't', '\u{1}', s @ ..] => {
+							super::push(out, 880);
+							s.is_empty()
+						}
+						['n', 'a', 's', '\u{1}', s @ ..] => {
+							super::push(out, 881);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['f', 'i', 'm', '\u{1}', s @ ..] => {
+					super::push(out, 445);
+					s.is_empty()
+				}
+				['i', s @ ..] => {
+					super::push(out, 446);
+					match s {
+						[] => true,
+						['a', 'n', '\u{1}', s @ ..] => {
+							super::push(out, 882);
+							s.is_empty()
+						}
+						['b', 'b', 'a', 'b', '\u{1}', s @ ..] => {
+							super::push(out, 883);
+							s.is_empty()
+						}
+						['c', s @ ..] => {
+							super::push(out, 884);
+							match s {
+								[] => true,
+								['c', s @ ..] => {
+									super::push(out, 1414);
+									match s {
+										[] => true,
+										['a', 'c', 'r', 'o', 'p', 's', '\u{1}', s @ ..] => {
+											super::push(out, 1815);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['h', 'c', 'n', 'i', 'm', '\u{1}', s @ ..] => {
+							super::push(out, 885);
+							s.is_empty()
+						}
+						['n', 'r', 'o', 's', '\u{1}', s @ ..] => {
+							super::push(out, 886);
+							s.is_empty()
+						}
+						['p', 'm', 'a', 'c', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 1415);
+									s.is_empty()
+								}
+								['a', 't', 'r', 'o', 'p', '\u{1}', s @ ..] => {
+									super::push(out, 1416);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['r', 'p', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 887);
+							s.is_empty()
+						}
+						['s', s @ ..] => {
+							super::push(out, 888);
+							match s {
+								[] => true,
+								['i', 'v', 'o', 'p', 'i', '\u{1}', s @ ..] => {
+									super::push(out, 1417);
+									s.is_empty()
+								}
+								['s', s @ ..] => {
+									match s {
+										[] => true,
+										['e', s @ ..] => {
+											super::push(out, 1816);
+											s.is_empty()
+										}
+										['i', 'm', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
+											super::push(out, 1817);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['u', s @ ..] => {
+									super::push(out, 1418);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['z', s @ ..] => {
+							super::push(out, 889);
+							match s {
+								[] => true,
+								['a', s @ ..] => super::t0::n1546(s, out),
+								['n', 'u', 'i', 'g', 'i', 'n', 'u', '\u{1}', s @ ..] => {
+									super::push(out, 1419);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['l', s @ ..] => super::t0::n469(s, out),
+				['m', s @ ..] => super::t0::n470(s, out),
+				['n', s @ ..] => super::t0::n471(s, out),
+				['p', s @ ..] => {
+					super::push(out, 449);
+					s.is_empty()
+				}
+				['r', s @ ..] => super::t0::n473(s, out),
+				['s', s @ ..] => super::t0::n474(s, out),
+				['t', s @ ..] => super::t0::n475(s, out),
+				['z', 'z', 'o', 's', '\u{1}', s @ ..] => {
+					super::push(out, 452);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['u', s @ ..] => super::t0::n205(s, out),
+		_ => false,
+	}
+}
+
+/// Words ending -re.
+pub(crate) fn n54(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 54);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 201);
+			match s {
+				[] => true,
+				['g', 'l', 'o', 'v', '\u{1}', s @ ..] => {
+					super::push(out, 454);
+					s.is_empty()
+				}
+				['i', 'l', 'i', 'm', s @ ..] => {
+					super::push(out, 455);
+					match s {
+						[] => true,
+						['a', 'f', '\u{1}', s @ ..] => {
+							super::push(out, 906);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['l', s @ ..] => {
+					super::push(out, 456);
+					match s {
+						[] => true,
+						['o', s @ ..] => {
+							match s {
+								[] => true,
+								['c', 'i', 't', s @ ..] => {
+									super::push(out, 1424);
+									match s {
+										[] => true,
+										['r', 'a', 'p', '\u{1}', s @ ..] => {
+											super::push(out, 1826);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['g', s @ ..] => {
+									super::push(out, 1425);
+									match s {
+										[] => true,
+										['n', 'i', 's', '\u{1}', s @ ..] => {
+											super::push(out, 1827);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['p', 'o', s @ ..] => {
+									super::push(out, 1426);
+									match s {
+										[] => true,
+										['p', '\u{1}', s @ ..] => {
+											super::push(out, 1828);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['m', s @ ..] => {
+					super::push(out, 457);
+					match s {
+						[] => true,
+						['e', s @ ..] => {
+							super::push(out, 907);
+							match s {
+								[] => true,
+								['d', 'r', 'e', 'v', '\u{1}', s @ ..] => {
+									super::push(out, 1427);
+									s.is_empty()
+								}
+								['r', 't', 'l', 'o', '\u{1}', s @ ..] => {
+									super::push(out, 1428);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['z', 'n', 'a', 'z', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 458);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['b', s @ ..] => {
+			super::push(out, 202);
+			match s {
+				[] => true,
+				['a', 's', '\u{1}', s @ ..] => {
+					super::push(out, 459);
+					s.is_empty()
+				}
+				['e', s @ ..] => {
+					super::push(out, 460);
+					match s {
+						[] => true,
+						['l', 'e', 'c', '\u{1}', s @ ..] => {
+							super::push(out, 908);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['m', s @ ..] => {
+					super::push(out, 461);
+					s.is_empty()
+				}
+				['u', s @ ..] => {
+					super::push(out, 462);
+					match s {
+						[] => true,
+						['l', 'a', 's', '\u{1}', s @ ..] => {
+							super::push(out, 909);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['c', s @ ..] => {
+			super::push(out, 203);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 463);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 910);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['e', s @ ..] => {
+			super::push(out, 204);
+			match s {
+				[] => true,
+				['d', 'e', 'v', 'l', 'e', 'b', '\u{1}', s @ ..] => {
+					super::push(out, 464);
+					s.is_empty()
+				}
+				['g', 'g', 'e', 'l', '\u{1}', s @ ..] => {
+					super::push(out, 465);
+					s.is_empty()
+				}
+				['i', s @ ..] => {
+					super::push(out, 466);
+					s.is_empty()
+				}
+				['m', s @ ..] => {
+					super::push(out, 467);
+					match s {
+						[] => true,
+						['a', s @ ..] => {
+							super::push(out, 911);
+							match s {
+								[] => true,
+								['c', s @ ..] => {
+									super::push(out, 1429);
+									match s {
+										[] => true,
+										['i', s @ ..] => {
+											super::push(out, 1829);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['n', s @ ..] => {
+					super::push(out, 468);
+					match s {
+						[] => true,
+						['e', s @ ..] => {
+							super::push(out, 912);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['v', 'l', 'o', 'p', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 469);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['i', 'n', 'e', 'v', 'v', 'a', '\u{1}', s @ ..] => {
+			super::push(out, 205);
+			s.is_empty()
+		}
+		['o', s @ ..] => {
+			super::push(out, 206);
+			match s {
+				[] => true,
+				['d', s @ ..] => {
+					super::push(out, 470);
+					match s {
+						[] => true,
+						['i', 'r', 'r', 'o', 'c', '\u{1}', s @ ..] => {
+							super::push(out, 913);
+							s.is_empty()
+						}
+						['o', 'n', 'i', '\u{1}', s @ ..] => {
+							super::push(out, 914);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['i', s @ ..] => {
+					super::push(out, 471);
+					match s {
+						[] => true,
+						['r', s @ ..] => {
+							super::push(out, 915);
+							match s {
+								[] => true,
+								['e', s @ ..] => {
+									super::push(out, 1430);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['l', s @ ..] => {
+					super::push(out, 472);
+					match s {
+						[] => true,
+						['a', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 916);
+							s.is_empty()
+						}
+						['o', s @ ..] => {
+							super::push(out, 917);
+							match s {
+								[] => true,
+								['c', s @ ..] => {
+									super::push(out, 1431);
+									s.is_empty()
+								}
+								['d', s @ ..] => {
+									super::push(out, 1432);
+									match s {
+										[] => true,
+										['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+											super::push(out, 1830);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['m', s @ ..] => {
+					super::push(out, 473);
+					match s {
+						[] => true,
+						['e', s @ ..] => {
+							super::push(out, 918);
+							match s {
+								[] => true,
+								['m', s @ ..] => {
+									super::push(out, 1433);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['u', s @ ..] => {
+							super::push(out, 919);
+							match s {
+								[] => true,
+								['r', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+									super::push(out, 1434);
+									s.is_empty()
+								}
+								['t', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+									super::push(out, 1435);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['n', 'g', 'i', 's', '\u{1}', s @ ..] => {
+					super::push(out, 474);
+					s.is_empty()
+				}
+				['p', 'a', 's', 'n', 'i', '\u{1}', s @ ..] => {
+					super::push(out, 475);
+					s.is_empty()
+				}
+				['s', s @ ..] => {
+					super::push(out, 476);
+					match s {
+						[] => true,
+						['a', 'v', 'n', 'i', '\u{1}', s @ ..] => {
+							super::push(out, 920);
+							s.is_empty()
+						}
+						['l', s @ ..] => {
+							super::push(out, 921);
+							match s {
+								[] => true,
+								['u', s @ ..] => {
+									super::push(out, 1436);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['n', s @ ..] => {
+							super::push(out, 922);
+							match s {
+								[] => true,
+								['e', s @ ..] => {
+									super::push(out, 1437);
+									match s {
+										[] => true,
+										['f', 'i', 'd', '\u{1}', s @ ..] => {
+											super::push(out, 1831);
+											s.is_empty()
+										}
+										['s', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
+											super::push(out, 1832);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['r', s @ ..] => {
+							super::push(out, 923);
+							match s {
+								[] => true,
+								['u', s @ ..] => {
+									super::push(out, 1438);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['s', s @ ..] => {
+							super::push(out, 924);
+							match s {
+								[] => true,
+								['e', s @ ..] => {
+									super::push(out, 1439);
+									match s {
+										[] => true,
+										['r', 'p', 'm', 'o', 'c', '\u{1}', s @ ..] => {
+											super::push(out, 1833);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['t', s @ ..] => super::t0::n501(s, out),
+				['u', 'c', 'a', 'v', 'l', 'a', 's', '\u{1}', s @ ..] => {
+					super::push(out, 478);
+					s.is_empty()
+				}
+				['v', 'a', 't', 's', 'i', 'd', '\u{1}', s @ ..] => {
+					super::push(out, 479);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['t', s @ ..] => {
+			super::push(out, 207);
+			match s {
+				[] => true,
+				['s', s @ ..] => {
+					super::push(out, 480);
+					match s {
+						[] => true,
+						['e', s @ ..] => super::t0::n1008(s, out),
+						['n', 'o', 'm', '\u{1}', s @ ..] => super::t0::n1009(s, out),
+						['u', 'l', s @ ..] => super::t0::n1010(s, out),
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['u', s @ ..] => super::t0::n213(s, out),
+		_ => false,
+	}
+}
+
+/// The word borghese.
+pub(crate) fn n1579(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1449);
+	s.is_empty()
+}
+
+/// Words ending -nese.
+pub(crate) fn n508(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 484);
+	s.is_empty()
+}
+
+/// The word tagliaspese.
+pub(crate) fn n509(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 485);
+	s.is_empty()
+}
+
+/// Words ending -tese.
+pub(crate) fn n510(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 486);
+	match s {
+		[] => true,
+		['r', s @ ..] => {
+			super::push(out, 936);
+			match s {
+				[] => true,
+				['o', s @ ..] => {
+					super::push(out, 1450);
+					match s {
+						[] => true,
+						['c', '\u{1}', s @ ..] => {
+							super::push(out, 1843);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -nse.
+pub(crate) fn n216(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 211);
+	s.is_empty()
+}
+
+/// Words ending -ose.
+pub(crate) fn n217(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 212);
+	match s {
+		[] => true,
+		['d', s @ ..] => {
+			super::push(out, 487);
+			match s {
+				[] => true,
+				['i', 'n', 'u', '\u{1}', s @ ..] => {
+					super::push(out, 937);
+					s.is_empty()
+				}
+				['o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
+					super::push(out, 938);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// The word votaborse.
+pub(crate) fn n218(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 213);
+	s.is_empty()
+}
+
+/// Words ending -sse.
+pub(crate) fn n219(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 214);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 488);
+			s.is_empty()
+		}
+		['e', 'c', 'e', 'n', '\u{1}', s @ ..] => {
+			super::push(out, 489);
+			s.is_empty()
+		}
+		['o', 't', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+			super::push(out, 490);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// The word tse-tse.
+pub(crate) fn n220(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 215);
+	s.is_empty()
 }
 
 /// Words ending -te.
-pub(crate) fn n54(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1, 0.9638514), (6, 0.025284199), (5, 0.010574502)], 0.9997101);
-    match s {
-        [] => true,
-        ['-', 'a', 'd', '-', 'i', 'a', 'f', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['a', s @ ..] => {
-            out.push(&[(1, 0.89944303), (5, 0.09245441), (6, 0.008010986)], 0.99990845);
-            match s {
-                [] => true,
-                ['r', 'o', 'p', 'r', 'o', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['t', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', 'p', 'a', 'i', 'g', 'n', 'a', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['s', 'e', '-', 'a', 'r', 'e', 'v', 'a', 'm', 'i', 'r', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['e', s @ ..] => {
-            out.push(&[(1, 0.8364843), (5, 0.14889753), (6, 0.014450294)], 0.99983215);
-            match s {
-                [] => true,
-                ['b', 'a', 'i', 'd', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', 'o', 't', 't', 'o', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['i', s @ ..] => {
-            out.push(&[(1, 0.8512398), (5, 0.13785), (6, 0.010788129)], 0.9998779);
-            match s {
-                [] => true,
-                ['l', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['l', 'e', 't', 'a', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['u', 'l', 'l', 'e', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['p', 'a', 'c', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['-', 'o', 'r', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', 'r', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['n', s @ ..] => {
-            match s {
-                [] => true,
-                ['a', s @ ..] => {
-                    out.push(&[(1, 0.98496985), (6, 0.012237736), (5, 0.002792401)], 1.0);
-                    match s {
-                        [] => true,
-                        ['c', 'c', 'i', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['d', 'n', 'o', 'b', 'b', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['e', 'n', s @ ..] => {
-                            out.push(&[(1, 0.8755169), (5, 0.11360342), (6, 0.010879682)], 1.0);
-                            match s {
-                                [] => true,
-                                ['r', 'o', 't', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['g', 'e', 'l', 'e', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['i', 'l', 'g', 'i', 'm', 'o', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['l', 'l', 'i', 'r', s @ ..] => {
-                            out.push(&[(1, 0.8755169), (6, 0.12198062), (5, 0.0024872206)], 0.99998474);
-                            match s {
-                                [] => true,
-                                ['b', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['r', 'g', 'a', 'l', 'f', 'e', s @ ..] => {
-                            out.push(&[(1, 0.88796824), (5, 0.102235444), (6, 0.009781033)], 0.99998474);
-                            match s {
-                                [] => true,
-                                ['d', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['s', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['e', 'p', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['s', 'e', 'r', 'e', 't', 'n', 'i', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['t', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['r', 'o', 'p', 'm', 'i', s @ ..] => {
-                                    out.push(&[(1, 0.8755169), (6, 0.12198062), (5, 0.0024872206)], 0.99998474);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            out.push(&[(6, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['s', 'i', 'd', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['v', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['a', 'd', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['e', 'l', 'i', 'r', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['e', s @ ..] => {
-                    out.push(&[(1, 0.9516747), (6, 0.04310674), (5, 0.0052185855)], 1.0);
-                    match s {
-                        [] => true,
-                        ['c', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['e', 'r', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['o', 'n', 'n', 'i', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['d', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['i', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['c', 'n', 'i', 't', s @ ..] => {
-                                            out.push(&[(1, 0.8459297), (5, 0.11575494), (6, 0.038315404)], 1.0);
-                                            match s {
-                                                [] => true,
-                                                ['n', 'a', '\u{1}', s @ ..] => {
-                                                    out.push(&[(5, 1.0)], 1.0);
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        ['v', 'e', '\u{1}', s @ ..] => {
-                                            out.push(&[(6, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['u', 'r', 'p', 'm', 'i', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['g', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['i', 'l', s @ ..] => {
-                                    out.push(&[(1, 0.78785384), (6, 0.20842297), (5, 0.0037079423)], 0.99998474);
-                                    match s {
-                                        [] => true,
-                                        ['i', 'd', '\u{1}', s @ ..] => {
-                                            out.push(&[(6, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['l', 'e', 't', 'n', 'i', '\u{1}', s @ ..] => {
-                                            out.push(&[(6, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['n', 'i', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['r', 'u', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['i', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['c', 'i', 'f', 'f', 'e', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['l', 'g', 'o', 'c', 'c', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['l', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['a', 'v', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['l', 'e', 'c', 'c', 'e', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['o', 'd', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['u', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['m', 'e', 'l', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['n', s @ ..] => super::t0::n888(s, out),
-                        ['r', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['e', 'd', 'a', '\u{1}', s @ ..] => super::t0::n1361(s, out),
-                                ['o', 'i', 'f', '\u{1}', s @ ..] => super::t0::n1362(s, out),
-                                ['r', 'o', 'c', 'a', s @ ..] => super::t0::n1363(s, out),
-                                _ => false,
-                            }
-                        }
-                        ['s', 'e', 'r', 'p', '\u{1}', s @ ..] => super::t0::n890(s, out),
-                        ['t', s @ ..] => super::t0::n891(s, out),
-                        ['u', 'q', s @ ..] => super::t0::n892(s, out),
-                        ['v', 'r', 'e', 'f', '\u{1}', s @ ..] => super::t0::n893(s, out),
-                        _ => false,
-                    }
-                }
-                ['o', s @ ..] => super::t0::n448(s, out),
-                _ => false,
-            }
-        }
-        ['r', 'o', s @ ..] => super::t0::n177(s, out),
-        ['s', 'i', 'r', 't', '\u{1}', s @ ..] => super::t0::n178(s, out),
-        ['t', s @ ..] => super::t0::n179(s, out),
-        _ => false,
-    }
+pub(crate) fn n56(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 56);
+	match s {
+		[] => true,
+		['-', 'a', 'd', '-', 'i', 'a', 'f', '\u{1}', s @ ..] => {
+			super::push(out, 216);
+			s.is_empty()
+		}
+		['a', s @ ..] => {
+			super::push(out, 217);
+			match s {
+				[] => true,
+				['n', s @ ..] => {
+					super::push(out, 491);
+					s.is_empty()
+				}
+				['r', 'o', 'p', 'r', 'o', 'p', '\u{1}', s @ ..] => {
+					super::push(out, 492);
+					s.is_empty()
+				}
+				['t', s @ ..] => {
+					super::push(out, 493);
+					match s {
+						[] => true,
+						['a', 'p', 'a', 'i', 'g', 'n', 'a', 'm', '\u{1}', s @ ..] => {
+							super::push(out, 939);
+							s.is_empty()
+						}
+						['s', 'e', '-', 'a', 'r', 'e', 'v', 'a', 'm', 'i', 'r', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 940);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['e', s @ ..] => {
+			super::push(out, 218);
+			match s {
+				[] => true,
+				['b', 'a', 'i', 'd', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 494);
+					s.is_empty()
+				}
+				['r', 'o', 't', 't', 'o', 's', '\u{1}', s @ ..] => {
+					super::push(out, 495);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['i', s @ ..] => {
+			super::push(out, 219);
+			match s {
+				[] => true,
+				['l', s @ ..] => {
+					super::push(out, 496);
+					match s {
+						[] => true,
+						['l', 'e', 't', 'a', 's', '\u{1}', s @ ..] => {
+							super::push(out, 941);
+							s.is_empty()
+						}
+						['u', 'l', 'l', 'e', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 942);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['p', 'a', 'c', s @ ..] => {
+					match s {
+						[] => true,
+						['-', 'o', 'r', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 943);
+							s.is_empty()
+						}
+						['o', 'r', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 944);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['n', s @ ..] => {
+			super::push(out, 220);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 497);
+					match s {
+						[] => true,
+						['c', 'c', 'i', s @ ..] => {
+							super::push(out, 945);
+							match s {
+								[] => true,
+								['p', s @ ..] => {
+									super::push(out, 1451);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 1844);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['d', 'n', s @ ..] => {
+							super::push(out, 946);
+							match s {
+								[] => true,
+								['o', 'b', s @ ..] => {
+									super::push(out, 1452);
+									match s {
+										[] => true,
+										['b', 'a', '\u{1}', s @ ..] => {
+											super::push(out, 1845);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['e', s @ ..] => {
+							super::push(out, 947);
+							match s {
+								[] => true,
+								['n', 'r', 'o', 't', '\u{1}', s @ ..] => {
+									super::push(out, 1453);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['g', 'e', s @ ..] => {
+							super::push(out, 948);
+							match s {
+								[] => true,
+								['l', 'e', s @ ..] => {
+									super::push(out, 1454);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 1846);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['i', 'l', s @ ..] => {
+							super::push(out, 949);
+							match s {
+								[] => true,
+								['g', 'i', 'm', 'o', s @ ..] => {
+									super::push(out, 1455);
+									match s {
+										[] => true,
+										['s', '\u{1}', s @ ..] => {
+											super::push(out, 1847);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['l', 'l', 'i', s @ ..] => {
+							super::push(out, 950);
+							match s {
+								[] => true,
+								['r', 'b', '\u{1}', s @ ..] => {
+									super::push(out, 1456);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['n', s @ ..] => {
+							super::push(out, 951);
+							s.is_empty()
+						}
+						['r', s @ ..] => {
+							super::push(out, 952);
+							match s {
+								[] => true,
+								['g', s @ ..] => {
+									super::push(out, 1457);
+									match s {
+										[] => true,
+										['a', 'l', s @ ..] => {
+											super::push(out, 1848);
+											match s {
+												[] => true,
+												['f', 'e', 'd', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+													super::push(out, 2032);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['s', s @ ..] => {
+							super::push(out, 953);
+							match s {
+								[] => true,
+								['e', s @ ..] => {
+									super::push(out, 1458);
+									match s {
+										[] => true,
+										['p', '\u{1}', s @ ..] => {
+											super::push(out, 1849);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['s', 'e', 'r', 'e', s @ ..] => {
+									super::push(out, 1459);
+									match s {
+										[] => true,
+										['t', 'n', 'i', '\u{1}', s @ ..] => {
+											super::push(out, 1850);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['t', s @ ..] => {
+							match s {
+								[] => true,
+								['r', s @ ..] => {
+									super::push(out, 1460);
+									match s {
+										[] => true,
+										['o', 'p', 'm', s @ ..] => {
+											super::push(out, 1851);
+											match s {
+												[] => true,
+												['i', '\u{1}', s @ ..] => {
+													super::push(out, 2033);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['s', 'i', s @ ..] => {
+									super::push(out, 1461);
+									match s {
+										[] => true,
+										['d', s @ ..] => super::t0::n1999(s, out),
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['v', s @ ..] => super::t0::n1034(s, out),
+						['z', s @ ..] => super::t0::n1035(s, out),
+						_ => false,
+					}
+				}
+				['e', s @ ..] => super::t0::n523(s, out),
+				['o', s @ ..] => super::t0::n524(s, out),
+				_ => false,
+			}
+		}
+		['r', s @ ..] => super::t0::n226(s, out),
+		['s', s @ ..] => super::t0::n227(s, out),
+		['t', 'e', 'u', 'l', 'b', '\u{1}', s @ ..] => super::t0::n228(s, out),
+		_ => false,
+	}
 }
 
 /// Words ending -ue.
-pub(crate) fn n55(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1, 0.7793546), (5, 0.19461356), (3, 0.018631266), (6, 0.005569543)], 0.99816895);
-    match s {
-        [] => true,
-        ['g', 'n', 'a', 's', s @ ..] => {
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['o', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['r', 'u', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['z', 'z', 'e', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['q', 'n', 'u', 'l', 'a', 'u', 'q', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n57(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 57);
+	match s {
+		[] => true,
+		['g', 'n', s @ ..] => {
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 502);
+					match s {
+						[] => true,
+						['s', s @ ..] => {
+							super::push(out, 964);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 1492);
+									s.is_empty()
+								}
+								['e', '\u{1}', s @ ..] => {
+									super::push(out, 1493);
+									s.is_empty()
+								}
+								['o', s @ ..] => {
+									super::push(out, 1494);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['i', s @ ..] => {
+					super::push(out, 503);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['q', 'n', 'u', 'l', 'a', 'u', 'q', '\u{1}', s @ ..] => {
+			super::push(out, 224);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -ve.
-pub(crate) fn n56(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1, 0.64768445), (5, 0.1867399), (6, 0.13763638), (3, 0.014389258), (37, 0.012115664)], 0.9985657);
-    match s {
-        [] => true,
-        ['a', s @ ..] => {
-            match s {
-                [] => true,
-                ['i', 'h', 'c', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['o', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(6, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', 'g', '\u{1}', s @ ..] => {
-                    out.push(&[(6, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['e', s @ ..] => {
-            match s {
-                [] => true,
-                ['i', 'l', '\u{1}', s @ ..] => {
-                    out.push(&[(6, 0.6666667), (37, 0.33333334)], 1.0);
-                    s.is_empty()
-                }
-                ['n', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', 'r', 'a', 'p', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['r', 'b', '\u{1}', s @ ..] => {
-                    out.push(&[(6, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['i', s @ ..] => {
-            match s {
-                [] => true,
-                ['l', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['t', 'o', 'm', 'o', 't', 'u', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n58(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 58);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 225);
+			match s {
+				[] => true,
+				['i', 'h', 'c', '\u{1}', s @ ..] => {
+					super::push(out, 504);
+					s.is_empty()
+				}
+				['o', 's', '\u{1}', s @ ..] => {
+					super::push(out, 505);
+					s.is_empty()
+				}
+				['r', 'g', '\u{1}', s @ ..] => {
+					super::push(out, 506);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['e', s @ ..] => {
+			super::push(out, 226);
+			match s {
+				[] => true,
+				['i', 'l', '\u{1}', s @ ..] => {
+					super::push(out, 507);
+					s.is_empty()
+				}
+				['n', s @ ..] => {
+					super::push(out, 508);
+					match s {
+						[] => true,
+						['a', 'r', 'a', 'p', 's', '\u{1}', s @ ..] => {
+							super::push(out, 965);
+							s.is_empty()
+						}
+						['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 966);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['r', 'b', '\u{1}', s @ ..] => {
+					super::push(out, 509);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['i', s @ ..] => {
+			super::push(out, 227);
+			match s {
+				[] => true,
+				['l', '\u{1}', s @ ..] => {
+					super::push(out, 510);
+					s.is_empty()
+				}
+				['t', 'o', 'm', 'o', 't', 'u', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 511);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['l', s @ ..] => {
+			super::push(out, 228);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 512);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -ze.
-pub(crate) fn n57(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1, 0.75558096), (5, 0.19414054), (3, 0.035980772), (6, 0.01075761), (20, 0.0022583352)], 0.9987182);
-    match s {
-        [] => true,
-        ['n', 'e', 't', 'n', 'e', 's', 'a', 'z', 'z', 'a', 'm', 'm', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['r', 'o', 'f', 'r', 'e', 't', 'n', 'i', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n59(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 59);
+	match s {
+		[] => true,
+		['n', 'e', 't', 'n', 'e', 's', 'a', 'z', 'z', 'a', 'm', 'm', 'a', '\u{1}', s @ ..] => {
+			super::push(out, 229);
+			s.is_empty()
+		}
+		['r', 'o', 'f', 'r', 'e', 't', 'n', 'i', '\u{1}', s @ ..] => {
+			super::push(out, 230);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// The word piùe.
-pub(crate) fn n58(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 1.0)], 1.0);
-    s.is_empty()
+pub(crate) fn n60(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 60);
+	s.is_empty()
 }
 
-/// Words ending -occo.
-pub(crate) fn n472(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['i', 'c', 's', '\u{1}', s @ ..] => {
-            out.push(&[(15, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['l', s @ ..] => {
-            out.push(&[(4, 0.52961016), (5, 0.3237049), (2, 0.11825742), (15, 0.02793927)], 0.9995117);
-            match s {
-                [] => true,
-                ['b', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['r', 'e', 't', 'n', 'i', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['t', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+/// The word briaco.
+pub(crate) fn n2018(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1870);
+	s.is_empty()
+}
+
+/// The word ubbriaco.
+pub(crate) fn n2019(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1871);
+	s.is_empty()
+}
+
+/// The word imbriaco.
+pub(crate) fn n2020(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1872);
+	s.is_empty()
+}
+
+/// The word ubriaco.
+pub(crate) fn n2021(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1873);
+	s.is_empty()
+}
+
+/// Words ending -tiaco.
+pub(crate) fn n1059(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 971);
+	match s {
+		[] => true,
+		['o', 'v', '\u{1}', s @ ..] => {
+			super::push(out, 1498);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -maco.
+pub(crate) fn n544(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 519);
+	match s {
+		[] => true,
+		['r', 'a', 'f', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
+			super::push(out, 972);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -paco.
+pub(crate) fn n545(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 520);
+	match s {
+		[] => true,
+		['o', s @ ..] => {
+			super::push(out, 973);
+			match s {
+				[] => true,
+				['i', 'd', 'a', 'r', '\u{1}', s @ ..] => {
+					super::push(out, 1499);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// The word tribraco.
+pub(crate) fn n546(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 521);
+	s.is_empty()
+}
+
+/// The word mataco.
+pub(crate) fn n547(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 522);
+	s.is_empty()
+}
+
+/// Words ending -cco.
+pub(crate) fn n246(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 240);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 523);
+			match s {
+				[] => true,
+				['s', s @ ..] => {
+					super::push(out, 974);
+					match s {
+						[] => true,
+						['i', 'r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
+							super::push(out, 1500);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['e', s @ ..] => {
+			super::push(out, 524);
+			s.is_empty()
+		}
+		['i', s @ ..] => {
+			super::push(out, 525);
+			match s {
+				[] => true,
+				['g', 'a', 't', '\u{1}', s @ ..] => {
+					super::push(out, 975);
+					s.is_empty()
+				}
+				['p', '\u{1}', s @ ..] => {
+					super::push(out, 976);
+					s.is_empty()
+				}
+				['r', s @ ..] => {
+					super::push(out, 977);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1501);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['o', s @ ..] => {
+			super::push(out, 526);
+			match s {
+				[] => true,
+				['i', 'c', 's', '\u{1}', s @ ..] => {
+					super::push(out, 978);
+					s.is_empty()
+				}
+				['l', s @ ..] => {
+					super::push(out, 979);
+					match s {
+						[] => true,
+						['b', s @ ..] => {
+							super::push(out, 1502);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['r', s @ ..] => {
+					super::push(out, 980);
+					match s {
+						[] => true,
+						['a', s @ ..] => {
+							super::push(out, 1503);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['t', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
+					super::push(out, 981);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['u', s @ ..] => {
+			super::push(out, 527);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -eco.
-pub(crate) fn n193(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(2, 0.55257493), (4, 0.4123293), (15, 0.03305104)], 0.99795526);
-    match s {
-        [] => true,
-        ['b', s @ ..] => {
-            match s {
-                [] => true,
-                ['s', 'u', '\u{1}', s @ ..] => {
-                    out.push(&[(4, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['z', 'u', '\u{1}', s @ ..] => {
-                    out.push(&[(4, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['c', '\u{1}', s @ ..] => {
-            out.push(&[(4, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['i', s @ ..] => {
-            match s {
-                [] => true,
-                ['b', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(15, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['s', '\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['c', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', 'd', 'r', 'o', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['m', 'l', 'o', '\u{1}', s @ ..] => {
-            out.push(&[(4, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['t', s @ ..] => {
-            match s {
-                [] => true,
-                ['l', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', 'm', 'e', 't', 'a', 'u', 'g', '\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', 't', '\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['o', 'p', 'a', 'z', '\u{1}', s @ ..] => {
-                    out.push(&[(4, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['z', 'a', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['-', 'o', 't', 'u', '\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n247(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 241);
+	match s {
+		[] => true,
+		['b', s @ ..] => {
+			super::push(out, 528);
+			s.is_empty()
+		}
+		['c', '\u{1}', s @ ..] => {
+			super::push(out, 529);
+			s.is_empty()
+		}
+		['i', s @ ..] => {
+			super::push(out, 530);
+			match s {
+				[] => true,
+				['b', s @ ..] => {
+					super::push(out, 982);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1504);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['c', s @ ..] => {
+					super::push(out, 983);
+					s.is_empty()
+				}
+				['d', '\u{1}', s @ ..] => {
+					super::push(out, 984);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['m', 'l', 'o', '\u{1}', s @ ..] => {
+			super::push(out, 531);
+			s.is_empty()
+		}
+		['r', s @ ..] => {
+			super::push(out, 532);
+			match s {
+				[] => true,
+				['g', s @ ..] => {
+					super::push(out, 985);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['s', s @ ..] => {
+			super::push(out, 533);
+			s.is_empty()
+		}
+		['t', s @ ..] => {
+			super::push(out, 534);
+			match s {
+				[] => true,
+				['e', 'm', '\u{1}', s @ ..] => {
+					super::push(out, 986);
+					s.is_empty()
+				}
+				['l', s @ ..] => {
+					super::push(out, 987);
+					s.is_empty()
+				}
+				['z', s @ ..] => {
+					super::push(out, 988);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -ico.
-pub(crate) fn n194(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(2, 0.9948577), (4, 0.0023956664)], 0.9972534);
-    match s {
-        [] => true,
-        ['c', 'n', s @ ..] => {
-            out.push(&[(2, 0.8958877), (4, 0.10191501)], 0.9978027);
-            match s {
-                [] => true,
-                ['a', 'r', '\u{1}', s @ ..] => {
-                    out.push(&[(4, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['d', s @ ..] => {
-            out.push(&[(2, 0.9798276), (4, 0.020035096)], 0.9998627);
-            match s {
-                [] => true,
-                ['n', 'e', s @ ..] => {
-                    out.push(&[(2, 0.8474098), (4, 0.15246814)], 0.9998779);
-                    match s {
-                        [] => true,
-                        ['m', '\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['v', '\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['u', s @ ..] => {
-                    out.push(&[(2, 0.8337377), (4, 0.166186)], 0.9999237);
-                    match s {
-                        [] => true,
-                        ['p', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(4, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['m', 'i', '\u{1}', s @ ..] => {
-                                    out.push(&[(4, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['f', s @ ..] => {
-            out.push(&[(2, 0.98054475), (5, 0.007721065), (4, 0.0039368276), (15, 0.0038605325), (41, 0.0038605325)], 0.9999237);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(15, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['a', 'r', 't', s @ ..] => {
-                    out.push(&[(2, 0.8715953), (4, 0.114610516), (5, 0.00686656), (15, 0.00343328), (41, 0.00343328)], 0.99993896);
-                    match s {
-                        [] => true,
-                        ['s', '\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['f', 'a', 'r', s @ ..] => {
-                    out.push(&[(2, 0.8715953), (5, 0.1179675), (4, 0.003494316), (15, 0.00343328), (41, 0.00343328)], 0.9999237);
-                    match s {
-                        [] => true,
-                        ['t', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['i', 'c', 'a', 'p', '-', s @ ..] => {
-                    out.push(&[(2, 0.8715953), (5, 0.1179675), (4, 0.003494316), (15, 0.00343328), (41, 0.00343328)], 0.9999237);
-                    match s {
-                        [] => true,
-                        ['o', 'd', 'n', 'i', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['à', s @ ..] => {
-                    out.push(&[(2, 0.8715953), (41, 0.11453422), (5, 0.00686656), (4, 0.003494316), (15, 0.00343328)], 0.9999237);
-                    match s {
-                        [] => true,
-                        ['r', 'g', 'o', 'l', 'a', 'g', 'e', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(41, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['l', s @ ..] => {
-            out.push(&[(2, 0.9961242), (13, 0.0037232013)], 0.9998474);
-            match s {
-                [] => true,
-                ['o', 't', 't', 'a', 'c', '\u{1}', s @ ..] => {
-                    out.push(&[(13, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['m', s @ ..] => {
-            out.push(&[(2, 0.9908751), (13, 0.009002823)], 0.9998779);
-            match s {
-                [] => true,
-                ['a', '\u{1}', s @ ..] => {
-                    out.push(&[(13, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['o', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['c', '\u{1}', s @ ..] => {
-                            out.push(&[(13, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['n', 'o', 'c', 'e', '\u{1}', s @ ..] => {
-                            out.push(&[(13, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['n', s @ ..] => {
-            out.push(&[(2, 0.9983978)], 0.9983978);
-            match s {
-                [] => true,
-                ['a', s @ ..] => {
-                    out.push(&[(2, 0.9911803), (5, 0.008712902)], 0.9998932);
-                    match s {
-                        [] => true,
-                        ['p', 'i', s @ ..] => {
-                            out.push(&[(2, 0.8810407), (5, 0.11885252)], 0.9998932);
-                            match s {
-                                [] => true,
-                                ['t', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['r', 'a', s @ ..] => {
-            out.push(&[(2, 0.9275959), (4, 0.07188525)], 0.99948114);
-            match s {
-                [] => true,
-                ['c', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['c', 'a', 'r', 'v', 'o', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['s', '\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['s', s @ ..] => {
-            out.push(&[(2, 0.9918822), (13, 0.0077973604)], 0.99967957);
-            match s {
-                [] => true,
-                ['s', 'a', 'l', 'c', '\u{1}', s @ ..] => {
-                    out.push(&[(13, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['t', s @ ..] => {
-            out.push(&[(2, 0.997467)], 0.997467);
-            match s {
-                [] => true,
-                ['a', s @ ..] => {
-                    out.push(&[(2, 0.99426264), (13, 0.005676356)], 0.99993896);
-                    match s {
-                        [] => true,
-                        ['p', 'm', 'i', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(13, 0.5263142), (2, 0.47368583)], 1.0);
-                            s.is_empty()
-                        }
-                        ['r', 'c', 'o', 'm', 'e', 'd', '\u{1}', s @ ..] => {
-                            out.push(&[(13, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['n', s @ ..] => {
-                    out.push(&[(2, 0.9515679), (4, 0.017563134), (13, 0.015274281), (15, 0.015274281)], 0.99967957);
-                    match s {
-                        [] => true,
-                        ['a', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(15, 0.36900893), (4, 0.33209735), (2, 0.29889372)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['m', 'o', 'r', '\u{1}', s @ ..] => {
-                                    out.push(&[(13, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['e', 'm', 'i', 'd', '\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['v', s @ ..] => {
-            out.push(&[(2, 0.88815135), (4, 0.11064317)], 0.9987945);
-            match s {
-                [] => true,
-                ['e', 'c', 's', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['l', 'o', 'b', '\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['n', 'e', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n248(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 242);
+	match s {
+		[] => true,
+		['c', s @ ..] => {
+			super::push(out, 535);
+			match s {
+				[] => true,
+				['n', s @ ..] => {
+					super::push(out, 989);
+					match s {
+						[] => true,
+						['a', 'r', '\u{1}', s @ ..] => {
+							super::push(out, 1505);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['d', s @ ..] => {
+			super::push(out, 536);
+			match s {
+				[] => true,
+				['i', s @ ..] => {
+					super::push(out, 990);
+					s.is_empty()
+				}
+				['n', s @ ..] => {
+					super::push(out, 991);
+					match s {
+						[] => true,
+						['e', s @ ..] => {
+							super::push(out, 1506);
+							match s {
+								[] => true,
+								['m', '\u{1}', s @ ..] => {
+									super::push(out, 1874);
+									s.is_empty()
+								}
+								['v', '\u{1}', s @ ..] => {
+									super::push(out, 1875);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['u', s @ ..] => {
+					super::push(out, 992);
+					match s {
+						[] => true,
+						['p', s @ ..] => {
+							super::push(out, 1507);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 1876);
+									s.is_empty()
+								}
+								['m', 'i', '\u{1}', s @ ..] => {
+									super::push(out, 1877);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['f', s @ ..] => {
+			super::push(out, 537);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 993);
+					s.is_empty()
+				}
+				['a', s @ ..] => {
+					super::push(out, 994);
+					match s {
+						[] => true,
+						['r', s @ ..] => {
+							match s {
+								[] => true,
+								['g', s @ ..] => {
+									super::push(out, 1878);
+									s.is_empty()
+								}
+								['t', 's', '\u{1}', s @ ..] => {
+									super::push(out, 1879);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['f', s @ ..] => {
+					super::push(out, 995);
+					match s {
+						[] => true,
+						['a', 'r', 't', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1508);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['i', 'c', s @ ..] => {
+					super::push(out, 996);
+					match s {
+						[] => true,
+						['a', s @ ..] => {
+							super::push(out, 1509);
+							match s {
+								[] => true,
+								['p', '-', 'o', 'd', 'n', 'i', '\u{1}', s @ ..] => {
+									super::push(out, 1880);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['à', 'r', 'g', 'o', 'l', 'a', 'g', 'e', 'm', '\u{1}', s @ ..] => {
+					super::push(out, 997);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['g', s @ ..] => {
+			super::push(out, 538);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 998);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['l', s @ ..] => {
+			super::push(out, 539);
+			match s {
+				[] => true,
+				['o', 't', s @ ..] => {
+					super::push(out, 999);
+					match s {
+						[] => true,
+						['t', 'a', 'c', '\u{1}', s @ ..] => {
+							super::push(out, 1510);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['m', s @ ..] => {
+			super::push(out, 540);
+			match s {
+				[] => true,
+				['a', '\u{1}', s @ ..] => {
+					super::push(out, 1000);
+					s.is_empty()
+				}
+				['o', s @ ..] => {
+					match s {
+						[] => true,
+						['c', s @ ..] => {
+							super::push(out, 1511);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 1881);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['n', 'o', 'c', s @ ..] => {
+							super::push(out, 1512);
+							match s {
+								[] => true,
+								['e', '\u{1}', s @ ..] => {
+									super::push(out, 1882);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['n', s @ ..] => {
+			super::push(out, 541);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 1001);
+					match s {
+						[] => true,
+						['p', s @ ..] => {
+							super::push(out, 1513);
+							match s {
+								[] => true,
+								['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+									super::push(out, 1883);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['r', s @ ..] => {
+			super::push(out, 542);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 1002);
+					match s {
+						[] => true,
+						['c', s @ ..] => {
+							super::push(out, 1514);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 1884);
+									s.is_empty()
+								}
+								['c', 'a', 'r', 'v', 'o', 's', '\u{1}', s @ ..] => {
+									super::push(out, 1885);
+									s.is_empty()
+								}
+								['s', '\u{1}', s @ ..] => {
+									super::push(out, 1886);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['t', s @ ..] => {
+					super::push(out, 1003);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['s', s @ ..] => {
+			super::push(out, 543);
+			match s {
+				[] => true,
+				['s', 'a', s @ ..] => {
+					super::push(out, 1004);
+					match s {
+						[] => true,
+						['l', 'c', '\u{1}', s @ ..] => {
+							super::push(out, 1515);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['t', s @ ..] => {
+			super::push(out, 544);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 1005);
+					match s {
+						[] => true,
+						['p', 'm', s @ ..] => {
+							super::push(out, 1516);
+							match s {
+								[] => true,
+								['i', 's', '\u{1}', s @ ..] => {
+									super::push(out, 1887);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['r', 'c', 'o', s @ ..] => {
+							super::push(out, 1517);
+							match s {
+								[] => true,
+								['m', 'e', 'd', '\u{1}', s @ ..] => {
+									super::push(out, 1888);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['n', s @ ..] => {
+					super::push(out, 1006);
+					match s {
+						[] => true,
+						['a', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 1889);
+									s.is_empty()
+								}
+								['m', s @ ..] => {
+									super::push(out, 1890);
+									match s {
+										[] => true,
+										['o', 'r', '\u{1}', s @ ..] => {
+											super::push(out, 2045);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['e', 'm', 'i', 'd', '\u{1}', s @ ..] => {
+							super::push(out, 1518);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['s', s @ ..] => {
+					super::push(out, 1007);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['v', s @ ..] => {
+			super::push(out, 545);
+			match s {
+				[] => true,
+				['e', s @ ..] => {
+					super::push(out, 1008);
+					match s {
+						[] => true,
+						['c', s @ ..] => {
+							super::push(out, 1519);
+							match s {
+								[] => true,
+								['s', s @ ..] => {
+									match s {
+										[] => true,
+										['l', 'o', 'b', '\u{1}', s @ ..] => {
+											super::push(out, 2046);
+											s.is_empty()
+										}
+										['n', 'e', 'm', '\u{1}', s @ ..] => {
+											super::push(out, 2047);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -lco.
-pub(crate) fn n195(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(2, 0.7742275), (4, 0.21945526), (5, 0.002731365)], 0.9964141);
-    match s {
-        [] => true,
-        ['o', 'd', '\u{1}', s @ ..] => {
-            out.push(&[(4, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['u', s @ ..] => {
-            match s {
-                [] => true,
-                ['s', 'i', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['b', '\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['r', 't', '\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['t', 'e', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(4, 0.6666667), (2, 0.33333334)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n249(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 243);
+	match s {
+		[] => true,
+		['o', 'd', '\u{1}', s @ ..] => {
+			super::push(out, 546);
+			s.is_empty()
+		}
+		['u', s @ ..] => {
+			super::push(out, 547);
+			match s {
+				[] => true,
+				['s', s @ ..] => {
+					super::push(out, 1009);
+					match s {
+						[] => true,
+						['i', s @ ..] => {
+							super::push(out, 1520);
+							match s {
+								[] => true,
+								['b', '\u{1}', s @ ..] => {
+									super::push(out, 1891);
+									s.is_empty()
+								}
+								['r', 't', '\u{1}', s @ ..] => {
+									super::push(out, 1892);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['t', 'e', 'p', '\u{1}', s @ ..] => {
+					super::push(out, 1010);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
-/// Words ending -anco.
-pub(crate) fn n490(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['i', 'b', '\u{1}', s @ ..] => {
-            out.push(&[(15, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['t', 's', '\u{1}', s @ ..] => {
-            out.push(&[(15, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+/// Words ending -nco.
+pub(crate) fn n250(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 244);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 548);
+			match s {
+				[] => true,
+				['i', 'b', '\u{1}', s @ ..] => {
+					super::push(out, 1011);
+					s.is_empty()
+				}
+				['t', 's', '\u{1}', s @ ..] => {
+					super::push(out, 1012);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['i', s @ ..] => {
+			super::push(out, 549);
+			match s {
+				[] => true,
+				['r', '\u{1}', s @ ..] => {
+					super::push(out, 1013);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['o', s @ ..] => {
+			super::push(out, 550);
+			match s {
+				[] => true,
+				['c', s @ ..] => {
+					super::push(out, 1014);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -oco.
-pub(crate) fn n197(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(2, 0.6807202), (5, 0.18948653), (4, 0.12814526)], 0.998352);
-    match s {
-        [] => true,
-        ['i', 'f', '\u{1}', s @ ..] => {
-            out.push(&[(4, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['p', 'p', 'a', 'd', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['r', '\u{1}', s @ ..] => {
-            out.push(&[(4, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['u', s @ ..] => {
-            out.push(&[(2, 0.4950637), (5, 0.41052872), (4, 0.09318685)], 0.99877924);
-            match s {
-                [] => true,
-                ['f', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['i', 'l', 'g', 'a', 't', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['t', 'u', 'p', 's', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['z', 'z', 'i', 'b', '\u{1}', s @ ..] => {
-            out.push(&[(4, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n251(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 245);
+	match s {
+		[] => true,
+		['i', 'f', '\u{1}', s @ ..] => {
+			super::push(out, 551);
+			s.is_empty()
+		}
+		['p', 'p', 'a', 'd', '\u{1}', s @ ..] => {
+			super::push(out, 552);
+			s.is_empty()
+		}
+		['r', s @ ..] => {
+			super::push(out, 553);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 1015);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['u', s @ ..] => {
+			super::push(out, 554);
+			match s {
+				[] => true,
+				['f', s @ ..] => {
+					super::push(out, 1016);
+					match s {
+						[] => true,
+						['a', s @ ..] => {
+							super::push(out, 1521);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['v', s @ ..] => {
+			super::push(out, 555);
+			match s {
+				[] => true,
+				['i', s @ ..] => {
+					super::push(out, 1017);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['z', 'z', 'i', 'b', '\u{1}', s @ ..] => {
+			super::push(out, 556);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -rco.
-pub(crate) fn n198(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(2, 0.48372626), (4, 0.45560387), (15, 0.057145037)], 0.99647516);
-    match s {
-        [] => true,
-        ['o', 'p', s @ ..] => {
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(2, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['s', '\u{1}', s @ ..] => {
-                    out.push(&[(15, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n252(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 246);
+	match s {
+		[] => true,
+		['e', s @ ..] => {
+			super::push(out, 557);
+			match s {
+				[] => true,
+				['c', s @ ..] => {
+					super::push(out, 1018);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['o', s @ ..] => {
+			super::push(out, 558);
+			match s {
+				[] => true,
+				['p', s @ ..] => {
+					super::push(out, 1019);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1522);
+							s.is_empty()
+						}
+						['s', '\u{1}', s @ ..] => {
+							super::push(out, 1523);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['u', s @ ..] => {
+			super::push(out, 559);
+			match s {
+				[] => true,
+				['t', s @ ..] => {
+					super::push(out, 1020);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -sco.
-pub(crate) fn n199(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(4, 0.95184255), (2, 0.03607233), (5, 0.008010986), (15, 0.003952087)], 0.9998779);
-    match s {
-        [] => true,
-        ['a', 'c', s @ ..] => {
-            out.push(&[(4, 0.84608227), (5, 0.1182269), (2, 0.032059204), (15, 0.003509575)], 0.9998779);
-            match s {
-                [] => true,
-                ['a', 't', 'r', 'o', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['e', s @ ..] => {
-            out.push(&[(4, 0.9938048), (15, 0.0046082246)], 0.998413);
-            match s {
-                [] => true,
-                ['r', 'f', s @ ..] => {
-                    out.push(&[(4, 0.88339055), (15, 0.115205616)], 0.9985962);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(15, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['i', 'd', s @ ..] => {
-            out.push(&[(4, 0.84608227), (5, 0.1182269), (2, 0.032059204), (15, 0.003509575)], 0.9998779);
-            match s {
-                [] => true,
-                ['o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['l', 'o', 'v', '\u{1}', s @ ..] => {
-            out.push(&[(2, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['o', '\u{1}', s @ ..] => {
-            out.push(&[(2, 0.6666667), (4, 0.33333334)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n253(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 247);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 560);
+			match s {
+				[] => true,
+				['c', 'a', 't', 'r', 'o', 'p', '\u{1}', s @ ..] => {
+					super::push(out, 1021);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['e', s @ ..] => {
+			super::push(out, 561);
+			match s {
+				[] => true,
+				['r', s @ ..] => {
+					super::push(out, 1022);
+					match s {
+						[] => true,
+						['f', '\u{1}', s @ ..] => {
+							super::push(out, 1524);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['i', s @ ..] => {
+			super::push(out, 562);
+			match s {
+				[] => true,
+				['d', 'o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
+					super::push(out, 1023);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['l', 'o', 'v', '\u{1}', s @ ..] => {
+			super::push(out, 563);
+			s.is_empty()
+		}
+		['o', '\u{1}', s @ ..] => {
+			super::push(out, 564);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -uco.
-pub(crate) fn n200(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(2, 0.66358435), (4, 0.24203861), (21, 0.0888838), (5, 0.0023651484)], 0.9968719);
-    match s {
-        [] => true,
-        ['a', s @ ..] => {
-            match s {
-                [] => true,
-                ['l', 'g', '\u{1}', s @ ..] => {
-                    out.push(&[(4, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', '\u{1}', s @ ..] => {
-                    out.push(&[(4, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['d', 'a', 'c', '\u{1}', s @ ..] => {
-            out.push(&[(21, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['i', 'c', '\u{1}', s @ ..] => {
-            out.push(&[(4, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n254(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 248);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 565);
+			match s {
+				[] => true,
+				['l', 'g', '\u{1}', s @ ..] => {
+					super::push(out, 1024);
+					s.is_empty()
+				}
+				['r', '\u{1}', s @ ..] => {
+					super::push(out, 1025);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['d', 'a', 'c', '\u{1}', s @ ..] => {
+			super::push(out, 566);
+			s.is_empty()
+		}
+		['i', 'c', '\u{1}', s @ ..] => {
+			super::push(out, 567);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -do.
-pub(crate) fn n64(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.84510565), (10, 0.10498207), (5, 0.037201494), (2, 0.010025177)], 0.9973144);
-    match s {
-        [] => true,
-        ['d', 'e', 'r', 'f', s @ ..] => {
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['i', s @ ..] => {
-            out.push(&[(0, 0.8255741), (10, 0.16122682), (5, 0.012237736)], 0.99903864);
-            match s {
-                [] => true,
-                ['b', 'r', 'o', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['c', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', 'i', s @ ..] => {
-                            out.push(&[(0, 0.7338369), (10, 0.14331274), (5, 0.12199588)], 0.9991455);
-                            match s {
-                                [] => true,
-                                ['t', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['s', 'i', 'v', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['d', 'n', 'a', 'c', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['g', 'i', 'r', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['l', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', 'v', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['l', 'a', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['m', 'i', 't', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['p', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', 'r', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['i', 'r', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['m', 'i', 'l', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['r', 'o', 'l', 'f', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['u', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['l', 'f', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['q', 'i', 'l', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['v', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['r', 'e', 'f', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['v', 'o', 'r', 'p', 'm', 'i', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['l', s @ ..] => {
-            out.push(&[(0, 0.6323339), (10, 0.19928282), (5, 0.16124208), (2, 0.0056305793)], 0.9984894);
-            match s {
-                [] => true,
-                ['a', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['c', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['r', 'e', 'm', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['s', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['n', s @ ..] => {
-            match s {
-                [] => true,
-                ['a', 'm', 'o', 'c', 'o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['e', 'r', 'e', 'v', 'e', 'r', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['o', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['f', 'o', 'r', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['i', 'b', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['o', 'm', s @ ..] => {
-            out.push(&[(0, 0.5808652), (10, 0.22719158), (5, 0.18381017), (2, 0.0064240484)], 0.998291);
-            match s {
-                [] => true,
-                ['i', 's', 'a', 'u', 'q', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['m', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['o', 'c', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['s', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['r', s @ ..] => {
-            match s {
-                [] => true,
-                ['a', 'i', 'l', 'g', 'a', 'g', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['o', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['b', s @ ..] => {
-                            out.push(&[(0, 0.6760815), (5, 0.22975509), (10, 0.08398566), (2, 0.008026246)], 0.99784845);
-                            match s {
-                                [] => true,
-                                ['i', 'r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['o', 'r', 't', 'n', 'e', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['c', 'c', 'a', 'd', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['u', 's', 's', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n76(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 76);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 249);
+			s.is_empty()
+		}
+		['d', s @ ..] => {
+			super::push(out, 250);
+			match s {
+				[] => true,
+				['e', 'r', 'f', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1026);
+							s.is_empty()
+						}
+						['i', s @ ..] => {
+							super::push(out, 1027);
+							match s {
+								[] => true,
+								['t', 'n', 'a', '\u{1}', s @ ..] => {
+									super::push(out, 1525);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['i', s @ ..] => {
+			super::push(out, 251);
+			match s {
+				[] => true,
+				['b', 'r', 'o', 'm', '\u{1}', s @ ..] => {
+					super::push(out, 568);
+					s.is_empty()
+				}
+				['c', s @ ..] => {
+					super::push(out, 569);
+					match s {
+						[] => true,
+						['a', s @ ..] => {
+							super::push(out, 1028);
+							match s {
+								[] => true,
+								['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+									super::push(out, 1526);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['s', s @ ..] => {
+							super::push(out, 1029);
+							match s {
+								[] => true,
+								['i', 'v', '\u{1}', s @ ..] => {
+									super::push(out, 1527);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['u', s @ ..] => {
+							super::push(out, 1030);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['d', 'n', 'a', 'c', '\u{1}', s @ ..] => {
+					super::push(out, 570);
+					s.is_empty()
+				}
+				['f', s @ ..] => {
+					super::push(out, 571);
+					s.is_empty()
+				}
+				['g', 'i', 'r', '\u{1}', s @ ..] => {
+					super::push(out, 572);
+					s.is_empty()
+				}
+				['l', s @ ..] => {
+					match s {
+						[] => true,
+						['a', 'v', '\u{1}', s @ ..] => {
+							super::push(out, 1031);
+							s.is_empty()
+						}
+						['l', 'a', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 1032);
+							s.is_empty()
+						}
+						['o', 's', '\u{1}', s @ ..] => {
+							super::push(out, 1033);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['m', 'i', 't', '\u{1}', s @ ..] => {
+					super::push(out, 573);
+					s.is_empty()
+				}
+				['p', s @ ..] => {
+					match s {
+						[] => true,
+						['a', 'r', '\u{1}', s @ ..] => {
+							super::push(out, 1034);
+							s.is_empty()
+						}
+						['i', 'r', '\u{1}', s @ ..] => {
+							super::push(out, 1035);
+							s.is_empty()
+						}
+						['m', 'i', 'l', '\u{1}', s @ ..] => {
+							super::push(out, 1036);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['r', 'o', 'l', 'f', '\u{1}', s @ ..] => {
+					super::push(out, 574);
+					s.is_empty()
+				}
+				['u', s @ ..] => {
+					match s {
+						[] => true,
+						['l', 'f', '\u{1}', s @ ..] => {
+							super::push(out, 1037);
+							s.is_empty()
+						}
+						['q', 'i', 'l', '\u{1}', s @ ..] => {
+							super::push(out, 1038);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['v', s @ ..] => {
+					match s {
+						[] => true,
+						['a', '\u{1}', s @ ..] => {
+							super::push(out, 1039);
+							s.is_empty()
+						}
+						['r', s @ ..] => {
+							super::push(out, 1040);
+							match s {
+								[] => true,
+								['e', 'f', '\u{1}', s @ ..] => {
+									super::push(out, 1528);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['v', 'o', 'r', 'p', 'm', 'i', '\u{1}', s @ ..] => {
+							super::push(out, 1041);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['l', s @ ..] => {
+			super::push(out, 252);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 575);
+					match s {
+						[] => true,
+						['c', s @ ..] => {
+							super::push(out, 1042);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 1529);
+									s.is_empty()
+								}
+								['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+									super::push(out, 1530);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['r', 'e', 'm', 's', '\u{1}', s @ ..] => {
+							super::push(out, 1043);
+							s.is_empty()
+						}
+						['s', '\u{1}', s @ ..] => {
+							super::push(out, 1044);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['n', s @ ..] => {
+			super::push(out, 253);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 576);
+					match s {
+						[] => true,
+						['m', s @ ..] => {
+							super::push(out, 1045);
+							match s {
+								[] => true,
+								['o', 'c', 'o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
+									super::push(out, 1531);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['e', 'r', s @ ..] => {
+					super::push(out, 577);
+					match s {
+						[] => true,
+						['e', 'v', 'e', 'r', '\u{1}', s @ ..] => {
+							super::push(out, 1046);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['o', s @ ..] => {
+					match s {
+						[] => true,
+						['f', s @ ..] => {
+							super::push(out, 1047);
+							match s {
+								[] => true,
+								['o', 'r', 'p', '\u{1}', s @ ..] => {
+									super::push(out, 1532);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['i', s @ ..] => {
+							super::push(out, 1048);
+							match s {
+								[] => true,
+								['b', '\u{1}', s @ ..] => {
+									super::push(out, 1533);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['o', s @ ..] => {
+			super::push(out, 254);
+			match s {
+				[] => true,
+				['m', s @ ..] => {
+					super::push(out, 578);
+					match s {
+						[] => true,
+						['i', 's', 'a', 'u', 'q', '\u{1}', s @ ..] => {
+							super::push(out, 1049);
+							s.is_empty()
+						}
+						['m', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1050);
+							s.is_empty()
+						}
+						['o', s @ ..] => {
+							super::push(out, 1051);
+							match s {
+								[] => true,
+								['c', s @ ..] => {
+									super::push(out, 1534);
+									match s {
+										[] => true,
+										['s', 'i', 'd', '\u{1}', s @ ..] => {
+											super::push(out, 1893);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['p', s @ ..] => {
+					super::push(out, 579);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['r', s @ ..] => {
+			super::push(out, 255);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 580);
+					match s {
+						[] => true,
+						['i', 'l', s @ ..] => {
+							super::push(out, 1052);
+							match s {
+								[] => true,
+								['g', 'a', 'g', '\u{1}', s @ ..] => {
+									super::push(out, 1535);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['o', s @ ..] => {
+					super::push(out, 581);
+					match s {
+						[] => true,
+						['b', s @ ..] => {
+							super::push(out, 1053);
+							match s {
+								[] => true,
+								['i', 'r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
+									super::push(out, 1536);
+									s.is_empty()
+								}
+								['o', 'r', 't', 'n', 'e', '\u{1}', s @ ..] => {
+									super::push(out, 1537);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['c', 'c', 'a', 'd', '\u{1}', s @ ..] => {
+							super::push(out, 1054);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['u', s @ ..] => {
+					super::push(out, 582);
+					match s {
+						[] => true,
+						['s', 's', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1055);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['u', s @ ..] => {
+			super::push(out, 256);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -eo.
-pub(crate) fn n65(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.9840543), (5, 0.0076752882), (2, 0.006225681)], 0.9979553);
-    match s {
-        [] => true,
-        ['l', 'c', 'u', s @ ..] => {
-            out.push(&[(0, 0.8747082), (5, 0.11793698), (2, 0.005539025)], 0.9981842);
-            match s {
-                [] => true,
-                ['n', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['r', 'e', 't', 's', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['t', 'e', 'm', s @ ..] => {
-            out.push(&[(0, 0.8747082), (5, 0.11793698), (2, 0.005539025)], 0.9981842);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n77(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 77);
+	match s {
+		[] => true,
+		['c', s @ ..] => {
+			super::push(out, 257);
+			s.is_empty()
+		}
+		['l', s @ ..] => {
+			super::push(out, 258);
+			match s {
+				[] => true,
+				['c', 'u', 'n', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 583);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['n', s @ ..] => {
+			super::push(out, 259);
+			s.is_empty()
+		}
+		['r', 'e', s @ ..] => {
+			super::push(out, 260);
+			match s {
+				[] => true,
+				['t', s @ ..] => {
+					super::push(out, 584);
+					match s {
+						[] => true,
+						['s', '\u{1}', s @ ..] => {
+							super::push(out, 1056);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['t', s @ ..] => {
+			super::push(out, 261);
+			match s {
+				[] => true,
+				['e', s @ ..] => {
+					super::push(out, 585);
+					match s {
+						[] => true,
+						['m', '\u{1}', s @ ..] => {
+							super::push(out, 1057);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -fo.
-pub(crate) fn n66(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.949218), (2, 0.028747998), (10, 0.013153277), (9, 0.00468452), (4, 0.002151522)], 0.9979553);
-    match s {
-        [] => true,
-        ['f', 'u', 'b', s @ ..] => {
-            out.push(&[(0, 0.8437476), (10, 0.12280461), (2, 0.025558861), (9, 0.004165713)], 0.9962768);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n78(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 78);
+	match s {
+		[] => true,
+		['f', s @ ..] => {
+			super::push(out, 262);
+			match s {
+				[] => true,
+				['u', 'b', '\u{1}', s @ ..] => {
+					super::push(out, 586);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['r', s @ ..] => {
+			super::push(out, 263);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -go.
-pub(crate) fn n67(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(4, 0.5708858), (2, 0.32446784), (0, 0.04121462), (15, 0.029480431), (5, 0.028168155), (9, 0.0037232013)], 0.99794);
-    match s {
-        [] => true,
-        ['a', s @ ..] => {
-            out.push(&[(2, 0.64721143), (4, 0.31659418), (15, 0.0243534), (0, 0.0065003433), (5, 0.0044403756)], 0.99909973);
-            match s {
-                [] => true,
-                ['f', s @ ..] => {
-                    out.push(&[(2, 0.87475395), (4, 0.11808957), (15, 0.004806592)], 0.9976501);
-                    match s {
-                        [] => true,
-                        ['i', 'n', 'i', 'l', 'l', 'o', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['l', 'i', 's', '\u{1}', s @ ..] => {
-                                    out.push(&[(4, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['o', 'z', '\u{1}', s @ ..] => {
-                                    out.push(&[(4, 0.6666667), (2, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['i', 'r', 'a', 'v', '\u{1}', s @ ..] => {
-                    out.push(&[(4, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['m', '\u{1}', s @ ..] => {
-                    out.push(&[(4, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['p', '\u{1}', s @ ..] => {
-                    out.push(&[(4, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', 'f', 'i', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['d', 'e', 'f', '\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['t', 't', 'e', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['s', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['e', 'r', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(4, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['v', s @ ..] => {
-                    out.push(&[(4, 0.5461509), (2, 0.36334783), (15, 0.08384833), (0, 0.0036469062), (5, 0.0024872206)], 0.9994812);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(15, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['e', 'i', 'v', 'a', 'n', 'o', 'e', '\u{1}', s @ ..] => {
-            out.push(&[(2, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['i', s @ ..] => {
-            match s {
-                [] => true,
-                ['f', '\u{1}', s @ ..] => {
-                    out.push(&[(15, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['p', 'o', 't', 'a', 'e', 't', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(2, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['n', s @ ..] => {
-            out.push(&[(4, 0.7321431), (5, 0.11622797), (2, 0.09353781), (15, 0.044541083), (0, 0.011886778)], 0.99833673);
-            match s {
-                [] => true,
-                ['a', 'f', 'a', 't', 'r', 'o', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['o', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['u', 'l', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(15, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', 'c', 'c', 'e', 'b', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['o', s @ ..] => {
-            out.push(&[(4, 0.8051423), (2, 0.15805295), (0, 0.014496071), (15, 0.010360876), (5, 0.009903105)], 0.99795526);
-            match s {
-                [] => true,
-                ['r', 'b', 'o', 'l', 'l', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(2, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['r', 'a', 'l', '\u{1}', s @ ..] => {
-            out.push(&[(15, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['u', s @ ..] => {
-            out.push(&[(4, 0.8365301), (2, 0.123613335), (0, 0.015701534), (15, 0.01123064), (5, 0.010727093)], 0.9978027);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n79(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 79);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 264);
+			match s {
+				[] => true,
+				['f', s @ ..] => {
+					super::push(out, 587);
+					match s {
+						[] => true,
+						['i', 'n', 'i', 'l', 'l', 'o', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 1058);
+							s.is_empty()
+						}
+						['o', s @ ..] => {
+							super::push(out, 1059);
+							match s {
+								[] => true,
+								['l', 'i', 's', '\u{1}', s @ ..] => {
+									super::push(out, 1538);
+									s.is_empty()
+								}
+								['o', 'z', '\u{1}', s @ ..] => {
+									super::push(out, 1539);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['i', 'r', 'a', 'v', '\u{1}', s @ ..] => {
+					super::push(out, 588);
+					s.is_empty()
+				}
+				['m', '\u{1}', s @ ..] => {
+					super::push(out, 589);
+					s.is_empty()
+				}
+				['p', '\u{1}', s @ ..] => {
+					super::push(out, 590);
+					s.is_empty()
+				}
+				['r', s @ ..] => {
+					super::push(out, 591);
+					match s {
+						[] => true,
+						['f', s @ ..] => {
+							super::push(out, 1060);
+							match s {
+								[] => true,
+								['i', s @ ..] => {
+									match s {
+										[] => true,
+										['d', 'e', 'f', '\u{1}', s @ ..] => {
+											super::push(out, 1894);
+											s.is_empty()
+										}
+										['t', 't', 'e', 's', '\u{1}', s @ ..] => {
+											super::push(out, 1895);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['s', s @ ..] => {
+					super::push(out, 592);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1061);
+							s.is_empty()
+						}
+						['e', 'r', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 1062);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['v', s @ ..] => {
+					super::push(out, 593);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1063);
+							s.is_empty()
+						}
+						['i', s @ ..] => {
+							super::push(out, 1064);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['e', s @ ..] => {
+			super::push(out, 265);
+			match s {
+				[] => true,
+				['i', 'v', 'a', 'n', 'o', 'e', '\u{1}', s @ ..] => {
+					super::push(out, 594);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['i', s @ ..] => {
+			match s {
+				[] => true,
+				['f', '\u{1}', s @ ..] => {
+					super::push(out, 595);
+					s.is_empty()
+				}
+				['p', 'o', 't', 'a', 'e', 't', 's', '\u{1}', s @ ..] => {
+					super::push(out, 596);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['n', s @ ..] => {
+			super::push(out, 266);
+			match s {
+				[] => true,
+				['a', 'f', 'a', 't', 'r', 'o', 'p', '\u{1}', s @ ..] => {
+					super::push(out, 597);
+					s.is_empty()
+				}
+				['e', s @ ..] => {
+					super::push(out, 598);
+					s.is_empty()
+				}
+				['i', s @ ..] => {
+					super::push(out, 599);
+					s.is_empty()
+				}
+				['o', 'm', '\u{1}', s @ ..] => {
+					super::push(out, 600);
+					s.is_empty()
+				}
+				['u', s @ ..] => {
+					super::push(out, 601);
+					match s {
+						[] => true,
+						['l', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 1540);
+									s.is_empty()
+								}
+								['o', 'c', 'c', 'e', 'b', '\u{1}', s @ ..] => {
+									super::push(out, 1541);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['o', s @ ..] => {
+			super::push(out, 267);
+			match s {
+				[] => true,
+				['g', s @ ..] => {
+					super::push(out, 602);
+					s.is_empty()
+				}
+				['l', s @ ..] => {
+					super::push(out, 603);
+					s.is_empty()
+				}
+				['r', 'b', 'o', 'l', 'l', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 604);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['r', s @ ..] => {
+			super::push(out, 268);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 605);
+					match s {
+						[] => true,
+						['l', '\u{1}', s @ ..] => {
+							super::push(out, 1065);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['u', s @ ..] => {
+			super::push(out, 269);
+			match s {
+				[] => true,
+				['f', s @ ..] => {
+					super::push(out, 606);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
-/// Words ending -ho.
-pub(crate) fn n68(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.5048142), (2, 0.28027773), (5, 0.122880906), (9, 0.045639735), (4, 0.02104219), (10, 0.017090105), (7, 0.006164645)], 0.99790955);
-    match s {
-        [] => true,
-        ['c', 'a', 'm', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+/// The word macho.
+pub(crate) fn n80(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 80);
+	s.is_empty()
 }
 
 /// Words ending -io.
-pub(crate) fn n69(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(9, 0.8194858), (7, 0.11068895), (5, 0.035538264), (0, 0.024628062), (25, 0.0029144732), (2, 0.0024414435)], 0.99569696);
-    match s {
-        [] => true,
-        ['a', s @ ..] => {
-            out.push(&[(9, 0.96043336), (7, 0.024261845), (5, 0.007782101), (0, 0.0054016938)], 0.997879);
-            s.is_empty()
-        }
-        ['b', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['c', s @ ..] => {
-            out.push(&[(7, 0.8163577), (9, 0.124895096), (5, 0.03367666), (0, 0.014648661), (28, 0.0078583965)], 0.99743646);
-            match s {
-                [] => true,
-                ['a', s @ ..] => {
-                    out.push(&[(7, 0.54422826), (9, 0.27769893), (0, 0.14865339), (5, 0.022446021), (28, 0.0052338447)], 0.99826044);
-                    match s {
-                        [] => true,
-                        ['b', '\u{1}', s @ ..] => {
-                            out.push(&[(0, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['r', 't', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(0, 0.6666667), (9, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['a', '\u{1}', s @ ..] => {
-                                    out.push(&[(9, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['s', '\u{1}', s @ ..] => {
-                            out.push(&[(9, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['c', s @ ..] => {
-                    out.push(&[(7, 0.9586938), (5, 0.027023727), (9, 0.011886778)], 0.9976043);
-                    match s {
-                        [] => true,
-                        ['a', 'i', 'h', 'g', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', 't', 'n', 'a', 'f', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['e', s @ ..] => {
-                    out.push(&[(7, 0.7256428), (28, 0.11810483), (9, 0.11100938), (5, 0.0299382), (0, 0.013015945)], 0.9977112);
-                    s.is_empty()
-                }
-                ['i', s @ ..] => {
-                    out.push(&[(7, 0.63430226), (9, 0.3160296), (5, 0.018585488), (47, 0.011490043), (0, 0.008087282), (48, 0.0057526515), (28, 0.004333562)], 0.9985809);
-                    match s {
-                        [] => true,
-                        ['f', 'i', 't', 'n', 'o', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(9, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['n', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['e', 'f', '\u{1}', s @ ..] => {
-                                    out.push(&[(9, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['i', 'p', 'e', '\u{1}', s @ ..] => {
-                                    out.push(&[(9, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['r', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['b', 's', '\u{1}', s @ ..] => {
-                                    out.push(&[(47, 0.6666667), (48, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['f', 'i', 't', 'n', 'e', 'd', '\u{1}', s @ ..] => {
-                                    out.push(&[(9, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['n', 'a', 'r', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['o', 'r', 'f', '\u{1}', s @ ..] => {
-                    out.push(&[(9, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['s', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['e', 'n', '\u{1}', s @ ..] => {
-                            out.push(&[(9, 0.6666667), (7, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['n', 'o', 'c', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(9, 0.6666667), (7, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['e', 'r', 'p', '\u{1}', s @ ..] => {
-                                    out.push(&[(9, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['u', 'g', 'o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['u', 'r', 't', '\u{1}', s @ ..] => {
-                    out.push(&[(9, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['d', s @ ..] => {
-            out.push(&[(9, 0.6478218), (5, 0.23337148), (0, 0.060608834), (7, 0.031631954), (33, 0.023804074)], 0.9972381);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(0, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['a', 't', s @ ..] => {
-                    out.push(&[(5, 0.4889143), (9, 0.43189135), (0, 0.04040589), (7, 0.021087969), (33, 0.015869383)], 0.9981689);
-                    match s {
-                        [] => true,
-                        ['s', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['i', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['l', 'o', 'p', '\u{1}', s @ ..] => {
-                                            out.push(&[(5, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['r', 'u', 'l', 'p', '\u{1}', s @ ..] => {
-                                            out.push(&[(5, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['t', 'l', 'u', 'm', '\u{1}', s @ ..] => {
-                                            out.push(&[(5, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['i', 'd', 'e', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(0, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['n', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['e', 'c', 'n', 'i', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['t', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['i', '\u{1}', s @ ..] => {
-                            out.push(&[(33, 0.6666667), (9, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['u', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['i', 'g', '\u{1}', s @ ..] => {
-                            out.push(&[(0, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['f', 'f', 'a', 'r', 'g', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['g', s @ ..] => {
-            out.push(&[(9, 0.49832913), (7, 0.28813612), (5, 0.20082399), (38, 0.006057832), (0, 0.004776074)], 0.99812317);
-            match s {
-                [] => true,
-                ['g', s @ ..] => {
-                    out.push(&[(5, 0.4357824), (7, 0.331899), (9, 0.21451133), (38, 0.015106432)], 0.99729913);
-                    match s {
-                        [] => true,
-                        ['a', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['c', 'c', 'o', 'l', 'b', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['l', 'c', 'i', 'c', 'i', 'r', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['m', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            out.push(&[(38, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['o', '\u{1}', s @ ..] => {
-                                            out.push(&[(5, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['n', 'i', 't', 't', 'a', 'p', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['s', '\u{1}', s @ ..] => {
-                                    out.push(&[(7, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['t', 'o', 'b', 'a', 's', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['v', 'l', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['a', 's', '\u{1}', s @ ..] => {
-                                            out.push(&[(7, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['e', 's', s @ ..] => {
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    out.push(&[(7, 1.0)], 1.0);
-                                                    s.is_empty()
-                                                }
-                                                ['i', 'm', 'e', 's', '\u{1}', s @ ..] => {
-                                                    out.push(&[(7, 1.0)], 1.0);
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['e', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['h', 'c', 'c', 'a', 't', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['p', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['r', 'g', '\u{1}', s @ ..] => {
-                                    out.push(&[(7, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['o', 'r', '\u{1}', s @ ..] => {
-                            out.push(&[(9, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['i', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['b', '\u{1}', s @ ..] => {
-                            out.push(&[(7, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['d', 'o', 'r', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['n', 'i', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['r', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['a', 't', 'o', 'l', '\u{1}', s @ ..] => {
-                                    out.push(&[(7, 0.6666667), (9, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['u', 't', '\u{1}', s @ ..] => {
-                                    out.push(&[(7, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['t', 'e', 'p', 'a', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(7, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['u', 't', 't', 'a', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(7, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['h', s @ ..] => super::t0::n225(s, out),
-        ['l', s @ ..] => super::t0::n226(s, out),
-        ['n', s @ ..] => super::t0::n227(s, out),
-        ['p', s @ ..] => super::t0::n228(s, out),
-        ['r', s @ ..] => super::t0::n229(s, out),
-        ['s', s @ ..] => super::t0::n230(s, out),
-        ['t', s @ ..] => super::t0::n231(s, out),
-        ['v', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['z', s @ ..] => {
-            out.push(&[(9, 0.96211183), (5, 0.019913023), (7, 0.01373312), (0, 0.0030518044)], 0.99880975);
-            match s {
-                [] => true,
-                ['a', 'p', 's', 'a', 'v', 'l', 'a', 's', '\u{1}', s @ ..] => super::t0::n580(s, out),
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n81(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 81);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 270);
+			s.is_empty()
+		}
+		['b', s @ ..] => {
+			super::push(out, 271);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 607);
+					s.is_empty()
+				}
+				['o', s @ ..] => {
+					super::push(out, 608);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['c', s @ ..] => {
+			super::push(out, 272);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 609);
+					match s {
+						[] => true,
+						['b', '\u{1}', s @ ..] => {
+							super::push(out, 1066);
+							s.is_empty()
+						}
+						['r', s @ ..] => {
+							super::push(out, 1067);
+							match s {
+								[] => true,
+								['t', s @ ..] => {
+									super::push(out, 1542);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 1896);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['s', '\u{1}', s @ ..] => {
+							super::push(out, 1068);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['c', s @ ..] => {
+					super::push(out, 610);
+					match s {
+						[] => true,
+						['a', s @ ..] => {
+							super::push(out, 1069);
+							match s {
+								[] => true,
+								['i', s @ ..] => {
+									super::push(out, 1543);
+									match s {
+										[] => true,
+										['h', s @ ..] => {
+											super::push(out, 1897);
+											match s {
+												[] => true,
+												['g', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+													super::push(out, 2048);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['i', s @ ..] => {
+							super::push(out, 1070);
+							s.is_empty()
+						}
+						['o', s @ ..] => {
+							super::push(out, 1071);
+							match s {
+								[] => true,
+								['t', 'n', 'a', 'f', '\u{1}', s @ ..] => {
+									super::push(out, 1544);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['i', s @ ..] => {
+					super::push(out, 611);
+					match s {
+						[] => true,
+						['f', 'i', 't', 'n', 'o', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 1072);
+							s.is_empty()
+						}
+						['n', s @ ..] => {
+							super::push(out, 1073);
+							match s {
+								[] => true,
+								['e', 'f', '\u{1}', s @ ..] => {
+									super::push(out, 1545);
+									s.is_empty()
+								}
+								['i', 'p', 'e', '\u{1}', s @ ..] => {
+									super::push(out, 1546);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['r', s @ ..] => {
+							super::push(out, 1074);
+							match s {
+								[] => true,
+								['b', 's', '\u{1}', s @ ..] => {
+									super::push(out, 1547);
+									s.is_empty()
+								}
+								['f', 'i', 't', 'n', 'e', 'd', '\u{1}', s @ ..] => {
+									super::push(out, 1548);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['n', s @ ..] => {
+					super::push(out, 612);
+					match s {
+						[] => true,
+						['a', s @ ..] => {
+							super::push(out, 1075);
+							match s {
+								[] => true,
+								['r', s @ ..] => {
+									super::push(out, 1549);
+									match s {
+										[] => true,
+										['a', '\u{1}', s @ ..] => {
+											super::push(out, 1898);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['o', 'r', 'f', '\u{1}', s @ ..] => {
+					super::push(out, 613);
+					s.is_empty()
+				}
+				['s', s @ ..] => {
+					match s {
+						[] => true,
+						['e', 'n', '\u{1}', s @ ..] => {
+							super::push(out, 1076);
+							s.is_empty()
+						}
+						['n', s @ ..] => {
+							super::push(out, 1077);
+							match s {
+								[] => true,
+								['o', 'c', s @ ..] => {
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 1899);
+											s.is_empty()
+										}
+										['e', 'r', 'p', '\u{1}', s @ ..] => {
+											super::push(out, 1900);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['u', s @ ..] => {
+							super::push(out, 1078);
+							match s {
+								[] => true,
+								['g', 'o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
+									super::push(out, 1550);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['u', 'r', 't', '\u{1}', s @ ..] => {
+					super::push(out, 614);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['d', s @ ..] => {
+			super::push(out, 273);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 615);
+					s.is_empty()
+				}
+				['a', s @ ..] => {
+					super::push(out, 616);
+					match s {
+						[] => true,
+						['t', s @ ..] => {
+							super::push(out, 1079);
+							match s {
+								[] => true,
+								['s', s @ ..] => {
+									super::push(out, 1551);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['e', s @ ..] => {
+					super::push(out, 617);
+					s.is_empty()
+				}
+				['i', s @ ..] => {
+					super::push(out, 618);
+					match s {
+						[] => true,
+						['d', 'e', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 1080);
+							s.is_empty()
+						}
+						['l', s @ ..] => {
+							super::push(out, 1081);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['n', s @ ..] => {
+					super::push(out, 619);
+					match s {
+						[] => true,
+						['e', s @ ..] => {
+							super::push(out, 1082);
+							match s {
+								[] => true,
+								['c', s @ ..] => {
+									super::push(out, 1552);
+									match s {
+										[] => true,
+										['n', s @ ..] => {
+											super::push(out, 1901);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['i', s @ ..] => {
+							super::push(out, 1083);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 1553);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['u', s @ ..] => {
+					super::push(out, 620);
+					match s {
+						[] => true,
+						['a', '\u{1}', s @ ..] => {
+							super::push(out, 1084);
+							s.is_empty()
+						}
+						['i', 'g', '\u{1}', s @ ..] => {
+							super::push(out, 1085);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['f', s @ ..] => {
+			super::push(out, 274);
+			match s {
+				[] => true,
+				['f', s @ ..] => {
+					super::push(out, 621);
+					match s {
+						[] => true,
+						['a', 'r', 'g', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1086);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['g', s @ ..] => {
+			super::push(out, 275);
+			match s {
+				[] => true,
+				['e', s @ ..] => {
+					super::push(out, 622);
+					match s {
+						[] => true,
+						['r', s @ ..] => {
+							super::push(out, 1087);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['g', s @ ..] => {
+					super::push(out, 623);
+					match s {
+						[] => true,
+						['a', s @ ..] => {
+							super::push(out, 1088);
+							match s {
+								[] => true,
+								['s', '\u{1}', s @ ..] => {
+									super::push(out, 1554);
+									s.is_empty()
+								}
+								['v', s @ ..] => {
+									super::push(out, 1555);
+									match s {
+										[] => true,
+										['l', s @ ..] => {
+											super::push(out, 1902);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['e', s @ ..] => {
+							match s {
+								[] => true,
+								['h', 'c', 'c', 'a', 't', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+									super::push(out, 1556);
+									s.is_empty()
+								}
+								['p', '\u{1}', s @ ..] => {
+									super::push(out, 1557);
+									s.is_empty()
+								}
+								['r', 'g', '\u{1}', s @ ..] => {
+									super::push(out, 1558);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['o', 'r', '\u{1}', s @ ..] => {
+							super::push(out, 1089);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['i', s @ ..] => {
+					match s {
+						[] => true,
+						['b', '\u{1}', s @ ..] => {
+							super::push(out, 1090);
+							s.is_empty()
+						}
+						['d', 'o', 'r', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 1091);
+							s.is_empty()
+						}
+						['r', s @ ..] => {
+							super::push(out, 1092);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['n', s @ ..] => {
+					super::push(out, 624);
+					match s {
+						[] => true,
+						['i', s @ ..] => super::t0::n1184(s, out),
+						_ => false,
+					}
+				}
+				['o', s @ ..] => super::t0::n658(s, out),
+				['u', 't', 't', 'a', 'm', '\u{1}', s @ ..] => super::t0::n659(s, out),
+				_ => false,
+			}
+		}
+		['h', s @ ..] => super::t0::n283(s, out),
+		['l', s @ ..] => super::t0::n284(s, out),
+		['m', s @ ..] => super::t0::n285(s, out),
+		['n', s @ ..] => super::t0::n286(s, out),
+		['o', s @ ..] => super::t0::n287(s, out),
+		['p', s @ ..] => super::t0::n288(s, out),
+		['r', s @ ..] => super::t0::n289(s, out),
+		['s', s @ ..] => super::t0::n290(s, out),
+		['t', s @ ..] => super::t0::n291(s, out),
+		['v', s @ ..] => super::t0::n292(s, out),
+		['z', s @ ..] => super::t0::n293(s, out),
+		_ => false,
+	}
+}
+
+/// Words ending -ko.
+pub(crate) fn n82(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 82);
+	s.is_empty()
 }
 
 /// Words ending -lo.
-pub(crate) fn n70(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.9494621), (5, 0.032593273), (10, 0.007690547), (2, 0.006149386), (45, 0.0024414435)], 0.9983368);
-    match s {
-        [] => true,
-        ['a', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['e', 'g', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['i', s @ ..] => {
-            out.push(&[(0, 0.995758), (5, 0.002731365)], 0.9984894);
-            s.is_empty()
-        }
-        ['l', s @ ..] => {
-            match s {
-                [] => true,
-                ['a', 'i', s @ ..] => {
-                    out.push(&[(0, 0.79964906), (5, 0.105058365), (10, 0.08847181), (2, 0.004104677)], 0.99728394);
-                    match s {
-                        [] => true,
-                        ['g', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['o', 'c', 'c', 'e', 'b', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['e', 't', 's', 'a', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['i', 'u', s @ ..] => {
-                    out.push(&[(0, 0.8439765), (10, 0.11795224), (5, 0.028976882), (2, 0.005477989), (45, 0.002166781)], 0.9985504);
-                    match s {
-                        [] => true,
-                        ['q', 'n', 'a', 'r', 't', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['o', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['b', 'o', 'c', 'n', 'a', 'r', 'f', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['r', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['o', s @ ..] => {
-            match s {
-                [] => true,
-                ['c', s @ ..] => {
-                    out.push(&[(0, 0.9841306), (45, 0.011520562), (5, 0.0029449912)], 0.9985962);
-                    match s {
-                        [] => true,
-                        ['c', 'i', s @ ..] => {
-                            out.push(&[(0, 0.87478447), (45, 0.121355005), (5, 0.0026245518)], 0.99876404);
-                            match s {
-                                [] => true,
-                                ['p', '\u{1}', s @ ..] => {
-                                    out.push(&[(45, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['i', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', 'v', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['c', 'c', 'u', 'r', 'd', 's', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['g', 'e', 'i', 'l', 'i', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['r', 'e', 't', 's', 'e', 'l', 'o', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['s', s @ ..] => {
-                    out.push(&[(0, 0.848188), (10, 0.1147631), (5, 0.028183414), (2, 0.005325399), (45, 0.002105745)], 0.9985657);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['t', 't', 'a', 'c', 'o', 'i', 'g', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['v', 'i', 'c', 's', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['r', 'a', 't', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['é', 'm', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n83(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 83);
+	match s {
+		[] => true,
+		['a', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+			super::push(out, 287);
+			s.is_empty()
+		}
+		['e', 'g', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+			super::push(out, 288);
+			s.is_empty()
+		}
+		['i', s @ ..] => {
+			super::push(out, 289);
+			s.is_empty()
+		}
+		['l', s @ ..] => {
+			super::push(out, 290);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 646);
+					match s {
+						[] => true,
+						['i', 'g', s @ ..] => {
+							super::push(out, 1116);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 1570);
+									s.is_empty()
+								}
+								['o', 'c', 'c', 'e', 'b', '\u{1}', s @ ..] => {
+									super::push(out, 1571);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['e', s @ ..] => {
+					super::push(out, 647);
+					match s {
+						[] => true,
+						['t', 's', 'a', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 1117);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['i', s @ ..] => {
+					super::push(out, 648);
+					match s {
+						[] => true,
+						['u', 'q', 'n', 'a', 'r', 't', '\u{1}', s @ ..] => {
+							super::push(out, 1118);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['o', s @ ..] => {
+					super::push(out, 649);
+					match s {
+						[] => true,
+						['b', 'o', 'c', 'n', 'a', 'r', 'f', '\u{1}', s @ ..] => {
+							super::push(out, 1119);
+							s.is_empty()
+						}
+						['r', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1120);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['o', s @ ..] => {
+			super::push(out, 291);
+			match s {
+				[] => true,
+				['c', s @ ..] => {
+					super::push(out, 650);
+					match s {
+						[] => true,
+						['c', s @ ..] => {
+							super::push(out, 1121);
+							match s {
+								[] => true,
+								['i', 'p', '\u{1}', s @ ..] => {
+									super::push(out, 1572);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['i', s @ ..] => {
+							super::push(out, 1122);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['i', s @ ..] => {
+					super::push(out, 651);
+					match s {
+						[] => true,
+						['a', 'v', s @ ..] => {
+							super::push(out, 1123);
+							match s {
+								[] => true,
+								['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+									super::push(out, 1573);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['c', 'c', 'u', 'r', 'd', 's', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1124);
+							s.is_empty()
+						}
+						['g', 'e', 'i', 'l', 'i', 'c', '\u{1}', s @ ..] => {
+							super::push(out, 1125);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['r', 'e', 't', 's', 'e', 'l', 'o', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 652);
+					s.is_empty()
+				}
+				['s', s @ ..] => {
+					super::push(out, 653);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1126);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['t', s @ ..] => {
+					super::push(out, 654);
+					match s {
+						[] => true,
+						['t', 'a', 'c', 'o', 'i', 'g', '\u{1}', s @ ..] => {
+							super::push(out, 1127);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['v', 'i', s @ ..] => {
+					super::push(out, 655);
+					match s {
+						[] => true,
+						['c', 's', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1128);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['r', 'a', 't', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+			super::push(out, 292);
+			s.is_empty()
+		}
+		['é', 'm', '\u{1}', s @ ..] => {
+			super::push(out, 293);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -mo.
-pub(crate) fn n71(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.9774319), (5, 0.011123827), (10, 0.0056916154), (2, 0.003463798)], 0.9977111);
-    match s {
-        [] => true,
-        ['i', s @ ..] => {
-            out.push(&[(0, 0.9950866), (10, 0.0031586175)], 0.99824524);
-            match s {
-                [] => true,
-                ['r', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['s', s @ ..] => {
-                    out.push(&[(0, 0.9982605)], 0.9982605);
-                    match s {
-                        [] => true,
-                        ['s', s @ ..] => {
-                            out.push(&[(0, 0.9978942), (43, 0.002075227)], 0.9999695);
-                            match s {
-                                [] => true,
-                                ['i', 'n', 'u', s @ ..] => {
-                                    out.push(&[(0, 0.8983139), (43, 0.1016556)], 0.9999695);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['t', 'l', 'u', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['l', 'a', 'c', s @ ..] => {
-            out.push(&[(0, 0.86881816), (10, 0.11618219), (5, 0.009887846), (2, 0.0030823224)], 0.9979705);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['o', 'u', s @ ..] => {
-            out.push(&[(0, 0.86881816), (5, 0.120988786), (10, 0.0050659953), (2, 0.0030823224)], 0.99795526);
-            match s {
-                [] => true,
-                ['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['r', 'e', s @ ..] => {
-            match s {
-                [] => true,
-                ['f', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['h', s @ ..] => {
-                    out.push(&[(0, 0.86881816), (5, 0.120988786), (10, 0.0050659953), (2, 0.0030823224)], 0.99795526);
-                    match s {
-                        [] => true,
-                        ['c', 's', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['s', s @ ..] => {
-            out.push(&[(0, 0.70663005), (5, 0.2869459), (10, 0.0032043946)], 0.99678034);
-            match s {
-                [] => true,
-                ['i', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['l', 'a', 'd', 'n', 'a', 'v', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['r', 'o', 'r', 'r', 'e', 't', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['v', 'i', 's', 'u', 'b', 'a', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['x', 'r', 'a', 'm', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['u', s @ ..] => {
-            out.push(&[(0, 0.80177003), (5, 0.18989852), (10, 0.004150454), (2, 0.0025177386)], 0.99833673);
-            match s {
-                [] => true,
-                ['f', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', 'r', 'e', 'n', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n84(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 84);
+	match s {
+		[] => true,
+		['i', s @ ..] => {
+			super::push(out, 294);
+			match s {
+				[] => true,
+				['r', s @ ..] => {
+					super::push(out, 656);
+					match s {
+						[] => true,
+						['p', s @ ..] => {
+							super::push(out, 1129);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 1574);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['s', s @ ..] => {
+					super::push(out, 657);
+					match s {
+						[] => true,
+						['s', s @ ..] => {
+							super::push(out, 1130);
+							match s {
+								[] => true,
+								['i', 'n', s @ ..] => {
+									super::push(out, 1575);
+									match s {
+										[] => true,
+										['u', s @ ..] => {
+											super::push(out, 1916);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['t', s @ ..] => {
+					super::push(out, 658);
+					match s {
+						[] => true,
+						['l', 'u', '\u{1}', s @ ..] => {
+							super::push(out, 1131);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['l', s @ ..] => {
+			super::push(out, 295);
+			match s {
+				[] => true,
+				['a', 'c', '\u{1}', s @ ..] => {
+					super::push(out, 659);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['o', 'u', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+			super::push(out, 296);
+			s.is_empty()
+		}
+		['r', s @ ..] => {
+			super::push(out, 297);
+			match s {
+				[] => true,
+				['e', s @ ..] => {
+					match s {
+						[] => true,
+						['f', s @ ..] => {
+							super::push(out, 1132);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 1576);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['h', 'c', 's', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
+							super::push(out, 1133);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['s', s @ ..] => {
+			super::push(out, 298);
+			match s {
+				[] => true,
+				['i', s @ ..] => {
+					super::push(out, 660);
+					match s {
+						[] => true,
+						['l', 'a', 'd', 'n', 'a', 'v', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1134);
+							s.is_empty()
+						}
+						['r', 'o', 'r', 'r', 'e', 't', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1135);
+							s.is_empty()
+						}
+						['v', 'i', 's', 'u', 'b', 'a', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1136);
+							s.is_empty()
+						}
+						['x', 'r', 'a', 'm', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1137);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['u', s @ ..] => {
+			super::push(out, 299);
+			match s {
+				[] => true,
+				['f', s @ ..] => {
+					super::push(out, 661);
+					match s {
+						[] => true,
+						['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1138);
+							s.is_empty()
+						}
+						['o', 'r', 'e', 'n', '\u{1}', s @ ..] => {
+							super::push(out, 1139);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -no.
-pub(crate) fn n72(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.97457844), (5, 0.013290608), (10, 0.009781033)], 0.9976501);
-    match s {
-        [] => true,
-        ['a', s @ ..] => {
-            out.push(&[(0, 0.9835508), (10, 0.008331426), (5, 0.007110704)], 0.9989929);
-            match s {
-                [] => true,
-                ['g', 'r', 'o', 'i', s @ ..] => {
-                    out.push(&[(0, 0.8742657), (5, 0.117433436), (10, 0.007400626)], 0.99909973);
-                    match s {
-                        [] => true,
-                        ['t', 'l', 'u', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['i', s @ ..] => {
-                    out.push(&[(0, 0.9869078), (10, 0.0067444877), (5, 0.004776074)], 0.99842834);
-                    match s {
-                        [] => true,
-                        ['l', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['a', 't', 'i', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['g', 'a', 't', 'i', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['p', s @ ..] => {
-                            out.push(&[(0, 0.7916228), (5, 0.13679713), (10, 0.07074083)], 0.99916077);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(10, 0.5263142), (0, 0.47368583)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['i', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['r', 'u', 'l', 'p', '\u{1}', s @ ..] => {
-                                            out.push(&[(5, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['t', 'l', 'u', 'm', '\u{1}', s @ ..] => {
-                                            out.push(&[(5, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['r', s @ ..] => {
-                            out.push(&[(0, 0.9894255), (22, 0.009567407)], 0.99899286);
-                            match s {
-                                [] => true,
-                                ['e', 'f', s @ ..] => {
-                                    out.push(&[(0, 0.87948424), (22, 0.11961547)], 0.99909973);
-                                    match s {
-                                        [] => true,
-                                        ['i', 'c', 'u', 'l', '\u{1}', s @ ..] => {
-                                            out.push(&[(22, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['t', 's', 'i', 'r', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['z', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['i', 't', s @ ..] => {
-                                    out.push(&[(0, 0.87725645), (5, 0.1153582), (10, 0.005996796)], 0.99861145);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            out.push(&[(5, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['n', 'a', s @ ..] => {
-                                    out.push(&[(0, 0.87725645), (10, 0.117097735), (5, 0.004242008)], 0.9985962);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            out.push(&[(10, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['m', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['i', 'r', 'o', s @ ..] => {
-                            out.push(&[(0, 0.8742657), (5, 0.117433436), (10, 0.007400626)], 0.99909973);
-                            match s {
-                                [] => true,
-                                ['u', 'f', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['u', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['p', 'a', s @ ..] => {
-                    out.push(&[(0, 0.8742657), (5, 0.117433436), (10, 0.007400626)], 0.99909973);
-                    match s {
-                        [] => true,
-                        ['r', 't', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['r', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['e', 'f', s @ ..] => {
-                            out.push(&[(0, 0.8742657), (5, 0.117433436), (10, 0.007400626)], 0.99909973);
-                            match s {
-                                [] => true,
-                                ['f', 'a', 'z', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['t', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['t', 'n', 'o', 'l', s @ ..] => {
-                    out.push(&[(0, 0.8742657), (10, 0.118516825), (5, 0.006317235)], 0.99909973);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['v', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['e', s @ ..] => {
-            match s {
-                [] => true,
-                ['i', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['l', 'a', 'b', s @ ..] => {
-                    out.push(&[(0, 0.8662852), (5, 0.12292668), (10, 0.008697643)], 0.99790955);
-                    match s {
-                        [] => true,
-                        ['o', 'c', 'r', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['m', 'm', s @ ..] => {
-                    out.push(&[(0, 0.8662852), (5, 0.12292668), (10, 0.008697643)], 0.99790955);
-                    match s {
-                        [] => true,
-                        ['a', 'd', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['r', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['e', s @ ..] => {
-                            out.push(&[(0, 0.8662852), (10, 0.11979858), (5, 0.011810483)], 0.9978943);
-                            match s {
-                                [] => true,
-                                ['s', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['r', 'e', 't', 'o', s @ ..] => {
-                            out.push(&[(0, 0.8662852), (5, 0.12292668), (10, 0.008697643)], 0.99790955);
-                            match s {
-                                [] => true,
-                                ['t', 't', 'u', 't', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['g', s @ ..] => {
-            match s {
-                [] => true,
-                ['a', 'b', s @ ..] => {
-                    out.push(&[(0, 0.8662852), (5, 0.12292668), (10, 0.008697643)], 0.99790955);
-                    match s {
-                        [] => true,
-                        ['i', 'b', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['e', 'd', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['i', 't', s @ ..] => {
-                    out.push(&[(0, 0.8041352), (5, 0.1872282), (10, 0.006958114)], 0.99832153);
-                    match s {
-                        [] => true,
-                        ['i', 'v', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['i', 'n', 'u', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['i', s @ ..] => {
-            match s {
-                [] => true,
-                ['c', 'i', 'v', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['f', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['m', 'a', s @ ..] => {
-                    out.push(&[(0, 0.8662852), (5, 0.12292668), (10, 0.008697643)], 0.99790955);
-                    match s {
-                        [] => true,
-                        ['l', 'c', 'i', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['r', 'a', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['c', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['d', 'n', 'a', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 0.5263142), (0, 0.47368583)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['t', 's', 'e', 'd', 'n', 'a', 'l', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['n', 'a', 'r', 'p', s @ ..] => {
-            out.push(&[(0, 0.8662852), (5, 0.12292668), (10, 0.008697643)], 0.99790955);
-            match s {
-                [] => true,
-                ['o', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['o', s @ ..] => {
-            match s {
-                [] => true,
-                ['m', s @ ..] => {
-                    out.push(&[(0, 0.8070192), (5, 0.18406957), (10, 0.0071717403)], 0.9982605);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['n', 'o', 'm', 'i', 'c', 'e', 'd', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['t', 'o', s @ ..] => {
-                    out.push(&[(0, 0.8232395), (5, 0.16859694), (10, 0.0065766387)], 0.9984131);
-                    match s {
-                        [] => true,
-                        ['t', 't', 'o', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['u', s @ ..] => {
-                    out.push(&[(0, 0.8662852), (10, 0.11979858), (5, 0.011810483)], 0.9978943);
-                    match s {
-                        [] => true,
-                        ['b', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['r', s @ ..] => {
-            out.push(&[(0, 0.8746166), (5, 0.0748455), (10, 0.05008011)], 0.99954224);
-            match s {
-                [] => true,
-                ['a', 'c', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['e', 'd', 'o', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['o', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['p', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['t', s @ ..] => {
-                            out.push(&[(0, 0.6996872), (5, 0.2598764), (10, 0.040054932)], 0.99961853);
-                            match s {
-                                [] => true,
-                                ['n', 'i', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['t', 'a', 'd', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['u', 'l', 'a', 'u', 'q', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n85(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 85);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 300);
+			match s {
+				[] => true,
+				['c', s @ ..] => {
+					super::push(out, 662);
+					s.is_empty()
+				}
+				['g', s @ ..] => {
+					super::push(out, 663);
+					match s {
+						[] => true,
+						['r', s @ ..] => {
+							super::push(out, 1140);
+							match s {
+								[] => true,
+								['o', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
+									super::push(out, 1577);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['i', s @ ..] => {
+					super::push(out, 664);
+					match s {
+						[] => true,
+						['l', s @ ..] => {
+							match s {
+								[] => true,
+								['a', s @ ..] => {
+									super::push(out, 1578);
+									match s {
+										[] => true,
+										['t', 'i', '\u{1}', s @ ..] => {
+											super::push(out, 1917);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['g', 'a', 't', 'i', '\u{1}', s @ ..] => {
+									super::push(out, 1579);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['n', s @ ..] => {
+							super::push(out, 1141);
+							s.is_empty()
+						}
+						['p', s @ ..] => {
+							super::push(out, 1142);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 1580);
+									s.is_empty()
+								}
+								['i', s @ ..] => {
+									super::push(out, 1581);
+									match s {
+										[] => true,
+										['r', 'u', 'l', 'p', '\u{1}', s @ ..] => {
+											super::push(out, 1918);
+											s.is_empty()
+										}
+										['t', 'l', 'u', 'm', '\u{1}', s @ ..] => {
+											super::push(out, 1919);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['r', s @ ..] => {
+							super::push(out, 1143);
+							match s {
+								[] => true,
+								['e', 'f', 'i', 'c', 'u', 'l', '\u{1}', s @ ..] => {
+									super::push(out, 1582);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['t', 's', s @ ..] => {
+							super::push(out, 1144);
+							match s {
+								[] => true,
+								['i', 'r', 'c', '\u{1}', s @ ..] => {
+									super::push(out, 1583);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['z', s @ ..] => {
+							super::push(out, 1145);
+							match s {
+								[] => true,
+								['i', 't', '\u{1}', s @ ..] => {
+									super::push(out, 1584);
+									s.is_empty()
+								}
+								['n', s @ ..] => {
+									super::push(out, 1585);
+									match s {
+										[] => true,
+										['a', '\u{1}', s @ ..] => {
+											super::push(out, 1920);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['m', s @ ..] => {
+					super::push(out, 665);
+					match s {
+						[] => true,
+						['i', s @ ..] => {
+							super::push(out, 1146);
+							match s {
+								[] => true,
+								['r', s @ ..] => {
+									super::push(out, 1586);
+									match s {
+										[] => true,
+										['o', 'u', 'f', '\u{1}', s @ ..] => {
+											super::push(out, 1921);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['u', '\u{1}', s @ ..] => {
+							super::push(out, 1147);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['p', s @ ..] => {
+					super::push(out, 666);
+					match s {
+						[] => true,
+						['a', 'r', 't', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1148);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['r', s @ ..] => {
+					super::push(out, 667);
+					match s {
+						[] => true,
+						['e', 'f', 'f', 'a', 'z', '\u{1}', s @ ..] => {
+							super::push(out, 1149);
+							s.is_empty()
+						}
+						['t', s @ ..] => {
+							super::push(out, 1150);
+							match s {
+								[] => true,
+								['s', '\u{1}', s @ ..] => {
+									super::push(out, 1587);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['t', 'n', s @ ..] => {
+					super::push(out, 668);
+					match s {
+						[] => true,
+						['o', 'l', '\u{1}', s @ ..] => {
+							super::push(out, 1151);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['v', s @ ..] => {
+					super::push(out, 669);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1152);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['e', s @ ..] => {
+			match s {
+				[] => true,
+				['g', s @ ..] => {
+					super::push(out, 670);
+					s.is_empty()
+				}
+				['i', s @ ..] => {
+					super::push(out, 671);
+					match s {
+						[] => true,
+						['p', '\u{1}', s @ ..] => {
+							super::push(out, 1153);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['l', s @ ..] => {
+					super::push(out, 672);
+					match s {
+						[] => true,
+						['a', s @ ..] => {
+							super::push(out, 1154);
+							match s {
+								[] => true,
+								['b', 'o', 'c', 'r', 'a', '\u{1}', s @ ..] => {
+									super::push(out, 1588);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['m', 'm', 'a', 'd', '\u{1}', s @ ..] => {
+					super::push(out, 673);
+					s.is_empty()
+				}
+				['r', s @ ..] => {
+					super::push(out, 674);
+					match s {
+						[] => true,
+						['e', 's', '\u{1}', s @ ..] => {
+							super::push(out, 1155);
+							s.is_empty()
+						}
+						['r', 'e', 't', 'o', 't', 't', 'u', 't', '\u{1}', s @ ..] => {
+							super::push(out, 1156);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['g', s @ ..] => {
+			super::push(out, 301);
+			match s {
+				[] => true,
+				['a', 'b', 'i', 'b', '\u{1}', s @ ..] => {
+					super::push(out, 675);
+					s.is_empty()
+				}
+				['e', s @ ..] => {
+					super::push(out, 676);
+					match s {
+						[] => true,
+						['d', s @ ..] => {
+							super::push(out, 1157);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 1589);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['i', 't', s @ ..] => {
+					super::push(out, 677);
+					match s {
+						[] => true,
+						['i', s @ ..] => {
+							super::push(out, 1158);
+							match s {
+								[] => true,
+								['v', s @ ..] => {
+									super::push(out, 1590);
+									match s {
+										[] => true,
+										['i', 'n', 'u', '\u{1}', s @ ..] => {
+											super::push(out, 1922);
+											s.is_empty()
+										}
+										['o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
+											super::push(out, 1923);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['i', s @ ..] => {
+			super::push(out, 302);
+			match s {
+				[] => true,
+				['c', 'i', s @ ..] => {
+					super::push(out, 678);
+					match s {
+						[] => true,
+						['v', s @ ..] => {
+							super::push(out, 1159);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 1591);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['f', s @ ..] => {
+					super::push(out, 679);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1160);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['m', s @ ..] => {
+					super::push(out, 680);
+					match s {
+						[] => true,
+						['a', 'l', 'c', 'i', 'c', '\u{1}', s @ ..] => {
+							super::push(out, 1161);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['r', 'a', s @ ..] => {
+					super::push(out, 681);
+					match s {
+						[] => true,
+						['c', s @ ..] => {
+							super::push(out, 1162);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 1592);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['d', 'n', 'a', 'm', '\u{1}', s @ ..] => {
+							super::push(out, 1163);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['t', 's', 'e', 'd', 'n', 'a', 'l', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 682);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['n', s @ ..] => {
+			super::push(out, 303);
+			match s {
+				[] => true,
+				['a', 'r', s @ ..] => {
+					super::push(out, 683);
+					match s {
+						[] => true,
+						['p', 'o', 's', '\u{1}', s @ ..] => {
+							super::push(out, 1164);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['o', s @ ..] => {
+			super::push(out, 304);
+			match s {
+				[] => true,
+				['f', s @ ..] => {
+					super::push(out, 684);
+					s.is_empty()
+				}
+				['m', s @ ..] => {
+					super::push(out, 685);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1165);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['n', 'o', 'm', 'i', 'c', 'e', 'd', '\u{1}', s @ ..] => {
+					super::push(out, 686);
+					s.is_empty()
+				}
+				['t', 'o', s @ ..] => {
+					super::push(out, 687);
+					match s {
+						[] => true,
+						['t', 't', 'o', 's', '\u{1}', s @ ..] => {
+							super::push(out, 1166);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['u', 'b', '\u{1}', s @ ..] => {
+					super::push(out, 688);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['r', s @ ..] => {
+			super::push(out, 305);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 689);
+					match s {
+						[] => true,
+						['c', 's', '\u{1}', s @ ..] => super::t0::n1261(s, out),
+						_ => false,
+					}
+				}
+				['e', s @ ..] => super::t0::n727(s, out),
+				['o', s @ ..] => super::t0::n728(s, out),
+				_ => false,
+			}
+		}
+		['u', 'l', 'a', 'u', 'q', '\u{1}', s @ ..] => super::t0::n314(s, out),
+		_ => false,
+	}
 }
 
-/// The word voodoo.
-pub(crate) fn n73(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 1.0)], 1.0);
-    s.is_empty()
+/// Words ending -oo.
+pub(crate) fn n86(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 86);
+	match s {
+		[] => true,
+		['d', 'o', 'o', 'v', '\u{1}', s @ ..] => {
+			super::push(out, 307);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -po.
-pub(crate) fn n74(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.80161744), (5, 0.14036775), (2, 0.04367132), (9, 0.007110704), (4, 0.0032806897), (10, 0.0026703288)], 0.99871826);
-    match s {
-        [] => true,
-        ['a', 'c', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['i', 't', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['l', 'o', 'c', 'o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['m', s @ ..] => {
-            out.push(&[(0, 0.5829862), (5, 0.37480736), (2, 0.031769283), (9, 0.0051728087), (4, 0.0023804074)], 0.997116);
-            match s {
-                [] => true,
-                ['a', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['c', 'i', 'r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['l', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['e', 't', 'i', 'n', 'g', 'o', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['o', s @ ..] => {
-            match s {
-                [] => true,
-                ['d', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', s @ ..] => {
-                    out.push(&[(0, 0.949218), (5, 0.035934996), (2, 0.011184863)], 0.99633783);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['p', 'i', 'c', 's', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n87(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 87);
+	match s {
+		[] => true,
+		['a', 'c', '\u{1}', s @ ..] => {
+			super::push(out, 308);
+			s.is_empty()
+		}
+		['i', 't', '\u{1}', s @ ..] => {
+			super::push(out, 309);
+			s.is_empty()
+		}
+		['l', 'o', 'c', 'o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
+			super::push(out, 310);
+			s.is_empty()
+		}
+		['m', s @ ..] => {
+			super::push(out, 311);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 692);
+					match s {
+						[] => true,
+						['c', 'i', 'r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
+							super::push(out, 1171);
+							s.is_empty()
+						}
+						['l', '\u{1}', s @ ..] => {
+							super::push(out, 1172);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['e', 't', 'i', 'n', 'g', 'o', '\u{1}', s @ ..] => {
+					super::push(out, 693);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['o', s @ ..] => {
+			super::push(out, 312);
+			match s {
+				[] => true,
+				['d', '\u{1}', s @ ..] => {
+					super::push(out, 694);
+					s.is_empty()
+				}
+				['r', s @ ..] => {
+					super::push(out, 695);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['p', 'i', s @ ..] => {
+			super::push(out, 313);
+			match s {
+				[] => true,
+				['c', 's', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 696);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -ro.
-pub(crate) fn n75(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.9041733), (5, 0.042816814), (10, 0.039551385), (2, 0.004715038)], 0.99125654);
-    match s {
-        [] => true,
-        ['a', s @ ..] => {
-            match s {
-                [] => true,
-                ['c', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['i', 'h', s @ ..] => {
-                    out.push(&[(0, 0.72333866), (5, 0.13426413), (10, 0.13163958), (2, 0.0037689784)], 0.99301136);
-                    match s {
-                        [] => true,
-                        ['c', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['o', 'p', 'm', 'a', 'c', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['m', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['v', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 0.5263142), (0, 0.47368583)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['c', s @ ..] => {
-            out.push(&[(0, 0.7318379), (5, 0.23628595), (10, 0.023788815), (2, 0.002838178)], 0.99475086);
-            match s {
-                [] => true,
-                ['n', 'a', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['d', 'i', 'i', 'r', 'e', 'p', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['e', s @ ..] => {
-            out.push(&[(0, 0.9432364), (10, 0.0299382), (5, 0.019241627), (22, 0.0036011292), (42, 0.0036011292)], 0.9996185);
-            match s {
-                [] => true,
-                ['b', s @ ..] => {
-                    out.push(&[(0, 0.7734951), (5, 0.14123751), (10, 0.081284806)], 0.9960174);
-                    match s {
-                        [] => true,
-                        ['i', 'l', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['l', 'a', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['i', 'b', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['f', s @ ..] => {
-                    out.push(&[(0, 0.9959716), (10, 0.002121004)], 0.99809265);
-                    s.is_empty()
-                }
-                ['g', 'g', 'e', 'l', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['i', 'f', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['m', 'u', 'n', 'n', 'a', 'r', 'p', 'o', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['n', s @ ..] => {
-                    out.push(&[(0, 0.7697261), (10, 0.14930953), (22, 0.0685893), (5, 0.010254063)], 0.99787897);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['e', 't', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['i', 'p', 'a', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(22, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['p', 'o', 'i', 'c', 's', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['s', s @ ..] => {
-                    out.push(&[(0, 0.8384375), (42, 0.11430533), (10, 0.026611734), (5, 0.017105363), (22, 0.0032043946)], 0.9996643);
-                    match s {
-                        [] => true,
-                        ['i', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(42, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['t', 'e', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['v', s @ ..] => {
-                    out.push(&[(0, 0.71802855), (10, 0.2644541), (5, 0.012558175), (22, 0.0023498894), (42, 0.0023498894)], 0.9997406);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['e', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['g', s @ ..] => {
-            out.push(&[(0, 0.6090486), (10, 0.22484168), (34, 0.067795835), (44, 0.067795835), (5, 0.02322423), (2, 0.0025635157)], 0.9952697);
-            match s {
-                [] => true,
-                ['a', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['e', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['l', 'l', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['t', 'n', 'i', '\u{1}', s @ ..] => {
-                            out.push(&[(34, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['i', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['i', 'f', 'f', 'a', 'z', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['o', s @ ..] => {
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['e', 'd', 'r', 'e', 'v', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['p', s @ ..] => {
-            out.push(&[(0, 0.73008317), (5, 0.13098344), (10, 0.12841994), (2, 0.0036774243)], 0.99316394);
-            match s {
-                [] => true,
-                ['s', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['u', 't', 's', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['r', 'a', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['t', s @ ..] => {
-            out.push(&[(0, 0.86546123), (5, 0.1271992), (10, 0.005477989)], 0.9981384);
-            match s {
-                [] => true,
-                ['a', 'e', 't', 'o', 'p', 'o', 'd', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['e', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['i', 'd', 'i', 'd', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['v', 'o', 't', 't', 'o', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['s', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', 'n', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['e', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['p', 'a', 'c', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['u', 'q', 'e', 's', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['é', 'r', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['u', s @ ..] => {
-            match s {
-                [] => true,
-                ['c', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['i', 's', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['n', 'i', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['s', 'o', 'p', 'm', 'a', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['d', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['p', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n88(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 88);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 314);
+			match s {
+				[] => true,
+				['c', s @ ..] => {
+					super::push(out, 697);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1173);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['i', s @ ..] => {
+					super::push(out, 698);
+					match s {
+						[] => true,
+						['h', s @ ..] => {
+							super::push(out, 1174);
+							match s {
+								[] => true,
+								['c', s @ ..] => {
+									super::push(out, 1595);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 1924);
+											s.is_empty()
+										}
+										['o', 'p', 'm', 'a', 'c', '\u{1}', s @ ..] => {
+											super::push(out, 1925);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['m', 'a', s @ ..] => {
+					super::push(out, 699);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1175);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['p', s @ ..] => {
+					super::push(out, 700);
+					s.is_empty()
+				}
+				['r', '\u{1}', s @ ..] => {
+					super::push(out, 701);
+					s.is_empty()
+				}
+				['v', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 702);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['b', s @ ..] => {
+			super::push(out, 315);
+			s.is_empty()
+		}
+		['c', s @ ..] => {
+			super::push(out, 316);
+			match s {
+				[] => true,
+				['n', 'a', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 703);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['d', 'i', s @ ..] => {
+			super::push(out, 317);
+			match s {
+				[] => true,
+				['i', 'r', 'e', 'p', '\u{1}', s @ ..] => {
+					super::push(out, 704);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['e', s @ ..] => {
+			super::push(out, 318);
+			match s {
+				[] => true,
+				['b', s @ ..] => {
+					super::push(out, 705);
+					match s {
+						[] => true,
+						['i', s @ ..] => {
+							super::push(out, 1176);
+							match s {
+								[] => true,
+								['l', '\u{1}', s @ ..] => {
+									super::push(out, 1596);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['l', s @ ..] => {
+							super::push(out, 1177);
+							match s {
+								[] => true,
+								['a', s @ ..] => {
+									super::push(out, 1597);
+									match s {
+										[] => true,
+										['i', 'b', '\u{1}', s @ ..] => {
+											super::push(out, 1926);
+											s.is_empty()
+										}
+										['o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
+											super::push(out, 1927);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['f', s @ ..] => {
+					super::push(out, 706);
+					s.is_empty()
+				}
+				['g', 'g', s @ ..] => {
+					super::push(out, 707);
+					match s {
+						[] => true,
+						['e', 'l', '\u{1}', s @ ..] => {
+							super::push(out, 1178);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['i', s @ ..] => {
+					super::push(out, 708);
+					match s {
+						[] => true,
+						['f', s @ ..] => {
+							super::push(out, 1179);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 1598);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['m', s @ ..] => {
+					super::push(out, 709);
+					match s {
+						[] => true,
+						['u', s @ ..] => {
+							super::push(out, 1180);
+							match s {
+								[] => true,
+								['n', 'n', 'a', 'r', 'p', 'o', 's', '\u{1}', s @ ..] => {
+									super::push(out, 1599);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['n', s @ ..] => {
+					super::push(out, 710);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1181);
+							s.is_empty()
+						}
+						['e', 't', '\u{1}', s @ ..] => {
+							super::push(out, 1182);
+							s.is_empty()
+						}
+						['i', 'p', 'a', 'c', '\u{1}', s @ ..] => {
+							super::push(out, 1183);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['p', s @ ..] => {
+					super::push(out, 711);
+					match s {
+						[] => true,
+						['o', 'i', 'c', 's', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1184);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['s', 'i', 'm', '\u{1}', s @ ..] => {
+					super::push(out, 712);
+					s.is_empty()
+				}
+				['t', s @ ..] => {
+					super::push(out, 713);
+					match s {
+						[] => true,
+						['e', '\u{1}', s @ ..] => {
+							super::push(out, 1185);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['v', s @ ..] => {
+					super::push(out, 714);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1186);
+							s.is_empty()
+						}
+						['e', 's', '\u{1}', s @ ..] => {
+							super::push(out, 1187);
+							s.is_empty()
+						}
+						['o', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 1188);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['g', s @ ..] => {
+			super::push(out, 319);
+			match s {
+				[] => true,
+				['a', 'm', '\u{1}', s @ ..] => {
+					super::push(out, 715);
+					s.is_empty()
+				}
+				['e', s @ ..] => {
+					super::push(out, 716);
+					match s {
+						[] => true,
+						['l', 'l', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1189);
+							s.is_empty()
+						}
+						['n', s @ ..] => {
+							super::push(out, 1190);
+							s.is_empty()
+						}
+						['t', 'n', 'i', '\u{1}', s @ ..] => {
+							super::push(out, 1191);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['i', 'p', '\u{1}', s @ ..] => {
+					super::push(out, 717);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['i', 'f', 'f', 'a', 'z', '\u{1}', s @ ..] => {
+			super::push(out, 320);
+			s.is_empty()
+		}
+		['o', s @ ..] => {
+			super::push(out, 321);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 718);
+					s.is_empty()
+				}
+				['e', 'd', 'r', 'e', 'v', '\u{1}', s @ ..] => {
+					super::push(out, 719);
+					s.is_empty()
+				}
+				['v', s @ ..] => {
+					super::push(out, 720);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['p', s @ ..] => {
+			super::push(out, 322);
+			match s {
+				[] => true,
+				['s', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 721);
+					s.is_empty()
+				}
+				['u', 't', 's', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 722);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['r', 'a', s @ ..] => {
+			super::push(out, 323);
+			match s {
+				[] => true,
+				['c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 723);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['t', s @ ..] => {
+			super::push(out, 324);
+			match s {
+				[] => true,
+				['a', 'e', 't', 'o', 'p', 'o', 'd', '\u{1}', s @ ..] => {
+					super::push(out, 724);
+					s.is_empty()
+				}
+				['e', s @ ..] => {
+					match s {
+						[] => true,
+						['i', 'd', 'i', 'd', '\u{1}', s @ ..] => {
+							super::push(out, 1192);
+							s.is_empty()
+						}
+						['v', 'o', 't', 't', 'o', 's', '\u{1}', s @ ..] => {
+							super::push(out, 1193);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['s', s @ ..] => {
+					match s {
+						[] => true,
+						['a', s @ ..] => {
+							super::push(out, 1194);
+							match s {
+								[] => true,
+								['n', s @ ..] => {
+									super::push(out, 1600);
+									match s {
+										[] => true,
+										['i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
+											super::push(out, 1928);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['e', s @ ..] => {
+							match s {
+								[] => true,
+								['p', s @ ..] => {
+									super::push(out, 1601);
+									match s {
+										[] => true,
+										['a', 'c', '\u{1}', s @ ..] => {
+											super::push(out, 1929);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['u', 'q', 'e', 's', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+									super::push(out, 1602);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['é', 'r', '\u{1}', s @ ..] => {
+					super::push(out, 725);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['u', s @ ..] => {
+			super::push(out, 325);
+			match s {
+				[] => true,
+				['c', s @ ..] => {
+					super::push(out, 726);
+					match s {
+						[] => true,
+						['i', s @ ..] => {
+							super::push(out, 1195);
+							match s {
+								[] => true,
+								['s', s @ ..] => {
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 1930);
+											s.is_empty()
+										}
+										['n', 'i', '\u{1}', s @ ..] => {
+											super::push(out, 1931);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['s', s @ ..] => {
+							super::push(out, 1196);
+							match s {
+								[] => true,
+								['o', 'p', 'm', 'a', 'c', '\u{1}', s @ ..] => {
+									super::push(out, 1603);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['d', s @ ..] => {
+					super::push(out, 727);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1197);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['p', '\u{1}', s @ ..] => {
+					super::push(out, 728);
+					s.is_empty()
+				}
+				['t', s @ ..] => {
+					super::push(out, 729);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -so.
-pub(crate) fn n76(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.9315785), (10, 0.050934616), (5, 0.014724956), (2, 0.002166781)], 0.99940485);
-    match s {
-        [] => true,
-        ['a', 'm', 'o', s @ ..] => {
-            out.push(&[(0, 0.8280766), (5, 0.124208435), (10, 0.045273516)], 0.99755853);
-            match s {
-                [] => true,
-                ['d', 'a', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['e', s @ ..] => {
-            match s {
-                [] => true,
-                ['c', 'c', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['p', s @ ..] => {
-                    out.push(&[(0, 0.73228043), (5, 0.23530938), (10, 0.03074693)], 0.99833673);
-                    match s {
-                        [] => true,
-                        ['o', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['m', 'r', 'o', 'n', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['t', 't', 'o', 's', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['p', 'a', 'r', 'v', 'o', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['r', 'p', 'r', 'o', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['t', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['s', 'e', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['t', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['i', 'c', 'e', s @ ..] => {
-            match s {
-                [] => true,
-                ['d', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['l', s @ ..] => {
-            match s {
-                [] => true,
-                ['a', 'f', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['u', 's', 'n', 'i', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['n', 'e', s @ ..] => {
-            match s {
-                [] => true,
-                ['d', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['t', 'n', 'i', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['o', s @ ..] => {
-            out.push(&[(0, 0.95187306), (10, 0.047974367)], 0.9998474);
-            match s {
-                [] => true,
-                ['c', 'i', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['l', 'l', 'e', 'b', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['t', 'a', 'f', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['f', 'i', 't', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['i', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['c', 'i', 'n', 'r', 'e', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['d', 'i', 't', 's', 'a', 'f', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['g', 'g', 'a', 't', 'n', 'a', 'v', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['h', 'c', 's', 'i', 'r', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['l', 'g', 'o', 'g', 'r', 'o', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', 'n', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['r', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['e', 's', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['o', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['b', 'a', 'l', '\u{1}', s @ ..] => {
-                                            out.push(&[(10, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['l', 'g', '\u{1}', s @ ..] => {
-                                            out.push(&[(10, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['z', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['a', 'r', 'g', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['e', 'r', 'p', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['i', 'b', 'm', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['n', 'e', 'l', 'i', 's', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['l', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['e', 'g', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['c', 'i', 'r', 'e', 'p', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['g', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['m', 'a', 'f', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['n', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['e', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['l', 'e', 'v', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['p', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['i', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['m', 'u', 'l', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['p', 's', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['n', 'a', 'd', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['r', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['e', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['m', 'u', 'n', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['n', 'e', 'g', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['o', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['g', s @ ..] => {
-                                    out.push(&[(0, 0.7831845), (10, 0.21670863)], 0.9998932);
-                                    match s {
-                                        [] => true,
-                                        ['i', s @ ..] => {
-                                            match s {
-                                                [] => true,
-                                                ['r', '\u{1}', s @ ..] => {
-                                                    out.push(&[(10, 1.0)], 1.0);
-                                                    s.is_empty()
-                                                }
-                                                ['v', '\u{1}', s @ ..] => {
-                                                    out.push(&[(10, 1.0)], 1.0);
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['l', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['a', 'c', '\u{1}', s @ ..] => {
-                                            out.push(&[(10, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['o', 'd', '\u{1}', s @ ..] => {
-                                            out.push(&[(10, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['s', 's', 'a', 'p', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['t', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['i', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['n', 'g', 'i', 'd', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['p', 'i', 'c', 'e', 'r', 'p', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['l', 'o', 'c', 'a', 'f', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['s', 'o', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['t', 'e', 'f', 'i', 'd', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['u', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['s', 's', 'u', 'l', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['t', s @ ..] => super::t0::n1113(s, out),
-                        _ => false,
-                    }
-                }
-                ['v', 'r', 'e', 'n', '\u{1}', s @ ..] => super::t0::n682(s, out),
-                _ => false,
-            }
-        }
-        ['r', s @ ..] => super::t0::n278(s, out),
-        ['s', s @ ..] => super::t0::n279(s, out),
-        ['u', s @ ..] => super::t0::n280(s, out),
-        _ => false,
-    }
+pub(crate) fn n89(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 89);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 326);
+			match s {
+				[] => true,
+				['m', s @ ..] => {
+					super::push(out, 730);
+					match s {
+						[] => true,
+						['o', 'd', 'a', 's', '\u{1}', s @ ..] => {
+							super::push(out, 1198);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['e', s @ ..] => {
+			super::push(out, 327);
+			match s {
+				[] => true,
+				['c', 'c', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 731);
+					s.is_empty()
+				}
+				['l', s @ ..] => {
+					super::push(out, 732);
+					s.is_empty()
+				}
+				['p', s @ ..] => {
+					super::push(out, 733);
+					match s {
+						[] => true,
+						['o', s @ ..] => {
+							super::push(out, 1199);
+							match s {
+								[] => true,
+								['m', 'r', 'o', 'n', '\u{1}', s @ ..] => {
+									super::push(out, 1604);
+									s.is_empty()
+								}
+								['t', 't', 'o', 's', '\u{1}', s @ ..] => {
+									super::push(out, 1605);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['p', 'a', 'r', 'v', 'o', 's', '\u{1}', s @ ..] => {
+							super::push(out, 1200);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['r', 'p', 'r', 'o', 's', '\u{1}', s @ ..] => {
+					super::push(out, 734);
+					s.is_empty()
+				}
+				['t', s @ ..] => {
+					super::push(out, 735);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1201);
+							s.is_empty()
+						}
+						['s', 'e', '\u{1}', s @ ..] => {
+							super::push(out, 1202);
+							s.is_empty()
+						}
+						['t', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1203);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['i', 'c', s @ ..] => {
+			super::push(out, 328);
+			match s {
+				[] => true,
+				['e', s @ ..] => {
+					match s {
+						[] => true,
+						['d', '\u{1}', s @ ..] => {
+							super::push(out, 1204);
+							s.is_empty()
+						}
+						['r', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 1205);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['l', s @ ..] => {
+			super::push(out, 329);
+			match s {
+				[] => true,
+				['a', 'f', '\u{1}', s @ ..] => {
+					super::push(out, 736);
+					s.is_empty()
+				}
+				['u', 's', 'n', 'i', '\u{1}', s @ ..] => {
+					super::push(out, 737);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['n', s @ ..] => {
+			super::push(out, 330);
+			match s {
+				[] => true,
+				['e', s @ ..] => {
+					match s {
+						[] => true,
+						['d', '\u{1}', s @ ..] => {
+							super::push(out, 1206);
+							s.is_empty()
+						}
+						['t', 'n', 'i', '\u{1}', s @ ..] => {
+							super::push(out, 1207);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['o', s @ ..] => {
+			super::push(out, 331);
+			match s {
+				[] => true,
+				['c', 'i', s @ ..] => {
+					match s {
+						[] => true,
+						['l', s @ ..] => {
+							super::push(out, 1208);
+							match s {
+								[] => true,
+								['l', 'e', 'b', '\u{1}', s @ ..] => {
+									super::push(out, 1606);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['t', 'a', 'f', '\u{1}', s @ ..] => {
+							super::push(out, 1209);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['f', 'i', s @ ..] => {
+					super::push(out, 738);
+					match s {
+						[] => true,
+						['t', '\u{1}', s @ ..] => {
+							super::push(out, 1210);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['i', s @ ..] => {
+					match s {
+						[] => true,
+						['c', 'i', 'n', 'r', 'e', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 1211);
+							s.is_empty()
+						}
+						['d', 'i', 't', 's', 'a', 'f', '\u{1}', s @ ..] => {
+							super::push(out, 1212);
+							s.is_empty()
+						}
+						['g', 'g', 'a', 't', s @ ..] => {
+							super::push(out, 1213);
+							match s {
+								[] => true,
+								['n', 'a', 'v', '\u{1}', s @ ..] => {
+									super::push(out, 1607);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['h', 'c', 's', s @ ..] => {
+							super::push(out, 1214);
+							match s {
+								[] => true,
+								['i', 'r', '\u{1}', s @ ..] => {
+									super::push(out, 1608);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['l', 'g', 'o', 'g', s @ ..] => {
+							super::push(out, 1215);
+							match s {
+								[] => true,
+								['r', 'o', '\u{1}', s @ ..] => {
+									super::push(out, 1609);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['o', s @ ..] => {
+							super::push(out, 1216);
+							match s {
+								[] => true,
+								['n', '\u{1}', s @ ..] => {
+									super::push(out, 1610);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['r', s @ ..] => {
+							super::push(out, 1217);
+							match s {
+								[] => true,
+								['e', 's', '\u{1}', s @ ..] => {
+									super::push(out, 1611);
+									s.is_empty()
+								}
+								['o', s @ ..] => {
+									super::push(out, 1612);
+									match s {
+										[] => true,
+										['b', 'a', 'l', '\u{1}', s @ ..] => {
+											super::push(out, 1932);
+											s.is_empty()
+										}
+										['l', 'g', '\u{1}', s @ ..] => {
+											super::push(out, 1933);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['z', s @ ..] => {
+							super::push(out, 1218);
+							match s {
+								[] => true,
+								['a', 'r', 'g', '\u{1}', s @ ..] => {
+									super::push(out, 1613);
+									s.is_empty()
+								}
+								['e', 'r', 'p', '\u{1}', s @ ..] => {
+									super::push(out, 1614);
+									s.is_empty()
+								}
+								['i', 'b', 'm', 'a', '\u{1}', s @ ..] => {
+									super::push(out, 1615);
+									s.is_empty()
+								}
+								['n', 'e', 'l', 'i', 's', '\u{1}', s @ ..] => {
+									super::push(out, 1616);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['l', s @ ..] => {
+					match s {
+						[] => true,
+						['e', 'g', '\u{1}', s @ ..] => {
+							super::push(out, 1219);
+							s.is_empty()
+						}
+						['l', s @ ..] => {
+							super::push(out, 1220);
+							s.is_empty()
+						}
+						['o', s @ ..] => {
+							match s {
+								[] => true,
+								['c', 'i', 'r', s @ ..] => {
+									super::push(out, 1617);
+									match s {
+										[] => true,
+										['e', 'p', '\u{1}', s @ ..] => {
+											super::push(out, 1934);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['g', s @ ..] => {
+									super::push(out, 1618);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 1935);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['m', 'a', 'f', '\u{1}', s @ ..] => {
+					super::push(out, 739);
+					s.is_empty()
+				}
+				['n', s @ ..] => {
+					match s {
+						[] => true,
+						['e', s @ ..] => {
+							match s {
+								[] => true,
+								['l', 'e', 'v', '\u{1}', s @ ..] => {
+									super::push(out, 1619);
+									s.is_empty()
+								}
+								['p', '\u{1}', s @ ..] => {
+									super::push(out, 1620);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['i', s @ ..] => {
+							match s {
+								[] => true,
+								['g', s @ ..] => {
+									super::push(out, 1621);
+									s.is_empty()
+								}
+								['m', 'u', 'l', s @ ..] => super::t0::n1759(s, out),
+								['p', 's', '\u{1}', s @ ..] => {
+									super::push(out, 1623);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['n', 'a', 'd', '\u{1}', s @ ..] => super::t0::n1319(s, out),
+						_ => false,
+					}
+				}
+				['r', s @ ..] => super::t0::n785(s, out),
+				['s', 's', 'a', 'p', 's', '\u{1}', s @ ..] => super::t0::n786(s, out),
+				['t', s @ ..] => super::t0::n787(s, out),
+				['u', s @ ..] => super::t0::n788(s, out),
+				['v', 'r', s @ ..] => super::t0::n789(s, out),
+				_ => false,
+			}
+		}
+		['r', s @ ..] => super::t0::n340(s, out),
+		['s', s @ ..] => super::t0::n341(s, out),
+		['u', s @ ..] => super::t0::n342(s, out),
+		_ => false,
+	}
 }
 
 /// Words ending -to.
-pub(crate) fn n77(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.9344625), (10, 0.050476845), (5, 0.014129855)], 0.9990692);
-    match s {
-        [] => true,
-        ['a', s @ ..] => {
-            out.push(&[(0, 0.95436025), (10, 0.044205386)], 0.9985656);
-            match s {
-                [] => true,
-                ['c', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['c', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['a', 't', 's', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['i', 'l', 'c', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['i', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['l', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['e', 'd', '\u{1}', s @ ..] => {
-                                            out.push(&[(10, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['p', 'm', 'o', 'c', '\u{1}', s @ ..] => {
-                                            out.push(&[(10, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['r', 't', 'n', 'i', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['t', 's', 'i', 'f', 'o', 's', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['r', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['a', 'm', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['e', 'c', 'i', 'r', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['u', 'd', 'e', 'l', 'a', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['d', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['i', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['f', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['l', 'o', 's', 'n', 'o', 'c', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['n', 'i', 'l', 'b', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', 'l', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['g', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['e', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['i', 'r', 'a', 'v', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['l', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['i', 'l', 'b', 'b', 'o', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['i', s @ ..] => super::t0::n695(s, out),
-                ['l', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['i', 'f', 'f', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['l', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['a', 'b', 's', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['o', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['c', 's', '\u{1}', s @ ..] => {
-                                            out.push(&[(10, 0.5263142), (0, 0.47368583)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['f', 'f', 'a', '\u{1}', s @ ..] => super::t0::n1708(s, out),
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['o', s @ ..] => super::t0::n1151(s, out),
-                        _ => false,
-                    }
-                }
-                ['m', s @ ..] => super::t0::n697(s, out),
-                ['n', s @ ..] => super::t0::n698(s, out),
-                ['p', s @ ..] => super::t0::n699(s, out),
-                ['r', s @ ..] => super::t0::n700(s, out),
-                ['s', s @ ..] => super::t0::n701(s, out),
-                ['t', s @ ..] => super::t0::n702(s, out),
-                ['v', s @ ..] => super::t0::n703(s, out),
-                ['z', s @ ..] => super::t0::n704(s, out),
-                _ => false,
-            }
-        }
-        ['e', s @ ..] => super::t0::n282(s, out),
-        ['i', s @ ..] => super::t0::n283(s, out),
-        ['l', s @ ..] => super::t0::n284(s, out),
-        ['n', s @ ..] => super::t0::n285(s, out),
-        ['o', s @ ..] => super::t0::n286(s, out),
-        ['r', s @ ..] => super::t0::n287(s, out),
-        ['s', s @ ..] => super::t0::n288(s, out),
-        ['t', s @ ..] => super::t0::n289(s, out),
-        ['u', s @ ..] => super::t0::n290(s, out),
-        _ => false,
-    }
+pub(crate) fn n90(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 90);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 334);
+			match s {
+				[] => true,
+				['b', s @ ..] => {
+					super::push(out, 751);
+					s.is_empty()
+				}
+				['c', s @ ..] => {
+					match s {
+						[] => true,
+						['c', s @ ..] => {
+							match s {
+								[] => true,
+								['a', 't', s @ ..] => {
+									super::push(out, 1643);
+									match s {
+										[] => true,
+										['s', '\u{1}', s @ ..] => {
+											super::push(out, 1946);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['i', 'l', 'c', '\u{1}', s @ ..] => {
+									super::push(out, 1644);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['i', s @ ..] => super::t0::n1347(s, out),
+						['r', s @ ..] => super::t0::n1348(s, out),
+						['u', 'd', s @ ..] => super::t0::n1349(s, out),
+						_ => false,
+					}
+				}
+				['d', s @ ..] => super::t0::n802(s, out),
+				['e', s @ ..] => {
+					super::push(out, 752);
+					s.is_empty()
+				}
+				['g', s @ ..] => super::t0::n804(s, out),
+				['i', s @ ..] => super::t0::n805(s, out),
+				['l', s @ ..] => super::t0::n806(s, out),
+				['m', s @ ..] => super::t0::n807(s, out),
+				['n', s @ ..] => super::t0::n808(s, out),
+				['p', s @ ..] => super::t0::n809(s, out),
+				['r', s @ ..] => super::t0::n810(s, out),
+				['s', s @ ..] => super::t0::n811(s, out),
+				['t', s @ ..] => super::t0::n812(s, out),
+				['u', s @ ..] => super::t0::n813(s, out),
+				['v', s @ ..] => super::t0::n814(s, out),
+				['z', s @ ..] => super::t0::n815(s, out),
+				_ => false,
+			}
+		}
+		['e', s @ ..] => super::t0::n344(s, out),
+		['i', s @ ..] => super::t0::n345(s, out),
+		['l', s @ ..] => super::t0::n346(s, out),
+		['n', s @ ..] => super::t0::n347(s, out),
+		['o', s @ ..] => super::t0::n348(s, out),
+		['r', s @ ..] => super::t0::n349(s, out),
+		['s', s @ ..] => super::t0::n350(s, out),
+		['t', s @ ..] => super::t0::n351(s, out),
+		['u', s @ ..] => super::t0::n352(s, out),
+		_ => false,
+	}
 }
 
 /// Words ending -uo.
-pub(crate) fn n78(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.8924849), (2, 0.049698636), (10, 0.022735942), (5, 0.021789884), (9, 0.008087282), (4, 0.0037232013)], 0.99851984);
-    match s {
-        [] => true,
-        ['l', 'f', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['q', 'i', 'n', 'i', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n91(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 91);
+	match s {
+		[] => true,
+		['l', s @ ..] => {
+			super::push(out, 342);
+			match s {
+				[] => true,
+				['f', '\u{1}', s @ ..] => {
+					super::push(out, 796);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['q', s @ ..] => {
+			super::push(out, 343);
+			match s {
+				[] => true,
+				['i', s @ ..] => {
+					super::push(out, 797);
+					match s {
+						[] => true,
+						['n', 'i', '\u{1}', s @ ..] => {
+							super::push(out, 1360);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -vo.
-pub(crate) fn n79(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.9868925), (10, 0.009323263), (2, 0.0028839551)], 0.99909973);
-    match s {
-        [] => true,
-        ['a', 'r', 'b', s @ ..] => {
-            out.push(&[(0, 0.8772412), (10, 0.11940185), (2, 0.0025635157)], 0.99920654);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['i', s @ ..] => {
-            match s {
-                [] => true,
-                ['s', 'u', 'l', 'c', 's', 'e', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['t', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', 'g', 'e', 'n', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['r', 'o', 'p', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['t', 'a', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['c', s @ ..] => {
-                                    out.push(&[(0, 0.8772412), (10, 0.11940185), (2, 0.0025635157)], 0.99920654);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            out.push(&[(10, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['v', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['o', 'u', s @ ..] => {
-            out.push(&[(0, 0.8772412), (10, 0.11940185), (2, 0.0025635157)], 0.99920654);
-            match s {
-                [] => true,
-                ['n', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n92(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 92);
+	match s {
+		[] => true,
+		['a', 'r', s @ ..] => {
+			super::push(out, 344);
+			match s {
+				[] => true,
+				['b', '\u{1}', s @ ..] => {
+					super::push(out, 798);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['i', s @ ..] => {
+			super::push(out, 345);
+			match s {
+				[] => true,
+				['s', 'u', s @ ..] => {
+					super::push(out, 799);
+					match s {
+						[] => true,
+						['l', 'c', 's', s @ ..] => {
+							super::push(out, 1361);
+							match s {
+								[] => true,
+								['e', '\u{1}', s @ ..] => {
+									super::push(out, 1775);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['t', s @ ..] => {
+					match s {
+						[] => true,
+						['a', 'g', s @ ..] => {
+							super::push(out, 1362);
+							match s {
+								[] => true,
+								['e', 'n', s @ ..] => {
+									super::push(out, 1776);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 2014);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['r', s @ ..] => {
+							super::push(out, 1363);
+							match s {
+								[] => true,
+								['o', 'p', 's', '\u{1}', s @ ..] => {
+									super::push(out, 1777);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['t', 'a', s @ ..] => {
+							super::push(out, 1364);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 1778);
+									s.is_empty()
+								}
+								['c', '\u{1}', s @ ..] => {
+									super::push(out, 1779);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['v', s @ ..] => {
+					super::push(out, 800);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1365);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['o', s @ ..] => {
+			super::push(out, 346);
+			match s {
+				[] => true,
+				['u', 'n', '\u{1}', s @ ..] => {
+					super::push(out, 801);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -zo.
-pub(crate) fn n80(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.90743876), (2, 0.052384224), (5, 0.022964828), (9, 0.0085297935), (4, 0.0039368276), (10, 0.0031891356)], 0.99844354);
-    match s {
-        [] => true,
-        ['z', 'e', 'p', 'o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n93(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 93);
+	match s {
+		[] => true,
+		['n', s @ ..] => {
+			super::push(out, 347);
+			s.is_empty()
+		}
+		['z', s @ ..] => {
+			super::push(out, 348);
+			match s {
+				[] => true,
+				['e', 'p', 'o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
+					super::push(out, 802);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
-/// The word montabile.
-pub(crate) fn n1781(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 1.0)], 1.0);
-    s.is_empty()
+/// Words ending -bile.
+pub(crate) fn n439(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 423);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 843);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 1387);
+					s.is_empty()
+				}
+				['r', 'u', s @ ..] => {
+					super::push(out, 1388);
+					match s {
+						[] => true,
+						['c', s @ ..] => {
+							super::push(out, 1795);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 2017);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['t', s @ ..] => {
+					super::push(out, 1389);
+					match s {
+						[] => true,
+						['n', s @ ..] => {
+							super::push(out, 1796);
+							match s {
+								[] => true,
+								['e', s @ ..] => {
+									super::push(out, 2018);
+									s.is_empty()
+								}
+								['o', s @ ..] => {
+									super::push(out, 2019);
+									match s {
+										[] => true,
+										['m', s @ ..] => {
+											super::push(out, 2074);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													super::push(out, 2080);
+													s.is_empty()
+												}
+												['i', 'r', '\u{1}', s @ ..] => {
+													super::push(out, 2081);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['s', '\u{1}', s @ ..] => {
+							super::push(out, 1797);
+							s.is_empty()
+						}
+						['t', 'e', s @ ..] => {
+							super::push(out, 1798);
+							match s {
+								[] => true,
+								['p', 's', 'i', 'r', '\u{1}', s @ ..] => {
+									super::push(out, 2020);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['i', s @ ..] => {
+			super::push(out, 844);
+			match s {
+				[] => true,
+				['d', 'o', s @ ..] => {
+					super::push(out, 1390);
+					match s {
+						[] => true,
+						['g', '\u{1}', s @ ..] => {
+							super::push(out, 1799);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['g', s @ ..] => {
+					super::push(out, 1391);
+					match s {
+						[] => true,
+						['r', s @ ..] => {
+							super::push(out, 1800);
+							match s {
+								[] => true,
+								['e', 'm', 'm', 'o', 's', 'i', s @ ..] => {
+									super::push(out, 2021);
+									match s {
+										[] => true,
+										['t', 'n', 'a', '\u{1}', s @ ..] => {
+											super::push(out, 2075);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['m', 'e', s @ ..] => {
+					super::push(out, 1392);
+					match s {
+						[] => true,
+						['t', '\u{1}', s @ ..] => {
+							super::push(out, 1801);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['r', 'e', 'p', s @ ..] => {
+					super::push(out, 1393);
+					match s {
+						[] => true,
+						['e', 'd', s @ ..] => {
+							super::push(out, 1802);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 2022);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['s', s @ ..] => {
+					super::push(out, 1394);
+					match s {
+						[] => true,
+						['n', 'e', s @ ..] => {
+							match s {
+								[] => true,
+								['r', 'p', 'm', s @ ..] => {
+									super::push(out, 2023);
+									match s {
+										[] => true,
+										['o', 'c', '\u{1}', s @ ..] => {
+											super::push(out, 2076);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['s', '\u{1}', s @ ..] => {
+									super::push(out, 2024);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['s', 'o', s @ ..] => {
+							super::push(out, 1803);
+							match s {
+								[] => true,
+								['p', '\u{1}', s @ ..] => {
+									super::push(out, 2025);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['t', 'u', s @ ..] => {
+					super::push(out, 1395);
+					match s {
+						[] => true,
+						['c', 's', 'i', 'd', '\u{1}', s @ ..] => {
+							super::push(out, 1804);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['o', s @ ..] => {
+			super::push(out, 845);
+			match s {
+				[] => true,
+				['m', '\u{1}', s @ ..] => {
+					super::push(out, 1396);
+					s.is_empty()
+				}
+				['n', '\u{1}', s @ ..] => {
+					super::push(out, 1397);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
-/// The word rimontabile.
-pub(crate) fn n1782(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 1.0)], 1.0);
-    s.is_empty()
+/// Words ending -iettile.
+pub(crate) fn n1951(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1805);
+	match s {
+		[] => true,
+		['o', 'r', 'p', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+			super::push(out, 2026);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
-/// Words ending -gile.
-pub(crate) fn n370(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1, 0.8370489), (6, 0.16116579)], 0.99821466);
-    match s {
-        [] => true,
-        ['a', s @ ..] => {
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(6, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', 'f', '\u{1}', s @ ..] => {
-                    out.push(&[(6, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+/// Words ending -ottile.
+pub(crate) fn n1526(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1401);
+	match s {
+		[] => true,
+		['s', '\u{1}', s @ ..] => {
+			super::push(out, 1806);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
-/// Words ending -tile.
-pub(crate) fn n372(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1, 0.9018845), (6, 0.073731594), (5, 0.0243534)], 0.9999695);
-    match s {
-        [] => true,
-        ['n', 'e', 'g', '\u{1}', s @ ..] => {
-            out.push(&[(6, 0.81632715), (1, 0.18367285)], 1.0);
-            s.is_empty()
-        }
-        ['t', s @ ..] => {
-            match s {
-                [] => true,
-                ['e', 'i', 'o', 'r', 'p', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['o', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(6, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['u', '\u{1}', s @ ..] => {
-            out.push(&[(6, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+/// The word utile.
+pub(crate) fn n924(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 851);
+	s.is_empty()
 }
 
-/// The word civile.
-pub(crate) fn n373(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(6, 1.0)], 1.0);
-    s.is_empty()
+/// Words ending -vile.
+pub(crate) fn n444(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 428);
+	match s {
+		[] => true,
+		['i', s @ ..] => {
+			super::push(out, 852);
+			match s {
+				[] => true,
+				['c', '\u{1}', s @ ..] => {
+					super::push(out, 1402);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -lle.
-pub(crate) fn n146(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1, 0.8366674), (5, 0.15671015), (6, 0.0065613794)], 0.99993896);
-    match s {
-        [] => true,
-        ['a', 'p', 's', 'i', 'r', 'p', 'o', 'c', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['e', 'p', s @ ..] => {
-            match s {
-                [] => true,
-                ['i', 's', 'r', 'e', 'v', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['o', 't', 't', 'o', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n193(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 188);
+	match s {
+		[] => true,
+		['a', 'p', 's', 'i', 'r', 'p', 'o', 'c', '\u{1}', s @ ..] => {
+			super::push(out, 429);
+			s.is_empty()
+		}
+		['e', 'p', s @ ..] => {
+			super::push(out, 430);
+			match s {
+				[] => true,
+				['i', 's', 'r', 'e', 'v', '\u{1}', s @ ..] => {
+					super::push(out, 853);
+					s.is_empty()
+				}
+				['o', 't', 't', 'o', 's', '\u{1}', s @ ..] => {
+					super::push(out, 854);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -ole.
-pub(crate) fn n147(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1, 0.9182269), (6, 0.06178378), (5, 0.01998932)], 1.0);
-    match s {
-        [] => true,
-        ['b', 'e', 'd', '\u{1}', s @ ..] => {
-            out.push(&[(6, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['s', s @ ..] => {
-            out.push(&[(1, 0.73458457), (5, 0.21599145), (6, 0.04942397)], 1.0);
-            match s {
-                [] => true,
-                ['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['o', 'p', 'o', 'd', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['v', s @ ..] => {
-            match s {
-                [] => true,
-                ['e', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['c', 'a', 'i', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['d', 'o', 'l', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['g', 'e', 'r', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['n', 'o', 'i', 'g', 'a', 'r', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['p', 'l', 'o', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['r', 'o', 't', 'u', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(6, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['t', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['i', 'p', 'i', 'c', 'e', 'r', 'p', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['o', 'n', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['r', 'o', 'f', 'n', 'o', 'c', '\u{1}', s @ ..] => {
-                                    out.push(&[(6, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['l', 'a', 'v', 'o', 'r', 't', 't', 'a', 'u', 'q', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n194(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 189);
+	match s {
+		[] => true,
+		['b', s @ ..] => {
+			super::push(out, 431);
+			match s {
+				[] => true,
+				['e', 'd', '\u{1}', s @ ..] => {
+					super::push(out, 855);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['s', s @ ..] => {
+			super::push(out, 432);
+			match s {
+				[] => true,
+				['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 856);
+					s.is_empty()
+				}
+				['o', 'p', 'o', 'd', '\u{1}', s @ ..] => {
+					super::push(out, 857);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['v', s @ ..] => {
+			match s {
+				[] => true,
+				['e', s @ ..] => {
+					super::push(out, 858);
+					match s {
+						[] => true,
+						['c', 'a', s @ ..] => {
+							super::push(out, 1403);
+							match s {
+								[] => true,
+								['i', 'p', '\u{1}', s @ ..] => {
+									super::push(out, 1807);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['d', 'o', s @ ..] => {
+							super::push(out, 1404);
+							match s {
+								[] => true,
+								['l', '\u{1}', s @ ..] => {
+									super::push(out, 1808);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['g', 'e', s @ ..] => {
+							super::push(out, 1405);
+							match s {
+								[] => true,
+								['r', 'p', '\u{1}', s @ ..] => {
+									super::push(out, 1809);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['h', s @ ..] => {
+							super::push(out, 1406);
+							s.is_empty()
+						}
+						['n', 'o', 'i', 'g', s @ ..] => {
+							super::push(out, 1407);
+							match s {
+								[] => true,
+								['a', 'r', '\u{1}', s @ ..] => {
+									super::push(out, 1810);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['p', 'l', s @ ..] => {
+							super::push(out, 1408);
+							match s {
+								[] => true,
+								['o', 'c', '\u{1}', s @ ..] => {
+									super::push(out, 1811);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['r', 'o', 't', 'u', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1409);
+							s.is_empty()
+						}
+						['t', s @ ..] => {
+							match s {
+								[] => true,
+								['i', 'p', 'i', 'c', 'e', 'r', 'p', '\u{1}', s @ ..] => {
+									super::push(out, 1812);
+									s.is_empty()
+								}
+								['o', 'n', '\u{1}', s @ ..] => {
+									super::push(out, 1813);
+									s.is_empty()
+								}
+								['r', s @ ..] => {
+									super::push(out, 1814);
+									match s {
+										[] => true,
+										['o', s @ ..] => {
+											super::push(out, 2027);
+											match s {
+												[] => true,
+												['f', 'n', 'o', 'c', '\u{1}', s @ ..] => {
+													super::push(out, 2077);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['l', 'a', 'v', 'o', 'r', 't', 't', 'a', 'u', 'q', '\u{1}', s @ ..] => {
+					super::push(out, 859);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
-/// Words ending -ione.
-pub(crate) fn n399(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1, 0.48455024), (5, 0.45482567), (20, 0.060440987)], 0.9998169);
-    match s {
-        [] => true,
-        ['a', 'n', '\u{1}', s @ ..] => {
-            out.push(&[(1, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['b', 'b', 'a', 'b', '\u{1}', s @ ..] => {
-            out.push(&[(1, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['c', s @ ..] => {
-            match s {
-                [] => true,
-                ['c', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['c', 'r', 'o', 'p', 's', '\u{1}', s @ ..] => {
-                                    out.push(&[(20, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['n', 'o', 'b', '\u{1}', s @ ..] => {
-                                    out.push(&[(1, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['i', 't', 's', 'a', 'p', '\u{1}', s @ ..] => {
-                            out.push(&[(1, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(1, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['n', 'a', 'r', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(1, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['h', 'c', 'n', 'i', 'm', '\u{1}', s @ ..] => {
-            out.push(&[(20, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['n', 'r', 'o', 's', '\u{1}', s @ ..] => {
-            out.push(&[(1, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['p', 'm', 'a', 'c', s @ ..] => {
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['a', 't', 'r', 'o', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(1, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['r', 'p', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(1, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['s', s @ ..] => {
-            match s {
-                [] => true,
-                ['i', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['l', 'l', 'o', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['v', 'o', 'p', 'i', '\u{1}', s @ ..] => {
-                            out.push(&[(1, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['o', 'r', 'r', 'o', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['s', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['e', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['c', 'e', 'r', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['r', 'p', 'e', 'd', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['i', 'm', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(1, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['u', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['l', 'c', 's', 'e', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['r', 't', 'n', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['z', s @ ..] => {
-            match s {
-                [] => true,
-                ['a', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['c', 'i', 't', 's', 'i', 'f', 'o', 's', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['f', 'f', 'a', 'r', 't', 'n', 'o', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(1, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['i', 'd', 'a', 'r', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(1, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['n', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['i', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['c', 'c', 'a', 'v', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                            out.push(&[(1, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['m', 'a', 't', 'n', 'o', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                            out.push(&[(5, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['r', 'e', 't', 'n', 'i', '\u{1}', s @ ..] => {
-                                    out.push(&[(1, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['r', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['f', 'f', 'e', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['g', 'i', 'm', 'm', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['i', 'p', 's', 'a', 'r', 't', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['o', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['f', 'r', 'e', 'p', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                            out.push(&[(1, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['n', 'o', 'm', '\u{1}', s @ ..] => {
-                                            out.push(&[(1, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['t', 'n', 'e', 'c', 'n', 'o', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['s', 's', 'u', 'l', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['t', 't', 'e', 'c', 'r', 'e', 't', 'n', 'i', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['t', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['z', 'z', 'i', 'l', 'i', 'v', 'i', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(1, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['e', 's', 'i', 'v', 'i', 'v', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['i', 'r', 'f', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['n', 'u', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['f', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['i', 'g', 'i', 'n', 'u', '\u{1}', s @ ..] => {
-                            out.push(&[(1, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['r', 'o', 'p', 'o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['u', 'r', 'r', 'o', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+/// Words ending -azione.
+pub(crate) fn n1546(s: &[char], out: &mut Path<'_>) -> bool {
+	match s {
+		[] => true,
+		['f', 'f', 'a', 'r', 't', 'n', 'o', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+			super::push(out, 1818);
+			s.is_empty()
+		}
+		['i', 'd', 'a', 'r', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+			super::push(out, 1819);
+			s.is_empty()
+		}
+		['n', s @ ..] => {
+			match s {
+				[] => true,
+				['i', 'c', 'c', 'a', 'v', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 2028);
+					s.is_empty()
+				}
+				['r', 'e', 't', 'n', 'i', '\u{1}', s @ ..] => {
+					super::push(out, 2029);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['r', 'o', s @ ..] => {
+			super::push(out, 1820);
+			s.is_empty()
+		}
+		['z', 'z', 'i', 'l', 'i', 'v', 'i', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+			super::push(out, 1821);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
-/// Words ending -omune.
-pub(crate) fn n157(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1, 0.64998853), (5, 0.14056611), (6, 0.12298772), (20, 0.08488594)], 0.9984283);
-    match s {
-        [] => true,
-        ['c', '\u{1}', s @ ..] => {
-            out.push(&[(6, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+/// Words ending -lone.
+pub(crate) fn n469(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 447);
+	match s {
+		[] => true,
+		['a', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+			super::push(out, 890);
+			s.is_empty()
+		}
+		['i', 'c', 'a', 'f', '\u{1}', s @ ..] => {
+			super::push(out, 891);
+			s.is_empty()
+		}
+		['l', s @ ..] => {
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					match s {
+						[] => true,
+						['i', 'g', '\u{1}', s @ ..] => {
+							super::push(out, 1822);
+							s.is_empty()
+						}
+						['s', 's', 'a', 'v', '\u{1}', s @ ..] => {
+							super::push(out, 1823);
+							s.is_empty()
+						}
+						['v', '\u{1}', s @ ..] => {
+							super::push(out, 1824);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['e', 'r', 'e', 'h', 'c', 'o', 'i', 'g', '\u{1}', s @ ..] => {
+					super::push(out, 1420);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['o', s @ ..] => {
+			match s {
+				[] => true,
+				['c', 'i', 'n', 'n', 'e', 'm', 'm', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 1421);
+					s.is_empty()
+				}
+				['i', 'c', 'c', 'o', 'g', '\u{1}', s @ ..] => {
+					super::push(out, 1422);
+					s.is_empty()
+				}
+				['t', s @ ..] => {
+					super::push(out, 1423);
+					match s {
+						[] => true,
+						['n', s @ ..] => {
+							super::push(out, 1825);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['u', s @ ..] => {
+			super::push(out, 892);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
-/// Words ending -nente.
-pub(crate) fn n888(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['i', 'm', s @ ..] => {
-            match s {
-                [] => true,
-                ['e', '\u{1}', s @ ..] => {
-                    out.push(&[(6, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['m', 'i', '\u{1}', s @ ..] => {
-                    out.push(&[(6, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['o', 'p', 'm', 'o', 'c', 'i', 't', s @ ..] => {
-            out.push(&[(1, 0.8459297), (5, 0.11575494), (6, 0.038315404)], 1.0);
-            match s {
-                [] => true,
-                ['l', 'u', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+/// Words ending -mone.
+pub(crate) fn n470(s: &[char], out: &mut Path<'_>) -> bool {
+	match s {
+		[] => true,
+		['e', s @ ..] => {
+			super::push(out, 893);
+			s.is_empty()
+		}
+		['l', 'a', 's', '\u{1}', s @ ..] => {
+			super::push(out, 894);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
-/// The word aderente.
-pub(crate) fn n1361(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(6, 1.0)], 1.0);
-    s.is_empty()
+/// Words ending -none.
+pub(crate) fn n471(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 448);
+	match s {
+		[] => true,
+		['g', s @ ..] => {
+			super::push(out, 895);
+			s.is_empty()
+		}
+		['n', 'a', 'p', '\u{1}', s @ ..] => {
+			super::push(out, 896);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
-/// The word fiorente.
-pub(crate) fn n1362(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(6, 1.0)], 1.0);
-    s.is_empty()
+/// Words ending -rone.
+pub(crate) fn n473(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 450);
+	match s {
+		[] => true,
+		['a', 'i', 'c', 'a', 'c', '\u{1}', s @ ..] => {
+			super::push(out, 897);
+			s.is_empty()
+		}
+		['e', 'i', 'h', 'c', 'c', 'a', 'i', 'h', 'c', '\u{1}', s @ ..] => {
+			super::push(out, 898);
+			s.is_empty()
+		}
+		['r', s @ ..] => {
+			super::push(out, 899);
+			s.is_empty()
+		}
+		['t', 'l', 'o', 'p', '\u{1}', s @ ..] => {
+			super::push(out, 900);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
-/// Words ending -acorrente.
-pub(crate) fn n1363(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1, 0.8459297), (5, 0.11575494), (6, 0.038315404)], 1.0);
-    match s {
-        [] => true,
-        ['t', 'r', 'o', 'p', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+/// Words ending -sone.
+pub(crate) fn n474(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 451);
+	match s {
+		[] => true,
+		['o', 't', 'i', 'r', 'i', 'p', 's', '\u{1}', s @ ..] => {
+			super::push(out, 901);
+			s.is_empty()
+		}
+		['s', s @ ..] => {
+			super::push(out, 902);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
-/// The word presente.
-pub(crate) fn n890(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(6, 1.0)], 1.0);
-    s.is_empty()
+/// Words ending -tone.
+pub(crate) fn n475(s: &[char], out: &mut Path<'_>) -> bool {
+	match s {
+		[] => true,
+		['l', 'a', 'b', 'i', 'r', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+			super::push(out, 903);
+			s.is_empty()
+		}
+		['t', 'o', 's', '\u{1}', s @ ..] => {
+			super::push(out, 904);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
-/// Words ending -tente.
-pub(crate) fn n891(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['e', 'p', 'm', 'o', 'c', '\u{1}', s @ ..] => {
-            out.push(&[(6, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['o', 'p', '\u{1}', s @ ..] => {
-            out.push(&[(6, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['r', 'e', 'v', 'i', 'd', '\u{1}', s @ ..] => {
-            out.push(&[(6, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+/// Words ending -une.
+pub(crate) fn n205(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 200);
+	match s {
+		[] => true,
+		['m', s @ ..] => {
+			super::push(out, 453);
+			match s {
+				[] => true,
+				['o', 'c', '\u{1}', s @ ..] => {
+					super::push(out, 905);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
-/// Words ending -quente.
-pub(crate) fn n892(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['e', 'r', 'f', '\u{1}', s @ ..] => {
-            out.push(&[(6, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['o', 'l', 'e', '\u{1}', s @ ..] => {
-            out.push(&[(6, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+/// Words ending -tore.
+pub(crate) fn n501(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 477);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 925);
+			match s {
+				[] => true,
+				['c', s @ ..] => {
+					super::push(out, 1440);
+					match s {
+						[] => true,
+						['o', s @ ..] => {
+							super::push(out, 1834);
+							match s {
+								[] => true,
+								['i', 'g', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
+									super::push(out, 2030);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['r', s @ ..] => {
+					super::push(out, 1441);
+					match s {
+						[] => true,
+						['c', s @ ..] => {
+							super::push(out, 1835);
+							match s {
+								[] => true,
+								['o', 't', 'n', 'a', 'p', '\u{1}', s @ ..] => {
+									super::push(out, 2031);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['i', s @ ..] => {
+			super::push(out, 926);
+			s.is_empty()
+		}
+		['o', s @ ..] => {
+			super::push(out, 927);
+			match s {
+				[] => true,
+				['m', s @ ..] => {
+					match s {
+						[] => true,
+						['a', 's', 'e', '\u{1}', s @ ..] => {
+							super::push(out, 1836);
+							s.is_empty()
+						}
+						['i', 'r', 't', '\u{1}', s @ ..] => {
+							super::push(out, 1837);
+							s.is_empty()
+						}
+						['o', 'l', 'u', 'c', 'o', '\u{1}', s @ ..] => {
+							super::push(out, 1838);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['r', s @ ..] => {
+					super::push(out, 1442);
+					match s {
+						[] => true,
+						['i', 'b', '\u{1}', s @ ..] => {
+							super::push(out, 1839);
+							s.is_empty()
+						}
+						['o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
+							super::push(out, 1840);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['t', s @ ..] => {
+			super::push(out, 928);
+			match s {
+				[] => true,
+				['a', 'e', s @ ..] => {
+					super::push(out, 1443);
+					match s {
+						[] => true,
+						['r', 'i', 'r', 'u', 'l', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 1841);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['e', 's', s @ ..] => {
+					super::push(out, 1444);
+					match s {
+						[] => true,
+						['a', 'r', 't', 'x', 'e', '\u{1}', s @ ..] => {
+							super::push(out, 1842);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['u', s @ ..] => {
+			super::push(out, 929);
+			match s {
+				[] => true,
+				['a', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
+					super::push(out, 1445);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
-/// The word fervente.
-pub(crate) fn n893(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(6, 1.0)], 1.0);
-    s.is_empty()
+/// Words ending -estre.
+pub(crate) fn n1008(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 930);
+	s.is_empty()
+}
+
+/// The word monstre.
+pub(crate) fn n1009(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 931);
+	s.is_empty()
+}
+
+/// Words ending -lustre.
+pub(crate) fn n1010(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 932);
+	match s {
+		[] => true,
+		['l', 'i', '\u{1}', s @ ..] => {
+			super::push(out, 1446);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ure.
+pub(crate) fn n213(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 208);
+	match s {
+		[] => true,
+		['t', s @ ..] => {
+			super::push(out, 481);
+			match s {
+				[] => true,
+				['a', 'n', '\u{1}', s @ ..] => {
+					super::push(out, 933);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -distante.
+pub(crate) fn n1999(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1852);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 2034);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -vante.
+pub(crate) fn n1034(s: &[char], out: &mut Path<'_>) -> bool {
+	match s {
+		[] => true,
+		['a', 'd', '\u{1}', s @ ..] => {
+			super::push(out, 1462);
+			s.is_empty()
+		}
+		['e', s @ ..] => {
+			super::push(out, 1463);
+			match s {
+				[] => true,
+				['l', 'i', s @ ..] => {
+					super::push(out, 1853);
+					match s {
+						[] => true,
+						['r', '\u{1}', s @ ..] => {
+							super::push(out, 2035);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -zante.
+pub(crate) fn n1035(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 954);
+	s.is_empty()
+}
+
+/// Words ending -ente.
+pub(crate) fn n523(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 498);
+	match s {
+		[] => true,
+		['c', s @ ..] => {
+			super::push(out, 955);
+			match s {
+				[] => true,
+				['e', s @ ..] => {
+					super::push(out, 1464);
+					match s {
+						[] => true,
+						['r', '\u{1}', s @ ..] => {
+							super::push(out, 1854);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['o', s @ ..] => {
+					super::push(out, 1465);
+					match s {
+						[] => true,
+						['n', s @ ..] => {
+							super::push(out, 1855);
+							match s {
+								[] => true,
+								['n', 'i', '\u{1}', s @ ..] => {
+									super::push(out, 2036);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['s', s @ ..] => {
+					super::push(out, 1466);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['d', s @ ..] => {
+			match s {
+				[] => true,
+				['i', s @ ..] => {
+					super::push(out, 1467);
+					match s {
+						[] => true,
+						['c', s @ ..] => {
+							super::push(out, 1856);
+							match s {
+								[] => true,
+								['n', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+									super::push(out, 2037);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['v', 'e', s @ ..] => {
+							super::push(out, 1857);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 2038);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['n', s @ ..] => {
+					super::push(out, 1468);
+					s.is_empty()
+				}
+				['u', 'r', s @ ..] => {
+					super::push(out, 1469);
+					match s {
+						[] => true,
+						['p', 'm', 'i', '\u{1}', s @ ..] => {
+							super::push(out, 1858);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['g', s @ ..] => {
+			match s {
+				[] => true,
+				['i', s @ ..] => {
+					super::push(out, 1470);
+					match s {
+						[] => true,
+						['l', s @ ..] => {
+							super::push(out, 1859);
+							match s {
+								[] => true,
+								['i', 'd', '\u{1}', s @ ..] => {
+									super::push(out, 2039);
+									s.is_empty()
+								}
+								['l', 'e', 't', 'n', 'i', '\u{1}', s @ ..] => {
+									super::push(out, 2040);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['n', 'i', s @ ..] => {
+					super::push(out, 1471);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1860);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['r', 'u', '\u{1}', s @ ..] => {
+					super::push(out, 1472);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['i', s @ ..] => {
+			match s {
+				[] => true,
+				['c', 'i', 'f', 'f', 'e', s @ ..] => {
+					super::push(out, 1473);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1861);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['l', 'g', s @ ..] => {
+					super::push(out, 1474);
+					match s {
+						[] => true,
+						['o', s @ ..] => {
+							super::push(out, 1862);
+							match s {
+								[] => true,
+								['c', 'c', 'a', '\u{1}', s @ ..] => {
+									super::push(out, 2041);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['l', s @ ..] => {
+			match s {
+				[] => true,
+				['a', 'v', '\u{1}', s @ ..] => {
+					super::push(out, 1475);
+					s.is_empty()
+				}
+				['l', 'e', 'c', 'c', 'e', '\u{1}', s @ ..] => {
+					super::push(out, 1476);
+					s.is_empty()
+				}
+				['o', 'd', s @ ..] => {
+					super::push(out, 1477);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1863);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['u', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 1478);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['m', 'e', s @ ..] => {
+			super::push(out, 956);
+			match s {
+				[] => true,
+				['l', 'c', '\u{1}', s @ ..] => {
+					super::push(out, 1479);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['n', s @ ..] => {
+			match s {
+				[] => true,
+				['i', s @ ..] => {
+					super::push(out, 1480);
+					match s {
+						[] => true,
+						['m', s @ ..] => {
+							match s {
+								[] => true,
+								['e', '\u{1}', s @ ..] => {
+									super::push(out, 2042);
+									s.is_empty()
+								}
+								['m', 'i', '\u{1}', s @ ..] => {
+									super::push(out, 2043);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['o', s @ ..] => {
+					super::push(out, 1481);
+					match s {
+						[] => true,
+						['p', 'm', 'o', 'c', 'i', s @ ..] => {
+							super::push(out, 1864);
+							match s {
+								[] => true,
+								['t', 'l', 'u', 'm', '\u{1}', s @ ..] => {
+									super::push(out, 2044);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['r', s @ ..] => {
+			match s {
+				[] => true,
+				['e', 'd', s @ ..] => {
+					super::push(out, 1482);
+					match s {
+						[] => true,
+						['a', '\u{1}', s @ ..] => {
+							super::push(out, 1865);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['o', s @ ..] => {
+					super::push(out, 1483);
+					match s {
+						[] => true,
+						['i', 'f', '\u{1}', s @ ..] => {
+							super::push(out, 1866);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['r', s @ ..] => {
+					super::push(out, 1484);
+					match s {
+						[] => true,
+						['o', 'c', 'a', 't', 'r', 'o', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 1867);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['s', 'e', 'r', s @ ..] => {
+			super::push(out, 957);
+			match s {
+				[] => true,
+				['p', '\u{1}', s @ ..] => {
+					super::push(out, 1485);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['t', s @ ..] => {
+			match s {
+				[] => true,
+				['e', 'p', s @ ..] => {
+					super::push(out, 1486);
+					match s {
+						[] => true,
+						['m', 'o', 'c', '\u{1}', s @ ..] => {
+							super::push(out, 1868);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['o', 'p', '\u{1}', s @ ..] => {
+					super::push(out, 1487);
+					s.is_empty()
+				}
+				['r', s @ ..] => {
+					super::push(out, 1488);
+					match s {
+						[] => true,
+						['e', 'v', 'i', 'd', '\u{1}', s @ ..] => {
+							super::push(out, 1869);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['u', 'q', s @ ..] => {
+			super::push(out, 958);
+			match s {
+				[] => true,
+				['e', 'r', 'f', '\u{1}', s @ ..] => {
+					super::push(out, 1489);
+					s.is_empty()
+				}
+				['o', 'l', 'e', '\u{1}', s @ ..] => {
+					super::push(out, 1490);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['v', 'r', s @ ..] => {
+			super::push(out, 959);
+			match s {
+				[] => true,
+				['e', 'f', '\u{1}', s @ ..] => {
+					super::push(out, 1491);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -onte.
-pub(crate) fn n448(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['p', s @ ..] => {
-            out.push(&[(1, 0.8567483), (5, 0.12051576), (6, 0.022476539)], 0.9997406);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['r', 'f', 'i', 'd', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n524(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 499);
+	match s {
+		[] => true,
+		['p', '\u{1}', s @ ..] => {
+			super::push(out, 960);
+			s.is_empty()
+		}
+		['r', 'f', 'i', 'd', '\u{1}', s @ ..] => {
+			super::push(out, 961);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
-/// Words ending -orte.
-pub(crate) fn n177(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1, 0.77108413), (6, 0.12022583), (5, 0.10846113)], 0.9997711);
-    match s {
-        [] => true,
-        ['f', '\u{1}', s @ ..] => {
-            out.push(&[(6, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['p', 'o', 'r', 't', 't', 'a', 'u', 'q', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+/// Words ending -rte.
+pub(crate) fn n226(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 221);
+	match s {
+		[] => true,
+		['o', s @ ..] => {
+			super::push(out, 500);
+			match s {
+				[] => true,
+				['f', '\u{1}', s @ ..] => {
+					super::push(out, 962);
+					s.is_empty()
+				}
+				['p', 'o', 'r', 't', 't', 'a', 'u', 'q', '\u{1}', s @ ..] => {
+					super::push(out, 963);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
-/// The word triste.
-pub(crate) fn n178(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(6, 1.0)], 1.0);
-    s.is_empty()
+/// Words ending -ste.
+pub(crate) fn n227(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 222);
+	match s {
+		[] => true,
+		['i', 'r', 't', '\u{1}', s @ ..] => {
+			super::push(out, 501);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
-/// Words ending -tte.
-pub(crate) fn n179(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1, 0.8567483), (5, 0.12051576), (6, 0.022476539)], 0.9997406);
-    match s {
-        [] => true,
-        ['e', 'u', 'l', 'b', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+/// The word bluette.
+pub(crate) fn n228(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 223);
+	s.is_empty()
+}
+
+/// Words ending -ingio.
+pub(crate) fn n1184(s: &[char], out: &mut Path<'_>) -> bool {
+	match s {
+		[] => true,
+		['r', s @ ..] => {
+			match s {
+				[] => true,
+				['a', 't', 'o', 'l', '\u{1}', s @ ..] => {
+					super::push(out, 1903);
+					s.is_empty()
+				}
+				['u', 't', '\u{1}', s @ ..] => {
+					super::push(out, 1904);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['t', 'e', 'p', 'a', 'c', '\u{1}', s @ ..] => {
+			super::push(out, 1559);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ogio.
+pub(crate) fn n658(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 625);
+	s.is_empty()
+}
+
+/// The word mattugio.
+pub(crate) fn n659(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 626);
+	s.is_empty()
 }
 
 /// Words ending -hio.
-pub(crate) fn n225(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(9, 0.7666285), (5, 0.056076907), (0, 0.05227741), (25, 0.044678416), (7, 0.03866636), (40, 0.026199741), (31, 0.0131075)], 0.9976348);
-    match s {
-        [] => true,
-        ['c', s @ ..] => {
-            match s {
-                [] => true,
-                ['c', 'e', 'v', '\u{1}', s @ ..] => {
-                    out.push(&[(25, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['i', 'c', 'c', 'u', 'l', '\u{1}', s @ ..] => {
-                    out.push(&[(0, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['s', 'i', 'r', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n283(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 276);
+	match s {
+		[] => true,
+		['c', s @ ..] => {
+			match s {
+				[] => true,
+				['c', s @ ..] => {
+					super::push(out, 1093);
+					match s {
+						[] => true,
+						['e', 'v', '\u{1}', s @ ..] => {
+							super::push(out, 1560);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['i', 'c', 'c', 'u', 'l', '\u{1}', s @ ..] => {
+					super::push(out, 1094);
+					s.is_empty()
+				}
+				['s', s @ ..] => {
+					super::push(out, 1095);
+					match s {
+						[] => true,
+						['i', s @ ..] => {
+							super::push(out, 1561);
+							match s {
+								[] => true,
+								['r', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
+									super::push(out, 1905);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -lio.
-pub(crate) fn n226(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(9, 0.70518047), (5, 0.24887465), (7, 0.035065234), (0, 0.0077973604)], 0.9969177);
-    match s {
-        [] => true,
-        ['g', s @ ..] => {
-            match s {
-                [] => true,
-                ['a', 't', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['e', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['l', 'o', 'r', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['o', s @ ..] => {
-            match s {
-                [] => true,
-                ['p', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', 'n', 'o', 'm', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['t', 't', 'o', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n284(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 277);
+	match s {
+		[] => true,
+		['g', s @ ..] => {
+			match s {
+				[] => true,
+				['a', 't', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 1096);
+					s.is_empty()
+				}
+				['e', 'm', '\u{1}', s @ ..] => {
+					super::push(out, 1097);
+					s.is_empty()
+				}
+				['o', s @ ..] => {
+					super::push(out, 1098);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['l', 'o', 'r', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+			super::push(out, 627);
+			s.is_empty()
+		}
+		['o', s @ ..] => {
+			super::push(out, 628);
+			match s {
+				[] => true,
+				['p', s @ ..] => {
+					super::push(out, 1099);
+					s.is_empty()
+				}
+				['t', 't', 'o', 's', '\u{1}', s @ ..] => {
+					super::push(out, 1100);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -mio.
+pub(crate) fn n285(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 278);
+	s.is_empty()
 }
 
 /// Words ending -nio.
-pub(crate) fn n227(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(9, 0.79844356), (0, 0.1220264), (5, 0.045456626), (7, 0.03134203)], 0.9972686);
-    match s {
-        [] => true,
-        ['a', 'f', 'o', 't', 's', 'i', 'r', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(0, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['i', 'm', 'r', 'a', 'c', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['o', s @ ..] => {
-            match s {
-                [] => true,
-                ['a', '\u{1}', s @ ..] => {
-                    out.push(&[(0, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['d', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(0, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['e', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(0, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n286(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 279);
+	match s {
+		[] => true,
+		['a', 'f', 'o', 't', 's', 'i', 'r', 'a', '\u{1}', s @ ..] => {
+			super::push(out, 629);
+			s.is_empty()
+		}
+		['i', s @ ..] => {
+			super::push(out, 630);
+			match s {
+				[] => true,
+				['m', 'r', 'a', 'c', '\u{1}', s @ ..] => {
+					super::push(out, 1101);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['o', s @ ..] => {
+			super::push(out, 631);
+			match s {
+				[] => true,
+				['a', '\u{1}', s @ ..] => {
+					super::push(out, 1102);
+					s.is_empty()
+				}
+				['d', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 1103);
+					s.is_empty()
+				}
+				['e', 'm', '\u{1}', s @ ..] => {
+					super::push(out, 1104);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -oio.
+pub(crate) fn n287(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 280);
+	s.is_empty()
 }
 
 /// Words ending -pio.
-pub(crate) fn n228(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(9, 0.77801174), (5, 0.09314107), (0, 0.04881361), (14, 0.040772106), (7, 0.036102846)], 0.9968414);
-    match s {
-        [] => true,
-        ['\u{1}', s @ ..] => {
-            out.push(&[(0, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['m', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(14, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['p', 'o', 'c', 's', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['s', 'a', 'c', '\u{1}', s @ ..] => {
-            out.push(&[(5, 0.81632715), (9, 0.18367285)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n288(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 281);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 632);
+			s.is_empty()
+		}
+		['m', s @ ..] => {
+			super::push(out, 633);
+			match s {
+				[] => true,
+				['a', '\u{1}', s @ ..] => {
+					super::push(out, 1105);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['p', 'o', 'c', 's', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+			super::push(out, 634);
+			s.is_empty()
+		}
+		['s', 'a', 'c', '\u{1}', s @ ..] => {
+			super::push(out, 635);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -rio.
-pub(crate) fn n229(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(9, 0.97819483), (0, 0.011581598), (5, 0.005554284), (25, 0.0031891356)], 0.99851984);
-    match s {
-        [] => true,
-        ['\u{1}', s @ ..] => {
-            out.push(&[(0, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['a', s @ ..] => {
-            out.push(&[(9, 0.9903716), (5, 0.0064545665), (25, 0.0028839551)], 0.9997101);
-            match s {
-                [] => true,
-                ['r', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['o', 'i', s @ ..] => {
-                            out.push(&[(9, 0.8820478), (5, 0.115693904), (25, 0.002044709)], 0.9997864);
-                            match s {
-                                [] => true,
-                                ['r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['t', 'l', 'u', 'm', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['t', 'n', s @ ..] => {
-                            out.push(&[(9, 0.8803387), (25, 0.113679715), (5, 0.005737392)], 0.99975586);
-                            match s {
-                                [] => true,
-                                ['o', 'c', '\u{1}', s @ ..] => {
-                                    out.push(&[(25, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['t', 'e', 'i', 'r', 'p', 'o', 'r', 'p', 'i', s @ ..] => {
-                    out.push(&[(9, 0.8803387), (5, 0.11683833), (25, 0.0025635157)], 0.9997406);
-                    match s {
-                        [] => true,
-                        ['n', 'u', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['e', s @ ..] => {
-            out.push(&[(9, 0.8327306), (5, 0.080338754), (25, 0.07888915), (0, 0.0071259635)], 0.9990845);
-            match s {
-                [] => true,
-                ['s', '\u{1}', s @ ..] => {
-                    out.push(&[(25, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['t', 'i', 'r', 'c', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['o', 't', s @ ..] => {
-            out.push(&[(9, 0.97380024), (0, 0.025864042)], 0.9996643);
-            match s {
-                [] => true,
-                ['a', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['c', 'o', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['l', '\u{1}', s @ ..] => {
-                                    out.push(&[(0, 0.6666667), (9, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['v', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(0, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['d', 'n', 'a', 'm', 'o', 'c', 'c', 'a', 'r', '\u{1}', s @ ..] => {
-                            out.push(&[(0, 0.6666667), (9, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['m', 'i', 't', 't', 'i', 'g', 'e', 'l', '\u{1}', s @ ..] => {
-                            out.push(&[(0, 0.6666667), (9, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['n', 'o', 'i', 'h', 'c', 'n', 'i', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(0, 0.6666667), (9, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['p', 'r', 'u', 's', 'u', '\u{1}', s @ ..] => {
-                            out.push(&[(0, 0.6666667), (9, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['r', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(0, 0.6666667), (9, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['t', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', '\u{1}', s @ ..] => {
-                            out.push(&[(0, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['u', 'd', 'e', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(0, 0.6666667), (9, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n289(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 282);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 636);
+			s.is_empty()
+		}
+		['a', s @ ..] => {
+			super::push(out, 637);
+			match s {
+				[] => true,
+				['r', s @ ..] => {
+					super::push(out, 1106);
+					match s {
+						[] => true,
+						['o', s @ ..] => {
+							super::push(out, 1562);
+							match s {
+								[] => true,
+								['i', s @ ..] => {
+									match s {
+										[] => true,
+										['r', 'o', 'u', 'f', '\u{1}', s @ ..] => {
+											super::push(out, 2049);
+											s.is_empty()
+										}
+										['t', 'l', 'u', 'm', '\u{1}', s @ ..] => {
+											super::push(out, 2050);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['t', s @ ..] => {
+							super::push(out, 1563);
+							match s {
+								[] => true,
+								['n', 'o', 'c', '\u{1}', s @ ..] => {
+									super::push(out, 1906);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['t', 'e', s @ ..] => {
+					super::push(out, 1107);
+					match s {
+						[] => true,
+						['i', s @ ..] => {
+							super::push(out, 1564);
+							match s {
+								[] => true,
+								['r', 'p', 'o', 'r', 'p', 'i', 'n', 'u', '\u{1}', s @ ..] => {
+									super::push(out, 1907);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['e', s @ ..] => {
+			super::push(out, 638);
+			match s {
+				[] => true,
+				['s', s @ ..] => {
+					super::push(out, 1108);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1565);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['t', s @ ..] => {
+					super::push(out, 1109);
+					match s {
+						[] => true,
+						['i', 'r', 'c', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
+							super::push(out, 1566);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['o', s @ ..] => {
+			super::push(out, 639);
+			match s {
+				[] => true,
+				['t', s @ ..] => {
+					match s {
+						[] => true,
+						['a', s @ ..] => {
+							match s {
+								[] => true,
+								['c', 'o', s @ ..] => {
+									super::push(out, 1908);
+									match s {
+										[] => true,
+										['l', '\u{1}', s @ ..] => {
+											super::push(out, 2051);
+											s.is_empty()
+										}
+										['v', 'a', '\u{1}', s @ ..] => {
+											super::push(out, 2052);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['d', 'n', s @ ..] => {
+									super::push(out, 1909);
+									match s {
+										[] => true,
+										['a', 'm', 'o', 'c', 'c', 'a', 'r', '\u{1}', s @ ..] => {
+											super::push(out, 2053);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['m', 'i', 't', 't', 'i', 'g', 'e', 'l', '\u{1}', s @ ..] => {
+									super::push(out, 1910);
+									s.is_empty()
+								}
+								['n', 'o', 'i', 'h', 'c', 'n', 'i', 'm', '\u{1}', s @ ..] => {
+									super::push(out, 1911);
+									s.is_empty()
+								}
+								['p', s @ ..] => {
+									super::push(out, 1912);
+									match s {
+										[] => true,
+										['r', 'u', 's', 'u', '\u{1}', s @ ..] => {
+											super::push(out, 2054);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['r', 'a', '\u{1}', s @ ..] => {
+									super::push(out, 1913);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['t', s @ ..] => {
+							super::push(out, 1567);
+							match s {
+								[] => true,
+								['a', '\u{1}', s @ ..] => {
+									super::push(out, 1914);
+									s.is_empty()
+								}
+								['u', 'd', 'e', 's', '\u{1}', s @ ..] => {
+									super::push(out, 1915);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -sio.
-pub(crate) fn n230(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(9, 0.7741512), (0, 0.14407569), (7, 0.058075838), (5, 0.018646525)], 0.9949493);
-    match s {
-        [] => true,
-        ['a', s @ ..] => {
-            match s {
-                [] => true,
-                ['n', 'r', 'a', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(0, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', 'r', 'a', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(0, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n290(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 283);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 640);
+			match s {
+				[] => true,
+				['n', 'r', 'a', 'p', '\u{1}', s @ ..] => {
+					super::push(out, 1110);
+					s.is_empty()
+				}
+				['r', 'r', 'a', 'p', '\u{1}', s @ ..] => {
+					super::push(out, 1111);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -tio.
-pub(crate) fn n231(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(9, 0.600412), (0, 0.24190128), (5, 0.09011979), (7, 0.062149998)], 0.9945831);
-    match s {
-        [] => true,
-        ['a', s @ ..] => {
-            match s {
-                [] => true,
-                ['l', 'o', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(0, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(0, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['n', 'a', 't', 's', '\u{1}', s @ ..] => {
-            out.push(&[(0, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['s', 'e', s @ ..] => {
-            match s {
-                [] => true,
-                ['p', 'l', 'a', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', '\u{1}', s @ ..] => {
-                    out.push(&[(0, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n291(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 284);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			match s {
+				[] => true,
+				['l', 'o', 's', '\u{1}', s @ ..] => {
+					super::push(out, 1112);
+					s.is_empty()
+				}
+				['r', 'p', '\u{1}', s @ ..] => {
+					super::push(out, 1113);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['n', 'a', 't', 's', '\u{1}', s @ ..] => {
+			super::push(out, 641);
+			s.is_empty()
+		}
+		['s', s @ ..] => {
+			super::push(out, 642);
+			match s {
+				[] => true,
+				['e', s @ ..] => {
+					super::push(out, 1114);
+					match s {
+						[] => true,
+						['p', 'l', 'a', 'c', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1568);
+							s.is_empty()
+						}
+						['r', '\u{1}', s @ ..] => {
+							super::push(out, 1569);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
-/// The word salvaspazio.
-pub(crate) fn n580(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 1.0)], 1.0);
-    s.is_empty()
+/// Words ending -vio.
+pub(crate) fn n292(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 285);
+	match s {
+		[] => true,
+		['a', '\u{1}', s @ ..] => {
+			super::push(out, 643);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
-/// Words ending -tuoso.
-pub(crate) fn n1113(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['n', 'o', 's', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['r', 'i', 'v', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['t', 'e', 'f', 'f', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+/// Words ending -zio.
+pub(crate) fn n293(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 286);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 644);
+			match s {
+				[] => true,
+				['p', 's', 'a', 'v', 'l', 'a', 's', '\u{1}', s @ ..] => {
+					super::push(out, 1115);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['i', s @ ..] => {
+			super::push(out, 645);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
-/// The word nervoso.
-pub(crate) fn n682(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(10, 1.0)], 1.0);
-    s.is_empty()
+/// The word scarno.
+pub(crate) fn n1261(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1167);
+	s.is_empty()
+}
+
+/// Words ending -erno.
+pub(crate) fn n727(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 690);
+	match s {
+		[] => true,
+		['d', 'o', 'm', '\u{1}', s @ ..] => {
+			super::push(out, 1168);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -orno.
+pub(crate) fn n728(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 691);
+	match s {
+		[] => true,
+		['p', '\u{1}', s @ ..] => {
+			super::push(out, 1169);
+			s.is_empty()
+		}
+		['t', s @ ..] => {
+			super::push(out, 1170);
+			match s {
+				[] => true,
+				['n', 'i', '\u{1}', s @ ..] => {
+					super::push(out, 1593);
+					s.is_empty()
+				}
+				['t', 'a', 'd', '\u{1}', s @ ..] => {
+					super::push(out, 1594);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// The word qualuno.
+pub(crate) fn n314(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 306);
+	s.is_empty()
+}
+
+/// Words ending -luminoso.
+pub(crate) fn n1759(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1622);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 1936);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// The word dannoso.
+pub(crate) fn n1319(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1221);
+	s.is_empty()
+}
+
+/// Words ending -roso.
+pub(crate) fn n785(s: &[char], out: &mut Path<'_>) -> bool {
+	match s {
+		[] => true,
+		['e', s @ ..] => {
+			match s {
+				[] => true,
+				['m', 'u', 'n', '\u{1}', s @ ..] => {
+					super::push(out, 1624);
+					s.is_empty()
+				}
+				['n', s @ ..] => {
+					super::push(out, 1625);
+					match s {
+						[] => true,
+						['e', 'g', '\u{1}', s @ ..] => {
+							super::push(out, 1937);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['o', s @ ..] => {
+			match s {
+				[] => true,
+				['g', s @ ..] => {
+					super::push(out, 1626);
+					match s {
+						[] => true,
+						['i', s @ ..] => {
+							super::push(out, 1938);
+							match s {
+								[] => true,
+								['r', '\u{1}', s @ ..] => {
+									super::push(out, 2055);
+									s.is_empty()
+								}
+								['v', '\u{1}', s @ ..] => {
+									super::push(out, 2056);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['l', s @ ..] => {
+					super::push(out, 1627);
+					match s {
+						[] => true,
+						['a', 'c', '\u{1}', s @ ..] => {
+							super::push(out, 1939);
+							s.is_empty()
+						}
+						['o', 'd', '\u{1}', s @ ..] => {
+							super::push(out, 1940);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// The word spassoso.
+pub(crate) fn n786(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 740);
+	s.is_empty()
+}
+
+/// Words ending -toso.
+pub(crate) fn n787(s: &[char], out: &mut Path<'_>) -> bool {
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 1222);
+			s.is_empty()
+		}
+		['i', s @ ..] => {
+			match s {
+				[] => true,
+				['n', s @ ..] => {
+					super::push(out, 1628);
+					match s {
+						[] => true,
+						['g', 'i', 'd', '\u{1}', s @ ..] => {
+							super::push(out, 1941);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['p', s @ ..] => {
+					super::push(out, 1629);
+					match s {
+						[] => true,
+						['i', 'c', 'e', 'r', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 1942);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['l', 'o', s @ ..] => {
+			super::push(out, 1223);
+			match s {
+				[] => true,
+				['c', 'a', 'f', '\u{1}', s @ ..] => {
+					super::push(out, 1630);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['s', 'o', 'c', s @ ..] => {
+			super::push(out, 1224);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 1631);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['t', 'e', 'f', 'i', 'd', '\u{1}', s @ ..] => {
+			super::push(out, 1225);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -uoso.
+pub(crate) fn n788(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 741);
+	match s {
+		[] => true,
+		['s', 's', 'u', 'l', '\u{1}', s @ ..] => {
+			super::push(out, 1226);
+			s.is_empty()
+		}
+		['t', s @ ..] => {
+			match s {
+				[] => true,
+				['n', 'o', 's', s @ ..] => {
+					super::push(out, 1632);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1943);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['r', 'i', 'v', '\u{1}', s @ ..] => {
+					super::push(out, 1633);
+					s.is_empty()
+				}
+				['t', 'e', 'f', 'f', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 1634);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -rvoso.
+pub(crate) fn n789(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 742);
+	match s {
+		[] => true,
+		['e', 'n', '\u{1}', s @ ..] => {
+			super::push(out, 1227);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -rso.
-pub(crate) fn n278(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['a', 'c', 's', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['e', 'v', 'i', 'd', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n340(s: &[char], out: &mut Path<'_>) -> bool {
+	match s {
+		[] => true,
+		['a', 'c', 's', '\u{1}', s @ ..] => {
+			super::push(out, 743);
+			s.is_empty()
+		}
+		['e', 'v', 'i', s @ ..] => {
+			super::push(out, 744);
+			match s {
+				[] => true,
+				['d', '\u{1}', s @ ..] => {
+					super::push(out, 1228);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -sso.
-pub(crate) fn n279(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.8813306), (5, 0.0886244), (10, 0.029846648)], 0.99980164);
-    match s {
-        [] => true,
-        ['a', s @ ..] => {
-            match s {
-                [] => true,
-                ['b', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['c', 's', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['p', 'i', 'b', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['e', s @ ..] => {
-            match s {
-                [] => true,
-                ['c', 'c', 'a', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['l', 'f', 'i', 'r', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['p', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', 'p', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(5, 0.81632715), (0, 0.18367285)], 1.0);
-                            s.is_empty()
-                        }
-                        ['p', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['s', 'o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['o', 'r', s @ ..] => {
-            match s {
-                [] => true,
-                ['g', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['o', 'c', 'c', 'e', 'b', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['u', 'l', 'a', 'r', 't', 'x', 'e', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n341(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 332);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			match s {
+				[] => true,
+				['b', s @ ..] => {
+					super::push(out, 1229);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1635);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['c', s @ ..] => {
+					super::push(out, 1230);
+					match s {
+						[] => true,
+						['s', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1636);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['p', s @ ..] => {
+					super::push(out, 1231);
+					match s {
+						[] => true,
+						['i', 'b', '\u{1}', s @ ..] => {
+							super::push(out, 1637);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['e', s @ ..] => {
+			match s {
+				[] => true,
+				['c', s @ ..] => {
+					super::push(out, 1232);
+					match s {
+						[] => true,
+						['c', s @ ..] => {
+							super::push(out, 1638);
+							match s {
+								[] => true,
+								['a', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
+									super::push(out, 1944);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['l', 'f', 'i', s @ ..] => {
+					super::push(out, 1233);
+					match s {
+						[] => true,
+						['r', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1639);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['m', s @ ..] => {
+					super::push(out, 1234);
+					s.is_empty()
+				}
+				['p', 's', '\u{1}', s @ ..] => {
+					super::push(out, 1235);
+					s.is_empty()
+				}
+				['r', 'p', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1640);
+							s.is_empty()
+						}
+						['p', s @ ..] => {
+							super::push(out, 1641);
+							match s {
+								[] => true,
+								['a', '\u{1}', s @ ..] => {
+									super::push(out, 1945);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['s', s @ ..] => {
+					super::push(out, 1236);
+					match s {
+						[] => true,
+						['o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
+							super::push(out, 1642);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['o', 'r', s @ ..] => {
+			super::push(out, 745);
+			match s {
+				[] => true,
+				['g', '\u{1}', s @ ..] => {
+					super::push(out, 1237);
+					s.is_empty()
+				}
+				['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 1238);
+					s.is_empty()
+				}
+				['o', 'c', 'c', 'e', 'b', '\u{1}', s @ ..] => {
+					super::push(out, 1239);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['u', 'l', 'a', 'r', 't', 'x', 'e', '\u{1}', s @ ..] => {
+			super::push(out, 746);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -uso.
-pub(crate) fn n280(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['f', 'f', 'i', 'd', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['i', s @ ..] => {
-            out.push(&[(0, 0.8180514), (5, 0.15127794), (10, 0.029098954)], 0.9984283);
-            match s {
-                [] => true,
-                ['r', 'u', 'l', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['t', 'l', 'u', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['o', s @ ..] => {
-            out.push(&[(0, 0.8280766), (5, 0.124208435), (10, 0.045273516)], 0.99755853);
-            match s {
-                [] => true,
-                ['n', 'o', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n342(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 333);
+	match s {
+		[] => true,
+		['f', s @ ..] => {
+			super::push(out, 747);
+			match s {
+				[] => true,
+				['f', 'i', 'd', '\u{1}', s @ ..] => {
+					super::push(out, 1240);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['i', s @ ..] => {
+			super::push(out, 748);
+			match s {
+				[] => true,
+				['r', 'u', 'l', 'p', '\u{1}', s @ ..] => {
+					super::push(out, 1241);
+					s.is_empty()
+				}
+				['t', 'l', 'u', 'm', '\u{1}', s @ ..] => {
+					super::push(out, 1242);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['l', s @ ..] => {
+			super::push(out, 749);
+			s.is_empty()
+		}
+		['o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
+			super::push(out, 750);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -icato.
+pub(crate) fn n1347(s: &[char], out: &mut Path<'_>) -> bool {
+	match s {
+		[] => true,
+		['f', s @ ..] => {
+			super::push(out, 1645);
+			s.is_empty()
+		}
+		['l', s @ ..] => {
+			super::push(out, 1646);
+			match s {
+				[] => true,
+				['e', 'd', '\u{1}', s @ ..] => {
+					super::push(out, 1947);
+					s.is_empty()
+				}
+				['p', 'm', 'o', 'c', '\u{1}', s @ ..] => {
+					super::push(out, 1948);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['r', 't', 'n', 'i', '\u{1}', s @ ..] => {
+			super::push(out, 1647);
+			s.is_empty()
+		}
+		['t', 's', s @ ..] => {
+			super::push(out, 1648);
+			match s {
+				[] => true,
+				['i', 'f', 'o', 's', '\u{1}', s @ ..] => {
+					super::push(out, 1949);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -rcato.
+pub(crate) fn n1348(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1243);
+	match s {
+		[] => true,
+		['a', 'm', '\u{1}', s @ ..] => {
+			super::push(out, 1649);
+			s.is_empty()
+		}
+		['e', 'c', 'i', 'r', '\u{1}', s @ ..] => {
+			super::push(out, 1650);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ducato.
+pub(crate) fn n1349(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1244);
+	match s {
+		[] => true,
+		['e', 'l', 'a', 'm', '\u{1}', s @ ..] => {
+			super::push(out, 1651);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -dato.
+pub(crate) fn n802(s: &[char], out: &mut Path<'_>) -> bool {
+	match s {
+		[] => true,
+		['i', s @ ..] => {
+			match s {
+				[] => true,
+				['f', s @ ..] => {
+					super::push(out, 1652);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1950);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['l', 'o', 's', 'n', 'o', 'c', '\u{1}', s @ ..] => {
+					super::push(out, 1653);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['n', 'i', s @ ..] => {
+			super::push(out, 1245);
+			match s {
+				[] => true,
+				['l', 'b', '\u{1}', s @ ..] => {
+					super::push(out, 1654);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['o', 'l', s @ ..] => {
+			super::push(out, 1246);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 1655);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -gato.
+pub(crate) fn n804(s: &[char], out: &mut Path<'_>) -> bool {
+	match s {
+		[] => true,
+		['e', s @ ..] => {
+			match s {
+				[] => true,
+				['i', s @ ..] => {
+					super::push(out, 1656);
+					match s {
+						[] => true,
+						['r', 'a', 'v', '\u{1}', s @ ..] => {
+							super::push(out, 1951);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['l', '\u{1}', s @ ..] => {
+					super::push(out, 1657);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['i', 'l', s @ ..] => {
+			super::push(out, 1247);
+			match s {
+				[] => true,
+				['b', 'b', 'o', '\u{1}', s @ ..] => {
+					super::push(out, 1658);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -iato.
-pub(crate) fn n695(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.9285878), (10, 0.067673765), (5, 0.0036926833)], 0.9999542);
-    match s {
-        [] => true,
-        ['b', 'b', 'a', 'r', 'r', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['c', 'n', 'a', 'l', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['d', s @ ..] => {
-            match s {
-                [] => true,
-                ['i', 'v', 'n', 'i', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['o', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['f', 'a', s @ ..] => {
-            out.push(&[(0, 0.8254215), (5, 0.114381626), (10, 0.060151063)], 0.9999542);
-            match s {
-                [] => true,
-                ['z', 'z', 'o', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['g', s @ ..] => {
-            match s {
-                [] => true,
-                ['e', 'r', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['g', 'e', 'r', 'a', 'l', 'o', 'c', 'i', 't', 'r', 'a', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['l', 'g', s @ ..] => {
-            match s {
-                [] => true,
-                ['a', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['b', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['t', 't', 'e', 'd', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['i', 's', 'n', 'o', 'c', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['s', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['u', 'b', 'r', 'a', 'g', 'n', 'i', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['m', 'e', 'r', 'p', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['p', 'o', 'c', s @ ..] => {
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['e', 'l', 'e', 't', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['r', 'a', 'v', 's', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['v', 'v', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['z', s @ ..] => {
-            match s {
-                [] => true,
-                ['a', 'r', 'g', 's', 'i', 'd', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['i', 'v', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n805(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 753);
+	match s {
+		[] => true,
+		['b', 'b', s @ ..] => {
+			super::push(out, 1248);
+			match s {
+				[] => true,
+				['a', 'r', 'r', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 1659);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['c', s @ ..] => {
+			super::push(out, 1249);
+			match s {
+				[] => true,
+				['n', 'a', 'l', s @ ..] => {
+					super::push(out, 1660);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1952);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['d', s @ ..] => {
+			super::push(out, 1250);
+			match s {
+				[] => true,
+				['i', 'v', 'n', 'i', '\u{1}', s @ ..] => {
+					super::push(out, 1661);
+					s.is_empty()
+				}
+				['o', '\u{1}', s @ ..] => {
+					super::push(out, 1662);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['f', s @ ..] => {
+			super::push(out, 1251);
+			match s {
+				[] => true,
+				['a', 'z', 'z', 'o', 'm', '\u{1}', s @ ..] => {
+					super::push(out, 1663);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['g', s @ ..] => {
+			match s {
+				[] => true,
+				['e', 'r', 'p', s @ ..] => {
+					super::push(out, 1664);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1953);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['g', 'e', 'r', s @ ..] => {
+					super::push(out, 1665);
+					match s {
+						[] => true,
+						['a', 'l', 'o', 'c', 'i', 't', 'r', 'a', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 1954);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['h', s @ ..] => {
+			super::push(out, 1252);
+			s.is_empty()
+		}
+		['l', 'g', s @ ..] => {
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					match s {
+						[] => true,
+						['b', s @ ..] => {
+							super::push(out, 1955);
+							match s {
+								[] => true,
+								['s', '\u{1}', s @ ..] => {
+									super::push(out, 2057);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['t', 't', 'e', 'd', '\u{1}', s @ ..] => {
+							super::push(out, 1956);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['i', 's', s @ ..] => {
+					super::push(out, 1666);
+					match s {
+						[] => true,
+						['n', s @ ..] => {
+							super::push(out, 1957);
+							match s {
+								[] => true,
+								['o', 'c', s @ ..] => {
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 2078);
+											s.is_empty()
+										}
+										['s', '\u{1}', s @ ..] => {
+											super::push(out, 2079);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['u', 'b', 'r', 'a', 'g', 'n', 'i', '\u{1}', s @ ..] => {
+					super::push(out, 1667);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['m', s @ ..] => {
+			super::push(out, 1253);
+			match s {
+				[] => true,
+				['e', 'r', 'p', '\u{1}', s @ ..] => {
+					super::push(out, 1668);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['p', 'o', s @ ..] => {
+			super::push(out, 1254);
+			match s {
+				[] => true,
+				['c', s @ ..] => {
+					super::push(out, 1669);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1958);
+							s.is_empty()
+						}
+						['e', 'l', 'e', 't', '\u{1}', s @ ..] => {
+							super::push(out, 1959);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['r', 'a', 'v', 's', '\u{1}', s @ ..] => {
+			super::push(out, 1255);
+			s.is_empty()
+		}
+		['v', 'v', s @ ..] => {
+			super::push(out, 1256);
+			match s {
+				[] => true,
+				['a', '\u{1}', s @ ..] => {
+					super::push(out, 1670);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['z', s @ ..] => {
+			match s {
+				[] => true,
+				['a', 'r', 'g', 's', s @ ..] => {
+					super::push(out, 1671);
+					match s {
+						[] => true,
+						['i', 'd', '\u{1}', s @ ..] => {
+							super::push(out, 1960);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['i', 'v', '\u{1}', s @ ..] => {
+					super::push(out, 1672);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
-/// The word affollato.
-pub(crate) fn n1708(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(10, 1.0)], 1.0);
-    s.is_empty()
-}
-
-/// Words ending -olato.
-pub(crate) fn n1151(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['c', 'i', 't', 'r', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['p', 'o', 'p', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['s', s @ ..] => {
-            match s {
-                [] => true,
-                ['e', 'd', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['i', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+/// Words ending -lato.
+pub(crate) fn n806(s: &[char], out: &mut Path<'_>) -> bool {
+	match s {
+		[] => true,
+		['a', 's', s @ ..] => {
+			super::push(out, 1257);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 1673);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['i', 'f', s @ ..] => {
+			super::push(out, 1258);
+			match s {
+				[] => true,
+				['f', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 1674);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['l', s @ ..] => {
+			match s {
+				[] => true,
+				['a', 'b', 's', '\u{1}', s @ ..] => {
+					super::push(out, 1675);
+					s.is_empty()
+				}
+				['e', s @ ..] => {
+					super::push(out, 1676);
+					s.is_empty()
+				}
+				['o', s @ ..] => {
+					super::push(out, 1677);
+					match s {
+						[] => true,
+						['c', 's', '\u{1}', s @ ..] => {
+							super::push(out, 1961);
+							s.is_empty()
+						}
+						['f', 'f', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1962);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['o', s @ ..] => {
+			match s {
+				[] => true,
+				['c', 'i', 't', 'r', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 1678);
+					s.is_empty()
+				}
+				['p', 'o', s @ ..] => {
+					super::push(out, 1679);
+					match s {
+						[] => true,
+						['p', '\u{1}', s @ ..] => {
+							super::push(out, 1963);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['s', s @ ..] => {
+					super::push(out, 1680);
+					match s {
+						[] => true,
+						['e', 'd', '\u{1}', s @ ..] => {
+							super::push(out, 1964);
+							s.is_empty()
+						}
+						['i', '\u{1}', s @ ..] => {
+							super::push(out, 1965);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -mato.
-pub(crate) fn n697(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['a', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['r', s @ ..] => {
-            match s {
-                [] => true,
-                ['a', 'l', 'l', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['o', 'f', 'n', 'i', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n807(s: &[char], out: &mut Path<'_>) -> bool {
+	match s {
+		[] => true,
+		['a', '\u{1}', s @ ..] => {
+			super::push(out, 1259);
+			s.is_empty()
+		}
+		['r', s @ ..] => {
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 1681);
+					match s {
+						[] => true,
+						['l', 'l', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1966);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['o', 'f', 'n', 'i', '\u{1}', s @ ..] => {
+					super::push(out, 1682);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -nato.
-pub(crate) fn n698(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.9541619), (10, 0.042816814), (5, 0.0029755093)], 0.9999542);
-    match s {
-        [] => true,
-        ['e', 'l', 'e', 'v', 'v', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['g', 'e', 'p', 'm', 'i', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['i', s @ ..] => {
-            match s {
-                [] => true,
-                ['f', 'f', 'a', 'r', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['m', 'u', 'l', 'l', 'i', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['s', 'a', 'c', 'n', 'i', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['t', 's', 'o', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['n', 'a', 'd', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['o', s @ ..] => {
-            match s {
-                [] => true,
-                ['e', s @ ..] => {
-                    out.push(&[(0, 0.86332494), (5, 0.10238804), (10, 0.034256503)], 0.9999695);
-                    match s {
-                        [] => true,
-                        ['l', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['i', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['g', 'a', 't', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['z', 'e', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['f', 'f', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['l', 'e', 's', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['t', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['s', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['t', 'e', 'g', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['r', 'o', 'i', 'g', 'g', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['u', 't', 'r', 'o', 'f', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n808(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 754);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 1260);
+			s.is_empty()
+		}
+		['e', 'l', 'e', 'v', 'v', 'a', '\u{1}', s @ ..] => {
+			super::push(out, 1261);
+			s.is_empty()
+		}
+		['g', 'e', 'p', 'm', 'i', '\u{1}', s @ ..] => {
+			super::push(out, 1262);
+			s.is_empty()
+		}
+		['i', s @ ..] => {
+			match s {
+				[] => true,
+				['f', 'f', s @ ..] => {
+					super::push(out, 1683);
+					match s {
+						[] => true,
+						['a', 'r', '\u{1}', s @ ..] => {
+							super::push(out, 1967);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['m', 'u', s @ ..] => {
+					super::push(out, 1684);
+					match s {
+						[] => true,
+						['l', 'l', 'i', '\u{1}', s @ ..] => {
+							super::push(out, 1968);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['s', s @ ..] => {
+					super::push(out, 1685);
+					match s {
+						[] => true,
+						['a', 'c', 'n', 'i', '\u{1}', s @ ..] => {
+							super::push(out, 1969);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['t', 's', s @ ..] => {
+					super::push(out, 1686);
+					match s {
+						[] => true,
+						['o', '\u{1}', s @ ..] => {
+							super::push(out, 1970);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['n', 'a', 'd', s @ ..] => {
+			super::push(out, 1263);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 1687);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['o', s @ ..] => {
+			match s {
+				[] => true,
+				['e', s @ ..] => {
+					super::push(out, 1688);
+					match s {
+						[] => true,
+						['l', '\u{1}', s @ ..] => {
+							super::push(out, 1971);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['i', s @ ..] => {
+					match s {
+						[] => true,
+						['g', s @ ..] => {
+							super::push(out, 1972);
+							match s {
+								[] => true,
+								['a', 't', 's', '\u{1}', s @ ..] => {
+									super::push(out, 2058);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['z', 'e', s @ ..] => {
+							super::push(out, 1973);
+							match s {
+								[] => true,
+								['f', 'f', 'a', '\u{1}', s @ ..] => {
+									super::push(out, 2059);
+									s.is_empty()
+								}
+								['l', 'e', 's', '\u{1}', s @ ..] => {
+									super::push(out, 2060);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['t', s @ ..] => {
+					super::push(out, 1689);
+					match s {
+						[] => true,
+						['s', s @ ..] => {
+							super::push(out, 1974);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 2061);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['t', 'e', 'g', '\u{1}', s @ ..] => {
+							super::push(out, 1975);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['r', 'o', 'i', 'g', 'g', 'a', '\u{1}', s @ ..] => {
+			super::push(out, 1264);
+			s.is_empty()
+		}
+		['u', 't', s @ ..] => {
+			super::push(out, 1265);
+			match s {
+				[] => true,
+				['r', 'o', 'f', '\u{1}', s @ ..] => {
+					super::push(out, 1690);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -pato.
-pub(crate) fn n699(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['p', 'u', 'l', 'i', 'v', 's', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['u', 'c', 'c', 'o', s @ ..] => {
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['e', 'r', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n809(s: &[char], out: &mut Path<'_>) -> bool {
+	match s {
+		[] => true,
+		['p', 'u', 'l', s @ ..] => {
+			super::push(out, 1266);
+			match s {
+				[] => true,
+				['i', 'v', 's', '\u{1}', s @ ..] => {
+					super::push(out, 1691);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['u', s @ ..] => {
+			super::push(out, 1267);
+			match s {
+				[] => true,
+				['c', 'c', 'o', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1976);
+							s.is_empty()
+						}
+						['e', 'r', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 1977);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -rato.
-pub(crate) fn n700(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.9308156), (10, 0.0649424), (5, 0.0041962313)], 0.9999542);
-    match s {
-        [] => true,
-        ['a', 'p', 'e', 'r', 'p', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['b', s @ ..] => {
-            match s {
-                [] => true,
-                ['e', 'l', 'e', 'c', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['i', 'l', 'i', 'u', 'q', 'e', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['e', s @ ..] => {
-            match s {
-                [] => true,
-                ['d', 'i', 's', 'e', 'd', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['l', 'l', 'e', 'c', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['n', 'u', 'm', 'e', 'r', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['p', 's', 'i', 'd', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['g', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['i', 'p', s @ ..] => {
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['s', 'i', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['o', s @ ..] => {
-            match s {
-                [] => true,
-                ['c', 'e', 'd', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['l', 'o', 'c', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['m', 'a', 'n', 'n', 'i', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['n', 'o', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['r', 'e', 's', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['t', s @ ..] => {
-            match s {
-                [] => true,
-                ['n', 'e', 'c', 'n', 'o', 'c', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['s', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['e', 'd', 'd', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['i', 't', s @ ..] => {
-                            out.push(&[(0, 0.82738996), (5, 0.1148394), (10, 0.05772488)], 0.9999542);
-                            match s {
-                                [] => true,
-                                ['l', 'u', 'm', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['u', s @ ..] => {
-            match s {
-                [] => true,
-                ['c', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['c', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['g', 'a', 'i', 'c', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n810(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 755);
+	match s {
+		[] => true,
+		['a', 'p', 'e', 'r', 'p', '\u{1}', s @ ..] => {
+			super::push(out, 1268);
+			s.is_empty()
+		}
+		['b', s @ ..] => {
+			match s {
+				[] => true,
+				['e', 'l', 'e', 'c', '\u{1}', s @ ..] => {
+					super::push(out, 1692);
+					s.is_empty()
+				}
+				['i', 'l', 'i', 'u', 'q', 'e', s @ ..] => {
+					super::push(out, 1693);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1978);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['e', s @ ..] => {
+			match s {
+				[] => true,
+				['d', 'i', 's', 'e', s @ ..] => {
+					super::push(out, 1694);
+					match s {
+						[] => true,
+						['d', '\u{1}', s @ ..] => {
+							super::push(out, 1979);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['l', 'l', s @ ..] => {
+					super::push(out, 1695);
+					match s {
+						[] => true,
+						['e', 'c', 's', '\u{1}', s @ ..] => {
+							super::push(out, 1980);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['n', 'u', 'm', 'e', 'r', '\u{1}', s @ ..] => {
+					super::push(out, 1696);
+					s.is_empty()
+				}
+				['p', 's', 'i', 'd', '\u{1}', s @ ..] => {
+					super::push(out, 1697);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['g', '\u{1}', s @ ..] => {
+			super::push(out, 1269);
+			s.is_empty()
+		}
+		['i', 'p', s @ ..] => {
+			super::push(out, 1270);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 1698);
+					s.is_empty()
+				}
+				['s', 'i', '\u{1}', s @ ..] => {
+					super::push(out, 1699);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['o', s @ ..] => {
+			match s {
+				[] => true,
+				['c', 'e', 'd', '\u{1}', s @ ..] => {
+					super::push(out, 1700);
+					s.is_empty()
+				}
+				['l', 'o', s @ ..] => {
+					super::push(out, 1701);
+					match s {
+						[] => true,
+						['c', s @ ..] => {
+							super::push(out, 1981);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 2062);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['m', 'a', s @ ..] => {
+					super::push(out, 1702);
+					match s {
+						[] => true,
+						['n', 'n', 'i', '\u{1}', s @ ..] => {
+							super::push(out, 1982);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['n', 'o', s @ ..] => {
+					super::push(out, 1703);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1983);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['r', 'e', 's', '\u{1}', s @ ..] => {
+			super::push(out, 1271);
+			s.is_empty()
+		}
+		['t', s @ ..] => {
+			super::push(out, 1272);
+			match s {
+				[] => true,
+				['n', 'e', 'c', 'n', s @ ..] => {
+					super::push(out, 1704);
+					match s {
+						[] => true,
+						['o', 'c', '\u{1}', s @ ..] => {
+							super::push(out, 1984);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['s', s @ ..] => {
+					match s {
+						[] => true,
+						['e', 'd', s @ ..] => {
+							super::push(out, 1985);
+							match s {
+								[] => true,
+								['d', 'a', '\u{1}', s @ ..] => {
+									super::push(out, 2063);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['i', s @ ..] => {
+							super::push(out, 1986);
+							match s {
+								[] => true,
+								['t', 'l', 'u', 'm', '\u{1}', s @ ..] => {
+									super::push(out, 2064);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['u', s @ ..] => {
+			match s {
+				[] => true,
+				['c', s @ ..] => {
+					super::push(out, 1705);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1987);
+							s.is_empty()
+						}
+						['c', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1988);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['g', 'a', 'i', 'c', 's', '\u{1}', s @ ..] => {
+					super::push(out, 1706);
+					s.is_empty()
+				}
+				['t', s @ ..] => {
+					super::push(out, 1707);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -sato.
-pub(crate) fn n701(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['n', 'e', 's', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['s', 'e', 'r', 'e', 't', 'n', 'i', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n811(s: &[char], out: &mut Path<'_>) -> bool {
+	match s {
+		[] => true,
+		['n', 'e', 's', s @ ..] => {
+			super::push(out, 1273);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 1708);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['s', 'e', 'r', 'e', s @ ..] => {
+			super::push(out, 1274);
+			match s {
+				[] => true,
+				['t', 'n', 'i', '\u{1}', s @ ..] => {
+					super::push(out, 1709);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -tato.
-pub(crate) fn n702(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['a', 'i', 'f', 'f', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['e', 'i', s @ ..] => {
-            out.push(&[(0, 0.76348513), (10, 0.23537041)], 0.99885553);
-            match s {
-                [] => true,
-                ['p', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['v', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['i', s @ ..] => {
-            match s {
-                [] => true,
-                ['c', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['c', 'e', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['g', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['m', 'i', 'l', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['e', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['r', 'i', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['n', s @ ..] => {
-            match s {
-                [] => true,
-                ['e', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['m', 'i', 'r', 'e', 'p', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['u', 'q', 'e', 'r', 'f', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['o', 'c', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['s', 'e', 't', 'n', 'o', 'c', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n812(s: &[char], out: &mut Path<'_>) -> bool {
+	match s {
+		[] => true,
+		['a', 'i', 'f', 'f', 'a', '\u{1}', s @ ..] => {
+			super::push(out, 1275);
+			s.is_empty()
+		}
+		['e', s @ ..] => {
+			super::push(out, 1276);
+			match s {
+				[] => true,
+				['i', s @ ..] => {
+					super::push(out, 1710);
+					match s {
+						[] => true,
+						['p', 's', '\u{1}', s @ ..] => {
+							super::push(out, 1989);
+							s.is_empty()
+						}
+						['v', '\u{1}', s @ ..] => {
+							super::push(out, 1990);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['i', s @ ..] => {
+			super::push(out, 1277);
+			match s {
+				[] => true,
+				['c', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1991);
+							s.is_empty()
+						}
+						['c', 'e', '\u{1}', s @ ..] => {
+							super::push(out, 1992);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['g', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 1711);
+					s.is_empty()
+				}
+				['m', 'i', 'l', '\u{1}', s @ ..] => {
+					super::push(out, 1712);
+					s.is_empty()
+				}
+				['r', s @ ..] => {
+					match s {
+						[] => true,
+						['e', 'm', '\u{1}', s @ ..] => {
+							super::push(out, 1993);
+							s.is_empty()
+						}
+						['r', 'i', '\u{1}', s @ ..] => {
+							super::push(out, 1994);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['n', s @ ..] => {
+			match s {
+				[] => true,
+				['e', s @ ..] => {
+					match s {
+						[] => true,
+						['m', 'i', 'r', 'e', 'p', 's', '\u{1}', s @ ..] => {
+							super::push(out, 1995);
+							s.is_empty()
+						}
+						['u', 'q', 'e', 'r', 'f', '\u{1}', s @ ..] => {
+							super::push(out, 1996);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['o', 'c', 's', '\u{1}', s @ ..] => {
+					super::push(out, 1713);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['s', 'e', 't', 'n', s @ ..] => {
+			super::push(out, 1278);
+			match s {
+				[] => true,
+				['o', 'c', '\u{1}', s @ ..] => {
+					super::push(out, 1714);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['t', s @ ..] => {
+			super::push(out, 1279);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -uato.
+pub(crate) fn n813(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 756);
+	s.is_empty()
 }
 
 /// Words ending -vato.
-pub(crate) fn n703(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['e', 'l', 'e', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['i', 'r', 'p', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n814(s: &[char], out: &mut Path<'_>) -> bool {
+	match s {
+		[] => true,
+		['e', 'l', 'e', s @ ..] => {
+			super::push(out, 1280);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 1715);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['i', 'r', 'p', '\u{1}', s @ ..] => {
+			super::push(out, 1281);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -zato.
-pub(crate) fn n704(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['n', 'a', s @ ..] => {
-            match s {
-                [] => true,
-                ['d', 'i', 'f', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['v', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['z', s @ ..] => {
-            match s {
-                [] => true,
-                ['a', 'r', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', 'b', 'm', 'i', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['r', 'e', 't', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['e', 'r', 'p', 'p', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['i', s @ ..] => {
-                    out.push(&[(0, 0.997528), (10, 0.0023956664)], 0.9999237);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n815(s: &[char], out: &mut Path<'_>) -> bool {
+	match s {
+		[] => true,
+		['n', s @ ..] => {
+			super::push(out, 1282);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					match s {
+						[] => true,
+						['d', 'i', 'f', '\u{1}', s @ ..] => {
+							super::push(out, 1997);
+							s.is_empty()
+						}
+						['v', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1998);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['z', s @ ..] => {
+			super::push(out, 1283);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 1716);
+					match s {
+						[] => true,
+						['r', s @ ..] => {
+							super::push(out, 1999);
+							match s {
+								[] => true,
+								['a', 'b', 'm', 'i', '\u{1}', s @ ..] => {
+									super::push(out, 2065);
+									s.is_empty()
+								}
+								['r', 'e', 't', '\u{1}', s @ ..] => {
+									super::push(out, 2066);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['e', s @ ..] => {
+					super::push(out, 1717);
+					match s {
+						[] => true,
+						['r', 'p', 'p', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 2000);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['i', s @ ..] => {
+					super::push(out, 1718);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -eto.
-pub(crate) fn n282(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['c', 'a', 't', s @ ..] => {
-            out.push(&[(0, 0.83064014), (5, 0.12367437), (10, 0.044861525)], 0.999176);
-            match s {
-                [] => true,
-                ['t', 'o', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['i', 'l', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['r', s @ ..] => {
-            out.push(&[(0, 0.74322116), (10, 0.24800488), (5, 0.008239872)], 0.99946594);
-            match s {
-                [] => true,
-                ['c', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['n', 'o', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['s', 'i', 'd', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['g', 'e', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n344(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 335);
+	match s {
+		[] => true,
+		['c', s @ ..] => {
+			super::push(out, 757);
+			match s {
+				[] => true,
+				['a', 't', 't', 'o', 's', '\u{1}', s @ ..] => {
+					super::push(out, 1284);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['i', 'l', '\u{1}', s @ ..] => {
+			super::push(out, 758);
+			s.is_empty()
+		}
+		['r', s @ ..] => {
+			super::push(out, 759);
+			match s {
+				[] => true,
+				['c', s @ ..] => {
+					match s {
+						[] => true,
+						['n', 'o', 'c', '\u{1}', s @ ..] => {
+							super::push(out, 1719);
+							s.is_empty()
+						}
+						['s', 'i', 'd', '\u{1}', s @ ..] => {
+							super::push(out, 1720);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['g', 'e', 's', '\u{1}', s @ ..] => {
+					super::push(out, 1285);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -ito.
-pub(crate) fn n283(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['b', 'm', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['c', 'e', 'l', 'l', 'o', 's', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['d', s @ ..] => {
-            match s {
-                [] => true,
-                ['a', 'r', 'g', s @ ..] => {
-                    out.push(&[(0, 0.77051955), (10, 0.21852446), (5, 0.0102693215)], 0.99931335);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['s', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['d', s @ ..] => {
-                    out.push(&[(0, 0.77051955), (5, 0.19209583), (10, 0.036713205)], 0.9993286);
-                    match s {
-                        [] => true,
-                        ['e', 'r', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['i', 'r', 'u', 'l', 'p', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['r', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['u', 'a', 'l', 'p', 'p', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['l', 'u', 'p', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['n', s @ ..] => {
-            match s {
-                [] => true,
-                ['r', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', 'u', 'g', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', 'f', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['u', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['p', 'm', 'o', 'c', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['r', s @ ..] => {
-            match s {
-                [] => true,
-                ['o', 'v', 'a', 'f', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['u', 'r', s @ ..] => {
-                    out.push(&[(0, 0.83064014), (5, 0.12367437), (10, 0.044861525)], 0.999176);
-                    match s {
-                        [] => true,
-                        ['p', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['s', 'o', 'p', 'o', s @ ..] => {
-            out.push(&[(0, 0.83064014), (5, 0.12367437), (10, 0.044861525)], 0.999176);
-            match s {
-                [] => true,
-                ['r', 'p', 'p', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['u', 'g', 'e', 's', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n345(s: &[char], out: &mut Path<'_>) -> bool {
+	match s {
+		[] => true,
+		['b', 'm', s @ ..] => {
+			super::push(out, 760);
+			match s {
+				[] => true,
+				['a', '\u{1}', s @ ..] => {
+					super::push(out, 1286);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['c', 'e', s @ ..] => {
+			super::push(out, 761);
+			match s {
+				[] => true,
+				['l', 'l', 'o', 's', '\u{1}', s @ ..] => {
+					super::push(out, 1287);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['d', s @ ..] => {
+			super::push(out, 762);
+			match s {
+				[] => true,
+				['a', s @ ..] => {
+					super::push(out, 1288);
+					match s {
+						[] => true,
+						['r', 'g', s @ ..] => {
+							super::push(out, 1721);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 2001);
+									s.is_empty()
+								}
+								['s', '\u{1}', s @ ..] => {
+									super::push(out, 2002);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['d', s @ ..] => {
+					super::push(out, 1289);
+					match s {
+						[] => true,
+						['e', s @ ..] => {
+							super::push(out, 1722);
+							match s {
+								[] => true,
+								['r', s @ ..] => {
+									super::push(out, 2003);
+									match s {
+										[] => true,
+										['i', 'r', 'u', 'l', 'p', '\u{1}', s @ ..] => {
+											super::push(out, 2067);
+											s.is_empty()
+										}
+										['o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
+											super::push(out, 2068);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['n', s @ ..] => {
+					super::push(out, 1290);
+					s.is_empty()
+				}
+				['r', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 1291);
+					s.is_empty()
+				}
+				['u', 'a', 'l', 'p', 'p', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 1292);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['l', 'u', 'p', '\u{1}', s @ ..] => {
+			super::push(out, 763);
+			s.is_empty()
+		}
+		['n', s @ ..] => {
+			match s {
+				[] => true,
+				['r', s @ ..] => {
+					super::push(out, 1293);
+					match s {
+						[] => true,
+						['a', 'u', 'g', 's', '\u{1}', s @ ..] => {
+							super::push(out, 1723);
+							s.is_empty()
+						}
+						['o', 'f', '\u{1}', s @ ..] => {
+							super::push(out, 1724);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['u', '\u{1}', s @ ..] => {
+					super::push(out, 1294);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['p', 'm', 'o', 'c', '\u{1}', s @ ..] => {
+			super::push(out, 764);
+			s.is_empty()
+		}
+		['r', s @ ..] => {
+			match s {
+				[] => true,
+				['e', s @ ..] => {
+					super::push(out, 1295);
+					s.is_empty()
+				}
+				['o', 'v', s @ ..] => {
+					super::push(out, 1296);
+					match s {
+						[] => true,
+						['a', 'f', '\u{1}', s @ ..] => {
+							super::push(out, 1725);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['u', s @ ..] => {
+					super::push(out, 1297);
+					match s {
+						[] => true,
+						['r', 'p', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1726);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['s', s @ ..] => {
+			super::push(out, 765);
+			match s {
+				[] => true,
+				['o', 'p', s @ ..] => {
+					super::push(out, 1298);
+					match s {
+						[] => true,
+						['o', 'r', 'p', 'p', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1727);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['t', s @ ..] => {
+			super::push(out, 766);
+			s.is_empty()
+		}
+		['u', 'g', s @ ..] => {
+			super::push(out, 767);
+			match s {
+				[] => true,
+				['e', 's', '\u{1}', s @ ..] => {
+					super::push(out, 1299);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -lto.
-pub(crate) fn n284(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['a', s @ ..] => {
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['b', s @ ..] => {
-                    out.push(&[(0, 0.83064014), (5, 0.12367437), (10, 0.044861525)], 0.999176);
-                    match s {
-                        [] => true,
-                        ['o', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['e', 'v', 's', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['o', s @ ..] => {
-            match s {
-                [] => true,
-                ['c', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['f', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['t', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n346(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 336);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 768);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 1300);
+					s.is_empty()
+				}
+				['b', 'o', 'c', '\u{1}', s @ ..] => {
+					super::push(out, 1301);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['e', 'v', 's', '\u{1}', s @ ..] => {
+			super::push(out, 769);
+			s.is_empty()
+		}
+		['o', s @ ..] => {
+			match s {
+				[] => true,
+				['c', '\u{1}', s @ ..] => {
+					super::push(out, 1302);
+					s.is_empty()
+				}
+				['f', '\u{1}', s @ ..] => {
+					super::push(out, 1303);
+					s.is_empty()
+				}
+				['t', 's', '\u{1}', s @ ..] => {
+					super::push(out, 1304);
+					s.is_empty()
+				}
+				['v', s @ ..] => {
+					super::push(out, 1305);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -nto.
-pub(crate) fn n285(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.81345844), (5, 0.12304875), (10, 0.063431755)], 0.99993896);
-    match s {
-        [] => true,
-        ['a', s @ ..] => {
-            match s {
-                [] => true,
-                ['i', 'p', 'm', 'i', 'e', 'r', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', 'm', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['e', 'p', 's', 'e', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['s', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['e', s @ ..] => {
-            match s {
-                [] => true,
-                ['g', 'r', 'a', 'o', 'r', 'e', 'n', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['l', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', 'i', 'v', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['m', s @ ..] => {
-                    out.push(&[(5, 0.5059892), (0, 0.4661784), (10, 0.027801938)], 0.99996954);
-                    match s {
-                        [] => true,
-                        ['a', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['d', 'n', 'o', 'f', 's', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['i', 'h', 'c', 'c', 'e', 'v', 'n', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(0, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['l', 'i', 'f', 's', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['n', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['i', s @ ..] => {
-                                            match s {
-                                                [] => true,
-                                                ['t', 't', 'a', 'p', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                                    out.push(&[(5, 1.0)], 1.0);
-                                                    s.is_empty()
-                                                }
-                                                ['u', 'q', 'n', 'i', s @ ..] => {
-                                                    match s {
-                                                        [] => true,
-                                                        ['i', 't', 'n', 'a', '\u{1}', s @ ..] => super::t0::n1789(s, out),
-                                                        ['t', 'n', 'a', '\u{1}', s @ ..] => super::t0::n1790(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        ['o', 'p', 'm', 'a', 't', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                            out.push(&[(5, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['t', 't', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['i', 'l', 's', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                            out.push(&[(5, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['o', 'r', 'i', 'd', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                                            out.push(&[(5, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['i', 'r', 'r', 'o', 'c', 's', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', 'g', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(0, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['t', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['n', 'o', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['t', 'a', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['u', 'r', 'c', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['v', 'o', 't', 't', 'o', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['i', s @ ..] => {
-            out.push(&[(0, 0.9530022), (5, 0.031006332), (10, 0.015976196)], 0.99998474);
-            s.is_empty()
-        }
-        ['o', 'r', 'p', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['u', 'p', 'i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n347(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 337);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			match s {
+				[] => true,
+				['i', 'p', 'm', 'i', 'e', 'r', 'p', '\u{1}', s @ ..] => {
+					super::push(out, 1306);
+					s.is_empty()
+				}
+				['r', s @ ..] => {
+					match s {
+						[] => true,
+						['a', 'm', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1728);
+							s.is_empty()
+						}
+						['e', 'p', 's', 'e', '\u{1}', s @ ..] => {
+							super::push(out, 1729);
+							s.is_empty()
+						}
+						['f', s @ ..] => {
+							super::push(out, 1730);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['s', s @ ..] => {
+					super::push(out, 1307);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1731);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['e', s @ ..] => {
+			super::push(out, 770);
+			match s {
+				[] => true,
+				['g', 'r', 'a', 'o', 'r', 'e', 'n', '\u{1}', s @ ..] => {
+					super::push(out, 1308);
+					s.is_empty()
+				}
+				['l', s @ ..] => {
+					super::push(out, 1309);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1732);
+							s.is_empty()
+						}
+						['o', 'i', s @ ..] => {
+							super::push(out, 1733);
+							match s {
+								[] => true,
+								['v', '\u{1}', s @ ..] => {
+									super::push(out, 2004);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['u', s @ ..] => {
+							super::push(out, 1734);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['m', s @ ..] => {
+					super::push(out, 1310);
+					match s {
+						[] => true,
+						['a', s @ ..] => {
+							super::push(out, 1735);
+							match s {
+								[] => true,
+								['i', 'h', 'c', 'c', 'e', 'v', 'n', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+									super::push(out, 2005);
+									s.is_empty()
+								}
+								['n', s @ ..] => {
+									super::push(out, 2006);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['o', 'g', 's', '\u{1}', s @ ..] => {
+							super::push(out, 1736);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['t', s @ ..] => {
+					super::push(out, 1311);
+					match s {
+						[] => true,
+						['n', 'o', 'c', '\u{1}', s @ ..] => {
+							super::push(out, 1737);
+							s.is_empty()
+						}
+						['t', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1738);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['u', s @ ..] => {
+					super::push(out, 1312);
+					match s {
+						[] => true,
+						['r', 'c', '\u{1}', s @ ..] => {
+							super::push(out, 1739);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['v', 'o', 't', 't', 'o', 's', '\u{1}', s @ ..] => {
+					super::push(out, 1313);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['i', s @ ..] => {
+			super::push(out, 771);
+			s.is_empty()
+		}
+		['o', s @ ..] => {
+			super::push(out, 772);
+			match s {
+				[] => true,
+				['r', 'p', '\u{1}', s @ ..] => {
+					super::push(out, 1314);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['u', s @ ..] => {
+			super::push(out, 773);
+			match s {
+				[] => true,
+				['p', s @ ..] => {
+					super::push(out, 1315);
+					match s {
+						[] => true,
+						['i', 't', 'l', 'u', 'm', '\u{1}', s @ ..] => {
+							super::push(out, 1740);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -oto.
-pub(crate) fn n286(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.8273747), (5, 0.09727626), (10, 0.075120166)], 0.9997711);
-    match s {
-        [] => true,
-        ['m', s @ ..] => {
-            match s {
-                [] => true,
-                ['e', 'r', 'r', 'e', 't', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['i', 'r', 'p', 'o', 'c', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['n', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['u', 'v', 'o', 't', 't', 'o', 's', '\u{1}', s @ ..] => {
-            out.push(&[(5, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['v', 'e', 'd', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n348(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 338);
+	match s {
+		[] => true,
+		['m', s @ ..] => {
+			super::push(out, 774);
+			match s {
+				[] => true,
+				['e', 'r', 'r', 'e', 't', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 1316);
+					s.is_empty()
+				}
+				['i', 'r', 'p', 'o', 'c', '\u{1}', s @ ..] => {
+					super::push(out, 1317);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['n', '\u{1}', s @ ..] => {
+			super::push(out, 775);
+			s.is_empty()
+		}
+		['u', 'v', 'o', 't', 't', 'o', 's', '\u{1}', s @ ..] => {
+			super::push(out, 776);
+			s.is_empty()
+		}
+		['v', s @ ..] => {
+			super::push(out, 777);
+			match s {
+				[] => true,
+				['e', 'd', '\u{1}', s @ ..] => {
+					super::push(out, 1318);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -rto.
-pub(crate) fn n287(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['a', 'u', 'q', 'o', 'p', s @ ..] => {
-            out.push(&[(0, 0.83064014), (5, 0.12367437), (10, 0.044861525)], 0.999176);
-            match s {
-                [] => true,
-                ['a', 'c', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['e', s @ ..] => {
-            match s {
-                [] => true,
-                ['c', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['p', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['s', 'e', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['o', 'c', s @ ..] => {
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['c', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['u', 'i', s @ ..] => {
-            out.push(&[(0, 0.83064014), (5, 0.12367437), (10, 0.044861525)], 0.999176);
-            match s {
-                [] => true,
-                ['t', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n349(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 339);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 778);
+			match s {
+				[] => true,
+				['u', 'q', 'o', s @ ..] => {
+					super::push(out, 1319);
+					match s {
+						[] => true,
+						['p', 'a', 'c', '\u{1}', s @ ..] => {
+							super::push(out, 1741);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['e', s @ ..] => {
+			super::push(out, 779);
+			match s {
+				[] => true,
+				['c', '\u{1}', s @ ..] => {
+					super::push(out, 1320);
+					s.is_empty()
+				}
+				['p', s @ ..] => {
+					match s {
+						[] => true,
+						['a', '\u{1}', s @ ..] => {
+							super::push(out, 1742);
+							s.is_empty()
+						}
+						['s', 'e', '\u{1}', s @ ..] => {
+							super::push(out, 1743);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['o', s @ ..] => {
+			match s {
+				[] => true,
+				['c', s @ ..] => {
+					super::push(out, 1321);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1744);
+							s.is_empty()
+						}
+						['c', 'a', '\u{1}', s @ ..] => {
+							super::push(out, 1745);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['t', s @ ..] => {
+					super::push(out, 1322);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['u', s @ ..] => {
+			super::push(out, 780);
+			match s {
+				[] => true,
+				['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 1323);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -sto.
-pub(crate) fn n288(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.8240177), (10, 0.095582515), (5, 0.080323495)], 0.9999237);
-    match s {
-        [] => true,
-        ['a', 'v', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['e', s @ ..] => {
-            match s {
-                [] => true,
-                ['d', 'o', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['i', 'h', 'c', 'i', 'r', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['m', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['n', 'o', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['o', s @ ..] => {
-            match s {
-                [] => true,
-                ['c', 'o', 't', 't', 'o', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['p', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['i', s @ ..] => {
-                            out.push(&[(0, 0.61371785), (5, 0.33160907), (10, 0.05461204)], 0.99993896);
-                            match s {
-                                [] => true,
-                                ['b', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['r', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['d', 'a', 'u', 'q', '\u{1}', s @ ..] => {
-                                            out.push(&[(5, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['o', 'u', 'f', '\u{1}', s @ ..] => {
-                                            out.push(&[(5, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['t', '\u{1}', s @ ..] => {
-                                            out.push(&[(5, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['s', 'i', 'd', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['r', 'r', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['t', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['u', s @ ..] => {
-            match s {
-                [] => true,
-                ['f', 'a', 'i', 'c', 'c', 'a', 'r', 'b', 'b', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['i', s @ ..] => {
-                    out.push(&[(0, 0.6592203), (10, 0.27646297), (5, 0.064255744)], 0.99993896);
-                    match s {
-                        [] => true,
-                        ['g', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['n', 'i', '\u{1}', s @ ..] => {
-                                    out.push(&[(10, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n350(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 340);
+	match s {
+		[] => true,
+		['a', 'v', '\u{1}', s @ ..] => {
+			super::push(out, 781);
+			s.is_empty()
+		}
+		['e', s @ ..] => {
+			super::push(out, 782);
+			match s {
+				[] => true,
+				['d', 'o', 'm', '\u{1}', s @ ..] => {
+					super::push(out, 1324);
+					s.is_empty()
+				}
+				['i', 'h', 'c', 'i', 'r', '\u{1}', s @ ..] => {
+					super::push(out, 1325);
+					s.is_empty()
+				}
+				['m', '\u{1}', s @ ..] => {
+					super::push(out, 1326);
+					s.is_empty()
+				}
+				['n', 'o', '\u{1}', s @ ..] => {
+					super::push(out, 1327);
+					s.is_empty()
+				}
+				['r', 'p', '\u{1}', s @ ..] => {
+					super::push(out, 1328);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['i', s @ ..] => {
+			super::push(out, 783);
+			s.is_empty()
+		}
+		['o', s @ ..] => {
+			super::push(out, 784);
+			match s {
+				[] => true,
+				['c', 'o', 't', 't', 'o', 's', '\u{1}', s @ ..] => {
+					super::push(out, 1329);
+					s.is_empty()
+				}
+				['p', s @ ..] => {
+					match s {
+						[] => true,
+						['i', s @ ..] => {
+							super::push(out, 1746);
+							match s {
+								[] => true,
+								['b', '\u{1}', s @ ..] => {
+									super::push(out, 2007);
+									s.is_empty()
+								}
+								['r', s @ ..] => {
+									match s {
+										[] => true,
+										['d', 'a', 'u', 'q', '\u{1}', s @ ..] => {
+											super::push(out, 2069);
+											s.is_empty()
+										}
+										['o', 'u', 'f', '\u{1}', s @ ..] => {
+											super::push(out, 2070);
+											s.is_empty()
+										}
+										['t', '\u{1}', s @ ..] => {
+											super::push(out, 2071);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['m', s @ ..] => {
+							super::push(out, 1747);
+							s.is_empty()
+						}
+						['o', 'n', 'o', 'm', '\u{1}', s @ ..] => {
+							super::push(out, 1748);
+							s.is_empty()
+						}
+						['p', s @ ..] => {
+							super::push(out, 1749);
+							s.is_empty()
+						}
+						['s', s @ ..] => {
+							super::push(out, 1750);
+							match s {
+								[] => true,
+								['i', 'd', '\u{1}', s @ ..] => {
+									super::push(out, 2008);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['r', 'r', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 1330);
+					s.is_empty()
+				}
+				['t', '\u{1}', s @ ..] => {
+					super::push(out, 1331);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['u', s @ ..] => {
+			match s {
+				[] => true,
+				['f', 'a', 'i', 'c', 'c', 'a', 'r', 'b', 'b', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 1332);
+					s.is_empty()
+				}
+				['i', s @ ..] => {
+					super::push(out, 1333);
+					match s {
+						[] => true,
+						['g', s @ ..] => {
+							super::push(out, 1751);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 2009);
+									s.is_empty()
+								}
+								['n', 'i', '\u{1}', s @ ..] => {
+									super::push(out, 2010);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -tto.
-pub(crate) fn n289(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.8937209), (10, 0.067200735), (5, 0.039047837)], 0.9999695);
-    match s {
-        [] => true,
-        ['a', s @ ..] => {
-            match s {
-                [] => true,
-                ['d', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['f', 's', 'i', 'd', 'd', 'o', 's', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['g', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['p', 'm', 'o', 'c', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['r', 't', 's', 'i', 'd', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['s', 'e', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['e', s @ ..] => {
-            match s {
-                [] => true,
-                ['d', 'e', 'l', 'a', 'm', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['f', 'r', 'e', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['h', 'c', 'c', 'o', 'b', 'a', 'r', 't', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['n', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['p', s @ ..] => {
-                    out.push(&[(0, 0.7249867), (5, 0.23660639), (10, 0.038406957)], 1.0);
-                    match s {
-                        [] => true,
-                        ['m', 'i', 'r', 'i', 'd', '\u{1}', s @ ..] => {
-                            out.push(&[(5, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['i', 'p', 'p', 'o', 'd', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['n', 'o', 'm', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['r', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['i', 'd', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['r', 'o', 'c', 's', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['t', s @ ..] => {
-                            out.push(&[(0, 0.7149767), (10, 0.25375754), (5, 0.031235218)], 0.9999695);
-                            match s {
-                                [] => true,
-                                ['s', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            out.push(&[(10, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['i', 'r', '\u{1}', s @ ..] => {
-                                            out.push(&[(10, 1.0)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['i', 'f', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['o', s @ ..] => {
-            match s {
-                [] => true,
-                ['d', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['i', 'r', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['r', 'r', 'o', 'c', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['s', 'a', 'i', 'c', 's', 'i', 'p', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['u', s @ ..] => {
-            out.push(&[(0, 0.6558633), (5, 0.25366598), (10, 0.09044022)], 0.9999695);
-            match s {
-                [] => true,
-                ['r', 'b', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['t', s @ ..] => {
-                    out.push(&[(5, 0.5024491), (0, 0.43724728), (10, 0.060303655)], 1.0);
-                    match s {
-                        [] => true,
-                        ['a', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['i', 'l', 'g', 'i', 'p', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['p', 'p', 'a', 'i', 'h', 'c', 'c', 'a', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['r', 'a', 'p', 's', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['v', 'l', 'a', 's', '\u{1}', s @ ..] => {
-                                    out.push(&[(5, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n351(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 341);
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			match s {
+				[] => true,
+				['d', 'a', s @ ..] => {
+					super::push(out, 1334);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1752);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['f', 's', 'i', 'd', 'd', s @ ..] => {
+					super::push(out, 1335);
+					match s {
+						[] => true,
+						['o', 's', '\u{1}', s @ ..] => {
+							super::push(out, 1753);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['g', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 1336);
+					s.is_empty()
+				}
+				['p', s @ ..] => {
+					super::push(out, 1337);
+					match s {
+						[] => true,
+						['m', 'o', 'c', '\u{1}', s @ ..] => {
+							super::push(out, 1754);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['r', 't', 's', s @ ..] => {
+					super::push(out, 1338);
+					match s {
+						[] => true,
+						['i', 'd', '\u{1}', s @ ..] => {
+							super::push(out, 1755);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['s', s @ ..] => {
+					super::push(out, 1339);
+					match s {
+						[] => true,
+						['e', '\u{1}', s @ ..] => {
+							super::push(out, 1756);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['e', s @ ..] => {
+			match s {
+				[] => true,
+				['d', 'e', 'l', s @ ..] => {
+					super::push(out, 1340);
+					match s {
+						[] => true,
+						['a', 'm', '\u{1}', s @ ..] => {
+							super::push(out, 1757);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['f', 'r', s @ ..] => {
+					super::push(out, 1341);
+					match s {
+						[] => true,
+						['e', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 1758);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['h', s @ ..] => {
+					super::push(out, 1342);
+					match s {
+						[] => true,
+						['c', 'c', 'o', 'b', 'a', 'r', 't', '\u{1}', s @ ..] => {
+							super::push(out, 1759);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['l', s @ ..] => {
+					super::push(out, 1343);
+					s.is_empty()
+				}
+				['n', s @ ..] => {
+					super::push(out, 1344);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1760);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['p', s @ ..] => {
+					super::push(out, 1345);
+					match s {
+						[] => true,
+						['m', 'i', 'r', 'i', 'd', '\u{1}', s @ ..] => {
+							super::push(out, 1761);
+							s.is_empty()
+						}
+						['o', s @ ..] => {
+							super::push(out, 1762);
+							match s {
+								[] => true,
+								['i', 'p', 'p', 'o', 'd', '\u{1}', s @ ..] => {
+									super::push(out, 2011);
+									s.is_empty()
+								}
+								['n', 'o', 'm', '\u{1}', s @ ..] => {
+									super::push(out, 2012);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['r', s @ ..] => {
+					super::push(out, 1346);
+					match s {
+						[] => true,
+						['i', 'd', '\u{1}', s @ ..] => {
+							super::push(out, 1763);
+							s.is_empty()
+						}
+						['r', 'o', 'c', 's', '\u{1}', s @ ..] => {
+							super::push(out, 1764);
+							s.is_empty()
+						}
+						['t', s @ ..] => {
+							super::push(out, 1765);
+							match s {
+								[] => true,
+								['s', s @ ..] => {
+									super::push(out, 2013);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 2072);
+											s.is_empty()
+										}
+										['i', 'r', '\u{1}', s @ ..] => {
+											super::push(out, 2073);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['i', s @ ..] => {
+			super::push(out, 785);
+			match s {
+				[] => true,
+				['f', s @ ..] => {
+					super::push(out, 1347);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1766);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['r', s @ ..] => {
+					super::push(out, 1348);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['o', s @ ..] => {
+			match s {
+				[] => true,
+				['d', s @ ..] => {
+					super::push(out, 1349);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 1767);
+							s.is_empty()
+						}
+						['i', 'r', '\u{1}', s @ ..] => {
+							super::push(out, 1768);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['i', s @ ..] => {
+					super::push(out, 1350);
+					s.is_empty()
+				}
+				['r', 'r', 'o', s @ ..] => {
+					super::push(out, 1351);
+					match s {
+						[] => true,
+						['c', '\u{1}', s @ ..] => {
+							super::push(out, 1769);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['s', s @ ..] => {
+					super::push(out, 1352);
+					match s {
+						[] => true,
+						['a', 'i', 'c', 's', 'i', 'p', '\u{1}', s @ ..] => {
+							super::push(out, 1770);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['u', s @ ..] => {
+			super::push(out, 786);
+			match s {
+				[] => true,
+				['r', s @ ..] => {
+					super::push(out, 1353);
+					match s {
+						[] => true,
+						['b', '\u{1}', s @ ..] => {
+							super::push(out, 1771);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['t', s @ ..] => {
+					super::push(out, 1354);
+					match s {
+						[] => true,
+						['a', s @ ..] => {
+							super::push(out, 1772);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -uto.
-pub(crate) fn n290(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['a', 'i', s @ ..] => {
-            out.push(&[(0, 0.83064014), (5, 0.12367437), (10, 0.044861525)], 0.999176);
-            match s {
-                [] => true,
-                ['r', 'p', 'o', 'c', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['c', 'a', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['d', 'n', 'e', 'v', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['i', 'c', 's', 'o', 'n', 'o', 'c', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['m', 'e', 't', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['n', 'i', 'm', '\u{1}', s @ ..] => {
-            out.push(&[(10, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['p', 's', s @ ..] => {
-            out.push(&[(0, 0.83064014), (5, 0.12367437), (10, 0.044861525)], 0.999176);
-            match s {
-                [] => true,
-                ['i', 't', 'n', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(5, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['t', s @ ..] => {
-            match s {
-                [] => true,
-                ['s', 'a', '\u{1}', s @ ..] => {
-                    out.push(&[(10, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['t', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['a', 'b', 'm', 'o', 'c', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['o', 'f', '\u{1}', s @ ..] => {
-                            out.push(&[(10, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
-}
-
-/// The word antiinquinamento.
-pub(crate) fn n1789(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 1.0)], 1.0);
-    s.is_empty()
-}
-
-/// The word antinquinamento.
-pub(crate) fn n1790(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(5, 1.0)], 1.0);
-    s.is_empty()
+pub(crate) fn n352(s: &[char], out: &mut Path<'_>) -> bool {
+	match s {
+		[] => true,
+		['a', s @ ..] => {
+			super::push(out, 787);
+			match s {
+				[] => true,
+				['i', 'r', 'p', 'o', 'c', '\u{1}', s @ ..] => {
+					super::push(out, 1355);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['c', 'a', '\u{1}', s @ ..] => {
+			super::push(out, 788);
+			s.is_empty()
+		}
+		['d', 'n', s @ ..] => {
+			super::push(out, 789);
+			match s {
+				[] => true,
+				['e', 'v', '\u{1}', s @ ..] => {
+					super::push(out, 1356);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['i', 'c', 's', 'o', 'n', 'o', 'c', '\u{1}', s @ ..] => {
+			super::push(out, 790);
+			s.is_empty()
+		}
+		['l', s @ ..] => {
+			super::push(out, 791);
+			s.is_empty()
+		}
+		['m', 'e', 't', '\u{1}', s @ ..] => {
+			super::push(out, 792);
+			s.is_empty()
+		}
+		['n', 'i', s @ ..] => {
+			super::push(out, 793);
+			match s {
+				[] => true,
+				['m', '\u{1}', s @ ..] => {
+					super::push(out, 1357);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['p', s @ ..] => {
+			super::push(out, 794);
+			match s {
+				[] => true,
+				['s', 'i', 't', 'n', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 1358);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['t', s @ ..] => {
+			super::push(out, 795);
+			match s {
+				[] => true,
+				['s', 'a', '\u{1}', s @ ..] => {
+					super::push(out, 1359);
+					s.is_empty()
+				}
+				['t', s @ ..] => {
+					match s {
+						[] => true,
+						['a', 'b', 'm', 'o', 'c', '\u{1}', s @ ..] => {
+							super::push(out, 1773);
+							s.is_empty()
+						}
+						['o', 'f', '\u{1}', s @ ..] => {
+							super::push(out, 1774);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 

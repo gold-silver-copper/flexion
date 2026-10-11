@@ -96,6 +96,21 @@ impl<'s> Citation<'s> {
 pub struct Pos<'m, 'a> {
     model: &'m Model<'a>,
     h: &'a dyn PosModel,
+    /// Its index in the model.
+    index: usize,
+}
+
+/// How a derived lexicon reads a key back to a lemma of the part of speech it
+/// derives from: by the ending an edit of those cells adds (folded), the rest
+/// of the edit and the cells that use it.
+pub(crate) type Readings = std::collections::HashMap<String, Vec<Reading>>;
+
+pub(crate) struct Reading {
+    source: usize,
+    cells: Vec<usize>,
+    front: String,
+    prefix: String,
+    strip: String,
 }
 
 /// A form being accumulated: the edit that builds it and the stress it gets.
@@ -132,8 +147,8 @@ const MIN_FRONT: f32 = 0.05;
 const MAX_READINGS: usize = 4;
 
 impl<'m, 'a> Pos<'m, 'a> {
-    pub(crate) fn new(model: &'m Model<'a>, h: &'a dyn PosModel) -> Self {
-        Pos { model, h }
+    pub(crate) fn new(model: &'m Model<'a>, h: &'a dyn PosModel, index: usize) -> Self {
+        Pos { model, h, index }
     }
 
     pub fn cells(&self) -> usize {
@@ -727,8 +742,18 @@ impl<'m, 'a> Pos<'m, 'a> {
             Casing::Lower if self.h.capitalized() => Casing::Title,
             c => c,
         };
+        // Sound laws the edit's triggers set off rewrite the letters, never
+        // the number of vowels, so the stress found from the edit holds.
+        let realized;
+        let parts = if (e.prefix.chars().chain(e.add.chars())).any(crate::is_trigger) {
+            realized = crate::realize(self.h.phonology(), &format!("{}{kept}{}", e.prefix, e.add))
+                .into_owned();
+            [realized.as_str(), "", ""]
+        } else {
+            [e.prefix, kept, e.add]
+        };
         Some(self.sp().render_parts(
-            [e.prefix, kept, e.add],
+            parts,
             (key.stress != NO_STRESS).then_some(usize::from(key.stress)),
             key.kind,
             options.stress,
@@ -1406,7 +1431,20 @@ impl<'m, 'a> Pos<'m, 'a> {
     fn written_in_full<'s>(&self, typed: &'s str) -> (Word<'s>, Cow<'s, str>) {
         let sp = self.sp();
         let lemma = sp.read(typed);
-        let Some((full, entry)) = self.lexicon(&lemma.key) else {
+        // A word of its own is read as its own entry has it. A derived
+        // lexicon stores only what derivation gets wrong, an empty entry
+        // where it finds a word that isn't one.
+        let found = match self.h.lexicon(&lemma.key) {
+            Some("") => None,
+            Some(_) => self
+                .lexicon(&lemma.key)
+                .map(|(full, w)| (full.to_string(), w)),
+            None => self.derives(&lemma.key).map(|full| {
+                let word = owned(sp.read(&full));
+                (full, word)
+            }),
+        };
+        let Some((full, entry)) = found else {
             return (lemma, Cow::Borrowed(typed));
         };
         let stress =
@@ -1420,7 +1458,113 @@ impl<'m, 'a> Pos<'m, 'a> {
         // The caller's capitals still apply.
         let mut word = entry;
         word.casing = lemma.casing;
-        (word, Cow::Owned(full.to_string()))
+        (word, Cow::Owned(full))
+    }
+
+    /// The lemma `key` spells, as the part of speech whose forms it is
+    /// writes it: each edit of those cells read backwards gives a lemma
+    /// there, an attested word whose form in the cell, if it has the cell,
+    /// is asked of its model (a verb's participle, with the verb's stress).
+    /// Nothing when no reading gives `key`, or two give different forms.
+    /// What a lemma whose key is `key` is written as by derivation alone,
+    /// with no lexicon entry: nothing for a word of the part of speech's own.
+    #[doc(hidden)]
+    pub fn derives(&self, key: &str) -> Option<String> {
+        if self.h.lexicon_from(0).is_none() || self.attested(&self.sp().read(key)) {
+            return None;
+        }
+        self.derived(key)
+    }
+
+    fn derived(&self, key: &str) -> Option<String> {
+        let sp = self.sp();
+        let readings = self
+            .model
+            .readings
+            .get(self.index)?
+            .get_or_init(|| self.readings());
+        let mut found: Option<String> = None;
+        // (source, lemma, cell) already asked.
+        let mut asked: Vec<(usize, String, usize)> = Vec::new();
+        let ends = key.char_indices().map(|(i, _)| i).chain([key.len()]);
+        for at in ends {
+            let (Some(start), Some(end)) = (key.get(..at), key.get(at..)) else {
+                continue;
+            };
+            for r in readings.get(end).into_iter().flatten() {
+                let Some(mid) = start.strip_prefix(r.prefix.as_str()) else {
+                    continue;
+                };
+                let lemma = format!("{}{mid}{}", r.front, r.strip);
+                let Some(v) = self.model.pos(r.source) else {
+                    continue;
+                };
+                // Only the forms of words the model knows, in cells they have.
+                if !v.attested(&sp.read(&lemma)) {
+                    continue;
+                }
+                let citation = v.citation(&lemma, &[]);
+                for &cell in &r.cells {
+                    let asking = (r.source, lemma.clone(), cell);
+                    if asked.contains(&asking) {
+                        continue;
+                    }
+                    asked.push(asking);
+                    if v.has_cell(&citation, cell) < 0.5 {
+                        continue;
+                    }
+                    let form = v.best(&citation, cell, Options::default());
+                    if sp.read(&form).key != key {
+                        continue;
+                    }
+                    match &found {
+                        None => found = Some(form),
+                        Some(f) if *f != form => return None,
+                        Some(_) => {}
+                    }
+                }
+            }
+        }
+        found
+    }
+
+    /// The readings of [`Pos::derived`]: every edit of the cells the lexicon
+    /// derives from, folded, by the ending it adds.
+    fn readings(&self) -> Readings {
+        let sp = self.sp();
+        let mut out = Readings::new();
+        let mut i = 0usize;
+        while let Some((source, cells)) = self.h.lexicon_from(i) {
+            i = i.saturating_add(1);
+            let Some(v) = self.model.pos(source) else {
+                continue;
+            };
+            for &cell in cells {
+                for &id in v.h.cell_edits(cell) {
+                    let Some(e) = usize::try_from(id).ok().and_then(|id| v.edit(id)) else {
+                        continue;
+                    };
+                    let (front, prefix, strip) =
+                        (sp.fold_str(e.front), sp.fold_str(e.prefix), sp.fold_str(e.strip));
+                    let list = out.entry(sp.fold_str(e.add)).or_default();
+                    let same = |r: &&mut Reading| {
+                        r.source == source && r.front == front && r.prefix == prefix && r.strip == strip
+                    };
+                    match list.iter_mut().find(same) {
+                        Some(r) if !r.cells.contains(&cell) => r.cells.push(cell),
+                        Some(_) => {}
+                        None => list.push(Reading {
+                            source,
+                            cells: vec![cell],
+                            front,
+                            prefix,
+                            strip,
+                        }),
+                    }
+                }
+            }
+        }
+        out
     }
 }
 

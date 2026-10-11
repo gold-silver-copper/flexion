@@ -24,7 +24,8 @@ pub struct Probe {
 impl Probe {
     /// Read the probe flags from `args` (`--alpha 2 --tau 1 --support 1
     /// --syllables 2 --initial 0 --epsilon e --variant v --joins 1 --front 1
-    /// --parts 1 --attested 1 --fraction 0.5 --pos noun`); others are ignored.
+    /// --phonology 1 --parts 1 --attested 1 --fraction 0.5 --pos noun`);
+    /// others are ignored.
     pub fn from_args(args: &[String]) -> Result<Probe, String> {
         let flag = |name: &str| -> Option<&str> {
             args.windows(2)
@@ -61,6 +62,8 @@ impl Probe {
         }
         params.joins = flag("--joins").is_some();
         params.front_restore = flag("--front").is_some();
+        params.phonology = flag("--phonology").is_some();
+        params.derive_lexicon = flag("--derive").is_some();
         Ok(Probe {
             params,
             fraction: num("--fraction")?.unwrap_or(1.0),

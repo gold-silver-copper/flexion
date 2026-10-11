@@ -6,7 +6,7 @@ pub(crate) static ITEMS: [ClassDef; 16] = [
     ClassDef { class: Class { strip: "αλληλων", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [0] },
     // 1: like ἀμφοτερος
     ClassDef { class: Class { strip: "αμφοτεροσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1] },
-    // 2: like ἀμφω
+    // 2: like ὁ
     ClassDef { class: Class { strip: "", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2] },
     // 3: like ἁπας
     ClassDef { class: Class { strip: "απασ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [3] },
@@ -26,7 +26,7 @@ pub(crate) static ITEMS: [ClassDef; 16] = [
     ClassDef { class: Class { strip: "απλασιοσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [10] },
     // 11: like ὁσαπλασιων
     ClassDef { class: Class { strip: "απλασιων", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [11] },
-    // 12: like ὁστις
+    // 12: like τις
     ClassDef { class: Class { strip: "ισ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [12] },
     // 13: like παντοιος
     ClassDef { class: Class { strip: "αντοιοσ", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [13] },

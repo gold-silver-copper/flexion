@@ -1,14 +1,15 @@
-//! noun: 15 cells, 1179 edits, 664 classes, 3446 tree nodes.
+//! noun: 15 cells, 1147 edits, 664 classes, 3446 tree nodes.
 
 use flexion::{Class, Edit, Join, Path, PosModel, Walk};
 
 mod classes;
 mod edits;
 mod tree;
+mod phonology;
 
 /// Per cell, which model builds it when the caller gives principal parts:
 /// 0 this one, `k + 1` part model `k`.
-static SOURCES: [u8; 15] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+static SOURCES: [u8; 15] = [0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0];
 
 pub(crate) struct Noun;
 
@@ -63,7 +64,7 @@ impl PosModel for Noun {
         None
     }
     fn part_models(&self) -> &[(usize, usize)] {
-        &[]
+        &[(2, 13)]
     }
     fn source(&self, cell: usize) -> u8 {
         SOURCES.get(cell).copied().unwrap_or(0)
@@ -71,4 +72,12 @@ impl PosModel for Noun {
     fn lexicon(&self, _key: &str) -> Option<&str> {
         None
     }
+    fn phonology(&self) -> Option<&flexion::sound_law::Program> {
+        phonology::program()
+    }
+}
+
+/// Whether the sound laws compile.
+pub(crate) fn sound_laws_compile() -> bool {
+    phonology::program().is_some()
 }

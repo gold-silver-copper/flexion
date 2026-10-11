@@ -72,9 +72,9 @@ used for any decision.
 
 | | lemmas | cells | top-1 | letters right (marks ignored) | top-1, lemma written in full | top-3 | top-1 given citation | top-1 given citation and markers |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 2561 | 27124 | **84.52%** | 95.13% | 93.24% | 97.39% | 95.29% | 97.41% |
+| noun | 2561 | 27124 | **84.97%** | 95.20% | 93.53% | 97.55% | 95.35% | 97.59% |
 | adjective | 3332 | 161121 | **96.60%** | 99.83% | 99.75% | 99.59% | – | – |
-| verb | 1251 | 19729 | **92.08%** | 97.45% | 96.78% | 98.67% | 98.88% | 98.86% |
+| verb | 1251 | 19729 | **92.09%** | 97.45% | 96.78% | 98.67% | 98.78% | 98.69% |
 | pronoun ¹ | 4 | 188 | **32.98%** | 100.00% | 51.06% | 65.43% | – | – |
 | numeral ¹ | 4 | 153 | **100.00%** | 100.00% | 100.00% | 100.00% | – | – |
 
@@ -94,6 +94,10 @@ those marks.
 lemmas in the shipped model). 1954 of the 3332 held-out lemmas (58.64%) are among the training
 words' forms, so their stress and length come from those tables; their other forms are
 still predicted.
+
+The shipped model reads those lemmas from the verb models instead of storing them (the
+words they lend are marked as attested there) and keeps only the 31823 entries reading them
+gets wrong or would wrongly find: it is smaller that way, with the same answers.
 
 ### Other Wiktionary editions
 
@@ -115,25 +119,25 @@ Every held-out word, from every edition:
 
 | | lemmas | cells | top-1 | top-1 given citation |
 |---|---:|---:|---:|---:|
-| noun | 10954 | 118858 | 84.88% | 95.95% |
+| noun | 10954 | 118858 | 85.17% | 95.97% |
 | adjective | 6752 | 327291 | 95.47% | – |
-| verb | 4772 | 73299 | 91.48% | 98.89% |
+| verb | 4772 | 73299 | 91.48% | 98.83% |
 
 <details><summary>Held-out top-1 per cell</summary>
 
 | cell | n | top-1 | top-3 |
 |---|---:|---:|---:|
-| noun.nom.pl | 2419 | 86.69% | 97.68% |
-| noun.gen.sg | 2517 | 85.94% | 97.81% |
-| noun.gen.pl | 2417 | 86.06% | 97.48% |
-| noun.dat.sg | 2517 | 85.94% | 97.85% |
-| noun.dat.pl | 2419 | 86.19% | 97.89% |
-| noun.acc.sg | 2517 | 80.61% | 97.06% |
-| noun.acc.pl | 2419 | 74.12% | 94.46% |
-| noun.ins.sg | 2517 | 85.94% | 97.54% |
-| noun.ins.pl | 2419 | 86.19% | 97.89% |
-| noun.prep.sg | 2517 | 85.94% | 97.85% |
-| noun.prep.pl | 2419 | 86.19% | 97.89% |
+| noun.nom.pl | 2419 | 87.23% | 97.85% |
+| noun.gen.sg | 2517 | 86.45% | 97.93% |
+| noun.gen.pl | 2417 | 86.43% | 97.68% |
+| noun.dat.sg | 2517 | 86.45% | 97.97% |
+| noun.dat.pl | 2419 | 86.69% | 98.10% |
+| noun.acc.sg | 2517 | 80.69% | 97.30% |
+| noun.acc.pl | 2419 | 74.45% | 94.67% |
+| noun.ins.sg | 2517 | 86.49% | 97.58% |
+| noun.ins.pl | 2419 | 86.69% | 98.10% |
+| noun.prep.sg | 2517 | 86.45% | 97.97% |
+| noun.prep.pl | 2419 | 86.69% | 98.10% |
 | noun_second_case.part | 21 | 71.43% | 76.19% |
 | noun_second_case.loc | 6 | 83.33% | 83.33% |
 | adjective.nom.m.anim | 3332 | 96.79% | 99.61% |
@@ -190,7 +194,7 @@ Every held-out word, from every edition:
 | non_past.1.sg | 1244 | 92.12% | 98.95% |
 | non_past.1.pl | 1246 | 91.25% | 98.72% |
 | non_past.2.sg | 1246 | 91.33% | 98.64% |
-| non_past.2.pl | 1246 | 91.33% | 98.72% |
+| non_past.2.pl | 1246 | 91.41% | 98.72% |
 | non_past.3.sg | 1249 | 91.43% | 98.72% |
 | non_past.3.pl | 1246 | 91.33% | 98.80% |
 | past.m | 1248 | 93.91% | 99.44% |
@@ -331,15 +335,15 @@ All parts of speech together (ECE 0.024):
 
 | confidence | mean confidence | accuracy | answers |
 |---|---:|---:|---:|
-| 0.1–0.2 | 0.187 | 1.000 | 13 |
-| 0.2–0.3 | 0.261 | 0.711 | 76 |
-| 0.3–0.4 | 0.360 | 0.381 | 396 |
-| 0.4–0.5 | 0.459 | 0.451 | 1261 |
-| 0.5–0.6 | 0.553 | 0.537 | 6260 |
-| 0.6–0.7 | 0.656 | 0.867 | 12716 |
-| 0.7–0.8 | 0.755 | 0.815 | 7206 |
-| 0.8–0.9 | 0.859 | 0.882 | 12300 |
-| 0.9–1.0 | 0.990 | 0.982 | 168087 |
+| 0.1–0.2 | 0.177 | 0.667 | 3 |
+| 0.2–0.3 | 0.261 | 0.583 | 108 |
+| 0.3–0.4 | 0.360 | 0.360 | 450 |
+| 0.4–0.5 | 0.460 | 0.486 | 1544 |
+| 0.5–0.6 | 0.555 | 0.560 | 6176 |
+| 0.6–0.7 | 0.656 | 0.866 | 13100 |
+| 0.7–0.8 | 0.755 | 0.821 | 7675 |
+| 0.8–0.9 | 0.859 | 0.887 | 12500 |
+| 0.9–1.0 | 0.990 | 0.983 | 166759 |
 
 ### Forms many words lack
 
@@ -348,7 +352,7 @@ how often the answer to "does this word have one?" is right.
 
 | | held-out cells | right | attested cells | right |
 |---|---:|---:|---:|---:|
-| noun | 5122 | 99.45% | 217552 | 99.95% |
+| noun | 5122 | 99.47% | 217552 | 99.95% |
 | adjective | 13328 | 93.86% | 270176 | 99.45% |
 | verb | 7506 | 87.41% | 281322 | 99.69% |
 
@@ -358,8 +362,8 @@ Predicted for held-out lemmas from the bare lemma.
 
 | feature | lemmas | right |
 |---|---:|---:|
-| noun gender | 2559 | 97.15% |
-| noun animacy | 2559 | 84.64% |
+| noun gender | 2559 | 97.42% |
+| noun animacy | 2559 | 84.49% |
 | verb aspect | 1251 | 73.86% |
 
 ### Made-up words
@@ -368,10 +372,10 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 | word | function | answers |
 |---|---|---|
-| `кракозябра` | noun | nom.sg: кракозя́бра 0.93; nom.pl: кракозя́бры 0.93; gen.sg: кракозя́бры 0.93; gen.pl: кракозя́бр 0.94; dat.sg: кракозя́бре 0.93; dat.pl: кракозя́брам 0.93; acc.sg: кракозя́бру 0.93; acc.pl: кракозя́бры 0.87; ins.sg: кракозя́брой 0.62, кракозя́брою 0.31; ins.pl: кракозя́брами 0.93; prep.sg: кракозя́бре 0.93; prep.pl: кракозя́брах 0.93 |
-| `глокость` | noun | nom.sg: гло́кость 0.59, глоко́сть 0.40; nom.pl: гло́кости 0.59, глоко́сти 0.40; gen.sg: гло́кости 0.59, глоко́сти 0.40; gen.pl: гло́костей 0.59, глокосте́й 0.40; dat.sg: гло́кости 0.59, глоко́сти 0.40; dat.pl: гло́костям 0.59, глокостя́м 0.40; acc.sg: гло́кость 0.59, глоко́сть 0.40; acc.pl: гло́кости 0.55, глоко́сти 0.40; ins.sg: гло́костью 0.58, глоко́стью 0.40; ins.pl: гло́костями 0.59, глокостя́ми 0.40; prep.sg: гло́кости 0.59, глоко́сти 0.40; prep.pl: гло́костях 0.59, глокостя́х 0.40 |
-| `бокр` | noun | nom.sg: бо́кр 1.00; nom.pl: бо́кры 1.00; gen.sg: бо́кра 1.00; gen.pl: бо́кров 1.00; dat.sg: бо́кру 1.00; dat.pl: бо́крам 1.00; acc.sg: бо́кр 0.81, бо́кра 0.19; acc.pl: бо́кры 0.81, бо́кров 0.19; ins.sg: бо́кром 1.00; ins.pl: бо́крами 1.00; prep.sg: бо́кре 1.00; prep.pl: бо́крах 1.00 |
-| `бокрёнок` | noun | nom.sg: бокрёнок 1.00; nom.pl: бокря́та 0.97; gen.sg: бокрёнка 1.00; gen.pl: бокря́т 0.97; dat.sg: бокрёнку 1.00; dat.pl: бокря́там 0.97; acc.sg: бокрёнка 0.97; acc.pl: бокря́т 0.97; ins.sg: бокрёнком 1.00; ins.pl: бокря́тами 0.97; prep.sg: бокрёнке 1.00; prep.pl: бокря́тах 0.97 |
+| `кракозябра` | noun | nom.sg: кракозя́бра 0.90; nom.pl: кракозя́бры 0.90; gen.sg: кракозя́бры 0.90; gen.pl: кракозя́бр 0.92; dat.sg: кракозя́бре 0.90; dat.pl: кракозя́брам 0.90; acc.sg: кракозя́бру 0.90; acc.pl: кракозя́бры 0.82; ins.sg: кракозя́брой 0.60, кракозя́брою 0.30; ins.pl: кракозя́брами 0.90; prep.sg: кракозя́бре 0.90; prep.pl: кракозя́брах 0.90 |
+| `глокость` | noun | nom.sg: гло́кость 0.83, глоко́сть 0.17; nom.pl: гло́кости 0.82, глоко́сти 0.17; gen.sg: гло́кости 0.83, глоко́сти 0.17; gen.pl: гло́костей 0.82, глокосте́й 0.18; dat.sg: гло́кости 0.83, глоко́сти 0.17; dat.pl: гло́костям 0.82, глокостя́м 0.18; acc.sg: гло́кость 0.83, глоко́сть 0.17; acc.pl: гло́кости 0.78, глоко́сти 0.17; ins.sg: гло́костью 0.81, глоко́стью 0.17; ins.pl: гло́костями 0.82, глокостя́ми 0.18; prep.sg: гло́кости 0.83, глоко́сти 0.17; prep.pl: гло́костях 0.82, глокостя́х 0.18 |
+| `бокр` | noun | nom.sg: бо́кр 1.00; nom.pl: бо́кры 0.98; gen.sg: бо́кра 1.00; gen.pl: бо́кров 0.98; dat.sg: бо́кру 1.00; dat.pl: бо́крам 0.98; acc.sg: бо́кр 0.77, бо́кра 0.23; acc.pl: бо́кры 0.75, бо́кров 0.23; ins.sg: бо́кром 1.00; ins.pl: бо́крами 0.98; prep.sg: бо́кре 1.00; prep.pl: бо́крах 0.98 |
+| `бокрёнок` | noun | nom.sg: бокрёнок 1.00; nom.pl: бокря́та 0.95; gen.sg: бокрёнка 1.00; gen.pl: бокря́т 0.95; dat.sg: бокрёнку 1.00; dat.pl: бокря́там 0.95; acc.sg: бокрёнка 0.95; acc.pl: бокря́т 0.94; ins.sg: бокрёнком 1.00; ins.pl: бокря́тами 0.95; prep.sg: бокрёнке 1.00; prep.pl: бокря́тах 0.95 |
 | `куздрый` | adjective | nom.m.anim: ку́здрый 1.00; nom.m.inan: ку́здрый 1.00; nom.f.anim: ку́здрая 1.00; nom.f.inan: ку́здрая 1.00; nom.n.anim: ку́здрое 1.00; nom.n.inan: ку́здрое 1.00; nom.pl.anim: ку́здрые 1.00; nom.pl.inan: ку́здрые 1.00; gen.m.anim: ку́здрого 1.00; gen.m.inan: ку́здрого 1.00; gen.f.anim: ку́здрой 1.00; gen.f.inan: ку́здрой 1.00; gen.n.anim: ку́здрого 1.00; gen.n.inan: ку́здрого 1.00; gen.pl.anim: ку́здрых 1.00; gen.pl.inan: ку́здрых 1.00; dat.m.anim: ку́здрому 1.00; dat.m.inan: ку́здрому 1.00; dat.f.anim: ку́здрой 1.00; dat.f.inan: ку́здрой 1.00; dat.n.anim: ку́здрому 1.00; dat.n.inan: ку́здрому 1.00; dat.pl.anim: ку́здрым 1.00; dat.pl.inan: ку́здрым 1.00; acc.m.anim: ку́здрого 1.00; acc.m.inan: ку́здрый 1.00; acc.f.anim: ку́здрую 1.00; acc.f.inan: ку́здрую 1.00; acc.n.anim: ку́здрое 1.00; acc.n.inan: ку́здрое 1.00; acc.pl.anim: ку́здрых 1.00; acc.pl.inan: ку́здрые 1.00; ins.m.anim: ку́здрым 1.00; ins.m.inan: ку́здрым 1.00; ins.f.anim: ку́здрой 0.67, ку́здрою 0.33; ins.f.inan: ку́здрой 0.67, ку́здрою 0.33; ins.n.anim: ку́здрым 1.00; ins.n.inan: ку́здрым 1.00; ins.pl.anim: ку́здрыми 1.00; ins.pl.inan: ку́здрыми 1.00; prep.m.anim: ку́здром 1.00; prep.m.inan: ку́здром 1.00; prep.f.anim: ку́здрой 1.00; prep.f.inan: ку́здрой 1.00; prep.n.anim: ку́здром 1.00; prep.n.inan: ку́здром 1.00; prep.pl.anim: ку́здрых 1.00; prep.pl.inan: ку́здрых 1.00 |
 | `будлануть` | non_past | 1.sg: будлану́ 0.99; 1.pl: будланём 0.97; 2.sg: будланёшь 0.97; 2.pl: будланёте 0.97; 3.sg: будланёт 0.97; 3.pl: будлану́т 0.97 |
 | `бузять` | non_past | 1.sg: буозьму́ 0.52, бузя́ю 0.44; 1.pl: буозьмём 0.52, бузя́ем 0.44; 2.sg: буозьмёшь 0.52, бузя́ешь 0.44; 2.pl: буозьмёте 0.52, бузя́ете 0.44; 3.sg: буозьмёт 0.52, бузя́ет 0.44; 3.pl: буозьму́т 0.52, бузя́ют 0.44 |
@@ -381,18 +385,18 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 <details><summary>noun</summary>
 
-- 289 × `noun.prep.sg`: right letters, wrong stress — абьюзерша → абьюзе́рше (attested абью́зерше); аванпост → аванпосте́ (attested аванпо́сте); алеф → але́фе (attested а́лефе)
-- 288 × `noun.gen.sg`: right letters, wrong stress — абьюзерша → абьюзе́рши (attested абью́зерши); аванпост → аванпоста́ (attested аванпо́ста); алеф → але́фа (attested а́лефа)
-- 288 × `noun.dat.sg`: right letters, wrong stress — абьюзерша → абьюзе́рше (attested абью́зерше); аванпост → аванпосту́ (attested аванпо́сту); алеф → але́фу (attested а́лефу)
-- 279 × `noun.prep.pl`: right letters, wrong stress — абьюзерша → абьюзе́ршах (attested абью́зершах); аванпост → аванпоста́х (attested аванпо́стах); алеф → але́фах (attested а́лефах)
-- 279 × `noun.dat.pl`: right letters, wrong stress — абьюзерша → абьюзе́ршам (attested абью́зершам); аванпост → аванпоста́м (attested аванпо́стам); алеф → але́фам (attested а́лефам)
-- 279 × `noun.ins.pl`: right letters, wrong stress — абьюзерша → абьюзе́ршами (attested абью́зершами); аванпост → аванпоста́ми (attested аванпо́стами); алеф → але́фами (attested а́лефами)
-- 258 × `noun.nom.pl`: right letters, wrong stress — абьюзерша → абьюзе́рши (attested абью́зерши); аванпост → аванпосты́ (attested аванпо́сты); алеф → але́фы (attested а́лефы)
-- 256 × `noun.ins.sg`: right letters, wrong stress — абьюзерша → абьюзе́ршей (attested абью́зершей); аванпост → аванпосто́м (attested аванпо́стом); алеф → але́фом (attested а́лефом)
-- 236 × `noun.gen.pl`: right letters, wrong stress — абьюзерша → абьюзе́рш (attested абью́зерш); аванпост → аванпосто́в (attested аванпо́стов); алеф → але́фов (attested а́лефов)
-- 224 × `noun.acc.sg`: right letters, wrong stress — абьюзерша → абьюзе́ршу (attested абью́зершу); алеф → але́ф (attested а́леф); аллергия → алле́ргию (attested аллерги́ю)
-- 168 × `noun.acc.pl`: right letters, wrong stress — абьюзерша → абьюзе́рш (attested абью́зерш); аванпост → аванпосты́ (attested аванпо́сты); алеф → але́фы (attested а́лефы)
-- 125 × `noun.acc.sg`: predicted `-+`, attested `-+а` — аббат → абба́т (attested абба́та); адвокат → адвока́т (attested адвока́та); адресат → адреса́т (attested адреса́та)
+- 280 × `noun.prep.sg`: right letters, wrong stress — абьюзерша → абьюзе́рше (attested абью́зерше); алеф → але́фе (attested а́лефе); алыча → алы́че (attested алыче́)
+- 280 × `noun.gen.sg`: right letters, wrong stress — абьюзерша → абьюзе́рши (attested абью́зерши); алеф → але́фа (attested а́лефа); алыча → алы́чи (attested алычи́)
+- 280 × `noun.dat.sg`: right letters, wrong stress — абьюзерша → абьюзе́рше (attested абью́зерше); алеф → але́фу (attested а́лефу); алыча → алы́че (attested алыче́)
+- 266 × `noun.prep.pl`: right letters, wrong stress — абьюзерша → абьюзе́ршах (attested абью́зершах); алеф → але́фах (attested а́лефах); алыча → алы́чах (attested алыча́х)
+- 266 × `noun.dat.pl`: right letters, wrong stress — абьюзерша → абьюзе́ршам (attested абью́зершам); алеф → але́фам (attested а́лефам); алыча → алы́чам (attested алыча́м)
+- 266 × `noun.ins.pl`: right letters, wrong stress — абьюзерша → абьюзе́ршами (attested абью́зершами); алеф → але́фами (attested а́лефами); алыча → алы́чами (attested алыча́ми)
+- 247 × `noun.ins.sg`: right letters, wrong stress — абьюзерша → абьюзе́ршей (attested абью́зершей); алеф → але́фом (attested а́лефом); анафема → анафе́мой (attested ана́фемой)
+- 246 × `noun.nom.pl`: right letters, wrong stress — абьюзерша → абьюзе́рши (attested абью́зерши); алеф → але́фы (attested а́лефы); алыча → алы́чи (attested алычи́)
+- 226 × `noun.gen.pl`: right letters, wrong stress — абьюзерша → абьюзе́рш (attested абью́зерш); алеф → але́фов (attested а́лефов); анафема → анафе́м (attested ана́фем)
+- 219 × `noun.acc.sg`: right letters, wrong stress — абьюзерша → абьюзе́ршу (attested абью́зершу); алеф → але́ф (attested а́леф); алыча → алы́чу (attested алычу́)
+- 164 × `noun.acc.pl`: right letters, wrong stress — абьюзерша → абьюзе́рш (attested абью́зерш); аванпост → аванпосты́ (attested аванпо́сты); алеф → але́фы (attested а́лефы)
+- 135 × `noun.acc.sg`: predicted `-+`, attested `-+а` — аббат → абба́т (attested абба́та); адвокат → адвока́т (attested адвока́та); адресат → адреса́т (attested адреса́та)
 
 </details>
 
@@ -454,23 +458,23 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 67138 KB of generated Rust (8441 KB gzipped). Its tables measure 12062 KB: what a compact binary layout of them would take, the size the build prices when it tunes. Where those bytes are, in KB (the strings, 2359 KB, are shared):
+The model is 59659 KB of generated Rust (4748 KB gzipped). Its tables measure 11229 KB: what a compact binary layout of them would take, the size the build prices when it tunes. Where those bytes are, in KB (the strings, 823 KB, are shared):
 
-| | edits | classes | tree nodes | distributions | joins | lexicon | restoration model | part models | total |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 302 | 193 | 673 | 1523 | 0 | 0 | 84 | 0 | 2777 |
-| adjective | 21 | 40 | 414 | 925 | 0 | 678 | 91 | 0 | 2170 |
-| verb | 1457 | 186 | 892 | 1686 | 509 | 0 | 0 | 0 | 4729 |
-| pronoun | 8 | 6 | 1 | 3 | 0 | 0 | 0 | 0 | 17 |
-| numeral | 3 | 5 | 1 | 1 | 0 | 0 | 0 | 0 | 10 |
+| | edits | classes | tree nodes | their counts | joins | lexicon | sound laws | restoration model | part models | total |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 302 | 193 | 1699 | 1608 | 0 | 0 | 0 | 128 | 0 | 3930 |
+| adjective | 21 | 40 | 414 | 622 | 0 | 373 | 0 | 93 | 0 | 1563 |
+| verb | 1451 | 185 | 1059 | 874 | 509 | 2 | 2 | 0 | 805 | 4887 |
+| pronoun | 8 | 6 | 1 | 2 | 0 | 0 | 0 | 0 | 0 | 16 |
+| numeral | 3 | 5 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 10 |
 
-| | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
+| | edits | classes | stored nodes | memorized words | counts stored | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 9669 | 4053 | 57464 | 10773 | 390014 | 1185 (`noun.gen.sg`) |
-| adjective | 661 | 815 | 35341 | 2168 | 236893 | 1495 (`adjective.nom.m.anim`) |
-| verb | 46630 | 3550 | 76111 | 5329 | 431506 | 1217 (`past.n`) |
-| pronoun | 242 | 57 | 56 | 4 | 681 | 794 (`pronoun.nom.m.anim`) |
-| numeral | 102 | 45 | 45 | 13 | 324 | 1016 (`numeral.nom.pl.anim`) |
+| noun | 9669 | 4053 | 144955 | 11627 | 274451 | 2821 (`noun.gen.sg`) |
+| adjective | 661 | 815 | 35341 | 2168 | 106125 | 1372 (`adjective.nom.m.anim`) |
+| verb | 46420 | 3546 | 76111 | 5329 | 149095 | 5675 (`past.n`) |
+| pronoun | 242 | 57 | 56 | 4 | 259 | 876 (`pronoun.nom.m.anim`) |
+| numeral | 102 | 45 | 45 | 13 | 178 | 1053 (`numeral.nom.pl.anim`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
@@ -482,40 +486,62 @@ release build, fastest of seven runs.
 
 | | τ | model KB | dev top-1 | dev log-loss |
 |---|---:|---:|---:|---:|
-| noun | 1 | 3460 | 85.09% | 0.5700 |
-| noun | 2 (chosen) | 2413 | 85.01% | 0.5693 |
-| noun | 8 | 1467 | 83.68% | 0.5798 |
-| adjective | 1 (chosen) | 1284 | 92.10% | 0.3413 |
-| adjective | 2 | 856 | 91.75% | 0.3419 |
-| adjective | 8 | 470 | 89.96% | 0.3647 |
-| verb | 1 (chosen) | 2212 | 90.66% | 0.4260 |
-| verb | 2 | 1569 | 90.29% | 0.4312 |
-| verb | 8 | 929 | 88.15% | 0.4656 |
-| pronoun | 1 (chosen) | 18 | 70.21% | 0.9015 |
-| pronoun | 2 | 17 | 70.21% | 1.0480 |
+| noun | 1 (chosen) | 3319 | 85.00% | 0.5350 |
+| noun | 2 | 2453 | 84.74% | 0.5400 |
+| noun | 8 | 1570 | 83.62% | 0.5636 |
+| adjective | 1 (chosen) | 1018 | 92.10% | 0.3413 |
+| adjective | 2 | 747 | 91.75% | 0.3419 |
+| adjective | 8 | 512 | 89.96% | 0.3647 |
+| verb | 1 (chosen) | 1499 | 90.66% | 0.4259 |
+| verb | 2 | 1214 | 90.29% | 0.4312 |
+| verb | 8 | 985 | 88.15% | 0.4655 |
+| pronoun | 1 (chosen) | 16 | 70.21% | 0.9014 |
+| pronoun | 2 | 16 | 70.21% | 1.0480 |
 | pronoun | 8 | 16 | 70.21% | 1.2320 |
-| numeral | 1 (chosen) | 10 | 94.48% | 0.5882 |
+| numeral | 1 (chosen) | 10 | 94.48% | 0.5883 |
 | numeral | 2 | 10 | 94.48% | 0.5884 |
-| numeral | 8 | 10 | 94.48% | 0.5976 |
+| numeral | 8 | 10 | 94.48% | 0.5977 |
 
 </details>
 
 <details><summary>Chosen hyperparameters</summary>
 
-| | smoothing α | pruning τ | suffix support | syllable token | dev top-1 |
-|---|---:|---:|---:|---|---:|
-| noun | 2 | 2 | 1 | none | 85.01% |
-| adjective | 2 | 1 | 1 | none | 92.10% |
-| verb | 2 | 1 | 1 | none | 91.04% |
-| pronoun | 0.5 | 1 | 1 | after 2 letters | 70.21% |
-| numeral | 0.5 | 1 | 2 | after 0 letters | 94.48% |
+| | smoothing α | pruning τ | suffix support | syllable token | join model | start restoration | sound laws | dev top-1 |
+|---|---:|---:|---:|---|---|---|---|---:|
+| noun | 8 | 1 | 1 | none | no | no | no | 85.00% |
+| adjective | 2 | 1 | 1 | none | no | no | no | 92.10% |
+| verb | 2 | 1 | 1 | none | yes | no | yes | 91.04% |
+| pronoun | 0.5 | 1 | 1 | after 2 letters | no | no | no | 70.21% |
+| numeral | 0.5 | 1 | 2 | after 0 letters | no | no | no | 94.48% |
 
 </details>
+
+### Sound laws
+
+Learned from the training words: where edits differ only by a regular change of the stem's edge, they are one edit and a rule, so an unseen word gets the change too.
+
+- **verb**:
+  - the stem's last segment before the ending: г→ж, з→ж, с→ш, ск→щ, сл→шл, ст→вш, т→вш, ть→лс, х→д, ь→с (79899 training pairs)
+  - the stem's last segment before the ending: ст→в, т→в, ть→б, чь→к (59063 training pairs)
+  - the stem's last segment before the ending: йт→шл, ст→л, т→л, ть→н, ч→гл, чь→ж (117819 training pairs)
+  - the stem's last segment before the ending: ст→шьт, т→йт, ть→в, чь→ж (27762 training pairs)
+  - the stem's last segment before the ending: д→ж, з→ж, к→ч, с→ш, ск→щ, сл→шл, ст→щ, т→ч, ть→б, х→ш, чь→ж (7277 training pairs)
+  - the stem's last segment before the ending: ст→л, т→л, ч→кл (1248 training pairs)
+  - the stem's last segment before the ending: ст→д, т→л, ч→к (1145 training pairs)
+  - the stem's last segment before the ending: ст→дш, т→ш (131 training pairs)
+  - the stem's last segment before the ending: ст→д, т→в (565 training pairs)
+  - the stem's last segment before the ending: ст→ш, т→н (187 training pairs)
+  - the stem's last segment before the ending: з→жь, йт→ш, к→чь, с→шь, ст→б, т→чь (209 training pairs)
+  - the stem's last segment before the ending: з→жьт, к→чьт, с→шьт, т→чьт (201 training pairs)
+  - the stem's last segment before the ending: ст→д, т→н (108 training pairs)
+  - the stem's last segment before the ending: ст→д, т→д (148 training pairs)
+  - the stem's last segment before the ending: г→ж, з→ж, к→ч, с→ш, ск→щ, т→ч, х→д (304 training pairs)
+  - the stem's last segment before the ending: д→ж, с→ш, ск→щ, ст→щ, т→щ, х→ш (424 training pairs)
 
 
 ## Data and license
 
-The code is MIT or Apache-2.0. The model (`src/model.bin`) is derived from
+The code is MIT or Apache-2.0. The model (the code under `src/model/`) is derived from
 [the English Wiktionary](https://en.wiktionary.org/) and [the Russian Wiktionary](https://ru.wiktionary.org/) via [Kaikki](https://kaikki.org/) and
 [wiktextract](https://github.com/tatuylonen/wiktextract), and is licensed under
 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); see `DATA-LICENSE.md`.

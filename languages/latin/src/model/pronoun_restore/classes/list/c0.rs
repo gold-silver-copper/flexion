@@ -2,9 +2,9 @@ use super::super::ClassDef;
 use flexion::{Class, Stress};
 
 pub(crate) static ITEMS: [ClassDef; 30] = [
-    // 0: like aliqui
+    // 0: like qui
     ClassDef { class: Class { strip: "i", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [0] },
-    // 1: like aliquis
+    // 1: like ea
     ClassDef { class: Class { strip: "", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [1] },
     // 2: like ambo
     ClassDef { class: Class { strip: "o", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [2] },
@@ -16,9 +16,9 @@ pub(crate) static ITEMS: [ClassDef; 30] = [
     ClassDef { class: Class { strip: "uria", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [5] },
     // 6: like complusculi
     ClassDef { class: Class { strip: "usculi", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [6] },
-    // 7: like cuiusvis
+    // 7: like utervis
     ClassDef { class: Class { strip: "is", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [7] },
-    // 8: like ecquinam
+    // 8: like quinam
     ClassDef { class: Class { strip: "inam", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [8] },
     // 9: like idem
     ClassDef { class: Class { strip: "idem", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [9] },
@@ -30,7 +30,7 @@ pub(crate) static ITEMS: [ClassDef; 30] = [
     ClassDef { class: Class { strip: "oquis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [12] },
     // 13: like nosmet
     ClassDef { class: Class { strip: "osmet", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [13] },
-    // 14: like nullus
+    // 14: like ullus
     ClassDef { class: Class { strip: "ullus", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [14] },
     // 15: like qualis
     ClassDef { class: Class { strip: "alis", front: "", lemma: (Stress::Unmarked, 0), values: &[] }, subs: [15] },

@@ -22,6 +22,17 @@ pub fn model() -> &'static Model<'static> {
     MODEL.get_or_init(model::build)
 }
 
+/// Every sound law of the model compiles (a doctest: the crate has no unit
+/// tests).
+///
+/// ```
+/// assert!(russian::sound_laws_compile());
+/// ```
+#[doc(hidden)]
+pub fn sound_laws_compile() -> bool {
+    model::sound_laws_compile()
+}
+
 /// Grammatical case.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum Case {

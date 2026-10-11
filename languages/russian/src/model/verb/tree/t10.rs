@@ -1,11666 +1,13011 @@
 use flexion::Path;
 
-/// Words ending -олоться.
-pub(crate) fn n13166(s: &[char], out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['к', s @ ..] => {
-            out.push(&[(647, 0.8230106), (255, 0.109910734), (1172, 0.04167239), (1606, 0.02169833)], 0.99629205);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(255, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['а', s @ ..] => {
-                    out.push(&[(647, 0.9277638), (255, 0.044861525), (1172, 0.017013809), (1606, 0.008850233)], 0.9984894);
-                    match s {
-                        [] => true,
-                        ['з', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['н', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['б', 'о', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['в', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['д', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['а', 'н', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(647, 0.92919815), (255, 0.04396124), (1172, 0.016662853), (1606, 0.008682383)], 0.99850464);
-                    match s {
-                        [] => true,
-                        ['д', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['с', s @ ..] => {
-                    out.push(&[(647, 0.9486992), (255, 0.03186084), (1172, 0.012085145), (1606, 0.006286717)], 0.9989319);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['а', 'р', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['в', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['и', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['т', 'о', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['у', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['ы', s @ ..] => {
-                    out.push(&[(647, 0.5486686), (1172, 0.36112002), (255, 0.07327382), (1606, 0.014465553)], 0.997528);
-                    match s {
-                        [] => true,
-                        ['в', s @ ..] => {
-                            out.push(&[(1172, 0.5740749), (647, 0.365774), (255, 0.04884413), (1606, 0.009643702)], 0.99833673);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['м', s @ ..] => {
-            out.push(&[(1606, 0.7856718), (647, 0.06582742), (1217, 0.06547646), (2352, 0.06547646), (255, 0.011352712), (1172, 0.006027314)], 0.99983215);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(2352, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['а', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['з', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['н', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['б', 'о', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['з', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['а', 'р', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['и', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(1606, 0.9142748), (647, 0.026337072), (1217, 0.026184482), (2352, 0.026184482), (255, 0.0045471885), (1172, 0.0024109255)], 0.99993896);
-                    match s {
-                        [] => true,
-                        ['д', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['с', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['т', 'о', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['ы', s @ ..] => {
-                    out.push(&[(1606, 0.5237812), (1217, 0.37697414), (647, 0.043884948), (2352, 0.043640804), (255, 0.007568475), (1172, 0.004028382)], 0.9998779);
-                    match s {
-                        [] => true,
-                        ['в', s @ ..] => {
-                            out.push(&[(1217, 0.58464944), (1606, 0.34918746), (647, 0.029251546), (2352, 0.029098954), (255, 0.0050507365), (1172, 0.0026855879)], 0.9999237);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['п', s @ ..] => {
-            out.push(&[(647, 0.4106508), (255, 0.23633173), (1172, 0.21930267), (1606, 0.114137486), (1217, 0.009506371), (2352, 0.009506371)], 0.9994354);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(255, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(647, 0.6070954), (255, 0.15756465), (1172, 0.1461967), (1606, 0.07609674), (1217, 0.006347753), (2352, 0.006347753)], 0.99964905);
-                    match s {
-                        [] => true,
-                        ['р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ы', s @ ..] => {
-                    out.push(&[(1172, 0.47953004), (647, 0.2737621), (255, 0.15756465), (1606, 0.07609674), (1217, 0.006347753), (2352, 0.006347753)], 0.99964905);
-                    match s {
-                        [] => true,
-                        ['в', s @ ..] => {
-                            out.push(&[(1172, 0.6530251), (647, 0.18251316), (255, 0.105043106), (1606, 0.05073625), (1217, 0.0042267493), (2352, 0.0042267493)], 0.9997711);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+/// Words ending -олять.
+pub(crate) fn n1059(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1029);
+	match s {
+		[] => true,
+		['в', s @ ..] => {
+			super::push(out, 4041);
+			match s {
+				[] => true,
+				['з', s @ ..] => {
+					match s {
+						[] => true,
+						['и', s @ ..] => {
+							super::push(out, 17933);
+							match s {
+								[] => true,
+								['о', s @ ..] => {
+									match s {
+										[] => true,
+										['р', 'п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['с', s @ ..] => {
+											super::push(out, 31614);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['о', s @ ..] => {
+							super::push(out, 17934);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['о', 'г', 'а', 'л', 'б', 'о', 'с', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['г', s @ ..] => {
+			super::push(out, 4042);
+			match s {
+				[] => true,
+				['а', s @ ..] => {
+					super::push(out, 10394);
+					match s {
+						[] => true,
+						['з', s @ ..] => {
+							super::push(out, 17935);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['е', s @ ..] => {
+					super::push(out, 10395);
+					match s {
+						[] => true,
+						['щ', s @ ..] => {
+							super::push(out, 17936);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 25052);
+									s.is_empty()
+								}
+								['а', s @ ..] => {
+									super::push(out, 25053);
+									match s {
+										[] => true,
+										['з', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['н', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['е', s @ ..] => {
+									super::push(out, 25054);
+									match s {
+										[] => true,
+										['р', s @ ..] => {
+											super::push(out, 31615);
+											match s {
+												[] => true,
+												['е', 'п', '\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['о', s @ ..] => {
+									super::push(out, 25055);
+									match s {
+										[] => true,
+										['п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['р', 'п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['т', s @ ..] => {
+									super::push(out, 25056);
+									match s {
+										[] => true,
+										['о', s @ ..] => {
+											super::push(out, 31616);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 10396);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['д', 'о', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['з', 'о', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['к', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['м', s @ ..] => {
+			super::push(out, 4043);
+			s.is_empty()
+		}
+		['с', s @ ..] => {
+			super::push(out, 4044);
+			match s {
+				[] => true,
+				['а', s @ ..] => {
+					super::push(out, 10397);
+					match s {
+						[] => true,
+						['з', s @ ..] => {
+							super::push(out, 17937);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['с', s @ ..] => {
+					super::push(out, 10398);
+					match s {
+						[] => true,
+						['а', 'р', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['т', s @ ..] => {
+			super::push(out, 4045);
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
-/// Words ending -роться.
-pub(crate) fn n4630(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(647, 0.78155184), (255, 0.1572137), (1172, 0.04257267), (1606, 0.014007783)], 0.995346);
-    match s {
-        [] => true,
-        ['о', s @ ..] => {
-            match s {
-                [] => true,
-                ['б', s @ ..] => {
-                    out.push(&[(647, 0.7003891), (255, 0.2838941), (1172, 0.010910201), (1606, 0.0035858701)], 0.99877924);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(255, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', 'н', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(647, 0.8463569), (255, 0.14558633), (1172, 0.0056000613)], 0.99754333);
-                            match s {
-                                [] => true,
-                                ['п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['п', s @ ..] => {
-                    out.push(&[(647, 0.8314641), (255, 0.11183337), (1172, 0.05481041)], 0.9981079);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(255, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            out.push(&[(647, 0.9312123), (255, 0.045654994), (1172, 0.022369726)], 0.999237);
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['д', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['а', 'н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(647, 0.9438163), (255, 0.03727779), (1172, 0.01826505)], 0.99935913);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['д', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['р', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['с', s @ ..] => {
-                            out.push(&[(647, 0.93258566), (255, 0.04473945), (1172, 0.021927215)], 0.9992523);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['в', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['т', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['у', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['ы', s @ ..] => {
-                            out.push(&[(647, 0.5543145), (1172, 0.36986342), (255, 0.07455558)], 0.9987335);
-                            match s {
-                                [] => true,
-                                ['в', s @ ..] => {
-                                    out.push(&[(1172, 0.5799191), (647, 0.369543), (255, 0.049698636)], 0.9991607);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+/// Words ending -плять.
+pub(crate) fn n1060(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1030);
+	match s {
+		[] => true,
+		['а', 'р', 'к', 'в', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['е', s @ ..] => {
+			match s {
+				[] => true,
+				['л', s @ ..] => {
+					super::push(out, 10399);
+					match s {
+						[] => true,
+						['а', s @ ..] => {
+							match s {
+								[] => true,
+								['з', s @ ..] => {
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['о', s @ ..] => {
+											super::push(out, 31617);
+											match s {
+												[] => true,
+												['п', s @ ..] => {
+													super::push(out, 36530);
+													match s {
+														[] => true,
+														['\u{1}', s @ ..] => super::t15::n76967(s, out),
+														_ => false,
+													}
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['н', s @ ..] => {
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['о', s @ ..] => {
+											super::push(out, 31618);
+											match s {
+												[] => true,
+												['п', s @ ..] => {
+													super::push(out, 36531);
+													match s {
+														[] => true,
+														['\u{1}', s @ ..] => super::t15::n76968(s, out),
+														_ => false,
+													}
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['в', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', s @ ..] => {
+									super::push(out, 25057);
+									match s {
+										[] => true,
+										['п', s @ ..] => {
+											super::push(out, 31619);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['д', s @ ..] => {
+							match s {
+								[] => true,
+								['а', 'н', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['з', 'и', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', 'д', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['с', s @ ..] => {
+							super::push(out, 17938);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['а', 'з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['у', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['ы', s @ ..] => {
+							super::push(out, 17939);
+							match s {
+								[] => true,
+								['в', s @ ..] => {
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['о', s @ ..] => {
+											super::push(out, 31620);
+											match s {
+												[] => true,
+												['п', s @ ..] => {
+													super::push(out, 36532);
+													match s {
+														[] => true,
+														['\u{1}', s @ ..] => super::t15::n76969(s, out),
+														_ => false,
+													}
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['р', s @ ..] => {
+					super::push(out, 10400);
+					match s {
+						[] => true,
+						['к', s @ ..] => {
+							match s {
+								[] => true,
+								['а', 'з', s @ ..] => {
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['в', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['с', s @ ..] => {
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['а', 'р', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['т', 'о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['у', s @ ..] => {
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['з', 'а', 'р', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['т', s @ ..] => {
+					match s {
+						[] => true,
+						['а', 'з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['с', 'а', 'р', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ц', s @ ..] => super::t15::n12770(s, out),
+				['щ', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['а', 'з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['и', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['с', s @ ..] => super::t15::n25375(s, out),
+						['т', 'о', '\u{1}', s @ ..] => super::t15::n25376(s, out),
+						['ы', 'в', '\u{1}', s @ ..] => super::t15::n25377(s, out),
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['о', s @ ..] => super::t15::n4368(s, out),
+		['у', s @ ..] => super::t15::n4369(s, out),
+		_ => false,
+	}
+}
+
+/// Words ending -урлять.
+pub(crate) fn n4370(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 4047);
+	match s {
+		[] => true,
+		['с', s @ ..] => {
+			super::push(out, 10402);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -слять.
+pub(crate) fn n1062(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1032);
+	match s {
+		[] => true,
+		['и', s @ ..] => {
+			match s {
+				[] => true,
+				['к', s @ ..] => {
+					match s {
+						[] => true,
+						['а', 'з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['д', 'о', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['с', 'а', 'р', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ч', s @ ..] => {
+					match s {
+						[] => true,
+						['а', 'н', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', 'д', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['и', 'р', 'п', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', 'с', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['с', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['а', 'р', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['и', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ы', 'в', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['д', 'е', 'р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['о', 'р', 'з', 'в', 'о', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['ы', 'м', 'с', 'о', s @ ..] => {
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -тлять.
+pub(crate) fn n1063(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1033);
+	match s {
+		[] => true,
+		['а', s @ ..] => {
+			super::push(out, 4048);
+			s.is_empty()
+		}
+		['е', s @ ..] => {
+			match s {
+				[] => true,
+				['в', s @ ..] => {
+					super::push(out, 10403);
+					match s {
+						[] => true,
+						['с', s @ ..] => {
+							super::push(out, 17940);
+							match s {
+								[] => true,
+								['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', 'р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['ы', 'в', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['п', s @ ..] => {
+					super::push(out, 10404);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 17941);
+							s.is_empty()
+						}
+						['а', s @ ..] => {
+							super::push(out, 17942);
+							match s {
+								[] => true,
+								['з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['н', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['о', s @ ..] => {
+							super::push(out, 17943);
+							match s {
+								[] => true,
+								['п', s @ ..] => {
+									super::push(out, 25058);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['р', s @ ..] => {
+									super::push(out, 25059);
+									match s {
+										[] => true,
+										['п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['у', s @ ..] => {
+			super::push(out, 4049);
+			match s {
+				[] => true,
+				['п', s @ ..] => {
+					super::push(out, 10405);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -улять.
+pub(crate) fn n1064(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1034);
+	match s {
+		[] => true,
+		['г', s @ ..] => {
+			super::push(out, 4050);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 10406);
+					s.is_empty()
+				}
+				['а', s @ ..] => {
+					super::push(out, 10407);
+					match s {
+						[] => true,
+						['з', s @ ..] => {
+							super::push(out, 17944);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['н', s @ ..] => {
+							super::push(out, 17945);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['д', s @ ..] => {
+					super::push(out, 10408);
+					match s {
+						[] => true,
+						['о', s @ ..] => {
+							super::push(out, 17946);
+							match s {
+								[] => true,
+								['п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['е', s @ ..] => {
+					super::push(out, 10409);
+					match s {
+						[] => true,
+						['р', s @ ..] => {
+							super::push(out, 17947);
+							match s {
+								[] => true,
+								['е', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['з', s @ ..] => {
+					super::push(out, 10410);
+					match s {
+						[] => true,
+						['а', s @ ..] => {
+							super::push(out, 17948);
+							match s {
+								[] => true,
+								['р', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['и', s @ ..] => {
+					super::push(out, 10411);
+					match s {
+						[] => true,
+						['р', s @ ..] => {
+							super::push(out, 17949);
+							match s {
+								[] => true,
+								['п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 10412);
+					match s {
+						[] => true,
+						['д', s @ ..] => {
+							super::push(out, 17950);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['п', s @ ..] => {
+							super::push(out, 17951);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['р', s @ ..] => {
+							super::push(out, 17952);
+							match s {
+								[] => true,
+								['п', s @ ..] => {
+									super::push(out, 25060);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['т', s @ ..] => {
+					super::push(out, 10413);
+					match s {
+						[] => true,
+						['о', s @ ..] => {
+							super::push(out, 17953);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 25061);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ы', s @ ..] => {
+					super::push(out, 10414);
+					match s {
+						[] => true,
+						['в', s @ ..] => {
+							super::push(out, 17954);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['к', s @ ..] => {
+			super::push(out, 4051);
+			match s {
+				[] => true,
+				['ш', s @ ..] => {
+					super::push(out, 10415);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 17955);
+							s.is_empty()
+						}
+						['а', s @ ..] => {
+							super::push(out, 17956);
+							match s {
+								[] => true,
+								['н', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['н', s @ ..] => {
+			super::push(out, 4052);
+			match s {
+				[] => true,
+				['а', 'з', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['б', s @ ..] => {
+					super::push(out, 10416);
+					match s {
+						[] => true,
+						['о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['п', s @ ..] => {
+			super::push(out, 4053);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['т', s @ ..] => {
+			super::push(out, 4054);
+			match s {
+				[] => true,
+				['и', s @ ..] => {
+					super::push(out, 10417);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -флять.
+pub(crate) fn n1065(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1035);
+	match s {
+		[] => true,
+		['а', 'р', s @ ..] => {
+			match s {
+				[] => true,
+				['г', s @ ..] => {
+					match s {
+						[] => true,
+						['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['з', s @ ..] => {
+							match s {
+								[] => true,
+								['а', 'р', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['и', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['о', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['т', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['т', s @ ..] => {
+					match s {
+						[] => true,
+						['о', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['у', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['и', 'р', 'а', 'з', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -хлять.
+pub(crate) fn n1066(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1036);
+	match s {
+		[] => true,
+		['а', 'р', 'а', 'б', 'а', 'з', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['е', 'ч', s @ ..] => {
+			match s {
+				[] => true,
+				['а', 'з', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['с', 'а', 'р', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['и', s @ ..] => {
+			super::push(out, 4055);
+			match s {
+				[] => true,
+				['в', s @ ..] => {
+					super::push(out, 10418);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['а', s @ ..] => {
+							super::push(out, 17957);
+							match s {
+								[] => true,
+								['з', s @ ..] => {
+									super::push(out, 25062);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ы', s @ ..] => {
+			super::push(out, 4056);
+			match s {
+				[] => true,
+				['р', s @ ..] => {
+					match s {
+						[] => true,
+						['д', 'о', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['з', 'в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -шлять.
+pub(crate) fn n1067(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1037);
+	match s {
+		[] => true,
+		['а', s @ ..] => {
+			super::push(out, 4057);
+			match s {
+				[] => true,
+				['б', s @ ..] => {
+					super::push(out, 10419);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 17958);
+							s.is_empty()
+						}
+						['а', s @ ..] => {
+							super::push(out, 17959);
+							match s {
+								[] => true,
+								['з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['т', s @ ..] => {
+							super::push(out, 17960);
+							match s {
+								[] => true,
+								['о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['к', s @ ..] => {
+					super::push(out, 10420);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 17961);
+							s.is_empty()
+						}
+						['а', s @ ..] => {
+							super::push(out, 17962);
+							match s {
+								[] => true,
+								['з', s @ ..] => {
+									super::push(out, 25063);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['б', s @ ..] => {
+							super::push(out, 17963);
+							match s {
+								[] => true,
+								['о', s @ ..] => {
+									super::push(out, 25064);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['о', s @ ..] => {
+							super::push(out, 17964);
+							match s {
+								[] => true,
+								['п', s @ ..] => {
+									super::push(out, 25065);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['р', s @ ..] => {
+									super::push(out, 25066);
+									match s {
+										[] => true,
+										['п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['т', s @ ..] => {
+							super::push(out, 17965);
+							match s {
+								[] => true,
+								['о', s @ ..] => {
+									super::push(out, 25067);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['ы', s @ ..] => {
+							super::push(out, 17966);
+							match s {
+								[] => true,
+								['в', s @ ..] => {
+									super::push(out, 25068);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['о', s @ ..] => {
+			super::push(out, 4058);
+			match s {
+				[] => true,
+				['п', s @ ..] => {
+					super::push(out, 10421);
+					match s {
+						[] => true,
+						['о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ы', s @ ..] => {
+			super::push(out, 4059);
+			match s {
+				[] => true,
+				['м', s @ ..] => {
+					super::push(out, 10422);
+					match s {
+						[] => true,
+						['а', s @ ..] => {
+							super::push(out, 17967);
+							s.is_empty()
+						}
+						['з', s @ ..] => {
+							super::push(out, 17968);
+							match s {
+								[] => true,
+								['а', s @ ..] => {
+									super::push(out, 25069);
+									match s {
+										[] => true,
+										['р', s @ ..] => {
+											super::push(out, 31621);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												['о', s @ ..] => {
+													super::push(out, 36533);
+													match s {
+														[] => true,
+														['п', s @ ..] => super::t15::n76970(s, out),
+														_ => false,
+													}
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['и', s @ ..] => {
+									super::push(out, 25070);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['и', s @ ..] => {
+							super::push(out, 17969);
+							match s {
+								[] => true,
+								['р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['о', s @ ..] => {
+							match s {
+								[] => true,
+								['д', s @ ..] => {
+									super::push(out, 25071);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['п', s @ ..] => {
+									super::push(out, 25072);
+									s.is_empty()
+								}
+								['р', s @ ..] => {
+									super::push(out, 25073);
+									match s {
+										[] => true,
+										['п', s @ ..] => {
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												['а', s @ ..] => {
+													super::push(out, 36534);
+													match s {
+														[] => true,
+														['н', s @ ..] => super::t15::n76971(s, out),
+														_ => false,
+													}
+												}
+												['о', s @ ..] => {
+													super::push(out, 36535);
+													match s {
+														[] => true,
+														['п', s @ ..] => super::t15::n76972(s, out),
+														_ => false,
+													}
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['с', s @ ..] => {
+							super::push(out, 17970);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['у', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', s @ ..] => {
+									super::push(out, 25074);
+									match s {
+										[] => true,
+										['л', s @ ..] => {
+											super::push(out, 31622);
+											match s {
+												[] => true,
+												['з', '\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['ы', s @ ..] => {
+							super::push(out, 17971);
+							match s {
+								[] => true,
+								['в', s @ ..] => super::t15::n40097(s, out),
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ылять.
+pub(crate) fn n1068(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1038);
+	match s {
+		[] => true,
+		['в', s @ ..] => {
+			super::push(out, 4060);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					super::push(out, 10423);
+					match s {
+						[] => true,
+						['к', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 25076);
+									s.is_empty()
+								}
+								['а', 'з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['д', 'о', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['и', 'р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', s @ ..] => {
+									match s {
+										[] => true,
+										['д', s @ ..] => {
+											super::push(out, 31623);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													super::push(out, 36536);
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										['п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['р', 'п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['т', 'о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['у', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['ы', s @ ..] => {
+									super::push(out, 25077);
+									match s {
+										[] => true,
+										['в', s @ ..] => {
+											super::push(out, 31624);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['к', s @ ..] => {
+			super::push(out, 4061);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['п', s @ ..] => {
+			super::push(out, 4062);
+			match s {
+				[] => true,
+				['а', s @ ..] => {
+					match s {
+						[] => true,
+						['з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['и', 'р', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['о', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['р', s @ ..] => {
+			super::push(out, 4063);
+			match s {
+				[] => true,
+				['б', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['к', s @ ..] => {
+					super::push(out, 10424);
+					match s {
+						[] => true,
+						['с', 'о', 'в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['т', s @ ..] => {
+			super::push(out, 4064);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					super::push(out, 10425);
+					match s {
+						[] => true,
+						['м', s @ ..] => {
+							super::push(out, 17972);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['с', s @ ..] => {
+					super::push(out, 10426);
+					match s {
+						[] => true,
+						['о', 'к', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 25078);
+									s.is_empty()
+								}
+								['а', s @ ..] => {
+									super::push(out, 25079);
+									match s {
+										[] => true,
+										['з', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['н', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['и', s @ ..] => {
+									super::push(out, 25080);
+									match s {
+										[] => true,
+										['р', s @ ..] => {
+											super::push(out, 31625);
+											match s {
+												[] => true,
+												['п', '\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['о', s @ ..] => {
+									super::push(out, 25081);
+									match s {
+										[] => true,
+										['п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -говнять.
+pub(crate) fn n12846(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 10431);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 17980);
+			s.is_empty()
+		}
+		['а', s @ ..] => {
+			super::push(out, 17981);
+			match s {
+				[] => true,
+				['з', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['д', s @ ..] => {
+			super::push(out, 17982);
+			match s {
+				[] => true,
+				['о', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['е', s @ ..] => {
+			super::push(out, 17983);
+			match s {
+				[] => true,
+				['р', s @ ..] => {
+					super::push(out, 25083);
+					match s {
+						[] => true,
+						['е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['з', s @ ..] => {
+			super::push(out, 17984);
+			match s {
+				[] => true,
+				['и', s @ ..] => {
+					super::push(out, 25084);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['с', s @ ..] => {
+			super::push(out, 17985);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ровнять.
+pub(crate) fn n12847(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 10432);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 17986);
+			s.is_empty()
+		}
+		['а', s @ ..] => {
+			super::push(out, 17987);
+			match s {
+				[] => true,
+				['з', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['б', s @ ..] => {
+			super::push(out, 17988);
+			match s {
+				[] => true,
+				['о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['д', s @ ..] => {
+			super::push(out, 17989);
+			match s {
+				[] => true,
+				['о', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['з', s @ ..] => {
+			super::push(out, 17990);
+			match s {
+				[] => true,
+				['а', 'р', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['и', s @ ..] => {
+			super::push(out, 17991);
+			match s {
+				[] => true,
+				['р', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['о', s @ ..] => {
+			super::push(out, 17992);
+			match s {
+				[] => true,
+				['п', s @ ..] => {
+					super::push(out, 25085);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['с', s @ ..] => {
+			super::push(out, 17993);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['у', s @ ..] => {
+			super::push(out, 17994);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ы', s @ ..] => {
+			super::push(out, 17995);
+			match s {
+				[] => true,
+				['в', s @ ..] => {
+					super::push(out, 25086);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -днять.
+pub(crate) fn n1085(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1055);
+	match s {
+		[] => true,
+		['е', s @ ..] => {
+			super::push(out, 4077);
+			match s {
+				[] => true,
+				['б', s @ ..] => {
+					super::push(out, 10433);
+					s.is_empty()
+				}
+				['м', 'о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['р', s @ ..] => {
+					super::push(out, 10434);
+					match s {
+						[] => true,
+						['с', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['з', s @ ..] => {
+			super::push(out, 4078);
+			s.is_empty()
+		}
+		['и', s @ ..] => {
+			super::push(out, 4079);
+			match s {
+				[] => true,
+				['в', s @ ..] => {
+					super::push(out, 10435);
+					match s {
+						[] => true,
+						['з', s @ ..] => {
+							super::push(out, 17996);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['о', s @ ..] => {
+			super::push(out, 4080);
+			match s {
+				[] => true,
+				['б', s @ ..] => {
+					super::push(out, 10436);
+					match s {
+						[] => true,
+						['о', s @ ..] => {
+							super::push(out, 17997);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['в', s @ ..] => {
+					super::push(out, 10437);
+					match s {
+						[] => true,
+						['а', 'з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['б', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['з', 'а', 'р', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['и', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['у', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['п', s @ ..] => {
+					super::push(out, 10438);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 17998);
+							s.is_empty()
+						}
+						['и', s @ ..] => {
+							super::push(out, 17999);
+							match s {
+								[] => true,
+								['р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['р', 'с', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['у', s @ ..] => {
+			super::push(out, 4081);
+			match s {
+				[] => true,
+				['р', 'т', 'у', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -енять.
+pub(crate) fn n1086(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1056);
+	match s {
+		[] => true,
+		['в', s @ ..] => {
+			super::push(out, 4082);
+			match s {
+				[] => true,
+				['о', 'р', 'к', 'с', 'и', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['р', 'е', 'т', 'с', 'о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['д', s @ ..] => {
+			super::push(out, 4083);
+			match s {
+				[] => true,
+				['е', 'л', s @ ..] => {
+					match s {
+						[] => true,
+						['б', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['л', s @ ..] => {
+			super::push(out, 4084);
+			match s {
+				[] => true,
+				['е', 'з', 'о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['ч', s @ ..] => {
+					match s {
+						[] => true,
+						['и', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', 'с', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['т', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['м', s @ ..] => {
+			super::push(out, 4085);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 10439);
+					s.is_empty()
+				}
+				['а', s @ ..] => {
+					super::push(out, 10440);
+					match s {
+						[] => true,
+						['з', s @ ..] => {
+							super::push(out, 18000);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['л', s @ ..] => {
+							super::push(out, 18001);
+							match s {
+								[] => true,
+								['п', 'с', 'в', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['н', s @ ..] => {
+							super::push(out, 18002);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 25087);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['б', s @ ..] => {
+					super::push(out, 10441);
+					match s {
+						[] => true,
+						['о', s @ ..] => {
+							super::push(out, 18003);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['в', s @ ..] => {
+					super::push(out, 10442);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['д', s @ ..] => {
+					super::push(out, 10443);
+					match s {
+						[] => true,
+						['о', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['е', s @ ..] => {
+					super::push(out, 10444);
+					match s {
+						[] => true,
+						['р', s @ ..] => {
+							match s {
+								[] => true,
+								['б', 'о', s @ ..] => {
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['е', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['с', s @ ..] => {
+							match s {
+								[] => true,
+								['б', 'о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['з', s @ ..] => {
+					super::push(out, 10445);
+					match s {
+						[] => true,
+						['а', s @ ..] => {
+							super::push(out, 18004);
+							match s {
+								[] => true,
+								['р', s @ ..] => {
+									super::push(out, 25088);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['и', s @ ..] => {
+							super::push(out, 18005);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['и', s @ ..] => {
+					super::push(out, 10446);
+					match s {
+						[] => true,
+						['р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 10447);
+					match s {
+						[] => true,
+						['д', s @ ..] => {
+							super::push(out, 18006);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['п', s @ ..] => {
+							super::push(out, 18007);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['р', s @ ..] => {
+							super::push(out, 18008);
+							match s {
+								[] => true,
+								['п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['с', s @ ..] => {
+					super::push(out, 10448);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['д', 'о', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['т', s @ ..] => {
+					super::push(out, 10449);
+					match s {
+						[] => true,
+						['о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ы', s @ ..] => {
+					super::push(out, 10450);
+					match s {
+						[] => true,
+						['в', s @ ..] => {
+							super::push(out, 18009);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['н', s @ ..] => {
+			super::push(out, 4086);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 10451);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['п', s @ ..] => {
+			super::push(out, 4087);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 10452);
+					s.is_empty()
+				}
+				['а', 'з', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['е', s @ ..] => {
+					super::push(out, 10453);
+					match s {
+						[] => true,
+						['т', 'с', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['ц', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 10454);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['п', s @ ..] => {
+							super::push(out, 18010);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['р', s @ ..] => {
+			super::push(out, 4088);
+			match s {
+				[] => true,
+				['е', s @ ..] => {
+					super::push(out, 10455);
+					match s {
+						[] => true,
+						['п', s @ ..] => {
+							super::push(out, 18011);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 10456);
+					match s {
+						[] => true,
+						['к', 'в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['с', s @ ..] => {
+			super::push(out, 4089);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['а', 'з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['и', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['т', s @ ..] => {
+			super::push(out, 4090);
+			match s {
+				[] => true,
+				['и', 'р', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ц', s @ ..] => {
+			super::push(out, 4091);
+			match s {
+				[] => true,
+				['а', 'н', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['и', 'р', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['с', 'а', 'р', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['у', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -жнять.
+pub(crate) fn n1087(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1057);
+	match s {
+		[] => true,
+		['а', s @ ..] => {
+			match s {
+				[] => true,
+				['л', 'в', s @ ..] => {
+					match s {
+						[] => true,
+						['о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['у', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['р', s @ ..] => {
+					super::push(out, 10457);
+					match s {
+						[] => true,
+						['п', s @ ..] => {
+							match s {
+								[] => true,
+								['с', 'и', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['у', s @ ..] => {
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['о', s @ ..] => {
+											super::push(out, 31626);
+											match s {
+												[] => true,
+												['п', s @ ..] => {
+													super::push(out, 36537);
+													match s {
+														[] => true,
+														['\u{1}', s @ ..] => super::t15::n76973(s, out),
+														_ => false,
+													}
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['о', s @ ..] => {
+			super::push(out, 4092);
+			match s {
+				[] => true,
+				['л', 'с', 'у', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -знять.
+pub(crate) fn n1088(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1058);
+	match s {
+		[] => true,
+		['а', s @ ..] => {
+			super::push(out, 4093);
+			match s {
+				[] => true,
+				['л', s @ ..] => {
+					super::push(out, 10458);
+					match s {
+						[] => true,
+						['б', s @ ..] => {
+							super::push(out, 18012);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['р', s @ ..] => {
+					super::push(out, 10459);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['и', s @ ..] => {
+			super::push(out, 4094);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 10460);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['я', s @ ..] => {
+			super::push(out, 4095);
+			match s {
+				[] => true,
+				['р', 'г', 'з', 'и', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -инять.
+pub(crate) fn n1089(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1059);
+	match s {
+		[] => true,
+		['в', s @ ..] => {
+			super::push(out, 4096);
+			match s {
+				[] => true,
+				['а', 'з', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['д', s @ ..] => {
+			super::push(out, 4097);
+			match s {
+				[] => true,
+				['е', s @ ..] => {
+					super::push(out, 10461);
+					match s {
+						[] => true,
+						['о', 'с', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['д', 'о', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['и', 'р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['с', s @ ..] => {
+									match s {
+										[] => true,
+										['а', 'р', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['о', 'в', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['т', 'о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ъ', 'т', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['л', s @ ..] => {
+			super::push(out, 4098);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 10462);
+					s.is_empty()
+				}
+				['б', s @ ..] => {
+					super::push(out, 10463);
+					match s {
+						[] => true,
+						['о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['д', s @ ..] => {
+					super::push(out, 10464);
+					match s {
+						[] => true,
+						['о', s @ ..] => {
+							super::push(out, 18013);
+							match s {
+								[] => true,
+								['п', s @ ..] => {
+									super::push(out, 25089);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['у', s @ ..] => {
+							super::push(out, 18014);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['е', s @ ..] => {
+					super::push(out, 10465);
+					match s {
+						[] => true,
+						['р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['к', s @ ..] => {
+					super::push(out, 10466);
+					match s {
+						[] => true,
+						['в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['с', 'а', 'р', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 10467);
+					match s {
+						[] => true,
+						['п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['с', s @ ..] => {
+					super::push(out, 10468);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['т', s @ ..] => {
+					super::push(out, 10469);
+					match s {
+						[] => true,
+						['о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ы', s @ ..] => {
+					super::push(out, 10470);
+					match s {
+						[] => true,
+						['в', s @ ..] => {
+							super::push(out, 18015);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', s @ ..] => {
+									super::push(out, 25090);
+									match s {
+										[] => true,
+										['п', s @ ..] => {
+											super::push(out, 31627);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['р', s @ ..] => {
+			super::push(out, 4099);
+			match s {
+				[] => true,
+				['п', s @ ..] => {
+					super::push(out, 10471);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['а', 'н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['д', 'е', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['с', 'о', 'в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['с', s @ ..] => {
+			super::push(out, 4100);
+			match s {
+				[] => true,
+				['а', 'з', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['ы', 'в', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ч', s @ ..] => {
+			super::push(out, 4101);
+			match s {
+				[] => true,
+				['в', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['д', s @ ..] => {
+					super::push(out, 10472);
+					match s {
+						[] => true,
+						['о', 'п', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', 'с', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 10473);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['д', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['с', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['а', s @ ..] => {
+									super::push(out, 25091);
+									match s {
+										[] => true,
+										['н', s @ ..] => {
+											super::push(out, 31628);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['в', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['и', 'р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', s @ ..] => {
+									super::push(out, 25092);
+									match s {
+										[] => true,
+										['д', s @ ..] => {
+											super::push(out, 31629);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										['п', s @ ..] => {
+											super::push(out, 31630);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										['р', s @ ..] => {
+											super::push(out, 31631);
+											match s {
+												[] => true,
+												['п', '\u{1}', s @ ..] => super::t15::n66913(s, out),
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['т', 'о', '\u{1}', s @ ..] => super::t15::n12913(s, out),
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -лнять.
+pub(crate) fn n1090(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1060);
+	match s {
+		[] => true,
+		['о', s @ ..] => {
+			super::push(out, 4102);
+			match s {
+				[] => true,
+				['п', s @ ..] => {
+					match s {
+						[] => true,
+						['а', 'н', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['с', 'и', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['е', 'р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ы', 'в', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', 'д', s @ ..] => {
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['е', 'н', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -мнять.
+pub(crate) fn n1091(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1061);
+	match s {
+		[] => true,
+		['е', 'т', s @ ..] => {
+			match s {
+				[] => true,
+				['и', 'р', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['о', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['у', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -онять.
+pub(crate) fn n1092(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1062);
+	match s {
+		[] => true,
+		['б', s @ ..] => {
+			super::push(out, 4103);
+			s.is_empty()
+		}
+		['в', s @ ..] => {
+			super::push(out, 4104);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 10474);
+					s.is_empty()
+				}
+				['а', s @ ..] => {
+					super::push(out, 10475);
+					match s {
+						[] => true,
+						['з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['з', s @ ..] => {
+					super::push(out, 10476);
+					match s {
+						[] => true,
+						['и', s @ ..] => {
+							super::push(out, 18016);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 10477);
+					match s {
+						[] => true,
+						['р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['г', s @ ..] => {
+			super::push(out, 4105);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['а', s @ ..] => {
+					super::push(out, 10478);
+					match s {
+						[] => true,
+						['з', s @ ..] => {
+							super::push(out, 18017);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 25093);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['н', s @ ..] => {
+							super::push(out, 18018);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['б', 'о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['в', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['д', 'о', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['е', s @ ..] => {
+					super::push(out, 10479);
+					match s {
+						[] => true,
+						['р', 'е', 'п', '\u{1}', s @ ..] => {
+							super::push(out, 18019);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['з', s @ ..] => {
+					super::push(out, 10480);
+					match s {
+						[] => true,
+						['а', s @ ..] => {
+							super::push(out, 18020);
+							match s {
+								[] => true,
+								['р', s @ ..] => {
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['о', s @ ..] => {
+											super::push(out, 31632);
+											match s {
+												[] => true,
+												['п', s @ ..] => {
+													super::push(out, 36538);
+													match s {
+														[] => true,
+														['\u{1}', s @ ..] => super::t15::n76974(s, out),
+														_ => false,
+													}
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['и', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', 'в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['и', 'р', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['о', s @ ..] => {
+					super::push(out, 10481);
+					match s {
+						[] => true,
+						['д', s @ ..] => {
+							super::push(out, 18021);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['с', s @ ..] => {
+					super::push(out, 10482);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['т', 'о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['у', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['ы', s @ ..] => {
+					super::push(out, 10483);
+					match s {
+						[] => true,
+						['в', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', s @ ..] => {
+									super::push(out, 25094);
+									match s {
+										[] => true,
+										['п', s @ ..] => {
+											super::push(out, 31633);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['д', s @ ..] => {
+			super::push(out, 4106);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 10484);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['л', s @ ..] => {
+			super::push(out, 4107);
+			match s {
+				[] => true,
+				['к', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['а', 'н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['д', 'о', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['е', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['и', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['с', s @ ..] => {
+							super::push(out, 18022);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', s @ ..] => {
+									super::push(out, 25095);
+									match s {
+										[] => true,
+										['р', s @ ..] => {
+											super::push(out, 31634);
+											match s {
+												[] => true,
+												['п', '\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['т', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['у', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					match s {
+						[] => true,
+						['п', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['а', 'з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['с', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['с', s @ ..] => {
+					super::push(out, 10485);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['а', 'з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['и', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['т', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['п', s @ ..] => {
+			super::push(out, 4108);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['о', 'д', 'е', 'н', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['р', s @ ..] => {
+			super::push(out, 4109);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['а', s @ ..] => super::t15::n12942(s, out),
+				['з', s @ ..] => {
+					super::push(out, 10486);
+					match s {
+						[] => true,
+						['а', s @ ..] => super::t15::n25602(s, out),
+						_ => false,
+					}
+				}
+				['о', s @ ..] => super::t15::n12944(s, out),
+				['п', s @ ..] => super::t15::n12945(s, out),
+				_ => false,
+			}
+		}
+		['т', s @ ..] => super::t15::n4458(s, out),
+		_ => false,
+	}
+}
+
+/// Words ending -пнять.
+pub(crate) fn n1093(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1063);
+	match s {
+		[] => true,
+		['у', 'р', 'к', 'у', s @ ..] => {
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['з', 'а', 'р', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -рнять.
+pub(crate) fn n1094(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1064);
+	match s {
+		[] => true,
+		['е', s @ ..] => {
+			super::push(out, 4111);
+			match s {
+				[] => true,
+				['в', 'к', 'с', 'е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['д', 'б', 'о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['з', 'о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['ч', s @ ..] => {
+					match s {
+						[] => true,
+						['а', s @ ..] => {
+							match s {
+								[] => true,
+								['з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['н', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['д', 'о', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['с', 'и', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -снять.
+pub(crate) fn n1095(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1065);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 4112);
+			s.is_empty()
+		}
+		['а', s @ ..] => {
+			super::push(out, 4113);
+			match s {
+				[] => true,
+				['з', s @ ..] => {
+					super::push(out, 10489);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['н', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['д', s @ ..] => {
+			super::push(out, 4114);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					super::push(out, 10490);
+					match s {
+						[] => true,
+						['п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['е', s @ ..] => {
+			super::push(out, 4115);
+			match s {
+				[] => true,
+				['р', s @ ..] => {
+					super::push(out, 10491);
+					match s {
+						[] => true,
+						['е', s @ ..] => {
+							super::push(out, 18027);
+							match s {
+								[] => true,
+								['п', s @ ..] => {
+									super::push(out, 25097);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['п', s @ ..] => {
+							super::push(out, 18028);
+							match s {
+								[] => true,
+								['с', 'а', 'р', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['т', s @ ..] => {
+					super::push(out, 10492);
+					match s {
+						[] => true,
+						['а', 'з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['и', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['с', s @ ..] => {
+							super::push(out, 18029);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', s @ ..] => {
+									super::push(out, 25098);
+									match s {
+										[] => true,
+										['п', s @ ..] => {
+											super::push(out, 31635);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['у', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['и', 'т', 'ы', 'в', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['о', s @ ..] => {
+			super::push(out, 4116);
+			match s {
+				[] => true,
+				['д', s @ ..] => {
+					super::push(out, 10493);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['к', s @ ..] => {
+					super::push(out, 10494);
+					match s {
+						[] => true,
+						['у', s @ ..] => {
+							super::push(out, 18030);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['п', s @ ..] => {
+					super::push(out, 10495);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['т', s @ ..] => {
+			super::push(out, 4117);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					super::push(out, 10496);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['я', s @ ..] => {
+			super::push(out, 4118);
+			match s {
+				[] => true,
+				['а', 'з', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -тнять.
+pub(crate) fn n1096(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1066);
+	match s {
+		[] => true,
+		['о', s @ ..] => {
+			super::push(out, 4119);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 10497);
+					s.is_empty()
+				}
+				['л', s @ ..] => {
+					super::push(out, 10498);
+					match s {
+						[] => true,
+						['п', s @ ..] => {
+							super::push(out, 18031);
+							match s {
+								[] => true,
+								['у', s @ ..] => {
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['з', 'а', 'р', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 10499);
+					match s {
+						[] => true,
+						['п', s @ ..] => {
+							super::push(out, 18032);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['у', 'м', 'а', 'з', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -унять.
+pub(crate) fn n1097(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1067);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 4120);
+			s.is_empty()
+		}
+		['к', s @ ..] => {
+			super::push(out, 4121);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['л', s @ ..] => {
+			super::push(out, 4122);
+			match s {
+				[] => true,
+				['и', 'р', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['о', s @ ..] => {
+			super::push(out, 4123);
+			match s {
+				[] => true,
+				['п', s @ ..] => {
+					super::push(out, 10500);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['щ', s @ ..] => {
+			super::push(out, 4124);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -чнять.
+pub(crate) fn n1098(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1068);
+	match s {
+		[] => true,
+		['о', 'т', 'у', s @ ..] => {
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['у', 'т', 'у', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// The word наблошнять.
+pub(crate) fn n1099(s: &[char], _out: &mut Path<'_>) -> bool {
+	s.is_empty()
+}
+
+/// Words ending -ынять.
+pub(crate) fn n1100(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1069);
+	match s {
+		[] => true,
+		['в', s @ ..] => {
+			super::push(out, 4125);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 10501);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['л', s @ ..] => {
+			super::push(out, 4126);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['т', 'о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['п', s @ ..] => {
+			super::push(out, 4127);
+			match s {
+				[] => true,
+				['ш', s @ ..] => {
+					super::push(out, 10502);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 18033);
+							s.is_empty()
+						}
+						['а', s @ ..] => {
+							super::push(out, 18034);
+							match s {
+								[] => true,
+								['з', s @ ..] => {
+									super::push(out, 25099);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['о', s @ ..] => {
+							super::push(out, 18035);
+							match s {
+								[] => true,
+								['п', s @ ..] => {
+									super::push(out, 25100);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ьнять.
+pub(crate) fn n1101(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1070);
+	match s {
+		[] => true,
+		['л', 'о', 'в', 'у', s @ ..] => {
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['о', s @ ..] => {
+					super::push(out, 10503);
+					match s {
+						[] => true,
+						['п', s @ ..] => {
+							super::push(out, 18036);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -янять.
+pub(crate) fn n1102(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1071);
+	s.is_empty()
+}
+
+/// Words ending -мерять.
+pub(crate) fn n4497(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 4134);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 10517);
+			s.is_empty()
+		}
+		['а', s @ ..] => {
+			super::push(out, 10518);
+			match s {
+				[] => true,
+				['з', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['н', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['б', 'о', '\u{1}', s @ ..] => {
+			super::push(out, 10519);
+			s.is_empty()
+		}
+		['е', s @ ..] => {
+			match s {
+				[] => true,
+				['р', s @ ..] => {
+					super::push(out, 18052);
+					match s {
+						[] => true,
+						['е', 'п', '\u{1}', s @ ..] => {
+							super::push(out, 25106);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['с', 'у', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['з', s @ ..] => {
+			super::push(out, 10520);
+			match s {
+				[] => true,
+				['а', 'р', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 25107);
+							s.is_empty()
+						}
+						['о', 'с', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['и', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 25108);
+							s.is_empty()
+						}
+						['о', 'с', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['и', 'р', 'п', '\u{1}', s @ ..] => {
+			super::push(out, 10521);
+			s.is_empty()
+		}
+		['о', s @ ..] => {
+			match s {
+				[] => true,
+				['д', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['е', 'н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['п', s @ ..] => {
+					super::push(out, 18053);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 25109);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['р', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['с', s @ ..] => {
+			super::push(out, 10522);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 18054);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['т', 'о', '\u{1}', s @ ..] => {
+			super::push(out, 10523);
+			s.is_empty()
+		}
+		['у', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['ы', 'в', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -терять.
+pub(crate) fn n4499(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 4136);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 10524);
+			s.is_empty()
+		}
+		['а', s @ ..] => {
+			super::push(out, 10525);
+			match s {
+				[] => true,
+				['з', s @ ..] => {
+					super::push(out, 18055);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['н', s @ ..] => {
+					super::push(out, 18056);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['е', s @ ..] => {
+			super::push(out, 10526);
+			match s {
+				[] => true,
+				['р', 'е', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['о', s @ ..] => {
+			super::push(out, 10527);
+			match s {
+				[] => true,
+				['п', s @ ..] => {
+					super::push(out, 18057);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['с', s @ ..] => {
+			super::push(out, 10528);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['а', s @ ..] => {
+					super::push(out, 18058);
+					match s {
+						[] => true,
+						['р', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['д', 'о', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['е', s @ ..] => {
+					super::push(out, 18059);
+					match s {
+						[] => true,
+						['ш', s @ ..] => {
+							super::push(out, 25110);
+							match s {
+								[] => true,
+								['у', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['у', s @ ..] => {
+			super::push(out, 10529);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['я', s @ ..] => {
+			super::push(out, 10530);
+			match s {
+				[] => true,
+				['в', 'е', 'д', 'у', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['п', s @ ..] => {
+					super::push(out, 18060);
+					match s {
+						[] => true,
+						['с', 'а', 'р', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['у', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['с', 'е', 'д', 'у', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// The word подвечерять.
+pub(crate) fn n40240(s: &[char], _out: &mut Path<'_>) -> bool {
+	s.is_empty()
+}
+
+/// Words ending -очерять.
+pub(crate) fn n13035(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 10532);
+	s.is_empty()
+}
+
+/// The word ощерять.
+pub(crate) fn n4501(s: &[char], _out: &mut Path<'_>) -> bool {
+	s.is_empty()
+}
+
+/// Words ending -ирять.
+pub(crate) fn n1114(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1082);
+	match s {
+		[] => true,
+		['к', s @ ..] => {
+			super::push(out, 4138);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 10533);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['м', s @ ..] => {
+			super::push(out, 4139);
+			match s {
+				[] => true,
+				['а', 'з', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['с', s @ ..] => {
+					match s {
+						[] => true,
+						['и', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['у', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['у', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ш', s @ ..] => {
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['с', 'а', 'р', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['у', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -орять.
+pub(crate) fn n1115(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1083);
+	match s {
+		[] => true,
+		['в', s @ ..] => {
+			super::push(out, 4140);
+			match s {
+				[] => true,
+				['д', 'о', 'в', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['т', s @ ..] => {
+					match s {
+						[] => true,
+						['д', 'о', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['и', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['в', 'и', 'ж', 'о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['г', s @ ..] => {
+									match s {
+										[] => true,
+										['а', 'л', 'б', 'у', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['о', 'б', 'о', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['и', 'р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['с', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['х', 'у', 'д', 'о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['с', 'а', 'р', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['ы', s @ ..] => {
+							super::push(out, 18062);
+							match s {
+								[] => true,
+								['в', '\u{1}', s @ ..] => {
+									super::push(out, 25111);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['з', 'о', 'д', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['к', s @ ..] => {
+			match s {
+				[] => true,
+				['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['о', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['т', 'е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -прять.
+pub(crate) fn n1116(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1084);
+	match s {
+		[] => true,
+		['с', s @ ..] => {
+			super::push(out, 4141);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					super::push(out, 10534);
+					match s {
+						[] => true,
+						['в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -трять.
+pub(crate) fn n1117(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1085);
+	match s {
+		[] => true,
+		['и', s @ ..] => {
+			super::push(out, 4142);
+			match s {
+				[] => true,
+				['х', s @ ..] => {
+					match s {
+						[] => true,
+						['б', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['с', s @ ..] => {
+			match s {
+				[] => true,
+				['а', s @ ..] => {
+					super::push(out, 10535);
+					match s {
+						[] => true,
+						['з', s @ ..] => {
+							super::push(out, 18063);
+							s.is_empty()
+						}
+						['н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['в', s @ ..] => {
+					super::push(out, 10536);
+					s.is_empty()
+				}
+				['е', s @ ..] => {
+					super::push(out, 10537);
+					match s {
+						[] => true,
+						['п', s @ ..] => {
+							match s {
+								[] => true,
+								['с', s @ ..] => {
+									match s {
+										[] => true,
+										['а', 'р', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['и', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['ы', 'в', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['и', s @ ..] => {
+					super::push(out, 10538);
+					match s {
+						[] => true,
+						['р', s @ ..] => {
+							super::push(out, 18064);
+							match s {
+								[] => true,
+								['п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 10539);
+					match s {
+						[] => true,
+						['в', s @ ..] => {
+							super::push(out, 18065);
+							match s {
+								[] => true,
+								['а', s @ ..] => {
+									match s {
+										[] => true,
+										['з', s @ ..] => {
+											super::push(out, 31637);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										['н', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['д', 'о', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['з', 'и', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['и', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['ы', 'в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ы', s @ ..] => {
+					super::push(out, 10540);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -урять.
+pub(crate) fn n1118(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1086);
+	match s {
+		[] => true,
+		['г', s @ ..] => {
+			super::push(out, 4143);
+			match s {
+				[] => true,
+				['и', s @ ..] => {
+					super::push(out, 10541);
+					match s {
+						[] => true,
+						['ф', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['д', s @ ..] => {
+			super::push(out, 4144);
+			match s {
+				[] => true,
+				['а', 'з', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['б', 'о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['к', s @ ..] => {
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['с', 'о', 'в', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['м', 'х', 'о', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['т', 'ы', 'в', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -хрять.
+pub(crate) fn n1119(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1087);
+	match s {
+		[] => true,
+		['и', 'в', s @ ..] => {
+			match s {
+				[] => true,
+				['а', 'з', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['з', 'в', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -щрять.
+pub(crate) fn n1120(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1088);
+	s.is_empty()
+}
+
+/// Words ending -ырять.
+pub(crate) fn n1121(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1089);
+	match s {
+		[] => true,
+		['в', s @ ..] => {
+			super::push(out, 4145);
+			match s {
+				[] => true,
+				['е', s @ ..] => {
+					super::push(out, 10542);
+					match s {
+						[] => true,
+						['ш', s @ ..] => {
+							super::push(out, 18066);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 10543);
+					match s {
+						[] => true,
+						['к', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 25112);
+									s.is_empty()
+								}
+								['а', s @ ..] => {
+									super::push(out, 25113);
+									match s {
+										[] => true,
+										['з', s @ ..] => {
+											super::push(out, 31638);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										['н', s @ ..] => {
+											super::push(out, 31639);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['б', s @ ..] => {
+									super::push(out, 25114);
+									match s {
+										[] => true,
+										['о', s @ ..] => {
+											super::push(out, 31640);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['д', s @ ..] => {
+									super::push(out, 25115);
+									match s {
+										[] => true,
+										['о', s @ ..] => {
+											super::push(out, 31641);
+											match s {
+												[] => true,
+												['п', '\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['е', s @ ..] => {
+									super::push(out, 25116);
+									match s {
+										[] => true,
+										['р', s @ ..] => {
+											super::push(out, 31642);
+											match s {
+												[] => true,
+												['е', 'п', '\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['о', s @ ..] => {
+									super::push(out, 25117);
+									match s {
+										[] => true,
+										['п', s @ ..] => {
+											super::push(out, 31643);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										['р', s @ ..] => {
+											super::push(out, 31644);
+											match s {
+												[] => true,
+												['п', '\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['с', s @ ..] => {
+									super::push(out, 25118);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['а', s @ ..] => {
+											super::push(out, 31645);
+											match s {
+												[] => true,
+												['р', '\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										['и', s @ ..] => {
+											super::push(out, 31646);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['т', s @ ..] => {
+									super::push(out, 25119);
+									match s {
+										[] => true,
+										['о', s @ ..] => {
+											super::push(out, 31647);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['ы', s @ ..] => {
+									super::push(out, 25120);
+									match s {
+										[] => true,
+										['в', s @ ..] => {
+											super::push(out, 31648);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ш', s @ ..] => {
+					super::push(out, 10544);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 18067);
+							s.is_empty()
+						}
+						['а', s @ ..] => {
+							super::push(out, 18068);
+							match s {
+								[] => true,
+								['з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['н', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['д', s @ ..] => {
+							super::push(out, 18069);
+							match s {
+								[] => true,
+								['о', s @ ..] => {
+									super::push(out, 25121);
+									match s {
+										[] => true,
+										['п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['е', s @ ..] => {
+							super::push(out, 18070);
+							match s {
+								[] => true,
+								['р', s @ ..] => {
+									super::push(out, 25122);
+									match s {
+										[] => true,
+										['е', 'п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['о', s @ ..] => {
+							super::push(out, 18071);
+							match s {
+								[] => true,
+								['д', s @ ..] => {
+									super::push(out, 25123);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['п', s @ ..] => super::t15::n40267(s, out),
+								_ => false,
+							}
+						}
+						['с', s @ ..] => super::t15::n25714(s, out),
+						['т', s @ ..] => super::t15::n25715(s, out),
+						['ы', s @ ..] => super::t15::n25716(s, out),
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['з', s @ ..] => super::t15::n4519(s, out),
+		['н', s @ ..] => super::t15::n4520(s, out),
+		['п', s @ ..] => super::t15::n4521(s, out),
+		_ => false,
+	}
+}
+
+/// Words ending -ярять.
+pub(crate) fn n1122(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1090);
+	s.is_empty()
+}
+
+/// Words ending -аться.
+pub(crate) fn n1215(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1174);
+	match s {
+		[] => true,
+		['б', s @ ..] => {
+			super::push(out, 4215);
+			match s {
+				[] => true,
+				['а', s @ ..] => {
+					super::push(out, 10588);
+					match s {
+						[] => true,
+						['р', s @ ..] => {
+							super::push(out, 18102);
+							match s {
+								[] => true,
+								['а', s @ ..] => {
+									super::push(out, 25139);
+									match s {
+										[] => true,
+										['б', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['е', s @ ..] => super::t15::n13186(s, out),
+				['и', s @ ..] => {
+					super::push(out, 10590);
+					match s {
+						[] => true,
+						['г', s @ ..] => {
+							super::push(out, 18113);
+							match s {
+								[] => true,
+								['а', 'н', s @ ..] => {
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['и', 'р', 'п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['б', 'о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['в', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['д', s @ ..] => {
+									match s {
+										[] => true,
+										['а', 'н', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['о', 'п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['о', s @ ..] => {
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['р', 'п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['у', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ш', s @ ..] => super::t15::n25803(s, out),
+						_ => false,
+					}
+				}
+				['л', s @ ..] => super::t15::n13188(s, out),
+				['у', s @ ..] => super::t15::n13189(s, out),
+				['ы', s @ ..] => super::t15::n13190(s, out),
+				['я', s @ ..] => super::t15::n13191(s, out),
+				_ => false,
+			}
+		}
+		['в', s @ ..] => super::t15::n4656(s, out),
+		['г', s @ ..] => super::t15::n4657(s, out),
+		['д', s @ ..] => super::t15::n4658(s, out),
+		['ж', s @ ..] => super::t15::n4659(s, out),
+		['з', s @ ..] => super::t15::n4660(s, out),
+		['к', s @ ..] => super::t15::n4661(s, out),
+		['л', s @ ..] => super::t16::n4662(s, out),
+		['м', s @ ..] => super::t16::n4663(s, out),
+		['н', s @ ..] => super::t16::n4664(s, out),
+		['п', s @ ..] => super::t16::n4665(s, out),
+		['р', s @ ..] => super::t16::n4666(s, out),
+		['с', s @ ..] => super::t16::n4667(s, out),
+		['т', s @ ..] => super::t16::n4668(s, out),
+		['х', s @ ..] => super::t16::n4669(s, out),
+		['ц', s @ ..] => super::t16::n4670(s, out),
+		['ч', s @ ..] => super::t16::n4671(s, out),
+		['ш', s @ ..] => super::t16::n4672(s, out),
+		['щ', s @ ..] => super::t16::n4673(s, out),
+		_ => false,
+	}
+}
+
+/// Words ending -еться.
+pub(crate) fn n1216(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1175);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 4234);
+			s.is_empty()
+		}
+		['б', s @ ..] => {
+			super::push(out, 4235);
+			match s {
+				[] => true,
+				['у', s @ ..] => {
+					super::push(out, 10796);
+					match s {
+						[] => true,
+						['л', s @ ..] => {
+							super::push(out, 18728);
+							match s {
+								[] => true,
+								['о', 'г', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['в', s @ ..] => {
+			super::push(out, 4236);
+			match s {
+				[] => true,
+				['е', s @ ..] => {
+					super::push(out, 10797);
+					match s {
+						[] => true,
+						['р', s @ ..] => {
+							super::push(out, 18729);
+							match s {
+								[] => true,
+								['а', 'н', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['б', 'о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['з', s @ ..] => {
+									match s {
+										[] => true,
+										['а', 'р', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['и', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['о', 'р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['т', 'о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['у', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['ы', s @ ..] => {
+									super::push(out, 26266);
+									match s {
+										[] => true,
+										['в', s @ ..] => {
+											super::push(out, 32702);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 10798);
+					match s {
+						[] => true,
+						['г', s @ ..] => {
+							super::push(out, 18730);
+							match s {
+								[] => true,
+								['а', s @ ..] => {
+									match s {
+										[] => true,
+										['з', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['н', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['т', 'о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['з', 'о', 'р', 'а', 'з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['д', s @ ..] => {
+			super::push(out, 4237);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 10799);
+					s.is_empty()
+				}
+				['а', s @ ..] => super::t16::n13399(s, out),
+				['в', s @ ..] => {
+					super::push(out, 10801);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['д', s @ ..] => super::t16::n13401(s, out),
+				['з', s @ ..] => super::t16::n13402(s, out),
+				['и', s @ ..] => super::t16::n13403(s, out),
+				['о', s @ ..] => super::t16::n13404(s, out),
+				['р', s @ ..] => super::t16::n13405(s, out),
+				['у', s @ ..] => super::t16::n13406(s, out),
+				['я', s @ ..] => super::t16::n13407(s, out),
+				_ => false,
+			}
+		}
+		['з', s @ ..] => super::t16::n4678(s, out),
+		['л', s @ ..] => super::t16::n4679(s, out),
+		['м', s @ ..] => super::t16::n4680(s, out),
+		['н', s @ ..] => super::t16::n4681(s, out),
+		['п', s @ ..] => super::t16::n4682(s, out),
+		['р', s @ ..] => super::t16::n4683(s, out),
+		['с', s @ ..] => super::t16::n4684(s, out),
+		['т', s @ ..] => super::t16::n4685(s, out),
+		_ => false,
+	}
+}
+
+/// Words ending -иться.
+pub(crate) fn n1218(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1177);
+	match s {
+		[] => true,
+		['а', s @ ..] => {
+			super::push(out, 4249);
+			match s {
+				[] => true,
+				['р', s @ ..] => {
+					super::push(out, 10850);
+					match s {
+						[] => true,
+						['д', s @ ..] => {
+							super::push(out, 18808);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 26357);
+									s.is_empty()
+								}
+								['а', s @ ..] => {
+									super::push(out, 26358);
+									match s {
+										[] => true,
+										['з', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['н', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['т', s @ ..] => {
+									super::push(out, 26359);
+									match s {
+										[] => true,
+										['о', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['ы', s @ ..] => {
+									super::push(out, 26360);
+									match s {
+										[] => true,
+										['в', s @ ..] => {
+											super::push(out, 32775);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['т', s @ ..] => {
+					super::push(out, 10851);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 18809);
+							s.is_empty()
+						}
+						['а', s @ ..] => {
+							super::push(out, 18810);
+							match s {
+								[] => true,
+								['з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['и', s @ ..] => {
+							super::push(out, 18811);
+							match s {
+								[] => true,
+								['р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['о', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['с', s @ ..] => {
+							super::push(out, 18812);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 26361);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['у', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['б', s @ ..] => super::t16::n4690(s, out),
+		['в', s @ ..] => super::t16::n4691(s, out),
+		['г', s @ ..] => {
+			super::push(out, 4252);
+			match s {
+				[] => true,
+				['е', s @ ..] => {
+					super::push(out, 10886);
+					match s {
+						[] => true,
+						['р', s @ ..] => {
+							super::push(out, 18913);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 26524);
+									s.is_empty()
+								}
+								['а', s @ ..] => {
+									super::push(out, 26525);
+									match s {
+										[] => true,
+										['з', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['д', s @ ..] => super::t16::n4693(s, out),
+		['е', s @ ..] => {
+			super::push(out, 4254);
+			match s {
+				[] => true,
+				['л', s @ ..] => {
+					super::push(out, 10901);
+					match s {
+						[] => true,
+						['к', s @ ..] => {
+							super::push(out, 18965);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 26669);
+									s.is_empty()
+								}
+								['а', s @ ..] => {
+									match s {
+										[] => true,
+										['з', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['н', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['б', 'о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['в', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['д', s @ ..] => {
+									match s {
+										[] => true,
+										['а', 'н', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['о', 'п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['и', 'р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', s @ ..] => {
+									super::push(out, 26670);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['р', 'п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['с', s @ ..] => {
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['а', 'р', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['т', 'о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['у', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['ы', s @ ..] => {
+									super::push(out, 26671);
+									match s {
+										[] => true,
+										['в', s @ ..] => {
+											super::push(out, 33071);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['м', s @ ..] => {
+					super::push(out, 10902);
+					match s {
+						[] => true,
+						['з', s @ ..] => {
+							super::push(out, 18966);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 26672);
+									s.is_empty()
+								}
+								['а', s @ ..] => {
+									super::push(out, 26673);
+									match s {
+										[] => true,
+										['з', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['о', s @ ..] => {
+									super::push(out, 26674);
+									match s {
+										[] => true,
+										['р', 'п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['п', s @ ..] => {
+					super::push(out, 10903);
+					match s {
+						[] => true,
+						['о', s @ ..] => {
+							super::push(out, 18967);
+							match s {
+								[] => true,
+								['р', s @ ..] => {
+									super::push(out, 26675);
+									match s {
+										[] => true,
+										['в', 'е', 'о', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ч', s @ ..] => {
+					super::push(out, 10904);
+					match s {
+						[] => true,
+						['я', s @ ..] => {
+							super::push(out, 18968);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ж', s @ ..] => super::t16::n4695(s, out),
+		['з', s @ ..] => super::t16::n4696(s, out),
+		['л', s @ ..] => super::t16::n4697(s, out),
+		['м', s @ ..] => super::t16::n4698(s, out),
+		['н', s @ ..] => super::t16::n4699(s, out),
+		['о', s @ ..] => super::t16::n4700(s, out),
+		['п', s @ ..] => super::t16::n4701(s, out),
+		['р', s @ ..] => super::t16::n4702(s, out),
+		['с', s @ ..] => super::t16::n4703(s, out),
+		['т', s @ ..] => super::t16::n4704(s, out),
+		['у', s @ ..] => super::t16::n4705(s, out),
+		['ф', s @ ..] => super::t16::n4706(s, out),
+		['ч', s @ ..] => super::t16::n4707(s, out),
+		['ш', s @ ..] => super::t17::n4708(s, out),
+		['щ', s @ ..] => super::t17::n4709(s, out),
+		['ь', s @ ..] => super::t17::n4710(s, out),
+		_ => false,
+	}
+}
+
+/// Words ending -лоться.
+pub(crate) fn n4711(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 4271);
+	match s {
+		[] => true,
+		['о', s @ ..] => {
+			match s {
+				[] => true,
+				['к', s @ ..] => {
+					super::push(out, 19694);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 28092);
+							s.is_empty()
+						}
+						['а', s @ ..] => {
+							super::push(out, 28093);
+							match s {
+								[] => true,
+								['з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['н', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['б', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['д', s @ ..] => {
+							match s {
+								[] => true,
+								['а', 'н', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['и', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							super::push(out, 28094);
+							match s {
+								[] => true,
+								['д', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['с', s @ ..] => {
+							super::push(out, 28095);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['а', 'р', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['в', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['и', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['т', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['у', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['ы', s @ ..] => {
+							super::push(out, 28096);
+							match s {
+								[] => true,
+								['в', s @ ..] => {
+									super::push(out, 34277);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['м', s @ ..] => {
+					super::push(out, 19695);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 28097);
+							s.is_empty()
+						}
+						['а', s @ ..] => {
+							match s {
+								[] => true,
+								['з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['н', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['б', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['з', s @ ..] => {
+							match s {
+								[] => true,
+								['а', 'р', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['и', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['и', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							super::push(out, 28098);
+							match s {
+								[] => true,
+								['д', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['с', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['т', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['ы', s @ ..] => {
+							super::push(out, 28099);
+							match s {
+								[] => true,
+								['в', s @ ..] => {
+									super::push(out, 34278);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['п', s @ ..] => {
+					super::push(out, 19696);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 28100);
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							super::push(out, 28101);
+							match s {
+								[] => true,
+								['р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ы', s @ ..] => {
+							super::push(out, 28102);
+							match s {
+								[] => true,
+								['в', s @ ..] => {
+									super::push(out, 34279);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ороться.
+pub(crate) fn n13705(s: &[char], out: &mut Path<'_>) -> bool {
+	match s {
+		[] => true,
+		['б', s @ ..] => {
+			super::push(out, 19697);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 28103);
+					s.is_empty()
+				}
+				['а', 'н', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['о', s @ ..] => {
+					super::push(out, 28104);
+					match s {
+						[] => true,
+						['п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['п', s @ ..] => {
+			super::push(out, 19698);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 28105);
+					s.is_empty()
+				}
+				['а', s @ ..] => {
+					super::push(out, 28106);
+					match s {
+						[] => true,
+						['з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['д', s @ ..] => {
+					match s {
+						[] => true,
+						['а', 'н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['о', s @ ..] => {
+					super::push(out, 28107);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['д', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['с', s @ ..] => {
+					super::push(out, 28108);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['а', 'р', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['т', 'о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['у', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['ы', s @ ..] => {
+					super::push(out, 28109);
+					match s {
+						[] => true,
+						['в', s @ ..] => {
+							super::push(out, 34280);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -сться.
-pub(crate) fn n1213(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(648, 0.3055619), (599, 0.21858549), (2411, 0.09768826), (2075, 0.085877776), (2221, 0.051407646), (1901, 0.03121996), (1180, 0.02230869), (2220, 0.02230869), (2617, 0.02230869), (3173, 0.01747158), (1751, 0.011154345), (2076, 0.011154345), (3068, 0.011154345), (3520, 0.011154345), (1110, 0.007431144), (1362, 0.007431144), (2243, 0.007431144), (2921, 0.007431144), (2245, 0.006698711), (29, 0.004760815), (1111, 0.0037232013), (1363, 0.0037232013), (2244, 0.0037232013), (2922, 0.0037232013), (3174, 0.0037232013), (51, 0.003555352), (2246, 0.0033417258)], 0.9860532);
-    match s {
-        [] => true,
-        ['а', s @ ..] => {
-            out.push(&[(648, 0.7334554), (2221, 0.12372015), (2220, 0.068131536), (1180, 0.03480583), (599, 0.014572366), (2411, 0.0065156026), (2075, 0.0057221334), (1901, 0.002075227)], 0.98899823);
-            match s {
-                [] => true,
-                ['л', s @ ..] => {
-                    out.push(&[(648, 0.6142672), (2221, 0.24129091), (2220, 0.12767224), (1180, 0.007827878), (599, 0.0032806897)], 0.99433887);
-                    match s {
-                        [] => true,
-                        ['к', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(2220, 0.5263142), (2221, 0.47368583)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['а', s @ ..] => {
-                                    out.push(&[(2221, 0.49419394), (648, 0.40950638), (2220, 0.08511482), (1180, 0.0052185855), (599, 0.0021820401)], 0.99621576);
-                                    match s {
-                                        [] => true,
-                                        ['н', s @ ..] => {
-                                            out.push(&[(2221, 0.6627909), (648, 0.27299917), (2220, 0.0567483), (1180, 0.003479057)], 0.9960174);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['б', 'о', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['с', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['у', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['п', s @ ..] => {
-                    out.push(&[(648, 0.93871975), (2221, 0.028442817), (2220, 0.015655756), (1180, 0.0079957275), (599, 0.0033417258)], 0.99415576);
-                    match s {
-                        [] => true,
-                        ['с', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['р', s @ ..] => {
-                    out.push(&[(648, 0.7414359), (2221, 0.11927977), (2220, 0.06924544), (1180, 0.065186545)], 0.99514765);
-                    match s {
-                        [] => true,
-                        ['к', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(2221, 0.6309911), (2220, 0.36900893)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['а', s @ ..] => {
-                                    out.push(&[(648, 0.8707103), (2221, 0.059647515), (2220, 0.03462272), (1180, 0.032593273)], 0.99757385);
-                                    match s {
-                                        [] => true,
-                                        ['з', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['н', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['в', s @ ..] => {
-                                    out.push(&[(648, 0.8673991), (2221, 0.06117342), (2220, 0.035507742), (1180, 0.033432517)], 0.99751276);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['д', s @ ..] => {
-                                    out.push(&[(648, 0.8673991), (2221, 0.06117342), (2220, 0.035507742), (1180, 0.033432517)], 0.99751276);
-                                    match s {
-                                        [] => true,
-                                        ['о', 'п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['о', s @ ..] => {
-                                    out.push(&[(648, 0.8944686), (2221, 0.048691537), (2220, 0.02825971), (1180, 0.026611734)], 0.9980316);
-                                    match s {
-                                        [] => true,
-                                        ['п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['р', 'п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['с', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['у', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['ы', s @ ..] => {
-                                    out.push(&[(648, 0.4942855), (1180, 0.37679103), (2221, 0.079514764), (2220, 0.04615854)], 0.9967498);
-                                    match s {
-                                        [] => true,
-                                        ['в', s @ ..] => {
-                                            out.push(&[(1180, 0.5845274), (648, 0.3295186), (2221, 0.05300984), (2220, 0.030777447)], 0.99783325);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['е', s @ ..] => {
-            out.push(&[(599, 0.41779202), (2411, 0.18672465), (2075, 0.16412604), (2617, 0.04263371), (3173, 0.033402), (1751, 0.021316854), (2076, 0.021316854), (3068, 0.021316854), (3520, 0.021316854), (1110, 0.01420615), (1362, 0.01420615), (648, 0.0127412835), (1111, 0.007110704), (1363, 0.007110704), (3174, 0.007110704), (2221, 0.002151522)], 0.9945831);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(1751, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['а', s @ ..] => {
-                    out.push(&[(599, 0.8026398), (2411, 0.063294426), (2075, 0.055634394), (2617, 0.014450294), (3173, 0.011322195), (1751, 0.0072327764), (2076, 0.0072327764), (3068, 0.0072327764), (3520, 0.0072327764), (1110, 0.004821851), (1362, 0.004821851), (648, 0.0043183034), (1111, 0.0024109255), (1363, 0.0024109255), (3174, 0.0024109255)], 0.997467);
-                    match s {
-                        [] => true,
-                        ['з', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['н', s @ ..] => {
-                            out.push(&[(599, 0.9194476), (2411, 0.025833525), (2075, 0.022705425), (2617, 0.0059052417), (3173, 0.004623484), (1751, 0.0029449912), (2076, 0.0029449912), (3068, 0.0029449912), (3520, 0.0029449912)], 0.99029523);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['и', s @ ..] => {
-                    out.push(&[(599, 0.70142674), (2411, 0.09575036), (2075, 0.08416876), (2617, 0.021866178), (3173, 0.017120622), (1751, 0.01092546), (2076, 0.01092546), (3068, 0.01092546), (3520, 0.01092546), (1110, 0.0072938125), (1362, 0.0072938125), (648, 0.0065308614), (1111, 0.0036469062), (1363, 0.0036469062), (3174, 0.0036469062)], 0.9960937);
-                    match s {
-                        [] => true,
-                        ['р', s @ ..] => {
-                            out.push(&[(599, 0.846891), (2411, 0.049103532), (2075, 0.043167774), (2617, 0.011215381), (3173, 0.008789197), (1751, 0.0056000613), (2076, 0.0056000613), (3068, 0.0056000613), (3520, 0.0056000613), (1110, 0.0037384604), (1362, 0.0037384604), (648, 0.0033569848)], 0.992401);
-                            match s {
-                                [] => true,
-                                ['п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(599, 0.7671168), (2411, 0.07469291), (2075, 0.06565957), (2617, 0.017059587), (3173, 0.013351644), (1751, 0.0085297935), (2076, 0.0085297935), (3068, 0.0085297935), (3520, 0.0085297935), (1110, 0.0056916154), (1362, 0.0056916154), (648, 0.0050965133), (1111, 0.002838178), (1363, 0.002838178), (3174, 0.002838178)], 0.99699396);
-                    match s {
-                        [] => true,
-                        ['д', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['р', s @ ..] => {
-                    out.push(&[(3068, 0.34753948), (599, 0.27852294), (2411, 0.1244831), (2075, 0.109422445), (2617, 0.028427558), (3173, 0.022262912), (1751, 0.01420615), (2076, 0.01420615), (3520, 0.01420615), (1110, 0.009475852), (1362, 0.009475852), (648, 0.008499275), (1111, 0.004730297), (1363, 0.004730297), (3174, 0.004730297)], 0.99491876);
-                    match s {
-                        [] => true,
-                        ['б', s @ ..] => {
-                            out.push(&[(3068, 0.56502634), (599, 0.18568704), (2411, 0.08299382), (2075, 0.07295338), (2617, 0.018951705), (3173, 0.014847028), (1751, 0.009475852), (2076, 0.009475852), (3520, 0.009475852), (1110, 0.006317235), (1362, 0.006317235), (648, 0.0056610974), (1111, 0.0031586175), (1363, 0.0031586175), (3174, 0.0031586175)], 0.99665827);
-                            match s {
-                                [] => true,
-                                ['о', s @ ..] => {
-                                    out.push(&[(3068, 0.71001756), (599, 0.12379645), (2411, 0.055329215), (2075, 0.048630502), (2617, 0.01263447), (3173, 0.009887846), (1751, 0.006317235), (2076, 0.006317235), (3520, 0.006317235), (1110, 0.00421149), (1362, 0.00421149), (648, 0.0037689784), (1111, 0.002105745), (1363, 0.002105745), (3174, 0.002105745)], 0.99775696);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['с', s @ ..] => {
-                    out.push(&[(2411, 0.84882885), (599, 0.07765316), (2075, 0.030502785), (2617, 0.007919433), (3173, 0.006210422), (1751, 0.0039673457), (2076, 0.0039673457), (3068, 0.0039673457), (3520, 0.0039673457), (1110, 0.0026398108), (1362, 0.0026398108), (648, 0.0023651484)], 0.9946288);
-                    match s {
-                        [] => true,
-                        ['б', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['с', s @ ..] => {
-                            out.push(&[(2411, 0.94705117), (599, 0.027206836), (2075, 0.010681315), (2617, 0.002777142), (3173, 0.002166781)], 0.98988324);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['у', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['у', s @ ..] => {
-                    out.push(&[(599, 0.6118563), (2411, 0.1244831), (2075, 0.109422445), (2617, 0.028427558), (3173, 0.022262912), (1751, 0.01420615), (2076, 0.01420615), (3068, 0.01420615), (3520, 0.01420615), (1110, 0.009475852), (1362, 0.009475852), (648, 0.008499275), (1111, 0.004730297), (1363, 0.004730297), (3174, 0.004730297)], 0.99491876);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ч', s @ ..] => super::t16::n13178(s, out),
-                ['ъ', s @ ..] => {
-                    out.push(&[(599, 0.9013199), (2411, 0.031647213), (2075, 0.027817197), (2617, 0.0072327764), (3173, 0.0056610974), (1751, 0.0036163882), (2076, 0.0036163882), (3068, 0.0036163882), (3520, 0.0036163882), (1110, 0.0024109255), (1362, 0.0024109255), (648, 0.002166781)], 0.9951324);
-                    match s {
-                        [] => true,
-                        ['б', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['в', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['д', 'о', 'п', '\u{1}', s @ ..] => super::t16::n26029(s, out),
-                        ['з', s @ ..] => super::t16::n26030(s, out),
-                        ['с', '\u{1}', s @ ..] => super::t16::n26031(s, out),
-                        ['т', 'о', '\u{1}', s @ ..] => super::t16::n26032(s, out),
-                        _ => false,
-                    }
-                }
-                ['ы', s @ ..] => super::t16::n13180(s, out),
-                _ => false,
-            }
-        }
-        ['я', s @ ..] => super::t16::n4633(s, out),
-        _ => false,
-    }
+pub(crate) fn n1220(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1179);
+	match s {
+		[] => true,
+		['а', s @ ..] => {
+			super::push(out, 4273);
+			match s {
+				[] => true,
+				['л', s @ ..] => {
+					super::push(out, 11104);
+					match s {
+						[] => true,
+						['к', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 28110);
+									s.is_empty()
+								}
+								['а', s @ ..] => {
+									super::push(out, 28111);
+									match s {
+										[] => true,
+										['н', s @ ..] => {
+											super::push(out, 34281);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['б', 'о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['с', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['у', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['п', s @ ..] => {
+					super::push(out, 11105);
+					match s {
+						[] => true,
+						['а', 'н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['с', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['а', 'р', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['р', s @ ..] => {
+					super::push(out, 11106);
+					match s {
+						[] => true,
+						['к', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 28112);
+									s.is_empty()
+								}
+								['а', s @ ..] => {
+									super::push(out, 28113);
+									match s {
+										[] => true,
+										['з', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['н', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['в', s @ ..] => {
+									super::push(out, 28114);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['д', s @ ..] => {
+									super::push(out, 28115);
+									match s {
+										[] => true,
+										['о', 'п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['о', s @ ..] => {
+									super::push(out, 28116);
+									match s {
+										[] => true,
+										['п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['р', 'п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['с', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['у', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['ы', s @ ..] => {
+									super::push(out, 28117);
+									match s {
+										[] => true,
+										['в', s @ ..] => {
+											super::push(out, 34282);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['е', s @ ..] => {
+			super::push(out, 4274);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 11107);
+					s.is_empty()
+				}
+				['а', s @ ..] => {
+					super::push(out, 11108);
+					match s {
+						[] => true,
+						['з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['н', s @ ..] => {
+							super::push(out, 19699);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['и', s @ ..] => {
+					super::push(out, 11109);
+					match s {
+						[] => true,
+						['р', s @ ..] => {
+							super::push(out, 19700);
+							match s {
+								[] => true,
+								['п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 11110);
+					match s {
+						[] => true,
+						['д', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['р', s @ ..] => {
+					super::push(out, 11111);
+					match s {
+						[] => true,
+						['б', s @ ..] => {
+							super::push(out, 19701);
+							match s {
+								[] => true,
+								['о', s @ ..] => {
+									super::push(out, 28118);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['с', s @ ..] => {
+					super::push(out, 11112);
+					match s {
+						[] => true,
+						['б', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['д', 'а', 'н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['с', s @ ..] => {
+							super::push(out, 19702);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['а', 'р', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['у', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['у', s @ ..] => {
+					super::push(out, 11113);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ч', s @ ..] => super::t17::n13716(s, out),
+				['ъ', s @ ..] => super::t17::n13717(s, out),
+				['ы', s @ ..] => {
+					super::push(out, 11116);
+					match s {
+						[] => true,
+						['в', s @ ..] => {
+							super::push(out, 19711);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 28123);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['я', s @ ..] => super::t17::n4715(s, out),
+		_ => false,
+	}
 }
 
 /// Words ending -уться.
-pub(crate) fn n1214(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(241, 0.52036315), (79, 0.21174945), (418, 0.08807507), (996, 0.03836118), (932, 0.03414969), (357, 0.02606241), (470, 0.022446021), (929, 0.010376135), (521, 0.006698711), (930, 0.0051880674), (1084, 0.0051575494), (1158, 0.0045471885), (1085, 0.0025787747), (51, 0.0025177386), (1092, 0.002166781), (1432, 0.002166781)], 0.9826047);
-    match s {
-        [] => true,
-        ['б', s @ ..] => {
-            out.push(&[(470, 0.6203708), (241, 0.20209049), (79, 0.082230866), (418, 0.034210727), (996, 0.014892805), (932, 0.01326009), (357, 0.010116732), (929, 0.004028382), (521, 0.0026092927), (930, 0.002014191), (1084, 0.0019989319)], 0.9878233);
-            match s {
-                [] => true,
-                ['о', s @ ..] => {
-                    out.push(&[(470, 0.8450446), (241, 0.08249027), (79, 0.03356985), (418, 0.013962005), (996, 0.0060730907), (932, 0.005416953), (357, 0.004135195)], 0.99069196);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['д', s @ ..] => {
-            out.push(&[(470, 0.7510185), (51, 0.09768826), (241, 0.05337606), (419, 0.051285572), (79, 0.021713588), (418, 0.009033341), (996, 0.0039368276), (932, 0.003509575), (357, 0.0026703288)], 0.99423206);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(51, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['а', s @ ..] => {
-                    out.push(&[(470, 0.9156023), (51, 0.03311208), (241, 0.0180972), (419, 0.017380025), (79, 0.0073548486), (418, 0.0030670634)], 0.9946135);
-                    match s {
-                        [] => true,
-                        ['з', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['н', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['д', 'о', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['б', s @ ..] => {
-                    out.push(&[(470, 0.8755169), (51, 0.04884413), (241, 0.02668803), (419, 0.025635157), (79, 0.010864424), (418, 0.0045166705)], 0.9920653);
-                    match s {
-                        [] => true,
-                        ['о', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['з', s @ ..] => {
-                    out.push(&[(470, 0.9141375), (51, 0.03369192), (241, 0.01840238), (419, 0.017685207), (79, 0.00749218), (418, 0.0031128405)], 0.99452204);
-                    match s {
-                        [] => true,
-                        ['а', 'р', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['в', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(470, 0.8755169), (51, 0.04884413), (241, 0.02668803), (419, 0.025635157), (79, 0.010864424), (418, 0.0045166705)], 0.9920653);
-                    match s {
-                        [] => true,
-                        ['п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['с', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['т', s @ ..] => {
-                    out.push(&[(470, 0.8723125), (51, 0.05009537), (241, 0.027374685), (419, 0.026291294), (79, 0.011139086), (418, 0.0046387427), (996, 0.002014191)], 0.99386585);
-                    match s {
-                        [] => true,
-                        ['о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ы', s @ ..] => {
-                    out.push(&[(470, 0.500679), (419, 0.3675288), (51, 0.0651255), (241, 0.03558404), (79, 0.014480812), (418, 0.006027314), (996, 0.0026245518), (932, 0.0023346303)], 0.99438465);
-                    match s {
-                        [] => true,
-                        ['в', s @ ..] => {
-                            out.push(&[(419, 0.57834744), (470, 0.3337911), (51, 0.043427177), (241, 0.023727778), (79, 0.009658961), (418, 0.004013123)], 0.9929656);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['з', s @ ..] => {
-            out.push(&[(470, 0.49869534), (241, 0.2668498), (79, 0.108598456), (418, 0.045166705), (996, 0.019668879), (932, 0.017517358), (357, 0.013366903), (929, 0.005325399), (521, 0.00343328), (930, 0.0026550698), (1084, 0.0026398108), (1158, 0.0023346303)], 0.9862516);
-            match s {
-                [] => true,
-                ['а', s @ ..] => {
-                    out.push(&[(470, 0.742916), (241, 0.1368429), (79, 0.05569543), (418, 0.023163196), (996, 0.010086213), (932, 0.008987564), (357, 0.006851301), (929, 0.002731365)], 0.987274);
-                    match s {
-                        [] => true,
-                        ['р', s @ ..] => {
-                            out.push(&[(470, 0.86816204), (241, 0.070176244), (79, 0.028564889), (418, 0.0118715195), (996, 0.0051728087), (932, 0.0046082246), (357, 0.003509575)], 0.9920653);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['н', s @ ..] => super::t16::n4637(s, out),
-        _ => false,
-    }
+pub(crate) fn n1221(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1180);
+	match s {
+		[] => true,
+		['б', s @ ..] => {
+			super::push(out, 4276);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					super::push(out, 11119);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['д', s @ ..] => {
+			super::push(out, 4277);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 11120);
+					s.is_empty()
+				}
+				['а', s @ ..] => {
+					super::push(out, 11121);
+					match s {
+						[] => true,
+						['з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['н', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['д', 'о', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['б', s @ ..] => {
+					super::push(out, 11122);
+					match s {
+						[] => true,
+						['о', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['з', s @ ..] => {
+					super::push(out, 11123);
+					match s {
+						[] => true,
+						['а', 'р', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 11124);
+					match s {
+						[] => true,
+						['п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['с', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['т', s @ ..] => {
+					super::push(out, 11125);
+					match s {
+						[] => true,
+						['о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ы', s @ ..] => {
+					super::push(out, 11126);
+					match s {
+						[] => true,
+						['в', s @ ..] => {
+							super::push(out, 19714);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['з', s @ ..] => {
+			super::push(out, 4278);
+			match s {
+				[] => true,
+				['а', s @ ..] => {
+					super::push(out, 11127);
+					match s {
+						[] => true,
+						['р', s @ ..] => {
+							super::push(out, 19715);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['н', s @ ..] => super::t17::n4719(s, out),
+		_ => false,
+	}
 }
 
 /// Words ending -ыться.
-pub(crate) fn n1215(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(592, 0.68279546), (1530, 0.112046994), (1637, 0.070160985), (470, 0.02198825), (1226, 0.020935379), (456, 0.020248722), (1528, 0.013962005), (457, 0.010116732), (1529, 0.0069733732), (1807, 0.0069733732), (3054, 0.0069733732), (29, 0.0044708936), (1806, 0.003494316), (3055, 0.003494316), (51, 0.0033417258)], 0.9879759);
-    match s {
-        [] => true,
-        ['б', s @ ..] => {
-            out.push(&[(1530, 0.7431296), (592, 0.09289692), (1528, 0.09260701), (1529, 0.046295874), (1637, 0.009552148), (470, 0.0029907683), (1226, 0.002853437), (456, 0.002761883)], 0.99308765);
-            match s {
-                [] => true,
-                ['а', s @ ..] => {
-                    out.push(&[(1530, 0.934966), (592, 0.023514153), (1528, 0.023437858), (1529, 0.011718929), (1637, 0.0024109255)], 0.9960479);
-                    match s {
-                        [] => true,
-                        ['з', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['д', 'о', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(1530, 0.6910811), (1528, 0.17384604), (1529, 0.08693065), (592, 0.03791867), (1637, 0.0038910506)], 0.9936675);
-                    match s {
-                        [] => true,
-                        ['д', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(1530, 0.47368583), (1528, 0.35088122), (1529, 0.17543298)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['з', 'а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['с', s @ ..] => {
-                    out.push(&[(1530, 0.61187154), (1528, 0.2184329), (1529, 0.10920882), (592, 0.047638666), (1637, 0.0048981463)], 0.99205005);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(1530, 0.47368583), (1528, 0.35088122), (1529, 0.17543298)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['в', s @ ..] => {
-            out.push(&[(592, 0.87312126), (1530, 0.04481575), (1637, 0.028061341), (470, 0.008789197), (1226, 0.008377203), (456, 0.008102541), (1528, 0.005584802), (457, 0.004043641), (1529, 0.002792401), (1807, 0.002792401), (3054, 0.002792401)], 0.98927295);
-            s.is_empty()
-        }
-        ['л', s @ ..] => {
-            out.push(&[(456, 0.28606087), (592, 0.19790952), (457, 0.14303806), (1807, 0.09863432), (3054, 0.09863432), (1806, 0.04931716), (3055, 0.04931716), (1530, 0.0324712), (1637, 0.020340277), (470, 0.006378271), (1226, 0.0060730907), (1528, 0.004043641), (1529, 0.00202945)], 0.9942473);
-            match s {
-                [] => true,
-                ['п', s @ ..] => {
-                    out.push(&[(456, 0.3631037), (457, 0.18155184), (1807, 0.12521553), (3054, 0.12521553), (1806, 0.062607765), (3055, 0.062607765), (592, 0.057358664), (1530, 0.009414816), (1637, 0.0058899825)], 0.9929656);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(1807, 0.6666667), (1806, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(456, 0.46430153), (457, 0.23215076), (1807, 0.08346685), (3054, 0.08346685), (1806, 0.041733425), (3055, 0.041733425), (592, 0.03823911), (1530, 0.006271458), (1637, 0.0039368276)], 0.99530023);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['с', s @ ..] => {
-                            out.push(&[(456, 0.40671396), (457, 0.20335698), (3054, 0.18716717), (3055, 0.093583584), (1807, 0.051102463), (1806, 0.025558861), (592, 0.02340734), (1530, 0.0038452735), (1637, 0.0024109255)], 0.99714655);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    out.push(&[(3054, 0.35088122), (456, 0.31578547), (3055, 0.17543298), (457, 0.15790036)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['м', s @ ..] => {
-            out.push(&[(592, 0.8070497), (1637, 0.086823836), (470, 0.044419013), (1226, 0.04434272), (1530, 0.009536888)], 0.9921721);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(1637, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['а', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['з', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['н', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['б', 'о', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['д', 'о', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['з', 'а', 'р', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(592, 0.95115584), (1637, 0.021972992), (470, 0.011245899), (1226, 0.01123064), (1530, 0.0024109255)], 0.9980163);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['д', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['е', 'н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['с', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['т', s @ ..] => {
-                    out.push(&[(592, 0.64463264), (470, 0.27919433), (1637, 0.044525824), (1226, 0.022735942), (1530, 0.004882887)], 0.9959716);
-                    match s {
-                        [] => true,
-                        ['о', '\u{1}', s @ ..] => {
-                            out.push(&[(470, 0.5263142), (592, 0.47368583)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['у', s @ ..] => {
-                    out.push(&[(592, 0.9212482), (1637, 0.03543145), (470, 0.018127719), (1226, 0.0180972), (1530, 0.0038910506)], 0.9967956);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ы', s @ ..] => {
-                    out.push(&[(592, 0.5380331), (1226, 0.36289006), (1637, 0.05787747), (470, 0.029617762), (1530, 0.0063630124)], 0.99478143);
-                    match s {
-                        [] => true,
-                        ['в', s @ ..] => {
-                            out.push(&[(1226, 0.5752651), (592, 0.35869384), (1637, 0.038590066), (470, 0.019745175), (1530, 0.004242008)], 0.9965362);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['р', s @ ..] => {
-            out.push(&[(592, 0.85812163), (1637, 0.094285496), (470, 0.019928282), (1226, 0.019882506), (1530, 0.004272526)], 0.9964904);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(1637, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['а', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['з', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['н', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['б', 'о', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['в', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['д', s @ ..] => {
-                    out.push(&[(592, 0.6708324), (470, 0.2666209), (1637, 0.04835584), (1226, 0.010193027), (1530, 0.0021972992)], 0.99819946);
-                    match s {
-                        [] => true,
-                        ['о', 'п', '\u{1}', s @ ..] => {
-                            out.push(&[(470, 0.5263142), (592, 0.47368583)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['з', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['а', 'р', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['в', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['и', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['к', s @ ..] => {
-                    out.push(&[(592, 0.9317617), (1637, 0.06526284)], 0.99702454);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(1637, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['з', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['о', 'п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['у', 'л', 'о', 'п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['н', s @ ..] => super::t16::n41397(s, out),
-                                _ => false,
-                            }
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['и', 'р', 'п', s @ ..] => super::t16::n26169(s, out),
-                        ['о', s @ ..] => super::t16::n26170(s, out),
-                        ['с', s @ ..] => super::t16::n26171(s, out),
-                        ['т', 'о', s @ ..] => super::t16::n26172(s, out),
-                        ['у', s @ ..] => super::t16::n26173(s, out),
-                        _ => false,
-                    }
-                }
-                ['о', s @ ..] => super::t16::n13240(s, out),
-                ['с', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['т', 'о', '\u{1}', s @ ..] => super::t16::n13242(s, out),
-                ['ы', s @ ..] => super::t16::n13243(s, out),
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n1222(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1181);
+	match s {
+		[] => true,
+		['б', s @ ..] => {
+			super::push(out, 4280);
+			match s {
+				[] => true,
+				['а', s @ ..] => {
+					super::push(out, 11153);
+					match s {
+						[] => true,
+						['з', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['д', 'о', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['и', 'р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['з', 'и', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['о', s @ ..] => {
+					super::push(out, 11154);
+					match s {
+						[] => true,
+						['д', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 28266);
+									s.is_empty()
+								}
+								['з', 'а', 'р', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['с', s @ ..] => {
+					super::push(out, 11155);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 19809);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['т', 'о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['в', s @ ..] => {
+			super::push(out, 4281);
+			match s {
+				[] => true,
+				['а', s @ ..] => {
+					match s {
+						[] => true,
+						['з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['з', 'а', 'р', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['л', s @ ..] => {
+			super::push(out, 4282);
+			match s {
+				[] => true,
+				['п', s @ ..] => {
+					super::push(out, 11156);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 19810);
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							super::push(out, 19811);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['с', s @ ..] => {
+							super::push(out, 19812);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['а', 'р', '\u{1}', s @ ..] => {
+									super::push(out, 28267);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['м', s @ ..] => {
+			super::push(out, 4283);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 11157);
+					s.is_empty()
+				}
+				['а', s @ ..] => {
+					match s {
+						[] => true,
+						['з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['б', 'о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['д', 'о', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['з', 'а', 'р', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['о', s @ ..] => {
+					super::push(out, 11158);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['д', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['е', 'н', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['с', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['т', s @ ..] => {
+					super::push(out, 11159);
+					match s {
+						[] => true,
+						['о', '\u{1}', s @ ..] => {
+							super::push(out, 19813);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['у', s @ ..] => {
+					super::push(out, 11160);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['и', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ы', s @ ..] => {
+					super::push(out, 11161);
+					match s {
+						[] => true,
+						['в', s @ ..] => {
+							super::push(out, 19814);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['н', 'з', 'а', 'р', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['р', s @ ..] => {
+			super::push(out, 4284);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 11162);
+					s.is_empty()
+				}
+				['а', s @ ..] => {
+					match s {
+						[] => true,
+						['з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['б', 'о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['в', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['д', s @ ..] => {
+					super::push(out, 11163);
+					match s {
+						[] => true,
+						['о', 'п', '\u{1}', s @ ..] => {
+							super::push(out, 19815);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['з', s @ ..] => {
+					match s {
+						[] => true,
+						['а', 'р', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['и', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['к', s @ ..] => {
+					super::push(out, 11164);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 19816);
+							s.is_empty()
+						}
+						['а', s @ ..] => super::t17::n27731(s, out),
+						['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['и', 'р', 'п', s @ ..] => super::t17::n27733(s, out),
+						['о', s @ ..] => super::t17::n27734(s, out),
+						['с', s @ ..] => super::t17::n27735(s, out),
+						['т', 'о', s @ ..] => super::t17::n27736(s, out),
+						['у', s @ ..] => super::t17::n27737(s, out),
+						_ => false,
+					}
+				}
+				['о', s @ ..] => super::t17::n13782(s, out),
+				['с', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['т', 'о', '\u{1}', s @ ..] => super::t17::n13784(s, out),
+				['ы', s @ ..] => super::t17::n13785(s, out),
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -яться.
-pub(crate) fn n1216(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(51, 0.7332876), (470, 0.096192874), (491, 0.0487068), (419, 0.012985428), (1653, 0.011200123), (1678, 0.0102693215), (1609, 0.009704738), (450, 0.009704738), (686, 0.007629511), (946, 0.005645838), (696, 0.005386435), (1943, 0.0044708936), (1946, 0.0043793395), (2038, 0.00421149), (46, 0.0029755093), (2140, 0.002853437), (1032, 0.002136263), (2560, 0.002136263), (258, 0.002075227), (1612, 0.002075227)], 0.97802705);
-    match s {
-        [] => true,
-        ['\u{1}', s @ ..] => {
-            out.push(&[(3548, 0.6666667), (3549, 0.33333334)], 1.0);
-            s.is_empty()
-        }
-        ['а', s @ ..] => {
-            out.push(&[(491, 0.5625696), (470, 0.19946593), (450, 0.13150226), (51, 0.06784161), (946, 0.019790951), (419, 0.01029984), (46, 0.005004959)], 0.99647516);
-            match s {
-                [] => true,
-                ['б', s @ ..] => {
-                    out.push(&[(491, 0.5312886), (470, 0.34973678), (450, 0.06575113), (51, 0.033920806), (946, 0.009887846), (419, 0.0051422906), (46, 0.0025024796)], 0.99823);
-                    match s {
-                        [] => true,
-                        ['а', s @ ..] => {
-                            out.push(&[(491, 0.68752575), (470, 0.23315786), (450, 0.04383917), (51, 0.02261387), (946, 0.0065918975), (419, 0.00343328)], 0.9971618);
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(470, 0.5664912), (491, 0.3541924), (450, 0.04383917), (51, 0.02261387), (946, 0.0065918975), (419, 0.00343328)], 0.9971618);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['в', s @ ..] => {
-                    out.push(&[(470, 0.34973678), (51, 0.2839246), (491, 0.2812848), (450, 0.06575113), (946, 0.009887846), (419, 0.0051422906), (46, 0.0025024796)], 0.9982299);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(51, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['з', s @ ..] => {
-                            out.push(&[(470, 0.5664912), (51, 0.18927291), (491, 0.18751812), (450, 0.04383917), (946, 0.0065918975), (419, 0.00343328)], 0.99714655);
-                            match s {
-                                [] => true,
-                                ['и', s @ ..] => {
-                                    out.push(&[(470, 0.7109941), (51, 0.12619211), (491, 0.12501717), (450, 0.029221026), (946, 0.0043945983), (419, 0.0022888533)], 0.99810785);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['к', s @ ..] => {
-                    out.push(&[(491, 0.74067295), (450, 0.20215152), (470, 0.03727779), (51, 0.012680247), (946, 0.0036926833)], 0.9964752);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(450, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', 'з', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(491, 0.91209275), (450, 0.068528265), (470, 0.01263447), (51, 0.004303044)], 0.99755853);
-                            match s {
-                                [] => true,
-                                ['п', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['с', s @ ..] => {
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                ['в', '\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['с', s @ ..] => {
-                            out.push(&[(491, 0.86700237), (450, 0.10366979), (470, 0.019119555), (51, 0.0065003433)], 0.99629205);
-                            match s {
-                                [] => true,
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['л', s @ ..] => {
-                    out.push(&[(491, 0.75838864), (450, 0.11128405), (419, 0.049820706), (470, 0.03817807), (46, 0.024887465), (51, 0.012985428), (946, 0.0037842374)], 0.9993286);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(450, 0.7826047), (46, 0.21739529)], 1.0);
-                            s.is_empty()
-                        }
-                        ['б', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['з', s @ ..] => {
-                            out.push(&[(491, 0.85763335), (419, 0.06788739), (450, 0.04321355), (470, 0.014831769), (46, 0.009658961), (51, 0.005035477)], 0.9982605);
-                            match s {
-                                [] => true,
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    out.push(&[(491, 0.7826047), (419, 0.21739529)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['в', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['и', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['о', 'п', '\u{1}', s @ ..] => {
-                            out.push(&[(491, 0.7826047), (419, 0.21739529)], 1.0);
-                            s.is_empty()
-                        }
-                        ['т', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['м', s @ ..] => {
-                    out.push(&[(491, 0.81562525), (450, 0.14372472), (470, 0.02650492), (51, 0.009018082), (946, 0.0026245518)], 0.99749756);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(450, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['з', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['и', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['р', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['с', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['т', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['у', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['п', s @ ..] => {
-                    out.push(&[(470, 0.69991606), (51, 0.094636455), (491, 0.09376669), (946, 0.086625464), (450, 0.021911956)], 0.99685663);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(51, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            out.push(&[(470, 0.84995806), (51, 0.047318228), (491, 0.046875715), (946, 0.04332036), (450, 0.010955978)], 0.99842834);
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['в', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['д', 'о', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['с', s @ ..] => {
-                            out.push(&[(470, 0.84995806), (51, 0.047318228), (491, 0.046875715), (946, 0.04332036), (450, 0.010955978)], 0.99842834);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['т', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['ы', s @ ..] => {
-                            out.push(&[(470, 0.46660563), (946, 0.39108872), (51, 0.063096054), (491, 0.06250095), (450, 0.014618143)], 0.9979095);
-                            match s {
-                                [] => true,
-                                ['в', s @ ..] => {
-                                    out.push(&[(946, 0.59406424), (470, 0.3110704), (51, 0.042069122), (491, 0.04167239), (450, 0.009735256)], 0.9986114);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['х', s @ ..] => {
-                    out.push(&[(491, 0.5312886), (450, 0.31575495), (470, 0.099732965), (51, 0.033920806), (946, 0.009887846), (419, 0.0051422906), (46, 0.0025024796)], 0.99823);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(450, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['с', s @ ..] => {
-                            out.push(&[(491, 0.68752575), (450, 0.21049821), (470, 0.06648356), (51, 0.02261387), (946, 0.0065918975), (419, 0.00343328)], 0.99714655);
-                            match s {
-                                [] => true,
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['ч', s @ ..] => {
-                    out.push(&[(491, 0.61738), (450, 0.2577554), (470, 0.081406884), (51, 0.027695125), (946, 0.008072022), (419, 0.0041962313), (46, 0.002044709)], 0.9985504);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(450, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['т', s @ ..] => {
-                            out.push(&[(491, 0.80378425), (450, 0.13217364), (470, 0.041748684), (51, 0.01420615), (946, 0.004135195), (419, 0.002151522)], 0.99819946);
-                            match s {
-                                [] => true,
-                                ['о', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['е', s @ ..] => super::t16::n4645(s, out),
-        ['з', s @ ..] => {
-            out.push(&[(51, 0.37604335), (608, 0.23076218), (606, 0.17094682), (607, 0.08546578), (470, 0.049332418), (491, 0.02497902), (419, 0.0066529335), (1653, 0.0057526515), (1678, 0.005264363), (1609, 0.004974441), (450, 0.004974441), (686, 0.003921569), (946, 0.0028992142), (696, 0.002761883), (1943, 0.0022888533), (1946, 0.0022430762), (2038, 0.002151522)], 0.9814145);
-            match s {
-                [] => true,
-                ['в', s @ ..] => {
-                    out.push(&[(608, 0.34911117), (606, 0.25859463), (51, 0.19284351), (607, 0.12930495), (470, 0.025299458), (491, 0.01280232), (419, 0.003418021), (1653, 0.0029449912), (1678, 0.0027008469), (1609, 0.0025482567), (450, 0.0025482567), (686, 0.002014191)], 0.9841306);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(608, 0.47368583), (606, 0.35088122), (607, 0.17543298)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['и', s @ ..] => {
-            out.push(&[(51, 0.4110933), (470, 0.36539254), (779, 0.1666743), (491, 0.0162356), (419, 0.004333562), (1653, 0.0037384604), (1678, 0.003418021), (1609, 0.0032349126), (450, 0.0032349126), (686, 0.0025482567)], 0.9799039);
-            match s {
-                [] => true,
-                ['л', s @ ..] => {
-                    out.push(&[(51, 0.6074006), (470, 0.24359502), (779, 0.1111162), (491, 0.010818646), (419, 0.0028839551), (1653, 0.0024872206), (1678, 0.0022888533), (1609, 0.002151522), (450, 0.002151522)], 0.98489356);
-                    s.is_empty()
-                }
-                ['п', s @ ..] => {
-                    out.push(&[(779, 0.44444954), (51, 0.27406728), (470, 0.24359502), (491, 0.010818646), (419, 0.0028839551), (1653, 0.0024872206), (1678, 0.0022888533), (1609, 0.002151522), (450, 0.002151522)], 0.98489356);
-                    match s {
-                        [] => true,
-                        ['о', s @ ..] => {
-                            out.push(&[(779, 0.629633), (51, 0.18271153), (470, 0.16240177), (491, 0.0072175176)], 0.9819638);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['с', s @ ..] => {
-                    out.push(&[(470, 0.6827039), (51, 0.20555428), (779, 0.08332952), (491, 0.0081178), (419, 0.002166781)], 0.9818723);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['л', s @ ..] => super::t16::n4648(s, out),
-        ['м', s @ ..] => super::t16::n4649(s, out),
-        ['н', s @ ..] => super::t16::n4650(s, out),
-        ['о', s @ ..] => super::t16::n4651(s, out),
-        ['п', s @ ..] => {
-            out.push(&[(51, 0.48885328), (1609, 0.33980316), (470, 0.06413367), (491, 0.0324712), (419, 0.008651866), (1653, 0.007461662), (1678, 0.006851301), (450, 0.0064698253), (686, 0.0050965133), (946, 0.0037689784), (696, 0.0035858701), (1943, 0.0029907683), (1946, 0.0029144732), (2038, 0.00280766)], 0.97586024);
-            match s {
-                [] => true,
-                ['с', s @ ..] => {
-                    out.push(&[(1609, 0.55986875), (51, 0.3259022), (470, 0.04275578), (491, 0.021652551), (419, 0.0057679103), (1653, 0.004974441), (1678, 0.004562448), (450, 0.0043183034), (686, 0.0033875029), (946, 0.0025024796), (696, 0.0023956664)], 0.978088);
-                    match s {
-                        [] => true,
-                        ['а', s @ ..] => super::t16::n26353(s, out),
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['р', s @ ..] => super::t16::n4653(s, out),
-        ['с', s @ ..] => super::t16::n4654(s, out),
-        ['у', s @ ..] => super::t16::n4655(s, out),
-        ['ъ', s @ ..] => super::t16::n4656(s, out),
-        _ => false,
-    }
+pub(crate) fn n1223(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1182);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 4285);
+			s.is_empty()
+		}
+		['а', s @ ..] => {
+			super::push(out, 4286);
+			match s {
+				[] => true,
+				['б', s @ ..] => {
+					super::push(out, 11166);
+					match s {
+						[] => true,
+						['а', s @ ..] => {
+							super::push(out, 19819);
+							match s {
+								[] => true,
+								['н', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['о', s @ ..] => {
+							super::push(out, 19820);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['в', s @ ..] => {
+					super::push(out, 11167);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 19821);
+							s.is_empty()
+						}
+						['з', s @ ..] => {
+							super::push(out, 19822);
+							match s {
+								[] => true,
+								['и', s @ ..] => {
+									super::push(out, 28269);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['к', s @ ..] => {
+					super::push(out, 11168);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 19823);
+							s.is_empty()
+						}
+						['а', 'з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							super::push(out, 19824);
+							match s {
+								[] => true,
+								['п', s @ ..] => {
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['с', s @ ..] => {
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												['в', '\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['с', s @ ..] => {
+							super::push(out, 19825);
+							match s {
+								[] => true,
+								['а', 'р', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['л', s @ ..] => {
+					super::push(out, 11169);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 19826);
+							s.is_empty()
+						}
+						['б', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['з', s @ ..] => {
+							super::push(out, 19827);
+							match s {
+								[] => true,
+								['а', 'р', '\u{1}', s @ ..] => {
+									super::push(out, 28270);
+									s.is_empty()
+								}
+								['в', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['и', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['о', 'п', '\u{1}', s @ ..] => {
+							super::push(out, 19828);
+							s.is_empty()
+						}
+						['т', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['м', s @ ..] => {
+					super::push(out, 11170);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 19829);
+							s.is_empty()
+						}
+						['а', s @ ..] => {
+							match s {
+								[] => true,
+								['з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['н', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['з', s @ ..] => {
+							match s {
+								[] => true,
+								['а', 'р', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['и', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['и', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							match s {
+								[] => true,
+								['п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['с', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['т', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['у', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['п', s @ ..] => {
+					super::push(out, 11171);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 19830);
+							s.is_empty()
+						}
+						['а', s @ ..] => {
+							super::push(out, 19831);
+							match s {
+								[] => true,
+								['з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['н', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['д', 'о', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['и', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['с', s @ ..] => {
+							super::push(out, 19832);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['а', 'р', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['т', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['ы', s @ ..] => {
+							super::push(out, 19833);
+							match s {
+								[] => true,
+								['в', s @ ..] => {
+									super::push(out, 28271);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['х', s @ ..] => {
+					super::push(out, 11172);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 19834);
+							s.is_empty()
+						}
+						['с', s @ ..] => {
+							super::push(out, 19835);
+							match s {
+								[] => true,
+								['а', 'р', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ч', s @ ..] => {
+					super::push(out, 11173);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 19836);
+							s.is_empty()
+						}
+						['т', s @ ..] => {
+							super::push(out, 19837);
+							match s {
+								[] => true,
+								['о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['е', s @ ..] => super::t17::n4728(s, out),
+		['з', s @ ..] => {
+			super::push(out, 4288);
+			match s {
+				[] => true,
+				['в', s @ ..] => {
+					super::push(out, 11180);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 19849);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['и', s @ ..] => {
+			super::push(out, 4289);
+			match s {
+				[] => true,
+				['л', s @ ..] => super::t17::n13801(s, out),
+				['п', s @ ..] => super::t17::n13802(s, out),
+				['с', s @ ..] => super::t17::n13803(s, out),
+				_ => false,
+			}
+		}
+		['л', s @ ..] => super::t17::n4731(s, out),
+		['м', s @ ..] => super::t17::n4732(s, out),
+		['н', s @ ..] => super::t17::n4733(s, out),
+		['о', s @ ..] => super::t17::n4734(s, out),
+		['п', s @ ..] => super::t17::n4735(s, out),
+		['р', s @ ..] => super::t17::n4736(s, out),
+		['с', s @ ..] => super::t17::n4737(s, out),
+		['у', s @ ..] => super::t17::n4738(s, out),
+		['ъ', s @ ..] => super::t17::n4739(s, out),
+		_ => false,
+	}
 }
 
-/// Words ending -еречься.
-pub(crate) fn n13356(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(2675, 0.70301366), (171, 0.22906844), (701, 0.04432746), (864, 0.0130769815), (657, 0.007400626)], 0.99688715);
-    match s {
-        [] => true,
-        ['б', s @ ..] => {
-            out.push(&[(2675, 0.6385595), (171, 0.3417563), (701, 0.012848097), (864, 0.0037994965), (657, 0.002151522)], 0.99911493);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(171, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['о', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['с', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['у', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['т', s @ ..] => {
-            out.push(&[(2675, 0.82090485), (171, 0.16383612), (701, 0.009964141), (864, 0.0029449912)], 0.9976501);
-            match s {
-                [] => true,
-                ['с', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(171, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(2675, 0.9480888), (171, 0.047486078), (701, 0.0028839551)], 0.99845886);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['д', 'е', 'р', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['у', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+/// Words ending -речься.
+pub(crate) fn n4743(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 4302);
+	match s {
+		[] => true,
+		['а', s @ ..] => {
+			super::push(out, 11267);
+			match s {
+				[] => true,
+				['з', s @ ..] => {
+					super::push(out, 19952);
+					s.is_empty()
+				}
+				['н', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['б', s @ ..] => {
+			super::push(out, 11268);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					super::push(out, 19953);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['е', s @ ..] => {
+			super::push(out, 11269);
+			match s {
+				[] => true,
+				['б', s @ ..] => {
+					super::push(out, 19954);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 28381);
+							s.is_empty()
+						}
+						['о', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['с', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['у', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['т', s @ ..] => {
+					super::push(out, 19955);
+					match s {
+						[] => true,
+						['с', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 34462);
+									s.is_empty()
+								}
+								['о', s @ ..] => {
+									super::push(out, 34463);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['д', 'е', 'р', 'п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['о', 'п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['у', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['з', s @ ..] => {
+			super::push(out, 11270);
+			match s {
+				[] => true,
+				['и', s @ ..] => {
+					super::push(out, 19956);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['п', s @ ..] => {
+			super::push(out, 11271);
+			match s {
+				[] => true,
+				['а', s @ ..] => {
+					super::push(out, 19957);
+					match s {
+						[] => true,
+						['з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['т', s @ ..] => {
+					super::push(out, 19958);
+					match s {
+						[] => true,
+						['о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['т', s @ ..] => {
+			super::push(out, 11272);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					super::push(out, 19959);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
-/// Words ending -изречься.
-pub(crate) fn n26420(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(657, 0.57824063), (2675, 0.17814907), (701, 0.13592736), (171, 0.05804532), (864, 0.040115967), (738, 0.00343328), (2116, 0.002075227)], 0.9959869);
-    s.is_empty()
+/// The word засечься.
+pub(crate) fn n28070(s: &[char], _out: &mut Path<'_>) -> bool {
+	s.is_empty()
 }
 
-/// Words ending -пречься.
-pub(crate) fn n13358(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(864, 0.5451286), (2675, 0.20041199), (701, 0.15292592), (171, 0.065308616), (657, 0.025528343), (738, 0.0038757916), (2116, 0.0023346303)], 0.99551386);
-    match s {
-        [] => true,
-        ['а', s @ ..] => {
-            out.push(&[(864, 0.69675744), (2675, 0.133608), (701, 0.10194553), (171, 0.04353399), (657, 0.017013809), (738, 0.0025787747)], 0.99543756);
-            s.is_empty()
-        }
-        ['т', s @ ..] => {
-            out.push(&[(864, 0.69675744), (2675, 0.133608), (701, 0.10194553), (171, 0.04353399), (657, 0.017013809), (738, 0.0025787747)], 0.99543756);
-            s.is_empty()
-        }
-        _ => false,
-    }
+/// The word насечься.
+pub(crate) fn n28071(s: &[char], _out: &mut Path<'_>) -> bool {
+	s.is_empty()
 }
 
-/// Words ending -тречься.
-pub(crate) fn n13359(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(701, 0.6440223), (2675, 0.20555428), (171, 0.066971846), (864, 0.046295874), (657, 0.026184482), (738, 0.0039673457), (2116, 0.0023956664)], 0.9953918);
-    match s {
-        [] => true,
-        ['о', s @ ..] => {
-            out.push(&[(701, 0.81744105), (2675, 0.105409324), (171, 0.03434806), (864, 0.023743039), (657, 0.013427939), (738, 0.00202945)], 0.99639887);
-            s.is_empty()
-        }
-        _ => false,
-    }
+/// The word обсечься.
+pub(crate) fn n13913(s: &[char], _out: &mut Path<'_>) -> bool {
+	s.is_empty()
 }
 
-/// Words ending -сечься.
-pub(crate) fn n4661(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(701, 0.7169299), (2668, 0.06524758), (657, 0.055466544), (1250, 0.04979019), (3246, 0.04893568), (2669, 0.016311895), (2820, 0.016311895), (738, 0.008407721), (2675, 0.00764477), (2116, 0.0050659953), (3007, 0.00421149), (171, 0.0024872206)], 0.9968109);
-    match s {
-        [] => true,
-        ['\u{1}', s @ ..] => {
-            out.push(&[(3246, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['а', s @ ..] => {
-            out.push(&[(701, 0.8584726), (2668, 0.03262379), (657, 0.027725643), (1250, 0.024902724), (3246, 0.024460211), (2669, 0.008148318), (2820, 0.008148318), (738, 0.00421149), (2675, 0.0038147555), (2116, 0.0025329976), (3007, 0.002105745)], 0.9971466);
-            match s {
-                [] => true,
-                ['з', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['н', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['б', 'о', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['д', s @ ..] => {
-            out.push(&[(701, 0.8584726), (2668, 0.03262379), (657, 0.027725643), (1250, 0.024902724), (3246, 0.024460211), (2669, 0.008148318), (2820, 0.008148318), (738, 0.00421149), (2675, 0.0038147555), (2116, 0.0025329976), (3007, 0.002105745)], 0.9971466);
-            match s {
-                [] => true,
-                ['а', 'н', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['о', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['е', s @ ..] => {
-            out.push(&[(701, 0.6803845), (2668, 0.1626917), (2820, 0.07467765), (657, 0.02264439), (1250, 0.020325018), (3246, 0.01997406), (2669, 0.0066529335), (738, 0.00343328), (2675, 0.0031128405), (2116, 0.002059968)], 0.99595636);
-            match s {
-                [] => true,
-                ['р', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['е', 'п', '\u{1}', s @ ..] => {
-                            out.push(&[(701, 0.47368583), (2668, 0.35088122), (2820, 0.17543298)], 1.0);
-                            s.is_empty()
-                        }
-                        ['п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['и', 'р', 'п', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['о', s @ ..] => {
-            out.push(&[(701, 0.73455405), (2668, 0.13511863), (2669, 0.062027924), (657, 0.018799115), (1250, 0.016876478), (3246, 0.016586557), (2820, 0.005523766), (738, 0.002853437), (2675, 0.0025940337)], 0.994934);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(701, 0.47368583), (2668, 0.35088122), (2669, 0.17543298)], 1.0);
-                    s.is_empty()
-                }
-                ['п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['р', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['с', s @ ..] => {
-            out.push(&[(701, 0.6084688), (657, 0.27772945), (2668, 0.03262379), (1250, 0.024902724), (3246, 0.024460211), (2669, 0.008148318), (2820, 0.008148318), (738, 0.00421149), (2675, 0.0038147555), (2116, 0.0025329976), (3007, 0.002105745)], 0.99714655);
-            match s {
-                [] => true,
-                ['а', 'р', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['и', s @ ..] => {
-                    out.push(&[(657, 0.5184863), (701, 0.40564585), (2668, 0.021744106), (1250, 0.016601816), (3246, 0.016311895), (2669, 0.005432212), (2820, 0.005432212), (738, 0.00280766), (2675, 0.0025482567)], 0.9950103);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['т', 'о', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['у', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['ы', s @ ..] => {
-            out.push(&[(701, 0.47795835), (1250, 0.36652172), (2668, 0.04350347), (657, 0.03697261), (3246, 0.03262379), (2669, 0.010879682), (2820, 0.010879682), (738, 0.0056000613), (2675, 0.0050965133), (2116, 0.0033722438), (3007, 0.00280766)], 0.99621576);
-            match s {
-                [] => true,
-                ['в', s @ ..] => {
-                    out.push(&[(1250, 0.5776913), (701, 0.3186389), (2668, 0.028992143), (657, 0.02465858), (3246, 0.021744106), (2669, 0.0072480356), (2820, 0.0072480356), (738, 0.0037384604), (2675, 0.0033875029), (2116, 0.0022430762)], 0.99559015);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+/// Words ending -дсечься.
+pub(crate) fn n13914(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 11275);
+	match s {
+		[] => true,
+		['а', 'н', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['о', 'п', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -есечься.
+pub(crate) fn n13915(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 11276);
+	match s {
+		[] => true,
+		['р', s @ ..] => {
+			match s {
+				[] => true,
+				['е', 'п', '\u{1}', s @ ..] => {
+					super::push(out, 28382);
+					s.is_empty()
+				}
+				['п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// The word присечься.
+pub(crate) fn n13916(s: &[char], _out: &mut Path<'_>) -> bool {
+	s.is_empty()
+}
+
+/// Words ending -осечься.
+pub(crate) fn n13917(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 11277);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 19960);
+			s.is_empty()
+		}
+		['п', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['р', 'п', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -ссечься.
+pub(crate) fn n13918(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 11278);
+	match s {
+		[] => true,
+		['а', 'р', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['и', s @ ..] => {
+			super::push(out, 19961);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// The word отсечься.
+pub(crate) fn n13919(s: &[char], _out: &mut Path<'_>) -> bool {
+	s.is_empty()
+}
+
+/// The word усечься.
+pub(crate) fn n13920(s: &[char], _out: &mut Path<'_>) -> bool {
+	s.is_empty()
+}
+
+/// Words ending -ысечься.
+pub(crate) fn n13921(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 11279);
+	match s {
+		[] => true,
+		['в', s @ ..] => {
+			super::push(out, 19962);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -течься.
-pub(crate) fn n4662(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(701, 0.7053178), (657, 0.21976043), (738, 0.017853055), (2675, 0.016205082), (2116, 0.010742351), (3007, 0.008926528), (171, 0.0052796216), (864, 0.004089418), (1250, 0.0036469062), (2668, 0.0024261845)], 0.9942474);
-    match s {
-        [] => true,
-        ['\u{1}', s @ ..] => {
-            out.push(&[(657, 1.0)], 1.0);
-            s.is_empty()
-        }
-        ['а', 'з', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['б', 'о', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['с', s @ ..] => {
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['а', s @ ..] => {
-                    out.push(&[(701, 0.8488899), (657, 0.11270314), (738, 0.009155413), (2675, 0.008316167), (2116, 0.005508507), (3007, 0.0045777066), (171, 0.002716106), (864, 0.002105745)], 0.99397266);
-                    match s {
-                        [] => true,
-                        ['р', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['и', s @ ..] => {
-                    out.push(&[(657, 0.47985047), (701, 0.47022203), (738, 0.011902037), (2675, 0.0108033875), (2116, 0.0071717403), (3007, 0.0059510185), (171, 0.003524834), (864, 0.002731365), (1250, 0.0024261845)], 0.9945831);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(657, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n4745(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 4304);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 11280);
+			s.is_empty()
+		}
+		['а', 'з', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['б', 'о', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['с', s @ ..] => {
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['а', s @ ..] => {
+					super::push(out, 19963);
+					match s {
+						[] => true,
+						['р', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['и', s @ ..] => {
+					super::push(out, 19964);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 28383);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// The word переизобрести.
-pub(crate) fn n64433(s: &[char], _out: &mut Path<'_>) -> bool {
-    s.is_empty()
+pub(crate) fn n73767(s: &[char], _out: &mut Path<'_>) -> bool {
+	s.is_empty()
 }
 
 /// Words ending -оскрести.
-pub(crate) fn n13517(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(518, 0.95928895), (1459, 0.025848784), (1295, 0.01356527)], 0.998703);
-    match s {
-        [] => true,
-        ['\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['д', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['п', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['р', 'п', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['с', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n14068(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 11317);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['д', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['п', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['р', 'п', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['с', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -выскрести.
-pub(crate) fn n26496(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1295, 0.58210117), (518, 0.36484322), (1459, 0.05055314)], 0.9974975);
-    match s {
-        [] => true,
-        ['\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n28149(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 19992);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -естись.
-pub(crate) fn n1345(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(561, 0.22423133), (370, 0.21304646), (1630, 0.11244373), (1645, 0.08065919), (1553, 0.05133135), (371, 0.034225985), (687, 0.03152514), (1425, 0.028595407), (2862, 0.02713054), (1603, 0.025055313), (1460, 0.021271076), (2498, 0.019867247), (857, 0.019546807), (1027, 0.018814374), (1074, 0.01466392), (449, 0.013931487), (2853, 0.0132753495), (1015, 0.011566339), (3065, 0.0090486), (1210, 0.0073395898), (1257, 0.0073395898), (1532, 0.0066071567), (1028, 0.0024109255), (1230, 0.0024109255), (1948, 0.0022735943)], 0.99861145);
-    match s {
-        [] => true,
-        ['в', s @ ..] => {
-            out.push(&[(370, 0.6137484), (371, 0.1042649), (2862, 0.08891432), (1027, 0.061676968), (449, 0.045654994), (2853, 0.024307622), (1532, 0.021622034), (561, 0.010620279), (1028, 0.008010986), (1630, 0.005325399), (1645, 0.0038147555), (1553, 0.0024261845)], 0.9903868);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(449, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['а', s @ ..] => {
-                    out.push(&[(370, 0.850248), (371, 0.09106585), (2862, 0.018509194), (1027, 0.012832837), (449, 0.009506371), (2853, 0.0050659953), (1532, 0.0045014117), (561, 0.0022125582)], 0.9939422);
-                    match s {
-                        [] => true,
-                        ['з', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['б', 'о', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['д', 'о', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', 'м', 'а', 'с', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['н', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['б', 'о', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['в', s @ ..] => {
-                    out.push(&[(370, 0.71645683), (371, 0.13893339), (2862, 0.04559396), (1027, 0.031631954), (449, 0.023422599), (2853, 0.012466621), (1532, 0.011093309), (561, 0.005447471), (1028, 0.004104677), (1630, 0.002731365)], 0.99188215);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['д', 'о', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['е', s @ ..] => {
-                    out.push(&[(370, 0.71645683), (371, 0.13893339), (2862, 0.04559396), (1027, 0.031631954), (449, 0.023422599), (2853, 0.012466621), (1532, 0.011093309), (561, 0.005447471), (1028, 0.004104677), (1630, 0.002731365)], 0.99188215);
-                    match s {
-                        [] => true,
-                        ['р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['з', s @ ..] => {
-                    out.push(&[(370, 0.8429694), (371, 0.11497673), (2862, 0.01326009), (1027, 0.00920119), (449, 0.0068055238), (2853, 0.0036316472), (1532, 0.0032196536)], 0.9940643);
-                    match s {
-                        [] => true,
-                        ['а', 'р', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['в', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['и', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', 'р', 'п', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['с', 'о', 'в', s @ ..] => {
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                ['о', 'м', 'а', 'с', '\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['о', 'в', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['и', s @ ..] => {
-                    out.push(&[(370, 0.48567942), (2862, 0.27637142), (371, 0.13893339), (1027, 0.031631954), (449, 0.023422599), (2853, 0.012466621), (1532, 0.011093309), (561, 0.005447471), (1028, 0.004104677), (1630, 0.002731365)], 0.9918822);
-                    match s {
-                        [] => true,
-                        ['р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(370, 0.37659267), (2862, 0.3055619), (1532, 0.13871977), (371, 0.12870985), (1027, 0.018142978), (449, 0.013427939), (2853, 0.0071564815), (561, 0.0031280995), (1028, 0.0023498894)], 0.99378955);
-                    match s {
-                        [] => true,
-                        ['д', s @ ..] => {
-                            out.push(&[(370, 0.364065), (1532, 0.30189976), (2862, 0.15669489), (371, 0.15147631), (1027, 0.009308004), (449, 0.006881819), (2853, 0.0036621653)], 0.9939879);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['р', s @ ..] => {
-                            out.push(&[(2862, 0.53704125), (370, 0.2510567), (1532, 0.09246967), (371, 0.08580148), (1027, 0.012100404), (449, 0.008957046), (2853, 0.004760815), (561, 0.002075227)], 0.9942626);
-                            match s {
-                                [] => true,
-                                ['п', s @ ..] => {
-                                    out.push(&[(2862, 0.69135576), (370, 0.1673762), (1532, 0.06164645), (371, 0.057206072), (1027, 0.008056764), (449, 0.005966278), (2853, 0.0031738766)], 0.99478143);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['с', s @ ..] => {
-                    out.push(&[(370, 0.48567942), (2862, 0.27637142), (371, 0.13893339), (1027, 0.031631954), (449, 0.023422599), (2853, 0.012466621), (1532, 0.011093309), (561, 0.005447471), (1028, 0.004104677), (1630, 0.002731365)], 0.9918822);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['т', 'о', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['ц', s @ ..] => {
-                    out.push(&[(370, 0.40917066), (2853, 0.34953842), (371, 0.06950484), (2862, 0.0592813), (1027, 0.041123062), (449, 0.030441748), (1532, 0.014419775), (561, 0.007080186), (1028, 0.0053406577), (1630, 0.003555352), (1645, 0.0025482567)], 0.9920043);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(2853, 1.0)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ы', s @ ..] => {
-                    out.push(&[(1027, 0.5489891), (370, 0.25050735), (1028, 0.07129015), (371, 0.04255741), (2862, 0.036301214), (449, 0.018631266), (2853, 0.009918365), (1532, 0.008834974), (561, 0.004333562), (1630, 0.002166781)], 0.9935302);
-                    match s {
-                        [] => true,
-                        ['в', s @ ..] => {
-                            out.push(&[(1027, 0.7478904), (370, 0.1022507), (1028, 0.097123675), (371, 0.017364766), (2862, 0.0148165105), (449, 0.007614252), (2853, 0.004043641), (1532, 0.0036011292)], 0.9947051);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['л', s @ ..] => {
-            out.push(&[(1630, 0.6631876), (1425, 0.083421074), (1603, 0.06251621), (857, 0.04429694), (1257, 0.043244068), (2853, 0.035660334), (561, 0.019119555), (370, 0.018158237), (1645, 0.006881819), (1553, 0.0043793395), (371, 0.0029144732), (687, 0.0026855879), (2862, 0.0023193713)], 0.9887846);
-            match s {
-                [] => true,
-                ['п', s @ ..] => {
-                    out.push(&[(1630, 0.7101244), (1425, 0.08810559), (1603, 0.06572061), (857, 0.046402685), (1257, 0.046311133), (2853, 0.037567712)], 0.9942321);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(1425, 0.70110625), (2853, 0.29889372)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            out.push(&[(1630, 0.8136568), (1603, 0.09485008), (1425, 0.035965513), (857, 0.018936446), (1257, 0.018905928), (2853, 0.015335317)], 0.9976501);
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['в', s @ ..] => {
-                            out.push(&[(1630, 0.4734264), (857, 0.3642634), (1425, 0.058731977), (1603, 0.04380865), (1257, 0.030869002), (2853, 0.025040055)], 0.99613947);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(857, 1.0)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['е', s @ ..] => {
-                            out.push(&[(1630, 0.7658808), (1603, 0.11917296), (1425, 0.045181964), (857, 0.023788815), (1257, 0.023743039), (2853, 0.019272145)], 0.99703974);
-                            match s {
-                                [] => true,
-                                ['р', 'е', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(1630, 0.8762188), (1603, 0.06808575), (1425, 0.021881437), (857, 0.011535821), (1257, 0.011505303), (2853, 0.009338521)], 0.9985656);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['д', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['р', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['с', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['с', s @ ..] => {
-                            out.push(&[(1630, 0.8136568), (1603, 0.09485008), (1425, 0.035965513), (857, 0.018936446), (1257, 0.018905928), (2853, 0.015335317)], 0.9976501);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['т', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['у', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['ы', s @ ..] => {
-                            out.push(&[(1630, 0.4734264), (1257, 0.36420232), (1425, 0.058731977), (1603, 0.04380865), (857, 0.030930037), (2853, 0.025040055)], 0.99613947);
-                            match s {
-                                [] => true,
-                                ['в', s @ ..] => {
-                                    out.push(&[(1257, 0.57613486), (1630, 0.31561762), (1425, 0.03915465), (1603, 0.029205767), (857, 0.020630198), (2853, 0.01669337)], 0.99743646);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['м', s @ ..] => {
-            out.push(&[(1603, 0.34168002), (1425, 0.17619592), (1210, 0.16911574), (561, 0.07473869), (370, 0.071015485), (1630, 0.03747616), (1645, 0.026886396), (1553, 0.017105363), (371, 0.011413748), (687, 0.010513466), (2862, 0.0090486), (1460, 0.0070954454), (2498, 0.0066224155), (857, 0.0065156026), (1027, 0.006271458), (1074, 0.004882887), (449, 0.0046387427), (2853, 0.0044251163), (1015, 0.0038605325), (3065, 0.0030212863), (1257, 0.0024414435), (1532, 0.0021972992)], 0.9971618);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(1425, 1.0)], 1.0);
-                    s.is_empty()
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(1603, 0.56112003), (1425, 0.117463954), (1210, 0.112733655), (561, 0.049820706), (370, 0.047348745), (1630, 0.02497902), (1645, 0.017929351), (1553, 0.011413748), (371, 0.007598993), (687, 0.0070038913), (2862, 0.006027314), (1460, 0.004730297), (2498, 0.0044098576), (857, 0.0043488215), (1027, 0.004180972), (1074, 0.0032654307), (449, 0.0030975814), (2853, 0.0029449912), (1015, 0.0025635157), (3065, 0.002014191)], 0.99499506);
-                    match s {
-                        [] => true,
-                        ['д', s @ ..] => {
-                            out.push(&[(1603, 0.70740825), (1425, 0.0783093), (1210, 0.07516594), (561, 0.03321889), (370, 0.031555656), (1630, 0.016662853), (1645, 0.011947814), (1553, 0.007598993), (371, 0.0050659953), (687, 0.0046692607), (2862, 0.004013123), (1460, 0.0031433585), (2498, 0.0029449912), (857, 0.0028992142), (1027, 0.002792401), (1074, 0.002166781), (449, 0.002059968)], 0.9916228);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['с', s @ ..] => {
-                    out.push(&[(1603, 0.56112003), (1425, 0.117463954), (1210, 0.112733655), (561, 0.049820706), (370, 0.047348745), (1630, 0.02497902), (1645, 0.017929351), (1553, 0.011413748), (371, 0.007598993), (687, 0.0070038913), (2862, 0.006027314), (1460, 0.004730297), (2498, 0.0044098576), (857, 0.0043488215), (1027, 0.004180972), (1074, 0.0032654307), (449, 0.0030975814), (2853, 0.0029449912), (1015, 0.0025635157), (3065, 0.002014191)], 0.99499506);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ы', s @ ..] => {
-                    out.push(&[(1210, 0.44606698), (1603, 0.22778668), (1425, 0.117463954), (561, 0.049820706), (370, 0.047348745), (1630, 0.02497902), (1645, 0.017929351), (1553, 0.011413748), (371, 0.007598993), (687, 0.0070038913), (2862, 0.006027314), (1460, 0.004730297), (2498, 0.0044098576), (857, 0.0043488215), (1027, 0.004180972), (1074, 0.0032654307), (449, 0.0030975814), (2853, 0.0029449912), (1015, 0.0025635157), (3065, 0.002014191)], 0.99499506);
-                    match s {
-                        [] => true,
-                        ['в', s @ ..] => {
-                            out.push(&[(1210, 0.6307164), (1603, 0.1518578), (1425, 0.0783093), (561, 0.03321889), (370, 0.031555656), (1630, 0.016662853), (1645, 0.011947814), (1553, 0.007598993), (371, 0.0050659953), (687, 0.0046692607), (2862, 0.004013123), (1460, 0.0031433585), (2498, 0.0029449912), (857, 0.0028992142), (1027, 0.002792401), (1074, 0.002166781), (449, 0.002059968)], 0.99162275);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['н', s @ ..] => super::t16::n4863(s, out),
-        ['р', s @ ..] => super::t16::n4864(s, out),
-        _ => false,
-    }
+pub(crate) fn n1359(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1280);
+	match s {
+		[] => true,
+		['в', s @ ..] => {
+			super::push(out, 4403);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 11334);
+					s.is_empty()
+				}
+				['а', s @ ..] => {
+					super::push(out, 11335);
+					match s {
+						[] => true,
+						['з', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['б', 'о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['д', 'о', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', 'м', 'а', 'с', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['б', 'о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['в', s @ ..] => {
+					super::push(out, 11336);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['д', 'о', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['е', s @ ..] => {
+					super::push(out, 11337);
+					match s {
+						[] => true,
+						['р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['з', s @ ..] => {
+					super::push(out, 11338);
+					match s {
+						[] => true,
+						['а', 'р', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['и', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', 'р', 'п', s @ ..] => {
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['с', 'о', 'в', s @ ..] => {
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												['о', 'м', 'а', 'с', '\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['о', 'в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['и', s @ ..] => {
+					super::push(out, 11339);
+					match s {
+						[] => true,
+						['р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 11340);
+					match s {
+						[] => true,
+						['д', s @ ..] => {
+							super::push(out, 19995);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['р', s @ ..] => {
+							super::push(out, 19996);
+							match s {
+								[] => true,
+								['п', s @ ..] => {
+									super::push(out, 28399);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['с', s @ ..] => {
+					super::push(out, 11341);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['т', 'о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['ц', s @ ..] => {
+					super::push(out, 11342);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 19997);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ы', s @ ..] => {
+					super::push(out, 11343);
+					match s {
+						[] => true,
+						['в', s @ ..] => {
+							super::push(out, 19998);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['л', s @ ..] => {
+			super::push(out, 4404);
+			match s {
+				[] => true,
+				['п', s @ ..] => {
+					super::push(out, 11344);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 19999);
+							s.is_empty()
+						}
+						['а', s @ ..] => {
+							super::push(out, 20000);
+							match s {
+								[] => true,
+								['з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['н', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['в', s @ ..] => {
+							super::push(out, 20001);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 28400);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['е', s @ ..] => {
+							super::push(out, 20002);
+							match s {
+								[] => true,
+								['р', 'е', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['и', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							super::push(out, 20003);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['д', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['с', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['с', s @ ..] => {
+							super::push(out, 20004);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['а', 'р', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['т', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['у', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['ы', s @ ..] => {
+							super::push(out, 20005);
+							match s {
+								[] => true,
+								['в', s @ ..] => {
+									super::push(out, 28401);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['м', s @ ..] => {
+			super::push(out, 4405);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 11345);
+					s.is_empty()
+				}
+				['о', s @ ..] => {
+					super::push(out, 11346);
+					match s {
+						[] => true,
+						['д', s @ ..] => {
+							super::push(out, 20006);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['с', s @ ..] => {
+					super::push(out, 11347);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ы', s @ ..] => {
+					super::push(out, 11348);
+					match s {
+						[] => true,
+						['в', s @ ..] => {
+							super::push(out, 20007);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['н', s @ ..] => super::t17::n4951(s, out),
+		['р', s @ ..] => super::t17::n4952(s, out),
+		_ => false,
+	}
 }
 
 /// The word пораспродавать.
-pub(crate) fn n69771(s: &[char], _out: &mut Path<'_>) -> bool {
-    s.is_empty()
+pub(crate) fn n81291(s: &[char], _out: &mut Path<'_>) -> bool {
+	s.is_empty()
 }
 
-/// Words ending -овыдавать.
-pub(crate) fn n26668(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(721, 0.3197223), (675, 0.31580073), (722, 0.15986878), (676, 0.15790036), (2397, 0.023514153), (2398, 0.011749447), (95, 0.0057984283), (96, 0.0028992142)], 0.9972534);
-    match s {
-        [] => true,
-        ['п', s @ ..] => {
-            out.push(&[(675, 0.43276113), (676, 0.21637294), (721, 0.21315327), (722, 0.10656901), (2397, 0.015671015), (2398, 0.007843138), (95, 0.0038605325)], 0.996231);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+/// Words ending -выдавать.
+pub(crate) fn n14260(s: &[char], out: &mut Path<'_>) -> bool {
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['о', s @ ..] => {
+			super::push(out, 20053);
+			match s {
+				[] => true,
+				['п', s @ ..] => {
+					super::push(out, 28430);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -удевать.
+pub(crate) fn n5071(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 4482);
+	match s {
+		[] => true,
+		['к', s @ ..] => {
+			super::push(out, 11453);
+			s.is_empty()
+		}
+		_ => false,
+	}
+}
+
+/// Words ending -еевать.
+pub(crate) fn n1403(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1322);
+	match s {
+		[] => true,
+		['с', s @ ..] => {
+			super::push(out, 4483);
+			match s {
+				[] => true,
+				['у', s @ ..] => {
+					super::push(out, 11454);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -жевать.
-pub(crate) fn n1388(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1600, 0.19485772), (1572, 0.18175021), (116, 0.09814603), (1601, 0.09742886), (1573, 0.09088273), (205, 0.056214236), (117, 0.049073014), (203, 0.028625926), (1177, 0.028488593), (206, 0.028107118), (1781, 0.02697795), (2723, 0.01451133), (204, 0.014312963), (1178, 0.014251927), (2691, 0.014160372), (1782, 0.013443198), (2724, 0.0072632944), (2692, 0.007080186), (95, 0.006942855), (49, 0.005676356), (96, 0.003448539), (50, 0.002838178)], 0.9844816);
-    match s {
-        [] => true,
-        ['\u{1}', s @ ..] => {
-            out.push(&[(1781, 0.6666667), (1782, 0.33333334)], 1.0);
-            s.is_empty()
-        }
-        ['а', s @ ..] => {
-            out.push(&[(1572, 0.42421606), (1573, 0.2121004), (1600, 0.09742886), (116, 0.049073014), (1601, 0.0487068), (205, 0.028107118), (117, 0.024536507), (203, 0.014312963), (1177, 0.014251927), (206, 0.014053559), (1781, 0.013488975), (2723, 0.0072632944), (204, 0.0071564815), (1178, 0.0071259635), (2691, 0.007080186), (1782, 0.006729229), (2724, 0.0036316472), (2692, 0.003540093), (95, 0.003463798), (49, 0.002838178)], 0.98910505);
-            match s {
-                [] => true,
-                ['з', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['н', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['б', s @ ..] => {
-            out.push(&[(1572, 0.34338903), (1573, 0.17169452), (1600, 0.12990005), (116, 0.065430686), (1601, 0.064957656), (205, 0.03747616), (117, 0.032715343), (203, 0.019089036), (1177, 0.018997483), (206, 0.01873808), (1781, 0.017990386), (2723, 0.00967422), (204, 0.009536888), (1178, 0.009491112), (2691, 0.009430076), (1782, 0.008957046), (2724, 0.00483711), (2692, 0.004715038), (95, 0.004623484), (49, 0.0037842374), (96, 0.0023041123)], 0.98773175);
-            match s {
-                [] => true,
-                ['о', s @ ..] => {
-                    out.push(&[(1572, 0.45114824), (1573, 0.22557412), (1600, 0.08659495), (116, 0.043625545), (1601, 0.043305103), (205, 0.024994278), (117, 0.021805143), (203, 0.012726025), (1177, 0.012664989), (206, 0.012497139), (1781, 0.011993592), (2723, 0.0064545665), (204, 0.0063630124), (1178, 0.0063324943), (2691, 0.006286717), (1782, 0.0059815366), (2724, 0.0032196536), (2692, 0.0031433585), (95, 0.0030823224), (49, 0.0025329976)], 0.9903258);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['е', s @ ..] => {
-            out.push(&[(1600, 0.37686732), (1601, 0.18843366), (116, 0.05941863), (203, 0.059174486), (1177, 0.059159227), (1572, 0.04383917), (117, 0.029709315), (2723, 0.029602503), (204, 0.029587243), (1178, 0.029587243), (2691, 0.029571984), (1573, 0.021911956), (2724, 0.014801252), (2692, 0.014785992), (205, 0.004791333), (206, 0.0023956664), (1781, 0.0022888533)], 0.99592584);
-            match s {
-                [] => true,
-                ['в', s @ ..] => {
-                    out.push(&[(1600, 0.38110933), (1601, 0.19055466), (203, 0.089204244), (1177, 0.089204244), (116, 0.08168154), (204, 0.044602122), (1178, 0.044602122), (117, 0.0408484), (1572, 0.009964141), (2723, 0.006729229), (2691, 0.0067139696), (1573, 0.004974441), (2724, 0.0033569848), (2692, 0.0033569848)], 0.9969024);
-                    match s {
-                        [] => true,
-                        ['с', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(203, 0.35088122), (116, 0.31578547), (204, 0.17543298), (117, 0.15790036)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['а', s @ ..] => {
-                                    out.push(&[(1600, 0.523888), (1601, 0.26193637), (203, 0.044602122), (1177, 0.044602122), (116, 0.0408484), (204, 0.02230869), (1178, 0.022293432), (117, 0.02041657), (1572, 0.004974441), (2723, 0.0033569848), (2691, 0.0033569848), (1573, 0.0024872206)], 0.99507135);
-                                    match s {
-                                        [] => true,
-                                        ['з', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['н', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['о', s @ ..] => {
-                                    out.push(&[(1600, 0.5202258), (1601, 0.26010528), (203, 0.045746546), (1177, 0.045746546), (116, 0.041886017), (204, 0.022873273), (1178, 0.022873273), (117, 0.020950638), (1572, 0.0051117726), (2723, 0.003448539), (2691, 0.003448539), (1573, 0.0025482567)], 0.9949645);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['ы', s @ ..] => {
-                                    out.push(&[(1177, 0.2816968), (1600, 0.25407797), (1178, 0.14084077), (1601, 0.12703136), (203, 0.05946441), (116, 0.05445945), (204, 0.029739834), (117, 0.027222095), (1572, 0.0066376748), (2723, 0.0044861524), (2691, 0.0044861524), (1573, 0.0033264668), (2724, 0.0022430762), (2692, 0.0022430762)], 0.99795526);
-                                    match s {
-                                        [] => true,
-                                        ['в', s @ ..] => {
-                                            out.push(&[(1177, 0.41000992), (1178, 0.20500496), (1600, 0.16937514), (1601, 0.08468757), (203, 0.039642937), (116, 0.036301214), (204, 0.019821469), (117, 0.018158237), (1572, 0.0044251163), (2723, 0.0029907683), (2691, 0.0029907683), (1573, 0.0022125582)], 0.99562067);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['м', s @ ..] => {
-                    out.push(&[(1600, 0.42168307), (1601, 0.2108339), (203, 0.050003815), (1177, 0.050003815), (2723, 0.046234835), (2691, 0.046234835), (116, 0.045792326), (204, 0.024994278), (1178, 0.024994278), (2724, 0.023117417), (2692, 0.023117417), (117, 0.022888534), (1572, 0.005584802), (1573, 0.002792401)], 0.99827576);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(203, 0.35088122), (116, 0.31578547), (204, 0.17543298), (117, 0.15790036)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            out.push(&[(1600, 0.5441672), (1601, 0.2720836), (203, 0.024994278), (1177, 0.024994278), (2723, 0.023117417), (2691, 0.023117417), (116, 0.022888534), (204, 0.012497139), (1178, 0.012497139), (2724, 0.011551079), (2692, 0.011551079), (117, 0.011444267), (1572, 0.002792401)], 0.99769586);
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['б', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', s @ ..] => {
-                            out.push(&[(1600, 0.28111696), (2723, 0.25304037), (1601, 0.14056611), (2724, 0.12652782), (203, 0.033340964), (1177, 0.033325706), (2691, 0.030823225), (116, 0.030518044), (204, 0.016662853), (1178, 0.016662853), (2692, 0.015411613), (117, 0.015259022), (1572, 0.0037232013)], 0.99697876);
-                            match s {
-                                [] => true,
-                                ['р', s @ ..] => {
-                                    out.push(&[(2723, 0.39092088), (2724, 0.19545281), (1600, 0.18741131), (1601, 0.093705654), (203, 0.022217136), (1177, 0.022217136), (2691, 0.020553902), (116, 0.020355536), (204, 0.011108568), (1178, 0.011108568), (2692, 0.0102693215), (117, 0.010177768), (1572, 0.0024872206)], 0.9979858);
-                                    match s {
-                                        [] => true,
-                                        ['е', s @ ..] => {
-                                            out.push(&[(2723, 0.48284122), (2724, 0.24141298), (1600, 0.12494087), (1601, 0.062470436), (203, 0.0148165105), (1177, 0.0148165105), (2691, 0.013702602), (116, 0.01356527), (204, 0.007400626), (1178, 0.007400626), (2692, 0.006851301), (117, 0.006790265)], 0.9970092);
-                                            match s {
-                                                [] => true,
-                                                ['п', '\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['з', s @ ..] => {
-                            out.push(&[(1600, 0.5666743), (1601, 0.28332952), (203, 0.020401312), (1177, 0.020401312), (2723, 0.01887541), (2691, 0.01887541), (116, 0.018692302), (204, 0.010208285), (1178, 0.010208285), (2724, 0.009430076), (2692, 0.009430076), (117, 0.009338521), (1572, 0.0022735943)], 0.99813837);
-                            match s {
-                                [] => true,
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['и', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', 'д', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['т', s @ ..] => {
-                            out.push(&[(1600, 0.3700923), (2691, 0.19464408), (1601, 0.18504615), (2692, 0.09732204), (203, 0.025635157), (1177, 0.025635157), (2723, 0.02371252), (116, 0.023483634), (204, 0.012817578), (1178, 0.012817578), (2724, 0.01185626), (117, 0.011734188), (1572, 0.002868696)], 0.99766535);
-                            match s {
-                                [] => true,
-                                ['о', '\u{1}', s @ ..] => {
-                                    out.push(&[(2691, 0.35088122), (1600, 0.31578547), (2692, 0.17543298), (1601, 0.15790036)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['ы', s @ ..] => {
-                            out.push(&[(1600, 0.28111696), (1177, 0.2555581), (1601, 0.14056611), (1178, 0.12777905), (203, 0.033340964), (2723, 0.030823225), (2691, 0.030823225), (116, 0.030518044), (204, 0.016662853), (2724, 0.015411613), (2692, 0.015411613), (117, 0.015259022), (1572, 0.0037232013)], 0.99699396);
-                            match s {
-                                [] => true,
-                                ['в', s @ ..] => {
-                                    out.push(&[(1177, 0.39259937), (1178, 0.19629206), (1600, 0.18741131), (1601, 0.093705654), (203, 0.022217136), (2723, 0.020553902), (2691, 0.020553902), (116, 0.020355536), (204, 0.011108568), (2724, 0.0102693215), (2692, 0.0102693215), (117, 0.010177768), (1572, 0.0024872206)], 0.99800104);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['р', s @ ..] => {
-                    out.push(&[(1572, 0.25145343), (1600, 0.2512398), (1573, 0.12571909), (1601, 0.12562753), (116, 0.03961242), (203, 0.039444573), (1177, 0.039444573), (117, 0.01980621), (2723, 0.019729916), (204, 0.019729916), (1178, 0.019714657), (2691, 0.019714657), (2724, 0.009872587), (2692, 0.009857329), (205, 0.0031891356)], 0.9941558);
-                    match s {
-                        [] => true,
-                        ['е', s @ ..] => {
-                            out.push(&[(1572, 0.38985276), (1573, 0.19493401), (1600, 0.16749829), (1601, 0.083741516), (116, 0.026413366), (203, 0.026306555), (1177, 0.026291294), (117, 0.013199054), (2723, 0.013153277), (204, 0.013153277), (1178, 0.013153277), (2691, 0.013138018), (2724, 0.0065766387), (2692, 0.0065766387), (205, 0.002121004)], 0.99610895);
-                            match s {
-                                [] => true,
-                                ['п', s @ ..] => {
-                                    out.push(&[(1572, 0.48212406), (1573, 0.24106203), (1600, 0.111665525), (1601, 0.055832762), (116, 0.01760891), (203, 0.017532617), (1177, 0.017532617), (117, 0.008804455), (2723, 0.008773938), (204, 0.008773938), (1178, 0.008758679), (2691, 0.008758679), (2724, 0.0043793395), (2692, 0.0043793395)], 0.9959869);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['ж', s @ ..] => {
-            out.push(&[(116, 0.2876478), (117, 0.14383154), (1600, 0.12990005), (1572, 0.12117189), (1601, 0.064957656), (1573, 0.060578316), (205, 0.03747616), (203, 0.019089036), (1177, 0.018997483), (206, 0.01873808), (1781, 0.017990386), (2723, 0.00967422), (204, 0.009536888), (1178, 0.009491112), (2691, 0.009430076), (1782, 0.008957046), (2724, 0.00483711), (2692, 0.004715038), (95, 0.004623484), (49, 0.0037842374), (96, 0.0023041123)], 0.98773175);
-            match s {
-                [] => true,
-                ['о', s @ ..] => {
-                    out.push(&[(116, 0.41399252), (117, 0.20698863), (1600, 0.08659495), (1572, 0.08078126), (1601, 0.043305103), (1573, 0.04039063), (205, 0.024994278), (203, 0.012726025), (1177, 0.012664989), (206, 0.012497139), (1781, 0.011993592), (2723, 0.0064545665), (204, 0.0063630124), (1178, 0.0063324943), (2691, 0.006286717), (1782, 0.0059815366), (2724, 0.0032196536), (2692, 0.0031433585), (95, 0.0030823224), (49, 0.0025329976)], 0.99032575);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['з', s @ ..] => {
-            out.push(&[(1572, 0.42421606), (1573, 0.2121004), (1600, 0.09742886), (116, 0.049073014), (1601, 0.0487068), (205, 0.028107118), (117, 0.024536507), (203, 0.014312963), (1177, 0.014251927), (206, 0.014053559), (1781, 0.013488975), (2723, 0.0072632944), (204, 0.0071564815), (1178, 0.0071259635), (2691, 0.007080186), (1782, 0.006729229), (2724, 0.0036316472), (2692, 0.003540093), (95, 0.003463798), (49, 0.002838178)], 0.98910505);
-            match s {
-                [] => true,
-                ['а', 'р', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['и', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['м', s @ ..] => {
-            out.push(&[(205, 0.25970855), (1600, 0.12990005), (206, 0.12985428), (1572, 0.12117189), (116, 0.065430686), (1601, 0.064957656), (1573, 0.060578316), (117, 0.032715343), (203, 0.019089036), (1177, 0.018997483), (1781, 0.017990386), (2723, 0.00967422), (204, 0.009536888), (1178, 0.009491112), (2691, 0.009430076), (1782, 0.008957046), (2724, 0.00483711), (2692, 0.004715038), (95, 0.004623484), (49, 0.0037842374), (96, 0.0023041123)], 0.987747);
-            match s {
-                [] => true,
-                ['о', s @ ..] => {
-                    out.push(&[(205, 0.39536124), (206, 0.19768062), (1600, 0.08659495), (1572, 0.08078126), (116, 0.043625545), (1601, 0.043305103), (1573, 0.04039063), (117, 0.021805143), (203, 0.012726025), (1177, 0.012664989), (1781, 0.011993592), (2723, 0.0064545665), (204, 0.0063630124), (1178, 0.0063324943), (2691, 0.006286717), (1782, 0.0059815366), (2724, 0.0032196536), (2692, 0.0031433585), (95, 0.0030823224), (49, 0.0025329976)], 0.99032575);
-                    match s {
-                        [] => true,
-                        ['б', s @ ..] => {
-                            out.push(&[(205, 0.48578623), (206, 0.24289311), (1600, 0.05774014), (1572, 0.05384909), (116, 0.029083695), (1601, 0.02887007), (1573, 0.026932174), (117, 0.014541848), (203, 0.008484016), (1177, 0.008438239), (1781, 0.0079957275), (2723, 0.004303044), (204, 0.004242008), (1178, 0.0042267493), (2691, 0.0041962313), (1782, 0.003982605), (2724, 0.002151522), (2692, 0.002090486), (95, 0.002059968)], 0.99186695);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['н', s @ ..] => {
-            out.push(&[(205, 0.4175021), (206, 0.20875868), (1600, 0.07953002), (1572, 0.074189365), (116, 0.040054932), (1601, 0.03976501), (1573, 0.037094682), (117, 0.020035096), (203, 0.011688411), (1177, 0.011627375), (1781, 0.011017014), (2723, 0.0059205005), (204, 0.0058442056), (1178, 0.0058136876), (2691, 0.0057831695), (1782, 0.005493248), (2724, 0.0029602502), (2692, 0.0028839551), (95, 0.002838178), (49, 0.0023193713)], 0.99111927);
-            match s {
-                [] => true,
-                ['и', s @ ..] => {
-                    out.push(&[(205, 0.5388876), (206, 0.2694438), (1600, 0.040787365), (1572, 0.038040742), (116, 0.020538643), (1601, 0.020386053), (1573, 0.019028), (117, 0.0102693215), (203, 0.005996796), (1177, 0.005966278), (1781, 0.005645838), (2723, 0.0030365454), (204, 0.0029907683), (1178, 0.0029755093), (2691, 0.0029602502), (1782, 0.00280766)], 0.9897612);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['о', s @ ..] => {
-            out.push(&[(1572, 0.45685512), (1573, 0.22842756), (116, 0.11064317), (117, 0.055313956), (1600, 0.04995804), (1601, 0.02497902), (205, 0.014419775), (203, 0.0073395898), (1177, 0.0073090717), (206, 0.0072022583), (1781, 0.006912337), (2723, 0.0037232013), (204, 0.0036774243), (1178, 0.0036469062), (2691, 0.0036316472), (1782, 0.003448539)], 0.9874876);
-            match s {
-                [] => true,
-                ['д', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['п', s @ ..] => {
-                    out.push(&[(1572, 0.5590753), (1573, 0.27953002), (116, 0.056733042), (117, 0.028366521), (1600, 0.025619898), (1601, 0.012817578), (205, 0.0073853666), (203, 0.0037689784), (1177, 0.0037537194), (206, 0.0036926833), (1781, 0.003540093)], 0.9842832);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['р', s @ ..] => {
-                    out.push(&[(1572, 0.4449836), (1573, 0.2224918), (116, 0.18121615), (117, 0.090608075), (1600, 0.020386053), (1601, 0.010193027), (205, 0.0058899825), (203, 0.0029907683), (1177, 0.0029755093), (206, 0.0029449912), (1781, 0.002822919)], 0.9875029);
-                    match s {
-                        [] => true,
-                        ['о', s @ ..] => {
-                            out.push(&[(116, 0.34302282), (1572, 0.29665065), (117, 0.17151141), (1573, 0.14833295), (1600, 0.013595789), (1601, 0.006790265), (205, 0.003921569)], 0.98382545);
-                            match s {
-                                [] => true,
-                                ['т', s @ ..] => {
-                                    out.push(&[(116, 0.4509041), (117, 0.22545205), (1572, 0.19777219), (1573, 0.098878466), (1600, 0.0090638595), (1601, 0.0045319297), (205, 0.0026092927)], 0.9892119);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['п', s @ ..] => {
-                            out.push(&[(1572, 0.552987), (1573, 0.2764935), (116, 0.09292744), (117, 0.04646372), (1600, 0.01045243), (1601, 0.0052338447), (205, 0.0030212863)], 0.98757917);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['р', s @ ..] => {
-            out.push(&[(116, 0.2876478), (117, 0.14383154), (1600, 0.12990005), (1572, 0.12117189), (1601, 0.064957656), (1573, 0.060578316), (205, 0.03747616), (203, 0.019089036), (1177, 0.018997483), (206, 0.01873808), (1781, 0.017990386), (2723, 0.00967422), (204, 0.009536888), (1178, 0.009491112), (2691, 0.009430076), (1782, 0.008957046), (2724, 0.00483711), (2692, 0.004715038), (95, 0.004623484), (49, 0.0037842374), (96, 0.0023041123)], 0.98773175);
-            match s {
-                [] => true,
-                ['о', s @ ..] => {
-                    out.push(&[(116, 0.41399252), (117, 0.20698863), (1600, 0.08659495), (1572, 0.08078126), (1601, 0.043305103), (1573, 0.04039063), (205, 0.024994278), (203, 0.012726025), (1177, 0.012664989), (206, 0.012497139), (1781, 0.011993592), (2723, 0.0064545665), (204, 0.0063630124), (1178, 0.0063324943), (2691, 0.006286717), (1782, 0.0059815366), (2724, 0.0032196536), (2692, 0.0031433585), (95, 0.0030823224), (49, 0.0025329976)], 0.99032575);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['с', s @ ..] => {
-            out.push(&[(1572, 0.34338903), (1573, 0.17169452), (1600, 0.12990005), (116, 0.065430686), (1601, 0.064957656), (205, 0.03747616), (117, 0.032715343), (203, 0.019089036), (1177, 0.018997483), (206, 0.01873808), (1781, 0.017990386), (2723, 0.00967422), (204, 0.009536888), (1178, 0.009491112), (2691, 0.009430076), (1782, 0.008957046), (2724, 0.00483711), (2692, 0.004715038), (95, 0.004623484), (49, 0.0037842374), (96, 0.0023041123)], 0.98773175);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['т', s @ ..] => {
-            out.push(&[(1572, 0.34338903), (1573, 0.17169452), (1600, 0.12990005), (116, 0.065430686), (1601, 0.064957656), (205, 0.03747616), (117, 0.032715343), (203, 0.019089036), (1177, 0.018997483), (206, 0.01873808), (1781, 0.017990386), (2723, 0.00967422), (204, 0.009536888), (1178, 0.009491112), (2691, 0.009430076), (1782, 0.008957046), (2724, 0.00483711), (2692, 0.004715038), (95, 0.004623484), (49, 0.0037842374), (96, 0.0023041123)], 0.98773175);
-            match s {
-                [] => true,
-                ['о', s @ ..] => {
-                    out.push(&[(1572, 0.45114824), (1573, 0.22557412), (1600, 0.08659495), (116, 0.043625545), (1601, 0.043305103), (205, 0.024994278), (117, 0.021805143), (203, 0.012726025), (1177, 0.012664989), (206, 0.012497139), (1781, 0.011993592), (2723, 0.0064545665), (204, 0.0063630124), (1178, 0.0063324943), (2691, 0.006286717), (1782, 0.0059815366), (2724, 0.0032196536), (2692, 0.0031433585), (95, 0.0030823224), (49, 0.0025329976)], 0.9903258);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['у', s @ ..] => {
-            out.push(&[(116, 0.2876478), (117, 0.14383154), (1600, 0.12990005), (1572, 0.12117189), (1601, 0.064957656), (1573, 0.060578316), (205, 0.03747616), (203, 0.019089036), (1177, 0.018997483), (206, 0.01873808), (1781, 0.017990386), (2723, 0.00967422), (204, 0.009536888), (1178, 0.009491112), (2691, 0.009430076), (1782, 0.008957046), (2724, 0.00483711), (2692, 0.004715038), (95, 0.004623484), (49, 0.0037842374), (96, 0.0023041123)], 0.98773175);
-            match s {
-                [] => true,
-                ['г', s @ ..] => {
-                    out.push(&[(116, 0.41399252), (117, 0.20698863), (1600, 0.08659495), (1572, 0.08078126), (1601, 0.043305103), (1573, 0.04039063), (205, 0.024994278), (203, 0.012726025), (1177, 0.012664989), (206, 0.012497139), (1781, 0.011993592), (2723, 0.0064545665), (204, 0.0063630124), (1178, 0.0063324943), (2691, 0.006286717), (1782, 0.0059815366), (2724, 0.0032196536), (2692, 0.0031433585), (95, 0.0030823224), (49, 0.0025329976)], 0.99032575);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['ы', s @ ..] => {
-            out.push(&[(116, 0.2876478), (117, 0.14383154), (1600, 0.12990005), (1572, 0.12117189), (1601, 0.064957656), (1573, 0.060578316), (205, 0.03747616), (203, 0.019089036), (1177, 0.018997483), (206, 0.01873808), (1781, 0.017990386), (2723, 0.00967422), (204, 0.009536888), (1178, 0.009491112), (2691, 0.009430076), (1782, 0.008957046), (2724, 0.00483711), (2692, 0.004715038), (95, 0.004623484), (49, 0.0037842374), (96, 0.0023041123)], 0.98773175);
-            match s {
-                [] => true,
-                ['р', s @ ..] => {
-                    out.push(&[(116, 0.41399252), (117, 0.20698863), (1600, 0.08659495), (1572, 0.08078126), (1601, 0.043305103), (1573, 0.04039063), (205, 0.024994278), (203, 0.012726025), (1177, 0.012664989), (206, 0.012497139), (1781, 0.011993592), (2723, 0.0064545665), (204, 0.0063630124), (1178, 0.0063324943), (2691, 0.006286717), (1782, 0.0059815366), (2724, 0.0032196536), (2692, 0.0031433585), (95, 0.0030823224), (49, 0.0025329976)], 0.99032575);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['я', s @ ..] => {
-            out.push(&[(1600, 0.35211718), (1601, 0.17605859), (1572, 0.12117189), (116, 0.065430686), (1573, 0.060578316), (205, 0.03747616), (117, 0.032715343), (203, 0.019089036), (1177, 0.018997483), (206, 0.01873808), (1781, 0.017990386), (2723, 0.00967422), (204, 0.009536888), (1178, 0.009491112), (2691, 0.009430076), (1782, 0.008957046), (2724, 0.00483711), (2692, 0.004715038), (95, 0.004623484), (49, 0.0037842374), (96, 0.0023041123)], 0.9877165);
-            match s {
-                [] => true,
-                ['р', s @ ..] => {
-                    out.push(&[(1600, 0.4569772), (1601, 0.2284886), (1572, 0.08078126), (116, 0.043625545), (1573, 0.04039063), (205, 0.024994278), (117, 0.021805143), (203, 0.012726025), (1177, 0.012664989), (206, 0.012497139), (1781, 0.011993592), (2723, 0.0064545665), (204, 0.0063630124), (1178, 0.0063324943), (2691, 0.006286717), (1782, 0.0059815366), (2724, 0.0032196536), (2692, 0.0031433585), (95, 0.0030823224), (49, 0.0025329976)], 0.99034107);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n1404(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1323);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 4484);
+			s.is_empty()
+		}
+		['а', s @ ..] => {
+			super::push(out, 4485);
+			match s {
+				[] => true,
+				['з', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['н', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['б', s @ ..] => {
+			super::push(out, 4486);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					super::push(out, 11455);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['е', s @ ..] => {
+			super::push(out, 4487);
+			match s {
+				[] => true,
+				['в', s @ ..] => {
+					super::push(out, 11456);
+					match s {
+						[] => true,
+						['с', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 28438);
+									s.is_empty()
+								}
+								['а', s @ ..] => {
+									super::push(out, 28439);
+									match s {
+										[] => true,
+										['з', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['н', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['о', s @ ..] => {
+									super::push(out, 28440);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['ы', s @ ..] => {
+									super::push(out, 28441);
+									match s {
+										[] => true,
+										['в', s @ ..] => {
+											super::push(out, 34480);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['м', s @ ..] => {
+					super::push(out, 11457);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 20070);
+							s.is_empty()
+						}
+						['а', s @ ..] => {
+							super::push(out, 20071);
+							match s {
+								[] => true,
+								['з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['н', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['б', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['е', s @ ..] => {
+							super::push(out, 20072);
+							match s {
+								[] => true,
+								['р', s @ ..] => {
+									super::push(out, 28442);
+									match s {
+										[] => true,
+										['е', s @ ..] => {
+											super::push(out, 34481);
+											match s {
+												[] => true,
+												['п', '\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['з', s @ ..] => {
+							super::push(out, 20073);
+							match s {
+								[] => true,
+								['а', 'р', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['и', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['и', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', 'д', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['т', s @ ..] => {
+							super::push(out, 20074);
+							match s {
+								[] => true,
+								['о', '\u{1}', s @ ..] => {
+									super::push(out, 28443);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ы', s @ ..] => {
+							super::push(out, 20075);
+							match s {
+								[] => true,
+								['в', s @ ..] => {
+									super::push(out, 28444);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['р', s @ ..] => {
+					super::push(out, 11458);
+					match s {
+						[] => true,
+						['е', s @ ..] => {
+							super::push(out, 20076);
+							match s {
+								[] => true,
+								['п', s @ ..] => {
+									super::push(out, 28445);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ж', s @ ..] => {
+			super::push(out, 4488);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					super::push(out, 11459);
+					match s {
+						[] => true,
+						['р', 'д', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['з', s @ ..] => {
+			super::push(out, 4489);
+			match s {
+				[] => true,
+				['а', 'р', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['и', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['м', s @ ..] => {
+			super::push(out, 4490);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					super::push(out, 11460);
+					match s {
+						[] => true,
+						['б', s @ ..] => {
+							super::push(out, 20077);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['н', s @ ..] => {
+			super::push(out, 4491);
+			match s {
+				[] => true,
+				['е', 'м', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['и', s @ ..] => {
+					super::push(out, 11461);
+					match s {
+						[] => true,
+						['р', 'к', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['о', s @ ..] => {
+			super::push(out, 4492);
+			match s {
+				[] => true,
+				['д', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['п', s @ ..] => {
+					super::push(out, 11462);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['р', s @ ..] => {
+					super::push(out, 11463);
+					match s {
+						[] => true,
+						['о', s @ ..] => {
+							super::push(out, 20078);
+							match s {
+								[] => true,
+								['т', s @ ..] => {
+									super::push(out, 28446);
+									match s {
+										[] => true,
+										['с', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['п', s @ ..] => {
+							super::push(out, 20079);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['р', s @ ..] => {
+			super::push(out, 4493);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					super::push(out, 11464);
+					match s {
+						[] => true,
+						['м', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['с', s @ ..] => {
+			super::push(out, 4494);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['т', s @ ..] => {
+			super::push(out, 4495);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					super::push(out, 11465);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['у', s @ ..] => {
+			super::push(out, 4496);
+			match s {
+				[] => true,
+				['г', s @ ..] => {
+					super::push(out, 11466);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ы', s @ ..] => {
+			super::push(out, 4497);
+			match s {
+				[] => true,
+				['р', s @ ..] => {
+					super::push(out, 11467);
+					match s {
+						[] => true,
+						['к', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['я', s @ ..] => {
+			super::push(out, 4498);
+			match s {
+				[] => true,
+				['р', s @ ..] => {
+					super::push(out, 11468);
+					match s {
+						[] => true,
+						['к', 'с', 'а', 'р', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
-/// Words ending -прозевать.
-pub(crate) fn n26733(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(2970, 0.5786679), (2971, 0.28931105), (524, 0.04914931), (525, 0.024536507), (95, 0.016296636), (49, 0.008651866), (96, 0.008133058), (2088, 0.0066529335), (50, 0.004333562), (2089, 0.0033264668)], 0.98905927);
-    match s {
-        [] => true,
-        ['\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        _ => false,
-    }
+/// Words ending -зевать.
+pub(crate) fn n1405(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1324);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 4499);
+			s.is_empty()
+		}
+		['а', s @ ..] => {
+			super::push(out, 4500);
+			match s {
+				[] => true,
+				['з', s @ ..] => {
+					super::push(out, 11469);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['р', s @ ..] => {
+					super::push(out, 11470);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 20080);
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							super::push(out, 20081);
+							match s {
+								[] => true,
+								['п', s @ ..] => {
+									super::push(out, 28447);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['о', s @ ..] => {
+			super::push(out, 4501);
+			match s {
+				[] => true,
+				['п', s @ ..] => {
+					super::push(out, 11471);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['р', s @ ..] => {
+					super::push(out, 11472);
+					match s {
+						[] => true,
+						['п', s @ ..] => {
+							super::push(out, 20082);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -левать.
-pub(crate) fn n1390(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1586, 0.1549096), (49, 0.103639275), (1843, 0.088029295), (95, 0.08656443), (2201, 0.08227665), (1587, 0.0774548), (50, 0.051819637), (1844, 0.04400702), (96, 0.043274585), (2202, 0.041138325), (703, 0.027084764), (2078, 0.020691235), (958, 0.020172426), (218, 0.015777828), (1537, 0.01574731), (704, 0.013534753), (2963, 0.011123827), (16, 0.010376135), (2079, 0.010345617), (959, 0.010086213), (1538, 0.007873655), (219, 0.0078583965), (2964, 0.005539025), (27, 0.0052033267), (17, 0.0051880674), (1203, 0.0051575494), (1893, 0.0051575494), (2847, 0.0051575494), (2849, 0.0046387427), (28, 0.0025787747), (1204, 0.0025787747), (1894, 0.0025787747), (2848, 0.0025787747), (2850, 0.0023193713)], 0.99246204);
-    match s {
-        [] => true,
-        ['а', s @ ..] => {
-            out.push(&[(1843, 0.3824216), (1844, 0.1912108), (2201, 0.12990005), (2202, 0.0649424), (49, 0.054108493), (1203, 0.041916534), (50, 0.027054247), (1204, 0.020965897), (1586, 0.01918059), (95, 0.010727093), (705, 0.010315099), (1587, 0.009597925), (96, 0.005355917), (706, 0.0051575494), (703, 0.0033569848), (2078, 0.0025635157), (958, 0.0025024796)], 0.98127717);
-            match s {
-                [] => true,
-                ['к', s @ ..] => {
-                    out.push(&[(2201, 0.30882734), (1843, 0.25494775), (2202, 0.15440604), (1844, 0.12747388), (49, 0.03607233), (1203, 0.02793927), (50, 0.018036164), (1204, 0.013977264), (1586, 0.012787061), (95, 0.0071412222), (705, 0.006881819), (1587, 0.0063935304), (96, 0.0035706111), (706, 0.00343328), (703, 0.0022430762)], 0.9841306);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(2201, 0.6666667), (2202, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['м', s @ ..] => {
-                    out.push(&[(1843, 0.5144427), (1844, 0.25722134), (2201, 0.06538491), (1203, 0.057068743), (2202, 0.032684825), (1204, 0.028534371), (705, 0.014236667), (49, 0.008224613), (706, 0.0071259635), (50, 0.004119936), (1586, 0.0029144732)], 0.9919585);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(2201, 0.5217365), (2202, 0.26086825), (705, 0.14493018), (706, 0.07246509)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            out.push(&[(1843, 0.59055465), (1844, 0.29527733), (2201, 0.032684825), (1203, 0.028534371), (2202, 0.016342413), (1204, 0.014267186), (705, 0.0071259635), (49, 0.004119936), (706, 0.003555352), (50, 0.002059968)], 0.994522);
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['б', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['д', 'о', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['з', s @ ..] => {
-                            out.push(&[(1843, 0.59055465), (1844, 0.29527733), (2201, 0.032684825), (1203, 0.028534371), (2202, 0.016342413), (1204, 0.014267186), (705, 0.0071259635), (49, 0.004119936), (706, 0.003555352), (50, 0.002059968)], 0.994522);
-                            match s {
-                                [] => true,
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['и', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['о', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['т', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['ы', s @ ..] => {
-                            out.push(&[(1843, 0.3429618), (1203, 0.26027313), (1844, 0.1714809), (1204, 0.13012893), (2201, 0.043595027), (2202, 0.021789884), (705, 0.009491112), (49, 0.005493248), (706, 0.004745556), (50, 0.002746624)], 0.9927062);
-                            match s {
-                                [] => true,
-                                ['в', s @ ..] => {
-                                    out.push(&[(1203, 0.39574274), (1843, 0.22864118), (1204, 0.19786374), (1844, 0.11432059), (2201, 0.029053178), (2202, 0.014526589), (705, 0.0063324943), (49, 0.0036621653), (706, 0.0031586175)], 0.99330133);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['ш', s @ ..] => {
-                    out.push(&[(2201, 0.23161669), (49, 0.19372854), (1843, 0.1912108), (2202, 0.115800716), (50, 0.09686427), (1844, 0.095597774), (1203, 0.020965897), (1204, 0.010482948), (1586, 0.009597925), (95, 0.005355917), (705, 0.0051575494), (1587, 0.004791333), (96, 0.0026855879), (706, 0.0025787747)], 0.9864347);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(2201, 0.6666667), (2202, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(49, 0.3513695), (50, 0.17569238), (2201, 0.15440604), (1843, 0.12747388), (2202, 0.07721065), (1844, 0.06373694), (1203, 0.013977264), (1204, 0.006988632), (1586, 0.0063935304), (95, 0.0035706111), (705, 0.00343328), (1587, 0.0032043946)], 0.9874571);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['б', s @ ..] => {
-            out.push(&[(1586, 0.36340886), (1587, 0.18170443), (218, 0.077500574), (958, 0.068635084), (2963, 0.06688029), (219, 0.038742658), (959, 0.034317542), (2964, 0.033432517), (49, 0.02012665), (1843, 0.017090105), (95, 0.016815443), (2201, 0.015976196), (50, 0.010055696), (1844, 0.008545052), (96, 0.008407721), (2202, 0.007980469), (703, 0.005264363), (2078, 0.004013123), (1537, 0.0030518044), (704, 0.0026245518), (16, 0.002014191), (2079, 0.002014191)], 0.9886015);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(218, 0.6666667), (219, 0.33333334)], 1.0);
-                    s.is_empty()
-                }
-                ['а', s @ ..] => {
-                    out.push(&[(1586, 0.5150378), (1587, 0.25752652), (218, 0.038742658), (958, 0.034317542), (2963, 0.033447776), (219, 0.019378958), (959, 0.0171664), (2964, 0.016723888), (49, 0.010055696), (1843, 0.008545052), (95, 0.008407721), (2201, 0.007980469), (50, 0.005035477), (1844, 0.004272526), (96, 0.0041962313), (2202, 0.0039978637), (703, 0.0026245518), (2078, 0.002014191)], 0.9894713);
-                    match s {
-                        [] => true,
-                        ['з', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['н', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['з', s @ ..] => {
-                    out.push(&[(1586, 0.4644999), (1587, 0.23224232), (218, 0.05166705), (958, 0.045761805), (2963, 0.044586863), (219, 0.025833525), (959, 0.022873273), (2964, 0.022293432), (49, 0.0134126805), (1843, 0.01139849), (95, 0.011200123), (2201, 0.010650798), (50, 0.0067139696), (1844, 0.0056916154), (96, 0.0056000613), (2202, 0.005325399), (703, 0.003509575), (2078, 0.0026855879), (1537, 0.002044709)], 0.98799115);
-                    match s {
-                        [] => true,
-                        ['и', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(1586, 0.52051574), (1587, 0.26025787), (218, 0.037354086), (958, 0.03308156), (2963, 0.032227054), (219, 0.018677043), (959, 0.01654078), (2964, 0.016113527), (49, 0.009704738), (1843, 0.008239872), (95, 0.008102541), (2201, 0.0077058063), (50, 0.004852369), (1844, 0.004119936), (96, 0.004043641), (2202, 0.0038452735), (703, 0.0025329976)], 0.98791486);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['с', s @ ..] => {
-                    out.push(&[(2963, 0.26681927), (1586, 0.24228275), (2964, 0.13340963), (1587, 0.121141374), (218, 0.05166705), (958, 0.045761805), (219, 0.025833525), (959, 0.022873273), (49, 0.0134126805), (1843, 0.01139849), (95, 0.011200123), (2201, 0.010650798), (50, 0.0067139696), (1844, 0.0056916154), (96, 0.0056000613), (2202, 0.005325399), (703, 0.003509575), (2078, 0.0026855879), (1537, 0.002044709)], 0.9880217);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(2963, 0.6666667), (2964, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ы', s @ ..] => {
-                    out.push(&[(958, 0.26797894), (1586, 0.24228275), (959, 0.13398947), (1587, 0.121141374), (218, 0.05166705), (2963, 0.044586863), (219, 0.025833525), (2964, 0.022293432), (49, 0.0134126805), (1843, 0.01139849), (95, 0.011200123), (2201, 0.010650798), (50, 0.0067139696), (1844, 0.0056916154), (96, 0.0056000613), (2202, 0.005325399), (703, 0.003509575), (2078, 0.0026855879), (1537, 0.002044709)], 0.9880064);
-                    match s {
-                        [] => true,
-                        ['в', s @ ..] => {
-                            out.push(&[(958, 0.40088502), (959, 0.20044251), (1586, 0.16151674), (1587, 0.080766), (218, 0.034439612), (2963, 0.029724576), (219, 0.017212177), (2964, 0.014862288), (49, 0.008941787), (1843, 0.007598993), (95, 0.0074769207), (2201, 0.0070954454), (50, 0.0044708936), (1844, 0.0037994965), (96, 0.0037384604), (2202, 0.003555352), (703, 0.0023346303)], 0.9888609);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['д', s @ ..] => {
-            out.push(&[(95, 0.36917678), (96, 0.18458839), (1586, 0.07943847), (49, 0.053147174), (1843, 0.045136187), (2201, 0.042191196), (1587, 0.039719235), (50, 0.026581217), (1844, 0.022568094), (2202, 0.021103228), (703, 0.01388571), (2078, 0.01060502), (958, 0.010345617), (218, 0.008087282), (1537, 0.008072022), (704, 0.006942855), (2963, 0.005706874), (16, 0.005325399), (2079, 0.0053101396), (959, 0.0051728087), (1538, 0.004043641), (219, 0.004028382), (2964, 0.002838178), (27, 0.0026703288), (17, 0.0026550698), (1203, 0.0026398108), (1893, 0.0026398108), (2847, 0.0026398108), (2849, 0.0023804074)], 0.9896391);
-            match s {
-                [] => true,
-                ['о', s @ ..] => {
-                    out.push(&[(95, 0.514107), (96, 0.2570535), (1586, 0.04074159), (49, 0.027252613), (1843, 0.023147937), (2201, 0.021637293), (1587, 0.020370794), (50, 0.013626306), (1844, 0.011581598), (2202, 0.010818646), (703, 0.0071259635), (2078, 0.005447471), (958, 0.0053101396), (218, 0.004150454), (1537, 0.004135195), (704, 0.003555352), (2963, 0.0029297322), (16, 0.002731365), (2079, 0.002716106), (959, 0.0026550698), (1538, 0.002075227), (219, 0.002075227)], 0.9852446);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['е', s @ ..] => {
-            out.push(&[(2201, 0.17576867), (49, 0.17456321), (2078, 0.1025864), (2202, 0.087891966), (50, 0.08728161), (95, 0.07570001), (2079, 0.051285572), (1843, 0.042343784), (96, 0.037857633), (16, 0.034546427), (1893, 0.03401236), (1844, 0.021179523), (17, 0.017273214), (1894, 0.017013809), (1586, 0.015564202), (1587, 0.007782101), (703, 0.002716106), (958, 0.00202945)], 0.98739606);
-            match s {
-                [] => true,
-                ['б', s @ ..] => {
-                    out.push(&[(2201, 0.20364691), (1843, 0.15027085), (16, 0.14715801), (2202, 0.10182346), (1844, 0.075135425), (17, 0.073579006), (49, 0.069825284), (2078, 0.04103151), (50, 0.034912642), (95, 0.0302739), (2079, 0.020523384), (96, 0.01513695), (1893, 0.0136110475), (1894, 0.0068055238), (1586, 0.006225681), (1587, 0.0031128405)], 0.99307245);
-                    match s {
-                        [] => true,
-                        ['а', s @ ..] => {
-                            out.push(&[(2201, 0.26848248), (1843, 0.24180973), (2202, 0.13424887), (1844, 0.12089723), (16, 0.073579006), (17, 0.036789503), (49, 0.034912642), (2078, 0.020523384), (50, 0.017456321), (95, 0.01513695), (2079, 0.010254063), (96, 0.007568475), (1893, 0.0068055238), (1894, 0.0034027619), (1586, 0.0031128405)], 0.9949798);
-                            match s {
-                                [] => true,
-                                ['т', s @ ..] => {
-                                    out.push(&[(2201, 0.3009079), (1843, 0.28757152), (2202, 0.15045395), (1844, 0.14378576), (16, 0.036789503), (17, 0.018387122), (49, 0.017456321), (2078, 0.010254063), (50, 0.0087281605), (95, 0.007568475), (2079, 0.0051270314), (96, 0.0037842374), (1893, 0.0034027619)], 0.9942168);
-                                    match s {
-                                        [] => true,
-                                        ['ш', s @ ..] => {
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    out.push(&[(2201, 0.6666667), (2202, 0.33333334)], 1.0);
-                                                    s.is_empty()
-                                                }
-                                                ['а', s @ ..] => {
-                                                    out.push(&[(1843, 0.4139315), (1844, 0.20697337), (2201, 0.20061035), (2202, 0.10029755), (16, 0.024521248), (17, 0.012268254), (49, 0.011642634), (2078, 0.006836042), (50, 0.0058136876), (95, 0.0050507365), (2079, 0.003418021), (96, 0.0025177386), (1893, 0.0022735943)], 0.9961547);
-                                                    match s {
-                                                        [] => true,
-                                                        ['з', '\u{1}', s @ ..] => super::t16::n69772(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['е', s @ ..] => {
-                            out.push(&[(16, 0.3203174), (17, 0.1601587), (2201, 0.13575952), (1843, 0.10017548), (2202, 0.06788739), (1844, 0.05009537), (49, 0.046555277), (2078, 0.027359426), (50, 0.02327001), (95, 0.020187685), (2079, 0.013672084), (96, 0.010086213), (1893, 0.009079118), (1894, 0.0045319297), (1586, 0.004150454), (1587, 0.002075227)], 0.99536127);
-                            match s {
-                                [] => true,
-                                ['д', s @ ..] => {
-                                    out.push(&[(16, 0.43576714), (17, 0.21788357), (2201, 0.09050126), (1843, 0.06678874), (2202, 0.045258258), (1844, 0.03338674), (49, 0.03103685), (2078, 0.01823453), (50, 0.015518425), (95, 0.013458458), (2079, 0.009124896), (96, 0.006729229), (1893, 0.0060425727), (1894, 0.0030212863), (1586, 0.002761883)], 0.99551386);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['в', s @ ..] => {
-                    out.push(&[(49, 0.41431296), (50, 0.20715648), (2201, 0.090135045), (2078, 0.05261311), (2202, 0.045075152), (95, 0.03881895), (2079, 0.026306555), (1843, 0.021713588), (96, 0.019409476), (16, 0.017715724), (1893, 0.017441062), (1844, 0.010864424), (17, 0.008850233), (1894, 0.0087281605), (1586, 0.007980469), (1587, 0.0039978637)], 0.99111927);
-                    match s {
-                        [] => true,
-                        ['о', s @ ..] => {
-                            out.push(&[(49, 0.5372549), (50, 0.26861984), (2201, 0.046219576), (2078, 0.02697795), (2202, 0.023117417), (95, 0.019913023), (2079, 0.013488975), (1843, 0.011139086), (96, 0.009948882), (16, 0.009079118), (1893, 0.008941787), (1844, 0.005569543), (17, 0.0045471885), (1894, 0.0044708936), (1586, 0.004089418), (1587, 0.002044709)], 0.99542236);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['д', s @ ..] => {
-                    out.push(&[(95, 0.272694), (96, 0.13633937), (2201, 0.11718929), (49, 0.11638056), (2078, 0.068390936), (2202, 0.058594644), (50, 0.05818265), (2079, 0.034195468), (1843, 0.02822919), (16, 0.023025865), (1893, 0.022674907), (1844, 0.014114595), (17, 0.011520562), (1894, 0.0113374535), (1586, 0.010376135), (1587, 0.0051880674)], 0.98843366);
-                    match s {
-                        [] => true,
-                        ['ж', s @ ..] => {
-                            out.push(&[(95, 0.40401313), (96, 0.2020142), (2201, 0.07812619), (49, 0.07759213), (2078, 0.04559396), (2202, 0.039063096), (50, 0.038788434), (2079, 0.02279698), (1843, 0.018814374), (16, 0.0153505765), (1893, 0.015121691), (1844, 0.009414816), (17, 0.0076752882), (1894, 0.007553216), (1586, 0.006912337), (1587, 0.003463798)], 0.9922942);
-                            match s {
-                                [] => true,
-                                ['о', s @ ..] => {
-                                    out.push(&[(95, 0.4915694), (96, 0.24577707), (2201, 0.05207904), (49, 0.051728085), (2078, 0.030395972), (2202, 0.02604715), (50, 0.025864042), (2079, 0.015197986), (1843, 0.012542916), (16, 0.010238804), (1893, 0.010086213), (1844, 0.006271458), (17, 0.0051117726), (1894, 0.005035477), (1586, 0.0046082246), (1587, 0.0023041123)], 0.9948577);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['ж', s @ ..] => {
-                    out.push(&[(95, 0.272694), (96, 0.13633937), (2201, 0.11718929), (49, 0.11638056), (2078, 0.068390936), (2202, 0.058594644), (50, 0.05818265), (2079, 0.034195468), (1843, 0.02822919), (16, 0.023025865), (1893, 0.022674907), (1844, 0.014114595), (17, 0.011520562), (1894, 0.0113374535), (1586, 0.010376135), (1587, 0.0051880674)], 0.98843366);
-                    match s {
-                        [] => true,
-                        ['я', s @ ..] => {
-                            out.push(&[(95, 0.40401313), (96, 0.2020142), (2201, 0.07812619), (49, 0.07759213), (2078, 0.04559396), (2202, 0.039063096), (50, 0.038788434), (2079, 0.02279698), (1843, 0.018814374), (16, 0.0153505765), (1893, 0.015121691), (1844, 0.009414816), (17, 0.0076752882), (1894, 0.007553216), (1586, 0.006912337), (1587, 0.003463798)], 0.9922942);
-                            match s {
-                                [] => true,
-                                ['т', s @ ..] => {
-                                    out.push(&[(95, 0.4915694), (96, 0.24577707), (2201, 0.05207904), (49, 0.051728085), (2078, 0.030395972), (2202, 0.02604715), (50, 0.025864042), (2079, 0.015197986), (1843, 0.012542916), (16, 0.010238804), (1893, 0.010086213), (1844, 0.006271458), (17, 0.0051117726), (1894, 0.005035477), (1586, 0.0046082246), (1587, 0.0023041123)], 0.9948577);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['м', s @ ..] => {
-                    out.push(&[(49, 0.42061493), (50, 0.2103151), (2201, 0.087891966), (2078, 0.051285572), (2202, 0.043945983), (95, 0.037857633), (2079, 0.025650416), (1843, 0.021179523), (96, 0.018921187), (16, 0.017273214), (1893, 0.017013809), (1844, 0.010589762), (17, 0.008636607), (1894, 0.008499275), (1586, 0.007782101), (1587, 0.0038910506)], 0.99134815);
-                    s.is_empty()
-                }
-                ['п', s @ ..] => {
-                    out.push(&[(2078, 0.2564126), (2201, 0.16969559), (2079, 0.1282063), (1893, 0.12245365), (2202, 0.08485542), (1894, 0.061219197), (49, 0.05818265), (50, 0.029098954), (95, 0.025238423), (1843, 0.014114595), (96, 0.012619211), (16, 0.011520562), (1844, 0.0070649274), (17, 0.0057526515), (1586, 0.0051880674), (1587, 0.0025940337)], 0.9942168);
-                    match s {
-                        [] => true,
-                        ['м', s @ ..] => {
-                            out.push(&[(2078, 0.3076982), (2201, 0.1676814), (2079, 0.15384147), (1893, 0.15193409), (2202, 0.08383307), (1894, 0.075959414), (49, 0.019394217), (50, 0.009704738), (95, 0.008407721), (1843, 0.0046997787), (96, 0.00421149), (16, 0.0038452735), (1844, 0.0023498894)], 0.99356073);
-                            match s {
-                                [] => true,
-                                ['е', 'т', 'ш', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            out.push(&[(2201, 0.6666667), (2202, 0.33333334)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['а', s @ ..] => {
-                                            out.push(&[(2078, 0.42734417), (2079, 0.21367209), (2201, 0.111787595), (1893, 0.101289384), (2202, 0.055893797), (1894, 0.050644692), (49, 0.012924392), (50, 0.0064698253), (95, 0.0056000613), (1843, 0.0031433585), (96, 0.00280766), (16, 0.0025635157)], 0.99414057);
-                                            match s {
-                                                [] => true,
-                                                ['з', '\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        ['е', s @ ..] => {
-                                            out.push(&[(1893, 0.32350653), (2078, 0.20512703), (1894, 0.1617609), (2201, 0.111787595), (2079, 0.102571145), (2202, 0.055893797), (49, 0.012924392), (50, 0.0064698253), (95, 0.0056000613), (1843, 0.0031433585), (96, 0.00280766), (16, 0.0025635157)], 0.9941558);
-                                            match s {
-                                                [] => true,
-                                                ['р', s @ ..] => {
-                                                    out.push(&[(1893, 0.43788815), (1894, 0.2189517), (2078, 0.13675135), (2201, 0.074525066), (2079, 0.06837568), (2202, 0.037262533), (49, 0.008621347), (50, 0.004303044), (95, 0.0037384604), (1843, 0.002090486)], 0.9925078);
-                                                    match s {
-                                                        [] => true,
-                                                        ['е', 'п', '\u{1}', s @ ..] => super::t16::n69773(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        ['о', s @ ..] => {
-                                            out.push(&[(2078, 0.42734417), (2079, 0.21367209), (2201, 0.111787595), (1893, 0.101289384), (2202, 0.055893797), (1894, 0.050644692), (49, 0.012924392), (50, 0.0064698253), (95, 0.0056000613), (1843, 0.0031433585), (96, 0.00280766), (16, 0.0025635157)], 0.99414057);
-                                            match s {
-                                                [] => true,
-                                                ['р', 'п', '\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['р', s @ ..] => {
-                    out.push(&[(2201, 0.254551), (2078, 0.21795987), (2202, 0.1272755), (2079, 0.10897993), (49, 0.08728161), (50, 0.043640804), (95, 0.037857633), (1843, 0.021179523), (96, 0.018921187), (16, 0.017273214), (1893, 0.017013809), (1844, 0.010589762), (17, 0.008636607), (1894, 0.008499275), (1586, 0.007782101), (1587, 0.0038910506)], 0.9913329);
-                    match s {
-                        [] => true,
-                        ['т', s @ ..] => {
-                            out.push(&[(2201, 0.2939498), (2078, 0.27563897), (2202, 0.1469749), (2079, 0.13781948), (49, 0.043640804), (50, 0.021820402), (95, 0.018921187), (1843, 0.010589762), (96, 0.009460594), (16, 0.008636607), (1893, 0.008499275), (1844, 0.005294881), (17, 0.0043183034), (1894, 0.0042572673), (1586, 0.0038910506)], 0.9937133);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(2201, 0.6666667), (2202, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['с', s @ ..] => {
-                                    out.push(&[(2078, 0.40598154), (2079, 0.20299077), (2201, 0.19595636), (2202, 0.09797818), (49, 0.029098954), (50, 0.014541848), (95, 0.012619211), (1843, 0.0070649274), (96, 0.0063019763), (16, 0.0057526515), (1893, 0.005676356), (1844, 0.003524834), (17, 0.0028839551), (1894, 0.002838178), (1586, 0.0025940337)], 0.9958038);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['ц', s @ ..] => {
-                    out.push(&[(49, 0.33859769), (50, 0.16929884), (2201, 0.11718929), (2078, 0.068390936), (2202, 0.058594644), (95, 0.050461587), (2079, 0.034195468), (1843, 0.02822919), (96, 0.025238423), (16, 0.023025865), (1893, 0.022674907), (1844, 0.014114595), (17, 0.011520562), (1894, 0.0113374535), (1586, 0.010376135), (1587, 0.0051880674)], 0.98843366);
-                    match s {
-                        [] => true,
-                        ['у', s @ ..] => super::t16::n26760(s, out),
-                        _ => false,
-                    }
-                }
-                ['ш', s @ ..] => super::t16::n13808(s, out),
-                ['щ', s @ ..] => super::t16::n13809(s, out),
-                _ => false,
-            }
-        }
-        ['и', s @ ..] => super::t16::n4997(s, out),
-        ['к', s @ ..] => super::t16::n4998(s, out),
-        ['м', s @ ..] => super::t16::n4999(s, out),
-        ['о', s @ ..] => super::t16::n5000(s, out),
-        ['п', s @ ..] => super::t16::n5001(s, out),
-        ['т', s @ ..] => super::t16::n5002(s, out),
-        ['ф', s @ ..] => super::t16::n5003(s, out),
-        ['х', s @ ..] => super::t16::n5004(s, out),
-        ['ы', s @ ..] => super::t16::n5005(s, out),
-        _ => false,
-    }
+pub(crate) fn n1406(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1325);
+	match s {
+		[] => true,
+		['а', s @ ..] => {
+			super::push(out, 4502);
+			match s {
+				[] => true,
+				['к', s @ ..] => {
+					super::push(out, 11473);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 20083);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['м', s @ ..] => {
+					super::push(out, 11474);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 20084);
+							s.is_empty()
+						}
+						['а', s @ ..] => {
+							super::push(out, 20085);
+							match s {
+								[] => true,
+								['з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['н', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['б', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['д', 'о', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['з', s @ ..] => {
+							super::push(out, 20086);
+							match s {
+								[] => true,
+								['а', 'р', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['и', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['о', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['т', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['ы', s @ ..] => {
+							super::push(out, 20087);
+							match s {
+								[] => true,
+								['в', s @ ..] => {
+									super::push(out, 28448);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ш', s @ ..] => {
+					super::push(out, 11475);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 20088);
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							super::push(out, 20089);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['б', s @ ..] => {
+			super::push(out, 4503);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 11476);
+					s.is_empty()
+				}
+				['а', s @ ..] => {
+					super::push(out, 11477);
+					match s {
+						[] => true,
+						['з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['з', s @ ..] => {
+					super::push(out, 11478);
+					match s {
+						[] => true,
+						['и', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 11479);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['с', s @ ..] => {
+					super::push(out, 11480);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 20090);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ы', s @ ..] => {
+					super::push(out, 11481);
+					match s {
+						[] => true,
+						['в', s @ ..] => {
+							super::push(out, 20091);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['д', s @ ..] => {
+			super::push(out, 4504);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					super::push(out, 11482);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['е', s @ ..] => {
+			super::push(out, 4505);
+			match s {
+				[] => true,
+				['б', s @ ..] => {
+					super::push(out, 11483);
+					match s {
+						[] => true,
+						['а', s @ ..] => {
+							super::push(out, 20092);
+							match s {
+								[] => true,
+								['т', s @ ..] => {
+									super::push(out, 28449);
+									match s {
+										[] => true,
+										['ш', s @ ..] => {
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													super::push(out, 38367);
+													s.is_empty()
+												}
+												['а', s @ ..] => {
+													super::push(out, 38368);
+													match s {
+														[] => true,
+														['з', '\u{1}', s @ ..] => super::t17::n81292(s, out),
+														_ => false,
+													}
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['е', s @ ..] => {
+							super::push(out, 20093);
+							match s {
+								[] => true,
+								['д', s @ ..] => {
+									super::push(out, 28450);
+									match s {
+										[] => true,
+										['о', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['в', s @ ..] => {
+					super::push(out, 11484);
+					match s {
+						[] => true,
+						['о', s @ ..] => {
+							super::push(out, 20094);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['д', s @ ..] => {
+					super::push(out, 11485);
+					match s {
+						[] => true,
+						['ж', s @ ..] => {
+							super::push(out, 20095);
+							match s {
+								[] => true,
+								['о', s @ ..] => {
+									super::push(out, 28451);
+									match s {
+										[] => true,
+										['в', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ж', s @ ..] => {
+					super::push(out, 11486);
+					match s {
+						[] => true,
+						['я', s @ ..] => {
+							super::push(out, 20096);
+							match s {
+								[] => true,
+								['т', s @ ..] => {
+									super::push(out, 28452);
+									match s {
+										[] => true,
+										['о', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['м', s @ ..] => {
+					super::push(out, 11487);
+					match s {
+						[] => true,
+						['б', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['х', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['п', s @ ..] => {
+					super::push(out, 11488);
+					match s {
+						[] => true,
+						['м', s @ ..] => {
+							super::push(out, 20097);
+							match s {
+								[] => true,
+								['е', 'т', 'ш', s @ ..] => {
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 34482);
+											s.is_empty()
+										}
+										['а', s @ ..] => {
+											super::push(out, 34483);
+											match s {
+												[] => true,
+												['з', '\u{1}', s @ ..] => super::t17::n73785(s, out),
+												_ => false,
+											}
+										}
+										['е', s @ ..] => super::t17::n61715(s, out),
+										['о', s @ ..] => super::t17::n61716(s, out),
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['р', s @ ..] => super::t17::n14368(s, out),
+				['ц', s @ ..] => super::t17::n14369(s, out),
+				['ш', s @ ..] => super::t17::n14370(s, out),
+				['щ', s @ ..] => super::t17::n14371(s, out),
+				_ => false,
+			}
+		}
+		['и', s @ ..] => super::t17::n5095(s, out),
+		['к', s @ ..] => super::t17::n5096(s, out),
+		['м', s @ ..] => super::t17::n5097(s, out),
+		['о', s @ ..] => super::t17::n5098(s, out),
+		['п', s @ ..] => super::t17::n5099(s, out),
+		['т', s @ ..] => super::t17::n5100(s, out),
+		['ф', s @ ..] => super::t17::n5101(s, out),
+		['х', s @ ..] => super::t17::n5102(s, out),
+		['ы', s @ ..] => super::t17::n5103(s, out),
+		_ => false,
+	}
 }
 
 /// Words ending -мевать.
-pub(crate) fn n1391(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(95, 0.45050737), (96, 0.22517739), (49, 0.16183719), (50, 0.080918595), (116, 0.0065766387), (539, 0.004821851), (1586, 0.0046997787), (484, 0.0044861524), (1843, 0.0035706111), (205, 0.003524834), (117, 0.0032806897), (1600, 0.0032501717), (2201, 0.00280766), (1537, 0.0026550698), (703, 0.0025635157), (540, 0.0024109255), (1587, 0.0023498894), (485, 0.0022430762), (1572, 0.0019989319)], 0.96968037);
-    match s {
-        [] => true,
-        ['т', s @ ..] => {
-            out.push(&[(95, 0.55580986), (96, 0.27786678), (49, 0.08299382), (50, 0.04150454), (116, 0.0033722438), (539, 0.0024719615), (1586, 0.0024109255), (484, 0.0023041123)], 0.96873426);
-            s.is_empty()
-        }
-        ['у', s @ ..] => {
-            out.push(&[(95, 0.4227817), (49, 0.23268482), (96, 0.21138322), (50, 0.11633478)], 0.9831845);
-            match s {
-                [] => true,
-                ['з', s @ ..] => {
-                    out.push(&[(95, 0.5186694), (96, 0.25932708), (49, 0.14512856), (50, 0.07257191)], 0.99569696);
-                    match s {
-                        [] => true,
-                        ['а', s @ ..] => {
-                            out.push(&[(95, 0.6231327), (96, 0.31157398), (49, 0.042679485), (50, 0.021347372)], 0.9987335);
-                            s.is_empty()
-                        }
-                        ['е', s @ ..] => {
-                            out.push(&[(95, 0.34576944), (49, 0.31897458), (96, 0.17288472), (50, 0.15948729)], 0.997116);
-                            match s {
-                                [] => true,
-                                ['б', s @ ..] => {
-                                    out.push(&[(49, 0.43486688), (95, 0.23051804), (50, 0.21744107), (96, 0.11525139)], 0.9980774);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(49, 0.44411382), (50, 0.22204928), (95, 0.21681544), (96, 0.10840009)], 0.99137866);
-                    match s {
-                        [] => true,
-                        ['д', s @ ..] => {
-                            out.push(&[(49, 0.55252916), (50, 0.27626458), (95, 0.111192495), (96, 0.055588618)], 0.99557483);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n1407(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1326);
+	match s {
+		[] => true,
+		['д', 'а', 'н', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['е', 'н', 'о', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['т', s @ ..] => {
+			super::push(out, 4515);
+			s.is_empty()
+		}
+		['у', s @ ..] => {
+			super::push(out, 4516);
+			match s {
+				[] => true,
+				['з', s @ ..] => {
+					super::push(out, 11526);
+					match s {
+						[] => true,
+						['а', s @ ..] => {
+							super::push(out, 20131);
+							match s {
+								[] => true,
+								['р', 'о', 'д', 'е', 'н', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['е', s @ ..] => {
+							super::push(out, 20132);
+							match s {
+								[] => true,
+								['б', s @ ..] => {
+									super::push(out, 28469);
+									match s {
+										[] => true,
+										['о', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 11527);
+					match s {
+						[] => true,
+						['д', s @ ..] => {
+							super::push(out, 20133);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -невать.
-pub(crate) fn n1392(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(49, 0.27058825), (50, 0.1352865), (95, 0.07940795), (703, 0.05397116), (343, 0.051453423), (96, 0.03967346), (2201, 0.03637751), (1537, 0.036316473), (84, 0.03370718), (704, 0.02699321), (425, 0.02652018), (344, 0.025635157), (1843, 0.018966964), (2202, 0.018188754), (1538, 0.018158237), (675, 0.01794461), (16, 0.017914092), (2929, 0.017685207), (85, 0.016800184), (1844, 0.009491112), (676, 0.008972305), (17, 0.008957046), (2930, 0.008834974), (116, 0.0023651484)], 0.98020905);
-    match s {
-        [] => true,
-        ['а', s @ ..] => {
-            out.push(&[(49, 0.4026093), (50, 0.20131227), (95, 0.052933548), (703, 0.035980772), (343, 0.034302283), (96, 0.026443886), (2201, 0.024246586), (1537, 0.024216067), (84, 0.022476539), (704, 0.017990386), (425, 0.017685207), (344, 0.017090105), (1843, 0.012649729), (2202, 0.012130923), (1538, 0.012100404), (675, 0.011963073), (16, 0.011947814), (2929, 0.011795224), (85, 0.011200123), (1844, 0.006317235), (676, 0.0059815366), (17, 0.005966278), (2930, 0.0058899825)], 0.98522925);
-            match s {
-                [] => true,
-                ['т', s @ ..] => {
-                    out.push(&[(49, 0.49062333), (50, 0.24531929), (95, 0.03529412), (703, 0.023987183), (343, 0.022858014), (96, 0.01763943), (2201, 0.016174564), (1537, 0.016144045), (84, 0.01498436), (704, 0.011993592), (425, 0.011795224), (344, 0.01139849), (1843, 0.008438239), (2202, 0.008087282), (1538, 0.008072022), (675, 0.007980469), (16, 0.00796521), (2929, 0.0078583965), (85, 0.007461662), (1844, 0.00421149), (676, 0.003982605), (17, 0.003982605), (2930, 0.0039368276)], 0.9901884);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['г', s @ ..] => {
-            out.push(&[(343, 0.29944304), (84, 0.19618525), (344, 0.149691), (85, 0.09808499), (49, 0.07959106), (50, 0.03979553), (95, 0.023346303), (703, 0.015869383), (96, 0.0116731515), (2201, 0.010696574), (1537, 0.010681315), (704, 0.007934691), (425, 0.0077973604), (1843, 0.005584802), (2202, 0.005355917), (1538, 0.0053406577), (675, 0.0052796216), (16, 0.005264363), (2929, 0.0052033267), (1844, 0.002792401), (676, 0.0026398108), (17, 0.0026398108), (2930, 0.0025940337)], 0.9934844);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(84, 0.6666667), (85, 0.33333334)], 1.0);
-                    s.is_empty()
-                }
-                ['з', s @ ..] => {
-                    out.push(&[(343, 0.47835508), (344, 0.23915465), (84, 0.10060273), (85, 0.050293736), (49, 0.040817883), (50, 0.020401312), (95, 0.011978332), (703, 0.008148318), (96, 0.0059815366), (2201, 0.005493248), (1537, 0.005477989), (704, 0.004074159), (425, 0.0039978637), (1843, 0.002868696), (2202, 0.002746624), (1538, 0.002746624), (675, 0.0027008469), (16, 0.0027008469), (2929, 0.0026703288)], 0.9912108);
-                    match s {
-                        [] => true,
-                        ['а', s @ ..] => {
-                            out.push(&[(343, 0.5700923), (344, 0.28503853), (84, 0.05159075), (85, 0.025787747), (49, 0.020935379), (50, 0.0104676895), (95, 0.006134127), (703, 0.004180972), (96, 0.0030670634), (2201, 0.00280766), (1537, 0.00280766), (704, 0.002090486), (425, 0.002044709)], 0.9870451);
-                            match s {
-                                [] => true,
-                                ['р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(343, 0.42185092), (344, 0.2109102), (84, 0.13078508), (85, 0.06538491), (49, 0.053055618), (50, 0.026535438), (95, 0.015564202), (703, 0.010589762), (96, 0.007782101), (2201, 0.0071259635), (1537, 0.0071259635), (704, 0.005294881), (425, 0.0052033267), (1843, 0.0037232013), (2202, 0.0035706111), (1538, 0.003555352), (675, 0.003524834), (16, 0.003509575), (2929, 0.003463798)], 0.9885557);
-                    match s {
-                        [] => true,
-                        ['р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['д', s @ ..] => {
-            out.push(&[(703, 0.16014344), (1537, 0.15622187), (49, 0.13420309), (425, 0.11700618), (704, 0.08006409), (1538, 0.07811093), (16, 0.0780499), (50, 0.067109175), (17, 0.03903258), (95, 0.01763943), (343, 0.011429007), (96, 0.008819715), (2201, 0.008087282), (84, 0.00749218), (344, 0.0056916154), (1843, 0.00421149), (2202, 0.004043641), (675, 0.003982605), (2929, 0.0039368276), (85, 0.0037384604), (1844, 0.002105745)], 0.99111927);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['е', s @ ..] => {
-                    out.push(&[(703, 0.3289845), (704, 0.16449225), (1537, 0.10414282), (49, 0.089463644), (425, 0.07800412), (1538, 0.05207904), (16, 0.052033264), (50, 0.04473945), (17, 0.026016632), (95, 0.011764706), (343, 0.007614252), (96, 0.0058747237), (2201, 0.005386435), (84, 0.0049897004), (344, 0.0037994965), (1843, 0.00280766), (2202, 0.0027008469), (675, 0.0026550698), (2929, 0.0026245518), (85, 0.0024872206)], 0.9926604);
-                    match s {
-                        [] => true,
-                        ['р', s @ ..] => {
-                            out.push(&[(703, 0.4415503), (704, 0.22076753), (1537, 0.06942855), (49, 0.059647515), (425, 0.052002747), (1538, 0.034714274), (16, 0.034683757), (50, 0.029816128), (17, 0.017349508), (95, 0.007843138), (343, 0.0050812545), (96, 0.003921569), (2201, 0.0035858701), (84, 0.0033264668), (344, 0.0025329976)], 0.9862516);
-                            match s {
-                                [] => true,
-                                ['е', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['л', s @ ..] => {
-                    out.push(&[(16, 0.27426565), (17, 0.13713282), (703, 0.10676738), (1537, 0.10414282), (49, 0.089463644), (425, 0.07800412), (704, 0.05337606), (1538, 0.05207904), (50, 0.04473945), (95, 0.011764706), (343, 0.007614252), (96, 0.0058747237), (2201, 0.005386435), (84, 0.0049897004), (344, 0.0037994965), (1843, 0.00280766), (2202, 0.0027008469), (675, 0.0026550698), (2929, 0.0026245518), (85, 0.0024872206)], 0.99267566);
-                    match s {
-                        [] => true,
-                        ['о', s @ ..] => {
-                            out.push(&[(16, 0.40506598), (17, 0.20253299), (703, 0.07116808), (1537, 0.06942855), (49, 0.059647515), (425, 0.052002747), (704, 0.03558404), (1538, 0.034714274), (50, 0.029816128), (95, 0.007843138), (343, 0.0050812545), (96, 0.003921569), (2201, 0.0035858701), (84, 0.0033264668), (344, 0.0025329976)], 0.9862516);
-                            match s {
-                                [] => true,
-                                ['п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(425, 0.3085069), (1537, 0.24476998), (1538, 0.12239262), (703, 0.08006409), (49, 0.067109175), (704, 0.040039673), (16, 0.03903258), (50, 0.033554588), (17, 0.01951629), (95, 0.008819715), (343, 0.0057221334), (96, 0.0044098576), (2201, 0.004043641), (84, 0.0037384604), (344, 0.002853437), (1843, 0.002105745), (2202, 0.002014191)], 0.98869306);
-                    match s {
-                        [] => true,
-                        ['б', s @ ..] => {
-                            out.push(&[(425, 0.53899443), (1537, 0.16317998), (1538, 0.08158999), (703, 0.05337606), (49, 0.04473945), (704, 0.02668803), (16, 0.026016632), (50, 0.022369726), (17, 0.013015945), (95, 0.0058747237), (343, 0.0038147555), (96, 0.0029449912), (2201, 0.0027008469), (84, 0.0025024796)], 0.98780805);
-                            match s {
-                                [] => true,
-                                ['о', s @ ..] => {
-                                    out.push(&[(425, 0.692668), (1537, 0.10879683), (1538, 0.054398414), (703, 0.03558404), (49, 0.029816128), (704, 0.01779202), (16, 0.017349508), (50, 0.014908064), (17, 0.008667124), (95, 0.003921569), (343, 0.0025329976)], 0.9864347);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['р', s @ ..] => {
-                            out.push(&[(1537, 0.38541237), (425, 0.2056611), (1538, 0.19270618), (703, 0.05337606), (49, 0.04473945), (704, 0.02668803), (16, 0.026016632), (50, 0.022369726), (17, 0.013015945), (95, 0.0058747237), (343, 0.0038147555), (96, 0.0029449912), (2201, 0.0027008469), (84, 0.0025024796)], 0.9878233);
-                            match s {
-                                [] => true,
-                                ['п', s @ ..] => {
-                                    out.push(&[(1537, 0.4791638), (1538, 0.2395819), (425, 0.13711756), (703, 0.03558404), (49, 0.029816128), (704, 0.01779202), (16, 0.017349508), (50, 0.014908064), (17, 0.008667124), (95, 0.003921569), (343, 0.0025329976)], 0.9864347);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['т', s @ ..] => {
-                    out.push(&[(1537, 0.32637522), (1538, 0.16317998), (703, 0.10676738), (49, 0.089463644), (425, 0.07800412), (704, 0.05337606), (16, 0.052033264), (50, 0.04473945), (17, 0.026016632), (95, 0.011764706), (343, 0.007614252), (96, 0.0058747237), (2201, 0.005386435), (84, 0.0049897004), (344, 0.0037994965), (1843, 0.00280766), (2202, 0.0027008469), (675, 0.0026550698), (2929, 0.0026245518), (85, 0.0024872206)], 0.9926604);
-                    match s {
-                        [] => true,
-                        ['о', s @ ..] => {
-                            out.push(&[(1537, 0.43979552), (1538, 0.21989776), (703, 0.07116808), (49, 0.059647515), (425, 0.052002747), (704, 0.03558404), (16, 0.034683757), (50, 0.029816128), (17, 0.017349508), (95, 0.007843138), (343, 0.0050812545), (96, 0.003921569), (2201, 0.0035858701), (84, 0.0033264668), (344, 0.0025329976)], 0.98623633);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['у', s @ ..] => {
-                    out.push(&[(49, 0.31169605), (50, 0.1558404), (703, 0.10676738), (1537, 0.10414282), (425, 0.07800412), (704, 0.05337606), (1538, 0.05207904), (16, 0.052033264), (17, 0.026016632), (95, 0.011764706), (343, 0.007614252), (96, 0.0058747237), (2201, 0.005386435), (84, 0.0049897004), (344, 0.0037994965), (1843, 0.00280766), (2202, 0.0027008469), (675, 0.0026550698), (2929, 0.0026245518), (85, 0.0024872206)], 0.9926604);
-                    match s {
-                        [] => true,
-                        ['т', s @ ..] => {
-                            out.push(&[(49, 0.4300145), (50, 0.21501487), (703, 0.07116808), (1537, 0.06942855), (425, 0.052002747), (704, 0.03558404), (1538, 0.034714274), (16, 0.034683757), (17, 0.017349508), (95, 0.007843138), (343, 0.0050812545), (96, 0.003921569), (2201, 0.0035858701), (84, 0.0033264668), (344, 0.0025329976)], 0.9862516);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['е', s @ ..] => {
-            out.push(&[(49, 0.46199742), (50, 0.23100634), (95, 0.12773328), (96, 0.06385901), (703, 0.045838103), (704, 0.022919051), (343, 0.00608835), (2201, 0.004303044), (1537, 0.004303044), (84, 0.003982605), (425, 0.0031433585), (344, 0.0030365454), (1843, 0.0022430762), (2202, 0.002151522), (1538, 0.002151522), (675, 0.002121004), (16, 0.002121004), (2929, 0.002090486)], 0.99108875);
-            match s {
-                [] => true,
-                ['б', s @ ..] => {
-                    out.push(&[(49, 0.39766538), (50, 0.19884032), (703, 0.18957809), (704, 0.09478904), (95, 0.06387427), (96, 0.031937134), (343, 0.0030365454), (2201, 0.002151522), (1537, 0.002151522)], 0.9840238);
-                    match s {
-                        [] => true,
-                        ['е', s @ ..] => {
-                            out.push(&[(703, 0.3486076), (49, 0.26511025), (704, 0.1743038), (50, 0.13255513), (95, 0.04257267), (96, 0.021286335), (343, 0.00202945)], 0.9864652);
-                            match s {
-                                [] => true,
-                                ['т', s @ ..] => {
-                                    out.push(&[(703, 0.4546273), (704, 0.22731365), (49, 0.17674525), (50, 0.088364996), (95, 0.028381782), (96, 0.014190891)], 0.9896239);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['л', s @ ..] => {
-                            out.push(&[(49, 0.4873274), (50, 0.24367133), (703, 0.12639047), (704, 0.06318761), (95, 0.04257267), (96, 0.021286335), (343, 0.00202945)], 0.9864653);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['д', s @ ..] => {
-                    out.push(&[(49, 0.5107195), (50, 0.25535974), (95, 0.13363852), (96, 0.06681926), (703, 0.013290608), (704, 0.0066376748)], 0.9864653);
-                    match s {
-                        [] => true,
-                        ['е', s @ ..] => {
-                            out.push(&[(49, 0.6138094), (50, 0.3069047), (95, 0.045304038), (96, 0.02264439), (703, 0.0045014117), (704, 0.0022583352)], 0.9954223);
-                            s.is_empty()
-                        }
-                        ['з', s @ ..] => {
-                            out.push(&[(49, 0.3404898), (95, 0.31131455), (50, 0.1702449), (96, 0.15565728), (703, 0.008850233), (704, 0.0044251163)], 0.9909819);
-                            match s {
-                                [] => true,
-                                ['и', s @ ..] => {
-                                    out.push(&[(95, 0.42977035), (49, 0.2269932), (96, 0.21487755), (50, 0.1134966), (703, 0.0059052417), (704, 0.0029449912)], 0.9939879);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['м', s @ ..] => {
-                    out.push(&[(49, 0.39766538), (95, 0.2305333), (50, 0.19884032), (96, 0.11526665), (703, 0.022919051), (704, 0.011459526), (343, 0.0030365454), (2201, 0.002151522), (1537, 0.002151522)], 0.9840238);
-                    match s {
-                        [] => true,
-                        ['а', 'к', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['а', s @ ..] => {
-                                    out.push(&[(49, 0.4873274), (50, 0.24367133), (95, 0.15368886), (96, 0.07684443), (703, 0.015274281), (704, 0.00764477), (343, 0.00202945)], 0.98648053);
-                                    s.is_empty()
-                                }
-                                ['о', s @ ..] => {
-                                    out.push(&[(95, 0.375906), (49, 0.26511025), (96, 0.18796062), (50, 0.13255513), (703, 0.015274281), (704, 0.00764477), (343, 0.00202945)], 0.9864805);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['п', s @ ..] => {
-                    out.push(&[(49, 0.30800337), (95, 0.30737773), (50, 0.15399405), (96, 0.15368886), (703, 0.03056382), (704, 0.015274281), (343, 0.0040589), (2201, 0.002868696), (1537, 0.002868696), (84, 0.0026550698), (425, 0.002090486), (344, 0.00202945)], 0.9854734);
-                    match s {
-                        [] => true,
-                        ['е', s @ ..] => {
-                            out.push(&[(95, 0.4271458), (96, 0.21356528), (49, 0.20534065), (50, 0.1026627), (703, 0.020370794), (704, 0.010193027), (343, 0.0027008469)], 0.98197913);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['т', s @ ..] => {
-                    out.push(&[(49, 0.56433964), (50, 0.28216982), (95, 0.06387427), (96, 0.031937134), (703, 0.022919051), (704, 0.011459526), (343, 0.0030365454), (2201, 0.002151522), (1537, 0.002151522)], 0.984039);
-                    s.is_empty()
-                }
-                ['ч', s @ ..] => {
-                    out.push(&[(49, 0.56433964), (50, 0.28216982), (95, 0.06387427), (96, 0.031937134), (703, 0.022919051), (704, 0.011459526), (343, 0.0030365454), (2201, 0.002151522), (1537, 0.002151522)], 0.984039);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['и', s @ ..] => {
-            out.push(&[(2201, 0.12323186), (1843, 0.117433436), (675, 0.117097735), (2929, 0.11700618), (49, 0.09019608), (2202, 0.06161593), (1844, 0.058716718), (676, 0.058548868), (2930, 0.05850309), (50, 0.04509041), (95, 0.026474403), (703, 0.017990386), (343, 0.017151142), (96, 0.013229572), (1537, 0.012100404), (84, 0.01123064), (704, 0.009002823), (425, 0.008834974), (344, 0.008545052), (1538, 0.006057832), (16, 0.005966278), (85, 0.0056000613), (17, 0.0029907683)], 0.9926146);
-            match s {
-                [] => true,
-                ['л', s @ ..] => {
-                    out.push(&[(2201, 0.15219349), (1843, 0.15025559), (675, 0.15014878), (2929, 0.15011826), (2202, 0.07609674), (1844, 0.075135425), (676, 0.07507439), (2930, 0.07505913), (49, 0.030060273), (50, 0.015030136), (95, 0.008819715), (703, 0.005996796), (343, 0.0057221334), (96, 0.0044098576), (1537, 0.004028382), (84, 0.0037384604), (704, 0.0030060273), (425, 0.0029449912), (344, 0.002853437), (1538, 0.002014191)], 0.9927062);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(2201, 0.6666667), (2202, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            out.push(&[(1843, 0.3223926), (1844, 0.1611963), (2201, 0.10145724), (675, 0.10009918), (2929, 0.100068666), (2202, 0.05073625), (676, 0.05004959), (2930, 0.050034333), (49, 0.020050354), (50, 0.010025177), (95, 0.0058747237), (703, 0.0039978637), (343, 0.0038147555), (96, 0.0029449912), (1537, 0.0026855879), (84, 0.0025024796)], 0.9879301);
-                            match s {
-                                [] => true,
-                                ['н', s @ ..] => {
-                                    out.push(&[(1843, 0.43715572), (1844, 0.21857023), (2201, 0.06764325), (675, 0.066727705), (2929, 0.06671245), (2202, 0.033813994), (676, 0.033371482), (2930, 0.033356223), (49, 0.013366903), (50, 0.0066834516), (95, 0.003921569), (703, 0.0026703288), (343, 0.0025329976)], 0.9865263);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['з', s @ ..] => {
-                            out.push(&[(675, 0.32231632), (676, 0.16116579), (2201, 0.10145724), (1843, 0.10017548), (2929, 0.100068666), (2202, 0.05073625), (1844, 0.05008011), (2930, 0.050034333), (49, 0.020050354), (50, 0.010025177), (95, 0.0058747237), (703, 0.0039978637), (343, 0.0038147555), (96, 0.0029449912), (1537, 0.0026855879), (84, 0.0025024796)], 0.9879301);
-                            match s {
-                                [] => true,
-                                ['а', s @ ..] => {
-                                    out.push(&[(675, 0.4370947), (676, 0.21855497), (2201, 0.06764325), (1843, 0.06677348), (2929, 0.06671245), (2202, 0.033813994), (1844, 0.03338674), (2930, 0.033356223), (49, 0.013366903), (50, 0.0066834516), (95, 0.003921569), (703, 0.0026703288), (343, 0.0025329976)], 0.98651105);
-                                    match s {
-                                        [] => true,
-                                        ['р', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(2929, 0.32230106), (2930, 0.16115053), (2201, 0.10145724), (1843, 0.10017548), (675, 0.10009918), (2202, 0.05073625), (1844, 0.05008011), (676, 0.05004959), (49, 0.020050354), (50, 0.010025177), (95, 0.0058747237), (703, 0.0039978637), (343, 0.0038147555), (96, 0.0029449912), (1537, 0.0026855879), (84, 0.0025024796)], 0.9879454);
-                            match s {
-                                [] => true,
-                                ['п', s @ ..] => {
-                                    out.push(&[(2929, 0.4370947), (2930, 0.21853971), (2201, 0.06764325), (1843, 0.06677348), (675, 0.066727705), (2202, 0.033813994), (1844, 0.03338674), (676, 0.033371482), (49, 0.013366903), (50, 0.0066834516), (95, 0.003921569), (703, 0.0026703288), (343, 0.0025329976)], 0.9865263);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['с', s @ ..] => {
-            out.push(&[(49, 0.3019608), (95, 0.206363), (50, 0.15097277), (96, 0.103166245), (703, 0.02699321), (343, 0.025726711), (2201, 0.018188754), (1537, 0.018158237), (84, 0.01684596), (704, 0.013488975), (425, 0.01326009), (344, 0.012817578), (1843, 0.009491112), (2202, 0.009094377), (1538, 0.009079118), (675, 0.008972305), (16, 0.008957046), (2929, 0.008834974), (85, 0.0083924625), (1844, 0.004745556), (676, 0.0044861524), (17, 0.0044708936), (2930, 0.0044251163)], 0.9888914);
-            match s {
-                [] => true,
-                ['е', s @ ..] => {
-                    out.push(&[(49, 0.42352942), (50, 0.21176471), (95, 0.13757534), (96, 0.06877241), (703, 0.017990386), (343, 0.017151142), (2201, 0.012130923), (1537, 0.012100404), (84, 0.01123064), (704, 0.009002823), (425, 0.008834974), (344, 0.008545052), (1843, 0.006317235), (2202, 0.006057832), (1538, 0.006057832), (675, 0.0059815366), (16, 0.005966278), (2929, 0.0058899825), (85, 0.0056000613), (1844, 0.0031586175), (676, 0.0029907683), (17, 0.0029907683), (2930, 0.0029449912)], 0.9925841);
-                    s.is_empty()
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(95, 0.35980773), (49, 0.20131227), (96, 0.1798886), (50, 0.10064851), (703, 0.017990386), (343, 0.017151142), (2201, 0.012130923), (1537, 0.012100404), (84, 0.01123064), (704, 0.009002823), (425, 0.008834974), (344, 0.008545052), (1843, 0.006317235), (2202, 0.006057832), (1538, 0.006057832), (675, 0.0059815366), (16, 0.005966278), (2929, 0.0058899825), (85, 0.0056000613), (1844, 0.0031586175), (676, 0.0029907683), (17, 0.0029907683), (2930, 0.0029449912)], 0.99259937);
-                    match s {
-                        [] => true,
-                        ['к', s @ ..] => {
-                            out.push(&[(95, 0.46208897), (96, 0.23103686), (49, 0.13420309), (50, 0.067109175), (703, 0.011993592), (343, 0.011429007), (2201, 0.008087282), (1537, 0.008072022), (84, 0.00749218), (704, 0.005996796), (425, 0.0058899825), (344, 0.0056916154), (1843, 0.00421149), (2202, 0.004043641), (1538, 0.004028382), (675, 0.003982605), (16, 0.003982605), (2929, 0.0039368276), (85, 0.0037384604), (1844, 0.002105745)], 0.9891203);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['т', s @ ..] => {
-            out.push(&[(2201, 0.24647897), (49, 0.18039216), (2202, 0.12323186), (50, 0.09019608), (95, 0.052933548), (703, 0.035980772), (343, 0.034302283), (96, 0.026443886), (1537, 0.024216067), (84, 0.022476539), (704, 0.017990386), (425, 0.017685207), (344, 0.017090105), (1843, 0.012649729), (1538, 0.012100404), (675, 0.011963073), (16, 0.011947814), (2929, 0.011795224), (85, 0.011200123), (1844, 0.006317235), (676, 0.0059815366), (17, 0.005966278), (2930, 0.0058899825)], 0.98522925);
-            match s {
-                [] => true,
-                ['е', s @ ..] => {
-                    out.push(&[(2201, 0.38654155), (2202, 0.19327077), (49, 0.12025635), (50, 0.060135804), (95, 0.03529412), (703, 0.023987183), (343, 0.022858014), (96, 0.01763943), (1537, 0.016144045), (84, 0.01498436), (704, 0.011993592), (425, 0.011795224), (344, 0.01139849), (1843, 0.008438239), (1538, 0.008072022), (675, 0.007980469), (16, 0.00796521), (2929, 0.0078583965), (85, 0.007461662), (1844, 0.00421149), (676, 0.003982605), (17, 0.003982605), (2930, 0.0039368276)], 0.9901885);
-                    match s {
-                        [] => true,
-                        ['л', s @ ..] => {
-                            out.push(&[(2201, 0.4799115), (2202, 0.23996338), (49, 0.0801709), (50, 0.04008545), (95, 0.023529412), (703, 0.015991455), (343, 0.015243763), (96, 0.011749447), (1537, 0.01075761), (84, 0.009979401), (704, 0.0079957275), (425, 0.0078583965), (344, 0.007598993), (1843, 0.00561532), (1538, 0.005386435), (675, 0.005325399), (16, 0.0053101396), (2929, 0.0052338447), (85, 0.004974441), (1844, 0.00280766), (676, 0.0026550698), (17, 0.0026550698), (2930, 0.0026245518)], 0.9934234);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['я', s @ ..] => {
-            out.push(&[(49, 0.4026093), (50, 0.20131227), (95, 0.052933548), (703, 0.035980772), (343, 0.034302283), (96, 0.026443886), (2201, 0.024246586), (1537, 0.024216067), (84, 0.022476539), (704, 0.017990386), (425, 0.017685207), (344, 0.017090105), (1843, 0.012649729), (2202, 0.012130923), (1538, 0.012100404), (675, 0.011963073), (16, 0.011947814), (2929, 0.011795224), (85, 0.011200123), (1844, 0.006317235), (676, 0.0059815366), (17, 0.005966278), (2930, 0.0058899825)], 0.98522925);
-            match s {
-                [] => true,
-                ['д', s @ ..] => {
-                    out.push(&[(49, 0.49062333), (50, 0.24531929), (95, 0.03529412), (703, 0.023987183), (343, 0.022858014), (96, 0.01763943), (2201, 0.016174564), (1537, 0.016144045), (84, 0.01498436), (704, 0.011993592), (425, 0.011795224), (344, 0.01139849), (1843, 0.008438239), (2202, 0.008087282), (1538, 0.008072022), (675, 0.007980469), (16, 0.00796521), (2929, 0.0078583965), (85, 0.007461662), (1844, 0.00421149), (676, 0.003982605), (17, 0.003982605), (2930, 0.0039368276)], 0.9901884);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n1408(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1327);
+	match s {
+		[] => true,
+		['а', s @ ..] => {
+			super::push(out, 4517);
+			match s {
+				[] => true,
+				['т', s @ ..] => {
+					super::push(out, 11528);
+					match s {
+						[] => true,
+						['а', 'с', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['г', s @ ..] => {
+			super::push(out, 4518);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 11529);
+					s.is_empty()
+				}
+				['з', s @ ..] => {
+					super::push(out, 11530);
+					match s {
+						[] => true,
+						['а', s @ ..] => {
+							super::push(out, 20134);
+							match s {
+								[] => true,
+								['р', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 11531);
+					match s {
+						[] => true,
+						['р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['д', s @ ..] => {
+			super::push(out, 4519);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['е', s @ ..] => {
+					super::push(out, 11532);
+					match s {
+						[] => true,
+						['р', s @ ..] => {
+							super::push(out, 20135);
+							match s {
+								[] => true,
+								['е', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['л', s @ ..] => {
+					super::push(out, 11533);
+					match s {
+						[] => true,
+						['о', s @ ..] => {
+							super::push(out, 20136);
+							match s {
+								[] => true,
+								['п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 11534);
+					match s {
+						[] => true,
+						['б', s @ ..] => {
+							super::push(out, 20137);
+							match s {
+								[] => true,
+								['о', s @ ..] => {
+									super::push(out, 28470);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['р', s @ ..] => {
+							super::push(out, 20138);
+							match s {
+								[] => true,
+								['п', s @ ..] => {
+									super::push(out, 28471);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['т', s @ ..] => {
+					super::push(out, 11535);
+					match s {
+						[] => true,
+						['о', s @ ..] => {
+							super::push(out, 20139);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['у', s @ ..] => {
+					super::push(out, 11536);
+					match s {
+						[] => true,
+						['т', s @ ..] => {
+							super::push(out, 20140);
+							match s {
+								[] => true,
+								['с', 'а', 'з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['е', s @ ..] => {
+			super::push(out, 4520);
+			match s {
+				[] => true,
+				['б', s @ ..] => {
+					super::push(out, 11537);
+					match s {
+						[] => true,
+						['е', s @ ..] => {
+							super::push(out, 20141);
+							match s {
+								[] => true,
+								['т', s @ ..] => {
+									super::push(out, 28472);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['л', s @ ..] => {
+							super::push(out, 20142);
+							match s {
+								[] => true,
+								['о', 'т', 'с', 'о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['д', s @ ..] => {
+					super::push(out, 11538);
+					match s {
+						[] => true,
+						['е', s @ ..] => {
+							super::push(out, 20143);
+							match s {
+								[] => true,
+								['л', s @ ..] => {
+									match s {
+										[] => true,
+										['а', 'з', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['о', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['з', s @ ..] => {
+							super::push(out, 20144);
+							match s {
+								[] => true,
+								['и', s @ ..] => {
+									super::push(out, 28473);
+									match s {
+										[] => true,
+										['п', 'о', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['м', s @ ..] => {
+					super::push(out, 11539);
+					match s {
+						[] => true,
+						['а', 'к', s @ ..] => {
+							match s {
+								[] => true,
+								['а', s @ ..] => {
+									super::push(out, 28474);
+									match s {
+										[] => true,
+										['з', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['о', s @ ..] => {
+									super::push(out, 28475);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['п', s @ ..] => {
+					super::push(out, 11540);
+					match s {
+						[] => true,
+						['е', s @ ..] => {
+							super::push(out, 20145);
+							match s {
+								[] => true,
+								['ц', 'о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['р', 'х', 'о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['т', s @ ..] => {
+					super::push(out, 11541);
+					match s {
+						[] => true,
+						['с', 'о', 'к', s @ ..] => {
+							match s {
+								[] => true,
+								['а', 'з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ч', s @ ..] => {
+					super::push(out, 11542);
+					match s {
+						[] => true,
+						['о', 'к', s @ ..] => {
+							match s {
+								[] => true,
+								['а', 'з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['и', s @ ..] => {
+			super::push(out, 4521);
+			match s {
+				[] => true,
+				['л', s @ ..] => {
+					super::push(out, 11543);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 20146);
+							s.is_empty()
+						}
+						['а', s @ ..] => {
+							super::push(out, 20147);
+							match s {
+								[] => true,
+								['н', s @ ..] => {
+									super::push(out, 28476);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['з', s @ ..] => {
+							super::push(out, 20148);
+							match s {
+								[] => true,
+								['а', s @ ..] => {
+									super::push(out, 28477);
+									match s {
+										[] => true,
+										['р', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['о', s @ ..] => {
+							super::push(out, 20149);
+							match s {
+								[] => true,
+								['п', s @ ..] => {
+									super::push(out, 28478);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['с', s @ ..] => {
+			super::push(out, 4522);
+			match s {
+				[] => true,
+				['е', s @ ..] => {
+					super::push(out, 11544);
+					match s {
+						[] => true,
+						['в', 'е', 'р', 'д', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 11545);
+					match s {
+						[] => true,
+						['к', s @ ..] => super::t17::n28513(s, out),
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['т', s @ ..] => super::t17::n5114(s, out),
+		['я', s @ ..] => super::t17::n5115(s, out),
+		_ => false,
+	}
 }
 
 /// Words ending -оевать.
-pub(crate) fn n1393(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(1843, 0.22024873), (1537, 0.17871366), (1844, 0.110124364), (1538, 0.08935683), (95, 0.07412833), (49, 0.0633402), (703, 0.047562372), (705, 0.040680554), (96, 0.03698787), (50, 0.03167773), (704, 0.023788815), (706, 0.020340277), (116, 0.006057832), (539, 0.0044556344), (1586, 0.004333562), (484, 0.004135195), (205, 0.0032501717), (117, 0.0030212863), (1600, 0.0029907683), (2201, 0.0025940337), (540, 0.0022278172), (1587, 0.002166781), (485, 0.002059968)], 0.9742428);
-    match s {
-        [] => true,
-        ['в', s @ ..] => {
-            out.push(&[(1843, 0.28892958), (1537, 0.23471427), (1844, 0.14445716), (1538, 0.117357135), (703, 0.060456246), (705, 0.054077975), (704, 0.030228123), (706, 0.027038988), (95, 0.011764706), (49, 0.010055696), (96, 0.0058747237), (50, 0.0050202184)], 0.9899748);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(703, 0.35088122), (705, 0.31578547), (704, 0.17543298), (706, 0.15790036)], 1.0);
-                    s.is_empty()
-                }
-                ['а', s @ ..] => {
-                    out.push(&[(1843, 0.5124895), (1844, 0.25624475), (1537, 0.09579614), (1538, 0.04789807), (703, 0.024673838), (705, 0.022064546), (704, 0.0123445485), (706, 0.011032273), (95, 0.004806592), (49, 0.004104677), (96, 0.0023956664), (50, 0.002044709)], 0.9958953);
-                    match s {
-                        [] => true,
-                        ['з', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['н', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(1537, 0.5202411), (1538, 0.26012054), (1843, 0.097947665), (1844, 0.048966203), (703, 0.020492867), (705, 0.018326085), (704, 0.010254063), (706, 0.009170672), (95, 0.003982605), (49, 0.0034027619)], 0.99290454);
-                    match s {
-                        [] => true,
-                        ['д', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['т', s @ ..] => {
-                    out.push(&[(1843, 0.47295338), (1844, 0.23648432), (1537, 0.12036317), (1538, 0.060181584), (703, 0.031006332), (705, 0.027725643), (704, 0.015503166), (706, 0.013870451), (95, 0.006027314), (49, 0.0051575494), (96, 0.0030060273), (50, 0.0025787747)], 0.9948577);
-                    match s {
-                        [] => true,
-                        ['о', s @ ..] => {
-                            out.push(&[(1843, 0.5673304), (1844, 0.2836652), (1537, 0.061722744), (1538, 0.030869002), (703, 0.0158999), (705, 0.014221408), (704, 0.00794995), (706, 0.007110704), (95, 0.0030975814), (49, 0.0026398108)], 0.9945067);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['к', s @ ..] => {
-            out.push(&[(95, 0.2904555), (96, 0.14517434), (1843, 0.13983367), (1537, 0.113466084), (1844, 0.06991684), (1538, 0.056733042), (49, 0.040222783), (703, 0.030197604), (705, 0.025833525), (50, 0.020111391), (704, 0.015106432), (706, 0.012909133), (116, 0.0038452735), (539, 0.002822919), (1586, 0.002746624), (484, 0.0026245518), (205, 0.002059968)], 0.97405964);
-            match s {
-                [] => true,
-                ['о', s @ ..] => {
-                    out.push(&[(95, 0.42780194), (96, 0.21387045), (1843, 0.08879225), (1537, 0.072037846), (1844, 0.044388495), (1538, 0.036026552), (49, 0.025543602), (703, 0.01918059), (705, 0.016403448), (50, 0.012771801), (704, 0.009582666), (706, 0.0081940945), (116, 0.0024414435)], 0.97703516);
-                    match s {
-                        [] => true,
-                        ['п', s @ ..] => {
-                            out.push(&[(95, 0.51500726), (96, 0.25748074), (1843, 0.056366827), (1537, 0.045746546), (1844, 0.028183414), (1538, 0.022873273), (49, 0.01622034), (703, 0.0121767), (705, 0.010406653), (50, 0.008102541), (704, 0.00608835), (706, 0.0052033267)], 0.98385596);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['п', s @ ..] => {
-            out.push(&[(49, 0.2644541), (1843, 0.1468223), (50, 0.13221942), (1537, 0.11914244), (1844, 0.07341115), (1538, 0.05957122), (95, 0.04942397), (703, 0.031708248), (705, 0.027115282), (96, 0.02465858), (704, 0.015854124), (706, 0.01356527), (116, 0.004043641), (539, 0.0029602502), (1586, 0.0028839551), (484, 0.002761883), (205, 0.002166781), (117, 0.002014191)], 0.9747768);
-            match s {
-                [] => true,
-                ['у', s @ ..] => {
-                    out.push(&[(49, 0.39851987), (50, 0.19926757), (1843, 0.09788662), (1537, 0.07942321), (1844, 0.04893568), (1538, 0.039719235), (95, 0.03294423), (703, 0.021133745), (705, 0.01808194), (96, 0.016449226), (704, 0.010574502), (706, 0.009033341), (116, 0.0026855879)], 0.97465473);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n1409(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1328);
+	match s {
+		[] => true,
+		['в', s @ ..] => {
+			super::push(out, 4525);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 11548);
+					s.is_empty()
+				}
+				['а', s @ ..] => {
+					super::push(out, 11549);
+					match s {
+						[] => true,
+						['з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 11550);
+					match s {
+						[] => true,
+						['д', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['т', s @ ..] => {
+					super::push(out, 11551);
+					match s {
+						[] => true,
+						['о', s @ ..] => {
+							super::push(out, 20152);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['к', s @ ..] => {
+			super::push(out, 4526);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					super::push(out, 11552);
+					match s {
+						[] => true,
+						['п', s @ ..] => {
+							super::push(out, 20153);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['п', s @ ..] => {
+			super::push(out, 4527);
+			match s {
+				[] => true,
+				['у', s @ ..] => {
+					super::push(out, 11553);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -певать.
-pub(crate) fn n1394(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(95, 0.4109102), (49, 0.21078813), (96, 0.1979553), (50, 0.105394065), (54, 0.014953841), (197, 0.013550011), (55, 0.0074769207), (2094, 0.0074769207), (198, 0.006729229), (116, 0.0019989319)], 0.9772335);
-    match s {
-        [] => true,
-        ['\u{1}', s @ ..] => {
-            out.push(&[(54, 0.35088122), (197, 0.31578547), (55, 0.17543298), (198, 0.15790036)], 1.0);
-            s.is_empty()
-        }
-        ['а', s @ ..] => {
-            out.push(&[(95, 0.5784695), (96, 0.286656), (49, 0.07267872), (50, 0.03634699), (54, 0.0051575494), (197, 0.0046692607), (55, 0.0025787747), (2094, 0.0025787747), (198, 0.0023193713)], 0.99145496);
-            match s {
-                [] => true,
-                ['з', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['н', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['в', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['д', s @ ..] => {
-            out.push(&[(95, 0.53551537), (96, 0.26390478), (49, 0.10809491), (50, 0.054047454), (54, 0.007660029), (197, 0.006942855), (55, 0.0038300145), (2094, 0.0038300145), (198, 0.003448539)], 0.987274);
-            match s {
-                [] => true,
-                ['о', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['е', s @ ..] => {
-            out.push(&[(95, 0.53551537), (96, 0.26390478), (49, 0.10809491), (50, 0.054047454), (54, 0.007660029), (197, 0.006942855), (55, 0.0038300145), (2094, 0.0038300145), (198, 0.003448539)], 0.987274);
-            match s {
-                [] => true,
-                ['р', 'е', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['и', s @ ..] => {
-            out.push(&[(95, 0.53551537), (96, 0.178439), (49, 0.10809491), (2094, 0.0892958), (50, 0.054047454), (54, 0.007660029), (197, 0.006942855), (55, 0.0038300145), (198, 0.003448539)], 0.987274);
-            match s {
-                [] => true,
-                ['р', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['о', s @ ..] => {
-            out.push(&[(95, 0.59253836), (96, 0.29408714), (49, 0.061097123), (50, 0.030548561), (54, 0.004333562), (197, 0.003921569), (55, 0.002166781), (2094, 0.002166781)], 0.99085987);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['д', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['р', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['р', s @ ..] => {
-            out.push(&[(95, 0.53551537), (96, 0.26390478), (49, 0.10809491), (50, 0.054047454), (54, 0.007660029), (197, 0.006942855), (55, 0.0038300145), (2094, 0.0038300145), (198, 0.003448539)], 0.987274);
-            s.is_empty()
-        }
-        ['с', s @ ..] => {
-            out.push(&[(49, 0.40105286), (95, 0.26123446), (50, 0.2005188), (96, 0.1298848)], 0.9926909);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(95, 0.6666667), (96, 0.33333334)], 1.0);
-                    s.is_empty()
-                }
-                ['а', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['н', s @ ..] => {
-                            out.push(&[(49, 0.48958573), (50, 0.2448005), (95, 0.17415121), (96, 0.08659495)], 0.9951324);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['р', s @ ..] => {
-                            out.push(&[(95, 0.45874724), (96, 0.22899213), (49, 0.2056611), (50, 0.10283055)], 0.996231);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['в', s @ ..] => {
-                    out.push(&[(95, 0.39636835), (49, 0.26736858), (96, 0.19769588), (50, 0.13368429)], 0.9951171);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['е', s @ ..] => {
-                    out.push(&[(95, 0.39636835), (49, 0.26736858), (96, 0.19769588), (50, 0.13368429)], 0.9951171);
-                    match s {
-                        [] => true,
-                        ['р', s @ ..] => {
-                            out.push(&[(95, 0.48647287), (96, 0.24290837), (49, 0.17824064), (50, 0.08912795)], 0.9967498);
-                            match s {
-                                [] => true,
-                                ['е', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['и', s @ ..] => {
-                    out.push(&[(49, 0.48958573), (50, 0.2448005), (95, 0.17415121), (96, 0.08659495)], 0.9951324);
-                    match s {
-                        [] => true,
-                        ['р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['о', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['в', s @ ..] => {
-                            out.push(&[(95, 0.45874724), (96, 0.22899213), (49, 0.2056611), (50, 0.10283055)], 0.996231);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['д', s @ ..] => {
-                            out.push(&[(49, 0.56041807), (50, 0.28021666), (95, 0.10449378), (96, 0.05195697)], 0.9970855);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['е', 'н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['п', s @ ..] => {
-                            out.push(&[(49, 0.5304494), (50, 0.26523232), (95, 0.13395895), (96, 0.06660563)], 0.9962463);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['у', s @ ..] => {
-                    out.push(&[(49, 0.575082), (50, 0.287541), (95, 0.090074), (96, 0.044785228)], 0.99748224);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ы', s @ ..] => {
-                    out.push(&[(49, 0.48958573), (50, 0.2448005), (95, 0.17415121), (96, 0.08659495)], 0.9951324);
-                    match s {
-                        [] => true,
-                        ['в', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['т', s @ ..] => {
-            out.push(&[(95, 0.53551537), (96, 0.26390478), (49, 0.10809491), (50, 0.054047454), (54, 0.007660029), (197, 0.006942855), (55, 0.0038300145), (2094, 0.0038300145), (198, 0.003448539)], 0.987274);
-            match s {
-                [] => true,
-                ['о', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['у', s @ ..] => {
-            out.push(&[(49, 0.4387274), (50, 0.2193637), (95, 0.20546272), (96, 0.09898528), (54, 0.0074769207), (197, 0.0067750057), (55, 0.0037384604), (2094, 0.0037384604), (198, 0.0033569848)], 0.98762494);
-            s.is_empty()
-        }
-        ['ы', 'в', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n1410(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1329);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 4528);
+			s.is_empty()
+		}
+		['а', s @ ..] => {
+			super::push(out, 4529);
+			match s {
+				[] => true,
+				['з', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['н', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['в', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['д', s @ ..] => {
+			super::push(out, 4530);
+			match s {
+				[] => true,
+				['о', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['е', s @ ..] => {
+			super::push(out, 4531);
+			match s {
+				[] => true,
+				['р', 'е', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['и', s @ ..] => {
+			super::push(out, 4532);
+			match s {
+				[] => true,
+				['р', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['о', s @ ..] => {
+			super::push(out, 4533);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['д', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['р', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['р', s @ ..] => {
+			super::push(out, 4534);
+			s.is_empty()
+		}
+		['с', s @ ..] => {
+			super::push(out, 4535);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					super::push(out, 11554);
+					s.is_empty()
+				}
+				['а', s @ ..] => {
+					match s {
+						[] => true,
+						['н', s @ ..] => {
+							super::push(out, 20154);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['р', s @ ..] => {
+							super::push(out, 20155);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['в', s @ ..] => {
+					super::push(out, 11555);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['е', s @ ..] => {
+					super::push(out, 11556);
+					match s {
+						[] => true,
+						['р', s @ ..] => {
+							super::push(out, 20156);
+							match s {
+								[] => true,
+								['е', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['и', s @ ..] => {
+					super::push(out, 11557);
+					match s {
+						[] => true,
+						['р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					match s {
+						[] => true,
+						['в', s @ ..] => {
+							super::push(out, 20157);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['д', s @ ..] => {
+							super::push(out, 20158);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['е', 'н', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['п', s @ ..] => {
+							super::push(out, 20159);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['у', s @ ..] => {
+					super::push(out, 11558);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['е', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ы', s @ ..] => {
+					super::push(out, 11559);
+					match s {
+						[] => true,
+						['в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['т', s @ ..] => {
+			super::push(out, 4536);
+			match s {
+				[] => true,
+				['о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['у', s @ ..] => {
+			super::push(out, 4537);
+			match s {
+				[] => true,
+				['п', 'о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['т', 'о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ы', 'в', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -ревать.
-pub(crate) fn n1395(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(49, 0.31020066), (95, 0.25580224), (50, 0.15510796), (96, 0.12788586), (1537, 0.046311133), (703, 0.03903258), (1538, 0.023163196), (704, 0.01951629), (16, 0.007751583), (17, 0.0038757916)], 0.9886473);
-    match s {
-        [] => true,
-        ['а', s @ ..] => {
-            out.push(&[(49, 0.31723505), (703, 0.187747), (50, 0.15861753), (1537, 0.09431601), (704, 0.0938735), (95, 0.063553825), (1538, 0.047165636), (96, 0.031769283)], 0.99427783);
-            match s {
-                [] => true,
-                ['з', s @ ..] => {
-                    out.push(&[(703, 0.2605478), (1537, 0.21382467), (49, 0.15861753), (704, 0.13026626), (1538, 0.10691997), (50, 0.07931639), (95, 0.031784542), (96, 0.015884642)], 0.9971618);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(1537, 0.36476693), (1538, 0.18239109), (703, 0.17369345), (49, 0.105745025), (704, 0.08685435), (50, 0.052872512), (95, 0.021179523), (96, 0.010589762)], 0.99809265);
-                            match s {
-                                [] => true,
-                                ['п', s @ ..] => {
-                                    out.push(&[(1537, 0.46540016), (1538, 0.23270008), (703, 0.115800716), (49, 0.07049668), (704, 0.05789273), (50, 0.03524834), (95, 0.014129855), (96, 0.0070649274)], 0.99873346);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['т', s @ ..] => {
-                    out.push(&[(49, 0.5240406), (50, 0.26202792), (703, 0.07663081), (1537, 0.038498513), (704, 0.038315404), (95, 0.025940338), (1538, 0.019256886), (96, 0.012970169)], 0.9976806);
-                    match s {
-                        [] => true,
-                        ['с', s @ ..] => {
-                            out.push(&[(49, 0.6084535), (50, 0.30421913), (703, 0.031280994), (1537, 0.015716793), (704, 0.015640497), (95, 0.010589762), (1538, 0.0078583965), (96, 0.005294881)], 0.99905396);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ц', s @ ..] => {
-                    out.push(&[(703, 0.36260015), (49, 0.20141909), (704, 0.18129244), (50, 0.10070954), (1537, 0.05989166), (95, 0.040344853), (1538, 0.0299382), (96, 0.020172426)], 0.99636835);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['г', s @ ..] => {
-            out.push(&[(95, 0.6049134), (96, 0.30244908), (49, 0.053406578), (50, 0.026703289), (1537, 0.0038452735), (703, 0.0032349126)], 0.99455255);
-            match s {
-                [] => true,
-                ['о', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['б', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['д', s @ ..] => {
-                            out.push(&[(95, 0.5054093), (96, 0.25270465), (49, 0.15785459), (50, 0.078919664)], 0.9948882);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(49, 0.6666667), (50, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['о', s @ ..] => {
-                                    out.push(&[(95, 0.58396274), (96, 0.29198137), (49, 0.08094911), (50, 0.040482186)], 0.9973754);
-                                    match s {
-                                        [] => true,
-                                        ['п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['з', 'а', 'р', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['с', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['т', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['е', s @ ..] => {
-            out.push(&[(49, 0.42902267), (50, 0.21451133), (95, 0.17053483), (96, 0.08526742), (1537, 0.030869002), (703, 0.026016632), (1538, 0.01544213), (704, 0.013015945), (16, 0.0051728087), (17, 0.0025787747)], 0.9924315);
-            s.is_empty()
-        }
-        ['з', s @ ..] => {
-            out.push(&[(49, 0.3806058), (95, 0.27743953), (50, 0.19029526), (96, 0.13871977), (1537, 0.0039673457), (703, 0.0033417258)], 0.99436945);
-            match s {
-                [] => true,
-                ['а', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['з', s @ ..] => {
-                            out.push(&[(95, 0.40718699), (49, 0.25374228), (96, 0.20358586), (50, 0.12686351), (1537, 0.0026398108), (703, 0.0022278172)], 0.9962463);
-                            s.is_empty()
-                        }
-                        ['н', s @ ..] => {
-                            out.push(&[(49, 0.5199664), (50, 0.2599832), (95, 0.14227512), (96, 0.07113756), (1537, 0.00202945)], 0.9953918);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['е', s @ ..] => {
-                    out.push(&[(49, 0.47595942), (50, 0.23797971), (95, 0.1849546), (96, 0.09248493), (1537, 0.0026398108), (703, 0.0022278172)], 0.9962463);
-                    s.is_empty()
-                }
-                ['з', s @ ..] => {
-                    out.push(&[(49, 0.47595942), (50, 0.23797971), (95, 0.1849546), (96, 0.09248493), (1537, 0.0026398108), (703, 0.0022278172)], 0.9962463);
-                    s.is_empty()
-                }
-                ['и', s @ ..] => {
-                    out.push(&[(95, 0.4195468), (49, 0.24165712), (96, 0.20976578), (50, 0.12082093), (1537, 0.0025177386), (703, 0.002121004)], 0.9964294);
-                    match s {
-                        [] => true,
-                        ['р', s @ ..] => {
-                            out.push(&[(95, 0.5097581), (96, 0.25488672), (49, 0.15342946), (50, 0.07672236)], 0.99479663);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['о', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['б', s @ ..] => {
-                            out.push(&[(95, 0.4670634), (96, 0.23352407), (49, 0.19517815), (50, 0.097596705), (1537, 0.00202945)], 0.9953918);
-                            match s {
-                                [] => true,
-                                ['о', s @ ..] => {
-                                    out.push(&[(95, 0.5643091), (96, 0.28215456), (49, 0.10009918), (50, 0.05004959)], 0.9966124);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['д', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['е', s @ ..] => {
-                                    out.push(&[(49, 0.47595942), (50, 0.23797971), (95, 0.1849546), (96, 0.09248493), (1537, 0.0026398108), (703, 0.0022278172)], 0.9962463);
-                                    match s {
-                                        [] => true,
-                                        ['н', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['о', s @ ..] => {
-                                    out.push(&[(95, 0.507805), (96, 0.25389487), (49, 0.1553521), (50, 0.07766842)], 0.9947204);
-                                    match s {
-                                        [] => true,
-                                        ['п', s @ ..] => {
-                                            out.push(&[(95, 0.6018158), (96, 0.3009079), (49, 0.06340124), (50, 0.031708248)], 0.9978332);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                ['а', 'з', '\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['р', s @ ..] => {
-                            out.push(&[(49, 0.5199664), (50, 0.2599832), (95, 0.14227512), (96, 0.07113756), (1537, 0.00202945)], 0.9953918);
-                            s.is_empty()
-                        }
-                        ['с', s @ ..] => {
-                            out.push(&[(49, 0.5199664), (50, 0.2599832), (95, 0.14227512), (96, 0.07113756), (1537, 0.00202945)], 0.9953918);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['у', '\u{1}', s @ ..] => {
-                    out.push(&[(95, 0.35088122), (49, 0.31578547), (96, 0.17543298), (50, 0.15790036)], 1.0);
-                    s.is_empty()
-                }
-                ['ы', 'в', '\u{1}', s @ ..] => {
-                    out.push(&[(95, 0.35088122), (49, 0.31578547), (96, 0.17543298), (50, 0.15790036)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['и', s @ ..] => {
-            out.push(&[(49, 0.44034484), (50, 0.22017242), (95, 0.16241702), (96, 0.08119325), (1537, 0.029404135), (703, 0.024780652), (1538, 0.014694438), (704, 0.012390326), (16, 0.004913405), (17, 0.0024567025)], 0.9927672);
-            s.is_empty()
-        }
-        ['о', s @ ..] => {
-            out.push(&[(1537, 0.34605935), (703, 0.20317388), (1538, 0.17302205), (704, 0.10157931), (49, 0.0626688), (95, 0.05168231), (50, 0.03132677), (96, 0.025833525)], 0.995346);
-            match s {
-                [] => true,
-                ['г', s @ ..] => {
-                    out.push(&[(1537, 0.45229268), (1538, 0.22615397), (703, 0.18797588), (704, 0.09399558), (49, 0.014084077), (95, 0.011612115), (50, 0.0070344093), (96, 0.0057984283)], 0.99894714);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(703, 0.6666667), (704, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', 'з', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(1537, 0.5594873), (1538, 0.27974364), (703, 0.09399558), (704, 0.04699779), (49, 0.0070344093), (95, 0.0058136876), (50, 0.003524834), (96, 0.0028992142)], 0.99949646);
-                            match s {
-                                [] => true,
-                                ['п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['р', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['т', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['з', s @ ..] => {
-                    out.push(&[(703, 0.35767147), (1537, 0.23070115), (704, 0.17883573), (1538, 0.1153582), (49, 0.0417792), (95, 0.03445487), (50, 0.0208896), (96, 0.017227435)], 0.99691767);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['п', s @ ..] => {
-            out.push(&[(49, 0.6247349), (50, 0.31236744), (95, 0.030090792), (96, 0.015045396), (1537, 0.005447471), (703, 0.004592966), (1538, 0.002731365), (704, 0.0022888533)], 0.99729913);
-            match s {
-                [] => true,
-                ['о', s @ ..] => {
-                    out.push(&[(49, 0.65827423), (50, 0.32913712), (95, 0.0060120546), (96, 0.0030060273)], 0.99642944);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['б', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['д', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['з', 'а', 'р', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['с', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['т', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['т', s @ ..] => {
-            out.push(&[(49, 0.40433356), (50, 0.20216678), (95, 0.15106432), (16, 0.087449454), (96, 0.07553216), (17, 0.043732356), (1537, 0.0118715195), (703, 0.010009918), (1538, 0.0059357597), (704, 0.005004959)], 0.9971008);
-            match s {
-                [] => true,
-                ['е', s @ ..] => {
-                    out.push(&[(16, 0.28052187), (49, 0.26955062), (17, 0.14026093), (50, 0.13478294), (95, 0.10070954), (96, 0.05035477), (1537, 0.007919433), (703, 0.006668193), (1538, 0.003952087), (704, 0.0033417258)], 0.99806213);
-                    match s {
-                        [] => true,
-                        ['в', s @ ..] => {
-                            out.push(&[(16, 0.40924698), (17, 0.20462349), (49, 0.1797055), (50, 0.08984512), (95, 0.0671397), (96, 0.03356985), (1537, 0.0052796216), (703, 0.0044556344), (1538, 0.0026398108), (704, 0.0022278172)], 0.9987335);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(95, 0.32292667), (49, 0.26955062), (96, 0.1614557), (50, 0.13478294), (16, 0.058304723), (17, 0.029144732), (1537, 0.007919433), (703, 0.006668193), (1538, 0.003952087), (704, 0.0033417258)], 0.9980468);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(95, 0.6666667), (96, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['с', s @ ..] => {
-                    out.push(&[(49, 0.5762112), (50, 0.2881056), (95, 0.0520943), (16, 0.030151827), (96, 0.02604715), (17, 0.015075914), (1537, 0.004089418), (703, 0.003448539), (1538, 0.002044709)], 0.9972687);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['у', s @ ..] => {
-            out.push(&[(95, 0.36292058), (49, 0.2626688), (96, 0.18144503), (50, 0.1313344), (1537, 0.018905928), (703, 0.01593042), (1538, 0.009445335), (704, 0.00796521), (16, 0.0031586175)], 0.9937743);
-            match s {
-                [] => true,
-                ['б', s @ ..] => {
-                    out.push(&[(95, 0.5109026), (96, 0.2554513), (49, 0.13470665), (50, 0.06735332), (1537, 0.009689479), (703, 0.008163577), (1538, 0.004852369), (704, 0.004089418)], 0.9952087);
-                    match s {
-                        [] => true,
-                        ['о', s @ ..] => {
-                            out.push(&[(95, 0.5867857), (96, 0.2933852), (49, 0.06907759), (50, 0.034546427), (1537, 0.004974441), (703, 0.0041962313), (1538, 0.0024872206), (704, 0.002090486)], 0.9975433);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['д', s @ ..] => {
-                    out.push(&[(49, 0.39732966), (95, 0.24194705), (50, 0.19867246), (96, 0.12097353), (1537, 0.012603953), (703, 0.010620279), (1538, 0.0063019763), (704, 0.0053101396), (16, 0.002105745)], 0.9958648);
-                    match s {
-                        [] => true,
-                        ['о', s @ ..] => {
-                            out.push(&[(49, 0.48711374), (50, 0.24354924), (95, 0.16128786), (96, 0.08064393), (1537, 0.008407721), (703, 0.007080186), (1538, 0.0041962313), (704, 0.003540093)], 0.99581903);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['ы', s @ ..] => {
-            out.push(&[(49, 0.4838636), (50, 0.2419318), (95, 0.1311818), (96, 0.065583274), (1537, 0.023743039), (703, 0.020019837), (1538, 0.0118715195), (704, 0.010009918), (16, 0.0039673457)], 0.9921721);
-            match s {
-                [] => true,
-                ['с', s @ ..] => {
-                    out.push(&[(49, 0.57291526), (50, 0.28645763), (95, 0.06727703), (96, 0.033630885), (1537, 0.0121767), (703, 0.0102693215), (1538, 0.00608835), (704, 0.0051270314), (16, 0.002044709)], 0.99598694);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n1411(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1330);
+	match s {
+		[] => true,
+		['а', s @ ..] => {
+			super::push(out, 4538);
+			match s {
+				[] => true,
+				['з', s @ ..] => {
+					super::push(out, 11560);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							super::push(out, 20160);
+							match s {
+								[] => true,
+								['п', s @ ..] => {
+									super::push(out, 28479);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['т', s @ ..] => {
+					super::push(out, 11561);
+					match s {
+						[] => true,
+						['с', s @ ..] => {
+							super::push(out, 20161);
+							match s {
+								[] => true,
+								['а', 'з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['ц', s @ ..] => {
+					super::push(out, 11562);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['г', s @ ..] => {
+			super::push(out, 4539);
+			match s {
+				[] => true,
+				['з', 'в', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['о', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['б', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['д', s @ ..] => {
+							super::push(out, 20162);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 28480);
+									s.is_empty()
+								}
+								['о', s @ ..] => {
+									super::push(out, 28481);
+									match s {
+										[] => true,
+										['п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['з', 'а', 'р', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['с', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['т', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['у', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['е', s @ ..] => {
+			super::push(out, 4540);
+			match s {
+				[] => true,
+				['х', 'о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['з', s @ ..] => {
+			super::push(out, 4541);
+			match s {
+				[] => true,
+				['а', s @ ..] => {
+					match s {
+						[] => true,
+						['з', s @ ..] => {
+							super::push(out, 20163);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['н', s @ ..] => {
+							super::push(out, 20164);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['е', s @ ..] => {
+					super::push(out, 11563);
+					match s {
+						[] => true,
+						['р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['з', s @ ..] => {
+					super::push(out, 11564);
+					match s {
+						[] => true,
+						['о', 'в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['и', s @ ..] => {
+					super::push(out, 11565);
+					match s {
+						[] => true,
+						['р', s @ ..] => {
+							super::push(out, 20165);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					match s {
+						[] => true,
+						['б', s @ ..] => {
+							super::push(out, 20166);
+							match s {
+								[] => true,
+								['о', s @ ..] => {
+									super::push(out, 28482);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['д', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['е', s @ ..] => {
+									super::push(out, 28483);
+									match s {
+										[] => true,
+										['н', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['о', s @ ..] => {
+									super::push(out, 28484);
+									match s {
+										[] => true,
+										['п', s @ ..] => {
+											super::push(out, 34489);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												['а', 'з', '\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['р', s @ ..] => {
+							super::push(out, 20167);
+							s.is_empty()
+						}
+						['с', s @ ..] => {
+							super::push(out, 20168);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['у', '\u{1}', s @ ..] => {
+					super::push(out, 11566);
+					s.is_empty()
+				}
+				['ы', 'в', '\u{1}', s @ ..] => {
+					super::push(out, 11567);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['и', s @ ..] => {
+			super::push(out, 4542);
+			s.is_empty()
+		}
+		['о', s @ ..] => {
+			super::push(out, 4543);
+			match s {
+				[] => true,
+				['г', s @ ..] => {
+					super::push(out, 11568);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 20169);
+							s.is_empty()
+						}
+						['а', 'з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							super::push(out, 20170);
+							match s {
+								[] => true,
+								['п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['т', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['з', s @ ..] => {
+					super::push(out, 11569);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['п', s @ ..] => {
+			super::push(out, 4544);
+			match s {
+				[] => true,
+				['а', s @ ..] => {
+					match s {
+						[] => true,
+						['з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['д', 'о', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['о', s @ ..] => {
+					super::push(out, 11570);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['б', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['д', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['з', 'а', 'р', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['с', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['т', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['с', 'и', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['у', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['ы', 'в', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['т', s @ ..] => {
+			super::push(out, 4545);
+			match s {
+				[] => true,
+				['е', s @ ..] => {
+					super::push(out, 11571);
+					match s {
+						[] => true,
+						['в', s @ ..] => super::t17::n28571(s, out),
+						_ => false,
+					}
+				}
+				['о', s @ ..] => super::t17::n14481(s, out),
+				['с', s @ ..] => super::t17::n14482(s, out),
+				_ => false,
+			}
+		}
+		['у', s @ ..] => super::t17::n5139(s, out),
+		['ы', s @ ..] => super::t17::n5140(s, out),
+		_ => false,
+	}
 }
 
 /// Words ending -севать.
-pub(crate) fn n1396(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(95, 0.5359426), (96, 0.2679179), (197, 0.03747616), (239, 0.037247274), (198, 0.018616008), (240, 0.018616008), (49, 0.014953841), (50, 0.0074769207), (116, 0.0049897004), (539, 0.0036621653), (1586, 0.0035706111), (484, 0.0034027619), (1843, 0.002716106), (205, 0.0026855879), (117, 0.0025024796), (1600, 0.0024719615), (2201, 0.002136263), (1537, 0.002014191)], 0.9683986);
-    match s {
-        [] => true,
-        ['\u{1}', s @ ..] => {
-            out.push(&[(197, 0.6666667), (198, 0.33333334)], 1.0);
-            s.is_empty()
-        }
-        ['а', s @ ..] => {
-            out.push(&[(95, 0.61330587), (96, 0.30663005), (197, 0.01528954), (239, 0.015197986), (198, 0.007598993), (240, 0.007598993), (49, 0.0061036088), (50, 0.0030518044), (116, 0.002044709)], 0.97682154);
-            match s {
-                [] => true,
-                ['з', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['н', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['б', 'о', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['в', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['д', 'о', 'п', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['и', s @ ..] => {
-            out.push(&[(95, 0.35730526), (239, 0.24705882), (96, 0.17860685), (240, 0.12352178), (197, 0.02497902), (198, 0.012420844), (49, 0.009964141), (50, 0.0049897004), (116, 0.0033264668), (539, 0.0024414435), (1586, 0.0023804074), (484, 0.0022735943)], 0.9692683);
-            match s {
-                [] => true,
-                ['р', s @ ..] => {
-                    out.push(&[(239, 0.38692302), (95, 0.23819333), (240, 0.19346914), (96, 0.11906615), (197, 0.016647592), (198, 0.00827039), (49, 0.0066529335), (50, 0.0033264668), (116, 0.0022125582)], 0.97476155);
-                    match s {
-                        [] => true,
-                        ['п', s @ ..] => {
-                            out.push(&[(239, 0.4801709), (240, 0.24008545), (95, 0.15880065), (96, 0.079377435), (197, 0.011108568), (198, 0.005523766), (49, 0.0044251163), (50, 0.0022125582)], 0.9817045);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['о', s @ ..] => {
-            out.push(&[(95, 0.614374), (96, 0.3071641), (197, 0.01498436), (239, 0.014892805), (198, 0.0074464027), (240, 0.0074464027), (49, 0.0059815366), (50, 0.0029907683)], 0.97528034);
-            match s {
-                [] => true,
-                ['д', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'н', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['р', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['с', 'а', 'р', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['т', 'о', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['у', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['ы', 'в', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n1412(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1331);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 4548);
+			s.is_empty()
+		}
+		['а', s @ ..] => {
+			super::push(out, 4549);
+			match s {
+				[] => true,
+				['з', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['н', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['б', 'о', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['в', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['д', 'о', 'п', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['и', s @ ..] => {
+			super::push(out, 4550);
+			match s {
+				[] => true,
+				['р', s @ ..] => {
+					super::push(out, 11577);
+					match s {
+						[] => true,
+						['п', s @ ..] => {
+							super::push(out, 20175);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['о', s @ ..] => {
+			super::push(out, 4551);
+			match s {
+				[] => true,
+				['д', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['е', 'н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['р', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['с', 'а', 'р', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['т', 'о', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['у', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['ы', 'в', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -тевать.
-pub(crate) fn n1397(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(49, 0.45632106), (50, 0.22816816), (95, 0.07266346), (1537, 0.046692606), (703, 0.046616312), (96, 0.036255438), (1538, 0.023346303), (704, 0.023315785), (116, 0.0059357597), (539, 0.0043640803), (1586, 0.004242008), (484, 0.004043641), (1843, 0.0032349126), (205, 0.0031891356), (117, 0.0029755093), (1600, 0.0029297322), (2201, 0.0025329976), (540, 0.0021820401), (1587, 0.002121004), (485, 0.00202945)], 0.9731594);
-    match s {
-        [] => true,
-        ['а', s @ ..] => {
-            out.push(&[(49, 0.28972304), (95, 0.28952467), (50, 0.14486915), (96, 0.14471656), (1537, 0.02964828), (703, 0.029602503), (1538, 0.0148165105), (704, 0.014801252), (116, 0.0037689784), (539, 0.002777142), (1586, 0.0027008469), (484, 0.0025787747), (1843, 0.002044709), (205, 0.00202945)], 0.9736019);
-            match s {
-                [] => true,
-                ['з', s @ ..] => {
-                    out.push(&[(95, 0.42720684), (96, 0.21358053), (49, 0.18396276), (50, 0.09198138), (1537, 0.018829633), (703, 0.018799115), (1538, 0.009414816), (704, 0.0093995575), (116, 0.0023956664)], 0.9755703);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['о', s @ ..] => {
-            out.push(&[(49, 0.6134127), (50, 0.30670634), (95, 0.018387122), (1537, 0.011825742), (703, 0.011795224), (96, 0.009185932), (1538, 0.0059052417), (704, 0.0059052417)], 0.98312354);
-            s.is_empty()
-        }
-        ['с', s @ ..] => {
-            out.push(&[(49, 0.41609827), (50, 0.2080415), (1537, 0.1085832), (703, 0.10855268), (1538, 0.0542916), (704, 0.05427634), (95, 0.02075227), (96, 0.010360876)], 0.98095673);
-            match s {
-                [] => true,
-                ['о', s @ ..] => {
-                    out.push(&[(1537, 0.22095063), (703, 0.22095063), (49, 0.2080415), (1538, 0.11047532), (704, 0.11047532), (50, 0.10402075), (95, 0.010376135), (96, 0.0051728087)], 0.9904631);
-                    match s {
-                        [] => true,
-                        ['г', s @ ..] => {
-                            out.push(&[(1537, 0.27714962), (703, 0.27713436), (1538, 0.13856718), (704, 0.13856718), (49, 0.10402075), (50, 0.052018005), (95, 0.0051880674), (96, 0.0025940337)], 0.9952392);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', s @ ..] => {
-                                    out.push(&[(1537, 0.40698862), (1538, 0.20349431), (703, 0.18475623), (704, 0.09237812), (49, 0.069352254), (50, 0.034668498), (95, 0.003463798)], 0.9951018);
-                                    match s {
-                                        [] => true,
-                                        ['п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['у', s @ ..] => {
-                    out.push(&[(49, 0.56643015), (50, 0.2832227), (1537, 0.043427177), (703, 0.043427177), (1538, 0.021713588), (704, 0.021713588), (95, 0.008300908), (96, 0.004150454)], 0.99238575);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n1413(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1332);
+	match s {
+		[] => true,
+		['а', s @ ..] => {
+			super::push(out, 4552);
+			match s {
+				[] => true,
+				['з', s @ ..] => {
+					super::push(out, 11578);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['о', s @ ..] => {
+			super::push(out, 4553);
+			match s {
+				[] => true,
+				['п', s @ ..] => {
+					match s {
+						[] => true,
+						['а', 'н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['т', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['ы', 'в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['р', 'е', 'ч', 'о', 'т', 'с', 'о', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['с', s @ ..] => {
+			super::push(out, 4554);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					super::push(out, 11579);
+					match s {
+						[] => true,
+						['г', s @ ..] => {
+							super::push(out, 20176);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', s @ ..] => {
+									super::push(out, 28485);
+									match s {
+										[] => true,
+										['п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['у', s @ ..] => {
+					super::push(out, 11580);
+					match s {
+						[] => true,
+						['г', s @ ..] => {
+							match s {
+								[] => true,
+								['а', 'з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['п', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -уевать.
-pub(crate) fn n1398(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(95, 0.3388113), (96, 0.16919203), (433, 0.12245365), (434, 0.061219197), (49, 0.0546273), (50, 0.02731365), (116, 0.01823453), (539, 0.013397422), (1586, 0.013031205), (484, 0.012436103), (1843, 0.009918365), (205, 0.0097962925), (117, 0.009109636), (1600, 0.009002823), (2201, 0.007782101), (1537, 0.0073548486), (703, 0.0071412222), (540, 0.006698711), (1587, 0.0065156026), (485, 0.006225681), (1572, 0.005569543), (1844, 0.0049591823), (206, 0.0048981463), (1601, 0.0045014117), (2202, 0.0038910506), (1538, 0.0036774243), (704, 0.0035706111), (2723, 0.003479057), (203, 0.0030518044), (1573, 0.002777142), (1964, 0.0021820401), (675, 0.002059968)], 0.95487905);
-    match s {
-        [] => true,
-        ['б', s @ ..] => {
-            out.push(&[(95, 0.34468603), (433, 0.2166476), (96, 0.17222857), (434, 0.1083238), (49, 0.028015565), (50, 0.014007783), (116, 0.00935378), (539, 0.00686656), (1586, 0.0066834516), (484, 0.006378271), (1843, 0.0050812545), (205, 0.0050202184), (117, 0.0046692607), (1600, 0.004623484), (2201, 0.0039978637), (1537, 0.0037689784), (703, 0.0036621653), (540, 0.00343328), (1587, 0.0033417258), (485, 0.0031891356), (1572, 0.002853437), (1844, 0.0025482567), (206, 0.0025177386), (1601, 0.0023041123)], 0.96420234);
-            match s {
-                [] => true,
-                ['о', '\u{1}', s @ ..] => {
-                    out.push(&[(95, 0.35088122), (433, 0.31578547), (96, 0.17543298), (434, 0.15790036)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['х', s @ ..] => {
-            out.push(&[(95, 0.44809642), (96, 0.22389562), (433, 0.081635766), (434, 0.040817883), (49, 0.036423285), (50, 0.018204013), (116, 0.01216144), (539, 0.008926528), (1586, 0.008682383), (484, 0.008300908), (1843, 0.0066071567), (205, 0.0065308614), (117, 0.0060730907), (1600, 0.005996796), (2201, 0.0051880674), (1537, 0.0048981463), (703, 0.004760815), (540, 0.0044708936), (1587, 0.0043488215), (485, 0.004150454), (1572, 0.0037079423), (1844, 0.0033112078), (206, 0.0032654307), (1601, 0.0030060273), (2202, 0.0025940337), (1538, 0.0024567025), (704, 0.0023804074), (2723, 0.0023193713), (203, 0.00202945)], 0.96523994);
-            s.is_empty()
-        }
-        _ => false,
-    }
+pub(crate) fn n1414(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1333);
+	match s {
+		[] => true,
+		['б', s @ ..] => {
+			super::push(out, 4555);
+			match s {
+				[] => true,
+				['о', '\u{1}', s @ ..] => {
+					super::push(out, 11581);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['х', s @ ..] => {
+			super::push(out, 4556);
+			match s {
+				[] => true,
+				['о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -цевать.
-pub(crate) fn n1399(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(539, 0.27724117), (116, 0.21385519), (540, 0.13861296), (117, 0.10691997), (205, 0.053589687), (484, 0.044785228), (2723, 0.0271458), (332, 0.027008468), (206, 0.026794843), (485, 0.022400245), (2724, 0.01358053), (333, 0.013458458), (1331, 0.008972305), (1332, 0.0044861524), (95, 0.0043945983), (49, 0.0036011292), (96, 0.0021820401)], 0.98902875);
-    match s {
-        [] => true,
-        ['б', s @ ..] => {
-            out.push(&[(539, 0.30528724), (116, 0.27359426), (540, 0.15263599), (117, 0.13679713), (205, 0.026794843), (484, 0.022400245), (2723, 0.01358053), (332, 0.013504234), (206, 0.013397422), (485, 0.011200123), (2724, 0.006790265), (333, 0.006729229), (1331, 0.0044861524), (1332, 0.0022430762), (95, 0.0021972992)], 0.99163806);
-            match s {
-                [] => true,
-                ['у', 'р', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(116, 0.6666667), (117, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['з', s @ ..] => {
-                            out.push(&[(539, 0.42574197), (540, 0.21287861), (116, 0.18239109), (117, 0.091203175), (205, 0.017868314), (484, 0.014923324), (2723, 0.0090486), (332, 0.009002823), (206, 0.008926528), (485, 0.007461662), (2724, 0.0045319297), (333, 0.0044861524), (1331, 0.0029907683)], 0.99145496);
-                            match s {
-                                [] => true,
-                                ['и', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['д', s @ ..] => {
-            out.push(&[(205, 0.2579385), (539, 0.18483253), (116, 0.14256504), (206, 0.12896925), (540, 0.092408635), (117, 0.07129015), (484, 0.029861907), (2723, 0.0180972), (332, 0.018005647), (485, 0.014923324), (2724, 0.0090486), (333, 0.008972305), (1331, 0.0059815366), (1332, 0.0029907683), (95, 0.0029297322), (49, 0.0023956664)], 0.9912108);
-            match s {
-                [] => true,
-                ['о', s @ ..] => {
-                    out.push(&[(205, 0.39418632), (206, 0.19708553), (539, 0.1232166), (116, 0.09504845), (540, 0.06161593), (117, 0.047516596), (484, 0.019897765), (2723, 0.012069887), (332, 0.01200885), (485, 0.009948882), (2724, 0.006027314), (333, 0.0059815366), (1331, 0.003982605)], 0.98858625);
-                    match s {
-                        [] => true,
-                        ['л', s @ ..] => {
-                            out.push(&[(205, 0.485008), (206, 0.24251163), (539, 0.08213931), (116, 0.06337072), (540, 0.041077286), (117, 0.03167773), (484, 0.0132753495), (2723, 0.008041505), (332, 0.0079957275), (485, 0.0066376748), (2724, 0.004028382), (333, 0.003982605), (1331, 0.0026550698)], 0.992401);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['и', s @ ..] => {
-            out.push(&[(116, 0.34207675), (539, 0.2920882), (117, 0.17103837), (540, 0.1460441), (205, 0.009918365), (484, 0.008300908), (2723, 0.0050202184), (332, 0.005004959), (206, 0.0049591823), (485, 0.004150454), (2724, 0.0025177386), (333, 0.0024872206)], 0.9936065);
-            match s {
-                [] => true,
-                ['л', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['б', s @ ..] => {
-                            out.push(&[(539, 0.47457084), (540, 0.23729305), (116, 0.17541772), (117, 0.08770886), (205, 0.0050812545), (484, 0.0042572673), (2723, 0.0025787747), (332, 0.0025635157), (206, 0.0025482567), (485, 0.002121004)], 0.99414057);
-                            match s {
-                                [] => true,
-                                ['о', s @ ..] => {
-                                    out.push(&[(539, 0.5681544), (540, 0.2840772), (116, 0.08996719), (117, 0.044983596), (205, 0.0026092927), (484, 0.0021820401)], 0.9919737);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['е', s @ ..] => {
-                            out.push(&[(539, 0.4169375), (116, 0.22804609), (540, 0.20846875), (117, 0.114030674), (205, 0.0066224155), (484, 0.005523766), (2723, 0.0033569848), (332, 0.0033264668), (206, 0.0033112078), (485, 0.002761883)], 0.99238575);
-                            match s {
-                                [] => true,
-                                ['р', 'е', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['ш', s @ ..] => {
-                            out.push(&[(116, 0.45026323), (117, 0.22513162), (539, 0.19472037), (540, 0.097367816), (205, 0.0066224155), (484, 0.005523766), (2723, 0.0033569848), (332, 0.0033264668), (206, 0.0033112078), (485, 0.002761883)], 0.99238575);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['п', s @ ..] => {
-                    out.push(&[(116, 0.45026323), (117, 0.22513162), (539, 0.19472037), (540, 0.097367816), (205, 0.0066224155), (484, 0.005523766), (2723, 0.0033569848), (332, 0.0033264668), (206, 0.0033112078), (485, 0.002761883)], 0.99238575);
-                    s.is_empty()
-                }
-                ['р', 'п', 'ш', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(539, 0.4169375), (116, 0.22804609), (540, 0.20846875), (117, 0.114030674), (205, 0.0066224155), (484, 0.005523766), (2723, 0.0033569848), (332, 0.0033264668), (206, 0.0033112078), (485, 0.002761883)], 0.99238575);
-                            match s {
-                                [] => true,
-                                ['р', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['й', s @ ..] => {
-            out.push(&[(116, 0.4402533), (117, 0.22012664), (539, 0.13861296), (540, 0.06930648), (205, 0.026794843), (484, 0.022400245), (2723, 0.01358053), (332, 0.013504234), (206, 0.013397422), (485, 0.011200123), (2724, 0.006790265), (333, 0.006729229), (1331, 0.0044861524), (1332, 0.0022430762), (95, 0.0021972992)], 0.9916228);
-            s.is_empty()
-        }
-        ['н', s @ ..] => {
-            out.push(&[(539, 0.2725109), (116, 0.2216373), (540, 0.13626307), (117, 0.110826276), (484, 0.07048142), (485, 0.03524834), (205, 0.026962692), (2723, 0.02511635), (332, 0.02511635), (1331, 0.02384985), (206, 0.013488975), (2724, 0.012558175), (333, 0.012558175), (1332, 0.011932556)], 0.9985504);
-            match s {
-                [] => true,
-                ['а', s @ ..] => {
-                    out.push(&[(539, 0.27513543), (116, 0.16273747), (540, 0.13756008), (484, 0.11091783), (117, 0.08137637), (485, 0.055466544), (2723, 0.038330663), (332, 0.038330663), (1331, 0.038208593), (2724, 0.019165331), (333, 0.019165331), (1332, 0.019104296), (205, 0.0028839551)], 0.99838257);
-                    match s {
-                        [] => true,
-                        ['г', s @ ..] => {
-                            out.push(&[(116, 0.33072403), (539, 0.1834287), (117, 0.16536202), (540, 0.09170672), (484, 0.07394522), (485, 0.03697261), (2723, 0.025558861), (332, 0.025558861), (1331, 0.025467308), (2724, 0.012771801), (333, 0.012771801), (1332, 0.0127412835)], 0.9970092);
-                            match s {
-                                [] => true,
-                                ['р', s @ ..] => {
-                                    out.push(&[(116, 0.44269475), (117, 0.22134738), (539, 0.1222858), (540, 0.0611429), (484, 0.0493019), (485, 0.02464332), (2723, 0.017044328), (332, 0.017044328), (1331, 0.016983291), (2724, 0.008514535), (333, 0.008514535), (1332, 0.008484016)], 0.9980011);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['л', s @ ..] => {
-                            out.push(&[(116, 0.33072403), (539, 0.1834287), (117, 0.16536202), (540, 0.09170672), (484, 0.07394522), (485, 0.03697261), (2723, 0.025558861), (332, 0.025558861), (1331, 0.025467308), (2724, 0.012771801), (333, 0.012771801), (1332, 0.0127412835)], 0.9970092);
-                            match s {
-                                [] => true,
-                                ['ф', s @ ..] => {
-                                    out.push(&[(116, 0.44269475), (117, 0.22134738), (539, 0.1222858), (540, 0.0611429), (484, 0.0493019), (485, 0.02464332), (2723, 0.017044328), (332, 0.017044328), (1331, 0.016983291), (2724, 0.008514535), (333, 0.008514535), (1332, 0.008484016)], 0.9980011);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['т', s @ ..] => {
-                            out.push(&[(539, 0.3084001), (540, 0.15419242), (484, 0.12904555), (116, 0.09533837), (485, 0.0645304), (117, 0.047669183), (2723, 0.044510566), (332, 0.044510566), (1331, 0.044495307), (2724, 0.022262912), (333, 0.022262912), (1332, 0.022247653)], 0.99946594);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(332, 0.35088122), (116, 0.31578547), (333, 0.17543298), (117, 0.15790036)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['а', s @ ..] => {
-                                    out.push(&[(484, 0.30826277), (539, 0.20560007), (485, 0.15413138), (540, 0.102800034), (116, 0.063553825), (117, 0.031784542), (2723, 0.029678797), (332, 0.029678797), (1331, 0.029663539), (2724, 0.014831769), (333, 0.014831769), (1332, 0.014831769)], 0.99964905);
-                                    match s {
-                                        [] => true,
-                                        ['з', s @ ..] => {
-                                            out.push(&[(484, 0.42772564), (485, 0.21387045), (539, 0.13707179), (540, 0.068528265), (116, 0.042374305), (117, 0.021179523), (2723, 0.019775692), (332, 0.019775692), (1331, 0.019775692), (2724, 0.009887846), (333, 0.009887846), (1332, 0.009887846)], 0.9997406);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['д', s @ ..] => {
-                                    out.push(&[(484, 0.30826277), (539, 0.20560007), (485, 0.15413138), (540, 0.102800034), (116, 0.063553825), (117, 0.031784542), (2723, 0.029678797), (332, 0.029678797), (1331, 0.029663539), (2724, 0.014831769), (333, 0.014831769), (1332, 0.014831769)], 0.99964905);
-                                    match s {
-                                        [] => true,
-                                        ['о', s @ ..] => {
-                                            out.push(&[(484, 0.42772564), (485, 0.21387045), (539, 0.13707179), (540, 0.068528265), (116, 0.042374305), (117, 0.021179523), (2723, 0.019775692), (332, 0.019775692), (1331, 0.019775692), (2724, 0.009887846), (333, 0.009887846), (1332, 0.009887846)], 0.9997406);
-                                            match s {
-                                                [] => true,
-                                                ['п', '\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['е', s @ ..] => {
-                                    out.push(&[(2723, 0.25189593), (539, 0.20560007), (2724, 0.12594797), (540, 0.102800034), (484, 0.086030364), (116, 0.063553825), (485, 0.043015182), (117, 0.031784542), (332, 0.029678797), (1331, 0.029663539), (333, 0.014831769), (1332, 0.014831769)], 0.9996338);
-                                    match s {
-                                        [] => true,
-                                        ['р', s @ ..] => {
-                                            out.push(&[(2723, 0.39015794), (2724, 0.19507134), (539, 0.13707179), (540, 0.068528265), (484, 0.057358664), (116, 0.042374305), (485, 0.028671702), (117, 0.021179523), (332, 0.019775692), (1331, 0.019775692), (333, 0.009887846), (1332, 0.009887846)], 0.9997406);
-                                            match s {
-                                                [] => true,
-                                                ['е', s @ ..] => {
-                                                    out.push(&[(2723, 0.48232242), (2724, 0.24116884), (539, 0.09137102), (540, 0.04568551), (484, 0.03823911), (116, 0.028244449), (485, 0.019119555), (117, 0.014129855), (332, 0.013183795), (1331, 0.013183795), (333, 0.0065918975), (1332, 0.0065918975)], 0.99983215);
-                                                    match s {
-                                                        [] => true,
-                                                        ['п', '\u{1}', s @ ..] => super::t16::n69775(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['о', s @ ..] => {
-                                    out.push(&[(539, 0.44351873), (540, 0.22175936), (484, 0.145449), (485, 0.0727245), (116, 0.032318607), (117, 0.016159303), (2723, 0.015091172), (332, 0.015091172), (1331, 0.015075914), (2724, 0.007537957), (333, 0.007537957), (1332, 0.007537957)], 0.99980164);
-                                    match s {
-                                        [] => true,
-                                        ['д', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['р', 'п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['с', s @ ..] => {
-                                    out.push(&[(539, 0.52043945), (540, 0.2602121), (484, 0.052674145), (116, 0.038910504), (485, 0.026337072), (117, 0.019455252), (2723, 0.018173495), (332, 0.018173495), (1331, 0.018158237), (2724, 0.009079118), (333, 0.009079118), (1332, 0.009079118)], 0.9997711);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['а', 'р', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['т', s @ ..] => {
-                                    out.push(&[(539, 0.4278172), (540, 0.21391623), (484, 0.086030364), (116, 0.063553825), (485, 0.043015182), (117, 0.031784542), (2723, 0.029678797), (332, 0.029678797), (1331, 0.029663539), (2724, 0.014831769), (333, 0.014831769), (1332, 0.014831769)], 0.9996338);
-                                    match s {
-                                        [] => true,
-                                        ['о', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['ш', s @ ..] => {
-                                    out.push(&[(116, 0.2857862), (539, 0.20560007), (117, 0.14288548), (540, 0.102800034), (484, 0.086030364), (485, 0.043015182), (2723, 0.029678797), (332, 0.029678797), (1331, 0.029663539), (2724, 0.014831769), (333, 0.014831769), (1332, 0.014831769)], 0.9996338);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            out.push(&[(116, 0.6666667), (117, 0.33333334)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['ы', s @ ..] => {
-                                    out.push(&[(1331, 0.25188068), (539, 0.20560007), (1332, 0.12594797), (540, 0.102800034), (484, 0.086030364), (116, 0.063553825), (485, 0.043015182), (117, 0.031784542), (2723, 0.029678797), (332, 0.029678797), (2724, 0.014831769), (333, 0.014831769)], 0.9996338);
-                                    match s {
-                                        [] => true,
-                                        ['в', s @ ..] => {
-                                            out.push(&[(1331, 0.39014268), (1332, 0.19507134), (539, 0.13707179), (540, 0.068528265), (484, 0.057358664), (116, 0.042374305), (485, 0.028671702), (117, 0.021179523), (2723, 0.019775692), (332, 0.019775692), (2724, 0.009887846), (333, 0.009887846)], 0.99972534);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['и', s @ ..] => {
-                    out.push(&[(116, 0.4072175), (117, 0.20360112), (539, 0.20195316), (540, 0.10096895), (484, 0.023498895), (485, 0.011749447), (205, 0.008987564), (2723, 0.008377203), (332, 0.008377203), (1331, 0.00794995), (206, 0.0045014117), (2724, 0.004180972), (333, 0.004180972), (1332, 0.003982605)], 0.999527);
-                    match s {
-                        [] => true,
-                        ['в', 'с', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', s @ ..] => {
-                                    out.push(&[(539, 0.3568475), (116, 0.27147326), (540, 0.17842375), (117, 0.13574426), (484, 0.015655756), (485, 0.007827878), (205, 0.005996796), (2723, 0.005584802), (332, 0.005584802), (1331, 0.005294881), (206, 0.0029907683), (2724, 0.002792401), (333, 0.002792401), (1332, 0.0026550698)], 0.9996643);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['р', s @ ..] => {
-                            out.push(&[(116, 0.53693444), (117, 0.26846722), (539, 0.10096895), (540, 0.050492104), (484, 0.011749447), (485, 0.0058747237), (205, 0.0045014117), (2723, 0.004180972), (332, 0.004180972), (1331, 0.003982605), (206, 0.0022430762), (2724, 0.002090486), (333, 0.002090486)], 0.9977569);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(539, 0.3029221), (116, 0.2774853), (540, 0.15146105), (117, 0.13875028), (484, 0.03524834), (485, 0.01762417), (205, 0.013488975), (2723, 0.012558175), (332, 0.012558175), (1331, 0.011932556), (206, 0.0067444877), (2724, 0.006286717), (333, 0.006271458), (1332, 0.005966278)], 0.9992981);
-                    match s {
-                        [] => true,
-                        ['л', 'о', 'с', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(116, 0.6666667), (117, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['о', s @ ..] => {
-                                    out.push(&[(539, 0.4241703), (540, 0.21208514), (116, 0.18498512), (117, 0.09250019), (484, 0.023498895), (485, 0.011749447), (205, 0.008987564), (2723, 0.008377203), (332, 0.008377203), (1331, 0.00794995), (206, 0.0045014117), (2724, 0.004180972), (333, 0.004180972), (1332, 0.003982605)], 0.999527);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['у', s @ ..] => super::t16::n13929(s, out),
-                ['я', s @ ..] => super::t16::n13930(s, out),
-                _ => false,
-            }
-        }
-        ['п', s @ ..] => super::t16::n5063(s, out),
-        ['р', s @ ..] => super::t16::n5064(s, out),
-        ['с', s @ ..] => super::t16::n5065(s, out),
-        ['ь', s @ ..] => super::t16::n5066(s, out),
-        _ => false,
-    }
+pub(crate) fn n1415(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1334);
+	match s {
+		[] => true,
+		['б', s @ ..] => {
+			super::push(out, 4557);
+			match s {
+				[] => true,
+				['у', 'р', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 20177);
+							s.is_empty()
+						}
+						['з', s @ ..] => {
+							super::push(out, 20178);
+							match s {
+								[] => true,
+								['и', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['д', s @ ..] => {
+			super::push(out, 4558);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					super::push(out, 11582);
+					match s {
+						[] => true,
+						['л', s @ ..] => {
+							super::push(out, 20179);
+							match s {
+								[] => true,
+								['о', 'м', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['и', s @ ..] => {
+			super::push(out, 4559);
+			match s {
+				[] => true,
+				['л', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['б', s @ ..] => {
+							super::push(out, 20180);
+							match s {
+								[] => true,
+								['о', s @ ..] => {
+									super::push(out, 28486);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['е', s @ ..] => {
+							super::push(out, 20181);
+							match s {
+								[] => true,
+								['р', 'е', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['ш', s @ ..] => {
+							super::push(out, 20182);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['п', s @ ..] => {
+					super::push(out, 11583);
+					match s {
+						[] => true,
+						['с', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['р', 'п', 'ш', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							super::push(out, 20183);
+							match s {
+								[] => true,
+								['р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['й', s @ ..] => {
+			super::push(out, 4560);
+			match s {
+				[] => true,
+				['а', 'б', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['е', 'л', 'ф', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['н', s @ ..] => {
+			super::push(out, 4561);
+			match s {
+				[] => true,
+				['а', s @ ..] => {
+					super::push(out, 11584);
+					match s {
+						[] => true,
+						['г', s @ ..] => {
+							super::push(out, 20184);
+							match s {
+								[] => true,
+								['р', s @ ..] => {
+									super::push(out, 28487);
+									match s {
+										[] => true,
+										['а', 'м', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['л', s @ ..] => {
+							super::push(out, 20185);
+							match s {
+								[] => true,
+								['ф', s @ ..] => {
+									super::push(out, 28488);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['т', s @ ..] => {
+							super::push(out, 20186);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 28489);
+									s.is_empty()
+								}
+								['а', s @ ..] => {
+									super::push(out, 28490);
+									match s {
+										[] => true,
+										['з', s @ ..] => {
+											super::push(out, 34490);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['д', s @ ..] => {
+									super::push(out, 28491);
+									match s {
+										[] => true,
+										['о', s @ ..] => {
+											super::push(out, 34491);
+											match s {
+												[] => true,
+												['п', '\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['е', s @ ..] => {
+									super::push(out, 28492);
+									match s {
+										[] => true,
+										['р', s @ ..] => {
+											super::push(out, 34492);
+											match s {
+												[] => true,
+												['е', s @ ..] => {
+													super::push(out, 38371);
+													match s {
+														[] => true,
+														['п', '\u{1}', s @ ..] => super::t17::n81295(s, out),
+														_ => false,
+													}
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['о', s @ ..] => {
+									super::push(out, 28493);
+									match s {
+										[] => true,
+										['д', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['р', 'п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['с', s @ ..] => {
+									super::push(out, 28494);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['а', 'р', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['т', s @ ..] => {
+									super::push(out, 28495);
+									match s {
+										[] => true,
+										['о', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['ш', s @ ..] => {
+									super::push(out, 28496);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											super::push(out, 34493);
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['ы', s @ ..] => {
+									super::push(out, 28497);
+									match s {
+										[] => true,
+										['в', s @ ..] => {
+											super::push(out, 34494);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['и', s @ ..] => super::t17::n14505(s, out),
+				['о', s @ ..] => super::t17::n14506(s, out),
+				['у', s @ ..] => {
+					super::push(out, 11587);
+					match s {
+						[] => true,
+						['п', s @ ..] => super::t17::n28601(s, out),
+						_ => false,
+					}
+				}
+				['я', s @ ..] => super::t17::n14508(s, out),
+				_ => false,
+			}
+		}
+		['п', s @ ..] => super::t17::n5164(s, out),
+		['р', s @ ..] => super::t17::n5165(s, out),
+		['с', s @ ..] => super::t17::n5166(s, out),
+		['ь', s @ ..] => super::t17::n5167(s, out),
+		_ => false,
+	}
 }
 
 /// Words ending -чевать.
-pub(crate) fn n1400(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(484, 0.21879911), (485, 0.10939193), (205, 0.10261692), (116, 0.100907914), (1964, 0.06535439), (206, 0.05131609), (117, 0.050446328), (1600, 0.03994812), (203, 0.039383534), (1965, 0.032684825), (1601, 0.01997406), (204, 0.019684138), (95, 0.019424735), (675, 0.013229572), (1177, 0.013199054), (2233, 0.013031205), (2311, 0.011734188), (3002, 0.011734188), (96, 0.009689479), (676, 0.0066071567), (1178, 0.0065918975), (2234, 0.0065156026), (2312, 0.0058594644), (3003, 0.0058594644), (49, 0.0052338447), (3000, 0.0032501717), (50, 0.0026092927)], 0.98507667);
-    match s {
-        [] => true,
-        ['а', s @ ..] => {
-            out.push(&[(116, 0.29968718), (1600, 0.15236133), (117, 0.14984359), (484, 0.0892958), (1601, 0.076188296), (485, 0.0446479), (205, 0.041886017), (1964, 0.026672771), (206, 0.020950638), (203, 0.01606775), (1965, 0.013336386), (204, 0.008041505), (95, 0.007919433), (675, 0.0054016938), (1177, 0.005386435), (2233, 0.005325399), (2311, 0.004791333), (3002, 0.004791333), (96, 0.003952087), (676, 0.0027008469), (1178, 0.0026855879), (2234, 0.0026550698), (2312, 0.0023956664), (3003, 0.0023956664), (49, 0.002136263)], 0.991516);
-            match s {
-                [] => true,
-                ['р', s @ ..] => {
-                    out.push(&[(116, 0.3808194), (1600, 0.19824521), (117, 0.19041733), (1601, 0.099122606), (484, 0.036453802), (485, 0.018219272), (205, 0.017090105), (1964, 0.010894942), (206, 0.008545052), (203, 0.0065613794), (1965, 0.005447471), (204, 0.0032806897), (95, 0.0032349126), (675, 0.0021972992), (1177, 0.0021972992), (2233, 0.002166781)], 0.98489356);
-                    match s {
-                        [] => true,
-                        ['в', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['у', s @ ..] => {
-                                    out.push(&[(1600, 0.35439077), (116, 0.2538796), (1601, 0.17718776), (117, 0.1269398), (484, 0.024307622), (485, 0.012146181), (205, 0.01139849), (1964, 0.0072632944), (206, 0.0056916154), (203, 0.0043793395), (1965, 0.0036316472), (204, 0.0021820401), (95, 0.002151522)], 0.9855497);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['е', s @ ..] => {
-            out.push(&[(116, 0.28949416), (484, 0.14586098), (117, 0.14474708), (485, 0.07293812), (205, 0.06842145), (1964, 0.04357977), (206, 0.034210727), (1600, 0.026642252), (203, 0.026260776), (1965, 0.021789884), (1601, 0.013321126), (204, 0.013122759), (95, 0.012939651), (675, 0.008819715), (1177, 0.008804455), (2233, 0.008682383), (2311, 0.007812619), (3002, 0.007812619), (96, 0.0064545665), (676, 0.0044098576), (1178, 0.0043945983), (2234, 0.0043488215), (2312, 0.0039063096), (3003, 0.0039063096), (49, 0.003494316), (3000, 0.002166781)], 0.9883421);
-            match s {
-                [] => true,
-                ['б', s @ ..] => {
-                    out.push(&[(116, 0.41521326), (117, 0.20761426), (484, 0.097245745), (485, 0.048615243), (205, 0.045609217), (1964, 0.029053178), (206, 0.022812238), (1600, 0.017761502), (203, 0.017502097), (1965, 0.014526589), (1601, 0.008880751), (204, 0.008758679), (95, 0.008636607), (675, 0.0058747237), (1177, 0.0058594644), (2233, 0.0057984283), (2311, 0.0052185855), (3002, 0.0052185855), (96, 0.004303044), (676, 0.0029449912), (1178, 0.0029297322), (2234, 0.0028992142), (2312, 0.0026092927), (3003, 0.0026092927), (49, 0.0023193713)], 0.9908141);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['и', s @ ..] => {
-            out.push(&[(484, 0.16325627), (205, 0.12437629), (1600, 0.110368505), (203, 0.11020066), (116, 0.10966659), (485, 0.08162051), (206, 0.062180515), (1601, 0.055191882), (204, 0.05510033), (117, 0.054840926), (1964, 0.019317921), (1965, 0.009658961), (95, 0.005737392), (675, 0.0039063096), (1177, 0.0039063096), (2233, 0.0038452735), (2311, 0.003463798), (3002, 0.003463798), (96, 0.002868696)], 0.98297095);
-            match s {
-                [] => true,
-                ['б', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(203, 0.24119936), (205, 0.23010606), (116, 0.19537652), (204, 0.12059205), (206, 0.11505303), (117, 0.09768826)], 1.0000153);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            out.push(&[(484, 0.33105975), (485, 0.16552988), (205, 0.08291753), (1600, 0.073579006), (203, 0.07347219), (116, 0.073105976), (206, 0.041458763), (1601, 0.036789503), (204, 0.036728464), (117, 0.036560617), (1964, 0.0128786145), (1965, 0.0064393072), (95, 0.0038300145), (675, 0.0026092927), (1177, 0.0025940337), (2233, 0.0025635157), (2311, 0.0023041123), (3002, 0.0023041123)], 0.9867247);
-                            match s {
-                                [] => true,
-                                ['з', s @ ..] => {
-                                    out.push(&[(484, 0.44292364), (485, 0.22146945), (205, 0.055283435), (1600, 0.049057756), (203, 0.04898146), (116, 0.048737317), (206, 0.027634088), (1601, 0.024521248), (204, 0.02449073), (117, 0.024368659), (1964, 0.00859083), (1965, 0.0042877854), (95, 0.0025482567)], 0.98289466);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['з', s @ ..] => {
-                            out.push(&[(1600, 0.29581138), (1601, 0.14790569), (484, 0.108842604), (205, 0.08291753), (203, 0.07347219), (116, 0.073105976), (485, 0.054413673), (206, 0.041458763), (204, 0.036728464), (117, 0.036560617), (1964, 0.0128786145), (1965, 0.0064393072), (95, 0.0038300145), (675, 0.0026092927), (1177, 0.0025940337), (2233, 0.0025635157), (2311, 0.0023041123), (3002, 0.0023041123)], 0.9867399);
-                            match s {
-                                [] => true,
-                                ['и', s @ ..] => {
-                                    out.push(&[(1600, 0.41942474), (1601, 0.20972), (484, 0.07255665), (205, 0.055283435), (203, 0.04898146), (116, 0.048737317), (485, 0.036285955), (206, 0.027634088), (204, 0.02449073), (117, 0.024368659), (1964, 0.00859083), (1965, 0.0042877854), (95, 0.0025482567)], 0.9829099);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['н', s @ ..] => {
-            out.push(&[(205, 0.12635995), (203, 0.10803387), (95, 0.1022507), (2233, 0.10038911), (2311, 0.09034867), (484, 0.063416496), (206, 0.06318761), (204, 0.054016937), (96, 0.051117722), (2234, 0.050202183), (2312, 0.045181964), (485, 0.031708248), (116, 0.029251546), (1964, 0.018951705), (117, 0.014618143), (1600, 0.011581598), (1965, 0.009475852), (1601, 0.0057831695), (675, 0.0038300145), (1177, 0.0038300145), (3002, 0.0034027619)], 0.98693824);
-            match s {
-                [] => true,
-                ['а', s @ ..] => {
-                    out.push(&[(205, 0.3064622), (206, 0.1532311), (203, 0.07202259), (95, 0.068162054), (2233, 0.06692607), (2311, 0.06024262), (484, 0.04228275), (204, 0.036011294), (96, 0.034073398), (2234, 0.033463035), (2312, 0.03012131), (485, 0.021133745), (116, 0.01950103), (1964, 0.01263447), (117, 0.009750515), (1600, 0.007721065), (1965, 0.006317235), (1601, 0.0038605325), (675, 0.0025635157), (1177, 0.0025482567), (3002, 0.0022735943)], 0.9913024);
-                    match s {
-                        [] => true,
-                        ['л', s @ ..] => {
-                            out.push(&[(205, 0.42653543), (206, 0.21326008), (203, 0.048020143), (95, 0.045441367), (2233, 0.04461738), (2311, 0.040161747), (484, 0.028183414), (204, 0.024002442), (96, 0.022720683), (2234, 0.02230869), (2312, 0.020080874), (485, 0.014099336), (116, 0.013000687), (1964, 0.00842298), (117, 0.0065003433), (1600, 0.0051422906), (1965, 0.00421149), (1601, 0.0025787747)], 0.98928815);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['и', s @ ..] => {
-                    out.push(&[(203, 0.180148), (2233, 0.17703517), (2311, 0.1593347), (204, 0.090074), (2234, 0.088517584), (2312, 0.07966735), (205, 0.051575493), (95, 0.041733425), (484, 0.025879301), (206, 0.025787747), (96, 0.020859083), (485, 0.012939651), (116, 0.011932556), (1964, 0.0077363243), (117, 0.005966278), (1600, 0.004730297), (1965, 0.0038605325), (1601, 0.0023651484)], 0.99014264);
-                    match s {
-                        [] => true,
-                        ['л', s @ ..] => {
-                            out.push(&[(203, 0.20958267), (2233, 0.20831616), (2311, 0.1874876), (204, 0.104798965), (2234, 0.10415808), (2312, 0.09373617), (205, 0.021057451), (95, 0.01702907), (484, 0.010559243), (206, 0.010528726), (96, 0.008514535), (485, 0.0052796216), (116, 0.004867628), (1964, 0.0031586175), (117, 0.0024414435)], 0.991516);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['к', s @ ..] => {
-                                    out.push(&[(2233, 0.36110476), (2234, 0.18054475), (203, 0.13972686), (2311, 0.12498665), (204, 0.0698558), (2312, 0.06250095), (205, 0.0140383), (95, 0.011352712), (484, 0.007049668), (206, 0.00701915), (96, 0.005676356), (485, 0.003524834), (116, 0.0032501717), (1964, 0.002105745)], 0.9927367);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(95, 0.2903792), (96, 0.1451896), (205, 0.08424506), (203, 0.07202259), (2233, 0.06692607), (2311, 0.06024262), (484, 0.04228275), (206, 0.042114902), (204, 0.036011294), (2234, 0.033463035), (2312, 0.03012131), (485, 0.021133745), (116, 0.01950103), (1964, 0.01263447), (117, 0.009750515), (1600, 0.007721065), (1965, 0.006317235), (1601, 0.0038605325), (675, 0.0025635157), (1177, 0.0025482567), (3002, 0.0022735943)], 0.9913024);
-                    match s {
-                        [] => true,
-                        ['к', s @ ..] => {
-                            out.push(&[(95, 0.41580835), (96, 0.20790417), (205, 0.05616846), (203, 0.048020143), (2233, 0.04461738), (2311, 0.040161747), (484, 0.028183414), (206, 0.0280766), (204, 0.024002442), (2234, 0.02230869), (2312, 0.020080874), (485, 0.014099336), (116, 0.013000687), (1964, 0.00842298), (117, 0.0065003433), (1600, 0.0051422906), (1965, 0.00421149), (1601, 0.0025787747)], 0.98928815);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['о', s @ ..] => {
-            out.push(&[(484, 0.5071794), (485, 0.2535897), (205, 0.12738231), (206, 0.063691154), (116, 0.009384299), (1964, 0.0060730907), (117, 0.0046997787), (1600, 0.0037232013), (203, 0.0036621653), (1965, 0.0030365454)], 0.98242164);
-            match s {
-                [] => true,
-                ['к', s @ ..] => {
-                    out.push(&[(484, 0.5427939), (485, 0.27139696), (205, 0.11886778), (206, 0.05943389)], 0.99249256);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(205, 0.6666667), (206, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', 'з', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['д', 'о', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['р', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['т', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['у', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['н', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(205, 0.6666667), (206, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            out.push(&[(484, 0.5848783), (485, 0.29243916), (205, 0.065323874), (206, 0.032654308), (116, 0.004806592), (1964, 0.0031128405), (117, 0.0024109255)], 0.98562604);
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['е', s @ ..] => {
-                            out.push(&[(484, 0.5848783), (485, 0.29243916), (205, 0.065323874), (206, 0.032654308), (116, 0.004806592), (1964, 0.0031128405), (117, 0.0024109255)], 0.98562604);
-                            match s {
-                                [] => true,
-                                ['р', 'е', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(484, 0.586923), (485, 0.2934615), (205, 0.063691154), (206, 0.031845577), (116, 0.0046997787), (1964, 0.0030365454), (117, 0.0023498894)], 0.98600745);
-                            match s {
-                                [] => true,
-                                ['п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['р', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['т', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['р', s @ ..] => {
-            out.push(&[(116, 0.16687267), (205, 0.09150835), (1600, 0.08484016), (203, 0.08470283), (117, 0.08343633), (675, 0.07876707), (1177, 0.07875181), (484, 0.049729154), (206, 0.045746546), (1601, 0.04242008), (204, 0.042359047), (676, 0.039383534), (1178, 0.039383534), (485, 0.024856947), (1964, 0.014847028), (1965, 0.007431144), (95, 0.0044098576), (2233, 0.0029602502), (2311, 0.0026703288), (3002, 0.0026703288), (96, 0.0021972992)], 0.9899443);
-            match s {
-                [] => true,
-                ['а', s @ ..] => {
-                    out.push(&[(116, 0.2565194), (205, 0.20077822), (117, 0.12825207), (206, 0.10038911), (1600, 0.04350347), (203, 0.043442436), (675, 0.04039063), (1177, 0.04039063), (484, 0.025497826), (1601, 0.021759365), (204, 0.021713588), (676, 0.020202946), (1178, 0.020187685), (485, 0.012756542), (1964, 0.007614252), (1965, 0.0038147555), (95, 0.0022583352)], 0.98947126);
-                    match s {
-                        [] => true,
-                        ['х', s @ ..] => {
-                            out.push(&[(116, 0.3024796), (205, 0.25680932), (117, 0.15124743), (206, 0.12840466), (1600, 0.02230869), (203, 0.022278173), (675, 0.020706493), (1177, 0.020706493), (484, 0.0130769815), (1601, 0.011154345), (204, 0.011139086), (676, 0.010360876), (1178, 0.010360876), (485, 0.0065461206), (1964, 0.0039063096)], 0.9914855);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(116, 0.35088122), (205, 0.31578547), (117, 0.17543298), (206, 0.15790036)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(116, 0.13533227), (1600, 0.12120241), (203, 0.12117189), (675, 0.119447626), (1177, 0.119447626), (117, 0.06765851), (1601, 0.060608834), (204, 0.060578316), (676, 0.059723813), (1178, 0.059723813), (205, 0.02652018), (484, 0.014419775), (206, 0.01326009), (485, 0.0072022583), (1964, 0.004303044), (1965, 0.002151522)], 0.99275196);
-                    match s {
-                        [] => true,
-                        ['к', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(203, 0.35088122), (116, 0.31578547), (204, 0.17543298), (117, 0.15790036)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['а', s @ ..] => {
-                                    out.push(&[(1600, 0.3030289), (1601, 0.15150683), (116, 0.09021134), (203, 0.08078126), (675, 0.079636835), (1177, 0.079636835), (117, 0.04510567), (204, 0.04039063), (676, 0.039810788), (1178, 0.039810788), (205, 0.017685207), (484, 0.009613184), (206, 0.008834974), (485, 0.004806592), (1964, 0.002868696)], 0.9937285);
-                                    match s {
-                                        [] => true,
-                                        ['н', s @ ..] => {
-                                            out.push(&[(1600, 0.42424658), (1601, 0.21211566), (116, 0.060151063), (203, 0.05384909), (675, 0.053086136), (1177, 0.053086136), (117, 0.030075531), (204, 0.026932174), (676, 0.026550699), (1178, 0.026550699), (205, 0.011795224), (484, 0.006408789), (206, 0.0058899825), (485, 0.0032043946)], 0.99394214);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['с', s @ ..] => {
-                                    out.push(&[(675, 0.30185398), (676, 0.15092699), (116, 0.09021134), (1600, 0.08081178), (203, 0.08078126), (1177, 0.079636835), (117, 0.04510567), (1601, 0.04040589), (204, 0.04039063), (1178, 0.039810788), (205, 0.017685207), (484, 0.009613184), (206, 0.008834974), (485, 0.004806592), (1964, 0.002868696)], 0.99374384);
-                                    match s {
-                                        [] => true,
-                                        ['а', s @ ..] => {
-                                            out.push(&[(675, 0.42345312), (676, 0.21173419), (116, 0.060151063), (1600, 0.05386435), (203, 0.05384909), (1177, 0.053086136), (117, 0.030075531), (1601, 0.026932174), (204, 0.026932174), (1178, 0.026550699), (205, 0.011795224), (484, 0.006408789), (206, 0.0058899825), (485, 0.0032043946)], 0.99392694);
-                                            match s {
-                                                [] => true,
-                                                ['р', '\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['ы', s @ ..] => {
-                                    out.push(&[(1177, 0.30185398), (1178, 0.15092699), (116, 0.09021134), (1600, 0.08081178), (203, 0.08078126), (675, 0.079636835), (117, 0.04510567), (1601, 0.04040589), (204, 0.04039063), (676, 0.039810788), (205, 0.017685207), (484, 0.009613184), (206, 0.008834974), (485, 0.004806592), (1964, 0.002868696)], 0.99374384);
-                                    match s {
-                                        [] => true,
-                                        ['в', s @ ..] => {
-                                            out.push(&[(1177, 0.42345312), (1178, 0.21173419), (116, 0.060151063), (1600, 0.05386435), (203, 0.05384909), (675, 0.053086136), (117, 0.030075531), (1601, 0.026932174), (204, 0.026932174), (676, 0.026550699), (205, 0.011795224), (484, 0.006408789), (206, 0.0058899825), (485, 0.0032043946)], 0.99392694);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['т', s @ ..] => {
-            out.push(&[(1964, 0.3785916), (1965, 0.18928817), (116, 0.09491111), (3002, 0.068131536), (484, 0.047821775), (117, 0.047455557), (3003, 0.034073398), (485, 0.023910888), (205, 0.022430763), (3000, 0.018921187), (206, 0.011215381), (3001, 0.009109636), (1600, 0.0087281605), (203, 0.008606088), (1601, 0.0043640803), (204, 0.004303044), (95, 0.004242008), (675, 0.0028839551), (1177, 0.0028839551), (2233, 0.002853437), (2311, 0.0025635157), (96, 0.002121004)], 0.9894102);
-            match s {
-                [] => true,
-                ['е', s @ ..] => {
-                    out.push(&[(116, 0.2854963), (1964, 0.25238422), (117, 0.14274815), (1965, 0.12619211), (3002, 0.045426108), (484, 0.0318761), (3003, 0.022705425), (485, 0.015945679), (205, 0.014953841), (3000, 0.012619211), (206, 0.0074769207), (3001, 0.0060730907), (1600, 0.0058289464), (203, 0.005737392), (1601, 0.0029144732), (204, 0.002868696), (95, 0.002822919)], 0.9840696);
-                    match s {
-                        [] => true,
-                        ['р', s @ ..] => {
-                            out.push(&[(116, 0.41255817), (117, 0.20627145), (1964, 0.16826123), (1965, 0.084122986), (3002, 0.030289158), (484, 0.021255817), (3003, 0.01513695), (485, 0.010620279), (205, 0.009964141), (3000, 0.008407721), (206, 0.0049897004), (3001, 0.004043641), (1600, 0.0038757916), (203, 0.0038300145)], 0.9836271);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(1964, 0.5018997), (1965, 0.25094986), (3002, 0.09033341), (3003, 0.045166705), (3000, 0.025101092), (116, 0.023285268), (3001, 0.012466621), (484, 0.011734188), (117, 0.011642634), (485, 0.0058747237), (205, 0.005508507), (206, 0.002746624), (1600, 0.002136263), (203, 0.002105745)], 0.99095136);
-                    match s {
-                        [] => true,
-                        ['п', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(3002, 0.5217365), (3003, 0.26086825), (3000, 0.14493018), (3001, 0.07246509)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['а', s @ ..] => {
-                                    out.push(&[(1964, 0.58428323), (1965, 0.29214925), (3002, 0.045166705), (3003, 0.022583352), (3000, 0.012542916), (116, 0.011642634), (3001, 0.006225681), (484, 0.0058747237), (117, 0.0058289464), (485, 0.0029297322), (205, 0.002746624)], 0.9919738);
-                                    match s {
-                                        [] => true,
-                                        ['з', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['н', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['о', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['т', 'о', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['у', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['ы', s @ ..] => super::t16::n5074(s, out),
-        ['ь', s @ ..] => super::t16::n5075(s, out),
-        _ => false,
-    }
+pub(crate) fn n1416(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1335);
+	match s {
+		[] => true,
+		['а', s @ ..] => {
+			super::push(out, 4566);
+			match s {
+				[] => true,
+				['р', s @ ..] => {
+					super::push(out, 11592);
+					match s {
+						[] => true,
+						['в', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['у', s @ ..] => {
+									super::push(out, 28511);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['е', s @ ..] => {
+			super::push(out, 4567);
+			match s {
+				[] => true,
+				['б', s @ ..] => {
+					super::push(out, 11593);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['и', s @ ..] => {
+			super::push(out, 4568);
+			match s {
+				[] => true,
+				['б', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 20198);
+							s.is_empty()
+						}
+						['а', s @ ..] => {
+							super::push(out, 20199);
+							match s {
+								[] => true,
+								['з', s @ ..] => {
+									super::push(out, 28512);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['з', s @ ..] => {
+							super::push(out, 20200);
+							match s {
+								[] => true,
+								['и', s @ ..] => {
+									super::push(out, 28513);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['н', s @ ..] => {
+			super::push(out, 4569);
+			match s {
+				[] => true,
+				['а', s @ ..] => {
+					super::push(out, 11594);
+					match s {
+						[] => true,
+						['л', s @ ..] => {
+							super::push(out, 20201);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['и', s @ ..] => {
+					super::push(out, 11595);
+					match s {
+						[] => true,
+						['л', s @ ..] => {
+							super::push(out, 20202);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['к', s @ ..] => {
+									super::push(out, 28514);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 11596);
+					match s {
+						[] => true,
+						['к', s @ ..] => {
+							super::push(out, 20203);
+							match s {
+								[] => true,
+								['с', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['о', s @ ..] => {
+			super::push(out, 4570);
+			match s {
+				[] => true,
+				['к', s @ ..] => {
+					super::push(out, 11597);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 20204);
+							s.is_empty()
+						}
+						['а', 'з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['д', 'о', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['и', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							match s {
+								[] => true,
+								['п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['т', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['у', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['н', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 20205);
+							s.is_empty()
+						}
+						['а', s @ ..] => {
+							super::push(out, 20206);
+							match s {
+								[] => true,
+								['з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['е', s @ ..] => {
+							super::push(out, 20207);
+							match s {
+								[] => true,
+								['р', 'е', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['о', s @ ..] => {
+							super::push(out, 20208);
+							match s {
+								[] => true,
+								['п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['т', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['р', s @ ..] => {
+			super::push(out, 4571);
+			match s {
+				[] => true,
+				['а', s @ ..] => {
+					super::push(out, 11598);
+					match s {
+						[] => true,
+						['х', s @ ..] => {
+							super::push(out, 20209);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 28515);
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 11599);
+					match s {
+						[] => true,
+						['к', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 28516);
+									s.is_empty()
+								}
+								['а', s @ ..] => {
+									super::push(out, 28517);
+									match s {
+										[] => true,
+										['н', s @ ..] => {
+											super::push(out, 34507);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['с', s @ ..] => {
+									super::push(out, 28518);
+									match s {
+										[] => true,
+										['а', s @ ..] => {
+											super::push(out, 34508);
+											match s {
+												[] => true,
+												['р', '\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								['ы', s @ ..] => {
+									super::push(out, 28519);
+									match s {
+										[] => true,
+										['в', s @ ..] => {
+											super::push(out, 34509);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['т', s @ ..] => {
+			super::push(out, 4572);
+			match s {
+				[] => true,
+				['е', s @ ..] => {
+					super::push(out, 11600);
+					match s {
+						[] => true,
+						['р', s @ ..] => {
+							super::push(out, 20210);
+							match s {
+								[] => true,
+								['т', 'с', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 11601);
+					match s {
+						[] => true,
+						['п', s @ ..] => super::t17::n28639(s, out),
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ы', s @ ..] => {
+			super::push(out, 4573);
+			match s {
+				[] => true,
+				['с', s @ ..] => super::t17::n14526(s, out),
+				_ => false,
+			}
+		}
+		['ь', s @ ..] => super::t17::n5176(s, out),
+		_ => false,
+	}
 }
 
 /// Words ending -шевать.
-pub(crate) fn n1401(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(484, 0.15918212), (205, 0.11160449), (1600, 0.09127947), (2723, 0.09036393), (116, 0.08830396), (485, 0.07959106), (206, 0.055802245), (1601, 0.045639735), (203, 0.04539559), (2724, 0.045181964), (117, 0.04415961), (675, 0.02278172), (1177, 0.022735942), (204, 0.022705425), (676, 0.01139849), (1178, 0.011367971), (95, 0.011001755), (49, 0.009018082), (96, 0.00546273), (50, 0.0045014117), (539, 0.0022125582), (1586, 0.002151522)], 0.98184174);
-    match s {
-        [] => true,
-        ['а', s @ ..] => {
-            out.push(&[(205, 0.29662013), (206, 0.1483177), (484, 0.106126495), (1600, 0.06085298), (2723, 0.06024262), (116, 0.058869306), (485, 0.053055618), (1601, 0.03042649), (203, 0.03025864), (2724, 0.03012131), (117, 0.029434653), (675, 0.015197986), (1177, 0.0151522085), (204, 0.01513695), (676, 0.007598993), (1178, 0.007583734), (95, 0.0073395898), (49, 0.0060120546), (96, 0.0036469062), (50, 0.0030060273)], 0.9850004);
-            match s {
-                [] => true,
-                ['б', s @ ..] => {
-                    out.push(&[(205, 0.41997406), (206, 0.2099794), (484, 0.07074083), (1600, 0.04055848), (2723, 0.040161747), (116, 0.039246205), (485, 0.035370413), (1601, 0.02027924), (203, 0.020172426), (2724, 0.020080874), (117, 0.019623103), (675, 0.010131991), (1177, 0.010101473), (204, 0.010086213), (676, 0.0050659953), (1178, 0.0050507365), (95, 0.004882887), (49, 0.004013123), (96, 0.0024261845), (50, 0.0019989319)], 0.9899443);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['е', s @ ..] => {
-            out.push(&[(484, 0.2462501), (205, 0.22246128), (485, 0.12312505), (206, 0.11123827), (1600, 0.045639735), (2723, 0.045181964), (116, 0.04415961), (1601, 0.022812238), (203, 0.022705425), (2724, 0.022583352), (117, 0.022079805), (675, 0.01139849), (1177, 0.011367971), (204, 0.011352712), (676, 0.0056916154), (1178, 0.005676356), (95, 0.005508507), (49, 0.0045014117), (96, 0.002731365), (50, 0.0022583352)], 0.9887236);
-            match s {
-                [] => true,
-                ['р', s @ ..] => {
-                    out.push(&[(484, 0.28979933), (205, 0.2778973), (485, 0.14489967), (206, 0.13894865), (1600, 0.022812238), (2723, 0.022583352), (116, 0.022079805), (1601, 0.011413748), (203, 0.011352712), (2724, 0.011291676), (117, 0.011032273), (675, 0.0056916154), (1177, 0.005676356), (204, 0.005676356), (676, 0.002853437), (1178, 0.002838178), (95, 0.002746624), (49, 0.0022583352)], 0.9918516);
-                    match s {
-                        [] => true,
-                        ['о', 'к', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(205, 0.6666667), (206, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['а', s @ ..] => {
-                                    out.push(&[(484, 0.41541162), (485, 0.20770581), (205, 0.18525979), (206, 0.092637524), (1600, 0.015213245), (2723, 0.015060655), (116, 0.014724956), (1601, 0.007598993), (203, 0.007568475), (2724, 0.007522698), (117, 0.0073548486), (675, 0.0037994965), (1177, 0.0037842374), (204, 0.0037842374)], 0.9874266);
-                                    match s {
-                                        [] => true,
-                                        ['з', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['и', s @ ..] => {
-            out.push(&[(205, 0.22246128), (116, 0.21081865), (206, 0.11123827), (117, 0.105409324), (484, 0.07959106), (1600, 0.045639735), (2723, 0.045181964), (485, 0.03979553), (1601, 0.022812238), (203, 0.022705425), (2724, 0.022583352), (675, 0.01139849), (1177, 0.011367971), (204, 0.011352712), (676, 0.0056916154), (1178, 0.005676356), (95, 0.005508507), (49, 0.0045014117), (96, 0.002731365), (50, 0.0022583352)], 0.9887236);
-            match s {
-                [] => true,
-                ['п', s @ ..] => {
-                    out.push(&[(205, 0.37053484), (206, 0.18525979), (116, 0.14055085), (117, 0.0702678), (484, 0.053055618), (1600, 0.03042649), (2723, 0.03012131), (485, 0.026535438), (1601, 0.015213245), (203, 0.01513695), (2724, 0.015060655), (675, 0.007598993), (1177, 0.007583734), (204, 0.007568475), (676, 0.0037994965), (1178, 0.0037842374), (95, 0.0036621653), (49, 0.0030060273)], 0.9891661);
-                    match s {
-                        [] => true,
-                        ['и', s @ ..] => {
-                            out.push(&[(205, 0.46924543), (206, 0.23462272), (116, 0.093690395), (117, 0.046845198), (484, 0.035370413), (1600, 0.02027924), (2723, 0.020080874), (485, 0.017685207), (1601, 0.010147249), (203, 0.010086213), (2724, 0.010040437), (675, 0.0050659953), (1177, 0.0050507365), (204, 0.0050507365), (676, 0.0025329976), (1178, 0.0025329976), (95, 0.0024414435), (49, 0.0019989319)], 0.9927672);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['р', s @ ..] => {
-                    out.push(&[(116, 0.362768), (117, 0.181384), (205, 0.1483177), (206, 0.07415885), (484, 0.053055618), (1600, 0.03042649), (2723, 0.03012131), (485, 0.026535438), (1601, 0.015213245), (203, 0.01513695), (2724, 0.015060655), (675, 0.007598993), (1177, 0.007583734), (204, 0.007568475), (676, 0.0037994965), (1178, 0.0037842374), (95, 0.0036621653), (49, 0.0030060273)], 0.98918134);
-                    match s {
-                        [] => true,
-                        ['ф', s @ ..] => {
-                            out.push(&[(116, 0.46407264), (117, 0.2320287), (205, 0.098878466), (206, 0.049439233), (484, 0.035370413), (1600, 0.02027924), (2723, 0.020080874), (485, 0.017685207), (1601, 0.010147249), (203, 0.010086213), (2724, 0.010040437), (675, 0.0050659953), (1177, 0.0050507365), (204, 0.0050507365), (676, 0.0025329976), (1178, 0.0025329976), (95, 0.0024414435), (49, 0.0019989319)], 0.99278253);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['н', s @ ..] => {
-            out.push(&[(116, 0.28108644), (117, 0.14055085), (484, 0.106126495), (205, 0.07440299), (1600, 0.06085298), (2723, 0.06024262), (485, 0.053055618), (206, 0.037201494), (1601, 0.03042649), (203, 0.03025864), (2724, 0.03012131), (675, 0.015197986), (1177, 0.0151522085), (204, 0.01513695), (676, 0.007598993), (1178, 0.007583734), (95, 0.0073395898), (49, 0.0060120546), (96, 0.0036469062), (50, 0.0030060273)], 0.9850004);
-            match s {
-                [] => true,
-                ['у', s @ ..] => {
-                    out.push(&[(116, 0.4096132), (117, 0.2048066), (484, 0.07074083), (205, 0.04960708), (1600, 0.04055848), (2723, 0.040161747), (485, 0.035370413), (206, 0.02479591), (1601, 0.02027924), (203, 0.020172426), (2724, 0.020080874), (675, 0.010131991), (1177, 0.010101473), (204, 0.010086213), (676, 0.0050659953), (1178, 0.0050507365), (95, 0.004882887), (49, 0.004013123), (96, 0.0024261845), (50, 0.0019989319)], 0.98994434);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['у', s @ ..] => {
-            out.push(&[(484, 0.19809262), (1600, 0.13069353), (2723, 0.13061723), (485, 0.09904631), (205, 0.06834516), (1601, 0.06535439), (2724, 0.065308616), (116, 0.035629816), (203, 0.03474479), (206, 0.03416495), (675, 0.032669567), (1177, 0.032669567), (117, 0.017807279), (204, 0.017380025), (676, 0.016342413), (1178, 0.016327154)], 0.9951934);
-            match s {
-                [] => true,
-                ['б', s @ ..] => {
-                    out.push(&[(484, 0.4440528), (485, 0.22203402), (205, 0.14175631), (206, 0.070878156), (1600, 0.026398107), (2723, 0.026382849), (1601, 0.013199054), (2724, 0.013199054), (116, 0.0072022583), (203, 0.00701915), (675, 0.0066071567), (1177, 0.0065918975), (117, 0.0036011292), (204, 0.003509575), (676, 0.0032959487), (1178, 0.0032959487)], 0.9990234);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(205, 0.6666667), (206, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            out.push(&[(484, 0.55536735), (485, 0.27768368), (205, 0.070878156), (206, 0.03543145), (1600, 0.013199054), (2723, 0.013199054), (1601, 0.0066071567), (2724, 0.0065918975), (116, 0.0036011292), (203, 0.003509575), (675, 0.0032959487), (1177, 0.0032959487)], 0.9926604);
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['з', 'в', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(484, 0.55536735), (485, 0.27768368), (205, 0.070878156), (206, 0.03543145), (1600, 0.013199054), (2723, 0.013199054), (1601, 0.0066071567), (2724, 0.0065918975), (116, 0.0036011292), (203, 0.003509575), (675, 0.0032959487), (1177, 0.0032959487)], 0.9926604);
-                            match s {
-                                [] => true,
-                                ['п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['р', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['т', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['т', s @ ..] => {
-                    out.push(&[(1600, 0.2106508), (2723, 0.21063554), (1601, 0.10533303), (2724, 0.10531777), (203, 0.052964065), (675, 0.052658886), (1177, 0.052658886), (116, 0.048294805), (484, 0.028503854), (204, 0.026474403), (676, 0.026337072), (1178, 0.026337072), (117, 0.024139773), (485, 0.014251927), (205, 0.00982681), (206, 0.004913405)], 0.9992981);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(203, 0.35088122), (116, 0.31578547), (204, 0.17543298), (117, 0.15790036)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            out.push(&[(1600, 0.36266118), (1601, 0.18132296), (2723, 0.14042878), (2724, 0.07020676), (203, 0.035309378), (675, 0.03511101), (1177, 0.03511101), (116, 0.032196537), (484, 0.018997483), (204, 0.017654689), (676, 0.017547876), (1178, 0.017547876), (117, 0.016098268), (485, 0.009506371), (205, 0.0065613794), (206, 0.0032806897)], 0.99954224);
-                            match s {
-                                [] => true,
-                                ['з', s @ ..] => {
-                                    out.push(&[(1600, 0.46399635), (1601, 0.23199818), (2723, 0.0936141), (2724, 0.04681468), (203, 0.023544671), (675, 0.02340734), (1177, 0.02340734), (116, 0.021469444), (484, 0.012664989), (204, 0.011764706), (676, 0.01170367), (1178, 0.01170367), (117, 0.010727093), (485, 0.0063324943), (205, 0.0043640803), (206, 0.0021820401)], 0.9996948);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['д', s @ ..] => {
-                            out.push(&[(675, 0.25732815), (1600, 0.14042878), (2723, 0.14042878), (676, 0.12866408), (1601, 0.07022202), (2724, 0.07020676), (203, 0.035309378), (1177, 0.03511101), (116, 0.032196537), (484, 0.018997483), (204, 0.017654689), (1178, 0.017547876), (117, 0.016098268), (485, 0.009506371), (205, 0.0065613794), (206, 0.0032806897)], 0.99954224);
-                            match s {
-                                [] => true,
-                                ['о', s @ ..] => {
-                                    out.push(&[(675, 0.39377433), (676, 0.19688717), (1600, 0.09362936), (2723, 0.0936141), (1601, 0.04681468), (2724, 0.04681468), (203, 0.023544671), (1177, 0.02340734), (116, 0.021469444), (484, 0.012664989), (204, 0.011764706), (1178, 0.01170367), (117, 0.010727093), (485, 0.0063324943), (205, 0.0043640803), (206, 0.0021820401)], 0.9996948);
-                                    match s {
-                                        [] => true,
-                                        ['п', s @ ..] => {
-                                            out.push(&[(675, 0.48473334), (676, 0.2423743), (1600, 0.0624094), (2723, 0.0624094), (1601, 0.0312047), (2724, 0.0312047), (203, 0.015686275), (1177, 0.01560998), (116, 0.014312963), (484, 0.008438239), (204, 0.007843138), (1178, 0.0077973604), (117, 0.0071564815), (485, 0.0042267493), (205, 0.0029144732)], 0.99832153);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['е', s @ ..] => {
-                            out.push(&[(1600, 0.36266118), (1601, 0.18132296), (2723, 0.14042878), (2724, 0.07020676), (203, 0.035309378), (675, 0.03511101), (1177, 0.03511101), (116, 0.032196537), (484, 0.018997483), (204, 0.017654689), (676, 0.017547876), (1178, 0.017547876), (117, 0.016098268), (485, 0.009506371), (205, 0.0065613794), (206, 0.0032806897)], 0.99954224);
-                            match s {
-                                [] => true,
-                                ['р', s @ ..] => {
-                                    out.push(&[(1600, 0.46399635), (1601, 0.23199818), (2723, 0.0936141), (2724, 0.04681468), (203, 0.023544671), (675, 0.02340734), (1177, 0.02340734), (116, 0.021469444), (484, 0.012664989), (204, 0.011764706), (676, 0.01170367), (1178, 0.01170367), (117, 0.010727093), (485, 0.0063324943), (205, 0.0043640803), (206, 0.0021820401)], 0.9996948);
-                                    match s {
-                                        [] => true,
-                                        ['е', 'п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(1600, 0.350927), (2723, 0.21759365), (1601, 0.1754635), (2724, 0.10879683), (203, 0.021179523), (675, 0.021057451), (1177, 0.021057451), (116, 0.019317921), (484, 0.01139849), (204, 0.010589762), (676, 0.010528726), (1178, 0.010528726), (117, 0.009658961), (485, 0.005706874), (205, 0.0039368276)], 0.9977417);
-                            match s {
-                                [] => true,
-                                ['д', s @ ..] => {
-                                    out.push(&[(1600, 0.45616847), (1601, 0.22809187), (2723, 0.14505227), (2724, 0.072526135), (203, 0.014129855), (675, 0.0140383), (1177, 0.0140383), (116, 0.0128786145), (484, 0.007598993), (204, 0.0070649274), (676, 0.00701915), (1178, 0.00701915), (117, 0.0064393072), (485, 0.0037994965), (205, 0.0026245518)], 0.9984894);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['п', s @ ..] => {
-                                    out.push(&[(2723, 0.36728466), (1600, 0.23395133), (2724, 0.18364233), (1601, 0.116975665), (203, 0.014129855), (675, 0.0140383), (1177, 0.0140383), (116, 0.0128786145), (484, 0.007598993), (204, 0.0070649274), (676, 0.00701915), (1178, 0.00701915), (117, 0.0064393072), (485, 0.0037994965), (205, 0.0026245518)], 0.99850464);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['р', s @ ..] => {
-                                    out.push(&[(1600, 0.45616847), (1601, 0.22809187), (2723, 0.14505227), (2724, 0.072526135), (203, 0.014129855), (675, 0.0140383), (1177, 0.0140383), (116, 0.0128786145), (484, 0.007598993), (204, 0.0070649274), (676, 0.00701915), (1178, 0.00701915), (117, 0.0064393072), (485, 0.0037994965), (205, 0.0026245518)], 0.9984894);
-                                    match s {
-                                        [] => true,
-                                        ['п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['с', s @ ..] => {
-                            out.push(&[(2723, 0.4386511), (2724, 0.21933319), (1600, 0.10533303), (1601, 0.052658886), (203, 0.026474403), (675, 0.026337072), (1177, 0.026337072), (116, 0.024139773), (484, 0.014251927), (204, 0.013244831), (676, 0.013168536), (1178, 0.013168536), (117, 0.012069887), (485, 0.0071259635), (205, 0.004913405), (206, 0.0024567025)], 0.9996643);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['т', s @ ..] => {
-                            out.push(&[(2723, 0.36264592), (2724, 0.18132296), (1600, 0.14042878), (1601, 0.07022202), (203, 0.035309378), (675, 0.03511101), (1177, 0.03511101), (116, 0.032196537), (484, 0.018997483), (204, 0.017654689), (676, 0.017547876), (1178, 0.017547876), (117, 0.016098268), (485, 0.009506371), (205, 0.0065613794), (206, 0.0032806897)], 0.99954224);
-                            match s {
-                                [] => true,
-                                ['о', s @ ..] => {
-                                    out.push(&[(2723, 0.4639811), (2724, 0.23199818), (1600, 0.09362936), (1601, 0.04681468), (203, 0.023544671), (675, 0.02340734), (1177, 0.02340734), (116, 0.021469444), (484, 0.012664989), (204, 0.011764706), (676, 0.01170367), (1178, 0.01170367), (117, 0.010727093), (485, 0.0063324943), (205, 0.0043640803), (206, 0.0021820401)], 0.9996948);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['ы', s @ ..] => {
-                            out.push(&[(1177, 0.25732815), (1600, 0.14042878), (2723, 0.14042878), (1178, 0.12866408), (1601, 0.07022202), (2724, 0.07020676), (203, 0.035309378), (675, 0.03511101), (116, 0.032196537), (484, 0.018997483), (204, 0.017654689), (676, 0.017547876), (117, 0.016098268), (485, 0.009506371), (205, 0.0065613794), (206, 0.0032806897)], 0.99954224);
-                            match s {
-                                [] => true,
-                                ['в', s @ ..] => {
-                                    out.push(&[(1177, 0.39377433), (1178, 0.19688717), (1600, 0.09362936), (2723, 0.0936141), (1601, 0.04681468), (2724, 0.04681468), (203, 0.023544671), (675, 0.02340734), (116, 0.021469444), (484, 0.012664989), (204, 0.011764706), (676, 0.01170367), (117, 0.010727093), (485, 0.0063324943), (205, 0.0043640803), (206, 0.0021820401)], 0.9996948);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['ы', s @ ..] => {
-            out.push(&[(116, 0.19913024), (203, 0.19421683), (117, 0.09956512), (204, 0.097108416), (484, 0.081635766), (205, 0.05723659), (1600, 0.04679942), (2723, 0.04634165), (485, 0.040817883), (206, 0.028610665), (1601, 0.02340734), (2724, 0.023163196), (675, 0.011688411), (1177, 0.011657893), (676, 0.0058442056), (1178, 0.0058289464), (95, 0.005645838), (49, 0.004623484), (96, 0.00280766), (50, 0.0023041123)], 0.98843366);
-            match s {
-                [] => true,
-                ['р', s @ ..] => {
-                    out.push(&[(203, 0.27054247), (116, 0.2559701), (204, 0.13527124), (117, 0.12797742), (484, 0.041855495), (205, 0.029343098), (1600, 0.024002442), (2723, 0.023758298), (485, 0.020935379), (206, 0.0146791795), (1601, 0.01200885), (2724, 0.011886778), (675, 0.005996796), (1177, 0.0059815366), (676, 0.0029907683), (1178, 0.0029907683), (95, 0.0028992142), (49, 0.0023651484)], 0.99145496);
-                    match s {
-                        [] => true,
-                        ['к', '\u{1}', s @ ..] => {
-                            out.push(&[(203, 0.35088122), (116, 0.31578547), (204, 0.17543298), (117, 0.15790036)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n1417(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1336);
+	match s {
+		[] => true,
+		['а', s @ ..] => {
+			super::push(out, 4575);
+			match s {
+				[] => true,
+				['б', s @ ..] => {
+					super::push(out, 11604);
+					match s {
+						[] => true,
+						['а', 'ш', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['е', s @ ..] => {
+			super::push(out, 4576);
+			match s {
+				[] => true,
+				['р', s @ ..] => {
+					super::push(out, 11605);
+					match s {
+						[] => true,
+						['о', 'к', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 28522);
+									s.is_empty()
+								}
+								['а', s @ ..] => {
+									super::push(out, 28523);
+									match s {
+										[] => true,
+										['з', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['и', s @ ..] => {
+			super::push(out, 4577);
+			match s {
+				[] => true,
+				['п', s @ ..] => {
+					super::push(out, 11606);
+					match s {
+						[] => true,
+						['и', s @ ..] => {
+							super::push(out, 20211);
+							match s {
+								[] => true,
+								['к', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['р', s @ ..] => {
+					super::push(out, 11607);
+					match s {
+						[] => true,
+						['ф', s @ ..] => {
+							super::push(out, 20212);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['н', s @ ..] => {
+			super::push(out, 4578);
+			match s {
+				[] => true,
+				['у', s @ ..] => {
+					super::push(out, 11608);
+					match s {
+						[] => true,
+						['п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['у', s @ ..] => {
+			super::push(out, 4579);
+			match s {
+				[] => true,
+				['б', s @ ..] => {
+					super::push(out, 11609);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 20213);
+							s.is_empty()
+						}
+						['а', s @ ..] => {
+							super::push(out, 20214);
+							match s {
+								[] => true,
+								['з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['н', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['з', 'в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							super::push(out, 20215);
+							match s {
+								[] => true,
+								['п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['т', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['т', s @ ..] => {
+					super::push(out, 11610);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 20216);
+							s.is_empty()
+						}
+						['а', s @ ..] => {
+							super::push(out, 20217);
+							match s {
+								[] => true,
+								['з', s @ ..] => {
+									super::push(out, 28524);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['д', s @ ..] => {
+							super::push(out, 20218);
+							match s {
+								[] => true,
+								['о', s @ ..] => {
+									super::push(out, 28525);
+									match s {
+										[] => true,
+										['п', s @ ..] => {
+											super::push(out, 34510);
+											match s {
+												[] => true,
+												['\u{1}', s @ ..] => {
+													s.is_empty()
+												}
+												_ => false,
+											}
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['е', s @ ..] => {
+							super::push(out, 20219);
+							match s {
+								[] => true,
+								['р', s @ ..] => {
+									super::push(out, 28526);
+									match s {
+										[] => true,
+										['е', 'п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['о', s @ ..] => {
+							super::push(out, 20220);
+							match s {
+								[] => true,
+								['д', s @ ..] => {
+									super::push(out, 28527);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['п', s @ ..] => {
+									super::push(out, 28528);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['р', s @ ..] => {
+									super::push(out, 28529);
+									match s {
+										[] => true,
+										['п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['с', s @ ..] => {
+							super::push(out, 20221);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['а', 'р', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['т', s @ ..] => {
+							super::push(out, 20222);
+							match s {
+								[] => true,
+								['о', s @ ..] => {
+									super::push(out, 28530);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['ы', s @ ..] => {
+							super::push(out, 20223);
+							match s {
+								[] => true,
+								['в', s @ ..] => {
+									super::push(out, 28531);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ы', s @ ..] => {
+			super::push(out, 4580);
+			match s {
+				[] => true,
+				['р', s @ ..] => {
+					super::push(out, 11611);
+					match s {
+						[] => true,
+						['к', '\u{1}', s @ ..] => {
+							super::push(out, 20224);
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -щевать.
-pub(crate) fn n1402(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(95, 0.2634928), (2293, 0.24097048), (96, 0.131487), (49, 0.064499885), (50, 0.03225757), (116, 0.02153048), (539, 0.015823606), (1586, 0.015381094), (484, 0.014694438), (1843, 0.01170367), (205, 0.011566339), (117, 0.01075761), (1600, 0.010635538), (2201, 0.00920119), (1537, 0.008682383), (703, 0.00842298), (540, 0.007904174), (1587, 0.007690547), (485, 0.0073395898), (1572, 0.0065766387), (1844, 0.0058594644), (206, 0.0057831695), (1601, 0.0053101396), (2202, 0.004592966), (1538, 0.004333562), (704, 0.00421149), (2723, 0.004104677), (203, 0.0036011292), (1573, 0.0032806897), (1964, 0.0025635157), (675, 0.0024261845), (16, 0.002090486), (1177, 0.002059968), (2078, 0.002059968), (2724, 0.002059968), (958, 0.0019989319)], 0.9569543);
-    match s {
-        [] => true,
-        ['е', s @ ..] => {
-            out.push(&[(95, 0.4106813), (96, 0.2051728), (2293, 0.15298696), (49, 0.040955216), (50, 0.020477608), (116, 0.013672084), (539, 0.010040437), (1586, 0.009765774), (484, 0.009323263), (1843, 0.007431144), (205, 0.0073395898), (117, 0.006836042), (1600, 0.0067444877), (2201, 0.0058442056), (1537, 0.005508507), (703, 0.005355917), (540, 0.0050202184), (1587, 0.004882887), (485, 0.0046692607), (1572, 0.004180972), (1844, 0.0037232013), (206, 0.0036621653), (1601, 0.0033722438), (2202, 0.0029144732), (1538, 0.002761883), (704, 0.0026703288), (2723, 0.0026092927), (203, 0.0022888533), (1573, 0.002090486)], 0.96298164);
-            match s {
-                [] => true,
-                ['в', s @ ..] => {
-                    out.push(&[(95, 0.5041428), (96, 0.25195697), (2293, 0.097138934), (49, 0.026001373), (50, 0.013000687), (116, 0.008682383), (539, 0.006378271), (1586, 0.006195163), (484, 0.0059205005), (1843, 0.004715038), (205, 0.004654002), (117, 0.004333562), (1600, 0.0042877854), (2201, 0.0037079423), (1537, 0.003494316), (703, 0.0034027619), (540, 0.0031891356), (1587, 0.0030975814), (485, 0.0029602502), (1572, 0.0026550698), (1844, 0.0023651484), (206, 0.0023346303), (1601, 0.002136263)], 0.96675056);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['у', s @ ..] => {
-            out.push(&[(2293, 0.49398032), (95, 0.17566186), (96, 0.087663084), (49, 0.042999923), (50, 0.021499962), (116, 0.014358739), (539, 0.010543984), (1586, 0.010254063), (484, 0.0097962925), (1843, 0.007812619), (205, 0.0077058063), (117, 0.0071717403), (1600, 0.0070954454), (2201, 0.006134127), (1537, 0.0057831695), (703, 0.00561532), (540, 0.0052796216), (1587, 0.0051270314), (485, 0.0048981463), (1572, 0.0043793395), (1844, 0.0039063096), (206, 0.0038605325), (1601, 0.003540093), (2202, 0.0030670634), (1538, 0.0028992142), (704, 0.00280766), (2723, 0.002746624), (203, 0.0023956664), (1573, 0.0021972992)], 0.96118104);
-            match s {
-                [] => true,
-                ['к', s @ ..] => {
-                    out.push(&[(2293, 0.66265357), (95, 0.117112994), (96, 0.058442052), (49, 0.028671702), (50, 0.014328222), (116, 0.009567407), (539, 0.0070344093), (1586, 0.006836042), (484, 0.0065308614), (1843, 0.0052033267), (205, 0.0051422906), (117, 0.004791333), (1600, 0.004730297), (2201, 0.004089418), (1537, 0.0038605325), (703, 0.0037384604), (540, 0.003509575), (1587, 0.003418021), (485, 0.0032654307), (1572, 0.0029144732), (1844, 0.0026092927), (206, 0.0025635157), (1601, 0.0023651484), (2202, 0.002044709)], 0.9654231);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n1418(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1337);
+	match s {
+		[] => true,
+		['е', s @ ..] => {
+			super::push(out, 4581);
+			match s {
+				[] => true,
+				['в', s @ ..] => {
+					super::push(out, 11612);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['у', s @ ..] => {
+			super::push(out, 4582);
+			match s {
+				[] => true,
+				['к', s @ ..] => {
+					super::push(out, 11613);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
-/// Words ending -опаивать.
-pub(crate) fn n13994(s: &[char], _out: &mut Path<'_>) -> bool {
-    match s {
-        [] => true,
-        ['\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['д', s @ ..] => {
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['е', 'н', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['п', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['р', 'п', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        _ => false,
-    }
+/// Words ending -лаивать.
+pub(crate) fn n5199(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 4595);
+	match s {
+		[] => true,
+		['б', 'о', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['д', s @ ..] => {
+			super::push(out, 11620);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					super::push(out, 20225);
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['з', s @ ..] => {
+			super::push(out, 11621);
+			match s {
+				[] => true,
+				['в', s @ ..] => {
+					super::push(out, 20226);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['о', s @ ..] => {
+			super::push(out, 11622);
+			match s {
+				[] => true,
+				['п', s @ ..] => {
+					super::push(out, 20227);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['с', s @ ..] => {
+			super::push(out, 11623);
+			match s {
+				[] => true,
+				['д', 'о', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['о', 'р', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['с', 'а', 'р', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['т', 'о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['т', 'о', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
-/// The word спаивать.
-pub(crate) fn n26978(s: &[char], _out: &mut Path<'_>) -> bool {
-    s.is_empty()
+/// Words ending -наивать.
+pub(crate) fn n5201(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 4597);
+	match s {
+		[] => true,
+		['г', s @ ..] => {
+			match s {
+				[] => true,
+				['а', s @ ..] => {
+					match s {
+						[] => true,
+						['з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['н', s @ ..] => {
+							super::push(out, 28532);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['д', 'о', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['е', s @ ..] => {
+					super::push(out, 20228);
+					match s {
+						[] => true,
+						['р', s @ ..] => {
+							super::push(out, 28533);
+							match s {
+								[] => true,
+								['е', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['с', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
-/// The word распаивать.
-pub(crate) fn n26979(s: &[char], _out: &mut Path<'_>) -> bool {
-    s.is_empty()
-}
-
-/// The word вспаивать.
-pub(crate) fn n26980(s: &[char], _out: &mut Path<'_>) -> bool {
-    s.is_empty()
-}
-
-/// The word испаивать.
-pub(crate) fn n26981(s: &[char], _out: &mut Path<'_>) -> bool {
-    s.is_empty()
-}
-
-/// The word отпаивать.
-pub(crate) fn n13996(s: &[char], _out: &mut Path<'_>) -> bool {
-    s.is_empty()
-}
-
-/// The word упаивать.
-pub(crate) fn n13997(s: &[char], _out: &mut Path<'_>) -> bool {
-    s.is_empty()
-}
-
-/// The word выпаивать.
-pub(crate) fn n13998(s: &[char], _out: &mut Path<'_>) -> bool {
-    s.is_empty()
+/// Words ending -паивать.
+pub(crate) fn n5202(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 4598);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 11625);
+			s.is_empty()
+		}
+		['а', s @ ..] => {
+			match s {
+				[] => true,
+				['з', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['н', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['в', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['д', 'о', 'п', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['и', 'р', 'п', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['о', s @ ..] => {
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['д', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['е', 'н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['р', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['с', s @ ..] => {
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['а', 'р', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['в', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['и', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['т', 'о', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['у', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['ы', 'в', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -раивать.
-pub(crate) fn n5102(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(27, 0.6445716), (28, 0.3222858), (16, 0.012573434), (122, 0.009506371), (17, 0.006286717), (123, 0.004745556)], 0.9999695);
-    match s {
-        [] => true,
-        ['к', s @ ..] => {
-            out.push(&[(27, 0.6641642), (28, 0.3320821)], 0.9962463);
-            match s {
-                [] => true,
-                ['с', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['а', 'р', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['и', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['т', 'с', s @ ..] => {
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(16, 0.35088122), (122, 0.31578547), (17, 0.17543298), (123, 0.15790036)], 1.0);
-                    s.is_empty()
-                }
-                ['а', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['з', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['н', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', 'д', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['б', 'о', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['в', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['д', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['а', 'н', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['о', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['д', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['е', 'н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['с', 'а', 'р', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['т', 'о', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['у', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['б', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['г', 'а', 'л', 'б', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['д', 'у', 'р', 'т', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['ы', 'в', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n5203(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 4599);
+	match s {
+		[] => true,
+		['д', s @ ..] => {
+			match s {
+				[] => true,
+				['а', 'з', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['о', 'р', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['т', 'о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['ы', 'в', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['к', s @ ..] => {
+			super::push(out, 11626);
+			match s {
+				[] => true,
+				['а', s @ ..] => {
+					match s {
+						[] => true,
+						['з', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['б', 'о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['в', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['д', 'о', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['и', 'р', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['о', 'д', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['с', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['а', 'р', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['и', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['т', s @ ..] => {
+			match s {
+				[] => true,
+				['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['с', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 28534);
+							s.is_empty()
+						}
+						['а', s @ ..] => {
+							match s {
+								[] => true,
+								['з', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['н', s @ ..] => {
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['о', 'д', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['б', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['д', s @ ..] => {
+							match s {
+								[] => true,
+								['а', 'н', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['и', 'р', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							match s {
+								[] => true,
+								['д', s @ ..] => {
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['е', 'н', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								['р', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['с', 'а', 'р', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['т', 'о', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['у', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['б', 'о', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['о', s @ ..] => {
+									match s {
+										[] => true,
+										['г', 'а', 'л', 'б', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										['д', 'у', 'р', 'т', '\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['ы', 'в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['у', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['ы', 'в', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -таивать.
-pub(crate) fn n5103(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(27, 0.38907453), (16, 0.26224154), (28, 0.19453727), (17, 0.13112077), (122, 0.015304799), (123, 0.007660029)], 0.99993896);
-    match s {
-        [] => true,
-        ['\u{1}', s @ ..] => {
-            out.push(&[(16, 0.6666667), (17, 0.33333334)], 1.0);
-            s.is_empty()
-        }
-        ['а', s @ ..] => {
-            match s {
-                [] => true,
-                ['з', s @ ..] => {
-                    out.push(&[(27, 0.52431524), (28, 0.26215), (16, 0.13449302), (17, 0.06724651), (122, 0.0078583965), (123, 0.003921569)], 0.99998474);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['н', s @ ..] => {
-                    out.push(&[(16, 0.397055), (27, 0.25938812), (17, 0.19851987), (28, 0.12968643), (122, 0.010208285), (123, 0.0050965133)], 0.9999542);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['б', s @ ..] => {
-            out.push(&[(16, 0.397055), (27, 0.25938812), (17, 0.19851987), (28, 0.12968643), (122, 0.010208285), (123, 0.0050965133)], 0.9999542);
-            match s {
-                [] => true,
-                ['о', s @ ..] => {
-                    out.push(&[(16, 0.48693064), (17, 0.24345769), (27, 0.1729305), (28, 0.08645762), (122, 0.0068055238), (123, 0.0034027619)], 0.99998474);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['д', s @ ..] => {
-            out.push(&[(16, 0.397055), (27, 0.25938812), (17, 0.19851987), (28, 0.12968643), (122, 0.010208285), (123, 0.0050965133)], 0.9999542);
-            match s {
-                [] => true,
-                ['о', s @ ..] => {
-                    out.push(&[(16, 0.48693064), (17, 0.24345769), (27, 0.1729305), (28, 0.08645762), (122, 0.0068055238), (123, 0.0034027619)], 0.99998474);
-                    match s {
-                        [] => true,
-                        ['п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['и', 'р', 'п', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['о', s @ ..] => {
-            out.push(&[(16, 0.4644541), (17, 0.23222706), (27, 0.19453727), (28, 0.09727626), (122, 0.007660029), (123, 0.0038300145)], 0.99998474);
-            match s {
-                [] => true,
-                ['д', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['р', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['с', s @ ..] => {
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['а', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['з', s @ ..] => {
-                            out.push(&[(27, 0.48160526), (28, 0.24080263), (16, 0.17483787), (17, 0.087418936), (122, 0.010208285), (123, 0.0050965133)], 0.9999695);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['н', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['р', s @ ..] => {
-                            out.push(&[(16, 0.397055), (27, 0.25938812), (17, 0.19851987), (28, 0.12968643), (122, 0.010208285), (123, 0.0050965133)], 0.9999542);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['е', s @ ..] => {
-                    out.push(&[(16, 0.397055), (27, 0.25938812), (17, 0.19851987), (28, 0.12968643), (122, 0.010208285), (123, 0.0050965133)], 0.9999542);
-                    match s {
-                        [] => true,
-                        ['р', s @ ..] => {
-                            out.push(&[(16, 0.48693064), (17, 0.24345769), (27, 0.1729305), (28, 0.08645762), (122, 0.0068055238), (123, 0.0034027619)], 0.99998474);
-                            match s {
-                                [] => true,
-                                ['е', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['и', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['о', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['д', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(16, 0.6666667), (17, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['у', s @ ..] => {
-                                    out.push(&[(27, 0.52431524), (28, 0.26215), (16, 0.13449302), (17, 0.06724651), (122, 0.0078583965), (123, 0.003921569)], 0.99998474);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['п', s @ ..] => {
-                            out.push(&[(16, 0.397055), (27, 0.25938812), (17, 0.19851987), (28, 0.12968643), (122, 0.010208285), (123, 0.0050965133)], 0.9999542);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['р', s @ ..] => {
-                            out.push(&[(27, 0.52431524), (28, 0.26215), (16, 0.13449302), (17, 0.06724651), (122, 0.0078583965), (123, 0.003921569)], 0.99998474);
-                            match s {
-                                [] => true,
-                                ['п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['с', s @ ..] => {
-                    out.push(&[(16, 0.397055), (27, 0.25938812), (17, 0.19851987), (28, 0.12968643), (122, 0.010208285), (123, 0.0050965133)], 0.9999542);
-                    match s {
-                        [] => true,
-                        ['а', s @ ..] => {
-                            out.push(&[(16, 0.48693064), (17, 0.24345769), (27, 0.1729305), (28, 0.08645762), (122, 0.0068055238), (123, 0.0034027619)], 0.99998474);
-                            match s {
-                                [] => true,
-                                ['р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['т', s @ ..] => {
-                    out.push(&[(27, 0.5645991), (28, 0.28229192), (16, 0.09643702), (17, 0.04821851), (122, 0.0056305793), (123, 0.00280766)], 0.9999848);
-                    match s {
-                        [] => true,
-                        ['о', s @ ..] => {
-                            out.push(&[(27, 0.62912947), (28, 0.31456473), (16, 0.035461966), (17, 0.017730983), (122, 0.002075227)], 0.9989624);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['у', s @ ..] => {
-                    out.push(&[(16, 0.40988785), (27, 0.2470283), (17, 0.20494393), (28, 0.12352178), (122, 0.009719997), (123, 0.004867628)], 0.9999695);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ы', s @ ..] => {
-                    out.push(&[(27, 0.52431524), (28, 0.26215), (16, 0.13449302), (17, 0.06724651), (122, 0.0078583965), (123, 0.003921569)], 0.99998474);
-                    match s {
-                        [] => true,
-                        ['в', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['т', s @ ..] => {
-            out.push(&[(27, 0.52431524), (28, 0.26215), (16, 0.13449302), (17, 0.06724651), (122, 0.0078583965), (123, 0.003921569)], 0.99998474);
-            match s {
-                [] => true,
-                ['о', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['у', s @ ..] => {
-            out.push(&[(27, 0.52431524), (28, 0.26215), (16, 0.13449302), (17, 0.06724651), (122, 0.0078583965), (123, 0.003921569)], 0.99998474);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ы', s @ ..] => {
-            out.push(&[(16, 0.397055), (27, 0.25938812), (17, 0.19851987), (28, 0.12968643), (122, 0.010208285), (123, 0.0050965133)], 0.9999542);
-            match s {
-                [] => true,
-                ['в', s @ ..] => {
-                    out.push(&[(16, 0.48693064), (17, 0.24345769), (27, 0.1729305), (28, 0.08645762), (122, 0.0068055238), (123, 0.0034027619)], 0.99998474);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n5204(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 4600);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 11627);
+			s.is_empty()
+		}
+		['а', s @ ..] => {
+			match s {
+				[] => true,
+				['з', s @ ..] => {
+					super::push(out, 20229);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['н', s @ ..] => {
+					super::push(out, 20230);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['б', s @ ..] => {
+			super::push(out, 11628);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					super::push(out, 20231);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['д', s @ ..] => {
+			super::push(out, 11629);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					super::push(out, 20232);
+					match s {
+						[] => true,
+						['п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['и', 'р', 'п', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['о', s @ ..] => {
+			super::push(out, 11630);
+			match s {
+				[] => true,
+				['д', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['р', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['с', s @ ..] => {
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['а', s @ ..] => {
+					match s {
+						[] => true,
+						['з', s @ ..] => {
+							super::push(out, 28535);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['р', s @ ..] => {
+							super::push(out, 28536);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['е', s @ ..] => {
+					super::push(out, 20233);
+					match s {
+						[] => true,
+						['р', s @ ..] => {
+							super::push(out, 28537);
+							match s {
+								[] => true,
+								['е', 'п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['и', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['о', s @ ..] => {
+					match s {
+						[] => true,
+						['д', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									super::push(out, 34511);
+									s.is_empty()
+								}
+								['у', s @ ..] => {
+									super::push(out, 34512);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						['п', s @ ..] => {
+							super::push(out, 28538);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						['р', s @ ..] => {
+							super::push(out, 28539);
+							match s {
+								[] => true,
+								['п', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['с', s @ ..] => {
+					super::push(out, 20234);
+					match s {
+						[] => true,
+						['а', s @ ..] => {
+							super::push(out, 28540);
+							match s {
+								[] => true,
+								['р', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['т', s @ ..] => {
+					super::push(out, 20235);
+					match s {
+						[] => true,
+						['о', s @ ..] => {
+							super::push(out, 28541);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['у', s @ ..] => {
+					super::push(out, 20236);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['ы', s @ ..] => {
+					super::push(out, 20237);
+					match s {
+						[] => true,
+						['в', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['т', s @ ..] => {
+			super::push(out, 11631);
+			match s {
+				[] => true,
+				['о', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['у', s @ ..] => {
+			super::push(out, 11632);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['ы', s @ ..] => {
+			super::push(out, 11633);
+			match s {
+				[] => true,
+				['в', s @ ..] => {
+					super::push(out, 20238);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -хаивать.
-pub(crate) fn n5104(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(27, 0.6394446), (28, 0.3197223), (16, 0.02322423), (17, 0.011612115), (122, 0.0038300145)], 0.99783325);
-    s.is_empty()
+pub(crate) fn n5205(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 4601);
+	match s {
+		[] => true,
+		['а', 'з', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['б', 'о', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['о', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['с', 'а', 'р', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -бивать.
-pub(crate) fn n1411(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(95, 0.4791638), (96, 0.2395819), (675, 0.09501793), (676, 0.047516596), (524, 0.04072633), (27, 0.022766462), (525, 0.020355536), (54, 0.01358053), (197, 0.012222476), (28, 0.011383231), (55, 0.006790265), (198, 0.0061036088)], 0.9952087);
-    match s {
-        [] => true,
-        ['\u{1}', s @ ..] => {
-            out.push(&[(54, 0.35088122), (197, 0.31578547), (55, 0.17543298), (198, 0.15790036)], 1.0);
-            s.is_empty()
-        }
-        ['а', s @ ..] => {
-            out.push(&[(95, 0.44765392), (96, 0.22381933), (675, 0.10983444), (524, 0.09591821), (676, 0.05491722), (525, 0.047959104), (27, 0.0058442056), (54, 0.003479057), (197, 0.0031280995), (28, 0.0029144732)], 0.9954681);
-            match s {
-                [] => true,
-                ['з', s @ ..] => {
-                    out.push(&[(95, 0.44121462), (96, 0.22061494), (675, 0.18088044), (676, 0.09044022), (524, 0.03915465), (525, 0.019577324), (27, 0.0023804074)], 0.9942626);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(675, 0.3428092), (95, 0.29414818), (676, 0.1714046), (96, 0.14706646), (524, 0.026092928), (525, 0.013046464)], 0.9945678);
-                            match s {
-                                [] => true,
-                                ['п', s @ ..] => {
-                                    out.push(&[(675, 0.45076677), (676, 0.22537576), (95, 0.1960937), (96, 0.098054476), (524, 0.017395286), (525, 0.008697643)], 0.9963836);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['н', s @ ..] => {
-                    out.push(&[(95, 0.44121462), (96, 0.22061494), (524, 0.17520408), (525, 0.08760204), (675, 0.044831008), (676, 0.022415504), (27, 0.0023804074)], 0.9942626);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(524, 0.33902496), (95, 0.29414818), (525, 0.16951248), (96, 0.14706646), (675, 0.029892424), (676, 0.014938583)], 0.9945831);
-                            match s {
-                                [] => true,
-                                ['п', s @ ..] => {
-                                    out.push(&[(524, 0.44823375), (525, 0.22412452), (95, 0.1960937), (96, 0.098054476), (675, 0.019928282), (676, 0.009964141)], 0.99639887);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['б', s @ ..] => {
-            out.push(&[(95, 0.4062562), (675, 0.21417563), (96, 0.2031281), (676, 0.10708781), (524, 0.020355536), (27, 0.011383231), (525, 0.010177768), (54, 0.006790265), (197, 0.0061036088), (28, 0.0056916154), (55, 0.0033875029), (198, 0.0030518044)], 0.99758905);
-            match s {
-                [] => true,
-                ['о', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(675, 0.36501107), (95, 0.2708324), (676, 0.1824979), (96, 0.13542382), (524, 0.01358053), (27, 0.007583734), (525, 0.006790265), (54, 0.0045319297), (197, 0.004074159), (28, 0.0037994965), (55, 0.0022583352), (198, 0.00202945)], 0.9984131);
-                            match s {
-                                [] => true,
-                                ['п', s @ ..] => {
-                                    out.push(&[(675, 0.465568), (676, 0.23277637), (95, 0.18056001), (96, 0.090272374), (524, 0.0090486), (27, 0.0050659953), (525, 0.0045319297), (54, 0.0030212863), (197, 0.002716106), (28, 0.0025329976)], 0.9960937);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['в', s @ ..] => {
-            out.push(&[(95, 0.5705043), (96, 0.28525215), (675, 0.048737317), (676, 0.024368659), (524, 0.0208896), (27, 0.0116731515), (525, 0.010437171), (54, 0.006958114), (197, 0.006271458), (28, 0.0058442056), (55, 0.003479057), (198, 0.0031280995)], 0.9975433);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['д', s @ ..] => {
-            out.push(&[(95, 0.5901274), (96, 0.2950637), (675, 0.038788434), (676, 0.019394217), (524, 0.016617075), (27, 0.009292744), (525, 0.008316167), (54, 0.005539025), (197, 0.0049897004), (28, 0.0046387427), (55, 0.002777142), (198, 0.0024872206)], 0.99803156);
-            match s {
-                [] => true,
-                ['а', 'н', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['о', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['е', s @ ..] => {
-            out.push(&[(95, 0.5705043), (96, 0.28525215), (675, 0.048737317), (676, 0.024368659), (524, 0.0208896), (27, 0.0116731515), (525, 0.010437171), (54, 0.006958114), (197, 0.006271458), (28, 0.0058442056), (55, 0.003479057), (198, 0.0031280995)], 0.9975433);
-            match s {
-                [] => true,
-                ['р', 'е', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['з', s @ ..] => {
-            out.push(&[(95, 0.5469291), (96, 0.2734722), (675, 0.09846647), (676, 0.049240865), (524, 0.00936904), (27, 0.0052338447), (525, 0.00468452), (54, 0.0031280995), (197, 0.00280766), (28, 0.0026092927)], 0.9959411);
-            match s {
-                [] => true,
-                ['а', 'р', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(95, 0.3646296), (675, 0.2878767), (96, 0.1823148), (676, 0.14393835), (524, 0.00624094), (27, 0.003494316), (525, 0.0031280995), (54, 0.002075227)], 0.993698);
-                            match s {
-                                [] => true,
-                                ['п', s @ ..] => {
-                                    out.push(&[(675, 0.41412985), (95, 0.24307622), (676, 0.20706493), (96, 0.12153811), (524, 0.004165713), (27, 0.0023193713), (525, 0.002075227)], 0.99436945);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['в', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['и', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['и', s @ ..] => {
-            out.push(&[(95, 0.45407796), (96, 0.22703898), (675, 0.17483787), (676, 0.087418936), (524, 0.016617075), (27, 0.009292744), (525, 0.008316167), (54, 0.005539025), (197, 0.0049897004), (28, 0.0046387427), (55, 0.002777142), (198, 0.0024872206)], 0.99803156);
-            match s {
-                [] => true,
-                ['р', 'п', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(675, 0.3387808), (95, 0.30272374), (676, 0.1693904), (96, 0.15135424), (524, 0.01107805), (27, 0.006195163), (525, 0.005539025), (54, 0.0036926833), (197, 0.0033264668), (28, 0.0030975814)], 0.9951781);
-                            match s {
-                                [] => true,
-                                ['п', s @ ..] => {
-                                    out.push(&[(675, 0.44808117), (676, 0.22403295), (95, 0.20181583), (96, 0.100907914), (524, 0.0073853666), (27, 0.004135195), (525, 0.0036926833), (54, 0.0024567025), (197, 0.0022125582), (28, 0.002059968)], 0.99678034);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['о', s @ ..] => {
-            out.push(&[(95, 0.6280003), (96, 0.31400016), (675, 0.019592585), (676, 0.0097962925), (524, 0.0083924625), (27, 0.0046997787), (525, 0.0041962313), (54, 0.002792401), (197, 0.0025177386), (28, 0.0023498894)], 0.99633783);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['д', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'н', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['р', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['с', s @ ..] => {
-            out.push(&[(95, 0.37711146), (96, 0.18855573), (675, 0.14520486), (524, 0.12680247), (676, 0.07260243), (525, 0.06340124), (27, 0.007721065), (54, 0.0046082246), (197, 0.004135195), (28, 0.0038605325), (55, 0.0023041123), (198, 0.002075227)], 0.99838257);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['а', s @ ..] => {
-                    out.push(&[(524, 0.30675212), (95, 0.25140765), (525, 0.15338369), (96, 0.12570383), (675, 0.09680323), (676, 0.048401617), (27, 0.0051422906), (54, 0.0030670634), (197, 0.002761883), (28, 0.0025787747)], 0.99600214);
-                    match s {
-                        [] => true,
-                        ['н', s @ ..] => {
-                            out.push(&[(524, 0.42671853), (525, 0.2133669), (95, 0.1676051), (96, 0.08380255), (675, 0.0645304), (676, 0.03227283), (27, 0.00343328), (54, 0.002044709)], 0.9937743);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(675, 0.31902036), (95, 0.25140765), (676, 0.15951781), (96, 0.12570383), (524, 0.08453498), (525, 0.04226749), (27, 0.0051422906), (54, 0.0030670634), (197, 0.002761883), (28, 0.0025787747)], 0.99600214);
-                    match s {
-                        [] => true,
-                        ['п', s @ ..] => {
-                            out.push(&[(675, 0.43491265), (676, 0.21745633), (95, 0.1676051), (96, 0.08380255), (524, 0.05635157), (525, 0.028183414), (27, 0.00343328), (54, 0.002044709)], 0.9937896);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['т', s @ ..] => {
-            out.push(&[(95, 0.45407796), (96, 0.22703898), (675, 0.17483787), (676, 0.087418936), (524, 0.016617075), (27, 0.009292744), (525, 0.008316167), (54, 0.005539025), (197, 0.0049897004), (28, 0.0046387427), (55, 0.002777142), (198, 0.0024872206)], 0.99803156);
-            match s {
-                [] => true,
-                ['о', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(675, 0.3387808), (95, 0.30272374), (676, 0.1693904), (96, 0.15135424), (524, 0.01107805), (27, 0.006195163), (525, 0.005539025), (54, 0.0036926833), (197, 0.0033264668), (28, 0.0030975814)], 0.9951781);
-                            match s {
-                                [] => true,
-                                ['п', s @ ..] => {
-                                    out.push(&[(675, 0.44808117), (676, 0.22403295), (95, 0.20181583), (96, 0.100907914), (524, 0.0073853666), (27, 0.004135195), (525, 0.0036926833), (54, 0.0024567025), (197, 0.0022125582), (28, 0.002059968)], 0.99678034);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['у', s @ ..] => {
-            out.push(&[(95, 0.4842298), (96, 0.2421149), (524, 0.13101396), (525, 0.06550698), (675, 0.033279926), (676, 0.016647592), (27, 0.007980469), (54, 0.004760815), (197, 0.004272526), (28, 0.003982605), (55, 0.0023804074), (198, 0.002136263)], 0.9983063);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(95, 0.32281986), (524, 0.30957505), (96, 0.16140993), (525, 0.15478753), (675, 0.022186618), (676, 0.011093309), (27, 0.0053101396), (54, 0.0031738766), (197, 0.002853437), (28, 0.0026550698)], 0.9958648);
-                    match s {
-                        [] => true,
-                        ['п', s @ ..] => {
-                            out.push(&[(524, 0.4285954), (95, 0.21521324), (525, 0.2142977), (96, 0.10760662), (675, 0.014785992), (676, 0.007400626), (27, 0.003540093), (54, 0.002105745)], 0.9935454);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['ы', s @ ..] => {
-            out.push(&[(95, 0.45407796), (96, 0.22703898), (675, 0.17483787), (676, 0.087418936), (524, 0.016617075), (27, 0.009292744), (525, 0.008316167), (54, 0.005539025), (197, 0.0049897004), (28, 0.0046387427), (55, 0.002777142), (198, 0.0024872206)], 0.99803156);
-            match s {
-                [] => true,
-                ['в', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(675, 0.3387808), (95, 0.30272374), (676, 0.1693904), (96, 0.15135424), (524, 0.01107805), (27, 0.006195163), (525, 0.005539025), (54, 0.0036926833), (197, 0.0033264668), (28, 0.0030975814)], 0.9951781);
-                            match s {
-                                [] => true,
-                                ['п', s @ ..] => {
-                                    out.push(&[(675, 0.44808117), (676, 0.22403295), (95, 0.20181583), (96, 0.100907914), (524, 0.0073853666), (27, 0.004135195), (525, 0.0036926833), (54, 0.0024567025), (197, 0.0022125582), (28, 0.002059968)], 0.99678034);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n1427(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1346);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			super::push(out, 4602);
+			s.is_empty()
+		}
+		['а', s @ ..] => {
+			super::push(out, 4603);
+			match s {
+				[] => true,
+				['з', s @ ..] => {
+					super::push(out, 11634);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							super::push(out, 20239);
+							match s {
+								[] => true,
+								['п', s @ ..] => {
+									super::push(out, 28542);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['н', s @ ..] => {
+					super::push(out, 11635);
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							super::push(out, 20240);
+							match s {
+								[] => true,
+								['п', s @ ..] => {
+									super::push(out, 28543);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['б', s @ ..] => {
+			super::push(out, 4604);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							super::push(out, 20241);
+							match s {
+								[] => true,
+								['п', s @ ..] => {
+									super::push(out, 28544);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['в', s @ ..] => {
+			super::push(out, 4605);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['д', s @ ..] => {
+			super::push(out, 4606);
+			match s {
+				[] => true,
+				['а', 'н', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['о', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['е', s @ ..] => {
+			super::push(out, 4607);
+			match s {
+				[] => true,
+				['р', 'е', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['з', s @ ..] => {
+			super::push(out, 4608);
+			match s {
+				[] => true,
+				['а', 'р', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							super::push(out, 20242);
+							match s {
+								[] => true,
+								['п', s @ ..] => {
+									super::push(out, 28545);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['в', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['и', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['и', s @ ..] => {
+			super::push(out, 4609);
+			match s {
+				[] => true,
+				['р', 'п', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							super::push(out, 20243);
+							match s {
+								[] => true,
+								['п', s @ ..] => {
+									super::push(out, 28546);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['о', s @ ..] => {
+			super::push(out, 4610);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['д', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['е', 'н', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['р', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['с', s @ ..] => {
+			super::push(out, 4611);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['а', s @ ..] => {
+					super::push(out, 11636);
+					match s {
+						[] => true,
+						['н', s @ ..] => {
+							super::push(out, 20244);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['о', s @ ..] => {
+					super::push(out, 11637);
+					match s {
+						[] => true,
+						['п', s @ ..] => {
+							super::push(out, 20245);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['т', s @ ..] => {
+			super::push(out, 4612);
+			match s {
+				[] => true,
+				['о', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							super::push(out, 20246);
+							match s {
+								[] => true,
+								['п', s @ ..] => {
+									super::push(out, 28547);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['у', s @ ..] => {
+			super::push(out, 4613);
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['о', s @ ..] => {
+					super::push(out, 11638);
+					match s {
+						[] => true,
+						['п', s @ ..] => {
+							super::push(out, 20247);
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['ы', s @ ..] => {
+			super::push(out, 4614);
+			match s {
+				[] => true,
+				['в', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							super::push(out, 20248);
+							match s {
+								[] => true,
+								['п', s @ ..] => {
+									super::push(out, 28548);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		_ => false,
+	}
 }
 
 /// Words ending -вивать.
-pub(crate) fn n1412(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(95, 0.59238577), (96, 0.29619288), (27, 0.031845577), (239, 0.018982224), (675, 0.018982224), (28, 0.01591516), (240, 0.009491112), (676, 0.009491112), (16, 0.002746624)], 0.9960327);
-    match s {
-        [] => true,
-        ['\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['а', s @ ..] => {
-            out.push(&[(95, 0.54677653), (96, 0.2733959), (239, 0.103624016), (240, 0.05180438), (27, 0.00936904), (675, 0.005584802), (28, 0.00468452), (676, 0.002792401)], 0.9980316);
-            match s {
-                [] => true,
-                ['з', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(239, 0.35088122), (95, 0.31578547), (240, 0.17543298), (96, 0.15790036)], 1.0);
-                            s.is_empty()
-                        }
-                        ['д', 'о', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['н', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['б', 'о', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['в', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['д', s @ ..] => {
-            match s {
-                [] => true,
-                ['а', 'н', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['о', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['з', s @ ..] => {
-            out.push(&[(95, 0.6499733), (96, 0.32498664), (27, 0.0071564815), (239, 0.004272526), (675, 0.004272526), (28, 0.0035706111), (240, 0.002136263), (676, 0.002136263)], 0.9985046);
-            match s {
-                [] => true,
-                ['а', 'р', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', 'д', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['е', 'н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['в', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['и', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['и', s @ ..] => {
-            out.push(&[(95, 0.54517436), (96, 0.27258718), (675, 0.10501259), (676, 0.052506294), (27, 0.009491112), (239, 0.0056610974), (28, 0.004745556), (240, 0.002822919)], 0.9980011);
-            match s {
-                [] => true,
-                ['р', 'п', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(95, 0.36343938), (675, 0.29222554), (96, 0.18171969), (676, 0.1461204), (27, 0.0063324943), (239, 0.0037689784), (28, 0.0031586175)], 0.9967651);
-                            match s {
-                                [] => true,
-                                ['п', s @ ..] => {
-                                    out.push(&[(675, 0.41704434), (95, 0.242298), (676, 0.20851454), (96, 0.121141374), (27, 0.00421149), (239, 0.0025177386), (28, 0.002105745)], 0.99783325);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['о', s @ ..] => {
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['д', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['с', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['с', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['т', 'о', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['у', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['ы', 'в', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -гивать.
-pub(crate) fn n1413(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(27, 0.514107), (28, 0.2570535), (16, 0.12004273), (17, 0.060013734), (965, 0.010742351), (122, 0.00999466), (963, 0.0053711757), (966, 0.005355917), (1950, 0.005355917), (123, 0.005004959), (964, 0.0026855879), (1951, 0.0026855879)], 0.9984131);
-    match s {
-        [] => true,
-        ['а', s @ ..] => {
-            out.push(&[(27, 0.5519493), (28, 0.27597466), (16, 0.099153124), (17, 0.049576562), (122, 0.014404517), (123, 0.0072022583)], 0.99826044);
-            match s {
-                [] => true,
-                ['л', s @ ..] => {
-                    out.push(&[(27, 0.35045394), (16, 0.30634013), (28, 0.17521934), (17, 0.15317006), (122, 0.009140154), (123, 0.0045777066)], 0.99890137);
-                    match s {
-                        [] => true,
-                        ['д', s @ ..] => {
-                            out.push(&[(16, 0.43788815), (27, 0.22250706), (17, 0.2189517), (28, 0.11125353), (122, 0.0057984283), (123, 0.0028992142)], 0.9992981);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['р', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['д', s @ ..] => {
-                            out.push(&[(16, 0.44191653), (17, 0.22095063), (27, 0.21860075), (28, 0.109300375), (122, 0.005706874), (123, 0.002853437)], 0.9993286);
-                            match s {
-                                [] => true,
-                                ['з', s @ ..] => {
-                                    out.push(&[(16, 0.5514), (17, 0.2757), (27, 0.11209278), (28, 0.05604639), (122, 0.0029297322)], 0.9981689);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['т', s @ ..] => {
-                            out.push(&[(27, 0.6364996), (28, 0.31825742), (122, 0.022293432), (123, 0.011154345), (16, 0.0077668424), (17, 0.0038910506)], 0.9998627);
-                            match s {
-                                [] => true,
-                                ['с', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['а', s @ ..] => {
-                                            match s {
-                                                [] => true,
-                                                ['з', '\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                ['н', '\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        ['б', 'о', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['д', s @ ..] => {
-                                            match s {
-                                                [] => true,
-                                                ['а', 'н', '\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                ['о', 'п', '\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['о', s @ ..] => {
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                ['д', '\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                ['п', '\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                ['р', 'п', '\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                ['с', '\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        ['с', 'и', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['т', 'о', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['у', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['ы', 'в', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['ш', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['о', s @ ..] => {
-                            out.push(&[(27, 0.6207828), (28, 0.31038377), (16, 0.039658196), (17, 0.01983673), (122, 0.0057526515), (123, 0.0028839551)], 0.9992981);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['д', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['т', s @ ..] => {
-                            out.push(&[(27, 0.3679713), (16, 0.2883345), (28, 0.18397802), (17, 0.14416724), (122, 0.009597925), (123, 0.004806592)], 0.9988556);
-                            match s {
-                                [] => true,
-                                ['о', s @ ..] => {
-                                    out.push(&[(16, 0.41443503), (27, 0.24531929), (17, 0.20721751), (28, 0.12265202), (122, 0.0063935304), (123, 0.0032043946)], 0.9992218);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['е', s @ ..] => {
-            out.push(&[(27, 0.6276341), (28, 0.31381705), (122, 0.022583352), (123, 0.011291676), (16, 0.008743419), (150, 0.0060730907), (17, 0.0043793395), (151, 0.0030365454)], 0.9975586);
-            match s {
-                [] => true,
-                ['б', s @ ..] => {
-                    out.push(&[(27, 0.4631113), (28, 0.23155566), (122, 0.15545891), (123, 0.077729456), (150, 0.04309148), (151, 0.02154574), (16, 0.00421149), (17, 0.002105745)], 0.9988098);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(122, 0.5217365), (123, 0.26086825), (150, 0.14493018), (151, 0.07246509)], 1.0);
-                            s.is_empty()
-                        }
-                        ['ы', 'в', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['т', s @ ..] => {
-                    out.push(&[(27, 0.66358435), (28, 0.33179218)], 0.9953765);
-                    match s {
-                        [] => true,
-                        ['с', 'о', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['д', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['р', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['с', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['з', s @ ..] => {
-            out.push(&[(27, 0.46253148), (28, 0.23126574), (16, 0.18228428), (17, 0.09114214), (1950, 0.020218205), (1951, 0.010116732)], 0.9975586);
-            match s {
-                [] => true,
-                ['и', s @ ..] => {
-                    out.push(&[(16, 0.45699245), (17, 0.22850385), (27, 0.20407416), (28, 0.10203708), (1950, 0.0051880674), (1951, 0.0025940337)], 0.99938965);
-                    match s {
-                        [] => true,
-                        ['в', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['з', s @ ..] => {
-                                    out.push(&[(16, 0.5591516), (17, 0.2795758), (27, 0.10464637), (28, 0.052323185), (1950, 0.0026550698)], 0.998352);
-                                    s.is_empty()
-                                }
-                                ['и', s @ ..] => {
-                                    out.push(&[(27, 0.35826656), (16, 0.30466163), (28, 0.17914091), (17, 0.15233082), (1950, 0.003463798)], 0.9978637);
-                                    match s {
-                                        [] => true,
-                                        ['р', s @ ..] => {
-                                            out.push(&[(27, 0.4610666), (28, 0.2305333), (16, 0.20311284), (17, 0.10154879), (1950, 0.0023041123)], 0.9985657);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['о', s @ ..] => {
-                                    out.push(&[(16, 0.5591516), (17, 0.2795758), (27, 0.10464637), (28, 0.052323185), (1950, 0.0026550698)], 0.998352);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['ы', s @ ..] => super::t16::n14051(s, out),
-                ['я', s @ ..] => {
-                    out.push(&[(16, 0.34375525), (27, 0.30835432), (17, 0.17187762), (28, 0.15417716), (1950, 0.013473717), (1951, 0.0067444877)], 0.99838257);
-                    match s {
-                        [] => true,
-                        ['л', s @ ..] => {
-                            out.push(&[(16, 0.45139238), (17, 0.22569619), (27, 0.20556955), (28, 0.102784775), (1950, 0.008987564), (1951, 0.0044861524)], 0.9989166);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['и', s @ ..] => super::t16::n5134(s, out),
-        ['о', s @ ..] => {
-            out.push(&[(27, 0.40686655), (16, 0.2490425), (28, 0.20343328), (17, 0.12452888), (965, 0.003555352), (122, 0.0033112078)], 0.99073774);
-            match s {
-                [] => true,
-                ['р', 'т', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['а', s @ ..] => {
-                            out.push(&[(27, 0.5017166), (28, 0.2508583), (16, 0.15812925), (17, 0.07905699), (965, 0.0022583352), (122, 0.002105745)], 0.99412525);
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => super::t16::n27058(s, out),
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['р', s @ ..] => super::t16::n5136(s, out),
-        ['у', s @ ..] => super::t16::n5137(s, out),
-        ['ы', s @ ..] => super::t16::n5138(s, out),
-        ['я', s @ ..] => super::t16::n5139(s, out),
-        _ => false,
-    }
-}
-
-/// Words ending -еивать.
-pub(crate) fn n1414(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(27, 0.65363544), (28, 0.32681772), (16, 0.011276417), (17, 0.0056305793)], 0.99736017);
-    match s {
-        [] => true,
-        ['в', s @ ..] => {
-            out.push(&[(27, 0.62017244), (28, 0.31009385), (16, 0.046250094), (17, 0.023132678)], 0.99964905);
-            match s {
-                [] => true,
-                ['а', s @ ..] => {
-                    out.push(&[(27, 0.47675288), (28, 0.23837644), (16, 0.18979171), (17, 0.094895855)], 0.9998169);
-                    match s {
-                        [] => true,
-                        ['з', s @ ..] => {
-                            out.push(&[(16, 0.34874496), (27, 0.31783018), (17, 0.17438011), (28, 0.15892272)], 0.9998779);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['о', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['д', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['л', 'к', s @ ..] => {
-            match s {
-                [] => true,
-                ['о', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['д', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['с', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['а', 'р', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'б', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['м', 'с', 'о', s @ ..] => {
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['р', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['с', 'о', 'д', s @ ..] => {
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['е', 'н', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -живать.
-pub(crate) fn n1415(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(27, 0.55968565), (28, 0.27985045), (16, 0.03700313), (95, 0.0249485), (17, 0.018509194), (122, 0.015869383), (96, 0.01248188), (49, 0.012191959), (123, 0.007934691), (50, 0.00608835), (965, 0.0039063096), (1950, 0.0037537194), (524, 0.0025940337)], 0.98481727);
-    match s {
-        [] => true,
-        ['\u{1}', s @ ..] => {
-            out.push(&[(197, 0.5217365), (198, 0.26086825), (54, 0.14493018), (55, 0.07246509)], 1.0);
-            s.is_empty()
-        }
-        ['а', s @ ..] => {
-            out.push(&[(27, 0.57103837), (28, 0.28551155), (16, 0.051438164), (17, 0.025711453), (122, 0.013962005), (95, 0.0081940945), (123, 0.006988632), (965, 0.0059205005), (49, 0.0056916154), (1930, 0.0044098576), (96, 0.004104677), (1950, 0.0029755093), (963, 0.0029449912), (966, 0.0029449912), (50, 0.002853437)], 0.9946898);
-            match s {
-                [] => true,
-                ['в', s @ ..] => {
-                    out.push(&[(27, 0.6011597), (28, 0.30058748), (122, 0.05816739), (123, 0.029083695), (16, 0.004623484), (17, 0.0023041123)], 0.99592584);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(122, 0.6666667), (123, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', 'н', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['а', 'з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['у', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['д', 'о', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['з', 'а', 'р', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(27, 0.65281147), (28, 0.32640573), (122, 0.012298772), (123, 0.006149386)], 0.99766535);
-                            match s {
-                                [] => true,
-                                ['д', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['р', 'п', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['а', 'з', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['с', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['ы', 'в', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['т', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['у', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['ы', 'в', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['г', s @ ..] => {
-                    out.push(&[(27, 0.5385519), (28, 0.26927596), (16, 0.1206836), (17, 0.06034943), (122, 0.0023498894)], 0.9912108);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(16, 0.6666667), (17, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', 'з', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['б', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['д', s @ ..] => {
-                            out.push(&[(27, 0.35902953), (16, 0.30267796), (28, 0.1795224), (17, 0.15133898)], 0.99256885);
-                            match s {
-                                [] => true,
-                                ['о', s @ ..] => {
-                                    out.push(&[(16, 0.4240177), (27, 0.23935302), (17, 0.21200885), (28, 0.11967651)], 0.9950561);
-                                    match s {
-                                        [] => true,
-                                        ['п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['з', 'и', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['у', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['з', s @ ..] => {
-                    out.push(&[(49, 0.2713512), (27, 0.24248111), (50, 0.13566796), (28, 0.12123293), (95, 0.11813535), (96, 0.059067674), (16, 0.02183566), (17, 0.01092546), (122, 0.0059357597), (123, 0.0029602502), (965, 0.0025177386)], 0.9921111);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(49, 0.4673991), (50, 0.23370717), (95, 0.19926757), (96, 0.09962615)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['л', s @ ..] => super::t16::n14076(s, out),
-                ['м', s @ ..] => {
-                    out.push(&[(27, 0.6517281), (28, 0.32585642), (16, 0.008041505), (17, 0.004013123), (122, 0.0021820401)], 0.99182117);
-                    s.is_empty()
-                }
-                ['н', s @ ..] => {
-                    out.push(&[(95, 0.3289845), (27, 0.2928359), (96, 0.16449225), (28, 0.14642558), (16, 0.026382849), (17, 0.013183795), (122, 0.0071564815), (123, 0.0035858701), (965, 0.0030365454), (49, 0.0029297322), (1930, 0.0022583352)], 0.9912718);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(95, 0.6666667), (96, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['р', s @ ..] => super::t16::n14079(s, out),
-                ['с', s @ ..] => super::t16::n14080(s, out),
-                ['х', s @ ..] => super::t16::n14081(s, out),
-                _ => false,
-            }
-        }
-        ['б', s @ ..] => {
-            out.push(&[(27, 0.35536736), (95, 0.25922027), (28, 0.17767605), (96, 0.12961014), (16, 0.023498895), (17, 0.011749447), (122, 0.010070954), (49, 0.0077363243), (123, 0.005035477), (50, 0.0038605325), (965, 0.0024719615), (1950, 0.0023804074)], 0.9886778);
-            match s {
-                [] => true,
-                ['о', s @ ..] => {
-                    out.push(&[(95, 0.40798047), (27, 0.2256199), (96, 0.2039826), (28, 0.11280995), (16, 0.014923324), (17, 0.007461662), (122, 0.0063935304), (49, 0.004913405), (123, 0.0032043946), (50, 0.0024567025)], 0.9897459);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['в', s @ ..] => {
-            out.push(&[(27, 0.37312886), (95, 0.23884948), (28, 0.1865568), (96, 0.11943237), (16, 0.024673838), (17, 0.01232929), (122, 0.010574502), (49, 0.008133058), (123, 0.005294881), (50, 0.0040589), (965, 0.0025940337), (1950, 0.0025024796)], 0.9881285);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['д', s @ ..] => super::t16::n5148(s, out),
-        ['е', s @ ..] => super::t16::n5149(s, out),
-        ['з', s @ ..] => super::t16::n5150(s, out),
-        ['и', s @ ..] => super::t16::n5151(s, out),
-        ['л', s @ ..] => super::t16::n5152(s, out),
-        ['о', s @ ..] => super::t16::n5153(s, out),
-        ['р', s @ ..] => super::t16::n5154(s, out),
-        ['с', s @ ..] => super::t16::n5155(s, out),
-        ['т', s @ ..] => super::t16::n5156(s, out),
-        ['у', s @ ..] => super::t16::n5157(s, out),
-        ['ы', s @ ..] => super::t16::n5158(s, out),
-        ['ю', s @ ..] => super::t16::n5159(s, out),
-        ['я', s @ ..] => super::t16::n5160(s, out),
-        _ => false,
-    }
-}
-
-/// Words ending -зивать.
-pub(crate) fn n1416(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(27, 0.49027237), (28, 0.24513619), (16, 0.15257496), (17, 0.07627985), (95, 0.011688411), (96, 0.0058442056), (122, 0.0029907683)], 0.98478675);
-    match s {
-        [] => true,
-        ['и', s @ ..] => {
-            out.push(&[(27, 0.32684824), (16, 0.32393378), (28, 0.16342412), (17, 0.16197452), (95, 0.007782101), (96, 0.0038910506)], 0.9878538);
-            match s {
-                [] => true,
-                ['м', s @ ..] => {
-                    out.push(&[(16, 0.43817806), (17, 0.21908903), (27, 0.21789883), (28, 0.108949415), (95, 0.0051880674), (96, 0.0025940337)], 0.99189746);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -кивать.
-pub(crate) fn n1417(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(27, 0.51177233), (28, 0.2558938), (16, 0.13191424), (17, 0.06596475), (963, 0.006195163), (524, 0.0058747237), (965, 0.004654002), (964, 0.0030823224), (49, 0.0029449912), (525, 0.0029297322), (966, 0.0023193713)], 0.9935454);
-    match s {
-        [] => true,
-        ['\u{1}', s @ ..] => {
-            out.push(&[(49, 0.6666667), (50, 0.33333334)], 1.0);
-            s.is_empty()
-        }
-        ['а', s @ ..] => {
-            out.push(&[(27, 0.44019225), (28, 0.22009613), (16, 0.18062104), (17, 0.09031815), (963, 0.018631266), (524, 0.017700465), (965, 0.00935378), (964, 0.009308004), (525, 0.008850233), (966, 0.00468452)], 0.99975586);
-            match s {
-                [] => true,
-                ['д', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['д', s @ ..] => {
-                            out.push(&[(16, 0.3580682), (27, 0.27948424), (17, 0.1790341), (28, 0.13974212), (963, 0.011825742), (524, 0.01123064), (965, 0.0059357597), (964, 0.0059205005), (525, 0.00561532), (966, 0.0029755093)], 0.99983215);
-                            match s {
-                                [] => true,
-                                ['о', s @ ..] => {
-                                    out.push(&[(16, 0.47072557), (17, 0.23537041), (27, 0.17744717), (28, 0.088731214), (963, 0.007507439), (524, 0.0071412222), (965, 0.0037689784), (964, 0.0037537194), (525, 0.0035706111)], 0.99801636);
-                                    match s {
-                                        [] => true,
-                                        ['п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['з', s @ ..] => {
-                    out.push(&[(524, 0.3338674), (27, 0.22574197), (525, 0.1669337), (28, 0.112870984), (16, 0.092622265), (17, 0.046311133), (963, 0.009552148), (965, 0.004791333), (964, 0.004776074), (966, 0.0023956664)], 0.9998627);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(524, 0.6666667), (525, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['к', s @ ..] => {
-                    out.push(&[(27, 0.31630427), (16, 0.30553138), (28, 0.1581445), (17, 0.15275806), (963, 0.043121997), (964, 0.021560999)], 0.9974212);
-                    match s {
-                        [] => true,
-                        ['б', s @ ..] => {
-                            out.push(&[(27, 0.43309683), (28, 0.21654078), (16, 0.20369269), (17, 0.101838715), (963, 0.028747998), (964, 0.014373999)], 0.998291);
-                            s.is_empty()
-                        }
-                        ['с', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['а', s @ ..] => {
-                                    out.push(&[(16, 0.54618144), (17, 0.27309072), (27, 0.105516136), (28, 0.052765697), (963, 0.014389258), (964, 0.0071869995)], 0.99913025);
-                                    match s {
-                                        [] => true,
-                                        ['н', s @ ..] => {
-                                            out.push(&[(16, 0.6155032), (17, 0.30775923), (27, 0.04480049), (28, 0.022400245), (963, 0.0061036088), (964, 0.0030518044)], 0.9996186);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['б', s @ ..] => {
-                                    out.push(&[(27, 0.43309683), (28, 0.21654078), (16, 0.20369269), (17, 0.101838715), (963, 0.028747998), (964, 0.014373999)], 0.998291);
-                                    s.is_empty()
-                                }
-                                ['в', s @ ..] => {
-                                    out.push(&[(16, 0.36031127), (27, 0.19363698), (17, 0.18016326), (963, 0.11219959), (28, 0.09681849), (964, 0.056107424)], 0.999237);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['и', s @ ..] => {
-                                            out.push(&[(27, 0.35130847), (16, 0.24020752), (28, 0.17566186), (17, 0.12010376), (963, 0.074799724), (964, 0.037399862)], 0.9994812);
-                                            match s {
-                                                [] => true,
-                                                ['р', s @ ..] => {
-                                                    out.push(&[(27, 0.45642787), (28, 0.22821394), (16, 0.16014344), (17, 0.08006409), (963, 0.049866483), (964, 0.024933241)], 0.99964905);
-                                                    match s {
-                                                        [] => true,
-                                                        ['п', '\u{1}', s @ ..] => super::t16::n69792(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        ['о', s @ ..] => {
-                                            out.push(&[(963, 0.29703212), (16, 0.24020752), (964, 0.14851606), (27, 0.12909132), (17, 0.12010376), (28, 0.06454566)], 0.99949646);
-                                            match s {
-                                                [] => true,
-                                                ['п', s @ ..] => {
-                                                    out.push(&[(963, 0.42023346), (964, 0.21011673), (16, 0.16014344), (27, 0.08606088), (17, 0.08006409), (28, 0.04303044)], 0.99964905);
-                                                    match s {
-                                                        [] => true,
-                                                        ['\u{1}', s @ ..] => super::t16::n69793(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['д', s @ ..] => {
-                                    out.push(&[(16, 0.48146793), (17, 0.24072634), (27, 0.1622034), (28, 0.0811017), (963, 0.022110322), (964, 0.011062791)], 0.9986725);
-                                    match s {
-                                        [] => true,
-                                        ['о', s @ ..] => {
-                                            out.push(&[(16, 0.5716945), (17, 0.28584725), (27, 0.083176926), (28, 0.041596092), (963, 0.0113374535), (964, 0.005676356)], 0.99932855);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['е', s @ ..] => {
-                                    out.push(&[(27, 0.48699167), (28, 0.24350347), (16, 0.15667963), (17, 0.078339815), (963, 0.022110322), (964, 0.011062791)], 0.9986877);
-                                    match s {
-                                        [] => true,
-                                        ['р', s @ ..] => {
-                                            out.push(&[(27, 0.5745327), (28, 0.28726634), (16, 0.08035401), (17, 0.040177006), (963, 0.0113374535), (964, 0.005676356)], 0.9993439);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['и', s @ ..] => {
-                                    out.push(&[(27, 0.43309683), (28, 0.21654078), (16, 0.20369269), (17, 0.101838715), (963, 0.028747998), (964, 0.014373999)], 0.998291);
-                                    s.is_empty()
-                                }
-                                ['о', s @ ..] => {
-                                    out.push(&[(27, 0.5775082), (28, 0.28876173), (16, 0.077744715), (17, 0.038864728), (963, 0.010971237), (964, 0.005493248)], 0.9993439);
-                                    s.is_empty()
-                                }
-                                ['т', s @ ..] => {
-                                    out.push(&[(16, 0.5133135), (17, 0.25665674), (27, 0.13430992), (28, 0.06715496), (963, 0.018310826), (964, 0.009155413)], 0.9989013);
-                                    match s {
-                                        [] => true,
-                                        ['о', s @ ..] => {
-                                            out.push(&[(16, 0.6015564), (17, 0.30077058), (27, 0.057038225), (28, 0.028519113), (963, 0.007782101), (964, 0.0038910506)], 0.9995575);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['у', s @ ..] => {
-                                    out.push(&[(27, 0.43309683), (28, 0.21654078), (16, 0.20369269), (17, 0.101838715), (963, 0.028747998), (964, 0.014373999)], 0.998291);
-                                    s.is_empty()
-                                }
-                                ['ы', s @ ..] => {
-                                    out.push(&[(16, 0.4234226), (17, 0.21170367), (963, 0.13185321), (27, 0.11079576), (964, 0.06593423), (28, 0.05539025)], 0.99909973);
-                                    match s {
-                                        [] => true,
-                                        ['в', s @ ..] => {
-                                            out.push(&[(16, 0.4647135), (17, 0.23234913), (963, 0.16293584), (964, 0.08146792), (27, 0.038803693), (28, 0.019409476)], 0.99967957);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                ['о', s @ ..] => {
-                                                    out.push(&[(963, 0.3308461), (16, 0.30980393), (964, 0.16542305), (17, 0.1549096), (27, 0.025864042), (28, 0.012939651)], 0.9997864);
-                                                    match s {
-                                                        [] => true,
-                                                        ['п', s @ ..] => super::t16::n69794(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['ы', s @ ..] => {
-                            out.push(&[(27, 0.43309683), (28, 0.21654078), (16, 0.20369269), (17, 0.101838715), (963, 0.028747998), (964, 0.014373999)], 0.998291);
-                            match s {
-                                [] => true,
-                                ['в', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['л', s @ ..] => {
-                    out.push(&[(27, 0.58352023), (28, 0.2917525), (16, 0.057450216), (17, 0.028717479), (965, 0.02323949), (966, 0.011612115)], 0.996292);
-                    match s {
-                        [] => true,
-                        ['о', s @ ..] => {
-                            out.push(&[(27, 0.628275), (28, 0.3141375), (965, 0.032867935), (966, 0.016433967), (16, 0.005294881), (17, 0.0026398108)], 0.99964905);
-                            match s {
-                                [] => true,
-                                ['в', 'а', s @ ..] => {
-                                    out.push(&[(27, 0.54065764), (28, 0.27032882), (965, 0.12413214), (966, 0.0620737)], 0.9971923);
-                                    match s {
-                                        [] => true,
-                                        ['з', s @ ..] => {
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                ['о', s @ ..] => {
-                                                    out.push(&[(27, 0.36043337), (965, 0.30498207), (28, 0.18022431), (966, 0.1524834)], 0.99812317);
-                                                    match s {
-                                                        [] => true,
-                                                        ['п', s @ ..] => super::t16::n69795(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['п', s @ ..] => {
-                            out.push(&[(27, 0.51364917), (28, 0.25682458), (16, 0.14778362), (17, 0.07388418), (965, 0.004745556), (966, 0.0023651484)], 0.99925226);
-                            match s {
-                                [] => true,
-                                ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['п', s @ ..] => {
-                                            out.push(&[(27, 0.3424277), (16, 0.32074463), (28, 0.17122148), (17, 0.16037232), (965, 0.0031586175)], 0.99792475);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    out.push(&[(16, 0.6666667), (17, 0.33333334)], 1.0);
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        ['р', 'п', '\u{1}', s @ ..] => super::t16::n55401(s, out),
-                                        _ => false,
-                                    }
-                                }
-                                ['с', s @ ..] => super::t16::n42319(s, out),
-                                ['ы', 'в', '\u{1}', s @ ..] => super::t16::n42320(s, out),
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['м', s @ ..] => super::t16::n14127(s, out),
-                ['т', s @ ..] => super::t16::n14128(s, out),
-                _ => false,
-            }
-        }
-        ['в', s @ ..] => super::t16::n5164(s, out),
-        ['и', s @ ..] => super::t16::n5165(s, out),
-        ['л', s @ ..] => super::t16::n5166(s, out),
-        ['м', s @ ..] => super::t16::n5167(s, out),
-        ['о', s @ ..] => super::t16::n5168(s, out),
-        ['р', s @ ..] => super::t16::n5169(s, out),
-        ['с', s @ ..] => super::t16::n5170(s, out),
-        ['у', s @ ..] => super::t16::n5171(s, out),
-        ['ч', s @ ..] => super::t16::n5172(s, out),
-        ['ы', s @ ..] => super::t16::n5173(s, out),
-        ['ь', s @ ..] => super::t16::n5174(s, out),
-        ['ю', s @ ..] => super::t16::n5175(s, out),
-        ['я', s @ ..] => super::t16::n5176(s, out),
-        _ => false,
-    }
-}
-
-/// Words ending -ливать.
-pub(crate) fn n1418(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(27, 0.5896544), (28, 0.29481956), (95, 0.027252613), (16, 0.025772488), (96, 0.013626306), (17, 0.012893873), (963, 0.00827039), (122, 0.0081178), (964, 0.004135195), (123, 0.0040589), (1930, 0.0023498894)], 0.9909514);
-    match s {
-        [] => true,
-        ['\u{1}', s @ ..] => {
-            out.push(&[(95, 0.34259555), (21, 0.3240711), (96, 0.17129777), (22, 0.16203555)], 1.0);
-            s.is_empty()
-        }
-        ['а', s @ ..] => {
-            out.push(&[(27, 0.608896), (28, 0.304448), (16, 0.02825971), (95, 0.018112458), (17, 0.014129855), (122, 0.011215381), (96, 0.0090486), (123, 0.00561532)], 0.99972534);
-            match s {
-                [] => true,
-                ['б', s @ ..] => {
-                    out.push(&[(27, 0.40222782), (28, 0.20111391), (16, 0.17372397), (17, 0.08686961), (122, 0.086137176), (123, 0.043076217), (95, 0.0045319297), (96, 0.0022583352)], 0.99993896);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(122, 0.6666667), (123, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            out.push(&[(27, 0.49037918), (28, 0.24518196), (16, 0.115815975), (17, 0.057907987), (122, 0.0574197), (123, 0.028717479), (95, 0.0030212863)], 0.99844354);
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['е', s @ ..] => {
-                            out.push(&[(27, 0.49037918), (28, 0.24518196), (16, 0.115815975), (17, 0.057907987), (122, 0.0574197), (123, 0.028717479), (95, 0.0030212863)], 0.99844354);
-                            match s {
-                                [] => true,
-                                ['р', 'е', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['и', s @ ..] => {
-                            out.push(&[(16, 0.33804837), (27, 0.26814678), (17, 0.16902418), (28, 0.13408102), (122, 0.0574197), (123, 0.028717479), (95, 0.0030212863)], 0.9984588);
-                            match s {
-                                [] => true,
-                                ['р', s @ ..] => {
-                                    out.push(&[(16, 0.44757763), (17, 0.22378881), (27, 0.17875944), (28, 0.08938735), (122, 0.038284887), (123, 0.019134814), (95, 0.002014191)], 0.99894714);
-                                    match s {
-                                        [] => true,
-                                        ['п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(16, 0.33804837), (27, 0.26814678), (17, 0.16902418), (28, 0.13408102), (122, 0.0574197), (123, 0.028717479), (95, 0.0030212863)], 0.9984588);
-                            match s {
-                                [] => true,
-                                ['п', s @ ..] => {
-                                    out.push(&[(16, 0.44757763), (17, 0.22378881), (27, 0.17875944), (28, 0.08938735), (122, 0.038284887), (123, 0.019134814), (95, 0.002014191)], 0.99894714);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['т', s @ ..] => {
-                            out.push(&[(27, 0.49037918), (28, 0.24518196), (16, 0.115815975), (17, 0.057907987), (122, 0.0574197), (123, 0.028717479), (95, 0.0030212863)], 0.99844354);
-                            match s {
-                                [] => true,
-                                ['о', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['в', s @ ..] => {
-                    out.push(&[(27, 0.616907), (28, 0.30844587), (122, 0.027267871), (16, 0.021774624), (123, 0.013626306), (17, 0.010879682)], 0.99890137);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(122, 0.6666667), (123, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['б', 'о', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['в', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['д', 'о', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['з', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['в', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['и', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['д', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => super::t16::n55466(s, out),
-                                        ['е', 'н', '\u{1}', s @ ..] => super::t16::n55467(s, out),
-                                        _ => false,
-                                    }
-                                }
-                                ['п', '\u{1}', s @ ..] => super::t16::n42423(s, out),
-                                ['р', 'п', '\u{1}', s @ ..] => super::t16::n42424(s, out),
-                                _ => false,
-                            }
-                        }
-                        ['с', s @ ..] => super::t16::n27327(s, out),
-                        ['т', 'о', '\u{1}', s @ ..] => super::t16::n27328(s, out),
-                        ['у', '\u{1}', s @ ..] => super::t16::n27329(s, out),
-                        ['х', s @ ..] => super::t16::n27330(s, out),
-                        ['ы', s @ ..] => super::t16::n27331(s, out),
-                        _ => false,
-                    }
-                }
-                ['ж', 'у', s @ ..] => super::t16::n14172(s, out),
-                ['з', s @ ..] => super::t16::n14173(s, out),
-                ['к', s @ ..] => super::t16::n14174(s, out),
-                ['м', s @ ..] => super::t16::n14175(s, out),
-                ['н', s @ ..] => super::t16::n14176(s, out),
-                ['п', s @ ..] => super::t16::n14177(s, out),
-                ['р', 'т', s @ ..] => super::t16::n14178(s, out),
-                ['с', s @ ..] => super::t16::n14179(s, out),
-                ['т', 'и', 'р', 'п', '\u{1}', s @ ..] => super::t16::n14180(s, out),
-                ['ч', s @ ..] => super::t16::n14181(s, out),
-                ['ш', s @ ..] => super::t16::n14182(s, out),
-                _ => false,
-            }
-        }
-        ['б', s @ ..] => super::t16::n5179(s, out),
-        ['в', s @ ..] => super::t16::n5180(s, out),
-        ['д', s @ ..] => super::t16::n5181(s, out),
-        ['е', s @ ..] => super::t16::n5182(s, out),
-        ['з', s @ ..] => super::t16::n5183(s, out),
-        ['и', s @ ..] => super::t16::n5184(s, out),
-        ['м', s @ ..] => super::t16::n5185(s, out),
-        ['о', s @ ..] => super::t16::n5186(s, out),
-        ['п', s @ ..] => super::t16::n5187(s, out),
-        ['р', s @ ..] => super::t16::n5188(s, out),
-        ['с', s @ ..] => super::t16::n5189(s, out),
-        ['т', s @ ..] => super::t16::n5190(s, out),
-        ['у', s @ ..] => super::t16::n5191(s, out),
-        ['ш', s @ ..] => super::t16::n5192(s, out),
-        ['ы', s @ ..] => super::t16::n5193(s, out),
-        ['ю', s @ ..] => super::t16::n5194(s, out),
-        ['я', s @ ..] => super::t16::n5195(s, out),
-        _ => false,
-    }
-}
-
-/// Words ending -нивать.
-pub(crate) fn n1419(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(27, 0.57686734), (28, 0.2884413), (16, 0.033920806), (49, 0.020737011), (17, 0.016968032), (95, 0.015854124), (50, 0.010360876), (96, 0.007919433), (122, 0.006729229), (1930, 0.0065613794), (123, 0.0033569848), (150, 0.0028839551), (1950, 0.0028839551), (965, 0.0023193713)], 0.9958038);
-    match s {
-        [] => true,
-        ['а', s @ ..] => {
-            out.push(&[(27, 0.59243155), (28, 0.29620814), (16, 0.050934616), (17, 0.025467308), (122, 0.012542916), (150, 0.008224613), (123, 0.006271458), (151, 0.004074159)], 0.9961548);
-            match s {
-                [] => true,
-                ['б', s @ ..] => {
-                    out.push(&[(27, 0.6280003), (28, 0.31400016), (1950, 0.02044709), (16, 0.012497139), (1951, 0.010223545), (17, 0.006256199), (122, 0.0030823224), (150, 0.002014191)], 0.99652094);
-                    match s {
-                        [] => true,
-                        ['з', 'а', 'р', '\u{1}', s @ ..] => {
-                            out.push(&[(27, 0.5217365), (28, 0.26086825), (1950, 0.14493018), (1951, 0.07246509)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['в', s @ ..] => {
-                    out.push(&[(27, 0.41905853), (16, 0.21458763), (28, 0.20952164), (17, 0.107301444), (122, 0.032028686), (123, 0.016006714)], 0.99850464);
-                    match s {
-                        [] => true,
-                        ['з', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(122, 0.6666667), (123, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['а', s @ ..] => {
-                                    out.push(&[(16, 0.43483636), (17, 0.21741055), (27, 0.2148928), (28, 0.10745403), (122, 0.016418708), (123, 0.008209354)], 0.9992218);
-                                    match s {
-                                        [] => true,
-                                        ['н', s @ ..] => {
-                                            out.push(&[(16, 0.5477836), (17, 0.27388418), (27, 0.11020066), (28, 0.05510033), (122, 0.00842298), (123, 0.00421149)], 0.9996033);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['б', s @ ..] => {
-                                    out.push(&[(27, 0.5396811), (28, 0.26984054), (16, 0.11004806), (17, 0.05502403), (122, 0.016418708), (123, 0.008209354)], 0.9992218);
-                                    match s {
-                                        [] => true,
-                                        ['о', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['д', 'о', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['з', 'а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', s @ ..] => {
-                                    out.push(&[(16, 0.34239718), (27, 0.31470206), (17, 0.17119096), (28, 0.15735103), (122, 0.009277485), (123, 0.0046387427)], 0.9995575);
-                                    match s {
-                                        [] => true,
-                                        ['д', s @ ..] => {
-                                            out.push(&[(16, 0.4504921), (17, 0.22523843), (27, 0.2097963), (28, 0.10490578), (122, 0.006195163), (123, 0.0030975814)], 0.99972534);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        ['п', s @ ..] => {
-                                            out.push(&[(16, 0.50037384), (17, 0.25018692), (27, 0.16137941), (28, 0.080689706), (122, 0.004760815), (123, 0.0023804074)], 0.9997711);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        ['р', s @ ..] => {
-                                            out.push(&[(27, 0.43202868), (16, 0.22825971), (28, 0.21600671), (17, 0.114137486), (122, 0.006195163), (123, 0.0030975814)], 0.99972534);
-                                            match s {
-                                                [] => true,
-                                                ['п', '\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        ['с', s @ ..] => {
-                                            out.push(&[(27, 0.43202868), (16, 0.22825971), (28, 0.21600671), (17, 0.114137486), (122, 0.006195163), (123, 0.0030975814)], 0.99972534);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['т', 'о', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['ы', 'в', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(16, 0.36528572), (27, 0.27936217), (17, 0.18263523), (28, 0.13968109), (122, 0.021347372), (123, 0.010681315)], 0.9989929);
-                            match s {
-                                [] => true,
-                                ['п', s @ ..] => {
-                                    out.push(&[(16, 0.4657511), (17, 0.23286793), (27, 0.18625163), (28, 0.09312581), (122, 0.014236667), (123, 0.007110704)], 0.9993439);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['г', s @ ..] => {
-                    out.push(&[(27, 0.5569696), (28, 0.27847716), (16, 0.054413673), (150, 0.052948806), (17, 0.027206836), (151, 0.026474403)], 0.9964905);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(150, 0.35088122), (16, 0.31578547), (151, 0.17543298), (17, 0.15790036)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['д', 'о', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(27, 0.63010603), (28, 0.31505302), (16, 0.018142978), (150, 0.017654689), (17, 0.0090638595), (151, 0.008819715)], 0.9988403);
-                            match s {
-                                [] => true,
-                                ['п', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['а', 'з', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['о', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['к', s @ ..] => {
-                    out.push(&[(27, 0.65738916), (28, 0.32869458), (16, 0.0063630124), (17, 0.0031891356)], 0.99563587);
-                    match s {
-                        [] => true,
-                        ['е', 'ч', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['а', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['з', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['н', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['д', 'о', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['д', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['р', 'п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['с', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['а', 'р', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['т', 'о', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['ы', 'в', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['м', s @ ..] => {
-                    out.push(&[(27, 0.6610208), (28, 0.3305104), (16, 0.0038757916)], 0.995407);
-                    match s {
-                        [] => true,
-                        ['у', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['т', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['а', 'з', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['о', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['р', s @ ..] => super::t16::n14244(s, out),
-                _ => false,
-            }
-        }
-        ['в', s @ ..] => super::t16::n5197(s, out),
-        ['г', s @ ..] => super::t16::n5198(s, out),
-        ['е', s @ ..] => super::t16::n5199(s, out),
-        ['з', s @ ..] => super::t16::n5200(s, out),
-        ['и', s @ ..] => super::t16::n5201(s, out),
-        ['о', s @ ..] => super::t16::n5202(s, out),
-        ['с', s @ ..] => super::t16::n5203(s, out),
-        ['у', s @ ..] => super::t16::n5204(s, out),
-        ['ш', s @ ..] => super::t16::n5205(s, out),
-        ['ы', s @ ..] => super::t16::n5206(s, out),
-        ['ю', s @ ..] => super::t16::n5207(s, out),
-        ['я', s @ ..] => super::t16::n5208(s, out),
-        _ => false,
-    }
-}
-
-/// Words ending -оивать.
-pub(crate) fn n1420(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(27, 0.64708936), (28, 0.3235523), (16, 0.008743419), (95, 0.0053101396), (17, 0.0043640803), (96, 0.0026550698)], 0.99171436);
-    s.is_empty()
-}
-
-/// Words ending -пивать.
-pub(crate) fn n1421(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(95, 0.54807353), (96, 0.27403677), (49, 0.039688718), (27, 0.03482109), (54, 0.020767529), (50, 0.019729916), (197, 0.018692302), (28, 0.017410545), (55, 0.010376135), (198, 0.009338521), (16, 0.0029907683)], 0.99592584);
-    match s {
-        [] => true,
-        ['\u{1}', s @ ..] => {
-            out.push(&[(54, 0.35088122), (197, 0.31578547), (55, 0.17543298), (198, 0.15790036)], 1.0);
-            s.is_empty()
-        }
-        ['а', s @ ..] => {
-            out.push(&[(95, 0.5200427), (96, 0.260029), (49, 0.118974596), (50, 0.05944915), (27, 0.012191959), (54, 0.0072785537), (197, 0.0065461206), (28, 0.0061036088), (55, 0.0036316472), (198, 0.0032654307)], 0.99751276);
-            match s {
-                [] => true,
-                ['з', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['н', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['б', 'о', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['в', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['д', s @ ..] => {
-            out.push(&[(95, 0.44069582), (96, 0.22035554), (49, 0.18651102), (50, 0.09320211), (27, 0.017410545), (54, 0.010376135), (197, 0.009338521), (28, 0.008697643), (55, 0.0051880674), (198, 0.0046692607)], 0.99644464);
-            match s {
-                [] => true,
-                ['а', 'н', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(49, 0.3465629), (95, 0.2937972), (50, 0.17323567), (96, 0.1468986), (27, 0.011612115), (54, 0.006927596), (197, 0.006225681), (28, 0.0057984283), (55, 0.003463798), (198, 0.0031128405)], 0.9976348);
-                    match s {
-                        [] => true,
-                        ['п', s @ ..] => {
-                            out.push(&[(49, 0.45326924), (50, 0.22661173), (95, 0.19586481), (96, 0.097932406), (27, 0.0077363243), (54, 0.0046082246), (197, 0.004150454), (28, 0.0038757916), (55, 0.0023041123), (198, 0.002075227)], 0.99842834);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['и', 'р', 'п', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['о', s @ ..] => {
-            out.push(&[(95, 0.6446021), (96, 0.32230106), (49, 0.0073853666), (27, 0.0064850845), (54, 0.0038605325), (50, 0.0036621653), (197, 0.003479057), (28, 0.0032349126)], 0.9950103);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['д', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'н', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['р', 'п', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['с', s @ ..] => {
-            out.push(&[(95, 0.62746626), (96, 0.3137255), (49, 0.013122759), (27, 0.011505303), (54, 0.00686656), (50, 0.0065156026), (197, 0.006179904), (28, 0.0057526515), (55, 0.00343328), (198, 0.0030823224)], 0.99765015);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['а', 'р', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['и', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['т', 'о', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['у', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        ['ы', 'в', '\u{1}', s @ ..] => {
-            s.is_empty()
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -ривать.
-pub(crate) fn n1422(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(27, 0.5681849), (28, 0.28409246), (16, 0.03994812), (180, 0.026306555), (17, 0.01997406), (95, 0.01670863), (181, 0.013153277), (96, 0.008361944), (122, 0.0081940945), (123, 0.004089418)], 0.9890135);
-    match s {
-        [] => true,
-        ['а', s @ ..] => {
-            out.push(&[(27, 0.5811704), (28, 0.29059282), (180, 0.035339896), (16, 0.034607463), (181, 0.017669948), (17, 0.017303731), (122, 0.011383231), (123, 0.0056916154), (150, 0.0038910506)], 0.99765015);
-            match s {
-                [] => true,
-                ['в', s @ ..] => {
-                    out.push(&[(27, 0.5872129), (28, 0.2936141), (16, 0.04884413), (17, 0.024429694), (122, 0.019378958), (150, 0.010147249), (123, 0.009689479), (151, 0.005004959)], 0.9983215);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(122, 0.6666667), (123, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['б', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['в', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['д', 'о', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['з', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['в', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(27, 0.56166935), (28, 0.28082705), (16, 0.07472343), (17, 0.037369344), (150, 0.015655756), (122, 0.014557107), (151, 0.007827878), (123, 0.0072785537)], 0.99990845);
-                            match s {
-                                [] => true,
-                                ['г', s @ ..] => super::t16::n42664(s, out),
-                                ['д', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['е', 'н', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['р', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['т', 'о', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['с', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['т', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['у', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['ы', 'в', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['д', s @ ..] => super::t16::n14278(s, out),
-                ['ж', s @ ..] => super::t16::n14279(s, out),
-                ['м', s @ ..] => {
-                    out.push(&[(27, 0.6495613), (28, 0.32478827), (180, 0.0070649274), (16, 0.006927596), (181, 0.003540093), (17, 0.003463798), (122, 0.0022735943)], 0.99761957);
-                    s.is_empty()
-                }
-                ['п', s @ ..] => super::t16::n14281(s, out),
-                ['с', s @ ..] => {
-                    out.push(&[(27, 0.64223695), (28, 0.3211261), (180, 0.010101473), (16, 0.009887846), (181, 0.0050507365), (17, 0.004943923), (122, 0.0032501717)], 0.99659723);
-                    s.is_empty()
-                }
-                ['т', s @ ..] => {
-                    out.push(&[(27, 0.6476692), (28, 0.32382697), (180, 0.0078583965), (16, 0.007690547), (181, 0.003921569), (17, 0.0038452735), (122, 0.0025329976)], 0.997345);
-                    s.is_empty()
-                }
-                ['у', s @ ..] => super::t16::n14284(s, out),
-                ['х', s @ ..] => super::t16::n14285(s, out),
-                ['ш', s @ ..] => super::t16::n14286(s, out),
-                _ => false,
-            }
-        }
-        ['б', s @ ..] => super::t16::n5222(s, out),
-        ['г', s @ ..] => {
-            out.push(&[(27, 0.638529), (28, 0.3192645), (16, 0.011413748), (180, 0.007522698), (17, 0.005706874), (95, 0.004776074), (181, 0.0037537194), (96, 0.0023804074), (122, 0.0023346303)], 0.99568164);
-            s.is_empty()
-        }
-        ['д', s @ ..] => super::t16::n5224(s, out),
-        ['е', s @ ..] => super::t16::n5225(s, out),
-        ['и', s @ ..] => super::t16::n5226(s, out),
-        ['о', s @ ..] => super::t16::n5227(s, out),
-        ['т', s @ ..] => super::t16::n5228(s, out),
-        ['у', s @ ..] => super::t17::n5229(s, out),
-        ['х', s @ ..] => super::t17::n5230(s, out),
-        ['ы', s @ ..] => super::t17::n5231(s, out),
-        ['ю', s @ ..] => super::t17::n5232(s, out),
-        ['я', s @ ..] => super::t17::n5233(s, out),
-        _ => false,
-    }
-}
-
-/// Words ending -уивать.
-pub(crate) fn n1423(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(27, 0.6227359), (28, 0.31136033), (16, 0.019623103), (95, 0.011917296), (17, 0.009811551), (96, 0.005966278), (122, 0.0030518044)], 0.98446625);
-    s.is_empty()
-}
-
-/// Words ending -хивать.
-pub(crate) fn n1424(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(27, 0.5048905), (28, 0.25244525), (16, 0.130251), (17, 0.0651255), (965, 0.009079118), (122, 0.008682383), (963, 0.0045471885), (150, 0.0045166705), (966, 0.0045166705), (123, 0.004333562), (1950, 0.0040589), (151, 0.0022583352), (964, 0.0022583352), (1951, 0.00202945)], 0.99899286);
-    match s {
-        [] => true,
-        ['а', s @ ..] => {
-            out.push(&[(27, 0.5000992), (28, 0.2500496), (16, 0.14264134), (17, 0.07132067), (122, 0.011718929), (963, 0.011581598), (123, 0.0058594644), (964, 0.0057831695)], 0.99905396);
-            match s {
-                [] => true,
-                ['м', s @ ..] => {
-                    out.push(&[(27, 0.46213475), (28, 0.23106737), (16, 0.17621118), (17, 0.08810559), (122, 0.027359426), (123, 0.013672084)], 0.9985504);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(122, 0.6666667), (123, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            out.push(&[(27, 0.5644007), (28, 0.28220034), (16, 0.08810559), (17, 0.044052795), (122, 0.013672084), (123, 0.006836042)], 0.9992675);
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['б', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['д', 'о', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['з', s @ ..] => {
-                            out.push(&[(16, 0.36379033), (27, 0.29333943), (17, 0.18188754), (28, 0.14666972), (122, 0.009216449), (123, 0.0046082246)], 0.9995117);
-                            match s {
-                                [] => true,
-                                ['а', s @ ..] => {
-                                    out.push(&[(16, 0.47936216), (17, 0.23968871), (27, 0.1825742), (28, 0.09127947), (122, 0.004562448), (123, 0.0022888533)], 0.99975586);
-                                    match s {
-                                        [] => true,
-                                        ['р', '\u{1}', s @ ..] => {
-                                            out.push(&[(16, 0.59295034), (17, 0.2964828), (27, 0.073716335), (28, 0.036850538)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['в', '\u{1}', s @ ..] => {
-                                    out.push(&[(27, 0.35088122), (16, 0.31578547), (28, 0.17543298), (17, 0.15790036)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['о', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['д', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['п', s @ ..] => {
-                                    out.push(&[(16, 0.41515222), (27, 0.23698787), (17, 0.20756848), (28, 0.11850157), (122, 0.014023041), (123, 0.00701915)], 0.9992523);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['р', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['с', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['т', s @ ..] => {
-                            out.push(&[(27, 0.56177616), (28, 0.28088808), (16, 0.09036393), (17, 0.045181964), (122, 0.014023041), (123, 0.00701915)], 0.9992523);
-                            match s {
-                                [] => true,
-                                ['о', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['у', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['ы', s @ ..] => {
-                            out.push(&[(27, 0.56177616), (28, 0.28088808), (16, 0.09036393), (17, 0.045181964), (122, 0.014023041), (123, 0.00701915)], 0.9992523);
-                            match s {
-                                [] => true,
-                                ['в', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['п', s @ ..] => {
-                    out.push(&[(27, 0.51404595), (28, 0.25702298), (16, 0.13038835), (17, 0.065201804), (963, 0.021454185), (964, 0.010727093)], 0.99884033);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            out.push(&[(27, 0.6250706), (28, 0.3125353), (16, 0.035538264), (17, 0.017761502), (963, 0.0058442056), (964, 0.0029297322)], 0.99967957);
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['в', s @ ..] => {
-                            out.push(&[(27, 0.25702298), (16, 0.23186083), (963, 0.1774014), (28, 0.12851149), (17, 0.115938045), (964, 0.0887007)], 0.9994354);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', s @ ..] => {
-                                    out.push(&[(963, 0.3404898), (27, 0.17134355), (964, 0.1702449), (16, 0.15457389), (28, 0.085679404), (17, 0.077286944)], 0.9996185);
-                                    match s {
-                                        [] => true,
-                                        ['п', s @ ..] => {
-                                            out.push(&[(963, 0.44921035), (964, 0.2246128), (27, 0.11422904), (16, 0.103044175), (28, 0.05711452), (17, 0.051529717)], 0.9997406);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['д', s @ ..] => {
-                            out.push(&[(27, 0.34270236), (16, 0.30914778), (28, 0.17134355), (17, 0.15457389), (963, 0.014297703), (964, 0.0071564815)], 0.99922174);
-                            match s {
-                                [] => true,
-                                ['о', s @ ..] => {
-                                    out.push(&[(16, 0.42832074), (27, 0.22845808), (17, 0.21416037), (28, 0.11422904), (963, 0.009536888), (964, 0.004760815)], 0.99946594);
-                                    match s {
-                                        [] => true,
-                                        ['п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['и', s @ ..] => {
-                            out.push(&[(27, 0.34566262), (16, 0.31155872), (28, 0.17283894), (17, 0.15577936), (963, 0.009109636), (964, 0.004562448)], 0.9995117);
-                            match s {
-                                [] => true,
-                                ['р', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['о', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['д', s @ ..] => {
-                                    out.push(&[(27, 0.5903563), (28, 0.29517052), (16, 0.065201804), (17, 0.032593273), (963, 0.010727093), (964, 0.0053711757)], 0.99942017);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['е', 'н', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['п', s @ ..] => {
-                                    out.push(&[(27, 0.32637522), (16, 0.32617685), (28, 0.16319524), (17, 0.16308843), (963, 0.013626306), (964, 0.0068055238)], 0.9992676);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['р', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['с', s @ ..] => {
-                            out.push(&[(27, 0.6339818), (28, 0.3169909), (16, 0.02792401), (17, 0.013962005), (963, 0.004592966), (964, 0.0023041123)], 0.99975586);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['в', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['и', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['т', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['ы', 'в', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['р', s @ ..] => {
-                    out.push(&[(27, 0.5833829), (28, 0.29169145), (16, 0.07132067), (17, 0.035660334), (122, 0.0058594644), (963, 0.0057831695), (123, 0.0029297322), (964, 0.0028992142)], 0.9995269);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['е', s @ ..] => {
-            out.push(&[(27, 0.5857786), (28, 0.29289693), (16, 0.0651255), (17, 0.03256275), (965, 0.0045319297), (122, 0.004333562), (963, 0.0022735943), (150, 0.0022583352), (966, 0.0022583352), (123, 0.002166781), (1950, 0.00202945)], 0.99621576);
-            s.is_empty()
-        }
-        ['и', s @ ..] => {
-            out.push(&[(27, 0.5942168), (28, 0.2971084), (965, 0.0312047), (1950, 0.027710384), (966, 0.015594721), (1951, 0.013855192), (16, 0.0118715195), (17, 0.0059357597)], 0.9974975);
-            match s {
-                [] => true,
-                ['п', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['а', s @ ..] => {
-                            out.push(&[(27, 0.42742047), (28, 0.2137026), (965, 0.12356756), (1950, 0.11108568), (966, 0.06178378), (1951, 0.05554284), (16, 0.004028382), (17, 0.002014191)], 0.9991455);
-                            match s {
-                                [] => true,
-                                ['з', s @ ..] => {
-                                    out.push(&[(27, 0.39012742), (1950, 0.21081865), (28, 0.19507134), (1951, 0.105409324), (965, 0.06337072), (966, 0.03167773), (16, 0.002059968)], 0.99853516);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            out.push(&[(27, 0.35088122), (1950, 0.31578547), (28, 0.17543298), (1951, 0.15790036)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['н', s @ ..] => {
-                                    out.push(&[(27, 0.3803769), (965, 0.22845808), (28, 0.19018845), (966, 0.11422904), (1950, 0.05554284), (1951, 0.02777142), (16, 0.002014191)], 0.99858093);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['о', s @ ..] => {
-                                            out.push(&[(965, 0.37451744), (27, 0.2535897), (966, 0.18725872), (28, 0.12678722), (1950, 0.037033647), (1951, 0.018509194)], 0.9976959);
-                                            match s {
-                                                [] => true,
-                                                ['п', s @ ..] => {
-                                                    out.push(&[(965, 0.47190052), (966, 0.23595026), (27, 0.1690547), (28, 0.08453498), (1950, 0.024689097), (1951, 0.0123445485)], 0.9984741);
-                                                    match s {
-                                                        [] => true,
-                                                        ['\u{1}', s @ ..] => super::t17::n69829(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['с', s @ ..] => super::t17::n27688(s, out),
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['о', s @ ..] => super::t17::n5237(s, out),
-        ['р', s @ ..] => super::t17::n5238(s, out),
-        ['у', s @ ..] => super::t17::n5239(s, out),
-        ['ы', s @ ..] => super::t17::n5240(s, out),
-        ['ю', s @ ..] => super::t17::n5241(s, out),
-        ['я', s @ ..] => super::t17::n5242(s, out),
-        _ => false,
-    }
-}
-
-/// Words ending -чивать.
-pub(crate) fn n1425(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(27, 0.6229343), (28, 0.31146714), (16, 0.02417029), (17, 0.012085145), (180, 0.005004959), (122, 0.004104677), (1930, 0.002761883), (181, 0.0025024796), (123, 0.002044709)], 0.98707557);
-    match s {
-        [] => true,
-        ['а', s @ ..] => {
-            out.push(&[(27, 0.64502937), (28, 0.32251468), (16, 0.009857329), (122, 0.0072938125), (17, 0.0049286643), (123, 0.0036469062), (1930, 0.0029602502), (3385, 0.0024261845)], 0.99865717);
-            match s {
-                [] => true,
-                ['к', s @ ..] => {
-                    out.push(&[(27, 0.6453803), (28, 0.3226978), (1930, 0.029770352)], 0.99784845);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['б', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['в', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['д', 'о', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['д', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['л', 'б', 'о', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['п', s @ ..] => {
-                                    out.push(&[(27, 0.54297704), (28, 0.27148852), (1930, 0.1846189)], 0.9990845);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['р', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['с', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['т', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['у', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['ы', 'в', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['л', s @ ..] => super::t17::n14334(s, out),
-                ['м', s @ ..] => {
-                    out.push(&[(27, 0.6653391), (28, 0.3326772)], 0.9980163);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['б', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['д', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['а', 'н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['з', s @ ..] => super::t17::n27741(s, out),
-                        ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => super::t17::n27743(s, out),
-                        ['с', '\u{1}', s @ ..] => super::t17::n27744(s, out),
-                        ['т', 'о', '\u{1}', s @ ..] => super::t17::n27745(s, out),
-                        ['у', '\u{1}', s @ ..] => super::t17::n27746(s, out),
-                        ['ы', 'в', '\u{1}', s @ ..] => super::t17::n27747(s, out),
-                        _ => false,
-                    }
-                }
-                ['п', s @ ..] => super::t17::n14336(s, out),
-                ['р', s @ ..] => super::t17::n14337(s, out),
-                ['т', s @ ..] => super::t17::n14338(s, out),
-                _ => false,
-            }
-        }
-        ['е', s @ ..] => super::t17::n5244(s, out),
-        ['и', s @ ..] => super::t17::n5245(s, out),
-        ['л', s @ ..] => super::t17::n5246(s, out),
-        ['н', s @ ..] => super::t17::n5247(s, out),
-        ['о', s @ ..] => super::t17::n5248(s, out),
-        ['п', s @ ..] => super::t17::n5249(s, out),
-        ['р', s @ ..] => super::t17::n5250(s, out),
-        ['у', s @ ..] => super::t17::n5251(s, out),
-        ['ю', s @ ..] => super::t17::n5252(s, out),
-        ['я', s @ ..] => super::t17::n5253(s, out),
-        _ => false,
-    }
-}
-
-/// Words ending -шивать.
-pub(crate) fn n1426(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(27, 0.5914244), (28, 0.29571983), (95, 0.054474708), (96, 0.027237354), (965, 0.0060730907), (122, 0.005706874), (966, 0.0030212863), (123, 0.002853437), (16, 0.0023041123), (49, 0.002044709), (197, 0.002014191), (2291, 0.002014191)], 0.9948882);
-    match s {
-        [] => true,
-        ['\u{1}', s @ ..] => {
-            out.push(&[(197, 0.6666667), (198, 0.33333334)], 1.0);
-            s.is_empty()
-        }
-        ['а', s @ ..] => {
-            out.push(&[(27, 0.6234989), (28, 0.31174183), (95, 0.020645456), (965, 0.0132753495), (96, 0.010315099), (122, 0.008041505), (966, 0.0066376748), (123, 0.004013123)], 0.99816895);
-            match s {
-                [] => true,
-                ['в', s @ ..] => {
-                    out.push(&[(27, 0.66045624), (28, 0.3302205), (95, 0.0029755093)], 0.9936522);
-                    match s {
-                        [] => true,
-                        ['к', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['о', 'д', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['е', 'н', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['с', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['а', 'р', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['г', 'а', 'з', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['з', s @ ..] => {
-                    out.push(&[(95, 0.4029755), (27, 0.25448996), (96, 0.20149538), (28, 0.12724498), (965, 0.005416953), (122, 0.0032806897), (966, 0.002716106)], 0.99761957);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['д', s @ ..] => {
-                            out.push(&[(95, 0.49088272), (96, 0.24544136), (27, 0.16966507), (28, 0.084824905), (965, 0.0036163882), (122, 0.0021820401)], 0.9966125);
-                            match s {
-                                [] => true,
-                                ['о', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['к', s @ ..] => {
-                    out.push(&[(27, 0.66358435), (28, 0.33179218)], 0.9953765);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['б', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['д', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['а', 'н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['д', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['е', 'н', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['р', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['с', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['и', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['т', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['у', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['ы', 'в', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['л', 'а', 'з', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['н', s @ ..] => {
-                    out.push(&[(27, 0.60567635), (28, 0.3028458), (95, 0.036591135), (96, 0.018295567), (122, 0.018051423), (123, 0.009018082), (150, 0.005416953), (151, 0.0027008469)], 0.9985962);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(95, 0.40386054), (96, 0.2019379), (122, 0.20082399), (123, 0.10040437), (150, 0.061982147), (151, 0.030991074)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['б', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['д', 'о', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['з', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['и', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => super::t17::n27850(s, out),
-                        ['с', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['ы', 'в', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['т', 'о', '\u{1}', s @ ..] => super::t17::n27852(s, out),
-                        ['ы', 'в', '\u{1}', s @ ..] => super::t17::n27853(s, out),
-                        _ => false,
-                    }
-                }
-                ['р', s @ ..] => super::t17::n14383(s, out),
-                _ => false,
-            }
-        }
-        ['б', s @ ..] => super::t17::n5256(s, out),
-        ['в', s @ ..] => super::t17::n5257(s, out),
-        ['д', s @ ..] => super::t17::n5258(s, out),
-        ['е', s @ ..] => super::t17::n5259(s, out),
-        ['и', s @ ..] => super::t17::n5260(s, out),
-        ['о', s @ ..] => super::t17::n5261(s, out),
-        ['с', s @ ..] => super::t17::n5262(s, out),
-        ['т', s @ ..] => super::t17::n5263(s, out),
-        ['у', s @ ..] => super::t17::n5264(s, out),
-        ['ы', s @ ..] => super::t17::n5265(s, out),
-        _ => false,
-    }
-}
-
-/// Words ending -щивать.
-pub(crate) fn n1427(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(27, 0.6057984), (28, 0.30289158), (16, 0.027588312), (180, 0.0193637), (17, 0.013794156), (181, 0.009689479), (122, 0.0065766387), (965, 0.0064850845), (123, 0.0032806897), (966, 0.0032196536)], 0.99868774);
-    match s {
-        [] => true,
-        ['а', s @ ..] => {
-            out.push(&[(27, 0.62589455), (28, 0.31294727), (16, 0.020294499), (17, 0.010147249), (122, 0.0099336235), (965, 0.0099336235), (123, 0.004974441), (966, 0.004974441)], 0.9990997);
-            match s {
-                [] => true,
-                ['в', s @ ..] => {
-                    out.push(&[(27, 0.5597772), (28, 0.27989623), (16, 0.10104524), (17, 0.05052262), (122, 0.002838178), (965, 0.002838178)], 0.99691767);
-                    match s {
-                        [] => true,
-                        ['ы', s @ ..] => {
-                            out.push(&[(27, 0.3731899), (16, 0.2895857), (28, 0.18658732), (17, 0.14479285)], 0.99415576);
-                            match s {
-                                [] => true,
-                                ['в', s @ ..] => {
-                                    out.push(&[(16, 0.4152743), (27, 0.24879836), (17, 0.20764478), (28, 0.12439155)], 0.99610895);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['г', s @ ..] => {
-                    out.push(&[(27, 0.43085375), (28, 0.21542688), (16, 0.11787594), (122, 0.1144274), (17, 0.0589456), (123, 0.057206072), (965, 0.0033112078)], 0.9980469);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(122, 0.6666667), (123, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['о', 'р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['т', s @ ..] => {
-                            out.push(&[(16, 0.3008011), (27, 0.28723583), (17, 0.15040818), (28, 0.14361791), (122, 0.07627985), (123, 0.038147554), (965, 0.0022125582)], 0.998703);
-                            match s {
-                                [] => true,
-                                ['о', s @ ..] => {
-                                    out.push(&[(16, 0.42276645), (17, 0.21138322), (27, 0.19148546), (28, 0.09575036), (122, 0.05085832), (123, 0.02542153)], 0.99766535);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['у', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['л', s @ ..] => {
-                    out.push(&[(27, 0.66115814), (28, 0.33057144), (16, 0.002746624)], 0.9944762);
-                    s.is_empty()
-                }
-                ['м', s @ ..] => {
-                    out.push(&[(27, 0.6615549), (28, 0.33078507), (16, 0.0025482567)], 0.9948882);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['д', 'о', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['з', 'в', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['д', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['р', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['у', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['ы', 'в', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['р', s @ ..] => {
-                    out.push(&[(27, 0.63859004), (28, 0.31929502), (965, 0.025757229), (966, 0.0128786145)], 0.9965209);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            out.push(&[(27, 0.57517356), (28, 0.28758678), (965, 0.09091325), (966, 0.045456626)], 0.9991302);
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['т', 'ы', s @ ..] => {
-                                    out.push(&[(27, 0.45424584), (28, 0.22713055), (965, 0.21211566), (966, 0.10606546)], 0.9995575);
-                                    match s {
-                                        [] => true,
-                                        ['в', s @ ..] => {
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                ['о', s @ ..] => {
-                                                    out.push(&[(965, 0.36363775), (27, 0.30283055), (966, 0.18181124), (28, 0.15141527)], 0.9996948);
-                                                    match s {
-                                                        [] => true,
-                                                        ['п', s @ ..] => super::t17::n69839(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['д', 'о', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['з', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['в', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['д', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['р', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['с', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['т', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['о', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['с', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['а', s @ ..] => {
-                                            match s {
-                                                [] => true,
-                                                ['з', '\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                ['н', '\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['ы', 'в', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['е', s @ ..] => {
-            out.push(&[(27, 0.55208665), (28, 0.27605096), (16, 0.056839857), (180, 0.05554284), (17, 0.0284123), (181, 0.02777142)], 0.99670404);
-            match s {
-                [] => true,
-                ['в', s @ ..] => {
-                    out.push(&[(27, 0.36806285), (180, 0.2592508), (28, 0.1840238), (181, 0.1296254), (16, 0.03788815), (17, 0.018951705)], 0.9978027);
-                    match s {
-                        [] => true,
-                        ['о', s @ ..] => {
-                            out.push(&[(180, 0.39505607), (27, 0.24538033), (181, 0.19752803), (28, 0.122682534), (16, 0.02526894), (17, 0.01263447)], 0.99855036);
-                            match s {
-                                [] => true,
-                                ['с', s @ ..] => {
-                                    out.push(&[(180, 0.48558787), (181, 0.24280156), (27, 0.16357672), (28, 0.08178836), (16, 0.01684596), (17, 0.00842298)], 0.99902344);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['р', s @ ..] => {
-                    out.push(&[(27, 0.56487375), (28, 0.28242925), (16, 0.08867018), (17, 0.04434272), (180, 0.012619211), (181, 0.006317235)], 0.9992523);
-                    match s {
-                        [] => true,
-                        ['к', 'с', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['и', s @ ..] => {
-                                    out.push(&[(27, 0.3765774), (16, 0.28134584), (28, 0.18829633), (17, 0.14067292), (180, 0.00842298), (181, 0.00421149)], 0.999527);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            out.push(&[(16, 0.6666667), (17, 0.33333334)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['о', s @ ..] => {
-            out.push(&[(27, 0.3756466), (180, 0.27441826), (28, 0.1878233), (181, 0.13720913), (16, 0.011032273), (17, 0.005523766), (122, 0.0026245518), (965, 0.0025940337)], 0.9968719);
-            match s {
-                [] => true,
-                ['к', s @ ..] => {
-                    out.push(&[(180, 0.47054246), (181, 0.2352636), (27, 0.1878233), (28, 0.09391928), (16, 0.005523766), (17, 0.002761883)], 0.9958343);
-                    match s {
-                        [] => true,
-                        ['а', s @ ..] => {
-                            out.push(&[(180, 0.56859696), (181, 0.2843061), (27, 0.09391928), (28, 0.04695201), (16, 0.002761883)], 0.99653625);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['п', s @ ..] => {
-                    out.push(&[(27, 0.47266346), (28, 0.23633173), (180, 0.18294041), (181, 0.09147783), (16, 0.0073548486), (17, 0.0036774243)], 0.9944457);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['р', s @ ..] => {
-            out.push(&[(27, 0.57738614), (28, 0.28868544), (16, 0.082597084), (17, 0.04130617), (180, 0.0038910506)], 0.9938659);
-            match s {
-                [] => true,
-                ['а', s @ ..] => {
-                    out.push(&[(27, 0.43889526), (16, 0.22455177), (28, 0.21945526), (17, 0.11227588)], 0.99517816);
-                    match s {
-                        [] => true,
-                        ['б', s @ ..] => {
-                            out.push(&[(16, 0.3859617), (27, 0.27866027), (17, 0.19298086), (28, 0.13933013)], 0.996933);
-                            match s {
-                                [] => true,
-                                ['е', s @ ..] => {
-                                    out.push(&[(16, 0.4884413), (17, 0.24422064), (27, 0.17692836), (28, 0.08847181)], 0.9980621);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(27, 0.64377815), (28, 0.32188907), (16, 0.021179523), (17, 0.010589762)], 0.9974365);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['у', s @ ..] => {
-            out.push(&[(27, 0.6529946), (28, 0.3264973), (16, 0.006195163), (180, 0.0043488215), (17, 0.0030975814), (181, 0.0021820401)], 0.9953155);
-            s.is_empty()
-        }
-        ['ю', s @ ..] => {
-            out.push(&[(27, 0.6528267), (28, 0.326421), (16, 0.006271458), (180, 0.0043945983), (17, 0.0031280995), (181, 0.0021972992)], 0.9952392);
-            match s {
-                [] => true,
-                ['л', 'п', 'с', s @ ..] => super::t17::n14421(s, out),
-                _ => false,
-            }
-        }
-        _ => false,
-    }
-}
-
-/// The word вытребовать.
-pub(crate) fn n64689(s: &[char], _out: &mut Path<'_>) -> bool {
-    s.is_empty()
-}
-
-/// The word вытрамбовать.
-pub(crate) fn n64690(s: &[char], _out: &mut Path<'_>) -> bool {
-    s.is_empty()
-}
-
-/// The word попробовать.
-pub(crate) fn n64691(s: &[char], _out: &mut Path<'_>) -> bool {
-    s.is_empty()
-}
-
-/// The word испробовать.
-pub(crate) fn n55825(s: &[char], _out: &mut Path<'_>) -> bool {
-    s.is_empty()
-}
-
-/// The word отпробовать.
-pub(crate) fn n43061(s: &[char], _out: &mut Path<'_>) -> bool {
-    s.is_empty()
-}
-
-/// Words ending -рбовать.
-pub(crate) fn n5275(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(39, 0.37703517), (40, 0.18850996), (101, 0.09257649), (25, 0.089662015), (677, 0.067338064), (102, 0.046280615), (26, 0.044831008), (678, 0.033661403), (2, 0.012527657), (4, 0.012375067), (975, 0.008026246), (3, 0.006256199), (8, 0.004974441), (5, 0.0041962313), (976, 0.003982605), (9, 0.0024872206)], 0.9947204);
-    match s {
-        [] => true,
-        ['е', s @ ..] => {
-            out.push(&[(39, 0.4300145), (40, 0.21499962), (25, 0.10846113), (101, 0.100663766), (26, 0.054230563), (102, 0.050324254), (677, 0.017257953), (678, 0.008636607), (2, 0.0032043946), (4, 0.0031738766), (975, 0.002059968)], 0.9930266);
-            match s {
-                [] => true,
-                ['в', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(25, 0.35088122), (101, 0.31578547), (26, 0.17543298), (102, 0.15790036)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            out.push(&[(39, 0.57007706), (40, 0.28503853), (25, 0.04426642), (101, 0.041092545), (26, 0.02214084), (102, 0.020538643), (677, 0.007049668), (678, 0.003524834)], 0.9937285);
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -юбовать.
-pub(crate) fn n5276(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(39, 0.32806897), (40, 0.16403449), (101, 0.16096742), (677, 0.10717937), (102, 0.08047608), (678, 0.053589687), (2, 0.019928282), (4, 0.019714657), (975, 0.012771801), (3, 0.009964141), (8, 0.007919433), (5, 0.0066834516), (25, 0.006668193), (976, 0.006347753), (9, 0.003952087), (26, 0.0033264668), (28, 0.0031738766)], 0.9947662);
-    match s {
-        [] => true,
-        ['л', s @ ..] => {
-            out.push(&[(39, 0.39241627), (101, 0.2017548), (40, 0.1962005), (102, 0.1008774), (677, 0.043747615), (678, 0.021866178), (2, 0.008133058), (4, 0.008041505), (975, 0.0052033267), (3, 0.004074159), (8, 0.0032349126), (5, 0.002731365), (25, 0.002716106), (976, 0.0025940337)], 0.99359125);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(101, 0.6666667), (102, 0.33333334)], 1.0);
-                    s.is_empty()
-                }
-                ['б', s @ ..] => {
-                    out.push(&[(39, 0.5260243), (40, 0.2630045), (101, 0.10345617), (102, 0.051728085), (677, 0.022430763), (678, 0.011215381), (2, 0.004165713), (4, 0.004119936), (975, 0.0026703288), (3, 0.002090486)], 0.99090564);
-                    match s {
-                        [] => true,
-                        ['о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -вовать.
-pub(crate) fn n1429(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(0, 0.25557336), (1, 0.12779431), (30, 0.104921035), (4, 0.09544518), (31, 0.052460518), (42, 0.05120928), (800, 0.047821775), (5, 0.047730222), (677, 0.043427177), (43, 0.02560464), (801, 0.023910888), (678, 0.021713588), (975, 0.009033341), (2, 0.007629511), (112, 0.007370108), (8, 0.006210422), (256, 0.005523766), (1143, 0.0046082246), (976, 0.0045166705), (3, 0.0038147555), (113, 0.0036926833), (2152, 0.0036774243), (101, 0.0036163882), (77, 0.0033264668), (9, 0.0030975814), (745, 0.002853437), (257, 0.002761883), (1144, 0.0023041123)], 0.97164875);
-    match s {
-        [] => true,
-        ['е', s @ ..] => {
-            out.push(&[(112, 0.22713055), (0, 0.17038223), (113, 0.1135729), (1, 0.085191116), (30, 0.069947354), (4, 0.06363012), (31, 0.034973677), (42, 0.034134433), (800, 0.0318761), (5, 0.03181506), (677, 0.028946364), (43, 0.017074846), (801, 0.015945679), (678, 0.014480812), (975, 0.006027314), (2, 0.0050812545), (8, 0.004135195), (256, 0.0036774243), (1143, 0.0030670634), (976, 0.0030060273), (3, 0.0025482567), (2152, 0.0024567025), (101, 0.0024109255), (77, 0.0022125582), (9, 0.002075227)], 0.9757992);
-            match s {
-                [] => true,
-                ['д', s @ ..] => {
-                    out.push(&[(112, 0.37364766), (113, 0.1868162), (0, 0.11358816), (1, 0.05679408), (30, 0.04663157), (4, 0.04242008), (31, 0.023315785), (42, 0.022751201), (800, 0.021255817), (5, 0.02121004), (677, 0.019302662), (43, 0.011383231), (801, 0.010620279), (678, 0.009643702), (975, 0.004013123), (2, 0.0033875029), (8, 0.002761883), (256, 0.0024567025), (1143, 0.002044709), (976, 0.0019989319)], 0.97604334);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['о', s @ ..] => {
-            out.push(&[(30, 0.29217976), (0, 0.17038223), (31, 0.14608988), (1, 0.085191116), (4, 0.06363012), (42, 0.034134433), (800, 0.0318761), (5, 0.03181506), (677, 0.028946364), (43, 0.017074846), (801, 0.015945679), (678, 0.014480812), (975, 0.006027314), (2, 0.0050812545), (112, 0.004913405), (8, 0.004135195), (256, 0.0036774243), (1143, 0.0030670634), (976, 0.0030060273), (3, 0.0025482567), (113, 0.0024567025), (2152, 0.0024567025), (101, 0.0024109255), (77, 0.0022125582), (9, 0.002075227)], 0.97581446);
-            match s {
-                [] => true,
-                ['в', s @ ..] => {
-                    out.push(&[(30, 0.41699857), (31, 0.20849928), (0, 0.11358816), (1, 0.05679408), (4, 0.04242008), (42, 0.022751201), (800, 0.021255817), (5, 0.02121004), (677, 0.019302662), (43, 0.011383231), (801, 0.010620279), (678, 0.009643702), (975, 0.004013123), (2, 0.0033875029), (112, 0.0032806897), (8, 0.002761883), (256, 0.0024567025), (1143, 0.002044709), (976, 0.0019989319)], 0.97441065);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['т', s @ ..] => super::t17::n5279(s, out),
-        ['х', s @ ..] => {
-            out.push(&[(112, 0.22713055), (0, 0.17038223), (113, 0.1135729), (1, 0.085191116), (30, 0.069947354), (4, 0.06363012), (31, 0.034973677), (42, 0.034134433), (800, 0.0318761), (5, 0.03181506), (677, 0.028946364), (43, 0.017074846), (801, 0.015945679), (678, 0.014480812), (975, 0.006027314), (2, 0.0050812545), (8, 0.004135195), (256, 0.0036774243), (1143, 0.0030670634), (976, 0.0030060273), (3, 0.0025482567), (2152, 0.0024567025), (101, 0.0024109255), (77, 0.0022125582), (9, 0.002075227)], 0.9757992);
-            match s {
-                [] => true,
-                ['л', s @ ..] => {
-                    out.push(&[(112, 0.37364766), (113, 0.1868162), (0, 0.11358816), (1, 0.05679408), (30, 0.04663157), (4, 0.04242008), (31, 0.023315785), (42, 0.022751201), (800, 0.021255817), (5, 0.02121004), (677, 0.019302662), (43, 0.011383231), (801, 0.010620279), (678, 0.009643702), (975, 0.004013123), (2, 0.0033875029), (8, 0.002761883), (256, 0.0024567025), (1143, 0.002044709), (976, 0.0019989319)], 0.97604334);
-                    match s {
-                        [] => true,
-                        ['о', s @ ..] => {
-                            out.push(&[(112, 0.47132066), (113, 0.23566033), (0, 0.075730525), (1, 0.037857633), (30, 0.031082628), (4, 0.028274968), (31, 0.015548944), (42, 0.015167468), (800, 0.014175631), (5, 0.0141451135), (677, 0.012863356), (43, 0.007583734), (801, 0.007080186), (678, 0.0064393072), (975, 0.0026703288), (2, 0.0022583352)], 0.97785914);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -говать.
-pub(crate) fn n1430(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(39, 0.23076218), (101, 0.20134279), (40, 0.11538872), (102, 0.100663766), (112, 0.08830396), (113, 0.04415961), (18, 0.027100023), (745, 0.026962692), (25, 0.019485772), (0, 0.018478675), (800, 0.017288473), (19, 0.013550011), (746, 0.013473717), (677, 0.010879682), (4, 0.009781033), (26, 0.009735256), (1, 0.009231708), (975, 0.008941787), (801, 0.008651866), (678, 0.005432212), (976, 0.0044251163), (2485, 0.003540093), (5, 0.0031128405), (8, 0.0030670634)], 0.99375904);
-    match s {
-        [] => true,
-        ['з', s @ ..] => {
-            out.push(&[(39, 0.20210575), (0, 0.11000229), (800, 0.10980392), (40, 0.10104524), (112, 0.07960632), (745, 0.060807202), (677, 0.058091097), (1, 0.055008773), (801, 0.05490196), (113, 0.03979553), (101, 0.03398184), (746, 0.03041123), (678, 0.029053178), (102, 0.016983291), (18, 0.0045777066), (25, 0.0032806897), (19, 0.0022888533)], 0.9917449);
-            match s {
-                [] => true,
-                ['е', s @ ..] => {
-                    out.push(&[(0, 0.21863127), (800, 0.21857023), (677, 0.11512932), (1, 0.109315634), (801, 0.109285116), (39, 0.05943389), (678, 0.05755703), (40, 0.029724576), (112, 0.02340734), (745, 0.017883575), (113, 0.01170367), (101, 0.00999466), (746, 0.008941787), (102, 0.0049897004)], 0.9945678);
-                    match s {
-                        [] => true,
-                        ['р', s @ ..] => {
-                            out.push(&[(0, 0.25058365), (800, 0.25055313), (677, 0.13189898), (1, 0.12529182), (801, 0.12527657), (678, 0.06594949), (39, 0.017486839), (40, 0.008743419), (112, 0.006881819), (745, 0.005264363), (113, 0.003448539), (101, 0.0029449912), (746, 0.0026245518)], 0.9969482);
-                            match s {
-                                [] => true,
-                                ['б', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            out.push(&[(0, 0.6666667), (1, 0.33333334)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['а', s @ ..] => {
-                                            out.push(&[(677, 0.31015489), (0, 0.16705577), (800, 0.16704051), (678, 0.15507744), (1, 0.083527885), (801, 0.08351263), (39, 0.011657893), (40, 0.0058289464), (112, 0.004592966), (745, 0.003509575), (113, 0.0022888533)], 0.9942474);
-                                            match s {
-                                                [] => true,
-                                                ['з', s @ ..] => {
-                                                    out.push(&[(677, 0.42899215), (678, 0.21449608), (0, 0.11136034), (800, 0.11136034), (1, 0.05568017), (801, 0.05568017), (39, 0.0077668424), (40, 0.0038910506), (112, 0.0030670634), (745, 0.0023346303)], 0.99462885);
-                                                    match s {
-                                                        [] => true,
-                                                        ['\u{1}', s @ ..] => super::t17::n70097(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        ['о', s @ ..] => {
-                                            out.push(&[(800, 0.4532845), (801, 0.22664225), (0, 0.12849623), (677, 0.06764325), (1, 0.064255744), (678, 0.033813994), (39, 0.008972305), (40, 0.0044861524), (112, 0.003524834), (745, 0.0027008469)], 0.99382013);
-                                            match s {
-                                                [] => true,
-                                                ['п', s @ ..] => {
-                                                    out.push(&[(800, 0.55724424), (801, 0.2786145), (0, 0.065903716), (677, 0.034683757), (1, 0.03294423), (678, 0.017349508), (39, 0.004592966), (40, 0.0023041123)], 0.993637);
-                                                    match s {
-                                                        [] => true,
-                                                        ['\u{1}', s @ ..] => super::t17::n70098(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(39, 0.3315633), (40, 0.16578928), (112, 0.1313344), (745, 0.11181811), (113, 0.06565957), (746, 0.055909056), (0, 0.0312047), (800, 0.031158922), (677, 0.016479744), (1, 0.01560998), (801, 0.015579461), (101, 0.009643702), (678, 0.008239872), (102, 0.004821851)], 0.99481195);
-                    match s {
-                        [] => true,
-                        ['м', s @ ..] => {
-                            out.push(&[(39, 0.36829177), (40, 0.18414588), (112, 0.14599833), (745, 0.12628366), (113, 0.072999164), (746, 0.06314183), (0, 0.008850233), (800, 0.008834974), (677, 0.0046692607), (1, 0.0044251163), (801, 0.0044251163), (101, 0.002731365), (678, 0.0023346303)], 0.99713135);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(112, 0.6666667), (113, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['б', s @ ..] => {
-                                    out.push(&[(39, 0.51364917), (40, 0.25682458), (112, 0.07487602), (745, 0.06475929), (113, 0.03743038), (746, 0.032379646), (0, 0.0045471885), (800, 0.0045319297), (677, 0.0023956664), (1, 0.0022735943), (801, 0.0022735943)], 0.99594104);
-                                    match s {
-                                        [] => true,
-                                        ['о', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['о', s @ ..] => {
-                                    out.push(&[(745, 0.30641642), (39, 0.24553291), (746, 0.15320058), (40, 0.12275883), (112, 0.0973373), (113, 0.04866102), (0, 0.0059052417), (800, 0.0058899825), (677, 0.0031128405), (1, 0.0029449912), (801, 0.0029449912)], 0.99470514);
-                                    match s {
-                                        [] => true,
-                                        ['п', s @ ..] => {
-                                            out.push(&[(745, 0.42648965), (746, 0.21324483), (39, 0.16368353), (40, 0.081849396), (112, 0.06489662), (113, 0.03244068), (0, 0.0039368276), (800, 0.003921569), (677, 0.002075227)], 0.99253833);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['с', s @ ..] => {
-                                    out.push(&[(39, 0.46775004), (40, 0.23387502), (112, 0.0973373), (745, 0.08418402), (113, 0.04866102), (746, 0.04209964), (0, 0.0059052417), (800, 0.0058899825), (677, 0.0031128405), (1, 0.0029449912), (801, 0.0029449912)], 0.9947051);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['и', s @ ..] => {
-            out.push(&[(39, 0.3250782), (112, 0.17662318), (40, 0.1625391), (101, 0.10336462), (113, 0.08830396), (102, 0.05168231), (25, 0.045319296), (26, 0.022659648), (18, 0.003479057), (745, 0.003463798), (0, 0.0023804074), (800, 0.0022278172)], 0.9871214);
-            match s {
-                [] => true,
-                ['з', s @ ..] => {
-                    out.push(&[(112, 0.41916534), (113, 0.20958267), (39, 0.16418707), (40, 0.08209354), (101, 0.052201115), (102, 0.026108187), (25, 0.022888534), (26, 0.011444267)], 0.9876707);
-                    s.is_empty()
-                }
-                ['п', s @ ..] => {
-                    out.push(&[(39, 0.47383842), (40, 0.23691158), (101, 0.124773026), (102, 0.062378883), (112, 0.050461587), (113, 0.025238423), (25, 0.012954909), (26, 0.0064698253)], 0.9930267);
-                    match s {
-                        [] => true,
-                        ['ш', s @ ..] => {
-                            out.push(&[(39, 0.5163348), (40, 0.2581674), (101, 0.13089189), (102, 0.065445945), (112, 0.014419775), (113, 0.0072022583), (25, 0.0036926833)], 0.9961547);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(101, 0.6666667), (102, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['а', s @ ..] => {
-                                    out.push(&[(39, 0.5915007), (40, 0.29575035), (101, 0.065445945), (102, 0.032715343), (112, 0.0072022583), (113, 0.0036011292)], 0.9962157);
-                                    match s {
-                                        [] => true,
-                                        ['з', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['н', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', 'р', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['р', s @ ..] => {
-                    out.push(&[(39, 0.33948272), (40, 0.16974136), (112, 0.1252613), (25, 0.09951934), (101, 0.09813077), (113, 0.062623024), (26, 0.04975967), (102, 0.049057756)], 0.99357593);
-                    match s {
-                        [] => true,
-                        ['т', 'н', 'и', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(25, 0.24600595), (112, 0.22140841), (101, 0.19926757), (26, 0.123002976), (113, 0.110704206), (102, 0.09962615)], 1.0000153);
-                                    s.is_empty()
-                                }
-                                ['а', s @ ..] => {
-                                    out.push(&[(39, 0.49887845), (40, 0.24943922), (112, 0.064240485), (25, 0.05102617), (101, 0.050324254), (113, 0.032120243), (26, 0.025513085), (102, 0.025162127)], 0.99670404);
-                                    match s {
-                                        [] => true,
-                                        ['з', s @ ..] => {
-                                            out.push(&[(39, 0.58062106), (40, 0.29031816), (112, 0.03294423), (25, 0.026169222), (101, 0.025803005), (113, 0.016464485), (26, 0.013092241), (102, 0.012909133)], 0.99832153);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['о', s @ ..] => {
-                                    out.push(&[(39, 0.44855422), (40, 0.22427711), (112, 0.08351263), (25, 0.06634623), (101, 0.06541543), (113, 0.041748684), (26, 0.033173114), (102, 0.032715343)], 0.99574274);
-                                    match s {
-                                        [] => true,
-                                        ['п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['т', s @ ..] => {
-                    out.push(&[(112, 0.339971), (39, 0.21672389), (113, 0.1699855), (40, 0.108354315), (101, 0.06890974), (102, 0.03445487), (25, 0.030212864), (26, 0.015106432), (18, 0.0023193713), (745, 0.0023041123)], 0.9883421);
-                    match s {
-                        [] => true,
-                        ['с', s @ ..] => {
-                            out.push(&[(112, 0.44887465), (113, 0.2244297), (39, 0.14448768), (40, 0.07223621), (101, 0.045944914), (102, 0.022964828), (25, 0.020141909), (26, 0.010070954)], 0.9891508);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['н', s @ ..] => {
-            out.push(&[(101, 0.34709698), (102, 0.17354086), (112, 0.09898528), (39, 0.08775464), (18, 0.07322805), (113, 0.049500268), (40, 0.043884948), (19, 0.036621653), (25, 0.028717479), (745, 0.025696194), (26, 0.014358739), (746, 0.012848097)], 0.99223316);
-            match s {
-                [] => true,
-                ['а', s @ ..] => {
-                    out.push(&[(39, 0.20292974), (25, 0.1985809), (101, 0.1672694), (40, 0.1014725), (26, 0.09929045), (102, 0.0836347), (112, 0.0476997), (18, 0.03529412), (113, 0.02384985), (19, 0.01763943), (745, 0.012375067), (746, 0.006195163)], 0.996231);
-                    match s {
-                        [] => true,
-                        ['в', s @ ..] => {
-                            out.push(&[(25, 0.28044558), (39, 0.25844204), (26, 0.14021516), (40, 0.12922865), (101, 0.08061341), (102, 0.040314335), (112, 0.022995345), (18, 0.017013809), (113, 0.011490043), (19, 0.008499275), (745, 0.005966278), (746, 0.0029907683)], 0.9982147);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', s @ ..] => {
-                                    out.push(&[(39, 0.394522), (40, 0.19725338), (25, 0.18695353), (26, 0.093476765), (101, 0.053742275), (102, 0.026871137), (112, 0.015320058), (18, 0.0113374535), (113, 0.007660029), (19, 0.005676356), (745, 0.003982605)], 0.9967956);
-                                    match s {
-                                        [] => true,
-                                        ['п', s @ ..] => {
-                                            out.push(&[(39, 0.48523688), (40, 0.24261844), (25, 0.12463569), (26, 0.062317844), (101, 0.035828184), (102, 0.017914092), (112, 0.010223545), (18, 0.007553216), (113, 0.0051117726), (19, 0.0037842374), (745, 0.0026550698)], 0.99787897);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['е', s @ ..] => {
-                    out.push(&[(101, 0.27217516), (112, 0.1729305), (39, 0.16842908), (102, 0.13607995), (113, 0.08645762), (40, 0.08421454), (18, 0.029297322), (19, 0.014648661), (25, 0.011490043), (745, 0.0102693215), (26, 0.005737392), (746, 0.0051422906)], 0.9968719);
-                    match s {
-                        [] => true,
-                        ['л', s @ ..] => {
-                            out.push(&[(101, 0.30275425), (39, 0.25088882), (102, 0.1513695), (40, 0.12544441), (112, 0.08645762), (113, 0.04322881), (18, 0.014648661), (19, 0.0073243305), (25, 0.005737392), (745, 0.0051422906), (26, 0.002868696), (746, 0.0025635157)], 0.9984283);
-                            match s {
-                                [] => true,
-                                ['е', 'п', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            out.push(&[(101, 0.6666667), (102, 0.33333334)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['а', s @ ..] => {
-                                            out.push(&[(39, 0.38947126), (101, 0.20183109), (40, 0.19473563), (102, 0.10092317), (112, 0.057648584), (113, 0.028824292), (18, 0.009765774), (19, 0.004882887), (25, 0.0038300145), (745, 0.003418021)], 0.99533075);
-                                            match s {
-                                                [] => true,
-                                                ['з', s @ ..] => super::t17::n64963(s, out),
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['р', s @ ..] => super::t17::n27979(s, out),
-                        _ => false,
-                    }
-                }
-                ['и', s @ ..] => super::t17::n14442(s, out),
-                _ => false,
-            }
-        }
-        ['о', s @ ..] => super::t17::n5284(s, out),
-        ['р', s @ ..] => super::t17::n5285(s, out),
-        ['у', s @ ..] => super::t17::n5286(s, out),
-        ['ю', s @ ..] => super::t17::n5287(s, out),
-        _ => false,
-    }
-}
-
-/// Words ending -довать.
-pub(crate) fn n1431(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(677, 0.1172961), (39, 0.114503704), (112, 0.065674834), (800, 0.065430686), (2, 0.059159227), (678, 0.05864042), (40, 0.057251852), (0, 0.056870375), (8, 0.047013048), (4, 0.04432746), (745, 0.03807126), (101, 0.03321889), (113, 0.032837417), (801, 0.032715343), (3, 0.029587243), (1, 0.028442817), (9, 0.023514153), (5, 0.0221561), (746, 0.019028), (102, 0.016601816), (25, 0.012619211), (18, 0.0077058063), (26, 0.006317235), (2678, 0.004135195), (19, 0.0038452735), (2679, 0.002075227)], 0.9990387);
-    match s {
-        [] => true,
-        ['а', s @ ..] => {
-            out.push(&[(677, 0.27824825), (678, 0.1391165), (0, 0.09520104), (39, 0.06176852), (112, 0.05503929), (800, 0.055008773), (2, 0.05413901), (1, 0.04759289), (4, 0.047486078), (40, 0.03088426), (113, 0.027512016), (801, 0.027496757), (3, 0.027069505), (5, 0.023743039), (8, 0.0064850845), (745, 0.0052491035), (101, 0.0045777066), (9, 0.0032501717), (746, 0.0026245518), (102, 0.0022888533)], 0.9947814);
-            match s {
-                [] => true,
-                ['р', s @ ..] => {
-                    out.push(&[(677, 0.31853208), (678, 0.15927367), (39, 0.08146792), (112, 0.08007935), (2, 0.07989624), (4, 0.07164111), (40, 0.04072633), (113, 0.040039673), (3, 0.03994812), (5, 0.035828184), (0, 0.019623103), (800, 0.0113374535), (1, 0.009811551), (801, 0.005676356)], 0.99388117);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(2, 0.35088122), (4, 0.31578547), (3, 0.17543298), (5, 0.15790036)], 1.0);
-                            s.is_empty()
-                        }
-                        ['б', s @ ..] => {
-                            out.push(&[(677, 0.4881361), (678, 0.24406806), (39, 0.0417792), (112, 0.041062027), (2, 0.040970474), (4, 0.036743727), (40, 0.0208896), (113, 0.020538643), (3, 0.020477608), (5, 0.018371863), (0, 0.010070954), (800, 0.0058136876), (1, 0.005035477), (801, 0.0029144732)], 0.9968719);
-                            match s {
-                                [] => true,
-                                ['о', s @ ..] => {
-                                    out.push(&[(677, 0.5751125), (678, 0.28755626), (39, 0.021423668), (112, 0.021057451), (2, 0.021011673), (4, 0.018844891), (40, 0.010711834), (113, 0.010528726), (3, 0.010498207), (5, 0.009414816), (0, 0.0051575494), (800, 0.0029755093), (1, 0.0025787747)], 0.9968719);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(677, 0.4881361), (678, 0.24406806), (39, 0.0417792), (112, 0.041062027), (2, 0.040970474), (4, 0.036743727), (40, 0.0208896), (113, 0.020538643), (3, 0.020477608), (5, 0.018371863), (0, 0.010070954), (800, 0.0058136876), (1, 0.005035477), (801, 0.0029144732)], 0.9968719);
-                            match s {
-                                [] => true,
-                                ['п', s @ ..] => {
-                                    out.push(&[(677, 0.5751125), (678, 0.28755626), (39, 0.021423668), (112, 0.021057451), (2, 0.021011673), (4, 0.018844891), (40, 0.010711834), (113, 0.010528726), (3, 0.010498207), (5, 0.009414816), (0, 0.0051575494), (800, 0.0029755093), (1, 0.0025787747)], 0.9968719);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['т', s @ ..] => {
-                            out.push(&[(39, 0.20740062), (112, 0.20669872), (677, 0.15927367), (40, 0.10370031), (113, 0.10334936), (678, 0.079636835), (2, 0.03994812), (4, 0.035828184), (3, 0.01997406), (5, 0.017914092), (0, 0.009811551), (800, 0.005676356), (1, 0.004913405), (801, 0.002838178)], 0.99696344);
-                            match s {
-                                [] => true,
-                                ['с', s @ ..] => {
-                                    out.push(&[(39, 0.27035934), (112, 0.27002364), (40, 0.13517967), (113, 0.13501182), (677, 0.079636835), (678, 0.039810788), (2, 0.01997406), (4, 0.017914092), (3, 0.009979401), (5, 0.008957046), (0, 0.004913405), (800, 0.002838178), (1, 0.0024567025)], 0.997055);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            out.push(&[(112, 0.6666667), (113, 0.33333334)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['т', s @ ..] => {
-                                            out.push(&[(39, 0.40247196), (40, 0.20123598), (112, 0.18001068), (113, 0.09001297), (677, 0.053086136), (678, 0.026550699), (2, 0.013321126), (4, 0.011947814), (3, 0.0066529335), (5, 0.005966278), (0, 0.0032654307)], 0.994522);
-                                            match s {
-                                                [] => true,
-                                                ['о', s @ ..] => {
-                                                    out.push(&[(39, 0.49053177), (40, 0.24527352), (112, 0.12001221), (113, 0.059998475), (677, 0.035385672), (678, 0.017700465), (2, 0.008880751), (4, 0.00796521), (3, 0.0044403756), (5, 0.003982605), (0, 0.0021820401)], 0.9963531);
-                                                    match s {
-                                                        [] => true,
-                                                        ['\u{1}', s @ ..] => super::t17::n70102(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['с', s @ ..] => {
-                    out.push(&[(677, 0.26811627), (0, 0.21426718), (678, 0.1340505), (800, 0.11421378), (1, 0.10713359), (801, 0.05711452), (39, 0.018173495), (112, 0.016189823), (2, 0.01593042), (4, 0.013962005), (40, 0.009079118), (113, 0.008087282), (3, 0.00796521), (5, 0.006988632)], 0.9912718);
-                    match s {
-                        [] => true,
-                        ['о', s @ ..] => {
-                            out.push(&[(677, 0.2651255), (0, 0.2493019), (678, 0.13257039), (800, 0.13163958), (1, 0.12465095), (801, 0.06581216), (39, 0.0053406577), (112, 0.004760815), (2, 0.00468452), (4, 0.004104677), (40, 0.0026703288), (113, 0.0023804074), (3, 0.0023346303), (5, 0.002059968)], 0.9974365);
-                            match s {
-                                [] => true,
-                                ['д', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            out.push(&[(0, 0.6666667), (1, 0.33333334)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['з', s @ ..] => {
-                                            out.push(&[(677, 0.46074617), (678, 0.23038071), (0, 0.12784009), (800, 0.06750591), (1, 0.06392004), (801, 0.033752955), (39, 0.002746624), (112, 0.0024414435), (2, 0.0023956664), (4, 0.002105745)], 0.99383533);
-                                            match s {
-                                                [] => true,
-                                                ['а', s @ ..] => {
-                                                    out.push(&[(677, 0.56107426), (678, 0.28053713), (0, 0.065568015), (800, 0.03462272), (1, 0.032776378), (801, 0.017303731)], 0.9918822);
-                                                    match s {
-                                                        [] => true,
-                                                        ['р', '\u{1}', s @ ..] => super::t17::n70103(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        ['о', s @ ..] => {
-                                            out.push(&[(800, 0.30997178), (677, 0.17676051), (0, 0.16620126), (801, 0.15498589), (678, 0.088380255), (1, 0.08310063), (39, 0.003555352), (112, 0.0031738766), (2, 0.0031280995), (4, 0.002731365)], 0.991989);
-                                            match s {
-                                                [] => true,
-                                                ['п', s @ ..] => {
-                                                    out.push(&[(800, 0.42887008), (801, 0.21443504), (677, 0.117830165), (0, 0.11079576), (678, 0.058915082), (1, 0.05540551), (39, 0.0023804074), (112, 0.002121004), (2, 0.002075227)], 0.99282825);
-                                                    match s {
-                                                        [] => true,
-                                                        ['\u{1}', s @ ..] => super::t17::n70104(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['е', s @ ..] => {
-            out.push(&[(800, 0.10690471), (8, 0.09869535), (2, 0.098420694), (677, 0.09752041), (0, 0.08119325), (4, 0.08075074), (801, 0.053452354), (9, 0.049347676), (3, 0.049210347), (678, 0.048767835), (1, 0.040604256), (5, 0.04037537), (39, 0.027695125), (745, 0.02497902), (112, 0.0141451135), (40, 0.013855192), (746, 0.012497139), (25, 0.012268254), (2678, 0.011963073), (101, 0.011810483), (113, 0.007080186), (26, 0.006134127), (2679, 0.0059815366), (102, 0.0059052417)], 0.9995575);
-            match s {
-                [] => true,
-                ['б', s @ ..] => {
-                    out.push(&[(745, 0.23054856), (39, 0.1203479), (112, 0.11583123), (746, 0.11528191), (40, 0.06016632), (113, 0.057907987), (800, 0.035629816), (8, 0.032898452), (2, 0.032806896), (677, 0.032501716), (0, 0.027069505), (4, 0.026916916), (801, 0.017822538), (9, 0.016449226), (3, 0.016403448), (678, 0.016250858), (1, 0.013534753), (5, 0.013458458), (25, 0.004089418), (2678, 0.003982605), (101, 0.0039368276), (26, 0.002044709)], 0.99588007);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(112, 0.6666667), (113, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            out.push(&[(745, 0.44861525), (746, 0.22430763), (39, 0.06016632), (112, 0.057907987), (40, 0.030090792), (113, 0.028961623), (800, 0.017822538), (8, 0.016449226), (2, 0.016403448), (677, 0.016250858), (0, 0.013534753), (4, 0.013458458), (801, 0.008911269), (9, 0.008224613), (3, 0.0081940945), (678, 0.008133058), (1, 0.006759747), (5, 0.006729229), (25, 0.002044709)], 0.9929656);
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['е', s @ ..] => {
-                            out.push(&[(39, 0.30244908), (745, 0.15370412), (40, 0.15123217), (112, 0.07721065), (746, 0.07684443), (113, 0.038605325), (800, 0.023758298), (8, 0.021927215), (2, 0.021866178), (677, 0.021667812), (0, 0.018051423), (4, 0.01794461), (801, 0.0118715195), (9, 0.010971237), (3, 0.010940718), (678, 0.010833906), (1, 0.009018082), (5, 0.008972305), (25, 0.002731365), (2678, 0.0026550698), (101, 0.0026245518)], 0.99588007);
-                            match s {
-                                [] => true,
-                                ['р', s @ ..] => {
-                                    out.push(&[(39, 0.42384985), (40, 0.21193255), (745, 0.10246433), (112, 0.05148394), (746, 0.051239796), (113, 0.02574197), (800, 0.015838865), (8, 0.014618143), (2, 0.014587625), (677, 0.014450294), (0, 0.012024109), (4, 0.011963073), (801, 0.007919433), (9, 0.0073090717), (3, 0.0072938125), (678, 0.0072175176), (1, 0.0060120546), (5, 0.0059815366)], 0.991928);
-                                    match s {
-                                        [] => true,
-                                        ['е', 'п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['в', s @ ..] => {
-                    out.push(&[(4, 0.23111315), (2, 0.13980316), (0, 0.122560464), (5, 0.115556575), (677, 0.07389944), (3, 0.06990158), (8, 0.06323339), (1, 0.061280232), (678, 0.03695735), (9, 0.031616695), (800, 0.018341344), (801, 0.009170672), (39, 0.004745556), (745, 0.0042877854), (112, 0.0024261845), (40, 0.0023804074), (746, 0.002136263), (25, 0.002105745), (2678, 0.002044709), (101, 0.00202945)], 0.99559015);
-                    match s {
-                        [] => true,
-                        ['а', s @ ..] => {
-                            out.push(&[(0, 0.38764018), (1, 0.19382009), (4, 0.118516825), (2, 0.071702145), (5, 0.059266042), (677, 0.03790341), (3, 0.035843443), (8, 0.032425422), (678, 0.018951705), (9, 0.01622034), (800, 0.0093995575), (801, 0.0046997787), (39, 0.0024414435), (745, 0.0021972992)], 0.99102765);
-                            match s {
-                                [] => true,
-                                ['з', s @ ..] => {
-                                    out.push(&[(0, 0.5235828), (1, 0.26178378), (4, 0.060776684), (2, 0.036774244), (5, 0.030395972), (677, 0.019439993), (3, 0.018387122), (8, 0.016632333), (678, 0.009719997), (9, 0.008316167), (800, 0.004821851), (801, 0.0024109255)], 0.9930419);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['о', s @ ..] => super::t17::n28013(s, out),
-                        _ => false,
-                    }
-                }
-                ['л', s @ ..] => super::t17::n14453(s, out),
-                ['р', s @ ..] => super::t17::n14454(s, out),
-                ['с', s @ ..] => super::t17::n14455(s, out),
-                _ => false,
-            }
-        }
-        ['ж', s @ ..] => {
-            out.push(&[(745, 0.23889525), (112, 0.23695736), (746, 0.119447626), (113, 0.11847105), (677, 0.03976501), (39, 0.03881895), (800, 0.022186618), (2, 0.020050354), (678, 0.019882506), (40, 0.019409476), (0, 0.019272145), (8, 0.015945679), (4, 0.015030136), (101, 0.011261159), (801, 0.011093309), (3, 0.010025177), (1, 0.009643702), (9, 0.00796521), (5, 0.007507439), (102, 0.0056305793), (25, 0.0042877854), (18, 0.0026092927), (26, 0.002136263)], 0.99629205);
-            match s {
-                [] => true,
-                ['а', s @ ..] => super::t17::n14456(s, out),
-                _ => false,
-            }
-        }
-        ['з', s @ ..] => super::t17::n5291(s, out),
-        ['и', s @ ..] => super::t17::n5292(s, out),
-        ['л', s @ ..] => super::t17::n5293(s, out),
-        ['н', s @ ..] => super::t17::n5294(s, out),
-        ['о', s @ ..] => super::t17::n5295(s, out),
-        ['р', s @ ..] => super::t17::n5296(s, out),
-        ['у', s @ ..] => super::t17::n5297(s, out),
-        ['я', s @ ..] => super::t17::n5298(s, out),
-        _ => false,
-    }
-}
-
-/// Words ending -жовать.
-pub(crate) fn n1432(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(112, 0.23566033), (113, 0.117830165), (8, 0.07687495), (4, 0.06755169), (39, 0.056656748), (677, 0.05070573), (0, 0.041275654), (9, 0.038422216), (5, 0.03370718), (2, 0.030914778), (40, 0.028274968), (101, 0.027115282), (678, 0.025345236), (1, 0.020630198), (3, 0.01544213), (102, 0.01356527), (18, 0.013427939), (800, 0.01170367), (25, 0.011001755), (30, 0.010162509), (745, 0.009643702), (19, 0.0067139696), (801, 0.0058594644), (26, 0.00546273), (31, 0.0050812545), (42, 0.005004959), (746, 0.004821851), (77, 0.0030975814), (642, 0.002853437), (43, 0.0025024796), (975, 0.0022583352)], 0.9795682);
-    match s {
-        [] => true,
-        ['н', s @ ..] => {
-            out.push(&[(112, 0.37932402), (113, 0.18966964), (8, 0.051255055), (4, 0.045029372), (39, 0.03776608), (677, 0.033798732), (0, 0.027527276), (9, 0.025619898), (5, 0.022476539), (2, 0.02059968), (40, 0.018860152), (101, 0.01808194), (678, 0.016906997), (1, 0.0137483785), (3, 0.010284581), (102, 0.009033341), (18, 0.008957046), (800, 0.007812619), (25, 0.0073395898), (30, 0.0067750057), (745, 0.0064240484), (19, 0.0044708936), (801, 0.0039063096), (26, 0.0036469062), (31, 0.0033875029), (42, 0.0033264668), (746, 0.0032196536), (77, 0.002059968)], 0.9813077);
-            match s {
-                [] => true,
-                ['и', s @ ..] => {
-                    out.push(&[(112, 0.4751049), (113, 0.23755245), (8, 0.03416495), (4, 0.030029755), (39, 0.025177386), (677, 0.022537576), (0, 0.018341344), (9, 0.017074846), (5, 0.01498436), (2, 0.01373312), (40, 0.012573434), (101, 0.012054628), (678, 0.011261159), (1, 0.009170672), (3, 0.00686656), (102, 0.006027314), (18, 0.005966278), (800, 0.0052033267), (25, 0.004882887), (30, 0.0045166705), (745, 0.0042877854), (19, 0.0029907683), (801, 0.0026092927), (26, 0.0024261845), (31, 0.0022583352), (42, 0.0022278172), (746, 0.002136263)], 0.98616004);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -зовать.
-pub(crate) fn n1433(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(18, 0.27168688), (39, 0.13835356), (19, 0.13585107), (101, 0.103501946), (25, 0.07794309), (40, 0.06918441), (102, 0.051743343), (26, 0.038971543), (87, 0.01185626), (2, 0.007080186), (677, 0.0066071567), (8, 0.0063630124), (112, 0.0061036088), (88, 0.0059205005), (4, 0.0035706111), (3, 0.003540093), (0, 0.003509575), (678, 0.0032959487), (9, 0.0031738766), (113, 0.0030518044), (975, 0.0029907683), (1184, 0.0029602502), (1433, 0.0029602502), (2150, 0.0029602502), (2206, 0.0029602502), (2992, 0.0029602502), (3102, 0.0029602502), (3180, 0.0029602502), (3188, 0.0029602502), (3038, 0.0026703288)], 0.98065156);
-    match s {
-        [] => true,
-        ['а', s @ ..] => {
-            out.push(&[(39, 0.35396352), (40, 0.17697413), (18, 0.10974289), (25, 0.09709316), (19, 0.054871444), (26, 0.04853895), (112, 0.044251163), (3038, 0.039459832), (113, 0.022125581), (3039, 0.019562066), (101, 0.013488975), (102, 0.0067444877)], 0.9868162);
-            match s {
-                [] => true,
-                ['г', s @ ..] => {
-                    out.push(&[(39, 0.48207828), (40, 0.24104677), (112, 0.107881285), (113, 0.053940643), (18, 0.03135729), (25, 0.027740901), (19, 0.015671015), (26, 0.013870451), (3038, 0.011276417), (3039, 0.005584802), (101, 0.0038605325)], 0.9943084);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(112, 0.6666667), (113, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', 'з', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['д', 'о', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['р', s @ ..] => {
-                    out.push(&[(39, 0.3089189), (40, 0.15446708), (25, 0.14773785), (18, 0.131487), (26, 0.07386892), (19, 0.06575113), (3038, 0.06565957), (3039, 0.032806896), (112, 0.008560311), (113, 0.0042877854), (101, 0.0026092927)], 0.9961547);
-                    match s {
-                        [] => true,
-                        ['б', 'о', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['е', s @ ..] => {
-                                    out.push(&[(39, 0.26215), (25, 0.1963531), (3038, 0.1492485), (40, 0.131075), (26, 0.09817655), (3039, 0.07461662), (18, 0.05366598), (19, 0.02684062), (112, 0.003494316)], 0.99562067);
-                                    match s {
-                                        [] => true,
-                                        ['р', s @ ..] => {
-                                            match s {
-                                                [] => true,
-                                                ['е', s @ ..] => {
-                                                    out.push(&[(39, 0.3969787), (40, 0.19848935), (25, 0.13090715), (3038, 0.09950408), (26, 0.065445945), (3039, 0.049744412), (18, 0.035782408), (19, 0.017883575), (112, 0.0023346303)], 0.99707025);
-                                                    match s {
-                                                        [] => true,
-                                                        ['п', s @ ..] => super::t17::n70131(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                ['п', s @ ..] => {
-                                                    out.push(&[(25, 0.2716411), (3038, 0.23038071), (26, 0.13582055), (39, 0.13443199), (3039, 0.11519036), (40, 0.067215994), (18, 0.027527276), (19, 0.013763638)], 0.9959716);
-                                                    match s {
-                                                        [] => true,
-                                                        ['\u{1}', s @ ..] => super::t17::n70132(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['о', s @ ..] => {
-                                    out.push(&[(39, 0.48780042), (40, 0.24390021), (25, 0.07386892), (18, 0.06575113), (26, 0.03694209), (19, 0.032867935), (3038, 0.032837417), (3039, 0.016403448), (112, 0.0042877854), (113, 0.002136263)], 0.9967956);
-                                    match s {
-                                        [] => true,
-                                        ['р', 'п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['с', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['б', s @ ..] => {
-            out.push(&[(1433, 0.22420081), (18, 0.18112458), (1434, 0.1111162), (39, 0.09224079), (19, 0.09056229), (101, 0.069001295), (25, 0.05195697), (40, 0.046112765), (102, 0.034500647), (26, 0.025986115), (87, 0.007904174), (2, 0.004715038), (677, 0.0044098576), (8, 0.004242008), (112, 0.004074159), (88, 0.003952087), (4, 0.0023804074), (3, 0.0023651484), (0, 0.0023498894), (678, 0.0021972992), (9, 0.002121004), (113, 0.00202945)], 0.969543);
-            match s {
-                [] => true,
-                ['о', s @ ..] => {
-                    out.push(&[(1433, 0.3716945), (1434, 0.1851835), (18, 0.12074464), (39, 0.06149386), (19, 0.06037995), (101, 0.04600595), (25, 0.03463798), (40, 0.03074693), (102, 0.022995345), (26, 0.01731899), (87, 0.005264363), (2, 0.0031433585), (677, 0.0029297322), (8, 0.002822919), (112, 0.002716106), (88, 0.0026398108)], 0.9707179);
-                    match s {
-                        [] => true,
-                        ['г', s @ ..] => {
-                            out.push(&[(1433, 0.4700084), (1434, 0.23456168), (18, 0.0805066), (39, 0.041000992), (19, 0.0402533), (101, 0.030670634), (25, 0.023102159), (40, 0.020492867), (102, 0.015335317), (26, 0.011551079), (87, 0.003509575), (2, 0.002090486)], 0.9730831);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['е', s @ ..] => {
-            out.push(&[(101, 0.17473106), (0, 0.13473716), (2992, 0.13452354), (18, 0.10867476), (102, 0.08737316), (1, 0.06666667), (2993, 0.06666667), (39, 0.055344474), (19, 0.05433738), (25, 0.031174181), (40, 0.027664607), (26, 0.015594721), (87, 0.004745556), (2, 0.002838178), (677, 0.0026398108), (8, 0.0025482567), (112, 0.0024414435), (88, 0.0023651484)], 0.9750668);
-            match s {
-                [] => true,
-                ['п', s @ ..] => {
-                    out.push(&[(0, 0.23404288), (2992, 0.23392081), (1, 0.11667048), (2993, 0.11667048), (101, 0.08737316), (18, 0.05433738), (102, 0.04368658), (39, 0.027664607), (19, 0.027176319), (25, 0.015594721), (40, 0.013839933), (26, 0.0077973604), (87, 0.0023651484)], 0.98113984);
-                    match s {
-                        [] => true,
-                        ['а', s @ ..] => {
-                            out.push(&[(0, 0.28368047), (2992, 0.2836347), (1, 0.14166476), (2993, 0.14166476), (101, 0.04368658), (18, 0.027176319), (102, 0.02183566), (39, 0.013839933), (19, 0.01358053), (25, 0.0077973604), (40, 0.006912337), (26, 0.0038910506)], 0.98936445);
-                            match s {
-                                [] => true,
-                                ['р', 'т', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['о', s @ ..] => {
-                                            out.push(&[(2992, 0.41130695), (2993, 0.20555428), (0, 0.18912032), (1, 0.09443808), (101, 0.029129473), (18, 0.018112458), (102, 0.014557107), (39, 0.009216449), (19, 0.0090638595), (25, 0.0052033267), (40, 0.0046082246), (26, 0.0025940337)], 0.99290454);
-                                            match s {
-                                                [] => true,
-                                                ['п', '\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['р', s @ ..] => {
-                    out.push(&[(101, 0.3387045), (102, 0.16935988), (0, 0.08982986), (2992, 0.089677274), (18, 0.07244983), (1, 0.04444953), (2993, 0.04444953), (39, 0.036896314), (19, 0.036224917), (25, 0.020782787), (40, 0.018448157), (26, 0.010391394), (87, 0.0031586175)], 0.9748226);
-                    match s {
-                        [] => true,
-                        ['ф', s @ ..] => {
-                            out.push(&[(101, 0.4480354), (102, 0.2240177), (0, 0.05989166), (2992, 0.05978485), (18, 0.048294805), (1, 0.029633021), (2993, 0.029633021), (39, 0.024597544), (19, 0.024155032), (25, 0.013855192), (40, 0.012298772), (26, 0.006927596), (87, 0.002105745)], 0.9832303);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['и', s @ ..] => super::t17::n5303(s, out),
-        ['м', s @ ..] => {
-            out.push(&[(101, 0.21841764), (3102, 0.16815442), (18, 0.13585107), (102, 0.10920882), (3103, 0.08332952), (39, 0.06918441), (19, 0.067917906), (25, 0.038971543), (40, 0.034592204), (26, 0.019485772), (87, 0.0059205005), (2, 0.003540093), (677, 0.0032959487), (8, 0.0031738766), (112, 0.0030518044), (88, 0.0029602502)], 0.9670558);
-            match s {
-                [] => true,
-                ['е', s @ ..] => {
-                    out.push(&[(101, 0.27586785), (3102, 0.25073624), (102, 0.13794155), (3103, 0.1250019), (18, 0.067917906), (39, 0.034592204), (19, 0.033966582), (25, 0.019485772), (40, 0.017288473), (26, 0.009750515), (87, 0.0029602502)], 0.9755092);
-                    match s {
-                        [] => true,
-                        ['п', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(101, 0.6666667), (102, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['о', s @ ..] => {
-                                    out.push(&[(3102, 0.3893797), (3103, 0.19444571), (101, 0.18391699), (102, 0.09195086), (18, 0.04528878), (39, 0.023056382), (19, 0.02264439), (25, 0.012985428), (40, 0.011535821), (26, 0.0065003433)], 0.9817044);
-                                    match s {
-                                        [] => true,
-                                        ['р', s @ ..] => {
-                                            out.push(&[(3102, 0.48180363), (3103, 0.2407416), (101, 0.12260624), (102, 0.06131075), (18, 0.030182345), (39, 0.015365835), (19, 0.015091172), (25, 0.008667124), (40, 0.007690547), (26, 0.004333562)], 0.9877928);
-                                            match s {
-                                                [] => true,
-                                                ['п', '\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['н', s @ ..] => {
-            out.push(&[(101, 0.29121843), (18, 0.18112458), (102, 0.14561684), (39, 0.09224079), (19, 0.09056229), (25, 0.05195697), (40, 0.046112765), (26, 0.025986115), (87, 0.007904174), (2, 0.004715038), (677, 0.0044098576), (8, 0.004242008), (112, 0.004074159), (88, 0.003952087), (4, 0.0023804074), (3, 0.0023651484), (0, 0.0023498894), (678, 0.0021972992), (9, 0.002121004), (113, 0.00202945)], 0.9675593);
-            match s {
-                [] => true,
-                ['о', s @ ..] => {
-                    out.push(&[(101, 0.41637293), (102, 0.20817883), (18, 0.12074464), (39, 0.06149386), (19, 0.06037995), (25, 0.03463798), (40, 0.03074693), (26, 0.01731899), (87, 0.005264363), (2, 0.0031433585), (677, 0.0029297322), (8, 0.002822919), (112, 0.002716106), (88, 0.0026398108)], 0.9693904);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['у', s @ ..] => {
-            out.push(&[(39, 0.23584345), (112, 0.1697261), (18, 0.13585107), (40, 0.117921725), (113, 0.08485542), (19, 0.067917906), (101, 0.051743343), (25, 0.038971543), (102, 0.025879301), (26, 0.019485772), (87, 0.0059205005), (2, 0.003540093), (677, 0.0032959487), (8, 0.0031738766), (88, 0.0029602502)], 0.9670863);
-            match s {
-                [] => true,
-                ['б', s @ ..] => {
-                    out.push(&[(39, 0.28459603), (112, 0.25152972), (40, 0.14229038), (113, 0.12576486), (18, 0.067917906), (19, 0.033966582), (101, 0.025879301), (25, 0.019485772), (102, 0.012939651), (26, 0.009750515), (87, 0.0029602502)], 0.977081);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(112, 0.6666667), (113, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['т', s @ ..] => {
-                            out.push(&[(39, 0.41194782), (40, 0.20598154), (112, 0.1676814), (113, 0.08384833), (18, 0.04528878), (19, 0.02264439), (101, 0.017242694), (25, 0.012985428), (102, 0.008621347), (26, 0.0065003433)], 0.9827421);
-                            match s {
-                                [] => true,
-                                ['о', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['ь', s @ ..] => {
-            out.push(&[(2, 0.15217823), (677, 0.13533227), (8, 0.12187381), (3, 0.076081485), (678, 0.06765851), (975, 0.067597464), (4, 0.06102083), (9, 0.060944535), (18, 0.05461204), (976, 0.033493552), (5, 0.030151827), (39, 0.027817197), (19, 0.02729839), (101, 0.020798046), (25, 0.015671015), (40, 0.013900969), (102, 0.010406653), (26, 0.007827878), (87, 0.0023804074)], 0.9870451);
-            match s {
-                [] => true,
-                ['л', s @ ..] => {
-                    out.push(&[(2, 0.18133822), (677, 0.16121157), (8, 0.14509805), (3, 0.09066911), (678, 0.08059815), (975, 0.080582894), (4, 0.07257191), (9, 0.07255665), (976, 0.04023804), (5, 0.036209658), (18, 0.010971237), (39, 0.005584802), (19, 0.005493248), (101, 0.004180972), (25, 0.0031433585), (40, 0.002792401), (102, 0.002090486)], 0.99533075);
-                    match s {
-                        [] => true,
-                        ['о', 'п', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', s @ ..] => {
-                                    out.push(&[(677, 0.32968643), (678, 0.16484322), (2, 0.12089723), (8, 0.09672694), (3, 0.060440987), (975, 0.053727016), (4, 0.0483711), (9, 0.0483711), (976, 0.026825361), (5, 0.024139773), (18, 0.0073243305), (39, 0.0037232013), (19, 0.0036621653), (101, 0.002792401), (25, 0.002105745)], 0.993637);
-                                    match s {
-                                        [] => true,
-                                        ['п', s @ ..] => {
-                                            out.push(&[(677, 0.44202334), (678, 0.22101167), (2, 0.08059815), (8, 0.064484626), (3, 0.040299077), (975, 0.035812926), (4, 0.03225757), (9, 0.032242313), (976, 0.017883575), (5, 0.016098268), (18, 0.004882887), (39, 0.0024872206), (19, 0.0024414435)], 0.9925231);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['с', s @ ..] => {
-                                    out.push(&[(2, 0.2494087), (8, 0.21915007), (677, 0.145449), (3, 0.12471198), (9, 0.10957503), (678, 0.0727245), (975, 0.02369726), (4, 0.021347372), (976, 0.011841001), (5, 0.010650798), (18, 0.0032349126)], 0.99179065);
-                                    match s {
-                                        [] => true,
-                                        ['и', s @ ..] => {
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                ['е', s @ ..] => {
-                                                    out.push(&[(2, 0.29884794), (8, 0.26622415), (3, 0.14941634), (9, 0.1331197), (677, 0.0745861), (678, 0.03729305), (975, 0.01216144), (4, 0.010940718), (976, 0.0060730907), (5, 0.00546273)], 0.99412525);
-                                                    match s {
-                                                        [] => true,
-                                                        ['р', 'е', 'п', '\u{1}', s @ ..] => super::t17::n70186(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                ['о', s @ ..] => {
-                                                    out.push(&[(677, 0.3191882), (2, 0.16627756), (678, 0.1595941), (8, 0.14610514), (3, 0.08313115), (9, 0.07304494), (975, 0.015808348), (4, 0.014221408), (976, 0.007888914), (5, 0.0070954454), (18, 0.002151522)], 0.9945067);
-                                                    match s {
-                                                        [] => true,
-                                                        ['д', s @ ..] => super::t17::n70187(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['ы', s @ ..] => {
-                                    out.push(&[(975, 0.27594414), (976, 0.13794155), (2, 0.12089723), (677, 0.10746929), (8, 0.09672694), (3, 0.060440987), (678, 0.053742275), (4, 0.0483711), (9, 0.0483711), (5, 0.024139773), (18, 0.0073243305), (39, 0.0037232013), (19, 0.0036621653), (101, 0.002792401), (25, 0.002105745)], 0.9936522);
-                                    match s {
-                                        [] => true,
-                                        ['в', s @ ..] => {
-                                            out.push(&[(975, 0.40619516), (976, 0.20306706), (2, 0.08059815), (677, 0.07164111), (8, 0.064484626), (3, 0.040299077), (678, 0.035828184), (4, 0.03225757), (9, 0.032242313), (5, 0.016098268), (18, 0.004882887), (39, 0.0024872206), (19, 0.0024414435)], 0.9925231);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['ю', s @ ..] => {
-            out.push(&[(18, 0.3025101), (39, 0.23584345), (19, 0.15126269), (40, 0.117921725), (101, 0.051743343), (25, 0.038971543), (102, 0.025879301), (26, 0.019485772), (87, 0.0059205005), (2, 0.003540093), (677, 0.0032959487), (8, 0.0031738766), (112, 0.0030518044), (88, 0.0029602502)], 0.9655604);
-            match s {
-                [] => true,
-                ['л', 'ш', s @ ..] => {
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(39, 0.3794461), (18, 0.2016785), (40, 0.18973067), (19, 0.10083162), (101, 0.034500647), (25, 0.025986115), (102, 0.017242694), (26, 0.012985428), (87, 0.003952087), (2, 0.0023651484), (677, 0.0021972992), (8, 0.002121004), (112, 0.00202945)], 0.9750668);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => super::t17::n43312(s, out),
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
-}
-
-/// Words ending -ковать.
-pub(crate) fn n1434(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(39, 0.21908903), (101, 0.11943237), (40, 0.109544516), (112, 0.10554665), (745, 0.0814374), (642, 0.062348362), (102, 0.059723813), (113, 0.052780956), (746, 0.04071107), (25, 0.04037537), (643, 0.031174181), (26, 0.020187685), (18, 0.010788129), (677, 0.0059510185), (975, 0.00561532), (19, 0.005386435), (1962, 0.0053101396), (3021, 0.0037689784), (678, 0.0029755093), (976, 0.002792401), (1963, 0.0026550698), (54, 0.0025177386), (2790, 0.002014191)], 0.99212635);
-    match s {
-        [] => true,
-        ['\u{1}', s @ ..] => {
-            out.push(&[(1962, 0.6666667), (1963, 0.33333334)], 1.0);
-            s.is_empty()
-        }
-        ['а', s @ ..] => {
-            out.push(&[(39, 0.32045472), (40, 0.16023499), (101, 0.08120851), (112, 0.06794842), (25, 0.06723125), (642, 0.06276036), (102, 0.040604256), (113, 0.03398184), (26, 0.033615626), (643, 0.03138781), (18, 0.03042649), (745, 0.019592585), (975, 0.016006714), (19, 0.015213245), (746, 0.0097962925), (976, 0.0079957275)], 0.99845886);
-            match s {
-                [] => true,
-                ['б', s @ ..] => {
-                    out.push(&[(112, 0.26752117), (39, 0.21364157), (113, 0.13376059), (40, 0.106813155), (101, 0.05413901), (25, 0.044831008), (642, 0.041840237), (102, 0.027069505), (26, 0.022415504), (643, 0.020920118), (18, 0.02027924), (745, 0.013061723), (975, 0.010666057), (19, 0.010147249), (746, 0.0065308614), (976, 0.0053406577)], 0.99897766);
-                    match s {
-                        [] => true,
-                        ['ы', s @ ..] => {
-                            out.push(&[(112, 0.40056458), (113, 0.20028992), (39, 0.14242771), (40, 0.07121386), (101, 0.036087587), (25, 0.029877165), (642, 0.027893493), (102, 0.018051423), (26, 0.014938583), (643, 0.0139467465), (18, 0.013519494), (745, 0.008712902), (975, 0.007110704), (19, 0.006759747), (746, 0.0043488215), (976, 0.003555352)], 0.9992981);
-                            match s {
-                                [] => true,
-                                ['р', s @ ..] => {
-                                    out.push(&[(112, 0.4892653), (113, 0.24463265), (39, 0.09495689), (40, 0.047470815), (101, 0.024063477), (25, 0.019928282), (642, 0.018600747), (102, 0.012024109), (26, 0.009964141), (643, 0.009292744), (18, 0.009018082), (745, 0.0057984283), (975, 0.004745556), (19, 0.0045014117), (746, 0.0028992142), (976, 0.0023651484)], 0.999527);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['д', s @ ..] => {
-                    out.push(&[(112, 0.26752117), (39, 0.21364157), (113, 0.13376059), (40, 0.106813155), (101, 0.05413901), (25, 0.044831008), (642, 0.041840237), (102, 0.027069505), (26, 0.022415504), (643, 0.020920118), (18, 0.02027924), (745, 0.013061723), (975, 0.010666057), (19, 0.010147249), (746, 0.0065308614), (976, 0.0053406577)], 0.99897766);
-                    match s {
-                        [] => true,
-                        ['й', s @ ..] => {
-                            out.push(&[(112, 0.40056458), (113, 0.20028992), (39, 0.14242771), (40, 0.07121386), (101, 0.036087587), (25, 0.029877165), (642, 0.027893493), (102, 0.018051423), (26, 0.014938583), (643, 0.0139467465), (18, 0.013519494), (745, 0.008712902), (975, 0.007110704), (19, 0.006759747), (746, 0.0043488215), (976, 0.003555352)], 0.9992981);
-                            match s {
-                                [] => true,
-                                ['а', s @ ..] => {
-                                    out.push(&[(112, 0.4892653), (113, 0.24463265), (39, 0.09495689), (40, 0.047470815), (101, 0.024063477), (25, 0.019928282), (642, 0.018600747), (102, 0.012024109), (26, 0.009964141), (643, 0.009292744), (18, 0.009018082), (745, 0.0057984283), (975, 0.004745556), (19, 0.0045014117), (746, 0.0028992142), (976, 0.0023651484)], 0.999527);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['з', s @ ..] => {
-                    out.push(&[(642, 0.28412297), (112, 0.16379035), (643, 0.14206149), (39, 0.13080034), (113, 0.08189517), (40, 0.06540017), (101, 0.033142596), (25, 0.027435722), (102, 0.016571298), (26, 0.013717861), (18, 0.012420844), (745, 0.0079957275), (975, 0.0065308614), (19, 0.006210422), (746, 0.0039978637), (976, 0.0032654307)], 0.99935913);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(642, 0.6666667), (643, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            out.push(&[(112, 0.3314107), (642, 0.18941024), (113, 0.16571298), (643, 0.09471275), (39, 0.08720531), (40, 0.043595027), (101, 0.022095064), (25, 0.018295567), (102, 0.011047532), (26, 0.009140154), (18, 0.00827039), (745, 0.005325399), (975, 0.0043488215), (19, 0.004135195), (746, 0.0026703288), (976, 0.0021820401)], 0.9995575);
-                            match s {
-                                [] => true,
-                                ['к', s @ ..] => {
-                                    out.push(&[(112, 0.44316778), (113, 0.22157626), (642, 0.12628366), (643, 0.06314183), (39, 0.058136873), (40, 0.029068436), (101, 0.014724956), (25, 0.012191959), (102, 0.007370108), (26, 0.0061036088), (18, 0.005523766), (745, 0.003555352), (975, 0.0028992142), (19, 0.002761883)], 0.9965057);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['л', s @ ..] => {
-                    out.push(&[(39, 0.44014648), (40, 0.22008087), (101, 0.13818571), (102, 0.069092855), (112, 0.02264439), (25, 0.022415504), (642, 0.020920118), (113, 0.011322195), (26, 0.011200123), (643, 0.0104676895), (18, 0.010147249), (745, 0.0065308614), (975, 0.0053406577), (19, 0.0050659953), (746, 0.0032654307), (976, 0.0026703288)], 0.99949646);
-                    match s {
-                        [] => true,
-                        ['ш', s @ ..] => {
-                            out.push(&[(39, 0.48004884), (40, 0.24002442), (101, 0.15716793), (102, 0.07858396), (112, 0.007553216), (25, 0.0074769207), (642, 0.0069733732), (113, 0.0037689784), (26, 0.0037384604), (643, 0.003494316), (18, 0.0033875029), (745, 0.0021820401)], 0.99439996);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(101, 0.6666667), (102, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['а', 'з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['о', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['с', 'а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['м', s @ ..] => {
-                    out.push(&[(39, 0.36935988), (101, 0.19986267), (40, 0.18467994), (102, 0.09993134), (25, 0.042114902), (26, 0.021057451), (112, 0.019012742), (642, 0.017563134), (113, 0.009506371), (643, 0.008773938), (18, 0.008514535), (745, 0.005477989), (975, 0.0044708936), (19, 0.0042572673), (746, 0.002746624), (976, 0.0022430762)], 0.99957275);
-                    match s {
-                        [] => true,
-                        ['с', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(101, 0.5217365), (102, 0.26086825), (25, 0.14493018), (26, 0.07246509)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['б', s @ ..] => {
-                                    out.push(&[(39, 0.46846724), (40, 0.23422599), (101, 0.13324177), (102, 0.06662089), (25, 0.0280766), (26, 0.0140383), (112, 0.012664989), (642, 0.01170367), (113, 0.0063324943), (643, 0.0058594644), (18, 0.005676356), (745, 0.0036469062), (975, 0.0029907683), (19, 0.002838178)], 0.9963836);
-                                    match s {
-                                        [] => true,
-                                        ['о', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['о', s @ ..] => {
-                                    out.push(&[(39, 0.5180133), (40, 0.25900665), (101, 0.09993134), (102, 0.049973298), (25, 0.021057451), (26, 0.010528726), (112, 0.009506371), (642, 0.008773938), (113, 0.004745556), (643, 0.0043945983), (18, 0.0042572673), (745, 0.002746624), (975, 0.0022430762), (19, 0.002121004)], 0.9972992);
-                                    match s {
-                                        [] => true,
-                                        ['п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['р', 'п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['у', s @ ..] => {
-                            out.push(&[(101, 0.35547417), (39, 0.24623483), (102, 0.17773709), (40, 0.12312505), (25, 0.0280766), (26, 0.0140383), (112, 0.012664989), (642, 0.01170367), (113, 0.0063324943), (643, 0.0058594644), (18, 0.005676356), (745, 0.0036469062), (975, 0.0029907683), (19, 0.002838178)], 0.99639887);
-                            match s {
-                                [] => true,
-                                ['ч', s @ ..] => {
-                                    out.push(&[(101, 0.459205), (102, 0.2296025), (39, 0.16415656), (40, 0.08207828), (25, 0.01872282), (26, 0.00935378), (112, 0.008453499), (642, 0.0077973604), (113, 0.0042267493), (643, 0.0039063096), (18, 0.0037842374), (745, 0.0024414435)], 0.9937285);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['н', s @ ..] => {
-                    out.push(&[(642, 0.35696957), (643, 0.17848478), (39, 0.16433966), (40, 0.08216983), (101, 0.041641872), (112, 0.034851607), (25, 0.03448539), (102, 0.020813307), (113, 0.017425803), (26, 0.017242694), (18, 0.015594721), (745, 0.010040437), (975, 0.008209354), (19, 0.0077973604), (746, 0.0050202184), (976, 0.004104677)], 0.9991913);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['п', s @ ..] => {
-                    out.push(&[(39, 0.48357368), (40, 0.24179447), (25, 0.07487602), (101, 0.07125963), (26, 0.03743038), (102, 0.035629816), (112, 0.012695506), (642, 0.011734188), (113, 0.006347753), (643, 0.0058594644), (18, 0.0056916154), (745, 0.0036621653), (975, 0.0029907683), (19, 0.002838178)], 0.9963836);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(25, 0.35088122), (101, 0.31578547), (26, 0.17543298), (102, 0.15790036)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', 'з', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['с', s @ ..] => {
-                            out.push(&[(39, 0.5727779), (40, 0.28638133), (25, 0.0383917), (101, 0.03654536), (26, 0.01919585), (102, 0.01826505), (112, 0.0065156026), (642, 0.0060120546), (113, 0.0032501717), (643, 0.0030060273), (18, 0.0029144732)], 0.99325556);
-                            match s {
-                                [] => true,
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['у', s @ ..] => {
-                            out.push(&[(39, 0.591928), (40, 0.295964), (25, 0.03056382), (101, 0.029083695), (26, 0.015274281), (102, 0.014541848), (112, 0.0051880674), (642, 0.004791333), (113, 0.0025940337), (643, 0.0023956664), (18, 0.0023193713)], 0.9946441);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['р', s @ ..] => {
-                    out.push(&[(39, 0.3541161), (40, 0.17706569), (25, 0.09466697), (101, 0.056015868), (112, 0.054230563), (745, 0.047684442), (26, 0.047333486), (975, 0.047211412), (102, 0.028015565), (113, 0.027115282), (746, 0.02384985), (976, 0.023605706), (642, 0.008484016), (643, 0.004242008), (18, 0.004104677), (19, 0.002059968)], 0.99980164);
-                    match s {
-                        [] => true,
-                        ['а', s @ ..] => {
-                            out.push(&[(101, 0.1946746), (745, 0.19050889), (39, 0.17706569), (102, 0.0973373), (746, 0.09526207), (40, 0.08853284), (25, 0.047333486), (112, 0.027115282), (26, 0.023666743), (975, 0.023605706), (113, 0.013550011), (976, 0.011795224), (642, 0.004242008), (643, 0.002121004), (18, 0.002059968)], 0.9988708);
-                            match s {
-                                [] => true,
-                                ['м', s @ ..] => {
-                                    out.push(&[(101, 0.2640116), (745, 0.2619211), (102, 0.1320058), (746, 0.13096818), (39, 0.08853284), (40, 0.04426642), (25, 0.023666743), (112, 0.013550011), (26, 0.011841001), (975, 0.011795224), (113, 0.0067750057), (976, 0.0059052417), (642, 0.002121004)], 0.99736017);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            out.push(&[(101, 0.6666667), (102, 0.33333334)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['о', s @ ..] => {
-                                            out.push(&[(745, 0.39684138), (746, 0.19841306), (101, 0.17599756), (102, 0.08799878), (39, 0.059021898), (40, 0.029510949), (25, 0.015777828), (112, 0.009033341), (26, 0.007888914), (975, 0.007873655), (113, 0.0045166705), (976, 0.0039368276)], 0.99681085);
-                                            match s {
-                                                [] => true,
-                                                ['п', s @ ..] => {
-                                                    out.push(&[(745, 0.48677805), (746, 0.24339665), (101, 0.117341876), (102, 0.058670938), (39, 0.039353017), (40, 0.019668879), (25, 0.010513466), (112, 0.006027314), (26, 0.005264363), (975, 0.0052491035), (113, 0.0030060273), (976, 0.0026245518)], 0.9978942);
-                                                    match s {
-                                                        [] => true,
-                                                        ['\u{1}', s @ ..] => super::t17::n70188(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['б', s @ ..] => {
-                            out.push(&[(39, 0.4498512), (40, 0.22491798), (25, 0.12338445), (975, 0.064499885), (26, 0.061692227), (976, 0.032242313), (101, 0.009491112), (112, 0.009185932), (745, 0.008087282), (102, 0.004745556), (113, 0.004592966), (746, 0.004043641)], 0.99673456);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(25, 0.6666667), (26, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['а', s @ ..] => {
-                                    out.push(&[(39, 0.57816434), (40, 0.28908217), (25, 0.05037003), (975, 0.026321813), (26, 0.025177386), (976, 0.013168536), (101, 0.0038757916), (112, 0.0037537194), (745, 0.0032959487)], 0.9932097);
-                                    match s {
-                                        [] => true,
-                                        ['з', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['н', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['з', 'а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['с', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['т', 'о', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['ы', s @ ..] => {
-                                    out.push(&[(39, 0.29990083), (975, 0.26521707), (40, 0.14995041), (976, 0.13261616), (25, 0.08226138), (26, 0.041123062), (101, 0.0063324943), (112, 0.006134127), (745, 0.005386435), (102, 0.0031586175), (113, 0.0030670634), (746, 0.0027008469)], 0.9978485);
-                                    match s {
-                                        [] => true,
-                                        ['в', s @ ..] => {
-                                            out.push(&[(975, 0.39903867), (39, 0.19993897), (976, 0.1995117), (40, 0.099961855), (25, 0.054840926), (26, 0.027420463), (101, 0.0042267493), (112, 0.004089418), (745, 0.0035858701), (102, 0.002105745), (113, 0.002044709)], 0.9967651);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['т', s @ ..] => {
-                            out.push(&[(112, 0.258381), (39, 0.23607233), (113, 0.12918288), (40, 0.118043795), (25, 0.06311131), (101, 0.037338827), (745, 0.0317998), (26, 0.031555656), (975, 0.031479362), (102, 0.018677043), (746, 0.0158999), (976, 0.015732052), (642, 0.0056610974), (643, 0.002822919), (18, 0.002746624)], 0.9985046);
-                            match s {
-                                [] => true,
-                                ['а', s @ ..] => {
-                                    out.push(&[(112, 0.39447623), (113, 0.19723812), (39, 0.15738155), (40, 0.078690775), (25, 0.042069122), (101, 0.024902724), (745, 0.021194782), (26, 0.02104219), (975, 0.020981155), (102, 0.012451362), (746, 0.01060502), (976, 0.010498207), (642, 0.0037689784)], 0.99530023);
-                                    match s {
-                                        [] => true,
-                                        ['б', s @ ..] => {
-                                            out.push(&[(112, 0.48520637), (113, 0.24260318), (39, 0.104921035), (40, 0.052460518), (25, 0.028046083), (101, 0.016601816), (745, 0.014129855), (26, 0.014023041), (975, 0.013992523), (102, 0.008300908), (746, 0.0070649274), (976, 0.006988632), (642, 0.0025177386)], 0.99685663);
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['т', s @ ..] => {
-                    out.push(&[(18, 0.27092394), (25, 0.16350041), (19, 0.13545434), (39, 0.13080034), (26, 0.08174258), (40, 0.06540017), (101, 0.033142596), (112, 0.027740901), (642, 0.025619898), (102, 0.016571298), (113, 0.013870451), (643, 0.01280232), (745, 0.0079957275), (975, 0.0065308614), (746, 0.0039978637), (976, 0.0032654307)], 0.99935913);
-                    match s {
-                        [] => true,
-                        ['а', s @ ..] => {
-                            out.push(&[(18, 0.36908522), (25, 0.2027924), (19, 0.18454261), (26, 0.1013962), (39, 0.05339132), (40, 0.02668803), (101, 0.013534753), (112, 0.011322195), (642, 0.01045243), (102, 0.006759747), (113, 0.0056610974), (643, 0.0052338447), (745, 0.0032654307), (975, 0.0026703288)], 0.9967956);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['р', s @ ..] => {
-                                    out.push(&[(18, 0.46828413), (19, 0.23413444), (25, 0.13519493), (26, 0.067597464), (39, 0.0355993), (40, 0.01779202), (101, 0.009018082), (112, 0.007553216), (642, 0.0069733732), (102, 0.0045166705), (113, 0.0037689784), (643, 0.003479057), (745, 0.0021820401)], 0.9960937);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['б', s @ ..] => {
-            out.push(&[(112, 0.21944), (642, 0.19783323), (113, 0.10972763), (39, 0.109544516), (643, 0.09892424), (101, 0.059723813), (40, 0.05476463), (745, 0.04071107), (102, 0.029861907), (746, 0.020355536), (25, 0.020187685), (26, 0.010086213), (18, 0.005386435), (677, 0.0029755093), (975, 0.00280766), (19, 0.0027008469), (1962, 0.0026550698)], 0.987686);
-            match s {
-                [] => true,
-                ['о', s @ ..] => {
-                    out.push(&[(642, 0.3541161), (643, 0.17706569), (112, 0.14628825), (113, 0.07315175), (39, 0.07302968), (101, 0.039810788), (40, 0.03651484), (745, 0.0271458), (102, 0.019913023), (746, 0.01356527), (25, 0.013458458), (26, 0.006729229), (18, 0.0036011292)], 0.98439);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['я', s @ ..] => {
-                    out.push(&[(112, 0.36852065), (113, 0.1842527), (642, 0.13189898), (39, 0.07302968), (643, 0.06594949), (101, 0.039810788), (40, 0.03651484), (745, 0.0271458), (102, 0.019913023), (746, 0.01356527), (25, 0.013458458), (26, 0.006729229), (18, 0.0036011292)], 0.98439);
-                    match s {
-                        [] => true,
-                        ['р', s @ ..] => {
-                            out.push(&[(112, 0.46790266), (113, 0.23395133), (642, 0.08792248), (39, 0.048691537), (643, 0.04396124), (101, 0.026535438), (40, 0.02433814), (745, 0.0180972), (102, 0.0132753495), (746, 0.0090486), (25, 0.008972305), (26, 0.0044861524), (18, 0.0023956664)], 0.9895781);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['в', s @ ..] => {
-            out.push(&[(642, 0.2637827), (39, 0.14605936), (643, 0.13189898), (101, 0.079621576), (40, 0.07302968), (112, 0.07037461), (745, 0.0542916), (102, 0.039810788), (113, 0.035187304), (746, 0.0271458), (25, 0.026916916), (26, 0.013458458), (18, 0.0071869995), (677, 0.0039673457), (975, 0.0037384604), (19, 0.0036011292), (1962, 0.003540093), (3021, 0.0025177386)], 0.9861296);
-            match s {
-                [] => true,
-                ['\u{1}', s @ ..] => {
-                    out.push(&[(642, 0.6666667), (643, 0.33333334)], 1.0);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['д', s @ ..] => {
-            out.push(&[(642, 0.42000458), (643, 0.21000992), (39, 0.08941787), (101, 0.048752576), (40, 0.044708934), (112, 0.043076217), (745, 0.03323415), (102, 0.024368659), (113, 0.02154574), (746, 0.016617075), (25, 0.016479744), (26, 0.008239872), (18, 0.0044098576), (677, 0.0024261845), (975, 0.0022888533), (19, 0.0021972992), (1962, 0.002166781)], 0.9899443);
-            match s {
-                [] => true,
-                ['а', 'н', '\u{1}', s @ ..] => {
-                    s.is_empty()
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(642, 0.54016936), (643, 0.27008468), (39, 0.04585336), (101, 0.024994278), (40, 0.02293431), (112, 0.022095064), (745, 0.017044328), (102, 0.012497139), (113, 0.011047532), (746, 0.0085297935), (25, 0.008453499), (26, 0.0042267493), (18, 0.0022583352)], 0.9901884);
-                    match s {
-                        [] => true,
-                        ['п', '\u{1}', s @ ..] => super::t17::n28104(s, out),
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['е', s @ ..] => super::t17::n5314(s, out),
-        ['и', s @ ..] => super::t17::n5315(s, out),
-        ['к', 'и', 'х', '\u{1}', s @ ..] => super::t17::n5316(s, out),
-        ['л', s @ ..] => super::t17::n5317(s, out),
-        ['н', s @ ..] => super::t17::n5318(s, out),
-        ['о', s @ ..] => super::t17::n5319(s, out),
-        ['п', s @ ..] => super::t17::n5320(s, out),
-        ['р', s @ ..] => super::t17::n5321(s, out),
-        ['с', s @ ..] => super::t17::n5322(s, out),
-        ['т', s @ ..] => super::t17::n5323(s, out),
-        ['у', s @ ..] => super::t17::n5324(s, out),
-        ['ч', s @ ..] => super::t17::n5325(s, out),
-        ['ш', s @ ..] => super::t17::n5326(s, out),
-        ['ы', s @ ..] => super::t17::n5327(s, out),
-        ['ь', s @ ..] => super::t17::n5328(s, out),
-        ['ю', s @ ..] => super::t17::n5329(s, out),
-        ['я', s @ ..] => super::t17::n5330(s, out),
-        _ => false,
-    }
-}
-
-/// Words ending -ловать.
-pub(crate) fn n1435(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(39, 0.22743572), (40, 0.11371023), (101, 0.0830396), (677, 0.07519646), (2, 0.053711757), (4, 0.05333028), (800, 0.04289311), (102, 0.0415198), (678, 0.03759823), (0, 0.033493552), (745, 0.031952392), (3, 0.026855879), (5, 0.02665751), (25, 0.025223164), (801, 0.021454185), (1, 0.016739147), (746, 0.015976196), (8, 0.013519494), (112, 0.011505303), (18, 0.011505303), (26, 0.00827039), (9, 0.006759747), (113, 0.0057526515), (19, 0.0057526515), (124, 0.0043488215), (125, 0.002166781)], 0.99636835);
-    match s {
-        [] => true,
-        ['а', s @ ..] => {
-            out.push(&[(39, 0.21705958), (40, 0.10852216), (800, 0.10188449), (677, 0.079041734), (2, 0.075135425), (4, 0.0520943), (801, 0.050949875), (745, 0.050476845), (678, 0.039520867), (3, 0.037567712), (101, 0.029068436), (25, 0.028473334), (5, 0.02604715), (746, 0.025238423), (8, 0.023788815), (102, 0.014526589), (9, 0.011886778), (124, 0.01045243), (125, 0.0052185855), (26, 0.0037842374), (0, 0.0025482567), (126, 0.0025329976)], 0.99581903);
-            match s {
-                [] => true,
-                ['б', s @ ..] => {
-                    out.push(&[(39, 0.42661172), (40, 0.21330586), (745, 0.11590753), (746, 0.057953764), (25, 0.050019074), (124, 0.024368659), (800, 0.017273214), (677, 0.013397422), (2, 0.0127412835), (125, 0.012191959), (4, 0.008834974), (801, 0.008636607), (678, 0.006698711), (3, 0.0063630124), (126, 0.0060730907), (101, 0.0049286643), (5, 0.0044098576), (8, 0.004028382), (102, 0.0024567025), (9, 0.002014191)], 0.99821466);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(25, 0.53333336), (124, 0.26666668), (125, 0.13333334), (126, 0.06666667)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            out.push(&[(39, 0.44623482), (40, 0.22311741), (745, 0.16975662), (746, 0.08487068), (25, 0.02041657), (124, 0.009948882), (800, 0.007049668), (677, 0.00546273), (2, 0.0052033267), (125, 0.004974441), (4, 0.0036011292), (801, 0.003524834), (678, 0.002731365), (3, 0.0025940337), (126, 0.0024872206), (101, 0.002014191)], 0.9939879);
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['з', s @ ..] => {
-                            out.push(&[(39, 0.5686885), (40, 0.28433663), (745, 0.04730297), (746, 0.023651484), (25, 0.02041657), (124, 0.009948882), (800, 0.007049668), (677, 0.00546273), (2, 0.0052033267), (125, 0.004974441), (4, 0.0036011292), (801, 0.003524834), (678, 0.002731365), (3, 0.0025940337), (126, 0.0024872206), (101, 0.002014191)], 0.993988);
-                            match s {
-                                [] => true,
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['и', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['о', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['с', s @ ..] => {
-                            out.push(&[(745, 0.2994888), (39, 0.28441292), (746, 0.14975204), (40, 0.14219883), (25, 0.033356223), (124, 0.016250858), (800, 0.011505303), (677, 0.008926528), (2, 0.008484016), (125, 0.0081178), (4, 0.0058899825), (801, 0.0057526515), (678, 0.0044708936), (3, 0.004242008), (126, 0.0040589), (101, 0.0032806897), (5, 0.0029449912), (8, 0.0026855879)], 0.99581903);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(745, 0.6666667), (746, 0.33333334)], 1.0);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['в', s @ ..] => {
-                    out.push(&[(39, 0.36691844), (40, 0.18345922), (800, 0.067933165), (677, 0.052704662), (2, 0.05009537), (4, 0.034729533), (801, 0.033966582), (745, 0.033646144), (678, 0.026352331), (3, 0.025040055), (101, 0.019378958), (25, 0.018982224), (5, 0.017364766), (746, 0.016830701), (8, 0.015854124), (102, 0.009689479), (9, 0.007934691), (124, 0.006958114), (125, 0.003479057), (26, 0.0025329976)], 0.99385065);
-                    match s {
-                        [] => true,
-                        ['б', s @ ..] => {
-                            out.push(&[(39, 0.46683452), (40, 0.23341726), (800, 0.04528878), (677, 0.03512627), (2, 0.033402), (4, 0.023147937), (801, 0.02264439), (745, 0.022430763), (678, 0.017563134), (3, 0.01669337), (101, 0.012909133), (25, 0.012649729), (5, 0.011581598), (746, 0.011215381), (8, 0.010574502), (102, 0.0064545665), (9, 0.0052796216), (124, 0.0046387427), (125, 0.0023193713)], 0.9941711);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ж', s @ ..] => {
-                    out.push(&[(800, 0.20907912), (677, 0.15596247), (2, 0.15089647), (801, 0.10453956), (678, 0.077973604), (3, 0.07545587), (4, 0.052506294), (8, 0.048294805), (39, 0.032364387), (5, 0.026260776), (9, 0.024139773), (40, 0.016189823), (745, 0.007522698), (101, 0.004333562), (25, 0.004242008), (746, 0.0037689784), (102, 0.002166781)], 0.99569696);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(2, 0.44525826), (3, 0.22262913), (4, 0.22140841), (5, 0.110704206)], 1.0);
-                            s.is_empty()
-                        }
-                        ['б', s @ ..] => {
-                            out.push(&[(2, 0.24832532), (8, 0.17860685), (3, 0.12416266), (800, 0.10722515), (9, 0.089311056), (677, 0.079972535), (801, 0.053604946), (678, 0.039993897), (4, 0.026932174), (39, 0.016601816), (5, 0.013458458), (40, 0.008300908), (745, 0.0038605325), (101, 0.0022278172), (25, 0.0021820401)], 0.9947662);
-                            match s {
-                                [] => true,
-                                ['о', s @ ..] => {
-                                    out.push(&[(2, 0.29828337), (8, 0.24544136), (3, 0.14914168), (9, 0.12271305), (800, 0.054978255), (677, 0.04101625), (801, 0.027496757), (678, 0.020508125), (4, 0.013809415), (39, 0.008514535), (5, 0.006912337), (40, 0.0042572673)], 0.9930724);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['е', s @ ..] => {
-                            out.push(&[(677, 0.3261921), (678, 0.16310368), (800, 0.13939117), (2, 0.10060273), (801, 0.069687955), (3, 0.050293736), (4, 0.035004195), (8, 0.032196537), (39, 0.021576257), (5, 0.017502097), (9, 0.016098268), (40, 0.010788129), (745, 0.0050202184), (101, 0.0028839551), (25, 0.002838178), (746, 0.0025024796)], 0.9956817);
-                            match s {
-                                [] => true,
-                                ['р', s @ ..] => {
-                                    out.push(&[(677, 0.4396887), (678, 0.21983673), (800, 0.09292744), (2, 0.0670634), (801, 0.04646372), (3, 0.03353933), (4, 0.023346303), (8, 0.021469444), (39, 0.014389258), (5, 0.0116731515), (9, 0.010727093), (40, 0.0071869995), (745, 0.0033417258)], 0.9916533);
-                                    match s {
-                                        [] => true,
-                                        ['е', 'п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['з', s @ ..] => {
-                            out.push(&[(677, 0.4047608), (678, 0.2023804), (800, 0.10722515), (2, 0.07739376), (801, 0.053604946), (3, 0.03869688), (4, 0.026932174), (8, 0.024765393), (39, 0.016601816), (5, 0.013458458), (9, 0.012375067), (40, 0.008300908), (745, 0.0038605325), (101, 0.0022278172), (25, 0.0021820401)], 0.9947662);
-                            match s {
-                                [] => true,
-                                ['а', s @ ..] => {
-                                    out.push(&[(677, 0.53235674), (678, 0.26617837), (800, 0.054978255), (2, 0.039688718), (801, 0.027496757), (3, 0.01983673), (4, 0.013809415), (8, 0.012695506), (39, 0.008514535), (5, 0.006912337), (9, 0.006347753), (40, 0.0042572673)], 0.9930724);
-                                    match s {
-                                        [] => true,
-                                        ['р', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(800, 0.5115587), (801, 0.25577173), (677, 0.052872512), (2, 0.051148243), (678, 0.026428627), (3, 0.025574122), (4, 0.017807279), (8, 0.01637293), (39, 0.010971237), (5, 0.00889601), (9, 0.008178836), (40, 0.005493248), (745, 0.0025482567)], 0.99362177);
-                            match s {
-                                [] => true,
-                                ['п', s @ ..] => {
-                                    out.push(&[(800, 0.61408406), (801, 0.30704203), (677, 0.017914092), (2, 0.017334249), (678, 0.008957046), (3, 0.008667124), (4, 0.006027314), (8, 0.005554284), (39, 0.0037232013), (5, 0.0030212863), (9, 0.002777142)], 0.9951018);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['е', 'р', 'п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['и', 'р', 'п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['ц', s @ ..] => {
-                    out.push(&[(101, 0.20892653), (39, 0.13781948), (102, 0.104463264), (25, 0.07098497), (40, 0.06890974), (800, 0.06469826), (677, 0.050186925), (2, 0.04771496), (4, 0.03308156), (801, 0.03234913), (745, 0.032043945), (26, 0.02885481), (678, 0.025101092), (3, 0.02384985), (5, 0.01654078), (746, 0.016021973), (8, 0.015106432), (9, 0.007553216), (124, 0.0066376748), (125, 0.0033112078)], 0.9941558);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(101, 0.5217365), (102, 0.26086825), (25, 0.14493018), (26, 0.07246509)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ч', s @ ..] => {
-                    out.push(&[(4, 0.25696194), (39, 0.1447013), (5, 0.12848097), (40, 0.07235828), (800, 0.067933165), (677, 0.052704662), (2, 0.05009537), (801, 0.033966582), (745, 0.033646144), (678, 0.026352331), (3, 0.025040055), (101, 0.019378958), (25, 0.018982224), (746, 0.016830701), (8, 0.015854124), (102, 0.009689479), (9, 0.007934691), (124, 0.006958114), (125, 0.003479057), (26, 0.0025329976)], 0.99388117);
-                    match s {
-                        [] => true,
-                        ['е', s @ ..] => {
-                            out.push(&[(4, 0.39353016), (5, 0.19676508), (39, 0.09646754), (40, 0.04823377), (800, 0.04528878), (677, 0.03512627), (2, 0.033402), (801, 0.02264439), (745, 0.022430763), (678, 0.017563134), (3, 0.01669337), (101, 0.012909133), (25, 0.012649729), (746, 0.011215381), (8, 0.010574502), (102, 0.0064545665), (9, 0.0052796216), (124, 0.0046387427), (125, 0.0023193713)], 0.9941863);
-                            match s {
-                                [] => true,
-                                ['п', s @ ..] => {
-                                    out.push(&[(4, 0.4845655), (5, 0.24228275), (39, 0.06431678), (40, 0.03215076), (800, 0.030182345), (677, 0.023422599), (2, 0.022262912), (801, 0.015091172), (745, 0.014953841), (678, 0.01170367), (3, 0.011139086), (101, 0.008606088), (25, 0.008438239), (746, 0.0074769207), (8, 0.007049668), (102, 0.004303044), (9, 0.003524834), (124, 0.0030975814)], 0.9945678);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['б', s @ ..] => {
-            out.push(&[(112, 0.22989242), (39, 0.1516289), (113, 0.11494621), (40, 0.07580682), (101, 0.055359732), (677, 0.050125886), (2, 0.035812926), (4, 0.035553522), (800, 0.028595407), (102, 0.027679866), (678, 0.025070572), (0, 0.02232395), (745, 0.021301595), (3, 0.017898833), (5, 0.017776761), (25, 0.016815443), (801, 0.014297703), (1, 0.011169604), (746, 0.010650798), (8, 0.009018082), (18, 0.0076752882), (26, 0.005508507), (9, 0.0045014117), (19, 0.0038300145), (124, 0.0028992142)], 0.99613947);
-            match s {
-                [] => true,
-                ['е', s @ ..] => {
-                    out.push(&[(112, 0.37547874), (113, 0.187747), (39, 0.10107576), (40, 0.05053788), (101, 0.036911573), (677, 0.03341726), (2, 0.02388037), (4, 0.02369726), (800, 0.019073777), (102, 0.018448157), (678, 0.01670863), (0, 0.014877547), (745, 0.014190891), (3, 0.011932556), (5, 0.01185626), (25, 0.011215381), (801, 0.009536888), (1, 0.0074464027), (746, 0.0070954454), (8, 0.0060120546), (18, 0.0051117726), (26, 0.0036774243), (9, 0.0030060273), (19, 0.0025635157)], 0.9954986);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['е', s @ ..] => {
-            out.push(&[(39, 0.48757154), (40, 0.24377814), (101, 0.09126421), (25, 0.045670252), (102, 0.045624476), (26, 0.022278173), (677, 0.009582666), (2, 0.006836042), (4, 0.006790265), (800, 0.00546273), (678, 0.004791333), (0, 0.004272526), (745, 0.004074159), (3, 0.003418021), (5, 0.0034027619), (801, 0.002731365), (1, 0.002136263), (746, 0.00202945)], 0.99171436);
-            match s {
-                [] => true,
-                ['м', s @ ..] => {
-                    out.push(&[(39, 0.32504767), (101, 0.28305486), (40, 0.16252384), (102, 0.14152743), (25, 0.030457009), (26, 0.014862288), (677, 0.0063935304), (2, 0.004562448), (4, 0.0045319297), (800, 0.0036469062), (678, 0.0031891356), (0, 0.002838178), (745, 0.002716106), (3, 0.0022735943), (5, 0.0022583352)], 0.98988324);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(101, 0.6666667), (102, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                ['ц', s @ ..] => {
-                    out.push(&[(39, 0.5561303), (40, 0.27806515), (101, 0.053238727), (25, 0.051560234), (102, 0.026611734), (26, 0.025711453)], 0.9913176);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(25, 0.35088122), (101, 0.31578547), (26, 0.17543298), (102, 0.15790036)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['з', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['н', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['б', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(39, 0.62154573), (40, 0.3107805), (101, 0.021728847), (25, 0.02104219), (102, 0.010864424), (26, 0.010498207)], 0.9964599);
-                            match s {
-                                [] => true,
-                                ['д', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['с', s @ ..] => {
-                            out.push(&[(39, 0.62154573), (40, 0.3107805), (101, 0.021728847), (25, 0.02104219), (102, 0.010864424), (26, 0.010498207)], 0.9964599);
-                            match s {
-                                [] => true,
-                                ['а', 'р', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['и', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['т', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['и', s @ ..] => {
-            out.push(&[(677, 0.17467003), (0, 0.13018997), (4, 0.12452888), (2, 0.09378195), (678, 0.08734264), (39, 0.072999164), (1, 0.065094985), (5, 0.062272068), (3, 0.046890974), (101, 0.04243534), (40, 0.036499582), (102, 0.0212253), (25, 0.013046464), (26, 0.0059510185), (800, 0.005584802), (745, 0.004165713), (801, 0.002792401), (746, 0.002075227)], 0.9915465);
-            match s {
-                [] => true,
-                ['б', s @ ..] => {
-                    out.push(&[(0, 0.37181658), (1, 0.18591592), (4, 0.15521477), (5, 0.077607386), (677, 0.059205007), (2, 0.031784542), (678, 0.029602503), (39, 0.024750134), (3, 0.0158999), (101, 0.014389258), (40, 0.012375067), (102, 0.0071869995), (25, 0.0044251163), (26, 0.002014191)], 0.9921874);
-                    match s {
-                        [] => true,
-                        ['о', s @ ..] => {
-                            out.push(&[(0, 0.453727), (1, 0.22685587), (4, 0.16560617), (5, 0.082810715), (677, 0.020065613), (2, 0.01077287), (678, 0.010040437), (39, 0.0083924625), (3, 0.005386435), (101, 0.004882887), (40, 0.0041962313), (102, 0.0024414435)], 0.99517816);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['з', 'и', s @ ..] => {
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['е', s @ ..] => {
-                                            out.push(&[(4, 0.3326314), (0, 0.3024796), (5, 0.16630808), (1, 0.15124743), (677, 0.013382162), (2, 0.0071869995), (678, 0.0066834516), (39, 0.005584802), (3, 0.0035858701), (101, 0.0032501717), (40, 0.002792401)], 0.9951324);
-                                            match s {
-                                                [] => true,
-                                                ['р', s @ ..] => {
-                                                    out.push(&[(4, 0.4439765), (5, 0.22198825), (0, 0.20164797), (1, 0.10083162), (677, 0.008926528), (2, 0.004791333), (678, 0.0044556344), (39, 0.0037232013), (3, 0.0023956664), (101, 0.002166781)], 0.99490345);
-                                                    match s {
-                                                        [] => true,
-                                                        ['п', '\u{1}', s @ ..] => super::t17::n70200(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['м', s @ ..] => {
-                    out.push(&[(677, 0.21086442), (2, 0.111451894), (39, 0.10603494), (678, 0.10542458), (4, 0.10295262), (101, 0.07449455), (3, 0.055725947), (40, 0.0530251), (5, 0.05148394), (102, 0.037247274), (0, 0.03398184), (25, 0.022980087), (1, 0.016983291), (26, 0.0113374535)], 0.9939879);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(2, 0.24119936), (4, 0.19537652), (101, 0.17582971), (3, 0.12059205), (5, 0.09768826), (102, 0.08792248), (25, 0.05427634), (26, 0.02713054)], 1.0000153);
-                            s.is_empty()
-                        }
-                        ['е', s @ ..] => {
-                            out.push(&[(39, 0.2929122), (40, 0.1464561), (677, 0.14056611), (2, 0.074311435), (678, 0.070283055), (4, 0.068635084), (101, 0.049652856), (3, 0.037155718), (5, 0.034317542), (102, 0.024826428), (0, 0.02264439), (25, 0.015320058), (1, 0.011322195), (26, 0.007553216)], 0.99595636);
-                            match s {
-                                [] => true,
-                                ['р', s @ ..] => {
-                                    out.push(&[(39, 0.4175021), (40, 0.20874342), (677, 0.09372091), (2, 0.049530786), (678, 0.046860456), (4, 0.045761805), (101, 0.03311208), (3, 0.024765393), (5, 0.022873273), (102, 0.01655604), (0, 0.015106432), (25, 0.010208285), (1, 0.007553216), (26, 0.005035477)], 0.9973297);
-                                    match s {
-                                        [] => true,
-                                        ['е', 'п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(677, 0.43291372), (678, 0.21646449), (2, 0.057160296), (39, 0.054383155), (4, 0.052796215), (101, 0.03819333), (3, 0.028580148), (40, 0.027191577), (5, 0.026398107), (102, 0.019104296), (0, 0.017425803), (25, 0.011779965), (1, 0.008712902), (26, 0.0058136876)], 0.99691767);
-                            match s {
-                                [] => true,
-                                ['п', s @ ..] => {
-                                    out.push(&[(677, 0.5467918), (678, 0.2733959), (2, 0.02931258), (39, 0.027893493), (4, 0.027069505), (101, 0.019592585), (3, 0.014648661), (40, 0.0139467465), (5, 0.013534753), (102, 0.0097962925), (0, 0.008941787), (25, 0.0060425727), (1, 0.0044708936), (26, 0.0029755093)], 0.9984131);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['с', s @ ..] => super::t17::n14576(s, out),
-                _ => false,
-            }
-        }
-        ['к', s @ ..] => super::t17::n5335(s, out),
-        ['о', s @ ..] => {
-            out.push(&[(745, 0.24351873), (39, 0.1516289), (746, 0.12176699), (40, 0.07580682), (101, 0.055359732), (677, 0.050125886), (2, 0.035812926), (4, 0.035553522), (800, 0.028595407), (102, 0.027679866), (678, 0.025070572), (0, 0.02232395), (3, 0.017898833), (5, 0.017776761), (25, 0.016815443), (801, 0.014297703), (1, 0.011169604), (8, 0.009018082), (112, 0.0076752882), (18, 0.0076752882), (26, 0.005508507), (9, 0.0045014117), (113, 0.0038300145), (19, 0.0038300145), (124, 0.0028992142)], 0.99613947);
-            match s {
-                [] => true,
-                ['т', s @ ..] => super::t17::n14579(s, out),
-                _ => false,
-            }
-        }
-        ['с', s @ ..] => super::t17::n5337(s, out),
-        ['т', s @ ..] => super::t17::n5338(s, out),
-        ['у', s @ ..] => super::t17::n5339(s, out),
-        _ => false,
-    }
-}
-
-/// Words ending -мовать.
-pub(crate) fn n1436(s: &[char], out: &mut Path<'_>) -> bool {
-    out.push(&[(39, 0.17331196), (745, 0.13189898), (101, 0.1296254), (40, 0.08665598), (112, 0.072297245), (746, 0.06594949), (102, 0.06482033), (25, 0.05711452), (113, 0.036148623), (26, 0.02854963), (4, 0.024414435), (18, 0.019851988), (1143, 0.01872282), (2725, 0.01872282), (5, 0.0122072175), (19, 0.0099336235), (1144, 0.00936904), (2726, 0.00936904), (8, 0.0064850845), (677, 0.004272526), (0, 0.003479057), (9, 0.0032349126), (2, 0.0026092927), (678, 0.002136263)], 0.9911803);
-    match s {
-        [] => true,
-        ['а', s @ ..] => {
-            out.push(&[(4, 0.23849851), (5, 0.119249254), (39, 0.11554132), (745, 0.08793774), (101, 0.08641184), (40, 0.05777066), (112, 0.04818799), (746, 0.04396124), (102, 0.04321355), (25, 0.03807126), (113, 0.024093995), (26, 0.019028), (18, 0.013244831), (1143, 0.01248188), (2725, 0.01248188), (19, 0.0066224155), (1144, 0.00624094), (2726, 0.00624094), (8, 0.0043183034), (677, 0.002853437), (0, 0.0023193713), (9, 0.002151522)], 0.9909209);
-            match s {
-                [] => true,
-                ['с', s @ ..] => {
-                    out.push(&[(4, 0.38121614), (5, 0.1906157), (39, 0.077027544), (745, 0.05862516), (101, 0.057618067), (40, 0.038513772), (112, 0.0321355), (746, 0.02931258), (102, 0.028809033), (25, 0.025375754), (113, 0.01606775), (26, 0.012695506), (18, 0.008819715), (1143, 0.008316167), (2725, 0.008316167), (19, 0.0044098576), (1144, 0.004165713), (2726, 0.004165713), (8, 0.0028839551)], 0.9890898);
-                    match s {
-                        [] => true,
-                        ['о', s @ ..] => {
-                            out.push(&[(4, 0.4763714), (5, 0.23817807), (39, 0.051346608), (745, 0.039078355), (101, 0.038406957), (40, 0.025680933), (112, 0.021423668), (746, 0.019546807), (102, 0.019211108), (25, 0.016922256), (113, 0.010711834), (26, 0.008453499), (18, 0.0058899825), (1143, 0.005554284), (2725, 0.005554284), (19, 0.0029449912), (1144, 0.002777142), (2726, 0.002777142)], 0.99082935);
-                            s.is_empty()
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['и', s @ ..] => {
-            out.push(&[(745, 0.39118028), (746, 0.19559014), (112, 0.1294728), (113, 0.064728774), (1143, 0.06459144), (1144, 0.03230335), (39, 0.0317998), (101, 0.023788815), (40, 0.0158999), (102, 0.011886778), (25, 0.010482948), (26, 0.0052338447), (4, 0.0044861524), (18, 0.0036469062), (2725, 0.00343328), (5, 0.0022430762)], 0.9907683);
-            match s {
-                [] => true,
-                ['з', s @ ..] => {
-                    out.push(&[(745, 0.43874267), (746, 0.21937896), (112, 0.139971), (1143, 0.07301442), (113, 0.06997787), (1144, 0.03651484), (39, 0.0058289464), (101, 0.0043640803), (40, 0.0029144732), (102, 0.0021820401)], 0.9928893);
-                    match s {
-                        [] => true,
-                        ['\u{1}', s @ ..] => {
-                            out.push(&[(112, 0.6666667), (113, 0.33333334)], 1.0);
-                            s.is_empty()
-                        }
-                        ['а', 'з', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['о', s @ ..] => {
-                            out.push(&[(745, 0.575494), (746, 0.28775463), (112, 0.05598535), (1143, 0.029205767), (113, 0.028000304), (1144, 0.014602884), (39, 0.0023346303)], 0.99337757);
-                            match s {
-                                [] => true,
-                                ['д', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['р', 'п', '\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['т', 'о', '\u{1}', s @ ..] => {
-                            s.is_empty()
-                        }
-                        ['ы', s @ ..] => {
-                            out.push(&[(745, 0.2925002), (1143, 0.27089342), (746, 0.14624247), (1144, 0.13545434), (112, 0.09330892), (113, 0.04666209), (39, 0.0038910506), (101, 0.0029144732)], 0.99186695);
-                            match s {
-                                [] => true,
-                                ['в', s @ ..] => {
-                                    out.push(&[(1143, 0.4028229), (1144, 0.20140383), (745, 0.19499505), (746, 0.09750515), (112, 0.062211033), (113, 0.031097887), (39, 0.0025940337)], 0.9926299);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['р', s @ ..] => {
-            out.push(&[(39, 0.24864577), (40, 0.124315254), (101, 0.0986038), (25, 0.09781033), (745, 0.06286717), (112, 0.05481041), (102, 0.0493019), (26, 0.048905164), (18, 0.047730222), (2725, 0.04757763), (746, 0.031433586), (113, 0.027405204), (19, 0.023865111), (2726, 0.023788815), (4, 0.0032959487), (1143, 0.0025329976)], 0.9928893);
-            match s {
-                [] => true,
-                ['и', s @ ..] => {
-                    out.push(&[(18, 0.25404745), (39, 0.16575876), (19, 0.1270161), (40, 0.08288701), (101, 0.06573587), (25, 0.065201804), (745, 0.041916534), (112, 0.03654536), (102, 0.032867935), (26, 0.03260853), (2725, 0.031723507), (746, 0.020950638), (113, 0.01826505), (2726, 0.015854124), (4, 0.0021972992)], 0.993576);
-                    match s {
-                        [] => true,
-                        ['ф', s @ ..] => {
-                            out.push(&[(18, 0.391577), (19, 0.1957885), (39, 0.110505834), (40, 0.055252917), (101, 0.043823913), (25, 0.043472953), (745, 0.02793927), (112, 0.024368659), (102, 0.021911956), (26, 0.021728847), (2725, 0.021149004), (746, 0.013977264), (113, 0.0121767), (2726, 0.010574502)], 0.9942473);
-                            match s {
-                                [] => true,
-                                ['н', s @ ..] => {
-                                    out.push(&[(18, 0.48328373), (19, 0.24164186), (39, 0.07367056), (40, 0.03683528), (101, 0.029221026), (25, 0.028976882), (745, 0.018631266), (112, 0.0162356), (102, 0.014602884), (26, 0.014496071), (2725, 0.014099336), (746, 0.009308004), (113, 0.0081178), (2726, 0.007049668)], 0.99617);
-                                    s.is_empty()
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['о', s @ ..] => {
-                    out.push(&[(39, 0.29027238), (40, 0.14512856), (25, 0.07910277), (101, 0.07313649), (745, 0.07269398), (112, 0.07121386), (2725, 0.06988632), (26, 0.039551385), (102, 0.036575876), (746, 0.03634699), (113, 0.035614558), (2726, 0.03494316), (18, 0.008758679), (19, 0.0043793395)], 0.99760437);
-                    match s {
-                        [] => true,
-                        ['т', s @ ..] => {
-                            out.push(&[(745, 0.20302129), (112, 0.20227359), (39, 0.14512856), (746, 0.101503015), (113, 0.101136796), (40, 0.07257191), (25, 0.039551385), (101, 0.036575876), (2725, 0.03494316), (26, 0.019775692), (102, 0.018280309), (2726, 0.01747158), (18, 0.0043793395), (19, 0.0021820401)], 0.99879456);
-                            match s {
-                                [] => true,
-                                ['ш', s @ ..] => {
-                                    out.push(&[(745, 0.2681773), (112, 0.2678111), (746, 0.13408102), (113, 0.13389792), (39, 0.07257191), (40, 0.036285955), (25, 0.019775692), (101, 0.018280309), (2725, 0.01747158), (26, 0.009887846), (102, 0.009140154), (2726, 0.008743419), (18, 0.0021820401)], 0.9983062);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            out.push(&[(112, 0.6666667), (113, 0.33333334)], 1.0);
-                                            s.is_empty()
-                                        }
-                                        ['а', s @ ..] => {
-                                            out.push(&[(745, 0.4010071), (746, 0.20050354), (112, 0.17853056), (113, 0.08926528), (39, 0.0483711), (40, 0.02418555), (25, 0.013183795), (101, 0.012191959), (2725, 0.011642634), (26, 0.0065918975), (102, 0.00608835), (2726, 0.0058289464)], 0.9973907);
-                                            match s {
-                                                [] => true,
-                                                ['з', s @ ..] => {
-                                                    out.push(&[(745, 0.4895552), (746, 0.24478523), (112, 0.11902037), (113, 0.059510186), (39, 0.03225757), (40, 0.016128786), (25, 0.008789197), (101, 0.008133058), (2725, 0.0077668424), (26, 0.0043945983), (102, 0.0040589), (2726, 0.0038757916)], 0.99827576);
-                                                    match s {
-                                                        [] => true,
-                                                        ['\u{1}', s @ ..] => super::t17::n70202(s, out),
-                                                        _ => false,
-                                                    }
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        ['ф', s @ ..] => {
-                            out.push(&[(39, 0.36485848), (40, 0.18242161), (25, 0.0926833), (2725, 0.090608075), (101, 0.08384833), (26, 0.04634165), (2726, 0.045304038), (102, 0.041931793), (745, 0.016342413), (112, 0.016006714), (746, 0.008163577), (113, 0.0079957275)], 0.9965057);
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(25, 0.35088122), (101, 0.31578547), (26, 0.17543298), (102, 0.15790036)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['а', s @ ..] => {
-                                    out.push(&[(39, 0.51575494), (40, 0.25787747), (25, 0.04634165), (2725, 0.045304038), (101, 0.041931793), (26, 0.023178454), (2726, 0.022659648), (102, 0.020965897), (745, 0.008163577), (112, 0.0079957275), (746, 0.004089418), (113, 0.0039978637)], 0.9982605);
-                                    match s {
-                                        [] => true,
-                                        ['з', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        ['н', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['е', s @ ..] => {
-                                    out.push(&[(39, 0.4654612), (40, 0.2327306), (25, 0.06178378), (2725, 0.060410466), (101, 0.055893797), (26, 0.03089952), (2726, 0.030197604), (102, 0.027954528), (745, 0.010894942), (112, 0.010666057), (746, 0.005447471), (113, 0.0053406577)], 0.9976806);
-                                    match s {
-                                        [] => true,
-                                        ['р', 'е', 'п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['с', s @ ..] => {
-                                    out.push(&[(39, 0.4654612), (40, 0.2327306), (25, 0.06178378), (2725, 0.060410466), (101, 0.055893797), (26, 0.03089952), (2726, 0.030197604), (102, 0.027954528), (745, 0.010894942), (112, 0.010666057), (746, 0.005447471), (113, 0.0053406577)], 0.9976806);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['т', s @ ..] => {
-                                    out.push(&[(2725, 0.2826276), (39, 0.24324407), (2726, 0.1413138), (40, 0.121614404), (25, 0.06178378), (101, 0.055893797), (26, 0.03089952), (102, 0.027954528), (745, 0.010894942), (112, 0.010666057), (746, 0.005447471), (113, 0.0053406577)], 0.99768066);
-                                    match s {
-                                        [] => true,
-                                        ['о', s @ ..] => {
-                                            out.push(&[(2725, 0.41063553), (2726, 0.2053254), (39, 0.16215762), (40, 0.08108644), (25, 0.04119936), (101, 0.037262533), (26, 0.02059968), (102, 0.018631266), (745, 0.0072632944), (112, 0.007110704), (746, 0.0036316472), (113, 0.003555352)], 0.9984588);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                ['у', s @ ..] => {
-                    out.push(&[(39, 0.23753719), (25, 0.1759823), (101, 0.1626917), (40, 0.118776225), (26, 0.08798352), (102, 0.08134585), (745, 0.025665674), (112, 0.022369726), (18, 0.019485772), (2725, 0.019424735), (746, 0.012832837), (113, 0.011184863), (19, 0.009735256), (2726, 0.009704738)], 0.9947204);
-                    match s {
-                        [] => true,
-                        ['т', 'ш', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['т', s @ ..] => {
-                                    out.push(&[(39, 0.38059053), (40, 0.19029526), (25, 0.11731136), (101, 0.10846113), (26, 0.05865568), (102, 0.054230563), (745, 0.017105363), (112, 0.014908064), (18, 0.012985428), (2725, 0.012939651), (746, 0.008560311), (113, 0.007461662), (19, 0.0065003433), (2726, 0.0064698253)], 0.99647516);
-                                    match s {
-                                        [] => true,
-                                        ['о', s @ ..] => {
-                                            out.push(&[(39, 0.47594416), (40, 0.23797971), (25, 0.078217745), (101, 0.072312504), (26, 0.039108872), (102, 0.036148623), (745, 0.01139849), (112, 0.009948882), (18, 0.008651866), (2725, 0.008636607), (746, 0.005706874), (113, 0.004974441), (19, 0.004333562), (2726, 0.0043183034)], 0.99768066);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['т', s @ ..] => {
-            out.push(&[(101, 0.30864424), (102, 0.15431449), (39, 0.11554132), (745, 0.08793774), (40, 0.05777066), (112, 0.04818799), (746, 0.04396124), (25, 0.03807126), (113, 0.024093995), (26, 0.019028), (4, 0.016281376), (18, 0.013244831), (1143, 0.01248188), (2725, 0.01248188), (5, 0.008133058), (19, 0.0066224155), (1144, 0.00624094), (2726, 0.00624094), (8, 0.0043183034), (677, 0.002853437), (0, 0.0023193713), (9, 0.002151522)], 0.9909209);
-            match s {
-                [] => true,
-                ['и', s @ ..] => {
-                    out.push(&[(101, 0.42798504), (102, 0.21399252), (39, 0.077027544), (745, 0.05862516), (40, 0.038513772), (112, 0.0321355), (746, 0.02931258), (25, 0.025375754), (113, 0.01606775), (26, 0.012695506), (4, 0.010849165), (18, 0.008819715), (1143, 0.008316167), (2725, 0.008316167), (5, 0.005416953), (19, 0.0044098576), (1144, 0.004165713), (2726, 0.004165713), (8, 0.0028839551)], 0.9890745);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['у', s @ ..] => {
-            out.push(&[(101, 0.30864424), (102, 0.15431449), (39, 0.11554132), (745, 0.08793774), (40, 0.05777066), (112, 0.04818799), (746, 0.04396124), (25, 0.03807126), (113, 0.024093995), (26, 0.019028), (4, 0.016281376), (18, 0.013244831), (1143, 0.01248188), (2725, 0.01248188), (5, 0.008133058), (19, 0.0066224155), (1144, 0.00624094), (2726, 0.00624094), (8, 0.0043183034), (677, 0.002853437), (0, 0.0023193713), (9, 0.002151522)], 0.9909209);
-            match s {
-                [] => true,
-                ['ш', s @ ..] => {
-                    out.push(&[(101, 0.42798504), (102, 0.21399252), (39, 0.077027544), (745, 0.05862516), (40, 0.038513772), (112, 0.0321355), (746, 0.02931258), (25, 0.025375754), (113, 0.01606775), (26, 0.012695506), (4, 0.010849165), (18, 0.008819715), (1143, 0.008316167), (2725, 0.008316167), (5, 0.005416953), (19, 0.0044098576), (1144, 0.004165713), (2726, 0.004165713), (8, 0.0028839551)], 0.9890745);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        ['ф', s @ ..] => {
-            out.push(&[(39, 0.20265508), (101, 0.1851835), (25, 0.15617609), (40, 0.10133517), (102, 0.09259175), (26, 0.078080416), (745, 0.052765697), (112, 0.028915847), (746, 0.026382849), (113, 0.014465553), (4, 0.009765774), (18, 0.00794995), (1143, 0.00749218), (2725, 0.00749218), (5, 0.004882887), (19, 0.0039673457), (1144, 0.0037384604), (2726, 0.0037384604), (8, 0.0025940337)], 0.9901732);
-            match s {
-                [] => true,
-                ['и', s @ ..] => {
-                    out.push(&[(39, 0.21438926), (101, 0.20740062), (25, 0.19580378), (40, 0.10719463), (102, 0.10370031), (26, 0.09790189), (745, 0.021103228), (112, 0.011566339), (746, 0.010559243), (113, 0.0057831695), (4, 0.0039063096), (18, 0.0031738766), (1143, 0.0029907683), (2725, 0.0029907683)], 0.9884642);
-                    match s {
-                        [] => true,
-                        ['р', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    s.is_empty()
-                                }
-                                ['а', s @ ..] => {
-                                    out.push(&[(101, 0.3604944), (102, 0.18023957), (39, 0.14293125), (25, 0.13054094), (40, 0.071458), (26, 0.06526284), (745, 0.014068819), (112, 0.0077058063), (746, 0.0070344093), (113, 0.0038605325), (4, 0.0026092927), (18, 0.002121004)], 0.98832685);
-                                    match s {
-                                        [] => true,
-                                        ['з', s @ ..] => {
-                                            out.push(&[(101, 0.46254674), (102, 0.231281), (39, 0.09529259), (25, 0.0870222), (40, 0.047638666), (26, 0.04351873), (745, 0.009384299), (112, 0.0051422906), (746, 0.00468452), (113, 0.0025635157)], 0.9890745);
-                                            match s {
-                                                [] => true,
-                                                ['\u{1}', s @ ..] => {
-                                                    s.is_empty()
-                                                }
-                                                _ => false,
-                                            }
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['с', s @ ..] => {
-                                    out.push(&[(39, 0.3651484), (40, 0.1825742), (101, 0.13827726), (25, 0.13054094), (102, 0.06913863), (26, 0.06526284), (745, 0.014068819), (112, 0.0077058063), (746, 0.0070344093), (113, 0.0038605325), (4, 0.0026092927), (18, 0.002121004)], 0.9883421);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['ь', s @ ..] => {
-            out.push(&[(39, 0.34009308), (40, 0.17004654), (101, 0.13418783), (112, 0.1079118), (102, 0.067093916), (113, 0.0539559), (745, 0.03822385), (746, 0.019119555), (25, 0.01655604), (26, 0.00827039), (4, 0.007080186), (18, 0.0057526515), (1143, 0.005432212), (2725, 0.005432212), (5, 0.003540093), (19, 0.0028839551), (1144, 0.002716106), (2726, 0.002716106)], 0.99101245);
-            match s {
-                [] => true,
-                ['л', s @ ..] => {
-                    out.push(&[(39, 0.38843367), (40, 0.19421683), (101, 0.13551538), (112, 0.11824216), (102, 0.06775006), (113, 0.05911345), (745, 0.01107805), (746, 0.005539025), (25, 0.004791333), (26, 0.0023956664), (4, 0.002044709)], 0.9891203);
-                    match s {
-                        [] => true,
-                        ['е', 'ш', s @ ..] => {
-                            match s {
-                                [] => true,
-                                ['\u{1}', s @ ..] => {
-                                    out.push(&[(101, 0.35088122), (112, 0.31578547), (102, 0.17543298), (113, 0.15790036)], 1.0);
-                                    s.is_empty()
-                                }
-                                ['б', s @ ..] => {
-                                    out.push(&[(39, 0.481178), (40, 0.240589), (101, 0.09034867), (112, 0.078828104), (102, 0.045166705), (113, 0.039414052), (745, 0.0073853666), (746, 0.0036926833), (25, 0.0032043946)], 0.98980695);
-                                    match s {
-                                        [] => true,
-                                        ['о', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['е', s @ ..] => {
-                                    out.push(&[(39, 0.481178), (40, 0.240589), (101, 0.09034867), (112, 0.078828104), (102, 0.045166705), (113, 0.039414052), (745, 0.0073853666), (746, 0.0036926833), (25, 0.0032043946)], 0.98980695);
-                                    match s {
-                                        [] => true,
-                                        ['р', 'е', 'п', '\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                ['о', s @ ..] => {
-                                    out.push(&[(39, 0.481178), (40, 0.240589), (101, 0.09034867), (112, 0.078828104), (102, 0.045166705), (113, 0.039414052), (745, 0.0073853666), (746, 0.0036926833), (25, 0.0032043946)], 0.98980695);
-                                    match s {
-                                        [] => true,
-                                        ['\u{1}', s @ ..] => {
-                                            s.is_empty()
-                                        }
-                                        _ => false,
-                                    }
-                                }
-                                _ => false,
-                            }
-                        }
-                        _ => false,
-                    }
-                }
-                _ => false,
-            }
-        }
-        ['э', s @ ..] => {
-            out.push(&[(101, 0.30864424), (102, 0.15431449), (39, 0.11554132), (745, 0.08793774), (40, 0.05777066), (112, 0.04818799), (746, 0.04396124), (25, 0.03807126), (113, 0.024093995), (26, 0.019028), (4, 0.016281376), (18, 0.013244831), (1143, 0.01248188), (2725, 0.01248188), (5, 0.008133058), (19, 0.0066224155), (1144, 0.00624094), (2726, 0.00624094), (8, 0.0043183034), (677, 0.002853437), (0, 0.0023193713), (9, 0.002151522)], 0.9909209);
-            match s {
-                [] => true,
-                ['л', s @ ..] => {
-                    out.push(&[(101, 0.42798504), (102, 0.21399252), (39, 0.077027544), (745, 0.05862516), (40, 0.038513772), (112, 0.0321355), (746, 0.02931258), (25, 0.025375754), (113, 0.01606775), (26, 0.012695506), (4, 0.010849165), (18, 0.008819715), (1143, 0.008316167), (2725, 0.008316167), (5, 0.005416953), (19, 0.0044098576), (1144, 0.004165713), (2726, 0.004165713), (8, 0.0028839551)], 0.9890745);
-                    s.is_empty()
-                }
-                _ => false,
-            }
-        }
-        _ => false,
-    }
+pub(crate) fn n1428(s: &[char], out: &mut Path<'_>) -> bool {
+	super::push(out, 1347);
+	match s {
+		[] => true,
+		['\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['а', s @ ..] => {
+			super::push(out, 4615);
+			match s {
+				[] => true,
+				['з', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							super::push(out, 20249);
+							s.is_empty()
+						}
+						['д', 'о', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						_ => false,
+					}
+				}
+				['н', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['б', 'о', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['в', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['д', s @ ..] => {
+			match s {
+				[] => true,
+				['а', 'н', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['о', 'п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['з', s @ ..] => {
+			super::push(out, 4616);
+			match s {
+				[] => true,
+				['а', 'р', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', 'д', s @ ..] => {
+							match s {
+								[] => true,
+								['\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								['е', 'н', '\u{1}', s @ ..] => {
+									s.is_empty()
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				['в', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['и', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['и', s @ ..] => {
+			super::push(out, 4617);
+			match s {
+				[] => true,
+				['р', 'п', s @ ..] => {
+					match s {
+						[] => true,
+						['\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['е', 'р', 'е', 'п', '\u{1}', s @ ..] => {
+							s.is_empty()
+						}
+						['о', s @ ..] => {
+							super::push(out, 20250);
+							match s {
+								[] => true,
+								['п', s @ ..] => {
+									super::push(out, 28549);
+									match s {
+										[] => true,
+										['\u{1}', s @ ..] => {
+											s.is_empty()
+										}
+										_ => false,
+									}
+								}
+								_ => false,
+							}
+						}
+						_ => false,
+					}
+				}
+				_ => false,
+			}
+		}
+		['о', s @ ..] => {
+			match s {
+				[] => true,
+				['\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['д', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['п', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				['с', '\u{1}', s @ ..] => {
+					s.is_empty()
+				}
+				_ => false,
+			}
+		}
+		['с', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['т', 'о', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['у', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		['ы', 'в', '\u{1}', s @ ..] => {
+			s.is_empty()
+		}
+		_ => false,
+	}
 }
 

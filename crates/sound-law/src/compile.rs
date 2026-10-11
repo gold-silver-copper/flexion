@@ -18,6 +18,9 @@ pub(crate) struct CompiledRule {
     pub(crate) capture_count: usize,
     pub(crate) direction: Direction,
     pub(crate) application: Application,
+    /// Literals every match needs, in its environment or target: a word
+    /// without one of them is left as it is, unscanned.
+    pub(crate) required: Vec<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -155,8 +158,18 @@ pub(crate) fn compile(spec: &RuleSet<'_>) -> Result<Program, CompileError> {
             _ => unreachable!("Rule::unless_context always sets both context halves"),
         };
 
+        let required = [&left, &target, &right]
+            .into_iter()
+            .flat_map(|p| &p.atoms)
+            .filter(|a| matches!(a.quantifier, Quantifier::One | Quantifier::OneOrMore))
+            .filter_map(|a| match &a.matcher {
+                Matcher::Literal(s) if !s.is_empty() => Some(s.clone()),
+                _ => None,
+            })
+            .collect();
         compiled.push(CompiledRule {
             name: rule.name().to_owned(),
+            required,
             left,
             target,
             right,

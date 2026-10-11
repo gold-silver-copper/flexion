@@ -59,8 +59,8 @@ used for any decision.
 
 | | lemmas | cells | top-1 | top-3 | top-1 given citation | top-1 given citation and markers |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 4225 | 4225 | **97.68%** | 99.03% | – | 97.70% |
-| adjective | 1838 | 5514 | **97.37%** | 99.53% | 99.73% | – |
+| noun | 4225 | 4225 | **97.59%** | 99.03% | – | 97.61% |
+| adjective | 1838 | 5514 | **97.41%** | 99.49% | 99.73% | – |
 | verb | 738 | 34572 | **99.06%** | 99.76% | 99.80% | – |
 | participle | 626 | 1878 | **99.04%** | 100.00% | – | – |
 | determiner ¹ | 6 | 13 | **69.23%** | 69.23% | – | – |
@@ -78,10 +78,10 @@ the word the way a dictionary prints them (noun `m`/`f`/`mf`).
 
 | cell | n | top-1 | top-3 |
 |---|---:|---:|---:|
-| noun.pl | 4225 | 97.68% | 99.03% |
-| adjective.m.pl | 1838 | 98.20% | 99.89% |
-| adjective.f.sg | 1837 | 97.39% | 99.51% |
-| adjective.f.pl | 1837 | 96.57% | 99.24% |
+| noun.pl | 4225 | 97.59% | 99.03% |
+| adjective.m.pl | 1838 | 98.20% | 99.84% |
+| adjective.f.sg | 1837 | 97.44% | 99.51% |
+| adjective.f.pl | 1837 | 96.62% | 99.18% |
 | before_vowel | 2 | 50.00% | 50.00% |
 | verb.pres.1.sg | 736 | 98.64% | 99.73% |
 | verb.pres.1.pl | 736 | 99.46% | 99.73% |
@@ -158,7 +158,7 @@ Expected calibration error (ECE) is the average gap between confidence and accur
 
 | | ECE |
 |---|---:|
-| noun | 0.011 |
+| noun | 0.010 |
 | adjective | 0.007 |
 | verb | 0.007 |
 | participle | 0.008 |
@@ -170,13 +170,13 @@ All parts of speech together (ECE 0.006):
 |---|---:|---:|---:|
 | 0.0–0.1 | 0.000 | 0.000 | 1 |
 | 0.2–0.3 | 0.246 | 0.000 | 2 |
-| 0.3–0.4 | 0.357 | 0.333 | 6 |
-| 0.4–0.5 | 0.458 | 0.333 | 33 |
-| 0.5–0.6 | 0.527 | 0.387 | 377 |
-| 0.6–0.7 | 0.656 | 0.918 | 462 |
-| 0.7–0.8 | 0.750 | 0.891 | 184 |
-| 0.8–0.9 | 0.862 | 0.845 | 439 |
-| 0.9–1.0 | 0.997 | 0.995 | 44698 |
+| 0.3–0.4 | 0.360 | 0.286 | 7 |
+| 0.4–0.5 | 0.461 | 0.438 | 32 |
+| 0.5–0.6 | 0.527 | 0.378 | 376 |
+| 0.6–0.7 | 0.655 | 0.919 | 455 |
+| 0.7–0.8 | 0.746 | 0.876 | 185 |
+| 0.8–0.9 | 0.862 | 0.832 | 457 |
+| 0.9–1.0 | 0.997 | 0.996 | 44687 |
 
 ### Forms many words lack
 
@@ -194,7 +194,7 @@ Predicted for held-out lemmas from the bare lemma.
 
 | feature | lemmas | right |
 |---|---:|---:|
-| noun noungender | 4223 | 88.73% |
+| noun noungender | 4223 | 88.78% |
 
 ### Made-up words
 
@@ -202,7 +202,7 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 | word | function | answers |
 |---|---|---|
-| `glorpal` | noun | sg: glorpal 1.00; pl: glorpaux 0.58, glorpals 0.40 |
+| `glorpal` | noun | sg: glorpal 1.00; pl: glorpaux 0.55, glorpals 0.44 |
 | `blicheau` | noun | sg: blicheau 1.00; pl: blicheaux 1.00 |
 | `flurmeur` | noun | sg: flurmeur 1.00; pl: flurmeurs 1.00 |
 | `glorpeux` | adjective | m.sg: glorpeux 1.00; m.pl: glorpeux 1.00; f.sg: glorpeuse 1.00; f.pl: glorpeuses 1.00 |
@@ -215,26 +215,26 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 <details><summary>noun</summary>
 
-- 36 × `noun.pl`: predicted `-+s`, attested `-+` — aide-mémoire → aide-mémoires (attested aide-mémoire); arrête-bœuf → arrête-bœufs (attested arrête-bœuf); baise-en-ville → baise-en-villes (attested baise-en-ville)
+- 38 × `noun.pl`: predicted `-+s`, attested `-+` — aide-mémoire → aide-mémoires (attested aide-mémoire); arrête-bœuf → arrête-bœufs (attested arrête-bœuf); baise-en-ville → baise-en-villes (attested baise-en-ville)
 - 5 × `noun.pl`: predicted `-l+ux`, attested `-+s` — acétal → acétaux (attested acétals); corral → corraux (attested corrals); célestial → célestiaux (attested célestials)
+- 3 × `noun.pl`: predicted `-+`, attested `-+s` — bêta-test → bêta-test (attested bêta-tests); cf → cf (attested cfs); sas → sas (attested sass)
 - 3 × `noun.pl`: predicted `-+s`, attested `-l+ux` — revival → revivals (attested revivaux); réal → réals (attested réaux); val → vals (attested vaux)
-- 3 × `noun.pl`: predicted `-+x`, attested `-+s` — nu → nux (attested nus); sudoku → sudokux (attested sudokus); émeu → émeux (attested émeus)
-- 2 × `noun.pl`: predicted `-+`, attested `-+s` — cf → cf (attested cfs); sas → sas (attested sass)
+- 2 × `noun.pl`: predicted `-+s`, attested `-+x` — cagou → cagous (attested cagoux); vœu → vœus (attested vœux)
 - 2 × `noun.pl`: predicted `-+s`, attested `--homme+s-hommes` — année-homme → année-hommes (attested années-hommes); sage-homme → sage-hommes (attested sages-hommes)
+- 2 × `noun.pl`: predicted `-+x`, attested `-+s` — sudoku → sudokux (attested sudokus); émeu → émeux (attested émeus)
+- 1 × `noun.pl`: predicted `-+`, attested `-+x` — couvre-feu → couvre-feu (attested couvre-feux)
 - 1 × `noun.pl`: predicted `-+`, attested `--levis+s-levis` — pont-levis → pont-levis (attested ponts-levis)
 - 1 × `noun.pl`: predicted `-+`, attested `--ongles+s-ongles` — coupe-ongles → coupe-ongles (attested coupes-ongles)
 - 1 × `noun.pl`: predicted `-+`, attested `--sens+s-sens` — double-sens → double-sens (attested doubles-sens)
 - 1 × `noun.pl`: predicted `-+`, attested `--spontex+s-spontex` — mao-spontex → mao-spontex (attested maos-spontex)
-- 1 × `noun.pl`: predicted `-+`, attested `-matildas+p` — matildas → matildas (attested p)
-- 1 × `noun.pl`: predicted `-+`, attested `-reillons+nly` — oreillons → oreillons (attested only)
 
 </details>
 
 <details><summary>adjective</summary>
 
 - 28 × `adjective.m.pl`: predicted `-+s`, attested `-+` — antiblanchiment → antiblanchiments (attested antiblanchiment); antimendicité → antimendicités (attested antimendicité); antisida → antisidas (attested antisida)
-- 22 × `adjective.f.sg`: predicted `-+e`, attested `-+` — antiblanchiment → antiblanchimente (attested antiblanchiment); anticasseurs → anticasseurse (attested anticasseurs); antimendicité → antimendicitée (attested antimendicité)
-- 15 × `adjective.f.pl`: predicted `-+es`, attested `-+` — antiblanchiment → antiblanchimentes (attested antiblanchiment); anticasseurs → anticasseurses (attested anticasseurs); antimendicité → antimendicitées (attested antimendicité)
+- 21 × `adjective.f.sg`: predicted `-+e`, attested `-+` — antiblanchiment → antiblanchimente (attested antiblanchiment); anticasseurs → anticasseurse (attested anticasseurs); antimendicité → antimendicitée (attested antimendicité)
+- 14 × `adjective.f.pl`: predicted `-+es`, attested `-+` — antiblanchiment → antiblanchimentes (attested antiblanchiment); anticasseurs → anticasseurses (attested anticasseurs); antimendicité → antimendicitées (attested antimendicité)
 - 12 × `adjective.f.pl`: predicted `-+s`, attested `-+` — antisida → antisidas (attested antisida); burkinabè → burkinabès (attested burkinabè); camp → camps (attested camp)
 - 7 × `adjective.f.pl`: predicted `-+es`, attested `-+s` — chanmé → chanmées (attested chanmés); expansé → expansées (attested expansés); fauché → fauchées (attested fauchés)
 - 3 × `adjective.f.sg`: predicted `-r+se`, attested `-+e` — impur → impuse (attested impure); mûr → mûse (attested mûre); ouïgour → ouïgouse (attested ouïgoure)
@@ -286,23 +286,23 @@ Words that exist nowhere, with the two most likely answers and their confidence.
 
 ### Size and speed
 
-The model is 2046 KB of generated Rust (237 KB gzipped). Its tables measure 303 KB: what a compact binary layout of them would take, the size the build prices when it tunes. Where those bytes are, in KB (the strings, 22 KB, are shared):
+The model is 1626 KB of generated Rust (163 KB gzipped). Its tables measure 319 KB: what a compact binary layout of them would take, the size the build prices when it tunes. Where those bytes are, in KB (the strings, 20 KB, are shared):
 
-| | edits | classes | tree nodes | distributions | joins | lexicon | restoration model | part models | total |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 15 | 16 | 56 | 60 | 0 | 0 | 0 | 0 | 147 |
-| adjective | 5 | 3 | 14 | 15 | 0 | 0 | 0 | 0 | 37 |
-| verb | 53 | 22 | 8 | 10 | 0 | 0 | 0 | 0 | 93 |
-| participle | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 3 |
-| determiner | 1 | 1 | 0 | 1 | 0 | 0 | 0 | 0 | 3 |
+| | edits | classes | tree nodes | their counts | joins | lexicon | sound laws | restoration model | part models | total |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 15 | 16 | 66 | 74 | 0 | 0 | 0 | 0 | 0 | 170 |
+| adjective | 5 | 3 | 17 | 15 | 0 | 0 | 0 | 0 | 0 | 40 |
+| verb | 42 | 22 | 8 | 11 | 0 | 0 | 1 | 0 | 0 | 84 |
+| participle | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 3 |
+| determiner | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 3 |
 
-| | edits | classes | stored nodes | memorized words | distribution entries | ns per call |
+| | edits | classes | stored nodes | memorized words | counts stored | ns per call |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 469 | 507 | 4792 | 884 | 15351 | 507 (`noun.pl`) |
-| adjective | 145 | 84 | 1199 | 523 | 3844 | 466 (`adjective.m.pl`) |
-| verb | 1683 | 201 | 702 | 173 | 2477 | 349 (`participle.past`) |
-| participle | 9 | 6 | 101 | 5 | 188 | 436 (`past_participle.m.pl`) |
-| determiner | 33 | 21 | 30 | 9 | 187 | 353 (`determiner.f.pl`) |
+| noun | 469 | 507 | 5662 | 990 | 12549 | 614 (`noun.pl`) |
+| adjective | 145 | 84 | 1480 | 521 | 2524 | 524 (`adjective.m.pl`) |
+| verb | 1343 | 201 | 702 | 173 | 1871 | 377 (`participle.past`) |
+| participle | 9 | 6 | 101 | 5 | 155 | 474 (`past_participle.m.pl`) |
+| determiner | 33 | 21 | 30 | 9 | 82 | 407 (`determiner.f.pl`) |
 
 *ns per call*: one plain call (parse the word, walk the tree, build the form) with the shipped
 model, for the held-out tenth's lemmas (which the shipped model has seen), single thread,
@@ -314,19 +314,19 @@ release build, fastest of seven runs.
 
 | | τ | model KB | dev top-1 | dev log-loss |
 |---|---:|---:|---:|---:|
-| noun | 1 | 174 | 97.60% | 0.1375 |
-| noun | 2 (chosen) | 130 | 97.58% | 0.1373 |
-| noun | 8 | 77 | 97.36% | 0.1420 |
-| adjective | 1 | 41 | 97.33% | 0.1067 |
-| adjective | 2 (chosen) | 34 | 97.32% | 0.1078 |
-| adjective | 8 | 25 | 97.17% | 0.1107 |
+| noun | 1 | 197 | 97.48% | 0.1349 |
+| noun | 2 (chosen) | 151 | 97.48% | 0.1359 |
+| noun | 8 | 90 | 97.22% | 0.1432 |
+| adjective | 1 (chosen) | 36 | 97.33% | 0.1067 |
+| adjective | 2 | 31 | 97.32% | 0.1078 |
+| adjective | 8 | 26 | 97.17% | 0.1107 |
 | verb | 1 | 97 | 98.87% | 0.0382 |
-| verb | 2 (chosen) | 93 | 98.72% | 0.0343 |
-| verb | 8 | 89 | 98.28% | 0.0453 |
+| verb | 2 (chosen) | 94 | 98.72% | 0.0343 |
+| verb | 8 | 91 | 98.28% | 0.0453 |
 | participle | 1 (chosen) | 2 | 99.56% | 0.0224 |
 | participle | 2 | 2 | 99.56% | 0.0230 |
 | participle | 8 | 1 | 99.56% | 0.0235 |
-| determiner | 1 (chosen) | 3 | 100.00% | 0.0892 |
+| determiner | 1 (chosen) | 2 | 100.00% | 0.0892 |
 | determiner | 2 | 2 | 100.00% | 0.2282 |
 | determiner | 8 | 2 | 40.00% | 0.7985 |
 
@@ -334,20 +334,29 @@ release build, fastest of seven runs.
 
 <details><summary>Chosen hyperparameters</summary>
 
-| | smoothing α | pruning τ | suffix support | syllable token | dev top-1 |
-|---|---:|---:|---:|---|---:|
-| noun | 2 | 2 | 2 | after 0 letters | 97.58% |
-| adjective | 8 | 2 | 2 | after 2 letters | 97.32% |
-| verb | 0.5 | 2 | 1 | none | 98.72% |
-| participle | 0.5 | 1 | 1 | after 0 letters | 99.56% |
-| determiner | 0.5 | 1 | 2 | after 0 letters | 100.00% |
+| | smoothing α | pruning τ | suffix support | syllable token | join model | start restoration | sound laws | dev top-1 |
+|---|---:|---:|---:|---|---|---|---|---:|
+| noun | 8 | 2 | 2 | after 0 letters | no | no | no | 97.48% |
+| adjective | 8 | 1 | 2 | after 2 letters | no | no | no | 97.33% |
+| verb | 0.5 | 2 | 1 | none | no | no | yes | 98.72% |
+| participle | 0.5 | 1 | 1 | after 0 letters | no | no | no | 99.56% |
+| determiner | 0.5 | 1 | 2 | after 0 letters | no | no | no | 100.00% |
 
 </details>
+
+### Sound laws
+
+Learned from the training words: where edits differ only by a regular change of the stem's edge, they are one edit and a rule, so an unseen word gets the change too.
+
+- **verb**:
+  - the stem's last vowel, across its final consonants: e→è, oi→u, é→è (14361 training pairs)
+  - the stem's last segment before the ending: dr→s, r→s, tr→ss (609 training pairs)
+  - the stem's last vowel, across its final consonants: e→oi, ou→eu (41 training pairs)
 
 
 ## Data and license
 
-The code is MIT or Apache-2.0. The model (`src/model.bin`) is derived from
+The code is MIT or Apache-2.0. The model (the code under `src/model/`) is derived from
 [the English Wiktionary](https://en.wiktionary.org/) via [Kaikki](https://kaikki.org/) and
 [wiktextract](https://github.com/tatuylonen/wiktextract), and is licensed under
 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); see `DATA-LICENSE.md`.
