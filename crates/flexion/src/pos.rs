@@ -1544,11 +1544,17 @@ impl<'m, 'a> Pos<'m, 'a> {
                     let Some(e) = usize::try_from(id).ok().and_then(|id| v.edit(id)) else {
                         continue;
                     };
-                    let (front, prefix, strip) =
-                        (sp.fold_str(e.front), sp.fold_str(e.prefix), sp.fold_str(e.strip));
+                    let (front, prefix, strip) = (
+                        sp.fold_str(e.front),
+                        sp.fold_str(e.prefix),
+                        sp.fold_str(e.strip),
+                    );
                     let list = out.entry(sp.fold_str(e.add)).or_default();
                     let same = |r: &&mut Reading| {
-                        r.source == source && r.front == front && r.prefix == prefix && r.strip == strip
+                        r.source == source
+                            && r.front == front
+                            && r.prefix == prefix
+                            && r.strip == strip
                     };
                     match list.iter_mut().find(same) {
                         Some(r) if !r.cells.contains(&cell) => r.cells.push(cell),
