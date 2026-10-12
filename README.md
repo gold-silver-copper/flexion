@@ -2,8 +2,8 @@
 
 Point a trainer at a language's [Kaikki](https://kaikki.org/) Wiktionary dump and get a
 Rust crate that **is that language's inflectional grammar**: its declensions and
-conjugations as named tables, the rules that choose them with their evidence, its accent
-system, its prefixes, its irregular words. The crate inflects **any** word, attested or
+conjugations as named tables, the rules that choose them with their evidence, its sound
+laws, its accent system, its irregular words' principal parts. The crate inflects **any** word, attested or
 not, and every answer comes with a calibrated probability, how settled it is, and why.
 
 ```rust
@@ -14,8 +14,8 @@ assert_eq!(noun("книга", Case::Genitive, Number::Plural), "книг");
 for c in Noun::new("бокр").candidates((Case::Accusative, Number::Singular)) {
     println!("{c}");
 }
-// бокр (60%, regular): like приём; 5019 of 5179 words in -р
-// бокра (39%, regular): like приём; 5019 of 5179 words in -р
+// бокр (61%, regular): like приём; 5031 of 5179 words in -р
+// бокра (39%, regular): like приём; 5031 of 5179 words in -р
 // (inanimate, or animate: say which with `.animacy(…)`, and the guess is gone)
 ```
 
@@ -31,45 +31,49 @@ Held-out words: a tenth of each part of speech (by a hash of the word) that the 
 was not learned from, asked for every form the dictionary lists. *Top-1 from the
 headword*: the word typed as the dictionary's headword (Latin `rosa`, Greek `λύω`, no
 vowel length), with a 95% margin. *Lemma in full*: typed with every mark the tables
-write. *Principal parts given*: the dictionary's principal parts given too. *Floor*: the
-longest-suffix rule, the SIGMORPHON shared tasks' non-neural baseline. *Baseline*: the
-previous version of these crates (a model, not a grammar), from the bare lemma.
+write. *Principal parts given*: the dictionary's principal parts given too. *Features
+given*: the word's gender (Russian: and animacy; verbs: aspect) given, as `.gender(…)`
+gives it. *Seen* and *unseen cells*: the cells some training word of the word's paradigm
+has, and the others (told from other cells), with their number of forms. *Floor*: the
+exact non-neural baseline of the CoNLL–SIGMORPHON 2017 shared task. *Baseline*: the
+version of these crates before PR #10 (a model, not a grammar), from the bare lemma.
 *Attested*: the shipped grammar on the dictionary's own words.
 
-| language | part of speech | top-1 from the headword | lemma in full | principal parts given | floor | baseline | attested | calibration error |
-|---|---|---:|---:|---:|---:|---:|---:|---:|
-| english | noun | **98.60%** ± 0.1 | 98.60% | 100.00% | 94.52% | 97.14% | 100.00% | 0.001 |
-| english | verb | **97.87%** ± 0.4 | 97.87% | 99.72% | 96.29% | 97.91% | 100.00% | 0.005 |
-| english | adjective | **96.59%** ± 0.5 | 96.59% | 100.00% | 36.21% | 96.69% | 100.00% | 0.024 |
-| english | adverb | **99.17%** ± 0.5 | 99.17% | 100.00% | 33.66% |  | 100.00% | 0.037 |
-| russian | noun | **94.96%** ± 0.8 | 94.96% | 96.11% | 92.57% | 84.48% | 100.00% | 0.003 |
-| russian | adjective | **99.76%** ± 0.2 | 99.76% |  | 99.67% | 96.60% | 100.00% | 0.002 |
-| russian | verb | **96.00%** ± 1.1 | 96.00% | 99.00% | 92.49% | 92.37% | 100.00% | 0.008 |
-| latin | noun | **65.24%** ± 2.4 | 93.67% | 98.33% | 54.53% | 68.91% | 100.00% | 0.048 |
-| latin | adjective | **81.70%** ± 1.4 | 99.24% | 99.47% | 61.20% | 87.22% | 100.00% | 0.052 |
-| latin | verb | **70.33%** ± 3.6 | 85.37% | 97.49% | 60.65% | 75.18% | 100.00% | 0.030 |
-| ancient-greek | noun | **61.88%** ± 3.3 | 78.74% | 89.46% | 42.88% | 57.82% | 100.00% | 0.118 |
-| ancient-greek | adjective | **58.78%** ± 4.4 | 71.76% | 87.42% | 38.51% | 63.66% | 100.00% | 0.093 |
-| ancient-greek | verb | **46.11%** ± 6.0 | 53.57% | 56.99% | 43.86% | 54.26% | 100.00% | 0.075 |
-| sanskrit | noun | **91.58%** ± 2.3 | 91.58% |  | 92.04% | 93.55% | 100.00% | 0.022 |
-| sanskrit | adjective | **90.21%** ± 4.2 | 90.21% |  | 91.12% | 91.21% | 100.00% | 0.039 |
-| sanskrit | verb | **87.61%** ± 6.9 | 87.61% | 87.94% | 72.49% | 90.13% | 100.00% | 0.101 |
+| language | part of speech | top-1 from the headword | lemma in full | principal parts given | features given | seen cells | unseen cells | floor | baseline | attested | calibration error |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| english | noun | **98.60%** ± 0.1 | 98.60% | 100.00% |  | 98.60% (47466) |  | 98.39% | 97.14% | 100.00% | 0.001 |
+| english | verb | **97.87%** ± 0.4 | 97.87% | 99.73% |  | 97.87% (20745) |  | 98.24% | 97.91% | 100.00% | 0.006 |
+| english | adjective | **96.53%** ± 0.5 | 96.53% | 100.00% |  | 96.53% (18715) |  | 95.02% | 96.69% | 100.00% | 0.050 |
+| english | adverb | **99.17%** ± 0.5 | 99.17% | 100.00% |  | 99.17% (3621) |  | 98.90% |  | 100.00% | 0.070 |
+| russian | noun | **95.03%** ± 0.8 | 95.03% | 96.16% | 97.57% | 95.03% (30193) | 87.50% (8) | 94.72% | 84.48% | 99.96% | 0.004 |
+| russian | adjective | **99.76%** ± 0.2 | 99.76% |  |  | 99.76% (171213) | 0.00% (12) | 99.78% | 96.60% | 100.00% | 0.002 |
+| russian | verb | **96.04%** ± 1.1 | 96.04% | 98.93% | 95.74% | 96.06% (21827) | 83.87% (31) | 96.17% | 92.37% | 100.00% | 0.009 |
+| latin | noun | **65.29%** ± 2.4 | 93.67% | 98.20% | 66.10% | 65.31% (18401) | 0.00% (6) | 59.70% | 68.91% | 100.00% | 0.048 |
+| latin | adjective | **81.70%** ± 1.4 | 99.24% | 99.47% |  | 81.71% (102281) | 0.00% (1) | 71.95% | 87.22% | 100.00% | 0.052 |
+| latin | verb | **70.53%** ± 3.6 | 85.26% | 95.78% |  | 70.50% (60859) | 85.71% (112) | 65.34% | 75.18% | 100.00% | 0.031 |
+| ancient-greek | noun | **61.94%** ± 3.3 | 78.80% | 88.96% | 62.59% | 61.89% (11658) | 100.00% (15) | 45.17% | 57.82% | 100.00% | 0.120 |
+| ancient-greek | adjective | **59.07%** ± 4.4 | 72.08% | 87.48% |  | 59.07% (22472) | 50.00% (12) | 39.77% | 63.66% | 100.00% | 0.100 |
+| ancient-greek | verb | **46.06%** ± 6.0 | 53.64% | 52.15% |  | 46.28% (64145) | 3.53% (340) | 42.64% | 54.26% | 100.00% | 0.065 |
+| sanskrit | noun | **91.90%** ± 2.2 | 91.90% |  | 97.16% | 91.90% (13801) |  | 91.70% | 93.55% | 100.00% | 0.013 |
+| sanskrit | adjective | **91.64%** ± 3.9 | 91.64% |  |  | 91.69% (13449) | 0.00% (7) | 89.95% | 91.21% | 100.00% | 0.030 |
+| sanskrit | verb | **87.74%** ± 6.9 | 87.74% | 85.44% |  | 88.01% (7173) | 57.81% (64) | 90.01% | 90.13% | 100.00% | 0.085 |
 
-Where the grammar is below the baseline, and why:
+Where the grammar is below the baseline or the floor, and why:
 
 - **Latin and Ancient Greek, from the headword.** A headword doesn't write vowel length
   (`fox` for `fōx`, `λυω` for `λῡω`); the grammar restores it by rules on the letters
   around each vowel (`-ātiō`, `dē-`, a diphthong), but a stem's own lengths are lexical:
   `iūdex`, `bōlus` and `grūs` come back as `iudex`, `bolus`, `grus`. Typed in full the
-  same grammars reach 93.7% (Latin nouns), 99.2% (adjectives), 85.4% (verbs), and with
-  the principal parts 97–99%. Latin adjectives also include participles, which the
+  same grammars reach 93.7% (Latin nouns), 99.2% (adjectives), 85.3% (verbs), and with
+  the principal parts 96–99%. Latin adjectives also include participles, which the
   previous version spelled from their verbs' tables.
 - **Ancient Greek verbs.** The augment goes after a preverb (`περιέφερον`, `ἐπετίθην`)
   and the perfect reduplicates (`βέβλεφα`); neither is learned yet, so such forms are
-  listed for known verbs and missed for new ones.
-- **Sanskrit.** A stem doesn't say its gender (`कुल` is neuter: `कुलम्`), and the rule that
-  turns `n` into `ṇ` after `r`, `ṣ` or `ṛ` (`तर्काणाम्`) is not learned yet; within the
-  margin for adjectives.
+  listed for known verbs (as principal parts where their system follows from them) and
+  missed for new ones.
+- **Sanskrit.** The `n` → `ṇ` rule is a law now (`तर्काणाम्`), and a noun's gender, given,
+  takes it from 91.9% to 97.2%; the verbs are within the margin of the baseline and the
+  floor.
 - **Russian** has no stress any more (stripped from input, never written), so its
   numbers aren't comparable with the baseline's, which placed stress.
 
@@ -78,33 +82,64 @@ Where the grammar is below the baseline, and why:
 A language crate has a module per part of speech. Excerpts from `russian`:
 
 A paradigm: a table of patterns, `~` for the stem, named after its commonest word, with
-the cells the word's animacy decides marked `referred`:
+the gender its words share and the cells it takes from others marked `derived`. A
+paradigm *like* another writes only the cells that differ (`_` for the rest):
 
 ```rust
-    // Приём: 27,734 words (указ, зонт, кот, узус, скот, мэр).
-    declension!("приём", 27734, "~";
+    // Приём: 37,696 words (указ, зонт, кот, зонтик, бортник, бочаг).
+    declension!("приём", 37696, "~", [gender: Masculine];
         nominative: "~", "~ы";
         genitive: "~а", "~ов";
         dative: "~у", "~ам";
-        accusative: referred, referred;
+        accusative: derived, derived;
         instrumental: "~ом", "~ами";
         prepositional: "~е", "~ах";
-        noun_second_case: "~а", "~е";
+        noun_second_case: "~у", "~у";
     ),
+
+    // Химия: 6,582 words (анархия, лесохимия, библия, биология, академия, армия). Like Склонность, except in 5 cells: nominative sg, genitive pl, accusative sg, instrumental sg, noun_second_case loc.
+    declension!("химия", 6582, "~я", [gender: Feminine, animacy: Inanimate], like Склонность;
+        nominative: "~я", _;
+        genitive: _, "~й";
+        accusative: "~ю", _;
+        instrumental: "~ей|~ею", _;
+        ...
 ```
 
-The referral itself, and the rules choosing a declension, each with its evidence (how
-many of the dictionary's words with that ending take each declension):
+Where a `derived` cell comes from (`relations.rs`): the accusative is the genitive or the
+nominative, by the word's animacy. From `latin`, a relation that changes the form, with
+the rules on its ending that choose the change (`0`, `1`: the changes in order):
 
 ```rust
-pub(super) static REFERRALS: [Referral<'static>; 2] = [
-    Referral { cell: ACC_SG, to: Cow::Borrowed(&[GEN_SG, NOM_SG]) },  // animate, inanimate
-    Referral { cell: ACC_PL, to: Cow::Borrowed(&[GEN_PL, NOM_PL]) },
-];
+    // ACC_SG, from GEN_SG or NOM_SG (by animacy, in order).
+    Relation { cell: ACC_SG, from: Cow::Borrowed(&[GEN_SG, NOM_SG]), changes: flexion::changes![], change: None, .. },
 
-        "ба" => [Полнота 241, Какао 10, Усадьба 4, Анкара 1],
-        "ьба" => [Полнота 32, Усадьба 4, Анкара 1],
-        "дьба" => [Полнота 6, Усадьба 4],
+    // IND_ACT_PERF_2_SG, from IND_ACT_PERF_1_SG.
+    Relation {
+        cell: IND_ACT_PERF_2_SG,
+        from: Cow::Borrowed(&[IND_ACT_PERF_1_SG]),
+        changes: flexion::changes![("iī", "īstī"), ("ī", "istī")],
+        change: Some(flexion::choice! {
+        rules {
+            "" => [1 4880, 0 31],
+            "iī" => [0 31, 1 14],
+```
+
+Sound laws (`laws.rs`), each with the words whose forms it gives and the forms it gets
+wrong (those are listed); from `russian` and `sanskrit`:
+
+```rust
+    // к+ы → к+и: 9,368 words (собака, зонтик, бортник, бредник), 5 forms wrong.
+    // न → ण after र, ष, ृ unless च, ज, ट, ठ, ड, ढ, ण, त, थ, द, ध, न, ल, श, स comes between, not before ्: 1,182 words (वृक्ष, समुद्र, तरंग, तीर), 1 forms wrong.
+```
+
+The rules choosing a declension, each with its evidence (how many of the dictionary's
+words with that ending take each declension):
+
+```rust
+        "ба" => [Полнота 241, Какао 10, Люлька 4, Порубка 1],
+        "ьба" => [Полнота 32, Люлька 4, Порубка 1],
+        "дьба" => [Полнота 6, Люлька 4],
 ```
 
 From `latin`, how a vowel typed without its macron is written, by the letter before it
@@ -132,27 +167,31 @@ cell's accent goes before the law moves it):
         ...
 ```
 
-And what no rule gives, as the dictionary writes it (a table: word, cell, form):
+And what no rule gives, as the dictionary writes it (a table: word, cell, form). A word
+lists its principal parts; Latin `adiuvō` lists its perfect and its participle, and its
+other perfect forms (`adiūvistī`, `adiūverant`) are told from them:
 
 ```text
-автомат-манипулятор	7	автоматы-манипуляторы
+adiuvo	18	adiūvī
+adiuvo	175	adiūtus
 ```
 
 ## What it costs
 
 A clean debug build of each crate, one at a time (one machine; CI's numbers are in its
-compile-cost job), and one call:
+compile-cost job), and one call (release, a word's form):
 
 | crate | source MB | build seconds | peak MB | `.rlib` MB | one call |
 |---|---:|---:|---:|---:|---:|
-| english | 2.9 | 10 | 949 | 102 | 11 µs |
-| russian | 2.6 | 6 | 726 | 62 | 16–18 µs |
-| latin | 2.4 | 7 | 1,303 | 52 | 8 µs |
-| ancient-greek | 21.3 | 29 | 11,109 | 134 | 35 µs |
-| sanskrit | 1.3 | 2 | 426 | 33 | 4 µs |
+| english | 2.8 | 8 | 926 | 57 | 9 µs |
+| russian | 3.1 | 6 | 861 | 61 | 17 µs |
+| latin | 2.6 | 4 | 694 | 50 | 9 µs |
+| ancient-greek | 11.9 | 8 | 1,119 | 82 | 28 µs |
+| sanskrit | 1.2 | 2 | 491 | 33 | 15 µs |
 
-Ancient Greek's verbs, 548 cells each, are most of its size. Nothing is computed before
-the first answer, and the same entries always give the same crate, byte for byte.
+Ancient Greek's verbs, 548 cells each, are most of its size: their paradigms (5.4 MB) and
+accent patterns (1.6 MB). Nothing is computed before the first answer, and the same
+entries always give the same crate, byte for byte.
 
 ## How the grammar is learned
 

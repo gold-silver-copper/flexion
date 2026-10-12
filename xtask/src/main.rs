@@ -268,15 +268,14 @@ fn try_language(
                 s.unseen.0
             );
         }
-        let inputs = if part.inherent.is_empty() {
-            vec![eval::Input::Headword, eval::Input::Full]
-        } else {
-            vec![
-                eval::Input::Headword,
-                eval::Input::Full,
-                eval::Input::Features,
-            ]
-        };
+        let parts = flexion_train::parts(lang, part)?;
+        let mut inputs = vec![eval::Input::Headword, eval::Input::Full];
+        if !part.inherent.is_empty() {
+            inputs.push(eval::Input::Features);
+        }
+        if !parts.is_empty() {
+            inputs.push(eval::Input::Citation(&parts));
+        }
         for input in inputs {
             let s = eval::score(g, &g.orthography, &test, input, &learned.seen);
             println!(

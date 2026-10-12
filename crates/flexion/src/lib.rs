@@ -101,16 +101,19 @@ impl fmt::Display for Evidence<'_> {
 }
 
 impl fmt::Display for Candidate<'_> {
-    /// `книги (97%, regular): like книга; 1203 of 1210 words in -га`
+    /// `книги (97%, regular): like книга; 1203 of 1210 words in -га`; a
+    /// listed form: `adiūvistī (100%, listed)`.
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
-            "{} ({:.0}%, {}): like {}",
+            "{} ({:.0}%, {})",
             self.form,
             self.probability * 100.0,
-            self.status,
-            self.paradigm
+            self.status
         )?;
+        if !self.paradigm.is_empty() {
+            write!(f, ": like {}", self.paradigm)?;
+        }
         if let Some(e) = self.evidence {
             write!(f, "; {e}")?;
         }

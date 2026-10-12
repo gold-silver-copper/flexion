@@ -427,7 +427,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             }
         }
         for (inf, (forms, p_cell)) in inflections.iter().take(KEEP).flat_map(|inf| {
-            self.build(inf, &key, known.inherent, cell, 0)
+            self.build(inf.paradigm, &inf.stems, &key, known.inherent, cell, 0)
                 .into_iter()
                 .map(move |b| (inf, b))
         }) {
@@ -490,16 +490,15 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     /// feature, given or chosen), changed.
     fn build(
         &self,
-        inf: &Inflection<'_, 'a, '_, P>,
+        paradigm: &Paradigm<'a>,
+        stems: &[&str],
         key: &str,
         inherent: &[(u8, u8)],
         cell: usize,
         depth: usize,
     ) -> Vec<(Vec<(String, usize)>, f32)> {
-        if !inf.paradigm.derives(&self.paradigms, cell) {
-            let forms = inf
-                .paradigm
-                .built(&self.paradigms, self.laws.as_ref(), cell, &inf.stems);
+        if !paradigm.derives(&self.paradigms, cell) {
+            let forms = paradigm.built(&self.paradigms, self.laws.as_ref(), cell, stems);
             return vec![(forms, 1.0)];
         }
         let Some(relation) = self.relation(cell).filter(|_| depth < self.cells) else {
@@ -527,7 +526,9 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         };
         let mut out = Vec::new();
         for (from, p) in sources {
-            for (forms, q) in self.build(inf, key, inherent, usize::from(from), depth + 1) {
+            for (forms, q) in
+                self.build(paradigm, stems, key, inherent, usize::from(from), depth + 1)
+            {
                 if relation.change.is_none() {
                     out.push((forms, p * q));
                     continue;
@@ -624,15 +625,14 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         given: &[(usize, Written)],
         inherent: &[(u8, u8)],
     ) -> Vec<Inflection<'g, 'a, 'w, P>> {
-        let agrees = |p: &Paradigm<'_>| {
+        let agrees = |p: &Paradigm<'a>| {
             let Some(stems) = p.stems(&self.orthography, letters) else {
                 return false;
             };
             given.iter().all(|(cell, form)| {
-                p.derives(&self.paradigms, *cell)
-                    || p.built(&self.paradigms, self.laws.as_ref(), *cell, &stems)
-                        .iter()
-                        .any(|(built, _)| *built == form.letters)
+                self.build(p, &stems, key, inherent, *cell, 0)
+                    .iter()
+                    .any(|(forms, _)| forms.iter().any(|(built, _)| *built == form.letters))
             })
         };
         let fits = |p: P| self.paradigm_of(p).is_some_and(agrees);
@@ -662,7 +662,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             .collect()
     }
 
-    fn fallback(&self, agrees: impl Fn(&Paradigm<'_>) -> bool) -> Vec<Reading<'_, 'a, P>> {
+    fn fallback(&self, agrees: impl Fn(&Paradigm<'a>) -> bool) -> Vec<Reading<'_, 'a, P>> {
         let fitting: Vec<(P, u32)> = self
             .paradigms
             .iter()
