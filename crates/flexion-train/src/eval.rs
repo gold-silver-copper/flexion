@@ -3,7 +3,7 @@
 //! probabilities match how often the answers are right is measured.
 
 use crate::extract::Lexeme;
-use flexion::{Inflect, Label};
+use flexion::Label;
 
 /// The tenth scored and never trained on.
 pub const TEST: u64 = 0;
@@ -97,8 +97,8 @@ pub fn same_form(orthography: &flexion::Orthography<'_>, a: &str, b: &str) -> bo
 
 /// Score `grammar` on `lexemes` (held out), every cell the dictionary lists,
 /// against its first form, typed as `input`.
-pub fn score<F: Label, G: Inflect<F> + ?Sized>(
-    grammar: &G,
+pub fn score<P: Label, A: Label, F: Label>(
+    grammar: &flexion::Grammar<'_, P, A, F>,
     orthography: &flexion::Orthography<'_>,
     lexemes: &[&Lexeme],
     input: Input<'_>,
@@ -208,8 +208,8 @@ pub fn floor(orthography: &flexion::Orthography<'_>, train: &[&Lexeme], test: &[
 /// stated probabilities match how often its answers are right on `words`
 /// (held out, typed as their headwords and in full): the one, of a grid from 0.5 to 4,
 /// with the smallest calibration error.
-pub fn fit_sharpness<F: Label, G: Inflect<F> + ?Sized>(
-    grammar: &G,
+pub fn fit_sharpness<P: Label, A: Label, F: Label>(
+    grammar: &flexion::Grammar<'_, P, A, F>,
     orthography: &flexion::Orthography<'_>,
     words: &[&Lexeme],
 ) -> f32 {

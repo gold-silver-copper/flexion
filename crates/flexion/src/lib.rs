@@ -7,7 +7,6 @@ mod orthography;
 mod paradigm;
 pub mod pattern;
 mod stress;
-mod systems;
 
 pub use choice::{Choice, Reading, Rule, Side, Status, by_ending, tolerance};
 pub use grammar::{
@@ -21,7 +20,6 @@ pub use stress::{
     Accent, AccentPattern, Finals, Place, Prosody, StressClass, Syllable, place as stress_place,
     position as stress_position, positions as stress_positions,
 };
-pub use systems::{Inflect, System, Systems};
 
 use std::fmt;
 

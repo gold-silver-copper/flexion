@@ -13,7 +13,7 @@ use flexion_train::{choose, eval, learn, script};
 use std::path::PathBuf;
 use std::time::Instant;
 
-const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|inspect> <language> [--pos <part of speech>] [--systems] [--errors N]";
+const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|inspect> <language> [--pos <part of speech>] [--errors N]";
 
 fn main() {
     if let Err(e) = run() {
@@ -51,13 +51,7 @@ fn run() -> Result<(), String> {
             }
             let errors = flag("--errors")
                 .map_or(Ok(0), |e| e.parse::<usize>().map_err(|_| "bad --errors"))?;
-            try_language(
-                &lang,
-                flag("--pos").as_deref(),
-                settings,
-                errors,
-                args.iter().any(|a| a == "--systems"),
-            )
+            try_language(&lang, flag("--pos").as_deref(), settings, errors)
         }
         "inspect" => inspect(
             &lang,
@@ -133,127 +127,11 @@ fn load(lang: &Language) -> Result<Vec<PosData>, String> {
     serde_json::from_slice(&bytes).map_err(|e| e.to_string())
 }
 
-/// `try` for a part of speech learned as its principal parts' systems.
-fn try_systems(
-    lang: &Language,
-    part: &flexion_train::spec::PartOfSpeech,
-    script: &script::Script,
-    lexemes: &[Lexeme],
-    settings: choose::Settings,
-    errors: usize,
-) -> Result<(), String> {
-    use flexion_train::pipeline::Inflection;
-    let shape = flexion_train::shape(lang, part)?;
-    let parts = flexion_train::parts(lang, part)?;
-    let orthography = script.orthography();
-    let not = |b: u64| -> Vec<Lexeme> {
-        lexemes
-            .iter()
-            .filter(|l| eval::bucket(&l.key) != b)
-            .cloned()
-            .collect()
-    };
-    let train = not(eval::TEST);
-    let fit: Vec<Lexeme> = train
-        .iter()
-        .filter(|l| eval::bucket(&l.key) != eval::DEV)
-        .cloned()
-        .collect();
-    let dev: Vec<&Lexeme> = train
-        .iter()
-        .filter(|l| eval::bucket(&l.key) == eval::DEV && l.source == 0)
-        .collect();
-    let test: Vec<&Lexeme> = lexemes
-        .iter()
-        .filter(|l| eval::bucket(&l.key) == eval::TEST && l.source == 0)
-        .collect();
-    let t = Instant::now();
-    let sharpness = Inflection::learn(script, &shape, Some(&parts), &fit, settings)
-        .with(|g| eval::fit_sharpness(g, &orthography, &dev));
-    let mut learned = Inflection::learn(script, &shape, Some(&parts), &train, settings);
-    learned.set_sharpness(sharpness);
-    println!(
-        "{} {} as principal parts ({:.0}s), sharpness {sharpness}:",
-        lang.name,
-        part.name,
-        t.elapsed().as_secs_f64()
-    );
-    if let Inflection::Systems(s) = &learned {
-        for sys in &s.systems {
-            let g = &sys.grammar;
-            println!(
-                "  system on {:?}: {} cells, {} paradigms, {} rules, {} listed, {} irregular{}",
-                sys.part,
-                sys.cells.len(),
-                g.stats.paradigms,
-                g.grammar.paradigm.rules.len(),
-                g.grammar.paradigm.exceptions.len(),
-                g.stats.irregular_forms,
-                sys.from_lemma.as_ref().map_or(String::new(), |f| format!(
-                    "; the part from the lemma: {} paradigms, {} irregular",
-                    f.stats.paradigms, f.stats.irregular_forms
-                ))
-            );
-        }
-    }
-    for input in [eval::Input::Headword, eval::Input::Full] {
-        let s = learned.with(|g| eval::score(g, &orthography, &test, input));
-        println!(
-            "  held-out {input:?}: {} words, {} forms, top-1 {:.2}% (letters {:.2}%), top-3 {:.2}%, calibration error {:.3}",
-            test.len(),
-            s.forms,
-            100.0 * s.accuracy(),
-            100.0 * s.letters as f64 / s.forms.max(1) as f64,
-            100.0 * s.top3_accuracy(),
-            s.calibration_error()
-        );
-    }
-    if errors > 0 {
-        learned.with(|g| {
-            let full = flexion::Known {
-                full: true,
-                ..flexion::Known::default()
-            };
-            let mut shown = 0;
-            'words: for l in test.iter().step_by(7) {
-                let headword = std::env::var_os("HEADWORD").is_some();
-                let typed = if headword { &l.lemma } else { &l.full };
-                let known = if headword {
-                    flexion::Known::default()
-                } else {
-                    full
-                };
-                for (cell, fs) in l.cells.iter().enumerate() {
-                    let Some(want) = fs.first() else { continue };
-                    let c = g.candidates(typed, cell, &known);
-                    if c.first()
-                        .is_some_and(|c| !eval::same_form(&orthography, &c.form, want))
-                    {
-                        let top: Vec<String> = c.iter().take(2).map(ToString::to_string).collect();
-                        println!(
-                            "    {} cell {cell}: want {want}; got {}",
-                            l.full,
-                            top.join(" | ")
-                        );
-                        shown += 1;
-                        if shown >= errors {
-                            break 'words;
-                        }
-                        continue 'words;
-                    }
-                }
-            }
-        });
-    }
-    Ok(())
-}
-
 fn try_language(
     lang: &Language,
     only: Option<&str>,
     settings: choose::Settings,
     errors: usize,
-    systems: bool,
 ) -> Result<(), String> {
     let data = load(lang)?;
     let script = script::Script::new(&lang.spelling);
@@ -262,10 +140,6 @@ fn try_language(
             continue;
         }
         let shape = flexion_train::shape(lang, part)?;
-        if systems {
-            try_systems(lang, part, &script, &d.lexemes, settings, errors)?;
-            continue;
-        }
         let train: Vec<Lexeme> = d
             .lexemes
             .iter()
@@ -285,7 +159,7 @@ fn try_language(
                 .filter(|l| eval::bucket(&l.key) == eval::DEV && l.source == 0)
                 .collect();
             let g = learn::learn(script.orthography(), &shape, &fit, settings).grammar;
-            eval::fit_sharpness::<u8, _>(&g, &g.orthography, &dev)
+            eval::fit_sharpness(&g, &g.orthography, &dev)
         };
         let test: Vec<&Lexeme> = d
             .lexemes
@@ -369,7 +243,7 @@ fn try_language(
         }
         {
             let main: Vec<&Lexeme> = train.iter().filter(|l| l.source == 0).collect();
-            let s = eval::score::<u8, _>(g, &g.orthography, &test, eval::Input::Headword);
+            let s = eval::score(g, &g.orthography, &test, eval::Input::Headword);
             let (mut common, mut rare) = ((0usize, 0usize), (0usize, 0usize));
             for (cell, &(forms, right)) in s.cells.iter().enumerate() {
                 let have = main
@@ -404,7 +278,7 @@ fn try_language(
             ]
         };
         for input in inputs {
-            let s = eval::score::<u8, _>(g, &g.orthography, &test, input);
+            let s = eval::score(g, &g.orthography, &test, input);
             println!(
                 "  held-out {input:?}: {} words, {} forms, top-1 {:.2}% (letters {:.2}%), top-3 {:.2}%, calibration error {:.3}",
                 test.len(),
@@ -463,7 +337,7 @@ fn try_language(
             .filter(|l| l.source == 0 && seen.insert(l.key.clone()))
             .take(3000)
             .collect();
-        let s = eval::score::<u8, _>(g, &g.orthography, &train_refs, eval::Input::Headword);
+        let s = eval::score(g, &g.orthography, &train_refs, eval::Input::Headword);
         println!(
             "  attested (sample of {}): top-1 {:.2}%",
             train_refs.len(),
@@ -654,7 +528,7 @@ fn build(lang: &Language) -> Result<(), String> {
         .parts
         .iter()
         .zip(&grammars)
-        .map(|(spec, inflection)| flexion_train::print::Part { spec, inflection })
+        .map(|(spec, learned)| flexion_train::print::Part { spec, learned })
         .collect();
     // The code's size, per part of speech, goes into the report too.
     let files = flexion_train::print::files(lang, &script, &parts, &report)?;

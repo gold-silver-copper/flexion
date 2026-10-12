@@ -774,22 +774,3 @@ pub fn sharpen<'p>(probabilities: impl Iterator<Item = &'p mut f32>, power: f32)
         }
     }
 }
-
-/// A grammar inflects for a caller who knows the value of a feature of
-/// type `F`: the same feature as its own (`G`), value for value, when it has
-/// one (the systems of a part of speech share their words' features).
-impl<P: Label, A: Label, G: Label, F: Label> crate::Inflect<F> for Grammar<'_, P, A, G> {
-    fn cells(&self) -> usize {
-        self.cells
-    }
-
-    fn candidates(&self, lemma: &str, cell: usize, known: &Known<'_, F>) -> Vec<Candidate<'_>> {
-        let known = Known {
-            forms: known.forms,
-            feature: known.feature.and_then(|f| G::from_index(f.index())),
-            inherent: known.inherent,
-            full: known.full,
-        };
-        Grammar::candidates(self, lemma, cell, &known)
-    }
-}

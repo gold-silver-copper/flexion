@@ -8,8 +8,10 @@ is `static` data.
 What a grammar is made of:
 
 - **Paradigms** ([`Paradigm`]): how a group of words inflects, one pattern per
-  cell. `~а` is the stem and `а`; `~о~` a stem with a vowel inside it that
-  other forms drop; `ge~t` a prefix and an ending. A cell may be
+  cell: `~а` is the stem and `а`; `~о~` a stem with a vowel inside it that
+  other forms drop; `ge~t` a prefix and an ending. A paradigm states the
+  inherent features its words share (Sanskrit `साधन` is neuter), and can be
+  *like* another, stating only the cells that differ. A cell may be
   [`Form::Referred`]: its form is another cell's, which one the word's
   feature says ([`Referral`]: the Russian accusative is the genitive of an
   animate noun and the nominative of an inanimate one).
@@ -27,8 +29,9 @@ What a grammar is made of:
   take off what the cell says (`verhindert`, not `vergehindert`).
 - **Compounds** ([`Compound`]): a word written in parts inflects only its
   last part, or each part.
-- **Principal parts** ([`Systems`]): each cell belongs to the system of one
-  part (Latin `amō, amāre, amāvī, amātum`) and is inflected from it.
+- **Sound laws** ([`sound_law::Program`]): every built form goes through
+  them, marked `+` where its stem meets its ending (Russian `к+ы` → `к+и`,
+  Greek `κ+σ` → `ξ`, Sanskrit `न` → `ण` after `र` along a tier).
 - **Spelling**: the [`Orthography`] reads a typed word into letters and
   stress; marks a caller may leave off (vowel length, `ё`) are restored by
   rules on the letters around them, or as the dictionary lists them.
@@ -41,5 +44,6 @@ calibrated probability, a status and its evidence:
 книги (97%, regular): like книга; 1203 of 1210 words in -га
 ```
 
-What the caller knows ([`Known`]: a principal part, the word's animacy, that
-the lemma is spelled in full) drops the readings that disagree with it.
+What the caller knows ([`Known`]: a principal part, the word's animacy or
+gender, that the lemma is spelled in full) drops the readings that disagree
+with it.

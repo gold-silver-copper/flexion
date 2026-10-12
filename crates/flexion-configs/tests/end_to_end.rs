@@ -11,7 +11,6 @@ use flexion_train::choose::Settings;
 use flexion_train::eval::same_form;
 use flexion_train::extract::{self, Lexeme, PosData};
 use flexion_train::learn::{self, Learned};
-use flexion_train::pipeline::Inflection;
 use flexion_train::script::Script;
 use flexion_train::spec::Language;
 use std::collections::HashSet;
@@ -160,35 +159,25 @@ fn a_word_the_dictionary_lacks_takes_its_paradigm_with_evidence() {
 
 #[test]
 fn a_printed_grammar_answers_as_the_grammar_it_was_printed_from() {
-    // Russian has referrals and compounds; Ancient Greek, accent; Latin is
-    // learned on its principal parts.
-    print_and_compare(flexion_configs::russian::language(), false);
-    print_and_compare(flexion_configs::ancient_greek::language(), false);
-    print_and_compare(flexion_configs::latin::language(), true);
+    // Russian has referrals, compounds and sound laws; Ancient Greek, accent;
+    // Latin, restored vowel length.
+    print_and_compare(flexion_configs::russian::language());
+    print_and_compare(flexion_configs::ancient_greek::language());
+    print_and_compare(flexion_configs::latin::language());
 }
 
 /// Print `lang`'s fixture grammar as a crate and check, by compiling and
 /// running it, that it answers every word's every cell as the grammar does.
-fn print_and_compare(lang: Language, systems: bool) {
+fn print_and_compare(lang: Language) {
     let crate_name = lang.name.replace('-', "_");
     let script = Script::new(&lang.spelling);
     let data = data(&lang, &script);
-    let inflections: Vec<Inflection<'_>> = lang
-        .parts
-        .iter()
-        .zip(&data)
-        .map(|(part, d)| {
-            let shape = flexion_train::shape(&lang, part).expect("shape");
-            let parts = flexion_train::parts(&lang, part).expect("parts");
-            let parts = (systems && !parts.is_empty()).then_some(parts.as_slice());
-            Inflection::learn(&script, &shape, parts, &d.lexemes, Settings::default())
-        })
-        .collect();
+    let learned = grammars(&lang, &script, &data);
     let parts: Vec<flexion_train::print::Part<'_, '_>> = lang
         .parts
         .iter()
-        .zip(&inflections)
-        .map(|(spec, inflection)| flexion_train::print::Part { spec, inflection })
+        .zip(&learned)
+        .map(|(spec, learned)| flexion_train::print::Part { spec, learned })
         .collect();
     let files = flexion_train::print::files(&lang, &script, &parts, "").expect("printed");
     // Russian nouns' spelling rule (`к+ы → к+и`) is a sound law, printed too.
@@ -212,10 +201,9 @@ fn print_and_compare(lang: Language, systems: bool) {
     .expect("manifest");
     // Its test: every word's every cell, and every candidate's probability,
     // as the grammar in memory answers them.
-    let mut test = String::from(
-        "#[allow(unused_imports)]\nuse flexion::{Inflect, Known};\n\n#[test]\nfn answers() {\n",
-    );
-    for (part, (d, inflection)) in lang.parts.iter().zip(data.iter().zip(&inflections)) {
+    let mut test = String::from("use flexion::Known;\n\n#[test]\nfn answers() {\n");
+    for (part, (d, learned)) in lang.parts.iter().zip(data.iter().zip(&learned)) {
+        let g = &learned.grammar;
         for l in &d.lexemes {
             // Asked without its gender, and (in its first cell: the gender
             // picks the paradigm) with it where the dictionary says.
@@ -226,7 +214,7 @@ fn print_and_compare(lang: Language, systems: bool) {
                 .filter(|&(_, &v)| v != u8::MAX)
                 .filter_map(|(f, &v)| Some((u8::try_from(f).ok()?, v)))
                 .collect();
-            for cell in 0..inflection.with(|g| g.cells()) {
+            for cell in 0..g.cells {
                 let asks: &[&[(u8, u8)]] = if cell > 0 || inherent.is_empty() {
                     &[&[]]
                 } else {
@@ -237,12 +225,11 @@ fn print_and_compare(lang: Language, systems: bool) {
                         inherent: ask,
                         ..Known::default()
                     };
-                    let candidates: Vec<(String, f32)> = inflection.with(|g| {
-                        g.candidates(&l.full, cell, &known)
-                            .into_iter()
-                            .map(|c| (c.form, c.probability))
-                            .collect()
-                    });
+                    let candidates: Vec<(String, f32)> = g
+                        .candidates(&l.full, cell, &known)
+                        .into_iter()
+                        .map(|c| (c.form, c.probability))
+                        .collect();
                     let forms: Vec<&str> = candidates.iter().map(|c| c.0.as_str()).collect();
                     let probabilities: Vec<String> =
                         candidates.iter().map(|c| format!("{:?}f32", c.1)).collect();
@@ -291,15 +278,12 @@ fn the_same_entries_print_the_same_crate() {
         let lang = flexion_configs::russian::language();
         let script = Script::new(&lang.spelling);
         let data = data(&lang, &script);
-        let inflections: Vec<Inflection<'_>> = grammars(&lang, &script, &data)
-            .into_iter()
-            .map(|g| Inflection::Grammar(Box::new(g)))
-            .collect();
+        let learned = grammars(&lang, &script, &data);
         let parts: Vec<flexion_train::print::Part<'_, '_>> = lang
             .parts
             .iter()
-            .zip(&inflections)
-            .map(|(spec, inflection)| flexion_train::print::Part { spec, inflection })
+            .zip(&learned)
+            .map(|(spec, learned)| flexion_train::print::Part { spec, learned })
             .collect();
         flexion_train::print::files(&lang, &script, &parts, "").expect("printed")
     };
