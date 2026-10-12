@@ -420,31 +420,4 @@ impl Hooks for SanskritHooks {
     }
 }
 
-const README: &str = "\
-Sanskrit inflection for **any** word, attested or not, in Devanagari: nouns and
-adjectives in eight cases and three numbers, and verbs (present system with its
-four moods, imperfect, future, conditional, perfect, aorist, infinitive,
-gerund, participles), with a confidence for every answer.
-
-```rust
-use sanskrit::*;
-
-assert_eq!(noun(\"देव\", Case::Instrumental, Number::Singular), \"देवेन\");
-assert_eq!(noun(\"देव\", Case::Genitive, Number::Plural), \"देवानाम्\");
-assert_eq!(adjective(\"नव\", Case::Nominative, Gender::Feminine, Number::Singular), \"नवा\");
-let cell = PresentCell {
-    mood: Mood::Indicative,
-    voice: Voice::Active,
-    person: Person::First,
-    number: Number::Singular,
-};
-assert_eq!(present(\"निन्दति\", cell), \"निन्दामि\");
-```
-
-Nouns and adjectives are cited by their stem, as Sanskrit dictionaries do; a
-gender marker helps (`देव m`). Verbs are cited by the third person singular
-present; a citation adds the future, perfect and aorist (`नयति, नेष्यति, निनाय,
-अनैषीत्`). Lookup is by Devanagari only, not by romanization, and the forms are
-Classical: Vedic variants and accents are left out. Sandhi between words is out
-of scope; forms carry the sandhi inside the word.
-";
+const README: &str = include_str!("../readme/sanskrit.md");

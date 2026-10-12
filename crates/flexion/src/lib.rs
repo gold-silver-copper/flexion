@@ -11,6 +11,7 @@ mod systems;
 
 pub use choice::{Choice, Reading, Rule, Side, Status, by_ending, tolerance};
 pub use grammar::{
+    Irregular,
     Compound, Grammar, Known, Placement, Prefix, Prefixes, Separation, WORD_END, restore, sharpen,
 };
 pub use orthography::{Casing, Orthography, Stress, Written, recase};
@@ -190,7 +191,11 @@ macro_rules! choice {
 #[macro_export]
 macro_rules! irregular {
     ( $( $word:literal $cell:ident $form:literal ),* $(,)? ) => {
-        &[ $( (::std::borrow::Cow::Borrowed($word), $cell, ::std::borrow::Cow::Borrowed($form)) ),* ]
+        &[ $( $crate::Irregular {
+            word: ::std::borrow::Cow::Borrowed($word),
+            cell: $cell,
+            form: ::std::borrow::Cow::Borrowed($form),
+        } ),* ]
     };
 }
 

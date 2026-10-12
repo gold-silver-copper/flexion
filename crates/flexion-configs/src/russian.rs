@@ -598,37 +598,4 @@ fn part_variants(pos: &str, part: &str) -> Vec<String> {
     vec![chars.into_iter().collect()]
 }
 
-const README: &str = "\
-Russian inflection for **any** Russian word, attested or not: noun declension,
-adjectives (long and short forms), verbs (non-past, past, imperative,
-participles, gerunds), with a confidence for every answer.
-
-```rust
-use russian::*;
-
-assert_eq!(noun(\"книга\", Case::Genitive, Number::Plural), \"книг\");
-assert_eq!(noun(\"стол\", Case::Genitive, Number::Singular), \"стола\");
-assert_eq!(adjective(\"новый\", Case::Dative, Agreement::Feminine, Animacy::Inanimate), \"новой\");
-assert_eq!(non_past(\"читать\", Person::Third, Number::Plural), \"читают\");
-assert_eq!(past(\"читать\", Agreement::Feminine), \"читала\");
-
-// Gender is predicted too, for words the data never saw.
-assert_eq!(gender(\"тетрадь\")[0].0, Gender::Feminine);
-```
-
-A citation gives principal parts (nominative and genitive singular for nouns;
-infinitive and first and second singular for verbs); the rest is predicted to
-agree with them.
-
-```rust
-use russian::*;
-
-assert_eq!(noun(\"путь, пути\", Case::Instrumental, Number::Singular), \"путём\");
-
-// Markers name what spelling can't show, as a dictionary prints them after the
-// word: gender (`m`, `f`, `n`), animacy (`anim`, `inan`), aspect (`impf`, `pf`).
-// They decide for a word the model doesn't know; an attested word keeps its own.
-assert_eq!(noun(\"бокр, бокра m anim\", Case::Accusative, Number::Singular), \"бокра\");
-assert_eq!(noun(\"бокр, бокра m inan\", Case::Accusative, Number::Singular), \"бокр\");
-```
-";
+const README: &str = include_str!("../readme/russian.md");

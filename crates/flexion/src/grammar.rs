@@ -126,6 +126,14 @@ impl Prefixes<'_> {
     }
 }
 
+/// A form no rule gives: the word (as it is looked up), the cell, the form.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub struct Irregular<'a> {
+    pub word: Cow<'a, str>,
+    pub cell: u16,
+    pub form: Cow<'a, str>,
+}
+
 /// What the caller knows about a word besides its lemma: forms of it, such
 /// as principal parts, as `(cell, form)`; the value of the feature its
 /// referrals depend on (its animacy); and whether the lemma is spelled in
@@ -189,7 +197,7 @@ pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
     pub marks: Option<Choice<'a, char>>,
     /// Forms no rule gives, as the dictionary writes them: `(word, cell,
     /// form)`, sorted by word and cell. They are the answer for that word.
-    pub irregular: Cow<'a, [(Cow<'a, str>, u16, Cow<'a, str>)]>,
+    pub irregular: Cow<'a, [Irregular<'a>]>,
     /// How many words' worth a broader rule's counts add to a specific
     /// rule's (see [`Choice::read`]).
     pub smoothing: f32,
@@ -473,9 +481,9 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         let cell = u16::try_from(cell).ok()?;
         let at = self
             .irregular
-            .binary_search_by(|(w, c, _)| w.as_ref().cmp(key).then(c.cmp(&cell)))
+            .binary_search_by(|i| i.word.as_ref().cmp(key).then(i.cell.cmp(&cell)))
             .ok()?;
-        self.irregular.get(at).map(|(_, _, f)| f.as_ref())
+        self.irregular.get(at).map(|i| i.form.as_ref())
     }
 
     /// The likeliest form of `cell` for `lemma` (the lemma itself when the

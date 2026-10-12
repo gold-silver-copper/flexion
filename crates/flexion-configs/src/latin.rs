@@ -317,41 +317,4 @@ impl Hooks for LatinHooks {
     }
 }
 
-const README: &str = "\
-Latin inflection for **any** Latin word, attested or not: nouns, adjectives and
-participles, verbs (every finite form, imperatives, infinitives, participles,
-gerund, supine), with long vowels marked, and a confidence for every answer.
-
-```rust
-use latin::*;
-
-assert_eq!(noun(\"rosa\", Case::Ablative, Number::Plural), \"rosīs\");
-assert_eq!(noun(\"rex\", Case::Genitive, Number::Singular), \"rēgis\");
-assert_eq!(noun(\"rēx, rēgis m.\", Case::Dative, Number::Plural), \"rēgibus\");
-let cell = VerbCell {
-    mood: Mood::Indicative,
-    voice: Voice::Active,
-    tense: Tense::Perfect,
-    person: Person::Third,
-    number: Number::Plural,
-};
-assert_eq!(verb(\"amo\", cell), \"amāvērunt\");
-assert_eq!(adjective(\"bonus\", Case::Dative, Gender::Feminine, Number::Singular), \"bonae\");
-
-// Without macrons:
-let plain = Latin::default().macrons(false);
-assert_eq!(plain.noun(\"rosa\", Case::Ablative, Number::Plural), \"rosis\");
-```
-
-A citation gives principal parts the way a dictionary prints them: nouns
-`rēx, rēgis m.` (nominative, genitive, gender), verbs `amō, amāre, amāvī, amātum`,
-adjectives `bonus, bona, bonum`.
-
-**Vowel length.** A word typed without macrons is found anyway, and an attested
-word comes back with its long vowels marked. For a word the model never saw,
-though, the length of its stem vowels can't be known from the plain spelling:
-`thesaurus` doesn't say that its `e` is long. So give such words with macrons, or
-as a citation (`thēsaurus, thēsaurī`), whose parts spell the stem in full. Parts
-are taken as written, so write them with their macrons. The report below scores all
-three ways.
-";
+const README: &str = include_str!("../readme/latin.md");

@@ -5,6 +5,7 @@
 
 pub mod accent;
 mod irregular;
+mod marks;
 mod paradigms;
 mod rules;
 mod spellings;
@@ -12,7 +13,8 @@ mod spellings;
 pub use paradigms::Conjugation;
 
 use crate::*;
-use flexion::{Candidate, Grammar, Known, Reading};
+use flexion::Grammar;
+use flexion::{Candidate, Known, Reading};
 use std::borrow::Cow;
 
 /// Each cell's place in a paradigm.
@@ -665,7 +667,7 @@ pub static GRAMMAR: Grammar<'static, Conjugation, accent::AccentClass> = Grammar
     }),
     laws: None,
     spellings: Cow::Borrowed(spellings::SPELLINGS),
-    hidden: 0.69691336,
+    marks: Some(marks::MARKS),
     irregular: Cow::Borrowed(irregular::IRREGULAR),
     smoothing: 2.0,
     sharpness: 0.5,
@@ -675,1989 +677,3569 @@ pub static GRAMMAR: Grammar<'static, Conjugation, accent::AccentClass> = Grammar
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Cell {
     /// The present.
-    Present(Mood, Voice, Person, Number),
+    Present(crate::Mood, crate::Voice, crate::Person, crate::Number),
     /// The imperfect (indicative only).
-    Imperfect(Voice, Person, Number),
+    Imperfect(crate::Voice, crate::Person, crate::Number),
     /// The future (no subjunctive or imperative).
-    Future(Mood, Voice, Person, Number),
+    Future(crate::Mood, crate::Voice, crate::Person, crate::Number),
     /// The aorist.
-    Aorist(Mood, Voice, Person, Number),
+    Aorist(crate::Mood, crate::Voice, crate::Person, crate::Number),
     /// The perfect.
-    Perfect(Mood, Voice, Person, Number),
+    Perfect(crate::Mood, crate::Voice, crate::Person, crate::Number),
     /// The pluperfect (indicative only).
-    Pluperfect(Voice, Person, Number),
+    Pluperfect(crate::Voice, crate::Person, crate::Number),
     /// The future perfect.
-    FuturePerfect(Mood, Voice, Person, Number),
+    FuturePerfect(crate::Mood, crate::Voice, crate::Person, crate::Number),
     /// An infinitive.
-    Infinitive(Tense, Voice),
+    Infinitive(crate::Tense, crate::Voice),
     /// A participle's citation form (masculine nominative singular); decline it with `adjective`.
-    Participle(Tense, Voice),
+    Participle(crate::Tense, crate::Voice),
 }
 
 impl Cell {
     /// Its place in a paradigm.
     pub const fn index(self) -> usize {
         let cell = match self {
-            Cell::Present(Mood::Indicative, Voice::Active, Person::First, Number::Singular) => {
-                cell::IND_ACT_1_SG
-            }
-            Cell::Present(Mood::Indicative, Voice::Active, Person::First, Number::Dual) => {
-                cell::IND_ACT_1_DU
-            }
-            Cell::Present(Mood::Indicative, Voice::Active, Person::First, Number::Plural) => {
-                cell::IND_ACT_1_PL
-            }
-            Cell::Present(Mood::Indicative, Voice::Active, Person::Second, Number::Singular) => {
-                cell::IND_ACT_2_SG
-            }
-            Cell::Present(Mood::Indicative, Voice::Active, Person::Second, Number::Dual) => {
-                cell::IND_ACT_2_DU
-            }
-            Cell::Present(Mood::Indicative, Voice::Active, Person::Second, Number::Plural) => {
-                cell::IND_ACT_2_PL
-            }
-            Cell::Present(Mood::Indicative, Voice::Active, Person::Third, Number::Singular) => {
-                cell::IND_ACT_3_SG
-            }
-            Cell::Present(Mood::Indicative, Voice::Active, Person::Third, Number::Dual) => {
-                cell::IND_ACT_3_DU
-            }
-            Cell::Present(Mood::Indicative, Voice::Active, Person::Third, Number::Plural) => {
-                cell::IND_ACT_3_PL
-            }
-            Cell::Present(Mood::Indicative, Voice::Middle, Person::First, Number::Singular) => {
-                cell::IND_MID_1_SG
-            }
-            Cell::Present(Mood::Indicative, Voice::Middle, Person::First, Number::Dual) => {
-                cell::IND_MID_1_DU
-            }
-            Cell::Present(Mood::Indicative, Voice::Middle, Person::First, Number::Plural) => {
-                cell::IND_MID_1_PL
-            }
-            Cell::Present(Mood::Indicative, Voice::Middle, Person::Second, Number::Singular) => {
-                cell::IND_MID_2_SG
-            }
-            Cell::Present(Mood::Indicative, Voice::Middle, Person::Second, Number::Dual) => {
-                cell::IND_MID_2_DU
-            }
-            Cell::Present(Mood::Indicative, Voice::Middle, Person::Second, Number::Plural) => {
-                cell::IND_MID_2_PL
-            }
-            Cell::Present(Mood::Indicative, Voice::Middle, Person::Third, Number::Singular) => {
-                cell::IND_MID_3_SG
-            }
-            Cell::Present(Mood::Indicative, Voice::Middle, Person::Third, Number::Dual) => {
-                cell::IND_MID_3_DU
-            }
-            Cell::Present(Mood::Indicative, Voice::Middle, Person::Third, Number::Plural) => {
-                cell::IND_MID_3_PL
-            }
-            Cell::Present(Mood::Indicative, Voice::Passive, Person::First, Number::Singular) => {
-                cell::IND_PASS_1_SG
-            }
-            Cell::Present(Mood::Indicative, Voice::Passive, Person::First, Number::Dual) => {
-                cell::IND_PASS_1_DU
-            }
-            Cell::Present(Mood::Indicative, Voice::Passive, Person::First, Number::Plural) => {
-                cell::IND_PASS_1_PL
-            }
-            Cell::Present(Mood::Indicative, Voice::Passive, Person::Second, Number::Singular) => {
-                cell::IND_PASS_2_SG
-            }
-            Cell::Present(Mood::Indicative, Voice::Passive, Person::Second, Number::Dual) => {
-                cell::IND_PASS_2_DU
-            }
-            Cell::Present(Mood::Indicative, Voice::Passive, Person::Second, Number::Plural) => {
-                cell::IND_PASS_2_PL
-            }
-            Cell::Present(Mood::Indicative, Voice::Passive, Person::Third, Number::Singular) => {
-                cell::IND_PASS_3_SG
-            }
-            Cell::Present(Mood::Indicative, Voice::Passive, Person::Third, Number::Dual) => {
-                cell::IND_PASS_3_DU
-            }
-            Cell::Present(Mood::Indicative, Voice::Passive, Person::Third, Number::Plural) => {
-                cell::IND_PASS_3_PL
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Active, Person::First, Number::Singular) => {
-                cell::SUBJ_ACT_1_SG
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Active, Person::First, Number::Dual) => {
-                cell::SUBJ_ACT_1_DU
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Active, Person::First, Number::Plural) => {
-                cell::SUBJ_ACT_1_PL
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Active, Person::Second, Number::Singular) => {
-                cell::SUBJ_ACT_2_SG
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Active, Person::Second, Number::Dual) => {
-                cell::SUBJ_ACT_2_DU
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Active, Person::Second, Number::Plural) => {
-                cell::SUBJ_ACT_2_PL
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Active, Person::Third, Number::Singular) => {
-                cell::SUBJ_ACT_3_SG
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Active, Person::Third, Number::Dual) => {
-                cell::SUBJ_ACT_3_DU
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Active, Person::Third, Number::Plural) => {
-                cell::SUBJ_ACT_3_PL
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Middle, Person::First, Number::Singular) => {
-                cell::SUBJ_MID_1_SG
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Middle, Person::First, Number::Dual) => {
-                cell::SUBJ_MID_1_DU
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Middle, Person::First, Number::Plural) => {
-                cell::SUBJ_MID_1_PL
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Middle, Person::Second, Number::Singular) => {
-                cell::SUBJ_MID_2_SG
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Middle, Person::Second, Number::Dual) => {
-                cell::SUBJ_MID_2_DU
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Middle, Person::Second, Number::Plural) => {
-                cell::SUBJ_MID_2_PL
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Middle, Person::Third, Number::Singular) => {
-                cell::SUBJ_MID_3_SG
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Middle, Person::Third, Number::Dual) => {
-                cell::SUBJ_MID_3_DU
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Middle, Person::Third, Number::Plural) => {
-                cell::SUBJ_MID_3_PL
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Passive, Person::First, Number::Singular) => {
-                cell::SUBJ_PASS_1_SG
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Passive, Person::First, Number::Dual) => {
-                cell::SUBJ_PASS_1_DU
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Passive, Person::First, Number::Plural) => {
-                cell::SUBJ_PASS_1_PL
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Passive, Person::Second, Number::Singular) => {
-                cell::SUBJ_PASS_2_SG
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Passive, Person::Second, Number::Dual) => {
-                cell::SUBJ_PASS_2_DU
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Passive, Person::Second, Number::Plural) => {
-                cell::SUBJ_PASS_2_PL
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Passive, Person::Third, Number::Singular) => {
-                cell::SUBJ_PASS_3_SG
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Passive, Person::Third, Number::Dual) => {
-                cell::SUBJ_PASS_3_DU
-            }
-            Cell::Present(Mood::Subjunctive, Voice::Passive, Person::Third, Number::Plural) => {
-                cell::SUBJ_PASS_3_PL
-            }
-            Cell::Present(Mood::Optative, Voice::Active, Person::First, Number::Singular) => {
-                cell::OPT_ACT_1_SG
-            }
-            Cell::Present(Mood::Optative, Voice::Active, Person::First, Number::Dual) => {
-                cell::OPT_ACT_1_DU
-            }
-            Cell::Present(Mood::Optative, Voice::Active, Person::First, Number::Plural) => {
-                cell::OPT_ACT_1_PL
-            }
-            Cell::Present(Mood::Optative, Voice::Active, Person::Second, Number::Singular) => {
-                cell::OPT_ACT_2_SG
-            }
-            Cell::Present(Mood::Optative, Voice::Active, Person::Second, Number::Dual) => {
-                cell::OPT_ACT_2_DU
-            }
-            Cell::Present(Mood::Optative, Voice::Active, Person::Second, Number::Plural) => {
-                cell::OPT_ACT_2_PL
-            }
-            Cell::Present(Mood::Optative, Voice::Active, Person::Third, Number::Singular) => {
-                cell::OPT_ACT_3_SG
-            }
-            Cell::Present(Mood::Optative, Voice::Active, Person::Third, Number::Dual) => {
-                cell::OPT_ACT_3_DU
-            }
-            Cell::Present(Mood::Optative, Voice::Active, Person::Third, Number::Plural) => {
-                cell::OPT_ACT_3_PL
-            }
-            Cell::Present(Mood::Optative, Voice::Middle, Person::First, Number::Singular) => {
-                cell::OPT_MID_1_SG
-            }
-            Cell::Present(Mood::Optative, Voice::Middle, Person::First, Number::Dual) => {
-                cell::OPT_MID_1_DU
-            }
-            Cell::Present(Mood::Optative, Voice::Middle, Person::First, Number::Plural) => {
-                cell::OPT_MID_1_PL
-            }
-            Cell::Present(Mood::Optative, Voice::Middle, Person::Second, Number::Singular) => {
-                cell::OPT_MID_2_SG
-            }
-            Cell::Present(Mood::Optative, Voice::Middle, Person::Second, Number::Dual) => {
-                cell::OPT_MID_2_DU
-            }
-            Cell::Present(Mood::Optative, Voice::Middle, Person::Second, Number::Plural) => {
-                cell::OPT_MID_2_PL
-            }
-            Cell::Present(Mood::Optative, Voice::Middle, Person::Third, Number::Singular) => {
-                cell::OPT_MID_3_SG
-            }
-            Cell::Present(Mood::Optative, Voice::Middle, Person::Third, Number::Dual) => {
-                cell::OPT_MID_3_DU
-            }
-            Cell::Present(Mood::Optative, Voice::Middle, Person::Third, Number::Plural) => {
-                cell::OPT_MID_3_PL
-            }
-            Cell::Present(Mood::Optative, Voice::Passive, Person::First, Number::Singular) => {
-                cell::OPT_PASS_1_SG
-            }
-            Cell::Present(Mood::Optative, Voice::Passive, Person::First, Number::Dual) => {
-                cell::OPT_PASS_1_DU
-            }
-            Cell::Present(Mood::Optative, Voice::Passive, Person::First, Number::Plural) => {
-                cell::OPT_PASS_1_PL
-            }
-            Cell::Present(Mood::Optative, Voice::Passive, Person::Second, Number::Singular) => {
-                cell::OPT_PASS_2_SG
-            }
-            Cell::Present(Mood::Optative, Voice::Passive, Person::Second, Number::Dual) => {
-                cell::OPT_PASS_2_DU
-            }
-            Cell::Present(Mood::Optative, Voice::Passive, Person::Second, Number::Plural) => {
-                cell::OPT_PASS_2_PL
-            }
-            Cell::Present(Mood::Optative, Voice::Passive, Person::Third, Number::Singular) => {
-                cell::OPT_PASS_3_SG
-            }
-            Cell::Present(Mood::Optative, Voice::Passive, Person::Third, Number::Dual) => {
-                cell::OPT_PASS_3_DU
-            }
-            Cell::Present(Mood::Optative, Voice::Passive, Person::Third, Number::Plural) => {
-                cell::OPT_PASS_3_PL
-            }
-            Cell::Present(Mood::Imperative, Voice::Active, Person::First, Number::Singular) => {
-                cell::IMP_ACT_1_SG
-            }
-            Cell::Present(Mood::Imperative, Voice::Active, Person::First, Number::Dual) => {
-                cell::IMP_ACT_1_DU
-            }
-            Cell::Present(Mood::Imperative, Voice::Active, Person::First, Number::Plural) => {
-                cell::IMP_ACT_1_PL
-            }
-            Cell::Present(Mood::Imperative, Voice::Active, Person::Second, Number::Singular) => {
-                cell::IMP_ACT_2_SG
-            }
-            Cell::Present(Mood::Imperative, Voice::Active, Person::Second, Number::Dual) => {
-                cell::IMP_ACT_2_DU
-            }
-            Cell::Present(Mood::Imperative, Voice::Active, Person::Second, Number::Plural) => {
-                cell::IMP_ACT_2_PL
-            }
-            Cell::Present(Mood::Imperative, Voice::Active, Person::Third, Number::Singular) => {
-                cell::IMP_ACT_3_SG
-            }
-            Cell::Present(Mood::Imperative, Voice::Active, Person::Third, Number::Dual) => {
-                cell::IMP_ACT_3_DU
-            }
-            Cell::Present(Mood::Imperative, Voice::Active, Person::Third, Number::Plural) => {
-                cell::IMP_ACT_3_PL
-            }
-            Cell::Present(Mood::Imperative, Voice::Middle, Person::First, Number::Singular) => {
-                cell::IMP_MID_1_SG
-            }
-            Cell::Present(Mood::Imperative, Voice::Middle, Person::First, Number::Dual) => {
-                cell::IMP_MID_1_DU
-            }
-            Cell::Present(Mood::Imperative, Voice::Middle, Person::First, Number::Plural) => {
-                cell::IMP_MID_1_PL
-            }
-            Cell::Present(Mood::Imperative, Voice::Middle, Person::Second, Number::Singular) => {
-                cell::IMP_MID_2_SG
-            }
-            Cell::Present(Mood::Imperative, Voice::Middle, Person::Second, Number::Dual) => {
-                cell::IMP_MID_2_DU
-            }
-            Cell::Present(Mood::Imperative, Voice::Middle, Person::Second, Number::Plural) => {
-                cell::IMP_MID_2_PL
-            }
-            Cell::Present(Mood::Imperative, Voice::Middle, Person::Third, Number::Singular) => {
-                cell::IMP_MID_3_SG
-            }
-            Cell::Present(Mood::Imperative, Voice::Middle, Person::Third, Number::Dual) => {
-                cell::IMP_MID_3_DU
-            }
-            Cell::Present(Mood::Imperative, Voice::Middle, Person::Third, Number::Plural) => {
-                cell::IMP_MID_3_PL
-            }
-            Cell::Present(Mood::Imperative, Voice::Passive, Person::First, Number::Singular) => {
-                cell::IMP_PASS_1_SG
-            }
-            Cell::Present(Mood::Imperative, Voice::Passive, Person::First, Number::Dual) => {
-                cell::IMP_PASS_1_DU
-            }
-            Cell::Present(Mood::Imperative, Voice::Passive, Person::First, Number::Plural) => {
-                cell::IMP_PASS_1_PL
-            }
-            Cell::Present(Mood::Imperative, Voice::Passive, Person::Second, Number::Singular) => {
-                cell::IMP_PASS_2_SG
-            }
-            Cell::Present(Mood::Imperative, Voice::Passive, Person::Second, Number::Dual) => {
-                cell::IMP_PASS_2_DU
-            }
-            Cell::Present(Mood::Imperative, Voice::Passive, Person::Second, Number::Plural) => {
-                cell::IMP_PASS_2_PL
-            }
-            Cell::Present(Mood::Imperative, Voice::Passive, Person::Third, Number::Singular) => {
-                cell::IMP_PASS_3_SG
-            }
-            Cell::Present(Mood::Imperative, Voice::Passive, Person::Third, Number::Dual) => {
-                cell::IMP_PASS_3_DU
-            }
-            Cell::Present(Mood::Imperative, Voice::Passive, Person::Third, Number::Plural) => {
-                cell::IMP_PASS_3_PL
-            }
-            Cell::Imperfect(Voice::Active, Person::First, Number::Singular) => {
-                cell::IMPERFECT_ACT_1_SG
-            }
-            Cell::Imperfect(Voice::Active, Person::First, Number::Dual) => cell::IMPERFECT_ACT_1_DU,
-            Cell::Imperfect(Voice::Active, Person::First, Number::Plural) => {
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::IND_ACT_1_SG,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::IND_ACT_1_DU,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::IND_ACT_1_PL,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::IND_ACT_2_SG,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::IND_ACT_2_DU,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::IND_ACT_2_PL,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::IND_ACT_3_SG,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::IND_ACT_3_DU,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::IND_ACT_3_PL,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::IND_MID_1_SG,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::IND_MID_1_DU,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::IND_MID_1_PL,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::IND_MID_2_SG,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::IND_MID_2_DU,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::IND_MID_2_PL,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::IND_MID_3_SG,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::IND_MID_3_DU,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::IND_MID_3_PL,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::IND_PASS_1_SG,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::IND_PASS_1_DU,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::IND_PASS_1_PL,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::IND_PASS_2_SG,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::IND_PASS_2_DU,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::IND_PASS_2_PL,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::IND_PASS_3_SG,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::IND_PASS_3_DU,
+            Cell::Present(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::IND_PASS_3_PL,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::SUBJ_ACT_1_SG,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::SUBJ_ACT_1_DU,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::SUBJ_ACT_1_PL,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::SUBJ_ACT_2_SG,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::SUBJ_ACT_2_DU,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::SUBJ_ACT_2_PL,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::SUBJ_ACT_3_SG,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::SUBJ_ACT_3_DU,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::SUBJ_ACT_3_PL,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::SUBJ_MID_1_SG,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::SUBJ_MID_1_DU,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::SUBJ_MID_1_PL,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::SUBJ_MID_2_SG,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::SUBJ_MID_2_DU,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::SUBJ_MID_2_PL,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::SUBJ_MID_3_SG,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::SUBJ_MID_3_DU,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::SUBJ_MID_3_PL,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::SUBJ_PASS_1_SG,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::SUBJ_PASS_1_DU,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::SUBJ_PASS_1_PL,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::SUBJ_PASS_2_SG,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::SUBJ_PASS_2_DU,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::SUBJ_PASS_2_PL,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::SUBJ_PASS_3_SG,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::SUBJ_PASS_3_DU,
+            Cell::Present(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::SUBJ_PASS_3_PL,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::OPT_ACT_1_SG,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::OPT_ACT_1_DU,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::OPT_ACT_1_PL,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::OPT_ACT_2_SG,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::OPT_ACT_2_DU,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::OPT_ACT_2_PL,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::OPT_ACT_3_SG,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::OPT_ACT_3_DU,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::OPT_ACT_3_PL,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::OPT_MID_1_SG,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::OPT_MID_1_DU,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::OPT_MID_1_PL,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::OPT_MID_2_SG,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::OPT_MID_2_DU,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::OPT_MID_2_PL,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::OPT_MID_3_SG,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::OPT_MID_3_DU,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::OPT_MID_3_PL,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::OPT_PASS_1_SG,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::OPT_PASS_1_DU,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::OPT_PASS_1_PL,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::OPT_PASS_2_SG,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::OPT_PASS_2_DU,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::OPT_PASS_2_PL,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::OPT_PASS_3_SG,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::OPT_PASS_3_DU,
+            Cell::Present(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::OPT_PASS_3_PL,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::IMP_ACT_1_SG,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::IMP_ACT_1_DU,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::IMP_ACT_1_PL,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::IMP_ACT_2_SG,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::IMP_ACT_2_DU,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::IMP_ACT_2_PL,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::IMP_ACT_3_SG,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::IMP_ACT_3_DU,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::IMP_ACT_3_PL,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::IMP_MID_1_SG,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::IMP_MID_1_DU,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::IMP_MID_1_PL,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::IMP_MID_2_SG,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::IMP_MID_2_DU,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::IMP_MID_2_PL,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::IMP_MID_3_SG,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::IMP_MID_3_DU,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::IMP_MID_3_PL,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::IMP_PASS_1_SG,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::IMP_PASS_1_DU,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::IMP_PASS_1_PL,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::IMP_PASS_2_SG,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::IMP_PASS_2_DU,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::IMP_PASS_2_PL,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::IMP_PASS_3_SG,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::IMP_PASS_3_DU,
+            Cell::Present(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::IMP_PASS_3_PL,
+            Cell::Imperfect(
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::IMPERFECT_ACT_1_SG,
+            Cell::Imperfect(crate::Voice::Active, crate::Person::First, crate::Number::Dual) => {
+                cell::IMPERFECT_ACT_1_DU
+            }
+            Cell::Imperfect(crate::Voice::Active, crate::Person::First, crate::Number::Plural) => {
                 cell::IMPERFECT_ACT_1_PL
             }
-            Cell::Imperfect(Voice::Active, Person::Second, Number::Singular) => {
-                cell::IMPERFECT_ACT_2_SG
-            }
-            Cell::Imperfect(Voice::Active, Person::Second, Number::Dual) => {
+            Cell::Imperfect(
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::IMPERFECT_ACT_2_SG,
+            Cell::Imperfect(crate::Voice::Active, crate::Person::Second, crate::Number::Dual) => {
                 cell::IMPERFECT_ACT_2_DU
             }
-            Cell::Imperfect(Voice::Active, Person::Second, Number::Plural) => {
+            Cell::Imperfect(crate::Voice::Active, crate::Person::Second, crate::Number::Plural) => {
                 cell::IMPERFECT_ACT_2_PL
             }
-            Cell::Imperfect(Voice::Active, Person::Third, Number::Singular) => {
-                cell::IMPERFECT_ACT_3_SG
+            Cell::Imperfect(
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::IMPERFECT_ACT_3_SG,
+            Cell::Imperfect(crate::Voice::Active, crate::Person::Third, crate::Number::Dual) => {
+                cell::IMPERFECT_ACT_3_DU
             }
-            Cell::Imperfect(Voice::Active, Person::Third, Number::Dual) => cell::IMPERFECT_ACT_3_DU,
-            Cell::Imperfect(Voice::Active, Person::Third, Number::Plural) => {
+            Cell::Imperfect(crate::Voice::Active, crate::Person::Third, crate::Number::Plural) => {
                 cell::IMPERFECT_ACT_3_PL
             }
-            Cell::Imperfect(Voice::Middle, Person::First, Number::Singular) => {
-                cell::IMPERFECT_MID_1_SG
+            Cell::Imperfect(
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::IMPERFECT_MID_1_SG,
+            Cell::Imperfect(crate::Voice::Middle, crate::Person::First, crate::Number::Dual) => {
+                cell::IMPERFECT_MID_1_DU
             }
-            Cell::Imperfect(Voice::Middle, Person::First, Number::Dual) => cell::IMPERFECT_MID_1_DU,
-            Cell::Imperfect(Voice::Middle, Person::First, Number::Plural) => {
+            Cell::Imperfect(crate::Voice::Middle, crate::Person::First, crate::Number::Plural) => {
                 cell::IMPERFECT_MID_1_PL
             }
-            Cell::Imperfect(Voice::Middle, Person::Second, Number::Singular) => {
-                cell::IMPERFECT_MID_2_SG
-            }
-            Cell::Imperfect(Voice::Middle, Person::Second, Number::Dual) => {
+            Cell::Imperfect(
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::IMPERFECT_MID_2_SG,
+            Cell::Imperfect(crate::Voice::Middle, crate::Person::Second, crate::Number::Dual) => {
                 cell::IMPERFECT_MID_2_DU
             }
-            Cell::Imperfect(Voice::Middle, Person::Second, Number::Plural) => {
+            Cell::Imperfect(crate::Voice::Middle, crate::Person::Second, crate::Number::Plural) => {
                 cell::IMPERFECT_MID_2_PL
             }
-            Cell::Imperfect(Voice::Middle, Person::Third, Number::Singular) => {
-                cell::IMPERFECT_MID_3_SG
+            Cell::Imperfect(
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::IMPERFECT_MID_3_SG,
+            Cell::Imperfect(crate::Voice::Middle, crate::Person::Third, crate::Number::Dual) => {
+                cell::IMPERFECT_MID_3_DU
             }
-            Cell::Imperfect(Voice::Middle, Person::Third, Number::Dual) => cell::IMPERFECT_MID_3_DU,
-            Cell::Imperfect(Voice::Middle, Person::Third, Number::Plural) => {
+            Cell::Imperfect(crate::Voice::Middle, crate::Person::Third, crate::Number::Plural) => {
                 cell::IMPERFECT_MID_3_PL
             }
-            Cell::Imperfect(Voice::Passive, Person::First, Number::Singular) => {
-                cell::IMPERFECT_PASS_1_SG
-            }
-            Cell::Imperfect(Voice::Passive, Person::First, Number::Dual) => {
+            Cell::Imperfect(
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::IMPERFECT_PASS_1_SG,
+            Cell::Imperfect(crate::Voice::Passive, crate::Person::First, crate::Number::Dual) => {
                 cell::IMPERFECT_PASS_1_DU
             }
-            Cell::Imperfect(Voice::Passive, Person::First, Number::Plural) => {
+            Cell::Imperfect(crate::Voice::Passive, crate::Person::First, crate::Number::Plural) => {
                 cell::IMPERFECT_PASS_1_PL
             }
-            Cell::Imperfect(Voice::Passive, Person::Second, Number::Singular) => {
-                cell::IMPERFECT_PASS_2_SG
-            }
-            Cell::Imperfect(Voice::Passive, Person::Second, Number::Dual) => {
+            Cell::Imperfect(
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::IMPERFECT_PASS_2_SG,
+            Cell::Imperfect(crate::Voice::Passive, crate::Person::Second, crate::Number::Dual) => {
                 cell::IMPERFECT_PASS_2_DU
             }
-            Cell::Imperfect(Voice::Passive, Person::Second, Number::Plural) => {
-                cell::IMPERFECT_PASS_2_PL
-            }
-            Cell::Imperfect(Voice::Passive, Person::Third, Number::Singular) => {
-                cell::IMPERFECT_PASS_3_SG
-            }
-            Cell::Imperfect(Voice::Passive, Person::Third, Number::Dual) => {
+            Cell::Imperfect(
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::IMPERFECT_PASS_2_PL,
+            Cell::Imperfect(
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::IMPERFECT_PASS_3_SG,
+            Cell::Imperfect(crate::Voice::Passive, crate::Person::Third, crate::Number::Dual) => {
                 cell::IMPERFECT_PASS_3_DU
             }
-            Cell::Imperfect(Voice::Passive, Person::Third, Number::Plural) => {
+            Cell::Imperfect(crate::Voice::Passive, crate::Person::Third, crate::Number::Plural) => {
                 cell::IMPERFECT_PASS_3_PL
             }
-            Cell::Future(Mood::Indicative, Voice::Active, Person::First, Number::Singular) => {
-                cell::FUTURE_IND_ACT_1_SG
-            }
-            Cell::Future(Mood::Indicative, Voice::Active, Person::First, Number::Dual) => {
-                cell::FUTURE_IND_ACT_1_DU
-            }
-            Cell::Future(Mood::Indicative, Voice::Active, Person::First, Number::Plural) => {
-                cell::FUTURE_IND_ACT_1_PL
-            }
-            Cell::Future(Mood::Indicative, Voice::Active, Person::Second, Number::Singular) => {
-                cell::FUTURE_IND_ACT_2_SG
-            }
-            Cell::Future(Mood::Indicative, Voice::Active, Person::Second, Number::Dual) => {
-                cell::FUTURE_IND_ACT_2_DU
-            }
-            Cell::Future(Mood::Indicative, Voice::Active, Person::Second, Number::Plural) => {
-                cell::FUTURE_IND_ACT_2_PL
-            }
-            Cell::Future(Mood::Indicative, Voice::Active, Person::Third, Number::Singular) => {
-                cell::FUTURE_IND_ACT_3_SG
-            }
-            Cell::Future(Mood::Indicative, Voice::Active, Person::Third, Number::Dual) => {
-                cell::FUTURE_IND_ACT_3_DU
-            }
-            Cell::Future(Mood::Indicative, Voice::Active, Person::Third, Number::Plural) => {
-                cell::FUTURE_IND_ACT_3_PL
-            }
-            Cell::Future(Mood::Indicative, Voice::Middle, Person::First, Number::Singular) => {
-                cell::FUTURE_IND_MID_1_SG
-            }
-            Cell::Future(Mood::Indicative, Voice::Middle, Person::First, Number::Dual) => {
-                cell::FUTURE_IND_MID_1_DU
-            }
-            Cell::Future(Mood::Indicative, Voice::Middle, Person::First, Number::Plural) => {
-                cell::FUTURE_IND_MID_1_PL
-            }
-            Cell::Future(Mood::Indicative, Voice::Middle, Person::Second, Number::Singular) => {
-                cell::FUTURE_IND_MID_2_SG
-            }
-            Cell::Future(Mood::Indicative, Voice::Middle, Person::Second, Number::Dual) => {
-                cell::FUTURE_IND_MID_2_DU
-            }
-            Cell::Future(Mood::Indicative, Voice::Middle, Person::Second, Number::Plural) => {
-                cell::FUTURE_IND_MID_2_PL
-            }
-            Cell::Future(Mood::Indicative, Voice::Middle, Person::Third, Number::Singular) => {
-                cell::FUTURE_IND_MID_3_SG
-            }
-            Cell::Future(Mood::Indicative, Voice::Middle, Person::Third, Number::Dual) => {
-                cell::FUTURE_IND_MID_3_DU
-            }
-            Cell::Future(Mood::Indicative, Voice::Middle, Person::Third, Number::Plural) => {
-                cell::FUTURE_IND_MID_3_PL
-            }
-            Cell::Future(Mood::Indicative, Voice::Passive, Person::First, Number::Singular) => {
-                cell::FUTURE_IND_PASS_1_SG
-            }
-            Cell::Future(Mood::Indicative, Voice::Passive, Person::First, Number::Dual) => {
-                cell::FUTURE_IND_PASS_1_DU
-            }
-            Cell::Future(Mood::Indicative, Voice::Passive, Person::First, Number::Plural) => {
-                cell::FUTURE_IND_PASS_1_PL
-            }
-            Cell::Future(Mood::Indicative, Voice::Passive, Person::Second, Number::Singular) => {
-                cell::FUTURE_IND_PASS_2_SG
-            }
-            Cell::Future(Mood::Indicative, Voice::Passive, Person::Second, Number::Dual) => {
-                cell::FUTURE_IND_PASS_2_DU
-            }
-            Cell::Future(Mood::Indicative, Voice::Passive, Person::Second, Number::Plural) => {
-                cell::FUTURE_IND_PASS_2_PL
-            }
-            Cell::Future(Mood::Indicative, Voice::Passive, Person::Third, Number::Singular) => {
-                cell::FUTURE_IND_PASS_3_SG
-            }
-            Cell::Future(Mood::Indicative, Voice::Passive, Person::Third, Number::Dual) => {
-                cell::FUTURE_IND_PASS_3_DU
-            }
-            Cell::Future(Mood::Indicative, Voice::Passive, Person::Third, Number::Plural) => {
-                cell::FUTURE_IND_PASS_3_PL
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Active, Person::First, Number::Singular) => {
-                cell::FUTURE_SUBJ_ACT_1_SG
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Active, Person::First, Number::Dual) => {
-                cell::FUTURE_SUBJ_ACT_1_DU
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Active, Person::First, Number::Plural) => {
-                cell::FUTURE_SUBJ_ACT_1_PL
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Active, Person::Second, Number::Singular) => {
-                cell::FUTURE_SUBJ_ACT_2_SG
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Active, Person::Second, Number::Dual) => {
-                cell::FUTURE_SUBJ_ACT_2_DU
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Active, Person::Second, Number::Plural) => {
-                cell::FUTURE_SUBJ_ACT_2_PL
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Active, Person::Third, Number::Singular) => {
-                cell::FUTURE_SUBJ_ACT_3_SG
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Active, Person::Third, Number::Dual) => {
-                cell::FUTURE_SUBJ_ACT_3_DU
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Active, Person::Third, Number::Plural) => {
-                cell::FUTURE_SUBJ_ACT_3_PL
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Middle, Person::First, Number::Singular) => {
-                cell::FUTURE_SUBJ_MID_1_SG
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Middle, Person::First, Number::Dual) => {
-                cell::FUTURE_SUBJ_MID_1_DU
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Middle, Person::First, Number::Plural) => {
-                cell::FUTURE_SUBJ_MID_1_PL
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Middle, Person::Second, Number::Singular) => {
-                cell::FUTURE_SUBJ_MID_2_SG
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Middle, Person::Second, Number::Dual) => {
-                cell::FUTURE_SUBJ_MID_2_DU
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Middle, Person::Second, Number::Plural) => {
-                cell::FUTURE_SUBJ_MID_2_PL
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Middle, Person::Third, Number::Singular) => {
-                cell::FUTURE_SUBJ_MID_3_SG
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Middle, Person::Third, Number::Dual) => {
-                cell::FUTURE_SUBJ_MID_3_DU
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Middle, Person::Third, Number::Plural) => {
-                cell::FUTURE_SUBJ_MID_3_PL
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Passive, Person::First, Number::Singular) => {
-                cell::FUTURE_SUBJ_PASS_1_SG
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Passive, Person::First, Number::Dual) => {
-                cell::FUTURE_SUBJ_PASS_1_DU
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Passive, Person::First, Number::Plural) => {
-                cell::FUTURE_SUBJ_PASS_1_PL
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Passive, Person::Second, Number::Singular) => {
-                cell::FUTURE_SUBJ_PASS_2_SG
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Passive, Person::Second, Number::Dual) => {
-                cell::FUTURE_SUBJ_PASS_2_DU
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Passive, Person::Second, Number::Plural) => {
-                cell::FUTURE_SUBJ_PASS_2_PL
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Passive, Person::Third, Number::Singular) => {
-                cell::FUTURE_SUBJ_PASS_3_SG
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Passive, Person::Third, Number::Dual) => {
-                cell::FUTURE_SUBJ_PASS_3_DU
-            }
-            Cell::Future(Mood::Subjunctive, Voice::Passive, Person::Third, Number::Plural) => {
-                cell::FUTURE_SUBJ_PASS_3_PL
-            }
-            Cell::Future(Mood::Optative, Voice::Active, Person::First, Number::Singular) => {
-                cell::FUTURE_OPT_ACT_1_SG
-            }
-            Cell::Future(Mood::Optative, Voice::Active, Person::First, Number::Dual) => {
-                cell::FUTURE_OPT_ACT_1_DU
-            }
-            Cell::Future(Mood::Optative, Voice::Active, Person::First, Number::Plural) => {
-                cell::FUTURE_OPT_ACT_1_PL
-            }
-            Cell::Future(Mood::Optative, Voice::Active, Person::Second, Number::Singular) => {
-                cell::FUTURE_OPT_ACT_2_SG
-            }
-            Cell::Future(Mood::Optative, Voice::Active, Person::Second, Number::Dual) => {
-                cell::FUTURE_OPT_ACT_2_DU
-            }
-            Cell::Future(Mood::Optative, Voice::Active, Person::Second, Number::Plural) => {
-                cell::FUTURE_OPT_ACT_2_PL
-            }
-            Cell::Future(Mood::Optative, Voice::Active, Person::Third, Number::Singular) => {
-                cell::FUTURE_OPT_ACT_3_SG
-            }
-            Cell::Future(Mood::Optative, Voice::Active, Person::Third, Number::Dual) => {
-                cell::FUTURE_OPT_ACT_3_DU
-            }
-            Cell::Future(Mood::Optative, Voice::Active, Person::Third, Number::Plural) => {
-                cell::FUTURE_OPT_ACT_3_PL
-            }
-            Cell::Future(Mood::Optative, Voice::Middle, Person::First, Number::Singular) => {
-                cell::FUTURE_OPT_MID_1_SG
-            }
-            Cell::Future(Mood::Optative, Voice::Middle, Person::First, Number::Dual) => {
-                cell::FUTURE_OPT_MID_1_DU
-            }
-            Cell::Future(Mood::Optative, Voice::Middle, Person::First, Number::Plural) => {
-                cell::FUTURE_OPT_MID_1_PL
-            }
-            Cell::Future(Mood::Optative, Voice::Middle, Person::Second, Number::Singular) => {
-                cell::FUTURE_OPT_MID_2_SG
-            }
-            Cell::Future(Mood::Optative, Voice::Middle, Person::Second, Number::Dual) => {
-                cell::FUTURE_OPT_MID_2_DU
-            }
-            Cell::Future(Mood::Optative, Voice::Middle, Person::Second, Number::Plural) => {
-                cell::FUTURE_OPT_MID_2_PL
-            }
-            Cell::Future(Mood::Optative, Voice::Middle, Person::Third, Number::Singular) => {
-                cell::FUTURE_OPT_MID_3_SG
-            }
-            Cell::Future(Mood::Optative, Voice::Middle, Person::Third, Number::Dual) => {
-                cell::FUTURE_OPT_MID_3_DU
-            }
-            Cell::Future(Mood::Optative, Voice::Middle, Person::Third, Number::Plural) => {
-                cell::FUTURE_OPT_MID_3_PL
-            }
-            Cell::Future(Mood::Optative, Voice::Passive, Person::First, Number::Singular) => {
-                cell::FUTURE_OPT_PASS_1_SG
-            }
-            Cell::Future(Mood::Optative, Voice::Passive, Person::First, Number::Dual) => {
-                cell::FUTURE_OPT_PASS_1_DU
-            }
-            Cell::Future(Mood::Optative, Voice::Passive, Person::First, Number::Plural) => {
-                cell::FUTURE_OPT_PASS_1_PL
-            }
-            Cell::Future(Mood::Optative, Voice::Passive, Person::Second, Number::Singular) => {
-                cell::FUTURE_OPT_PASS_2_SG
-            }
-            Cell::Future(Mood::Optative, Voice::Passive, Person::Second, Number::Dual) => {
-                cell::FUTURE_OPT_PASS_2_DU
-            }
-            Cell::Future(Mood::Optative, Voice::Passive, Person::Second, Number::Plural) => {
-                cell::FUTURE_OPT_PASS_2_PL
-            }
-            Cell::Future(Mood::Optative, Voice::Passive, Person::Third, Number::Singular) => {
-                cell::FUTURE_OPT_PASS_3_SG
-            }
-            Cell::Future(Mood::Optative, Voice::Passive, Person::Third, Number::Dual) => {
-                cell::FUTURE_OPT_PASS_3_DU
-            }
-            Cell::Future(Mood::Optative, Voice::Passive, Person::Third, Number::Plural) => {
-                cell::FUTURE_OPT_PASS_3_PL
-            }
-            Cell::Future(Mood::Imperative, Voice::Active, Person::First, Number::Singular) => {
-                cell::FUTURE_IMP_ACT_1_SG
-            }
-            Cell::Future(Mood::Imperative, Voice::Active, Person::First, Number::Dual) => {
-                cell::FUTURE_IMP_ACT_1_DU
-            }
-            Cell::Future(Mood::Imperative, Voice::Active, Person::First, Number::Plural) => {
-                cell::FUTURE_IMP_ACT_1_PL
-            }
-            Cell::Future(Mood::Imperative, Voice::Active, Person::Second, Number::Singular) => {
-                cell::FUTURE_IMP_ACT_2_SG
-            }
-            Cell::Future(Mood::Imperative, Voice::Active, Person::Second, Number::Dual) => {
-                cell::FUTURE_IMP_ACT_2_DU
-            }
-            Cell::Future(Mood::Imperative, Voice::Active, Person::Second, Number::Plural) => {
-                cell::FUTURE_IMP_ACT_2_PL
-            }
-            Cell::Future(Mood::Imperative, Voice::Active, Person::Third, Number::Singular) => {
-                cell::FUTURE_IMP_ACT_3_SG
-            }
-            Cell::Future(Mood::Imperative, Voice::Active, Person::Third, Number::Dual) => {
-                cell::FUTURE_IMP_ACT_3_DU
-            }
-            Cell::Future(Mood::Imperative, Voice::Active, Person::Third, Number::Plural) => {
-                cell::FUTURE_IMP_ACT_3_PL
-            }
-            Cell::Future(Mood::Imperative, Voice::Middle, Person::First, Number::Singular) => {
-                cell::FUTURE_IMP_MID_1_SG
-            }
-            Cell::Future(Mood::Imperative, Voice::Middle, Person::First, Number::Dual) => {
-                cell::FUTURE_IMP_MID_1_DU
-            }
-            Cell::Future(Mood::Imperative, Voice::Middle, Person::First, Number::Plural) => {
-                cell::FUTURE_IMP_MID_1_PL
-            }
-            Cell::Future(Mood::Imperative, Voice::Middle, Person::Second, Number::Singular) => {
-                cell::FUTURE_IMP_MID_2_SG
-            }
-            Cell::Future(Mood::Imperative, Voice::Middle, Person::Second, Number::Dual) => {
-                cell::FUTURE_IMP_MID_2_DU
-            }
-            Cell::Future(Mood::Imperative, Voice::Middle, Person::Second, Number::Plural) => {
-                cell::FUTURE_IMP_MID_2_PL
-            }
-            Cell::Future(Mood::Imperative, Voice::Middle, Person::Third, Number::Singular) => {
-                cell::FUTURE_IMP_MID_3_SG
-            }
-            Cell::Future(Mood::Imperative, Voice::Middle, Person::Third, Number::Dual) => {
-                cell::FUTURE_IMP_MID_3_DU
-            }
-            Cell::Future(Mood::Imperative, Voice::Middle, Person::Third, Number::Plural) => {
-                cell::FUTURE_IMP_MID_3_PL
-            }
-            Cell::Future(Mood::Imperative, Voice::Passive, Person::First, Number::Singular) => {
-                cell::FUTURE_IMP_PASS_1_SG
-            }
-            Cell::Future(Mood::Imperative, Voice::Passive, Person::First, Number::Dual) => {
-                cell::FUTURE_IMP_PASS_1_DU
-            }
-            Cell::Future(Mood::Imperative, Voice::Passive, Person::First, Number::Plural) => {
-                cell::FUTURE_IMP_PASS_1_PL
-            }
-            Cell::Future(Mood::Imperative, Voice::Passive, Person::Second, Number::Singular) => {
-                cell::FUTURE_IMP_PASS_2_SG
-            }
-            Cell::Future(Mood::Imperative, Voice::Passive, Person::Second, Number::Dual) => {
-                cell::FUTURE_IMP_PASS_2_DU
-            }
-            Cell::Future(Mood::Imperative, Voice::Passive, Person::Second, Number::Plural) => {
-                cell::FUTURE_IMP_PASS_2_PL
-            }
-            Cell::Future(Mood::Imperative, Voice::Passive, Person::Third, Number::Singular) => {
-                cell::FUTURE_IMP_PASS_3_SG
-            }
-            Cell::Future(Mood::Imperative, Voice::Passive, Person::Third, Number::Dual) => {
-                cell::FUTURE_IMP_PASS_3_DU
-            }
-            Cell::Future(Mood::Imperative, Voice::Passive, Person::Third, Number::Plural) => {
-                cell::FUTURE_IMP_PASS_3_PL
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Active, Person::First, Number::Singular) => {
-                cell::AORIST_IND_ACT_1_SG
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Active, Person::First, Number::Dual) => {
-                cell::AORIST_IND_ACT_1_DU
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Active, Person::First, Number::Plural) => {
-                cell::AORIST_IND_ACT_1_PL
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Active, Person::Second, Number::Singular) => {
-                cell::AORIST_IND_ACT_2_SG
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Active, Person::Second, Number::Dual) => {
-                cell::AORIST_IND_ACT_2_DU
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Active, Person::Second, Number::Plural) => {
-                cell::AORIST_IND_ACT_2_PL
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Active, Person::Third, Number::Singular) => {
-                cell::AORIST_IND_ACT_3_SG
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Active, Person::Third, Number::Dual) => {
-                cell::AORIST_IND_ACT_3_DU
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Active, Person::Third, Number::Plural) => {
-                cell::AORIST_IND_ACT_3_PL
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Middle, Person::First, Number::Singular) => {
-                cell::AORIST_IND_MID_1_SG
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Middle, Person::First, Number::Dual) => {
-                cell::AORIST_IND_MID_1_DU
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Middle, Person::First, Number::Plural) => {
-                cell::AORIST_IND_MID_1_PL
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Middle, Person::Second, Number::Singular) => {
-                cell::AORIST_IND_MID_2_SG
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Middle, Person::Second, Number::Dual) => {
-                cell::AORIST_IND_MID_2_DU
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Middle, Person::Second, Number::Plural) => {
-                cell::AORIST_IND_MID_2_PL
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Middle, Person::Third, Number::Singular) => {
-                cell::AORIST_IND_MID_3_SG
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Middle, Person::Third, Number::Dual) => {
-                cell::AORIST_IND_MID_3_DU
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Middle, Person::Third, Number::Plural) => {
-                cell::AORIST_IND_MID_3_PL
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Passive, Person::First, Number::Singular) => {
-                cell::AORIST_IND_PASS_1_SG
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Passive, Person::First, Number::Dual) => {
-                cell::AORIST_IND_PASS_1_DU
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Passive, Person::First, Number::Plural) => {
-                cell::AORIST_IND_PASS_1_PL
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Passive, Person::Second, Number::Singular) => {
-                cell::AORIST_IND_PASS_2_SG
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Passive, Person::Second, Number::Dual) => {
-                cell::AORIST_IND_PASS_2_DU
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Passive, Person::Second, Number::Plural) => {
-                cell::AORIST_IND_PASS_2_PL
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Passive, Person::Third, Number::Singular) => {
-                cell::AORIST_IND_PASS_3_SG
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Passive, Person::Third, Number::Dual) => {
-                cell::AORIST_IND_PASS_3_DU
-            }
-            Cell::Aorist(Mood::Indicative, Voice::Passive, Person::Third, Number::Plural) => {
-                cell::AORIST_IND_PASS_3_PL
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Active, Person::First, Number::Singular) => {
-                cell::AORIST_SUBJ_ACT_1_SG
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Active, Person::First, Number::Dual) => {
-                cell::AORIST_SUBJ_ACT_1_DU
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Active, Person::First, Number::Plural) => {
-                cell::AORIST_SUBJ_ACT_1_PL
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Active, Person::Second, Number::Singular) => {
-                cell::AORIST_SUBJ_ACT_2_SG
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Active, Person::Second, Number::Dual) => {
-                cell::AORIST_SUBJ_ACT_2_DU
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Active, Person::Second, Number::Plural) => {
-                cell::AORIST_SUBJ_ACT_2_PL
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Active, Person::Third, Number::Singular) => {
-                cell::AORIST_SUBJ_ACT_3_SG
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Active, Person::Third, Number::Dual) => {
-                cell::AORIST_SUBJ_ACT_3_DU
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Active, Person::Third, Number::Plural) => {
-                cell::AORIST_SUBJ_ACT_3_PL
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Middle, Person::First, Number::Singular) => {
-                cell::AORIST_SUBJ_MID_1_SG
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Middle, Person::First, Number::Dual) => {
-                cell::AORIST_SUBJ_MID_1_DU
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Middle, Person::First, Number::Plural) => {
-                cell::AORIST_SUBJ_MID_1_PL
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Middle, Person::Second, Number::Singular) => {
-                cell::AORIST_SUBJ_MID_2_SG
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Middle, Person::Second, Number::Dual) => {
-                cell::AORIST_SUBJ_MID_2_DU
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Middle, Person::Second, Number::Plural) => {
-                cell::AORIST_SUBJ_MID_2_PL
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Middle, Person::Third, Number::Singular) => {
-                cell::AORIST_SUBJ_MID_3_SG
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Middle, Person::Third, Number::Dual) => {
-                cell::AORIST_SUBJ_MID_3_DU
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Middle, Person::Third, Number::Plural) => {
-                cell::AORIST_SUBJ_MID_3_PL
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Passive, Person::First, Number::Singular) => {
-                cell::AORIST_SUBJ_PASS_1_SG
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Passive, Person::First, Number::Dual) => {
-                cell::AORIST_SUBJ_PASS_1_DU
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Passive, Person::First, Number::Plural) => {
-                cell::AORIST_SUBJ_PASS_1_PL
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Passive, Person::Second, Number::Singular) => {
-                cell::AORIST_SUBJ_PASS_2_SG
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Passive, Person::Second, Number::Dual) => {
-                cell::AORIST_SUBJ_PASS_2_DU
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Passive, Person::Second, Number::Plural) => {
-                cell::AORIST_SUBJ_PASS_2_PL
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Passive, Person::Third, Number::Singular) => {
-                cell::AORIST_SUBJ_PASS_3_SG
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Passive, Person::Third, Number::Dual) => {
-                cell::AORIST_SUBJ_PASS_3_DU
-            }
-            Cell::Aorist(Mood::Subjunctive, Voice::Passive, Person::Third, Number::Plural) => {
-                cell::AORIST_SUBJ_PASS_3_PL
-            }
-            Cell::Aorist(Mood::Optative, Voice::Active, Person::First, Number::Singular) => {
-                cell::AORIST_OPT_ACT_1_SG
-            }
-            Cell::Aorist(Mood::Optative, Voice::Active, Person::First, Number::Dual) => {
-                cell::AORIST_OPT_ACT_1_DU
-            }
-            Cell::Aorist(Mood::Optative, Voice::Active, Person::First, Number::Plural) => {
-                cell::AORIST_OPT_ACT_1_PL
-            }
-            Cell::Aorist(Mood::Optative, Voice::Active, Person::Second, Number::Singular) => {
-                cell::AORIST_OPT_ACT_2_SG
-            }
-            Cell::Aorist(Mood::Optative, Voice::Active, Person::Second, Number::Dual) => {
-                cell::AORIST_OPT_ACT_2_DU
-            }
-            Cell::Aorist(Mood::Optative, Voice::Active, Person::Second, Number::Plural) => {
-                cell::AORIST_OPT_ACT_2_PL
-            }
-            Cell::Aorist(Mood::Optative, Voice::Active, Person::Third, Number::Singular) => {
-                cell::AORIST_OPT_ACT_3_SG
-            }
-            Cell::Aorist(Mood::Optative, Voice::Active, Person::Third, Number::Dual) => {
-                cell::AORIST_OPT_ACT_3_DU
-            }
-            Cell::Aorist(Mood::Optative, Voice::Active, Person::Third, Number::Plural) => {
-                cell::AORIST_OPT_ACT_3_PL
-            }
-            Cell::Aorist(Mood::Optative, Voice::Middle, Person::First, Number::Singular) => {
-                cell::AORIST_OPT_MID_1_SG
-            }
-            Cell::Aorist(Mood::Optative, Voice::Middle, Person::First, Number::Dual) => {
-                cell::AORIST_OPT_MID_1_DU
-            }
-            Cell::Aorist(Mood::Optative, Voice::Middle, Person::First, Number::Plural) => {
-                cell::AORIST_OPT_MID_1_PL
-            }
-            Cell::Aorist(Mood::Optative, Voice::Middle, Person::Second, Number::Singular) => {
-                cell::AORIST_OPT_MID_2_SG
-            }
-            Cell::Aorist(Mood::Optative, Voice::Middle, Person::Second, Number::Dual) => {
-                cell::AORIST_OPT_MID_2_DU
-            }
-            Cell::Aorist(Mood::Optative, Voice::Middle, Person::Second, Number::Plural) => {
-                cell::AORIST_OPT_MID_2_PL
-            }
-            Cell::Aorist(Mood::Optative, Voice::Middle, Person::Third, Number::Singular) => {
-                cell::AORIST_OPT_MID_3_SG
-            }
-            Cell::Aorist(Mood::Optative, Voice::Middle, Person::Third, Number::Dual) => {
-                cell::AORIST_OPT_MID_3_DU
-            }
-            Cell::Aorist(Mood::Optative, Voice::Middle, Person::Third, Number::Plural) => {
-                cell::AORIST_OPT_MID_3_PL
-            }
-            Cell::Aorist(Mood::Optative, Voice::Passive, Person::First, Number::Singular) => {
-                cell::AORIST_OPT_PASS_1_SG
-            }
-            Cell::Aorist(Mood::Optative, Voice::Passive, Person::First, Number::Dual) => {
-                cell::AORIST_OPT_PASS_1_DU
-            }
-            Cell::Aorist(Mood::Optative, Voice::Passive, Person::First, Number::Plural) => {
-                cell::AORIST_OPT_PASS_1_PL
-            }
-            Cell::Aorist(Mood::Optative, Voice::Passive, Person::Second, Number::Singular) => {
-                cell::AORIST_OPT_PASS_2_SG
-            }
-            Cell::Aorist(Mood::Optative, Voice::Passive, Person::Second, Number::Dual) => {
-                cell::AORIST_OPT_PASS_2_DU
-            }
-            Cell::Aorist(Mood::Optative, Voice::Passive, Person::Second, Number::Plural) => {
-                cell::AORIST_OPT_PASS_2_PL
-            }
-            Cell::Aorist(Mood::Optative, Voice::Passive, Person::Third, Number::Singular) => {
-                cell::AORIST_OPT_PASS_3_SG
-            }
-            Cell::Aorist(Mood::Optative, Voice::Passive, Person::Third, Number::Dual) => {
-                cell::AORIST_OPT_PASS_3_DU
-            }
-            Cell::Aorist(Mood::Optative, Voice::Passive, Person::Third, Number::Plural) => {
-                cell::AORIST_OPT_PASS_3_PL
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Active, Person::First, Number::Singular) => {
-                cell::AORIST_IMP_ACT_1_SG
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Active, Person::First, Number::Dual) => {
-                cell::AORIST_IMP_ACT_1_DU
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Active, Person::First, Number::Plural) => {
-                cell::AORIST_IMP_ACT_1_PL
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Active, Person::Second, Number::Singular) => {
-                cell::AORIST_IMP_ACT_2_SG
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Active, Person::Second, Number::Dual) => {
-                cell::AORIST_IMP_ACT_2_DU
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Active, Person::Second, Number::Plural) => {
-                cell::AORIST_IMP_ACT_2_PL
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Active, Person::Third, Number::Singular) => {
-                cell::AORIST_IMP_ACT_3_SG
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Active, Person::Third, Number::Dual) => {
-                cell::AORIST_IMP_ACT_3_DU
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Active, Person::Third, Number::Plural) => {
-                cell::AORIST_IMP_ACT_3_PL
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Middle, Person::First, Number::Singular) => {
-                cell::AORIST_IMP_MID_1_SG
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Middle, Person::First, Number::Dual) => {
-                cell::AORIST_IMP_MID_1_DU
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Middle, Person::First, Number::Plural) => {
-                cell::AORIST_IMP_MID_1_PL
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Middle, Person::Second, Number::Singular) => {
-                cell::AORIST_IMP_MID_2_SG
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Middle, Person::Second, Number::Dual) => {
-                cell::AORIST_IMP_MID_2_DU
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Middle, Person::Second, Number::Plural) => {
-                cell::AORIST_IMP_MID_2_PL
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Middle, Person::Third, Number::Singular) => {
-                cell::AORIST_IMP_MID_3_SG
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Middle, Person::Third, Number::Dual) => {
-                cell::AORIST_IMP_MID_3_DU
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Middle, Person::Third, Number::Plural) => {
-                cell::AORIST_IMP_MID_3_PL
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Passive, Person::First, Number::Singular) => {
-                cell::AORIST_IMP_PASS_1_SG
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Passive, Person::First, Number::Dual) => {
-                cell::AORIST_IMP_PASS_1_DU
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Passive, Person::First, Number::Plural) => {
-                cell::AORIST_IMP_PASS_1_PL
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Passive, Person::Second, Number::Singular) => {
-                cell::AORIST_IMP_PASS_2_SG
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Passive, Person::Second, Number::Dual) => {
-                cell::AORIST_IMP_PASS_2_DU
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Passive, Person::Second, Number::Plural) => {
-                cell::AORIST_IMP_PASS_2_PL
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Passive, Person::Third, Number::Singular) => {
-                cell::AORIST_IMP_PASS_3_SG
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Passive, Person::Third, Number::Dual) => {
-                cell::AORIST_IMP_PASS_3_DU
-            }
-            Cell::Aorist(Mood::Imperative, Voice::Passive, Person::Third, Number::Plural) => {
-                cell::AORIST_IMP_PASS_3_PL
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Active, Person::First, Number::Singular) => {
-                cell::PERFECT_IND_ACT_1_SG
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Active, Person::First, Number::Dual) => {
-                cell::PERFECT_IND_ACT_1_DU
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Active, Person::First, Number::Plural) => {
-                cell::PERFECT_IND_ACT_1_PL
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Active, Person::Second, Number::Singular) => {
-                cell::PERFECT_IND_ACT_2_SG
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Active, Person::Second, Number::Dual) => {
-                cell::PERFECT_IND_ACT_2_DU
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Active, Person::Second, Number::Plural) => {
-                cell::PERFECT_IND_ACT_2_PL
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Active, Person::Third, Number::Singular) => {
-                cell::PERFECT_IND_ACT_3_SG
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Active, Person::Third, Number::Dual) => {
-                cell::PERFECT_IND_ACT_3_DU
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Active, Person::Third, Number::Plural) => {
-                cell::PERFECT_IND_ACT_3_PL
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Middle, Person::First, Number::Singular) => {
-                cell::PERFECT_IND_MID_1_SG
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Middle, Person::First, Number::Dual) => {
-                cell::PERFECT_IND_MID_1_DU
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Middle, Person::First, Number::Plural) => {
-                cell::PERFECT_IND_MID_1_PL
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Middle, Person::Second, Number::Singular) => {
-                cell::PERFECT_IND_MID_2_SG
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Middle, Person::Second, Number::Dual) => {
-                cell::PERFECT_IND_MID_2_DU
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Middle, Person::Second, Number::Plural) => {
-                cell::PERFECT_IND_MID_2_PL
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Middle, Person::Third, Number::Singular) => {
-                cell::PERFECT_IND_MID_3_SG
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Middle, Person::Third, Number::Dual) => {
-                cell::PERFECT_IND_MID_3_DU
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Middle, Person::Third, Number::Plural) => {
-                cell::PERFECT_IND_MID_3_PL
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Passive, Person::First, Number::Singular) => {
-                cell::PERFECT_IND_PASS_1_SG
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Passive, Person::First, Number::Dual) => {
-                cell::PERFECT_IND_PASS_1_DU
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Passive, Person::First, Number::Plural) => {
-                cell::PERFECT_IND_PASS_1_PL
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Passive, Person::Second, Number::Singular) => {
-                cell::PERFECT_IND_PASS_2_SG
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Passive, Person::Second, Number::Dual) => {
-                cell::PERFECT_IND_PASS_2_DU
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Passive, Person::Second, Number::Plural) => {
-                cell::PERFECT_IND_PASS_2_PL
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Passive, Person::Third, Number::Singular) => {
-                cell::PERFECT_IND_PASS_3_SG
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Passive, Person::Third, Number::Dual) => {
-                cell::PERFECT_IND_PASS_3_DU
-            }
-            Cell::Perfect(Mood::Indicative, Voice::Passive, Person::Third, Number::Plural) => {
-                cell::PERFECT_IND_PASS_3_PL
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Active, Person::First, Number::Singular) => {
-                cell::PERFECT_SUBJ_ACT_1_SG
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Active, Person::First, Number::Dual) => {
-                cell::PERFECT_SUBJ_ACT_1_DU
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Active, Person::First, Number::Plural) => {
-                cell::PERFECT_SUBJ_ACT_1_PL
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Active, Person::Second, Number::Singular) => {
-                cell::PERFECT_SUBJ_ACT_2_SG
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Active, Person::Second, Number::Dual) => {
-                cell::PERFECT_SUBJ_ACT_2_DU
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Active, Person::Second, Number::Plural) => {
-                cell::PERFECT_SUBJ_ACT_2_PL
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Active, Person::Third, Number::Singular) => {
-                cell::PERFECT_SUBJ_ACT_3_SG
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Active, Person::Third, Number::Dual) => {
-                cell::PERFECT_SUBJ_ACT_3_DU
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Active, Person::Third, Number::Plural) => {
-                cell::PERFECT_SUBJ_ACT_3_PL
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Middle, Person::First, Number::Singular) => {
-                cell::PERFECT_SUBJ_MID_1_SG
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Middle, Person::First, Number::Dual) => {
-                cell::PERFECT_SUBJ_MID_1_DU
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Middle, Person::First, Number::Plural) => {
-                cell::PERFECT_SUBJ_MID_1_PL
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Middle, Person::Second, Number::Singular) => {
-                cell::PERFECT_SUBJ_MID_2_SG
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Middle, Person::Second, Number::Dual) => {
-                cell::PERFECT_SUBJ_MID_2_DU
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Middle, Person::Second, Number::Plural) => {
-                cell::PERFECT_SUBJ_MID_2_PL
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Middle, Person::Third, Number::Singular) => {
-                cell::PERFECT_SUBJ_MID_3_SG
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Middle, Person::Third, Number::Dual) => {
-                cell::PERFECT_SUBJ_MID_3_DU
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Middle, Person::Third, Number::Plural) => {
-                cell::PERFECT_SUBJ_MID_3_PL
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Passive, Person::First, Number::Singular) => {
-                cell::PERFECT_SUBJ_PASS_1_SG
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Passive, Person::First, Number::Dual) => {
-                cell::PERFECT_SUBJ_PASS_1_DU
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Passive, Person::First, Number::Plural) => {
-                cell::PERFECT_SUBJ_PASS_1_PL
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Passive, Person::Second, Number::Singular) => {
-                cell::PERFECT_SUBJ_PASS_2_SG
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Passive, Person::Second, Number::Dual) => {
-                cell::PERFECT_SUBJ_PASS_2_DU
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Passive, Person::Second, Number::Plural) => {
-                cell::PERFECT_SUBJ_PASS_2_PL
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Passive, Person::Third, Number::Singular) => {
-                cell::PERFECT_SUBJ_PASS_3_SG
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Passive, Person::Third, Number::Dual) => {
-                cell::PERFECT_SUBJ_PASS_3_DU
-            }
-            Cell::Perfect(Mood::Subjunctive, Voice::Passive, Person::Third, Number::Plural) => {
-                cell::PERFECT_SUBJ_PASS_3_PL
-            }
-            Cell::Perfect(Mood::Optative, Voice::Active, Person::First, Number::Singular) => {
-                cell::PERFECT_OPT_ACT_1_SG
-            }
-            Cell::Perfect(Mood::Optative, Voice::Active, Person::First, Number::Dual) => {
-                cell::PERFECT_OPT_ACT_1_DU
-            }
-            Cell::Perfect(Mood::Optative, Voice::Active, Person::First, Number::Plural) => {
-                cell::PERFECT_OPT_ACT_1_PL
-            }
-            Cell::Perfect(Mood::Optative, Voice::Active, Person::Second, Number::Singular) => {
-                cell::PERFECT_OPT_ACT_2_SG
-            }
-            Cell::Perfect(Mood::Optative, Voice::Active, Person::Second, Number::Dual) => {
-                cell::PERFECT_OPT_ACT_2_DU
-            }
-            Cell::Perfect(Mood::Optative, Voice::Active, Person::Second, Number::Plural) => {
-                cell::PERFECT_OPT_ACT_2_PL
-            }
-            Cell::Perfect(Mood::Optative, Voice::Active, Person::Third, Number::Singular) => {
-                cell::PERFECT_OPT_ACT_3_SG
-            }
-            Cell::Perfect(Mood::Optative, Voice::Active, Person::Third, Number::Dual) => {
-                cell::PERFECT_OPT_ACT_3_DU
-            }
-            Cell::Perfect(Mood::Optative, Voice::Active, Person::Third, Number::Plural) => {
-                cell::PERFECT_OPT_ACT_3_PL
-            }
-            Cell::Perfect(Mood::Optative, Voice::Middle, Person::First, Number::Singular) => {
-                cell::PERFECT_OPT_MID_1_SG
-            }
-            Cell::Perfect(Mood::Optative, Voice::Middle, Person::First, Number::Dual) => {
-                cell::PERFECT_OPT_MID_1_DU
-            }
-            Cell::Perfect(Mood::Optative, Voice::Middle, Person::First, Number::Plural) => {
-                cell::PERFECT_OPT_MID_1_PL
-            }
-            Cell::Perfect(Mood::Optative, Voice::Middle, Person::Second, Number::Singular) => {
-                cell::PERFECT_OPT_MID_2_SG
-            }
-            Cell::Perfect(Mood::Optative, Voice::Middle, Person::Second, Number::Dual) => {
-                cell::PERFECT_OPT_MID_2_DU
-            }
-            Cell::Perfect(Mood::Optative, Voice::Middle, Person::Second, Number::Plural) => {
-                cell::PERFECT_OPT_MID_2_PL
-            }
-            Cell::Perfect(Mood::Optative, Voice::Middle, Person::Third, Number::Singular) => {
-                cell::PERFECT_OPT_MID_3_SG
-            }
-            Cell::Perfect(Mood::Optative, Voice::Middle, Person::Third, Number::Dual) => {
-                cell::PERFECT_OPT_MID_3_DU
-            }
-            Cell::Perfect(Mood::Optative, Voice::Middle, Person::Third, Number::Plural) => {
-                cell::PERFECT_OPT_MID_3_PL
-            }
-            Cell::Perfect(Mood::Optative, Voice::Passive, Person::First, Number::Singular) => {
-                cell::PERFECT_OPT_PASS_1_SG
-            }
-            Cell::Perfect(Mood::Optative, Voice::Passive, Person::First, Number::Dual) => {
-                cell::PERFECT_OPT_PASS_1_DU
-            }
-            Cell::Perfect(Mood::Optative, Voice::Passive, Person::First, Number::Plural) => {
-                cell::PERFECT_OPT_PASS_1_PL
-            }
-            Cell::Perfect(Mood::Optative, Voice::Passive, Person::Second, Number::Singular) => {
-                cell::PERFECT_OPT_PASS_2_SG
-            }
-            Cell::Perfect(Mood::Optative, Voice::Passive, Person::Second, Number::Dual) => {
-                cell::PERFECT_OPT_PASS_2_DU
-            }
-            Cell::Perfect(Mood::Optative, Voice::Passive, Person::Second, Number::Plural) => {
-                cell::PERFECT_OPT_PASS_2_PL
-            }
-            Cell::Perfect(Mood::Optative, Voice::Passive, Person::Third, Number::Singular) => {
-                cell::PERFECT_OPT_PASS_3_SG
-            }
-            Cell::Perfect(Mood::Optative, Voice::Passive, Person::Third, Number::Dual) => {
-                cell::PERFECT_OPT_PASS_3_DU
-            }
-            Cell::Perfect(Mood::Optative, Voice::Passive, Person::Third, Number::Plural) => {
-                cell::PERFECT_OPT_PASS_3_PL
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Active, Person::First, Number::Singular) => {
-                cell::PERFECT_IMP_ACT_1_SG
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Active, Person::First, Number::Dual) => {
-                cell::PERFECT_IMP_ACT_1_DU
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Active, Person::First, Number::Plural) => {
-                cell::PERFECT_IMP_ACT_1_PL
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Active, Person::Second, Number::Singular) => {
-                cell::PERFECT_IMP_ACT_2_SG
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Active, Person::Second, Number::Dual) => {
-                cell::PERFECT_IMP_ACT_2_DU
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Active, Person::Second, Number::Plural) => {
-                cell::PERFECT_IMP_ACT_2_PL
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Active, Person::Third, Number::Singular) => {
-                cell::PERFECT_IMP_ACT_3_SG
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Active, Person::Third, Number::Dual) => {
-                cell::PERFECT_IMP_ACT_3_DU
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Active, Person::Third, Number::Plural) => {
-                cell::PERFECT_IMP_ACT_3_PL
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Middle, Person::First, Number::Singular) => {
-                cell::PERFECT_IMP_MID_1_SG
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Middle, Person::First, Number::Dual) => {
-                cell::PERFECT_IMP_MID_1_DU
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Middle, Person::First, Number::Plural) => {
-                cell::PERFECT_IMP_MID_1_PL
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Middle, Person::Second, Number::Singular) => {
-                cell::PERFECT_IMP_MID_2_SG
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Middle, Person::Second, Number::Dual) => {
-                cell::PERFECT_IMP_MID_2_DU
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Middle, Person::Second, Number::Plural) => {
-                cell::PERFECT_IMP_MID_2_PL
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Middle, Person::Third, Number::Singular) => {
-                cell::PERFECT_IMP_MID_3_SG
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Middle, Person::Third, Number::Dual) => {
-                cell::PERFECT_IMP_MID_3_DU
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Middle, Person::Third, Number::Plural) => {
-                cell::PERFECT_IMP_MID_3_PL
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Passive, Person::First, Number::Singular) => {
-                cell::PERFECT_IMP_PASS_1_SG
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Passive, Person::First, Number::Dual) => {
-                cell::PERFECT_IMP_PASS_1_DU
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Passive, Person::First, Number::Plural) => {
-                cell::PERFECT_IMP_PASS_1_PL
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Passive, Person::Second, Number::Singular) => {
-                cell::PERFECT_IMP_PASS_2_SG
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Passive, Person::Second, Number::Dual) => {
-                cell::PERFECT_IMP_PASS_2_DU
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Passive, Person::Second, Number::Plural) => {
-                cell::PERFECT_IMP_PASS_2_PL
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Passive, Person::Third, Number::Singular) => {
-                cell::PERFECT_IMP_PASS_3_SG
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Passive, Person::Third, Number::Dual) => {
-                cell::PERFECT_IMP_PASS_3_DU
-            }
-            Cell::Perfect(Mood::Imperative, Voice::Passive, Person::Third, Number::Plural) => {
-                cell::PERFECT_IMP_PASS_3_PL
-            }
-            Cell::Pluperfect(Voice::Active, Person::First, Number::Singular) => {
-                cell::PLUPERFECT_ACT_1_SG
-            }
-            Cell::Pluperfect(Voice::Active, Person::First, Number::Dual) => {
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::FUTURE_IND_ACT_1_SG,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_IND_ACT_1_DU,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::FUTURE_IND_ACT_1_PL,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::FUTURE_IND_ACT_2_SG,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_IND_ACT_2_DU,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::FUTURE_IND_ACT_2_PL,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::FUTURE_IND_ACT_3_SG,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_IND_ACT_3_DU,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::FUTURE_IND_ACT_3_PL,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::FUTURE_IND_MID_1_SG,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_IND_MID_1_DU,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::FUTURE_IND_MID_1_PL,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::FUTURE_IND_MID_2_SG,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_IND_MID_2_DU,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::FUTURE_IND_MID_2_PL,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::FUTURE_IND_MID_3_SG,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_IND_MID_3_DU,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::FUTURE_IND_MID_3_PL,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::FUTURE_IND_PASS_1_SG,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_IND_PASS_1_DU,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::FUTURE_IND_PASS_1_PL,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::FUTURE_IND_PASS_2_SG,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_IND_PASS_2_DU,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::FUTURE_IND_PASS_2_PL,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::FUTURE_IND_PASS_3_SG,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_IND_PASS_3_DU,
+            Cell::Future(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::FUTURE_IND_PASS_3_PL,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::FUTURE_SUBJ_ACT_1_SG,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_SUBJ_ACT_1_DU,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::FUTURE_SUBJ_ACT_1_PL,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::FUTURE_SUBJ_ACT_2_SG,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_SUBJ_ACT_2_DU,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::FUTURE_SUBJ_ACT_2_PL,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::FUTURE_SUBJ_ACT_3_SG,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_SUBJ_ACT_3_DU,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::FUTURE_SUBJ_ACT_3_PL,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::FUTURE_SUBJ_MID_1_SG,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_SUBJ_MID_1_DU,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::FUTURE_SUBJ_MID_1_PL,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::FUTURE_SUBJ_MID_2_SG,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_SUBJ_MID_2_DU,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::FUTURE_SUBJ_MID_2_PL,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::FUTURE_SUBJ_MID_3_SG,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_SUBJ_MID_3_DU,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::FUTURE_SUBJ_MID_3_PL,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::FUTURE_SUBJ_PASS_1_SG,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_SUBJ_PASS_1_DU,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::FUTURE_SUBJ_PASS_1_PL,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::FUTURE_SUBJ_PASS_2_SG,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_SUBJ_PASS_2_DU,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::FUTURE_SUBJ_PASS_2_PL,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::FUTURE_SUBJ_PASS_3_SG,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_SUBJ_PASS_3_DU,
+            Cell::Future(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::FUTURE_SUBJ_PASS_3_PL,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::FUTURE_OPT_ACT_1_SG,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_OPT_ACT_1_DU,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::FUTURE_OPT_ACT_1_PL,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::FUTURE_OPT_ACT_2_SG,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_OPT_ACT_2_DU,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::FUTURE_OPT_ACT_2_PL,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::FUTURE_OPT_ACT_3_SG,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_OPT_ACT_3_DU,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::FUTURE_OPT_ACT_3_PL,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::FUTURE_OPT_MID_1_SG,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_OPT_MID_1_DU,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::FUTURE_OPT_MID_1_PL,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::FUTURE_OPT_MID_2_SG,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_OPT_MID_2_DU,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::FUTURE_OPT_MID_2_PL,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::FUTURE_OPT_MID_3_SG,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_OPT_MID_3_DU,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::FUTURE_OPT_MID_3_PL,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::FUTURE_OPT_PASS_1_SG,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_OPT_PASS_1_DU,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::FUTURE_OPT_PASS_1_PL,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::FUTURE_OPT_PASS_2_SG,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_OPT_PASS_2_DU,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::FUTURE_OPT_PASS_2_PL,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::FUTURE_OPT_PASS_3_SG,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_OPT_PASS_3_DU,
+            Cell::Future(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::FUTURE_OPT_PASS_3_PL,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::FUTURE_IMP_ACT_1_SG,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_IMP_ACT_1_DU,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::FUTURE_IMP_ACT_1_PL,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::FUTURE_IMP_ACT_2_SG,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_IMP_ACT_2_DU,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::FUTURE_IMP_ACT_2_PL,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::FUTURE_IMP_ACT_3_SG,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_IMP_ACT_3_DU,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::FUTURE_IMP_ACT_3_PL,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::FUTURE_IMP_MID_1_SG,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_IMP_MID_1_DU,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::FUTURE_IMP_MID_1_PL,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::FUTURE_IMP_MID_2_SG,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_IMP_MID_2_DU,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::FUTURE_IMP_MID_2_PL,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::FUTURE_IMP_MID_3_SG,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_IMP_MID_3_DU,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::FUTURE_IMP_MID_3_PL,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::FUTURE_IMP_PASS_1_SG,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_IMP_PASS_1_DU,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::FUTURE_IMP_PASS_1_PL,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::FUTURE_IMP_PASS_2_SG,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_IMP_PASS_2_DU,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::FUTURE_IMP_PASS_2_PL,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::FUTURE_IMP_PASS_3_SG,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_IMP_PASS_3_DU,
+            Cell::Future(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::FUTURE_IMP_PASS_3_PL,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::AORIST_IND_ACT_1_SG,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::AORIST_IND_ACT_1_DU,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::AORIST_IND_ACT_1_PL,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::AORIST_IND_ACT_2_SG,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::AORIST_IND_ACT_2_DU,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::AORIST_IND_ACT_2_PL,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::AORIST_IND_ACT_3_SG,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::AORIST_IND_ACT_3_DU,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::AORIST_IND_ACT_3_PL,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::AORIST_IND_MID_1_SG,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::AORIST_IND_MID_1_DU,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::AORIST_IND_MID_1_PL,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::AORIST_IND_MID_2_SG,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::AORIST_IND_MID_2_DU,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::AORIST_IND_MID_2_PL,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::AORIST_IND_MID_3_SG,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::AORIST_IND_MID_3_DU,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::AORIST_IND_MID_3_PL,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::AORIST_IND_PASS_1_SG,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::AORIST_IND_PASS_1_DU,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::AORIST_IND_PASS_1_PL,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::AORIST_IND_PASS_2_SG,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::AORIST_IND_PASS_2_DU,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::AORIST_IND_PASS_2_PL,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::AORIST_IND_PASS_3_SG,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::AORIST_IND_PASS_3_DU,
+            Cell::Aorist(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::AORIST_IND_PASS_3_PL,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::AORIST_SUBJ_ACT_1_SG,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::AORIST_SUBJ_ACT_1_DU,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::AORIST_SUBJ_ACT_1_PL,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::AORIST_SUBJ_ACT_2_SG,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::AORIST_SUBJ_ACT_2_DU,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::AORIST_SUBJ_ACT_2_PL,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::AORIST_SUBJ_ACT_3_SG,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::AORIST_SUBJ_ACT_3_DU,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::AORIST_SUBJ_ACT_3_PL,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::AORIST_SUBJ_MID_1_SG,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::AORIST_SUBJ_MID_1_DU,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::AORIST_SUBJ_MID_1_PL,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::AORIST_SUBJ_MID_2_SG,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::AORIST_SUBJ_MID_2_DU,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::AORIST_SUBJ_MID_2_PL,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::AORIST_SUBJ_MID_3_SG,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::AORIST_SUBJ_MID_3_DU,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::AORIST_SUBJ_MID_3_PL,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::AORIST_SUBJ_PASS_1_SG,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::AORIST_SUBJ_PASS_1_DU,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::AORIST_SUBJ_PASS_1_PL,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::AORIST_SUBJ_PASS_2_SG,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::AORIST_SUBJ_PASS_2_DU,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::AORIST_SUBJ_PASS_2_PL,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::AORIST_SUBJ_PASS_3_SG,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::AORIST_SUBJ_PASS_3_DU,
+            Cell::Aorist(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::AORIST_SUBJ_PASS_3_PL,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::AORIST_OPT_ACT_1_SG,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::AORIST_OPT_ACT_1_DU,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::AORIST_OPT_ACT_1_PL,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::AORIST_OPT_ACT_2_SG,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::AORIST_OPT_ACT_2_DU,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::AORIST_OPT_ACT_2_PL,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::AORIST_OPT_ACT_3_SG,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::AORIST_OPT_ACT_3_DU,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::AORIST_OPT_ACT_3_PL,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::AORIST_OPT_MID_1_SG,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::AORIST_OPT_MID_1_DU,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::AORIST_OPT_MID_1_PL,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::AORIST_OPT_MID_2_SG,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::AORIST_OPT_MID_2_DU,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::AORIST_OPT_MID_2_PL,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::AORIST_OPT_MID_3_SG,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::AORIST_OPT_MID_3_DU,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::AORIST_OPT_MID_3_PL,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::AORIST_OPT_PASS_1_SG,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::AORIST_OPT_PASS_1_DU,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::AORIST_OPT_PASS_1_PL,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::AORIST_OPT_PASS_2_SG,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::AORIST_OPT_PASS_2_DU,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::AORIST_OPT_PASS_2_PL,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::AORIST_OPT_PASS_3_SG,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::AORIST_OPT_PASS_3_DU,
+            Cell::Aorist(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::AORIST_OPT_PASS_3_PL,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::AORIST_IMP_ACT_1_SG,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::AORIST_IMP_ACT_1_DU,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::AORIST_IMP_ACT_1_PL,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::AORIST_IMP_ACT_2_SG,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::AORIST_IMP_ACT_2_DU,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::AORIST_IMP_ACT_2_PL,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::AORIST_IMP_ACT_3_SG,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::AORIST_IMP_ACT_3_DU,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::AORIST_IMP_ACT_3_PL,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::AORIST_IMP_MID_1_SG,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::AORIST_IMP_MID_1_DU,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::AORIST_IMP_MID_1_PL,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::AORIST_IMP_MID_2_SG,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::AORIST_IMP_MID_2_DU,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::AORIST_IMP_MID_2_PL,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::AORIST_IMP_MID_3_SG,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::AORIST_IMP_MID_3_DU,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::AORIST_IMP_MID_3_PL,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::AORIST_IMP_PASS_1_SG,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::AORIST_IMP_PASS_1_DU,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::AORIST_IMP_PASS_1_PL,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::AORIST_IMP_PASS_2_SG,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::AORIST_IMP_PASS_2_DU,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::AORIST_IMP_PASS_2_PL,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::AORIST_IMP_PASS_3_SG,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::AORIST_IMP_PASS_3_DU,
+            Cell::Aorist(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::AORIST_IMP_PASS_3_PL,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::PERFECT_IND_ACT_1_SG,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::PERFECT_IND_ACT_1_DU,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::PERFECT_IND_ACT_1_PL,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::PERFECT_IND_ACT_2_SG,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::PERFECT_IND_ACT_2_DU,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::PERFECT_IND_ACT_2_PL,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::PERFECT_IND_ACT_3_SG,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::PERFECT_IND_ACT_3_DU,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::PERFECT_IND_ACT_3_PL,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::PERFECT_IND_MID_1_SG,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::PERFECT_IND_MID_1_DU,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::PERFECT_IND_MID_1_PL,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::PERFECT_IND_MID_2_SG,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::PERFECT_IND_MID_2_DU,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::PERFECT_IND_MID_2_PL,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::PERFECT_IND_MID_3_SG,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::PERFECT_IND_MID_3_DU,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::PERFECT_IND_MID_3_PL,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::PERFECT_IND_PASS_1_SG,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::PERFECT_IND_PASS_1_DU,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::PERFECT_IND_PASS_1_PL,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::PERFECT_IND_PASS_2_SG,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::PERFECT_IND_PASS_2_DU,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::PERFECT_IND_PASS_2_PL,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::PERFECT_IND_PASS_3_SG,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::PERFECT_IND_PASS_3_DU,
+            Cell::Perfect(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::PERFECT_IND_PASS_3_PL,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::PERFECT_SUBJ_ACT_1_SG,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::PERFECT_SUBJ_ACT_1_DU,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::PERFECT_SUBJ_ACT_1_PL,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::PERFECT_SUBJ_ACT_2_SG,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::PERFECT_SUBJ_ACT_2_DU,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::PERFECT_SUBJ_ACT_2_PL,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::PERFECT_SUBJ_ACT_3_SG,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::PERFECT_SUBJ_ACT_3_DU,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::PERFECT_SUBJ_ACT_3_PL,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::PERFECT_SUBJ_MID_1_SG,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::PERFECT_SUBJ_MID_1_DU,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::PERFECT_SUBJ_MID_1_PL,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::PERFECT_SUBJ_MID_2_SG,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::PERFECT_SUBJ_MID_2_DU,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::PERFECT_SUBJ_MID_2_PL,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::PERFECT_SUBJ_MID_3_SG,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::PERFECT_SUBJ_MID_3_DU,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::PERFECT_SUBJ_MID_3_PL,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::PERFECT_SUBJ_PASS_1_SG,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::PERFECT_SUBJ_PASS_1_DU,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::PERFECT_SUBJ_PASS_1_PL,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::PERFECT_SUBJ_PASS_2_SG,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::PERFECT_SUBJ_PASS_2_DU,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::PERFECT_SUBJ_PASS_2_PL,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::PERFECT_SUBJ_PASS_3_SG,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::PERFECT_SUBJ_PASS_3_DU,
+            Cell::Perfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::PERFECT_SUBJ_PASS_3_PL,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::PERFECT_OPT_ACT_1_SG,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::PERFECT_OPT_ACT_1_DU,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::PERFECT_OPT_ACT_1_PL,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::PERFECT_OPT_ACT_2_SG,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::PERFECT_OPT_ACT_2_DU,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::PERFECT_OPT_ACT_2_PL,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::PERFECT_OPT_ACT_3_SG,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::PERFECT_OPT_ACT_3_DU,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::PERFECT_OPT_ACT_3_PL,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::PERFECT_OPT_MID_1_SG,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::PERFECT_OPT_MID_1_DU,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::PERFECT_OPT_MID_1_PL,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::PERFECT_OPT_MID_2_SG,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::PERFECT_OPT_MID_2_DU,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::PERFECT_OPT_MID_2_PL,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::PERFECT_OPT_MID_3_SG,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::PERFECT_OPT_MID_3_DU,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::PERFECT_OPT_MID_3_PL,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::PERFECT_OPT_PASS_1_SG,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::PERFECT_OPT_PASS_1_DU,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::PERFECT_OPT_PASS_1_PL,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::PERFECT_OPT_PASS_2_SG,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::PERFECT_OPT_PASS_2_DU,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::PERFECT_OPT_PASS_2_PL,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::PERFECT_OPT_PASS_3_SG,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::PERFECT_OPT_PASS_3_DU,
+            Cell::Perfect(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::PERFECT_OPT_PASS_3_PL,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::PERFECT_IMP_ACT_1_SG,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::PERFECT_IMP_ACT_1_DU,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::PERFECT_IMP_ACT_1_PL,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::PERFECT_IMP_ACT_2_SG,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::PERFECT_IMP_ACT_2_DU,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::PERFECT_IMP_ACT_2_PL,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::PERFECT_IMP_ACT_3_SG,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::PERFECT_IMP_ACT_3_DU,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::PERFECT_IMP_ACT_3_PL,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::PERFECT_IMP_MID_1_SG,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::PERFECT_IMP_MID_1_DU,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::PERFECT_IMP_MID_1_PL,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::PERFECT_IMP_MID_2_SG,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::PERFECT_IMP_MID_2_DU,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::PERFECT_IMP_MID_2_PL,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::PERFECT_IMP_MID_3_SG,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::PERFECT_IMP_MID_3_DU,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::PERFECT_IMP_MID_3_PL,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::PERFECT_IMP_PASS_1_SG,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::PERFECT_IMP_PASS_1_DU,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::PERFECT_IMP_PASS_1_PL,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::PERFECT_IMP_PASS_2_SG,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::PERFECT_IMP_PASS_2_DU,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::PERFECT_IMP_PASS_2_PL,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::PERFECT_IMP_PASS_3_SG,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::PERFECT_IMP_PASS_3_DU,
+            Cell::Perfect(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::PERFECT_IMP_PASS_3_PL,
+            Cell::Pluperfect(
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::PLUPERFECT_ACT_1_SG,
+            Cell::Pluperfect(crate::Voice::Active, crate::Person::First, crate::Number::Dual) => {
                 cell::PLUPERFECT_ACT_1_DU
             }
-            Cell::Pluperfect(Voice::Active, Person::First, Number::Plural) => {
+            Cell::Pluperfect(crate::Voice::Active, crate::Person::First, crate::Number::Plural) => {
                 cell::PLUPERFECT_ACT_1_PL
             }
-            Cell::Pluperfect(Voice::Active, Person::Second, Number::Singular) => {
-                cell::PLUPERFECT_ACT_2_SG
-            }
-            Cell::Pluperfect(Voice::Active, Person::Second, Number::Dual) => {
+            Cell::Pluperfect(
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::PLUPERFECT_ACT_2_SG,
+            Cell::Pluperfect(crate::Voice::Active, crate::Person::Second, crate::Number::Dual) => {
                 cell::PLUPERFECT_ACT_2_DU
             }
-            Cell::Pluperfect(Voice::Active, Person::Second, Number::Plural) => {
-                cell::PLUPERFECT_ACT_2_PL
-            }
-            Cell::Pluperfect(Voice::Active, Person::Third, Number::Singular) => {
-                cell::PLUPERFECT_ACT_3_SG
-            }
-            Cell::Pluperfect(Voice::Active, Person::Third, Number::Dual) => {
+            Cell::Pluperfect(
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::PLUPERFECT_ACT_2_PL,
+            Cell::Pluperfect(
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::PLUPERFECT_ACT_3_SG,
+            Cell::Pluperfect(crate::Voice::Active, crate::Person::Third, crate::Number::Dual) => {
                 cell::PLUPERFECT_ACT_3_DU
             }
-            Cell::Pluperfect(Voice::Active, Person::Third, Number::Plural) => {
+            Cell::Pluperfect(crate::Voice::Active, crate::Person::Third, crate::Number::Plural) => {
                 cell::PLUPERFECT_ACT_3_PL
             }
-            Cell::Pluperfect(Voice::Middle, Person::First, Number::Singular) => {
-                cell::PLUPERFECT_MID_1_SG
-            }
-            Cell::Pluperfect(Voice::Middle, Person::First, Number::Dual) => {
+            Cell::Pluperfect(
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::PLUPERFECT_MID_1_SG,
+            Cell::Pluperfect(crate::Voice::Middle, crate::Person::First, crate::Number::Dual) => {
                 cell::PLUPERFECT_MID_1_DU
             }
-            Cell::Pluperfect(Voice::Middle, Person::First, Number::Plural) => {
+            Cell::Pluperfect(crate::Voice::Middle, crate::Person::First, crate::Number::Plural) => {
                 cell::PLUPERFECT_MID_1_PL
             }
-            Cell::Pluperfect(Voice::Middle, Person::Second, Number::Singular) => {
-                cell::PLUPERFECT_MID_2_SG
-            }
-            Cell::Pluperfect(Voice::Middle, Person::Second, Number::Dual) => {
+            Cell::Pluperfect(
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::PLUPERFECT_MID_2_SG,
+            Cell::Pluperfect(crate::Voice::Middle, crate::Person::Second, crate::Number::Dual) => {
                 cell::PLUPERFECT_MID_2_DU
             }
-            Cell::Pluperfect(Voice::Middle, Person::Second, Number::Plural) => {
-                cell::PLUPERFECT_MID_2_PL
-            }
-            Cell::Pluperfect(Voice::Middle, Person::Third, Number::Singular) => {
-                cell::PLUPERFECT_MID_3_SG
-            }
-            Cell::Pluperfect(Voice::Middle, Person::Third, Number::Dual) => {
+            Cell::Pluperfect(
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::PLUPERFECT_MID_2_PL,
+            Cell::Pluperfect(
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::PLUPERFECT_MID_3_SG,
+            Cell::Pluperfect(crate::Voice::Middle, crate::Person::Third, crate::Number::Dual) => {
                 cell::PLUPERFECT_MID_3_DU
             }
-            Cell::Pluperfect(Voice::Middle, Person::Third, Number::Plural) => {
+            Cell::Pluperfect(crate::Voice::Middle, crate::Person::Third, crate::Number::Plural) => {
                 cell::PLUPERFECT_MID_3_PL
             }
-            Cell::Pluperfect(Voice::Passive, Person::First, Number::Singular) => {
-                cell::PLUPERFECT_PASS_1_SG
-            }
-            Cell::Pluperfect(Voice::Passive, Person::First, Number::Dual) => {
+            Cell::Pluperfect(
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::PLUPERFECT_PASS_1_SG,
+            Cell::Pluperfect(crate::Voice::Passive, crate::Person::First, crate::Number::Dual) => {
                 cell::PLUPERFECT_PASS_1_DU
             }
-            Cell::Pluperfect(Voice::Passive, Person::First, Number::Plural) => {
-                cell::PLUPERFECT_PASS_1_PL
-            }
-            Cell::Pluperfect(Voice::Passive, Person::Second, Number::Singular) => {
-                cell::PLUPERFECT_PASS_2_SG
-            }
-            Cell::Pluperfect(Voice::Passive, Person::Second, Number::Dual) => {
+            Cell::Pluperfect(
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::PLUPERFECT_PASS_1_PL,
+            Cell::Pluperfect(
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::PLUPERFECT_PASS_2_SG,
+            Cell::Pluperfect(crate::Voice::Passive, crate::Person::Second, crate::Number::Dual) => {
                 cell::PLUPERFECT_PASS_2_DU
             }
-            Cell::Pluperfect(Voice::Passive, Person::Second, Number::Plural) => {
-                cell::PLUPERFECT_PASS_2_PL
-            }
-            Cell::Pluperfect(Voice::Passive, Person::Third, Number::Singular) => {
-                cell::PLUPERFECT_PASS_3_SG
-            }
-            Cell::Pluperfect(Voice::Passive, Person::Third, Number::Dual) => {
+            Cell::Pluperfect(
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::PLUPERFECT_PASS_2_PL,
+            Cell::Pluperfect(
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::PLUPERFECT_PASS_3_SG,
+            Cell::Pluperfect(crate::Voice::Passive, crate::Person::Third, crate::Number::Dual) => {
                 cell::PLUPERFECT_PASS_3_DU
             }
-            Cell::Pluperfect(Voice::Passive, Person::Third, Number::Plural) => {
-                cell::PLUPERFECT_PASS_3_PL
-            }
+            Cell::Pluperfect(
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::PLUPERFECT_PASS_3_PL,
             Cell::FuturePerfect(
-                Mood::Indicative,
-                Voice::Active,
-                Person::First,
-                Number::Singular,
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_IND_ACT_1_SG,
-            Cell::FuturePerfect(Mood::Indicative, Voice::Active, Person::First, Number::Dual) => {
-                cell::FUTURE_PERFECT_IND_ACT_1_DU
-            }
-            Cell::FuturePerfect(Mood::Indicative, Voice::Active, Person::First, Number::Plural) => {
-                cell::FUTURE_PERFECT_IND_ACT_1_PL
-            }
             Cell::FuturePerfect(
-                Mood::Indicative,
-                Voice::Active,
-                Person::Second,
-                Number::Singular,
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_IND_ACT_1_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::FUTURE_PERFECT_IND_ACT_1_PL,
+            Cell::FuturePerfect(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_IND_ACT_2_SG,
-            Cell::FuturePerfect(Mood::Indicative, Voice::Active, Person::Second, Number::Dual) => {
-                cell::FUTURE_PERFECT_IND_ACT_2_DU
-            }
             Cell::FuturePerfect(
-                Mood::Indicative,
-                Voice::Active,
-                Person::Second,
-                Number::Plural,
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_IND_ACT_2_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Plural,
             ) => cell::FUTURE_PERFECT_IND_ACT_2_PL,
             Cell::FuturePerfect(
-                Mood::Indicative,
-                Voice::Active,
-                Person::Third,
-                Number::Singular,
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_IND_ACT_3_SG,
-            Cell::FuturePerfect(Mood::Indicative, Voice::Active, Person::Third, Number::Dual) => {
-                cell::FUTURE_PERFECT_IND_ACT_3_DU
-            }
-            Cell::FuturePerfect(Mood::Indicative, Voice::Active, Person::Third, Number::Plural) => {
-                cell::FUTURE_PERFECT_IND_ACT_3_PL
-            }
             Cell::FuturePerfect(
-                Mood::Indicative,
-                Voice::Middle,
-                Person::First,
-                Number::Singular,
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_IND_ACT_3_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Indicative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::FUTURE_PERFECT_IND_ACT_3_PL,
+            Cell::FuturePerfect(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_IND_MID_1_SG,
-            Cell::FuturePerfect(Mood::Indicative, Voice::Middle, Person::First, Number::Dual) => {
-                cell::FUTURE_PERFECT_IND_MID_1_DU
-            }
-            Cell::FuturePerfect(Mood::Indicative, Voice::Middle, Person::First, Number::Plural) => {
-                cell::FUTURE_PERFECT_IND_MID_1_PL
-            }
             Cell::FuturePerfect(
-                Mood::Indicative,
-                Voice::Middle,
-                Person::Second,
-                Number::Singular,
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_IND_MID_1_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::FUTURE_PERFECT_IND_MID_1_PL,
+            Cell::FuturePerfect(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_IND_MID_2_SG,
-            Cell::FuturePerfect(Mood::Indicative, Voice::Middle, Person::Second, Number::Dual) => {
-                cell::FUTURE_PERFECT_IND_MID_2_DU
-            }
             Cell::FuturePerfect(
-                Mood::Indicative,
-                Voice::Middle,
-                Person::Second,
-                Number::Plural,
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_IND_MID_2_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Plural,
             ) => cell::FUTURE_PERFECT_IND_MID_2_PL,
             Cell::FuturePerfect(
-                Mood::Indicative,
-                Voice::Middle,
-                Person::Third,
-                Number::Singular,
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_IND_MID_3_SG,
-            Cell::FuturePerfect(Mood::Indicative, Voice::Middle, Person::Third, Number::Dual) => {
-                cell::FUTURE_PERFECT_IND_MID_3_DU
-            }
-            Cell::FuturePerfect(Mood::Indicative, Voice::Middle, Person::Third, Number::Plural) => {
-                cell::FUTURE_PERFECT_IND_MID_3_PL
-            }
             Cell::FuturePerfect(
-                Mood::Indicative,
-                Voice::Passive,
-                Person::First,
-                Number::Singular,
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_IND_MID_3_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Indicative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::FUTURE_PERFECT_IND_MID_3_PL,
+            Cell::FuturePerfect(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_IND_PASS_1_SG,
-            Cell::FuturePerfect(Mood::Indicative, Voice::Passive, Person::First, Number::Dual) => {
-                cell::FUTURE_PERFECT_IND_PASS_1_DU
-            }
             Cell::FuturePerfect(
-                Mood::Indicative,
-                Voice::Passive,
-                Person::First,
-                Number::Plural,
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_IND_PASS_1_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Plural,
             ) => cell::FUTURE_PERFECT_IND_PASS_1_PL,
             Cell::FuturePerfect(
-                Mood::Indicative,
-                Voice::Passive,
-                Person::Second,
-                Number::Singular,
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_IND_PASS_2_SG,
-            Cell::FuturePerfect(Mood::Indicative, Voice::Passive, Person::Second, Number::Dual) => {
-                cell::FUTURE_PERFECT_IND_PASS_2_DU
-            }
             Cell::FuturePerfect(
-                Mood::Indicative,
-                Voice::Passive,
-                Person::Second,
-                Number::Plural,
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_IND_PASS_2_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Plural,
             ) => cell::FUTURE_PERFECT_IND_PASS_2_PL,
             Cell::FuturePerfect(
-                Mood::Indicative,
-                Voice::Passive,
-                Person::Third,
-                Number::Singular,
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_IND_PASS_3_SG,
-            Cell::FuturePerfect(Mood::Indicative, Voice::Passive, Person::Third, Number::Dual) => {
-                cell::FUTURE_PERFECT_IND_PASS_3_DU
-            }
             Cell::FuturePerfect(
-                Mood::Indicative,
-                Voice::Passive,
-                Person::Third,
-                Number::Plural,
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_IND_PASS_3_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Indicative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Plural,
             ) => cell::FUTURE_PERFECT_IND_PASS_3_PL,
             Cell::FuturePerfect(
-                Mood::Subjunctive,
-                Voice::Active,
-                Person::First,
-                Number::Singular,
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_SUBJ_ACT_1_SG,
-            Cell::FuturePerfect(Mood::Subjunctive, Voice::Active, Person::First, Number::Dual) => {
-                cell::FUTURE_PERFECT_SUBJ_ACT_1_DU
-            }
             Cell::FuturePerfect(
-                Mood::Subjunctive,
-                Voice::Active,
-                Person::First,
-                Number::Plural,
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_SUBJ_ACT_1_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Plural,
             ) => cell::FUTURE_PERFECT_SUBJ_ACT_1_PL,
             Cell::FuturePerfect(
-                Mood::Subjunctive,
-                Voice::Active,
-                Person::Second,
-                Number::Singular,
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_SUBJ_ACT_2_SG,
-            Cell::FuturePerfect(Mood::Subjunctive, Voice::Active, Person::Second, Number::Dual) => {
-                cell::FUTURE_PERFECT_SUBJ_ACT_2_DU
-            }
             Cell::FuturePerfect(
-                Mood::Subjunctive,
-                Voice::Active,
-                Person::Second,
-                Number::Plural,
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_SUBJ_ACT_2_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Plural,
             ) => cell::FUTURE_PERFECT_SUBJ_ACT_2_PL,
             Cell::FuturePerfect(
-                Mood::Subjunctive,
-                Voice::Active,
-                Person::Third,
-                Number::Singular,
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_SUBJ_ACT_3_SG,
-            Cell::FuturePerfect(Mood::Subjunctive, Voice::Active, Person::Third, Number::Dual) => {
-                cell::FUTURE_PERFECT_SUBJ_ACT_3_DU
-            }
             Cell::FuturePerfect(
-                Mood::Subjunctive,
-                Voice::Active,
-                Person::Third,
-                Number::Plural,
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_SUBJ_ACT_3_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Plural,
             ) => cell::FUTURE_PERFECT_SUBJ_ACT_3_PL,
             Cell::FuturePerfect(
-                Mood::Subjunctive,
-                Voice::Middle,
-                Person::First,
-                Number::Singular,
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_SUBJ_MID_1_SG,
-            Cell::FuturePerfect(Mood::Subjunctive, Voice::Middle, Person::First, Number::Dual) => {
-                cell::FUTURE_PERFECT_SUBJ_MID_1_DU
-            }
             Cell::FuturePerfect(
-                Mood::Subjunctive,
-                Voice::Middle,
-                Person::First,
-                Number::Plural,
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_SUBJ_MID_1_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Plural,
             ) => cell::FUTURE_PERFECT_SUBJ_MID_1_PL,
             Cell::FuturePerfect(
-                Mood::Subjunctive,
-                Voice::Middle,
-                Person::Second,
-                Number::Singular,
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_SUBJ_MID_2_SG,
-            Cell::FuturePerfect(Mood::Subjunctive, Voice::Middle, Person::Second, Number::Dual) => {
-                cell::FUTURE_PERFECT_SUBJ_MID_2_DU
-            }
             Cell::FuturePerfect(
-                Mood::Subjunctive,
-                Voice::Middle,
-                Person::Second,
-                Number::Plural,
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_SUBJ_MID_2_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Plural,
             ) => cell::FUTURE_PERFECT_SUBJ_MID_2_PL,
             Cell::FuturePerfect(
-                Mood::Subjunctive,
-                Voice::Middle,
-                Person::Third,
-                Number::Singular,
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_SUBJ_MID_3_SG,
-            Cell::FuturePerfect(Mood::Subjunctive, Voice::Middle, Person::Third, Number::Dual) => {
-                cell::FUTURE_PERFECT_SUBJ_MID_3_DU
-            }
             Cell::FuturePerfect(
-                Mood::Subjunctive,
-                Voice::Middle,
-                Person::Third,
-                Number::Plural,
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_SUBJ_MID_3_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Plural,
             ) => cell::FUTURE_PERFECT_SUBJ_MID_3_PL,
             Cell::FuturePerfect(
-                Mood::Subjunctive,
-                Voice::Passive,
-                Person::First,
-                Number::Singular,
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_SUBJ_PASS_1_SG,
-            Cell::FuturePerfect(Mood::Subjunctive, Voice::Passive, Person::First, Number::Dual) => {
-                cell::FUTURE_PERFECT_SUBJ_PASS_1_DU
-            }
             Cell::FuturePerfect(
-                Mood::Subjunctive,
-                Voice::Passive,
-                Person::First,
-                Number::Plural,
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_SUBJ_PASS_1_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Plural,
             ) => cell::FUTURE_PERFECT_SUBJ_PASS_1_PL,
             Cell::FuturePerfect(
-                Mood::Subjunctive,
-                Voice::Passive,
-                Person::Second,
-                Number::Singular,
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_SUBJ_PASS_2_SG,
             Cell::FuturePerfect(
-                Mood::Subjunctive,
-                Voice::Passive,
-                Person::Second,
-                Number::Dual,
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Dual,
             ) => cell::FUTURE_PERFECT_SUBJ_PASS_2_DU,
             Cell::FuturePerfect(
-                Mood::Subjunctive,
-                Voice::Passive,
-                Person::Second,
-                Number::Plural,
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Plural,
             ) => cell::FUTURE_PERFECT_SUBJ_PASS_2_PL,
             Cell::FuturePerfect(
-                Mood::Subjunctive,
-                Voice::Passive,
-                Person::Third,
-                Number::Singular,
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_SUBJ_PASS_3_SG,
-            Cell::FuturePerfect(Mood::Subjunctive, Voice::Passive, Person::Third, Number::Dual) => {
-                cell::FUTURE_PERFECT_SUBJ_PASS_3_DU
-            }
             Cell::FuturePerfect(
-                Mood::Subjunctive,
-                Voice::Passive,
-                Person::Third,
-                Number::Plural,
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_SUBJ_PASS_3_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Subjunctive,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Plural,
             ) => cell::FUTURE_PERFECT_SUBJ_PASS_3_PL,
-            Cell::FuturePerfect(Mood::Optative, Voice::Active, Person::First, Number::Singular) => {
-                cell::FUTURE_PERFECT_OPT_ACT_1_SG
-            }
-            Cell::FuturePerfect(Mood::Optative, Voice::Active, Person::First, Number::Dual) => {
-                cell::FUTURE_PERFECT_OPT_ACT_1_DU
-            }
-            Cell::FuturePerfect(Mood::Optative, Voice::Active, Person::First, Number::Plural) => {
-                cell::FUTURE_PERFECT_OPT_ACT_1_PL
-            }
             Cell::FuturePerfect(
-                Mood::Optative,
-                Voice::Active,
-                Person::Second,
-                Number::Singular,
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::FUTURE_PERFECT_OPT_ACT_1_SG,
+            Cell::FuturePerfect(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_OPT_ACT_1_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::FUTURE_PERFECT_OPT_ACT_1_PL,
+            Cell::FuturePerfect(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_OPT_ACT_2_SG,
-            Cell::FuturePerfect(Mood::Optative, Voice::Active, Person::Second, Number::Dual) => {
-                cell::FUTURE_PERFECT_OPT_ACT_2_DU
-            }
-            Cell::FuturePerfect(Mood::Optative, Voice::Active, Person::Second, Number::Plural) => {
-                cell::FUTURE_PERFECT_OPT_ACT_2_PL
-            }
-            Cell::FuturePerfect(Mood::Optative, Voice::Active, Person::Third, Number::Singular) => {
-                cell::FUTURE_PERFECT_OPT_ACT_3_SG
-            }
-            Cell::FuturePerfect(Mood::Optative, Voice::Active, Person::Third, Number::Dual) => {
-                cell::FUTURE_PERFECT_OPT_ACT_3_DU
-            }
-            Cell::FuturePerfect(Mood::Optative, Voice::Active, Person::Third, Number::Plural) => {
-                cell::FUTURE_PERFECT_OPT_ACT_3_PL
-            }
-            Cell::FuturePerfect(Mood::Optative, Voice::Middle, Person::First, Number::Singular) => {
-                cell::FUTURE_PERFECT_OPT_MID_1_SG
-            }
-            Cell::FuturePerfect(Mood::Optative, Voice::Middle, Person::First, Number::Dual) => {
-                cell::FUTURE_PERFECT_OPT_MID_1_DU
-            }
-            Cell::FuturePerfect(Mood::Optative, Voice::Middle, Person::First, Number::Plural) => {
-                cell::FUTURE_PERFECT_OPT_MID_1_PL
-            }
             Cell::FuturePerfect(
-                Mood::Optative,
-                Voice::Middle,
-                Person::Second,
-                Number::Singular,
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_OPT_ACT_2_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::FUTURE_PERFECT_OPT_ACT_2_PL,
+            Cell::FuturePerfect(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::FUTURE_PERFECT_OPT_ACT_3_SG,
+            Cell::FuturePerfect(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_OPT_ACT_3_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Optative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::FUTURE_PERFECT_OPT_ACT_3_PL,
+            Cell::FuturePerfect(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::FUTURE_PERFECT_OPT_MID_1_SG,
+            Cell::FuturePerfect(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_OPT_MID_1_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::FUTURE_PERFECT_OPT_MID_1_PL,
+            Cell::FuturePerfect(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_OPT_MID_2_SG,
-            Cell::FuturePerfect(Mood::Optative, Voice::Middle, Person::Second, Number::Dual) => {
-                cell::FUTURE_PERFECT_OPT_MID_2_DU
-            }
-            Cell::FuturePerfect(Mood::Optative, Voice::Middle, Person::Second, Number::Plural) => {
-                cell::FUTURE_PERFECT_OPT_MID_2_PL
-            }
-            Cell::FuturePerfect(Mood::Optative, Voice::Middle, Person::Third, Number::Singular) => {
-                cell::FUTURE_PERFECT_OPT_MID_3_SG
-            }
-            Cell::FuturePerfect(Mood::Optative, Voice::Middle, Person::Third, Number::Dual) => {
-                cell::FUTURE_PERFECT_OPT_MID_3_DU
-            }
-            Cell::FuturePerfect(Mood::Optative, Voice::Middle, Person::Third, Number::Plural) => {
-                cell::FUTURE_PERFECT_OPT_MID_3_PL
-            }
             Cell::FuturePerfect(
-                Mood::Optative,
-                Voice::Passive,
-                Person::First,
-                Number::Singular,
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_OPT_MID_2_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::FUTURE_PERFECT_OPT_MID_2_PL,
+            Cell::FuturePerfect(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::FUTURE_PERFECT_OPT_MID_3_SG,
+            Cell::FuturePerfect(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_OPT_MID_3_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Optative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::FUTURE_PERFECT_OPT_MID_3_PL,
+            Cell::FuturePerfect(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_OPT_PASS_1_SG,
-            Cell::FuturePerfect(Mood::Optative, Voice::Passive, Person::First, Number::Dual) => {
-                cell::FUTURE_PERFECT_OPT_PASS_1_DU
-            }
-            Cell::FuturePerfect(Mood::Optative, Voice::Passive, Person::First, Number::Plural) => {
-                cell::FUTURE_PERFECT_OPT_PASS_1_PL
-            }
             Cell::FuturePerfect(
-                Mood::Optative,
-                Voice::Passive,
-                Person::Second,
-                Number::Singular,
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_OPT_PASS_1_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::FUTURE_PERFECT_OPT_PASS_1_PL,
+            Cell::FuturePerfect(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_OPT_PASS_2_SG,
-            Cell::FuturePerfect(Mood::Optative, Voice::Passive, Person::Second, Number::Dual) => {
-                cell::FUTURE_PERFECT_OPT_PASS_2_DU
-            }
-            Cell::FuturePerfect(Mood::Optative, Voice::Passive, Person::Second, Number::Plural) => {
-                cell::FUTURE_PERFECT_OPT_PASS_2_PL
-            }
             Cell::FuturePerfect(
-                Mood::Optative,
-                Voice::Passive,
-                Person::Third,
-                Number::Singular,
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_OPT_PASS_2_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::FUTURE_PERFECT_OPT_PASS_2_PL,
+            Cell::FuturePerfect(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_OPT_PASS_3_SG,
-            Cell::FuturePerfect(Mood::Optative, Voice::Passive, Person::Third, Number::Dual) => {
-                cell::FUTURE_PERFECT_OPT_PASS_3_DU
-            }
-            Cell::FuturePerfect(Mood::Optative, Voice::Passive, Person::Third, Number::Plural) => {
-                cell::FUTURE_PERFECT_OPT_PASS_3_PL
-            }
             Cell::FuturePerfect(
-                Mood::Imperative,
-                Voice::Active,
-                Person::First,
-                Number::Singular,
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_OPT_PASS_3_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Optative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::FUTURE_PERFECT_OPT_PASS_3_PL,
+            Cell::FuturePerfect(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_IMP_ACT_1_SG,
-            Cell::FuturePerfect(Mood::Imperative, Voice::Active, Person::First, Number::Dual) => {
-                cell::FUTURE_PERFECT_IMP_ACT_1_DU
-            }
-            Cell::FuturePerfect(Mood::Imperative, Voice::Active, Person::First, Number::Plural) => {
-                cell::FUTURE_PERFECT_IMP_ACT_1_PL
-            }
             Cell::FuturePerfect(
-                Mood::Imperative,
-                Voice::Active,
-                Person::Second,
-                Number::Singular,
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_IMP_ACT_1_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::FUTURE_PERFECT_IMP_ACT_1_PL,
+            Cell::FuturePerfect(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_IMP_ACT_2_SG,
-            Cell::FuturePerfect(Mood::Imperative, Voice::Active, Person::Second, Number::Dual) => {
-                cell::FUTURE_PERFECT_IMP_ACT_2_DU
-            }
             Cell::FuturePerfect(
-                Mood::Imperative,
-                Voice::Active,
-                Person::Second,
-                Number::Plural,
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_IMP_ACT_2_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Second,
+                crate::Number::Plural,
             ) => cell::FUTURE_PERFECT_IMP_ACT_2_PL,
             Cell::FuturePerfect(
-                Mood::Imperative,
-                Voice::Active,
-                Person::Third,
-                Number::Singular,
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_IMP_ACT_3_SG,
-            Cell::FuturePerfect(Mood::Imperative, Voice::Active, Person::Third, Number::Dual) => {
-                cell::FUTURE_PERFECT_IMP_ACT_3_DU
-            }
-            Cell::FuturePerfect(Mood::Imperative, Voice::Active, Person::Third, Number::Plural) => {
-                cell::FUTURE_PERFECT_IMP_ACT_3_PL
-            }
             Cell::FuturePerfect(
-                Mood::Imperative,
-                Voice::Middle,
-                Person::First,
-                Number::Singular,
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_IMP_ACT_3_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Imperative,
+                crate::Voice::Active,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::FUTURE_PERFECT_IMP_ACT_3_PL,
+            Cell::FuturePerfect(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_IMP_MID_1_SG,
-            Cell::FuturePerfect(Mood::Imperative, Voice::Middle, Person::First, Number::Dual) => {
-                cell::FUTURE_PERFECT_IMP_MID_1_DU
-            }
-            Cell::FuturePerfect(Mood::Imperative, Voice::Middle, Person::First, Number::Plural) => {
-                cell::FUTURE_PERFECT_IMP_MID_1_PL
-            }
             Cell::FuturePerfect(
-                Mood::Imperative,
-                Voice::Middle,
-                Person::Second,
-                Number::Singular,
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_IMP_MID_1_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::FUTURE_PERFECT_IMP_MID_1_PL,
+            Cell::FuturePerfect(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_IMP_MID_2_SG,
-            Cell::FuturePerfect(Mood::Imperative, Voice::Middle, Person::Second, Number::Dual) => {
-                cell::FUTURE_PERFECT_IMP_MID_2_DU
-            }
             Cell::FuturePerfect(
-                Mood::Imperative,
-                Voice::Middle,
-                Person::Second,
-                Number::Plural,
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_IMP_MID_2_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Second,
+                crate::Number::Plural,
             ) => cell::FUTURE_PERFECT_IMP_MID_2_PL,
             Cell::FuturePerfect(
-                Mood::Imperative,
-                Voice::Middle,
-                Person::Third,
-                Number::Singular,
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_IMP_MID_3_SG,
-            Cell::FuturePerfect(Mood::Imperative, Voice::Middle, Person::Third, Number::Dual) => {
-                cell::FUTURE_PERFECT_IMP_MID_3_DU
-            }
-            Cell::FuturePerfect(Mood::Imperative, Voice::Middle, Person::Third, Number::Plural) => {
-                cell::FUTURE_PERFECT_IMP_MID_3_PL
-            }
             Cell::FuturePerfect(
-                Mood::Imperative,
-                Voice::Passive,
-                Person::First,
-                Number::Singular,
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_IMP_MID_3_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Imperative,
+                crate::Voice::Middle,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::FUTURE_PERFECT_IMP_MID_3_PL,
+            Cell::FuturePerfect(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_IMP_PASS_1_SG,
-            Cell::FuturePerfect(Mood::Imperative, Voice::Passive, Person::First, Number::Dual) => {
-                cell::FUTURE_PERFECT_IMP_PASS_1_DU
-            }
             Cell::FuturePerfect(
-                Mood::Imperative,
-                Voice::Passive,
-                Person::First,
-                Number::Plural,
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_IMP_PASS_1_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::First,
+                crate::Number::Plural,
             ) => cell::FUTURE_PERFECT_IMP_PASS_1_PL,
             Cell::FuturePerfect(
-                Mood::Imperative,
-                Voice::Passive,
-                Person::Second,
-                Number::Singular,
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_IMP_PASS_2_SG,
-            Cell::FuturePerfect(Mood::Imperative, Voice::Passive, Person::Second, Number::Dual) => {
-                cell::FUTURE_PERFECT_IMP_PASS_2_DU
-            }
             Cell::FuturePerfect(
-                Mood::Imperative,
-                Voice::Passive,
-                Person::Second,
-                Number::Plural,
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_IMP_PASS_2_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Second,
+                crate::Number::Plural,
             ) => cell::FUTURE_PERFECT_IMP_PASS_2_PL,
             Cell::FuturePerfect(
-                Mood::Imperative,
-                Voice::Passive,
-                Person::Third,
-                Number::Singular,
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Singular,
             ) => cell::FUTURE_PERFECT_IMP_PASS_3_SG,
-            Cell::FuturePerfect(Mood::Imperative, Voice::Passive, Person::Third, Number::Dual) => {
-                cell::FUTURE_PERFECT_IMP_PASS_3_DU
-            }
             Cell::FuturePerfect(
-                Mood::Imperative,
-                Voice::Passive,
-                Person::Third,
-                Number::Plural,
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Dual,
+            ) => cell::FUTURE_PERFECT_IMP_PASS_3_DU,
+            Cell::FuturePerfect(
+                crate::Mood::Imperative,
+                crate::Voice::Passive,
+                crate::Person::Third,
+                crate::Number::Plural,
             ) => cell::FUTURE_PERFECT_IMP_PASS_3_PL,
-            Cell::Infinitive(Tense::Present, Voice::Active) => cell::INFINITIVE_PRES_ACT,
-            Cell::Infinitive(Tense::Present, Voice::Middle) => cell::INFINITIVE_PRES_MID,
-            Cell::Infinitive(Tense::Present, Voice::Passive) => cell::INFINITIVE_PRES_PASS,
-            Cell::Infinitive(Tense::Future, Voice::Active) => cell::INFINITIVE_FUT_ACT,
-            Cell::Infinitive(Tense::Future, Voice::Middle) => cell::INFINITIVE_FUT_MID,
-            Cell::Infinitive(Tense::Future, Voice::Passive) => cell::INFINITIVE_FUT_PASS,
-            Cell::Infinitive(Tense::Aorist, Voice::Active) => cell::INFINITIVE_AOR_ACT,
-            Cell::Infinitive(Tense::Aorist, Voice::Middle) => cell::INFINITIVE_AOR_MID,
-            Cell::Infinitive(Tense::Aorist, Voice::Passive) => cell::INFINITIVE_AOR_PASS,
-            Cell::Infinitive(Tense::Perfect, Voice::Active) => cell::INFINITIVE_PERF_ACT,
-            Cell::Infinitive(Tense::Perfect, Voice::Middle) => cell::INFINITIVE_PERF_MID,
-            Cell::Infinitive(Tense::Perfect, Voice::Passive) => cell::INFINITIVE_PERF_PASS,
-            Cell::Infinitive(Tense::FuturePerfect, Voice::Active) => cell::INFINITIVE_FUTP_ACT,
-            Cell::Infinitive(Tense::FuturePerfect, Voice::Middle) => cell::INFINITIVE_FUTP_MID,
-            Cell::Infinitive(Tense::FuturePerfect, Voice::Passive) => cell::INFINITIVE_FUTP_PASS,
-            Cell::Participle(Tense::Present, Voice::Active) => cell::PARTICIPLE_PRES_ACT,
-            Cell::Participle(Tense::Present, Voice::Middle) => cell::PARTICIPLE_PRES_MID,
-            Cell::Participle(Tense::Present, Voice::Passive) => cell::PARTICIPLE_PRES_PASS,
-            Cell::Participle(Tense::Future, Voice::Active) => cell::PARTICIPLE_FUT_ACT,
-            Cell::Participle(Tense::Future, Voice::Middle) => cell::PARTICIPLE_FUT_MID,
-            Cell::Participle(Tense::Future, Voice::Passive) => cell::PARTICIPLE_FUT_PASS,
-            Cell::Participle(Tense::Aorist, Voice::Active) => cell::PARTICIPLE_AOR_ACT,
-            Cell::Participle(Tense::Aorist, Voice::Middle) => cell::PARTICIPLE_AOR_MID,
-            Cell::Participle(Tense::Aorist, Voice::Passive) => cell::PARTICIPLE_AOR_PASS,
-            Cell::Participle(Tense::Perfect, Voice::Active) => cell::PARTICIPLE_PERF_ACT,
-            Cell::Participle(Tense::Perfect, Voice::Middle) => cell::PARTICIPLE_PERF_MID,
-            Cell::Participle(Tense::Perfect, Voice::Passive) => cell::PARTICIPLE_PERF_PASS,
-            Cell::Participle(Tense::FuturePerfect, Voice::Active) => cell::PARTICIPLE_FUTP_ACT,
-            Cell::Participle(Tense::FuturePerfect, Voice::Middle) => cell::PARTICIPLE_FUTP_MID,
-            Cell::Participle(Tense::FuturePerfect, Voice::Passive) => cell::PARTICIPLE_FUTP_PASS,
+            Cell::Infinitive(crate::Tense::Present, crate::Voice::Active) => {
+                cell::INFINITIVE_PRES_ACT
+            }
+            Cell::Infinitive(crate::Tense::Present, crate::Voice::Middle) => {
+                cell::INFINITIVE_PRES_MID
+            }
+            Cell::Infinitive(crate::Tense::Present, crate::Voice::Passive) => {
+                cell::INFINITIVE_PRES_PASS
+            }
+            Cell::Infinitive(crate::Tense::Future, crate::Voice::Active) => {
+                cell::INFINITIVE_FUT_ACT
+            }
+            Cell::Infinitive(crate::Tense::Future, crate::Voice::Middle) => {
+                cell::INFINITIVE_FUT_MID
+            }
+            Cell::Infinitive(crate::Tense::Future, crate::Voice::Passive) => {
+                cell::INFINITIVE_FUT_PASS
+            }
+            Cell::Infinitive(crate::Tense::Aorist, crate::Voice::Active) => {
+                cell::INFINITIVE_AOR_ACT
+            }
+            Cell::Infinitive(crate::Tense::Aorist, crate::Voice::Middle) => {
+                cell::INFINITIVE_AOR_MID
+            }
+            Cell::Infinitive(crate::Tense::Aorist, crate::Voice::Passive) => {
+                cell::INFINITIVE_AOR_PASS
+            }
+            Cell::Infinitive(crate::Tense::Perfect, crate::Voice::Active) => {
+                cell::INFINITIVE_PERF_ACT
+            }
+            Cell::Infinitive(crate::Tense::Perfect, crate::Voice::Middle) => {
+                cell::INFINITIVE_PERF_MID
+            }
+            Cell::Infinitive(crate::Tense::Perfect, crate::Voice::Passive) => {
+                cell::INFINITIVE_PERF_PASS
+            }
+            Cell::Infinitive(crate::Tense::FuturePerfect, crate::Voice::Active) => {
+                cell::INFINITIVE_FUTP_ACT
+            }
+            Cell::Infinitive(crate::Tense::FuturePerfect, crate::Voice::Middle) => {
+                cell::INFINITIVE_FUTP_MID
+            }
+            Cell::Infinitive(crate::Tense::FuturePerfect, crate::Voice::Passive) => {
+                cell::INFINITIVE_FUTP_PASS
+            }
+            Cell::Participle(crate::Tense::Present, crate::Voice::Active) => {
+                cell::PARTICIPLE_PRES_ACT
+            }
+            Cell::Participle(crate::Tense::Present, crate::Voice::Middle) => {
+                cell::PARTICIPLE_PRES_MID
+            }
+            Cell::Participle(crate::Tense::Present, crate::Voice::Passive) => {
+                cell::PARTICIPLE_PRES_PASS
+            }
+            Cell::Participle(crate::Tense::Future, crate::Voice::Active) => {
+                cell::PARTICIPLE_FUT_ACT
+            }
+            Cell::Participle(crate::Tense::Future, crate::Voice::Middle) => {
+                cell::PARTICIPLE_FUT_MID
+            }
+            Cell::Participle(crate::Tense::Future, crate::Voice::Passive) => {
+                cell::PARTICIPLE_FUT_PASS
+            }
+            Cell::Participle(crate::Tense::Aorist, crate::Voice::Active) => {
+                cell::PARTICIPLE_AOR_ACT
+            }
+            Cell::Participle(crate::Tense::Aorist, crate::Voice::Middle) => {
+                cell::PARTICIPLE_AOR_MID
+            }
+            Cell::Participle(crate::Tense::Aorist, crate::Voice::Passive) => {
+                cell::PARTICIPLE_AOR_PASS
+            }
+            Cell::Participle(crate::Tense::Perfect, crate::Voice::Active) => {
+                cell::PARTICIPLE_PERF_ACT
+            }
+            Cell::Participle(crate::Tense::Perfect, crate::Voice::Middle) => {
+                cell::PARTICIPLE_PERF_MID
+            }
+            Cell::Participle(crate::Tense::Perfect, crate::Voice::Passive) => {
+                cell::PARTICIPLE_PERF_PASS
+            }
+            Cell::Participle(crate::Tense::FuturePerfect, crate::Voice::Active) => {
+                cell::PARTICIPLE_FUTP_ACT
+            }
+            Cell::Participle(crate::Tense::FuturePerfect, crate::Voice::Middle) => {
+                cell::PARTICIPLE_FUTP_MID
+            }
+            Cell::Participle(crate::Tense::FuturePerfect, crate::Voice::Passive) => {
+                cell::PARTICIPLE_FUTP_PASS
+            }
         };
         cell as usize
     }

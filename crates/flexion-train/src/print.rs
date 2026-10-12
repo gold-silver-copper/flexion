@@ -346,7 +346,7 @@ fn part_files(
                 );
             }
             let _ = writeln!(m, "    ],\n    sharpness: {:?},\n}};\n", systems.sharpness);
-            let lemma = systems.systems.first().map(&name).unwrap_or_default();
+            let lemma = systems.systems.first().map(name).unwrap_or_default();
             let api = Api {
                 cells,
                 readings: format!("{lemma}::GRAMMAR"),
@@ -669,7 +669,7 @@ fn grammar_files(
         thousands(g.paradigm.exceptions.len() as u64),
         one.to_uppercase()
     );
-    r.push_str(&choice_body(&g.paradigm, &name_of));
+    r.push_str(&choice_body(&g.paradigm, name_of));
     r.push_str("    }\n};\n");
     files.push((format!("{dir}/rules.rs"), r));
 
@@ -797,10 +797,10 @@ fn grammar_files(
     if !learned.irregular.is_empty() {
         ir.push_str("use super::cell::*;\n");
     }
-    ir.push_str("use std::borrow::Cow;\n\n");
+    ir.push_str("use flexion::Irregular;\n\n");
     let _ = writeln!(
         ir,
-        "pub(super) static IRREGULAR: &[(Cow<'static, str>, u16, Cow<'static, str>)] = flexion::irregular! {{"
+        "pub(super) static IRREGULAR: &[Irregular<'static>] = flexion::irregular! {{"
     );
     for (w, c, f) in &learned.irregular {
         let name = layout.names.get(*c).map_or("", String::as_str);
@@ -815,7 +815,7 @@ fn thousands(n: u64) -> String {
     let s = n.to_string();
     let mut out = String::new();
     for (i, c) in s.chars().enumerate() {
-        if i > 0 && (s.len() - i) % 3 == 0 {
+        if i > 0 && (s.len() - i).is_multiple_of(3) {
             out.push(',');
         }
         out.push(c);
@@ -1093,7 +1093,7 @@ fn accent_file(
         thousands(a.class.rules.len() as u64),
         thousands(a.class.exceptions.len() as u64)
     );
-    s.push_str(&choice_body(&a.class, &value));
+    s.push_str(&choice_body(&a.class, value));
     s.push_str("    }\n};\n\n");
     let _ = writeln!(
         s,
@@ -1271,7 +1271,13 @@ fn api_code(
                 .features
                 .iter()
                 .zip(&values)
-                .map(|(f, &x)| format!("crate::{}::{}", f.name, f.values.get(x).map_or("", |v| v.name)))
+                .map(|(f, &x)| {
+                    format!(
+                        "crate::{}::{}",
+                        f.name,
+                        f.values.get(x).map_or("", |v| v.name)
+                    )
+                })
                 .collect();
             let constant = layout.names.get(g.offset + i).map_or("", String::as_str);
             if args.is_empty() {
@@ -1376,11 +1382,11 @@ fn api_code(
         s,
         "    fn known(&self) -> Known<'_, {feature_type}> {{\n        Known {{\n            forms: &self.given,\n            feature: {feature_value},\n            full: {full},\n        }}\n    }}\n"
     );
+    let one = kind_name.to_lowercase();
+    let many = format!("{one}s");
     let _ = writeln!(
         s,
         "    /// Its likeliest form in `cell`.\n    #[must_use]\n    pub fn form(&self, cell: impl Into<Cell>) -> String {{\n        GRAMMAR.best(self.lemma, cell.into().index(), &self.known())\n    }}\n\n    /// Every form it may have in `cell`, likeliest first, each with its\n    /// probability and why.\n    #[must_use]\n    pub fn candidates(&self, cell: impl Into<Cell>) -> Vec<Candidate<'static>> {{\n        GRAMMAR.candidates(self.lemma, cell.into().index(), &self.known())\n    }}\n\n    /// The {many} it may follow, likeliest first, each with its probability\n    /// and why.\n    #[must_use]\n    pub fn {one}(&self) -> Vec<Reading<'static, 'static, {ty}>> {{\n        {readings}.readings(self.lemma, &self.known())\n    }}\n}}",
-        many = format!("{}s", kind_name.to_lowercase()),
-        one = kind_name.to_lowercase(),
     );
     s
 }
@@ -1491,7 +1497,9 @@ workspace = true
     )
 }
 
-fn readme(lang: &Language, report: &str) -> String {
+/// The crate's README: the language's intro, how the grammar is laid out,
+/// and `report` (what it is and how well it does).
+pub fn readme(lang: &Language, report: &str) -> String {
     let sources: String = lang
         .editions
         .iter()
@@ -1501,13 +1509,23 @@ fn readme(lang: &Language, report: &str) -> String {
         "# {name}\n\n{intro}\n## How it works\n\n\
          This crate is {display} inflection as a grammar, learned by\n\
          [flexion](https://github.com/gold-silver-copper/flexion) from the English Wiktionary's{sources}\n\
-         {display} entries. Each part of speech is a module under `src/`:\n\n\
+         {display} entries. Each part of speech is a module under `src/`, and has what its\n\
+         grammar needs of:\n\n\
          - `paradigms.rs`: how words inflect, one table per paradigm, named after a word that\n  \
-           follows it, with a pattern per form (`~а`: the stem, then `а`);\n\
+           follows it, with a pattern per form (`~а`: the stem, then `а`; `referred`: another\n  \
+           cell's form, as the word's feature says);\n\
          - `rules.rs`: which paradigm a word takes, as rules on its ending, each with how many of\n  \
            the dictionary's words with that ending follow each paradigm, and the words no rule\n  \
            gets right, listed;\n\
-         - `irregular.rs`: the forms no paradigm gives.\n\n\
+         - `accent.rs`: per cell, which rule places the accent, and which words have which\n  \
+           pattern;\n\
+         - `prefixes.rs`: prefixes a word inflects behind, separable or not;\n\
+         - `compounds.rs`: whether a word written in parts inflects each part;\n\
+         - `marks.rs` and `spellings.rs`: how a word typed without its marks (vowel length,\n  \
+           `ё`) is spelled;\n\
+         - `irregular.rs`: the forms no paradigm gives;\n\
+         - a module per principal part, where a part of speech is built on them: each cell\n  \
+           belongs to one part's system and is inflected from that part.\n\n\
          A word the dictionary lists gets its own forms. Any other word gets the paradigm its\n\
          ending suggests, with a probability that says how often such a guess is right, and the\n\
          reason (the rule and its counts).\n\n\

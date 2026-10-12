@@ -493,35 +493,4 @@ const AUXILIARY: &[&str] = &[
     "εἰήτην",
 ];
 
-const README: &str = "\
-Ancient Greek (Attic) inflection for **any** word, attested or not: nouns,
-adjectives, and verbs in every tense, mood and voice, with accents, breathings
-and vowel length, and a confidence for every answer.
-
-```rust
-use ancient_greek::*;
-
-assert_eq!(noun(\"λόγος\", Case::Genitive, Number::Plural), \"λόγων\");
-assert_eq!(noun(\"δωρον\", Case::Genitive, Number::Singular), \"δώρου\");
-// Vowel length is marked on α, ι, υ, as Wiktionary's tables do:
-assert_eq!(adjective(\"ἀγαθός\", Case::Dative, Gender::Feminine, Number::Singular), \"ᾰ̓γᾰθῇ\");
-let cell = PresentCell {
-    mood: Mood::Indicative,
-    voice: Voice::Active,
-    person: Person::Third,
-    number: Number::Plural,
-};
-assert_eq!(present(\"λύω\", cell), \"λῡ́ουσῐ\");
-
-// Without accents or length marks:
-let plain = AncientGreek::default().accents(false).length_marks(false);
-assert_eq!(plain.noun(\"δῶρον\", Case::Nominative, Number::Plural), \"δωρα\");
-```
-
-A word is found whether or not it is typed with accents, breathings, iota
-subscripts or length marks; the output writes them. A citation gives principal
-parts the way a dictionary prints them: nouns with the genitive and gender
-(`λόγος, λόγου m`), adjectives with the feminine and neuter (`ἀγαθός, ἀγαθή,
-ἀγαθόν`), verbs with the six principal parts (`λύω, λύσω, ἔλυσα, λέλυκα,
-λέλυμαι, ἐλύθην`), or as many as are given.
-";
+const README: &str = include_str!("../readme/ancient-greek.md");

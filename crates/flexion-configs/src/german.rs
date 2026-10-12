@@ -508,29 +508,4 @@ fn de_noun(entry: &Entry) -> Vec<Form> {
     first
 }
 
-const README: &str = "\
-German inflection for **any** German word, attested or not: noun declension,
-adjectives in all three declensions and three degrees, and verbs (every finite
-form in main and subordinate clauses, imperative, infinitives, participles),
-separable verbs included, with a confidence for every answer.
-
-```rust
-use german::*;
-
-assert_eq!(noun(\"Mann\", Case::Nominative, Number::Plural), \"Männer\");
-assert_eq!(noun(\"haus\", Case::Dative, Number::Plural), \"Häusern\");
-assert_eq!(adjective(\"schön\", Declension::Weak, Case::Nominative, Agreement::Masculine), \"schöne\");
-assert_eq!(comparative(\"gut\", Declension::Strong, Case::Nominative, Agreement::Neuter), \"besseres\");
-assert_eq!(verb(\"geben\", Tense::Present, Person::Third, Number::Singular), \"gibt\");
-assert_eq!(verb(\"anfangen\", Tense::Preterite, Person::First, Number::Singular), \"fing an\");
-assert_eq!(subordinate(\"anfangen\", Tense::Present, Person::Third, Number::Singular), \"anfängt\");
-assert_eq!(participle(\"singen\", Participle::Past), \"gesungen\");
-```
-
-Nouns are always written capitalized, however the word is typed.
-
-A citation gives principal parts the way a dictionary prints them: nouns with
-their plural and gender (`Mann, Männer m`), verbs with the third person
-singular present, preterite and past participle (`geben, gibt, gab, gegeben`),
-adjectives with their comparative and superlative (`gut, besser, am besten`).
-";
+const README: &str = include_str!("../readme/german.md");

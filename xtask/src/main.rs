@@ -2,7 +2,10 @@
 //!
 //! - `extract`: read the language's Kaikki dumps into a lexeme cache;
 //! - `build`: learn the language's grammar, measure it, and write its crate;
-//! - `try`: learn on nine tenths of the words and score the held-out tenth.
+//! - `readme`: rewrite a built crate's README, keeping its report;
+//! - `try`: learn on nine tenths of the words and score the held-out tenth
+//!   (`--systems`: as principal parts' systems);
+//! - `inspect`: a word's readings and forms, and a sample of irregular forms.
 
 use flexion_train::extract::{self, Lexeme, PosData};
 use flexion_train::spec::Language;
@@ -11,7 +14,7 @@ use std::path::PathBuf;
 use std::time::Instant;
 
 const USAGE: &str =
-    "usage: cargo xtask <extract|build|try|inspect> <language> [--pos <part of speech>]";
+    "usage: cargo xtask <extract|build|readme|try|inspect> <language> [--pos <part of speech>] [--systems] [--errors N]";
 
 fn main() {
     if let Err(e) = run() {
@@ -35,6 +38,7 @@ fn run() -> Result<(), String> {
     match command.as_str() {
         "extract" => extract_dumps(&lang),
         "build" => build(&lang),
+        "readme" => readme(&lang),
         "try" => {
             let mut settings = choose::Settings::default();
             if let Some(g) = flag("--min-gain") {
@@ -571,6 +575,19 @@ fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Res
 
 fn workspace() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("..")
+}
+
+/// Rewrite a built crate's README with the current intro and text, keeping
+/// its report.
+fn readme(lang: &Language) -> Result<(), String> {
+    let path = workspace().join("languages").join(lang.name).join("README.md");
+    let old = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
+    let (Some(a), Some(b)) = (old.find("## The grammar"), old.find("## Data and license")) else {
+        return Err(format!("{}: no report", path.display()));
+    };
+    let report = old.get(a..b).unwrap_or("").trim_end();
+    let text = flexion_train::print::readme(lang, &format!("{report}\n"));
+    std::fs::write(&path, text).map_err(|e| format!("{}: {e}", path.display()))
 }
 
 fn build(lang: &Language) -> Result<(), String> {

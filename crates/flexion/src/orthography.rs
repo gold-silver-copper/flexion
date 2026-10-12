@@ -103,7 +103,7 @@ impl Orthography<'_> {
             .char_indices()
             .filter(|&(_, c)| is_mark(c) || is_stressed(c))
             .map(|(i, _)| i)
-            .last();
+            .next_back();
         let mut letters = String::with_capacity(word.len());
         let mut vowels: u8 = 0;
         let mut stress = None;

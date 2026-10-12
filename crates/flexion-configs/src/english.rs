@@ -193,41 +193,4 @@ impl Hooks for EnglishHooks {
     }
 }
 
-const README: &str = "\
-English inflection for **any** English word, attested or not: noun plurals, verb
-forms, and comparatives and superlatives, each with a confidence.
-
-```rust
-use english::*;
-
-assert_eq!(noun(\"cat\", Number::Plural), \"cats\");
-assert_eq!(noun(\"child\", Number::Plural), \"children\");
-assert_eq!(verb(\"go\", VerbForm::Past), \"went\");
-assert_eq!(adjective(\"good\", Degree::Comparative), \"better\");
-assert_eq!(adjective(\"beautiful\", Degree::Superlative), \"most beautiful\");
-
-// Words nobody wrote down inflect by the patterns learned from those who did.
-assert_eq!(noun(\"glorp\", Number::Plural), \"glorps\");
-
-// Every candidate, with the model's confidence.
-let plurals = noun_scored(\"octopus\", Number::Plural);
-assert_eq!(plurals[0].form, \"octopuses\");
-
-// A citation pins principal parts: here, which `lie` you mean.
-assert_eq!(verb(\"lie\", VerbForm::Past), \"lay\");
-assert_eq!(verb(\"lie, lied\", VerbForm::Past), \"lied\");
-assert_eq!(verb(\"lie, lied\", VerbForm::PastParticiple), \"lied\");
-```
-
-Agreement, pronouns and possessives are hand-written helpers on top:
-
-```rust
-use english::*;
-
-assert_eq!(conjugate(\"be\", Tense::Present, Person::First, Number::Singular), \"am\");
-assert_eq!(conjugate(\"walk\", Tense::Present, Person::Third, Number::Singular), \"walks\");
-assert_eq!(pronoun(Person::Third, Number::Singular, Gender::Feminine, Case::Accusative), \"her\");
-assert_eq!(count_with_number(\"mouse\", 3), \"3 mice\");
-assert_eq!(add_possessive(\"dogs\"), \"dogs'\");
-```
-";
+const README: &str = include_str!("../readme/english.md");

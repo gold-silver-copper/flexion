@@ -50,15 +50,16 @@ reason (the rule and its counts).
 
 ## The grammar
 
-| | words | paradigms | rules | listed words | irregular forms |
-|---|---:|---:|---:|---:|---:|
-| noun | 8165 | 163 | 676 | 2835 | 9202 |
-| adjective | 4699 | 105 | 512 | 2208 | 16327 |
-| verb | 2689 | 329 | 441 | 2405 | 232304 |
-| pronoun | 58 | 27 | 12 | 36 | 526 |
-| numeral | 19 | 8 | 4 | 5 | 24 |
+| | words | systems | paradigms | rules | listed words | irregular forms |
+|---|---:|---:|---:|---:|---:|---:|
+| noun | 8165 | 1 | 163 | 676 | 2835 | 9202 |
+| adjective | 4699 | 1 | 105 | 512 | 2208 | 16247 |
+| verb | 2689 | 1 | 329 | 440 | 2408 | 232312 |
+| pronoun | 58 | 1 | 27 | 12 | 36 | 526 |
+| numeral | 19 | 1 | 8 | 4 | 5 | 24 |
 
-*Words*: the dictionary's words the grammar is learned from. *Rules*: the endings that
+*Words*: the dictionary's words the grammar is learned from. *Systems*: the principal
+parts a part of speech is built on (1: its lemma alone). *Rules*: the endings that
 choose a paradigm. *Listed words*: words no rule gets right, listed with their paradigm.
 *Irregular forms*: forms no paradigm gives, listed.
 
@@ -66,17 +67,19 @@ choose a paradigm. *Listed words*: words no rule gets right, listed with their p
 
 A tenth of the words (by a hash of the word) was held out: the grammar scored here was
 learned from the other nine tenths, and asked for every form the dictionary lists of
-each held-out word. *Top-1*: its first answer is right; *top-3*: the right answer is among
-its first three. *Calibration error*: how far its stated probabilities are, on average,
-from how often it is right (0 is perfect).
+each held-out word, typed as the dictionary's headword. *Top-1*: its first answer is
+right; *top-3*: the right answer is among its first three. *Calibration error*: how far
+its stated probabilities are, on average, from how often it is right (0 is perfect).
+*Top-1, lemma in full*: typed with every mark the dictionary's table writes, and said
+to be so (`spelled_in_full`).
 
-| | held-out words | forms | top-1 | top-1, lemma typed without stress | top-3 | calibration error |
+| | held-out words | forms | top-1 | top-3 | calibration error | top-1, lemma in full |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 815 | 11673 | **78.74%** | 13.73% | 88.91% | 0.045 |
-| adjective | 477 | 22484 | **71.76%** | 10.98% | 82.94% | 0.060 |
-| verb | 261 | 64485 | **53.38%** | 17.42% | 58.99% | 0.150 |
-| pronoun | 11 | 375 | **26.67%** | 1.87% | 38.67% | 0.637 |
-| numeral | 2 | 30 | **100.00%** | 0.00% | 100.00% | 0.000 |
+| noun | 815 | 11673 | **61.88%** | 71.98% | 0.118 | 78.74% |
+| adjective | 477 | 22484 | **58.78%** | 70.88% | 0.093 | 71.76% |
+| verb | 261 | 64485 | **45.85%** | 50.77% | 0.071 | 53.38% |
+| pronoun | 11 | 375 | **2.40%** | 2.40% | 0.631 | 26.67% |
+| numeral | 2 | 30 | **100.00%** | 100.00% | 0.284 | 100.00% |
 
 
 ## Data and license

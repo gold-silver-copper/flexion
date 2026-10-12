@@ -5,6 +5,7 @@
 
 pub mod accent;
 mod irregular;
+mod marks;
 mod paradigms;
 mod rules;
 mod spellings;
@@ -12,7 +13,8 @@ mod spellings;
 pub use paradigms::Declension;
 
 use crate::*;
-use flexion::{Candidate, Grammar, Known, Reading};
+use flexion::Grammar;
+use flexion::{Candidate, Known, Reading};
 use std::borrow::Cow;
 
 /// Each cell's place in a paradigm.
@@ -86,7 +88,7 @@ pub static GRAMMAR: Grammar<'static, Declension, accent::AccentClass> = Grammar 
     }),
     laws: None,
     spellings: Cow::Borrowed(spellings::SPELLINGS),
-    hidden: 0.5344828,
+    marks: Some(marks::MARKS),
     irregular: Cow::Borrowed(irregular::IRREGULAR),
     smoothing: 2.0,
     sharpness: 0.5,
@@ -96,65 +98,171 @@ pub static GRAMMAR: Grammar<'static, Declension, accent::AccentClass> = Grammar 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Cell {
     /// A declined pronoun, determiner or article.
-    Form(Case, Gender, Number),
+    Form(crate::Case, crate::Gender, crate::Number),
 }
 
 impl Cell {
     /// Its place in a paradigm.
     pub const fn index(self) -> usize {
         let cell = match self {
-            Cell::Form(Case::Nominative, Gender::Masculine, Number::Singular) => cell::NOM_M_SG,
-            Cell::Form(Case::Nominative, Gender::Masculine, Number::Dual) => cell::NOM_M_DU,
-            Cell::Form(Case::Nominative, Gender::Masculine, Number::Plural) => cell::NOM_M_PL,
-            Cell::Form(Case::Nominative, Gender::Feminine, Number::Singular) => cell::NOM_F_SG,
-            Cell::Form(Case::Nominative, Gender::Feminine, Number::Dual) => cell::NOM_F_DU,
-            Cell::Form(Case::Nominative, Gender::Feminine, Number::Plural) => cell::NOM_F_PL,
-            Cell::Form(Case::Nominative, Gender::Neuter, Number::Singular) => cell::NOM_N_SG,
-            Cell::Form(Case::Nominative, Gender::Neuter, Number::Dual) => cell::NOM_N_DU,
-            Cell::Form(Case::Nominative, Gender::Neuter, Number::Plural) => cell::NOM_N_PL,
-            Cell::Form(Case::Genitive, Gender::Masculine, Number::Singular) => cell::GEN_M_SG,
-            Cell::Form(Case::Genitive, Gender::Masculine, Number::Dual) => cell::GEN_M_DU,
-            Cell::Form(Case::Genitive, Gender::Masculine, Number::Plural) => cell::GEN_M_PL,
-            Cell::Form(Case::Genitive, Gender::Feminine, Number::Singular) => cell::GEN_F_SG,
-            Cell::Form(Case::Genitive, Gender::Feminine, Number::Dual) => cell::GEN_F_DU,
-            Cell::Form(Case::Genitive, Gender::Feminine, Number::Plural) => cell::GEN_F_PL,
-            Cell::Form(Case::Genitive, Gender::Neuter, Number::Singular) => cell::GEN_N_SG,
-            Cell::Form(Case::Genitive, Gender::Neuter, Number::Dual) => cell::GEN_N_DU,
-            Cell::Form(Case::Genitive, Gender::Neuter, Number::Plural) => cell::GEN_N_PL,
-            Cell::Form(Case::Dative, Gender::Masculine, Number::Singular) => cell::DAT_M_SG,
-            Cell::Form(Case::Dative, Gender::Masculine, Number::Dual) => cell::DAT_M_DU,
-            Cell::Form(Case::Dative, Gender::Masculine, Number::Plural) => cell::DAT_M_PL,
-            Cell::Form(Case::Dative, Gender::Feminine, Number::Singular) => cell::DAT_F_SG,
-            Cell::Form(Case::Dative, Gender::Feminine, Number::Dual) => cell::DAT_F_DU,
-            Cell::Form(Case::Dative, Gender::Feminine, Number::Plural) => cell::DAT_F_PL,
-            Cell::Form(Case::Dative, Gender::Neuter, Number::Singular) => cell::DAT_N_SG,
-            Cell::Form(Case::Dative, Gender::Neuter, Number::Dual) => cell::DAT_N_DU,
-            Cell::Form(Case::Dative, Gender::Neuter, Number::Plural) => cell::DAT_N_PL,
-            Cell::Form(Case::Accusative, Gender::Masculine, Number::Singular) => cell::ACC_M_SG,
-            Cell::Form(Case::Accusative, Gender::Masculine, Number::Dual) => cell::ACC_M_DU,
-            Cell::Form(Case::Accusative, Gender::Masculine, Number::Plural) => cell::ACC_M_PL,
-            Cell::Form(Case::Accusative, Gender::Feminine, Number::Singular) => cell::ACC_F_SG,
-            Cell::Form(Case::Accusative, Gender::Feminine, Number::Dual) => cell::ACC_F_DU,
-            Cell::Form(Case::Accusative, Gender::Feminine, Number::Plural) => cell::ACC_F_PL,
-            Cell::Form(Case::Accusative, Gender::Neuter, Number::Singular) => cell::ACC_N_SG,
-            Cell::Form(Case::Accusative, Gender::Neuter, Number::Dual) => cell::ACC_N_DU,
-            Cell::Form(Case::Accusative, Gender::Neuter, Number::Plural) => cell::ACC_N_PL,
-            Cell::Form(Case::Vocative, Gender::Masculine, Number::Singular) => cell::VOC_M_SG,
-            Cell::Form(Case::Vocative, Gender::Masculine, Number::Dual) => cell::VOC_M_DU,
-            Cell::Form(Case::Vocative, Gender::Masculine, Number::Plural) => cell::VOC_M_PL,
-            Cell::Form(Case::Vocative, Gender::Feminine, Number::Singular) => cell::VOC_F_SG,
-            Cell::Form(Case::Vocative, Gender::Feminine, Number::Dual) => cell::VOC_F_DU,
-            Cell::Form(Case::Vocative, Gender::Feminine, Number::Plural) => cell::VOC_F_PL,
-            Cell::Form(Case::Vocative, Gender::Neuter, Number::Singular) => cell::VOC_N_SG,
-            Cell::Form(Case::Vocative, Gender::Neuter, Number::Dual) => cell::VOC_N_DU,
-            Cell::Form(Case::Vocative, Gender::Neuter, Number::Plural) => cell::VOC_N_PL,
+            Cell::Form(
+                crate::Case::Nominative,
+                crate::Gender::Masculine,
+                crate::Number::Singular,
+            ) => cell::NOM_M_SG,
+            Cell::Form(crate::Case::Nominative, crate::Gender::Masculine, crate::Number::Dual) => {
+                cell::NOM_M_DU
+            }
+            Cell::Form(
+                crate::Case::Nominative,
+                crate::Gender::Masculine,
+                crate::Number::Plural,
+            ) => cell::NOM_M_PL,
+            Cell::Form(
+                crate::Case::Nominative,
+                crate::Gender::Feminine,
+                crate::Number::Singular,
+            ) => cell::NOM_F_SG,
+            Cell::Form(crate::Case::Nominative, crate::Gender::Feminine, crate::Number::Dual) => {
+                cell::NOM_F_DU
+            }
+            Cell::Form(crate::Case::Nominative, crate::Gender::Feminine, crate::Number::Plural) => {
+                cell::NOM_F_PL
+            }
+            Cell::Form(crate::Case::Nominative, crate::Gender::Neuter, crate::Number::Singular) => {
+                cell::NOM_N_SG
+            }
+            Cell::Form(crate::Case::Nominative, crate::Gender::Neuter, crate::Number::Dual) => {
+                cell::NOM_N_DU
+            }
+            Cell::Form(crate::Case::Nominative, crate::Gender::Neuter, crate::Number::Plural) => {
+                cell::NOM_N_PL
+            }
+            Cell::Form(
+                crate::Case::Genitive,
+                crate::Gender::Masculine,
+                crate::Number::Singular,
+            ) => cell::GEN_M_SG,
+            Cell::Form(crate::Case::Genitive, crate::Gender::Masculine, crate::Number::Dual) => {
+                cell::GEN_M_DU
+            }
+            Cell::Form(crate::Case::Genitive, crate::Gender::Masculine, crate::Number::Plural) => {
+                cell::GEN_M_PL
+            }
+            Cell::Form(crate::Case::Genitive, crate::Gender::Feminine, crate::Number::Singular) => {
+                cell::GEN_F_SG
+            }
+            Cell::Form(crate::Case::Genitive, crate::Gender::Feminine, crate::Number::Dual) => {
+                cell::GEN_F_DU
+            }
+            Cell::Form(crate::Case::Genitive, crate::Gender::Feminine, crate::Number::Plural) => {
+                cell::GEN_F_PL
+            }
+            Cell::Form(crate::Case::Genitive, crate::Gender::Neuter, crate::Number::Singular) => {
+                cell::GEN_N_SG
+            }
+            Cell::Form(crate::Case::Genitive, crate::Gender::Neuter, crate::Number::Dual) => {
+                cell::GEN_N_DU
+            }
+            Cell::Form(crate::Case::Genitive, crate::Gender::Neuter, crate::Number::Plural) => {
+                cell::GEN_N_PL
+            }
+            Cell::Form(crate::Case::Dative, crate::Gender::Masculine, crate::Number::Singular) => {
+                cell::DAT_M_SG
+            }
+            Cell::Form(crate::Case::Dative, crate::Gender::Masculine, crate::Number::Dual) => {
+                cell::DAT_M_DU
+            }
+            Cell::Form(crate::Case::Dative, crate::Gender::Masculine, crate::Number::Plural) => {
+                cell::DAT_M_PL
+            }
+            Cell::Form(crate::Case::Dative, crate::Gender::Feminine, crate::Number::Singular) => {
+                cell::DAT_F_SG
+            }
+            Cell::Form(crate::Case::Dative, crate::Gender::Feminine, crate::Number::Dual) => {
+                cell::DAT_F_DU
+            }
+            Cell::Form(crate::Case::Dative, crate::Gender::Feminine, crate::Number::Plural) => {
+                cell::DAT_F_PL
+            }
+            Cell::Form(crate::Case::Dative, crate::Gender::Neuter, crate::Number::Singular) => {
+                cell::DAT_N_SG
+            }
+            Cell::Form(crate::Case::Dative, crate::Gender::Neuter, crate::Number::Dual) => {
+                cell::DAT_N_DU
+            }
+            Cell::Form(crate::Case::Dative, crate::Gender::Neuter, crate::Number::Plural) => {
+                cell::DAT_N_PL
+            }
+            Cell::Form(
+                crate::Case::Accusative,
+                crate::Gender::Masculine,
+                crate::Number::Singular,
+            ) => cell::ACC_M_SG,
+            Cell::Form(crate::Case::Accusative, crate::Gender::Masculine, crate::Number::Dual) => {
+                cell::ACC_M_DU
+            }
+            Cell::Form(
+                crate::Case::Accusative,
+                crate::Gender::Masculine,
+                crate::Number::Plural,
+            ) => cell::ACC_M_PL,
+            Cell::Form(
+                crate::Case::Accusative,
+                crate::Gender::Feminine,
+                crate::Number::Singular,
+            ) => cell::ACC_F_SG,
+            Cell::Form(crate::Case::Accusative, crate::Gender::Feminine, crate::Number::Dual) => {
+                cell::ACC_F_DU
+            }
+            Cell::Form(crate::Case::Accusative, crate::Gender::Feminine, crate::Number::Plural) => {
+                cell::ACC_F_PL
+            }
+            Cell::Form(crate::Case::Accusative, crate::Gender::Neuter, crate::Number::Singular) => {
+                cell::ACC_N_SG
+            }
+            Cell::Form(crate::Case::Accusative, crate::Gender::Neuter, crate::Number::Dual) => {
+                cell::ACC_N_DU
+            }
+            Cell::Form(crate::Case::Accusative, crate::Gender::Neuter, crate::Number::Plural) => {
+                cell::ACC_N_PL
+            }
+            Cell::Form(
+                crate::Case::Vocative,
+                crate::Gender::Masculine,
+                crate::Number::Singular,
+            ) => cell::VOC_M_SG,
+            Cell::Form(crate::Case::Vocative, crate::Gender::Masculine, crate::Number::Dual) => {
+                cell::VOC_M_DU
+            }
+            Cell::Form(crate::Case::Vocative, crate::Gender::Masculine, crate::Number::Plural) => {
+                cell::VOC_M_PL
+            }
+            Cell::Form(crate::Case::Vocative, crate::Gender::Feminine, crate::Number::Singular) => {
+                cell::VOC_F_SG
+            }
+            Cell::Form(crate::Case::Vocative, crate::Gender::Feminine, crate::Number::Dual) => {
+                cell::VOC_F_DU
+            }
+            Cell::Form(crate::Case::Vocative, crate::Gender::Feminine, crate::Number::Plural) => {
+                cell::VOC_F_PL
+            }
+            Cell::Form(crate::Case::Vocative, crate::Gender::Neuter, crate::Number::Singular) => {
+                cell::VOC_N_SG
+            }
+            Cell::Form(crate::Case::Vocative, crate::Gender::Neuter, crate::Number::Dual) => {
+                cell::VOC_N_DU
+            }
+            Cell::Form(crate::Case::Vocative, crate::Gender::Neuter, crate::Number::Plural) => {
+                cell::VOC_N_PL
+            }
         };
         cell as usize
     }
 }
 
-impl From<(Case, Gender, Number)> for Cell {
-    fn from((case, gender, number): (Case, Gender, Number)) -> Self {
+impl From<(crate::Case, crate::Gender, crate::Number)> for Cell {
+    fn from((case, gender, number): (crate::Case, crate::Gender, crate::Number)) -> Self {
         Cell::Form(case, gender, number)
     }
 }

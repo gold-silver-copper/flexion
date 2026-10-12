@@ -5,15 +5,16 @@
 
 pub mod accent;
 mod irregular;
+mod marks;
 mod paradigms;
-mod prefixes;
 mod rules;
 mod spellings;
 
 pub use paradigms::Declension;
 
 use crate::*;
-use flexion::{Candidate, Grammar, Known, Reading};
+use flexion::Grammar;
+use flexion::{Candidate, Known, Reading};
 use std::borrow::Cow;
 
 /// Each cell's place in a paradigm.
@@ -47,7 +48,7 @@ pub static GRAMMAR: Grammar<'static, Declension, accent::AccentClass> = Grammar 
     referrals: Cow::Borrowed(&[]),
     feature: None,
     compound: None,
-    prefixes: Some(prefixes::PREFIXES),
+    prefixes: None,
     accent: Some(flexion::Accent {
         patterns: Cow::Borrowed(&accent::PATTERNS),
         classes: Cow::Borrowed(&accent::CLASSES),
@@ -57,7 +58,7 @@ pub static GRAMMAR: Grammar<'static, Declension, accent::AccentClass> = Grammar 
     }),
     laws: None,
     spellings: Cow::Borrowed(spellings::SPELLINGS),
-    hidden: 0.7633803,
+    marks: Some(marks::MARKS),
     irregular: Cow::Borrowed(irregular::IRREGULAR),
     smoothing: 2.0,
     sharpness: 0.75,
@@ -67,35 +68,35 @@ pub static GRAMMAR: Grammar<'static, Declension, accent::AccentClass> = Grammar 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Cell {
     /// A noun in a case and number.
-    Form(Case, Number),
+    Form(crate::Case, crate::Number),
 }
 
 impl Cell {
     /// Its place in a paradigm.
     pub const fn index(self) -> usize {
         let cell = match self {
-            Cell::Form(Case::Nominative, Number::Singular) => cell::NOM_SG,
-            Cell::Form(Case::Nominative, Number::Dual) => cell::NOM_DU,
-            Cell::Form(Case::Nominative, Number::Plural) => cell::NOM_PL,
-            Cell::Form(Case::Genitive, Number::Singular) => cell::GEN_SG,
-            Cell::Form(Case::Genitive, Number::Dual) => cell::GEN_DU,
-            Cell::Form(Case::Genitive, Number::Plural) => cell::GEN_PL,
-            Cell::Form(Case::Dative, Number::Singular) => cell::DAT_SG,
-            Cell::Form(Case::Dative, Number::Dual) => cell::DAT_DU,
-            Cell::Form(Case::Dative, Number::Plural) => cell::DAT_PL,
-            Cell::Form(Case::Accusative, Number::Singular) => cell::ACC_SG,
-            Cell::Form(Case::Accusative, Number::Dual) => cell::ACC_DU,
-            Cell::Form(Case::Accusative, Number::Plural) => cell::ACC_PL,
-            Cell::Form(Case::Vocative, Number::Singular) => cell::VOC_SG,
-            Cell::Form(Case::Vocative, Number::Dual) => cell::VOC_DU,
-            Cell::Form(Case::Vocative, Number::Plural) => cell::VOC_PL,
+            Cell::Form(crate::Case::Nominative, crate::Number::Singular) => cell::NOM_SG,
+            Cell::Form(crate::Case::Nominative, crate::Number::Dual) => cell::NOM_DU,
+            Cell::Form(crate::Case::Nominative, crate::Number::Plural) => cell::NOM_PL,
+            Cell::Form(crate::Case::Genitive, crate::Number::Singular) => cell::GEN_SG,
+            Cell::Form(crate::Case::Genitive, crate::Number::Dual) => cell::GEN_DU,
+            Cell::Form(crate::Case::Genitive, crate::Number::Plural) => cell::GEN_PL,
+            Cell::Form(crate::Case::Dative, crate::Number::Singular) => cell::DAT_SG,
+            Cell::Form(crate::Case::Dative, crate::Number::Dual) => cell::DAT_DU,
+            Cell::Form(crate::Case::Dative, crate::Number::Plural) => cell::DAT_PL,
+            Cell::Form(crate::Case::Accusative, crate::Number::Singular) => cell::ACC_SG,
+            Cell::Form(crate::Case::Accusative, crate::Number::Dual) => cell::ACC_DU,
+            Cell::Form(crate::Case::Accusative, crate::Number::Plural) => cell::ACC_PL,
+            Cell::Form(crate::Case::Vocative, crate::Number::Singular) => cell::VOC_SG,
+            Cell::Form(crate::Case::Vocative, crate::Number::Dual) => cell::VOC_DU,
+            Cell::Form(crate::Case::Vocative, crate::Number::Plural) => cell::VOC_PL,
         };
         cell as usize
     }
 }
 
-impl From<(Case, Number)> for Cell {
-    fn from((case, number): (Case, Number)) -> Self {
+impl From<(crate::Case, crate::Number)> for Cell {
+    fn from((case, number): (crate::Case, crate::Number)) -> Self {
         Cell::Form(case, number)
     }
 }

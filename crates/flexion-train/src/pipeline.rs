@@ -26,7 +26,7 @@ pub struct Measured {
 /// parts.
 #[derive(Debug, Clone)]
 pub enum Inflection<'s> {
-    Grammar(Learned<'s>),
+    Grammar(Box<Learned<'s>>),
     Systems(LearnedSystems<'s>),
 }
 
@@ -47,9 +47,12 @@ impl<'s> Inflection<'s> {
                 lexemes,
                 settings,
             )),
-            None => {
-                Inflection::Grammar(learn::learn(script.orthography(), shape, lexemes, settings))
-            }
+            None => Inflection::Grammar(Box::new(learn::learn(
+                script.orthography(),
+                shape,
+                lexemes,
+                settings,
+            ))),
         }
     }
 
@@ -71,7 +74,7 @@ impl<'s> Inflection<'s> {
     /// Every grammar in it: one, or each system's and each part's.
     pub fn grammars(&self) -> Vec<&Learned<'s>> {
         match self {
-            Inflection::Grammar(l) => vec![l],
+            Inflection::Grammar(l) => vec![l.as_ref()],
             Inflection::Systems(s) => s
                 .systems
                 .iter()

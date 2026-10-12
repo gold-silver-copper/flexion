@@ -292,21 +292,18 @@ pub fn learn<'s>(
                 .is_some_and(|(_, separable, inseparable)| separable + inseparable > 0.0)
     };
     let mut irregular = irregular(&grammar, all_lexemes, all_words, |w| !made(w));
-    let listed =
-        |irregular: &[(String, usize, String)]| -> Cow<'s, [(Cow<'s, str>, u16, Cow<'s, str>)]> {
-            Cow::Owned(
-                irregular
-                    .iter()
-                    .map(|(w, c, f)| {
-                        (
-                            Cow::Owned(w.clone()),
-                            u16::try_from(*c).unwrap_or(u16::MAX),
-                            Cow::Owned(f.clone()),
-                        )
-                    })
-                    .collect(),
-            )
-        };
+    let listed = |irregular: &[(String, usize, String)]| -> Cow<'s, [flexion::Irregular<'s>]> {
+        Cow::Owned(
+            irregular
+                .iter()
+                .map(|(w, c, f)| flexion::Irregular {
+                    word: Cow::Owned(w.clone()),
+                    cell: u16::try_from(*c).unwrap_or(u16::MAX),
+                    form: Cow::Owned(f.clone()),
+                })
+                .collect(),
+        )
+    };
     grammar.irregular = listed(&irregular);
     irregular.extend(self::irregular(&grammar, all_lexemes, all_words, made));
     irregular.sort();

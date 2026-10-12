@@ -470,23 +470,4 @@ impl Hooks for PolishHooks {
     }
 }
 
-const README: &str = "\
-Polish inflection for **any** Polish word, attested or not: noun declension,
-adjectives, and verbs (non-past, past and conditional by person and gender,
-imperative, participles), with a confidence for every answer.
-
-```rust
-use polish::*;
-
-assert_eq!(noun(\"kot\", Case::Genitive, Number::Singular), \"kota\");
-assert_eq!(noun(\"ręka\", Case::Locative, Number::Singular), \"ręce\");
-assert_eq!(adjective(\"dobry\", AdjectiveCase::Nominative, Agreement::Virile, Animacy::Animate), \"dobrzy\");
-assert_eq!(non_past(\"czytać\", Person::First, Number::Singular), \"czytam\");
-assert_eq!(past(\"czytać\", Person::First, Agreement::Feminine), \"czytałam\");
-```
-
-A citation gives principal parts the way a dictionary prints them: nouns
-nominative and genitive singular (`dom, domu`: whether a masculine noun takes
-`-a` or `-u` can't be predicted), verbs infinitive and first and second person
-singular; markers name gender and aspect (`kot, kota manim`, `czytać impf`).
-";
+const README: &str = include_str!("../readme/polish.md");
