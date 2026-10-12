@@ -23,8 +23,8 @@ const START: char = '<';
 struct Cell {
     /// Lemma end → (form end → count).
     suffixes: HashMap<String, HashMap<String, u32>>,
-    /// (Lemma start, form start) → count.
-    prefixes: HashMap<(String, String), u32>,
+    /// Lemma start → (form start → count).
+    prefixes: HashMap<String, HashMap<String, u32>>,
 }
 
 /// The baseline learned from training pairs.
@@ -73,7 +73,9 @@ impl Baseline {
                 let stem = text(&a, first, k);
                 *rules
                     .prefixes
-                    .entry((format!("{START}{pa}{stem}"), format!("{START}{pf}{stem}")))
+                    .entry(format!("{START}{pa}{stem}"))
+                    .or_default()
+                    .entry(format!("{START}{pf}{stem}"))
                     .or_default() += 1;
             }
         }
@@ -102,13 +104,23 @@ impl Baseline {
             .unwrap_or(word);
         // The commonest matching prefix rule.
         let word = format!("{START}{suffixed}");
-        let prefixed = rules
-            .prefixes
-            .iter()
-            .filter(|((lhs, _), _)| word.starts_with(lhs.as_str()))
-            .max_by(|a, b| a.1.cmp(b.1).then(b.0.cmp(a.0)))
+        let prefixed = word
+            .char_indices()
+            .map(|(i, c)| i + c.len_utf8())
+            .filter_map(|end| {
+                let lhs = word.get(..end)?;
+                Some(
+                    rules
+                        .prefixes
+                        .get(lhs)?
+                        .iter()
+                        .map(move |(rhs, n)| ((lhs, rhs.as_str()), n)),
+                )
+            })
+            .flatten()
+            .max_by(|a, b| a.1.cmp(b.1).then(b.0.cmp(&a.0)))
             .and_then(|((lhs, rhs), _)| Some(format!("{rhs}{}", word.get(lhs.len()..)?)))
-            .unwrap_or(word);
+            .unwrap_or_else(|| word.clone());
         prefixed
             .chars()
             .filter(|&c| c != START && c != END)
