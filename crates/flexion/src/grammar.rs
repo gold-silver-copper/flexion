@@ -4,7 +4,7 @@
 
 use crate::choice::{Choice, Reading, Status};
 use crate::orthography::{Casing, Orthography, Written};
-use crate::paradigm::{Paradigm, Referral};
+use crate::paradigm::{Paradigm, Relation};
 use crate::pattern;
 use crate::stress::{self, Accent, Place};
 use crate::{Candidate, Evidence, Label};
@@ -204,31 +204,19 @@ fn line(line: &str) -> Option<(&str, u16, &str)> {
 }
 
 /// What the caller knows about a word besides its lemma: forms of it, such
-/// as principal parts, as `(cell, form)`; the value of the feature its
-/// referrals depend on (its animacy); the values of its inherent features
-/// (its gender); and whether the lemma is spelled in full. Readings that
-/// disagree are dropped.
-#[derive(Debug, Clone, Copy)]
-pub struct Known<'q, F> {
+/// as principal parts, as `(cell, form)`; the values of its inherent
+/// features (its gender, its animacy); and whether the lemma is spelled in
+/// full. Readings that disagree are dropped.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct Known<'q> {
     pub forms: &'q [(usize, &'q str)],
-    pub feature: Option<F>,
     /// Values of its inherent features, as `(feature, value)` by their
-    /// places: the paradigms of other values are dropped.
+    /// places: the paradigms of other values are dropped, and a relation
+    /// that depends on one takes the cell this value says.
     pub inherent: &'q [(u8, u8)],
     /// The lemma is spelled with every mark the dictionary writes (`fōx`,
     /// `ёж`, not `fox`, `еж`): none is hidden.
     pub full: bool,
-}
-
-impl<F> Default for Known<'_, F> {
-    fn default() -> Self {
-        Known {
-            forms: &[],
-            feature: None,
-            inherent: &[],
-            full: false,
-        }
-    }
 }
 
 /// The inflection of one part of speech, as learned from the dictionary.
@@ -245,11 +233,13 @@ pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
     pub paradigms: Cow<'a, [Paradigm<'a>]>,
     /// Which paradigm a word follows.
     pub paradigm: Choice<'a, P>,
-    /// Cells whose form, in the paradigms that refer them, is another
-    /// cell's, by the word's [`Grammar::feature`].
-    pub referrals: Cow<'a, [Referral<'a>]>,
-    /// Which value of the feature referrals depend on a word has.
-    pub feature: Option<Choice<'a, F>>,
+    /// Per cell (at most one each, by cell), where its form comes from when
+    /// a paradigm derives it, or the word's form of the cell it comes from
+    /// is listed.
+    pub relations: Cow<'a, [Relation<'a>]>,
+    /// The inherent feature relations depend on (its place), and which
+    /// value of it a word has.
+    pub feature: Option<(u8, Choice<'a, F>)>,
     /// Prefixes words inflect behind, where the part of speech has them.
     pub prefixes: Option<Prefixes<'a>>,
     /// Which words written in parts inflect each part, read off the first
@@ -296,7 +286,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     /// The forms of `cell` for `lemma`, likeliest first, given what the
     /// caller knows (readings that disagree with it are dropped, unless all
     /// do).
-    pub fn candidates(&self, lemma: &str, cell: usize, known: &Known<'_, F>) -> Vec<Candidate<'_>> {
+    pub fn candidates(&self, lemma: &str, cell: usize, known: &Known<'_>) -> Vec<Candidate<'_>> {
         let mut out = self.unsharpened(lemma, cell, known);
         sharpen(out.iter_mut().map(|c| &mut c.probability), self.sharpness);
         out.sort_by(|a, b| b.probability.total_cmp(&a.probability));
@@ -304,7 +294,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     }
 
     /// [`Grammar::candidates`] before sharpening, in no order.
-    fn unsharpened(&self, lemma: &str, cell: usize, known: &Known<'_, F>) -> Vec<Candidate<'_>> {
+    fn unsharpened(&self, lemma: &str, cell: usize, known: &Known<'_>) -> Vec<Candidate<'_>> {
         let mut word = self.orthography.read(lemma);
         let key = self.orthography.key(&word.letters);
         // A word typed without some of its marks: as listed, or as its
@@ -339,6 +329,25 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         let mut inflections = self.inflections(&word.letters, &key, &given, known.inherent);
         if inflections.is_empty() {
             inflections = self.inflections(&word.letters, &key, &[], known.inherent);
+        }
+        // A form of a word whose forms are listed, but not this one: told
+        // from the listed form of the cell it comes from.
+        if let Some((letters, ending)) = self.from_listed(&key, cell, 0) {
+            let stresses = match inflections.first() {
+                Some(inf) => self.stresses(&word, inf, cell, &letters, ending),
+                None => vec![(None, 1.0)],
+            };
+            return stresses
+                .into_iter()
+                .map(|(stress, probability)| Candidate {
+                    form: self.orthography.write(&letters, stress, casing),
+                    also: Vec::new(),
+                    probability,
+                    status: Status::Listed,
+                    paradigm: "",
+                    evidence: None,
+                })
+                .collect();
         }
         // A word written in parts: as one word, or part by part.
         let (whole, each) = match (&self.compound, lemma.split_once(JOINER)) {
@@ -424,22 +433,11 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 }
             }
         }
-        let referred = self.referred(&key, cell, known.feature);
-        let cells = |inf: &Inflection<'_, 'a, '_, P>| -> Vec<(usize, f32)> {
-            if inf.paradigm.refers(&self.paradigms, cell) {
-                referred.clone()
-            } else {
-                vec![(cell, 1.0)]
-            }
-        };
-        for (inf, (cell, p_cell)) in inflections
-            .iter()
-            .take(KEEP)
-            .flat_map(|inf| cells(inf).into_iter().map(move |c| (inf, c)))
-        {
-            let forms = inf
-                .paradigm
-                .built(&self.paradigms, self.laws.as_ref(), cell, &inf.stems);
+        for (inf, (forms, p_cell)) in inflections.iter().take(KEEP).flat_map(|inf| {
+            self.build(inf, &key, known.inherent, cell, 0)
+                .into_iter()
+                .map(move |b| (inf, b))
+        }) {
             let Some(((first, ending), also)) = forms.split_first() else {
                 continue;
             };
@@ -469,30 +467,88 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         out
     }
 
-    /// The cells a referred `cell` of the word `key` takes its form from,
-    /// with probabilities: by the feature's value, given or chosen.
-    fn referred(&self, key: &str, cell: usize, given: Option<F>) -> Vec<(usize, f32)> {
-        let Some(referral) = self.referrals.iter().find(|r| usize::from(r.cell) == cell) else {
+    /// The letters of `cell` for the word looked up as `key`, told from the
+    /// listed form of the cell it comes from (or one told so in turn), and
+    /// where the change starts.
+    pub fn from_listed(&self, key: &str, cell: usize, depth: usize) -> Option<(String, usize)> {
+        let relation = self
+            .relation(cell)
+            .filter(|r| r.listed && depth < self.cells)?;
+        let from = relation.source()?;
+        let source = match self.irregular_form(key, from) {
+            Some(listed) => self.orthography.read(listed).letters,
+            None => self.from_listed(key, from, depth + 1)?.0,
+        };
+        relation.told(&source, self.smoothing)
+    }
+
+    /// The relation that gives `cell`.
+    pub fn relation(&self, cell: usize) -> Option<&Relation<'a>> {
+        self.relations.iter().find(|r| usize::from(r.cell) == cell)
+    }
+
+    /// What an inflection builds in `cell`, by how likely: its paradigm's
+    /// forms, the usual first, each with where its ending starts; for a cell
+    /// the paradigm derives, those of the cell it comes from (by the word's
+    /// feature, given or chosen), changed.
+    fn build(
+        &self,
+        inf: &Inflection<'_, 'a, '_, P>,
+        key: &str,
+        inherent: &[(u8, u8)],
+        cell: usize,
+        depth: usize,
+    ) -> Vec<(Vec<(String, usize)>, f32)> {
+        if !inf.paradigm.derives(&self.paradigms, cell) {
+            let forms = inf
+                .paradigm
+                .built(&self.paradigms, self.laws.as_ref(), cell, &inf.stems);
+            return vec![(forms, 1.0)];
+        }
+        let Some(relation) = self.relation(cell).filter(|_| depth < self.cells) else {
             return Vec::new();
         };
-        let values: Vec<(F, f32)> = match (given, &self.feature) {
-            (Some(v), _) => vec![(v, 1.0)],
-            (None, Some(feature)) => feature
-                .read(key, self.smoothing, |_| true)
-                .into_iter()
-                .map(|r| (r.value, r.probability))
-                .collect(),
-            (None, None) => Vec::new(),
+        let sources: Vec<(u16, f32)> = match relation.from.as_ref() {
+            [from] => vec![(*from, 1.0)],
+            from => {
+                let Some((f, choice)) = &self.feature else {
+                    return Vec::new();
+                };
+                match inherent.iter().find(|(g, _)| g == f) {
+                    Some(&(_, v)) => from
+                        .get(usize::from(v))
+                        .map(|&c| (c, 1.0))
+                        .into_iter()
+                        .collect(),
+                    None => choice
+                        .read(key, self.smoothing, |_| true)
+                        .into_iter()
+                        .filter_map(|r| Some((*from.get(r.value.index())?, r.probability)))
+                        .collect(),
+                }
+            }
         };
-        values
-            .into_iter()
-            .filter_map(|(v, p)| Some((usize::from(*referral.to.get(v.index())?), p)))
-            .collect()
+        let mut out = Vec::new();
+        for (from, p) in sources {
+            for (forms, q) in self.build(inf, key, inherent, usize::from(from), depth + 1) {
+                if relation.change.is_none() {
+                    out.push((forms, p * q));
+                    continue;
+                }
+                let Some((usual, ending)) = forms.first() else {
+                    continue;
+                };
+                for (changed, at, r) in relation.apply(usual, self.smoothing) {
+                    out.push((vec![(changed, (*ending).min(at))], p * q * r));
+                }
+            }
+        }
+        out
     }
 
     /// The paradigms `lemma` can follow, likeliest first, each with how
     /// sure and why, given what the caller knows.
-    pub fn readings<K: Label>(&self, lemma: &str, known: &Known<'_, K>) -> Vec<Reading<'_, 'a, P>> {
+    pub fn readings(&self, lemma: &str, known: &Known<'_>) -> Vec<Reading<'_, 'a, P>> {
         let mut letters = self.orthography.read(lemma).letters;
         let key = self.orthography.key(&letters);
         if let Some(listed) = self.spelling(&letters, &key).filter(|_| !known.full) {
@@ -549,7 +605,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
 
     /// The likeliest form of `cell` for `lemma` (the lemma itself when the
     /// grammar has no reading of it).
-    pub fn best(&self, lemma: &str, cell: usize, known: &Known<'_, F>) -> String {
+    pub fn best(&self, lemma: &str, cell: usize, known: &Known<'_>) -> String {
         self.candidates(lemma, cell, known)
             .into_iter()
             .next()
@@ -572,7 +628,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             };
             p.has(inherent)
                 && given.iter().all(|(cell, form)| {
-                    p.refers(&self.paradigms, *cell)
+                    p.derives(&self.paradigms, *cell)
                         || p.built(&self.paradigms, self.laws.as_ref(), *cell, &stems)
                             .iter()
                             .any(|(built, _)| *built == form.letters)

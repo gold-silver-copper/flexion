@@ -146,8 +146,7 @@ pub fn language() -> Language {
                         &[],
                         &["before-vowel"],
                         &[],
-                    )
-                    .fallback(&[], "adjective", &["Masculine", "Singular"]),
+                    ),
                 ],
                 lemma: Some(("adjective", vec!["Masculine", "Singular"])),
                 citation: vec![

@@ -149,26 +149,9 @@ pub struct Group {
     /// The group's forms are on the entry's head line rather than in its
     /// inflection table (Latin comparatives).
     pub from_head: bool,
-    /// Where a word has no form of its own in a cell of this group, it uses
-    /// another cell's form: `(this group's values, group, its values)`. A
-    /// Russian noun without a second locative uses its prepositional
-    /// (`столе́`, where `лес` has `лесу́`).
-    pub fallbacks: Vec<(Vec<&'static str>, &'static str, Vec<&'static str>)>,
 }
 
 impl Group {
-    /// Add a fallback (see [`Group::fallbacks`]): this group's cells with
-    /// `values` use `group`'s cell with `to` where a word has none of its own.
-    pub fn fallback(
-        mut self,
-        values: &[&'static str],
-        group: &'static str,
-        to: &[&'static str],
-    ) -> Self {
-        self.fallbacks.push((values.to_vec(), group, to.to_vec()));
-        self
-    }
-
     /// Mark the group as read from the head line (see [`Group::from_head`]).
     pub fn from_head(mut self) -> Self {
         self.from_head = true;

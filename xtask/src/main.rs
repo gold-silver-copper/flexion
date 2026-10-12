@@ -219,20 +219,28 @@ fn try_language(
         if !g.spellings.is_empty() {
             println!("  {} spellings listed", g.spellings.len());
         }
-        if let (Some(f), Some(choice)) = (learned.feature, &g.feature) {
-            let to: Vec<String> = g
-                .referrals
-                .iter()
-                .map(|r| format!("{}→{:?}", r.cell, r.to))
-                .collect();
-            println!(
-                "  referrals by {}: {}; {} rules, {} listed",
-                part.inherent.get(f).copied().unwrap_or("?"),
-                to.join(" "),
-                choice.rules.len(),
-                choice.exceptions.len()
-            );
-        }
+        let by: Vec<String> = g
+            .relations
+            .iter()
+            .filter(|r| r.from.len() > 1)
+            .map(|r| format!("{}←{:?}", r.cell, r.from))
+            .collect();
+        let changes: usize = g.relations.iter().map(|r| r.changes.len()).sum();
+        let rules: usize = g
+            .relations
+            .iter()
+            .filter_map(|r| r.change.as_ref())
+            .map(|c| c.rules.len())
+            .sum();
+        println!(
+            "  relations: {} ({changes} changes, {rules} rules); by {}: {}",
+            g.relations.len(),
+            learned
+                .feature
+                .and_then(|f| part.inherent.get(f).copied())
+                .unwrap_or("-"),
+            by.join(" ")
+        );
         if let Some(a) = &g.accent {
             println!(
                 "  stress: {} classes, {} rules, {} listed",
@@ -243,29 +251,21 @@ fn try_language(
         }
         {
             let main: Vec<&Lexeme> = train.iter().filter(|l| l.source == 0).collect();
-            let s = eval::score(g, &g.orthography, &test, eval::Input::Headword);
-            let (mut common, mut rare) = ((0usize, 0usize), (0usize, 0usize));
-            for (cell, &(forms, right)) in s.cells.iter().enumerate() {
-                let have = main
-                    .iter()
-                    .filter(|l| l.cells.get(cell).is_some_and(|f| !f.is_empty()))
-                    .count();
-                let slot = if have * 10 < main.len() {
-                    &mut rare
-                } else {
-                    &mut common
-                };
-                slot.0 += forms;
-                slot.1 += right;
-            }
+            let s = eval::score(
+                g,
+                &g.orthography,
+                &test,
+                eval::Input::Headword,
+                &learned.seen,
+            );
             let pct = |(f, r): (usize, usize)| 100.0 * r as f64 / f.max(1) as f64;
             println!(
-                "  floor {:.2}%; common cells {:.2}% ({}), rare cells {:.2}% ({})",
+                "  floor {:.2}%; seen cells {:.2}% ({}), unseen cells {:.2}% ({})",
                 100.0 * eval::floor(&g.orthography, &main, &test),
-                pct(common),
-                common.0,
-                pct(rare),
-                rare.0
+                pct(s.seen),
+                s.seen.0,
+                pct(s.unseen),
+                s.unseen.0
             );
         }
         let inputs = if part.inherent.is_empty() {
@@ -278,7 +278,7 @@ fn try_language(
             ]
         };
         for input in inputs {
-            let s = eval::score(g, &g.orthography, &test, input);
+            let s = eval::score(g, &g.orthography, &test, input, &learned.seen);
             println!(
                 "  held-out {input:?}: {} words, {} forms, top-1 {:.2}% (letters {:.2}%), top-3 {:.2}%, calibration error {:.3}",
                 test.len(),
@@ -337,7 +337,13 @@ fn try_language(
             .filter(|l| l.source == 0 && seen.insert(l.key.clone()))
             .take(3000)
             .collect();
-        let s = eval::score(g, &g.orthography, &train_refs, eval::Input::Headword);
+        let s = eval::score(
+            g,
+            &g.orthography,
+            &train_refs,
+            eval::Input::Headword,
+            &learned.seen,
+        );
         println!(
             "  attested (sample of {}): top-1 {:.2}%",
             train_refs.len(),

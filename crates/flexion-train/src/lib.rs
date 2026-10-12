@@ -18,6 +18,7 @@ pub mod laws;
 pub mod learn;
 pub mod pipeline;
 pub mod print;
+pub mod relations;
 pub mod script;
 pub mod skeleton;
 pub mod spec;
@@ -51,7 +52,6 @@ pub fn shape(lang: &Language, part: &PartOfSpeech) -> Result<learn::Shape, Strin
     Ok(learn::Shape {
         cells: cells.total,
         lemma_cell,
-        fallback: (0..cells.total).map(|c| cells.fallback(c)).collect(),
         capitalized: part.capitalized,
         inherent: part
             .inherent

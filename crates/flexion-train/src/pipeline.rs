@@ -28,15 +28,7 @@ pub struct Measured {
     pub floor: f64,
     /// The shipped grammar on the dictionary's own words, typed in full.
     pub attested: Score,
-    /// Top-1 from the headword on the cells most training words have, and on
-    /// the rare ones (see [`RARE`]): `(forms, right)` each.
-    pub common: (usize, usize),
-    pub rare: (usize, usize),
 }
-
-/// A cell fewer than this share of the training words have is rare: its
-/// patterns rest on few words, or were filled in from other cells.
-const RARE: f64 = 0.1;
 
 /// The dictionary's words a grammar is checked on for attested accuracy, at
 /// most.
@@ -85,26 +77,21 @@ pub fn build<'s>(
             .iter()
             .filter(|l| eval::bucket(&l.key) == eval::TEST && l.source == 0)
             .collect();
-        let full = eval::score(g, &orthography, &test, Input::Full);
-        let headword = eval::score(g, &orthography, &test, Input::Headword);
-        let citation = (!parts.is_empty())
-            .then(|| eval::score(g, &orthography, &test, Input::Citation(&parts)));
+        let full = eval::score(g, &orthography, &test, Input::Full, &scored.seen);
+        let headword = eval::score(g, &orthography, &test, Input::Headword, &scored.seen);
+        let citation = (!parts.is_empty()).then(|| {
+            eval::score(
+                g,
+                &orthography,
+                &test,
+                Input::Citation(&parts),
+                &scored.seen,
+            )
+        });
         let features = (!part.inherent.is_empty())
-            .then(|| eval::score(g, &orthography, &test, Input::Features));
+            .then(|| eval::score(g, &orthography, &test, Input::Features, &scored.seen));
         let main: Vec<&Lexeme> = train.iter().filter(|l| l.source == 0).collect();
         let floor = eval::floor(&orthography, &main, &test);
-        let (mut common, mut rare) = ((0, 0), (0, 0));
-        for (cell, &(forms, right)) in headword.cells.iter().enumerate() {
-            let have = main
-                .iter()
-                .filter(|l| l.cells.get(cell).is_some_and(|f| !f.is_empty()))
-                .count();
-            #[allow(clippy::cast_precision_loss)]
-            let share = have as f64 / main.len().max(1) as f64;
-            let slot = if share < RARE { &mut rare } else { &mut common };
-            slot.0 += forms;
-            slot.1 += right;
-        }
         let mut shipped = learned(&d.lexemes);
         shipped.grammar.sharpness = sharpness;
         // Attested: an even sample of the dictionary's own words (of
@@ -118,7 +105,13 @@ pub fn build<'s>(
             .collect();
         let step = own.len().div_ceil(ATTESTED).max(1);
         let sample: Vec<&Lexeme> = own.into_iter().step_by(step).collect();
-        let attested = eval::score(&shipped.grammar, &orthography, &sample, Input::Full);
+        let attested = eval::score(
+            &shipped.grammar,
+            &orthography,
+            &sample,
+            Input::Full,
+            &shipped.seen,
+        );
         eprintln!(
             "{} {}: held-out top-1 {:.2}% from the headword ({:.2}% in full)",
             lang.name,
@@ -136,8 +129,6 @@ pub fn build<'s>(
             features,
             floor,
             attested,
-            common,
-            rare,
         });
         grammars.push(shipped);
     }
@@ -175,13 +166,14 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
          with every mark the dictionary's table writes, and said to be so (`spelled_in_full`).\n\
          *Principal parts given*: top-1 of the other forms, given the dictionary's principal\n\
          parts. *Features given*: top-1 from the headword, told the word's inherent features\n\
-         (its gender, as `.gender(…)` tells it). *Common* and *rare cells*: top-1 on the cells at least a tenth of the training\n\
-         words have, and on the others (with the number of forms). *Floor*: the CoNLL–SIGMORPHON\n\
+         (its gender, as `.gender(…)` tells it). *Seen* and *unseen cells*: top-1 on the cells some training word of\n\
+         the word's paradigm has a form in, and on the others, derived from other cells (with\n\
+         the number of forms). *Floor*: the CoNLL–SIGMORPHON\n\
          2017 shared task's non-neural baseline (letters only). *Attested*: top-1 of the shipped grammar on the dictionary's\n\
          own words, typed in full.\n\n",
     );
     s.push_str(
-        "| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | features given | common cells | rare cells | floor | attested |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n",
+        "| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | features given | seen cells | unseen cells | floor | attested |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n",
     );
     // `right` of `forms`, as a percentage with the count of forms.
     let share = |(forms, right): (usize, usize)| {
@@ -214,8 +206,8 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
             m.features
                 .as_ref()
                 .map_or(String::new(), |c| format!("{:.2}%", 100.0 * c.accuracy())),
-            share(m.common),
-            share(m.rare),
+            share(m.headword.seen),
+            share(m.headword.unseen),
             100.0 * m.floor,
             100.0 * m.attested.accuracy(),
         );

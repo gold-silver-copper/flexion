@@ -14,7 +14,7 @@ pub use grammar::{
     restore, sharpen,
 };
 pub use orthography::{Casing, Orthography, Stress, Written, recase};
-pub use paradigm::{Form, Paradigm, REFERRED, Referral};
+pub use paradigm::{DERIVED, Form, Paradigm, Relation};
 pub use sound_law;
 pub use stress::{
     Accent, AccentPattern, Finals, Place, Prosody, StressClass, Syllable, place as stress_place,
@@ -157,30 +157,39 @@ impl std::error::Error for UnknownValue {}
 #[macro_export]
 macro_rules! choice {
     (
-        rules { $( $ending:literal => [ $( $value:tt $count:literal ),* $(,)? ] ),* $(,)? }
+        rules { $( $ending:literal => [ $( $value:tt $count:literal ),* $(,)? ] $(+ $rest:literal)? ),* $(,)? }
         listed { $( $word:literal => $listed:tt ),* $(,)? }
     ) => {
-        $crate::choice!(@ $crate::Side::End; $( $ending => [ $( $value $count ),* ] ),*; $( $word => $listed ),*)
+        $crate::choice!(@ $crate::Side::End; $( $ending => [ $( $value $count ),* ] (0 $(+ $rest)?) ),*; $( $word => $listed ),*)
     };
     (
-        starts { $( $ending:literal => [ $( $value:tt $count:literal ),* $(,)? ] ),* $(,)? }
+        starts { $( $ending:literal => [ $( $value:tt $count:literal ),* $(,)? ] $(+ $rest:literal)? ),* $(,)? }
         listed { $( $word:literal => $listed:tt ),* $(,)? }
     ) => {
-        $crate::choice!(@ $crate::Side::Start; $( $ending => [ $( $value $count ),* ] ),*; $( $word => $listed ),*)
+        $crate::choice!(@ $crate::Side::Start; $( $ending => [ $( $value $count ),* ] (0 $(+ $rest)?) ),*; $( $word => $listed ),*)
     };
-    (@ $side:expr; $( $ending:literal => [ $( $value:tt $count:literal ),* ] ),*; $( $word:literal => $listed:tt ),*) => {
+    (@ $side:expr; $( $ending:literal => [ $( $value:tt $count:literal ),* ] ($($rest:tt)*) ),*; $( $word:literal => $listed:tt ),*) => {
         $crate::Choice {
             side: $side,
             rules: ::std::borrow::Cow::Borrowed(&[ $(
                 $crate::Rule {
                     ending: ::std::borrow::Cow::Borrowed($ending),
                     counts: ::std::borrow::Cow::Borrowed(&[ $( ($value, $count) ),* ]),
+                    rest: $($rest)*,
                 }
             ),* ]),
             exceptions: ::std::borrow::Cow::Borrowed(&[ $(
                 (::std::borrow::Cow::Borrowed($word), $listed)
             ),* ]),
         }
+    };
+}
+
+/// A relation's changes written as data: `(old ending, new ending)`.
+#[macro_export]
+macro_rules! changes {
+    ( $( ($old:literal, $new:literal) ),* $(,)? ) => {
+        ::std::borrow::Cow::Borrowed(&[ $( (::std::borrow::Cow::Borrowed($old), ::std::borrow::Cow::Borrowed($new)) ),* ])
     };
 }
 
@@ -192,12 +201,13 @@ macro_rules! spellings {
     };
 }
 
-/// A cell of a paradigm table, as text: a pattern (`"~а"`), `referred` (see
-/// [`Referral`]), or `_` for the parent's.
+/// A cell of a paradigm table, as text: a pattern (`"~а"`), `derived` (see
+/// [`Relation`]), or `_` for the parent's.
 #[macro_export]
 macro_rules! cell {
-    (referred) => {
-        $crate::REFERRED
+    // `concat!` takes literals only: this is `DERIVED`.
+    (derived) => {
+        "="
     };
     (_) => {
         ""

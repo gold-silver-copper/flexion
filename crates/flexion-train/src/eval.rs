@@ -51,8 +51,10 @@ pub struct Score {
     /// Per probability tenth of the top candidate: `(forms, right, sum of
     /// probabilities)`.
     pub bins: [(usize, usize, f64); 10],
-    /// Per cell: `(forms, right)`.
-    pub cells: Vec<(usize, usize)>,
+    /// `(forms, right)` on the cells the word's paradigm (its likeliest
+    /// one) has some training word's form in, and on the others.
+    pub seen: (usize, usize),
+    pub unseen: (usize, usize),
 }
 
 impl Score {
@@ -96,12 +98,14 @@ pub fn same_form(orthography: &flexion::Orthography<'_>, a: &str, b: &str) -> bo
 }
 
 /// Score `grammar` on `lexemes` (held out), every cell the dictionary lists,
-/// against its first form, typed as `input`.
+/// against its first form, typed as `input`. `seen`: per paradigm, the
+/// cells its training words have forms in.
 pub fn score<P: Label, A: Label, F: Label>(
     grammar: &flexion::Grammar<'_, P, A, F>,
     orthography: &flexion::Orthography<'_>,
     lexemes: &[&Lexeme],
     input: Input<'_>,
+    seen: &[Vec<bool>],
 ) -> Score {
     let mut s = Score::default();
     for l in lexemes {
@@ -124,6 +128,15 @@ pub fn score<P: Label, A: Label, F: Label>(
             .iter()
             .filter_map(|&c| Some((c, l.cells.get(c)?.first()?.as_str())))
             .collect();
+        let known = flexion::Known {
+            forms: &given,
+            inherent: &inherent,
+            full: !matches!(input, Input::Headword | Input::Features),
+        };
+        let has = grammar
+            .readings(&typed, &known)
+            .first()
+            .and_then(|r| seen.get(r.value.index()));
         for (cell, forms) in l.cells.iter().enumerate() {
             let Some(want) = forms.first() else {
                 continue;
@@ -131,12 +144,6 @@ pub fn score<P: Label, A: Label, F: Label>(
             if parts.contains(&cell) {
                 continue;
             }
-            let known = flexion::Known {
-                forms: &given,
-                inherent: &inherent,
-                full: !matches!(input, Input::Headword | Input::Features),
-                ..flexion::Known::default()
-            };
             let candidates = grammar.candidates(&typed, cell, &known);
             s.forms += 1;
             let same = |form: &str| same_form(orthography, form, want);
@@ -144,13 +151,13 @@ pub fn score<P: Label, A: Label, F: Label>(
             if right {
                 s.right += 1;
             }
-            if s.cells.len() <= cell {
-                s.cells.resize(cell + 1, (0, 0));
-            }
-            if let Some(c) = s.cells.get_mut(cell) {
-                c.0 += 1;
-                c.1 += usize::from(right);
-            }
+            let split = if has.is_none_or(|h| h.get(cell).copied().unwrap_or(false)) {
+                &mut s.seen
+            } else {
+                &mut s.unseen
+            };
+            split.0 += 1;
+            split.1 += usize::from(right);
             if candidates.first().is_some_and(|c| {
                 orthography.read(&c.form).letters == orthography.read(want).letters
             }) {

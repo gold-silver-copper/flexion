@@ -1,9 +1,10 @@
-//! Sound laws at the stem's edge: changes where a stem meets its ending
-//! (Greek `ε+ο → +ου`, Russian `к+ы → к+и`). They are found where a more
-//! general paradigm would build another paradigm's words but for such a
-//! change, and kept when they fix many forms and break few. The words they
-//! explain join the more general paradigm, and paradigms left without words
-//! go.
+//! Sound laws: changes where a stem meets its ending (Greek `γ+σ → +ξ`,
+//! Russian `[к|г|х]+ы → +и`), or of a letter of the ending by the nearest
+//! of some letters before it (Sanskrit `न → ण` after `र`). They are found
+//! where a word's paradigm, or a more general one, would build its forms but
+//! for such a change, and kept when they fix many forms and break few. The
+//! words they explain join the more general paradigm, and paradigms left
+//! without words go.
 
 use crate::HashMap;
 use flexion::pattern::{self, BOUNDARY};
@@ -11,12 +12,35 @@ use flexion::{Orthography, Paradigm};
 use sound_law::{Program, Rule, RuleSet};
 use std::borrow::Cow;
 
-/// One learned law: `from` (the stem's last letters, the boundary, the
-/// ending's first) becomes `to`, in `sound-law`'s notation.
+/// What a law changes.
+#[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum Change {
+    /// Where stem meets ending: after one of `stem` (the stem's last
+    /// letters), the ending's first letters `ending` and those of the stem
+    /// become `to` (with the boundary): `ε+ο → +ου`. With `keep`, the stem's
+    /// letter stays before `to`: `[к|г|х]+ы → +и`.
+    Edge {
+        stem: Vec<String>,
+        ending: String,
+        to: String,
+        keep: bool,
+    },
+    /// Along a tier: `letter` in the ending becomes `to` where the nearest
+    /// of `on` and `off` before it is one of `on`, and none of `stop`
+    /// follows it.
+    Tier {
+        letter: char,
+        to: char,
+        on: Vec<char>,
+        off: Vec<char>,
+        stop: Vec<char>,
+    },
+}
+
+/// One learned law.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Law {
-    pub from: String,
-    pub to: String,
+    pub change: Change,
     /// The words whose forms it gives.
     pub words: u32,
     /// Some of them.
@@ -26,33 +50,149 @@ pub struct Law {
 }
 
 impl std::fmt::Display for Law {
-    /// As a grammar states it: `ε+ο → +ου`; for a law on several letters,
-    /// `[к|г|х]+ы → +и`; for one on a tier, `न → ण after र, ष unless त, …
-    /// comes between, not before ्`.
+    /// As a grammar states it: `ε+ο → +ου`, `[к|г|х]+ы → +и`, `न → ण after र,
+    /// ष unless त, … comes between, not before ्`.
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        if let Some(t) = tier_parts(&self.from) {
-            let off: Vec<&str> = t
-                .tier
-                .iter()
-                .filter(|l| !t.on.contains(l))
-                .copied()
-                .collect();
-            write!(f, "{} → {} after {}", t.letter, self.to, t.on.join(", "))?;
-            if !off.is_empty() {
-                write!(f, " unless {} comes between", off.join(", "))?;
+        let list = |l: &[char]| l.iter().map(char::to_string).collect::<Vec<_>>().join(", ");
+        match &self.change {
+            Change::Edge {
+                stem, ending, to, ..
+            } => match stem.as_slice() {
+                [one] => write!(f, "{one}{BOUNDARY}{ending} → {to}"),
+                many => write!(f, "[{}]{BOUNDARY}{ending} → {to}", many.join("|")),
+            },
+            Change::Tier {
+                letter,
+                to,
+                on,
+                off,
+                stop,
+            } => {
+                write!(f, "{letter} → {to} after {}", list(on))?;
+                if !off.is_empty() {
+                    write!(f, " unless {} comes between", list(off))?;
+                }
+                if !stop.is_empty() {
+                    write!(f, ", not before {}", list(stop))?;
+                }
+                Ok(())
             }
-            if !t.stop.is_empty() {
-                write!(f, ", not before {}", t.stop.join(", "))?;
-            }
-            return Ok(());
         }
-        let plain = |s: &str| s.replace("{x:", "").replace("{x}", "").replace('}', "");
-        write!(f, "{} → {}", plain(&self.from), plain(&self.to))
     }
 }
 
+impl Change {
+    /// What it makes of a form built marked at the stem's edge; `None` where
+    /// it doesn't apply. A law on a tier runs as its compiled rule.
+    fn rewrite(&self, built: &str) -> Option<String> {
+        match self {
+            Change::Edge {
+                stem: letters,
+                ending: first,
+                to,
+                keep,
+            } => {
+                let (stem, ending) = built.split_once(BOUNDARY)?;
+                let rest = ending.strip_prefix(first.as_str())?;
+                let letter = letters.iter().find(|l| stem.ends_with(l.as_str()))?;
+                let head = stem.strip_suffix(letter.as_str())?;
+                let kept = if *keep { letter.as_str() } else { "" };
+                Some(format!("{head}{kept}{to}{rest}"))
+            }
+            Change::Tier { .. } => compile(std::slice::from_ref(self)).map(|p| p.apply(built)),
+        }
+    }
+
+    /// Whether it may apply where a build has `window` around its boundary:
+    /// a law on a tier, wherever its letter is.
+    fn applies(&self, (before, after): &(String, String), built: &str) -> bool {
+        match self {
+            Change::Edge { stem, ending, .. } => {
+                after.starts_with(ending.as_str())
+                    && stem.iter().any(|l| before.ends_with(l.as_str()))
+            }
+            Change::Tier { letter, .. } => built.contains(*letter),
+        }
+    }
+
+    /// As `sound-law` states it: what changes into what, what must come
+    /// before, and what after stops it.
+    fn rule(&self) -> [String; 4] {
+        let list = |l: &[char]| l.iter().map(char::to_string).collect::<Vec<_>>().join("|");
+        match self {
+            Change::Edge {
+                stem,
+                ending,
+                to,
+                keep: false,
+            } => [
+                stem.join("|") + &BOUNDARY.to_string() + ending,
+                to.clone(),
+                String::new(),
+                String::new(),
+            ],
+            Change::Edge {
+                stem,
+                ending,
+                to,
+                keep: true,
+            } => [
+                format!("{{x:[{}]}}{BOUNDARY}{ending}", stem.join("|")),
+                format!("{{x}}{to}"),
+                String::new(),
+                String::new(),
+            ],
+            // The letter is the ending's: the stem's are as the dictionary
+            // writes them.
+            Change::Tier {
+                letter,
+                to,
+                on,
+                off,
+                stop,
+            } => {
+                let tier = list(&[on.as_slice(), off.as_slice()].concat());
+                [
+                    letter.to_string(),
+                    to.to_string(),
+                    format!(
+                        "{{t:[{}]}}{{a:![{tier}]*}}{BOUNDARY}{{b:![{tier}]*}}",
+                        list(on)
+                    ),
+                    if stop.is_empty() {
+                        String::new()
+                    } else {
+                        format!("{{[{}]}}", list(stop))
+                    },
+                ]
+            }
+        }
+    }
+}
+
+/// The laws compiled, in order.
+pub fn compile(changes: &[Change]) -> Option<Program<'static>> {
+    let texts: Vec<(String, [String; 4])> = changes
+        .iter()
+        .enumerate()
+        .map(|(i, c)| (format!("law{i}"), c.rule()))
+        .collect();
+    let rules: Vec<Rule<'_>> = texts
+        .iter()
+        .map(|(name, [target, to, before, stop])| {
+            let rule = Rule::new(name, target, to).in_context(before, "");
+            if stop.is_empty() {
+                rule
+            } else {
+                rule.unless_context("", stop)
+            }
+        })
+        .collect();
+    RuleSet::new(&[], &rules).compile().ok()
+}
+
 /// A word, as the learner sees it: its letters, and per cell its usual form
-/// (`None` where the dictionary has none, or the cell is referred).
+/// (`None` where the dictionary has none, or the cell is derived).
 pub struct Word<'w> {
     pub letters: &'w str,
     pub forms: Vec<Option<&'w str>>,
@@ -77,11 +217,11 @@ struct Reading {
     right: usize,
 }
 
-/// A law kept, the words whose forms it gives, and how many forms.
-type Kept = (Law, Vec<usize>, usize);
-
 /// A build: its word, its reading, its place among the word's forms.
 type At = (usize, usize, usize);
+
+/// A law kept, the words whose forms it gives, and how many forms.
+type Kept = (Law, Vec<usize>, usize);
 
 /// The laws, and the paradigms and assignment once the words they explain
 /// have joined more general paradigms.
@@ -113,6 +253,16 @@ pub fn learn<'s>(
         .iter()
         .map(|w| w.forms.iter().flatten().copied().collect())
         .collect();
+    let cells_of: Vec<Vec<usize>> = words
+        .iter()
+        .map(|w| {
+            w.forms
+                .iter()
+                .enumerate()
+                .filter_map(|(c, f)| f.map(|_| c))
+                .collect()
+        })
+        .collect();
     let readings: Vec<Vec<Reading>> = words
         .iter()
         .zip(&assignment)
@@ -124,20 +274,18 @@ pub fn learn<'s>(
                 .collect()
         })
         .collect();
-    // Every change that would let a word's paradigm, or a more general one,
-    // build a form it has, and the words it would do that for.
-    let mut support: HashMap<(String, String), u32> = HashMap::default();
+    // Every change that would let a word's paradigm (where a change explains
+    // the form), or a more general one (all its forms), build a form it has,
+    // with the words it would do that for.
+    let mut support: HashMap<Change, u32> = HashMap::default();
     for (rs, fs) in readings.iter().zip(&forms) {
         let Some(own) = rs.first() else { continue };
-        // Its own paradigm's wrong forms, each that a change explains; a
-        // more general paradigm's, all of them.
-        let mut mine: Vec<(String, String)> = own
+        let mut mine: Vec<Change> = own
             .builds
             .iter()
             .zip(fs)
             .filter(|(b, f)| !same(b, f))
-            .filter_map(|(b, f)| b.split_once(BOUNDARY).map(|(s, e)| edits(s, e, f)))
-            .flatten()
+            .flat_map(|(b, f)| edits(b, f))
             .collect();
         mine.extend(
             rs.iter()
@@ -151,22 +299,11 @@ pub fn learn<'s>(
             *support.entry(edit).or_default() += 1;
         }
     }
-    let mut candidates: Vec<((String, String), u32)> = classes(&support);
+    let mut candidates: Vec<(Change, u32)> = classes(&support);
     candidates.extend(support);
     candidates.extend(tiers(&readings, &forms));
     candidates.retain(|&(_, n)| n as usize >= MIN_WORDS);
     candidates.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(&b.0)));
-    // The cell of each form a word has.
-    let cells_of: Vec<Vec<usize>> = words
-        .iter()
-        .map(|w| {
-            w.forms
-                .iter()
-                .enumerate()
-                .filter_map(|(c, f)| f.map(|_| c))
-                .collect()
-        })
-        .collect();
     let (laws, moved) = greedy(
         &candidates,
         readings,
@@ -188,15 +325,8 @@ pub fn learn<'s>(
             law
         })
         .collect();
-    let program = (!laws.is_empty())
-        .then(|| {
-            let rules: Vec<(String, String)> = laws
-                .iter()
-                .map(|l| (l.from.clone(), l.to.clone()))
-                .collect();
-            compile(&rules)
-        })
-        .flatten();
+    let changes: Vec<Change> = laws.iter().map(|l| l.change.clone()).collect();
+    let program = (!laws.is_empty()).then(|| compile(&changes)).flatten();
     // A word stays where it was unless, under the laws kept, the paradigm
     // it moved to builds its forms as well.
     let right = |p: u16, w: &Word<'_>| {
@@ -204,9 +334,13 @@ pub fn learn<'s>(
             r.builds
                 .iter()
                 .zip(w.forms.iter().flatten())
-                .filter(|(b, f)| match &program {
-                    Some(laws) => same(&laws.apply(b), f),
-                    None => same(b, f),
+                .filter(|(b, f)| {
+                    same(
+                        &program
+                            .as_ref()
+                            .map_or_else(|| b.to_string(), |p| p.apply(b)),
+                        f,
+                    )
                 })
                 .count()
         })
@@ -236,21 +370,23 @@ fn reading(
 ) -> Option<Reading> {
     let par = paradigms.get(p)?;
     let stems = par.stems(orthography, w.letters)?;
-    let (builds, right) = w
+    let builds: Vec<String> = w
         .forms
         .iter()
         .enumerate()
-        .filter_map(|(cell, f)| Some((cell, (*f)?)))
-        .fold((Vec::new(), 0), |(mut builds, right), (cell, form)| {
-            let built = par
-                .pattern(paradigms, cell)
+        .filter(|(_, f)| f.is_some())
+        .map(|(cell, _)| {
+            par.pattern(paradigms, cell)
                 .and_then(|pat| pattern::variants(pat).next())
                 .map(|v| pattern::fill_marked(v, &stems))
-                .unwrap_or_default();
-            let right = right + usize::from(same(&built, form));
-            builds.push(built);
-            (builds, right)
-        });
+                .unwrap_or_default()
+        })
+        .collect();
+    let right = builds
+        .iter()
+        .zip(w.forms.iter().flatten())
+        .filter(|(b, f)| same(b, f))
+        .count();
     Some(Reading {
         paradigm: p,
         builds,
@@ -260,64 +396,42 @@ fn reading(
 
 /// The laws, tried in turn (the best supported first), and the assignment
 /// after the words they explain moved. A law is kept when it fixes forms of
-/// enough words (under their paradigm or a more general one) and breaks few
-/// their paradigm gave; with each, the words whose forms it gives (by their
-/// place in `forms`) and how many forms.
+/// enough words, in more than one cell (a sound law applies wherever its
+/// letters meet), and breaks few their paradigm gave; with each, the words
+/// whose forms it gives (by their place in `forms`) and how many forms.
 fn greedy(
-    candidates: &[((String, String), u32)],
+    candidates: &[(Change, u32)],
     mut readings: Vec<Vec<Reading>>,
     forms: &[Vec<&str>],
     cells_of: &[Vec<usize>],
     mut assignment: Vec<u16>,
     rank: &dyn Fn(usize) -> (usize, usize),
 ) -> (Vec<Kept>, Vec<u16>) {
-    // Builds by the stem's last letter and the letters around their
-    // boundary.
-    let mut index: Index = HashMap::default();
+    // Builds by the letters around their boundary.
+    let mut index: HashMap<(String, String), Vec<At>> = HashMap::default();
     for (w, rs) in readings.iter().enumerate() {
         for (r, reading) in rs.iter().enumerate() {
             for (k, built) in reading.builds.iter().enumerate() {
-                file(&mut index, built, (w, r, k));
+                index.entry(window(built)).or_default().push((w, r, k));
             }
         }
     }
     let form = |w: usize, k: usize| forms.get(w).and_then(|f| f.get(k)).copied().unwrap_or("");
     let mut laws: Vec<(Law, Vec<At>)> = Vec::new();
-    for ((from, to), _) in candidates {
-        let tier = tier_letter(from);
-        // A law on a tier runs as its compiled rule; one at the edge, as a
-        // rewrite.
-        let law = match tier {
-            Some(_) => match compile(&[(from.clone(), to.clone())]) {
-                Some(law) => Some(law),
+    for (change, _) in candidates {
+        // A law on a tier runs as its rule, once compiled.
+        let program = match change {
+            Change::Tier { .. } => match compile(std::slice::from_ref(change)) {
+                Some(p) => Some(p),
                 None => continue,
             },
-            None => None,
+            Change::Edge { .. } => None,
         };
-        let mut at: Vec<At> = match tier {
-            // A law on a tier looks at every build with its letter.
-            Some(x) => readings
-                .iter()
-                .enumerate()
-                .flat_map(|(w, rs)| {
-                    rs.iter().enumerate().flat_map(move |(r, reading)| {
-                        reading
-                            .builds
-                            .iter()
-                            .enumerate()
-                            .filter(move |(_, b)| b.contains(x))
-                            .map(move |(k, _)| (w, r, k))
-                    })
-                })
-                .collect(),
-            None => stem_ends(from)
-                .iter()
-                .filter_map(|c| index.get(c))
-                .flatten()
-                .filter(|(k, _)| applies(from, k))
-                .flat_map(|(_, v)| v.iter().copied())
-                .collect(),
-        };
+        let mut at: Vec<At> = index
+            .iter()
+            .filter(|(k, _)| matches!(change, Change::Tier { .. }) || change.applies(k, ""))
+            .flat_map(|(_, v)| v.iter().copied())
+            .collect();
         at.sort_unstable();
         at.dedup();
         let mut changes: Vec<(At, String)> = Vec::new();
@@ -327,17 +441,17 @@ fn greedy(
             let Some(reading) = readings.get(w).and_then(|rs| rs.get(r)) else {
                 continue;
             };
-            // An entry the laws so far have moved elsewhere.
+            // Not an entry the laws so far have moved elsewhere.
             let Some(built) = reading
                 .builds
                 .get(k)
-                .filter(|b| tier.is_some() || applies(from, &window(b)))
+                .filter(|b| change.applies(&window(b), b))
             else {
                 continue;
             };
-            let after = match &law {
-                Some(law) => law.apply(built),
-                None => rewrite(from, to, built).unwrap_or_else(|| built.clone()),
+            let after = match &program {
+                Some(p) => p.apply(built),
+                None => change.rewrite(built).unwrap_or_else(|| built.clone()),
             };
             if after == *built {
                 continue;
@@ -346,9 +460,7 @@ fn greedy(
             let own = assignment
                 .get(w)
                 .is_some_and(|&p| usize::from(p) == reading.paradigm);
-            if own && was && !is {
-                breaks += 1;
-            }
+            breaks += u32::from(own && was && !is);
             if !was && is {
                 fixed.push((w, r, k));
             }
@@ -356,8 +468,6 @@ fn greedy(
         }
         let mut fixed_words: Vec<usize> = fixed.iter().map(|a| a.0).collect();
         fixed_words.dedup();
-        // A sound law applies wherever its letters meet: in more than one
-        // cell.
         let mut fixed_cells: Vec<usize> = fixed
             .iter()
             .filter_map(|&(w, _, k)| cells_of.get(w)?.get(k).copied())
@@ -373,15 +483,19 @@ fn greedy(
         }
         for ((w, r, k), after) in changes {
             let want = form(w, k);
-            let Some(reading) = readings.get_mut(w).and_then(|rs| rs.get_mut(r)) else {
+            let Some(built) =
+                readings
+                    .get_mut(w)
+                    .and_then(|rs| rs.get_mut(r))
+                    .and_then(|reading| {
+                        reading.right = (reading.right + usize::from(same(&after, want)))
+                            .saturating_sub(usize::from(same(reading.builds.get(k)?, want)));
+                        reading.builds.get_mut(k)
+                    })
+            else {
                 continue;
             };
-            let Some(built) = reading.builds.get_mut(k) else {
-                continue;
-            };
-            reading.right = (reading.right + usize::from(same(&after, want)))
-                .saturating_sub(usize::from(same(built, want)));
-            file(&mut index, &after, (w, r, k));
+            index.entry(window(&after)).or_default().push((w, r, k));
             *built = after;
         }
         // A word whose forms a more general paradigm now builds as well as
@@ -405,16 +519,13 @@ fn greedy(
                 *own = p;
             }
         }
-        laws.push((
-            Law {
-                from: from.clone(),
-                to: to.clone(),
-                words: 0,
-                examples: Vec::new(),
-                breaks,
-            },
-            fixed,
-        ));
+        let law = Law {
+            change: change.clone(),
+            words: 0,
+            examples: Vec::new(),
+            breaks,
+        };
+        laws.push((law, fixed));
     }
     // What each law did for the words that moved: forms it fixed that their
     // new paradigm still builds.
@@ -450,72 +561,18 @@ fn pays(law: &Law, users: &[usize], forms: usize) -> bool {
     users.len() >= MIN_WORDS && f64::from(law.breaks) <= BREAKS * forms as f64
 }
 
-/// What a law at the stem's edge makes of a build, as its compiled rule
-/// does, but quicker: the letters around the boundary replaced. `None` where
-/// it doesn't apply.
-fn rewrite(from: &str, to: &str, built: &str) -> Option<String> {
-    let (a, b) = from.split_once(BOUNDARY)?;
-    let (stem, ending) = built.split_once(BOUNDARY)?;
-    let rest = ending.strip_prefix(b)?;
-    let (head, kept) = match a.strip_prefix("{x:[").and_then(|a| a.strip_suffix("]}")) {
-        Some(letters) => {
-            let letter = letters.split('|').find(|l| stem.ends_with(l))?;
-            (stem.strip_suffix(letter)?, letter)
-        }
-        None => (stem.strip_suffix(a)?, ""),
-    };
-    Some(format!("{head}{}{rest}", to.replace("{x}", kept)))
-}
-
-/// Builds by the stem's last letter, then the letters around their
-/// boundary.
-type Index = HashMap<char, HashMap<(String, String), Vec<At>>>;
-
-fn file(index: &mut Index, built: &str, at: At) {
-    let around = window(built);
-    let last = around.0.chars().last().unwrap_or(BOUNDARY);
-    index
-        .entry(last)
-        .or_default()
-        .entry(around)
-        .or_default()
-        .push(at);
-}
-
-/// The stem's last letters a law at the stem's edge applies after.
-fn stem_ends(from: &str) -> Vec<char> {
-    let a = from.split_once(BOUNDARY).map_or("", |(a, _)| a);
-    a.strip_prefix("{x:[")
-        .and_then(|a| a.strip_suffix("]}"))
-        .map_or_else(|| vec![a], |a| a.split('|').collect())
-        .iter()
-        .map(|a| a.chars().last().unwrap_or(BOUNDARY))
-        .collect()
-}
-
 /// The letters around a build's boundary: up to two before, two after.
 fn window(built: &str) -> (String, String) {
     let (stem, ending) = built.split_once(BOUNDARY).unwrap_or(("", built));
-    let mut before: Vec<char> = stem.chars().rev().take(2).collect();
-    before.reverse();
-    (
-        before.into_iter().collect(),
-        ending.chars().take(2).collect(),
-    )
-}
-
-/// Whether the law changing `from` (`a+b`) applies where a build's boundary
-/// has `window` around it.
-fn applies(from: &str, (before, after): &(String, String)) -> bool {
-    let Some((a, b)) = from.split_once(BOUNDARY) else {
-        return false;
-    };
-    let letters = a.strip_prefix("{x:[").and_then(|a| a.strip_suffix("]}"));
-    after.starts_with(b)
-        && match letters {
-            Some(letters) => letters.split('|').any(|a| before.ends_with(a)),
-            None => before.ends_with(a),
-        }
+    let before: String = stem
+        .chars()
+        .rev()
+        .take(2)
+        .collect::<Vec<_>>()
+        .into_iter()
+        .rev()
+        .collect();
+    (before, ending.chars().take(2).collect())
 }
 
 /// Per paradigm, the more general paradigms with the same number of stem
@@ -546,14 +603,10 @@ fn neighbours(
             let mut close: Vec<((usize, usize), usize)> = (0..paradigms.len())
                 .filter(|&p| rank(p) < rank(q))
                 .filter(|&p| {
-                    paradigms
-                        .get(p)
-                        .is_some_and(|p| pattern::pieces(&p.lemma) == pattern::pieces(&me.lemma))
-                })
-                .filter(|&p| {
-                    paradigms
-                        .get(p)
-                        .is_some_and(|p| stem_like(&p.lemma, &me.lemma, mine))
+                    paradigms.get(p).is_some_and(|p| {
+                        pattern::pieces(&p.lemma) == pattern::pieces(&me.lemma)
+                            && stem_like(&p.lemma, &me.lemma, mine)
+                    })
                 })
                 .filter_map(|p| {
                     let theirs = tables.get(p)?;
@@ -574,32 +627,48 @@ fn neighbours(
 /// `~о`, `~а`, `~у`).
 fn stem_like(general: &str, lemma: &str, cells: &[&str]) -> bool {
     let end = |p: &str| p.rsplit_once('~').map(|(_, e)| e.to_string());
-    let (Some(general), Some(lemma)) = (end(general), end(lemma)) else {
+    let Some(moved) = end(lemma)
+        .zip(end(general))
+        .and_then(|(l, g)| l.strip_suffix(g.as_str()).map(str::to_string))
+    else {
         return false;
     };
-    let Some(moved) = lemma.strip_suffix(general.as_str()) else {
-        return false;
-    };
-    let begins = cells
+    let had: Vec<&&str> = cells.iter().filter(|c| !c.is_empty()).collect();
+    let begins = had
         .iter()
-        .filter(|c| !c.is_empty())
-        .filter(|c| end(c).is_some_and(|e| e.starts_with(moved)))
+        .filter(|c| end(c).is_some_and(|e| e.starts_with(&moved)))
         .count();
-    let all = cells.iter().filter(|c| !c.is_empty()).count();
-    moved.is_empty() || 2 * begins >= all
+    moved.is_empty() || 2 * begins >= had.len()
+}
+
+/// Whether pattern `p` builds what `q` does but for a change of the stem's
+/// last letters and the ending's first two at most: the same before the
+/// last stem piece, and `q`'s ending is `p`'s, its first letters changed
+/// (`~ομεν`, `~ουμεν`).
+fn near(p: &str, q: &str) -> bool {
+    let (Some((p_head, p_end)), Some((q_head, q_end))) = (p.rsplit_once('~'), q.rsplit_once('~'))
+    else {
+        return p == q;
+    };
+    let (p_end, q_end): (Vec<char>, Vec<char>) = (p_end.chars().collect(), q_end.chars().collect());
+    p_head == q_head
+        && (0..=2).any(|m| {
+            p_end
+                .get(m..)
+                .is_some_and(|rest| q_end.ends_with(rest) && q_end.len() <= rest.len() + 4)
+        })
 }
 
 /// The changes at the stem's edge that would let reading `r` build the forms
 /// the word's `own` reading builds: every way of explaining each (see
 /// [`edits`]). `None` when one can't be explained so, or none differs.
-fn options(own: &Reading, r: &Reading, forms: &[&str]) -> Option<Vec<(String, String)>> {
-    let mut out: Vec<(String, String)> = Vec::new();
+fn options(own: &Reading, r: &Reading, forms: &[&str]) -> Option<Vec<Change>> {
+    let mut out: Vec<Change> = Vec::new();
     for ((built, mine), want) in r.builds.iter().zip(&own.builds).zip(forms) {
         if same(built, want) || !same(mine, want) {
             continue;
         }
-        let (stem, ending) = built.split_once(BOUNDARY)?;
-        let ways = edits(stem, ending, want);
+        let ways = edits(built, want);
         if ways.is_empty() {
             return None;
         }
@@ -609,19 +678,26 @@ fn options(own: &Reading, r: &Reading, forms: &[&str]) -> Option<Vec<(String, St
 }
 
 /// The changes of the stem's last letters (one or two) and the ending's
-/// first (none to two) that turn `stem` + `ending` into `want`, as
-/// `(from, to)`: `("ε+ο", "+ου")`. What stays of the stem keeps the boundary
-/// after it.
-fn edits(stem: &str, ending: &str, want: &str) -> Vec<(String, String)> {
-    let stem: Vec<char> = stem.chars().collect();
-    let ending: Vec<char> = ending.chars().collect();
-    let want: Vec<char> = want.chars().collect();
+/// first (none to two) that turn `built` into `want`: `ε+ο → +ου`. What
+/// stays of the stem keeps the boundary after it.
+fn edits(built: &str, want: &str) -> Vec<Change> {
+    let Some((stem, ending)) = built.split_once(BOUNDARY) else {
+        return Vec::new();
+    };
+    let (stem, ending, want): (Vec<char>, Vec<char>, Vec<char>) = (
+        stem.chars().collect(),
+        ending.chars().collect(),
+        want.chars().collect(),
+    );
     let mut out = Vec::new();
     for k in 1..=2usize {
         for m in 0..=2usize {
+            let Some(h) = stem.len().checked_sub(k) else {
+                continue;
+            };
             let (Some(head), Some(a), Some(b), Some(tail)) = (
-                stem.len().checked_sub(k).and_then(|h| stem.get(..h)),
-                stem.len().checked_sub(k).and_then(|h| stem.get(h..)),
+                stem.get(..h),
+                stem.get(h..),
                 ending.get(..m),
                 ending.get(m..),
             ) else {
@@ -637,107 +713,113 @@ fn edits(stem: &str, ending: &str, want: &str) -> Vec<(String, String)> {
             let (Some(kept_part), Some(rest)) = (middle.get(..kept), middle.get(kept..)) else {
                 continue;
             };
-            let from: String = a.iter().chain(&[BOUNDARY]).chain(b).collect();
-            let to: String = kept_part.iter().chain(&[BOUNDARY]).chain(rest).collect();
-            out.push((from, to));
+            out.push(Change::Edge {
+                stem: vec![a.iter().collect()],
+                ending: b.iter().collect(),
+                to: kept_part.iter().chain(&[BOUNDARY]).chain(rest).collect(),
+                keep: false,
+            });
         }
     }
     out
 }
 
 /// The same change of an ending after one letter or another (`к+ы → к+и`,
-/// `г+ы → г+и`), as one law on those letters (`{x:[к|г]}+ы → {x}+и`), with
-/// the words of all of them.
-fn classes(support: &HashMap<(String, String), u32>) -> Vec<((String, String), u32)> {
+/// `г+ы → г+и`), as one law on those letters (`[к|г]+ы → +и`), with the
+/// words of all of them.
+fn classes(support: &HashMap<Change, u32>) -> Vec<(Change, u32)> {
     let mut by_change: HashMap<(&str, &str), Vec<(u32, &str)>> = HashMap::default();
-    for ((from, to), &n) in support {
-        let (Some((a, b)), Some((kept, rest))) =
-            (from.split_once(BOUNDARY), to.split_once(BOUNDARY))
-        else {
-            continue;
-        };
-        if a.chars().count() == 1 && a == kept {
-            by_change.entry((b, rest)).or_default().push((n, a));
+    for (change, &n) in support {
+        if let Change::Edge {
+            stem,
+            ending,
+            to,
+            keep: false,
+        } = change
+            && let [a] = stem.as_slice()
+            && a.chars().count() == 1
+            && let Some(rest) = to.strip_prefix(a.as_str())
+        {
+            by_change.entry((ending, rest)).or_default().push((n, a));
         }
     }
     by_change
         .into_iter()
         .filter(|(_, letters)| letters.len() > 1)
-        .map(|((b, rest), mut letters)| {
+        .map(|((ending, rest), mut letters)| {
             letters.sort_by(|x, y| y.cmp(x));
-            let alternatives: Vec<&str> = letters.iter().map(|l| l.1).collect();
-            let from = format!("{{x:[{}]}}{BOUNDARY}{b}", alternatives.join("|"));
-            let to = format!("{{x}}{BOUNDARY}{rest}");
-            ((from, to), letters.iter().map(|l| l.0).sum())
+            let change = Change::Edge {
+                stem: letters.iter().map(|l| l.1.to_string()).collect(),
+                ending: ending.to_string(),
+                to: rest.to_string(),
+                keep: true,
+            };
+            (change, letters.iter().map(|l| l.0).sum())
         })
         .collect()
 }
 
+/// A place an ending has the letter a law on a tier may change: the letters
+/// before it (the nearest first), the one after it, and whether the
+/// dictionary changes it.
+type Example = (Vec<char>, Option<char>, bool);
+
 /// Laws on a tier: one letter of an ending becomes another (`न` → `ण`) where
-/// the nearest of some letters before it (the tier) is one of a few (`र`,
-/// `ष`, `ृ`; not `त`, `च`, …): Sanskrit's n → ṇ, or a vowel harmony. Found
-/// where the change is away from the stem's edge (a change next to it is a
-/// law at the edge). As candidates, with the words that have the change.
-fn tiers(readings: &[Vec<Reading>], forms: &[Vec<&str>]) -> Vec<((String, String), u32)> {
-    // A build and its form, as letters, and where the ending starts.
-    let pairs = || {
-        readings.iter().zip(forms).flat_map(|(rs, fs)| {
+/// the nearest of some letters before it decides (see [`tier`]). Found where
+/// the change is away from the stem's edge (a change next to it is a law at
+/// the edge). As candidates, with the words that have the change.
+fn tiers(readings: &[Vec<Reading>], forms: &[Vec<&str>]) -> Vec<(Change, u32)> {
+    // Each build and its form, as letters, and where the ending starts.
+    let pairs: Vec<(usize, Vec<char>, Vec<char>, usize)> = readings
+        .iter()
+        .zip(forms)
+        .enumerate()
+        .flat_map(|(w, (rs, fs))| {
             rs.iter().flat_map(move |r| {
-                r.builds.iter().zip(fs).filter_map(|(b, f)| {
+                r.builds.iter().zip(fs).filter_map(move |(b, f)| {
                     let edge = b.chars().position(|c| c == BOUNDARY)?;
                     let built: Vec<char> = b.chars().filter(|&c| c != BOUNDARY).collect();
                     let form: Vec<char> = f.chars().collect();
-                    (built.len() == form.len()).then_some((built, form, edge))
+                    (built.len() == form.len()).then_some((w, built, form, edge))
                 })
             })
         })
-    };
-    // The changes of one letter of the ending, and the words with them.
+        .collect();
+    // The changes of one letter of the ending past its first, and the words
+    // with them.
     let mut changes: HashMap<(char, char), Vec<usize>> = HashMap::default();
-    for (w, rs) in readings.iter().enumerate() {
-        let fs = forms.get(w).map_or(&[][..], Vec::as_slice);
-        for r in rs {
-            for (b, f) in r.builds.iter().zip(fs) {
-                let (Some(edge), built) = (
-                    b.chars().position(|c| c == BOUNDARY),
-                    b.chars().filter(|&c| c != BOUNDARY),
-                ) else {
-                    continue;
-                };
-                let differ: Vec<(usize, (char, char))> = built
-                    .zip(f.chars())
-                    .enumerate()
-                    .filter(|(_, (a, b))| a != b)
-                    .collect();
-                if let [(at, change)] = differ.as_slice()
-                    && *at > edge
-                    && b.chars().count() == f.chars().count() + 1
-                {
-                    let words = changes.entry(*change).or_default();
-                    if words.last() != Some(&w) {
-                        words.push(w);
-                    }
-                }
+    for (w, built, form, edge) in &pairs {
+        let differ: Vec<(usize, (char, char))> = built
+            .iter()
+            .zip(form)
+            .enumerate()
+            .filter(|(_, (a, b))| a != b)
+            .map(|(i, (a, b))| (i, (*a, *b)))
+            .collect();
+        if let [(at, change)] = differ.as_slice()
+            && at > edge
+        {
+            let words = changes.entry(*change).or_default();
+            if words.last() != Some(w) {
+                words.push(*w);
             }
         }
     }
-    let mut out: Vec<((String, String), u32)> = changes
+    let mut out: Vec<(Change, u32)> = changes
         .into_iter()
         .filter(|(_, words)| words.len() >= MIN_WORDS)
-        .filter_map(|((x, y), words)| {
-            // Each place an ending has `x`, by the letters before it (the
-            // nearest first), and whether the dictionary has `y` there.
+        .filter_map(|((letter, to), words)| {
             let mut examples: HashMap<Example, u32> = HashMap::default();
-            for (built, form, edge) in pairs() {
+            for (_, built, form, edge) in &pairs {
                 if built
                     .iter()
-                    .zip(&form)
-                    .any(|(a, b)| a != b && (*a, *b) != (x, y))
+                    .zip(form)
+                    .any(|(a, b)| a != b && (*a, *b) != (letter, to))
                 {
                     continue;
                 }
-                for (i, (&a, &b)) in built.iter().zip(&form).enumerate().skip(edge) {
-                    if a == x {
+                for (i, (&a, &b)) in built.iter().zip(form).enumerate().skip(*edge) {
+                    if a == letter {
                         let before: Vec<char> = built
                             .get(..i)
                             .unwrap_or_default()
@@ -745,38 +827,29 @@ fn tiers(readings: &[Vec<Reading>], forms: &[Vec<&str>]) -> Vec<((String, String
                             .rev()
                             .copied()
                             .collect();
-                        let next = built.get(i + 1).copied();
-                        *examples.entry((before, next, b == y)).or_default() += 1;
+                        *examples
+                            .entry((before, built.get(i + 1).copied(), b == to))
+                            .or_default() += 1;
                     }
                 }
             }
             let [on, off, stop] = tier(&examples)?;
-            let list = |letters: &[char]| {
-                letters
-                    .iter()
-                    .map(char::to_string)
-                    .collect::<Vec<String>>()
-                    .join("|")
-            };
-            let all: Vec<char> = on.iter().chain(&off).copied().collect();
-            let mut from = format!("{{t:[{}]}}{{gap:![{}]*}}{x}", list(&on), list(&all));
-            if !stop.is_empty() {
-                from.push_str(&format!("{{!:[{}]}}", list(&stop)));
-            }
+            let words = u32::try_from(words.len()).unwrap_or(u32::MAX);
             Some((
-                (from, y.to_string()),
-                u32::try_from(words.len()).unwrap_or(u32::MAX),
+                Change::Tier {
+                    letter,
+                    to,
+                    on,
+                    off,
+                    stop,
+                },
+                words,
             ))
         })
         .collect();
     out.sort();
     out
 }
-
-/// A place an ending has the letter a law on a tier may change: the letters
-/// before it (the nearest first), the one after it, and whether the
-/// dictionary changes it.
-type Example = (Vec<char>, Option<char>, bool);
 
 /// What decides whether the change happens: the letters that make it, the
 /// letters that don't (with them, the tier: the nearest of them before the
@@ -798,12 +871,9 @@ fn tier(examples: &HashMap<Example, u32>) -> Option<[Vec<char>; 3]> {
         examples
             .iter()
             .filter(|((before, next, y), _)| {
-                let changes = before
-                    .iter()
-                    .find(|c| on.contains(c) || off.contains(c))
-                    .is_some_and(|c| on.contains(c))
-                    && next.is_none_or(|n| !stop.contains(&n));
-                changes == *y
+                let decides = before.iter().find(|c| on.contains(c) || off.contains(c));
+                (decides.is_some_and(|c| on.contains(c)) && next.is_none_or(|n| !stop.contains(&n)))
+                    == *y
             })
             .map(|e| e.1)
             .sum()
@@ -816,10 +886,11 @@ fn tier(examples: &HashMap<Example, u32>) -> Option<[Vec<char>; 3]> {
             for side in 0..3 {
                 let mut next = sets.clone();
                 // A letter is on the tier on one side, and stops it or not.
+                let [on, off, stop] = &next;
                 let free = if side == 2 {
-                    !next[2].contains(&l)
+                    !stop.contains(&l)
                 } else {
-                    !next[0].contains(&l) && !next[1].contains(&l)
+                    !on.contains(&l) && !off.contains(&l)
                 };
                 let Some(set) = next.get_mut(side).filter(|_| free) else {
                     continue;
@@ -832,137 +903,20 @@ fn tier(examples: &HashMap<Example, u32>) -> Option<[Vec<char>; 3]> {
             }
         }
         match step {
-            Some((score, next)) if score >= best + MIN_WORDS as u32 => {
-                best = score;
-                sets = next;
-            }
+            Some((score, next)) if score >= best + MIN_WORDS as u32 => (best, sets) = (score, next),
             _ => break,
         }
     }
     for set in &mut sets {
         set.sort_unstable();
     }
-    (!sets[0].is_empty()).then_some(sets)
-}
-
-/// The letter a law on a tier changes; `None` for a law at the stem's edge.
-fn tier_letter(from: &str) -> Option<char> {
-    tier_parts(from).map(|t| t.letter)
-}
-
-/// A law on a tier, read: `{t:[र|ष]}{gap:![र|ष|त]*}न{!:[्]}`.
-struct TierLaw<'a> {
-    /// The letters that make the change.
-    on: Vec<&'a str>,
-    /// The tier: the nearest of these before the letter decides.
-    tier: Vec<&'a str>,
-    letter: char,
-    /// The letters after it that stop it.
-    stop: Vec<&'a str>,
-}
-
-fn tier_parts(from: &str) -> Option<TierLaw<'_>> {
-    let rest = from.strip_prefix("{t:[")?;
-    let (on, rest) = rest.split_once("]}{gap:![")?;
-    let (tier, rest) = rest.split_once("]*}")?;
-    let mut chars = rest.chars();
-    let letter = chars.next()?;
-    let stop = chars
-        .as_str()
-        .strip_prefix("{!:[")
-        .and_then(|s| s.strip_suffix("]}"))
-        .map_or_else(Vec::new, |s| s.split('|').collect());
-    Some(TierLaw {
-        on: on.split('|').collect(),
-        tier: tier.split('|').collect(),
-        letter,
-        stop,
-    })
+    let [on, ..] = &sets;
+    (!on.is_empty()).then_some(sets)
 }
 
 /// Whether a form built marked at the stem's edge is `form`.
 fn same(built: &str, form: &str) -> bool {
     built.chars().filter(|&c| c != BOUNDARY).eq(form.chars())
-}
-
-/// The rules of `laws` compiled, in order.
-pub fn compile(laws: &[(String, String)]) -> Option<Program<'static>> {
-    let rules: Vec<RuleText> = laws
-        .iter()
-        .enumerate()
-        .map(|(i, (from, to))| {
-            let name = format!("law{i}");
-            match tier_parts(from) {
-                Some(t) => RuleText {
-                    name,
-                    target: t.letter.to_string(),
-                    to: to.clone(),
-                    // The letter is the ending's: the stem's are as the
-                    // dictionary writes them.
-                    before: format!(
-                        "{{t:[{on}]}}{{a:![{tier}]*}}{BOUNDARY}{{b:![{tier}]*}}",
-                        on = t.on.join("|"),
-                        tier = t.tier.join("|")
-                    ),
-                    stop: if t.stop.is_empty() {
-                        String::new()
-                    } else {
-                        format!("{{[{}]}}", t.stop.join("|"))
-                    },
-                },
-                None => RuleText {
-                    name,
-                    target: from.clone(),
-                    to: to.clone(),
-                    before: String::new(),
-                    stop: String::new(),
-                },
-            }
-        })
-        .collect();
-    let rules: Vec<Rule<'_>> = rules
-        .iter()
-        .map(|r| {
-            let rule = Rule::new(&r.name, &r.target, &r.to).in_context(&r.before, "");
-            if r.stop.is_empty() {
-                rule
-            } else {
-                rule.unless_context("", &r.stop)
-            }
-        })
-        .collect();
-    RuleSet::new(&[], &rules).compile().ok()
-}
-
-/// A law as `sound-law` states a rule: its name, what it changes into what,
-/// what must come before, and what after stops it.
-struct RuleText {
-    name: String,
-    target: String,
-    to: String,
-    before: String,
-    stop: String,
-}
-
-/// Whether pattern `p` builds what `q` does but for a change of the stem's
-/// last letters and the ending's first two at most: the same before the
-/// last stem piece, and `q`'s ending is `p`'s, its first letters changed
-/// (`~ομεν`, `~ουμεν`).
-fn near(p: &str, q: &str) -> bool {
-    if p == q {
-        return true;
-    }
-    let (Some((p_head, p_end)), Some((q_head, q_end))) = (p.rsplit_once('~'), q.rsplit_once('~'))
-    else {
-        return false;
-    };
-    let (p_end, q_end): (Vec<char>, Vec<char>) = (p_end.chars().collect(), q_end.chars().collect());
-    p_head == q_head
-        && (0..=2).any(|m| {
-            p_end
-                .get(m..)
-                .is_some_and(|rest| q_end.ends_with(rest) && q_end.len() <= rest.len() + 4)
-        })
 }
 
 /// The paradigms that still have words, and the assignment renumbered.
@@ -1010,35 +964,36 @@ mod tests {
 
     #[test]
     fn finds_the_change_at_the_stem_edge() {
-        let finds = |stem, ending, want, from: &str, to: &str| {
-            edits(stem, ending, want).contains(&(from.to_string(), to.to_string()))
+        let edge = |stem: &str, ending: &str, to: &str| Change::Edge {
+            stem: vec![stem.to_string()],
+            ending: ending.to_string(),
+            to: to.to_string(),
+            keep: false,
         };
         // Greek contraction: ποιε + ομεν → ποιουμεν.
-        assert!(finds("ποιε", "ομεν", "ποιουμεν", "ε+ο", "+ου"));
+        assert!(edits("ποιε+ομεν", "ποιουμεν").contains(&edge("ε", "ο", "+ου")));
         // The Russian spelling rule: стрелк + ы → стрелки.
-        assert!(finds("стрелк", "ы", "стрелки", "к+ы", "к+и"));
-        let program = compile(&[("ε+ο".into(), "+ου".into())]).expect("compiles");
-        assert_eq!(program.apply("ποιε+ομεν"), "ποι+ουμεν");
+        assert!(edits("стрелк+ы", "стрелки").contains(&edge("к", "ы", "к+и")));
         // The same change after several letters is one law on all of them.
         let mut support = HashMap::default();
-        support.insert(("к+ы".to_string(), "к+и".to_string()), 3);
-        support.insert(("г+ы".to_string(), "г+и".to_string()), 2);
+        support.insert(edge("к", "ы", "к+и"), 3);
+        support.insert(edge("г", "ы", "г+и"), 2);
         let class = classes(&support);
-        assert_eq!(
-            class,
-            [(("{x:[к|г]}+ы".to_string(), "{x}+и".to_string()), 5)]
-        );
-        assert!(applies("{x:[к|г]}+ы", &window("книг+ы")));
-        let program = compile(&[class[0].0.clone()]).expect("compiles");
-        assert_eq!(program.apply("книг+ы"), "книг+и");
-        // The learner's quick rewrite agrees with the compiled rules.
-        for (from, to, built) in [
-            ("{x:[к|г]}+ы", "{x}+и", "книг+ы"),
-            ("ε+ο", "+ου", "ποιε+ομεν"),
-            ("γ+σ", "+ξ", "λεγ+σω"),
+        let velar = Change::Edge {
+            stem: vec!["к".into(), "г".into()],
+            ending: "ы".into(),
+            to: "+и".into(),
+            keep: true,
+        };
+        assert_eq!(class, [(velar.clone(), 5)]);
+        // The learner's rewrite agrees with the compiled rules.
+        for (change, built) in [
+            (velar, "книг+ы"),
+            (edge("ε", "ο", "+ου"), "ποιε+ομεν"),
+            (edge("γ", "σ", "+ξ"), "λεγ+σω"),
         ] {
-            let program = compile(&[(from.into(), to.into())]).expect("compiles");
-            assert_eq!(rewrite(from, to, built), Some(program.apply(built)));
+            let program = compile(std::slice::from_ref(&change)).expect("compiles");
+            assert_eq!(change.rewrite(built), Some(program.apply(built)));
         }
     }
 }

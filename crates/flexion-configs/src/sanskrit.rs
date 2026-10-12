@@ -259,7 +259,6 @@ fn group(
         any: vec![],
         none: none.to_vec(),
         from_head: false,
-        fallbacks: Vec::new(),
     }
 }
 
@@ -278,7 +277,6 @@ fn finite(
         any: vec![],
         none: vec!["participle", "infinitive", "gerund"],
         from_head: false,
-        fallbacks: Vec::new(),
     }
 }
 

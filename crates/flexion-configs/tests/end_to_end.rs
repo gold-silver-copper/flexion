@@ -149,7 +149,7 @@ fn a_word_the_dictionary_lacks_takes_its_paradigm_with_evidence() {
     let noun = &grammars[0].grammar;
     // An invented noun in -а: its readings say how sure and why, and say it
     // by a rule's evidence, not a listing.
-    let readings = noun.readings("бокра", &Known::<u8>::default());
+    let readings = noun.readings("бокра", &Known::default());
     let first = readings.first().expect("a reading");
     assert_ne!(first.status, Status::Listed);
     assert!(first.rule.is_some(), "{first}");
@@ -180,10 +180,12 @@ fn print_and_compare(lang: Language) {
         .map(|(spec, learned)| flexion_train::print::Part { spec, learned })
         .collect();
     let files = flexion_train::print::files(&lang, &script, &parts, "").expect("printed");
-    // Russian nouns' spelling rule (`к+ы → к+и`) is a sound law, printed too.
+    // Russian nouns' spelling rule (`к+ы → к+и`) is a sound law, and their
+    // accusative is the genitive or nominative by animacy: printed too.
+    let printed = |file: &str| files.iter().any(|(path, _)| path.ends_with(file));
     assert!(
-        lang.name != "russian" || files.iter().any(|(path, _)| path.ends_with("noun/laws.rs")),
-        "the Russian nouns have their sound laws"
+        lang.name != "russian" || (printed("noun/laws.rs") && printed("noun/relations.rs")),
+        "the Russian nouns have their sound laws and relations"
     );
     let dir = PathBuf::from(env!("CARGO_TARGET_TMPDIR")).join(format!("printed-{}", lang.name));
     flexion_train::print::write(&dir, &files).expect("written");

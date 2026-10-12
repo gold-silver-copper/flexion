@@ -1,11 +1,13 @@
 //! Learning a [`Choice`]: ordered ending rules and the words they get wrong.
 //!
 //! Endings are considered from short to long. An ending becomes a rule when
-//! it pays for itself (minimum description length): telling the values of
-//! the words with that ending by the rule's own counts, rather than by the
-//! broader rule that decides them now, saves more bits than writing the rule
-//! down costs. The words the finished rules still get wrong, judged exactly
-//! as the runtime reads them, are listed.
+//! it says something the broader rule that decides its words now doesn't
+//! (another value, or another productivity) and pays for itself (minimum
+//! description length): telling the values of the words with that ending by
+//! the rule's own counts, rather than by the broader rule's, saves more bits
+//! than writing the rule down costs. A rule lists its main values and lumps
+//! the rest. The words the finished rules still get wrong, judged exactly as
+//! the runtime reads them, are listed.
 
 use crate::HashMap;
 use flexion::{Choice, Label, Rule};
@@ -15,6 +17,10 @@ use std::hash::Hash;
 
 /// The longest ending a rule looks at, in letters.
 pub const MAX_ENDING: usize = 8;
+/// A value a rule lists has at least this many of its words, and one in
+/// this many of them; the others are lumped.
+const MAIN_WORDS: u32 = 2;
+const MAIN_SHARE: u32 = 20;
 
 /// How a choice is learned.
 #[derive(Debug, Clone, Copy)]
@@ -83,11 +89,19 @@ pub fn learn<'a, L: Label + Hash + Ord>(
         if total < settings.min_gain {
             continue;
         }
-        // The rule deciding these words now: the longest kept ending.
+        // The rule deciding these words now: the longest kept ending. A rule
+        // must pay for itself, and say something it doesn't: another value,
+        // or another productivity (Wilson & Li's pruning).
         let Some(current) = endings(ending).skip(1).find_map(|e| kept.get(e).copied()) else {
             continue;
         };
-        if saved_bits(c, current) >= settings.rule_bits {
+        let productive = |c: &BTreeMap<L, u32>| {
+            let total: u32 = c.values().sum();
+            let top = c.values().max().copied().unwrap_or(0);
+            f64::from(total.saturating_sub(top)) <= flexion::tolerance(total)
+        };
+        let says = winner(c) != winner(current) || productive(c) != productive(current);
+        if says && saved_bits(c, current) >= settings.rule_bits {
             kept.insert(ending.as_str(), c);
         }
     }
@@ -97,9 +111,27 @@ pub fn learn<'a, L: Label + Hash + Ord>(
             let c = counts.get(ending)?;
             let mut list: Vec<(L, u32)> = c.iter().map(|(&l, &n)| (l, n)).collect();
             list.sort_by(|a, b| b.1.cmp(&a.1).then_with(|| a.0.cmp(&b.0)));
+            // The main values; the others lumped.
+            let total: u32 = list.iter().map(|e| e.1).sum();
+            let main = |(i, &(_, n)): (usize, &(L, u32))| {
+                i == 0 || (n >= MAIN_WORDS && n * MAIN_SHARE >= total)
+            };
+            let rest = list
+                .iter()
+                .enumerate()
+                .filter(|&e| !main(e))
+                .map(|(_, e)| e.1)
+                .sum();
+            let counts = list
+                .iter()
+                .enumerate()
+                .filter(|&e| main(e))
+                .map(|(_, &e)| e)
+                .collect();
             Some(Rule {
                 ending: Cow::Owned(ending.to_string()),
-                counts: Cow::Owned(list),
+                counts: Cow::Owned(counts),
+                rest,
             })
         })
         .collect();
@@ -150,6 +182,7 @@ pub fn learn_starts<'a, L: Label + Hash + Ord>(
         .map(|r| Rule {
             ending: Cow::Owned(back(&r.ending)),
             counts: r.counts.clone(),
+            rest: r.rest,
         })
         .collect();
     rules.sort_by(|a, b| a.ending.cmp(&b.ending));

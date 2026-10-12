@@ -276,7 +276,7 @@ fn grammar_files(
         variants.push(v);
     }
     let name_of = |p: u16| variants.get(usize::from(p)).cloned().unwrap_or_default();
-    // The feature referrals depend on, as the crate's enum names it.
+    // The feature relations depend on, as the crate's enum names it.
     let feature_name: Option<&str> = learned.feature.and_then(|f| spec.inherent.get(f).copied());
     let inherent = inherent(lang, spec);
     let mut files = Vec::new();
@@ -295,6 +295,9 @@ fn grammar_files(
     }
     if g.accent.is_some() {
         m.push_str("pub mod accent;\n");
+    }
+    if !g.relations.is_empty() {
+        m.push_str("mod relations;\n");
     }
     if g.compound.is_some() {
         m.push_str("mod compounds;\n");
@@ -319,7 +322,7 @@ fn grammar_files(
     m.push_str("}\n\n");
     let _ = writeln!(
         m,
-        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    referrals: {referrals},\n    feature: {feature},\n    compound: {},\n    prefixes: {prefixes},\n    accent: {accent},\n    laws: {laws},\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    marks: {marks},\n    irregular: irregular::IRREGULAR,\n    smoothing: {:?},\n    sharpness: {:?},\n}};",
+        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    relations: {relations},\n    feature: {feature},\n    compound: {},\n    prefixes: {prefixes},\n    accent: {accent},\n    laws: {laws},\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    marks: {marks},\n    irregular: irregular::IRREGULAR,\n    smoothing: {:?},\n    sharpness: {:?},\n}};",
         g.cells,
         g.lemma_cell,
         g.capitalized,
@@ -358,15 +361,18 @@ fn grammar_files(
         } else {
             "None"
         },
-        referrals = feature_name.map_or("Cow::Borrowed(&[])".to_string(), |f| format!(
-            "Cow::Borrowed(&{}::REFERRALS)",
-            snake(f)
-        )),
-        feature = feature_name.map_or("None".to_string(), |f| format!(
-            "Some({}::{})",
-            snake(f),
-            f.to_uppercase()
-        )),
+        relations = if g.relations.is_empty() {
+            "Cow::Borrowed(&[])"
+        } else {
+            "Cow::Borrowed(&relations::RELATIONS)"
+        },
+        feature = feature_name
+            .zip(learned.feature)
+            .map_or("None".to_string(), |(f, i)| format!(
+                "Some(({i}, {}::{}))",
+                snake(f),
+                f.to_uppercase()
+            )),
     );
     m.push('\n');
     m.push_str(&api_code(
@@ -389,8 +395,7 @@ fn grammar_files(
     // The table macro.
     let _ = writeln!(
         p,
-        "/// Writes one {one}: the word it is named after, how many words follow it,\n/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if\n/// they share them), the {one} it is like (if any), then a row of patterns\n/// per line (`referred`: the form is another cell's, as the word's {feature}\n/// says; `_`: the form is the {one}'s it is like):",
-        feature = feature_name.map_or_else(|| "feature".to_string(), str::to_lowercase)
+        "/// Writes one {one}: the word it is named after, how many words follow it,\n/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if\n/// they share them), the {one} it is like (if any), then a row of patterns\n/// per line (`derived`: the form comes from another cell's, see\n/// `relations.rs`; `_`: the form is the {one}'s it is like):"
     );
     for row in &layout.rows {
         let cols = if row.columns.is_empty() {
@@ -545,7 +550,7 @@ fn grammar_files(
                 .iter()
                 .map(|&c| match par.own(c) {
                     Some(flexion::Form::Pattern(p)) => Lit(p).to_string(),
-                    Some(flexion::Form::Referred) => "referred".to_string(),
+                    Some(flexion::Form::Derived) => "derived".to_string(),
                     None => "_".to_string(),
                 })
                 .collect();
@@ -563,7 +568,7 @@ fn grammar_files(
     let mut r = String::new();
     let _ = writeln!(
         r,
-        "//! Which {one} a word takes. The rule with the longest ending the word has\n//! decides, giving each {one} with how many of the dictionary's words with\n//! that ending follow it; the words no rule gets right are listed. A rule is\n//! kept only when it pays for itself: it must describe the words it covers\n//! in fewer bits than the broader rule does, by more than the rule costs.\n"
+        "//! Which {one} a word takes. The rule with the longest ending the word has\n//! decides, giving each {one} with how many of the dictionary's words with\n//! that ending follow it (`+ N`: words of {many} too few to list); the words\n//! no rule gets right are listed. A rule is kept only when it says something\n//! the broader rule doesn't (another {one}, or whether speakers extend it)\n//! and pays for itself: it must describe the words it covers in fewer bits\n//! than the broader rule does, by more than the rule costs.\n"
     );
     let _ = writeln!(
         r,
@@ -585,49 +590,27 @@ fn grammar_files(
     r.push_str("    }\n};\n");
     files.push((format!("{dir}/rules.rs"), r));
 
-    // The feature referrals depend on.
-    if let (Some(f), Some(choice)) = (feature_name, &g.feature) {
+    let cell_name = |c: u16| {
+        layout
+            .names
+            .get(usize::from(c))
+            .cloned()
+            .unwrap_or_default()
+    };
+    // The feature relations depend on.
+    if let (Some(f), Some((_, choice))) = (feature_name, &g.feature) {
         let values = lang
             .feature(f)
             .map(|x| x.values.as_slice())
             .unwrap_or_default();
         let value = |v: u8| values.get(usize::from(v)).map_or("", |x| x.name);
-        let cell_name = |c: u16| {
-            layout
-                .names
-                .get(usize::from(c))
-                .cloned()
-                .unwrap_or_default()
-        };
-        let lower = f.to_lowercase();
-        let mut r = String::new();
-        let _ = writeln!(
-            r,
-            "//! {f}, which decides the cells some {many} refer to others, and which\n//! words have which. The rule with the longest ending the word has decides;\n//! the words no rule gets right are listed.\n\nuse super::cell::*;\nuse crate::{f}::{{self, *}};\nuse flexion::{{Choice, Referral}};\nuse std::borrow::Cow;\n"
+        let mut r = format!(
+            "//! A word's {lower}, which decides which cell some cells' forms come from\n//! (see `relations.rs`). The rule with the longest ending the word has\n//! decides; the words no rule gets right are listed.\n\nuse crate::{f}::{{self, *}};\nuse flexion::Choice;\n\n",
+            lower = f.to_lowercase()
         );
         let _ = writeln!(
             r,
-            "/// The cells whose form, in the {many} that say `referred`, is another\n/// cell's: per {lower}, in order ({}), the cell.",
-            values.iter().map(|x| x.name).collect::<Vec<_>>().join(", ")
-        );
-        let _ = writeln!(
-            r,
-            "pub(super) static REFERRALS: [Referral<'static>; {}] = [",
-            g.referrals.len()
-        );
-        for referral in g.referrals.iter() {
-            let to: Vec<String> = referral.to.iter().map(|&t| cell_name(t)).collect();
-            let _ = writeln!(
-                r,
-                "    Referral {{\n        cell: {},\n        to: Cow::Borrowed(&[{}]),\n    }},",
-                cell_name(referral.cell),
-                to.join(", ")
-            );
-        }
-        r.push_str("];\n\n");
-        let _ = writeln!(
-            r,
-            "/// Which {lower} a word has: {} rules and {} listed words.\npub(super) const {}: Choice<'static, {f}> = flexion::choice! {{\n    rules {{",
+            "/// {} rules and {} listed words.\npub(super) const {}: Choice<'static, {f}> = flexion::choice! {{\n    rules {{",
             thousands(choice.rules.len() as u64),
             thousands(choice.exceptions.len() as u64),
             f.to_uppercase()
@@ -635,6 +618,49 @@ fn grammar_files(
         r.push_str(&choice_body(choice, |l| value(l).to_string()));
         r.push_str("    }\n};\n");
         files.push((format!("{dir}/{}.rs", snake(f)), r));
+    }
+    // relations.rs
+    if !g.relations.is_empty() {
+        let mut r = format!(
+            "//! Where a cell's form comes from: another cell's form of the word, its end\n//! changed. A {one} that writes `derived` in a cell takes the form this way,\n//! and so does a word whose form of the other cell is listed but not this\n//! one's. Each relation lists its changes (`\"ī\" => \"istī\"`), numbered in\n//! order, and the rules on that form's ending choosing one.\n\nuse super::cell::*;\nuse flexion::Relation;\nuse std::borrow::Cow;\n\npub(super) static RELATIONS: [Relation<'static>; {}] = [\n",
+            g.relations.len()
+        );
+        for rel in g.relations.iter() {
+            let from: Vec<String> = rel.from.iter().map(|&c| cell_name(c)).collect();
+            let feature = match (rel.from.len(), feature_name) {
+                (n, Some(f)) if n > 1 => format!(" (by {}, in order)", f.to_lowercase()),
+                _ => String::new(),
+            };
+            let _ = writeln!(
+                r,
+                "    // {}, from {}{feature}.",
+                cell_name(rel.cell),
+                from.join(" or ")
+            );
+            let changes: Vec<String> = rel
+                .changes
+                .iter()
+                .map(|(old, new)| format!("({}, {})", Lit(old), Lit(new)))
+                .collect();
+            let _ = writeln!(
+                r,
+                "    Relation {{\n        cell: {},\n        from: Cow::Borrowed(&[{}]),\n        changes: flexion::changes![{}],",
+                cell_name(rel.cell),
+                from.join(", "),
+                changes.join(", ")
+            );
+            match &rel.change {
+                Some(choice) => {
+                    r.push_str("        change: Some(flexion::choice! {\n    rules {\n");
+                    r.push_str(&choice_body(choice, |l| l.to_string()));
+                    r.push_str("    }\n        }),\n");
+                }
+                None => r.push_str("        change: None,\n"),
+            }
+            let _ = writeln!(r, "        listed: {},\n    }},", rel.listed);
+        }
+        r.push_str("];\n");
+        files.push((format!("{dir}/relations.rs"), r));
     }
 
     if let Some(a) = &g.accent {
@@ -1069,9 +1095,14 @@ fn choice_body<L: flexion::Label>(
             .iter()
             .map(|&(l, n)| format!("{} {n}", name(l)))
             .collect();
+        let rest = if rule.rest > 0 {
+            format!(" + {}", rule.rest)
+        } else {
+            String::new()
+        };
         let _ = writeln!(
             s,
-            "        {} => [{}],",
+            "        {} => [{}]{rest},",
             Lit(&rule.ending),
             counts.join(", ")
         );
@@ -1271,17 +1302,10 @@ fn api_code(
         );
     }
     // The word.
-    let (feature_field, feature_type) = match feature {
-        Some(f) => (snake(f), format!("crate::{f}")),
-        None => (String::new(), "u8".to_string()),
-    };
     let _ = writeln!(
         s,
         "/// A {name} to inflect: its lemma, and what you know of it. The more you\n/// tell, the surer its forms.\n#[derive(Debug, Clone, PartialEq, Eq)]\npub struct {word}<'w> {{\n    lemma: &'w str,\n    given: Vec<(usize, &'w str)>,"
     );
-    if feature.is_some() {
-        let _ = writeln!(s, "    {feature_field}: Option<{feature_type}>,");
-    }
     if !inherent.is_empty() {
         s.push_str("    inherent: Vec<(u8, u8)>,\n");
     }
@@ -1294,9 +1318,6 @@ fn api_code(
         s,
         "impl<'w> {word}<'w> {{\n    /// The {name} `lemma`, as the dictionary writes it.\n    #[must_use]\n    pub fn new(lemma: &'w str) -> Self {{\n        {word} {{\n            lemma,\n            given: Vec::new(),"
     );
-    if feature.is_some() {
-        let _ = writeln!(s, "            {feature_field}: None,");
-    }
     if !inherent.is_empty() {
         s.push_str("            inherent: Vec::new(),\n");
     }
@@ -1317,22 +1338,16 @@ fn api_code(
         let field = snake(f.name);
         let lower = f.name.to_lowercase();
         let many = kind_name.to_lowercase();
-        let (doc, refers) = if feature == Some(f.name) {
-            (
-                format!(
-                    "Its {lower}, which says which cell its `referred` forms (see its\n    /// {many}s) are taken from, and which {many}s it can follow."
-                ),
-                format!("\n        self.{field} = Some({field});"),
+        let doc = if feature == Some(f.name) {
+            format!(
+                "Its {lower}, which says which cell some `derived` forms (see its\n    /// {many}s) come from."
             )
         } else {
-            (
-                format!("Its {lower}: only {many}s of words of that {lower} are read."),
-                String::new(),
-            )
+            format!("Its {lower}: only {many}s of words of that {lower} are read.")
         };
         let _ = writeln!(
             s,
-            "    /// {doc}\n    #[must_use]\n    pub fn {field}(mut self, {field}: crate::{}) -> Self {{{refers}\n        self.inherent.push(({i}, {field} as u8));\n        self\n    }}\n",
+            "    /// {doc}\n    #[must_use]\n    pub fn {field}(mut self, {field}: crate::{}) -> Self {{\n        self.inherent.push(({i}, {field} as u8));\n        self\n    }}\n",
             f.name
         );
     }
@@ -1348,14 +1363,9 @@ fn api_code(
     } else {
         "&self.inherent"
     };
-    let feature_value = if feature.is_some() {
-        format!("self.{feature_field}")
-    } else {
-        "None".to_string()
-    };
     let _ = writeln!(
         s,
-        "    fn known(&self) -> Known<'_, {feature_type}> {{\n        Known {{\n            forms: &self.given,\n            feature: {feature_value},\n            inherent: {inherent_value},\n            full: {full},\n        }}\n    }}\n"
+        "    fn known(&self) -> Known<'_> {{\n        Known {{\n            forms: &self.given,\n            inherent: {inherent_value},\n            full: {full},\n        }}\n    }}\n"
     );
     let one = kind_name.to_lowercase();
     let many = format!("{one}s");
@@ -1487,8 +1497,10 @@ pub fn readme(lang: &Language, report: &str) -> String {
          {display} entries. Each part of speech is a module under `src/`, and has what its\n\
          grammar needs of:\n\n\
          - `paradigms.rs`: how words inflect, one table per paradigm, named after a word that\n  \
-           follows it, with a pattern per form (`~а`: the stem, then `а`; `referred`: another\n  \
-           cell's form, as the word's feature says);\n\
+           follows it, with a pattern per form (`~а`: the stem, then `а`; `derived`: another\n  \
+           cell's form, changed);\n\
+         - `relations.rs`: which cell each cell's form is told from, and the rules on that\n  \
+           form's ending that change it;\n\
          - `rules.rs`: which paradigm a word takes, as rules on its ending, each with how many of\n  \
            the dictionary's words with that ending follow each paradigm, and the words no rule\n  \
            gets right, listed;\n\

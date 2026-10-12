@@ -9,7 +9,7 @@ use crate::skeleton;
 use flexion::Finals;
 use flexion::pattern;
 use flexion::{
-    Accent, AccentPattern, Compound, Grammar, Orthography, Paradigm, Place, REFERRED, Referral,
+    Accent, AccentPattern, Compound, DERIVED, Grammar, Orthography, Paradigm, Place, Relation,
     StressClass, Written,
 };
 use std::borrow::Cow;
@@ -20,8 +20,6 @@ use std::collections::BTreeMap;
 pub struct Shape {
     pub cells: usize,
     pub lemma_cell: Option<usize>,
-    /// Per cell, the cell a word without a form of its own there uses.
-    pub fallback: Vec<Option<usize>>,
     pub capitalized: bool,
     /// How many values each inherent feature has.
     pub inherent: Vec<usize>,
@@ -38,6 +36,8 @@ pub struct Learned<'s> {
     pub members: Vec<Vec<String>>,
     /// Forms the grammar doesn't give, listed: `(word, cell, form)`.
     pub irregular: Vec<(String, usize, String)>,
+    /// Per paradigm, the cells its words have forms in.
+    pub seen: Vec<Vec<bool>>,
     /// The sound laws at the stem's edge, with their evidence.
     pub laws: Vec<crate::laws::Law>,
     pub stats: Stats,
@@ -63,6 +63,8 @@ struct Word {
     senses: u16,
     /// How many of the dictionaries have the word.
     dictionaries: u8,
+    /// A sense of it is vulgar or offensive.
+    vulgar: bool,
     /// Per inherent feature, its value (`u8::MAX` if the dictionary doesn't
     /// say).
     inherent: Vec<u8>,
@@ -105,6 +107,7 @@ pub fn learn<'s>(
             key: key(l),
             letters: orthography.read(&l.full).letters,
             senses: l.senses,
+            vulgar: l.vulgar,
             dictionaries: dictionaries
                 .get(&key(l))
                 .map_or(1, |s| u8::try_from(s.len()).unwrap_or(1)),
@@ -177,7 +180,25 @@ pub fn learn<'s>(
     let feature_choice = found
         .as_ref()
         .map(|_| choose::learn(&feature_examples, settings, |_, _| true));
-    let (paradigms, assignment) = paradigms(&words, &analyses, shape);
+    // Each cell's relation to the cell its form is best told from; the
+    // referrals (by the word's feature) take their cells' place.
+    let usual: Vec<Vec<Option<&str>>> = words
+        .iter()
+        .map(|w| {
+            w.cells
+                .iter()
+                .map(|fs| fs.first().map(|f| f.letters.as_str()))
+                .collect()
+        })
+        .collect();
+    let root = shape.lemma_cell.unwrap_or(0);
+    let mut relations = crate::relations::learn(&usual, shape.cells, root, settings);
+    if let Some((_, referrals)) = &found {
+        relations.retain(|r| !referrals.iter().any(|q| q.cell == r.cell));
+        relations.extend(referrals.iter().cloned());
+    }
+    relations.sort_by_key(|r| r.cell);
+    let (paradigms, assignment) = paradigms(&words, &analyses, shape, &relations);
     // Paradigms that differ only by a change where stem meets ending are
     // one paradigm and a sound law.
     let law_words: Vec<crate::laws::Word<'_>> = words
@@ -191,7 +212,7 @@ pub fn learn<'s>(
                 .zip(&a.cells)
                 .map(|(fs, p)| {
                     fs.first()
-                        .filter(|_| p.as_deref() != Some(REFERRED))
+                        .filter(|_| p.as_deref() != Some(DERIVED))
                         .map(|f| f.letters.as_str())
                 })
                 .collect(),
@@ -199,7 +220,22 @@ pub fn learn<'s>(
         .collect();
     let (laws, program, mut paradigms, assignment) =
         crate::laws::learn(&orthography, &law_words, paradigms, assignment);
-    inherent(&words, &assignment, &mut paradigms);
+    inherent(
+        &words,
+        &assignment,
+        &mut paradigms,
+        found
+            .as_ref()
+            .map(|(f, rs)| (*f, rs.iter().map(|r| r.cell).collect())),
+    );
+    let mut seen = vec![vec![false; shape.cells]; paradigms.len()];
+    for (w, &p) in words.iter().zip(&assignment) {
+        for (c, fs) in w.cells.iter().enumerate() {
+            if let Some(slot) = seen.get_mut(usize::from(p)).and_then(|s| s.get_mut(c)) {
+                *slot |= !fs.is_empty();
+            }
+        }
+    }
     let paradigm_examples: Vec<(String, u16)> = words
         .iter()
         .zip(&assignment)
@@ -271,8 +307,11 @@ pub fn learn<'s>(
         capitalized: shape.capitalized,
         paradigms: Cow::Owned(paradigms),
         paradigm: paradigm_choice,
-        referrals: Cow::Owned(found.as_ref().map(|f| f.1.clone()).unwrap_or_default()),
-        feature: feature_choice,
+        relations: Cow::Owned(relations),
+        feature: found
+            .as_ref()
+            .and_then(|f| u8::try_from(f.0).ok())
+            .zip(feature_choice),
         compound: compound_choice,
         prefixes,
         accent,
@@ -316,8 +355,28 @@ pub fn learn<'s>(
                 .and_then(|p| p.split(&w.key))
                 .is_some_and(|(_, separable, inseparable)| separable + inseparable > 0.0)
     };
-    let mut irregular = irregular(&grammar, all_lexemes, all_words, |w| !made(w));
+    // A word's listed forms are its principal parts: the forms no relation
+    // tells from another listed one. The forms told wrong are listed too.
+    let wrong = irregular(&grammar, all_lexemes, all_words, |w| !made(w));
+    if let Cow::Owned(relations) = &mut grammar.relations {
+        for r in relations.iter_mut() {
+            r.listed = tells_listed(r, &wrong, all_words, grammar.smoothing);
+        }
+    }
+    let mut irregular = roots(&grammar, &wrong);
     grammar.irregular = flexion::Irregular::new(&irregular);
+    for _ in 0..ROUNDS {
+        let listed: crate::HashSet<String> = irregular.iter().map(|(k, _, _)| k.clone()).collect();
+        let more = self::irregular(&grammar, all_lexemes, all_words, |w| {
+            !made(w) && listed.contains(&w.key)
+        });
+        if more.is_empty() {
+            break;
+        }
+        irregular.extend(more);
+        irregular.sort();
+        grammar.irregular = flexion::Irregular::new(&irregular);
+    }
     irregular.extend(self::irregular(&grammar, all_lexemes, all_words, made));
     irregular.sort();
     grammar.irregular = flexion::Irregular::new(&irregular);
@@ -335,6 +394,7 @@ pub fn learn<'s>(
         feature: found.map(|f| f.0),
         members,
         irregular,
+        seen,
         laws,
         stats,
     }
@@ -710,9 +770,9 @@ const REFERRAL_SHARE: f64 = 0.5;
 /// for most words with each value of the feature, the form of one earlier
 /// cell, a different cell for different values (the accusative is the genitive of
 /// animate nouns and the nominative of inanimate ones).
-fn referrals(words: &[Word], shape: &Shape) -> Option<(usize, Vec<Referral<'static>>)> {
+fn referrals<'s>(words: &[Word], shape: &Shape) -> Option<(usize, Vec<Relation<'s>>)> {
     let form = first_form;
-    let mut best: Option<(usize, Vec<Referral<'static>>)> = None;
+    let mut best: Option<(usize, Vec<Relation<'s>>)> = None;
     for (f, &values) in shape.inherent.iter().enumerate() {
         let mut found = Vec::new();
         for cell in 0..shape.cells {
@@ -730,7 +790,7 @@ fn referrals(words: &[Word], shape: &Shape) -> Option<(usize, Vec<Referral<'stat
                     .filter(|&t| {
                         !found
                             .iter()
-                            .any(|r: &Referral<'_>| usize::from(r.cell) == t)
+                            .any(|r: &Relation<'_>| usize::from(r.cell) == t)
                     })
                     .map(|t| {
                         (
@@ -752,9 +812,12 @@ fn referrals(words: &[Word], shape: &Shape) -> Option<(usize, Vec<Referral<'stat
             }
             let differ = to.iter().any(|t| Some(t) != to.first());
             if to.len() == values && differ {
-                found.push(Referral {
+                found.push(Relation {
                     cell: u16::try_from(cell).unwrap_or(u16::MAX),
-                    to: Cow::Owned(to),
+                    from: Cow::Owned(to),
+                    changes: Cow::Borrowed(&[]),
+                    change: None,
+                    listed: false,
                 });
             }
         }
@@ -767,18 +830,19 @@ fn referrals(words: &[Word], shape: &Shape) -> Option<(usize, Vec<Referral<'stat
 
 /// The value of a word the dictionary gives none for, from its forms: the
 /// one whose referrals its forms follow, if just one.
-fn infer(w: &Word, referrals: &[Referral<'_>]) -> Option<u8> {
+fn infer(w: &Word, referrals: &[Relation<'_>]) -> Option<u8> {
     let form = |c: u16| {
         w.cells
             .get(usize::from(c))
             .and_then(|fs| fs.first())
             .map(|f| &f.letters)
     };
-    let values = referrals.first()?.to.len();
+    let values = referrals.first()?.from.len();
     let fitting: Vec<usize> = (0..values)
         .filter(|&v| {
             referrals.iter().all(|r| {
-                r.to.get(v)
+                r.from
+                    .get(v)
                     .is_some_and(|&t| form(r.cell).is_none() || form(r.cell) == form(t))
             })
         })
@@ -790,7 +854,7 @@ fn infer(w: &Word, referrals: &[Referral<'_>]) -> Option<u8> {
 }
 
 /// Mark the cells of `a` the word, of value `v`, forms by referral.
-fn refer(w: &Word, a: &mut Analyzed, referrals: &[Referral<'_>], v: u8) {
+fn refer(w: &Word, a: &mut Analyzed, referrals: &[Relation<'_>], v: u8) {
     let form = |c: u16| {
         w.cells
             .get(usize::from(c))
@@ -798,20 +862,19 @@ fn refer(w: &Word, a: &mut Analyzed, referrals: &[Referral<'_>], v: u8) {
             .map(|f| &f.letters)
     };
     for r in referrals {
-        let Some(&t) = r.to.get(usize::from(v)) else {
+        let Some(&t) = r.from.get(usize::from(v)) else {
             continue;
         };
         if form(r.cell).is_some()
             && form(r.cell) == form(t)
             && let Some(slot) = a.cells.get_mut(usize::from(r.cell))
         {
-            *slot = Some(REFERRED.to_string());
+            *slot = Some(DERIVED.to_string());
         }
     }
 }
 
-/// A word's patterns over its own skeleton. Cells it has no form in that
-/// fall back to another cell take that cell's pattern.
+/// A word's patterns over its own skeleton.
 fn analyze(w: &Word, shape: &Shape) -> Analyzed {
     let mut forms: Vec<&str> = Vec::new();
     let mut slots: Vec<Vec<usize>> = vec![Vec::new(); shape.cells];
@@ -824,7 +887,7 @@ fn analyze(w: &Word, shape: &Shape) -> Analyzed {
         }
     }
     let a = skeleton::analyze(&w.letters, &forms);
-    let mut cells: Vec<Option<String>> = slots
+    let cells: Vec<Option<String>> = slots
         .iter()
         .map(|idx| {
             let patterns: Vec<&str> = idx
@@ -834,15 +897,6 @@ fn analyze(w: &Word, shape: &Shape) -> Analyzed {
             (!patterns.is_empty()).then(|| patterns.join("|"))
         })
         .collect();
-    for c in 0..shape.cells {
-        if cells.get(c).is_some_and(Option::is_none)
-            && let Some(Some(f)) = shape.fallback.get(c)
-            && let Some(p) = cells.get(*f).cloned().flatten()
-            && let Some(slot) = cells.get_mut(c)
-        {
-            *slot = Some(p);
-        }
-    }
     Analyzed {
         lemma: a.lemma,
         cells,
@@ -860,12 +914,13 @@ fn usual(p: &str) -> &str {
 /// cell a word has) is a candidate. A word goes to the fullest candidate
 /// that builds every form it has; of equally full ones, to the one most
 /// common among words that end like it (its last three letters, then two,
-/// then one), then the most common. Cells no word of a paradigm has take the
-/// pattern of the most similar paradigm that has them.
+/// then one), then the most common. A cell no word of a paradigm has is
+/// derived from another (see [`crate::relations`]), where one tells it.
 fn paradigms<'s>(
     words: &[Word],
     analyses: &[Analyzed],
     shape: &Shape,
+    relations: &[Relation<'_>],
 ) -> (Vec<Paradigm<'s>>, Vec<u16>) {
     // Distinct signatures, and their words.
     let mut index: HashMap<(String, Vec<Option<String>>), usize> = HashMap::default();
@@ -949,7 +1004,7 @@ fn paradigms<'s>(
                         .all(|(c, (m, p))| match (m, p) {
                             (None, _) => true,
                             (Some(_), None) => false,
-                            (Some(m), Some(p)) if p == REFERRED => m == REFERRED,
+                            (Some(m), Some(p)) if p == DERIVED => m == DERIVED,
                             (Some(_), Some(p)) => w
                                 .cells
                                 .get(c)
@@ -1030,9 +1085,9 @@ fn paradigms<'s>(
                     .filter(|(cell, p)| {
                         let want = w.cells.get(*cell).and_then(|fs| fs.first());
                         match (p, want) {
-                            (Some(p), Some(_)) if p == REFERRED => mine
+                            (Some(p), Some(_)) if p == DERIVED => mine
                                 .and_then(|a| a.cells.get(*cell))
-                                .is_some_and(|m| m.as_deref() == Some(REFERRED)),
+                                .is_some_and(|m| m.as_deref() == Some(DERIVED)),
                             (Some(p), Some(f)) => pattern::fill(usual(p), &stems) == f.letters,
                             _ => false,
                         }
@@ -1085,8 +1140,10 @@ fn paradigms<'s>(
             .map(|(cell, p)| {
                 let usual_p = match p {
                     Some(p) => p.clone(),
-                    None => borrow_cell(&signatures, &order, s, cell, shape)
-                        .unwrap_or_else(|| lemma.clone()),
+                    None if relations.iter().any(|r| usize::from(r.cell) == cell) => {
+                        DERIVED.to_string()
+                    }
+                    None => lemma.clone(),
                 };
                 // The usual pattern, with the alternatives most words list.
                 let full = variants
@@ -1114,8 +1171,15 @@ fn paradigms<'s>(
 }
 
 /// Per paradigm, the inherent feature values (its gender) nine in ten of
-/// its words that have one share.
-fn inherent(words: &[Word], assignment: &[u16], paradigms: &mut [Paradigm<'_>]) {
+/// its words that have one share; not those of the feature `relational`
+/// cells of the paradigm depend on, which it leaves to them (one Russian
+/// declension serves animate and inanimate nouns).
+fn inherent(
+    words: &[Word],
+    assignment: &[u16],
+    paradigms: &mut [Paradigm<'_>],
+    relational: Option<(usize, Vec<u16>)>,
+) {
     let mut counts: BTreeMap<(u16, u8, u8), u32> = BTreeMap::new();
     for (w, &p) in words.iter().zip(assignment) {
         for (f, &v) in w.inherent.iter().enumerate() {
@@ -1127,8 +1191,17 @@ fn inherent(words: &[Word], assignment: &[u16], paradigms: &mut [Paradigm<'_>]) 
     let features = words.first().map_or(0, |w| w.inherent.len());
     for (p, paradigm) in paradigms.iter_mut().enumerate() {
         let Ok(p) = u16::try_from(p) else { continue };
+        let left = relational.as_ref().and_then(|(f, cells)| {
+            let derives = cells
+                .iter()
+                .any(|&c| paradigm.own(usize::from(c)) == Some(flexion::Form::Derived));
+            derives.then_some(*f)
+        });
         let mut values: Vec<(u8, u8)> = Vec::new();
-        for f in (0..features).filter_map(|f| u8::try_from(f).ok()) {
+        for f in (0..features)
+            .filter(|&f| Some(f) != left)
+            .filter_map(|f| u8::try_from(f).ok())
+        {
             let of = counts.range((p, f, 0)..=(p, f, u8::MAX));
             let total: u32 = of.clone().map(|(_, n)| n).sum();
             if let Some((&(_, _, v), &n)) = of.max_by_key(|(_, n)| **n)
@@ -1141,46 +1214,84 @@ fn inherent(words: &[Word], assignment: &[u16], paradigms: &mut [Paradigm<'_>]) 
     }
 }
 
-/// A pattern for `cell`, which no word of signature `s` has: from the chosen
-/// paradigm with the same lemma pattern and number of stem pieces that agrees
-/// with `s` on the most cells and has the cell (the cell's fallback first).
-fn borrow_cell(
-    signatures: &[(String, Vec<Option<String>>)],
-    order: &[(usize, u32)],
-    s: usize,
-    cell: usize,
-    shape: &Shape,
-) -> Option<String> {
-    let (lemma, cells) = signatures.get(s)?;
-    if let Some(Some(f)) = shape.fallback.get(cell)
-        && let Some(Some(p)) = cells.get(*f)
-    {
-        return Some(p.clone());
+/// How many times the forms derivations from listed forms get wrong are
+/// listed, at most.
+const ROUNDS: usize = 3;
+
+/// Whether relation `r` tells the forms of the words whose form of the cell
+/// it comes from is `wrong` (sorted) right as often as their paradigm does.
+fn tells_listed(
+    r: &Relation<'_>,
+    wrong: &[(String, usize, String)],
+    words: &[Word],
+    smoothing: f32,
+) -> bool {
+    let (Some(from), cell) = (r.source(), usize::from(r.cell)) else {
+        return false;
+    };
+    let is_wrong = |key: &str, c: usize| {
+        wrong
+            .binary_search_by(|(k, x, _)| (k.as_str(), *x).cmp(&(key, c)))
+            .is_ok()
+    };
+    let (mut told, mut built) = (0usize, 0usize);
+    for w in words.iter().filter(|w| is_wrong(&w.key, from)) {
+        let (Some(source), Some(want)) = (first_form(w, from), first_form(w, cell)) else {
+            continue;
+        };
+        told += usize::from(r.told(source, smoothing).is_some_and(|t| t.0 == want));
+        built += usize::from(!is_wrong(&w.key, cell));
     }
-    let pieces = pattern::pieces(lemma);
-    order
-        .iter()
-        .filter_map(|&(o, n)| {
-            let (l, c) = signatures.get(o)?;
-            let p = c.get(cell)?.as_ref()?;
-            (pattern::pieces(l) == pieces).then_some(())?;
-            let agree = cells
-                .iter()
-                .zip(c)
-                .filter(|(a, b)| a.is_some() && a == b)
-                .count();
-            Some(((l == lemma, agree, n), p.clone()))
-        })
-        .max_by(|a, b| a.0.cmp(&b.0))
-        .map(|(_, p)| p)
+    told >= built
+}
+
+/// Of `listed` forms (`(word, cell, form)`, sorted), those no relation
+/// tells from another listed form of the word, or one told so in turn.
+fn roots(
+    grammar: &Grammar<'_, u16, u16, u8>,
+    listed: &[(String, usize, String)],
+) -> Vec<(String, usize, String)> {
+    let order = crate::relations::order(&grammar.relations, grammar.cells);
+    let mut out = Vec::with_capacity(listed.len());
+    for word in listed.chunk_by(|a, b| a.0 == b.0) {
+        let Some((key, _, _)) = word.first() else {
+            continue;
+        };
+        let forms: BTreeMap<usize, &String> = word.iter().map(|(_, c, f)| (*c, f)).collect();
+        // Per cell, the letters the word has there: listed, or told.
+        let mut have: BTreeMap<usize, String> = BTreeMap::new();
+        for &c in &order {
+            let told = grammar.relation(c).filter(|r| r.listed).and_then(|r| {
+                let source = have.get(&r.source()?)?;
+                r.told(source, grammar.smoothing).map(|t| t.0)
+            });
+            match forms.get(&c) {
+                Some(form) => {
+                    let letters = grammar.orthography.read(form).letters;
+                    if told.as_ref() != Some(&letters) {
+                        out.push((key.clone(), c, (*form).clone()));
+                    }
+                    have.insert(c, letters);
+                }
+                None => {
+                    if let Some(t) = told {
+                        have.insert(c, t);
+                    }
+                }
+            }
+        }
+    }
+    out.sort();
+    out
 }
 
 /// The fewest words a paradigm or a stress pattern is learned from.
 const MIN_WORDS: u32 = 3;
 
-/// A paradigm's name: its commonest word, judged by how many dictionaries
-/// have it and how many senses its entry has (then the shortest, then the
-/// first alphabetically), of its plain words (letters only) of at least
+/// A paradigm's name: its commonest word that no sense makes vulgar or
+/// offensive, judged by how many dictionaries have it and how many senses
+/// its entry has (the dumps give no frequencies; then the shortest, then
+/// the first alphabetically), of its plain words (letters only) of at least
 /// three letters if it has any.
 fn name(words: &[Word], chosen: &[usize], s: usize) -> String {
     let mine = || {
@@ -1198,8 +1309,8 @@ fn name(words: &[Word], chosen: &[usize], s: usize) -> String {
                         && w.letters.chars().all(char::is_alphabetic))
             })
             .max_by(|a, b| {
-                (a.dictionaries, a.senses)
-                    .cmp(&(b.dictionaries, b.senses))
+                (!a.vulgar, a.dictionaries, a.senses)
+                    .cmp(&(!b.vulgar, b.dictionaries, b.senses))
                     .then_with(|| b.letters.chars().count().cmp(&a.letters.chars().count()))
                     .then_with(|| b.letters.cmp(&a.letters))
             })

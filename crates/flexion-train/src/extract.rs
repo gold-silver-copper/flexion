@@ -38,6 +38,10 @@ pub struct Lexeme {
     /// language's edition `i`.
     #[serde(default)]
     pub source: u8,
+    /// A sense of it is vulgar or offensive: not a word to name a paradigm
+    /// after.
+    #[serde(default)]
+    pub vulgar: bool,
 }
 
 /// Every lexeme of one part of speech.
@@ -487,5 +491,10 @@ fn lexeme(
         order,
         senses: u16::try_from(entry.senses.len()).unwrap_or(u16::MAX),
         source: 0,
+        vulgar: entry.senses.iter().any(|s| {
+            s.tags
+                .iter()
+                .any(|t| matches!(t.as_str(), "vulgar" | "offensive" | "derogatory" | "slur"))
+        }),
     })
 }
