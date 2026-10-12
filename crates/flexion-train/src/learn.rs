@@ -127,11 +127,38 @@ pub fn learn<'s>(
         .map(|w| w.key.as_str())
         .collect();
     let (all_words, all_lexemes) = (words.as_slice(), lexemes);
-    let words: Vec<Word> = all_words
+    // Words that separate a particle are the grammar of the rest of them:
+    // their bases are learned with the other words.
+    let (prefixes, bases) = prefixes(all_words);
+    let separated: std::collections::HashSet<&str> =
+        bases.iter().map(|(k, _)| k.as_str()).collect();
+    let mut words: Vec<Word> = all_words
         .iter()
-        .filter(|w| !parted.contains(w.key.as_str()))
+        .filter(|w| !parted.contains(w.key.as_str()) && !separated.contains(w.key.as_str()))
         .cloned()
         .collect();
+    // A base the dictionary has takes the forms its particle verbs show in
+    // the cells it lacks (`aufzunehmen` shows `nehmen`'s `zunehmen`).
+    let mut at: HashMap<String, usize> = words
+        .iter()
+        .enumerate()
+        .map(|(i, w)| (w.key.clone(), i))
+        .collect();
+    for (_, base) in bases {
+        match at.get(&base.key).and_then(|&i| words.get_mut(i)) {
+            Some(known) => {
+                for (mine, theirs) in known.cells.iter_mut().zip(base.cells) {
+                    if mine.is_empty() {
+                        *mine = theirs;
+                    }
+                }
+            }
+            None => {
+                at.insert(base.key.clone(), words.len());
+                words.push(base);
+            }
+        }
+    }
     let found = referrals(&words, shape);
     let mut analyses: Vec<Analyzed> = words.iter().map(|w| analyze(w, shape)).collect();
     let mut feature_examples: Vec<(String, u8)> = Vec::new();
@@ -214,6 +241,7 @@ pub fn learn<'s>(
         referrals: Cow::Owned(found.as_ref().map(|f| f.1.clone()).unwrap_or_default()),
         feature: feature_choice,
         compound: compound_choice,
+        prefixes,
         accent,
         laws: None,
         spellings: Cow::Owned(spellings),
@@ -224,10 +252,11 @@ pub fn learn<'s>(
     };
     // A word the grammar gets wrong is listed in its choices: its paradigm,
     // its stress pattern and stem vowel. Forms still wrong are irregular.
-    let wrong: std::collections::BTreeSet<String> = irregular(&grammar, all_lexemes, all_words)
-        .into_iter()
-        .map(|(k, _, _)| k)
-        .collect();
+    let wrong: std::collections::BTreeSet<String> =
+        irregular(&grammar, all_lexemes, all_words, |_| true)
+            .into_iter()
+            .map(|(k, _, _)| k)
+            .collect();
     let mut paradigm_of: HashMap<&str, u16> = HashMap::new();
     for (w, &p) in words.iter().zip(&assignment) {
         paradigm_of.entry(w.key.as_str()).or_insert(p);
@@ -244,19 +273,36 @@ pub fn learn<'s>(
     if let Some(a) = grammar.accent.as_mut() {
         tidy(&mut a.class);
     }
-    let irregular = irregular(&grammar, all_lexemes, all_words);
-    grammar.irregular = Cow::Owned(
-        irregular
-            .iter()
-            .map(|(w, c, f)| {
-                (
-                    Cow::Owned(w.clone()),
-                    u16::try_from(*c).unwrap_or(u16::MAX),
-                    Cow::Owned(f.clone()),
-                )
-            })
-            .collect(),
-    );
+    // Words made of others (`hineinlassen`, `диван-кровать`) are checked
+    // once the words they are made of have their irregular forms.
+    let made = |w: &Word| {
+        w.key.contains('-')
+            || grammar
+                .prefixes
+                .as_ref()
+                .and_then(|p| p.split(&w.key))
+                .is_some_and(|(_, separable, inseparable)| separable + inseparable > 0.0)
+    };
+    let mut irregular = irregular(&grammar, all_lexemes, all_words, |w| !made(w));
+    let listed =
+        |irregular: &[(String, usize, String)]| -> Cow<'s, [(Cow<'s, str>, u16, Cow<'s, str>)]> {
+            Cow::Owned(
+                irregular
+                    .iter()
+                    .map(|(w, c, f)| {
+                        (
+                            Cow::Owned(w.clone()),
+                            u16::try_from(*c).unwrap_or(u16::MAX),
+                            Cow::Owned(f.clone()),
+                        )
+                    })
+                    .collect(),
+            )
+        };
+    grammar.irregular = listed(&irregular);
+    irregular.extend(self::irregular(&grammar, all_lexemes, all_words, made));
+    irregular.sort();
+    grammar.irregular = listed(&irregular);
     let stats = Stats {
         words: all_words.len(),
         paradigms: grammar.paradigms.len(),
@@ -293,6 +339,255 @@ fn compound(w: &Word) -> Option<(String, Compound)> {
     ))
 }
 
+/// The letters of a word's usual form in cell `c`.
+fn first_form(w: &Word, c: usize) -> Option<&str> {
+    w.cells
+        .get(c)
+        .and_then(|fs| fs.first())
+        .map(|f| f.letters.as_str())
+}
+
+/// The shortest and longest prefix, in letters.
+const PREFIX_LETTERS: std::ops::RangeInclusive<usize> = 2..=12;
+
+/// Prefixes words inflect behind, and the words made of one with their
+/// bases: `(word's key, base)`.
+///
+/// A word separates a prefix when a form of it puts the prefix after the
+/// rest, as a word of its own (`räuchre aus`). It keeps one in front when
+/// every form begins with it and the rest is a word whose forms, with what
+/// the cell's inseparable prefixes take off (the participle's `ge`), are the
+/// rest of its forms (`verhindern`, `hindern`); the cells' drops are learned
+/// from such pairs. A word's base has its forms without the prefix (and with
+/// what was taken off put back).
+fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, Word)>) {
+    use flexion::Separation;
+    let cells = words.first().map_or(0, |w| w.cells.len());
+    let form = first_form;
+    let by_key: HashMap<&str, &Word> = words.iter().map(|w| (w.key.as_str(), w)).collect();
+    // Separable: a form with the prefix after the rest.
+    let mut separable: HashMap<&str, String> = HashMap::new();
+    for w in words {
+        let prefix = w.cells.iter().filter_map(|fs| fs.first()).find_map(|f| {
+            let (_, tail) = f.letters.rsplit_once(' ')?;
+            (!tail.is_empty() && w.letters.starts_with(tail) && w.letters.len() > tail.len())
+                .then_some(tail)
+        });
+        if let Some(p) = prefix {
+            separable.insert(w.key.as_str(), p.to_string());
+        }
+    }
+    // What an inseparable prefix takes off each cell: from words made of a
+    // prefix and a word of the dictionary.
+    let split = |w: &Word, n: usize| -> Option<(String, String)> {
+        let at = w.letters.char_indices().nth(n)?.0;
+        let (p, rest) = w.letters.split_at(at);
+        (rest.chars().count() >= 3).then(|| (p.to_string(), rest.to_string()))
+    };
+    let mut drops: Vec<BTreeMap<String, u32>> = vec![BTreeMap::new(); cells];
+    for w in words
+        .iter()
+        .filter(|w| !separable.contains_key(w.key.as_str()))
+    {
+        for n in PREFIX_LETTERS {
+            let Some((p, rest)) = split(w, n) else { break };
+            let Some(base) = by_key.get(rest.as_str()) else {
+                continue;
+            };
+            for (c, votes) in drops.iter_mut().enumerate() {
+                let (Some(mine), Some(theirs)) = (form(w, c), form(base, c)) else {
+                    continue;
+                };
+                let Some(tail) = mine.strip_prefix(p.as_str()) else {
+                    continue;
+                };
+                if let Some(dropped) = theirs.strip_suffix(tail) {
+                    *votes.entry(dropped.to_string()).or_default() += 1;
+                }
+            }
+        }
+    }
+    let drops: Vec<String> = drops
+        .iter()
+        .map(|v| {
+            v.iter()
+                .max_by_key(|e| *e.1)
+                .map(|e| e.0.clone())
+                .unwrap_or_default()
+        })
+        .collect();
+    let drop = |c: usize| drops.get(c).map_or("", String::as_str);
+    // Inseparable: every form begins with the prefix and, with what the cell
+    // takes off put back, its rest is the base's form where the dictionary
+    // has the base.
+    let keeps = |w: &Word, p: &str, rest: &str| {
+        let base = by_key.get(rest);
+        let mut seen = 0;
+        for c in 0..cells {
+            let Some(mine) = form(w, c) else { continue };
+            let Some(tail) = mine.strip_prefix(p) else {
+                return false;
+            };
+            if !drop(c).is_empty() && tail.starts_with(drop(c)) {
+                return false;
+            }
+            if let Some(theirs) = base.and_then(|b| form(b, c))
+                && theirs != format!("{}{tail}", drop(c))
+            {
+                return false;
+            }
+            seen += 1;
+        }
+        seen > 0
+    };
+    let mut inseparable: HashMap<&str, String> = HashMap::new();
+    let mut proven: BTreeMap<String, u32> = BTreeMap::new();
+    for w in words
+        .iter()
+        .filter(|w| !separable.contains_key(w.key.as_str()))
+    {
+        for n in PREFIX_LETTERS {
+            let Some((p, rest)) = split(w, n) else { break };
+            if by_key.contains_key(rest.as_str()) && keeps(w, &p, &rest) {
+                *proven.entry(p).or_default() += 1;
+                break;
+            }
+        }
+    }
+    // A prefix needs MIN_WORDS words that separate it or that keep it, with a
+    // base the dictionary has.
+    let mut counted: BTreeMap<String, (u32, u32)> = BTreeMap::new();
+    for p in separable.values() {
+        counted.entry(p.clone()).or_default().0 += 1;
+    }
+    for (p, n) in &proven {
+        if *n >= MIN_WORDS {
+            counted.entry(p.clone()).or_default();
+        }
+    }
+    counted.retain(|p, (s, _)| *s >= MIN_WORDS || proven.get(p).is_some_and(|&n| n >= MIN_WORDS));
+    if counted.is_empty() {
+        return (None, Vec::new());
+    }
+    // Every word that begins with a prefix: what it does with it.
+    let longest = |key: &str| {
+        counted
+            .keys()
+            .filter(|p| key.starts_with(p.as_str()) && key.chars().count() >= p.chars().count() + 3)
+            .max_by_key(|p| p.len())
+            .cloned()
+    };
+    let mut bases: Vec<(String, Word)> = Vec::new();
+    let mut what: Vec<(String, String, Separation)> = Vec::new();
+    for w in words {
+        let Some(p) = longest(&w.key) else { continue };
+        let n = p.chars().count();
+        let rest: String = w.letters.chars().skip(n).collect();
+        let prefix: String = w.letters.chars().take(n).collect();
+        let separation = if separable.get(w.key.as_str()).is_some_and(|s| *s == prefix) {
+            Separation::Separable
+        } else if keeps(w, &prefix, &rest) {
+            inseparable.insert(w.key.as_str(), prefix.clone());
+            Separation::Inseparable
+        } else {
+            Separation::Neither
+        };
+        if separation != Separation::Neither {
+            let mut base = w.clone();
+            base.letters = rest;
+            base.key = w.key.chars().skip(n).collect();
+            for (c, forms) in base.cells.iter_mut().enumerate() {
+                for f in forms.iter_mut() {
+                    let rest = match separation {
+                        Separation::Separable => f
+                            .letters
+                            .strip_suffix(prefix.as_str())
+                            .and_then(|s| s.strip_suffix(' '))
+                            .or_else(|| f.letters.strip_prefix(prefix.as_str()))
+                            .map(str::to_string),
+                        _ => f
+                            .letters
+                            .strip_prefix(prefix.as_str())
+                            .map(|t| format!("{}{t}", drop(c))),
+                    };
+                    if let Some(rest) = rest {
+                        f.letters = rest;
+                        f.stress = None;
+                    }
+                }
+            }
+            bases.push((w.key.clone(), base));
+        }
+        what.push((p, w.key.clone(), separation));
+    }
+    // Where a separable prefix goes, cell by cell.
+    let mut votes: Vec<[u32; 2]> = vec![[0; 2]; cells];
+    for w in words {
+        let Some(p) = separable.get(w.key.as_str()) else {
+            continue;
+        };
+        for (c, v) in votes.iter_mut().enumerate() {
+            match form(w, c) {
+                Some(f) if f.ends_with(&format!(" {p}")) => v[1] += 1,
+                Some(f) if f.starts_with(p.as_str()) => v[0] += 1,
+                _ => {}
+            }
+        }
+    }
+    // Each prefix's counts; words that go against most are listed.
+    let mut prefixes: Vec<flexion::Prefix<'a>> = Vec::new();
+    let mut listed: Vec<(Cow<'a, str>, Separation)> = Vec::new();
+    for p in counted.keys() {
+        let mine: Vec<&(String, String, Separation)> = what.iter().filter(|e| e.0 == *p).collect();
+        let count = |s: Separation| {
+            u32::try_from(mine.iter().filter(|e| e.2 == s).count()).unwrap_or(u32::MAX)
+        };
+        let (sep, insep, neither) = (
+            count(Separation::Separable),
+            count(Separation::Inseparable),
+            count(Separation::Neither),
+        );
+        let most = [
+            (sep, Separation::Separable),
+            (insep, Separation::Inseparable),
+            (neither, Separation::Neither),
+        ]
+        .into_iter()
+        .max_by_key(|e| e.0)
+        .map_or(Separation::Neither, |e| e.1);
+        for (_, key, s) in &mine {
+            if *s != most {
+                listed.push((Cow::Owned(key.clone()), *s));
+            }
+        }
+        prefixes.push(flexion::Prefix {
+            letters: Cow::Owned(p.clone()),
+            separable: sep,
+            inseparable: insep,
+            words: sep + insep + neither,
+        });
+    }
+    listed.sort();
+    listed.dedup_by(|a, b| a.0 == b.0);
+    let placement = votes
+        .iter()
+        .map(|v| {
+            if v[1] > v[0] {
+                flexion::Placement::After
+            } else {
+                flexion::Placement::Before
+            }
+        })
+        .collect();
+    let prefixes = flexion::Prefixes {
+        prefixes: Cow::Owned(prefixes),
+        listed: Cow::Owned(listed),
+        placement: Cow::Owned(placement),
+        drops: Cow::Owned(drops.into_iter().map(Cow::Owned).collect()),
+    };
+    (Some(prefixes), bases)
+}
+
 /// What the trainer writes for a referred cell while it learns paradigms.
 const REFERRED: &str = "=";
 
@@ -305,12 +600,7 @@ const REFERRAL_SHARE: f64 = 0.5;
 /// cell, a different cell for different values (the accusative is the genitive of
 /// animate nouns and the nominative of inanimate ones).
 fn referrals(words: &[Word], shape: &Shape) -> Option<(usize, Vec<Referral<'static>>)> {
-    fn form(w: &Word, c: usize) -> Option<&str> {
-        w.cells
-            .get(c)
-            .and_then(|fs| fs.first())
-            .map(|f| f.letters.as_str())
-    }
+    let form = first_form;
     let mut best: Option<(usize, Vec<Referral<'static>>)> = None;
     for (f, &values) in shape.inherent.iter().enumerate() {
         let mut found = Vec::new();
@@ -1155,17 +1445,19 @@ fn vowel_at(orthography: &Orthography<'_>, letters: &str, vowel: u8) -> usize {
 }
 
 /// The dictionary's forms the grammar doesn't give, for the word typed as
-/// the dictionary writes it and typed plain: `(key, cell, form)`, sorted.
-/// Of homographs, the first word's forms.
+/// the dictionary writes it and typed plain: `(key, cell, form)`, sorted;
+/// of the words `only` accepts. Of homographs, the first word's forms.
 fn irregular(
     grammar: &Grammar<'_, u16, u16, u8>,
     lexemes: &[Lexeme],
     words: &[Word],
+    only: impl Fn(&Word) -> bool,
 ) -> Vec<(String, usize, String)> {
     let mut first: BTreeMap<&str, usize> = BTreeMap::new();
     for (i, w) in words.iter().enumerate() {
         first.entry(w.key.as_str()).or_insert(i);
     }
+    first.retain(|_, &mut i| words.get(i).is_some_and(&only));
     let firsts: Vec<usize> = first.into_values().collect();
     let chunk = firsts.len().div_ceil(THREADS).max(1);
     let found: Vec<Vec<(String, usize, String)>> = std::thread::scope(|scope| {

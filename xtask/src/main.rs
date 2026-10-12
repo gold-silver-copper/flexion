@@ -181,6 +181,30 @@ fn try_language(
             st.accent_patterns,
             st.irregular_forms,
         );
+        if let Some(p) = &g.prefixes {
+            let list: Vec<String> = p
+                .prefixes
+                .iter()
+                .map(|p| {
+                    format!(
+                        "{} {}+{}/{}",
+                        p.letters, p.separable, p.inseparable, p.words
+                    )
+                })
+                .collect();
+            println!(
+                "  prefixes (separable+inseparable/words): {}",
+                list.join(", ")
+            );
+            println!(
+                "  drops: {:?}",
+                p.drops
+                    .iter()
+                    .enumerate()
+                    .filter(|(_, d)| !d.is_empty())
+                    .collect::<Vec<_>>()
+            );
+        }
         if !g.spellings.is_empty() {
             println!("  {} spellings listed", g.spellings.len());
         }

@@ -7,10 +7,12 @@ mod compounds;
 mod irregular;
 mod paradigms;
 mod rules;
+mod spellings;
 
 pub use paradigms::Declension;
 
-use flexion::Grammar;
+use crate::*;
+use flexion::{Candidate, Grammar, Known, Reading};
 use std::borrow::Cow;
 
 /// Each cell's place in a paradigm.
@@ -79,7 +81,193 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
     compound: Some(compounds::COMPOUND),
     accent: None,
     laws: None,
+    spellings: Cow::Borrowed(spellings::SPELLINGS),
+    hidden: 0.0,
     irregular: Cow::Borrowed(irregular::IRREGULAR),
     smoothing: 2.0,
     sharpness: 0.5,
 };
+
+/// A pronoun form: which cell of its declension.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum Cell {
+    /// A declined pronoun or determiner.
+    Form(Case, Agreement, Animacy),
+}
+
+impl Cell {
+    /// Its place in a paradigm.
+    pub const fn index(self) -> usize {
+        let cell = match self {
+            Cell::Form(Case::Nominative, Agreement::Masculine, Animacy::Animate) => {
+                cell::NOM_M_ANIM
+            }
+            Cell::Form(Case::Nominative, Agreement::Masculine, Animacy::Inanimate) => {
+                cell::NOM_M_INAN
+            }
+            Cell::Form(Case::Nominative, Agreement::Feminine, Animacy::Animate) => cell::NOM_F_ANIM,
+            Cell::Form(Case::Nominative, Agreement::Feminine, Animacy::Inanimate) => {
+                cell::NOM_F_INAN
+            }
+            Cell::Form(Case::Nominative, Agreement::Neuter, Animacy::Animate) => cell::NOM_N_ANIM,
+            Cell::Form(Case::Nominative, Agreement::Neuter, Animacy::Inanimate) => cell::NOM_N_INAN,
+            Cell::Form(Case::Nominative, Agreement::Plural, Animacy::Animate) => cell::NOM_PL_ANIM,
+            Cell::Form(Case::Nominative, Agreement::Plural, Animacy::Inanimate) => {
+                cell::NOM_PL_INAN
+            }
+            Cell::Form(Case::Genitive, Agreement::Masculine, Animacy::Animate) => cell::GEN_M_ANIM,
+            Cell::Form(Case::Genitive, Agreement::Masculine, Animacy::Inanimate) => {
+                cell::GEN_M_INAN
+            }
+            Cell::Form(Case::Genitive, Agreement::Feminine, Animacy::Animate) => cell::GEN_F_ANIM,
+            Cell::Form(Case::Genitive, Agreement::Feminine, Animacy::Inanimate) => cell::GEN_F_INAN,
+            Cell::Form(Case::Genitive, Agreement::Neuter, Animacy::Animate) => cell::GEN_N_ANIM,
+            Cell::Form(Case::Genitive, Agreement::Neuter, Animacy::Inanimate) => cell::GEN_N_INAN,
+            Cell::Form(Case::Genitive, Agreement::Plural, Animacy::Animate) => cell::GEN_PL_ANIM,
+            Cell::Form(Case::Genitive, Agreement::Plural, Animacy::Inanimate) => cell::GEN_PL_INAN,
+            Cell::Form(Case::Dative, Agreement::Masculine, Animacy::Animate) => cell::DAT_M_ANIM,
+            Cell::Form(Case::Dative, Agreement::Masculine, Animacy::Inanimate) => cell::DAT_M_INAN,
+            Cell::Form(Case::Dative, Agreement::Feminine, Animacy::Animate) => cell::DAT_F_ANIM,
+            Cell::Form(Case::Dative, Agreement::Feminine, Animacy::Inanimate) => cell::DAT_F_INAN,
+            Cell::Form(Case::Dative, Agreement::Neuter, Animacy::Animate) => cell::DAT_N_ANIM,
+            Cell::Form(Case::Dative, Agreement::Neuter, Animacy::Inanimate) => cell::DAT_N_INAN,
+            Cell::Form(Case::Dative, Agreement::Plural, Animacy::Animate) => cell::DAT_PL_ANIM,
+            Cell::Form(Case::Dative, Agreement::Plural, Animacy::Inanimate) => cell::DAT_PL_INAN,
+            Cell::Form(Case::Accusative, Agreement::Masculine, Animacy::Animate) => {
+                cell::ACC_M_ANIM
+            }
+            Cell::Form(Case::Accusative, Agreement::Masculine, Animacy::Inanimate) => {
+                cell::ACC_M_INAN
+            }
+            Cell::Form(Case::Accusative, Agreement::Feminine, Animacy::Animate) => cell::ACC_F_ANIM,
+            Cell::Form(Case::Accusative, Agreement::Feminine, Animacy::Inanimate) => {
+                cell::ACC_F_INAN
+            }
+            Cell::Form(Case::Accusative, Agreement::Neuter, Animacy::Animate) => cell::ACC_N_ANIM,
+            Cell::Form(Case::Accusative, Agreement::Neuter, Animacy::Inanimate) => cell::ACC_N_INAN,
+            Cell::Form(Case::Accusative, Agreement::Plural, Animacy::Animate) => cell::ACC_PL_ANIM,
+            Cell::Form(Case::Accusative, Agreement::Plural, Animacy::Inanimate) => {
+                cell::ACC_PL_INAN
+            }
+            Cell::Form(Case::Instrumental, Agreement::Masculine, Animacy::Animate) => {
+                cell::INS_M_ANIM
+            }
+            Cell::Form(Case::Instrumental, Agreement::Masculine, Animacy::Inanimate) => {
+                cell::INS_M_INAN
+            }
+            Cell::Form(Case::Instrumental, Agreement::Feminine, Animacy::Animate) => {
+                cell::INS_F_ANIM
+            }
+            Cell::Form(Case::Instrumental, Agreement::Feminine, Animacy::Inanimate) => {
+                cell::INS_F_INAN
+            }
+            Cell::Form(Case::Instrumental, Agreement::Neuter, Animacy::Animate) => cell::INS_N_ANIM,
+            Cell::Form(Case::Instrumental, Agreement::Neuter, Animacy::Inanimate) => {
+                cell::INS_N_INAN
+            }
+            Cell::Form(Case::Instrumental, Agreement::Plural, Animacy::Animate) => {
+                cell::INS_PL_ANIM
+            }
+            Cell::Form(Case::Instrumental, Agreement::Plural, Animacy::Inanimate) => {
+                cell::INS_PL_INAN
+            }
+            Cell::Form(Case::Prepositional, Agreement::Masculine, Animacy::Animate) => {
+                cell::PREP_M_ANIM
+            }
+            Cell::Form(Case::Prepositional, Agreement::Masculine, Animacy::Inanimate) => {
+                cell::PREP_M_INAN
+            }
+            Cell::Form(Case::Prepositional, Agreement::Feminine, Animacy::Animate) => {
+                cell::PREP_F_ANIM
+            }
+            Cell::Form(Case::Prepositional, Agreement::Feminine, Animacy::Inanimate) => {
+                cell::PREP_F_INAN
+            }
+            Cell::Form(Case::Prepositional, Agreement::Neuter, Animacy::Animate) => {
+                cell::PREP_N_ANIM
+            }
+            Cell::Form(Case::Prepositional, Agreement::Neuter, Animacy::Inanimate) => {
+                cell::PREP_N_INAN
+            }
+            Cell::Form(Case::Prepositional, Agreement::Plural, Animacy::Animate) => {
+                cell::PREP_PL_ANIM
+            }
+            Cell::Form(Case::Prepositional, Agreement::Plural, Animacy::Inanimate) => {
+                cell::PREP_PL_INAN
+            }
+        };
+        cell as usize
+    }
+}
+
+impl From<(Case, Agreement, Animacy)> for Cell {
+    fn from((case, agreement, animacy): (Case, Agreement, Animacy)) -> Self {
+        Cell::Form(case, agreement, animacy)
+    }
+}
+
+/// A pronoun to inflect: its lemma, and what you know of it. The more you
+/// tell, the surer its forms.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Pronoun<'w> {
+    lemma: &'w str,
+    given: Vec<(usize, &'w str)>,
+    full: bool,
+}
+
+impl<'w> Pronoun<'w> {
+    /// The pronoun `lemma`, as the dictionary writes it.
+    #[must_use]
+    pub fn new(lemma: &'w str) -> Self {
+        Pronoun {
+            lemma,
+            given: Vec::new(),
+            full: false,
+        }
+    }
+
+    /// One of its forms you know (a principal part): readings that disagree
+    /// with it are dropped.
+    #[must_use]
+    pub fn given(mut self, cell: impl Into<Cell>, form: &'w str) -> Self {
+        self.given.push((cell.into().index(), form));
+        self
+    }
+
+    /// Its lemma is spelled with every mark the dictionary writes, so
+    /// none is hidden (without this, a lemma typed without marks may be
+    /// missing some, and its forms are less sure).
+    #[must_use]
+    pub fn spelled_in_full(mut self) -> Self {
+        self.full = true;
+        self
+    }
+
+    fn known(&self) -> Known<'_, u8> {
+        Known {
+            forms: &self.given,
+            feature: None,
+            full: self.full,
+        }
+    }
+
+    /// Its likeliest form in `cell`.
+    #[must_use]
+    pub fn form(&self, cell: impl Into<Cell>) -> String {
+        GRAMMAR.best(self.lemma, cell.into().index(), &self.known())
+    }
+
+    /// Every form it may have in `cell`, likeliest first, each with its
+    /// probability and why.
+    #[must_use]
+    pub fn candidates(&self, cell: impl Into<Cell>) -> Vec<Candidate<'static>> {
+        GRAMMAR.candidates(self.lemma, cell.into().index(), &self.known())
+    }
+
+    /// The declensions it may follow, likeliest first, each with its probability
+    /// and why.
+    #[must_use]
+    pub fn declension(&self) -> Vec<Reading<'static, 'static, Declension>> {
+        GRAMMAR.readings(self.lemma, &self.known())
+    }
+}

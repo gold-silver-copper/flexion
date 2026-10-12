@@ -277,6 +277,9 @@ fn part_files(
     if g.compound.is_some() {
         m.push_str("mod compounds;\n");
     }
+    if g.prefixes.is_some() {
+        m.push_str("mod prefixes;\n");
+    }
     m.push_str("mod irregular;\nmod paradigms;\nmod rules;\nmod spellings;\n\n");
     let _ = writeln!(m, "pub use paradigms::{ty};\n");
     m.push_str("use crate::*;\nuse flexion::{{Candidate, Grammar, Known, Reading}};\nuse std::borrow::Cow;\n\n");
@@ -287,7 +290,7 @@ fn part_files(
     m.push_str("}\n\n");
     let _ = writeln!(
         m,
-        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    referrals: {referrals},\n    feature: {feature},\n    compound: {},\n    accent: {accent},\n    laws: None,\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    hidden: {hidden:?},\n    irregular: Cow::Borrowed(irregular::IRREGULAR),\n    smoothing: {:?},\n    sharpness: {:?},\n}};",
+        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    referrals: {referrals},\n    feature: {feature},\n    compound: {},\n    prefixes: {prefixes},\n    accent: {accent},\n    laws: None,\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    hidden: {hidden:?},\n    irregular: Cow::Borrowed(irregular::IRREGULAR),\n    smoothing: {:?},\n    sharpness: {:?},\n}};",
         g.cells,
         g.lemma_cell,
         g.capitalized,
@@ -306,6 +309,11 @@ fn part_files(
             (true, None) => ", accent::AccentClass".to_string(),
             (false, Some(f)) => format!(", u8, crate::{f}"),
             (true, Some(f)) => format!(", accent::AccentClass, crate::{f}"),
+        },
+        prefixes = if g.prefixes.is_some() {
+            "Some(prefixes::PREFIXES)"
+        } else {
+            "None"
         },
         accent = if g.accent.is_some() {
             "Some(flexion::Accent {\n        patterns: Cow::Borrowed(&accent::PATTERNS),\n        classes: Cow::Borrowed(&accent::CLASSES),\n        class: accent::CLASS,\n        circumflex: Cow::Borrowed(&accent::CIRCUMFLEX),\n        long_finals: Cow::Borrowed(&accent::LONG_FINALS),\n    })"
@@ -476,23 +484,7 @@ fn part_files(
         thousands(g.paradigm.exceptions.len() as u64),
         one.to_uppercase()
     );
-    for rule in g.paradigm.rules.iter() {
-        let counts: Vec<String> = rule
-            .counts
-            .iter()
-            .map(|&(l, n)| format!("{} {n}", name_of(l)))
-            .collect();
-        let _ = writeln!(
-            r,
-            "        {:?} => [{}],",
-            rule.ending.as_ref(),
-            counts.join(", ")
-        );
-    }
-    r.push_str("    }\n    listed {\n");
-    for (w, l) in g.paradigm.exceptions.iter() {
-        let _ = writeln!(r, "        {:?} => {},", w.as_ref(), name_of(*l));
-    }
+    r.push_str(&choice_body(&g.paradigm, &name_of));
     r.push_str("    }\n};\n");
     files.push((format!("{dir}/rules.rs"), r));
 
@@ -543,23 +535,7 @@ fn part_files(
             thousands(choice.exceptions.len() as u64),
             f.to_uppercase()
         );
-        for rule in choice.rules.iter() {
-            let counts: Vec<String> = rule
-                .counts
-                .iter()
-                .map(|&(l, n)| format!("{} {n}", value(l)))
-                .collect();
-            let _ = writeln!(
-                r,
-                "        {:?} => [{}],",
-                rule.ending.as_ref(),
-                counts.join(", ")
-            );
-        }
-        r.push_str("    }\n    listed {\n");
-        for (w, l) in choice.exceptions.iter() {
-            let _ = writeln!(r, "        {:?} => {},", w.as_ref(), value(*l));
-        }
+        r.push_str(&choice_body(choice, |l| value(l).to_string()));
         r.push_str("    }\n};\n");
         files.push((format!("{dir}/{}.rs", snake(f)), r));
     }
@@ -569,6 +545,10 @@ fn part_files(
             format!("{dir}/accent.rs"),
             accent_file(a, layout, &variants, many),
         ));
+    }
+
+    if let Some(p) = &g.prefixes {
+        files.push((format!("{dir}/prefixes.rs"), prefixes_file(p, layout)));
     }
 
     // compounds.rs
@@ -584,23 +564,7 @@ fn part_files(
             thousands(c.rules.len() as u64),
             thousands(c.exceptions.len() as u64),
         );
-        for rule in c.rules.iter() {
-            let counts: Vec<String> = rule
-                .counts
-                .iter()
-                .map(|&(l, n)| format!("{l:?} {n}"))
-                .collect();
-            let _ = writeln!(
-                r,
-                "        {:?} => [{}],",
-                rule.ending.as_ref(),
-                counts.join(", ")
-            );
-        }
-        r.push_str("    }\n    listed {\n");
-        for (w, l) in c.exceptions.iter() {
-            let _ = writeln!(r, "        {:?} => {l:?},", w.as_ref());
-        }
+        r.push_str(&choice_body(c, |l| format!("{l:?}")));
         r.push_str("    }\n};\n");
         files.push((format!("{dir}/compounds.rs"), r));
     }
@@ -927,23 +891,7 @@ fn accent_file(
         thousands(a.class.rules.len() as u64),
         thousands(a.class.exceptions.len() as u64)
     );
-    for rule in a.class.rules.iter() {
-        let counts: Vec<String> = rule
-            .counts
-            .iter()
-            .map(|&(l, n)| format!("{} {n}", value(l)))
-            .collect();
-        let _ = writeln!(
-            s,
-            "        {:?} => [{}],",
-            rule.ending.as_ref(),
-            counts.join(", ")
-        );
-    }
-    s.push_str("    }\n    listed {\n");
-    for (w, l) in a.class.exceptions.iter() {
-        let _ = writeln!(s, "        {:?} => {},", w.as_ref(), value(*l));
-    }
+    s.push_str(&choice_body(&a.class, &value));
     s.push_str("    }\n};\n\n");
     let _ = writeln!(
         s,
@@ -973,6 +921,34 @@ fn accent_file(
     s
 }
 
+/// A choice's insides as `flexion::choice!` reads them, after its opening
+/// `rules {`: its rules and its listed words (left open for the caller to
+/// close), each value written by `name`.
+fn choice_body<L: flexion::Label>(
+    choice: &flexion::Choice<'_, L>,
+    name: impl Fn(L) -> String,
+) -> String {
+    let mut s = String::new();
+    for rule in choice.rules.iter() {
+        let counts: Vec<String> = rule
+            .counts
+            .iter()
+            .map(|&(l, n)| format!("{} {n}", name(l)))
+            .collect();
+        let _ = writeln!(
+            s,
+            "        {:?} => [{}],",
+            rule.ending.as_ref(),
+            counts.join(", ")
+        );
+    }
+    s.push_str("    }\n    listed {\n");
+    for (w, l) in choice.exceptions.iter() {
+        let _ = writeln!(s, "        {:?} => {},", w.as_ref(), name(*l));
+    }
+    s
+}
+
 /// `text` without the macro that starts at `from`, up to `to` (a table
 /// with no rows doesn't need its macro).
 fn without_macro(text: &str, from: &str, to: &str) -> String {
@@ -984,6 +960,59 @@ fn without_macro(text: &str, from: &str, to: &str) -> String {
         ),
         _ => text.to_string(),
     }
+}
+
+/// The prefixes words inflect behind, written out: each prefix with how many
+/// words separate it or keep it, the words that go against most, and per
+/// cell where a separable prefix goes and what an inseparable one takes off.
+fn prefixes_file(p: &flexion::Prefixes<'_>, layout: &Layout) -> String {
+    let mut s = String::from(
+        "//! Prefixes words inflect behind. A word that begins with one inflects as the\n\
+         //! rest of it does: a separable prefix goes where the cell puts it (`Before`\n\
+         //! the rest, written together, or `After` it, as a word of its own); an\n\
+         //! inseparable one stays in front and takes off the front of the rest's form\n\
+         //! what the cell says. How likely a word is to do either is how many of the\n\
+         //! dictionary's words with its prefix do.\n\n\
+         use flexion::Placement::*;\n\
+         use flexion::{Prefix, Prefixes, Separation};\n\
+         use std::borrow::Cow;\n\n",
+    );
+    let _ = writeln!(
+        s,
+        "/// {} prefixes and {} words that go against most with theirs.\npub(super) const PREFIXES: Prefixes<'static> = Prefixes {{\n    prefixes: Cow::Borrowed(&[",
+        p.prefixes.len(),
+        thousands(p.listed.len() as u64)
+    );
+    for x in p.prefixes.iter() {
+        let _ = writeln!(
+            s,
+            "        Prefix {{ letters: Cow::Borrowed({:?}), separable: {}, inseparable: {}, words: {} }},",
+            x.letters.as_ref(),
+            x.separable,
+            x.inseparable,
+            x.words
+        );
+    }
+    s.push_str("    ]),\n    listed: Cow::Borrowed(&[\n");
+    for (w, sep) in p.listed.iter() {
+        let _ = writeln!(
+            s,
+            "        (Cow::Borrowed({:?}), Separation::{sep:?}),",
+            w.as_ref()
+        );
+    }
+    s.push_str("    ]),\n    placement: Cow::Borrowed(&[\n");
+    for (c, place) in p.placement.iter().enumerate() {
+        let name = layout.names.get(c).map_or("", String::as_str);
+        let _ = writeln!(s, "        {place:?}, // {name}");
+    }
+    s.push_str("    ]),\n    drops: Cow::Borrowed(&[\n");
+    for (c, d) in p.drops.iter().enumerate() {
+        let name = layout.names.get(c).map_or("", String::as_str);
+        let _ = writeln!(s, "        Cow::Borrowed({:?}), // {name}", d.as_ref());
+    }
+    s.push_str("    ]),\n};\n");
+    s
 }
 
 /// A cell group's variant of a part of speech's `Cell`: `noun_second_case`

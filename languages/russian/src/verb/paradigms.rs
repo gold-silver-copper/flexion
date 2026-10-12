@@ -60,9 +60,9 @@ macro_rules! conjugation {
 /// Every conjugation learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Conjugation {
-    /// Like `играть`: 11,635 words.
+    /// Like `играть`: 11,621 words.
     Играть,
-    /// Like `набираться`: 8,293 words.
+    /// Like `набираться`: 8,289 words.
     Набираться,
     /// Like `вибрировать`: 4,162 words.
     Вибрировать,
@@ -70,13 +70,13 @@ pub enum Conjugation {
     Стыковаться,
     /// Like `числиться`: 1,171 words.
     Числиться,
-    /// Like `хуярить`: 1,130 words.
+    /// Like `хуярить`: 1,129 words.
     Хуярить,
     /// Like `палить`: 1,053 words.
     Палить,
     /// Like `раздуть`: 928 words.
     Раздуть,
-    /// Like `рвануть`: 680 words.
+    /// Like `рвануть`: 679 words.
     Рвануть,
     /// Like `предназначить`: 619 words.
     Предназначить,
@@ -84,13 +84,13 @@ pub enum Conjugation {
     Усилиться,
     /// Like `тянуть`: 548 words.
     Тянуть,
-    /// Like `выделить`: 521 words.
+    /// Like `выделить`: 520 words.
     Выделить,
     /// Like `обнажиться`: 501 words.
     Обнажиться,
     /// Like `прицепиться`: 454 words.
     Прицепиться,
-    /// Like `обернуться`: 392 words.
+    /// Like `обернуться`: 391 words.
     Обернуться,
     /// Like `служить`: 358 words.
     Служить,
@@ -118,14 +118,14 @@ pub enum Conjugation {
     Тянуться,
     /// Like `залипнуть`: 203 words.
     Залипнуть,
-    /// Like `стучать`: 192 words.
-    Стучать,
     /// Like `сносить`: 186 words.
     Сносить,
     /// Like `распуститься`: 163 words.
     Распуститься,
     /// Like `отметить`: 153 words.
     Отметить,
+    /// Like `стучать`: 152 words.
+    Стучать,
     /// Like `возместить`: 152 words.
     Возместить,
     /// Like `носиться`: 138 words.
@@ -146,10 +146,10 @@ pub enum Conjugation {
     Топтать,
     /// Like `сорваться`: 103 words.
     Сорваться,
-    /// Like `трафить`: 103 words.
-    Трафить,
     /// Like `вывозить`: 102 words.
     Вывозить,
+    /// Like `трафить`: 102 words.
+    Трафить,
     /// Like `сычевать`: 101 words.
     Сычевать,
     /// Like `наладиться`: 95 words.
@@ -194,7 +194,7 @@ pub enum Conjugation {
     Сблизиться,
     /// Like `сидеть`: 66 words.
     Сидеть,
-    /// Like `клепать`: 61 words.
+    /// Like `клепать`: 60 words.
     Клепать,
     /// Like `обтечь`: 60 words.
     Обтечь,
@@ -232,6 +232,8 @@ pub enum Conjugation {
     Разбить,
     /// Like `снести`: 45 words.
     Снести,
+    /// Like `трещать`: 43 words.
+    Трещать,
     /// Like `развести`: 42 words.
     Развести,
     /// Like `колоться`: 42 words.
@@ -732,8 +734,6 @@ pub enum Conjugation {
     Помутить,
     /// Like `обглодать`: 3 words.
     Обглодать,
-    /// Like `пролежать`: 3 words.
-    Пролежать,
     /// Like `осечься`: 3 words.
     Осечься,
     /// Like `наморщиться`: 3 words.
@@ -790,10 +790,10 @@ impl Conjugation {
         Conjugation::Закатиться,
         Conjugation::Тянуться,
         Conjugation::Залипнуть,
-        Conjugation::Стучать,
         Conjugation::Сносить,
         Conjugation::Распуститься,
         Conjugation::Отметить,
+        Conjugation::Стучать,
         Conjugation::Возместить,
         Conjugation::Носиться,
         Conjugation::Забросить,
@@ -804,8 +804,8 @@ impl Conjugation {
         Conjugation::Держаться,
         Conjugation::Топтать,
         Conjugation::Сорваться,
-        Conjugation::Трафить,
         Conjugation::Вывозить,
+        Conjugation::Трафить,
         Conjugation::Сычевать,
         Conjugation::Наладиться,
         Conjugation::Переброситься,
@@ -847,6 +847,7 @@ impl Conjugation {
         Conjugation::Глядеться,
         Conjugation::Разбить,
         Conjugation::Снести,
+        Conjugation::Трещать,
         Conjugation::Развести,
         Conjugation::Колоться,
         Conjugation::Топтаться,
@@ -1097,7 +1098,6 @@ impl Conjugation {
         Conjugation::Отозвать,
         Conjugation::Помутить,
         Conjugation::Обглодать,
-        Conjugation::Пролежать,
         Conjugation::Осечься,
         Conjugation::Наморщиться,
         Conjugation::Чтиться,
@@ -1127,8 +1127,8 @@ impl flexion::Label for Conjugation {
 }
 
 pub(super) static CONJUGATIONS: [Paradigm<'static>; 348] = [
-    // Играть: 11,635 words (знать, играть, презирать, делать, уступать, скучать).
-    conjugation!("играть", 11635, "~ть";
+    // Играть: 11,621 words (знать, играть, презирать, делать, уступать, скучать).
+    conjugation!("играть", 11621, "~ть";
         infinitive: "~ть";
         non_past_first: "~ю", "~ем";
         non_past_second: "~ешь", "~ете";
@@ -1138,8 +1138,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 348] = [
         participle: "~ющий", "~вший", "~емый", "~нный";
         gerund: "~я", "~в|~вши";
     ),
-    // Набираться: 8,293 words (отпочковываться, изъясняться, облокачиваться, кончаться, являться, сморкаться).
-    conjugation!("набираться", 8293, "~ть~я";
+    // Набираться: 8,289 words (отпочковываться, изъясняться, облокачиваться, кончаться, являться, сморкаться).
+    conjugation!("набираться", 8289, "~ть~я";
         infinitive: "~ть~я";
         non_past_first: "~ю~ь", "~ем~я";
         non_past_second: "~ешь~я", "~ете~ь";
@@ -1182,8 +1182,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 348] = [
         participle: "~ящий~я", "~ивший~я", "~е~емый", "~ё~нный";
         gerund: "~я~ь", "~ивши~ь";
     ),
-    // Хуярить: 1,130 words (жалить, ужалить, ударить, парить, жарить, верить).
-    conjugation!("хуярить", 1130, "~ить";
+    // Хуярить: 1,129 words (жалить, ужалить, ударить, парить, жарить, верить).
+    conjugation!("хуярить", 1129, "~ить";
         infinitive: "~ить";
         non_past_first: "~ю", "~им";
         non_past_second: "~ишь", "~ите";
@@ -1215,8 +1215,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 348] = [
         participle: "~ющий", "~вший", "~емый", "~тый";
         gerund: "~я", "~в|~вши";
     ),
-    // Рвануть: 680 words (взбзднуть, хохотнуть, блевануть, пугнуть, гнуть, ткнуть).
-    conjugation!("рвануть", 680, "~уть";
+    // Рвануть: 679 words (взбзднуть, хохотнуть, блевануть, пугнуть, гнуть, ткнуть).
+    conjugation!("рвануть", 679, "~уть";
         infinitive: "~уть";
         non_past_first: "~у", "~ём";
         non_past_second: "~ёшь", "~ёте";
@@ -1259,8 +1259,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 348] = [
         participle: "~ущий", "~увший", "~имый", "~утый";
         gerund: "~ая", "~ув|~увши";
     ),
-    // Выделить: 521 words (курить, покурить, помнить, запомнить, варить, чинить).
-    conjugation!("выделить", 521, "~ить";
+    // Выделить: 520 words (курить, покурить, помнить, запомнить, варить, чинить).
+    conjugation!("выделить", 520, "~ить";
         infinitive: "~ить";
         non_past_first: "~ю", "~им";
         non_past_second: "~ишь", "~ите";
@@ -1292,8 +1292,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 348] = [
         participle: "~ящий~я", "~ивший~я", "~е~емый", "~ё~нный";
         gerund: "~я~ь", "~ивши~ь";
     ),
-    // Обернуться: 392 words (рехнуться, повернуться, проснуться, заткнуться, вернуться, улыбнуться).
-    conjugation!("обернуться", 392, "~уть~я";
+    // Обернуться: 391 words (рехнуться, повернуться, проснуться, заткнуться, вернуться, улыбнуться).
+    conjugation!("обернуться", 391, "~уть~я";
         infinitive: "~уть~я";
         non_past_first: "~у~ь", "~ём~я";
         non_past_second: "~ёшь~я", "~ёте~ь";
@@ -1446,17 +1446,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 348] = [
         participle: "~нущий", "~ший", "~нимый", "~нутый";
         gerund: "~ня", "~ши";
     ),
-    // Стучать: 192 words (держать, кричать, жужжать, мычать, принадлежать, лежать).
-    conjugation!("стучать", 192, "~ать";
-        infinitive: "~ать";
-        non_past_first: "~у", "~им";
-        non_past_second: "~ишь", "~ите";
-        non_past_third: "~ит", "~ат";
-        past: "~ал", "~ала", "~ало", "~али";
-        imperative: "~и", "~ите";
-        participle: "~ащий", "~авший", "~имый", "~анный";
-        gerund: "~а", "~ав|~авши";
-    ),
     // Сносить: 186 words (носить, спросить, приносить, гласить, переносить, косить).
     conjugation!("сносить", 186, "~сить";
         infinitive: "~сить";
@@ -1489,6 +1478,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 348] = [
         imperative: "~ть", "~тьте";
         participle: "~тящий", "~тивший", "~тимый", "~ченный";
         gerund: "~тя", "~тив|~тивши";
+    ),
+    // Стучать: 152 words (держать, кричать, жужжать, мычать, лежать, подержать).
+    conjugation!("стучать", 152, "~ать";
+        infinitive: "~ать";
+        non_past_first: "~у", "~им";
+        non_past_second: "~ишь", "~ите";
+        non_past_third: "~ит", "~ат";
+        past: "~ал", "~ала", "~ало", "~али";
+        imperative: "~и", "~ите";
+        participle: "~ащий", "~авший", "~имый", "~анный";
+        gerund: "~а", "~ав|~авши";
     ),
     // Возместить: 152 words (крестить, простить, нарастить, поместить, растить, переместить).
     conjugation!("возместить", 152, "~стить";
@@ -1600,17 +1600,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 348] = [
         participle: "~ущий~я", "~авший~я", "~е~емый", "~ё~нный";
         gerund: "~я~ь", "~авши~ь";
     ),
-    // Трафить: 103 words (суесловить, буравить, брасопить, дыбить, шароёбить, стрёмить).
-    conjugation!("трафить", 103, "~ить";
-        infinitive: "~ить";
-        non_past_first: "~лю", "~им";
-        non_past_second: "~ишь", "~ите";
-        non_past_third: "~ит", "~ят";
-        past: "~ил", "~ила", "~ило", "~или";
-        imperative: "~ь", "~ьте";
-        participle: "~ящий", "~ивший", "~имый", "~ленный";
-        gerund: "~я", "~ивши|~ив";
-    ),
     // Вывозить: 102 words (возить, привозить, скользить, грозить, выразить, возразить).
     conjugation!("вывозить", 102, "~зить";
         infinitive: "~зить";
@@ -1621,6 +1610,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 348] = [
         imperative: "~зи", "~зите";
         participle: "~зящий", "~зивший", "~зимый", "~женный";
         gerund: "~зя", "~зив|~зивши";
+    ),
+    // Трафить: 102 words (суесловить, буравить, брасопить, дыбить, шароёбить, швартовить).
+    conjugation!("трафить", 102, "~ить";
+        infinitive: "~ить";
+        non_past_first: "~лю", "~им";
+        non_past_second: "~ишь", "~ите";
+        non_past_third: "~ит", "~ят";
+        past: "~ил", "~ила", "~ило", "~или";
+        imperative: "~ь", "~ьте";
+        participle: "~ящий", "~ивший", "~имый", "~ленный";
+        gerund: "~я", "~ивши|~ив";
     ),
     // Сычевать: 101 words (бичевать, кочевать, ночевать, корчевать, бушевать, переночевать).
     conjugation!("сычевать", 101, "~евать";
@@ -1864,8 +1864,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 348] = [
         participle: "~дящий", "~девший", "~димый", "~жённый";
         gerund: "~дя", "~дев|~девши";
     ),
-    // Клепать: 61 words (зевать, оседлать, хлебать, седлать, верстать, сверстать).
-    conjugation!("клепать", 61, "~е~ть";
+    // Клепать: 60 words (зевать, оседлать, хлебать, седлать, верстать, сверстать).
+    conjugation!("клепать", 60, "~е~ть";
         infinitive: "~е~ть";
         non_past_first: "~е~ю", "~е~ем";
         non_past_second: "~е~ешь", "~е~ете";
@@ -2072,6 +2072,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 348] = [
         imperative: "~е~и", "~е~ите";
         participle: "~е~ущий", "~ё~ший", "~е~омый", "~е~ённый";
         gerund: "~е~я", "~е~я|~ё~ши";
+    ),
+    // Трещать: 43 words (принадлежать, бренчать, дребезжать, трещать, верещать, содержать).
+    conjugation!("трещать", 43, "~е~ать";
+        infinitive: "~е~ать";
+        non_past_first: "~е~у", "~е~им";
+        non_past_second: "~е~ишь", "~е~ите";
+        non_past_third: "~е~ит", "~е~ат";
+        past: "~е~ал", "~е~ала", "~е~ало", "~е~али";
+        imperative: "~е~и", "~е~ите";
+        participle: "~е~ащий", "~е~авший", "~е~имый", "~ё~анный";
+        gerund: "~е~а", "~е~ав";
     ),
     // Развести: 42 words (провести, перевести, увести, завести, произвести, извести).
     conjugation!("развести", 42, "~ести";
@@ -4822,17 +4833,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 348] = [
         imperative: "~жи|~дай", "~жите|~дайте";
         participle: "~жущий", "~давший", "~даемый", "~данный";
         gerund: "~жа", "~дав|~давши";
-    ),
-    // Пролежать: 3 words (пролежать, отлежать, облежать).
-    conjugation!("пролежать", 3, "~е~ать";
-        infinitive: "~е~ать";
-        non_past_first: "~е~у", "~е~им";
-        non_past_second: "~е~ишь", "~е~ите";
-        non_past_third: "~е~ит", "~е~ат";
-        past: "~е~ал", "~е~ала", "~е~ало", "~е~али";
-        imperative: "~е~и", "~е~ите";
-        participle: "~е~ащий", "~е~авший", "~е~имый", "~ё~анный";
-        gerund: "~е~а", "~е~ав|~е~авши";
     ),
     // Осечься: 3 words (пересечься, осечься, сечься).
     conjugation!("осечься", 3, "~ечь~я";

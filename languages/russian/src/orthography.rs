@@ -11,4 +11,6 @@ pub(crate) const ORTHOGRAPHY: Orthography<'static> = Orthography {
     implicit: "",
     dropped: "\u{301}\u{300}",
     mark_monosyllables: false,
+    folded: &[('ё', 'е')],
+    prosody: None,
 };

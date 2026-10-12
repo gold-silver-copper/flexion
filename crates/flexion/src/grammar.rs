@@ -39,6 +39,90 @@ impl Label for Compound {
     }
 }
 
+/// Prefixes a word inflects behind (German `aus-`, `ver-`): a word that
+/// begins with one may inflect as the rest of it does. A separable prefix
+/// goes where the cell puts it (`räuchre aus`, `ausgeräuchert`); an
+/// inseparable one stays in front, and takes off the rest's form what the
+/// cell says (`verhindert`, not `vergehindert`).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Prefixes<'a> {
+    /// Sorted by their letters.
+    pub prefixes: Cow<'a, [Prefix<'a>]>,
+    /// Words that do with their prefix what few words with it do, sorted.
+    pub listed: Cow<'a, [(Cow<'a, str>, Separation)]>,
+    /// Per cell, where a separable prefix goes.
+    pub placement: Cow<'a, [Placement]>,
+    /// Per cell, what an inseparable prefix takes off the front of the rest's
+    /// form (the participle's `ge`).
+    pub drops: Cow<'a, [Cow<'a, str>]>,
+}
+
+/// A prefix, and of the dictionary's words that begin with it, how many
+/// separate it, how many keep it in front, of how many.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Prefix<'a> {
+    pub letters: Cow<'a, str>,
+    pub separable: u32,
+    pub inseparable: u32,
+    pub words: u32,
+}
+
+/// What a word does with the prefix it begins with.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum Separation {
+    /// Separates it (`räuchre aus`).
+    Separable,
+    /// Keeps it in front (`verhindert`).
+    Inseparable,
+    /// Isn't made of it (`rauschen`, not `raus-chen`).
+    Neither,
+}
+
+/// Where a separable prefix goes in a cell.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum Placement {
+    /// Before the rest, written together: `ausgeräuchert`.
+    Before,
+    /// After it, as a word of its own: `räuchre aus`.
+    After,
+}
+
+impl Prefixes<'_> {
+    /// The prefix the word looked up as `key` begins with (the longest, with
+    /// at least three letters after it), its length in letters, and how
+    /// likely the word is to separate it and to keep it in front.
+    pub fn split(&self, key: &str) -> Option<(usize, f32, f32)> {
+        let prefix = self
+            .prefixes
+            .iter()
+            .filter(|p| {
+                key.starts_with(p.letters.as_ref())
+                    && key.chars().count() >= p.letters.chars().count() + 3
+            })
+            .max_by_key(|p| p.letters.len())?;
+        let listed = self
+            .listed
+            .binary_search_by(|(w, _)| w.as_ref().cmp(key))
+            .ok()
+            .and_then(|i| self.listed.get(i))
+            .map(|e| e.1);
+        #[allow(clippy::cast_precision_loss)]
+        let (separable, inseparable) = match listed {
+            Some(Separation::Separable) => (1.0, 0.0),
+            Some(Separation::Inseparable) => (0.0, 1.0),
+            Some(Separation::Neither) => (0.0, 0.0),
+            None => {
+                let words = prefix.words as f32 + 3.0;
+                (
+                    (prefix.separable as f32 + 1.0) / words,
+                    (prefix.inseparable as f32 + 1.0) / words,
+                )
+            }
+        };
+        Some((prefix.letters.chars().count(), separable, inseparable))
+    }
+}
+
 /// What the caller knows about a word besides its lemma: forms of it, such
 /// as principal parts, as `(cell, form)`; the value of the feature its
 /// referrals depend on (its animacy); and whether the lemma is spelled in
@@ -81,6 +165,8 @@ pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
     pub referrals: Cow<'a, [Referral<'a>]>,
     /// Which value of the feature referrals depend on a word has.
     pub feature: Option<Choice<'a, F>>,
+    /// Prefixes words inflect behind, where the part of speech has them.
+    pub prefixes: Option<Prefixes<'a>>,
     /// Which words written in parts inflect each part, read off the first
     /// part (`диван` of `диван-кровать`).
     pub compound: Option<Choice<'a, Compound>>,
@@ -182,6 +268,58 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             _ => (1.0, None),
         };
         let mut out: Vec<Candidate<'_>> = Vec::new();
+        // A word that begins with a prefix: the rest of it, the prefix where
+        // the cell puts it; or a word of its own.
+        let whole = match self
+            .prefixes
+            .as_ref()
+            .and_then(|p| Some((p, p.split(&key)?)))
+        {
+            Some((prefixes, (letters, separable, inseparable)))
+                if separable + inseparable > 0.0 =>
+            {
+                let at = word
+                    .letters
+                    .char_indices()
+                    .nth(letters)
+                    .map_or(word.letters.len(), |(i, _)| i);
+                let (prefix, rest) = word.letters.split_at(at);
+                let placement = prefixes
+                    .placement
+                    .get(cell)
+                    .copied()
+                    .unwrap_or(Placement::Before);
+                let drop = prefixes.drops.get(cell).map_or("", |d| d.as_ref());
+                let base = Known {
+                    forms: &[],
+                    ..*known
+                };
+                for c in top(self.unsharpened(rest, cell, &base)) {
+                    let separated = match placement {
+                        Placement::Before => format!("{prefix}{}", c.form),
+                        Placement::After => format!("{} {prefix}", c.form),
+                    };
+                    let kept = format!("{prefix}{}", c.form.strip_prefix(drop).unwrap_or(&c.form));
+                    for (form, p) in [(separated, separable), (kept, inseparable)] {
+                        if p <= 0.0 {
+                            continue;
+                        }
+                        let probability = p * c.probability;
+                        match out.iter_mut().find(|o| o.form == form) {
+                            Some(o) => o.probability += probability,
+                            None => out.push(Candidate {
+                                form,
+                                probability,
+                                also: Vec::new(),
+                                ..c
+                            }),
+                        }
+                    }
+                }
+                whole * (1.0 - separable - inseparable)
+            }
+            _ => whole,
+        };
         if let Some((first, rest, p)) = each.filter(|e| e.2 > 0.0) {
             let firsts = top(self.unsharpened(first, cell, &Known::default()));
             let rests = top(self.unsharpened(rest, cell, known));

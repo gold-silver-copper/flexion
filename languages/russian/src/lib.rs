@@ -3,8 +3,7 @@
 #![doc = include_str!("../README.md")]
 #![forbid(unsafe_code)]
 
-use flexion::Known;
-pub use flexion::{Candidate, Status};
+pub use flexion::{Candidate, Reading, Status, UnknownValue};
 
 mod extra;
 pub use extra::*;
@@ -14,6 +13,11 @@ pub mod numeral;
 mod orthography;
 pub mod pronoun;
 pub mod verb;
+pub use adjective::Adjective;
+pub use noun::Noun;
+pub use numeral::Numeral;
+pub use pronoun::Pronoun;
+pub use verb::Verb;
 
 /// Grammatical case.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
@@ -50,6 +54,35 @@ impl Case {
     }
 }
 
+impl std::fmt::Display for Case {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Case::Nominative => "nominative",
+            Case::Genitive => "genitive",
+            Case::Dative => "dative",
+            Case::Accusative => "accusative",
+            Case::Instrumental => "instrumental",
+            Case::Prepositional => "prepositional",
+        })
+    }
+}
+
+impl std::str::FromStr for Case {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Case",
+                name: name.to_string(),
+            })
+    }
+}
+
 impl flexion::Label for Case {
     fn index(self) -> usize {
         self as usize
@@ -79,6 +112,31 @@ impl Number {
     }
 }
 
+impl std::fmt::Display for Number {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Number::Singular => "singular",
+            Number::Plural => "plural",
+        })
+    }
+}
+
+impl std::str::FromStr for Number {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Number",
+                name: name.to_string(),
+            })
+    }
+}
+
 impl flexion::Label for Number {
     fn index(self) -> usize {
         self as usize
@@ -105,6 +163,31 @@ impl SecondCase {
             SecondCase::Partitive => "part",
             SecondCase::Locative => "loc",
         }
+    }
+}
+
+impl std::fmt::Display for SecondCase {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            SecondCase::Partitive => "partitive",
+            SecondCase::Locative => "locative",
+        })
+    }
+}
+
+impl std::str::FromStr for SecondCase {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "SecondCase",
+                name: name.to_string(),
+            })
     }
 }
 
@@ -139,6 +222,32 @@ impl Gender {
     }
 }
 
+impl std::fmt::Display for Gender {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Gender::Masculine => "masculine",
+            Gender::Feminine => "feminine",
+            Gender::Neuter => "neuter",
+        })
+    }
+}
+
+impl std::str::FromStr for Gender {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Gender",
+                name: name.to_string(),
+            })
+    }
+}
+
 impl flexion::Label for Gender {
     fn index(self) -> usize {
         self as usize
@@ -165,6 +274,31 @@ impl Animacy {
             Animacy::Animate => "anim",
             Animacy::Inanimate => "inan",
         }
+    }
+}
+
+impl std::fmt::Display for Animacy {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Animacy::Animate => "animate",
+            Animacy::Inanimate => "inanimate",
+        })
+    }
+}
+
+impl std::str::FromStr for Animacy {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Animacy",
+                name: name.to_string(),
+            })
     }
 }
 
@@ -206,6 +340,33 @@ impl Agreement {
     }
 }
 
+impl std::fmt::Display for Agreement {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Agreement::Masculine => "masculine",
+            Agreement::Feminine => "feminine",
+            Agreement::Neuter => "neuter",
+            Agreement::Plural => "plural",
+        })
+    }
+}
+
+impl std::str::FromStr for Agreement {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Agreement",
+                name: name.to_string(),
+            })
+    }
+}
+
 impl flexion::Label for Agreement {
     fn index(self) -> usize {
         self as usize
@@ -232,6 +393,31 @@ impl Aspect {
             Aspect::Imperfective => "impf",
             Aspect::Perfective => "pf",
         }
+    }
+}
+
+impl std::fmt::Display for Aspect {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Aspect::Imperfective => "imperfective",
+            Aspect::Perfective => "perfective",
+        })
+    }
+}
+
+impl std::str::FromStr for Aspect {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Aspect",
+                name: name.to_string(),
+            })
     }
 }
 
@@ -263,6 +449,32 @@ impl Person {
             Person::Second => "2",
             Person::Third => "3",
         }
+    }
+}
+
+impl std::fmt::Display for Person {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Person::First => "first",
+            Person::Second => "second",
+            Person::Third => "third",
+        })
+    }
+}
+
+impl std::str::FromStr for Person {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Person",
+                name: name.to_string(),
+            })
     }
 }
 
@@ -304,6 +516,33 @@ impl Participle {
     }
 }
 
+impl std::fmt::Display for Participle {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Participle::PresentActive => "presentactive",
+            Participle::PastActive => "pastactive",
+            Participle::PresentPassive => "presentpassive",
+            Participle::PastPassive => "pastpassive",
+        })
+    }
+}
+
+impl std::str::FromStr for Participle {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Participle",
+                name: name.to_string(),
+            })
+    }
+}
+
 impl flexion::Label for Participle {
     fn index(self) -> usize {
         self as usize
@@ -333,6 +572,31 @@ impl Tense {
     }
 }
 
+impl std::fmt::Display for Tense {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Tense::Present => "present",
+            Tense::Past => "past",
+        })
+    }
+}
+
+impl std::str::FromStr for Tense {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Tense",
+                name: name.to_string(),
+            })
+    }
+}
+
 impl flexion::Label for Tense {
     fn index(self) -> usize {
         self as usize
@@ -343,191 +607,73 @@ impl flexion::Label for Tense {
 }
 
 /// A noun in a case and number.
+#[must_use]
 pub fn noun(lemma: &str, case: Case, number: Number) -> String {
-    noun::GRAMMAR.best(
-        lemma,
-        0 + case as usize * 2 + number as usize,
-        &Known::default(),
-    )
-}
-
-/// Every possible form of [`noun`], likeliest first, each with its
-/// probability and why.
-pub fn noun_candidates(lemma: &str, case: Case, number: Number) -> Vec<Candidate<'static>> {
-    noun::GRAMMAR.candidates(
-        lemma,
-        0 + case as usize * 2 + number as usize,
-        &Known::default(),
-    )
+    Noun::new(lemma).form(noun::Cell::Form(case, number))
 }
 
 /// The second genitive or second locative singular. A noun without one gives its genitive or prepositional singular.
+#[must_use]
 pub fn noun_second_case(lemma: &str, second_case: SecondCase) -> String {
-    noun::GRAMMAR.best(lemma, 12 + second_case as usize, &Known::default())
-}
-
-/// Every possible form of [`noun_second_case`], likeliest first, each with its
-/// probability and why.
-pub fn noun_second_case_candidates(
-    lemma: &str,
-    second_case: SecondCase,
-) -> Vec<Candidate<'static>> {
-    noun::GRAMMAR.candidates(lemma, 12 + second_case as usize, &Known::default())
+    Noun::new(lemma).form(noun::Cell::SecondCase(second_case))
 }
 
 /// The long (attributive) form.
+#[must_use]
 pub fn adjective(lemma: &str, case: Case, agreement: Agreement, animacy: Animacy) -> String {
-    adjective::GRAMMAR.best(
-        lemma,
-        0 + case as usize * 8 + agreement as usize * 2 + animacy as usize,
-        &Known::default(),
-    )
-}
-
-/// Every possible form of [`adjective`], likeliest first, each with its
-/// probability and why.
-pub fn adjective_candidates(
-    lemma: &str,
-    case: Case,
-    agreement: Agreement,
-    animacy: Animacy,
-) -> Vec<Candidate<'static>> {
-    adjective::GRAMMAR.candidates(
-        lemma,
-        0 + case as usize * 8 + agreement as usize * 2 + animacy as usize,
-        &Known::default(),
-    )
+    Adjective::new(lemma).form(adjective::Cell::Form(case, agreement, animacy))
 }
 
 /// The short (predicative) form.
+#[must_use]
 pub fn short_adjective(lemma: &str, agreement: Agreement) -> String {
-    adjective::GRAMMAR.best(lemma, 48 + agreement as usize, &Known::default())
-}
-
-/// Every possible form of [`short_adjective`], likeliest first, each with its
-/// probability and why.
-pub fn short_adjective_candidates(lemma: &str, agreement: Agreement) -> Vec<Candidate<'static>> {
-    adjective::GRAMMAR.candidates(lemma, 48 + agreement as usize, &Known::default())
+    Adjective::new(lemma).form(adjective::Cell::ShortAdjective(agreement))
 }
 
 /// The infinitive.
+#[must_use]
 pub fn infinitive(lemma: &str) -> String {
-    verb::GRAMMAR.best(lemma, 0, &Known::default())
-}
-
-/// Every possible form of [`infinitive`], likeliest first, each with its
-/// probability and why.
-pub fn infinitive_candidates(lemma: &str) -> Vec<Candidate<'static>> {
-    verb::GRAMMAR.candidates(lemma, 0, &Known::default())
+    Verb::new(lemma).form(verb::Cell::Infinitive)
 }
 
 /// The non-past: present tense for imperfective verbs, future for perfective ones. (The imperfective future is `буду` + infinitive and is not a form of the verb.)
+#[must_use]
 pub fn non_past(lemma: &str, person: Person, number: Number) -> String {
-    verb::GRAMMAR.best(
-        lemma,
-        1 + person as usize * 2 + number as usize,
-        &Known::default(),
-    )
-}
-
-/// Every possible form of [`non_past`], likeliest first, each with its
-/// probability and why.
-pub fn non_past_candidates(lemma: &str, person: Person, number: Number) -> Vec<Candidate<'static>> {
-    verb::GRAMMAR.candidates(
-        lemma,
-        1 + person as usize * 2 + number as usize,
-        &Known::default(),
-    )
+    Verb::new(lemma).form(verb::Cell::NonPast(person, number))
 }
 
 /// The past tense.
+#[must_use]
 pub fn past(lemma: &str, agreement: Agreement) -> String {
-    verb::GRAMMAR.best(lemma, 7 + agreement as usize, &Known::default())
-}
-
-/// Every possible form of [`past`], likeliest first, each with its
-/// probability and why.
-pub fn past_candidates(lemma: &str, agreement: Agreement) -> Vec<Candidate<'static>> {
-    verb::GRAMMAR.candidates(lemma, 7 + agreement as usize, &Known::default())
+    Verb::new(lemma).form(verb::Cell::Past(agreement))
 }
 
 /// The imperative.
+#[must_use]
 pub fn imperative(lemma: &str, number: Number) -> String {
-    verb::GRAMMAR.best(lemma, 11 + number as usize, &Known::default())
-}
-
-/// Every possible form of [`imperative`], likeliest first, each with its
-/// probability and why.
-pub fn imperative_candidates(lemma: &str, number: Number) -> Vec<Candidate<'static>> {
-    verb::GRAMMAR.candidates(lemma, 11 + number as usize, &Known::default())
+    Verb::new(lemma).form(verb::Cell::Imperative(number))
 }
 
 /// A participle's citation form (masculine nominative singular); decline it with `adjective`.
+#[must_use]
 pub fn participle(lemma: &str, participle: Participle) -> String {
-    verb::GRAMMAR.best(lemma, 13 + participle as usize, &Known::default())
-}
-
-/// Every possible form of [`participle`], likeliest first, each with its
-/// probability and why.
-pub fn participle_candidates(lemma: &str, participle: Participle) -> Vec<Candidate<'static>> {
-    verb::GRAMMAR.candidates(lemma, 13 + participle as usize, &Known::default())
+    Verb::new(lemma).form(verb::Cell::Participle(participle))
 }
 
 /// A gerund (adverbial participle).
+#[must_use]
 pub fn gerund(lemma: &str, tense: Tense) -> String {
-    verb::GRAMMAR.best(lemma, 17 + tense as usize, &Known::default())
-}
-
-/// Every possible form of [`gerund`], likeliest first, each with its
-/// probability and why.
-pub fn gerund_candidates(lemma: &str, tense: Tense) -> Vec<Candidate<'static>> {
-    verb::GRAMMAR.candidates(lemma, 17 + tense as usize, &Known::default())
+    Verb::new(lemma).form(verb::Cell::Gerund(tense))
 }
 
 /// A declined pronoun or determiner.
+#[must_use]
 pub fn pronoun(lemma: &str, case: Case, agreement: Agreement, animacy: Animacy) -> String {
-    pronoun::GRAMMAR.best(
-        lemma,
-        0 + case as usize * 8 + agreement as usize * 2 + animacy as usize,
-        &Known::default(),
-    )
-}
-
-/// Every possible form of [`pronoun`], likeliest first, each with its
-/// probability and why.
-pub fn pronoun_candidates(
-    lemma: &str,
-    case: Case,
-    agreement: Agreement,
-    animacy: Animacy,
-) -> Vec<Candidate<'static>> {
-    pronoun::GRAMMAR.candidates(
-        lemma,
-        0 + case as usize * 8 + agreement as usize * 2 + animacy as usize,
-        &Known::default(),
-    )
+    Pronoun::new(lemma).form(pronoun::Cell::Form(case, agreement, animacy))
 }
 
 /// A declined numeral.
+#[must_use]
 pub fn numeral(lemma: &str, case: Case, agreement: Agreement, animacy: Animacy) -> String {
-    numeral::GRAMMAR.best(
-        lemma,
-        0 + case as usize * 8 + agreement as usize * 2 + animacy as usize,
-        &Known::default(),
-    )
-}
-
-/// Every possible form of [`numeral`], likeliest first, each with its
-/// probability and why.
-pub fn numeral_candidates(
-    lemma: &str,
-    case: Case,
-    agreement: Agreement,
-    animacy: Animacy,
-) -> Vec<Candidate<'static>> {
-    numeral::GRAMMAR.candidates(
-        lemma,
-        0 + case as usize * 8 + agreement as usize * 2 + animacy as usize,
-        &Known::default(),
-    )
+    Numeral::new(lemma).form(numeral::Cell::Form(case, agreement, animacy))
 }

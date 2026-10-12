@@ -23,7 +23,7 @@ pub mod pattern;
 mod stress;
 
 pub use choice::{Choice, Reading, Rule, Status, by_ending, tolerance};
-pub use grammar::{Compound, Grammar, Known, sharpen};
+pub use grammar::{Compound, Grammar, Known, Placement, Prefix, Prefixes, Separation, sharpen};
 pub use orthography::{Casing, Orthography, Stress, Written, recase};
 pub use paradigm::{Form, Paradigm, Referral};
 pub use sound_law;
