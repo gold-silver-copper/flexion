@@ -161,19 +161,40 @@ it pays for itself.
 
 - **Paradigms.** A word's forms are aligned on the letters they all keep (the stem
   pieces); what's left is a pattern per form: `~а`, `~о~` (a vowel the other forms drop),
-  `ge~t`. Words with the same patterns share a paradigm, named after its commonest word.
-  A word missing some forms joins the fullest paradigm that builds the forms it has.
+  `ge~t`. Words with the same patterns share a paradigm, named after its commonest word
+  that no sense marks vulgar or offensive (the dumps give no word frequencies: commonest
+  means in the most dictionaries, with the most senses). A word missing some forms joins
+  the fullest paradigm that builds the forms it has. A paradigm states the inherent
+  features its words share (`[gender: Neuter]`), and is *like* the commoner paradigm it
+  shares the most cells with: it writes only the cells that differ (`_` for the rest).
+- **Sound laws.** A built form marks where its stem meets its ending (`+`). Where a word's
+  paradigm, or a more general one, would build its forms but for a change there, the
+  change is a law: Russian `[к|г|х|ш|ч|ж|щ]+ы → +и`, Greek `γ+σ → +ξ`, `κ+θ → +χθ`. A law
+  can also change a letter of the ending by the nearest of some letters before it (a
+  tier): Sanskrit `न → ण` after `र`, `ष`, `ृ` unless a dental, palatal or retroflex comes
+  between. Which letters make the change, block it, or stop it after it, is learned. A
+  law is kept when it gives forms of five or more words in two or more cells and breaks
+  fewer than one in twenty of the forms it gives; the words it explains join the more
+  general paradigm, and the forms it breaks are listed. Laws run in
+  [`sound-law`](crates/sound-law).
+- **Relations.** Each cell's form is told from another cell's (the one that predicts it
+  best: a tree on the lemma's cell), its end changed by rules read off that form's ending
+  (Latin `amāvī` → `amāvistī`). Where a feature of the word decides which cell (Russian:
+  the accusative is the genitive of animate nouns, the nominative of inanimate ones), the
+  relation is by that feature, and the feature is a choice of its own. A paradigm takes
+  the cells none of its words has from its relations (`derived`), and a word whose forms
+  are listed lists only its principal parts: its other forms are told from them, where
+  that does as well as its paradigm.
 - **Choices.** Which paradigm a word takes is a list of rules on its ending: the longest
   rule the word has decides, with how many of the dictionary's words with that ending
-  take each paradigm. A rule is kept only when it describes its words in fewer bits than
-  the broader rule does, by more than the rule costs (minimum description length). Words
-  no rule gets right are listed. A rule's status follows Yang's Tolerance Principle: a
-  rule with few enough exceptions is productive (`regular`); otherwise speakers vary
-  (`unsettled`).
-- **Referrals.** A cell whose form is another cell's, depending on a feature of the word
-  (Russian: the accusative is the genitive of animate nouns, the nominative of inanimate
-  ones; Polish likewise for masculine animates), is found from the data and written
-  `referred`; the feature becomes a choice of its own.
+  take each paradigm (its main ones; the rest lumped, `+ N`). A rule is kept only when it
+  says something the broader rule doesn't (another paradigm, or another productivity:
+  Wilson & Li's pruning) and describes its words in fewer bits than the broader rule
+  does, by more than the rule costs (minimum description length). Words no rule gets
+  right are listed. A rule's status follows Yang's Tolerance Principle: a rule with few
+  enough exceptions is productive (`regular`); otherwise speakers vary (`unsettled`).
+  (The principle wants a core of frequent words; with no frequencies in the dumps it is
+  applied to every word of the rule.)
 - **Compounds and prefixes.** A word written in parts inflects its last part or each part
   (Russian `диван-кровать`). German verbs inflect behind their prefixes: separable ones
   go where the form puts them (`fing an`), inseparable ones stay in front and take off
@@ -188,10 +209,6 @@ it pays for itself.
   `λυω`), without `ё`. Rules on the letters around each vowel restore the marks (`-ātiō`,
   `dē-`), the dictionary's words that they don't spell are listed, and the answer's
   probability says how much of the spelling was a guess.
-- **Principal parts.** A part of speech can be learned as the systems of its principal
-  parts (Latin `amō, amāre, amāvī, amātum`): each cell is inflected from the part it is
-  told from most regularly. It is used where it does as well on held-out words with
-  fewer forms listed.
 - **Irregular forms.** Whatever no rule gives is listed, as the dictionary writes it.
 - **Calibration.** Probabilities are sharpened by one power per part of speech, fitted on
   a tenth of the words the grammar didn't learn from.

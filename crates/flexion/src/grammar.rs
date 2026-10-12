@@ -168,6 +168,16 @@ impl Irregular<'_> {
 
     /// The form of `cell` for the word looked up as `word`, if listed.
     pub fn get(&self, word: &str, cell: u16) -> Option<&str> {
+        self.find(word, Some(cell))
+    }
+
+    /// Whether the word looked up as `word` has listed forms.
+    pub fn has(&self, word: &str) -> bool {
+        self.find(word, None).is_some()
+    }
+
+    /// A listed form of the word, of `cell` if given.
+    fn find(&self, word: &str, cell: Option<u16>) -> Option<&str> {
         let table = self.table.as_ref();
         let bytes = table.as_bytes();
         let (mut low, mut high) = (0, table.len());
@@ -185,7 +195,10 @@ impl Irregular<'_> {
                 .position(|&b| b == b'\n')
                 .map_or(table.len(), |i| start + i);
             let (w, c, f) = line(table.get(start..end)?)?;
-            match w.cmp(word).then(c.cmp(&cell)) {
+            match w
+                .cmp(word)
+                .then(cell.map_or(std::cmp::Ordering::Equal, |cell| c.cmp(&cell)))
+            {
                 std::cmp::Ordering::Less => low = end + 1,
                 std::cmp::Ordering::Greater => high = start,
                 std::cmp::Ordering::Equal => return Some(f),
@@ -471,6 +484,9 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     /// listed form of the cell it comes from (or one told so in turn), and
     /// where the change starts.
     pub fn from_listed(&self, key: &str, cell: usize, depth: usize) -> Option<(String, usize)> {
+        if depth == 0 && !self.irregular.has(key) {
+            return None;
+        }
         let relation = self
             .relation(cell)
             .filter(|r| r.listed && depth < self.cells)?;
@@ -484,7 +500,11 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
 
     /// The relation that gives `cell`.
     pub fn relation(&self, cell: usize) -> Option<&Relation<'a>> {
-        self.relations.iter().find(|r| usize::from(r.cell) == cell)
+        let at = self
+            .relations
+            .binary_search_by_key(&cell, |r| usize::from(r.cell))
+            .ok()?;
+        self.relations.get(at)
     }
 
     /// What an inflection builds in `cell`, by how likely: its paradigm's

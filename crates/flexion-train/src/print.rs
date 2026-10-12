@@ -511,13 +511,39 @@ fn grammar_files(
             .map(|m| m.iter().map(String::as_str).take(6).collect())
             .unwrap_or_default();
         let parent = par.parent.and_then(|q| variants.get(usize::from(q)));
+        // A child: like its parent, except in the cells it writes.
+        let like = parent.map_or(String::new(), |q| {
+            let own: Vec<String> = (0..g.cells)
+                .filter(|&c| par.own(c).is_some())
+                .map(|c| {
+                    layout
+                        .rows
+                        .iter()
+                        .find_map(|row| {
+                            let at = row.cells.iter().position(|&x| x == c)?;
+                            Some(match row.columns.get(at) {
+                                Some(column) => format!("{} {column}", row.label),
+                                None => row.label.clone(),
+                            })
+                        })
+                        .unwrap_or_default()
+                })
+                .collect();
+            let more = if own.len() > 6 { ", …" } else { "" };
+            let named: Vec<&str> = own.iter().take(6).map(String::as_str).collect();
+            let cells = if own.len() == 1 { "cell" } else { "cells" };
+            format!(
+                " Like {q}, except in {} {cells}: {}{more}.",
+                own.len(),
+                named.join(", ")
+            )
+        });
         let _ = writeln!(
             p,
-            "    // {}: {} words ({}).{}",
+            "    // {}: {} words ({}).{like}",
             variants.get(i).map_or("", String::as_str),
             thousands(u64::from(par.words)),
             examples.join(", "),
-            parent.map_or(String::new(), |q| format!(" Like {q} where `_`."))
         );
         let values: Vec<String> = par
             .inherent
