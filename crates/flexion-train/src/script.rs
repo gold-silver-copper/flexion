@@ -67,28 +67,19 @@ impl Script {
             // A letter whose marks a lookup ignores reads as the letter
             // without them (Greek `ᾰ` as `α`, `ἀ` as `α`).
             let ignored = |m: &char| s.fold_marks.contains(*m) || s.unmark_marks.contains(*m);
-            if rest.iter().any(ignored) && !rest.iter().any(|m| marks.contains(m)) {
-                let kept: String = std::iter::once(base)
-                    .chain(rest.iter().copied().filter(|m| !ignored(m)))
-                    .collect::<String>()
-                    .nfc()
-                    .collect();
-                let mut k = kept.chars();
-                if let (Some(plain), None) = (k.next(), k.next())
-                    && plain != c
-                    && !folded.iter().any(|e| e.0 == c)
-                {
-                    folded.push((c, plain));
-                }
+            let stress =
+                |m: &char| marks.contains(m) || s.stress_aliases.iter().any(|(f, _)| f == m);
+            if rest.iter().any(ignored)
+                && !rest.iter().any(|m| marks.contains(m))
+                && let Some(plain) = compose(base, rest.iter().filter(|m| !ignored(m)))
+                && plain != c
+                && !folded.iter().any(|e| e.0 == c)
+            {
+                folded.push((c, plain));
             }
             // A vowel: listed, or a listed vowel with marks the language
             // writes on vowels (Greek breathings and length; stress marks).
-            let vowel_marks = |m: &char| {
-                s.fold_marks.contains(*m)
-                    || s.unmark_marks.contains(*m)
-                    || marks.contains(m)
-                    || s.stress_aliases.iter().any(|(f, _)| f == m)
-            };
+            let vowel_marks = |m: &char| ignored(m) || stress(m);
             if !s.vowels.contains(c)
                 && !(base_vowels.contains(&base) && rest.iter().all(vowel_marks))
             {
@@ -105,32 +96,21 @@ impl Script {
             });
             match kind {
                 Some(kind) => {
-                    let without: Vec<char> = rest
-                        .iter()
-                        .copied()
-                        .filter(|m| {
-                            !marks.contains(m) && !s.stress_aliases.iter().any(|(f, _)| f == m)
-                        })
-                        .collect();
-                    let compose = |marks: &[char]| -> Option<char> {
-                        let s: String = std::iter::once(base)
-                            .chain(marks.iter().copied())
-                            .collect::<String>()
-                            .nfc()
-                            .collect();
-                        let mut p = s.chars();
-                        match (p.next(), p.next()) {
-                            (Some(c), None) => Some(c),
-                            _ => None,
-                        }
-                    };
+                    let without: Vec<&char> = rest.iter().filter(|m| !stress(m)).collect();
                     // A circumflex stands on a long vowel: `ᾶ` reads `ᾱ`
                     // (where the long letter is one character).
                     let circumflexed = s.circumflex.is_some_and(|m| rest.contains(&m));
                     let lengthened = (circumflexed && !s.long_vowels.contains(base))
-                        .then(|| compose(&[&['\u{304}'][..], &without].concat()))
+                        .then(|| {
+                            compose(
+                                base,
+                                std::iter::once(&'\u{304}').chain(without.iter().copied()),
+                            )
+                        })
                         .flatten();
-                    if let Some(plain) = lengthened.or_else(|| compose(&without)) {
+                    if let Some(plain) =
+                        lengthened.or_else(|| compose(base, without.iter().copied()))
+                    {
                         // A letter whose mark is only read as a stress mark (the
                         // grave) is never written: it goes after the others.
                         let aliased = !rest.iter().any(|m| marks.contains(m));
@@ -199,5 +179,19 @@ impl Script {
                 circumflex: p.circumflex,
             }),
         }
+    }
+}
+
+/// The one character `base` with `marks` composes to, if it is one.
+fn compose<'m>(base: char, marks: impl Iterator<Item = &'m char>) -> Option<char> {
+    let composed: String = std::iter::once(base)
+        .chain(marks.copied())
+        .collect::<String>()
+        .nfc()
+        .collect();
+    let mut chars = composed.chars();
+    match (chars.next(), chars.next()) {
+        (Some(c), None) => Some(c),
+        _ => None,
     }
 }

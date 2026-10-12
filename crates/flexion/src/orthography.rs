@@ -109,12 +109,9 @@ impl Orthography<'_> {
         let mut stress = None;
         for (i, c) in word.char_indices() {
             let main = Some(i) == last;
-            if is_mark(c) && !main {
-                continue;
-            }
             if is_mark(c) {
                 // A mark stresses the vowel before it.
-                if let Some(v) = vowels.checked_sub(1) {
+                if main && let Some(v) = vowels.checked_sub(1) {
                     let kind = self.stress_marks.chars().position(|m| m == c).unwrap_or(0);
                     stress = Some(Stress {
                         vowel: v,

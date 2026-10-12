@@ -149,29 +149,23 @@ impl<'a, L: Label> Choice<'a, L> {
     /// The rules whose ending (or beginning) `word` has, least specific
     /// first.
     pub fn chain(&self, word: &str) -> Vec<&Rule<'a, L>> {
-        let cuts = word
-            .char_indices()
-            .map(|(i, _)| i)
-            .chain(std::iter::once(word.len()));
-        let find = |affix: &str| {
-            let at = match self.side {
-                Side::End => self.rules.binary_search_by(|r| by_ending(&r.ending, affix)),
-                Side::Start => self
-                    .rules
-                    .binary_search_by(|r| r.ending.as_ref().cmp(affix)),
-            };
-            self.rules.get(at.ok()?)
-        };
-        let mut chain: Vec<&Rule<'a, L>> = match self.side {
-            Side::End => cuts
-                .filter_map(|i| word.get(i..))
-                .filter_map(find)
-                .collect(),
-            Side::Start => cuts
-                .filter_map(|i| word.get(..i))
-                .filter_map(find)
-                .collect(),
-        };
+        let cuts = word.char_indices().map(|(i, _)| i).chain([word.len()]);
+        let mut chain: Vec<&Rule<'a, L>> = cuts
+            .filter_map(|i| {
+                let at = match self.side {
+                    Side::End => {
+                        let affix = word.get(i..)?;
+                        self.rules.binary_search_by(|r| by_ending(&r.ending, affix))
+                    }
+                    Side::Start => {
+                        let affix = word.get(..i)?;
+                        self.rules
+                            .binary_search_by(|r| r.ending.as_ref().cmp(affix))
+                    }
+                };
+                self.rules.get(at.ok()?)
+            })
+            .collect();
         if self.side == Side::End {
             chain.reverse();
         }

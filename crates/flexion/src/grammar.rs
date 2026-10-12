@@ -39,11 +39,7 @@ impl Label for Compound {
         self as usize
     }
     fn from_index(index: usize) -> Option<Self> {
-        match index {
-            0 => Some(Compound::Last),
-            1 => Some(Compound::Each),
-            _ => None,
-        }
+        [Compound::Last, Compound::Each].get(index).copied()
     }
 }
 
@@ -148,10 +144,10 @@ impl Irregular<'_> {
             .collect();
         lines.sort_unstable();
         lines.dedup_by(|a, b| a.0 == b.0 && a.1 == b.1);
-        let mut table = String::new();
-        for (w, c, f) in lines {
-            table.push_str(&format!("{w}\t{c}\t{f}\n"));
-        }
+        let table = lines
+            .iter()
+            .map(|(w, c, f)| format!("{w}\t{c}\t{f}\n"))
+            .collect();
         Irregular {
             table: Cow::Owned(table),
         }
@@ -330,20 +326,9 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             word.casing
         };
         if let Some(form) = self.irregular_form(&key, cell) {
-            return vec![Candidate {
-                form: crate::recase(form, casing),
-                also: Vec::new(),
-                probability: 1.0,
-                status: Status::Listed,
-                paradigm: "",
-                evidence: None,
-            }];
+            return vec![listed(crate::recase(form, casing), 1.0)];
         }
-        let given: Vec<(usize, Written)> = known
-            .forms
-            .iter()
-            .map(|&(c, f)| (c, self.orthography.read(f)))
-            .collect();
+        let given = self.given(known);
         let mut inflections = self.inflections(&word.letters, &key, &given, known.inherent);
         if inflections.is_empty() {
             inflections = self.inflections(&word.letters, &key, &[], known.inherent);
@@ -357,14 +342,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             };
             return stresses
                 .into_iter()
-                .map(|(stress, probability)| Candidate {
-                    form: self.orthography.write(&letters, stress, casing),
-                    also: Vec::new(),
-                    probability,
-                    status: Status::Listed,
-                    paradigm: "",
-                    evidence: None,
-                })
+                .map(|(stress, p)| listed(self.orthography.write(&letters, stress, casing), p))
                 .collect();
         }
         // A word written in parts: as one word, or part by part.
@@ -419,16 +397,13 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                         if p <= 0.0 {
                             continue;
                         }
-                        let probability = p * c.probability;
-                        match out.iter_mut().find(|o| o.form == form) {
-                            Some(o) => o.probability += probability,
-                            None => out.push(Candidate {
-                                form,
-                                probability,
-                                also: Vec::new(),
-                                ..c
-                            }),
-                        }
+                        let candidate = Candidate {
+                            form,
+                            probability: p * c.probability,
+                            also: Vec::new(),
+                            ..c
+                        };
+                        add(&mut out, candidate);
                     }
                 }
                 whole * (1.0 - separable - inseparable)
@@ -475,10 +450,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                     paradigm: inf.paradigm.name.as_ref(),
                     evidence,
                 };
-                match out.iter_mut().find(|c| c.form == candidate.form) {
-                    Some(c) => c.probability += candidate.probability,
-                    None => out.push(candidate),
-                }
+                add(&mut out, candidate);
             }
         }
         out.retain(|c| c.probability > 0.0);
@@ -579,13 +551,8 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         if let Some(listed) = self.spelling(&letters, &key).filter(|_| !known.full) {
             letters = listed.to_string();
         }
-        let given: Vec<(usize, Written)> = known
-            .forms
-            .iter()
-            .map(|&(c, f)| (c, self.orthography.read(f)))
-            .collect();
         let mut readings: Vec<Reading<'_, 'a, P>> = self
-            .inflections(&letters, &key, &given, known.inherent)
+            .inflections(&letters, &key, &self.given(known), known.inherent)
             .into_iter()
             .map(|i| i.reading)
             .collect();
@@ -594,6 +561,15 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             self.sharpness,
         );
         readings
+    }
+
+    /// The forms the caller gave, read.
+    fn given(&self, known: &Known<'_>) -> Vec<(usize, Written)> {
+        known
+            .forms
+            .iter()
+            .map(|&(c, f)| (c, self.orthography.read(f)))
+            .collect()
     }
 
     /// The dictionary's spelling of a word typed as `letters` without some
@@ -745,22 +721,13 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         // A class fits an accent the caller wrote when its pattern puts the
         // lemma's accent there.
         let fits = |a: A| {
-            let Some(class) = accent.class_of(a) else {
-                return false;
-            };
-            match (given, class_place(class)) {
-                (Some(g), Some(place)) => {
-                    stress::place(
-                        o,
-                        letters,
-                        lemma_ending,
-                        lemma_finals,
-                        place,
-                        given_at.unwrap_or(0),
-                    ) == Some(g)
-                }
-                _ => true,
-            }
+            accent.class_of(a).is_some_and(|class| {
+                let (Some(g), Some(place)) = (given, class_place(class)) else {
+                    return true;
+                };
+                let at = given_at.unwrap_or(0);
+                stress::place(o, letters, lemma_ending, lemma_finals, place, at) == Some(g)
+            })
         };
         let classes = accent
             .class
@@ -831,6 +798,26 @@ pub fn restore(
         }
     }
     (out, p)
+}
+
+/// A form the dictionary lists.
+fn listed(form: String, probability: f32) -> Candidate<'static> {
+    Candidate {
+        form,
+        also: Vec::new(),
+        probability,
+        status: Status::Listed,
+        paradigm: "",
+        evidence: None,
+    }
+}
+
+/// `candidate` added to `out`: to the one of the same form, if any.
+fn add<'g>(out: &mut Vec<Candidate<'g>>, candidate: Candidate<'g>) {
+    match out.iter_mut().find(|c| c.form == candidate.form) {
+        Some(c) => c.probability += candidate.probability,
+        None => out.push(candidate),
+    }
 }
 
 /// The likeliest few of `candidates`.
