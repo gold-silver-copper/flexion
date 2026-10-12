@@ -315,7 +315,7 @@ fn part_files(
                     let _ = writeln!(m, "pub mod {n}_part;");
                 }
             }
-            m.push_str("\nuse crate::*;\nuse flexion::{Candidate, Inflect, Known, Reading, System, Systems};\n\n");
+            m.push_str("\nuse flexion::{Candidate, Inflect, Known, Reading, System, Systems};\n\n");
             m.push_str(
                 "/// Each cell's place in a word's forms.\n#[allow(dead_code)]\npub mod cell {\n",
             );
@@ -460,7 +460,7 @@ fn grammar_files(
     m.push_str("mod irregular;\nmod paradigms;\nmod rules;\nmod spellings;\n\n");
     let _ = writeln!(m, "pub use paradigms::{ty};\n");
     if api.is_some() {
-        m.push_str("use crate::*;\nuse flexion::{Candidate, Known, Reading};\n");
+        m.push_str("use flexion::{Candidate, Known, Reading};\n");
     }
     m.push_str("use flexion::Grammar;\nuse std::borrow::Cow;\n\n");
     m.push_str("/// Each cell's place in a paradigm.\n#[allow(dead_code)]\npub mod cell {\n");
@@ -470,7 +470,7 @@ fn grammar_files(
     m.push_str("}\n\n");
     let _ = writeln!(
         m,
-        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    referrals: {referrals},\n    feature: {feature},\n    compound: {},\n    prefixes: {prefixes},\n    accent: {accent},\n    laws: None,\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    marks: {marks},\n    irregular: Cow::Borrowed(irregular::IRREGULAR),\n    smoothing: {:?},\n    sharpness: {:?},\n}};",
+        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    referrals: {referrals},\n    feature: {feature},\n    compound: {},\n    prefixes: {prefixes},\n    accent: {accent},\n    laws: None,\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    marks: {marks},\n    irregular: irregular::IRREGULAR,\n    smoothing: {:?},\n    sharpness: {:?},\n}};",
         g.cells,
         g.lemma_cell,
         g.capitalized,
@@ -792,21 +792,19 @@ fn grammar_files(
     let mut ir = String::new();
     let _ = writeln!(
         ir,
-        "//! The dictionary's forms no {one} gives, as it writes them: `(word, cell,\n//! form)`, sorted. They are the answer for that word and cell.\n"
+        "//! The dictionary's forms no {one} gives, as it writes them: a line per form,\n//! the word, its cell's number (see `super::cell`) and the form, sorted by word\n//! and cell. They are the answer for that word and cell.\n\nuse flexion::Irregular;\nuse std::borrow::Cow;\n"
     );
-    if !learned.irregular.is_empty() {
-        ir.push_str("use super::cell::*;\n");
-    }
-    ir.push_str("use flexion::Irregular;\n\n");
+    let table = learned.grammar.irregular.table.as_ref();
+    let hashes = "#".repeat(
+        (1..)
+            .find(|&n| !table.contains(&format!("\"{}", "#".repeat(n))))
+            .unwrap_or(1),
+    );
     let _ = writeln!(
         ir,
-        "pub(super) static IRREGULAR: &[Irregular<'static>] = flexion::irregular! {{"
+        "/// {} forms.\npub(super) const IRREGULAR: Irregular<'static> = Irregular {{\n    table: Cow::Borrowed(\n        r{hashes}\"{table}\"{hashes},\n    ),\n}};",
+        thousands(learned.grammar.irregular.len() as u64)
     );
-    for (w, c, f) in &learned.irregular {
-        let name = layout.names.get(*c).map_or("", String::as_str);
-        let _ = writeln!(ir, "    {w:?} {name} {f:?},");
-    }
-    ir.push_str("};\n");
     files.push((format!("{dir}/irregular.rs"), ir));
     files
 }

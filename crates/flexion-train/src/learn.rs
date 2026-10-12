@@ -254,7 +254,7 @@ pub fn learn<'s>(
         laws: None,
         spellings: Cow::Owned(spellings),
         marks,
-        irregular: Cow::Owned(Vec::new()),
+        irregular: flexion::Irregular::default(),
         smoothing: settings.smoothing,
         sharpness: 1.0,
     };
@@ -292,22 +292,10 @@ pub fn learn<'s>(
                 .is_some_and(|(_, separable, inseparable)| separable + inseparable > 0.0)
     };
     let mut irregular = irregular(&grammar, all_lexemes, all_words, |w| !made(w));
-    let listed = |irregular: &[(String, usize, String)]| -> Cow<'s, [flexion::Irregular<'s>]> {
-        Cow::Owned(
-            irregular
-                .iter()
-                .map(|(w, c, f)| flexion::Irregular {
-                    word: Cow::Owned(w.clone()),
-                    cell: u16::try_from(*c).unwrap_or(u16::MAX),
-                    form: Cow::Owned(f.clone()),
-                })
-                .collect(),
-        )
-    };
-    grammar.irregular = listed(&irregular);
+    grammar.irregular = flexion::Irregular::new(&irregular);
     irregular.extend(self::irregular(&grammar, all_lexemes, all_words, made));
     irregular.sort();
-    grammar.irregular = listed(&irregular);
+    grammar.irregular = flexion::Irregular::new(&irregular);
     let stats = Stats {
         words: all_words.len(),
         paradigms: grammar.paradigms.len(),

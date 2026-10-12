@@ -126,12 +126,81 @@ impl Prefixes<'_> {
     }
 }
 
-/// A form no rule gives: the word (as it is looked up), the cell, the form.
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+/// The forms no rule gives, as a table: a line per form, `word`, tab, the
+/// cell's number, tab, `form`, sorted by word and cell. A word is as it is
+/// looked up (see [`Orthography::key`]).
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct Irregular<'a> {
-    pub word: Cow<'a, str>,
-    pub cell: u16,
-    pub form: Cow<'a, str>,
+    pub table: Cow<'a, str>,
+}
+
+impl Irregular<'_> {
+    /// The table of `forms`: `(word, cell, form)`.
+    pub fn new(forms: &[(String, usize, String)]) -> Irregular<'static> {
+        let mut lines: Vec<(&str, usize, &str)> = forms
+            .iter()
+            .map(|(w, c, f)| (w.as_str(), *c, f.as_str()))
+            .collect();
+        lines.sort_unstable();
+        lines.dedup_by(|a, b| a.0 == b.0 && a.1 == b.1);
+        let mut table = String::new();
+        for (w, c, f) in lines {
+            table.push_str(&format!("{w}\t{c}\t{f}\n"));
+        }
+        Irregular {
+            table: Cow::Owned(table),
+        }
+    }
+
+    /// Every form: `(word, cell, form)`.
+    pub fn iter(&self) -> impl Iterator<Item = (&str, u16, &str)> {
+        self.table.lines().filter_map(line)
+    }
+
+    /// How many forms the table lists.
+    pub fn len(&self) -> usize {
+        self.table.lines().count()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.table.is_empty()
+    }
+
+    /// The form of `cell` for the word looked up as `word`, if listed.
+    pub fn get(&self, word: &str, cell: u16) -> Option<&str> {
+        let table = self.table.as_ref();
+        let bytes = table.as_bytes();
+        let (mut low, mut high) = (0, table.len());
+        while low < high {
+            let middle = low + (high - low) / 2;
+            let start = bytes
+                .get(..middle)?
+                .iter()
+                .rposition(|&b| b == b'\n')
+                .map_or(0, |i| i + 1)
+                .max(low);
+            let end = bytes
+                .get(start..)?
+                .iter()
+                .position(|&b| b == b'\n')
+                .map_or(table.len(), |i| start + i);
+            let (w, c, f) = line(table.get(start..end)?)?;
+            match w.cmp(word).then(c.cmp(&cell)) {
+                std::cmp::Ordering::Less => low = end + 1,
+                std::cmp::Ordering::Greater => high = start,
+                std::cmp::Ordering::Equal => return Some(f),
+            }
+        }
+        None
+    }
+}
+
+/// A table line's word, cell and form.
+fn line(line: &str) -> Option<(&str, u16, &str)> {
+    let mut parts = line.splitn(3, '\t');
+    let word = parts.next()?;
+    let cell = parts.next()?.parse().ok()?;
+    Some((word, cell, parts.next()?))
 }
 
 /// What the caller knows about a word besides its lemma: forms of it, such
@@ -197,7 +266,7 @@ pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
     pub marks: Option<Choice<'a, char>>,
     /// Forms no rule gives, as the dictionary writes them: `(word, cell,
     /// form)`, sorted by word and cell. They are the answer for that word.
-    pub irregular: Cow<'a, [Irregular<'a>]>,
+    pub irregular: Irregular<'a>,
     /// How many words' worth a broader rule's counts add to a specific
     /// rule's (see [`Choice::read`]).
     pub smoothing: f32,
@@ -478,12 +547,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
 
     /// The listed form of `cell` for the word looked up as `key`, if any.
     pub fn irregular_form(&self, key: &str, cell: usize) -> Option<&str> {
-        let cell = u16::try_from(cell).ok()?;
-        let at = self
-            .irregular
-            .binary_search_by(|i| i.word.as_ref().cmp(key).then(i.cell.cmp(&cell)))
-            .ok()?;
-        self.irregular.get(at).map(|i| i.form.as_ref())
+        self.irregular.get(key, u16::try_from(cell).ok()?)
     }
 
     /// The likeliest form of `cell` for `lemma` (the lemma itself when the

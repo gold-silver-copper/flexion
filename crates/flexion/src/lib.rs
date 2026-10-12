@@ -11,8 +11,8 @@ mod systems;
 
 pub use choice::{Choice, Reading, Rule, Side, Status, by_ending, tolerance};
 pub use grammar::{
-    Irregular,
-    Compound, Grammar, Known, Placement, Prefix, Prefixes, Separation, WORD_END, restore, sharpen,
+    Compound, Grammar, Irregular, Known, Placement, Prefix, Prefixes, Separation, WORD_END,
+    restore, sharpen,
 };
 pub use orthography::{Casing, Orthography, Stress, Written, recase};
 pub use paradigm::{Form, Paradigm, Referral};
@@ -183,19 +183,6 @@ macro_rules! choice {
                 (::std::borrow::Cow::Borrowed($word), $listed)
             ),* ]),
         }
-    };
-}
-
-/// Irregular forms written as data: `word CELL form`, one per line, sorted
-/// by word and cell.
-#[macro_export]
-macro_rules! irregular {
-    ( $( $word:literal $cell:ident $form:literal ),* $(,)? ) => {
-        &[ $( $crate::Irregular {
-            word: ::std::borrow::Cow::Borrowed($word),
-            cell: $cell,
-            form: ::std::borrow::Cow::Borrowed($form),
-        } ),* ]
     };
 }
 

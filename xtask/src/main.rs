@@ -13,8 +13,7 @@ use flexion_train::{choose, eval, learn, script};
 use std::path::PathBuf;
 use std::time::Instant;
 
-const USAGE: &str =
-    "usage: cargo xtask <extract|build|readme|try|inspect> <language> [--pos <part of speech>] [--systems] [--errors N]";
+const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|inspect> <language> [--pos <part of speech>] [--systems] [--errors N]";
 
 fn main() {
     if let Err(e) = run() {
@@ -460,7 +459,7 @@ fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Res
     let g = &learned.grammar;
     if let Some(word) = word {
         let bare = flexion::Grammar {
-            irregular: std::borrow::Cow::Owned(Vec::new()),
+            irregular: flexion::Irregular::default(),
             ..g.clone()
         };
         let key = script
@@ -544,7 +543,7 @@ fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Res
     }
     // Irregular forms: how many differ only in stress.
     let bare = flexion::Grammar {
-        irregular: std::borrow::Cow::Owned(Vec::new()),
+        irregular: flexion::Irregular::default(),
         ..g.clone()
     };
     let only_stress = learned
@@ -580,7 +579,10 @@ fn workspace() -> PathBuf {
 /// Rewrite a built crate's README with the current intro and text, keeping
 /// its report.
 fn readme(lang: &Language) -> Result<(), String> {
-    let path = workspace().join("languages").join(lang.name).join("README.md");
+    let path = workspace()
+        .join("languages")
+        .join(lang.name)
+        .join("README.md");
     let old = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
     let (Some(a), Some(b)) = (old.find("## The grammar"), old.find("## Data and license")) else {
         return Err(format!("{}: no report", path.display()));
