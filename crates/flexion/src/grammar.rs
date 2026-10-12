@@ -205,12 +205,16 @@ fn line(line: &str) -> Option<(&str, u16, &str)> {
 
 /// What the caller knows about a word besides its lemma: forms of it, such
 /// as principal parts, as `(cell, form)`; the value of the feature its
-/// referrals depend on (its animacy); and whether the lemma is spelled in
-/// full. Readings that disagree are dropped.
+/// referrals depend on (its animacy); the values of its inherent features
+/// (its gender); and whether the lemma is spelled in full. Readings that
+/// disagree are dropped.
 #[derive(Debug, Clone, Copy)]
 pub struct Known<'q, F> {
     pub forms: &'q [(usize, &'q str)],
     pub feature: Option<F>,
+    /// Values of its inherent features, as `(feature, value)` by their
+    /// places: the paradigms of other values are dropped.
+    pub inherent: &'q [(u8, u8)],
     /// The lemma is spelled with every mark the dictionary writes (`fōx`,
     /// `ёж`, not `fox`, `еж`): none is hidden.
     pub full: bool,
@@ -221,6 +225,7 @@ impl<F> Default for Known<'_, F> {
         Known {
             forms: &[],
             feature: None,
+            inherent: &[],
             full: false,
         }
     }
@@ -253,7 +258,7 @@ pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
     /// Mobile stress, where the language writes it.
     pub accent: Option<Accent<'a, A>>,
     /// Sound laws and spelling rules every built form goes through.
-    pub laws: Option<sound_law::Program<'a>>,
+    pub laws: Option<sound_law::Program<'static>>,
     /// Words whose spelling their key doesn't show, as the dictionary writes
     /// them: `(key, letters)`, sorted. A caller who types `fox` means `fōx`;
     /// marks a paradigm writes (the `ō` of `ratiō`) aren't listed.
@@ -331,9 +336,9 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             .iter()
             .map(|&(c, f)| (c, self.orthography.read(f)))
             .collect();
-        let mut inflections = self.inflections(&word.letters, &key, &given);
+        let mut inflections = self.inflections(&word.letters, &key, &given, known.inherent);
         if inflections.is_empty() {
-            inflections = self.inflections(&word.letters, &key, &[]);
+            inflections = self.inflections(&word.letters, &key, &[], known.inherent);
         }
         // A word written in parts: as one word, or part by part.
         let (whole, each) = match (&self.compound, lemma.split_once(JOINER)) {
@@ -432,30 +437,22 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             .take(KEEP)
             .flat_map(|inf| cells(inf).into_iter().map(move |c| (inf, c)))
         {
-            let forms = inf.paradigm.forms(&self.paradigms, cell, &inf.stems);
-            let Some((first, also)) = forms.split_first() else {
+            let forms = inf
+                .paradigm
+                .built(&self.paradigms, self.laws.as_ref(), cell, &inf.stems);
+            let Some(((first, ending), also)) = forms.split_first() else {
                 continue;
             };
-            let built = |f: &str| match &self.laws {
-                Some(laws) => laws.apply(f),
-                None => f.to_string(),
-            };
-            let first = built(first);
-            let also: Vec<String> = also.iter().map(|f| built(f)).collect();
+            let also: Vec<&String> = also.iter().map(|(f, _)| f).collect();
             let evidence = inf.reading.rule.map(|r| Evidence {
                 ending: r.ending.as_ref(),
                 count: r.count(inf.reading.value),
                 total: r.total(),
             });
-            let ending = inf
-                .paradigm
-                .pattern(&self.paradigms, cell)
-                .and_then(|p| pattern::variants(p).next())
-                .map_or(0, |p| pattern::ending_start(p, &inf.stems));
-            for (stress, p_stress) in self.stresses(&word, inf, cell, ending) {
+            for (stress, p_stress) in self.stresses(&word, inf, cell, first, *ending) {
                 let write = |f: &str| self.orthography.write(f, stress, casing);
                 let candidate = Candidate {
-                    form: write(&first),
+                    form: write(first),
                     also: also.iter().map(|f| write(f)).collect(),
                     probability: spelled * whole * p_cell * inf.reading.probability * p_stress,
                     status: inf.reading.status,
@@ -507,7 +504,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             .map(|&(c, f)| (c, self.orthography.read(f)))
             .collect();
         let mut readings: Vec<Reading<'_, 'a, P>> = self
-            .inflections(&letters, &key, &given)
+            .inflections(&letters, &key, &given, known.inherent)
             .into_iter()
             .map(|i| i.reading)
             .collect();
@@ -560,30 +557,26 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     }
 
     /// The paradigms the word `letters` (looked up as `key`) can follow,
-    /// likeliest first, agreeing with `given` forms.
+    /// likeliest first, agreeing with `given` forms and, where some paradigm
+    /// does, the `inherent` feature values.
     fn inflections<'g, 'w>(
         &'g self,
         letters: &'w str,
         key: &str,
         given: &[(usize, Written)],
+        inherent: &[(u8, u8)],
     ) -> Vec<Inflection<'g, 'a, 'w, P>> {
         let agrees = |p: &Paradigm<'_>| {
             let Some(stems) = p.stems(&self.orthography, letters) else {
                 return false;
             };
-            given.iter().all(|(cell, form)| {
-                p.refers(&self.paradigms, *cell)
-                    || p.pattern(&self.paradigms, *cell).is_some_and(|pat| {
-                        pattern::variants(pat).any(|v| {
-                            let built = pattern::fill(v, &stems);
-                            let built = match &self.laws {
-                                Some(laws) => laws.apply(&built),
-                                None => built,
-                            };
-                            built == form.letters
-                        })
-                    })
-            })
+            p.has(inherent)
+                && given.iter().all(|(cell, form)| {
+                    p.refers(&self.paradigms, *cell)
+                        || p.built(&self.paradigms, self.laws.as_ref(), *cell, &stems)
+                            .iter()
+                            .any(|(built, _)| *built == form.letters)
+                })
         };
         let fits = |p: P| self.paradigm_of(p).is_some_and(agrees);
         let mut readings = self.paradigm.read(key, self.smoothing, fits);
@@ -591,6 +584,9 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             // No rule knows a paradigm the word fits: every paradigm it does,
             // by how many words follow it.
             readings = self.fallback(agrees);
+        }
+        if readings.is_empty() && !inherent.is_empty() {
+            return self.inflections(letters, key, given, &[]);
         }
         readings
             .into_iter()
@@ -637,6 +633,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         word: &Written,
         inf: &Inflection<'_, 'a, '_, P>,
         cell: usize,
+        form: &str,
         ending: usize,
     ) -> Vec<(Option<crate::Stress>, f32)> {
         let Some(accent) = &self.accent else {
@@ -686,12 +683,6 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             .read(&self.orthography.key(letters), self.smoothing, fits);
         let mut out: Vec<(Option<crate::Stress>, f32)> = Vec::new();
         // The form's letters, to place the stress in.
-        let form = inf
-            .paradigm
-            .pattern(&self.paradigms, cell)
-            .and_then(|p| pattern::variants(p).next())
-            .map(|p| pattern::fill(p, &inf.stems))
-            .unwrap_or_default();
         for reading in classes.iter().take(KEEP * KEEP) {
             let Some(class) = accent.class_of(reading.value) else {
                 continue;
@@ -708,7 +699,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                     .vowel
                     .and_then(|v| positions.checked_sub(1)?.checked_sub(usize::from(v))),
             };
-            let s = stress::place(o, &form, ending, finals, place, k.unwrap_or(0));
+            let s = stress::place(o, form, ending, finals, place, k.unwrap_or(0));
             match out.iter_mut().find(|e| e.0 == s) {
                 Some(e) => e.1 += reading.probability,
                 None => out.push((s, reading.probability)),
@@ -796,6 +787,7 @@ impl<P: Label, A: Label, G: Label, F: Label> crate::Inflect<F> for Grammar<'_, P
         let known = Known {
             forms: known.forms,
             feature: known.feature.and_then(|f| G::from_index(f.index())),
+            inherent: known.inherent,
             full: known.full,
         };
         Grammar::candidates(self, lemma, cell, &known)

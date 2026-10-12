@@ -120,6 +120,22 @@ fn place<'w>(
     None
 }
 
+/// Where a built form's stem ends and its ending begins, for sound laws to
+/// see (`ε+ο` → `+ου`). Never part of a word.
+pub const BOUNDARY: char = '+';
+
+/// [`fill`], with [`BOUNDARY`] after the last stem piece (at the start, for
+/// a pattern with none).
+pub fn fill_marked(pattern: &str, stems: &[&str]) -> String {
+    match pattern.rfind('~') {
+        Some(at) => {
+            let (head, tail) = pattern.split_at(at + 1);
+            format!("{}{BOUNDARY}{tail}", fill(head, stems))
+        }
+        None => format!("{BOUNDARY}{pattern}"),
+    }
+}
+
 /// Build a form: `pattern` (one alternative) with `stems` at its `~`s.
 /// Missing stem pieces leave their place empty.
 pub fn fill(pattern: &str, stems: &[&str]) -> String {

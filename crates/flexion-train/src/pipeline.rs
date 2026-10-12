@@ -23,6 +23,9 @@ pub struct Measured {
     /// Given the dictionary's principal parts, where the part of speech has
     /// them.
     pub citation: Option<Score>,
+    /// From the headword with the word's inherent features (its gender)
+    /// given, where the part of speech has them.
+    pub features: Option<Score>,
     /// The longest-suffix rule's share right (see [`eval::floor`]).
     pub floor: f64,
     /// The shipped grammar on the dictionary's own words, typed in full.
@@ -168,6 +171,8 @@ pub fn build<'s>(
         let headword = scored.with(|g| eval::score(g, &orthography, &test, Input::Headword));
         let citation = (!parts.is_empty())
             .then(|| scored.with(|g| eval::score(g, &orthography, &test, Input::Citation(&parts))));
+        let features = (!part.inherent.is_empty())
+            .then(|| scored.with(|g| eval::score(g, &orthography, &test, Input::Features)));
         let main: Vec<&Lexeme> = train.iter().filter(|l| l.source == 0).collect();
         let floor = eval::floor(&orthography, &main, &test);
         let (mut common, mut rare) = ((0, 0), (0, 0));
@@ -215,6 +220,7 @@ pub fn build<'s>(
             full,
             headword,
             citation,
+            features,
             floor,
             attested,
             systems: kind.is_some(),
@@ -229,7 +235,7 @@ pub fn build<'s>(
 /// The README's report: the grammar's size and how well it does.
 pub fn report(lang: &Language, inflections: &[Inflection<'_>], measured: &[Measured]) -> String {
     let mut s = String::from("## The grammar\n\n");
-    s.push_str("| | words | systems | paradigms | rules | listed words | irregular forms |\n|---|---:|---:|---:|---:|---:|---:|\n");
+    s.push_str("| | words | systems | paradigms | sound laws | rules | listed words | irregular forms |\n|---|---:|---:|---:|---:|---:|---:|---:|\n");
     for (part, inflection) in lang.parts.iter().zip(inflections) {
         let grammars = inflection.grammars();
         let sum = |f: &dyn Fn(&Learned<'_>) -> usize| grammars.iter().map(|g| f(g)).sum::<usize>();
@@ -239,10 +245,11 @@ pub fn report(lang: &Language, inflections: &[Inflection<'_>], measured: &[Measu
         };
         let _ = writeln!(
             s,
-            "| {} | {} | {systems} | {} | {} | {} | {} |",
+            "| {} | {} | {systems} | {} | {} | {} | {} | {} |",
             part.name,
             grammars.first().map_or(0, |g| g.stats.words),
             sum(&|g| g.stats.paradigms),
+            sum(&|g| g.laws.len()),
             sum(&|g| g.grammar.paradigm.rules.len()),
             sum(&|g| g.grammar.paradigm.exceptions.len()),
             sum(&|g| g.stats.irregular_forms),
@@ -250,7 +257,8 @@ pub fn report(lang: &Language, inflections: &[Inflection<'_>], measured: &[Measu
     }
     s.push_str(
         "\n*Words*: the dictionary's words the grammar is learned from. *Systems*: the principal\n\
-         parts a part of speech is built on (1: its lemma alone). *Rules*: the endings that\n\
+         parts a part of speech is built on (1: its lemma alone). *Sound laws*: changes where a\n\
+         stem meets its ending (or farther, along a tier). *Rules*: the endings that\n\
          choose a paradigm. *Listed words*: words no rule gets right, listed with their paradigm.\n\
          *Irregular forms*: forms no paradigm gives, listed.\n\n## How well it does\n\n\
          A tenth of the words (by a hash of the word) was held out: the grammar scored here was\n\
@@ -261,13 +269,14 @@ pub fn report(lang: &Language, inflections: &[Inflection<'_>], measured: &[Measu
          The margin after top-1 is a 95% interval, counting words. *Lemma in full*: top-1 typed\n\
          with every mark the dictionary's table writes, and said to be so (`spelled_in_full`).\n\
          *Principal parts given*: top-1 of the other forms, given the dictionary's principal\n\
-         parts. *Common* and *rare cells*: top-1 on the cells at least a tenth of the training\n\
+         parts. *Features given*: top-1 from the headword, told the word's inherent features\n\
+         (its gender, as `.gender(…)` tells it). *Common* and *rare cells*: top-1 on the cells at least a tenth of the training\n\
          words have, and on the others (with the number of forms). *Floor*: the CoNLL–SIGMORPHON\n\
          2017 shared task's non-neural baseline (letters only). *Attested*: top-1 of the shipped grammar on the dictionary's\n\
          own words, typed in full.\n\n",
     );
     s.push_str(
-        "| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | common cells | rare cells | floor | attested |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n",
+        "| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | features given | common cells | rare cells | floor | attested |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n",
     );
     // `right` of `forms`, as a percentage with the count of forms.
     let share = |(forms, right): (usize, usize)| {
@@ -285,7 +294,7 @@ pub fn report(lang: &Language, inflections: &[Inflection<'_>], measured: &[Measu
         let noise = 1.96 * (p * (1.0 - p) / m.test_words.max(1) as f64).sqrt();
         let _ = writeln!(
             s,
-            "| {} | {} | {} | **{:.2}%** ± {:.1} | {:.2}% | {:.3} | {:.2}% | {} | {} | {} | {:.2}% | {:.2}% |",
+            "| {} | {} | {} | **{:.2}%** ± {:.1} | {:.2}% | {:.3} | {:.2}% | {} | {} | {} | {} | {:.2}% | {:.2}% |",
             m.name,
             m.test_words,
             m.headword.forms,
@@ -295,6 +304,9 @@ pub fn report(lang: &Language, inflections: &[Inflection<'_>], measured: &[Measu
             m.headword.calibration_error(),
             100.0 * m.full.accuracy(),
             m.citation
+                .as_ref()
+                .map_or(String::new(), |c| format!("{:.2}%", 100.0 * c.accuracy())),
+            m.features
                 .as_ref()
                 .map_or(String::new(), |c| format!("{:.2}%", 100.0 * c.accuracy())),
             share(m.common),

@@ -38,6 +38,8 @@ pub struct Learned<'s> {
     pub members: Vec<Vec<String>>,
     /// Forms the grammar doesn't give, listed: `(word, cell, form)`.
     pub irregular: Vec<(String, usize, String)>,
+    /// The sound laws at the stem's edge, with their evidence.
+    pub laws: Vec<crate::laws::Law>,
     pub stats: Stats,
 }
 
@@ -176,6 +178,28 @@ pub fn learn<'s>(
         .as_ref()
         .map(|_| choose::learn(&feature_examples, settings, |_, _| true));
     let (paradigms, assignment) = paradigms(&words, &analyses, shape);
+    // Paradigms that differ only by a change where stem meets ending are
+    // one paradigm and a sound law.
+    let law_words: Vec<crate::laws::Word<'_>> = words
+        .iter()
+        .zip(&analyses)
+        .map(|(w, a)| crate::laws::Word {
+            letters: &w.letters,
+            forms: w
+                .cells
+                .iter()
+                .zip(&a.cells)
+                .map(|(fs, p)| {
+                    fs.first()
+                        .filter(|_| p.as_deref() != Some(REFERRED))
+                        .map(|f| f.letters.as_str())
+                })
+                .collect(),
+        })
+        .collect();
+    let (laws, program, mut paradigms, assignment) =
+        crate::laws::learn(&orthography, &law_words, paradigms, assignment);
+    inherent(&words, &assignment, &mut paradigms);
     let paradigm_examples: Vec<(String, u16)> = words
         .iter()
         .zip(&assignment)
@@ -195,6 +219,7 @@ pub fn learn<'s>(
             &words,
             &assignment,
             &paradigms,
+            program.as_ref(),
             shape,
             settings,
         );
@@ -251,7 +276,7 @@ pub fn learn<'s>(
         compound: compound_choice,
         prefixes,
         accent,
-        laws: None,
+        laws: program,
         spellings: Cow::Owned(spellings),
         marks,
         irregular: flexion::Irregular::default(),
@@ -310,6 +335,7 @@ pub fn learn<'s>(
         feature: found.map(|f| f.0),
         members,
         irregular,
+        laws,
         stats,
     }
 }
@@ -1076,6 +1102,7 @@ fn paradigms<'s>(
             words: n,
             lemma: Cow::Owned(lemma.clone()),
             parent: None,
+            inherent: Cow::Borrowed(&[]),
             table: Cow::Owned(table),
         });
     }
@@ -1084,6 +1111,34 @@ fn paradigms<'s>(
         .map(|c| id_of.get(c).copied().unwrap_or(0))
         .collect();
     (out, assignment)
+}
+
+/// Per paradigm, the inherent feature values (its gender) nine in ten of
+/// its words that have one share.
+fn inherent(words: &[Word], assignment: &[u16], paradigms: &mut [Paradigm<'_>]) {
+    let mut counts: BTreeMap<(u16, u8, u8), u32> = BTreeMap::new();
+    for (w, &p) in words.iter().zip(assignment) {
+        for (f, &v) in w.inherent.iter().enumerate() {
+            if let (Ok(f), true) = (u8::try_from(f), v != u8::MAX) {
+                *counts.entry((p, f, v)).or_default() += 1;
+            }
+        }
+    }
+    let features = words.first().map_or(0, |w| w.inherent.len());
+    for (p, paradigm) in paradigms.iter_mut().enumerate() {
+        let Ok(p) = u16::try_from(p) else { continue };
+        let mut values: Vec<(u8, u8)> = Vec::new();
+        for f in (0..features).filter_map(|f| u8::try_from(f).ok()) {
+            let of = counts.range((p, f, 0)..=(p, f, u8::MAX));
+            let total: u32 = of.clone().map(|(_, n)| n).sum();
+            if let Some((&(_, _, v), &n)) = of.max_by_key(|(_, n)| **n)
+                && 10 * n >= 9 * total
+            {
+                values.push((f, v));
+            }
+        }
+        paradigm.inherent = Cow::Owned(values);
+    }
 }
 
 /// A pattern for `cell`, which no word of signature `s` has: from the chosen
@@ -1166,6 +1221,7 @@ fn accent<'s>(
     words: &[Word],
     assignment: &[u16],
     paradigms: &[Paradigm<'s>],
+    laws: Option<&sound_law::Program<'_>>,
     shape: &Shape,
     settings: Settings,
 ) -> (Accent<'s, u16>, HashMap<String, u16>) {
@@ -1183,12 +1239,8 @@ fn accent<'s>(
         let cells: Vec<Option<Fact>> = (0..shape.cells)
             .map(|c| {
                 let f = form(c)?;
-                let pat = par.pattern(paradigms, c).map(usual)?;
-                Some((
-                    f.stress?,
-                    f.letters.clone(),
-                    pattern::ending_start(pat, &stems),
-                ))
+                let (_, ending) = par.built(paradigms, laws, c, &stems).into_iter().next()?;
+                Some((f.stress?, f.letters.clone(), ending))
             })
             .collect();
         // The lemma's accent; else where the cells accented before their

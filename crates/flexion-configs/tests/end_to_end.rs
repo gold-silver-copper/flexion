@@ -191,6 +191,11 @@ fn print_and_compare(lang: Language, systems: bool) {
         .map(|(spec, inflection)| flexion_train::print::Part { spec, inflection })
         .collect();
     let files = flexion_train::print::files(&lang, &script, &parts, "").expect("printed");
+    // Russian nouns' spelling rule (`к+ы → к+и`) is a sound law, printed too.
+    assert!(
+        lang.name != "russian" || files.iter().any(|(path, _)| path.ends_with("noun/laws.rs")),
+        "the Russian nouns have their sound laws"
+    );
     let dir = PathBuf::from(env!("CARGO_TARGET_TMPDIR")).join(format!("printed-{}", lang.name));
     flexion_train::print::write(&dir, &files).expect("written");
     // A crate of its own, depending on this workspace's runtime.
@@ -212,26 +217,46 @@ fn print_and_compare(lang: Language, systems: bool) {
     );
     for (part, (d, inflection)) in lang.parts.iter().zip(data.iter().zip(&inflections)) {
         for l in &d.lexemes {
+            // Asked without its gender, and (in its first cell: the gender
+            // picks the paradigm) with it where the dictionary says.
+            let inherent: Vec<(u8, u8)> = l
+                .inherent
+                .iter()
+                .enumerate()
+                .filter(|&(_, &v)| v != u8::MAX)
+                .filter_map(|(f, &v)| Some((u8::try_from(f).ok()?, v)))
+                .collect();
             for cell in 0..inflection.with(|g| g.cells()) {
-                let candidates: Vec<(String, f32)> = inflection.with(|g| {
-                    g.candidates(&l.full, cell, &Known::default())
-                        .into_iter()
-                        .map(|c| (c.form, c.probability))
-                        .collect()
-                });
-                let forms: Vec<&str> = candidates.iter().map(|c| c.0.as_str()).collect();
-                let probabilities: Vec<String> =
-                    candidates.iter().map(|c| format!("{:?}f32", c.1)).collect();
-                let _ = writeln!(
-                    test,
-                    "    let c = {crate_name}::{}::GRAMMAR.candidates({:?}, {cell}, &Known::default());\n    \
-                     assert_eq!(c.iter().map(|c| c.form.as_str()).collect::<Vec<&str>>(), {forms:?} as [&str; {}]);\n    \
-                     assert_eq!(c.iter().map(|c| c.probability).collect::<Vec<f32>>(), [{}]);",
-                    part.name,
-                    l.full,
-                    forms.len(),
-                    probabilities.join(", ")
-                );
+                let asks: &[&[(u8, u8)]] = if cell > 0 || inherent.is_empty() {
+                    &[&[]]
+                } else {
+                    &[&[], &inherent]
+                };
+                for &ask in asks {
+                    let known = Known {
+                        inherent: ask,
+                        ..Known::default()
+                    };
+                    let candidates: Vec<(String, f32)> = inflection.with(|g| {
+                        g.candidates(&l.full, cell, &known)
+                            .into_iter()
+                            .map(|c| (c.form, c.probability))
+                            .collect()
+                    });
+                    let forms: Vec<&str> = candidates.iter().map(|c| c.0.as_str()).collect();
+                    let probabilities: Vec<String> =
+                        candidates.iter().map(|c| format!("{:?}f32", c.1)).collect();
+                    let _ = writeln!(
+                        test,
+                        "    let c = {crate_name}::{}::GRAMMAR.candidates({:?}, {cell}, &Known {{ inherent: &{ask:?}, ..Known::default() }});\n    \
+                         assert_eq!(c.iter().map(|c| c.form.as_str()).collect::<Vec<&str>>(), {forms:?} as [&str; {}]);\n    \
+                         assert_eq!(c.iter().map(|c| c.probability).collect::<Vec<f32>>(), [{}]);",
+                        part.name,
+                        l.full,
+                        forms.len(),
+                        probabilities.join(", ")
+                    );
+                }
             }
         }
     }

@@ -32,6 +32,9 @@ pub enum Input<'p> {
     /// In full, with the dictionary's forms of these cells (its principal
     /// parts) given; those cells aren't scored.
     Citation(&'p [usize]),
+    /// As the headword, with the word's inherent features (its gender)
+    /// given.
+    Features,
 }
 
 /// Scores for one input mode.
@@ -104,8 +107,15 @@ pub fn score<F: Label, G: Inflect<F> + ?Sized>(
     for l in lexemes {
         let typed = match input {
             Input::Full | Input::Citation(_) => l.full.clone(),
-            Input::Headword => l.lemma.clone(),
+            Input::Headword | Input::Features => l.lemma.clone(),
         };
+        let inherent: Vec<(u8, u8)> = l
+            .inherent
+            .iter()
+            .enumerate()
+            .filter(|&(_, &v)| input == Input::Features && v != u8::MAX)
+            .filter_map(|(f, &v)| Some((u8::try_from(f).ok()?, v)))
+            .collect();
         let parts = match input {
             Input::Citation(parts) => parts,
             _ => &[],
@@ -123,7 +133,8 @@ pub fn score<F: Label, G: Inflect<F> + ?Sized>(
             }
             let known = flexion::Known {
                 forms: &given,
-                full: input != Input::Headword,
+                inherent: &inherent,
+                full: !matches!(input, Input::Headword | Input::Features),
                 ..flexion::Known::default()
             };
             let candidates = grammar.candidates(&typed, cell, &known);

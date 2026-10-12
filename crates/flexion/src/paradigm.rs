@@ -20,6 +20,9 @@ pub struct Paradigm<'a> {
     pub lemma: Cow<'a, str>,
     /// The paradigm (its place among its part of speech's) this one is like.
     pub parent: Option<u16>,
+    /// The values of its part of speech's inherent features its words have,
+    /// as `(feature, value)` by their places: Sanskrit `साधन` is neuter.
+    pub inherent: Cow<'a, [(u8, u8)]>,
     /// What it has in each cell, in the part of speech's cell order, a tab
     /// after each: a pattern (`~а`, alternatives after `|`), [`REFERRED`],
     /// or nothing, for the parent's.
@@ -64,6 +67,14 @@ impl<'a> Paradigm<'a> {
         pattern::bind_by(&self.lemma, lemma, |a, b| orthography.same_letter(a, b))
     }
 
+    /// Whether words with these inherent feature values (`(feature, value)`)
+    /// can inflect this way.
+    pub fn has(&self, values: &[(u8, u8)]) -> bool {
+        values
+            .iter()
+            .all(|(f, v)| self.inherent.iter().all(|(g, w)| g != f || w == v))
+    }
+
     /// What its own table has in `cell`; `None` where it is the parent's.
     pub fn own(&self, cell: usize) -> Option<Form<'_>> {
         match self.table.split('\t').nth(cell)? {
@@ -101,14 +112,28 @@ impl<'a> Paradigm<'a> {
         self.form(family, cell) == Some(Form::Referred)
     }
 
-    /// The forms of `cell` for these stems, the usual one first.
-    pub fn forms(&self, family: &[Paradigm<'a>], cell: usize, stems: &[&str]) -> Vec<String> {
-        self.pattern(family, cell)
-            .map(|p| {
-                pattern::variants(p)
-                    .map(|v| pattern::fill(v, stems))
-                    .collect()
+    /// The forms of `cell` for these stems, the usual one first, each with
+    /// where its ending starts: the patterns filled, then `laws` applied at
+    /// the stem's edge (see [`pattern::BOUNDARY`]).
+    pub fn built(
+        &self,
+        family: &[Paradigm<'a>],
+        laws: Option<&sound_law::Program<'_>>,
+        cell: usize,
+        stems: &[&str],
+    ) -> Vec<(String, usize)> {
+        let Some(p) = self.pattern(family, cell) else {
+            return Vec::new();
+        };
+        pattern::variants(p)
+            .map(|v| match laws {
+                None => (pattern::fill(v, stems), pattern::ending_start(v, stems)),
+                Some(laws) => {
+                    let marked = laws.apply(&pattern::fill_marked(v, stems));
+                    let ending = marked.find(pattern::BOUNDARY).unwrap_or(0);
+                    (marked.replace(pattern::BOUNDARY, ""), ending)
+                }
             })
-            .unwrap_or_default()
+            .collect()
     }
 }

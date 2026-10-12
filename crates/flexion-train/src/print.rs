@@ -368,6 +368,7 @@ fn part_files(
                 layout,
                 &api,
                 feature,
+                &inherent(lang, spec),
             ));
             files.push((format!("{dir}/mod.rs"), m));
             for s in &systems.systems {
@@ -441,6 +442,7 @@ fn grammar_files(
     let name_of = |p: u16| variants.get(usize::from(p)).cloned().unwrap_or_default();
     // The feature referrals depend on, as the crate's enum names it.
     let feature_name: Option<&str> = learned.feature.and_then(|f| spec.inherent.get(f).copied());
+    let inherent = inherent(lang, spec);
     let mut files = Vec::new();
 
     // mod.rs
@@ -467,7 +469,11 @@ fn grammar_files(
     if g.marks.is_some() {
         m.push_str("mod marks;\n");
     }
-    m.push_str("mod irregular;\nmod paradigms;\nmod rules;\nmod spellings;\n\n");
+    m.push_str("mod irregular;\n");
+    if g.laws.is_some() {
+        m.push_str("mod laws;\n");
+    }
+    m.push_str("mod paradigms;\nmod rules;\nmod spellings;\n\n");
     let _ = writeln!(m, "pub use paradigms::{ty};\n");
     if api.is_some() {
         m.push_str("use flexion::{Candidate, Known, Reading};\n");
@@ -480,7 +486,7 @@ fn grammar_files(
     m.push_str("}\n\n");
     let _ = writeln!(
         m,
-        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    referrals: {referrals},\n    feature: {feature},\n    compound: {},\n    prefixes: {prefixes},\n    accent: {accent},\n    laws: None,\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    marks: {marks},\n    irregular: irregular::IRREGULAR,\n    smoothing: {:?},\n    sharpness: {:?},\n}};",
+        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    referrals: {referrals},\n    feature: {feature},\n    compound: {},\n    prefixes: {prefixes},\n    accent: {accent},\n    laws: {laws},\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    marks: {marks},\n    irregular: irregular::IRREGULAR,\n    smoothing: {:?},\n    sharpness: {:?},\n}};",
         g.cells,
         g.lemma_cell,
         g.capitalized,
@@ -493,6 +499,11 @@ fn grammar_files(
         },
         g.smoothing,
         g.sharpness,
+        laws = if g.laws.is_some() {
+            "Some(laws::LAWS)"
+        } else {
+            "None"
+        },
         marks = if g.marks.is_some() {
             "Some(marks::MARKS)"
         } else {
@@ -526,7 +537,14 @@ fn grammar_files(
     );
     m.push('\n');
     if let Some(api) = api {
-        m.push_str(&api_code(spec, Some(learned), layout, api, feature_name));
+        m.push_str(&api_code(
+            spec,
+            Some(learned),
+            layout,
+            api,
+            feature_name,
+            &inherent,
+        ));
     }
     files.push((format!("{dir}/mod.rs"), m));
 
@@ -540,7 +558,7 @@ fn grammar_files(
     // The table macro.
     let _ = writeln!(
         p,
-        "/// Writes one {one}: the word it is named after, how many words follow it,\n/// the lemma's pattern, the {one} it is like (if any), then a row of patterns\n/// per line (`referred`: the form is another cell's, as the word's {feature}\n/// says; `_`: the form is the {one}'s it is like):",
+        "/// Writes one {one}: the word it is named after, how many words follow it,\n/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if\n/// they share them), the {one} it is like (if any), then a row of patterns\n/// per line (`referred`: the form is another cell's, as the word's {feature}\n/// says; `_`: the form is the {one}'s it is like):",
         feature = feature_name.map_or_else(|| "feature".to_string(), str::to_lowercase)
     );
     for row in &layout.rows {
@@ -552,7 +570,13 @@ fn grammar_files(
         let _ = writeln!(p, "/// `{}`{cols}", row.label);
     }
     let _ = writeln!(p, "macro_rules! {one} {{");
-    p.push_str("    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident)?;\n");
+    if inherent.is_empty() {
+        p.push_str(
+            "    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident)?;\n",
+        );
+    } else {
+        p.push_str("    ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident)?;\n");
+    }
     let mut k = 0usize;
     let mut order: Vec<usize> = Vec::new();
     for row in &layout.rows {
@@ -568,7 +592,15 @@ fn grammar_files(
             .collect();
         let _ = writeln!(p, "     {}: {};", row.label, args.join(", "));
     }
-    p.push_str("    ) => {\n        Paradigm {\n            name: ::std::borrow::Cow::Borrowed($name),\n            words: $words,\n            lemma: ::std::borrow::Cow::Borrowed($lemma),\n            parent: like!($($parent)?),\n            table: ::std::borrow::Cow::Borrowed(concat!(\n");
+    p.push_str("    ) => {\n        Paradigm {\n            name: ::std::borrow::Cow::Borrowed($name),\n            words: $words,\n            lemma: ::std::borrow::Cow::Borrowed($lemma),\n            parent: like!($($parent)?),\n");
+    if inherent.is_empty() {
+        p.push_str("            inherent: ::std::borrow::Cow::Borrowed(&[]),\n");
+    } else {
+        p.push_str(
+            "            inherent: ::std::borrow::Cow::Borrowed(&[$($(feature!($f: $v)),*)?]),\n",
+        );
+    }
+    p.push_str("            table: ::std::borrow::Cow::Borrowed(concat!(\n");
     // Forms in cell order: the k-th argument is cell order[k].
     let mut by_cell: Vec<usize> = vec![0; order.len()];
     for (arg, &cell) in order.iter().enumerate() {
@@ -584,6 +616,21 @@ fn grammar_files(
         p,
         "/// The {one} a {one} is like, by its name.\nmacro_rules! like {{\n    () => {{\n        None\n    }};\n    ($parent:ident) => {{\n        Some({ty}::$parent as u16)\n    }};\n}}\n"
     );
+    if g.paradigms.iter().any(|p| !p.inherent.is_empty()) {
+        let _ = writeln!(
+            p,
+            "/// An inherent feature's value, as `(feature, value)` by their places.\nmacro_rules! feature {{"
+        );
+        for (i, f) in inherent.iter().enumerate() {
+            let _ = writeln!(
+                p,
+                "    ({}: $v:ident) => {{\n        ({i}, crate::{}::$v as u8)\n    }};",
+                snake(f.name),
+                f.name
+            );
+        }
+        p.push_str("}\n\n");
+    }
     let _ = writeln!(
         p,
         "/// Every {one} learned.\n#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]\npub enum {ty} {{"
@@ -636,12 +683,29 @@ fn grammar_files(
             examples.join(", "),
             parent.map_or(String::new(), |q| format!(" Like {q} where `_`."))
         );
+        let values: Vec<String> = par
+            .inherent
+            .iter()
+            .filter_map(|&(f, v)| {
+                let f = inherent.get(usize::from(f))?;
+                Some(format!(
+                    "{}: {}",
+                    snake(f.name),
+                    f.values.get(usize::from(v))?.name
+                ))
+            })
+            .collect();
         let _ = writeln!(
             p,
-            "    {one}!({}, {}, {}{};",
+            "    {one}!({}, {}, {}{}{};",
             Lit(&par.name),
             par.words,
             Lit(&par.lemma),
+            if values.is_empty() {
+                String::new()
+            } else {
+                format!(", [{}]", values.join(", "))
+            },
             parent.map_or(String::new(), |q| format!(", like {q}"))
         );
         for row in &layout.rows {
@@ -805,6 +869,25 @@ fn grammar_files(
     sp.push_str("};\n");
     files.push((format!("{dir}/spellings.rs"), sp));
 
+    // laws.rs
+    if let Some(program) = &g.laws {
+        let mut l = format!(
+            "//! Sound laws where a stem meets its ending (`+`): every form a {one}\n//! builds goes through them, in order, so one {one} serves words whose\n//! stems change its endings. Each with the words whose forms it gives, and\n//! how many of the dictionary's forms it gets wrong (those are listed in\n//! `irregular.rs`).\n\nuse flexion::sound_law::compiled::*;\n\nconst RULES: &[CompiledRule<'static>] = &[\n"
+        );
+        for (law, rule) in learned.laws.iter().zip(program.rules()) {
+            let _ = writeln!(
+                l,
+                "    // {law}: {} words ({}), {} forms wrong.\n    {},",
+                thousands(u64::from(law.words)),
+                law.examples.join(", "),
+                thousands(u64::from(law.breaks)),
+                rule.to_rust()
+            );
+        }
+        l.push_str("];\n\n/// The laws, in order.\npub(super) const LAWS: Program<'static> = Program::from_rules(RULES);\n");
+        files.push((format!("{dir}/laws.rs"), l));
+    }
+
     // irregular.rs
     let mut ir = String::new();
     let _ = writeln!(
@@ -824,6 +907,14 @@ fn grammar_files(
     );
     files.push((format!("{dir}/irregular.rs"), ir));
     files
+}
+
+/// A part of speech's inherent features (its gender), with their values.
+fn inherent<'l>(lang: &'l Language, spec: &PartOfSpeech) -> Vec<&'l Feature> {
+    spec.inherent
+        .iter()
+        .filter_map(|n| lang.features.iter().find(|f| f.name == *n))
+        .collect()
 }
 
 fn thousands(n: u64) -> String {
@@ -1265,6 +1356,7 @@ fn api_code(
     layout: &Layout,
     api: &Api<'_>,
     feature: Option<&str>,
+    inherent: &[&Feature],
 ) -> String {
     let cells = api.cells;
     let ty = api.ty.as_str();
@@ -1361,6 +1453,9 @@ fn api_code(
     if feature.is_some() {
         let _ = writeln!(s, "    {feature_field}: Option<{feature_type}>,");
     }
+    if !inherent.is_empty() {
+        s.push_str("    inherent: Vec<(u8, u8)>,\n");
+    }
     let folds = learned.is_some_and(|l| !l.grammar.orthography.folded.is_empty());
     if folds {
         s.push_str("    full: bool,\n");
@@ -1372,6 +1467,9 @@ fn api_code(
     );
     if feature.is_some() {
         let _ = writeln!(s, "            {feature_field}: None,");
+    }
+    if !inherent.is_empty() {
+        s.push_str("            inherent: Vec::new(),\n");
     }
     if folds {
         s.push_str("            full: false,\n");
@@ -1386,12 +1484,27 @@ fn api_code(
         s,
         "    /// One of its forms you know (a principal part): readings that disagree\n    /// with it are dropped.\n    #[must_use]\n    pub fn given(mut self, cell: impl Into<Cell>, form: &'w str) -> Self {{\n        self.given.push((cell.into().index(), form));\n        self\n    }}\n"
     );
-    if let Some(f) = feature {
+    for (i, f) in inherent.iter().enumerate() {
+        let field = snake(f.name);
+        let lower = f.name.to_lowercase();
+        let many = kind_name.to_lowercase();
+        let (doc, refers) = if feature == Some(f.name) {
+            (
+                format!(
+                    "Its {lower}, which says which cell its `referred` forms (see its\n    /// {many}s) are taken from, and which {many}s it can follow."
+                ),
+                format!("\n        self.{field} = Some({field});"),
+            )
+        } else {
+            (
+                format!("Its {lower}: only {many}s of words of that {lower} are read."),
+                String::new(),
+            )
+        };
         let _ = writeln!(
             s,
-            "    /// Its {lower}, which says which cell its `referred` forms (see its\n    /// {many}) are taken from.\n    #[must_use]\n    pub fn {feature_field}(mut self, {feature_field}: crate::{f}) -> Self {{\n        self.{feature_field} = Some({feature_field});\n        self\n    }}\n",
-            lower = f.to_lowercase(),
-            many = kind_name.to_lowercase(),
+            "    /// {doc}\n    #[must_use]\n    pub fn {field}(mut self, {field}: crate::{}) -> Self {{{refers}\n        self.inherent.push(({i}, {field} as u8));\n        self\n    }}\n",
+            f.name
         );
     }
     if folds {
@@ -1401,6 +1514,11 @@ fn api_code(
         );
     }
     let full = if folds { "self.full" } else { "false" };
+    let inherent_value = if inherent.is_empty() {
+        "&[]"
+    } else {
+        "&self.inherent"
+    };
     let feature_value = if feature.is_some() {
         format!("self.{feature_field}")
     } else {
@@ -1408,7 +1526,7 @@ fn api_code(
     };
     let _ = writeln!(
         s,
-        "    fn known(&self) -> Known<'_, {feature_type}> {{\n        Known {{\n            forms: &self.given,\n            feature: {feature_value},\n            full: {full},\n        }}\n    }}\n"
+        "    fn known(&self) -> Known<'_, {feature_type}> {{\n        Known {{\n            forms: &self.given,\n            feature: {feature_value},\n            inherent: {inherent_value},\n            full: {full},\n        }}\n    }}\n"
     );
     let one = kind_name.to_lowercase();
     let many = format!("{one}s");

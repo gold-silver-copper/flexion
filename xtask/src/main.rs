@@ -310,6 +310,14 @@ fn try_language(
             st.accent_patterns,
             st.irregular_forms,
         );
+        for l in &learned.laws {
+            println!(
+                "  law {l}: {} words ({}), breaks {}",
+                l.words,
+                l.examples.join(", "),
+                l.breaks
+            );
+        }
         if let Some(p) = &g.prefixes {
             let list: Vec<String> = p
                 .prefixes
@@ -386,7 +394,16 @@ fn try_language(
                 rare.0
             );
         }
-        for input in [eval::Input::Headword, eval::Input::Full] {
+        let inputs = if part.inherent.is_empty() {
+            vec![eval::Input::Headword, eval::Input::Full]
+        } else {
+            vec![
+                eval::Input::Headword,
+                eval::Input::Full,
+                eval::Input::Features,
+            ]
+        };
+        for input in inputs {
             let s = eval::score::<u8, _>(g, &g.orthography, &test, input);
             println!(
                 "  held-out {input:?}: {} words, {} forms, top-1 {:.2}% (letters {:.2}%), top-3 {:.2}%, calibration error {:.3}",

@@ -14,6 +14,7 @@ pub mod choose;
 pub mod eval;
 pub mod extract;
 pub mod kaikki;
+pub mod laws;
 pub mod learn;
 pub mod pipeline;
 pub mod print;
