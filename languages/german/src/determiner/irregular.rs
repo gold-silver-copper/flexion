@@ -1,51 +1,56 @@
-//! The dictionary's forms no declension gives, as it writes them: `(word, cell,
-//! form)`, sorted. They are the answer for that word and cell.
+//! The dictionary's forms no declension gives, as it writes them: a line per form,
+//! the word, its cell's number (see `super::cell`) and the form, sorted by word
+//! and cell. They are the answer for that word and cell.
 
-use super::cell::*;
+use flexion::Irregular;
 use std::borrow::Cow;
 
-pub(super) static IRREGULAR: &[(Cow<'static, str>, u16, Cow<'static, str>)] = flexion::irregular! {
-    "der" NOM_F "die",
-    "der" NOM_N "das",
-    "der" NOM_PL "die",
-    "der" ACC_F "die",
-    "der" ACC_N "das",
-    "der" ACC_PL "die",
-    "derjenige" NOM_F "diejenige",
-    "derjenige" NOM_N "dasjenige",
-    "derjenige" NOM_PL "diejenigen",
-    "derjenige" GEN_M "desjenigen",
-    "derjenige" GEN_N "desjenigen",
-    "derjenige" DAT_M "demjenigen",
-    "derjenige" DAT_N "demjenigen",
-    "derjenige" DAT_PL "denjenigen",
-    "derjenige" ACC_M "denjenigen",
-    "derjenige" ACC_F "diejenige",
-    "derjenige" ACC_N "dasjenige",
-    "derjenige" ACC_PL "diejenigen",
-    "derselbe" NOM_F "dieselbe",
-    "derselbe" NOM_N "dasselbe",
-    "derselbe" NOM_PL "dieselben",
-    "derselbe" GEN_M "desselben",
-    "derselbe" GEN_N "desselben",
-    "derselbe" DAT_M "demselben",
-    "derselbe" DAT_N "demselben",
-    "derselbe" DAT_PL "denselben",
-    "derselbe" ACC_M "denselben",
-    "derselbe" ACC_F "dieselbe",
-    "derselbe" ACC_N "dasselbe",
-    "derselbe" ACC_PL "dieselben",
-    "eine" NOM_M "einer",
-    "eine" NOM_N "eines",
-    "eine" GEN_M "eines",
-    "eine" GEN_F "einer",
-    "eine" GEN_N "eines",
-    "eine" DAT_M "einem",
-    "eine" DAT_F "einer",
-    "eine" DAT_N "einem",
-    "eine" ACC_N "eines",
-    "einer" NOM_PL "einen",
-    "einer" GEN_PL "einen",
-    "einer" ACC_PL "einen",
-    "unßer" ACC_N "unßeres",
+/// 43 forms.
+pub(super) const IRREGULAR: Irregular<'static> = Irregular {
+    table: Cow::Borrowed(
+        r#"der	1	die
+der	2	das
+der	3	die
+der	13	die
+der	14	das
+der	15	die
+derjenige	1	diejenige
+derjenige	2	dasjenige
+derjenige	3	diejenigen
+derjenige	4	desjenigen
+derjenige	6	desjenigen
+derjenige	8	demjenigen
+derjenige	10	demjenigen
+derjenige	11	denjenigen
+derjenige	12	denjenigen
+derjenige	13	diejenige
+derjenige	14	dasjenige
+derjenige	15	diejenigen
+derselbe	1	dieselbe
+derselbe	2	dasselbe
+derselbe	3	dieselben
+derselbe	4	desselben
+derselbe	6	desselben
+derselbe	8	demselben
+derselbe	10	demselben
+derselbe	11	denselben
+derselbe	12	denselben
+derselbe	13	dieselbe
+derselbe	14	dasselbe
+derselbe	15	dieselben
+eine	0	einer
+eine	2	eines
+eine	4	eines
+eine	5	einer
+eine	6	eines
+eine	8	einem
+eine	9	einer
+eine	10	einem
+eine	14	eines
+einer	3	einen
+einer	7	einen
+einer	15	einen
+unßer	14	unßeres
+"#,
+    ),
 };

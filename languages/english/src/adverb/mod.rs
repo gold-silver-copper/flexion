@@ -10,8 +10,8 @@ mod spellings;
 
 pub use paradigms::Declension;
 
-use crate::*;
-use flexion::{Candidate, Grammar, Known, Reading};
+use flexion::Grammar;
+use flexion::{Candidate, Known, Reading};
 use std::borrow::Cow;
 
 /// Each cell's place in a paradigm.
@@ -37,8 +37,8 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
     accent: None,
     laws: None,
     spellings: Cow::Borrowed(spellings::SPELLINGS),
-    hidden: 0.0,
-    irregular: Cow::Borrowed(irregular::IRREGULAR),
+    marks: None,
+    irregular: irregular::IRREGULAR,
     smoothing: 2.0,
     sharpness: 4.0,
 };
@@ -47,23 +47,23 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Cell {
     /// An adverb in the given degree.
-    Form(Degree),
+    Form(crate::Degree),
 }
 
 impl Cell {
     /// Its place in a paradigm.
     pub const fn index(self) -> usize {
         let cell = match self {
-            Cell::Form(Degree::Positive) => cell::ADVERB_POS,
-            Cell::Form(Degree::Comparative) => cell::ADVERB_COMP,
-            Cell::Form(Degree::Superlative) => cell::ADVERB_SUP,
+            Cell::Form(crate::Degree::Positive) => cell::ADVERB_POS,
+            Cell::Form(crate::Degree::Comparative) => cell::ADVERB_COMP,
+            Cell::Form(crate::Degree::Superlative) => cell::ADVERB_SUP,
         };
         cell as usize
     }
 }
 
-impl From<Degree> for Cell {
-    fn from(degree: Degree) -> Self {
+impl From<crate::Degree> for Cell {
+    fn from(degree: crate::Degree) -> Self {
         Cell::Form(degree)
     }
 }

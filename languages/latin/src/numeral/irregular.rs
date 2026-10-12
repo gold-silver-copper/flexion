@@ -1,14 +1,19 @@
-//! The dictionary's forms no declension gives, as it writes them: `(word, cell,
-//! form)`, sorted. They are the answer for that word and cell.
+//! The dictionary's forms no declension gives, as it writes them: a line per form,
+//! the word, its cell's number (see `super::cell`) and the form, sorted by word
+//! and cell. They are the answer for that word and cell.
 
-use super::cell::*;
+use flexion::Irregular;
 use std::borrow::Cow;
 
-pub(super) static IRREGULAR: &[(Cow<'static, str>, u16, Cow<'static, str>)] = flexion::irregular! {
-    "unus" GEN_M_SG "ūnīus",
-    "unus" GEN_F_SG "ūnīus",
-    "unus" GEN_N_SG "ūnīus",
-    "unus" DAT_M_SG "ūnī",
-    "unus" DAT_F_SG "ūnī",
-    "unus" DAT_N_SG "ūnī",
+/// 6 forms.
+pub(super) const IRREGULAR: Irregular<'static> = Irregular {
+    table: Cow::Borrowed(
+        r#"unus	6	ūnīus
+unus	8	ūnīus
+unus	10	ūnīus
+unus	12	ūnī
+unus	14	ūnī
+unus	16	ūnī
+"#,
+    ),
 };

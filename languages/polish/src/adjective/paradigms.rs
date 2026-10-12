@@ -151,122 +151,131 @@ macro_rules! declension {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `wolny`: 3,092 words.
+    /// Like `wolny`: 4,032 words.
     Wolny,
-    /// Like `słaby`: 2,420 words.
+    /// Like `słaby`: 2,935 words.
     Słaby,
-    /// Like `lekki`: 1,184 words.
+    /// Like `lekki`: 1,304 words.
     Lekki,
-    /// Like `ciężki`: 530 words.
-    Ciężki,
-    /// Like `pierwszy`: 527 words.
+    /// Like `pierwszy`: 798 words.
     Pierwszy,
-    /// Like `herbaciany`: 520 words.
+    /// Like `herbaciany`: 644 words.
     Herbaciany,
-    /// Like `stępujący`: 508 words.
-    Stępujący,
-    /// Like `jarzony`: 368 words.
-    Jarzony,
-    /// Like `jęczy`: 351 words.
-    Jęczy,
-    /// Like `otwarty`: 331 words.
+    /// Like `ciężki`: 588 words.
+    Ciężki,
+    /// Like `palący`: 584 words.
+    Palący,
+    /// Like `otwarty`: 456 words.
     Otwarty,
-    /// Like `prosty`: 191 words.
-    Prosty,
-    /// Like `odpowiedni`: 156 words.
+    /// Like `uczulony`: 440 words.
+    Uczulony,
+    /// Like `zajęczy`: 393 words.
+    Zajęczy,
+    /// Like `odpowiedni`: 221 words.
     Odpowiedni,
-    /// Like `mały`: 110 words.
+    /// Like `prosty`: 217 words.
+    Prosty,
+    /// Like `mały`: 136 words.
     Mały,
-    /// Like `mdły`: 100 words.
-    Mdły,
-    /// Like `drugi`: 31 words.
+    /// Like `stały`: 129 words.
+    Stały,
+    /// Like `drugi`: 49 words.
     Drugi,
+    /// Like `jasny`: 38 words.
+    Jasny,
+    /// Like `głęboki`: 30 words.
+    Głęboki,
     /// Like `normalny`: 27 words.
     Normalny,
-    /// Like `jasny`: 25 words.
-    Jasny,
-    /// Like `boli`: 24 words.
-    Boli,
-    /// Like `głęboki`: 22 words.
-    Głęboki,
-    /// Like `dobry`: 22 words.
-    Dobry,
-    /// Like `ścisły`: 15 words.
+    /// Like `ścisły`: 26 words.
     Ścisły,
+    /// Like `soboli`: 25 words.
+    Soboli,
+    /// Like `dobry`: 23 words.
+    Dobry,
+    /// Like `głuchy`: 16 words.
+    Głuchy,
+    /// Like `młody`: 14 words.
+    Młody,
     /// Like `agresywny`: 14 words.
     Agresywny,
-    /// Like `młody`: 13 words.
-    Młody,
-    /// Like `głuchy`: 11 words.
-    Głuchy,
-    /// Like `stary`: 10 words.
+    /// Like `stary`: 12 words.
     Stary,
-    /// Like `głupi`: 10 words.
+    /// Like `głupi`: 12 words.
     Głupi,
+    /// Like `namolny`: 7 words.
+    Namolny,
+    /// Like `zwięzły`: 7 words.
+    Zwięzły,
     /// Like `nowy`: 6 words.
     Nowy,
-    /// Like `zwięzły`: 6 words.
-    Zwięzły,
-    /// Like `molny`: 6 words.
-    Molny,
-    /// Like `rani`: 5 words.
-    Rani,
-    /// Like `żyzny`: 4 words.
+    /// Like `barani`: 5 words.
+    Barani,
+    /// Like `żyzny`: 5 words.
     Żyzny,
+    /// Like `wart`: 4 words.
+    Wart,
+    /// Like `wązki`: 4 words.
+    Wązki,
     /// Like `jawny`: 4 words.
     Jawny,
     /// Like `rad`: 4 words.
     Rad,
-    /// Like `wart`: 3 words.
-    Wart,
     /// Like `jaskrawy`: 3 words.
     Jaskrawy,
+    /// Like `wielki`: 3 words.
+    Wielki,
+    /// Like `daleki`: 3 words.
+    Daleki,
     /// Like `blady`: 3 words.
     Blady,
-    /// Like `wązki`: 3 words.
-    Wązki,
+    /// Like `niedobry`: 3 words.
+    Niedobry,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 37] = [
+    pub const ALL: [Declension; 40] = [
         Declension::Wolny,
         Declension::Słaby,
         Declension::Lekki,
-        Declension::Ciężki,
         Declension::Pierwszy,
         Declension::Herbaciany,
-        Declension::Stępujący,
-        Declension::Jarzony,
-        Declension::Jęczy,
+        Declension::Ciężki,
+        Declension::Palący,
         Declension::Otwarty,
-        Declension::Prosty,
+        Declension::Uczulony,
+        Declension::Zajęczy,
         Declension::Odpowiedni,
+        Declension::Prosty,
         Declension::Mały,
-        Declension::Mdły,
+        Declension::Stały,
         Declension::Drugi,
-        Declension::Normalny,
         Declension::Jasny,
-        Declension::Boli,
         Declension::Głęboki,
-        Declension::Dobry,
+        Declension::Normalny,
         Declension::Ścisły,
-        Declension::Agresywny,
-        Declension::Młody,
+        Declension::Soboli,
+        Declension::Dobry,
         Declension::Głuchy,
+        Declension::Młody,
+        Declension::Agresywny,
         Declension::Stary,
         Declension::Głupi,
-        Declension::Nowy,
+        Declension::Namolny,
         Declension::Zwięzły,
-        Declension::Molny,
-        Declension::Rani,
+        Declension::Nowy,
+        Declension::Barani,
         Declension::Żyzny,
+        Declension::Wart,
+        Declension::Wązki,
         Declension::Jawny,
         Declension::Rad,
-        Declension::Wart,
         Declension::Jaskrawy,
+        Declension::Wielki,
+        Declension::Daleki,
         Declension::Blady,
-        Declension::Wązki,
+        Declension::Niedobry,
     ];
 
     /// Its table.
@@ -284,9 +293,9 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
-    // Wolny: 3,092 words (wolny, bezwstydny, homoseksualny, uszny, czerwony, zielony).
-    declension!("wolny", 3092, "~y";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 40] = [
+    // Wolny: 4,032 words (wolny, jenny, bezwstydny, homoseksualny, uszny, niechlujny).
+    declension!("wolny", 4032, "~y";
         nominative_masculine: "~y", "~y";
         nominative_feminine: "~a", "~a";
         nominative_neuter: "~e", "~e";
@@ -320,8 +329,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         comparative: "~iejszy";
         superlative: "naj~iejszy";
     ),
-    // Słaby: 2,420 words (różowy, brązowy, snowy, fioletowy, purpurowy, turkusowy).
-    declension!("słaby", 2420, "~y";
+    // Słaby: 2,935 words (międzynarodowy, różowy, brązowy, snowy, pomarańczowy, fioletowy).
+    declension!("słaby", 2935, "~y";
         nominative_masculine: "~y", "~y";
         nominative_feminine: "~a", "~a";
         nominative_neuter: "~e", "~e";
@@ -355,8 +364,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         comparative: "~szy";
         superlative: "naj~szy";
     ),
-    // Lekki: 1,184 words (norweski, ruski, francuski, wszelki, piski, etruski).
-    declension!("lekki", 1184, "~~ki";
+    // Lekki: 1,304 words (polski, rosyjski, norweski, ruski, łaciński, morski).
+    declension!("lekki", 1304, "~~ki";
         nominative_masculine: "~~ki", "~~ki";
         nominative_feminine: "~~ka", "~~ka";
         nominative_neuter: "~~kie", "~~kie";
@@ -390,43 +399,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         comparative: "~ż~zy";
         superlative: "naj~ż~zy";
     ),
-    // Ciężki: 530 words (słodki, jaki, niderlandzki, ciężki, grecki, islandzki).
-    declension!("ciężki", 530, "~ki";
-        nominative_masculine: "~ki", "~ki";
-        nominative_feminine: "~ka", "~ka";
-        nominative_neuter: "~kie", "~kie";
-        nominative_virile: "~cy", "~cy";
-        nominative_nonvirile: "~kie", "~kie";
-        genitive_masculine: "~kiego", "~kiego";
-        genitive_feminine: "~kiej", "~kiej";
-        genitive_neuter: "~kiego", "~kiego";
-        genitive_virile: "~kich", "~kich";
-        genitive_nonvirile: "~kich", "~kich";
-        dative_masculine: "~kiemu", "~kiemu";
-        dative_feminine: "~kiej", "~kiej";
-        dative_neuter: "~kiemu", "~kiemu";
-        dative_virile: "~kim", "~kim";
-        dative_nonvirile: "~kim", "~kim";
-        accusative_masculine: "~kiego", "~ki";
-        accusative_feminine: "~ką", "~ką";
-        accusative_neuter: "~kie", "~kie";
-        accusative_virile: "~kich", "~kich";
-        accusative_nonvirile: "~kie", "~kie";
-        instrumental_masculine: "~kim", "~kim";
-        instrumental_feminine: "~ką", "~ką";
-        instrumental_neuter: "~kim", "~kim";
-        instrumental_virile: "~kimi", "~kimi";
-        instrumental_nonvirile: "~kimi", "~kimi";
-        locative_masculine: "~kim", "~kim";
-        locative_feminine: "~kiej", "~kiej";
-        locative_neuter: "~kim", "~kim";
-        locative_virile: "~kich", "~kich";
-        locative_nonvirile: "~kich", "~kich";
-        comparative: "~szy";
-        superlative: "naj~szy";
-    ),
-    // Pierwszy: 527 words (pierwszy, pieszy, lepszy, teraźniejszy, rychlejszy, tańszy).
-    declension!("pierwszy", 527, "~zy";
+    // Pierwszy: 798 words (pierwszy, pieszy, lepszy, teraźniejszy, rychlejszy, najrychlejszy).
+    declension!("pierwszy", 798, "~zy";
         nominative_masculine: "~zy", "~zy";
         nominative_feminine: "~za", "~za";
         nominative_neuter: "~ze", "~ze";
@@ -460,8 +434,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         comparative: "~iejszy";
         superlative: "naj~iejszy";
     ),
-    // Herbaciany: 520 words (dany, miedziany, pijany, słony, kukurydziany, owsiany).
-    declension!("herbaciany", 520, "~ny";
+    // Herbaciany: 644 words (dany, nieprzygotowany, miedziany, przygotowany, pijany, słony).
+    declension!("herbaciany", 644, "~ny";
         nominative_masculine: "~ny", "~ny";
         nominative_feminine: "~na", "~na";
         nominative_neuter: "~ne", "~ne";
@@ -495,8 +469,43 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         comparative: "~ńszy";
         superlative: "naj~ńszy";
     ),
-    // Stępujący: 508 words (mulczujący, lśniący, gorący, śpiący, chcący, muszący).
-    declension!("stępujący", 508, "~ący";
+    // Ciężki: 588 words (słodki, jaki, malutki, niderlandzki, niemiecki, ciężki).
+    declension!("ciężki", 588, "~ki";
+        nominative_masculine: "~ki", "~ki";
+        nominative_feminine: "~ka", "~ka";
+        nominative_neuter: "~kie", "~kie";
+        nominative_virile: "~cy", "~cy";
+        nominative_nonvirile: "~kie", "~kie";
+        genitive_masculine: "~kiego", "~kiego";
+        genitive_feminine: "~kiej", "~kiej";
+        genitive_neuter: "~kiego", "~kiego";
+        genitive_virile: "~kich", "~kich";
+        genitive_nonvirile: "~kich", "~kich";
+        dative_masculine: "~kiemu", "~kiemu";
+        dative_feminine: "~kiej", "~kiej";
+        dative_neuter: "~kiemu", "~kiemu";
+        dative_virile: "~kim", "~kim";
+        dative_nonvirile: "~kim", "~kim";
+        accusative_masculine: "~kiego", "~ki";
+        accusative_feminine: "~ką", "~ką";
+        accusative_neuter: "~kie", "~kie";
+        accusative_virile: "~kich", "~kich";
+        accusative_nonvirile: "~kie", "~kie";
+        instrumental_masculine: "~kim", "~kim";
+        instrumental_feminine: "~ką", "~ką";
+        instrumental_neuter: "~kim", "~kim";
+        instrumental_virile: "~kimi", "~kimi";
+        instrumental_nonvirile: "~kimi", "~kimi";
+        locative_masculine: "~kim", "~kim";
+        locative_feminine: "~kiej", "~kiej";
+        locative_neuter: "~kim", "~kim";
+        locative_virile: "~kich", "~kich";
+        locative_nonvirile: "~kich", "~kich";
+        comparative: "~szy";
+        superlative: "naj~szy";
+    ),
+    // Palący: 584 words (mulczujący, lśniący, gorący, bieżący, śpiący, wystarczający).
+    declension!("palący", 584, "~ący";
         nominative_masculine: "~ący", "~ący";
         nominative_feminine: "~ąca", "~ąca";
         nominative_neuter: "~ące", "~ące";
@@ -530,78 +539,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         comparative: "~ętszy";
         superlative: "naj~ętszy";
     ),
-    // Jarzony: 368 words (zmęczony, ograniczony, uzależniony, ulubiony, umięśniony, uszkodzony).
-    declension!("jarzony", 368, "~ony";
-        nominative_masculine: "~ony", "~ony";
-        nominative_feminine: "~ona", "~ona";
-        nominative_neuter: "~one", "~one";
-        nominative_virile: "~eni", "~eni";
-        nominative_nonvirile: "~one", "~one";
-        genitive_masculine: "~onego", "~onego";
-        genitive_feminine: "~onej", "~onej";
-        genitive_neuter: "~onego", "~onego";
-        genitive_virile: "~onych", "~onych";
-        genitive_nonvirile: "~onych", "~onych";
-        dative_masculine: "~onemu", "~onemu";
-        dative_feminine: "~onej", "~onej";
-        dative_neuter: "~onemu", "~onemu";
-        dative_virile: "~onym", "~onym";
-        dative_nonvirile: "~onym", "~onym";
-        accusative_masculine: "~onego", "~ony";
-        accusative_feminine: "~oną", "~oną";
-        accusative_neuter: "~one", "~one";
-        accusative_virile: "~onych", "~onych";
-        accusative_nonvirile: "~one", "~one";
-        instrumental_masculine: "~onym", "~onym";
-        instrumental_feminine: "~oną", "~oną";
-        instrumental_neuter: "~onym", "~onym";
-        instrumental_virile: "~onymi", "~onymi";
-        instrumental_nonvirile: "~onymi", "~onymi";
-        locative_masculine: "~onym", "~onym";
-        locative_feminine: "~onej", "~onej";
-        locative_neuter: "~onym", "~onym";
-        locative_virile: "~onych", "~onych";
-        locative_nonvirile: "~onych", "~onych";
-        comparative: "~eńszy";
-        superlative: "naj~eńszy";
-    ),
-    // Jęczy: 351 words (zwierzęcy, obcy, świeży, uroczy, tajemniczy, dziecięcy).
-    declension!("jęczy", 351, "~y";
-        nominative_masculine: "~y", "~y";
-        nominative_feminine: "~a", "~a";
-        nominative_neuter: "~e", "~e";
-        nominative_virile: "~y", "~y";
-        nominative_nonvirile: "~e", "~e";
-        genitive_masculine: "~ego", "~ego";
-        genitive_feminine: "~ej", "~ej";
-        genitive_neuter: "~ego", "~ego";
-        genitive_virile: "~ych", "~ych";
-        genitive_nonvirile: "~ych", "~ych";
-        dative_masculine: "~emu", "~emu";
-        dative_feminine: "~ej", "~ej";
-        dative_neuter: "~emu", "~emu";
-        dative_virile: "~ym", "~ym";
-        dative_nonvirile: "~ym", "~ym";
-        accusative_masculine: "~ego", "~y";
-        accusative_feminine: "~ą", "~ą";
-        accusative_neuter: "~e", "~e";
-        accusative_virile: "~ych", "~ych";
-        accusative_nonvirile: "~e", "~e";
-        instrumental_masculine: "~ym", "~ym";
-        instrumental_feminine: "~ą", "~ą";
-        instrumental_neuter: "~ym", "~ym";
-        instrumental_virile: "~ymi", "~ymi";
-        instrumental_nonvirile: "~ymi", "~ymi";
-        locative_masculine: "~ym", "~ym";
-        locative_feminine: "~ej", "~ej";
-        locative_neuter: "~ym", "~ym";
-        locative_virile: "~ych", "~ych";
-        locative_nonvirile: "~ych", "~ych";
-        comparative: "~szy";
-        superlative: "naj~szy";
-    ),
-    // Otwarty: 331 words (złoty, pity, żółty, luty, syty, otwarty).
-    declension!("otwarty", 331, "~ty";
+    // Otwarty: 456 words (party, złoty, pity, żółty, luty, syty).
+    declension!("otwarty", 456, "~ty";
         nominative_masculine: "~ty", "~ty";
         nominative_feminine: "~ta", "~ta";
         nominative_neuter: "~te", "~te";
@@ -635,43 +574,78 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         comparative: "~tszy";
         superlative: "naj~tszy";
     ),
-    // Prosty: 191 words (prosty, pusty, przezroczysty, czternasty, piętnasty, dziewiętnasty).
-    declension!("prosty", 191, "~sty";
-        nominative_masculine: "~sty", "~sty";
-        nominative_feminine: "~sta", "~sta";
-        nominative_neuter: "~ste", "~ste";
-        nominative_virile: "~ści", "~ści";
-        nominative_nonvirile: "~ste", "~ste";
-        genitive_masculine: "~stego", "~stego";
-        genitive_feminine: "~stej", "~stej";
-        genitive_neuter: "~stego", "~stego";
-        genitive_virile: "~stych", "~stych";
-        genitive_nonvirile: "~stych", "~stych";
-        dative_masculine: "~stemu", "~stemu";
-        dative_feminine: "~stej", "~stej";
-        dative_neuter: "~stemu", "~stemu";
-        dative_virile: "~stym", "~stym";
-        dative_nonvirile: "~stym", "~stym";
-        accusative_masculine: "~stego", "~sty";
-        accusative_feminine: "~stą", "~stą";
-        accusative_neuter: "~ste", "~ste";
-        accusative_virile: "~stych", "~stych";
-        accusative_nonvirile: "~ste", "~ste";
-        instrumental_masculine: "~stym", "~stym";
-        instrumental_feminine: "~stą", "~stą";
-        instrumental_neuter: "~stym", "~stym";
-        instrumental_virile: "~stymi", "~stymi";
-        instrumental_nonvirile: "~stymi", "~stymi";
-        locative_masculine: "~stym", "~stym";
-        locative_feminine: "~stej", "~stej";
-        locative_neuter: "~stym", "~stym";
-        locative_virile: "~stych", "~stych";
-        locative_nonvirile: "~stych", "~stych";
-        comparative: "~stszy";
-        superlative: "naj~stszy";
+    // Uczulony: 440 words (spragniony, zmęczony, ograniczony, uzależniony, roztargniony, popierdolony).
+    declension!("uczulony", 440, "~ony";
+        nominative_masculine: "~ony", "~ony";
+        nominative_feminine: "~ona", "~ona";
+        nominative_neuter: "~one", "~one";
+        nominative_virile: "~eni", "~eni";
+        nominative_nonvirile: "~one", "~one";
+        genitive_masculine: "~onego", "~onego";
+        genitive_feminine: "~onej", "~onej";
+        genitive_neuter: "~onego", "~onego";
+        genitive_virile: "~onych", "~onych";
+        genitive_nonvirile: "~onych", "~onych";
+        dative_masculine: "~onemu", "~onemu";
+        dative_feminine: "~onej", "~onej";
+        dative_neuter: "~onemu", "~onemu";
+        dative_virile: "~onym", "~onym";
+        dative_nonvirile: "~onym", "~onym";
+        accusative_masculine: "~onego", "~ony";
+        accusative_feminine: "~oną", "~oną";
+        accusative_neuter: "~one", "~one";
+        accusative_virile: "~onych", "~onych";
+        accusative_nonvirile: "~one", "~one";
+        instrumental_masculine: "~onym", "~onym";
+        instrumental_feminine: "~oną", "~oną";
+        instrumental_neuter: "~onym", "~onym";
+        instrumental_virile: "~onymi", "~onymi";
+        instrumental_nonvirile: "~onymi", "~onymi";
+        locative_masculine: "~onym", "~onym";
+        locative_feminine: "~onej", "~onej";
+        locative_neuter: "~onym", "~onym";
+        locative_virile: "~onych", "~onych";
+        locative_nonvirile: "~onych", "~onych";
+        comparative: "~eńszy";
+        superlative: "naj~eńszy";
     ),
-    // Odpowiedni: 156 words (psi, babi, kuni, misi, osi, elfi).
-    declension!("odpowiedni", 156, "~";
+    // Zajęczy: 393 words (zwierzęcy, obcy, świeży, uroczy, tajemniczy, rolniczy).
+    declension!("zajęczy", 393, "~y";
+        nominative_masculine: "~y", "~y";
+        nominative_feminine: "~a", "~a";
+        nominative_neuter: "~e", "~e";
+        nominative_virile: "~y", "~y";
+        nominative_nonvirile: "~e", "~e";
+        genitive_masculine: "~ego", "~ego";
+        genitive_feminine: "~ej", "~ej";
+        genitive_neuter: "~ego", "~ego";
+        genitive_virile: "~ych", "~ych";
+        genitive_nonvirile: "~ych", "~ych";
+        dative_masculine: "~emu", "~emu";
+        dative_feminine: "~ej", "~ej";
+        dative_neuter: "~emu", "~emu";
+        dative_virile: "~ym", "~ym";
+        dative_nonvirile: "~ym", "~ym";
+        accusative_masculine: "~ego", "~y";
+        accusative_feminine: "~ą", "~ą";
+        accusative_neuter: "~e", "~e";
+        accusative_virile: "~ych", "~ych";
+        accusative_nonvirile: "~e", "~e";
+        instrumental_masculine: "~ym", "~ym";
+        instrumental_feminine: "~ą", "~ą";
+        instrumental_neuter: "~ym", "~ym";
+        instrumental_virile: "~ymi", "~ymi";
+        instrumental_nonvirile: "~ymi", "~ymi";
+        locative_masculine: "~ym", "~ym";
+        locative_feminine: "~ej", "~ej";
+        locative_neuter: "~ym", "~ym";
+        locative_virile: "~ych", "~ych";
+        locative_nonvirile: "~ych", "~ych";
+        comparative: "~szy";
+        superlative: "naj~szy";
+    ),
+    // Odpowiedni: 221 words (psi, babi, kuni, misi, osi, elfi).
+    declension!("odpowiedni", 221, "~";
         nominative_masculine: "~", "~";
         nominative_feminine: "~a", "~a";
         nominative_neuter: "~e", "~e";
@@ -705,43 +679,43 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         comparative: "~ejszy";
         superlative: "naj~ejszy";
     ),
-    // Mały: 110 words (miły, biały, mały, cały, zgniły, były).
-    declension!("mały", 110, "~ły";
-        nominative_masculine: "~ły", "~ły";
-        nominative_feminine: "~ła", "~ła";
-        nominative_neuter: "~łe", "~łe";
-        nominative_virile: "~li", "~li";
-        nominative_nonvirile: "~łe", "~łe";
-        genitive_masculine: "~łego", "~łego";
-        genitive_feminine: "~łej", "~łej";
-        genitive_neuter: "~łego", "~łego";
-        genitive_virile: "~łych", "~łych";
-        genitive_nonvirile: "~łych", "~łych";
-        dative_masculine: "~łemu", "~łemu";
-        dative_feminine: "~łej", "~łej";
-        dative_neuter: "~łemu", "~łemu";
-        dative_virile: "~łym", "~łym";
-        dative_nonvirile: "~łym", "~łym";
-        accusative_masculine: "~łego", "~ły";
-        accusative_feminine: "~łą", "~łą";
-        accusative_neuter: "~łe", "~łe";
-        accusative_virile: "~łych", "~łych";
-        accusative_nonvirile: "~łe", "~łe";
-        instrumental_masculine: "~łym", "~łym";
-        instrumental_feminine: "~łą", "~łą";
-        instrumental_neuter: "~łym", "~łym";
-        instrumental_virile: "~łymi", "~łymi";
-        instrumental_nonvirile: "~łymi", "~łymi";
-        locative_masculine: "~łym", "~łym";
-        locative_feminine: "~łej", "~łej";
-        locative_neuter: "~łym", "~łym";
-        locative_virile: "~łych", "~łych";
-        locative_nonvirile: "~łych", "~łych";
-        comparative: "~lszy";
-        superlative: "naj~lszy";
+    // Prosty: 217 words (prosty, pusty, przezroczysty, szósty, jedenasty, dwunasty).
+    declension!("prosty", 217, "~sty";
+        nominative_masculine: "~sty", "~sty";
+        nominative_feminine: "~sta", "~sta";
+        nominative_neuter: "~ste", "~ste";
+        nominative_virile: "~ści", "~ści";
+        nominative_nonvirile: "~ste", "~ste";
+        genitive_masculine: "~stego", "~stego";
+        genitive_feminine: "~stej", "~stej";
+        genitive_neuter: "~stego", "~stego";
+        genitive_virile: "~stych", "~stych";
+        genitive_nonvirile: "~stych", "~stych";
+        dative_masculine: "~stemu", "~stemu";
+        dative_feminine: "~stej", "~stej";
+        dative_neuter: "~stemu", "~stemu";
+        dative_virile: "~stym", "~stym";
+        dative_nonvirile: "~stym", "~stym";
+        accusative_masculine: "~stego", "~sty";
+        accusative_feminine: "~stą", "~stą";
+        accusative_neuter: "~ste", "~ste";
+        accusative_virile: "~stych", "~stych";
+        accusative_nonvirile: "~ste", "~ste";
+        instrumental_masculine: "~stym", "~stym";
+        instrumental_feminine: "~stą", "~stą";
+        instrumental_neuter: "~stym", "~stym";
+        instrumental_virile: "~stymi", "~stymi";
+        instrumental_nonvirile: "~stymi", "~stymi";
+        locative_masculine: "~stym", "~stym";
+        locative_feminine: "~stej", "~stej";
+        locative_neuter: "~stym", "~stym";
+        locative_virile: "~stych", "~stych";
+        locative_nonvirile: "~stych", "~stych";
+        comparative: "~stszy";
+        superlative: "naj~stszy";
     ),
-    // Mdły: 100 words (ciepły, oziębły, okrągły, goły, zwykły, szczupły).
-    declension!("mdły", 100, "~ły";
+    // Mały: 136 words (ciepły, biały, oziębły, prostopadły, równoległy, mały).
+    declension!("mały", 136, "~ły";
         nominative_masculine: "~ły", "~ły";
         nominative_feminine: "~ła", "~ła";
         nominative_neuter: "~łe", "~łe";
@@ -775,8 +749,43 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         comparative: "~lejszy";
         superlative: "naj~lejszy";
     ),
-    // Drugi: 31 words (drogi, nagi, drugi, długi, mnogi, wrogi).
-    declension!("drugi", 31, "~gi";
+    // Stały: 129 words (miły, cały, zgniły, spleśniały, były, dojrzały).
+    declension!("stały", 129, "~ły";
+        nominative_masculine: "~ły", "~ły";
+        nominative_feminine: "~ła", "~ła";
+        nominative_neuter: "~łe", "~łe";
+        nominative_virile: "~li", "~li";
+        nominative_nonvirile: "~łe", "~łe";
+        genitive_masculine: "~łego", "~łego";
+        genitive_feminine: "~łej", "~łej";
+        genitive_neuter: "~łego", "~łego";
+        genitive_virile: "~łych", "~łych";
+        genitive_nonvirile: "~łych", "~łych";
+        dative_masculine: "~łemu", "~łemu";
+        dative_feminine: "~łej", "~łej";
+        dative_neuter: "~łemu", "~łemu";
+        dative_virile: "~łym", "~łym";
+        dative_nonvirile: "~łym", "~łym";
+        accusative_masculine: "~łego", "~ły";
+        accusative_feminine: "~łą", "~łą";
+        accusative_neuter: "~łe", "~łe";
+        accusative_virile: "~łych", "~łych";
+        accusative_nonvirile: "~łe", "~łe";
+        instrumental_masculine: "~łym", "~łym";
+        instrumental_feminine: "~łą", "~łą";
+        instrumental_neuter: "~łym", "~łym";
+        instrumental_virile: "~łymi", "~łymi";
+        instrumental_nonvirile: "~łymi", "~łymi";
+        locative_masculine: "~łym", "~łym";
+        locative_feminine: "~łej", "~łej";
+        locative_neuter: "~łym", "~łym";
+        locative_virile: "~łych", "~łych";
+        locative_nonvirile: "~łych", "~łych";
+        comparative: "~lszy";
+        superlative: "naj~lszy";
+    ),
+    // Drugi: 49 words (drogi, nagi, drugi, długi, mnogi, wrogi).
+    declension!("drugi", 49, "~gi";
         nominative_masculine: "~gi", "~gi";
         nominative_feminine: "~ga", "~ga";
         nominative_neuter: "~gie", "~gie";
@@ -809,6 +818,76 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         locative_nonvirile: "~gich", "~gich";
         comparative: "~ższy";
         superlative: "naj~ższy";
+    ),
+    // Jasny: 38 words (ciasny, własny, jasny, równoczesny, jednoczesny, wczesny).
+    declension!("jasny", 38, "~s~y";
+        nominative_masculine: "~s~y", "~s~y";
+        nominative_feminine: "~s~a", "~s~a";
+        nominative_neuter: "~s~e", "~s~e";
+        nominative_virile: "~ś~i", "~ś~i";
+        nominative_nonvirile: "~s~e", "~s~e";
+        genitive_masculine: "~s~ego", "~s~ego";
+        genitive_feminine: "~s~ej", "~s~ej";
+        genitive_neuter: "~s~ego", "~s~ego";
+        genitive_virile: "~s~ych", "~s~ych";
+        genitive_nonvirile: "~s~ych", "~s~ych";
+        dative_masculine: "~s~emu", "~s~emu";
+        dative_feminine: "~s~ej", "~s~ej";
+        dative_neuter: "~s~emu", "~s~emu";
+        dative_virile: "~s~ym", "~s~ym";
+        dative_nonvirile: "~s~ym", "~s~ym";
+        accusative_masculine: "~s~ego", "~s~y";
+        accusative_feminine: "~s~ą", "~s~ą";
+        accusative_neuter: "~s~e", "~s~e";
+        accusative_virile: "~s~ych", "~s~ych";
+        accusative_nonvirile: "~s~e", "~s~e";
+        instrumental_masculine: "~s~ym", "~s~ym";
+        instrumental_feminine: "~s~ą", "~s~ą";
+        instrumental_neuter: "~s~ym", "~s~ym";
+        instrumental_virile: "~s~ymi", "~s~ymi";
+        instrumental_nonvirile: "~s~ymi", "~s~ymi";
+        locative_masculine: "~s~ym", "~s~ym";
+        locative_feminine: "~s~ej", "~s~ej";
+        locative_neuter: "~s~ym", "~s~ym";
+        locative_virile: "~s~ych", "~s~ych";
+        locative_nonvirile: "~s~ych", "~s~ych";
+        comparative: "~ś~iejszy";
+        superlative: "naj~ś~iejszy";
+    ),
+    // Głęboki: 30 words (szeroki, głęboki, jednooki, zielonooki, bystrooki, skośnooki).
+    declension!("głęboki", 30, "~oki";
+        nominative_masculine: "~oki", "~oki";
+        nominative_feminine: "~oka", "~oka";
+        nominative_neuter: "~okie", "~okie";
+        nominative_virile: "~ocy", "~ocy";
+        nominative_nonvirile: "~okie", "~okie";
+        genitive_masculine: "~okiego", "~okiego";
+        genitive_feminine: "~okiej", "~okiej";
+        genitive_neuter: "~okiego", "~okiego";
+        genitive_virile: "~okich", "~okich";
+        genitive_nonvirile: "~okich", "~okich";
+        dative_masculine: "~okiemu", "~okiemu";
+        dative_feminine: "~okiej", "~okiej";
+        dative_neuter: "~okiemu", "~okiemu";
+        dative_virile: "~okim", "~okim";
+        dative_nonvirile: "~okim", "~okim";
+        accusative_masculine: "~okiego", "~oki";
+        accusative_feminine: "~oką", "~oką";
+        accusative_neuter: "~okie", "~okie";
+        accusative_virile: "~okich", "~okich";
+        accusative_nonvirile: "~okie", "~okie";
+        instrumental_masculine: "~okim", "~okim";
+        instrumental_feminine: "~oką", "~oką";
+        instrumental_neuter: "~okim", "~okim";
+        instrumental_virile: "~okimi", "~okimi";
+        instrumental_nonvirile: "~okimi", "~okimi";
+        locative_masculine: "~okim", "~okim";
+        locative_feminine: "~okiej", "~okiej";
+        locative_neuter: "~okim", "~okim";
+        locative_virile: "~okich", "~okich";
+        locative_nonvirile: "~okich", "~okich";
+        comparative: "~szy";
+        superlative: "naj~szy";
     ),
     // Normalny: 27 words (nudny, niebezpieczny, neutralny, normalny, niezbędny, nikczemny).
     declension!("normalny", 27, "~~y";
@@ -845,43 +924,43 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         comparative: "~~iejszy";
         superlative: "~ajn~iejszy";
     ),
-    // Jasny: 25 words (ciasny, własny, jasny, wczesny, współczesny, bolesny).
-    declension!("jasny", 25, "~s~y";
-        nominative_masculine: "~s~y", "~s~y";
-        nominative_feminine: "~s~a", "~s~a";
-        nominative_neuter: "~s~e", "~s~e";
-        nominative_virile: "~ś~i", "~ś~i";
-        nominative_nonvirile: "~s~e", "~s~e";
-        genitive_masculine: "~s~ego", "~s~ego";
-        genitive_feminine: "~s~ej", "~s~ej";
-        genitive_neuter: "~s~ego", "~s~ego";
-        genitive_virile: "~s~ych", "~s~ych";
-        genitive_nonvirile: "~s~ych", "~s~ych";
-        dative_masculine: "~s~emu", "~s~emu";
-        dative_feminine: "~s~ej", "~s~ej";
-        dative_neuter: "~s~emu", "~s~emu";
-        dative_virile: "~s~ym", "~s~ym";
-        dative_nonvirile: "~s~ym", "~s~ym";
-        accusative_masculine: "~s~ego", "~s~y";
-        accusative_feminine: "~s~ą", "~s~ą";
-        accusative_neuter: "~s~e", "~s~e";
-        accusative_virile: "~s~ych", "~s~ych";
-        accusative_nonvirile: "~s~e", "~s~e";
-        instrumental_masculine: "~s~ym", "~s~ym";
-        instrumental_feminine: "~s~ą", "~s~ą";
-        instrumental_neuter: "~s~ym", "~s~ym";
-        instrumental_virile: "~s~ymi", "~s~ymi";
-        instrumental_nonvirile: "~s~ymi", "~s~ymi";
-        locative_masculine: "~s~ym", "~s~ym";
-        locative_feminine: "~s~ej", "~s~ej";
-        locative_neuter: "~s~ym", "~s~ym";
-        locative_virile: "~s~ych", "~s~ych";
-        locative_nonvirile: "~s~ych", "~s~ych";
-        comparative: "~ś~iejszy";
-        superlative: "naj~ś~iejszy";
+    // Ścisły: 26 words (dorosły, ścisły, wzniosły, wklęsły, rosły, wyniosły).
+    declension!("ścisły", 26, "~sły";
+        nominative_masculine: "~sły", "~sły";
+        nominative_feminine: "~sła", "~sła";
+        nominative_neuter: "~słe", "~słe";
+        nominative_virile: "~śli", "~śli";
+        nominative_nonvirile: "~słe", "~słe";
+        genitive_masculine: "~słego", "~słego";
+        genitive_feminine: "~słej", "~słej";
+        genitive_neuter: "~słego", "~słego";
+        genitive_virile: "~słych", "~słych";
+        genitive_nonvirile: "~słych", "~słych";
+        dative_masculine: "~słemu", "~słemu";
+        dative_feminine: "~słej", "~słej";
+        dative_neuter: "~słemu", "~słemu";
+        dative_virile: "~słym", "~słym";
+        dative_nonvirile: "~słym", "~słym";
+        accusative_masculine: "~słego", "~sły";
+        accusative_feminine: "~słą", "~słą";
+        accusative_neuter: "~słe", "~słe";
+        accusative_virile: "~słych", "~słych";
+        accusative_nonvirile: "~słe", "~słe";
+        instrumental_masculine: "~słym", "~słym";
+        instrumental_feminine: "~słą", "~słą";
+        instrumental_neuter: "~słym", "~słym";
+        instrumental_virile: "~słymi", "~słymi";
+        instrumental_nonvirile: "~słymi", "~słymi";
+        locative_masculine: "~słym", "~słym";
+        locative_feminine: "~słej", "~słej";
+        locative_neuter: "~słym", "~słym";
+        locative_virile: "~słych", "~słych";
+        locative_nonvirile: "~słych", "~słych";
+        comparative: "~ślejszy";
+        superlative: "naj~ślejszy";
     ),
-    // Boli: 24 words (orli, muli, ośli, krokodyli, pszczeli, diabli).
-    declension!("boli", 24, "~i";
+    // Soboli: 25 words (orli, muli, karli, ośli, krokodyli, pszczeli).
+    declension!("soboli", 25, "~i";
         nominative_masculine: "~i", "~i";
         nominative_feminine: "~a", "~a";
         nominative_neuter: "~e", "~e";
@@ -915,43 +994,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         comparative: "~szy";
         superlative: "naj~szy";
     ),
-    // Głęboki: 22 words (szeroki, głęboki, zielonooki, bystrooki, pięknooki, czarnooki).
-    declension!("głęboki", 22, "~oki";
-        nominative_masculine: "~oki", "~oki";
-        nominative_feminine: "~oka", "~oka";
-        nominative_neuter: "~okie", "~okie";
-        nominative_virile: "~ocy", "~ocy";
-        nominative_nonvirile: "~okie", "~okie";
-        genitive_masculine: "~okiego", "~okiego";
-        genitive_feminine: "~okiej", "~okiej";
-        genitive_neuter: "~okiego", "~okiego";
-        genitive_virile: "~okich", "~okich";
-        genitive_nonvirile: "~okich", "~okich";
-        dative_masculine: "~okiemu", "~okiemu";
-        dative_feminine: "~okiej", "~okiej";
-        dative_neuter: "~okiemu", "~okiemu";
-        dative_virile: "~okim", "~okim";
-        dative_nonvirile: "~okim", "~okim";
-        accusative_masculine: "~okiego", "~oki";
-        accusative_feminine: "~oką", "~oką";
-        accusative_neuter: "~okie", "~okie";
-        accusative_virile: "~okich", "~okich";
-        accusative_nonvirile: "~okie", "~okie";
-        instrumental_masculine: "~okim", "~okim";
-        instrumental_feminine: "~oką", "~oką";
-        instrumental_neuter: "~okim", "~okim";
-        instrumental_virile: "~okimi", "~okimi";
-        instrumental_nonvirile: "~okimi", "~okimi";
-        locative_masculine: "~okim", "~okim";
-        locative_feminine: "~okiej", "~okiej";
-        locative_neuter: "~okim", "~okim";
-        locative_virile: "~okich", "~okich";
-        locative_nonvirile: "~okich", "~okich";
-        comparative: "~szy";
-        superlative: "naj~szy";
-    ),
-    // Dobry: 22 words (bury, dobry, ostry, mądry, chrobry, bystry).
-    declension!("dobry", 22, "~y";
+    // Dobry: 23 words (bury, dobry, mokry, ostry, mądry, chrobry).
+    declension!("dobry", 23, "~y";
         nominative_masculine: "~y", "~y";
         nominative_feminine: "~a", "~a";
         nominative_neuter: "~e", "~e";
@@ -985,40 +1029,75 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         comparative: "~zejszy";
         superlative: "naj~zejszy";
     ),
-    // Ścisły: 15 words (dorosły, ścisły, wzniosły, wklęsły, rosły, wyniosły).
-    declension!("ścisły", 15, "~sły";
-        nominative_masculine: "~sły", "~sły";
-        nominative_feminine: "~sła", "~sła";
-        nominative_neuter: "~słe", "~słe";
-        nominative_virile: "~śli", "~śli";
-        nominative_nonvirile: "~słe", "~słe";
-        genitive_masculine: "~słego", "~słego";
-        genitive_feminine: "~słej", "~słej";
-        genitive_neuter: "~słego", "~słego";
-        genitive_virile: "~słych", "~słych";
-        genitive_nonvirile: "~słych", "~słych";
-        dative_masculine: "~słemu", "~słemu";
-        dative_feminine: "~słej", "~słej";
-        dative_neuter: "~słemu", "~słemu";
-        dative_virile: "~słym", "~słym";
-        dative_nonvirile: "~słym", "~słym";
-        accusative_masculine: "~słego", "~sły";
-        accusative_feminine: "~słą", "~słą";
-        accusative_neuter: "~słe", "~słe";
-        accusative_virile: "~słych", "~słych";
-        accusative_nonvirile: "~słe", "~słe";
-        instrumental_masculine: "~słym", "~słym";
-        instrumental_feminine: "~słą", "~słą";
-        instrumental_neuter: "~słym", "~słym";
-        instrumental_virile: "~słymi", "~słymi";
-        instrumental_nonvirile: "~słymi", "~słymi";
-        locative_masculine: "~słym", "~słym";
-        locative_feminine: "~słej", "~słej";
-        locative_neuter: "~słym", "~słym";
-        locative_virile: "~słych", "~słych";
-        locative_nonvirile: "~słych", "~słych";
-        comparative: "~ślejszy";
-        superlative: "naj~ślejszy";
+    // Głuchy: 16 words (cichy, suchy, głuchy, kruchy, lichy, płochy).
+    declension!("głuchy", 16, "~chy";
+        nominative_masculine: "~chy", "~chy";
+        nominative_feminine: "~cha", "~cha";
+        nominative_neuter: "~che", "~che";
+        nominative_virile: "~si", "~si";
+        nominative_nonvirile: "~che", "~che";
+        genitive_masculine: "~chego", "~chego";
+        genitive_feminine: "~chej", "~chej";
+        genitive_neuter: "~chego", "~chego";
+        genitive_virile: "~chych", "~chych";
+        genitive_nonvirile: "~chych", "~chych";
+        dative_masculine: "~chemu", "~chemu";
+        dative_feminine: "~chej", "~chej";
+        dative_neuter: "~chemu", "~chemu";
+        dative_virile: "~chym", "~chym";
+        dative_nonvirile: "~chym", "~chym";
+        accusative_masculine: "~chego", "~chy";
+        accusative_feminine: "~chą", "~chą";
+        accusative_neuter: "~che", "~che";
+        accusative_virile: "~chych", "~chych";
+        accusative_nonvirile: "~che", "~che";
+        instrumental_masculine: "~chym", "~chym";
+        instrumental_feminine: "~chą", "~chą";
+        instrumental_neuter: "~chym", "~chym";
+        instrumental_virile: "~chymi", "~chymi";
+        instrumental_nonvirile: "~chymi", "~chymi";
+        locative_masculine: "~chym", "~chym";
+        locative_feminine: "~chej", "~chej";
+        locative_neuter: "~chym", "~chym";
+        locative_virile: "~chych", "~chych";
+        locative_nonvirile: "~chych", "~chych";
+        comparative: "~chszy";
+        superlative: "naj~chszy";
+    ),
+    // Młody: 14 words (hardy, młody, twardy, chudy, rudy, złotorudy).
+    declension!("młody", 14, "~y";
+        nominative_masculine: "~y", "~y";
+        nominative_feminine: "~a", "~a";
+        nominative_neuter: "~e", "~e";
+        nominative_virile: "~zi", "~zi";
+        nominative_nonvirile: "~e", "~e";
+        genitive_masculine: "~ego", "~ego";
+        genitive_feminine: "~ej", "~ej";
+        genitive_neuter: "~ego", "~ego";
+        genitive_virile: "~ych", "~ych";
+        genitive_nonvirile: "~ych", "~ych";
+        dative_masculine: "~emu", "~emu";
+        dative_feminine: "~ej", "~ej";
+        dative_neuter: "~emu", "~emu";
+        dative_virile: "~ym", "~ym";
+        dative_nonvirile: "~ym", "~ym";
+        accusative_masculine: "~ego", "~y";
+        accusative_feminine: "~ą", "~ą";
+        accusative_neuter: "~e", "~e";
+        accusative_virile: "~ych", "~ych";
+        accusative_nonvirile: "~e", "~e";
+        instrumental_masculine: "~ym", "~ym";
+        instrumental_feminine: "~ą", "~ą";
+        instrumental_neuter: "~ym", "~ym";
+        instrumental_virile: "~ymi", "~ymi";
+        instrumental_nonvirile: "~ymi", "~ymi";
+        locative_masculine: "~ym", "~ym";
+        locative_feminine: "~ej", "~ej";
+        locative_neuter: "~ym", "~ym";
+        locative_virile: "~ych", "~ych";
+        locative_nonvirile: "~ych", "~ych";
+        comparative: "~szy";
+        superlative: "naj~szy";
     ),
     // Agresywny: 14 words (agresywny, atrakcyjny, ambitny, aktualny, adekwatny, absolutny).
     declension!("agresywny", 14, "~~y";
@@ -1055,78 +1134,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         comparative: "~~iejszy";
         superlative: "n~ja~iejszy";
     ),
-    // Młody: 13 words (hardy, młody, twardy, chudy, rudy, płomiennorudy).
-    declension!("młody", 13, "~y";
-        nominative_masculine: "~y", "~y";
-        nominative_feminine: "~a", "~a";
-        nominative_neuter: "~e", "~e";
-        nominative_virile: "~zi", "~zi";
-        nominative_nonvirile: "~e", "~e";
-        genitive_masculine: "~ego", "~ego";
-        genitive_feminine: "~ej", "~ej";
-        genitive_neuter: "~ego", "~ego";
-        genitive_virile: "~ych", "~ych";
-        genitive_nonvirile: "~ych", "~ych";
-        dative_masculine: "~emu", "~emu";
-        dative_feminine: "~ej", "~ej";
-        dative_neuter: "~emu", "~emu";
-        dative_virile: "~ym", "~ym";
-        dative_nonvirile: "~ym", "~ym";
-        accusative_masculine: "~ego", "~y";
-        accusative_feminine: "~ą", "~ą";
-        accusative_neuter: "~e", "~e";
-        accusative_virile: "~ych", "~ych";
-        accusative_nonvirile: "~e", "~e";
-        instrumental_masculine: "~ym", "~ym";
-        instrumental_feminine: "~ą", "~ą";
-        instrumental_neuter: "~ym", "~ym";
-        instrumental_virile: "~ymi", "~ymi";
-        instrumental_nonvirile: "~ymi", "~ymi";
-        locative_masculine: "~ym", "~ym";
-        locative_feminine: "~ej", "~ej";
-        locative_neuter: "~ym", "~ym";
-        locative_virile: "~ych", "~ych";
-        locative_nonvirile: "~ych", "~ych";
-        comparative: "~szy";
-        superlative: "naj~szy";
-    ),
-    // Głuchy: 11 words (cichy, suchy, głuchy, kruchy, lichy, płochy).
-    declension!("głuchy", 11, "~chy";
-        nominative_masculine: "~chy", "~chy";
-        nominative_feminine: "~cha", "~cha";
-        nominative_neuter: "~che", "~che";
-        nominative_virile: "~si", "~si";
-        nominative_nonvirile: "~che", "~che";
-        genitive_masculine: "~chego", "~chego";
-        genitive_feminine: "~chej", "~chej";
-        genitive_neuter: "~chego", "~chego";
-        genitive_virile: "~chych", "~chych";
-        genitive_nonvirile: "~chych", "~chych";
-        dative_masculine: "~chemu", "~chemu";
-        dative_feminine: "~chej", "~chej";
-        dative_neuter: "~chemu", "~chemu";
-        dative_virile: "~chym", "~chym";
-        dative_nonvirile: "~chym", "~chym";
-        accusative_masculine: "~chego", "~chy";
-        accusative_feminine: "~chą", "~chą";
-        accusative_neuter: "~che", "~che";
-        accusative_virile: "~chych", "~chych";
-        accusative_nonvirile: "~che", "~che";
-        instrumental_masculine: "~chym", "~chym";
-        instrumental_feminine: "~chą", "~chą";
-        instrumental_neuter: "~chym", "~chym";
-        instrumental_virile: "~chymi", "~chymi";
-        instrumental_nonvirile: "~chymi", "~chymi";
-        locative_masculine: "~chym", "~chym";
-        locative_feminine: "~chej", "~chej";
-        locative_neuter: "~chym", "~chym";
-        locative_virile: "~chych", "~chych";
-        locative_nonvirile: "~chych", "~chych";
-        comparative: "~chszy";
-        superlative: "naj~chszy";
-    ),
-    // Stary: 10 words (chory, stary, szczery, jary, kary, skory).
-    declension!("stary", 10, "~y";
+    // Stary: 12 words (chory, stary, szary, szczery, jasnoszary, spory).
+    declension!("stary", 12, "~y";
         nominative_masculine: "~y", "~y";
         nominative_feminine: "~a", "~a";
         nominative_neuter: "~e", "~e";
@@ -1160,8 +1169,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         comparative: "~szy";
         superlative: "naj~szy";
     ),
-    // Głupi: 10 words (dropi, capi, głupi, trupi, sępi, łpi).
-    declension!("głupi", 10, "~i";
+    // Głupi: 12 words (dropi, capi, głupi, małpi, karpi, trupi).
+    declension!("głupi", 12, "~i";
         nominative_masculine: "~i", "~i";
         nominative_feminine: "~ia", "~ia";
         nominative_neuter: "~ie", "~ie";
@@ -1194,6 +1203,76 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         locative_nonvirile: "~ich", "~ich";
         comparative: "~szy";
         superlative: "naj~szy";
+    ),
+    // Namolny: 7 words (naturalny, nadobny, nachalny, natrętny, namiętny, namolny).
+    declension!("namolny", 7, "~~y";
+        nominative_masculine: "~~y", "~~y";
+        nominative_feminine: "~~a", "~~a";
+        nominative_neuter: "~~e", "~~e";
+        nominative_virile: "~~i", "~~i";
+        nominative_nonvirile: "~~e", "~~e";
+        genitive_masculine: "~~ego", "~~ego";
+        genitive_feminine: "~~ej", "~~ej";
+        genitive_neuter: "~~ego", "~~ego";
+        genitive_virile: "~~ych", "~~ych";
+        genitive_nonvirile: "~~ych", "~~ych";
+        dative_masculine: "~~emu", "~~emu";
+        dative_feminine: "~~ej", "~~ej";
+        dative_neuter: "~~emu", "~~emu";
+        dative_virile: "~~ym", "~~ym";
+        dative_nonvirile: "~~ym", "~~ym";
+        accusative_masculine: "~~ego", "~~y";
+        accusative_feminine: "~~ą", "~~ą";
+        accusative_neuter: "~~e", "~~e";
+        accusative_virile: "~~ych", "~~ych";
+        accusative_nonvirile: "~~e", "~~e";
+        instrumental_masculine: "~~ym", "~~ym";
+        instrumental_feminine: "~~ą", "~~ą";
+        instrumental_neuter: "~~ym", "~~ym";
+        instrumental_virile: "~~ymi", "~~ymi";
+        instrumental_nonvirile: "~~ymi", "~~ymi";
+        locative_masculine: "~~ym", "~~ym";
+        locative_feminine: "~~ej", "~~ej";
+        locative_neuter: "~~ym", "~~ym";
+        locative_virile: "~~ych", "~~ych";
+        locative_nonvirile: "~~ych", "~~ych";
+        comparative: "~~iejszy";
+        superlative: "~jna~iejszy";
+    ),
+    // Zwięzły: 7 words (zwięzły, rozwiązły, niezły, rozlazły, spełzły, wypełzły).
+    declension!("zwięzły", 7, "~zły";
+        nominative_masculine: "~zły", "~zły";
+        nominative_feminine: "~zła", "~zła";
+        nominative_neuter: "~złe", "~złe";
+        nominative_virile: "~źli", "~źli";
+        nominative_nonvirile: "~złe", "~złe";
+        genitive_masculine: "~złego", "~złego";
+        genitive_feminine: "~złej", "~złej";
+        genitive_neuter: "~złego", "~złego";
+        genitive_virile: "~złych", "~złych";
+        genitive_nonvirile: "~złych", "~złych";
+        dative_masculine: "~złemu", "~złemu";
+        dative_feminine: "~złej", "~złej";
+        dative_neuter: "~złemu", "~złemu";
+        dative_virile: "~złym", "~złym";
+        dative_nonvirile: "~złym", "~złym";
+        accusative_masculine: "~złego", "~zły";
+        accusative_feminine: "~złą", "~złą";
+        accusative_neuter: "~złe", "~złe";
+        accusative_virile: "~złych", "~złych";
+        accusative_nonvirile: "~złe", "~złe";
+        instrumental_masculine: "~złym", "~złym";
+        instrumental_feminine: "~złą", "~złą";
+        instrumental_neuter: "~złym", "~złym";
+        instrumental_virile: "~złymi", "~złymi";
+        instrumental_nonvirile: "~złymi", "~złymi";
+        locative_masculine: "~złym", "~złym";
+        locative_feminine: "~złej", "~złej";
+        locative_neuter: "~złym", "~złym";
+        locative_virile: "~złych", "~złych";
+        locative_nonvirile: "~złych", "~złych";
+        comparative: "~źlejszy";
+        superlative: "naj~źlejszy";
     ),
     // Nowy: 6 words (nowy, niecierpliwy, niesprawiedliwy, nieszczęśliwy, nieżyczliwy, nobliwy).
     declension!("nowy", 6, "~~y";
@@ -1230,78 +1309,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         comparative: "~~szy";
         superlative: "~ajn~szy";
     ),
-    // Zwięzły: 6 words (zwięzły, sczezły, wiązły, lazły, ełzły, pełzły).
-    declension!("zwięzły", 6, "~zły";
-        nominative_masculine: "~zły", "~zły";
-        nominative_feminine: "~zła", "~zła";
-        nominative_neuter: "~złe", "~złe";
-        nominative_virile: "~źli", "~źli";
-        nominative_nonvirile: "~złe", "~złe";
-        genitive_masculine: "~złego", "~złego";
-        genitive_feminine: "~złej", "~złej";
-        genitive_neuter: "~złego", "~złego";
-        genitive_virile: "~złych", "~złych";
-        genitive_nonvirile: "~złych", "~złych";
-        dative_masculine: "~złemu", "~złemu";
-        dative_feminine: "~złej", "~złej";
-        dative_neuter: "~złemu", "~złemu";
-        dative_virile: "~złym", "~złym";
-        dative_nonvirile: "~złym", "~złym";
-        accusative_masculine: "~złego", "~zły";
-        accusative_feminine: "~złą", "~złą";
-        accusative_neuter: "~złe", "~złe";
-        accusative_virile: "~złych", "~złych";
-        accusative_nonvirile: "~złe", "~złe";
-        instrumental_masculine: "~złym", "~złym";
-        instrumental_feminine: "~złą", "~złą";
-        instrumental_neuter: "~złym", "~złym";
-        instrumental_virile: "~złymi", "~złymi";
-        instrumental_nonvirile: "~złymi", "~złymi";
-        locative_masculine: "~złym", "~złym";
-        locative_feminine: "~złej", "~złej";
-        locative_neuter: "~złym", "~złym";
-        locative_virile: "~złych", "~złych";
-        locative_nonvirile: "~złych", "~złych";
-        comparative: "~źlejszy";
-        superlative: "naj~źlejszy";
-    ),
-    // Molny: 6 words (turalny, miętny, chalny, trętny, molny, bożny).
-    declension!("molny", 6, "~y";
-        nominative_masculine: "~y", "~y";
-        nominative_feminine: "~a", "~a";
-        nominative_neuter: "~e", "~e";
-        nominative_virile: "~i", "~i";
-        nominative_nonvirile: "~e", "~e";
-        genitive_masculine: "~ego", "~ego";
-        genitive_feminine: "~ej", "~ej";
-        genitive_neuter: "~ego", "~ego";
-        genitive_virile: "~ych", "~ych";
-        genitive_nonvirile: "~ych", "~ych";
-        dative_masculine: "~emu", "~emu";
-        dative_feminine: "~ej", "~ej";
-        dative_neuter: "~emu", "~emu";
-        dative_virile: "~ym", "~ym";
-        dative_nonvirile: "~ym", "~ym";
-        accusative_masculine: "~ego", "~y";
-        accusative_feminine: "~ą", "~ą";
-        accusative_neuter: "~e", "~e";
-        accusative_virile: "~ych", "~ych";
-        accusative_nonvirile: "~e", "~e";
-        instrumental_masculine: "~ym", "~ym";
-        instrumental_feminine: "~ą", "~ą";
-        instrumental_neuter: "~ym", "~ym";
-        instrumental_virile: "~ymi", "~ymi";
-        instrumental_nonvirile: "~ymi", "~ymi";
-        locative_masculine: "~ym", "~ym";
-        locative_feminine: "~ej", "~ej";
-        locative_neuter: "~ym", "~ym";
-        locative_virile: "~ych", "~ych";
-        locative_nonvirile: "~ych", "~ych";
-        comparative: "~iejszy";
-        superlative: "jna~iejszy";
-    ),
-    // Rani: 5 words (kani, tani, łani, bociani, rani).
-    declension!("rani", 5, "~ni";
+    // Barani: 5 words (kani, tani, barani, łani, bociani).
+    declension!("barani", 5, "~ni";
         nominative_masculine: "~ni", "~ni";
         nominative_feminine: "~nia", "~nia";
         nominative_neuter: "~nie", "~nie";
@@ -1335,8 +1344,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         comparative: "~ńszy";
         superlative: "naj~ńszy";
     ),
-    // Żyzny: 4 words (żelazny, przyjazny, żyzny, nieprzyjazny).
-    declension!("żyzny", 4, "~z~y";
+    // Żyzny: 5 words (żelazny, przyjazny, żyzny, nieprzyjazny, nieżelazny).
+    declension!("żyzny", 5, "~z~y";
         nominative_masculine: "~z~y", "~z~y";
         nominative_feminine: "~z~a", "~z~a";
         nominative_neuter: "~z~e", "~z~e";
@@ -1369,6 +1378,76 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         locative_nonvirile: "~z~ych", "~z~ych";
         comparative: "~ź~iejszy";
         superlative: "naj~ź~iejszy";
+    ),
+    // Wart: 4 words (wart, syt, kontent, niewart).
+    declension!("wart", 4, "~t";
+        nominative_masculine: "~t", "~t";
+        nominative_feminine: "~ta", "~ta";
+        nominative_neuter: "~te", "~te";
+        nominative_virile: "~ci", "~ci";
+        nominative_nonvirile: "~te", "~te";
+        genitive_masculine: "~tego", "~tego";
+        genitive_feminine: "~tej", "~tej";
+        genitive_neuter: "~tego", "~tego";
+        genitive_virile: "~tych", "~tych";
+        genitive_nonvirile: "~tych", "~tych";
+        dative_masculine: "~temu", "~temu";
+        dative_feminine: "~tej", "~tej";
+        dative_neuter: "~temu", "~temu";
+        dative_virile: "~tym", "~tym";
+        dative_nonvirile: "~tym", "~tym";
+        accusative_masculine: "~tego", "~t";
+        accusative_feminine: "~tą", "~tą";
+        accusative_neuter: "~te", "~te";
+        accusative_virile: "~tych", "~tych";
+        accusative_nonvirile: "~te", "~te";
+        instrumental_masculine: "~tym", "~tym";
+        instrumental_feminine: "~tą", "~tą";
+        instrumental_neuter: "~tym", "~tym";
+        instrumental_virile: "~tymi", "~tymi";
+        instrumental_nonvirile: "~tymi", "~tymi";
+        locative_masculine: "~tym", "~tym";
+        locative_feminine: "~tej", "~tej";
+        locative_neuter: "~tym", "~tym";
+        locative_virile: "~tych", "~tych";
+        locative_nonvirile: "~tych", "~tych";
+        comparative: "~tszy";
+        superlative: "naj~tszy";
+    ),
+    // Wązki: 4 words (sąsiedzki, wązki, dobrosąsiedzki, grudziądzki).
+    declension!("wązki", 4, "~ą~ki";
+        nominative_masculine: "~ą~ki", "~ą~ki";
+        nominative_feminine: "~ą~ka", "~ą~ka";
+        nominative_neuter: "~ą~kie", "~ą~kie";
+        nominative_virile: "~ą~cy", "~ą~cy";
+        nominative_nonvirile: "~ą~kie", "~ą~kie";
+        genitive_masculine: "~ą~kiego", "~ą~kiego";
+        genitive_feminine: "~ą~kiej", "~ą~kiej";
+        genitive_neuter: "~ą~kiego", "~ą~kiego";
+        genitive_virile: "~ą~kich", "~ą~kich";
+        genitive_nonvirile: "~ą~kich", "~ą~kich";
+        dative_masculine: "~ą~kiemu", "~ą~kiemu";
+        dative_feminine: "~ą~kiej", "~ą~kiej";
+        dative_neuter: "~ą~kiemu", "~ą~kiemu";
+        dative_virile: "~ą~kim", "~ą~kim";
+        dative_nonvirile: "~ą~kim", "~ą~kim";
+        accusative_masculine: "~ą~kiego", "~ą~ki";
+        accusative_feminine: "~ą~ką", "~ą~ką";
+        accusative_neuter: "~ą~kie", "~ą~kie";
+        accusative_virile: "~ą~kich", "~ą~kich";
+        accusative_nonvirile: "~ą~kie", "~ą~kie";
+        instrumental_masculine: "~ą~kim", "~ą~kim";
+        instrumental_feminine: "~ą~ką", "~ą~ką";
+        instrumental_neuter: "~ą~kim", "~ą~kim";
+        instrumental_virile: "~ą~kimi", "~ą~kimi";
+        instrumental_nonvirile: "~ą~kimi", "~ą~kimi";
+        locative_masculine: "~ą~kim", "~ą~kim";
+        locative_feminine: "~ą~kiej", "~ą~kiej";
+        locative_neuter: "~ą~kim", "~ą~kim";
+        locative_virile: "~ą~kich", "~ą~kich";
+        locative_nonvirile: "~ą~kich", "~ą~kich";
+        comparative: "~ężs~y";
+        superlative: "naj~ężs~y";
     ),
     // Jawny: 4 words (jawny, jędrny, jowialny, jurny).
     declension!("jawny", 4, "~~y";
@@ -1405,7 +1484,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         comparative: "~~iejszy";
         superlative: "na~j~iejszy";
     ),
-    // Rad: 4 words (rad, miłościw, córczyn, skaw).
+    // Rad: 4 words (rad, łaskaw, miłościw, córczyn).
     declension!("rad", 4, "~";
         nominative_masculine: "~", "~";
         nominative_feminine: "~a", "~a";
@@ -1439,41 +1518,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         locative_nonvirile: "~ych", "~ych";
         comparative: "~ejszy";
         superlative: "naj~ejszy";
-    ),
-    // Wart: 3 words (wart, syt, ntent).
-    declension!("wart", 3, "~t";
-        nominative_masculine: "~t", "~t";
-        nominative_feminine: "~ta", "~ta";
-        nominative_neuter: "~te", "~te";
-        nominative_virile: "~ci", "~ci";
-        nominative_nonvirile: "~te", "~te";
-        genitive_masculine: "~tego", "~tego";
-        genitive_feminine: "~tej", "~tej";
-        genitive_neuter: "~tego", "~tego";
-        genitive_virile: "~tych", "~tych";
-        genitive_nonvirile: "~tych", "~tych";
-        dative_masculine: "~temu", "~temu";
-        dative_feminine: "~tej", "~tej";
-        dative_neuter: "~temu", "~temu";
-        dative_virile: "~tym", "~tym";
-        dative_nonvirile: "~tym", "~tym";
-        accusative_masculine: "~tego", "~t";
-        accusative_feminine: "~tą", "~tą";
-        accusative_neuter: "~te", "~te";
-        accusative_virile: "~tych", "~tych";
-        accusative_nonvirile: "~te", "~te";
-        instrumental_masculine: "~tym", "~tym";
-        instrumental_feminine: "~tą", "~tą";
-        instrumental_neuter: "~tym", "~tym";
-        instrumental_virile: "~tymi", "~tymi";
-        instrumental_nonvirile: "~tymi", "~tymi";
-        locative_masculine: "~tym", "~tym";
-        locative_feminine: "~tej", "~tej";
-        locative_neuter: "~tym", "~tym";
-        locative_virile: "~tych", "~tych";
-        locative_nonvirile: "~tych", "~tych";
-        comparative: "~tszy";
-        superlative: "naj~tszy";
     ),
     // Jaskrawy: 3 words (jaskrawy, jebliwy, jadliwy).
     declension!("jaskrawy", 3, "~~y";
@@ -1510,6 +1554,76 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         comparative: "~~szy";
         superlative: "na~j~szy";
     ),
+    // Wielki: 3 words (wszelki, wielki, niewielki).
+    declension!("wielki", 3, "~elki";
+        nominative_masculine: "~elki", "~elki";
+        nominative_feminine: "~elka", "~elka";
+        nominative_neuter: "~elkie", "~elkie";
+        nominative_virile: "~elcy", "~elcy";
+        nominative_nonvirile: "~elkie", "~elkie";
+        genitive_masculine: "~elkiego", "~elkiego";
+        genitive_feminine: "~elkiej", "~elkiej";
+        genitive_neuter: "~elkiego", "~elkiego";
+        genitive_virile: "~elkich", "~elkich";
+        genitive_nonvirile: "~elkich", "~elkich";
+        dative_masculine: "~elkiemu", "~elkiemu";
+        dative_feminine: "~elkiej", "~elkiej";
+        dative_neuter: "~elkiemu", "~elkiemu";
+        dative_virile: "~elkim", "~elkim";
+        dative_nonvirile: "~elkim", "~elkim";
+        accusative_masculine: "~elkiego", "~elki";
+        accusative_feminine: "~elką", "~elką";
+        accusative_neuter: "~elkie", "~elkie";
+        accusative_virile: "~elkich", "~elkich";
+        accusative_nonvirile: "~elkie", "~elkie";
+        instrumental_masculine: "~elkim", "~elkim";
+        instrumental_feminine: "~elką", "~elką";
+        instrumental_neuter: "~elkim", "~elkim";
+        instrumental_virile: "~elkimi", "~elkimi";
+        instrumental_nonvirile: "~elkimi", "~elkimi";
+        locative_masculine: "~elkim", "~elkim";
+        locative_feminine: "~elkiej", "~elkiej";
+        locative_neuter: "~elkim", "~elkim";
+        locative_virile: "~elkich", "~elkich";
+        locative_nonvirile: "~elkich", "~elkich";
+        comparative: "~ększy";
+        superlative: "naj~ększy";
+    ),
+    // Daleki: 3 words (daleki, niedaleki, kaleki).
+    declension!("daleki", 3, "~eki";
+        nominative_masculine: "~eki", "~eki";
+        nominative_feminine: "~eka", "~eka";
+        nominative_neuter: "~ekie", "~ekie";
+        nominative_virile: "~ecy", "~ecy";
+        nominative_nonvirile: "~ekie", "~ekie";
+        genitive_masculine: "~ekiego", "~ekiego";
+        genitive_feminine: "~ekiej", "~ekiej";
+        genitive_neuter: "~ekiego", "~ekiego";
+        genitive_virile: "~ekich", "~ekich";
+        genitive_nonvirile: "~ekich", "~ekich";
+        dative_masculine: "~ekiemu", "~ekiemu";
+        dative_feminine: "~ekiej", "~ekiej";
+        dative_neuter: "~ekiemu", "~ekiemu";
+        dative_virile: "~ekim", "~ekim";
+        dative_nonvirile: "~ekim", "~ekim";
+        accusative_masculine: "~ekiego", "~eki";
+        accusative_feminine: "~eką", "~eką";
+        accusative_neuter: "~ekie", "~ekie";
+        accusative_virile: "~ekich", "~ekich";
+        accusative_nonvirile: "~ekie", "~ekie";
+        instrumental_masculine: "~ekim", "~ekim";
+        instrumental_feminine: "~eką", "~eką";
+        instrumental_neuter: "~ekim", "~ekim";
+        instrumental_virile: "~ekimi", "~ekimi";
+        instrumental_nonvirile: "~ekimi", "~ekimi";
+        locative_masculine: "~ekim", "~ekim";
+        locative_feminine: "~ekiej", "~ekiej";
+        locative_neuter: "~ekim", "~ekim";
+        locative_virile: "~ekich", "~ekich";
+        locative_nonvirile: "~ekich", "~ekich";
+        comparative: "~szy";
+        superlative: "naj~szy";
+    ),
     // Blady: 3 words (gniady, blady, śniady).
     declension!("blady", 3, "~a~y";
         nominative_masculine: "~a~y", "~a~y";
@@ -1545,39 +1659,39 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 37] = [
         comparative: "~a~szy";
         superlative: "naj~a~szy";
     ),
-    // Wązki: 3 words (sąsiedzki, wązki, grudziądzki).
-    declension!("wązki", 3, "~ą~ki";
-        nominative_masculine: "~ą~ki", "~ą~ki";
-        nominative_feminine: "~ą~ka", "~ą~ka";
-        nominative_neuter: "~ą~kie", "~ą~kie";
-        nominative_virile: "~ą~cy", "~ą~cy";
-        nominative_nonvirile: "~ą~kie", "~ą~kie";
-        genitive_masculine: "~ą~kiego", "~ą~kiego";
-        genitive_feminine: "~ą~kiej", "~ą~kiej";
-        genitive_neuter: "~ą~kiego", "~ą~kiego";
-        genitive_virile: "~ą~kich", "~ą~kich";
-        genitive_nonvirile: "~ą~kich", "~ą~kich";
-        dative_masculine: "~ą~kiemu", "~ą~kiemu";
-        dative_feminine: "~ą~kiej", "~ą~kiej";
-        dative_neuter: "~ą~kiemu", "~ą~kiemu";
-        dative_virile: "~ą~kim", "~ą~kim";
-        dative_nonvirile: "~ą~kim", "~ą~kim";
-        accusative_masculine: "~ą~kiego", "~ą~ki";
-        accusative_feminine: "~ą~ką", "~ą~ką";
-        accusative_neuter: "~ą~kie", "~ą~kie";
-        accusative_virile: "~ą~kich", "~ą~kich";
-        accusative_nonvirile: "~ą~kie", "~ą~kie";
-        instrumental_masculine: "~ą~kim", "~ą~kim";
-        instrumental_feminine: "~ą~ką", "~ą~ką";
-        instrumental_neuter: "~ą~kim", "~ą~kim";
-        instrumental_virile: "~ą~kimi", "~ą~kimi";
-        instrumental_nonvirile: "~ą~kimi", "~ą~kimi";
-        locative_masculine: "~ą~kim", "~ą~kim";
-        locative_feminine: "~ą~kiej", "~ą~kiej";
-        locative_neuter: "~ą~kim", "~ą~kim";
-        locative_virile: "~ą~kich", "~ą~kich";
-        locative_nonvirile: "~ą~kich", "~ą~kich";
-        comparative: "~ężs~y";
-        superlative: "naj~ężs~y";
+    // Niedobry: 3 words (niedobry, arcydobry, przedobry).
+    declension!("niedobry", 3, "~dobry";
+        nominative_masculine: "~dobry", "~dobry";
+        nominative_feminine: "~dobra", "~dobra";
+        nominative_neuter: "~dobre", "~dobre";
+        nominative_virile: "~dobrzy", "~dobrzy";
+        nominative_nonvirile: "~dobre", "~dobre";
+        genitive_masculine: "~dobrego", "~dobrego";
+        genitive_feminine: "~dobrej", "~dobrej";
+        genitive_neuter: "~dobrego", "~dobrego";
+        genitive_virile: "~dobrych", "~dobrych";
+        genitive_nonvirile: "~dobrych", "~dobrych";
+        dative_masculine: "~dobremu", "~dobremu";
+        dative_feminine: "~dobrej", "~dobrej";
+        dative_neuter: "~dobremu", "~dobremu";
+        dative_virile: "~dobrym", "~dobrym";
+        dative_nonvirile: "~dobrym", "~dobrym";
+        accusative_masculine: "~dobrego", "~dobry";
+        accusative_feminine: "~dobrą", "~dobrą";
+        accusative_neuter: "~dobre", "~dobre";
+        accusative_virile: "~dobrych", "~dobrych";
+        accusative_nonvirile: "~dobre", "~dobre";
+        instrumental_masculine: "~dobrym", "~dobrym";
+        instrumental_feminine: "~dobrą", "~dobrą";
+        instrumental_neuter: "~dobrym", "~dobrym";
+        instrumental_virile: "~dobrymi", "~dobrymi";
+        instrumental_nonvirile: "~dobrymi", "~dobrymi";
+        locative_masculine: "~dobrym", "~dobrym";
+        locative_feminine: "~dobrej", "~dobrej";
+        locative_neuter: "~dobrym", "~dobrym";
+        locative_virile: "~dobrych", "~dobrych";
+        locative_nonvirile: "~dobrych", "~dobrych";
+        comparative: "~lepszy";
+        superlative: "~najlepszy";
     ),
 ];

@@ -1,41 +1,11 @@
-//! The dictionary's forms no declension gives, as it writes them: `(word, cell,
-//! form)`, sorted. They are the answer for that word and cell.
+//! The dictionary's forms no declension gives, as it writes them: a line per form,
+//! the word, its cell's number (see `super::cell`) and the form, sorted by word
+//! and cell. They are the answer for that word and cell.
 
-use super::cell::*;
+use flexion::Irregular;
 use std::borrow::Cow;
 
-pub(super) static IRREGULAR: &[(Cow<'static, str>, u16, Cow<'static, str>)] = flexion::irregular! {
-    "absous" F_SG "absoute",
-    "absous" F_PL "absoutes",
-    "afforesté" M_PL "afforestés",
-    "afforesté" F_SG "afforestée",
-    "afforesté" F_PL "afforestées",
-    "attristé" M_PL "attristés",
-    "attristé" F_SG "attristée",
-    "attristé" F_PL "attristées",
-    "dissous" F_SG "dissoute",
-    "dissous" F_PL "dissoutes",
-    "désisté" M_PL "désistés",
-    "désisté" F_SG "désistée",
-    "désisté" F_PL "désistées",
-    "empierré" M_PL "empierrés",
-    "empierré" F_SG "empierrée",
-    "empierré" F_PL "empierrées",
-    "empiété" M_PL "empiétés",
-    "empiété" F_SG "empiétée",
-    "empiété" F_PL "empiétées",
-    "interprété" M_PL "interprétés",
-    "interprété" F_SG "interprétée",
-    "interprété" F_PL "interprétées",
-    "reforesté" M_PL "reforestés",
-    "reforesté" F_SG "reforestée",
-    "reforesté" F_PL "reforestées",
-    "réinterprété" M_PL "réinterprétés",
-    "réinterprété" F_SG "réinterprétée",
-    "réinterprété" F_PL "réinterprétées",
-    "résous" F_SG "résoute",
-    "résous" F_PL "résoutes",
-    "surinterprété" M_PL "surinterprétés",
-    "surinterprété" F_SG "surinterprétée",
-    "surinterprété" F_PL "surinterprétées",
+/// 0 forms.
+pub(super) const IRREGULAR: Irregular<'static> = Irregular {
+    table: Cow::Borrowed(r#""#),
 };

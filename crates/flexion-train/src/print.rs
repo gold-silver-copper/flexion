@@ -322,7 +322,17 @@ fn part_files(
             for (i, n) in layout.names.iter().enumerate() {
                 let _ = writeln!(m, "    pub const {n}: u16 = {i};");
             }
-            m.push_str("}\n\n/// The systems, the lemma's first.\npub static GRAMMAR: Systems<'static, u8> = Systems {\n");
+            // The feature the systems' referrals depend on, if any.
+            let feature = systems
+                .systems
+                .iter()
+                .find_map(|s| s.grammar.feature)
+                .and_then(|f| spec.inherent.get(f).copied());
+            let _ = writeln!(
+                m,
+                "}}\n\n/// The systems, the lemma's first.\npub static GRAMMAR: Systems<'static, {}> = Systems {{",
+                feature.map_or_else(|| "u8".to_string(), |f| format!("crate::{f}"))
+            );
             let _ = writeln!(m, "    cells: {},\n    parts: &[", systems.cells);
             for s in &systems.systems {
                 let n = name(s);
@@ -357,7 +367,7 @@ fn part_files(
                 systems.systems.first().map(|s| &s.grammar),
                 layout,
                 &api,
-                None,
+                feature,
             ));
             files.push((format!("{dir}/mod.rs"), m));
             for s in &systems.systems {
@@ -864,13 +874,13 @@ fn library(lang: &Language, parts: &[Part<'_, '_>]) -> Result<String, String> {
     for part in parts {
         let _ = writeln!(s, "pub mod {};", part.spec.name);
     }
+    // Each part of speech's word type, unless a feature has its name
+    // (French `Participle`).
     for part in parts {
-        let _ = writeln!(
-            s,
-            "pub use {}::{};",
-            part.spec.name,
-            variant(part.spec.name)
-        );
+        let word = variant(part.spec.name);
+        if !lang.features.iter().any(|f| f.name == word) {
+            let _ = writeln!(s, "pub use {}::{word};", part.spec.name);
+        }
     }
     s.push('\n');
     // The features the parts of speech use.
@@ -917,8 +927,8 @@ fn library(lang: &Language, parts: &[Part<'_, '_>]) -> Result<String, String> {
             };
             let _ = writeln!(
                 s,
-                "/// {}\n#[must_use]\npub fn {}(lemma: &str{params}) -> String {{\n    {word}::new(lemma).form({cell})\n}}\n",
-                g.group.doc, g.name
+                "/// {}\n#[must_use]\npub fn {}(lemma: &str{params}) -> String {{\n    {}::{word}::new(lemma).form({cell})\n}}\n",
+                g.group.doc, g.name, part.spec.name
             );
         }
     }
@@ -1359,7 +1369,7 @@ fn api_code(
     if let Some(f) = feature {
         let _ = writeln!(
             s,
-            "    /// Its {lower}, which says which cell its `referred` forms (see its\n    /// {many}) are taken from.\n    #[must_use]\n    pub fn {feature_field}(mut self, {feature_field}: {f}) -> Self {{\n        self.{feature_field} = Some({feature_field});\n        self\n    }}\n",
+            "    /// Its {lower}, which says which cell its `referred` forms (see its\n    /// {many}) are taken from.\n    #[must_use]\n    pub fn {feature_field}(mut self, {feature_field}: crate::{f}) -> Self {{\n        self.{feature_field} = Some({feature_field});\n        self\n    }}\n",
             lower = f.to_lowercase(),
             many = kind_name.to_lowercase(),
         );

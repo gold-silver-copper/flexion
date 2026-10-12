@@ -1,454 +1,407 @@
-//! The dictionary's forms no declension gives, as it writes them: `(word, cell,
-//! form)`, sorted. They are the answer for that word and cell.
+//! The dictionary's forms no declension gives, as it writes them: a line per form,
+//! the word, its cell's number (see `super::cell`) and the form, sorted by word
+//! and cell. They are the answer for that word and cell.
 
-use super::cell::*;
+use flexion::Irregular;
 use std::borrow::Cow;
 
-pub(super) static IRREGULAR: &[(Cow<'static, str>, u16, Cow<'static, str>)] = flexion::irregular! {
-    "absolutny" SUPERLATIVE "najabsolutniejszy",
-    "abstrakcyjny" SUPERLATIVE "najabstrakcyjniejszy",
-    "absurdalny" SUPERLATIVE "najabsurdalniejszy",
-    "adekwatny" SUPERLATIVE "najadekwatniejszy",
-    "agresywny" SUPERLATIVE "najagresywniejszy",
-    "aktualny" SUPERLATIVE "najaktualniejszy",
-    "aktywny" SUPERLATIVE "najaktywniejszy",
-    "akuratny" SUPERLATIVE "najakuratniejszy",
-    "ambitny" SUPERLATIVE "najambitniejszy",
-    "apatyczny" SUPERLATIVE "najapatyczniejszy",
-    "apetyczny" SUPERLATIVE "najapetyczniejszy",
-    "atrakcyjny" SUPERLATIVE "najatrakcyjniejszy",
-    "autentyczny" SUPERLATIVE "najautentyczniejszy",
-    "awantażowny" SUPERLATIVE "najawantażowniejszy",
-    "bezlitosny" NOM_VIR_ANIM "bezlitośni",
-    "bezlitosny" NOM_VIR_INAN "bezlitośni",
-    "beznosy" NOM_VIR_ANIM "beznosy",
-    "beznosy" NOM_VIR_INAN "beznosy",
-    "biały" COMPARATIVE "bielszy",
-    "biały" SUPERLATIVE "najbielszy",
-    "bukoliczny" COMPARATIVE "bardziej",
-    "bukoliczny" SUPERLATIVE "najbardziej",
-    "błahy" NOM_VIR_ANIM "błazi",
-    "błahy" NOM_VIR_INAN "błazi",
-    "cienki" COMPARATIVE "cieńszy",
-    "cienki" SUPERLATIVE "najcieńszy",
-    "czerwony" COMPARATIVE "czerwieńszy",
-    "czerwony" SUPERLATIVE "najczerwieńszy",
-    "daleki" COMPARATIVE "dalszy",
-    "daleki" SUPERLATIVE "najdalszy",
-    "dobry" COMPARATIVE "lepszy",
-    "dobry" SUPERLATIVE "najlepszy",
-    "dorobiony" NOM_VIR_ANIM "dorobieni",
-    "dorobiony" NOM_VIR_INAN "dorobieni",
-    "duży" NOM_VIR_ANIM "duzi",
-    "duży" NOM_VIR_INAN "duzi",
-    "duży" COMPARATIVE "większy",
-    "duży" SUPERLATIVE "największy",
-    "dwunasty" NOM_VIR_ANIM "dwunaści",
-    "dwunasty" NOM_VIR_INAN "dwunaści",
-    "dziki" COMPARATIVE "dzikszy",
-    "dziki" SUPERLATIVE "najdzikszy",
-    "fazowy" COMPARATIVE "h",
-    "fazowy" SUPERLATIVE "najh",
-    "furiacki" COMPARATIVE "bardziej",
-    "furiacki" SUPERLATIVE "najbardziej",
-    "gorazdy" NOM_VIR_ANIM "goraździ",
-    "gorazdy" NOM_VIR_INAN "goraździ",
-    "jadliwy" SUPERLATIVE "najjadliwszy",
-    "jaskrawy" SUPERLATIVE "najjaskrawszy",
-    "jawny" SUPERLATIVE "najjawniejszy",
-    "jebliwy" SUPERLATIVE "najjebliwszy",
-    "jowialny" SUPERLATIVE "najjowialniejszy",
-    "jurny" SUPERLATIVE "najjurniejszy",
-    "jędrny" SUPERLATIVE "najjędrniejszy",
-    "kolisty" NOM_VIR_ANIM "koliści",
-    "kolisty" NOM_VIR_INAN "koliści",
-    "koszony" NOM_VIR_ANIM "koszeni",
-    "koszony" NOM_VIR_INAN "koszeni",
-    "kundlowaty" COMPARATIVE "bardziej",
-    "kundlowaty" SUPERLATIVE "najbardziej",
-    "lekki" COMPARATIVE "lżejszy",
-    "lekki" SUPERLATIVE "najlżejszy",
-    "litosny" NOM_VIR_ANIM "litośni",
-    "litosny" NOM_VIR_INAN "litośni",
-    "malusi" COMPARATIVE "barzdiej",
-    "malusi" SUPERLATIVE "najbarzdiej",
-    "manewrowy" COMPARATIVE "bardziej",
-    "manewrowy" SUPERLATIVE "najbardziej",
-    "mały" COMPARATIVE "mniejszy",
-    "mały" SUPERLATIVE "najmniejszy",
-    "merkantylny" COMPARATIVE "bardziej",
-    "merkantylny" SUPERLATIVE "najbardziej",
-    "namaszczony" COMPARATIVE "bardziej",
-    "namaszczony" SUPERLATIVE "najbardziej",
-    "namolny" SUPERLATIVE "najnamolniejszy",
-    "napastliwy" SUPERLATIVE "najnapastliwszy",
-    "narowisty" NOM_VIR_ANIM "narowiści",
-    "narowisty" NOM_VIR_INAN "narowiści",
-    "natarczywy" SUPERLATIVE "najnatarczywszy",
-    "negatywny" SUPERLATIVE "najnegatywniejszy",
-    "neutralny" SUPERLATIVE "najneutralniejszy",
-    "niebezpieczny" SUPERLATIVE "najniebezpieczniejszy",
-    "niebłahy" NOM_VIR_ANIM "niebłasi",
-    "niebłahy" NOM_VIR_INAN "niebłasi",
-    "niecierpliwy" SUPERLATIVE "najniecierpliwszy",
-    "niecny" SUPERLATIVE "najniecniejszy",
-    "niedokładny" SUPERLATIVE "najniedokładniejszy",
-    "niedorzeczny" SUPERLATIVE "najniedorzeczniejszy",
-    "niedołężny" SUPERLATIVE "najniedołężniejszy",
-    "nieliczny" SUPERLATIVE "najnieliczniejszy",
-    "niemiłosierny" SUPERLATIVE "najniemiłosierniejszy",
-    "niemoralny" SUPERLATIVE "najniemoralniejszy",
-    "nieporządny" SUPERLATIVE "najnieporządniejszy",
-    "nieprzyjemny" SUPERLATIVE "najnieprzyjemniejszy",
-    "nierozproszony" NOM_VIR_ANIM "nierozproszeni",
-    "nierozproszony" NOM_VIR_INAN "nierozproszeni",
-    "nierozsądny" SUPERLATIVE "najnierozsądniejszy",
-    "nieroztropny" SUPERLATIVE "najnieroztropniejszy",
-    "nierozważny" SUPERLATIVE "najnierozważniejszy",
-    "niesforny" SUPERLATIVE "najniesforniejszy",
-    "niesmaczny" SUPERLATIVE "najniesmaczniejszy",
-    "niesprawiedliwy" SUPERLATIVE "najniesprawiedliwszy",
-    "niestosowny" SUPERLATIVE "najniestosowniejszy",
-    "nieswój" NOM_F_ANIM "nieswoja",
-    "nieswój" NOM_F_INAN "nieswoja",
-    "nieswój" NOM_N_ANIM "nieswoje",
-    "nieswój" NOM_N_INAN "nieswoje",
-    "nieswój" NOM_VIR_ANIM "nieswoi",
-    "nieswój" NOM_VIR_INAN "nieswoi",
-    "nieswój" NOM_NVIR_ANIM "nieswoje",
-    "nieswój" NOM_NVIR_INAN "nieswoje",
-    "nieswój" GEN_M_ANIM "nieswojego",
-    "nieswój" GEN_M_INAN "nieswojego",
-    "nieswój" GEN_F_ANIM "nieswojej",
-    "nieswój" GEN_F_INAN "nieswojej",
-    "nieswój" GEN_N_ANIM "nieswojego",
-    "nieswój" GEN_N_INAN "nieswojego",
-    "nieswój" GEN_VIR_ANIM "nieswoich",
-    "nieswój" GEN_VIR_INAN "nieswoich",
-    "nieswój" GEN_NVIR_ANIM "nieswoich",
-    "nieswój" GEN_NVIR_INAN "nieswoich",
-    "nieswój" DAT_M_ANIM "nieswojemu",
-    "nieswój" DAT_M_INAN "nieswojemu",
-    "nieswój" DAT_F_ANIM "nieswojej",
-    "nieswój" DAT_F_INAN "nieswojej",
-    "nieswój" DAT_N_ANIM "nieswojemu",
-    "nieswój" DAT_N_INAN "nieswojemu",
-    "nieswój" DAT_VIR_ANIM "nieswoim",
-    "nieswój" DAT_VIR_INAN "nieswoim",
-    "nieswój" DAT_NVIR_ANIM "nieswoim",
-    "nieswój" DAT_NVIR_INAN "nieswoim",
-    "nieswój" ACC_M_ANIM "nieswojego",
-    "nieswój" ACC_F_ANIM "nieswoją",
-    "nieswój" ACC_F_INAN "nieswoją",
-    "nieswój" ACC_N_ANIM "nieswoje",
-    "nieswój" ACC_N_INAN "nieswoje",
-    "nieswój" ACC_VIR_ANIM "nieswoich",
-    "nieswój" ACC_VIR_INAN "nieswoich",
-    "nieswój" ACC_NVIR_ANIM "nieswoje",
-    "nieswój" ACC_NVIR_INAN "nieswoje",
-    "nieswój" INS_M_ANIM "nieswoim",
-    "nieswój" INS_M_INAN "nieswoim",
-    "nieswój" INS_F_ANIM "nieswoją",
-    "nieswój" INS_F_INAN "nieswoją",
-    "nieswój" INS_N_ANIM "nieswoim",
-    "nieswój" INS_N_INAN "nieswoim",
-    "nieswój" INS_VIR_ANIM "nieswoimi",
-    "nieswój" INS_VIR_INAN "nieswoimi",
-    "nieswój" INS_NVIR_ANIM "nieswoimi",
-    "nieswój" INS_NVIR_INAN "nieswoimi",
-    "nieswój" LOC_M_ANIM "nieswoim",
-    "nieswój" LOC_M_INAN "nieswoim",
-    "nieswój" LOC_F_ANIM "nieswojej",
-    "nieswój" LOC_F_INAN "nieswojej",
-    "nieswój" LOC_N_ANIM "nieswoim",
-    "nieswój" LOC_N_INAN "nieswoim",
-    "nieswój" LOC_VIR_ANIM "nieswoich",
-    "nieswój" LOC_VIR_INAN "nieswoich",
-    "nieswój" LOC_NVIR_ANIM "nieswoich",
-    "nieswój" LOC_NVIR_INAN "nieswoich",
-    "nieszczęśliwy" SUPERLATIVE "najnieszczęśliwszy",
-    "nietolerancyjny" COMPARATIVE "bardziej",
-    "nietolerancyjny" SUPERLATIVE "najbardziej",
-    "nieudolny" SUPERLATIVE "najnieudolniejszy",
-    "niewdzięczny" SUPERLATIVE "najniewdzięczniejszy",
-    "niewyrobiony" NOM_VIR_ANIM "niewyrobieni",
-    "niewyrobiony" NOM_VIR_INAN "niewyrobieni",
-    "niezbędny" SUPERLATIVE "najniezbędniejszy",
-    "niezdarny" SUPERLATIVE "najniezdarniejszy",
-    "niezgrabny" SUPERLATIVE "najniezgrabniejszy",
-    "nieżyczliwy" SUPERLATIVE "najnieżyczliwszy",
-    "nikczemny" SUPERLATIVE "najnikczemniejszy",
-    "nobliwy" SUPERLATIVE "najnobliwszy",
-    "normalny" SUPERLATIVE "najnormalniejszy",
-    "nowy" SUPERLATIVE "najnowszy",
-    "nośny" SUPERLATIVE "najnośniejszy",
-    "nudny" SUPERLATIVE "najnudniejszy",
-    "nędzny" NOM_VIR_ANIM "nędźni",
-    "nędzny" NOM_VIR_INAN "nędźni",
-    "obwisły" NOM_VIR_ANIM "obwiśli",
-    "obwisły" NOM_VIR_INAN "obwiśli",
-    "osiemnasty" NOM_VIR_ANIM "osiemnaści",
-    "osiemnasty" NOM_VIR_INAN "osiemnaści",
-    "pewien" NOM_F_ANIM "pewna",
-    "pewien" NOM_F_INAN "pewna",
-    "pewien" NOM_N_ANIM "pewne",
-    "pewien" NOM_N_INAN "pewne",
-    "pewien" NOM_VIR_ANIM "pewni",
-    "pewien" NOM_VIR_INAN "pewni",
-    "pewien" NOM_NVIR_ANIM "pewne",
-    "pewien" NOM_NVIR_INAN "pewne",
-    "pewien" GEN_M_ANIM "pewnego",
-    "pewien" GEN_M_INAN "pewnego",
-    "pewien" GEN_F_ANIM "pewnej",
-    "pewien" GEN_F_INAN "pewnej",
-    "pewien" GEN_N_ANIM "pewnego",
-    "pewien" GEN_N_INAN "pewnego",
-    "pewien" GEN_VIR_ANIM "pewnych",
-    "pewien" GEN_VIR_INAN "pewnych",
-    "pewien" GEN_NVIR_ANIM "pewnych",
-    "pewien" GEN_NVIR_INAN "pewnych",
-    "pewien" DAT_M_ANIM "pewnemu",
-    "pewien" DAT_M_INAN "pewnemu",
-    "pewien" DAT_F_ANIM "pewnej",
-    "pewien" DAT_F_INAN "pewnej",
-    "pewien" DAT_N_ANIM "pewnemu",
-    "pewien" DAT_N_INAN "pewnemu",
-    "pewien" DAT_VIR_ANIM "pewnym",
-    "pewien" DAT_VIR_INAN "pewnym",
-    "pewien" DAT_NVIR_ANIM "pewnym",
-    "pewien" DAT_NVIR_INAN "pewnym",
-    "pewien" ACC_M_ANIM "pewnego",
-    "pewien" ACC_F_ANIM "pewną",
-    "pewien" ACC_F_INAN "pewną",
-    "pewien" ACC_N_ANIM "pewne",
-    "pewien" ACC_N_INAN "pewne",
-    "pewien" ACC_VIR_ANIM "pewnych",
-    "pewien" ACC_VIR_INAN "pewnych",
-    "pewien" ACC_NVIR_ANIM "pewne",
-    "pewien" ACC_NVIR_INAN "pewne",
-    "pewien" INS_M_ANIM "pewnym",
-    "pewien" INS_M_INAN "pewnym",
-    "pewien" INS_F_ANIM "pewną",
-    "pewien" INS_F_INAN "pewną",
-    "pewien" INS_N_ANIM "pewnym",
-    "pewien" INS_N_INAN "pewnym",
-    "pewien" INS_VIR_ANIM "pewnymi",
-    "pewien" INS_VIR_INAN "pewnymi",
-    "pewien" INS_NVIR_ANIM "pewnymi",
-    "pewien" INS_NVIR_INAN "pewnymi",
-    "pewien" LOC_M_ANIM "pewnym",
-    "pewien" LOC_M_INAN "pewnym",
-    "pewien" LOC_F_ANIM "pewnej",
-    "pewien" LOC_F_INAN "pewnej",
-    "pewien" LOC_N_ANIM "pewnym",
-    "pewien" LOC_N_INAN "pewnym",
-    "pewien" LOC_VIR_ANIM "pewnych",
-    "pewien" LOC_VIR_INAN "pewnych",
-    "pewien" LOC_NVIR_ANIM "pewnych",
-    "pewien" LOC_NVIR_INAN "pewnych",
-    "pożądany" COMPARATIVE "bardziej",
-    "pożądany" SUPERLATIVE "najbardziej",
-    "prawiony" NOM_VIR_ANIM "prawieni",
-    "prawiony" NOM_VIR_INAN "prawieni",
-    "proszony" NOM_VIR_ANIM "proszeni",
-    "proszony" NOM_VIR_INAN "proszeni",
-    "przedobry" COMPARATIVE "przelepszy",
-    "przedobry" SUPERLATIVE "przenajlepszy",
-    "przygaszony" NOM_VIR_ANIM "przygaszeni",
-    "przygaszony" NOM_VIR_INAN "przygaszeni",
-    "przygasły" NOM_VIR_ANIM "przygaśli",
-    "przygasły" NOM_VIR_INAN "przygaśli",
-    "półkolisty" NOM_VIR_ANIM "półkoliści",
-    "półkolisty" NOM_VIR_INAN "półkoliści",
-    "rad" NOM_VIR_ANIM "radzi",
-    "rad" NOM_VIR_INAN "radzi",
-    "robiony" NOM_VIR_ANIM "robieni",
-    "robiony" NOM_VIR_INAN "robieni",
-    "rozbawiony" NOM_VIR_ANIM "rozbawieni",
-    "rozbawiony" NOM_VIR_INAN "rozbawieni",
-    "rozwiązły" NOM_VIR_ANIM "rozwiąźli",
-    "rozwiązły" NOM_VIR_INAN "rozwiąźli",
-    "rumiany" COMPARATIVE "rumieńszy",
-    "rumiany" SUPERLATIVE "najrumieńszy",
-    "siedemnasty" NOM_VIR_ANIM "siedemnaści",
-    "siedemnasty" NOM_VIR_INAN "siedemnaści",
-    "spasły" NOM_VIR_ANIM "spaśli",
-    "spasły" NOM_VIR_INAN "spaśli",
-    "tolerancyjny" COMPARATIVE "bardziej",
-    "tolerancyjny" SUPERLATIVE "najbardziej",
-    "trzynasty" NOM_VIR_ANIM "trzynaści",
-    "trzynasty" NOM_VIR_INAN "trzynaści",
-    "tuzinkowy" COMPARATIVE "bardziej",
-    "tuzinkowy" SUPERLATIVE "najbardziej",
-    "wesoły" NOM_VIR_ANIM "weseli",
-    "wesoły" NOM_VIR_INAN "weseli",
-    "wesoły" COMPARATIVE "weselszy",
-    "wesoły" SUPERLATIVE "najweselszy",
-    "wielki" COMPARATIVE "większy",
-    "wielki" SUPERLATIVE "największy",
-    "winien" NOM_F_ANIM "winna",
-    "winien" NOM_F_INAN "winna",
-    "winien" NOM_N_ANIM "winne",
-    "winien" NOM_N_INAN "winne",
-    "winien" NOM_VIR_ANIM "winni",
-    "winien" NOM_VIR_INAN "winni",
-    "winien" NOM_NVIR_ANIM "winne",
-    "winien" NOM_NVIR_INAN "winne",
-    "winien" GEN_M_ANIM "winnego",
-    "winien" GEN_M_INAN "winnego",
-    "winien" GEN_F_ANIM "winnej",
-    "winien" GEN_F_INAN "winnej",
-    "winien" GEN_N_ANIM "winnego",
-    "winien" GEN_N_INAN "winnego",
-    "winien" GEN_VIR_ANIM "winnych",
-    "winien" GEN_VIR_INAN "winnych",
-    "winien" GEN_NVIR_ANIM "winnych",
-    "winien" GEN_NVIR_INAN "winnych",
-    "winien" DAT_M_ANIM "winnemu",
-    "winien" DAT_M_INAN "winnemu",
-    "winien" DAT_F_ANIM "winnej",
-    "winien" DAT_F_INAN "winnej",
-    "winien" DAT_N_ANIM "winnemu",
-    "winien" DAT_N_INAN "winnemu",
-    "winien" DAT_VIR_ANIM "winnym",
-    "winien" DAT_VIR_INAN "winnym",
-    "winien" DAT_NVIR_ANIM "winnym",
-    "winien" DAT_NVIR_INAN "winnym",
-    "winien" ACC_M_ANIM "winnego",
-    "winien" ACC_F_ANIM "winną",
-    "winien" ACC_F_INAN "winną",
-    "winien" ACC_N_ANIM "winne",
-    "winien" ACC_N_INAN "winne",
-    "winien" ACC_VIR_ANIM "winnych",
-    "winien" ACC_VIR_INAN "winnych",
-    "winien" ACC_NVIR_ANIM "winne",
-    "winien" ACC_NVIR_INAN "winne",
-    "winien" INS_M_ANIM "winnym",
-    "winien" INS_M_INAN "winnym",
-    "winien" INS_F_ANIM "winną",
-    "winien" INS_F_INAN "winną",
-    "winien" INS_N_ANIM "winnym",
-    "winien" INS_N_INAN "winnym",
-    "winien" INS_VIR_ANIM "winnymi",
-    "winien" INS_VIR_INAN "winnymi",
-    "winien" INS_NVIR_ANIM "winnymi",
-    "winien" INS_NVIR_INAN "winnymi",
-    "winien" LOC_M_ANIM "winnym",
-    "winien" LOC_M_INAN "winnym",
-    "winien" LOC_F_ANIM "winnej",
-    "winien" LOC_F_INAN "winnej",
-    "winien" LOC_N_ANIM "winnym",
-    "winien" LOC_N_INAN "winnym",
-    "winien" LOC_VIR_ANIM "winnych",
-    "winien" LOC_VIR_INAN "winnych",
-    "winien" LOC_NVIR_ANIM "winnych",
-    "winien" LOC_NVIR_INAN "winnych",
-    "wszystek" NOM_F_ANIM "wszystka",
-    "wszystek" NOM_F_INAN "wszystka",
-    "wszystek" NOM_N_ANIM "wszystko",
-    "wszystek" NOM_N_INAN "wszystko",
-    "wszystek" NOM_VIR_ANIM "wszyscy",
-    "wszystek" NOM_VIR_INAN "wszyscy",
-    "wszystek" NOM_NVIR_ANIM "wszystkie",
-    "wszystek" NOM_NVIR_INAN "wszystkie",
-    "wszystek" GEN_M_ANIM "wszystkiego",
-    "wszystek" GEN_M_INAN "wszystkiego",
-    "wszystek" GEN_F_ANIM "wszystkiej",
-    "wszystek" GEN_F_INAN "wszystkiej",
-    "wszystek" GEN_N_ANIM "wszystkiego",
-    "wszystek" GEN_N_INAN "wszystkiego",
-    "wszystek" GEN_VIR_ANIM "wszystkich",
-    "wszystek" GEN_VIR_INAN "wszystkich",
-    "wszystek" GEN_NVIR_ANIM "wszystkich",
-    "wszystek" GEN_NVIR_INAN "wszystkich",
-    "wszystek" DAT_M_ANIM "wszystkiemu",
-    "wszystek" DAT_M_INAN "wszystkiemu",
-    "wszystek" DAT_F_ANIM "wszystkiej",
-    "wszystek" DAT_F_INAN "wszystkiej",
-    "wszystek" DAT_N_ANIM "wszystkiemu",
-    "wszystek" DAT_N_INAN "wszystkiemu",
-    "wszystek" DAT_VIR_ANIM "wszystkim",
-    "wszystek" DAT_VIR_INAN "wszystkim",
-    "wszystek" DAT_NVIR_ANIM "wszystkim",
-    "wszystek" DAT_NVIR_INAN "wszystkim",
-    "wszystek" ACC_M_ANIM "wszystkiego",
-    "wszystek" ACC_F_ANIM "wszystką",
-    "wszystek" ACC_F_INAN "wszystką",
-    "wszystek" ACC_N_ANIM "wszystko",
-    "wszystek" ACC_N_INAN "wszystko",
-    "wszystek" ACC_VIR_ANIM "wszystkich",
-    "wszystek" ACC_VIR_INAN "wszystkich",
-    "wszystek" ACC_NVIR_ANIM "wszystkie",
-    "wszystek" ACC_NVIR_INAN "wszystkie",
-    "wszystek" INS_M_ANIM "wszystkim",
-    "wszystek" INS_M_INAN "wszystkim",
-    "wszystek" INS_F_ANIM "wszystką",
-    "wszystek" INS_F_INAN "wszystką",
-    "wszystek" INS_N_ANIM "wszystkim",
-    "wszystek" INS_N_INAN "wszystkim",
-    "wszystek" INS_VIR_ANIM "wszystkimi",
-    "wszystek" INS_VIR_INAN "wszystkimi",
-    "wszystek" INS_NVIR_ANIM "wszystkimi",
-    "wszystek" INS_NVIR_INAN "wszystkimi",
-    "wszystek" LOC_M_ANIM "wszystkim",
-    "wszystek" LOC_M_INAN "wszystkim",
-    "wszystek" LOC_F_ANIM "wszystkiej",
-    "wszystek" LOC_F_INAN "wszystkiej",
-    "wszystek" LOC_N_ANIM "wszystkim",
-    "wszystek" LOC_N_INAN "wszystkim",
-    "wszystek" LOC_VIR_ANIM "wszystkich",
-    "wszystek" LOC_VIR_INAN "wszystkich",
-    "wszystek" LOC_NVIR_ANIM "wszystkich",
-    "wszystek" LOC_NVIR_INAN "wszystkich",
-    "wygasły" NOM_VIR_ANIM "wygaśli",
-    "wygasły" NOM_VIR_INAN "wygaśli",
-    "wysoki" COMPARATIVE "wyższy",
-    "wysoki" SUPERLATIVE "najwyższy",
-    "wąski" COMPARATIVE "węższy",
-    "wąski" SUPERLATIVE "najwęższy",
-    "zaangażowany" COMPARATIVE "bardziej",
-    "zaangażowany" SUPERLATIVE "najbardziej",
-    "zaciszny" COMPARATIVE "zaciszniej",
-    "zaciszny" SUPERLATIVE "najzaciszniej",
-    "zarobiony" NOM_VIR_ANIM "zarobieni",
-    "zarobiony" NOM_VIR_INAN "zarobieni",
-    "zawisły" NOM_VIR_ANIM "zawiśli",
-    "zawisły" NOM_VIR_INAN "zawiśli",
-    "zielony" COMPARATIVE "zieleńszy",
-    "zielony" SUPERLATIVE "najzieleńszy",
-    "zły" NOM_VIR_ANIM "źli",
-    "zły" NOM_VIR_INAN "źli",
-    "łachmanowaty" COMPARATIVE "bardziej",
-    "łachmanowaty" SUPERLATIVE "najbardziej",
-    "śmiały" COMPARATIVE "śmielszy",
-    "śmiały" SUPERLATIVE "najśmielszy",
-    "żmii" NOM_F_ANIM "żmija",
-    "żmii" NOM_F_INAN "żmija",
-    "żmii" NOM_N_ANIM "żmije",
-    "żmii" NOM_N_INAN "żmije",
-    "żmii" NOM_NVIR_ANIM "żmije",
-    "żmii" NOM_NVIR_INAN "żmije",
-    "żmii" GEN_M_ANIM "żmijego",
-    "żmii" GEN_M_INAN "żmijego",
-    "żmii" GEN_F_ANIM "żmijej",
-    "żmii" GEN_F_INAN "żmijej",
-    "żmii" GEN_N_ANIM "żmijego",
-    "żmii" GEN_N_INAN "żmijego",
-    "żmii" DAT_M_ANIM "żmijemu",
-    "żmii" DAT_M_INAN "żmijemu",
-    "żmii" DAT_F_ANIM "żmijej",
-    "żmii" DAT_F_INAN "żmijej",
-    "żmii" DAT_N_ANIM "żmijemu",
-    "żmii" DAT_N_INAN "żmijemu",
-    "żmii" ACC_M_ANIM "żmijego",
-    "żmii" ACC_F_ANIM "żmiją",
-    "żmii" ACC_F_INAN "żmiją",
-    "żmii" ACC_N_ANIM "żmije",
-    "żmii" ACC_N_INAN "żmije",
-    "żmii" ACC_NVIR_ANIM "żmije",
-    "żmii" ACC_NVIR_INAN "żmije",
-    "żmii" INS_F_ANIM "żmiją",
-    "żmii" INS_F_INAN "żmiją",
-    "żmii" LOC_F_ANIM "żmijej",
-    "żmii" LOC_F_INAN "żmijej",
+/// 394 forms.
+pub(super) const IRREGULAR: Irregular<'static> = Irregular {
+    table: Cow::Borrowed(
+        r#"absolutny	61	najabsolutniejszy
+abstrakcyjny	61	najabstrakcyjniejszy
+absurdalny	61	najabsurdalniejszy
+adekwatny	61	najadekwatniejszy
+agresywny	61	najagresywniejszy
+aktualny	61	najaktualniejszy
+aktywny	61	najaktywniejszy
+akuratny	61	najakuratniejszy
+ambitny	61	najambitniejszy
+apatyczny	61	najapatyczniejszy
+apetyczny	61	najapetyczniejszy
+atrakcyjny	61	najatrakcyjniejszy
+autentyczny	61	najautentyczniejszy
+awantażowny	61	najawantażowniejszy
+biały	60	bielszy
+biały	61	najbielszy
+bukoliczny	60	bardziej
+bukoliczny	61	najbardziej
+błahy	6	błazi
+błahy	7	błazi
+cienki	60	cieńszy
+cienki	61	najcieńszy
+czerwony	60	czerwieńszy
+czerwony	61	najczerwieńszy
+dobry	60	lepszy
+dobry	61	najlepszy
+duży	6	duzi
+duży	7	duzi
+duży	60	większy
+duży	61	największy
+dziki	60	dzikszy
+dziki	61	najdzikszy
+fazowy	60	h
+fazowy	61	najh
+furiacki	60	bardziej
+furiacki	61	najbardziej
+gorazdy	6	goraździ
+gorazdy	7	goraździ
+jadliwy	61	najjadliwszy
+jaskrawy	61	najjaskrawszy
+jawny	61	najjawniejszy
+jebliwy	61	najjebliwszy
+jowialny	61	najjowialniejszy
+jurny	61	najjurniejszy
+jędrny	61	najjędrniejszy
+kundlowaty	60	bardziej
+kundlowaty	61	najbardziej
+lekki	60	lżejszy
+lekki	61	najlżejszy
+malusi	60	barzdiej
+malusi	61	najbarzdiej
+manewrowy	60	bardziej
+manewrowy	61	najbardziej
+mały	60	mniejszy
+mały	61	najmniejszy
+merkantylny	60	bardziej
+merkantylny	61	najbardziej
+nabożny	61	najnabożniejszy
+nachalny	61	najnachalniejszy
+nadobny	61	najnadobniejszy
+namaszczony	60	bardziej
+namaszczony	61	najbardziej
+namiętny	61	najnamiętniejszy
+namolny	61	najnamolniejszy
+natrętny	61	najnatrętniejszy
+naturalny	61	najnaturalniejszy
+negatywny	61	najnegatywniejszy
+neutralny	61	najneutralniejszy
+niebezpieczny	61	najniebezpieczniejszy
+niebłahy	6	niebłasi
+niebłahy	7	niebłasi
+niecierpliwy	61	najniecierpliwszy
+niecny	61	najniecniejszy
+niedokładny	61	najniedokładniejszy
+niedorzeczny	61	najniedorzeczniejszy
+niedołężny	61	najniedołężniejszy
+nieliczny	61	najnieliczniejszy
+niemiłosierny	61	najniemiłosierniejszy
+niemoralny	61	najniemoralniejszy
+nieporządny	61	najnieporządniejszy
+nieprzyjemny	61	najnieprzyjemniejszy
+nierozsądny	61	najnierozsądniejszy
+nieroztropny	61	najnieroztropniejszy
+nierozważny	61	najnierozważniejszy
+niesforny	61	najniesforniejszy
+niesmaczny	61	najniesmaczniejszy
+niesprawiedliwy	61	najniesprawiedliwszy
+niestosowny	61	najniestosowniejszy
+nieswój	2	nieswoja
+nieswój	3	nieswoja
+nieswój	4	nieswoje
+nieswój	5	nieswoje
+nieswój	6	nieswoi
+nieswój	7	nieswoi
+nieswój	8	nieswoje
+nieswój	9	nieswoje
+nieswój	10	nieswojego
+nieswój	11	nieswojego
+nieswój	12	nieswojej
+nieswój	13	nieswojej
+nieswój	14	nieswojego
+nieswój	15	nieswojego
+nieswój	16	nieswoich
+nieswój	17	nieswoich
+nieswój	18	nieswoich
+nieswój	19	nieswoich
+nieswój	20	nieswojemu
+nieswój	21	nieswojemu
+nieswój	22	nieswojej
+nieswój	23	nieswojej
+nieswój	24	nieswojemu
+nieswój	25	nieswojemu
+nieswój	26	nieswoim
+nieswój	27	nieswoim
+nieswój	28	nieswoim
+nieswój	29	nieswoim
+nieswój	30	nieswojego
+nieswój	32	nieswoją
+nieswój	33	nieswoją
+nieswój	34	nieswoje
+nieswój	35	nieswoje
+nieswój	36	nieswoich
+nieswój	37	nieswoich
+nieswój	38	nieswoje
+nieswój	39	nieswoje
+nieswój	40	nieswoim
+nieswój	41	nieswoim
+nieswój	42	nieswoją
+nieswój	43	nieswoją
+nieswój	44	nieswoim
+nieswój	45	nieswoim
+nieswój	46	nieswoimi
+nieswój	47	nieswoimi
+nieswój	48	nieswoimi
+nieswój	49	nieswoimi
+nieswój	50	nieswoim
+nieswój	51	nieswoim
+nieswój	52	nieswojej
+nieswój	53	nieswojej
+nieswój	54	nieswoim
+nieswój	55	nieswoim
+nieswój	56	nieswoich
+nieswój	57	nieswoich
+nieswój	58	nieswoich
+nieswój	59	nieswoich
+nieszczęśliwy	61	najnieszczęśliwszy
+nietolerancyjny	60	bardziej
+nietolerancyjny	61	najbardziej
+nieudolny	61	najnieudolniejszy
+niewdzięczny	61	najniewdzięczniejszy
+niewesoły	6	nieweseli
+niewesoły	7	nieweseli
+niezbędny	61	najniezbędniejszy
+niezdarny	61	najniezdarniejszy
+niezgrabny	61	najniezgrabniejszy
+nieżyczliwy	61	najnieżyczliwszy
+nikczemny	61	najnikczemniejszy
+nobliwy	61	najnobliwszy
+normalny	61	najnormalniejszy
+nowy	61	najnowszy
+nośny	61	najnośniejszy
+nudny	61	najnudniejszy
+nędzny	6	nędźni
+nędzny	7	nędźni
+pewien	2	pewna
+pewien	3	pewna
+pewien	4	pewne
+pewien	5	pewne
+pewien	6	pewni
+pewien	7	pewni
+pewien	8	pewne
+pewien	9	pewne
+pewien	10	pewnego
+pewien	11	pewnego
+pewien	12	pewnej
+pewien	13	pewnej
+pewien	14	pewnego
+pewien	15	pewnego
+pewien	16	pewnych
+pewien	17	pewnych
+pewien	18	pewnych
+pewien	19	pewnych
+pewien	20	pewnemu
+pewien	21	pewnemu
+pewien	22	pewnej
+pewien	23	pewnej
+pewien	24	pewnemu
+pewien	25	pewnemu
+pewien	26	pewnym
+pewien	27	pewnym
+pewien	28	pewnym
+pewien	29	pewnym
+pewien	30	pewnego
+pewien	32	pewną
+pewien	33	pewną
+pewien	34	pewne
+pewien	35	pewne
+pewien	36	pewnych
+pewien	37	pewnych
+pewien	38	pewne
+pewien	39	pewne
+pewien	40	pewnym
+pewien	41	pewnym
+pewien	42	pewną
+pewien	43	pewną
+pewien	44	pewnym
+pewien	45	pewnym
+pewien	46	pewnymi
+pewien	47	pewnymi
+pewien	48	pewnymi
+pewien	49	pewnymi
+pewien	50	pewnym
+pewien	51	pewnym
+pewien	52	pewnej
+pewien	53	pewnej
+pewien	54	pewnym
+pewien	55	pewnym
+pewien	56	pewnych
+pewien	57	pewnych
+pewien	58	pewnych
+pewien	59	pewnych
+pożądany	60	bardziej
+pożądany	61	najbardziej
+rad	6	radzi
+rad	7	radzi
+rumiany	60	rumieńszy
+rumiany	61	najrumieńszy
+tolerancyjny	60	bardziej
+tolerancyjny	61	najbardziej
+tuzinkowy	60	bardziej
+tuzinkowy	61	najbardziej
+wesoły	6	weseli
+wesoły	7	weseli
+wesoły	60	weselszy
+wesoły	61	najweselszy
+winien	2	winna
+winien	3	winna
+winien	4	winne
+winien	5	winne
+winien	6	winni
+winien	7	winni
+winien	8	winne
+winien	9	winne
+winien	10	winnego
+winien	11	winnego
+winien	12	winnej
+winien	13	winnej
+winien	14	winnego
+winien	15	winnego
+winien	16	winnych
+winien	17	winnych
+winien	18	winnych
+winien	19	winnych
+winien	20	winnemu
+winien	21	winnemu
+winien	22	winnej
+winien	23	winnej
+winien	24	winnemu
+winien	25	winnemu
+winien	26	winnym
+winien	27	winnym
+winien	28	winnym
+winien	29	winnym
+winien	30	winnego
+winien	32	winną
+winien	33	winną
+winien	34	winne
+winien	35	winne
+winien	36	winnych
+winien	37	winnych
+winien	38	winne
+winien	39	winne
+winien	40	winnym
+winien	41	winnym
+winien	42	winną
+winien	43	winną
+winien	44	winnym
+winien	45	winnym
+winien	46	winnymi
+winien	47	winnymi
+winien	48	winnymi
+winien	49	winnymi
+winien	50	winnym
+winien	51	winnym
+winien	52	winnej
+winien	53	winnej
+winien	54	winnym
+winien	55	winnym
+winien	56	winnych
+winien	57	winnych
+winien	58	winnych
+winien	59	winnych
+wszystek	2	wszystka
+wszystek	3	wszystka
+wszystek	4	wszystko
+wszystek	5	wszystko
+wszystek	6	wszyscy
+wszystek	7	wszyscy
+wszystek	8	wszystkie
+wszystek	9	wszystkie
+wszystek	10	wszystkiego
+wszystek	11	wszystkiego
+wszystek	12	wszystkiej
+wszystek	13	wszystkiej
+wszystek	14	wszystkiego
+wszystek	15	wszystkiego
+wszystek	16	wszystkich
+wszystek	17	wszystkich
+wszystek	18	wszystkich
+wszystek	19	wszystkich
+wszystek	20	wszystkiemu
+wszystek	21	wszystkiemu
+wszystek	22	wszystkiej
+wszystek	23	wszystkiej
+wszystek	24	wszystkiemu
+wszystek	25	wszystkiemu
+wszystek	26	wszystkim
+wszystek	27	wszystkim
+wszystek	28	wszystkim
+wszystek	29	wszystkim
+wszystek	30	wszystkiego
+wszystek	32	wszystką
+wszystek	33	wszystką
+wszystek	34	wszystko
+wszystek	35	wszystko
+wszystek	36	wszystkich
+wszystek	37	wszystkich
+wszystek	38	wszystkie
+wszystek	39	wszystkie
+wszystek	40	wszystkim
+wszystek	41	wszystkim
+wszystek	42	wszystką
+wszystek	43	wszystką
+wszystek	44	wszystkim
+wszystek	45	wszystkim
+wszystek	46	wszystkimi
+wszystek	47	wszystkimi
+wszystek	48	wszystkimi
+wszystek	49	wszystkimi
+wszystek	50	wszystkim
+wszystek	51	wszystkim
+wszystek	52	wszystkiej
+wszystek	53	wszystkiej
+wszystek	54	wszystkim
+wszystek	55	wszystkim
+wszystek	56	wszystkich
+wszystek	57	wszystkich
+wszystek	58	wszystkich
+wszystek	59	wszystkich
+wysoki	60	wyższy
+wysoki	61	najwyższy
+wąski	60	węższy
+wąski	61	najwęższy
+zaangażowany	60	bardziej
+zaangażowany	61	najbardziej
+zaciszny	60	zaciszniej
+zaciszny	61	najzaciszniej
+zielony	60	zieleńszy
+zielony	61	najzieleńszy
+zły	6	źli
+zły	7	źli
+łachmanowaty	60	bardziej
+łachmanowaty	61	najbardziej
+śmiały	60	śmielszy
+śmiały	61	najśmielszy
+żmii	2	żmija
+żmii	3	żmija
+żmii	4	żmije
+żmii	5	żmije
+żmii	8	żmije
+żmii	9	żmije
+żmii	10	żmijego
+żmii	11	żmijego
+żmii	12	żmijej
+żmii	13	żmijej
+żmii	14	żmijego
+żmii	15	żmijego
+żmii	20	żmijemu
+żmii	21	żmijemu
+żmii	22	żmijej
+żmii	23	żmijej
+żmii	24	żmijemu
+żmii	25	żmijemu
+żmii	30	żmijego
+żmii	32	żmiją
+żmii	33	żmiją
+żmii	34	żmije
+żmii	35	żmije
+żmii	38	żmije
+żmii	39	żmije
+żmii	42	żmiją
+żmii	43	żmiją
+żmii	52	żmijej
+żmii	53	żmijej
+"#,
+    ),
 };

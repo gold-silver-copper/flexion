@@ -26,101 +26,83 @@ macro_rules! declension {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `ait`: 27,460 words.
-    Ait,
-    /// Like `bois`: 1,312 words.
+    /// Like `trait`: 40,467 words.
+    Trait,
+    /// Like `bois`: 1,573 words.
     Bois,
-    /// Like `bonhomme`: 243 words.
-    Bonhomme,
-    /// Like `jeu`: 187 words.
-    Jeu,
-    /// Like `mal`: 112 words.
-    Mal,
-    /// Like `tit-gris`: 81 words.
-    Titgris,
-    /// Like `au-frère`: 16 words.
-    Aufrère,
-    /// Like `ddy`: 14 words.
-    Ddy,
+    /// Like `marteau`: 324 words.
+    Marteau,
+    /// Like `journal`: 152 words.
+    Journal,
+    /// Like `blanc-seing`: 16 words.
+    Blancseing,
+    /// Like `caddy`: 15 words.
+    Caddy,
     /// Like `ksar`: 14 words.
     Ksar,
-    /// Like `russien`: 13 words.
-    Russien,
-    /// Like `-bar`: 13 words.
-    Bar,
-    /// Like `woman`: 12 words.
-    Woman,
+    /// Like `superwoman`: 12 words.
+    Superwoman,
+    /// Like `bonhomme`: 11 words.
+    Bonhomme,
     /// Like `émail`: 9 words.
     Émail,
-    /// Like `dium`: 7 words.
-    Dium,
-    /// Like `pedimentum`: 7 words.
-    Pedimentum,
-    /// Like `f-lieu`: 7 words.
-    Flieu,
-    /// Like `al-garou`: 7 words.
-    Algarou,
-    /// Like `-de-cuir`: 6 words.
-    Decuir,
-    /// Like `evus`: 5 words.
-    Evus,
-    /// Like `tto`: 4 words.
-    Tto,
-    /// Like `zza`: 4 words.
-    Zza,
-    /// Like `ndy`: 4 words.
-    Ndy,
-    /// Like `au-fils`: 4 words.
-    Aufils,
+    /// Like `impedimentum`: 8 words.
+    Impedimentum,
+    /// Like `atrium`: 8 words.
+    Atrium,
+    /// Like `dandy`: 5 words.
+    Dandy,
+    /// Like `match`: 5 words.
+    Match,
+    /// Like `nævus`: 5 words.
+    Nævus,
+    /// Like `nova`: 4 words.
+    Nova,
+    /// Like `putto`: 4 words.
+    Putto,
+    /// Like `aïeul`: 4 words.
+    Aïeul,
     /// Like `de`: 3 words.
     De,
+    /// Like `dipinto`: 3 words.
+    Dipinto,
     /// Like `dr`: 3 words.
     Dr,
+    /// Like `aller-retour`: 3 words.
+    Allerretour,
     /// Like `djeune`: 3 words.
     Djeune,
-    /// Like `aïeul`: 3 words.
-    Aïeul,
-    /// Like `ombox`: 3 words.
-    Ombox,
-    /// Like `ler-retour`: 3 words.
-    Lerretour,
-    /// Like `al-jupon`: 3 words.
-    Aljupon,
+    /// Like `bisaïeul`: 3 words.
+    Bisaïeul,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 30] = [
-        Declension::Ait,
+    pub const ALL: [Declension; 24] = [
+        Declension::Trait,
         Declension::Bois,
-        Declension::Bonhomme,
-        Declension::Jeu,
-        Declension::Mal,
-        Declension::Titgris,
-        Declension::Aufrère,
-        Declension::Ddy,
+        Declension::Marteau,
+        Declension::Journal,
+        Declension::Blancseing,
+        Declension::Caddy,
         Declension::Ksar,
-        Declension::Russien,
-        Declension::Bar,
-        Declension::Woman,
+        Declension::Superwoman,
+        Declension::Bonhomme,
         Declension::Émail,
-        Declension::Dium,
-        Declension::Pedimentum,
-        Declension::Flieu,
-        Declension::Algarou,
-        Declension::Decuir,
-        Declension::Evus,
-        Declension::Tto,
-        Declension::Zza,
-        Declension::Ndy,
-        Declension::Aufils,
-        Declension::De,
-        Declension::Dr,
-        Declension::Djeune,
+        Declension::Impedimentum,
+        Declension::Atrium,
+        Declension::Dandy,
+        Declension::Match,
+        Declension::Nævus,
+        Declension::Nova,
+        Declension::Putto,
         Declension::Aïeul,
-        Declension::Ombox,
-        Declension::Lerretour,
-        Declension::Aljupon,
+        Declension::De,
+        Declension::Dipinto,
+        Declension::Dr,
+        Declension::Allerretour,
+        Declension::Djeune,
+        Declension::Bisaïeul,
     ];
 
     /// Its table.
@@ -138,125 +120,101 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 30] = [
-    // Ait: 27,460 words (book, pie, deal, eagle, able, nu).
-    declension!("ait", 27460, "~";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 24] = [
+    // Trait: 40,467 words (livre, book, chien, pie, connotation, minute).
+    declension!("trait", 40467, "~";
         noun: "~", "~s";
     ),
-    // Bois: 1,312 words (fa, faq, ce, os, bm, led).
-    declension!("bois", 1312, "~";
+    // Bois: 1,573 words (fa, abraxas, faq, ce, os, bm).
+    declension!("bois", 1573, "~";
         noun: "~", "~";
     ),
-    // Bonhomme: 243 words (bonhomme, gentilhomme, arrière-grand-oncle, p-garou, ille-douce, c-tireur).
-    declension!("bonhomme", 243, "~~";
-        noun: "~~", "~s~s";
-    ),
-    // Jeu: 187 words (ypréau, gâteau, jeu, dieu, beau, pou).
-    declension!("jeu", 187, "~";
+    // Marteau: 324 words (ypréau, taureau, gâteau, jeu, dieu, bureau).
+    declension!("marteau", 324, "~";
         noun: "~", "~x";
     ),
-    // Mal: 112 words (dual, oral, vocal, mal, hospital, pascal).
-    declension!("mal", 112, "~l";
+    // Journal: 152 words (abbatial, dual, rational, animal, oral, capital).
+    declension!("journal", 152, "~l";
         noun: "~l", "~ux";
     ),
-    // Titgris: 81 words (in-marie, l-de-sac, tien-gorge, lle-de-jour, lle-de-nuit, l-au-vent).
-    declension!("tit-gris", 81, "~~";
-        noun: "~~", "~s~";
+    // Blancseing: 16 words (tam-tam, ticket-restaurant, nouveau-né, auto-tamponneuse, garde-côte, aide-soignant).
+    declension!("blanc-seing", 16, "~~";
+        noun: "~~", "~~s|~s~s";
     ),
-    // Aufrère: 16 words (au-père, teau-pilon, teau-piolet, teau-piqueur, au-frère, seau-mouche).
-    declension!("au-frère", 16, "~~";
-        noun: "~~", "~x~s";
-    ),
-    // Ddy: 14 words (hobby, lady, whisky, wallaby, ferry, rty).
-    declension!("ddy", 14, "~y";
+    // Caddy: 15 words (hobby, party, lavatory, buggy, lady, whisky).
+    declension!("caddy", 15, "~y";
         noun: "~y", "~ies|~ys";
     ),
-    // Ksar: 14 words (land, yachtsman, ksar, yachtwoman, yachtman, wattman).
+    // Ksar: 14 words (businesswoman, land, yachtsman, recordman, ksar, croque-madame).
     declension!("ksar", 14, "~a~";
         noun: "~a~", "~a~s|~e~";
     ),
-    // Russien: 13 words (homme-sandwich, m-tam, cket-restaurant, veau-né, tamponneuse, de-soignant).
-    declension!("russien", 13, "~~";
-        noun: "~~", "~~s|~s~s";
-    ),
-    // Bar: 13 words (-pourri, -boutant, -point, -blanc, -pub, -bar).
-    declension!("-bar", 13, "~";
-        noun: "~", "s~s";
-    ),
-    // Woman: 12 words (gentleman, tennisman, tenniswoman, sinessman, raman, ryman).
-    declension!("woman", 12, "~a~";
+    // Superwoman: 12 words (businessman, gentleman, cameraman, salaryman, superwoman, tennisman).
+    declension!("superwoman", 12, "~a~";
         noun: "~a~", "~e~|~a~s";
     ),
-    // Émail: 9 words (bail, émail, ventail, corail, vitrail, fermail).
+    // Bonhomme: 11 words (bonhomme, arrière-grand-mère, gentilhomme, arrière-petit-enfant, arrière-grand-parent, arrière-petite-fille).
+    declension!("bonhomme", 11, "~~";
+        noun: "~~", "~s~s";
+    ),
+    // Émail: 9 words (bail, émail, travail, ventail, corail, vitrail).
     declension!("émail", 9, "~il";
         noun: "~il", "~ux";
     ),
-    // Dium: 7 words (ultimatum, tepidarium, dium, orium, ferendum, férendum).
-    declension!("dium", 7, "~um";
+    // Impedimentum: 8 words (maximum, minimum, quantum, scriptorium, impedimentum, dolium).
+    declension!("impedimentum", 8, "~um";
+        noun: "~um", "~a";
+    ),
+    // Atrium: 8 words (atrium, podium, emporium, ultimatum, referendum, tepidarium).
+    declension!("atrium", 8, "~um";
         noun: "~um", "~ums|~a";
     ),
-    // Pedimentum: 7 words (cæcum, ximum, mum, ntum, riptorium, pedimentum).
-    declension!("pedimentum", 7, "~um";
-        noun: "~um", "~a|~ums";
-    ),
-    // Flieu: 7 words (f-lieu, quin-marteau, tit-neveu, petit-neveu, pa-gâteau, ouille-taureau).
-    declension!("f-lieu", 7, "~~";
-        noun: "~~", "~s~x";
-    ),
-    // Algarou: 7 words (chal-ferrant, éral-démocrate, cial-démocrate, al-risque, mal-garou, al-garou).
-    declension!("al-garou", 7, "~l~";
-        noun: "~l~", "~ux~s";
-    ),
-    // Decuir: 6 words (-en-ciel, -de-pied, -de-vin, -de-cuir, -sous-roche, -basket).
-    declension!("-de-cuir", 6, "~";
-        noun: "~", "s~";
-    ),
-    // Evus: 5 words (uræus, balanus, nævus, nucléus, evus).
-    declension!("evus", 5, "~us";
-        noun: "~us", "~i";
-    ),
-    // Tto: 4 words (ghetto, anissimo, tto, presario).
-    declension!("tto", 4, "~o";
-        noun: "~o", "~os|~i";
-    ),
-    // Zza: 4 words (nova, khrouchtchevka, zza, ïba).
-    declension!("zza", 4, "~a";
-        noun: "~a", "~as";
-    ),
-    // Ndy: 4 words (rry, alty, ndy, nalty).
-    declension!("ndy", 4, "~y";
+    // Dandy: 5 words (cherry, penalty, dandy, lorry, pénalty).
+    declension!("dandy", 5, "~y";
         noun: "~y", "~ys|~ies";
     ),
-    // Aufils: 4 words (au-fils, teau-feu, teau-phare, teau-lavoir).
-    declension!("au-fils", 4, "~~";
-        noun: "~~", "~x~";
+    // Match: 5 words (match, brunch, boombox, venator, bérabich).
+    declension!("match", 5, "~";
+        noun: "~", "~es";
+    ),
+    // Nævus: 5 words (naevus, uræus, balanus, nævus, nucléus).
+    declension!("nævus", 5, "~us";
+        noun: "~us", "~i";
+    ),
+    // Nova: 4 words (pizza, nova, supernova, khrouchtchevka).
+    declension!("nova", 4, "~a";
+        noun: "~a", "~as";
+    ),
+    // Putto: 4 words (ghetto, pianissimo, putto, impresario).
+    declension!("putto", 4, "~o";
+        noun: "~o", "~os|~i";
+    ),
+    // Aïeul: 4 words (fractal, étal, aïeul, airial).
+    declension!("aïeul", 4, "~l";
+        noun: "~l", "~ls|~ux";
     ),
     // De: 3 words (de, me, ve).
     declension!("de", 3, "~e";
         noun: "~e", "~ᵉˢ";
     ),
+    // Dipinto: 3 words (scenario, dipinto, zingaro).
+    declension!("dipinto", 3, "~o";
+        noun: "~o", "~i";
+    ),
     // Dr: 3 words (dr, mr, sr).
     declension!("dr", 3, "~r";
         noun: "~r", "~ʳˢ";
     ),
-    // Djeune: 3 words (érouve, djeune, rodescendante).
+    // Allerretour: 3 words (aller-retour, jupe-crayon, réveil-matin).
+    declension!("aller-retour", 3, "~~";
+        noun: "~~", "~~";
+    ),
+    // Djeune: 3 words (érouve, djeune, afrodescendante).
     declension!("djeune", 3, "~e";
         noun: "~e", "~es|~s";
     ),
-    // Aïeul: 3 words (étal, aïeul, ctal).
-    declension!("aïeul", 3, "~l";
-        noun: "~l", "~ls|~ux";
-    ),
-    // Ombox: 3 words (venator, ombox, rabich).
-    declension!("ombox", 3, "~";
-        noun: "~", "~es";
-    ),
-    // Lerretour: 3 words (ler-retour, pe-crayon, veil-matin).
-    declension!("ler-retour", 3, "~~";
-        noun: "~~", "~~";
-    ),
-    // Aljupon: 3 words (al-vapeur, al-jupon, al-diable).
-    declension!("al-jupon", 3, "~l~";
-        noun: "~l~", "~ux~";
+    // Bisaïeul: 3 words (trisaïeul, bisaïeul, quadrisaïeul).
+    declension!("bisaïeul", 3, "~l";
+        noun: "~l", "~x|~ls";
     ),
 ];

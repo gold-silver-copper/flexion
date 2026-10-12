@@ -1,841 +1,297 @@
-//! The dictionary's forms no declension gives, as it writes them: `(word, cell,
-//! form)`, sorted. They are the answer for that word and cell.
+//! The dictionary's forms no declension gives, as it writes them: a line per form,
+//! the word, its cell's number (see `super::cell`) and the form, sorted by word
+//! and cell. They are the answer for that word and cell.
 
-use super::cell::*;
+use flexion::Irregular;
 use std::borrow::Cow;
 
-pub(super) static IRREGULAR: &[(Cow<'static, str>, u16, Cow<'static, str>)] = flexion::irregular! {
-    "abri-sous-roche" NOUN_PL "abris-sous-roche",
-    "abu-markub" NOUN_PL "abu-markubs",
-    "académiste" NOUN_PL "académistes",
-    "activiste" NOUN_PL "activistes",
-    "adjudant-major" NOUN_PL "adjudants-majors",
-    "adéquiste" NOUN_PL "adéquistes",
-    "affairiste" NOUN_PL "affairistes",
-    "affichiste" NOUN_PL "affichistes",
-    "afrodescendantes" NOUN_PL "afrodescendants",
-    "afrodescendants" NOUN_PL "afrodescendantes",
-    "agrochimiste" NOUN_PL "agrochimistes",
-    "aide-comptable" NOUN_PL "aides-comptables",
-    "aide-mémoire" NOUN_PL "aide-mémoire",
-    "alarmiste" NOUN_PL "alarmistes",
-    "alchimiste" NOUN_PL "alchimistes",
-    "algébriste" NOUN_PL "algébristes",
-    "allemaniste" NOUN_PL "allemanistes",
-    "aller-retour" NOUN_PL "aller-retour",
-    "allume-cigare" NOUN_PL "allume-cigares",
-    "allume-feu" NOUN_PL "allume-feu",
-    "ambigramme" NOUN_PL "ambigrammes",
-    "amuse-bouche" NOUN_PL "amuse-bouche",
-    "amuse-gueule" NOUN_PL "amuse-gueules",
-    "aménagiste" NOUN_PL "aménagistes",
-    "animal-garou" NOUN_PL "animaux-garous",
-    "animiste" NOUN_PL "animistes",
-    "anishinaabe" NOUN_PL "anishinaabeg",
-    "année-homme" NOUN_PL "années-hommes",
-    "année-lumière" NOUN_PL "années-lumière",
-    "anthropologiste" NOUN_PL "anthropologistes",
-    "anthémol" NOUN_PL "anthémols",
-    "anticommuniste" NOUN_PL "anticommunistes",
-    "antiesclavagiste" NOUN_PL "antiesclavagistes",
-    "antipodiste" NOUN_PL "antipodistes",
-    "antipoutiniste" NOUN_PL "antipoutinistes",
-    "apanagiste" NOUN_PL "apanagistes",
-    "apartement" NOUN_PL "apartemens",
-    "apartheid" NOUN_PL "apartheid",
-    "apologiste" NOUN_PL "apologistes",
-    "appui-main" NOUN_PL "appuis-main",
-    "appui-pied" NOUN_PL "appui-pied",
-    "appui-tête" NOUN_PL "appuis-tête",
-    "aquafortiste" NOUN_PL "aquafortistes",
-    "arbitragiste" NOUN_PL "arbitragistes",
-    "arc-doubleau" NOUN_PL "arcs-doubleaux",
-    "archiviste" NOUN_PL "archivistes",
-    "arriviste" NOUN_PL "arrivistes",
-    "arrière-grand-mère" NOUN_PL "arrière-grands-mères",
-    "arrière-grand-oncle" NOUN_PL "arrière-grands-oncles",
-    "arrière-grand-parent" NOUN_PL "arrière-grands-parents",
-    "arrière-grand-tante" NOUN_PL "arrière-grandes-tantes",
-    "artisan" NOUN_PL "artisans",
-    "artiste" NOUN_PL "artistes",
-    "asbeste" NOUN_PL "asbestes",
-    "assadiste" NOUN_PL "assadistes",
-    "assurance-chômage" NOUN_PL "assurances-chômage",
-    "assurance-crédit" NOUN_PL "assurances-crédit",
-    "assurance-vie" NOUN_PL "assurances-vie",
-    "astrobiologiste" NOUN_PL "astrobiologistes",
-    "astrométriste" NOUN_PL "astrométristes",
-    "atlantiste" NOUN_PL "atlantistes",
-    "attaché-case" NOUN_PL "attaché-cases",
-    "aubergiste" NOUN_PL "aubergistes",
-    "audiologiste" NOUN_PL "audiologistes",
-    "auguste" NOUN_PL "augustes",
-    "autarcie" NOUN_PL "autarcies",
-    "autonomiste" NOUN_PL "autonomistes",
-    "avant-gardiste" NOUN_PL "avant-gardistes",
-    "baathiste" NOUN_PL "baathistes",
-    "babouviste" NOUN_PL "babouvistes",
-    "bacchanal" NOUN_PL "bacchanals",
-    "bactériologiste" NOUN_PL "bactériologistes",
-    "badiste" NOUN_PL "badistes",
-    "bagad" NOUN_PL "bagadoù",
-    "bagagiste" NOUN_PL "bagagistes",
-    "baggy" NOUN_PL "baggys",
-    "bagou" NOUN_PL "bagous",
-    "baillive" NOUN_PL "baillives",
-    "bain-marie" NOUN_PL "bains-marie",
-    "baise-en-ville" NOUN_PL "baise-en-ville",
-    "ballon-panier" NOUN_PL "ballons-panier",
-    "bambouseraie" NOUN_PL "bambouseraies",
-    "bananeraie" NOUN_PL "bananeraies",
-    "bandagiste" NOUN_PL "bandagistes",
-    "bande-vidéo" NOUN_PL "bandes-vidéo",
-    "banquiste" NOUN_PL "banquistes",
-    "barbital" NOUN_PL "barbitals",
-    "basquiste" NOUN_PL "basquistes",
-    "basse-cour" NOUN_PL "basses-cours",
-    "basse-fosse" NOUN_PL "basses-fosses",
-    "basse-taille" NOUN_PL "basses-tailles",
-    "bateau-feu" NOUN_PL "bateaux-feu",
-    "bateau-lavoir" NOUN_PL "bateaux-lavoir",
-    "bateau-phare" NOUN_PL "bateaux-phare",
-    "batiste" NOUN_PL "batistes",
-    "bd" NOUN_PL "bᵈˢ",
-    "beau-dabe" NOUN_PL "beaux-dabes",
-    "beau-fils" NOUN_PL "beaux-fils",
-    "beau-frère" NOUN_PL "beaux-frères",
-    "beau-neveu" NOUN_PL "beaux-neveux",
-    "beau-papa" NOUN_PL "beau-papas",
-    "beau-parent" NOUN_PL "beaux-parents",
-    "beau-père" NOUN_PL "beaux-pères",
-    "bec-croisé" NOUN_PL "becs-croisés",
-    "bec-de-cane" NOUN_PL "becs-de-cane",
-    "bec-de-lièvre" NOUN_PL "becs-de-lièvre",
-    "bec-en-sabot" NOUN_PL "becs-en-sabot",
-    "bel-enfant" NOUN_PL "beaux-enfants",
-    "belle-dabe" NOUN_PL "belles-dabes",
-    "belle-de-jour" NOUN_PL "belles-de-jour",
-    "belle-de-nuit" NOUN_PL "belles-de-nuit",
-    "belle-doche" NOUN_PL "belles-doches",
-    "belle-famille" NOUN_PL "belles-familles",
-    "belle-maman" NOUN_PL "belles-mamans",
-    "belle-nièce" NOUN_PL "belles-nièces",
-    "belle-sœur" NOUN_PL "belles-sœurs",
-    "belle-âge" NOUN_PL "belles-âges",
-    "berbériste" NOUN_PL "berbéristes",
-    "berimbau" NOUN_PL "berimbaus",
-    "biochimiste" NOUN_PL "biochimistes",
-    "biologiste" NOUN_PL "biologistes",
-    "bioterroriste" NOUN_PL "bioterroristes",
-    "bisaïeul" NOUN_PL "bisaïeux",
-    "blanc-bec" NOUN_PL "blancs-becs",
-    "blanc-estoc" NOUN_PL "blancs-estocs",
-    "blanc-manger" NOUN_PL "blancs-mangers",
-    "blanc-russien" NOUN_PL "blancs-russiens",
-    "blanc-étoc" NOUN_PL "blancs-étocs",
-    "blastocyste" NOUN_PL "blastocystes",
-    "bloc-cylindres" NOUN_PL "blocs-cylindres",
-    "bloc-notes" NOUN_PL "blocs-notes",
-    "blush" NOUN_PL "blushs",
-    "boit-sans-soif" NOUN_PL "boit-sans-soif",
-    "bollandiste" NOUN_PL "bollandistes",
-    "bonapartiste" NOUN_PL "bonapartistes",
-    "bonheur-du-jour" NOUN_PL "bonheurs-du-jour",
-    "bonhomme" NOUN_PL "bonshommes",
-    "borne-abreuvoir" NOUN_PL "bornes-abreuvoirs",
-    "borne-fontaine" NOUN_PL "bornes-fontaines",
-    "botaniste" NOUN_PL "botanistes",
-    "bouche-trou" NOUN_PL "bouche-trous",
-    "boui-boui" NOUN_PL "bouis-bouis",
-    "boulangiste" NOUN_PL "boulangistes",
-    "bourse-à-pasteur" NOUN_PL "bourses-à-pasteur",
-    "bouton-poussoir" NOUN_PL "boutons-poussoir",
-    "bouton-pression" NOUN_PL "boutons-pression",
-    "brassal" NOUN_PL "brassals",
-    "brigadier-chef" NOUN_PL "brigadier-chefs",
-    "brise-bise" NOUN_PL "brise-bise",
-    "brise-glace" NOUN_PL "brise-glace",
-    "brunch" NOUN_PL "brunches",
-    "bte" NOUN_PL "bᵗᵉˢ",
-    "bupreste" NOUN_PL "buprestes",
-    "bâton-du-diable" NOUN_PL "bâtons-du-diable",
-    "bébé-éprouvette" NOUN_PL "bébés-éprouvette",
-    "bélandre" NOUN_PL "bélandres",
-    "bémol" NOUN_PL "bémols",
-    "béni-oui-oui" NOUN_PL "béni-oui-oui",
-    "bérabich" NOUN_PL "bérabiches",
-    "bérimbau" NOUN_PL "bérimbaus",
-    "bêche-de-mer" NOUN_PL "bêches-de-mer",
-    "cabanon" NOUN_PL "cabanons",
-    "cadriciel" NOUN_PL "cadriciels",
-    "café-chicorée" NOUN_PL "cafés-chicorée",
-    "café-théâtre" NOUN_PL "cafés-théâtres",
-    "caillou" NOUN_PL "cailloux",
-    "cajou" NOUN_PL "cajous",
-    "calandre" NOUN_PL "calandres",
-    "calviniste" NOUN_PL "calvinistes",
-    "cambiste" NOUN_PL "cambistes",
-    "cameraman" NOUN_PL "cameramen",
-    "camion-balai" NOUN_PL "camions-balai",
-    "cantal" NOUN_PL "cantals",
-    "capital-risque" NOUN_PL "capitaux-risques",
-    "caquiste" NOUN_PL "caquistes",
-    "caravagiste" NOUN_PL "caravagistes",
-    "carcajou" NOUN_PL "carcajous",
-    "cardon-de-mer" NOUN_PL "cardons-de-mer",
-    "carnaval" NOUN_PL "carnavals",
-    "cartomancie" NOUN_PL "cartomancies",
-    "castriste" NOUN_PL "castristes",
-    "caviste" NOUN_PL "cavistes",
-    "centre-ville" NOUN_PL "centres-villes",
-    "cerisaie" NOUN_PL "cerisaies",
-    "ceriseraie" NOUN_PL "ceriseraies",
-    "chaabane" NOUN_PL "chaabane",
-    "chabab" NOUN_PL "chabab",
-    "chambriste" NOUN_PL "chambristes",
-    "champi" NOUN_PL "champis",
-    "chargeuse-pelleteuse" NOUN_PL "chargeuse-pelleteuses",
-    "chartiste" NOUN_PL "chartistes",
-    "chat-garou" NOUN_PL "chats-garous",
-    "chat-huant" NOUN_PL "chats-huants",
-    "chaud-froid" NOUN_PL "chauds-froids",
-    "chauve-souriceau" NOUN_PL "chauves-souriceaux",
-    "chauve-souris" NOUN_PL "chauves-souris",
-    "chaviste" NOUN_PL "chavistes",
-    "chef-lieu" NOUN_PL "chefs-lieux",
-    "cheval-diable" NOUN_PL "chevaux-diable",
-    "cheval-garou" NOUN_PL "chevaux-garous",
-    "cheval-jupon" NOUN_PL "chevaux-jupon",
-    "cheval-vapeur" NOUN_PL "chevaux-vapeur",
-    "chimiste" NOUN_PL "chimistes",
-    "chiromancie" NOUN_PL "chiromancies",
-    "chromiste" NOUN_PL "chromistes",
-    "cibiste" NOUN_PL "cibistes",
-    "cie" NOUN_PL "cⁱᵉˢ",
-    "citrouille-lanterne" NOUN_PL "citrouille-lanternes",
-    "coco-fesse" NOUN_PL "cocos-fesses",
-    "cocotte-minute" NOUN_PL "cocottes-minutes",
-    "code-barres" NOUN_PL "codes-barres",
-    "coin-coin" NOUN_PL "coin-coin",
-    "colbertiste" NOUN_PL "colbertistes",
-    "coloriste" NOUN_PL "coloristes",
-    "comment" NOUN_PL "comment",
-    "communiste" NOUN_PL "communistes",
-    "compagnon" NOUN_PL "compagnons",
-    "complotiste" NOUN_PL "complotistes",
-    "complétiste" NOUN_PL "complétistes",
-    "compte-rendu" NOUN_PL "comptes-rendus",
-    "concertiste" NOUN_PL "concertistes",
-    "conclaviste" NOUN_PL "conclavistes",
-    "conformiste" NOUN_PL "conformistes",
-    "confucianiste" NOUN_PL "confucianistes",
-    "consumériste" NOUN_PL "consuméristes",
-    "contactologiste" NOUN_PL "contactologistes",
-    "contingent" NOUN_PL "contingents",
-    "contre-la-montre" NOUN_PL "contre-la-montre",
-    "contre-terroriste" NOUN_PL "contre-terroristes",
-    "cordon-bleu" NOUN_PL "cordons-bleus",
-    "corniste" NOUN_PL "cornistes",
-    "corral" NOUN_PL "corrals",
-    "cosmochimiste" NOUN_PL "cosmochimistes",
-    "cosmologiste" NOUN_PL "cosmologistes",
-    "cotorep" NOUN_PL "cotorep",
-    "couche-culotte" NOUN_PL "couches-culottes",
-    "couche-tard" NOUN_PL "couche-tard",
-    "couche-tôt" NOUN_PL "couche-tôt",
-    "coupe-chou" NOUN_PL "coupes-chou",
-    "coupe-choux" NOUN_PL "coupes-choux",
-    "coupe-ongles" NOUN_PL "coupes-ongles",
-    "court-circuit" NOUN_PL "courts-circuits",
-    "courtisan" NOUN_PL "courtisans",
-    "crapaud-buffle" NOUN_PL "crapauds-buffles",
-    "croc-en-jambe" NOUN_PL "crocs-en-jambe",
-    "crossman" NOUN_PL "crossmen",
-    "crosswoman" NOUN_PL "crosswomen",
-    "créditiste" NOUN_PL "créditistes",
-    "cubiste" NOUN_PL "cubistes",
-    "cul-béni" NOUN_PL "culs-bénis",
-    "cul-bénit" NOUN_PL "culs-bénits",
-    "cul-de-jatte" NOUN_PL "culs-de-jatte",
-    "cul-de-poule" NOUN_PL "culs-de-poule",
-    "cul-de-sac" NOUN_PL "culs-de-sac",
-    "cul-rond" NOUN_PL "culs-ronds",
-    "cul-terreux" NOUN_PL "culs-terreux",
-    "curieux" NOUN_PL "curieuse",
-    "curiste" NOUN_PL "curistes",
-    "cyberactiviste" NOUN_PL "cyberactivistes",
-    "cyberterroriste" NOUN_PL "cyberterroristes",
-    "cycliste" NOUN_PL "cyclistes",
-    "cyclocrossman" NOUN_PL "cyclocrossmen",
-    "cyclomotoriste" NOUN_PL "cyclomotoristes",
-    "cylindre" NOUN_PL "cylindres",
-    "cytologiste" NOUN_PL "cytologistes",
-    "cégétiste" NOUN_PL "cégétistes",
-    "célestial" NOUN_PL "célestials",
-    "céraste" NOUN_PL "cérastes",
-    "cétal" NOUN_PL "cétals",
-    "dacryocyste" NOUN_PL "dacryocystes",
-    "damma" NOUN_PL "dammas",
-    "dent-de-lion" NOUN_PL "dents-de-lion",
-    "dessous-de-table" NOUN_PL "dessous-de-table",
-    "diagou" NOUN_PL "diagous",
-    "dialoguiste" NOUN_PL "dialoguistes",
-    "dipinto" NOUN_PL "dipinti",
-    "dirigiste" NOUN_PL "dirigistes",
-    "djoundi" NOUN_PL "djounoud",
-    "dlle" NOUN_PL "dˡˡᵉˢ",
-    "dodécaphoniste" NOUN_PL "dodécaphonistes",
-    "dolium" NOUN_PL "dolia",
-    "donacie" NOUN_PL "donacies",
-    "donatiste" NOUN_PL "donatistes",
-    "double-clic" NOUN_PL "doubles-clics",
-    "double-cloche" NOUN_PL "doubles-cloches",
-    "double-fond" NOUN_PL "doubles-fonds",
-    "double-sens" NOUN_PL "doubles-sens",
-    "dre" NOUN_PL "dʳᵉˢ",
-    "dystocie" NOUN_PL "dystocies",
-    "décembriste" NOUN_PL "décembristes",
-    "décorum" NOUN_PL "décorums",
-    "défaitiste" NOUN_PL "défaitistes",
-    "démoniste" NOUN_PL "démonistes",
-    "dépose-minute" NOUN_PL "dépose-minute",
-    "dépt" NOUN_PL "dépᵗˢ",
-    "détergent" NOUN_PL "détergents",
-    "déterministe" NOUN_PL "déterministes",
-    "déverbal" NOUN_PL "déverbaux",
-    "dû" NOUN_PL "dus",
-    "eau-de-vie" NOUN_PL "eaux-de-vie",
-    "effraie" NOUN_PL "effraies",
-    "embryologiste" NOUN_PL "embryologistes",
-    "enduriste" NOUN_PL "enduristes",
-    "engagiste" NOUN_PL "engagistes",
-    "ergonomiste" NOUN_PL "ergonomistes",
-    "esbroufe" NOUN_PL "esbroufe",
-    "esclandre" NOUN_PL "esclandres",
-    "esclavagiste" NOUN_PL "esclavagistes",
-    "estropié" NOUN_PL "estropiés",
-    "ethnobiologiste" NOUN_PL "ethnobiologistes",
-    "ethnobotaniste" NOUN_PL "ethnobotanistes",
-    "ethnoornithologiste" NOUN_PL "ethnoornithologistes",
-    "ethnozoologiste" NOUN_PL "ethnozoologistes",
-    "eudiste" NOUN_PL "eudistes",
-    "eudémoniste" NOUN_PL "eudémonistes",
-    "eugéniste" NOUN_PL "eugénistes",
-    "eurocommuniste" NOUN_PL "eurocommunistes",
-    "exobiologiste" NOUN_PL "exobiologistes",
-    "expression-valise" NOUN_PL "expression-valises",
-    "extrémiste" NOUN_PL "extrémistes",
-    "extrémum" NOUN_PL "extrémums",
-    "fair-play" NOUN_PL "fair-plays",
-    "faire-part" NOUN_PL "faire-part",
-    "faire-valoir" NOUN_PL "faire-valoir",
-    "far-niente" NOUN_PL "far-nientes",
-    "fausse-braie" NOUN_PL "fausses-braies",
-    "fausse-monnayeuse" NOUN_PL "fausses-monnayeuses",
-    "fauviste" NOUN_PL "fauvistes",
-    "femme-renarde" NOUN_PL "femmes-renardes",
-    "fiducie" NOUN_PL "fiducies",
-    "fier-à-bras" NOUN_PL "fiers-à-bras",
-    "figuriste" NOUN_PL "figuristes",
-    "fildefériste" NOUN_PL "fildeféristes",
-    "final" NOUN_PL "finals",
-    "finistérien" NOUN_PL "finistérien",
-    "fleuriste" NOUN_PL "fleuristes",
-    "floréal" NOUN_PL "floréals",
-    "flush" NOUN_PL "flushs",
-    "fouille-merde" NOUN_PL "fouille-merde",
-    "fraiseraie" NOUN_PL "fraiseraies",
-    "franc-alleu" NOUN_PL "franc-alleus",
-    "franc-maçon" NOUN_PL "francs-maçons",
-    "franc-tireur" NOUN_PL "francs-tireurs",
-    "frankiste" NOUN_PL "frankistes",
-    "frou-frou" NOUN_PL "frous-frous",
-    "frériste" NOUN_PL "fréristes",
-    "fuguiste" NOUN_PL "fuguistes",
-    "fumiste" NOUN_PL "fumistes",
-    "furigana" NOUN_PL "furigana",
-    "furry" NOUN_PL "furries",
-    "fusil-mitrailleur" NOUN_PL "fusils-mitrailleurs",
-    "futal" NOUN_PL "futals",
-    "fédéraste" NOUN_PL "fédérastes",
-    "féministe" NOUN_PL "féministes",
-    "fétichiste" NOUN_PL "fétichistes",
-    "gadjo" NOUN_PL "gadjé",
-    "gambiste" NOUN_PL "gambistes",
-    "garde-chasse" NOUN_PL "gardes-chasse",
-    "garde-française" NOUN_PL "gardes-françaises",
-    "garde-frontière" NOUN_PL "gardes-frontières",
-    "garde-magasin" NOUN_PL "gardes-magasins",
-    "garde-voie" NOUN_PL "gardes-voies",
-    "gardénal" NOUN_PL "gardénals",
-    "gauchiste" NOUN_PL "gauchistes",
-    "genouil" NOUN_PL "genoux",
-    "gent" NOUN_PL "gens",
-    "gentilhomme" NOUN_PL "gentilshommes",
-    "gineste" NOUN_PL "ginestes",
-    "gode-ceinture" NOUN_PL "godes-ceintures",
-    "gonococcie" NOUN_PL "gonococcies",
-    "graal" NOUN_PL "graux",
-    "grand-angle" NOUN_PL "grands-angles",
-    "grand-chelem" NOUN_PL "grands-chelems",
-    "grand-duc" NOUN_PL "grands-ducs",
-    "grand-duché" NOUN_PL "grands-duchés",
-    "grand-maman" NOUN_PL "grands-mamans",
-    "grand-mère" NOUN_PL "grands-mères",
-    "grand-parent" NOUN_PL "grands-parents",
-    "grand-père" NOUN_PL "grands-pères",
-    "grand-rabbin" NOUN_PL "grands-rabbins",
-    "grand-rue" NOUN_PL "grands-rues",
-    "graphiste" NOUN_PL "graphistes",
-    "grigou" NOUN_PL "grigous",
-    "gréviste" NOUN_PL "grévistes",
-    "guesdiste" NOUN_PL "guesdistes",
-    "gueule-de-loup" NOUN_PL "gueules-de-loup",
-    "guévariste" NOUN_PL "guévaristes",
-    "gynécomaste" NOUN_PL "gynécomastes",
-    "génétiste" NOUN_PL "génétistes",
-    "géochimiste" NOUN_PL "géochimistes",
-    "géomancie" NOUN_PL "géomancies",
-    "halte-chaleur" NOUN_PL "haltes-chaleur",
-    "halte-garderie" NOUN_PL "haltes-garderies",
-    "hanout" NOUN_PL "haouanet",
-    "haut-de-chausses" NOUN_PL "hauts-de-chausses",
-    "haut-de-forme" NOUN_PL "hauts-de-forme",
-    "haut-le-cœur" NOUN_PL "haut-le-cœur",
-    "haute-contre" NOUN_PL "hautes-contre",
-    "herbe-aux-chats" NOUN_PL "herbes-aux-chats",
-    "herbe-à-robert" NOUN_PL "herbes-à-robert",
-    "heure-lumière" NOUN_PL "heures-lumière",
-    "hispaniste" NOUN_PL "hispanistes",
-    "histochimiste" NOUN_PL "histochimistes",
-    "histologiste" NOUN_PL "histologistes",
-    "homme-animal" NOUN_PL "hommes-animaux",
-    "homme-grenouille" NOUN_PL "hommes-grenouilles",
-    "homme-médecine" NOUN_PL "hommes-médecine",
-    "homme-orchestre" NOUN_PL "hommes-orchestres",
-    "hors-la-loi" NOUN_PL "hors-la-loi",
-    "huit-centième" NOUN_PL "huit-centièmes",
-    "humaniste" NOUN_PL "humanistes",
-    "hydrologiste" NOUN_PL "hydrologistes",
-    "hydromancie" NOUN_PL "hydromancies",
-    "hypocondre" NOUN_PL "hypocondres",
-    "hébertiste" NOUN_PL "hébertistes",
-    "hédoniste" NOUN_PL "hédonistes",
-    "hétraie" NOUN_PL "hétraies",
-    "hôtel-dieu" NOUN_PL "hôtels-dieu",
-    "ichtyologiste" NOUN_PL "ichtyologistes",
-    "iconoclaste" NOUN_PL "iconoclastes",
-    "iconologiste" NOUN_PL "iconologistes",
-    "idéolinguiste" NOUN_PL "idéolinguistes",
-    "immunologiste" NOUN_PL "immunologistes",
-    "impedimentum" NOUN_PL "impedimenta",
-    "indianiste" NOUN_PL "indianistes",
-    "indigéniste" NOUN_PL "indigénistes",
-    "indéterministe" NOUN_PL "indéterministes",
-    "infographiste" NOUN_PL "infographistes",
-    "instrumentiste" NOUN_PL "instrumentistes",
-    "intergiciel" NOUN_PL "intergiciels",
-    "intimiste" NOUN_PL "intimistes",
-    "intériste" NOUN_PL "intéristes",
-    "jaconas" NOUN_PL "jaconas",
-    "jacuzzi" NOUN_PL "jacuzzis",
-    "jaube" NOUN_PL "jaube",
-    "jour-homme" NOUN_PL "jours-homme",
-    "jour-lumière" NOUN_PL "jours-lumière",
-    "jupe-crayon" NOUN_PL "jupe-crayon",
-    "juriste" NOUN_PL "juristes",
-    "kaki-lima" NOUN_PL "kaki-lima",
-    "kalashnikov" NOUN_PL "kalashnikov",
-    "katakana" NOUN_PL "katakana",
-    "katsina" NOUN_PL "katsinam",
-    "kippa" NOUN_PL "kippas",
-    "laissez-passer" NOUN_PL "laissez-passer",
-    "lakiste" NOUN_PL "lakistes",
-    "lambertiste" NOUN_PL "lambertistes",
-    "laméthiste" NOUN_PL "laméthistes",
-    "langouste" NOUN_PL "langoustes",
-    "langue-toit" NOUN_PL "langues-toits",
-    "lanternon" NOUN_PL "lanternons",
-    "latiniste" NOUN_PL "latinistes",
-    "laurier-sauce" NOUN_PL "lauriers-sauce",
-    "lavatory" NOUN_PL "lavatories",
-    "leitmotiv" NOUN_PL "leitmotive",
-    "lepéniste" NOUN_PL "lepénistes",
-    "leu" NOUN_PL "lei",
-    "levain-levure" NOUN_PL "levain-levure",
-    "libre-arbitre" NOUN_PL "libres-arbitres",
-    "libre-échange" NOUN_PL "libres-échanges",
-    "lied" NOUN_PL "lieder",
-    "lieu-dit" NOUN_PL "lieux-dits",
-    "lieutenant-colonel" NOUN_PL "lieutenants-colonels",
-    "limnologiste" NOUN_PL "limnologistes",
-    "linguiste" NOUN_PL "linguistes",
-    "lit-cage" NOUN_PL "lits-cages",
-    "liturgiste" NOUN_PL "liturgistes",
-    "livre-journal" NOUN_PL "livres-journaux",
-    "locuste" NOUN_PL "locustes",
-    "loup-cervier" NOUN_PL "loups-cerviers",
-    "loup-garou" NOUN_PL "loups-garous",
-    "louvaniste" NOUN_PL "louvanistes",
-    "luministe" NOUN_PL "luministes",
-    "légiste" NOUN_PL "légistes",
-    "légitimiste" NOUN_PL "légitimistes",
-    "légumiste" NOUN_PL "légumistes",
-    "léprologiste" NOUN_PL "léprologistes",
-    "machiniste" NOUN_PL "machinistes",
-    "machiste" NOUN_PL "machistes",
-    "macrocyste" NOUN_PL "macrocystes",
-    "macroniste" NOUN_PL "macronistes",
-    "madame" NOUN_PL "mesdames",
-    "mademoiselle" NOUN_PL "mesdemoiselles",
-    "magistère" NOUN_PL "magistêres",
-    "maitre-chanteur" NOUN_PL "maitres-chanteurs",
-    "maitre-chanteuse" NOUN_PL "maitre-chanteuses",
-    "maitre-nageuse" NOUN_PL "maitres-nageuses",
-    "major-général" NOUN_PL "major-généraux",
-    "making-of" NOUN_PL "making-of",
-    "malandre" NOUN_PL "malandres",
-    "mamadou" NOUN_PL "mamadou",
-    "mangouste" NOUN_PL "mangoustes",
-    "mao-spontex" NOUN_PL "maos-spontex",
-    "maréchal-ferrant" NOUN_PL "maréchaux-ferrants",
-    "masochiste" NOUN_PL "masochistes",
-    "masque-cheval" NOUN_PL "masques-cheval",
-    "match" NOUN_PL "matches",
-    "matildas" NOUN_PL "p",
-    "maître-assistant" NOUN_PL "maître-assistants",
-    "maître-chef" NOUN_PL "maître-chefs",
-    "maître-cylindre" NOUN_PL "maîtres-cylindres",
-    "mdlle" NOUN_PL "mᵈˡˡᵉˢ",
-    "mezcal" NOUN_PL "mescals",
-    "mgr" NOUN_PL "mᵍʳˢ",
-    "micaschiste" NOUN_PL "micaschistes",
-    "microbiologiste" NOUN_PL "microbiologistes",
-    "minerval" NOUN_PL "minervaux",
-    "minute-lumière" NOUN_PL "minutes-lumière",
-    "minéralogiste" NOUN_PL "minéralogistes",
-    "misandre" NOUN_PL "misandres",
-    "mise-en-page" NOUN_PL "mises-en-page",
-    "mlle" NOUN_PL "mˡˡᵉˢ",
-    "mme" NOUN_PL "mᵐᵉˢ",
-    "modiste" NOUN_PL "modistes",
-    "modérantiste" NOUN_PL "modérantistes",
-    "moins-que-rien" NOUN_PL "moins-que-rien",
-    "monarchiste" NOUN_PL "monarchistes",
-    "mondamoiseau" NOUN_PL "mesdamoiseaux",
-    "monnaie-papier" NOUN_PL "monnaies-papier",
-    "monocycliste" NOUN_PL "monocyclistes",
-    "monocylindre" NOUN_PL "monocylindres",
-    "monogéniste" NOUN_PL "monogénistes",
-    "monseigneur" NOUN_PL "messeigneurs",
-    "monsieur" NOUN_PL "messieurs",
-    "mont-de-piété" NOUN_PL "monts-de-piété",
-    "montaniste" NOUN_PL "montanistes",
-    "morte-saison" NOUN_PL "mortes-saisons",
-    "mot-clic" NOUN_PL "mots-clics",
-    "mot-clé" NOUN_PL "mots-clés",
-    "mot-dièse" NOUN_PL "mots-dièse",
-    "mot-outil" NOUN_PL "mots-outils",
-    "mot-valise" NOUN_PL "mots-valises",
-    "motocycliste" NOUN_PL "motocyclistes",
-    "motoriste" NOUN_PL "motoristes",
-    "moudjahid" NOUN_PL "moudjahidin",
-    "moulagiste" NOUN_PL "moulagistes",
-    "multirécidiviste" NOUN_PL "multirécidivistes",
-    "mère-grand" NOUN_PL "mères-grand",
-    "méandre" NOUN_PL "méandres",
-    "médersa" NOUN_PL "médersas",
-    "méli-mélo" NOUN_PL "mélis-mélos",
-    "mélodiste" NOUN_PL "mélodistes",
-    "métrologiste" NOUN_PL "métrologistes",
-    "mʳ" NOUN_PL "mʳˢ",
-    "mᵐᵉ" NOUN_PL "mᵐᵉˢ",
-    "national-socialisme" NOUN_PL "national-socialismes",
-    "national-socialiste" NOUN_PL "national-socialistes",
-    "nativiste" NOUN_PL "nativistes",
-    "navire-citerne" NOUN_PL "navires-citerne",
-    "neurobiologiste" NOUN_PL "neurobiologistes",
-    "neurologiste" NOUN_PL "neurologistes",
-    "nid-de-poule" NOUN_PL "nids-de-poule",
-    "noir-marron" NOUN_PL "noirs-marrons",
-    "non-conformiste" NOUN_PL "non-conformistes",
-    "nouveau-né" NOUN_PL "nouveau-nés",
-    "nunavummiuq" NOUN_PL "nunavummiut",
-    "nécromancie" NOUN_PL "nécromancies",
-    "nématocyste" NOUN_PL "nématocystes",
-    "néocommuniste" NOUN_PL "néocommunistes",
-    "obsèques" NOUN_PL "only",
-    "odontologiste" NOUN_PL "odontologistes",
-    "oeil" NOUN_PL "yeux",
-    "ontologiste" NOUN_PL "ontologistes",
-    "oocyste" NOUN_PL "oocystes",
-    "opportuniste" NOUN_PL "opportunistes",
-    "optimiste" NOUN_PL "optimistes",
-    "optimum" NOUN_PL "optimums",
-    "orangiste" NOUN_PL "orangistes",
-    "oreillons" NOUN_PL "only",
-    "orfraie" NOUN_PL "orfraies",
-    "organiste" NOUN_PL "organistes",
-    "orgues" NOUN_PL "only",
-    "orléaniste" NOUN_PL "orléanistes",
-    "ornemaniste" NOUN_PL "ornemanistes",
-    "ornithologiste" NOUN_PL "ornithologistes",
-    "orthographiste" NOUN_PL "orthographistes",
-    "orthophoniste" NOUN_PL "orthophonistes",
-    "orthopédiste" NOUN_PL "orthopédistes",
-    "oseraie" NOUN_PL "oseraies",
-    "ossements" NOUN_PL "only",
-    "ostéoclaste" NOUN_PL "ostéoclastes",
-    "pacifiste" NOUN_PL "pacifistes",
-    "paddy" NOUN_PL "paddys",
-    "pallisandre" NOUN_PL "pallisandres",
-    "palmeraie" NOUN_PL "palmeraies",
-    "palmiste" NOUN_PL "palmistes",
-    "paon-du-jour" NOUN_PL "paons-du-jour",
-    "papa-gâteau" NOUN_PL "papas-gâteaux",
-    "paparazzi" NOUN_PL "paparazzis",
-    "paracétamol" NOUN_PL "paracétamols",
-    "parajuriste" NOUN_PL "parajuristes",
-    "paralégal" NOUN_PL "paralégaux",
-    "paramécie" NOUN_PL "paramécies",
-    "parapharmacie" NOUN_PL "parapharmacies",
-    "paraphraste" NOUN_PL "paraphrastes",
-    "partagiciel" NOUN_PL "partagiciels",
-    "partisan" NOUN_PL "partisans",
-    "pathologiste" NOUN_PL "pathologistes",
-    "pause-déjeuner" NOUN_PL "pauses-déjeuner",
-    "peau-rouge" NOUN_PL "peaux-rouges",
-    "peine-à-jouir" NOUN_PL "peine-à-jouir",
-    "pelta" NOUN_PL "peltas",
-    "peltaste" NOUN_PL "peltastes",
-    "perchiste" NOUN_PL "perchistes",
-    "persistance" NOUN_PL "persistance",
-    "pet-de-nonne" NOUN_PL "pets-de-nonne",
-    "petite-nièce" NOUN_PL "petites-nièces",
-    "phalangiste" NOUN_PL "phalangistes",
-    "pharmacie" NOUN_PL "pharmacies",
-    "pharmacien-ne" NOUN_PL "pharmacien-ne-s",
-    "pharmacologiste" NOUN_PL "pharmacologistes",
-    "physiologiste" NOUN_PL "physiologistes",
-    "physionomiste" NOUN_PL "physionomistes",
-    "physiopathologiste" NOUN_PL "physiopathologistes",
-    "phénoménologiste" NOUN_PL "phénoménologistes",
-    "pianiste" NOUN_PL "pianistes",
-    "pied-bot" NOUN_PL "pieds-bots",
-    "pied-de-biche" NOUN_PL "pieds-de-biche",
-    "pied-de-mouche" NOUN_PL "pieds-de-mouche",
-    "pied-de-vent" NOUN_PL "pieds-de-vent",
-    "pigiste" NOUN_PL "pigistes",
-    "pilori" NOUN_PL "piloris",
-    "pince-monseigneur" NOUN_PL "pinces-monseigneur",
-    "pineraie" NOUN_PL "pineraies",
-    "pinzutu" NOUN_PL "pinzuti",
-    "pisse-au-lit" NOUN_PL "pisse-au-lit",
-    "pisse-vinaigre" NOUN_PL "pisse-vinaigre",
-    "piétiste" NOUN_PL "piétistes",
-    "plagiste" NOUN_PL "plagistes",
-    "planchiste" NOUN_PL "planchistes",
-    "plaquiste" NOUN_PL "plaquistes",
-    "plate-bande" NOUN_PL "plates-bandes",
-    "plate-forme" NOUN_PL "plates-formes",
-    "platiste" NOUN_PL "platistes",
-    "pleure-pain" NOUN_PL "pleure-pain",
-    "plugiciel" NOUN_PL "plugiciels",
-    "poche-revolver" NOUN_PL "poches-revolver",
-    "poisson-chien" NOUN_PL "poissons-chien",
-    "poisson-clown" NOUN_PL "poisson-clowns",
-    "poisson-football" NOUN_PL "poissons-football",
-    "poisson-lait" NOUN_PL "poissons-lait",
-    "poisson-scorpion" NOUN_PL "poisson-scorpions",
-    "poisson-tigre" NOUN_PL "poissons-tigre",
-    "polkiste" NOUN_PL "polkistes",
-    "polygraphiste" NOUN_PL "polygraphistes",
-    "polygéniste" NOUN_PL "polygénistes",
-    "polyphoniste" NOUN_PL "polyphonistes",
-    "polysarcie" NOUN_PL "polysarcies",
-    "polémiste" NOUN_PL "polémistes",
-    "pommeraie" NOUN_PL "pommeraies",
-    "pont-canal" NOUN_PL "ponts-canaux",
-    "poolish" NOUN_PL "poolish",
-    "porte-bagages" NOUN_PL "porte-bagages",
-    "porte-fenêtre" NOUN_PL "portes-fenêtres",
-    "posadiste" NOUN_PL "posadistes",
-    "postscriptum" NOUN_PL "postscriptum",
-    "poujadiste" NOUN_PL "poujadistes",
-    "pourriciel" NOUN_PL "pourriciels",
-    "poutiniste" NOUN_PL "poutinistes",
-    "prisunic" NOUN_PL "prisunic",
-    "problémiste" NOUN_PL "problémistes",
-    "progiciel" NOUN_PL "progiciels",
-    "prony" NOUN_PL "pronys",
-    "protistologiste" NOUN_PL "protistologistes",
-    "prêt-à-porter" NOUN_PL "prêts-à-porter",
-    "psycholinguiste" NOUN_PL "psycholinguistes",
-    "psychologiste" NOUN_PL "psychologistes",
-    "psychophysiologiste" NOUN_PL "psychophysiologistes",
-    "pur-sang" NOUN_PL "pur-sangs",
-    "puriste" NOUN_PL "puristes",
-    "pyroclaste" NOUN_PL "pyroclastes",
-    "pyromancie" NOUN_PL "pyromancies",
-    "père-la-pudeur" NOUN_PL "pères-la-pudeur",
-    "pédéraste" NOUN_PL "pédérastes",
-    "péquiste" NOUN_PL "péquistes",
-    "périople" NOUN_PL "périoples",
-    "pétrochimiste" NOUN_PL "pétrochimistes",
-    "quadrisaïeul" NOUN_PL "quadrisaïeux",
-    "quatre-vingt" NOUN_PL "quatre-vingt",
-    "queue-de-cheval" NOUN_PL "queues-de-cheval",
-    "queue-de-pie" NOUN_PL "queues-de-pie",
-    "quincajou" NOUN_PL "quincajous",
-    "radargramme" NOUN_PL "radargrammes",
-    "radiochimiste" NOUN_PL "radiochimistes",
-    "radiologiste" NOUN_PL "radiologistes",
-    "radiopharmacie" NOUN_PL "radiopharmacies",
-    "radiophoniste" NOUN_PL "radiophonistes",
-    "radiotélégraphiste" NOUN_PL "radiotélégraphistes",
-    "radiotéléphoniste" NOUN_PL "radiotéléphonistes",
-    "rate-garou" NOUN_PL "rates-garous",
-    "reine-des-prés" NOUN_PL "reines-des-prés",
-    "repose-pied" NOUN_PL "repose-pied",
-    "repose-tête" NOUN_PL "repose-tête",
-    "richelieu" NOUN_PL "richelieu",
-    "rigoriste" NOUN_PL "rigoristes",
-    "rital" NOUN_PL "ritals",
-    "romaniste" NOUN_PL "romanistes",
-    "roseraie" NOUN_PL "roseraies",
-    "rotativiste" NOUN_PL "rotativistes",
-    "rouge-brun" NOUN_PL "rouges-bruns",
-    "rouge-gorge" NOUN_PL "rouges-gorges",
-    "rouge-queue" NOUN_PL "rouges-queues",
-    "rugbywoman" NOUN_PL "rugbywomen",
-    "récidiviste" NOUN_PL "récidivistes",
-    "réformiste" NOUN_PL "réformistes",
-    "réserviste" NOUN_PL "réservistes",
-    "réveil-matin" NOUN_PL "réveil-matin",
-    "sadiste" NOUN_PL "sadistes",
-    "sadomasochiste" NOUN_PL "sadomasochistes",
-    "sage-femme" NOUN_PL "sages-femmes",
-    "sage-homme" NOUN_PL "sages-hommes",
-    "sagou" NOUN_PL "sagous",
-    "saint-honoré" NOUN_PL "saint-honoré",
-    "saint-pierre" NOUN_PL "saint-pierre",
-    "sajou" NOUN_PL "sajous",
-    "salafiste" NOUN_PL "salafistes",
-    "salamandre" NOUN_PL "salamandres",
-    "sandiniste" NOUN_PL "sandinistes",
-    "sankariste" NOUN_PL "sankaristes",
-    "sans-filiste" NOUN_PL "sans-filistes",
-    "sanscritiste" NOUN_PL "sanscritistes",
-    "santal" NOUN_PL "sandals",
-    "sapajou" NOUN_PL "sapajous",
-    "sataniste" NOUN_PL "satanistes",
-    "saut-de-loup" NOUN_PL "sauts-de-loup",
-    "scenario" NOUN_PL "scenarii",
-    "schiste" NOUN_PL "schistes",
-    "scolopendre" NOUN_PL "scolopendres",
-    "scootériste" NOUN_PL "scootéristes",
-    "scriptorium" NOUN_PL "scriptoria",
-    "seconde-lumière" NOUN_PL "secondes-lumière",
-    "seta" NOUN_PL "setæ",
-    "sirvente" NOUN_PL "sirventès",
-    "siècle-lumière" NOUN_PL "siècles-lumière",
-    "socceroos" NOUN_PL "p",
-    "sociologiste" NOUN_PL "sociologistes",
-    "sodomiste" NOUN_PL "sodomistes",
-    "sonal" NOUN_PL "sonals",
-    "sonoriste" NOUN_PL "sonoristes",
-    "sopraniste" NOUN_PL "sopranistes",
-    "souflaki" NOUN_PL "souflakia",
-    "soupirail" NOUN_PL "soupiraux",
-    "soutien-gorge" NOUN_PL "soutiens-gorge",
-    "souverainiste" NOUN_PL "souverainistes",
-    "souvlaki" NOUN_PL "souvlakia",
-    "spartakiste" NOUN_PL "spartakistes",
-    "spermatiste" NOUN_PL "spermatistes",
-    "spiritiste" NOUN_PL "spiritistes",
-    "st" NOUN_PL "sᵗˢ",
-    "station-service" NOUN_PL "stations-service",
-    "ste" NOUN_PL "sᵗᵉˢ",
-    "stercoraniste" NOUN_PL "stercoranistes",
-    "stockiste" NOUN_PL "stockistes",
-    "streptococcie" NOUN_PL "streptococcies",
-    "sudiste" NOUN_PL "sudistes",
-    "superficie" NOUN_PL "superficies",
-    "superwoman" NOUN_PL "superwomen",
-    "surmoi" NOUN_PL "surmois",
-    "symphoniste" NOUN_PL "symphonistes",
-    "sébeste" NOUN_PL "sébestes",
-    "sédimentologiste" NOUN_PL "sédimentologistes",
-    "séminariste" NOUN_PL "séminaristes",
-    "séparatiste" NOUN_PL "séparatistes",
-    "tachiste" NOUN_PL "tachistes",
-    "taille-crayon" NOUN_PL "taille-crayons",
-    "targumiste" NOUN_PL "targumistes",
-    "taxi-auto" NOUN_PL "taxis-autos",
-    "technologiste" NOUN_PL "technologistes",
-    "terministe" NOUN_PL "terministes",
-    "terre-neuvien-et-labradorien" NOUN_PL "terre-neuviens-et-labradoriens",
-    "terre-neuvienne-et-labradorienne" NOUN_PL "terre-neuviennes-et-labradoriennes",
-    "terreplatiste" NOUN_PL "terreplatistes",
-    "terroriste" NOUN_PL "terroristes",
-    "thermopolium" NOUN_PL "thermopolia",
-    "thomiste" NOUN_PL "thomistes",
-    "théatin" NOUN_PL "théatins",
-    "timbre-poste" NOUN_PL "timbres-poste",
-    "tiramisu" NOUN_PL "tiramisus",
-    "toc-toc" NOUN_PL "toc-tocs",
-    "torieu" NOUN_PL "torieu",
-    "touche-à-tout" NOUN_PL "touche-à-tout",
-    "trachée-artère" NOUN_PL "trachée-artères",
-    "trantran" NOUN_PL "trantran",
-    "tremblaie" NOUN_PL "tremblaies",
-    "tribuniste" NOUN_PL "tribunistes",
-    "triclinium" NOUN_PL "trincliniums",
-    "trisaïeul" NOUN_PL "trisaïeux",
-    "trouble-fête" NOUN_PL "trouble-fête",
-    "turfiste" NOUN_PL "turfistes",
-    "tæniasis" NOUN_PL "tæniases",
-    "télégraphiste" NOUN_PL "télégraphistes",
-    "téléphoniste" NOUN_PL "téléphonistes",
-    "téniasis" NOUN_PL "téniases",
-    "tératologiste" NOUN_PL "tératologistes",
-    "tête-bêche" NOUN_PL "têtes-bêches",
-    "tête-de-violon" NOUN_PL "têtes-de-violon",
-    "ultragauchiste" NOUN_PL "ultragauchistes",
-    "un-e" NOUN_PL "un-e-s",
-    "unanimiste" NOUN_PL "unanimistes",
-    "unicycliste" NOUN_PL "unicyclistes",
-    "unijambiste" NOUN_PL "unijambistes",
-    "urologiste" NOUN_PL "urologistes",
-    "verbatim" NOUN_PL "verbatim",
-    "vesse-de-loup" NOUN_PL "vesses-de-loup",
-    "vibraphoniste" NOUN_PL "vibraphonistes",
-    "virologiste" NOUN_PL "virologistes",
-    "voenkor" NOUN_PL "voenkor",
-    "voiture-balai" NOUN_PL "voitures-balai",
-    "vol-au-vent" NOUN_PL "vols-au-vent",
-    "wagon-poste" NOUN_PL "wagons-poste",
-    "xoanon" NOUN_PL "xoana",
-    "xylophoniste" NOUN_PL "xylophonistes",
-    "zingaro" NOUN_PL "zingari",
-    "zoguiste" NOUN_PL "zoguistes",
-    "zoologiste" NOUN_PL "zoologistes",
-    "zébré-de-vert" NOUN_PL "zébrés-de-vert",
-    "zénoniste" NOUN_PL "zénonistes",
-    "échangiste" NOUN_PL "échangistes",
-    "échographiste" NOUN_PL "échographistes",
-    "éclairagiste" NOUN_PL "éclairagistes",
-    "écologiste" NOUN_PL "écologistes",
-    "économiste" NOUN_PL "économistes",
-    "électroradiologiste" NOUN_PL "électroradiologistes",
-    "épigraphiste" NOUN_PL "épigraphistes",
-    "épine-vinette" NOUN_PL "épines-vinettes",
-    "équilibriste" NOUN_PL "équilibristes",
-    "érouv" NOUN_PL "érouvim",
-    "état-providence" NOUN_PL "états-providence",
-    "œil" NOUN_PL "yeux",
-    "œil-de-bœuf" NOUN_PL "œils-de-bœuf",
-    "œil-de-chat" NOUN_PL "œils-de-chat",
-    "œil-de-perdrix" NOUN_PL "œils-de-perdrix",
-    "œil-de-tigre" NOUN_PL "œils-de-tigre",
+/// 284 forms.
+pub(super) const IRREGULAR: Irregular<'static> = Irregular {
+    table: Cow::Borrowed(
+        r#"abri-sous-roche	1	abris-sous-roche
+afrodescendantes	1	afrodescendants
+afrodescendants	1	afrodescendantes
+aide-comptable	1	aides-comptables
+animal-garou	1	animaux-garous
+anishinaabe	1	anishinaabeg
+année-lumière	1	années-lumière
+apartement	1	apartemens
+appui-main	1	appuis-main
+appui-tête	1	appuis-tête
+arc-boutant	1	arcs-boutants
+arc-doubleau	1	arcs-doubleaux
+arc-en-ciel	1	arcs-en-ciel
+arrière-arrière-petite-fille	1	arrière-arrière-petites-filles
+arrière-grand-mère	1	arrière-grands-mères
+arrière-grand-oncle	1	arrière-grands-oncles
+arrière-grand-parent	1	arrière-grands-parents
+arrière-grand-tante	1	arrière-grandes-tantes
+arrière-petit-enfant	1	arrière-petits-enfants
+arrière-petit-fils	1	arrière-petits-fils
+arrière-petit-neveu	1	arrière-petits-neveux
+arrière-petite-fille	1	arrière-petites-filles
+arrière-petite-nièce	1	arrière-petites-nièces
+assurance-chômage	1	assurances-chômage
+assurance-crédit	1	assurances-crédit
+assurance-vie	1	assurances-vie
+bagad	1	bagadoù
+bain-marie	1	bains-marie
+ballon-panier	1	ballons-panier
+bande-vidéo	1	bandes-vidéo
+basse-cour	1	basses-cours
+basse-fosse	1	basses-fosses
+basse-taille	1	basses-tailles
+bateau-feu	1	bateaux-feu
+bateau-lavoir	1	bateaux-lavoir
+bateau-phare	1	bateaux-phare
+bd	1	bᵈˢ
+beau-dabe	1	beaux-dabes
+beau-fils	1	beaux-fils
+beau-frère	1	beaux-frères
+beau-neveu	1	beaux-neveux
+beau-parent	1	beaux-parents
+beau-père	1	beaux-pères
+bec-croisé	1	becs-croisés
+bec-de-cane	1	becs-de-cane
+bec-de-lièvre	1	becs-de-lièvre
+bec-en-sabot	1	becs-en-sabot
+bel-enfant	1	beaux-enfants
+belle-dabe	1	belles-dabes
+belle-de-jour	1	belles-de-jour
+belle-de-nuit	1	belles-de-nuit
+belle-doche	1	belles-doches
+belle-famille	1	belles-familles
+belle-fille	1	belles-filles
+belle-maman	1	belles-mamans
+belle-mère	1	belles-mères
+belle-nièce	1	belles-nièces
+belle-sœur	1	belles-sœurs
+belle-âge	1	belles-âges
+blanc-bec	1	blancs-becs
+blanc-estoc	1	blancs-estocs
+blanc-manger	1	blancs-mangers
+blanc-russien	1	blancs-russiens
+blanc-étoc	1	blancs-étocs
+bloc-cylindres	1	blocs-cylindres
+bloc-notes	1	blocs-notes
+bonheur-du-jour	1	bonheurs-du-jour
+bonhomme	1	bonshommes
+bourse-à-pasteur	1	bourses-à-pasteur
+bouton-poussoir	1	boutons-poussoir
+bouton-pression	1	boutons-pression
+bte	1	bᵗᵉˢ
+bâton-du-diable	1	bâtons-du-diable
+bébé-éprouvette	1	bébés-éprouvette
+bêche-de-mer	1	bêches-de-mer
+café-chicorée	1	cafés-chicorée
+café-théâtre	1	cafés-théâtres
+camion-balai	1	camions-balai
+capital-risque	1	capitaux-risques
+caporal-chef	1	caporaux-chefs
+cardon-de-mer	1	cardons-de-mer
+centre-ville	1	centres-villes
+chat-garou	1	chats-garous
+chat-huant	1	chats-huants
+chat-tigre	1	chats-tigres
+chaud-froid	1	chauds-froids
+chauve-souriceau	1	chauves-souriceaux
+chauve-souris	1	chauves-souris
+cheval-diable	1	chevaux-diable
+cheval-garou	1	chevaux-garous
+cheval-jupon	1	chevaux-jupon
+cheval-vapeur	1	chevaux-vapeur
+cie	1	cⁱᵉˢ
+compte-rendu	1	comptes-rendus
+cou-de-pied	1	cous-de-pied
+couche-culotte	1	couches-culottes
+coupe-chou	1	coupes-chou
+coupe-choux	1	coupes-choux
+coupe-ongles	1	coupes-ongles
+court-circuit	1	courts-circuits
+court-métrage	1	courts-métrages
+croc-en-jambe	1	crocs-en-jambe
+cul-béni	1	culs-bénis
+cul-bénit	1	culs-bénits
+cul-de-jatte	1	culs-de-jatte
+cul-de-poule	1	culs-de-poule
+cul-de-sac	1	culs-de-sac
+cul-rond	1	culs-ronds
+cul-terreux	1	culs-terreux
+curieux	1	curieuse
+dent-de-lion	1	dents-de-lion
+djoundi	1	djounoud
+dlle	1	dˡˡᵉˢ
+double-bécassine	1	doubles-bécassines
+double-clic	1	doubles-clics
+double-cloche	1	doubles-cloches
+double-fond	1	doubles-fonds
+double-sens	1	doubles-sens
+dre	1	dʳᵉˢ
+dépt	1	dépᵗˢ
+dû	1	dus
+eau-de-vie	1	eaux-de-vie
+franc-maçon	1	francs-maçons
+franc-tireur	1	francs-tireurs
+fusil-mitrailleur	1	fusils-mitrailleurs
+gadjo	1	gadjé
+garde-chasse	1	gardes-chasse
+garde-française	1	gardes-françaises
+garde-frontière	1	gardes-frontières
+garde-magasin	1	gardes-magasins
+garde-voie	1	gardes-voies
+genouil	1	genoux
+gent	1	gens
+gentilhomme	1	gentilshommes
+graal	1	graux
+grand-angle	1	grands-angles
+grand-bi	1	grands-bis
+grand-chelem	1	grands-chelems
+grand-duc	1	grands-ducs
+grand-duché	1	grands-duchés
+grand-maman	1	grands-mamans
+grand-mère	1	grands-mères
+grand-parent	1	grands-parents
+grand-père	1	grands-pères
+grand-rabbin	1	grands-rabbins
+grand-rue	1	grands-rues
+gueule-de-loup	1	gueules-de-loup
+halte-chaleur	1	haltes-chaleur
+hanout	1	haouanet
+haut-de-chausses	1	hauts-de-chausses
+haut-de-forme	1	hauts-de-forme
+haute-contre	1	hautes-contre
+herbe-à-robert	1	herbes-à-robert
+heure-lumière	1	heures-lumière
+homme-animal	1	hommes-animaux
+homme-grenouille	1	hommes-grenouilles
+homme-médecine	1	hommes-médecine
+homme-orchestre	1	hommes-orchestres
+hôtel-dieu	1	hôtels-dieu
+jour-homme	1	jours-homme
+jour-lumière	1	jours-lumière
+katsina	1	katsinam
+laurier-sauce	1	lauriers-sauce
+leitmotiv	1	leitmotive
+leu	1	lei
+libre-arbitre	1	libres-arbitres
+libre-échange	1	libres-échanges
+libéral-démocrate	1	libéraux-démocrates
+lied	1	lieder
+lieutenant-colonel	1	lieutenants-colonels
+long-métrage	1	longs-métrages
+madame	1	mesdames
+mademoiselle	1	mesdemoiselles
+magistère	1	magistêres
+maitre-chanteur	1	maitres-chanteurs
+maitre-nageur	1	maitres-nageurs
+maitre-nageuse	1	maitres-nageuses
+maréchal-ferrant	1	maréchaux-ferrants
+masque-cheval	1	masques-cheval
+matildas	1	p
+maître-autel	1	maîtres-autels
+maître-chanteur	1	maîtres-chanteurs
+maître-chanteuse	1	maîtres-chanteuses
+maître-chien	1	maîtres-chiens
+maître-cylindre	1	maîtres-cylindres
+maître-mot	1	maîtres-mots
+maître-nageur	1	maîtres-nageurs
+maître-nageuse	1	maîtres-nageuses
+mdlle	1	mᵈˡˡᵉˢ
+mezcal	1	mescals
+mgr	1	mᵍʳˢ
+minute-lumière	1	minutes-lumière
+mise-en-page	1	mises-en-page
+mlle	1	mˡˡᵉˢ
+mme	1	mᵐᵉˢ
+mondamoiseau	1	mesdamoiseaux
+monnaie-papier	1	monnaies-papier
+monseigneur	1	messeigneurs
+monsieur	1	messieurs
+mont-de-piété	1	monts-de-piété
+morte-saison	1	mortes-saisons
+mot-dièse	1	mots-dièse
+moudjahid	1	moudjahidin
+mère-grand	1	mères-grand
+mʳ	1	mʳˢ
+mᵐᵉ	1	mᵐᵉˢ
+navire-citerne	1	navires-citerne
+nid-de-poule	1	nids-de-poule
+nunavummiuq	1	nunavummiut
+obsèques	1	only
+oeil	1	yeux
+opéra-féerie	1	opéras-féeries
+oreillons	1	only
+orgues	1	only
+ossements	1	only
+paon-du-jour	1	paons-du-jour
+pause-déjeuner	1	pauses-déjeuner
+pet-de-nonne	1	pets-de-nonne
+pharmacien-ne	1	pharmacien-ne-s
+pied-bot	1	pieds-bots
+pied-de-biche	1	pieds-de-biche
+pied-de-mouche	1	pieds-de-mouche
+pied-de-vent	1	pieds-de-vent
+pince-monseigneur	1	pinces-monseigneur
+pinzutu	1	pinzuti
+poche-revolver	1	poches-revolver
+poisson-chat	1	poissons-chats
+poisson-chien	1	poissons-chien
+poisson-chirurgien	1	poissons-chirurgiens
+poisson-football	1	poissons-football
+poisson-lait	1	poissons-lait
+poisson-lion	1	poissons-lions
+poisson-lune	1	poissons-lunes
+poisson-pilote	1	poissons-pilotes
+poisson-scie	1	poissons-scies
+poisson-tigre	1	poissons-tigre
+poisson-vipère	1	poissons-vipères
+poisson-épée	1	poissons-épées
+porte-fenêtre	1	portes-fenêtres
+pot-de-vin	1	pots-de-vin
+pot-pourri	1	pots-pourris
+prêt-à-porter	1	prêts-à-porter
+père-la-pudeur	1	pères-la-pudeur
+queue-de-cheval	1	queues-de-cheval
+queue-de-pie	1	queues-de-pie
+rond-de-cuir	1	ronds-de-cuir
+santal	1	sandals
+saut-de-loup	1	sauts-de-loup
+seconde-lumière	1	secondes-lumière
+seta	1	setæ
+sirvente	1	sirventès
+siècle-lumière	1	siècles-lumière
+socceroos	1	p
+social-démocrate	1	sociaux-démocrates
+souflaki	1	souflakia
+soutien-gorge	1	soutiens-gorge
+souvlaki	1	souvlakia
+st	1	sᵗˢ
+station-service	1	stations-service
+ste	1	sᵗᵉˢ
+taille-douce	1	tailles-douces
+terre-neuvien-et-labradorien	1	terre-neuviens-et-labradoriens
+terre-neuvienne-et-labradorienne	1	terre-neuviennes-et-labradoriennes
+timbre-poste	1	timbres-poste
+triclinium	1	trincliniums
+tæniasis	1	tæniases
+téniasis	1	téniases
+tête-bêche	1	têtes-bêches
+tête-de-violon	1	têtes-de-violon
+un-e	1	un-e-s
+vesse-de-loup	1	vesses-de-loup
+voiture-balai	1	voitures-balai
+vol-au-vent	1	vols-au-vent
+vélo-pupitre	1	vélos-pupitres
+wagon-poste	1	wagons-poste
+xoanon	1	xoana
+zébré-de-vert	1	zébrés-de-vert
+érouv	1	érouvim
+état-providence	1	états-providence
+œil	1	yeux
+œil-de-bœuf	1	œils-de-bœuf
+œil-de-chat	1	œils-de-chat
+œil-de-perdrix	1	œils-de-perdrix
+œil-de-tigre	1	œils-de-tigre
+"#,
+    ),
 };

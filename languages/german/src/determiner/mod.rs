@@ -10,8 +10,8 @@ mod spellings;
 
 pub use paradigms::Declension;
 
-use crate::*;
-use flexion::{Candidate, Grammar, Known, Reading};
+use flexion::Grammar;
+use flexion::{Candidate, Known, Reading};
 use std::borrow::Cow;
 
 /// Each cell's place in a paradigm.
@@ -50,8 +50,8 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
     accent: None,
     laws: None,
     spellings: Cow::Borrowed(spellings::SPELLINGS),
-    hidden: 0.0,
-    irregular: Cow::Borrowed(irregular::IRREGULAR),
+    marks: None,
+    irregular: irregular::IRREGULAR,
     smoothing: 2.0,
     sharpness: 4.0,
 };
@@ -60,36 +60,36 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Cell {
     /// A declined article, determiner or pronoun.
-    Form(Case, Agreement),
+    Form(crate::Case, crate::Agreement),
 }
 
 impl Cell {
     /// Its place in a paradigm.
     pub const fn index(self) -> usize {
         let cell = match self {
-            Cell::Form(Case::Nominative, Agreement::Masculine) => cell::NOM_M,
-            Cell::Form(Case::Nominative, Agreement::Feminine) => cell::NOM_F,
-            Cell::Form(Case::Nominative, Agreement::Neuter) => cell::NOM_N,
-            Cell::Form(Case::Nominative, Agreement::Plural) => cell::NOM_PL,
-            Cell::Form(Case::Genitive, Agreement::Masculine) => cell::GEN_M,
-            Cell::Form(Case::Genitive, Agreement::Feminine) => cell::GEN_F,
-            Cell::Form(Case::Genitive, Agreement::Neuter) => cell::GEN_N,
-            Cell::Form(Case::Genitive, Agreement::Plural) => cell::GEN_PL,
-            Cell::Form(Case::Dative, Agreement::Masculine) => cell::DAT_M,
-            Cell::Form(Case::Dative, Agreement::Feminine) => cell::DAT_F,
-            Cell::Form(Case::Dative, Agreement::Neuter) => cell::DAT_N,
-            Cell::Form(Case::Dative, Agreement::Plural) => cell::DAT_PL,
-            Cell::Form(Case::Accusative, Agreement::Masculine) => cell::ACC_M,
-            Cell::Form(Case::Accusative, Agreement::Feminine) => cell::ACC_F,
-            Cell::Form(Case::Accusative, Agreement::Neuter) => cell::ACC_N,
-            Cell::Form(Case::Accusative, Agreement::Plural) => cell::ACC_PL,
+            Cell::Form(crate::Case::Nominative, crate::Agreement::Masculine) => cell::NOM_M,
+            Cell::Form(crate::Case::Nominative, crate::Agreement::Feminine) => cell::NOM_F,
+            Cell::Form(crate::Case::Nominative, crate::Agreement::Neuter) => cell::NOM_N,
+            Cell::Form(crate::Case::Nominative, crate::Agreement::Plural) => cell::NOM_PL,
+            Cell::Form(crate::Case::Genitive, crate::Agreement::Masculine) => cell::GEN_M,
+            Cell::Form(crate::Case::Genitive, crate::Agreement::Feminine) => cell::GEN_F,
+            Cell::Form(crate::Case::Genitive, crate::Agreement::Neuter) => cell::GEN_N,
+            Cell::Form(crate::Case::Genitive, crate::Agreement::Plural) => cell::GEN_PL,
+            Cell::Form(crate::Case::Dative, crate::Agreement::Masculine) => cell::DAT_M,
+            Cell::Form(crate::Case::Dative, crate::Agreement::Feminine) => cell::DAT_F,
+            Cell::Form(crate::Case::Dative, crate::Agreement::Neuter) => cell::DAT_N,
+            Cell::Form(crate::Case::Dative, crate::Agreement::Plural) => cell::DAT_PL,
+            Cell::Form(crate::Case::Accusative, crate::Agreement::Masculine) => cell::ACC_M,
+            Cell::Form(crate::Case::Accusative, crate::Agreement::Feminine) => cell::ACC_F,
+            Cell::Form(crate::Case::Accusative, crate::Agreement::Neuter) => cell::ACC_N,
+            Cell::Form(crate::Case::Accusative, crate::Agreement::Plural) => cell::ACC_PL,
         };
         cell as usize
     }
 }
 
-impl From<(Case, Agreement)> for Cell {
-    fn from((case, agreement): (Case, Agreement)) -> Self {
+impl From<(crate::Case, crate::Agreement)> for Cell {
+    fn from((case, agreement): (crate::Case, crate::Agreement)) -> Self {
         Cell::Form(case, agreement)
     }
 }

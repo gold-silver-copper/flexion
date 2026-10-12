@@ -12,7 +12,6 @@ mod spellings;
 
 pub use paradigms::Declension;
 
-use crate::*;
 use flexion::Grammar;
 use flexion::{Candidate, Known, Reading};
 use std::borrow::Cow;
@@ -89,7 +88,7 @@ pub static GRAMMAR: Grammar<'static, Declension, accent::AccentClass> = Grammar 
     laws: None,
     spellings: Cow::Borrowed(spellings::SPELLINGS),
     marks: Some(marks::MARKS),
-    irregular: Cow::Borrowed(irregular::IRREGULAR),
+    irregular: irregular::IRREGULAR,
     smoothing: 2.0,
     sharpness: 2.5,
 };

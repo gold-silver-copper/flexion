@@ -1,4621 +1,4626 @@
-//! The dictionary's forms no declension gives, as it writes them: `(word, cell,
-//! form)`, sorted. They are the answer for that word and cell.
+//! The dictionary's forms no declension gives, as it writes them: a line per form,
+//! the word, its cell's number (see `super::cell`) and the form, sorted by word
+//! and cell. They are the answer for that word and cell.
 
-use super::cell::*;
+use flexion::Irregular;
 use std::borrow::Cow;
 
-pub(super) static IRREGULAR: &[(Cow<'static, str>, u16, Cow<'static, str>)] = flexion::irregular! {
-    "bad" ADVERB_COMP "worse",
-    "bad" ADVERB_SUP "worst",
-    "badly" ADVERB_COMP "worse",
-    "badly" ADVERB_SUP "worst",
-    "big" ADVERB_COMP "bigger",
-    "big" ADVERB_SUP "biggest",
-    "eagerly" ADVERB_COMP "more eagerly",
-    "eaglesque" ADVERB_COMP "more eaglesque",
-    "earlily" ADVERB_COMP "more earlily",
-    "earnestly" ADVERB_COMP "more earnestly",
-    "earsplittingly" ADVERB_COMP "more earsplittingly",
-    "earthily" ADVERB_COMP "more earthily",
-    "earthly" ADVERB_COMP "more earthly",
-    "earthshakingly" ADVERB_COMP "more earthshakingly",
-    "earthside" ADVERB_COMP "more earthside",
-    "earthward" ADVERB_COMP "more earthward",
-    "easefully" ADVERB_COMP "more easefully",
-    "easterly" ADVERB_COMP "more easterly",
-    "eastish" ADVERB_COMP "more eastish",
-    "eastly" ADVERB_COMP "more eastly",
-    "eastward" ADVERB_COMP "more eastward",
-    "eastwardly" ADVERB_COMP "more eastwardly",
-    "easylike" ADVERB_COMP "more easylike",
-    "eathlins" ADVERB_COMP "more eathlins",
-    "eathly" ADVERB_COMP "more eathly",
-    "eazily" ADVERB_COMP "more eazily",
-    "eben" ADVERB_COMP "more eben",
-    "ebonically" ADVERB_COMP "more ebonically",
-    "ebonly" ADVERB_COMP "more ebonly",
-    "ebulliently" ADVERB_COMP "more ebulliently",
-    "eccentrically" ADVERB_COMP "more eccentrically",
-    "ecclesially" ADVERB_COMP "more ecclesially",
-    "ecclesiastically" ADVERB_COMP "more ecclesiastically",
-    "echoically" ADVERB_COMP "more echoically",
-    "echoingly" ADVERB_COMP "more echoingly",
-    "eclectically" ADVERB_COMP "more eclectically",
-    "ecocritically" ADVERB_COMP "more ecocritically",
-    "ecoculturally" ADVERB_COMP "more ecoculturally",
-    "ecologically" ADVERB_COMP "more ecologically",
-    "economically" ADVERB_COMP "more economically",
-    "economicly" ADVERB_COMP "more economicly",
-    "ecospiritually" ADVERB_COMP "more ecospiritually",
-    "ecotoxicologically" ADVERB_COMP "more ecotoxicologically",
-    "ecstatically" ADVERB_COMP "more ecstatically",
-    "ecumenically" ADVERB_COMP "more ecumenically",
-    "edaciously" ADVERB_COMP "more edaciously",
-    "edgeling" ADVERB_COMP "more edgeling",
-    "edgewise" ADVERB_COMP "more edgewise",
-    "edgily" ADVERB_COMP "more edgily",
-    "edifyingly" ADVERB_COMP "more edifyingly",
-    "editorially" ADVERB_COMP "more editorially",
-    "educably" ADVERB_COMP "more educably",
-    "educationally" ADVERB_COMP "more educationally",
-    "educatively" ADVERB_COMP "more educatively",
-    "edwardianly" ADVERB_COMP "more edwardianly",
-    "eelishly" ADVERB_COMP "more eelishly",
-    "eenamost" ADVERB_COMP "more eenamost",
-    "eepily" ADVERB_COMP "more eepily",
-    "eerily" ADVERB_COMP "more eerily",
-    "effably" ADVERB_COMP "more effably",
-    "effectively" ADVERB_COMP "more effectively",
-    "effectlessly" ADVERB_COMP "more effectlessly",
-    "effectually" ADVERB_COMP "more effectually",
-    "effectuously" ADVERB_COMP "more effectuously",
-    "effeminately" ADVERB_COMP "more effeminately",
-    "efferently" ADVERB_COMP "more efferently",
-    "effervescently" ADVERB_COMP "more effervescently",
-    "effervescingly" ADVERB_COMP "more effervescingly",
-    "effetely" ADVERB_COMP "more effetely",
-    "efficaciously" ADVERB_COMP "more efficaciously",
-    "efficiently" ADVERB_COMP "more efficiently",
-    "effortfully" ADVERB_COMP "more effortfully",
-    "effortlessly" ADVERB_COMP "more effortlessly",
-    "effulgently" ADVERB_COMP "more effulgently",
-    "effusely" ADVERB_COMP "more effusely",
-    "effusively" ADVERB_COMP "more effusively",
-    "egalitarianly" ADVERB_COMP "more egalitarianly",
-    "egally" ADVERB_COMP "more egally",
-    "eggheadedly" ADVERB_COMP "more eggheadedly",
-    "eggily" ADVERB_COMP "more eggily",
-    "eggsactly" ADVERB_COMP "more eggsactly",
-    "egocentrically" ADVERB_COMP "more egocentrically",
-    "egoistically" ADVERB_COMP "more egoistically",
-    "egolessly" ADVERB_COMP "more egolessly",
-    "egomaniacally" ADVERB_COMP "more egomaniacally",
-    "egotistically" ADVERB_COMP "more egotistically",
-    "egregiously" ADVERB_COMP "more egregiously",
-    "egressively" ADVERB_COMP "more egressively",
-    "eidently" ADVERB_COMP "more eidently",
-    "eidetically" ADVERB_COMP "more eidetically",
-    "eirenically" ADVERB_COMP "more eirenically",
-    "ejectively" ADVERB_COMP "more ejectively",
-    "ekistically" ADVERB_COMP "more ekistically",
-    "elaborately" ADVERB_COMP "more elaborately",
-    "elaboratively" ADVERB_COMP "more elaboratively",
-    "elastically" ADVERB_COMP "more elastically",
-    "elastodynamically" ADVERB_COMP "more elastodynamically",
-    "elastohydrodynamically" ADVERB_COMP "more elastohydrodynamically",
-    "elastomerically" ADVERB_COMP "more elastomerically",
-    "elatedly" ADVERB_COMP "more elatedly",
-    "eldritchly" ADVERB_COMP "more eldritchly",
-    "electorally" ADVERB_COMP "more electorally",
-    "electrically" ADVERB_COMP "more electrically",
-    "electrifyingly" ADVERB_COMP "more electrifyingly",
-    "electrolytically" ADVERB_COMP "more electrolytically",
-    "electronically" ADVERB_COMP "more electronically",
-    "electrophilically" ADVERB_COMP "more electrophilically",
-    "electrostatically" ADVERB_COMP "more electrostatically",
-    "electrotonically" ADVERB_COMP "more electrotonically",
-    "eleemosynarily" ADVERB_COMP "more eleemosynarily",
-    "elegantly" ADVERB_COMP "more elegantly",
-    "elegiacally" ADVERB_COMP "more elegiacally",
-    "elementalistically" ADVERB_COMP "more elementalistically",
-    "elementally" ADVERB_COMP "more elementally",
-    "elementarily" ADVERB_COMP "more elementarily",
-    "elephantinely" ADVERB_COMP "more elephantinely",
-    "elevatedly" ADVERB_COMP "more elevatedly",
-    "elfinly" ADVERB_COMP "more elfinly",
-    "elfishly" ADVERB_COMP "more elfishly",
-    "elfwise" ADVERB_COMP "more elfwise",
-    "eligibly" ADVERB_COMP "more eligibly",
-    "eliminatingly" ADVERB_COMP "more eliminatingly",
-    "elitely" ADVERB_COMP "more elitely",
-    "elitistly" ADVERB_COMP "more elitistly",
-    "elizabethanly" ADVERB_COMP "more elizabethanly",
-    "ellipsoidally" ADVERB_COMP "more ellipsoidally",
-    "elliptically" ADVERB_COMP "more elliptically",
-    "elocutionarily" ADVERB_COMP "more elocutionarily",
-    "elongatedly" ADVERB_COMP "more elongatedly",
-    "eloquently" ADVERB_COMP "more eloquently",
-    "elucidatingly" ADVERB_COMP "more elucidatingly",
-    "elucidatively" ADVERB_COMP "more elucidatively",
-    "elucidatorily" ADVERB_COMP "more elucidatorily",
-    "elusively" ADVERB_COMP "more elusively",
-    "elvishly" ADVERB_COMP "more elvishly",
-    "emanatively" ADVERB_COMP "more emanatively",
-    "emarginately" ADVERB_COMP "more emarginately",
-    "emasculatingly" ADVERB_COMP "more emasculatingly",
-    "embarrassedly" ADVERB_COMP "more embarrassedly",
-    "embarrassingly" ADVERB_COMP "more embarrassingly",
-    "embellishingly" ADVERB_COMP "more embellishingly",
-    "embitteredly" ADVERB_COMP "more embitteredly",
-    "embitteringly" ADVERB_COMP "more embitteringly",
-    "emblematically" ADVERB_COMP "more emblematically",
-    "embodiedly" ADVERB_COMP "more embodiedly",
-    "embraceably" ADVERB_COMP "more embraceably",
-    "emergently" ADVERB_COMP "more emergently",
-    "emically" ADVERB_COMP "more emically",
-    "eminently" ADVERB_COMP "more eminently",
-    "emolliently" ADVERB_COMP "more emolliently",
-    "emotionally" ADVERB_COMP "more emotionally",
-    "emotionlessly" ADVERB_COMP "more emotionlessly",
-    "emotively" ADVERB_COMP "more emotively",
-    "empathetically" ADVERB_COMP "more empathetically",
-    "empathically" ADVERB_COMP "more empathically",
-    "emphatically" ADVERB_COMP "more emphatically",
-    "empirically" ADVERB_COMP "more empirically",
-    "empoweringly" ADVERB_COMP "more empoweringly",
-    "emptily" ADVERB_COMP "more emptily",
-    "emptyhandedly" ADVERB_COMP "more emptyhandedly",
-    "emulatively" ADVERB_COMP "more emulatively",
-    "emulously" ADVERB_COMP "more emulously",
-    "enantiomerically" ADVERB_COMP "more enantiomerically",
-    "enchantedly" ADVERB_COMP "more enchantedly",
-    "enchantingly" ADVERB_COMP "more enchantingly",
-    "enclitically" ADVERB_COMP "more enclitically",
-    "encomiastically" ADVERB_COMP "more encomiastically",
-    "encompassingly" ADVERB_COMP "more encompassingly",
-    "encouragingly" ADVERB_COMP "more encouragingly",
-    "encroachingly" ADVERB_COMP "more encroachingly",
-    "encumberingly" ADVERB_COMP "more encumberingly",
-    "encyclopaedically" ADVERB_COMP "more encyclopaedically",
-    "encyclopedically" ADVERB_COMP "more encyclopedically",
-    "endearedly" ADVERB_COMP "more endearedly",
-    "endearingly" ADVERB_COMP "more endearingly",
-    "endemically" ADVERB_COMP "more endemically",
-    "endlessly" ADVERB_COMP "more endlessly",
-    "endocentrically" ADVERB_COMP "more endocentrically",
-    "endocranially" ADVERB_COMP "more endocranially",
-    "endogenously" ADVERB_COMP "more endogenously",
-    "endonormatively" ADVERB_COMP "more endonormatively",
-    "endorsingly" ADVERB_COMP "more endorsingly",
-    "endothelially" ADVERB_COMP "more endothelially",
-    "endothermically" ADVERB_COMP "more endothermically",
-    "endurably" ADVERB_COMP "more endurably",
-    "enduringly" ADVERB_COMP "more enduringly",
-    "endward" ADVERB_COMP "more endward",
-    "endwards" ADVERB_COMP "more endwards",
-    "endways" ADVERB_COMP "more endways",
-    "endwise" ADVERB_COMP "more endwise",
-    "energetically" ADVERB_COMP "more energetically",
-    "energizingly" ADVERB_COMP "more energizingly",
-    "enervatingly" ADVERB_COMP "more enervatingly",
-    "enfoldingly" ADVERB_COMP "more enfoldingly",
-    "engagedly" ADVERB_COMP "more engagedly",
-    "engagingly" ADVERB_COMP "more engagingly",
-    "englishly" ADVERB_COMP "more englishly",
-    "engrossingly" ADVERB_COMP "more engrossingly",
-    "enigmatically" ADVERB_COMP "more enigmatically",
-    "enjoyably" ADVERB_COMP "more enjoyably",
-    "enjoyingly" ADVERB_COMP "more enjoyingly",
-    "enlargedly" ADVERB_COMP "more enlargedly",
-    "enlightenedly" ADVERB_COMP "more enlightenedly",
-    "enlighteningly" ADVERB_COMP "more enlighteningly",
-    "enliveningly" ADVERB_COMP "more enliveningly",
-    "ennoblingly" ADVERB_COMP "more ennoblingly",
-    "enquiringly" ADVERB_COMP "more enquiringly",
-    "enragedly" ADVERB_COMP "more enragedly",
-    "enragingly" ADVERB_COMP "more enragingly",
-    "enravishingly" ADVERB_COMP "more enravishingly",
-    "enrichingly" ADVERB_COMP "more enrichingly",
-    "ensuingly" ADVERB_COMP "more ensuingly",
-    "entangledly" ADVERB_COMP "more entangledly",
-    "entanglingly" ADVERB_COMP "more entanglingly",
-    "enterchangeably" ADVERB_COMP "more enterchangeably",
-    "enterprisingly" ADVERB_COMP "more enterprisingly",
-    "entertainingly" ADVERB_COMP "more entertainingly",
-    "enthalpicly" ADVERB_COMP "more enthalpicly",
-    "entheastically" ADVERB_COMP "more entheastically",
-    "enthrallingly" ADVERB_COMP "more enthrallingly",
-    "enthusiastically" ADVERB_COMP "more enthusiastically",
-    "enthusiastly" ADVERB_COMP "more enthusiastly",
-    "enticingly" ADVERB_COMP "more enticingly",
-    "entitatively" ADVERB_COMP "more entitatively",
-    "entrancedly" ADVERB_COMP "more entrancedly",
-    "entrancingly" ADVERB_COMP "more entrancingly",
-    "entreatingly" ADVERB_COMP "more entreatingly",
-    "entrepreneurially" ADVERB_COMP "more entrepreneurially",
-    "entwiningly" ADVERB_COMP "more entwiningly",
-    "enunciatively" ADVERB_COMP "more enunciatively",
-    "enviably" ADVERB_COMP "more enviably",
-    "enviously" ADVERB_COMP "more enviously",
-    "environmentally" ADVERB_COMP "more environmentally",
-    "envyingly" ADVERB_COMP "more envyingly",
-    "ephemerally" ADVERB_COMP "more ephemerally",
-    "epically" ADVERB_COMP "more epically",
-    "epideictically" ADVERB_COMP "more epideictically",
-    "epigrammatically" ADVERB_COMP "more epigrammatically",
-    "epileptically" ADVERB_COMP "more epileptically",
-    "epiphanally" ADVERB_COMP "more epiphanally",
-    "epiphanically" ADVERB_COMP "more epiphanically",
-    "epiphenomenalistically" ADVERB_COMP "more epiphenomenalistically",
-    "epiphenomenally" ADVERB_COMP "more epiphenomenally",
-    "epistatically" ADVERB_COMP "more epistatically",
-    "epistemically" ADVERB_COMP "more epistemically",
-    "epistemologically" ADVERB_COMP "more epistemologically",
-    "equably" ADVERB_COMP "more equably",
-    "equally" ADVERB_COMP "more equally",
-    "equanimitably" ADVERB_COMP "more equanimitably",
-    "equanimously" ADVERB_COMP "more equanimously",
-    "equatorially" ADVERB_COMP "more equatorially",
-    "equatorward" ADVERB_COMP "more equatorward",
-    "equidimensionally" ADVERB_COMP "more equidimensionally",
-    "equinely" ADVERB_COMP "more equinely",
-    "equitably" ADVERB_COMP "more equitably",
-    "equivalently" ADVERB_COMP "more equivalently",
-    "equivocally" ADVERB_COMP "more equivocally",
-    "equivocatingly" ADVERB_COMP "more equivocatingly",
-    "erasably" ADVERB_COMP "more erasably",
-    "erasively" ADVERB_COMP "more erasively",
-    "erectly" ADVERB_COMP "more erectly",
-    "ergodically" ADVERB_COMP "more ergodically",
-    "ergonomically" ADVERB_COMP "more ergonomically",
-    "eristically" ADVERB_COMP "more eristically",
-    "erogenously" ADVERB_COMP "more erogenously",
-    "erosely" ADVERB_COMP "more erosely",
-    "erosively" ADVERB_COMP "more erosively",
-    "erotically" ADVERB_COMP "more erotically",
-    "errantly" ADVERB_COMP "more errantly",
-    "erratically" ADVERB_COMP "more erratically",
-    "erringly" ADVERB_COMP "more erringly",
-    "erroneously" ADVERB_COMP "more erroneously",
-    "eruditely" ADVERB_COMP "more eruditely",
-    "eruptively" ADVERB_COMP "more eruptively",
-    "escalatingly" ADVERB_COMP "more escalatingly",
-    "escapistically" ADVERB_COMP "more escapistically",
-    "eschatologically" ADVERB_COMP "more eschatologically",
-    "esoterically" ADVERB_COMP "more esoterically",
-    "especially" ADVERB_COMP "more especially",
-    "especifically" ADVERB_COMP "more especifically",
-    "espeically" ADVERB_COMP "more espeically",
-    "espesially" ADVERB_COMP "more espesially",
-    "essayistically" ADVERB_COMP "more essayistically",
-    "essentialistically" ADVERB_COMP "more essentialistically",
-    "essentially" ADVERB_COMP "more essentially",
-    "estimably" ADVERB_COMP "more estimably",
-    "esuriently" ADVERB_COMP "more esuriently",
-    "ethereally" ADVERB_COMP "more ethereally",
-    "etherially" ADVERB_COMP "more etherially",
-    "ethically" ADVERB_COMP "more ethically",
-    "ethnocentrically" ADVERB_COMP "more ethnocentrically",
-    "ethnocratically" ADVERB_COMP "more ethnocratically",
-    "ethnomusicologically" ADVERB_COMP "more ethnomusicologically",
-    "ethnoreligiously" ADVERB_COMP "more ethnoreligiously",
-    "ethnoscientifically" ADVERB_COMP "more ethnoscientifically",
-    "ethologically" ADVERB_COMP "more ethologically",
-    "etically" ADVERB_COMP "more etically",
-    "etymologically" ADVERB_COMP "more etymologically",
-    "etymonically" ADVERB_COMP "more etymonically",
-    "eucharistically" ADVERB_COMP "more eucharistically",
-    "eudaemonically" ADVERB_COMP "more eudaemonically",
-    "euhedrally" ADVERB_COMP "more euhedrally",
-    "eulogically" ADVERB_COMP "more eulogically",
-    "eulogistically" ADVERB_COMP "more eulogistically",
-    "eupeptically" ADVERB_COMP "more eupeptically",
-    "euphemistically" ADVERB_COMP "more euphemistically",
-    "euphoniously" ADVERB_COMP "more euphoniously",
-    "euphorically" ADVERB_COMP "more euphorically",
-    "euphuistically" ADVERB_COMP "more euphuistically",
-    "eurocentrically" ADVERB_COMP "more eurocentrically",
-    "europeanly" ADVERB_COMP "more europeanly",
-    "eusocially" ADVERB_COMP "more eusocially",
-    "eutrophically" ADVERB_COMP "more eutrophically",
-    "evadingly" ADVERB_COMP "more evadingly",
-    "evanescently" ADVERB_COMP "more evanescently",
-    "evangelically" ADVERB_COMP "more evangelically",
-    "evangelistically" ADVERB_COMP "more evangelistically",
-    "evaporatively" ADVERB_COMP "more evaporatively",
-    "evasively" ADVERB_COMP "more evasively",
-    "evenhandedly" ADVERB_COMP "more evenhandedly",
-    "evenlike" ADVERB_COMP "more evenlike",
-    "evenly" ADVERB_COMP "more evenly",
-    "evenmindedly" ADVERB_COMP "more evenmindedly",
-    "eventfully" ADVERB_COMP "more eventfully",
-    "evenward" ADVERB_COMP "more evenward",
-    "everlasting" ADVERB_COMP "more everlasting",
-    "everlastingly" ADVERB_COMP "more everlastingly",
-    "everloving" ADVERB_COMP "more everloving",
-    "evidentially" ADVERB_COMP "more evidentially",
-    "evidently" ADVERB_COMP "more evidently",
-    "evil" ADVERB_COMP "more evil",
-    "evilly" ADVERB_COMP "more evilly",
-    "evincibly" ADVERB_COMP "more evincibly",
-    "evincingly" ADVERB_COMP "more evincingly",
-    "evitably" ADVERB_COMP "more evitably",
-    "evocatively" ADVERB_COMP "more evocatively",
-    "evolutionally" ADVERB_COMP "more evolutionally",
-    "evolutionarily" ADVERB_COMP "more evolutionarily",
-    "evolvingly" ADVERB_COMP "more evolvingly",
-    "exacerbatingly" ADVERB_COMP "more exacerbatingly",
-    "exackly" ADVERB_COMP "more exackly",
-    "exact" ADVERB_COMP "more exact",
-    "exactingly" ADVERB_COMP "more exactingly",
-    "exactly" ADVERB_COMP "more exactly",
-    "exaggeratedly" ADVERB_COMP "more exaggeratedly",
-    "exaggeratingly" ADVERB_COMP "more exaggeratingly",
-    "exaggeratively" ADVERB_COMP "more exaggeratively",
-    "exaltedly" ADVERB_COMP "more exaltedly",
-    "exaltingly" ADVERB_COMP "more exaltingly",
-    "exasperatedly" ADVERB_COMP "more exasperatedly",
-    "exasperatingly" ADVERB_COMP "more exasperatingly",
-    "exceeding" ADVERB_COMP "more exceeding",
-    "excellent" ADVERB_COMP "more excellent",
-    "excellently" ADVERB_COMP "more excellently",
-    "exceptionably" ADVERB_COMP "more exceptionably",
-    "exceptionally" ADVERB_COMP "more exceptionally",
-    "exceptionlessly" ADVERB_COMP "more exceptionlessly",
-    "excessively" ADVERB_COMP "more excessively",
-    "excitably" ADVERB_COMP "more excitably",
-    "excitedly" ADVERB_COMP "more excitedly",
-    "excitingly" ADVERB_COMP "more excitingly",
-    "exclamatorily" ADVERB_COMP "more exclamatorily",
-    "excludingly" ADVERB_COMP "more excludingly",
-    "exclusionarily" ADVERB_COMP "more exclusionarily",
-    "exclusively" ADVERB_COMP "more exclusively",
-    "excoriatingly" ADVERB_COMP "more excoriatingly",
-    "excrescently" ADVERB_COMP "more excrescently",
-    "excretorily" ADVERB_COMP "more excretorily",
-    "excruciatingly" ADVERB_COMP "more excruciatingly",
-    "excursively" ADVERB_COMP "more excursively",
-    "excusably" ADVERB_COMP "more excusably",
-    "excusingly" ADVERB_COMP "more excusingly",
-    "execrably" ADVERB_COMP "more execrably",
-    "execratively" ADVERB_COMP "more execratively",
-    "exegetically" ADVERB_COMP "more exegetically",
-    "exemplarily" ADVERB_COMP "more exemplarily",
-    "exergetically" ADVERB_COMP "more exergetically",
-    "exergonically" ADVERB_COMP "more exergonically",
-    "exhaustedly" ADVERB_COMP "more exhaustedly",
-    "exhaustingly" ADVERB_COMP "more exhaustingly",
-    "exhaustively" ADVERB_COMP "more exhaustively",
-    "exhaustlessly" ADVERB_COMP "more exhaustlessly",
-    "exhibitionistically" ADVERB_COMP "more exhibitionistically",
-    "exhibitionistly" ADVERB_COMP "more exhibitionistly",
-    "exhibitively" ADVERB_COMP "more exhibitively",
-    "exhilaratingly" ADVERB_COMP "more exhilaratingly",
-    "exhortatively" ADVERB_COMP "more exhortatively",
-    "exhortingly" ADVERB_COMP "more exhortingly",
-    "exigently" ADVERB_COMP "more exigently",
-    "exiguously" ADVERB_COMP "more exiguously",
-    "exilically" ADVERB_COMP "more exilically",
-    "eximiously" ADVERB_COMP "more eximiously",
-    "existentialistically" ADVERB_COMP "more existentialistically",
-    "existentially" ADVERB_COMP "more existentially",
-    "exocentrically" ADVERB_COMP "more exocentrically",
-    "exonormatively" ADVERB_COMP "more exonormatively",
-    "exorbitantly" ADVERB_COMP "more exorbitantly",
-    "exoterically" ADVERB_COMP "more exoterically",
-    "exothermally" ADVERB_COMP "more exothermally",
-    "exothermically" ADVERB_COMP "more exothermically",
-    "exotically" ADVERB_COMP "more exotically",
-    "expandedly" ADVERB_COMP "more expandedly",
-    "expandingly" ADVERB_COMP "more expandingly",
-    "expansibly" ADVERB_COMP "more expansibly",
-    "expansively" ADVERB_COMP "more expansively",
-    "expecially" ADVERB_COMP "more expecially",
-    "expectably" ADVERB_COMP "more expectably",
-    "expectantly" ADVERB_COMP "more expectantly",
-    "expectedly" ADVERB_COMP "more expectedly",
-    "expectingly" ADVERB_COMP "more expectingly",
-    "expedientially" ADVERB_COMP "more expedientially",
-    "expediently" ADVERB_COMP "more expediently",
-    "expeditely" ADVERB_COMP "more expeditely",
-    "expeditiously" ADVERB_COMP "more expeditiously",
-    "expendably" ADVERB_COMP "more expendably",
-    "expensefully" ADVERB_COMP "more expensefully",
-    "expensively" ADVERB_COMP "more expensively",
-    "experiencedly" ADVERB_COMP "more experiencedly",
-    "experimentally" ADVERB_COMP "more experimentally",
-    "experimently" ADVERB_COMP "more experimently",
-    "expertly" ADVERB_COMP "more expertly",
-    "explanatively" ADVERB_COMP "more explanatively",
-    "expletively" ADVERB_COMP "more expletively",
-    "explicatively" ADVERB_COMP "more explicatively",
-    "explicitly" ADVERB_COMP "more explicitly",
-    "explicted" ADVERB_COMP "more explicted",
-    "explodingly" ADVERB_COMP "more explodingly",
-    "exploitably" ADVERB_COMP "more exploitably",
-    "exploitatively" ADVERB_COMP "more exploitatively",
-    "exploitively" ADVERB_COMP "more exploitively",
-    "explorably" ADVERB_COMP "more explorably",
-    "exploratively" ADVERB_COMP "more exploratively",
-    "exploratorily" ADVERB_COMP "more exploratorily",
-    "exploringly" ADVERB_COMP "more exploringly",
-    "explosively" ADVERB_COMP "more explosively",
-    "exponentially" ADVERB_COMP "more exponentially",
-    "exposedly" ADVERB_COMP "more exposedly",
-    "exposingly" ADVERB_COMP "more exposingly",
-    "expositorially" ADVERB_COMP "more expositorially",
-    "expositorily" ADVERB_COMP "more expositorily",
-    "expostulatingly" ADVERB_COMP "more expostulatingly",
-    "expostulatively" ADVERB_COMP "more expostulatively",
-    "expressedly" ADVERB_COMP "more expressedly",
-    "expressibly" ADVERB_COMP "more expressibly",
-    "expressionistically" ADVERB_COMP "more expressionistically",
-    "expressionlessly" ADVERB_COMP "more expressionlessly",
-    "expressively" ADVERB_COMP "more expressively",
-    "exquisitely" ADVERB_COMP "more exquisitely",
-    "exspecially" ADVERB_COMP "more exspecially",
-    "extatically" ADVERB_COMP "more extatically",
-    "extemporally" ADVERB_COMP "more extemporally",
-    "extempore" ADVERB_COMP "more extempore",
-    "extendedly" ADVERB_COMP "more extendedly",
-    "extensively" ADVERB_COMP "more extensively",
-    "extenuatingly" ADVERB_COMP "more extenuatingly",
-    "exteriorly" ADVERB_COMP "more exteriorly",
-    "exteriourly" ADVERB_COMP "more exteriourly",
-    "externally" ADVERB_COMP "more externally",
-    "extinctively" ADVERB_COMP "more extinctively",
-    "extollingly" ADVERB_COMP "more extollingly",
-    "extorsively" ADVERB_COMP "more extorsively",
-    "extortionately" ADVERB_COMP "more extortionately",
-    "extraneously" ADVERB_COMP "more extraneously",
-    "extraordinarily" ADVERB_COMP "more extraordinarily",
-    "extrapolatively" ADVERB_COMP "more extrapolatively",
-    "extraterritorially" ADVERB_COMP "more extraterritorially",
-    "extravagantly" ADVERB_COMP "more extravagantly",
-    "extreamely" ADVERB_COMP "more extreamely",
-    "extreamly" ADVERB_COMP "more extreamly",
-    "extreme" ADVERB_COMP "more extreme",
-    "extremely" ADVERB_COMP "more extremely",
-    "extrinsically" ADVERB_COMP "more extrinsically",
-    "extrorsely" ADVERB_COMP "more extrorsely",
-    "extroversively" ADVERB_COMP "more extroversively",
-    "extrovertedly" ADVERB_COMP "more extrovertedly",
-    "exuberantly" ADVERB_COMP "more exuberantly",
-    "exultantly" ADVERB_COMP "more exultantly",
-    "exultatingly" ADVERB_COMP "more exultatingly",
-    "exultingly" ADVERB_COMP "more exultingly",
-    "eyeingly" ADVERB_COMP "more eyeingly",
-    "eyepoppingly" ADVERB_COMP "more eyepoppingly",
-    "eyewateringly" ADVERB_COMP "more eyewateringly",
-    "far" ADVERB_COMP "farther",
-    "far" ADVERB_SUP "farthest",
-    "good" ADVERB_COMP "better",
-    "good" ADVERB_SUP "best",
-    "hot" ADVERB_COMP "hotter",
-    "hot" ADVERB_SUP "hottest",
-    "ill" ADVERB_COMP "worse",
-    "ill" ADVERB_SUP "worst",
-    "little" ADVERB_COMP "less",
-    "little" ADVERB_SUP "least",
-    "macabrely" ADVERB_COMP "more macabrely",
-    "macabrely" ADVERB_SUP "most macabrely",
-    "macaronically" ADVERB_COMP "more macaronically",
-    "macaronically" ADVERB_SUP "most macaronically",
-    "machiavellianly" ADVERB_COMP "more machiavellianly",
-    "machiavellianly" ADVERB_SUP "most machiavellianly",
-    "machoistically" ADVERB_COMP "more machoistically",
-    "machoistically" ADVERB_SUP "most machoistically",
-    "mackly" ADVERB_COMP "more mackly",
-    "mackly" ADVERB_SUP "most mackly",
-    "macronationally" ADVERB_COMP "more macronationally",
-    "macronationally" ADVERB_SUP "most macronationally",
-    "macrophallically" ADVERB_COMP "more macrophallically",
-    "macrophallically" ADVERB_SUP "most macrophallically",
-    "macroscopically" ADVERB_COMP "more macroscopically",
-    "macroscopically" ADVERB_SUP "most macroscopically",
-    "maddeningly" ADVERB_COMP "more maddeningly",
-    "maddeningly" ADVERB_SUP "most maddeningly",
-    "maddingly" ADVERB_COMP "more maddingly",
-    "maddingly" ADVERB_SUP "most maddingly",
-    "maestoso" ADVERB_COMP "more maestoso",
-    "maestoso" ADVERB_SUP "most maestoso",
-    "magically" ADVERB_COMP "more magically",
-    "magically" ADVERB_SUP "most magically",
-    "magickally" ADVERB_COMP "more magickally",
-    "magickally" ADVERB_SUP "most magickally",
-    "magickly" ADVERB_COMP "more magickly",
-    "magickly" ADVERB_SUP "most magickly",
-    "magisterially" ADVERB_COMP "more magisterially",
-    "magisterially" ADVERB_SUP "most magisterially",
-    "magistrally" ADVERB_COMP "more magistrally",
-    "magistrally" ADVERB_SUP "most magistrally",
-    "magistratically" ADVERB_COMP "more magistratically",
-    "magistratically" ADVERB_SUP "most magistratically",
-    "magnanimously" ADVERB_COMP "more magnanimously",
-    "magnanimously" ADVERB_SUP "most magnanimously",
-    "magnetostatically" ADVERB_COMP "more magnetostatically",
-    "magnetostatically" ADVERB_SUP "most magnetostatically",
-    "magnifically" ADVERB_COMP "more magnifically",
-    "magnifically" ADVERB_SUP "most magnifically",
-    "magnificently" ADVERB_COMP "more magnificently",
-    "magnificently" ADVERB_SUP "most magnificently",
-    "magniloquently" ADVERB_COMP "more magniloquently",
-    "magniloquently" ADVERB_SUP "most magniloquently",
-    "maieutically" ADVERB_COMP "more maieutically",
-    "maieutically" ADVERB_SUP "most maieutically",
-    "maimedly" ADVERB_COMP "more maimedly",
-    "maimedly" ADVERB_SUP "most maimedly",
-    "main" ADVERB_COMP "more main",
-    "main" ADVERB_SUP "most main",
-    "majestically" ADVERB_COMP "more majestically",
-    "majestically" ADVERB_SUP "most majestically",
-    "majoritively" ADVERB_COMP "more majoritively",
-    "majoritively" ADVERB_SUP "most majoritively",
-    "maladaptively" ADVERB_COMP "more maladaptively",
-    "maladaptively" ADVERB_SUP "most maladaptively",
-    "maladroitly" ADVERB_COMP "more maladroitly",
-    "maladroitly" ADVERB_SUP "most maladroitly",
-    "malapertly" ADVERB_COMP "more malapertly",
-    "malapertly" ADVERB_SUP "most malapertly",
-    "malapropistically" ADVERB_COMP "more malapropistically",
-    "malapropistically" ADVERB_SUP "most malapropistically",
-    "malapropos" ADVERB_COMP "more malapropos",
-    "malapropos" ADVERB_SUP "most malapropos",
-    "malcontentedly" ADVERB_COMP "more malcontentedly",
-    "malcontentedly" ADVERB_SUP "most malcontentedly",
-    "malcontently" ADVERB_COMP "more malcontently",
-    "malcontently" ADVERB_SUP "most malcontently",
-    "malefically" ADVERB_COMP "more malefically",
-    "malefically" ADVERB_SUP "most malefically",
-    "maleficently" ADVERB_COMP "more maleficently",
-    "maleficently" ADVERB_SUP "most maleficently",
-    "maleficiently" ADVERB_COMP "more maleficiently",
-    "maleficiently" ADVERB_SUP "most maleficiently",
-    "malevolently" ADVERB_COMP "more malevolently",
-    "malevolently" ADVERB_SUP "most malevolently",
-    "maliciously" ADVERB_COMP "more maliciously",
-    "maliciously" ADVERB_SUP "most maliciously",
-    "malignantly" ADVERB_COMP "more malignantly",
-    "malignantly" ADVERB_SUP "most malignantly",
-    "malignly" ADVERB_COMP "more malignly",
-    "malignly" ADVERB_SUP "most malignly",
-    "malitiously" ADVERB_COMP "more malitiously",
-    "malitiously" ADVERB_SUP "most malitiously",
-    "malleably" ADVERB_COMP "more malleably",
-    "malleably" ADVERB_SUP "most malleably",
-    "malodorously" ADVERB_COMP "more malodorously",
-    "malodorously" ADVERB_SUP "most malodorously",
-    "manageably" ADVERB_COMP "more manageably",
-    "manageably" ADVERB_SUP "most manageably",
-    "manfully" ADVERB_COMP "more manfully",
-    "manfully" ADVERB_SUP "most manfully",
-    "mangily" ADVERB_COMP "more mangily",
-    "mangily" ADVERB_SUP "most mangily",
-    "manglingly" ADVERB_COMP "more manglingly",
-    "manglingly" ADVERB_SUP "most manglingly",
-    "maniacally" ADVERB_COMP "more maniacally",
-    "maniacally" ADVERB_SUP "most maniacally",
-    "manically" ADVERB_COMP "more manically",
-    "manically" ADVERB_SUP "most manically",
-    "manifestly" ADVERB_COMP "more manifestly",
-    "manifestly" ADVERB_SUP "most manifestly",
-    "manifold" ADVERB_COMP "more manifold",
-    "manifold" ADVERB_SUP "most manifold",
-    "manifoldly" ADVERB_COMP "more manifoldly",
-    "manifoldly" ADVERB_SUP "most manifoldly",
-    "manipulably" ADVERB_COMP "more manipulably",
-    "manipulably" ADVERB_SUP "most manipulably",
-    "manipulatively" ADVERB_COMP "more manipulatively",
-    "manipulatively" ADVERB_SUP "most manipulatively",
-    "mankily" ADVERB_COMP "more mankily",
-    "mankily" ADVERB_SUP "most mankily",
-    "manlessly" ADVERB_COMP "more manlessly",
-    "manlessly" ADVERB_SUP "most manlessly",
-    "manlily" ADVERB_COMP "more manlily",
-    "manlily" ADVERB_SUP "most manlily",
-    "manneristically" ADVERB_COMP "more manneristically",
-    "manneristically" ADVERB_SUP "most manneristically",
-    "mannerlessly" ADVERB_COMP "more mannerlessly",
-    "mannerlessly" ADVERB_SUP "most mannerlessly",
-    "mannerly" ADVERB_COMP "more mannerly",
-    "mannerly" ADVERB_SUP "most mannerly",
-    "mannishly" ADVERB_COMP "more mannishly",
-    "mannishly" ADVERB_SUP "most mannishly",
-    "manshiply" ADVERB_COMP "more manshiply",
-    "manshiply" ADVERB_SUP "most manshiply",
-    "manwise" ADVERB_COMP "more manwise",
-    "manwise" ADVERB_SUP "most manwise",
-    "manyhandedly" ADVERB_COMP "more manyhandedly",
-    "manyhandedly" ADVERB_SUP "most manyhandedly",
-    "mardily" ADVERB_COMP "more mardily",
-    "mardily" ADVERB_SUP "most mardily",
-    "margarinely" ADVERB_COMP "more margarinely",
-    "margarinely" ADVERB_SUP "most margarinely",
-    "marginalistically" ADVERB_COMP "more marginalistically",
-    "marginalistically" ADVERB_SUP "most marginalistically",
-    "marginally" ADVERB_COMP "more marginally",
-    "marginally" ADVERB_SUP "most marginally",
-    "markedly" ADVERB_COMP "more markedly",
-    "markedly" ADVERB_SUP "most markedly",
-    "marketably" ADVERB_COMP "more marketably",
-    "marketably" ADVERB_SUP "most marketably",
-    "marmoreally" ADVERB_COMP "more marmoreally",
-    "marmoreally" ADVERB_SUP "most marmoreally",
-    "marriageably" ADVERB_COMP "more marriageably",
-    "marriageably" ADVERB_SUP "most marriageably",
-    "marshily" ADVERB_COMP "more marshily",
-    "marshily" ADVERB_SUP "most marshily",
-    "martially" ADVERB_COMP "more martially",
-    "martially" ADVERB_SUP "most martially",
-    "martyrly" ADVERB_COMP "more martyrly",
-    "martyrly" ADVERB_SUP "most martyrly",
-    "marvellously" ADVERB_COMP "more marvellously",
-    "marvellously" ADVERB_SUP "most marvellously",
-    "marvelously" ADVERB_COMP "more marvelously",
-    "marvelously" ADVERB_SUP "most marvelously",
-    "marxistically" ADVERB_COMP "more marxistically",
-    "marxistically" ADVERB_SUP "most marxistically",
-    "marxistly" ADVERB_COMP "more marxistly",
-    "marxistly" ADVERB_SUP "most marxistly",
-    "masculinely" ADVERB_COMP "more masculinely",
-    "masculinely" ADVERB_SUP "most masculinely",
-    "masculinistically" ADVERB_COMP "more masculinistically",
-    "masculinistically" ADVERB_SUP "most masculinistically",
-    "masochistically" ADVERB_COMP "more masochistically",
-    "masochistically" ADVERB_SUP "most masochistically",
-    "masoretically" ADVERB_COMP "more masoretically",
-    "masoretically" ADVERB_SUP "most masoretically",
-    "massagingly" ADVERB_COMP "more massagingly",
-    "massagingly" ADVERB_SUP "most massagingly",
-    "massily" ADVERB_COMP "more massily",
-    "massily" ADVERB_SUP "most massily",
-    "massively" ADVERB_COMP "more massively",
-    "massively" ADVERB_SUP "most massively",
-    "massly" ADVERB_COMP "more massly",
-    "massly" ADVERB_SUP "most massly",
-    "masterfully" ADVERB_COMP "more masterfully",
-    "masterfully" ADVERB_SUP "most masterfully",
-    "masteringly" ADVERB_COMP "more masteringly",
-    "masteringly" ADVERB_SUP "most masteringly",
-    "masterly" ADVERB_COMP "more masterly",
-    "masterly" ADVERB_SUP "most masterly",
-    "masturbatorily" ADVERB_COMP "more masturbatorily",
-    "masturbatorily" ADVERB_SUP "most masturbatorily",
-    "materialistically" ADVERB_COMP "more materialistically",
-    "materialistically" ADVERB_SUP "most materialistically",
-    "materially" ADVERB_COMP "more materially",
-    "materially" ADVERB_SUP "most materially",
-    "maternalistically" ADVERB_COMP "more maternalistically",
-    "maternalistically" ADVERB_SUP "most maternalistically",
-    "maternally" ADVERB_COMP "more maternally",
-    "maternally" ADVERB_SUP "most maternally",
-    "mathematically" ADVERB_COMP "more mathematically",
-    "mathematically" ADVERB_SUP "most mathematically",
-    "matily" ADVERB_COMP "more matily",
-    "matily" ADVERB_SUP "most matily",
-    "matriarchally" ADVERB_COMP "more matriarchally",
-    "matriarchally" ADVERB_SUP "most matriarchally",
-    "matriarchically" ADVERB_COMP "more matriarchically",
-    "matriarchically" ADVERB_SUP "most matriarchically",
-    "matrically" ADVERB_COMP "more matrically",
-    "matrically" ADVERB_SUP "most matrically",
-    "matricentrically" ADVERB_COMP "more matricentrically",
-    "matricentrically" ADVERB_SUP "most matricentrically",
-    "matricidally" ADVERB_COMP "more matricidally",
-    "matricidally" ADVERB_SUP "most matricidally",
-    "matrifocally" ADVERB_COMP "more matrifocally",
-    "matrifocally" ADVERB_SUP "most matrifocally",
-    "matronly" ADVERB_COMP "more matronly",
-    "matronly" ADVERB_SUP "most matronly",
-    "mattedly" ADVERB_COMP "more mattedly",
-    "mattedly" ADVERB_SUP "most mattedly",
-    "maturationally" ADVERB_COMP "more maturationally",
-    "maturationally" ADVERB_SUP "most maturationally",
-    "maturely" ADVERB_COMP "more maturely",
-    "maturely" ADVERB_SUP "most maturely",
-    "maudlinly" ADVERB_COMP "more maudlinly",
-    "maudlinly" ADVERB_SUP "most maudlinly",
-    "maunderingly" ADVERB_COMP "more maunderingly",
-    "maunderingly" ADVERB_SUP "most maunderingly",
-    "mauvely" ADVERB_COMP "more mauvely",
-    "mauvely" ADVERB_SUP "most mauvely",
-    "mawkishly" ADVERB_COMP "more mawkishly",
-    "mawkishly" ADVERB_SUP "most mawkishly",
-    "maximally" ADVERB_COMP "more maximally",
-    "maximally" ADVERB_SUP "most maximally",
-    "maximumly" ADVERB_COMP "more maximumly",
-    "maximumly" ADVERB_SUP "most maximumly",
-    "mazedly" ADVERB_COMP "more mazedly",
-    "mazedly" ADVERB_SUP "most mazedly",
-    "mazily" ADVERB_COMP "more mazily",
-    "mazily" ADVERB_SUP "most mazily",
-    "meagerly" ADVERB_COMP "more meagerly",
-    "meagerly" ADVERB_SUP "most meagerly",
-    "meagrely" ADVERB_COMP "more meagrely",
-    "meagrely" ADVERB_SUP "most meagrely",
-    "mealily" ADVERB_COMP "more mealily",
-    "mealily" ADVERB_SUP "most mealily",
-    "meanderingly" ADVERB_COMP "more meanderingly",
-    "meanderingly" ADVERB_SUP "most meanderingly",
-    "meaningfully" ADVERB_COMP "more meaningfully",
-    "meaningfully" ADVERB_SUP "most meaningfully",
-    "meaninglessly" ADVERB_COMP "more meaninglessly",
-    "meaninglessly" ADVERB_SUP "most meaninglessly",
-    "meaningly" ADVERB_COMP "more meaningly",
-    "meaningly" ADVERB_SUP "most meaningly",
-    "meanspiritedly" ADVERB_COMP "more meanspiritedly",
-    "meanspiritedly" ADVERB_SUP "most meanspiritedly",
-    "measurably" ADVERB_COMP "more measurably",
-    "measurably" ADVERB_SUP "most measurably",
-    "measuredly" ADVERB_COMP "more measuredly",
-    "measuredly" ADVERB_SUP "most measuredly",
-    "measurelessly" ADVERB_COMP "more measurelessly",
-    "measurelessly" ADVERB_SUP "most measurelessly",
-    "measurely" ADVERB_COMP "more measurely",
-    "measurely" ADVERB_SUP "most measurely",
-    "measuringly" ADVERB_COMP "more measuringly",
-    "measuringly" ADVERB_SUP "most measuringly",
-    "meatily" ADVERB_COMP "more meatily",
-    "meatily" ADVERB_SUP "most meatily",
-    "mechanically" ADVERB_COMP "more mechanically",
-    "mechanically" ADVERB_SUP "most mechanically",
-    "mechanistically" ADVERB_COMP "more mechanistically",
-    "mechanistically" ADVERB_SUP "most mechanistically",
-    "meddlesomely" ADVERB_COMP "more meddlesomely",
-    "meddlesomely" ADVERB_SUP "most meddlesomely",
-    "meddlingly" ADVERB_COMP "more meddlingly",
-    "meddlingly" ADVERB_SUP "most meddlingly",
-    "mediaevally" ADVERB_COMP "more mediaevally",
-    "mediaevally" ADVERB_SUP "most mediaevally",
-    "mediagenically" ADVERB_COMP "more mediagenically",
-    "mediagenically" ADVERB_SUP "most mediagenically",
-    "medialward" ADVERB_COMP "more medialward",
-    "medialward" ADVERB_SUP "most medialward",
-    "medialwards" ADVERB_COMP "more medialwards",
-    "medialwards" ADVERB_SUP "most medialwards",
-    "medianly" ADVERB_COMP "more medianly",
-    "medianly" ADVERB_SUP "most medianly",
-    "mediatically" ADVERB_COMP "more mediatically",
-    "mediatically" ADVERB_SUP "most mediatically",
-    "medically" ADVERB_COMP "more medically",
-    "medically" ADVERB_SUP "most medically",
-    "medicamentally" ADVERB_COMP "more medicamentally",
-    "medicamentally" ADVERB_SUP "most medicamentally",
-    "medicinally" ADVERB_COMP "more medicinally",
-    "medicinally" ADVERB_SUP "most medicinally",
-    "medievally" ADVERB_COMP "more medievally",
-    "medievally" ADVERB_SUP "most medievally",
-    "mediocrally" ADVERB_COMP "more mediocrally",
-    "mediocrally" ADVERB_SUP "most mediocrally",
-    "mediocrely" ADVERB_COMP "more mediocrely",
-    "mediocrely" ADVERB_SUP "most mediocrely",
-    "mediolaterally" ADVERB_COMP "more mediolaterally",
-    "mediolaterally" ADVERB_SUP "most mediolaterally",
-    "meditatively" ADVERB_COMP "more meditatively",
-    "meditatively" ADVERB_SUP "most meditatively",
-    "mediumistically" ADVERB_COMP "more mediumistically",
-    "mediumistically" ADVERB_SUP "most mediumistically",
-    "meechingly" ADVERB_COMP "more meechingly",
-    "meechingly" ADVERB_SUP "most meechingly",
-    "meekishly" ADVERB_COMP "more meekishly",
-    "meekishly" ADVERB_SUP "most meekishly",
-    "meekly" ADVERB_COMP "more meekly",
-    "meekly" ADVERB_SUP "most meekly",
-    "meeterly" ADVERB_COMP "more meeterly",
-    "meeterly" ADVERB_SUP "most meeterly",
-    "meetly" ADVERB_COMP "more meetly",
-    "meetly" ADVERB_SUP "most meetly",
-    "mega" ADVERB_COMP "more mega",
-    "mega" ADVERB_SUP "most mega",
-    "megalomaniacally" ADVERB_COMP "more megalomaniacally",
-    "megalomaniacally" ADVERB_SUP "most megalomaniacally",
-    "megaly" ADVERB_COMP "more megaly",
-    "megaly" ADVERB_SUP "most megaly",
-    "megaphonically" ADVERB_COMP "more megaphonically",
-    "megaphonically" ADVERB_SUP "most megaphonically",
-    "melancholically" ADVERB_COMP "more melancholically",
-    "melancholically" ADVERB_SUP "most melancholically",
-    "melancholily" ADVERB_COMP "more melancholily",
-    "melancholily" ADVERB_SUP "most melancholily",
-    "melancholiously" ADVERB_COMP "more melancholiously",
-    "melancholiously" ADVERB_SUP "most melancholiously",
-    "melioristically" ADVERB_COMP "more melioristically",
-    "melioristically" ADVERB_SUP "most melioristically",
-    "melismatically" ADVERB_COMP "more melismatically",
-    "melismatically" ADVERB_SUP "most melismatically",
-    "mellifluently" ADVERB_COMP "more mellifluently",
-    "mellifluently" ADVERB_SUP "most mellifluently",
-    "mellifluously" ADVERB_COMP "more mellifluously",
-    "mellifluously" ADVERB_SUP "most mellifluously",
-    "mellowingly" ADVERB_COMP "more mellowingly",
-    "mellowingly" ADVERB_SUP "most mellowingly",
-    "mellowly" ADVERB_COMP "more mellowly",
-    "mellowly" ADVERB_SUP "most mellowly",
-    "melodially" ADVERB_COMP "more melodially",
-    "melodially" ADVERB_SUP "most melodially",
-    "melodically" ADVERB_COMP "more melodically",
-    "melodically" ADVERB_SUP "most melodically",
-    "melodiously" ADVERB_COMP "more melodiously",
-    "melodiously" ADVERB_SUP "most melodiously",
-    "melodramatically" ADVERB_COMP "more melodramatically",
-    "melodramatically" ADVERB_SUP "most melodramatically",
-    "meltingly" ADVERB_COMP "more meltingly",
-    "meltingly" ADVERB_SUP "most meltingly",
-    "menacingly" ADVERB_COMP "more menacingly",
-    "menacingly" ADVERB_SUP "most menacingly",
-    "mendaciously" ADVERB_COMP "more mendaciously",
-    "mendaciously" ADVERB_SUP "most mendaciously",
-    "menially" ADVERB_COMP "more menially",
-    "menially" ADVERB_SUP "most menially",
-    "mentalistically" ADVERB_COMP "more mentalistically",
-    "mentalistically" ADVERB_SUP "most mentalistically",
-    "mentally" ADVERB_COMP "more mentally",
-    "mentally" ADVERB_SUP "most mentally",
-    "mentionably" ADVERB_COMP "more mentionably",
-    "mentionably" ADVERB_SUP "most mentionably",
-    "mentorially" ADVERB_COMP "more mentorially",
-    "mentorially" ADVERB_SUP "most mentorially",
-    "meowingly" ADVERB_COMP "more meowingly",
-    "meowingly" ADVERB_SUP "most meowingly",
-    "mephistopheleanly" ADVERB_COMP "more mephistopheleanly",
-    "mephistopheleanly" ADVERB_SUP "most mephistopheleanly",
-    "mephitically" ADVERB_COMP "more mephitically",
-    "mephitically" ADVERB_SUP "most mephitically",
-    "mercantilely" ADVERB_COMP "more mercantilely",
-    "mercantilely" ADVERB_SUP "most mercantilely",
-    "mercenarily" ADVERB_COMP "more mercenarily",
-    "mercenarily" ADVERB_SUP "most mercenarily",
-    "mercifully" ADVERB_COMP "more mercifully",
-    "mercifully" ADVERB_SUP "most mercifully",
-    "mercilessly" ADVERB_COMP "more mercilessly",
-    "mercilessly" ADVERB_SUP "most mercilessly",
-    "mercurially" ADVERB_COMP "more mercurially",
-    "mercurially" ADVERB_SUP "most mercurially",
-    "meretriciously" ADVERB_COMP "more meretriciously",
-    "meretriciously" ADVERB_SUP "most meretriciously",
-    "meritedly" ADVERB_COMP "more meritedly",
-    "meritedly" ADVERB_SUP "most meritedly",
-    "meritocratically" ADVERB_COMP "more meritocratically",
-    "meritocratically" ADVERB_SUP "most meritocratically",
-    "meritoriously" ADVERB_COMP "more meritoriously",
-    "meritoriously" ADVERB_SUP "most meritoriously",
-    "merohedrally" ADVERB_COMP "more merohedrally",
-    "merohedrally" ADVERB_SUP "most merohedrally",
-    "meromorphically" ADVERB_COMP "more meromorphically",
-    "meromorphically" ADVERB_SUP "most meromorphically",
-    "merrily" ADVERB_COMP "more merrily",
-    "merrily" ADVERB_SUP "most merrily",
-    "mesenchymally" ADVERB_COMP "more mesenchymally",
-    "mesenchymally" ADVERB_SUP "most mesenchymally",
-    "mesially" ADVERB_COMP "more mesially",
-    "mesially" ADVERB_SUP "most mesially",
-    "mesmerically" ADVERB_COMP "more mesmerically",
-    "mesmerically" ADVERB_SUP "most mesmerically",
-    "mesmerisingly" ADVERB_COMP "more mesmerisingly",
-    "mesmerisingly" ADVERB_SUP "most mesmerisingly",
-    "mesmerizingly" ADVERB_COMP "more mesmerizingly",
-    "mesmerizingly" ADVERB_SUP "most mesmerizingly",
-    "messianically" ADVERB_COMP "more messianically",
-    "messianically" ADVERB_SUP "most messianically",
-    "messily" ADVERB_COMP "more messily",
-    "messily" ADVERB_SUP "most messily",
-    "messlessly" ADVERB_COMP "more messlessly",
-    "messlessly" ADVERB_SUP "most messlessly",
-    "metachromatically" ADVERB_COMP "more metachromatically",
-    "metachromatically" ADVERB_SUP "most metachromatically",
-    "metacinematically" ADVERB_COMP "more metacinematically",
-    "metacinematically" ADVERB_SUP "most metacinematically",
-    "metafictionally" ADVERB_COMP "more metafictionally",
-    "metafictionally" ADVERB_SUP "most metafictionally",
-    "metallically" ADVERB_COMP "more metallically",
-    "metallically" ADVERB_SUP "most metallically",
-    "metallicly" ADVERB_COMP "more metallicly",
-    "metallicly" ADVERB_SUP "most metallicly",
-    "metaphorically" ADVERB_COMP "more metaphorically",
-    "metaphorically" ADVERB_SUP "most metaphorically",
-    "metaphrastically" ADVERB_COMP "more metaphrastically",
-    "metaphrastically" ADVERB_SUP "most metaphrastically",
-    "metaphysically" ADVERB_COMP "more metaphysically",
-    "metaphysically" ADVERB_SUP "most metaphysically",
-    "metapoetically" ADVERB_COMP "more metapoetically",
-    "metapoetically" ADVERB_SUP "most metapoetically",
-    "metareflectively" ADVERB_COMP "more metareflectively",
-    "metareflectively" ADVERB_SUP "most metareflectively",
-    "metareflexively" ADVERB_COMP "more metareflexively",
-    "metareflexively" ADVERB_SUP "most metareflexively",
-    "metastably" ADVERB_COMP "more metastably",
-    "metastably" ADVERB_SUP "most metastably",
-    "metasubjectively" ADVERB_COMP "more metasubjectively",
-    "metasubjectively" ADVERB_SUP "most metasubjectively",
-    "metatheatrically" ADVERB_COMP "more metatheatrically",
-    "metatheatrically" ADVERB_SUP "most metatheatrically",
-    "metathetically" ADVERB_COMP "more metathetically",
-    "metathetically" ADVERB_SUP "most metathetically",
-    "meteorically" ADVERB_COMP "more meteorically",
-    "meteorically" ADVERB_SUP "most meteorically",
-    "methodically" ADVERB_COMP "more methodically",
-    "methodically" ADVERB_SUP "most methodically",
-    "methodistically" ADVERB_COMP "more methodistically",
-    "methodistically" ADVERB_SUP "most methodistically",
-    "methodologically" ADVERB_COMP "more methodologically",
-    "methodologically" ADVERB_SUP "most methodologically",
-    "meticulously" ADVERB_COMP "more meticulously",
-    "meticulously" ADVERB_SUP "most meticulously",
-    "metonymically" ADVERB_COMP "more metonymically",
-    "metonymically" ADVERB_SUP "most metonymically",
-    "metonymously" ADVERB_COMP "more metonymously",
-    "metonymously" ADVERB_SUP "most metonymously",
-    "metrically" ADVERB_COMP "more metrically",
-    "metrically" ADVERB_SUP "most metrically",
-    "metronomically" ADVERB_COMP "more metronomically",
-    "metronomically" ADVERB_SUP "most metronomically",
-    "metropolitanly" ADVERB_COMP "more metropolitanly",
-    "metropolitanly" ADVERB_SUP "most metropolitanly",
-    "metrosexually" ADVERB_COMP "more metrosexually",
-    "metrosexually" ADVERB_SUP "most metrosexually",
-    "mettlesomely" ADVERB_COMP "more mettlesomely",
-    "mettlesomely" ADVERB_SUP "most mettlesomely",
-    "mewingly" ADVERB_COMP "more mewingly",
-    "mewingly" ADVERB_SUP "most mewingly",
-    "miasmatically" ADVERB_COMP "more miasmatically",
-    "miasmatically" ADVERB_SUP "most miasmatically",
-    "miasmically" ADVERB_COMP "more miasmically",
-    "miasmically" ADVERB_SUP "most miasmically",
-    "micawberly" ADVERB_COMP "more micawberly",
-    "micawberly" ADVERB_SUP "most micawberly",
-    "mickle" ADVERB_COMP "more mickle",
-    "mickle" ADVERB_SUP "most mickle",
-    "microaggressively" ADVERB_COMP "more microaggressively",
-    "microaggressively" ADVERB_SUP "most microaggressively",
-    "micronationally" ADVERB_COMP "more micronationally",
-    "micronationally" ADVERB_SUP "most micronationally",
-    "micropolitically" ADVERB_COMP "more micropolitically",
-    "micropolitically" ADVERB_SUP "most micropolitically",
-    "microscopically" ADVERB_COMP "more microscopically",
-    "microscopically" ADVERB_SUP "most microscopically",
-    "microtonally" ADVERB_COMP "more microtonally",
-    "microtonally" ADVERB_SUP "most microtonally",
-    "middlesome" ADVERB_COMP "more middlesome",
-    "middlesome" ADVERB_SUP "most middlesome",
-    "middling" ADVERB_COMP "more middling",
-    "middling" ADVERB_SUP "most middling",
-    "middlingly" ADVERB_COMP "more middlingly",
-    "middlingly" ADVERB_SUP "most middlingly",
-    "midmarket" ADVERB_COMP "more midmarket",
-    "midmarket" ADVERB_SUP "most midmarket",
-    "miffily" ADVERB_COMP "more miffily",
-    "miffily" ADVERB_SUP "most miffily",
-    "mightily" ADVERB_COMP "more mightily",
-    "mightily" ADVERB_SUP "most mightily",
-    "mightly" ADVERB_COMP "more mightly",
-    "mightly" ADVERB_SUP "most mightly",
-    "militantly" ADVERB_COMP "more militantly",
-    "militantly" ADVERB_SUP "most militantly",
-    "militarically" ADVERB_COMP "more militarically",
-    "militarically" ADVERB_SUP "most militarically",
-    "militarily" ADVERB_COMP "more militarily",
-    "militarily" ADVERB_SUP "most militarily",
-    "militaristically" ADVERB_COMP "more militaristically",
-    "militaristically" ADVERB_SUP "most militaristically",
-    "milkily" ADVERB_COMP "more milkily",
-    "milkily" ADVERB_SUP "most milkily",
-    "milquetoastedly" ADVERB_COMP "more milquetoastedly",
-    "milquetoastedly" ADVERB_SUP "most milquetoastedly",
-    "miltonically" ADVERB_COMP "more miltonically",
-    "miltonically" ADVERB_SUP "most miltonically",
-    "mimetically" ADVERB_COMP "more mimetically",
-    "mimetically" ADVERB_SUP "most mimetically",
-    "mimically" ADVERB_COMP "more mimically",
-    "mimically" ADVERB_SUP "most mimically",
-    "minaciously" ADVERB_COMP "more minaciously",
-    "minaciously" ADVERB_SUP "most minaciously",
-    "minatorially" ADVERB_COMP "more minatorially",
-    "minatorially" ADVERB_SUP "most minatorially",
-    "minatorily" ADVERB_COMP "more minatorily",
-    "minatorily" ADVERB_SUP "most minatorily",
-    "mincingly" ADVERB_COMP "more mincingly",
-    "mincingly" ADVERB_SUP "most mincingly",
-    "mindblowingly" ADVERB_COMP "more mindblowingly",
-    "mindblowingly" ADVERB_SUP "most mindblowingly",
-    "mindbogglingly" ADVERB_COMP "more mindbogglingly",
-    "mindbogglingly" ADVERB_SUP "most mindbogglingly",
-    "mindedly" ADVERB_COMP "more mindedly",
-    "mindedly" ADVERB_SUP "most mindedly",
-    "mindfully" ADVERB_COMP "more mindfully",
-    "mindfully" ADVERB_SUP "most mindfully",
-    "mindlessly" ADVERB_COMP "more mindlessly",
-    "mindlessly" ADVERB_SUP "most mindlessly",
-    "mindnumbingly" ADVERB_COMP "more mindnumbingly",
-    "mindnumbingly" ADVERB_SUP "most mindnumbingly",
-    "mingily" ADVERB_COMP "more mingily",
-    "mingily" ADVERB_SUP "most mingily",
-    "mingledly" ADVERB_COMP "more mingledly",
-    "mingledly" ADVERB_SUP "most mingledly",
-    "minglingly" ADVERB_COMP "more minglingly",
-    "minglingly" ADVERB_SUP "most minglingly",
-    "minimalistically" ADVERB_COMP "more minimalistically",
-    "minimalistically" ADVERB_SUP "most minimalistically",
-    "minionlike" ADVERB_COMP "more minionlike",
-    "minionlike" ADVERB_SUP "most minionlike",
-    "minionly" ADVERB_COMP "more minionly",
-    "minionly" ADVERB_SUP "most minionly",
-    "minusculely" ADVERB_COMP "more minusculely",
-    "minusculely" ADVERB_SUP "most minusculely",
-    "minutely" ADVERB_COMP "more minutely",
-    "minutely" ADVERB_SUP "most minutely",
-    "minutiously" ADVERB_COMP "more minutiously",
-    "minutiously" ADVERB_SUP "most minutiously",
-    "minxishly" ADVERB_COMP "more minxishly",
-    "minxishly" ADVERB_SUP "most minxishly",
-    "miraculously" ADVERB_COMP "more miraculously",
-    "miraculously" ADVERB_SUP "most miraculously",
-    "mirifically" ADVERB_COMP "more mirifically",
-    "mirifically" ADVERB_SUP "most mirifically",
-    "mirkily" ADVERB_COMP "more mirkily",
-    "mirkily" ADVERB_SUP "most mirkily",
-    "mirthfully" ADVERB_COMP "more mirthfully",
-    "mirthfully" ADVERB_SUP "most mirthfully",
-    "mirthlessly" ADVERB_COMP "more mirthlessly",
-    "mirthlessly" ADVERB_SUP "most mirthlessly",
-    "misadventurously" ADVERB_COMP "more misadventurously",
-    "misadventurously" ADVERB_SUP "most misadventurously",
-    "misadvisedly" ADVERB_COMP "more misadvisedly",
-    "misadvisedly" ADVERB_SUP "most misadvisedly",
-    "misanthropically" ADVERB_COMP "more misanthropically",
-    "misanthropically" ADVERB_SUP "most misanthropically",
-    "misapprehensively" ADVERB_COMP "more misapprehensively",
-    "misapprehensively" ADVERB_SUP "most misapprehensively",
-    "misappropriately" ADVERB_COMP "more misappropriately",
-    "misappropriately" ADVERB_SUP "most misappropriately",
-    "misbecomingly" ADVERB_COMP "more misbecomingly",
-    "misbecomingly" ADVERB_SUP "most misbecomingly",
-    "misbelievingly" ADVERB_COMP "more misbelievingly",
-    "misbelievingly" ADVERB_SUP "most misbelievingly",
-    "miscellaneously" ADVERB_COMP "more miscellaneously",
-    "miscellaneously" ADVERB_SUP "most miscellaneously",
-    "mischievously" ADVERB_COMP "more mischievously",
-    "mischievously" ADVERB_SUP "most mischievously",
-    "miscibly" ADVERB_COMP "more miscibly",
-    "miscibly" ADVERB_SUP "most miscibly",
-    "misconceivedly" ADVERB_COMP "more misconceivedly",
-    "misconceivedly" ADVERB_SUP "most misconceivedly",
-    "misdirectedly" ADVERB_COMP "more misdirectedly",
-    "misdirectedly" ADVERB_SUP "most misdirectedly",
-    "miserably" ADVERB_COMP "more miserably",
-    "miserably" ADVERB_SUP "most miserably",
-    "miserlily" ADVERB_COMP "more miserlily",
-    "miserlily" ADVERB_SUP "most miserlily",
-    "misfortunately" ADVERB_COMP "more misfortunately",
-    "misfortunately" ADVERB_SUP "most misfortunately",
-    "misgivingly" ADVERB_COMP "more misgivingly",
-    "misgivingly" ADVERB_SUP "most misgivingly",
-    "misguidedly" ADVERB_COMP "more misguidedly",
-    "misguidedly" ADVERB_SUP "most misguidedly",
-    "misguidingly" ADVERB_COMP "more misguidingly",
-    "misguidingly" ADVERB_SUP "most misguidingly",
-    "misinformedly" ADVERB_COMP "more misinformedly",
-    "misinformedly" ADVERB_SUP "most misinformedly",
-    "misjudgingly" ADVERB_COMP "more misjudgingly",
-    "misjudgingly" ADVERB_SUP "most misjudgingly",
-    "misleadingly" ADVERB_COMP "more misleadingly",
-    "misleadingly" ADVERB_SUP "most misleadingly",
-    "misogynistically" ADVERB_COMP "more misogynistically",
-    "misogynistically" ADVERB_SUP "most misogynistically",
-    "misogynously" ADVERB_COMP "more misogynously",
-    "misogynously" ADVERB_SUP "most misogynously",
-    "misplacedly" ADVERB_COMP "more misplacedly",
-    "misplacedly" ADVERB_SUP "most misplacedly",
-    "misshapenly" ADVERB_COMP "more misshapenly",
-    "misshapenly" ADVERB_SUP "most misshapenly",
-    "missingly" ADVERB_COMP "more missingly",
-    "missingly" ADVERB_SUP "most missingly",
-    "missionally" ADVERB_COMP "more missionally",
-    "missionally" ADVERB_SUP "most missionally",
-    "missionarily" ADVERB_COMP "more missionarily",
-    "missionarily" ADVERB_SUP "most missionarily",
-    "missishly" ADVERB_COMP "more missishly",
-    "missishly" ADVERB_SUP "most missishly",
-    "misspellingly" ADVERB_COMP "more misspellingly",
-    "misspellingly" ADVERB_SUP "most misspellingly",
-    "mistakably" ADVERB_COMP "more mistakably",
-    "mistakably" ADVERB_SUP "most mistakably",
-    "mistakeably" ADVERB_COMP "more mistakeably",
-    "mistakeably" ADVERB_SUP "most mistakeably",
-    "mistily" ADVERB_COMP "more mistily",
-    "mistily" ADVERB_SUP "most mistily",
-    "mistrustfully" ADVERB_COMP "more mistrustfully",
-    "mistrustfully" ADVERB_SUP "most mistrustfully",
-    "mistrustingly" ADVERB_COMP "more mistrustingly",
-    "mistrustingly" ADVERB_SUP "most mistrustingly",
-    "misunderstandingly" ADVERB_COMP "more misunderstandingly",
-    "misunderstandingly" ADVERB_SUP "most misunderstandingly",
-    "mitigatedly" ADVERB_COMP "more mitigatedly",
-    "mitigatedly" ADVERB_SUP "most mitigatedly",
-    "mitigatingly" ADVERB_COMP "more mitigatingly",
-    "mitigatingly" ADVERB_SUP "most mitigatingly",
-    "mixedly" ADVERB_COMP "more mixedly",
-    "mixedly" ADVERB_SUP "most mixedly",
-    "mixtly" ADVERB_COMP "more mixtly",
-    "mixtly" ADVERB_SUP "most mixtly",
-    "moanfully" ADVERB_COMP "more moanfully",
-    "moanfully" ADVERB_SUP "most moanfully",
-    "moaningly" ADVERB_COMP "more moaningly",
-    "moaningly" ADVERB_SUP "most moaningly",
-    "mobhanded" ADVERB_COMP "more mobhanded",
-    "mobhanded" ADVERB_SUP "most mobhanded",
-    "mobilely" ADVERB_COMP "more mobilely",
-    "mobilely" ADVERB_SUP "most mobilely",
-    "mockably" ADVERB_COMP "more mockably",
-    "mockably" ADVERB_SUP "most mockably",
-    "mockfully" ADVERB_COMP "more mockfully",
-    "mockfully" ADVERB_SUP "most mockfully",
-    "mockingly" ADVERB_COMP "more mockingly",
-    "mockingly" ADVERB_SUP "most mockingly",
-    "modalistically" ADVERB_COMP "more modalistically",
-    "modalistically" ADVERB_SUP "most modalistically",
-    "modally" ADVERB_COMP "more modally",
-    "modally" ADVERB_SUP "most modally",
-    "moderately" ADVERB_COMP "more moderately",
-    "moderately" ADVERB_SUP "most moderately",
-    "modernistically" ADVERB_COMP "more modernistically",
-    "modernistically" ADVERB_SUP "most modernistically",
-    "modernly" ADVERB_COMP "more modernly",
-    "modernly" ADVERB_SUP "most modernly",
-    "modestly" ADVERB_COMP "more modestly",
-    "modestly" ADVERB_SUP "most modestly",
-    "modishly" ADVERB_COMP "more modishly",
-    "modishly" ADVERB_SUP "most modishly",
-    "modularly" ADVERB_COMP "more modularly",
-    "modularly" ADVERB_SUP "most modularly",
-    "moistly" ADVERB_COMP "more moistly",
-    "moistly" ADVERB_SUP "most moistly",
-    "moldily" ADVERB_COMP "more moldily",
-    "moldily" ADVERB_SUP "most moldily",
-    "molliently" ADVERB_COMP "more molliently",
-    "molliently" ADVERB_SUP "most molliently",
-    "mollifiedly" ADVERB_COMP "more mollifiedly",
-    "mollifiedly" ADVERB_SUP "most mollifiedly",
-    "mollifyingly" ADVERB_COMP "more mollifyingly",
-    "mollifyingly" ADVERB_SUP "most mollifyingly",
-    "moltenly" ADVERB_COMP "more moltenly",
-    "moltenly" ADVERB_SUP "most moltenly",
-    "monasterially" ADVERB_COMP "more monasterially",
-    "monasterially" ADVERB_SUP "most monasterially",
-    "monastically" ADVERB_COMP "more monastically",
-    "monastically" ADVERB_SUP "most monastically",
-    "monistically" ADVERB_COMP "more monistically",
-    "monistically" ADVERB_SUP "most monistically",
-    "monitorially" ADVERB_COMP "more monitorially",
-    "monitorially" ADVERB_SUP "most monitorially",
-    "monkeyishly" ADVERB_COMP "more monkeyishly",
-    "monkeyishly" ADVERB_SUP "most monkeyishly",
-    "monkishly" ADVERB_COMP "more monkishly",
-    "monkishly" ADVERB_SUP "most monkishly",
-    "monocratically" ADVERB_COMP "more monocratically",
-    "monocratically" ADVERB_SUP "most monocratically",
-    "monogamously" ADVERB_COMP "more monogamously",
-    "monogamously" ADVERB_SUP "most monogamously",
-    "monogenically" ADVERB_COMP "more monogenically",
-    "monogenically" ADVERB_SUP "most monogenically",
-    "monolinguistically" ADVERB_COMP "more monolinguistically",
-    "monolinguistically" ADVERB_SUP "most monolinguistically",
-    "monolithically" ADVERB_COMP "more monolithically",
-    "monolithically" ADVERB_SUP "most monolithically",
-    "monologically" ADVERB_COMP "more monologically",
-    "monologically" ADVERB_SUP "most monologically",
-    "monomaniacally" ADVERB_COMP "more monomaniacally",
-    "monomaniacally" ADVERB_SUP "most monomaniacally",
-    "mononymically" ADVERB_COMP "more mononymically",
-    "mononymically" ADVERB_SUP "most mononymically",
-    "mononymously" ADVERB_COMP "more mononymously",
-    "mononymously" ADVERB_SUP "most mononymously",
-    "monophonically" ADVERB_COMP "more monophonically",
-    "monophonically" ADVERB_SUP "most monophonically",
-    "monopolistically" ADVERB_COMP "more monopolistically",
-    "monopolistically" ADVERB_SUP "most monopolistically",
-    "monopsonistically" ADVERB_COMP "more monopsonistically",
-    "monopsonistically" ADVERB_SUP "most monopsonistically",
-    "monosexually" ADVERB_COMP "more monosexually",
-    "monosexually" ADVERB_SUP "most monosexually",
-    "monotonously" ADVERB_COMP "more monotonously",
-    "monotonously" ADVERB_SUP "most monotonously",
-    "monstrously" ADVERB_COMP "more monstrously",
-    "monstrously" ADVERB_SUP "most monstrously",
-    "monumentally" ADVERB_COMP "more monumentally",
-    "monumentally" ADVERB_SUP "most monumentally",
-    "moodily" ADVERB_COMP "more moodily",
-    "moodily" ADVERB_SUP "most moodily",
-    "moodishly" ADVERB_COMP "more moodishly",
-    "moodishly" ADVERB_SUP "most moodishly",
-    "mooingly" ADVERB_COMP "more mooingly",
-    "mooingly" ADVERB_SUP "most mooingly",
-    "moonily" ADVERB_COMP "more moonily",
-    "moonily" ADVERB_SUP "most moonily",
-    "moonishly" ADVERB_COMP "more moonishly",
-    "moonishly" ADVERB_SUP "most moonishly",
-    "moorishly" ADVERB_COMP "more moorishly",
-    "moorishly" ADVERB_SUP "most moorishly",
-    "mopily" ADVERB_COMP "more mopily",
-    "mopily" ADVERB_SUP "most mopily",
-    "mopingly" ADVERB_COMP "more mopingly",
-    "mopingly" ADVERB_SUP "most mopingly",
-    "mopishly" ADVERB_COMP "more mopishly",
-    "mopishly" ADVERB_SUP "most mopishly",
-    "moralisingly" ADVERB_COMP "more moralisingly",
-    "moralisingly" ADVERB_SUP "most moralisingly",
-    "moralistically" ADVERB_COMP "more moralistically",
-    "moralistically" ADVERB_SUP "most moralistically",
-    "moralizingly" ADVERB_COMP "more moralizingly",
-    "moralizingly" ADVERB_SUP "most moralizingly",
-    "morally" ADVERB_COMP "more morally",
-    "morally" ADVERB_SUP "most morally",
-    "morbidly" ADVERB_COMP "more morbidly",
-    "morbidly" ADVERB_SUP "most morbidly",
-    "morbifically" ADVERB_COMP "more morbifically",
-    "morbifically" ADVERB_SUP "most morbifically",
-    "mordaciously" ADVERB_COMP "more mordaciously",
-    "mordaciously" ADVERB_SUP "most mordaciously",
-    "mordantly" ADVERB_COMP "more mordantly",
-    "mordantly" ADVERB_SUP "most mordantly",
-    "morphically" ADVERB_COMP "more morphically",
-    "morphically" ADVERB_SUP "most morphically",
-    "mortally" ADVERB_COMP "more mortally",
-    "mortally" ADVERB_SUP "most mortally",
-    "mortiferously" ADVERB_COMP "more mortiferously",
-    "mortiferously" ADVERB_SUP "most mortiferously",
-    "mortifiedly" ADVERB_COMP "more mortifiedly",
-    "mortifiedly" ADVERB_SUP "most mortifiedly",
-    "mortifyingly" ADVERB_COMP "more mortifyingly",
-    "mortifyingly" ADVERB_SUP "most mortifyingly",
-    "motheringly" ADVERB_COMP "more motheringly",
-    "motheringly" ADVERB_SUP "most motheringly",
-    "motherless" ADVERB_COMP "more motherless",
-    "motherless" ADVERB_SUP "most motherless",
-    "motherlily" ADVERB_COMP "more motherlily",
-    "motherlily" ADVERB_SUP "most motherlily",
-    "motherly" ADVERB_COMP "more motherly",
-    "motherly" ADVERB_SUP "most motherly",
-    "motionlessly" ADVERB_COMP "more motionlessly",
-    "motionlessly" ADVERB_SUP "most motionlessly",
-    "motivationally" ADVERB_COMP "more motivationally",
-    "motivationally" ADVERB_SUP "most motivationally",
-    "moulderingly" ADVERB_COMP "more moulderingly",
-    "moulderingly" ADVERB_SUP "most moulderingly",
-    "mouldily" ADVERB_COMP "more mouldily",
-    "mouldily" ADVERB_SUP "most mouldily",
-    "mountainously" ADVERB_COMP "more mountainously",
-    "mountainously" ADVERB_SUP "most mountainously",
-    "mountainward" ADVERB_COMP "more mountainward",
-    "mountainward" ADVERB_SUP "most mountainward",
-    "mountainwards" ADVERB_COMP "more mountainwards",
-    "mountainwards" ADVERB_SUP "most mountainwards",
-    "mountingly" ADVERB_COMP "more mountingly",
-    "mountingly" ADVERB_SUP "most mountingly",
-    "mournfully" ADVERB_COMP "more mournfully",
-    "mournfully" ADVERB_SUP "most mournfully",
-    "mourningly" ADVERB_COMP "more mourningly",
-    "mourningly" ADVERB_SUP "most mourningly",
-    "mouselike" ADVERB_COMP "more mouselike",
-    "mouselike" ADVERB_SUP "most mouselike",
-    "mousily" ADVERB_COMP "more mousily",
-    "mousily" ADVERB_SUP "most mousily",
-    "mouthily" ADVERB_COMP "more mouthily",
-    "mouthily" ADVERB_SUP "most mouthily",
-    "mouthingly" ADVERB_COMP "more mouthingly",
-    "mouthingly" ADVERB_SUP "most mouthingly",
-    "mouthpuckeringly" ADVERB_COMP "more mouthpuckeringly",
-    "mouthpuckeringly" ADVERB_SUP "most mouthpuckeringly",
-    "mouthwateringly" ADVERB_COMP "more mouthwateringly",
-    "mouthwateringly" ADVERB_SUP "most mouthwateringly",
-    "movably" ADVERB_COMP "more movably",
-    "movably" ADVERB_SUP "most movably",
-    "moveably" ADVERB_COMP "more moveably",
-    "moveably" ADVERB_SUP "most moveably",
-    "movedly" ADVERB_COMP "more movedly",
-    "movedly" ADVERB_SUP "most movedly",
-    "movelessly" ADVERB_COMP "more movelessly",
-    "movelessly" ADVERB_SUP "most movelessly",
-    "movingly" ADVERB_COMP "more movingly",
-    "movingly" ADVERB_SUP "most movingly",
-    "much" ADVERB_COMP "more",
-    "much" ADVERB_SUP "most",
-    "mucilaginously" ADVERB_COMP "more mucilaginously",
-    "mucilaginously" ADVERB_SUP "most mucilaginously",
-    "muckily" ADVERB_COMP "more muckily",
-    "muckily" ADVERB_SUP "most muckily",
-    "mucolytically" ADVERB_COMP "more mucolytically",
-    "mucolytically" ADVERB_SUP "most mucolytically",
-    "mucously" ADVERB_COMP "more mucously",
-    "mucously" ADVERB_SUP "most mucously",
-    "mucronately" ADVERB_COMP "more mucronately",
-    "mucronately" ADVERB_SUP "most mucronately",
-    "muddily" ADVERB_COMP "more muddily",
-    "muddily" ADVERB_SUP "most muddily",
-    "muddleheadedly" ADVERB_COMP "more muddleheadedly",
-    "muddleheadedly" ADVERB_SUP "most muddleheadedly",
-    "muddlingly" ADVERB_COMP "more muddlingly",
-    "muddlingly" ADVERB_SUP "most muddlingly",
-    "muffledly" ADVERB_COMP "more muffledly",
-    "muffledly" ADVERB_SUP "most muffledly",
-    "muggily" ADVERB_COMP "more muggily",
-    "muggily" ADVERB_SUP "most muggily",
-    "mulierly" ADVERB_COMP "more mulierly",
-    "mulierly" ADVERB_SUP "most mulierly",
-    "mulishly" ADVERB_COMP "more mulishly",
-    "mulishly" ADVERB_SUP "most mulishly",
-    "multiculturally" ADVERB_COMP "more multiculturally",
-    "multiculturally" ADVERB_SUP "most multiculturally",
-    "multidimensionally" ADVERB_COMP "more multidimensionally",
-    "multidimensionally" ADVERB_SUP "most multidimensionally",
-    "multiethnically" ADVERB_COMP "more multiethnically",
-    "multiethnically" ADVERB_SUP "most multiethnically",
-    "multifacetedly" ADVERB_COMP "more multifacetedly",
-    "multifacetedly" ADVERB_SUP "most multifacetedly",
-    "multifariously" ADVERB_COMP "more multifariously",
-    "multifariously" ADVERB_SUP "most multifariously",
-    "multifocally" ADVERB_COMP "more multifocally",
-    "multifocally" ADVERB_SUP "most multifocally",
-    "multifunctionally" ADVERB_COMP "more multifunctionally",
-    "multifunctionally" ADVERB_SUP "most multifunctionally",
-    "multilaterally" ADVERB_COMP "more multilaterally",
-    "multilaterally" ADVERB_SUP "most multilaterally",
-    "multilingually" ADVERB_COMP "more multilingually",
-    "multilingually" ADVERB_SUP "most multilingually",
-    "multilinguistically" ADVERB_COMP "more multilinguistically",
-    "multilinguistically" ADVERB_SUP "most multilinguistically",
-    "multinationally" ADVERB_COMP "more multinationally",
-    "multinationally" ADVERB_SUP "most multinationally",
-    "multipliciously" ADVERB_COMP "more multipliciously",
-    "multipliciously" ADVERB_SUP "most multipliciously",
-    "multiracially" ADVERB_COMP "more multiracially",
-    "multiracially" ADVERB_SUP "most multiracially",
-    "multisensorially" ADVERB_COMP "more multisensorially",
-    "multisensorially" ADVERB_SUP "most multisensorially",
-    "multisensorily" ADVERB_COMP "more multisensorily",
-    "multisensorily" ADVERB_SUP "most multisensorily",
-    "multisyllabically" ADVERB_COMP "more multisyllabically",
-    "multisyllabically" ADVERB_SUP "most multisyllabically",
-    "multitudinously" ADVERB_COMP "more multitudinously",
-    "multitudinously" ADVERB_SUP "most multitudinously",
-    "multivalently" ADVERB_COMP "more multivalently",
-    "multivalently" ADVERB_SUP "most multivalently",
-    "multiversally" ADVERB_COMP "more multiversally",
-    "multiversally" ADVERB_SUP "most multiversally",
-    "mumblingly" ADVERB_COMP "more mumblingly",
-    "mumblingly" ADVERB_SUP "most mumblingly",
-    "mumpishly" ADVERB_COMP "more mumpishly",
-    "mumpishly" ADVERB_SUP "most mumpishly",
-    "mundanely" ADVERB_COMP "more mundanely",
-    "mundanely" ADVERB_SUP "most mundanely",
-    "munificently" ADVERB_COMP "more munificently",
-    "munificently" ADVERB_SUP "most munificently",
-    "murderously" ADVERB_COMP "more murderously",
-    "murderously" ADVERB_SUP "most murderously",
-    "murkily" ADVERB_COMP "more murkily",
-    "murkily" ADVERB_SUP "most murkily",
-    "murklins" ADVERB_COMP "more murklins",
-    "murklins" ADVERB_SUP "most murklins",
-    "murmuringly" ADVERB_COMP "more murmuringly",
-    "murmuringly" ADVERB_SUP "most murmuringly",
-    "murmurlessly" ADVERB_COMP "more murmurlessly",
-    "murmurlessly" ADVERB_SUP "most murmurlessly",
-    "murmurously" ADVERB_COMP "more murmurously",
-    "murmurously" ADVERB_SUP "most murmurously",
-    "murrain" ADVERB_COMP "more murrain",
-    "murrain" ADVERB_SUP "most murrain",
-    "muscularly" ADVERB_COMP "more muscularly",
-    "muscularly" ADVERB_SUP "most muscularly",
-    "musculoskeletally" ADVERB_COMP "more musculoskeletally",
-    "musculoskeletally" ADVERB_SUP "most musculoskeletally",
-    "musefully" ADVERB_COMP "more musefully",
-    "musefully" ADVERB_SUP "most musefully",
-    "mushily" ADVERB_COMP "more mushily",
-    "mushily" ADVERB_SUP "most mushily",
-    "musically" ADVERB_COMP "more musically",
-    "musically" ADVERB_SUP "most musically",
-    "musicianly" ADVERB_COMP "more musicianly",
-    "musicianly" ADVERB_SUP "most musicianly",
-    "musingly" ADVERB_COMP "more musingly",
-    "musingly" ADVERB_SUP "most musingly",
-    "muskily" ADVERB_COMP "more muskily",
-    "muskily" ADVERB_SUP "most muskily",
-    "mussily" ADVERB_COMP "more mussily",
-    "mussily" ADVERB_SUP "most mussily",
-    "mustily" ADVERB_COMP "more mustily",
-    "mustily" ADVERB_SUP "most mustily",
-    "mutably" ADVERB_COMP "more mutably",
-    "mutably" ADVERB_SUP "most mutably",
-    "mutatively" ADVERB_COMP "more mutatively",
-    "mutatively" ADVERB_SUP "most mutatively",
-    "mutedly" ADVERB_COMP "more mutedly",
-    "mutedly" ADVERB_SUP "most mutedly",
-    "mutely" ADVERB_COMP "more mutely",
-    "mutely" ADVERB_SUP "most mutely",
-    "mutinously" ADVERB_COMP "more mutinously",
-    "mutinously" ADVERB_SUP "most mutinously",
-    "mutteringly" ADVERB_COMP "more mutteringly",
-    "mutteringly" ADVERB_SUP "most mutteringly",
-    "mutualistically" ADVERB_COMP "more mutualistically",
-    "mutualistically" ADVERB_SUP "most mutualistically",
-    "mutually" ADVERB_COMP "more mutually",
-    "mutually" ADVERB_SUP "most mutually",
-    "muzzily" ADVERB_COMP "more muzzily",
-    "muzzily" ADVERB_SUP "most muzzily",
-    "myopically" ADVERB_COMP "more myopically",
-    "myopically" ADVERB_SUP "most myopically",
-    "mystagogically" ADVERB_COMP "more mystagogically",
-    "mystagogically" ADVERB_SUP "most mystagogically",
-    "mysterically" ADVERB_COMP "more mysterically",
-    "mysterically" ADVERB_SUP "most mysterically",
-    "mysteriously" ADVERB_COMP "more mysteriously",
-    "mysteriously" ADVERB_SUP "most mysteriously",
-    "mystically" ADVERB_COMP "more mystically",
-    "mystically" ADVERB_SUP "most mystically",
-    "mysticly" ADVERB_COMP "more mysticly",
-    "mysticly" ADVERB_SUP "most mysticly",
-    "mystifiedly" ADVERB_COMP "more mystifiedly",
-    "mystifiedly" ADVERB_SUP "most mystifiedly",
-    "mystifyingly" ADVERB_COMP "more mystifyingly",
-    "mystifyingly" ADVERB_SUP "most mystifyingly",
-    "mythically" ADVERB_COMP "more mythically",
-    "mythically" ADVERB_SUP "most mythically",
-    "mythohistorically" ADVERB_COMP "more mythohistorically",
-    "mythohistorically" ADVERB_SUP "most mythohistorically",
-    "mythologically" ADVERB_COMP "more mythologically",
-    "mythologically" ADVERB_SUP "most mythologically",
-    "mythopoetically" ADVERB_COMP "more mythopoetically",
-    "mythopoetically" ADVERB_SUP "most mythopoetically",
-    "oafishly" ADVERB_COMP "more oafishly",
-    "oafishly" ADVERB_SUP "most oafishly",
-    "obdurantly" ADVERB_COMP "more obdurantly",
-    "obdurantly" ADVERB_SUP "most obdurantly",
-    "obdurately" ADVERB_COMP "more obdurately",
-    "obdurately" ADVERB_SUP "most obdurately",
-    "obedientially" ADVERB_COMP "more obedientially",
-    "obedientially" ADVERB_SUP "most obedientially",
-    "obediently" ADVERB_COMP "more obediently",
-    "obediently" ADVERB_SUP "most obediently",
-    "obeisantly" ADVERB_COMP "more obeisantly",
-    "obeisantly" ADVERB_SUP "most obeisantly",
-    "obesely" ADVERB_COMP "more obesely",
-    "obesely" ADVERB_SUP "most obesely",
-    "obeyingly" ADVERB_COMP "more obeyingly",
-    "obeyingly" ADVERB_SUP "most obeyingly",
-    "obfuscatorily" ADVERB_COMP "more obfuscatorily",
-    "obfuscatorily" ADVERB_SUP "most obfuscatorily",
-    "objectionably" ADVERB_COMP "more objectionably",
-    "objectionably" ADVERB_SUP "most objectionably",
-    "objectively" ADVERB_COMP "more objectively",
-    "objectively" ADVERB_SUP "most objectively",
-    "objectivistically" ADVERB_COMP "more objectivistically",
-    "objectivistically" ADVERB_SUP "most objectivistically",
-    "objectlessly" ADVERB_COMP "more objectlessly",
-    "objectlessly" ADVERB_SUP "most objectlessly",
-    "objectually" ADVERB_COMP "more objectually",
-    "objectually" ADVERB_SUP "most objectually",
-    "objurgatively" ADVERB_COMP "more objurgatively",
-    "objurgatively" ADVERB_SUP "most objurgatively",
-    "objurgatorily" ADVERB_COMP "more objurgatorily",
-    "objurgatorily" ADVERB_SUP "most objurgatorily",
-    "oblately" ADVERB_COMP "more oblately",
-    "oblately" ADVERB_SUP "most oblately",
-    "obligately" ADVERB_COMP "more obligately",
-    "obligately" ADVERB_SUP "most obligately",
-    "obligatorily" ADVERB_COMP "more obligatorily",
-    "obligatorily" ADVERB_SUP "most obligatorily",
-    "obligedly" ADVERB_COMP "more obligedly",
-    "obligedly" ADVERB_SUP "most obligedly",
-    "obligingly" ADVERB_COMP "more obligingly",
-    "obligingly" ADVERB_SUP "most obligingly",
-    "obliquely" ADVERB_COMP "more obliquely",
-    "obliquely" ADVERB_SUP "most obliquely",
-    "obliteratively" ADVERB_COMP "more obliteratively",
-    "obliteratively" ADVERB_SUP "most obliteratively",
-    "obliviously" ADVERB_COMP "more obliviously",
-    "obliviously" ADVERB_SUP "most obliviously",
-    "obnoxiously" ADVERB_COMP "more obnoxiously",
-    "obnoxiously" ADVERB_SUP "most obnoxiously",
-    "obovately" ADVERB_COMP "more obovately",
-    "obovately" ADVERB_SUP "most obovately",
-    "obreptitiously" ADVERB_COMP "more obreptitiously",
-    "obreptitiously" ADVERB_SUP "most obreptitiously",
-    "obscenely" ADVERB_COMP "more obscenely",
-    "obscenely" ADVERB_SUP "most obscenely",
-    "obscuredly" ADVERB_COMP "more obscuredly",
-    "obscuredly" ADVERB_SUP "most obscuredly",
-    "obscurely" ADVERB_COMP "more obscurely",
-    "obscurely" ADVERB_SUP "most obscurely",
-    "obscuringly" ADVERB_COMP "more obscuringly",
-    "obscuringly" ADVERB_SUP "most obscuringly",
-    "obsequiously" ADVERB_COMP "more obsequiously",
-    "obsequiously" ADVERB_SUP "most obsequiously",
-    "observably" ADVERB_COMP "more observably",
-    "observably" ADVERB_SUP "most observably",
-    "observantly" ADVERB_COMP "more observantly",
-    "observantly" ADVERB_SUP "most observantly",
-    "observationally" ADVERB_COMP "more observationally",
-    "observationally" ADVERB_SUP "most observationally",
-    "observingly" ADVERB_COMP "more observingly",
-    "observingly" ADVERB_SUP "most observingly",
-    "obsessedly" ADVERB_COMP "more obsessedly",
-    "obsessedly" ADVERB_SUP "most obsessedly",
-    "obsessingly" ADVERB_COMP "more obsessingly",
-    "obsessingly" ADVERB_SUP "most obsessingly",
-    "obsessionally" ADVERB_COMP "more obsessionally",
-    "obsessionally" ADVERB_SUP "most obsessionally",
-    "obsessively" ADVERB_COMP "more obsessively",
-    "obsessively" ADVERB_SUP "most obsessively",
-    "obsoletely" ADVERB_COMP "more obsoletely",
-    "obsoletely" ADVERB_SUP "most obsoletely",
-    "obstinately" ADVERB_COMP "more obstinately",
-    "obstinately" ADVERB_SUP "most obstinately",
-    "obstreperously" ADVERB_COMP "more obstreperously",
-    "obstreperously" ADVERB_SUP "most obstreperously",
-    "obstructedly" ADVERB_COMP "more obstructedly",
-    "obstructedly" ADVERB_SUP "most obstructedly",
-    "obstructingly" ADVERB_COMP "more obstructingly",
-    "obstructingly" ADVERB_SUP "most obstructingly",
-    "obstructionally" ADVERB_COMP "more obstructionally",
-    "obstructionally" ADVERB_SUP "most obstructionally",
-    "obstructively" ADVERB_COMP "more obstructively",
-    "obstructively" ADVERB_SUP "most obstructively",
-    "obtrusively" ADVERB_COMP "more obtrusively",
-    "obtrusively" ADVERB_SUP "most obtrusively",
-    "obtusely" ADVERB_COMP "more obtusely",
-    "obtusely" ADVERB_SUP "most obtusely",
-    "obv" ADVERB_COMP "more obv",
-    "obv" ADVERB_SUP "most obv",
-    "obversely" ADVERB_COMP "more obversely",
-    "obversely" ADVERB_SUP "most obversely",
-    "obvi" ADVERB_COMP "more obvi",
-    "obvi" ADVERB_SUP "most obvi",
-    "obviously" ADVERB_COMP "more obviously",
-    "obviously" ADVERB_SUP "most obviously",
-    "obvs" ADVERB_COMP "more obvs",
-    "obvs" ADVERB_SUP "most obvs",
-    "obvy" ADVERB_COMP "more obvy",
-    "obvy" ADVERB_SUP "most obvy",
-    "obvz" ADVERB_COMP "more obvz",
-    "obvz" ADVERB_SUP "most obvz",
-    "occasionably" ADVERB_COMP "more occasionably",
-    "occasionably" ADVERB_SUP "most occasionably",
-    "occasionally" ADVERB_COMP "more occasionally",
-    "occasionally" ADVERB_SUP "most occasionally",
-    "occasionly" ADVERB_COMP "more occasionly",
-    "occasionly" ADVERB_SUP "most occasionly",
-    "occidentally" ADVERB_COMP "more occidentally",
-    "occidentally" ADVERB_SUP "most occidentally",
-    "occlusively" ADVERB_COMP "more occlusively",
-    "occlusively" ADVERB_SUP "most occlusively",
-    "occultically" ADVERB_COMP "more occultically",
-    "occultically" ADVERB_SUP "most occultically",
-    "occultly" ADVERB_COMP "more occultly",
-    "occultly" ADVERB_SUP "most occultly",
-    "occupationally" ADVERB_COMP "more occupationally",
-    "occupationally" ADVERB_SUP "most occupationally",
-    "oceanically" ADVERB_COMP "more oceanically",
-    "oceanically" ADVERB_SUP "most oceanically",
-    "ochlocratically" ADVERB_COMP "more ochlocratically",
-    "ochlocratically" ADVERB_SUP "most ochlocratically",
-    "odiferously" ADVERB_COMP "more odiferously",
-    "odiferously" ADVERB_SUP "most odiferously",
-    "odiously" ADVERB_COMP "more odiously",
-    "odiously" ADVERB_SUP "most odiously",
-    "odoriferously" ADVERB_COMP "more odoriferously",
-    "odoriferously" ADVERB_SUP "most odoriferously",
-    "odorously" ADVERB_COMP "more odorously",
-    "odorously" ADVERB_SUP "most odorously",
-    "odourously" ADVERB_COMP "more odourously",
-    "odourously" ADVERB_SUP "most odourously",
-    "offencelessly" ADVERB_COMP "more offencelessly",
-    "offencelessly" ADVERB_SUP "most offencelessly",
-    "offencively" ADVERB_COMP "more offencively",
-    "offencively" ADVERB_SUP "most offencively",
-    "offendedly" ADVERB_COMP "more offendedly",
-    "offendedly" ADVERB_SUP "most offendedly",
-    "offenselessly" ADVERB_COMP "more offenselessly",
-    "offenselessly" ADVERB_SUP "most offenselessly",
-    "offensively" ADVERB_COMP "more offensively",
-    "offensively" ADVERB_SUP "most offensively",
-    "offhand" ADVERB_COMP "more offhand",
-    "offhand" ADVERB_SUP "most offhand",
-    "offhandedly" ADVERB_COMP "more offhandedly",
-    "offhandedly" ADVERB_SUP "most offhandedly",
-    "offically" ADVERB_COMP "more offically",
-    "offically" ADVERB_SUP "most offically",
-    "officially" ADVERB_COMP "more officially",
-    "officially" ADVERB_SUP "most officially",
-    "officiously" ADVERB_COMP "more officiously",
-    "officiously" ADVERB_SUP "most officiously",
-    "offishly" ADVERB_COMP "more offishly",
-    "offishly" ADVERB_SUP "most offishly",
-    "offkey" ADVERB_COMP "more offkey",
-    "offkey" ADVERB_SUP "most offkey",
-    "offly" ADVERB_COMP "more offly",
-    "offly" ADVERB_SUP "most offly",
-    "offputtingly" ADVERB_COMP "more offputtingly",
-    "offputtingly" ADVERB_SUP "most offputtingly",
-    "offset" ADVERB_COMP "more offset",
-    "offset" ADVERB_SUP "most offset",
-    "oftenly" ADVERB_COMP "more oftenly",
-    "oftenly" ADVERB_SUP "most oftenly",
-    "ogreishly" ADVERB_COMP "more ogreishly",
-    "ogreishly" ADVERB_SUP "most ogreishly",
-    "ogrishly" ADVERB_COMP "more ogrishly",
-    "ogrishly" ADVERB_SUP "most ogrishly",
-    "oilily" ADVERB_COMP "more oilily",
-    "oilily" ADVERB_SUP "most oilily",
-    "okay" ADVERB_COMP "more okay",
-    "okay" ADVERB_SUP "most okay",
-    "okayly" ADVERB_COMP "more okayly",
-    "okayly" ADVERB_SUP "most okayly",
-    "oldly" ADVERB_COMP "more oldly",
-    "oldly" ADVERB_SUP "most oldly",
-    "oleaginously" ADVERB_COMP "more oleaginously",
-    "oleaginously" ADVERB_SUP "most oleaginously",
-    "oleophobically" ADVERB_COMP "more oleophobically",
-    "oleophobically" ADVERB_SUP "most oleophobically",
-    "oligarchically" ADVERB_COMP "more oligarchically",
-    "oligarchically" ADVERB_SUP "most oligarchically",
-    "oligopolistically" ADVERB_COMP "more oligopolistically",
-    "oligopolistically" ADVERB_SUP "most oligopolistically",
-    "olympianly" ADVERB_COMP "more olympianly",
-    "olympianly" ADVERB_SUP "most olympianly",
-    "olympically" ADVERB_COMP "more olympically",
-    "olympically" ADVERB_SUP "most olympically",
-    "olympicly" ADVERB_COMP "more olympicly",
-    "olympicly" ADVERB_SUP "most olympicly",
-    "ominously" ADVERB_COMP "more ominously",
-    "ominously" ADVERB_SUP "most ominously",
-    "omissively" ADVERB_COMP "more omissively",
-    "omissively" ADVERB_SUP "most omissively",
-    "omnifariously" ADVERB_COMP "more omnifariously",
-    "omnifariously" ADVERB_SUP "most omnifariously",
-    "omniphobically" ADVERB_COMP "more omniphobically",
-    "omniphobically" ADVERB_SUP "most omniphobically",
-    "omnipotently" ADVERB_COMP "more omnipotently",
-    "omnipotently" ADVERB_SUP "most omnipotently",
-    "omnivorously" ADVERB_COMP "more omnivorously",
-    "omnivorously" ADVERB_SUP "most omnivorously",
-    "onanistically" ADVERB_COMP "more onanistically",
-    "onanistically" ADVERB_SUP "most onanistically",
-    "oneirically" ADVERB_COMP "more oneirically",
-    "oneirically" ADVERB_SUP "most oneirically",
-    "onerously" ADVERB_COMP "more onerously",
-    "onerously" ADVERB_SUP "most onerously",
-    "onomastically" ADVERB_COMP "more onomastically",
-    "onomastically" ADVERB_SUP "most onomastically",
-    "onomatopoeically" ADVERB_COMP "more onomatopoeically",
-    "onomatopoeically" ADVERB_SUP "most onomatopoeically",
-    "onomatopoetically" ADVERB_COMP "more onomatopoetically",
-    "onomatopoetically" ADVERB_SUP "most onomatopoetically",
-    "onomatopoietically" ADVERB_COMP "more onomatopoietically",
-    "onomatopoietically" ADVERB_SUP "most onomatopoietically",
-    "onomotopoetically" ADVERB_COMP "more onomotopoetically",
-    "onomotopoetically" ADVERB_SUP "most onomotopoetically",
-    "onshore" ADVERB_COMP "more onshore",
-    "onshore" ADVERB_SUP "most onshore",
-    "ontically" ADVERB_COMP "more ontically",
-    "ontically" ADVERB_SUP "most ontically",
-    "ontologically" ADVERB_COMP "more ontologically",
-    "ontologically" ADVERB_SUP "most ontologically",
-    "oologically" ADVERB_COMP "more oologically",
-    "oologically" ADVERB_SUP "most oologically",
-    "oozily" ADVERB_COMP "more oozily",
-    "oozily" ADVERB_SUP "most oozily",
-    "oozingly" ADVERB_COMP "more oozingly",
-    "oozingly" ADVERB_SUP "most oozingly",
-    "opalescently" ADVERB_COMP "more opalescently",
-    "opalescently" ADVERB_SUP "most opalescently",
-    "opaquely" ADVERB_COMP "more opaquely",
-    "opaquely" ADVERB_SUP "most opaquely",
-    "openhanded" ADVERB_COMP "more openhanded",
-    "openhanded" ADVERB_SUP "most openhanded",
-    "openhandedly" ADVERB_COMP "more openhandedly",
-    "openhandedly" ADVERB_SUP "most openhandedly",
-    "openheartedly" ADVERB_COMP "more openheartedly",
-    "openheartedly" ADVERB_SUP "most openheartedly",
-    "openly" ADVERB_COMP "more openly",
-    "openly" ADVERB_SUP "most openly",
-    "openmindedly" ADVERB_COMP "more openmindedly",
-    "openmindedly" ADVERB_SUP "most openmindedly",
-    "operably" ADVERB_COMP "more operably",
-    "operably" ADVERB_SUP "most operably",
-    "operatically" ADVERB_COMP "more operatically",
-    "operatically" ADVERB_SUP "most operatically",
-    "operatively" ADVERB_COMP "more operatively",
-    "operatively" ADVERB_SUP "most operatively",
-    "operosely" ADVERB_COMP "more operosely",
-    "operosely" ADVERB_SUP "most operosely",
-    "ophitically" ADVERB_COMP "more ophitically",
-    "ophitically" ADVERB_SUP "most ophitically",
-    "ophthalmologically" ADVERB_COMP "more ophthalmologically",
-    "ophthalmologically" ADVERB_SUP "most ophthalmologically",
-    "opinatively" ADVERB_COMP "more opinatively",
-    "opinatively" ADVERB_SUP "most opinatively",
-    "opiniatively" ADVERB_COMP "more opiniatively",
-    "opiniatively" ADVERB_SUP "most opiniatively",
-    "opinionatedly" ADVERB_COMP "more opinionatedly",
-    "opinionatedly" ADVERB_SUP "most opinionatedly",
-    "opinionately" ADVERB_COMP "more opinionately",
-    "opinionately" ADVERB_SUP "most opinionately",
-    "opinionatively" ADVERB_COMP "more opinionatively",
-    "opinionatively" ADVERB_SUP "most opinionatively",
-    "opportunely" ADVERB_COMP "more opportunely",
-    "opportunely" ADVERB_SUP "most opportunely",
-    "opportunistically" ADVERB_COMP "more opportunistically",
-    "opportunistically" ADVERB_SUP "most opportunistically",
-    "opposably" ADVERB_COMP "more opposably",
-    "opposably" ADVERB_SUP "most opposably",
-    "opposingly" ADVERB_COMP "more opposingly",
-    "opposingly" ADVERB_SUP "most opposingly",
-    "oppositely" ADVERB_COMP "more oppositely",
-    "oppositely" ADVERB_SUP "most oppositely",
-    "oppositionally" ADVERB_COMP "more oppositionally",
-    "oppositionally" ADVERB_SUP "most oppositionally",
-    "oppositively" ADVERB_COMP "more oppositively",
-    "oppositively" ADVERB_SUP "most oppositively",
-    "oppressingly" ADVERB_COMP "more oppressingly",
-    "oppressingly" ADVERB_SUP "most oppressingly",
-    "oppressively" ADVERB_COMP "more oppressively",
-    "oppressively" ADVERB_SUP "most oppressively",
-    "opprobriously" ADVERB_COMP "more opprobriously",
-    "opprobriously" ADVERB_SUP "most opprobriously",
-    "optimally" ADVERB_COMP "more optimally",
-    "optimally" ADVERB_SUP "most optimally",
-    "optimistically" ADVERB_COMP "more optimistically",
-    "optimistically" ADVERB_SUP "most optimistically",
-    "optionally" ADVERB_COMP "more optionally",
-    "optionally" ADVERB_SUP "most optionally",
-    "opulently" ADVERB_COMP "more opulently",
-    "opulently" ADVERB_SUP "most opulently",
-    "oracularly" ADVERB_COMP "more oracularly",
-    "oracularly" ADVERB_SUP "most oracularly",
-    "oraculously" ADVERB_COMP "more oraculously",
-    "oraculously" ADVERB_SUP "most oraculously",
-    "orangely" ADVERB_COMP "more orangely",
-    "orangely" ADVERB_SUP "most orangely",
-    "oratorially" ADVERB_COMP "more oratorially",
-    "oratorially" ADVERB_SUP "most oratorially",
-    "orbicularly" ADVERB_COMP "more orbicularly",
-    "orbicularly" ADVERB_SUP "most orbicularly",
-    "orbiculately" ADVERB_COMP "more orbiculately",
-    "orbiculately" ADVERB_SUP "most orbiculately",
-    "orchestratively" ADVERB_COMP "more orchestratively",
-    "orchestratively" ADVERB_SUP "most orchestratively",
-    "orderly" ADVERB_COMP "more orderly",
-    "orderly" ADVERB_SUP "most orderly",
-    "ordinately" ADVERB_COMP "more ordinately",
-    "ordinately" ADVERB_SUP "most ordinately",
-    "ordoliberally" ADVERB_COMP "more ordoliberally",
-    "ordoliberally" ADVERB_SUP "most ordoliberally",
-    "ordrely" ADVERB_COMP "more ordrely",
-    "ordrely" ADVERB_SUP "most ordrely",
-    "orfen" ADVERB_COMP "more orfen",
-    "orfen" ADVERB_SUP "most orfen",
-    "organically" ADVERB_COMP "more organically",
-    "organically" ADVERB_SUP "most organically",
-    "organizedly" ADVERB_COMP "more organizedly",
-    "organizedly" ADVERB_SUP "most organizedly",
-    "organoleptically" ADVERB_COMP "more organoleptically",
-    "organoleptically" ADVERB_SUP "most organoleptically",
-    "orgasmically" ADVERB_COMP "more orgasmically",
-    "orgasmically" ADVERB_SUP "most orgasmically",
-    "orgiastically" ADVERB_COMP "more orgiastically",
-    "orgiastically" ADVERB_SUP "most orgiastically",
-    "orgulously" ADVERB_COMP "more orgulously",
-    "orgulously" ADVERB_SUP "most orgulously",
-    "orientally" ADVERB_COMP "more orientally",
-    "orientally" ADVERB_SUP "most orientally",
-    "oriently" ADVERB_COMP "more oriently",
-    "oriently" ADVERB_SUP "most oriently",
-    "originalistically" ADVERB_COMP "more originalistically",
-    "originalistically" ADVERB_SUP "most originalistically",
-    "originally" ADVERB_COMP "more originally",
-    "originally" ADVERB_SUP "most originally",
-    "originarily" ADVERB_COMP "more originarily",
-    "originarily" ADVERB_SUP "most originarily",
-    "originatively" ADVERB_COMP "more originatively",
-    "originatively" ADVERB_SUP "most originatively",
-    "ornamentally" ADVERB_COMP "more ornamentally",
-    "ornamentally" ADVERB_SUP "most ornamentally",
-    "ornately" ADVERB_COMP "more ornately",
-    "ornately" ADVERB_SUP "most ornately",
-    "ornerily" ADVERB_COMP "more ornerily",
-    "ornerily" ADVERB_SUP "most ornerily",
-    "orpedly" ADVERB_COMP "more orpedly",
-    "orpedly" ADVERB_SUP "most orpedly",
-    "orphically" ADVERB_COMP "more orphically",
-    "orphically" ADVERB_SUP "most orphically",
-    "orthodoxally" ADVERB_COMP "more orthodoxally",
-    "orthodoxally" ADVERB_SUP "most orthodoxally",
-    "orthodoxically" ADVERB_COMP "more orthodoxically",
-    "orthodoxically" ADVERB_SUP "most orthodoxically",
-    "orthodoxly" ADVERB_COMP "more orthodoxly",
-    "orthodoxly" ADVERB_SUP "most orthodoxly",
-    "orthogonally" ADVERB_COMP "more orthogonally",
-    "orthogonally" ADVERB_SUP "most orthogonally",
-    "orthopraxically" ADVERB_COMP "more orthopraxically",
-    "orthopraxically" ADVERB_SUP "most orthopraxically",
-    "orwellianly" ADVERB_COMP "more orwellianly",
-    "orwellianly" ADVERB_SUP "most orwellianly",
-    "ostensively" ADVERB_COMP "more ostensively",
-    "ostensively" ADVERB_SUP "most ostensively",
-    "ostentatiously" ADVERB_COMP "more ostentatiously",
-    "ostentatiously" ADVERB_SUP "most ostentatiously",
-    "ostentatively" ADVERB_COMP "more ostentatively",
-    "ostentatively" ADVERB_SUP "most ostentatively",
-    "outdatedly" ADVERB_COMP "more outdatedly",
-    "outdatedly" ADVERB_SUP "most outdatedly",
-    "outerly" ADVERB_COMP "more outerly",
-    "outerly" ADVERB_SUP "most outerly",
-    "outgoingly" ADVERB_COMP "more outgoingly",
-    "outgoingly" ADVERB_SUP "most outgoingly",
-    "outlandishly" ADVERB_COMP "more outlandishly",
-    "outlandishly" ADVERB_SUP "most outlandishly",
-    "outly" ADVERB_COMP "more outly",
-    "outly" ADVERB_SUP "most outly",
-    "outmodedly" ADVERB_COMP "more outmodedly",
-    "outmodedly" ADVERB_SUP "most outmodedly",
-    "outragedly" ADVERB_COMP "more outragedly",
-    "outragedly" ADVERB_SUP "most outragedly",
-    "outrageously" ADVERB_COMP "more outrageously",
-    "outrageously" ADVERB_SUP "most outrageously",
-    "outside" ADVERB_COMP "more outside",
-    "outside" ADVERB_SUP "most outside",
-    "outspokenly" ADVERB_COMP "more outspokenly",
-    "outspokenly" ADVERB_SUP "most outspokenly",
-    "outspreadingly" ADVERB_COMP "more outspreadingly",
-    "outspreadingly" ADVERB_SUP "most outspreadingly",
-    "outstandingly" ADVERB_COMP "more outstandingly",
-    "outstandingly" ADVERB_SUP "most outstandingly",
-    "outward" ADVERB_COMP "more outward",
-    "outward" ADVERB_SUP "most outward",
-    "outwards" ADVERB_COMP "more outwards",
-    "outwards" ADVERB_SUP "most outwards",
-    "ovally" ADVERB_COMP "more ovally",
-    "ovally" ADVERB_SUP "most ovally",
-    "ovately" ADVERB_COMP "more ovately",
-    "ovately" ADVERB_SUP "most ovately",
-    "overaggressively" ADVERB_COMP "more overaggressively",
-    "overaggressively" ADVERB_SUP "most overaggressively",
-    "overambitiously" ADVERB_COMP "more overambitiously",
-    "overambitiously" ADVERB_SUP "most overambitiously",
-    "overanalytically" ADVERB_COMP "more overanalytically",
-    "overanalytically" ADVERB_SUP "most overanalytically",
-    "overanxiously" ADVERB_COMP "more overanxiously",
-    "overanxiously" ADVERB_SUP "most overanxiously",
-    "overarchingly" ADVERB_COMP "more overarchingly",
-    "overarchingly" ADVERB_SUP "most overarchingly",
-    "overassertively" ADVERB_COMP "more overassertively",
-    "overassertively" ADVERB_SUP "most overassertively",
-    "overattentively" ADVERB_COMP "more overattentively",
-    "overattentively" ADVERB_SUP "most overattentively",
-    "overawingly" ADVERB_COMP "more overawingly",
-    "overawingly" ADVERB_SUP "most overawingly",
-    "overbearingly" ADVERB_COMP "more overbearingly",
-    "overbearingly" ADVERB_SUP "most overbearingly",
-    "overbitterly" ADVERB_COMP "more overbitterly",
-    "overbitterly" ADVERB_SUP "most overbitterly",
-    "overboisterously" ADVERB_COMP "more overboisterously",
-    "overboisterously" ADVERB_SUP "most overboisterously",
-    "overboldly" ADVERB_COMP "more overboldly",
-    "overboldly" ADVERB_SUP "most overboldly",
-    "overbravely" ADVERB_COMP "more overbravely",
-    "overbravely" ADVERB_SUP "most overbravely",
-    "overbrightly" ADVERB_COMP "more overbrightly",
-    "overbrightly" ADVERB_SUP "most overbrightly",
-    "overbrilliantly" ADVERB_COMP "more overbrilliantly",
-    "overbrilliantly" ADVERB_SUP "most overbrilliantly",
-    "overbrimmingly" ADVERB_COMP "more overbrimmingly",
-    "overbrimmingly" ADVERB_SUP "most overbrimmingly",
-    "overbroadly" ADVERB_COMP "more overbroadly",
-    "overbroadly" ADVERB_SUP "most overbroadly",
-    "overburdeningly" ADVERB_COMP "more overburdeningly",
-    "overburdeningly" ADVERB_SUP "most overburdeningly",
-    "overbusily" ADVERB_COMP "more overbusily",
-    "overbusily" ADVERB_SUP "most overbusily",
-    "overcarefully" ADVERB_COMP "more overcarefully",
-    "overcarefully" ADVERB_SUP "most overcarefully",
-    "overcarelessly" ADVERB_COMP "more overcarelessly",
-    "overcarelessly" ADVERB_SUP "most overcarelessly",
-    "overcasually" ADVERB_COMP "more overcasually",
-    "overcasually" ADVERB_SUP "most overcasually",
-    "overcautiously" ADVERB_COMP "more overcautiously",
-    "overcautiously" ADVERB_SUP "most overcautiously",
-    "overcharitably" ADVERB_COMP "more overcharitably",
-    "overcharitably" ADVERB_SUP "most overcharitably",
-    "overcheaply" ADVERB_COMP "more overcheaply",
-    "overcheaply" ADVERB_SUP "most overcheaply",
-    "overclosely" ADVERB_COMP "more overclosely",
-    "overclosely" ADVERB_SUP "most overclosely",
-    "overcomingly" ADVERB_COMP "more overcomingly",
-    "overcomingly" ADVERB_SUP "most overcomingly",
-    "overcompensatingly" ADVERB_COMP "more overcompensatingly",
-    "overcompensatingly" ADVERB_SUP "most overcompensatingly",
-    "overcomplacently" ADVERB_COMP "more overcomplacently",
-    "overcomplacently" ADVERB_SUP "most overcomplacently",
-    "overcomplicatedly" ADVERB_COMP "more overcomplicatedly",
-    "overcomplicatedly" ADVERB_SUP "most overcomplicatedly",
-    "overconfidently" ADVERB_COMP "more overconfidently",
-    "overconfidently" ADVERB_SUP "most overconfidently",
-    "overconsciously" ADVERB_COMP "more overconsciously",
-    "overconsciously" ADVERB_SUP "most overconsciously",
-    "overconservatively" ADVERB_COMP "more overconservatively",
-    "overconservatively" ADVERB_SUP "most overconservatively",
-    "overcopiously" ADVERB_COMP "more overcopiously",
-    "overcopiously" ADVERB_SUP "most overcopiously",
-    "overcredulously" ADVERB_COMP "more overcredulously",
-    "overcredulously" ADVERB_SUP "most overcredulously",
-    "overcritically" ADVERB_COMP "more overcritically",
-    "overcritically" ADVERB_SUP "most overcritically",
-    "overcrowdedly" ADVERB_COMP "more overcrowdedly",
-    "overcrowdedly" ADVERB_SUP "most overcrowdedly",
-    "overcunningly" ADVERB_COMP "more overcunningly",
-    "overcunningly" ADVERB_SUP "most overcunningly",
-    "overcuriously" ADVERB_COMP "more overcuriously",
-    "overcuriously" ADVERB_SUP "most overcuriously",
-    "overdaintily" ADVERB_COMP "more overdaintily",
-    "overdaintily" ADVERB_SUP "most overdaintily",
-    "overdaringly" ADVERB_COMP "more overdaringly",
-    "overdaringly" ADVERB_SUP "most overdaringly",
-    "overdearly" ADVERB_COMP "more overdearly",
-    "overdearly" ADVERB_SUP "most overdearly",
-    "overdeeply" ADVERB_COMP "more overdeeply",
-    "overdeeply" ADVERB_SUP "most overdeeply",
-    "overdelicately" ADVERB_COMP "more overdelicately",
-    "overdelicately" ADVERB_SUP "most overdelicately",
-    "overdiligently" ADVERB_COMP "more overdiligently",
-    "overdiligently" ADVERB_SUP "most overdiligently",
-    "overdogmatically" ADVERB_COMP "more overdogmatically",
-    "overdogmatically" ADVERB_SUP "most overdogmatically",
-    "overdominantly" ADVERB_COMP "more overdominantly",
-    "overdominantly" ADVERB_SUP "most overdominantly",
-    "overdramatically" ADVERB_COMP "more overdramatically",
-    "overdramatically" ADVERB_SUP "most overdramatically",
-    "overeagerly" ADVERB_COMP "more overeagerly",
-    "overeagerly" ADVERB_SUP "most overeagerly",
-    "overearnestly" ADVERB_COMP "more overearnestly",
-    "overearnestly" ADVERB_SUP "most overearnestly",
-    "overeasily" ADVERB_COMP "more overeasily",
-    "overeasily" ADVERB_SUP "most overeasily",
-    "overeffusively" ADVERB_COMP "more overeffusively",
-    "overeffusively" ADVERB_SUP "most overeffusively",
-    "overelaborately" ADVERB_COMP "more overelaborately",
-    "overelaborately" ADVERB_SUP "most overelaborately",
-    "overelegantly" ADVERB_COMP "more overelegantly",
-    "overelegantly" ADVERB_SUP "most overelegantly",
-    "overemotionally" ADVERB_COMP "more overemotionally",
-    "overemotionally" ADVERB_SUP "most overemotionally",
-    "overemphatically" ADVERB_COMP "more overemphatically",
-    "overemphatically" ADVERB_SUP "most overemphatically",
-    "overenthusiastically" ADVERB_COMP "more overenthusiastically",
-    "overenthusiastically" ADVERB_SUP "most overenthusiastically",
-    "overexcitably" ADVERB_COMP "more overexcitably",
-    "overexcitably" ADVERB_SUP "most overexcitably",
-    "overexpectantly" ADVERB_COMP "more overexpectantly",
-    "overexpectantly" ADVERB_SUP "most overexpectantly",
-    "overexquisitely" ADVERB_COMP "more overexquisitely",
-    "overexquisitely" ADVERB_SUP "most overexquisitely",
-    "overexuberantly" ADVERB_COMP "more overexuberantly",
-    "overexuberantly" ADVERB_SUP "most overexuberantly",
-    "overfaithfully" ADVERB_COMP "more overfaithfully",
-    "overfaithfully" ADVERB_SUP "most overfaithfully",
-    "overfamiliarly" ADVERB_COMP "more overfamiliarly",
-    "overfamiliarly" ADVERB_SUP "most overfamiliarly",
-    "overfast" ADVERB_COMP "more overfast",
-    "overfast" ADVERB_SUP "most overfast",
-    "overfastidiously" ADVERB_COMP "more overfastidiously",
-    "overfastidiously" ADVERB_SUP "most overfastidiously",
-    "overfinely" ADVERB_COMP "more overfinely",
-    "overfinely" ADVERB_SUP "most overfinely",
-    "overflowingly" ADVERB_COMP "more overflowingly",
-    "overflowingly" ADVERB_SUP "most overflowingly",
-    "overflush" ADVERB_COMP "more overflush",
-    "overflush" ADVERB_SUP "most overflush",
-    "overfondly" ADVERB_COMP "more overfondly",
-    "overfondly" ADVERB_SUP "most overfondly",
-    "overforcefully" ADVERB_COMP "more overforcefully",
-    "overforcefully" ADVERB_SUP "most overforcefully",
-    "overfreely" ADVERB_COMP "more overfreely",
-    "overfreely" ADVERB_SUP "most overfreely",
-    "overfrequently" ADVERB_COMP "more overfrequently",
-    "overfrequently" ADVERB_SUP "most overfrequently",
-    "overfully" ADVERB_COMP "more overfully",
-    "overfully" ADVERB_SUP "most overfully",
-    "overgenerally" ADVERB_COMP "more overgenerally",
-    "overgenerally" ADVERB_SUP "most overgenerally",
-    "overgenerously" ADVERB_COMP "more overgenerously",
-    "overgenerously" ADVERB_SUP "most overgenerously",
-    "overgently" ADVERB_COMP "more overgently",
-    "overgently" ADVERB_SUP "most overgently",
-    "overgratefully" ADVERB_COMP "more overgratefully",
-    "overgratefully" ADVERB_SUP "most overgratefully",
-    "overgreatly" ADVERB_COMP "more overgreatly",
-    "overgreatly" ADVERB_SUP "most overgreatly",
-    "overgreedily" ADVERB_COMP "more overgreedily",
-    "overgreedily" ADVERB_SUP "most overgreedily",
-    "overguilty" ADVERB_COMP "more overguilty",
-    "overguilty" ADVERB_SUP "most overguilty",
-    "overhardly" ADVERB_COMP "more overhardly",
-    "overhardly" ADVERB_SUP "most overhardly",
-    "overharshly" ADVERB_COMP "more overharshly",
-    "overharshly" ADVERB_SUP "most overharshly",
-    "overhastily" ADVERB_COMP "more overhastily",
-    "overhastily" ADVERB_SUP "most overhastily",
-    "overhead" ADVERB_COMP "more overhead",
-    "overhead" ADVERB_SUP "most overhead",
-    "overheartily" ADVERB_COMP "more overheartily",
-    "overheartily" ADVERB_SUP "most overheartily",
-    "overheatedly" ADVERB_COMP "more overheatedly",
-    "overheatedly" ADVERB_SUP "most overheatedly",
-    "overheavily" ADVERB_COMP "more overheavily",
-    "overheavily" ADVERB_SUP "most overheavily",
-    "overhighly" ADVERB_COMP "more overhighly",
-    "overhighly" ADVERB_SUP "most overhighly",
-    "overhonestly" ADVERB_COMP "more overhonestly",
-    "overhonestly" ADVERB_SUP "most overhonestly",
-    "overhurriedly" ADVERB_COMP "more overhurriedly",
-    "overhurriedly" ADVERB_SUP "most overhurriedly",
-    "overidealistically" ADVERB_COMP "more overidealistically",
-    "overidealistically" ADVERB_SUP "most overidealistically",
-    "overinclusively" ADVERB_COMP "more overinclusively",
-    "overinclusively" ADVERB_SUP "most overinclusively",
-    "overindulgently" ADVERB_COMP "more overindulgently",
-    "overindulgently" ADVERB_SUP "most overindulgently",
-    "overinsistently" ADVERB_COMP "more overinsistently",
-    "overinsistently" ADVERB_SUP "most overinsistently",
-    "overintensely" ADVERB_COMP "more overintensely",
-    "overintensely" ADVERB_SUP "most overintensely",
-    "overintimately" ADVERB_COMP "more overintimately",
-    "overintimately" ADVERB_SUP "most overintimately",
-    "overjealously" ADVERB_COMP "more overjealously",
-    "overjealously" ADVERB_SUP "most overjealously",
-    "overjoyfully" ADVERB_COMP "more overjoyfully",
-    "overjoyfully" ADVERB_SUP "most overjoyfully",
-    "overlappingly" ADVERB_COMP "more overlappingly",
-    "overlappingly" ADVERB_SUP "most overlappingly",
-    "overlarge" ADVERB_COMP "more overlarge",
-    "overlarge" ADVERB_SUP "most overlarge",
-    "overlargely" ADVERB_COMP "more overlargely",
-    "overlargely" ADVERB_SUP "most overlargely",
-    "overlate" ADVERB_COMP "more overlate",
-    "overlate" ADVERB_SUP "most overlate",
-    "overlavishly" ADVERB_COMP "more overlavishly",
-    "overlavishly" ADVERB_SUP "most overlavishly",
-    "overlearnedly" ADVERB_COMP "more overlearnedly",
-    "overlearnedly" ADVERB_SUP "most overlearnedly",
-    "overliberally" ADVERB_COMP "more overliberally",
-    "overliberally" ADVERB_SUP "most overliberally",
-    "overlightly" ADVERB_COMP "more overlightly",
-    "overlightly" ADVERB_SUP "most overlightly",
-    "overlogically" ADVERB_COMP "more overlogically",
-    "overlogically" ADVERB_SUP "most overlogically",
-    "overlong" ADVERB_COMP "more overlong",
-    "overlong" ADVERB_SUP "most overlong",
-    "overloudly" ADVERB_COMP "more overloudly",
-    "overloudly" ADVERB_SUP "most overloudly",
-    "overmasteringly" ADVERB_COMP "more overmasteringly",
-    "overmasteringly" ADVERB_SUP "most overmasteringly",
-    "overmeticulously" ADVERB_COMP "more overmeticulously",
-    "overmeticulously" ADVERB_SUP "most overmeticulously",
-    "overminutely" ADVERB_COMP "more overminutely",
-    "overminutely" ADVERB_SUP "most overminutely",
-    "overmodestly" ADVERB_COMP "more overmodestly",
-    "overmodestly" ADVERB_SUP "most overmodestly",
-    "overnarrowly" ADVERB_COMP "more overnarrowly",
-    "overnarrowly" ADVERB_SUP "most overnarrowly",
-    "overnervously" ADVERB_COMP "more overnervously",
-    "overnervously" ADVERB_SUP "most overnervously",
-    "overnicely" ADVERB_COMP "more overnicely",
-    "overnicely" ADVERB_SUP "most overnicely",
-    "overoptimistically" ADVERB_COMP "more overoptimistically",
-    "overoptimistically" ADVERB_SUP "most overoptimistically",
-    "overparticularly" ADVERB_COMP "more overparticularly",
-    "overparticularly" ADVERB_SUP "most overparticularly",
-    "overpassionately" ADVERB_COMP "more overpassionately",
-    "overpassionately" ADVERB_SUP "most overpassionately",
-    "overpedantically" ADVERB_COMP "more overpedantically",
-    "overpedantically" ADVERB_SUP "most overpedantically",
-    "overpoweredly" ADVERB_COMP "more overpoweredly",
-    "overpoweredly" ADVERB_SUP "most overpoweredly",
-    "overpowerfully" ADVERB_COMP "more overpowerfully",
-    "overpowerfully" ADVERB_SUP "most overpowerfully",
-    "overpoweringly" ADVERB_COMP "more overpoweringly",
-    "overpoweringly" ADVERB_SUP "most overpoweringly",
-    "overprecisely" ADVERB_COMP "more overprecisely",
-    "overprecisely" ADVERB_SUP "most overprecisely",
-    "overprominently" ADVERB_COMP "more overprominently",
-    "overprominently" ADVERB_SUP "most overprominently",
-    "overpromptly" ADVERB_COMP "more overpromptly",
-    "overpromptly" ADVERB_SUP "most overpromptly",
-    "overproportionately" ADVERB_COMP "more overproportionately",
-    "overproportionately" ADVERB_SUP "most overproportionately",
-    "overprotectively" ADVERB_COMP "more overprotectively",
-    "overprotectively" ADVERB_SUP "most overprotectively",
-    "overquietly" ADVERB_COMP "more overquietly",
-    "overquietly" ADVERB_SUP "most overquietly",
-    "overrashly" ADVERB_COMP "more overrashly",
-    "overrashly" ADVERB_SUP "most overrashly",
-    "overratedly" ADVERB_COMP "more overratedly",
-    "overratedly" ADVERB_SUP "most overratedly",
-    "overreachingly" ADVERB_COMP "more overreachingly",
-    "overreachingly" ADVERB_SUP "most overreachingly",
-    "overreadily" ADVERB_COMP "more overreadily",
-    "overreadily" ADVERB_SUP "most overreadily",
-    "overridingly" ADVERB_COMP "more overridingly",
-    "overridingly" ADVERB_SUP "most overridingly",
-    "overrighteously" ADVERB_COMP "more overrighteously",
-    "overrighteously" ADVERB_SUP "most overrighteously",
-    "overrigidly" ADVERB_COMP "more overrigidly",
-    "overrigidly" ADVERB_SUP "most overrigidly",
-    "overrigorously" ADVERB_COMP "more overrigorously",
-    "overrigorously" ADVERB_SUP "most overrigorously",
-    "overripely" ADVERB_COMP "more overripely",
-    "overripely" ADVERB_SUP "most overripely",
-    "overromantically" ADVERB_COMP "more overromantically",
-    "overromantically" ADVERB_SUP "most overromantically",
-    "overroughly" ADVERB_COMP "more overroughly",
-    "overroughly" ADVERB_SUP "most overroughly",
-    "overrulingly" ADVERB_COMP "more overrulingly",
-    "overrulingly" ADVERB_SUP "most overrulingly",
-    "oversanguinely" ADVERB_COMP "more oversanguinely",
-    "oversanguinely" ADVERB_SUP "most oversanguinely",
-    "overscrupulously" ADVERB_COMP "more overscrupulously",
-    "overscrupulously" ADVERB_SUP "most overscrupulously",
-    "oversensationally" ADVERB_COMP "more oversensationally",
-    "oversensationally" ADVERB_SUP "most oversensationally",
-    "oversensitively" ADVERB_COMP "more oversensitively",
-    "oversensitively" ADVERB_SUP "most oversensitively",
-    "oversentimentally" ADVERB_COMP "more oversentimentally",
-    "oversentimentally" ADVERB_SUP "most oversentimentally",
-    "overseriously" ADVERB_COMP "more overseriously",
-    "overseriously" ADVERB_SUP "most overseriously",
-    "overseverely" ADVERB_COMP "more overseverely",
-    "overseverely" ADVERB_SUP "most overseverely",
-    "oversimplistically" ADVERB_COMP "more oversimplistically",
-    "oversimplistically" ADVERB_SUP "most oversimplistically",
-    "oversimply" ADVERB_COMP "more oversimply",
-    "oversimply" ADVERB_SUP "most oversimply",
-    "overslavishly" ADVERB_COMP "more overslavishly",
-    "overslavishly" ADVERB_SUP "most overslavishly",
-    "oversmoothly" ADVERB_COMP "more oversmoothly",
-    "oversmoothly" ADVERB_SUP "most oversmoothly",
-    "oversoftly" ADVERB_COMP "more oversoftly",
-    "oversoftly" ADVERB_SUP "most oversoftly",
-    "oversolemnly" ADVERB_COMP "more oversolemnly",
-    "oversolemnly" ADVERB_SUP "most oversolemnly",
-    "oversolicitously" ADVERB_COMP "more oversolicitously",
-    "oversolicitously" ADVERB_SUP "most oversolicitously",
-    "oversoon" ADVERB_COMP "more oversoon",
-    "oversoon" ADVERB_SUP "most oversoon",
-    "oversparingly" ADVERB_COMP "more oversparingly",
-    "oversparingly" ADVERB_SUP "most oversparingly",
-    "overspecifically" ADVERB_COMP "more overspecifically",
-    "overspecifically" ADVERB_SUP "most overspecifically",
-    "overspeedily" ADVERB_COMP "more overspeedily",
-    "overspeedily" ADVERB_SUP "most overspeedily",
-    "overstrenuously" ADVERB_COMP "more overstrenuously",
-    "overstrenuously" ADVERB_SUP "most overstrenuously",
-    "overstrictly" ADVERB_COMP "more overstrictly",
-    "overstrictly" ADVERB_SUP "most overstrictly",
-    "overstrongly" ADVERB_COMP "more overstrongly",
-    "overstrongly" ADVERB_SUP "most overstrongly",
-    "overstudiously" ADVERB_COMP "more overstudiously",
-    "overstudiously" ADVERB_SUP "most overstudiously",
-    "oversubtly" ADVERB_COMP "more oversubtly",
-    "oversubtly" ADVERB_SUP "most oversubtly",
-    "oversufficiently" ADVERB_COMP "more oversufficiently",
-    "oversufficiently" ADVERB_SUP "most oversufficiently",
-    "oversuspiciously" ADVERB_COMP "more oversuspiciously",
-    "oversuspiciously" ADVERB_SUP "most oversuspiciously",
-    "oversweetly" ADVERB_COMP "more oversweetly",
-    "oversweetly" ADVERB_SUP "most oversweetly",
-    "overswiftly" ADVERB_COMP "more overswiftly",
-    "overswiftly" ADVERB_SUP "most overswiftly",
-    "oversystematically" ADVERB_COMP "more oversystematically",
-    "oversystematically" ADVERB_SUP "most oversystematically",
-    "overtenderly" ADVERB_COMP "more overtenderly",
-    "overtenderly" ADVERB_SUP "most overtenderly",
-    "overthwart" ADVERB_COMP "more overthwart",
-    "overthwart" ADVERB_SUP "most overthwart",
-    "overthwartly" ADVERB_COMP "more overthwartly",
-    "overthwartly" ADVERB_SUP "most overthwartly",
-    "overtightly" ADVERB_COMP "more overtightly",
-    "overtightly" ADVERB_SUP "most overtightly",
-    "overtly" ADVERB_COMP "more overtly",
-    "overtly" ADVERB_SUP "most overtly",
-    "overvigorously" ADVERB_COMP "more overvigorously",
-    "overvigorously" ADVERB_SUP "most overvigorously",
-    "overvividly" ADVERB_COMP "more overvividly",
-    "overvividly" ADVERB_SUP "most overvividly",
-    "overweeningly" ADVERB_COMP "more overweeningly",
-    "overweeningly" ADVERB_SUP "most overweeningly",
-    "overwell" ADVERB_COMP "more overwell",
-    "overwell" ADVERB_SUP "most overwell",
-    "overwhelmingly" ADVERB_COMP "more overwhelmingly",
-    "overwhelmingly" ADVERB_SUP "most overwhelmingly",
-    "overwillingly" ADVERB_COMP "more overwillingly",
-    "overwillingly" ADVERB_SUP "most overwillingly",
-    "overwisely" ADVERB_COMP "more overwisely",
-    "overwisely" ADVERB_SUP "most overwisely",
-    "overzealously" ADVERB_COMP "more overzealously",
-    "overzealously" ADVERB_SUP "most overzealously",
-    "ovinely" ADVERB_COMP "more ovinely",
-    "ovinely" ADVERB_SUP "most ovinely",
-    "owlishly" ADVERB_COMP "more owlishly",
-    "owlishly" ADVERB_SUP "most owlishly",
-    "owwer" ADVERB_COMP "more owwer",
-    "owwer" ADVERB_SUP "most owwer",
-    "oxishly" ADVERB_COMP "more oxishly",
-    "oxishly" ADVERB_SUP "most oxishly",
-    "oxymoronically" ADVERB_COMP "more oxymoronically",
-    "oxymoronically" ADVERB_SUP "most oxymoronically",
-    "rabidly" ADVERB_COMP "more rabidly",
-    "racialistically" ADVERB_COMP "more racialistically",
-    "racially" ADVERB_COMP "more racially",
-    "racily" ADVERB_COMP "more racily",
-    "racingly" ADVERB_COMP "more racingly",
-    "racistically" ADVERB_COMP "more racistically",
-    "racistly" ADVERB_COMP "more racistly",
-    "rackingly" ADVERB_COMP "more rackingly",
-    "radially" ADVERB_COMP "more radially",
-    "radiantly" ADVERB_COMP "more radiantly",
-    "radiatively" ADVERB_COMP "more radiatively",
-    "radicalistically" ADVERB_COMP "more radicalistically",
-    "radically" ADVERB_COMP "more radically",
-    "radioactively" ADVERB_COMP "more radioactively",
-    "raffishly" ADVERB_COMP "more raffishly",
-    "ragefully" ADVERB_COMP "more ragefully",
-    "raggedly" ADVERB_COMP "more raggedly",
-    "ragingly" ADVERB_COMP "more ragingly",
-    "railingly" ADVERB_COMP "more railingly",
-    "rainily" ADVERB_COMP "more rainily",
-    "rakingly" ADVERB_COMP "more rakingly",
-    "rakishly" ADVERB_COMP "more rakishly",
-    "rallyingly" ADVERB_COMP "more rallyingly",
-    "ramblingly" ADVERB_COMP "more ramblingly",
-    "rambunctiously" ADVERB_COMP "more rambunctiously",
-    "ramosely" ADVERB_COMP "more ramosely",
-    "rampaciously" ADVERB_COMP "more rampaciously",
-    "rampageously" ADVERB_COMP "more rampageously",
-    "rampant" ADVERB_COMP "more rampant",
-    "rampantly" ADVERB_COMP "more rampantly",
-    "rampingly" ADVERB_COMP "more rampingly",
-    "rancidly" ADVERB_COMP "more rancidly",
-    "rancorously" ADVERB_COMP "more rancorously",
-    "rancourously" ADVERB_COMP "more rancourously",
-    "randily" ADVERB_COMP "more randily",
-    "randomly" ADVERB_COMP "more randomly",
-    "rangily" ADVERB_COMP "more rangily",
-    "rank" ADVERB_COMP "more rank",
-    "ranklingly" ADVERB_COMP "more ranklingly",
-    "rankly" ADVERB_COMP "more rankly",
-    "rantingly" ADVERB_COMP "more rantingly",
-    "rapaciously" ADVERB_COMP "more rapaciously",
-    "rape" ADVERB_COMP "more rape",
-    "rapid" ADVERB_COMP "more rapid",
-    "rapidly" ADVERB_COMP "more rapidly",
-    "raptly" ADVERB_COMP "more raptly",
-    "raptorially" ADVERB_COMP "more raptorially",
-    "rapturously" ADVERB_COMP "more rapturously",
-    "rascally" ADVERB_COMP "more rascally",
-    "rash" ADVERB_COMP "more rash",
-    "rashely" ADVERB_COMP "more rashely",
-    "rashly" ADVERB_COMP "more rashly",
-    "raspily" ADVERB_COMP "more raspily",
-    "raspingly" ADVERB_COMP "more raspingly",
-    "rathely" ADVERB_COMP "more rathely",
-    "ratherish" ADVERB_COMP "more ratherish",
-    "ratiocinatively" ADVERB_COMP "more ratiocinatively",
-    "rationably" ADVERB_COMP "more rationably",
-    "rationalistically" ADVERB_COMP "more rationalistically",
-    "rationally" ADVERB_COMP "more rationally",
-    "ratlike" ADVERB_COMP "more ratlike",
-    "rattily" ADVERB_COMP "more rattily",
-    "rattishly" ADVERB_COMP "more rattishly",
-    "rattlingly" ADVERB_COMP "more rattlingly",
-    "raucously" ADVERB_COMP "more raucously",
-    "raunchily" ADVERB_COMP "more raunchily",
-    "raveningly" ADVERB_COMP "more raveningly",
-    "ravenly" ADVERB_COMP "more ravenly",
-    "ravenously" ADVERB_COMP "more ravenously",
-    "raving" ADVERB_COMP "more raving",
-    "ravingly" ADVERB_COMP "more ravingly",
-    "ravishingly" ADVERB_COMP "more ravishingly",
-    "rawly" ADVERB_COMP "more rawly",
-    "reachably" ADVERB_COMP "more reachably",
-    "reactionarily" ADVERB_COMP "more reactionarily",
-    "reactively" ADVERB_COMP "more reactively",
-    "readably" ADVERB_COMP "more readably",
-    "realistically" ADVERB_COMP "more realistically",
-    "realizably" ADVERB_COMP "more realizably",
-    "realizingly" ADVERB_COMP "more realizingly",
-    "really" ADVERB_COMP "more really",
-    "rearly" ADVERB_COMP "more rearly",
-    "rearrangeably" ADVERB_COMP "more rearrangeably",
-    "rearwardly" ADVERB_COMP "more rearwardly",
-    "rearwards" ADVERB_COMP "more rearwards",
-    "reasonably" ADVERB_COMP "more reasonably",
-    "reasoningly" ADVERB_COMP "more reasoningly",
-    "reasonlessly" ADVERB_COMP "more reasonlessly",
-    "reassuredly" ADVERB_COMP "more reassuredly",
-    "reassuringly" ADVERB_COMP "more reassuringly",
-    "rebarbatively" ADVERB_COMP "more rebarbatively",
-    "rebelliously" ADVERB_COMP "more rebelliously",
-    "reboundingly" ADVERB_COMP "more reboundingly",
-    "rebuffingly" ADVERB_COMP "more rebuffingly",
-    "rebukefully" ADVERB_COMP "more rebukefully",
-    "rebukingly" ADVERB_COMP "more rebukingly",
-    "rebuttably" ADVERB_COMP "more rebuttably",
-    "recalcitrantly" ADVERB_COMP "more recalcitrantly",
-    "recedingly" ADVERB_COMP "more recedingly",
-    "recently" ADVERB_COMP "more recently",
-    "receptively" ADVERB_COMP "more receptively",
-    "recessionarily" ADVERB_COMP "more recessionarily",
-    "recessively" ADVERB_COMP "more recessively",
-    "recidivistically" ADVERB_COMP "more recidivistically",
-    "reciprocally" ADVERB_COMP "more reciprocally",
-    "reciprocatively" ADVERB_COMP "more reciprocatively",
-    "recitatively" ADVERB_COMP "more recitatively",
-    "recklessly" ADVERB_COMP "more recklessly",
-    "reclaimably" ADVERB_COMP "more reclaimably",
-    "reclusely" ADVERB_COMP "more reclusely",
-    "reclusively" ADVERB_COMP "more reclusively",
-    "recognisably" ADVERB_COMP "more recognisably",
-    "recognizably" ADVERB_COMP "more recognizably",
-    "recognizedly" ADVERB_COMP "more recognizedly",
-    "recognizingly" ADVERB_COMP "more recognizingly",
-    "recoilingly" ADVERB_COMP "more recoilingly",
-    "recollectedly" ADVERB_COMP "more recollectedly",
-    "recollectively" ADVERB_COMP "more recollectively",
-    "recombinantly" ADVERB_COMP "more recombinantly",
-    "recommendably" ADVERB_COMP "more recommendably",
-    "reconcilably" ADVERB_COMP "more reconcilably",
-    "reconciliatorily" ADVERB_COMP "more reconciliatorily",
-    "reconcilingly" ADVERB_COMP "more reconcilingly",
-    "reconditely" ADVERB_COMP "more reconditely",
-    "reconnoiteringly" ADVERB_COMP "more reconnoiteringly",
-    "reconnoitringly" ADVERB_COMP "more reconnoitringly",
-    "reconstructively" ADVERB_COMP "more reconstructively",
-    "recreantly" ADVERB_COMP "more recreantly",
-    "recreationally" ADVERB_COMP "more recreationally",
-    "recreatively" ADVERB_COMP "more recreatively",
-    "recriminatingly" ADVERB_COMP "more recriminatingly",
-    "rectilineally" ADVERB_COMP "more rectilineally",
-    "rectilinearly" ADVERB_COMP "more rectilinearly",
-    "recuperatively" ADVERB_COMP "more recuperatively",
-    "recurrently" ADVERB_COMP "more recurrently",
-    "recurringly" ADVERB_COMP "more recurringly",
-    "reddeningly" ADVERB_COMP "more reddeningly",
-    "reddishly" ADVERB_COMP "more reddishly",
-    "redeemably" ADVERB_COMP "more redeemably",
-    "redeemingly" ADVERB_COMP "more redeemingly",
-    "redemptively" ADVERB_COMP "more redemptively",
-    "redhandedly" ADVERB_COMP "more redhandedly",
-    "redly" ADVERB_COMP "more redly",
-    "redolently" ADVERB_COMP "more redolently",
-    "redoubtably" ADVERB_COMP "more redoubtably",
-    "redoundingly" ADVERB_COMP "more redoundingly",
-    "reductionally" ADVERB_COMP "more reductionally",
-    "reductionistically" ADVERB_COMP "more reductionistically",
-    "reductively" ADVERB_COMP "more reductively",
-    "reductivistically" ADVERB_COMP "more reductivistically",
-    "redundantly" ADVERB_COMP "more redundantly",
-    "redward" ADVERB_COMP "more redward",
-    "redwards" ADVERB_COMP "more redwards",
-    "reedily" ADVERB_COMP "more reedily",
-    "reekingly" ADVERB_COMP "more reekingly",
-    "reelingly" ADVERB_COMP "more reelingly",
-    "referentially" ADVERB_COMP "more referentially",
-    "refinedly" ADVERB_COMP "more refinedly",
-    "reflectingly" ADVERB_COMP "more reflectingly",
-    "reflectively" ADVERB_COMP "more reflectively",
-    "reformationally" ADVERB_COMP "more reformationally",
-    "reformatively" ADVERB_COMP "more reformatively",
-    "reformedly" ADVERB_COMP "more reformedly",
-    "reformingly" ADVERB_COMP "more reformingly",
-    "reformistly" ADVERB_COMP "more reformistly",
-    "refractively" ADVERB_COMP "more refractively",
-    "refractorily" ADVERB_COMP "more refractorily",
-    "refreshfully" ADVERB_COMP "more refreshfully",
-    "refreshingly" ADVERB_COMP "more refreshingly",
-    "refulgently" ADVERB_COMP "more refulgently",
-    "refusingly" ADVERB_COMP "more refusingly",
-    "refutably" ADVERB_COMP "more refutably",
-    "refutatively" ADVERB_COMP "more refutatively",
-    "regally" ADVERB_COMP "more regally",
-    "regardfully" ADVERB_COMP "more regardfully",
-    "regardlessly" ADVERB_COMP "more regardlessly",
-    "regenerately" ADVERB_COMP "more regenerately",
-    "regeneratively" ADVERB_COMP "more regeneratively",
-    "reginally" ADVERB_COMP "more reginally",
-    "regiolectally" ADVERB_COMP "more regiolectally",
-    "regionally" ADVERB_COMP "more regionally",
-    "regiospecifically" ADVERB_COMP "more regiospecifically",
-    "regressively" ADVERB_COMP "more regressively",
-    "regretable" ADVERB_COMP "more regretable",
-    "regretfully" ADVERB_COMP "more regretfully",
-    "regrettably" ADVERB_COMP "more regrettably",
-    "regrettingly" ADVERB_COMP "more regrettingly",
-    "reinforcingly" ADVERB_COMP "more reinforcingly",
-    "reintegratively" ADVERB_COMP "more reintegratively",
-    "reinvigoratingly" ADVERB_COMP "more reinvigoratingly",
-    "reiteratedly" ADVERB_COMP "more reiteratedly",
-    "rejectfully" ADVERB_COMP "more rejectfully",
-    "rejectingly" ADVERB_COMP "more rejectingly",
-    "rejoicefully" ADVERB_COMP "more rejoicefully",
-    "rejoicingly" ADVERB_COMP "more rejoicingly",
-    "rejuvenatingly" ADVERB_COMP "more rejuvenatingly",
-    "relatably" ADVERB_COMP "more relatably",
-    "relatedly" ADVERB_COMP "more relatedly",
-    "relationally" ADVERB_COMP "more relationally",
-    "relationshipwise" ADVERB_COMP "more relationshipwise",
-    "relativistically" ADVERB_COMP "more relativistically",
-    "relaxedly" ADVERB_COMP "more relaxedly",
-    "relaxingly" ADVERB_COMP "more relaxingly",
-    "releasably" ADVERB_COMP "more releasably",
-    "relentfully" ADVERB_COMP "more relentfully",
-    "relentingly" ADVERB_COMP "more relentingly",
-    "relentlessly" ADVERB_COMP "more relentlessly",
-    "relevantly" ADVERB_COMP "more relevantly",
-    "reliably" ADVERB_COMP "more reliably",
-    "reliantly" ADVERB_COMP "more reliantly",
-    "relievedly" ADVERB_COMP "more relievedly",
-    "relievingly" ADVERB_COMP "more relievingly",
-    "religionistically" ADVERB_COMP "more religionistically",
-    "religiously" ADVERB_COMP "more religiously",
-    "relishingly" ADVERB_COMP "more relishingly",
-    "reluctantly" ADVERB_COMP "more reluctantly",
-    "remarkably" ADVERB_COMP "more remarkably",
-    "remediably" ADVERB_COMP "more remediably",
-    "remedially" ADVERB_COMP "more remedially",
-    "remedilessly" ADVERB_COMP "more remedilessly",
-    "rememberably" ADVERB_COMP "more rememberably",
-    "reminiscentially" ADVERB_COMP "more reminiscentially",
-    "reminiscently" ADVERB_COMP "more reminiscently",
-    "reminiscingly" ADVERB_COMP "more reminiscingly",
-    "remissibly" ADVERB_COMP "more remissibly",
-    "remissly" ADVERB_COMP "more remissly",
-    "remonstrantly" ADVERB_COMP "more remonstrantly",
-    "remonstratingly" ADVERB_COMP "more remonstratingly",
-    "remonstratively" ADVERB_COMP "more remonstratively",
-    "remorsefully" ADVERB_COMP "more remorsefully",
-    "remorselessly" ADVERB_COMP "more remorselessly",
-    "remotely" ADVERB_COMP "more remotely",
-    "remuneratingly" ADVERB_COMP "more remuneratingly",
-    "remuneratively" ADVERB_COMP "more remuneratively",
-    "renably" ADVERB_COMP "more renably",
-    "rendingly" ADVERB_COMP "more rendingly",
-    "renewably" ADVERB_COMP "more renewably",
-    "renownedly" ADVERB_COMP "more renownedly",
-    "repandly" ADVERB_COMP "more repandly",
-    "reparably" ADVERB_COMP "more reparably",
-    "repeatably" ADVERB_COMP "more repeatably",
-    "repeatedly" ADVERB_COMP "more repeatedly",
-    "repellantly" ADVERB_COMP "more repellantly",
-    "repellently" ADVERB_COMP "more repellently",
-    "repellingly" ADVERB_COMP "more repellingly",
-    "repentantly" ADVERB_COMP "more repentantly",
-    "repentingly" ADVERB_COMP "more repentingly",
-    "repercussively" ADVERB_COMP "more repercussively",
-    "repetitiously" ADVERB_COMP "more repetitiously",
-    "repetitively" ADVERB_COMP "more repetitively",
-    "replenishingly" ADVERB_COMP "more replenishingly",
-    "repletely" ADVERB_COMP "more repletely",
-    "repletively" ADVERB_COMP "more repletively",
-    "reportorially" ADVERB_COMP "more reportorially",
-    "reposedly" ADVERB_COMP "more reposedly",
-    "reposefully" ADVERB_COMP "more reposefully",
-    "reposingly" ADVERB_COMP "more reposingly",
-    "reprehensibly" ADVERB_COMP "more reprehensibly",
-    "reprehensively" ADVERB_COMP "more reprehensively",
-    "representationally" ADVERB_COMP "more representationally",
-    "representatively" ADVERB_COMP "more representatively",
-    "representively" ADVERB_COMP "more representively",
-    "repressedly" ADVERB_COMP "more repressedly",
-    "repressibly" ADVERB_COMP "more repressibly",
-    "repressively" ADVERB_COMP "more repressively",
-    "reproachably" ADVERB_COMP "more reproachably",
-    "reproachfully" ADVERB_COMP "more reproachfully",
-    "reproachingly" ADVERB_COMP "more reproachingly",
-    "reproducibly" ADVERB_COMP "more reproducibly",
-    "reprovably" ADVERB_COMP "more reprovably",
-    "reprovingly" ADVERB_COMP "more reprovingly",
-    "reptilianly" ADVERB_COMP "more reptilianly",
-    "repudiatingly" ADVERB_COMP "more repudiatingly",
-    "repugnantly" ADVERB_COMP "more repugnantly",
-    "repulsingly" ADVERB_COMP "more repulsingly",
-    "repulsively" ADVERB_COMP "more repulsively",
-    "reputably" ADVERB_COMP "more reputably",
-    "reputedly" ADVERB_COMP "more reputedly",
-    "requestingly" ADVERB_COMP "more requestingly",
-    "requisitely" ADVERB_COMP "more requisitely",
-    "resemblingly" ADVERB_COMP "more resemblingly",
-    "resentfully" ADVERB_COMP "more resentfully",
-    "resentingly" ADVERB_COMP "more resentingly",
-    "reservedly" ADVERB_COMP "more reservedly",
-    "residually" ADVERB_COMP "more residually",
-    "resignedly" ADVERB_COMP "more resignedly",
-    "resiliently" ADVERB_COMP "more resiliently",
-    "resinously" ADVERB_COMP "more resinously",
-    "resistantly" ADVERB_COMP "more resistantly",
-    "resistibly" ADVERB_COMP "more resistibly",
-    "resistingly" ADVERB_COMP "more resistingly",
-    "resistively" ADVERB_COMP "more resistively",
-    "resolutely" ADVERB_COMP "more resolutely",
-    "resolutively" ADVERB_COMP "more resolutively",
-    "resolvably" ADVERB_COMP "more resolvably",
-    "resolvedly" ADVERB_COMP "more resolvedly",
-    "resonantly" ADVERB_COMP "more resonantly",
-    "resoundingly" ADVERB_COMP "more resoundingly",
-    "resourcefully" ADVERB_COMP "more resourcefully",
-    "respectably" ADVERB_COMP "more respectably",
-    "respectfully" ADVERB_COMP "more respectfully",
-    "respectively" ADVERB_COMP "more respectively",
-    "respectlessly" ADVERB_COMP "more respectlessly",
-    "resplendently" ADVERB_COMP "more resplendently",
-    "responsibly" ADVERB_COMP "more responsibly",
-    "responsively" ADVERB_COMP "more responsively",
-    "restfully" ADVERB_COMP "more restfully",
-    "restily" ADVERB_COMP "more restily",
-    "restingly" ADVERB_COMP "more restingly",
-    "restitutively" ADVERB_COMP "more restitutively",
-    "restively" ADVERB_COMP "more restively",
-    "restlessly" ADVERB_COMP "more restlessly",
-    "restoratively" ADVERB_COMP "more restoratively",
-    "restrainingly" ADVERB_COMP "more restrainingly",
-    "restrictedly" ADVERB_COMP "more restrictedly",
-    "restrictively" ADVERB_COMP "more restrictively",
-    "resultfully" ADVERB_COMP "more resultfully",
-    "resurrectingly" ADVERB_COMP "more resurrectingly",
-    "retaliatorily" ADVERB_COMP "more retaliatorily",
-    "retardedly" ADVERB_COMP "more retardedly",
-    "retardingly" ADVERB_COMP "more retardingly",
-    "retardively" ADVERB_COMP "more retardively",
-    "retentively" ADVERB_COMP "more retentively",
-    "reticently" ADVERB_COMP "more reticently",
-    "reticularly" ADVERB_COMP "more reticularly",
-    "retiredly" ADVERB_COMP "more retiredly",
-    "retiringly" ADVERB_COMP "more retiringly",
-    "retractively" ADVERB_COMP "more retractively",
-    "retrally" ADVERB_COMP "more retrally",
-    "retrievably" ADVERB_COMP "more retrievably",
-    "retrocessively" ADVERB_COMP "more retrocessively",
-    "retroflexively" ADVERB_COMP "more retroflexively",
-    "retrograde" ADVERB_COMP "more retrograde",
-    "retrogradely" ADVERB_COMP "more retrogradely",
-    "retrogressively" ADVERB_COMP "more retrogressively",
-    "retrospectively" ADVERB_COMP "more retrospectively",
-    "reusably" ADVERB_COMP "more reusably",
-    "revealingly" ADVERB_COMP "more revealingly",
-    "revelatorily" ADVERB_COMP "more revelatorily",
-    "revengefully" ADVERB_COMP "more revengefully",
-    "revengingly" ADVERB_COMP "more revengingly",
-    "reverberantly" ADVERB_COMP "more reverberantly",
-    "reverberatingly" ADVERB_COMP "more reverberatingly",
-    "reverberatively" ADVERB_COMP "more reverberatively",
-    "reveredly" ADVERB_COMP "more reveredly",
-    "reverendly" ADVERB_COMP "more reverendly",
-    "reverentially" ADVERB_COMP "more reverentially",
-    "reverently" ADVERB_COMP "more reverently",
-    "reversedly" ADVERB_COMP "more reversedly",
-    "reversibly" ADVERB_COMP "more reversibly",
-    "revertively" ADVERB_COMP "more revertively",
-    "revilingly" ADVERB_COMP "more revilingly",
-    "revisionistically" ADVERB_COMP "more revisionistically",
-    "revivingly" ADVERB_COMP "more revivingly",
-    "revoltedly" ADVERB_COMP "more revoltedly",
-    "revoltingly" ADVERB_COMP "more revoltingly",
-    "rewardably" ADVERB_COMP "more rewardably",
-    "rewardedly" ADVERB_COMP "more rewardedly",
-    "rewardfully" ADVERB_COMP "more rewardfully",
-    "rewardlessly" ADVERB_COMP "more rewardlessly",
-    "rhapsodically" ADVERB_COMP "more rhapsodically",
-    "rheumatically" ADVERB_COMP "more rheumatically",
-    "rheumatoidally" ADVERB_COMP "more rheumatoidally",
-    "rheumily" ADVERB_COMP "more rheumily",
-    "rhombically" ADVERB_COMP "more rhombically",
-    "rhomboidally" ADVERB_COMP "more rhomboidally",
-    "rhomboidly" ADVERB_COMP "more rhomboidly",
-    "rhymingly" ADVERB_COMP "more rhymingly",
-    "rhythmically" ADVERB_COMP "more rhythmically",
-    "rhythmlessly" ADVERB_COMP "more rhythmlessly",
-    "riantly" ADVERB_COMP "more riantly",
-    "ribaldly" ADVERB_COMP "more ribaldly",
-    "ribbingly" ADVERB_COMP "more ribbingly",
-    "ricketily" ADVERB_COMP "more ricketily",
-    "riddlingly" ADVERB_COMP "more riddlingly",
-    "ridiculously" ADVERB_COMP "more ridiculously",
-    "rife" ADVERB_COMP "more rife",
-    "rifely" ADVERB_COMP "more rifely",
-    "righteously" ADVERB_COMP "more righteously",
-    "rightfully" ADVERB_COMP "more rightfully",
-    "righthandedly" ADVERB_COMP "more righthandedly",
-    "rightmindedly" ADVERB_COMP "more rightmindedly",
-    "rightward" ADVERB_COMP "more rightward",
-    "rightwardly" ADVERB_COMP "more rightwardly",
-    "rightways" ADVERB_COMP "more rightways",
-    "rightwisely" ADVERB_COMP "more rightwisely",
-    "rigidly" ADVERB_COMP "more rigidly",
-    "rigorously" ADVERB_COMP "more rigorously",
-    "rimosely" ADVERB_COMP "more rimosely",
-    "rinforzando" ADVERB_COMP "more rinforzando",
-    "ringingly" ADVERB_COMP "more ringingly",
-    "riotously" ADVERB_COMP "more riotously",
-    "ripely" ADVERB_COMP "more ripely",
-    "rippingly" ADVERB_COMP "more rippingly",
-    "ripplingly" ADVERB_COMP "more ripplingly",
-    "ripsnortingly" ADVERB_COMP "more ripsnortingly",
-    "risibly" ADVERB_COMP "more risibly",
-    "risingly" ADVERB_COMP "more risingly",
-    "riskily" ADVERB_COMP "more riskily",
-    "ritualistically" ADVERB_COMP "more ritualistically",
-    "ritually" ADVERB_COMP "more ritually",
-    "ritzily" ADVERB_COMP "more ritzily",
-    "rivalrously" ADVERB_COMP "more rivalrously",
-    "rivetingly" ADVERB_COMP "more rivetingly",
-    "rlly" ADVERB_COMP "more rlly",
-    "roaringly" ADVERB_COMP "more roaringly",
-    "roastingly" ADVERB_COMP "more roastingly",
-    "robotically" ADVERB_COMP "more robotically",
-    "robustfully" ADVERB_COMP "more robustfully",
-    "robustiously" ADVERB_COMP "more robustiously",
-    "robustly" ADVERB_COMP "more robustly",
-    "rockily" ADVERB_COMP "more rockily",
-    "rockingly" ADVERB_COMP "more rockingly",
-    "rodentially" ADVERB_COMP "more rodentially",
-    "roguishly" ADVERB_COMP "more roguishly",
-    "roisteringly" ADVERB_COMP "more roisteringly",
-    "roisterly" ADVERB_COMP "more roisterly",
-    "roisterously" ADVERB_COMP "more roisterously",
-    "rollickingly" ADVERB_COMP "more rollickingly",
-    "rollingly" ADVERB_COMP "more rollingly",
-    "romanly" ADVERB_COMP "more romanly",
-    "romantically" ADVERB_COMP "more romantically",
-    "romanticly" ADVERB_COMP "more romanticly",
-    "romishly" ADVERB_COMP "more romishly",
-    "rompingly" ADVERB_COMP "more rompingly",
-    "rompishly" ADVERB_COMP "more rompishly",
-    "room" ADVERB_COMP "more room",
-    "roomily" ADVERB_COMP "more roomily",
-    "rootedly" ADVERB_COMP "more rootedly",
-    "ropily" ADVERB_COMP "more ropily",
-    "roseately" ADVERB_COMP "more roseately",
-    "rosily" ADVERB_COMP "more rosily",
-    "rotatively" ADVERB_COMP "more rotatively",
-    "rotely" ADVERB_COMP "more rotely",
-    "rotten" ADVERB_COMP "more rotten",
-    "rottenly" ADVERB_COMP "more rottenly",
-    "rottingly" ADVERB_COMP "more rottingly",
-    "rotundly" ADVERB_COMP "more rotundly",
-    "rough" ADVERB_COMP "more rough",
-    "roughishly" ADVERB_COMP "more roughishly",
-    "roundaboutedly" ADVERB_COMP "more roundaboutedly",
-    "roundaboutly" ADVERB_COMP "more roundaboutly",
-    "roundedly" ADVERB_COMP "more roundedly",
-    "roundishly" ADVERB_COMP "more roundishly",
-    "roundly" ADVERB_COMP "more roundly",
-    "roupily" ADVERB_COMP "more roupily",
-    "rousingly" ADVERB_COMP "more rousingly",
-    "routinely" ADVERB_COMP "more routinely",
-    "rovingly" ADVERB_COMP "more rovingly",
-    "rowdily" ADVERB_COMP "more rowdily",
-    "rowdyishly" ADVERB_COMP "more rowdyishly",
-    "royally" ADVERB_COMP "more royally",
-    "rubberily" ADVERB_COMP "more rubberily",
-    "rubbingly" ADVERB_COMP "more rubbingly",
-    "rubescently" ADVERB_COMP "more rubescently",
-    "rudderlessly" ADVERB_COMP "more rudderlessly",
-    "ruddily" ADVERB_COMP "more ruddily",
-    "rudely" ADVERB_COMP "more rudely",
-    "rudimentally" ADVERB_COMP "more rudimentally",
-    "rudimentarily" ADVERB_COMP "more rudimentarily",
-    "ruefully" ADVERB_COMP "more ruefully",
-    "ruffianly" ADVERB_COMP "more ruffianly",
-    "ruggedly" ADVERB_COMP "more ruggedly",
-    "rugosely" ADVERB_COMP "more rugosely",
-    "ruinously" ADVERB_COMP "more ruinously",
-    "rulingly" ADVERB_COMP "more rulingly",
-    "rumblingly" ADVERB_COMP "more rumblingly",
-    "rumbunctiously" ADVERB_COMP "more rumbunctiously",
-    "rumbustiously" ADVERB_COMP "more rumbustiously",
-    "ruminantly" ADVERB_COMP "more ruminantly",
-    "ruminatingly" ADVERB_COMP "more ruminatingly",
-    "ruminatively" ADVERB_COMP "more ruminatively",
-    "rumly" ADVERB_COMP "more rumly",
-    "rummily" ADVERB_COMP "more rummily",
-    "rumoredly" ADVERB_COMP "more rumoredly",
-    "rumouredly" ADVERB_COMP "more rumouredly",
-    "runnily" ADVERB_COMP "more runnily",
-    "runningly" ADVERB_COMP "more runningly",
-    "runtishly" ADVERB_COMP "more runtishly",
-    "rurally" ADVERB_COMP "more rurally",
-    "rushedly" ADVERB_COMP "more rushedly",
-    "rushingly" ADVERB_COMP "more rushingly",
-    "rustfully" ADVERB_COMP "more rustfully",
-    "rustically" ADVERB_COMP "more rustically",
-    "rusticly" ADVERB_COMP "more rusticly",
-    "rustily" ADVERB_COMP "more rustily",
-    "rustlingly" ADVERB_COMP "more rustlingly",
-    "ruthfully" ADVERB_COMP "more ruthfully",
-    "ruthlessly" ADVERB_COMP "more ruthlessly",
-    "ruttily" ADVERB_COMP "more ruttily",
-    "ruttishly" ADVERB_COMP "more ruttishly",
-    "sabbatically" ADVERB_SUP "most sabbatically",
-    "sably" ADVERB_SUP "most sably",
-    "saccadically" ADVERB_SUP "most saccadically",
-    "saccharinely" ADVERB_SUP "most saccharinely",
-    "sacerdotally" ADVERB_SUP "most sacerdotally",
-    "sacrad" ADVERB_SUP "most sacrad",
-    "sacramentally" ADVERB_SUP "most sacramentally",
-    "sacredly" ADVERB_SUP "most sacredly",
-    "sacrilegiously" ADVERB_SUP "most sacrilegiously",
-    "sacrosanctly" ADVERB_SUP "most sacrosanctly",
-    "saddeningly" ADVERB_SUP "most saddeningly",
-    "sadistically" ADVERB_SUP "most sadistically",
-    "sadomasochistically" ADVERB_SUP "most sadomasochistically",
-    "safely" ADVERB_SUP "most safely",
-    "sagaciously" ADVERB_SUP "most sagaciously",
-    "sagely" ADVERB_SUP "most sagely",
-    "saggily" ADVERB_SUP "most saggily",
-    "saggingly" ADVERB_SUP "most saggingly",
-    "sailingly" ADVERB_SUP "most sailingly",
-    "saintlily" ADVERB_SUP "most saintlily",
-    "salably" ADVERB_SUP "most salably",
-    "salaciously" ADVERB_SUP "most salaciously",
-    "saleably" ADVERB_SUP "most saleably",
-    "saliently" ADVERB_SUP "most saliently",
-    "salinely" ADVERB_SUP "most salinely",
-    "salivatingly" ADVERB_SUP "most salivatingly",
-    "sallowly" ADVERB_SUP "most sallowly",
-    "saltily" ADVERB_SUP "most saltily",
-    "saltishly" ADVERB_SUP "most saltishly",
-    "saltly" ADVERB_SUP "most saltly",
-    "salubriously" ADVERB_SUP "most salubriously",
-    "salutatorily" ADVERB_SUP "most salutatorily",
-    "salutiferously" ADVERB_SUP "most salutiferously",
-    "salvably" ADVERB_SUP "most salvably",
-    "salvageably" ADVERB_SUP "most salvageably",
-    "salvationally" ADVERB_SUP "most salvationally",
-    "salvifically" ADVERB_SUP "most salvifically",
-    "same" ADVERB_SUP "most same",
-    "sanatively" ADVERB_SUP "most sanatively",
-    "sanctifiedly" ADVERB_SUP "most sanctifiedly",
-    "sanctifyingly" ADVERB_SUP "most sanctifyingly",
-    "sanctimoniously" ADVERB_SUP "most sanctimoniously",
-    "sanctionably" ADVERB_SUP "most sanctionably",
-    "sandily" ADVERB_SUP "most sandily",
-    "sanely" ADVERB_SUP "most sanely",
-    "sanguinarily" ADVERB_SUP "most sanguinarily",
-    "sanguinely" ADVERB_SUP "most sanguinely",
-    "sanguinously" ADVERB_SUP "most sanguinously",
-    "sanitarily" ADVERB_SUP "most sanitarily",
-    "sapientially" ADVERB_SUP "most sapientially",
-    "sapiently" ADVERB_SUP "most sapiently",
-    "sapphically" ADVERB_SUP "most sapphically",
-    "sappily" ADVERB_SUP "most sappily",
-    "saprotrophically" ADVERB_SUP "most saprotrophically",
-    "sarcastically" ADVERB_SUP "most sarcastically",
-    "sardonically" ADVERB_SUP "most sardonically",
-    "sarkily" ADVERB_SUP "most sarkily",
-    "sartinly" ADVERB_SUP "most sartinly",
-    "sartorially" ADVERB_SUP "most sartorially",
-    "sassily" ADVERB_SUP "most sassily",
-    "satanically" ADVERB_SUP "most satanically",
-    "satirically" ADVERB_SUP "most satirically",
-    "satisfactorily" ADVERB_SUP "most satisfactorily",
-    "satisfactually" ADVERB_SUP "most satisfactually",
-    "satisfiedly" ADVERB_SUP "most satisfiedly",
-    "satisfyingly" ADVERB_SUP "most satisfyingly",
-    "saturatedly" ADVERB_SUP "most saturatedly",
-    "saturnally" ADVERB_SUP "most saturnally",
-    "saturninely" ADVERB_SUP "most saturninely",
-    "saucily" ADVERB_SUP "most saucily",
-    "saunteringly" ADVERB_SUP "most saunteringly",
-    "savagely" ADVERB_SUP "most savagely",
-    "savingly" ADVERB_SUP "most savingly",
-    "savorily" ADVERB_SUP "most savorily",
-    "savoringly" ADVERB_SUP "most savoringly",
-    "savorly" ADVERB_SUP "most savorly",
-    "savorously" ADVERB_SUP "most savorously",
-    "savourily" ADVERB_SUP "most savourily",
-    "savouringly" ADVERB_SUP "most savouringly",
-    "savourly" ADVERB_SUP "most savourly",
-    "savourously" ADVERB_SUP "most savourously",
-    "savvily" ADVERB_SUP "most savvily",
-    "saxonically" ADVERB_SUP "most saxonically",
-    "saxonly" ADVERB_SUP "most saxonly",
-    "scabbily" ADVERB_SUP "most scabbily",
-    "scabrosely" ADVERB_SUP "most scabrosely",
-    "scabrously" ADVERB_SUP "most scabrously",
-    "scalably" ADVERB_SUP "most scalably",
-    "scalariformly" ADVERB_SUP "most scalariformly",
-    "scaldingly" ADVERB_SUP "most scaldingly",
-    "scaleably" ADVERB_SUP "most scaleably",
-    "scalily" ADVERB_SUP "most scalily",
-    "scamblingly" ADVERB_SUP "most scamblingly",
-    "scampingly" ADVERB_SUP "most scampingly",
-    "scampishly" ADVERB_SUP "most scampishly",
-    "scandalously" ADVERB_SUP "most scandalously",
-    "scansorially" ADVERB_SUP "most scansorially",
-    "scantily" ADVERB_SUP "most scantily",
-    "scantly" ADVERB_SUP "most scantly",
-    "scarcely" ADVERB_SUP "most scarcely",
-    "scaredly" ADVERB_SUP "most scaredly",
-    "scaresomely" ADVERB_SUP "most scaresomely",
-    "scarifyingly" ADVERB_SUP "most scarifyingly",
-    "scarily" ADVERB_SUP "most scarily",
-    "scaringly" ADVERB_SUP "most scaringly",
-    "scarletly" ADVERB_SUP "most scarletly",
-    "scarringly" ADVERB_SUP "most scarringly",
-    "scathelessly" ADVERB_SUP "most scathelessly",
-    "scathingly" ADVERB_SUP "most scathingly",
-    "scathlessly" ADVERB_SUP "most scathlessly",
-    "scatologically" ADVERB_SUP "most scatologically",
-    "scatteredly" ADVERB_SUP "most scatteredly",
-    "scatteringly" ADVERB_SUP "most scatteringly",
-    "scattily" ADVERB_SUP "most scattily",
-    "scenically" ADVERB_SUP "most scenically",
-    "scentingly" ADVERB_SUP "most scentingly",
-    "sceptically" ADVERB_SUP "most sceptically",
-    "schemingly" ADVERB_SUP "most schemingly",
-    "scherzando" ADVERB_SUP "most scherzando",
-    "schismatically" ADVERB_SUP "most schismatically",
-    "schismogenically" ADVERB_SUP "most schismogenically",
-    "schizoanalytically" ADVERB_SUP "most schizoanalytically",
-    "schizoidally" ADVERB_SUP "most schizoidally",
-    "schizophrenetically" ADVERB_SUP "most schizophrenetically",
-    "schizophrenically" ADVERB_SUP "most schizophrenically",
-    "schlockily" ADVERB_SUP "most schlockily",
-    "schmaltzily" ADVERB_SUP "most schmaltzily",
-    "schmalzily" ADVERB_SUP "most schmalzily",
-    "schmoozingly" ADVERB_SUP "most schmoozingly",
-    "scholarlike" ADVERB_SUP "most scholarlike",
-    "scholarlily" ADVERB_SUP "most scholarlily",
-    "scholastically" ADVERB_SUP "most scholastically",
-    "scholasticly" ADVERB_SUP "most scholasticly",
-    "schoolboyishly" ADVERB_SUP "most schoolboyishly",
-    "schoolgirlishly" ADVERB_SUP "most schoolgirlishly",
-    "schoolishly" ADVERB_SUP "most schoolishly",
-    "schoolmarmishly" ADVERB_SUP "most schoolmarmishly",
-    "schoolmasterishly" ADVERB_SUP "most schoolmasterishly",
-    "schwifty" ADVERB_SUP "most schwifty",
-    "scientifically" ADVERB_SUP "most scientifically",
-    "scientifictionally" ADVERB_SUP "most scientifictionally",
-    "scientistically" ADVERB_SUP "most scientistically",
-    "scientologically" ADVERB_SUP "most scientologically",
-    "scintillantly" ADVERB_SUP "most scintillantly",
-    "scintillatingly" ADVERB_SUP "most scintillatingly",
-    "sciolistically" ADVERB_SUP "most sciolistically",
-    "scoffingly" ADVERB_SUP "most scoffingly",
-    "scoldingly" ADVERB_SUP "most scoldingly",
-    "scoptically" ADVERB_SUP "most scoptically",
-    "scornfully" ADVERB_SUP "most scornfully",
-    "scorningly" ADVERB_SUP "most scorningly",
-    "scottishly" ADVERB_SUP "most scottishly",
-    "scoundrelously" ADVERB_SUP "most scoundrelously",
-    "scourgingly" ADVERB_SUP "most scourgingly",
-    "scouringly" ADVERB_SUP "most scouringly",
-    "scoutingly" ADVERB_SUP "most scoutingly",
-    "scowlily" ADVERB_SUP "most scowlily",
-    "scowlingly" ADVERB_SUP "most scowlingly",
-    "scraggily" ADVERB_SUP "most scraggily",
-    "scramblingly" ADVERB_SUP "most scramblingly",
-    "scrapingly" ADVERB_SUP "most scrapingly",
-    "scrappily" ADVERB_SUP "most scrappily",
-    "scratchily" ADVERB_SUP "most scratchily",
-    "scratchingly" ADVERB_SUP "most scratchingly",
-    "scrawlingly" ADVERB_SUP "most scrawlingly",
-    "scrawnily" ADVERB_SUP "most scrawnily",
-    "screamingly" ADVERB_SUP "most screamingly",
-    "screechily" ADVERB_SUP "most screechily",
-    "screechingly" ADVERB_SUP "most screechingly",
-    "scribblingly" ADVERB_SUP "most scribblingly",
-    "scrimpily" ADVERB_SUP "most scrimpily",
-    "scrimpingly" ADVERB_SUP "most scrimpingly",
-    "scrofulously" ADVERB_SUP "most scrofulously",
-    "scrubbily" ADVERB_SUP "most scrubbily",
-    "scruffily" ADVERB_SUP "most scruffily",
-    "scrumptiously" ADVERB_SUP "most scrumptiously",
-    "scrunchingly" ADVERB_SUP "most scrunchingly",
-    "scrupulously" ADVERB_SUP "most scrupulously",
-    "scrutinisingly" ADVERB_SUP "most scrutinisingly",
-    "scrutinizingly" ADVERB_SUP "most scrutinizingly",
-    "scrutinously" ADVERB_SUP "most scrutinously",
-    "sculpturesquely" ADVERB_SUP "most sculpturesquely",
-    "scummily" ADVERB_SUP "most scummily",
-    "scurfily" ADVERB_SUP "most scurfily",
-    "scurrilously" ADVERB_SUP "most scurrilously",
-    "scurryingly" ADVERB_SUP "most scurryingly",
-    "scurvily" ADVERB_SUP "most scurvily",
-    "scuzzily" ADVERB_SUP "most scuzzily",
-    "seamily" ADVERB_SUP "most seamily",
-    "seamlessly" ADVERB_SUP "most seamlessly",
-    "searchingly" ADVERB_SUP "most searchingly",
-    "searingly" ADVERB_SUP "most searingly",
-    "seasonably" ADVERB_SUP "most seasonably",
-    "seasonally" ADVERB_SUP "most seasonally",
-    "seasonedly" ADVERB_SUP "most seasonedly",
-    "seaworthily" ADVERB_SUP "most seaworthily",
-    "secessionistically" ADVERB_SUP "most secessionistically",
-    "secludedly" ADVERB_SUP "most secludedly",
-    "seclusively" ADVERB_SUP "most seclusively",
-    "secretarially" ADVERB_SUP "most secretarially",
-    "secretively" ADVERB_SUP "most secretively",
-    "sectarianly" ADVERB_SUP "most sectarianly",
-    "sectionally" ADVERB_SUP "most sectionally",
-    "secularistically" ADVERB_SUP "most secularistically",
-    "secularly" ADVERB_SUP "most secularly",
-    "securely" ADVERB_SUP "most securely",
-    "sedately" ADVERB_SUP "most sedately",
-    "sedentarily" ADVERB_SUP "most sedentarily",
-    "seducingly" ADVERB_SUP "most seducingly",
-    "seductively" ADVERB_SUP "most seductively",
-    "sedulously" ADVERB_SUP "most sedulously",
-    "seedily" ADVERB_SUP "most seedily",
-    "seeingly" ADVERB_SUP "most seeingly",
-    "seekingly" ADVERB_SUP "most seekingly",
-    "seemingly" ADVERB_SUP "most seemingly",
-    "seemlily" ADVERB_SUP "most seemlily",
-    "seemly" ADVERB_SUP "most seemly",
-    "seepingly" ADVERB_SUP "most seepingly",
-    "seethingly" ADVERB_SUP "most seethingly",
-    "segmentally" ADVERB_SUP "most segmentally",
-    "segregationally" ADVERB_SUP "most segregationally",
-    "seismically" ADVERB_SUP "most seismically",
-    "sejunctively" ADVERB_SUP "most sejunctively",
-    "selcouthly" ADVERB_SUP "most selcouthly",
-    "seld" ADVERB_SUP "most seld",
-    "seldom" ADVERB_SUP "most seldom",
-    "seldomly" ADVERB_SUP "most seldomly",
-    "selectively" ADVERB_SUP "most selectively",
-    "selectly" ADVERB_SUP "most selectly",
-    "selfconsciously" ADVERB_SUP "most selfconsciously",
-    "selfconsistently" ADVERB_SUP "most selfconsistently",
-    "selfishly" ADVERB_SUP "most selfishly",
-    "selflessly" ADVERB_SUP "most selflessly",
-    "sellingly" ADVERB_SUP "most sellingly",
-    "semantically" ADVERB_SUP "most semantically",
-    "semblably" ADVERB_SUP "most semblably",
-    "semeiologically" ADVERB_SUP "most semeiologically",
-    "semeiotically" ADVERB_SUP "most semeiotically",
-    "semicircularly" ADVERB_SUP "most semicircularly",
-    "semidefinitely" ADVERB_SUP "most semidefinitely",
-    "seminally" ADVERB_SUP "most seminally",
-    "semiotically" ADVERB_SUP "most semiotically",
-    "semisweetly" ADVERB_SUP "most semisweetly",
-    "semiyearly" ADVERB_SUP "most semiyearly",
-    "senilely" ADVERB_SUP "most senilely",
-    "sensately" ADVERB_SUP "most sensately",
-    "sensationalistically" ADVERB_SUP "most sensationalistically",
-    "sensationally" ADVERB_SUP "most sensationally",
-    "senselessly" ADVERB_SUP "most senselessly",
-    "sensely" ADVERB_SUP "most sensely",
-    "sensibly" ADVERB_SUP "most sensibly",
-    "sensically" ADVERB_SUP "most sensically",
-    "sensitively" ADVERB_SUP "most sensitively",
-    "sensualistically" ADVERB_SUP "most sensualistically",
-    "sensually" ADVERB_SUP "most sensually",
-    "sensuously" ADVERB_SUP "most sensuously",
-    "sentencewise" ADVERB_SUP "most sentencewise",
-    "sentenciously" ADVERB_SUP "most sentenciously",
-    "sententiously" ADVERB_SUP "most sententiously",
-    "sentiently" ADVERB_SUP "most sentiently",
-    "sentimentalistically" ADVERB_SUP "most sentimentalistically",
-    "sentimentally" ADVERB_SUP "most sentimentally",
-    "separatively" ADVERB_SUP "most separatively",
-    "septically" ADVERB_SUP "most septically",
-    "sepulchrally" ADVERB_SUP "most sepulchrally",
-    "sequaciously" ADVERB_SUP "most sequaciously",
-    "seraphically" ADVERB_SUP "most seraphically",
-    "serely" ADVERB_SUP "most serely",
-    "serendipitously" ADVERB_SUP "most serendipitously",
-    "serenely" ADVERB_SUP "most serenely",
-    "serfishly" ADVERB_SUP "most serfishly",
-    "seriocomically" ADVERB_SUP "most seriocomically",
-    "seriously" ADVERB_SUP "most seriously",
-    "sermonically" ADVERB_SUP "most sermonically",
-    "serpentinely" ADVERB_SUP "most serpentinely",
-    "serpentiningly" ADVERB_SUP "most serpentiningly",
-    "serriedly" ADVERB_SUP "most serriedly",
-    "serviceably" ADVERB_SUP "most serviceably",
-    "servilely" ADVERB_SUP "most servilely",
-    "sessilely" ADVERB_SUP "most sessilely",
-    "setaceously" ADVERB_SUP "most setaceously",
-    "settledly" ADVERB_SUP "most settledly",
-    "severely" ADVERB_SUP "most severely",
-    "sexily" ADVERB_SUP "most sexily",
-    "sexistly" ADVERB_SUP "most sexistly",
-    "sexlessly" ADVERB_SUP "most sexlessly",
-    "sextually" ADVERB_SUP "most sextually",
-    "sexually" ADVERB_SUP "most sexually",
-    "sforzando" ADVERB_SUP "most sforzando",
-    "shabbily" ADVERB_SUP "most shabbily",
-    "shadily" ADVERB_SUP "most shadily",
-    "shadowily" ADVERB_SUP "most shadowily",
-    "shadowishly" ADVERB_SUP "most shadowishly",
-    "shaggily" ADVERB_SUP "most shaggily",
-    "shakenly" ADVERB_SUP "most shakenly",
-    "shakespeareanly" ADVERB_SUP "most shakespeareanly",
-    "shakespearianly" ADVERB_SUP "most shakespearianly",
-    "shakily" ADVERB_SUP "most shakily",
-    "shamably" ADVERB_SUP "most shamably",
-    "shamanically" ADVERB_SUP "most shamanically",
-    "shamanistically" ADVERB_SUP "most shamanistically",
-    "shamblingly" ADVERB_SUP "most shamblingly",
-    "shambolically" ADVERB_SUP "most shambolically",
-    "shamedly" ADVERB_SUP "most shamedly",
-    "shamefacedly" ADVERB_SUP "most shamefacedly",
-    "shamefastly" ADVERB_SUP "most shamefastly",
-    "shamefully" ADVERB_SUP "most shamefully",
-    "shamelessly" ADVERB_SUP "most shamelessly",
-    "shamingly" ADVERB_SUP "most shamingly",
-    "shapelessly" ADVERB_SUP "most shapelessly",
-    "shapelily" ADVERB_SUP "most shapelily",
-    "sharkishly" ADVERB_SUP "most sharkishly",
-    "sharpishly" ADVERB_SUP "most sharpishly",
-    "shatteringly" ADVERB_SUP "most shatteringly",
-    "sheenly" ADVERB_SUP "most sheenly",
-    "sheepily" ADVERB_SUP "most sheepily",
-    "sheepishly" ADVERB_SUP "most sheepishly",
-    "sheer" ADVERB_SUP "most sheer",
-    "sheerly" ADVERB_SUP "most sheerly",
-    "shieldedly" ADVERB_SUP "most shieldedly",
-    "shieldingly" ADVERB_SUP "most shieldingly",
-    "shieldwise" ADVERB_SUP "most shieldwise",
-    "shiftily" ADVERB_SUP "most shiftily",
-    "shiftingly" ADVERB_SUP "most shiftingly",
-    "shiftlessly" ADVERB_SUP "most shiftlessly",
-    "shily" ADVERB_SUP "most shily",
-    "shimmeringly" ADVERB_SUP "most shimmeringly",
-    "shinily" ADVERB_SUP "most shinily",
-    "shiningly" ADVERB_SUP "most shiningly",
-    "shipshape" ADVERB_SUP "most shipshape",
-    "shipshapely" ADVERB_SUP "most shipshapely",
-    "shirtily" ADVERB_SUP "most shirtily",
-    "shitfully" ADVERB_SUP "most shitfully",
-    "shitheadedly" ADVERB_SUP "most shitheadedly",
-    "shitly" ADVERB_SUP "most shitly",
-    "shittily" ADVERB_SUP "most shittily",
-    "shiveringly" ADVERB_SUP "most shiveringly",
-    "shlockily" ADVERB_SUP "most shlockily",
-    "shockingly" ADVERB_SUP "most shockingly",
-    "shoddily" ADVERB_SUP "most shoddily",
-    "sholy" ADVERB_SUP "most sholy",
-    "shonkily" ADVERB_SUP "most shonkily",
-    "shoppily" ADVERB_SUP "most shoppily",
-    "shore" ADVERB_SUP "most shore",
-    "shorthanded" ADVERB_SUP "most shorthanded",
-    "shorthandedly" ADVERB_SUP "most shorthandedly",
-    "shortsightedly" ADVERB_SUP "most shortsightedly",
-    "shortterm" ADVERB_SUP "most shortterm",
-    "shortward" ADVERB_SUP "most shortward",
-    "shoutily" ADVERB_SUP "most shoutily",
-    "shoutingly" ADVERB_SUP "most shoutingly",
-    "showily" ADVERB_SUP "most showily",
-    "showstoppingly" ADVERB_SUP "most showstoppingly",
-    "shrewdly" ADVERB_SUP "most shrewdly",
-    "shrewishly" ADVERB_SUP "most shrewishly",
-    "shrewly" ADVERB_SUP "most shrewly",
-    "shriekily" ADVERB_SUP "most shriekily",
-    "shriekingly" ADVERB_SUP "most shriekingly",
-    "shrillingly" ADVERB_SUP "most shrillingly",
-    "shrilly" ADVERB_SUP "most shrilly",
-    "shrinkingly" ADVERB_SUP "most shrinkingly",
-    "shruggingly" ADVERB_SUP "most shruggingly",
-    "shrunkenly" ADVERB_SUP "most shrunkenly",
-    "shudderingly" ADVERB_SUP "most shudderingly",
-    "shufflingly" ADVERB_SUP "most shufflingly",
-    "shurely" ADVERB_SUP "most shurely",
-    "shwifty" ADVERB_SUP "most shwifty",
-    "shyly" ADVERB_SUP "most shyly",
-    "sibilantly" ADVERB_SUP "most sibilantly",
-    "sickeningly" ADVERB_SUP "most sickeningly",
-    "sickishly" ADVERB_SUP "most sickishly",
-    "sicklily" ADVERB_SUP "most sicklily",
-    "sickly" ADVERB_SUP "most sickly",
-    "side" ADVERB_SUP "most side",
-    "sidearm" ADVERB_SUP "most sidearm",
-    "sideling" ADVERB_SUP "most sideling",
-    "sidelong" ADVERB_SUP "most sidelong",
-    "sidesplittingly" ADVERB_SUP "most sidesplittingly",
-    "sideward" ADVERB_SUP "most sideward",
-    "sidewardly" ADVERB_SUP "most sidewardly",
-    "sidewards" ADVERB_SUP "most sidewards",
-    "sideway" ADVERB_SUP "most sideway",
-    "sideways" ADVERB_SUP "most sideways",
-    "sidewise" ADVERB_SUP "most sidewise",
-    "sideyways" ADVERB_SUP "most sideyways",
-    "sidlingly" ADVERB_SUP "most sidlingly",
-    "siftingly" ADVERB_SUP "most siftingly",
-    "sighfully" ADVERB_SUP "most sighfully",
-    "sighingly" ADVERB_SUP "most sighingly",
-    "sightlessly" ADVERB_SUP "most sightlessly",
-    "sightwise" ADVERB_SUP "most sightwise",
-    "sigmoidally" ADVERB_SUP "most sigmoidally",
-    "sigmoidly" ADVERB_SUP "most sigmoidly",
-    "signally" ADVERB_SUP "most signally",
-    "significantly" ADVERB_SUP "most significantly",
-    "significatively" ADVERB_SUP "most significatively",
-    "signifyingly" ADVERB_SUP "most signifyingly",
-    "silentiously" ADVERB_SUP "most silentiously",
-    "silently" ADVERB_SUP "most silently",
-    "silkenly" ADVERB_SUP "most silkenly",
-    "silkily" ADVERB_SUP "most silkily",
-    "sillily" ADVERB_SUP "most sillily",
-    "sillyly" ADVERB_SUP "most sillyly",
-    "silverily" ADVERB_SUP "most silverily",
-    "silverly" ADVERB_SUP "most silverly",
-    "similarily" ADVERB_SUP "most similarily",
-    "similarly" ADVERB_SUP "most similarly",
-    "similatively" ADVERB_SUP "most similatively",
-    "simmeringly" ADVERB_SUP "most simmeringly",
-    "simoniacally" ADVERB_SUP "most simoniacally",
-    "simperingly" ADVERB_SUP "most simperingly",
-    "simpleheartedly" ADVERB_SUP "most simpleheartedly",
-    "simplemindedly" ADVERB_SUP "most simplemindedly",
-    "simplifiedly" ADVERB_SUP "most simplifiedly",
-    "simplistically" ADVERB_SUP "most simplistically",
-    "simply" ADVERB_SUP "most simply",
-    "simulatively" ADVERB_SUP "most simulatively",
-    "sincerely" ADVERB_SUP "most sincerely",
-    "sinceriously" ADVERB_SUP "most sinceriously",
-    "sinfully" ADVERB_SUP "most sinfully",
-    "singably" ADVERB_SUP "most singably",
-    "singeingly" ADVERB_SUP "most singeingly",
-    "singleheartedly" ADVERB_SUP "most singleheartedly",
-    "singlemindedly" ADVERB_SUP "most singlemindedly",
-    "singsongingly" ADVERB_SUP "most singsongingly",
-    "singularly" ADVERB_SUP "most singularly",
-    "sinisterly" ADVERB_SUP "most sinisterly",
-    "sinistrally" ADVERB_SUP "most sinistrally",
-    "sinistrely" ADVERB_SUP "most sinistrely",
-    "sinistrorsally" ADVERB_SUP "most sinistrorsally",
-    "sinistrously" ADVERB_SUP "most sinistrously",
-    "sinlessly" ADVERB_SUP "most sinlessly",
-    "sinningly" ADVERB_SUP "most sinningly",
-    "sinseriously" ADVERB_SUP "most sinseriously",
-    "sinuately" ADVERB_SUP "most sinuately",
-    "sinuosely" ADVERB_SUP "most sinuosely",
-    "sinuously" ADVERB_SUP "most sinuously",
-    "sinusoidally" ADVERB_SUP "most sinusoidally",
-    "sippingly" ADVERB_SUP "most sippingly",
-    "sirenically" ADVERB_SUP "most sirenically",
-    "sisterly" ADVERB_SUP "most sisterly",
-    "sithingly" ADVERB_SUP "most sithingly",
-    "situatedly" ADVERB_SUP "most situatedly",
-    "sizably" ADVERB_SUP "most sizably",
-    "sizeably" ADVERB_SUP "most sizeably",
-    "sizzlingly" ADVERB_SUP "most sizzlingly",
-    "skeletally" ADVERB_SUP "most skeletally",
-    "skeptically" ADVERB_SUP "most skeptically",
-    "sketchily" ADVERB_SUP "most sketchily",
-    "skew" ADVERB_SUP "most skew",
-    "skewedly" ADVERB_SUP "most skewedly",
-    "skiddily" ADVERB_SUP "most skiddily",
-    "skiddingly" ADVERB_SUP "most skiddingly",
-    "skilfully" ADVERB_SUP "most skilfully",
-    "skilledly" ADVERB_SUP "most skilledly",
-    "skillessly" ADVERB_SUP "most skillessly",
-    "skillfully" ADVERB_SUP "most skillfully",
-    "skimmingly" ADVERB_SUP "most skimmingly",
-    "skimpily" ADVERB_SUP "most skimpily",
-    "skimpingly" ADVERB_SUP "most skimpingly",
-    "skinnily" ADVERB_SUP "most skinnily",
-    "skippingly" ADVERB_SUP "most skippingly",
-    "skirmishingly" ADVERB_SUP "most skirmishingly",
-    "skitteringly" ADVERB_SUP "most skitteringly",
-    "skittishly" ADVERB_SUP "most skittishly",
-    "skulkingly" ADVERB_SUP "most skulkingly",
-    "slabbily" ADVERB_SUP "most slabbily",
-    "slackerishly" ADVERB_SUP "most slackerishly",
-    "slackly" ADVERB_SUP "most slackly",
-    "slammingly" ADVERB_SUP "most slammingly",
-    "slanderingly" ADVERB_SUP "most slanderingly",
-    "slanderously" ADVERB_SUP "most slanderously",
-    "slangfully" ADVERB_SUP "most slangfully",
-    "slangily" ADVERB_SUP "most slangily",
-    "slangingly" ADVERB_SUP "most slangingly",
-    "slangishly" ADVERB_SUP "most slangishly",
-    "slangly" ADVERB_SUP "most slangly",
-    "slangwise" ADVERB_SUP "most slangwise",
-    "slantedly" ADVERB_SUP "most slantedly",
-    "slantendicularly" ADVERB_SUP "most slantendicularly",
-    "slantily" ADVERB_SUP "most slantily",
-    "slantindicularly" ADVERB_SUP "most slantindicularly",
-    "slantingdicularly" ADVERB_SUP "most slantingdicularly",
-    "slantingly" ADVERB_SUP "most slantingly",
-    "slantly" ADVERB_SUP "most slantly",
-    "slantwise" ADVERB_SUP "most slantwise",
-    "slapdash" ADVERB_SUP "most slapdash",
-    "slapdashedly" ADVERB_SUP "most slapdashedly",
-    "slappingly" ADVERB_SUP "most slappingly",
-    "slashingly" ADVERB_SUP "most slashingly",
-    "slatily" ADVERB_SUP "most slatily",
-    "slatternly" ADVERB_SUP "most slatternly",
-    "slaughterously" ADVERB_SUP "most slaughterously",
-    "slaveringly" ADVERB_SUP "most slaveringly",
-    "slavically" ADVERB_SUP "most slavically",
-    "slavishly" ADVERB_SUP "most slavishly",
-    "slavonically" ADVERB_SUP "most slavonically",
-    "sleazily" ADVERB_SUP "most sleazily",
-    "sleepfully" ADVERB_SUP "most sleepfully",
-    "sleepily" ADVERB_SUP "most sleepily",
-    "sleepingly" ADVERB_SUP "most sleepingly",
-    "sleeplessly" ADVERB_SUP "most sleeplessly",
-    "sleightly" ADVERB_SUP "most sleightly",
-    "slenderly" ADVERB_SUP "most slenderly",
-    "slickly" ADVERB_SUP "most slickly",
-    "slidingly" ADVERB_SUP "most slidingly",
-    "slightily" ADVERB_SUP "most slightily",
-    "slightingly" ADVERB_SUP "most slightingly",
-    "slightly" ADVERB_SUP "most slightly",
-    "slily" ADVERB_SUP "most slily",
-    "slimly" ADVERB_SUP "most slimly",
-    "slinkily" ADVERB_SUP "most slinkily",
-    "slinkingly" ADVERB_SUP "most slinkingly",
-    "slipperily" ADVERB_SUP "most slipperily",
-    "slippily" ADVERB_SUP "most slippily",
-    "slippingly" ADVERB_SUP "most slippingly",
-    "slipshodly" ADVERB_SUP "most slipshodly",
-    "slobberingly" ADVERB_SUP "most slobberingly",
-    "slobbily" ADVERB_SUP "most slobbily",
-    "sloggingly" ADVERB_SUP "most sloggingly",
-    "slope" ADVERB_SUP "most slope",
-    "slopingly" ADVERB_SUP "most slopingly",
-    "sloppery" ADVERB_SUP "most sloppery",
-    "sloppily" ADVERB_SUP "most sloppily",
-    "sloshily" ADVERB_SUP "most sloshily",
-    "sloshingly" ADVERB_SUP "most sloshingly",
-    "slothfully" ADVERB_SUP "most slothfully",
-    "slouchily" ADVERB_SUP "most slouchily",
-    "slouchingly" ADVERB_SUP "most slouchingly",
-    "slovenlily" ADVERB_SUP "most slovenlily",
-    "slovenly" ADVERB_SUP "most slovenly",
-    "slowlily" ADVERB_SUP "most slowlily",
-    "slowsome" ADVERB_SUP "most slowsome",
-    "slubberingly" ADVERB_SUP "most slubberingly",
-    "sludgily" ADVERB_SUP "most sludgily",
-    "sluggishly" ADVERB_SUP "most sluggishly",
-    "slumberingly" ADVERB_SUP "most slumberingly",
-    "slumberously" ADVERB_SUP "most slumberously",
-    "slumbrously" ADVERB_SUP "most slumbrously",
-    "slurpily" ADVERB_SUP "most slurpily",
-    "slurpingly" ADVERB_SUP "most slurpingly",
-    "slurredly" ADVERB_SUP "most slurredly",
-    "slurrily" ADVERB_SUP "most slurrily",
-    "slurringly" ADVERB_SUP "most slurringly",
-    "slushily" ADVERB_SUP "most slushily",
-    "sluttily" ADVERB_SUP "most sluttily",
-    "sluttishly" ADVERB_SUP "most sluttishly",
-    "slyly" ADVERB_SUP "most slyly",
-    "smackingly" ADVERB_SUP "most smackingly",
-    "smallmindedly" ADVERB_SUP "most smallmindedly",
-    "smally" ADVERB_SUP "most smally",
-    "smarmily" ADVERB_SUP "most smarmily",
-    "smartingly" ADVERB_SUP "most smartingly",
-    "smartish" ADVERB_SUP "most smartish",
-    "smartly" ADVERB_SUP "most smartly",
-    "smashingly" ADVERB_SUP "most smashingly",
-    "smatteringly" ADVERB_SUP "most smatteringly",
-    "smearily" ADVERB_SUP "most smearily",
-    "smellily" ADVERB_SUP "most smellily",
-    "smexily" ADVERB_SUP "most smexily",
-    "smickly" ADVERB_SUP "most smickly",
-    "smilingly" ADVERB_SUP "most smilingly",
-    "smirkily" ADVERB_SUP "most smirkily",
-    "smirkingly" ADVERB_SUP "most smirkingly",
-    "smoggily" ADVERB_SUP "most smoggily",
-    "smokily" ADVERB_SUP "most smokily",
-    "smokingly" ADVERB_SUP "most smokingly",
-    "smolderingly" ADVERB_SUP "most smolderingly",
-    "smoochily" ADVERB_SUP "most smoochily",
-    "smoothingly" ADVERB_SUP "most smoothingly",
-    "smotheringly" ADVERB_SUP "most smotheringly",
-    "smoulderingly" ADVERB_SUP "most smoulderingly",
-    "smudgedly" ADVERB_SUP "most smudgedly",
-    "smudgily" ADVERB_SUP "most smudgily",
-    "smugly" ADVERB_SUP "most smugly",
-    "smuttily" ADVERB_SUP "most smuttily",
-    "snailishly" ADVERB_SUP "most snailishly",
-    "snakily" ADVERB_SUP "most snakily",
-    "snappily" ADVERB_SUP "most snappily",
-    "snappishly" ADVERB_SUP "most snappishly",
-    "snarkily" ADVERB_SUP "most snarkily",
-    "snarkishly" ADVERB_SUP "most snarkishly",
-    "snarlingly" ADVERB_SUP "most snarlingly",
-    "snatchily" ADVERB_SUP "most snatchily",
-    "snatchingly" ADVERB_SUP "most snatchingly",
-    "snazzily" ADVERB_SUP "most snazzily",
-    "sneakily" ADVERB_SUP "most sneakily",
-    "sneakingly" ADVERB_SUP "most sneakingly",
-    "sneakishly" ADVERB_SUP "most sneakishly",
-    "sneerily" ADVERB_SUP "most sneerily",
-    "sneeringly" ADVERB_SUP "most sneeringly",
-    "sneezily" ADVERB_SUP "most sneezily",
-    "snell" ADVERB_SUP "most snell",
-    "snelly" ADVERB_SUP "most snelly",
-    "snickeringly" ADVERB_SUP "most snickeringly",
-    "snidely" ADVERB_SUP "most snidely",
-    "sniffily" ADVERB_SUP "most sniffily",
-    "sniffingly" ADVERB_SUP "most sniffingly",
-    "sniffishly" ADVERB_SUP "most sniffishly",
-    "snifflingly" ADVERB_SUP "most snifflingly",
-    "sniggeringly" ADVERB_SUP "most sniggeringly",
-    "snipingly" ADVERB_SUP "most snipingly",
-    "snippily" ADVERB_SUP "most snippily",
-    "snivelingly" ADVERB_SUP "most snivelingly",
-    "snivellingly" ADVERB_SUP "most snivellingly",
-    "snobbily" ADVERB_SUP "most snobbily",
-    "snobbishly" ADVERB_SUP "most snobbishly",
-    "snoopily" ADVERB_SUP "most snoopily",
-    "snootily" ADVERB_SUP "most snootily",
-    "snortingly" ADVERB_SUP "most snortingly",
-    "snottily" ADVERB_SUP "most snottily",
-    "snowily" ADVERB_SUP "most snowily",
-    "snubbingly" ADVERB_SUP "most snubbingly",
-    "snubbishly" ADVERB_SUP "most snubbishly",
-    "snuffily" ADVERB_SUP "most snuffily",
-    "snuffingly" ADVERB_SUP "most snuffingly",
-    "snuggly" ADVERB_SUP "most snuggly",
-    "snugly" ADVERB_SUP "most snugly",
-    "soakingly" ADVERB_SUP "most soakingly",
-    "soapily" ADVERB_SUP "most soapily",
-    "soaringly" ADVERB_SUP "most soaringly",
-    "sobbingly" ADVERB_SUP "most sobbingly",
-    "soberingly" ADVERB_SUP "most soberingly",
-    "soberly" ADVERB_SUP "most soberly",
-    "sociably" ADVERB_SUP "most sociably",
-    "socialistically" ADVERB_SUP "most socialistically",
-    "socially" ADVERB_SUP "most socially",
-    "sociofugally" ADVERB_SUP "most sociofugally",
-    "sociolinguistically" ADVERB_SUP "most sociolinguistically",
-    "sociopathically" ADVERB_SUP "most sociopathically",
-    "sociopetally" ADVERB_SUP "most sociopetally",
-    "sociopolitically" ADVERB_SUP "most sociopolitically",
-    "sociopsychologically" ADVERB_SUP "most sociopsychologically",
-    "socioreligiously" ADVERB_SUP "most socioreligiously",
-    "socratically" ADVERB_SUP "most socratically",
-    "soddenly" ADVERB_SUP "most soddenly",
-    "sodeinly" ADVERB_SUP "most sodeinly",
-    "sodomitically" ADVERB_SUP "most sodomitically",
-    "soft" ADVERB_SUP "most soft",
-    "softeningly" ADVERB_SUP "most softeningly",
-    "softheadedly" ADVERB_SUP "most softheadedly",
-    "softheartedly" ADVERB_SUP "most softheartedly",
-    "soggily" ADVERB_SUP "most soggily",
-    "solaciously" ADVERB_SUP "most solaciously",
-    "soldierly" ADVERB_SUP "most soldierly",
-    "solecistically" ADVERB_SUP "most solecistically",
-    "solemnlike" ADVERB_SUP "most solemnlike",
-    "solemnly" ADVERB_SUP "most solemnly",
-    "solicitously" ADVERB_SUP "most solicitously",
-    "solid" ADVERB_SUP "most solid",
-    "solidarily" ADVERB_SUP "most solidarily",
-    "solidly" ADVERB_SUP "most solidly",
-    "solipsistically" ADVERB_SUP "most solipsistically",
-    "solitariously" ADVERB_SUP "most solitariously",
-    "solitudinously" ADVERB_SUP "most solitudinously",
-    "solvently" ADVERB_SUP "most solvently",
-    "somatically" ADVERB_SUP "most somatically",
-    "somatotropically" ADVERB_SUP "most somatotropically",
-    "somberly" ADVERB_SUP "most somberly",
-    "sombrously" ADVERB_SUP "most sombrously",
-    "somnambulantly" ADVERB_SUP "most somnambulantly",
-    "somnambulistically" ADVERB_SUP "most somnambulistically",
-    "somniferously" ADVERB_SUP "most somniferously",
-    "somnolently" ADVERB_SUP "most somnolently",
-    "somnolescently" ADVERB_SUP "most somnolescently",
-    "songfully" ADVERB_SUP "most songfully",
-    "soniferously" ADVERB_SUP "most soniferously",
-    "sonorously" ADVERB_SUP "most sonorously",
-    "soonish" ADVERB_SUP "most soonish",
-    "soonly" ADVERB_SUP "most soonly",
-    "soothfastly" ADVERB_SUP "most soothfastly",
-    "soothingly" ADVERB_SUP "most soothingly",
-    "soothly" ADVERB_SUP "most soothly",
-    "sootily" ADVERB_SUP "most sootily",
-    "sophically" ADVERB_SUP "most sophically",
-    "sophistically" ADVERB_SUP "most sophistically",
-    "sophisticatedly" ADVERB_SUP "most sophisticatedly",
-    "sophomorically" ADVERB_SUP "most sophomorically",
-    "soporiferously" ADVERB_SUP "most soporiferously",
-    "soporifically" ADVERB_SUP "most soporifically",
-    "soppily" ADVERB_SUP "most soppily",
-    "soppingly" ADVERB_SUP "most soppingly",
-    "sorcerously" ADVERB_SUP "most sorcerously",
-    "sordidly" ADVERB_SUP "most sordidly",
-    "sorely" ADVERB_SUP "most sorely",
-    "sororally" ADVERB_SUP "most sororally",
-    "sororially" ADVERB_SUP "most sororially",
-    "sororicidally" ADVERB_SUP "most sororicidally",
-    "sorrily" ADVERB_SUP "most sorrily",
-    "sorrowfully" ADVERB_SUP "most sorrowfully",
-    "sorrowingly" ADVERB_SUP "most sorrowingly",
-    "sorrowly" ADVERB_SUP "most sorrowly",
-    "sortably" ADVERB_SUP "most sortably",
-    "sottishly" ADVERB_SUP "most sottishly",
-    "soulfully" ADVERB_SUP "most soulfully",
-    "soulishly" ADVERB_SUP "most soulishly",
-    "soullessly" ADVERB_SUP "most soullessly",
-    "soulrendingly" ADVERB_SUP "most soulrendingly",
-    "sound" ADVERB_SUP "most sound",
-    "soundingly" ADVERB_SUP "most soundingly",
-    "soundlessly" ADVERB_SUP "most soundlessly",
-    "soundly" ADVERB_SUP "most soundly",
-    "soundwise" ADVERB_SUP "most soundwise",
-    "soupily" ADVERB_SUP "most soupily",
-    "sourishly" ADVERB_SUP "most sourishly",
-    "sourly" ADVERB_SUP "most sourly",
-    "south" ADVERB_SUP "furthest south",
-    "southeast" ADVERB_SUP "furthest southeast",
-    "southeasterly" ADVERB_SUP "most southeasterly",
-    "southeastward" ADVERB_SUP "most southeastward",
-    "southeastwardly" ADVERB_SUP "most southeastwardly",
-    "southeastwards" ADVERB_SUP "most southeastwards",
-    "southerly" ADVERB_SUP "most southerly",
-    "southernly" ADVERB_SUP "most southernly",
-    "southish" ADVERB_SUP "most southish",
-    "southly" ADVERB_SUP "most southly",
-    "southward" ADVERB_SUP "most southward",
-    "southwardly" ADVERB_SUP "most southwardly",
-    "southwest" ADVERB_SUP "furthest southwest",
-    "southwesterly" ADVERB_SUP "most southwesterly",
-    "southwestward" ADVERB_SUP "most southwestward",
-    "southwestwardly" ADVERB_SUP "most southwestwardly",
-    "southwestwards" ADVERB_SUP "most southwestwards",
-    "sovereignly" ADVERB_SUP "most sovereignly",
-    "sovranly" ADVERB_SUP "most sovranly",
-    "spaciously" ADVERB_SUP "most spaciously",
-    "spagirically" ADVERB_SUP "most spagirically",
-    "spagyrically" ADVERB_SUP "most spagyrically",
-    "spakely" ADVERB_SUP "most spakely",
-    "spanishly" ADVERB_SUP "most spanishly",
-    "spankily" ADVERB_SUP "most spankily",
-    "spankingly" ADVERB_SUP "most spankingly",
-    "sparely" ADVERB_SUP "most sparely",
-    "sparingly" ADVERB_SUP "most sparingly",
-    "sparkily" ADVERB_SUP "most sparkily",
-    "sparkingly" ADVERB_SUP "most sparkingly",
-    "sparkishly" ADVERB_SUP "most sparkishly",
-    "sparklingly" ADVERB_SUP "most sparklingly",
-    "sparringly" ADVERB_SUP "most sparringly",
-    "sparsedly" ADVERB_SUP "most sparsedly",
-    "sparsely" ADVERB_SUP "most sparsely",
-    "spartanly" ADVERB_SUP "most spartanly",
-    "spasmodically" ADVERB_SUP "most spasmodically",
-    "spasmogenically" ADVERB_SUP "most spasmogenically",
-    "spastically" ADVERB_SUP "most spastically",
-    "spatiously" ADVERB_SUP "most spatiously",
-    "speakingly" ADVERB_SUP "most speakingly",
-    "specialistically" ADVERB_SUP "most specialistically",
-    "specifiably" ADVERB_SUP "most specifiably",
-    "specifically" ADVERB_SUP "most specifically",
-    "speciously" ADVERB_SUP "most speciously",
-    "spectacularly" ADVERB_SUP "most spectacularly",
-    "spectatorially" ADVERB_SUP "most spectatorially",
-    "spectrally" ADVERB_SUP "most spectrally",
-    "specularly" ADVERB_SUP "most specularly",
-    "speculatively" ADVERB_SUP "most speculatively",
-    "specutively" ADVERB_SUP "most specutively",
-    "speechlessly" ADVERB_SUP "most speechlessly",
-    "speedfully" ADVERB_SUP "most speedfully",
-    "speedingly" ADVERB_SUP "most speedingly",
-    "spellbindingly" ADVERB_SUP "most spellbindingly",
-    "spellingly" ADVERB_SUP "most spellingly",
-    "spendthriftily" ADVERB_SUP "most spendthriftily",
-    "spheroidally" ADVERB_SUP "most spheroidally",
-    "spicately" ADVERB_SUP "most spicately",
-    "spiccato" ADVERB_SUP "most spiccato",
-    "spicewise" ADVERB_SUP "most spicewise",
-    "spicily" ADVERB_SUP "most spicily",
-    "spiffily" ADVERB_SUP "most spiffily",
-    "spiffingly" ADVERB_SUP "most spiffingly",
-    "spikily" ADVERB_SUP "most spikily",
-    "spinelessly" ADVERB_SUP "most spinelessly",
-    "spinily" ADVERB_SUP "most spinily",
-    "spinosely" ADVERB_SUP "most spinosely",
-    "spinsterishly" ADVERB_SUP "most spinsterishly",
-    "spinward" ADVERB_SUP "most spinward",
-    "spiritedly" ADVERB_SUP "most spiritedly",
-    "spiritfully" ADVERB_SUP "most spiritfully",
-    "spiritlessly" ADVERB_SUP "most spiritlessly",
-    "spiritly" ADVERB_SUP "most spiritly",
-    "spiritualistically" ADVERB_SUP "most spiritualistically",
-    "spiritually" ADVERB_SUP "most spiritually",
-    "spirituously" ADVERB_SUP "most spirituously",
-    "spirographically" ADVERB_SUP "most spirographically",
-    "spitefully" ADVERB_SUP "most spitefully",
-    "spitishly" ADVERB_SUP "most spitishly",
-    "spittingly" ADVERB_SUP "most spittingly",
-    "spivvily" ADVERB_SUP "most spivvily",
-    "splashily" ADVERB_SUP "most splashily",
-    "splashingly" ADVERB_SUP "most splashingly",
-    "splay" ADVERB_SUP "most splay",
-    "spleenfully" ADVERB_SUP "most spleenfully",
-    "spleenishly" ADVERB_SUP "most spleenishly",
-    "splendaciously" ADVERB_SUP "most splendaciously",
-    "splendently" ADVERB_SUP "most splendently",
-    "splendidly" ADVERB_SUP "most splendidly",
-    "splendiferously" ADVERB_SUP "most splendiferously",
-    "splendorously" ADVERB_SUP "most splendorously",
-    "splendrously" ADVERB_SUP "most splendrously",
-    "splenetically" ADVERB_SUP "most splenetically",
-    "splinteringly" ADVERB_SUP "most splinteringly",
-    "splittingly" ADVERB_SUP "most splittingly",
-    "splodgily" ADVERB_SUP "most splodgily",
-    "splotchily" ADVERB_SUP "most splotchily",
-    "splutteringly" ADVERB_SUP "most splutteringly",
-    "spongily" ADVERB_SUP "most spongily",
-    "spontaneously" ADVERB_SUP "most spontaneously",
-    "spookily" ADVERB_SUP "most spookily",
-    "spookishly" ADVERB_SUP "most spookishly",
-    "spooktacularly" ADVERB_SUP "most spooktacularly",
-    "spoonily" ADVERB_SUP "most spoonily",
-    "sportfully" ADVERB_SUP "most sportfully",
-    "sportily" ADVERB_SUP "most sportily",
-    "sportingly" ADVERB_SUP "most sportingly",
-    "sportively" ADVERB_SUP "most sportively",
-    "spotlessly" ADVERB_SUP "most spotlessly",
-    "spottily" ADVERB_SUP "most spottily",
-    "sprawlingly" ADVERB_SUP "most sprawlingly",
-    "spreadably" ADVERB_SUP "most spreadably",
-    "spreadingly" ADVERB_SUP "most spreadingly",
-    "spreadly" ADVERB_SUP "most spreadly",
-    "sprightfully" ADVERB_SUP "most sprightfully",
-    "sprightlily" ADVERB_SUP "most sprightlily",
-    "springily" ADVERB_SUP "most springily",
-    "springingly" ADVERB_SUP "most springingly",
-    "sprinklingly" ADVERB_SUP "most sprinklingly",
-    "spritefully" ADVERB_SUP "most spritefully",
-    "spritely" ADVERB_SUP "most spritely",
-    "sprucely" ADVERB_SUP "most sprucely",
-    "spruntly" ADVERB_SUP "most spruntly",
-    "spryly" ADVERB_SUP "most spryly",
-    "spunkily" ADVERB_SUP "most spunkily",
-    "spuriously" ADVERB_SUP "most spuriously",
-    "spurningly" ADVERB_SUP "most spurningly",
-    "spurtively" ADVERB_SUP "most spurtively",
-    "sputteringly" ADVERB_SUP "most sputteringly",
-    "squalidly" ADVERB_SUP "most squalidly",
-    "squamosely" ADVERB_SUP "most squamosely",
-    "squamously" ADVERB_SUP "most squamously",
-    "squanderingly" ADVERB_SUP "most squanderingly",
-    "square" ADVERB_SUP "most square",
-    "squarely" ADVERB_SUP "most squarely",
-    "squarishly" ADVERB_SUP "most squarishly",
-    "squarrosely" ADVERB_SUP "most squarrosely",
-    "squashily" ADVERB_SUP "most squashily",
-    "squashingly" ADVERB_SUP "most squashingly",
-    "squatly" ADVERB_SUP "most squatly",
-    "squawkily" ADVERB_SUP "most squawkily",
-    "squawkingly" ADVERB_SUP "most squawkingly",
-    "squeakily" ADVERB_SUP "most squeakily",
-    "squeakingly" ADVERB_SUP "most squeakingly",
-    "squealingly" ADVERB_SUP "most squealingly",
-    "squeamishly" ADVERB_SUP "most squeamishly",
-    "squeezably" ADVERB_SUP "most squeezably",
-    "squelchily" ADVERB_SUP "most squelchily",
-    "squelchingly" ADVERB_SUP "most squelchingly",
-    "squidgily" ADVERB_SUP "most squidgily",
-    "squiffily" ADVERB_SUP "most squiffily",
-    "squintily" ADVERB_SUP "most squintily",
-    "squintingly" ADVERB_SUP "most squintingly",
-    "squintly" ADVERB_SUP "most squintly",
-    "squirmily" ADVERB_SUP "most squirmily",
-    "squirmingly" ADVERB_SUP "most squirmingly",
-    "squirrellike" ADVERB_SUP "most squirrellike",
-    "squishably" ADVERB_SUP "most squishably",
-    "squishily" ADVERB_SUP "most squishily",
-    "squishingly" ADVERB_SUP "most squishingly",
-    "squooshily" ADVERB_SUP "most squooshily",
-    "srsly" ADVERB_SUP "most srsly",
-    "stabbily" ADVERB_SUP "most stabbily",
-    "stabbingly" ADVERB_SUP "most stabbingly",
-    "stably" ADVERB_SUP "most stably",
-    "staccato" ADVERB_SUP "most staccato",
-    "stagely" ADVERB_SUP "most stagely",
-    "staggeredly" ADVERB_SUP "most staggeredly",
-    "staggeringly" ADVERB_SUP "most staggeringly",
-    "stagily" ADVERB_SUP "most stagily",
-    "stagnantly" ADVERB_SUP "most stagnantly",
-    "staidly" ADVERB_SUP "most staidly",
-    "stainlessly" ADVERB_SUP "most stainlessly",
-    "stalagmitically" ADVERB_SUP "most stalagmitically",
-    "stalely" ADVERB_SUP "most stalely",
-    "stalwartly" ADVERB_SUP "most stalwartly",
-    "stammeringly" ADVERB_SUP "most stammeringly",
-    "stanch" ADVERB_SUP "most stanch",
-    "stanchly" ADVERB_SUP "most stanchly",
-    "standoffishly" ADVERB_SUP "most standoffishly",
-    "starboardside" ADVERB_SUP "most starboardside",
-    "starchedly" ADVERB_SUP "most starchedly",
-    "starchily" ADVERB_SUP "most starchily",
-    "starchly" ADVERB_SUP "most starchly",
-    "staringly" ADVERB_SUP "most staringly",
-    "starkly" ADVERB_SUP "most starkly",
-    "starly" ADVERB_SUP "most starly",
-    "starrily" ADVERB_SUP "most starrily",
-    "start" ADVERB_SUP "most start",
-    "startingly" ADVERB_SUP "most startingly",
-    "startledly" ADVERB_SUP "most startledly",
-    "startlingly" ADVERB_SUP "most startlingly",
-    "starvedly" ADVERB_SUP "most starvedly",
-    "starvingly" ADVERB_SUP "most starvingly",
-    "statarianly" ADVERB_SUP "most statarianly",
-    "statelily" ADVERB_SUP "most statelily",
-    "stately" ADVERB_SUP "most stately",
-    "statuesquely" ADVERB_SUP "most statuesquely",
-    "statutorily" ADVERB_SUP "most statutorily",
-    "staunchly" ADVERB_SUP "most staunchly",
-    "stayedly" ADVERB_SUP "most stayedly",
-    "steadfastly" ADVERB_SUP "most steadfastly",
-    "steadily" ADVERB_SUP "most steadily",
-    "steadyhanded" ADVERB_SUP "most steadyhanded",
-    "steadyingly" ADVERB_SUP "most steadyingly",
-    "stealthfully" ADVERB_SUP "most stealthfully",
-    "stealthily" ADVERB_SUP "most stealthily",
-    "steamily" ADVERB_SUP "most steamily",
-    "steamingly" ADVERB_SUP "most steamingly",
-    "stedfastly" ADVERB_SUP "most stedfastly",
-    "steelily" ADVERB_SUP "most steelily",
-    "steeply" ADVERB_SUP "most steeply",
-    "steeringly" ADVERB_SUP "most steeringly",
-    "stellarly" ADVERB_SUP "most stellarly",
-    "stentorianly" ADVERB_SUP "most stentorianly",
-    "stentoriously" ADVERB_SUP "most stentoriously",
-    "steply" ADVERB_SUP "most steply",
-    "stepwise" ADVERB_SUP "most stepwise",
-    "stereochemically" ADVERB_SUP "most stereochemically",
-    "stereospecifically" ADVERB_SUP "most stereospecifically",
-    "stereotaxically" ADVERB_SUP "most stereotaxically",
-    "stereotypically" ADVERB_SUP "most stereotypically",
-    "sterilely" ADVERB_SUP "most sterilely",
-    "sterlingly" ADVERB_SUP "most sterlingly",
-    "sternly" ADVERB_SUP "most sternly",
-    "sternward" ADVERB_SUP "most sternward",
-    "sternwards" ADVERB_SUP "most sternwards",
-    "steroidally" ADVERB_SUP "most steroidally",
-    "stertoriously" ADVERB_SUP "most stertoriously",
-    "stertorously" ADVERB_SUP "most stertorously",
-    "stewardly" ADVERB_SUP "most stewardly",
-    "stewingly" ADVERB_SUP "most stewingly",
-    "sthenically" ADVERB_SUP "most sthenically",
-    "stickily" ADVERB_SUP "most stickily",
-    "stiff" ADVERB_SUP "most stiff",
-    "stiffly" ADVERB_SUP "most stiffly",
-    "stifledly" ADVERB_SUP "most stifledly",
-    "stiflingly" ADVERB_SUP "most stiflingly",
-    "stilly" ADVERB_SUP "most stilly",
-    "stiltedly" ADVERB_SUP "most stiltedly",
-    "stimulatingly" ADVERB_SUP "most stimulatingly",
-    "stingily" ADVERB_SUP "most stingily",
-    "stingingly" ADVERB_SUP "most stingingly",
-    "stinkily" ADVERB_SUP "most stinkily",
-    "stinkingly" ADVERB_SUP "most stinkingly",
-    "stintedly" ADVERB_SUP "most stintedly",
-    "stintingly" ADVERB_SUP "most stintingly",
-    "stipulationally" ADVERB_SUP "most stipulationally",
-    "stirlessly" ADVERB_SUP "most stirlessly",
-    "stirringly" ADVERB_SUP "most stirringly",
-    "stochastically" ADVERB_SUP "most stochastically",
-    "stockily" ADVERB_SUP "most stockily",
-    "stockishly" ADVERB_SUP "most stockishly",
-    "stodgily" ADVERB_SUP "most stodgily",
-    "stoically" ADVERB_SUP "most stoically",
-    "stoichiometrically" ADVERB_SUP "most stoichiometrically",
-    "stoicly" ADVERB_SUP "most stoicly",
-    "stolidly" ADVERB_SUP "most stolidly",
-    "stompily" ADVERB_SUP "most stompily",
-    "stompingly" ADVERB_SUP "most stompingly",
-    "stonedly" ADVERB_SUP "most stonedly",
-    "stoneheartedly" ADVERB_SUP "most stoneheartedly",
-    "stonily" ADVERB_SUP "most stonily",
-    "stoopingly" ADVERB_SUP "most stoopingly",
-    "stormfully" ADVERB_SUP "most stormfully",
-    "stormily" ADVERB_SUP "most stormily",
-    "stormingly" ADVERB_SUP "most stormingly",
-    "stour" ADVERB_SUP "most stour",
-    "stoutheartedly" ADVERB_SUP "most stoutheartedly",
-    "stoutly" ADVERB_SUP "most stoutly",
-    "strabismally" ADVERB_SUP "most strabismally",
-    "stragglingly" ADVERB_SUP "most stragglingly",
-    "straight" ADVERB_SUP "most straight",
-    "straightfacedly" ADVERB_SUP "most straightfacedly",
-    "straightforth" ADVERB_SUP "most straightforth",
-    "straightforward" ADVERB_SUP "most straightforward",
-    "straightforwardly" ADVERB_SUP "most straightforwardly",
-    "straightly" ADVERB_SUP "most straightly",
-    "straightwise" ADVERB_SUP "most straightwise",
-    "strainably" ADVERB_SUP "most strainably",
-    "strainedly" ADVERB_SUP "most strainedly",
-    "strainingly" ADVERB_SUP "most strainingly",
-    "straitlacedly" ADVERB_SUP "most straitlacedly",
-    "straitly" ADVERB_SUP "most straitly",
-    "strambang" ADVERB_SUP "most strambang",
-    "strangely" ADVERB_SUP "most strangely",
-    "strangledly" ADVERB_SUP "most strangledly",
-    "stranglingly" ADVERB_SUP "most stranglingly",
-    "strappingly" ADVERB_SUP "most strappingly",
-    "stratagemically" ADVERB_SUP "most stratagemically",
-    "strategically" ADVERB_SUP "most strategically",
-    "stratospherically" ADVERB_SUP "most stratospherically",
-    "streakily" ADVERB_SUP "most streakily",
-    "streamingly" ADVERB_SUP "most streamingly",
-    "strengtheningly" ADVERB_SUP "most strengtheningly",
-    "strengthfully" ADVERB_SUP "most strengthfully",
-    "strengthily" ADVERB_SUP "most strengthily",
-    "strengthlessly" ADVERB_SUP "most strengthlessly",
-    "strenuously" ADVERB_SUP "most strenuously",
-    "strepitantly" ADVERB_SUP "most strepitantly",
-    "strepitously" ADVERB_SUP "most strepitously",
-    "stressfully" ADVERB_SUP "most stressfully",
-    "stresslessly" ADVERB_SUP "most stresslessly",
-    "stretchably" ADVERB_SUP "most stretchably",
-    "stretchily" ADVERB_SUP "most stretchily",
-    "strickenly" ADVERB_SUP "most strickenly",
-    "strickly" ADVERB_SUP "most strickly",
-    "stridently" ADVERB_SUP "most stridently",
-    "stridulantly" ADVERB_SUP "most stridulantly",
-    "stridulously" ADVERB_SUP "most stridulously",
-    "strikingly" ADVERB_SUP "most strikingly",
-    "stringently" ADVERB_SUP "most stringently",
-    "stringily" ADVERB_SUP "most stringily",
-    "strivingly" ADVERB_SUP "most strivingly",
-    "strokingly" ADVERB_SUP "most strokingly",
-    "strollingly" ADVERB_SUP "most strollingly",
-    "strongfully" ADVERB_SUP "most strongfully",
-    "stronghanded" ADVERB_SUP "most stronghanded",
-    "stronghandedly" ADVERB_SUP "most stronghandedly",
-    "strongheartedly" ADVERB_SUP "most strongheartedly",
-    "strongmindedly" ADVERB_SUP "most strongmindedly",
-    "stroppily" ADVERB_SUP "most stroppily",
-    "structuralistically" ADVERB_SUP "most structuralistically",
-    "strugglingly" ADVERB_SUP "most strugglingly",
-    "strummingly" ADVERB_SUP "most strummingly",
-    "strumously" ADVERB_SUP "most strumously",
-    "struttingly" ADVERB_SUP "most struttingly",
-    "stubbily" ADVERB_SUP "most stubbily",
-    "stubbornly" ADVERB_SUP "most stubbornly",
-    "studiedly" ADVERB_SUP "most studiedly",
-    "studiously" ADVERB_SUP "most studiously",
-    "stuffily" ADVERB_SUP "most stuffily",
-    "stultifyingly" ADVERB_SUP "most stultifyingly",
-    "stultiloquently" ADVERB_SUP "most stultiloquently",
-    "stumblingly" ADVERB_SUP "most stumblingly",
-    "stumpily" ADVERB_SUP "most stumpily",
-    "stunningly" ADVERB_SUP "most stunningly",
-    "stuntedly" ADVERB_SUP "most stuntedly",
-    "stuntly" ADVERB_SUP "most stuntly",
-    "stupefyingly" ADVERB_SUP "most stupefyingly",
-    "stupendously" ADVERB_SUP "most stupendously",
-    "stupid" ADVERB_SUP "most stupid",
-    "stupidly" ADVERB_SUP "most stupidly",
-    "stuporously" ADVERB_SUP "most stuporously",
-    "sturdily" ADVERB_SUP "most sturdily",
-    "stutteringly" ADVERB_SUP "most stutteringly",
-    "stylishly" ADVERB_SUP "most stylishly",
-    "stylistically" ADVERB_SUP "most stylistically",
-    "stylographically" ADVERB_SUP "most stylographically",
-    "suant" ADVERB_SUP "most suant",
-    "suasively" ADVERB_SUP "most suasively",
-    "suavely" ADVERB_SUP "most suavely",
-    "subacidly" ADVERB_SUP "most subacidly",
-    "subcapsularly" ADVERB_SUP "most subcapsularly",
-    "subchronically" ADVERB_SUP "most subchronically",
-    "subconsciously" ADVERB_SUP "most subconsciously",
-    "subdititiously" ADVERB_SUP "most subdititiously",
-    "subdolously" ADVERB_SUP "most subdolously",
-    "subdorsally" ADVERB_SUP "most subdorsally",
-    "subductively" ADVERB_SUP "most subductively",
-    "subduedly" ADVERB_SUP "most subduedly",
-    "subduingly" ADVERB_SUP "most subduingly",
-    "subdurally" ADVERB_SUP "most subdurally",
-    "subgingivally" ADVERB_SUP "most subgingivally",
-    "subgranularly" ADVERB_SUP "most subgranularly",
-    "subhumanly" ADVERB_SUP "most subhumanly",
-    "subitaneously" ADVERB_SUP "most subitaneously",
-    "subjacently" ADVERB_SUP "most subjacently",
-    "subjectively" ADVERB_SUP "most subjectively",
-    "subjectivistically" ADVERB_SUP "most subjectivistically",
-    "subjectlessly" ADVERB_SUP "most subjectlessly",
-    "sublethally" ADVERB_SUP "most sublethally",
-    "sublimely" ADVERB_SUP "most sublimely",
-    "subliminally" ADVERB_SUP "most subliminally",
-    "sublinearly" ADVERB_SUP "most sublinearly",
-    "sublineately" ADVERB_SUP "most sublineately",
-    "subliterately" ADVERB_SUP "most subliterately",
-    "submaximally" ADVERB_SUP "most submaximally",
-    "subminimally" ADVERB_SUP "most subminimally",
-    "submissively" ADVERB_SUP "most submissively",
-    "submissly" ADVERB_SUP "most submissly",
-    "submittingly" ADVERB_SUP "most submittingly",
-    "subnationally" ADVERB_SUP "most subnationally",
-    "subnormally" ADVERB_SUP "most subnormally",
-    "suboptimally" ADVERB_SUP "most suboptimally",
-    "subordinately" ADVERB_SUP "most subordinately",
-    "subplicately" ADVERB_SUP "most subplicately",
-    "subrationally" ADVERB_SUP "most subrationally",
-    "subreptitiously" ADVERB_SUP "most subreptitiously",
-    "subserviently" ADVERB_SUP "most subserviently",
-    "subsonically" ADVERB_SUP "most subsonically",
-    "substandardly" ADVERB_SUP "most substandardly",
-    "substantially" ADVERB_SUP "most substantially",
-    "substantiously" ADVERB_SUP "most substantiously",
-    "substantively" ADVERB_SUP "most substantively",
-    "substoichiometrically" ADVERB_SUP "most substoichiometrically",
-    "subsultorily" ADVERB_SUP "most subsultorily",
-    "subtely" ADVERB_SUP "most subtely",
-    "subtilely" ADVERB_SUP "most subtilely",
-    "subtilly" ADVERB_SUP "most subtilly",
-    "subtlely" ADVERB_SUP "most subtlely",
-    "subtly" ADVERB_SUP "most subtly",
-    "subtractively" ADVERB_SUP "most subtractively",
-    "subtropically" ADVERB_SUP "most subtropically",
-    "subtypically" ADVERB_SUP "most subtypically",
-    "suburbanly" ADVERB_SUP "most suburbanly",
-    "subverbally" ADVERB_SUP "most subverbally",
-    "subversively" ADVERB_SUP "most subversively",
-    "subvertingly" ADVERB_SUP "most subvertingly",
-    "successantly" ADVERB_SUP "most successantly",
-    "successfully" ADVERB_SUP "most successfully",
-    "succinct" ADVERB_SUP "most succinct",
-    "succinctly" ADVERB_SUP "most succinctly",
-    "succulently" ADVERB_SUP "most succulently",
-    "suckingly" ADVERB_SUP "most suckingly",
-    "suctorially" ADVERB_SUP "most suctorially",
-    "sudden" ADVERB_SUP "most sudden",
-    "suddenly" ADVERB_SUP "most suddenly",
-    "suently" ADVERB_SUP "most suently",
-    "sufferably" ADVERB_SUP "most sufferably",
-    "sufferingly" ADVERB_SUP "most sufferingly",
-    "sufficiently" ADVERB_SUP "most sufficiently",
-    "suffocatingly" ADVERB_SUP "most suffocatingly",
-    "suffusedly" ADVERB_SUP "most suffusedly",
-    "suffusely" ADVERB_SUP "most suffusely",
-    "sugarily" ADVERB_SUP "most sugarily",
-    "suggestfully" ADVERB_SUP "most suggestfully",
-    "suggestibly" ADVERB_SUP "most suggestibly",
-    "suggestingly" ADVERB_SUP "most suggestingly",
-    "suggestively" ADVERB_SUP "most suggestively",
-    "suicidally" ADVERB_SUP "most suicidally",
-    "suitably" ADVERB_SUP "most suitably",
-    "suitingly" ADVERB_SUP "most suitingly",
-    "sulfureously" ADVERB_SUP "most sulfureously",
-    "sulfurously" ADVERB_SUP "most sulfurously",
-    "sulkily" ADVERB_SUP "most sulkily",
-    "sullenly" ADVERB_SUP "most sullenly",
-    "sulphureously" ADVERB_SUP "most sulphureously",
-    "sulphurously" ADVERB_SUP "most sulphurously",
-    "sultrily" ADVERB_SUP "most sultrily",
-    "summarily" ADVERB_SUP "most summarily",
-    "summerily" ADVERB_SUP "most summerily",
-    "summoningly" ADVERB_SUP "most summoningly",
-    "sumptiously" ADVERB_SUP "most sumptiously",
-    "sumptuously" ADVERB_SUP "most sumptuously",
-    "sunderly" ADVERB_SUP "most sunderly",
-    "sundrily" ADVERB_SUP "most sundrily",
-    "sundry" ADVERB_SUP "most sundry",
-    "sunkenly" ADVERB_SUP "most sunkenly",
-    "sunlessly" ADVERB_SUP "most sunlessly",
-    "sunnily" ADVERB_SUP "most sunnily",
-    "sunward" ADVERB_SUP "most sunward",
-    "superabundantly" ADVERB_SUP "most superabundantly",
-    "superambiently" ADVERB_SUP "most superambiently",
-    "superbly" ADVERB_SUP "most superbly",
-    "superbrilliantly" ADVERB_SUP "most superbrilliantly",
-    "supercalifragilisticexpialidociously" ADVERB_SUP "most supercalifragilisticexpialidociously",
-    "supercautiously" ADVERB_SUP "most supercautiously",
-    "supercelestially" ADVERB_SUP "most supercelestially",
-    "superciliously" ADVERB_SUP "most superciliously",
-    "supercolossally" ADVERB_SUP "most supercolossally",
-    "superconductively" ADVERB_SUP "most superconductively",
-    "superconformally" ADVERB_SUP "most superconformally",
-    "supercritically" ADVERB_SUP "most supercritically",
-    "superelastically" ADVERB_SUP "most superelastically",
-    "supereminently" ADVERB_SUP "most supereminently",
-    "supererogatorily" ADVERB_SUP "most supererogatorily",
-    "superessentially" ADVERB_SUP "most superessentially",
-    "superexplosively" ADVERB_SUP "most superexplosively",
-    "superexponentially" ADVERB_SUP "most superexponentially",
-    "superextraordinarily" ADVERB_SUP "most superextraordinarily",
-    "superferociously" ADVERB_SUP "most superferociously",
-    "superferromagnetically" ADVERB_SUP "most superferromagnetically",
-    "superficially" ADVERB_SUP "most superficially",
-    "superfinely" ADVERB_SUP "most superfinely",
-    "superformidably" ADVERB_SUP "most superformidably",
-    "superglacially" ADVERB_SUP "most superglacially",
-    "superhelically" ADVERB_SUP "most superhelically",
-    "superheroically" ADVERB_SUP "most superheroically",
-    "superhumanly" ADVERB_SUP "most superhumanly",
-    "superimmensely" ADVERB_SUP "most superimmensely",
-    "superiorly" ADVERB_SUP "most superiorly",
-    "superiourly" ADVERB_SUP "most superiourly",
-    "superlatively" ADVERB_SUP "most superlatively",
-    "superly" ADVERB_SUP "most superly",
-    "supermonstrously" ADVERB_SUP "most supermonstrously",
-    "supermorbidly" ADVERB_SUP "most supermorbidly",
-    "supernally" ADVERB_SUP "most supernally",
-    "supernationally" ADVERB_SUP "most supernationally",
-    "supernaturally" ADVERB_SUP "most supernaturally",
-    "supernormally" ADVERB_SUP "most supernormally",
-    "supernumerarily" ADVERB_SUP "most supernumerarily",
-    "superordinately" ADVERB_SUP "most superordinately",
-    "superoverwhelmingly" ADVERB_SUP "most superoverwhelmingly",
-    "superparamagnetically" ADVERB_SUP "most superparamagnetically",
-    "superphenomenally" ADVERB_SUP "most superphenomenally",
-    "superplastically" ADVERB_SUP "most superplastically",
-    "superproficiently" ADVERB_SUP "most superproficiently",
-    "superrationally" ADVERB_SUP "most superrationally",
-    "supersensitively" ADVERB_SUP "most supersensitively",
-    "supersensually" ADVERB_SUP "most supersensually",
-    "supersensuously" ADVERB_SUP "most supersensuously",
-    "superserviceably" ADVERB_SUP "most superserviceably",
-    "supersexually" ADVERB_SUP "most supersexually",
-    "supersonically" ADVERB_SUP "most supersonically",
-    "superstitiously" ADVERB_SUP "most superstitiously",
-    "supersubstantially" ADVERB_SUP "most supersubstantially",
-    "supervacaneously" ADVERB_SUP "most supervacaneously",
-    "supes" ADVERB_SUP "most supes",
-    "supinely" ADVERB_SUP "most supinely",
-    "supplely" ADVERB_SUP "most supplely",
-    "suppletively" ADVERB_SUP "most suppletively",
-    "suppliantly" ADVERB_SUP "most suppliantly",
-    "supplicantly" ADVERB_SUP "most supplicantly",
-    "supplicatingly" ADVERB_SUP "most supplicatingly",
-    "supply" ADVERB_SUP "most supply",
-    "supportably" ADVERB_SUP "most supportably",
-    "supportedly" ADVERB_SUP "most supportedly",
-    "supportively" ADVERB_SUP "most supportively",
-    "suppositionally" ADVERB_SUP "most suppositionally",
-    "suppositiously" ADVERB_SUP "most suppositiously",
-    "supposititiously" ADVERB_SUP "most supposititiously",
-    "suppositively" ADVERB_SUP "most suppositively",
-    "suppressedly" ADVERB_SUP "most suppressedly",
-    "suppressively" ADVERB_SUP "most suppressively",
-    "suprabasally" ADVERB_SUP "most suprabasally",
-    "supraliminally" ADVERB_SUP "most supraliminally",
-    "supralinguistically" ADVERB_SUP "most supralinguistically",
-    "supramaximally" ADVERB_SUP "most supramaximally",
-    "supranationally" ADVERB_SUP "most supranationally",
-    "supraordinately" ADVERB_SUP "most supraordinately",
-    "supraphysically" ADVERB_SUP "most supraphysically",
-    "suprasensually" ADVERB_SUP "most suprasensually",
-    "supremely" ADVERB_SUP "most supremely",
-    "sure" ADVERB_SUP "most sure",
-    "surefootedly" ADVERB_SUP "most surefootedly",
-    "surehandedly" ADVERB_SUP "most surehandedly",
-    "surlily" ADVERB_SUP "most surlily",
-    "surpassingly" ADVERB_SUP "most surpassingly",
-    "surprisedly" ADVERB_SUP "most surprisedly",
-    "surprisingly" ADVERB_SUP "most surprisingly",
-    "surrealistically" ADVERB_SUP "most surrealistically",
-    "surrenderingly" ADVERB_SUP "most surrenderingly",
-    "surreptitiously" ADVERB_SUP "most surreptitiously",
-    "surreverently" ADVERB_SUP "most surreverently",
-    "surrogatively" ADVERB_SUP "most surrogatively",
-    "surveyingly" ADVERB_SUP "most surveyingly",
-    "susceptibly" ADVERB_SUP "most susceptibly",
-    "suspectingly" ADVERB_SUP "most suspectingly",
-    "suspectly" ADVERB_SUP "most suspectly",
-    "suspensefully" ADVERB_SUP "most suspensefully",
-    "suspensively" ADVERB_SUP "most suspensively",
-    "suspiciously" ADVERB_SUP "most suspiciously",
-    "sustainably" ADVERB_SUP "most sustainably",
-    "sustainedly" ADVERB_SUP "most sustainedly",
-    "sustainingly" ADVERB_SUP "most sustainingly",
-    "susurringly" ADVERB_SUP "most susurringly",
-    "susurrously" ADVERB_SUP "most susurrously",
-    "suttly" ADVERB_SUP "most suttly",
-    "sveltely" ADVERB_SUP "most sveltely",
-    "swack" ADVERB_SUP "most swack",
-    "swaggeringly" ADVERB_SUP "most swaggeringly",
-    "swampily" ADVERB_SUP "most swampily",
-    "swankily" ADVERB_SUP "most swankily",
-    "swankly" ADVERB_SUP "most swankly",
-    "swarmingly" ADVERB_SUP "most swarmingly",
-    "swarthily" ADVERB_SUP "most swarthily",
-    "swashbucklingly" ADVERB_SUP "most swashbucklingly",
-    "swayingly" ADVERB_SUP "most swayingly",
-    "swearily" ADVERB_SUP "most swearily",
-    "swearingly" ADVERB_SUP "most swearingly",
-    "sweatily" ADVERB_SUP "most sweatily",
-    "swedishly" ADVERB_SUP "most swedishly",
-    "sweepingly" ADVERB_SUP "most sweepingly",
-    "sweet" ADVERB_SUP "most sweet",
-    "sweetely" ADVERB_SUP "most sweetely",
-    "sweetfully" ADVERB_SUP "most sweetfully",
-    "sweetheartedly" ADVERB_SUP "most sweetheartedly",
-    "sweetishly" ADVERB_SUP "most sweetishly",
-    "swellingly" ADVERB_SUP "most swellingly",
-    "swelteringly" ADVERB_SUP "most swelteringly",
-    "swervily" ADVERB_SUP "most swervily",
-    "swervingly" ADVERB_SUP "most swervingly",
-    "swift" ADVERB_SUP "most swift",
-    "swimmily" ADVERB_SUP "most swimmily",
-    "swimmingly" ADVERB_SUP "most swimmingly",
-    "swindlingly" ADVERB_SUP "most swindlingly",
-    "swingeingly" ADVERB_SUP "most swingeingly",
-    "swingingly" ADVERB_SUP "most swingingly",
-    "swinishly" ADVERB_SUP "most swinishly",
-    "swirlingly" ADVERB_SUP "most swirlingly",
-    "swishily" ADVERB_SUP "most swishily",
-    "swishingly" ADVERB_SUP "most swishingly",
-    "swishly" ADVERB_SUP "most swishly",
-    "swissly" ADVERB_SUP "most swissly",
-    "swithly" ADVERB_SUP "most swithly",
-    "swollenly" ADVERB_SUP "most swollenly",
-    "swoonily" ADVERB_SUP "most swoonily",
-    "swooningly" ADVERB_SUP "most swooningly",
-    "swoopily" ADVERB_SUP "most swoopily",
-    "swoopingly" ADVERB_SUP "most swoopingly",
-    "swottily" ADVERB_SUP "most swottily",
-    "sybaritically" ADVERB_SUP "most sybaritically",
-    "sycophantically" ADVERB_SUP "most sycophantically",
-    "sycophantishly" ADVERB_SUP "most sycophantishly",
-    "sycophantly" ADVERB_SUP "most sycophantly",
-    "syllogistically" ADVERB_SUP "most syllogistically",
-    "symbiotically" ADVERB_SUP "most symbiotically",
-    "symbolically" ADVERB_SUP "most symbolically",
-    "symbolicly" ADVERB_SUP "most symbolicly",
-    "symbolistically" ADVERB_SUP "most symbolistically",
-    "symmetrically" ADVERB_SUP "most symmetrically",
-    "symmetrologically" ADVERB_SUP "most symmetrologically",
-    "sympathetically" ADVERB_SUP "most sympathetically",
-    "sympathisingly" ADVERB_SUP "most sympathisingly",
-    "sympathizingly" ADVERB_SUP "most sympathizingly",
-    "sympatrically" ADVERB_SUP "most sympatrically",
-    "symphonically" ADVERB_SUP "most symphonically",
-    "symphoniously" ADVERB_SUP "most symphoniously",
-    "symposiastically" ADVERB_SUP "most symposiastically",
-    "sympotically" ADVERB_SUP "most sympotically",
-    "symptomatically" ADVERB_SUP "most symptomatically",
-    "synagogally" ADVERB_SUP "most synagogally",
-    "synagogically" ADVERB_SUP "most synagogically",
-    "synchronously" ADVERB_SUP "most synchronously",
-    "synclinally" ADVERB_SUP "most synclinally",
-    "syncretically" ADVERB_SUP "most syncretically",
-    "syncretistically" ADVERB_SUP "most syncretistically",
-    "synecdochally" ADVERB_SUP "most synecdochally",
-    "synecdochically" ADVERB_SUP "most synecdochically",
-    "synergetically" ADVERB_SUP "most synergetically",
-    "synergically" ADVERB_SUP "most synergically",
-    "synergistically" ADVERB_SUP "most synergistically",
-    "syneruptively" ADVERB_SUP "most syneruptively",
-    "synodally" ADVERB_SUP "most synodally",
-    "synonimously" ADVERB_SUP "most synonimously",
-    "synonymously" ADVERB_SUP "most synonymously",
-    "synoptically" ADVERB_SUP "most synoptically",
-    "syntactically" ADVERB_SUP "most syntactically",
-    "syntagmatically" ADVERB_SUP "most syntagmatically",
-    "syphilitically" ADVERB_SUP "most syphilitically",
-    "syrupily" ADVERB_SUP "most syrupily",
-    "systematic" ADVERB_SUP "most systematic",
-    "systematically" ADVERB_SUP "most systematically",
-    "systemically" ADVERB_SUP "most systemically",
-    "systolically" ADVERB_SUP "most systolically",
-    "tabooistically" ADVERB_SUP "most tabooistically",
-    "tacitly" ADVERB_SUP "most tacitly",
-    "taciturnly" ADVERB_SUP "most taciturnly",
-    "tackily" ADVERB_SUP "most tackily",
-    "tactfully" ADVERB_SUP "most tactfully",
-    "tactically" ADVERB_SUP "most tactically",
-    "tactilely" ADVERB_SUP "most tactilely",
-    "tactlessly" ADVERB_SUP "most tactlessly",
-    "tactually" ADVERB_SUP "most tactually",
-    "taintlessly" ADVERB_SUP "most taintlessly",
-    "takingly" ADVERB_SUP "most takingly",
-    "talentedly" ADVERB_SUP "most talentedly",
-    "talentlessly" ADVERB_SUP "most talentlessly",
-    "talismanically" ADVERB_SUP "most talismanically",
-    "talkatively" ADVERB_SUP "most talkatively",
-    "talkily" ADVERB_SUP "most talkily",
-    "tally" ADVERB_SUP "most tally",
-    "tamelessly" ADVERB_SUP "most tamelessly",
-    "tamely" ADVERB_SUP "most tamely",
-    "tangentally" ADVERB_SUP "most tangentally",
-    "tangentially" ADVERB_SUP "most tangentially",
-    "tangibly" ADVERB_SUP "most tangibly",
-    "tangily" ADVERB_SUP "most tangily",
-    "tangledly" ADVERB_SUP "most tangledly",
-    "tanglingly" ADVERB_SUP "most tanglingly",
-    "tantalisingly" ADVERB_SUP "most tantalisingly",
-    "tantalizingly" ADVERB_SUP "most tantalizingly",
-    "taoistically" ADVERB_SUP "most taoistically",
-    "taperingly" ADVERB_SUP "most taperingly",
-    "taperly" ADVERB_SUP "most taperly",
-    "taperwise" ADVERB_SUP "most taperwise",
-    "tardily" ADVERB_SUP "most tardily",
-    "tardively" ADVERB_SUP "most tardively",
-    "targetedly" ADVERB_SUP "most targetedly",
-    "tarnation" ADVERB_SUP "most tarnation",
-    "tarrily" ADVERB_SUP "most tarrily",
-    "tartily" ADVERB_SUP "most tartily",
-    "tartly" ADVERB_SUP "most tartly",
-    "tastefully" ADVERB_SUP "most tastefully",
-    "tastelessly" ADVERB_SUP "most tastelessly",
-    "tastily" ADVERB_SUP "most tastily",
-    "tastingly" ADVERB_SUP "most tastingly",
-    "tatteredly" ADVERB_SUP "most tatteredly",
-    "tatterly" ADVERB_SUP "most tatterly",
-    "tattily" ADVERB_SUP "most tattily",
-    "tauntingly" ADVERB_SUP "most tauntingly",
-    "tautly" ADVERB_SUP "most tautly",
-    "tautologically" ADVERB_SUP "most tautologically",
-    "tautologously" ADVERB_SUP "most tautologously",
-    "tawdrily" ADVERB_SUP "most tawdrily",
-    "tawnily" ADVERB_SUP "most tawnily",
-    "taxingly" ADVERB_SUP "most taxingly",
-    "teachably" ADVERB_SUP "most teachably",
-    "teachingly" ADVERB_SUP "most teachingly",
-    "tearfully" ADVERB_SUP "most tearfully",
-    "tearily" ADVERB_SUP "most tearily",
-    "tearingly" ADVERB_SUP "most tearingly",
-    "tearjerkingly" ADVERB_SUP "most tearjerkingly",
-    "teasably" ADVERB_SUP "most teasably",
-    "teasingly" ADVERB_SUP "most teasingly",
-    "techily" ADVERB_SUP "most techily",
-    "technically" ADVERB_SUP "most technically",
-    "technocentrically" ADVERB_SUP "most technocentrically",
-    "technocratically" ADVERB_SUP "most technocratically",
-    "technologically" ADVERB_SUP "most technologically",
-    "technoscientifically" ADVERB_SUP "most technoscientifically",
-    "tectly" ADVERB_SUP "most tectly",
-    "tectonically" ADVERB_SUP "most tectonically",
-    "tediously" ADVERB_SUP "most tediously",
-    "teemingly" ADVERB_SUP "most teemingly",
-    "teeteringly" ADVERB_SUP "most teeteringly",
-    "teethily" ADVERB_SUP "most teethily",
-    "teetotally" ADVERB_SUP "most teetotally",
-    "tegularly" ADVERB_SUP "most tegularly",
-    "telegenically" ADVERB_SUP "most telegenically",
-    "telegrammatically" ADVERB_SUP "most telegrammatically",
-    "telegraphically" ADVERB_SUP "most telegraphically",
-    "teleonomically" ADVERB_SUP "most teleonomically",
-    "telergically" ADVERB_SUP "most telergically",
-    "telesmatically" ADVERB_SUP "most telesmatically",
-    "telically" ADVERB_SUP "most telically",
-    "tellingly" ADVERB_SUP "most tellingly",
-    "temerously" ADVERB_SUP "most temerously",
-    "temperamentally" ADVERB_SUP "most temperamentally",
-    "temperately" ADVERB_SUP "most temperately",
-    "temperedly" ADVERB_SUP "most temperedly",
-    "tempestuously" ADVERB_SUP "most tempestuously",
-    "temporisingly" ADVERB_SUP "most temporisingly",
-    "temporizingly" ADVERB_SUP "most temporizingly",
-    "temptingly" ADVERB_SUP "most temptingly",
-    "temulently" ADVERB_SUP "most temulently",
-    "tenably" ADVERB_SUP "most tenably",
-    "tenaciously" ADVERB_SUP "most tenaciously",
-    "tendenciously" ADVERB_SUP "most tendenciously",
-    "tendentiously" ADVERB_SUP "most tendentiously",
-    "tender" ADVERB_SUP "most tender",
-    "tenderfully" ADVERB_SUP "most tenderfully",
-    "tenderhanded" ADVERB_SUP "most tenderhanded",
-    "tenderheartedly" ADVERB_SUP "most tenderheartedly",
-    "tenderly" ADVERB_SUP "most tenderly",
-    "tendermindedly" ADVERB_SUP "most tendermindedly",
-    "tendrely" ADVERB_SUP "most tendrely",
-    "tenebriously" ADVERB_SUP "most tenebriously",
-    "tenebrously" ADVERB_SUP "most tenebrously",
-    "tensely" ADVERB_SUP "most tensely",
-    "tensilely" ADVERB_SUP "most tensilely",
-    "tensionally" ADVERB_SUP "most tensionally",
-    "tentatively" ADVERB_SUP "most tentatively",
-    "tentively" ADVERB_SUP "most tentively",
-    "tenuously" ADVERB_SUP "most tenuously",
-    "tenurially" ADVERB_SUP "most tenurially",
-    "tenuto" ADVERB_SUP "most tenuto",
-    "tepidly" ADVERB_SUP "most tepidly",
-    "teratogenically" ADVERB_SUP "most teratogenically",
-    "termagantly" ADVERB_SUP "most termagantly",
-    "terminally" ADVERB_SUP "most terminally",
-    "termlessly" ADVERB_SUP "most termlessly",
-    "termly" ADVERB_SUP "most termly",
-    "terpsichoreally" ADVERB_SUP "most terpsichoreally",
-    "terpsichoreanly" ADVERB_SUP "most terpsichoreanly",
-    "terpsichorially" ADVERB_SUP "most terpsichorially",
-    "terrenely" ADVERB_SUP "most terrenely",
-    "terrestrially" ADVERB_SUP "most terrestrially",
-    "terrible" ADVERB_SUP "most terrible",
-    "terribly" ADVERB_SUP "most terribly",
-    "terrificly" ADVERB_SUP "most terrificly",
-    "terrifiedly" ADVERB_SUP "most terrifiedly",
-    "terrifyingly" ADVERB_SUP "most terrifyingly",
-    "territorially" ADVERB_SUP "most territorially",
-    "terroristically" ADVERB_SUP "most terroristically",
-    "tersely" ADVERB_SUP "most tersely",
-    "testerically" ADVERB_SUP "most testerically",
-    "testicularly" ADVERB_SUP "most testicularly",
-    "testily" ADVERB_SUP "most testily",
-    "testingly" ADVERB_SUP "most testingly",
-    "testosteronally" ADVERB_SUP "most testosteronally",
-    "testosteronically" ADVERB_SUP "most testosteronically",
-    "tetchily" ADVERB_SUP "most tetchily",
-    "teutonically" ADVERB_SUP "most teutonically",
-    "textualistically" ADVERB_SUP "most textualistically",
-    "textually" ADVERB_SUP "most textually",
-    "thair" ADVERB_SUP "most thair",
-    "thanatologically" ADVERB_SUP "most thanatologically",
-    "thankably" ADVERB_SUP "most thankably",
-    "thankfully" ADVERB_SUP "most thankfully",
-    "thanklessly" ADVERB_SUP "most thanklessly",
-    "thankly" ADVERB_SUP "most thankly",
-    "thaumaturgically" ADVERB_SUP "most thaumaturgically",
-    "thawingly" ADVERB_SUP "most thawingly",
-    "theatrically" ADVERB_SUP "most theatrically",
-    "theftuously" ADVERB_SUP "most theftuously",
-    "theistically" ADVERB_SUP "most theistically",
-    "thelemically" ADVERB_SUP "most thelemically",
-    "thematically" ADVERB_SUP "most thematically",
-    "theocentrically" ADVERB_SUP "most theocentrically",
-    "theocratically" ADVERB_SUP "most theocratically",
-    "theodically" ADVERB_SUP "most theodically",
-    "theologically" ADVERB_SUP "most theologically",
-    "theonomically" ADVERB_SUP "most theonomically",
-    "theonomously" ADVERB_SUP "most theonomously",
-    "theophilosophically" ADVERB_SUP "most theophilosophically",
-    "theorematically" ADVERB_SUP "most theorematically",
-    "theosophically" ADVERB_SUP "most theosophically",
-    "therapeutically" ADVERB_SUP "most therapeutically",
-    "thereckly" ADVERB_SUP "most thereckly",
-    "thermophilically" ADVERB_SUP "most thermophilically",
-    "thermosensitively" ADVERB_SUP "most thermosensitively",
-    "thespically" ADVERB_SUP "most thespically",
-    "theurgically" ADVERB_SUP "most theurgically",
-    "thickeningly" ADVERB_SUP "most thickeningly",
-    "thickheadedly" ADVERB_SUP "most thickheadedly",
-    "thiefly" ADVERB_SUP "most thiefly",
-    "thievingly" ADVERB_SUP "most thievingly",
-    "thievishly" ADVERB_SUP "most thievishly",
-    "thin" ADVERB_SUP "most thin",
-    "thinkably" ADVERB_SUP "most thinkably",
-    "thinkingly" ADVERB_SUP "most thinkingly",
-    "thinly" ADVERB_SUP "most thinly",
-    "thirdhand" ADVERB_SUP "most thirdhand",
-    "thirstily" ADVERB_SUP "most thirstily",
-    "thirstingly" ADVERB_SUP "most thirstingly",
-    "thitherto" ADVERB_SUP "most thitherto",
-    "thornily" ADVERB_SUP "most thornily",
-    "thoroly" ADVERB_SUP "most thoroly",
-    "thoroughgoingly" ADVERB_SUP "most thoroughgoingly",
-    "thoroughly" ADVERB_SUP "most thoroughly",
-    "thoroughstitch" ADVERB_SUP "most thoroughstitch",
-    "thoughtfully" ADVERB_SUP "most thoughtfully",
-    "thoughtlessly" ADVERB_SUP "most thoughtlessly",
-    "thrasonically" ADVERB_SUP "most thrasonically",
-    "thrawnly" ADVERB_SUP "most thrawnly",
-    "threadily" ADVERB_SUP "most threadily",
-    "threateningly" ADVERB_SUP "most threateningly",
-    "threatfully" ADVERB_SUP "most threatfully",
-    "threedimensionally" ADVERB_SUP "most threedimensionally",
-    "threegether" ADVERB_SUP "most threegether",
-    "thriftfully" ADVERB_SUP "most thriftfully",
-    "thriftily" ADVERB_SUP "most thriftily",
-    "thriftlessly" ADVERB_SUP "most thriftlessly",
-    "thriftly" ADVERB_SUP "most thriftly",
-    "thrillingly" ADVERB_SUP "most thrillingly",
-    "thrivingly" ADVERB_SUP "most thrivingly",
-    "throatily" ADVERB_SUP "most throatily",
-    "throatward" ADVERB_SUP "most throatward",
-    "throbbingly" ADVERB_SUP "most throbbingly",
-    "thromboplastically" ADVERB_SUP "most thromboplastically",
-    "throngingly" ADVERB_SUP "most throngingly",
-    "throughly" ADVERB_SUP "most throughly",
-    "thruly" ADVERB_SUP "most thruly",
-    "thrummingly" ADVERB_SUP "most thrummingly",
-    "thrustingly" ADVERB_SUP "most thrustingly",
-    "thuddingly" ADVERB_SUP "most thuddingly",
-    "thuggishly" ADVERB_SUP "most thuggishly",
-    "thumping" ADVERB_SUP "most thumping",
-    "thumpingly" ADVERB_SUP "most thumpingly",
-    "thundering" ADVERB_SUP "most thundering",
-    "thunderingly" ADVERB_SUP "most thunderingly",
-    "thunderously" ADVERB_SUP "most thunderously",
-    "thundrously" ADVERB_SUP "most thundrously",
-    "thwackingly" ADVERB_SUP "most thwackingly",
-    "thwartedly" ADVERB_SUP "most thwartedly",
-    "thwartly" ADVERB_SUP "most thwartly",
-    "thwartways" ADVERB_SUP "most thwartways",
-    "tickle" ADVERB_SUP "most tickle",
-    "ticklishly" ADVERB_SUP "most ticklishly",
-    "tidally" ADVERB_SUP "most tidally",
-    "tidely" ADVERB_SUP "most tidely",
-    "tidily" ADVERB_SUP "most tidily",
-    "tigerishly" ADVERB_SUP "most tigerishly",
-    "tighteningly" ADVERB_SUP "most tighteningly",
-    "tightsome" ADVERB_SUP "most tightsome",
-    "tigrishly" ADVERB_SUP "most tigrishly",
-    "timefully" ADVERB_SUP "most timefully",
-    "timelessly" ADVERB_SUP "most timelessly",
-    "timelily" ADVERB_SUP "most timelily",
-    "timely" ADVERB_SUP "most timely",
-    "timeously" ADVERB_SUP "most timeously",
-    "timidly" ADVERB_SUP "most timidly",
-    "timocratically" ADVERB_SUP "most timocratically",
-    "timorously" ADVERB_SUP "most timorously",
-    "timourously" ADVERB_SUP "most timourously",
-    "timously" ADVERB_SUP "most timously",
-    "tinglingly" ADVERB_SUP "most tinglingly",
-    "tinily" ADVERB_SUP "most tinily",
-    "tinnily" ADVERB_SUP "most tinnily",
-    "tipsily" ADVERB_SUP "most tipsily",
-    "tiptoeingly" ADVERB_SUP "most tiptoeingly",
-    "tiredly" ADVERB_SUP "most tiredly",
-    "tirelessly" ADVERB_SUP "most tirelessly",
-    "tiresomely" ADVERB_SUP "most tiresomely",
-    "tiringly" ADVERB_SUP "most tiringly",
-    "titanically" ADVERB_SUP "most titanically",
-    "titillatingly" ADVERB_SUP "most titillatingly",
-    "titteringly" ADVERB_SUP "most titteringly",
-    "titubantly" ADVERB_SUP "most titubantly",
-    "toastily" ADVERB_SUP "most toastily",
-    "togetherlike" ADVERB_SUP "most togetherlike",
-    "togetherly" ADVERB_SUP "most togetherly",
-    "togetherwise" ADVERB_SUP "most togetherwise",
-    "toilfully" ADVERB_SUP "most toilfully",
-    "toilingly" ADVERB_SUP "most toilingly",
-    "toilsomely" ADVERB_SUP "most toilsomely",
-    "tokenistically" ADVERB_SUP "most tokenistically",
-    "tolerable" ADVERB_SUP "most tolerable",
-    "tolerably" ADVERB_SUP "most tolerably",
-    "tolerantly" ADVERB_SUP "most tolerantly",
-    "tollingly" ADVERB_SUP "most tollingly",
-    "tomboyishly" ADVERB_SUP "most tomboyishly",
-    "tonally" ADVERB_SUP "most tonally",
-    "tonelessly" ADVERB_SUP "most tonelessly",
-    "tonguelessly" ADVERB_SUP "most tonguelessly",
-    "tonishly" ADVERB_SUP "most tonishly",
-    "tonnishly" ADVERB_SUP "most tonnishly",
-    "toothachingly" ADVERB_SUP "most toothachingly",
-    "toothily" ADVERB_SUP "most toothily",
-    "toothsomely" ADVERB_SUP "most toothsomely",
-    "toothward" ADVERB_SUP "most toothward",
-    "topheavily" ADVERB_SUP "most topheavily",
-    "topically" ADVERB_SUP "most topically",
-    "toploftily" ADVERB_SUP "most toploftily",
-    "topologically" ADVERB_SUP "most topologically",
-    "toppingly" ADVERB_SUP "most toppingly",
-    "topsyturvily" ADVERB_SUP "most topsyturvily",
-    "topsyturvy" ADVERB_SUP "most topsyturvy",
-    "torely" ADVERB_SUP "most torely",
-    "tormentedly" ADVERB_SUP "most tormentedly",
-    "tormentingly" ADVERB_SUP "most tormentingly",
-    "toroidally" ADVERB_SUP "most toroidally",
-    "torpidly" ADVERB_SUP "most torpidly",
-    "torrentially" ADVERB_SUP "most torrentially",
-    "torridly" ADVERB_SUP "most torridly",
-    "tortiously" ADVERB_SUP "most tortiously",
-    "tortuously" ADVERB_SUP "most tortuously",
-    "torturedly" ADVERB_SUP "most torturedly",
-    "torturingly" ADVERB_SUP "most torturingly",
-    "tosh" ADVERB_SUP "most tosh",
-    "toshly" ADVERB_SUP "most toshly",
-    "tossily" ADVERB_SUP "most tossily",
-    "totemically" ADVERB_SUP "most totemically",
-    "totemistically" ADVERB_SUP "most totemistically",
-    "totteringly" ADVERB_SUP "most totteringly",
-    "touchably" ADVERB_SUP "most touchably",
-    "touchily" ADVERB_SUP "most touchily",
-    "touchingly" ADVERB_SUP "most touchingly",
-    "toughly" ADVERB_SUP "most toughly",
-    "toughmindedly" ADVERB_SUP "most toughmindedly",
-    "touristically" ADVERB_SUP "most touristically",
-    "toweringly" ADVERB_SUP "most toweringly",
-    "townishly" ADVERB_SUP "most townishly",
-    "toxically" ADVERB_SUP "most toxically",
-    "toxicologically" ADVERB_SUP "most toxicologically",
-    "toyingly" ADVERB_SUP "most toyingly",
-    "toyishly" ADVERB_SUP "most toyishly",
-    "traceably" ADVERB_SUP "most traceably",
-    "tractably" ADVERB_SUP "most tractably",
-    "traditionalistically" ADVERB_SUP "most traditionalistically",
-    "traditionally" ADVERB_SUP "most traditionally",
-    "traducingly" ADVERB_SUP "most traducingly",
-    "tragedically" ADVERB_SUP "most tragedically",
-    "tragically" ADVERB_SUP "most tragically",
-    "tragicly" ADVERB_SUP "most tragicly",
-    "tragicomically" ADVERB_SUP "most tragicomically",
-    "trailingly" ADVERB_SUP "most trailingly",
-    "traitorly" ADVERB_SUP "most traitorly",
-    "traitorously" ADVERB_SUP "most traitorously",
-    "traitourly" ADVERB_SUP "most traitourly",
-    "traitourously" ADVERB_SUP "most traitourously",
-    "trajectorially" ADVERB_SUP "most trajectorially",
-    "tralatitiously" ADVERB_SUP "most tralatitiously",
-    "trampily" ADVERB_SUP "most trampily",
-    "trampishly" ADVERB_SUP "most trampishly",
-    "tramplingly" ADVERB_SUP "most tramplingly",
-    "trancedly" ADVERB_SUP "most trancedly",
-    "trancily" ADVERB_SUP "most trancily",
-    "tranquilisingly" ADVERB_SUP "most tranquilisingly",
-    "tranquilizingly" ADVERB_SUP "most tranquilizingly",
-    "tranquillisingly" ADVERB_SUP "most tranquillisingly",
-    "tranquillizingly" ADVERB_SUP "most tranquillizingly",
-    "tranquilly" ADVERB_SUP "most tranquilly",
-    "transannularly" ADVERB_SUP "most transannularly",
-    "transatlantically" ADVERB_SUP "most transatlantically",
-    "transcendentally" ADVERB_SUP "most transcendentally",
-    "transcendently" ADVERB_SUP "most transcendently",
-    "transcendingly" ADVERB_SUP "most transcendingly",
-    "transculturally" ADVERB_SUP "most transculturally",
-    "transdisciplinarily" ADVERB_SUP "most transdisciplinarily",
-    "transeuntly" ADVERB_SUP "most transeuntly",
-    "transferably" ADVERB_SUP "most transferably",
-    "transferrably" ADVERB_SUP "most transferrably",
-    "transfiguringly" ADVERB_SUP "most transfiguringly",
-    "transfixingly" ADVERB_SUP "most transfixingly",
-    "transformationally" ADVERB_SUP "most transformationally",
-    "transformatively" ADVERB_SUP "most transformatively",
-    "transformingly" ADVERB_SUP "most transformingly",
-    "transgressively" ADVERB_SUP "most transgressively",
-    "transiently" ADVERB_SUP "most transiently",
-    "transindividually" ADVERB_SUP "most transindividually",
-    "transitionally" ADVERB_SUP "most transitionally",
-    "transitwise" ADVERB_SUP "most transitwise",
-    "translationally" ADVERB_SUP "most translationally",
-    "translucently" ADVERB_SUP "most translucently",
-    "transmigratively" ADVERB_SUP "most transmigratively",
-    "transmutationally" ADVERB_SUP "most transmutationally",
-    "transmutatively" ADVERB_SUP "most transmutatively",
-    "transparently" ADVERB_SUP "most transparently",
-    "transpersonally" ADVERB_SUP "most transpersonally",
-    "transphobically" ADVERB_SUP "most transphobically",
-    "transpicuously" ADVERB_SUP "most transpicuously",
-    "transplendently" ADVERB_SUP "most transplendently",
-    "transportedly" ADVERB_SUP "most transportedly",
-    "transportingly" ADVERB_SUP "most transportingly",
-    "transpositionally" ADVERB_SUP "most transpositionally",
-    "transrationally" ADVERB_SUP "most transrationally",
-    "transversally" ADVERB_SUP "most transversally",
-    "trashily" ADVERB_SUP "most trashily",
-    "traumatically" ADVERB_SUP "most traumatically",
-    "traumatizingly" ADVERB_SUP "most traumatizingly",
-    "traverse" ADVERB_SUP "most traverse",
-    "treacherously" ADVERB_SUP "most treacherously",
-    "treasonably" ADVERB_SUP "most treasonably",
-    "treasonously" ADVERB_SUP "most treasonously",
-    "treatably" ADVERB_SUP "most treatably",
-    "tremblesome" ADVERB_SUP "most tremblesome",
-    "tremblingly" ADVERB_SUP "most tremblingly",
-    "tremendously" ADVERB_SUP "most tremendously",
-    "tremorously" ADVERB_SUP "most tremorously",
-    "tremulously" ADVERB_SUP "most tremulously",
-    "trenchantly" ADVERB_SUP "most trenchantly",
-    "trendily" ADVERB_SUP "most trendily",
-    "trepidatiously" ADVERB_SUP "most trepidatiously",
-    "trepidly" ADVERB_SUP "most trepidly",
-    "tribalistically" ADVERB_SUP "most tribalistically",
-    "tribally" ADVERB_SUP "most tribally",
-    "tributarily" ADVERB_SUP "most tributarily",
-    "trickily" ADVERB_SUP "most trickily",
-    "trickingly" ADVERB_SUP "most trickingly",
-    "trickishly" ADVERB_SUP "most trickishly",
-    "tricksily" ADVERB_SUP "most tricksily",
-    "triflingly" ADVERB_SUP "most triflingly",
-    "trigly" ADVERB_SUP "most trigly",
-    "trigraphically" ADVERB_SUP "most trigraphically",
-    "trimly" ADVERB_SUP "most trimly",
-    "trimmingly" ADVERB_SUP "most trimmingly",
-    "trimorphically" ADVERB_SUP "most trimorphically",
-    "trippily" ADVERB_SUP "most trippily",
-    "trippingly" ADVERB_SUP "most trippingly",
-    "tristfully" ADVERB_SUP "most tristfully",
-    "tritely" ADVERB_SUP "most tritely",
-    "tritically" ADVERB_SUP "most tritically",
-    "triumphalistically" ADVERB_SUP "most triumphalistically",
-    "triumphally" ADVERB_SUP "most triumphally",
-    "triumphantly" ADVERB_SUP "most triumphantly",
-    "trivializingly" ADVERB_SUP "most trivializingly",
-    "trochoidally" ADVERB_SUP "most trochoidally",
-    "troglodytically" ADVERB_SUP "most troglodytically",
-    "trollishly" ADVERB_SUP "most trollishly",
-    "trollistically" ADVERB_SUP "most trollistically",
-    "tropically" ADVERB_SUP "most tropically",
-    "tropologically" ADVERB_SUP "most tropologically",
-    "tropotactically" ADVERB_SUP "most tropotactically",
-    "troubledly" ADVERB_SUP "most troubledly",
-    "troublesomely" ADVERB_SUP "most troublesomely",
-    "troublingly" ADVERB_SUP "most troublingly",
-    "troublously" ADVERB_SUP "most troublously",
-    "truantly" ADVERB_SUP "most truantly",
-    "truculently" ADVERB_SUP "most truculently",
-    "truefully" ADVERB_SUP "most truefully",
-    "trueheartedly" ADVERB_SUP "most trueheartedly",
-    "truistically" ADVERB_SUP "most truistically",
-    "trustably" ADVERB_SUP "most trustably",
-    "trustfully" ADVERB_SUP "most trustfully",
-    "trustily" ADVERB_SUP "most trustily",
-    "trustingly" ADVERB_SUP "most trustingly",
-    "trustworthily" ADVERB_SUP "most trustworthily",
-    "truthfully" ADVERB_SUP "most truthfully",
-    "truthlessly" ADVERB_SUP "most truthlessly",
-    "truthly" ADVERB_SUP "most truthly",
-    "truthward" ADVERB_SUP "most truthward",
-    "truthwards" ADVERB_SUP "most truthwards",
-    "tryingly" ADVERB_SUP "most tryingly",
-    "tubbily" ADVERB_SUP "most tubbily",
-    "tuberously" ADVERB_SUP "most tuberously",
-    "tubulously" ADVERB_SUP "most tubulously",
-    "tuftily" ADVERB_SUP "most tuftily",
-    "tumescently" ADVERB_SUP "most tumescently",
-    "tumidly" ADVERB_SUP "most tumidly",
-    "tumourously" ADVERB_SUP "most tumourously",
-    "tumultuarily" ADVERB_SUP "most tumultuarily",
-    "tumultuously" ADVERB_SUP "most tumultuously",
-    "tunably" ADVERB_SUP "most tunably",
-    "tuneably" ADVERB_SUP "most tuneably",
-    "tunefully" ADVERB_SUP "most tunefully",
-    "tunelessly" ADVERB_SUP "most tunelessly",
-    "turbidly" ADVERB_SUP "most turbidly",
-    "turbinately" ADVERB_SUP "most turbinately",
-    "turbulently" ADVERB_SUP "most turbulently",
-    "turgently" ADVERB_SUP "most turgently",
-    "turgidly" ADVERB_SUP "most turgidly",
-    "turkeylike" ADVERB_SUP "most turkeylike",
-    "turkishly" ADVERB_SUP "most turkishly",
-    "turkwise" ADVERB_SUP "most turkwise",
-    "turpidly" ADVERB_SUP "most turpidly",
-    "turrible" ADVERB_SUP "most turrible",
-    "tutelarily" ADVERB_SUP "most tutelarily",
-    "twaddlingly" ADVERB_SUP "most twaddlingly",
-    "twangily" ADVERB_SUP "most twangily",
-    "twangingly" ADVERB_SUP "most twangingly",
-    "twattily" ADVERB_SUP "most twattily",
-    "tweedily" ADVERB_SUP "most tweedily",
-    "tweely" ADVERB_SUP "most tweely",
-    "twifold" ADVERB_SUP "most twifold",
-    "twiggily" ADVERB_SUP "most twiggily",
-    "twilightly" ADVERB_SUP "most twilightly",
-    "twiningly" ADVERB_SUP "most twiningly",
-    "twirlingly" ADVERB_SUP "most twirlingly",
-    "twistedly" ADVERB_SUP "most twistedly",
-    "twistily" ADVERB_SUP "most twistily",
-    "twistingly" ADVERB_SUP "most twistingly",
-    "twitchily" ADVERB_SUP "most twitchily",
-    "twitchingly" ADVERB_SUP "most twitchingly",
-    "twitteringly" ADVERB_SUP "most twitteringly",
-    "twittingly" ADVERB_SUP "most twittingly",
-    "typically" ADVERB_SUP "most typically",
-    "typologically" ADVERB_SUP "most typologically",
-    "tyrannically" ADVERB_SUP "most tyrannically",
-    "tyrannizingly" ADVERB_SUP "most tyrannizingly",
-    "tyrannously" ADVERB_SUP "most tyrannously",
-    "upcountry" ADVERB_COMP "further upcountry",
-    "upcountry" ADVERB_SUP "furthest upcountry",
-    "upcourt" ADVERB_COMP "further upcourt",
-    "upcourt" ADVERB_SUP "furthest upcourt",
-    "upcreek" ADVERB_COMP "further upcreek",
-    "upcreek" ADVERB_SUP "furthest upcreek",
-    "upfield" ADVERB_COMP "further upfield",
-    "upfield" ADVERB_SUP "furthest upfield",
-    "upgrade" ADVERB_COMP "further upgrade",
-    "upgrade" ADVERB_SUP "furthest upgrade",
-    "uphill" ADVERB_COMP "further uphill",
-    "uphill" ADVERB_SUP "furthest uphill",
-    "upmountain" ADVERB_COMP "further upmountain",
-    "upmountain" ADVERB_SUP "furthest upmountain",
-    "upriver" ADVERB_COMP "further upriver",
-    "upriver" ADVERB_SUP "furthest upriver",
-    "upshore" ADVERB_COMP "further upshore",
-    "upshore" ADVERB_SUP "furthest upshore",
-    "upslope" ADVERB_COMP "further upslope",
-    "upslope" ADVERB_SUP "furthest upslope",
-    "upstairs" ADVERB_COMP "further upstairs",
-    "upstairs" ADVERB_SUP "furthest upstairs",
-    "upstream" ADVERB_COMP "further upstream",
-    "upstream" ADVERB_SUP "furthest upstream",
-    "upstreet" ADVERB_COMP "further upstreet",
-    "upstreet" ADVERB_SUP "furthest upstreet",
-    "upthread" ADVERB_COMP "further upthread",
-    "upthread" ADVERB_SUP "furthest upthread",
-    "uptown" ADVERB_COMP "further uptown",
-    "uptown" ADVERB_SUP "furthest uptown",
-    "upvalley" ADVERB_COMP "further upvalley",
-    "upvalley" ADVERB_SUP "furthest upvalley",
-    "upwind" ADVERB_COMP "further upwind",
-    "upwind" ADVERB_SUP "furthest upwind",
-    "well" ADVERB_COMP "better",
-    "well" ADVERB_SUP "best",
+/// 4,613 forms.
+pub(super) const IRREGULAR: Irregular<'static> = Irregular {
+    table: Cow::Borrowed(
+        r#"bad	1	worse
+bad	2	worst
+badly	1	worse
+badly	2	worst
+big	1	bigger
+big	2	biggest
+eagerly	1	more eagerly
+eaglesque	1	more eaglesque
+earlily	1	more earlily
+earnestly	1	more earnestly
+earsplittingly	1	more earsplittingly
+earthily	1	more earthily
+earthly	1	more earthly
+earthshakingly	1	more earthshakingly
+earthside	1	more earthside
+earthward	1	more earthward
+easefully	1	more easefully
+easterly	1	more easterly
+eastish	1	more eastish
+eastly	1	more eastly
+eastward	1	more eastward
+eastwardly	1	more eastwardly
+easylike	1	more easylike
+eathlins	1	more eathlins
+eathly	1	more eathly
+eazily	1	more eazily
+eben	1	more eben
+ebonically	1	more ebonically
+ebonly	1	more ebonly
+ebulliently	1	more ebulliently
+eccentrically	1	more eccentrically
+ecclesially	1	more ecclesially
+ecclesiastically	1	more ecclesiastically
+echoically	1	more echoically
+echoingly	1	more echoingly
+eclectically	1	more eclectically
+ecocritically	1	more ecocritically
+ecoculturally	1	more ecoculturally
+ecologically	1	more ecologically
+economically	1	more economically
+economicly	1	more economicly
+ecospiritually	1	more ecospiritually
+ecotoxicologically	1	more ecotoxicologically
+ecstatically	1	more ecstatically
+ecumenically	1	more ecumenically
+edaciously	1	more edaciously
+edgeling	1	more edgeling
+edgewise	1	more edgewise
+edgily	1	more edgily
+edifyingly	1	more edifyingly
+editorially	1	more editorially
+educably	1	more educably
+educationally	1	more educationally
+educatively	1	more educatively
+edwardianly	1	more edwardianly
+eelishly	1	more eelishly
+eenamost	1	more eenamost
+eepily	1	more eepily
+eerily	1	more eerily
+effably	1	more effably
+effectively	1	more effectively
+effectlessly	1	more effectlessly
+effectually	1	more effectually
+effectuously	1	more effectuously
+effeminately	1	more effeminately
+efferently	1	more efferently
+effervescently	1	more effervescently
+effervescingly	1	more effervescingly
+effetely	1	more effetely
+efficaciously	1	more efficaciously
+efficiently	1	more efficiently
+effortfully	1	more effortfully
+effortlessly	1	more effortlessly
+effulgently	1	more effulgently
+effusely	1	more effusely
+effusively	1	more effusively
+egalitarianly	1	more egalitarianly
+egally	1	more egally
+eggheadedly	1	more eggheadedly
+eggily	1	more eggily
+eggsactly	1	more eggsactly
+egocentrically	1	more egocentrically
+egoistically	1	more egoistically
+egolessly	1	more egolessly
+egomaniacally	1	more egomaniacally
+egotistically	1	more egotistically
+egregiously	1	more egregiously
+egressively	1	more egressively
+eidently	1	more eidently
+eidetically	1	more eidetically
+eirenically	1	more eirenically
+ejectively	1	more ejectively
+ekistically	1	more ekistically
+elaborately	1	more elaborately
+elaboratively	1	more elaboratively
+elastically	1	more elastically
+elastodynamically	1	more elastodynamically
+elastohydrodynamically	1	more elastohydrodynamically
+elastomerically	1	more elastomerically
+elatedly	1	more elatedly
+eldritchly	1	more eldritchly
+electorally	1	more electorally
+electrically	1	more electrically
+electrifyingly	1	more electrifyingly
+electrolytically	1	more electrolytically
+electronically	1	more electronically
+electrophilically	1	more electrophilically
+electrostatically	1	more electrostatically
+electrotonically	1	more electrotonically
+eleemosynarily	1	more eleemosynarily
+elegantly	1	more elegantly
+elegiacally	1	more elegiacally
+elementalistically	1	more elementalistically
+elementally	1	more elementally
+elementarily	1	more elementarily
+elephantinely	1	more elephantinely
+elevatedly	1	more elevatedly
+elfinly	1	more elfinly
+elfishly	1	more elfishly
+elfwise	1	more elfwise
+eligibly	1	more eligibly
+eliminatingly	1	more eliminatingly
+elitely	1	more elitely
+elitistly	1	more elitistly
+elizabethanly	1	more elizabethanly
+ellipsoidally	1	more ellipsoidally
+elliptically	1	more elliptically
+elocutionarily	1	more elocutionarily
+elongatedly	1	more elongatedly
+eloquently	1	more eloquently
+elucidatingly	1	more elucidatingly
+elucidatively	1	more elucidatively
+elucidatorily	1	more elucidatorily
+elusively	1	more elusively
+elvishly	1	more elvishly
+emanatively	1	more emanatively
+emarginately	1	more emarginately
+emasculatingly	1	more emasculatingly
+embarrassedly	1	more embarrassedly
+embarrassingly	1	more embarrassingly
+embellishingly	1	more embellishingly
+embitteredly	1	more embitteredly
+embitteringly	1	more embitteringly
+emblematically	1	more emblematically
+embodiedly	1	more embodiedly
+embraceably	1	more embraceably
+emergently	1	more emergently
+emically	1	more emically
+eminently	1	more eminently
+emolliently	1	more emolliently
+emotionally	1	more emotionally
+emotionlessly	1	more emotionlessly
+emotively	1	more emotively
+empathetically	1	more empathetically
+empathically	1	more empathically
+emphatically	1	more emphatically
+empirically	1	more empirically
+empoweringly	1	more empoweringly
+emptily	1	more emptily
+emptyhandedly	1	more emptyhandedly
+emulatively	1	more emulatively
+emulously	1	more emulously
+enantiomerically	1	more enantiomerically
+enchantedly	1	more enchantedly
+enchantingly	1	more enchantingly
+enclitically	1	more enclitically
+encomiastically	1	more encomiastically
+encompassingly	1	more encompassingly
+encouragingly	1	more encouragingly
+encroachingly	1	more encroachingly
+encumberingly	1	more encumberingly
+encyclopaedically	1	more encyclopaedically
+encyclopedically	1	more encyclopedically
+endearedly	1	more endearedly
+endearingly	1	more endearingly
+endemically	1	more endemically
+endlessly	1	more endlessly
+endocentrically	1	more endocentrically
+endocranially	1	more endocranially
+endogenously	1	more endogenously
+endonormatively	1	more endonormatively
+endorsingly	1	more endorsingly
+endothelially	1	more endothelially
+endothermically	1	more endothermically
+endurably	1	more endurably
+enduringly	1	more enduringly
+endward	1	more endward
+endwards	1	more endwards
+endways	1	more endways
+endwise	1	more endwise
+energetically	1	more energetically
+energizingly	1	more energizingly
+enervatingly	1	more enervatingly
+enfoldingly	1	more enfoldingly
+engagedly	1	more engagedly
+engagingly	1	more engagingly
+englishly	1	more englishly
+engrossingly	1	more engrossingly
+enigmatically	1	more enigmatically
+enjoyably	1	more enjoyably
+enjoyingly	1	more enjoyingly
+enlargedly	1	more enlargedly
+enlightenedly	1	more enlightenedly
+enlighteningly	1	more enlighteningly
+enliveningly	1	more enliveningly
+ennoblingly	1	more ennoblingly
+enquiringly	1	more enquiringly
+enragedly	1	more enragedly
+enragingly	1	more enragingly
+enravishingly	1	more enravishingly
+enrichingly	1	more enrichingly
+ensuingly	1	more ensuingly
+entangledly	1	more entangledly
+entanglingly	1	more entanglingly
+enterchangeably	1	more enterchangeably
+enterprisingly	1	more enterprisingly
+entertainingly	1	more entertainingly
+enthalpicly	1	more enthalpicly
+entheastically	1	more entheastically
+enthrallingly	1	more enthrallingly
+enthusiastically	1	more enthusiastically
+enthusiastly	1	more enthusiastly
+enticingly	1	more enticingly
+entitatively	1	more entitatively
+entrancedly	1	more entrancedly
+entrancingly	1	more entrancingly
+entreatingly	1	more entreatingly
+entrepreneurially	1	more entrepreneurially
+entwiningly	1	more entwiningly
+enunciatively	1	more enunciatively
+enviably	1	more enviably
+enviously	1	more enviously
+environmentally	1	more environmentally
+envyingly	1	more envyingly
+ephemerally	1	more ephemerally
+epically	1	more epically
+epideictically	1	more epideictically
+epigrammatically	1	more epigrammatically
+epileptically	1	more epileptically
+epiphanally	1	more epiphanally
+epiphanically	1	more epiphanically
+epiphenomenalistically	1	more epiphenomenalistically
+epiphenomenally	1	more epiphenomenally
+epistatically	1	more epistatically
+epistemically	1	more epistemically
+epistemologically	1	more epistemologically
+equably	1	more equably
+equally	1	more equally
+equanimitably	1	more equanimitably
+equanimously	1	more equanimously
+equatorially	1	more equatorially
+equatorward	1	more equatorward
+equidimensionally	1	more equidimensionally
+equinely	1	more equinely
+equitably	1	more equitably
+equivalently	1	more equivalently
+equivocally	1	more equivocally
+equivocatingly	1	more equivocatingly
+erasably	1	more erasably
+erasively	1	more erasively
+erectly	1	more erectly
+ergodically	1	more ergodically
+ergonomically	1	more ergonomically
+eristically	1	more eristically
+erogenously	1	more erogenously
+erosely	1	more erosely
+erosively	1	more erosively
+erotically	1	more erotically
+errantly	1	more errantly
+erratically	1	more erratically
+erringly	1	more erringly
+erroneously	1	more erroneously
+eruditely	1	more eruditely
+eruptively	1	more eruptively
+escalatingly	1	more escalatingly
+escapistically	1	more escapistically
+eschatologically	1	more eschatologically
+esoterically	1	more esoterically
+especially	1	more especially
+especifically	1	more especifically
+espeically	1	more espeically
+espesially	1	more espesially
+essayistically	1	more essayistically
+essentialistically	1	more essentialistically
+essentially	1	more essentially
+estimably	1	more estimably
+esuriently	1	more esuriently
+ethereally	1	more ethereally
+etherially	1	more etherially
+ethically	1	more ethically
+ethnocentrically	1	more ethnocentrically
+ethnocratically	1	more ethnocratically
+ethnomusicologically	1	more ethnomusicologically
+ethnoreligiously	1	more ethnoreligiously
+ethnoscientifically	1	more ethnoscientifically
+ethologically	1	more ethologically
+etically	1	more etically
+etymologically	1	more etymologically
+etymonically	1	more etymonically
+eucharistically	1	more eucharistically
+eudaemonically	1	more eudaemonically
+euhedrally	1	more euhedrally
+eulogically	1	more eulogically
+eulogistically	1	more eulogistically
+eupeptically	1	more eupeptically
+euphemistically	1	more euphemistically
+euphoniously	1	more euphoniously
+euphorically	1	more euphorically
+euphuistically	1	more euphuistically
+eurocentrically	1	more eurocentrically
+europeanly	1	more europeanly
+eusocially	1	more eusocially
+eutrophically	1	more eutrophically
+evadingly	1	more evadingly
+evanescently	1	more evanescently
+evangelically	1	more evangelically
+evangelistically	1	more evangelistically
+evaporatively	1	more evaporatively
+evasively	1	more evasively
+evenhandedly	1	more evenhandedly
+evenlike	1	more evenlike
+evenly	1	more evenly
+evenmindedly	1	more evenmindedly
+eventfully	1	more eventfully
+evenward	1	more evenward
+everlasting	1	more everlasting
+everlastingly	1	more everlastingly
+everloving	1	more everloving
+evidentially	1	more evidentially
+evidently	1	more evidently
+evil	1	more evil
+evilly	1	more evilly
+evincibly	1	more evincibly
+evincingly	1	more evincingly
+evitably	1	more evitably
+evocatively	1	more evocatively
+evolutionally	1	more evolutionally
+evolutionarily	1	more evolutionarily
+evolvingly	1	more evolvingly
+exacerbatingly	1	more exacerbatingly
+exackly	1	more exackly
+exact	1	more exact
+exactingly	1	more exactingly
+exactly	1	more exactly
+exaggeratedly	1	more exaggeratedly
+exaggeratingly	1	more exaggeratingly
+exaggeratively	1	more exaggeratively
+exaltedly	1	more exaltedly
+exaltingly	1	more exaltingly
+exasperatedly	1	more exasperatedly
+exasperatingly	1	more exasperatingly
+exceeding	1	more exceeding
+excellent	1	more excellent
+excellently	1	more excellently
+exceptionably	1	more exceptionably
+exceptionally	1	more exceptionally
+exceptionlessly	1	more exceptionlessly
+excessively	1	more excessively
+excitably	1	more excitably
+excitedly	1	more excitedly
+excitingly	1	more excitingly
+exclamatorily	1	more exclamatorily
+excludingly	1	more excludingly
+exclusionarily	1	more exclusionarily
+exclusively	1	more exclusively
+excoriatingly	1	more excoriatingly
+excrescently	1	more excrescently
+excretorily	1	more excretorily
+excruciatingly	1	more excruciatingly
+excursively	1	more excursively
+excusably	1	more excusably
+excusingly	1	more excusingly
+execrably	1	more execrably
+execratively	1	more execratively
+exegetically	1	more exegetically
+exemplarily	1	more exemplarily
+exergetically	1	more exergetically
+exergonically	1	more exergonically
+exhaustedly	1	more exhaustedly
+exhaustingly	1	more exhaustingly
+exhaustively	1	more exhaustively
+exhaustlessly	1	more exhaustlessly
+exhibitionistically	1	more exhibitionistically
+exhibitionistly	1	more exhibitionistly
+exhibitively	1	more exhibitively
+exhilaratingly	1	more exhilaratingly
+exhortatively	1	more exhortatively
+exhortingly	1	more exhortingly
+exigently	1	more exigently
+exiguously	1	more exiguously
+exilically	1	more exilically
+eximiously	1	more eximiously
+existentialistically	1	more existentialistically
+existentially	1	more existentially
+exocentrically	1	more exocentrically
+exonormatively	1	more exonormatively
+exorbitantly	1	more exorbitantly
+exoterically	1	more exoterically
+exothermally	1	more exothermally
+exothermically	1	more exothermically
+exotically	1	more exotically
+expandedly	1	more expandedly
+expandingly	1	more expandingly
+expansibly	1	more expansibly
+expansively	1	more expansively
+expecially	1	more expecially
+expectably	1	more expectably
+expectantly	1	more expectantly
+expectedly	1	more expectedly
+expectingly	1	more expectingly
+expedientially	1	more expedientially
+expediently	1	more expediently
+expeditely	1	more expeditely
+expeditiously	1	more expeditiously
+expendably	1	more expendably
+expensefully	1	more expensefully
+expensively	1	more expensively
+experiencedly	1	more experiencedly
+experimentally	1	more experimentally
+experimently	1	more experimently
+expertly	1	more expertly
+explanatively	1	more explanatively
+expletively	1	more expletively
+explicatively	1	more explicatively
+explicitly	1	more explicitly
+explicted	1	more explicted
+explodingly	1	more explodingly
+exploitably	1	more exploitably
+exploitatively	1	more exploitatively
+exploitively	1	more exploitively
+explorably	1	more explorably
+exploratively	1	more exploratively
+exploratorily	1	more exploratorily
+exploringly	1	more exploringly
+explosively	1	more explosively
+exponentially	1	more exponentially
+exposedly	1	more exposedly
+exposingly	1	more exposingly
+expositorially	1	more expositorially
+expositorily	1	more expositorily
+expostulatingly	1	more expostulatingly
+expostulatively	1	more expostulatively
+expressedly	1	more expressedly
+expressibly	1	more expressibly
+expressionistically	1	more expressionistically
+expressionlessly	1	more expressionlessly
+expressively	1	more expressively
+exquisitely	1	more exquisitely
+exspecially	1	more exspecially
+extatically	1	more extatically
+extemporally	1	more extemporally
+extempore	1	more extempore
+extendedly	1	more extendedly
+extensively	1	more extensively
+extenuatingly	1	more extenuatingly
+exteriorly	1	more exteriorly
+exteriourly	1	more exteriourly
+externally	1	more externally
+extinctively	1	more extinctively
+extollingly	1	more extollingly
+extorsively	1	more extorsively
+extortionately	1	more extortionately
+extraneously	1	more extraneously
+extraordinarily	1	more extraordinarily
+extrapolatively	1	more extrapolatively
+extraterritorially	1	more extraterritorially
+extravagantly	1	more extravagantly
+extreamely	1	more extreamely
+extreamly	1	more extreamly
+extreme	1	more extreme
+extremely	1	more extremely
+extrinsically	1	more extrinsically
+extrorsely	1	more extrorsely
+extroversively	1	more extroversively
+extrovertedly	1	more extrovertedly
+exuberantly	1	more exuberantly
+exultantly	1	more exultantly
+exultatingly	1	more exultatingly
+exultingly	1	more exultingly
+eyeingly	1	more eyeingly
+eyepoppingly	1	more eyepoppingly
+eyewateringly	1	more eyewateringly
+far	1	farther
+far	2	farthest
+good	1	better
+good	2	best
+hot	1	hotter
+hot	2	hottest
+ill	1	worse
+ill	2	worst
+little	1	less
+little	2	least
+macabrely	1	more macabrely
+macabrely	2	most macabrely
+macaronically	1	more macaronically
+macaronically	2	most macaronically
+machiavellianly	1	more machiavellianly
+machiavellianly	2	most machiavellianly
+machoistically	1	more machoistically
+machoistically	2	most machoistically
+mackly	1	more mackly
+mackly	2	most mackly
+macronationally	1	more macronationally
+macronationally	2	most macronationally
+macrophallically	1	more macrophallically
+macrophallically	2	most macrophallically
+macroscopically	1	more macroscopically
+macroscopically	2	most macroscopically
+maddeningly	1	more maddeningly
+maddeningly	2	most maddeningly
+maddingly	1	more maddingly
+maddingly	2	most maddingly
+maestoso	1	more maestoso
+maestoso	2	most maestoso
+magically	1	more magically
+magically	2	most magically
+magickally	1	more magickally
+magickally	2	most magickally
+magickly	1	more magickly
+magickly	2	most magickly
+magisterially	1	more magisterially
+magisterially	2	most magisterially
+magistrally	1	more magistrally
+magistrally	2	most magistrally
+magistratically	1	more magistratically
+magistratically	2	most magistratically
+magnanimously	1	more magnanimously
+magnanimously	2	most magnanimously
+magnetostatically	1	more magnetostatically
+magnetostatically	2	most magnetostatically
+magnifically	1	more magnifically
+magnifically	2	most magnifically
+magnificently	1	more magnificently
+magnificently	2	most magnificently
+magniloquently	1	more magniloquently
+magniloquently	2	most magniloquently
+maieutically	1	more maieutically
+maieutically	2	most maieutically
+maimedly	1	more maimedly
+maimedly	2	most maimedly
+main	1	more main
+main	2	most main
+majestically	1	more majestically
+majestically	2	most majestically
+majoritively	1	more majoritively
+majoritively	2	most majoritively
+maladaptively	1	more maladaptively
+maladaptively	2	most maladaptively
+maladroitly	1	more maladroitly
+maladroitly	2	most maladroitly
+malapertly	1	more malapertly
+malapertly	2	most malapertly
+malapropistically	1	more malapropistically
+malapropistically	2	most malapropistically
+malapropos	1	more malapropos
+malapropos	2	most malapropos
+malcontentedly	1	more malcontentedly
+malcontentedly	2	most malcontentedly
+malcontently	1	more malcontently
+malcontently	2	most malcontently
+malefically	1	more malefically
+malefically	2	most malefically
+maleficently	1	more maleficently
+maleficently	2	most maleficently
+maleficiently	1	more maleficiently
+maleficiently	2	most maleficiently
+malevolently	1	more malevolently
+malevolently	2	most malevolently
+maliciously	1	more maliciously
+maliciously	2	most maliciously
+malignantly	1	more malignantly
+malignantly	2	most malignantly
+malignly	1	more malignly
+malignly	2	most malignly
+malitiously	1	more malitiously
+malitiously	2	most malitiously
+malleably	1	more malleably
+malleably	2	most malleably
+malodorously	1	more malodorously
+malodorously	2	most malodorously
+manageably	1	more manageably
+manageably	2	most manageably
+manfully	1	more manfully
+manfully	2	most manfully
+mangily	1	more mangily
+mangily	2	most mangily
+manglingly	1	more manglingly
+manglingly	2	most manglingly
+maniacally	1	more maniacally
+maniacally	2	most maniacally
+manically	1	more manically
+manically	2	most manically
+manifestly	1	more manifestly
+manifestly	2	most manifestly
+manifold	1	more manifold
+manifold	2	most manifold
+manifoldly	1	more manifoldly
+manifoldly	2	most manifoldly
+manipulably	1	more manipulably
+manipulably	2	most manipulably
+manipulatively	1	more manipulatively
+manipulatively	2	most manipulatively
+mankily	1	more mankily
+mankily	2	most mankily
+manlessly	1	more manlessly
+manlessly	2	most manlessly
+manlily	1	more manlily
+manlily	2	most manlily
+manneristically	1	more manneristically
+manneristically	2	most manneristically
+mannerlessly	1	more mannerlessly
+mannerlessly	2	most mannerlessly
+mannerly	1	more mannerly
+mannerly	2	most mannerly
+mannishly	1	more mannishly
+mannishly	2	most mannishly
+manshiply	1	more manshiply
+manshiply	2	most manshiply
+manwise	1	more manwise
+manwise	2	most manwise
+manyhandedly	1	more manyhandedly
+manyhandedly	2	most manyhandedly
+mardily	1	more mardily
+mardily	2	most mardily
+margarinely	1	more margarinely
+margarinely	2	most margarinely
+marginalistically	1	more marginalistically
+marginalistically	2	most marginalistically
+marginally	1	more marginally
+marginally	2	most marginally
+markedly	1	more markedly
+markedly	2	most markedly
+marketably	1	more marketably
+marketably	2	most marketably
+marmoreally	1	more marmoreally
+marmoreally	2	most marmoreally
+marriageably	1	more marriageably
+marriageably	2	most marriageably
+marshily	1	more marshily
+marshily	2	most marshily
+martially	1	more martially
+martially	2	most martially
+martyrly	1	more martyrly
+martyrly	2	most martyrly
+marvellously	1	more marvellously
+marvellously	2	most marvellously
+marvelously	1	more marvelously
+marvelously	2	most marvelously
+marxistically	1	more marxistically
+marxistically	2	most marxistically
+marxistly	1	more marxistly
+marxistly	2	most marxistly
+masculinely	1	more masculinely
+masculinely	2	most masculinely
+masculinistically	1	more masculinistically
+masculinistically	2	most masculinistically
+masochistically	1	more masochistically
+masochistically	2	most masochistically
+masoretically	1	more masoretically
+masoretically	2	most masoretically
+massagingly	1	more massagingly
+massagingly	2	most massagingly
+massily	1	more massily
+massily	2	most massily
+massively	1	more massively
+massively	2	most massively
+massly	1	more massly
+massly	2	most massly
+masterfully	1	more masterfully
+masterfully	2	most masterfully
+masteringly	1	more masteringly
+masteringly	2	most masteringly
+masterly	1	more masterly
+masterly	2	most masterly
+masturbatorily	1	more masturbatorily
+masturbatorily	2	most masturbatorily
+materialistically	1	more materialistically
+materialistically	2	most materialistically
+materially	1	more materially
+materially	2	most materially
+maternalistically	1	more maternalistically
+maternalistically	2	most maternalistically
+maternally	1	more maternally
+maternally	2	most maternally
+mathematically	1	more mathematically
+mathematically	2	most mathematically
+matily	1	more matily
+matily	2	most matily
+matriarchally	1	more matriarchally
+matriarchally	2	most matriarchally
+matriarchically	1	more matriarchically
+matriarchically	2	most matriarchically
+matrically	1	more matrically
+matrically	2	most matrically
+matricentrically	1	more matricentrically
+matricentrically	2	most matricentrically
+matricidally	1	more matricidally
+matricidally	2	most matricidally
+matrifocally	1	more matrifocally
+matrifocally	2	most matrifocally
+matronly	1	more matronly
+matronly	2	most matronly
+mattedly	1	more mattedly
+mattedly	2	most mattedly
+maturationally	1	more maturationally
+maturationally	2	most maturationally
+maturely	1	more maturely
+maturely	2	most maturely
+maudlinly	1	more maudlinly
+maudlinly	2	most maudlinly
+maunderingly	1	more maunderingly
+maunderingly	2	most maunderingly
+mauvely	1	more mauvely
+mauvely	2	most mauvely
+mawkishly	1	more mawkishly
+mawkishly	2	most mawkishly
+maximally	1	more maximally
+maximally	2	most maximally
+maximumly	1	more maximumly
+maximumly	2	most maximumly
+mazedly	1	more mazedly
+mazedly	2	most mazedly
+mazily	1	more mazily
+mazily	2	most mazily
+meagerly	1	more meagerly
+meagerly	2	most meagerly
+meagrely	1	more meagrely
+meagrely	2	most meagrely
+mealily	1	more mealily
+mealily	2	most mealily
+meanderingly	1	more meanderingly
+meanderingly	2	most meanderingly
+meaningfully	1	more meaningfully
+meaningfully	2	most meaningfully
+meaninglessly	1	more meaninglessly
+meaninglessly	2	most meaninglessly
+meaningly	1	more meaningly
+meaningly	2	most meaningly
+meanspiritedly	1	more meanspiritedly
+meanspiritedly	2	most meanspiritedly
+measurably	1	more measurably
+measurably	2	most measurably
+measuredly	1	more measuredly
+measuredly	2	most measuredly
+measurelessly	1	more measurelessly
+measurelessly	2	most measurelessly
+measurely	1	more measurely
+measurely	2	most measurely
+measuringly	1	more measuringly
+measuringly	2	most measuringly
+meatily	1	more meatily
+meatily	2	most meatily
+mechanically	1	more mechanically
+mechanically	2	most mechanically
+mechanistically	1	more mechanistically
+mechanistically	2	most mechanistically
+meddlesomely	1	more meddlesomely
+meddlesomely	2	most meddlesomely
+meddlingly	1	more meddlingly
+meddlingly	2	most meddlingly
+mediaevally	1	more mediaevally
+mediaevally	2	most mediaevally
+mediagenically	1	more mediagenically
+mediagenically	2	most mediagenically
+medialward	1	more medialward
+medialward	2	most medialward
+medialwards	1	more medialwards
+medialwards	2	most medialwards
+medianly	1	more medianly
+medianly	2	most medianly
+mediatically	1	more mediatically
+mediatically	2	most mediatically
+medically	1	more medically
+medically	2	most medically
+medicamentally	1	more medicamentally
+medicamentally	2	most medicamentally
+medicinally	1	more medicinally
+medicinally	2	most medicinally
+medievally	1	more medievally
+medievally	2	most medievally
+mediocrally	1	more mediocrally
+mediocrally	2	most mediocrally
+mediocrely	1	more mediocrely
+mediocrely	2	most mediocrely
+mediolaterally	1	more mediolaterally
+mediolaterally	2	most mediolaterally
+meditatively	1	more meditatively
+meditatively	2	most meditatively
+mediumistically	1	more mediumistically
+mediumistically	2	most mediumistically
+meechingly	1	more meechingly
+meechingly	2	most meechingly
+meekishly	1	more meekishly
+meekishly	2	most meekishly
+meekly	1	more meekly
+meekly	2	most meekly
+meeterly	1	more meeterly
+meeterly	2	most meeterly
+meetly	1	more meetly
+meetly	2	most meetly
+mega	1	more mega
+mega	2	most mega
+megalomaniacally	1	more megalomaniacally
+megalomaniacally	2	most megalomaniacally
+megaly	1	more megaly
+megaly	2	most megaly
+megaphonically	1	more megaphonically
+megaphonically	2	most megaphonically
+melancholically	1	more melancholically
+melancholically	2	most melancholically
+melancholily	1	more melancholily
+melancholily	2	most melancholily
+melancholiously	1	more melancholiously
+melancholiously	2	most melancholiously
+melioristically	1	more melioristically
+melioristically	2	most melioristically
+melismatically	1	more melismatically
+melismatically	2	most melismatically
+mellifluently	1	more mellifluently
+mellifluently	2	most mellifluently
+mellifluously	1	more mellifluously
+mellifluously	2	most mellifluously
+mellowingly	1	more mellowingly
+mellowingly	2	most mellowingly
+mellowly	1	more mellowly
+mellowly	2	most mellowly
+melodially	1	more melodially
+melodially	2	most melodially
+melodically	1	more melodically
+melodically	2	most melodically
+melodiously	1	more melodiously
+melodiously	2	most melodiously
+melodramatically	1	more melodramatically
+melodramatically	2	most melodramatically
+meltingly	1	more meltingly
+meltingly	2	most meltingly
+menacingly	1	more menacingly
+menacingly	2	most menacingly
+mendaciously	1	more mendaciously
+mendaciously	2	most mendaciously
+menially	1	more menially
+menially	2	most menially
+mentalistically	1	more mentalistically
+mentalistically	2	most mentalistically
+mentally	1	more mentally
+mentally	2	most mentally
+mentionably	1	more mentionably
+mentionably	2	most mentionably
+mentorially	1	more mentorially
+mentorially	2	most mentorially
+meowingly	1	more meowingly
+meowingly	2	most meowingly
+mephistopheleanly	1	more mephistopheleanly
+mephistopheleanly	2	most mephistopheleanly
+mephitically	1	more mephitically
+mephitically	2	most mephitically
+mercantilely	1	more mercantilely
+mercantilely	2	most mercantilely
+mercenarily	1	more mercenarily
+mercenarily	2	most mercenarily
+mercifully	1	more mercifully
+mercifully	2	most mercifully
+mercilessly	1	more mercilessly
+mercilessly	2	most mercilessly
+mercurially	1	more mercurially
+mercurially	2	most mercurially
+meretriciously	1	more meretriciously
+meretriciously	2	most meretriciously
+meritedly	1	more meritedly
+meritedly	2	most meritedly
+meritocratically	1	more meritocratically
+meritocratically	2	most meritocratically
+meritoriously	1	more meritoriously
+meritoriously	2	most meritoriously
+merohedrally	1	more merohedrally
+merohedrally	2	most merohedrally
+meromorphically	1	more meromorphically
+meromorphically	2	most meromorphically
+merrily	1	more merrily
+merrily	2	most merrily
+mesenchymally	1	more mesenchymally
+mesenchymally	2	most mesenchymally
+mesially	1	more mesially
+mesially	2	most mesially
+mesmerically	1	more mesmerically
+mesmerically	2	most mesmerically
+mesmerisingly	1	more mesmerisingly
+mesmerisingly	2	most mesmerisingly
+mesmerizingly	1	more mesmerizingly
+mesmerizingly	2	most mesmerizingly
+messianically	1	more messianically
+messianically	2	most messianically
+messily	1	more messily
+messily	2	most messily
+messlessly	1	more messlessly
+messlessly	2	most messlessly
+metachromatically	1	more metachromatically
+metachromatically	2	most metachromatically
+metacinematically	1	more metacinematically
+metacinematically	2	most metacinematically
+metafictionally	1	more metafictionally
+metafictionally	2	most metafictionally
+metallically	1	more metallically
+metallically	2	most metallically
+metallicly	1	more metallicly
+metallicly	2	most metallicly
+metaphorically	1	more metaphorically
+metaphorically	2	most metaphorically
+metaphrastically	1	more metaphrastically
+metaphrastically	2	most metaphrastically
+metaphysically	1	more metaphysically
+metaphysically	2	most metaphysically
+metapoetically	1	more metapoetically
+metapoetically	2	most metapoetically
+metareflectively	1	more metareflectively
+metareflectively	2	most metareflectively
+metareflexively	1	more metareflexively
+metareflexively	2	most metareflexively
+metastably	1	more metastably
+metastably	2	most metastably
+metasubjectively	1	more metasubjectively
+metasubjectively	2	most metasubjectively
+metatheatrically	1	more metatheatrically
+metatheatrically	2	most metatheatrically
+metathetically	1	more metathetically
+metathetically	2	most metathetically
+meteorically	1	more meteorically
+meteorically	2	most meteorically
+methodically	1	more methodically
+methodically	2	most methodically
+methodistically	1	more methodistically
+methodistically	2	most methodistically
+methodologically	1	more methodologically
+methodologically	2	most methodologically
+meticulously	1	more meticulously
+meticulously	2	most meticulously
+metonymically	1	more metonymically
+metonymically	2	most metonymically
+metonymously	1	more metonymously
+metonymously	2	most metonymously
+metrically	1	more metrically
+metrically	2	most metrically
+metronomically	1	more metronomically
+metronomically	2	most metronomically
+metropolitanly	1	more metropolitanly
+metropolitanly	2	most metropolitanly
+metrosexually	1	more metrosexually
+metrosexually	2	most metrosexually
+mettlesomely	1	more mettlesomely
+mettlesomely	2	most mettlesomely
+mewingly	1	more mewingly
+mewingly	2	most mewingly
+miasmatically	1	more miasmatically
+miasmatically	2	most miasmatically
+miasmically	1	more miasmically
+miasmically	2	most miasmically
+micawberly	1	more micawberly
+micawberly	2	most micawberly
+mickle	1	more mickle
+mickle	2	most mickle
+microaggressively	1	more microaggressively
+microaggressively	2	most microaggressively
+micronationally	1	more micronationally
+micronationally	2	most micronationally
+micropolitically	1	more micropolitically
+micropolitically	2	most micropolitically
+microscopically	1	more microscopically
+microscopically	2	most microscopically
+microtonally	1	more microtonally
+microtonally	2	most microtonally
+middlesome	1	more middlesome
+middlesome	2	most middlesome
+middling	1	more middling
+middling	2	most middling
+middlingly	1	more middlingly
+middlingly	2	most middlingly
+midmarket	1	more midmarket
+midmarket	2	most midmarket
+miffily	1	more miffily
+miffily	2	most miffily
+mightily	1	more mightily
+mightily	2	most mightily
+mightly	1	more mightly
+mightly	2	most mightly
+militantly	1	more militantly
+militantly	2	most militantly
+militarically	1	more militarically
+militarically	2	most militarically
+militarily	1	more militarily
+militarily	2	most militarily
+militaristically	1	more militaristically
+militaristically	2	most militaristically
+milkily	1	more milkily
+milkily	2	most milkily
+milquetoastedly	1	more milquetoastedly
+milquetoastedly	2	most milquetoastedly
+miltonically	1	more miltonically
+miltonically	2	most miltonically
+mimetically	1	more mimetically
+mimetically	2	most mimetically
+mimically	1	more mimically
+mimically	2	most mimically
+minaciously	1	more minaciously
+minaciously	2	most minaciously
+minatorially	1	more minatorially
+minatorially	2	most minatorially
+minatorily	1	more minatorily
+minatorily	2	most minatorily
+mincingly	1	more mincingly
+mincingly	2	most mincingly
+mindblowingly	1	more mindblowingly
+mindblowingly	2	most mindblowingly
+mindbogglingly	1	more mindbogglingly
+mindbogglingly	2	most mindbogglingly
+mindedly	1	more mindedly
+mindedly	2	most mindedly
+mindfully	1	more mindfully
+mindfully	2	most mindfully
+mindlessly	1	more mindlessly
+mindlessly	2	most mindlessly
+mindnumbingly	1	more mindnumbingly
+mindnumbingly	2	most mindnumbingly
+mingily	1	more mingily
+mingily	2	most mingily
+mingledly	1	more mingledly
+mingledly	2	most mingledly
+minglingly	1	more minglingly
+minglingly	2	most minglingly
+minimalistically	1	more minimalistically
+minimalistically	2	most minimalistically
+minionlike	1	more minionlike
+minionlike	2	most minionlike
+minionly	1	more minionly
+minionly	2	most minionly
+minusculely	1	more minusculely
+minusculely	2	most minusculely
+minutely	1	more minutely
+minutely	2	most minutely
+minutiously	1	more minutiously
+minutiously	2	most minutiously
+minxishly	1	more minxishly
+minxishly	2	most minxishly
+miraculously	1	more miraculously
+miraculously	2	most miraculously
+mirifically	1	more mirifically
+mirifically	2	most mirifically
+mirkily	1	more mirkily
+mirkily	2	most mirkily
+mirthfully	1	more mirthfully
+mirthfully	2	most mirthfully
+mirthlessly	1	more mirthlessly
+mirthlessly	2	most mirthlessly
+misadventurously	1	more misadventurously
+misadventurously	2	most misadventurously
+misadvisedly	1	more misadvisedly
+misadvisedly	2	most misadvisedly
+misanthropically	1	more misanthropically
+misanthropically	2	most misanthropically
+misapprehensively	1	more misapprehensively
+misapprehensively	2	most misapprehensively
+misappropriately	1	more misappropriately
+misappropriately	2	most misappropriately
+misbecomingly	1	more misbecomingly
+misbecomingly	2	most misbecomingly
+misbelievingly	1	more misbelievingly
+misbelievingly	2	most misbelievingly
+miscellaneously	1	more miscellaneously
+miscellaneously	2	most miscellaneously
+mischievously	1	more mischievously
+mischievously	2	most mischievously
+miscibly	1	more miscibly
+miscibly	2	most miscibly
+misconceivedly	1	more misconceivedly
+misconceivedly	2	most misconceivedly
+misdirectedly	1	more misdirectedly
+misdirectedly	2	most misdirectedly
+miserably	1	more miserably
+miserably	2	most miserably
+miserlily	1	more miserlily
+miserlily	2	most miserlily
+misfortunately	1	more misfortunately
+misfortunately	2	most misfortunately
+misgivingly	1	more misgivingly
+misgivingly	2	most misgivingly
+misguidedly	1	more misguidedly
+misguidedly	2	most misguidedly
+misguidingly	1	more misguidingly
+misguidingly	2	most misguidingly
+misinformedly	1	more misinformedly
+misinformedly	2	most misinformedly
+misjudgingly	1	more misjudgingly
+misjudgingly	2	most misjudgingly
+misleadingly	1	more misleadingly
+misleadingly	2	most misleadingly
+misogynistically	1	more misogynistically
+misogynistically	2	most misogynistically
+misogynously	1	more misogynously
+misogynously	2	most misogynously
+misplacedly	1	more misplacedly
+misplacedly	2	most misplacedly
+misshapenly	1	more misshapenly
+misshapenly	2	most misshapenly
+missingly	1	more missingly
+missingly	2	most missingly
+missionally	1	more missionally
+missionally	2	most missionally
+missionarily	1	more missionarily
+missionarily	2	most missionarily
+missishly	1	more missishly
+missishly	2	most missishly
+misspellingly	1	more misspellingly
+misspellingly	2	most misspellingly
+mistakably	1	more mistakably
+mistakably	2	most mistakably
+mistakeably	1	more mistakeably
+mistakeably	2	most mistakeably
+mistily	1	more mistily
+mistily	2	most mistily
+mistrustfully	1	more mistrustfully
+mistrustfully	2	most mistrustfully
+mistrustingly	1	more mistrustingly
+mistrustingly	2	most mistrustingly
+misunderstandingly	1	more misunderstandingly
+misunderstandingly	2	most misunderstandingly
+mitigatedly	1	more mitigatedly
+mitigatedly	2	most mitigatedly
+mitigatingly	1	more mitigatingly
+mitigatingly	2	most mitigatingly
+mixedly	1	more mixedly
+mixedly	2	most mixedly
+mixtly	1	more mixtly
+mixtly	2	most mixtly
+moanfully	1	more moanfully
+moanfully	2	most moanfully
+moaningly	1	more moaningly
+moaningly	2	most moaningly
+mobhanded	1	more mobhanded
+mobhanded	2	most mobhanded
+mobilely	1	more mobilely
+mobilely	2	most mobilely
+mockably	1	more mockably
+mockably	2	most mockably
+mockfully	1	more mockfully
+mockfully	2	most mockfully
+mockingly	1	more mockingly
+mockingly	2	most mockingly
+modalistically	1	more modalistically
+modalistically	2	most modalistically
+modally	1	more modally
+modally	2	most modally
+moderately	1	more moderately
+moderately	2	most moderately
+modernistically	1	more modernistically
+modernistically	2	most modernistically
+modernly	1	more modernly
+modernly	2	most modernly
+modestly	1	more modestly
+modestly	2	most modestly
+modishly	1	more modishly
+modishly	2	most modishly
+modularly	1	more modularly
+modularly	2	most modularly
+moistly	1	more moistly
+moistly	2	most moistly
+moldily	1	more moldily
+moldily	2	most moldily
+molliently	1	more molliently
+molliently	2	most molliently
+mollifiedly	1	more mollifiedly
+mollifiedly	2	most mollifiedly
+mollifyingly	1	more mollifyingly
+mollifyingly	2	most mollifyingly
+moltenly	1	more moltenly
+moltenly	2	most moltenly
+monasterially	1	more monasterially
+monasterially	2	most monasterially
+monastically	1	more monastically
+monastically	2	most monastically
+monistically	1	more monistically
+monistically	2	most monistically
+monitorially	1	more monitorially
+monitorially	2	most monitorially
+monkeyishly	1	more monkeyishly
+monkeyishly	2	most monkeyishly
+monkishly	1	more monkishly
+monkishly	2	most monkishly
+monocratically	1	more monocratically
+monocratically	2	most monocratically
+monogamously	1	more monogamously
+monogamously	2	most monogamously
+monogenically	1	more monogenically
+monogenically	2	most monogenically
+monolinguistically	1	more monolinguistically
+monolinguistically	2	most monolinguistically
+monolithically	1	more monolithically
+monolithically	2	most monolithically
+monologically	1	more monologically
+monologically	2	most monologically
+monomaniacally	1	more monomaniacally
+monomaniacally	2	most monomaniacally
+mononymically	1	more mononymically
+mononymically	2	most mononymically
+mononymously	1	more mononymously
+mononymously	2	most mononymously
+monophonically	1	more monophonically
+monophonically	2	most monophonically
+monopolistically	1	more monopolistically
+monopolistically	2	most monopolistically
+monopsonistically	1	more monopsonistically
+monopsonistically	2	most monopsonistically
+monosexually	1	more monosexually
+monosexually	2	most monosexually
+monotonously	1	more monotonously
+monotonously	2	most monotonously
+monstrously	1	more monstrously
+monstrously	2	most monstrously
+monumentally	1	more monumentally
+monumentally	2	most monumentally
+moodily	1	more moodily
+moodily	2	most moodily
+moodishly	1	more moodishly
+moodishly	2	most moodishly
+mooingly	1	more mooingly
+mooingly	2	most mooingly
+moonily	1	more moonily
+moonily	2	most moonily
+moonishly	1	more moonishly
+moonishly	2	most moonishly
+moorishly	1	more moorishly
+moorishly	2	most moorishly
+mopily	1	more mopily
+mopily	2	most mopily
+mopingly	1	more mopingly
+mopingly	2	most mopingly
+mopishly	1	more mopishly
+mopishly	2	most mopishly
+moralisingly	1	more moralisingly
+moralisingly	2	most moralisingly
+moralistically	1	more moralistically
+moralistically	2	most moralistically
+moralizingly	1	more moralizingly
+moralizingly	2	most moralizingly
+morally	1	more morally
+morally	2	most morally
+morbidly	1	more morbidly
+morbidly	2	most morbidly
+morbifically	1	more morbifically
+morbifically	2	most morbifically
+mordaciously	1	more mordaciously
+mordaciously	2	most mordaciously
+mordantly	1	more mordantly
+mordantly	2	most mordantly
+morphically	1	more morphically
+morphically	2	most morphically
+mortally	1	more mortally
+mortally	2	most mortally
+mortiferously	1	more mortiferously
+mortiferously	2	most mortiferously
+mortifiedly	1	more mortifiedly
+mortifiedly	2	most mortifiedly
+mortifyingly	1	more mortifyingly
+mortifyingly	2	most mortifyingly
+motheringly	1	more motheringly
+motheringly	2	most motheringly
+motherless	1	more motherless
+motherless	2	most motherless
+motherlily	1	more motherlily
+motherlily	2	most motherlily
+motherly	1	more motherly
+motherly	2	most motherly
+motionlessly	1	more motionlessly
+motionlessly	2	most motionlessly
+motivationally	1	more motivationally
+motivationally	2	most motivationally
+moulderingly	1	more moulderingly
+moulderingly	2	most moulderingly
+mouldily	1	more mouldily
+mouldily	2	most mouldily
+mountainously	1	more mountainously
+mountainously	2	most mountainously
+mountainward	1	more mountainward
+mountainward	2	most mountainward
+mountainwards	1	more mountainwards
+mountainwards	2	most mountainwards
+mountingly	1	more mountingly
+mountingly	2	most mountingly
+mournfully	1	more mournfully
+mournfully	2	most mournfully
+mourningly	1	more mourningly
+mourningly	2	most mourningly
+mouselike	1	more mouselike
+mouselike	2	most mouselike
+mousily	1	more mousily
+mousily	2	most mousily
+mouthily	1	more mouthily
+mouthily	2	most mouthily
+mouthingly	1	more mouthingly
+mouthingly	2	most mouthingly
+mouthpuckeringly	1	more mouthpuckeringly
+mouthpuckeringly	2	most mouthpuckeringly
+mouthwateringly	1	more mouthwateringly
+mouthwateringly	2	most mouthwateringly
+movably	1	more movably
+movably	2	most movably
+moveably	1	more moveably
+moveably	2	most moveably
+movedly	1	more movedly
+movedly	2	most movedly
+movelessly	1	more movelessly
+movelessly	2	most movelessly
+movingly	1	more movingly
+movingly	2	most movingly
+much	1	more
+much	2	most
+mucilaginously	1	more mucilaginously
+mucilaginously	2	most mucilaginously
+muckily	1	more muckily
+muckily	2	most muckily
+mucolytically	1	more mucolytically
+mucolytically	2	most mucolytically
+mucously	1	more mucously
+mucously	2	most mucously
+mucronately	1	more mucronately
+mucronately	2	most mucronately
+muddily	1	more muddily
+muddily	2	most muddily
+muddleheadedly	1	more muddleheadedly
+muddleheadedly	2	most muddleheadedly
+muddlingly	1	more muddlingly
+muddlingly	2	most muddlingly
+muffledly	1	more muffledly
+muffledly	2	most muffledly
+muggily	1	more muggily
+muggily	2	most muggily
+mulierly	1	more mulierly
+mulierly	2	most mulierly
+mulishly	1	more mulishly
+mulishly	2	most mulishly
+multiculturally	1	more multiculturally
+multiculturally	2	most multiculturally
+multidimensionally	1	more multidimensionally
+multidimensionally	2	most multidimensionally
+multiethnically	1	more multiethnically
+multiethnically	2	most multiethnically
+multifacetedly	1	more multifacetedly
+multifacetedly	2	most multifacetedly
+multifariously	1	more multifariously
+multifariously	2	most multifariously
+multifocally	1	more multifocally
+multifocally	2	most multifocally
+multifunctionally	1	more multifunctionally
+multifunctionally	2	most multifunctionally
+multilaterally	1	more multilaterally
+multilaterally	2	most multilaterally
+multilingually	1	more multilingually
+multilingually	2	most multilingually
+multilinguistically	1	more multilinguistically
+multilinguistically	2	most multilinguistically
+multinationally	1	more multinationally
+multinationally	2	most multinationally
+multipliciously	1	more multipliciously
+multipliciously	2	most multipliciously
+multiracially	1	more multiracially
+multiracially	2	most multiracially
+multisensorially	1	more multisensorially
+multisensorially	2	most multisensorially
+multisensorily	1	more multisensorily
+multisensorily	2	most multisensorily
+multisyllabically	1	more multisyllabically
+multisyllabically	2	most multisyllabically
+multitudinously	1	more multitudinously
+multitudinously	2	most multitudinously
+multivalently	1	more multivalently
+multivalently	2	most multivalently
+multiversally	1	more multiversally
+multiversally	2	most multiversally
+mumblingly	1	more mumblingly
+mumblingly	2	most mumblingly
+mumpishly	1	more mumpishly
+mumpishly	2	most mumpishly
+mundanely	1	more mundanely
+mundanely	2	most mundanely
+munificently	1	more munificently
+munificently	2	most munificently
+murderously	1	more murderously
+murderously	2	most murderously
+murkily	1	more murkily
+murkily	2	most murkily
+murklins	1	more murklins
+murklins	2	most murklins
+murmuringly	1	more murmuringly
+murmuringly	2	most murmuringly
+murmurlessly	1	more murmurlessly
+murmurlessly	2	most murmurlessly
+murmurously	1	more murmurously
+murmurously	2	most murmurously
+murrain	1	more murrain
+murrain	2	most murrain
+muscularly	1	more muscularly
+muscularly	2	most muscularly
+musculoskeletally	1	more musculoskeletally
+musculoskeletally	2	most musculoskeletally
+musefully	1	more musefully
+musefully	2	most musefully
+mushily	1	more mushily
+mushily	2	most mushily
+musically	1	more musically
+musically	2	most musically
+musicianly	1	more musicianly
+musicianly	2	most musicianly
+musingly	1	more musingly
+musingly	2	most musingly
+muskily	1	more muskily
+muskily	2	most muskily
+mussily	1	more mussily
+mussily	2	most mussily
+mustily	1	more mustily
+mustily	2	most mustily
+mutably	1	more mutably
+mutably	2	most mutably
+mutatively	1	more mutatively
+mutatively	2	most mutatively
+mutedly	1	more mutedly
+mutedly	2	most mutedly
+mutely	1	more mutely
+mutely	2	most mutely
+mutinously	1	more mutinously
+mutinously	2	most mutinously
+mutteringly	1	more mutteringly
+mutteringly	2	most mutteringly
+mutualistically	1	more mutualistically
+mutualistically	2	most mutualistically
+mutually	1	more mutually
+mutually	2	most mutually
+muzzily	1	more muzzily
+muzzily	2	most muzzily
+myopically	1	more myopically
+myopically	2	most myopically
+mystagogically	1	more mystagogically
+mystagogically	2	most mystagogically
+mysterically	1	more mysterically
+mysterically	2	most mysterically
+mysteriously	1	more mysteriously
+mysteriously	2	most mysteriously
+mystically	1	more mystically
+mystically	2	most mystically
+mysticly	1	more mysticly
+mysticly	2	most mysticly
+mystifiedly	1	more mystifiedly
+mystifiedly	2	most mystifiedly
+mystifyingly	1	more mystifyingly
+mystifyingly	2	most mystifyingly
+mythically	1	more mythically
+mythically	2	most mythically
+mythohistorically	1	more mythohistorically
+mythohistorically	2	most mythohistorically
+mythologically	1	more mythologically
+mythologically	2	most mythologically
+mythopoetically	1	more mythopoetically
+mythopoetically	2	most mythopoetically
+oafishly	1	more oafishly
+oafishly	2	most oafishly
+obdurantly	1	more obdurantly
+obdurantly	2	most obdurantly
+obdurately	1	more obdurately
+obdurately	2	most obdurately
+obedientially	1	more obedientially
+obedientially	2	most obedientially
+obediently	1	more obediently
+obediently	2	most obediently
+obeisantly	1	more obeisantly
+obeisantly	2	most obeisantly
+obesely	1	more obesely
+obesely	2	most obesely
+obeyingly	1	more obeyingly
+obeyingly	2	most obeyingly
+obfuscatorily	1	more obfuscatorily
+obfuscatorily	2	most obfuscatorily
+objectionably	1	more objectionably
+objectionably	2	most objectionably
+objectively	1	more objectively
+objectively	2	most objectively
+objectivistically	1	more objectivistically
+objectivistically	2	most objectivistically
+objectlessly	1	more objectlessly
+objectlessly	2	most objectlessly
+objectually	1	more objectually
+objectually	2	most objectually
+objurgatively	1	more objurgatively
+objurgatively	2	most objurgatively
+objurgatorily	1	more objurgatorily
+objurgatorily	2	most objurgatorily
+oblately	1	more oblately
+oblately	2	most oblately
+obligately	1	more obligately
+obligately	2	most obligately
+obligatorily	1	more obligatorily
+obligatorily	2	most obligatorily
+obligedly	1	more obligedly
+obligedly	2	most obligedly
+obligingly	1	more obligingly
+obligingly	2	most obligingly
+obliquely	1	more obliquely
+obliquely	2	most obliquely
+obliteratively	1	more obliteratively
+obliteratively	2	most obliteratively
+obliviously	1	more obliviously
+obliviously	2	most obliviously
+obnoxiously	1	more obnoxiously
+obnoxiously	2	most obnoxiously
+obovately	1	more obovately
+obovately	2	most obovately
+obreptitiously	1	more obreptitiously
+obreptitiously	2	most obreptitiously
+obscenely	1	more obscenely
+obscenely	2	most obscenely
+obscuredly	1	more obscuredly
+obscuredly	2	most obscuredly
+obscurely	1	more obscurely
+obscurely	2	most obscurely
+obscuringly	1	more obscuringly
+obscuringly	2	most obscuringly
+obsequiously	1	more obsequiously
+obsequiously	2	most obsequiously
+observably	1	more observably
+observably	2	most observably
+observantly	1	more observantly
+observantly	2	most observantly
+observationally	1	more observationally
+observationally	2	most observationally
+observingly	1	more observingly
+observingly	2	most observingly
+obsessedly	1	more obsessedly
+obsessedly	2	most obsessedly
+obsessingly	1	more obsessingly
+obsessingly	2	most obsessingly
+obsessionally	1	more obsessionally
+obsessionally	2	most obsessionally
+obsessively	1	more obsessively
+obsessively	2	most obsessively
+obsoletely	1	more obsoletely
+obsoletely	2	most obsoletely
+obstinately	1	more obstinately
+obstinately	2	most obstinately
+obstreperously	1	more obstreperously
+obstreperously	2	most obstreperously
+obstructedly	1	more obstructedly
+obstructedly	2	most obstructedly
+obstructingly	1	more obstructingly
+obstructingly	2	most obstructingly
+obstructionally	1	more obstructionally
+obstructionally	2	most obstructionally
+obstructively	1	more obstructively
+obstructively	2	most obstructively
+obtrusively	1	more obtrusively
+obtrusively	2	most obtrusively
+obtusely	1	more obtusely
+obtusely	2	most obtusely
+obv	1	more obv
+obv	2	most obv
+obversely	1	more obversely
+obversely	2	most obversely
+obvi	1	more obvi
+obvi	2	most obvi
+obviously	1	more obviously
+obviously	2	most obviously
+obvs	1	more obvs
+obvs	2	most obvs
+obvy	1	more obvy
+obvy	2	most obvy
+obvz	1	more obvz
+obvz	2	most obvz
+occasionably	1	more occasionably
+occasionably	2	most occasionably
+occasionally	1	more occasionally
+occasionally	2	most occasionally
+occasionly	1	more occasionly
+occasionly	2	most occasionly
+occidentally	1	more occidentally
+occidentally	2	most occidentally
+occlusively	1	more occlusively
+occlusively	2	most occlusively
+occultically	1	more occultically
+occultically	2	most occultically
+occultly	1	more occultly
+occultly	2	most occultly
+occupationally	1	more occupationally
+occupationally	2	most occupationally
+oceanically	1	more oceanically
+oceanically	2	most oceanically
+ochlocratically	1	more ochlocratically
+ochlocratically	2	most ochlocratically
+odiferously	1	more odiferously
+odiferously	2	most odiferously
+odiously	1	more odiously
+odiously	2	most odiously
+odoriferously	1	more odoriferously
+odoriferously	2	most odoriferously
+odorously	1	more odorously
+odorously	2	most odorously
+odourously	1	more odourously
+odourously	2	most odourously
+offencelessly	1	more offencelessly
+offencelessly	2	most offencelessly
+offencively	1	more offencively
+offencively	2	most offencively
+offendedly	1	more offendedly
+offendedly	2	most offendedly
+offenselessly	1	more offenselessly
+offenselessly	2	most offenselessly
+offensively	1	more offensively
+offensively	2	most offensively
+offhand	1	more offhand
+offhand	2	most offhand
+offhandedly	1	more offhandedly
+offhandedly	2	most offhandedly
+offically	1	more offically
+offically	2	most offically
+officially	1	more officially
+officially	2	most officially
+officiously	1	more officiously
+officiously	2	most officiously
+offishly	1	more offishly
+offishly	2	most offishly
+offkey	1	more offkey
+offkey	2	most offkey
+offly	1	more offly
+offly	2	most offly
+offputtingly	1	more offputtingly
+offputtingly	2	most offputtingly
+offset	1	more offset
+offset	2	most offset
+oftenly	1	more oftenly
+oftenly	2	most oftenly
+ogreishly	1	more ogreishly
+ogreishly	2	most ogreishly
+ogrishly	1	more ogrishly
+ogrishly	2	most ogrishly
+oilily	1	more oilily
+oilily	2	most oilily
+okay	1	more okay
+okay	2	most okay
+okayly	1	more okayly
+okayly	2	most okayly
+oldly	1	more oldly
+oldly	2	most oldly
+oleaginously	1	more oleaginously
+oleaginously	2	most oleaginously
+oleophobically	1	more oleophobically
+oleophobically	2	most oleophobically
+oligarchically	1	more oligarchically
+oligarchically	2	most oligarchically
+oligopolistically	1	more oligopolistically
+oligopolistically	2	most oligopolistically
+olympianly	1	more olympianly
+olympianly	2	most olympianly
+olympically	1	more olympically
+olympically	2	most olympically
+olympicly	1	more olympicly
+olympicly	2	most olympicly
+ominously	1	more ominously
+ominously	2	most ominously
+omissively	1	more omissively
+omissively	2	most omissively
+omnifariously	1	more omnifariously
+omnifariously	2	most omnifariously
+omniphobically	1	more omniphobically
+omniphobically	2	most omniphobically
+omnipotently	1	more omnipotently
+omnipotently	2	most omnipotently
+omnivorously	1	more omnivorously
+omnivorously	2	most omnivorously
+onanistically	1	more onanistically
+onanistically	2	most onanistically
+oneirically	1	more oneirically
+oneirically	2	most oneirically
+onerously	1	more onerously
+onerously	2	most onerously
+onomastically	1	more onomastically
+onomastically	2	most onomastically
+onomatopoeically	1	more onomatopoeically
+onomatopoeically	2	most onomatopoeically
+onomatopoetically	1	more onomatopoetically
+onomatopoetically	2	most onomatopoetically
+onomatopoietically	1	more onomatopoietically
+onomatopoietically	2	most onomatopoietically
+onomotopoetically	1	more onomotopoetically
+onomotopoetically	2	most onomotopoetically
+onshore	1	more onshore
+onshore	2	most onshore
+ontically	1	more ontically
+ontically	2	most ontically
+ontologically	1	more ontologically
+ontologically	2	most ontologically
+oologically	1	more oologically
+oologically	2	most oologically
+oozily	1	more oozily
+oozily	2	most oozily
+oozingly	1	more oozingly
+oozingly	2	most oozingly
+opalescently	1	more opalescently
+opalescently	2	most opalescently
+opaquely	1	more opaquely
+opaquely	2	most opaquely
+openhanded	1	more openhanded
+openhanded	2	most openhanded
+openhandedly	1	more openhandedly
+openhandedly	2	most openhandedly
+openheartedly	1	more openheartedly
+openheartedly	2	most openheartedly
+openly	1	more openly
+openly	2	most openly
+openmindedly	1	more openmindedly
+openmindedly	2	most openmindedly
+operably	1	more operably
+operably	2	most operably
+operatically	1	more operatically
+operatically	2	most operatically
+operatively	1	more operatively
+operatively	2	most operatively
+operosely	1	more operosely
+operosely	2	most operosely
+ophitically	1	more ophitically
+ophitically	2	most ophitically
+ophthalmologically	1	more ophthalmologically
+ophthalmologically	2	most ophthalmologically
+opinatively	1	more opinatively
+opinatively	2	most opinatively
+opiniatively	1	more opiniatively
+opiniatively	2	most opiniatively
+opinionatedly	1	more opinionatedly
+opinionatedly	2	most opinionatedly
+opinionately	1	more opinionately
+opinionately	2	most opinionately
+opinionatively	1	more opinionatively
+opinionatively	2	most opinionatively
+opportunely	1	more opportunely
+opportunely	2	most opportunely
+opportunistically	1	more opportunistically
+opportunistically	2	most opportunistically
+opposably	1	more opposably
+opposably	2	most opposably
+opposingly	1	more opposingly
+opposingly	2	most opposingly
+oppositely	1	more oppositely
+oppositely	2	most oppositely
+oppositionally	1	more oppositionally
+oppositionally	2	most oppositionally
+oppositively	1	more oppositively
+oppositively	2	most oppositively
+oppressingly	1	more oppressingly
+oppressingly	2	most oppressingly
+oppressively	1	more oppressively
+oppressively	2	most oppressively
+opprobriously	1	more opprobriously
+opprobriously	2	most opprobriously
+optimally	1	more optimally
+optimally	2	most optimally
+optimistically	1	more optimistically
+optimistically	2	most optimistically
+optionally	1	more optionally
+optionally	2	most optionally
+opulently	1	more opulently
+opulently	2	most opulently
+oracularly	1	more oracularly
+oracularly	2	most oracularly
+oraculously	1	more oraculously
+oraculously	2	most oraculously
+orangely	1	more orangely
+orangely	2	most orangely
+oratorially	1	more oratorially
+oratorially	2	most oratorially
+orbicularly	1	more orbicularly
+orbicularly	2	most orbicularly
+orbiculately	1	more orbiculately
+orbiculately	2	most orbiculately
+orchestratively	1	more orchestratively
+orchestratively	2	most orchestratively
+orderly	1	more orderly
+orderly	2	most orderly
+ordinately	1	more ordinately
+ordinately	2	most ordinately
+ordoliberally	1	more ordoliberally
+ordoliberally	2	most ordoliberally
+ordrely	1	more ordrely
+ordrely	2	most ordrely
+orfen	1	more orfen
+orfen	2	most orfen
+organically	1	more organically
+organically	2	most organically
+organizedly	1	more organizedly
+organizedly	2	most organizedly
+organoleptically	1	more organoleptically
+organoleptically	2	most organoleptically
+orgasmically	1	more orgasmically
+orgasmically	2	most orgasmically
+orgiastically	1	more orgiastically
+orgiastically	2	most orgiastically
+orgulously	1	more orgulously
+orgulously	2	most orgulously
+orientally	1	more orientally
+orientally	2	most orientally
+oriently	1	more oriently
+oriently	2	most oriently
+originalistically	1	more originalistically
+originalistically	2	most originalistically
+originally	1	more originally
+originally	2	most originally
+originarily	1	more originarily
+originarily	2	most originarily
+originatively	1	more originatively
+originatively	2	most originatively
+ornamentally	1	more ornamentally
+ornamentally	2	most ornamentally
+ornately	1	more ornately
+ornately	2	most ornately
+ornerily	1	more ornerily
+ornerily	2	most ornerily
+orpedly	1	more orpedly
+orpedly	2	most orpedly
+orphically	1	more orphically
+orphically	2	most orphically
+orthodoxally	1	more orthodoxally
+orthodoxally	2	most orthodoxally
+orthodoxically	1	more orthodoxically
+orthodoxically	2	most orthodoxically
+orthodoxly	1	more orthodoxly
+orthodoxly	2	most orthodoxly
+orthogonally	1	more orthogonally
+orthogonally	2	most orthogonally
+orthopraxically	1	more orthopraxically
+orthopraxically	2	most orthopraxically
+orwellianly	1	more orwellianly
+orwellianly	2	most orwellianly
+ostensively	1	more ostensively
+ostensively	2	most ostensively
+ostentatiously	1	more ostentatiously
+ostentatiously	2	most ostentatiously
+ostentatively	1	more ostentatively
+ostentatively	2	most ostentatively
+outdatedly	1	more outdatedly
+outdatedly	2	most outdatedly
+outerly	1	more outerly
+outerly	2	most outerly
+outgoingly	1	more outgoingly
+outgoingly	2	most outgoingly
+outlandishly	1	more outlandishly
+outlandishly	2	most outlandishly
+outly	1	more outly
+outly	2	most outly
+outmodedly	1	more outmodedly
+outmodedly	2	most outmodedly
+outragedly	1	more outragedly
+outragedly	2	most outragedly
+outrageously	1	more outrageously
+outrageously	2	most outrageously
+outside	1	more outside
+outside	2	most outside
+outspokenly	1	more outspokenly
+outspokenly	2	most outspokenly
+outspreadingly	1	more outspreadingly
+outspreadingly	2	most outspreadingly
+outstandingly	1	more outstandingly
+outstandingly	2	most outstandingly
+outward	1	more outward
+outward	2	most outward
+outwards	1	more outwards
+outwards	2	most outwards
+ovally	1	more ovally
+ovally	2	most ovally
+ovately	1	more ovately
+ovately	2	most ovately
+overaggressively	1	more overaggressively
+overaggressively	2	most overaggressively
+overambitiously	1	more overambitiously
+overambitiously	2	most overambitiously
+overanalytically	1	more overanalytically
+overanalytically	2	most overanalytically
+overanxiously	1	more overanxiously
+overanxiously	2	most overanxiously
+overarchingly	1	more overarchingly
+overarchingly	2	most overarchingly
+overassertively	1	more overassertively
+overassertively	2	most overassertively
+overattentively	1	more overattentively
+overattentively	2	most overattentively
+overawingly	1	more overawingly
+overawingly	2	most overawingly
+overbearingly	1	more overbearingly
+overbearingly	2	most overbearingly
+overbitterly	1	more overbitterly
+overbitterly	2	most overbitterly
+overboisterously	1	more overboisterously
+overboisterously	2	most overboisterously
+overboldly	1	more overboldly
+overboldly	2	most overboldly
+overbravely	1	more overbravely
+overbravely	2	most overbravely
+overbrightly	1	more overbrightly
+overbrightly	2	most overbrightly
+overbrilliantly	1	more overbrilliantly
+overbrilliantly	2	most overbrilliantly
+overbrimmingly	1	more overbrimmingly
+overbrimmingly	2	most overbrimmingly
+overbroadly	1	more overbroadly
+overbroadly	2	most overbroadly
+overburdeningly	1	more overburdeningly
+overburdeningly	2	most overburdeningly
+overbusily	1	more overbusily
+overbusily	2	most overbusily
+overcarefully	1	more overcarefully
+overcarefully	2	most overcarefully
+overcarelessly	1	more overcarelessly
+overcarelessly	2	most overcarelessly
+overcasually	1	more overcasually
+overcasually	2	most overcasually
+overcautiously	1	more overcautiously
+overcautiously	2	most overcautiously
+overcharitably	1	more overcharitably
+overcharitably	2	most overcharitably
+overcheaply	1	more overcheaply
+overcheaply	2	most overcheaply
+overclosely	1	more overclosely
+overclosely	2	most overclosely
+overcomingly	1	more overcomingly
+overcomingly	2	most overcomingly
+overcompensatingly	1	more overcompensatingly
+overcompensatingly	2	most overcompensatingly
+overcomplacently	1	more overcomplacently
+overcomplacently	2	most overcomplacently
+overcomplicatedly	1	more overcomplicatedly
+overcomplicatedly	2	most overcomplicatedly
+overconfidently	1	more overconfidently
+overconfidently	2	most overconfidently
+overconsciously	1	more overconsciously
+overconsciously	2	most overconsciously
+overconservatively	1	more overconservatively
+overconservatively	2	most overconservatively
+overcopiously	1	more overcopiously
+overcopiously	2	most overcopiously
+overcredulously	1	more overcredulously
+overcredulously	2	most overcredulously
+overcritically	1	more overcritically
+overcritically	2	most overcritically
+overcrowdedly	1	more overcrowdedly
+overcrowdedly	2	most overcrowdedly
+overcunningly	1	more overcunningly
+overcunningly	2	most overcunningly
+overcuriously	1	more overcuriously
+overcuriously	2	most overcuriously
+overdaintily	1	more overdaintily
+overdaintily	2	most overdaintily
+overdaringly	1	more overdaringly
+overdaringly	2	most overdaringly
+overdearly	1	more overdearly
+overdearly	2	most overdearly
+overdeeply	1	more overdeeply
+overdeeply	2	most overdeeply
+overdelicately	1	more overdelicately
+overdelicately	2	most overdelicately
+overdiligently	1	more overdiligently
+overdiligently	2	most overdiligently
+overdogmatically	1	more overdogmatically
+overdogmatically	2	most overdogmatically
+overdominantly	1	more overdominantly
+overdominantly	2	most overdominantly
+overdramatically	1	more overdramatically
+overdramatically	2	most overdramatically
+overeagerly	1	more overeagerly
+overeagerly	2	most overeagerly
+overearnestly	1	more overearnestly
+overearnestly	2	most overearnestly
+overeasily	1	more overeasily
+overeasily	2	most overeasily
+overeffusively	1	more overeffusively
+overeffusively	2	most overeffusively
+overelaborately	1	more overelaborately
+overelaborately	2	most overelaborately
+overelegantly	1	more overelegantly
+overelegantly	2	most overelegantly
+overemotionally	1	more overemotionally
+overemotionally	2	most overemotionally
+overemphatically	1	more overemphatically
+overemphatically	2	most overemphatically
+overenthusiastically	1	more overenthusiastically
+overenthusiastically	2	most overenthusiastically
+overexcitably	1	more overexcitably
+overexcitably	2	most overexcitably
+overexpectantly	1	more overexpectantly
+overexpectantly	2	most overexpectantly
+overexquisitely	1	more overexquisitely
+overexquisitely	2	most overexquisitely
+overexuberantly	1	more overexuberantly
+overexuberantly	2	most overexuberantly
+overfaithfully	1	more overfaithfully
+overfaithfully	2	most overfaithfully
+overfamiliarly	1	more overfamiliarly
+overfamiliarly	2	most overfamiliarly
+overfast	1	more overfast
+overfast	2	most overfast
+overfastidiously	1	more overfastidiously
+overfastidiously	2	most overfastidiously
+overfinely	1	more overfinely
+overfinely	2	most overfinely
+overflowingly	1	more overflowingly
+overflowingly	2	most overflowingly
+overflush	1	more overflush
+overflush	2	most overflush
+overfondly	1	more overfondly
+overfondly	2	most overfondly
+overforcefully	1	more overforcefully
+overforcefully	2	most overforcefully
+overfreely	1	more overfreely
+overfreely	2	most overfreely
+overfrequently	1	more overfrequently
+overfrequently	2	most overfrequently
+overfully	1	more overfully
+overfully	2	most overfully
+overgenerally	1	more overgenerally
+overgenerally	2	most overgenerally
+overgenerously	1	more overgenerously
+overgenerously	2	most overgenerously
+overgently	1	more overgently
+overgently	2	most overgently
+overgratefully	1	more overgratefully
+overgratefully	2	most overgratefully
+overgreatly	1	more overgreatly
+overgreatly	2	most overgreatly
+overgreedily	1	more overgreedily
+overgreedily	2	most overgreedily
+overguilty	1	more overguilty
+overguilty	2	most overguilty
+overhardly	1	more overhardly
+overhardly	2	most overhardly
+overharshly	1	more overharshly
+overharshly	2	most overharshly
+overhastily	1	more overhastily
+overhastily	2	most overhastily
+overhead	1	more overhead
+overhead	2	most overhead
+overheartily	1	more overheartily
+overheartily	2	most overheartily
+overheatedly	1	more overheatedly
+overheatedly	2	most overheatedly
+overheavily	1	more overheavily
+overheavily	2	most overheavily
+overhighly	1	more overhighly
+overhighly	2	most overhighly
+overhonestly	1	more overhonestly
+overhonestly	2	most overhonestly
+overhurriedly	1	more overhurriedly
+overhurriedly	2	most overhurriedly
+overidealistically	1	more overidealistically
+overidealistically	2	most overidealistically
+overinclusively	1	more overinclusively
+overinclusively	2	most overinclusively
+overindulgently	1	more overindulgently
+overindulgently	2	most overindulgently
+overinsistently	1	more overinsistently
+overinsistently	2	most overinsistently
+overintensely	1	more overintensely
+overintensely	2	most overintensely
+overintimately	1	more overintimately
+overintimately	2	most overintimately
+overjealously	1	more overjealously
+overjealously	2	most overjealously
+overjoyfully	1	more overjoyfully
+overjoyfully	2	most overjoyfully
+overlappingly	1	more overlappingly
+overlappingly	2	most overlappingly
+overlarge	1	more overlarge
+overlarge	2	most overlarge
+overlargely	1	more overlargely
+overlargely	2	most overlargely
+overlate	1	more overlate
+overlate	2	most overlate
+overlavishly	1	more overlavishly
+overlavishly	2	most overlavishly
+overlearnedly	1	more overlearnedly
+overlearnedly	2	most overlearnedly
+overliberally	1	more overliberally
+overliberally	2	most overliberally
+overlightly	1	more overlightly
+overlightly	2	most overlightly
+overlogically	1	more overlogically
+overlogically	2	most overlogically
+overlong	1	more overlong
+overlong	2	most overlong
+overloudly	1	more overloudly
+overloudly	2	most overloudly
+overmasteringly	1	more overmasteringly
+overmasteringly	2	most overmasteringly
+overmeticulously	1	more overmeticulously
+overmeticulously	2	most overmeticulously
+overminutely	1	more overminutely
+overminutely	2	most overminutely
+overmodestly	1	more overmodestly
+overmodestly	2	most overmodestly
+overnarrowly	1	more overnarrowly
+overnarrowly	2	most overnarrowly
+overnervously	1	more overnervously
+overnervously	2	most overnervously
+overnicely	1	more overnicely
+overnicely	2	most overnicely
+overoptimistically	1	more overoptimistically
+overoptimistically	2	most overoptimistically
+overparticularly	1	more overparticularly
+overparticularly	2	most overparticularly
+overpassionately	1	more overpassionately
+overpassionately	2	most overpassionately
+overpedantically	1	more overpedantically
+overpedantically	2	most overpedantically
+overpoweredly	1	more overpoweredly
+overpoweredly	2	most overpoweredly
+overpowerfully	1	more overpowerfully
+overpowerfully	2	most overpowerfully
+overpoweringly	1	more overpoweringly
+overpoweringly	2	most overpoweringly
+overprecisely	1	more overprecisely
+overprecisely	2	most overprecisely
+overprominently	1	more overprominently
+overprominently	2	most overprominently
+overpromptly	1	more overpromptly
+overpromptly	2	most overpromptly
+overproportionately	1	more overproportionately
+overproportionately	2	most overproportionately
+overprotectively	1	more overprotectively
+overprotectively	2	most overprotectively
+overquietly	1	more overquietly
+overquietly	2	most overquietly
+overrashly	1	more overrashly
+overrashly	2	most overrashly
+overratedly	1	more overratedly
+overratedly	2	most overratedly
+overreachingly	1	more overreachingly
+overreachingly	2	most overreachingly
+overreadily	1	more overreadily
+overreadily	2	most overreadily
+overridingly	1	more overridingly
+overridingly	2	most overridingly
+overrighteously	1	more overrighteously
+overrighteously	2	most overrighteously
+overrigidly	1	more overrigidly
+overrigidly	2	most overrigidly
+overrigorously	1	more overrigorously
+overrigorously	2	most overrigorously
+overripely	1	more overripely
+overripely	2	most overripely
+overromantically	1	more overromantically
+overromantically	2	most overromantically
+overroughly	1	more overroughly
+overroughly	2	most overroughly
+overrulingly	1	more overrulingly
+overrulingly	2	most overrulingly
+oversanguinely	1	more oversanguinely
+oversanguinely	2	most oversanguinely
+overscrupulously	1	more overscrupulously
+overscrupulously	2	most overscrupulously
+oversensationally	1	more oversensationally
+oversensationally	2	most oversensationally
+oversensitively	1	more oversensitively
+oversensitively	2	most oversensitively
+oversentimentally	1	more oversentimentally
+oversentimentally	2	most oversentimentally
+overseriously	1	more overseriously
+overseriously	2	most overseriously
+overseverely	1	more overseverely
+overseverely	2	most overseverely
+oversimplistically	1	more oversimplistically
+oversimplistically	2	most oversimplistically
+oversimply	1	more oversimply
+oversimply	2	most oversimply
+overslavishly	1	more overslavishly
+overslavishly	2	most overslavishly
+oversmoothly	1	more oversmoothly
+oversmoothly	2	most oversmoothly
+oversoftly	1	more oversoftly
+oversoftly	2	most oversoftly
+oversolemnly	1	more oversolemnly
+oversolemnly	2	most oversolemnly
+oversolicitously	1	more oversolicitously
+oversolicitously	2	most oversolicitously
+oversoon	1	more oversoon
+oversoon	2	most oversoon
+oversparingly	1	more oversparingly
+oversparingly	2	most oversparingly
+overspecifically	1	more overspecifically
+overspecifically	2	most overspecifically
+overspeedily	1	more overspeedily
+overspeedily	2	most overspeedily
+overstrenuously	1	more overstrenuously
+overstrenuously	2	most overstrenuously
+overstrictly	1	more overstrictly
+overstrictly	2	most overstrictly
+overstrongly	1	more overstrongly
+overstrongly	2	most overstrongly
+overstudiously	1	more overstudiously
+overstudiously	2	most overstudiously
+oversubtly	1	more oversubtly
+oversubtly	2	most oversubtly
+oversufficiently	1	more oversufficiently
+oversufficiently	2	most oversufficiently
+oversuspiciously	1	more oversuspiciously
+oversuspiciously	2	most oversuspiciously
+oversweetly	1	more oversweetly
+oversweetly	2	most oversweetly
+overswiftly	1	more overswiftly
+overswiftly	2	most overswiftly
+oversystematically	1	more oversystematically
+oversystematically	2	most oversystematically
+overtenderly	1	more overtenderly
+overtenderly	2	most overtenderly
+overthwart	1	more overthwart
+overthwart	2	most overthwart
+overthwartly	1	more overthwartly
+overthwartly	2	most overthwartly
+overtightly	1	more overtightly
+overtightly	2	most overtightly
+overtly	1	more overtly
+overtly	2	most overtly
+overvigorously	1	more overvigorously
+overvigorously	2	most overvigorously
+overvividly	1	more overvividly
+overvividly	2	most overvividly
+overweeningly	1	more overweeningly
+overweeningly	2	most overweeningly
+overwell	1	more overwell
+overwell	2	most overwell
+overwhelmingly	1	more overwhelmingly
+overwhelmingly	2	most overwhelmingly
+overwillingly	1	more overwillingly
+overwillingly	2	most overwillingly
+overwisely	1	more overwisely
+overwisely	2	most overwisely
+overzealously	1	more overzealously
+overzealously	2	most overzealously
+ovinely	1	more ovinely
+ovinely	2	most ovinely
+owlishly	1	more owlishly
+owlishly	2	most owlishly
+owwer	1	more owwer
+owwer	2	most owwer
+oxishly	1	more oxishly
+oxishly	2	most oxishly
+oxymoronically	1	more oxymoronically
+oxymoronically	2	most oxymoronically
+rabidly	1	more rabidly
+racialistically	1	more racialistically
+racially	1	more racially
+racily	1	more racily
+racingly	1	more racingly
+racistically	1	more racistically
+racistly	1	more racistly
+rackingly	1	more rackingly
+radially	1	more radially
+radiantly	1	more radiantly
+radiatively	1	more radiatively
+radicalistically	1	more radicalistically
+radically	1	more radically
+radioactively	1	more radioactively
+raffishly	1	more raffishly
+ragefully	1	more ragefully
+raggedly	1	more raggedly
+ragingly	1	more ragingly
+railingly	1	more railingly
+rainily	1	more rainily
+rakingly	1	more rakingly
+rakishly	1	more rakishly
+rallyingly	1	more rallyingly
+ramblingly	1	more ramblingly
+rambunctiously	1	more rambunctiously
+ramosely	1	more ramosely
+rampaciously	1	more rampaciously
+rampageously	1	more rampageously
+rampant	1	more rampant
+rampantly	1	more rampantly
+rampingly	1	more rampingly
+rancidly	1	more rancidly
+rancorously	1	more rancorously
+rancourously	1	more rancourously
+randily	1	more randily
+randomly	1	more randomly
+rangily	1	more rangily
+rank	1	more rank
+ranklingly	1	more ranklingly
+rankly	1	more rankly
+rantingly	1	more rantingly
+rapaciously	1	more rapaciously
+rape	1	more rape
+rapid	1	more rapid
+rapidly	1	more rapidly
+raptly	1	more raptly
+raptorially	1	more raptorially
+rapturously	1	more rapturously
+rascally	1	more rascally
+rash	1	more rash
+rashely	1	more rashely
+rashly	1	more rashly
+raspily	1	more raspily
+raspingly	1	more raspingly
+rathely	1	more rathely
+ratherish	1	more ratherish
+ratiocinatively	1	more ratiocinatively
+rationably	1	more rationably
+rationalistically	1	more rationalistically
+rationally	1	more rationally
+ratlike	1	more ratlike
+rattily	1	more rattily
+rattishly	1	more rattishly
+rattlingly	1	more rattlingly
+raucously	1	more raucously
+raunchily	1	more raunchily
+raveningly	1	more raveningly
+ravenly	1	more ravenly
+ravenously	1	more ravenously
+raving	1	more raving
+ravingly	1	more ravingly
+ravishingly	1	more ravishingly
+rawly	1	more rawly
+reachably	1	more reachably
+reactionarily	1	more reactionarily
+reactively	1	more reactively
+readably	1	more readably
+realistically	1	more realistically
+realizably	1	more realizably
+realizingly	1	more realizingly
+really	1	more really
+rearly	1	more rearly
+rearrangeably	1	more rearrangeably
+rearwardly	1	more rearwardly
+rearwards	1	more rearwards
+reasonably	1	more reasonably
+reasoningly	1	more reasoningly
+reasonlessly	1	more reasonlessly
+reassuredly	1	more reassuredly
+reassuringly	1	more reassuringly
+rebarbatively	1	more rebarbatively
+rebelliously	1	more rebelliously
+reboundingly	1	more reboundingly
+rebuffingly	1	more rebuffingly
+rebukefully	1	more rebukefully
+rebukingly	1	more rebukingly
+rebuttably	1	more rebuttably
+recalcitrantly	1	more recalcitrantly
+recedingly	1	more recedingly
+recently	1	more recently
+receptively	1	more receptively
+recessionarily	1	more recessionarily
+recessively	1	more recessively
+recidivistically	1	more recidivistically
+reciprocally	1	more reciprocally
+reciprocatively	1	more reciprocatively
+recitatively	1	more recitatively
+recklessly	1	more recklessly
+reclaimably	1	more reclaimably
+reclusely	1	more reclusely
+reclusively	1	more reclusively
+recognisably	1	more recognisably
+recognizably	1	more recognizably
+recognizedly	1	more recognizedly
+recognizingly	1	more recognizingly
+recoilingly	1	more recoilingly
+recollectedly	1	more recollectedly
+recollectively	1	more recollectively
+recombinantly	1	more recombinantly
+recommendably	1	more recommendably
+reconcilably	1	more reconcilably
+reconciliatorily	1	more reconciliatorily
+reconcilingly	1	more reconcilingly
+reconditely	1	more reconditely
+reconnoiteringly	1	more reconnoiteringly
+reconnoitringly	1	more reconnoitringly
+reconstructively	1	more reconstructively
+recreantly	1	more recreantly
+recreationally	1	more recreationally
+recreatively	1	more recreatively
+recriminatingly	1	more recriminatingly
+rectilineally	1	more rectilineally
+rectilinearly	1	more rectilinearly
+recuperatively	1	more recuperatively
+recurrently	1	more recurrently
+recurringly	1	more recurringly
+reddeningly	1	more reddeningly
+reddishly	1	more reddishly
+redeemably	1	more redeemably
+redeemingly	1	more redeemingly
+redemptively	1	more redemptively
+redhandedly	1	more redhandedly
+redly	1	more redly
+redolently	1	more redolently
+redoubtably	1	more redoubtably
+redoundingly	1	more redoundingly
+reductionally	1	more reductionally
+reductionistically	1	more reductionistically
+reductively	1	more reductively
+reductivistically	1	more reductivistically
+redundantly	1	more redundantly
+redward	1	more redward
+redwards	1	more redwards
+reedily	1	more reedily
+reekingly	1	more reekingly
+reelingly	1	more reelingly
+referentially	1	more referentially
+refinedly	1	more refinedly
+reflectingly	1	more reflectingly
+reflectively	1	more reflectively
+reformationally	1	more reformationally
+reformatively	1	more reformatively
+reformedly	1	more reformedly
+reformingly	1	more reformingly
+reformistly	1	more reformistly
+refractively	1	more refractively
+refractorily	1	more refractorily
+refreshfully	1	more refreshfully
+refreshingly	1	more refreshingly
+refulgently	1	more refulgently
+refusingly	1	more refusingly
+refutably	1	more refutably
+refutatively	1	more refutatively
+regally	1	more regally
+regardfully	1	more regardfully
+regardlessly	1	more regardlessly
+regenerately	1	more regenerately
+regeneratively	1	more regeneratively
+reginally	1	more reginally
+regiolectally	1	more regiolectally
+regionally	1	more regionally
+regiospecifically	1	more regiospecifically
+regressively	1	more regressively
+regretable	1	more regretable
+regretfully	1	more regretfully
+regrettably	1	more regrettably
+regrettingly	1	more regrettingly
+reinforcingly	1	more reinforcingly
+reintegratively	1	more reintegratively
+reinvigoratingly	1	more reinvigoratingly
+reiteratedly	1	more reiteratedly
+rejectfully	1	more rejectfully
+rejectingly	1	more rejectingly
+rejoicefully	1	more rejoicefully
+rejoicingly	1	more rejoicingly
+rejuvenatingly	1	more rejuvenatingly
+relatably	1	more relatably
+relatedly	1	more relatedly
+relationally	1	more relationally
+relationshipwise	1	more relationshipwise
+relativistically	1	more relativistically
+relaxedly	1	more relaxedly
+relaxingly	1	more relaxingly
+releasably	1	more releasably
+relentfully	1	more relentfully
+relentingly	1	more relentingly
+relentlessly	1	more relentlessly
+relevantly	1	more relevantly
+reliably	1	more reliably
+reliantly	1	more reliantly
+relievedly	1	more relievedly
+relievingly	1	more relievingly
+religionistically	1	more religionistically
+religiously	1	more religiously
+relishingly	1	more relishingly
+reluctantly	1	more reluctantly
+remarkably	1	more remarkably
+remediably	1	more remediably
+remedially	1	more remedially
+remedilessly	1	more remedilessly
+rememberably	1	more rememberably
+reminiscentially	1	more reminiscentially
+reminiscently	1	more reminiscently
+reminiscingly	1	more reminiscingly
+remissibly	1	more remissibly
+remissly	1	more remissly
+remonstrantly	1	more remonstrantly
+remonstratingly	1	more remonstratingly
+remonstratively	1	more remonstratively
+remorsefully	1	more remorsefully
+remorselessly	1	more remorselessly
+remotely	1	more remotely
+remuneratingly	1	more remuneratingly
+remuneratively	1	more remuneratively
+renably	1	more renably
+rendingly	1	more rendingly
+renewably	1	more renewably
+renownedly	1	more renownedly
+repandly	1	more repandly
+reparably	1	more reparably
+repeatably	1	more repeatably
+repeatedly	1	more repeatedly
+repellantly	1	more repellantly
+repellently	1	more repellently
+repellingly	1	more repellingly
+repentantly	1	more repentantly
+repentingly	1	more repentingly
+repercussively	1	more repercussively
+repetitiously	1	more repetitiously
+repetitively	1	more repetitively
+replenishingly	1	more replenishingly
+repletely	1	more repletely
+repletively	1	more repletively
+reportorially	1	more reportorially
+reposedly	1	more reposedly
+reposefully	1	more reposefully
+reposingly	1	more reposingly
+reprehensibly	1	more reprehensibly
+reprehensively	1	more reprehensively
+representationally	1	more representationally
+representatively	1	more representatively
+representively	1	more representively
+repressedly	1	more repressedly
+repressibly	1	more repressibly
+repressively	1	more repressively
+reproachably	1	more reproachably
+reproachfully	1	more reproachfully
+reproachingly	1	more reproachingly
+reproducibly	1	more reproducibly
+reprovably	1	more reprovably
+reprovingly	1	more reprovingly
+reptilianly	1	more reptilianly
+repudiatingly	1	more repudiatingly
+repugnantly	1	more repugnantly
+repulsingly	1	more repulsingly
+repulsively	1	more repulsively
+reputably	1	more reputably
+reputedly	1	more reputedly
+requestingly	1	more requestingly
+requisitely	1	more requisitely
+resemblingly	1	more resemblingly
+resentfully	1	more resentfully
+resentingly	1	more resentingly
+reservedly	1	more reservedly
+residually	1	more residually
+resignedly	1	more resignedly
+resiliently	1	more resiliently
+resinously	1	more resinously
+resistantly	1	more resistantly
+resistibly	1	more resistibly
+resistingly	1	more resistingly
+resistively	1	more resistively
+resolutely	1	more resolutely
+resolutively	1	more resolutively
+resolvably	1	more resolvably
+resolvedly	1	more resolvedly
+resonantly	1	more resonantly
+resoundingly	1	more resoundingly
+resourcefully	1	more resourcefully
+respectably	1	more respectably
+respectfully	1	more respectfully
+respectively	1	more respectively
+respectlessly	1	more respectlessly
+resplendently	1	more resplendently
+responsibly	1	more responsibly
+responsively	1	more responsively
+restfully	1	more restfully
+restily	1	more restily
+restingly	1	more restingly
+restitutively	1	more restitutively
+restively	1	more restively
+restlessly	1	more restlessly
+restoratively	1	more restoratively
+restrainingly	1	more restrainingly
+restrictedly	1	more restrictedly
+restrictively	1	more restrictively
+resultfully	1	more resultfully
+resurrectingly	1	more resurrectingly
+retaliatorily	1	more retaliatorily
+retardedly	1	more retardedly
+retardingly	1	more retardingly
+retardively	1	more retardively
+retentively	1	more retentively
+reticently	1	more reticently
+reticularly	1	more reticularly
+retiredly	1	more retiredly
+retiringly	1	more retiringly
+retractively	1	more retractively
+retrally	1	more retrally
+retrievably	1	more retrievably
+retrocessively	1	more retrocessively
+retroflexively	1	more retroflexively
+retrograde	1	more retrograde
+retrogradely	1	more retrogradely
+retrogressively	1	more retrogressively
+retrospectively	1	more retrospectively
+reusably	1	more reusably
+revealingly	1	more revealingly
+revelatorily	1	more revelatorily
+revengefully	1	more revengefully
+revengingly	1	more revengingly
+reverberantly	1	more reverberantly
+reverberatingly	1	more reverberatingly
+reverberatively	1	more reverberatively
+reveredly	1	more reveredly
+reverendly	1	more reverendly
+reverentially	1	more reverentially
+reverently	1	more reverently
+reversedly	1	more reversedly
+reversibly	1	more reversibly
+revertively	1	more revertively
+revilingly	1	more revilingly
+revisionistically	1	more revisionistically
+revivingly	1	more revivingly
+revoltedly	1	more revoltedly
+revoltingly	1	more revoltingly
+rewardably	1	more rewardably
+rewardedly	1	more rewardedly
+rewardfully	1	more rewardfully
+rewardlessly	1	more rewardlessly
+rhapsodically	1	more rhapsodically
+rheumatically	1	more rheumatically
+rheumatoidally	1	more rheumatoidally
+rheumily	1	more rheumily
+rhombically	1	more rhombically
+rhomboidally	1	more rhomboidally
+rhomboidly	1	more rhomboidly
+rhymingly	1	more rhymingly
+rhythmically	1	more rhythmically
+rhythmlessly	1	more rhythmlessly
+riantly	1	more riantly
+ribaldly	1	more ribaldly
+ribbingly	1	more ribbingly
+ricketily	1	more ricketily
+riddlingly	1	more riddlingly
+ridiculously	1	more ridiculously
+rife	1	more rife
+rifely	1	more rifely
+righteously	1	more righteously
+rightfully	1	more rightfully
+righthandedly	1	more righthandedly
+rightmindedly	1	more rightmindedly
+rightward	1	more rightward
+rightwardly	1	more rightwardly
+rightways	1	more rightways
+rightwisely	1	more rightwisely
+rigidly	1	more rigidly
+rigorously	1	more rigorously
+rimosely	1	more rimosely
+rinforzando	1	more rinforzando
+ringingly	1	more ringingly
+riotously	1	more riotously
+ripely	1	more ripely
+rippingly	1	more rippingly
+ripplingly	1	more ripplingly
+ripsnortingly	1	more ripsnortingly
+risibly	1	more risibly
+risingly	1	more risingly
+riskily	1	more riskily
+ritualistically	1	more ritualistically
+ritually	1	more ritually
+ritzily	1	more ritzily
+rivalrously	1	more rivalrously
+rivetingly	1	more rivetingly
+rlly	1	more rlly
+roaringly	1	more roaringly
+roastingly	1	more roastingly
+robotically	1	more robotically
+robustfully	1	more robustfully
+robustiously	1	more robustiously
+robustly	1	more robustly
+rockily	1	more rockily
+rockingly	1	more rockingly
+rodentially	1	more rodentially
+roguishly	1	more roguishly
+roisteringly	1	more roisteringly
+roisterly	1	more roisterly
+roisterously	1	more roisterously
+rollickingly	1	more rollickingly
+rollingly	1	more rollingly
+romanly	1	more romanly
+romantically	1	more romantically
+romanticly	1	more romanticly
+romishly	1	more romishly
+rompingly	1	more rompingly
+rompishly	1	more rompishly
+room	1	more room
+roomily	1	more roomily
+rootedly	1	more rootedly
+ropily	1	more ropily
+roseately	1	more roseately
+rosily	1	more rosily
+rotatively	1	more rotatively
+rotely	1	more rotely
+rotten	1	more rotten
+rottenly	1	more rottenly
+rottingly	1	more rottingly
+rotundly	1	more rotundly
+rough	1	more rough
+roughishly	1	more roughishly
+roundaboutedly	1	more roundaboutedly
+roundaboutly	1	more roundaboutly
+roundedly	1	more roundedly
+roundishly	1	more roundishly
+roundly	1	more roundly
+roupily	1	more roupily
+rousingly	1	more rousingly
+routinely	1	more routinely
+rovingly	1	more rovingly
+rowdily	1	more rowdily
+rowdyishly	1	more rowdyishly
+royally	1	more royally
+rubberily	1	more rubberily
+rubbingly	1	more rubbingly
+rubescently	1	more rubescently
+rudderlessly	1	more rudderlessly
+ruddily	1	more ruddily
+rudely	1	more rudely
+rudimentally	1	more rudimentally
+rudimentarily	1	more rudimentarily
+ruefully	1	more ruefully
+ruffianly	1	more ruffianly
+ruggedly	1	more ruggedly
+rugosely	1	more rugosely
+ruinously	1	more ruinously
+rulingly	1	more rulingly
+rumblingly	1	more rumblingly
+rumbunctiously	1	more rumbunctiously
+rumbustiously	1	more rumbustiously
+ruminantly	1	more ruminantly
+ruminatingly	1	more ruminatingly
+ruminatively	1	more ruminatively
+rumly	1	more rumly
+rummily	1	more rummily
+rumoredly	1	more rumoredly
+rumouredly	1	more rumouredly
+runnily	1	more runnily
+runningly	1	more runningly
+runtishly	1	more runtishly
+rurally	1	more rurally
+rushedly	1	more rushedly
+rushingly	1	more rushingly
+rustfully	1	more rustfully
+rustically	1	more rustically
+rusticly	1	more rusticly
+rustily	1	more rustily
+rustlingly	1	more rustlingly
+ruthfully	1	more ruthfully
+ruthlessly	1	more ruthlessly
+ruttily	1	more ruttily
+ruttishly	1	more ruttishly
+sabbatically	2	most sabbatically
+sably	2	most sably
+saccadically	2	most saccadically
+saccharinely	2	most saccharinely
+sacerdotally	2	most sacerdotally
+sacrad	2	most sacrad
+sacramentally	2	most sacramentally
+sacredly	2	most sacredly
+sacrilegiously	2	most sacrilegiously
+sacrosanctly	2	most sacrosanctly
+saddeningly	2	most saddeningly
+sadistically	2	most sadistically
+sadomasochistically	2	most sadomasochistically
+safely	2	most safely
+sagaciously	2	most sagaciously
+sagely	2	most sagely
+saggily	2	most saggily
+saggingly	2	most saggingly
+sailingly	2	most sailingly
+saintlily	2	most saintlily
+salably	2	most salably
+salaciously	2	most salaciously
+saleably	2	most saleably
+saliently	2	most saliently
+salinely	2	most salinely
+salivatingly	2	most salivatingly
+sallowly	2	most sallowly
+saltily	2	most saltily
+saltishly	2	most saltishly
+saltly	2	most saltly
+salubriously	2	most salubriously
+salutatorily	2	most salutatorily
+salutiferously	2	most salutiferously
+salvably	2	most salvably
+salvageably	2	most salvageably
+salvationally	2	most salvationally
+salvifically	2	most salvifically
+same	2	most same
+sanatively	2	most sanatively
+sanctifiedly	2	most sanctifiedly
+sanctifyingly	2	most sanctifyingly
+sanctimoniously	2	most sanctimoniously
+sanctionably	2	most sanctionably
+sandily	2	most sandily
+sanely	2	most sanely
+sanguinarily	2	most sanguinarily
+sanguinely	2	most sanguinely
+sanguinously	2	most sanguinously
+sanitarily	2	most sanitarily
+sapientially	2	most sapientially
+sapiently	2	most sapiently
+sapphically	2	most sapphically
+sappily	2	most sappily
+saprotrophically	2	most saprotrophically
+sarcastically	2	most sarcastically
+sardonically	2	most sardonically
+sarkily	2	most sarkily
+sartinly	2	most sartinly
+sartorially	2	most sartorially
+sassily	2	most sassily
+satanically	2	most satanically
+satirically	2	most satirically
+satisfactorily	2	most satisfactorily
+satisfactually	2	most satisfactually
+satisfiedly	2	most satisfiedly
+satisfyingly	2	most satisfyingly
+saturatedly	2	most saturatedly
+saturnally	2	most saturnally
+saturninely	2	most saturninely
+saucily	2	most saucily
+saunteringly	2	most saunteringly
+savagely	2	most savagely
+savingly	2	most savingly
+savorily	2	most savorily
+savoringly	2	most savoringly
+savorly	2	most savorly
+savorously	2	most savorously
+savourily	2	most savourily
+savouringly	2	most savouringly
+savourly	2	most savourly
+savourously	2	most savourously
+savvily	2	most savvily
+saxonically	2	most saxonically
+saxonly	2	most saxonly
+scabbily	2	most scabbily
+scabrosely	2	most scabrosely
+scabrously	2	most scabrously
+scalably	2	most scalably
+scalariformly	2	most scalariformly
+scaldingly	2	most scaldingly
+scaleably	2	most scaleably
+scalily	2	most scalily
+scamblingly	2	most scamblingly
+scampingly	2	most scampingly
+scampishly	2	most scampishly
+scandalously	2	most scandalously
+scansorially	2	most scansorially
+scantily	2	most scantily
+scantly	2	most scantly
+scarcely	2	most scarcely
+scaredly	2	most scaredly
+scaresomely	2	most scaresomely
+scarifyingly	2	most scarifyingly
+scarily	2	most scarily
+scaringly	2	most scaringly
+scarletly	2	most scarletly
+scarringly	2	most scarringly
+scathelessly	2	most scathelessly
+scathingly	2	most scathingly
+scathlessly	2	most scathlessly
+scatologically	2	most scatologically
+scatteredly	2	most scatteredly
+scatteringly	2	most scatteringly
+scattily	2	most scattily
+scenically	2	most scenically
+scentingly	2	most scentingly
+sceptically	2	most sceptically
+schemingly	2	most schemingly
+scherzando	2	most scherzando
+schismatically	2	most schismatically
+schismogenically	2	most schismogenically
+schizoanalytically	2	most schizoanalytically
+schizoidally	2	most schizoidally
+schizophrenetically	2	most schizophrenetically
+schizophrenically	2	most schizophrenically
+schlockily	2	most schlockily
+schmaltzily	2	most schmaltzily
+schmalzily	2	most schmalzily
+schmoozingly	2	most schmoozingly
+scholarlike	2	most scholarlike
+scholarlily	2	most scholarlily
+scholastically	2	most scholastically
+scholasticly	2	most scholasticly
+schoolboyishly	2	most schoolboyishly
+schoolgirlishly	2	most schoolgirlishly
+schoolishly	2	most schoolishly
+schoolmarmishly	2	most schoolmarmishly
+schoolmasterishly	2	most schoolmasterishly
+schwifty	2	most schwifty
+scientifically	2	most scientifically
+scientifictionally	2	most scientifictionally
+scientistically	2	most scientistically
+scientologically	2	most scientologically
+scintillantly	2	most scintillantly
+scintillatingly	2	most scintillatingly
+sciolistically	2	most sciolistically
+scoffingly	2	most scoffingly
+scoldingly	2	most scoldingly
+scoptically	2	most scoptically
+scornfully	2	most scornfully
+scorningly	2	most scorningly
+scottishly	2	most scottishly
+scoundrelously	2	most scoundrelously
+scourgingly	2	most scourgingly
+scouringly	2	most scouringly
+scoutingly	2	most scoutingly
+scowlily	2	most scowlily
+scowlingly	2	most scowlingly
+scraggily	2	most scraggily
+scramblingly	2	most scramblingly
+scrapingly	2	most scrapingly
+scrappily	2	most scrappily
+scratchily	2	most scratchily
+scratchingly	2	most scratchingly
+scrawlingly	2	most scrawlingly
+scrawnily	2	most scrawnily
+screamingly	2	most screamingly
+screechily	2	most screechily
+screechingly	2	most screechingly
+scribblingly	2	most scribblingly
+scrimpily	2	most scrimpily
+scrimpingly	2	most scrimpingly
+scrofulously	2	most scrofulously
+scrubbily	2	most scrubbily
+scruffily	2	most scruffily
+scrumptiously	2	most scrumptiously
+scrunchingly	2	most scrunchingly
+scrupulously	2	most scrupulously
+scrutinisingly	2	most scrutinisingly
+scrutinizingly	2	most scrutinizingly
+scrutinously	2	most scrutinously
+sculpturesquely	2	most sculpturesquely
+scummily	2	most scummily
+scurfily	2	most scurfily
+scurrilously	2	most scurrilously
+scurryingly	2	most scurryingly
+scurvily	2	most scurvily
+scuzzily	2	most scuzzily
+seamily	2	most seamily
+seamlessly	2	most seamlessly
+searchingly	2	most searchingly
+searingly	2	most searingly
+seasonably	2	most seasonably
+seasonally	2	most seasonally
+seasonedly	2	most seasonedly
+seaworthily	2	most seaworthily
+secessionistically	2	most secessionistically
+secludedly	2	most secludedly
+seclusively	2	most seclusively
+secretarially	2	most secretarially
+secretively	2	most secretively
+sectarianly	2	most sectarianly
+sectionally	2	most sectionally
+secularistically	2	most secularistically
+secularly	2	most secularly
+securely	2	most securely
+sedately	2	most sedately
+sedentarily	2	most sedentarily
+seducingly	2	most seducingly
+seductively	2	most seductively
+sedulously	2	most sedulously
+seedily	2	most seedily
+seeingly	2	most seeingly
+seekingly	2	most seekingly
+seemingly	2	most seemingly
+seemlily	2	most seemlily
+seemly	2	most seemly
+seepingly	2	most seepingly
+seethingly	2	most seethingly
+segmentally	2	most segmentally
+segregationally	2	most segregationally
+seismically	2	most seismically
+sejunctively	2	most sejunctively
+selcouthly	2	most selcouthly
+seld	2	most seld
+seldom	2	most seldom
+seldomly	2	most seldomly
+selectively	2	most selectively
+selectly	2	most selectly
+selfconsciously	2	most selfconsciously
+selfconsistently	2	most selfconsistently
+selfishly	2	most selfishly
+selflessly	2	most selflessly
+sellingly	2	most sellingly
+semantically	2	most semantically
+semblably	2	most semblably
+semeiologically	2	most semeiologically
+semeiotically	2	most semeiotically
+semicircularly	2	most semicircularly
+semidefinitely	2	most semidefinitely
+seminally	2	most seminally
+semiotically	2	most semiotically
+semisweetly	2	most semisweetly
+semiyearly	2	most semiyearly
+senilely	2	most senilely
+sensately	2	most sensately
+sensationalistically	2	most sensationalistically
+sensationally	2	most sensationally
+senselessly	2	most senselessly
+sensely	2	most sensely
+sensibly	2	most sensibly
+sensically	2	most sensically
+sensitively	2	most sensitively
+sensualistically	2	most sensualistically
+sensually	2	most sensually
+sensuously	2	most sensuously
+sentencewise	2	most sentencewise
+sentenciously	2	most sentenciously
+sententiously	2	most sententiously
+sentiently	2	most sentiently
+sentimentalistically	2	most sentimentalistically
+sentimentally	2	most sentimentally
+separatively	2	most separatively
+septically	2	most septically
+sepulchrally	2	most sepulchrally
+sequaciously	2	most sequaciously
+seraphically	2	most seraphically
+serely	2	most serely
+serendipitously	2	most serendipitously
+serenely	2	most serenely
+serfishly	2	most serfishly
+seriocomically	2	most seriocomically
+seriously	2	most seriously
+sermonically	2	most sermonically
+serpentinely	2	most serpentinely
+serpentiningly	2	most serpentiningly
+serriedly	2	most serriedly
+serviceably	2	most serviceably
+servilely	2	most servilely
+sessilely	2	most sessilely
+setaceously	2	most setaceously
+settledly	2	most settledly
+severely	2	most severely
+sexily	2	most sexily
+sexistly	2	most sexistly
+sexlessly	2	most sexlessly
+sextually	2	most sextually
+sexually	2	most sexually
+sforzando	2	most sforzando
+shabbily	2	most shabbily
+shadily	2	most shadily
+shadowily	2	most shadowily
+shadowishly	2	most shadowishly
+shaggily	2	most shaggily
+shakenly	2	most shakenly
+shakespeareanly	2	most shakespeareanly
+shakespearianly	2	most shakespearianly
+shakily	2	most shakily
+shamably	2	most shamably
+shamanically	2	most shamanically
+shamanistically	2	most shamanistically
+shamblingly	2	most shamblingly
+shambolically	2	most shambolically
+shamedly	2	most shamedly
+shamefacedly	2	most shamefacedly
+shamefastly	2	most shamefastly
+shamefully	2	most shamefully
+shamelessly	2	most shamelessly
+shamingly	2	most shamingly
+shapelessly	2	most shapelessly
+shapelily	2	most shapelily
+sharkishly	2	most sharkishly
+sharpishly	2	most sharpishly
+shatteringly	2	most shatteringly
+sheenly	2	most sheenly
+sheepily	2	most sheepily
+sheepishly	2	most sheepishly
+sheer	2	most sheer
+sheerly	2	most sheerly
+shieldedly	2	most shieldedly
+shieldingly	2	most shieldingly
+shieldwise	2	most shieldwise
+shiftily	2	most shiftily
+shiftingly	2	most shiftingly
+shiftlessly	2	most shiftlessly
+shily	2	most shily
+shimmeringly	2	most shimmeringly
+shinily	2	most shinily
+shiningly	2	most shiningly
+shipshape	2	most shipshape
+shipshapely	2	most shipshapely
+shirtily	2	most shirtily
+shitfully	2	most shitfully
+shitheadedly	2	most shitheadedly
+shitly	2	most shitly
+shittily	2	most shittily
+shiveringly	2	most shiveringly
+shlockily	2	most shlockily
+shockingly	2	most shockingly
+shoddily	2	most shoddily
+sholy	2	most sholy
+shonkily	2	most shonkily
+shoppily	2	most shoppily
+shore	2	most shore
+shorthanded	2	most shorthanded
+shorthandedly	2	most shorthandedly
+shortsightedly	2	most shortsightedly
+shortterm	2	most shortterm
+shortward	2	most shortward
+shoutily	2	most shoutily
+shoutingly	2	most shoutingly
+showily	2	most showily
+showstoppingly	2	most showstoppingly
+shrewdly	2	most shrewdly
+shrewishly	2	most shrewishly
+shrewly	2	most shrewly
+shriekily	2	most shriekily
+shriekingly	2	most shriekingly
+shrillingly	2	most shrillingly
+shrilly	2	most shrilly
+shrinkingly	2	most shrinkingly
+shruggingly	2	most shruggingly
+shrunkenly	2	most shrunkenly
+shudderingly	2	most shudderingly
+shufflingly	2	most shufflingly
+shurely	2	most shurely
+shwifty	2	most shwifty
+shyly	2	most shyly
+sibilantly	2	most sibilantly
+sickeningly	2	most sickeningly
+sickishly	2	most sickishly
+sicklily	2	most sicklily
+sickly	2	most sickly
+side	2	most side
+sidearm	2	most sidearm
+sideling	2	most sideling
+sidelong	2	most sidelong
+sidesplittingly	2	most sidesplittingly
+sideward	2	most sideward
+sidewardly	2	most sidewardly
+sidewards	2	most sidewards
+sideway	2	most sideway
+sideways	2	most sideways
+sidewise	2	most sidewise
+sideyways	2	most sideyways
+sidlingly	2	most sidlingly
+siftingly	2	most siftingly
+sighfully	2	most sighfully
+sighingly	2	most sighingly
+sightlessly	2	most sightlessly
+sightwise	2	most sightwise
+sigmoidally	2	most sigmoidally
+sigmoidly	2	most sigmoidly
+signally	2	most signally
+significantly	2	most significantly
+significatively	2	most significatively
+signifyingly	2	most signifyingly
+silentiously	2	most silentiously
+silently	2	most silently
+silkenly	2	most silkenly
+silkily	2	most silkily
+sillily	2	most sillily
+sillyly	2	most sillyly
+silverily	2	most silverily
+silverly	2	most silverly
+similarily	2	most similarily
+similarly	2	most similarly
+similatively	2	most similatively
+simmeringly	2	most simmeringly
+simoniacally	2	most simoniacally
+simperingly	2	most simperingly
+simpleheartedly	2	most simpleheartedly
+simplemindedly	2	most simplemindedly
+simplifiedly	2	most simplifiedly
+simplistically	2	most simplistically
+simply	2	most simply
+simulatively	2	most simulatively
+sincerely	2	most sincerely
+sinceriously	2	most sinceriously
+sinfully	2	most sinfully
+singably	2	most singably
+singeingly	2	most singeingly
+singleheartedly	2	most singleheartedly
+singlemindedly	2	most singlemindedly
+singsongingly	2	most singsongingly
+singularly	2	most singularly
+sinisterly	2	most sinisterly
+sinistrally	2	most sinistrally
+sinistrely	2	most sinistrely
+sinistrorsally	2	most sinistrorsally
+sinistrously	2	most sinistrously
+sinlessly	2	most sinlessly
+sinningly	2	most sinningly
+sinseriously	2	most sinseriously
+sinuately	2	most sinuately
+sinuosely	2	most sinuosely
+sinuously	2	most sinuously
+sinusoidally	2	most sinusoidally
+sippingly	2	most sippingly
+sirenically	2	most sirenically
+sisterly	2	most sisterly
+sithingly	2	most sithingly
+situatedly	2	most situatedly
+sizably	2	most sizably
+sizeably	2	most sizeably
+sizzlingly	2	most sizzlingly
+skeletally	2	most skeletally
+skeptically	2	most skeptically
+sketchily	2	most sketchily
+skew	2	most skew
+skewedly	2	most skewedly
+skiddily	2	most skiddily
+skiddingly	2	most skiddingly
+skilfully	2	most skilfully
+skilledly	2	most skilledly
+skillessly	2	most skillessly
+skillfully	2	most skillfully
+skimmingly	2	most skimmingly
+skimpily	2	most skimpily
+skimpingly	2	most skimpingly
+skinnily	2	most skinnily
+skippingly	2	most skippingly
+skirmishingly	2	most skirmishingly
+skitteringly	2	most skitteringly
+skittishly	2	most skittishly
+skulkingly	2	most skulkingly
+slabbily	2	most slabbily
+slackerishly	2	most slackerishly
+slackly	2	most slackly
+slammingly	2	most slammingly
+slanderingly	2	most slanderingly
+slanderously	2	most slanderously
+slangfully	2	most slangfully
+slangily	2	most slangily
+slangingly	2	most slangingly
+slangishly	2	most slangishly
+slangly	2	most slangly
+slangwise	2	most slangwise
+slantedly	2	most slantedly
+slantendicularly	2	most slantendicularly
+slantily	2	most slantily
+slantindicularly	2	most slantindicularly
+slantingdicularly	2	most slantingdicularly
+slantingly	2	most slantingly
+slantly	2	most slantly
+slantwise	2	most slantwise
+slapdash	2	most slapdash
+slapdashedly	2	most slapdashedly
+slappingly	2	most slappingly
+slashingly	2	most slashingly
+slatily	2	most slatily
+slatternly	2	most slatternly
+slaughterously	2	most slaughterously
+slaveringly	2	most slaveringly
+slavically	2	most slavically
+slavishly	2	most slavishly
+slavonically	2	most slavonically
+sleazily	2	most sleazily
+sleepfully	2	most sleepfully
+sleepily	2	most sleepily
+sleepingly	2	most sleepingly
+sleeplessly	2	most sleeplessly
+sleightly	2	most sleightly
+slenderly	2	most slenderly
+slickly	2	most slickly
+slidingly	2	most slidingly
+slightily	2	most slightily
+slightingly	2	most slightingly
+slightly	2	most slightly
+slily	2	most slily
+slimly	2	most slimly
+slinkily	2	most slinkily
+slinkingly	2	most slinkingly
+slipperily	2	most slipperily
+slippily	2	most slippily
+slippingly	2	most slippingly
+slipshodly	2	most slipshodly
+slobberingly	2	most slobberingly
+slobbily	2	most slobbily
+sloggingly	2	most sloggingly
+slope	2	most slope
+slopingly	2	most slopingly
+sloppery	2	most sloppery
+sloppily	2	most sloppily
+sloshily	2	most sloshily
+sloshingly	2	most sloshingly
+slothfully	2	most slothfully
+slouchily	2	most slouchily
+slouchingly	2	most slouchingly
+slovenlily	2	most slovenlily
+slovenly	2	most slovenly
+slowlily	2	most slowlily
+slowsome	2	most slowsome
+slubberingly	2	most slubberingly
+sludgily	2	most sludgily
+sluggishly	2	most sluggishly
+slumberingly	2	most slumberingly
+slumberously	2	most slumberously
+slumbrously	2	most slumbrously
+slurpily	2	most slurpily
+slurpingly	2	most slurpingly
+slurredly	2	most slurredly
+slurrily	2	most slurrily
+slurringly	2	most slurringly
+slushily	2	most slushily
+sluttily	2	most sluttily
+sluttishly	2	most sluttishly
+slyly	2	most slyly
+smackingly	2	most smackingly
+smallmindedly	2	most smallmindedly
+smally	2	most smally
+smarmily	2	most smarmily
+smartingly	2	most smartingly
+smartish	2	most smartish
+smartly	2	most smartly
+smashingly	2	most smashingly
+smatteringly	2	most smatteringly
+smearily	2	most smearily
+smellily	2	most smellily
+smexily	2	most smexily
+smickly	2	most smickly
+smilingly	2	most smilingly
+smirkily	2	most smirkily
+smirkingly	2	most smirkingly
+smoggily	2	most smoggily
+smokily	2	most smokily
+smokingly	2	most smokingly
+smolderingly	2	most smolderingly
+smoochily	2	most smoochily
+smoothingly	2	most smoothingly
+smotheringly	2	most smotheringly
+smoulderingly	2	most smoulderingly
+smudgedly	2	most smudgedly
+smudgily	2	most smudgily
+smugly	2	most smugly
+smuttily	2	most smuttily
+snailishly	2	most snailishly
+snakily	2	most snakily
+snappily	2	most snappily
+snappishly	2	most snappishly
+snarkily	2	most snarkily
+snarkishly	2	most snarkishly
+snarlingly	2	most snarlingly
+snatchily	2	most snatchily
+snatchingly	2	most snatchingly
+snazzily	2	most snazzily
+sneakily	2	most sneakily
+sneakingly	2	most sneakingly
+sneakishly	2	most sneakishly
+sneerily	2	most sneerily
+sneeringly	2	most sneeringly
+sneezily	2	most sneezily
+snell	2	most snell
+snelly	2	most snelly
+snickeringly	2	most snickeringly
+snidely	2	most snidely
+sniffily	2	most sniffily
+sniffingly	2	most sniffingly
+sniffishly	2	most sniffishly
+snifflingly	2	most snifflingly
+sniggeringly	2	most sniggeringly
+snipingly	2	most snipingly
+snippily	2	most snippily
+snivelingly	2	most snivelingly
+snivellingly	2	most snivellingly
+snobbily	2	most snobbily
+snobbishly	2	most snobbishly
+snoopily	2	most snoopily
+snootily	2	most snootily
+snortingly	2	most snortingly
+snottily	2	most snottily
+snowily	2	most snowily
+snubbingly	2	most snubbingly
+snubbishly	2	most snubbishly
+snuffily	2	most snuffily
+snuffingly	2	most snuffingly
+snuggly	2	most snuggly
+snugly	2	most snugly
+soakingly	2	most soakingly
+soapily	2	most soapily
+soaringly	2	most soaringly
+sobbingly	2	most sobbingly
+soberingly	2	most soberingly
+soberly	2	most soberly
+sociably	2	most sociably
+socialistically	2	most socialistically
+socially	2	most socially
+sociofugally	2	most sociofugally
+sociolinguistically	2	most sociolinguistically
+sociopathically	2	most sociopathically
+sociopetally	2	most sociopetally
+sociopolitically	2	most sociopolitically
+sociopsychologically	2	most sociopsychologically
+socioreligiously	2	most socioreligiously
+socratically	2	most socratically
+soddenly	2	most soddenly
+sodeinly	2	most sodeinly
+sodomitically	2	most sodomitically
+soft	2	most soft
+softeningly	2	most softeningly
+softheadedly	2	most softheadedly
+softheartedly	2	most softheartedly
+soggily	2	most soggily
+solaciously	2	most solaciously
+soldierly	2	most soldierly
+solecistically	2	most solecistically
+solemnlike	2	most solemnlike
+solemnly	2	most solemnly
+solicitously	2	most solicitously
+solid	2	most solid
+solidarily	2	most solidarily
+solidly	2	most solidly
+solipsistically	2	most solipsistically
+solitariously	2	most solitariously
+solitudinously	2	most solitudinously
+solvently	2	most solvently
+somatically	2	most somatically
+somatotropically	2	most somatotropically
+somberly	2	most somberly
+sombrously	2	most sombrously
+somnambulantly	2	most somnambulantly
+somnambulistically	2	most somnambulistically
+somniferously	2	most somniferously
+somnolently	2	most somnolently
+somnolescently	2	most somnolescently
+songfully	2	most songfully
+soniferously	2	most soniferously
+sonorously	2	most sonorously
+soonish	2	most soonish
+soonly	2	most soonly
+soothfastly	2	most soothfastly
+soothingly	2	most soothingly
+soothly	2	most soothly
+sootily	2	most sootily
+sophically	2	most sophically
+sophistically	2	most sophistically
+sophisticatedly	2	most sophisticatedly
+sophomorically	2	most sophomorically
+soporiferously	2	most soporiferously
+soporifically	2	most soporifically
+soppily	2	most soppily
+soppingly	2	most soppingly
+sorcerously	2	most sorcerously
+sordidly	2	most sordidly
+sorely	2	most sorely
+sororally	2	most sororally
+sororially	2	most sororially
+sororicidally	2	most sororicidally
+sorrily	2	most sorrily
+sorrowfully	2	most sorrowfully
+sorrowingly	2	most sorrowingly
+sorrowly	2	most sorrowly
+sortably	2	most sortably
+sottishly	2	most sottishly
+soulfully	2	most soulfully
+soulishly	2	most soulishly
+soullessly	2	most soullessly
+soulrendingly	2	most soulrendingly
+sound	2	most sound
+soundingly	2	most soundingly
+soundlessly	2	most soundlessly
+soundly	2	most soundly
+soundwise	2	most soundwise
+soupily	2	most soupily
+sourishly	2	most sourishly
+sourly	2	most sourly
+south	2	furthest south
+southeast	2	furthest southeast
+southeasterly	2	most southeasterly
+southeastward	2	most southeastward
+southeastwardly	2	most southeastwardly
+southeastwards	2	most southeastwards
+southerly	2	most southerly
+southernly	2	most southernly
+southish	2	most southish
+southly	2	most southly
+southward	2	most southward
+southwardly	2	most southwardly
+southwest	2	furthest southwest
+southwesterly	2	most southwesterly
+southwestward	2	most southwestward
+southwestwardly	2	most southwestwardly
+southwestwards	2	most southwestwards
+sovereignly	2	most sovereignly
+sovranly	2	most sovranly
+spaciously	2	most spaciously
+spagirically	2	most spagirically
+spagyrically	2	most spagyrically
+spakely	2	most spakely
+spanishly	2	most spanishly
+spankily	2	most spankily
+spankingly	2	most spankingly
+sparely	2	most sparely
+sparingly	2	most sparingly
+sparkily	2	most sparkily
+sparkingly	2	most sparkingly
+sparkishly	2	most sparkishly
+sparklingly	2	most sparklingly
+sparringly	2	most sparringly
+sparsedly	2	most sparsedly
+sparsely	2	most sparsely
+spartanly	2	most spartanly
+spasmodically	2	most spasmodically
+spasmogenically	2	most spasmogenically
+spastically	2	most spastically
+spatiously	2	most spatiously
+speakingly	2	most speakingly
+specialistically	2	most specialistically
+specifiably	2	most specifiably
+specifically	2	most specifically
+speciously	2	most speciously
+spectacularly	2	most spectacularly
+spectatorially	2	most spectatorially
+spectrally	2	most spectrally
+specularly	2	most specularly
+speculatively	2	most speculatively
+specutively	2	most specutively
+speechlessly	2	most speechlessly
+speedfully	2	most speedfully
+speedingly	2	most speedingly
+spellbindingly	2	most spellbindingly
+spellingly	2	most spellingly
+spendthriftily	2	most spendthriftily
+spheroidally	2	most spheroidally
+spicately	2	most spicately
+spiccato	2	most spiccato
+spicewise	2	most spicewise
+spicily	2	most spicily
+spiffily	2	most spiffily
+spiffingly	2	most spiffingly
+spikily	2	most spikily
+spinelessly	2	most spinelessly
+spinily	2	most spinily
+spinosely	2	most spinosely
+spinsterishly	2	most spinsterishly
+spinward	2	most spinward
+spiritedly	2	most spiritedly
+spiritfully	2	most spiritfully
+spiritlessly	2	most spiritlessly
+spiritly	2	most spiritly
+spiritualistically	2	most spiritualistically
+spiritually	2	most spiritually
+spirituously	2	most spirituously
+spirographically	2	most spirographically
+spitefully	2	most spitefully
+spitishly	2	most spitishly
+spittingly	2	most spittingly
+spivvily	2	most spivvily
+splashily	2	most splashily
+splashingly	2	most splashingly
+splay	2	most splay
+spleenfully	2	most spleenfully
+spleenishly	2	most spleenishly
+splendaciously	2	most splendaciously
+splendently	2	most splendently
+splendidly	2	most splendidly
+splendiferously	2	most splendiferously
+splendorously	2	most splendorously
+splendrously	2	most splendrously
+splenetically	2	most splenetically
+splinteringly	2	most splinteringly
+splittingly	2	most splittingly
+splodgily	2	most splodgily
+splotchily	2	most splotchily
+splutteringly	2	most splutteringly
+spongily	2	most spongily
+spontaneously	2	most spontaneously
+spookily	2	most spookily
+spookishly	2	most spookishly
+spooktacularly	2	most spooktacularly
+spoonily	2	most spoonily
+sportfully	2	most sportfully
+sportily	2	most sportily
+sportingly	2	most sportingly
+sportively	2	most sportively
+spotlessly	2	most spotlessly
+spottily	2	most spottily
+sprawlingly	2	most sprawlingly
+spreadably	2	most spreadably
+spreadingly	2	most spreadingly
+spreadly	2	most spreadly
+sprightfully	2	most sprightfully
+sprightlily	2	most sprightlily
+springily	2	most springily
+springingly	2	most springingly
+sprinklingly	2	most sprinklingly
+spritefully	2	most spritefully
+spritely	2	most spritely
+sprucely	2	most sprucely
+spruntly	2	most spruntly
+spryly	2	most spryly
+spunkily	2	most spunkily
+spuriously	2	most spuriously
+spurningly	2	most spurningly
+spurtively	2	most spurtively
+sputteringly	2	most sputteringly
+squalidly	2	most squalidly
+squamosely	2	most squamosely
+squamously	2	most squamously
+squanderingly	2	most squanderingly
+square	2	most square
+squarely	2	most squarely
+squarishly	2	most squarishly
+squarrosely	2	most squarrosely
+squashily	2	most squashily
+squashingly	2	most squashingly
+squatly	2	most squatly
+squawkily	2	most squawkily
+squawkingly	2	most squawkingly
+squeakily	2	most squeakily
+squeakingly	2	most squeakingly
+squealingly	2	most squealingly
+squeamishly	2	most squeamishly
+squeezably	2	most squeezably
+squelchily	2	most squelchily
+squelchingly	2	most squelchingly
+squidgily	2	most squidgily
+squiffily	2	most squiffily
+squintily	2	most squintily
+squintingly	2	most squintingly
+squintly	2	most squintly
+squirmily	2	most squirmily
+squirmingly	2	most squirmingly
+squirrellike	2	most squirrellike
+squishably	2	most squishably
+squishily	2	most squishily
+squishingly	2	most squishingly
+squooshily	2	most squooshily
+srsly	2	most srsly
+stabbily	2	most stabbily
+stabbingly	2	most stabbingly
+stably	2	most stably
+staccato	2	most staccato
+stagely	2	most stagely
+staggeredly	2	most staggeredly
+staggeringly	2	most staggeringly
+stagily	2	most stagily
+stagnantly	2	most stagnantly
+staidly	2	most staidly
+stainlessly	2	most stainlessly
+stalagmitically	2	most stalagmitically
+stalely	2	most stalely
+stalwartly	2	most stalwartly
+stammeringly	2	most stammeringly
+stanch	2	most stanch
+stanchly	2	most stanchly
+standoffishly	2	most standoffishly
+starboardside	2	most starboardside
+starchedly	2	most starchedly
+starchily	2	most starchily
+starchly	2	most starchly
+staringly	2	most staringly
+starkly	2	most starkly
+starly	2	most starly
+starrily	2	most starrily
+start	2	most start
+startingly	2	most startingly
+startledly	2	most startledly
+startlingly	2	most startlingly
+starvedly	2	most starvedly
+starvingly	2	most starvingly
+statarianly	2	most statarianly
+statelily	2	most statelily
+stately	2	most stately
+statuesquely	2	most statuesquely
+statutorily	2	most statutorily
+staunchly	2	most staunchly
+stayedly	2	most stayedly
+steadfastly	2	most steadfastly
+steadily	2	most steadily
+steadyhanded	2	most steadyhanded
+steadyingly	2	most steadyingly
+stealthfully	2	most stealthfully
+stealthily	2	most stealthily
+steamily	2	most steamily
+steamingly	2	most steamingly
+stedfastly	2	most stedfastly
+steelily	2	most steelily
+steeply	2	most steeply
+steeringly	2	most steeringly
+stellarly	2	most stellarly
+stentorianly	2	most stentorianly
+stentoriously	2	most stentoriously
+steply	2	most steply
+stepwise	2	most stepwise
+stereochemically	2	most stereochemically
+stereospecifically	2	most stereospecifically
+stereotaxically	2	most stereotaxically
+stereotypically	2	most stereotypically
+sterilely	2	most sterilely
+sterlingly	2	most sterlingly
+sternly	2	most sternly
+sternward	2	most sternward
+sternwards	2	most sternwards
+steroidally	2	most steroidally
+stertoriously	2	most stertoriously
+stertorously	2	most stertorously
+stewardly	2	most stewardly
+stewingly	2	most stewingly
+sthenically	2	most sthenically
+stickily	2	most stickily
+stiff	2	most stiff
+stiffly	2	most stiffly
+stifledly	2	most stifledly
+stiflingly	2	most stiflingly
+stilly	2	most stilly
+stiltedly	2	most stiltedly
+stimulatingly	2	most stimulatingly
+stingily	2	most stingily
+stingingly	2	most stingingly
+stinkily	2	most stinkily
+stinkingly	2	most stinkingly
+stintedly	2	most stintedly
+stintingly	2	most stintingly
+stipulationally	2	most stipulationally
+stirlessly	2	most stirlessly
+stirringly	2	most stirringly
+stochastically	2	most stochastically
+stockily	2	most stockily
+stockishly	2	most stockishly
+stodgily	2	most stodgily
+stoically	2	most stoically
+stoichiometrically	2	most stoichiometrically
+stoicly	2	most stoicly
+stolidly	2	most stolidly
+stompily	2	most stompily
+stompingly	2	most stompingly
+stonedly	2	most stonedly
+stoneheartedly	2	most stoneheartedly
+stonily	2	most stonily
+stoopingly	2	most stoopingly
+stormfully	2	most stormfully
+stormily	2	most stormily
+stormingly	2	most stormingly
+stour	2	most stour
+stoutheartedly	2	most stoutheartedly
+stoutly	2	most stoutly
+strabismally	2	most strabismally
+stragglingly	2	most stragglingly
+straight	2	most straight
+straightfacedly	2	most straightfacedly
+straightforth	2	most straightforth
+straightforward	2	most straightforward
+straightforwardly	2	most straightforwardly
+straightly	2	most straightly
+straightwise	2	most straightwise
+strainably	2	most strainably
+strainedly	2	most strainedly
+strainingly	2	most strainingly
+straitlacedly	2	most straitlacedly
+straitly	2	most straitly
+strambang	2	most strambang
+strangely	2	most strangely
+strangledly	2	most strangledly
+stranglingly	2	most stranglingly
+strappingly	2	most strappingly
+stratagemically	2	most stratagemically
+strategically	2	most strategically
+stratospherically	2	most stratospherically
+streakily	2	most streakily
+streamingly	2	most streamingly
+strengtheningly	2	most strengtheningly
+strengthfully	2	most strengthfully
+strengthily	2	most strengthily
+strengthlessly	2	most strengthlessly
+strenuously	2	most strenuously
+strepitantly	2	most strepitantly
+strepitously	2	most strepitously
+stressfully	2	most stressfully
+stresslessly	2	most stresslessly
+stretchably	2	most stretchably
+stretchily	2	most stretchily
+strickenly	2	most strickenly
+strickly	2	most strickly
+stridently	2	most stridently
+stridulantly	2	most stridulantly
+stridulously	2	most stridulously
+strikingly	2	most strikingly
+stringently	2	most stringently
+stringily	2	most stringily
+strivingly	2	most strivingly
+strokingly	2	most strokingly
+strollingly	2	most strollingly
+strongfully	2	most strongfully
+stronghanded	2	most stronghanded
+stronghandedly	2	most stronghandedly
+strongheartedly	2	most strongheartedly
+strongmindedly	2	most strongmindedly
+stroppily	2	most stroppily
+structuralistically	2	most structuralistically
+strugglingly	2	most strugglingly
+strummingly	2	most strummingly
+strumously	2	most strumously
+struttingly	2	most struttingly
+stubbily	2	most stubbily
+stubbornly	2	most stubbornly
+studiedly	2	most studiedly
+studiously	2	most studiously
+stuffily	2	most stuffily
+stultifyingly	2	most stultifyingly
+stultiloquently	2	most stultiloquently
+stumblingly	2	most stumblingly
+stumpily	2	most stumpily
+stunningly	2	most stunningly
+stuntedly	2	most stuntedly
+stuntly	2	most stuntly
+stupefyingly	2	most stupefyingly
+stupendously	2	most stupendously
+stupid	2	most stupid
+stupidly	2	most stupidly
+stuporously	2	most stuporously
+sturdily	2	most sturdily
+stutteringly	2	most stutteringly
+stylishly	2	most stylishly
+stylistically	2	most stylistically
+stylographically	2	most stylographically
+suant	2	most suant
+suasively	2	most suasively
+suavely	2	most suavely
+subacidly	2	most subacidly
+subcapsularly	2	most subcapsularly
+subchronically	2	most subchronically
+subconsciously	2	most subconsciously
+subdititiously	2	most subdititiously
+subdolously	2	most subdolously
+subdorsally	2	most subdorsally
+subductively	2	most subductively
+subduedly	2	most subduedly
+subduingly	2	most subduingly
+subdurally	2	most subdurally
+subgingivally	2	most subgingivally
+subgranularly	2	most subgranularly
+subhumanly	2	most subhumanly
+subitaneously	2	most subitaneously
+subjacently	2	most subjacently
+subjectively	2	most subjectively
+subjectivistically	2	most subjectivistically
+subjectlessly	2	most subjectlessly
+sublethally	2	most sublethally
+sublimely	2	most sublimely
+subliminally	2	most subliminally
+sublinearly	2	most sublinearly
+sublineately	2	most sublineately
+subliterately	2	most subliterately
+submaximally	2	most submaximally
+subminimally	2	most subminimally
+submissively	2	most submissively
+submissly	2	most submissly
+submittingly	2	most submittingly
+subnationally	2	most subnationally
+subnormally	2	most subnormally
+suboptimally	2	most suboptimally
+subordinately	2	most subordinately
+subplicately	2	most subplicately
+subrationally	2	most subrationally
+subreptitiously	2	most subreptitiously
+subserviently	2	most subserviently
+subsonically	2	most subsonically
+substandardly	2	most substandardly
+substantially	2	most substantially
+substantiously	2	most substantiously
+substantively	2	most substantively
+substoichiometrically	2	most substoichiometrically
+subsultorily	2	most subsultorily
+subtely	2	most subtely
+subtilely	2	most subtilely
+subtilly	2	most subtilly
+subtlely	2	most subtlely
+subtly	2	most subtly
+subtractively	2	most subtractively
+subtropically	2	most subtropically
+subtypically	2	most subtypically
+suburbanly	2	most suburbanly
+subverbally	2	most subverbally
+subversively	2	most subversively
+subvertingly	2	most subvertingly
+successantly	2	most successantly
+successfully	2	most successfully
+succinct	2	most succinct
+succinctly	2	most succinctly
+succulently	2	most succulently
+suckingly	2	most suckingly
+suctorially	2	most suctorially
+sudden	2	most sudden
+suddenly	2	most suddenly
+suently	2	most suently
+sufferably	2	most sufferably
+sufferingly	2	most sufferingly
+sufficiently	2	most sufficiently
+suffocatingly	2	most suffocatingly
+suffusedly	2	most suffusedly
+suffusely	2	most suffusely
+sugarily	2	most sugarily
+suggestfully	2	most suggestfully
+suggestibly	2	most suggestibly
+suggestingly	2	most suggestingly
+suggestively	2	most suggestively
+suicidally	2	most suicidally
+suitably	2	most suitably
+suitingly	2	most suitingly
+sulfureously	2	most sulfureously
+sulfurously	2	most sulfurously
+sulkily	2	most sulkily
+sullenly	2	most sullenly
+sulphureously	2	most sulphureously
+sulphurously	2	most sulphurously
+sultrily	2	most sultrily
+summarily	2	most summarily
+summerily	2	most summerily
+summoningly	2	most summoningly
+sumptiously	2	most sumptiously
+sumptuously	2	most sumptuously
+sunderly	2	most sunderly
+sundrily	2	most sundrily
+sundry	2	most sundry
+sunkenly	2	most sunkenly
+sunlessly	2	most sunlessly
+sunnily	2	most sunnily
+sunward	2	most sunward
+superabundantly	2	most superabundantly
+superambiently	2	most superambiently
+superbly	2	most superbly
+superbrilliantly	2	most superbrilliantly
+supercalifragilisticexpialidociously	2	most supercalifragilisticexpialidociously
+supercautiously	2	most supercautiously
+supercelestially	2	most supercelestially
+superciliously	2	most superciliously
+supercolossally	2	most supercolossally
+superconductively	2	most superconductively
+superconformally	2	most superconformally
+supercritically	2	most supercritically
+superelastically	2	most superelastically
+supereminently	2	most supereminently
+supererogatorily	2	most supererogatorily
+superessentially	2	most superessentially
+superexplosively	2	most superexplosively
+superexponentially	2	most superexponentially
+superextraordinarily	2	most superextraordinarily
+superferociously	2	most superferociously
+superferromagnetically	2	most superferromagnetically
+superficially	2	most superficially
+superfinely	2	most superfinely
+superformidably	2	most superformidably
+superglacially	2	most superglacially
+superhelically	2	most superhelically
+superheroically	2	most superheroically
+superhumanly	2	most superhumanly
+superimmensely	2	most superimmensely
+superiorly	2	most superiorly
+superiourly	2	most superiourly
+superlatively	2	most superlatively
+superly	2	most superly
+supermonstrously	2	most supermonstrously
+supermorbidly	2	most supermorbidly
+supernally	2	most supernally
+supernationally	2	most supernationally
+supernaturally	2	most supernaturally
+supernormally	2	most supernormally
+supernumerarily	2	most supernumerarily
+superordinately	2	most superordinately
+superoverwhelmingly	2	most superoverwhelmingly
+superparamagnetically	2	most superparamagnetically
+superphenomenally	2	most superphenomenally
+superplastically	2	most superplastically
+superproficiently	2	most superproficiently
+superrationally	2	most superrationally
+supersensitively	2	most supersensitively
+supersensually	2	most supersensually
+supersensuously	2	most supersensuously
+superserviceably	2	most superserviceably
+supersexually	2	most supersexually
+supersonically	2	most supersonically
+superstitiously	2	most superstitiously
+supersubstantially	2	most supersubstantially
+supervacaneously	2	most supervacaneously
+supes	2	most supes
+supinely	2	most supinely
+supplely	2	most supplely
+suppletively	2	most suppletively
+suppliantly	2	most suppliantly
+supplicantly	2	most supplicantly
+supplicatingly	2	most supplicatingly
+supply	2	most supply
+supportably	2	most supportably
+supportedly	2	most supportedly
+supportively	2	most supportively
+suppositionally	2	most suppositionally
+suppositiously	2	most suppositiously
+supposititiously	2	most supposititiously
+suppositively	2	most suppositively
+suppressedly	2	most suppressedly
+suppressively	2	most suppressively
+suprabasally	2	most suprabasally
+supraliminally	2	most supraliminally
+supralinguistically	2	most supralinguistically
+supramaximally	2	most supramaximally
+supranationally	2	most supranationally
+supraordinately	2	most supraordinately
+supraphysically	2	most supraphysically
+suprasensually	2	most suprasensually
+supremely	2	most supremely
+sure	2	most sure
+surefootedly	2	most surefootedly
+surehandedly	2	most surehandedly
+surlily	2	most surlily
+surpassingly	2	most surpassingly
+surprisedly	2	most surprisedly
+surprisingly	2	most surprisingly
+surrealistically	2	most surrealistically
+surrenderingly	2	most surrenderingly
+surreptitiously	2	most surreptitiously
+surreverently	2	most surreverently
+surrogatively	2	most surrogatively
+surveyingly	2	most surveyingly
+susceptibly	2	most susceptibly
+suspectingly	2	most suspectingly
+suspectly	2	most suspectly
+suspensefully	2	most suspensefully
+suspensively	2	most suspensively
+suspiciously	2	most suspiciously
+sustainably	2	most sustainably
+sustainedly	2	most sustainedly
+sustainingly	2	most sustainingly
+susurringly	2	most susurringly
+susurrously	2	most susurrously
+suttly	2	most suttly
+sveltely	2	most sveltely
+swack	2	most swack
+swaggeringly	2	most swaggeringly
+swampily	2	most swampily
+swankily	2	most swankily
+swankly	2	most swankly
+swarmingly	2	most swarmingly
+swarthily	2	most swarthily
+swashbucklingly	2	most swashbucklingly
+swayingly	2	most swayingly
+swearily	2	most swearily
+swearingly	2	most swearingly
+sweatily	2	most sweatily
+swedishly	2	most swedishly
+sweepingly	2	most sweepingly
+sweet	2	most sweet
+sweetely	2	most sweetely
+sweetfully	2	most sweetfully
+sweetheartedly	2	most sweetheartedly
+sweetishly	2	most sweetishly
+swellingly	2	most swellingly
+swelteringly	2	most swelteringly
+swervily	2	most swervily
+swervingly	2	most swervingly
+swift	2	most swift
+swimmily	2	most swimmily
+swimmingly	2	most swimmingly
+swindlingly	2	most swindlingly
+swingeingly	2	most swingeingly
+swingingly	2	most swingingly
+swinishly	2	most swinishly
+swirlingly	2	most swirlingly
+swishily	2	most swishily
+swishingly	2	most swishingly
+swishly	2	most swishly
+swissly	2	most swissly
+swithly	2	most swithly
+swollenly	2	most swollenly
+swoonily	2	most swoonily
+swooningly	2	most swooningly
+swoopily	2	most swoopily
+swoopingly	2	most swoopingly
+swottily	2	most swottily
+sybaritically	2	most sybaritically
+sycophantically	2	most sycophantically
+sycophantishly	2	most sycophantishly
+sycophantly	2	most sycophantly
+syllogistically	2	most syllogistically
+symbiotically	2	most symbiotically
+symbolically	2	most symbolically
+symbolicly	2	most symbolicly
+symbolistically	2	most symbolistically
+symmetrically	2	most symmetrically
+symmetrologically	2	most symmetrologically
+sympathetically	2	most sympathetically
+sympathisingly	2	most sympathisingly
+sympathizingly	2	most sympathizingly
+sympatrically	2	most sympatrically
+symphonically	2	most symphonically
+symphoniously	2	most symphoniously
+symposiastically	2	most symposiastically
+sympotically	2	most sympotically
+symptomatically	2	most symptomatically
+synagogally	2	most synagogally
+synagogically	2	most synagogically
+synchronously	2	most synchronously
+synclinally	2	most synclinally
+syncretically	2	most syncretically
+syncretistically	2	most syncretistically
+synecdochally	2	most synecdochally
+synecdochically	2	most synecdochically
+synergetically	2	most synergetically
+synergically	2	most synergically
+synergistically	2	most synergistically
+syneruptively	2	most syneruptively
+synodally	2	most synodally
+synonimously	2	most synonimously
+synonymously	2	most synonymously
+synoptically	2	most synoptically
+syntactically	2	most syntactically
+syntagmatically	2	most syntagmatically
+syphilitically	2	most syphilitically
+syrupily	2	most syrupily
+systematic	2	most systematic
+systematically	2	most systematically
+systemically	2	most systemically
+systolically	2	most systolically
+tabooistically	2	most tabooistically
+tacitly	2	most tacitly
+taciturnly	2	most taciturnly
+tackily	2	most tackily
+tactfully	2	most tactfully
+tactically	2	most tactically
+tactilely	2	most tactilely
+tactlessly	2	most tactlessly
+tactually	2	most tactually
+taintlessly	2	most taintlessly
+takingly	2	most takingly
+talentedly	2	most talentedly
+talentlessly	2	most talentlessly
+talismanically	2	most talismanically
+talkatively	2	most talkatively
+talkily	2	most talkily
+tally	2	most tally
+tamelessly	2	most tamelessly
+tamely	2	most tamely
+tangentally	2	most tangentally
+tangentially	2	most tangentially
+tangibly	2	most tangibly
+tangily	2	most tangily
+tangledly	2	most tangledly
+tanglingly	2	most tanglingly
+tantalisingly	2	most tantalisingly
+tantalizingly	2	most tantalizingly
+taoistically	2	most taoistically
+taperingly	2	most taperingly
+taperly	2	most taperly
+taperwise	2	most taperwise
+tardily	2	most tardily
+tardively	2	most tardively
+targetedly	2	most targetedly
+tarnation	2	most tarnation
+tarrily	2	most tarrily
+tartily	2	most tartily
+tartly	2	most tartly
+tastefully	2	most tastefully
+tastelessly	2	most tastelessly
+tastily	2	most tastily
+tastingly	2	most tastingly
+tatteredly	2	most tatteredly
+tatterly	2	most tatterly
+tattily	2	most tattily
+tauntingly	2	most tauntingly
+tautly	2	most tautly
+tautologically	2	most tautologically
+tautologously	2	most tautologously
+tawdrily	2	most tawdrily
+tawnily	2	most tawnily
+taxingly	2	most taxingly
+teachably	2	most teachably
+teachingly	2	most teachingly
+tearfully	2	most tearfully
+tearily	2	most tearily
+tearingly	2	most tearingly
+tearjerkingly	2	most tearjerkingly
+teasably	2	most teasably
+teasingly	2	most teasingly
+techily	2	most techily
+technically	2	most technically
+technocentrically	2	most technocentrically
+technocratically	2	most technocratically
+technologically	2	most technologically
+technoscientifically	2	most technoscientifically
+tectly	2	most tectly
+tectonically	2	most tectonically
+tediously	2	most tediously
+teemingly	2	most teemingly
+teeteringly	2	most teeteringly
+teethily	2	most teethily
+teetotally	2	most teetotally
+tegularly	2	most tegularly
+telegenically	2	most telegenically
+telegrammatically	2	most telegrammatically
+telegraphically	2	most telegraphically
+teleonomically	2	most teleonomically
+telergically	2	most telergically
+telesmatically	2	most telesmatically
+telically	2	most telically
+tellingly	2	most tellingly
+temerously	2	most temerously
+temperamentally	2	most temperamentally
+temperately	2	most temperately
+temperedly	2	most temperedly
+tempestuously	2	most tempestuously
+temporisingly	2	most temporisingly
+temporizingly	2	most temporizingly
+temptingly	2	most temptingly
+temulently	2	most temulently
+tenably	2	most tenably
+tenaciously	2	most tenaciously
+tendenciously	2	most tendenciously
+tendentiously	2	most tendentiously
+tender	2	most tender
+tenderfully	2	most tenderfully
+tenderhanded	2	most tenderhanded
+tenderheartedly	2	most tenderheartedly
+tenderly	2	most tenderly
+tendermindedly	2	most tendermindedly
+tendrely	2	most tendrely
+tenebriously	2	most tenebriously
+tenebrously	2	most tenebrously
+tensely	2	most tensely
+tensilely	2	most tensilely
+tensionally	2	most tensionally
+tentatively	2	most tentatively
+tentively	2	most tentively
+tenuously	2	most tenuously
+tenurially	2	most tenurially
+tenuto	2	most tenuto
+tepidly	2	most tepidly
+teratogenically	2	most teratogenically
+termagantly	2	most termagantly
+terminally	2	most terminally
+termlessly	2	most termlessly
+termly	2	most termly
+terpsichoreally	2	most terpsichoreally
+terpsichoreanly	2	most terpsichoreanly
+terpsichorially	2	most terpsichorially
+terrenely	2	most terrenely
+terrestrially	2	most terrestrially
+terrible	2	most terrible
+terribly	2	most terribly
+terrificly	2	most terrificly
+terrifiedly	2	most terrifiedly
+terrifyingly	2	most terrifyingly
+territorially	2	most territorially
+terroristically	2	most terroristically
+tersely	2	most tersely
+testerically	2	most testerically
+testicularly	2	most testicularly
+testily	2	most testily
+testingly	2	most testingly
+testosteronally	2	most testosteronally
+testosteronically	2	most testosteronically
+tetchily	2	most tetchily
+teutonically	2	most teutonically
+textualistically	2	most textualistically
+textually	2	most textually
+thair	2	most thair
+thanatologically	2	most thanatologically
+thankably	2	most thankably
+thankfully	2	most thankfully
+thanklessly	2	most thanklessly
+thankly	2	most thankly
+thaumaturgically	2	most thaumaturgically
+thawingly	2	most thawingly
+theatrically	2	most theatrically
+theftuously	2	most theftuously
+theistically	2	most theistically
+thelemically	2	most thelemically
+thematically	2	most thematically
+theocentrically	2	most theocentrically
+theocratically	2	most theocratically
+theodically	2	most theodically
+theologically	2	most theologically
+theonomically	2	most theonomically
+theonomously	2	most theonomously
+theophilosophically	2	most theophilosophically
+theorematically	2	most theorematically
+theosophically	2	most theosophically
+therapeutically	2	most therapeutically
+thereckly	2	most thereckly
+thermophilically	2	most thermophilically
+thermosensitively	2	most thermosensitively
+thespically	2	most thespically
+theurgically	2	most theurgically
+thickeningly	2	most thickeningly
+thickheadedly	2	most thickheadedly
+thiefly	2	most thiefly
+thievingly	2	most thievingly
+thievishly	2	most thievishly
+thin	2	most thin
+thinkably	2	most thinkably
+thinkingly	2	most thinkingly
+thinly	2	most thinly
+thirdhand	2	most thirdhand
+thirstily	2	most thirstily
+thirstingly	2	most thirstingly
+thitherto	2	most thitherto
+thornily	2	most thornily
+thoroly	2	most thoroly
+thoroughgoingly	2	most thoroughgoingly
+thoroughly	2	most thoroughly
+thoroughstitch	2	most thoroughstitch
+thoughtfully	2	most thoughtfully
+thoughtlessly	2	most thoughtlessly
+thrasonically	2	most thrasonically
+thrawnly	2	most thrawnly
+threadily	2	most threadily
+threateningly	2	most threateningly
+threatfully	2	most threatfully
+threedimensionally	2	most threedimensionally
+threegether	2	most threegether
+thriftfully	2	most thriftfully
+thriftily	2	most thriftily
+thriftlessly	2	most thriftlessly
+thriftly	2	most thriftly
+thrillingly	2	most thrillingly
+thrivingly	2	most thrivingly
+throatily	2	most throatily
+throatward	2	most throatward
+throbbingly	2	most throbbingly
+thromboplastically	2	most thromboplastically
+throngingly	2	most throngingly
+throughly	2	most throughly
+thruly	2	most thruly
+thrummingly	2	most thrummingly
+thrustingly	2	most thrustingly
+thuddingly	2	most thuddingly
+thuggishly	2	most thuggishly
+thumping	2	most thumping
+thumpingly	2	most thumpingly
+thundering	2	most thundering
+thunderingly	2	most thunderingly
+thunderously	2	most thunderously
+thundrously	2	most thundrously
+thwackingly	2	most thwackingly
+thwartedly	2	most thwartedly
+thwartly	2	most thwartly
+thwartways	2	most thwartways
+tickle	2	most tickle
+ticklishly	2	most ticklishly
+tidally	2	most tidally
+tidely	2	most tidely
+tidily	2	most tidily
+tigerishly	2	most tigerishly
+tighteningly	2	most tighteningly
+tightsome	2	most tightsome
+tigrishly	2	most tigrishly
+timefully	2	most timefully
+timelessly	2	most timelessly
+timelily	2	most timelily
+timely	2	most timely
+timeously	2	most timeously
+timidly	2	most timidly
+timocratically	2	most timocratically
+timorously	2	most timorously
+timourously	2	most timourously
+timously	2	most timously
+tinglingly	2	most tinglingly
+tinily	2	most tinily
+tinnily	2	most tinnily
+tipsily	2	most tipsily
+tiptoeingly	2	most tiptoeingly
+tiredly	2	most tiredly
+tirelessly	2	most tirelessly
+tiresomely	2	most tiresomely
+tiringly	2	most tiringly
+titanically	2	most titanically
+titillatingly	2	most titillatingly
+titteringly	2	most titteringly
+titubantly	2	most titubantly
+toastily	2	most toastily
+togetherlike	2	most togetherlike
+togetherly	2	most togetherly
+togetherwise	2	most togetherwise
+toilfully	2	most toilfully
+toilingly	2	most toilingly
+toilsomely	2	most toilsomely
+tokenistically	2	most tokenistically
+tolerable	2	most tolerable
+tolerably	2	most tolerably
+tolerantly	2	most tolerantly
+tollingly	2	most tollingly
+tomboyishly	2	most tomboyishly
+tonally	2	most tonally
+tonelessly	2	most tonelessly
+tonguelessly	2	most tonguelessly
+tonishly	2	most tonishly
+tonnishly	2	most tonnishly
+toothachingly	2	most toothachingly
+toothily	2	most toothily
+toothsomely	2	most toothsomely
+toothward	2	most toothward
+topheavily	2	most topheavily
+topically	2	most topically
+toploftily	2	most toploftily
+topologically	2	most topologically
+toppingly	2	most toppingly
+topsyturvily	2	most topsyturvily
+topsyturvy	2	most topsyturvy
+torely	2	most torely
+tormentedly	2	most tormentedly
+tormentingly	2	most tormentingly
+toroidally	2	most toroidally
+torpidly	2	most torpidly
+torrentially	2	most torrentially
+torridly	2	most torridly
+tortiously	2	most tortiously
+tortuously	2	most tortuously
+torturedly	2	most torturedly
+torturingly	2	most torturingly
+tosh	2	most tosh
+toshly	2	most toshly
+tossily	2	most tossily
+totemically	2	most totemically
+totemistically	2	most totemistically
+totteringly	2	most totteringly
+touchably	2	most touchably
+touchily	2	most touchily
+touchingly	2	most touchingly
+toughly	2	most toughly
+toughmindedly	2	most toughmindedly
+touristically	2	most touristically
+toweringly	2	most toweringly
+townishly	2	most townishly
+toxically	2	most toxically
+toxicologically	2	most toxicologically
+toyingly	2	most toyingly
+toyishly	2	most toyishly
+traceably	2	most traceably
+tractably	2	most tractably
+traditionalistically	2	most traditionalistically
+traditionally	2	most traditionally
+traducingly	2	most traducingly
+tragedically	2	most tragedically
+tragically	2	most tragically
+tragicly	2	most tragicly
+tragicomically	2	most tragicomically
+trailingly	2	most trailingly
+traitorly	2	most traitorly
+traitorously	2	most traitorously
+traitourly	2	most traitourly
+traitourously	2	most traitourously
+trajectorially	2	most trajectorially
+tralatitiously	2	most tralatitiously
+trampily	2	most trampily
+trampishly	2	most trampishly
+tramplingly	2	most tramplingly
+trancedly	2	most trancedly
+trancily	2	most trancily
+tranquilisingly	2	most tranquilisingly
+tranquilizingly	2	most tranquilizingly
+tranquillisingly	2	most tranquillisingly
+tranquillizingly	2	most tranquillizingly
+tranquilly	2	most tranquilly
+transannularly	2	most transannularly
+transatlantically	2	most transatlantically
+transcendentally	2	most transcendentally
+transcendently	2	most transcendently
+transcendingly	2	most transcendingly
+transculturally	2	most transculturally
+transdisciplinarily	2	most transdisciplinarily
+transeuntly	2	most transeuntly
+transferably	2	most transferably
+transferrably	2	most transferrably
+transfiguringly	2	most transfiguringly
+transfixingly	2	most transfixingly
+transformationally	2	most transformationally
+transformatively	2	most transformatively
+transformingly	2	most transformingly
+transgressively	2	most transgressively
+transiently	2	most transiently
+transindividually	2	most transindividually
+transitionally	2	most transitionally
+transitwise	2	most transitwise
+translationally	2	most translationally
+translucently	2	most translucently
+transmigratively	2	most transmigratively
+transmutationally	2	most transmutationally
+transmutatively	2	most transmutatively
+transparently	2	most transparently
+transpersonally	2	most transpersonally
+transphobically	2	most transphobically
+transpicuously	2	most transpicuously
+transplendently	2	most transplendently
+transportedly	2	most transportedly
+transportingly	2	most transportingly
+transpositionally	2	most transpositionally
+transrationally	2	most transrationally
+transversally	2	most transversally
+trashily	2	most trashily
+traumatically	2	most traumatically
+traumatizingly	2	most traumatizingly
+traverse	2	most traverse
+treacherously	2	most treacherously
+treasonably	2	most treasonably
+treasonously	2	most treasonously
+treatably	2	most treatably
+tremblesome	2	most tremblesome
+tremblingly	2	most tremblingly
+tremendously	2	most tremendously
+tremorously	2	most tremorously
+tremulously	2	most tremulously
+trenchantly	2	most trenchantly
+trendily	2	most trendily
+trepidatiously	2	most trepidatiously
+trepidly	2	most trepidly
+tribalistically	2	most tribalistically
+tribally	2	most tribally
+tributarily	2	most tributarily
+trickily	2	most trickily
+trickingly	2	most trickingly
+trickishly	2	most trickishly
+tricksily	2	most tricksily
+triflingly	2	most triflingly
+trigly	2	most trigly
+trigraphically	2	most trigraphically
+trimly	2	most trimly
+trimmingly	2	most trimmingly
+trimorphically	2	most trimorphically
+trippily	2	most trippily
+trippingly	2	most trippingly
+tristfully	2	most tristfully
+tritely	2	most tritely
+tritically	2	most tritically
+triumphalistically	2	most triumphalistically
+triumphally	2	most triumphally
+triumphantly	2	most triumphantly
+trivializingly	2	most trivializingly
+trochoidally	2	most trochoidally
+troglodytically	2	most troglodytically
+trollishly	2	most trollishly
+trollistically	2	most trollistically
+tropically	2	most tropically
+tropologically	2	most tropologically
+tropotactically	2	most tropotactically
+troubledly	2	most troubledly
+troublesomely	2	most troublesomely
+troublingly	2	most troublingly
+troublously	2	most troublously
+truantly	2	most truantly
+truculently	2	most truculently
+truefully	2	most truefully
+trueheartedly	2	most trueheartedly
+truistically	2	most truistically
+trustably	2	most trustably
+trustfully	2	most trustfully
+trustily	2	most trustily
+trustingly	2	most trustingly
+trustworthily	2	most trustworthily
+truthfully	2	most truthfully
+truthlessly	2	most truthlessly
+truthly	2	most truthly
+truthward	2	most truthward
+truthwards	2	most truthwards
+tryingly	2	most tryingly
+tubbily	2	most tubbily
+tuberously	2	most tuberously
+tubulously	2	most tubulously
+tuftily	2	most tuftily
+tumescently	2	most tumescently
+tumidly	2	most tumidly
+tumourously	2	most tumourously
+tumultuarily	2	most tumultuarily
+tumultuously	2	most tumultuously
+tunably	2	most tunably
+tuneably	2	most tuneably
+tunefully	2	most tunefully
+tunelessly	2	most tunelessly
+turbidly	2	most turbidly
+turbinately	2	most turbinately
+turbulently	2	most turbulently
+turgently	2	most turgently
+turgidly	2	most turgidly
+turkeylike	2	most turkeylike
+turkishly	2	most turkishly
+turkwise	2	most turkwise
+turpidly	2	most turpidly
+turrible	2	most turrible
+tutelarily	2	most tutelarily
+twaddlingly	2	most twaddlingly
+twangily	2	most twangily
+twangingly	2	most twangingly
+twattily	2	most twattily
+tweedily	2	most tweedily
+tweely	2	most tweely
+twifold	2	most twifold
+twiggily	2	most twiggily
+twilightly	2	most twilightly
+twiningly	2	most twiningly
+twirlingly	2	most twirlingly
+twistedly	2	most twistedly
+twistily	2	most twistily
+twistingly	2	most twistingly
+twitchily	2	most twitchily
+twitchingly	2	most twitchingly
+twitteringly	2	most twitteringly
+twittingly	2	most twittingly
+typically	2	most typically
+typologically	2	most typologically
+tyrannically	2	most tyrannically
+tyrannizingly	2	most tyrannizingly
+tyrannously	2	most tyrannously
+upcountry	1	further upcountry
+upcountry	2	furthest upcountry
+upcourt	1	further upcourt
+upcourt	2	furthest upcourt
+upcreek	1	further upcreek
+upcreek	2	furthest upcreek
+upfield	1	further upfield
+upfield	2	furthest upfield
+upgrade	1	further upgrade
+upgrade	2	furthest upgrade
+uphill	1	further uphill
+uphill	2	furthest uphill
+upmountain	1	further upmountain
+upmountain	2	furthest upmountain
+upriver	1	further upriver
+upriver	2	furthest upriver
+upshore	1	further upshore
+upshore	2	furthest upshore
+upslope	1	further upslope
+upslope	2	furthest upslope
+upstairs	1	further upstairs
+upstairs	2	furthest upstairs
+upstream	1	further upstream
+upstream	2	furthest upstream
+upstreet	1	further upstreet
+upstreet	2	furthest upstreet
+upthread	1	further upthread
+upthread	2	furthest upthread
+uptown	1	further uptown
+uptown	2	furthest uptown
+upvalley	1	further upvalley
+upvalley	2	furthest upvalley
+upwind	1	further upwind
+upwind	2	furthest upwind
+well	1	better
+well	2	best
+"#,
+    ),
 };

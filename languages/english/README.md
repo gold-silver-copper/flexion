@@ -1,7 +1,8 @@
 # english
 
-English inflection for **any** English word, attested or not: noun plurals, verb
-forms, and comparatives and superlatives, each with a confidence.
+English inflection for **any** English word, attested or not: noun plurals,
+verb forms, comparatives and superlatives, each with how sure the grammar is
+and why.
 
 ```rust
 use english::*;
@@ -10,19 +11,17 @@ assert_eq!(noun("cat", Number::Plural), "cats");
 assert_eq!(noun("child", Number::Plural), "children");
 assert_eq!(verb("go", VerbForm::Past), "went");
 assert_eq!(adjective("good", Degree::Comparative), "better");
-assert_eq!(adjective("beautiful", Degree::Superlative), "most beautiful");
+```
 
-// Words nobody wrote down inflect by the patterns learned from those who did.
-assert_eq!(noun("glorp", Number::Plural), "glorps");
+A word nobody wrote down inflects by the rules learned from the words that
+were. Every answer can come with its alternatives, how likely each is, and why:
 
-// Every candidate, with the model's confidence.
-let plurals = noun_scored("octopus", Number::Plural);
-assert_eq!(plurals[0].form, "octopuses");
+```rust
+use english::*;
 
-// A citation pins principal parts: here, which `lie` you mean.
-assert_eq!(verb("lie", VerbForm::Past), "lay");
-assert_eq!(verb("lie, lied", VerbForm::Past), "lied");
-assert_eq!(verb("lie, lied", VerbForm::PastParticiple), "lied");
+let plurals = Noun::new("glorp").candidates(Number::Plural);
+assert_eq!(plurals[0].form, "glorps");
+println!("{}", plurals[0]);
 ```
 
 Agreement, pronouns and possessives are hand-written helpers on top:
@@ -41,14 +40,24 @@ assert_eq!(add_possessive("dogs"), "dogs'");
 
 This crate is English inflection as a grammar, learned by
 [flexion](https://github.com/gold-silver-copper/flexion) from the English Wiktionary's
-English entries. Each part of speech is a module under `src/`:
+English entries. Each part of speech is a module under `src/`, and has what its
+grammar needs of:
 
 - `paradigms.rs`: how words inflect, one table per paradigm, named after a word that
-  follows it, with a pattern per form (`~а`: the stem, then `а`);
+  follows it, with a pattern per form (`~а`: the stem, then `а`; `referred`: another
+  cell's form, as the word's feature says);
 - `rules.rs`: which paradigm a word takes, as rules on its ending, each with how many of
   the dictionary's words with that ending follow each paradigm, and the words no rule
   gets right, listed;
-- `irregular.rs`: the forms no paradigm gives.
+- `accent.rs`: per cell, which rule places the accent, and which words have which
+  pattern;
+- `prefixes.rs`: prefixes a word inflects behind, separable or not;
+- `compounds.rs`: whether a word written in parts inflects each part;
+- `marks.rs` and `spellings.rs`: how a word typed without its marks (vowel length,
+  `ё`) is spelled;
+- `irregular.rs`: the forms no paradigm gives;
+- a module per principal part, where a part of speech is built on them: each cell
+  belongs to one part's system and is inflected from that part.
 
 A word the dictionary lists gets its own forms. Any other word gets the paradigm its
 ending suggests, with a probability that says how often such a guess is right, and the
@@ -56,14 +65,15 @@ reason (the rule and its counts).
 
 ## The grammar
 
-| | words | paradigms | rules | listed words | irregular forms |
-|---|---:|---:|---:|---:|---:|
-| noun | 228072 | 109 | 1403 | 4782 | 5803 |
-| verb | 38230 | 88 | 472 | 1211 | 2790 |
-| adjective | 61454 | 68 | 4990 | 19951 | 22855 |
-| adverb | 12620 | 28 | 838 | 3869 | 4613 |
+| | words | systems | paradigms | rules | listed words | irregular forms |
+|---|---:|---:|---:|---:|---:|---:|
+| noun | 228072 | 1 | 130 | 2373 | 6934 | 253 |
+| verb | 38230 | 3 | 294 | 2388 | 3370 | 230 |
+| adjective | 61454 | 1 | 65 | 5012 | 20155 | 22737 |
+| adverb | 12620 | 1 | 28 | 838 | 3869 | 4613 |
 
-*Words*: the dictionary's words the grammar is learned from. *Rules*: the endings that
+*Words*: the dictionary's words the grammar is learned from. *Systems*: the principal
+parts a part of speech is built on (1: its lemma alone). *Rules*: the endings that
 choose a paradigm. *Listed words*: words no rule gets right, listed with their paradigm.
 *Irregular forms*: forms no paradigm gives, listed.
 
@@ -71,16 +81,18 @@ choose a paradigm. *Listed words*: words no rule gets right, listed with their p
 
 A tenth of the words (by a hash of the word) was held out: the grammar scored here was
 learned from the other nine tenths, and asked for every form the dictionary lists of
-each held-out word. *Top-1*: its first answer is right; *top-3*: the right answer is among
-its first three. *Calibration error*: how far its stated probabilities are, on average,
-from how often it is right (0 is perfect).
+each held-out word, typed as the dictionary's headword. *Top-1*: its first answer is
+right; *top-3*: the right answer is among its first three. *Calibration error*: how far
+its stated probabilities are, on average, from how often it is right (0 is perfect).
+*Top-1, lemma in full*: typed with every mark the dictionary's table writes, and said
+to be so (`spelled_in_full`).
 
-| | held-out words | forms | top-1 | top-3 | calibration error |
-|---|---:|---:|---:|---:|---:|
-| noun | 23733 | 47466 | **97.64%** | 99.79% | 0.010 |
-| verb | 4151 | 20745 | **96.62%** | 99.72% | 0.016 |
-| adjective | 6239 | 18715 | **96.62%** | 99.50% | 0.052 |
-| adverb | 1207 | 3621 | **99.17%** | 99.70% | 0.070 |
+| | held-out words | forms | top-1 | top-3 | calibration error | top-1, lemma in full |
+|---|---:|---:|---:|---:|---:|---:|
+| noun | 23733 | 47466 | **98.60%** | 99.84% | 0.001 | 98.60% |
+| verb | 4151 | 20745 | **97.78%** | 99.80% | 0.003 | 97.78% |
+| adjective | 6239 | 18715 | **96.53%** | 99.55% | 0.050 | 96.53% |
+| adverb | 1207 | 3621 | **99.17%** | 99.70% | 0.070 | 99.17% |
 
 
 ## Data and license

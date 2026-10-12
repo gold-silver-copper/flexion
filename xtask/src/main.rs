@@ -285,7 +285,7 @@ fn try_language(
                 .filter(|l| eval::bucket(&l.key) == eval::DEV && l.source == 0)
                 .collect();
             let g = learn::learn(script.orthography(), &shape, &fit, settings).grammar;
-            eval::fit_sharpness(&g, &g.orthography, &dev)
+            eval::fit_sharpness::<u8, _>(&g, &g.orthography, &dev)
         };
         let test: Vec<&Lexeme> = d
             .lexemes
@@ -360,7 +360,7 @@ fn try_language(
             );
         }
         for input in [eval::Input::Headword, eval::Input::Full] {
-            let s = eval::score(g, &g.orthography, &test, input);
+            let s = eval::score::<u8, _>(g, &g.orthography, &test, input);
             println!(
                 "  held-out {input:?}: {} words, {} forms, top-1 {:.2}% (letters {:.2}%), top-3 {:.2}%, calibration error {:.3}",
                 test.len(),
@@ -419,7 +419,7 @@ fn try_language(
             .filter(|l| l.source == 0 && seen.insert(l.key.clone()))
             .take(3000)
             .collect();
-        let s = eval::score(g, &g.orthography, &train_refs, eval::Input::Headword);
+        let s = eval::score::<u8, _>(g, &g.orthography, &train_refs, eval::Input::Headword);
         println!(
             "  attested (sample of {}): top-1 {:.2}%",
             train_refs.len(),

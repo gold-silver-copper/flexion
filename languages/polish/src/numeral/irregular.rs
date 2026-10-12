@@ -1,28 +1,33 @@
-//! The dictionary's forms no declension gives, as it writes them: `(word, cell,
-//! form)`, sorted. They are the answer for that word and cell.
+//! The dictionary's forms no declension gives, as it writes them: a line per form,
+//! the word, its cell's number (see `super::cell`) and the form, sorted by word
+//! and cell. They are the answer for that word and cell.
 
-use super::cell::*;
+use flexion::Irregular;
 use std::borrow::Cow;
 
-pub(super) static IRREGULAR: &[(Cow<'static, str>, u16, Cow<'static, str>)] = flexion::irregular! {
-    "dwanaście" NOM_VIR_ANIM "dwunastu",
-    "dwanaście" NOM_VIR_INAN "dwunastu",
-    "dwanaście" ACC_VIR_ANIM "dwunastu",
-    "dwanaście" ACC_VIR_INAN "dwunastu",
-    "dwieście" NOM_VIR_ANIM "dwustu",
-    "dwieście" NOM_VIR_INAN "dwustu",
-    "dwieście" ACC_VIR_ANIM "dwustu",
-    "dwieście" ACC_VIR_INAN "dwustu",
-    "osiemset" NOM_VIR_ANIM "ośmiuset",
-    "osiemset" NOM_VIR_INAN "ośmiuset",
-    "osiemset" ACC_VIR_ANIM "ośmiuset",
-    "osiemset" ACC_VIR_INAN "ośmiuset",
-    "pińcet" NOM_VIR_ANIM "pińciuset",
-    "pińcet" NOM_VIR_INAN "pińciuset",
-    "pińcet" ACC_VIR_ANIM "pińciuset",
-    "pińcet" ACC_VIR_INAN "pińciuset",
-    "siedemset" NOM_VIR_ANIM "siedmiuset",
-    "siedemset" NOM_VIR_INAN "siedmiuset",
-    "siedemset" ACC_VIR_ANIM "siedmiuset",
-    "siedemset" ACC_VIR_INAN "siedmiuset",
+/// 20 forms.
+pub(super) const IRREGULAR: Irregular<'static> = Irregular {
+    table: Cow::Borrowed(
+        r#"dwanaście	6	dwunastu
+dwanaście	7	dwunastu
+dwanaście	36	dwunastu
+dwanaście	37	dwunastu
+dwieście	6	dwustu
+dwieście	7	dwustu
+dwieście	36	dwustu
+dwieście	37	dwustu
+osiemset	6	ośmiuset
+osiemset	7	ośmiuset
+osiemset	36	ośmiuset
+osiemset	37	ośmiuset
+pińcet	6	pińciuset
+pińcet	7	pińciuset
+pińcet	36	pińciuset
+pińcet	37	pińciuset
+siedemset	6	siedmiuset
+siedemset	7	siedmiuset
+siedemset	36	siedmiuset
+siedemset	37	siedmiuset
+"#,
+    ),
 };

@@ -1,1294 +1,1299 @@
-//! The dictionary's forms no declension gives, as it writes them: `(word, cell,
-//! form)`, sorted. They are the answer for that word and cell.
+//! The dictionary's forms no declension gives, as it writes them: a line per form,
+//! the word, its cell's number (see `super::cell`) and the form, sorted by word
+//! and cell. They are the answer for that word and cell.
 
-use super::cell::*;
+use flexion::Irregular;
 use std::borrow::Cow;
 
-pub(super) static IRREGULAR: &[(Cow<'static, str>, u16, Cow<'static, str>)] = flexion::irregular! {
-    "aliqui" NOM_M_PL "aliquī",
-    "aliqui" NOM_F_SG "aliqua",
-    "aliqui" NOM_F_PL "aliquae",
-    "aliqui" NOM_N_SG "aliquod",
-    "aliqui" NOM_N_PL "aliqua",
-    "aliqui" GEN_M_SG "alicuius",
-    "aliqui" GEN_M_PL "aliquōrum",
-    "aliqui" GEN_F_SG "alicuius",
-    "aliqui" GEN_F_PL "aliquārum",
-    "aliqui" GEN_N_SG "alicuius",
-    "aliqui" GEN_N_PL "aliquōrum",
-    "aliqui" DAT_M_SG "alicui",
-    "aliqui" DAT_M_PL "aliquīs",
-    "aliqui" DAT_F_SG "alicui",
-    "aliqui" DAT_F_PL "aliquīs",
-    "aliqui" DAT_N_SG "alicui",
-    "aliqui" DAT_N_PL "aliquīs",
-    "aliqui" ACC_M_SG "aliquem",
-    "aliqui" ACC_M_PL "aliquōs",
-    "aliqui" ACC_F_SG "aliquam",
-    "aliqui" ACC_F_PL "aliquās",
-    "aliqui" ACC_N_SG "aliquod",
-    "aliqui" ACC_N_PL "aliqua",
-    "aliqui" ABL_M_SG "aliquō",
-    "aliqui" ABL_M_PL "aliquīs",
-    "aliqui" ABL_F_SG "aliquā",
-    "aliqui" ABL_F_PL "aliquīs",
-    "aliqui" ABL_N_SG "aliquō",
-    "aliqui" ABL_N_PL "aliquīs",
-    "aliquis" NOM_M_PL "aliquī",
-    "aliquis" NOM_F_SG "aliqua",
-    "aliquis" NOM_F_PL "aliquae",
-    "aliquis" NOM_N_SG "aliquid",
-    "aliquis" NOM_N_PL "aliqua",
-    "aliquis" GEN_M_SG "alicuius",
-    "aliquis" GEN_M_PL "aliquōrum",
-    "aliquis" GEN_F_SG "alicuius",
-    "aliquis" GEN_F_PL "aliquārum",
-    "aliquis" GEN_N_SG "alicuius",
-    "aliquis" GEN_N_PL "aliquōrum",
-    "aliquis" DAT_M_SG "alicui",
-    "aliquis" DAT_M_PL "aliquīs",
-    "aliquis" DAT_F_SG "alicui",
-    "aliquis" DAT_F_PL "aliquīs",
-    "aliquis" DAT_N_SG "alicui",
-    "aliquis" DAT_N_PL "aliquīs",
-    "aliquis" ACC_M_SG "aliquem",
-    "aliquis" ACC_M_PL "aliquōs",
-    "aliquis" ACC_F_SG "aliquam",
-    "aliquis" ACC_F_PL "aliquās",
-    "aliquis" ACC_N_SG "aliquid",
-    "aliquis" ACC_N_PL "aliqua",
-    "aliquis" ABL_M_SG "aliquō",
-    "aliquis" ABL_M_PL "aliquīs",
-    "aliquis" ABL_F_SG "aliquā",
-    "aliquis" ABL_F_PL "aliquīs",
-    "aliquis" ABL_N_SG "aliquō",
-    "aliquis" ABL_N_PL "aliquīs",
-    "aliquisquam" NOM_F_SG "aliquisquam",
-    "aliquisquam" NOM_N_SG "aliquidquam",
-    "aliquisquam" GEN_M_SG "alicuiusquam",
-    "aliquisquam" GEN_F_SG "alicuiusquam",
-    "aliquisquam" GEN_N_SG "alicuiusquam",
-    "aliquisquam" DAT_M_SG "alicuiquam",
-    "aliquisquam" DAT_F_SG "alicuiquam",
-    "aliquisquam" DAT_N_SG "alicuiquam",
-    "aliquisquam" ACC_M_SG "aliquemquam",
-    "aliquisquam" ACC_F_SG "aliquemquam",
-    "aliquisquam" ACC_N_SG "aliquidquam",
-    "aliquisquam" ABL_M_SG "aliquōquam",
-    "aliquisquam" ABL_F_SG "aliquōquam",
-    "aliquisquam" ABL_N_SG "aliquōquam",
-    "alius" NOM_N_SG "aliud",
-    "alius" GEN_M_SG "alterīus",
-    "alius" GEN_F_SG "alterīus",
-    "alius" GEN_N_SG "alterīus",
-    "alius" DAT_M_SG "aliī",
-    "alius" DAT_F_SG "aliī",
-    "alius" DAT_N_SG "aliī",
-    "alius" ACC_N_SG "aliud",
-    "alius" VOC_N_SG "aliud",
-    "alter" NOM_M_PL "alterī",
-    "alter" NOM_F_SG "altera",
-    "alter" NOM_F_PL "alterae",
-    "alter" NOM_N_SG "alterum",
-    "alter" NOM_N_PL "altera",
-    "alter" GEN_M_SG "alterīus",
-    "alter" GEN_M_PL "alterōrum",
-    "alter" GEN_F_SG "alterīus",
-    "alter" GEN_F_PL "alterārum",
-    "alter" GEN_N_SG "alterīus",
-    "alter" GEN_N_PL "alterōrum",
-    "alter" DAT_M_SG "alterī",
-    "alter" DAT_M_PL "alterīs",
-    "alter" DAT_F_SG "alterī",
-    "alter" DAT_F_PL "alterīs",
-    "alter" DAT_N_SG "alterī",
-    "alter" DAT_N_PL "alterīs",
-    "alter" ACC_M_SG "alterum",
-    "alter" ACC_M_PL "alterōs",
-    "alter" ACC_F_SG "alteram",
-    "alter" ACC_F_PL "alterās",
-    "alter" ACC_N_SG "alterum",
-    "alter" ACC_N_PL "altera",
-    "alter" ABL_M_SG "alterō",
-    "alter" ABL_M_PL "alterīs",
-    "alter" ABL_F_SG "alterā",
-    "alter" ABL_F_PL "alterīs",
-    "alter" ABL_N_SG "alterō",
-    "alter" ABL_N_PL "alterīs",
-    "alter" VOC_M_PL "alterī",
-    "alter" VOC_F_SG "altera",
-    "alter" VOC_F_PL "alterae",
-    "alter" VOC_N_SG "alterum",
-    "alter" VOC_N_PL "altera",
-    "compluria" NOM_M_PL "complūra",
-    "compluria" NOM_F_PL "complūra",
-    "compluria" NOM_N_PL "complūra",
-    "compluria" GEN_M_PL "complūrium",
-    "compluria" GEN_F_PL "complūrium",
-    "compluria" GEN_N_PL "complūrium",
-    "compluria" DAT_M_PL "complūribus",
-    "compluria" DAT_F_PL "complūribus",
-    "compluria" DAT_N_PL "complūribus",
-    "compluria" ACC_M_PL "complūra",
-    "compluria" ACC_F_PL "complūra",
-    "compluria" ACC_N_PL "complūra",
-    "compluria" ABL_M_PL "complūribus",
-    "compluria" ABL_F_PL "complūribus",
-    "compluria" ABL_N_PL "complūribus",
-    "compluria" VOC_M_PL "complūra",
-    "compluria" VOC_F_PL "complūra",
-    "compluria" VOC_N_PL "complūra",
-    "conpluria" NOM_M_PL "conplūra",
-    "conpluria" NOM_F_PL "conplūra",
-    "conpluria" NOM_N_PL "conplūra",
-    "conpluria" GEN_M_PL "conplūrium",
-    "conpluria" GEN_F_PL "conplūrium",
-    "conpluria" GEN_N_PL "conplūrium",
-    "conpluria" DAT_M_PL "conplūribus",
-    "conpluria" DAT_F_PL "conplūribus",
-    "conpluria" DAT_N_PL "conplūribus",
-    "conpluria" ACC_M_PL "conplūra",
-    "conpluria" ACC_F_PL "conplūra",
-    "conpluria" ACC_N_PL "conplūra",
-    "conpluria" ABL_M_PL "conplūribus",
-    "conpluria" ABL_F_PL "conplūribus",
-    "conpluria" ABL_N_PL "conplūribus",
-    "conpluria" VOC_M_PL "conplūra",
-    "conpluria" VOC_F_PL "conplūra",
-    "conpluria" VOC_N_PL "conplūra",
-    "cuiusvis" NOM_M_SG "cuiusvīs",
-    "cuiusvis" NOM_M_PL "cuiīvīs",
-    "cuiusvis" NOM_F_SG "cuiavīs",
-    "cuiusvis" NOM_F_PL "cuiaevīs",
-    "cuiusvis" NOM_N_SG "cuiumvīs",
-    "cuiusvis" NOM_N_PL "cuiavīs",
-    "cuiusvis" GEN_M_SG "cuiīvīs",
-    "cuiusvis" GEN_M_PL "cuiōrumvīs",
-    "cuiusvis" GEN_F_SG "cuiaevīs",
-    "cuiusvis" GEN_F_PL "cuiārumvīs",
-    "cuiusvis" GEN_N_SG "cuiīvīs",
-    "cuiusvis" GEN_N_PL "cuiōrumvīs",
-    "cuiusvis" DAT_M_SG "cuiōvīs",
-    "cuiusvis" DAT_M_PL "cuiīsvīs",
-    "cuiusvis" DAT_F_SG "cuiaevīs",
-    "cuiusvis" DAT_F_PL "cuiīsvīs",
-    "cuiusvis" DAT_N_SG "cuiōvīs",
-    "cuiusvis" DAT_N_PL "cuiīsvīs",
-    "cuiusvis" ACC_M_SG "cuiumvīs",
-    "cuiusvis" ACC_M_PL "cuiōsvīs",
-    "cuiusvis" ACC_F_SG "cuiamvīs",
-    "cuiusvis" ACC_F_PL "cuiāsvīs",
-    "cuiusvis" ACC_N_SG "cuiumvīs",
-    "cuiusvis" ACC_N_PL "cuiavīs",
-    "cuiusvis" ABL_M_SG "cuiōvīs",
-    "cuiusvis" ABL_M_PL "cuiīsvīs",
-    "cuiusvis" ABL_F_SG "cuiāvīs",
-    "cuiusvis" ABL_F_PL "cuiīsvīs",
-    "cuiusvis" ABL_N_SG "cuiōvīs",
-    "cuiusvis" ABL_N_PL "cuiīsvīs",
-    "cuiusvis" VOC_M_SG "cuievīs",
-    "cuiusvis" VOC_M_PL "cuiīvīs",
-    "cuiusvis" VOC_F_SG "cuiavīs",
-    "cuiusvis" VOC_F_PL "cuiaevīs",
-    "cuiusvis" VOC_N_SG "cuiumvīs",
-    "cuiusvis" VOC_N_PL "cuiavīs",
-    "ecquis" NOM_M_PL "ecquī",
-    "ecquis" NOM_F_SG "ecqua",
-    "ecquis" NOM_F_PL "ecquae",
-    "ecquis" NOM_N_SG "ecquid",
-    "ecquis" NOM_N_PL "ecqua",
-    "ecquis" GEN_M_SG "eccuius",
-    "ecquis" GEN_F_SG "eccuius",
-    "ecquis" GEN_N_SG "eccuius",
-    "ecquis" DAT_M_SG "eccui",
-    "ecquis" DAT_F_SG "eccui",
-    "ecquis" DAT_N_SG "eccui",
-    "ecquis" ACC_M_SG "ecquem",
-    "ecquis" ACC_M_PL "ecquōs",
-    "ecquis" ACC_F_SG "ecquam",
-    "ecquis" ACC_F_PL "ecquās",
-    "ecquis" ACC_N_SG "ecquod",
-    "ecquis" ACC_N_PL "ecqua",
-    "ecquis" ABL_M_SG "ecquō",
-    "ecquis" ABL_F_SG "ecquā",
-    "ecquis" ABL_N_SG "ecquō",
-    "ecquisnam" NOM_M_PL "ecquīnam",
-    "ecquisnam" NOM_F_SG "ecquaenam",
-    "ecquisnam" NOM_F_PL "ecquaenam",
-    "ecquisnam" NOM_N_SG "ecquidnam",
-    "ecquisnam" NOM_N_PL "ecquaenam",
-    "ecquisnam" DAT_M_SG "eccuinam",
-    "ecquisnam" DAT_F_SG "eccuinam",
-    "ecquisnam" DAT_N_SG "eccuinam",
-    "ecquisnam" ACC_M_SG "ecquemnam",
-    "ecquisnam" ACC_M_PL "ecquōsnam",
-    "ecquisnam" ACC_F_SG "ecquamnam",
-    "ecquisnam" ACC_F_PL "ecquāsnam",
-    "ecquisnam" ACC_N_SG "ecquidnam",
-    "ecquisnam" ACC_N_PL "ecquaenam",
-    "ecquisnam" ABL_M_SG "ecquōnam",
-    "ecquisnam" ABL_F_SG "ecquānam",
-    "ecquisnam" ABL_N_SG "ecquōnam",
-    "egomet" NOM_F_SG "egomet",
-    "egomet" NOM_N_SG "egomet",
-    "egomet" GEN_M_SG "meīmet",
-    "egomet" GEN_F_SG "meīmet",
-    "egomet" GEN_N_SG "meīmet",
-    "egomet" DAT_M_SG "mihimet",
-    "egomet" DAT_F_SG "mihimet",
-    "egomet" DAT_N_SG "mihimet",
-    "egomet" ACC_M_SG "mēmet",
-    "egomet" ACC_F_SG "mēmet",
-    "egomet" ACC_N_SG "mēmet",
-    "egomet" ABL_M_SG "mēmet",
-    "egomet" ABL_F_SG "mēmet",
-    "egomet" ABL_N_SG "mēmet",
-    "egomet" VOC_F_SG "egomet",
-    "egomet" VOC_N_SG "egomet",
-    "hic" NOM_M_PL "hī",
-    "hic" NOM_F_PL "hae",
-    "hic" NOM_N_SG "hoc",
-    "hic" GEN_M_SG "huius",
-    "hic" GEN_M_PL "hōrum",
-    "hic" GEN_F_SG "huius",
-    "hic" GEN_F_PL "hārum",
-    "hic" GEN_N_SG "huius",
-    "hic" GEN_N_PL "hōrum",
-    "hic" DAT_M_SG "huic",
-    "hic" DAT_M_PL "hīs",
-    "hic" DAT_F_SG "huic",
-    "hic" DAT_F_PL "hīs",
-    "hic" DAT_N_SG "huic",
-    "hic" DAT_N_PL "hīs",
-    "hic" ACC_M_PL "hōs",
-    "hic" ACC_F_PL "hās",
-    "hic" ACC_N_SG "hoc",
-    "hic" ABL_M_PL "hīs",
-    "hic" ABL_F_PL "hīs",
-    "hic" ABL_N_PL "hīs",
-    "hice" NOM_M_PL "hīce",
-    "hice" NOM_N_SG "hoce",
-    "hice" GEN_M_SG "huiusce",
-    "hice" GEN_F_SG "huiusce",
-    "hice" GEN_N_SG "huiusce",
-    "hice" DAT_M_SG "huīce",
-    "hice" DAT_M_PL "hīsce",
-    "hice" DAT_F_SG "huīce",
-    "hice" DAT_F_PL "hīsce",
-    "hice" DAT_N_SG "huīce",
-    "hice" DAT_N_PL "hīsce",
-    "hice" ACC_M_PL "hōsce",
-    "hice" ACC_F_PL "hāsce",
-    "hice" ACC_N_SG "hoce",
-    "hice" ABL_M_PL "hīsce",
-    "hice" ABL_F_PL "hīsce",
-    "hice" ABL_N_PL "hīsce",
-    "idem" NOM_M_PL "iīdem",
-    "idem" NOM_F_SG "eadem",
-    "idem" NOM_F_PL "eaedem",
-    "idem" NOM_N_SG "idem",
-    "idem" NOM_N_PL "eadem",
-    "idem" GEN_M_SG "eiusdem",
-    "idem" GEN_M_PL "eōrundem",
-    "idem" GEN_F_SG "eiusdem",
-    "idem" GEN_F_PL "eārundem",
-    "idem" GEN_N_SG "eiusdem",
-    "idem" GEN_N_PL "eōrundem",
-    "idem" DAT_M_SG "eīdem",
-    "idem" DAT_M_PL "iīsdem",
-    "idem" DAT_F_SG "eīdem",
-    "idem" DAT_F_PL "iīsdem",
-    "idem" DAT_N_SG "eīdem",
-    "idem" DAT_N_PL "iīsdem",
-    "idem" ACC_M_SG "eundem",
-    "idem" ACC_M_PL "eōsdem",
-    "idem" ACC_F_SG "eandem",
-    "idem" ACC_F_PL "eāsdem",
-    "idem" ACC_N_SG "idem",
-    "idem" ACC_N_PL "eadem",
-    "idem" ABL_M_SG "eōdem",
-    "idem" ABL_M_PL "iīsdem",
-    "idem" ABL_F_SG "eādem",
-    "idem" ABL_F_PL "iīsdem",
-    "idem" ABL_N_SG "eōdem",
-    "idem" ABL_N_PL "iīsdem",
-    "ipse" NOM_N_SG "ipsum",
-    "ipse" ACC_N_SG "ipsum",
-    "ipsemet" NOM_M_PL "ipsīmet",
-    "ipsemet" NOM_F_SG "ipsamet",
-    "ipsemet" NOM_F_PL "ipsaemet",
-    "ipsemet" NOM_N_SG "ipsummet",
-    "ipsemet" NOM_N_PL "ipsamet",
-    "ipsemet" GEN_M_SG "ipsīusmet",
-    "ipsemet" GEN_M_PL "ipsōrummet",
-    "ipsemet" GEN_F_SG "ipsīusmet",
-    "ipsemet" GEN_F_PL "ipsārummet",
-    "ipsemet" GEN_N_SG "ipsīusmet",
-    "ipsemet" GEN_N_PL "ipsōrummet",
-    "ipsemet" DAT_M_SG "ipsīmet",
-    "ipsemet" DAT_M_PL "ipsīsmet",
-    "ipsemet" DAT_F_SG "ipsīmet",
-    "ipsemet" DAT_F_PL "ipsīsmet",
-    "ipsemet" DAT_N_SG "ipsīmet",
-    "ipsemet" DAT_N_PL "ipsīsmet",
-    "ipsemet" ACC_M_SG "ipsummet",
-    "ipsemet" ACC_M_PL "ipsōsmet",
-    "ipsemet" ACC_F_SG "ipsammet",
-    "ipsemet" ACC_F_PL "ipsāsmet",
-    "ipsemet" ACC_N_SG "ipsummet",
-    "ipsemet" ACC_N_PL "ipsamet",
-    "ipsemet" ABL_M_SG "ipsōmet",
-    "ipsemet" ABL_M_PL "ipsīsmet",
-    "ipsemet" ABL_F_SG "ipsāmet",
-    "ipsemet" ABL_F_PL "ipsīsmet",
-    "ipsemet" ABL_N_SG "ipsōmet",
-    "ipsemet" ABL_N_PL "ipsīsmet",
-    "meus" VOC_M_SG "mī",
-    "nequis" NOM_M_PL "nēquī",
-    "nequis" NOM_F_SG "nēqua",
-    "nequis" NOM_F_PL "nēquae",
-    "nequis" NOM_N_SG "nēquid",
-    "nequis" NOM_N_PL "nēqua",
-    "nequis" DAT_M_SG "nēcui",
-    "nequis" DAT_M_PL "nēquibus",
-    "nequis" DAT_F_SG "nēcui",
-    "nequis" DAT_F_PL "nēquibus",
-    "nequis" DAT_N_SG "nēcui",
-    "nequis" DAT_N_PL "nēquibus",
-    "nequis" ACC_M_SG "nēquem",
-    "nequis" ACC_M_PL "nēquōs",
-    "nequis" ACC_F_SG "nēquam",
-    "nequis" ACC_F_PL "nēquās",
-    "nequis" ACC_N_SG "nēquid",
-    "nequis" ACC_N_PL "nēqua",
-    "nequis" ABL_M_SG "nēquō",
-    "nequis" ABL_M_PL "nēquibus",
-    "nequis" ABL_F_SG "nēquā",
-    "nequis" ABL_F_PL "nēquibus",
-    "nequis" ABL_N_SG "nēquō",
-    "nequis" ABL_N_PL "nēquibus",
-    "nescioquis" NOM_M_PL "nesciōquī",
-    "nescioquis" NOM_F_SG "nesciōquae",
-    "nescioquis" NOM_F_PL "nesciōquae",
-    "nescioquis" NOM_N_SG "nesciōquid",
-    "nescioquis" NOM_N_PL "nesciōquae",
-    "nescioquis" GEN_M_SG "nesciōcuius",
-    "nescioquis" GEN_M_PL "nesciōquōrum",
-    "nescioquis" GEN_F_SG "nesciōcuius",
-    "nescioquis" GEN_F_PL "nesciōquārum",
-    "nescioquis" GEN_N_SG "nesciōcuius",
-    "nescioquis" GEN_N_PL "nesciōquōrum",
-    "nescioquis" DAT_M_SG "nesciōcui",
-    "nescioquis" DAT_M_PL "nesciōquibus",
-    "nescioquis" DAT_F_SG "nesciōcui",
-    "nescioquis" DAT_F_PL "nesciōquibus",
-    "nescioquis" DAT_N_SG "nesciōcui",
-    "nescioquis" DAT_N_PL "nesciōquibus",
-    "nescioquis" ACC_M_SG "nesciōquem",
-    "nescioquis" ACC_M_PL "nesciōquōs",
-    "nescioquis" ACC_F_SG "nesciōquam",
-    "nescioquis" ACC_F_PL "nesciōquās",
-    "nescioquis" ACC_N_SG "nesciōquid",
-    "nescioquis" ACC_N_PL "nesciōquae",
-    "nescioquis" ABL_M_SG "nesciōquō",
-    "nescioquis" ABL_M_PL "nesciōquibus",
-    "nescioquis" ABL_F_SG "nesciōquā",
-    "nescioquis" ABL_F_PL "nesciōquibus",
-    "nescioquis" ABL_N_SG "nesciōquō",
-    "nescioquis" ABL_N_PL "nesciōquibus",
-    "nosmet" NOM_M_PL "nōsmet",
-    "nosmet" NOM_F_PL "nōsmet",
-    "nosmet" NOM_N_PL "nōsmet",
-    "nosmet" DAT_M_PL "nōbīsmet",
-    "nosmet" DAT_F_PL "nōbīsmet",
-    "nosmet" DAT_N_PL "nōbīsmet",
-    "nosmet" ACC_M_PL "nōsmet",
-    "nosmet" ACC_F_PL "nōsmet",
-    "nosmet" ACC_N_PL "nōsmet",
-    "nosmet" ABL_M_PL "nōbīsmet",
-    "nosmet" ABL_F_PL "nōbīsmet",
-    "nosmet" ABL_N_PL "nōbīsmet",
-    "nosmet" VOC_M_PL "nōsmet",
-    "nosmet" VOC_F_PL "nōsmet",
-    "nosmet" VOC_N_PL "nōsmet",
-    "nullus" GEN_M_SG "nūllīus",
-    "nullus" GEN_F_SG "nūllīus",
-    "nullus" GEN_N_SG "nūllīus",
-    "nullus" DAT_M_SG "nūllī",
-    "nullus" DAT_F_SG "nūllī",
-    "nullus" DAT_N_SG "nūllī",
-    "numquis" NOM_M_PL "numquī",
-    "numquis" NOM_F_SG "numqua",
-    "numquis" NOM_F_PL "numquae",
-    "numquis" NOM_N_SG "numquid",
-    "numquis" NOM_N_PL "numqua",
-    "numquis" DAT_M_SG "numcui",
-    "numquis" DAT_M_PL "numquibus",
-    "numquis" DAT_F_SG "numcui",
-    "numquis" DAT_F_PL "numquibus",
-    "numquis" DAT_N_SG "numcui",
-    "numquis" DAT_N_PL "numquibus",
-    "numquis" ACC_M_SG "numquem",
-    "numquis" ACC_M_PL "numquōs",
-    "numquis" ACC_F_SG "numquam",
-    "numquis" ACC_F_PL "numquās",
-    "numquis" ACC_N_SG "numquid",
-    "numquis" ACC_N_PL "numqua",
-    "numquis" ABL_M_SG "numquō",
-    "numquis" ABL_M_PL "numquibus",
-    "numquis" ABL_F_SG "numquā",
-    "numquis" ABL_F_PL "numquibus",
-    "numquis" ABL_N_SG "numquō",
-    "numquis" ABL_N_PL "numquibus",
-    "qualis" NOM_M_PL "quālēs",
-    "qualis" NOM_F_SG "quālis",
-    "qualis" NOM_F_PL "quālēs",
-    "qualis" NOM_N_SG "quāle",
-    "qualis" NOM_N_PL "quālia",
-    "qualis" GEN_M_SG "quālis",
-    "qualis" GEN_M_PL "quālium",
-    "qualis" GEN_F_SG "quālis",
-    "qualis" GEN_F_PL "quālium",
-    "qualis" GEN_N_SG "quālis",
-    "qualis" GEN_N_PL "quālium",
-    "qualis" DAT_M_SG "quālī",
-    "qualis" DAT_M_PL "quālibus",
-    "qualis" DAT_F_SG "quālī",
-    "qualis" DAT_F_PL "quālibus",
-    "qualis" DAT_N_SG "quālī",
-    "qualis" DAT_N_PL "quālibus",
-    "qualis" ACC_M_SG "quālem",
-    "qualis" ACC_M_PL "quālīs",
-    "qualis" ACC_F_SG "quālem",
-    "qualis" ACC_F_PL "quālīs",
-    "qualis" ACC_N_SG "quāle",
-    "qualis" ACC_N_PL "quālia",
-    "qualis" ABL_M_SG "quālī",
-    "qualis" ABL_M_PL "quālibus",
-    "qualis" ABL_F_SG "quālī",
-    "qualis" ABL_F_PL "quālibus",
-    "qualis" ABL_N_SG "quālī",
-    "qualis" ABL_N_PL "quālibus",
-    "qualis" VOC_M_SG "quālis",
-    "qualis" VOC_M_PL "quālēs",
-    "qualis" VOC_F_SG "quālis",
-    "qualis" VOC_F_PL "quālēs",
-    "qualis" VOC_N_SG "quāle",
-    "qualis" VOC_N_PL "quālia",
-    "qualiscumque" NOM_M_PL "quālēscumque",
-    "qualiscumque" NOM_F_SG "quāliscumque",
-    "qualiscumque" NOM_F_PL "quālēscumque",
-    "qualiscumque" NOM_N_SG "quālecumque",
-    "qualiscumque" NOM_N_PL "quāliacumque",
-    "qualiscumque" GEN_M_SG "quāliscumque",
-    "qualiscumque" GEN_M_PL "quāliumcumque",
-    "qualiscumque" GEN_F_SG "quāliscumque",
-    "qualiscumque" GEN_F_PL "quāliumcumque",
-    "qualiscumque" GEN_N_SG "quāliscumque",
-    "qualiscumque" GEN_N_PL "quāliumcumque",
-    "qualiscumque" DAT_M_SG "quālīcumque",
-    "qualiscumque" DAT_M_PL "quālibuscumque",
-    "qualiscumque" DAT_F_SG "quālīcumque",
-    "qualiscumque" DAT_F_PL "quālibuscumque",
-    "qualiscumque" DAT_N_SG "quālīcumque",
-    "qualiscumque" DAT_N_PL "quālibuscumque",
-    "qualiscumque" ACC_M_SG "quālemcumque",
-    "qualiscumque" ACC_M_PL "quālīscumque",
-    "qualiscumque" ACC_F_SG "quālemcumque",
-    "qualiscumque" ACC_F_PL "quālīscumque",
-    "qualiscumque" ACC_N_SG "quālecumque",
-    "qualiscumque" ACC_N_PL "quāliacumque",
-    "qualiscumque" ABL_M_SG "quālīcumque",
-    "qualiscumque" ABL_M_PL "quālibuscumque",
-    "qualiscumque" ABL_F_SG "quālīcumque",
-    "qualiscumque" ABL_F_PL "quālibuscumque",
-    "qualiscumque" ABL_N_SG "quālīcumque",
-    "qualiscumque" ABL_N_PL "quālibuscumque",
-    "qualiscumque" VOC_M_PL "quālēscumque",
-    "qualiscumque" VOC_F_SG "quāliscumque",
-    "qualiscumque" VOC_F_PL "quālēscumque",
-    "qualiscumque" VOC_N_SG "quālecumque",
-    "qualiscumque" VOC_N_PL "quāliacumque",
-    "quicquid" NOM_M_SG "quidquid",
-    "quicquid" NOM_M_PL "quaequae",
-    "quicquid" NOM_F_SG "quidquid",
-    "quicquid" NOM_F_PL "quaequae",
-    "quicquid" NOM_N_SG "quidquid",
-    "quicquid" NOM_N_PL "quaequae",
-    "quicquid" GEN_M_SG "cuiuscuius",
-    "quicquid" GEN_M_PL "quōrumquōrum",
-    "quicquid" GEN_F_SG "cuiuscuius",
-    "quicquid" GEN_F_PL "quōrumquōrum",
-    "quicquid" GEN_N_SG "cuiuscuius",
-    "quicquid" GEN_N_PL "quōrumquōrum",
-    "quicquid" DAT_M_SG "cuicui",
-    "quicquid" DAT_M_PL "quibusquibus",
-    "quicquid" DAT_F_SG "cuicui",
-    "quicquid" DAT_F_PL "quibusquibus",
-    "quicquid" DAT_N_SG "cuicui",
-    "quicquid" DAT_N_PL "quibusquibus",
-    "quicquid" ACC_M_SG "quidquid",
-    "quicquid" ACC_M_PL "quaequae",
-    "quicquid" ACC_F_SG "quidquid",
-    "quicquid" ACC_F_PL "quaequae",
-    "quicquid" ACC_N_SG "quidquid",
-    "quicquid" ACC_N_PL "quaequae",
-    "quicquid" ABL_M_SG "quōquō",
-    "quicquid" ABL_M_PL "quibusquibus",
-    "quicquid" ABL_F_SG "quōquō",
-    "quicquid" ABL_F_PL "quibusquibus",
-    "quicquid" ABL_N_SG "quōquō",
-    "quicquid" ABL_N_PL "quibusquibus",
-    "quicquid" VOC_M_SG "quidquid",
-    "quicquid" VOC_M_PL "quaequae",
-    "quicquid" VOC_F_SG "quidquid",
-    "quicquid" VOC_F_PL "quaequae",
-    "quicquid" VOC_N_SG "quidquid",
-    "quicquid" VOC_N_PL "quaequae",
-    "quicquidlibet" NOM_M_SG "quidquidlibet",
-    "quicquidlibet" NOM_M_PL "quaequaelibet",
-    "quicquidlibet" NOM_F_SG "quidquidlibet",
-    "quicquidlibet" NOM_F_PL "quaequaelibet",
-    "quicquidlibet" NOM_N_SG "quidquidlibet",
-    "quicquidlibet" NOM_N_PL "quaequaelibet",
-    "quicquidlibet" GEN_M_SG "cuiuscuiuslibet",
-    "quicquidlibet" GEN_M_PL "quōrumquōrumlibet",
-    "quicquidlibet" GEN_F_SG "cuiuscuiuslibet",
-    "quicquidlibet" GEN_F_PL "quōrumquōrumlibet",
-    "quicquidlibet" GEN_N_SG "cuiuscuiuslibet",
-    "quicquidlibet" GEN_N_PL "quōrumquōrumlibet",
-    "quicquidlibet" DAT_M_SG "cuicuilibet",
-    "quicquidlibet" DAT_M_PL "quibusquibuslibet",
-    "quicquidlibet" DAT_F_SG "cuicuilibet",
-    "quicquidlibet" DAT_F_PL "quibusquibuslibet",
-    "quicquidlibet" DAT_N_SG "cuicuilibet",
-    "quicquidlibet" DAT_N_PL "quibusquibuslibet",
-    "quicquidlibet" ACC_M_SG "quidquidlibet",
-    "quicquidlibet" ACC_M_PL "quaequaelibet",
-    "quicquidlibet" ACC_F_SG "quidquidlibet",
-    "quicquidlibet" ACC_F_PL "quaequaelibet",
-    "quicquidlibet" ACC_N_SG "quidquidlibet",
-    "quicquidlibet" ACC_N_PL "quaequaelibet",
-    "quicquidlibet" ABL_M_SG "quōquōlibet",
-    "quicquidlibet" ABL_M_PL "quibusquibuslibet",
-    "quicquidlibet" ABL_F_SG "quōquōlibet",
-    "quicquidlibet" ABL_F_PL "quibusquibuslibet",
-    "quicquidlibet" ABL_N_SG "quōquōlibet",
-    "quicquidlibet" ABL_N_PL "quibusquibuslibet",
-    "quicquidlibet" VOC_M_SG "quidquidlibet",
-    "quicquidlibet" VOC_M_PL "quaequaelibet",
-    "quicquidlibet" VOC_F_SG "quidquidlibet",
-    "quicquidlibet" VOC_F_PL "quaequaelibet",
-    "quicquidlibet" VOC_N_SG "quidquidlibet",
-    "quicquidlibet" VOC_N_PL "quaequaelibet",
-    "quicumque" NOM_M_PL "quīcumque",
-    "quicumque" NOM_F_SG "quaecumque",
-    "quicumque" NOM_F_PL "quaecumque",
-    "quicumque" NOM_N_SG "quodcumque",
-    "quicumque" NOM_N_PL "quaecumque",
-    "quicumque" GEN_M_SG "cuiuscumque",
-    "quicumque" GEN_M_PL "quōrumcumque",
-    "quicumque" GEN_F_SG "cuiuscumque",
-    "quicumque" GEN_F_PL "quārumcumque",
-    "quicumque" GEN_N_SG "cuiuscumque",
-    "quicumque" GEN_N_PL "quōrumcumque",
-    "quicumque" DAT_M_SG "cuicumque",
-    "quicumque" DAT_M_PL "quibuscumque",
-    "quicumque" DAT_F_SG "cuicumque",
-    "quicumque" DAT_F_PL "quibuscumque",
-    "quicumque" DAT_N_SG "cuicumque",
-    "quicumque" DAT_N_PL "quibuscumque",
-    "quicumque" ACC_M_SG "quemcumque",
-    "quicumque" ACC_M_PL "quōscumque",
-    "quicumque" ACC_F_SG "quamcumque",
-    "quicumque" ACC_F_PL "quāscumque",
-    "quicumque" ACC_N_SG "quodcumque",
-    "quicumque" ACC_N_PL "quaecumque",
-    "quicumque" ABL_M_SG "quōcumque",
-    "quicumque" ABL_M_PL "quibuscumque",
-    "quicumque" ABL_F_SG "quācumque",
-    "quicumque" ABL_F_PL "quibuscumque",
-    "quicumque" ABL_N_SG "quōcumque",
-    "quicumque" ABL_N_PL "quibuscumque",
-    "quicunque" NOM_M_PL "quīcunque",
-    "quicunque" NOM_F_SG "quaecunque",
-    "quicunque" NOM_F_PL "quaecunque",
-    "quicunque" NOM_N_SG "quodcunque",
-    "quicunque" NOM_N_PL "quaecunque",
-    "quicunque" GEN_M_SG "cuiuscunque",
-    "quicunque" GEN_M_PL "quōruncunque",
-    "quicunque" GEN_F_SG "cuiuscunque",
-    "quicunque" GEN_F_PL "quāruncunque",
-    "quicunque" GEN_N_SG "cuiuscunque",
-    "quicunque" GEN_N_PL "quōruncunque",
-    "quicunque" DAT_M_SG "cuicunque",
-    "quicunque" DAT_M_PL "quibuscunque",
-    "quicunque" DAT_F_SG "cuicunque",
-    "quicunque" DAT_F_PL "quibuscunque",
-    "quicunque" DAT_N_SG "cuicunque",
-    "quicunque" DAT_N_PL "quibuscunque",
-    "quicunque" ACC_M_SG "quencunque",
-    "quicunque" ACC_M_PL "quōscunque",
-    "quicunque" ACC_F_SG "quancunque",
-    "quicunque" ACC_F_PL "quāscunque",
-    "quicunque" ACC_N_SG "quodcunque",
-    "quicunque" ACC_N_PL "quaecunque",
-    "quicunque" ABL_M_SG "quōcunque",
-    "quicunque" ABL_M_PL "quibuscunque",
-    "quicunque" ABL_F_SG "quācunque",
-    "quicunque" ABL_F_PL "quibuscunque",
-    "quicunque" ABL_N_SG "quōcunque",
-    "quicunque" ABL_N_PL "quibuscunque",
-    "quidam" NOM_N_SG "quiddam",
-    "quidam" ACC_N_SG "quiddam",
-    "quidquid" NOM_M_PL "quaequae",
-    "quidquid" NOM_F_SG "quidquid",
-    "quidquid" NOM_F_PL "quaequae",
-    "quidquid" NOM_N_SG "quidquid",
-    "quidquid" NOM_N_PL "quaequae",
-    "quidquid" GEN_M_SG "cuiuscuius",
-    "quidquid" GEN_M_PL "quōrumquōrum",
-    "quidquid" GEN_F_SG "cuiuscuius",
-    "quidquid" GEN_F_PL "quōrumquōrum",
-    "quidquid" GEN_N_SG "cuiuscuius",
-    "quidquid" GEN_N_PL "quōrumquōrum",
-    "quidquid" DAT_M_SG "cuicui",
-    "quidquid" DAT_M_PL "quibusquibus",
-    "quidquid" DAT_F_SG "cuicui",
-    "quidquid" DAT_F_PL "quibusquibus",
-    "quidquid" DAT_N_SG "cuicui",
-    "quidquid" DAT_N_PL "quibusquibus",
-    "quidquid" ACC_M_SG "quidquid",
-    "quidquid" ACC_M_PL "quaequae",
-    "quidquid" ACC_F_SG "quidquid",
-    "quidquid" ACC_F_PL "quaequae",
-    "quidquid" ACC_N_SG "quidquid",
-    "quidquid" ACC_N_PL "quaequae",
-    "quidquid" ABL_M_SG "quōquō",
-    "quidquid" ABL_M_PL "quibusquibus",
-    "quidquid" ABL_F_SG "quōquō",
-    "quidquid" ABL_F_PL "quibusquibus",
-    "quidquid" ABL_N_SG "quōquō",
-    "quidquid" ABL_N_PL "quibusquibus",
-    "quidquid" VOC_M_SG "quidquid",
-    "quidquid" VOC_M_PL "quaequae",
-    "quidquid" VOC_F_SG "quidquid",
-    "quidquid" VOC_F_PL "quaequae",
-    "quidquid" VOC_N_SG "quidquid",
-    "quidquid" VOC_N_PL "quaequae",
-    "quidquidlibet" NOM_M_PL "quaequaelibet",
-    "quidquidlibet" NOM_F_SG "quidquidlibet",
-    "quidquidlibet" NOM_F_PL "quaequaelibet",
-    "quidquidlibet" NOM_N_SG "quidquidlibet",
-    "quidquidlibet" NOM_N_PL "quaequaelibet",
-    "quidquidlibet" GEN_M_SG "cuiuscuiuslibet",
-    "quidquidlibet" GEN_M_PL "quōrumquōrumlibet",
-    "quidquidlibet" GEN_F_SG "cuiuscuiuslibet",
-    "quidquidlibet" GEN_F_PL "quōrumquōrumlibet",
-    "quidquidlibet" GEN_N_SG "cuiuscuiuslibet",
-    "quidquidlibet" GEN_N_PL "quōrumquōrumlibet",
-    "quidquidlibet" DAT_M_SG "cuicuilibet",
-    "quidquidlibet" DAT_M_PL "quibusquibuslibet",
-    "quidquidlibet" DAT_F_SG "cuicuilibet",
-    "quidquidlibet" DAT_F_PL "quibusquibuslibet",
-    "quidquidlibet" DAT_N_SG "cuicuilibet",
-    "quidquidlibet" DAT_N_PL "quibusquibuslibet",
-    "quidquidlibet" ACC_M_SG "quidquidlibet",
-    "quidquidlibet" ACC_M_PL "quaequaelibet",
-    "quidquidlibet" ACC_F_SG "quidquidlibet",
-    "quidquidlibet" ACC_F_PL "quaequaelibet",
-    "quidquidlibet" ACC_N_SG "quidquidlibet",
-    "quidquidlibet" ACC_N_PL "quaequaelibet",
-    "quidquidlibet" ABL_M_SG "quōquōlibet",
-    "quidquidlibet" ABL_M_PL "quibusquibuslibet",
-    "quidquidlibet" ABL_F_SG "quōquōlibet",
-    "quidquidlibet" ABL_F_PL "quibusquibuslibet",
-    "quidquidlibet" ABL_N_SG "quōquōlibet",
-    "quidquidlibet" ABL_N_PL "quibusquibuslibet",
-    "quidquidlibet" VOC_M_PL "quaequaelibet",
-    "quidquidlibet" VOC_F_SG "quidquidlibet",
-    "quidquidlibet" VOC_F_PL "quaequaelibet",
-    "quidquidlibet" VOC_N_SG "quidquidlibet",
-    "quidquidlibet" VOC_N_PL "quaequaelibet",
-    "quilibet" NOM_M_PL "quīlibet",
-    "quilibet" NOM_F_SG "quaelibet",
-    "quilibet" NOM_F_PL "quaelibet",
-    "quilibet" NOM_N_SG "quodlibet",
-    "quilibet" NOM_N_PL "quaelibet",
-    "quilibet" GEN_M_SG "cuiuslibet",
-    "quilibet" GEN_M_PL "quōrumlibet",
-    "quilibet" GEN_F_SG "cuiuslibet",
-    "quilibet" GEN_F_PL "quārumlibet",
-    "quilibet" GEN_N_SG "cuiuslibet",
-    "quilibet" GEN_N_PL "quōrumlibet",
-    "quilibet" DAT_M_SG "cuilibet",
-    "quilibet" DAT_M_PL "quibuslibet",
-    "quilibet" DAT_F_SG "cuilibet",
-    "quilibet" DAT_F_PL "quibuslibet",
-    "quilibet" DAT_N_SG "cuilibet",
-    "quilibet" DAT_N_PL "quibuslibet",
-    "quilibet" ACC_M_SG "quemlibet",
-    "quilibet" ACC_M_PL "quōslibet",
-    "quilibet" ACC_F_SG "quamlibet",
-    "quilibet" ACC_F_PL "quāslibet",
-    "quilibet" ACC_N_SG "quodlibet",
-    "quilibet" ACC_N_PL "quaelibet",
-    "quilibet" ABL_M_SG "quōlibet",
-    "quilibet" ABL_M_PL "quibuslibet",
-    "quilibet" ABL_F_SG "quālibet",
-    "quilibet" ABL_F_PL "quibuslibet",
-    "quilibet" ABL_N_SG "quōlibet",
-    "quilibet" ABL_N_PL "quibuslibet",
-    "quilubet" NOM_M_PL "quīlubet",
-    "quilubet" NOM_F_SG "quaelubet",
-    "quilubet" NOM_F_PL "quaelubet",
-    "quilubet" NOM_N_SG "quodlubet",
-    "quilubet" NOM_N_PL "quaelubet",
-    "quilubet" GEN_M_SG "cuiuslubet",
-    "quilubet" GEN_M_PL "quōrumlubet",
-    "quilubet" GEN_F_SG "cuiuslubet",
-    "quilubet" GEN_F_PL "quārumlubet",
-    "quilubet" GEN_N_SG "cuiuslubet",
-    "quilubet" GEN_N_PL "quōrumlubet",
-    "quilubet" DAT_M_SG "cuilubet",
-    "quilubet" DAT_M_PL "quibuslubet",
-    "quilubet" DAT_F_SG "cuilubet",
-    "quilubet" DAT_F_PL "quibuslubet",
-    "quilubet" DAT_N_SG "cuilubet",
-    "quilubet" DAT_N_PL "quibuslubet",
-    "quilubet" ACC_M_SG "quemlubet",
-    "quilubet" ACC_M_PL "quōslubet",
-    "quilubet" ACC_F_SG "quamlubet",
-    "quilubet" ACC_F_PL "quāslubet",
-    "quilubet" ACC_N_SG "quodlubet",
-    "quilubet" ACC_N_PL "quaelubet",
-    "quilubet" ABL_M_SG "quōlubet",
-    "quilubet" ABL_M_PL "quibuslubet",
-    "quilubet" ABL_F_SG "quālubet",
-    "quilubet" ABL_F_PL "quibuslubet",
-    "quilubet" ABL_N_SG "quōlubet",
-    "quilubet" ABL_N_PL "quibuslubet",
-    "quis" NOM_M_PL "quī",
-    "quis" NOM_F_SG "quae",
-    "quis" NOM_F_PL "quae",
-    "quis" NOM_N_SG "quid",
-    "quis" NOM_N_PL "quae",
-    "quis" GEN_M_SG "cuius",
-    "quis" GEN_M_PL "quōrum",
-    "quis" GEN_F_SG "cuius",
-    "quis" GEN_F_PL "quārum",
-    "quis" GEN_N_SG "cuius",
-    "quis" GEN_N_PL "quōrum",
-    "quis" DAT_M_SG "cui",
-    "quis" DAT_M_PL "quibus",
-    "quis" DAT_F_SG "cui",
-    "quis" DAT_F_PL "quibus",
-    "quis" DAT_N_SG "cui",
-    "quis" DAT_N_PL "quibus",
-    "quis" ACC_M_SG "quem",
-    "quis" ACC_M_PL "quōs",
-    "quis" ACC_F_SG "quam",
-    "quis" ACC_F_PL "quās",
-    "quis" ACC_N_SG "quid",
-    "quis" ACC_N_PL "quae",
-    "quis" ABL_M_SG "quō",
-    "quis" ABL_M_PL "quibus",
-    "quis" ABL_F_SG "quā",
-    "quis" ABL_F_PL "quibus",
-    "quis" ABL_N_SG "quō",
-    "quis" ABL_N_PL "quibus",
-    "quispiam" NOM_M_PL "quīpiam",
-    "quispiam" NOM_F_SG "quaepiam",
-    "quispiam" NOM_F_PL "quaepiam",
-    "quispiam" NOM_N_SG "quidpiam",
-    "quispiam" NOM_N_PL "quaepiam",
-    "quispiam" GEN_M_SG "cuiuspiam",
-    "quispiam" GEN_M_PL "quōrumpiam",
-    "quispiam" GEN_F_SG "cuiuspiam",
-    "quispiam" GEN_F_PL "quārumpiam",
-    "quispiam" GEN_N_SG "cuiuspiam",
-    "quispiam" GEN_N_PL "quōrumpiam",
-    "quispiam" DAT_M_SG "cuipiam",
-    "quispiam" DAT_M_PL "quibuspiam",
-    "quispiam" DAT_F_SG "cuipiam",
-    "quispiam" DAT_F_PL "quibuspiam",
-    "quispiam" DAT_N_SG "cuipiam",
-    "quispiam" DAT_N_PL "quibuspiam",
-    "quispiam" ACC_M_SG "quempiam",
-    "quispiam" ACC_M_PL "quōspiam",
-    "quispiam" ACC_F_SG "quampiam",
-    "quispiam" ACC_F_PL "quāspiam",
-    "quispiam" ACC_N_SG "quidpiam",
-    "quispiam" ACC_N_PL "quaepiam",
-    "quispiam" ABL_M_SG "quōpiam",
-    "quispiam" ABL_M_PL "quibuspiam",
-    "quispiam" ABL_F_SG "quāpiam",
-    "quispiam" ABL_F_PL "quibuspiam",
-    "quispiam" ABL_N_SG "quōpiam",
-    "quispiam" ABL_N_PL "quibuspiam",
-    "quisquam" NOM_F_SG "quisquam",
-    "quisquam" NOM_N_SG "quicquam",
-    "quisquam" GEN_M_SG "cuiusquam",
-    "quisquam" GEN_F_SG "cuiusquam",
-    "quisquam" GEN_N_SG "cuiusquam",
-    "quisquam" DAT_M_SG "cuiquam",
-    "quisquam" DAT_F_SG "cuiquam",
-    "quisquam" DAT_N_SG "cuiquam",
-    "quisquam" ACC_M_SG "quemquam",
-    "quisquam" ACC_F_SG "quemquam",
-    "quisquam" ACC_N_SG "quicquam",
-    "quisquam" ABL_M_SG "quōquam",
-    "quisquam" ABL_F_SG "quōquam",
-    "quisquam" ABL_N_SG "quōquam",
-    "quisquamne" NOM_M_PL "quīquamne",
-    "quisquamne" NOM_F_SG "quaequamne",
-    "quisquamne" NOM_F_PL "quaequamne",
-    "quisquamne" NOM_N_SG "quidquamne",
-    "quisquamne" NOM_N_PL "quaequamne",
-    "quisquamne" GEN_M_SG "cuiusquamne",
-    "quisquamne" GEN_M_PL "quōrumquamne",
-    "quisquamne" GEN_F_SG "cuiusquamne",
-    "quisquamne" GEN_F_PL "quārumquamne",
-    "quisquamne" GEN_N_SG "cuiusquamne",
-    "quisquamne" GEN_N_PL "quōrumquamne",
-    "quisquamne" DAT_M_SG "cuiquamne",
-    "quisquamne" DAT_M_PL "quibusquamne",
-    "quisquamne" DAT_F_SG "cuiquamne",
-    "quisquamne" DAT_F_PL "quibusquamne",
-    "quisquamne" DAT_N_SG "cuiquamne",
-    "quisquamne" DAT_N_PL "quibusquamne",
-    "quisquamne" ACC_M_SG "quemquamne",
-    "quisquamne" ACC_M_PL "quōsquamne",
-    "quisquamne" ACC_F_SG "quamquamne",
-    "quisquamne" ACC_F_PL "quāsquamne",
-    "quisquamne" ACC_N_SG "quidquamne",
-    "quisquamne" ACC_N_PL "quaequamne",
-    "quisquamne" ABL_M_SG "quōquamne",
-    "quisquamne" ABL_M_PL "quibusquamne",
-    "quisquamne" ABL_F_SG "quāquamne",
-    "quisquamne" ABL_F_PL "quibusquamne",
-    "quisquamne" ABL_N_SG "quōquamne",
-    "quisquamne" ABL_N_PL "quibusquamne",
-    "quisque" NOM_M_PL "quīque",
-    "quisque" NOM_F_SG "quaeque",
-    "quisque" NOM_F_PL "quaeque",
-    "quisque" NOM_N_SG "quidque",
-    "quisque" NOM_N_PL "quaeque",
-    "quisque" GEN_M_SG "cuiusque",
-    "quisque" GEN_M_PL "quōrumque",
-    "quisque" GEN_F_SG "cuiusque",
-    "quisque" GEN_F_PL "quārumque",
-    "quisque" GEN_N_SG "cuiusque",
-    "quisque" GEN_N_PL "quōrumque",
-    "quisque" DAT_M_SG "cuique",
-    "quisque" DAT_M_PL "quibusque",
-    "quisque" DAT_F_SG "cuique",
-    "quisque" DAT_F_PL "quibusque",
-    "quisque" DAT_N_SG "cuique",
-    "quisque" DAT_N_PL "quibusque",
-    "quisque" ACC_M_SG "quemque",
-    "quisque" ACC_M_PL "quōsque",
-    "quisque" ACC_F_SG "quamque",
-    "quisque" ACC_F_PL "quāsque",
-    "quisque" ACC_N_SG "quidque",
-    "quisque" ACC_N_PL "quaeque",
-    "quisque" ABL_M_SG "quōque",
-    "quisque" ABL_M_PL "quibusque",
-    "quisque" ABL_F_SG "quāque",
-    "quisque" ABL_F_PL "quibusque",
-    "quisque" ABL_N_SG "quōque",
-    "quisque" ABL_N_PL "quibusque",
-    "quisquidem" NOM_M_PL "quīquidem",
-    "quisquidem" NOM_F_SG "quaequidem",
-    "quisquidem" NOM_F_PL "quaequidem",
-    "quisquidem" NOM_N_SG "quidquidem",
-    "quisquidem" NOM_N_PL "quaequidem",
-    "quisquidem" GEN_M_SG "cuiusquidem",
-    "quisquidem" GEN_M_PL "quōrumquidem",
-    "quisquidem" GEN_F_SG "cuiusquidem",
-    "quisquidem" GEN_F_PL "quārumquidem",
-    "quisquidem" GEN_N_SG "cuiusquidem",
-    "quisquidem" GEN_N_PL "quōrumquidem",
-    "quisquidem" DAT_M_SG "cuiquidem",
-    "quisquidem" DAT_M_PL "quibusquidem",
-    "quisquidem" DAT_F_SG "cuiquidem",
-    "quisquidem" DAT_F_PL "quibusquidem",
-    "quisquidem" DAT_N_SG "cuiquidem",
-    "quisquidem" DAT_N_PL "quibusquidem",
-    "quisquidem" ACC_M_SG "quemquidem",
-    "quisquidem" ACC_M_PL "quōsquidem",
-    "quisquidem" ACC_F_SG "quamquidem",
-    "quisquidem" ACC_F_PL "quāsquidem",
-    "quisquidem" ACC_N_SG "quidquidem",
-    "quisquidem" ACC_N_PL "quaequidem",
-    "quisquidem" ABL_M_SG "quōquidem",
-    "quisquidem" ABL_M_PL "quibusquidem",
-    "quisquidem" ABL_F_SG "quāquidem",
-    "quisquidem" ABL_F_PL "quibusquidem",
-    "quisquidem" ABL_N_SG "quōquidem",
-    "quisquidem" ABL_N_PL "quibusquidem",
-    "quisquis" NOM_M_PL "quīquī",
-    "quisquis" NOM_F_SG "quisquis",
-    "quisquis" NOM_F_PL "quaequae",
-    "quisquis" NOM_N_SG "quidquid",
-    "quisquis" NOM_N_PL "quaequae",
-    "quisquis" GEN_M_SG "cuiuscuius",
-    "quisquis" GEN_M_PL "quōrumquōrum",
-    "quisquis" GEN_F_SG "cuiuscuius",
-    "quisquis" GEN_F_PL "quārumquārum",
-    "quisquis" GEN_N_SG "cuiuscuius",
-    "quisquis" GEN_N_PL "quōrumquōrum",
-    "quisquis" DAT_M_SG "cuicui",
-    "quisquis" DAT_M_PL "quibusquibus",
-    "quisquis" DAT_F_SG "cuicui",
-    "quisquis" DAT_F_PL "quibusquibus",
-    "quisquis" DAT_N_SG "cuicui",
-    "quisquis" DAT_N_PL "quibusquibus",
-    "quisquis" ACC_M_SG "quemquem",
-    "quisquis" ACC_M_PL "quōsquōs",
-    "quisquis" ACC_F_SG "quamquam",
-    "quisquis" ACC_F_PL "quāsquās",
-    "quisquis" ACC_N_SG "quidquid",
-    "quisquis" ACC_N_PL "quaequae",
-    "quisquis" ABL_M_SG "quōquō",
-    "quisquis" ABL_M_PL "quibusquibus",
-    "quisquis" ABL_F_SG "quāquā",
-    "quisquis" ABL_F_PL "quibusquibus",
-    "quisquis" ABL_N_SG "quōquō",
-    "quisquis" ABL_N_PL "quibusquibus",
-    "quisquis" VOC_M_SG "quisquis",
-    "quisquis" VOC_M_PL "quīquī",
-    "quisquis" VOC_F_SG "quisquis",
-    "quisquis" VOC_F_PL "quaequae",
-    "quisquis" VOC_N_SG "quidquid",
-    "quisquis" VOC_N_PL "quaequae",
-    "quivis" NOM_F_SG "quaevīs",
-    "quivis" NOM_F_PL "quaevīs",
-    "quivis" NOM_N_SG "quidvīs",
-    "quivis" NOM_N_PL "quaevīs",
-    "quivis" GEN_M_SG "cuiusvīs",
-    "quivis" GEN_M_PL "quōrunvīs",
-    "quivis" GEN_F_SG "cuiusvīs",
-    "quivis" GEN_F_PL "quārunvīs",
-    "quivis" GEN_N_SG "cuiusvīs",
-    "quivis" GEN_N_PL "quōrunvīs",
-    "quivis" DAT_M_SG "cuivīs",
-    "quivis" DAT_M_PL "quibusvīs",
-    "quivis" DAT_F_SG "cuivīs",
-    "quivis" DAT_F_PL "quibusvīs",
-    "quivis" DAT_N_SG "cuivīs",
-    "quivis" DAT_N_PL "quibusvīs",
-    "quivis" ACC_M_SG "quenvīs",
-    "quivis" ACC_M_PL "quōsvīs",
-    "quivis" ACC_F_SG "quanvīs",
-    "quivis" ACC_F_PL "quāsvīs",
-    "quivis" ACC_N_SG "quidvīs",
-    "quivis" ACC_N_PL "quaevīs",
-    "quivis" ABL_M_SG "quōvīs",
-    "quivis" ABL_M_PL "quibusvīs",
-    "quivis" ABL_F_SG "quāvīs",
-    "quivis" ABL_F_PL "quibusvīs",
-    "quivis" ABL_N_SG "quōvīs",
-    "quivis" ABL_N_PL "quibusvīs",
-    "quiviscumque" NOM_M_PL "quīcumque",
-    "quiviscumque" NOM_F_SG "quaevīscumque",
-    "quiviscumque" NOM_F_PL "quaecumque",
-    "quiviscumque" NOM_N_SG "quodcumque",
-    "quiviscumque" NOM_N_PL "quaevīscumque",
-    "quiviscumque" GEN_M_SG "cuiuscumque",
-    "quiviscumque" GEN_M_PL "quōrumcumque",
-    "quiviscumque" GEN_F_SG "cuiuscumque",
-    "quiviscumque" GEN_F_PL "quārumcumque",
-    "quiviscumque" GEN_N_SG "cuiuscumque",
-    "quiviscumque" GEN_N_PL "quōrumcumque",
-    "quiviscumque" DAT_M_SG "cuicumque",
-    "quiviscumque" DAT_M_PL "quibuscumque",
-    "quiviscumque" DAT_F_SG "cuicumque",
-    "quiviscumque" DAT_F_PL "quibuscumque",
-    "quiviscumque" DAT_N_SG "cuicumque",
-    "quiviscumque" DAT_N_PL "quibuscumque",
-    "quiviscumque" ACC_M_SG "quemcumque",
-    "quiviscumque" ACC_M_PL "quōscumque",
-    "quiviscumque" ACC_F_SG "quamcumque",
-    "quiviscumque" ACC_F_PL "quāscumque",
-    "quiviscumque" ACC_N_SG "quodcumque",
-    "quiviscumque" ACC_N_PL "quaevīscumque",
-    "quiviscumque" ABL_M_SG "quōcumque",
-    "quiviscumque" ABL_M_PL "quibuscumque",
-    "quiviscumque" ABL_F_SG "quācumque",
-    "quiviscumque" ABL_F_PL "quibuscumque",
-    "quiviscumque" ABL_N_SG "quōcumque",
-    "quiviscumque" ABL_N_PL "quibuscumque",
-    "seipse" NOM_N_SG "seipsum",
-    "seipse" ACC_N_SG "seipsum",
-    "semet" GEN_M_SG "suīmet",
-    "semet" GEN_M_PL "suīmet",
-    "semet" GEN_F_SG "suīmet",
-    "semet" GEN_F_PL "suīmet",
-    "semet" GEN_N_SG "suīmet",
-    "semet" GEN_N_PL "suīmet",
-    "semet" DAT_M_SG "sibimet",
-    "semet" DAT_M_PL "sibimet",
-    "semet" DAT_F_SG "sibimet",
-    "semet" DAT_F_PL "sibimet",
-    "semet" DAT_N_SG "sibimet",
-    "semet" DAT_N_PL "sibimet",
-    "semet" ACC_M_SG "sēmet",
-    "semet" ACC_M_PL "sēmet",
-    "semet" ACC_F_SG "sēmet",
-    "semet" ACC_F_PL "sēmet",
-    "semet" ACC_N_SG "sēmet",
-    "semet" ACC_N_PL "sēmet",
-    "semet" ABL_M_SG "sēmet",
-    "semet" ABL_M_PL "sēmet",
-    "semet" ABL_F_SG "sēmet",
-    "semet" ABL_F_PL "sēmet",
-    "semet" ABL_N_SG "sēmet",
-    "semet" ABL_N_PL "sēmet",
-    "sibi" GEN_M_SG "suī",
-    "sibi" GEN_F_SG "suī",
-    "sibi" GEN_N_SG "suī",
-    "sibi" DAT_M_SG "sibī",
-    "sibi" DAT_F_SG "sibī",
-    "sibi" DAT_N_SG "sibī",
-    "sibi" ACC_M_SG "sē",
-    "sibi" ACC_F_SG "sē",
-    "sibi" ACC_N_SG "sē",
-    "sibi" ABL_M_SG "sē",
-    "sibi" ABL_F_SG "sē",
-    "sibi" ABL_N_SG "sē",
-    "siquis" NOM_M_PL "sīquī",
-    "siquis" NOM_F_SG "sīqua",
-    "siquis" NOM_F_PL "sīquae",
-    "siquis" NOM_N_SG "sīquid",
-    "siquis" NOM_N_PL "sīqua",
-    "siquis" DAT_M_SG "sīcui",
-    "siquis" DAT_M_PL "sīquibus",
-    "siquis" DAT_F_SG "sīcui",
-    "siquis" DAT_F_PL "sīquibus",
-    "siquis" DAT_N_SG "sīcui",
-    "siquis" DAT_N_PL "sīquibus",
-    "siquis" ACC_M_SG "sīquem",
-    "siquis" ACC_M_PL "sīquōs",
-    "siquis" ACC_F_SG "sīquam",
-    "siquis" ACC_F_PL "sīquās",
-    "siquis" ACC_N_SG "sīquid",
-    "siquis" ACC_N_PL "sīqua",
-    "siquis" ABL_M_SG "sīquō",
-    "siquis" ABL_M_PL "sīquibus",
-    "siquis" ABL_F_SG "sīquā",
-    "siquis" ABL_F_PL "sīquibus",
-    "siquis" ABL_N_SG "sīquō",
-    "siquis" ABL_N_PL "sīquibus",
-    "temet" NOM_M_SG "tūtemet",
-    "temet" NOM_F_SG "tūtemet",
-    "temet" NOM_N_SG "tūtemet",
-    "temet" GEN_M_SG "tuīmet",
-    "temet" GEN_F_SG "tuīmet",
-    "temet" GEN_N_SG "tuīmet",
-    "temet" DAT_M_SG "tibimet",
-    "temet" DAT_F_SG "tibimet",
-    "temet" DAT_N_SG "tibimet",
-    "temet" ACC_M_SG "temet",
-    "temet" ACC_F_SG "temet",
-    "temet" ACC_N_SG "temet",
-    "temet" ABL_M_SG "temet",
-    "temet" ABL_F_SG "temet",
-    "temet" ABL_N_SG "temet",
-    "temet" VOC_M_SG "tūtemet",
-    "temet" VOC_F_SG "tūtemet",
-    "temet" VOC_N_SG "tūtemet",
-    "tutemet" NOM_F_SG "tūtemet",
-    "tutemet" NOM_N_SG "tūtemet",
-    "tutemet" GEN_M_SG "tuīmet",
-    "tutemet" GEN_F_SG "tuīmet",
-    "tutemet" GEN_N_SG "tuīmet",
-    "tutemet" DAT_M_SG "tibimet",
-    "tutemet" DAT_F_SG "tibimet",
-    "tutemet" DAT_N_SG "tibimet",
-    "tutemet" ACC_M_SG "temet",
-    "tutemet" ACC_F_SG "temet",
-    "tutemet" ACC_N_SG "temet",
-    "tutemet" ABL_M_SG "temet",
-    "tutemet" ABL_F_SG "temet",
-    "tutemet" ABL_N_SG "temet",
-    "tutemet" VOC_F_SG "tūtemet",
-    "tutemet" VOC_N_SG "tūtemet",
-    "ullus" GEN_M_SG "ūllīus",
-    "ullus" GEN_F_SG "ūllīus",
-    "ullus" GEN_N_SG "ūllīus",
-    "ullus" DAT_M_SG "ūllī",
-    "ullus" DAT_F_SG "ūllī",
-    "ullus" DAT_N_SG "ūllī",
-    "unusquisque" NOM_F_SG "ūnaquaeque",
-    "unusquisque" NOM_N_SG "ūnumquidque",
-    "unusquisque" GEN_M_SG "ūnīuscuiusque",
-    "unusquisque" GEN_F_SG "ūnīuscuiusque",
-    "unusquisque" GEN_N_SG "ūnīuscuiusque",
-    "unusquisque" DAT_M_SG "ūnīcuique",
-    "unusquisque" DAT_F_SG "ūnīcuique",
-    "unusquisque" DAT_N_SG "ūnīcuique",
-    "unusquisque" ACC_M_SG "ūnumquemque",
-    "unusquisque" ACC_F_SG "ūnamquamque",
-    "unusquisque" ACC_N_SG "ūnumquidque",
-    "unusquisque" ABL_M_SG "ūnōquōque",
-    "unusquisque" ABL_F_SG "ūnāquāque",
-    "unusquisque" ABL_N_SG "ūnōquōque",
-    "uter" GEN_M_SG "utrīus",
-    "uter" GEN_F_SG "utrīus",
-    "uter" GEN_N_SG "utrīus",
-    "uter" DAT_M_SG "utrī",
-    "uter" DAT_F_SG "utrī",
-    "uter" DAT_N_SG "utrī",
-    "utercumque" NOM_M_PL "utrīcumque",
-    "utercumque" NOM_F_SG "utracumque",
-    "utercumque" NOM_F_PL "utraecumque",
-    "utercumque" NOM_N_SG "utrumcumque",
-    "utercumque" NOM_N_PL "utracumque",
-    "utercumque" GEN_M_SG "utrīuscumque",
-    "utercumque" GEN_M_PL "utrōrumcumque",
-    "utercumque" GEN_F_SG "utrīuscumque",
-    "utercumque" GEN_F_PL "utrārumcumque",
-    "utercumque" GEN_N_SG "utrīuscumque",
-    "utercumque" GEN_N_PL "utrōrumcumque",
-    "utercumque" DAT_M_SG "utrīcumque",
-    "utercumque" DAT_M_PL "utrīscumque",
-    "utercumque" DAT_F_SG "utrīcumque",
-    "utercumque" DAT_F_PL "utrīscumque",
-    "utercumque" DAT_N_SG "utrīcumque",
-    "utercumque" DAT_N_PL "utrīscumque",
-    "utercumque" ACC_M_SG "utrumcumque",
-    "utercumque" ACC_M_PL "utrōscumque",
-    "utercumque" ACC_F_SG "utramcumque",
-    "utercumque" ACC_F_PL "utrāscumque",
-    "utercumque" ACC_N_SG "utrumcumque",
-    "utercumque" ACC_N_PL "utracumque",
-    "utercumque" ABL_M_SG "utrōcumque",
-    "utercumque" ABL_M_PL "utrīscumque",
-    "utercumque" ABL_F_SG "utrācumque",
-    "utercumque" ABL_F_PL "utrīscumque",
-    "utercumque" ABL_N_SG "utrōcumque",
-    "utercumque" ABL_N_PL "utrīscumque",
-    "utercumque" VOC_M_PL "utrīcumque",
-    "utercumque" VOC_F_SG "utracumque",
-    "utercumque" VOC_F_PL "utraecumque",
-    "utercumque" VOC_N_SG "utrumcumque",
-    "utercumque" VOC_N_PL "utracumque",
-    "uterlibet" NOM_M_PL "utrīlibet",
-    "uterlibet" NOM_F_SG "utralibet",
-    "uterlibet" NOM_F_PL "utraelibet",
-    "uterlibet" NOM_N_SG "utrumlibet",
-    "uterlibet" NOM_N_PL "utralibet",
-    "uterlibet" GEN_M_SG "utrīuslibet",
-    "uterlibet" GEN_M_PL "utrōrumlibet",
-    "uterlibet" GEN_F_SG "utrīuslibet",
-    "uterlibet" GEN_F_PL "utrārumlibet",
-    "uterlibet" GEN_N_SG "utrīuslibet",
-    "uterlibet" GEN_N_PL "utrōrumlibet",
-    "uterlibet" DAT_M_SG "utrīlibet",
-    "uterlibet" DAT_M_PL "utrīslibet",
-    "uterlibet" DAT_F_SG "utrīlibet",
-    "uterlibet" DAT_F_PL "utrīslibet",
-    "uterlibet" DAT_N_SG "utrīlibet",
-    "uterlibet" DAT_N_PL "utrīslibet",
-    "uterlibet" ACC_M_SG "utrumlibet",
-    "uterlibet" ACC_M_PL "utrōslibet",
-    "uterlibet" ACC_F_SG "utramlibet",
-    "uterlibet" ACC_F_PL "utrāslibet",
-    "uterlibet" ACC_N_SG "utrumlibet",
-    "uterlibet" ACC_N_PL "utralibet",
-    "uterlibet" ABL_M_SG "utrōlibet",
-    "uterlibet" ABL_M_PL "utrīslibet",
-    "uterlibet" ABL_F_SG "utrālibet",
-    "uterlibet" ABL_F_PL "utrīslibet",
-    "uterlibet" ABL_N_SG "utrōlibet",
-    "uterlibet" ABL_N_PL "utrīslibet",
-    "uterlibet" VOC_M_PL "utrīlibet",
-    "uterlibet" VOC_F_SG "utralibet",
-    "uterlibet" VOC_F_PL "utraelibet",
-    "uterlibet" VOC_N_SG "utrumlibet",
-    "uterlibet" VOC_N_PL "utralibet",
-    "uterque" NOM_M_PL "utrīque",
-    "uterque" NOM_F_SG "utraque",
-    "uterque" NOM_F_PL "utraeque",
-    "uterque" NOM_N_SG "utrumque",
-    "uterque" NOM_N_PL "utraque",
-    "uterque" GEN_M_SG "utrīusque",
-    "uterque" GEN_M_PL "utrōrumque",
-    "uterque" GEN_F_SG "utrīusque",
-    "uterque" GEN_F_PL "utrārumque",
-    "uterque" GEN_N_SG "utrīusque",
-    "uterque" GEN_N_PL "utrōrumque",
-    "uterque" DAT_M_SG "utrīque",
-    "uterque" DAT_M_PL "utrīsque",
-    "uterque" DAT_F_SG "utrīque",
-    "uterque" DAT_F_PL "utrīsque",
-    "uterque" DAT_N_SG "utrīque",
-    "uterque" DAT_N_PL "utrīsque",
-    "uterque" ACC_M_SG "utrumque",
-    "uterque" ACC_M_PL "utrōsque",
-    "uterque" ACC_F_SG "utramque",
-    "uterque" ACC_F_PL "utrāsque",
-    "uterque" ACC_N_SG "utrumque",
-    "uterque" ACC_N_PL "utraque",
-    "uterque" ABL_M_SG "utrōque",
-    "uterque" ABL_M_PL "utrīsque",
-    "uterque" ABL_F_SG "utrāque",
-    "uterque" ABL_F_PL "utrīsque",
-    "uterque" ABL_N_SG "utrōque",
-    "uterque" ABL_N_PL "utrīsque",
-    "uterque" VOC_M_PL "utrīque",
-    "uterque" VOC_F_SG "utraque",
-    "uterque" VOC_F_PL "utraeque",
-    "uterque" VOC_N_SG "utrumque",
-    "uterque" VOC_N_PL "utraque",
-    "utervis" NOM_M_PL "utrīvīs",
-    "utervis" NOM_F_SG "utravīs",
-    "utervis" NOM_F_PL "utraevīs",
-    "utervis" NOM_N_SG "utrumvīs",
-    "utervis" NOM_N_PL "utravīs",
-    "utervis" GEN_M_SG "utrīusvīs",
-    "utervis" GEN_M_PL "utrōrumvīs",
-    "utervis" GEN_F_SG "utrīusvīs",
-    "utervis" GEN_F_PL "utrārumvīs",
-    "utervis" GEN_N_SG "utrīusvīs",
-    "utervis" GEN_N_PL "utrōrumvīs",
-    "utervis" DAT_M_SG "utrīvīs",
-    "utervis" DAT_M_PL "utrīsvīs",
-    "utervis" DAT_F_SG "utrīvīs",
-    "utervis" DAT_F_PL "utrīsvīs",
-    "utervis" DAT_N_SG "utrīvīs",
-    "utervis" DAT_N_PL "utrīsvīs",
-    "utervis" ACC_M_SG "utrumvīs",
-    "utervis" ACC_M_PL "utrōsvīs",
-    "utervis" ACC_F_SG "utramvīs",
-    "utervis" ACC_F_PL "utrāsvīs",
-    "utervis" ACC_N_SG "utrumvīs",
-    "utervis" ACC_N_PL "utravīs",
-    "utervis" ABL_M_SG "utrōvīs",
-    "utervis" ABL_M_PL "utrīsvīs",
-    "utervis" ABL_F_SG "utrāvīs",
-    "utervis" ABL_F_PL "utrīsvīs",
-    "utervis" ABL_N_SG "utrōvīs",
-    "utervis" ABL_N_PL "utrīsvīs",
-    "utervis" VOC_M_PL "utrīvīs",
-    "utervis" VOC_F_SG "utravīs",
-    "utervis" VOC_F_PL "utraevīs",
-    "utervis" VOC_N_SG "utrumvīs",
-    "utervis" VOC_N_PL "utravīs",
-    "vosmet" NOM_M_PL "vōsmet",
-    "vosmet" NOM_F_PL "vōsmet",
-    "vosmet" NOM_N_PL "vōsmet",
-    "vosmet" DAT_M_PL "vōbīsmet",
-    "vosmet" DAT_F_PL "vōbīsmet",
-    "vosmet" DAT_N_PL "vōbīsmet",
-    "vosmet" ACC_M_PL "vōsmet",
-    "vosmet" ACC_F_PL "vōsmet",
-    "vosmet" ACC_N_PL "vōsmet",
-    "vosmet" ABL_M_PL "vōbīsmet",
-    "vosmet" ABL_F_PL "vōbīsmet",
-    "vosmet" ABL_N_PL "vōbīsmet",
-    "vosmet" VOC_M_PL "vōsmet",
-    "vosmet" VOC_F_PL "vōsmet",
-    "vosmet" VOC_N_PL "vōsmet",
+/// 1,286 forms.
+pub(super) const IRREGULAR: Irregular<'static> = Irregular {
+    table: Cow::Borrowed(
+        r#"aliqui	1	aliquī
+aliqui	2	aliqua
+aliqui	3	aliquae
+aliqui	4	aliquod
+aliqui	5	aliqua
+aliqui	6	alicuius
+aliqui	7	aliquōrum
+aliqui	8	alicuius
+aliqui	9	aliquārum
+aliqui	10	alicuius
+aliqui	11	aliquōrum
+aliqui	12	alicui
+aliqui	13	aliquīs
+aliqui	14	alicui
+aliqui	15	aliquīs
+aliqui	16	alicui
+aliqui	17	aliquīs
+aliqui	18	aliquem
+aliqui	19	aliquōs
+aliqui	20	aliquam
+aliqui	21	aliquās
+aliqui	22	aliquod
+aliqui	23	aliqua
+aliqui	24	aliquō
+aliqui	25	aliquīs
+aliqui	26	aliquā
+aliqui	27	aliquīs
+aliqui	28	aliquō
+aliqui	29	aliquīs
+aliquis	1	aliquī
+aliquis	2	aliqua
+aliquis	3	aliquae
+aliquis	4	aliquid
+aliquis	5	aliqua
+aliquis	6	alicuius
+aliquis	7	aliquōrum
+aliquis	8	alicuius
+aliquis	9	aliquārum
+aliquis	10	alicuius
+aliquis	11	aliquōrum
+aliquis	12	alicui
+aliquis	13	aliquīs
+aliquis	14	alicui
+aliquis	15	aliquīs
+aliquis	16	alicui
+aliquis	17	aliquīs
+aliquis	18	aliquem
+aliquis	19	aliquōs
+aliquis	20	aliquam
+aliquis	21	aliquās
+aliquis	22	aliquid
+aliquis	23	aliqua
+aliquis	24	aliquō
+aliquis	25	aliquīs
+aliquis	26	aliquā
+aliquis	27	aliquīs
+aliquis	28	aliquō
+aliquis	29	aliquīs
+aliquisquam	2	aliquisquam
+aliquisquam	4	aliquidquam
+aliquisquam	6	alicuiusquam
+aliquisquam	8	alicuiusquam
+aliquisquam	10	alicuiusquam
+aliquisquam	12	alicuiquam
+aliquisquam	14	alicuiquam
+aliquisquam	16	alicuiquam
+aliquisquam	18	aliquemquam
+aliquisquam	20	aliquemquam
+aliquisquam	22	aliquidquam
+aliquisquam	24	aliquōquam
+aliquisquam	26	aliquōquam
+aliquisquam	28	aliquōquam
+alius	4	aliud
+alius	6	alterīus
+alius	8	alterīus
+alius	10	alterīus
+alius	12	aliī
+alius	14	aliī
+alius	16	aliī
+alius	22	aliud
+alius	34	aliud
+alter	1	alterī
+alter	2	altera
+alter	3	alterae
+alter	4	alterum
+alter	5	altera
+alter	6	alterīus
+alter	7	alterōrum
+alter	8	alterīus
+alter	9	alterārum
+alter	10	alterīus
+alter	11	alterōrum
+alter	12	alterī
+alter	13	alterīs
+alter	14	alterī
+alter	15	alterīs
+alter	16	alterī
+alter	17	alterīs
+alter	18	alterum
+alter	19	alterōs
+alter	20	alteram
+alter	21	alterās
+alter	22	alterum
+alter	23	altera
+alter	24	alterō
+alter	25	alterīs
+alter	26	alterā
+alter	27	alterīs
+alter	28	alterō
+alter	29	alterīs
+alter	31	alterī
+alter	32	altera
+alter	33	alterae
+alter	34	alterum
+alter	35	altera
+compluria	1	complūra
+compluria	3	complūra
+compluria	5	complūra
+compluria	7	complūrium
+compluria	9	complūrium
+compluria	11	complūrium
+compluria	13	complūribus
+compluria	15	complūribus
+compluria	17	complūribus
+compluria	19	complūra
+compluria	21	complūra
+compluria	23	complūra
+compluria	25	complūribus
+compluria	27	complūribus
+compluria	29	complūribus
+compluria	31	complūra
+compluria	33	complūra
+compluria	35	complūra
+conpluria	1	conplūra
+conpluria	3	conplūra
+conpluria	5	conplūra
+conpluria	7	conplūrium
+conpluria	9	conplūrium
+conpluria	11	conplūrium
+conpluria	13	conplūribus
+conpluria	15	conplūribus
+conpluria	17	conplūribus
+conpluria	19	conplūra
+conpluria	21	conplūra
+conpluria	23	conplūra
+conpluria	25	conplūribus
+conpluria	27	conplūribus
+conpluria	29	conplūribus
+conpluria	31	conplūra
+conpluria	33	conplūra
+conpluria	35	conplūra
+cuiusvis	0	cuiusvīs
+cuiusvis	1	cuiīvīs
+cuiusvis	2	cuiavīs
+cuiusvis	3	cuiaevīs
+cuiusvis	4	cuiumvīs
+cuiusvis	5	cuiavīs
+cuiusvis	6	cuiīvīs
+cuiusvis	7	cuiōrumvīs
+cuiusvis	8	cuiaevīs
+cuiusvis	9	cuiārumvīs
+cuiusvis	10	cuiīvīs
+cuiusvis	11	cuiōrumvīs
+cuiusvis	12	cuiōvīs
+cuiusvis	13	cuiīsvīs
+cuiusvis	14	cuiaevīs
+cuiusvis	15	cuiīsvīs
+cuiusvis	16	cuiōvīs
+cuiusvis	17	cuiīsvīs
+cuiusvis	18	cuiumvīs
+cuiusvis	19	cuiōsvīs
+cuiusvis	20	cuiamvīs
+cuiusvis	21	cuiāsvīs
+cuiusvis	22	cuiumvīs
+cuiusvis	23	cuiavīs
+cuiusvis	24	cuiōvīs
+cuiusvis	25	cuiīsvīs
+cuiusvis	26	cuiāvīs
+cuiusvis	27	cuiīsvīs
+cuiusvis	28	cuiōvīs
+cuiusvis	29	cuiīsvīs
+cuiusvis	30	cuievīs
+cuiusvis	31	cuiīvīs
+cuiusvis	32	cuiavīs
+cuiusvis	33	cuiaevīs
+cuiusvis	34	cuiumvīs
+cuiusvis	35	cuiavīs
+ecquis	1	ecquī
+ecquis	2	ecqua
+ecquis	3	ecquae
+ecquis	4	ecquid
+ecquis	5	ecqua
+ecquis	6	eccuius
+ecquis	8	eccuius
+ecquis	10	eccuius
+ecquis	12	eccui
+ecquis	14	eccui
+ecquis	16	eccui
+ecquis	18	ecquem
+ecquis	19	ecquōs
+ecquis	20	ecquam
+ecquis	21	ecquās
+ecquis	22	ecquod
+ecquis	23	ecqua
+ecquis	24	ecquō
+ecquis	26	ecquā
+ecquis	28	ecquō
+ecquisnam	1	ecquīnam
+ecquisnam	2	ecquaenam
+ecquisnam	3	ecquaenam
+ecquisnam	4	ecquidnam
+ecquisnam	5	ecquaenam
+ecquisnam	12	eccuinam
+ecquisnam	14	eccuinam
+ecquisnam	16	eccuinam
+ecquisnam	18	ecquemnam
+ecquisnam	19	ecquōsnam
+ecquisnam	20	ecquamnam
+ecquisnam	21	ecquāsnam
+ecquisnam	22	ecquidnam
+ecquisnam	23	ecquaenam
+ecquisnam	24	ecquōnam
+ecquisnam	26	ecquānam
+ecquisnam	28	ecquōnam
+egomet	2	egomet
+egomet	4	egomet
+egomet	6	meīmet
+egomet	8	meīmet
+egomet	10	meīmet
+egomet	12	mihimet
+egomet	14	mihimet
+egomet	16	mihimet
+egomet	18	mēmet
+egomet	20	mēmet
+egomet	22	mēmet
+egomet	24	mēmet
+egomet	26	mēmet
+egomet	28	mēmet
+egomet	32	egomet
+egomet	34	egomet
+hic	1	hī
+hic	3	hae
+hic	4	hoc
+hic	6	huius
+hic	7	hōrum
+hic	8	huius
+hic	9	hārum
+hic	10	huius
+hic	11	hōrum
+hic	12	huic
+hic	13	hīs
+hic	14	huic
+hic	15	hīs
+hic	16	huic
+hic	17	hīs
+hic	19	hōs
+hic	21	hās
+hic	22	hoc
+hic	25	hīs
+hic	27	hīs
+hic	29	hīs
+hice	1	hīce
+hice	4	hoce
+hice	6	huiusce
+hice	8	huiusce
+hice	10	huiusce
+hice	12	huīce
+hice	13	hīsce
+hice	14	huīce
+hice	15	hīsce
+hice	16	huīce
+hice	17	hīsce
+hice	19	hōsce
+hice	21	hāsce
+hice	22	hoce
+hice	25	hīsce
+hice	27	hīsce
+hice	29	hīsce
+idem	1	iīdem
+idem	2	eadem
+idem	3	eaedem
+idem	4	idem
+idem	5	eadem
+idem	6	eiusdem
+idem	7	eōrundem
+idem	8	eiusdem
+idem	9	eārundem
+idem	10	eiusdem
+idem	11	eōrundem
+idem	12	eīdem
+idem	13	iīsdem
+idem	14	eīdem
+idem	15	iīsdem
+idem	16	eīdem
+idem	17	iīsdem
+idem	18	eundem
+idem	19	eōsdem
+idem	20	eandem
+idem	21	eāsdem
+idem	22	idem
+idem	23	eadem
+idem	24	eōdem
+idem	25	iīsdem
+idem	26	eādem
+idem	27	iīsdem
+idem	28	eōdem
+idem	29	iīsdem
+ipse	4	ipsum
+ipse	22	ipsum
+ipsemet	1	ipsīmet
+ipsemet	2	ipsamet
+ipsemet	3	ipsaemet
+ipsemet	4	ipsummet
+ipsemet	5	ipsamet
+ipsemet	6	ipsīusmet
+ipsemet	7	ipsōrummet
+ipsemet	8	ipsīusmet
+ipsemet	9	ipsārummet
+ipsemet	10	ipsīusmet
+ipsemet	11	ipsōrummet
+ipsemet	12	ipsīmet
+ipsemet	13	ipsīsmet
+ipsemet	14	ipsīmet
+ipsemet	15	ipsīsmet
+ipsemet	16	ipsīmet
+ipsemet	17	ipsīsmet
+ipsemet	18	ipsummet
+ipsemet	19	ipsōsmet
+ipsemet	20	ipsammet
+ipsemet	21	ipsāsmet
+ipsemet	22	ipsummet
+ipsemet	23	ipsamet
+ipsemet	24	ipsōmet
+ipsemet	25	ipsīsmet
+ipsemet	26	ipsāmet
+ipsemet	27	ipsīsmet
+ipsemet	28	ipsōmet
+ipsemet	29	ipsīsmet
+meus	30	mī
+nequis	1	nēquī
+nequis	2	nēqua
+nequis	3	nēquae
+nequis	4	nēquid
+nequis	5	nēqua
+nequis	12	nēcui
+nequis	13	nēquibus
+nequis	14	nēcui
+nequis	15	nēquibus
+nequis	16	nēcui
+nequis	17	nēquibus
+nequis	18	nēquem
+nequis	19	nēquōs
+nequis	20	nēquam
+nequis	21	nēquās
+nequis	22	nēquid
+nequis	23	nēqua
+nequis	24	nēquō
+nequis	25	nēquibus
+nequis	26	nēquā
+nequis	27	nēquibus
+nequis	28	nēquō
+nequis	29	nēquibus
+nescioquis	1	nesciōquī
+nescioquis	2	nesciōquae
+nescioquis	3	nesciōquae
+nescioquis	4	nesciōquid
+nescioquis	5	nesciōquae
+nescioquis	6	nesciōcuius
+nescioquis	7	nesciōquōrum
+nescioquis	8	nesciōcuius
+nescioquis	9	nesciōquārum
+nescioquis	10	nesciōcuius
+nescioquis	11	nesciōquōrum
+nescioquis	12	nesciōcui
+nescioquis	13	nesciōquibus
+nescioquis	14	nesciōcui
+nescioquis	15	nesciōquibus
+nescioquis	16	nesciōcui
+nescioquis	17	nesciōquibus
+nescioquis	18	nesciōquem
+nescioquis	19	nesciōquōs
+nescioquis	20	nesciōquam
+nescioquis	21	nesciōquās
+nescioquis	22	nesciōquid
+nescioquis	23	nesciōquae
+nescioquis	24	nesciōquō
+nescioquis	25	nesciōquibus
+nescioquis	26	nesciōquā
+nescioquis	27	nesciōquibus
+nescioquis	28	nesciōquō
+nescioquis	29	nesciōquibus
+nosmet	1	nōsmet
+nosmet	3	nōsmet
+nosmet	5	nōsmet
+nosmet	13	nōbīsmet
+nosmet	15	nōbīsmet
+nosmet	17	nōbīsmet
+nosmet	19	nōsmet
+nosmet	21	nōsmet
+nosmet	23	nōsmet
+nosmet	25	nōbīsmet
+nosmet	27	nōbīsmet
+nosmet	29	nōbīsmet
+nosmet	31	nōsmet
+nosmet	33	nōsmet
+nosmet	35	nōsmet
+nullus	6	nūllīus
+nullus	8	nūllīus
+nullus	10	nūllīus
+nullus	12	nūllī
+nullus	14	nūllī
+nullus	16	nūllī
+numquis	1	numquī
+numquis	2	numqua
+numquis	3	numquae
+numquis	4	numquid
+numquis	5	numqua
+numquis	12	numcui
+numquis	13	numquibus
+numquis	14	numcui
+numquis	15	numquibus
+numquis	16	numcui
+numquis	17	numquibus
+numquis	18	numquem
+numquis	19	numquōs
+numquis	20	numquam
+numquis	21	numquās
+numquis	22	numquid
+numquis	23	numqua
+numquis	24	numquō
+numquis	25	numquibus
+numquis	26	numquā
+numquis	27	numquibus
+numquis	28	numquō
+numquis	29	numquibus
+qualis	1	quālēs
+qualis	2	quālis
+qualis	3	quālēs
+qualis	4	quāle
+qualis	5	quālia
+qualis	6	quālis
+qualis	7	quālium
+qualis	8	quālis
+qualis	9	quālium
+qualis	10	quālis
+qualis	11	quālium
+qualis	12	quālī
+qualis	13	quālibus
+qualis	14	quālī
+qualis	15	quālibus
+qualis	16	quālī
+qualis	17	quālibus
+qualis	18	quālem
+qualis	19	quālīs
+qualis	20	quālem
+qualis	21	quālīs
+qualis	22	quāle
+qualis	23	quālia
+qualis	24	quālī
+qualis	25	quālibus
+qualis	26	quālī
+qualis	27	quālibus
+qualis	28	quālī
+qualis	29	quālibus
+qualis	30	quālis
+qualis	31	quālēs
+qualis	32	quālis
+qualis	33	quālēs
+qualis	34	quāle
+qualis	35	quālia
+qualiscumque	1	quālēscumque
+qualiscumque	2	quāliscumque
+qualiscumque	3	quālēscumque
+qualiscumque	4	quālecumque
+qualiscumque	5	quāliacumque
+qualiscumque	6	quāliscumque
+qualiscumque	7	quāliumcumque
+qualiscumque	8	quāliscumque
+qualiscumque	9	quāliumcumque
+qualiscumque	10	quāliscumque
+qualiscumque	11	quāliumcumque
+qualiscumque	12	quālīcumque
+qualiscumque	13	quālibuscumque
+qualiscumque	14	quālīcumque
+qualiscumque	15	quālibuscumque
+qualiscumque	16	quālīcumque
+qualiscumque	17	quālibuscumque
+qualiscumque	18	quālemcumque
+qualiscumque	19	quālīscumque
+qualiscumque	20	quālemcumque
+qualiscumque	21	quālīscumque
+qualiscumque	22	quālecumque
+qualiscumque	23	quāliacumque
+qualiscumque	24	quālīcumque
+qualiscumque	25	quālibuscumque
+qualiscumque	26	quālīcumque
+qualiscumque	27	quālibuscumque
+qualiscumque	28	quālīcumque
+qualiscumque	29	quālibuscumque
+qualiscumque	31	quālēscumque
+qualiscumque	32	quāliscumque
+qualiscumque	33	quālēscumque
+qualiscumque	34	quālecumque
+qualiscumque	35	quāliacumque
+quicquid	0	quidquid
+quicquid	1	quaequae
+quicquid	2	quidquid
+quicquid	3	quaequae
+quicquid	4	quidquid
+quicquid	5	quaequae
+quicquid	6	cuiuscuius
+quicquid	7	quōrumquōrum
+quicquid	8	cuiuscuius
+quicquid	9	quōrumquōrum
+quicquid	10	cuiuscuius
+quicquid	11	quōrumquōrum
+quicquid	12	cuicui
+quicquid	13	quibusquibus
+quicquid	14	cuicui
+quicquid	15	quibusquibus
+quicquid	16	cuicui
+quicquid	17	quibusquibus
+quicquid	18	quidquid
+quicquid	19	quaequae
+quicquid	20	quidquid
+quicquid	21	quaequae
+quicquid	22	quidquid
+quicquid	23	quaequae
+quicquid	24	quōquō
+quicquid	25	quibusquibus
+quicquid	26	quōquō
+quicquid	27	quibusquibus
+quicquid	28	quōquō
+quicquid	29	quibusquibus
+quicquid	30	quidquid
+quicquid	31	quaequae
+quicquid	32	quidquid
+quicquid	33	quaequae
+quicquid	34	quidquid
+quicquid	35	quaequae
+quicquidlibet	0	quidquidlibet
+quicquidlibet	1	quaequaelibet
+quicquidlibet	2	quidquidlibet
+quicquidlibet	3	quaequaelibet
+quicquidlibet	4	quidquidlibet
+quicquidlibet	5	quaequaelibet
+quicquidlibet	6	cuiuscuiuslibet
+quicquidlibet	7	quōrumquōrumlibet
+quicquidlibet	8	cuiuscuiuslibet
+quicquidlibet	9	quōrumquōrumlibet
+quicquidlibet	10	cuiuscuiuslibet
+quicquidlibet	11	quōrumquōrumlibet
+quicquidlibet	12	cuicuilibet
+quicquidlibet	13	quibusquibuslibet
+quicquidlibet	14	cuicuilibet
+quicquidlibet	15	quibusquibuslibet
+quicquidlibet	16	cuicuilibet
+quicquidlibet	17	quibusquibuslibet
+quicquidlibet	18	quidquidlibet
+quicquidlibet	19	quaequaelibet
+quicquidlibet	20	quidquidlibet
+quicquidlibet	21	quaequaelibet
+quicquidlibet	22	quidquidlibet
+quicquidlibet	23	quaequaelibet
+quicquidlibet	24	quōquōlibet
+quicquidlibet	25	quibusquibuslibet
+quicquidlibet	26	quōquōlibet
+quicquidlibet	27	quibusquibuslibet
+quicquidlibet	28	quōquōlibet
+quicquidlibet	29	quibusquibuslibet
+quicquidlibet	30	quidquidlibet
+quicquidlibet	31	quaequaelibet
+quicquidlibet	32	quidquidlibet
+quicquidlibet	33	quaequaelibet
+quicquidlibet	34	quidquidlibet
+quicquidlibet	35	quaequaelibet
+quicumque	1	quīcumque
+quicumque	2	quaecumque
+quicumque	3	quaecumque
+quicumque	4	quodcumque
+quicumque	5	quaecumque
+quicumque	6	cuiuscumque
+quicumque	7	quōrumcumque
+quicumque	8	cuiuscumque
+quicumque	9	quārumcumque
+quicumque	10	cuiuscumque
+quicumque	11	quōrumcumque
+quicumque	12	cuicumque
+quicumque	13	quibuscumque
+quicumque	14	cuicumque
+quicumque	15	quibuscumque
+quicumque	16	cuicumque
+quicumque	17	quibuscumque
+quicumque	18	quemcumque
+quicumque	19	quōscumque
+quicumque	20	quamcumque
+quicumque	21	quāscumque
+quicumque	22	quodcumque
+quicumque	23	quaecumque
+quicumque	24	quōcumque
+quicumque	25	quibuscumque
+quicumque	26	quācumque
+quicumque	27	quibuscumque
+quicumque	28	quōcumque
+quicumque	29	quibuscumque
+quicunque	1	quīcunque
+quicunque	2	quaecunque
+quicunque	3	quaecunque
+quicunque	4	quodcunque
+quicunque	5	quaecunque
+quicunque	6	cuiuscunque
+quicunque	7	quōruncunque
+quicunque	8	cuiuscunque
+quicunque	9	quāruncunque
+quicunque	10	cuiuscunque
+quicunque	11	quōruncunque
+quicunque	12	cuicunque
+quicunque	13	quibuscunque
+quicunque	14	cuicunque
+quicunque	15	quibuscunque
+quicunque	16	cuicunque
+quicunque	17	quibuscunque
+quicunque	18	quencunque
+quicunque	19	quōscunque
+quicunque	20	quancunque
+quicunque	21	quāscunque
+quicunque	22	quodcunque
+quicunque	23	quaecunque
+quicunque	24	quōcunque
+quicunque	25	quibuscunque
+quicunque	26	quācunque
+quicunque	27	quibuscunque
+quicunque	28	quōcunque
+quicunque	29	quibuscunque
+quidam	4	quiddam
+quidam	22	quiddam
+quidquid	1	quaequae
+quidquid	2	quidquid
+quidquid	3	quaequae
+quidquid	4	quidquid
+quidquid	5	quaequae
+quidquid	6	cuiuscuius
+quidquid	7	quōrumquōrum
+quidquid	8	cuiuscuius
+quidquid	9	quōrumquōrum
+quidquid	10	cuiuscuius
+quidquid	11	quōrumquōrum
+quidquid	12	cuicui
+quidquid	13	quibusquibus
+quidquid	14	cuicui
+quidquid	15	quibusquibus
+quidquid	16	cuicui
+quidquid	17	quibusquibus
+quidquid	18	quidquid
+quidquid	19	quaequae
+quidquid	20	quidquid
+quidquid	21	quaequae
+quidquid	22	quidquid
+quidquid	23	quaequae
+quidquid	24	quōquō
+quidquid	25	quibusquibus
+quidquid	26	quōquō
+quidquid	27	quibusquibus
+quidquid	28	quōquō
+quidquid	29	quibusquibus
+quidquid	30	quidquid
+quidquid	31	quaequae
+quidquid	32	quidquid
+quidquid	33	quaequae
+quidquid	34	quidquid
+quidquid	35	quaequae
+quidquidlibet	1	quaequaelibet
+quidquidlibet	2	quidquidlibet
+quidquidlibet	3	quaequaelibet
+quidquidlibet	4	quidquidlibet
+quidquidlibet	5	quaequaelibet
+quidquidlibet	6	cuiuscuiuslibet
+quidquidlibet	7	quōrumquōrumlibet
+quidquidlibet	8	cuiuscuiuslibet
+quidquidlibet	9	quōrumquōrumlibet
+quidquidlibet	10	cuiuscuiuslibet
+quidquidlibet	11	quōrumquōrumlibet
+quidquidlibet	12	cuicuilibet
+quidquidlibet	13	quibusquibuslibet
+quidquidlibet	14	cuicuilibet
+quidquidlibet	15	quibusquibuslibet
+quidquidlibet	16	cuicuilibet
+quidquidlibet	17	quibusquibuslibet
+quidquidlibet	18	quidquidlibet
+quidquidlibet	19	quaequaelibet
+quidquidlibet	20	quidquidlibet
+quidquidlibet	21	quaequaelibet
+quidquidlibet	22	quidquidlibet
+quidquidlibet	23	quaequaelibet
+quidquidlibet	24	quōquōlibet
+quidquidlibet	25	quibusquibuslibet
+quidquidlibet	26	quōquōlibet
+quidquidlibet	27	quibusquibuslibet
+quidquidlibet	28	quōquōlibet
+quidquidlibet	29	quibusquibuslibet
+quidquidlibet	31	quaequaelibet
+quidquidlibet	32	quidquidlibet
+quidquidlibet	33	quaequaelibet
+quidquidlibet	34	quidquidlibet
+quidquidlibet	35	quaequaelibet
+quilibet	1	quīlibet
+quilibet	2	quaelibet
+quilibet	3	quaelibet
+quilibet	4	quodlibet
+quilibet	5	quaelibet
+quilibet	6	cuiuslibet
+quilibet	7	quōrumlibet
+quilibet	8	cuiuslibet
+quilibet	9	quārumlibet
+quilibet	10	cuiuslibet
+quilibet	11	quōrumlibet
+quilibet	12	cuilibet
+quilibet	13	quibuslibet
+quilibet	14	cuilibet
+quilibet	15	quibuslibet
+quilibet	16	cuilibet
+quilibet	17	quibuslibet
+quilibet	18	quemlibet
+quilibet	19	quōslibet
+quilibet	20	quamlibet
+quilibet	21	quāslibet
+quilibet	22	quodlibet
+quilibet	23	quaelibet
+quilibet	24	quōlibet
+quilibet	25	quibuslibet
+quilibet	26	quālibet
+quilibet	27	quibuslibet
+quilibet	28	quōlibet
+quilibet	29	quibuslibet
+quilubet	1	quīlubet
+quilubet	2	quaelubet
+quilubet	3	quaelubet
+quilubet	4	quodlubet
+quilubet	5	quaelubet
+quilubet	6	cuiuslubet
+quilubet	7	quōrumlubet
+quilubet	8	cuiuslubet
+quilubet	9	quārumlubet
+quilubet	10	cuiuslubet
+quilubet	11	quōrumlubet
+quilubet	12	cuilubet
+quilubet	13	quibuslubet
+quilubet	14	cuilubet
+quilubet	15	quibuslubet
+quilubet	16	cuilubet
+quilubet	17	quibuslubet
+quilubet	18	quemlubet
+quilubet	19	quōslubet
+quilubet	20	quamlubet
+quilubet	21	quāslubet
+quilubet	22	quodlubet
+quilubet	23	quaelubet
+quilubet	24	quōlubet
+quilubet	25	quibuslubet
+quilubet	26	quālubet
+quilubet	27	quibuslubet
+quilubet	28	quōlubet
+quilubet	29	quibuslubet
+quis	1	quī
+quis	2	quae
+quis	3	quae
+quis	4	quid
+quis	5	quae
+quis	6	cuius
+quis	7	quōrum
+quis	8	cuius
+quis	9	quārum
+quis	10	cuius
+quis	11	quōrum
+quis	12	cui
+quis	13	quibus
+quis	14	cui
+quis	15	quibus
+quis	16	cui
+quis	17	quibus
+quis	18	quem
+quis	19	quōs
+quis	20	quam
+quis	21	quās
+quis	22	quid
+quis	23	quae
+quis	24	quō
+quis	25	quibus
+quis	26	quā
+quis	27	quibus
+quis	28	quō
+quis	29	quibus
+quispiam	1	quīpiam
+quispiam	2	quaepiam
+quispiam	3	quaepiam
+quispiam	4	quidpiam
+quispiam	5	quaepiam
+quispiam	6	cuiuspiam
+quispiam	7	quōrumpiam
+quispiam	8	cuiuspiam
+quispiam	9	quārumpiam
+quispiam	10	cuiuspiam
+quispiam	11	quōrumpiam
+quispiam	12	cuipiam
+quispiam	13	quibuspiam
+quispiam	14	cuipiam
+quispiam	15	quibuspiam
+quispiam	16	cuipiam
+quispiam	17	quibuspiam
+quispiam	18	quempiam
+quispiam	19	quōspiam
+quispiam	20	quampiam
+quispiam	21	quāspiam
+quispiam	22	quidpiam
+quispiam	23	quaepiam
+quispiam	24	quōpiam
+quispiam	25	quibuspiam
+quispiam	26	quāpiam
+quispiam	27	quibuspiam
+quispiam	28	quōpiam
+quispiam	29	quibuspiam
+quisquam	2	quisquam
+quisquam	4	quicquam
+quisquam	6	cuiusquam
+quisquam	8	cuiusquam
+quisquam	10	cuiusquam
+quisquam	12	cuiquam
+quisquam	14	cuiquam
+quisquam	16	cuiquam
+quisquam	18	quemquam
+quisquam	20	quemquam
+quisquam	22	quicquam
+quisquam	24	quōquam
+quisquam	26	quōquam
+quisquam	28	quōquam
+quisquamne	1	quīquamne
+quisquamne	2	quaequamne
+quisquamne	3	quaequamne
+quisquamne	4	quidquamne
+quisquamne	5	quaequamne
+quisquamne	6	cuiusquamne
+quisquamne	7	quōrumquamne
+quisquamne	8	cuiusquamne
+quisquamne	9	quārumquamne
+quisquamne	10	cuiusquamne
+quisquamne	11	quōrumquamne
+quisquamne	12	cuiquamne
+quisquamne	13	quibusquamne
+quisquamne	14	cuiquamne
+quisquamne	15	quibusquamne
+quisquamne	16	cuiquamne
+quisquamne	17	quibusquamne
+quisquamne	18	quemquamne
+quisquamne	19	quōsquamne
+quisquamne	20	quamquamne
+quisquamne	21	quāsquamne
+quisquamne	22	quidquamne
+quisquamne	23	quaequamne
+quisquamne	24	quōquamne
+quisquamne	25	quibusquamne
+quisquamne	26	quāquamne
+quisquamne	27	quibusquamne
+quisquamne	28	quōquamne
+quisquamne	29	quibusquamne
+quisque	1	quīque
+quisque	2	quaeque
+quisque	3	quaeque
+quisque	4	quidque
+quisque	5	quaeque
+quisque	6	cuiusque
+quisque	7	quōrumque
+quisque	8	cuiusque
+quisque	9	quārumque
+quisque	10	cuiusque
+quisque	11	quōrumque
+quisque	12	cuique
+quisque	13	quibusque
+quisque	14	cuique
+quisque	15	quibusque
+quisque	16	cuique
+quisque	17	quibusque
+quisque	18	quemque
+quisque	19	quōsque
+quisque	20	quamque
+quisque	21	quāsque
+quisque	22	quidque
+quisque	23	quaeque
+quisque	24	quōque
+quisque	25	quibusque
+quisque	26	quāque
+quisque	27	quibusque
+quisque	28	quōque
+quisque	29	quibusque
+quisquidem	1	quīquidem
+quisquidem	2	quaequidem
+quisquidem	3	quaequidem
+quisquidem	4	quidquidem
+quisquidem	5	quaequidem
+quisquidem	6	cuiusquidem
+quisquidem	7	quōrumquidem
+quisquidem	8	cuiusquidem
+quisquidem	9	quārumquidem
+quisquidem	10	cuiusquidem
+quisquidem	11	quōrumquidem
+quisquidem	12	cuiquidem
+quisquidem	13	quibusquidem
+quisquidem	14	cuiquidem
+quisquidem	15	quibusquidem
+quisquidem	16	cuiquidem
+quisquidem	17	quibusquidem
+quisquidem	18	quemquidem
+quisquidem	19	quōsquidem
+quisquidem	20	quamquidem
+quisquidem	21	quāsquidem
+quisquidem	22	quidquidem
+quisquidem	23	quaequidem
+quisquidem	24	quōquidem
+quisquidem	25	quibusquidem
+quisquidem	26	quāquidem
+quisquidem	27	quibusquidem
+quisquidem	28	quōquidem
+quisquidem	29	quibusquidem
+quisquis	1	quīquī
+quisquis	2	quisquis
+quisquis	3	quaequae
+quisquis	4	quidquid
+quisquis	5	quaequae
+quisquis	6	cuiuscuius
+quisquis	7	quōrumquōrum
+quisquis	8	cuiuscuius
+quisquis	9	quārumquārum
+quisquis	10	cuiuscuius
+quisquis	11	quōrumquōrum
+quisquis	12	cuicui
+quisquis	13	quibusquibus
+quisquis	14	cuicui
+quisquis	15	quibusquibus
+quisquis	16	cuicui
+quisquis	17	quibusquibus
+quisquis	18	quemquem
+quisquis	19	quōsquōs
+quisquis	20	quamquam
+quisquis	21	quāsquās
+quisquis	22	quidquid
+quisquis	23	quaequae
+quisquis	24	quōquō
+quisquis	25	quibusquibus
+quisquis	26	quāquā
+quisquis	27	quibusquibus
+quisquis	28	quōquō
+quisquis	29	quibusquibus
+quisquis	30	quisquis
+quisquis	31	quīquī
+quisquis	32	quisquis
+quisquis	33	quaequae
+quisquis	34	quidquid
+quisquis	35	quaequae
+quivis	2	quaevīs
+quivis	3	quaevīs
+quivis	4	quidvīs
+quivis	5	quaevīs
+quivis	6	cuiusvīs
+quivis	7	quōrunvīs
+quivis	8	cuiusvīs
+quivis	9	quārunvīs
+quivis	10	cuiusvīs
+quivis	11	quōrunvīs
+quivis	12	cuivīs
+quivis	13	quibusvīs
+quivis	14	cuivīs
+quivis	15	quibusvīs
+quivis	16	cuivīs
+quivis	17	quibusvīs
+quivis	18	quenvīs
+quivis	19	quōsvīs
+quivis	20	quanvīs
+quivis	21	quāsvīs
+quivis	22	quidvīs
+quivis	23	quaevīs
+quivis	24	quōvīs
+quivis	25	quibusvīs
+quivis	26	quāvīs
+quivis	27	quibusvīs
+quivis	28	quōvīs
+quivis	29	quibusvīs
+quiviscumque	1	quīcumque
+quiviscumque	2	quaevīscumque
+quiviscumque	3	quaecumque
+quiviscumque	4	quodcumque
+quiviscumque	5	quaevīscumque
+quiviscumque	6	cuiuscumque
+quiviscumque	7	quōrumcumque
+quiviscumque	8	cuiuscumque
+quiviscumque	9	quārumcumque
+quiviscumque	10	cuiuscumque
+quiviscumque	11	quōrumcumque
+quiviscumque	12	cuicumque
+quiviscumque	13	quibuscumque
+quiviscumque	14	cuicumque
+quiviscumque	15	quibuscumque
+quiviscumque	16	cuicumque
+quiviscumque	17	quibuscumque
+quiviscumque	18	quemcumque
+quiviscumque	19	quōscumque
+quiviscumque	20	quamcumque
+quiviscumque	21	quāscumque
+quiviscumque	22	quodcumque
+quiviscumque	23	quaevīscumque
+quiviscumque	24	quōcumque
+quiviscumque	25	quibuscumque
+quiviscumque	26	quācumque
+quiviscumque	27	quibuscumque
+quiviscumque	28	quōcumque
+quiviscumque	29	quibuscumque
+seipse	4	seipsum
+seipse	22	seipsum
+semet	6	suīmet
+semet	7	suīmet
+semet	8	suīmet
+semet	9	suīmet
+semet	10	suīmet
+semet	11	suīmet
+semet	12	sibimet
+semet	13	sibimet
+semet	14	sibimet
+semet	15	sibimet
+semet	16	sibimet
+semet	17	sibimet
+semet	18	sēmet
+semet	19	sēmet
+semet	20	sēmet
+semet	21	sēmet
+semet	22	sēmet
+semet	23	sēmet
+semet	24	sēmet
+semet	25	sēmet
+semet	26	sēmet
+semet	27	sēmet
+semet	28	sēmet
+semet	29	sēmet
+sibi	6	suī
+sibi	8	suī
+sibi	10	suī
+sibi	12	sibī
+sibi	14	sibī
+sibi	16	sibī
+sibi	18	sē
+sibi	20	sē
+sibi	22	sē
+sibi	24	sē
+sibi	26	sē
+sibi	28	sē
+siquis	1	sīquī
+siquis	2	sīqua
+siquis	3	sīquae
+siquis	4	sīquid
+siquis	5	sīqua
+siquis	12	sīcui
+siquis	13	sīquibus
+siquis	14	sīcui
+siquis	15	sīquibus
+siquis	16	sīcui
+siquis	17	sīquibus
+siquis	18	sīquem
+siquis	19	sīquōs
+siquis	20	sīquam
+siquis	21	sīquās
+siquis	22	sīquid
+siquis	23	sīqua
+siquis	24	sīquō
+siquis	25	sīquibus
+siquis	26	sīquā
+siquis	27	sīquibus
+siquis	28	sīquō
+siquis	29	sīquibus
+temet	0	tūtemet
+temet	2	tūtemet
+temet	4	tūtemet
+temet	6	tuīmet
+temet	8	tuīmet
+temet	10	tuīmet
+temet	12	tibimet
+temet	14	tibimet
+temet	16	tibimet
+temet	18	temet
+temet	20	temet
+temet	22	temet
+temet	24	temet
+temet	26	temet
+temet	28	temet
+temet	30	tūtemet
+temet	32	tūtemet
+temet	34	tūtemet
+tutemet	2	tūtemet
+tutemet	4	tūtemet
+tutemet	6	tuīmet
+tutemet	8	tuīmet
+tutemet	10	tuīmet
+tutemet	12	tibimet
+tutemet	14	tibimet
+tutemet	16	tibimet
+tutemet	18	temet
+tutemet	20	temet
+tutemet	22	temet
+tutemet	24	temet
+tutemet	26	temet
+tutemet	28	temet
+tutemet	32	tūtemet
+tutemet	34	tūtemet
+ullus	6	ūllīus
+ullus	8	ūllīus
+ullus	10	ūllīus
+ullus	12	ūllī
+ullus	14	ūllī
+ullus	16	ūllī
+unusquisque	2	ūnaquaeque
+unusquisque	4	ūnumquidque
+unusquisque	6	ūnīuscuiusque
+unusquisque	8	ūnīuscuiusque
+unusquisque	10	ūnīuscuiusque
+unusquisque	12	ūnīcuique
+unusquisque	14	ūnīcuique
+unusquisque	16	ūnīcuique
+unusquisque	18	ūnumquemque
+unusquisque	20	ūnamquamque
+unusquisque	22	ūnumquidque
+unusquisque	24	ūnōquōque
+unusquisque	26	ūnāquāque
+unusquisque	28	ūnōquōque
+uter	6	utrīus
+uter	8	utrīus
+uter	10	utrīus
+uter	12	utrī
+uter	14	utrī
+uter	16	utrī
+utercumque	1	utrīcumque
+utercumque	2	utracumque
+utercumque	3	utraecumque
+utercumque	4	utrumcumque
+utercumque	5	utracumque
+utercumque	6	utrīuscumque
+utercumque	7	utrōrumcumque
+utercumque	8	utrīuscumque
+utercumque	9	utrārumcumque
+utercumque	10	utrīuscumque
+utercumque	11	utrōrumcumque
+utercumque	12	utrīcumque
+utercumque	13	utrīscumque
+utercumque	14	utrīcumque
+utercumque	15	utrīscumque
+utercumque	16	utrīcumque
+utercumque	17	utrīscumque
+utercumque	18	utrumcumque
+utercumque	19	utrōscumque
+utercumque	20	utramcumque
+utercumque	21	utrāscumque
+utercumque	22	utrumcumque
+utercumque	23	utracumque
+utercumque	24	utrōcumque
+utercumque	25	utrīscumque
+utercumque	26	utrācumque
+utercumque	27	utrīscumque
+utercumque	28	utrōcumque
+utercumque	29	utrīscumque
+utercumque	31	utrīcumque
+utercumque	32	utracumque
+utercumque	33	utraecumque
+utercumque	34	utrumcumque
+utercumque	35	utracumque
+uterlibet	1	utrīlibet
+uterlibet	2	utralibet
+uterlibet	3	utraelibet
+uterlibet	4	utrumlibet
+uterlibet	5	utralibet
+uterlibet	6	utrīuslibet
+uterlibet	7	utrōrumlibet
+uterlibet	8	utrīuslibet
+uterlibet	9	utrārumlibet
+uterlibet	10	utrīuslibet
+uterlibet	11	utrōrumlibet
+uterlibet	12	utrīlibet
+uterlibet	13	utrīslibet
+uterlibet	14	utrīlibet
+uterlibet	15	utrīslibet
+uterlibet	16	utrīlibet
+uterlibet	17	utrīslibet
+uterlibet	18	utrumlibet
+uterlibet	19	utrōslibet
+uterlibet	20	utramlibet
+uterlibet	21	utrāslibet
+uterlibet	22	utrumlibet
+uterlibet	23	utralibet
+uterlibet	24	utrōlibet
+uterlibet	25	utrīslibet
+uterlibet	26	utrālibet
+uterlibet	27	utrīslibet
+uterlibet	28	utrōlibet
+uterlibet	29	utrīslibet
+uterlibet	31	utrīlibet
+uterlibet	32	utralibet
+uterlibet	33	utraelibet
+uterlibet	34	utrumlibet
+uterlibet	35	utralibet
+uterque	1	utrīque
+uterque	2	utraque
+uterque	3	utraeque
+uterque	4	utrumque
+uterque	5	utraque
+uterque	6	utrīusque
+uterque	7	utrōrumque
+uterque	8	utrīusque
+uterque	9	utrārumque
+uterque	10	utrīusque
+uterque	11	utrōrumque
+uterque	12	utrīque
+uterque	13	utrīsque
+uterque	14	utrīque
+uterque	15	utrīsque
+uterque	16	utrīque
+uterque	17	utrīsque
+uterque	18	utrumque
+uterque	19	utrōsque
+uterque	20	utramque
+uterque	21	utrāsque
+uterque	22	utrumque
+uterque	23	utraque
+uterque	24	utrōque
+uterque	25	utrīsque
+uterque	26	utrāque
+uterque	27	utrīsque
+uterque	28	utrōque
+uterque	29	utrīsque
+uterque	31	utrīque
+uterque	32	utraque
+uterque	33	utraeque
+uterque	34	utrumque
+uterque	35	utraque
+utervis	1	utrīvīs
+utervis	2	utravīs
+utervis	3	utraevīs
+utervis	4	utrumvīs
+utervis	5	utravīs
+utervis	6	utrīusvīs
+utervis	7	utrōrumvīs
+utervis	8	utrīusvīs
+utervis	9	utrārumvīs
+utervis	10	utrīusvīs
+utervis	11	utrōrumvīs
+utervis	12	utrīvīs
+utervis	13	utrīsvīs
+utervis	14	utrīvīs
+utervis	15	utrīsvīs
+utervis	16	utrīvīs
+utervis	17	utrīsvīs
+utervis	18	utrumvīs
+utervis	19	utrōsvīs
+utervis	20	utramvīs
+utervis	21	utrāsvīs
+utervis	22	utrumvīs
+utervis	23	utravīs
+utervis	24	utrōvīs
+utervis	25	utrīsvīs
+utervis	26	utrāvīs
+utervis	27	utrīsvīs
+utervis	28	utrōvīs
+utervis	29	utrīsvīs
+utervis	31	utrīvīs
+utervis	32	utravīs
+utervis	33	utraevīs
+utervis	34	utrumvīs
+utervis	35	utravīs
+vosmet	1	vōsmet
+vosmet	3	vōsmet
+vosmet	5	vōsmet
+vosmet	13	vōbīsmet
+vosmet	15	vōbīsmet
+vosmet	17	vōbīsmet
+vosmet	19	vōsmet
+vosmet	21	vōsmet
+vosmet	23	vōsmet
+vosmet	25	vōbīsmet
+vosmet	27	vōbīsmet
+vosmet	29	vōbīsmet
+vosmet	31	vōsmet
+vosmet	33	vōsmet
+vosmet	35	vōsmet
+"#,
+    ),
 };

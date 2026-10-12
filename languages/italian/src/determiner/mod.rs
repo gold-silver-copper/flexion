@@ -10,8 +10,8 @@ mod spellings;
 
 pub use paradigms::Declension;
 
-use crate::*;
-use flexion::{Candidate, Grammar, Known, Reading};
+use flexion::Grammar;
+use flexion::{Candidate, Known, Reading};
 use std::borrow::Cow;
 
 /// Each cell's place in a paradigm.
@@ -38,8 +38,8 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
     accent: None,
     laws: None,
     spellings: Cow::Borrowed(spellings::SPELLINGS),
-    hidden: 0.0,
-    irregular: Cow::Borrowed(irregular::IRREGULAR),
+    marks: None,
+    irregular: irregular::IRREGULAR,
     smoothing: 2.0,
     sharpness: 3.0,
 };
@@ -48,24 +48,24 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Cell {
     /// A determiner or numeral agreeing in gender and number.
-    Form(Gender, Number),
+    Form(crate::Gender, crate::Number),
 }
 
 impl Cell {
     /// Its place in a paradigm.
     pub const fn index(self) -> usize {
         let cell = match self {
-            Cell::Form(Gender::Masculine, Number::Singular) => cell::M_SG,
-            Cell::Form(Gender::Masculine, Number::Plural) => cell::M_PL,
-            Cell::Form(Gender::Feminine, Number::Singular) => cell::F_SG,
-            Cell::Form(Gender::Feminine, Number::Plural) => cell::F_PL,
+            Cell::Form(crate::Gender::Masculine, crate::Number::Singular) => cell::M_SG,
+            Cell::Form(crate::Gender::Masculine, crate::Number::Plural) => cell::M_PL,
+            Cell::Form(crate::Gender::Feminine, crate::Number::Singular) => cell::F_SG,
+            Cell::Form(crate::Gender::Feminine, crate::Number::Plural) => cell::F_PL,
         };
         cell as usize
     }
 }
 
-impl From<(Gender, Number)> for Cell {
-    fn from((gender, number): (Gender, Number)) -> Self {
+impl From<(crate::Gender, crate::Number)> for Cell {
+    fn from((gender, number): (crate::Gender, crate::Number)) -> Self {
         Cell::Form(gender, number)
     }
 }

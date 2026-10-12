@@ -13,8 +13,8 @@ mod spellings;
 
 pub use paradigms::Conjugation;
 
-use crate::*;
-use flexion::{Candidate, Grammar, Known, Reading};
+use flexion::Grammar;
+use flexion::{Candidate, Known, Reading};
 use std::borrow::Cow;
 
 /// Each cell's place in a paradigm.
@@ -91,8 +91,8 @@ pub static GRAMMAR: Grammar<'static, Conjugation, u8, crate::Auxiliary> = Gramma
     accent: None,
     laws: None,
     spellings: Cow::Borrowed(spellings::SPELLINGS),
-    hidden: 0.0,
-    irregular: Cow::Borrowed(irregular::IRREGULAR),
+    marks: None,
+    irregular: irregular::IRREGULAR,
     smoothing: 2.0,
     sharpness: 1.25,
 };
@@ -101,138 +101,254 @@ pub static GRAMMAR: Grammar<'static, Conjugation, u8, crate::Auxiliary> = Gramma
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Cell {
     /// A finite form, as in a main clause (`er fängt an`).
-    Form(Tense, Person, Number),
+    Form(crate::Tense, crate::Person, crate::Number),
     /// A finite form as in a subordinate clause (`dass er anfängt`): the same as [`verb`] except for separable verbs.
-    Subordinate(Tense, Person, Number),
+    Subordinate(crate::Tense, crate::Person, crate::Number),
     /// The imperative (second person).
-    Imperative(Number),
+    Imperative(crate::Number),
     /// The infinitive.
     Infinitive,
     /// The one-word infinitive with `zu` of a separable verb (`anzufangen`).
     ZuInfinitive,
     /// A participle.
-    Participle(Participle),
+    Participle(crate::Participle),
 }
 
 impl Cell {
     /// Its place in a paradigm.
     pub const fn index(self) -> usize {
         let cell = match self {
-            Cell::Form(Tense::Present, Person::First, Number::Singular) => cell::PRES_1_SG,
-            Cell::Form(Tense::Present, Person::First, Number::Plural) => cell::PRES_1_PL,
-            Cell::Form(Tense::Present, Person::Second, Number::Singular) => cell::PRES_2_SG,
-            Cell::Form(Tense::Present, Person::Second, Number::Plural) => cell::PRES_2_PL,
-            Cell::Form(Tense::Present, Person::Third, Number::Singular) => cell::PRES_3_SG,
-            Cell::Form(Tense::Present, Person::Third, Number::Plural) => cell::PRES_3_PL,
-            Cell::Form(Tense::Preterite, Person::First, Number::Singular) => cell::PRET_1_SG,
-            Cell::Form(Tense::Preterite, Person::First, Number::Plural) => cell::PRET_1_PL,
-            Cell::Form(Tense::Preterite, Person::Second, Number::Singular) => cell::PRET_2_SG,
-            Cell::Form(Tense::Preterite, Person::Second, Number::Plural) => cell::PRET_2_PL,
-            Cell::Form(Tense::Preterite, Person::Third, Number::Singular) => cell::PRET_3_SG,
-            Cell::Form(Tense::Preterite, Person::Third, Number::Plural) => cell::PRET_3_PL,
-            Cell::Form(Tense::SubjunctiveI, Person::First, Number::Singular) => cell::SUBJ1_1_SG,
-            Cell::Form(Tense::SubjunctiveI, Person::First, Number::Plural) => cell::SUBJ1_1_PL,
-            Cell::Form(Tense::SubjunctiveI, Person::Second, Number::Singular) => cell::SUBJ1_2_SG,
-            Cell::Form(Tense::SubjunctiveI, Person::Second, Number::Plural) => cell::SUBJ1_2_PL,
-            Cell::Form(Tense::SubjunctiveI, Person::Third, Number::Singular) => cell::SUBJ1_3_SG,
-            Cell::Form(Tense::SubjunctiveI, Person::Third, Number::Plural) => cell::SUBJ1_3_PL,
-            Cell::Form(Tense::SubjunctiveII, Person::First, Number::Singular) => cell::SUBJ2_1_SG,
-            Cell::Form(Tense::SubjunctiveII, Person::First, Number::Plural) => cell::SUBJ2_1_PL,
-            Cell::Form(Tense::SubjunctiveII, Person::Second, Number::Singular) => cell::SUBJ2_2_SG,
-            Cell::Form(Tense::SubjunctiveII, Person::Second, Number::Plural) => cell::SUBJ2_2_PL,
-            Cell::Form(Tense::SubjunctiveII, Person::Third, Number::Singular) => cell::SUBJ2_3_SG,
-            Cell::Form(Tense::SubjunctiveII, Person::Third, Number::Plural) => cell::SUBJ2_3_PL,
-            Cell::Subordinate(Tense::Present, Person::First, Number::Singular) => {
-                cell::SUBORDINATE_PRES_1_SG
+            Cell::Form(crate::Tense::Present, crate::Person::First, crate::Number::Singular) => {
+                cell::PRES_1_SG
             }
-            Cell::Subordinate(Tense::Present, Person::First, Number::Plural) => {
-                cell::SUBORDINATE_PRES_1_PL
+            Cell::Form(crate::Tense::Present, crate::Person::First, crate::Number::Plural) => {
+                cell::PRES_1_PL
             }
-            Cell::Subordinate(Tense::Present, Person::Second, Number::Singular) => {
-                cell::SUBORDINATE_PRES_2_SG
+            Cell::Form(crate::Tense::Present, crate::Person::Second, crate::Number::Singular) => {
+                cell::PRES_2_SG
             }
-            Cell::Subordinate(Tense::Present, Person::Second, Number::Plural) => {
-                cell::SUBORDINATE_PRES_2_PL
+            Cell::Form(crate::Tense::Present, crate::Person::Second, crate::Number::Plural) => {
+                cell::PRES_2_PL
             }
-            Cell::Subordinate(Tense::Present, Person::Third, Number::Singular) => {
-                cell::SUBORDINATE_PRES_3_SG
+            Cell::Form(crate::Tense::Present, crate::Person::Third, crate::Number::Singular) => {
+                cell::PRES_3_SG
             }
-            Cell::Subordinate(Tense::Present, Person::Third, Number::Plural) => {
-                cell::SUBORDINATE_PRES_3_PL
+            Cell::Form(crate::Tense::Present, crate::Person::Third, crate::Number::Plural) => {
+                cell::PRES_3_PL
             }
-            Cell::Subordinate(Tense::Preterite, Person::First, Number::Singular) => {
-                cell::SUBORDINATE_PRET_1_SG
+            Cell::Form(crate::Tense::Preterite, crate::Person::First, crate::Number::Singular) => {
+                cell::PRET_1_SG
             }
-            Cell::Subordinate(Tense::Preterite, Person::First, Number::Plural) => {
-                cell::SUBORDINATE_PRET_1_PL
+            Cell::Form(crate::Tense::Preterite, crate::Person::First, crate::Number::Plural) => {
+                cell::PRET_1_PL
             }
-            Cell::Subordinate(Tense::Preterite, Person::Second, Number::Singular) => {
-                cell::SUBORDINATE_PRET_2_SG
+            Cell::Form(crate::Tense::Preterite, crate::Person::Second, crate::Number::Singular) => {
+                cell::PRET_2_SG
             }
-            Cell::Subordinate(Tense::Preterite, Person::Second, Number::Plural) => {
-                cell::SUBORDINATE_PRET_2_PL
+            Cell::Form(crate::Tense::Preterite, crate::Person::Second, crate::Number::Plural) => {
+                cell::PRET_2_PL
             }
-            Cell::Subordinate(Tense::Preterite, Person::Third, Number::Singular) => {
-                cell::SUBORDINATE_PRET_3_SG
+            Cell::Form(crate::Tense::Preterite, crate::Person::Third, crate::Number::Singular) => {
+                cell::PRET_3_SG
             }
-            Cell::Subordinate(Tense::Preterite, Person::Third, Number::Plural) => {
-                cell::SUBORDINATE_PRET_3_PL
+            Cell::Form(crate::Tense::Preterite, crate::Person::Third, crate::Number::Plural) => {
+                cell::PRET_3_PL
             }
-            Cell::Subordinate(Tense::SubjunctiveI, Person::First, Number::Singular) => {
-                cell::SUBORDINATE_SUBJ1_1_SG
+            Cell::Form(
+                crate::Tense::SubjunctiveI,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::SUBJ1_1_SG,
+            Cell::Form(crate::Tense::SubjunctiveI, crate::Person::First, crate::Number::Plural) => {
+                cell::SUBJ1_1_PL
             }
-            Cell::Subordinate(Tense::SubjunctiveI, Person::First, Number::Plural) => {
-                cell::SUBORDINATE_SUBJ1_1_PL
+            Cell::Form(
+                crate::Tense::SubjunctiveI,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::SUBJ1_2_SG,
+            Cell::Form(
+                crate::Tense::SubjunctiveI,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::SUBJ1_2_PL,
+            Cell::Form(
+                crate::Tense::SubjunctiveI,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::SUBJ1_3_SG,
+            Cell::Form(crate::Tense::SubjunctiveI, crate::Person::Third, crate::Number::Plural) => {
+                cell::SUBJ1_3_PL
             }
-            Cell::Subordinate(Tense::SubjunctiveI, Person::Second, Number::Singular) => {
-                cell::SUBORDINATE_SUBJ1_2_SG
-            }
-            Cell::Subordinate(Tense::SubjunctiveI, Person::Second, Number::Plural) => {
-                cell::SUBORDINATE_SUBJ1_2_PL
-            }
-            Cell::Subordinate(Tense::SubjunctiveI, Person::Third, Number::Singular) => {
-                cell::SUBORDINATE_SUBJ1_3_SG
-            }
-            Cell::Subordinate(Tense::SubjunctiveI, Person::Third, Number::Plural) => {
-                cell::SUBORDINATE_SUBJ1_3_PL
-            }
-            Cell::Subordinate(Tense::SubjunctiveII, Person::First, Number::Singular) => {
-                cell::SUBORDINATE_SUBJ2_1_SG
-            }
-            Cell::Subordinate(Tense::SubjunctiveII, Person::First, Number::Plural) => {
-                cell::SUBORDINATE_SUBJ2_1_PL
-            }
-            Cell::Subordinate(Tense::SubjunctiveII, Person::Second, Number::Singular) => {
-                cell::SUBORDINATE_SUBJ2_2_SG
-            }
-            Cell::Subordinate(Tense::SubjunctiveII, Person::Second, Number::Plural) => {
-                cell::SUBORDINATE_SUBJ2_2_PL
-            }
-            Cell::Subordinate(Tense::SubjunctiveII, Person::Third, Number::Singular) => {
-                cell::SUBORDINATE_SUBJ2_3_SG
-            }
-            Cell::Subordinate(Tense::SubjunctiveII, Person::Third, Number::Plural) => {
-                cell::SUBORDINATE_SUBJ2_3_PL
-            }
-            Cell::Imperative(Number::Singular) => cell::IMPERATIVE_SG,
-            Cell::Imperative(Number::Plural) => cell::IMPERATIVE_PL,
+            Cell::Form(
+                crate::Tense::SubjunctiveII,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::SUBJ2_1_SG,
+            Cell::Form(
+                crate::Tense::SubjunctiveII,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::SUBJ2_1_PL,
+            Cell::Form(
+                crate::Tense::SubjunctiveII,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::SUBJ2_2_SG,
+            Cell::Form(
+                crate::Tense::SubjunctiveII,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::SUBJ2_2_PL,
+            Cell::Form(
+                crate::Tense::SubjunctiveII,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::SUBJ2_3_SG,
+            Cell::Form(
+                crate::Tense::SubjunctiveII,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::SUBJ2_3_PL,
+            Cell::Subordinate(
+                crate::Tense::Present,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::SUBORDINATE_PRES_1_SG,
+            Cell::Subordinate(
+                crate::Tense::Present,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::SUBORDINATE_PRES_1_PL,
+            Cell::Subordinate(
+                crate::Tense::Present,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::SUBORDINATE_PRES_2_SG,
+            Cell::Subordinate(
+                crate::Tense::Present,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::SUBORDINATE_PRES_2_PL,
+            Cell::Subordinate(
+                crate::Tense::Present,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::SUBORDINATE_PRES_3_SG,
+            Cell::Subordinate(
+                crate::Tense::Present,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::SUBORDINATE_PRES_3_PL,
+            Cell::Subordinate(
+                crate::Tense::Preterite,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::SUBORDINATE_PRET_1_SG,
+            Cell::Subordinate(
+                crate::Tense::Preterite,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::SUBORDINATE_PRET_1_PL,
+            Cell::Subordinate(
+                crate::Tense::Preterite,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::SUBORDINATE_PRET_2_SG,
+            Cell::Subordinate(
+                crate::Tense::Preterite,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::SUBORDINATE_PRET_2_PL,
+            Cell::Subordinate(
+                crate::Tense::Preterite,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::SUBORDINATE_PRET_3_SG,
+            Cell::Subordinate(
+                crate::Tense::Preterite,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::SUBORDINATE_PRET_3_PL,
+            Cell::Subordinate(
+                crate::Tense::SubjunctiveI,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::SUBORDINATE_SUBJ1_1_SG,
+            Cell::Subordinate(
+                crate::Tense::SubjunctiveI,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::SUBORDINATE_SUBJ1_1_PL,
+            Cell::Subordinate(
+                crate::Tense::SubjunctiveI,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::SUBORDINATE_SUBJ1_2_SG,
+            Cell::Subordinate(
+                crate::Tense::SubjunctiveI,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::SUBORDINATE_SUBJ1_2_PL,
+            Cell::Subordinate(
+                crate::Tense::SubjunctiveI,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::SUBORDINATE_SUBJ1_3_SG,
+            Cell::Subordinate(
+                crate::Tense::SubjunctiveI,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::SUBORDINATE_SUBJ1_3_PL,
+            Cell::Subordinate(
+                crate::Tense::SubjunctiveII,
+                crate::Person::First,
+                crate::Number::Singular,
+            ) => cell::SUBORDINATE_SUBJ2_1_SG,
+            Cell::Subordinate(
+                crate::Tense::SubjunctiveII,
+                crate::Person::First,
+                crate::Number::Plural,
+            ) => cell::SUBORDINATE_SUBJ2_1_PL,
+            Cell::Subordinate(
+                crate::Tense::SubjunctiveII,
+                crate::Person::Second,
+                crate::Number::Singular,
+            ) => cell::SUBORDINATE_SUBJ2_2_SG,
+            Cell::Subordinate(
+                crate::Tense::SubjunctiveII,
+                crate::Person::Second,
+                crate::Number::Plural,
+            ) => cell::SUBORDINATE_SUBJ2_2_PL,
+            Cell::Subordinate(
+                crate::Tense::SubjunctiveII,
+                crate::Person::Third,
+                crate::Number::Singular,
+            ) => cell::SUBORDINATE_SUBJ2_3_SG,
+            Cell::Subordinate(
+                crate::Tense::SubjunctiveII,
+                crate::Person::Third,
+                crate::Number::Plural,
+            ) => cell::SUBORDINATE_SUBJ2_3_PL,
+            Cell::Imperative(crate::Number::Singular) => cell::IMPERATIVE_SG,
+            Cell::Imperative(crate::Number::Plural) => cell::IMPERATIVE_PL,
             Cell::Infinitive => cell::INFINITIVE,
             Cell::ZuInfinitive => cell::ZU_INFINITIVE,
-            Cell::Participle(Participle::Present) => cell::PARTICIPLE_PRES,
-            Cell::Participle(Participle::Past) => cell::PARTICIPLE_PAST,
+            Cell::Participle(crate::Participle::Present) => cell::PARTICIPLE_PRES,
+            Cell::Participle(crate::Participle::Past) => cell::PARTICIPLE_PAST,
         };
         cell as usize
     }
 }
 
-impl From<Number> for Cell {
-    fn from(number: Number) -> Self {
+impl From<crate::Number> for Cell {
+    fn from(number: crate::Number) -> Self {
         Cell::Imperative(number)
     }
 }
 
-impl From<Participle> for Cell {
-    fn from(participle: Participle) -> Self {
+impl From<crate::Participle> for Cell {
+    fn from(participle: crate::Participle) -> Self {
         Cell::Participle(participle)
     }
 }

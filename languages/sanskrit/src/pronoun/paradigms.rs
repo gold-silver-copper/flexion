@@ -151,9 +151,7 @@ pub enum Declension {
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 1] = [
-        Declension::कतम,
-    ];
+    pub const ALL: [Declension; 1] = [Declension::कतम];
 
     /// Its table.
     pub fn paradigm(self) -> Option<&'static Paradigm<'static>> {

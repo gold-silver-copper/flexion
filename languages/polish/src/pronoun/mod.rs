@@ -10,8 +10,8 @@ mod spellings;
 
 pub use paradigms::Declension;
 
-use crate::*;
-use flexion::{Candidate, Grammar, Known, Reading};
+use flexion::Grammar;
+use flexion::{Candidate, Known, Reading};
 use std::borrow::Cow;
 
 /// Each cell's place in a paradigm.
@@ -94,8 +94,8 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
     accent: None,
     laws: None,
     spellings: Cow::Borrowed(spellings::SPELLINGS),
-    hidden: 0.0,
-    irregular: Cow::Borrowed(irregular::IRREGULAR),
+    marks: None,
+    irregular: irregular::IRREGULAR,
     smoothing: 2.0,
     sharpness: 0.75,
 };
@@ -104,200 +104,326 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Cell {
     /// A declined pronoun or determiner.
-    Form(AdjectiveCase, Agreement, Animacy),
+    Form(crate::AdjectiveCase, crate::Agreement, crate::Animacy),
 }
 
 impl Cell {
     /// Its place in a paradigm.
     pub const fn index(self) -> usize {
         let cell = match self {
-            Cell::Form(AdjectiveCase::Nominative, Agreement::Masculine, Animacy::Animate) => {
-                cell::NOM_M_ANIM
-            }
-            Cell::Form(AdjectiveCase::Nominative, Agreement::Masculine, Animacy::Inanimate) => {
-                cell::NOM_M_INAN
-            }
-            Cell::Form(AdjectiveCase::Nominative, Agreement::Feminine, Animacy::Animate) => {
-                cell::NOM_F_ANIM
-            }
-            Cell::Form(AdjectiveCase::Nominative, Agreement::Feminine, Animacy::Inanimate) => {
-                cell::NOM_F_INAN
-            }
-            Cell::Form(AdjectiveCase::Nominative, Agreement::Neuter, Animacy::Animate) => {
-                cell::NOM_N_ANIM
-            }
-            Cell::Form(AdjectiveCase::Nominative, Agreement::Neuter, Animacy::Inanimate) => {
-                cell::NOM_N_INAN
-            }
-            Cell::Form(AdjectiveCase::Nominative, Agreement::Virile, Animacy::Animate) => {
-                cell::NOM_VIR_ANIM
-            }
-            Cell::Form(AdjectiveCase::Nominative, Agreement::Virile, Animacy::Inanimate) => {
-                cell::NOM_VIR_INAN
-            }
-            Cell::Form(AdjectiveCase::Nominative, Agreement::Nonvirile, Animacy::Animate) => {
-                cell::NOM_NVIR_ANIM
-            }
-            Cell::Form(AdjectiveCase::Nominative, Agreement::Nonvirile, Animacy::Inanimate) => {
-                cell::NOM_NVIR_INAN
-            }
-            Cell::Form(AdjectiveCase::Genitive, Agreement::Masculine, Animacy::Animate) => {
-                cell::GEN_M_ANIM
-            }
-            Cell::Form(AdjectiveCase::Genitive, Agreement::Masculine, Animacy::Inanimate) => {
-                cell::GEN_M_INAN
-            }
-            Cell::Form(AdjectiveCase::Genitive, Agreement::Feminine, Animacy::Animate) => {
-                cell::GEN_F_ANIM
-            }
-            Cell::Form(AdjectiveCase::Genitive, Agreement::Feminine, Animacy::Inanimate) => {
-                cell::GEN_F_INAN
-            }
-            Cell::Form(AdjectiveCase::Genitive, Agreement::Neuter, Animacy::Animate) => {
-                cell::GEN_N_ANIM
-            }
-            Cell::Form(AdjectiveCase::Genitive, Agreement::Neuter, Animacy::Inanimate) => {
-                cell::GEN_N_INAN
-            }
-            Cell::Form(AdjectiveCase::Genitive, Agreement::Virile, Animacy::Animate) => {
-                cell::GEN_VIR_ANIM
-            }
-            Cell::Form(AdjectiveCase::Genitive, Agreement::Virile, Animacy::Inanimate) => {
-                cell::GEN_VIR_INAN
-            }
-            Cell::Form(AdjectiveCase::Genitive, Agreement::Nonvirile, Animacy::Animate) => {
-                cell::GEN_NVIR_ANIM
-            }
-            Cell::Form(AdjectiveCase::Genitive, Agreement::Nonvirile, Animacy::Inanimate) => {
-                cell::GEN_NVIR_INAN
-            }
-            Cell::Form(AdjectiveCase::Dative, Agreement::Masculine, Animacy::Animate) => {
-                cell::DAT_M_ANIM
-            }
-            Cell::Form(AdjectiveCase::Dative, Agreement::Masculine, Animacy::Inanimate) => {
-                cell::DAT_M_INAN
-            }
-            Cell::Form(AdjectiveCase::Dative, Agreement::Feminine, Animacy::Animate) => {
-                cell::DAT_F_ANIM
-            }
-            Cell::Form(AdjectiveCase::Dative, Agreement::Feminine, Animacy::Inanimate) => {
-                cell::DAT_F_INAN
-            }
-            Cell::Form(AdjectiveCase::Dative, Agreement::Neuter, Animacy::Animate) => {
-                cell::DAT_N_ANIM
-            }
-            Cell::Form(AdjectiveCase::Dative, Agreement::Neuter, Animacy::Inanimate) => {
-                cell::DAT_N_INAN
-            }
-            Cell::Form(AdjectiveCase::Dative, Agreement::Virile, Animacy::Animate) => {
-                cell::DAT_VIR_ANIM
-            }
-            Cell::Form(AdjectiveCase::Dative, Agreement::Virile, Animacy::Inanimate) => {
-                cell::DAT_VIR_INAN
-            }
-            Cell::Form(AdjectiveCase::Dative, Agreement::Nonvirile, Animacy::Animate) => {
-                cell::DAT_NVIR_ANIM
-            }
-            Cell::Form(AdjectiveCase::Dative, Agreement::Nonvirile, Animacy::Inanimate) => {
-                cell::DAT_NVIR_INAN
-            }
-            Cell::Form(AdjectiveCase::Accusative, Agreement::Masculine, Animacy::Animate) => {
-                cell::ACC_M_ANIM
-            }
-            Cell::Form(AdjectiveCase::Accusative, Agreement::Masculine, Animacy::Inanimate) => {
-                cell::ACC_M_INAN
-            }
-            Cell::Form(AdjectiveCase::Accusative, Agreement::Feminine, Animacy::Animate) => {
-                cell::ACC_F_ANIM
-            }
-            Cell::Form(AdjectiveCase::Accusative, Agreement::Feminine, Animacy::Inanimate) => {
-                cell::ACC_F_INAN
-            }
-            Cell::Form(AdjectiveCase::Accusative, Agreement::Neuter, Animacy::Animate) => {
-                cell::ACC_N_ANIM
-            }
-            Cell::Form(AdjectiveCase::Accusative, Agreement::Neuter, Animacy::Inanimate) => {
-                cell::ACC_N_INAN
-            }
-            Cell::Form(AdjectiveCase::Accusative, Agreement::Virile, Animacy::Animate) => {
-                cell::ACC_VIR_ANIM
-            }
-            Cell::Form(AdjectiveCase::Accusative, Agreement::Virile, Animacy::Inanimate) => {
-                cell::ACC_VIR_INAN
-            }
-            Cell::Form(AdjectiveCase::Accusative, Agreement::Nonvirile, Animacy::Animate) => {
-                cell::ACC_NVIR_ANIM
-            }
-            Cell::Form(AdjectiveCase::Accusative, Agreement::Nonvirile, Animacy::Inanimate) => {
-                cell::ACC_NVIR_INAN
-            }
-            Cell::Form(AdjectiveCase::Instrumental, Agreement::Masculine, Animacy::Animate) => {
-                cell::INS_M_ANIM
-            }
-            Cell::Form(AdjectiveCase::Instrumental, Agreement::Masculine, Animacy::Inanimate) => {
-                cell::INS_M_INAN
-            }
-            Cell::Form(AdjectiveCase::Instrumental, Agreement::Feminine, Animacy::Animate) => {
-                cell::INS_F_ANIM
-            }
-            Cell::Form(AdjectiveCase::Instrumental, Agreement::Feminine, Animacy::Inanimate) => {
-                cell::INS_F_INAN
-            }
-            Cell::Form(AdjectiveCase::Instrumental, Agreement::Neuter, Animacy::Animate) => {
-                cell::INS_N_ANIM
-            }
-            Cell::Form(AdjectiveCase::Instrumental, Agreement::Neuter, Animacy::Inanimate) => {
-                cell::INS_N_INAN
-            }
-            Cell::Form(AdjectiveCase::Instrumental, Agreement::Virile, Animacy::Animate) => {
-                cell::INS_VIR_ANIM
-            }
-            Cell::Form(AdjectiveCase::Instrumental, Agreement::Virile, Animacy::Inanimate) => {
-                cell::INS_VIR_INAN
-            }
-            Cell::Form(AdjectiveCase::Instrumental, Agreement::Nonvirile, Animacy::Animate) => {
-                cell::INS_NVIR_ANIM
-            }
-            Cell::Form(AdjectiveCase::Instrumental, Agreement::Nonvirile, Animacy::Inanimate) => {
-                cell::INS_NVIR_INAN
-            }
-            Cell::Form(AdjectiveCase::Locative, Agreement::Masculine, Animacy::Animate) => {
-                cell::LOC_M_ANIM
-            }
-            Cell::Form(AdjectiveCase::Locative, Agreement::Masculine, Animacy::Inanimate) => {
-                cell::LOC_M_INAN
-            }
-            Cell::Form(AdjectiveCase::Locative, Agreement::Feminine, Animacy::Animate) => {
-                cell::LOC_F_ANIM
-            }
-            Cell::Form(AdjectiveCase::Locative, Agreement::Feminine, Animacy::Inanimate) => {
-                cell::LOC_F_INAN
-            }
-            Cell::Form(AdjectiveCase::Locative, Agreement::Neuter, Animacy::Animate) => {
-                cell::LOC_N_ANIM
-            }
-            Cell::Form(AdjectiveCase::Locative, Agreement::Neuter, Animacy::Inanimate) => {
-                cell::LOC_N_INAN
-            }
-            Cell::Form(AdjectiveCase::Locative, Agreement::Virile, Animacy::Animate) => {
-                cell::LOC_VIR_ANIM
-            }
-            Cell::Form(AdjectiveCase::Locative, Agreement::Virile, Animacy::Inanimate) => {
-                cell::LOC_VIR_INAN
-            }
-            Cell::Form(AdjectiveCase::Locative, Agreement::Nonvirile, Animacy::Animate) => {
-                cell::LOC_NVIR_ANIM
-            }
-            Cell::Form(AdjectiveCase::Locative, Agreement::Nonvirile, Animacy::Inanimate) => {
-                cell::LOC_NVIR_INAN
-            }
+            Cell::Form(
+                crate::AdjectiveCase::Nominative,
+                crate::Agreement::Masculine,
+                crate::Animacy::Animate,
+            ) => cell::NOM_M_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Nominative,
+                crate::Agreement::Masculine,
+                crate::Animacy::Inanimate,
+            ) => cell::NOM_M_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Nominative,
+                crate::Agreement::Feminine,
+                crate::Animacy::Animate,
+            ) => cell::NOM_F_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Nominative,
+                crate::Agreement::Feminine,
+                crate::Animacy::Inanimate,
+            ) => cell::NOM_F_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Nominative,
+                crate::Agreement::Neuter,
+                crate::Animacy::Animate,
+            ) => cell::NOM_N_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Nominative,
+                crate::Agreement::Neuter,
+                crate::Animacy::Inanimate,
+            ) => cell::NOM_N_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Nominative,
+                crate::Agreement::Virile,
+                crate::Animacy::Animate,
+            ) => cell::NOM_VIR_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Nominative,
+                crate::Agreement::Virile,
+                crate::Animacy::Inanimate,
+            ) => cell::NOM_VIR_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Nominative,
+                crate::Agreement::Nonvirile,
+                crate::Animacy::Animate,
+            ) => cell::NOM_NVIR_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Nominative,
+                crate::Agreement::Nonvirile,
+                crate::Animacy::Inanimate,
+            ) => cell::NOM_NVIR_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Genitive,
+                crate::Agreement::Masculine,
+                crate::Animacy::Animate,
+            ) => cell::GEN_M_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Genitive,
+                crate::Agreement::Masculine,
+                crate::Animacy::Inanimate,
+            ) => cell::GEN_M_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Genitive,
+                crate::Agreement::Feminine,
+                crate::Animacy::Animate,
+            ) => cell::GEN_F_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Genitive,
+                crate::Agreement::Feminine,
+                crate::Animacy::Inanimate,
+            ) => cell::GEN_F_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Genitive,
+                crate::Agreement::Neuter,
+                crate::Animacy::Animate,
+            ) => cell::GEN_N_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Genitive,
+                crate::Agreement::Neuter,
+                crate::Animacy::Inanimate,
+            ) => cell::GEN_N_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Genitive,
+                crate::Agreement::Virile,
+                crate::Animacy::Animate,
+            ) => cell::GEN_VIR_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Genitive,
+                crate::Agreement::Virile,
+                crate::Animacy::Inanimate,
+            ) => cell::GEN_VIR_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Genitive,
+                crate::Agreement::Nonvirile,
+                crate::Animacy::Animate,
+            ) => cell::GEN_NVIR_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Genitive,
+                crate::Agreement::Nonvirile,
+                crate::Animacy::Inanimate,
+            ) => cell::GEN_NVIR_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Dative,
+                crate::Agreement::Masculine,
+                crate::Animacy::Animate,
+            ) => cell::DAT_M_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Dative,
+                crate::Agreement::Masculine,
+                crate::Animacy::Inanimate,
+            ) => cell::DAT_M_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Dative,
+                crate::Agreement::Feminine,
+                crate::Animacy::Animate,
+            ) => cell::DAT_F_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Dative,
+                crate::Agreement::Feminine,
+                crate::Animacy::Inanimate,
+            ) => cell::DAT_F_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Dative,
+                crate::Agreement::Neuter,
+                crate::Animacy::Animate,
+            ) => cell::DAT_N_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Dative,
+                crate::Agreement::Neuter,
+                crate::Animacy::Inanimate,
+            ) => cell::DAT_N_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Dative,
+                crate::Agreement::Virile,
+                crate::Animacy::Animate,
+            ) => cell::DAT_VIR_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Dative,
+                crate::Agreement::Virile,
+                crate::Animacy::Inanimate,
+            ) => cell::DAT_VIR_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Dative,
+                crate::Agreement::Nonvirile,
+                crate::Animacy::Animate,
+            ) => cell::DAT_NVIR_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Dative,
+                crate::Agreement::Nonvirile,
+                crate::Animacy::Inanimate,
+            ) => cell::DAT_NVIR_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Accusative,
+                crate::Agreement::Masculine,
+                crate::Animacy::Animate,
+            ) => cell::ACC_M_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Accusative,
+                crate::Agreement::Masculine,
+                crate::Animacy::Inanimate,
+            ) => cell::ACC_M_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Accusative,
+                crate::Agreement::Feminine,
+                crate::Animacy::Animate,
+            ) => cell::ACC_F_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Accusative,
+                crate::Agreement::Feminine,
+                crate::Animacy::Inanimate,
+            ) => cell::ACC_F_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Accusative,
+                crate::Agreement::Neuter,
+                crate::Animacy::Animate,
+            ) => cell::ACC_N_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Accusative,
+                crate::Agreement::Neuter,
+                crate::Animacy::Inanimate,
+            ) => cell::ACC_N_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Accusative,
+                crate::Agreement::Virile,
+                crate::Animacy::Animate,
+            ) => cell::ACC_VIR_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Accusative,
+                crate::Agreement::Virile,
+                crate::Animacy::Inanimate,
+            ) => cell::ACC_VIR_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Accusative,
+                crate::Agreement::Nonvirile,
+                crate::Animacy::Animate,
+            ) => cell::ACC_NVIR_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Accusative,
+                crate::Agreement::Nonvirile,
+                crate::Animacy::Inanimate,
+            ) => cell::ACC_NVIR_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Instrumental,
+                crate::Agreement::Masculine,
+                crate::Animacy::Animate,
+            ) => cell::INS_M_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Instrumental,
+                crate::Agreement::Masculine,
+                crate::Animacy::Inanimate,
+            ) => cell::INS_M_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Instrumental,
+                crate::Agreement::Feminine,
+                crate::Animacy::Animate,
+            ) => cell::INS_F_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Instrumental,
+                crate::Agreement::Feminine,
+                crate::Animacy::Inanimate,
+            ) => cell::INS_F_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Instrumental,
+                crate::Agreement::Neuter,
+                crate::Animacy::Animate,
+            ) => cell::INS_N_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Instrumental,
+                crate::Agreement::Neuter,
+                crate::Animacy::Inanimate,
+            ) => cell::INS_N_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Instrumental,
+                crate::Agreement::Virile,
+                crate::Animacy::Animate,
+            ) => cell::INS_VIR_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Instrumental,
+                crate::Agreement::Virile,
+                crate::Animacy::Inanimate,
+            ) => cell::INS_VIR_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Instrumental,
+                crate::Agreement::Nonvirile,
+                crate::Animacy::Animate,
+            ) => cell::INS_NVIR_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Instrumental,
+                crate::Agreement::Nonvirile,
+                crate::Animacy::Inanimate,
+            ) => cell::INS_NVIR_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Locative,
+                crate::Agreement::Masculine,
+                crate::Animacy::Animate,
+            ) => cell::LOC_M_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Locative,
+                crate::Agreement::Masculine,
+                crate::Animacy::Inanimate,
+            ) => cell::LOC_M_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Locative,
+                crate::Agreement::Feminine,
+                crate::Animacy::Animate,
+            ) => cell::LOC_F_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Locative,
+                crate::Agreement::Feminine,
+                crate::Animacy::Inanimate,
+            ) => cell::LOC_F_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Locative,
+                crate::Agreement::Neuter,
+                crate::Animacy::Animate,
+            ) => cell::LOC_N_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Locative,
+                crate::Agreement::Neuter,
+                crate::Animacy::Inanimate,
+            ) => cell::LOC_N_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Locative,
+                crate::Agreement::Virile,
+                crate::Animacy::Animate,
+            ) => cell::LOC_VIR_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Locative,
+                crate::Agreement::Virile,
+                crate::Animacy::Inanimate,
+            ) => cell::LOC_VIR_INAN,
+            Cell::Form(
+                crate::AdjectiveCase::Locative,
+                crate::Agreement::Nonvirile,
+                crate::Animacy::Animate,
+            ) => cell::LOC_NVIR_ANIM,
+            Cell::Form(
+                crate::AdjectiveCase::Locative,
+                crate::Agreement::Nonvirile,
+                crate::Animacy::Inanimate,
+            ) => cell::LOC_NVIR_INAN,
         };
         cell as usize
     }
 }
 
-impl From<(AdjectiveCase, Agreement, Animacy)> for Cell {
-    fn from((adjective_case, agreement, animacy): (AdjectiveCase, Agreement, Animacy)) -> Self {
+impl From<(crate::AdjectiveCase, crate::Agreement, crate::Animacy)> for Cell {
+    fn from(
+        (adjective_case, agreement, animacy): (
+            crate::AdjectiveCase,
+            crate::Agreement,
+            crate::Animacy,
+        ),
+    ) -> Self {
         Cell::Form(adjective_case, agreement, animacy)
     }
 }

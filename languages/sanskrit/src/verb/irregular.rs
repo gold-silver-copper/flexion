@@ -1,8445 +1,8450 @@
-//! The dictionary's forms no conjugation gives, as it writes them: `(word, cell,
-//! form)`, sorted. They are the answer for that word and cell.
+//! The dictionary's forms no conjugation gives, as it writes them: a line per form,
+//! the word, its cell's number (see `super::cell`) and the form, sorted by word
+//! and cell. They are the answer for that word and cell.
 
-use super::cell::*;
+use flexion::Irregular;
 use std::borrow::Cow;
 
-pub(super) static IRREGULAR: &[(Cow<'static, str>, u16, Cow<'static, str>)] = flexion::irregular! {
-    "अकर\u{94d}" AORIST_ACT_1_SG "अकरम\u{94d}",
-    "अकर\u{94d}" AORIST_ACT_1_DU "अकर\u{94d}व",
-    "अकर\u{94d}" AORIST_ACT_1_PL "अकर\u{94d}म",
-    "अकर\u{94d}" AORIST_ACT_2_SG "अकः",
-    "अकर\u{94d}" AORIST_ACT_3_SG "अकः",
-    "अकर\u{94d}" AORIST_ACT_3_PL "अक\u{94d}रन\u{94d}",
-    "अकर\u{94d}" AORIST_MID_1_SG "अक\u{94d}रि",
-    "अकर\u{94d}" AORIST_MID_1_DU "अक\u{943}वहि",
-    "अकर\u{94d}" AORIST_MID_1_PL "अक\u{943}महि",
-    "अकर\u{94d}" AORIST_MID_2_SG "अक\u{943}थाः",
-    "अकर\u{94d}" AORIST_MID_2_DU "अक\u{94d}राथाम\u{94d}",
-    "अकर\u{94d}" AORIST_MID_2_PL "अक\u{943}ध\u{94d}वम\u{94d}",
-    "अकर\u{94d}" AORIST_MID_3_SG "अक\u{943}त",
-    "अकर\u{94d}" AORIST_MID_3_DU "अक\u{94d}राताम\u{94d}",
-    "अकर\u{94d}" AORIST_MID_3_PL "अक\u{94d}रत",
-    "अकाङ\u{94d}क\u{94d}षीत\u{94d}" AORIST_ACT_1_SG "अकाङ\u{94d}क\u{94d}षम\u{94d}",
-    "अकाङ\u{94d}क\u{94d}षीत\u{94d}" AORIST_ACT_1_DU "अकाङ\u{94d}क\u{94d}ष\u{94d}व",
-    "अकाङ\u{94d}क\u{94d}षीत\u{94d}" AORIST_ACT_1_PL "अकाङ\u{94d}क\u{94d}ष\u{94d}म",
-    "अकाङ\u{94d}क\u{94d}षीत\u{94d}" AORIST_ACT_2_DU "अकाङ\u{94d}क\u{94d}तम\u{94d}",
-    "अकाङ\u{94d}क\u{94d}षीत\u{94d}" AORIST_ACT_2_PL "अकाङ\u{94d}क\u{94d}त",
-    "अकाङ\u{94d}क\u{94d}षीत\u{94d}" AORIST_ACT_3_DU "अकाङ\u{94d}क\u{94d}ताम\u{94d}",
-    "अकाङ\u{94d}क\u{94d}षीत\u{94d}" AORIST_ACT_3_PL "अकाङ\u{94d}क\u{94d}ष\u{941}ः",
-    "अक\u{94d}रन\u{94d}" AORIST_ACT_1_SG "अक\u{94d}रन\u{94d}दम\u{94d}",
-    "अक\u{94d}रन\u{94d}" AORIST_ACT_1_DU "अक\u{94d}रन\u{94d}द\u{94d}व",
-    "अक\u{94d}रन\u{94d}" AORIST_ACT_1_PL "अक\u{94d}रन\u{94d}द\u{94d}म",
-    "अक\u{94d}रन\u{94d}" AORIST_ACT_2_SG "अक\u{94d}रन\u{94d}",
-    "अक\u{94d}रन\u{94d}" AORIST_ACT_2_DU "अक\u{94d}रन\u{94d}त\u{94d}तम\u{94d}",
-    "अक\u{94d}रन\u{94d}" AORIST_ACT_2_PL "अक\u{94d}रन\u{94d}त\u{94d}त",
-    "अक\u{94d}रन\u{94d}" AORIST_ACT_3_SG "अक\u{94d}रन\u{94d}",
-    "अक\u{94d}रन\u{94d}" AORIST_ACT_3_DU "अक\u{94d}रन\u{94d}त\u{94d}ताम\u{94d}",
-    "अक\u{94d}रन\u{94d}" AORIST_ACT_3_PL "अक\u{94d}रदन\u{94d}",
-    "अक\u{94d}षति" IMP_ACT_1_SG "अक\u{94d}षाणि",
-    "अक\u{94d}षति" SUBJ_ACT_1_SG "अक\u{94d}षाणि",
-    "अक\u{94d}षति" PARTICIPLE_PRES_MID "अक\u{94d}षमाण",
-    "अगन\u{94d}" AORIST_ACT_1_SG "अगमम\u{94d}",
-    "अगन\u{94d}" AORIST_ACT_1_DU "अगन\u{94d}व",
-    "अगन\u{94d}" AORIST_ACT_1_PL "अगन\u{94d}म",
-    "अगन\u{94d}" AORIST_ACT_2_SG "अगन\u{94d}",
-    "अगन\u{94d}" AORIST_ACT_3_SG "अगन\u{94d}",
-    "अगन\u{94d}" AORIST_ACT_3_PL "अग\u{94d}मन\u{94d}",
-    "अगन\u{94d}" AORIST_MID_1_SG "अग\u{94d}मि",
-    "अगन\u{94d}" AORIST_MID_1_DU "अगन\u{94d}वहि",
-    "अगन\u{94d}" AORIST_MID_1_PL "अगन\u{94d}महि",
-    "अगन\u{94d}" AORIST_MID_2_SG "अगथाः",
-    "अगन\u{94d}" AORIST_MID_2_DU "अग\u{94d}माथाम\u{94d}",
-    "अगन\u{94d}" AORIST_MID_2_PL "अगध\u{94d}वम\u{94d}",
-    "अगन\u{94d}" AORIST_MID_3_SG "अगत",
-    "अगन\u{94d}" AORIST_MID_3_DU "अग\u{94d}माताम\u{94d}",
-    "अगन\u{94d}" AORIST_MID_3_PL "अग\u{94d}मत",
-    "अग\u{94d}रहीत\u{94d}" AORIST_ACT_1_SG "अग\u{94d}रहीषम\u{94d}",
-    "अग\u{94d}रहीत\u{94d}" AORIST_ACT_1_DU "अग\u{94d}रहीष\u{94d}व",
-    "अग\u{94d}रहीत\u{94d}" AORIST_ACT_1_PL "अग\u{94d}रहीष\u{94d}म",
-    "अग\u{94d}रहीत\u{94d}" AORIST_ACT_2_DU "अग\u{94d}रहीष\u{94d}टम\u{94d}",
-    "अग\u{94d}रहीत\u{94d}" AORIST_ACT_2_PL "अग\u{94d}रहीष\u{94d}ट",
-    "अग\u{94d}रहीत\u{94d}" AORIST_ACT_3_DU "अग\u{94d}रहीष\u{94d}टाम\u{94d}",
-    "अग\u{94d}रहीत\u{94d}" AORIST_ACT_3_PL "अग\u{94d}रहीष\u{941}ः",
-    "अग\u{94d}रहीत\u{94d}" AORIST_MID_1_SG "अग\u{94d}रहीषि",
-    "अग\u{94d}रहीत\u{94d}" AORIST_MID_1_DU "अग\u{94d}रहीष\u{94d}वहि",
-    "अग\u{94d}रहीत\u{94d}" AORIST_MID_1_PL "अग\u{94d}रहीष\u{94d}महि",
-    "अग\u{94d}रहीत\u{94d}" AORIST_MID_2_SG "अग\u{94d}रहीष\u{94d}ठाः",
-    "अग\u{94d}रहीत\u{94d}" AORIST_MID_2_DU "अग\u{94d}रहीषाथाम\u{94d}",
-    "अग\u{94d}रहीत\u{94d}" AORIST_MID_2_PL "अग\u{94d}रहीढ\u{94d}वम\u{94d}",
-    "अग\u{94d}रहीत\u{94d}" AORIST_MID_3_SG "अग\u{94d}रहीष\u{94d}ट",
-    "अग\u{94d}रहीत\u{94d}" AORIST_MID_3_DU "अग\u{94d}रहीषाताम\u{94d}",
-    "अग\u{94d}रहीत\u{94d}" AORIST_MID_3_PL "अग\u{94d}रहीषत",
-    "अघस\u{94d}" AORIST_ACT_1_SG "अघसम\u{94d}",
-    "अघस\u{94d}" AORIST_ACT_1_DU "अघस\u{94d}व",
-    "अघस\u{94d}" AORIST_ACT_1_PL "अघस\u{94d}म",
-    "अघस\u{94d}" AORIST_ACT_2_SG "अघः",
-    "अघस\u{94d}" AORIST_ACT_3_SG "अघः",
-    "अघस\u{94d}" AORIST_ACT_3_PL "अक\u{94d}षन\u{94d}",
-    "अघस\u{94d}" AORIST_MID_1_SG "अक\u{94d}षि",
-    "अघस\u{94d}" AORIST_MID_1_DU "अक\u{94d}ष\u{94d}वहि",
-    "अघस\u{94d}" AORIST_MID_1_PL "अक\u{94d}ष\u{94d}महि",
-    "अघस\u{94d}" AORIST_MID_2_SG "अग\u{94d}धाः",
-    "अघस\u{94d}" AORIST_MID_2_DU "अक\u{94d}षाथाम\u{94d}",
-    "अघस\u{94d}" AORIST_MID_2_PL "अग\u{94d}ध\u{94d}वम\u{94d}",
-    "अघस\u{94d}" AORIST_MID_3_SG "अग\u{94d}ध",
-    "अघस\u{94d}" AORIST_MID_3_DU "अक\u{94d}षाताम\u{94d}",
-    "अघस\u{94d}" AORIST_MID_3_PL "अक\u{94d}षत",
-    "अच\u{947}त\u{94d}" AORIST_ACT_1_SG "अचयम\u{94d}",
-    "अच\u{947}त\u{94d}" AORIST_ACT_1_DU "अच\u{947}व",
-    "अच\u{947}त\u{94d}" AORIST_ACT_1_PL "अच\u{947}म",
-    "अच\u{947}त\u{94d}" AORIST_ACT_3_PL "अच\u{94d}यन\u{94d}",
-    "अच\u{94d}छ\u{947}त\u{94d}" AORIST_ACT_1_SG "अच\u{94d}छ\u{947}दम\u{94d}",
-    "अच\u{94d}छ\u{947}त\u{94d}" AORIST_ACT_1_DU "अच\u{94d}छ\u{947}द\u{94d}व",
-    "अच\u{94d}छ\u{947}त\u{94d}" AORIST_ACT_1_PL "अच\u{94d}छ\u{947}द\u{94d}म",
-    "अच\u{94d}छ\u{947}त\u{94d}" AORIST_ACT_2_SG "अच\u{94d}छ\u{947}त\u{94d}",
-    "अच\u{94d}छ\u{947}त\u{94d}" AORIST_ACT_2_DU "अच\u{94d}छ\u{947}त\u{94d}तम\u{94d}",
-    "अच\u{94d}छ\u{947}त\u{94d}" AORIST_ACT_2_PL "अच\u{94d}छ\u{947}त\u{94d}त",
-    "अच\u{94d}छ\u{947}त\u{94d}" AORIST_ACT_3_DU "अच\u{94d}छ\u{947}त\u{94d}ताम\u{94d}",
-    "अच\u{94d}छ\u{947}त\u{94d}" AORIST_ACT_3_PL "अच\u{94d}छिदन\u{94d}",
-    "अजनिष\u{94d}ट" AORIST_MID_1_SG "अजनिषि",
-    "अजनिष\u{94d}ट" AORIST_MID_1_DU "अजनिष\u{94d}वहि",
-    "अजनिष\u{94d}ट" AORIST_MID_1_PL "अजनिष\u{94d}महि",
-    "अजनिष\u{94d}ट" AORIST_MID_2_SG "अजनिष\u{94d}ठाः",
-    "अजनिष\u{94d}ट" AORIST_MID_2_DU "अजनिषाथाम\u{94d}",
-    "अजनिष\u{94d}ट" AORIST_MID_2_PL "अजनिढ\u{94d}वम\u{94d}",
-    "अजनिष\u{94d}ट" AORIST_MID_3_SG "अजनिष\u{94d}ट",
-    "अजनिष\u{94d}ट" AORIST_MID_3_DU "अजनिषाताम\u{94d}",
-    "अजनिष\u{94d}ट" AORIST_MID_3_PL "अजनिषत",
-    "अजन\u{94d}त" AORIST_MID_1_SG "अजनि",
-    "अजन\u{94d}त" AORIST_MID_1_DU "अजन\u{94d}वहि",
-    "अजन\u{94d}त" AORIST_MID_1_PL "अजन\u{94d}महि",
-    "अजन\u{94d}त" AORIST_MID_2_SG "अजन\u{94d}थाः",
-    "अजन\u{94d}त" AORIST_MID_2_DU "अजनाथाम\u{94d}",
-    "अजन\u{94d}त" AORIST_MID_2_PL "अजन\u{94d}ध\u{94d}वम\u{94d}",
-    "अजन\u{94d}त" AORIST_MID_3_SG "अजन\u{94d}त",
-    "अजन\u{94d}त" AORIST_MID_3_DU "अजनाताम\u{94d}",
-    "अजन\u{94d}त" AORIST_MID_3_PL "अजनत",
-    "अजीवत\u{94d}" IMPERFECT_ACT_1_SG "अजीवम\u{94d}",
-    "अजीवत\u{94d}" IMPERFECT_ACT_1_DU "अजीवाव",
-    "अजीवत\u{94d}" IMPERFECT_ACT_1_PL "अजीवाम",
-    "अजीवत\u{94d}" IMPERFECT_ACT_2_SG "अजीवः",
-    "अजीवत\u{94d}" IMPERFECT_ACT_2_DU "अजीवतम\u{94d}",
-    "अजीवत\u{94d}" IMPERFECT_ACT_2_PL "अजीवत",
-    "अजीवत\u{94d}" IMPERFECT_ACT_3_SG "अजीवत\u{94d}",
-    "अजीवत\u{94d}" IMPERFECT_ACT_3_DU "अजीवताम\u{94d}",
-    "अजीवत\u{94d}" IMPERFECT_ACT_3_PL "अजीवन\u{94d}",
-    "अजीवत\u{94d}" IMPERFECT_MID_1_SG "अजीव\u{947}",
-    "अजीवत\u{94d}" IMPERFECT_MID_1_DU "अजीवावहि",
-    "अजीवत\u{94d}" IMPERFECT_MID_1_PL "अजीवामहि",
-    "अजीवत\u{94d}" IMPERFECT_MID_2_SG "अजीवथाः",
-    "अजीवत\u{94d}" IMPERFECT_MID_2_DU "अजीव\u{947}थाम\u{94d}",
-    "अजीवत\u{94d}" IMPERFECT_MID_2_PL "अजीवध\u{94d}वम\u{94d}",
-    "अजीवत\u{94d}" IMPERFECT_MID_3_SG "अजीवत",
-    "अजीवत\u{94d}" IMPERFECT_MID_3_DU "अजीव\u{947}ताम\u{94d}",
-    "अजीवत\u{94d}" IMPERFECT_MID_3_PL "अजीवन\u{94d}त",
-    "अजीविष\u{94d}यत\u{94d}" CONDITIONAL_ACT_1_SG "अजीविष\u{94d}यम\u{94d}",
-    "अजीविष\u{94d}यत\u{94d}" CONDITIONAL_ACT_1_DU "अजीविष\u{94d}याव",
-    "अजीविष\u{94d}यत\u{94d}" CONDITIONAL_ACT_1_PL "अजीविष\u{94d}याम",
-    "अजीविष\u{94d}यत\u{94d}" CONDITIONAL_ACT_2_SG "अजीविष\u{94d}यः",
-    "अजीविष\u{94d}यत\u{94d}" CONDITIONAL_ACT_2_DU "अजीविष\u{94d}यतम\u{94d}",
-    "अजीविष\u{94d}यत\u{94d}" CONDITIONAL_ACT_2_PL "अजीविष\u{94d}यत",
-    "अजीविष\u{94d}यत\u{94d}" CONDITIONAL_ACT_3_SG "अजीविष\u{94d}यत\u{94d}",
-    "अजीविष\u{94d}यत\u{94d}" CONDITIONAL_ACT_3_DU "अजीविष\u{94d}यताम\u{94d}",
-    "अजीविष\u{94d}यत\u{94d}" CONDITIONAL_ACT_3_PL "अजीविष\u{94d}यन\u{94d}",
-    "अजीविष\u{94d}यत\u{94d}" CONDITIONAL_MID_1_SG "अजीविष\u{94d}य\u{947}",
-    "अजीविष\u{94d}यत\u{94d}" CONDITIONAL_MID_1_DU "अजीविष\u{94d}यावहि",
-    "अजीविष\u{94d}यत\u{94d}" CONDITIONAL_MID_1_PL "अजीविष\u{94d}यामहि",
-    "अजीविष\u{94d}यत\u{94d}" CONDITIONAL_MID_2_SG "अजीविष\u{94d}यथाः",
-    "अजीविष\u{94d}यत\u{94d}" CONDITIONAL_MID_2_DU "अजीविष\u{94d}य\u{947}थाम\u{94d}",
-    "अजीविष\u{94d}यत\u{94d}" CONDITIONAL_MID_2_PL "अजीविष\u{94d}यध\u{94d}वम\u{94d}",
-    "अजीविष\u{94d}यत\u{94d}" CONDITIONAL_MID_3_SG "अजीविष\u{94d}यत",
-    "अजीविष\u{94d}यत\u{94d}" CONDITIONAL_MID_3_DU "अजीविष\u{94d}य\u{947}ताम\u{94d}",
-    "अजीविष\u{94d}यत\u{94d}" CONDITIONAL_MID_3_PL "अजीविष\u{94d}यन\u{94d}त",
-    "अज\u{941}षत\u{94d}" AORIST_ACT_1_SG "अज\u{941}सम\u{94d}",
-    "अज\u{941}षत\u{94d}" AORIST_ACT_1_DU "अज\u{941}साव",
-    "अज\u{941}षत\u{94d}" AORIST_ACT_1_PL "अज\u{941}साम",
-    "अज\u{941}षत\u{94d}" AORIST_ACT_2_SG "अज\u{941}सः",
-    "अज\u{941}षत\u{94d}" AORIST_ACT_2_DU "अज\u{941}सतम\u{94d}",
-    "अज\u{941}षत\u{94d}" AORIST_ACT_2_PL "अज\u{941}सत",
-    "अज\u{941}षत\u{94d}" AORIST_ACT_3_SG "अज\u{941}सत\u{94d}",
-    "अज\u{941}षत\u{94d}" AORIST_ACT_3_DU "अज\u{941}सताम\u{94d}",
-    "अज\u{941}षत\u{94d}" AORIST_ACT_3_PL "अज\u{941}सन\u{94d}",
-    "अज\u{941}षत\u{94d}" AORIST_MID_1_SG "अज\u{941}स\u{947}",
-    "अज\u{941}षत\u{94d}" AORIST_MID_1_DU "अज\u{941}सावहि",
-    "अज\u{941}षत\u{94d}" AORIST_MID_1_PL "अज\u{941}सामहि",
-    "अज\u{941}षत\u{94d}" AORIST_MID_2_SG "अज\u{941}सथाः",
-    "अज\u{941}षत\u{94d}" AORIST_MID_2_DU "अज\u{941}स\u{947}थाम\u{94d}",
-    "अज\u{941}षत\u{94d}" AORIST_MID_2_PL "अज\u{941}सध\u{94d}वम\u{94d}",
-    "अज\u{941}षत\u{94d}" AORIST_MID_3_SG "अज\u{941}सत",
-    "अज\u{941}षत\u{94d}" AORIST_MID_3_DU "अज\u{941}स\u{947}ताम\u{94d}",
-    "अज\u{941}षत\u{94d}" AORIST_MID_3_PL "अज\u{941}सन\u{94d}त",
-    "अञ\u{94d}चिष\u{94d}यति" CONDITIONAL_ACT_1_SG "आञ\u{94d}चिष\u{94d}यम\u{94d}",
-    "अञ\u{94d}चिष\u{94d}यति" CONDITIONAL_ACT_1_DU "आञ\u{94d}चिष\u{94d}याव",
-    "अञ\u{94d}चिष\u{94d}यति" CONDITIONAL_ACT_1_PL "आञ\u{94d}चिष\u{94d}याम",
-    "अञ\u{94d}चिष\u{94d}यति" CONDITIONAL_ACT_2_SG "आञ\u{94d}चिष\u{94d}यः",
-    "अञ\u{94d}चिष\u{94d}यति" CONDITIONAL_ACT_2_DU "आञ\u{94d}चिष\u{94d}यतम\u{94d}",
-    "अञ\u{94d}चिष\u{94d}यति" CONDITIONAL_ACT_2_PL "आञ\u{94d}चिष\u{94d}यत",
-    "अञ\u{94d}चिष\u{94d}यति" CONDITIONAL_ACT_3_SG "आञ\u{94d}चिष\u{94d}यत\u{94d}",
-    "अञ\u{94d}चिष\u{94d}यति" CONDITIONAL_ACT_3_DU "आञ\u{94d}चिष\u{94d}यताम\u{94d}",
-    "अञ\u{94d}चिष\u{94d}यति" CONDITIONAL_ACT_3_PL "आञ\u{94d}चिष\u{94d}यन\u{94d}",
-    "अञ\u{94d}चिष\u{94d}यति" CONDITIONAL_MID_1_SG "आञ\u{94d}चिष\u{94d}य\u{947}",
-    "अञ\u{94d}चिष\u{94d}यति" CONDITIONAL_MID_1_DU "आञ\u{94d}चिष\u{94d}यावहि",
-    "अञ\u{94d}चिष\u{94d}यति" CONDITIONAL_MID_1_PL "आञ\u{94d}चिष\u{94d}यामहि",
-    "अञ\u{94d}चिष\u{94d}यति" CONDITIONAL_MID_2_SG "आञ\u{94d}चिष\u{94d}यथाः",
-    "अञ\u{94d}चिष\u{94d}यति" CONDITIONAL_MID_2_DU "आञ\u{94d}चिष\u{94d}य\u{947}थाम\u{94d}",
-    "अञ\u{94d}चिष\u{94d}यति" CONDITIONAL_MID_2_PL "आञ\u{94d}चिष\u{94d}यध\u{94d}वम\u{94d}",
-    "अञ\u{94d}चिष\u{94d}यति" CONDITIONAL_MID_3_SG "आञ\u{94d}चिष\u{94d}यत",
-    "अञ\u{94d}चिष\u{94d}यति" CONDITIONAL_MID_3_DU "आञ\u{94d}चिष\u{94d}य\u{947}ताम\u{94d}",
-    "अञ\u{94d}चिष\u{94d}यति" CONDITIONAL_MID_3_PL "आञ\u{94d}चिष\u{94d}यन\u{94d}त",
-    "अतन\u{94d}" AORIST_ACT_1_SG "अतनम\u{94d}",
-    "अतन\u{94d}" AORIST_ACT_1_DU "अतन\u{94d}व",
-    "अतन\u{94d}" AORIST_ACT_1_PL "अतन\u{94d}म",
-    "अतन\u{94d}" AORIST_ACT_2_SG "अतन\u{94d}",
-    "अतन\u{94d}" AORIST_ACT_3_SG "अतन\u{94d}",
-    "अतन\u{94d}" AORIST_ACT_3_PL "अत\u{94d}नन\u{94d}",
-    "अतन\u{94d}" AORIST_MID_1_SG "अत\u{94d}नि",
-    "अतन\u{94d}" AORIST_MID_1_DU "अतन\u{94d}वहि",
-    "अतन\u{94d}" AORIST_MID_1_PL "अतन\u{94d}महि",
-    "अतन\u{94d}" AORIST_MID_2_SG "अतथाः",
-    "अतन\u{94d}" AORIST_MID_2_DU "अत\u{94d}नाथाम\u{94d}",
-    "अतन\u{94d}" AORIST_MID_2_PL "अतध\u{94d}वम\u{94d}",
-    "अतन\u{94d}" AORIST_MID_3_SG "अतत",
-    "अतन\u{94d}" AORIST_MID_3_DU "अत\u{94d}नाताम\u{94d}",
-    "अतन\u{94d}" AORIST_MID_3_PL "अत\u{94d}नत",
-    "अता\u{902}सीत\u{94d}" AORIST_MID_1_SG "अत\u{902}सि",
-    "अता\u{902}सीत\u{94d}" AORIST_MID_1_DU "अत\u{902}स\u{94d}वहि",
-    "अता\u{902}सीत\u{94d}" AORIST_MID_1_PL "अत\u{902}स\u{94d}महि",
-    "अता\u{902}सीत\u{94d}" AORIST_MID_2_SG "अत\u{902}स\u{94d}थाः",
-    "अता\u{902}सीत\u{94d}" AORIST_MID_2_DU "अत\u{902}साथाम\u{94d}",
-    "अता\u{902}सीत\u{94d}" AORIST_MID_2_PL "अतन\u{94d}ध\u{94d}वम\u{94d}",
-    "अता\u{902}सीत\u{94d}" AORIST_MID_3_SG "अत\u{902}स\u{94d}त",
-    "अता\u{902}सीत\u{94d}" AORIST_MID_3_DU "अत\u{902}साताम\u{94d}",
-    "अता\u{902}सीत\u{94d}" AORIST_MID_3_PL "अत\u{902}सत",
-    "अताप\u{94d}सीत\u{94d}" AORIST_ACT_2_DU "अताप\u{94d}तम\u{94d}",
-    "अताप\u{94d}सीत\u{94d}" AORIST_ACT_2_PL "अताप\u{94d}त",
-    "अताप\u{94d}सीत\u{94d}" AORIST_ACT_3_DU "अताप\u{94d}ताम\u{94d}",
-    "अत\u{94d}ति" IND_ACT_1_SG "अद\u{94d}मि",
-    "अत\u{94d}ति" IND_ACT_1_DU "अद\u{94d}वः",
-    "अत\u{94d}ति" IND_ACT_1_PL "अद\u{94d}मः",
-    "अत\u{94d}ति" IND_ACT_3_PL "अदन\u{94d}ति",
-    "अत\u{94d}ति" IND_MID_1_SG "अद\u{947}",
-    "अत\u{94d}ति" IND_MID_1_DU "अद\u{94d}वह\u{947}",
-    "अत\u{94d}ति" IND_MID_1_PL "अद\u{94d}मह\u{947}",
-    "अत\u{94d}ति" IND_MID_2_DU "अदाथ\u{947}",
-    "अत\u{94d}ति" IND_MID_2_PL "अद\u{94d}ध\u{94d}व\u{947}",
-    "अत\u{94d}ति" IND_MID_3_DU "अदात\u{947}",
-    "अत\u{94d}ति" IND_MID_3_PL "अदत\u{947}",
-    "अत\u{94d}ति" IMP_ACT_1_SG "अदानि",
-    "अत\u{94d}ति" IMP_ACT_1_DU "अदाव",
-    "अत\u{94d}ति" IMP_ACT_1_PL "अदाम",
-    "अत\u{94d}ति" IMP_ACT_2_SG "अद\u{94d}धि",
-    "अत\u{94d}ति" IMP_ACT_3_PL "अदन\u{94d}त\u{941}",
-    "अत\u{94d}ति" IMP_MID_1_SG "अद\u{948}",
-    "अत\u{94d}ति" IMP_MID_1_DU "अदावह\u{948}",
-    "अत\u{94d}ति" IMP_MID_1_PL "अदामह\u{948}",
-    "अत\u{94d}ति" IMP_MID_2_DU "अदाथाम\u{94d}",
-    "अत\u{94d}ति" IMP_MID_2_PL "अद\u{94d}ध\u{94d}वम\u{94d}",
-    "अत\u{94d}ति" IMP_MID_3_DU "अदाताम\u{94d}",
-    "अत\u{94d}ति" IMP_MID_3_PL "अदताम\u{94d}",
-    "अत\u{94d}ति" OPT_ACT_1_SG "अद\u{94d}याम\u{94d}",
-    "अत\u{94d}ति" OPT_ACT_1_DU "अद\u{94d}याव",
-    "अत\u{94d}ति" OPT_ACT_1_PL "अद\u{94d}याम",
-    "अत\u{94d}ति" OPT_ACT_2_SG "अद\u{94d}याः",
-    "अत\u{94d}ति" OPT_ACT_2_DU "अद\u{94d}यातम\u{94d}",
-    "अत\u{94d}ति" OPT_ACT_2_PL "अद\u{94d}यात",
-    "अत\u{94d}ति" OPT_ACT_3_SG "अद\u{94d}यात\u{94d}",
-    "अत\u{94d}ति" OPT_ACT_3_DU "अद\u{94d}याताम\u{94d}",
-    "अत\u{94d}ति" OPT_ACT_3_PL "अद\u{94d}य\u{941}ः",
-    "अत\u{94d}ति" OPT_MID_1_SG "अदीय",
-    "अत\u{94d}ति" OPT_MID_1_DU "अदीवहि",
-    "अत\u{94d}ति" OPT_MID_1_PL "अदीमहि",
-    "अत\u{94d}ति" OPT_MID_2_SG "अदीथाः",
-    "अत\u{94d}ति" OPT_MID_2_DU "अदीयाथाम\u{94d}",
-    "अत\u{94d}ति" OPT_MID_2_PL "अदीध\u{94d}वम\u{94d}",
-    "अत\u{94d}ति" OPT_MID_3_SG "अदीत",
-    "अत\u{94d}ति" OPT_MID_3_DU "अदीयाताम\u{94d}",
-    "अत\u{94d}ति" OPT_MID_3_PL "अदीरन\u{94d}",
-    "अत\u{94d}ति" SUBJ_ACT_1_SG "अदानि",
-    "अत\u{94d}ति" SUBJ_ACT_1_DU "अदाव",
-    "अत\u{94d}ति" SUBJ_ACT_1_PL "अदाम",
-    "अत\u{94d}ति" SUBJ_ACT_2_SG "अदः",
-    "अत\u{94d}ति" SUBJ_ACT_2_DU "अदथः",
-    "अत\u{94d}ति" SUBJ_ACT_2_PL "अदथ",
-    "अत\u{94d}ति" SUBJ_ACT_3_SG "अदत\u{94d}",
-    "अत\u{94d}ति" SUBJ_ACT_3_DU "अदतः",
-    "अत\u{94d}ति" SUBJ_ACT_3_PL "अदन\u{94d}",
-    "अत\u{94d}ति" SUBJ_MID_1_SG "अद\u{948}",
-    "अत\u{94d}ति" SUBJ_MID_1_DU "अदावह\u{948}",
-    "अत\u{94d}ति" SUBJ_MID_1_PL "अदामह\u{948}",
-    "अत\u{94d}ति" SUBJ_MID_2_SG "अदस\u{947}",
-    "अत\u{94d}ति" SUBJ_MID_2_DU "अद\u{948}थ\u{947}",
-    "अत\u{94d}ति" SUBJ_MID_2_PL "अदध\u{94d}व\u{947}",
-    "अत\u{94d}ति" SUBJ_MID_3_SG "अदत\u{947}",
-    "अत\u{94d}ति" SUBJ_MID_3_DU "अद\u{948}त\u{947}",
-    "अत\u{94d}ति" SUBJ_MID_3_PL "अदन\u{94d}त",
-    "अत\u{94d}ति" IMPERFECT_ACT_1_SG "आदम\u{94d}",
-    "अत\u{94d}ति" IMPERFECT_ACT_1_DU "आद\u{94d}व",
-    "अत\u{94d}ति" IMPERFECT_ACT_1_PL "आद\u{94d}म",
-    "अत\u{94d}ति" IMPERFECT_ACT_2_SG "आदः",
-    "अत\u{94d}ति" IMPERFECT_ACT_3_SG "आदत\u{94d}",
-    "अत\u{94d}ति" IMPERFECT_ACT_3_PL "आदन\u{94d}",
-    "अत\u{94d}ति" IMPERFECT_MID_1_SG "आदि",
-    "अत\u{94d}ति" IMPERFECT_MID_1_DU "आद\u{94d}वहि",
-    "अत\u{94d}ति" IMPERFECT_MID_1_PL "आद\u{94d}महि",
-    "अत\u{94d}ति" IMPERFECT_MID_2_DU "आदाथाम\u{94d}",
-    "अत\u{94d}ति" IMPERFECT_MID_2_PL "आद\u{94d}ध\u{94d}वम\u{94d}",
-    "अत\u{94d}ति" IMPERFECT_MID_3_DU "आदाताम\u{94d}",
-    "अत\u{94d}ति" IMPERFECT_MID_3_PL "आदत",
-    "अत\u{94d}ति" PARTICIPLE_PRES_ACT "अदत\u{94d}",
-    "अत\u{94d}ति" PARTICIPLE_PRES_MID "अदान",
-    "अदर\u{94d}क\u{94d}" AORIST_ACT_1_SG "अदर\u{94d}शम\u{94d}",
-    "अदर\u{94d}क\u{94d}" AORIST_ACT_1_DU "अदर\u{94d}श\u{94d}व",
-    "अदर\u{94d}क\u{94d}" AORIST_ACT_1_PL "अदर\u{94d}श\u{94d}म",
-    "अदर\u{94d}क\u{94d}" AORIST_ACT_2_SG "अदर\u{94d}क\u{94d}",
-    "अदर\u{94d}क\u{94d}" AORIST_ACT_2_DU "अदर\u{94d}ष\u{94d}टम\u{94d}",
-    "अदर\u{94d}क\u{94d}" AORIST_ACT_2_PL "अदर\u{94d}ष\u{94d}ट",
-    "अदर\u{94d}क\u{94d}" AORIST_ACT_3_SG "अदर\u{94d}क\u{94d}",
-    "अदर\u{94d}क\u{94d}" AORIST_ACT_3_DU "अदर\u{94d}ष\u{94d}टाम\u{94d}",
-    "अदर\u{94d}क\u{94d}" AORIST_ACT_3_PL "अद\u{943}शन\u{94d}",
-    "अदात\u{94d}" AORIST_MID_3_PL "अदत",
-    "अद\u{94d}राक\u{94d}षीत\u{94d}" AORIST_ACT_1_SG "अद\u{94d}राक\u{94d}षम\u{94d}",
-    "अद\u{94d}राक\u{94d}षीत\u{94d}" AORIST_ACT_1_DU "अद\u{94d}राक\u{94d}ष\u{94d}व",
-    "अद\u{94d}राक\u{94d}षीत\u{94d}" AORIST_ACT_1_PL "अद\u{94d}राक\u{94d}ष\u{94d}म",
-    "अद\u{94d}राक\u{94d}षीत\u{94d}" AORIST_ACT_2_DU "अद\u{94d}राष\u{94d}टम\u{94d}",
-    "अद\u{94d}राक\u{94d}षीत\u{94d}" AORIST_ACT_2_PL "अद\u{94d}राष\u{94d}ट",
-    "अद\u{94d}राक\u{94d}षीत\u{94d}" AORIST_ACT_3_DU "अद\u{94d}राष\u{94d}टाम\u{94d}",
-    "अद\u{94d}राक\u{94d}षीत\u{94d}" AORIST_ACT_3_PL "अद\u{94d}राक\u{94d}ष\u{941}ः",
-    "अद\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_1_SG "अद\u{943}क\u{94d}षि",
-    "अद\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_1_DU "अद\u{943}क\u{94d}ष\u{94d}वहि",
-    "अद\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_1_PL "अद\u{943}क\u{94d}ष\u{94d}महि",
-    "अद\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_2_SG "अद\u{943}ष\u{94d}ठाः",
-    "अद\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_2_DU "अद\u{943}क\u{94d}षाथाम\u{94d}",
-    "अद\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_2_PL "अद\u{943}ड\u{94d}ढ\u{94d}वम\u{94d}",
-    "अद\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_3_SG "अद\u{943}ष\u{94d}ट",
-    "अद\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_3_DU "अद\u{943}क\u{94d}षाताम\u{94d}",
-    "अद\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_3_PL "अद\u{943}क\u{94d}षत",
-    "अधाक\u{94d}षीत\u{94d}" AORIST_ACT_1_SG "अधाक\u{94d}षम\u{94d}",
-    "अधाक\u{94d}षीत\u{94d}" AORIST_ACT_1_DU "अधाक\u{94d}ष\u{94d}व",
-    "अधाक\u{94d}षीत\u{94d}" AORIST_ACT_1_PL "अधाक\u{94d}ष\u{94d}म",
-    "अधाक\u{94d}षीत\u{94d}" AORIST_ACT_2_DU "अधाक\u{94d}तम\u{94d}",
-    "अधाक\u{94d}षीत\u{94d}" AORIST_ACT_2_PL "अधाक\u{94d}त",
-    "अधाक\u{94d}षीत\u{94d}" AORIST_ACT_3_DU "अधाक\u{94d}ताम\u{94d}",
-    "अधाक\u{94d}षीत\u{94d}" AORIST_ACT_3_PL "अधाक\u{94d}ष\u{941}ः",
-    "अधात\u{94d}" AORIST_MID_1_DU "अधीवहि",
-    "अधात\u{94d}" AORIST_MID_1_PL "अधीमहि",
-    "अधात\u{94d}" AORIST_MID_3_PL "अधत",
-    "अधिगच\u{94d}छति" IMPERFECT_ACT_1_SG "अध\u{94d}यगच\u{94d}छम\u{94d}",
-    "अधिगच\u{94d}छति" IMPERFECT_ACT_1_DU "अध\u{94d}यगच\u{94d}छाव",
-    "अधिगच\u{94d}छति" IMPERFECT_ACT_1_PL "अध\u{94d}यगच\u{94d}छाम",
-    "अधिगच\u{94d}छति" IMPERFECT_ACT_2_SG "अध\u{94d}यगच\u{94d}छः",
-    "अधिगच\u{94d}छति" IMPERFECT_ACT_2_DU "अध\u{94d}यगच\u{94d}छतम\u{94d}",
-    "अधिगच\u{94d}छति" IMPERFECT_ACT_2_PL "अध\u{94d}यगच\u{94d}छत",
-    "अधिगच\u{94d}छति" IMPERFECT_ACT_3_SG "अध\u{94d}यगच\u{94d}छत\u{94d}",
-    "अधिगच\u{94d}छति" IMPERFECT_ACT_3_DU "अध\u{94d}यगच\u{94d}छताम\u{94d}",
-    "अधिगच\u{94d}छति" IMPERFECT_ACT_3_PL "अध\u{94d}यगच\u{94d}छन\u{94d}",
-    "अधिगच\u{94d}छति" IMPERFECT_MID_1_SG "अध\u{94d}यगच\u{94d}छ\u{947}",
-    "अधिगच\u{94d}छति" IMPERFECT_MID_1_DU "अध\u{94d}यगच\u{94d}छावहि",
-    "अधिगच\u{94d}छति" IMPERFECT_MID_1_PL "अध\u{94d}यगच\u{94d}छामहि",
-    "अधिगच\u{94d}छति" IMPERFECT_MID_2_SG "अध\u{94d}यगच\u{94d}छथाः",
-    "अधिगच\u{94d}छति" IMPERFECT_MID_2_DU "अध\u{94d}यगच\u{94d}छ\u{947}थाम\u{94d}",
-    "अधिगच\u{94d}छति" IMPERFECT_MID_2_PL "अध\u{94d}यगच\u{94d}छध\u{94d}वम\u{94d}",
-    "अधिगच\u{94d}छति" IMPERFECT_MID_3_SG "अध\u{94d}यगच\u{94d}छत",
-    "अधिगच\u{94d}छति" IMPERFECT_MID_3_DU "अध\u{94d}यगच\u{94d}छ\u{947}ताम\u{94d}",
-    "अधिगच\u{94d}छति" IMPERFECT_MID_3_PL "अध\u{94d}यगच\u{94d}छन\u{94d}त",
-    "अधिगच\u{94d}छति" FUTURE_ACT_1_SG "अधिग\u{902}स\u{94d}यामि",
-    "अधिगच\u{94d}छति" FUTURE_ACT_1_DU "अधिग\u{902}स\u{94d}यावः",
-    "अधिगच\u{94d}छति" FUTURE_ACT_1_PL "अधिग\u{902}स\u{94d}यामः",
-    "अधिगच\u{94d}छति" FUTURE_ACT_2_SG "अधिग\u{902}स\u{94d}यसि",
-    "अधिगच\u{94d}छति" FUTURE_ACT_2_DU "अधिग\u{902}स\u{94d}यथः",
-    "अधिगच\u{94d}छति" FUTURE_ACT_2_PL "अधिग\u{902}स\u{94d}यथ",
-    "अधिगच\u{94d}छति" FUTURE_ACT_3_SG "अधिग\u{902}स\u{94d}यति",
-    "अधिगच\u{94d}छति" FUTURE_ACT_3_DU "अधिग\u{902}स\u{94d}यतः",
-    "अधिगच\u{94d}छति" FUTURE_ACT_3_PL "अधिग\u{902}स\u{94d}यन\u{94d}ति",
-    "अधिगच\u{94d}छति" FUTURE_MID_1_SG "अधिग\u{902}स\u{94d}य\u{947}",
-    "अधिगच\u{94d}छति" FUTURE_MID_1_DU "अधिग\u{902}स\u{94d}यावह\u{947}",
-    "अधिगच\u{94d}छति" FUTURE_MID_1_PL "अधिग\u{902}स\u{94d}यामह\u{947}",
-    "अधिगच\u{94d}छति" FUTURE_MID_2_SG "अधिग\u{902}स\u{94d}यस\u{947}",
-    "अधिगच\u{94d}छति" FUTURE_MID_2_DU "अधिग\u{902}स\u{94d}य\u{947}थ\u{947}",
-    "अधिगच\u{94d}छति" FUTURE_MID_2_PL "अधिग\u{902}स\u{94d}यध\u{94d}व\u{947}",
-    "अधिगच\u{94d}छति" FUTURE_MID_3_SG "अधिग\u{902}स\u{94d}यत\u{947}",
-    "अधिगच\u{94d}छति" FUTURE_MID_3_DU "अधिग\u{902}स\u{94d}य\u{947}त\u{947}",
-    "अधिगच\u{94d}छति" FUTURE_MID_3_PL "अधिग\u{902}स\u{94d}यन\u{94d}त\u{947}",
-    "अधिगच\u{94d}छति" CONDITIONAL_ACT_1_SG "अध\u{94d}यग\u{902}स\u{94d}यम\u{94d}",
-    "अधिगच\u{94d}छति" CONDITIONAL_ACT_1_DU "अध\u{94d}यग\u{902}स\u{94d}याव",
-    "अधिगच\u{94d}छति" CONDITIONAL_ACT_1_PL "अध\u{94d}यग\u{902}स\u{94d}याम",
-    "अधिगच\u{94d}छति" CONDITIONAL_ACT_2_SG "अध\u{94d}यग\u{902}स\u{94d}यः",
-    "अधिगच\u{94d}छति" CONDITIONAL_ACT_2_DU "अध\u{94d}यग\u{902}स\u{94d}यतम\u{94d}",
-    "अधिगच\u{94d}छति" CONDITIONAL_ACT_2_PL "अध\u{94d}यग\u{902}स\u{94d}यत",
-    "अधिगच\u{94d}छति" CONDITIONAL_ACT_3_SG "अध\u{94d}यग\u{902}स\u{94d}यत\u{94d}",
-    "अधिगच\u{94d}छति" CONDITIONAL_ACT_3_DU "अध\u{94d}यग\u{902}स\u{94d}यताम\u{94d}",
-    "अधिगच\u{94d}छति" CONDITIONAL_ACT_3_PL "अध\u{94d}यग\u{902}स\u{94d}यन\u{94d}",
-    "अधिगच\u{94d}छति" CONDITIONAL_MID_1_SG "अध\u{94d}यग\u{902}स\u{94d}य\u{947}",
-    "अधिगच\u{94d}छति" CONDITIONAL_MID_1_DU "अध\u{94d}यग\u{902}स\u{94d}यावहि",
-    "अधिगच\u{94d}छति" CONDITIONAL_MID_1_PL "अध\u{94d}यग\u{902}स\u{94d}यामहि",
-    "अधिगच\u{94d}छति" CONDITIONAL_MID_2_SG "अध\u{94d}यग\u{902}स\u{94d}यथाः",
-    "अधिगच\u{94d}छति" CONDITIONAL_MID_2_DU "अध\u{94d}यग\u{902}स\u{94d}य\u{947}थाम\u{94d}",
-    "अधिगच\u{94d}छति" CONDITIONAL_MID_2_PL "अध\u{94d}यग\u{902}स\u{94d}यध\u{94d}वम\u{94d}",
-    "अधिगच\u{94d}छति" CONDITIONAL_MID_3_SG "अध\u{94d}यग\u{902}स\u{94d}यत",
-    "अधिगच\u{94d}छति" CONDITIONAL_MID_3_DU "अध\u{94d}यग\u{902}स\u{94d}य\u{947}ताम\u{94d}",
-    "अधिगच\u{94d}छति" CONDITIONAL_MID_3_PL "अध\u{94d}यग\u{902}स\u{94d}यन\u{94d}त",
-    "अधिगच\u{94d}छति" PERFECT_ACT_1_SG "अधिजगम",
-    "अधिगच\u{94d}छति" PERFECT_ACT_1_DU "अधिजग\u{94d}मिव",
-    "अधिगच\u{94d}छति" PERFECT_ACT_1_PL "अधिजग\u{94d}मिम",
-    "अधिगच\u{94d}छति" PERFECT_ACT_2_SG "अधिजगन\u{94d}थ",
-    "अधिगच\u{94d}छति" PERFECT_ACT_2_DU "अधिजग\u{94d}मथ\u{941}ः",
-    "अधिगच\u{94d}छति" PERFECT_ACT_2_PL "अधिजग\u{94d}म",
-    "अधिगच\u{94d}छति" PERFECT_ACT_3_SG "अधिजगाम",
-    "अधिगच\u{94d}छति" PERFECT_ACT_3_DU "अधिजग\u{94d}मत\u{941}ः",
-    "अधिगच\u{94d}छति" PERFECT_ACT_3_PL "अधिजग\u{94d}म\u{941}ः",
-    "अधिगच\u{94d}छति" PERFECT_MID_1_SG "अधिजग\u{94d}म\u{947}",
-    "अधिगच\u{94d}छति" PERFECT_MID_1_DU "अधिजग\u{94d}मिवह\u{947}",
-    "अधिगच\u{94d}छति" PERFECT_MID_1_PL "अधिजग\u{94d}मिमह\u{947}",
-    "अधिगच\u{94d}छति" PERFECT_MID_2_SG "अधिजग\u{94d}मिष\u{947}",
-    "अधिगच\u{94d}छति" PERFECT_MID_2_DU "अधिजग\u{94d}माथ\u{947}",
-    "अधिगच\u{94d}छति" PERFECT_MID_2_PL "अधिजग\u{94d}मिध\u{94d}व\u{947}",
-    "अधिगच\u{94d}छति" PERFECT_MID_3_SG "अधिजग\u{94d}म\u{947}",
-    "अधिगच\u{94d}छति" PERFECT_MID_3_DU "अधिजग\u{94d}मात\u{947}",
-    "अधिगच\u{94d}छति" PERFECT_MID_3_PL "अधिजग\u{94d}मिर\u{947}",
-    "अधिगच\u{94d}छति" AORIST_ACT_1_SG "अध\u{94d}यगमम\u{94d}",
-    "अधिगच\u{94d}छति" AORIST_ACT_1_DU "अध\u{94d}यगमाव",
-    "अधिगच\u{94d}छति" AORIST_ACT_1_PL "अध\u{94d}यगमाम",
-    "अधिगच\u{94d}छति" AORIST_ACT_2_SG "अध\u{94d}यगमः",
-    "अधिगच\u{94d}छति" AORIST_ACT_2_DU "अध\u{94d}यगमतम\u{94d}",
-    "अधिगच\u{94d}छति" AORIST_ACT_2_PL "अध\u{94d}यगमत",
-    "अधिगच\u{94d}छति" AORIST_ACT_3_SG "अध\u{94d}यगमत\u{94d}",
-    "अधिगच\u{94d}छति" AORIST_ACT_3_DU "अध\u{94d}यगमताम\u{94d}",
-    "अधिगच\u{94d}छति" AORIST_ACT_3_PL "अध\u{94d}यगमन\u{94d}",
-    "अधिगच\u{94d}छति" AORIST_MID_1_SG "अध\u{94d}यग\u{902}सि",
-    "अधिगच\u{94d}छति" AORIST_MID_1_DU "अध\u{94d}यग\u{902}स\u{94d}वहि",
-    "अधिगच\u{94d}छति" AORIST_MID_1_PL "अध\u{94d}यग\u{902}स\u{94d}महि",
-    "अधिगच\u{94d}छति" AORIST_MID_2_SG "अध\u{94d}यग\u{902}स\u{94d}थाः",
-    "अधिगच\u{94d}छति" AORIST_MID_2_DU "अध\u{94d}यग\u{902}साथाम\u{94d}",
-    "अधिगच\u{94d}छति" AORIST_MID_2_PL "अध\u{94d}यगन\u{94d}ध\u{94d}वम\u{94d}",
-    "अधिगच\u{94d}छति" AORIST_MID_3_SG "अध\u{94d}यग\u{902}स\u{94d}त",
-    "अधिगच\u{94d}छति" AORIST_MID_3_DU "अध\u{94d}यग\u{902}साताम\u{94d}",
-    "अधिगच\u{94d}छति" AORIST_MID_3_PL "अध\u{94d}यग\u{902}सत",
-    "अधिगच\u{94d}छति" INFINITIVE "अधिगन\u{94d}त\u{941}म\u{94d}",
-    "अधिगच\u{94d}छति" GERUND "अधिगत\u{94d}वा",
-    "अधिगच\u{94d}छति" PARTICIPLE_FUT_ACT "अधिग\u{902}स\u{94d}यत\u{94d}",
-    "अधिगच\u{94d}छति" PARTICIPLE_FUT_MID "अधिग\u{902}स\u{94d}यमान",
-    "अधिगच\u{94d}छति" PARTICIPLE_PERF_ACT "अधिजगन\u{94d}वा\u{902}स\u{94d}",
-    "अधिगच\u{94d}छति" PARTICIPLE_PERF_MID "अधिजग\u{94d}मान",
-    "अधितिष\u{94d}ठति" IMPERFECT_ACT_1_SG "अध\u{94d}यतिष\u{94d}ठम\u{94d}",
-    "अधितिष\u{94d}ठति" IMPERFECT_ACT_1_DU "अध\u{94d}यतिष\u{94d}ठाव",
-    "अधितिष\u{94d}ठति" IMPERFECT_ACT_1_PL "अध\u{94d}यतिष\u{94d}ठाम",
-    "अधितिष\u{94d}ठति" IMPERFECT_ACT_2_SG "अध\u{94d}यतिष\u{94d}ठः",
-    "अधितिष\u{94d}ठति" IMPERFECT_ACT_2_DU "अध\u{94d}यतिष\u{94d}ठतम\u{94d}",
-    "अधितिष\u{94d}ठति" IMPERFECT_ACT_2_PL "अध\u{94d}यतिष\u{94d}ठत",
-    "अधितिष\u{94d}ठति" IMPERFECT_ACT_3_SG "अध\u{94d}यतिष\u{94d}ठत\u{94d}",
-    "अधितिष\u{94d}ठति" IMPERFECT_ACT_3_DU "अध\u{94d}यतिष\u{94d}ठताम\u{94d}",
-    "अधितिष\u{94d}ठति" IMPERFECT_ACT_3_PL "अध\u{94d}यतिष\u{94d}ठन\u{94d}",
-    "अधितिष\u{94d}ठति" IMPERFECT_MID_1_SG "अध\u{94d}यतिष\u{94d}ठ\u{947}",
-    "अधितिष\u{94d}ठति" IMPERFECT_MID_1_DU "अध\u{94d}यतिष\u{94d}ठावहि",
-    "अधितिष\u{94d}ठति" IMPERFECT_MID_1_PL "अध\u{94d}यतिष\u{94d}ठामहि",
-    "अधितिष\u{94d}ठति" IMPERFECT_MID_2_SG "अध\u{94d}यतिष\u{94d}ठथाः",
-    "अधितिष\u{94d}ठति" IMPERFECT_MID_2_DU "अध\u{94d}यतिष\u{94d}ठ\u{947}थाम\u{94d}",
-    "अधितिष\u{94d}ठति" IMPERFECT_MID_2_PL "अध\u{94d}यतिष\u{94d}ठध\u{94d}वम\u{94d}",
-    "अधितिष\u{94d}ठति" IMPERFECT_MID_3_SG "अध\u{94d}यतिष\u{94d}ठत",
-    "अधितिष\u{94d}ठति" IMPERFECT_MID_3_DU "अध\u{94d}यतिष\u{94d}ठ\u{947}ताम\u{94d}",
-    "अधितिष\u{94d}ठति" IMPERFECT_MID_3_PL "अध\u{94d}यतिष\u{94d}ठन\u{94d}त",
-    "अनक\u{94d}ति" IMPERFECT_ACT_1_SG "आनजम\u{94d}",
-    "अनक\u{94d}ति" IMPERFECT_ACT_1_DU "आञ\u{94d}ज\u{94d}व",
-    "अनक\u{94d}ति" IMPERFECT_ACT_1_PL "आञ\u{94d}ज\u{94d}म",
-    "अनक\u{94d}ति" IMPERFECT_ACT_2_SG "आनक\u{94d}",
-    "अनक\u{94d}ति" IMPERFECT_ACT_2_DU "आङ\u{94d}क\u{94d}तम\u{94d}",
-    "अनक\u{94d}ति" IMPERFECT_ACT_2_PL "आङ\u{94d}क\u{94d}त",
-    "अनक\u{94d}ति" IMPERFECT_ACT_3_SG "आनक\u{94d}",
-    "अनक\u{94d}ति" IMPERFECT_ACT_3_DU "आङ\u{94d}क\u{94d}ताम\u{94d}",
-    "अनक\u{94d}ति" IMPERFECT_ACT_3_PL "आञ\u{94d}जन\u{94d}",
-    "अनक\u{94d}ति" IMPERFECT_MID_1_SG "आञ\u{94d}जि",
-    "अनक\u{94d}ति" IMPERFECT_MID_1_DU "आञ\u{94d}ज\u{94d}वहि",
-    "अनक\u{94d}ति" IMPERFECT_MID_1_PL "आञ\u{94d}ज\u{94d}महि",
-    "अनक\u{94d}ति" IMPERFECT_MID_2_SG "आङ\u{94d}क\u{94d}थाः",
-    "अनक\u{94d}ति" IMPERFECT_MID_2_DU "आञ\u{94d}जाथाम\u{94d}",
-    "अनक\u{94d}ति" IMPERFECT_MID_2_PL "आङ\u{94d}ग\u{94d}ध\u{94d}वम\u{94d}",
-    "अनक\u{94d}ति" IMPERFECT_MID_3_SG "आङ\u{94d}क\u{94d}त",
-    "अनक\u{94d}ति" IMPERFECT_MID_3_DU "आञ\u{94d}जाताम\u{94d}",
-    "अनक\u{94d}ति" IMPERFECT_MID_3_PL "आञ\u{94d}जत",
-    "अनिति" IND_ACT_1_SG "अनिमि",
-    "अनिति" IND_ACT_1_DU "अनिवः",
-    "अनिति" IND_ACT_1_PL "अनिमः",
-    "अनिति" IND_ACT_2_SG "अनिषि",
-    "अनिति" IND_ACT_3_PL "अनन\u{94d}ति",
-    "अनिति" IMP_ACT_1_SG "अनानि",
-    "अनिति" IMP_ACT_1_DU "अनाव",
-    "अनिति" IMP_ACT_1_PL "अनाम",
-    "अनिति" IMP_ACT_2_SG "अनिहि",
-    "अनिति" IMP_ACT_3_PL "अनन\u{94d}त\u{941}",
-    "अनिति" OPT_ACT_1_SG "अन\u{94d}याम\u{94d}",
-    "अनिति" OPT_ACT_1_DU "अन\u{94d}याव",
-    "अनिति" OPT_ACT_1_PL "अन\u{94d}याम",
-    "अनिति" OPT_ACT_2_SG "अन\u{94d}याः",
-    "अनिति" OPT_ACT_2_DU "अन\u{94d}यातम\u{94d}",
-    "अनिति" OPT_ACT_2_PL "अन\u{94d}यात",
-    "अनिति" OPT_ACT_3_SG "अन\u{94d}यात\u{94d}",
-    "अनिति" OPT_ACT_3_DU "अन\u{94d}याताम\u{94d}",
-    "अनिति" OPT_ACT_3_PL "अन\u{94d}य\u{941}ः",
-    "अनिति" SUBJ_ACT_1_SG "अनानि",
-    "अनिति" SUBJ_ACT_1_DU "अनाव",
-    "अनिति" SUBJ_ACT_1_PL "अनाम",
-    "अनिति" SUBJ_ACT_2_SG "अनः",
-    "अनिति" SUBJ_ACT_2_DU "अनथः",
-    "अनिति" SUBJ_ACT_2_PL "अनथ",
-    "अनिति" SUBJ_ACT_3_SG "अनत\u{94d}",
-    "अनिति" SUBJ_ACT_3_DU "अनतः",
-    "अनिति" SUBJ_ACT_3_PL "अनन\u{94d}",
-    "अनिति" IMPERFECT_ACT_1_SG "आनम\u{94d}",
-    "अनिति" IMPERFECT_ACT_1_DU "आनिव",
-    "अनिति" IMPERFECT_ACT_1_PL "आनिम",
-    "अनिति" IMPERFECT_ACT_2_SG "आनीः",
-    "अनिति" IMPERFECT_ACT_3_SG "आनीत\u{94d}",
-    "अनिति" IMPERFECT_ACT_3_PL "आनन\u{94d}",
-    "अनिति" PARTICIPLE_PRES_ACT "अनत\u{94d}",
-    "अनौत\u{94d}सीत\u{94d}" AORIST_ACT_2_DU "अनौत\u{94d}तम\u{94d}",
-    "अनौत\u{94d}सीत\u{94d}" AORIST_ACT_2_PL "अनौत\u{94d}त",
-    "अनौत\u{94d}सीत\u{94d}" AORIST_ACT_3_DU "अनौत\u{94d}ताम\u{94d}",
-    "अनौत\u{94d}सीत\u{94d}" AORIST_MID_1_SG "अन\u{941}त\u{94d}सि",
-    "अनौत\u{94d}सीत\u{94d}" AORIST_MID_1_DU "अन\u{941}त\u{94d}स\u{94d}वहि",
-    "अनौत\u{94d}सीत\u{94d}" AORIST_MID_1_PL "अन\u{941}त\u{94d}स\u{94d}महि",
-    "अनौत\u{94d}सीत\u{94d}" AORIST_MID_2_SG "अन\u{941}त\u{94d}थाः",
-    "अनौत\u{94d}सीत\u{94d}" AORIST_MID_2_DU "अन\u{941}त\u{94d}साथाम\u{94d}",
-    "अनौत\u{94d}सीत\u{94d}" AORIST_MID_2_PL "अन\u{941}द\u{94d}ध\u{94d}वम\u{94d}",
-    "अनौत\u{94d}सीत\u{94d}" AORIST_MID_3_SG "अन\u{941}त\u{94d}त",
-    "अनौत\u{94d}सीत\u{94d}" AORIST_MID_3_DU "अन\u{941}त\u{94d}साताम\u{94d}",
-    "अनौत\u{94d}सीत\u{94d}" AORIST_MID_3_PL "अन\u{941}त\u{94d}सत",
-    "अपत\u{94d}त" AORIST_MID_1_SG "अपदि",
-    "अपत\u{94d}त" AORIST_MID_1_DU "अपद\u{94d}वहि",
-    "अपत\u{94d}त" AORIST_MID_1_PL "अपद\u{94d}महि",
-    "अपत\u{94d}त" AORIST_MID_2_SG "अपत\u{94d}थाः",
-    "अपत\u{94d}त" AORIST_MID_2_DU "अपदाथाम\u{94d}",
-    "अपत\u{94d}त" AORIST_MID_2_PL "अपद\u{94d}ध\u{94d}वम\u{94d}",
-    "अपत\u{94d}त" AORIST_MID_3_SG "अपत\u{94d}त",
-    "अपत\u{94d}त" AORIST_MID_3_DU "अपदाताम\u{94d}",
-    "अपत\u{94d}त" AORIST_MID_3_PL "अपदत",
-    "अपोहति" IMPERFECT_ACT_1_SG "अपौहम\u{94d}",
-    "अपोहति" IMPERFECT_ACT_1_DU "अपौहाव",
-    "अपोहति" IMPERFECT_ACT_1_PL "अपौहाम",
-    "अपोहति" IMPERFECT_ACT_2_SG "अपौहः",
-    "अपोहति" IMPERFECT_ACT_2_DU "अपौहतम\u{94d}",
-    "अपोहति" IMPERFECT_ACT_2_PL "अपौहत",
-    "अपोहति" IMPERFECT_ACT_3_SG "अपौहत\u{94d}",
-    "अपोहति" IMPERFECT_ACT_3_DU "अपौहताम\u{94d}",
-    "अपोहति" IMPERFECT_ACT_3_PL "अपौहन\u{94d}",
-    "अपोहति" IMPERFECT_MID_1_SG "अपौह\u{947}",
-    "अपोहति" IMPERFECT_MID_1_DU "अपौहावहि",
-    "अपोहति" IMPERFECT_MID_1_PL "अपौहामहि",
-    "अपोहति" IMPERFECT_MID_2_SG "अपौहथाः",
-    "अपोहति" IMPERFECT_MID_2_DU "अपौह\u{947}थाम\u{94d}",
-    "अपोहति" IMPERFECT_MID_2_PL "अपौहध\u{94d}वम\u{94d}",
-    "अपोहति" IMPERFECT_MID_3_SG "अपौहत",
-    "अपोहति" IMPERFECT_MID_3_DU "अपौह\u{947}ताम\u{94d}",
-    "अपोहति" IMPERFECT_MID_3_PL "अपौहन\u{94d}त",
-    "अप\u{94d}राक\u{94d}" AORIST_ACT_1_SG "अप\u{94d}राक\u{94d}षम\u{94d}",
-    "अप\u{94d}राक\u{94d}" AORIST_ACT_1_DU "अप\u{94d}राक\u{94d}ष\u{94d}व",
-    "अप\u{94d}राक\u{94d}" AORIST_ACT_1_PL "अप\u{94d}राक\u{94d}ष\u{94d}म",
-    "अप\u{94d}राक\u{94d}" AORIST_ACT_2_SG "अप\u{94d}राक\u{94d}",
-    "अप\u{94d}राक\u{94d}" AORIST_ACT_3_SG "अप\u{94d}राक\u{94d}",
-    "अप\u{94d}राक\u{94d}" AORIST_ACT_3_PL "अप\u{94d}राक\u{94d}ष\u{941}ः",
-    "अप\u{94d}राक\u{94d}" AORIST_MID_1_SG "अप\u{943}क\u{94d}षि",
-    "अप\u{94d}राक\u{94d}" AORIST_MID_1_DU "अप\u{943}क\u{94d}ष\u{94d}वहि",
-    "अप\u{94d}राक\u{94d}" AORIST_MID_1_PL "अप\u{943}क\u{94d}ष\u{94d}महि",
-    "अप\u{94d}राक\u{94d}" AORIST_MID_2_SG "अप\u{943}क\u{94d}थाः",
-    "अप\u{94d}राक\u{94d}" AORIST_MID_2_DU "अप\u{943}क\u{94d}षाथाम\u{94d}",
-    "अप\u{94d}राक\u{94d}" AORIST_MID_2_PL "अप\u{943}ग\u{94d}ध\u{94d}वम\u{94d}",
-    "अप\u{94d}राक\u{94d}" AORIST_MID_3_SG "अप\u{943}क\u{94d}त",
-    "अप\u{94d}राक\u{94d}" AORIST_MID_3_DU "अप\u{943}क\u{94d}षाताम\u{94d}",
-    "अप\u{94d}राक\u{94d}" AORIST_MID_3_PL "अप\u{943}क\u{94d}षत",
-    "अप\u{94d}राक\u{94d}षीत\u{94d}" AORIST_ACT_1_SG "अप\u{94d}राक\u{94d}षम\u{94d}",
-    "अप\u{94d}राक\u{94d}षीत\u{94d}" AORIST_ACT_1_DU "अप\u{94d}राक\u{94d}ष\u{94d}व",
-    "अप\u{94d}राक\u{94d}षीत\u{94d}" AORIST_ACT_1_PL "अप\u{94d}राक\u{94d}ष\u{94d}म",
-    "अप\u{94d}राक\u{94d}षीत\u{94d}" AORIST_ACT_2_DU "अप\u{94d}राष\u{94d}टम\u{94d}",
-    "अप\u{94d}राक\u{94d}षीत\u{94d}" AORIST_ACT_2_PL "अप\u{94d}राष\u{94d}ट",
-    "अप\u{94d}राक\u{94d}षीत\u{94d}" AORIST_ACT_3_DU "अप\u{94d}राष\u{94d}टाम\u{94d}",
-    "अप\u{94d}राक\u{94d}षीत\u{94d}" AORIST_ACT_3_PL "अप\u{94d}राक\u{94d}ष\u{941}ः",
-    "अप\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_1_SG "अप\u{94d}रक\u{94d}षि",
-    "अप\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_1_DU "अप\u{94d}रक\u{94d}ष\u{94d}वहि",
-    "अप\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_1_PL "अप\u{94d}रक\u{94d}ष\u{94d}महि",
-    "अप\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_2_SG "अप\u{94d}रष\u{94d}ठाः",
-    "अप\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_2_DU "अप\u{94d}रक\u{94d}षाथाम\u{94d}",
-    "अप\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_2_PL "अप\u{94d}रड\u{94d}ढ\u{94d}वम\u{94d}",
-    "अप\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_3_SG "अप\u{94d}रष\u{94d}ट",
-    "अप\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_3_DU "अप\u{94d}रक\u{94d}षाताम\u{94d}",
-    "अप\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_3_PL "अप\u{94d}रक\u{94d}षत",
-    "अब\u{941}द\u{94d}ध" AORIST_MID_1_SG "अभ\u{941}त\u{94d}सि",
-    "अब\u{941}द\u{94d}ध" AORIST_MID_1_DU "अभ\u{941}त\u{94d}स\u{94d}वहि",
-    "अब\u{941}द\u{94d}ध" AORIST_MID_1_PL "अभ\u{941}त\u{94d}स\u{94d}महि",
-    "अब\u{941}द\u{94d}ध" AORIST_MID_2_SG "अब\u{941}द\u{94d}धाः",
-    "अब\u{941}द\u{94d}ध" AORIST_MID_2_DU "अभ\u{941}त\u{94d}साथाम\u{94d}",
-    "अब\u{941}द\u{94d}ध" AORIST_MID_2_PL "अभ\u{941}द\u{94d}ध\u{94d}वम\u{94d}",
-    "अब\u{941}द\u{94d}ध" AORIST_MID_3_SG "अब\u{941}द\u{94d}ध",
-    "अब\u{941}द\u{94d}ध" AORIST_MID_3_DU "अभ\u{941}त\u{94d}साताम\u{94d}",
-    "अब\u{941}द\u{94d}ध" AORIST_MID_3_PL "अभ\u{941}त\u{94d}सत",
-    "अभाक\u{94d}षीत\u{94d}" AORIST_ACT_1_SG "अभाक\u{94d}षम\u{94d}",
-    "अभाक\u{94d}षीत\u{94d}" AORIST_ACT_1_DU "अभाक\u{94d}ष\u{94d}व",
-    "अभाक\u{94d}षीत\u{94d}" AORIST_ACT_1_PL "अभाक\u{94d}ष\u{94d}म",
-    "अभाक\u{94d}षीत\u{94d}" AORIST_ACT_2_DU "अभाक\u{94d}तम\u{94d}",
-    "अभाक\u{94d}षीत\u{94d}" AORIST_ACT_2_PL "अभाक\u{94d}त",
-    "अभाक\u{94d}षीत\u{94d}" AORIST_ACT_3_DU "अभाक\u{94d}ताम\u{94d}",
-    "अभाक\u{94d}षीत\u{94d}" AORIST_ACT_3_PL "अभाक\u{94d}ष\u{941}ः",
-    "अभाक\u{94d}षीत\u{94d}" AORIST_MID_1_SG "अभक\u{94d}षि",
-    "अभाक\u{94d}षीत\u{94d}" AORIST_MID_1_DU "अभक\u{94d}ष\u{94d}वहि",
-    "अभाक\u{94d}षीत\u{94d}" AORIST_MID_1_PL "अभक\u{94d}ष\u{94d}महि",
-    "अभाक\u{94d}षीत\u{94d}" AORIST_MID_2_SG "अभक\u{94d}थाः",
-    "अभाक\u{94d}षीत\u{94d}" AORIST_MID_2_DU "अभक\u{94d}षाथाम\u{94d}",
-    "अभाक\u{94d}षीत\u{94d}" AORIST_MID_2_PL "अभग\u{94d}ध\u{94d}वम\u{94d}",
-    "अभाक\u{94d}षीत\u{94d}" AORIST_MID_3_SG "अभक\u{94d}त",
-    "अभाक\u{94d}षीत\u{94d}" AORIST_MID_3_DU "अभक\u{94d}षाताम\u{94d}",
-    "अभाक\u{94d}षीत\u{94d}" AORIST_MID_3_PL "अभक\u{94d}षत",
-    "अभ\u{942}त\u{94d}" AORIST_ACT_1_SG "अभ\u{942}वम\u{94d}",
-    "अभ\u{942}त\u{94d}" AORIST_ACT_1_DU "अभ\u{942}व",
-    "अभ\u{942}त\u{94d}" AORIST_ACT_1_PL "अभ\u{942}म",
-    "अभ\u{942}त\u{94d}" AORIST_ACT_3_PL "अभ\u{942}वन\u{94d}",
-    "अभ\u{947}त\u{94d}" AORIST_ACT_1_SG "अभ\u{947}दम\u{94d}",
-    "अभ\u{947}त\u{94d}" AORIST_ACT_1_DU "अभ\u{947}द\u{94d}व",
-    "अभ\u{947}त\u{94d}" AORIST_ACT_1_PL "अभ\u{947}द\u{94d}म",
-    "अभ\u{947}त\u{94d}" AORIST_ACT_2_SG "अभ\u{947}त\u{94d}",
-    "अभ\u{947}त\u{94d}" AORIST_ACT_2_DU "अभ\u{947}त\u{94d}तम\u{94d}",
-    "अभ\u{947}त\u{94d}" AORIST_ACT_2_PL "अभ\u{947}त\u{94d}त",
-    "अभ\u{947}त\u{94d}" AORIST_ACT_3_DU "अभ\u{947}त\u{94d}ताम\u{94d}",
-    "अभ\u{947}त\u{94d}" AORIST_ACT_3_PL "अभिदन\u{94d}",
-    "अभोक\u{94d}" AORIST_ACT_1_SG "अभोजम\u{94d}",
-    "अभोक\u{94d}" AORIST_ACT_1_DU "अभोज\u{94d}व",
-    "अभोक\u{94d}" AORIST_ACT_1_PL "अभोज\u{94d}म",
-    "अभोक\u{94d}" AORIST_ACT_2_SG "अभोक\u{94d}",
-    "अभोक\u{94d}" AORIST_ACT_3_SG "अभोक\u{94d}",
-    "अभोक\u{94d}" AORIST_ACT_3_PL "अभ\u{941}जन\u{94d}",
-    "अभोक\u{94d}" AORIST_MID_1_SG "अभ\u{941}जि",
-    "अभोक\u{94d}" AORIST_MID_1_DU "अभ\u{941}ज\u{94d}वहि",
-    "अभोक\u{94d}" AORIST_MID_1_PL "अभ\u{941}ज\u{94d}महि",
-    "अभोक\u{94d}" AORIST_MID_2_SG "अभ\u{941}क\u{94d}थाः",
-    "अभोक\u{94d}" AORIST_MID_2_DU "अभ\u{941}जाथाम\u{94d}",
-    "अभोक\u{94d}" AORIST_MID_2_PL "अभ\u{941}ग\u{94d}ध\u{94d}वम\u{94d}",
-    "अभोक\u{94d}" AORIST_MID_3_SG "अभ\u{941}क\u{94d}त",
-    "अभोक\u{94d}" AORIST_MID_3_DU "अभ\u{941}जाताम\u{94d}",
-    "अभोक\u{94d}" AORIST_MID_3_PL "अभ\u{941}जत",
-    "अमत" AORIST_MID_1_SG "अम\u{94d}नि",
-    "अमत" AORIST_MID_1_DU "अमन\u{94d}वहि",
-    "अमत" AORIST_MID_1_PL "अमन\u{94d}महि",
-    "अमत" AORIST_MID_2_SG "अमथाः",
-    "अमत" AORIST_MID_2_DU "अम\u{94d}नाथाम\u{94d}",
-    "अमत" AORIST_MID_2_PL "अमध\u{94d}वम\u{94d}",
-    "अमत" AORIST_MID_3_SG "अमत",
-    "अमत" AORIST_MID_3_DU "अम\u{94d}नाताम\u{94d}",
-    "अमत" AORIST_MID_3_PL "अम\u{94d}नत",
-    "अम\u{943}त" AORIST_MID_1_SG "अम\u{94d}रि",
-    "अम\u{943}त" AORIST_MID_1_DU "अम\u{943}वहि",
-    "अम\u{943}त" AORIST_MID_1_PL "अम\u{943}महि",
-    "अम\u{943}त" AORIST_MID_2_SG "अम\u{943}थाः",
-    "अम\u{943}त" AORIST_MID_2_DU "अम\u{94d}राथाम\u{94d}",
-    "अम\u{943}त" AORIST_MID_2_PL "अम\u{943}ध\u{94d}वम\u{94d}",
-    "अम\u{943}त" AORIST_MID_3_SG "अम\u{943}त",
-    "अम\u{943}त" AORIST_MID_3_DU "अम\u{94d}राताम\u{94d}",
-    "अम\u{943}त" AORIST_MID_3_PL "अम\u{94d}रत",
-    "अमोक\u{94d}" AORIST_ACT_1_SG "अमोचम\u{94d}",
-    "अमोक\u{94d}" AORIST_ACT_1_DU "अमोच\u{94d}व",
-    "अमोक\u{94d}" AORIST_ACT_1_PL "अमोच\u{94d}म",
-    "अमोक\u{94d}" AORIST_ACT_2_SG "अमोक\u{94d}",
-    "अमोक\u{94d}" AORIST_ACT_3_SG "अमोक\u{94d}",
-    "अमोक\u{94d}" AORIST_ACT_3_PL "अम\u{941}चन\u{94d}",
-    "अमोक\u{94d}" AORIST_MID_1_SG "अम\u{941}चि",
-    "अमोक\u{94d}" AORIST_MID_1_DU "अम\u{941}च\u{94d}वहि",
-    "अमोक\u{94d}" AORIST_MID_1_PL "अम\u{941}च\u{94d}महि",
-    "अमोक\u{94d}" AORIST_MID_2_SG "अम\u{941}क\u{94d}थाः",
-    "अमोक\u{94d}" AORIST_MID_2_DU "अम\u{941}चाथाम\u{94d}",
-    "अमोक\u{94d}" AORIST_MID_2_PL "अम\u{941}ग\u{94d}ध\u{94d}वम\u{94d}",
-    "अमोक\u{94d}" AORIST_MID_3_SG "अम\u{941}क\u{94d}त",
-    "अमोक\u{94d}" AORIST_MID_3_DU "अम\u{941}चाताम\u{94d}",
-    "अमोक\u{94d}" AORIST_MID_3_PL "अम\u{941}चत",
-    "अमौक\u{94d}" AORIST_ACT_1_SG "अमौक\u{94d}षम\u{94d}",
-    "अमौक\u{94d}" AORIST_ACT_1_DU "अमौक\u{94d}ष\u{94d}व",
-    "अमौक\u{94d}" AORIST_ACT_1_PL "अमौक\u{94d}ष\u{94d}म",
-    "अमौक\u{94d}" AORIST_ACT_2_SG "अमौक\u{94d}",
-    "अमौक\u{94d}" AORIST_ACT_3_SG "अमौक\u{94d}",
-    "अमौक\u{94d}" AORIST_ACT_3_PL "अमौक\u{94d}ष\u{941}ः",
-    "अमौक\u{94d}" AORIST_MID_1_SG "अम\u{941}क\u{94d}षि",
-    "अमौक\u{94d}" AORIST_MID_1_DU "अम\u{941}क\u{94d}ष\u{94d}वहि",
-    "अमौक\u{94d}" AORIST_MID_1_PL "अम\u{941}क\u{94d}ष\u{94d}महि",
-    "अमौक\u{94d}" AORIST_MID_2_SG "अम\u{941}क\u{94d}थाः",
-    "अमौक\u{94d}" AORIST_MID_2_DU "अम\u{941}क\u{94d}षाथाम\u{94d}",
-    "अमौक\u{94d}" AORIST_MID_2_PL "अम\u{941}ग\u{94d}ध\u{94d}वम\u{94d}",
-    "अमौक\u{94d}" AORIST_MID_3_SG "अम\u{941}क\u{94d}त",
-    "अमौक\u{94d}" AORIST_MID_3_DU "अम\u{941}क\u{94d}षाताम\u{94d}",
-    "अमौक\u{94d}" AORIST_MID_3_PL "अम\u{941}क\u{94d}षत",
-    "अयाक\u{94d}षीत\u{94d}" AORIST_ACT_1_SG "अयाक\u{94d}षम\u{94d}",
-    "अयाक\u{94d}षीत\u{94d}" AORIST_ACT_1_DU "अयाक\u{94d}ष\u{94d}व",
-    "अयाक\u{94d}षीत\u{94d}" AORIST_ACT_1_PL "अयाक\u{94d}ष\u{94d}म",
-    "अयाक\u{94d}षीत\u{94d}" AORIST_ACT_2_DU "अयाष\u{94d}टम\u{94d}",
-    "अयाक\u{94d}षीत\u{94d}" AORIST_ACT_2_PL "अयाष\u{94d}ट",
-    "अयाक\u{94d}षीत\u{94d}" AORIST_ACT_3_DU "अयाष\u{94d}टाम\u{94d}",
-    "अयाक\u{94d}षीत\u{94d}" AORIST_ACT_3_PL "अयाक\u{94d}ष\u{941}ः",
-    "अयाक\u{94d}षीत\u{94d}" AORIST_MID_1_SG "अयक\u{94d}षि",
-    "अयाक\u{94d}षीत\u{94d}" AORIST_MID_1_DU "अयक\u{94d}ष\u{94d}वहि",
-    "अयाक\u{94d}षीत\u{94d}" AORIST_MID_1_PL "अयक\u{94d}ष\u{94d}महि",
-    "अयाक\u{94d}षीत\u{94d}" AORIST_MID_2_SG "अयष\u{94d}ठाः",
-    "अयाक\u{94d}षीत\u{94d}" AORIST_MID_2_DU "अयक\u{94d}षाथाम\u{94d}",
-    "अयाक\u{94d}षीत\u{94d}" AORIST_MID_2_PL "अयड\u{94d}ढ\u{94d}वम\u{94d}",
-    "अयाक\u{94d}षीत\u{94d}" AORIST_MID_3_SG "अयष\u{94d}ट",
-    "अयाक\u{94d}षीत\u{94d}" AORIST_MID_3_DU "अयक\u{94d}षाताम\u{94d}",
-    "अयाक\u{94d}षीत\u{94d}" AORIST_MID_3_PL "अयक\u{94d}षत",
-    "अयोक\u{94d}" AORIST_ACT_1_SG "अयोजम\u{94d}",
-    "अयोक\u{94d}" AORIST_ACT_1_DU "अयोज\u{94d}व",
-    "अयोक\u{94d}" AORIST_ACT_1_PL "अयोज\u{94d}म",
-    "अयोक\u{94d}" AORIST_ACT_2_SG "अयोक\u{94d}",
-    "अयोक\u{94d}" AORIST_ACT_3_SG "अयोक\u{94d}",
-    "अयोक\u{94d}" AORIST_ACT_3_PL "अय\u{941}जन\u{94d}",
-    "अयोक\u{94d}" AORIST_MID_1_SG "अय\u{941}जि",
-    "अयोक\u{94d}" AORIST_MID_1_DU "अय\u{941}ज\u{94d}वहि",
-    "अयोक\u{94d}" AORIST_MID_1_PL "अय\u{941}ज\u{94d}महि",
-    "अयोक\u{94d}" AORIST_MID_2_SG "अय\u{941}क\u{94d}थाः",
-    "अयोक\u{94d}" AORIST_MID_2_DU "अय\u{941}जाथाम\u{94d}",
-    "अयोक\u{94d}" AORIST_MID_2_PL "अय\u{941}ग\u{94d}ध\u{94d}वम\u{94d}",
-    "अयोक\u{94d}" AORIST_MID_3_SG "अय\u{941}क\u{94d}त",
-    "अयोक\u{94d}" AORIST_MID_3_DU "अय\u{941}जाताम\u{94d}",
-    "अयोक\u{94d}" AORIST_MID_3_PL "अय\u{941}जत",
-    "अरोत\u{94d}" AORIST_ACT_1_SG "अरोधम\u{94d}",
-    "अरोत\u{94d}" AORIST_ACT_1_DU "अरोध\u{94d}व",
-    "अरोत\u{94d}" AORIST_ACT_1_PL "अरोध\u{94d}म",
-    "अरोत\u{94d}" AORIST_ACT_2_SG "अरोत\u{94d}",
-    "अरोत\u{94d}" AORIST_ACT_2_DU "अरोद\u{94d}धम\u{94d}",
-    "अरोत\u{94d}" AORIST_ACT_2_PL "अरोद\u{94d}ध",
-    "अरोत\u{94d}" AORIST_ACT_3_DU "अरोद\u{94d}धाम\u{94d}",
-    "अरोत\u{94d}" AORIST_ACT_3_PL "अर\u{941}धन\u{94d}",
-    "अरौत\u{94d}सीत\u{94d}" AORIST_ACT_2_DU "अरौद\u{94d}धम\u{94d}",
-    "अरौत\u{94d}सीत\u{94d}" AORIST_ACT_2_PL "अरौद\u{94d}ध",
-    "अरौत\u{94d}सीत\u{94d}" AORIST_ACT_3_DU "अरौद\u{94d}धाम\u{94d}",
-    "अरौत\u{94d}सीत\u{94d}" AORIST_MID_1_SG "अर\u{941}त\u{94d}सि",
-    "अरौत\u{94d}सीत\u{94d}" AORIST_MID_1_DU "अर\u{941}त\u{94d}स\u{94d}वहि",
-    "अरौत\u{94d}सीत\u{94d}" AORIST_MID_1_PL "अर\u{941}त\u{94d}स\u{94d}महि",
-    "अरौत\u{94d}सीत\u{94d}" AORIST_MID_2_SG "अर\u{941}द\u{94d}धाः",
-    "अरौत\u{94d}सीत\u{94d}" AORIST_MID_2_DU "अर\u{941}त\u{94d}साथाम\u{94d}",
-    "अरौत\u{94d}सीत\u{94d}" AORIST_MID_2_PL "अर\u{941}द\u{94d}ध\u{94d}वम\u{94d}",
-    "अरौत\u{94d}सीत\u{94d}" AORIST_MID_3_SG "अर\u{941}द\u{94d}ध",
-    "अरौत\u{94d}सीत\u{94d}" AORIST_MID_3_DU "अर\u{941}त\u{94d}साताम\u{94d}",
-    "अरौत\u{94d}सीत\u{94d}" AORIST_MID_3_PL "अर\u{941}त\u{94d}सत",
-    "अर\u{94d}पयति" IMP_ACT_1_SG "अर\u{94d}पयाणि",
-    "अर\u{94d}पयति" SUBJ_ACT_1_SG "अर\u{94d}पयाणि",
-    "अर\u{94d}पयति" PARTICIPLE_PRES_MID "अर\u{94d}पयमाण",
-    "अर\u{94d}हति" IMP_ACT_1_SG "अर\u{94d}हाणि",
-    "अर\u{94d}हति" SUBJ_ACT_1_SG "अर\u{94d}हाणि",
-    "अर\u{94d}हति" PERFECT_ACT_1_SG "आनर\u{94d}ह",
-    "अर\u{94d}हति" PERFECT_ACT_1_DU "आनर\u{94d}हिव",
-    "अर\u{94d}हति" PERFECT_ACT_1_PL "आनर\u{94d}हिम",
-    "अर\u{94d}हति" PERFECT_ACT_2_SG "आनर\u{94d}हिथ",
-    "अर\u{94d}हति" PERFECT_ACT_2_DU "आनर\u{94d}हथ\u{941}ः",
-    "अर\u{94d}हति" PERFECT_ACT_2_PL "आनर\u{94d}ह",
-    "अर\u{94d}हति" PERFECT_ACT_3_SG "आनर\u{94d}ह",
-    "अर\u{94d}हति" PERFECT_ACT_3_DU "आनर\u{94d}हत\u{941}ः",
-    "अर\u{94d}हति" PERFECT_ACT_3_PL "आनर\u{94d}ह\u{941}ः",
-    "अर\u{94d}हति" PERFECT_MID_1_SG "आनर\u{94d}ह\u{947}",
-    "अर\u{94d}हति" PERFECT_MID_1_DU "आनर\u{94d}हिवह\u{947}",
-    "अर\u{94d}हति" PERFECT_MID_1_PL "आनर\u{94d}हिमह\u{947}",
-    "अर\u{94d}हति" PERFECT_MID_2_SG "आनर\u{94d}हिष\u{947}",
-    "अर\u{94d}हति" PERFECT_MID_2_DU "आनर\u{94d}हाथ\u{947}",
-    "अर\u{94d}हति" PERFECT_MID_2_PL "आनर\u{94d}हिध\u{94d}व\u{947}",
-    "अर\u{94d}हति" PERFECT_MID_3_SG "आनर\u{94d}ह\u{947}",
-    "अर\u{94d}हति" PERFECT_MID_3_DU "आनर\u{94d}हात\u{947}",
-    "अर\u{94d}हति" PERFECT_MID_3_PL "आनर\u{94d}हिर\u{947}",
-    "अर\u{94d}हति" PARTICIPLE_PERF_ACT "आनर\u{94d}ह\u{94d}वा\u{902}स\u{94d}",
-    "अर\u{94d}हति" PARTICIPLE_PERF_MID "आनर\u{94d}हाण",
-    "अल\u{947}किष\u{94d}यत\u{94d}" CONDITIONAL_ACT_1_SG "अल\u{947}किष\u{94d}यम\u{94d}",
-    "अल\u{947}किष\u{94d}यत\u{94d}" CONDITIONAL_ACT_1_DU "अल\u{947}किष\u{94d}याव",
-    "अल\u{947}किष\u{94d}यत\u{94d}" CONDITIONAL_ACT_1_PL "अल\u{947}किष\u{94d}याम",
-    "अल\u{947}किष\u{94d}यत\u{94d}" CONDITIONAL_ACT_2_SG "अल\u{947}किष\u{94d}यः",
-    "अल\u{947}किष\u{94d}यत\u{94d}" CONDITIONAL_ACT_2_DU "अल\u{947}किष\u{94d}यतम\u{94d}",
-    "अल\u{947}किष\u{94d}यत\u{94d}" CONDITIONAL_ACT_2_PL "अल\u{947}किष\u{94d}यत",
-    "अल\u{947}किष\u{94d}यत\u{94d}" CONDITIONAL_ACT_3_SG "अल\u{947}किष\u{94d}यत\u{94d}",
-    "अल\u{947}किष\u{94d}यत\u{94d}" CONDITIONAL_ACT_3_DU "अल\u{947}किष\u{94d}यताम\u{94d}",
-    "अल\u{947}किष\u{94d}यत\u{94d}" CONDITIONAL_ACT_3_PL "अल\u{947}किष\u{94d}यन\u{94d}",
-    "अवगच\u{94d}छति" IMPERFECT_ACT_1_SG "अवागच\u{94d}छम\u{94d}",
-    "अवगच\u{94d}छति" IMPERFECT_ACT_1_DU "अवागच\u{94d}छाव",
-    "अवगच\u{94d}छति" IMPERFECT_ACT_1_PL "अवागच\u{94d}छाम",
-    "अवगच\u{94d}छति" IMPERFECT_ACT_2_SG "अवागच\u{94d}छः",
-    "अवगच\u{94d}छति" IMPERFECT_ACT_2_DU "अवागच\u{94d}छतम\u{94d}",
-    "अवगच\u{94d}छति" IMPERFECT_ACT_2_PL "अवागच\u{94d}छत",
-    "अवगच\u{94d}छति" IMPERFECT_ACT_3_SG "अवागच\u{94d}छत\u{94d}",
-    "अवगच\u{94d}छति" IMPERFECT_ACT_3_DU "अवागच\u{94d}छताम\u{94d}",
-    "अवगच\u{94d}छति" IMPERFECT_ACT_3_PL "अवागच\u{94d}छन\u{94d}",
-    "अवगच\u{94d}छति" IMPERFECT_MID_1_SG "अवागच\u{94d}छ\u{947}",
-    "अवगच\u{94d}छति" IMPERFECT_MID_1_DU "अवागच\u{94d}छावहि",
-    "अवगच\u{94d}छति" IMPERFECT_MID_1_PL "अवागच\u{94d}छामहि",
-    "अवगच\u{94d}छति" IMPERFECT_MID_2_SG "अवागच\u{94d}छथाः",
-    "अवगच\u{94d}छति" IMPERFECT_MID_2_DU "अवागच\u{94d}छ\u{947}थाम\u{94d}",
-    "अवगच\u{94d}छति" IMPERFECT_MID_2_PL "अवागच\u{94d}छध\u{94d}वम\u{94d}",
-    "अवगच\u{94d}छति" IMPERFECT_MID_3_SG "अवागच\u{94d}छत",
-    "अवगच\u{94d}छति" IMPERFECT_MID_3_DU "अवागच\u{94d}छ\u{947}ताम\u{94d}",
-    "अवगच\u{94d}छति" IMPERFECT_MID_3_PL "अवागच\u{94d}छन\u{94d}त",
-    "अवगच\u{94d}छति" FUTURE_ACT_1_SG "अवगमिष\u{94d}यामि",
-    "अवगच\u{94d}छति" FUTURE_ACT_1_DU "अवगमिष\u{94d}यावः",
-    "अवगच\u{94d}छति" FUTURE_ACT_1_PL "अवगमिष\u{94d}यामः",
-    "अवगच\u{94d}छति" FUTURE_ACT_2_SG "अवगमिष\u{94d}यसि",
-    "अवगच\u{94d}छति" FUTURE_ACT_2_DU "अवगमिष\u{94d}यथः",
-    "अवगच\u{94d}छति" FUTURE_ACT_2_PL "अवगमिष\u{94d}यथ",
-    "अवगच\u{94d}छति" FUTURE_ACT_3_SG "अवगमिष\u{94d}यति",
-    "अवगच\u{94d}छति" FUTURE_ACT_3_DU "अवगमिष\u{94d}यतः",
-    "अवगच\u{94d}छति" FUTURE_ACT_3_PL "अवगमिष\u{94d}यन\u{94d}ति",
-    "अवगच\u{94d}छति" FUTURE_MID_1_SG "अवगमिष\u{94d}य\u{947}",
-    "अवगच\u{94d}छति" FUTURE_MID_1_DU "अवगमिष\u{94d}यावह\u{947}",
-    "अवगच\u{94d}छति" FUTURE_MID_1_PL "अवगमिष\u{94d}यामह\u{947}",
-    "अवगच\u{94d}छति" FUTURE_MID_2_SG "अवगमिष\u{94d}यस\u{947}",
-    "अवगच\u{94d}छति" FUTURE_MID_2_DU "अवगमिष\u{94d}य\u{947}थ\u{947}",
-    "अवगच\u{94d}छति" FUTURE_MID_2_PL "अवगमिष\u{94d}यध\u{94d}व\u{947}",
-    "अवगच\u{94d}छति" FUTURE_MID_3_SG "अवगमिष\u{94d}यत\u{947}",
-    "अवगच\u{94d}छति" FUTURE_MID_3_DU "अवगमिष\u{94d}य\u{947}त\u{947}",
-    "अवगच\u{94d}छति" FUTURE_MID_3_PL "अवगमिष\u{94d}यन\u{94d}त\u{947}",
-    "अवगच\u{94d}छति" CONDITIONAL_ACT_1_SG "अवागमिष\u{94d}यम\u{94d}",
-    "अवगच\u{94d}छति" CONDITIONAL_ACT_1_DU "अवागमिष\u{94d}याव",
-    "अवगच\u{94d}छति" CONDITIONAL_ACT_1_PL "अवागमिष\u{94d}याम",
-    "अवगच\u{94d}छति" CONDITIONAL_ACT_2_SG "अवागमिष\u{94d}यः",
-    "अवगच\u{94d}छति" CONDITIONAL_ACT_2_DU "अवागमिष\u{94d}यतम\u{94d}",
-    "अवगच\u{94d}छति" CONDITIONAL_ACT_2_PL "अवागमिष\u{94d}यत",
-    "अवगच\u{94d}छति" CONDITIONAL_ACT_3_SG "अवागमिष\u{94d}यत\u{94d}",
-    "अवगच\u{94d}छति" CONDITIONAL_ACT_3_DU "अवागमिष\u{94d}यताम\u{94d}",
-    "अवगच\u{94d}छति" CONDITIONAL_ACT_3_PL "अवागमिष\u{94d}यन\u{94d}",
-    "अवगच\u{94d}छति" CONDITIONAL_MID_1_SG "अवागमिष\u{94d}य\u{947}",
-    "अवगच\u{94d}छति" CONDITIONAL_MID_1_DU "अवागमिष\u{94d}यावहि",
-    "अवगच\u{94d}छति" CONDITIONAL_MID_1_PL "अवागमिष\u{94d}यामहि",
-    "अवगच\u{94d}छति" CONDITIONAL_MID_2_SG "अवागमिष\u{94d}यथाः",
-    "अवगच\u{94d}छति" CONDITIONAL_MID_2_DU "अवागमिष\u{94d}य\u{947}थाम\u{94d}",
-    "अवगच\u{94d}छति" CONDITIONAL_MID_2_PL "अवागमिष\u{94d}यध\u{94d}वम\u{94d}",
-    "अवगच\u{94d}छति" CONDITIONAL_MID_3_SG "अवागमिष\u{94d}यत",
-    "अवगच\u{94d}छति" CONDITIONAL_MID_3_DU "अवागमिष\u{94d}य\u{947}ताम\u{94d}",
-    "अवगच\u{94d}छति" CONDITIONAL_MID_3_PL "अवागमिष\u{94d}यन\u{94d}त",
-    "अवगच\u{94d}छति" PERFECT_ACT_1_SG "अवजगम",
-    "अवगच\u{94d}छति" PERFECT_ACT_1_DU "अवजग\u{94d}मिव",
-    "अवगच\u{94d}छति" PERFECT_ACT_1_PL "अवजग\u{94d}मिम",
-    "अवगच\u{94d}छति" PERFECT_ACT_2_SG "अवजगन\u{94d}थ",
-    "अवगच\u{94d}छति" PERFECT_ACT_2_DU "अवजग\u{94d}मथ\u{941}ः",
-    "अवगच\u{94d}छति" PERFECT_ACT_2_PL "अवजग\u{94d}म",
-    "अवगच\u{94d}छति" PERFECT_ACT_3_SG "अवजगाम",
-    "अवगच\u{94d}छति" PERFECT_ACT_3_DU "अवजग\u{94d}मत\u{941}ः",
-    "अवगच\u{94d}छति" PERFECT_ACT_3_PL "अवजग\u{94d}म\u{941}ः",
-    "अवगच\u{94d}छति" PERFECT_MID_1_SG "अवजग\u{94d}म\u{947}",
-    "अवगच\u{94d}छति" PERFECT_MID_1_DU "अवजग\u{94d}मिवह\u{947}",
-    "अवगच\u{94d}छति" PERFECT_MID_1_PL "अवजग\u{94d}मिमह\u{947}",
-    "अवगच\u{94d}छति" PERFECT_MID_2_SG "अवजग\u{94d}मिष\u{947}",
-    "अवगच\u{94d}छति" PERFECT_MID_2_DU "अवजग\u{94d}माथ\u{947}",
-    "अवगच\u{94d}छति" PERFECT_MID_2_PL "अवजग\u{94d}मिध\u{94d}व\u{947}",
-    "अवगच\u{94d}छति" PERFECT_MID_3_SG "अवजग\u{94d}म\u{947}",
-    "अवगच\u{94d}छति" PERFECT_MID_3_DU "अवजग\u{94d}मात\u{947}",
-    "अवगच\u{94d}छति" PERFECT_MID_3_PL "अवजग\u{94d}मिर\u{947}",
-    "अवगच\u{94d}छति" AORIST_ACT_1_SG "अवागमम\u{94d}",
-    "अवगच\u{94d}छति" AORIST_ACT_1_DU "अवागमाव",
-    "अवगच\u{94d}छति" AORIST_ACT_1_PL "अवागमाम",
-    "अवगच\u{94d}छति" AORIST_ACT_2_SG "अवागमः",
-    "अवगच\u{94d}छति" AORIST_ACT_2_DU "अवागमतम\u{94d}",
-    "अवगच\u{94d}छति" AORIST_ACT_2_PL "अवागमत",
-    "अवगच\u{94d}छति" AORIST_ACT_3_SG "अवागमत\u{94d}",
-    "अवगच\u{94d}छति" AORIST_ACT_3_DU "अवागमताम\u{94d}",
-    "अवगच\u{94d}छति" AORIST_ACT_3_PL "अवागमन\u{94d}",
-    "अवगच\u{94d}छति" AORIST_MID_1_SG "अवागमिषि",
-    "अवगच\u{94d}छति" AORIST_MID_1_DU "अवागमिष\u{94d}वहि",
-    "अवगच\u{94d}छति" AORIST_MID_1_PL "अवागमिष\u{94d}महि",
-    "अवगच\u{94d}छति" AORIST_MID_2_SG "अवागमिष\u{94d}ठाः",
-    "अवगच\u{94d}छति" AORIST_MID_2_DU "अवागमिषाथाम\u{94d}",
-    "अवगच\u{94d}छति" AORIST_MID_2_PL "अवागमिड\u{94d}ढ\u{94d}वम\u{94d}",
-    "अवगच\u{94d}छति" AORIST_MID_3_SG "अवागमिष\u{94d}ट",
-    "अवगच\u{94d}छति" AORIST_MID_3_DU "अवागमिषाताम\u{94d}",
-    "अवगच\u{94d}छति" AORIST_MID_3_PL "अवागमिषत",
-    "अवगच\u{94d}छति" INFINITIVE "अवगन\u{94d}त\u{941}म\u{94d}",
-    "अवगच\u{94d}छति" GERUND "अवगत\u{94d}वा",
-    "अवगच\u{94d}छति" PARTICIPLE_FUT_ACT "अवगमिष\u{94d}यत\u{94d}",
-    "अवगच\u{94d}छति" PARTICIPLE_FUT_MID "अवगमिष\u{94d}यमाण",
-    "अवगच\u{94d}छति" PARTICIPLE_PERF_ACT "अवजगन\u{94d}वा\u{902}स\u{94d}",
-    "अवगच\u{94d}छति" PARTICIPLE_PERF_MID "अवजग\u{94d}मान",
-    "अवर\u{94d}" AORIST_ACT_1_SG "अवरम\u{94d}",
-    "अवर\u{94d}" AORIST_ACT_1_DU "अवर\u{94d}व",
-    "अवर\u{94d}" AORIST_ACT_1_PL "अवर\u{94d}म",
-    "अवर\u{94d}" AORIST_ACT_2_SG "अवर\u{94d}",
-    "अवर\u{94d}" AORIST_ACT_3_SG "अवर\u{94d}",
-    "अवर\u{94d}" AORIST_ACT_3_PL "अव\u{94d}रन\u{94d}",
-    "अवर\u{94d}" AORIST_MID_1_SG "अव\u{94d}रि",
-    "अवर\u{94d}" AORIST_MID_1_DU "अव\u{943}वहि",
-    "अवर\u{94d}" AORIST_MID_1_PL "अव\u{943}महि",
-    "अवर\u{94d}" AORIST_MID_2_SG "अव\u{943}थाः",
-    "अवर\u{94d}" AORIST_MID_2_DU "अव\u{94d}राथाम\u{94d}",
-    "अवर\u{94d}" AORIST_MID_2_PL "अव\u{943}ध\u{94d}वम\u{94d}",
-    "अवर\u{94d}" AORIST_MID_3_SG "अव\u{943}त",
-    "अवर\u{94d}" AORIST_MID_3_DU "अव\u{94d}राताम\u{94d}",
-    "अवर\u{94d}" AORIST_MID_3_PL "अव\u{94d}रत",
-    "अवर\u{94d}क\u{94d}" AORIST_ACT_1_SG "अवर\u{94d}जम\u{94d}",
-    "अवर\u{94d}क\u{94d}" AORIST_ACT_1_DU "अवर\u{94d}ज\u{94d}व",
-    "अवर\u{94d}क\u{94d}" AORIST_ACT_1_PL "अवर\u{94d}ज\u{94d}म",
-    "अवर\u{94d}क\u{94d}" AORIST_ACT_2_SG "अवर\u{94d}क\u{94d}",
-    "अवर\u{94d}क\u{94d}" AORIST_ACT_3_SG "अवर\u{94d}क\u{94d}",
-    "अवर\u{94d}क\u{94d}" AORIST_ACT_3_PL "अव\u{943}जन\u{94d}",
-    "अवर\u{94d}क\u{94d}" AORIST_MID_1_SG "अव\u{943}जि",
-    "अवर\u{94d}क\u{94d}" AORIST_MID_1_DU "अव\u{943}ज\u{94d}वहि",
-    "अवर\u{94d}क\u{94d}" AORIST_MID_1_PL "अव\u{943}ज\u{94d}महि",
-    "अवर\u{94d}क\u{94d}" AORIST_MID_2_SG "अव\u{943}क\u{94d}थाः",
-    "अवर\u{94d}क\u{94d}" AORIST_MID_2_DU "अव\u{943}जाथाम\u{94d}",
-    "अवर\u{94d}क\u{94d}" AORIST_MID_2_PL "अव\u{943}ग\u{94d}ध\u{94d}वम\u{94d}",
-    "अवर\u{94d}क\u{94d}" AORIST_MID_3_SG "अव\u{943}क\u{94d}त",
-    "अवर\u{94d}क\u{94d}" AORIST_MID_3_DU "अव\u{943}जाताम\u{94d}",
-    "अवर\u{94d}क\u{94d}" AORIST_MID_3_PL "अव\u{943}जत",
-    "अवर\u{94d}त\u{94d}" AORIST_ACT_1_SG "अवर\u{94d}तम\u{94d}",
-    "अवर\u{94d}त\u{94d}" AORIST_ACT_1_DU "अवर\u{94d}त\u{94d}व",
-    "अवर\u{94d}त\u{94d}" AORIST_ACT_1_PL "अवर\u{94d}त\u{94d}म",
-    "अवर\u{94d}त\u{94d}" AORIST_ACT_2_SG "अवर\u{94d}त\u{94d}",
-    "अवर\u{94d}त\u{94d}" AORIST_ACT_2_DU "अवर\u{94d}त\u{94d}तम\u{94d}",
-    "अवर\u{94d}त\u{94d}" AORIST_ACT_2_PL "अवर\u{94d}त\u{94d}त",
-    "अवर\u{94d}त\u{94d}" AORIST_ACT_3_DU "अवर\u{94d}त\u{94d}ताम\u{94d}",
-    "अवर\u{94d}त\u{94d}" AORIST_ACT_3_PL "अव\u{943}तन\u{94d}",
-    "अवाक\u{94d}षीत\u{94d}" AORIST_ACT_1_SG "अवाक\u{94d}षम\u{94d}",
-    "अवाक\u{94d}षीत\u{94d}" AORIST_ACT_1_DU "अवाक\u{94d}ष\u{94d}व",
-    "अवाक\u{94d}षीत\u{94d}" AORIST_ACT_1_PL "अवाक\u{94d}ष\u{94d}म",
-    "अवाक\u{94d}षीत\u{94d}" AORIST_ACT_2_DU "अवाढम\u{94d}",
-    "अवाक\u{94d}षीत\u{94d}" AORIST_ACT_2_PL "अवाढ",
-    "अवाक\u{94d}षीत\u{94d}" AORIST_ACT_3_DU "अवाढाम\u{94d}",
-    "अवाक\u{94d}षीत\u{94d}" AORIST_ACT_3_PL "अवाक\u{94d}ष\u{941}ः",
-    "अवात\u{94d}सीत\u{94d}" AORIST_ACT_2_DU "अवास\u{94d}तम\u{94d}",
-    "अवात\u{94d}सीत\u{94d}" AORIST_ACT_2_PL "अवास\u{94d}त",
-    "अवात\u{94d}सीत\u{94d}" AORIST_ACT_3_DU "अवास\u{94d}ताम\u{94d}",
-    "अवार\u{94d}क\u{94d}षीत\u{94d}" AORIST_ACT_1_SG "अवार\u{94d}क\u{94d}षम\u{94d}",
-    "अवार\u{94d}क\u{94d}षीत\u{94d}" AORIST_ACT_1_DU "अवार\u{94d}क\u{94d}ष\u{94d}व",
-    "अवार\u{94d}क\u{94d}षीत\u{94d}" AORIST_ACT_1_PL "अवार\u{94d}क\u{94d}ष\u{94d}म",
-    "अवार\u{94d}क\u{94d}षीत\u{94d}" AORIST_ACT_2_DU "अवार\u{94d}क\u{94d}तम\u{94d}",
-    "अवार\u{94d}क\u{94d}षीत\u{94d}" AORIST_ACT_2_PL "अवार\u{94d}क\u{94d}त",
-    "अवार\u{94d}क\u{94d}षीत\u{94d}" AORIST_ACT_3_DU "अवार\u{94d}क\u{94d}ताम\u{94d}",
-    "अवार\u{94d}क\u{94d}षीत\u{94d}" AORIST_ACT_3_PL "अवार\u{94d}क\u{94d}ष\u{941}ः",
-    "अवार\u{94d}क\u{94d}षीत\u{94d}" AORIST_MID_1_SG "अव\u{943}क\u{94d}षि",
-    "अवार\u{94d}क\u{94d}षीत\u{94d}" AORIST_MID_1_DU "अव\u{943}क\u{94d}ष\u{94d}वहि",
-    "अवार\u{94d}क\u{94d}षीत\u{94d}" AORIST_MID_1_PL "अव\u{943}क\u{94d}ष\u{94d}महि",
-    "अवार\u{94d}क\u{94d}षीत\u{94d}" AORIST_MID_2_SG "अव\u{943}क\u{94d}थाः",
-    "अवार\u{94d}क\u{94d}षीत\u{94d}" AORIST_MID_2_DU "अव\u{943}क\u{94d}षाथाम\u{94d}",
-    "अवार\u{94d}क\u{94d}षीत\u{94d}" AORIST_MID_2_PL "अव\u{943}ग\u{94d}ध\u{94d}वम\u{94d}",
-    "अवार\u{94d}क\u{94d}षीत\u{94d}" AORIST_MID_3_SG "अव\u{943}क\u{94d}त",
-    "अवार\u{94d}क\u{94d}षीत\u{94d}" AORIST_MID_3_DU "अव\u{943}क\u{94d}षाताम\u{94d}",
-    "अवार\u{94d}क\u{94d}षीत\u{94d}" AORIST_MID_3_PL "अव\u{943}क\u{94d}षत",
-    "अश\u{94d}र\u{947}त\u{94d}" AORIST_ACT_1_SG "अश\u{94d}रयम\u{94d}",
-    "अश\u{94d}र\u{947}त\u{94d}" AORIST_ACT_1_DU "अश\u{94d}र\u{947}व",
-    "अश\u{94d}र\u{947}त\u{94d}" AORIST_ACT_1_PL "अश\u{94d}र\u{947}म",
-    "अश\u{94d}र\u{947}त\u{94d}" AORIST_ACT_3_PL "अश\u{94d}रियन\u{94d}",
-    "अश\u{94d}रोत\u{94d}" AORIST_ACT_1_SG "अश\u{94d}रवम\u{94d}",
-    "अश\u{94d}रोत\u{94d}" AORIST_ACT_1_DU "अश\u{94d}रोव",
-    "अश\u{94d}रोत\u{94d}" AORIST_ACT_1_PL "अश\u{94d}रोम",
-    "अश\u{94d}रोत\u{94d}" AORIST_ACT_3_PL "अश\u{94d}र\u{941}वन\u{94d}",
-    "अश\u{94d}रौषीत\u{94d}" AORIST_ACT_1_SG "अश\u{94d}रौषम\u{94d}",
-    "अश\u{94d}रौषीत\u{94d}" AORIST_ACT_1_DU "अश\u{94d}रौष\u{94d}व",
-    "अश\u{94d}रौषीत\u{94d}" AORIST_ACT_1_PL "अश\u{94d}रौष\u{94d}म",
-    "अश\u{94d}रौषीत\u{94d}" AORIST_ACT_2_DU "अश\u{94d}रौष\u{94d}टम\u{94d}",
-    "अश\u{94d}रौषीत\u{94d}" AORIST_ACT_2_PL "अश\u{94d}रौष\u{94d}ट",
-    "अश\u{94d}रौषीत\u{94d}" AORIST_ACT_3_DU "अश\u{94d}रौष\u{94d}टाम\u{94d}",
-    "अश\u{94d}रौषीत\u{94d}" AORIST_ACT_3_PL "अश\u{94d}रौष\u{941}ः",
-    "अस\u{94d}ति" IND_ACT_1_SG "अस\u{94d}मि",
-    "अस\u{94d}ति" IND_ACT_1_DU "स\u{94d}वः",
-    "अस\u{94d}ति" IND_ACT_1_PL "स\u{94d}मः",
-    "अस\u{94d}ति" IND_ACT_2_SG "असि",
-    "अस\u{94d}ति" IND_ACT_2_DU "स\u{94d}थः",
-    "अस\u{94d}ति" IND_ACT_2_PL "स\u{94d}थ",
-    "अस\u{94d}ति" IND_ACT_3_DU "स\u{94d}तः",
-    "अस\u{94d}ति" IND_ACT_3_PL "सन\u{94d}ति",
-    "अस\u{94d}ति" IND_MID_1_SG "ह\u{947}",
-    "अस\u{94d}ति" IND_MID_1_DU "स\u{94d}वह\u{947}",
-    "अस\u{94d}ति" IND_MID_1_PL "स\u{94d}मह\u{947}",
-    "अस\u{94d}ति" IND_MID_2_SG "स\u{947}",
-    "अस\u{94d}ति" IND_MID_2_DU "साथ\u{947}",
-    "अस\u{94d}ति" IND_MID_2_PL "ध\u{94d}व\u{947}",
-    "अस\u{94d}ति" IND_MID_3_SG "स\u{94d}त\u{947}",
-    "अस\u{94d}ति" IND_MID_3_DU "सात\u{947}",
-    "अस\u{94d}ति" IND_MID_3_PL "सत\u{947}",
-    "अस\u{94d}ति" IMP_ACT_1_SG "असानि",
-    "अस\u{94d}ति" IMP_ACT_1_DU "असाव",
-    "अस\u{94d}ति" IMP_ACT_1_PL "असाम",
-    "अस\u{94d}ति" IMP_ACT_2_SG "एधि",
-    "अस\u{94d}ति" IMP_ACT_2_DU "स\u{94d}तम\u{94d}",
-    "अस\u{94d}ति" IMP_ACT_2_PL "स\u{94d}त",
-    "अस\u{94d}ति" IMP_ACT_3_DU "स\u{94d}ताम\u{94d}",
-    "अस\u{94d}ति" IMP_ACT_3_PL "सन\u{94d}त\u{941}",
-    "अस\u{94d}ति" IMP_MID_1_SG "अस\u{948}",
-    "अस\u{94d}ति" IMP_MID_1_DU "असावह\u{948}",
-    "अस\u{94d}ति" IMP_MID_1_PL "असामह\u{948}",
-    "अस\u{94d}ति" IMP_MID_2_SG "स\u{94d}व",
-    "अस\u{94d}ति" IMP_MID_2_DU "साथाम\u{94d}",
-    "अस\u{94d}ति" IMP_MID_2_PL "ध\u{94d}वम\u{94d}",
-    "अस\u{94d}ति" IMP_MID_3_SG "स\u{94d}ताम\u{94d}",
-    "अस\u{94d}ति" IMP_MID_3_DU "साताम\u{94d}",
-    "अस\u{94d}ति" IMP_MID_3_PL "सताम\u{94d}",
-    "अस\u{94d}ति" OPT_ACT_1_SG "स\u{94d}याम\u{94d}",
-    "अस\u{94d}ति" OPT_ACT_1_DU "स\u{94d}याव",
-    "अस\u{94d}ति" OPT_ACT_1_PL "स\u{94d}याम",
-    "अस\u{94d}ति" OPT_ACT_2_SG "स\u{94d}याः",
-    "अस\u{94d}ति" OPT_ACT_2_DU "स\u{94d}यातम\u{94d}",
-    "अस\u{94d}ति" OPT_ACT_2_PL "स\u{94d}यात",
-    "अस\u{94d}ति" OPT_ACT_3_SG "स\u{94d}यात\u{94d}",
-    "अस\u{94d}ति" OPT_ACT_3_DU "स\u{94d}याताम\u{94d}",
-    "अस\u{94d}ति" OPT_ACT_3_PL "स\u{94d}य\u{941}ः",
-    "अस\u{94d}ति" OPT_MID_1_SG "सीय",
-    "अस\u{94d}ति" OPT_MID_1_DU "सीवहि",
-    "अस\u{94d}ति" OPT_MID_1_PL "सीमहि",
-    "अस\u{94d}ति" OPT_MID_2_SG "सीथाः",
-    "अस\u{94d}ति" OPT_MID_2_DU "सीयाथाम\u{94d}",
-    "अस\u{94d}ति" OPT_MID_2_PL "सीध\u{94d}वम\u{94d}",
-    "अस\u{94d}ति" OPT_MID_3_SG "सीत",
-    "अस\u{94d}ति" OPT_MID_3_DU "सीयाताम\u{94d}",
-    "अस\u{94d}ति" OPT_MID_3_PL "सीरन\u{94d}",
-    "अस\u{94d}ति" SUBJ_ACT_1_SG "असानि",
-    "अस\u{94d}ति" SUBJ_ACT_1_DU "असाव",
-    "अस\u{94d}ति" SUBJ_ACT_1_PL "असाम",
-    "अस\u{94d}ति" SUBJ_ACT_2_SG "असः",
-    "अस\u{94d}ति" SUBJ_ACT_2_DU "असथः",
-    "अस\u{94d}ति" SUBJ_ACT_2_PL "असथ",
-    "अस\u{94d}ति" SUBJ_ACT_3_SG "असत\u{94d}",
-    "अस\u{94d}ति" SUBJ_ACT_3_DU "असतः",
-    "अस\u{94d}ति" SUBJ_ACT_3_PL "असन\u{94d}",
-    "अस\u{94d}ति" SUBJ_MID_1_SG "अस\u{948}",
-    "अस\u{94d}ति" SUBJ_MID_1_DU "असावह\u{948}",
-    "अस\u{94d}ति" SUBJ_MID_1_PL "असामह\u{948}",
-    "अस\u{94d}ति" SUBJ_MID_2_SG "असस\u{947}",
-    "अस\u{94d}ति" SUBJ_MID_2_DU "अस\u{948}थ\u{947}",
-    "अस\u{94d}ति" SUBJ_MID_2_PL "असध\u{94d}व\u{947}",
-    "अस\u{94d}ति" SUBJ_MID_3_SG "असत\u{947}",
-    "अस\u{94d}ति" SUBJ_MID_3_DU "अस\u{948}त\u{947}",
-    "अस\u{94d}ति" SUBJ_MID_3_PL "असन\u{94d}त",
-    "अस\u{94d}ति" IMPERFECT_ACT_1_SG "आसम\u{94d}",
-    "अस\u{94d}ति" IMPERFECT_ACT_1_DU "आस\u{94d}व",
-    "अस\u{94d}ति" IMPERFECT_ACT_1_PL "आस\u{94d}म",
-    "अस\u{94d}ति" IMPERFECT_ACT_2_SG "आसीः",
-    "अस\u{94d}ति" IMPERFECT_ACT_3_SG "आसीत\u{94d}",
-    "अस\u{94d}ति" IMPERFECT_ACT_3_PL "आसन\u{94d}",
-    "अस\u{94d}ति" IMPERFECT_MID_1_SG "आसि",
-    "अस\u{94d}ति" IMPERFECT_MID_1_DU "आस\u{94d}वहि",
-    "अस\u{94d}ति" IMPERFECT_MID_1_PL "आस\u{94d}महि",
-    "अस\u{94d}ति" IMPERFECT_MID_2_DU "आसाथाम\u{94d}",
-    "अस\u{94d}ति" IMPERFECT_MID_2_PL "आद\u{94d}ध\u{94d}वम\u{94d}",
-    "अस\u{94d}ति" IMPERFECT_MID_3_DU "आसाताम\u{94d}",
-    "अस\u{94d}ति" IMPERFECT_MID_3_PL "आसत",
-    "अस\u{94d}ति" PARTICIPLE_PRES_ACT "सत\u{94d}",
-    "अस\u{94d}ति" PARTICIPLE_PRES_MID "सान",
-    "अस\u{94d}राक\u{94d}षीत\u{94d}" AORIST_ACT_1_SG "अस\u{94d}राक\u{94d}षम\u{94d}",
-    "अस\u{94d}राक\u{94d}षीत\u{94d}" AORIST_ACT_1_DU "अस\u{94d}राक\u{94d}ष\u{94d}व",
-    "अस\u{94d}राक\u{94d}षीत\u{94d}" AORIST_ACT_1_PL "अस\u{94d}राक\u{94d}ष\u{94d}म",
-    "अस\u{94d}राक\u{94d}षीत\u{94d}" AORIST_ACT_2_DU "अस\u{94d}राष\u{94d}टम\u{94d}",
-    "अस\u{94d}राक\u{94d}षीत\u{94d}" AORIST_ACT_2_PL "अस\u{94d}राष\u{94d}ट",
-    "अस\u{94d}राक\u{94d}षीत\u{94d}" AORIST_ACT_3_DU "अस\u{94d}राष\u{94d}टाम\u{94d}",
-    "अस\u{94d}राक\u{94d}षीत\u{94d}" AORIST_ACT_3_PL "अस\u{94d}राक\u{94d}ष\u{941}ः",
-    "अस\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_1_SG "अस\u{943}क\u{94d}षि",
-    "अस\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_1_DU "अस\u{943}क\u{94d}ष\u{94d}वहि",
-    "अस\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_1_PL "अस\u{943}क\u{94d}ष\u{94d}महि",
-    "अस\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_2_SG "अस\u{943}ष\u{94d}ठाः",
-    "अस\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_2_DU "अस\u{943}क\u{94d}षाथाम\u{94d}",
-    "अस\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_2_PL "अस\u{943}ड\u{94d}ढ\u{94d}वम\u{94d}",
-    "अस\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_3_SG "अस\u{943}ष\u{94d}ट",
-    "अस\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_3_DU "अस\u{943}क\u{94d}षाताम\u{94d}",
-    "अस\u{94d}राक\u{94d}षीत\u{94d}" AORIST_MID_3_PL "अस\u{943}क\u{94d}षत",
-    "अस\u{94d}वार\u{94d}" AORIST_ACT_1_SG "अस\u{94d}वार\u{94d}षम\u{94d}",
-    "अस\u{94d}वार\u{94d}" AORIST_ACT_1_DU "अस\u{94d}वार\u{94d}ष\u{94d}व",
-    "अस\u{94d}वार\u{94d}" AORIST_ACT_1_PL "अस\u{94d}वार\u{94d}ष\u{94d}म",
-    "अस\u{94d}वार\u{94d}" AORIST_ACT_2_SG "अस\u{94d}वाः",
-    "अस\u{94d}वार\u{94d}" AORIST_ACT_2_DU "अस\u{94d}वार\u{94d}ष\u{94d}टम\u{94d}",
-    "अस\u{94d}वार\u{94d}" AORIST_ACT_2_PL "अस\u{94d}वार\u{94d}ष\u{94d}ट",
-    "अस\u{94d}वार\u{94d}" AORIST_ACT_3_SG "अस\u{94d}वाः",
-    "अस\u{94d}वार\u{94d}" AORIST_ACT_3_DU "अस\u{94d}वार\u{94d}ष\u{94d}टाम\u{94d}",
-    "अस\u{94d}वार\u{94d}" AORIST_ACT_3_PL "अस\u{94d}वार\u{94d}ष\u{941}ः",
-    "अह\u{947}त\u{94d}" AORIST_ACT_1_SG "अहयम\u{94d}",
-    "अह\u{947}त\u{94d}" AORIST_ACT_1_DU "अह\u{947}व",
-    "अह\u{947}त\u{94d}" AORIST_ACT_1_PL "अह\u{947}म",
-    "अह\u{947}त\u{94d}" AORIST_ACT_3_PL "अह\u{94d}यन\u{94d}",
-    "आक\u{94d}ष\u{947}ति" IND_ACT_1_SG "आक\u{94d}ष\u{947}मि",
-    "आक\u{94d}ष\u{947}ति" IND_ACT_1_DU "आक\u{94d}षिवः",
-    "आक\u{94d}ष\u{947}ति" IND_ACT_1_PL "आक\u{94d}षिमः",
-    "आक\u{94d}ष\u{947}ति" IND_ACT_2_SG "आक\u{94d}ष\u{947}षि",
-    "आक\u{94d}ष\u{947}ति" IND_ACT_2_DU "आक\u{94d}षिथः",
-    "आक\u{94d}ष\u{947}ति" IND_ACT_2_PL "आक\u{94d}षिथ",
-    "आक\u{94d}ष\u{947}ति" IND_ACT_3_DU "आक\u{94d}षितः",
-    "आक\u{94d}ष\u{947}ति" IND_ACT_3_PL "आक\u{94d}षियन\u{94d}ति",
-    "आक\u{94d}ष\u{947}ति" IND_MID_1_SG "आक\u{94d}षिय\u{947}",
-    "आक\u{94d}ष\u{947}ति" IND_MID_1_DU "आक\u{94d}षिवह\u{947}",
-    "आक\u{94d}ष\u{947}ति" IND_MID_1_PL "आक\u{94d}षिमह\u{947}",
-    "आक\u{94d}ष\u{947}ति" IND_MID_2_SG "आक\u{94d}षिष\u{947}",
-    "आक\u{94d}ष\u{947}ति" IND_MID_2_DU "आक\u{94d}षियाथ\u{947}",
-    "आक\u{94d}ष\u{947}ति" IND_MID_2_PL "आक\u{94d}षिध\u{94d}व\u{947}",
-    "आक\u{94d}ष\u{947}ति" IND_MID_3_SG "आक\u{94d}षित\u{947}",
-    "आक\u{94d}ष\u{947}ति" IND_MID_3_DU "आक\u{94d}षियात\u{947}",
-    "आक\u{94d}ष\u{947}ति" IND_MID_3_PL "आक\u{94d}षियत\u{947}",
-    "आक\u{94d}ष\u{947}ति" IMP_ACT_1_SG "आक\u{94d}षयाणि",
-    "आक\u{94d}ष\u{947}ति" IMP_ACT_1_DU "आक\u{94d}षयाव",
-    "आक\u{94d}ष\u{947}ति" IMP_ACT_1_PL "आक\u{94d}षयाम",
-    "आक\u{94d}ष\u{947}ति" IMP_ACT_2_SG "आक\u{94d}षिहि",
-    "आक\u{94d}ष\u{947}ति" IMP_ACT_2_DU "आक\u{94d}षितम\u{94d}",
-    "आक\u{94d}ष\u{947}ति" IMP_ACT_2_PL "आक\u{94d}षित",
-    "आक\u{94d}ष\u{947}ति" IMP_ACT_3_DU "आक\u{94d}षिताम\u{94d}",
-    "आक\u{94d}ष\u{947}ति" IMP_ACT_3_PL "आक\u{94d}षियन\u{94d}त\u{941}",
-    "आक\u{94d}ष\u{947}ति" IMP_MID_1_SG "आक\u{94d}षय\u{948}",
-    "आक\u{94d}ष\u{947}ति" IMP_MID_1_DU "आक\u{94d}षयावह\u{948}",
-    "आक\u{94d}ष\u{947}ति" IMP_MID_1_PL "आक\u{94d}षयामह\u{948}",
-    "आक\u{94d}ष\u{947}ति" IMP_MID_2_SG "आक\u{94d}षिष\u{94d}व",
-    "आक\u{94d}ष\u{947}ति" IMP_MID_2_DU "आक\u{94d}षियाथाम\u{94d}",
-    "आक\u{94d}ष\u{947}ति" IMP_MID_2_PL "आक\u{94d}षिध\u{94d}वम\u{94d}",
-    "आक\u{94d}ष\u{947}ति" IMP_MID_3_SG "आक\u{94d}षिताम\u{94d}",
-    "आक\u{94d}ष\u{947}ति" IMP_MID_3_DU "आक\u{94d}षियाताम\u{94d}",
-    "आक\u{94d}ष\u{947}ति" IMP_MID_3_PL "आक\u{94d}षियताम\u{94d}",
-    "आक\u{94d}ष\u{947}ति" OPT_ACT_1_SG "आक\u{94d}षियाम\u{94d}",
-    "आक\u{94d}ष\u{947}ति" OPT_ACT_1_DU "आक\u{94d}षियाव",
-    "आक\u{94d}ष\u{947}ति" OPT_ACT_1_PL "आक\u{94d}षियाम",
-    "आक\u{94d}ष\u{947}ति" OPT_ACT_2_SG "आक\u{94d}षियाः",
-    "आक\u{94d}ष\u{947}ति" OPT_ACT_2_DU "आक\u{94d}षियातम\u{94d}",
-    "आक\u{94d}ष\u{947}ति" OPT_ACT_2_PL "आक\u{94d}षियात",
-    "आक\u{94d}ष\u{947}ति" OPT_ACT_3_SG "आक\u{94d}षियात\u{94d}",
-    "आक\u{94d}ष\u{947}ति" OPT_ACT_3_DU "आक\u{94d}षियाताम\u{94d}",
-    "आक\u{94d}ष\u{947}ति" OPT_ACT_3_PL "आक\u{94d}षिय\u{941}ः",
-    "आक\u{94d}ष\u{947}ति" OPT_MID_1_SG "आक\u{94d}षियीय",
-    "आक\u{94d}ष\u{947}ति" OPT_MID_1_DU "आक\u{94d}षियीवहि",
-    "आक\u{94d}ष\u{947}ति" OPT_MID_1_PL "आक\u{94d}षियीमहि",
-    "आक\u{94d}ष\u{947}ति" OPT_MID_2_SG "आक\u{94d}षियीथाः",
-    "आक\u{94d}ष\u{947}ति" OPT_MID_2_DU "आक\u{94d}षियीयाथाम\u{94d}",
-    "आक\u{94d}ष\u{947}ति" OPT_MID_2_PL "आक\u{94d}षियीध\u{94d}वम\u{94d}",
-    "आक\u{94d}ष\u{947}ति" OPT_MID_3_SG "आक\u{94d}षियीत",
-    "आक\u{94d}ष\u{947}ति" OPT_MID_3_DU "आक\u{94d}षियीयाताम\u{94d}",
-    "आक\u{94d}ष\u{947}ति" OPT_MID_3_PL "आक\u{94d}षियीरन\u{94d}",
-    "आक\u{94d}ष\u{947}ति" SUBJ_ACT_1_SG "आक\u{94d}षयाणि",
-    "आक\u{94d}ष\u{947}ति" SUBJ_ACT_1_DU "आक\u{94d}षयाव",
-    "आक\u{94d}ष\u{947}ति" SUBJ_ACT_1_PL "आक\u{94d}षयाम",
-    "आक\u{94d}ष\u{947}ति" SUBJ_ACT_2_SG "आक\u{94d}षयः",
-    "आक\u{94d}ष\u{947}ति" SUBJ_ACT_2_DU "आक\u{94d}षयथः",
-    "आक\u{94d}ष\u{947}ति" SUBJ_ACT_2_PL "आक\u{94d}षयथ",
-    "आक\u{94d}ष\u{947}ति" SUBJ_ACT_3_SG "आक\u{94d}षयत\u{94d}",
-    "आक\u{94d}ष\u{947}ति" SUBJ_ACT_3_DU "आक\u{94d}षयतः",
-    "आक\u{94d}ष\u{947}ति" SUBJ_ACT_3_PL "आक\u{94d}षयन\u{94d}",
-    "आक\u{94d}ष\u{947}ति" SUBJ_MID_1_SG "आक\u{94d}षय\u{948}",
-    "आक\u{94d}ष\u{947}ति" SUBJ_MID_1_DU "आक\u{94d}षयावह\u{948}",
-    "आक\u{94d}ष\u{947}ति" SUBJ_MID_1_PL "आक\u{94d}षयामह\u{948}",
-    "आक\u{94d}ष\u{947}ति" SUBJ_MID_2_SG "आक\u{94d}षयस\u{947}",
-    "आक\u{94d}ष\u{947}ति" SUBJ_MID_2_DU "आक\u{94d}षय\u{948}थ\u{947}",
-    "आक\u{94d}ष\u{947}ति" SUBJ_MID_2_PL "आक\u{94d}षयध\u{94d}व\u{947}",
-    "आक\u{94d}ष\u{947}ति" SUBJ_MID_3_SG "आक\u{94d}षयत\u{947}",
-    "आक\u{94d}ष\u{947}ति" SUBJ_MID_3_DU "आक\u{94d}षय\u{948}त\u{947}",
-    "आक\u{94d}ष\u{947}ति" SUBJ_MID_3_PL "आक\u{94d}षयन\u{94d}त",
-    "आक\u{94d}ष\u{947}ति" PARTICIPLE_PRES_ACT "आक\u{94d}षियत\u{94d}",
-    "आक\u{94d}ष\u{947}ति" PARTICIPLE_PRES_MID "आक\u{94d}षियाण",
-    "आन\u{902}श" PERFECT_ACT_1_DU "आनशिव",
-    "आन\u{902}श" PERFECT_ACT_1_PL "आनशिम",
-    "आन\u{902}श" PERFECT_ACT_2_DU "आनशथ\u{941}ः",
-    "आन\u{902}श" PERFECT_ACT_2_PL "आनश",
-    "आन\u{902}श" PERFECT_ACT_3_DU "आनशत\u{941}ः",
-    "आन\u{902}श" PERFECT_ACT_3_PL "आनश\u{941}ः",
-    "आन\u{902}श" PERFECT_MID_1_SG "आनश\u{947}",
-    "आन\u{902}श" PERFECT_MID_1_DU "आनशिवह\u{947}",
-    "आन\u{902}श" PERFECT_MID_1_PL "आनशिमह\u{947}",
-    "आन\u{902}श" PERFECT_MID_2_SG "आनशिष\u{947}",
-    "आन\u{902}श" PERFECT_MID_2_DU "आनशाथ\u{947}",
-    "आन\u{902}श" PERFECT_MID_2_PL "आनशिध\u{94d}व\u{947}",
-    "आन\u{902}श" PERFECT_MID_3_SG "आनश\u{947}",
-    "आन\u{902}श" PERFECT_MID_3_DU "आनशात\u{947}",
-    "आन\u{902}श" PERFECT_MID_3_PL "आनशिर\u{947}",
-    "आन\u{902}श" PARTICIPLE_PERF_ACT "आनश\u{94d}वा\u{902}स\u{94d}",
-    "आन\u{902}श" PARTICIPLE_PERF_MID "आनशान",
-    "आनञ\u{94d}ज" PERFECT_ACT_1_DU "आनजिव",
-    "आनञ\u{94d}ज" PERFECT_ACT_1_PL "आनजिम",
-    "आनञ\u{94d}ज" PERFECT_ACT_2_DU "आनजथ\u{941}ः",
-    "आनञ\u{94d}ज" PERFECT_ACT_2_PL "आनज",
-    "आनञ\u{94d}ज" PERFECT_ACT_3_DU "आनजत\u{941}ः",
-    "आनञ\u{94d}ज" PERFECT_ACT_3_PL "आनज\u{941}ः",
-    "आनञ\u{94d}ज" PERFECT_MID_1_SG "आनज\u{947}",
-    "आनञ\u{94d}ज" PERFECT_MID_1_DU "आनजिवह\u{947}",
-    "आनञ\u{94d}ज" PERFECT_MID_1_PL "आनजिमह\u{947}",
-    "आनञ\u{94d}ज" PERFECT_MID_2_SG "आनजिष\u{947}",
-    "आनञ\u{94d}ज" PERFECT_MID_2_DU "आनजाथ\u{947}",
-    "आनञ\u{94d}ज" PERFECT_MID_2_PL "आनजिध\u{94d}व\u{947}",
-    "आनञ\u{94d}ज" PERFECT_MID_3_SG "आनज\u{947}",
-    "आनञ\u{94d}ज" PERFECT_MID_3_DU "आनजात\u{947}",
-    "आनञ\u{94d}ज" PERFECT_MID_3_PL "आनजिर\u{947}",
-    "आनञ\u{94d}ज" PARTICIPLE_PERF_ACT "आनग\u{94d}वा\u{902}स\u{94d}",
-    "आनञ\u{94d}ज" PARTICIPLE_PERF_MID "आनजान",
-    "आनट\u{94d}" AORIST_ACT_1_SG "आनशम\u{94d}",
-    "आनट\u{94d}" AORIST_ACT_1_DU "आनश\u{94d}व",
-    "आनट\u{94d}" AORIST_ACT_1_PL "आनश\u{94d}म",
-    "आनट\u{94d}" AORIST_ACT_2_SG "आनट\u{94d}",
-    "आनट\u{94d}" AORIST_ACT_2_DU "आनष\u{94d}टम\u{94d}",
-    "आनट\u{94d}" AORIST_ACT_2_PL "आनष\u{94d}ट",
-    "आनट\u{94d}" AORIST_ACT_3_SG "आनट\u{94d}",
-    "आनट\u{94d}" AORIST_ACT_3_DU "आनष\u{94d}टाम\u{94d}",
-    "आनट\u{94d}" AORIST_ACT_3_PL "आनशन\u{94d}",
-    "आनट\u{94d}" AORIST_MID_1_SG "आशि",
-    "आनट\u{94d}" AORIST_MID_1_DU "आश\u{94d}वहि",
-    "आनट\u{94d}" AORIST_MID_1_PL "आश\u{94d}महि",
-    "आनट\u{94d}" AORIST_MID_2_SG "आष\u{94d}ठाः",
-    "आनट\u{94d}" AORIST_MID_2_DU "आशाथाम\u{94d}",
-    "आनट\u{94d}" AORIST_MID_2_PL "आड\u{94d}ढ\u{94d}वम\u{94d}",
-    "आनट\u{94d}" AORIST_MID_3_SG "आष\u{94d}ट",
-    "आनट\u{94d}" AORIST_MID_3_DU "आशाताम\u{94d}",
-    "आनट\u{94d}" AORIST_MID_3_PL "आशत",
-    "आनर\u{94d}च" PERFECT_ACT_1_DU "आन\u{943}चिव",
-    "आनर\u{94d}च" PERFECT_ACT_1_PL "आन\u{943}चिम",
-    "आनर\u{94d}च" PERFECT_ACT_2_DU "आन\u{943}चथ\u{941}ः",
-    "आनर\u{94d}च" PERFECT_ACT_2_PL "आन\u{943}च",
-    "आनर\u{94d}च" PERFECT_ACT_3_DU "आन\u{943}चत\u{941}ः",
-    "आनर\u{94d}च" PERFECT_ACT_3_PL "आन\u{943}च\u{941}ः",
-    "आनर\u{94d}च" PERFECT_MID_1_SG "आन\u{943}च\u{947}",
-    "आनर\u{94d}च" PERFECT_MID_1_DU "आन\u{943}चिवह\u{947}",
-    "आनर\u{94d}च" PERFECT_MID_1_PL "आन\u{943}चिमह\u{947}",
-    "आनर\u{94d}च" PERFECT_MID_2_SG "आन\u{943}चिष\u{947}",
-    "आनर\u{94d}च" PERFECT_MID_2_DU "आन\u{943}चाथ\u{947}",
-    "आनर\u{94d}च" PERFECT_MID_2_PL "आन\u{943}चिध\u{94d}व\u{947}",
-    "आनर\u{94d}च" PERFECT_MID_3_SG "आन\u{943}च\u{947}",
-    "आनर\u{94d}च" PERFECT_MID_3_DU "आन\u{943}चात\u{947}",
-    "आनर\u{94d}च" PERFECT_MID_3_PL "आन\u{943}चिर\u{947}",
-    "आनर\u{94d}च" PARTICIPLE_PERF_ACT "आन\u{943}क\u{94d}वा\u{902}स\u{94d}",
-    "आनर\u{94d}च" PARTICIPLE_PERF_MID "आन\u{943}चान",
-    "आनाश" PERFECT_ACT_1_DU "आशिव",
-    "आनाश" PERFECT_ACT_1_PL "आशिम",
-    "आनाश" PERFECT_ACT_2_DU "आशथ\u{941}ः",
-    "आनाश" PERFECT_ACT_2_PL "आश",
-    "आनाश" PERFECT_ACT_3_DU "आशत\u{941}ः",
-    "आनाश" PERFECT_ACT_3_PL "आश\u{941}ः",
-    "आनाश" PERFECT_MID_1_SG "आश\u{947}",
-    "आनाश" PERFECT_MID_1_DU "आशिवह\u{947}",
-    "आनाश" PERFECT_MID_1_PL "आशिमह\u{947}",
-    "आनाश" PERFECT_MID_2_SG "आशिष\u{947}",
-    "आनाश" PERFECT_MID_2_DU "आशाथ\u{947}",
-    "आनाश" PERFECT_MID_2_PL "आशिध\u{94d}व\u{947}",
-    "आनाश" PERFECT_MID_3_SG "आश\u{947}",
-    "आनाश" PERFECT_MID_3_DU "आशात\u{947}",
-    "आनाश" PERFECT_MID_3_PL "आशिर\u{947}",
-    "आनाश" PARTICIPLE_PERF_ACT "आशिवा\u{902}स\u{94d}",
-    "आनाश" PARTICIPLE_PERF_MID "आशान",
-    "आप\u{94d}नोति" IMPERFECT_ACT_1_SG "आप\u{94d}नवम\u{94d}",
-    "आप\u{94d}नोति" IMPERFECT_ACT_1_DU "आप\u{94d}न\u{941}व",
-    "आप\u{94d}नोति" IMPERFECT_ACT_1_PL "आप\u{94d}न\u{941}म",
-    "आप\u{94d}नोति" IMPERFECT_ACT_2_SG "आप\u{94d}नोः",
-    "आप\u{94d}नोति" IMPERFECT_ACT_2_DU "आप\u{94d}न\u{941}तम\u{94d}",
-    "आप\u{94d}नोति" IMPERFECT_ACT_2_PL "आप\u{94d}न\u{941}त",
-    "आप\u{94d}नोति" IMPERFECT_ACT_3_SG "आप\u{94d}नोत\u{94d}",
-    "आप\u{94d}नोति" IMPERFECT_ACT_3_DU "आप\u{94d}न\u{941}ताम\u{94d}",
-    "आप\u{94d}नोति" IMPERFECT_ACT_3_PL "आप\u{94d}न\u{941}वन\u{94d}",
-    "आप\u{94d}नोति" IMPERFECT_MID_1_SG "आप\u{94d}न\u{941}वि",
-    "आप\u{94d}नोति" IMPERFECT_MID_1_DU "आप\u{94d}न\u{941}वहि",
-    "आप\u{94d}नोति" IMPERFECT_MID_1_PL "आप\u{94d}न\u{941}महि",
-    "आप\u{94d}नोति" IMPERFECT_MID_2_SG "आप\u{94d}न\u{941}थाः",
-    "आप\u{94d}नोति" IMPERFECT_MID_2_DU "आप\u{94d}न\u{941}वाथाम\u{94d}",
-    "आप\u{94d}नोति" IMPERFECT_MID_2_PL "आप\u{94d}न\u{941}ध\u{94d}वम\u{94d}",
-    "आप\u{94d}नोति" IMPERFECT_MID_3_SG "आप\u{94d}न\u{941}त",
-    "आप\u{94d}नोति" IMPERFECT_MID_3_DU "आप\u{94d}न\u{941}वाताम\u{94d}",
-    "आप\u{94d}नोति" IMPERFECT_MID_3_PL "आप\u{94d}न\u{941}वत",
-    "आमन\u{94d}त\u{94d}रयत\u{947}" IMPERFECT_MID_1_SG "आमन\u{94d}त\u{94d}रय\u{947}",
-    "आमन\u{94d}त\u{94d}रयत\u{947}" IMPERFECT_MID_1_DU "आमन\u{94d}त\u{94d}रयावहि",
-    "आमन\u{94d}त\u{94d}रयत\u{947}" IMPERFECT_MID_1_PL "आमन\u{94d}त\u{94d}रयामहि",
-    "आमन\u{94d}त\u{94d}रयत\u{947}" IMPERFECT_MID_2_SG "आमन\u{94d}त\u{94d}रयथाः",
-    "आमन\u{94d}त\u{94d}रयत\u{947}" IMPERFECT_MID_2_DU "आमन\u{94d}त\u{94d}रय\u{947}थाम\u{94d}",
-    "आमन\u{94d}त\u{94d}रयत\u{947}" IMPERFECT_MID_2_PL "आमन\u{94d}त\u{94d}रयध\u{94d}वम\u{94d}",
-    "आमन\u{94d}त\u{94d}रयत\u{947}" IMPERFECT_MID_3_SG "आमन\u{94d}त\u{94d}रयत",
-    "आमन\u{94d}त\u{94d}रयत\u{947}" IMPERFECT_MID_3_DU "आमन\u{94d}त\u{94d}रय\u{947}ताम\u{94d}",
-    "आमन\u{94d}त\u{94d}रयत\u{947}" IMPERFECT_MID_3_PL "आमन\u{94d}त\u{94d}रयन\u{94d}त",
-    "आयाति" IMPERFECT_ACT_1_SG "आयाम\u{94d}",
-    "आयाति" IMPERFECT_ACT_1_DU "आयाव",
-    "आयाति" IMPERFECT_ACT_1_PL "आयाम",
-    "आयाति" IMPERFECT_ACT_2_SG "आयाः",
-    "आयाति" IMPERFECT_ACT_2_DU "आयातम\u{94d}",
-    "आयाति" IMPERFECT_ACT_2_PL "आयात",
-    "आयाति" IMPERFECT_ACT_3_SG "आयात\u{94d}",
-    "आयाति" IMPERFECT_ACT_3_DU "आयाताम\u{94d}",
-    "आयाति" IMPERFECT_ACT_3_PL "आय\u{941}ः",
-    "आयाति" IMPERFECT_MID_1_SG "आय\u{947}",
-    "आयाति" IMPERFECT_MID_1_DU "आयावहि",
-    "आयाति" IMPERFECT_MID_1_PL "आयामहि",
-    "आयाति" IMPERFECT_MID_2_SG "आयाथाः",
-    "आयाति" IMPERFECT_MID_2_DU "आयाथाम\u{94d}",
-    "आयाति" IMPERFECT_MID_2_PL "आयाध\u{94d}वम\u{94d}",
-    "आयाति" IMPERFECT_MID_3_SG "आयात",
-    "आयाति" IMPERFECT_MID_3_DU "आयाताम\u{94d}",
-    "आयाति" IMPERFECT_MID_3_PL "आयात",
-    "आर" PARTICIPLE_PERF_MID "आराण",
-    "आर\u{94d}त" AORIST_MID_1_SG "आरि",
-    "आर\u{94d}त" AORIST_MID_1_DU "आर\u{94d}वहि",
-    "आर\u{94d}त" AORIST_MID_1_PL "आर\u{94d}महि",
-    "आर\u{94d}त" AORIST_MID_2_SG "आर\u{94d}थाः",
-    "आर\u{94d}त" AORIST_MID_2_DU "आराथाम\u{94d}",
-    "आर\u{94d}त" AORIST_MID_2_PL "आर\u{94d}ध\u{94d}वम\u{94d}",
-    "आर\u{94d}त" AORIST_MID_3_SG "आर\u{94d}त",
-    "आर\u{94d}त" AORIST_MID_3_DU "आराताम\u{94d}",
-    "आर\u{94d}त" AORIST_MID_3_PL "आरत",
-    "आर\u{94d}त\u{94d}" AORIST_ACT_1_SG "आर\u{94d}धम\u{94d}",
-    "आर\u{94d}त\u{94d}" AORIST_ACT_1_DU "आर\u{94d}ध\u{94d}व",
-    "आर\u{94d}त\u{94d}" AORIST_ACT_1_PL "आर\u{94d}ध\u{94d}म",
-    "आर\u{94d}त\u{94d}" AORIST_ACT_2_SG "आर\u{94d}त\u{94d}",
-    "आर\u{94d}त\u{94d}" AORIST_ACT_2_DU "आर\u{94d}द\u{94d}धम\u{94d}",
-    "आर\u{94d}त\u{94d}" AORIST_ACT_2_PL "आर\u{94d}द\u{94d}ध",
-    "आर\u{94d}त\u{94d}" AORIST_ACT_3_DU "आर\u{94d}द\u{94d}धाम\u{94d}",
-    "आर\u{94d}त\u{94d}" AORIST_ACT_3_PL "आर\u{94d}ध\u{941}ः",
-    "आर\u{94d}त\u{94d}" AORIST_MID_1_SG "आर\u{94d}धि",
-    "आर\u{94d}त\u{94d}" AORIST_MID_1_DU "आर\u{94d}ध\u{94d}वहि",
-    "आर\u{94d}त\u{94d}" AORIST_MID_1_PL "आर\u{94d}ध\u{94d}महि",
-    "आर\u{94d}त\u{94d}" AORIST_MID_2_SG "आर\u{94d}द\u{94d}धाः",
-    "आर\u{94d}त\u{94d}" AORIST_MID_2_DU "आर\u{94d}धाथाम\u{94d}",
-    "आर\u{94d}त\u{94d}" AORIST_MID_2_PL "आर\u{94d}द\u{94d}ध\u{94d}वम\u{94d}",
-    "आर\u{94d}त\u{94d}" AORIST_MID_3_SG "आर\u{94d}द\u{94d}ध",
-    "आर\u{94d}त\u{94d}" AORIST_MID_3_DU "आर\u{94d}धाताम\u{94d}",
-    "आर\u{94d}त\u{94d}" AORIST_MID_3_PL "आर\u{94d}धत",
-    "आस\u{94d}त\u{947}" IND_MID_1_SG "आस\u{947}",
-    "आस\u{94d}त\u{947}" IND_MID_1_DU "आस\u{94d}वह\u{947}",
-    "आस\u{94d}त\u{947}" IND_MID_1_PL "आस\u{94d}मह\u{947}",
-    "आस\u{94d}त\u{947}" IND_MID_2_DU "आसाथ\u{947}",
-    "आस\u{94d}त\u{947}" IND_MID_2_PL "आद\u{94d}ध\u{94d}व\u{947}",
-    "आस\u{94d}त\u{947}" IND_MID_3_DU "आसात\u{947}",
-    "आस\u{94d}त\u{947}" IND_MID_3_PL "आसत\u{947}",
-    "आस\u{94d}त\u{947}" IMP_MID_1_SG "आस\u{948}",
-    "आस\u{94d}त\u{947}" IMP_MID_1_DU "आसावह\u{948}",
-    "आस\u{94d}त\u{947}" IMP_MID_1_PL "आसामह\u{948}",
-    "आस\u{94d}त\u{947}" IMP_MID_2_DU "आसाथाम\u{94d}",
-    "आस\u{94d}त\u{947}" IMP_MID_2_PL "आद\u{94d}ध\u{94d}वम\u{94d}",
-    "आस\u{94d}त\u{947}" IMP_MID_3_DU "आसाताम\u{94d}",
-    "आस\u{94d}त\u{947}" IMP_MID_3_PL "आसताम\u{94d}",
-    "आस\u{94d}त\u{947}" OPT_MID_1_SG "आसीय",
-    "आस\u{94d}त\u{947}" OPT_MID_1_DU "आसीवहि",
-    "आस\u{94d}त\u{947}" OPT_MID_1_PL "आसीमहि",
-    "आस\u{94d}त\u{947}" OPT_MID_2_SG "आसीथाः",
-    "आस\u{94d}त\u{947}" OPT_MID_2_DU "आसीयाथाम\u{94d}",
-    "आस\u{94d}त\u{947}" OPT_MID_2_PL "आसीध\u{94d}वम\u{94d}",
-    "आस\u{94d}त\u{947}" OPT_MID_3_SG "आसीत",
-    "आस\u{94d}त\u{947}" OPT_MID_3_DU "आसीयाताम\u{94d}",
-    "आस\u{94d}त\u{947}" OPT_MID_3_PL "आसीरन\u{94d}",
-    "आस\u{94d}त\u{947}" SUBJ_MID_1_SG "आस\u{948}",
-    "आस\u{94d}त\u{947}" SUBJ_MID_1_DU "आसावह\u{948}",
-    "आस\u{94d}त\u{947}" SUBJ_MID_1_PL "आसामह\u{948}",
-    "आस\u{94d}त\u{947}" SUBJ_MID_2_SG "आसस\u{947}",
-    "आस\u{94d}त\u{947}" SUBJ_MID_2_DU "आस\u{948}थ\u{947}",
-    "आस\u{94d}त\u{947}" SUBJ_MID_2_PL "आसध\u{94d}व\u{947}",
-    "आस\u{94d}त\u{947}" SUBJ_MID_3_SG "आसत\u{947}",
-    "आस\u{94d}त\u{947}" SUBJ_MID_3_DU "आस\u{948}त\u{947}",
-    "आस\u{94d}त\u{947}" SUBJ_MID_3_PL "आसन\u{94d}त",
-    "आस\u{94d}त\u{947}" IMPERFECT_MID_1_SG "आसि",
-    "आस\u{94d}त\u{947}" IMPERFECT_MID_1_DU "आस\u{94d}वहि",
-    "आस\u{94d}त\u{947}" IMPERFECT_MID_1_PL "आस\u{94d}महि",
-    "आस\u{94d}त\u{947}" IMPERFECT_MID_2_SG "आस\u{94d}थाः",
-    "आस\u{94d}त\u{947}" IMPERFECT_MID_2_DU "आसाथाम\u{94d}",
-    "आस\u{94d}त\u{947}" IMPERFECT_MID_2_PL "आद\u{94d}ध\u{94d}वम\u{94d}",
-    "आस\u{94d}त\u{947}" IMPERFECT_MID_3_SG "आस\u{94d}त",
-    "आस\u{94d}त\u{947}" IMPERFECT_MID_3_DU "आसाताम\u{94d}",
-    "आस\u{94d}त\u{947}" IMPERFECT_MID_3_PL "आसत",
-    "आस\u{94d}त\u{947}" PARTICIPLE_PRES_MID "आसीन",
-    "आह" PERFECT_ACT_2_SG "आत\u{94d}थ",
-    "इन\u{94d}द\u{94d}ध\u{947}" IND_MID_1_SG "इन\u{94d}ध\u{947}",
-    "इन\u{94d}द\u{94d}ध\u{947}" IND_MID_1_DU "इन\u{94d}ध\u{94d}वह\u{947}",
-    "इन\u{94d}द\u{94d}ध\u{947}" IND_MID_1_PL "इन\u{94d}ध\u{94d}मह\u{947}",
-    "इन\u{94d}द\u{94d}ध\u{947}" IND_MID_2_SG "इन\u{94d}त\u{94d}स\u{947}",
-    "इन\u{94d}द\u{94d}ध\u{947}" IND_MID_2_DU "इन\u{94d}धाथ\u{947}",
-    "इन\u{94d}द\u{94d}ध\u{947}" IND_MID_2_PL "इन\u{94d}द\u{94d}ध\u{94d}व\u{947}",
-    "इन\u{94d}द\u{94d}ध\u{947}" IND_MID_3_SG "इन\u{94d}द\u{94d}ध\u{947}",
-    "इन\u{94d}द\u{94d}ध\u{947}" IND_MID_3_DU "इन\u{94d}धात\u{947}",
-    "इन\u{94d}द\u{94d}ध\u{947}" IND_MID_3_PL "इन\u{94d}धत\u{947}",
-    "इन\u{94d}द\u{94d}ध\u{947}" IMP_MID_1_SG "इनध\u{948}",
-    "इन\u{94d}द\u{94d}ध\u{947}" IMP_MID_1_DU "इनधावह\u{948}",
-    "इन\u{94d}द\u{94d}ध\u{947}" IMP_MID_1_PL "इनधामह\u{948}",
-    "इन\u{94d}द\u{94d}ध\u{947}" IMP_MID_2_SG "इन\u{94d}त\u{94d}स\u{94d}व",
-    "इन\u{94d}द\u{94d}ध\u{947}" IMP_MID_2_DU "इन\u{94d}धाथाम\u{94d}",
-    "इन\u{94d}द\u{94d}ध\u{947}" IMP_MID_2_PL "इन\u{94d}द\u{94d}ध\u{94d}वम\u{94d}",
-    "इन\u{94d}द\u{94d}ध\u{947}" IMP_MID_3_SG "इन\u{94d}द\u{94d}धाम\u{94d}",
-    "इन\u{94d}द\u{94d}ध\u{947}" IMP_MID_3_DU "इन\u{94d}धाताम\u{94d}",
-    "इन\u{94d}द\u{94d}ध\u{947}" IMP_MID_3_PL "इन\u{94d}धताम\u{94d}",
-    "इन\u{94d}द\u{94d}ध\u{947}" OPT_MID_1_SG "इन\u{94d}धीय",
-    "इन\u{94d}द\u{94d}ध\u{947}" OPT_MID_1_DU "इन\u{94d}धीवहि",
-    "इन\u{94d}द\u{94d}ध\u{947}" OPT_MID_1_PL "इन\u{94d}धीमहि",
-    "इन\u{94d}द\u{94d}ध\u{947}" OPT_MID_2_SG "इन\u{94d}धीथाः",
-    "इन\u{94d}द\u{94d}ध\u{947}" OPT_MID_2_DU "इन\u{94d}धीयाथाम\u{94d}",
-    "इन\u{94d}द\u{94d}ध\u{947}" OPT_MID_2_PL "इन\u{94d}धीध\u{94d}वम\u{94d}",
-    "इन\u{94d}द\u{94d}ध\u{947}" OPT_MID_3_SG "इन\u{94d}धीत",
-    "इन\u{94d}द\u{94d}ध\u{947}" OPT_MID_3_DU "इन\u{94d}धीयाताम\u{94d}",
-    "इन\u{94d}द\u{94d}ध\u{947}" OPT_MID_3_PL "इन\u{94d}धीरन\u{94d}",
-    "इन\u{94d}द\u{94d}ध\u{947}" SUBJ_MID_1_SG "इनध\u{948}",
-    "इन\u{94d}द\u{94d}ध\u{947}" SUBJ_MID_1_DU "इनधावह\u{948}",
-    "इन\u{94d}द\u{94d}ध\u{947}" SUBJ_MID_1_PL "इनधामह\u{948}",
-    "इन\u{94d}द\u{94d}ध\u{947}" SUBJ_MID_2_SG "इनधस\u{947}",
-    "इन\u{94d}द\u{94d}ध\u{947}" SUBJ_MID_2_DU "इनध\u{948}थ\u{947}",
-    "इन\u{94d}द\u{94d}ध\u{947}" SUBJ_MID_2_PL "इनधध\u{94d}व\u{947}",
-    "इन\u{94d}द\u{94d}ध\u{947}" SUBJ_MID_3_SG "इनधत\u{947}",
-    "इन\u{94d}द\u{94d}ध\u{947}" SUBJ_MID_3_DU "इनध\u{948}त\u{947}",
-    "इन\u{94d}द\u{94d}ध\u{947}" SUBJ_MID_3_PL "इनधन\u{94d}त",
-    "इन\u{94d}द\u{94d}ध\u{947}" IMPERFECT_MID_1_SG "ऐन\u{94d}धि",
-    "इन\u{94d}द\u{94d}ध\u{947}" IMPERFECT_MID_1_DU "ऐन\u{94d}ध\u{94d}वहि",
-    "इन\u{94d}द\u{94d}ध\u{947}" IMPERFECT_MID_1_PL "ऐन\u{94d}ध\u{94d}महि",
-    "इन\u{94d}द\u{94d}ध\u{947}" IMPERFECT_MID_2_SG "ऐन\u{94d}द\u{94d}धाः",
-    "इन\u{94d}द\u{94d}ध\u{947}" IMPERFECT_MID_2_DU "ऐन\u{94d}धाथाम\u{94d}",
-    "इन\u{94d}द\u{94d}ध\u{947}" IMPERFECT_MID_2_PL "ऐन\u{94d}द\u{94d}ध\u{94d}वम\u{94d}",
-    "इन\u{94d}द\u{94d}ध\u{947}" IMPERFECT_MID_3_SG "ऐन\u{94d}द\u{94d}ध",
-    "इन\u{94d}द\u{94d}ध\u{947}" IMPERFECT_MID_3_DU "ऐन\u{94d}धाताम\u{94d}",
-    "इन\u{94d}द\u{94d}ध\u{947}" IMPERFECT_MID_3_PL "ऐन\u{94d}धत",
-    "इन\u{94d}द\u{94d}ध\u{947}" PARTICIPLE_PRES_MID "इन\u{94d}धान",
-    "इयर\u{94d}ति" IND_ACT_1_DU "ईर\u{94d}वः",
-    "इयर\u{94d}ति" IND_ACT_1_PL "ईर\u{94d}मः",
-    "इयर\u{94d}ति" IND_ACT_2_DU "ईर\u{94d}थः",
-    "इयर\u{94d}ति" IND_ACT_2_PL "ईर\u{94d}थ",
-    "इयर\u{94d}ति" IND_ACT_3_DU "ईर\u{94d}तः",
-    "इयर\u{94d}ति" IND_ACT_3_PL "ईरति",
-    "इयर\u{94d}ति" IND_MID_1_SG "ईर\u{947}",
-    "इयर\u{94d}ति" IND_MID_1_DU "ईर\u{94d}वह\u{947}",
-    "इयर\u{94d}ति" IND_MID_1_PL "ईर\u{94d}मह\u{947}",
-    "इयर\u{94d}ति" IND_MID_2_SG "ईर\u{94d}ष\u{947}",
-    "इयर\u{94d}ति" IND_MID_2_DU "ईराथ\u{947}",
-    "इयर\u{94d}ति" IND_MID_2_PL "ईर\u{94d}ध\u{94d}व\u{947}",
-    "इयर\u{94d}ति" IND_MID_3_SG "ईर\u{94d}त\u{947}",
-    "इयर\u{94d}ति" IND_MID_3_DU "ईरात\u{947}",
-    "इयर\u{94d}ति" IND_MID_3_PL "ईरत\u{947}",
-    "इयर\u{94d}ति" IMP_ACT_2_SG "ईर\u{94d}धि",
-    "इयर\u{94d}ति" IMP_ACT_2_DU "ईर\u{94d}तम\u{94d}",
-    "इयर\u{94d}ति" IMP_ACT_2_PL "ईर\u{94d}त",
-    "इयर\u{94d}ति" IMP_ACT_3_DU "ईर\u{94d}ताम\u{94d}",
-    "इयर\u{94d}ति" IMP_ACT_3_PL "ईरत\u{941}",
-    "इयर\u{94d}ति" IMP_MID_2_SG "ईर\u{94d}ष\u{94d}व",
-    "इयर\u{94d}ति" IMP_MID_2_DU "ईराथाम\u{94d}",
-    "इयर\u{94d}ति" IMP_MID_2_PL "ईर\u{94d}ध\u{94d}वम\u{94d}",
-    "इयर\u{94d}ति" IMP_MID_3_SG "ईर\u{94d}ताम\u{94d}",
-    "इयर\u{94d}ति" IMP_MID_3_DU "ईराताम\u{94d}",
-    "इयर\u{94d}ति" IMP_MID_3_PL "ईरताम\u{94d}",
-    "इयर\u{94d}ति" OPT_ACT_1_SG "ईर\u{94d}याम\u{94d}",
-    "इयर\u{94d}ति" OPT_ACT_1_DU "ईर\u{94d}याव",
-    "इयर\u{94d}ति" OPT_ACT_1_PL "ईर\u{94d}याम",
-    "इयर\u{94d}ति" OPT_ACT_2_SG "ईर\u{94d}याः",
-    "इयर\u{94d}ति" OPT_ACT_2_DU "ईर\u{94d}यातम\u{94d}",
-    "इयर\u{94d}ति" OPT_ACT_2_PL "ईर\u{94d}यात",
-    "इयर\u{94d}ति" OPT_ACT_3_SG "ईर\u{94d}यात\u{94d}",
-    "इयर\u{94d}ति" OPT_ACT_3_DU "ईर\u{94d}याताम\u{94d}",
-    "इयर\u{94d}ति" OPT_ACT_3_PL "ईर\u{94d}य\u{941}ः",
-    "इयर\u{94d}ति" OPT_MID_1_SG "ईरीय",
-    "इयर\u{94d}ति" OPT_MID_1_DU "ईरीवहि",
-    "इयर\u{94d}ति" OPT_MID_1_PL "ईरीमहि",
-    "इयर\u{94d}ति" OPT_MID_2_SG "ईरीथाः",
-    "इयर\u{94d}ति" OPT_MID_2_DU "ईरीयाथाम\u{94d}",
-    "इयर\u{94d}ति" OPT_MID_2_PL "ईरीध\u{94d}वम\u{94d}",
-    "इयर\u{94d}ति" OPT_MID_3_SG "ईरीत",
-    "इयर\u{94d}ति" OPT_MID_3_DU "ईरीयाताम\u{94d}",
-    "इयर\u{94d}ति" OPT_MID_3_PL "ईरीरन\u{94d}",
-    "इयर\u{94d}ति" IMPERFECT_ACT_1_SG "ऐयरम\u{94d}",
-    "इयर\u{94d}ति" IMPERFECT_ACT_1_DU "ऐर\u{94d}व",
-    "इयर\u{94d}ति" IMPERFECT_ACT_1_PL "ऐर\u{94d}म",
-    "इयर\u{94d}ति" IMPERFECT_ACT_2_SG "ऐयः",
-    "इयर\u{94d}ति" IMPERFECT_ACT_2_DU "ऐर\u{94d}तम\u{94d}",
-    "इयर\u{94d}ति" IMPERFECT_ACT_2_PL "ऐर\u{94d}त",
-    "इयर\u{94d}ति" IMPERFECT_ACT_3_SG "ऐयः",
-    "इयर\u{94d}ति" IMPERFECT_ACT_3_DU "ऐर\u{94d}ताम\u{94d}",
-    "इयर\u{94d}ति" IMPERFECT_ACT_3_PL "ऐयर\u{941}ः",
-    "इयर\u{94d}ति" IMPERFECT_MID_1_SG "ऐरि",
-    "इयर\u{94d}ति" IMPERFECT_MID_1_DU "ऐर\u{94d}वहि",
-    "इयर\u{94d}ति" IMPERFECT_MID_1_PL "ऐर\u{94d}महि",
-    "इयर\u{94d}ति" IMPERFECT_MID_2_SG "ऐर\u{94d}थाः",
-    "इयर\u{94d}ति" IMPERFECT_MID_2_DU "ऐराथाम\u{94d}",
-    "इयर\u{94d}ति" IMPERFECT_MID_2_PL "ऐर\u{94d}ध\u{94d}वम\u{94d}",
-    "इयर\u{94d}ति" IMPERFECT_MID_3_SG "ऐर\u{94d}त",
-    "इयर\u{94d}ति" IMPERFECT_MID_3_DU "ऐराताम\u{94d}",
-    "इयर\u{94d}ति" IMPERFECT_MID_3_PL "ऐरत",
-    "इयर\u{94d}ति" PARTICIPLE_PRES_ACT "ईरत\u{94d}",
-    "इयर\u{94d}ति" PARTICIPLE_PRES_MID "ईराण",
-    "इयाज" PERFECT_ACT_1_SG "इयज",
-    "इयाज" PERFECT_ACT_1_DU "ईजिव",
-    "इयाज" PERFECT_ACT_1_PL "ईजिम",
-    "इयाज" PERFECT_ACT_2_SG "इयष\u{94d}ठ",
-    "इयाज" PERFECT_ACT_2_DU "ईजथ\u{941}ः",
-    "इयाज" PERFECT_ACT_2_PL "ईज",
-    "इयाज" PERFECT_ACT_3_DU "ईजत\u{941}ः",
-    "इयाज" PERFECT_ACT_3_PL "ईज\u{941}ः",
-    "इयाज" PERFECT_MID_1_SG "ईज\u{947}",
-    "इयाज" PERFECT_MID_1_DU "ईजिवह\u{947}",
-    "इयाज" PERFECT_MID_1_PL "ईजिमह\u{947}",
-    "इयाज" PERFECT_MID_2_SG "ईजिष\u{947}",
-    "इयाज" PERFECT_MID_2_DU "ईजाथ\u{947}",
-    "इयाज" PERFECT_MID_2_PL "ईजिध\u{94d}व\u{947}",
-    "इयाज" PERFECT_MID_3_SG "ईज\u{947}",
-    "इयाज" PERFECT_MID_3_DU "ईजात\u{947}",
-    "इयाज" PERFECT_MID_3_PL "ईजिर\u{947}",
-    "इयाज" PARTICIPLE_PERF_ACT "ईजिवा\u{902}स\u{94d}",
-    "इयाज" PARTICIPLE_PERF_MID "ईजान",
-    "इयाय" PERFECT_ACT_1_DU "ईयिव",
-    "इयाय" PERFECT_ACT_1_PL "ईयिम",
-    "इयाय" PERFECT_ACT_2_DU "ईयथ\u{941}ः",
-    "इयाय" PERFECT_ACT_2_PL "ईय",
-    "इयाय" PERFECT_ACT_3_DU "ईयत\u{941}ः",
-    "इयाय" PERFECT_ACT_3_PL "ईय\u{941}ः",
-    "इयाय" PARTICIPLE_PERF_ACT "ईयिवा\u{902}स\u{94d}",
-    "इय\u{947}ष" PERFECT_ACT_1_DU "ईषिव",
-    "इय\u{947}ष" PERFECT_ACT_1_PL "ईषिम",
-    "इय\u{947}ष" PERFECT_ACT_2_DU "ईषथ\u{941}ः",
-    "इय\u{947}ष" PERFECT_ACT_2_PL "ईष",
-    "इय\u{947}ष" PERFECT_ACT_3_DU "ईषत\u{941}ः",
-    "इय\u{947}ष" PERFECT_ACT_3_PL "ईष\u{941}ः",
-    "इय\u{947}ष" PERFECT_MID_1_SG "ईष\u{947}",
-    "इय\u{947}ष" PERFECT_MID_1_DU "ईषिवह\u{947}",
-    "इय\u{947}ष" PERFECT_MID_1_PL "ईषिमह\u{947}",
-    "इय\u{947}ष" PERFECT_MID_2_SG "ईषिष\u{947}",
-    "इय\u{947}ष" PERFECT_MID_2_DU "ईषाथ\u{947}",
-    "इय\u{947}ष" PERFECT_MID_2_PL "ईषिध\u{94d}व\u{947}",
-    "इय\u{947}ष" PERFECT_MID_3_SG "ईष\u{947}",
-    "इय\u{947}ष" PERFECT_MID_3_DU "ईषात\u{947}",
-    "इय\u{947}ष" PERFECT_MID_3_PL "ईषिर\u{947}",
-    "इय\u{947}ष" PARTICIPLE_PERF_ACT "ईषिवा\u{902}स\u{94d}",
-    "इय\u{947}ष" PARTICIPLE_PERF_MID "ईषाण",
-    "इष\u{94d}णाति" IMPERFECT_ACT_1_SG "ऐष\u{94d}णाम\u{94d}",
-    "इष\u{94d}णाति" IMPERFECT_ACT_1_DU "ऐष\u{94d}णीव",
-    "इष\u{94d}णाति" IMPERFECT_ACT_1_PL "ऐष\u{94d}णीम",
-    "इष\u{94d}णाति" IMPERFECT_ACT_2_SG "ऐष\u{94d}णाः",
-    "इष\u{94d}णाति" IMPERFECT_ACT_2_DU "ऐष\u{94d}णीतम\u{94d}",
-    "इष\u{94d}णाति" IMPERFECT_ACT_2_PL "ऐष\u{94d}णीत",
-    "इष\u{94d}णाति" IMPERFECT_ACT_3_SG "ऐष\u{94d}णात\u{94d}",
-    "इष\u{94d}णाति" IMPERFECT_ACT_3_DU "ऐष\u{94d}णीताम\u{94d}",
-    "इष\u{94d}णाति" IMPERFECT_ACT_3_PL "ऐष\u{94d}णन\u{94d}",
-    "इष\u{94d}णाति" IMPERFECT_MID_1_SG "ऐष\u{94d}णि",
-    "इष\u{94d}णाति" IMPERFECT_MID_1_DU "ऐष\u{94d}णीवहि",
-    "इष\u{94d}णाति" IMPERFECT_MID_1_PL "ऐष\u{94d}णीमहि",
-    "इष\u{94d}णाति" IMPERFECT_MID_2_SG "ऐष\u{94d}णीथाः",
-    "इष\u{94d}णाति" IMPERFECT_MID_2_DU "ऐष\u{94d}णाथाम\u{94d}",
-    "इष\u{94d}णाति" IMPERFECT_MID_2_PL "ऐष\u{94d}णीध\u{94d}वम\u{94d}",
-    "इष\u{94d}णाति" IMPERFECT_MID_3_SG "ऐष\u{94d}णीत",
-    "इष\u{94d}णाति" IMPERFECT_MID_3_DU "ऐष\u{94d}णाताम\u{94d}",
-    "इष\u{94d}णाति" IMPERFECT_MID_3_PL "ऐष\u{94d}णत",
-    "ईक\u{94d}षत\u{947}" IMPERFECT_MID_1_SG "ऐक\u{94d}ष\u{947}",
-    "ईक\u{94d}षत\u{947}" IMPERFECT_MID_1_DU "ऐक\u{94d}षावहि",
-    "ईक\u{94d}षत\u{947}" IMPERFECT_MID_1_PL "ऐक\u{94d}षामहि",
-    "ईक\u{94d}षत\u{947}" IMPERFECT_MID_2_SG "ऐक\u{94d}षथाः",
-    "ईक\u{94d}षत\u{947}" IMPERFECT_MID_2_DU "ऐक\u{94d}ष\u{947}थाम\u{94d}",
-    "ईक\u{94d}षत\u{947}" IMPERFECT_MID_2_PL "ऐक\u{94d}षध\u{94d}वम\u{94d}",
-    "ईक\u{94d}षत\u{947}" IMPERFECT_MID_3_SG "ऐक\u{94d}षत",
-    "ईक\u{94d}षत\u{947}" IMPERFECT_MID_3_DU "ऐक\u{94d}ष\u{947}ताम\u{94d}",
-    "ईक\u{94d}षत\u{947}" IMPERFECT_MID_3_PL "ऐक\u{94d}षन\u{94d}त",
-    "ईट\u{94d}ट\u{947}" IND_MID_1_SG "ईड\u{947}",
-    "ईट\u{94d}ट\u{947}" IND_MID_1_DU "ईड\u{94d}वह\u{947}",
-    "ईट\u{94d}ट\u{947}" IND_MID_1_PL "ईड\u{94d}मह\u{947}",
-    "ईट\u{94d}ट\u{947}" IND_MID_2_SG "ईडिष\u{947}",
-    "ईट\u{94d}ट\u{947}" IND_MID_2_DU "ईडाथ\u{947}",
-    "ईट\u{94d}ट\u{947}" IND_MID_2_PL "ईड\u{94d}ढ\u{94d}व\u{947}",
-    "ईट\u{94d}ट\u{947}" IND_MID_3_SG "ईट\u{94d}ट\u{947}",
-    "ईट\u{94d}ट\u{947}" IND_MID_3_DU "ईडात\u{947}",
-    "ईट\u{94d}ट\u{947}" IND_MID_3_PL "ईडत\u{947}",
-    "ईट\u{94d}ट\u{947}" IMP_MID_1_SG "ईड\u{948}",
-    "ईट\u{94d}ट\u{947}" IMP_MID_1_DU "ईडावह\u{948}",
-    "ईट\u{94d}ट\u{947}" IMP_MID_1_PL "ईडामह\u{948}",
-    "ईट\u{94d}ट\u{947}" IMP_MID_2_SG "ईडिष\u{94d}व",
-    "ईट\u{94d}ट\u{947}" IMP_MID_2_DU "ईडाथाम\u{94d}",
-    "ईट\u{94d}ट\u{947}" IMP_MID_2_PL "ईड\u{94d}ढ\u{94d}वम\u{94d}",
-    "ईट\u{94d}ट\u{947}" IMP_MID_3_SG "ईट\u{94d}टाम\u{94d}",
-    "ईट\u{94d}ट\u{947}" IMP_MID_3_DU "ईडाताम\u{94d}",
-    "ईट\u{94d}ट\u{947}" IMP_MID_3_PL "ईडताम\u{94d}",
-    "ईट\u{94d}ट\u{947}" OPT_MID_1_SG "ईडीय",
-    "ईट\u{94d}ट\u{947}" OPT_MID_1_DU "ईडीवहि",
-    "ईट\u{94d}ट\u{947}" OPT_MID_1_PL "ईडीमहि",
-    "ईट\u{94d}ट\u{947}" OPT_MID_2_SG "ईडीथाः",
-    "ईट\u{94d}ट\u{947}" OPT_MID_2_DU "ईडीयाथाम\u{94d}",
-    "ईट\u{94d}ट\u{947}" OPT_MID_2_PL "ईडीध\u{94d}वम\u{94d}",
-    "ईट\u{94d}ट\u{947}" OPT_MID_3_SG "ईडीत",
-    "ईट\u{94d}ट\u{947}" OPT_MID_3_DU "ईडीयाताम\u{94d}",
-    "ईट\u{94d}ट\u{947}" OPT_MID_3_PL "ईडीरन\u{94d}",
-    "ईट\u{94d}ट\u{947}" SUBJ_MID_1_SG "ईड\u{948}",
-    "ईट\u{94d}ट\u{947}" SUBJ_MID_1_DU "ईडावह\u{948}",
-    "ईट\u{94d}ट\u{947}" SUBJ_MID_1_PL "ईडामह\u{948}",
-    "ईट\u{94d}ट\u{947}" SUBJ_MID_2_SG "ईडस\u{947}",
-    "ईट\u{94d}ट\u{947}" SUBJ_MID_2_DU "ईड\u{948}थ\u{947}",
-    "ईट\u{94d}ट\u{947}" SUBJ_MID_2_PL "ईडध\u{94d}व\u{947}",
-    "ईट\u{94d}ट\u{947}" SUBJ_MID_3_SG "ईडत\u{947}",
-    "ईट\u{94d}ट\u{947}" SUBJ_MID_3_DU "ईड\u{948}त\u{947}",
-    "ईट\u{94d}ट\u{947}" SUBJ_MID_3_PL "ईडन\u{94d}त",
-    "ईट\u{94d}ट\u{947}" IMPERFECT_MID_1_SG "ऐडि",
-    "ईट\u{94d}ट\u{947}" IMPERFECT_MID_1_DU "ऐड\u{94d}वहि",
-    "ईट\u{94d}ट\u{947}" IMPERFECT_MID_1_PL "ऐड\u{94d}महि",
-    "ईट\u{94d}ट\u{947}" IMPERFECT_MID_2_SG "ऐट\u{94d}ठाः",
-    "ईट\u{94d}ट\u{947}" IMPERFECT_MID_2_DU "ऐडाथाम\u{94d}",
-    "ईट\u{94d}ट\u{947}" IMPERFECT_MID_2_PL "ऐड\u{94d}ढ\u{94d}वम\u{94d}",
-    "ईट\u{94d}ट\u{947}" IMPERFECT_MID_3_SG "ऐट\u{94d}ट",
-    "ईट\u{94d}ट\u{947}" IMPERFECT_MID_3_DU "ऐडाताम\u{94d}",
-    "ईट\u{94d}ट\u{947}" IMPERFECT_MID_3_PL "ऐडत",
-    "ईट\u{94d}ट\u{947}" PARTICIPLE_PRES_MID "ईडान",
-    "ईर\u{94d}ष\u{94d}यति" IMPERFECT_ACT_1_SG "ऐर\u{94d}ष\u{94d}यम\u{94d}",
-    "ईर\u{94d}ष\u{94d}यति" IMPERFECT_ACT_1_DU "ऐर\u{94d}ष\u{94d}याव",
-    "ईर\u{94d}ष\u{94d}यति" IMPERFECT_ACT_1_PL "ऐर\u{94d}ष\u{94d}याम",
-    "ईर\u{94d}ष\u{94d}यति" IMPERFECT_ACT_2_SG "ऐर\u{94d}ष\u{94d}यः",
-    "ईर\u{94d}ष\u{94d}यति" IMPERFECT_ACT_2_DU "ऐर\u{94d}ष\u{94d}यतम\u{94d}",
-    "ईर\u{94d}ष\u{94d}यति" IMPERFECT_ACT_2_PL "ऐर\u{94d}ष\u{94d}यत",
-    "ईर\u{94d}ष\u{94d}यति" IMPERFECT_ACT_3_SG "ऐर\u{94d}ष\u{94d}यत\u{94d}",
-    "ईर\u{94d}ष\u{94d}यति" IMPERFECT_ACT_3_DU "ऐर\u{94d}ष\u{94d}यताम\u{94d}",
-    "ईर\u{94d}ष\u{94d}यति" IMPERFECT_ACT_3_PL "ऐर\u{94d}ष\u{94d}यन\u{94d}",
-    "ईर\u{94d}ष\u{94d}यति" IMPERFECT_MID_1_SG "ऐर\u{94d}ष\u{94d}य\u{947}",
-    "ईर\u{94d}ष\u{94d}यति" IMPERFECT_MID_1_DU "ऐर\u{94d}ष\u{94d}यावहि",
-    "ईर\u{94d}ष\u{94d}यति" IMPERFECT_MID_1_PL "ऐर\u{94d}ष\u{94d}यामहि",
-    "ईर\u{94d}ष\u{94d}यति" IMPERFECT_MID_2_SG "ऐर\u{94d}ष\u{94d}यथाः",
-    "ईर\u{94d}ष\u{94d}यति" IMPERFECT_MID_2_DU "ऐर\u{94d}ष\u{94d}य\u{947}थाम\u{94d}",
-    "ईर\u{94d}ष\u{94d}यति" IMPERFECT_MID_2_PL "ऐर\u{94d}ष\u{94d}यध\u{94d}वम\u{94d}",
-    "ईर\u{94d}ष\u{94d}यति" IMPERFECT_MID_3_SG "ऐर\u{94d}ष\u{94d}यत",
-    "ईर\u{94d}ष\u{94d}यति" IMPERFECT_MID_3_DU "ऐर\u{94d}ष\u{94d}य\u{947}ताम\u{94d}",
-    "ईर\u{94d}ष\u{94d}यति" IMPERFECT_MID_3_PL "ऐर\u{94d}ष\u{94d}यन\u{94d}त",
-    "ईष\u{94d}ट\u{947}" IND_MID_1_SG "ईश\u{947}",
-    "ईष\u{94d}ट\u{947}" IND_MID_1_DU "ईश\u{94d}वह\u{947}",
-    "ईष\u{94d}ट\u{947}" IND_MID_1_PL "ईश\u{94d}मह\u{947}",
-    "ईष\u{94d}ट\u{947}" IND_MID_2_SG "ईशिष\u{947}",
-    "ईष\u{94d}ट\u{947}" IND_MID_2_DU "ईशाथ\u{947}",
-    "ईष\u{94d}ट\u{947}" IND_MID_2_PL "ईशिध\u{94d}व\u{947}",
-    "ईष\u{94d}ट\u{947}" IND_MID_3_SG "ईष\u{94d}ट\u{947}",
-    "ईष\u{94d}ट\u{947}" IND_MID_3_DU "ईशात\u{947}",
-    "ईष\u{94d}ट\u{947}" IND_MID_3_PL "ईशत\u{947}",
-    "ईष\u{94d}ट\u{947}" IMP_MID_1_SG "ईश\u{948}",
-    "ईष\u{94d}ट\u{947}" IMP_MID_1_DU "ईशावह\u{948}",
-    "ईष\u{94d}ट\u{947}" IMP_MID_1_PL "ईशामह\u{948}",
-    "ईष\u{94d}ट\u{947}" IMP_MID_2_SG "ईशिष\u{94d}व",
-    "ईष\u{94d}ट\u{947}" IMP_MID_2_DU "ईशाथाम\u{94d}",
-    "ईष\u{94d}ट\u{947}" IMP_MID_2_PL "ईशिध\u{94d}वम\u{94d}",
-    "ईष\u{94d}ट\u{947}" IMP_MID_3_SG "ईष\u{94d}टाम\u{94d}",
-    "ईष\u{94d}ट\u{947}" IMP_MID_3_DU "ईशाताम\u{94d}",
-    "ईष\u{94d}ट\u{947}" IMP_MID_3_PL "ईशताम\u{94d}",
-    "ईष\u{94d}ट\u{947}" OPT_MID_1_SG "ईशीय",
-    "ईष\u{94d}ट\u{947}" OPT_MID_1_DU "ईशीवहि",
-    "ईष\u{94d}ट\u{947}" OPT_MID_1_PL "ईशीमहि",
-    "ईष\u{94d}ट\u{947}" OPT_MID_2_SG "ईशीथाः",
-    "ईष\u{94d}ट\u{947}" OPT_MID_2_DU "ईशीयाथाम\u{94d}",
-    "ईष\u{94d}ट\u{947}" OPT_MID_2_PL "ईशीध\u{94d}वम\u{94d}",
-    "ईष\u{94d}ट\u{947}" OPT_MID_3_SG "ईशीत",
-    "ईष\u{94d}ट\u{947}" OPT_MID_3_DU "ईशीयाताम\u{94d}",
-    "ईष\u{94d}ट\u{947}" OPT_MID_3_PL "ईशीरन\u{94d}",
-    "ईष\u{94d}ट\u{947}" SUBJ_MID_1_SG "ईश\u{948}",
-    "ईष\u{94d}ट\u{947}" SUBJ_MID_1_DU "ईशावह\u{948}",
-    "ईष\u{94d}ट\u{947}" SUBJ_MID_1_PL "ईशामह\u{948}",
-    "ईष\u{94d}ट\u{947}" SUBJ_MID_2_SG "ईशस\u{947}",
-    "ईष\u{94d}ट\u{947}" SUBJ_MID_2_DU "ईश\u{948}थ\u{947}",
-    "ईष\u{94d}ट\u{947}" SUBJ_MID_2_PL "ईशध\u{94d}व\u{947}",
-    "ईष\u{94d}ट\u{947}" SUBJ_MID_3_SG "ईशत\u{947}",
-    "ईष\u{94d}ट\u{947}" SUBJ_MID_3_DU "ईश\u{948}त\u{947}",
-    "ईष\u{94d}ट\u{947}" SUBJ_MID_3_PL "ईशन\u{94d}त",
-    "ईष\u{94d}ट\u{947}" IMPERFECT_MID_1_SG "ऐशि",
-    "ईष\u{94d}ट\u{947}" IMPERFECT_MID_1_DU "ऐश\u{94d}वहि",
-    "ईष\u{94d}ट\u{947}" IMPERFECT_MID_1_PL "ऐश\u{94d}महि",
-    "ईष\u{94d}ट\u{947}" IMPERFECT_MID_2_SG "ऐष\u{94d}ठाः",
-    "ईष\u{94d}ट\u{947}" IMPERFECT_MID_2_DU "ऐशाथाम\u{94d}",
-    "ईष\u{94d}ट\u{947}" IMPERFECT_MID_2_PL "ऐशिध\u{94d}वम\u{94d}",
-    "ईष\u{94d}ट\u{947}" IMPERFECT_MID_3_SG "ऐष\u{94d}ट",
-    "ईष\u{94d}ट\u{947}" IMPERFECT_MID_3_DU "ऐशाताम\u{94d}",
-    "ईष\u{94d}ट\u{947}" IMPERFECT_MID_3_PL "ऐशत",
-    "ईष\u{94d}ट\u{947}" PARTICIPLE_PRES_MID "ईशान",
-    "ईहति" IMPERFECT_ACT_1_SG "ऐहम\u{94d}",
-    "ईहति" IMPERFECT_ACT_1_DU "ऐहाव",
-    "ईहति" IMPERFECT_ACT_1_PL "ऐहाम",
-    "ईहति" IMPERFECT_ACT_2_SG "ऐहः",
-    "ईहति" IMPERFECT_ACT_2_DU "ऐहतम\u{94d}",
-    "ईहति" IMPERFECT_ACT_2_PL "ऐहत",
-    "ईहति" IMPERFECT_ACT_3_SG "ऐहत\u{94d}",
-    "ईहति" IMPERFECT_ACT_3_DU "ऐहताम\u{94d}",
-    "ईहति" IMPERFECT_ACT_3_PL "ऐहन\u{94d}",
-    "ईहति" IMPERFECT_MID_1_SG "ऐह\u{947}",
-    "ईहति" IMPERFECT_MID_1_DU "ऐहावहि",
-    "ईहति" IMPERFECT_MID_1_PL "ऐहामहि",
-    "ईहति" IMPERFECT_MID_2_SG "ऐहथाः",
-    "ईहति" IMPERFECT_MID_2_DU "ऐह\u{947}थाम\u{94d}",
-    "ईहति" IMPERFECT_MID_2_PL "ऐहध\u{94d}वम\u{94d}",
-    "ईहति" IMPERFECT_MID_3_SG "ऐहत",
-    "ईहति" IMPERFECT_MID_3_DU "ऐह\u{947}ताम\u{94d}",
-    "ईहति" IMPERFECT_MID_3_PL "ऐहन\u{94d}त",
-    "उक\u{94d}षति" IMP_ACT_1_SG "उक\u{94d}षाणि",
-    "उक\u{94d}षति" SUBJ_ACT_1_SG "उक\u{94d}षाणि",
-    "उक\u{94d}षति" PARTICIPLE_PRES_MID "उक\u{94d}षमाण",
-    "उच\u{94d}छ\u{94d}वसिति" IND_ACT_1_SG "उच\u{94d}छ\u{94d}वसिमि",
-    "उच\u{94d}छ\u{94d}वसिति" IND_ACT_1_DU "उच\u{94d}छ\u{94d}वसिवः",
-    "उच\u{94d}छ\u{94d}वसिति" IND_ACT_1_PL "उच\u{94d}छ\u{94d}वसिमः",
-    "उच\u{94d}छ\u{94d}वसिति" IND_ACT_2_SG "उच\u{94d}छ\u{94d}वसिषि",
-    "उच\u{94d}छ\u{94d}वसिति" IND_ACT_3_PL "उच\u{94d}छ\u{94d}वसन\u{94d}ति",
-    "उच\u{94d}छ\u{94d}वसिति" IND_MID_1_SG "उच\u{94d}छ\u{94d}वस\u{947}",
-    "उच\u{94d}छ\u{94d}वसिति" IND_MID_1_DU "उच\u{94d}छ\u{94d}वसिवह\u{947}",
-    "उच\u{94d}छ\u{94d}वसिति" IND_MID_1_PL "उच\u{94d}छ\u{94d}वसिमह\u{947}",
-    "उच\u{94d}छ\u{94d}वसिति" IND_MID_2_SG "उच\u{94d}छ\u{94d}वसिष\u{947}",
-    "उच\u{94d}छ\u{94d}वसिति" IND_MID_2_DU "उच\u{94d}छ\u{94d}वसाथ\u{947}",
-    "उच\u{94d}छ\u{94d}वसिति" IND_MID_3_DU "उच\u{94d}छ\u{94d}वसात\u{947}",
-    "उच\u{94d}छ\u{94d}वसिति" IND_MID_3_PL "उच\u{94d}छ\u{94d}वसत\u{947}",
-    "उच\u{94d}छ\u{94d}वसिति" IMP_ACT_1_SG "उच\u{94d}छ\u{94d}वस\u{94d}यानि",
-    "उच\u{94d}छ\u{94d}वसिति" IMP_ACT_1_DU "उच\u{94d}छ\u{94d}वस\u{94d}याव",
-    "उच\u{94d}छ\u{94d}वसिति" IMP_ACT_1_PL "उच\u{94d}छ\u{94d}वस\u{94d}याम",
-    "उच\u{94d}छ\u{94d}वसिति" IMP_ACT_2_SG "उच\u{94d}छ\u{94d}वसिहि",
-    "उच\u{94d}छ\u{94d}वसिति" IMP_ACT_3_PL "उच\u{94d}छ\u{94d}वसन\u{94d}त\u{941}",
-    "उच\u{94d}छ\u{94d}वसिति" IMP_MID_1_SG "उच\u{94d}छ\u{94d}वस\u{94d}य\u{948}",
-    "उच\u{94d}छ\u{94d}वसिति" IMP_MID_1_DU "उच\u{94d}छ\u{94d}वस\u{94d}यावह\u{948}",
-    "उच\u{94d}छ\u{94d}वसिति" IMP_MID_1_PL "उच\u{94d}छ\u{94d}वस\u{94d}यामह\u{948}",
-    "उच\u{94d}छ\u{94d}वसिति" IMP_MID_2_SG "उच\u{94d}छ\u{94d}वसिष\u{94d}व",
-    "उच\u{94d}छ\u{94d}वसिति" IMP_MID_2_DU "उच\u{94d}छ\u{94d}वसाथाम\u{94d}",
-    "उच\u{94d}छ\u{94d}वसिति" IMP_MID_3_DU "उच\u{94d}छ\u{94d}वसाताम\u{94d}",
-    "उच\u{94d}छ\u{94d}वसिति" IMP_MID_3_PL "उच\u{94d}छ\u{94d}वसताम\u{94d}",
-    "उच\u{94d}छ\u{94d}वसिति" OPT_ACT_1_SG "उच\u{94d}छ\u{94d}वसियाम\u{94d}",
-    "उच\u{94d}छ\u{94d}वसिति" OPT_ACT_1_DU "उच\u{94d}छ\u{94d}वसियाव",
-    "उच\u{94d}छ\u{94d}वसिति" OPT_ACT_1_PL "उच\u{94d}छ\u{94d}वसियाम",
-    "उच\u{94d}छ\u{94d}वसिति" OPT_ACT_2_SG "उच\u{94d}छ\u{94d}वसियाः",
-    "उच\u{94d}छ\u{94d}वसिति" OPT_ACT_2_DU "उच\u{94d}छ\u{94d}वसियातम\u{94d}",
-    "उच\u{94d}छ\u{94d}वसिति" OPT_ACT_2_PL "उच\u{94d}छ\u{94d}वसियात",
-    "उच\u{94d}छ\u{94d}वसिति" OPT_ACT_3_SG "उच\u{94d}छ\u{94d}वसियात\u{94d}",
-    "उच\u{94d}छ\u{94d}वसिति" OPT_ACT_3_DU "उच\u{94d}छ\u{94d}वसियाताम\u{94d}",
-    "उच\u{94d}छ\u{94d}वसिति" OPT_ACT_3_PL "उच\u{94d}छ\u{94d}वसिय\u{941}ः",
-    "उच\u{94d}छ\u{94d}वसिति" OPT_MID_1_SG "उच\u{94d}छ\u{94d}वसीय",
-    "उच\u{94d}छ\u{94d}वसिति" OPT_MID_1_DU "उच\u{94d}छ\u{94d}वसीवहि",
-    "उच\u{94d}छ\u{94d}वसिति" OPT_MID_1_PL "उच\u{94d}छ\u{94d}वसीमहि",
-    "उच\u{94d}छ\u{94d}वसिति" OPT_MID_2_SG "उच\u{94d}छ\u{94d}वसीथाः",
-    "उच\u{94d}छ\u{94d}वसिति" OPT_MID_2_DU "उच\u{94d}छ\u{94d}वसीयाथाम\u{94d}",
-    "उच\u{94d}छ\u{94d}वसिति" OPT_MID_2_PL "उच\u{94d}छ\u{94d}वसीध\u{94d}वम\u{94d}",
-    "उच\u{94d}छ\u{94d}वसिति" OPT_MID_3_SG "उच\u{94d}छ\u{94d}वसीत",
-    "उच\u{94d}छ\u{94d}वसिति" OPT_MID_3_DU "उच\u{94d}छ\u{94d}वसीयाताम\u{94d}",
-    "उच\u{94d}छ\u{94d}वसिति" OPT_MID_3_PL "उच\u{94d}छ\u{94d}वसीरन\u{94d}",
-    "उच\u{94d}छ\u{94d}वसिति" SUBJ_ACT_1_SG "उच\u{94d}छ\u{94d}वस\u{94d}यानि",
-    "उच\u{94d}छ\u{94d}वसिति" SUBJ_ACT_1_DU "उच\u{94d}छ\u{94d}वस\u{94d}याव",
-    "उच\u{94d}छ\u{94d}वसिति" SUBJ_ACT_1_PL "उच\u{94d}छ\u{94d}वस\u{94d}याम",
-    "उच\u{94d}छ\u{94d}वसिति" SUBJ_ACT_2_SG "उच\u{94d}छ\u{94d}वस\u{94d}यः",
-    "उच\u{94d}छ\u{94d}वसिति" SUBJ_ACT_2_DU "उच\u{94d}छ\u{94d}वस\u{94d}यथः",
-    "उच\u{94d}छ\u{94d}वसिति" SUBJ_ACT_2_PL "उच\u{94d}छ\u{94d}वस\u{94d}यथ",
-    "उच\u{94d}छ\u{94d}वसिति" SUBJ_ACT_3_SG "उच\u{94d}छ\u{94d}वस\u{94d}यत\u{94d}",
-    "उच\u{94d}छ\u{94d}वसिति" SUBJ_ACT_3_DU "उच\u{94d}छ\u{94d}वस\u{94d}यतः",
-    "उच\u{94d}छ\u{94d}वसिति" SUBJ_ACT_3_PL "उच\u{94d}छ\u{94d}वस\u{94d}यन\u{94d}",
-    "उच\u{94d}छ\u{94d}वसिति" SUBJ_MID_1_SG "उच\u{94d}छ\u{94d}वस\u{94d}य\u{948}",
-    "उच\u{94d}छ\u{94d}वसिति" SUBJ_MID_1_DU "उच\u{94d}छ\u{94d}वस\u{94d}यावह\u{948}",
-    "उच\u{94d}छ\u{94d}वसिति" SUBJ_MID_1_PL "उच\u{94d}छ\u{94d}वस\u{94d}यामह\u{948}",
-    "उच\u{94d}छ\u{94d}वसिति" SUBJ_MID_2_SG "उच\u{94d}छ\u{94d}वस\u{94d}यस\u{947}",
-    "उच\u{94d}छ\u{94d}वसिति" SUBJ_MID_2_DU "उच\u{94d}छ\u{94d}वस\u{94d}य\u{948}थ\u{947}",
-    "उच\u{94d}छ\u{94d}वसिति" SUBJ_MID_2_PL "उच\u{94d}छ\u{94d}वस\u{94d}यध\u{94d}व\u{947}",
-    "उच\u{94d}छ\u{94d}वसिति" SUBJ_MID_3_SG "उच\u{94d}छ\u{94d}वस\u{94d}यत\u{947}",
-    "उच\u{94d}छ\u{94d}वसिति" SUBJ_MID_3_DU "उच\u{94d}छ\u{94d}वस\u{94d}य\u{948}त\u{947}",
-    "उच\u{94d}छ\u{94d}वसिति" SUBJ_MID_3_PL "उच\u{94d}छ\u{94d}वस\u{94d}यन\u{94d}त",
-    "उच\u{94d}छ\u{94d}वसिति" PARTICIPLE_PRES_ACT "उच\u{94d}छ\u{94d}वसत\u{94d}",
-    "उच\u{94d}छ\u{94d}वसिति" PARTICIPLE_PRES_MID "उच\u{94d}छ\u{94d}वसमान",
-    "उच\u{94d}यत\u{947}" IMPERFECT_MID_1_SG "औच\u{94d}य\u{947}",
-    "उच\u{94d}यत\u{947}" IMPERFECT_MID_1_DU "औच\u{94d}यावहि",
-    "उच\u{94d}यत\u{947}" IMPERFECT_MID_1_PL "औच\u{94d}यामहि",
-    "उच\u{94d}यत\u{947}" IMPERFECT_MID_2_SG "औच\u{94d}यथाः",
-    "उच\u{94d}यत\u{947}" IMPERFECT_MID_2_DU "औच\u{94d}य\u{947}थाम\u{94d}",
-    "उच\u{94d}यत\u{947}" IMPERFECT_MID_2_PL "औच\u{94d}यध\u{94d}वम\u{94d}",
-    "उच\u{94d}यत\u{947}" IMPERFECT_MID_3_SG "औच\u{94d}यत",
-    "उच\u{94d}यत\u{947}" IMPERFECT_MID_3_DU "औच\u{94d}य\u{947}ताम\u{94d}",
-    "उच\u{94d}यत\u{947}" IMPERFECT_MID_3_PL "औच\u{94d}यन\u{94d}त",
-    "उत\u{94d}तिष\u{94d}ठति" IMPERFECT_ACT_1_SG "उदतिष\u{94d}ठम\u{94d}",
-    "उत\u{94d}तिष\u{94d}ठति" IMPERFECT_ACT_1_DU "उदतिष\u{94d}ठाव",
-    "उत\u{94d}तिष\u{94d}ठति" IMPERFECT_ACT_1_PL "उदतिष\u{94d}ठाम",
-    "उत\u{94d}तिष\u{94d}ठति" IMPERFECT_ACT_2_SG "उदतिष\u{94d}ठः",
-    "उत\u{94d}तिष\u{94d}ठति" IMPERFECT_ACT_2_DU "उदतिष\u{94d}ठतम\u{94d}",
-    "उत\u{94d}तिष\u{94d}ठति" IMPERFECT_ACT_2_PL "उदतिष\u{94d}ठत",
-    "उत\u{94d}तिष\u{94d}ठति" IMPERFECT_ACT_3_SG "उदतिष\u{94d}ठत\u{94d}",
-    "उत\u{94d}तिष\u{94d}ठति" IMPERFECT_ACT_3_DU "उदतिष\u{94d}ठताम\u{94d}",
-    "उत\u{94d}तिष\u{94d}ठति" IMPERFECT_ACT_3_PL "उदतिष\u{94d}ठन\u{94d}",
-    "उत\u{94d}तिष\u{94d}ठति" IMPERFECT_MID_1_SG "उदतिष\u{94d}ठ\u{947}",
-    "उत\u{94d}तिष\u{94d}ठति" IMPERFECT_MID_1_DU "उदतिष\u{94d}ठावहि",
-    "उत\u{94d}तिष\u{94d}ठति" IMPERFECT_MID_1_PL "उदतिष\u{94d}ठामहि",
-    "उत\u{94d}तिष\u{94d}ठति" IMPERFECT_MID_2_SG "उदतिष\u{94d}ठथाः",
-    "उत\u{94d}तिष\u{94d}ठति" IMPERFECT_MID_2_DU "उदतिष\u{94d}ठ\u{947}थाम\u{94d}",
-    "उत\u{94d}तिष\u{94d}ठति" IMPERFECT_MID_2_PL "उदतिष\u{94d}ठध\u{94d}वम\u{94d}",
-    "उत\u{94d}तिष\u{94d}ठति" IMPERFECT_MID_3_SG "उदतिष\u{94d}ठत",
-    "उत\u{94d}तिष\u{94d}ठति" IMPERFECT_MID_3_DU "उदतिष\u{94d}ठ\u{947}ताम\u{94d}",
-    "उत\u{94d}तिष\u{94d}ठति" IMPERFECT_MID_3_PL "उदतिष\u{94d}ठन\u{94d}त",
-    "उत\u{94d}थाति" IND_MID_2_DU "उत\u{94d}थ\u{948}थ\u{947}",
-    "उत\u{94d}थाति" IND_MID_3_DU "उत\u{94d}थ\u{948}त\u{947}",
-    "उत\u{94d}थाति" IND_MID_3_PL "उत\u{94d}थान\u{94d}त\u{947}",
-    "उत\u{94d}थाति" IMP_ACT_2_SG "उत\u{94d}था",
-    "उत\u{94d}थाति" IMP_MID_2_DU "उत\u{94d}थ\u{948}थाम\u{94d}",
-    "उत\u{94d}थाति" IMP_MID_3_DU "उत\u{94d}थ\u{948}ताम\u{94d}",
-    "उत\u{94d}थाति" IMP_MID_3_PL "उत\u{94d}थान\u{94d}ताम\u{94d}",
-    "उत\u{94d}थाति" OPT_ACT_1_SG "उत\u{94d}थ\u{948}यम\u{94d}",
-    "उत\u{94d}थाति" OPT_ACT_1_DU "उत\u{94d}थ\u{948}व",
-    "उत\u{94d}थाति" OPT_ACT_1_PL "उत\u{94d}थ\u{948}म",
-    "उत\u{94d}थाति" OPT_ACT_2_SG "उत\u{94d}थ\u{948}ः",
-    "उत\u{94d}थाति" OPT_ACT_2_DU "उत\u{94d}थ\u{948}तम\u{94d}",
-    "उत\u{94d}थाति" OPT_ACT_2_PL "उत\u{94d}थ\u{948}त",
-    "उत\u{94d}थाति" OPT_ACT_3_SG "उत\u{94d}थ\u{948}त\u{94d}",
-    "उत\u{94d}थाति" OPT_ACT_3_DU "उत\u{94d}थ\u{948}ताम\u{94d}",
-    "उत\u{94d}थाति" OPT_ACT_3_PL "उत\u{94d}थ\u{948}य\u{941}ः",
-    "उत\u{94d}थाति" OPT_MID_1_SG "उत\u{94d}थ\u{948}य",
-    "उत\u{94d}थाति" OPT_MID_1_DU "उत\u{94d}थ\u{948}वहि",
-    "उत\u{94d}थाति" OPT_MID_1_PL "उत\u{94d}थ\u{948}महि",
-    "उत\u{94d}थाति" OPT_MID_2_SG "उत\u{94d}थ\u{948}थाः",
-    "उत\u{94d}थाति" OPT_MID_2_DU "उत\u{94d}थ\u{948}याथाम\u{94d}",
-    "उत\u{94d}थाति" OPT_MID_2_PL "उत\u{94d}थ\u{948}ध\u{94d}वम\u{94d}",
-    "उत\u{94d}थाति" OPT_MID_3_SG "उत\u{94d}थ\u{948}त",
-    "उत\u{94d}थाति" OPT_MID_3_DU "उत\u{94d}थ\u{948}याताम\u{94d}",
-    "उत\u{94d}थाति" OPT_MID_3_PL "उत\u{94d}थ\u{948}रन\u{94d}",
-    "उत\u{94d}थाति" SUBJ_MID_2_PL "उत\u{94d}थाध\u{94d}व\u{948}",
-    "उत\u{94d}थाति" PARTICIPLE_PRES_MID "उत\u{94d}थामान",
-    "उत\u{94d}पद\u{94d}यत\u{947}" IMPERFECT_MID_1_SG "उदपद\u{94d}य\u{947}",
-    "उत\u{94d}पद\u{94d}यत\u{947}" IMPERFECT_MID_1_DU "उदपद\u{94d}यावहि",
-    "उत\u{94d}पद\u{94d}यत\u{947}" IMPERFECT_MID_1_PL "उदपद\u{94d}यामहि",
-    "उत\u{94d}पद\u{94d}यत\u{947}" IMPERFECT_MID_2_SG "उदपद\u{94d}यथाः",
-    "उत\u{94d}पद\u{94d}यत\u{947}" IMPERFECT_MID_2_DU "उदपद\u{94d}य\u{947}थाम\u{94d}",
-    "उत\u{94d}पद\u{94d}यत\u{947}" IMPERFECT_MID_2_PL "उदपद\u{94d}यध\u{94d}वम\u{94d}",
-    "उत\u{94d}पद\u{94d}यत\u{947}" IMPERFECT_MID_3_SG "उदपद\u{94d}यत",
-    "उत\u{94d}पद\u{94d}यत\u{947}" IMPERFECT_MID_3_DU "उदपद\u{94d}य\u{947}ताम\u{94d}",
-    "उत\u{94d}पद\u{94d}यत\u{947}" IMPERFECT_MID_3_PL "उदपद\u{94d}यन\u{94d}त",
-    "उदच\u{94d}यत\u{947}" IMPERFECT_MID_1_SG "उदाच\u{94d}य\u{947}",
-    "उदच\u{94d}यत\u{947}" IMPERFECT_MID_1_DU "उदाच\u{94d}यावहि",
-    "उदच\u{94d}यत\u{947}" IMPERFECT_MID_1_PL "उदाच\u{94d}यामहि",
-    "उदच\u{94d}यत\u{947}" IMPERFECT_MID_2_SG "उदाच\u{94d}यथाः",
-    "उदच\u{94d}यत\u{947}" IMPERFECT_MID_2_DU "उदाच\u{94d}य\u{947}थाम\u{94d}",
-    "उदच\u{94d}यत\u{947}" IMPERFECT_MID_2_PL "उदाच\u{94d}यध\u{94d}वम\u{94d}",
-    "उदच\u{94d}यत\u{947}" IMPERFECT_MID_3_SG "उदाच\u{94d}यत",
-    "उदच\u{94d}यत\u{947}" IMPERFECT_MID_3_DU "उदाच\u{94d}य\u{947}ताम\u{94d}",
-    "उदच\u{94d}यत\u{947}" IMPERFECT_MID_3_PL "उदाच\u{94d}यन\u{94d}त",
-    "उद\u{94d}यत\u{947}" IMPERFECT_MID_1_SG "औद\u{94d}य\u{947}",
-    "उद\u{94d}यत\u{947}" IMPERFECT_MID_1_DU "औद\u{94d}यावहि",
-    "उद\u{94d}यत\u{947}" IMPERFECT_MID_1_PL "औद\u{94d}यामहि",
-    "उद\u{94d}यत\u{947}" IMPERFECT_MID_2_SG "औद\u{94d}यथाः",
-    "उद\u{94d}यत\u{947}" IMPERFECT_MID_2_DU "औद\u{94d}य\u{947}थाम\u{94d}",
-    "उद\u{94d}यत\u{947}" IMPERFECT_MID_2_PL "औद\u{94d}यध\u{94d}वम\u{94d}",
-    "उद\u{94d}यत\u{947}" IMPERFECT_MID_3_SG "औद\u{94d}यत",
-    "उद\u{94d}यत\u{947}" IMPERFECT_MID_3_DU "औद\u{94d}य\u{947}ताम\u{94d}",
-    "उद\u{94d}यत\u{947}" IMPERFECT_MID_3_PL "औद\u{94d}यन\u{94d}त",
-    "उद\u{94d}विजत\u{947}" IMPERFECT_MID_1_SG "उदविज\u{947}",
-    "उद\u{94d}विजत\u{947}" IMPERFECT_MID_1_DU "उदविजावहि",
-    "उद\u{94d}विजत\u{947}" IMPERFECT_MID_1_PL "उदविजामहि",
-    "उद\u{94d}विजत\u{947}" IMPERFECT_MID_2_SG "उदविजथाः",
-    "उद\u{94d}विजत\u{947}" IMPERFECT_MID_2_DU "उदविज\u{947}थाम\u{94d}",
-    "उद\u{94d}विजत\u{947}" IMPERFECT_MID_2_PL "उदविजध\u{94d}वम\u{94d}",
-    "उद\u{94d}विजत\u{947}" IMPERFECT_MID_3_SG "उदविजत",
-    "उद\u{94d}विजत\u{947}" IMPERFECT_MID_3_DU "उदविज\u{947}ताम\u{94d}",
-    "उद\u{94d}विजत\u{947}" IMPERFECT_MID_3_PL "उदविजन\u{94d}त",
-    "उनत\u{94d}ति" IND_ACT_1_SG "उनद\u{94d}मि",
-    "उनत\u{94d}ति" IND_ACT_1_DU "उन\u{94d}द\u{94d}वः",
-    "उनत\u{94d}ति" IND_ACT_1_PL "उन\u{94d}द\u{94d}मः",
-    "उनत\u{94d}ति" IND_ACT_2_DU "उन\u{94d}त\u{94d}थः",
-    "उनत\u{94d}ति" IND_ACT_2_PL "उन\u{94d}त\u{94d}थ",
-    "उनत\u{94d}ति" IND_ACT_3_DU "उन\u{94d}त\u{94d}तः",
-    "उनत\u{94d}ति" IND_ACT_3_PL "उन\u{94d}दन\u{94d}ति",
-    "उनत\u{94d}ति" IND_MID_1_SG "उन\u{94d}द\u{947}",
-    "उनत\u{94d}ति" IND_MID_1_DU "उन\u{94d}द\u{94d}वह\u{947}",
-    "उनत\u{94d}ति" IND_MID_1_PL "उन\u{94d}द\u{94d}मह\u{947}",
-    "उनत\u{94d}ति" IND_MID_2_SG "उन\u{94d}त\u{94d}स\u{947}",
-    "उनत\u{94d}ति" IND_MID_2_DU "उन\u{94d}दाथ\u{947}",
-    "उनत\u{94d}ति" IND_MID_2_PL "उन\u{94d}द\u{94d}ध\u{94d}व\u{947}",
-    "उनत\u{94d}ति" IND_MID_3_SG "उन\u{94d}त\u{94d}त\u{947}",
-    "उनत\u{94d}ति" IND_MID_3_DU "उन\u{94d}दात\u{947}",
-    "उनत\u{94d}ति" IND_MID_3_PL "उन\u{94d}दत\u{947}",
-    "उनत\u{94d}ति" IMP_ACT_1_SG "उनदानि",
-    "उनत\u{94d}ति" IMP_ACT_1_DU "उनदाव",
-    "उनत\u{94d}ति" IMP_ACT_1_PL "उनदाम",
-    "उनत\u{94d}ति" IMP_ACT_2_SG "उन\u{94d}द\u{94d}धि",
-    "उनत\u{94d}ति" IMP_ACT_2_DU "उन\u{94d}त\u{94d}तम\u{94d}",
-    "उनत\u{94d}ति" IMP_ACT_2_PL "उन\u{94d}त\u{94d}त",
-    "उनत\u{94d}ति" IMP_ACT_3_DU "उन\u{94d}त\u{94d}ताम\u{94d}",
-    "उनत\u{94d}ति" IMP_ACT_3_PL "उन\u{94d}दन\u{94d}त\u{941}",
-    "उनत\u{94d}ति" IMP_MID_1_SG "उनद\u{948}",
-    "उनत\u{94d}ति" IMP_MID_1_DU "उनदावह\u{948}",
-    "उनत\u{94d}ति" IMP_MID_1_PL "उनदामह\u{948}",
-    "उनत\u{94d}ति" IMP_MID_2_SG "उन\u{94d}त\u{94d}स\u{94d}व",
-    "उनत\u{94d}ति" IMP_MID_2_DU "उन\u{94d}दाथाम\u{94d}",
-    "उनत\u{94d}ति" IMP_MID_2_PL "उन\u{94d}द\u{94d}ध\u{94d}वम\u{94d}",
-    "उनत\u{94d}ति" IMP_MID_3_SG "उन\u{94d}त\u{94d}ताम\u{94d}",
-    "उनत\u{94d}ति" IMP_MID_3_DU "उन\u{94d}दाताम\u{94d}",
-    "उनत\u{94d}ति" IMP_MID_3_PL "उन\u{94d}दताम\u{94d}",
-    "उनत\u{94d}ति" OPT_ACT_1_SG "उन\u{94d}द\u{94d}याम\u{94d}",
-    "उनत\u{94d}ति" OPT_ACT_1_DU "उन\u{94d}द\u{94d}याव",
-    "उनत\u{94d}ति" OPT_ACT_1_PL "उन\u{94d}द\u{94d}याम",
-    "उनत\u{94d}ति" OPT_ACT_2_SG "उन\u{94d}द\u{94d}याः",
-    "उनत\u{94d}ति" OPT_ACT_2_DU "उन\u{94d}द\u{94d}यातम\u{94d}",
-    "उनत\u{94d}ति" OPT_ACT_2_PL "उन\u{94d}द\u{94d}यात",
-    "उनत\u{94d}ति" OPT_ACT_3_SG "उन\u{94d}द\u{94d}यात\u{94d}",
-    "उनत\u{94d}ति" OPT_ACT_3_DU "उन\u{94d}द\u{94d}याताम\u{94d}",
-    "उनत\u{94d}ति" OPT_ACT_3_PL "उन\u{94d}द\u{94d}य\u{941}ः",
-    "उनत\u{94d}ति" OPT_MID_1_SG "उन\u{94d}दीय",
-    "उनत\u{94d}ति" OPT_MID_1_DU "उन\u{94d}दीवहि",
-    "उनत\u{94d}ति" OPT_MID_1_PL "उन\u{94d}दीमहि",
-    "उनत\u{94d}ति" OPT_MID_2_SG "उन\u{94d}दीथाः",
-    "उनत\u{94d}ति" OPT_MID_2_DU "उन\u{94d}दीयाथाम\u{94d}",
-    "उनत\u{94d}ति" OPT_MID_2_PL "उन\u{94d}दीध\u{94d}वम\u{94d}",
-    "उनत\u{94d}ति" OPT_MID_3_SG "उन\u{94d}दीत",
-    "उनत\u{94d}ति" OPT_MID_3_DU "उन\u{94d}दीयाताम\u{94d}",
-    "उनत\u{94d}ति" OPT_MID_3_PL "उन\u{94d}दीरन\u{94d}",
-    "उनत\u{94d}ति" SUBJ_ACT_1_SG "उनदानि",
-    "उनत\u{94d}ति" SUBJ_ACT_1_DU "उनदाव",
-    "उनत\u{94d}ति" SUBJ_ACT_1_PL "उनदाम",
-    "उनत\u{94d}ति" SUBJ_ACT_2_SG "उनदः",
-    "उनत\u{94d}ति" SUBJ_ACT_2_DU "उनदथः",
-    "उनत\u{94d}ति" SUBJ_ACT_2_PL "उनदथ",
-    "उनत\u{94d}ति" SUBJ_ACT_3_SG "उनदत\u{94d}",
-    "उनत\u{94d}ति" SUBJ_ACT_3_DU "उनदतः",
-    "उनत\u{94d}ति" SUBJ_ACT_3_PL "उनदन\u{94d}",
-    "उनत\u{94d}ति" SUBJ_MID_1_SG "उनद\u{948}",
-    "उनत\u{94d}ति" SUBJ_MID_1_DU "उनदावह\u{948}",
-    "उनत\u{94d}ति" SUBJ_MID_1_PL "उनदामह\u{948}",
-    "उनत\u{94d}ति" SUBJ_MID_2_SG "उनदस\u{947}",
-    "उनत\u{94d}ति" SUBJ_MID_2_DU "उनद\u{948}थ\u{947}",
-    "उनत\u{94d}ति" SUBJ_MID_2_PL "उनदध\u{94d}व\u{947}",
-    "उनत\u{94d}ति" SUBJ_MID_3_SG "उनदत\u{947}",
-    "उनत\u{94d}ति" SUBJ_MID_3_DU "उनद\u{948}त\u{947}",
-    "उनत\u{94d}ति" SUBJ_MID_3_PL "उनदन\u{94d}त",
-    "उनत\u{94d}ति" IMPERFECT_ACT_1_SG "औनदम\u{94d}",
-    "उनत\u{94d}ति" IMPERFECT_ACT_1_DU "औन\u{94d}द\u{94d}व",
-    "उनत\u{94d}ति" IMPERFECT_ACT_1_PL "औन\u{94d}द\u{94d}म",
-    "उनत\u{94d}ति" IMPERFECT_ACT_2_SG "औनत\u{94d}",
-    "उनत\u{94d}ति" IMPERFECT_ACT_2_DU "औन\u{94d}त\u{94d}तम\u{94d}",
-    "उनत\u{94d}ति" IMPERFECT_ACT_2_PL "औन\u{94d}त\u{94d}त",
-    "उनत\u{94d}ति" IMPERFECT_ACT_3_SG "औनत\u{94d}",
-    "उनत\u{94d}ति" IMPERFECT_ACT_3_DU "औन\u{94d}त\u{94d}ताम\u{94d}",
-    "उनत\u{94d}ति" IMPERFECT_ACT_3_PL "औन\u{94d}दन\u{94d}",
-    "उनत\u{94d}ति" IMPERFECT_MID_1_SG "औन\u{94d}दि",
-    "उनत\u{94d}ति" IMPERFECT_MID_1_DU "औन\u{94d}द\u{94d}वहि",
-    "उनत\u{94d}ति" IMPERFECT_MID_1_PL "औन\u{94d}द\u{94d}महि",
-    "उनत\u{94d}ति" IMPERFECT_MID_2_SG "औन\u{94d}त\u{94d}थाः",
-    "उनत\u{94d}ति" IMPERFECT_MID_2_DU "औन\u{94d}दाथाम\u{94d}",
-    "उनत\u{94d}ति" IMPERFECT_MID_2_PL "औन\u{94d}द\u{94d}ध\u{94d}वम\u{94d}",
-    "उनत\u{94d}ति" IMPERFECT_MID_3_SG "औन\u{94d}त\u{94d}त",
-    "उनत\u{94d}ति" IMPERFECT_MID_3_DU "औन\u{94d}दाताम\u{94d}",
-    "उनत\u{94d}ति" IMPERFECT_MID_3_PL "औन\u{94d}दत",
-    "उनत\u{94d}ति" PARTICIPLE_PRES_ACT "उन\u{94d}दत\u{94d}",
-    "उनत\u{94d}ति" PARTICIPLE_PRES_MID "उन\u{94d}दान",
-    "उपनह\u{94d}यति" IMPERFECT_ACT_1_SG "उपानह\u{94d}यम\u{94d}",
-    "उपनह\u{94d}यति" IMPERFECT_ACT_1_DU "उपानह\u{94d}याव",
-    "उपनह\u{94d}यति" IMPERFECT_ACT_1_PL "उपानह\u{94d}याम",
-    "उपनह\u{94d}यति" IMPERFECT_ACT_2_SG "उपानह\u{94d}यः",
-    "उपनह\u{94d}यति" IMPERFECT_ACT_2_DU "उपानह\u{94d}यतम\u{94d}",
-    "उपनह\u{94d}यति" IMPERFECT_ACT_2_PL "उपानह\u{94d}यत",
-    "उपनह\u{94d}यति" IMPERFECT_ACT_3_SG "उपानह\u{94d}यत\u{94d}",
-    "उपनह\u{94d}यति" IMPERFECT_ACT_3_DU "उपानह\u{94d}यताम\u{94d}",
-    "उपनह\u{94d}यति" IMPERFECT_ACT_3_PL "उपानह\u{94d}यन\u{94d}",
-    "उपनह\u{94d}यति" IMPERFECT_MID_1_SG "उपानह\u{94d}य\u{947}",
-    "उपनह\u{94d}यति" IMPERFECT_MID_1_DU "उपानह\u{94d}यावहि",
-    "उपनह\u{94d}यति" IMPERFECT_MID_1_PL "उपानह\u{94d}यामहि",
-    "उपनह\u{94d}यति" IMPERFECT_MID_2_SG "उपानह\u{94d}यथाः",
-    "उपनह\u{94d}यति" IMPERFECT_MID_2_DU "उपानह\u{94d}य\u{947}थाम\u{94d}",
-    "उपनह\u{94d}यति" IMPERFECT_MID_2_PL "उपानह\u{94d}यध\u{94d}वम\u{94d}",
-    "उपनह\u{94d}यति" IMPERFECT_MID_3_SG "उपानह\u{94d}यत",
-    "उपनह\u{94d}यति" IMPERFECT_MID_3_DU "उपानह\u{94d}य\u{947}ताम\u{94d}",
-    "उपनह\u{94d}यति" IMPERFECT_MID_3_PL "उपानह\u{94d}यन\u{94d}त",
-    "उपनह\u{94d}यति" GERUND "उपनद\u{94d}ध\u{94d}वा",
-    "उपन\u{94d}यस\u{94d}यति" IMPERFECT_ACT_1_SG "उपन\u{94d}यास\u{94d}यम\u{94d}",
-    "उपन\u{94d}यस\u{94d}यति" IMPERFECT_ACT_1_DU "उपन\u{94d}यास\u{94d}याव",
-    "उपन\u{94d}यस\u{94d}यति" IMPERFECT_ACT_1_PL "उपन\u{94d}यास\u{94d}याम",
-    "उपन\u{94d}यस\u{94d}यति" IMPERFECT_ACT_2_SG "उपन\u{94d}यास\u{94d}यः",
-    "उपन\u{94d}यस\u{94d}यति" IMPERFECT_ACT_2_DU "उपन\u{94d}यास\u{94d}यतम\u{94d}",
-    "उपन\u{94d}यस\u{94d}यति" IMPERFECT_ACT_2_PL "उपन\u{94d}यास\u{94d}यत",
-    "उपन\u{94d}यस\u{94d}यति" IMPERFECT_ACT_3_SG "उपन\u{94d}यास\u{94d}यत\u{94d}",
-    "उपन\u{94d}यस\u{94d}यति" IMPERFECT_ACT_3_DU "उपन\u{94d}यास\u{94d}यताम\u{94d}",
-    "उपन\u{94d}यस\u{94d}यति" IMPERFECT_ACT_3_PL "उपन\u{94d}यास\u{94d}यन\u{94d}",
-    "उपन\u{94d}यस\u{94d}यति" IMPERFECT_MID_1_SG "उपन\u{94d}यास\u{94d}य\u{947}",
-    "उपन\u{94d}यस\u{94d}यति" IMPERFECT_MID_1_DU "उपन\u{94d}यास\u{94d}यावहि",
-    "उपन\u{94d}यस\u{94d}यति" IMPERFECT_MID_1_PL "उपन\u{94d}यास\u{94d}यामहि",
-    "उपन\u{94d}यस\u{94d}यति" IMPERFECT_MID_2_SG "उपन\u{94d}यास\u{94d}यथाः",
-    "उपन\u{94d}यस\u{94d}यति" IMPERFECT_MID_2_DU "उपन\u{94d}यास\u{94d}य\u{947}थाम\u{94d}",
-    "उपन\u{94d}यस\u{94d}यति" IMPERFECT_MID_2_PL "उपन\u{94d}यास\u{94d}यध\u{94d}वम\u{94d}",
-    "उपन\u{94d}यस\u{94d}यति" IMPERFECT_MID_3_SG "उपन\u{94d}यास\u{94d}यत",
-    "उपन\u{94d}यस\u{94d}यति" IMPERFECT_MID_3_DU "उपन\u{94d}यास\u{94d}य\u{947}ताम\u{94d}",
-    "उपन\u{94d}यस\u{94d}यति" IMPERFECT_MID_3_PL "उपन\u{94d}यास\u{94d}यन\u{94d}त",
-    "उभ\u{94d}नाति" IMPERFECT_ACT_1_SG "औभ\u{94d}नाम\u{94d}",
-    "उभ\u{94d}नाति" IMPERFECT_ACT_1_DU "औभ\u{94d}नीव",
-    "उभ\u{94d}नाति" IMPERFECT_ACT_1_PL "औभ\u{94d}नीम",
-    "उभ\u{94d}नाति" IMPERFECT_ACT_2_SG "औभ\u{94d}नाः",
-    "उभ\u{94d}नाति" IMPERFECT_ACT_2_DU "औभ\u{94d}नीतम\u{94d}",
-    "उभ\u{94d}नाति" IMPERFECT_ACT_2_PL "औभ\u{94d}नीत",
-    "उभ\u{94d}नाति" IMPERFECT_ACT_3_SG "औभ\u{94d}नात\u{94d}",
-    "उभ\u{94d}नाति" IMPERFECT_ACT_3_DU "औभ\u{94d}नीताम\u{94d}",
-    "उभ\u{94d}नाति" IMPERFECT_ACT_3_PL "औभ\u{94d}नन\u{94d}",
-    "उभ\u{94d}नाति" IMPERFECT_MID_1_SG "औभ\u{94d}नि",
-    "उभ\u{94d}नाति" IMPERFECT_MID_1_DU "औभ\u{94d}नीवहि",
-    "उभ\u{94d}नाति" IMPERFECT_MID_1_PL "औभ\u{94d}नीमहि",
-    "उभ\u{94d}नाति" IMPERFECT_MID_2_SG "औभ\u{94d}नीथाः",
-    "उभ\u{94d}नाति" IMPERFECT_MID_2_DU "औभ\u{94d}नाथाम\u{94d}",
-    "उभ\u{94d}नाति" IMPERFECT_MID_2_PL "औभ\u{94d}नीध\u{94d}वम\u{94d}",
-    "उभ\u{94d}नाति" IMPERFECT_MID_3_SG "औभ\u{94d}नीत",
-    "उभ\u{94d}नाति" IMPERFECT_MID_3_DU "औभ\u{94d}नाताम\u{94d}",
-    "उभ\u{94d}नाति" IMPERFECT_MID_3_PL "औभ\u{94d}नत",
-    "उल\u{94d}लसति" IMPERFECT_ACT_1_SG "उदलसम\u{94d}",
-    "उल\u{94d}लसति" IMPERFECT_ACT_1_DU "उदलसाव",
-    "उल\u{94d}लसति" IMPERFECT_ACT_1_PL "उदलसाम",
-    "उल\u{94d}लसति" IMPERFECT_ACT_2_SG "उदलसः",
-    "उल\u{94d}लसति" IMPERFECT_ACT_2_DU "उदलसतम\u{94d}",
-    "उल\u{94d}लसति" IMPERFECT_ACT_2_PL "उदलसत",
-    "उल\u{94d}लसति" IMPERFECT_ACT_3_SG "उदलसत\u{94d}",
-    "उल\u{94d}लसति" IMPERFECT_ACT_3_DU "उदलसताम\u{94d}",
-    "उल\u{94d}लसति" IMPERFECT_ACT_3_PL "उदलसन\u{94d}",
-    "उल\u{94d}लसति" IMPERFECT_MID_1_SG "उदलस\u{947}",
-    "उल\u{94d}लसति" IMPERFECT_MID_1_DU "उदलसावहि",
-    "उल\u{94d}लसति" IMPERFECT_MID_1_PL "उदलसामहि",
-    "उल\u{94d}लसति" IMPERFECT_MID_2_SG "उदलसथाः",
-    "उल\u{94d}लसति" IMPERFECT_MID_2_DU "उदलस\u{947}थाम\u{94d}",
-    "उल\u{94d}लसति" IMPERFECT_MID_2_PL "उदलसध\u{94d}वम\u{94d}",
-    "उल\u{94d}लसति" IMPERFECT_MID_3_SG "उदलसत",
-    "उल\u{94d}लसति" IMPERFECT_MID_3_DU "उदलस\u{947}ताम\u{94d}",
-    "उल\u{94d}लसति" IMPERFECT_MID_3_PL "उदलसन\u{94d}त",
-    "उल\u{94d}लिखति" IMPERFECT_ACT_1_SG "उदलिखम\u{94d}",
-    "उल\u{94d}लिखति" IMPERFECT_ACT_1_DU "उदलिखाव",
-    "उल\u{94d}लिखति" IMPERFECT_ACT_1_PL "उदलिखाम",
-    "उल\u{94d}लिखति" IMPERFECT_ACT_2_SG "उदलिखः",
-    "उल\u{94d}लिखति" IMPERFECT_ACT_2_DU "उदलिखतम\u{94d}",
-    "उल\u{94d}लिखति" IMPERFECT_ACT_2_PL "उदलिखत",
-    "उल\u{94d}लिखति" IMPERFECT_ACT_3_SG "उदलिखत\u{94d}",
-    "उल\u{94d}लिखति" IMPERFECT_ACT_3_DU "उदलिखताम\u{94d}",
-    "उल\u{94d}लिखति" IMPERFECT_ACT_3_PL "उदलिखन\u{94d}",
-    "उल\u{94d}लिखति" IMPERFECT_MID_1_SG "उदलिख\u{947}",
-    "उल\u{94d}लिखति" IMPERFECT_MID_1_DU "उदलिखावहि",
-    "उल\u{94d}लिखति" IMPERFECT_MID_1_PL "उदलिखामहि",
-    "उल\u{94d}लिखति" IMPERFECT_MID_2_SG "उदलिखथाः",
-    "उल\u{94d}लिखति" IMPERFECT_MID_2_DU "उदलिख\u{947}थाम\u{94d}",
-    "उल\u{94d}लिखति" IMPERFECT_MID_2_PL "उदलिखध\u{94d}वम\u{94d}",
-    "उल\u{94d}लिखति" IMPERFECT_MID_3_SG "उदलिखत",
-    "उल\u{94d}लिखति" IMPERFECT_MID_3_DU "उदलिख\u{947}ताम\u{94d}",
-    "उल\u{94d}लिखति" IMPERFECT_MID_3_PL "उदलिखन\u{94d}त",
-    "उवाच" PERFECT_ACT_1_SG "उवच",
-    "उवाच" PERFECT_ACT_1_DU "ऊचिव",
-    "उवाच" PERFECT_ACT_1_PL "ऊचिम",
-    "उवाच" PERFECT_ACT_2_SG "उवक\u{94d}थ",
-    "उवाच" PERFECT_ACT_2_DU "ऊचथ\u{941}ः",
-    "उवाच" PERFECT_ACT_2_PL "ऊच",
-    "उवाच" PERFECT_ACT_3_DU "ऊचत\u{941}ः",
-    "उवाच" PERFECT_ACT_3_PL "ऊच\u{941}ः",
-    "उवाच" PERFECT_MID_1_SG "ऊच\u{947}",
-    "उवाच" PERFECT_MID_1_DU "ऊचिवह\u{947}",
-    "उवाच" PERFECT_MID_1_PL "ऊचिमह\u{947}",
-    "उवाच" PERFECT_MID_2_SG "ऊचिष\u{947}",
-    "उवाच" PERFECT_MID_2_DU "ऊचाथ\u{947}",
-    "उवाच" PERFECT_MID_2_PL "ऊचिध\u{94d}व\u{947}",
-    "उवाच" PERFECT_MID_3_SG "ऊच\u{947}",
-    "उवाच" PERFECT_MID_3_DU "ऊचात\u{947}",
-    "उवाच" PERFECT_MID_3_PL "ऊचिर\u{947}",
-    "उवाच" PARTICIPLE_PERF_ACT "ऊचिवा\u{902}स\u{94d}",
-    "उवाच" PARTICIPLE_PERF_MID "ऊचान",
-    "उवाद" PERFECT_ACT_1_SG "उवद",
-    "उवाद" PERFECT_ACT_1_DU "ऊदिव",
-    "उवाद" PERFECT_ACT_1_PL "ऊदिम",
-    "उवाद" PERFECT_ACT_2_SG "उवत\u{94d}थ",
-    "उवाद" PERFECT_ACT_2_DU "ऊदथ\u{941}ः",
-    "उवाद" PERFECT_ACT_2_PL "ऊद",
-    "उवाद" PERFECT_ACT_3_DU "ऊदत\u{941}ः",
-    "उवाद" PERFECT_ACT_3_PL "ऊद\u{941}ः",
-    "उवाद" PERFECT_MID_1_SG "ऊद\u{947}",
-    "उवाद" PERFECT_MID_1_DU "ऊदिवह\u{947}",
-    "उवाद" PERFECT_MID_1_PL "ऊदिमह\u{947}",
-    "उवाद" PERFECT_MID_2_SG "ऊदिष\u{947}",
-    "उवाद" PERFECT_MID_2_DU "ऊदाथ\u{947}",
-    "उवाद" PERFECT_MID_2_PL "ऊदिध\u{94d}व\u{947}",
-    "उवाद" PERFECT_MID_3_SG "ऊद\u{947}",
-    "उवाद" PERFECT_MID_3_DU "ऊदात\u{947}",
-    "उवाद" PERFECT_MID_3_PL "ऊदिर\u{947}",
-    "उवाद" PARTICIPLE_PERF_ACT "ऊदिवा\u{902}स\u{94d}",
-    "उवाद" PARTICIPLE_PERF_MID "ऊदान",
-    "उवाप" PERFECT_ACT_1_SG "उवप",
-    "उवाप" PERFECT_ACT_1_DU "ऊपिव",
-    "उवाप" PERFECT_ACT_1_PL "ऊपिम",
-    "उवाप" PERFECT_ACT_2_SG "उवप\u{94d}थ",
-    "उवाप" PERFECT_ACT_2_DU "ऊपथ\u{941}ः",
-    "उवाप" PERFECT_ACT_2_PL "ऊप",
-    "उवाप" PERFECT_ACT_3_DU "ऊपत\u{941}ः",
-    "उवाप" PERFECT_ACT_3_PL "ऊप\u{941}ः",
-    "उवाप" PERFECT_MID_1_SG "ऊप\u{947}",
-    "उवाप" PERFECT_MID_1_DU "ऊपिवह\u{947}",
-    "उवाप" PERFECT_MID_1_PL "ऊपिमह\u{947}",
-    "उवाप" PERFECT_MID_2_SG "ऊपिष\u{947}",
-    "उवाप" PERFECT_MID_2_DU "ऊपाथ\u{947}",
-    "उवाप" PERFECT_MID_2_PL "ऊपिध\u{94d}व\u{947}",
-    "उवाप" PERFECT_MID_3_SG "ऊप\u{947}",
-    "उवाप" PERFECT_MID_3_DU "ऊपात\u{947}",
-    "उवाप" PERFECT_MID_3_PL "ऊपिर\u{947}",
-    "उवाप" PARTICIPLE_PERF_ACT "ऊपिवा\u{902}स\u{94d}",
-    "उवाप" PARTICIPLE_PERF_MID "ऊपान",
-    "उवास" PERFECT_ACT_1_SG "उवस",
-    "उवास" PERFECT_ACT_1_DU "ऊषिव",
-    "उवास" PERFECT_ACT_1_PL "ऊषिम",
-    "उवास" PERFECT_ACT_2_SG "उवस\u{94d}थ",
-    "उवास" PERFECT_ACT_2_DU "ऊषथ\u{941}ः",
-    "उवास" PERFECT_ACT_2_PL "ऊष",
-    "उवास" PERFECT_ACT_3_DU "ऊषत\u{941}ः",
-    "उवास" PERFECT_ACT_3_PL "ऊष\u{941}ः",
-    "उवास" PARTICIPLE_PERF_ACT "ऊषिवा\u{902}स\u{94d}",
-    "उवाह" PERFECT_ACT_1_SG "उवह",
-    "उवाह" PERFECT_ACT_1_DU "ऊहिव",
-    "उवाह" PERFECT_ACT_1_PL "ऊहिम",
-    "उवाह" PERFECT_ACT_2_SG "उवोढ",
-    "उवाह" PERFECT_ACT_2_DU "ऊहथ\u{941}ः",
-    "उवाह" PERFECT_ACT_2_PL "ऊह",
-    "उवाह" PERFECT_ACT_3_DU "ऊहत\u{941}ः",
-    "उवाह" PERFECT_ACT_3_PL "ऊह\u{941}ः",
-    "उवाह" PERFECT_MID_1_SG "ऊह\u{947}",
-    "उवाह" PERFECT_MID_1_DU "ऊहिवह\u{947}",
-    "उवाह" PERFECT_MID_1_PL "ऊहिमह\u{947}",
-    "उवाह" PERFECT_MID_2_SG "ऊहिष\u{947}",
-    "उवाह" PERFECT_MID_2_DU "ऊहाथ\u{947}",
-    "उवाह" PERFECT_MID_2_PL "ऊहिध\u{94d}व\u{947}",
-    "उवाह" PERFECT_MID_3_SG "ऊह\u{947}",
-    "उवाह" PERFECT_MID_3_DU "ऊहात\u{947}",
-    "उवाह" PERFECT_MID_3_PL "ऊहिर\u{947}",
-    "उवाह" PARTICIPLE_PERF_ACT "ऊहिवा\u{902}स\u{94d}",
-    "उवाह" PARTICIPLE_PERF_MID "ऊहान",
-    "उवोच" PERFECT_ACT_1_DU "ऊचिव",
-    "उवोच" PERFECT_ACT_1_PL "ऊचिम",
-    "उवोच" PERFECT_ACT_2_DU "ऊचथ\u{941}ः",
-    "उवोच" PERFECT_ACT_2_PL "ऊच",
-    "उवोच" PERFECT_ACT_3_DU "ऊचत\u{941}ः",
-    "उवोच" PERFECT_ACT_3_PL "ऊच\u{941}ः",
-    "उवोच" PERFECT_MID_1_SG "ऊच\u{947}",
-    "उवोच" PERFECT_MID_1_DU "ऊचिवह\u{947}",
-    "उवोच" PERFECT_MID_1_PL "ऊचिमह\u{947}",
-    "उवोच" PERFECT_MID_2_SG "ऊचिष\u{947}",
-    "उवोच" PERFECT_MID_2_DU "ऊचाथ\u{947}",
-    "उवोच" PERFECT_MID_2_PL "ऊचिध\u{94d}व\u{947}",
-    "उवोच" PERFECT_MID_3_SG "ऊच\u{947}",
-    "उवोच" PERFECT_MID_3_DU "ऊचात\u{947}",
-    "उवोच" PERFECT_MID_3_PL "ऊचिर\u{947}",
-    "उवोच" PARTICIPLE_PERF_ACT "ऊचिवा\u{902}स\u{94d}",
-    "उवोच" PARTICIPLE_PERF_MID "ऊचान",
-    "ऊर\u{94d}दत\u{947}" IMPERFECT_MID_1_SG "और\u{94d}द\u{947}",
-    "ऊर\u{94d}दत\u{947}" IMPERFECT_MID_1_DU "और\u{94d}दावहि",
-    "ऊर\u{94d}दत\u{947}" IMPERFECT_MID_1_PL "और\u{94d}दामहि",
-    "ऊर\u{94d}दत\u{947}" IMPERFECT_MID_2_SG "और\u{94d}दथाः",
-    "ऊर\u{94d}दत\u{947}" IMPERFECT_MID_2_DU "और\u{94d}द\u{947}थाम\u{94d}",
-    "ऊर\u{94d}दत\u{947}" IMPERFECT_MID_2_PL "और\u{94d}दध\u{94d}वम\u{94d}",
-    "ऊर\u{94d}दत\u{947}" IMPERFECT_MID_3_SG "और\u{94d}दत",
-    "ऊर\u{94d}दत\u{947}" IMPERFECT_MID_3_DU "और\u{94d}द\u{947}ताम\u{94d}",
-    "ऊर\u{94d}दत\u{947}" IMPERFECT_MID_3_PL "और\u{94d}दन\u{94d}त",
-    "ऊर\u{94d}दत\u{947}" CONDITIONAL_MID_1_SG "और\u{94d}दिष\u{94d}य\u{947}",
-    "ऊर\u{94d}दत\u{947}" CONDITIONAL_MID_1_DU "और\u{94d}दिष\u{94d}यावहि",
-    "ऊर\u{94d}दत\u{947}" CONDITIONAL_MID_1_PL "और\u{94d}दिष\u{94d}यामहि",
-    "ऊर\u{94d}दत\u{947}" CONDITIONAL_MID_2_SG "और\u{94d}दिष\u{94d}यथाः",
-    "ऊर\u{94d}दत\u{947}" CONDITIONAL_MID_2_DU "और\u{94d}दिष\u{94d}य\u{947}थाम\u{94d}",
-    "ऊर\u{94d}दत\u{947}" CONDITIONAL_MID_2_PL "और\u{94d}दिष\u{94d}यध\u{94d}वम\u{94d}",
-    "ऊर\u{94d}दत\u{947}" CONDITIONAL_MID_3_SG "और\u{94d}दिष\u{94d}यत",
-    "ऊर\u{94d}दत\u{947}" CONDITIONAL_MID_3_DU "और\u{94d}दिष\u{94d}य\u{947}ताम\u{94d}",
-    "ऊर\u{94d}दत\u{947}" CONDITIONAL_MID_3_PL "और\u{94d}दिष\u{94d}यन\u{94d}त",
-    "ऊर\u{94d}दत\u{947}" PERFECT_MID_1_SG "ऊर\u{94d}दाञ\u{94d}चक\u{94d}र\u{947}",
-    "ऊर\u{94d}दत\u{947}" PERFECT_MID_1_DU "ऊर\u{94d}दाञ\u{94d}चक\u{943}वह\u{947}",
-    "ऊर\u{94d}दत\u{947}" PERFECT_MID_1_PL "ऊर\u{94d}दाञ\u{94d}चक\u{943}मह\u{947}",
-    "ऊर\u{94d}दत\u{947}" PERFECT_MID_2_SG "ऊर\u{94d}दाञ\u{94d}चक\u{943}ष\u{947}",
-    "ऊर\u{94d}दत\u{947}" PERFECT_MID_2_DU "ऊर\u{94d}दाञ\u{94d}चक\u{94d}राथ\u{947}",
-    "ऊर\u{94d}दत\u{947}" PERFECT_MID_2_PL "ऊर\u{94d}दाञ\u{94d}चक\u{943}ध\u{94d}व\u{947}",
-    "ऊर\u{94d}दत\u{947}" PERFECT_MID_3_SG "ऊर\u{94d}दाञ\u{94d}चक\u{94d}र\u{947}",
-    "ऊर\u{94d}दत\u{947}" PERFECT_MID_3_DU "ऊर\u{94d}दाञ\u{94d}चक\u{94d}रात\u{947}",
-    "ऊर\u{94d}दत\u{947}" PERFECT_MID_3_PL "ऊर\u{94d}दाञ\u{94d}चक\u{94d}रिर\u{947}",
-    "ऊर\u{94d}दत\u{947}" AORIST_MID_1_SG "और\u{94d}दिषि",
-    "ऊर\u{94d}दत\u{947}" AORIST_MID_1_DU "और\u{94d}दिष\u{94d}वहि",
-    "ऊर\u{94d}दत\u{947}" AORIST_MID_1_PL "और\u{94d}दिष\u{94d}महि",
-    "ऊर\u{94d}दत\u{947}" AORIST_MID_2_SG "और\u{94d}दिष\u{94d}ठाः",
-    "ऊर\u{94d}दत\u{947}" AORIST_MID_2_DU "और\u{94d}दिषाथाम\u{94d}",
-    "ऊर\u{94d}दत\u{947}" AORIST_MID_2_PL "और\u{94d}दिढ\u{94d}वम\u{94d}",
-    "ऊर\u{94d}दत\u{947}" AORIST_MID_3_SG "और\u{94d}दिष\u{94d}ट",
-    "ऊर\u{94d}दत\u{947}" AORIST_MID_3_DU "और\u{94d}दिषाताम\u{94d}",
-    "ऊर\u{94d}दत\u{947}" AORIST_MID_3_PL "और\u{94d}दिषत",
-    "ऊर\u{94d}दत\u{947}" PARTICIPLE_PERF_MID "ऊर\u{94d}दाञ\u{94d}चक\u{94d}रान",
-    "ऊहति" IMPERFECT_ACT_1_SG "औहम\u{94d}",
-    "ऊहति" IMPERFECT_ACT_1_DU "औहाव",
-    "ऊहति" IMPERFECT_ACT_1_PL "औहाम",
-    "ऊहति" IMPERFECT_ACT_2_SG "औहः",
-    "ऊहति" IMPERFECT_ACT_2_DU "औहतम\u{94d}",
-    "ऊहति" IMPERFECT_ACT_2_PL "औहत",
-    "ऊहति" IMPERFECT_ACT_3_SG "औहत\u{94d}",
-    "ऊहति" IMPERFECT_ACT_3_DU "औहताम\u{94d}",
-    "ऊहति" IMPERFECT_ACT_3_PL "औहन\u{94d}",
-    "ऊहति" IMPERFECT_MID_1_SG "औह\u{947}",
-    "ऊहति" IMPERFECT_MID_1_DU "औहावहि",
-    "ऊहति" IMPERFECT_MID_1_PL "औहामहि",
-    "ऊहति" IMPERFECT_MID_2_SG "औहथाः",
-    "ऊहति" IMPERFECT_MID_2_DU "औह\u{947}थाम\u{94d}",
-    "ऊहति" IMPERFECT_MID_2_PL "औहध\u{94d}वम\u{94d}",
-    "ऊहति" IMPERFECT_MID_3_SG "औहत",
-    "ऊहति" IMPERFECT_MID_3_DU "औह\u{947}ताम\u{94d}",
-    "ऊहति" IMPERFECT_MID_3_PL "औहन\u{94d}त",
-    "ऊह\u{94d}यत\u{947}" IMPERFECT_MID_1_SG "औह\u{94d}य\u{947}",
-    "ऊह\u{94d}यत\u{947}" IMPERFECT_MID_1_DU "औह\u{94d}यावहि",
-    "ऊह\u{94d}यत\u{947}" IMPERFECT_MID_1_PL "औह\u{94d}यामहि",
-    "ऊह\u{94d}यत\u{947}" IMPERFECT_MID_2_SG "औह\u{94d}यथाः",
-    "ऊह\u{94d}यत\u{947}" IMPERFECT_MID_2_DU "औह\u{94d}य\u{947}थाम\u{94d}",
-    "ऊह\u{94d}यत\u{947}" IMPERFECT_MID_2_PL "औह\u{94d}यध\u{94d}वम\u{94d}",
-    "ऊह\u{94d}यत\u{947}" IMPERFECT_MID_3_SG "औह\u{94d}यत",
-    "ऊह\u{94d}यत\u{947}" IMPERFECT_MID_3_DU "औह\u{94d}य\u{947}ताम\u{94d}",
-    "ऊह\u{94d}यत\u{947}" IMPERFECT_MID_3_PL "औह\u{94d}यन\u{94d}त",
-    "ऋघायति" IMPERFECT_ACT_1_SG "आर\u{94d}घायम\u{94d}",
-    "ऋघायति" IMPERFECT_ACT_1_DU "आर\u{94d}घायाव",
-    "ऋघायति" IMPERFECT_ACT_1_PL "आर\u{94d}घायाम",
-    "ऋघायति" IMPERFECT_ACT_2_SG "आर\u{94d}घायः",
-    "ऋघायति" IMPERFECT_ACT_2_DU "आर\u{94d}घायतम\u{94d}",
-    "ऋघायति" IMPERFECT_ACT_2_PL "आर\u{94d}घायत",
-    "ऋघायति" IMPERFECT_ACT_3_SG "आर\u{94d}घायत\u{94d}",
-    "ऋघायति" IMPERFECT_ACT_3_DU "आर\u{94d}घायताम\u{94d}",
-    "ऋघायति" IMPERFECT_ACT_3_PL "आर\u{94d}घायन\u{94d}",
-    "ऋघायति" IMPERFECT_MID_1_SG "आर\u{94d}घाय\u{947}",
-    "ऋघायति" IMPERFECT_MID_1_DU "आर\u{94d}घायावहि",
-    "ऋघायति" IMPERFECT_MID_1_PL "आर\u{94d}घायामहि",
-    "ऋघायति" IMPERFECT_MID_2_SG "आर\u{94d}घायथाः",
-    "ऋघायति" IMPERFECT_MID_2_DU "आर\u{94d}घाय\u{947}थाम\u{94d}",
-    "ऋघायति" IMPERFECT_MID_2_PL "आर\u{94d}घायध\u{94d}वम\u{94d}",
-    "ऋघायति" IMPERFECT_MID_3_SG "आर\u{94d}घायत",
-    "ऋघायति" IMPERFECT_MID_3_DU "आर\u{94d}घाय\u{947}ताम\u{94d}",
-    "ऋघायति" IMPERFECT_MID_3_PL "आर\u{94d}घायन\u{94d}त",
-    "ऋच\u{94d}छति" IMPERFECT_ACT_1_SG "आर\u{94d}च\u{94d}छम\u{94d}",
-    "ऋच\u{94d}छति" IMPERFECT_ACT_1_DU "आर\u{94d}च\u{94d}छाव",
-    "ऋच\u{94d}छति" IMPERFECT_ACT_1_PL "आर\u{94d}च\u{94d}छाम",
-    "ऋच\u{94d}छति" IMPERFECT_ACT_2_SG "आर\u{94d}च\u{94d}छः",
-    "ऋच\u{94d}छति" IMPERFECT_ACT_2_DU "आर\u{94d}च\u{94d}छतम\u{94d}",
-    "ऋच\u{94d}छति" IMPERFECT_ACT_2_PL "आर\u{94d}च\u{94d}छत",
-    "ऋच\u{94d}छति" IMPERFECT_ACT_3_SG "आर\u{94d}च\u{94d}छत\u{94d}",
-    "ऋच\u{94d}छति" IMPERFECT_ACT_3_DU "आर\u{94d}च\u{94d}छताम\u{94d}",
-    "ऋच\u{94d}छति" IMPERFECT_ACT_3_PL "आर\u{94d}च\u{94d}छन\u{94d}",
-    "ऋच\u{94d}छति" IMPERFECT_MID_1_SG "आर\u{94d}च\u{94d}छ\u{947}",
-    "ऋच\u{94d}छति" IMPERFECT_MID_1_DU "आर\u{94d}च\u{94d}छावहि",
-    "ऋच\u{94d}छति" IMPERFECT_MID_1_PL "आर\u{94d}च\u{94d}छामहि",
-    "ऋच\u{94d}छति" IMPERFECT_MID_2_SG "आर\u{94d}च\u{94d}छथाः",
-    "ऋच\u{94d}छति" IMPERFECT_MID_2_DU "आर\u{94d}च\u{94d}छ\u{947}थाम\u{94d}",
-    "ऋच\u{94d}छति" IMPERFECT_MID_2_PL "आर\u{94d}च\u{94d}छध\u{94d}वम\u{94d}",
-    "ऋच\u{94d}छति" IMPERFECT_MID_3_SG "आर\u{94d}च\u{94d}छत",
-    "ऋच\u{94d}छति" IMPERFECT_MID_3_DU "आर\u{94d}च\u{94d}छ\u{947}ताम\u{94d}",
-    "ऋच\u{94d}छति" IMPERFECT_MID_3_PL "आर\u{94d}च\u{94d}छन\u{94d}त",
-    "ऋच\u{94d}यत\u{947}" IMPERFECT_MID_1_SG "अर\u{94d}च\u{94d}य\u{947}",
-    "ऋच\u{94d}यत\u{947}" IMPERFECT_MID_1_DU "अर\u{94d}च\u{94d}यावहि",
-    "ऋच\u{94d}यत\u{947}" IMPERFECT_MID_1_PL "अर\u{94d}च\u{94d}यामहि",
-    "ऋच\u{94d}यत\u{947}" IMPERFECT_MID_2_SG "अर\u{94d}च\u{94d}यथाः",
-    "ऋच\u{94d}यत\u{947}" IMPERFECT_MID_2_DU "अर\u{94d}च\u{94d}य\u{947}थाम\u{94d}",
-    "ऋच\u{94d}यत\u{947}" IMPERFECT_MID_2_PL "अर\u{94d}च\u{94d}यध\u{94d}वम\u{94d}",
-    "ऋच\u{94d}यत\u{947}" IMPERFECT_MID_3_SG "अर\u{94d}च\u{94d}यत",
-    "ऋच\u{94d}यत\u{947}" IMPERFECT_MID_3_DU "अर\u{94d}च\u{94d}य\u{947}ताम\u{94d}",
-    "ऋच\u{94d}यत\u{947}" IMPERFECT_MID_3_PL "अर\u{94d}च\u{94d}यन\u{94d}त",
-    "ऋणोति" IMPERFECT_ACT_1_SG "आर\u{94d}णवम\u{94d}",
-    "ऋणोति" IMPERFECT_ACT_1_DU "आर\u{94d}ण\u{941}व",
-    "ऋणोति" IMPERFECT_ACT_1_PL "आर\u{94d}ण\u{941}म",
-    "ऋणोति" IMPERFECT_ACT_2_SG "आर\u{94d}णोः",
-    "ऋणोति" IMPERFECT_ACT_2_DU "आर\u{94d}ण\u{941}तम\u{94d}",
-    "ऋणोति" IMPERFECT_ACT_2_PL "आर\u{94d}ण\u{941}त",
-    "ऋणोति" IMPERFECT_ACT_3_SG "आर\u{94d}णोत\u{94d}",
-    "ऋणोति" IMPERFECT_ACT_3_DU "आर\u{94d}ण\u{941}ताम\u{94d}",
-    "ऋणोति" IMPERFECT_ACT_3_PL "आर\u{94d}ण\u{941}वन\u{94d}",
-    "ऋणोति" IMPERFECT_MID_1_SG "आर\u{94d}ण\u{941}वि",
-    "ऋणोति" IMPERFECT_MID_1_DU "आर\u{94d}ण\u{941}वहि",
-    "ऋणोति" IMPERFECT_MID_1_PL "आर\u{94d}ण\u{941}महि",
-    "ऋणोति" IMPERFECT_MID_2_SG "आर\u{94d}ण\u{941}थाः",
-    "ऋणोति" IMPERFECT_MID_2_DU "आर\u{94d}ण\u{941}वाथाम\u{94d}",
-    "ऋणोति" IMPERFECT_MID_2_PL "आर\u{94d}ण\u{941}ध\u{94d}वम\u{94d}",
-    "ऋणोति" IMPERFECT_MID_3_SG "आर\u{94d}ण\u{941}त",
-    "ऋणोति" IMPERFECT_MID_3_DU "आर\u{94d}ण\u{941}वाताम\u{94d}",
-    "ऋणोति" IMPERFECT_MID_3_PL "आर\u{94d}ण\u{941}वत",
-    "ऋध\u{94d}नोति" IMPERFECT_ACT_1_SG "आर\u{94d}ध\u{94d}नवम\u{94d}",
-    "ऋध\u{94d}नोति" IMPERFECT_ACT_1_DU "आर\u{94d}ध\u{94d}न\u{941}व",
-    "ऋध\u{94d}नोति" IMPERFECT_ACT_1_PL "आर\u{94d}ध\u{94d}न\u{941}म",
-    "ऋध\u{94d}नोति" IMPERFECT_ACT_2_SG "आर\u{94d}ध\u{94d}नोः",
-    "ऋध\u{94d}नोति" IMPERFECT_ACT_2_DU "आर\u{94d}ध\u{94d}न\u{941}तम\u{94d}",
-    "ऋध\u{94d}नोति" IMPERFECT_ACT_2_PL "आर\u{94d}ध\u{94d}न\u{941}त",
-    "ऋध\u{94d}नोति" IMPERFECT_ACT_3_SG "आर\u{94d}ध\u{94d}नोत\u{94d}",
-    "ऋध\u{94d}नोति" IMPERFECT_ACT_3_DU "आर\u{94d}ध\u{94d}न\u{941}ताम\u{94d}",
-    "ऋध\u{94d}नोति" IMPERFECT_ACT_3_PL "आर\u{94d}ध\u{94d}न\u{941}वन\u{94d}",
-    "ऋध\u{94d}यति" IMPERFECT_ACT_1_SG "आर\u{94d}ध\u{94d}यम\u{94d}",
-    "ऋध\u{94d}यति" IMPERFECT_ACT_1_DU "आर\u{94d}ध\u{94d}याव",
-    "ऋध\u{94d}यति" IMPERFECT_ACT_1_PL "आर\u{94d}ध\u{94d}याम",
-    "ऋध\u{94d}यति" IMPERFECT_ACT_2_SG "आर\u{94d}ध\u{94d}यः",
-    "ऋध\u{94d}यति" IMPERFECT_ACT_2_DU "आर\u{94d}ध\u{94d}यतम\u{94d}",
-    "ऋध\u{94d}यति" IMPERFECT_ACT_2_PL "आर\u{94d}ध\u{94d}यत",
-    "ऋध\u{94d}यति" IMPERFECT_ACT_3_SG "आर\u{94d}ध\u{94d}यत\u{94d}",
-    "ऋध\u{94d}यति" IMPERFECT_ACT_3_DU "आर\u{94d}ध\u{94d}यताम\u{94d}",
-    "ऋध\u{94d}यति" IMPERFECT_ACT_3_PL "आर\u{94d}ध\u{94d}यन\u{94d}",
-    "ऋध\u{94d}यति" IMPERFECT_MID_1_SG "आर\u{94d}ध\u{94d}य\u{947}",
-    "ऋध\u{94d}यति" IMPERFECT_MID_1_DU "आर\u{94d}ध\u{94d}यावहि",
-    "ऋध\u{94d}यति" IMPERFECT_MID_1_PL "आर\u{94d}ध\u{94d}यामहि",
-    "ऋध\u{94d}यति" IMPERFECT_MID_2_SG "आर\u{94d}ध\u{94d}यथाः",
-    "ऋध\u{94d}यति" IMPERFECT_MID_2_DU "आर\u{94d}ध\u{94d}य\u{947}थाम\u{94d}",
-    "ऋध\u{94d}यति" IMPERFECT_MID_2_PL "आर\u{94d}ध\u{94d}यध\u{94d}वम\u{94d}",
-    "ऋध\u{94d}यति" IMPERFECT_MID_3_SG "आर\u{94d}ध\u{94d}यत",
-    "ऋध\u{94d}यति" IMPERFECT_MID_3_DU "आर\u{94d}ध\u{94d}य\u{947}ताम\u{94d}",
-    "ऋध\u{94d}यति" IMPERFECT_MID_3_PL "आर\u{94d}ध\u{94d}यन\u{94d}त",
-    "एकीभवति" IMPERFECT_ACT_1_SG "एक\u{94d}यभवम\u{94d}",
-    "एकीभवति" IMPERFECT_ACT_1_DU "एक\u{94d}यभवाव",
-    "एकीभवति" IMPERFECT_ACT_1_PL "एक\u{94d}यभवाम",
-    "एकीभवति" IMPERFECT_ACT_2_SG "एक\u{94d}यभवः",
-    "एकीभवति" IMPERFECT_ACT_2_DU "एक\u{94d}यभवतम\u{94d}",
-    "एकीभवति" IMPERFECT_ACT_2_PL "एक\u{94d}यभवत",
-    "एकीभवति" IMPERFECT_ACT_3_SG "एक\u{94d}यभवत\u{94d}",
-    "एकीभवति" IMPERFECT_ACT_3_DU "एक\u{94d}यभवताम\u{94d}",
-    "एकीभवति" IMPERFECT_ACT_3_PL "एक\u{94d}यभवन\u{94d}",
-    "एकीभवति" IMPERFECT_MID_1_SG "एक\u{94d}यभव\u{947}",
-    "एकीभवति" IMPERFECT_MID_1_DU "एक\u{94d}यभवावहि",
-    "एकीभवति" IMPERFECT_MID_1_PL "एक\u{94d}यभवामहि",
-    "एकीभवति" IMPERFECT_MID_2_SG "एक\u{94d}यभवथाः",
-    "एकीभवति" IMPERFECT_MID_2_DU "एक\u{94d}यभव\u{947}थाम\u{94d}",
-    "एकीभवति" IMPERFECT_MID_2_PL "एक\u{94d}यभवध\u{94d}वम\u{94d}",
-    "एकीभवति" IMPERFECT_MID_3_SG "एक\u{94d}यभवत",
-    "एकीभवति" IMPERFECT_MID_3_DU "एक\u{94d}यभव\u{947}ताम\u{94d}",
-    "एकीभवति" IMPERFECT_MID_3_PL "एक\u{94d}यभवन\u{94d}त",
-    "एति" IND_ACT_1_SG "एमि",
-    "एति" IND_ACT_1_DU "इवः",
-    "एति" IND_ACT_1_PL "इमः",
-    "एति" IND_ACT_2_SG "एषि",
-    "एति" IND_ACT_2_DU "इथः",
-    "एति" IND_ACT_2_PL "इथ",
-    "एति" IND_ACT_3_DU "इतः",
-    "एति" IND_ACT_3_PL "यन\u{94d}ति",
-    "एति" IMP_ACT_1_SG "अयानि",
-    "एति" IMP_ACT_1_DU "अयाव",
-    "एति" IMP_ACT_1_PL "अयाम",
-    "एति" IMP_ACT_2_SG "इहि",
-    "एति" IMP_ACT_2_DU "इतम\u{94d}",
-    "एति" IMP_ACT_2_PL "इत",
-    "एति" IMP_ACT_3_DU "इताम\u{94d}",
-    "एति" IMP_ACT_3_PL "यन\u{94d}त\u{941}",
-    "एति" OPT_ACT_1_SG "इयाम\u{94d}",
-    "एति" OPT_ACT_1_DU "इयाव",
-    "एति" OPT_ACT_1_PL "इयाम",
-    "एति" OPT_ACT_2_SG "इयाः",
-    "एति" OPT_ACT_2_DU "इयातम\u{94d}",
-    "एति" OPT_ACT_2_PL "इयात",
-    "एति" OPT_ACT_3_SG "इयात\u{94d}",
-    "एति" OPT_ACT_3_DU "इयाताम\u{94d}",
-    "एति" OPT_ACT_3_PL "इय\u{941}ः",
-    "एति" SUBJ_ACT_1_SG "अयानि",
-    "एति" SUBJ_ACT_1_DU "अयाव",
-    "एति" SUBJ_ACT_1_PL "अयाम",
-    "एति" SUBJ_ACT_2_SG "अयः",
-    "एति" SUBJ_ACT_2_DU "अयथः",
-    "एति" SUBJ_ACT_2_PL "अयथ",
-    "एति" SUBJ_ACT_3_SG "अयत\u{94d}",
-    "एति" SUBJ_ACT_3_DU "अयतः",
-    "एति" SUBJ_ACT_3_PL "अयन\u{94d}",
-    "एति" IMPERFECT_ACT_1_SG "आयम\u{94d}",
-    "एति" IMPERFECT_ACT_1_DU "ऐव",
-    "एति" IMPERFECT_ACT_1_PL "ऐम",
-    "एति" IMPERFECT_ACT_2_SG "ऐः",
-    "एति" IMPERFECT_ACT_2_DU "ऐतम\u{94d}",
-    "एति" IMPERFECT_ACT_2_PL "ऐत",
-    "एति" IMPERFECT_ACT_3_SG "ऐत\u{94d}",
-    "एति" IMPERFECT_ACT_3_DU "ऐताम\u{94d}",
-    "एति" IMPERFECT_ACT_3_PL "आयन\u{94d}",
-    "एति" PARTICIPLE_PRES_ACT "यत\u{94d}",
-    "एधत\u{947}" IMPERFECT_MID_1_SG "ऐध\u{947}",
-    "एधत\u{947}" IMPERFECT_MID_1_DU "ऐधावहि",
-    "एधत\u{947}" IMPERFECT_MID_1_PL "ऐधामहि",
-    "एधत\u{947}" IMPERFECT_MID_2_SG "ऐधथाः",
-    "एधत\u{947}" IMPERFECT_MID_2_DU "ऐध\u{947}थाम\u{94d}",
-    "एधत\u{947}" IMPERFECT_MID_2_PL "ऐधध\u{94d}वम\u{94d}",
-    "एधत\u{947}" IMPERFECT_MID_3_SG "ऐधत",
-    "एधत\u{947}" IMPERFECT_MID_3_DU "ऐध\u{947}ताम\u{94d}",
-    "एधत\u{947}" IMPERFECT_MID_3_PL "ऐधन\u{94d}त",
-    "एष\u{94d}यति" CONDITIONAL_ACT_1_SG "ऐष\u{94d}यम\u{94d}",
-    "एष\u{94d}यति" CONDITIONAL_ACT_1_DU "ऐष\u{94d}याव",
-    "एष\u{94d}यति" CONDITIONAL_ACT_1_PL "ऐष\u{94d}याम",
-    "एष\u{94d}यति" CONDITIONAL_ACT_2_SG "ऐष\u{94d}यः",
-    "एष\u{94d}यति" CONDITIONAL_ACT_2_DU "ऐष\u{94d}यतम\u{94d}",
-    "एष\u{94d}यति" CONDITIONAL_ACT_2_PL "ऐष\u{94d}यत",
-    "एष\u{94d}यति" CONDITIONAL_ACT_3_SG "ऐष\u{94d}यत\u{94d}",
-    "एष\u{94d}यति" CONDITIONAL_ACT_3_DU "ऐष\u{94d}यताम\u{94d}",
-    "एष\u{94d}यति" CONDITIONAL_ACT_3_PL "ऐष\u{94d}यन\u{94d}",
-    "एष\u{94d}यति" CONDITIONAL_MID_1_SG "ऐष\u{94d}य\u{947}",
-    "एष\u{94d}यति" CONDITIONAL_MID_1_DU "ऐष\u{94d}यावहि",
-    "एष\u{94d}यति" CONDITIONAL_MID_1_PL "ऐष\u{94d}यामहि",
-    "एष\u{94d}यति" CONDITIONAL_MID_2_SG "ऐष\u{94d}यथाः",
-    "एष\u{94d}यति" CONDITIONAL_MID_2_DU "ऐष\u{94d}य\u{947}थाम\u{94d}",
-    "एष\u{94d}यति" CONDITIONAL_MID_2_PL "ऐष\u{94d}यध\u{94d}वम\u{94d}",
-    "एष\u{94d}यति" CONDITIONAL_MID_3_SG "ऐष\u{94d}यत",
-    "एष\u{94d}यति" CONDITIONAL_MID_3_DU "ऐष\u{94d}य\u{947}ताम\u{94d}",
-    "एष\u{94d}यति" CONDITIONAL_MID_3_PL "ऐष\u{94d}यन\u{94d}त",
-    "ओषति" IMPERFECT_ACT_1_SG "औषम\u{94d}",
-    "ओषति" IMPERFECT_ACT_1_DU "औषाव",
-    "ओषति" IMPERFECT_ACT_1_PL "औषाम",
-    "ओषति" IMPERFECT_ACT_2_SG "औषः",
-    "ओषति" IMPERFECT_ACT_2_DU "औषतम\u{94d}",
-    "ओषति" IMPERFECT_ACT_2_PL "औषत",
-    "ओषति" IMPERFECT_ACT_3_SG "औषत\u{94d}",
-    "ओषति" IMPERFECT_ACT_3_DU "औषताम\u{94d}",
-    "ओषति" IMPERFECT_ACT_3_PL "औषन\u{94d}",
-    "करोति" IND_ACT_1_DU "क\u{941}र\u{94d}वः",
-    "करोति" IND_ACT_1_PL "क\u{941}र\u{94d}मः",
-    "करोति" IND_ACT_2_DU "क\u{941}र\u{941}थः",
-    "करोति" IND_ACT_2_PL "क\u{941}र\u{941}थ",
-    "करोति" IND_ACT_3_DU "क\u{941}र\u{941}तः",
-    "करोति" IND_ACT_3_PL "क\u{941}र\u{94d}वन\u{94d}ति",
-    "करोति" IND_MID_1_SG "क\u{941}र\u{94d}व\u{947}",
-    "करोति" IND_MID_1_DU "क\u{941}र\u{94d}वह\u{947}",
-    "करोति" IND_MID_1_PL "क\u{941}र\u{94d}मह\u{947}",
-    "करोति" IND_MID_2_SG "क\u{941}र\u{941}ष\u{947}",
-    "करोति" IND_MID_2_DU "क\u{941}र\u{94d}वाथ\u{947}",
-    "करोति" IND_MID_2_PL "क\u{941}र\u{941}ध\u{94d}व\u{947}",
-    "करोति" IND_MID_3_SG "क\u{941}र\u{941}त\u{947}",
-    "करोति" IND_MID_3_DU "क\u{941}र\u{94d}वात\u{947}",
-    "करोति" IND_MID_3_PL "क\u{941}र\u{94d}वत\u{947}",
-    "करोति" IMP_ACT_1_SG "करवाणि",
-    "करोति" IMP_ACT_2_SG "क\u{941}र\u{941}",
-    "करोति" IMP_ACT_2_DU "क\u{941}र\u{941}तम\u{94d}",
-    "करोति" IMP_ACT_2_PL "क\u{941}र\u{941}त",
-    "करोति" IMP_ACT_3_DU "क\u{941}र\u{941}ताम\u{94d}",
-    "करोति" IMP_ACT_3_PL "क\u{941}र\u{94d}वन\u{94d}त\u{941}",
-    "करोति" IMP_MID_2_SG "क\u{941}र\u{941}ष\u{94d}व",
-    "करोति" IMP_MID_2_DU "क\u{941}र\u{94d}वाथाम\u{94d}",
-    "करोति" IMP_MID_2_PL "क\u{941}र\u{941}ध\u{94d}वम\u{94d}",
-    "करोति" IMP_MID_3_SG "क\u{941}र\u{941}ताम\u{94d}",
-    "करोति" IMP_MID_3_DU "क\u{941}र\u{94d}वाताम\u{94d}",
-    "करोति" IMP_MID_3_PL "क\u{941}र\u{94d}वताम\u{94d}",
-    "करोति" OPT_ACT_1_SG "क\u{941}र\u{94d}याम\u{94d}",
-    "करोति" OPT_ACT_1_DU "क\u{941}र\u{94d}याव",
-    "करोति" OPT_ACT_1_PL "क\u{941}र\u{94d}याम",
-    "करोति" OPT_ACT_2_SG "क\u{941}र\u{94d}याः",
-    "करोति" OPT_ACT_2_DU "क\u{941}र\u{94d}यातम\u{94d}",
-    "करोति" OPT_ACT_2_PL "क\u{941}र\u{94d}यात",
-    "करोति" OPT_ACT_3_SG "क\u{941}र\u{94d}यात\u{94d}",
-    "करोति" OPT_ACT_3_DU "क\u{941}र\u{94d}याताम\u{94d}",
-    "करोति" OPT_ACT_3_PL "क\u{941}र\u{94d}य\u{941}ः",
-    "करोति" OPT_MID_1_SG "क\u{941}र\u{94d}वीय",
-    "करोति" OPT_MID_1_DU "क\u{941}र\u{94d}वीवहि",
-    "करोति" OPT_MID_1_PL "क\u{941}र\u{94d}वीमहि",
-    "करोति" OPT_MID_2_SG "क\u{941}र\u{94d}वीथाः",
-    "करोति" OPT_MID_2_DU "क\u{941}र\u{94d}वीयाथाम\u{94d}",
-    "करोति" OPT_MID_2_PL "क\u{941}र\u{94d}वीध\u{94d}वम\u{94d}",
-    "करोति" OPT_MID_3_SG "क\u{941}र\u{94d}वीत",
-    "करोति" OPT_MID_3_DU "क\u{941}र\u{94d}वीयाताम\u{94d}",
-    "करोति" OPT_MID_3_PL "क\u{941}र\u{94d}वीरन\u{94d}",
-    "करोति" SUBJ_ACT_1_SG "करवाणि",
-    "करोति" IMPERFECT_ACT_1_DU "अक\u{941}र\u{94d}व",
-    "करोति" IMPERFECT_ACT_1_PL "अक\u{941}र\u{94d}म",
-    "करोति" IMPERFECT_ACT_2_DU "अक\u{941}र\u{941}तम\u{94d}",
-    "करोति" IMPERFECT_ACT_2_PL "अक\u{941}र\u{941}त",
-    "करोति" IMPERFECT_ACT_3_DU "अक\u{941}र\u{941}ताम\u{94d}",
-    "करोति" IMPERFECT_ACT_3_PL "अक\u{941}र\u{94d}वन\u{94d}",
-    "करोति" IMPERFECT_MID_1_SG "अक\u{941}र\u{94d}वि",
-    "करोति" IMPERFECT_MID_1_DU "अक\u{941}र\u{94d}वहि",
-    "करोति" IMPERFECT_MID_1_PL "अक\u{941}र\u{94d}महि",
-    "करोति" IMPERFECT_MID_2_SG "अक\u{941}र\u{941}थाः",
-    "करोति" IMPERFECT_MID_2_DU "अक\u{941}र\u{94d}वाथाम\u{94d}",
-    "करोति" IMPERFECT_MID_2_PL "अक\u{941}र\u{941}ध\u{94d}वम\u{94d}",
-    "करोति" IMPERFECT_MID_3_SG "अक\u{941}र\u{941}त",
-    "करोति" IMPERFECT_MID_3_DU "अक\u{941}र\u{94d}वाताम\u{94d}",
-    "करोति" IMPERFECT_MID_3_PL "अक\u{941}र\u{94d}वत",
-    "करोति" PARTICIPLE_PRES_ACT "क\u{941}र\u{94d}वत\u{94d}",
-    "करोति" PARTICIPLE_PRES_MID "क\u{941}र\u{94d}वाण",
-    "कर\u{94d}तति" PERFECT_ACT_1_SG "चकर\u{94d}त",
-    "कर\u{94d}तति" PERFECT_ACT_1_DU "चक\u{943}तिव",
-    "कर\u{94d}तति" PERFECT_ACT_1_PL "चक\u{943}तिम",
-    "कर\u{94d}तति" PERFECT_ACT_2_SG "चकर\u{94d}तिथ",
-    "कर\u{94d}तति" PERFECT_ACT_2_DU "चक\u{943}तथ\u{941}ः",
-    "कर\u{94d}तति" PERFECT_ACT_2_PL "चक\u{943}त",
-    "कर\u{94d}तति" PERFECT_ACT_3_SG "चकर\u{94d}त",
-    "कर\u{94d}तति" PERFECT_ACT_3_DU "चक\u{943}तत\u{941}ः",
-    "कर\u{94d}तति" PERFECT_ACT_3_PL "चक\u{943}त\u{941}ः",
-    "कर\u{94d}तति" PERFECT_MID_1_SG "चक\u{943}त\u{947}",
-    "कर\u{94d}तति" PERFECT_MID_1_DU "चक\u{943}तिवह\u{947}",
-    "कर\u{94d}तति" PERFECT_MID_1_PL "चक\u{943}तिमह\u{947}",
-    "कर\u{94d}तति" PERFECT_MID_2_SG "चक\u{943}तिष\u{947}",
-    "कर\u{94d}तति" PERFECT_MID_2_DU "चक\u{943}ताथ\u{947}",
-    "कर\u{94d}तति" PERFECT_MID_2_PL "चक\u{943}तिध\u{94d}व\u{947}",
-    "कर\u{94d}तति" PERFECT_MID_3_SG "चक\u{943}त\u{947}",
-    "कर\u{94d}तति" PERFECT_MID_3_DU "चक\u{943}तात\u{947}",
-    "कर\u{94d}तति" PERFECT_MID_3_PL "चक\u{943}तिर\u{947}",
-    "कर\u{94d}तति" INFINITIVE "कर\u{94d}त\u{94d}त\u{941}म\u{94d}",
-    "कर\u{94d}तति" GERUND "क\u{943}त\u{94d}त\u{94d}वा",
-    "कर\u{94d}तति" PARTICIPLE_PERF_ACT "चक\u{943}त\u{94d}वा\u{902}स\u{94d}",
-    "कर\u{94d}तति" PARTICIPLE_PERF_MID "चक\u{943}तान",
-    "कर\u{94d}ति" IND_ACT_3_PL "क\u{94d}रन\u{94d}ति",
-    "कर\u{94d}ति" IMP_ACT_3_PL "क\u{94d}रन\u{94d}त\u{941}",
-    "कर\u{94d}ति" IMPERFECT_ACT_3_PL "अक\u{94d}रन\u{94d}",
-    "क\u{943}णत\u{94d}ति" IND_ACT_1_SG "क\u{943}णत\u{94d}मि",
-    "क\u{943}णत\u{94d}ति" IND_ACT_1_DU "क\u{943}न\u{94d}त\u{94d}वः",
-    "क\u{943}णत\u{94d}ति" IND_ACT_1_PL "क\u{943}न\u{94d}त\u{94d}मः",
-    "क\u{943}णत\u{94d}ति" IND_ACT_2_DU "क\u{943}न\u{94d}त\u{94d}थः",
-    "क\u{943}णत\u{94d}ति" IND_ACT_2_PL "क\u{943}न\u{94d}त\u{94d}थ",
-    "क\u{943}णत\u{94d}ति" IND_ACT_3_DU "क\u{943}न\u{94d}त\u{94d}तः",
-    "क\u{943}णत\u{94d}ति" IND_ACT_3_PL "क\u{943}न\u{94d}तन\u{94d}ति",
-    "क\u{943}णत\u{94d}ति" IND_MID_1_SG "क\u{943}न\u{94d}त\u{947}",
-    "क\u{943}णत\u{94d}ति" IND_MID_1_DU "क\u{943}न\u{94d}त\u{94d}वह\u{947}",
-    "क\u{943}णत\u{94d}ति" IND_MID_1_PL "क\u{943}न\u{94d}त\u{94d}मह\u{947}",
-    "क\u{943}णत\u{94d}ति" IND_MID_2_SG "क\u{943}न\u{94d}त\u{94d}स\u{947}",
-    "क\u{943}णत\u{94d}ति" IND_MID_2_DU "क\u{943}न\u{94d}ताथ\u{947}",
-    "क\u{943}णत\u{94d}ति" IND_MID_2_PL "क\u{943}न\u{94d}द\u{94d}ध\u{94d}व\u{947}",
-    "क\u{943}णत\u{94d}ति" IND_MID_3_SG "क\u{943}न\u{94d}त\u{94d}त\u{947}",
-    "क\u{943}णत\u{94d}ति" IND_MID_3_DU "क\u{943}न\u{94d}तात\u{947}",
-    "क\u{943}णत\u{94d}ति" IND_MID_3_PL "क\u{943}न\u{94d}तत\u{947}",
-    "क\u{943}णत\u{94d}ति" IMP_ACT_1_SG "क\u{943}णतानि",
-    "क\u{943}णत\u{94d}ति" IMP_ACT_1_DU "क\u{943}णताव",
-    "क\u{943}णत\u{94d}ति" IMP_ACT_1_PL "क\u{943}णताम",
-    "क\u{943}णत\u{94d}ति" IMP_ACT_2_SG "क\u{943}न\u{94d}द\u{94d}धि",
-    "क\u{943}णत\u{94d}ति" IMP_ACT_2_DU "क\u{943}न\u{94d}त\u{94d}तम\u{94d}",
-    "क\u{943}णत\u{94d}ति" IMP_ACT_2_PL "क\u{943}न\u{94d}त\u{94d}त",
-    "क\u{943}णत\u{94d}ति" IMP_ACT_3_DU "क\u{943}न\u{94d}त\u{94d}ताम\u{94d}",
-    "क\u{943}णत\u{94d}ति" IMP_ACT_3_PL "क\u{943}न\u{94d}तन\u{94d}त\u{941}",
-    "क\u{943}णत\u{94d}ति" IMP_MID_1_SG "क\u{943}णत\u{948}",
-    "क\u{943}णत\u{94d}ति" IMP_MID_1_DU "क\u{943}णतावह\u{948}",
-    "क\u{943}णत\u{94d}ति" IMP_MID_1_PL "क\u{943}णतामह\u{948}",
-    "क\u{943}णत\u{94d}ति" IMP_MID_2_SG "क\u{943}न\u{94d}त\u{94d}स\u{94d}व",
-    "क\u{943}णत\u{94d}ति" IMP_MID_2_DU "क\u{943}न\u{94d}ताथाम\u{94d}",
-    "क\u{943}णत\u{94d}ति" IMP_MID_2_PL "क\u{943}न\u{94d}द\u{94d}ध\u{94d}वम\u{94d}",
-    "क\u{943}णत\u{94d}ति" IMP_MID_3_SG "क\u{943}न\u{94d}त\u{94d}ताम\u{94d}",
-    "क\u{943}णत\u{94d}ति" IMP_MID_3_DU "क\u{943}न\u{94d}ताताम\u{94d}",
-    "क\u{943}णत\u{94d}ति" IMP_MID_3_PL "क\u{943}न\u{94d}तताम\u{94d}",
-    "क\u{943}णत\u{94d}ति" OPT_ACT_1_SG "क\u{943}न\u{94d}त\u{94d}याम\u{94d}",
-    "क\u{943}णत\u{94d}ति" OPT_ACT_1_DU "क\u{943}न\u{94d}त\u{94d}याव",
-    "क\u{943}णत\u{94d}ति" OPT_ACT_1_PL "क\u{943}न\u{94d}त\u{94d}याम",
-    "क\u{943}णत\u{94d}ति" OPT_ACT_2_SG "क\u{943}न\u{94d}त\u{94d}याः",
-    "क\u{943}णत\u{94d}ति" OPT_ACT_2_DU "क\u{943}न\u{94d}त\u{94d}यातम\u{94d}",
-    "क\u{943}णत\u{94d}ति" OPT_ACT_2_PL "क\u{943}न\u{94d}त\u{94d}यात",
-    "क\u{943}णत\u{94d}ति" OPT_ACT_3_SG "क\u{943}न\u{94d}त\u{94d}यात\u{94d}",
-    "क\u{943}णत\u{94d}ति" OPT_ACT_3_DU "क\u{943}न\u{94d}त\u{94d}याताम\u{94d}",
-    "क\u{943}णत\u{94d}ति" OPT_ACT_3_PL "क\u{943}न\u{94d}त\u{94d}य\u{941}ः",
-    "क\u{943}णत\u{94d}ति" OPT_MID_1_SG "क\u{943}न\u{94d}तीय",
-    "क\u{943}णत\u{94d}ति" OPT_MID_1_DU "क\u{943}न\u{94d}तीवहि",
-    "क\u{943}णत\u{94d}ति" OPT_MID_1_PL "क\u{943}न\u{94d}तीमहि",
-    "क\u{943}णत\u{94d}ति" OPT_MID_2_SG "क\u{943}न\u{94d}तीथाः",
-    "क\u{943}णत\u{94d}ति" OPT_MID_2_DU "क\u{943}न\u{94d}तीयाथाम\u{94d}",
-    "क\u{943}णत\u{94d}ति" OPT_MID_2_PL "क\u{943}न\u{94d}तीध\u{94d}वम\u{94d}",
-    "क\u{943}णत\u{94d}ति" OPT_MID_3_SG "क\u{943}न\u{94d}तीत",
-    "क\u{943}णत\u{94d}ति" OPT_MID_3_DU "क\u{943}न\u{94d}तीयाताम\u{94d}",
-    "क\u{943}णत\u{94d}ति" OPT_MID_3_PL "क\u{943}न\u{94d}तीरन\u{94d}",
-    "क\u{943}णत\u{94d}ति" SUBJ_ACT_1_SG "क\u{943}णतानि",
-    "क\u{943}णत\u{94d}ति" SUBJ_ACT_1_DU "क\u{943}णताव",
-    "क\u{943}णत\u{94d}ति" SUBJ_ACT_1_PL "क\u{943}णताम",
-    "क\u{943}णत\u{94d}ति" SUBJ_ACT_2_SG "क\u{943}णतः",
-    "क\u{943}णत\u{94d}ति" SUBJ_ACT_2_DU "क\u{943}णतथः",
-    "क\u{943}णत\u{94d}ति" SUBJ_ACT_2_PL "क\u{943}णतथ",
-    "क\u{943}णत\u{94d}ति" SUBJ_ACT_3_SG "क\u{943}णतत\u{94d}",
-    "क\u{943}णत\u{94d}ति" SUBJ_ACT_3_DU "क\u{943}णततः",
-    "क\u{943}णत\u{94d}ति" SUBJ_ACT_3_PL "क\u{943}णतन\u{94d}",
-    "क\u{943}णत\u{94d}ति" SUBJ_MID_1_SG "क\u{943}णत\u{948}",
-    "क\u{943}णत\u{94d}ति" SUBJ_MID_1_DU "क\u{943}णतावह\u{948}",
-    "क\u{943}णत\u{94d}ति" SUBJ_MID_1_PL "क\u{943}णतामह\u{948}",
-    "क\u{943}णत\u{94d}ति" SUBJ_MID_2_SG "क\u{943}णतस\u{947}",
-    "क\u{943}णत\u{94d}ति" SUBJ_MID_2_DU "क\u{943}णत\u{948}थ\u{947}",
-    "क\u{943}णत\u{94d}ति" SUBJ_MID_2_PL "क\u{943}णतध\u{94d}व\u{947}",
-    "क\u{943}णत\u{94d}ति" SUBJ_MID_3_SG "क\u{943}णतत\u{947}",
-    "क\u{943}णत\u{94d}ति" SUBJ_MID_3_DU "क\u{943}णत\u{948}त\u{947}",
-    "क\u{943}णत\u{94d}ति" SUBJ_MID_3_PL "क\u{943}णतन\u{94d}त",
-    "क\u{943}णत\u{94d}ति" IMPERFECT_ACT_1_SG "अक\u{943}णतम\u{94d}",
-    "क\u{943}णत\u{94d}ति" IMPERFECT_ACT_1_DU "अक\u{943}न\u{94d}त\u{94d}व",
-    "क\u{943}णत\u{94d}ति" IMPERFECT_ACT_1_PL "अक\u{943}न\u{94d}त\u{94d}म",
-    "क\u{943}णत\u{94d}ति" IMPERFECT_ACT_2_SG "अक\u{943}णत\u{94d}",
-    "क\u{943}णत\u{94d}ति" IMPERFECT_ACT_2_DU "अक\u{943}न\u{94d}त\u{94d}तम\u{94d}",
-    "क\u{943}णत\u{94d}ति" IMPERFECT_ACT_2_PL "अक\u{943}न\u{94d}त\u{94d}त",
-    "क\u{943}णत\u{94d}ति" IMPERFECT_ACT_3_SG "अक\u{943}णत\u{94d}",
-    "क\u{943}णत\u{94d}ति" IMPERFECT_ACT_3_DU "अक\u{943}न\u{94d}त\u{94d}ताम\u{94d}",
-    "क\u{943}णत\u{94d}ति" IMPERFECT_ACT_3_PL "अक\u{943}न\u{94d}तन\u{94d}",
-    "क\u{943}णत\u{94d}ति" IMPERFECT_MID_1_SG "अक\u{943}न\u{94d}ति",
-    "क\u{943}णत\u{94d}ति" IMPERFECT_MID_1_DU "अक\u{943}न\u{94d}त\u{94d}वहि",
-    "क\u{943}णत\u{94d}ति" IMPERFECT_MID_1_PL "अक\u{943}न\u{94d}त\u{94d}महि",
-    "क\u{943}णत\u{94d}ति" IMPERFECT_MID_2_SG "अक\u{943}न\u{94d}त\u{94d}थाः",
-    "क\u{943}णत\u{94d}ति" IMPERFECT_MID_2_DU "अक\u{943}न\u{94d}ताथाम\u{94d}",
-    "क\u{943}णत\u{94d}ति" IMPERFECT_MID_2_PL "अक\u{943}न\u{94d}द\u{94d}ध\u{94d}वम\u{94d}",
-    "क\u{943}णत\u{94d}ति" IMPERFECT_MID_3_SG "अक\u{943}न\u{94d}त\u{94d}त",
-    "क\u{943}णत\u{94d}ति" IMPERFECT_MID_3_DU "अक\u{943}न\u{94d}ताताम\u{94d}",
-    "क\u{943}णत\u{94d}ति" IMPERFECT_MID_3_PL "अक\u{943}न\u{94d}तत",
-    "क\u{943}णत\u{94d}ति" PARTICIPLE_PRES_ACT "क\u{943}न\u{94d}तत\u{94d}",
-    "क\u{943}णत\u{94d}ति" PARTICIPLE_PRES_MID "क\u{943}न\u{94d}तान",
-    "क\u{943}न\u{94d}तति" FUTURE_ACT_1_SG "कर\u{94d}तिष\u{94d}यामि",
-    "क\u{943}न\u{94d}तति" FUTURE_ACT_1_DU "कर\u{94d}तिष\u{94d}यावः",
-    "क\u{943}न\u{94d}तति" FUTURE_ACT_1_PL "कर\u{94d}तिष\u{94d}यामः",
-    "क\u{943}न\u{94d}तति" FUTURE_ACT_2_SG "कर\u{94d}तिष\u{94d}यसि",
-    "क\u{943}न\u{94d}तति" FUTURE_ACT_2_DU "कर\u{94d}तिष\u{94d}यथः",
-    "क\u{943}न\u{94d}तति" FUTURE_ACT_2_PL "कर\u{94d}तिष\u{94d}यथ",
-    "क\u{943}न\u{94d}तति" FUTURE_ACT_3_SG "कर\u{94d}तिष\u{94d}यति",
-    "क\u{943}न\u{94d}तति" FUTURE_ACT_3_DU "कर\u{94d}तिष\u{94d}यतः",
-    "क\u{943}न\u{94d}तति" FUTURE_ACT_3_PL "कर\u{94d}तिष\u{94d}यन\u{94d}ति",
-    "क\u{943}न\u{94d}तति" FUTURE_MID_1_SG "कर\u{94d}तिष\u{94d}य\u{947}",
-    "क\u{943}न\u{94d}तति" FUTURE_MID_1_DU "कर\u{94d}तिष\u{94d}यावह\u{947}",
-    "क\u{943}न\u{94d}तति" FUTURE_MID_1_PL "कर\u{94d}तिष\u{94d}यामह\u{947}",
-    "क\u{943}न\u{94d}तति" FUTURE_MID_2_SG "कर\u{94d}तिष\u{94d}यस\u{947}",
-    "क\u{943}न\u{94d}तति" FUTURE_MID_2_DU "कर\u{94d}तिष\u{94d}य\u{947}थ\u{947}",
-    "क\u{943}न\u{94d}तति" FUTURE_MID_2_PL "कर\u{94d}तिष\u{94d}यध\u{94d}व\u{947}",
-    "क\u{943}न\u{94d}तति" FUTURE_MID_3_SG "कर\u{94d}तिष\u{94d}यत\u{947}",
-    "क\u{943}न\u{94d}तति" FUTURE_MID_3_DU "कर\u{94d}तिष\u{94d}य\u{947}त\u{947}",
-    "क\u{943}न\u{94d}तति" FUTURE_MID_3_PL "कर\u{94d}तिष\u{94d}यन\u{94d}त\u{947}",
-    "क\u{943}न\u{94d}तति" CONDITIONAL_ACT_1_SG "अकर\u{94d}तिष\u{94d}यम\u{94d}",
-    "क\u{943}न\u{94d}तति" CONDITIONAL_ACT_1_DU "अकर\u{94d}तिष\u{94d}याव",
-    "क\u{943}न\u{94d}तति" CONDITIONAL_ACT_1_PL "अकर\u{94d}तिष\u{94d}याम",
-    "क\u{943}न\u{94d}तति" CONDITIONAL_ACT_2_SG "अकर\u{94d}तिष\u{94d}यः",
-    "क\u{943}न\u{94d}तति" CONDITIONAL_ACT_2_DU "अकर\u{94d}तिष\u{94d}यतम\u{94d}",
-    "क\u{943}न\u{94d}तति" CONDITIONAL_ACT_2_PL "अकर\u{94d}तिष\u{94d}यत",
-    "क\u{943}न\u{94d}तति" CONDITIONAL_ACT_3_SG "अकर\u{94d}तिष\u{94d}यत\u{94d}",
-    "क\u{943}न\u{94d}तति" CONDITIONAL_ACT_3_DU "अकर\u{94d}तिष\u{94d}यताम\u{94d}",
-    "क\u{943}न\u{94d}तति" CONDITIONAL_ACT_3_PL "अकर\u{94d}तिष\u{94d}यन\u{94d}",
-    "क\u{943}न\u{94d}तति" CONDITIONAL_MID_1_SG "अकर\u{94d}तिष\u{94d}य\u{947}",
-    "क\u{943}न\u{94d}तति" CONDITIONAL_MID_1_DU "अकर\u{94d}तिष\u{94d}यावहि",
-    "क\u{943}न\u{94d}तति" CONDITIONAL_MID_1_PL "अकर\u{94d}तिष\u{94d}यामहि",
-    "क\u{943}न\u{94d}तति" CONDITIONAL_MID_2_SG "अकर\u{94d}तिष\u{94d}यथाः",
-    "क\u{943}न\u{94d}तति" CONDITIONAL_MID_2_DU "अकर\u{94d}तिष\u{94d}य\u{947}थाम\u{94d}",
-    "क\u{943}न\u{94d}तति" CONDITIONAL_MID_2_PL "अकर\u{94d}तिष\u{94d}यध\u{94d}वम\u{94d}",
-    "क\u{943}न\u{94d}तति" CONDITIONAL_MID_3_SG "अकर\u{94d}तिष\u{94d}यत",
-    "क\u{943}न\u{94d}तति" CONDITIONAL_MID_3_DU "अकर\u{94d}तिष\u{94d}य\u{947}ताम\u{94d}",
-    "क\u{943}न\u{94d}तति" CONDITIONAL_MID_3_PL "अकर\u{94d}तिष\u{94d}यन\u{94d}त",
-    "क\u{943}न\u{94d}तति" PERFECT_ACT_1_SG "चकर\u{94d}त",
-    "क\u{943}न\u{94d}तति" PERFECT_ACT_1_DU "चक\u{943}तिव",
-    "क\u{943}न\u{94d}तति" PERFECT_ACT_1_PL "चक\u{943}तिम",
-    "क\u{943}न\u{94d}तति" PERFECT_ACT_2_SG "चकर\u{94d}तिथ",
-    "क\u{943}न\u{94d}तति" PERFECT_ACT_2_DU "चक\u{943}तथ\u{941}ः",
-    "क\u{943}न\u{94d}तति" PERFECT_ACT_2_PL "चक\u{943}त",
-    "क\u{943}न\u{94d}तति" PERFECT_ACT_3_SG "चकर\u{94d}त",
-    "क\u{943}न\u{94d}तति" PERFECT_ACT_3_DU "चक\u{943}तत\u{941}ः",
-    "क\u{943}न\u{94d}तति" PERFECT_ACT_3_PL "चक\u{943}त\u{941}ः",
-    "क\u{943}न\u{94d}तति" PERFECT_MID_1_SG "चक\u{943}त\u{947}",
-    "क\u{943}न\u{94d}तति" PERFECT_MID_1_DU "चक\u{943}तिवह\u{947}",
-    "क\u{943}न\u{94d}तति" PERFECT_MID_1_PL "चक\u{943}तिमह\u{947}",
-    "क\u{943}न\u{94d}तति" PERFECT_MID_2_SG "चक\u{943}तिष\u{947}",
-    "क\u{943}न\u{94d}तति" PERFECT_MID_2_DU "चक\u{943}ताथ\u{947}",
-    "क\u{943}न\u{94d}तति" PERFECT_MID_2_PL "चक\u{943}तिध\u{94d}व\u{947}",
-    "क\u{943}न\u{94d}तति" PERFECT_MID_3_SG "चक\u{943}त\u{947}",
-    "क\u{943}न\u{94d}तति" PERFECT_MID_3_DU "चक\u{943}तात\u{947}",
-    "क\u{943}न\u{94d}तति" PERFECT_MID_3_PL "चक\u{943}तिर\u{947}",
-    "क\u{943}न\u{94d}तति" AORIST_ACT_1_SG "अकर\u{94d}तिषम\u{94d}",
-    "क\u{943}न\u{94d}तति" AORIST_ACT_1_DU "अकर\u{94d}तिष\u{94d}व",
-    "क\u{943}न\u{94d}तति" AORIST_ACT_1_PL "अकर\u{94d}तिष\u{94d}म",
-    "क\u{943}न\u{94d}तति" AORIST_ACT_2_SG "अकर\u{94d}तीः",
-    "क\u{943}न\u{94d}तति" AORIST_ACT_2_DU "अकर\u{94d}तिष\u{94d}टम\u{94d}",
-    "क\u{943}न\u{94d}तति" AORIST_ACT_2_PL "अकर\u{94d}तिष\u{94d}ट",
-    "क\u{943}न\u{94d}तति" AORIST_ACT_3_SG "अकर\u{94d}तीत\u{94d}",
-    "क\u{943}न\u{94d}तति" AORIST_ACT_3_DU "अकर\u{94d}तिष\u{94d}टाम\u{94d}",
-    "क\u{943}न\u{94d}तति" AORIST_ACT_3_PL "अकर\u{94d}तिष\u{941}ः",
-    "क\u{943}न\u{94d}तति" AORIST_MID_1_SG "अकर\u{94d}तिषि",
-    "क\u{943}न\u{94d}तति" AORIST_MID_1_DU "अकर\u{94d}तिष\u{94d}वहि",
-    "क\u{943}न\u{94d}तति" AORIST_MID_1_PL "अकर\u{94d}तिष\u{94d}महि",
-    "क\u{943}न\u{94d}तति" AORIST_MID_2_SG "अकर\u{94d}तिष\u{94d}ठाः",
-    "क\u{943}न\u{94d}तति" AORIST_MID_2_DU "अकर\u{94d}तिषाथाम\u{94d}",
-    "क\u{943}न\u{94d}तति" AORIST_MID_2_PL "अकर\u{94d}तिढ\u{94d}वम\u{94d}",
-    "क\u{943}न\u{94d}तति" AORIST_MID_3_SG "अकर\u{94d}तिष\u{94d}ट",
-    "क\u{943}न\u{94d}तति" AORIST_MID_3_DU "अकर\u{94d}तिषाताम\u{94d}",
-    "क\u{943}न\u{94d}तति" AORIST_MID_3_PL "अकर\u{94d}तिषत",
-    "क\u{943}न\u{94d}तति" INFINITIVE "कर\u{94d}त\u{94d}त\u{941}म\u{94d}",
-    "क\u{943}न\u{94d}तति" GERUND "क\u{943}त\u{94d}त\u{94d}वा",
-    "क\u{943}न\u{94d}तति" PARTICIPLE_FUT_ACT "कर\u{94d}तिष\u{94d}यत\u{94d}",
-    "क\u{943}न\u{94d}तति" PARTICIPLE_FUT_MID "कर\u{94d}तिष\u{94d}यमाण",
-    "क\u{943}न\u{94d}तति" PARTICIPLE_PERF_ACT "चक\u{943}त\u{94d}वा\u{902}स\u{94d}",
-    "क\u{943}न\u{94d}तति" PARTICIPLE_PERF_MID "चक\u{943}तान",
-    "क\u{94d}रामति" IND_MID_1_SG "क\u{94d}रम\u{947}",
-    "क\u{94d}रामति" IND_MID_1_DU "क\u{94d}रमावह\u{947}",
-    "क\u{94d}रामति" IND_MID_1_PL "क\u{94d}रमामह\u{947}",
-    "क\u{94d}रामति" IND_MID_2_SG "क\u{94d}रमस\u{947}",
-    "क\u{94d}रामति" IND_MID_2_DU "क\u{94d}रम\u{947}थ\u{947}",
-    "क\u{94d}रामति" IND_MID_2_PL "क\u{94d}रमध\u{94d}व\u{947}",
-    "क\u{94d}रामति" IND_MID_3_SG "क\u{94d}रमत\u{947}",
-    "क\u{94d}रामति" IND_MID_3_DU "क\u{94d}रम\u{947}त\u{947}",
-    "क\u{94d}रामति" IND_MID_3_PL "क\u{94d}रमन\u{94d}त\u{947}",
-    "क\u{94d}रामति" IMP_MID_1_SG "क\u{94d}रम\u{948}",
-    "क\u{94d}रामति" IMP_MID_1_DU "क\u{94d}रमावह\u{948}",
-    "क\u{94d}रामति" IMP_MID_1_PL "क\u{94d}रमामह\u{948}",
-    "क\u{94d}रामति" IMP_MID_2_SG "क\u{94d}रमस\u{94d}व",
-    "क\u{94d}रामति" IMP_MID_2_DU "क\u{94d}रम\u{947}थाम\u{94d}",
-    "क\u{94d}रामति" IMP_MID_2_PL "क\u{94d}रमध\u{94d}वम\u{94d}",
-    "क\u{94d}रामति" IMP_MID_3_SG "क\u{94d}रमताम\u{94d}",
-    "क\u{94d}रामति" IMP_MID_3_DU "क\u{94d}रम\u{947}ताम\u{94d}",
-    "क\u{94d}रामति" IMP_MID_3_PL "क\u{94d}रमन\u{94d}ताम\u{94d}",
-    "क\u{94d}रामति" OPT_MID_1_SG "क\u{94d}रम\u{947}य",
-    "क\u{94d}रामति" OPT_MID_1_DU "क\u{94d}रम\u{947}वहि",
-    "क\u{94d}रामति" OPT_MID_1_PL "क\u{94d}रम\u{947}महि",
-    "क\u{94d}रामति" OPT_MID_2_SG "क\u{94d}रम\u{947}थाः",
-    "क\u{94d}रामति" OPT_MID_2_DU "क\u{94d}रम\u{947}याथाम\u{94d}",
-    "क\u{94d}रामति" OPT_MID_2_PL "क\u{94d}रम\u{947}ध\u{94d}वम\u{94d}",
-    "क\u{94d}रामति" OPT_MID_3_SG "क\u{94d}रम\u{947}त",
-    "क\u{94d}रामति" OPT_MID_3_DU "क\u{94d}रम\u{947}याताम\u{94d}",
-    "क\u{94d}रामति" OPT_MID_3_PL "क\u{94d}रम\u{947}रन\u{94d}",
-    "क\u{94d}रामति" SUBJ_MID_1_SG "क\u{94d}रम\u{948}",
-    "क\u{94d}रामति" SUBJ_MID_1_DU "क\u{94d}रमावह\u{948}",
-    "क\u{94d}रामति" SUBJ_MID_1_PL "क\u{94d}रमामह\u{948}",
-    "क\u{94d}रामति" SUBJ_MID_2_SG "क\u{94d}रमास\u{947}",
-    "क\u{94d}रामति" SUBJ_MID_2_DU "क\u{94d}रम\u{948}थ\u{947}",
-    "क\u{94d}रामति" SUBJ_MID_2_PL "क\u{94d}रमाध\u{94d}व\u{948}",
-    "क\u{94d}रामति" SUBJ_MID_3_SG "क\u{94d}रमात\u{947}",
-    "क\u{94d}रामति" SUBJ_MID_3_DU "क\u{94d}रम\u{948}त\u{947}",
-    "क\u{94d}रामति" SUBJ_MID_3_PL "क\u{94d}रमन\u{94d}त",
-    "क\u{94d}रामति" PARTICIPLE_PRES_MID "क\u{94d}रममाण",
-    "क\u{94d}षमत\u{947}" FUTURE_MID_1_SG "क\u{94d}ष\u{902}स\u{94d}य\u{947}",
-    "क\u{94d}षमत\u{947}" FUTURE_MID_1_DU "क\u{94d}ष\u{902}स\u{94d}यावह\u{947}",
-    "क\u{94d}षमत\u{947}" FUTURE_MID_1_PL "क\u{94d}ष\u{902}स\u{94d}यामह\u{947}",
-    "क\u{94d}षमत\u{947}" FUTURE_MID_2_SG "क\u{94d}ष\u{902}स\u{94d}यस\u{947}",
-    "क\u{94d}षमत\u{947}" FUTURE_MID_2_DU "क\u{94d}ष\u{902}स\u{94d}य\u{947}थ\u{947}",
-    "क\u{94d}षमत\u{947}" FUTURE_MID_2_PL "क\u{94d}ष\u{902}स\u{94d}यध\u{94d}व\u{947}",
-    "क\u{94d}षमत\u{947}" FUTURE_MID_3_SG "क\u{94d}ष\u{902}स\u{94d}यत\u{947}",
-    "क\u{94d}षमत\u{947}" FUTURE_MID_3_DU "क\u{94d}ष\u{902}स\u{94d}य\u{947}त\u{947}",
-    "क\u{94d}षमत\u{947}" FUTURE_MID_3_PL "क\u{94d}ष\u{902}स\u{94d}यन\u{94d}त\u{947}",
-    "क\u{94d}षमत\u{947}" CONDITIONAL_MID_1_SG "अक\u{94d}ष\u{902}स\u{94d}य\u{947}",
-    "क\u{94d}षमत\u{947}" CONDITIONAL_MID_1_DU "अक\u{94d}ष\u{902}स\u{94d}यावहि",
-    "क\u{94d}षमत\u{947}" CONDITIONAL_MID_1_PL "अक\u{94d}ष\u{902}स\u{94d}यामहि",
-    "क\u{94d}षमत\u{947}" CONDITIONAL_MID_2_SG "अक\u{94d}ष\u{902}स\u{94d}यथाः",
-    "क\u{94d}षमत\u{947}" CONDITIONAL_MID_2_DU "अक\u{94d}ष\u{902}स\u{94d}य\u{947}थाम\u{94d}",
-    "क\u{94d}षमत\u{947}" CONDITIONAL_MID_2_PL "अक\u{94d}ष\u{902}स\u{94d}यध\u{94d}वम\u{94d}",
-    "क\u{94d}षमत\u{947}" CONDITIONAL_MID_3_SG "अक\u{94d}ष\u{902}स\u{94d}यत",
-    "क\u{94d}षमत\u{947}" CONDITIONAL_MID_3_DU "अक\u{94d}ष\u{902}स\u{94d}य\u{947}ताम\u{94d}",
-    "क\u{94d}षमत\u{947}" CONDITIONAL_MID_3_PL "अक\u{94d}ष\u{902}स\u{94d}यन\u{94d}त",
-    "क\u{94d}षमत\u{947}" PERFECT_MID_1_SG "चक\u{94d}षम\u{947}",
-    "क\u{94d}षमत\u{947}" PERFECT_MID_1_DU "चक\u{94d}षमिवह\u{947}",
-    "क\u{94d}षमत\u{947}" PERFECT_MID_1_PL "चक\u{94d}षमिमह\u{947}",
-    "क\u{94d}षमत\u{947}" PERFECT_MID_2_SG "चक\u{94d}षमिष\u{947}",
-    "क\u{94d}षमत\u{947}" PERFECT_MID_2_DU "चक\u{94d}षमाथ\u{947}",
-    "क\u{94d}षमत\u{947}" PERFECT_MID_2_PL "चक\u{94d}षमिध\u{94d}व\u{947}",
-    "क\u{94d}षमत\u{947}" PERFECT_MID_3_SG "चक\u{94d}षम\u{947}",
-    "क\u{94d}षमत\u{947}" PERFECT_MID_3_DU "चक\u{94d}षमात\u{947}",
-    "क\u{94d}षमत\u{947}" PERFECT_MID_3_PL "चक\u{94d}षमिर\u{947}",
-    "क\u{94d}षमत\u{947}" AORIST_MID_1_SG "अक\u{94d}ष\u{902}सि",
-    "क\u{94d}षमत\u{947}" AORIST_MID_1_DU "अक\u{94d}ष\u{902}स\u{94d}वहि",
-    "क\u{94d}षमत\u{947}" AORIST_MID_1_PL "अक\u{94d}ष\u{902}स\u{94d}महि",
-    "क\u{94d}षमत\u{947}" AORIST_MID_2_SG "अक\u{94d}ष\u{902}स\u{94d}थाः",
-    "क\u{94d}षमत\u{947}" AORIST_MID_2_DU "अक\u{94d}ष\u{902}साथाम\u{94d}",
-    "क\u{94d}षमत\u{947}" AORIST_MID_2_PL "अक\u{94d}षन\u{94d}ध\u{94d}वम\u{94d}",
-    "क\u{94d}षमत\u{947}" AORIST_MID_3_SG "अक\u{94d}ष\u{902}स\u{94d}त",
-    "क\u{94d}षमत\u{947}" AORIST_MID_3_DU "अक\u{94d}ष\u{902}साताम\u{94d}",
-    "क\u{94d}षमत\u{947}" AORIST_MID_3_PL "अक\u{94d}ष\u{902}सत",
-    "क\u{94d}षमत\u{947}" INFINITIVE "क\u{94d}षन\u{94d}त\u{941}म\u{94d}",
-    "क\u{94d}षमत\u{947}" PARTICIPLE_FUT_MID "क\u{94d}ष\u{902}स\u{94d}यमान",
-    "क\u{94d}षमत\u{947}" PARTICIPLE_PERF_MID "चक\u{94d}षमाण",
-    "क\u{94d}ष\u{947}ति" IND_ACT_1_SG "क\u{94d}ष\u{947}मि",
-    "क\u{94d}ष\u{947}ति" IND_ACT_1_DU "क\u{94d}षिवः",
-    "क\u{94d}ष\u{947}ति" IND_ACT_1_PL "क\u{94d}षिमः",
-    "क\u{94d}ष\u{947}ति" IND_ACT_2_SG "क\u{94d}ष\u{947}षि",
-    "क\u{94d}ष\u{947}ति" IND_ACT_2_DU "क\u{94d}षिथः",
-    "क\u{94d}ष\u{947}ति" IND_ACT_2_PL "क\u{94d}षिथ",
-    "क\u{94d}ष\u{947}ति" IND_ACT_3_DU "क\u{94d}षितः",
-    "क\u{94d}ष\u{947}ति" IND_ACT_3_PL "क\u{94d}षियन\u{94d}ति",
-    "क\u{94d}ष\u{947}ति" IND_MID_1_SG "क\u{94d}षिय\u{947}",
-    "क\u{94d}ष\u{947}ति" IND_MID_1_DU "क\u{94d}षिवह\u{947}",
-    "क\u{94d}ष\u{947}ति" IND_MID_1_PL "क\u{94d}षिमह\u{947}",
-    "क\u{94d}ष\u{947}ति" IND_MID_2_SG "क\u{94d}षिष\u{947}",
-    "क\u{94d}ष\u{947}ति" IND_MID_2_DU "क\u{94d}षियाथ\u{947}",
-    "क\u{94d}ष\u{947}ति" IND_MID_2_PL "क\u{94d}षिध\u{94d}व\u{947}",
-    "क\u{94d}ष\u{947}ति" IND_MID_3_SG "क\u{94d}षित\u{947}",
-    "क\u{94d}ष\u{947}ति" IND_MID_3_DU "क\u{94d}षियात\u{947}",
-    "क\u{94d}ष\u{947}ति" IND_MID_3_PL "क\u{94d}षियत\u{947}",
-    "क\u{94d}ष\u{947}ति" IMP_ACT_1_SG "क\u{94d}षयाणि",
-    "क\u{94d}ष\u{947}ति" IMP_ACT_1_DU "क\u{94d}षयाव",
-    "क\u{94d}ष\u{947}ति" IMP_ACT_1_PL "क\u{94d}षयाम",
-    "क\u{94d}ष\u{947}ति" IMP_ACT_2_SG "क\u{94d}षिहि",
-    "क\u{94d}ष\u{947}ति" IMP_ACT_2_DU "क\u{94d}षितम\u{94d}",
-    "क\u{94d}ष\u{947}ति" IMP_ACT_2_PL "क\u{94d}षित",
-    "क\u{94d}ष\u{947}ति" IMP_ACT_3_DU "क\u{94d}षिताम\u{94d}",
-    "क\u{94d}ष\u{947}ति" IMP_ACT_3_PL "क\u{94d}षियन\u{94d}त\u{941}",
-    "क\u{94d}ष\u{947}ति" IMP_MID_1_SG "क\u{94d}षय\u{948}",
-    "क\u{94d}ष\u{947}ति" IMP_MID_1_DU "क\u{94d}षयावह\u{948}",
-    "क\u{94d}ष\u{947}ति" IMP_MID_1_PL "क\u{94d}षयामह\u{948}",
-    "क\u{94d}ष\u{947}ति" IMP_MID_2_SG "क\u{94d}षिष\u{94d}व",
-    "क\u{94d}ष\u{947}ति" IMP_MID_2_DU "क\u{94d}षियाथाम\u{94d}",
-    "क\u{94d}ष\u{947}ति" IMP_MID_2_PL "क\u{94d}षिध\u{94d}वम\u{94d}",
-    "क\u{94d}ष\u{947}ति" IMP_MID_3_SG "क\u{94d}षिताम\u{94d}",
-    "क\u{94d}ष\u{947}ति" IMP_MID_3_DU "क\u{94d}षियाताम\u{94d}",
-    "क\u{94d}ष\u{947}ति" IMP_MID_3_PL "क\u{94d}षियताम\u{94d}",
-    "क\u{94d}ष\u{947}ति" OPT_ACT_1_SG "क\u{94d}षियाम\u{94d}",
-    "क\u{94d}ष\u{947}ति" OPT_ACT_1_DU "क\u{94d}षियाव",
-    "क\u{94d}ष\u{947}ति" OPT_ACT_1_PL "क\u{94d}षियाम",
-    "क\u{94d}ष\u{947}ति" OPT_ACT_2_SG "क\u{94d}षियाः",
-    "क\u{94d}ष\u{947}ति" OPT_ACT_2_DU "क\u{94d}षियातम\u{94d}",
-    "क\u{94d}ष\u{947}ति" OPT_ACT_2_PL "क\u{94d}षियात",
-    "क\u{94d}ष\u{947}ति" OPT_ACT_3_SG "क\u{94d}षियात\u{94d}",
-    "क\u{94d}ष\u{947}ति" OPT_ACT_3_DU "क\u{94d}षियाताम\u{94d}",
-    "क\u{94d}ष\u{947}ति" OPT_ACT_3_PL "क\u{94d}षिय\u{941}ः",
-    "क\u{94d}ष\u{947}ति" OPT_MID_1_SG "क\u{94d}षियीय",
-    "क\u{94d}ष\u{947}ति" OPT_MID_1_DU "क\u{94d}षियीवहि",
-    "क\u{94d}ष\u{947}ति" OPT_MID_1_PL "क\u{94d}षियीमहि",
-    "क\u{94d}ष\u{947}ति" OPT_MID_2_SG "क\u{94d}षियीथाः",
-    "क\u{94d}ष\u{947}ति" OPT_MID_2_DU "क\u{94d}षियीयाथाम\u{94d}",
-    "क\u{94d}ष\u{947}ति" OPT_MID_2_PL "क\u{94d}षियीध\u{94d}वम\u{94d}",
-    "क\u{94d}ष\u{947}ति" OPT_MID_3_SG "क\u{94d}षियीत",
-    "क\u{94d}ष\u{947}ति" OPT_MID_3_DU "क\u{94d}षियीयाताम\u{94d}",
-    "क\u{94d}ष\u{947}ति" OPT_MID_3_PL "क\u{94d}षियीरन\u{94d}",
-    "क\u{94d}ष\u{947}ति" SUBJ_ACT_1_SG "क\u{94d}षयाणि",
-    "क\u{94d}ष\u{947}ति" SUBJ_ACT_1_DU "क\u{94d}षयाव",
-    "क\u{94d}ष\u{947}ति" SUBJ_ACT_1_PL "क\u{94d}षयाम",
-    "क\u{94d}ष\u{947}ति" SUBJ_ACT_2_SG "क\u{94d}षयः",
-    "क\u{94d}ष\u{947}ति" SUBJ_ACT_2_DU "क\u{94d}षयथः",
-    "क\u{94d}ष\u{947}ति" SUBJ_ACT_2_PL "क\u{94d}षयथ",
-    "क\u{94d}ष\u{947}ति" SUBJ_ACT_3_SG "क\u{94d}षयत\u{94d}",
-    "क\u{94d}ष\u{947}ति" SUBJ_ACT_3_DU "क\u{94d}षयतः",
-    "क\u{94d}ष\u{947}ति" SUBJ_ACT_3_PL "क\u{94d}षयन\u{94d}",
-    "क\u{94d}ष\u{947}ति" SUBJ_MID_1_SG "क\u{94d}षय\u{948}",
-    "क\u{94d}ष\u{947}ति" SUBJ_MID_1_DU "क\u{94d}षयावह\u{948}",
-    "क\u{94d}ष\u{947}ति" SUBJ_MID_1_PL "क\u{94d}षयामह\u{948}",
-    "क\u{94d}ष\u{947}ति" SUBJ_MID_2_SG "क\u{94d}षयस\u{947}",
-    "क\u{94d}ष\u{947}ति" SUBJ_MID_2_DU "क\u{94d}षय\u{948}थ\u{947}",
-    "क\u{94d}ष\u{947}ति" SUBJ_MID_2_PL "क\u{94d}षयध\u{94d}व\u{947}",
-    "क\u{94d}ष\u{947}ति" SUBJ_MID_3_SG "क\u{94d}षयत\u{947}",
-    "क\u{94d}ष\u{947}ति" SUBJ_MID_3_DU "क\u{94d}षय\u{948}त\u{947}",
-    "क\u{94d}ष\u{947}ति" SUBJ_MID_3_PL "क\u{94d}षयन\u{94d}त",
-    "क\u{94d}ष\u{947}ति" IMPERFECT_ACT_1_SG "अक\u{94d}षयम\u{94d}",
-    "क\u{94d}ष\u{947}ति" IMPERFECT_ACT_1_DU "अक\u{94d}षिव",
-    "क\u{94d}ष\u{947}ति" IMPERFECT_ACT_1_PL "अक\u{94d}षिम",
-    "क\u{94d}ष\u{947}ति" IMPERFECT_ACT_2_DU "अक\u{94d}षितम\u{94d}",
-    "क\u{94d}ष\u{947}ति" IMPERFECT_ACT_2_PL "अक\u{94d}षित",
-    "क\u{94d}ष\u{947}ति" IMPERFECT_ACT_3_DU "अक\u{94d}षिताम\u{94d}",
-    "क\u{94d}ष\u{947}ति" IMPERFECT_ACT_3_PL "अक\u{94d}षियन\u{94d}",
-    "क\u{94d}ष\u{947}ति" IMPERFECT_MID_1_SG "अक\u{94d}षियि",
-    "क\u{94d}ष\u{947}ति" IMPERFECT_MID_1_DU "अक\u{94d}षिवहि",
-    "क\u{94d}ष\u{947}ति" IMPERFECT_MID_1_PL "अक\u{94d}षिमहि",
-    "क\u{94d}ष\u{947}ति" IMPERFECT_MID_2_SG "अक\u{94d}षिथाः",
-    "क\u{94d}ष\u{947}ति" IMPERFECT_MID_2_DU "अक\u{94d}षियाथाम\u{94d}",
-    "क\u{94d}ष\u{947}ति" IMPERFECT_MID_2_PL "अक\u{94d}षिध\u{94d}वम\u{94d}",
-    "क\u{94d}ष\u{947}ति" IMPERFECT_MID_3_SG "अक\u{94d}षित",
-    "क\u{94d}ष\u{947}ति" IMPERFECT_MID_3_DU "अक\u{94d}षियाताम\u{94d}",
-    "क\u{94d}ष\u{947}ति" IMPERFECT_MID_3_PL "अक\u{94d}षियत",
-    "क\u{94d}ष\u{947}ति" PARTICIPLE_PRES_ACT "क\u{94d}षियत\u{94d}",
-    "क\u{94d}ष\u{947}ति" PARTICIPLE_PRES_MID "क\u{94d}षियाण",
-    "गन\u{94d}ति" IND_ACT_1_SG "गन\u{94d}मि",
-    "गन\u{94d}ति" IND_ACT_1_DU "गन\u{94d}वः",
-    "गन\u{94d}ति" IND_ACT_1_PL "गन\u{94d}मः",
-    "गन\u{94d}ति" IND_ACT_2_SG "ग\u{902}सि",
-    "गन\u{94d}ति" IND_ACT_2_DU "गथः",
-    "गन\u{94d}ति" IND_ACT_2_PL "गथ",
-    "गन\u{94d}ति" IND_ACT_3_DU "गतः",
-    "गन\u{94d}ति" IND_ACT_3_PL "ग\u{94d}मन\u{94d}ति",
-    "गन\u{94d}ति" IMP_ACT_1_SG "गमानि",
-    "गन\u{94d}ति" IMP_ACT_1_DU "गमाव",
-    "गन\u{94d}ति" IMP_ACT_1_PL "गमाम",
-    "गन\u{94d}ति" IMP_ACT_2_SG "गहि",
-    "गन\u{94d}ति" IMP_ACT_2_DU "गतम\u{94d}",
-    "गन\u{94d}ति" IMP_ACT_2_PL "गत",
-    "गन\u{94d}ति" IMP_ACT_3_DU "गताम\u{94d}",
-    "गन\u{94d}ति" IMP_ACT_3_PL "ग\u{94d}मन\u{94d}त\u{941}",
-    "गन\u{94d}ति" OPT_ACT_1_SG "गम\u{94d}याम\u{94d}",
-    "गन\u{94d}ति" OPT_ACT_1_DU "गम\u{94d}याव",
-    "गन\u{94d}ति" OPT_ACT_1_PL "गम\u{94d}याम",
-    "गन\u{94d}ति" OPT_ACT_2_SG "गम\u{94d}याः",
-    "गन\u{94d}ति" OPT_ACT_2_DU "गम\u{94d}यातम\u{94d}",
-    "गन\u{94d}ति" OPT_ACT_2_PL "गम\u{94d}यात",
-    "गन\u{94d}ति" OPT_ACT_3_SG "गम\u{94d}यात\u{94d}",
-    "गन\u{94d}ति" OPT_ACT_3_DU "गम\u{94d}याताम\u{94d}",
-    "गन\u{94d}ति" OPT_ACT_3_PL "गम\u{94d}य\u{941}ः",
-    "गन\u{94d}ति" SUBJ_ACT_1_SG "गमानि",
-    "गन\u{94d}ति" SUBJ_ACT_1_DU "गमाव",
-    "गन\u{94d}ति" SUBJ_ACT_1_PL "गमाम",
-    "गन\u{94d}ति" SUBJ_ACT_2_SG "गमः",
-    "गन\u{94d}ति" SUBJ_ACT_2_DU "गमथः",
-    "गन\u{94d}ति" SUBJ_ACT_2_PL "गमथ",
-    "गन\u{94d}ति" SUBJ_ACT_3_SG "गमत\u{94d}",
-    "गन\u{94d}ति" SUBJ_ACT_3_DU "गमतः",
-    "गन\u{94d}ति" SUBJ_ACT_3_PL "गमन\u{94d}",
-    "गन\u{94d}ति" IMPERFECT_ACT_1_SG "अगमम\u{94d}",
-    "गन\u{94d}ति" IMPERFECT_ACT_1_DU "अगन\u{94d}व",
-    "गन\u{94d}ति" IMPERFECT_ACT_1_PL "अगन\u{94d}म",
-    "गन\u{94d}ति" IMPERFECT_ACT_2_SG "अगन\u{94d}",
-    "गन\u{94d}ति" IMPERFECT_ACT_2_DU "अगतम\u{94d}",
-    "गन\u{94d}ति" IMPERFECT_ACT_2_PL "अगत",
-    "गन\u{94d}ति" IMPERFECT_ACT_3_SG "अगन\u{94d}",
-    "गन\u{94d}ति" IMPERFECT_ACT_3_DU "अगताम\u{94d}",
-    "गन\u{94d}ति" IMPERFECT_ACT_3_PL "अग\u{94d}मन\u{94d}",
-    "गन\u{94d}ति" PARTICIPLE_PRES_ACT "ग\u{94d}मत\u{94d}",
-    "घ\u{943}णोति" IMPERFECT_ACT_1_SG "अघ\u{943}नवम\u{94d}",
-    "घ\u{943}णोति" IMPERFECT_ACT_1_DU "अघ\u{943}न\u{94d}व",
-    "घ\u{943}णोति" IMPERFECT_ACT_1_PL "अघ\u{943}न\u{94d}म",
-    "घ\u{943}णोति" IMPERFECT_ACT_2_SG "अघ\u{943}नोः",
-    "घ\u{943}णोति" IMPERFECT_ACT_3_SG "अघ\u{943}नोत\u{94d}",
-    "घ\u{943}णोति" IMPERFECT_MID_1_DU "अघ\u{943}न\u{94d}वहि",
-    "घ\u{943}णोति" IMPERFECT_MID_1_PL "अघ\u{943}न\u{94d}महि",
-    "चकर\u{94d}ष" PERFECT_ACT_1_DU "चक\u{943}षिव",
-    "चकर\u{94d}ष" PERFECT_ACT_1_PL "चक\u{943}षिम",
-    "चकर\u{94d}ष" PERFECT_ACT_2_DU "चक\u{943}षथ\u{941}ः",
-    "चकर\u{94d}ष" PERFECT_ACT_2_PL "चक\u{943}ष",
-    "चकर\u{94d}ष" PERFECT_ACT_3_DU "चक\u{943}षत\u{941}ः",
-    "चकर\u{94d}ष" PERFECT_ACT_3_PL "चक\u{943}ष\u{941}ः",
-    "चकर\u{94d}ष" PERFECT_MID_1_SG "चक\u{943}ष\u{947}",
-    "चकर\u{94d}ष" PERFECT_MID_1_DU "चक\u{943}षिवह\u{947}",
-    "चकर\u{94d}ष" PERFECT_MID_1_PL "चक\u{943}षिमह\u{947}",
-    "चकर\u{94d}ष" PERFECT_MID_2_SG "चक\u{943}षिष\u{947}",
-    "चकर\u{94d}ष" PERFECT_MID_2_DU "चक\u{943}षाथ\u{947}",
-    "चकर\u{94d}ष" PERFECT_MID_2_PL "चक\u{943}षिध\u{94d}व\u{947}",
-    "चकर\u{94d}ष" PERFECT_MID_3_SG "चक\u{943}ष\u{947}",
-    "चकर\u{94d}ष" PERFECT_MID_3_DU "चक\u{943}षात\u{947}",
-    "चकर\u{94d}ष" PERFECT_MID_3_PL "चक\u{943}षिर\u{947}",
-    "चकर\u{94d}ष" PARTICIPLE_PERF_ACT "चक\u{943}ष\u{94d}वा\u{902}स\u{94d}",
-    "चकर\u{94d}ष" PARTICIPLE_PERF_MID "चक\u{943}षाण",
-    "चकल\u{94d}प" PERFECT_ACT_1_DU "चाक\u{962}पिव",
-    "चकल\u{94d}प" PERFECT_ACT_1_PL "चाक\u{962}पिम",
-    "चकल\u{94d}प" PERFECT_ACT_2_DU "चाक\u{962}पथ\u{941}ः",
-    "चकल\u{94d}प" PERFECT_ACT_2_PL "चाक\u{962}प",
-    "चकल\u{94d}प" PERFECT_ACT_3_DU "चाक\u{962}पत\u{941}ः",
-    "चकल\u{94d}प" PERFECT_ACT_3_PL "चाक\u{962}प\u{941}ः",
-    "चकल\u{94d}प" PERFECT_MID_1_SG "चाक\u{962}प\u{947}",
-    "चकल\u{94d}प" PERFECT_MID_1_DU "चाक\u{962}पिवह\u{947}",
-    "चकल\u{94d}प" PERFECT_MID_1_PL "चाक\u{962}पिमह\u{947}",
-    "चकल\u{94d}प" PERFECT_MID_2_SG "चाक\u{962}पिष\u{947}",
-    "चकल\u{94d}प" PERFECT_MID_2_DU "चाक\u{962}पाथ\u{947}",
-    "चकल\u{94d}प" PERFECT_MID_2_PL "चाक\u{962}पिध\u{94d}व\u{947}",
-    "चकल\u{94d}प" PERFECT_MID_3_SG "चाक\u{962}प\u{947}",
-    "चकल\u{94d}प" PERFECT_MID_3_DU "चाक\u{962}पात\u{947}",
-    "चकल\u{94d}प" PERFECT_MID_3_PL "चाक\u{962}पिर\u{947}",
-    "चकल\u{94d}प" PARTICIPLE_PERF_ACT "चाक\u{962}प\u{94d}वा\u{902}स\u{94d}",
-    "चकल\u{94d}प" PARTICIPLE_PERF_MID "चाक\u{962}पान",
-    "चकाङ\u{94d}क\u{94d}ष" PARTICIPLE_PERF_MID "चकाङ\u{94d}क\u{94d}षाण",
-    "चखान" PERFECT_ACT_1_SG "चखन",
-    "चखान" PERFECT_ACT_1_DU "चख\u{94d}निव",
-    "चखान" PERFECT_ACT_1_PL "चख\u{94d}निम",
-    "चखान" PERFECT_ACT_2_SG "चखन\u{94d}थ",
-    "चखान" PERFECT_ACT_2_DU "चख\u{94d}नथ\u{941}ः",
-    "चखान" PERFECT_ACT_2_PL "चख\u{94d}न",
-    "चखान" PERFECT_ACT_3_DU "चख\u{94d}नत\u{941}ः",
-    "चखान" PERFECT_ACT_3_PL "चख\u{94d}न\u{941}ः",
-    "चखान" PERFECT_MID_1_SG "चख\u{94d}न\u{947}",
-    "चखान" PERFECT_MID_1_DU "चख\u{94d}निवह\u{947}",
-    "चखान" PERFECT_MID_1_PL "चख\u{94d}निमह\u{947}",
-    "चखान" PERFECT_MID_2_SG "चख\u{94d}निष\u{947}",
-    "चखान" PERFECT_MID_2_DU "चख\u{94d}नाथ\u{947}",
-    "चखान" PERFECT_MID_2_PL "चख\u{94d}निध\u{94d}व\u{947}",
-    "चखान" PERFECT_MID_3_SG "चख\u{94d}न\u{947}",
-    "चखान" PERFECT_MID_3_DU "चख\u{94d}नात\u{947}",
-    "चखान" PERFECT_MID_3_PL "चख\u{94d}निर\u{947}",
-    "चखान" PARTICIPLE_PERF_ACT "चख\u{94d}निवा\u{902}स\u{94d}",
-    "चखान" PARTICIPLE_PERF_MID "चख\u{94d}नान",
-    "चचक\u{94d}ष" PARTICIPLE_PERF_MID "चचक\u{94d}षाण",
-    "चचार" PERFECT_ACT_1_DU "च\u{947}रिव",
-    "चचार" PERFECT_ACT_1_PL "च\u{947}रिम",
-    "चचार" PERFECT_ACT_2_DU "च\u{947}रथ\u{941}ः",
-    "चचार" PERFECT_ACT_2_PL "च\u{947}र",
-    "चचार" PERFECT_ACT_3_DU "च\u{947}रत\u{941}ः",
-    "चचार" PERFECT_ACT_3_PL "च\u{947}र\u{941}ः",
-    "चचार" PERFECT_MID_1_SG "च\u{947}र\u{947}",
-    "चचार" PERFECT_MID_1_DU "च\u{947}रिवह\u{947}",
-    "चचार" PERFECT_MID_1_PL "च\u{947}रिमह\u{947}",
-    "चचार" PERFECT_MID_2_SG "च\u{947}रिष\u{947}",
-    "चचार" PERFECT_MID_2_DU "च\u{947}राथ\u{947}",
-    "चचार" PERFECT_MID_2_PL "च\u{947}रिध\u{94d}व\u{947}",
-    "चचार" PERFECT_MID_3_SG "च\u{947}र\u{947}",
-    "चचार" PERFECT_MID_3_DU "च\u{947}रात\u{947}",
-    "चचार" PERFECT_MID_3_PL "च\u{947}रिर\u{947}",
-    "चचार" PARTICIPLE_PERF_ACT "च\u{947}रिवा\u{902}स\u{94d}",
-    "चचार" PARTICIPLE_PERF_MID "च\u{947}राण",
-    "चष\u{94d}ट\u{947}" IND_MID_1_SG "चक\u{94d}ष\u{947}",
-    "चष\u{94d}ट\u{947}" IND_MID_1_DU "चक\u{94d}ष\u{94d}वह\u{947}",
-    "चष\u{94d}ट\u{947}" IND_MID_1_PL "चक\u{94d}ष\u{94d}मह\u{947}",
-    "चष\u{94d}ट\u{947}" IND_MID_2_SG "चक\u{94d}ष\u{947}",
-    "चष\u{94d}ट\u{947}" IND_MID_2_DU "चक\u{94d}षाथ\u{947}",
-    "चष\u{94d}ट\u{947}" IND_MID_2_PL "चड\u{94d}ढ\u{94d}व\u{947}",
-    "चष\u{94d}ट\u{947}" IND_MID_3_SG "चष\u{94d}ट\u{947}",
-    "चष\u{94d}ट\u{947}" IND_MID_3_DU "चक\u{94d}षात\u{947}",
-    "चष\u{94d}ट\u{947}" IND_MID_3_PL "चक\u{94d}षत\u{947}",
-    "चष\u{94d}ट\u{947}" IMP_MID_1_SG "चक\u{94d}ष\u{948}",
-    "चष\u{94d}ट\u{947}" IMP_MID_1_DU "चक\u{94d}षावह\u{948}",
-    "चष\u{94d}ट\u{947}" IMP_MID_1_PL "चक\u{94d}षामह\u{948}",
-    "चष\u{94d}ट\u{947}" IMP_MID_2_SG "चक\u{94d}ष\u{94d}व",
-    "चष\u{94d}ट\u{947}" IMP_MID_2_DU "चक\u{94d}षाथाम\u{94d}",
-    "चष\u{94d}ट\u{947}" IMP_MID_2_PL "चड\u{94d}ढ\u{94d}वम\u{94d}",
-    "चष\u{94d}ट\u{947}" IMP_MID_3_SG "चष\u{94d}टाम\u{94d}",
-    "चष\u{94d}ट\u{947}" IMP_MID_3_DU "चक\u{94d}षाताम\u{94d}",
-    "चष\u{94d}ट\u{947}" IMP_MID_3_PL "चक\u{94d}षताम\u{94d}",
-    "चष\u{94d}ट\u{947}" OPT_MID_1_SG "चक\u{94d}षीय",
-    "चष\u{94d}ट\u{947}" OPT_MID_1_DU "चक\u{94d}षीवहि",
-    "चष\u{94d}ट\u{947}" OPT_MID_1_PL "चक\u{94d}षीमहि",
-    "चष\u{94d}ट\u{947}" OPT_MID_2_SG "चक\u{94d}षीथाः",
-    "चष\u{94d}ट\u{947}" OPT_MID_2_DU "चक\u{94d}षीयाथाम\u{94d}",
-    "चष\u{94d}ट\u{947}" OPT_MID_2_PL "चक\u{94d}षीध\u{94d}वम\u{94d}",
-    "चष\u{94d}ट\u{947}" OPT_MID_3_SG "चक\u{94d}षीत",
-    "चष\u{94d}ट\u{947}" OPT_MID_3_DU "चक\u{94d}षीयाताम\u{94d}",
-    "चष\u{94d}ट\u{947}" OPT_MID_3_PL "चक\u{94d}षीरन\u{94d}",
-    "चष\u{94d}ट\u{947}" SUBJ_MID_1_SG "चक\u{94d}ष\u{948}",
-    "चष\u{94d}ट\u{947}" SUBJ_MID_1_DU "चक\u{94d}षावह\u{948}",
-    "चष\u{94d}ट\u{947}" SUBJ_MID_1_PL "चक\u{94d}षामह\u{948}",
-    "चष\u{94d}ट\u{947}" SUBJ_MID_2_SG "चक\u{94d}षस\u{947}",
-    "चष\u{94d}ट\u{947}" SUBJ_MID_2_DU "चक\u{94d}ष\u{948}थ\u{947}",
-    "चष\u{94d}ट\u{947}" SUBJ_MID_2_PL "चक\u{94d}षध\u{94d}व\u{947}",
-    "चष\u{94d}ट\u{947}" SUBJ_MID_3_SG "चक\u{94d}षत\u{947}",
-    "चष\u{94d}ट\u{947}" SUBJ_MID_3_DU "चक\u{94d}ष\u{948}त\u{947}",
-    "चष\u{94d}ट\u{947}" SUBJ_MID_3_PL "चक\u{94d}षन\u{94d}त",
-    "चष\u{94d}ट\u{947}" IMPERFECT_MID_1_SG "अचक\u{94d}षि",
-    "चष\u{94d}ट\u{947}" IMPERFECT_MID_1_DU "अचक\u{94d}ष\u{94d}वहि",
-    "चष\u{94d}ट\u{947}" IMPERFECT_MID_1_PL "अचक\u{94d}ष\u{94d}महि",
-    "चष\u{94d}ट\u{947}" IMPERFECT_MID_2_SG "अचष\u{94d}ठाः",
-    "चष\u{94d}ट\u{947}" IMPERFECT_MID_2_DU "अचक\u{94d}षाथाम\u{94d}",
-    "चष\u{94d}ट\u{947}" IMPERFECT_MID_2_PL "अचड\u{94d}ढ\u{94d}वम\u{94d}",
-    "चष\u{94d}ट\u{947}" IMPERFECT_MID_3_SG "अचष\u{94d}ट",
-    "चष\u{94d}ट\u{947}" IMPERFECT_MID_3_DU "अचक\u{94d}षाताम\u{94d}",
-    "चष\u{94d}ट\u{947}" IMPERFECT_MID_3_PL "अचक\u{94d}षत",
-    "चष\u{94d}ट\u{947}" PARTICIPLE_PRES_MID "चक\u{94d}षाण",
-    "चिक\u{947}ति" IND_ACT_1_SG "चिक\u{947}मि",
-    "चिक\u{947}ति" IND_ACT_1_DU "चिकिवः",
-    "चिक\u{947}ति" IND_ACT_1_PL "चिकिमः",
-    "चिक\u{947}ति" IND_ACT_2_SG "चिक\u{947}षि",
-    "चिक\u{947}ति" IND_ACT_2_DU "चिकिथः",
-    "चिक\u{947}ति" IND_ACT_2_PL "चिकिथ",
-    "चिक\u{947}ति" IND_ACT_3_DU "चिकितः",
-    "चिक\u{947}ति" IND_ACT_3_PL "चिक\u{94d}यति",
-    "चिक\u{947}ति" IND_MID_1_SG "चिक\u{94d}य\u{947}",
-    "चिक\u{947}ति" IND_MID_1_DU "चिकिवह\u{947}",
-    "चिक\u{947}ति" IND_MID_1_PL "चिकिमह\u{947}",
-    "चिक\u{947}ति" IND_MID_2_SG "चिकिष\u{947}",
-    "चिक\u{947}ति" IND_MID_2_DU "चिक\u{94d}याथ\u{947}",
-    "चिक\u{947}ति" IND_MID_2_PL "चिकिध\u{94d}व\u{947}",
-    "चिक\u{947}ति" IND_MID_3_SG "चिकित\u{947}",
-    "चिक\u{947}ति" IND_MID_3_DU "चिक\u{94d}यात\u{947}",
-    "चिक\u{947}ति" IND_MID_3_PL "चिक\u{94d}यत\u{947}",
-    "चिक\u{947}ति" IMP_ACT_1_SG "चिकयानि",
-    "चिक\u{947}ति" IMP_ACT_1_DU "चिकयाव",
-    "चिक\u{947}ति" IMP_ACT_1_PL "चिकयाम",
-    "चिक\u{947}ति" IMP_ACT_2_SG "चिकिहि",
-    "चिक\u{947}ति" IMP_ACT_2_DU "चिकितम\u{94d}",
-    "चिक\u{947}ति" IMP_ACT_2_PL "चिकित",
-    "चिक\u{947}ति" IMP_ACT_3_DU "चिकिताम\u{94d}",
-    "चिक\u{947}ति" IMP_ACT_3_PL "चिक\u{94d}यत\u{941}",
-    "चिक\u{947}ति" IMP_MID_1_SG "चिकय\u{948}",
-    "चिक\u{947}ति" IMP_MID_1_DU "चिकयावह\u{948}",
-    "चिक\u{947}ति" IMP_MID_1_PL "चिकयामह\u{948}",
-    "चिक\u{947}ति" IMP_MID_2_SG "चिकिष\u{94d}व",
-    "चिक\u{947}ति" IMP_MID_2_DU "चिक\u{94d}याथाम\u{94d}",
-    "चिक\u{947}ति" IMP_MID_2_PL "चिकिध\u{94d}वम\u{94d}",
-    "चिक\u{947}ति" IMP_MID_3_SG "चिकिताम\u{94d}",
-    "चिक\u{947}ति" IMP_MID_3_DU "चिक\u{94d}याताम\u{94d}",
-    "चिक\u{947}ति" IMP_MID_3_PL "चिक\u{94d}यताम\u{94d}",
-    "चिक\u{947}ति" OPT_ACT_1_SG "चिकियाम\u{94d}",
-    "चिक\u{947}ति" OPT_ACT_1_DU "चिकियाव",
-    "चिक\u{947}ति" OPT_ACT_1_PL "चिकियाम",
-    "चिक\u{947}ति" OPT_ACT_2_SG "चिकियाः",
-    "चिक\u{947}ति" OPT_ACT_2_DU "चिकियातम\u{94d}",
-    "चिक\u{947}ति" OPT_ACT_2_PL "चिकियात",
-    "चिक\u{947}ति" OPT_ACT_3_SG "चिकियात\u{94d}",
-    "चिक\u{947}ति" OPT_ACT_3_DU "चिकियाताम\u{94d}",
-    "चिक\u{947}ति" OPT_ACT_3_PL "चिकिय\u{941}ः",
-    "चिक\u{947}ति" OPT_MID_1_SG "चिक\u{94d}यीय",
-    "चिक\u{947}ति" OPT_MID_1_DU "चिक\u{94d}यीवहि",
-    "चिक\u{947}ति" OPT_MID_1_PL "चिक\u{94d}यीमहि",
-    "चिक\u{947}ति" OPT_MID_2_SG "चिक\u{94d}यीथाः",
-    "चिक\u{947}ति" OPT_MID_2_DU "चिक\u{94d}यीयाथाम\u{94d}",
-    "चिक\u{947}ति" OPT_MID_2_PL "चिक\u{94d}यीध\u{94d}वम\u{94d}",
-    "चिक\u{947}ति" OPT_MID_3_SG "चिक\u{94d}यीत",
-    "चिक\u{947}ति" OPT_MID_3_DU "चिक\u{94d}यीयाताम\u{94d}",
-    "चिक\u{947}ति" OPT_MID_3_PL "चिक\u{94d}यीरन\u{94d}",
-    "चिक\u{947}ति" SUBJ_ACT_1_SG "चिकयानि",
-    "चिक\u{947}ति" SUBJ_ACT_1_DU "चिकयाव",
-    "चिक\u{947}ति" SUBJ_ACT_1_PL "चिकयाम",
-    "चिक\u{947}ति" SUBJ_ACT_2_SG "चिकयः",
-    "चिक\u{947}ति" SUBJ_ACT_2_DU "चिकयथः",
-    "चिक\u{947}ति" SUBJ_ACT_2_PL "चिकयथ",
-    "चिक\u{947}ति" SUBJ_ACT_3_SG "चिकयत\u{94d}",
-    "चिक\u{947}ति" SUBJ_ACT_3_DU "चिकयतः",
-    "चिक\u{947}ति" SUBJ_ACT_3_PL "चिकयन\u{94d}",
-    "चिक\u{947}ति" SUBJ_MID_1_SG "चिकय\u{948}",
-    "चिक\u{947}ति" SUBJ_MID_1_DU "चिकयावह\u{948}",
-    "चिक\u{947}ति" SUBJ_MID_1_PL "चिकयामह\u{948}",
-    "चिक\u{947}ति" SUBJ_MID_2_SG "चिकयस\u{947}",
-    "चिक\u{947}ति" SUBJ_MID_2_DU "चिकय\u{948}थ\u{947}",
-    "चिक\u{947}ति" SUBJ_MID_2_PL "चिकयध\u{94d}व\u{947}",
-    "चिक\u{947}ति" SUBJ_MID_3_SG "चिकयत\u{947}",
-    "चिक\u{947}ति" SUBJ_MID_3_DU "चिकय\u{948}त\u{947}",
-    "चिक\u{947}ति" SUBJ_MID_3_PL "चिकयन\u{94d}त",
-    "चिक\u{947}ति" IMPERFECT_ACT_1_SG "अचिकयम\u{94d}",
-    "चिक\u{947}ति" IMPERFECT_ACT_1_DU "अचिकिव",
-    "चिक\u{947}ति" IMPERFECT_ACT_1_PL "अचिकिम",
-    "चिक\u{947}ति" IMPERFECT_ACT_2_DU "अचिकितम\u{94d}",
-    "चिक\u{947}ति" IMPERFECT_ACT_2_PL "अचिकित",
-    "चिक\u{947}ति" IMPERFECT_ACT_3_DU "अचिकिताम\u{94d}",
-    "चिक\u{947}ति" IMPERFECT_ACT_3_PL "अचिकय\u{941}ः",
-    "चिक\u{947}ति" IMPERFECT_MID_1_SG "अचिक\u{94d}यि",
-    "चिक\u{947}ति" IMPERFECT_MID_1_DU "अचिकिवहि",
-    "चिक\u{947}ति" IMPERFECT_MID_1_PL "अचिकिमहि",
-    "चिक\u{947}ति" IMPERFECT_MID_2_SG "अचिकिथाः",
-    "चिक\u{947}ति" IMPERFECT_MID_2_DU "अचिक\u{94d}याथाम\u{94d}",
-    "चिक\u{947}ति" IMPERFECT_MID_2_PL "अचिकिध\u{94d}वम\u{94d}",
-    "चिक\u{947}ति" IMPERFECT_MID_3_SG "अचिकित",
-    "चिक\u{947}ति" IMPERFECT_MID_3_DU "अचिक\u{94d}याताम\u{94d}",
-    "चिक\u{947}ति" IMPERFECT_MID_3_PL "अचिक\u{94d}यत",
-    "चिक\u{947}ति" PARTICIPLE_PRES_ACT "चिक\u{94d}यत\u{94d}",
-    "चिक\u{947}ति" PARTICIPLE_PRES_MID "चिक\u{94d}यान",
-    "चिच\u{94d}छ\u{947}द" PERFECT_ACT_1_DU "चिच\u{94d}छिदिव",
-    "चिच\u{94d}छ\u{947}द" PERFECT_ACT_1_PL "चिच\u{94d}छिदिम",
-    "चिच\u{94d}छ\u{947}द" PERFECT_ACT_2_DU "चिच\u{94d}छिदथ\u{941}ः",
-    "चिच\u{94d}छ\u{947}द" PERFECT_ACT_2_PL "चिच\u{94d}छिद",
-    "चिच\u{94d}छ\u{947}द" PERFECT_ACT_3_DU "चिच\u{94d}छिदत\u{941}ः",
-    "चिच\u{94d}छ\u{947}द" PERFECT_ACT_3_PL "चिच\u{94d}छिद\u{941}ः",
-    "चिच\u{94d}छ\u{947}द" PERFECT_MID_1_SG "चिच\u{94d}छिद\u{947}",
-    "चिच\u{94d}छ\u{947}द" PERFECT_MID_1_DU "चिच\u{94d}छिदिवह\u{947}",
-    "चिच\u{94d}छ\u{947}द" PERFECT_MID_1_PL "चिच\u{94d}छिदिमह\u{947}",
-    "चिच\u{94d}छ\u{947}द" PERFECT_MID_2_SG "चिच\u{94d}छिदिष\u{947}",
-    "चिच\u{94d}छ\u{947}द" PERFECT_MID_2_DU "चिच\u{94d}छिदाथ\u{947}",
-    "चिच\u{94d}छ\u{947}द" PERFECT_MID_2_PL "चिच\u{94d}छिदिध\u{94d}व\u{947}",
-    "चिच\u{94d}छ\u{947}द" PERFECT_MID_3_SG "चिच\u{94d}छिद\u{947}",
-    "चिच\u{94d}छ\u{947}द" PERFECT_MID_3_DU "चिच\u{94d}छिदात\u{947}",
-    "चिच\u{94d}छ\u{947}द" PERFECT_MID_3_PL "चिच\u{94d}छिदिर\u{947}",
-    "चिच\u{94d}छ\u{947}द" PARTICIPLE_PERF_ACT "चिच\u{94d}छिद\u{94d}वा\u{902}स\u{94d}",
-    "चिच\u{94d}छ\u{947}द" PARTICIPLE_PERF_MID "चिच\u{94d}छिदान",
-    "छिक\u{94d}कति" IMPERFECT_ACT_1_SG "अच\u{94d}छिक\u{94d}कम\u{94d}",
-    "छिक\u{94d}कति" IMPERFECT_ACT_1_DU "अच\u{94d}छिक\u{94d}काव",
-    "छिक\u{94d}कति" IMPERFECT_ACT_1_PL "अच\u{94d}छिक\u{94d}काम",
-    "छिक\u{94d}कति" IMPERFECT_ACT_2_SG "अच\u{94d}छिक\u{94d}कः",
-    "छिक\u{94d}कति" IMPERFECT_ACT_2_DU "अच\u{94d}छिक\u{94d}कतम\u{94d}",
-    "छिक\u{94d}कति" IMPERFECT_ACT_2_PL "अच\u{94d}छिक\u{94d}कत",
-    "छिक\u{94d}कति" IMPERFECT_ACT_3_SG "अच\u{94d}छिक\u{94d}कत\u{94d}",
-    "छिक\u{94d}कति" IMPERFECT_ACT_3_DU "अच\u{94d}छिक\u{94d}कताम\u{94d}",
-    "छिक\u{94d}कति" IMPERFECT_ACT_3_PL "अच\u{94d}छिक\u{94d}कन\u{94d}",
-    "छिक\u{94d}कति" IMPERFECT_MID_1_SG "अच\u{94d}छिक\u{94d}क\u{947}",
-    "छिक\u{94d}कति" IMPERFECT_MID_1_DU "अच\u{94d}छिक\u{94d}कावहि",
-    "छिक\u{94d}कति" IMPERFECT_MID_1_PL "अच\u{94d}छिक\u{94d}कामहि",
-    "छिक\u{94d}कति" IMPERFECT_MID_2_SG "अच\u{94d}छिक\u{94d}कथाः",
-    "छिक\u{94d}कति" IMPERFECT_MID_2_DU "अच\u{94d}छिक\u{94d}क\u{947}थाम\u{94d}",
-    "छिक\u{94d}कति" IMPERFECT_MID_2_PL "अच\u{94d}छिक\u{94d}कध\u{94d}वम\u{94d}",
-    "छिक\u{94d}कति" IMPERFECT_MID_3_SG "अच\u{94d}छिक\u{94d}कत",
-    "छिक\u{94d}कति" IMPERFECT_MID_3_DU "अच\u{94d}छिक\u{94d}क\u{947}ताम\u{94d}",
-    "छिक\u{94d}कति" IMPERFECT_MID_3_PL "अच\u{94d}छिक\u{94d}कन\u{94d}त",
-    "छिनत\u{94d}ति" IND_ACT_1_SG "छिनद\u{94d}मि",
-    "छिनत\u{94d}ति" IND_ACT_1_DU "छिन\u{94d}द\u{94d}वः",
-    "छिनत\u{94d}ति" IND_ACT_1_PL "छिन\u{94d}द\u{94d}मः",
-    "छिनत\u{94d}ति" IND_ACT_2_DU "छिन\u{94d}त\u{94d}थः",
-    "छिनत\u{94d}ति" IND_ACT_2_PL "छिन\u{94d}त\u{94d}थ",
-    "छिनत\u{94d}ति" IND_ACT_3_DU "छिन\u{94d}त\u{94d}तः",
-    "छिनत\u{94d}ति" IND_ACT_3_PL "छिन\u{94d}दन\u{94d}ति",
-    "छिनत\u{94d}ति" IND_MID_1_SG "छिन\u{94d}द\u{947}",
-    "छिनत\u{94d}ति" IND_MID_1_DU "छिन\u{94d}द\u{94d}वह\u{947}",
-    "छिनत\u{94d}ति" IND_MID_1_PL "छिन\u{94d}द\u{94d}मह\u{947}",
-    "छिनत\u{94d}ति" IND_MID_2_SG "छिन\u{94d}त\u{94d}स\u{947}",
-    "छिनत\u{94d}ति" IND_MID_2_DU "छिन\u{94d}दाथ\u{947}",
-    "छिनत\u{94d}ति" IND_MID_2_PL "छिन\u{94d}द\u{94d}ध\u{94d}व\u{947}",
-    "छिनत\u{94d}ति" IND_MID_3_SG "छिन\u{94d}त\u{94d}त\u{947}",
-    "छिनत\u{94d}ति" IND_MID_3_DU "छिन\u{94d}दात\u{947}",
-    "छिनत\u{94d}ति" IND_MID_3_PL "छिन\u{94d}दत\u{947}",
-    "छिनत\u{94d}ति" IMP_ACT_1_SG "छिनदानि",
-    "छिनत\u{94d}ति" IMP_ACT_1_DU "छिनदाव",
-    "छिनत\u{94d}ति" IMP_ACT_1_PL "छिनदाम",
-    "छिनत\u{94d}ति" IMP_ACT_2_SG "छिन\u{94d}द\u{94d}धि",
-    "छिनत\u{94d}ति" IMP_ACT_2_DU "छिन\u{94d}त\u{94d}तम\u{94d}",
-    "छिनत\u{94d}ति" IMP_ACT_2_PL "छिन\u{94d}त\u{94d}त",
-    "छिनत\u{94d}ति" IMP_ACT_3_DU "छिन\u{94d}त\u{94d}ताम\u{94d}",
-    "छिनत\u{94d}ति" IMP_ACT_3_PL "छिन\u{94d}दन\u{94d}त\u{941}",
-    "छिनत\u{94d}ति" IMP_MID_1_SG "छिनद\u{948}",
-    "छिनत\u{94d}ति" IMP_MID_1_DU "छिनदावह\u{948}",
-    "छिनत\u{94d}ति" IMP_MID_1_PL "छिनदामह\u{948}",
-    "छिनत\u{94d}ति" IMP_MID_2_SG "छिन\u{94d}त\u{94d}स\u{94d}व",
-    "छिनत\u{94d}ति" IMP_MID_2_DU "छिन\u{94d}दाथाम\u{94d}",
-    "छिनत\u{94d}ति" IMP_MID_2_PL "छिन\u{94d}द\u{94d}ध\u{94d}वम\u{94d}",
-    "छिनत\u{94d}ति" IMP_MID_3_SG "छिन\u{94d}त\u{94d}ताम\u{94d}",
-    "छिनत\u{94d}ति" IMP_MID_3_DU "छिन\u{94d}दाताम\u{94d}",
-    "छिनत\u{94d}ति" IMP_MID_3_PL "छिन\u{94d}दताम\u{94d}",
-    "छिनत\u{94d}ति" OPT_ACT_1_SG "छिन\u{94d}द\u{94d}याम\u{94d}",
-    "छिनत\u{94d}ति" OPT_ACT_1_DU "छिन\u{94d}द\u{94d}याव",
-    "छिनत\u{94d}ति" OPT_ACT_1_PL "छिन\u{94d}द\u{94d}याम",
-    "छिनत\u{94d}ति" OPT_ACT_2_SG "छिन\u{94d}द\u{94d}याः",
-    "छिनत\u{94d}ति" OPT_ACT_2_DU "छिन\u{94d}द\u{94d}यातम\u{94d}",
-    "छिनत\u{94d}ति" OPT_ACT_2_PL "छिन\u{94d}द\u{94d}यात",
-    "छिनत\u{94d}ति" OPT_ACT_3_SG "छिन\u{94d}द\u{94d}यात\u{94d}",
-    "छिनत\u{94d}ति" OPT_ACT_3_DU "छिन\u{94d}द\u{94d}याताम\u{94d}",
-    "छिनत\u{94d}ति" OPT_ACT_3_PL "छिन\u{94d}द\u{94d}य\u{941}ः",
-    "छिनत\u{94d}ति" OPT_MID_1_SG "छिन\u{94d}दीय",
-    "छिनत\u{94d}ति" OPT_MID_1_DU "छिन\u{94d}दीवहि",
-    "छिनत\u{94d}ति" OPT_MID_1_PL "छिन\u{94d}दीमहि",
-    "छिनत\u{94d}ति" OPT_MID_2_SG "छिन\u{94d}दीथाः",
-    "छिनत\u{94d}ति" OPT_MID_2_DU "छिन\u{94d}दीयाथाम\u{94d}",
-    "छिनत\u{94d}ति" OPT_MID_2_PL "छिन\u{94d}दीध\u{94d}वम\u{94d}",
-    "छिनत\u{94d}ति" OPT_MID_3_SG "छिन\u{94d}दीत",
-    "छिनत\u{94d}ति" OPT_MID_3_DU "छिन\u{94d}दीयाताम\u{94d}",
-    "छिनत\u{94d}ति" OPT_MID_3_PL "छिन\u{94d}दीरन\u{94d}",
-    "छिनत\u{94d}ति" SUBJ_ACT_1_SG "छिनदानि",
-    "छिनत\u{94d}ति" SUBJ_ACT_1_DU "छिनदाव",
-    "छिनत\u{94d}ति" SUBJ_ACT_1_PL "छिनदाम",
-    "छिनत\u{94d}ति" SUBJ_ACT_2_SG "छिनदः",
-    "छिनत\u{94d}ति" SUBJ_ACT_2_DU "छिनदथः",
-    "छिनत\u{94d}ति" SUBJ_ACT_2_PL "छिनदथ",
-    "छिनत\u{94d}ति" SUBJ_ACT_3_SG "छिनदत\u{94d}",
-    "छिनत\u{94d}ति" SUBJ_ACT_3_DU "छिनदतः",
-    "छिनत\u{94d}ति" SUBJ_ACT_3_PL "छिनदन\u{94d}",
-    "छिनत\u{94d}ति" SUBJ_MID_1_SG "छिनद\u{948}",
-    "छिनत\u{94d}ति" SUBJ_MID_1_DU "छिनदावह\u{948}",
-    "छिनत\u{94d}ति" SUBJ_MID_1_PL "छिनदामह\u{948}",
-    "छिनत\u{94d}ति" SUBJ_MID_2_SG "छिनदस\u{947}",
-    "छिनत\u{94d}ति" SUBJ_MID_2_DU "छिनद\u{948}थ\u{947}",
-    "छिनत\u{94d}ति" SUBJ_MID_2_PL "छिनदध\u{94d}व\u{947}",
-    "छिनत\u{94d}ति" SUBJ_MID_3_SG "छिनदत\u{947}",
-    "छिनत\u{94d}ति" SUBJ_MID_3_DU "छिनद\u{948}त\u{947}",
-    "छिनत\u{94d}ति" SUBJ_MID_3_PL "छिनदन\u{94d}त",
-    "छिनत\u{94d}ति" IMPERFECT_ACT_1_SG "अच\u{94d}छिनदम\u{94d}",
-    "छिनत\u{94d}ति" IMPERFECT_ACT_1_DU "अच\u{94d}छिन\u{94d}द\u{94d}व",
-    "छिनत\u{94d}ति" IMPERFECT_ACT_1_PL "अच\u{94d}छिन\u{94d}द\u{94d}म",
-    "छिनत\u{94d}ति" IMPERFECT_ACT_2_SG "अच\u{94d}छिनत\u{94d}",
-    "छिनत\u{94d}ति" IMPERFECT_ACT_2_DU "अच\u{94d}छिन\u{94d}त\u{94d}तम\u{94d}",
-    "छिनत\u{94d}ति" IMPERFECT_ACT_2_PL "अच\u{94d}छिन\u{94d}त\u{94d}त",
-    "छिनत\u{94d}ति" IMPERFECT_ACT_3_SG "अच\u{94d}छिनत\u{94d}",
-    "छिनत\u{94d}ति" IMPERFECT_ACT_3_DU "अच\u{94d}छिन\u{94d}त\u{94d}ताम\u{94d}",
-    "छिनत\u{94d}ति" IMPERFECT_ACT_3_PL "अच\u{94d}छिन\u{94d}दन\u{94d}",
-    "छिनत\u{94d}ति" IMPERFECT_MID_1_SG "अच\u{94d}छिन\u{94d}दि",
-    "छिनत\u{94d}ति" IMPERFECT_MID_1_DU "अच\u{94d}छिन\u{94d}द\u{94d}वहि",
-    "छिनत\u{94d}ति" IMPERFECT_MID_1_PL "अच\u{94d}छिन\u{94d}द\u{94d}महि",
-    "छिनत\u{94d}ति" IMPERFECT_MID_2_SG "अच\u{94d}छिन\u{94d}त\u{94d}थाः",
-    "छिनत\u{94d}ति" IMPERFECT_MID_2_DU "अच\u{94d}छिन\u{94d}दाथाम\u{94d}",
-    "छिनत\u{94d}ति" IMPERFECT_MID_2_PL "अच\u{94d}छिन\u{94d}द\u{94d}ध\u{94d}वम\u{94d}",
-    "छिनत\u{94d}ति" IMPERFECT_MID_3_SG "अच\u{94d}छिन\u{94d}त\u{94d}त",
-    "छिनत\u{94d}ति" IMPERFECT_MID_3_DU "अच\u{94d}छिन\u{94d}दाताम\u{94d}",
-    "छिनत\u{94d}ति" IMPERFECT_MID_3_PL "अच\u{94d}छिन\u{94d}दत",
-    "छिनत\u{94d}ति" PARTICIPLE_PRES_ACT "छिन\u{94d}दत\u{94d}",
-    "छिनत\u{94d}ति" PARTICIPLE_PRES_MID "छिन\u{94d}दान",
-    "छ\u{943}णत\u{94d}ति" IND_ACT_1_SG "छ\u{943}णद\u{94d}मि",
-    "छ\u{943}णत\u{94d}ति" IND_ACT_1_DU "छ\u{943}न\u{94d}द\u{94d}वः",
-    "छ\u{943}णत\u{94d}ति" IND_ACT_1_PL "छ\u{943}न\u{94d}द\u{94d}मः",
-    "छ\u{943}णत\u{94d}ति" IND_ACT_2_DU "छ\u{943}न\u{94d}त\u{94d}थः",
-    "छ\u{943}णत\u{94d}ति" IND_ACT_2_PL "छ\u{943}न\u{94d}त\u{94d}थ",
-    "छ\u{943}णत\u{94d}ति" IND_ACT_3_DU "छ\u{943}न\u{94d}त\u{94d}तः",
-    "छ\u{943}णत\u{94d}ति" IND_ACT_3_PL "छ\u{943}न\u{94d}दन\u{94d}ति",
-    "छ\u{943}णत\u{94d}ति" IND_MID_1_SG "छ\u{943}न\u{94d}द\u{947}",
-    "छ\u{943}णत\u{94d}ति" IND_MID_1_DU "छ\u{943}न\u{94d}द\u{94d}वह\u{947}",
-    "छ\u{943}णत\u{94d}ति" IND_MID_1_PL "छ\u{943}न\u{94d}द\u{94d}मह\u{947}",
-    "छ\u{943}णत\u{94d}ति" IND_MID_2_SG "छ\u{943}न\u{94d}त\u{94d}स\u{947}",
-    "छ\u{943}णत\u{94d}ति" IND_MID_2_DU "छ\u{943}न\u{94d}दाथ\u{947}",
-    "छ\u{943}णत\u{94d}ति" IND_MID_2_PL "छ\u{943}न\u{94d}द\u{94d}ध\u{94d}व\u{947}",
-    "छ\u{943}णत\u{94d}ति" IND_MID_3_SG "छ\u{943}न\u{94d}त\u{94d}त\u{947}",
-    "छ\u{943}णत\u{94d}ति" IND_MID_3_DU "छ\u{943}न\u{94d}दात\u{947}",
-    "छ\u{943}णत\u{94d}ति" IND_MID_3_PL "छ\u{943}न\u{94d}दत\u{947}",
-    "छ\u{943}णत\u{94d}ति" IMP_ACT_1_SG "छ\u{943}णदानि",
-    "छ\u{943}णत\u{94d}ति" IMP_ACT_1_DU "छ\u{943}णदाव",
-    "छ\u{943}णत\u{94d}ति" IMP_ACT_1_PL "छ\u{943}णदाम",
-    "छ\u{943}णत\u{94d}ति" IMP_ACT_2_SG "छ\u{943}न\u{94d}द\u{94d}धि",
-    "छ\u{943}णत\u{94d}ति" IMP_ACT_2_DU "छ\u{943}न\u{94d}त\u{94d}तम\u{94d}",
-    "छ\u{943}णत\u{94d}ति" IMP_ACT_2_PL "छ\u{943}न\u{94d}त\u{94d}त",
-    "छ\u{943}णत\u{94d}ति" IMP_ACT_3_DU "छ\u{943}न\u{94d}त\u{94d}ताम\u{94d}",
-    "छ\u{943}णत\u{94d}ति" IMP_ACT_3_PL "छ\u{943}न\u{94d}दन\u{94d}त\u{941}",
-    "छ\u{943}णत\u{94d}ति" IMP_MID_1_SG "छ\u{943}णद\u{948}",
-    "छ\u{943}णत\u{94d}ति" IMP_MID_1_DU "छ\u{943}णदावह\u{948}",
-    "छ\u{943}णत\u{94d}ति" IMP_MID_1_PL "छ\u{943}णदामह\u{948}",
-    "छ\u{943}णत\u{94d}ति" IMP_MID_2_SG "छ\u{943}न\u{94d}त\u{94d}स\u{94d}व",
-    "छ\u{943}णत\u{94d}ति" IMP_MID_2_DU "छ\u{943}न\u{94d}दाथाम\u{94d}",
-    "छ\u{943}णत\u{94d}ति" IMP_MID_2_PL "छ\u{943}न\u{94d}द\u{94d}ध\u{94d}वम\u{94d}",
-    "छ\u{943}णत\u{94d}ति" IMP_MID_3_SG "छ\u{943}न\u{94d}त\u{94d}ताम\u{94d}",
-    "छ\u{943}णत\u{94d}ति" IMP_MID_3_DU "छ\u{943}न\u{94d}दाताम\u{94d}",
-    "छ\u{943}णत\u{94d}ति" IMP_MID_3_PL "छ\u{943}न\u{94d}दताम\u{94d}",
-    "छ\u{943}णत\u{94d}ति" OPT_ACT_1_SG "छ\u{943}न\u{94d}द\u{94d}याम\u{94d}",
-    "छ\u{943}णत\u{94d}ति" OPT_ACT_1_DU "छ\u{943}न\u{94d}द\u{94d}याव",
-    "छ\u{943}णत\u{94d}ति" OPT_ACT_1_PL "छ\u{943}न\u{94d}द\u{94d}याम",
-    "छ\u{943}णत\u{94d}ति" OPT_ACT_2_SG "छ\u{943}न\u{94d}द\u{94d}याः",
-    "छ\u{943}णत\u{94d}ति" OPT_ACT_2_DU "छ\u{943}न\u{94d}द\u{94d}यातम\u{94d}",
-    "छ\u{943}णत\u{94d}ति" OPT_ACT_2_PL "छ\u{943}न\u{94d}द\u{94d}यात",
-    "छ\u{943}णत\u{94d}ति" OPT_ACT_3_SG "छ\u{943}न\u{94d}द\u{94d}यात\u{94d}",
-    "छ\u{943}णत\u{94d}ति" OPT_ACT_3_DU "छ\u{943}न\u{94d}द\u{94d}याताम\u{94d}",
-    "छ\u{943}णत\u{94d}ति" OPT_ACT_3_PL "छ\u{943}न\u{94d}द\u{94d}य\u{941}ः",
-    "छ\u{943}णत\u{94d}ति" OPT_MID_1_SG "छ\u{943}न\u{94d}दीय",
-    "छ\u{943}णत\u{94d}ति" OPT_MID_1_DU "छ\u{943}न\u{94d}दीवहि",
-    "छ\u{943}णत\u{94d}ति" OPT_MID_1_PL "छ\u{943}न\u{94d}दीमहि",
-    "छ\u{943}णत\u{94d}ति" OPT_MID_2_SG "छ\u{943}न\u{94d}दीथाः",
-    "छ\u{943}णत\u{94d}ति" OPT_MID_2_DU "छ\u{943}न\u{94d}दीयाथाम\u{94d}",
-    "छ\u{943}णत\u{94d}ति" OPT_MID_2_PL "छ\u{943}न\u{94d}दीध\u{94d}वम\u{94d}",
-    "छ\u{943}णत\u{94d}ति" OPT_MID_3_SG "छ\u{943}न\u{94d}दीत",
-    "छ\u{943}णत\u{94d}ति" OPT_MID_3_DU "छ\u{943}न\u{94d}दीयाताम\u{94d}",
-    "छ\u{943}णत\u{94d}ति" OPT_MID_3_PL "छ\u{943}न\u{94d}दीरन\u{94d}",
-    "छ\u{943}णत\u{94d}ति" SUBJ_ACT_1_SG "छ\u{943}णदानि",
-    "छ\u{943}णत\u{94d}ति" SUBJ_ACT_1_DU "छ\u{943}णदाव",
-    "छ\u{943}णत\u{94d}ति" SUBJ_ACT_1_PL "छ\u{943}णदाम",
-    "छ\u{943}णत\u{94d}ति" SUBJ_ACT_2_SG "छ\u{943}णदः",
-    "छ\u{943}णत\u{94d}ति" SUBJ_ACT_2_DU "छ\u{943}णदथः",
-    "छ\u{943}णत\u{94d}ति" SUBJ_ACT_2_PL "छ\u{943}णदथ",
-    "छ\u{943}णत\u{94d}ति" SUBJ_ACT_3_SG "छ\u{943}णदत\u{94d}",
-    "छ\u{943}णत\u{94d}ति" SUBJ_ACT_3_DU "छ\u{943}णदतः",
-    "छ\u{943}णत\u{94d}ति" SUBJ_ACT_3_PL "छ\u{943}णदन\u{94d}",
-    "छ\u{943}णत\u{94d}ति" SUBJ_MID_1_SG "छ\u{943}णद\u{948}",
-    "छ\u{943}णत\u{94d}ति" SUBJ_MID_1_DU "छ\u{943}णदावह\u{948}",
-    "छ\u{943}णत\u{94d}ति" SUBJ_MID_1_PL "छ\u{943}णदामह\u{948}",
-    "छ\u{943}णत\u{94d}ति" SUBJ_MID_2_SG "छ\u{943}णदस\u{947}",
-    "छ\u{943}णत\u{94d}ति" SUBJ_MID_2_DU "छ\u{943}णद\u{948}थ\u{947}",
-    "छ\u{943}णत\u{94d}ति" SUBJ_MID_2_PL "छ\u{943}णदध\u{94d}व\u{947}",
-    "छ\u{943}णत\u{94d}ति" SUBJ_MID_3_SG "छ\u{943}णदत\u{947}",
-    "छ\u{943}णत\u{94d}ति" SUBJ_MID_3_DU "छ\u{943}णद\u{948}त\u{947}",
-    "छ\u{943}णत\u{94d}ति" SUBJ_MID_3_PL "छ\u{943}णदन\u{94d}त",
-    "छ\u{943}णत\u{94d}ति" IMPERFECT_ACT_1_SG "अच\u{94d}छ\u{943}णदम\u{94d}",
-    "छ\u{943}णत\u{94d}ति" IMPERFECT_ACT_1_DU "अच\u{94d}छ\u{943}न\u{94d}द\u{94d}व",
-    "छ\u{943}णत\u{94d}ति" IMPERFECT_ACT_1_PL "अच\u{94d}छ\u{943}न\u{94d}द\u{94d}म",
-    "छ\u{943}णत\u{94d}ति" IMPERFECT_ACT_2_SG "अच\u{94d}छ\u{943}णत\u{94d}",
-    "छ\u{943}णत\u{94d}ति" IMPERFECT_ACT_2_DU "अच\u{94d}छ\u{943}न\u{94d}त\u{94d}तम\u{94d}",
-    "छ\u{943}णत\u{94d}ति" IMPERFECT_ACT_2_PL "अच\u{94d}छ\u{943}न\u{94d}त\u{94d}त",
-    "छ\u{943}णत\u{94d}ति" IMPERFECT_ACT_3_SG "अच\u{94d}छ\u{943}णत\u{94d}",
-    "छ\u{943}णत\u{94d}ति" IMPERFECT_ACT_3_DU "अच\u{94d}छ\u{943}न\u{94d}त\u{94d}ताम\u{94d}",
-    "छ\u{943}णत\u{94d}ति" IMPERFECT_ACT_3_PL "अच\u{94d}छ\u{943}न\u{94d}दन\u{94d}",
-    "छ\u{943}णत\u{94d}ति" IMPERFECT_MID_1_SG "अच\u{94d}छ\u{943}न\u{94d}दि",
-    "छ\u{943}णत\u{94d}ति" IMPERFECT_MID_1_DU "अच\u{94d}छ\u{943}न\u{94d}द\u{94d}वहि",
-    "छ\u{943}णत\u{94d}ति" IMPERFECT_MID_1_PL "अच\u{94d}छ\u{943}न\u{94d}द\u{94d}महि",
-    "छ\u{943}णत\u{94d}ति" IMPERFECT_MID_2_SG "अच\u{94d}छ\u{943}न\u{94d}त\u{94d}थाः",
-    "छ\u{943}णत\u{94d}ति" IMPERFECT_MID_2_DU "अच\u{94d}छ\u{943}न\u{94d}दाथाम\u{94d}",
-    "छ\u{943}णत\u{94d}ति" IMPERFECT_MID_2_PL "अच\u{94d}छ\u{943}न\u{94d}द\u{94d}ध\u{94d}वम\u{94d}",
-    "छ\u{943}णत\u{94d}ति" IMPERFECT_MID_3_SG "अच\u{94d}छ\u{943}न\u{94d}त\u{94d}त",
-    "छ\u{943}णत\u{94d}ति" IMPERFECT_MID_3_DU "अच\u{94d}छ\u{943}न\u{94d}दाताम\u{94d}",
-    "छ\u{943}णत\u{94d}ति" IMPERFECT_MID_3_PL "अच\u{94d}छ\u{943}न\u{94d}दत",
-    "छ\u{943}णत\u{94d}ति" PARTICIPLE_PRES_ACT "छ\u{943}न\u{94d}दत\u{94d}",
-    "छ\u{943}णत\u{94d}ति" PARTICIPLE_PRES_MID "छ\u{943}न\u{94d}दान",
-    "जगर\u{94d}ध" PERFECT_ACT_1_DU "जग\u{943}धिव",
-    "जगर\u{94d}ध" PERFECT_ACT_1_PL "जग\u{943}धिम",
-    "जगर\u{94d}ध" PERFECT_ACT_2_DU "जग\u{943}धथ\u{941}ः",
-    "जगर\u{94d}ध" PERFECT_ACT_2_PL "जग\u{943}ध",
-    "जगर\u{94d}ध" PERFECT_ACT_3_DU "जग\u{943}धत\u{941}ः",
-    "जगर\u{94d}ध" PERFECT_ACT_3_PL "जग\u{943}ध\u{941}ः",
-    "जगर\u{94d}ध" PARTICIPLE_PERF_ACT "जग\u{943}ध\u{94d}वा\u{902}स\u{94d}",
-    "जगाम" PERFECT_ACT_1_SG "जगम",
-    "जगाम" PERFECT_ACT_1_DU "जग\u{94d}मिव",
-    "जगाम" PERFECT_ACT_1_PL "जग\u{94d}मिम",
-    "जगाम" PERFECT_ACT_2_SG "जगन\u{94d}थ",
-    "जगाम" PERFECT_ACT_2_DU "जग\u{94d}मथ\u{941}ः",
-    "जगाम" PERFECT_ACT_2_PL "जग\u{94d}म",
-    "जगाम" PERFECT_ACT_3_DU "जग\u{94d}मत\u{941}ः",
-    "जगाम" PERFECT_ACT_3_PL "जग\u{94d}म\u{941}ः",
-    "जगाम" PERFECT_MID_1_SG "जग\u{94d}म\u{947}",
-    "जगाम" PERFECT_MID_1_DU "जग\u{94d}मिवह\u{947}",
-    "जगाम" PERFECT_MID_1_PL "जग\u{94d}मिमह\u{947}",
-    "जगाम" PERFECT_MID_2_SG "जग\u{94d}मिष\u{947}",
-    "जगाम" PERFECT_MID_2_DU "जग\u{94d}माथ\u{947}",
-    "जगाम" PERFECT_MID_2_PL "जग\u{94d}मिध\u{94d}व\u{947}",
-    "जगाम" PERFECT_MID_3_SG "जग\u{94d}म\u{947}",
-    "जगाम" PERFECT_MID_3_DU "जग\u{94d}मात\u{947}",
-    "जगाम" PERFECT_MID_3_PL "जग\u{94d}मिर\u{947}",
-    "जगाम" PARTICIPLE_PERF_ACT "जग\u{94d}मिवा\u{902}स\u{94d}",
-    "जगाम" PARTICIPLE_PERF_MID "जग\u{94d}मान",
-    "जघान" PERFECT_ACT_1_SG "जघन",
-    "जघान" PERFECT_ACT_1_DU "जघ\u{94d}निव",
-    "जघान" PERFECT_ACT_1_PL "जघ\u{94d}निम",
-    "जघान" PERFECT_ACT_2_SG "जघन\u{94d}थ",
-    "जघान" PERFECT_ACT_2_DU "जघ\u{94d}नथ\u{941}ः",
-    "जघान" PERFECT_ACT_2_PL "जघ\u{94d}न",
-    "जघान" PERFECT_ACT_3_DU "जघ\u{94d}नत\u{941}ः",
-    "जघान" PERFECT_ACT_3_PL "जघ\u{94d}न\u{941}ः",
-    "जघान" PERFECT_MID_1_SG "जघ\u{94d}न\u{947}",
-    "जघान" PERFECT_MID_1_DU "जघ\u{94d}निवह\u{947}",
-    "जघान" PERFECT_MID_1_PL "जघ\u{94d}निमह\u{947}",
-    "जघान" PERFECT_MID_2_SG "जघ\u{94d}निष\u{947}",
-    "जघान" PERFECT_MID_2_DU "जघ\u{94d}नाथ\u{947}",
-    "जघान" PERFECT_MID_2_PL "जघ\u{94d}निध\u{94d}व\u{947}",
-    "जघान" PERFECT_MID_3_SG "जघ\u{94d}न\u{947}",
-    "जघान" PERFECT_MID_3_DU "जघ\u{94d}नात\u{947}",
-    "जघान" PERFECT_MID_3_PL "जघ\u{94d}निर\u{947}",
-    "जघान" PARTICIPLE_PERF_ACT "जघ\u{94d}निवा\u{902}स\u{94d}",
-    "जघान" PARTICIPLE_PERF_MID "जघ\u{94d}नान",
-    "जघास" PERFECT_ACT_1_SG "जघस",
-    "जघास" PERFECT_ACT_1_DU "जक\u{94d}षिव",
-    "जघास" PERFECT_ACT_1_PL "जक\u{94d}षिम",
-    "जघास" PERFECT_ACT_2_SG "जघस\u{94d}थ",
-    "जघास" PERFECT_ACT_2_DU "जक\u{94d}षथ\u{941}ः",
-    "जघास" PERFECT_ACT_2_PL "जक\u{94d}ष",
-    "जघास" PERFECT_ACT_3_DU "जक\u{94d}षत\u{941}ः",
-    "जघास" PERFECT_ACT_3_PL "जक\u{94d}ष\u{941}ः",
-    "जघास" PARTICIPLE_PERF_ACT "जक\u{94d}षिवा\u{902}स\u{94d}",
-    "जजान" PERFECT_ACT_1_SG "जजन",
-    "जजान" PERFECT_ACT_1_DU "जज\u{94d}ञिव",
-    "जजान" PERFECT_ACT_1_PL "जज\u{94d}ञिम",
-    "जजान" PERFECT_ACT_2_SG "जजन\u{94d}थ",
-    "जजान" PERFECT_ACT_2_DU "जज\u{94d}ञथ\u{941}ः",
-    "जजान" PERFECT_ACT_2_PL "जज\u{94d}ञ",
-    "जजान" PERFECT_ACT_3_DU "जज\u{94d}ञत\u{941}ः",
-    "जजान" PERFECT_ACT_3_PL "जज\u{94d}ञ\u{941}ः",
-    "जजान" PERFECT_MID_1_SG "जज\u{94d}ञ\u{947}",
-    "जजान" PERFECT_MID_1_DU "जज\u{94d}ञिवह\u{947}",
-    "जजान" PERFECT_MID_1_PL "जज\u{94d}ञिमह\u{947}",
-    "जजान" PERFECT_MID_2_SG "जज\u{94d}ञिष\u{947}",
-    "जजान" PERFECT_MID_2_DU "जज\u{94d}ञाथ\u{947}",
-    "जजान" PERFECT_MID_2_PL "जज\u{94d}ञिध\u{94d}व\u{947}",
-    "जजान" PERFECT_MID_3_SG "जज\u{94d}ञ\u{947}",
-    "जजान" PERFECT_MID_3_DU "जज\u{94d}ञात\u{947}",
-    "जजान" PERFECT_MID_3_PL "जज\u{94d}ञिर\u{947}",
-    "जजान" PARTICIPLE_PERF_ACT "जज\u{94d}ञिवा\u{902}स\u{94d}",
-    "जजान" PARTICIPLE_PERF_MID "जज\u{94d}ञान",
-    "जहाति" IND_ACT_3_PL "जहति",
-    "जहाति" IMP_ACT_3_PL "जहत\u{941}",
-    "जहाति" OPT_ACT_1_SG "जह\u{94d}याम\u{94d}",
-    "जहाति" OPT_ACT_1_DU "जह\u{94d}याव",
-    "जहाति" OPT_ACT_1_PL "जह\u{94d}याम",
-    "जहाति" OPT_ACT_2_SG "जह\u{94d}याः",
-    "जहाति" OPT_ACT_2_DU "जह\u{94d}यातम\u{94d}",
-    "जहाति" OPT_ACT_2_PL "जह\u{94d}यात",
-    "जहाति" OPT_ACT_3_SG "जह\u{94d}यात\u{94d}",
-    "जहाति" OPT_ACT_3_DU "जह\u{94d}याताम\u{94d}",
-    "जहाति" OPT_ACT_3_PL "जह\u{94d}य\u{941}ः",
-    "जहाति" IMPERFECT_ACT_3_PL "अजह\u{941}ः",
-    "जागर\u{94d}ति" IMPERFECT_ACT_3_PL "अजाग\u{94d}र\u{941}ः",
-    "जिगाति" IND_ACT_3_PL "जिगति",
-    "जिगाति" IMP_ACT_3_PL "जिगत\u{941}",
-    "जिगाति" IMPERFECT_ACT_3_PL "अजिग\u{941}ः",
-    "जिघर\u{94d}ति" FUTURE_ACT_1_SG "घरिष\u{94d}यामि",
-    "जिघर\u{94d}ति" FUTURE_ACT_1_DU "घरिष\u{94d}यावः",
-    "जिघर\u{94d}ति" FUTURE_ACT_1_PL "घरिष\u{94d}यामः",
-    "जिघर\u{94d}ति" FUTURE_ACT_2_SG "घरिष\u{94d}यसि",
-    "जिघर\u{94d}ति" FUTURE_ACT_2_DU "घरिष\u{94d}यथः",
-    "जिघर\u{94d}ति" FUTURE_ACT_2_PL "घरिष\u{94d}यथ",
-    "जिघर\u{94d}ति" FUTURE_ACT_3_SG "घरिष\u{94d}यति",
-    "जिघर\u{94d}ति" FUTURE_ACT_3_DU "घरिष\u{94d}यतः",
-    "जिघर\u{94d}ति" FUTURE_ACT_3_PL "घरिष\u{94d}यन\u{94d}ति",
-    "जिघर\u{94d}ति" CONDITIONAL_ACT_1_SG "अघरिष\u{94d}यम\u{94d}",
-    "जिघर\u{94d}ति" CONDITIONAL_ACT_1_DU "अघरिष\u{94d}याव",
-    "जिघर\u{94d}ति" CONDITIONAL_ACT_1_PL "अघरिष\u{94d}याम",
-    "जिघर\u{94d}ति" CONDITIONAL_ACT_2_SG "अघरिष\u{94d}यः",
-    "जिघर\u{94d}ति" CONDITIONAL_ACT_2_DU "अघरिष\u{94d}यतम\u{94d}",
-    "जिघर\u{94d}ति" CONDITIONAL_ACT_2_PL "अघरिष\u{94d}यत",
-    "जिघर\u{94d}ति" CONDITIONAL_ACT_3_SG "अघरिष\u{94d}यत\u{94d}",
-    "जिघर\u{94d}ति" CONDITIONAL_ACT_3_DU "अघरिष\u{94d}यताम\u{94d}",
-    "जिघर\u{94d}ति" CONDITIONAL_ACT_3_PL "अघरिष\u{94d}यन\u{94d}",
-    "जिघर\u{94d}ति" PERFECT_ACT_1_SG "जघर",
-    "जिघर\u{94d}ति" PERFECT_ACT_1_DU "जघ\u{943}व",
-    "जिघर\u{94d}ति" PERFECT_ACT_1_PL "जघ\u{943}म",
-    "जिघर\u{94d}ति" PERFECT_ACT_2_SG "जघर\u{94d}थ",
-    "जिघर\u{94d}ति" PERFECT_ACT_2_DU "जघ\u{94d}रथ\u{941}ः",
-    "जिघर\u{94d}ति" PERFECT_ACT_2_PL "जघ\u{94d}र",
-    "जिघर\u{94d}ति" PERFECT_ACT_3_SG "जघार",
-    "जिघर\u{94d}ति" PERFECT_ACT_3_DU "जघ\u{94d}रत\u{941}ः",
-    "जिघर\u{94d}ति" PERFECT_ACT_3_PL "जघ\u{94d}र\u{941}ः",
-    "जिघर\u{94d}ति" AORIST_ACT_1_SG "अघार\u{94d}षम\u{94d}",
-    "जिघर\u{94d}ति" AORIST_ACT_1_DU "अघार\u{94d}ष\u{94d}व",
-    "जिघर\u{94d}ति" AORIST_ACT_1_PL "अघार\u{94d}ष\u{94d}म",
-    "जिघर\u{94d}ति" AORIST_ACT_2_SG "अघार\u{94d}षीः",
-    "जिघर\u{94d}ति" AORIST_ACT_2_DU "अघार\u{94d}ष\u{94d}टम\u{94d}",
-    "जिघर\u{94d}ति" AORIST_ACT_2_PL "अघार\u{94d}ष\u{94d}ट",
-    "जिघर\u{94d}ति" AORIST_ACT_3_SG "अघार\u{94d}षीत\u{94d}",
-    "जिघर\u{94d}ति" AORIST_ACT_3_DU "अघार\u{94d}ष\u{94d}टाम\u{94d}",
-    "जिघर\u{94d}ति" AORIST_ACT_3_PL "अघार\u{94d}ष\u{941}ः",
-    "जिघर\u{94d}ति" INFINITIVE "घर\u{94d}त\u{941}म\u{94d}",
-    "जिघर\u{94d}ति" GERUND "घ\u{943}त\u{94d}वा",
-    "जिघर\u{94d}ति" PARTICIPLE_FUT_ACT "घरिष\u{94d}यत\u{94d}",
-    "जिघर\u{94d}ति" PARTICIPLE_PERF_ACT "जघ\u{943}वा\u{902}स\u{94d}",
-    "जिघाय" PARTICIPLE_PERF_ACT "जिघिवा\u{902}स\u{94d}",
-    "जिह\u{94d}र\u{947}ति" IND_ACT_1_SG "जिह\u{94d}र\u{947}मि",
-    "जिह\u{94d}र\u{947}ति" IND_ACT_1_DU "जिह\u{94d}रीवः",
-    "जिह\u{94d}र\u{947}ति" IND_ACT_1_PL "जिह\u{94d}रीमः",
-    "जिह\u{94d}र\u{947}ति" IND_ACT_2_SG "जिह\u{94d}र\u{947}षि",
-    "जिह\u{94d}र\u{947}ति" IND_ACT_2_DU "जिह\u{94d}रीथः",
-    "जिह\u{94d}र\u{947}ति" IND_ACT_2_PL "जिह\u{94d}रीथ",
-    "जिह\u{94d}र\u{947}ति" IND_ACT_3_DU "जिह\u{94d}रीतः",
-    "जिह\u{94d}र\u{947}ति" IND_ACT_3_PL "जिह\u{94d}रियति",
-    "जिह\u{94d}र\u{947}ति" IMP_ACT_1_SG "जिह\u{94d}रयाणि",
-    "जिह\u{94d}र\u{947}ति" IMP_ACT_1_DU "जिह\u{94d}रयाव",
-    "जिह\u{94d}र\u{947}ति" IMP_ACT_1_PL "जिह\u{94d}रयाम",
-    "जिह\u{94d}र\u{947}ति" IMP_ACT_2_SG "जिह\u{94d}रीहि",
-    "जिह\u{94d}र\u{947}ति" IMP_ACT_2_DU "जिह\u{94d}रीतम\u{94d}",
-    "जिह\u{94d}र\u{947}ति" IMP_ACT_2_PL "जिह\u{94d}रीत",
-    "जिह\u{94d}र\u{947}ति" IMP_ACT_3_DU "जिह\u{94d}रीताम\u{94d}",
-    "जिह\u{94d}र\u{947}ति" IMP_ACT_3_PL "जिह\u{94d}रियत\u{941}",
-    "जिह\u{94d}र\u{947}ति" OPT_ACT_1_SG "जिह\u{94d}रीयाम\u{94d}",
-    "जिह\u{94d}र\u{947}ति" OPT_ACT_1_DU "जिह\u{94d}रीयाव",
-    "जिह\u{94d}र\u{947}ति" OPT_ACT_1_PL "जिह\u{94d}रीयाम",
-    "जिह\u{94d}र\u{947}ति" OPT_ACT_2_SG "जिह\u{94d}रीयाः",
-    "जिह\u{94d}र\u{947}ति" OPT_ACT_2_DU "जिह\u{94d}रीयातम\u{94d}",
-    "जिह\u{94d}र\u{947}ति" OPT_ACT_2_PL "जिह\u{94d}रीयात",
-    "जिह\u{94d}र\u{947}ति" OPT_ACT_3_SG "जिह\u{94d}रीयात\u{94d}",
-    "जिह\u{94d}र\u{947}ति" OPT_ACT_3_DU "जिह\u{94d}रीयाताम\u{94d}",
-    "जिह\u{94d}र\u{947}ति" OPT_ACT_3_PL "जिह\u{94d}रीय\u{941}ः",
-    "जिह\u{94d}र\u{947}ति" SUBJ_ACT_1_SG "जिह\u{94d}रयाणि",
-    "जिह\u{94d}र\u{947}ति" SUBJ_ACT_1_DU "जिह\u{94d}रयाव",
-    "जिह\u{94d}र\u{947}ति" SUBJ_ACT_1_PL "जिह\u{94d}रयाम",
-    "जिह\u{94d}र\u{947}ति" SUBJ_ACT_2_SG "जिह\u{94d}रयः",
-    "जिह\u{94d}र\u{947}ति" SUBJ_ACT_2_DU "जिह\u{94d}रयथः",
-    "जिह\u{94d}र\u{947}ति" SUBJ_ACT_2_PL "जिह\u{94d}रयथ",
-    "जिह\u{94d}र\u{947}ति" SUBJ_ACT_3_SG "जिह\u{94d}रयत\u{94d}",
-    "जिह\u{94d}र\u{947}ति" SUBJ_ACT_3_DU "जिह\u{94d}रयतः",
-    "जिह\u{94d}र\u{947}ति" SUBJ_ACT_3_PL "जिह\u{94d}रयन\u{94d}",
-    "जिह\u{94d}र\u{947}ति" IMPERFECT_ACT_1_SG "अजिह\u{94d}रयम\u{94d}",
-    "जिह\u{94d}र\u{947}ति" IMPERFECT_ACT_1_DU "अजिह\u{94d}रीव",
-    "जिह\u{94d}र\u{947}ति" IMPERFECT_ACT_1_PL "अजिह\u{94d}रीम",
-    "जिह\u{94d}र\u{947}ति" IMPERFECT_ACT_2_DU "अजिह\u{94d}रीतम\u{94d}",
-    "जिह\u{94d}र\u{947}ति" IMPERFECT_ACT_2_PL "अजिह\u{94d}रीत",
-    "जिह\u{94d}र\u{947}ति" IMPERFECT_ACT_3_DU "अजिह\u{94d}रीताम\u{94d}",
-    "जिह\u{94d}र\u{947}ति" IMPERFECT_ACT_3_PL "अजिह\u{94d}रियन\u{94d}",
-    "जिह\u{94d}र\u{947}ति" PARTICIPLE_PRES_ACT "जिह\u{94d}रियत\u{94d}",
-    "ज\u{941}जोष" PERFECT_ACT_1_DU "ज\u{941}ज\u{941}षिव",
-    "ज\u{941}जोष" PERFECT_ACT_1_PL "ज\u{941}ज\u{941}षिम",
-    "ज\u{941}जोष" PERFECT_ACT_2_DU "ज\u{941}ज\u{941}षथ\u{941}ः",
-    "ज\u{941}जोष" PERFECT_ACT_2_PL "ज\u{941}ज\u{941}ष",
-    "ज\u{941}जोष" PERFECT_ACT_3_DU "ज\u{941}ज\u{941}षत\u{941}ः",
-    "ज\u{941}जोष" PERFECT_ACT_3_PL "ज\u{941}ज\u{941}ष\u{941}ः",
-    "ज\u{941}जोष" PERFECT_MID_1_SG "ज\u{941}ज\u{941}ष\u{947}",
-    "ज\u{941}जोष" PERFECT_MID_1_DU "ज\u{941}ज\u{941}षिवह\u{947}",
-    "ज\u{941}जोष" PERFECT_MID_1_PL "ज\u{941}ज\u{941}षिमह\u{947}",
-    "ज\u{941}जोष" PERFECT_MID_2_SG "ज\u{941}ज\u{941}षिष\u{947}",
-    "ज\u{941}जोष" PERFECT_MID_2_DU "ज\u{941}ज\u{941}षाथ\u{947}",
-    "ज\u{941}जोष" PERFECT_MID_2_PL "ज\u{941}ज\u{941}षिध\u{94d}व\u{947}",
-    "ज\u{941}जोष" PERFECT_MID_3_SG "ज\u{941}ज\u{941}ष\u{947}",
-    "ज\u{941}जोष" PERFECT_MID_3_DU "ज\u{941}ज\u{941}षात\u{947}",
-    "ज\u{941}जोष" PERFECT_MID_3_PL "ज\u{941}ज\u{941}षिर\u{947}",
-    "ज\u{941}जोष" PARTICIPLE_PERF_ACT "ज\u{941}ज\u{941}ष\u{94d}वा\u{902}स\u{94d}",
-    "ज\u{941}जोष" PARTICIPLE_PERF_MID "ज\u{941}ज\u{941}षाण",
-    "ज\u{941}षत\u{947}" FUTURE_ACT_1_SG "जोषिष\u{94d}यामि",
-    "ज\u{941}षत\u{947}" FUTURE_ACT_1_DU "जोषिष\u{94d}यावः",
-    "ज\u{941}षत\u{947}" FUTURE_ACT_1_PL "जोषिष\u{94d}यामः",
-    "ज\u{941}षत\u{947}" FUTURE_ACT_2_SG "जोषिष\u{94d}यसि",
-    "ज\u{941}षत\u{947}" FUTURE_ACT_2_DU "जोषिष\u{94d}यथः",
-    "ज\u{941}षत\u{947}" FUTURE_ACT_2_PL "जोषिष\u{94d}यथ",
-    "ज\u{941}षत\u{947}" FUTURE_ACT_3_SG "जोषिष\u{94d}यति",
-    "ज\u{941}षत\u{947}" FUTURE_ACT_3_DU "जोषिष\u{94d}यतः",
-    "ज\u{941}षत\u{947}" FUTURE_ACT_3_PL "जोषिष\u{94d}यन\u{94d}ति",
-    "ज\u{941}षत\u{947}" FUTURE_MID_1_SG "जोषिष\u{94d}य\u{947}",
-    "ज\u{941}षत\u{947}" FUTURE_MID_1_DU "जोषिष\u{94d}यावह\u{947}",
-    "ज\u{941}षत\u{947}" FUTURE_MID_1_PL "जोषिष\u{94d}यामह\u{947}",
-    "ज\u{941}षत\u{947}" FUTURE_MID_2_SG "जोषिष\u{94d}यस\u{947}",
-    "ज\u{941}षत\u{947}" FUTURE_MID_2_DU "जोषिष\u{94d}य\u{947}थ\u{947}",
-    "ज\u{941}षत\u{947}" FUTURE_MID_2_PL "जोषिष\u{94d}यध\u{94d}व\u{947}",
-    "ज\u{941}षत\u{947}" FUTURE_MID_3_SG "जोषिष\u{94d}यत\u{947}",
-    "ज\u{941}षत\u{947}" FUTURE_MID_3_DU "जोषिष\u{94d}य\u{947}त\u{947}",
-    "ज\u{941}षत\u{947}" FUTURE_MID_3_PL "जोषिष\u{94d}यन\u{94d}त\u{947}",
-    "ज\u{941}षत\u{947}" CONDITIONAL_ACT_1_SG "अजोषिष\u{94d}यम\u{94d}",
-    "ज\u{941}षत\u{947}" CONDITIONAL_ACT_1_DU "अजोषिष\u{94d}याव",
-    "ज\u{941}षत\u{947}" CONDITIONAL_ACT_1_PL "अजोषिष\u{94d}याम",
-    "ज\u{941}षत\u{947}" CONDITIONAL_ACT_2_SG "अजोषिष\u{94d}यः",
-    "ज\u{941}षत\u{947}" CONDITIONAL_ACT_2_DU "अजोषिष\u{94d}यतम\u{94d}",
-    "ज\u{941}षत\u{947}" CONDITIONAL_ACT_2_PL "अजोषिष\u{94d}यत",
-    "ज\u{941}षत\u{947}" CONDITIONAL_ACT_3_SG "अजोषिष\u{94d}यत\u{94d}",
-    "ज\u{941}षत\u{947}" CONDITIONAL_ACT_3_DU "अजोषिष\u{94d}यताम\u{94d}",
-    "ज\u{941}षत\u{947}" CONDITIONAL_ACT_3_PL "अजोषिष\u{94d}यन\u{94d}",
-    "ज\u{941}षत\u{947}" CONDITIONAL_MID_1_SG "अजोषिष\u{94d}य\u{947}",
-    "ज\u{941}षत\u{947}" CONDITIONAL_MID_1_DU "अजोषिष\u{94d}यावहि",
-    "ज\u{941}षत\u{947}" CONDITIONAL_MID_1_PL "अजोषिष\u{94d}यामहि",
-    "ज\u{941}षत\u{947}" CONDITIONAL_MID_2_SG "अजोषिष\u{94d}यथाः",
-    "ज\u{941}षत\u{947}" CONDITIONAL_MID_2_DU "अजोषिष\u{94d}य\u{947}थाम\u{94d}",
-    "ज\u{941}षत\u{947}" CONDITIONAL_MID_2_PL "अजोषिष\u{94d}यध\u{94d}वम\u{94d}",
-    "ज\u{941}षत\u{947}" CONDITIONAL_MID_3_SG "अजोषिष\u{94d}यत",
-    "ज\u{941}षत\u{947}" CONDITIONAL_MID_3_DU "अजोषिष\u{94d}य\u{947}ताम\u{94d}",
-    "ज\u{941}षत\u{947}" CONDITIONAL_MID_3_PL "अजोषिष\u{94d}यन\u{94d}त",
-    "ज\u{941}षत\u{947}" PERFECT_MID_1_SG "ज\u{941}ज\u{941}ष\u{947}",
-    "ज\u{941}षत\u{947}" PERFECT_MID_1_DU "ज\u{941}ज\u{941}षिवह\u{947}",
-    "ज\u{941}षत\u{947}" PERFECT_MID_1_PL "ज\u{941}ज\u{941}षिमह\u{947}",
-    "ज\u{941}षत\u{947}" PERFECT_MID_2_SG "ज\u{941}ज\u{941}षिष\u{947}",
-    "ज\u{941}षत\u{947}" PERFECT_MID_2_DU "ज\u{941}ज\u{941}षाथ\u{947}",
-    "ज\u{941}षत\u{947}" PERFECT_MID_2_PL "ज\u{941}ज\u{941}षिध\u{94d}व\u{947}",
-    "ज\u{941}षत\u{947}" PERFECT_MID_3_SG "ज\u{941}ज\u{941}ष\u{947}",
-    "ज\u{941}षत\u{947}" PERFECT_MID_3_DU "ज\u{941}ज\u{941}षात\u{947}",
-    "ज\u{941}षत\u{947}" PERFECT_MID_3_PL "ज\u{941}ज\u{941}षिर\u{947}",
-    "ज\u{941}षत\u{947}" AORIST_MID_1_SG "अजोषिषि",
-    "ज\u{941}षत\u{947}" AORIST_MID_1_DU "अजोषिष\u{94d}वहि",
-    "ज\u{941}षत\u{947}" AORIST_MID_1_PL "अजोषिष\u{94d}महि",
-    "ज\u{941}षत\u{947}" AORIST_MID_2_SG "अजोषिष\u{94d}ठाः",
-    "ज\u{941}षत\u{947}" AORIST_MID_2_DU "अजोषिषाथाम\u{94d}",
-    "ज\u{941}षत\u{947}" AORIST_MID_2_PL "अजोषिढ\u{94d}वम\u{94d}",
-    "ज\u{941}षत\u{947}" AORIST_MID_3_SG "अजोषिष\u{94d}ट",
-    "ज\u{941}षत\u{947}" AORIST_MID_3_DU "अजोषिषाताम\u{94d}",
-    "ज\u{941}षत\u{947}" AORIST_MID_3_PL "अजोषिषत",
-    "ज\u{941}षत\u{947}" PARTICIPLE_FUT_ACT "जोषिष\u{94d}यत\u{94d}",
-    "ज\u{941}षत\u{947}" PARTICIPLE_FUT_MID "जोषिष\u{94d}यमाण",
-    "ज\u{941}षत\u{947}" PARTICIPLE_PERF_MID "ज\u{941}ज\u{941}षाण",
-    "ज\u{941}हाव" PERFECT_ACT_1_DU "ज\u{941}ह\u{941}विव",
-    "ज\u{941}हाव" PERFECT_ACT_1_PL "ज\u{941}ह\u{941}विम",
-    "ज\u{941}हाव" PERFECT_MID_1_DU "ज\u{941}ह\u{941}विवह\u{947}",
-    "ज\u{941}हाव" PERFECT_MID_1_PL "ज\u{941}ह\u{941}विमह\u{947}",
-    "ज\u{941}हाव" PERFECT_MID_2_SG "ज\u{941}ह\u{941}विष\u{947}",
-    "ज\u{941}हाव" PERFECT_MID_2_PL "ज\u{941}ह\u{941}विध\u{94d}व\u{947}",
-    "ज\u{941}हाव" PARTICIPLE_PERF_ACT "ज\u{941}ह\u{942}वा\u{902}स\u{94d}",
-    "ज\u{941}हाव" PARTICIPLE_PERF_MID "ज\u{941}ह\u{941}वान",
-    "ज\u{941}होति" IND_ACT_1_DU "ज\u{941}ह\u{941}वः",
-    "ज\u{941}होति" IND_ACT_1_PL "ज\u{941}ह\u{941}मः",
-    "ज\u{941}होति" IND_ACT_3_PL "ज\u{941}ह\u{94d}वति",
-    "ज\u{941}होति" IND_MID_1_DU "ज\u{941}ह\u{941}वह\u{947}",
-    "ज\u{941}होति" IND_MID_1_PL "ज\u{941}ह\u{941}मह\u{947}",
-    "ज\u{941}होति" IMP_ACT_2_SG "ज\u{941}ह\u{941}धि",
-    "ज\u{941}होति" IMP_ACT_3_PL "ज\u{941}ह\u{94d}वत\u{941}",
-    "ज\u{941}होति" IMPERFECT_ACT_1_DU "अज\u{941}ह\u{941}व",
-    "ज\u{941}होति" IMPERFECT_ACT_1_PL "अज\u{941}ह\u{941}म",
-    "ज\u{941}होति" IMPERFECT_ACT_3_PL "अज\u{941}हव\u{941}ः",
-    "ज\u{941}होति" IMPERFECT_MID_1_DU "अज\u{941}ह\u{941}वहि",
-    "ज\u{941}होति" IMPERFECT_MID_1_PL "अज\u{941}ह\u{941}महि",
-    "ज\u{943}म\u{94d}भत\u{947}" PERFECT_MID_1_SG "जज\u{943}म\u{94d}भ\u{947}",
-    "ज\u{943}म\u{94d}भत\u{947}" PERFECT_MID_1_DU "जज\u{943}म\u{94d}भिवह\u{947}",
-    "ज\u{943}म\u{94d}भत\u{947}" PERFECT_MID_1_PL "जज\u{943}म\u{94d}भिमह\u{947}",
-    "ज\u{943}म\u{94d}भत\u{947}" PERFECT_MID_2_SG "जज\u{943}म\u{94d}भिष\u{947}",
-    "ज\u{943}म\u{94d}भत\u{947}" PERFECT_MID_2_DU "जज\u{943}म\u{94d}भाथ\u{947}",
-    "ज\u{943}म\u{94d}भत\u{947}" PERFECT_MID_2_PL "जज\u{943}म\u{94d}भिध\u{94d}व\u{947}",
-    "ज\u{943}म\u{94d}भत\u{947}" PERFECT_MID_3_SG "जज\u{943}म\u{94d}भ\u{947}",
-    "ज\u{943}म\u{94d}भत\u{947}" PERFECT_MID_3_DU "जज\u{943}म\u{94d}भात\u{947}",
-    "ज\u{943}म\u{94d}भत\u{947}" PERFECT_MID_3_PL "जज\u{943}म\u{94d}भिर\u{947}",
-    "ज\u{943}म\u{94d}भत\u{947}" AORIST_MID_1_SG "अज\u{943}म\u{94d}भिषि",
-    "ज\u{943}म\u{94d}भत\u{947}" AORIST_MID_1_DU "अज\u{943}म\u{94d}भिष\u{94d}वहि",
-    "ज\u{943}म\u{94d}भत\u{947}" AORIST_MID_1_PL "अज\u{943}म\u{94d}भिष\u{94d}महि",
-    "ज\u{943}म\u{94d}भत\u{947}" AORIST_MID_2_SG "अज\u{943}म\u{94d}भिष\u{94d}ठाः",
-    "ज\u{943}म\u{94d}भत\u{947}" AORIST_MID_2_DU "अज\u{943}म\u{94d}भिषाथाम\u{94d}",
-    "ज\u{943}म\u{94d}भत\u{947}" AORIST_MID_2_PL "अज\u{943}म\u{94d}भिढ\u{94d}वम\u{94d}",
-    "ज\u{943}म\u{94d}भत\u{947}" AORIST_MID_3_SG "अज\u{943}म\u{94d}भिष\u{94d}ट",
-    "ज\u{943}म\u{94d}भत\u{947}" AORIST_MID_3_DU "अज\u{943}म\u{94d}भिषाताम\u{94d}",
-    "ज\u{943}म\u{94d}भत\u{947}" AORIST_MID_3_PL "अज\u{943}म\u{94d}भिषत",
-    "ज\u{943}म\u{94d}भत\u{947}" PARTICIPLE_PERF_MID "जज\u{943}म\u{94d}भाण",
-    "तक\u{94d}ति" IND_ACT_1_SG "तक\u{94d}मि",
-    "तक\u{94d}ति" IND_ACT_1_DU "तक\u{94d}वः",
-    "तक\u{94d}ति" IND_ACT_1_PL "तक\u{94d}मः",
-    "तक\u{94d}ति" IND_ACT_2_SG "तक\u{94d}षि",
-    "तक\u{94d}ति" IND_ACT_3_PL "तकन\u{94d}ति",
-    "तक\u{94d}ति" IND_MID_1_SG "तक\u{947}",
-    "तक\u{94d}ति" IND_MID_1_DU "तक\u{94d}वह\u{947}",
-    "तक\u{94d}ति" IND_MID_1_PL "तक\u{94d}मह\u{947}",
-    "तक\u{94d}ति" IND_MID_2_SG "तक\u{94d}ष\u{947}",
-    "तक\u{94d}ति" IND_MID_2_DU "तकाथ\u{947}",
-    "तक\u{94d}ति" IND_MID_2_PL "तग\u{94d}ध\u{94d}व\u{947}",
-    "तक\u{94d}ति" IND_MID_3_DU "तकात\u{947}",
-    "तक\u{94d}ति" IND_MID_3_PL "तकत\u{947}",
-    "तक\u{94d}ति" IMP_ACT_1_SG "तकानि",
-    "तक\u{94d}ति" IMP_ACT_1_DU "तकाव",
-    "तक\u{94d}ति" IMP_ACT_1_PL "तकाम",
-    "तक\u{94d}ति" IMP_ACT_2_SG "तग\u{94d}धि",
-    "तक\u{94d}ति" IMP_ACT_3_PL "तकन\u{94d}त\u{941}",
-    "तक\u{94d}ति" IMP_MID_1_SG "तक\u{948}",
-    "तक\u{94d}ति" IMP_MID_1_DU "तकावह\u{948}",
-    "तक\u{94d}ति" IMP_MID_1_PL "तकामह\u{948}",
-    "तक\u{94d}ति" IMP_MID_2_SG "तक\u{94d}ष\u{94d}व",
-    "तक\u{94d}ति" IMP_MID_2_DU "तकाथाम\u{94d}",
-    "तक\u{94d}ति" IMP_MID_2_PL "तग\u{94d}ध\u{94d}वम\u{94d}",
-    "तक\u{94d}ति" IMP_MID_3_DU "तकाताम\u{94d}",
-    "तक\u{94d}ति" IMP_MID_3_PL "तकताम\u{94d}",
-    "तक\u{94d}ति" OPT_ACT_1_SG "तक\u{94d}याम\u{94d}",
-    "तक\u{94d}ति" OPT_ACT_1_DU "तक\u{94d}याव",
-    "तक\u{94d}ति" OPT_ACT_1_PL "तक\u{94d}याम",
-    "तक\u{94d}ति" OPT_ACT_2_SG "तक\u{94d}याः",
-    "तक\u{94d}ति" OPT_ACT_2_DU "तक\u{94d}यातम\u{94d}",
-    "तक\u{94d}ति" OPT_ACT_2_PL "तक\u{94d}यात",
-    "तक\u{94d}ति" OPT_ACT_3_SG "तक\u{94d}यात\u{94d}",
-    "तक\u{94d}ति" OPT_ACT_3_DU "तक\u{94d}याताम\u{94d}",
-    "तक\u{94d}ति" OPT_ACT_3_PL "तक\u{94d}य\u{941}ः",
-    "तक\u{94d}ति" OPT_MID_1_SG "तकीय",
-    "तक\u{94d}ति" OPT_MID_1_DU "तकीवहि",
-    "तक\u{94d}ति" OPT_MID_1_PL "तकीमहि",
-    "तक\u{94d}ति" OPT_MID_2_SG "तकीथाः",
-    "तक\u{94d}ति" OPT_MID_2_DU "तकीयाथाम\u{94d}",
-    "तक\u{94d}ति" OPT_MID_2_PL "तकीध\u{94d}वम\u{94d}",
-    "तक\u{94d}ति" OPT_MID_3_SG "तकीत",
-    "तक\u{94d}ति" OPT_MID_3_DU "तकीयाताम\u{94d}",
-    "तक\u{94d}ति" OPT_MID_3_PL "तकीरन\u{94d}",
-    "तक\u{94d}ति" SUBJ_ACT_1_SG "तकानि",
-    "तक\u{94d}ति" SUBJ_ACT_1_DU "तकाव",
-    "तक\u{94d}ति" SUBJ_ACT_1_PL "तकाम",
-    "तक\u{94d}ति" SUBJ_ACT_2_SG "तकः",
-    "तक\u{94d}ति" SUBJ_ACT_2_DU "तकथः",
-    "तक\u{94d}ति" SUBJ_ACT_2_PL "तकथ",
-    "तक\u{94d}ति" SUBJ_ACT_3_SG "तकत\u{94d}",
-    "तक\u{94d}ति" SUBJ_ACT_3_DU "तकतः",
-    "तक\u{94d}ति" SUBJ_ACT_3_PL "तकन\u{94d}",
-    "तक\u{94d}ति" SUBJ_MID_1_SG "तक\u{948}",
-    "तक\u{94d}ति" SUBJ_MID_1_DU "तकावह\u{948}",
-    "तक\u{94d}ति" SUBJ_MID_1_PL "तकामह\u{948}",
-    "तक\u{94d}ति" SUBJ_MID_2_SG "तकस\u{947}",
-    "तक\u{94d}ति" SUBJ_MID_2_DU "तक\u{948}थ\u{947}",
-    "तक\u{94d}ति" SUBJ_MID_2_PL "तकध\u{94d}व\u{947}",
-    "तक\u{94d}ति" SUBJ_MID_3_SG "तकत\u{947}",
-    "तक\u{94d}ति" SUBJ_MID_3_DU "तक\u{948}त\u{947}",
-    "तक\u{94d}ति" SUBJ_MID_3_PL "तकन\u{94d}त",
-    "तक\u{94d}ति" IMPERFECT_ACT_1_SG "अतकम\u{94d}",
-    "तक\u{94d}ति" IMPERFECT_ACT_1_DU "अतक\u{94d}व",
-    "तक\u{94d}ति" IMPERFECT_ACT_1_PL "अतक\u{94d}म",
-    "तक\u{94d}ति" IMPERFECT_ACT_2_SG "अतक\u{94d}",
-    "तक\u{94d}ति" IMPERFECT_ACT_3_SG "अतक\u{94d}",
-    "तक\u{94d}ति" IMPERFECT_ACT_3_PL "अतकन\u{94d}",
-    "तक\u{94d}ति" IMPERFECT_MID_1_SG "अतकि",
-    "तक\u{94d}ति" IMPERFECT_MID_1_DU "अतक\u{94d}वहि",
-    "तक\u{94d}ति" IMPERFECT_MID_1_PL "अतक\u{94d}महि",
-    "तक\u{94d}ति" IMPERFECT_MID_2_DU "अतकाथाम\u{94d}",
-    "तक\u{94d}ति" IMPERFECT_MID_2_PL "अतग\u{94d}ध\u{94d}वम\u{94d}",
-    "तक\u{94d}ति" IMPERFECT_MID_3_DU "अतकाताम\u{94d}",
-    "तक\u{94d}ति" IMPERFECT_MID_3_PL "अतकत",
-    "तक\u{94d}ति" PARTICIPLE_PRES_ACT "तकत\u{94d}",
-    "तक\u{94d}ति" PARTICIPLE_PRES_MID "तकान",
-    "तक\u{94d}षयति" CONDITIONAL_ACT_1_SG "अतक\u{94d}सयिष\u{94d}यम\u{94d}",
-    "तक\u{94d}षयति" CONDITIONAL_ACT_1_DU "अतक\u{94d}सयिष\u{94d}याव",
-    "तक\u{94d}षयति" CONDITIONAL_ACT_1_PL "अतक\u{94d}सयिष\u{94d}याम",
-    "तक\u{94d}षयति" CONDITIONAL_ACT_2_SG "अतक\u{94d}सयिष\u{94d}यः",
-    "तक\u{94d}षयति" CONDITIONAL_ACT_2_DU "अतक\u{94d}सयिष\u{94d}यतम\u{94d}",
-    "तक\u{94d}षयति" CONDITIONAL_ACT_2_PL "अतक\u{94d}सयिष\u{94d}यत",
-    "तक\u{94d}षयति" CONDITIONAL_ACT_3_SG "अतक\u{94d}सयिष\u{94d}यत\u{94d}",
-    "तक\u{94d}षयति" CONDITIONAL_ACT_3_DU "अतक\u{94d}सयिष\u{94d}यताम\u{94d}",
-    "तक\u{94d}षयति" CONDITIONAL_ACT_3_PL "अतक\u{94d}सयिष\u{94d}यन\u{94d}",
-    "तक\u{94d}षयति" CONDITIONAL_MID_1_SG "अतक\u{94d}सयिष\u{94d}य\u{947}",
-    "तक\u{94d}षयति" CONDITIONAL_MID_1_DU "अतक\u{94d}सयिष\u{94d}यावहि",
-    "तक\u{94d}षयति" CONDITIONAL_MID_1_PL "अतक\u{94d}सयिष\u{94d}यामहि",
-    "तक\u{94d}षयति" CONDITIONAL_MID_2_SG "अतक\u{94d}सयिष\u{94d}यथाः",
-    "तक\u{94d}षयति" CONDITIONAL_MID_2_DU "अतक\u{94d}सयिष\u{94d}य\u{947}थाम\u{94d}",
-    "तक\u{94d}षयति" CONDITIONAL_MID_2_PL "अतक\u{94d}सयिष\u{94d}यध\u{94d}वम\u{94d}",
-    "तक\u{94d}षयति" CONDITIONAL_MID_3_SG "अतक\u{94d}सयिष\u{94d}यत",
-    "तक\u{94d}षयति" CONDITIONAL_MID_3_DU "अतक\u{94d}सयिष\u{94d}य\u{947}ताम\u{94d}",
-    "तक\u{94d}षयति" CONDITIONAL_MID_3_PL "अतक\u{94d}सयिष\u{94d}यन\u{94d}त",
-    "तक\u{94d}षयति" PERFECT_MID_1_SG "तक\u{94d}षयामास\u{947}",
-    "तक\u{94d}षयति" PERFECT_MID_1_DU "तक\u{94d}षयामासिवह\u{947}",
-    "तक\u{94d}षयति" PERFECT_MID_1_PL "तक\u{94d}षयामासिमह\u{947}",
-    "तक\u{94d}षयति" PERFECT_MID_2_SG "तक\u{94d}षयामासिष\u{947}",
-    "तक\u{94d}षयति" PERFECT_MID_2_DU "तक\u{94d}षयामासाथ\u{947}",
-    "तक\u{94d}षयति" PERFECT_MID_2_PL "तक\u{94d}षयामासिध\u{94d}व\u{947}",
-    "तक\u{94d}षयति" PERFECT_MID_3_SG "तक\u{94d}षयामास\u{947}",
-    "तक\u{94d}षयति" PERFECT_MID_3_DU "तक\u{94d}षयामासात\u{947}",
-    "तक\u{94d}षयति" PERFECT_MID_3_PL "तक\u{94d}षयामासिर\u{947}",
-    "तक\u{94d}षयति" PARTICIPLE_PERF_ACT "तक\u{94d}षयामास\u{94d}वा\u{902}स\u{94d}",
-    "तक\u{94d}षयति" PARTICIPLE_PERF_MID "तक\u{94d}षयामासान",
-    "ततक\u{94d}ष" PARTICIPLE_PERF_MID "ततक\u{94d}षाण",
-    "ततर\u{94d}ह" PERFECT_ACT_1_DU "तत\u{943}हिव",
-    "ततर\u{94d}ह" PERFECT_ACT_1_PL "तत\u{943}हिम",
-    "ततर\u{94d}ह" PERFECT_ACT_2_DU "तत\u{943}हथ\u{941}ः",
-    "ततर\u{94d}ह" PERFECT_ACT_2_PL "तत\u{943}ह",
-    "ततर\u{94d}ह" PERFECT_ACT_3_DU "तत\u{943}हत\u{941}ः",
-    "ततर\u{94d}ह" PERFECT_ACT_3_PL "तत\u{943}ह\u{941}ः",
-    "ततर\u{94d}ह" PARTICIPLE_PERF_ACT "तत\u{943}ह\u{94d}वा\u{902}स\u{94d}",
-    "ततान" PERFECT_ACT_1_SG "ततन",
-    "ततान" PERFECT_ACT_1_DU "त\u{947}निव",
-    "ततान" PERFECT_ACT_1_PL "त\u{947}निम",
-    "ततान" PERFECT_ACT_2_SG "ततन\u{94d}थ",
-    "ततान" PERFECT_ACT_2_DU "त\u{947}नथ\u{941}ः",
-    "ततान" PERFECT_ACT_2_PL "त\u{947}न",
-    "ततान" PERFECT_ACT_3_DU "त\u{947}नत\u{941}ः",
-    "ततान" PERFECT_ACT_3_PL "त\u{947}न\u{941}ः",
-    "ततान" PERFECT_MID_1_SG "त\u{947}न\u{947}",
-    "ततान" PERFECT_MID_1_DU "त\u{947}निवह\u{947}",
-    "ततान" PERFECT_MID_1_PL "त\u{947}निमह\u{947}",
-    "ततान" PERFECT_MID_2_SG "त\u{947}निष\u{947}",
-    "ततान" PERFECT_MID_2_DU "त\u{947}नाथ\u{947}",
-    "ततान" PERFECT_MID_2_PL "त\u{947}निध\u{94d}व\u{947}",
-    "ततान" PERFECT_MID_3_SG "त\u{947}न\u{947}",
-    "ततान" PERFECT_MID_3_DU "त\u{947}नात\u{947}",
-    "ततान" PERFECT_MID_3_PL "त\u{947}निर\u{947}",
-    "ततान" PARTICIPLE_PERF_ACT "त\u{947}निवा\u{902}स\u{94d}",
-    "ततान" PARTICIPLE_PERF_MID "त\u{947}नान",
-    "तताप" PERFECT_ACT_1_SG "ततप",
-    "तताप" PERFECT_ACT_1_DU "त\u{947}पिव",
-    "तताप" PERFECT_ACT_1_PL "त\u{947}पिम",
-    "तताप" PERFECT_ACT_2_SG "ततप\u{94d}थ",
-    "तताप" PERFECT_ACT_2_DU "त\u{947}पथ\u{941}ः",
-    "तताप" PERFECT_ACT_2_PL "त\u{947}प",
-    "तताप" PERFECT_ACT_3_DU "त\u{947}पत\u{941}ः",
-    "तताप" PERFECT_ACT_3_PL "त\u{947}प\u{941}ः",
-    "तताप" PERFECT_MID_1_SG "त\u{947}प\u{947}",
-    "तताप" PERFECT_MID_1_DU "त\u{947}पिवह\u{947}",
-    "तताप" PERFECT_MID_1_PL "त\u{947}पिमह\u{947}",
-    "तताप" PERFECT_MID_2_SG "त\u{947}पिष\u{947}",
-    "तताप" PERFECT_MID_2_DU "त\u{947}पाथ\u{947}",
-    "तताप" PERFECT_MID_2_PL "त\u{947}पिध\u{94d}व\u{947}",
-    "तताप" PERFECT_MID_3_SG "त\u{947}प\u{947}",
-    "तताप" PERFECT_MID_3_DU "त\u{947}पात\u{947}",
-    "तताप" PERFECT_MID_3_PL "त\u{947}पिर\u{947}",
-    "तताप" PARTICIPLE_PERF_ACT "त\u{947}पिवा\u{902}स\u{94d}",
-    "तताप" PARTICIPLE_PERF_MID "त\u{947}पान",
-    "तनक\u{94d}ति" IND_ACT_1_SG "तनच\u{94d}मि",
-    "तनक\u{94d}ति" IND_ACT_1_DU "तञ\u{94d}च\u{94d}वः",
-    "तनक\u{94d}ति" IND_ACT_1_PL "तञ\u{94d}च\u{94d}मः",
-    "तनक\u{94d}ति" IND_ACT_3_PL "तञ\u{94d}चन\u{94d}ति",
-    "तनक\u{94d}ति" IMP_ACT_1_SG "तनचानि",
-    "तनक\u{94d}ति" IMP_ACT_1_DU "तनचाव",
-    "तनक\u{94d}ति" IMP_ACT_1_PL "तनचाम",
-    "तनक\u{94d}ति" IMP_ACT_3_PL "तञ\u{94d}चन\u{94d}त\u{941}",
-    "तनक\u{94d}ति" OPT_ACT_1_SG "तञ\u{94d}च\u{94d}याम\u{94d}",
-    "तनक\u{94d}ति" OPT_ACT_1_DU "तञ\u{94d}च\u{94d}याव",
-    "तनक\u{94d}ति" OPT_ACT_1_PL "तञ\u{94d}च\u{94d}याम",
-    "तनक\u{94d}ति" OPT_ACT_2_SG "तञ\u{94d}च\u{94d}याः",
-    "तनक\u{94d}ति" OPT_ACT_2_DU "तञ\u{94d}च\u{94d}यातम\u{94d}",
-    "तनक\u{94d}ति" OPT_ACT_2_PL "तञ\u{94d}च\u{94d}यात",
-    "तनक\u{94d}ति" OPT_ACT_3_SG "तञ\u{94d}च\u{94d}यात\u{94d}",
-    "तनक\u{94d}ति" OPT_ACT_3_DU "तञ\u{94d}च\u{94d}याताम\u{94d}",
-    "तनक\u{94d}ति" OPT_ACT_3_PL "तञ\u{94d}च\u{94d}य\u{941}ः",
-    "तनक\u{94d}ति" SUBJ_ACT_1_SG "तनचानि",
-    "तनक\u{94d}ति" SUBJ_ACT_1_DU "तनचाव",
-    "तनक\u{94d}ति" SUBJ_ACT_1_PL "तनचाम",
-    "तनक\u{94d}ति" SUBJ_ACT_2_SG "तनचः",
-    "तनक\u{94d}ति" SUBJ_ACT_2_DU "तनचथः",
-    "तनक\u{94d}ति" SUBJ_ACT_2_PL "तनचथ",
-    "तनक\u{94d}ति" SUBJ_ACT_3_SG "तनचत\u{94d}",
-    "तनक\u{94d}ति" SUBJ_ACT_3_DU "तनचतः",
-    "तनक\u{94d}ति" SUBJ_ACT_3_PL "तनचन\u{94d}",
-    "तनक\u{94d}ति" IMPERFECT_ACT_1_SG "अतनचम\u{94d}",
-    "तनक\u{94d}ति" IMPERFECT_ACT_1_DU "अतञ\u{94d}च\u{94d}व",
-    "तनक\u{94d}ति" IMPERFECT_ACT_1_PL "अतञ\u{94d}च\u{94d}म",
-    "तनक\u{94d}ति" IMPERFECT_ACT_3_PL "अतञ\u{94d}चन\u{94d}",
-    "तनक\u{94d}ति" PARTICIPLE_PRES_ACT "तञ\u{94d}चत\u{94d}",
-    "ताष\u{94d}टि" IND_ACT_1_SG "ताक\u{94d}ष\u{94d}मि",
-    "ताष\u{94d}टि" IND_ACT_1_DU "तक\u{94d}ष\u{94d}वः",
-    "ताष\u{94d}टि" IND_ACT_1_PL "तक\u{94d}ष\u{94d}मः",
-    "ताष\u{94d}टि" IND_ACT_2_SG "ताक\u{94d}षि",
-    "ताष\u{94d}टि" IND_ACT_2_DU "तष\u{94d}ठः",
-    "ताष\u{94d}टि" IND_ACT_2_PL "तष\u{94d}ठ",
-    "ताष\u{94d}टि" IND_ACT_3_SG "ताष\u{94d}टि",
-    "ताष\u{94d}टि" IND_ACT_3_DU "तष\u{94d}टः",
-    "ताष\u{94d}टि" IND_ACT_3_PL "तक\u{94d}षति",
-    "ताष\u{94d}टि" IMP_ACT_1_SG "तक\u{94d}षाणि",
-    "ताष\u{94d}टि" IMP_ACT_1_DU "तक\u{94d}षाव",
-    "ताष\u{94d}टि" IMP_ACT_1_PL "तक\u{94d}षाम",
-    "ताष\u{94d}टि" IMP_ACT_2_SG "ताढि",
-    "ताष\u{94d}टि" IMP_ACT_2_DU "तष\u{94d}टम\u{94d}",
-    "ताष\u{94d}टि" IMP_ACT_2_PL "तष\u{94d}ट",
-    "ताष\u{94d}टि" IMP_ACT_3_SG "ताष\u{94d}ट\u{941}",
-    "ताष\u{94d}टि" IMP_ACT_3_DU "तष\u{94d}टाम\u{94d}",
-    "ताष\u{94d}टि" IMP_ACT_3_PL "तक\u{94d}षत\u{941}",
-    "ताष\u{94d}टि" OPT_ACT_1_SG "तक\u{94d}ष\u{94d}याम\u{94d}",
-    "ताष\u{94d}टि" OPT_ACT_1_DU "तक\u{94d}ष\u{94d}याव",
-    "ताष\u{94d}टि" OPT_ACT_1_PL "तक\u{94d}ष\u{94d}याम",
-    "ताष\u{94d}टि" OPT_ACT_2_SG "तक\u{94d}ष\u{94d}याः",
-    "ताष\u{94d}टि" OPT_ACT_2_DU "तक\u{94d}ष\u{94d}यातम\u{94d}",
-    "ताष\u{94d}टि" OPT_ACT_2_PL "तक\u{94d}ष\u{94d}यात",
-    "ताष\u{94d}टि" OPT_ACT_3_SG "तक\u{94d}ष\u{94d}यात\u{94d}",
-    "ताष\u{94d}टि" OPT_ACT_3_DU "तक\u{94d}ष\u{94d}याताम\u{94d}",
-    "ताष\u{94d}टि" OPT_ACT_3_PL "तक\u{94d}ष\u{94d}य\u{941}ः",
-    "ताष\u{94d}टि" SUBJ_ACT_1_SG "तक\u{94d}षाणि",
-    "ताष\u{94d}टि" SUBJ_ACT_1_DU "तक\u{94d}षाव",
-    "ताष\u{94d}टि" SUBJ_ACT_1_PL "तक\u{94d}षाम",
-    "ताष\u{94d}टि" SUBJ_ACT_2_SG "तक\u{94d}षः",
-    "ताष\u{94d}टि" SUBJ_ACT_2_DU "तक\u{94d}षथः",
-    "ताष\u{94d}टि" SUBJ_ACT_2_PL "तक\u{94d}षथ",
-    "ताष\u{94d}टि" SUBJ_ACT_3_SG "तक\u{94d}षत\u{94d}",
-    "ताष\u{94d}टि" SUBJ_ACT_3_DU "तक\u{94d}षतः",
-    "ताष\u{94d}टि" SUBJ_ACT_3_PL "तक\u{94d}षन\u{94d}",
-    "ताष\u{94d}टि" IMPERFECT_ACT_1_SG "अताक\u{94d}षम\u{94d}",
-    "ताष\u{94d}टि" IMPERFECT_ACT_1_DU "अतक\u{94d}ष\u{94d}व",
-    "ताष\u{94d}टि" IMPERFECT_ACT_1_PL "अतक\u{94d}ष\u{94d}म",
-    "ताष\u{94d}टि" IMPERFECT_ACT_2_SG "अताट\u{94d}",
-    "ताष\u{94d}टि" IMPERFECT_ACT_2_DU "अतष\u{94d}टम\u{94d}",
-    "ताष\u{94d}टि" IMPERFECT_ACT_2_PL "अतष\u{94d}ट",
-    "ताष\u{94d}टि" IMPERFECT_ACT_3_SG "अताट\u{94d}",
-    "ताष\u{94d}टि" IMPERFECT_ACT_3_DU "अतष\u{94d}टाम\u{94d}",
-    "ताष\u{94d}टि" IMPERFECT_ACT_3_PL "अतक\u{94d}ष\u{941}ः",
-    "ताष\u{94d}टि" PARTICIPLE_PRES_ACT "तक\u{94d}षत\u{94d}",
-    "त\u{941}ष\u{94d}टाव" PARTICIPLE_PERF_MID "त\u{941}ष\u{94d}ट\u{941}वान",
-    "त\u{943}ण\u{947}ढि" IND_ACT_1_SG "त\u{943}ण\u{947}ह\u{94d}मि",
-    "त\u{943}ण\u{947}ढि" IND_ACT_1_DU "त\u{943}\u{902}ह\u{94d}वः",
-    "त\u{943}ण\u{947}ढि" IND_ACT_1_PL "त\u{943}\u{902}ह\u{94d}मः",
-    "त\u{943}ण\u{947}ढि" IND_ACT_2_SG "त\u{943}ण\u{947}क\u{94d}षि",
-    "त\u{943}ण\u{947}ढि" IND_ACT_2_DU "त\u{943}ण\u{94d}ढः",
-    "त\u{943}ण\u{947}ढि" IND_ACT_2_PL "त\u{943}ण\u{94d}ढ",
-    "त\u{943}ण\u{947}ढि" IND_ACT_3_SG "त\u{943}ण\u{947}ढि",
-    "त\u{943}ण\u{947}ढि" IND_ACT_3_DU "त\u{943}ण\u{94d}ढः",
-    "त\u{943}ण\u{947}ढि" IND_ACT_3_PL "त\u{943}\u{902}हन\u{94d}ति",
-    "त\u{943}ण\u{947}ढि" IMP_ACT_1_SG "त\u{943}ण\u{947}हानि",
-    "त\u{943}ण\u{947}ढि" IMP_ACT_1_DU "त\u{943}ण\u{947}हाव",
-    "त\u{943}ण\u{947}ढि" IMP_ACT_1_PL "त\u{943}ण\u{947}हाम",
-    "त\u{943}ण\u{947}ढि" IMP_ACT_2_SG "त\u{943}ण\u{94d}ढि",
-    "त\u{943}ण\u{947}ढि" IMP_ACT_2_DU "त\u{943}ण\u{94d}ढम\u{94d}",
-    "त\u{943}ण\u{947}ढि" IMP_ACT_2_PL "त\u{943}ण\u{94d}ढ",
-    "त\u{943}ण\u{947}ढि" IMP_ACT_3_SG "त\u{943}ण\u{947}ढ\u{941}",
-    "त\u{943}ण\u{947}ढि" IMP_ACT_3_DU "त\u{943}ण\u{94d}ढाम\u{94d}",
-    "त\u{943}ण\u{947}ढि" IMP_ACT_3_PL "त\u{943}\u{902}हन\u{94d}त\u{941}",
-    "त\u{943}ण\u{947}ढि" OPT_ACT_1_SG "त\u{943}\u{902}ह\u{94d}याम\u{94d}",
-    "त\u{943}ण\u{947}ढि" OPT_ACT_1_DU "त\u{943}\u{902}ह\u{94d}याव",
-    "त\u{943}ण\u{947}ढि" OPT_ACT_1_PL "त\u{943}\u{902}ह\u{94d}याम",
-    "त\u{943}ण\u{947}ढि" OPT_ACT_2_SG "त\u{943}\u{902}ह\u{94d}याः",
-    "त\u{943}ण\u{947}ढि" OPT_ACT_2_DU "त\u{943}\u{902}ह\u{94d}यातम\u{94d}",
-    "त\u{943}ण\u{947}ढि" OPT_ACT_2_PL "त\u{943}\u{902}ह\u{94d}यात",
-    "त\u{943}ण\u{947}ढि" OPT_ACT_3_SG "त\u{943}\u{902}ह\u{94d}यात\u{94d}",
-    "त\u{943}ण\u{947}ढि" OPT_ACT_3_DU "त\u{943}\u{902}ह\u{94d}याताम\u{94d}",
-    "त\u{943}ण\u{947}ढि" OPT_ACT_3_PL "त\u{943}\u{902}ह\u{94d}य\u{941}ः",
-    "त\u{943}ण\u{947}ढि" SUBJ_ACT_1_SG "त\u{943}ण\u{947}हानि",
-    "त\u{943}ण\u{947}ढि" SUBJ_ACT_1_DU "त\u{943}ण\u{947}हाव",
-    "त\u{943}ण\u{947}ढि" SUBJ_ACT_1_PL "त\u{943}ण\u{947}हाम",
-    "त\u{943}ण\u{947}ढि" SUBJ_ACT_2_SG "त\u{943}ण\u{947}हः",
-    "त\u{943}ण\u{947}ढि" SUBJ_ACT_2_DU "त\u{943}ण\u{947}हथः",
-    "त\u{943}ण\u{947}ढि" SUBJ_ACT_2_PL "त\u{943}ण\u{947}हथ",
-    "त\u{943}ण\u{947}ढि" SUBJ_ACT_3_SG "त\u{943}ण\u{947}हत\u{94d}",
-    "त\u{943}ण\u{947}ढि" SUBJ_ACT_3_DU "त\u{943}ण\u{947}हतः",
-    "त\u{943}ण\u{947}ढि" SUBJ_ACT_3_PL "त\u{943}ण\u{947}हन\u{94d}",
-    "त\u{943}ण\u{947}ढि" IMPERFECT_ACT_1_SG "अत\u{943}ण\u{947}हम\u{94d}",
-    "त\u{943}ण\u{947}ढि" IMPERFECT_ACT_1_DU "अत\u{943}\u{902}ह\u{94d}व",
-    "त\u{943}ण\u{947}ढि" IMPERFECT_ACT_1_PL "अत\u{943}\u{902}ह\u{94d}म",
-    "त\u{943}ण\u{947}ढि" IMPERFECT_ACT_2_SG "अत\u{943}ण\u{947}ट\u{94d}",
-    "त\u{943}ण\u{947}ढि" IMPERFECT_ACT_2_DU "अत\u{943}ण\u{94d}ढम\u{94d}",
-    "त\u{943}ण\u{947}ढि" IMPERFECT_ACT_2_PL "अत\u{943}ण\u{94d}ढ",
-    "त\u{943}ण\u{947}ढि" IMPERFECT_ACT_3_SG "अत\u{943}ण\u{947}ट\u{94d}",
-    "त\u{943}ण\u{947}ढि" IMPERFECT_ACT_3_DU "अत\u{943}ण\u{94d}ढाम\u{94d}",
-    "त\u{943}ण\u{947}ढि" IMPERFECT_ACT_3_PL "अत\u{943}\u{902}हन\u{94d}",
-    "त\u{943}ण\u{947}ढि" PARTICIPLE_PRES_ACT "त\u{943}\u{902}हत\u{94d}",
-    "त\u{943}ष\u{94d}यति" IMPERFECT_ACT_1_SG "अत\u{943}स\u{94d}यम\u{94d}",
-    "त\u{943}ष\u{94d}यति" IMPERFECT_ACT_1_DU "अत\u{943}स\u{94d}याव",
-    "त\u{943}ष\u{94d}यति" IMPERFECT_ACT_1_PL "अत\u{943}स\u{94d}याम",
-    "त\u{943}ष\u{94d}यति" IMPERFECT_ACT_2_SG "अत\u{943}स\u{94d}यः",
-    "त\u{943}ष\u{94d}यति" IMPERFECT_ACT_2_DU "अत\u{943}स\u{94d}यतम\u{94d}",
-    "त\u{943}ष\u{94d}यति" IMPERFECT_ACT_2_PL "अत\u{943}स\u{94d}यत",
-    "त\u{943}ष\u{94d}यति" IMPERFECT_ACT_3_SG "अत\u{943}स\u{94d}यत\u{94d}",
-    "त\u{943}ष\u{94d}यति" IMPERFECT_ACT_3_DU "अत\u{943}स\u{94d}यताम\u{94d}",
-    "त\u{943}ष\u{94d}यति" IMPERFECT_ACT_3_PL "अत\u{943}स\u{94d}यन\u{94d}",
-    "त\u{943}ष\u{94d}यति" IMPERFECT_MID_1_SG "अत\u{943}स\u{94d}य\u{947}",
-    "त\u{943}ष\u{94d}यति" IMPERFECT_MID_1_DU "अत\u{943}स\u{94d}यावहि",
-    "त\u{943}ष\u{94d}यति" IMPERFECT_MID_1_PL "अत\u{943}स\u{94d}यामहि",
-    "त\u{943}ष\u{94d}यति" IMPERFECT_MID_2_SG "अत\u{943}स\u{94d}यथाः",
-    "त\u{943}ष\u{94d}यति" IMPERFECT_MID_2_DU "अत\u{943}स\u{94d}य\u{947}थाम\u{94d}",
-    "त\u{943}ष\u{94d}यति" IMPERFECT_MID_2_PL "अत\u{943}स\u{94d}यध\u{94d}वम\u{94d}",
-    "त\u{943}ष\u{94d}यति" IMPERFECT_MID_3_SG "अत\u{943}स\u{94d}यत",
-    "त\u{943}ष\u{94d}यति" IMPERFECT_MID_3_DU "अत\u{943}स\u{94d}य\u{947}ताम\u{94d}",
-    "त\u{943}ष\u{94d}यति" IMPERFECT_MID_3_PL "अत\u{943}स\u{94d}यन\u{94d}त",
-    "ददर\u{94d}श" PERFECT_ACT_1_DU "दद\u{943}शिव",
-    "ददर\u{94d}श" PERFECT_ACT_1_PL "दद\u{943}शिम",
-    "ददर\u{94d}श" PERFECT_ACT_2_DU "दद\u{943}शथ\u{941}ः",
-    "ददर\u{94d}श" PERFECT_ACT_2_PL "दद\u{943}श",
-    "ददर\u{94d}श" PERFECT_ACT_3_DU "दद\u{943}शत\u{941}ः",
-    "ददर\u{94d}श" PERFECT_ACT_3_PL "दद\u{943}श\u{941}ः",
-    "ददर\u{94d}श" PERFECT_MID_1_SG "दद\u{943}श\u{947}",
-    "ददर\u{94d}श" PERFECT_MID_1_DU "दद\u{943}शिवह\u{947}",
-    "ददर\u{94d}श" PERFECT_MID_1_PL "दद\u{943}शिमह\u{947}",
-    "ददर\u{94d}श" PERFECT_MID_2_SG "दद\u{943}शिष\u{947}",
-    "ददर\u{94d}श" PERFECT_MID_2_DU "दद\u{943}शाथ\u{947}",
-    "ददर\u{94d}श" PERFECT_MID_2_PL "दद\u{943}शिध\u{94d}व\u{947}",
-    "ददर\u{94d}श" PERFECT_MID_3_SG "दद\u{943}श\u{947}",
-    "ददर\u{94d}श" PERFECT_MID_3_DU "दद\u{943}शात\u{947}",
-    "ददर\u{94d}श" PERFECT_MID_3_PL "दद\u{943}शिर\u{947}",
-    "ददर\u{94d}श" PARTICIPLE_PERF_ACT "दद\u{943}श\u{94d}वा\u{902}स\u{94d}",
-    "ददर\u{94d}श" PARTICIPLE_PERF_MID "दद\u{943}शान",
-    "ददाति" IND_ACT_1_DU "दद\u{94d}वः",
-    "ददाति" IND_ACT_1_PL "दद\u{94d}मः",
-    "ददाति" IND_ACT_2_DU "दत\u{94d}थः",
-    "ददाति" IND_ACT_2_PL "दत\u{94d}थ",
-    "ददाति" IND_ACT_3_DU "दत\u{94d}तः",
-    "ददाति" IND_ACT_3_PL "ददति",
-    "ददाति" IND_MID_1_DU "दद\u{94d}वह\u{947}",
-    "ददाति" IND_MID_1_PL "दद\u{94d}मह\u{947}",
-    "ददाति" IND_MID_2_SG "दत\u{94d}स\u{947}",
-    "ददाति" IND_MID_2_PL "दद\u{94d}ध\u{94d}व\u{947}",
-    "ददाति" IND_MID_3_SG "दत\u{94d}त\u{947}",
-    "ददाति" IMP_ACT_2_SG "द\u{947}हि",
-    "ददाति" IMP_ACT_2_DU "दत\u{94d}तम\u{94d}",
-    "ददाति" IMP_ACT_2_PL "दत\u{94d}त",
-    "ददाति" IMP_ACT_3_DU "दत\u{94d}ताम\u{94d}",
-    "ददाति" IMP_ACT_3_PL "ददत\u{941}",
-    "ददाति" IMP_MID_2_SG "दत\u{94d}स\u{94d}व",
-    "ददाति" IMP_MID_2_PL "दद\u{94d}ध\u{94d}वम\u{94d}",
-    "ददाति" IMP_MID_3_SG "दत\u{94d}ताम\u{94d}",
-    "ददाति" OPT_ACT_1_SG "दद\u{94d}याम\u{94d}",
-    "ददाति" OPT_ACT_1_DU "दद\u{94d}याव",
-    "ददाति" OPT_ACT_1_PL "दद\u{94d}याम",
-    "ददाति" OPT_ACT_2_SG "दद\u{94d}याः",
-    "ददाति" OPT_ACT_2_DU "दद\u{94d}यातम\u{94d}",
-    "ददाति" OPT_ACT_2_PL "दद\u{94d}यात",
-    "ददाति" OPT_ACT_3_SG "दद\u{94d}यात\u{94d}",
-    "ददाति" OPT_ACT_3_DU "दद\u{94d}याताम\u{94d}",
-    "ददाति" OPT_ACT_3_PL "दद\u{94d}य\u{941}ः",
-    "ददाति" OPT_MID_2_PL "ददीध\u{94d}वम\u{94d}",
-    "ददाति" IMPERFECT_ACT_1_DU "अदद\u{94d}व",
-    "ददाति" IMPERFECT_ACT_1_PL "अदद\u{94d}म",
-    "ददाति" IMPERFECT_ACT_2_DU "अदत\u{94d}तम\u{94d}",
-    "ददाति" IMPERFECT_ACT_2_PL "अदत\u{94d}त",
-    "ददाति" IMPERFECT_ACT_3_DU "अदत\u{94d}ताम\u{94d}",
-    "ददाति" IMPERFECT_ACT_3_PL "अदद\u{941}ः",
-    "ददाति" IMPERFECT_MID_1_DU "अदद\u{94d}वहि",
-    "ददाति" IMPERFECT_MID_1_PL "अदद\u{94d}महि",
-    "ददाति" IMPERFECT_MID_2_SG "अदत\u{94d}थाः",
-    "ददाति" IMPERFECT_MID_2_PL "अदद\u{94d}ध\u{94d}वम\u{94d}",
-    "ददाति" IMPERFECT_MID_3_SG "अदत\u{94d}त",
-    "ददाह" PERFECT_ACT_1_SG "ददह",
-    "ददाह" PERFECT_ACT_1_DU "द\u{947}हिव",
-    "ददाह" PERFECT_ACT_1_PL "द\u{947}हिम",
-    "ददाह" PERFECT_ACT_2_SG "ददग\u{94d}ध",
-    "ददाह" PERFECT_ACT_2_DU "द\u{947}हथ\u{941}ः",
-    "ददाह" PERFECT_ACT_2_PL "द\u{947}ह",
-    "ददाह" PERFECT_ACT_3_DU "द\u{947}हत\u{941}ः",
-    "ददाह" PERFECT_ACT_3_PL "द\u{947}ह\u{941}ः",
-    "ददाह" PERFECT_MID_1_SG "द\u{947}ह\u{947}",
-    "ददाह" PERFECT_MID_1_DU "द\u{947}हिवह\u{947}",
-    "ददाह" PERFECT_MID_1_PL "द\u{947}हिमह\u{947}",
-    "ददाह" PERFECT_MID_2_SG "द\u{947}हिष\u{947}",
-    "ददाह" PERFECT_MID_2_DU "द\u{947}हाथ\u{947}",
-    "ददाह" PERFECT_MID_2_PL "द\u{947}हिध\u{94d}व\u{947}",
-    "ददाह" PERFECT_MID_3_SG "द\u{947}ह\u{947}",
-    "ददाह" PERFECT_MID_3_DU "द\u{947}हात\u{947}",
-    "ददाह" PERFECT_MID_3_PL "द\u{947}हिर\u{947}",
-    "ददाह" PARTICIPLE_PERF_ACT "द\u{947}हिवा\u{902}स\u{94d}",
-    "ददाह" PARTICIPLE_PERF_MID "द\u{947}हान",
-    "दधाति" IND_ACT_1_DU "दध\u{94d}वः",
-    "दधाति" IND_ACT_1_PL "दध\u{94d}मः",
-    "दधाति" IND_ACT_2_DU "धत\u{94d}थः",
-    "दधाति" IND_ACT_2_PL "धत\u{94d}थ",
-    "दधाति" IND_ACT_3_DU "धत\u{94d}तः",
-    "दधाति" IND_ACT_3_PL "दधति",
-    "दधाति" IND_MID_1_DU "दध\u{94d}वह\u{947}",
-    "दधाति" IND_MID_1_PL "दध\u{94d}मह\u{947}",
-    "दधाति" IND_MID_2_SG "धत\u{94d}स\u{947}",
-    "दधाति" IND_MID_2_PL "धद\u{94d}ध\u{94d}व\u{947}",
-    "दधाति" IND_MID_3_SG "धत\u{94d}त\u{947}",
-    "दधाति" IMP_ACT_2_SG "ध\u{947}हि",
-    "दधाति" IMP_ACT_2_DU "धत\u{94d}तम\u{94d}",
-    "दधाति" IMP_ACT_2_PL "धत\u{94d}त",
-    "दधाति" IMP_ACT_3_DU "धत\u{94d}ताम\u{94d}",
-    "दधाति" IMP_ACT_3_PL "दधत\u{941}",
-    "दधाति" IMP_MID_2_SG "धत\u{94d}स\u{94d}व",
-    "दधाति" IMP_MID_2_PL "धद\u{94d}ध\u{94d}वम\u{94d}",
-    "दधाति" IMP_MID_3_SG "धत\u{94d}ताम\u{94d}",
-    "दधाति" OPT_ACT_1_SG "दध\u{94d}याम\u{94d}",
-    "दधाति" OPT_ACT_1_DU "दध\u{94d}याव",
-    "दधाति" OPT_ACT_1_PL "दध\u{94d}याम",
-    "दधाति" OPT_ACT_2_SG "दध\u{94d}याः",
-    "दधाति" OPT_ACT_2_DU "दध\u{94d}यातम\u{94d}",
-    "दधाति" OPT_ACT_2_PL "दध\u{94d}यात",
-    "दधाति" OPT_ACT_3_SG "दध\u{94d}यात\u{94d}",
-    "दधाति" OPT_ACT_3_DU "दध\u{94d}याताम\u{94d}",
-    "दधाति" OPT_ACT_3_PL "दध\u{94d}य\u{941}ः",
-    "दधाति" OPT_MID_2_PL "दधीध\u{94d}वम\u{94d}",
-    "दधाति" IMPERFECT_ACT_1_DU "अदध\u{94d}व",
-    "दधाति" IMPERFECT_ACT_1_PL "अदध\u{94d}म",
-    "दधाति" IMPERFECT_ACT_2_DU "अधत\u{94d}तम\u{94d}",
-    "दधाति" IMPERFECT_ACT_2_PL "अधत\u{94d}त",
-    "दधाति" IMPERFECT_ACT_3_DU "अधत\u{94d}ताम\u{94d}",
-    "दधाति" IMPERFECT_ACT_3_PL "अदध\u{941}ः",
-    "दधाति" IMPERFECT_MID_1_DU "अदध\u{94d}वहि",
-    "दधाति" IMPERFECT_MID_1_PL "अदध\u{94d}महि",
-    "दधाति" IMPERFECT_MID_2_SG "अधत\u{94d}थाः",
-    "दधाति" IMPERFECT_MID_2_PL "अधद\u{94d}ध\u{94d}वम\u{94d}",
-    "दधाति" IMPERFECT_MID_3_SG "अधत\u{94d}त",
-    "दिद\u{947}ष\u{94d}टि" IND_ACT_1_SG "दिद\u{947}श\u{94d}मि",
-    "दिद\u{947}ष\u{94d}टि" IND_ACT_1_DU "दिदिश\u{94d}वः",
-    "दिद\u{947}ष\u{94d}टि" IND_ACT_1_PL "दिदिश\u{94d}मः",
-    "दिद\u{947}ष\u{94d}टि" IND_ACT_2_SG "दिद\u{947}क\u{94d}षि",
-    "दिद\u{947}ष\u{94d}टि" IND_ACT_2_DU "दिदिष\u{94d}ठः",
-    "दिद\u{947}ष\u{94d}टि" IND_ACT_2_PL "दिदिष\u{94d}ठ",
-    "दिद\u{947}ष\u{94d}टि" IND_ACT_3_SG "दिद\u{947}ष\u{94d}टि",
-    "दिद\u{947}ष\u{94d}टि" IND_ACT_3_DU "दिदिष\u{94d}टः",
-    "दिद\u{947}ष\u{94d}टि" IND_ACT_3_PL "दिदिशति",
-    "दिद\u{947}ष\u{94d}टि" IND_MID_1_SG "दिदिश\u{947}",
-    "दिद\u{947}ष\u{94d}टि" IND_MID_1_DU "दिदिश\u{94d}वह\u{947}",
-    "दिद\u{947}ष\u{94d}टि" IND_MID_1_PL "दिदिश\u{94d}मह\u{947}",
-    "दिद\u{947}ष\u{94d}टि" IND_MID_2_SG "दिदिक\u{94d}ष\u{947}",
-    "दिद\u{947}ष\u{94d}टि" IND_MID_2_DU "दिदिशाथ\u{947}",
-    "दिद\u{947}ष\u{94d}टि" IND_MID_2_PL "दिदिड\u{94d}ढ\u{94d}व\u{947}",
-    "दिद\u{947}ष\u{94d}टि" IND_MID_3_SG "दिदिष\u{94d}ट\u{947}",
-    "दिद\u{947}ष\u{94d}टि" IND_MID_3_DU "दिदिशात\u{947}",
-    "दिद\u{947}ष\u{94d}टि" IND_MID_3_PL "दिदिशत\u{947}",
-    "दिद\u{947}ष\u{94d}टि" IMP_ACT_1_SG "दिद\u{947}शानि",
-    "दिद\u{947}ष\u{94d}टि" IMP_ACT_1_DU "दिद\u{947}शाव",
-    "दिद\u{947}ष\u{94d}टि" IMP_ACT_1_PL "दिद\u{947}शाम",
-    "दिद\u{947}ष\u{94d}टि" IMP_ACT_2_SG "दिदिड\u{94d}ढि",
-    "दिद\u{947}ष\u{94d}टि" IMP_ACT_2_DU "दिदिष\u{94d}टम\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" IMP_ACT_2_PL "दिदिष\u{94d}ट",
-    "दिद\u{947}ष\u{94d}टि" IMP_ACT_3_SG "दिद\u{947}ष\u{94d}ट\u{941}",
-    "दिद\u{947}ष\u{94d}टि" IMP_ACT_3_DU "दिदिष\u{94d}टाम\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" IMP_ACT_3_PL "दिदिशत\u{941}",
-    "दिद\u{947}ष\u{94d}टि" IMP_MID_1_SG "दिद\u{947}श\u{948}",
-    "दिद\u{947}ष\u{94d}टि" IMP_MID_1_DU "दिद\u{947}शावह\u{948}",
-    "दिद\u{947}ष\u{94d}टि" IMP_MID_1_PL "दिद\u{947}शामह\u{948}",
-    "दिद\u{947}ष\u{94d}टि" IMP_MID_2_SG "दिदिक\u{94d}ष\u{94d}व",
-    "दिद\u{947}ष\u{94d}टि" IMP_MID_2_DU "दिदिशाथाम\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" IMP_MID_2_PL "दिदिड\u{94d}ढ\u{94d}वम\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" IMP_MID_3_SG "दिदिष\u{94d}टाम\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" IMP_MID_3_DU "दिदिशाताम\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" IMP_MID_3_PL "दिदिशताम\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" OPT_ACT_1_SG "दिदिश\u{94d}याम\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" OPT_ACT_1_DU "दिदिश\u{94d}याव",
-    "दिद\u{947}ष\u{94d}टि" OPT_ACT_1_PL "दिदिश\u{94d}याम",
-    "दिद\u{947}ष\u{94d}टि" OPT_ACT_2_SG "दिदिश\u{94d}याः",
-    "दिद\u{947}ष\u{94d}टि" OPT_ACT_2_DU "दिदिश\u{94d}यातम\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" OPT_ACT_2_PL "दिदिश\u{94d}यात",
-    "दिद\u{947}ष\u{94d}टि" OPT_ACT_3_SG "दिदिश\u{94d}यात\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" OPT_ACT_3_DU "दिदिश\u{94d}याताम\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" OPT_ACT_3_PL "दिदिश\u{94d}य\u{941}ः",
-    "दिद\u{947}ष\u{94d}टि" OPT_MID_1_SG "दिदिशीय",
-    "दिद\u{947}ष\u{94d}टि" OPT_MID_1_DU "दिदिशीवहि",
-    "दिद\u{947}ष\u{94d}टि" OPT_MID_1_PL "दिदिशीमहि",
-    "दिद\u{947}ष\u{94d}टि" OPT_MID_2_SG "दिदिशीथाः",
-    "दिद\u{947}ष\u{94d}टि" OPT_MID_2_DU "दिदिशीयाथाम\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" OPT_MID_2_PL "दिदिशीध\u{94d}वम\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" OPT_MID_3_SG "दिदिशीत",
-    "दिद\u{947}ष\u{94d}टि" OPT_MID_3_DU "दिदिशीयाताम\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" OPT_MID_3_PL "दिदिशीरन\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" SUBJ_ACT_1_SG "दिद\u{947}शानि",
-    "दिद\u{947}ष\u{94d}टि" SUBJ_ACT_1_DU "दिद\u{947}शाव",
-    "दिद\u{947}ष\u{94d}टि" SUBJ_ACT_1_PL "दिद\u{947}शाम",
-    "दिद\u{947}ष\u{94d}टि" SUBJ_ACT_2_SG "दिद\u{947}शः",
-    "दिद\u{947}ष\u{94d}टि" SUBJ_ACT_2_DU "दिद\u{947}शथः",
-    "दिद\u{947}ष\u{94d}टि" SUBJ_ACT_2_PL "दिद\u{947}शथ",
-    "दिद\u{947}ष\u{94d}टि" SUBJ_ACT_3_SG "दिद\u{947}शत\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" SUBJ_ACT_3_DU "दिद\u{947}शतः",
-    "दिद\u{947}ष\u{94d}टि" SUBJ_ACT_3_PL "दिद\u{947}शन\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" SUBJ_MID_1_SG "दिद\u{947}श\u{948}",
-    "दिद\u{947}ष\u{94d}टि" SUBJ_MID_1_DU "दिद\u{947}शावह\u{948}",
-    "दिद\u{947}ष\u{94d}टि" SUBJ_MID_1_PL "दिद\u{947}शामह\u{948}",
-    "दिद\u{947}ष\u{94d}टि" SUBJ_MID_2_SG "दिद\u{947}शस\u{947}",
-    "दिद\u{947}ष\u{94d}टि" SUBJ_MID_2_DU "दिद\u{947}श\u{948}थ\u{947}",
-    "दिद\u{947}ष\u{94d}टि" SUBJ_MID_2_PL "दिद\u{947}शध\u{94d}व\u{947}",
-    "दिद\u{947}ष\u{94d}टि" SUBJ_MID_3_SG "दिद\u{947}शत\u{947}",
-    "दिद\u{947}ष\u{94d}टि" SUBJ_MID_3_DU "दिद\u{947}श\u{948}त\u{947}",
-    "दिद\u{947}ष\u{94d}टि" SUBJ_MID_3_PL "दिद\u{947}शन\u{94d}त",
-    "दिद\u{947}ष\u{94d}टि" IMPERFECT_ACT_1_SG "अदिद\u{947}शम\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" IMPERFECT_ACT_1_DU "अदिदिश\u{94d}व",
-    "दिद\u{947}ष\u{94d}टि" IMPERFECT_ACT_1_PL "अदिदिश\u{94d}म",
-    "दिद\u{947}ष\u{94d}टि" IMPERFECT_ACT_2_SG "अदिद\u{947}क\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" IMPERFECT_ACT_2_DU "अदिदिष\u{94d}टम\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" IMPERFECT_ACT_2_PL "अदिदिष\u{94d}ट",
-    "दिद\u{947}ष\u{94d}टि" IMPERFECT_ACT_3_SG "अदिद\u{947}क\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" IMPERFECT_ACT_3_DU "अदिदिष\u{94d}टाम\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" IMPERFECT_ACT_3_PL "अदिदिश\u{941}ः",
-    "दिद\u{947}ष\u{94d}टि" IMPERFECT_MID_1_SG "अदिदिशि",
-    "दिद\u{947}ष\u{94d}टि" IMPERFECT_MID_1_DU "अदिदिश\u{94d}वहि",
-    "दिद\u{947}ष\u{94d}टि" IMPERFECT_MID_1_PL "अदिदिश\u{94d}महि",
-    "दिद\u{947}ष\u{94d}टि" IMPERFECT_MID_2_SG "अदिदिष\u{94d}ठाः",
-    "दिद\u{947}ष\u{94d}टि" IMPERFECT_MID_2_DU "अदिदिशाथाम\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" IMPERFECT_MID_2_PL "अदिदिड\u{94d}ढ\u{94d}वम\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" IMPERFECT_MID_3_SG "अदिदिष\u{94d}ट",
-    "दिद\u{947}ष\u{94d}टि" IMPERFECT_MID_3_DU "अदिदिशाताम\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" IMPERFECT_MID_3_PL "अदिदिशत",
-    "दिद\u{947}ष\u{94d}टि" PARTICIPLE_PRES_ACT "दिदिशत\u{94d}",
-    "दिद\u{947}ष\u{94d}टि" PARTICIPLE_PRES_MID "दिदिशान",
-    "द\u{941}दोह" PERFECT_ACT_1_DU "द\u{941}द\u{941}हिव",
-    "द\u{941}दोह" PERFECT_ACT_1_PL "द\u{941}द\u{941}हिम",
-    "द\u{941}दोह" PERFECT_ACT_2_DU "द\u{941}द\u{941}हथ\u{941}ः",
-    "द\u{941}दोह" PERFECT_ACT_2_PL "द\u{941}द\u{941}ह",
-    "द\u{941}दोह" PERFECT_ACT_3_DU "द\u{941}द\u{941}हत\u{941}ः",
-    "द\u{941}दोह" PERFECT_ACT_3_PL "द\u{941}द\u{941}ह\u{941}ः",
-    "द\u{941}दोह" PERFECT_MID_1_SG "द\u{941}द\u{941}ह\u{947}",
-    "द\u{941}दोह" PERFECT_MID_1_DU "द\u{941}द\u{941}हिवह\u{947}",
-    "द\u{941}दोह" PERFECT_MID_1_PL "द\u{941}द\u{941}हिमह\u{947}",
-    "द\u{941}दोह" PERFECT_MID_2_SG "द\u{941}द\u{941}हिष\u{947}",
-    "द\u{941}दोह" PERFECT_MID_2_DU "द\u{941}द\u{941}हाथ\u{947}",
-    "द\u{941}दोह" PERFECT_MID_2_PL "द\u{941}द\u{941}हिध\u{94d}व\u{947}",
-    "द\u{941}दोह" PERFECT_MID_3_SG "द\u{941}द\u{941}ह\u{947}",
-    "द\u{941}दोह" PERFECT_MID_3_DU "द\u{941}द\u{941}हात\u{947}",
-    "द\u{941}दोह" PERFECT_MID_3_PL "द\u{941}द\u{941}हिर\u{947}",
-    "द\u{941}दोह" PARTICIPLE_PERF_ACT "द\u{941}द\u{941}घ\u{94d}वा\u{902}स\u{94d}",
-    "द\u{941}दोह" PARTICIPLE_PERF_MID "द\u{941}द\u{941}हान",
-    "द\u{941}द\u{94d}रोह" PERFECT_ACT_1_DU "द\u{941}द\u{94d}र\u{941}हिव",
-    "द\u{941}द\u{94d}रोह" PERFECT_ACT_1_PL "द\u{941}द\u{94d}र\u{941}हिम",
-    "द\u{941}द\u{94d}रोह" PERFECT_ACT_2_DU "द\u{941}द\u{94d}र\u{941}हथ\u{941}ः",
-    "द\u{941}द\u{94d}रोह" PERFECT_ACT_2_PL "द\u{941}द\u{94d}र\u{941}ह",
-    "द\u{941}द\u{94d}रोह" PERFECT_ACT_3_DU "द\u{941}द\u{94d}र\u{941}हत\u{941}ः",
-    "द\u{941}द\u{94d}रोह" PERFECT_ACT_3_PL "द\u{941}द\u{94d}र\u{941}ह\u{941}ः",
-    "द\u{941}द\u{94d}रोह" PERFECT_MID_1_SG "द\u{941}द\u{94d}र\u{941}ह\u{947}",
-    "द\u{941}द\u{94d}रोह" PERFECT_MID_1_DU "द\u{941}द\u{94d}र\u{941}हिवह\u{947}",
-    "द\u{941}द\u{94d}रोह" PERFECT_MID_1_PL "द\u{941}द\u{94d}र\u{941}हिमह\u{947}",
-    "द\u{941}द\u{94d}रोह" PERFECT_MID_2_SG "द\u{941}द\u{94d}र\u{941}हिष\u{947}",
-    "द\u{941}द\u{94d}रोह" PERFECT_MID_2_DU "द\u{941}द\u{94d}र\u{941}हाथ\u{947}",
-    "द\u{941}द\u{94d}रोह" PERFECT_MID_2_PL "द\u{941}द\u{94d}र\u{941}हिध\u{94d}व\u{947}",
-    "द\u{941}द\u{94d}रोह" PERFECT_MID_3_SG "द\u{941}द\u{94d}र\u{941}ह\u{947}",
-    "द\u{941}द\u{94d}रोह" PERFECT_MID_3_DU "द\u{941}द\u{94d}र\u{941}हात\u{947}",
-    "द\u{941}द\u{94d}रोह" PERFECT_MID_3_PL "द\u{941}द\u{94d}र\u{941}हिर\u{947}",
-    "द\u{941}द\u{94d}रोह" PARTICIPLE_PERF_ACT "द\u{941}द\u{94d}र\u{941}ह\u{94d}वा\u{902}स\u{94d}",
-    "द\u{941}द\u{94d}रोह" PARTICIPLE_PERF_MID "द\u{941}द\u{94d}र\u{941}हाण",
-    "द\u{941}नोति" FUTURE_ACT_1_SG "दोष\u{94d}यामि",
-    "द\u{941}नोति" FUTURE_ACT_1_DU "दोष\u{94d}यावः",
-    "द\u{941}नोति" FUTURE_ACT_1_PL "दोष\u{94d}यामः",
-    "द\u{941}नोति" FUTURE_ACT_2_SG "दोष\u{94d}यसि",
-    "द\u{941}नोति" FUTURE_ACT_2_DU "दोष\u{94d}यथः",
-    "द\u{941}नोति" FUTURE_ACT_2_PL "दोष\u{94d}यथ",
-    "द\u{941}नोति" FUTURE_ACT_3_SG "दोष\u{94d}यति",
-    "द\u{941}नोति" FUTURE_ACT_3_DU "दोष\u{94d}यतः",
-    "द\u{941}नोति" FUTURE_ACT_3_PL "दोष\u{94d}यन\u{94d}ति",
-    "द\u{941}नोति" CONDITIONAL_ACT_1_SG "अदोष\u{94d}यम\u{94d}",
-    "द\u{941}नोति" CONDITIONAL_ACT_1_DU "अदोष\u{94d}याव",
-    "द\u{941}नोति" CONDITIONAL_ACT_1_PL "अदोष\u{94d}याम",
-    "द\u{941}नोति" CONDITIONAL_ACT_2_SG "अदोष\u{94d}यः",
-    "द\u{941}नोति" CONDITIONAL_ACT_2_DU "अदोष\u{94d}यतम\u{94d}",
-    "द\u{941}नोति" CONDITIONAL_ACT_2_PL "अदोष\u{94d}यत",
-    "द\u{941}नोति" CONDITIONAL_ACT_3_SG "अदोष\u{94d}यत\u{94d}",
-    "द\u{941}नोति" CONDITIONAL_ACT_3_DU "अदोष\u{94d}यताम\u{94d}",
-    "द\u{941}नोति" CONDITIONAL_ACT_3_PL "अदोष\u{94d}यन\u{94d}",
-    "द\u{941}नोति" PERFECT_ACT_1_SG "द\u{941}दव",
-    "द\u{941}नोति" PERFECT_ACT_1_DU "द\u{941}द\u{941}विव",
-    "द\u{941}नोति" PERFECT_ACT_1_PL "द\u{941}द\u{941}विम",
-    "द\u{941}नोति" PERFECT_ACT_2_SG "द\u{941}दोथ",
-    "द\u{941}नोति" PERFECT_ACT_2_DU "द\u{941}द\u{941}वथ\u{941}ः",
-    "द\u{941}नोति" PERFECT_ACT_2_PL "द\u{941}द\u{941}व",
-    "द\u{941}नोति" PERFECT_ACT_3_SG "द\u{941}दाव",
-    "द\u{941}नोति" PERFECT_ACT_3_DU "द\u{941}द\u{941}वत\u{941}ः",
-    "द\u{941}नोति" PERFECT_ACT_3_PL "द\u{941}द\u{941}व\u{941}ः",
-    "द\u{941}नोति" AORIST_ACT_1_SG "अदौषम\u{94d}",
-    "द\u{941}नोति" AORIST_ACT_1_DU "अदौष\u{94d}व",
-    "द\u{941}नोति" AORIST_ACT_1_PL "अदौष\u{94d}म",
-    "द\u{941}नोति" AORIST_ACT_2_SG "अदौषीः",
-    "द\u{941}नोति" AORIST_ACT_2_DU "अदौष\u{94d}टम\u{94d}",
-    "द\u{941}नोति" AORIST_ACT_2_PL "अदौष\u{94d}ट",
-    "द\u{941}नोति" AORIST_ACT_3_SG "अदौषीत\u{94d}",
-    "द\u{941}नोति" AORIST_ACT_3_DU "अदौष\u{94d}टाम\u{94d}",
-    "द\u{941}नोति" AORIST_ACT_3_PL "अदौष\u{941}ः",
-    "द\u{941}नोति" INFINITIVE "दोत\u{941}म\u{94d}",
-    "द\u{941}नोति" GERUND "द\u{942}त\u{94d}वा",
-    "द\u{941}नोति" PARTICIPLE_FUT_ACT "दोष\u{94d}यत\u{94d}",
-    "द\u{941}नोति" PARTICIPLE_PERF_ACT "द\u{941}द\u{941}वा\u{902}स\u{94d}",
-    "द\u{947}ग\u{94d}धि" IND_ACT_1_SG "द\u{947}ह\u{94d}मि",
-    "द\u{947}ग\u{94d}धि" IND_ACT_1_DU "दिह\u{94d}वः",
-    "द\u{947}ग\u{94d}धि" IND_ACT_1_PL "दिह\u{94d}मः",
-    "द\u{947}ग\u{94d}धि" IND_ACT_2_SG "ध\u{947}क\u{94d}षि",
-    "द\u{947}ग\u{94d}धि" IND_ACT_2_DU "दिग\u{94d}धः",
-    "द\u{947}ग\u{94d}धि" IND_ACT_2_PL "दिग\u{94d}ध",
-    "द\u{947}ग\u{94d}धि" IND_ACT_3_SG "द\u{947}ग\u{94d}धि",
-    "द\u{947}ग\u{94d}धि" IND_ACT_3_DU "दिग\u{94d}धः",
-    "द\u{947}ग\u{94d}धि" IND_ACT_3_PL "दिहन\u{94d}ति",
-    "द\u{947}ग\u{94d}धि" IND_MID_1_SG "दिह\u{947}",
-    "द\u{947}ग\u{94d}धि" IND_MID_1_DU "दिह\u{94d}वह\u{947}",
-    "द\u{947}ग\u{94d}धि" IND_MID_1_PL "दिह\u{94d}मह\u{947}",
-    "द\u{947}ग\u{94d}धि" IND_MID_2_SG "धिक\u{94d}ष\u{947}",
-    "द\u{947}ग\u{94d}धि" IND_MID_2_DU "दिहाथ\u{947}",
-    "द\u{947}ग\u{94d}धि" IND_MID_2_PL "धिग\u{94d}ध\u{94d}व\u{947}",
-    "द\u{947}ग\u{94d}धि" IND_MID_3_SG "दिग\u{94d}ध\u{947}",
-    "द\u{947}ग\u{94d}धि" IND_MID_3_DU "दिहात\u{947}",
-    "द\u{947}ग\u{94d}धि" IND_MID_3_PL "दिहत\u{947}",
-    "द\u{947}ग\u{94d}धि" IMP_ACT_1_SG "द\u{947}हानि",
-    "द\u{947}ग\u{94d}धि" IMP_ACT_1_DU "द\u{947}हाव",
-    "द\u{947}ग\u{94d}धि" IMP_ACT_1_PL "द\u{947}हाम",
-    "द\u{947}ग\u{94d}धि" IMP_ACT_2_SG "दिग\u{94d}धि",
-    "द\u{947}ग\u{94d}धि" IMP_ACT_2_DU "दिग\u{94d}धम\u{94d}",
-    "द\u{947}ग\u{94d}धि" IMP_ACT_2_PL "दिग\u{94d}ध",
-    "द\u{947}ग\u{94d}धि" IMP_ACT_3_SG "द\u{947}ग\u{94d}ध\u{941}",
-    "द\u{947}ग\u{94d}धि" IMP_ACT_3_DU "दिग\u{94d}धाम\u{94d}",
-    "द\u{947}ग\u{94d}धि" IMP_ACT_3_PL "दिहन\u{94d}त\u{941}",
-    "द\u{947}ग\u{94d}धि" IMP_MID_1_SG "द\u{947}ह\u{948}",
-    "द\u{947}ग\u{94d}धि" IMP_MID_1_DU "द\u{947}हावह\u{948}",
-    "द\u{947}ग\u{94d}धि" IMP_MID_1_PL "द\u{947}हामह\u{948}",
-    "द\u{947}ग\u{94d}धि" IMP_MID_2_SG "धिक\u{94d}ष\u{94d}व",
-    "द\u{947}ग\u{94d}धि" IMP_MID_2_DU "दिहाथाम\u{94d}",
-    "द\u{947}ग\u{94d}धि" IMP_MID_2_PL "धिग\u{94d}ध\u{94d}वम\u{94d}",
-    "द\u{947}ग\u{94d}धि" IMP_MID_3_SG "दिग\u{94d}धाम\u{94d}",
-    "द\u{947}ग\u{94d}धि" IMP_MID_3_DU "दिहाताम\u{94d}",
-    "द\u{947}ग\u{94d}धि" IMP_MID_3_PL "दिहताम\u{94d}",
-    "द\u{947}ग\u{94d}धि" OPT_ACT_1_SG "दिह\u{94d}याम\u{94d}",
-    "द\u{947}ग\u{94d}धि" OPT_ACT_1_DU "दिह\u{94d}याव",
-    "द\u{947}ग\u{94d}धि" OPT_ACT_1_PL "दिह\u{94d}याम",
-    "द\u{947}ग\u{94d}धि" OPT_ACT_2_SG "दिह\u{94d}याः",
-    "द\u{947}ग\u{94d}धि" OPT_ACT_2_DU "दिह\u{94d}यातम\u{94d}",
-    "द\u{947}ग\u{94d}धि" OPT_ACT_2_PL "दिह\u{94d}यात",
-    "द\u{947}ग\u{94d}धि" OPT_ACT_3_SG "दिह\u{94d}यात\u{94d}",
-    "द\u{947}ग\u{94d}धि" OPT_ACT_3_DU "दिह\u{94d}याताम\u{94d}",
-    "द\u{947}ग\u{94d}धि" OPT_ACT_3_PL "दिह\u{94d}य\u{941}ः",
-    "द\u{947}ग\u{94d}धि" OPT_MID_1_SG "दिहीय",
-    "द\u{947}ग\u{94d}धि" OPT_MID_1_DU "दिहीवहि",
-    "द\u{947}ग\u{94d}धि" OPT_MID_1_PL "दिहीमहि",
-    "द\u{947}ग\u{94d}धि" OPT_MID_2_SG "दिहीथाः",
-    "द\u{947}ग\u{94d}धि" OPT_MID_2_DU "दिहीयाथाम\u{94d}",
-    "द\u{947}ग\u{94d}धि" OPT_MID_2_PL "दिहीध\u{94d}वम\u{94d}",
-    "द\u{947}ग\u{94d}धि" OPT_MID_3_SG "दिहीत",
-    "द\u{947}ग\u{94d}धि" OPT_MID_3_DU "दिहीयाताम\u{94d}",
-    "द\u{947}ग\u{94d}धि" OPT_MID_3_PL "दिहीरन\u{94d}",
-    "द\u{947}ग\u{94d}धि" SUBJ_ACT_1_SG "द\u{947}हानि",
-    "द\u{947}ग\u{94d}धि" SUBJ_ACT_1_DU "द\u{947}हाव",
-    "द\u{947}ग\u{94d}धि" SUBJ_ACT_1_PL "द\u{947}हाम",
-    "द\u{947}ग\u{94d}धि" SUBJ_ACT_2_SG "द\u{947}हः",
-    "द\u{947}ग\u{94d}धि" SUBJ_ACT_2_DU "द\u{947}हथः",
-    "द\u{947}ग\u{94d}धि" SUBJ_ACT_2_PL "द\u{947}हथ",
-    "द\u{947}ग\u{94d}धि" SUBJ_ACT_3_SG "द\u{947}हत\u{94d}",
-    "द\u{947}ग\u{94d}धि" SUBJ_ACT_3_DU "द\u{947}हतः",
-    "द\u{947}ग\u{94d}धि" SUBJ_ACT_3_PL "द\u{947}हन\u{94d}",
-    "द\u{947}ग\u{94d}धि" SUBJ_MID_1_SG "द\u{947}ह\u{948}",
-    "द\u{947}ग\u{94d}धि" SUBJ_MID_1_DU "द\u{947}हावह\u{948}",
-    "द\u{947}ग\u{94d}धि" SUBJ_MID_1_PL "द\u{947}हामह\u{948}",
-    "द\u{947}ग\u{94d}धि" SUBJ_MID_2_SG "द\u{947}हस\u{947}",
-    "द\u{947}ग\u{94d}धि" SUBJ_MID_2_DU "द\u{947}ह\u{948}थ\u{947}",
-    "द\u{947}ग\u{94d}धि" SUBJ_MID_2_PL "द\u{947}हध\u{94d}व\u{947}",
-    "द\u{947}ग\u{94d}धि" SUBJ_MID_3_SG "द\u{947}हत\u{947}",
-    "द\u{947}ग\u{94d}धि" SUBJ_MID_3_DU "द\u{947}ह\u{948}त\u{947}",
-    "द\u{947}ग\u{94d}धि" SUBJ_MID_3_PL "द\u{947}हन\u{94d}त",
-    "द\u{947}ग\u{94d}धि" IMPERFECT_ACT_1_SG "अद\u{947}हम\u{94d}",
-    "द\u{947}ग\u{94d}धि" IMPERFECT_ACT_1_DU "अदिह\u{94d}व",
-    "द\u{947}ग\u{94d}धि" IMPERFECT_ACT_1_PL "अदिह\u{94d}म",
-    "द\u{947}ग\u{94d}धि" IMPERFECT_ACT_2_SG "अध\u{947}क\u{94d}",
-    "द\u{947}ग\u{94d}धि" IMPERFECT_ACT_2_DU "अदिग\u{94d}धम\u{94d}",
-    "द\u{947}ग\u{94d}धि" IMPERFECT_ACT_2_PL "अदिग\u{94d}ध",
-    "द\u{947}ग\u{94d}धि" IMPERFECT_ACT_3_SG "अध\u{947}क\u{94d}",
-    "द\u{947}ग\u{94d}धि" IMPERFECT_ACT_3_DU "अदिग\u{94d}धाम\u{94d}",
-    "द\u{947}ग\u{94d}धि" IMPERFECT_ACT_3_PL "अदिहन\u{94d}",
-    "द\u{947}ग\u{94d}धि" IMPERFECT_MID_1_SG "अदिहि",
-    "द\u{947}ग\u{94d}धि" IMPERFECT_MID_1_DU "अदिह\u{94d}वहि",
-    "द\u{947}ग\u{94d}धि" IMPERFECT_MID_1_PL "अदिह\u{94d}महि",
-    "द\u{947}ग\u{94d}धि" IMPERFECT_MID_2_SG "अदिग\u{94d}धाः",
-    "द\u{947}ग\u{94d}धि" IMPERFECT_MID_2_DU "अदिहाथाम\u{94d}",
-    "द\u{947}ग\u{94d}धि" IMPERFECT_MID_2_PL "अधिग\u{94d}ध\u{94d}वम\u{94d}",
-    "द\u{947}ग\u{94d}धि" IMPERFECT_MID_3_SG "अदिग\u{94d}ध",
-    "द\u{947}ग\u{94d}धि" IMPERFECT_MID_3_DU "अदिहाताम\u{94d}",
-    "द\u{947}ग\u{94d}धि" IMPERFECT_MID_3_PL "अदिहत",
-    "द\u{947}ग\u{94d}धि" PARTICIPLE_PRES_ACT "दिहत\u{94d}",
-    "द\u{947}ग\u{94d}धि" PARTICIPLE_PRES_MID "दिहान",
-    "दोग\u{94d}धि" IND_ACT_1_SG "दोह\u{94d}मि",
-    "दोग\u{94d}धि" IND_ACT_1_DU "द\u{941}ह\u{94d}वः",
-    "दोग\u{94d}धि" IND_ACT_1_PL "द\u{941}ह\u{94d}मः",
-    "दोग\u{94d}धि" IND_ACT_2_SG "धोक\u{94d}षि",
-    "दोग\u{94d}धि" IND_ACT_2_DU "द\u{941}ग\u{94d}धः",
-    "दोग\u{94d}धि" IND_ACT_2_PL "द\u{941}ग\u{94d}ध",
-    "दोग\u{94d}धि" IND_ACT_3_SG "दोग\u{94d}धि",
-    "दोग\u{94d}धि" IND_ACT_3_DU "द\u{941}ग\u{94d}धः",
-    "दोग\u{94d}धि" IND_ACT_3_PL "द\u{941}हन\u{94d}ति",
-    "दोग\u{94d}धि" IND_MID_1_SG "द\u{941}ह\u{947}",
-    "दोग\u{94d}धि" IND_MID_1_DU "द\u{941}ह\u{94d}वह\u{947}",
-    "दोग\u{94d}धि" IND_MID_1_PL "द\u{941}ह\u{94d}मह\u{947}",
-    "दोग\u{94d}धि" IND_MID_2_SG "ध\u{941}क\u{94d}ष\u{947}",
-    "दोग\u{94d}धि" IND_MID_2_DU "द\u{941}हाथ\u{947}",
-    "दोग\u{94d}धि" IND_MID_2_PL "ध\u{941}ग\u{94d}ध\u{94d}व\u{947}",
-    "दोग\u{94d}धि" IND_MID_3_SG "द\u{941}ग\u{94d}ध\u{947}",
-    "दोग\u{94d}धि" IND_MID_3_DU "द\u{941}हात\u{947}",
-    "दोग\u{94d}धि" IND_MID_3_PL "द\u{941}हत\u{947}",
-    "दोग\u{94d}धि" IMP_ACT_1_SG "दोहानि",
-    "दोग\u{94d}धि" IMP_ACT_1_DU "दोहाव",
-    "दोग\u{94d}धि" IMP_ACT_1_PL "दोहाम",
-    "दोग\u{94d}धि" IMP_ACT_2_SG "द\u{941}ग\u{94d}धि",
-    "दोग\u{94d}धि" IMP_ACT_2_DU "द\u{941}ग\u{94d}धम\u{94d}",
-    "दोग\u{94d}धि" IMP_ACT_2_PL "द\u{941}ग\u{94d}ध",
-    "दोग\u{94d}धि" IMP_ACT_3_SG "दोग\u{94d}ध\u{941}",
-    "दोग\u{94d}धि" IMP_ACT_3_DU "द\u{941}ग\u{94d}धाम\u{94d}",
-    "दोग\u{94d}धि" IMP_ACT_3_PL "द\u{941}हन\u{94d}त\u{941}",
-    "दोग\u{94d}धि" IMP_MID_1_SG "दोह\u{948}",
-    "दोग\u{94d}धि" IMP_MID_1_DU "दोहावह\u{948}",
-    "दोग\u{94d}धि" IMP_MID_1_PL "दोहामह\u{948}",
-    "दोग\u{94d}धि" IMP_MID_2_SG "ध\u{941}क\u{94d}ष\u{94d}व",
-    "दोग\u{94d}धि" IMP_MID_2_DU "द\u{941}हाथाम\u{94d}",
-    "दोग\u{94d}धि" IMP_MID_2_PL "ध\u{941}ग\u{94d}ध\u{94d}वम\u{94d}",
-    "दोग\u{94d}धि" IMP_MID_3_SG "द\u{941}ग\u{94d}धाम\u{94d}",
-    "दोग\u{94d}धि" IMP_MID_3_DU "द\u{941}हाताम\u{94d}",
-    "दोग\u{94d}धि" IMP_MID_3_PL "द\u{941}हताम\u{94d}",
-    "दोग\u{94d}धि" OPT_ACT_1_SG "द\u{941}ह\u{94d}याम\u{94d}",
-    "दोग\u{94d}धि" OPT_ACT_1_DU "द\u{941}ह\u{94d}याव",
-    "दोग\u{94d}धि" OPT_ACT_1_PL "द\u{941}ह\u{94d}याम",
-    "दोग\u{94d}धि" OPT_ACT_2_SG "द\u{941}ह\u{94d}याः",
-    "दोग\u{94d}धि" OPT_ACT_2_DU "द\u{941}ह\u{94d}यातम\u{94d}",
-    "दोग\u{94d}धि" OPT_ACT_2_PL "द\u{941}ह\u{94d}यात",
-    "दोग\u{94d}धि" OPT_ACT_3_SG "द\u{941}ह\u{94d}यात\u{94d}",
-    "दोग\u{94d}धि" OPT_ACT_3_DU "द\u{941}ह\u{94d}याताम\u{94d}",
-    "दोग\u{94d}धि" OPT_ACT_3_PL "द\u{941}ह\u{94d}य\u{941}ः",
-    "दोग\u{94d}धि" OPT_MID_1_SG "द\u{941}हीय",
-    "दोग\u{94d}धि" OPT_MID_1_DU "द\u{941}हीवहि",
-    "दोग\u{94d}धि" OPT_MID_1_PL "द\u{941}हीमहि",
-    "दोग\u{94d}धि" OPT_MID_2_SG "द\u{941}हीथाः",
-    "दोग\u{94d}धि" OPT_MID_2_DU "द\u{941}हीयाथाम\u{94d}",
-    "दोग\u{94d}धि" OPT_MID_2_PL "द\u{941}हीध\u{94d}वम\u{94d}",
-    "दोग\u{94d}धि" OPT_MID_3_SG "द\u{941}हीत",
-    "दोग\u{94d}धि" OPT_MID_3_DU "द\u{941}हीयाताम\u{94d}",
-    "दोग\u{94d}धि" OPT_MID_3_PL "द\u{941}हीरन\u{94d}",
-    "दोग\u{94d}धि" SUBJ_ACT_1_SG "दोहानि",
-    "दोग\u{94d}धि" SUBJ_ACT_1_DU "दोहाव",
-    "दोग\u{94d}धि" SUBJ_ACT_1_PL "दोहाम",
-    "दोग\u{94d}धि" SUBJ_ACT_2_SG "दोहः",
-    "दोग\u{94d}धि" SUBJ_ACT_2_DU "दोहथः",
-    "दोग\u{94d}धि" SUBJ_ACT_2_PL "दोहथ",
-    "दोग\u{94d}धि" SUBJ_ACT_3_SG "दोहत\u{94d}",
-    "दोग\u{94d}धि" SUBJ_ACT_3_DU "दोहतः",
-    "दोग\u{94d}धि" SUBJ_ACT_3_PL "दोहन\u{94d}",
-    "दोग\u{94d}धि" SUBJ_MID_1_SG "दोह\u{948}",
-    "दोग\u{94d}धि" SUBJ_MID_1_DU "दोहावह\u{948}",
-    "दोग\u{94d}धि" SUBJ_MID_1_PL "दोहामह\u{948}",
-    "दोग\u{94d}धि" SUBJ_MID_2_SG "दोहस\u{947}",
-    "दोग\u{94d}धि" SUBJ_MID_2_DU "दोह\u{948}थ\u{947}",
-    "दोग\u{94d}धि" SUBJ_MID_2_PL "दोहध\u{94d}व\u{947}",
-    "दोग\u{94d}धि" SUBJ_MID_3_SG "दोहत\u{947}",
-    "दोग\u{94d}धि" SUBJ_MID_3_DU "दोह\u{948}त\u{947}",
-    "दोग\u{94d}धि" SUBJ_MID_3_PL "दोहन\u{94d}त",
-    "दोग\u{94d}धि" IMPERFECT_ACT_1_SG "अदोहम\u{94d}",
-    "दोग\u{94d}धि" IMPERFECT_ACT_1_DU "अद\u{941}ह\u{94d}व",
-    "दोग\u{94d}धि" IMPERFECT_ACT_1_PL "अद\u{941}ह\u{94d}म",
-    "दोग\u{94d}धि" IMPERFECT_ACT_2_SG "अधोक\u{94d}",
-    "दोग\u{94d}धि" IMPERFECT_ACT_2_DU "अद\u{941}ग\u{94d}धम\u{94d}",
-    "दोग\u{94d}धि" IMPERFECT_ACT_2_PL "अद\u{941}ग\u{94d}ध",
-    "दोग\u{94d}धि" IMPERFECT_ACT_3_SG "अधोक\u{94d}",
-    "दोग\u{94d}धि" IMPERFECT_ACT_3_DU "अद\u{941}ग\u{94d}धाम\u{94d}",
-    "दोग\u{94d}धि" IMPERFECT_ACT_3_PL "अद\u{941}हन\u{94d}",
-    "दोग\u{94d}धि" IMPERFECT_MID_1_SG "अद\u{941}हि",
-    "दोग\u{94d}धि" IMPERFECT_MID_1_DU "अद\u{941}ह\u{94d}वहि",
-    "दोग\u{94d}धि" IMPERFECT_MID_1_PL "अद\u{941}ह\u{94d}महि",
-    "दोग\u{94d}धि" IMPERFECT_MID_2_SG "अद\u{941}ग\u{94d}धाः",
-    "दोग\u{94d}धि" IMPERFECT_MID_2_DU "अद\u{941}हाथाम\u{94d}",
-    "दोग\u{94d}धि" IMPERFECT_MID_2_PL "अध\u{941}ग\u{94d}ध\u{94d}वम\u{94d}",
-    "दोग\u{94d}धि" IMPERFECT_MID_3_SG "अद\u{941}ग\u{94d}ध",
-    "दोग\u{94d}धि" IMPERFECT_MID_3_DU "अद\u{941}हाताम\u{94d}",
-    "दोग\u{94d}धि" IMPERFECT_MID_3_PL "अद\u{941}हत",
-    "दोग\u{94d}धि" PARTICIPLE_PRES_ACT "द\u{941}हत\u{94d}",
-    "दोग\u{94d}धि" PARTICIPLE_PRES_MID "द\u{941}हान",
-    "द\u{94d}रवति" PERFECT_ACT_1_SG "द\u{941}द\u{94d}रव",
-    "द\u{94d}रवति" PERFECT_ACT_1_DU "द\u{941}द\u{94d}र\u{941}व",
-    "द\u{94d}रवति" PERFECT_ACT_1_PL "द\u{941}द\u{94d}र\u{941}म",
-    "द\u{94d}रवति" PERFECT_ACT_2_SG "द\u{941}द\u{94d}रोथ",
-    "द\u{94d}रवति" PERFECT_ACT_2_DU "द\u{941}द\u{94d}र\u{941}वथ\u{941}ः",
-    "द\u{94d}रवति" PERFECT_ACT_2_PL "द\u{941}द\u{94d}र\u{941}व",
-    "द\u{94d}रवति" PERFECT_ACT_3_SG "द\u{941}द\u{94d}राव",
-    "द\u{94d}रवति" PERFECT_ACT_3_DU "द\u{941}द\u{94d}र\u{941}वत\u{941}ः",
-    "द\u{94d}रवति" PERFECT_ACT_3_PL "द\u{941}द\u{94d}र\u{941}व\u{941}ः",
-    "द\u{94d}रवति" PERFECT_MID_1_SG "द\u{941}द\u{94d}र\u{941}व\u{947}",
-    "द\u{94d}रवति" PERFECT_MID_1_DU "द\u{941}द\u{94d}र\u{941}वह\u{947}",
-    "द\u{94d}रवति" PERFECT_MID_1_PL "द\u{941}द\u{94d}र\u{941}मह\u{947}",
-    "द\u{94d}रवति" PERFECT_MID_2_SG "द\u{941}द\u{94d}र\u{941}ष\u{947}",
-    "द\u{94d}रवति" PERFECT_MID_2_DU "द\u{941}द\u{94d}र\u{941}वाथ\u{947}",
-    "द\u{94d}रवति" PERFECT_MID_2_PL "द\u{941}द\u{94d}र\u{941}ध\u{94d}व\u{947}",
-    "द\u{94d}रवति" PERFECT_MID_3_SG "द\u{941}द\u{94d}र\u{941}व\u{947}",
-    "द\u{94d}रवति" PERFECT_MID_3_DU "द\u{941}द\u{94d}र\u{941}वात\u{947}",
-    "द\u{94d}रवति" PERFECT_MID_3_PL "द\u{941}द\u{94d}र\u{941}विर\u{947}",
-    "द\u{94d}रवति" PARTICIPLE_PERF_ACT "द\u{941}द\u{94d}र\u{941}वा\u{902}स\u{94d}",
-    "द\u{94d}रवति" PARTICIPLE_PERF_MID "द\u{941}द\u{94d}र\u{941}वाण",
-    "द\u{94d}राति" IMP_ACT_1_SG "द\u{94d}राणि",
-    "द\u{94d}राति" SUBJ_ACT_1_SG "द\u{94d}राणि",
-    "द\u{94d}राति" PARTICIPLE_PRES_MID "द\u{94d}राण",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IND_ACT_1_SG "द\u{94d}व\u{947}ष\u{94d}मि",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IND_ACT_1_DU "द\u{94d}विष\u{94d}वः",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IND_ACT_1_PL "द\u{94d}विष\u{94d}मः",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IND_ACT_2_SG "द\u{94d}व\u{947}क\u{94d}षि",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IND_ACT_2_DU "द\u{94d}विष\u{94d}ठः",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IND_ACT_2_PL "द\u{94d}विष\u{94d}ठ",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IND_ACT_3_SG "द\u{94d}व\u{947}ष\u{94d}टि",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IND_ACT_3_DU "द\u{94d}विष\u{94d}टः",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IND_ACT_3_PL "द\u{94d}विषन\u{94d}ति",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IND_MID_1_SG "द\u{94d}विष\u{947}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IND_MID_1_DU "द\u{94d}विष\u{94d}वह\u{947}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IND_MID_1_PL "द\u{94d}विष\u{94d}मह\u{947}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IND_MID_2_SG "द\u{94d}विक\u{94d}ष\u{947}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IND_MID_2_DU "द\u{94d}विषाथ\u{947}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IND_MID_2_PL "द\u{94d}विड\u{94d}ढ\u{94d}व\u{947}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IND_MID_3_SG "द\u{94d}विष\u{94d}ट\u{947}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IND_MID_3_DU "द\u{94d}विषात\u{947}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IND_MID_3_PL "द\u{94d}विषत\u{947}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMP_ACT_1_SG "द\u{94d}व\u{947}षाणि",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMP_ACT_1_DU "द\u{94d}व\u{947}षाव",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMP_ACT_1_PL "द\u{94d}व\u{947}षाम",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMP_ACT_2_SG "द\u{94d}विड\u{94d}ढि",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMP_ACT_2_DU "द\u{94d}विष\u{94d}टम\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMP_ACT_2_PL "द\u{94d}विष\u{94d}ट",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMP_ACT_3_SG "द\u{94d}व\u{947}ष\u{94d}ट\u{941}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMP_ACT_3_DU "द\u{94d}विष\u{94d}टाम\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMP_ACT_3_PL "द\u{94d}विषन\u{94d}त\u{941}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMP_MID_1_SG "द\u{94d}व\u{947}ष\u{948}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMP_MID_1_DU "द\u{94d}व\u{947}षावह\u{948}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMP_MID_1_PL "द\u{94d}व\u{947}षामह\u{948}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMP_MID_2_SG "द\u{94d}विक\u{94d}ष\u{94d}व",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMP_MID_2_DU "द\u{94d}विषाथाम\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMP_MID_2_PL "द\u{94d}विड\u{94d}ढ\u{94d}वम\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMP_MID_3_SG "द\u{94d}विष\u{94d}टाम\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMP_MID_3_DU "द\u{94d}विषाताम\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMP_MID_3_PL "द\u{94d}विषताम\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" OPT_ACT_1_SG "द\u{94d}विष\u{94d}याम\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" OPT_ACT_1_DU "द\u{94d}विष\u{94d}याव",
-    "द\u{94d}व\u{947}ष\u{94d}टि" OPT_ACT_1_PL "द\u{94d}विष\u{94d}याम",
-    "द\u{94d}व\u{947}ष\u{94d}टि" OPT_ACT_2_SG "द\u{94d}विष\u{94d}याः",
-    "द\u{94d}व\u{947}ष\u{94d}टि" OPT_ACT_2_DU "द\u{94d}विष\u{94d}यातम\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" OPT_ACT_2_PL "द\u{94d}विष\u{94d}यात",
-    "द\u{94d}व\u{947}ष\u{94d}टि" OPT_ACT_3_SG "द\u{94d}विष\u{94d}यात\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" OPT_ACT_3_DU "द\u{94d}विष\u{94d}याताम\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" OPT_ACT_3_PL "द\u{94d}विष\u{94d}य\u{941}ः",
-    "द\u{94d}व\u{947}ष\u{94d}टि" OPT_MID_1_SG "द\u{94d}विषीय",
-    "द\u{94d}व\u{947}ष\u{94d}टि" OPT_MID_1_DU "द\u{94d}विषीवहि",
-    "द\u{94d}व\u{947}ष\u{94d}टि" OPT_MID_1_PL "द\u{94d}विषीमहि",
-    "द\u{94d}व\u{947}ष\u{94d}टि" OPT_MID_2_SG "द\u{94d}विषीथाः",
-    "द\u{94d}व\u{947}ष\u{94d}टि" OPT_MID_2_DU "द\u{94d}विषीयाथाम\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" OPT_MID_2_PL "द\u{94d}विषीध\u{94d}वम\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" OPT_MID_3_SG "द\u{94d}विषीत",
-    "द\u{94d}व\u{947}ष\u{94d}टि" OPT_MID_3_DU "द\u{94d}विषीयाताम\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" OPT_MID_3_PL "द\u{94d}विषीरन\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" SUBJ_ACT_1_SG "द\u{94d}व\u{947}षाणि",
-    "द\u{94d}व\u{947}ष\u{94d}टि" SUBJ_ACT_1_DU "द\u{94d}व\u{947}षाव",
-    "द\u{94d}व\u{947}ष\u{94d}टि" SUBJ_ACT_1_PL "द\u{94d}व\u{947}षाम",
-    "द\u{94d}व\u{947}ष\u{94d}टि" SUBJ_ACT_2_SG "द\u{94d}व\u{947}षः",
-    "द\u{94d}व\u{947}ष\u{94d}टि" SUBJ_ACT_2_DU "द\u{94d}व\u{947}षथः",
-    "द\u{94d}व\u{947}ष\u{94d}टि" SUBJ_ACT_2_PL "द\u{94d}व\u{947}षथ",
-    "द\u{94d}व\u{947}ष\u{94d}टि" SUBJ_ACT_3_SG "द\u{94d}व\u{947}षत\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" SUBJ_ACT_3_DU "द\u{94d}व\u{947}षतः",
-    "द\u{94d}व\u{947}ष\u{94d}टि" SUBJ_ACT_3_PL "द\u{94d}व\u{947}षन\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" SUBJ_MID_1_SG "द\u{94d}व\u{947}ष\u{948}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" SUBJ_MID_1_DU "द\u{94d}व\u{947}षावह\u{948}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" SUBJ_MID_1_PL "द\u{94d}व\u{947}षामह\u{948}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" SUBJ_MID_2_SG "द\u{94d}व\u{947}षस\u{947}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" SUBJ_MID_2_DU "द\u{94d}व\u{947}ष\u{948}थ\u{947}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" SUBJ_MID_2_PL "द\u{94d}व\u{947}षध\u{94d}व\u{947}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" SUBJ_MID_3_SG "द\u{94d}व\u{947}षत\u{947}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" SUBJ_MID_3_DU "द\u{94d}व\u{947}ष\u{948}त\u{947}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" SUBJ_MID_3_PL "द\u{94d}व\u{947}षन\u{94d}त",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMPERFECT_ACT_1_SG "अद\u{94d}व\u{947}षम\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMPERFECT_ACT_1_DU "अद\u{94d}विष\u{94d}व",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMPERFECT_ACT_1_PL "अद\u{94d}विष\u{94d}म",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMPERFECT_ACT_2_SG "अद\u{94d}व\u{947}ट\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMPERFECT_ACT_2_DU "अद\u{94d}विष\u{94d}टम\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMPERFECT_ACT_2_PL "अद\u{94d}विष\u{94d}ट",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMPERFECT_ACT_3_SG "अद\u{94d}व\u{947}ट\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMPERFECT_ACT_3_DU "अद\u{94d}विष\u{94d}टाम\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMPERFECT_ACT_3_PL "अद\u{94d}विषन\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMPERFECT_MID_1_SG "अद\u{94d}विषि",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMPERFECT_MID_1_DU "अद\u{94d}विष\u{94d}वहि",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMPERFECT_MID_1_PL "अद\u{94d}विष\u{94d}महि",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMPERFECT_MID_2_SG "अद\u{94d}विष\u{94d}ठाः",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMPERFECT_MID_2_DU "अद\u{94d}विषाथाम\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMPERFECT_MID_2_PL "अद\u{94d}विड\u{94d}ढ\u{94d}वम\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMPERFECT_MID_3_SG "अद\u{94d}विष\u{94d}ट",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMPERFECT_MID_3_DU "अद\u{94d}विषाताम\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" IMPERFECT_MID_3_PL "अद\u{94d}विषत",
-    "द\u{94d}व\u{947}ष\u{94d}टि" PARTICIPLE_PRES_ACT "द\u{94d}विषत\u{94d}",
-    "द\u{94d}व\u{947}ष\u{94d}टि" PARTICIPLE_PRES_MID "द\u{94d}विषाण",
-    "ध\u{943}ष\u{94d}णोति" IMPERFECT_ACT_1_SG "अध\u{943}ष\u{94d}नवम\u{94d}",
-    "ध\u{943}ष\u{94d}णोति" IMPERFECT_ACT_2_SG "अध\u{943}ष\u{94d}नोः",
-    "ध\u{943}ष\u{94d}णोति" IMPERFECT_ACT_3_SG "अध\u{943}ष\u{94d}नोत\u{94d}",
-    "ननाम" PERFECT_ACT_1_SG "ननम",
-    "ननाम" PERFECT_ACT_1_DU "न\u{947}मिव",
-    "ननाम" PERFECT_ACT_1_PL "न\u{947}मिम",
-    "ननाम" PERFECT_ACT_2_SG "ननन\u{94d}थ",
-    "ननाम" PERFECT_ACT_2_DU "न\u{947}मथ\u{941}ः",
-    "ननाम" PERFECT_ACT_2_PL "न\u{947}म",
-    "ननाम" PERFECT_ACT_3_DU "न\u{947}मत\u{941}ः",
-    "ननाम" PERFECT_ACT_3_PL "न\u{947}म\u{941}ः",
-    "ननाम" PERFECT_MID_1_SG "न\u{947}म\u{947}",
-    "ननाम" PERFECT_MID_1_DU "न\u{947}मिवह\u{947}",
-    "ननाम" PERFECT_MID_1_PL "न\u{947}मिमह\u{947}",
-    "ननाम" PERFECT_MID_2_SG "न\u{947}मिष\u{947}",
-    "ननाम" PERFECT_MID_2_DU "न\u{947}माथ\u{947}",
-    "ननाम" PERFECT_MID_2_PL "न\u{947}मिध\u{94d}व\u{947}",
-    "ननाम" PERFECT_MID_3_SG "न\u{947}म\u{947}",
-    "ननाम" PERFECT_MID_3_DU "न\u{947}मात\u{947}",
-    "ननाम" PERFECT_MID_3_PL "न\u{947}मिर\u{947}",
-    "ननाम" PARTICIPLE_PERF_ACT "न\u{947}मिवा\u{902}स\u{94d}",
-    "ननाम" PARTICIPLE_PERF_MID "न\u{947}मान",
-    "ननाश" PERFECT_ACT_1_SG "ननश",
-    "ननाश" PERFECT_ACT_1_DU "न\u{947}शिव",
-    "ननाश" PERFECT_ACT_1_PL "न\u{947}शिम",
-    "ननाश" PERFECT_ACT_2_SG "ननष\u{94d}ठ",
-    "ननाश" PERFECT_ACT_2_DU "न\u{947}शथ\u{941}ः",
-    "ननाश" PERFECT_ACT_2_PL "न\u{947}श",
-    "ननाश" PERFECT_ACT_3_DU "न\u{947}शत\u{941}ः",
-    "ननाश" PERFECT_ACT_3_PL "न\u{947}श\u{941}ः",
-    "ननाश" PARTICIPLE_PERF_ACT "न\u{947}शिवा\u{902}स\u{94d}",
-    "निन\u{94d}दति" PERFECT_ACT_1_SG "निनिन\u{94d}द",
-    "निन\u{94d}दति" PERFECT_ACT_1_DU "निनिन\u{94d}दिव",
-    "निन\u{94d}दति" PERFECT_ACT_1_PL "निनिन\u{94d}दिम",
-    "निन\u{94d}दति" PERFECT_ACT_2_SG "निनिन\u{94d}दिथ",
-    "निन\u{94d}दति" PERFECT_ACT_2_DU "निनिन\u{94d}दथ\u{941}ः",
-    "निन\u{94d}दति" PERFECT_ACT_2_PL "निनिन\u{94d}द",
-    "निन\u{94d}दति" PERFECT_ACT_3_SG "निनिन\u{94d}द",
-    "निन\u{94d}दति" PERFECT_ACT_3_DU "निनिन\u{94d}दत\u{941}ः",
-    "निन\u{94d}दति" PERFECT_ACT_3_PL "निनिन\u{94d}द\u{941}ः",
-    "निन\u{94d}दति" PERFECT_MID_1_SG "निनिन\u{94d}द\u{947}",
-    "निन\u{94d}दति" PERFECT_MID_1_DU "निनिन\u{94d}दिवह\u{947}",
-    "निन\u{94d}दति" PERFECT_MID_1_PL "निनिन\u{94d}दिमह\u{947}",
-    "निन\u{94d}दति" PERFECT_MID_2_SG "निनिन\u{94d}दिष\u{947}",
-    "निन\u{94d}दति" PERFECT_MID_2_DU "निनिन\u{94d}दाथ\u{947}",
-    "निन\u{94d}दति" PERFECT_MID_2_PL "निनिन\u{94d}दिध\u{94d}व\u{947}",
-    "निन\u{94d}दति" PERFECT_MID_3_SG "निनिन\u{94d}द\u{947}",
-    "निन\u{94d}दति" PERFECT_MID_3_DU "निनिन\u{94d}दात\u{947}",
-    "निन\u{94d}दति" PERFECT_MID_3_PL "निनिन\u{94d}दिर\u{947}",
-    "निन\u{94d}दति" PARTICIPLE_PERF_ACT "निनिन\u{94d}द\u{94d}वा\u{902}स\u{94d}",
-    "निन\u{94d}दति" PARTICIPLE_PERF_MID "निनिन\u{94d}दान",
-    "निर\u{94d}वाहयति" IMPERFECT_ACT_1_SG "निरवाहयम\u{94d}",
-    "निर\u{94d}वाहयति" IMPERFECT_ACT_1_DU "निरवाहयाव",
-    "निर\u{94d}वाहयति" IMPERFECT_ACT_1_PL "निरवाहयाम",
-    "निर\u{94d}वाहयति" IMPERFECT_ACT_2_SG "निरवाहयः",
-    "निर\u{94d}वाहयति" IMPERFECT_ACT_2_DU "निरवाहयतम\u{94d}",
-    "निर\u{94d}वाहयति" IMPERFECT_ACT_2_PL "निरवाहयत",
-    "निर\u{94d}वाहयति" IMPERFECT_ACT_3_SG "निरवाहयत\u{94d}",
-    "निर\u{94d}वाहयति" IMPERFECT_ACT_3_DU "निरवाहयताम\u{94d}",
-    "निर\u{94d}वाहयति" IMPERFECT_ACT_3_PL "निरवाहयन\u{94d}",
-    "न\u{941}नोद" PERFECT_ACT_1_DU "न\u{941}न\u{941}दिव",
-    "न\u{941}नोद" PERFECT_ACT_1_PL "न\u{941}न\u{941}दिम",
-    "न\u{941}नोद" PERFECT_ACT_2_DU "न\u{941}न\u{941}दथ\u{941}ः",
-    "न\u{941}नोद" PERFECT_ACT_2_PL "न\u{941}न\u{941}द",
-    "न\u{941}नोद" PERFECT_ACT_3_DU "न\u{941}न\u{941}दत\u{941}ः",
-    "न\u{941}नोद" PERFECT_ACT_3_PL "न\u{941}न\u{941}द\u{941}ः",
-    "न\u{941}नोद" PERFECT_MID_1_SG "न\u{941}न\u{941}द\u{947}",
-    "न\u{941}नोद" PERFECT_MID_1_DU "न\u{941}न\u{941}दिवह\u{947}",
-    "न\u{941}नोद" PERFECT_MID_1_PL "न\u{941}न\u{941}दिमह\u{947}",
-    "न\u{941}नोद" PERFECT_MID_2_SG "न\u{941}न\u{941}दिष\u{947}",
-    "न\u{941}नोद" PERFECT_MID_2_DU "न\u{941}न\u{941}दाथ\u{947}",
-    "न\u{941}नोद" PERFECT_MID_2_PL "न\u{941}न\u{941}दिध\u{94d}व\u{947}",
-    "न\u{941}नोद" PERFECT_MID_3_SG "न\u{941}न\u{941}द\u{947}",
-    "न\u{941}नोद" PERFECT_MID_3_DU "न\u{941}न\u{941}दात\u{947}",
-    "न\u{941}नोद" PERFECT_MID_3_PL "न\u{941}न\u{941}दिर\u{947}",
-    "न\u{941}नोद" PARTICIPLE_PERF_ACT "न\u{941}न\u{941}द\u{94d}वा\u{902}स\u{94d}",
-    "न\u{941}नोद" PARTICIPLE_PERF_MID "न\u{941}न\u{941}दान",
-    "न\u{947}न\u{947}क\u{94d}ति" IND_ACT_1_SG "न\u{947}न\u{947}ज\u{94d}मि",
-    "न\u{947}न\u{947}क\u{94d}ति" IND_ACT_1_DU "न\u{947}निज\u{94d}वः",
-    "न\u{947}न\u{947}क\u{94d}ति" IND_ACT_1_PL "न\u{947}निज\u{94d}मः",
-    "न\u{947}न\u{947}क\u{94d}ति" IND_ACT_2_SG "न\u{947}न\u{947}क\u{94d}षि",
-    "न\u{947}न\u{947}क\u{94d}ति" IND_ACT_2_DU "न\u{947}निक\u{94d}थः",
-    "न\u{947}न\u{947}क\u{94d}ति" IND_ACT_2_PL "न\u{947}निक\u{94d}थ",
-    "न\u{947}न\u{947}क\u{94d}ति" IND_ACT_3_DU "न\u{947}निक\u{94d}तः",
-    "न\u{947}न\u{947}क\u{94d}ति" IND_ACT_3_PL "न\u{947}निजति",
-    "न\u{947}न\u{947}क\u{94d}ति" IND_MID_1_SG "न\u{947}निज\u{947}",
-    "न\u{947}न\u{947}क\u{94d}ति" IND_MID_1_DU "न\u{947}निज\u{94d}वह\u{947}",
-    "न\u{947}न\u{947}क\u{94d}ति" IND_MID_1_PL "न\u{947}निज\u{94d}मह\u{947}",
-    "न\u{947}न\u{947}क\u{94d}ति" IND_MID_2_SG "न\u{947}निक\u{94d}ष\u{947}",
-    "न\u{947}न\u{947}क\u{94d}ति" IND_MID_2_DU "न\u{947}निजाथ\u{947}",
-    "न\u{947}न\u{947}क\u{94d}ति" IND_MID_2_PL "न\u{947}निग\u{94d}ध\u{94d}व\u{947}",
-    "न\u{947}न\u{947}क\u{94d}ति" IND_MID_3_SG "न\u{947}निक\u{94d}त\u{947}",
-    "न\u{947}न\u{947}क\u{94d}ति" IND_MID_3_DU "न\u{947}निजात\u{947}",
-    "न\u{947}न\u{947}क\u{94d}ति" IND_MID_3_PL "न\u{947}निजत\u{947}",
-    "न\u{947}न\u{947}क\u{94d}ति" IMP_ACT_1_SG "न\u{947}न\u{947}जानि",
-    "न\u{947}न\u{947}क\u{94d}ति" IMP_ACT_1_DU "न\u{947}न\u{947}जाव",
-    "न\u{947}न\u{947}क\u{94d}ति" IMP_ACT_1_PL "न\u{947}न\u{947}जाम",
-    "न\u{947}न\u{947}क\u{94d}ति" IMP_ACT_2_SG "न\u{947}निग\u{94d}धि",
-    "न\u{947}न\u{947}क\u{94d}ति" IMP_ACT_2_DU "न\u{947}निक\u{94d}तम\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" IMP_ACT_2_PL "न\u{947}निक\u{94d}त",
-    "न\u{947}न\u{947}क\u{94d}ति" IMP_ACT_3_DU "न\u{947}निक\u{94d}ताम\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" IMP_ACT_3_PL "न\u{947}निजत\u{941}",
-    "न\u{947}न\u{947}क\u{94d}ति" IMP_MID_1_SG "न\u{947}न\u{947}ज\u{948}",
-    "न\u{947}न\u{947}क\u{94d}ति" IMP_MID_1_DU "न\u{947}न\u{947}जावह\u{948}",
-    "न\u{947}न\u{947}क\u{94d}ति" IMP_MID_1_PL "न\u{947}न\u{947}जामह\u{948}",
-    "न\u{947}न\u{947}क\u{94d}ति" IMP_MID_2_SG "न\u{947}निक\u{94d}ष\u{94d}व",
-    "न\u{947}न\u{947}क\u{94d}ति" IMP_MID_2_DU "न\u{947}निजाथाम\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" IMP_MID_2_PL "न\u{947}निग\u{94d}ध\u{94d}वम\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" IMP_MID_3_SG "न\u{947}निक\u{94d}ताम\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" IMP_MID_3_DU "न\u{947}निजाताम\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" IMP_MID_3_PL "न\u{947}निजताम\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" OPT_ACT_1_SG "न\u{947}निज\u{94d}याम\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" OPT_ACT_1_DU "न\u{947}निज\u{94d}याव",
-    "न\u{947}न\u{947}क\u{94d}ति" OPT_ACT_1_PL "न\u{947}निज\u{94d}याम",
-    "न\u{947}न\u{947}क\u{94d}ति" OPT_ACT_2_SG "न\u{947}निज\u{94d}याः",
-    "न\u{947}न\u{947}क\u{94d}ति" OPT_ACT_2_DU "न\u{947}निज\u{94d}यातम\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" OPT_ACT_2_PL "न\u{947}निज\u{94d}यात",
-    "न\u{947}न\u{947}क\u{94d}ति" OPT_ACT_3_SG "न\u{947}निज\u{94d}यात\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" OPT_ACT_3_DU "न\u{947}निज\u{94d}याताम\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" OPT_ACT_3_PL "न\u{947}निज\u{94d}य\u{941}ः",
-    "न\u{947}न\u{947}क\u{94d}ति" OPT_MID_1_SG "न\u{947}निजीय",
-    "न\u{947}न\u{947}क\u{94d}ति" OPT_MID_1_DU "न\u{947}निजीवहि",
-    "न\u{947}न\u{947}क\u{94d}ति" OPT_MID_1_PL "न\u{947}निजीमहि",
-    "न\u{947}न\u{947}क\u{94d}ति" OPT_MID_2_SG "न\u{947}निजीथाः",
-    "न\u{947}न\u{947}क\u{94d}ति" OPT_MID_2_DU "न\u{947}निजीयाथाम\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" OPT_MID_2_PL "न\u{947}निजीध\u{94d}वम\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" OPT_MID_3_SG "न\u{947}निजीत",
-    "न\u{947}न\u{947}क\u{94d}ति" OPT_MID_3_DU "न\u{947}निजीयाताम\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" OPT_MID_3_PL "न\u{947}निजीरन\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" SUBJ_ACT_1_SG "न\u{947}न\u{947}जानि",
-    "न\u{947}न\u{947}क\u{94d}ति" SUBJ_ACT_1_DU "न\u{947}न\u{947}जाव",
-    "न\u{947}न\u{947}क\u{94d}ति" SUBJ_ACT_1_PL "न\u{947}न\u{947}जाम",
-    "न\u{947}न\u{947}क\u{94d}ति" SUBJ_ACT_2_SG "न\u{947}न\u{947}जः",
-    "न\u{947}न\u{947}क\u{94d}ति" SUBJ_ACT_2_DU "न\u{947}न\u{947}जथः",
-    "न\u{947}न\u{947}क\u{94d}ति" SUBJ_ACT_2_PL "न\u{947}न\u{947}जथ",
-    "न\u{947}न\u{947}क\u{94d}ति" SUBJ_ACT_3_SG "न\u{947}न\u{947}जत\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" SUBJ_ACT_3_DU "न\u{947}न\u{947}जतः",
-    "न\u{947}न\u{947}क\u{94d}ति" SUBJ_ACT_3_PL "न\u{947}न\u{947}जन\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" SUBJ_MID_1_SG "न\u{947}न\u{947}ज\u{948}",
-    "न\u{947}न\u{947}क\u{94d}ति" SUBJ_MID_1_DU "न\u{947}न\u{947}जावह\u{948}",
-    "न\u{947}न\u{947}क\u{94d}ति" SUBJ_MID_1_PL "न\u{947}न\u{947}जामह\u{948}",
-    "न\u{947}न\u{947}क\u{94d}ति" SUBJ_MID_2_SG "न\u{947}न\u{947}जस\u{947}",
-    "न\u{947}न\u{947}क\u{94d}ति" SUBJ_MID_2_DU "न\u{947}न\u{947}ज\u{948}थ\u{947}",
-    "न\u{947}न\u{947}क\u{94d}ति" SUBJ_MID_2_PL "न\u{947}न\u{947}जध\u{94d}व\u{947}",
-    "न\u{947}न\u{947}क\u{94d}ति" SUBJ_MID_3_SG "न\u{947}न\u{947}जत\u{947}",
-    "न\u{947}न\u{947}क\u{94d}ति" SUBJ_MID_3_DU "न\u{947}न\u{947}ज\u{948}त\u{947}",
-    "न\u{947}न\u{947}क\u{94d}ति" SUBJ_MID_3_PL "न\u{947}न\u{947}जन\u{94d}त",
-    "न\u{947}न\u{947}क\u{94d}ति" IMPERFECT_ACT_1_SG "अन\u{947}न\u{947}जम\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" IMPERFECT_ACT_1_DU "अन\u{947}निज\u{94d}व",
-    "न\u{947}न\u{947}क\u{94d}ति" IMPERFECT_ACT_1_PL "अन\u{947}निज\u{94d}म",
-    "न\u{947}न\u{947}क\u{94d}ति" IMPERFECT_ACT_2_SG "अन\u{947}न\u{947}क\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" IMPERFECT_ACT_2_DU "अन\u{947}निक\u{94d}तम\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" IMPERFECT_ACT_2_PL "अन\u{947}निक\u{94d}त",
-    "न\u{947}न\u{947}क\u{94d}ति" IMPERFECT_ACT_3_SG "अन\u{947}न\u{947}क\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" IMPERFECT_ACT_3_DU "अन\u{947}निक\u{94d}ताम\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" IMPERFECT_ACT_3_PL "अन\u{947}निज\u{941}ः",
-    "न\u{947}न\u{947}क\u{94d}ति" IMPERFECT_MID_1_SG "अन\u{947}निजि",
-    "न\u{947}न\u{947}क\u{94d}ति" IMPERFECT_MID_1_DU "अन\u{947}निज\u{94d}वहि",
-    "न\u{947}न\u{947}क\u{94d}ति" IMPERFECT_MID_1_PL "अन\u{947}निज\u{94d}महि",
-    "न\u{947}न\u{947}क\u{94d}ति" IMPERFECT_MID_2_SG "अन\u{947}निक\u{94d}थाः",
-    "न\u{947}न\u{947}क\u{94d}ति" IMPERFECT_MID_2_DU "अन\u{947}निजाथाम\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" IMPERFECT_MID_2_PL "अन\u{947}निग\u{94d}ध\u{94d}वम\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" IMPERFECT_MID_3_SG "अन\u{947}निक\u{94d}त",
-    "न\u{947}न\u{947}क\u{94d}ति" IMPERFECT_MID_3_DU "अन\u{947}निजाताम\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" IMPERFECT_MID_3_PL "अन\u{947}निजत",
-    "न\u{947}न\u{947}क\u{94d}ति" PARTICIPLE_PRES_ACT "न\u{947}निजत\u{94d}",
-    "न\u{947}न\u{947}क\u{94d}ति" PARTICIPLE_PRES_MID "न\u{947}निजान",
-    "नौति" IND_ACT_1_SG "नौमि",
-    "नौति" IND_ACT_1_DU "न\u{941}वः",
-    "नौति" IND_ACT_1_PL "न\u{941}मः",
-    "नौति" IND_ACT_2_SG "नौषि",
-    "नौति" IND_ACT_2_DU "न\u{941}थः",
-    "नौति" IND_ACT_2_PL "न\u{941}थ",
-    "नौति" IND_ACT_3_DU "न\u{941}तः",
-    "नौति" IND_ACT_3_PL "न\u{941}वन\u{94d}ति",
-    "नौति" IMP_ACT_1_SG "नवानि",
-    "नौति" IMP_ACT_1_DU "नवाव",
-    "नौति" IMP_ACT_1_PL "नवाम",
-    "नौति" IMP_ACT_2_SG "न\u{941}हि",
-    "नौति" IMP_ACT_2_DU "न\u{941}तम\u{94d}",
-    "नौति" IMP_ACT_2_PL "न\u{941}त",
-    "नौति" IMP_ACT_3_DU "न\u{941}ताम\u{94d}",
-    "नौति" IMP_ACT_3_PL "न\u{941}वन\u{94d}त\u{941}",
-    "नौति" OPT_ACT_1_SG "न\u{941}याम\u{94d}",
-    "नौति" OPT_ACT_1_DU "न\u{941}याव",
-    "नौति" OPT_ACT_1_PL "न\u{941}याम",
-    "नौति" OPT_ACT_2_SG "न\u{941}याः",
-    "नौति" OPT_ACT_2_DU "न\u{941}यातम\u{94d}",
-    "नौति" OPT_ACT_2_PL "न\u{941}यात",
-    "नौति" OPT_ACT_3_SG "न\u{941}यात\u{94d}",
-    "नौति" OPT_ACT_3_DU "न\u{941}याताम\u{94d}",
-    "नौति" OPT_ACT_3_PL "न\u{941}य\u{941}ः",
-    "नौति" SUBJ_ACT_1_SG "नवानि",
-    "नौति" SUBJ_ACT_1_DU "नवाव",
-    "नौति" SUBJ_ACT_1_PL "नवाम",
-    "नौति" SUBJ_ACT_2_SG "नवः",
-    "नौति" SUBJ_ACT_2_DU "नवथः",
-    "नौति" SUBJ_ACT_2_PL "नवथ",
-    "नौति" SUBJ_ACT_3_SG "नवत\u{94d}",
-    "नौति" SUBJ_ACT_3_DU "नवतः",
-    "नौति" SUBJ_ACT_3_PL "नवन\u{94d}",
-    "नौति" IMPERFECT_ACT_1_SG "अनवम\u{94d}",
-    "नौति" IMPERFECT_ACT_1_DU "अन\u{941}व",
-    "नौति" IMPERFECT_ACT_1_PL "अन\u{941}म",
-    "नौति" IMPERFECT_ACT_2_DU "अन\u{941}तम\u{94d}",
-    "नौति" IMPERFECT_ACT_2_PL "अन\u{941}त",
-    "नौति" IMPERFECT_ACT_3_DU "अन\u{941}ताम\u{94d}",
-    "नौति" IMPERFECT_ACT_3_PL "अन\u{941}वन\u{94d}",
-    "नौति" PARTICIPLE_PRES_ACT "न\u{941}वत\u{94d}",
-    "पतति" PERFECT_ACT_1_SG "पपत",
-    "पतति" PERFECT_ACT_1_DU "प\u{947}चिव",
-    "पतति" PERFECT_ACT_1_PL "प\u{947}चिम",
-    "पतति" PERFECT_ACT_2_SG "पपत\u{94d}थ",
-    "पतति" PERFECT_ACT_2_DU "प\u{947}चथ\u{941}ः",
-    "पतति" PERFECT_ACT_2_PL "प\u{947}च",
-    "पतति" PERFECT_ACT_3_SG "पपात",
-    "पतति" PERFECT_ACT_3_DU "प\u{947}चत\u{941}ः",
-    "पतति" PERFECT_ACT_3_PL "प\u{947}च\u{941}ः",
-    "पतति" PERFECT_MID_1_SG "प\u{947}च\u{947}",
-    "पतति" PERFECT_MID_1_DU "प\u{947}चिवह\u{947}",
-    "पतति" PERFECT_MID_1_PL "प\u{947}चिमह\u{947}",
-    "पतति" PERFECT_MID_2_SG "प\u{947}चिष\u{947}",
-    "पतति" PERFECT_MID_2_DU "प\u{947}चाथ\u{947}",
-    "पतति" PERFECT_MID_2_PL "प\u{947}चिध\u{94d}व\u{947}",
-    "पतति" PERFECT_MID_3_SG "प\u{947}च\u{947}",
-    "पतति" PERFECT_MID_3_DU "प\u{947}चात\u{947}",
-    "पतति" PERFECT_MID_3_PL "प\u{947}चिर\u{947}",
-    "पतति" AORIST_ACT_1_SG "अपप\u{94d}तम\u{94d}",
-    "पतति" AORIST_ACT_1_DU "अपप\u{94d}ताव",
-    "पतति" AORIST_ACT_1_PL "अपप\u{94d}ताम",
-    "पतति" AORIST_ACT_2_SG "अपप\u{94d}तः",
-    "पतति" AORIST_ACT_2_DU "अपप\u{94d}ततम\u{94d}",
-    "पतति" AORIST_ACT_2_PL "अपप\u{94d}तत",
-    "पतति" AORIST_ACT_3_SG "अपप\u{94d}तत\u{94d}",
-    "पतति" AORIST_ACT_3_DU "अपप\u{94d}तताम\u{94d}",
-    "पतति" AORIST_ACT_3_PL "अपप\u{94d}तन\u{94d}",
-    "पतति" PARTICIPLE_PERF_ACT "प\u{947}चिवा\u{902}स\u{94d}",
-    "पतति" PARTICIPLE_PERF_MID "प\u{947}चान",
-    "पपर\u{94d}च" PERFECT_ACT_1_DU "पप\u{943}चिव",
-    "पपर\u{94d}च" PERFECT_ACT_1_PL "पप\u{943}चिम",
-    "पपर\u{94d}च" PERFECT_ACT_2_DU "पप\u{943}चथ\u{941}ः",
-    "पपर\u{94d}च" PERFECT_ACT_2_PL "पप\u{943}च",
-    "पपर\u{94d}च" PERFECT_ACT_3_DU "पप\u{943}चत\u{941}ः",
-    "पपर\u{94d}च" PERFECT_ACT_3_PL "पप\u{943}च\u{941}ः",
-    "पपर\u{94d}च" PERFECT_MID_1_SG "पप\u{943}च\u{947}",
-    "पपर\u{94d}च" PERFECT_MID_1_DU "पप\u{943}चिवह\u{947}",
-    "पपर\u{94d}च" PERFECT_MID_1_PL "पप\u{943}चिमह\u{947}",
-    "पपर\u{94d}च" PERFECT_MID_2_SG "पप\u{943}चिष\u{947}",
-    "पपर\u{94d}च" PERFECT_MID_2_DU "पप\u{943}चाथ\u{947}",
-    "पपर\u{94d}च" PERFECT_MID_2_PL "पप\u{943}चिध\u{94d}व\u{947}",
-    "पपर\u{94d}च" PERFECT_MID_3_SG "पप\u{943}च\u{947}",
-    "पपर\u{94d}च" PERFECT_MID_3_DU "पप\u{943}चात\u{947}",
-    "पपर\u{94d}च" PERFECT_MID_3_PL "पप\u{943}चिर\u{947}",
-    "पपर\u{94d}च" PARTICIPLE_PERF_ACT "पप\u{943}क\u{94d}वा\u{902}स\u{94d}",
-    "पपर\u{94d}च" PARTICIPLE_PERF_MID "पप\u{943}चान",
-    "पपात" PERFECT_ACT_1_SG "पपत",
-    "पपात" PERFECT_ACT_1_DU "प\u{947}तिव",
-    "पपात" PERFECT_ACT_1_PL "प\u{947}तिम",
-    "पपात" PERFECT_ACT_2_SG "पपत\u{94d}थ",
-    "पपात" PERFECT_ACT_2_DU "प\u{947}तथ\u{941}ः",
-    "पपात" PERFECT_ACT_2_PL "प\u{947}त",
-    "पपात" PERFECT_ACT_3_DU "प\u{947}तत\u{941}ः",
-    "पपात" PERFECT_ACT_3_PL "प\u{947}त\u{941}ः",
-    "पपात" PARTICIPLE_PERF_ACT "प\u{947}तिवा\u{902}स\u{94d}",
-    "पपाद" PERFECT_ACT_1_SG "पपद",
-    "पपाद" PERFECT_ACT_1_DU "प\u{947}दिव",
-    "पपाद" PERFECT_ACT_1_PL "प\u{947}दिम",
-    "पपाद" PERFECT_ACT_2_SG "पपत\u{94d}थ",
-    "पपाद" PERFECT_ACT_2_DU "प\u{947}दथ\u{941}ः",
-    "पपाद" PERFECT_ACT_2_PL "प\u{947}द",
-    "पपाद" PERFECT_ACT_3_DU "प\u{947}दत\u{941}ः",
-    "पपाद" PERFECT_ACT_3_PL "प\u{947}द\u{941}ः",
-    "पपाद" PERFECT_MID_1_SG "प\u{947}द\u{947}",
-    "पपाद" PERFECT_MID_1_DU "प\u{947}दिवह\u{947}",
-    "पपाद" PERFECT_MID_1_PL "प\u{947}दिमह\u{947}",
-    "पपाद" PERFECT_MID_2_SG "प\u{947}दिष\u{947}",
-    "पपाद" PERFECT_MID_2_DU "प\u{947}दाथ\u{947}",
-    "पपाद" PERFECT_MID_2_PL "प\u{947}दिध\u{94d}व\u{947}",
-    "पपाद" PERFECT_MID_3_SG "प\u{947}द\u{947}",
-    "पपाद" PERFECT_MID_3_DU "प\u{947}दात\u{947}",
-    "पपाद" PERFECT_MID_3_PL "प\u{947}दिर\u{947}",
-    "पपाद" PARTICIPLE_PERF_ACT "प\u{947}दिवा\u{902}स\u{94d}",
-    "पपाद" PARTICIPLE_PERF_MID "प\u{947}दान",
-    "पप\u{94d}रौ" PARTICIPLE_PERF_MID "पप\u{94d}राण",
-    "परिवर\u{94d}तत\u{947}" IMPERFECT_MID_1_SG "पर\u{94d}यवर\u{94d}त\u{947}",
-    "परिवर\u{94d}तत\u{947}" IMPERFECT_MID_1_DU "पर\u{94d}यवर\u{94d}तावहि",
-    "परिवर\u{94d}तत\u{947}" IMPERFECT_MID_1_PL "पर\u{94d}यवर\u{94d}तामहि",
-    "परिवर\u{94d}तत\u{947}" IMPERFECT_MID_2_SG "पर\u{94d}यवर\u{94d}तथाः",
-    "परिवर\u{94d}तत\u{947}" IMPERFECT_MID_2_DU "पर\u{94d}यवर\u{94d}त\u{947}थाम\u{94d}",
-    "परिवर\u{94d}तत\u{947}" IMPERFECT_MID_2_PL "पर\u{94d}यवर\u{94d}तध\u{94d}वम\u{94d}",
-    "परिवर\u{94d}तत\u{947}" IMPERFECT_MID_3_SG "पर\u{94d}यवर\u{94d}तत",
-    "परिवर\u{94d}तत\u{947}" IMPERFECT_MID_3_DU "पर\u{94d}यवर\u{94d}त\u{947}ताम\u{94d}",
-    "परिवर\u{94d}तत\u{947}" IMPERFECT_MID_3_PL "पर\u{94d}यवर\u{94d}तन\u{94d}त",
-    "परिहरति" IMPERFECT_ACT_1_SG "पर\u{94d}यहरम\u{94d}",
-    "परिहरति" IMPERFECT_ACT_1_DU "पर\u{94d}यहराव",
-    "परिहरति" IMPERFECT_ACT_1_PL "पर\u{94d}यहराम",
-    "परिहरति" IMPERFECT_ACT_2_SG "पर\u{94d}यहरः",
-    "परिहरति" IMPERFECT_ACT_2_DU "पर\u{94d}यहरतम\u{94d}",
-    "परिहरति" IMPERFECT_ACT_2_PL "पर\u{94d}यहरत",
-    "परिहरति" IMPERFECT_ACT_3_SG "पर\u{94d}यहरत\u{94d}",
-    "परिहरति" IMPERFECT_ACT_3_DU "पर\u{94d}यहरताम\u{94d}",
-    "परिहरति" IMPERFECT_ACT_3_PL "पर\u{94d}यहरन\u{94d}",
-    "परिहरति" IMPERFECT_MID_1_SG "पर\u{94d}यहर\u{947}",
-    "परिहरति" IMPERFECT_MID_1_DU "पर\u{94d}यहरावहि",
-    "परिहरति" IMPERFECT_MID_1_PL "पर\u{94d}यहरामहि",
-    "परिहरति" IMPERFECT_MID_2_SG "पर\u{94d}यहरथाः",
-    "परिहरति" IMPERFECT_MID_2_DU "पर\u{94d}यहर\u{947}थाम\u{94d}",
-    "परिहरति" IMPERFECT_MID_2_PL "पर\u{94d}यहरध\u{94d}वम\u{94d}",
-    "परिहरति" IMPERFECT_MID_3_SG "पर\u{94d}यहरत",
-    "परिहरति" IMPERFECT_MID_3_DU "पर\u{94d}यहर\u{947}ताम\u{94d}",
-    "परिहरति" IMPERFECT_MID_3_PL "पर\u{94d}यहरन\u{94d}त",
-    "परीक\u{94d}षत\u{947}" IMPERFECT_MID_1_SG "पर\u{94d}य\u{948}क\u{94d}ष\u{947}",
-    "परीक\u{94d}षत\u{947}" IMPERFECT_MID_1_DU "पर\u{94d}य\u{948}क\u{94d}षावहि",
-    "परीक\u{94d}षत\u{947}" IMPERFECT_MID_1_PL "पर\u{94d}य\u{948}क\u{94d}षामहि",
-    "परीक\u{94d}षत\u{947}" IMPERFECT_MID_2_SG "पर\u{94d}य\u{948}क\u{94d}षथाः",
-    "परीक\u{94d}षत\u{947}" IMPERFECT_MID_2_DU "पर\u{94d}य\u{948}क\u{94d}ष\u{947}थाम\u{94d}",
-    "परीक\u{94d}षत\u{947}" IMPERFECT_MID_2_PL "पर\u{94d}य\u{948}क\u{94d}षध\u{94d}वम\u{94d}",
-    "परीक\u{94d}षत\u{947}" IMPERFECT_MID_3_SG "पर\u{94d}य\u{948}क\u{94d}षत",
-    "परीक\u{94d}षत\u{947}" IMPERFECT_MID_3_DU "पर\u{94d}य\u{948}क\u{94d}ष\u{947}ताम\u{94d}",
-    "परीक\u{94d}षत\u{947}" IMPERFECT_MID_3_PL "पर\u{94d}य\u{948}क\u{94d}षन\u{94d}त",
-    "पर\u{94d}दत\u{947}" IMPERFECT_MID_1_SG "पर\u{94d}द\u{947}",
-    "पर\u{94d}दत\u{947}" IMPERFECT_MID_1_DU "पर\u{94d}दावहि",
-    "पर\u{94d}दत\u{947}" IMPERFECT_MID_1_PL "पर\u{94d}दामहि",
-    "पर\u{94d}दत\u{947}" IMPERFECT_MID_2_SG "पर\u{94d}दथाः",
-    "पर\u{94d}दत\u{947}" IMPERFECT_MID_2_DU "पर\u{94d}द\u{947}थाम\u{94d}",
-    "पर\u{94d}दत\u{947}" IMPERFECT_MID_2_PL "पर\u{94d}दध\u{94d}वम\u{94d}",
-    "पर\u{94d}दत\u{947}" IMPERFECT_MID_3_SG "पर\u{94d}दत",
-    "पर\u{94d}दत\u{947}" IMPERFECT_MID_3_DU "पर\u{94d}द\u{947}ताम\u{94d}",
-    "पर\u{94d}दत\u{947}" IMPERFECT_MID_3_PL "पर\u{94d}दन\u{94d}त",
-    "पापतीति" IND_ACT_1_SG "पापतीमि",
-    "पापतीति" IND_ACT_1_DU "पापत\u{94d}वः",
-    "पापतीति" IND_ACT_1_PL "पापत\u{94d}मः",
-    "पापतीति" IND_ACT_2_SG "पापतीषि",
-    "पापतीति" IND_ACT_2_DU "पापत\u{94d}थः",
-    "पापतीति" IND_ACT_2_PL "पापत\u{94d}थ",
-    "पापतीति" IND_ACT_3_DU "पापत\u{94d}तः",
-    "पापतीति" IND_ACT_3_PL "पापतति",
-    "पापतीति" IMP_ACT_1_SG "पापतानि",
-    "पापतीति" IMP_ACT_1_DU "पापताव",
-    "पापतीति" IMP_ACT_1_PL "पापताम",
-    "पापतीति" IMP_ACT_2_SG "पापद\u{94d}धि",
-    "पापतीति" IMP_ACT_2_DU "पापत\u{94d}तम\u{94d}",
-    "पापतीति" IMP_ACT_2_PL "पापत\u{94d}त",
-    "पापतीति" IMP_ACT_3_DU "पापत\u{94d}ताम\u{94d}",
-    "पापतीति" IMP_ACT_3_PL "पापतत\u{941}",
-    "पापतीति" OPT_ACT_1_SG "पापत\u{94d}याम\u{94d}",
-    "पापतीति" OPT_ACT_1_DU "पापत\u{94d}याव",
-    "पापतीति" OPT_ACT_1_PL "पापत\u{94d}याम",
-    "पापतीति" OPT_ACT_2_SG "पापत\u{94d}याः",
-    "पापतीति" OPT_ACT_2_DU "पापत\u{94d}यातम\u{94d}",
-    "पापतीति" OPT_ACT_2_PL "पापत\u{94d}यात",
-    "पापतीति" OPT_ACT_3_SG "पापत\u{94d}यात\u{94d}",
-    "पापतीति" OPT_ACT_3_DU "पापत\u{94d}याताम\u{94d}",
-    "पापतीति" OPT_ACT_3_PL "पापत\u{94d}य\u{941}ः",
-    "पापतीति" SUBJ_ACT_1_SG "पापतानि",
-    "पापतीति" SUBJ_ACT_1_DU "पापताव",
-    "पापतीति" SUBJ_ACT_1_PL "पापताम",
-    "पापतीति" SUBJ_ACT_2_SG "पापतः",
-    "पापतीति" SUBJ_ACT_2_DU "पापतथः",
-    "पापतीति" SUBJ_ACT_2_PL "पापतथ",
-    "पापतीति" SUBJ_ACT_3_SG "पापतत\u{94d}",
-    "पापतीति" SUBJ_ACT_3_DU "पापततः",
-    "पापतीति" SUBJ_ACT_3_PL "पापतन\u{94d}",
-    "पापतीति" IMPERFECT_ACT_1_SG "अपापतम\u{94d}",
-    "पापतीति" IMPERFECT_ACT_1_DU "अपापत\u{94d}व",
-    "पापतीति" IMPERFECT_ACT_1_PL "अपापत\u{94d}म",
-    "पापतीति" IMPERFECT_ACT_2_DU "अपापत\u{94d}तम\u{94d}",
-    "पापतीति" IMPERFECT_ACT_2_PL "अपापत\u{94d}त",
-    "पापतीति" IMPERFECT_ACT_3_DU "अपापत\u{94d}ताम\u{94d}",
-    "पापतीति" IMPERFECT_ACT_3_PL "अपापत\u{941}ः",
-    "पापतीति" PARTICIPLE_PRES_ACT "पापतत\u{94d}",
-    "पिङ\u{94d}क\u{94d}त\u{947}" IND_MID_1_SG "पिञ\u{94d}ज\u{947}",
-    "पिङ\u{94d}क\u{94d}त\u{947}" IND_MID_1_DU "पिञ\u{94d}ज\u{94d}वह\u{947}",
-    "पिङ\u{94d}क\u{94d}त\u{947}" IND_MID_1_PL "पिञ\u{94d}ज\u{94d}मह\u{947}",
-    "पिङ\u{94d}क\u{94d}त\u{947}" IND_MID_2_SG "पिङ\u{94d}क\u{94d}ष\u{947}",
-    "पिङ\u{94d}क\u{94d}त\u{947}" IND_MID_2_DU "पिञ\u{94d}जाथ\u{947}",
-    "पिङ\u{94d}क\u{94d}त\u{947}" IND_MID_2_PL "पिङ\u{94d}ग\u{94d}ध\u{94d}व\u{947}",
-    "पिङ\u{94d}क\u{94d}त\u{947}" IND_MID_3_DU "पिञ\u{94d}जात\u{947}",
-    "पिङ\u{94d}क\u{94d}त\u{947}" IND_MID_3_PL "पिञ\u{94d}जत\u{947}",
-    "पिङ\u{94d}क\u{94d}त\u{947}" IMP_MID_2_SG "पिङ\u{94d}क\u{94d}ष\u{94d}व",
-    "पिङ\u{94d}क\u{94d}त\u{947}" IMP_MID_2_DU "पिञ\u{94d}जाथाम\u{94d}",
-    "पिङ\u{94d}क\u{94d}त\u{947}" IMP_MID_2_PL "पिङ\u{94d}ग\u{94d}ध\u{94d}वम\u{94d}",
-    "पिङ\u{94d}क\u{94d}त\u{947}" IMP_MID_3_DU "पिञ\u{94d}जाताम\u{94d}",
-    "पिङ\u{94d}क\u{94d}त\u{947}" IMP_MID_3_PL "पिञ\u{94d}जताम\u{94d}",
-    "पिङ\u{94d}क\u{94d}त\u{947}" OPT_MID_1_SG "पिञ\u{94d}जीय",
-    "पिङ\u{94d}क\u{94d}त\u{947}" OPT_MID_1_DU "पिञ\u{94d}जीवहि",
-    "पिङ\u{94d}क\u{94d}त\u{947}" OPT_MID_1_PL "पिञ\u{94d}जीमहि",
-    "पिङ\u{94d}क\u{94d}त\u{947}" OPT_MID_2_SG "पिञ\u{94d}जीथाः",
-    "पिङ\u{94d}क\u{94d}त\u{947}" OPT_MID_2_DU "पिञ\u{94d}जीयाथाम\u{94d}",
-    "पिङ\u{94d}क\u{94d}त\u{947}" OPT_MID_2_PL "पिञ\u{94d}जीध\u{94d}वम\u{94d}",
-    "पिङ\u{94d}क\u{94d}त\u{947}" OPT_MID_3_SG "पिञ\u{94d}जीत",
-    "पिङ\u{94d}क\u{94d}त\u{947}" OPT_MID_3_DU "पिञ\u{94d}जीयाताम\u{94d}",
-    "पिङ\u{94d}क\u{94d}त\u{947}" OPT_MID_3_PL "पिञ\u{94d}जीरन\u{94d}",
-    "पिङ\u{94d}क\u{94d}त\u{947}" IMPERFECT_MID_1_SG "अपिन\u{94d}जि",
-    "पिङ\u{94d}क\u{94d}त\u{947}" IMPERFECT_MID_1_DU "अपिन\u{94d}ज\u{94d}वहि",
-    "पिङ\u{94d}क\u{94d}त\u{947}" IMPERFECT_MID_1_PL "अपिन\u{94d}ज\u{94d}महि",
-    "पिङ\u{94d}क\u{94d}त\u{947}" IMPERFECT_MID_2_SG "अपिन\u{94d}क\u{94d}थाः",
-    "पिङ\u{94d}क\u{94d}त\u{947}" IMPERFECT_MID_2_DU "अपिन\u{94d}जाथाम\u{94d}",
-    "पिङ\u{94d}क\u{94d}त\u{947}" IMPERFECT_MID_2_PL "अपिन\u{94d}ग\u{94d}ध\u{94d}वम\u{94d}",
-    "पिङ\u{94d}क\u{94d}त\u{947}" IMPERFECT_MID_3_SG "अपिन\u{94d}क\u{94d}त",
-    "पिङ\u{94d}क\u{94d}त\u{947}" IMPERFECT_MID_3_DU "अपिन\u{94d}जाताम\u{94d}",
-    "पिङ\u{94d}क\u{94d}त\u{947}" IMPERFECT_MID_3_PL "अपिन\u{94d}जत",
-    "पिङ\u{94d}क\u{94d}त\u{947}" PARTICIPLE_PRES_MID "पिञ\u{94d}जान",
-    "पिनष\u{94d}टि" IND_ACT_1_SG "पिनष\u{94d}मि",
-    "पिनष\u{94d}टि" IND_ACT_1_DU "पि\u{902}ष\u{94d}वः",
-    "पिनष\u{94d}टि" IND_ACT_1_PL "पि\u{902}ष\u{94d}मः",
-    "पिनष\u{94d}टि" IND_ACT_2_SG "पिनक\u{94d}षि",
-    "पिनष\u{94d}टि" IND_ACT_2_DU "पि\u{902}ष\u{94d}ठः",
-    "पिनष\u{94d}टि" IND_ACT_2_PL "पि\u{902}ष\u{94d}ठ",
-    "पिनष\u{94d}टि" IND_ACT_3_SG "पिनष\u{94d}टि",
-    "पिनष\u{94d}टि" IND_ACT_3_DU "पि\u{902}ष\u{94d}टः",
-    "पिनष\u{94d}टि" IND_ACT_3_PL "पि\u{902}षन\u{94d}ति",
-    "पिनष\u{94d}टि" IND_MID_1_SG "पि\u{902}ष\u{947}",
-    "पिनष\u{94d}टि" IND_MID_1_DU "पि\u{902}ष\u{94d}वह\u{947}",
-    "पिनष\u{94d}टि" IND_MID_1_PL "पि\u{902}ष\u{94d}मह\u{947}",
-    "पिनष\u{94d}टि" IND_MID_2_SG "पिङ\u{94d}क\u{94d}ष\u{947}",
-    "पिनष\u{94d}टि" IND_MID_2_DU "पि\u{902}षाथ\u{947}",
-    "पिनष\u{94d}टि" IND_MID_2_PL "पिण\u{94d}ड\u{94d}ढ\u{94d}व\u{947}",
-    "पिनष\u{94d}टि" IND_MID_3_SG "पि\u{902}ष\u{94d}ट\u{947}",
-    "पिनष\u{94d}टि" IND_MID_3_DU "पि\u{902}षात\u{947}",
-    "पिनष\u{94d}टि" IND_MID_3_PL "पि\u{902}षत\u{947}",
-    "पिनष\u{94d}टि" IMP_ACT_1_SG "पिनषाणि",
-    "पिनष\u{94d}टि" IMP_ACT_1_DU "पिनषाव",
-    "पिनष\u{94d}टि" IMP_ACT_1_PL "पिनषाम",
-    "पिनष\u{94d}टि" IMP_ACT_2_SG "पिण\u{94d}ड\u{94d}ढि",
-    "पिनष\u{94d}टि" IMP_ACT_2_DU "पि\u{902}ष\u{94d}टम\u{94d}",
-    "पिनष\u{94d}टि" IMP_ACT_2_PL "पि\u{902}ष\u{94d}ट",
-    "पिनष\u{94d}टि" IMP_ACT_3_SG "पिनष\u{94d}ट\u{941}",
-    "पिनष\u{94d}टि" IMP_ACT_3_DU "पि\u{902}ष\u{94d}टाम\u{94d}",
-    "पिनष\u{94d}टि" IMP_ACT_3_PL "पि\u{902}षन\u{94d}त\u{941}",
-    "पिनष\u{94d}टि" IMP_MID_1_SG "पिनष\u{948}",
-    "पिनष\u{94d}टि" IMP_MID_1_DU "पिनषावह\u{948}",
-    "पिनष\u{94d}टि" IMP_MID_1_PL "पिनषामह\u{948}",
-    "पिनष\u{94d}टि" IMP_MID_2_SG "पिङ\u{94d}क\u{94d}ष\u{94d}व",
-    "पिनष\u{94d}टि" IMP_MID_2_DU "पि\u{902}षाथाम\u{94d}",
-    "पिनष\u{94d}टि" IMP_MID_2_PL "पिण\u{94d}ड\u{94d}ढ\u{94d}वम\u{94d}",
-    "पिनष\u{94d}टि" IMP_MID_3_SG "पि\u{902}ष\u{94d}टाम\u{94d}",
-    "पिनष\u{94d}टि" IMP_MID_3_DU "पि\u{902}षाताम\u{94d}",
-    "पिनष\u{94d}टि" IMP_MID_3_PL "पि\u{902}षताम\u{94d}",
-    "पिनष\u{94d}टि" OPT_ACT_1_SG "पि\u{902}ष\u{94d}याम\u{94d}",
-    "पिनष\u{94d}टि" OPT_ACT_1_DU "पि\u{902}ष\u{94d}याव",
-    "पिनष\u{94d}टि" OPT_ACT_1_PL "पि\u{902}ष\u{94d}याम",
-    "पिनष\u{94d}टि" OPT_ACT_2_SG "पि\u{902}ष\u{94d}याः",
-    "पिनष\u{94d}टि" OPT_ACT_2_DU "पि\u{902}ष\u{94d}यातम\u{94d}",
-    "पिनष\u{94d}टि" OPT_ACT_2_PL "पि\u{902}ष\u{94d}यात",
-    "पिनष\u{94d}टि" OPT_ACT_3_SG "पि\u{902}ष\u{94d}यात\u{94d}",
-    "पिनष\u{94d}टि" OPT_ACT_3_DU "पि\u{902}ष\u{94d}याताम\u{94d}",
-    "पिनष\u{94d}टि" OPT_ACT_3_PL "पि\u{902}ष\u{94d}य\u{941}ः",
-    "पिनष\u{94d}टि" OPT_MID_1_SG "पि\u{902}षीय",
-    "पिनष\u{94d}टि" OPT_MID_1_DU "पि\u{902}षीवहि",
-    "पिनष\u{94d}टि" OPT_MID_1_PL "पि\u{902}षीमहि",
-    "पिनष\u{94d}टि" OPT_MID_2_SG "पि\u{902}षीथाः",
-    "पिनष\u{94d}टि" OPT_MID_2_DU "पि\u{902}षीयाथाम\u{94d}",
-    "पिनष\u{94d}टि" OPT_MID_2_PL "पि\u{902}षीध\u{94d}वम\u{94d}",
-    "पिनष\u{94d}टि" OPT_MID_3_SG "पि\u{902}षीत",
-    "पिनष\u{94d}टि" OPT_MID_3_DU "पि\u{902}षीयाताम\u{94d}",
-    "पिनष\u{94d}टि" OPT_MID_3_PL "पि\u{902}षीरन\u{94d}",
-    "पिनष\u{94d}टि" SUBJ_ACT_1_SG "पिनषाणि",
-    "पिनष\u{94d}टि" SUBJ_ACT_1_DU "पिनषाव",
-    "पिनष\u{94d}टि" SUBJ_ACT_1_PL "पिनषाम",
-    "पिनष\u{94d}टि" SUBJ_ACT_2_SG "पिनषः",
-    "पिनष\u{94d}टि" SUBJ_ACT_2_DU "पिनषथः",
-    "पिनष\u{94d}टि" SUBJ_ACT_2_PL "पिनषथ",
-    "पिनष\u{94d}टि" SUBJ_ACT_3_SG "पिनषत\u{94d}",
-    "पिनष\u{94d}टि" SUBJ_ACT_3_DU "पिनषतः",
-    "पिनष\u{94d}टि" SUBJ_ACT_3_PL "पिनषन\u{94d}",
-    "पिनष\u{94d}टि" SUBJ_MID_1_SG "पिनष\u{948}",
-    "पिनष\u{94d}टि" SUBJ_MID_1_DU "पिनषावह\u{948}",
-    "पिनष\u{94d}टि" SUBJ_MID_1_PL "पिनषामह\u{948}",
-    "पिनष\u{94d}टि" SUBJ_MID_2_SG "पिनषस\u{947}",
-    "पिनष\u{94d}टि" SUBJ_MID_2_DU "पिनष\u{948}थ\u{947}",
-    "पिनष\u{94d}टि" SUBJ_MID_2_PL "पिनषध\u{94d}व\u{947}",
-    "पिनष\u{94d}टि" SUBJ_MID_3_SG "पिनषत\u{947}",
-    "पिनष\u{94d}टि" SUBJ_MID_3_DU "पिनष\u{948}त\u{947}",
-    "पिनष\u{94d}टि" SUBJ_MID_3_PL "पिनषन\u{94d}त",
-    "पिनष\u{94d}टि" IMPERFECT_ACT_1_SG "अपिनषम\u{94d}",
-    "पिनष\u{94d}टि" IMPERFECT_ACT_1_DU "अपि\u{902}ष\u{94d}व",
-    "पिनष\u{94d}टि" IMPERFECT_ACT_1_PL "अपि\u{902}ष\u{94d}म",
-    "पिनष\u{94d}टि" IMPERFECT_ACT_2_SG "अपिनट\u{94d}",
-    "पिनष\u{94d}टि" IMPERFECT_ACT_2_DU "अपि\u{902}ष\u{94d}टम\u{94d}",
-    "पिनष\u{94d}टि" IMPERFECT_ACT_2_PL "अपि\u{902}ष\u{94d}ट",
-    "पिनष\u{94d}टि" IMPERFECT_ACT_3_SG "अपिनट\u{94d}",
-    "पिनष\u{94d}टि" IMPERFECT_ACT_3_DU "अपि\u{902}ष\u{94d}टाम\u{94d}",
-    "पिनष\u{94d}टि" IMPERFECT_ACT_3_PL "अपि\u{902}षन\u{94d}",
-    "पिनष\u{94d}टि" IMPERFECT_MID_1_SG "अपि\u{902}षि",
-    "पिनष\u{94d}टि" IMPERFECT_MID_1_DU "अपि\u{902}ष\u{94d}वहि",
-    "पिनष\u{94d}टि" IMPERFECT_MID_1_PL "अपि\u{902}ष\u{94d}महि",
-    "पिनष\u{94d}टि" IMPERFECT_MID_2_SG "अपि\u{902}ष\u{94d}ठाः",
-    "पिनष\u{94d}टि" IMPERFECT_MID_2_DU "अपि\u{902}षाथाम\u{94d}",
-    "पिनष\u{94d}टि" IMPERFECT_MID_2_PL "अपिण\u{94d}ड\u{94d}ढ\u{94d}वम\u{94d}",
-    "पिनष\u{94d}टि" IMPERFECT_MID_3_SG "अपि\u{902}ष\u{94d}ट",
-    "पिनष\u{94d}टि" IMPERFECT_MID_3_DU "अपि\u{902}षाताम\u{94d}",
-    "पिनष\u{94d}टि" IMPERFECT_MID_3_PL "अपि\u{902}षत",
-    "पिनष\u{94d}टि" PARTICIPLE_PRES_ACT "पि\u{902}षत\u{94d}",
-    "पिनष\u{94d}टि" PARTICIPLE_PRES_MID "पि\u{902}षाण",
-    "पिबति" FUTURE_ACT_1_SG "पास\u{94d}यामि",
-    "पिबति" FUTURE_ACT_1_DU "पास\u{94d}यावः",
-    "पिबति" FUTURE_ACT_1_PL "पास\u{94d}यामः",
-    "पिबति" FUTURE_ACT_2_SG "पास\u{94d}यसि",
-    "पिबति" FUTURE_ACT_2_DU "पास\u{94d}यथः",
-    "पिबति" FUTURE_ACT_2_PL "पास\u{94d}यथ",
-    "पिबति" FUTURE_ACT_3_SG "पास\u{94d}यति",
-    "पिबति" FUTURE_ACT_3_DU "पास\u{94d}यतः",
-    "पिबति" FUTURE_ACT_3_PL "पास\u{94d}यन\u{94d}ति",
-    "पिबति" FUTURE_MID_1_SG "पास\u{94d}य\u{947}",
-    "पिबति" FUTURE_MID_1_DU "पास\u{94d}यावह\u{947}",
-    "पिबति" FUTURE_MID_1_PL "पास\u{94d}यामह\u{947}",
-    "पिबति" FUTURE_MID_2_SG "पास\u{94d}यस\u{947}",
-    "पिबति" FUTURE_MID_2_DU "पास\u{94d}य\u{947}थ\u{947}",
-    "पिबति" FUTURE_MID_2_PL "पास\u{94d}यध\u{94d}व\u{947}",
-    "पिबति" FUTURE_MID_3_SG "पास\u{94d}यत\u{947}",
-    "पिबति" FUTURE_MID_3_DU "पास\u{94d}य\u{947}त\u{947}",
-    "पिबति" FUTURE_MID_3_PL "पास\u{94d}यन\u{94d}त\u{947}",
-    "पिबति" PARTICIPLE_FUT_ACT "पास\u{94d}यत\u{94d}",
-    "पिबति" PARTICIPLE_FUT_MID "पास\u{94d}यमान",
-    "प\u{941}पोष" PERFECT_ACT_1_DU "प\u{941}प\u{941}षिव",
-    "प\u{941}पोष" PERFECT_ACT_1_PL "प\u{941}प\u{941}षिम",
-    "प\u{941}पोष" PERFECT_ACT_2_DU "प\u{941}प\u{941}षथ\u{941}ः",
-    "प\u{941}पोष" PERFECT_ACT_2_PL "प\u{941}प\u{941}ष",
-    "प\u{941}पोष" PERFECT_ACT_3_DU "प\u{941}प\u{941}षत\u{941}ः",
-    "प\u{941}पोष" PERFECT_ACT_3_PL "प\u{941}प\u{941}ष\u{941}ः",
-    "प\u{941}पोष" PERFECT_MID_1_SG "प\u{941}प\u{941}ष\u{947}",
-    "प\u{941}पोष" PERFECT_MID_1_DU "प\u{941}प\u{941}षिवह\u{947}",
-    "प\u{941}पोष" PERFECT_MID_1_PL "प\u{941}प\u{941}षिमह\u{947}",
-    "प\u{941}पोष" PERFECT_MID_2_SG "प\u{941}प\u{941}षिष\u{947}",
-    "प\u{941}पोष" PERFECT_MID_2_DU "प\u{941}प\u{941}षाथ\u{947}",
-    "प\u{941}पोष" PERFECT_MID_2_PL "प\u{941}प\u{941}षिध\u{94d}व\u{947}",
-    "प\u{941}पोष" PERFECT_MID_3_SG "प\u{941}प\u{941}ष\u{947}",
-    "प\u{941}पोष" PERFECT_MID_3_DU "प\u{941}प\u{941}षात\u{947}",
-    "प\u{941}पोष" PERFECT_MID_3_PL "प\u{941}प\u{941}षिर\u{947}",
-    "प\u{941}पोष" PARTICIPLE_PERF_ACT "प\u{941}प\u{941}ष\u{94d}वा\u{902}स\u{94d}",
-    "प\u{941}पोष" PARTICIPLE_PERF_MID "प\u{941}प\u{941}षाण",
-    "प\u{943}णक\u{94d}ति" IND_ACT_1_SG "प\u{943}णच\u{94d}मि",
-    "प\u{943}णक\u{94d}ति" IND_ACT_1_DU "प\u{943}ञ\u{94d}च\u{94d}वः",
-    "प\u{943}णक\u{94d}ति" IND_ACT_1_PL "प\u{943}ञ\u{94d}च\u{94d}मः",
-    "प\u{943}णक\u{94d}ति" IND_ACT_2_SG "प\u{943}णक\u{94d}षि",
-    "प\u{943}णक\u{94d}ति" IND_ACT_2_DU "प\u{943}ङ\u{94d}क\u{94d}थः",
-    "प\u{943}णक\u{94d}ति" IND_ACT_2_PL "प\u{943}ङ\u{94d}क\u{94d}थ",
-    "प\u{943}णक\u{94d}ति" IND_ACT_3_DU "प\u{943}ङ\u{94d}क\u{94d}तः",
-    "प\u{943}णक\u{94d}ति" IND_ACT_3_PL "प\u{943}ञ\u{94d}चन\u{94d}ति",
-    "प\u{943}णक\u{94d}ति" IND_MID_1_SG "प\u{943}ञ\u{94d}च\u{947}",
-    "प\u{943}णक\u{94d}ति" IND_MID_1_DU "प\u{943}ञ\u{94d}च\u{94d}वह\u{947}",
-    "प\u{943}णक\u{94d}ति" IND_MID_1_PL "प\u{943}ञ\u{94d}च\u{94d}मह\u{947}",
-    "प\u{943}णक\u{94d}ति" IND_MID_2_SG "प\u{943}ङ\u{94d}क\u{94d}ष\u{947}",
-    "प\u{943}णक\u{94d}ति" IND_MID_2_DU "प\u{943}ञ\u{94d}चाथ\u{947}",
-    "प\u{943}णक\u{94d}ति" IND_MID_2_PL "प\u{943}ङ\u{94d}ग\u{94d}ध\u{94d}व\u{947}",
-    "प\u{943}णक\u{94d}ति" IND_MID_3_SG "प\u{943}ङ\u{94d}क\u{94d}त\u{947}",
-    "प\u{943}णक\u{94d}ति" IND_MID_3_DU "प\u{943}ञ\u{94d}चात\u{947}",
-    "प\u{943}णक\u{94d}ति" IND_MID_3_PL "प\u{943}ञ\u{94d}चत\u{947}",
-    "प\u{943}णक\u{94d}ति" IMP_ACT_1_SG "प\u{943}णचानि",
-    "प\u{943}णक\u{94d}ति" IMP_ACT_1_DU "प\u{943}णचाव",
-    "प\u{943}णक\u{94d}ति" IMP_ACT_1_PL "प\u{943}णचाम",
-    "प\u{943}णक\u{94d}ति" IMP_ACT_2_SG "प\u{943}ङ\u{94d}ग\u{94d}धि",
-    "प\u{943}णक\u{94d}ति" IMP_ACT_2_DU "प\u{943}ङ\u{94d}क\u{94d}तम\u{94d}",
-    "प\u{943}णक\u{94d}ति" IMP_ACT_2_PL "प\u{943}ङ\u{94d}क\u{94d}त",
-    "प\u{943}णक\u{94d}ति" IMP_ACT_3_DU "प\u{943}ङ\u{94d}क\u{94d}ताम\u{94d}",
-    "प\u{943}णक\u{94d}ति" IMP_ACT_3_PL "प\u{943}ञ\u{94d}चन\u{94d}त\u{941}",
-    "प\u{943}णक\u{94d}ति" IMP_MID_1_SG "प\u{943}णच\u{948}",
-    "प\u{943}णक\u{94d}ति" IMP_MID_1_DU "प\u{943}णचावह\u{948}",
-    "प\u{943}णक\u{94d}ति" IMP_MID_1_PL "प\u{943}णचामह\u{948}",
-    "प\u{943}णक\u{94d}ति" IMP_MID_2_SG "प\u{943}ङ\u{94d}क\u{94d}ष\u{94d}व",
-    "प\u{943}णक\u{94d}ति" IMP_MID_2_DU "प\u{943}ञ\u{94d}चाथाम\u{94d}",
-    "प\u{943}णक\u{94d}ति" IMP_MID_2_PL "प\u{943}ङ\u{94d}ग\u{94d}ध\u{94d}वम\u{94d}",
-    "प\u{943}णक\u{94d}ति" IMP_MID_3_SG "प\u{943}ङ\u{94d}क\u{94d}ताम\u{94d}",
-    "प\u{943}णक\u{94d}ति" IMP_MID_3_DU "प\u{943}ञ\u{94d}चाताम\u{94d}",
-    "प\u{943}णक\u{94d}ति" IMP_MID_3_PL "प\u{943}ञ\u{94d}चताम\u{94d}",
-    "प\u{943}णक\u{94d}ति" OPT_ACT_1_SG "प\u{943}ञ\u{94d}च\u{94d}याम\u{94d}",
-    "प\u{943}णक\u{94d}ति" OPT_ACT_1_DU "प\u{943}ञ\u{94d}च\u{94d}याव",
-    "प\u{943}णक\u{94d}ति" OPT_ACT_1_PL "प\u{943}ञ\u{94d}च\u{94d}याम",
-    "प\u{943}णक\u{94d}ति" OPT_ACT_2_SG "प\u{943}ञ\u{94d}च\u{94d}याः",
-    "प\u{943}णक\u{94d}ति" OPT_ACT_2_DU "प\u{943}ञ\u{94d}च\u{94d}यातम\u{94d}",
-    "प\u{943}णक\u{94d}ति" OPT_ACT_2_PL "प\u{943}ञ\u{94d}च\u{94d}यात",
-    "प\u{943}णक\u{94d}ति" OPT_ACT_3_SG "प\u{943}ञ\u{94d}च\u{94d}यात\u{94d}",
-    "प\u{943}णक\u{94d}ति" OPT_ACT_3_DU "प\u{943}ञ\u{94d}च\u{94d}याताम\u{94d}",
-    "प\u{943}णक\u{94d}ति" OPT_ACT_3_PL "प\u{943}ञ\u{94d}च\u{94d}य\u{941}ः",
-    "प\u{943}णक\u{94d}ति" OPT_MID_1_SG "प\u{943}ञ\u{94d}चीय",
-    "प\u{943}णक\u{94d}ति" OPT_MID_1_DU "प\u{943}ञ\u{94d}चीवहि",
-    "प\u{943}णक\u{94d}ति" OPT_MID_1_PL "प\u{943}ञ\u{94d}चीमहि",
-    "प\u{943}णक\u{94d}ति" OPT_MID_2_SG "प\u{943}ञ\u{94d}चीथाः",
-    "प\u{943}णक\u{94d}ति" OPT_MID_2_DU "प\u{943}ञ\u{94d}चीयाथाम\u{94d}",
-    "प\u{943}णक\u{94d}ति" OPT_MID_2_PL "प\u{943}ञ\u{94d}चीध\u{94d}वम\u{94d}",
-    "प\u{943}णक\u{94d}ति" OPT_MID_3_SG "प\u{943}ञ\u{94d}चीत",
-    "प\u{943}णक\u{94d}ति" OPT_MID_3_DU "प\u{943}ञ\u{94d}चीयाताम\u{94d}",
-    "प\u{943}णक\u{94d}ति" OPT_MID_3_PL "प\u{943}ञ\u{94d}चीरन\u{94d}",
-    "प\u{943}णक\u{94d}ति" SUBJ_ACT_1_SG "प\u{943}णचानि",
-    "प\u{943}णक\u{94d}ति" SUBJ_ACT_1_DU "प\u{943}णचाव",
-    "प\u{943}णक\u{94d}ति" SUBJ_ACT_1_PL "प\u{943}णचाम",
-    "प\u{943}णक\u{94d}ति" SUBJ_ACT_2_SG "प\u{943}णचः",
-    "प\u{943}णक\u{94d}ति" SUBJ_ACT_2_DU "प\u{943}णचथः",
-    "प\u{943}णक\u{94d}ति" SUBJ_ACT_2_PL "प\u{943}णचथ",
-    "प\u{943}णक\u{94d}ति" SUBJ_ACT_3_SG "प\u{943}णचत\u{94d}",
-    "प\u{943}णक\u{94d}ति" SUBJ_ACT_3_DU "प\u{943}णचतः",
-    "प\u{943}णक\u{94d}ति" SUBJ_ACT_3_PL "प\u{943}णचन\u{94d}",
-    "प\u{943}णक\u{94d}ति" SUBJ_MID_1_SG "प\u{943}णच\u{948}",
-    "प\u{943}णक\u{94d}ति" SUBJ_MID_1_DU "प\u{943}णचावह\u{948}",
-    "प\u{943}णक\u{94d}ति" SUBJ_MID_1_PL "प\u{943}णचामह\u{948}",
-    "प\u{943}णक\u{94d}ति" SUBJ_MID_2_SG "प\u{943}णचस\u{947}",
-    "प\u{943}णक\u{94d}ति" SUBJ_MID_2_DU "प\u{943}णच\u{948}थ\u{947}",
-    "प\u{943}णक\u{94d}ति" SUBJ_MID_2_PL "प\u{943}णचध\u{94d}व\u{947}",
-    "प\u{943}णक\u{94d}ति" SUBJ_MID_3_SG "प\u{943}णचत\u{947}",
-    "प\u{943}णक\u{94d}ति" SUBJ_MID_3_DU "प\u{943}णच\u{948}त\u{947}",
-    "प\u{943}णक\u{94d}ति" SUBJ_MID_3_PL "प\u{943}णचन\u{94d}त",
-    "प\u{943}णक\u{94d}ति" IMPERFECT_ACT_1_SG "अप\u{943}णचम\u{94d}",
-    "प\u{943}णक\u{94d}ति" IMPERFECT_ACT_1_DU "अप\u{943}ञ\u{94d}च\u{94d}व",
-    "प\u{943}णक\u{94d}ति" IMPERFECT_ACT_1_PL "अप\u{943}ञ\u{94d}च\u{94d}म",
-    "प\u{943}णक\u{94d}ति" IMPERFECT_ACT_2_SG "अप\u{943}णक\u{94d}",
-    "प\u{943}णक\u{94d}ति" IMPERFECT_ACT_2_DU "अप\u{943}ङ\u{94d}क\u{94d}तम\u{94d}",
-    "प\u{943}णक\u{94d}ति" IMPERFECT_ACT_2_PL "अप\u{943}ङ\u{94d}क\u{94d}त",
-    "प\u{943}णक\u{94d}ति" IMPERFECT_ACT_3_SG "अप\u{943}णक\u{94d}",
-    "प\u{943}णक\u{94d}ति" IMPERFECT_ACT_3_DU "अप\u{943}ङ\u{94d}क\u{94d}ताम\u{94d}",
-    "प\u{943}णक\u{94d}ति" IMPERFECT_ACT_3_PL "अप\u{943}ञ\u{94d}चन\u{94d}",
-    "प\u{943}णक\u{94d}ति" IMPERFECT_MID_1_SG "अप\u{943}ञ\u{94d}चि",
-    "प\u{943}णक\u{94d}ति" IMPERFECT_MID_1_DU "अप\u{943}ञ\u{94d}च\u{94d}वहि",
-    "प\u{943}णक\u{94d}ति" IMPERFECT_MID_1_PL "अप\u{943}ञ\u{94d}च\u{94d}महि",
-    "प\u{943}णक\u{94d}ति" IMPERFECT_MID_2_SG "अप\u{943}ङ\u{94d}क\u{94d}थाः",
-    "प\u{943}णक\u{94d}ति" IMPERFECT_MID_2_DU "अप\u{943}ञ\u{94d}चाथाम\u{94d}",
-    "प\u{943}णक\u{94d}ति" IMPERFECT_MID_2_PL "अप\u{943}ङ\u{94d}ग\u{94d}ध\u{94d}वम\u{94d}",
-    "प\u{943}णक\u{94d}ति" IMPERFECT_MID_3_SG "अप\u{943}ङ\u{94d}क\u{94d}त",
-    "प\u{943}णक\u{94d}ति" IMPERFECT_MID_3_DU "अप\u{943}ञ\u{94d}चाताम\u{94d}",
-    "प\u{943}णक\u{94d}ति" IMPERFECT_MID_3_PL "अप\u{943}ञ\u{94d}चत",
-    "प\u{943}णक\u{94d}ति" PARTICIPLE_PRES_ACT "प\u{943}ञ\u{94d}चत\u{94d}",
-    "प\u{943}णक\u{94d}ति" PARTICIPLE_PRES_MID "प\u{943}ञ\u{94d}चान",
-    "प\u{94d}रक\u{94d}षालयति" IMPERFECT_ACT_1_SG "प\u{94d}राक\u{94d}षालयम\u{94d}",
-    "प\u{94d}रक\u{94d}षालयति" IMPERFECT_ACT_1_DU "प\u{94d}राक\u{94d}षालयाव",
-    "प\u{94d}रक\u{94d}षालयति" IMPERFECT_ACT_1_PL "प\u{94d}राक\u{94d}षालयाम",
-    "प\u{94d}रक\u{94d}षालयति" IMPERFECT_ACT_2_SG "प\u{94d}राक\u{94d}षालयः",
-    "प\u{94d}रक\u{94d}षालयति" IMPERFECT_ACT_2_DU "प\u{94d}राक\u{94d}षालयतम\u{94d}",
-    "प\u{94d}रक\u{94d}षालयति" IMPERFECT_ACT_2_PL "प\u{94d}राक\u{94d}षालयत",
-    "प\u{94d}रक\u{94d}षालयति" IMPERFECT_ACT_3_SG "प\u{94d}राक\u{94d}षालयत\u{94d}",
-    "प\u{94d}रक\u{94d}षालयति" IMPERFECT_ACT_3_DU "प\u{94d}राक\u{94d}षालयताम\u{94d}",
-    "प\u{94d}रक\u{94d}षालयति" IMPERFECT_ACT_3_PL "प\u{94d}राक\u{94d}षालयन\u{94d}",
-    "प\u{94d}रक\u{94d}षालयति" IMPERFECT_MID_1_SG "प\u{94d}राक\u{94d}षालय\u{947}",
-    "प\u{94d}रक\u{94d}षालयति" IMPERFECT_MID_1_DU "प\u{94d}राक\u{94d}षालयावहि",
-    "प\u{94d}रक\u{94d}षालयति" IMPERFECT_MID_1_PL "प\u{94d}राक\u{94d}षालयामहि",
-    "प\u{94d}रक\u{94d}षालयति" IMPERFECT_MID_2_SG "प\u{94d}राक\u{94d}षालयथाः",
-    "प\u{94d}रक\u{94d}षालयति" IMPERFECT_MID_2_DU "प\u{94d}राक\u{94d}षालय\u{947}थाम\u{94d}",
-    "प\u{94d}रक\u{94d}षालयति" IMPERFECT_MID_2_PL "प\u{94d}राक\u{94d}षालयध\u{94d}वम\u{94d}",
-    "प\u{94d}रक\u{94d}षालयति" IMPERFECT_MID_3_SG "प\u{94d}राक\u{94d}षालयत",
-    "प\u{94d}रक\u{94d}षालयति" IMPERFECT_MID_3_DU "प\u{94d}राक\u{94d}षालय\u{947}ताम\u{94d}",
-    "प\u{94d}रक\u{94d}षालयति" IMPERFECT_MID_3_PL "प\u{94d}राक\u{94d}षालयन\u{94d}त",
-    "प\u{94d}रचष\u{94d}ट\u{947}" IND_MID_1_SG "प\u{94d}रचक\u{94d}ष\u{947}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" IND_MID_1_DU "प\u{94d}रचक\u{94d}ष\u{94d}वह\u{947}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" IND_MID_1_PL "प\u{94d}रचक\u{94d}ष\u{94d}मह\u{947}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" IND_MID_2_SG "प\u{94d}रचक\u{94d}ष\u{947}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" IND_MID_2_DU "प\u{94d}रचक\u{94d}षाथ\u{947}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" IND_MID_2_PL "प\u{94d}रचड\u{94d}ढ\u{94d}व\u{947}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" IND_MID_3_SG "प\u{94d}रचष\u{94d}ट\u{947}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" IND_MID_3_DU "प\u{94d}रचक\u{94d}षात\u{947}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" IND_MID_3_PL "प\u{94d}रचक\u{94d}षत\u{947}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" IMP_MID_1_SG "चक\u{94d}ष\u{948}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" IMP_MID_1_DU "चक\u{94d}षावह\u{948}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" IMP_MID_1_PL "चक\u{94d}षामह\u{948}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" IMP_MID_2_SG "प\u{94d}रचक\u{94d}ष\u{94d}व",
-    "प\u{94d}रचष\u{94d}ट\u{947}" IMP_MID_2_DU "प\u{94d}रचक\u{94d}षाथाम\u{94d}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" IMP_MID_2_PL "प\u{94d}रचड\u{94d}ढ\u{94d}वम\u{94d}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" IMP_MID_3_SG "प\u{94d}रचष\u{94d}टाम\u{94d}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" IMP_MID_3_DU "प\u{94d}रचक\u{94d}षाताम\u{94d}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" IMP_MID_3_PL "प\u{94d}रचक\u{94d}षताम\u{94d}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" OPT_MID_1_SG "प\u{94d}रचक\u{94d}षीय",
-    "प\u{94d}रचष\u{94d}ट\u{947}" OPT_MID_1_DU "प\u{94d}रचक\u{94d}षीवहि",
-    "प\u{94d}रचष\u{94d}ट\u{947}" OPT_MID_1_PL "प\u{94d}रचक\u{94d}षीमहि",
-    "प\u{94d}रचष\u{94d}ट\u{947}" OPT_MID_2_SG "प\u{94d}रचक\u{94d}षीथाः",
-    "प\u{94d}रचष\u{94d}ट\u{947}" OPT_MID_2_DU "प\u{94d}रचक\u{94d}षीयाथाम\u{94d}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" OPT_MID_2_PL "प\u{94d}रचक\u{94d}षीध\u{94d}वम\u{94d}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" OPT_MID_3_SG "प\u{94d}रचक\u{94d}षीत",
-    "प\u{94d}रचष\u{94d}ट\u{947}" OPT_MID_3_DU "प\u{94d}रचक\u{94d}षीयाताम\u{94d}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" OPT_MID_3_PL "प\u{94d}रचक\u{94d}षीरन\u{94d}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" SUBJ_MID_1_SG "चक\u{94d}ष\u{948}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" SUBJ_MID_1_DU "चक\u{94d}षावह\u{948}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" SUBJ_MID_1_PL "चक\u{94d}षामह\u{948}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" SUBJ_MID_2_SG "चक\u{94d}षस\u{947}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" SUBJ_MID_2_DU "चक\u{94d}ष\u{948}थ\u{947}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" SUBJ_MID_2_PL "चक\u{94d}षध\u{94d}व\u{947}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" SUBJ_MID_3_SG "चक\u{94d}षत\u{947}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" SUBJ_MID_3_DU "चक\u{94d}ष\u{948}त\u{947}",
-    "प\u{94d}रचष\u{94d}ट\u{947}" SUBJ_MID_3_PL "चक\u{94d}षन\u{94d}त",
-    "प\u{94d}रचष\u{94d}ट\u{947}" PARTICIPLE_PRES_MID "प\u{94d}रचक\u{94d}षाण",
-    "प\u{94d}रभाति" IMP_ACT_1_SG "प\u{94d}रभाणि",
-    "प\u{94d}रभाति" SUBJ_ACT_1_SG "प\u{94d}रभाणि",
-    "प\u{94d}रभाति" IMPERFECT_ACT_1_SG "प\u{94d}राभाम\u{94d}",
-    "प\u{94d}रभाति" IMPERFECT_ACT_1_DU "प\u{94d}राभाव",
-    "प\u{94d}रभाति" IMPERFECT_ACT_1_PL "प\u{94d}राभाम",
-    "प\u{94d}रभाति" IMPERFECT_ACT_2_SG "प\u{94d}राभाः",
-    "प\u{94d}रभाति" IMPERFECT_ACT_2_DU "प\u{94d}राभातम\u{94d}",
-    "प\u{94d}रभाति" IMPERFECT_ACT_2_PL "प\u{94d}राभात",
-    "प\u{94d}रभाति" IMPERFECT_ACT_3_SG "प\u{94d}राभात\u{94d}",
-    "प\u{94d}रभाति" IMPERFECT_ACT_3_DU "प\u{94d}राभाताम\u{94d}",
-    "प\u{94d}रभाति" IMPERFECT_ACT_3_PL "प\u{94d}राभ\u{941}ः",
-    "प\u{94d}रवदति" IMPERFECT_ACT_1_SG "प\u{94d}रावदम\u{94d}",
-    "प\u{94d}रवदति" IMPERFECT_ACT_1_DU "प\u{94d}रावदाव",
-    "प\u{94d}रवदति" IMPERFECT_ACT_1_PL "प\u{94d}रावदाम",
-    "प\u{94d}रवदति" IMPERFECT_ACT_2_SG "प\u{94d}रावदः",
-    "प\u{94d}रवदति" IMPERFECT_ACT_2_DU "प\u{94d}रावदतम\u{94d}",
-    "प\u{94d}रवदति" IMPERFECT_ACT_2_PL "प\u{94d}रावदत",
-    "प\u{94d}रवदति" IMPERFECT_ACT_3_SG "प\u{94d}रावदत\u{94d}",
-    "प\u{94d}रवदति" IMPERFECT_ACT_3_DU "प\u{94d}रावदताम\u{94d}",
-    "प\u{94d}रवदति" IMPERFECT_ACT_3_PL "प\u{94d}रावदन\u{94d}",
-    "प\u{94d}रवदति" IMPERFECT_MID_1_SG "प\u{94d}रावद\u{947}",
-    "प\u{94d}रवदति" IMPERFECT_MID_1_DU "प\u{94d}रावदावहि",
-    "प\u{94d}रवदति" IMPERFECT_MID_1_PL "प\u{94d}रावदामहि",
-    "प\u{94d}रवदति" IMPERFECT_MID_2_SG "प\u{94d}रावदथाः",
-    "प\u{94d}रवदति" IMPERFECT_MID_2_DU "प\u{94d}रावद\u{947}थाम\u{94d}",
-    "प\u{94d}रवदति" IMPERFECT_MID_2_PL "प\u{94d}रावदध\u{94d}वम\u{94d}",
-    "प\u{94d}रवदति" IMPERFECT_MID_3_SG "प\u{94d}रावदत",
-    "प\u{94d}रवदति" IMPERFECT_MID_3_DU "प\u{94d}रावद\u{947}ताम\u{94d}",
-    "प\u{94d}रवदति" IMPERFECT_MID_3_PL "प\u{94d}रावदन\u{94d}त",
-    "प\u{94d}रवहति" IMPERFECT_ACT_1_SG "प\u{94d}रावहम\u{94d}",
-    "प\u{94d}रवहति" IMPERFECT_ACT_1_DU "प\u{94d}रावहाव",
-    "प\u{94d}रवहति" IMPERFECT_ACT_1_PL "प\u{94d}रावहाम",
-    "प\u{94d}रवहति" IMPERFECT_ACT_2_SG "प\u{94d}रावहः",
-    "प\u{94d}रवहति" IMPERFECT_ACT_2_DU "प\u{94d}रावहतम\u{94d}",
-    "प\u{94d}रवहति" IMPERFECT_ACT_2_PL "प\u{94d}रावहत",
-    "प\u{94d}रवहति" IMPERFECT_ACT_3_SG "प\u{94d}रावहत\u{94d}",
-    "प\u{94d}रवहति" IMPERFECT_ACT_3_DU "प\u{94d}रावहताम\u{94d}",
-    "प\u{94d}रवहति" IMPERFECT_ACT_3_PL "प\u{94d}रावहन\u{94d}",
-    "प\u{94d}रवहति" IMPERFECT_MID_1_SG "प\u{94d}रावह\u{947}",
-    "प\u{94d}रवहति" IMPERFECT_MID_1_DU "प\u{94d}रावहावहि",
-    "प\u{94d}रवहति" IMPERFECT_MID_1_PL "प\u{94d}रावहामहि",
-    "प\u{94d}रवहति" IMPERFECT_MID_2_SG "प\u{94d}रावहथाः",
-    "प\u{94d}रवहति" IMPERFECT_MID_2_DU "प\u{94d}रावह\u{947}थाम\u{94d}",
-    "प\u{94d}रवहति" IMPERFECT_MID_2_PL "प\u{94d}रावहध\u{94d}वम\u{94d}",
-    "प\u{94d}रवहति" IMPERFECT_MID_3_SG "प\u{94d}रावहत",
-    "प\u{94d}रवहति" IMPERFECT_MID_3_DU "प\u{94d}रावह\u{947}ताम\u{94d}",
-    "प\u{94d}रवहति" IMPERFECT_MID_3_PL "प\u{94d}रावहन\u{94d}त",
-    "प\u{94d}र\u{941}ष\u{94d}णोति" IMPERFECT_ACT_1_SG "अप\u{94d}र\u{941}ष\u{94d}नवम\u{94d}",
-    "प\u{94d}र\u{941}ष\u{94d}णोति" IMPERFECT_ACT_2_SG "अप\u{94d}र\u{941}ष\u{94d}नोः",
-    "प\u{94d}र\u{941}ष\u{94d}णोति" IMPERFECT_ACT_3_SG "अप\u{94d}र\u{941}ष\u{94d}नोत\u{94d}",
-    "प\u{94d}साति" IND_MID_2_DU "प\u{94d}स\u{948}थ\u{947}",
-    "प\u{94d}साति" IND_MID_3_DU "प\u{94d}स\u{948}त\u{947}",
-    "प\u{94d}साति" IND_MID_3_PL "प\u{94d}सान\u{94d}त\u{947}",
-    "प\u{94d}साति" IMP_ACT_2_SG "प\u{94d}सा",
-    "प\u{94d}साति" IMP_MID_2_DU "प\u{94d}स\u{948}थाम\u{94d}",
-    "प\u{94d}साति" IMP_MID_3_DU "प\u{94d}स\u{948}ताम\u{94d}",
-    "प\u{94d}साति" IMP_MID_3_PL "प\u{94d}सान\u{94d}ताम\u{94d}",
-    "प\u{94d}साति" OPT_ACT_1_SG "प\u{94d}स\u{948}यम\u{94d}",
-    "प\u{94d}साति" OPT_ACT_1_DU "प\u{94d}स\u{948}व",
-    "प\u{94d}साति" OPT_ACT_1_PL "प\u{94d}स\u{948}म",
-    "प\u{94d}साति" OPT_ACT_2_SG "प\u{94d}स\u{948}ः",
-    "प\u{94d}साति" OPT_ACT_2_DU "प\u{94d}स\u{948}तम\u{94d}",
-    "प\u{94d}साति" OPT_ACT_2_PL "प\u{94d}स\u{948}त",
-    "प\u{94d}साति" OPT_ACT_3_SG "प\u{94d}स\u{948}त\u{94d}",
-    "प\u{94d}साति" OPT_ACT_3_DU "प\u{94d}स\u{948}ताम\u{94d}",
-    "प\u{94d}साति" OPT_ACT_3_PL "प\u{94d}स\u{948}य\u{941}ः",
-    "प\u{94d}साति" OPT_MID_1_SG "प\u{94d}स\u{948}य",
-    "प\u{94d}साति" OPT_MID_1_DU "प\u{94d}स\u{948}वहि",
-    "प\u{94d}साति" OPT_MID_1_PL "प\u{94d}स\u{948}महि",
-    "प\u{94d}साति" OPT_MID_2_SG "प\u{94d}स\u{948}थाः",
-    "प\u{94d}साति" OPT_MID_2_DU "प\u{94d}स\u{948}याथाम\u{94d}",
-    "प\u{94d}साति" OPT_MID_2_PL "प\u{94d}स\u{948}ध\u{94d}वम\u{94d}",
-    "प\u{94d}साति" OPT_MID_3_SG "प\u{94d}स\u{948}त",
-    "प\u{94d}साति" OPT_MID_3_DU "प\u{94d}स\u{948}याताम\u{94d}",
-    "प\u{94d}साति" OPT_MID_3_PL "प\u{94d}स\u{948}रन\u{94d}",
-    "प\u{94d}साति" SUBJ_MID_2_PL "प\u{94d}साध\u{94d}व\u{948}",
-    "प\u{94d}साति" IMPERFECT_ACT_3_PL "अप\u{94d}सान\u{94d}",
-    "प\u{94d}साति" IMPERFECT_MID_1_SG "अप\u{94d}स\u{948}",
-    "प\u{94d}साति" IMPERFECT_MID_2_DU "अप\u{94d}स\u{948}थाम\u{94d}",
-    "प\u{94d}साति" IMPERFECT_MID_3_DU "अप\u{94d}स\u{948}ताम\u{94d}",
-    "प\u{94d}साति" IMPERFECT_MID_3_PL "अप\u{94d}सान\u{94d}त",
-    "प\u{94d}साति" PARTICIPLE_PRES_MID "प\u{94d}सामान",
-    "बबन\u{94d}ध" PERFECT_ACT_2_SG "बबन\u{94d}द\u{94d}ध",
-    "बबर\u{94d}ह" PERFECT_ACT_1_DU "बब\u{943}हिव",
-    "बबर\u{94d}ह" PERFECT_ACT_1_PL "बब\u{943}हिम",
-    "बबर\u{94d}ह" PERFECT_ACT_2_DU "बब\u{943}हथ\u{941}ः",
-    "बबर\u{94d}ह" PERFECT_ACT_2_PL "बब\u{943}ह",
-    "बबर\u{94d}ह" PERFECT_ACT_3_DU "बब\u{943}हत\u{941}ः",
-    "बबर\u{94d}ह" PERFECT_ACT_3_PL "बब\u{943}ह\u{941}ः",
-    "बबर\u{94d}ह" PERFECT_MID_1_SG "बब\u{943}ह\u{947}",
-    "बबर\u{94d}ह" PERFECT_MID_1_DU "बब\u{943}हिवह\u{947}",
-    "बबर\u{94d}ह" PERFECT_MID_1_PL "बब\u{943}हिमह\u{947}",
-    "बबर\u{94d}ह" PERFECT_MID_2_SG "बब\u{943}हिष\u{947}",
-    "बबर\u{94d}ह" PERFECT_MID_2_DU "बब\u{943}हाथ\u{947}",
-    "बबर\u{94d}ह" PERFECT_MID_2_PL "बब\u{943}हिध\u{94d}व\u{947}",
-    "बबर\u{94d}ह" PERFECT_MID_3_SG "बब\u{943}ह\u{947}",
-    "बबर\u{94d}ह" PERFECT_MID_3_DU "बब\u{943}हात\u{947}",
-    "बबर\u{94d}ह" PERFECT_MID_3_PL "बब\u{943}हिर\u{947}",
-    "बबर\u{94d}ह" PARTICIPLE_PERF_ACT "बब\u{943}ह\u{94d}वा\u{902}स\u{94d}",
-    "बबर\u{94d}ह" PARTICIPLE_PERF_MID "बब\u{943}हाण",
-    "बभस\u{94d}ति" IND_ACT_1_SG "बभस\u{94d}मि",
-    "बभस\u{94d}ति" IND_ACT_1_DU "बप\u{94d}स\u{94d}वः",
-    "बभस\u{94d}ति" IND_ACT_1_PL "बप\u{94d}स\u{94d}मः",
-    "बभस\u{94d}ति" IND_ACT_2_DU "बब\u{94d}धः",
-    "बभस\u{94d}ति" IND_ACT_2_PL "बब\u{94d}ध",
-    "बभस\u{94d}ति" IND_ACT_3_DU "बब\u{94d}धः",
-    "बभस\u{94d}ति" IND_ACT_3_PL "बप\u{94d}सति",
-    "बभस\u{94d}ति" IMP_ACT_1_SG "बभसानि",
-    "बभस\u{94d}ति" IMP_ACT_1_DU "बभसाव",
-    "बभस\u{94d}ति" IMP_ACT_1_PL "बभसाम",
-    "बभस\u{94d}ति" IMP_ACT_2_SG "बब\u{94d}धि",
-    "बभस\u{94d}ति" IMP_ACT_2_DU "बब\u{94d}धम\u{94d}",
-    "बभस\u{94d}ति" IMP_ACT_2_PL "बब\u{94d}ध",
-    "बभस\u{94d}ति" IMP_ACT_3_DU "बब\u{94d}धाम\u{94d}",
-    "बभस\u{94d}ति" IMP_ACT_3_PL "बप\u{94d}सत\u{941}",
-    "बभस\u{94d}ति" OPT_ACT_1_SG "बप\u{94d}स\u{94d}याम\u{94d}",
-    "बभस\u{94d}ति" OPT_ACT_1_DU "बप\u{94d}स\u{94d}याव",
-    "बभस\u{94d}ति" OPT_ACT_1_PL "बप\u{94d}स\u{94d}याम",
-    "बभस\u{94d}ति" OPT_ACT_2_SG "बप\u{94d}स\u{94d}याः",
-    "बभस\u{94d}ति" OPT_ACT_2_DU "बप\u{94d}स\u{94d}यातम\u{94d}",
-    "बभस\u{94d}ति" OPT_ACT_2_PL "बप\u{94d}स\u{94d}यात",
-    "बभस\u{94d}ति" OPT_ACT_3_SG "बप\u{94d}स\u{94d}यात\u{94d}",
-    "बभस\u{94d}ति" OPT_ACT_3_DU "बप\u{94d}स\u{94d}याताम\u{94d}",
-    "बभस\u{94d}ति" OPT_ACT_3_PL "बप\u{94d}स\u{94d}य\u{941}ः",
-    "बभस\u{94d}ति" SUBJ_ACT_1_SG "बभसानि",
-    "बभस\u{94d}ति" SUBJ_ACT_1_DU "बभसाव",
-    "बभस\u{94d}ति" SUBJ_ACT_1_PL "बभसाम",
-    "बभस\u{94d}ति" SUBJ_ACT_2_SG "बभसः",
-    "बभस\u{94d}ति" SUBJ_ACT_2_DU "बभसथः",
-    "बभस\u{94d}ति" SUBJ_ACT_2_PL "बभसथ",
-    "बभस\u{94d}ति" SUBJ_ACT_3_SG "बभसत\u{94d}",
-    "बभस\u{94d}ति" SUBJ_ACT_3_DU "बभसतः",
-    "बभस\u{94d}ति" SUBJ_ACT_3_PL "बभसन\u{94d}",
-    "बभस\u{94d}ति" IMPERFECT_ACT_1_SG "अबभसम\u{94d}",
-    "बभस\u{94d}ति" IMPERFECT_ACT_1_DU "अबप\u{94d}स\u{94d}व",
-    "बभस\u{94d}ति" IMPERFECT_ACT_1_PL "अबप\u{94d}स\u{94d}म",
-    "बभस\u{94d}ति" IMPERFECT_ACT_2_SG "अबभः",
-    "बभस\u{94d}ति" IMPERFECT_ACT_2_DU "अबब\u{94d}धम\u{94d}",
-    "बभस\u{94d}ति" IMPERFECT_ACT_2_PL "अबब\u{94d}ध",
-    "बभस\u{94d}ति" IMPERFECT_ACT_3_SG "अबभः",
-    "बभस\u{94d}ति" IMPERFECT_ACT_3_DU "अबब\u{94d}धाम\u{94d}",
-    "बभस\u{94d}ति" IMPERFECT_ACT_3_PL "अबप\u{94d}स\u{941}ः",
-    "बभस\u{94d}ति" PARTICIPLE_PRES_ACT "बप\u{94d}सत\u{94d}",
-    "बभाज" PERFECT_ACT_1_SG "बभज",
-    "बभाज" PERFECT_ACT_1_DU "भ\u{947}जिव",
-    "बभाज" PERFECT_ACT_1_PL "भ\u{947}जिम",
-    "बभाज" PERFECT_ACT_2_SG "बभक\u{94d}थ",
-    "बभाज" PERFECT_ACT_2_DU "भ\u{947}जथ\u{941}ः",
-    "बभाज" PERFECT_ACT_2_PL "भ\u{947}ज",
-    "बभाज" PERFECT_ACT_3_DU "भ\u{947}जत\u{941}ः",
-    "बभाज" PERFECT_ACT_3_PL "भ\u{947}ज\u{941}ः",
-    "बभाज" PERFECT_MID_1_SG "भ\u{947}ज\u{947}",
-    "बभाज" PERFECT_MID_1_DU "भ\u{947}जिवह\u{947}",
-    "बभाज" PERFECT_MID_1_PL "भ\u{947}जिमह\u{947}",
-    "बभाज" PERFECT_MID_2_SG "भ\u{947}जिष\u{947}",
-    "बभाज" PERFECT_MID_2_DU "भ\u{947}जाथ\u{947}",
-    "बभाज" PERFECT_MID_2_PL "भ\u{947}जिध\u{94d}व\u{947}",
-    "बभाज" PERFECT_MID_3_SG "भ\u{947}ज\u{947}",
-    "बभाज" PERFECT_MID_3_DU "भ\u{947}जात\u{947}",
-    "बभाज" PERFECT_MID_3_PL "भ\u{947}जिर\u{947}",
-    "बभाज" PARTICIPLE_PERF_ACT "भ\u{947}जिवा\u{902}स\u{94d}",
-    "बभाज" PARTICIPLE_PERF_MID "भ\u{947}जान",
-    "बभ\u{942}व" PERFECT_ACT_2_SG "बभ\u{942}थ",
-    "बभ\u{942}व" PARTICIPLE_PERF_ACT "बभ\u{942}वा\u{902}स\u{94d}",
-    "बाधिष\u{94d}यत\u{947}" FUTURE_MID_1_SG "बाधिष\u{94d}य\u{947}",
-    "बाधिष\u{94d}यत\u{947}" FUTURE_MID_1_DU "बाधिष\u{94d}यावह\u{947}",
-    "बाधिष\u{94d}यत\u{947}" FUTURE_MID_1_PL "बाधिष\u{94d}यामह\u{947}",
-    "बाधिष\u{94d}यत\u{947}" FUTURE_MID_2_SG "बाधिष\u{94d}यस\u{947}",
-    "बाधिष\u{94d}यत\u{947}" FUTURE_MID_2_DU "बाधिष\u{94d}य\u{947}थ\u{947}",
-    "बाधिष\u{94d}यत\u{947}" FUTURE_MID_2_PL "बाधिष\u{94d}यध\u{94d}व\u{947}",
-    "बाधिष\u{94d}यत\u{947}" FUTURE_MID_3_SG "बाधिष\u{94d}यत\u{947}",
-    "बाधिष\u{94d}यत\u{947}" FUTURE_MID_3_DU "बाधिष\u{94d}य\u{947}त\u{947}",
-    "बाधिष\u{94d}यत\u{947}" FUTURE_MID_3_PL "बाधिष\u{94d}यन\u{94d}त\u{947}",
-    "बाधिष\u{94d}यत\u{947}" CONDITIONAL_MID_1_SG "अबाधिष\u{94d}य\u{947}",
-    "बाधिष\u{94d}यत\u{947}" CONDITIONAL_MID_1_DU "अबाधिष\u{94d}यावहि",
-    "बाधिष\u{94d}यत\u{947}" CONDITIONAL_MID_1_PL "अबाधिष\u{94d}यामहि",
-    "बाधिष\u{94d}यत\u{947}" CONDITIONAL_MID_2_SG "अबाधिष\u{94d}यथाः",
-    "बाधिष\u{94d}यत\u{947}" CONDITIONAL_MID_2_DU "अबाधिष\u{94d}य\u{947}थाम\u{94d}",
-    "बाधिष\u{94d}यत\u{947}" CONDITIONAL_MID_2_PL "अबाधिष\u{94d}यध\u{94d}वम\u{94d}",
-    "बाधिष\u{94d}यत\u{947}" CONDITIONAL_MID_3_SG "अबाधिष\u{94d}यत",
-    "बाधिष\u{94d}यत\u{947}" CONDITIONAL_MID_3_DU "अबाधिष\u{94d}य\u{947}ताम\u{94d}",
-    "बाधिष\u{94d}यत\u{947}" CONDITIONAL_MID_3_PL "अबाधिष\u{94d}यन\u{94d}त",
-    "बाधिष\u{94d}यत\u{947}" PARTICIPLE_FUT_MID "बाधिष\u{94d}यमाण",
-    "बिभ\u{947}ति" IND_ACT_1_SG "बिभ\u{947}मि",
-    "बिभ\u{947}ति" IND_ACT_1_DU "बिभीवः",
-    "बिभ\u{947}ति" IND_ACT_1_PL "बिभीमः",
-    "बिभ\u{947}ति" IND_ACT_2_SG "बिभ\u{947}षि",
-    "बिभ\u{947}ति" IND_ACT_2_DU "बिभीथः",
-    "बिभ\u{947}ति" IND_ACT_2_PL "बिभीथ",
-    "बिभ\u{947}ति" IND_ACT_3_DU "बिभीतः",
-    "बिभ\u{947}ति" IND_ACT_3_PL "बिभ\u{94d}यति",
-    "बिभ\u{947}ति" IND_MID_1_SG "बिभ\u{94d}य\u{947}",
-    "बिभ\u{947}ति" IND_MID_1_DU "बिभीवह\u{947}",
-    "बिभ\u{947}ति" IND_MID_1_PL "बिभीमह\u{947}",
-    "बिभ\u{947}ति" IND_MID_2_SG "बिभीष\u{947}",
-    "बिभ\u{947}ति" IND_MID_2_DU "बिभ\u{94d}याथ\u{947}",
-    "बिभ\u{947}ति" IND_MID_2_PL "बिभीध\u{94d}व\u{947}",
-    "बिभ\u{947}ति" IND_MID_3_SG "बिभीत\u{947}",
-    "बिभ\u{947}ति" IND_MID_3_DU "बिभ\u{94d}यात\u{947}",
-    "बिभ\u{947}ति" IND_MID_3_PL "बिभ\u{94d}यत\u{947}",
-    "बिभ\u{947}ति" IMP_ACT_1_SG "बिभयानि",
-    "बिभ\u{947}ति" IMP_ACT_1_DU "बिभयाव",
-    "बिभ\u{947}ति" IMP_ACT_1_PL "बिभयाम",
-    "बिभ\u{947}ति" IMP_ACT_2_SG "बिभीहि",
-    "बिभ\u{947}ति" IMP_ACT_2_DU "बिभीतम\u{94d}",
-    "बिभ\u{947}ति" IMP_ACT_2_PL "बिभीत",
-    "बिभ\u{947}ति" IMP_ACT_3_DU "बिभीताम\u{94d}",
-    "बिभ\u{947}ति" IMP_ACT_3_PL "बिभ\u{94d}यत\u{941}",
-    "बिभ\u{947}ति" IMP_MID_1_SG "बिभय\u{948}",
-    "बिभ\u{947}ति" IMP_MID_1_DU "बिभयावह\u{948}",
-    "बिभ\u{947}ति" IMP_MID_1_PL "बिभयामह\u{948}",
-    "बिभ\u{947}ति" IMP_MID_2_SG "बिभीष\u{94d}व",
-    "बिभ\u{947}ति" IMP_MID_2_DU "बिभ\u{94d}याथाम\u{94d}",
-    "बिभ\u{947}ति" IMP_MID_2_PL "बिभीध\u{94d}वम\u{94d}",
-    "बिभ\u{947}ति" IMP_MID_3_SG "बिभीताम\u{94d}",
-    "बिभ\u{947}ति" IMP_MID_3_DU "बिभ\u{94d}याताम\u{94d}",
-    "बिभ\u{947}ति" IMP_MID_3_PL "बिभ\u{94d}यताम\u{94d}",
-    "बिभ\u{947}ति" OPT_ACT_1_SG "बिभीयाम\u{94d}",
-    "बिभ\u{947}ति" OPT_ACT_1_DU "बिभीयाव",
-    "बिभ\u{947}ति" OPT_ACT_1_PL "बिभीयाम",
-    "बिभ\u{947}ति" OPT_ACT_2_SG "बिभीयाः",
-    "बिभ\u{947}ति" OPT_ACT_2_DU "बिभीयातम\u{94d}",
-    "बिभ\u{947}ति" OPT_ACT_2_PL "बिभीयात",
-    "बिभ\u{947}ति" OPT_ACT_3_SG "बिभीयात\u{94d}",
-    "बिभ\u{947}ति" OPT_ACT_3_DU "बिभीयाताम\u{94d}",
-    "बिभ\u{947}ति" OPT_ACT_3_PL "बिभीय\u{941}ः",
-    "बिभ\u{947}ति" OPT_MID_1_SG "बिभ\u{94d}यीय",
-    "बिभ\u{947}ति" OPT_MID_1_DU "बिभ\u{94d}यीवहि",
-    "बिभ\u{947}ति" OPT_MID_1_PL "बिभ\u{94d}यीमहि",
-    "बिभ\u{947}ति" OPT_MID_2_SG "बिभ\u{94d}यीथाः",
-    "बिभ\u{947}ति" OPT_MID_2_DU "बिभ\u{94d}यीयाथाम\u{94d}",
-    "बिभ\u{947}ति" OPT_MID_2_PL "बिभ\u{94d}यीध\u{94d}वम\u{94d}",
-    "बिभ\u{947}ति" OPT_MID_3_SG "बिभ\u{94d}यीत",
-    "बिभ\u{947}ति" OPT_MID_3_DU "बिभ\u{94d}यीयाताम\u{94d}",
-    "बिभ\u{947}ति" OPT_MID_3_PL "बिभ\u{94d}यीरन\u{94d}",
-    "बिभ\u{947}ति" SUBJ_ACT_1_SG "बिभयानि",
-    "बिभ\u{947}ति" SUBJ_ACT_1_DU "बिभयाव",
-    "बिभ\u{947}ति" SUBJ_ACT_1_PL "बिभयाम",
-    "बिभ\u{947}ति" SUBJ_ACT_2_SG "बिभयः",
-    "बिभ\u{947}ति" SUBJ_ACT_2_DU "बिभयथः",
-    "बिभ\u{947}ति" SUBJ_ACT_2_PL "बिभयथ",
-    "बिभ\u{947}ति" SUBJ_ACT_3_SG "बिभयत\u{94d}",
-    "बिभ\u{947}ति" SUBJ_ACT_3_DU "बिभयतः",
-    "बिभ\u{947}ति" SUBJ_ACT_3_PL "बिभयन\u{94d}",
-    "बिभ\u{947}ति" SUBJ_MID_1_SG "बिभय\u{948}",
-    "बिभ\u{947}ति" SUBJ_MID_1_DU "बिभयावह\u{948}",
-    "बिभ\u{947}ति" SUBJ_MID_1_PL "बिभयामह\u{948}",
-    "बिभ\u{947}ति" SUBJ_MID_2_SG "बिभयस\u{947}",
-    "बिभ\u{947}ति" SUBJ_MID_2_DU "बिभय\u{948}थ\u{947}",
-    "बिभ\u{947}ति" SUBJ_MID_2_PL "बिभयध\u{94d}व\u{947}",
-    "बिभ\u{947}ति" SUBJ_MID_3_SG "बिभयत\u{947}",
-    "बिभ\u{947}ति" SUBJ_MID_3_DU "बिभय\u{948}त\u{947}",
-    "बिभ\u{947}ति" SUBJ_MID_3_PL "बिभयन\u{94d}त",
-    "बिभ\u{947}ति" IMPERFECT_ACT_1_SG "अबिभयम\u{94d}",
-    "बिभ\u{947}ति" IMPERFECT_ACT_1_DU "अबिभीव",
-    "बिभ\u{947}ति" IMPERFECT_ACT_1_PL "अबिभीम",
-    "बिभ\u{947}ति" IMPERFECT_ACT_2_DU "अबिभीतम\u{94d}",
-    "बिभ\u{947}ति" IMPERFECT_ACT_2_PL "अबिभीत",
-    "बिभ\u{947}ति" IMPERFECT_ACT_3_DU "अबिभीताम\u{94d}",
-    "बिभ\u{947}ति" IMPERFECT_ACT_3_PL "अबिभय\u{941}ः",
-    "बिभ\u{947}ति" IMPERFECT_MID_1_SG "अबिभ\u{94d}यि",
-    "बिभ\u{947}ति" IMPERFECT_MID_1_DU "अबिभीवहि",
-    "बिभ\u{947}ति" IMPERFECT_MID_1_PL "अबिभीमहि",
-    "बिभ\u{947}ति" IMPERFECT_MID_2_SG "अबिभीथाः",
-    "बिभ\u{947}ति" IMPERFECT_MID_2_DU "अबिभ\u{94d}याथाम\u{94d}",
-    "बिभ\u{947}ति" IMPERFECT_MID_2_PL "अबिभीध\u{94d}वम\u{94d}",
-    "बिभ\u{947}ति" IMPERFECT_MID_3_SG "अबिभीत",
-    "बिभ\u{947}ति" IMPERFECT_MID_3_DU "अबिभ\u{94d}याताम\u{94d}",
-    "बिभ\u{947}ति" IMPERFECT_MID_3_PL "अबिभ\u{94d}यत",
-    "बिभ\u{947}ति" PARTICIPLE_PRES_ACT "बिभ\u{94d}यत\u{94d}",
-    "बिभ\u{947}ति" PARTICIPLE_PRES_MID "बिभ\u{94d}यान",
-    "ब\u{941}बोध" PERFECT_ACT_1_DU "ब\u{941}ब\u{941}धिव",
-    "ब\u{941}बोध" PERFECT_ACT_1_PL "ब\u{941}ब\u{941}धिम",
-    "ब\u{941}बोध" PERFECT_ACT_2_DU "ब\u{941}ब\u{941}धथ\u{941}ः",
-    "ब\u{941}बोध" PERFECT_ACT_2_PL "ब\u{941}ब\u{941}ध",
-    "ब\u{941}बोध" PERFECT_ACT_3_DU "ब\u{941}ब\u{941}धत\u{941}ः",
-    "ब\u{941}बोध" PERFECT_ACT_3_PL "ब\u{941}ब\u{941}ध\u{941}ः",
-    "ब\u{941}बोध" PERFECT_MID_1_SG "ब\u{941}ब\u{941}ध\u{947}",
-    "ब\u{941}बोध" PERFECT_MID_1_DU "ब\u{941}ब\u{941}धिवह\u{947}",
-    "ब\u{941}बोध" PERFECT_MID_1_PL "ब\u{941}ब\u{941}धिमह\u{947}",
-    "ब\u{941}बोध" PERFECT_MID_2_SG "ब\u{941}ब\u{941}धिष\u{947}",
-    "ब\u{941}बोध" PERFECT_MID_2_DU "ब\u{941}ब\u{941}धाथ\u{947}",
-    "ब\u{941}बोध" PERFECT_MID_2_PL "ब\u{941}ब\u{941}धिध\u{94d}व\u{947}",
-    "ब\u{941}बोध" PERFECT_MID_3_SG "ब\u{941}ब\u{941}ध\u{947}",
-    "ब\u{941}बोध" PERFECT_MID_3_DU "ब\u{941}ब\u{941}धात\u{947}",
-    "ब\u{941}बोध" PERFECT_MID_3_PL "ब\u{941}ब\u{941}धिर\u{947}",
-    "ब\u{941}बोध" PARTICIPLE_PERF_ACT "ब\u{941}ब\u{941}ध\u{94d}वा\u{902}स\u{94d}",
-    "ब\u{941}बोध" PARTICIPLE_PERF_MID "ब\u{941}ब\u{941}धान",
-    "ब\u{941}भ\u{942}षति" PARTICIPLE_PRES_ACT "ब\u{941}भ\u{942}ष\u{941}",
-    "बोभवीति" IND_ACT_1_SG "बोभवीमि",
-    "बोभवीति" IND_ACT_1_DU "बोभ\u{942}वः",
-    "बोभवीति" IND_ACT_1_PL "बोभ\u{942}मः",
-    "बोभवीति" IND_ACT_2_SG "बोभवीषि",
-    "बोभवीति" IND_ACT_2_DU "बोभ\u{942}थः",
-    "बोभवीति" IND_ACT_2_PL "बोभ\u{942}थ",
-    "बोभवीति" IND_ACT_3_DU "बोभ\u{942}तः",
-    "बोभवीति" IND_ACT_3_PL "बोभ\u{941}वति",
-    "बोभवीति" IMP_ACT_1_SG "बोभवानि",
-    "बोभवीति" IMP_ACT_1_DU "बोभवाव",
-    "बोभवीति" IMP_ACT_1_PL "बोभवाम",
-    "बोभवीति" IMP_ACT_2_SG "बोभ\u{942}हि",
-    "बोभवीति" IMP_ACT_2_DU "बोभ\u{942}तम\u{94d}",
-    "बोभवीति" IMP_ACT_2_PL "बोभ\u{942}त",
-    "बोभवीति" IMP_ACT_3_DU "बोभ\u{942}ताम\u{94d}",
-    "बोभवीति" IMP_ACT_3_PL "बोभ\u{941}वत\u{941}",
-    "बोभवीति" OPT_ACT_1_SG "बोभ\u{942}याम\u{94d}",
-    "बोभवीति" OPT_ACT_1_DU "बोभ\u{942}याव",
-    "बोभवीति" OPT_ACT_1_PL "बोभ\u{942}याम",
-    "बोभवीति" OPT_ACT_2_SG "बोभ\u{942}याः",
-    "बोभवीति" OPT_ACT_2_DU "बोभ\u{942}यातम\u{94d}",
-    "बोभवीति" OPT_ACT_2_PL "बोभ\u{942}यात",
-    "बोभवीति" OPT_ACT_3_SG "बोभ\u{942}यात\u{94d}",
-    "बोभवीति" OPT_ACT_3_DU "बोभ\u{942}याताम\u{94d}",
-    "बोभवीति" OPT_ACT_3_PL "बोभ\u{942}य\u{941}ः",
-    "बोभवीति" SUBJ_ACT_1_SG "बोभवानि",
-    "बोभवीति" SUBJ_ACT_1_DU "बोभवाव",
-    "बोभवीति" SUBJ_ACT_1_PL "बोभवाम",
-    "बोभवीति" SUBJ_ACT_2_SG "बोभवः",
-    "बोभवीति" SUBJ_ACT_2_DU "बोभवथः",
-    "बोभवीति" SUBJ_ACT_2_PL "बोभवथ",
-    "बोभवीति" SUBJ_ACT_3_SG "बोभवत\u{94d}",
-    "बोभवीति" SUBJ_ACT_3_DU "बोभवतः",
-    "बोभवीति" SUBJ_ACT_3_PL "बोभवन\u{94d}",
-    "बोभवीति" IMPERFECT_ACT_1_SG "अबोभवम\u{94d}",
-    "बोभवीति" IMPERFECT_ACT_1_DU "अबोभ\u{942}व",
-    "बोभवीति" IMPERFECT_ACT_1_PL "अबोभ\u{942}म",
-    "बोभवीति" IMPERFECT_ACT_2_DU "अबोभ\u{942}तम\u{94d}",
-    "बोभवीति" IMPERFECT_ACT_2_PL "अबोभ\u{942}त",
-    "बोभवीति" IMPERFECT_ACT_3_DU "अबोभ\u{942}ताम\u{94d}",
-    "बोभवीति" IMPERFECT_ACT_3_PL "अबोभ\u{941}व\u{941}ः",
-    "बोभवीति" PARTICIPLE_PRES_ACT "बोभ\u{941}वत\u{94d}",
-    "ब\u{94d}रवीति" IND_ACT_1_SG "ब\u{94d}रवीमि",
-    "ब\u{94d}रवीति" IND_ACT_1_DU "ब\u{94d}र\u{942}वः",
-    "ब\u{94d}रवीति" IND_ACT_1_PL "ब\u{94d}र\u{942}मः",
-    "ब\u{94d}रवीति" IND_ACT_2_SG "ब\u{94d}रवीषि",
-    "ब\u{94d}रवीति" IND_ACT_2_DU "ब\u{94d}र\u{942}थः",
-    "ब\u{94d}रवीति" IND_ACT_2_PL "ब\u{94d}र\u{942}थ",
-    "ब\u{94d}रवीति" IND_ACT_3_DU "ब\u{94d}र\u{942}तः",
-    "ब\u{94d}रवीति" IND_ACT_3_PL "ब\u{94d}र\u{941}वन\u{94d}ति",
-    "ब\u{94d}रवीति" IND_MID_1_SG "ब\u{94d}र\u{941}व\u{947}",
-    "ब\u{94d}रवीति" IND_MID_1_DU "ब\u{94d}र\u{942}वह\u{947}",
-    "ब\u{94d}रवीति" IND_MID_1_PL "ब\u{94d}र\u{942}मह\u{947}",
-    "ब\u{94d}रवीति" IND_MID_2_SG "ब\u{94d}र\u{942}ष\u{947}",
-    "ब\u{94d}रवीति" IND_MID_2_DU "ब\u{94d}र\u{941}वाथ\u{947}",
-    "ब\u{94d}रवीति" IND_MID_2_PL "ब\u{94d}र\u{942}ध\u{94d}व\u{947}",
-    "ब\u{94d}रवीति" IND_MID_3_SG "ब\u{94d}र\u{942}त\u{947}",
-    "ब\u{94d}रवीति" IND_MID_3_DU "ब\u{94d}र\u{941}वात\u{947}",
-    "ब\u{94d}रवीति" IND_MID_3_PL "ब\u{94d}र\u{941}वत\u{947}",
-    "ब\u{94d}रवीति" IMP_ACT_1_SG "ब\u{94d}रवाणि",
-    "ब\u{94d}रवीति" IMP_ACT_1_DU "ब\u{94d}रवाव",
-    "ब\u{94d}रवीति" IMP_ACT_1_PL "ब\u{94d}रवाम",
-    "ब\u{94d}रवीति" IMP_ACT_2_SG "ब\u{94d}र\u{942}हि",
-    "ब\u{94d}रवीति" IMP_ACT_2_DU "ब\u{94d}र\u{942}तम\u{94d}",
-    "ब\u{94d}रवीति" IMP_ACT_2_PL "ब\u{94d}र\u{942}त",
-    "ब\u{94d}रवीति" IMP_ACT_3_DU "ब\u{94d}र\u{942}ताम\u{94d}",
-    "ब\u{94d}रवीति" IMP_ACT_3_PL "ब\u{94d}र\u{941}वन\u{94d}त\u{941}",
-    "ब\u{94d}रवीति" IMP_MID_1_SG "ब\u{94d}रव\u{948}",
-    "ब\u{94d}रवीति" IMP_MID_1_DU "ब\u{94d}रवावह\u{948}",
-    "ब\u{94d}रवीति" IMP_MID_1_PL "ब\u{94d}रवामह\u{948}",
-    "ब\u{94d}रवीति" IMP_MID_2_SG "ब\u{94d}र\u{942}ष\u{94d}व",
-    "ब\u{94d}रवीति" IMP_MID_2_DU "ब\u{94d}र\u{941}वाथाम\u{94d}",
-    "ब\u{94d}रवीति" IMP_MID_2_PL "ब\u{94d}र\u{942}ध\u{94d}वम\u{94d}",
-    "ब\u{94d}रवीति" IMP_MID_3_SG "ब\u{94d}र\u{942}ताम\u{94d}",
-    "ब\u{94d}रवीति" IMP_MID_3_DU "ब\u{94d}र\u{941}वाताम\u{94d}",
-    "ब\u{94d}रवीति" IMP_MID_3_PL "ब\u{94d}र\u{941}वताम\u{94d}",
-    "ब\u{94d}रवीति" OPT_ACT_1_SG "ब\u{94d}र\u{942}याम\u{94d}",
-    "ब\u{94d}रवीति" OPT_ACT_1_DU "ब\u{94d}र\u{942}याव",
-    "ब\u{94d}रवीति" OPT_ACT_1_PL "ब\u{94d}र\u{942}याम",
-    "ब\u{94d}रवीति" OPT_ACT_2_SG "ब\u{94d}र\u{942}याः",
-    "ब\u{94d}रवीति" OPT_ACT_2_DU "ब\u{94d}र\u{942}यातम\u{94d}",
-    "ब\u{94d}रवीति" OPT_ACT_2_PL "ब\u{94d}र\u{942}यात",
-    "ब\u{94d}रवीति" OPT_ACT_3_SG "ब\u{94d}र\u{942}यात\u{94d}",
-    "ब\u{94d}रवीति" OPT_ACT_3_DU "ब\u{94d}र\u{942}याताम\u{94d}",
-    "ब\u{94d}रवीति" OPT_ACT_3_PL "ब\u{94d}र\u{942}य\u{941}ः",
-    "ब\u{94d}रवीति" OPT_MID_1_SG "ब\u{94d}र\u{941}वीय",
-    "ब\u{94d}रवीति" OPT_MID_1_DU "ब\u{94d}र\u{941}वीवहि",
-    "ब\u{94d}रवीति" OPT_MID_1_PL "ब\u{94d}र\u{941}वीमहि",
-    "ब\u{94d}रवीति" OPT_MID_2_SG "ब\u{94d}र\u{941}वीथाः",
-    "ब\u{94d}रवीति" OPT_MID_2_DU "ब\u{94d}र\u{941}वीयाथाम\u{94d}",
-    "ब\u{94d}रवीति" OPT_MID_2_PL "ब\u{94d}र\u{941}वीध\u{94d}वम\u{94d}",
-    "ब\u{94d}रवीति" OPT_MID_3_SG "ब\u{94d}र\u{941}वीत",
-    "ब\u{94d}रवीति" OPT_MID_3_DU "ब\u{94d}र\u{941}वीयाताम\u{94d}",
-    "ब\u{94d}रवीति" OPT_MID_3_PL "ब\u{94d}र\u{941}वीरन\u{94d}",
-    "ब\u{94d}रवीति" SUBJ_ACT_1_SG "ब\u{94d}रवाणि",
-    "ब\u{94d}रवीति" SUBJ_ACT_1_DU "ब\u{94d}रवाव",
-    "ब\u{94d}रवीति" SUBJ_ACT_1_PL "ब\u{94d}रवाम",
-    "ब\u{94d}रवीति" SUBJ_ACT_2_SG "ब\u{94d}रवः",
-    "ब\u{94d}रवीति" SUBJ_ACT_2_DU "ब\u{94d}रवथः",
-    "ब\u{94d}रवीति" SUBJ_ACT_2_PL "ब\u{94d}रवथ",
-    "ब\u{94d}रवीति" SUBJ_ACT_3_SG "ब\u{94d}रवत\u{94d}",
-    "ब\u{94d}रवीति" SUBJ_ACT_3_DU "ब\u{94d}रवतः",
-    "ब\u{94d}रवीति" SUBJ_ACT_3_PL "ब\u{94d}रवन\u{94d}",
-    "ब\u{94d}रवीति" SUBJ_MID_1_SG "ब\u{94d}रव\u{948}",
-    "ब\u{94d}रवीति" SUBJ_MID_1_DU "ब\u{94d}रवावह\u{948}",
-    "ब\u{94d}रवीति" SUBJ_MID_1_PL "ब\u{94d}रवामह\u{948}",
-    "ब\u{94d}रवीति" SUBJ_MID_2_SG "ब\u{94d}रवस\u{947}",
-    "ब\u{94d}रवीति" SUBJ_MID_2_DU "ब\u{94d}रव\u{948}थ\u{947}",
-    "ब\u{94d}रवीति" SUBJ_MID_2_PL "ब\u{94d}रवध\u{94d}व\u{947}",
-    "ब\u{94d}रवीति" SUBJ_MID_3_SG "ब\u{94d}रवत\u{947}",
-    "ब\u{94d}रवीति" SUBJ_MID_3_DU "ब\u{94d}रव\u{948}त\u{947}",
-    "ब\u{94d}रवीति" SUBJ_MID_3_PL "ब\u{94d}रवन\u{94d}त",
-    "ब\u{94d}रवीति" IMPERFECT_ACT_1_SG "अब\u{94d}र\u{941}वम\u{94d}",
-    "ब\u{94d}रवीति" IMPERFECT_ACT_1_DU "अब\u{94d}र\u{942}व",
-    "ब\u{94d}रवीति" IMPERFECT_ACT_1_PL "अब\u{94d}र\u{942}म",
-    "ब\u{94d}रवीति" IMPERFECT_ACT_2_DU "अब\u{94d}र\u{942}तम\u{94d}",
-    "ब\u{94d}रवीति" IMPERFECT_ACT_2_PL "अब\u{94d}र\u{942}त",
-    "ब\u{94d}रवीति" IMPERFECT_ACT_3_DU "अब\u{94d}र\u{942}ताम\u{94d}",
-    "ब\u{94d}रवीति" IMPERFECT_ACT_3_PL "अब\u{94d}र\u{941}वन\u{94d}",
-    "ब\u{94d}रवीति" IMPERFECT_MID_1_SG "अब\u{94d}र\u{941}वि",
-    "ब\u{94d}रवीति" IMPERFECT_MID_1_DU "अब\u{94d}र\u{942}वहि",
-    "ब\u{94d}रवीति" IMPERFECT_MID_1_PL "अब\u{94d}र\u{942}महि",
-    "ब\u{94d}रवीति" IMPERFECT_MID_2_SG "अब\u{94d}र\u{942}थाः",
-    "ब\u{94d}रवीति" IMPERFECT_MID_2_DU "अब\u{94d}र\u{941}वाथाम\u{94d}",
-    "ब\u{94d}रवीति" IMPERFECT_MID_2_PL "अब\u{94d}र\u{942}ध\u{94d}वम\u{94d}",
-    "ब\u{94d}रवीति" IMPERFECT_MID_3_SG "अब\u{94d}र\u{942}त",
-    "ब\u{94d}रवीति" IMPERFECT_MID_3_DU "अब\u{94d}र\u{941}वाताम\u{94d}",
-    "ब\u{94d}रवीति" IMPERFECT_MID_3_PL "अब\u{94d}र\u{941}वत",
-    "ब\u{94d}रवीति" PARTICIPLE_PRES_ACT "ब\u{94d}र\u{941}वत\u{94d}",
-    "ब\u{94d}रवीति" PARTICIPLE_PRES_MID "ब\u{94d}र\u{941}वाण",
-    "भिनत\u{94d}ति" IND_ACT_1_SG "भिनद\u{94d}मि",
-    "भिनत\u{94d}ति" IND_ACT_1_DU "भिन\u{94d}द\u{94d}वः",
-    "भिनत\u{94d}ति" IND_ACT_1_PL "भिन\u{94d}द\u{94d}मः",
-    "भिनत\u{94d}ति" IND_ACT_2_DU "भिन\u{94d}त\u{94d}थः",
-    "भिनत\u{94d}ति" IND_ACT_2_PL "भिन\u{94d}त\u{94d}थ",
-    "भिनत\u{94d}ति" IND_ACT_3_DU "भिन\u{94d}त\u{94d}तः",
-    "भिनत\u{94d}ति" IND_ACT_3_PL "भिन\u{94d}दन\u{94d}ति",
-    "भिनत\u{94d}ति" IND_MID_1_SG "भिन\u{94d}द\u{947}",
-    "भिनत\u{94d}ति" IND_MID_1_DU "भिन\u{94d}द\u{94d}वह\u{947}",
-    "भिनत\u{94d}ति" IND_MID_1_PL "भिन\u{94d}द\u{94d}मह\u{947}",
-    "भिनत\u{94d}ति" IND_MID_2_SG "भिन\u{94d}त\u{94d}स\u{947}",
-    "भिनत\u{94d}ति" IND_MID_2_DU "भिन\u{94d}दाथ\u{947}",
-    "भिनत\u{94d}ति" IND_MID_2_PL "भिन\u{94d}द\u{94d}ध\u{94d}व\u{947}",
-    "भिनत\u{94d}ति" IND_MID_3_SG "भिन\u{94d}त\u{94d}त\u{947}",
-    "भिनत\u{94d}ति" IND_MID_3_DU "भिन\u{94d}दात\u{947}",
-    "भिनत\u{94d}ति" IND_MID_3_PL "भिन\u{94d}दत\u{947}",
-    "भिनत\u{94d}ति" IMP_ACT_1_SG "भिनदानि",
-    "भिनत\u{94d}ति" IMP_ACT_1_DU "भिनदाव",
-    "भिनत\u{94d}ति" IMP_ACT_1_PL "भिनदाम",
-    "भिनत\u{94d}ति" IMP_ACT_2_SG "भिन\u{94d}द\u{94d}धि",
-    "भिनत\u{94d}ति" IMP_ACT_2_DU "भिन\u{94d}त\u{94d}तम\u{94d}",
-    "भिनत\u{94d}ति" IMP_ACT_2_PL "भिन\u{94d}त\u{94d}त",
-    "भिनत\u{94d}ति" IMP_ACT_3_DU "भिन\u{94d}त\u{94d}ताम\u{94d}",
-    "भिनत\u{94d}ति" IMP_ACT_3_PL "भिन\u{94d}दन\u{94d}त\u{941}",
-    "भिनत\u{94d}ति" IMP_MID_1_SG "भिनद\u{948}",
-    "भिनत\u{94d}ति" IMP_MID_1_DU "भिनदावह\u{948}",
-    "भिनत\u{94d}ति" IMP_MID_1_PL "भिनदामह\u{948}",
-    "भिनत\u{94d}ति" IMP_MID_2_SG "भिन\u{94d}त\u{94d}स\u{94d}व",
-    "भिनत\u{94d}ति" IMP_MID_2_DU "भिन\u{94d}दाथाम\u{94d}",
-    "भिनत\u{94d}ति" IMP_MID_2_PL "भिन\u{94d}द\u{94d}ध\u{94d}वम\u{94d}",
-    "भिनत\u{94d}ति" IMP_MID_3_SG "भिन\u{94d}त\u{94d}ताम\u{94d}",
-    "भिनत\u{94d}ति" IMP_MID_3_DU "भिन\u{94d}दाताम\u{94d}",
-    "भिनत\u{94d}ति" IMP_MID_3_PL "भिन\u{94d}दताम\u{94d}",
-    "भिनत\u{94d}ति" OPT_ACT_1_SG "भिन\u{94d}द\u{94d}याम\u{94d}",
-    "भिनत\u{94d}ति" OPT_ACT_1_DU "भिन\u{94d}द\u{94d}याव",
-    "भिनत\u{94d}ति" OPT_ACT_1_PL "भिन\u{94d}द\u{94d}याम",
-    "भिनत\u{94d}ति" OPT_ACT_2_SG "भिन\u{94d}द\u{94d}याः",
-    "भिनत\u{94d}ति" OPT_ACT_2_DU "भिन\u{94d}द\u{94d}यातम\u{94d}",
-    "भिनत\u{94d}ति" OPT_ACT_2_PL "भिन\u{94d}द\u{94d}यात",
-    "भिनत\u{94d}ति" OPT_ACT_3_SG "भिन\u{94d}द\u{94d}यात\u{94d}",
-    "भिनत\u{94d}ति" OPT_ACT_3_DU "भिन\u{94d}द\u{94d}याताम\u{94d}",
-    "भिनत\u{94d}ति" OPT_ACT_3_PL "भिन\u{94d}द\u{94d}य\u{941}ः",
-    "भिनत\u{94d}ति" OPT_MID_1_SG "भिन\u{94d}दीय",
-    "भिनत\u{94d}ति" OPT_MID_1_DU "भिन\u{94d}दीवहि",
-    "भिनत\u{94d}ति" OPT_MID_1_PL "भिन\u{94d}दीमहि",
-    "भिनत\u{94d}ति" OPT_MID_2_SG "भिन\u{94d}दीथाः",
-    "भिनत\u{94d}ति" OPT_MID_2_DU "भिन\u{94d}दीयाथाम\u{94d}",
-    "भिनत\u{94d}ति" OPT_MID_2_PL "भिन\u{94d}दीध\u{94d}वम\u{94d}",
-    "भिनत\u{94d}ति" OPT_MID_3_SG "भिन\u{94d}दीत",
-    "भिनत\u{94d}ति" OPT_MID_3_DU "भिन\u{94d}दीयाताम\u{94d}",
-    "भिनत\u{94d}ति" OPT_MID_3_PL "भिन\u{94d}दीरन\u{94d}",
-    "भिनत\u{94d}ति" SUBJ_ACT_1_SG "भिनदानि",
-    "भिनत\u{94d}ति" SUBJ_ACT_1_DU "भिनदाव",
-    "भिनत\u{94d}ति" SUBJ_ACT_1_PL "भिनदाम",
-    "भिनत\u{94d}ति" SUBJ_ACT_2_SG "भिनदः",
-    "भिनत\u{94d}ति" SUBJ_ACT_2_DU "भिनदथः",
-    "भिनत\u{94d}ति" SUBJ_ACT_2_PL "भिनदथ",
-    "भिनत\u{94d}ति" SUBJ_ACT_3_SG "भिनदत\u{94d}",
-    "भिनत\u{94d}ति" SUBJ_ACT_3_DU "भिनदतः",
-    "भिनत\u{94d}ति" SUBJ_ACT_3_PL "भिनदन\u{94d}",
-    "भिनत\u{94d}ति" SUBJ_MID_1_SG "भिनद\u{948}",
-    "भिनत\u{94d}ति" SUBJ_MID_1_DU "भिनदावह\u{948}",
-    "भिनत\u{94d}ति" SUBJ_MID_1_PL "भिनदामह\u{948}",
-    "भिनत\u{94d}ति" SUBJ_MID_2_SG "भिनदस\u{947}",
-    "भिनत\u{94d}ति" SUBJ_MID_2_DU "भिनद\u{948}थ\u{947}",
-    "भिनत\u{94d}ति" SUBJ_MID_2_PL "भिनदध\u{94d}व\u{947}",
-    "भिनत\u{94d}ति" SUBJ_MID_3_SG "भिनदत\u{947}",
-    "भिनत\u{94d}ति" SUBJ_MID_3_DU "भिनद\u{948}त\u{947}",
-    "भिनत\u{94d}ति" SUBJ_MID_3_PL "भिनदन\u{94d}त",
-    "भिनत\u{94d}ति" IMPERFECT_ACT_1_SG "अभिनदम\u{94d}",
-    "भिनत\u{94d}ति" IMPERFECT_ACT_1_DU "अभिन\u{94d}द\u{94d}व",
-    "भिनत\u{94d}ति" IMPERFECT_ACT_1_PL "अभिन\u{94d}द\u{94d}म",
-    "भिनत\u{94d}ति" IMPERFECT_ACT_2_SG "अभिनत\u{94d}",
-    "भिनत\u{94d}ति" IMPERFECT_ACT_2_DU "अभिन\u{94d}त\u{94d}तम\u{94d}",
-    "भिनत\u{94d}ति" IMPERFECT_ACT_2_PL "अभिन\u{94d}त\u{94d}त",
-    "भिनत\u{94d}ति" IMPERFECT_ACT_3_SG "अभिनत\u{94d}",
-    "भिनत\u{94d}ति" IMPERFECT_ACT_3_DU "अभिन\u{94d}त\u{94d}ताम\u{94d}",
-    "भिनत\u{94d}ति" IMPERFECT_ACT_3_PL "अभिन\u{94d}दन\u{94d}",
-    "भिनत\u{94d}ति" IMPERFECT_MID_1_SG "अभिन\u{94d}दि",
-    "भिनत\u{94d}ति" IMPERFECT_MID_1_DU "अभिन\u{94d}द\u{94d}वहि",
-    "भिनत\u{94d}ति" IMPERFECT_MID_1_PL "अभिन\u{94d}द\u{94d}महि",
-    "भिनत\u{94d}ति" IMPERFECT_MID_2_SG "अभिन\u{94d}त\u{94d}थाः",
-    "भिनत\u{94d}ति" IMPERFECT_MID_2_DU "अभिन\u{94d}दाथाम\u{94d}",
-    "भिनत\u{94d}ति" IMPERFECT_MID_2_PL "अभिन\u{94d}द\u{94d}ध\u{94d}वम\u{94d}",
-    "भिनत\u{94d}ति" IMPERFECT_MID_3_SG "अभिन\u{94d}त\u{94d}त",
-    "भिनत\u{94d}ति" IMPERFECT_MID_3_DU "अभिन\u{94d}दाताम\u{94d}",
-    "भिनत\u{94d}ति" IMPERFECT_MID_3_PL "अभिन\u{94d}दत",
-    "भिनत\u{94d}ति" PARTICIPLE_PRES_ACT "भिन\u{94d}दत\u{94d}",
-    "भिनत\u{94d}ति" PARTICIPLE_PRES_MID "भिन\u{94d}दान",
-    "भिषक\u{94d}ति" IND_ACT_1_SG "भिषज\u{94d}मि",
-    "भिषक\u{94d}ति" IND_ACT_1_DU "भिषज\u{94d}वः",
-    "भिषक\u{94d}ति" IND_ACT_1_PL "भिषज\u{94d}मः",
-    "भिषक\u{94d}ति" IND_ACT_2_SG "भिषक\u{94d}षि",
-    "भिषक\u{94d}ति" IND_ACT_3_PL "भिषजन\u{94d}ति",
-    "भिषक\u{94d}ति" IND_MID_1_SG "भिषज\u{947}",
-    "भिषक\u{94d}ति" IND_MID_1_DU "भिषज\u{94d}वह\u{947}",
-    "भिषक\u{94d}ति" IND_MID_1_PL "भिषज\u{94d}मह\u{947}",
-    "भिषक\u{94d}ति" IND_MID_2_SG "भिषक\u{94d}ष\u{947}",
-    "भिषक\u{94d}ति" IND_MID_2_DU "भिषजाथ\u{947}",
-    "भिषक\u{94d}ति" IND_MID_2_PL "भिषग\u{94d}ध\u{94d}व\u{947}",
-    "भिषक\u{94d}ति" IND_MID_3_DU "भिषजात\u{947}",
-    "भिषक\u{94d}ति" IND_MID_3_PL "भिषजत\u{947}",
-    "भिषक\u{94d}ति" IMP_ACT_1_SG "भिषजानि",
-    "भिषक\u{94d}ति" IMP_ACT_1_DU "भिषजाव",
-    "भिषक\u{94d}ति" IMP_ACT_1_PL "भिषजाम",
-    "भिषक\u{94d}ति" IMP_ACT_2_SG "भिषग\u{94d}धि",
-    "भिषक\u{94d}ति" IMP_ACT_3_PL "भिषजन\u{94d}त\u{941}",
-    "भिषक\u{94d}ति" IMP_MID_1_SG "भिषज\u{948}",
-    "भिषक\u{94d}ति" IMP_MID_1_DU "भिषजावह\u{948}",
-    "भिषक\u{94d}ति" IMP_MID_1_PL "भिषजामह\u{948}",
-    "भिषक\u{94d}ति" IMP_MID_2_SG "भिषक\u{94d}ष\u{94d}व",
-    "भिषक\u{94d}ति" IMP_MID_2_DU "भिषजाथाम\u{94d}",
-    "भिषक\u{94d}ति" IMP_MID_2_PL "भिषग\u{94d}ध\u{94d}वम\u{94d}",
-    "भिषक\u{94d}ति" IMP_MID_3_DU "भिषजाताम\u{94d}",
-    "भिषक\u{94d}ति" IMP_MID_3_PL "भिषजताम\u{94d}",
-    "भिषक\u{94d}ति" OPT_ACT_1_SG "भिषज\u{94d}याम\u{94d}",
-    "भिषक\u{94d}ति" OPT_ACT_1_DU "भिषज\u{94d}याव",
-    "भिषक\u{94d}ति" OPT_ACT_1_PL "भिषज\u{94d}याम",
-    "भिषक\u{94d}ति" OPT_ACT_2_SG "भिषज\u{94d}याः",
-    "भिषक\u{94d}ति" OPT_ACT_2_DU "भिषज\u{94d}यातम\u{94d}",
-    "भिषक\u{94d}ति" OPT_ACT_2_PL "भिषज\u{94d}यात",
-    "भिषक\u{94d}ति" OPT_ACT_3_SG "भिषज\u{94d}यात\u{94d}",
-    "भिषक\u{94d}ति" OPT_ACT_3_DU "भिषज\u{94d}याताम\u{94d}",
-    "भिषक\u{94d}ति" OPT_ACT_3_PL "भिषज\u{94d}य\u{941}ः",
-    "भिषक\u{94d}ति" OPT_MID_1_SG "भिषजीय",
-    "भिषक\u{94d}ति" OPT_MID_1_DU "भिषजीवहि",
-    "भिषक\u{94d}ति" OPT_MID_1_PL "भिषजीमहि",
-    "भिषक\u{94d}ति" OPT_MID_2_SG "भिषजीथाः",
-    "भिषक\u{94d}ति" OPT_MID_2_DU "भिषजीयाथाम\u{94d}",
-    "भिषक\u{94d}ति" OPT_MID_2_PL "भिषजीध\u{94d}वम\u{94d}",
-    "भिषक\u{94d}ति" OPT_MID_3_SG "भिषजीत",
-    "भिषक\u{94d}ति" OPT_MID_3_DU "भिषजीयाताम\u{94d}",
-    "भिषक\u{94d}ति" OPT_MID_3_PL "भिषजीरन\u{94d}",
-    "भिषक\u{94d}ति" SUBJ_ACT_1_SG "भिषजानि",
-    "भिषक\u{94d}ति" SUBJ_ACT_1_DU "भिषजाव",
-    "भिषक\u{94d}ति" SUBJ_ACT_1_PL "भिषजाम",
-    "भिषक\u{94d}ति" SUBJ_ACT_2_SG "भिषजः",
-    "भिषक\u{94d}ति" SUBJ_ACT_2_DU "भिषजथः",
-    "भिषक\u{94d}ति" SUBJ_ACT_2_PL "भिषजथ",
-    "भिषक\u{94d}ति" SUBJ_ACT_3_SG "भिषजत\u{94d}",
-    "भिषक\u{94d}ति" SUBJ_ACT_3_DU "भिषजतः",
-    "भिषक\u{94d}ति" SUBJ_ACT_3_PL "भिषजन\u{94d}",
-    "भिषक\u{94d}ति" SUBJ_MID_1_SG "भिषज\u{948}",
-    "भिषक\u{94d}ति" SUBJ_MID_1_DU "भिषजावह\u{948}",
-    "भिषक\u{94d}ति" SUBJ_MID_1_PL "भिषजामह\u{948}",
-    "भिषक\u{94d}ति" SUBJ_MID_2_SG "भिषजस\u{947}",
-    "भिषक\u{94d}ति" SUBJ_MID_2_DU "भिषज\u{948}थ\u{947}",
-    "भिषक\u{94d}ति" SUBJ_MID_2_PL "भिषजध\u{94d}व\u{947}",
-    "भिषक\u{94d}ति" SUBJ_MID_3_SG "भिषजत\u{947}",
-    "भिषक\u{94d}ति" SUBJ_MID_3_DU "भिषज\u{948}त\u{947}",
-    "भिषक\u{94d}ति" SUBJ_MID_3_PL "भिषजन\u{94d}त",
-    "भिषक\u{94d}ति" IMPERFECT_ACT_1_SG "अभिषजम\u{94d}",
-    "भिषक\u{94d}ति" IMPERFECT_ACT_1_DU "अभिषज\u{94d}व",
-    "भिषक\u{94d}ति" IMPERFECT_ACT_1_PL "अभिषज\u{94d}म",
-    "भिषक\u{94d}ति" IMPERFECT_ACT_2_SG "अभिषक\u{94d}",
-    "भिषक\u{94d}ति" IMPERFECT_ACT_3_SG "अभिषक\u{94d}",
-    "भिषक\u{94d}ति" IMPERFECT_ACT_3_PL "अभिषजन\u{94d}",
-    "भिषक\u{94d}ति" IMPERFECT_MID_1_SG "अभिषजि",
-    "भिषक\u{94d}ति" IMPERFECT_MID_1_DU "अभिषज\u{94d}वहि",
-    "भिषक\u{94d}ति" IMPERFECT_MID_1_PL "अभिषज\u{94d}महि",
-    "भिषक\u{94d}ति" IMPERFECT_MID_2_DU "अभिषजाथाम\u{94d}",
-    "भिषक\u{94d}ति" IMPERFECT_MID_2_PL "अभिषग\u{94d}ध\u{94d}वम\u{94d}",
-    "भिषक\u{94d}ति" IMPERFECT_MID_3_DU "अभिषजाताम\u{94d}",
-    "भिषक\u{94d}ति" IMPERFECT_MID_3_PL "अभिषजत",
-    "भिषक\u{94d}ति" PARTICIPLE_PRES_ACT "भिषजत\u{94d}",
-    "भिषक\u{94d}ति" PARTICIPLE_PRES_MID "भिषजान",
-    "ममार\u{94d}ज" PERFECT_ACT_1_DU "मम\u{943}जिव",
-    "ममार\u{94d}ज" PERFECT_ACT_1_PL "मम\u{943}जिम",
-    "ममार\u{94d}ज" PERFECT_ACT_2_DU "मम\u{943}जथ\u{941}ः",
-    "ममार\u{94d}ज" PERFECT_ACT_2_PL "मम\u{943}ज",
-    "ममार\u{94d}ज" PERFECT_ACT_3_DU "मम\u{943}जत\u{941}ः",
-    "ममार\u{94d}ज" PERFECT_ACT_3_PL "मम\u{943}ज\u{941}ः",
-    "ममार\u{94d}ज" PERFECT_MID_1_SG "मम\u{943}ज\u{947}",
-    "ममार\u{94d}ज" PERFECT_MID_1_DU "मम\u{943}जिवह\u{947}",
-    "ममार\u{94d}ज" PERFECT_MID_1_PL "मम\u{943}जिमह\u{947}",
-    "ममार\u{94d}ज" PERFECT_MID_2_SG "मम\u{943}जिष\u{947}",
-    "ममार\u{94d}ज" PERFECT_MID_2_DU "मम\u{943}जाथ\u{947}",
-    "ममार\u{94d}ज" PERFECT_MID_2_PL "मम\u{943}जिध\u{94d}व\u{947}",
-    "ममार\u{94d}ज" PERFECT_MID_3_SG "मम\u{943}ज\u{947}",
-    "ममार\u{94d}ज" PERFECT_MID_3_DU "मम\u{943}जात\u{947}",
-    "ममार\u{94d}ज" PERFECT_MID_3_PL "मम\u{943}जिर\u{947}",
-    "ममार\u{94d}ज" PARTICIPLE_PERF_ACT "मम\u{943}ज\u{94d}वा\u{902}स\u{94d}",
-    "ममार\u{94d}ज" PARTICIPLE_PERF_MID "मम\u{943}जान",
-    "मार\u{94d}ष\u{94d}टि" IND_ACT_1_SG "मार\u{94d}ज\u{94d}मि",
-    "मार\u{94d}ष\u{94d}टि" IND_ACT_1_DU "म\u{943}ज\u{94d}वः",
-    "मार\u{94d}ष\u{94d}टि" IND_ACT_1_PL "म\u{943}ज\u{94d}मः",
-    "मार\u{94d}ष\u{94d}टि" IND_ACT_2_SG "मार\u{94d}क\u{94d}षि",
-    "मार\u{94d}ष\u{94d}टि" IND_ACT_2_DU "म\u{943}ष\u{94d}ठः",
-    "मार\u{94d}ष\u{94d}टि" IND_ACT_2_PL "म\u{943}ष\u{94d}ठ",
-    "मार\u{94d}ष\u{94d}टि" IND_ACT_3_SG "मार\u{94d}ष\u{94d}टि",
-    "मार\u{94d}ष\u{94d}टि" IND_ACT_3_DU "म\u{943}ष\u{94d}टः",
-    "मार\u{94d}ष\u{94d}टि" IND_ACT_3_PL "म\u{943}जन\u{94d}ति",
-    "मार\u{94d}ष\u{94d}टि" IND_MID_1_SG "म\u{943}ज\u{947}",
-    "मार\u{94d}ष\u{94d}टि" IND_MID_1_DU "म\u{943}ज\u{94d}वह\u{947}",
-    "मार\u{94d}ष\u{94d}टि" IND_MID_1_PL "म\u{943}ज\u{94d}मह\u{947}",
-    "मार\u{94d}ष\u{94d}टि" IND_MID_2_SG "म\u{943}क\u{94d}ष\u{947}",
-    "मार\u{94d}ष\u{94d}टि" IND_MID_2_DU "म\u{943}जाथ\u{947}",
-    "मार\u{94d}ष\u{94d}टि" IND_MID_2_PL "म\u{943}ड\u{94d}ढ\u{94d}व\u{947}",
-    "मार\u{94d}ष\u{94d}टि" IND_MID_3_SG "म\u{943}ष\u{94d}ट\u{947}",
-    "मार\u{94d}ष\u{94d}टि" IND_MID_3_DU "म\u{943}जात\u{947}",
-    "मार\u{94d}ष\u{94d}टि" IND_MID_3_PL "म\u{943}जत\u{947}",
-    "मार\u{94d}ष\u{94d}टि" IMP_ACT_1_SG "मार\u{94d}जानि",
-    "मार\u{94d}ष\u{94d}टि" IMP_ACT_1_DU "मार\u{94d}जाव",
-    "मार\u{94d}ष\u{94d}टि" IMP_ACT_1_PL "मार\u{94d}जाम",
-    "मार\u{94d}ष\u{94d}टि" IMP_ACT_2_SG "म\u{943}ड\u{94d}ढि",
-    "मार\u{94d}ष\u{94d}टि" IMP_ACT_2_DU "म\u{943}ष\u{94d}टम\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" IMP_ACT_2_PL "म\u{943}ष\u{94d}ट",
-    "मार\u{94d}ष\u{94d}टि" IMP_ACT_3_SG "मार\u{94d}ष\u{94d}ट\u{941}",
-    "मार\u{94d}ष\u{94d}टि" IMP_ACT_3_DU "म\u{943}ष\u{94d}टाम\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" IMP_ACT_3_PL "म\u{943}जन\u{94d}त\u{941}",
-    "मार\u{94d}ष\u{94d}टि" IMP_MID_1_SG "मार\u{94d}ज\u{948}",
-    "मार\u{94d}ष\u{94d}टि" IMP_MID_1_DU "मार\u{94d}जावह\u{948}",
-    "मार\u{94d}ष\u{94d}टि" IMP_MID_1_PL "मार\u{94d}जामह\u{948}",
-    "मार\u{94d}ष\u{94d}टि" IMP_MID_2_SG "म\u{943}क\u{94d}ष\u{94d}व",
-    "मार\u{94d}ष\u{94d}टि" IMP_MID_2_DU "म\u{943}जाथाम\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" IMP_MID_2_PL "म\u{943}ड\u{94d}ढ\u{94d}वम\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" IMP_MID_3_SG "म\u{943}ष\u{94d}टाम\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" IMP_MID_3_DU "म\u{943}जाताम\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" IMP_MID_3_PL "म\u{943}जताम\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" OPT_ACT_1_SG "म\u{943}ज\u{94d}याम\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" OPT_ACT_1_DU "म\u{943}ज\u{94d}याव",
-    "मार\u{94d}ष\u{94d}टि" OPT_ACT_1_PL "म\u{943}ज\u{94d}याम",
-    "मार\u{94d}ष\u{94d}टि" OPT_ACT_2_SG "म\u{943}ज\u{94d}याः",
-    "मार\u{94d}ष\u{94d}टि" OPT_ACT_2_DU "म\u{943}ज\u{94d}यातम\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" OPT_ACT_2_PL "म\u{943}ज\u{94d}यात",
-    "मार\u{94d}ष\u{94d}टि" OPT_ACT_3_SG "म\u{943}ज\u{94d}यात\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" OPT_ACT_3_DU "म\u{943}ज\u{94d}याताम\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" OPT_ACT_3_PL "म\u{943}ज\u{94d}य\u{941}ः",
-    "मार\u{94d}ष\u{94d}टि" OPT_MID_1_SG "म\u{943}जीय",
-    "मार\u{94d}ष\u{94d}टि" OPT_MID_1_DU "म\u{943}जीवहि",
-    "मार\u{94d}ष\u{94d}टि" OPT_MID_1_PL "म\u{943}जीमहि",
-    "मार\u{94d}ष\u{94d}टि" OPT_MID_2_SG "म\u{943}जीथाः",
-    "मार\u{94d}ष\u{94d}टि" OPT_MID_2_DU "म\u{943}जीयाथाम\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" OPT_MID_2_PL "म\u{943}जीध\u{94d}वम\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" OPT_MID_3_SG "म\u{943}जीत",
-    "मार\u{94d}ष\u{94d}टि" OPT_MID_3_DU "म\u{943}जीयाताम\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" OPT_MID_3_PL "म\u{943}जीरन\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" SUBJ_ACT_1_SG "मार\u{94d}जानि",
-    "मार\u{94d}ष\u{94d}टि" SUBJ_ACT_1_DU "मार\u{94d}जाव",
-    "मार\u{94d}ष\u{94d}टि" SUBJ_ACT_1_PL "मार\u{94d}जाम",
-    "मार\u{94d}ष\u{94d}टि" SUBJ_ACT_2_SG "मार\u{94d}जः",
-    "मार\u{94d}ष\u{94d}टि" SUBJ_ACT_2_DU "मार\u{94d}जथः",
-    "मार\u{94d}ष\u{94d}टि" SUBJ_ACT_2_PL "मार\u{94d}जथ",
-    "मार\u{94d}ष\u{94d}टि" SUBJ_ACT_3_SG "मार\u{94d}जत\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" SUBJ_ACT_3_DU "मार\u{94d}जतः",
-    "मार\u{94d}ष\u{94d}टि" SUBJ_ACT_3_PL "मार\u{94d}जन\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" SUBJ_MID_1_SG "मार\u{94d}ज\u{948}",
-    "मार\u{94d}ष\u{94d}टि" SUBJ_MID_1_DU "मार\u{94d}जावह\u{948}",
-    "मार\u{94d}ष\u{94d}टि" SUBJ_MID_1_PL "मार\u{94d}जामह\u{948}",
-    "मार\u{94d}ष\u{94d}टि" SUBJ_MID_2_SG "मार\u{94d}जस\u{947}",
-    "मार\u{94d}ष\u{94d}टि" SUBJ_MID_2_DU "मार\u{94d}ज\u{948}थ\u{947}",
-    "मार\u{94d}ष\u{94d}टि" SUBJ_MID_2_PL "मार\u{94d}जध\u{94d}व\u{947}",
-    "मार\u{94d}ष\u{94d}टि" SUBJ_MID_3_SG "मार\u{94d}जत\u{947}",
-    "मार\u{94d}ष\u{94d}टि" SUBJ_MID_3_DU "मार\u{94d}ज\u{948}त\u{947}",
-    "मार\u{94d}ष\u{94d}टि" SUBJ_MID_3_PL "मार\u{94d}जन\u{94d}त",
-    "मार\u{94d}ष\u{94d}टि" IMPERFECT_ACT_1_SG "अमार\u{94d}जम\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" IMPERFECT_ACT_1_DU "अम\u{943}ज\u{94d}व",
-    "मार\u{94d}ष\u{94d}टि" IMPERFECT_ACT_1_PL "अम\u{943}ज\u{94d}म",
-    "मार\u{94d}ष\u{94d}टि" IMPERFECT_ACT_2_SG "अमार\u{94d}ट\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" IMPERFECT_ACT_2_DU "अम\u{943}ष\u{94d}टम\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" IMPERFECT_ACT_2_PL "अम\u{943}ष\u{94d}ट",
-    "मार\u{94d}ष\u{94d}टि" IMPERFECT_ACT_3_SG "अमार\u{94d}ट\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" IMPERFECT_ACT_3_DU "अम\u{943}ष\u{94d}टाम\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" IMPERFECT_ACT_3_PL "अम\u{943}जन\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" IMPERFECT_MID_1_SG "अम\u{943}जि",
-    "मार\u{94d}ष\u{94d}टि" IMPERFECT_MID_1_DU "अम\u{943}ज\u{94d}वहि",
-    "मार\u{94d}ष\u{94d}टि" IMPERFECT_MID_1_PL "अम\u{943}ज\u{94d}महि",
-    "मार\u{94d}ष\u{94d}टि" IMPERFECT_MID_2_SG "अम\u{943}ष\u{94d}ठाः",
-    "मार\u{94d}ष\u{94d}टि" IMPERFECT_MID_2_DU "अम\u{943}जाथाम\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" IMPERFECT_MID_2_PL "अम\u{943}ड\u{94d}ढ\u{94d}वम\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" IMPERFECT_MID_3_SG "अम\u{943}ष\u{94d}ट",
-    "मार\u{94d}ष\u{94d}टि" IMPERFECT_MID_3_DU "अम\u{943}जाताम\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" IMPERFECT_MID_3_PL "अम\u{943}जत",
-    "मार\u{94d}ष\u{94d}टि" PARTICIPLE_PRES_ACT "म\u{943}जत\u{94d}",
-    "मार\u{94d}ष\u{94d}टि" PARTICIPLE_PRES_MID "म\u{943}जान",
-    "ययाम" PERFECT_ACT_1_SG "ययम",
-    "ययाम" PERFECT_ACT_1_DU "य\u{947}मिव",
-    "ययाम" PERFECT_ACT_1_PL "य\u{947}मिम",
-    "ययाम" PERFECT_ACT_2_SG "ययन\u{94d}थ",
-    "ययाम" PERFECT_ACT_2_DU "य\u{947}मथ\u{941}ः",
-    "ययाम" PERFECT_ACT_2_PL "य\u{947}म",
-    "ययाम" PERFECT_ACT_3_DU "य\u{947}मत\u{941}ः",
-    "ययाम" PERFECT_ACT_3_PL "य\u{947}म\u{941}ः",
-    "ययाम" PERFECT_MID_1_SG "य\u{947}म\u{947}",
-    "ययाम" PERFECT_MID_1_DU "य\u{947}मिवह\u{947}",
-    "ययाम" PERFECT_MID_1_PL "य\u{947}मिमह\u{947}",
-    "ययाम" PERFECT_MID_2_SG "य\u{947}मिष\u{947}",
-    "ययाम" PERFECT_MID_2_DU "य\u{947}माथ\u{947}",
-    "ययाम" PERFECT_MID_2_PL "य\u{947}मिध\u{94d}व\u{947}",
-    "ययाम" PERFECT_MID_3_SG "य\u{947}म\u{947}",
-    "ययाम" PERFECT_MID_3_DU "य\u{947}मात\u{947}",
-    "ययाम" PERFECT_MID_3_PL "य\u{947}मिर\u{947}",
-    "ययाम" PARTICIPLE_PERF_ACT "य\u{947}मिवा\u{902}स\u{94d}",
-    "ययाम" PARTICIPLE_PERF_MID "य\u{947}मान",
-    "य\u{941}योज" PERFECT_ACT_1_DU "य\u{941}य\u{941}जिव",
-    "य\u{941}योज" PERFECT_ACT_1_PL "य\u{941}य\u{941}जिम",
-    "य\u{941}योज" PERFECT_ACT_2_DU "य\u{941}य\u{941}जथ\u{941}ः",
-    "य\u{941}योज" PERFECT_ACT_2_PL "य\u{941}य\u{941}ज",
-    "य\u{941}योज" PERFECT_ACT_3_DU "य\u{941}य\u{941}जत\u{941}ः",
-    "य\u{941}योज" PERFECT_ACT_3_PL "य\u{941}य\u{941}ज\u{941}ः",
-    "य\u{941}योज" PERFECT_MID_1_SG "य\u{941}य\u{941}ज\u{947}",
-    "य\u{941}योज" PERFECT_MID_1_DU "य\u{941}य\u{941}जिवह\u{947}",
-    "य\u{941}योज" PERFECT_MID_1_PL "य\u{941}य\u{941}जिमह\u{947}",
-    "य\u{941}योज" PERFECT_MID_2_SG "य\u{941}य\u{941}जिष\u{947}",
-    "य\u{941}योज" PERFECT_MID_2_DU "य\u{941}य\u{941}जाथ\u{947}",
-    "य\u{941}योज" PERFECT_MID_2_PL "य\u{941}य\u{941}जिध\u{94d}व\u{947}",
-    "य\u{941}योज" PERFECT_MID_3_SG "य\u{941}य\u{941}ज\u{947}",
-    "य\u{941}योज" PERFECT_MID_3_DU "य\u{941}य\u{941}जात\u{947}",
-    "य\u{941}योज" PERFECT_MID_3_PL "य\u{941}य\u{941}जिर\u{947}",
-    "य\u{941}योज" PARTICIPLE_PERF_ACT "य\u{941}य\u{941}ग\u{94d}वा\u{902}स\u{94d}",
-    "य\u{941}योज" PARTICIPLE_PERF_MID "य\u{941}य\u{941}जान",
-    "र\u{902}हति" IMPERFECT_ACT_1_SG "अरम\u{94d}हम\u{94d}",
-    "र\u{902}हति" IMPERFECT_ACT_1_DU "अरम\u{94d}हाव",
-    "र\u{902}हति" IMPERFECT_ACT_1_PL "अरम\u{94d}हाम",
-    "र\u{902}हति" IMPERFECT_ACT_2_SG "अरम\u{94d}हः",
-    "र\u{902}हति" IMPERFECT_ACT_2_DU "अरम\u{94d}हतम\u{94d}",
-    "र\u{902}हति" IMPERFECT_ACT_2_PL "अरम\u{94d}हत",
-    "र\u{902}हति" IMPERFECT_ACT_3_SG "अरम\u{94d}हत\u{94d}",
-    "र\u{902}हति" IMPERFECT_ACT_3_DU "अरम\u{94d}हताम\u{94d}",
-    "र\u{902}हति" IMPERFECT_ACT_3_PL "अरम\u{94d}हन\u{94d}",
-    "र\u{902}हति" IMPERFECT_MID_1_SG "अरम\u{94d}ह\u{947}",
-    "र\u{902}हति" IMPERFECT_MID_1_DU "अरम\u{94d}हावहि",
-    "र\u{902}हति" IMPERFECT_MID_1_PL "अरम\u{94d}हामहि",
-    "र\u{902}हति" IMPERFECT_MID_2_SG "अरम\u{94d}हथाः",
-    "र\u{902}हति" IMPERFECT_MID_2_DU "अरम\u{94d}ह\u{947}थाम\u{94d}",
-    "र\u{902}हति" IMPERFECT_MID_2_PL "अरम\u{94d}हध\u{94d}वम\u{94d}",
-    "र\u{902}हति" IMPERFECT_MID_3_SG "अरम\u{94d}हत",
-    "र\u{902}हति" IMPERFECT_MID_3_DU "अरम\u{94d}ह\u{947}ताम\u{94d}",
-    "र\u{902}हति" IMPERFECT_MID_3_PL "अरम\u{94d}हन\u{94d}त",
-    "रर\u{902}ह" PARTICIPLE_PERF_MID "रर\u{902}हाण",
-    "ररौ" PARTICIPLE_PERF_MID "रराण",
-    "रिणक\u{94d}ति" IND_ACT_1_SG "रिणच\u{94d}मि",
-    "रिणक\u{94d}ति" IND_ACT_1_DU "रिञ\u{94d}च\u{94d}वः",
-    "रिणक\u{94d}ति" IND_ACT_1_PL "रिञ\u{94d}च\u{94d}मः",
-    "रिणक\u{94d}ति" IND_ACT_2_SG "रिणक\u{94d}षि",
-    "रिणक\u{94d}ति" IND_ACT_2_DU "रिङ\u{94d}क\u{94d}थः",
-    "रिणक\u{94d}ति" IND_ACT_2_PL "रिङ\u{94d}क\u{94d}थ",
-    "रिणक\u{94d}ति" IND_ACT_3_DU "रिङ\u{94d}क\u{94d}तः",
-    "रिणक\u{94d}ति" IND_ACT_3_PL "रिञ\u{94d}चन\u{94d}ति",
-    "रिणक\u{94d}ति" IND_MID_1_SG "रिञ\u{94d}च\u{947}",
-    "रिणक\u{94d}ति" IND_MID_1_DU "रिञ\u{94d}च\u{94d}वह\u{947}",
-    "रिणक\u{94d}ति" IND_MID_1_PL "रिञ\u{94d}च\u{94d}मह\u{947}",
-    "रिणक\u{94d}ति" IND_MID_2_SG "रिङ\u{94d}क\u{94d}ष\u{947}",
-    "रिणक\u{94d}ति" IND_MID_2_DU "रिञ\u{94d}चाथ\u{947}",
-    "रिणक\u{94d}ति" IND_MID_2_PL "रिङ\u{94d}ग\u{94d}ध\u{94d}व\u{947}",
-    "रिणक\u{94d}ति" IND_MID_3_SG "रिङ\u{94d}क\u{94d}त\u{947}",
-    "रिणक\u{94d}ति" IND_MID_3_DU "रिञ\u{94d}चात\u{947}",
-    "रिणक\u{94d}ति" IND_MID_3_PL "रिञ\u{94d}चत\u{947}",
-    "रिणक\u{94d}ति" IMP_ACT_1_SG "रिणचानि",
-    "रिणक\u{94d}ति" IMP_ACT_1_DU "रिणचाव",
-    "रिणक\u{94d}ति" IMP_ACT_1_PL "रिणचाम",
-    "रिणक\u{94d}ति" IMP_ACT_2_SG "रिङ\u{94d}ग\u{94d}धि",
-    "रिणक\u{94d}ति" IMP_ACT_2_DU "रिङ\u{94d}क\u{94d}तम\u{94d}",
-    "रिणक\u{94d}ति" IMP_ACT_2_PL "रिङ\u{94d}क\u{94d}त",
-    "रिणक\u{94d}ति" IMP_ACT_3_DU "रिङ\u{94d}क\u{94d}ताम\u{94d}",
-    "रिणक\u{94d}ति" IMP_ACT_3_PL "रिञ\u{94d}चन\u{94d}त\u{941}",
-    "रिणक\u{94d}ति" IMP_MID_1_SG "रिणच\u{948}",
-    "रिणक\u{94d}ति" IMP_MID_1_DU "रिणचावह\u{948}",
-    "रिणक\u{94d}ति" IMP_MID_1_PL "रिणचामह\u{948}",
-    "रिणक\u{94d}ति" IMP_MID_2_SG "रिङ\u{94d}क\u{94d}ष\u{94d}व",
-    "रिणक\u{94d}ति" IMP_MID_2_DU "रिञ\u{94d}चाथाम\u{94d}",
-    "रिणक\u{94d}ति" IMP_MID_2_PL "रिङ\u{94d}ग\u{94d}ध\u{94d}वम\u{94d}",
-    "रिणक\u{94d}ति" IMP_MID_3_SG "रिङ\u{94d}क\u{94d}ताम\u{94d}",
-    "रिणक\u{94d}ति" IMP_MID_3_DU "रिञ\u{94d}चाताम\u{94d}",
-    "रिणक\u{94d}ति" IMP_MID_3_PL "रिञ\u{94d}चताम\u{94d}",
-    "रिणक\u{94d}ति" OPT_ACT_1_SG "रिञ\u{94d}च\u{94d}याम\u{94d}",
-    "रिणक\u{94d}ति" OPT_ACT_1_DU "रिञ\u{94d}च\u{94d}याव",
-    "रिणक\u{94d}ति" OPT_ACT_1_PL "रिञ\u{94d}च\u{94d}याम",
-    "रिणक\u{94d}ति" OPT_ACT_2_SG "रिञ\u{94d}च\u{94d}याः",
-    "रिणक\u{94d}ति" OPT_ACT_2_DU "रिञ\u{94d}च\u{94d}यातम\u{94d}",
-    "रिणक\u{94d}ति" OPT_ACT_2_PL "रिञ\u{94d}च\u{94d}यात",
-    "रिणक\u{94d}ति" OPT_ACT_3_SG "रिञ\u{94d}च\u{94d}यात\u{94d}",
-    "रिणक\u{94d}ति" OPT_ACT_3_DU "रिञ\u{94d}च\u{94d}याताम\u{94d}",
-    "रिणक\u{94d}ति" OPT_ACT_3_PL "रिञ\u{94d}च\u{94d}य\u{941}ः",
-    "रिणक\u{94d}ति" OPT_MID_1_SG "रिञ\u{94d}चीय",
-    "रिणक\u{94d}ति" OPT_MID_1_DU "रिञ\u{94d}चीवहि",
-    "रिणक\u{94d}ति" OPT_MID_1_PL "रिञ\u{94d}चीमहि",
-    "रिणक\u{94d}ति" OPT_MID_2_SG "रिञ\u{94d}चीथाः",
-    "रिणक\u{94d}ति" OPT_MID_2_DU "रिञ\u{94d}चीयाथाम\u{94d}",
-    "रिणक\u{94d}ति" OPT_MID_2_PL "रिञ\u{94d}चीध\u{94d}वम\u{94d}",
-    "रिणक\u{94d}ति" OPT_MID_3_SG "रिञ\u{94d}चीत",
-    "रिणक\u{94d}ति" OPT_MID_3_DU "रिञ\u{94d}चीयाताम\u{94d}",
-    "रिणक\u{94d}ति" OPT_MID_3_PL "रिञ\u{94d}चीरन\u{94d}",
-    "रिणक\u{94d}ति" SUBJ_ACT_1_SG "रिणचानि",
-    "रिणक\u{94d}ति" SUBJ_ACT_1_DU "रिणचाव",
-    "रिणक\u{94d}ति" SUBJ_ACT_1_PL "रिणचाम",
-    "रिणक\u{94d}ति" SUBJ_ACT_2_SG "रिणचः",
-    "रिणक\u{94d}ति" SUBJ_ACT_2_DU "रिणचथः",
-    "रिणक\u{94d}ति" SUBJ_ACT_2_PL "रिणचथ",
-    "रिणक\u{94d}ति" SUBJ_ACT_3_SG "रिणचत\u{94d}",
-    "रिणक\u{94d}ति" SUBJ_ACT_3_DU "रिणचतः",
-    "रिणक\u{94d}ति" SUBJ_ACT_3_PL "रिणचन\u{94d}",
-    "रिणक\u{94d}ति" SUBJ_MID_1_SG "रिणच\u{948}",
-    "रिणक\u{94d}ति" SUBJ_MID_1_DU "रिणचावह\u{948}",
-    "रिणक\u{94d}ति" SUBJ_MID_1_PL "रिणचामह\u{948}",
-    "रिणक\u{94d}ति" SUBJ_MID_2_SG "रिणचस\u{947}",
-    "रिणक\u{94d}ति" SUBJ_MID_2_DU "रिणच\u{948}थ\u{947}",
-    "रिणक\u{94d}ति" SUBJ_MID_2_PL "रिणचध\u{94d}व\u{947}",
-    "रिणक\u{94d}ति" SUBJ_MID_3_SG "रिणचत\u{947}",
-    "रिणक\u{94d}ति" SUBJ_MID_3_DU "रिणच\u{948}त\u{947}",
-    "रिणक\u{94d}ति" SUBJ_MID_3_PL "रिणचन\u{94d}त",
-    "रिणक\u{94d}ति" IMPERFECT_ACT_1_SG "अरिणचम\u{94d}",
-    "रिणक\u{94d}ति" IMPERFECT_ACT_1_DU "अरिञ\u{94d}च\u{94d}व",
-    "रिणक\u{94d}ति" IMPERFECT_ACT_1_PL "अरिञ\u{94d}च\u{94d}म",
-    "रिणक\u{94d}ति" IMPERFECT_ACT_2_SG "अरिणक\u{94d}",
-    "रिणक\u{94d}ति" IMPERFECT_ACT_2_DU "अरिङ\u{94d}क\u{94d}तम\u{94d}",
-    "रिणक\u{94d}ति" IMPERFECT_ACT_2_PL "अरिङ\u{94d}क\u{94d}त",
-    "रिणक\u{94d}ति" IMPERFECT_ACT_3_SG "अरिणक\u{94d}",
-    "रिणक\u{94d}ति" IMPERFECT_ACT_3_DU "अरिङ\u{94d}क\u{94d}ताम\u{94d}",
-    "रिणक\u{94d}ति" IMPERFECT_ACT_3_PL "अरिञ\u{94d}चन\u{94d}",
-    "रिणक\u{94d}ति" IMPERFECT_MID_1_SG "अरिञ\u{94d}चि",
-    "रिणक\u{94d}ति" IMPERFECT_MID_1_DU "अरिञ\u{94d}च\u{94d}वहि",
-    "रिणक\u{94d}ति" IMPERFECT_MID_1_PL "अरिञ\u{94d}च\u{94d}महि",
-    "रिणक\u{94d}ति" IMPERFECT_MID_2_SG "अरिङ\u{94d}क\u{94d}थाः",
-    "रिणक\u{94d}ति" IMPERFECT_MID_2_DU "अरिञ\u{94d}चाथाम\u{94d}",
-    "रिणक\u{94d}ति" IMPERFECT_MID_2_PL "अरिङ\u{94d}ग\u{94d}ध\u{94d}वम\u{94d}",
-    "रिणक\u{94d}ति" IMPERFECT_MID_3_SG "अरिङ\u{94d}क\u{94d}त",
-    "रिणक\u{94d}ति" IMPERFECT_MID_3_DU "अरिञ\u{94d}चाताम\u{94d}",
-    "रिणक\u{94d}ति" IMPERFECT_MID_3_PL "अरिञ\u{94d}चत",
-    "रिणक\u{94d}ति" PARTICIPLE_PRES_ACT "रिञ\u{94d}चत\u{94d}",
-    "रिणक\u{94d}ति" PARTICIPLE_PRES_MID "रिञ\u{94d}चान",
-    "रिर\u{947}च" PERFECT_ACT_1_DU "रिरिचिव",
-    "रिर\u{947}च" PERFECT_ACT_1_PL "रिरिचिम",
-    "रिर\u{947}च" PERFECT_ACT_2_DU "रिरिचथ\u{941}ः",
-    "रिर\u{947}च" PERFECT_ACT_2_PL "रिरिच",
-    "रिर\u{947}च" PERFECT_ACT_3_DU "रिरिचत\u{941}ः",
-    "रिर\u{947}च" PERFECT_ACT_3_PL "रिरिच\u{941}ः",
-    "रिर\u{947}च" PERFECT_MID_1_SG "रिरिच\u{947}",
-    "रिर\u{947}च" PERFECT_MID_1_DU "रिरिचिवह\u{947}",
-    "रिर\u{947}च" PERFECT_MID_1_PL "रिरिचिमह\u{947}",
-    "रिर\u{947}च" PERFECT_MID_2_SG "रिरिचिष\u{947}",
-    "रिर\u{947}च" PERFECT_MID_2_DU "रिरिचाथ\u{947}",
-    "रिर\u{947}च" PERFECT_MID_2_PL "रिरिचिध\u{94d}व\u{947}",
-    "रिर\u{947}च" PERFECT_MID_3_SG "रिरिच\u{947}",
-    "रिर\u{947}च" PERFECT_MID_3_DU "रिरिचात\u{947}",
-    "रिर\u{947}च" PERFECT_MID_3_PL "रिरिचिर\u{947}",
-    "रिर\u{947}च" PARTICIPLE_PERF_ACT "रिरिक\u{94d}वा\u{902}स\u{94d}",
-    "रिर\u{947}च" PARTICIPLE_PERF_MID "रिरिचान",
-    "र\u{941}णद\u{94d}धि" IND_ACT_1_SG "र\u{941}णध\u{94d}मि",
-    "र\u{941}णद\u{94d}धि" IND_ACT_1_DU "र\u{941}न\u{94d}ध\u{94d}वः",
-    "र\u{941}णद\u{94d}धि" IND_ACT_1_PL "र\u{941}न\u{94d}ध\u{94d}मः",
-    "र\u{941}णद\u{94d}धि" IND_ACT_2_SG "र\u{941}णत\u{94d}सि",
-    "र\u{941}णद\u{94d}धि" IND_ACT_2_DU "र\u{941}न\u{94d}द\u{94d}धः",
-    "र\u{941}णद\u{94d}धि" IND_ACT_2_PL "र\u{941}न\u{94d}द\u{94d}ध",
-    "र\u{941}णद\u{94d}धि" IND_ACT_3_SG "र\u{941}णद\u{94d}धि",
-    "र\u{941}णद\u{94d}धि" IND_ACT_3_DU "र\u{941}न\u{94d}द\u{94d}धः",
-    "र\u{941}णद\u{94d}धि" IND_ACT_3_PL "र\u{941}न\u{94d}धन\u{94d}ति",
-    "र\u{941}णद\u{94d}धि" IND_MID_1_SG "र\u{941}न\u{94d}ध\u{947}",
-    "र\u{941}णद\u{94d}धि" IND_MID_1_DU "र\u{941}न\u{94d}ध\u{94d}वह\u{947}",
-    "र\u{941}णद\u{94d}धि" IND_MID_1_PL "र\u{941}न\u{94d}ध\u{94d}मह\u{947}",
-    "र\u{941}णद\u{94d}धि" IND_MID_2_SG "र\u{941}न\u{94d}त\u{94d}स\u{947}",
-    "र\u{941}णद\u{94d}धि" IND_MID_2_DU "र\u{941}न\u{94d}धाथ\u{947}",
-    "र\u{941}णद\u{94d}धि" IND_MID_2_PL "र\u{941}न\u{94d}द\u{94d}ध\u{94d}व\u{947}",
-    "र\u{941}णद\u{94d}धि" IND_MID_3_SG "र\u{941}न\u{94d}द\u{94d}ध\u{947}",
-    "र\u{941}णद\u{94d}धि" IND_MID_3_DU "र\u{941}न\u{94d}धात\u{947}",
-    "र\u{941}णद\u{94d}धि" IND_MID_3_PL "र\u{941}न\u{94d}धत\u{947}",
-    "र\u{941}णद\u{94d}धि" IMP_ACT_1_SG "र\u{941}णधानि",
-    "र\u{941}णद\u{94d}धि" IMP_ACT_1_DU "र\u{941}णधाव",
-    "र\u{941}णद\u{94d}धि" IMP_ACT_1_PL "र\u{941}णधाम",
-    "र\u{941}णद\u{94d}धि" IMP_ACT_2_SG "र\u{941}न\u{94d}द\u{94d}धि",
-    "र\u{941}णद\u{94d}धि" IMP_ACT_2_DU "र\u{941}न\u{94d}द\u{94d}धम\u{94d}",
-    "र\u{941}णद\u{94d}धि" IMP_ACT_2_PL "र\u{941}न\u{94d}द\u{94d}ध",
-    "र\u{941}णद\u{94d}धि" IMP_ACT_3_SG "र\u{941}णद\u{94d}ध\u{941}",
-    "र\u{941}णद\u{94d}धि" IMP_ACT_3_DU "र\u{941}न\u{94d}द\u{94d}धाम\u{94d}",
-    "र\u{941}णद\u{94d}धि" IMP_ACT_3_PL "र\u{941}न\u{94d}धन\u{94d}त\u{941}",
-    "र\u{941}णद\u{94d}धि" IMP_MID_1_SG "र\u{941}णध\u{948}",
-    "र\u{941}णद\u{94d}धि" IMP_MID_1_DU "र\u{941}णधावह\u{948}",
-    "र\u{941}णद\u{94d}धि" IMP_MID_1_PL "र\u{941}णधामह\u{948}",
-    "र\u{941}णद\u{94d}धि" IMP_MID_2_SG "र\u{941}न\u{94d}त\u{94d}स\u{94d}व",
-    "र\u{941}णद\u{94d}धि" IMP_MID_2_DU "र\u{941}न\u{94d}धाथाम\u{94d}",
-    "र\u{941}णद\u{94d}धि" IMP_MID_2_PL "र\u{941}न\u{94d}द\u{94d}ध\u{94d}वम\u{94d}",
-    "र\u{941}णद\u{94d}धि" IMP_MID_3_SG "र\u{941}न\u{94d}द\u{94d}धाम\u{94d}",
-    "र\u{941}णद\u{94d}धि" IMP_MID_3_DU "र\u{941}न\u{94d}धाताम\u{94d}",
-    "र\u{941}णद\u{94d}धि" IMP_MID_3_PL "र\u{941}न\u{94d}धताम\u{94d}",
-    "र\u{941}णद\u{94d}धि" OPT_ACT_1_SG "र\u{941}न\u{94d}ध\u{94d}याम\u{94d}",
-    "र\u{941}णद\u{94d}धि" OPT_ACT_1_DU "र\u{941}न\u{94d}ध\u{94d}याव",
-    "र\u{941}णद\u{94d}धि" OPT_ACT_1_PL "र\u{941}न\u{94d}ध\u{94d}याम",
-    "र\u{941}णद\u{94d}धि" OPT_ACT_2_SG "र\u{941}न\u{94d}ध\u{94d}याः",
-    "र\u{941}णद\u{94d}धि" OPT_ACT_2_DU "र\u{941}न\u{94d}ध\u{94d}यातम\u{94d}",
-    "र\u{941}णद\u{94d}धि" OPT_ACT_2_PL "र\u{941}न\u{94d}ध\u{94d}यात",
-    "र\u{941}णद\u{94d}धि" OPT_ACT_3_SG "र\u{941}न\u{94d}ध\u{94d}यात\u{94d}",
-    "र\u{941}णद\u{94d}धि" OPT_ACT_3_DU "र\u{941}न\u{94d}ध\u{94d}याताम\u{94d}",
-    "र\u{941}णद\u{94d}धि" OPT_ACT_3_PL "र\u{941}न\u{94d}ध\u{94d}य\u{941}ः",
-    "र\u{941}णद\u{94d}धि" OPT_MID_1_SG "र\u{941}न\u{94d}धीय",
-    "र\u{941}णद\u{94d}धि" OPT_MID_1_DU "र\u{941}न\u{94d}धीवहि",
-    "र\u{941}णद\u{94d}धि" OPT_MID_1_PL "र\u{941}न\u{94d}धीमहि",
-    "र\u{941}णद\u{94d}धि" OPT_MID_2_SG "र\u{941}न\u{94d}धीथाः",
-    "र\u{941}णद\u{94d}धि" OPT_MID_2_DU "र\u{941}न\u{94d}धीयाथाम\u{94d}",
-    "र\u{941}णद\u{94d}धि" OPT_MID_2_PL "र\u{941}न\u{94d}धीध\u{94d}वम\u{94d}",
-    "र\u{941}णद\u{94d}धि" OPT_MID_3_SG "र\u{941}न\u{94d}धीत",
-    "र\u{941}णद\u{94d}धि" OPT_MID_3_DU "र\u{941}न\u{94d}धीयाताम\u{94d}",
-    "र\u{941}णद\u{94d}धि" OPT_MID_3_PL "र\u{941}न\u{94d}धीरन\u{94d}",
-    "र\u{941}णद\u{94d}धि" SUBJ_ACT_1_SG "र\u{941}णधानि",
-    "र\u{941}णद\u{94d}धि" SUBJ_ACT_1_DU "र\u{941}णधाव",
-    "र\u{941}णद\u{94d}धि" SUBJ_ACT_1_PL "र\u{941}णधाम",
-    "र\u{941}णद\u{94d}धि" SUBJ_ACT_2_SG "र\u{941}णधः",
-    "र\u{941}णद\u{94d}धि" SUBJ_ACT_2_DU "र\u{941}णधथः",
-    "र\u{941}णद\u{94d}धि" SUBJ_ACT_2_PL "र\u{941}णधथ",
-    "र\u{941}णद\u{94d}धि" SUBJ_ACT_3_SG "र\u{941}णधत\u{94d}",
-    "र\u{941}णद\u{94d}धि" SUBJ_ACT_3_DU "र\u{941}णधतः",
-    "र\u{941}णद\u{94d}धि" SUBJ_ACT_3_PL "र\u{941}णधन\u{94d}",
-    "र\u{941}णद\u{94d}धि" SUBJ_MID_1_SG "र\u{941}णध\u{948}",
-    "र\u{941}णद\u{94d}धि" SUBJ_MID_1_DU "र\u{941}णधावह\u{948}",
-    "र\u{941}णद\u{94d}धि" SUBJ_MID_1_PL "र\u{941}णधामह\u{948}",
-    "र\u{941}णद\u{94d}धि" SUBJ_MID_2_SG "र\u{941}णधस\u{947}",
-    "र\u{941}णद\u{94d}धि" SUBJ_MID_2_DU "र\u{941}णध\u{948}थ\u{947}",
-    "र\u{941}णद\u{94d}धि" SUBJ_MID_2_PL "र\u{941}णधध\u{94d}व\u{947}",
-    "र\u{941}णद\u{94d}धि" SUBJ_MID_3_SG "र\u{941}णधत\u{947}",
-    "र\u{941}णद\u{94d}धि" SUBJ_MID_3_DU "र\u{941}णध\u{948}त\u{947}",
-    "र\u{941}णद\u{94d}धि" SUBJ_MID_3_PL "र\u{941}णधन\u{94d}त",
-    "र\u{941}णद\u{94d}धि" IMPERFECT_ACT_1_SG "अर\u{941}णधम\u{94d}",
-    "र\u{941}णद\u{94d}धि" IMPERFECT_ACT_1_DU "अर\u{941}न\u{94d}ध\u{94d}व",
-    "र\u{941}णद\u{94d}धि" IMPERFECT_ACT_1_PL "अर\u{941}न\u{94d}ध\u{94d}म",
-    "र\u{941}णद\u{94d}धि" IMPERFECT_ACT_2_SG "अर\u{941}णत\u{94d}",
-    "र\u{941}णद\u{94d}धि" IMPERFECT_ACT_2_DU "अर\u{941}न\u{94d}द\u{94d}धम\u{94d}",
-    "र\u{941}णद\u{94d}धि" IMPERFECT_ACT_2_PL "अर\u{941}न\u{94d}द\u{94d}ध",
-    "र\u{941}णद\u{94d}धि" IMPERFECT_ACT_3_SG "अर\u{941}णत\u{94d}",
-    "र\u{941}णद\u{94d}धि" IMPERFECT_ACT_3_DU "अर\u{941}न\u{94d}द\u{94d}धाम\u{94d}",
-    "र\u{941}णद\u{94d}धि" IMPERFECT_ACT_3_PL "अर\u{941}न\u{94d}धन\u{94d}",
-    "र\u{941}णद\u{94d}धि" IMPERFECT_MID_1_SG "अर\u{941}न\u{94d}धि",
-    "र\u{941}णद\u{94d}धि" IMPERFECT_MID_1_DU "अर\u{941}न\u{94d}ध\u{94d}वहि",
-    "र\u{941}णद\u{94d}धि" IMPERFECT_MID_1_PL "अर\u{941}न\u{94d}ध\u{94d}महि",
-    "र\u{941}णद\u{94d}धि" IMPERFECT_MID_2_SG "अर\u{941}न\u{94d}द\u{94d}धाः",
-    "र\u{941}णद\u{94d}धि" IMPERFECT_MID_2_DU "अर\u{941}न\u{94d}धाथाम\u{94d}",
-    "र\u{941}णद\u{94d}धि" IMPERFECT_MID_2_PL "अर\u{941}न\u{94d}द\u{94d}ध\u{94d}वम\u{94d}",
-    "र\u{941}णद\u{94d}धि" IMPERFECT_MID_3_SG "अर\u{941}न\u{94d}द\u{94d}ध",
-    "र\u{941}णद\u{94d}धि" IMPERFECT_MID_3_DU "अर\u{941}न\u{94d}धाताम\u{94d}",
-    "र\u{941}णद\u{94d}धि" IMPERFECT_MID_3_PL "अर\u{941}न\u{94d}धत",
-    "र\u{941}णद\u{94d}धि" PARTICIPLE_PRES_ACT "र\u{941}न\u{94d}धत\u{94d}",
-    "र\u{941}णद\u{94d}धि" PARTICIPLE_PRES_MID "र\u{941}न\u{94d}धान",
-    "र\u{941}रोध" PERFECT_ACT_1_DU "र\u{941}र\u{941}धिव",
-    "र\u{941}रोध" PERFECT_ACT_1_PL "र\u{941}र\u{941}धिम",
-    "र\u{941}रोध" PERFECT_ACT_2_DU "र\u{941}र\u{941}धथ\u{941}ः",
-    "र\u{941}रोध" PERFECT_ACT_2_PL "र\u{941}र\u{941}ध",
-    "र\u{941}रोध" PERFECT_ACT_3_DU "र\u{941}र\u{941}धत\u{941}ः",
-    "र\u{941}रोध" PERFECT_ACT_3_PL "र\u{941}र\u{941}ध\u{941}ः",
-    "र\u{941}रोध" PERFECT_MID_1_SG "र\u{941}र\u{941}ध\u{947}",
-    "र\u{941}रोध" PERFECT_MID_1_DU "र\u{941}र\u{941}धिवह\u{947}",
-    "र\u{941}रोध" PERFECT_MID_1_PL "र\u{941}र\u{941}धिमह\u{947}",
-    "र\u{941}रोध" PERFECT_MID_2_SG "र\u{941}र\u{941}धिष\u{947}",
-    "र\u{941}रोध" PERFECT_MID_2_DU "र\u{941}र\u{941}धाथ\u{947}",
-    "र\u{941}रोध" PERFECT_MID_2_PL "र\u{941}र\u{941}धिध\u{94d}व\u{947}",
-    "र\u{941}रोध" PERFECT_MID_3_SG "र\u{941}र\u{941}ध\u{947}",
-    "र\u{941}रोध" PERFECT_MID_3_DU "र\u{941}र\u{941}धात\u{947}",
-    "र\u{941}रोध" PERFECT_MID_3_PL "र\u{941}र\u{941}धिर\u{947}",
-    "र\u{941}रोध" PARTICIPLE_PERF_ACT "र\u{941}र\u{941}ध\u{94d}वा\u{902}स\u{94d}",
-    "र\u{941}रोध" PARTICIPLE_PERF_MID "र\u{941}र\u{941}धान",
-    "र\u{941}रोह" PERFECT_ACT_1_DU "र\u{941}र\u{941}हिव",
-    "र\u{941}रोह" PERFECT_ACT_1_PL "र\u{941}र\u{941}हिम",
-    "र\u{941}रोह" PERFECT_ACT_2_DU "र\u{941}र\u{941}हथ\u{941}ः",
-    "र\u{941}रोह" PERFECT_ACT_2_PL "र\u{941}र\u{941}ह",
-    "र\u{941}रोह" PERFECT_ACT_3_DU "र\u{941}र\u{941}हत\u{941}ः",
-    "र\u{941}रोह" PERFECT_ACT_3_PL "र\u{941}र\u{941}ह\u{941}ः",
-    "र\u{941}रोह" PERFECT_MID_1_SG "र\u{941}र\u{941}ह\u{947}",
-    "र\u{941}रोह" PERFECT_MID_1_DU "र\u{941}र\u{941}हिवह\u{947}",
-    "र\u{941}रोह" PERFECT_MID_1_PL "र\u{941}र\u{941}हिमह\u{947}",
-    "र\u{941}रोह" PERFECT_MID_2_SG "र\u{941}र\u{941}हिष\u{947}",
-    "र\u{941}रोह" PERFECT_MID_2_DU "र\u{941}र\u{941}हाथ\u{947}",
-    "र\u{941}रोह" PERFECT_MID_2_PL "र\u{941}र\u{941}हिध\u{94d}व\u{947}",
-    "र\u{941}रोह" PERFECT_MID_3_SG "र\u{941}र\u{941}ह\u{947}",
-    "र\u{941}रोह" PERFECT_MID_3_DU "र\u{941}र\u{941}हात\u{947}",
-    "र\u{941}रोह" PERFECT_MID_3_PL "र\u{941}र\u{941}हिर\u{947}",
-    "र\u{941}रोह" PARTICIPLE_PERF_ACT "र\u{941}र\u{941}ह\u{94d}वा\u{902}स\u{94d}",
-    "र\u{941}रोह" PARTICIPLE_PERF_MID "र\u{941}र\u{941}हाण",
-    "र\u{947}क\u{94d}ष\u{94d}यत\u{947}" FUTURE_MID_1_SG "र\u{947}क\u{94d}ष\u{94d}य\u{947}",
-    "र\u{947}क\u{94d}ष\u{94d}यत\u{947}" FUTURE_MID_1_DU "र\u{947}क\u{94d}ष\u{94d}यावह\u{947}",
-    "र\u{947}क\u{94d}ष\u{94d}यत\u{947}" FUTURE_MID_1_PL "र\u{947}क\u{94d}ष\u{94d}यामह\u{947}",
-    "र\u{947}क\u{94d}ष\u{94d}यत\u{947}" FUTURE_MID_2_SG "र\u{947}क\u{94d}ष\u{94d}यस\u{947}",
-    "र\u{947}क\u{94d}ष\u{94d}यत\u{947}" FUTURE_MID_2_DU "र\u{947}क\u{94d}ष\u{94d}य\u{947}थ\u{947}",
-    "र\u{947}क\u{94d}ष\u{94d}यत\u{947}" FUTURE_MID_2_PL "र\u{947}क\u{94d}ष\u{94d}यध\u{94d}व\u{947}",
-    "र\u{947}क\u{94d}ष\u{94d}यत\u{947}" FUTURE_MID_3_SG "र\u{947}क\u{94d}ष\u{94d}यत\u{947}",
-    "र\u{947}क\u{94d}ष\u{94d}यत\u{947}" FUTURE_MID_3_DU "र\u{947}क\u{94d}ष\u{94d}य\u{947}त\u{947}",
-    "र\u{947}क\u{94d}ष\u{94d}यत\u{947}" FUTURE_MID_3_PL "र\u{947}क\u{94d}ष\u{94d}यन\u{94d}त\u{947}",
-    "र\u{947}क\u{94d}ष\u{94d}यत\u{947}" CONDITIONAL_MID_1_SG "अर\u{947}क\u{94d}ष\u{94d}य\u{947}",
-    "र\u{947}क\u{94d}ष\u{94d}यत\u{947}" CONDITIONAL_MID_1_DU "अर\u{947}क\u{94d}ष\u{94d}यावहि",
-    "र\u{947}क\u{94d}ष\u{94d}यत\u{947}" CONDITIONAL_MID_1_PL "अर\u{947}क\u{94d}ष\u{94d}यामहि",
-    "र\u{947}क\u{94d}ष\u{94d}यत\u{947}" CONDITIONAL_MID_2_SG "अर\u{947}क\u{94d}ष\u{94d}यथाः",
-    "र\u{947}क\u{94d}ष\u{94d}यत\u{947}" CONDITIONAL_MID_2_DU "अर\u{947}क\u{94d}ष\u{94d}य\u{947}थाम\u{94d}",
-    "र\u{947}क\u{94d}ष\u{94d}यत\u{947}" CONDITIONAL_MID_2_PL "अर\u{947}क\u{94d}ष\u{94d}यध\u{94d}वम\u{94d}",
-    "र\u{947}क\u{94d}ष\u{94d}यत\u{947}" CONDITIONAL_MID_3_SG "अर\u{947}क\u{94d}ष\u{94d}यत",
-    "र\u{947}क\u{94d}ष\u{94d}यत\u{947}" CONDITIONAL_MID_3_DU "अर\u{947}क\u{94d}ष\u{94d}य\u{947}ताम\u{94d}",
-    "र\u{947}क\u{94d}ष\u{94d}यत\u{947}" CONDITIONAL_MID_3_PL "अर\u{947}क\u{94d}ष\u{94d}यन\u{94d}त",
-    "र\u{947}क\u{94d}ष\u{94d}यत\u{947}" PARTICIPLE_FUT_MID "र\u{947}क\u{94d}ष\u{94d}यमाण",
-    "र\u{947}ळ\u{94d}हि" IND_ACT_1_SG "र\u{947}ह\u{94d}मि",
-    "र\u{947}ळ\u{94d}हि" IND_ACT_1_DU "रिह\u{94d}वः",
-    "र\u{947}ळ\u{94d}हि" IND_ACT_1_PL "रिह\u{94d}मः",
-    "र\u{947}ळ\u{94d}हि" IND_ACT_2_SG "र\u{947}क\u{94d}षि",
-    "र\u{947}ळ\u{94d}हि" IND_ACT_2_DU "रीळ\u{94d}हः",
-    "र\u{947}ळ\u{94d}हि" IND_ACT_2_PL "रीळ\u{94d}ह",
-    "र\u{947}ळ\u{94d}हि" IND_ACT_3_SG "र\u{947}ळ\u{94d}हि",
-    "र\u{947}ळ\u{94d}हि" IND_ACT_3_DU "रीळ\u{94d}हः",
-    "र\u{947}ळ\u{94d}हि" IND_ACT_3_PL "रिहन\u{94d}ति",
-    "र\u{947}ळ\u{94d}हि" IND_MID_1_SG "रिह\u{947}",
-    "र\u{947}ळ\u{94d}हि" IND_MID_1_DU "रिह\u{94d}वह\u{947}",
-    "र\u{947}ळ\u{94d}हि" IND_MID_1_PL "रिह\u{94d}मह\u{947}",
-    "र\u{947}ळ\u{94d}हि" IND_MID_2_SG "रिक\u{94d}ष\u{947}",
-    "र\u{947}ळ\u{94d}हि" IND_MID_2_DU "रिहाथ\u{947}",
-    "र\u{947}ळ\u{94d}हि" IND_MID_2_PL "रीढ\u{94d}व\u{947}",
-    "र\u{947}ळ\u{94d}हि" IND_MID_3_SG "रीळ\u{94d}ह\u{947}",
-    "र\u{947}ळ\u{94d}हि" IND_MID_3_DU "रिहात\u{947}",
-    "र\u{947}ळ\u{94d}हि" IND_MID_3_PL "रिहत\u{947}",
-    "र\u{947}ळ\u{94d}हि" IMP_ACT_1_SG "र\u{947}हाणि",
-    "र\u{947}ळ\u{94d}हि" IMP_ACT_1_DU "र\u{947}हाव",
-    "र\u{947}ळ\u{94d}हि" IMP_ACT_1_PL "र\u{947}हाम",
-    "र\u{947}ळ\u{94d}हि" IMP_ACT_2_SG "रीळ\u{94d}हि",
-    "र\u{947}ळ\u{94d}हि" IMP_ACT_2_DU "रीळ\u{94d}हम\u{94d}",
-    "र\u{947}ळ\u{94d}हि" IMP_ACT_2_PL "रीळ\u{94d}ह",
-    "र\u{947}ळ\u{94d}हि" IMP_ACT_3_SG "र\u{947}ळ\u{94d}ह\u{941}",
-    "र\u{947}ळ\u{94d}हि" IMP_ACT_3_DU "रीळ\u{94d}हाम\u{94d}",
-    "र\u{947}ळ\u{94d}हि" IMP_ACT_3_PL "रिहन\u{94d}त\u{941}",
-    "र\u{947}ळ\u{94d}हि" IMP_MID_1_SG "र\u{947}ह\u{948}",
-    "र\u{947}ळ\u{94d}हि" IMP_MID_1_DU "र\u{947}हावह\u{948}",
-    "र\u{947}ळ\u{94d}हि" IMP_MID_1_PL "र\u{947}हामह\u{948}",
-    "र\u{947}ळ\u{94d}हि" IMP_MID_2_SG "रिक\u{94d}ष\u{94d}व",
-    "र\u{947}ळ\u{94d}हि" IMP_MID_2_DU "रिहाथाम\u{94d}",
-    "र\u{947}ळ\u{94d}हि" IMP_MID_2_PL "रीढ\u{94d}वम\u{94d}",
-    "र\u{947}ळ\u{94d}हि" IMP_MID_3_SG "रीळ\u{94d}हाम\u{94d}",
-    "र\u{947}ळ\u{94d}हि" IMP_MID_3_DU "रिहाताम\u{94d}",
-    "र\u{947}ळ\u{94d}हि" IMP_MID_3_PL "रिहताम\u{94d}",
-    "र\u{947}ळ\u{94d}हि" OPT_ACT_1_SG "रिह\u{94d}याम\u{94d}",
-    "र\u{947}ळ\u{94d}हि" OPT_ACT_1_DU "रिह\u{94d}याव",
-    "र\u{947}ळ\u{94d}हि" OPT_ACT_1_PL "रिह\u{94d}याम",
-    "र\u{947}ळ\u{94d}हि" OPT_ACT_2_SG "रिह\u{94d}याः",
-    "र\u{947}ळ\u{94d}हि" OPT_ACT_2_DU "रिह\u{94d}यातम\u{94d}",
-    "र\u{947}ळ\u{94d}हि" OPT_ACT_2_PL "रिह\u{94d}यात",
-    "र\u{947}ळ\u{94d}हि" OPT_ACT_3_SG "रिह\u{94d}यात\u{94d}",
-    "र\u{947}ळ\u{94d}हि" OPT_ACT_3_DU "रिह\u{94d}याताम\u{94d}",
-    "र\u{947}ळ\u{94d}हि" OPT_ACT_3_PL "रिह\u{94d}य\u{941}ः",
-    "र\u{947}ळ\u{94d}हि" OPT_MID_1_SG "रिहीय",
-    "र\u{947}ळ\u{94d}हि" OPT_MID_1_DU "रिहीवहि",
-    "र\u{947}ळ\u{94d}हि" OPT_MID_1_PL "रिहीमहि",
-    "र\u{947}ळ\u{94d}हि" OPT_MID_2_SG "रिहीथाः",
-    "र\u{947}ळ\u{94d}हि" OPT_MID_2_DU "रिहीयाथाम\u{94d}",
-    "र\u{947}ळ\u{94d}हि" OPT_MID_2_PL "रिहीध\u{94d}वम\u{94d}",
-    "र\u{947}ळ\u{94d}हि" OPT_MID_3_SG "रिहीत",
-    "र\u{947}ळ\u{94d}हि" OPT_MID_3_DU "रिहीयाताम\u{94d}",
-    "र\u{947}ळ\u{94d}हि" OPT_MID_3_PL "रिहीरन\u{94d}",
-    "र\u{947}ळ\u{94d}हि" SUBJ_ACT_1_SG "र\u{947}हाणि",
-    "र\u{947}ळ\u{94d}हि" SUBJ_ACT_1_DU "र\u{947}हाव",
-    "र\u{947}ळ\u{94d}हि" SUBJ_ACT_1_PL "र\u{947}हाम",
-    "र\u{947}ळ\u{94d}हि" SUBJ_ACT_2_SG "र\u{947}हः",
-    "र\u{947}ळ\u{94d}हि" SUBJ_ACT_2_DU "र\u{947}हथः",
-    "र\u{947}ळ\u{94d}हि" SUBJ_ACT_2_PL "र\u{947}हथ",
-    "र\u{947}ळ\u{94d}हि" SUBJ_ACT_3_SG "र\u{947}हत\u{94d}",
-    "र\u{947}ळ\u{94d}हि" SUBJ_ACT_3_DU "र\u{947}हतः",
-    "र\u{947}ळ\u{94d}हि" SUBJ_ACT_3_PL "र\u{947}हन\u{94d}",
-    "र\u{947}ळ\u{94d}हि" SUBJ_MID_1_SG "र\u{947}ह\u{948}",
-    "र\u{947}ळ\u{94d}हि" SUBJ_MID_1_DU "र\u{947}हावह\u{948}",
-    "र\u{947}ळ\u{94d}हि" SUBJ_MID_1_PL "र\u{947}हामह\u{948}",
-    "र\u{947}ळ\u{94d}हि" SUBJ_MID_2_SG "र\u{947}हस\u{947}",
-    "र\u{947}ळ\u{94d}हि" SUBJ_MID_2_DU "र\u{947}ह\u{948}थ\u{947}",
-    "र\u{947}ळ\u{94d}हि" SUBJ_MID_2_PL "र\u{947}हध\u{94d}व\u{947}",
-    "र\u{947}ळ\u{94d}हि" SUBJ_MID_3_SG "र\u{947}हत\u{947}",
-    "र\u{947}ळ\u{94d}हि" SUBJ_MID_3_DU "र\u{947}ह\u{948}त\u{947}",
-    "र\u{947}ळ\u{94d}हि" SUBJ_MID_3_PL "र\u{947}हन\u{94d}त",
-    "र\u{947}ळ\u{94d}हि" IMPERFECT_ACT_1_SG "अर\u{947}हम\u{94d}",
-    "र\u{947}ळ\u{94d}हि" IMPERFECT_ACT_1_DU "अरिह\u{94d}व",
-    "र\u{947}ळ\u{94d}हि" IMPERFECT_ACT_1_PL "अरिह\u{94d}म",
-    "र\u{947}ळ\u{94d}हि" IMPERFECT_ACT_2_SG "अर\u{947}ट\u{94d}",
-    "र\u{947}ळ\u{94d}हि" IMPERFECT_ACT_2_DU "अरीळ\u{94d}हम\u{94d}",
-    "र\u{947}ळ\u{94d}हि" IMPERFECT_ACT_2_PL "अरीळ\u{94d}ह",
-    "र\u{947}ळ\u{94d}हि" IMPERFECT_ACT_3_SG "अर\u{947}ट\u{94d}",
-    "र\u{947}ळ\u{94d}हि" IMPERFECT_ACT_3_DU "अरीळ\u{94d}हाम\u{94d}",
-    "र\u{947}ळ\u{94d}हि" IMPERFECT_ACT_3_PL "अरिहन\u{94d}",
-    "र\u{947}ळ\u{94d}हि" IMPERFECT_MID_1_SG "अरिहि",
-    "र\u{947}ळ\u{94d}हि" IMPERFECT_MID_1_DU "अरिह\u{94d}वहि",
-    "र\u{947}ळ\u{94d}हि" IMPERFECT_MID_1_PL "अरिह\u{94d}महि",
-    "र\u{947}ळ\u{94d}हि" IMPERFECT_MID_2_SG "अरीळ\u{94d}हाः",
-    "र\u{947}ळ\u{94d}हि" IMPERFECT_MID_2_DU "अरिहाथाम\u{94d}",
-    "र\u{947}ळ\u{94d}हि" IMPERFECT_MID_2_PL "अरीढ\u{94d}वम\u{94d}",
-    "र\u{947}ळ\u{94d}हि" IMPERFECT_MID_3_SG "अरीळ\u{94d}ह",
-    "र\u{947}ळ\u{94d}हि" IMPERFECT_MID_3_DU "अरिहाताम\u{94d}",
-    "र\u{947}ळ\u{94d}हि" IMPERFECT_MID_3_PL "अरिहत",
-    "र\u{947}ळ\u{94d}हि" PARTICIPLE_PRES_ACT "रिहत\u{94d}",
-    "र\u{947}ळ\u{94d}हि" PARTICIPLE_PRES_MID "रिहाण",
-    "रोदिति" IND_ACT_1_SG "रोदिमि",
-    "रोदिति" IND_ACT_1_DU "र\u{941}दिवः",
-    "रोदिति" IND_ACT_1_PL "र\u{941}दिमः",
-    "रोदिति" IND_ACT_2_SG "रोदिषि",
-    "रोदिति" IND_ACT_2_DU "र\u{941}दिथः",
-    "रोदिति" IND_ACT_2_PL "र\u{941}दिथ",
-    "रोदिति" IND_ACT_3_DU "र\u{941}दितः",
-    "रोदिति" IND_ACT_3_PL "र\u{941}दन\u{94d}ति",
-    "रोदिति" IND_MID_1_SG "र\u{941}द\u{947}",
-    "रोदिति" IND_MID_1_DU "र\u{941}दिवह\u{947}",
-    "रोदिति" IND_MID_1_PL "र\u{941}दिमह\u{947}",
-    "रोदिति" IND_MID_2_SG "र\u{941}दिष\u{947}",
-    "रोदिति" IND_MID_2_DU "र\u{941}दाथ\u{947}",
-    "रोदिति" IND_MID_2_PL "र\u{941}दिध\u{94d}व\u{947}",
-    "रोदिति" IND_MID_3_SG "र\u{941}दित\u{947}",
-    "रोदिति" IND_MID_3_DU "र\u{941}दात\u{947}",
-    "रोदिति" IND_MID_3_PL "र\u{941}दत\u{947}",
-    "रोदिति" IMP_ACT_1_SG "रोदानि",
-    "रोदिति" IMP_ACT_1_DU "रोदाव",
-    "रोदिति" IMP_ACT_1_PL "रोदाम",
-    "रोदिति" IMP_ACT_2_SG "र\u{941}दिहि",
-    "रोदिति" IMP_ACT_2_DU "र\u{941}दितम\u{94d}",
-    "रोदिति" IMP_ACT_2_PL "र\u{941}दित",
-    "रोदिति" IMP_ACT_3_DU "र\u{941}दिताम\u{94d}",
-    "रोदिति" IMP_ACT_3_PL "र\u{941}दन\u{94d}त\u{941}",
-    "रोदिति" IMP_MID_1_SG "रोद\u{948}",
-    "रोदिति" IMP_MID_1_DU "रोदावह\u{948}",
-    "रोदिति" IMP_MID_1_PL "रोदामह\u{948}",
-    "रोदिति" IMP_MID_2_SG "र\u{941}दिष\u{94d}व",
-    "रोदिति" IMP_MID_2_DU "र\u{941}दाथाम\u{94d}",
-    "रोदिति" IMP_MID_2_PL "र\u{941}दिध\u{94d}वम\u{94d}",
-    "रोदिति" IMP_MID_3_SG "र\u{941}दिताम\u{94d}",
-    "रोदिति" IMP_MID_3_DU "र\u{941}दाताम\u{94d}",
-    "रोदिति" IMP_MID_3_PL "र\u{941}दताम\u{94d}",
-    "रोदिति" OPT_ACT_1_SG "र\u{941}द\u{94d}याम\u{94d}",
-    "रोदिति" OPT_ACT_1_DU "र\u{941}द\u{94d}याव",
-    "रोदिति" OPT_ACT_1_PL "र\u{941}द\u{94d}याम",
-    "रोदिति" OPT_ACT_2_SG "र\u{941}द\u{94d}याः",
-    "रोदिति" OPT_ACT_2_DU "र\u{941}द\u{94d}यातम\u{94d}",
-    "रोदिति" OPT_ACT_2_PL "र\u{941}द\u{94d}यात",
-    "रोदिति" OPT_ACT_3_SG "र\u{941}द\u{94d}यात\u{94d}",
-    "रोदिति" OPT_ACT_3_DU "र\u{941}द\u{94d}याताम\u{94d}",
-    "रोदिति" OPT_ACT_3_PL "र\u{941}द\u{94d}य\u{941}ः",
-    "रोदिति" OPT_MID_1_SG "र\u{941}दीय",
-    "रोदिति" OPT_MID_1_DU "र\u{941}दीवहि",
-    "रोदिति" OPT_MID_1_PL "र\u{941}दीमहि",
-    "रोदिति" OPT_MID_2_SG "र\u{941}दीथाः",
-    "रोदिति" OPT_MID_2_DU "र\u{941}दीयाथाम\u{94d}",
-    "रोदिति" OPT_MID_2_PL "र\u{941}दीध\u{94d}वम\u{94d}",
-    "रोदिति" OPT_MID_3_SG "र\u{941}दीत",
-    "रोदिति" OPT_MID_3_DU "र\u{941}दीयाताम\u{94d}",
-    "रोदिति" OPT_MID_3_PL "र\u{941}दीरन\u{94d}",
-    "रोदिति" SUBJ_ACT_1_SG "रोदानि",
-    "रोदिति" SUBJ_ACT_1_DU "रोदाव",
-    "रोदिति" SUBJ_ACT_1_PL "रोदाम",
-    "रोदिति" SUBJ_ACT_2_SG "रोदः",
-    "रोदिति" SUBJ_ACT_2_DU "रोदथः",
-    "रोदिति" SUBJ_ACT_2_PL "रोदथ",
-    "रोदिति" SUBJ_ACT_3_SG "रोदत\u{94d}",
-    "रोदिति" SUBJ_ACT_3_DU "रोदतः",
-    "रोदिति" SUBJ_ACT_3_PL "रोदन\u{94d}",
-    "रोदिति" SUBJ_MID_1_SG "रोद\u{948}",
-    "रोदिति" SUBJ_MID_1_DU "रोदावह\u{948}",
-    "रोदिति" SUBJ_MID_1_PL "रोदामह\u{948}",
-    "रोदिति" SUBJ_MID_2_SG "रोदस\u{947}",
-    "रोदिति" SUBJ_MID_2_DU "रोद\u{948}थ\u{947}",
-    "रोदिति" SUBJ_MID_2_PL "रोदध\u{94d}व\u{947}",
-    "रोदिति" SUBJ_MID_3_SG "रोदत\u{947}",
-    "रोदिति" SUBJ_MID_3_DU "रोद\u{948}त\u{947}",
-    "रोदिति" SUBJ_MID_3_PL "रोदन\u{94d}त",
-    "रोदिति" IMPERFECT_ACT_1_SG "अरोदम\u{94d}",
-    "रोदिति" IMPERFECT_ACT_1_DU "अर\u{941}दिव",
-    "रोदिति" IMPERFECT_ACT_1_PL "अर\u{941}दिम",
-    "रोदिति" IMPERFECT_ACT_2_SG "अरोदीः",
-    "रोदिति" IMPERFECT_ACT_2_DU "अर\u{941}दितम\u{94d}",
-    "रोदिति" IMPERFECT_ACT_2_PL "अर\u{941}दित",
-    "रोदिति" IMPERFECT_ACT_3_SG "अरोदीत\u{94d}",
-    "रोदिति" IMPERFECT_ACT_3_DU "अर\u{941}दिताम\u{94d}",
-    "रोदिति" IMPERFECT_ACT_3_PL "अर\u{941}दन\u{94d}",
-    "रोदिति" IMPERFECT_MID_1_SG "अर\u{941}दि",
-    "रोदिति" IMPERFECT_MID_1_DU "अर\u{941}दिवहि",
-    "रोदिति" IMPERFECT_MID_1_PL "अर\u{941}दिमहि",
-    "रोदिति" IMPERFECT_MID_2_SG "अर\u{941}दिथाः",
-    "रोदिति" IMPERFECT_MID_2_DU "अर\u{941}दाथाम\u{94d}",
-    "रोदिति" IMPERFECT_MID_2_PL "अर\u{941}दिध\u{94d}वम\u{94d}",
-    "रोदिति" IMPERFECT_MID_3_SG "अर\u{941}दित",
-    "रोदिति" IMPERFECT_MID_3_DU "अर\u{941}दाताम\u{94d}",
-    "रोदिति" IMPERFECT_MID_3_PL "अर\u{941}दत",
-    "रोदिति" PARTICIPLE_PRES_ACT "र\u{941}दत\u{94d}",
-    "रोदिति" PARTICIPLE_PRES_MID "र\u{941}दान",
-    "रोरवीति" IND_ACT_1_SG "रोरवीमि",
-    "रोरवीति" IND_ACT_1_DU "रोर\u{941}वः",
-    "रोरवीति" IND_ACT_1_PL "रोर\u{941}मः",
-    "रोरवीति" IND_ACT_2_SG "रोरवीषि",
-    "रोरवीति" IND_ACT_2_DU "रोर\u{941}थः",
-    "रोरवीति" IND_ACT_2_PL "रोर\u{941}थ",
-    "रोरवीति" IND_ACT_3_DU "रोर\u{941}तः",
-    "रोरवीति" IND_ACT_3_PL "रोर\u{941}वति",
-    "रोरवीति" IMP_ACT_1_SG "रोरवाणि",
-    "रोरवीति" IMP_ACT_1_DU "रोरवाव",
-    "रोरवीति" IMP_ACT_1_PL "रोरवाम",
-    "रोरवीति" IMP_ACT_2_SG "रोर\u{941}हि",
-    "रोरवीति" IMP_ACT_2_DU "रोर\u{941}तम\u{94d}",
-    "रोरवीति" IMP_ACT_2_PL "रोर\u{941}त",
-    "रोरवीति" IMP_ACT_3_DU "रोर\u{941}ताम\u{94d}",
-    "रोरवीति" IMP_ACT_3_PL "रोर\u{941}वत\u{941}",
-    "रोरवीति" OPT_ACT_1_SG "रोर\u{941}याम\u{94d}",
-    "रोरवीति" OPT_ACT_1_DU "रोर\u{941}याव",
-    "रोरवीति" OPT_ACT_1_PL "रोर\u{941}याम",
-    "रोरवीति" OPT_ACT_2_SG "रोर\u{941}याः",
-    "रोरवीति" OPT_ACT_2_DU "रोर\u{941}यातम\u{94d}",
-    "रोरवीति" OPT_ACT_2_PL "रोर\u{941}यात",
-    "रोरवीति" OPT_ACT_3_SG "रोर\u{941}यात\u{94d}",
-    "रोरवीति" OPT_ACT_3_DU "रोर\u{941}याताम\u{94d}",
-    "रोरवीति" OPT_ACT_3_PL "रोर\u{941}य\u{941}ः",
-    "रोरवीति" SUBJ_ACT_1_SG "रोरवाणि",
-    "रोरवीति" SUBJ_ACT_1_DU "रोरवाव",
-    "रोरवीति" SUBJ_ACT_1_PL "रोरवाम",
-    "रोरवीति" SUBJ_ACT_2_SG "रोरवः",
-    "रोरवीति" SUBJ_ACT_2_DU "रोरवथः",
-    "रोरवीति" SUBJ_ACT_2_PL "रोरवथ",
-    "रोरवीति" SUBJ_ACT_3_SG "रोरवत\u{94d}",
-    "रोरवीति" SUBJ_ACT_3_DU "रोरवतः",
-    "रोरवीति" SUBJ_ACT_3_PL "रोरवन\u{94d}",
-    "रोरवीति" IMPERFECT_ACT_1_SG "अरोरवम\u{94d}",
-    "रोरवीति" IMPERFECT_ACT_1_DU "अरोर\u{941}व",
-    "रोरवीति" IMPERFECT_ACT_1_PL "अरोर\u{941}म",
-    "रोरवीति" IMPERFECT_ACT_2_DU "अरोर\u{941}तम\u{94d}",
-    "रोरवीति" IMPERFECT_ACT_2_PL "अरोर\u{941}त",
-    "रोरवीति" IMPERFECT_ACT_3_DU "अरोर\u{941}ताम\u{94d}",
-    "रोरवीति" IMPERFECT_ACT_3_PL "अरोरव\u{941}ः",
-    "रोरवीति" PARTICIPLE_PRES_ACT "रोर\u{941}वत\u{94d}",
-    "रौति" IND_ACT_1_SG "रौमि",
-    "रौति" IND_ACT_1_DU "र\u{941}वः",
-    "रौति" IND_ACT_1_PL "र\u{941}मः",
-    "रौति" IND_ACT_2_SG "रौषि",
-    "रौति" IND_ACT_2_DU "र\u{941}थः",
-    "रौति" IND_ACT_2_PL "र\u{941}थ",
-    "रौति" IND_ACT_3_DU "र\u{941}तः",
-    "रौति" IND_ACT_3_PL "र\u{941}वन\u{94d}ति",
-    "रौति" IMP_ACT_1_SG "रवाणि",
-    "रौति" IMP_ACT_1_DU "रवाव",
-    "रौति" IMP_ACT_1_PL "रवाम",
-    "रौति" IMP_ACT_2_SG "र\u{941}हि",
-    "रौति" IMP_ACT_2_DU "र\u{941}तम\u{94d}",
-    "रौति" IMP_ACT_2_PL "र\u{941}त",
-    "रौति" IMP_ACT_3_DU "र\u{941}ताम\u{94d}",
-    "रौति" IMP_ACT_3_PL "र\u{941}वन\u{94d}त\u{941}",
-    "रौति" OPT_ACT_1_SG "र\u{941}याम\u{94d}",
-    "रौति" OPT_ACT_1_DU "र\u{941}याव",
-    "रौति" OPT_ACT_1_PL "र\u{941}याम",
-    "रौति" OPT_ACT_2_SG "र\u{941}याः",
-    "रौति" OPT_ACT_2_DU "र\u{941}यातम\u{94d}",
-    "रौति" OPT_ACT_2_PL "र\u{941}यात",
-    "रौति" OPT_ACT_3_SG "र\u{941}यात\u{94d}",
-    "रौति" OPT_ACT_3_DU "र\u{941}याताम\u{94d}",
-    "रौति" OPT_ACT_3_PL "र\u{941}य\u{941}ः",
-    "रौति" SUBJ_ACT_1_SG "रवाणि",
-    "रौति" SUBJ_ACT_1_DU "रवाव",
-    "रौति" SUBJ_ACT_1_PL "रवाम",
-    "रौति" SUBJ_ACT_2_SG "रवः",
-    "रौति" SUBJ_ACT_2_DU "रवथः",
-    "रौति" SUBJ_ACT_2_PL "रवथ",
-    "रौति" SUBJ_ACT_3_SG "रवत\u{94d}",
-    "रौति" SUBJ_ACT_3_DU "रवतः",
-    "रौति" SUBJ_ACT_3_PL "रवन\u{94d}",
-    "रौति" IMPERFECT_ACT_1_SG "अरवम\u{94d}",
-    "रौति" IMPERFECT_ACT_1_DU "अर\u{941}व",
-    "रौति" IMPERFECT_ACT_1_PL "अर\u{941}म",
-    "रौति" IMPERFECT_ACT_2_DU "अर\u{941}तम\u{94d}",
-    "रौति" IMPERFECT_ACT_2_PL "अर\u{941}त",
-    "रौति" IMPERFECT_ACT_3_DU "अर\u{941}ताम\u{94d}",
-    "रौति" IMPERFECT_ACT_3_PL "अर\u{941}वन\u{94d}",
-    "रौति" PARTICIPLE_PRES_ACT "र\u{941}वत\u{94d}",
-    "लिल\u{947}ख" PERFECT_ACT_1_DU "लिलिखिव",
-    "लिल\u{947}ख" PERFECT_ACT_1_PL "लिलिखिम",
-    "लिल\u{947}ख" PERFECT_ACT_2_DU "लिलिखथ\u{941}ः",
-    "लिल\u{947}ख" PERFECT_ACT_2_PL "लिलिख",
-    "लिल\u{947}ख" PERFECT_ACT_3_DU "लिलिखत\u{941}ः",
-    "लिल\u{947}ख" PERFECT_ACT_3_PL "लिलिख\u{941}ः",
-    "लिल\u{947}ख" PARTICIPLE_PERF_ACT "लिलिख\u{94d}वा\u{902}स\u{94d}",
-    "ल\u{947}ढि" IND_ACT_1_SG "ल\u{947}ह\u{94d}मि",
-    "ल\u{947}ढि" IND_ACT_1_DU "लिह\u{94d}वः",
-    "ल\u{947}ढि" IND_ACT_1_PL "लिह\u{94d}मः",
-    "ल\u{947}ढि" IND_ACT_2_SG "ल\u{947}क\u{94d}षि",
-    "ल\u{947}ढि" IND_ACT_2_DU "लीढः",
-    "ल\u{947}ढि" IND_ACT_2_PL "लीढ",
-    "ल\u{947}ढि" IND_ACT_3_SG "ल\u{947}ढि",
-    "ल\u{947}ढि" IND_ACT_3_DU "लीढः",
-    "ल\u{947}ढि" IND_ACT_3_PL "लिहन\u{94d}ति",
-    "ल\u{947}ढि" IND_MID_1_SG "लिह\u{947}",
-    "ल\u{947}ढि" IND_MID_1_DU "लिह\u{94d}वह\u{947}",
-    "ल\u{947}ढि" IND_MID_1_PL "लिह\u{94d}मह\u{947}",
-    "ल\u{947}ढि" IND_MID_2_SG "लिक\u{94d}ष\u{947}",
-    "ल\u{947}ढि" IND_MID_2_DU "लिहाथ\u{947}",
-    "ल\u{947}ढि" IND_MID_2_PL "लीढ\u{94d}व\u{947}",
-    "ल\u{947}ढि" IND_MID_3_SG "लीढ\u{947}",
-    "ल\u{947}ढि" IND_MID_3_DU "लिहात\u{947}",
-    "ल\u{947}ढि" IND_MID_3_PL "लिहत\u{947}",
-    "ल\u{947}ढि" IMP_ACT_1_SG "ल\u{947}हानि",
-    "ल\u{947}ढि" IMP_ACT_1_DU "ल\u{947}हाव",
-    "ल\u{947}ढि" IMP_ACT_1_PL "ल\u{947}हाम",
-    "ल\u{947}ढि" IMP_ACT_2_SG "लीढि",
-    "ल\u{947}ढि" IMP_ACT_2_DU "लीढम\u{94d}",
-    "ल\u{947}ढि" IMP_ACT_2_PL "लीढ",
-    "ल\u{947}ढि" IMP_ACT_3_SG "ल\u{947}ढ\u{941}",
-    "ल\u{947}ढि" IMP_ACT_3_DU "लीढाम\u{94d}",
-    "ल\u{947}ढि" IMP_ACT_3_PL "लिहन\u{94d}त\u{941}",
-    "ल\u{947}ढि" IMP_MID_1_SG "ल\u{947}ह\u{948}",
-    "ल\u{947}ढि" IMP_MID_1_DU "ल\u{947}हावह\u{948}",
-    "ल\u{947}ढि" IMP_MID_1_PL "ल\u{947}हामह\u{948}",
-    "ल\u{947}ढि" IMP_MID_2_SG "लिक\u{94d}ष\u{94d}व",
-    "ल\u{947}ढि" IMP_MID_2_DU "लिहाथाम\u{94d}",
-    "ल\u{947}ढि" IMP_MID_2_PL "लीढ\u{94d}वम\u{94d}",
-    "ल\u{947}ढि" IMP_MID_3_SG "लीढाम\u{94d}",
-    "ल\u{947}ढि" IMP_MID_3_DU "लिहाताम\u{94d}",
-    "ल\u{947}ढि" IMP_MID_3_PL "लिहताम\u{94d}",
-    "ल\u{947}ढि" OPT_ACT_1_SG "लिह\u{94d}याम\u{94d}",
-    "ल\u{947}ढि" OPT_ACT_1_DU "लिह\u{94d}याव",
-    "ल\u{947}ढि" OPT_ACT_1_PL "लिह\u{94d}याम",
-    "ल\u{947}ढि" OPT_ACT_2_SG "लिह\u{94d}याः",
-    "ल\u{947}ढि" OPT_ACT_2_DU "लिह\u{94d}यातम\u{94d}",
-    "ल\u{947}ढि" OPT_ACT_2_PL "लिह\u{94d}यात",
-    "ल\u{947}ढि" OPT_ACT_3_SG "लिह\u{94d}यात\u{94d}",
-    "ल\u{947}ढि" OPT_ACT_3_DU "लिह\u{94d}याताम\u{94d}",
-    "ल\u{947}ढि" OPT_ACT_3_PL "लिह\u{94d}य\u{941}ः",
-    "ल\u{947}ढि" OPT_MID_1_SG "लिहीय",
-    "ल\u{947}ढि" OPT_MID_1_DU "लिहीवहि",
-    "ल\u{947}ढि" OPT_MID_1_PL "लिहीमहि",
-    "ल\u{947}ढि" OPT_MID_2_SG "लिहीथाः",
-    "ल\u{947}ढि" OPT_MID_2_DU "लिहीयाथाम\u{94d}",
-    "ल\u{947}ढि" OPT_MID_2_PL "लिहीध\u{94d}वम\u{94d}",
-    "ल\u{947}ढि" OPT_MID_3_SG "लिहीत",
-    "ल\u{947}ढि" OPT_MID_3_DU "लिहीयाताम\u{94d}",
-    "ल\u{947}ढि" OPT_MID_3_PL "लिहीरन\u{94d}",
-    "ल\u{947}ढि" SUBJ_ACT_1_SG "ल\u{947}हानि",
-    "ल\u{947}ढि" SUBJ_ACT_1_DU "ल\u{947}हाव",
-    "ल\u{947}ढि" SUBJ_ACT_1_PL "ल\u{947}हाम",
-    "ल\u{947}ढि" SUBJ_ACT_2_SG "ल\u{947}हः",
-    "ल\u{947}ढि" SUBJ_ACT_2_DU "ल\u{947}हथः",
-    "ल\u{947}ढि" SUBJ_ACT_2_PL "ल\u{947}हथ",
-    "ल\u{947}ढि" SUBJ_ACT_3_SG "ल\u{947}हत\u{94d}",
-    "ल\u{947}ढि" SUBJ_ACT_3_DU "ल\u{947}हतः",
-    "ल\u{947}ढि" SUBJ_ACT_3_PL "ल\u{947}हन\u{94d}",
-    "ल\u{947}ढि" SUBJ_MID_1_SG "ल\u{947}ह\u{948}",
-    "ल\u{947}ढि" SUBJ_MID_1_DU "ल\u{947}हावह\u{948}",
-    "ल\u{947}ढि" SUBJ_MID_1_PL "ल\u{947}हामह\u{948}",
-    "ल\u{947}ढि" SUBJ_MID_2_SG "ल\u{947}हस\u{947}",
-    "ल\u{947}ढि" SUBJ_MID_2_DU "ल\u{947}ह\u{948}थ\u{947}",
-    "ल\u{947}ढि" SUBJ_MID_2_PL "ल\u{947}हध\u{94d}व\u{947}",
-    "ल\u{947}ढि" SUBJ_MID_3_SG "ल\u{947}हत\u{947}",
-    "ल\u{947}ढि" SUBJ_MID_3_DU "ल\u{947}ह\u{948}त\u{947}",
-    "ल\u{947}ढि" SUBJ_MID_3_PL "ल\u{947}हन\u{94d}त",
-    "ल\u{947}ढि" IMPERFECT_ACT_1_SG "अल\u{947}हम\u{94d}",
-    "ल\u{947}ढि" IMPERFECT_ACT_1_DU "अलिह\u{94d}व",
-    "ल\u{947}ढि" IMPERFECT_ACT_1_PL "अलिह\u{94d}म",
-    "ल\u{947}ढि" IMPERFECT_ACT_2_SG "अल\u{947}ट\u{94d}",
-    "ल\u{947}ढि" IMPERFECT_ACT_2_DU "अलीढम\u{94d}",
-    "ल\u{947}ढि" IMPERFECT_ACT_2_PL "अलीढ",
-    "ल\u{947}ढि" IMPERFECT_ACT_3_SG "अल\u{947}ट\u{94d}",
-    "ल\u{947}ढि" IMPERFECT_ACT_3_DU "अलीढाम\u{94d}",
-    "ल\u{947}ढि" IMPERFECT_ACT_3_PL "अलिहन\u{94d}",
-    "ल\u{947}ढि" IMPERFECT_MID_1_SG "अलिहि",
-    "ल\u{947}ढि" IMPERFECT_MID_1_DU "अलिह\u{94d}वहि",
-    "ल\u{947}ढि" IMPERFECT_MID_1_PL "अलिह\u{94d}महि",
-    "ल\u{947}ढि" IMPERFECT_MID_2_SG "अलीढाः",
-    "ल\u{947}ढि" IMPERFECT_MID_2_DU "अलिहाथाम\u{94d}",
-    "ल\u{947}ढि" IMPERFECT_MID_2_PL "अलीढ\u{94d}वम\u{94d}",
-    "ल\u{947}ढि" IMPERFECT_MID_3_SG "अलीढ",
-    "ल\u{947}ढि" IMPERFECT_MID_3_DU "अलिहाताम\u{94d}",
-    "ल\u{947}ढि" IMPERFECT_MID_3_PL "अलिहत",
-    "ल\u{947}ढि" FUTURE_ACT_1_SG "ल\u{947}क\u{94d}ष\u{94d}यामि",
-    "ल\u{947}ढि" FUTURE_ACT_1_DU "ल\u{947}क\u{94d}ष\u{94d}यावः",
-    "ल\u{947}ढि" FUTURE_ACT_1_PL "ल\u{947}क\u{94d}ष\u{94d}यामः",
-    "ल\u{947}ढि" FUTURE_ACT_2_SG "ल\u{947}क\u{94d}ष\u{94d}यसि",
-    "ल\u{947}ढि" FUTURE_ACT_2_DU "ल\u{947}क\u{94d}ष\u{94d}यथः",
-    "ल\u{947}ढि" FUTURE_ACT_2_PL "ल\u{947}क\u{94d}ष\u{94d}यथ",
-    "ल\u{947}ढि" FUTURE_ACT_3_SG "ल\u{947}क\u{94d}ष\u{94d}यति",
-    "ल\u{947}ढि" FUTURE_ACT_3_DU "ल\u{947}क\u{94d}ष\u{94d}यतः",
-    "ल\u{947}ढि" FUTURE_ACT_3_PL "ल\u{947}क\u{94d}ष\u{94d}यन\u{94d}ति",
-    "ल\u{947}ढि" FUTURE_MID_1_SG "ल\u{947}क\u{94d}ष\u{94d}य\u{947}",
-    "ल\u{947}ढि" FUTURE_MID_1_DU "ल\u{947}क\u{94d}ष\u{94d}यावह\u{947}",
-    "ल\u{947}ढि" FUTURE_MID_1_PL "ल\u{947}क\u{94d}ष\u{94d}यामह\u{947}",
-    "ल\u{947}ढि" FUTURE_MID_2_SG "ल\u{947}क\u{94d}ष\u{94d}यस\u{947}",
-    "ल\u{947}ढि" FUTURE_MID_2_DU "ल\u{947}क\u{94d}ष\u{94d}य\u{947}थ\u{947}",
-    "ल\u{947}ढि" FUTURE_MID_2_PL "ल\u{947}क\u{94d}ष\u{94d}यध\u{94d}व\u{947}",
-    "ल\u{947}ढि" FUTURE_MID_3_SG "ल\u{947}क\u{94d}ष\u{94d}यत\u{947}",
-    "ल\u{947}ढि" FUTURE_MID_3_DU "ल\u{947}क\u{94d}ष\u{94d}य\u{947}त\u{947}",
-    "ल\u{947}ढि" FUTURE_MID_3_PL "ल\u{947}क\u{94d}ष\u{94d}यन\u{94d}त\u{947}",
-    "ल\u{947}ढि" CONDITIONAL_ACT_1_SG "अल\u{947}क\u{94d}ष\u{94d}यम\u{94d}",
-    "ल\u{947}ढि" CONDITIONAL_ACT_1_DU "अल\u{947}क\u{94d}ष\u{94d}याव",
-    "ल\u{947}ढि" CONDITIONAL_ACT_1_PL "अल\u{947}क\u{94d}ष\u{94d}याम",
-    "ल\u{947}ढि" CONDITIONAL_ACT_2_SG "अल\u{947}क\u{94d}ष\u{94d}यः",
-    "ल\u{947}ढि" CONDITIONAL_ACT_2_DU "अल\u{947}क\u{94d}ष\u{94d}यतम\u{94d}",
-    "ल\u{947}ढि" CONDITIONAL_ACT_2_PL "अल\u{947}क\u{94d}ष\u{94d}यत",
-    "ल\u{947}ढि" CONDITIONAL_ACT_3_SG "अल\u{947}क\u{94d}ष\u{94d}यत\u{94d}",
-    "ल\u{947}ढि" CONDITIONAL_ACT_3_DU "अल\u{947}क\u{94d}ष\u{94d}यताम\u{94d}",
-    "ल\u{947}ढि" CONDITIONAL_ACT_3_PL "अल\u{947}क\u{94d}ष\u{94d}यन\u{94d}",
-    "ल\u{947}ढि" CONDITIONAL_MID_1_SG "अल\u{947}क\u{94d}ष\u{94d}य\u{947}",
-    "ल\u{947}ढि" CONDITIONAL_MID_1_DU "अल\u{947}क\u{94d}ष\u{94d}यावहि",
-    "ल\u{947}ढि" CONDITIONAL_MID_1_PL "अल\u{947}क\u{94d}ष\u{94d}यामहि",
-    "ल\u{947}ढि" CONDITIONAL_MID_2_SG "अल\u{947}क\u{94d}ष\u{94d}यथाः",
-    "ल\u{947}ढि" CONDITIONAL_MID_2_DU "अल\u{947}क\u{94d}ष\u{94d}य\u{947}थाम\u{94d}",
-    "ल\u{947}ढि" CONDITIONAL_MID_2_PL "अल\u{947}क\u{94d}ष\u{94d}यध\u{94d}वम\u{94d}",
-    "ल\u{947}ढि" CONDITIONAL_MID_3_SG "अल\u{947}क\u{94d}ष\u{94d}यत",
-    "ल\u{947}ढि" CONDITIONAL_MID_3_DU "अल\u{947}क\u{94d}ष\u{94d}य\u{947}ताम\u{94d}",
-    "ल\u{947}ढि" CONDITIONAL_MID_3_PL "अल\u{947}क\u{94d}ष\u{94d}यन\u{94d}त",
-    "ल\u{947}ढि" PERFECT_ACT_1_SG "लिल\u{947}ह",
-    "ल\u{947}ढि" PERFECT_ACT_1_DU "लिलिहिव",
-    "ल\u{947}ढि" PERFECT_ACT_1_PL "लिलिहिम",
-    "ल\u{947}ढि" PERFECT_ACT_2_SG "लिल\u{947}हिथ",
-    "ल\u{947}ढि" PERFECT_ACT_2_DU "लिलिहथ\u{941}ः",
-    "ल\u{947}ढि" PERFECT_ACT_2_PL "लिलिह",
-    "ल\u{947}ढि" PERFECT_ACT_3_SG "लिल\u{947}ह",
-    "ल\u{947}ढि" PERFECT_ACT_3_DU "लिलिहत\u{941}ः",
-    "ल\u{947}ढि" PERFECT_ACT_3_PL "लिलिह\u{941}ः",
-    "ल\u{947}ढि" PERFECT_MID_1_SG "लिलिह\u{947}",
-    "ल\u{947}ढि" PERFECT_MID_1_DU "लिलिहिवह\u{947}",
-    "ल\u{947}ढि" PERFECT_MID_1_PL "लिलिहिमह\u{947}",
-    "ल\u{947}ढि" PERFECT_MID_2_SG "लिलिहिष\u{947}",
-    "ल\u{947}ढि" PERFECT_MID_2_DU "लिलिहाथ\u{947}",
-    "ल\u{947}ढि" PERFECT_MID_2_PL "लिलिहिध\u{94d}व\u{947}",
-    "ल\u{947}ढि" PERFECT_MID_3_SG "लिलिह\u{947}",
-    "ल\u{947}ढि" PERFECT_MID_3_DU "लिलिहात\u{947}",
-    "ल\u{947}ढि" PERFECT_MID_3_PL "लिलिहिर\u{947}",
-    "ल\u{947}ढि" AORIST_ACT_1_SG "अलिक\u{94d}षम\u{94d}",
-    "ल\u{947}ढि" AORIST_ACT_1_DU "अलिक\u{94d}षाव",
-    "ल\u{947}ढि" AORIST_ACT_1_PL "अलिक\u{94d}षाम",
-    "ल\u{947}ढि" AORIST_ACT_2_SG "अलिक\u{94d}षः",
-    "ल\u{947}ढि" AORIST_ACT_2_DU "अलिक\u{94d}षतम\u{94d}",
-    "ल\u{947}ढि" AORIST_ACT_2_PL "अलिक\u{94d}षत",
-    "ल\u{947}ढि" AORIST_ACT_3_SG "अलिक\u{94d}षत\u{94d}",
-    "ल\u{947}ढि" AORIST_ACT_3_DU "अलिक\u{94d}षताम\u{94d}",
-    "ल\u{947}ढि" AORIST_ACT_3_PL "अलिक\u{94d}षन\u{94d}",
-    "ल\u{947}ढि" AORIST_MID_1_SG "अलिक\u{94d}षि",
-    "ल\u{947}ढि" AORIST_MID_1_DU "अलिक\u{94d}षावहि",
-    "ल\u{947}ढि" AORIST_MID_1_PL "अलिक\u{94d}षामहि",
-    "ल\u{947}ढि" AORIST_MID_2_SG "अलिक\u{94d}षथाः",
-    "ल\u{947}ढि" AORIST_MID_2_DU "अलिक\u{94d}षाथाम\u{94d}",
-    "ल\u{947}ढि" AORIST_MID_2_PL "अलिक\u{94d}षध\u{94d}वम\u{94d}",
-    "ल\u{947}ढि" AORIST_MID_3_SG "अलिक\u{94d}षत",
-    "ल\u{947}ढि" AORIST_MID_3_DU "अलिक\u{94d}षाताम\u{94d}",
-    "ल\u{947}ढि" AORIST_MID_3_PL "अलिक\u{94d}षन\u{94d}त",
-    "ल\u{947}ढि" INFINITIVE "ल\u{947}ढ\u{941}म\u{94d}",
-    "ल\u{947}ढि" GERUND "लीढ\u{94d}वा",
-    "ल\u{947}ढि" PARTICIPLE_PRES_ACT "लिहत\u{94d}",
-    "ल\u{947}ढि" PARTICIPLE_PRES_MID "लिहान",
-    "ल\u{947}ढि" PARTICIPLE_FUT_ACT "ल\u{947}क\u{94d}ष\u{94d}यत\u{94d}",
-    "ल\u{947}ढि" PARTICIPLE_FUT_MID "ल\u{947}क\u{94d}ष\u{94d}यमाण",
-    "ल\u{947}ढि" PARTICIPLE_PERF_ACT "लिलिह\u{94d}वा\u{902}स\u{94d}",
-    "ल\u{947}ढि" PARTICIPLE_PERF_MID "लिलिहान",
-    "वक\u{94d}ति" IND_ACT_1_SG "वच\u{94d}मि",
-    "वक\u{94d}ति" IND_ACT_1_DU "वच\u{94d}वः",
-    "वक\u{94d}ति" IND_ACT_1_PL "वच\u{94d}मः",
-    "वक\u{94d}ति" IND_ACT_2_SG "वक\u{94d}षि",
-    "वक\u{94d}ति" IND_ACT_3_PL "वचन\u{94d}ति",
-    "वक\u{94d}ति" IND_MID_1_SG "वच\u{947}",
-    "वक\u{94d}ति" IND_MID_1_DU "वच\u{94d}वह\u{947}",
-    "वक\u{94d}ति" IND_MID_1_PL "वच\u{94d}मह\u{947}",
-    "वक\u{94d}ति" IND_MID_2_SG "वक\u{94d}ष\u{947}",
-    "वक\u{94d}ति" IND_MID_2_DU "वचाथ\u{947}",
-    "वक\u{94d}ति" IND_MID_2_PL "वग\u{94d}ध\u{94d}व\u{947}",
-    "वक\u{94d}ति" IND_MID_3_DU "वचात\u{947}",
-    "वक\u{94d}ति" IND_MID_3_PL "वचत\u{947}",
-    "वक\u{94d}ति" IMP_ACT_1_SG "वचानि",
-    "वक\u{94d}ति" IMP_ACT_1_DU "वचाव",
-    "वक\u{94d}ति" IMP_ACT_1_PL "वचाम",
-    "वक\u{94d}ति" IMP_ACT_2_SG "वग\u{94d}धि",
-    "वक\u{94d}ति" IMP_ACT_3_PL "वचन\u{94d}त\u{941}",
-    "वक\u{94d}ति" IMP_MID_1_SG "वच\u{948}",
-    "वक\u{94d}ति" IMP_MID_1_DU "वचावह\u{948}",
-    "वक\u{94d}ति" IMP_MID_1_PL "वचामह\u{948}",
-    "वक\u{94d}ति" IMP_MID_2_SG "वक\u{94d}ष\u{94d}व",
-    "वक\u{94d}ति" IMP_MID_2_DU "वचाथाम\u{94d}",
-    "वक\u{94d}ति" IMP_MID_2_PL "वग\u{94d}ध\u{94d}वम\u{94d}",
-    "वक\u{94d}ति" IMP_MID_3_DU "वचाताम\u{94d}",
-    "वक\u{94d}ति" IMP_MID_3_PL "वचताम\u{94d}",
-    "वक\u{94d}ति" OPT_ACT_1_SG "वच\u{94d}याम\u{94d}",
-    "वक\u{94d}ति" OPT_ACT_1_DU "वच\u{94d}याव",
-    "वक\u{94d}ति" OPT_ACT_1_PL "वच\u{94d}याम",
-    "वक\u{94d}ति" OPT_ACT_2_SG "वच\u{94d}याः",
-    "वक\u{94d}ति" OPT_ACT_2_DU "वच\u{94d}यातम\u{94d}",
-    "वक\u{94d}ति" OPT_ACT_2_PL "वच\u{94d}यात",
-    "वक\u{94d}ति" OPT_ACT_3_SG "वच\u{94d}यात\u{94d}",
-    "वक\u{94d}ति" OPT_ACT_3_DU "वच\u{94d}याताम\u{94d}",
-    "वक\u{94d}ति" OPT_ACT_3_PL "वच\u{94d}य\u{941}ः",
-    "वक\u{94d}ति" OPT_MID_1_SG "वचीय",
-    "वक\u{94d}ति" OPT_MID_1_DU "वचीवहि",
-    "वक\u{94d}ति" OPT_MID_1_PL "वचीमहि",
-    "वक\u{94d}ति" OPT_MID_2_SG "वचीथाः",
-    "वक\u{94d}ति" OPT_MID_2_DU "वचीयाथाम\u{94d}",
-    "वक\u{94d}ति" OPT_MID_2_PL "वचीध\u{94d}वम\u{94d}",
-    "वक\u{94d}ति" OPT_MID_3_SG "वचीत",
-    "वक\u{94d}ति" OPT_MID_3_DU "वचीयाताम\u{94d}",
-    "वक\u{94d}ति" OPT_MID_3_PL "वचीरन\u{94d}",
-    "वक\u{94d}ति" SUBJ_ACT_1_SG "वचानि",
-    "वक\u{94d}ति" SUBJ_ACT_1_DU "वचाव",
-    "वक\u{94d}ति" SUBJ_ACT_1_PL "वचाम",
-    "वक\u{94d}ति" SUBJ_ACT_2_SG "वचः",
-    "वक\u{94d}ति" SUBJ_ACT_2_DU "वचथः",
-    "वक\u{94d}ति" SUBJ_ACT_2_PL "वचथ",
-    "वक\u{94d}ति" SUBJ_ACT_3_SG "वचत\u{94d}",
-    "वक\u{94d}ति" SUBJ_ACT_3_DU "वचतः",
-    "वक\u{94d}ति" SUBJ_ACT_3_PL "वचन\u{94d}",
-    "वक\u{94d}ति" SUBJ_MID_1_SG "वच\u{948}",
-    "वक\u{94d}ति" SUBJ_MID_1_DU "वचावह\u{948}",
-    "वक\u{94d}ति" SUBJ_MID_1_PL "वचामह\u{948}",
-    "वक\u{94d}ति" SUBJ_MID_2_SG "वचस\u{947}",
-    "वक\u{94d}ति" SUBJ_MID_2_DU "वच\u{948}थ\u{947}",
-    "वक\u{94d}ति" SUBJ_MID_2_PL "वचध\u{94d}व\u{947}",
-    "वक\u{94d}ति" SUBJ_MID_3_SG "वचत\u{947}",
-    "वक\u{94d}ति" SUBJ_MID_3_DU "वच\u{948}त\u{947}",
-    "वक\u{94d}ति" SUBJ_MID_3_PL "वचन\u{94d}त",
-    "वक\u{94d}ति" IMPERFECT_ACT_1_SG "अवचाम\u{94d}",
-    "वक\u{94d}ति" IMPERFECT_ACT_1_DU "अवच\u{94d}व",
-    "वक\u{94d}ति" IMPERFECT_ACT_1_PL "अवच\u{94d}म",
-    "वक\u{94d}ति" IMPERFECT_ACT_2_SG "अवचः",
-    "वक\u{94d}ति" IMPERFECT_ACT_3_SG "अवचत\u{94d}",
-    "वक\u{94d}ति" IMPERFECT_ACT_3_PL "अवचन\u{94d}",
-    "वक\u{94d}ति" IMPERFECT_MID_1_SG "अवचि",
-    "वक\u{94d}ति" IMPERFECT_MID_1_DU "अवच\u{94d}वहि",
-    "वक\u{94d}ति" IMPERFECT_MID_1_PL "अवच\u{94d}महि",
-    "वक\u{94d}ति" IMPERFECT_MID_2_DU "अवचाथाम\u{94d}",
-    "वक\u{94d}ति" IMPERFECT_MID_2_PL "अवग\u{94d}ध\u{94d}वम\u{94d}",
-    "वक\u{94d}ति" IMPERFECT_MID_3_DU "अवचाताम\u{94d}",
-    "वक\u{94d}ति" IMPERFECT_MID_3_PL "अवचत",
-    "वक\u{94d}ति" PARTICIPLE_PRES_ACT "वचत\u{94d}",
-    "वक\u{94d}ति" PARTICIPLE_PRES_MID "वचान",
-    "ववर\u{94d}त" PERFECT_ACT_1_DU "वव\u{943}तिव",
-    "ववर\u{94d}त" PERFECT_ACT_1_PL "वव\u{943}तिम",
-    "ववर\u{94d}त" PERFECT_ACT_2_DU "वव\u{943}तथ\u{941}ः",
-    "ववर\u{94d}त" PERFECT_ACT_2_PL "वव\u{943}त",
-    "ववर\u{94d}त" PERFECT_ACT_3_DU "वव\u{943}तत\u{941}ः",
-    "ववर\u{94d}त" PERFECT_ACT_3_PL "वव\u{943}त\u{941}ः",
-    "ववर\u{94d}त" PERFECT_MID_1_SG "वव\u{943}त\u{947}",
-    "ववर\u{94d}त" PERFECT_MID_1_DU "वव\u{943}तिवह\u{947}",
-    "ववर\u{94d}त" PERFECT_MID_1_PL "वव\u{943}तिमह\u{947}",
-    "ववर\u{94d}त" PERFECT_MID_2_SG "वव\u{943}तिष\u{947}",
-    "ववर\u{94d}त" PERFECT_MID_2_DU "वव\u{943}ताथ\u{947}",
-    "ववर\u{94d}त" PERFECT_MID_2_PL "वव\u{943}तिध\u{94d}व\u{947}",
-    "ववर\u{94d}त" PERFECT_MID_3_SG "वव\u{943}त\u{947}",
-    "ववर\u{94d}त" PERFECT_MID_3_DU "वव\u{943}तात\u{947}",
-    "ववर\u{94d}त" PERFECT_MID_3_PL "वव\u{943}तिर\u{947}",
-    "ववर\u{94d}त" PARTICIPLE_PERF_ACT "वव\u{943}त\u{94d}वा\u{902}स\u{94d}",
-    "ववर\u{94d}त" PARTICIPLE_PERF_MID "वव\u{943}तान",
-    "वष\u{94d}टि" IND_ACT_1_SG "वश\u{94d}मि",
-    "वष\u{94d}टि" IND_ACT_1_DU "उश\u{94d}वः",
-    "वष\u{94d}टि" IND_ACT_1_PL "उश\u{94d}मः",
-    "वष\u{94d}टि" IND_ACT_2_SG "वक\u{94d}षि",
-    "वष\u{94d}टि" IND_ACT_2_DU "उष\u{94d}ठः",
-    "वष\u{94d}टि" IND_ACT_2_PL "उष\u{94d}ठ",
-    "वष\u{94d}टि" IND_ACT_3_SG "वष\u{94d}टि",
-    "वष\u{94d}टि" IND_ACT_3_DU "उष\u{94d}टः",
-    "वष\u{94d}टि" IND_ACT_3_PL "उशन\u{94d}ति",
-    "वष\u{94d}टि" IMP_ACT_1_SG "वशानि",
-    "वष\u{94d}टि" IMP_ACT_1_DU "वशाव",
-    "वष\u{94d}टि" IMP_ACT_1_PL "वशाम",
-    "वष\u{94d}टि" IMP_ACT_2_SG "उड\u{94d}ढि",
-    "वष\u{94d}टि" IMP_ACT_2_DU "उष\u{94d}टम\u{94d}",
-    "वष\u{94d}टि" IMP_ACT_2_PL "उष\u{94d}ट",
-    "वष\u{94d}टि" IMP_ACT_3_SG "वष\u{94d}ट\u{941}",
-    "वष\u{94d}टि" IMP_ACT_3_DU "उष\u{94d}टाम\u{94d}",
-    "वष\u{94d}टि" IMP_ACT_3_PL "उशन\u{94d}त\u{941}",
-    "वष\u{94d}टि" OPT_ACT_1_SG "उश\u{94d}याम\u{94d}",
-    "वष\u{94d}टि" OPT_ACT_1_DU "उश\u{94d}याव",
-    "वष\u{94d}टि" OPT_ACT_1_PL "उश\u{94d}याम",
-    "वष\u{94d}टि" OPT_ACT_2_SG "उश\u{94d}याः",
-    "वष\u{94d}टि" OPT_ACT_2_DU "उश\u{94d}यातम\u{94d}",
-    "वष\u{94d}टि" OPT_ACT_2_PL "उश\u{94d}यात",
-    "वष\u{94d}टि" OPT_ACT_3_SG "उश\u{94d}यात\u{94d}",
-    "वष\u{94d}टि" OPT_ACT_3_DU "उश\u{94d}याताम\u{94d}",
-    "वष\u{94d}टि" OPT_ACT_3_PL "उश\u{94d}य\u{941}ः",
-    "वष\u{94d}टि" SUBJ_ACT_1_SG "वशानि",
-    "वष\u{94d}टि" SUBJ_ACT_1_DU "वशाव",
-    "वष\u{94d}टि" SUBJ_ACT_1_PL "वशाम",
-    "वष\u{94d}टि" SUBJ_ACT_2_SG "वशः",
-    "वष\u{94d}टि" SUBJ_ACT_2_DU "वशथः",
-    "वष\u{94d}टि" SUBJ_ACT_2_PL "वशथ",
-    "वष\u{94d}टि" SUBJ_ACT_3_SG "वशत\u{94d}",
-    "वष\u{94d}टि" SUBJ_ACT_3_DU "वशतः",
-    "वष\u{94d}टि" SUBJ_ACT_3_PL "वशन\u{94d}",
-    "वष\u{94d}टि" IMPERFECT_ACT_1_SG "अवशम\u{94d}",
-    "वष\u{94d}टि" IMPERFECT_ACT_1_DU "औश\u{94d}व",
-    "वष\u{94d}टि" IMPERFECT_ACT_1_PL "औश\u{94d}म",
-    "वष\u{94d}टि" IMPERFECT_ACT_2_SG "अवट\u{94d}",
-    "वष\u{94d}टि" IMPERFECT_ACT_2_DU "औष\u{94d}टम\u{94d}",
-    "वष\u{94d}टि" IMPERFECT_ACT_2_PL "औष\u{94d}ट",
-    "वष\u{94d}टि" IMPERFECT_ACT_3_SG "अवट\u{94d}",
-    "वष\u{94d}टि" IMPERFECT_ACT_3_DU "औष\u{94d}टाम\u{94d}",
-    "वष\u{94d}टि" IMPERFECT_ACT_3_PL "औशन\u{94d}",
-    "वष\u{94d}टि" PARTICIPLE_PRES_ACT "उशत\u{94d}",
-    "वस\u{94d}त\u{947}" IND_MID_1_SG "वस\u{947}",
-    "वस\u{94d}त\u{947}" IND_MID_1_DU "वस\u{94d}वह\u{947}",
-    "वस\u{94d}त\u{947}" IND_MID_1_PL "वस\u{94d}मह\u{947}",
-    "वस\u{94d}त\u{947}" IND_MID_2_DU "वसाथ\u{947}",
-    "वस\u{94d}त\u{947}" IND_MID_2_PL "वद\u{94d}ध\u{94d}व\u{947}",
-    "वस\u{94d}त\u{947}" IND_MID_3_DU "वसात\u{947}",
-    "वस\u{94d}त\u{947}" IND_MID_3_PL "वसत\u{947}",
-    "वस\u{94d}त\u{947}" IMP_MID_1_SG "वस\u{948}",
-    "वस\u{94d}त\u{947}" IMP_MID_1_DU "वसावह\u{948}",
-    "वस\u{94d}त\u{947}" IMP_MID_1_PL "वसामह\u{948}",
-    "वस\u{94d}त\u{947}" IMP_MID_2_DU "वसाथाम\u{94d}",
-    "वस\u{94d}त\u{947}" IMP_MID_2_PL "वद\u{94d}ध\u{94d}वम\u{94d}",
-    "वस\u{94d}त\u{947}" IMP_MID_3_DU "वसाताम\u{94d}",
-    "वस\u{94d}त\u{947}" IMP_MID_3_PL "वसताम\u{94d}",
-    "वस\u{94d}त\u{947}" OPT_MID_1_SG "वसीय",
-    "वस\u{94d}त\u{947}" OPT_MID_1_DU "वसीवहि",
-    "वस\u{94d}त\u{947}" OPT_MID_1_PL "वसीमहि",
-    "वस\u{94d}त\u{947}" OPT_MID_2_SG "वसीथाः",
-    "वस\u{94d}त\u{947}" OPT_MID_2_DU "वसीयाथाम\u{94d}",
-    "वस\u{94d}त\u{947}" OPT_MID_2_PL "वसीध\u{94d}वम\u{94d}",
-    "वस\u{94d}त\u{947}" OPT_MID_3_SG "वसीत",
-    "वस\u{94d}त\u{947}" OPT_MID_3_DU "वसीयाताम\u{94d}",
-    "वस\u{94d}त\u{947}" OPT_MID_3_PL "वसीरन\u{94d}",
-    "वस\u{94d}त\u{947}" SUBJ_MID_1_SG "वस\u{948}",
-    "वस\u{94d}त\u{947}" SUBJ_MID_1_DU "वसावह\u{948}",
-    "वस\u{94d}त\u{947}" SUBJ_MID_1_PL "वसामह\u{948}",
-    "वस\u{94d}त\u{947}" SUBJ_MID_2_SG "वसस\u{947}",
-    "वस\u{94d}त\u{947}" SUBJ_MID_2_DU "वस\u{948}थ\u{947}",
-    "वस\u{94d}त\u{947}" SUBJ_MID_2_PL "वसध\u{94d}व\u{947}",
-    "वस\u{94d}त\u{947}" SUBJ_MID_3_SG "वसत\u{947}",
-    "वस\u{94d}त\u{947}" SUBJ_MID_3_DU "वस\u{948}त\u{947}",
-    "वस\u{94d}त\u{947}" SUBJ_MID_3_PL "वसन\u{94d}त",
-    "वस\u{94d}त\u{947}" IMPERFECT_MID_1_SG "अवसि",
-    "वस\u{94d}त\u{947}" IMPERFECT_MID_1_DU "अवस\u{94d}वहि",
-    "वस\u{94d}त\u{947}" IMPERFECT_MID_1_PL "अवस\u{94d}महि",
-    "वस\u{94d}त\u{947}" IMPERFECT_MID_2_DU "अवसाथाम\u{94d}",
-    "वस\u{94d}त\u{947}" IMPERFECT_MID_2_PL "अवद\u{94d}ध\u{94d}वम\u{94d}",
-    "वस\u{94d}त\u{947}" IMPERFECT_MID_3_DU "अवसाताम\u{94d}",
-    "वस\u{94d}त\u{947}" IMPERFECT_MID_3_PL "अवसत",
-    "वस\u{94d}त\u{947}" PARTICIPLE_PRES_MID "वसान",
-    "विनक\u{94d}ति" IND_ACT_1_SG "विनच\u{94d}मि",
-    "विनक\u{94d}ति" IND_ACT_1_DU "विञ\u{94d}च\u{94d}वः",
-    "विनक\u{94d}ति" IND_ACT_1_PL "विञ\u{94d}च\u{94d}मः",
-    "विनक\u{94d}ति" IND_ACT_3_PL "विञ\u{94d}चन\u{94d}ति",
-    "विनक\u{94d}ति" IMP_ACT_1_SG "विनचानि",
-    "विनक\u{94d}ति" IMP_ACT_1_DU "विनचाव",
-    "विनक\u{94d}ति" IMP_ACT_1_PL "विनचाम",
-    "विनक\u{94d}ति" IMP_ACT_3_PL "विञ\u{94d}चन\u{94d}त\u{941}",
-    "विनक\u{94d}ति" OPT_ACT_1_SG "विञ\u{94d}च\u{94d}याम\u{94d}",
-    "विनक\u{94d}ति" OPT_ACT_1_DU "विञ\u{94d}च\u{94d}याव",
-    "विनक\u{94d}ति" OPT_ACT_1_PL "विञ\u{94d}च\u{94d}याम",
-    "विनक\u{94d}ति" OPT_ACT_2_SG "विञ\u{94d}च\u{94d}याः",
-    "विनक\u{94d}ति" OPT_ACT_2_DU "विञ\u{94d}च\u{94d}यातम\u{94d}",
-    "विनक\u{94d}ति" OPT_ACT_2_PL "विञ\u{94d}च\u{94d}यात",
-    "विनक\u{94d}ति" OPT_ACT_3_SG "विञ\u{94d}च\u{94d}यात\u{94d}",
-    "विनक\u{94d}ति" OPT_ACT_3_DU "विञ\u{94d}च\u{94d}याताम\u{94d}",
-    "विनक\u{94d}ति" OPT_ACT_3_PL "विञ\u{94d}च\u{94d}य\u{941}ः",
-    "विनक\u{94d}ति" SUBJ_ACT_1_SG "विनचानि",
-    "विनक\u{94d}ति" SUBJ_ACT_1_DU "विनचाव",
-    "विनक\u{94d}ति" SUBJ_ACT_1_PL "विनचाम",
-    "विनक\u{94d}ति" SUBJ_ACT_2_SG "विनचः",
-    "विनक\u{94d}ति" SUBJ_ACT_2_DU "विनचथः",
-    "विनक\u{94d}ति" SUBJ_ACT_2_PL "विनचथ",
-    "विनक\u{94d}ति" SUBJ_ACT_3_SG "विनचत\u{94d}",
-    "विनक\u{94d}ति" SUBJ_ACT_3_DU "विनचतः",
-    "विनक\u{94d}ति" SUBJ_ACT_3_PL "विनचन\u{94d}",
-    "विनक\u{94d}ति" IMPERFECT_ACT_1_SG "अविनचम\u{94d}",
-    "विनक\u{94d}ति" IMPERFECT_ACT_1_DU "अविञ\u{94d}च\u{94d}व",
-    "विनक\u{94d}ति" IMPERFECT_ACT_1_PL "अविञ\u{94d}च\u{94d}म",
-    "विनक\u{94d}ति" IMPERFECT_ACT_3_PL "अविञ\u{94d}चन\u{94d}",
-    "विनक\u{94d}ति" PARTICIPLE_PRES_ACT "विञ\u{94d}चत\u{94d}",
-    "विराजति" IMPERFECT_ACT_1_SG "व\u{94d}यराजम\u{94d}",
-    "विराजति" IMPERFECT_ACT_1_DU "व\u{94d}यराजाव",
-    "विराजति" IMPERFECT_ACT_1_PL "व\u{94d}यराजाम",
-    "विराजति" IMPERFECT_ACT_2_SG "व\u{94d}यराजः",
-    "विराजति" IMPERFECT_ACT_2_DU "व\u{94d}यराजतम\u{94d}",
-    "विराजति" IMPERFECT_ACT_2_PL "व\u{94d}यराजत",
-    "विराजति" IMPERFECT_ACT_3_SG "व\u{94d}यराजत\u{94d}",
-    "विराजति" IMPERFECT_ACT_3_DU "व\u{94d}यराजताम\u{94d}",
-    "विराजति" IMPERFECT_ACT_3_PL "व\u{94d}यराजन\u{94d}",
-    "विराजति" IMPERFECT_MID_1_SG "व\u{94d}यराज\u{947}",
-    "विराजति" IMPERFECT_MID_1_DU "व\u{94d}यराजावहि",
-    "विराजति" IMPERFECT_MID_1_PL "व\u{94d}यराजामहि",
-    "विराजति" IMPERFECT_MID_2_SG "व\u{94d}यराजथाः",
-    "विराजति" IMPERFECT_MID_2_DU "व\u{94d}यराज\u{947}थाम\u{94d}",
-    "विराजति" IMPERFECT_MID_2_PL "व\u{94d}यराजध\u{94d}वम\u{94d}",
-    "विराजति" IMPERFECT_MID_3_SG "व\u{94d}यराजत",
-    "विराजति" IMPERFECT_MID_3_DU "व\u{94d}यराज\u{947}ताम\u{94d}",
-    "विराजति" IMPERFECT_MID_3_PL "व\u{94d}यराजन\u{94d}त",
-    "विलीयत\u{947}" IMPERFECT_MID_1_SG "व\u{94d}यलीय\u{947}",
-    "विलीयत\u{947}" IMPERFECT_MID_1_DU "व\u{94d}यलीयावहि",
-    "विलीयत\u{947}" IMPERFECT_MID_1_PL "व\u{94d}यलीयामहि",
-    "विलीयत\u{947}" IMPERFECT_MID_2_SG "व\u{94d}यलीयथाः",
-    "विलीयत\u{947}" IMPERFECT_MID_2_DU "व\u{94d}यलीय\u{947}थाम\u{94d}",
-    "विलीयत\u{947}" IMPERFECT_MID_2_PL "व\u{94d}यलीयध\u{94d}वम\u{94d}",
-    "विलीयत\u{947}" IMPERFECT_MID_3_SG "व\u{94d}यलीयत",
-    "विलीयत\u{947}" IMPERFECT_MID_3_DU "व\u{94d}यलीय\u{947}ताम\u{94d}",
-    "विलीयत\u{947}" IMPERFECT_MID_3_PL "व\u{94d}यलीयन\u{94d}त",
-    "विव\u{947}द" PERFECT_ACT_1_DU "विविदिव",
-    "विव\u{947}द" PERFECT_ACT_1_PL "विविदिम",
-    "विव\u{947}द" PERFECT_ACT_2_DU "विविदथ\u{941}ः",
-    "विव\u{947}द" PERFECT_ACT_2_PL "विविद",
-    "विव\u{947}द" PERFECT_ACT_3_DU "विविदत\u{941}ः",
-    "विव\u{947}द" PERFECT_ACT_3_PL "विविद\u{941}ः",
-    "विव\u{947}द" PERFECT_MID_1_SG "विविद\u{947}",
-    "विव\u{947}द" PERFECT_MID_1_DU "विविदिवह\u{947}",
-    "विव\u{947}द" PERFECT_MID_1_PL "विविदिमह\u{947}",
-    "विव\u{947}द" PERFECT_MID_2_SG "विविदिष\u{947}",
-    "विव\u{947}द" PERFECT_MID_2_DU "विविदाथ\u{947}",
-    "विव\u{947}द" PERFECT_MID_2_PL "विविदिध\u{94d}व\u{947}",
-    "विव\u{947}द" PERFECT_MID_3_SG "विविद\u{947}",
-    "विव\u{947}द" PERFECT_MID_3_DU "विविदात\u{947}",
-    "विव\u{947}द" PERFECT_MID_3_PL "विविदिर\u{947}",
-    "विव\u{947}द" PARTICIPLE_PERF_ACT "विविद\u{94d}वा\u{902}स\u{94d}",
-    "विव\u{947}द" PARTICIPLE_PERF_MID "विविदान",
-    "विव\u{947}श" PERFECT_ACT_1_DU "विविशिव",
-    "विव\u{947}श" PERFECT_ACT_1_PL "विविशिम",
-    "विव\u{947}श" PERFECT_ACT_2_DU "विविशथ\u{941}ः",
-    "विव\u{947}श" PERFECT_ACT_2_PL "विविश",
-    "विव\u{947}श" PERFECT_ACT_3_DU "विविशत\u{941}ः",
-    "विव\u{947}श" PERFECT_ACT_3_PL "विविश\u{941}ः",
-    "विव\u{947}श" PERFECT_MID_1_SG "विविश\u{947}",
-    "विव\u{947}श" PERFECT_MID_1_DU "विविशिवह\u{947}",
-    "विव\u{947}श" PERFECT_MID_1_PL "विविशिमह\u{947}",
-    "विव\u{947}श" PERFECT_MID_2_SG "विविशिष\u{947}",
-    "विव\u{947}श" PERFECT_MID_2_DU "विविशाथ\u{947}",
-    "विव\u{947}श" PERFECT_MID_2_PL "विविशिध\u{94d}व\u{947}",
-    "विव\u{947}श" PERFECT_MID_3_SG "विविश\u{947}",
-    "विव\u{947}श" PERFECT_MID_3_DU "विविशात\u{947}",
-    "विव\u{947}श" PERFECT_MID_3_PL "विविशिर\u{947}",
-    "विव\u{947}श" PARTICIPLE_PERF_ACT "विविश\u{94d}वा\u{902}स\u{94d}",
-    "विव\u{947}श" PARTICIPLE_PERF_MID "विविशान",
-    "विव\u{947}ष\u{94d}टि" IND_ACT_1_SG "विव\u{947}ष\u{94d}मि",
-    "विव\u{947}ष\u{94d}टि" IND_ACT_1_DU "विविष\u{94d}वः",
-    "विव\u{947}ष\u{94d}टि" IND_ACT_1_PL "विविष\u{94d}मः",
-    "विव\u{947}ष\u{94d}टि" IND_ACT_2_SG "विव\u{947}क\u{94d}षि",
-    "विव\u{947}ष\u{94d}टि" IND_ACT_2_DU "विविष\u{94d}ठः",
-    "विव\u{947}ष\u{94d}टि" IND_ACT_2_PL "विविष\u{94d}ठ",
-    "विव\u{947}ष\u{94d}टि" IND_ACT_3_SG "विव\u{947}ष\u{94d}टि",
-    "विव\u{947}ष\u{94d}टि" IND_ACT_3_DU "विविष\u{94d}टः",
-    "विव\u{947}ष\u{94d}टि" IND_ACT_3_PL "विविषति",
-    "विव\u{947}ष\u{94d}टि" IMP_ACT_1_SG "विव\u{947}षाणि",
-    "विव\u{947}ष\u{94d}टि" IMP_ACT_1_DU "विव\u{947}षाव",
-    "विव\u{947}ष\u{94d}टि" IMP_ACT_1_PL "विव\u{947}षाम",
-    "विव\u{947}ष\u{94d}टि" IMP_ACT_2_SG "विविड\u{94d}ढि",
-    "विव\u{947}ष\u{94d}टि" IMP_ACT_2_DU "विविष\u{94d}टम\u{94d}",
-    "विव\u{947}ष\u{94d}टि" IMP_ACT_2_PL "विविष\u{94d}ट",
-    "विव\u{947}ष\u{94d}टि" IMP_ACT_3_SG "विव\u{947}ष\u{94d}ट\u{941}",
-    "विव\u{947}ष\u{94d}टि" IMP_ACT_3_DU "विविष\u{94d}टाम\u{94d}",
-    "विव\u{947}ष\u{94d}टि" IMP_ACT_3_PL "विविषत\u{941}",
-    "विव\u{947}ष\u{94d}टि" OPT_ACT_1_SG "विविष\u{94d}याम\u{94d}",
-    "विव\u{947}ष\u{94d}टि" OPT_ACT_1_DU "विविष\u{94d}याव",
-    "विव\u{947}ष\u{94d}टि" OPT_ACT_1_PL "विविष\u{94d}याम",
-    "विव\u{947}ष\u{94d}टि" OPT_ACT_2_SG "विविष\u{94d}याः",
-    "विव\u{947}ष\u{94d}टि" OPT_ACT_2_DU "विविष\u{94d}यातम\u{94d}",
-    "विव\u{947}ष\u{94d}टि" OPT_ACT_2_PL "विविष\u{94d}यात",
-    "विव\u{947}ष\u{94d}टि" OPT_ACT_3_SG "विविष\u{94d}यात\u{94d}",
-    "विव\u{947}ष\u{94d}टि" OPT_ACT_3_DU "विविष\u{94d}याताम\u{94d}",
-    "विव\u{947}ष\u{94d}टि" OPT_ACT_3_PL "विविष\u{94d}य\u{941}ः",
-    "विव\u{947}ष\u{94d}टि" SUBJ_ACT_1_SG "विव\u{947}षाणि",
-    "विव\u{947}ष\u{94d}टि" SUBJ_ACT_1_DU "विव\u{947}षाव",
-    "विव\u{947}ष\u{94d}टि" SUBJ_ACT_1_PL "विव\u{947}षाम",
-    "विव\u{947}ष\u{94d}टि" SUBJ_ACT_2_SG "विव\u{947}षः",
-    "विव\u{947}ष\u{94d}टि" SUBJ_ACT_2_DU "विव\u{947}षथः",
-    "विव\u{947}ष\u{94d}टि" SUBJ_ACT_2_PL "विव\u{947}षथ",
-    "विव\u{947}ष\u{94d}टि" SUBJ_ACT_3_SG "विव\u{947}षत\u{94d}",
-    "विव\u{947}ष\u{94d}टि" SUBJ_ACT_3_DU "विव\u{947}षतः",
-    "विव\u{947}ष\u{94d}टि" SUBJ_ACT_3_PL "विव\u{947}षन\u{94d}",
-    "विव\u{947}ष\u{94d}टि" IMPERFECT_ACT_1_SG "अविव\u{947}षम\u{94d}",
-    "विव\u{947}ष\u{94d}टि" IMPERFECT_ACT_1_DU "अविविष\u{94d}व",
-    "विव\u{947}ष\u{94d}टि" IMPERFECT_ACT_1_PL "अविविष\u{94d}म",
-    "विव\u{947}ष\u{94d}टि" IMPERFECT_ACT_2_SG "अविव\u{947}ट\u{94d}",
-    "विव\u{947}ष\u{94d}टि" IMPERFECT_ACT_2_DU "अविविष\u{94d}टम\u{94d}",
-    "विव\u{947}ष\u{94d}टि" IMPERFECT_ACT_2_PL "अविविष\u{94d}ट",
-    "विव\u{947}ष\u{94d}टि" IMPERFECT_ACT_3_SG "अविव\u{947}ट\u{94d}",
-    "विव\u{947}ष\u{94d}टि" IMPERFECT_ACT_3_DU "अविविष\u{94d}टाम\u{94d}",
-    "विव\u{947}ष\u{94d}टि" IMPERFECT_ACT_3_PL "अविविष\u{941}ः",
-    "विव\u{947}ष\u{94d}टि" PARTICIPLE_PRES_ACT "विविषत\u{94d}",
-    "व\u{943}क\u{94d}त\u{947}" IND_MID_1_SG "व\u{943}ज\u{947}",
-    "व\u{943}क\u{94d}त\u{947}" IND_MID_1_DU "व\u{943}ज\u{94d}वह\u{947}",
-    "व\u{943}क\u{94d}त\u{947}" IND_MID_1_PL "व\u{943}ज\u{94d}मह\u{947}",
-    "व\u{943}क\u{94d}त\u{947}" IND_MID_2_SG "व\u{943}क\u{94d}ष\u{947}",
-    "व\u{943}क\u{94d}त\u{947}" IND_MID_2_DU "व\u{943}जाथ\u{947}",
-    "व\u{943}क\u{94d}त\u{947}" IND_MID_2_PL "व\u{943}ग\u{94d}ध\u{94d}व\u{947}",
-    "व\u{943}क\u{94d}त\u{947}" IND_MID_3_DU "व\u{943}जात\u{947}",
-    "व\u{943}क\u{94d}त\u{947}" IND_MID_3_PL "व\u{943}जत\u{947}",
-    "व\u{943}क\u{94d}त\u{947}" IMP_MID_2_SG "व\u{943}क\u{94d}ष\u{94d}व",
-    "व\u{943}क\u{94d}त\u{947}" IMP_MID_2_DU "व\u{943}जाथाम\u{94d}",
-    "व\u{943}क\u{94d}त\u{947}" IMP_MID_2_PL "व\u{943}ग\u{94d}ध\u{94d}वम\u{94d}",
-    "व\u{943}क\u{94d}त\u{947}" IMP_MID_3_DU "व\u{943}जाताम\u{94d}",
-    "व\u{943}क\u{94d}त\u{947}" IMP_MID_3_PL "व\u{943}जताम\u{94d}",
-    "व\u{943}क\u{94d}त\u{947}" OPT_MID_1_SG "व\u{943}जीय",
-    "व\u{943}क\u{94d}त\u{947}" OPT_MID_1_DU "व\u{943}जीवहि",
-    "व\u{943}क\u{94d}त\u{947}" OPT_MID_1_PL "व\u{943}जीमहि",
-    "व\u{943}क\u{94d}त\u{947}" OPT_MID_2_SG "व\u{943}जीथाः",
-    "व\u{943}क\u{94d}त\u{947}" OPT_MID_2_DU "व\u{943}जीयाथाम\u{94d}",
-    "व\u{943}क\u{94d}त\u{947}" OPT_MID_2_PL "व\u{943}जीध\u{94d}वम\u{94d}",
-    "व\u{943}क\u{94d}त\u{947}" OPT_MID_3_SG "व\u{943}जीत",
-    "व\u{943}क\u{94d}त\u{947}" OPT_MID_3_DU "व\u{943}जीयाताम\u{94d}",
-    "व\u{943}क\u{94d}त\u{947}" OPT_MID_3_PL "व\u{943}जीरन\u{94d}",
-    "व\u{943}क\u{94d}त\u{947}" IMPERFECT_MID_1_SG "अव\u{943}जि",
-    "व\u{943}क\u{94d}त\u{947}" IMPERFECT_MID_1_DU "अव\u{943}ज\u{94d}वहि",
-    "व\u{943}क\u{94d}त\u{947}" IMPERFECT_MID_1_PL "अव\u{943}ज\u{94d}महि",
-    "व\u{943}क\u{94d}त\u{947}" IMPERFECT_MID_2_DU "अव\u{943}जाथाम\u{94d}",
-    "व\u{943}क\u{94d}त\u{947}" IMPERFECT_MID_2_PL "अव\u{943}ग\u{94d}ध\u{94d}वम\u{94d}",
-    "व\u{943}क\u{94d}त\u{947}" IMPERFECT_MID_3_DU "अव\u{943}जाताम\u{94d}",
-    "व\u{943}क\u{94d}त\u{947}" IMPERFECT_MID_3_PL "अव\u{943}जत",
-    "व\u{943}क\u{94d}त\u{947}" PARTICIPLE_PRES_MID "व\u{943}जान",
-    "व\u{943}णक\u{94d}ति" IND_ACT_1_SG "व\u{943}णज\u{94d}मि",
-    "व\u{943}णक\u{94d}ति" IND_ACT_1_DU "व\u{943}ञ\u{94d}ज\u{94d}वः",
-    "व\u{943}णक\u{94d}ति" IND_ACT_1_PL "व\u{943}ञ\u{94d}ज\u{94d}मः",
-    "व\u{943}णक\u{94d}ति" IND_ACT_2_SG "व\u{943}णक\u{94d}षि",
-    "व\u{943}णक\u{94d}ति" IND_ACT_2_DU "व\u{943}ङ\u{94d}क\u{94d}थः",
-    "व\u{943}णक\u{94d}ति" IND_ACT_2_PL "व\u{943}ङ\u{94d}क\u{94d}थ",
-    "व\u{943}णक\u{94d}ति" IND_ACT_3_DU "व\u{943}ङ\u{94d}क\u{94d}तः",
-    "व\u{943}णक\u{94d}ति" IND_ACT_3_PL "व\u{943}ञ\u{94d}जन\u{94d}ति",
-    "व\u{943}णक\u{94d}ति" IND_MID_1_SG "व\u{943}ञ\u{94d}ज\u{947}",
-    "व\u{943}णक\u{94d}ति" IND_MID_1_DU "व\u{943}ञ\u{94d}ज\u{94d}वह\u{947}",
-    "व\u{943}णक\u{94d}ति" IND_MID_1_PL "व\u{943}ञ\u{94d}ज\u{94d}मह\u{947}",
-    "व\u{943}णक\u{94d}ति" IND_MID_2_SG "व\u{943}ङ\u{94d}क\u{94d}ष\u{947}",
-    "व\u{943}णक\u{94d}ति" IND_MID_2_DU "व\u{943}ञ\u{94d}जाथ\u{947}",
-    "व\u{943}णक\u{94d}ति" IND_MID_2_PL "व\u{943}ङ\u{94d}ग\u{94d}ध\u{94d}व\u{947}",
-    "व\u{943}णक\u{94d}ति" IND_MID_3_SG "व\u{943}ङ\u{94d}क\u{94d}त\u{947}",
-    "व\u{943}णक\u{94d}ति" IND_MID_3_DU "व\u{943}ञ\u{94d}जात\u{947}",
-    "व\u{943}णक\u{94d}ति" IND_MID_3_PL "व\u{943}ञ\u{94d}जत\u{947}",
-    "व\u{943}णक\u{94d}ति" IMP_ACT_1_SG "व\u{943}णजानि",
-    "व\u{943}णक\u{94d}ति" IMP_ACT_1_DU "व\u{943}णजाव",
-    "व\u{943}णक\u{94d}ति" IMP_ACT_1_PL "व\u{943}णजाम",
-    "व\u{943}णक\u{94d}ति" IMP_ACT_2_SG "व\u{943}ङ\u{94d}ग\u{94d}धि",
-    "व\u{943}णक\u{94d}ति" IMP_ACT_2_DU "व\u{943}ङ\u{94d}क\u{94d}तम\u{94d}",
-    "व\u{943}णक\u{94d}ति" IMP_ACT_2_PL "व\u{943}ङ\u{94d}क\u{94d}त",
-    "व\u{943}णक\u{94d}ति" IMP_ACT_3_DU "व\u{943}ङ\u{94d}क\u{94d}ताम\u{94d}",
-    "व\u{943}णक\u{94d}ति" IMP_ACT_3_PL "व\u{943}ञ\u{94d}जन\u{94d}त\u{941}",
-    "व\u{943}णक\u{94d}ति" IMP_MID_1_SG "व\u{943}णज\u{948}",
-    "व\u{943}णक\u{94d}ति" IMP_MID_1_DU "व\u{943}णजावह\u{948}",
-    "व\u{943}णक\u{94d}ति" IMP_MID_1_PL "व\u{943}णजामह\u{948}",
-    "व\u{943}णक\u{94d}ति" IMP_MID_2_SG "व\u{943}ङ\u{94d}क\u{94d}ष\u{94d}व",
-    "व\u{943}णक\u{94d}ति" IMP_MID_2_DU "व\u{943}ञ\u{94d}जाथाम\u{94d}",
-    "व\u{943}णक\u{94d}ति" IMP_MID_2_PL "व\u{943}ङ\u{94d}ग\u{94d}ध\u{94d}वम\u{94d}",
-    "व\u{943}णक\u{94d}ति" IMP_MID_3_SG "व\u{943}ङ\u{94d}क\u{94d}ताम\u{94d}",
-    "व\u{943}णक\u{94d}ति" IMP_MID_3_DU "व\u{943}ञ\u{94d}जाताम\u{94d}",
-    "व\u{943}णक\u{94d}ति" IMP_MID_3_PL "व\u{943}ञ\u{94d}जताम\u{94d}",
-    "व\u{943}णक\u{94d}ति" OPT_ACT_1_SG "व\u{943}ञ\u{94d}ज\u{94d}याम\u{94d}",
-    "व\u{943}णक\u{94d}ति" OPT_ACT_1_DU "व\u{943}ञ\u{94d}ज\u{94d}याव",
-    "व\u{943}णक\u{94d}ति" OPT_ACT_1_PL "व\u{943}ञ\u{94d}ज\u{94d}याम",
-    "व\u{943}णक\u{94d}ति" OPT_ACT_2_SG "व\u{943}ञ\u{94d}ज\u{94d}याः",
-    "व\u{943}णक\u{94d}ति" OPT_ACT_2_DU "व\u{943}ञ\u{94d}ज\u{94d}यातम\u{94d}",
-    "व\u{943}णक\u{94d}ति" OPT_ACT_2_PL "व\u{943}ञ\u{94d}ज\u{94d}यात",
-    "व\u{943}णक\u{94d}ति" OPT_ACT_3_SG "व\u{943}ञ\u{94d}ज\u{94d}यात\u{94d}",
-    "व\u{943}णक\u{94d}ति" OPT_ACT_3_DU "व\u{943}ञ\u{94d}ज\u{94d}याताम\u{94d}",
-    "व\u{943}णक\u{94d}ति" OPT_ACT_3_PL "व\u{943}ञ\u{94d}ज\u{94d}य\u{941}ः",
-    "व\u{943}णक\u{94d}ति" OPT_MID_1_SG "व\u{943}ञ\u{94d}जीय",
-    "व\u{943}णक\u{94d}ति" OPT_MID_1_DU "व\u{943}ञ\u{94d}जीवहि",
-    "व\u{943}णक\u{94d}ति" OPT_MID_1_PL "व\u{943}ञ\u{94d}जीमहि",
-    "व\u{943}णक\u{94d}ति" OPT_MID_2_SG "व\u{943}ञ\u{94d}जीथाः",
-    "व\u{943}णक\u{94d}ति" OPT_MID_2_DU "व\u{943}ञ\u{94d}जीयाथाम\u{94d}",
-    "व\u{943}णक\u{94d}ति" OPT_MID_2_PL "व\u{943}ञ\u{94d}जीध\u{94d}वम\u{94d}",
-    "व\u{943}णक\u{94d}ति" OPT_MID_3_SG "व\u{943}ञ\u{94d}जीत",
-    "व\u{943}णक\u{94d}ति" OPT_MID_3_DU "व\u{943}ञ\u{94d}जीयाताम\u{94d}",
-    "व\u{943}णक\u{94d}ति" OPT_MID_3_PL "व\u{943}ञ\u{94d}जीरन\u{94d}",
-    "व\u{943}णक\u{94d}ति" SUBJ_ACT_1_SG "व\u{943}णजानि",
-    "व\u{943}णक\u{94d}ति" SUBJ_ACT_1_DU "व\u{943}णजाव",
-    "व\u{943}णक\u{94d}ति" SUBJ_ACT_1_PL "व\u{943}णजाम",
-    "व\u{943}णक\u{94d}ति" SUBJ_ACT_2_SG "व\u{943}णजः",
-    "व\u{943}णक\u{94d}ति" SUBJ_ACT_2_DU "व\u{943}णजथः",
-    "व\u{943}णक\u{94d}ति" SUBJ_ACT_2_PL "व\u{943}णजथ",
-    "व\u{943}णक\u{94d}ति" SUBJ_ACT_3_SG "व\u{943}णजत\u{94d}",
-    "व\u{943}णक\u{94d}ति" SUBJ_ACT_3_DU "व\u{943}णजतः",
-    "व\u{943}णक\u{94d}ति" SUBJ_ACT_3_PL "व\u{943}णजन\u{94d}",
-    "व\u{943}णक\u{94d}ति" SUBJ_MID_1_SG "व\u{943}णज\u{948}",
-    "व\u{943}णक\u{94d}ति" SUBJ_MID_1_DU "व\u{943}णजावह\u{948}",
-    "व\u{943}णक\u{94d}ति" SUBJ_MID_1_PL "व\u{943}णजामह\u{948}",
-    "व\u{943}णक\u{94d}ति" SUBJ_MID_2_SG "व\u{943}णजस\u{947}",
-    "व\u{943}णक\u{94d}ति" SUBJ_MID_2_DU "व\u{943}णज\u{948}थ\u{947}",
-    "व\u{943}णक\u{94d}ति" SUBJ_MID_2_PL "व\u{943}णजध\u{94d}व\u{947}",
-    "व\u{943}णक\u{94d}ति" SUBJ_MID_3_SG "व\u{943}णजत\u{947}",
-    "व\u{943}णक\u{94d}ति" SUBJ_MID_3_DU "व\u{943}णज\u{948}त\u{947}",
-    "व\u{943}णक\u{94d}ति" SUBJ_MID_3_PL "व\u{943}णजन\u{94d}त",
-    "व\u{943}णक\u{94d}ति" IMPERFECT_ACT_1_SG "अव\u{943}णजम\u{94d}",
-    "व\u{943}णक\u{94d}ति" IMPERFECT_ACT_1_DU "अव\u{943}ञ\u{94d}ज\u{94d}व",
-    "व\u{943}णक\u{94d}ति" IMPERFECT_ACT_1_PL "अव\u{943}ञ\u{94d}ज\u{94d}म",
-    "व\u{943}णक\u{94d}ति" IMPERFECT_ACT_2_SG "अव\u{943}णक\u{94d}",
-    "व\u{943}णक\u{94d}ति" IMPERFECT_ACT_2_DU "अव\u{943}ङ\u{94d}क\u{94d}तम\u{94d}",
-    "व\u{943}णक\u{94d}ति" IMPERFECT_ACT_2_PL "अव\u{943}ङ\u{94d}क\u{94d}त",
-    "व\u{943}णक\u{94d}ति" IMPERFECT_ACT_3_SG "अव\u{943}णक\u{94d}",
-    "व\u{943}णक\u{94d}ति" IMPERFECT_ACT_3_DU "अव\u{943}ङ\u{94d}क\u{94d}ताम\u{94d}",
-    "व\u{943}णक\u{94d}ति" IMPERFECT_ACT_3_PL "अव\u{943}ञ\u{94d}जन\u{94d}",
-    "व\u{943}णक\u{94d}ति" IMPERFECT_MID_1_SG "अव\u{943}ञ\u{94d}जि",
-    "व\u{943}णक\u{94d}ति" IMPERFECT_MID_1_DU "अव\u{943}ञ\u{94d}ज\u{94d}वहि",
-    "व\u{943}णक\u{94d}ति" IMPERFECT_MID_1_PL "अव\u{943}ञ\u{94d}ज\u{94d}महि",
-    "व\u{943}णक\u{94d}ति" IMPERFECT_MID_2_SG "अव\u{943}ङ\u{94d}क\u{94d}थाः",
-    "व\u{943}णक\u{94d}ति" IMPERFECT_MID_2_DU "अव\u{943}ञ\u{94d}जाथाम\u{94d}",
-    "व\u{943}णक\u{94d}ति" IMPERFECT_MID_2_PL "अव\u{943}ङ\u{94d}ग\u{94d}ध\u{94d}वम\u{94d}",
-    "व\u{943}णक\u{94d}ति" IMPERFECT_MID_3_SG "अव\u{943}ङ\u{94d}क\u{94d}त",
-    "व\u{943}णक\u{94d}ति" IMPERFECT_MID_3_DU "अव\u{943}ञ\u{94d}जाताम\u{94d}",
-    "व\u{943}णक\u{94d}ति" IMPERFECT_MID_3_PL "अव\u{943}ञ\u{94d}जत",
-    "व\u{943}णक\u{94d}ति" PARTICIPLE_PRES_ACT "व\u{943}ञ\u{94d}जत\u{94d}",
-    "व\u{943}णक\u{94d}ति" PARTICIPLE_PRES_MID "व\u{943}ञ\u{94d}जान",
-    "व\u{943}णोति" IMPERFECT_ACT_2_DU "अव\u{943}न\u{941}तम\u{94d}",
-    "व\u{943}णोति" IMPERFECT_ACT_2_PL "अव\u{943}न\u{941}त",
-    "व\u{943}णोति" IMPERFECT_ACT_3_DU "अव\u{943}न\u{941}ताम\u{94d}",
-    "व\u{943}णोति" IMPERFECT_ACT_3_PL "अव\u{943}न\u{94d}वन\u{94d}",
-    "व\u{943}णोति" IMPERFECT_MID_1_SG "अव\u{943}न\u{94d}वि",
-    "व\u{943}णोति" IMPERFECT_MID_2_SG "अव\u{943}न\u{941}थाः",
-    "व\u{943}णोति" IMPERFECT_MID_2_DU "अव\u{943}न\u{94d}वाथाम\u{94d}",
-    "व\u{943}णोति" IMPERFECT_MID_2_PL "अव\u{943}न\u{941}ध\u{94d}वम\u{94d}",
-    "व\u{943}णोति" IMPERFECT_MID_3_SG "अव\u{943}न\u{941}त",
-    "व\u{943}णोति" IMPERFECT_MID_3_DU "अव\u{943}न\u{94d}वाताम\u{94d}",
-    "व\u{943}णोति" IMPERFECT_MID_3_PL "अव\u{943}न\u{94d}वत",
-    "व\u{947}ति" IND_ACT_1_SG "व\u{947}मि",
-    "व\u{947}ति" IND_ACT_1_DU "वीवः",
-    "व\u{947}ति" IND_ACT_1_PL "वीमः",
-    "व\u{947}ति" IND_ACT_2_SG "व\u{947}षि",
-    "व\u{947}ति" IND_ACT_2_DU "वीथः",
-    "व\u{947}ति" IND_ACT_2_PL "वीथ",
-    "व\u{947}ति" IND_ACT_3_DU "वीतः",
-    "व\u{947}ति" IND_ACT_3_PL "व\u{94d}यन\u{94d}ति",
-    "व\u{947}ति" IMP_ACT_1_SG "वयानि",
-    "व\u{947}ति" IMP_ACT_1_DU "वयाव",
-    "व\u{947}ति" IMP_ACT_1_PL "वयाम",
-    "व\u{947}ति" IMP_ACT_2_SG "वीहि",
-    "व\u{947}ति" IMP_ACT_2_DU "वीतम\u{94d}",
-    "व\u{947}ति" IMP_ACT_2_PL "वीत",
-    "व\u{947}ति" IMP_ACT_3_DU "वीताम\u{94d}",
-    "व\u{947}ति" IMP_ACT_3_PL "व\u{94d}यन\u{94d}त\u{941}",
-    "व\u{947}ति" OPT_ACT_1_SG "वीयाम\u{94d}",
-    "व\u{947}ति" OPT_ACT_1_DU "वीयाव",
-    "व\u{947}ति" OPT_ACT_1_PL "वीयाम",
-    "व\u{947}ति" OPT_ACT_2_SG "वीयाः",
-    "व\u{947}ति" OPT_ACT_2_DU "वीयातम\u{94d}",
-    "व\u{947}ति" OPT_ACT_2_PL "वीयात",
-    "व\u{947}ति" OPT_ACT_3_SG "वीयात\u{94d}",
-    "व\u{947}ति" OPT_ACT_3_DU "वीयाताम\u{94d}",
-    "व\u{947}ति" OPT_ACT_3_PL "वीय\u{941}ः",
-    "व\u{947}ति" SUBJ_ACT_1_SG "वयानि",
-    "व\u{947}ति" SUBJ_ACT_1_DU "वयाव",
-    "व\u{947}ति" SUBJ_ACT_1_PL "वयाम",
-    "व\u{947}ति" SUBJ_ACT_2_SG "वयः",
-    "व\u{947}ति" SUBJ_ACT_2_DU "वयथः",
-    "व\u{947}ति" SUBJ_ACT_2_PL "वयथ",
-    "व\u{947}ति" SUBJ_ACT_3_SG "वयत\u{94d}",
-    "व\u{947}ति" SUBJ_ACT_3_DU "वयतः",
-    "व\u{947}ति" SUBJ_ACT_3_PL "वयन\u{94d}",
-    "व\u{947}ति" IMPERFECT_ACT_1_SG "अवयम\u{94d}",
-    "व\u{947}ति" IMPERFECT_ACT_1_DU "अवीव",
-    "व\u{947}ति" IMPERFECT_ACT_1_PL "अवीम",
-    "व\u{947}ति" IMPERFECT_ACT_2_DU "अवीतम\u{94d}",
-    "व\u{947}ति" IMPERFECT_ACT_2_PL "अवीत",
-    "व\u{947}ति" IMPERFECT_ACT_3_DU "अवीताम\u{94d}",
-    "व\u{947}ति" IMPERFECT_ACT_3_PL "अव\u{94d}यन\u{94d}",
-    "व\u{947}ति" FUTURE_ACT_1_SG "व\u{947}ष\u{94d}यामि",
-    "व\u{947}ति" FUTURE_ACT_1_DU "व\u{947}ष\u{94d}यावः",
-    "व\u{947}ति" FUTURE_ACT_1_PL "व\u{947}ष\u{94d}यामः",
-    "व\u{947}ति" FUTURE_ACT_2_SG "व\u{947}ष\u{94d}यसि",
-    "व\u{947}ति" FUTURE_ACT_2_DU "व\u{947}ष\u{94d}यथः",
-    "व\u{947}ति" FUTURE_ACT_2_PL "व\u{947}ष\u{94d}यथ",
-    "व\u{947}ति" FUTURE_ACT_3_SG "व\u{947}ष\u{94d}यति",
-    "व\u{947}ति" FUTURE_ACT_3_DU "व\u{947}ष\u{94d}यतः",
-    "व\u{947}ति" FUTURE_ACT_3_PL "व\u{947}ष\u{94d}यन\u{94d}ति",
-    "व\u{947}ति" FUTURE_MID_1_SG "व\u{947}ष\u{94d}य\u{947}",
-    "व\u{947}ति" FUTURE_MID_1_DU "व\u{947}ष\u{94d}यावह\u{947}",
-    "व\u{947}ति" FUTURE_MID_1_PL "व\u{947}ष\u{94d}यामह\u{947}",
-    "व\u{947}ति" FUTURE_MID_2_SG "व\u{947}ष\u{94d}यस\u{947}",
-    "व\u{947}ति" FUTURE_MID_2_DU "व\u{947}ष\u{94d}य\u{947}थ\u{947}",
-    "व\u{947}ति" FUTURE_MID_2_PL "व\u{947}ष\u{94d}यध\u{94d}व\u{947}",
-    "व\u{947}ति" FUTURE_MID_3_SG "व\u{947}ष\u{94d}यत\u{947}",
-    "व\u{947}ति" FUTURE_MID_3_DU "व\u{947}ष\u{94d}य\u{947}त\u{947}",
-    "व\u{947}ति" FUTURE_MID_3_PL "व\u{947}ष\u{94d}यन\u{94d}त\u{947}",
-    "व\u{947}ति" CONDITIONAL_ACT_1_SG "अव\u{947}ष\u{94d}यम\u{94d}",
-    "व\u{947}ति" CONDITIONAL_ACT_1_DU "अव\u{947}ष\u{94d}याव",
-    "व\u{947}ति" CONDITIONAL_ACT_1_PL "अव\u{947}ष\u{94d}याम",
-    "व\u{947}ति" CONDITIONAL_ACT_2_SG "अव\u{947}ष\u{94d}यः",
-    "व\u{947}ति" CONDITIONAL_ACT_2_DU "अव\u{947}ष\u{94d}यतम\u{94d}",
-    "व\u{947}ति" CONDITIONAL_ACT_2_PL "अव\u{947}ष\u{94d}यत",
-    "व\u{947}ति" CONDITIONAL_ACT_3_SG "अव\u{947}ष\u{94d}यत\u{94d}",
-    "व\u{947}ति" CONDITIONAL_ACT_3_DU "अव\u{947}ष\u{94d}यताम\u{94d}",
-    "व\u{947}ति" CONDITIONAL_ACT_3_PL "अव\u{947}ष\u{94d}यन\u{94d}",
-    "व\u{947}ति" CONDITIONAL_MID_1_SG "अव\u{947}ष\u{94d}य\u{947}",
-    "व\u{947}ति" CONDITIONAL_MID_1_DU "अव\u{947}ष\u{94d}यावहि",
-    "व\u{947}ति" CONDITIONAL_MID_1_PL "अव\u{947}ष\u{94d}यामहि",
-    "व\u{947}ति" CONDITIONAL_MID_2_SG "अव\u{947}ष\u{94d}यथाः",
-    "व\u{947}ति" CONDITIONAL_MID_2_DU "अव\u{947}ष\u{94d}य\u{947}थाम\u{94d}",
-    "व\u{947}ति" CONDITIONAL_MID_2_PL "अव\u{947}ष\u{94d}यध\u{94d}वम\u{94d}",
-    "व\u{947}ति" CONDITIONAL_MID_3_SG "अव\u{947}ष\u{94d}यत",
-    "व\u{947}ति" CONDITIONAL_MID_3_DU "अव\u{947}ष\u{94d}य\u{947}ताम\u{94d}",
-    "व\u{947}ति" CONDITIONAL_MID_3_PL "अव\u{947}ष\u{94d}यन\u{94d}त",
-    "व\u{947}ति" PERFECT_ACT_1_SG "विवय",
-    "व\u{947}ति" PERFECT_ACT_1_DU "विव\u{94d}यिव",
-    "व\u{947}ति" PERFECT_ACT_1_PL "विव\u{94d}यिम",
-    "व\u{947}ति" PERFECT_ACT_2_SG "विव\u{947}थ",
-    "व\u{947}ति" PERFECT_ACT_2_DU "विव\u{94d}यथ\u{941}ः",
-    "व\u{947}ति" PERFECT_ACT_2_PL "विव\u{94d}य",
-    "व\u{947}ति" PERFECT_ACT_3_SG "विवाय",
-    "व\u{947}ति" PERFECT_ACT_3_DU "विव\u{94d}यत\u{941}ः",
-    "व\u{947}ति" PERFECT_ACT_3_PL "विव\u{94d}य\u{941}ः",
-    "व\u{947}ति" PERFECT_MID_1_SG "विव\u{94d}य\u{947}",
-    "व\u{947}ति" PERFECT_MID_1_DU "विव\u{94d}यिवह\u{947}",
-    "व\u{947}ति" PERFECT_MID_1_PL "विव\u{94d}यिमह\u{947}",
-    "व\u{947}ति" PERFECT_MID_2_SG "विव\u{94d}यिष\u{947}",
-    "व\u{947}ति" PERFECT_MID_2_DU "विव\u{94d}याथ\u{947}",
-    "व\u{947}ति" PERFECT_MID_2_PL "विव\u{94d}यिध\u{94d}व\u{947}",
-    "व\u{947}ति" PERFECT_MID_3_SG "विव\u{94d}य\u{947}",
-    "व\u{947}ति" PERFECT_MID_3_DU "विव\u{94d}यात\u{947}",
-    "व\u{947}ति" PERFECT_MID_3_PL "विव\u{94d}यिर\u{947}",
-    "व\u{947}ति" AORIST_ACT_1_SG "अव\u{948}षम\u{94d}",
-    "व\u{947}ति" AORIST_ACT_1_DU "अव\u{948}ष\u{94d}व",
-    "व\u{947}ति" AORIST_ACT_1_PL "अव\u{948}ष\u{94d}म",
-    "व\u{947}ति" AORIST_ACT_2_SG "अव\u{948}षीः",
-    "व\u{947}ति" AORIST_ACT_2_DU "अव\u{948}ष\u{94d}टम\u{94d}",
-    "व\u{947}ति" AORIST_ACT_2_PL "अव\u{948}ष\u{94d}ट",
-    "व\u{947}ति" AORIST_ACT_3_SG "अव\u{948}षीत\u{94d}",
-    "व\u{947}ति" AORIST_ACT_3_DU "अव\u{948}ष\u{94d}टाम\u{94d}",
-    "व\u{947}ति" AORIST_ACT_3_PL "अव\u{948}ष\u{941}ः",
-    "व\u{947}ति" AORIST_MID_1_SG "अव\u{947}षि",
-    "व\u{947}ति" AORIST_MID_1_DU "अव\u{947}ष\u{94d}वहि",
-    "व\u{947}ति" AORIST_MID_1_PL "अव\u{947}ष\u{94d}महि",
-    "व\u{947}ति" AORIST_MID_2_SG "अव\u{947}ष\u{94d}ठाः",
-    "व\u{947}ति" AORIST_MID_2_DU "अव\u{947}षाथाम\u{94d}",
-    "व\u{947}ति" AORIST_MID_2_PL "अव\u{947}ढ\u{94d}वम\u{94d}",
-    "व\u{947}ति" AORIST_MID_3_SG "अव\u{947}ष\u{94d}ट",
-    "व\u{947}ति" AORIST_MID_3_DU "अव\u{947}षाताम\u{94d}",
-    "व\u{947}ति" AORIST_MID_3_PL "अव\u{947}षत",
-    "व\u{947}ति" INFINITIVE "व\u{947}त\u{941}म\u{94d}",
-    "व\u{947}ति" GERUND "वीत\u{94d}वा",
-    "व\u{947}ति" PARTICIPLE_PRES_ACT "व\u{94d}यत\u{94d}",
-    "व\u{947}ति" PARTICIPLE_FUT_ACT "व\u{947}ष\u{94d}यत\u{94d}",
-    "व\u{947}ति" PARTICIPLE_FUT_MID "व\u{947}ष\u{94d}यमाण",
-    "व\u{947}ति" PARTICIPLE_PERF_ACT "विवीवा\u{902}स\u{94d}",
-    "व\u{947}ति" PARTICIPLE_PERF_MID "विव\u{94d}यान",
-    "व\u{947}त\u{94d}ति" IND_ACT_1_SG "व\u{947}द\u{94d}मि",
-    "व\u{947}त\u{94d}ति" IND_ACT_1_DU "विद\u{94d}वः",
-    "व\u{947}त\u{94d}ति" IND_ACT_1_PL "विद\u{94d}मः",
-    "व\u{947}त\u{94d}ति" IND_ACT_2_DU "वित\u{94d}थः",
-    "व\u{947}त\u{94d}ति" IND_ACT_2_PL "वित\u{94d}थ",
-    "व\u{947}त\u{94d}ति" IND_ACT_3_DU "वित\u{94d}तः",
-    "व\u{947}त\u{94d}ति" IND_ACT_3_PL "विदन\u{94d}ति",
-    "व\u{947}त\u{94d}ति" IND_MID_1_SG "विद\u{947}",
-    "व\u{947}त\u{94d}ति" IND_MID_1_DU "विद\u{94d}वह\u{947}",
-    "व\u{947}त\u{94d}ति" IND_MID_1_PL "विद\u{94d}मह\u{947}",
-    "व\u{947}त\u{94d}ति" IND_MID_2_SG "वित\u{94d}स\u{947}",
-    "व\u{947}त\u{94d}ति" IND_MID_2_DU "विदाथ\u{947}",
-    "व\u{947}त\u{94d}ति" IND_MID_2_PL "विद\u{94d}ध\u{94d}व\u{947}",
-    "व\u{947}त\u{94d}ति" IND_MID_3_SG "वित\u{94d}त\u{947}",
-    "व\u{947}त\u{94d}ति" IND_MID_3_DU "विदात\u{947}",
-    "व\u{947}त\u{94d}ति" IND_MID_3_PL "विदत\u{947}",
-    "व\u{947}त\u{94d}ति" IMP_ACT_1_SG "व\u{947}दानि",
-    "व\u{947}त\u{94d}ति" IMP_ACT_1_DU "व\u{947}दाव",
-    "व\u{947}त\u{94d}ति" IMP_ACT_1_PL "व\u{947}दाम",
-    "व\u{947}त\u{94d}ति" IMP_ACT_2_SG "विद\u{94d}धि",
-    "व\u{947}त\u{94d}ति" IMP_ACT_2_DU "वित\u{94d}तम\u{94d}",
-    "व\u{947}त\u{94d}ति" IMP_ACT_2_PL "वित\u{94d}त",
-    "व\u{947}त\u{94d}ति" IMP_ACT_3_DU "वित\u{94d}ताम\u{94d}",
-    "व\u{947}त\u{94d}ति" IMP_ACT_3_PL "विदन\u{94d}त\u{941}",
-    "व\u{947}त\u{94d}ति" IMP_MID_1_SG "व\u{947}द\u{948}",
-    "व\u{947}त\u{94d}ति" IMP_MID_1_DU "व\u{947}दावह\u{948}",
-    "व\u{947}त\u{94d}ति" IMP_MID_1_PL "व\u{947}दामह\u{948}",
-    "व\u{947}त\u{94d}ति" IMP_MID_2_SG "वित\u{94d}स\u{94d}व",
-    "व\u{947}त\u{94d}ति" IMP_MID_2_DU "विदाथाम\u{94d}",
-    "व\u{947}त\u{94d}ति" IMP_MID_2_PL "विद\u{94d}ध\u{94d}वम\u{94d}",
-    "व\u{947}त\u{94d}ति" IMP_MID_3_SG "वित\u{94d}ताम\u{94d}",
-    "व\u{947}त\u{94d}ति" IMP_MID_3_DU "विदाताम\u{94d}",
-    "व\u{947}त\u{94d}ति" IMP_MID_3_PL "विदताम\u{94d}",
-    "व\u{947}त\u{94d}ति" OPT_ACT_1_SG "विद\u{94d}याम\u{94d}",
-    "व\u{947}त\u{94d}ति" OPT_ACT_1_DU "विद\u{94d}याव",
-    "व\u{947}त\u{94d}ति" OPT_ACT_1_PL "विद\u{94d}याम",
-    "व\u{947}त\u{94d}ति" OPT_ACT_2_SG "विद\u{94d}याः",
-    "व\u{947}त\u{94d}ति" OPT_ACT_2_DU "विद\u{94d}यातम\u{94d}",
-    "व\u{947}त\u{94d}ति" OPT_ACT_2_PL "विद\u{94d}यात",
-    "व\u{947}त\u{94d}ति" OPT_ACT_3_SG "विद\u{94d}यात\u{94d}",
-    "व\u{947}त\u{94d}ति" OPT_ACT_3_DU "विद\u{94d}याताम\u{94d}",
-    "व\u{947}त\u{94d}ति" OPT_ACT_3_PL "विद\u{94d}य\u{941}ः",
-    "व\u{947}त\u{94d}ति" OPT_MID_1_SG "विदीय",
-    "व\u{947}त\u{94d}ति" OPT_MID_1_DU "विदीवहि",
-    "व\u{947}त\u{94d}ति" OPT_MID_1_PL "विदीमहि",
-    "व\u{947}त\u{94d}ति" OPT_MID_2_SG "विदीथाः",
-    "व\u{947}त\u{94d}ति" OPT_MID_2_DU "विदीयाथाम\u{94d}",
-    "व\u{947}त\u{94d}ति" OPT_MID_2_PL "विदीध\u{94d}वम\u{94d}",
-    "व\u{947}त\u{94d}ति" OPT_MID_3_SG "विदीत",
-    "व\u{947}त\u{94d}ति" OPT_MID_3_DU "विदीयाताम\u{94d}",
-    "व\u{947}त\u{94d}ति" OPT_MID_3_PL "विदीरन\u{94d}",
-    "व\u{947}त\u{94d}ति" SUBJ_ACT_1_SG "व\u{947}दानि",
-    "व\u{947}त\u{94d}ति" SUBJ_ACT_1_DU "व\u{947}दाव",
-    "व\u{947}त\u{94d}ति" SUBJ_ACT_1_PL "व\u{947}दाम",
-    "व\u{947}त\u{94d}ति" SUBJ_ACT_2_SG "व\u{947}दः",
-    "व\u{947}त\u{94d}ति" SUBJ_ACT_2_DU "व\u{947}दथः",
-    "व\u{947}त\u{94d}ति" SUBJ_ACT_2_PL "व\u{947}दथ",
-    "व\u{947}त\u{94d}ति" SUBJ_ACT_3_SG "व\u{947}दत\u{94d}",
-    "व\u{947}त\u{94d}ति" SUBJ_ACT_3_DU "व\u{947}दतः",
-    "व\u{947}त\u{94d}ति" SUBJ_ACT_3_PL "व\u{947}दन\u{94d}",
-    "व\u{947}त\u{94d}ति" SUBJ_MID_1_SG "व\u{947}द\u{948}",
-    "व\u{947}त\u{94d}ति" SUBJ_MID_1_DU "व\u{947}दावह\u{948}",
-    "व\u{947}त\u{94d}ति" SUBJ_MID_1_PL "व\u{947}दामह\u{948}",
-    "व\u{947}त\u{94d}ति" SUBJ_MID_2_SG "व\u{947}दस\u{947}",
-    "व\u{947}त\u{94d}ति" SUBJ_MID_2_DU "व\u{947}द\u{948}थ\u{947}",
-    "व\u{947}त\u{94d}ति" SUBJ_MID_2_PL "व\u{947}दध\u{94d}व\u{947}",
-    "व\u{947}त\u{94d}ति" SUBJ_MID_3_SG "व\u{947}दत\u{947}",
-    "व\u{947}त\u{94d}ति" SUBJ_MID_3_DU "व\u{947}द\u{948}त\u{947}",
-    "व\u{947}त\u{94d}ति" SUBJ_MID_3_PL "व\u{947}दन\u{94d}त",
-    "व\u{947}त\u{94d}ति" IMPERFECT_ACT_1_SG "अव\u{947}दम\u{94d}",
-    "व\u{947}त\u{94d}ति" IMPERFECT_ACT_1_DU "अविद\u{94d}व",
-    "व\u{947}त\u{94d}ति" IMPERFECT_ACT_1_PL "अविद\u{94d}म",
-    "व\u{947}त\u{94d}ति" IMPERFECT_ACT_2_SG "अव\u{947}त\u{94d}",
-    "व\u{947}त\u{94d}ति" IMPERFECT_ACT_2_DU "अवित\u{94d}तम\u{94d}",
-    "व\u{947}त\u{94d}ति" IMPERFECT_ACT_2_PL "अवित\u{94d}त",
-    "व\u{947}त\u{94d}ति" IMPERFECT_ACT_3_SG "अव\u{947}त\u{94d}",
-    "व\u{947}त\u{94d}ति" IMPERFECT_ACT_3_DU "अवित\u{94d}ताम\u{94d}",
-    "व\u{947}त\u{94d}ति" IMPERFECT_ACT_3_PL "अविदन\u{94d}",
-    "व\u{947}त\u{94d}ति" IMPERFECT_MID_1_SG "अविदि",
-    "व\u{947}त\u{94d}ति" IMPERFECT_MID_1_DU "अविद\u{94d}वहि",
-    "व\u{947}त\u{94d}ति" IMPERFECT_MID_1_PL "अविद\u{94d}महि",
-    "व\u{947}त\u{94d}ति" IMPERFECT_MID_2_SG "अवित\u{94d}थाः",
-    "व\u{947}त\u{94d}ति" IMPERFECT_MID_2_DU "अविदाथाम\u{94d}",
-    "व\u{947}त\u{94d}ति" IMPERFECT_MID_2_PL "अविद\u{94d}ध\u{94d}वम\u{94d}",
-    "व\u{947}त\u{94d}ति" IMPERFECT_MID_3_SG "अवित\u{94d}त",
-    "व\u{947}त\u{94d}ति" IMPERFECT_MID_3_DU "अविदाताम\u{94d}",
-    "व\u{947}त\u{94d}ति" IMPERFECT_MID_3_PL "अविदत",
-    "व\u{947}त\u{94d}ति" PARTICIPLE_PRES_ACT "विदत\u{94d}",
-    "व\u{947}त\u{94d}ति" PARTICIPLE_PRES_MID "विदान",
-    "व\u{947}द" PERFECT_ACT_1_DU "विद\u{94d}व",
-    "व\u{947}द" PERFECT_ACT_1_PL "विद\u{94d}म",
-    "व\u{947}द" PERFECT_ACT_2_SG "व\u{947}त\u{94d}थ",
-    "व\u{947}द" PERFECT_ACT_2_DU "विदथ\u{941}ः",
-    "व\u{947}द" PERFECT_ACT_2_PL "विद",
-    "व\u{947}द" PERFECT_ACT_3_DU "विदत\u{941}ः",
-    "व\u{947}द" PERFECT_ACT_3_PL "विद\u{941}ः",
-    "व\u{947}द" PERFECT_MID_1_SG "विद\u{947}",
-    "व\u{947}द" PERFECT_MID_1_DU "विद\u{94d}वह\u{947}",
-    "व\u{947}द" PERFECT_MID_1_PL "विद\u{94d}मह\u{947}",
-    "व\u{947}द" PERFECT_MID_2_SG "वित\u{94d}स\u{947}",
-    "व\u{947}द" PERFECT_MID_2_DU "विदाथ\u{947}",
-    "व\u{947}द" PERFECT_MID_2_PL "विद\u{94d}ध\u{94d}व\u{947}",
-    "व\u{947}द" PERFECT_MID_3_SG "विद\u{947}",
-    "व\u{947}द" PERFECT_MID_3_DU "विदात\u{947}",
-    "व\u{947}द" PERFECT_MID_3_PL "विदिर\u{947}",
-    "व\u{947}द" PARTICIPLE_PERF_ACT "विद\u{94d}वा\u{902}स\u{94d}",
-    "व\u{947}द" PARTICIPLE_PERF_MID "विदान",
-    "व\u{947}व\u{947}त\u{94d}ति" IND_ACT_1_SG "व\u{947}व\u{947}द\u{94d}मि",
-    "व\u{947}व\u{947}त\u{94d}ति" IND_ACT_1_DU "व\u{947}विद\u{94d}वः",
-    "व\u{947}व\u{947}त\u{94d}ति" IND_ACT_1_PL "व\u{947}विद\u{94d}मः",
-    "व\u{947}व\u{947}त\u{94d}ति" IND_ACT_2_DU "व\u{947}वित\u{94d}थः",
-    "व\u{947}व\u{947}त\u{94d}ति" IND_ACT_2_PL "व\u{947}वित\u{94d}थ",
-    "व\u{947}व\u{947}त\u{94d}ति" IND_ACT_3_DU "व\u{947}वित\u{94d}तः",
-    "व\u{947}व\u{947}त\u{94d}ति" IND_ACT_3_PL "व\u{947}विदति",
-    "व\u{947}व\u{947}त\u{94d}ति" IMP_ACT_1_SG "व\u{947}विदानि",
-    "व\u{947}व\u{947}त\u{94d}ति" IMP_ACT_1_DU "व\u{947}विदाव",
-    "व\u{947}व\u{947}त\u{94d}ति" IMP_ACT_1_PL "व\u{947}विदाम",
-    "व\u{947}व\u{947}त\u{94d}ति" IMP_ACT_2_SG "व\u{947}विद\u{94d}धि",
-    "व\u{947}व\u{947}त\u{94d}ति" IMP_ACT_2_DU "व\u{947}वित\u{94d}तम\u{94d}",
-    "व\u{947}व\u{947}त\u{94d}ति" IMP_ACT_2_PL "व\u{947}वित\u{94d}त",
-    "व\u{947}व\u{947}त\u{94d}ति" IMP_ACT_3_DU "व\u{947}वित\u{94d}ताम\u{94d}",
-    "व\u{947}व\u{947}त\u{94d}ति" IMP_ACT_3_PL "व\u{947}विदत\u{941}",
-    "व\u{947}व\u{947}त\u{94d}ति" OPT_ACT_1_SG "व\u{947}विद\u{94d}याम\u{94d}",
-    "व\u{947}व\u{947}त\u{94d}ति" OPT_ACT_1_DU "व\u{947}विद\u{94d}याव",
-    "व\u{947}व\u{947}त\u{94d}ति" OPT_ACT_1_PL "व\u{947}विद\u{94d}याम",
-    "व\u{947}व\u{947}त\u{94d}ति" OPT_ACT_2_SG "व\u{947}विद\u{94d}याः",
-    "व\u{947}व\u{947}त\u{94d}ति" OPT_ACT_2_DU "व\u{947}विद\u{94d}यातम\u{94d}",
-    "व\u{947}व\u{947}त\u{94d}ति" OPT_ACT_2_PL "व\u{947}विद\u{94d}यात",
-    "व\u{947}व\u{947}त\u{94d}ति" OPT_ACT_3_SG "व\u{947}विद\u{94d}यात\u{94d}",
-    "व\u{947}व\u{947}त\u{94d}ति" OPT_ACT_3_DU "व\u{947}विद\u{94d}याताम\u{94d}",
-    "व\u{947}व\u{947}त\u{94d}ति" OPT_ACT_3_PL "व\u{947}विद\u{94d}य\u{941}ः",
-    "व\u{947}व\u{947}त\u{94d}ति" SUBJ_ACT_1_SG "व\u{947}विदानि",
-    "व\u{947}व\u{947}त\u{94d}ति" SUBJ_ACT_1_DU "व\u{947}विदाव",
-    "व\u{947}व\u{947}त\u{94d}ति" SUBJ_ACT_1_PL "व\u{947}विदाम",
-    "व\u{947}व\u{947}त\u{94d}ति" SUBJ_ACT_2_SG "व\u{947}विदः",
-    "व\u{947}व\u{947}त\u{94d}ति" SUBJ_ACT_2_DU "व\u{947}विदथः",
-    "व\u{947}व\u{947}त\u{94d}ति" SUBJ_ACT_2_PL "व\u{947}विदथ",
-    "व\u{947}व\u{947}त\u{94d}ति" SUBJ_ACT_3_SG "व\u{947}विदत\u{94d}",
-    "व\u{947}व\u{947}त\u{94d}ति" SUBJ_ACT_3_DU "व\u{947}विदतः",
-    "व\u{947}व\u{947}त\u{94d}ति" SUBJ_ACT_3_PL "व\u{947}विदन\u{94d}",
-    "व\u{947}व\u{947}त\u{94d}ति" IMPERFECT_ACT_1_SG "अव\u{947}विदम\u{94d}",
-    "व\u{947}व\u{947}त\u{94d}ति" IMPERFECT_ACT_1_DU "अव\u{947}विद\u{94d}व",
-    "व\u{947}व\u{947}त\u{94d}ति" IMPERFECT_ACT_1_PL "अव\u{947}विद\u{94d}म",
-    "व\u{947}व\u{947}त\u{94d}ति" IMPERFECT_ACT_2_SG "अव\u{947}व\u{947}त\u{94d}",
-    "व\u{947}व\u{947}त\u{94d}ति" IMPERFECT_ACT_2_DU "अव\u{947}वित\u{94d}तम\u{94d}",
-    "व\u{947}व\u{947}त\u{94d}ति" IMPERFECT_ACT_2_PL "अव\u{947}वित\u{94d}त",
-    "व\u{947}व\u{947}त\u{94d}ति" IMPERFECT_ACT_3_SG "अव\u{947}व\u{947}त\u{94d}",
-    "व\u{947}व\u{947}त\u{94d}ति" IMPERFECT_ACT_3_DU "अव\u{947}वित\u{94d}ताम\u{94d}",
-    "व\u{947}व\u{947}त\u{94d}ति" IMPERFECT_ACT_3_PL "अव\u{947}विद\u{941}ः",
-    "व\u{947}व\u{947}त\u{94d}ति" PARTICIPLE_PRES_ACT "व\u{947}विदत\u{94d}",
-    "व\u{947}व\u{947}ष\u{94d}टि" IND_ACT_1_SG "व\u{947}व\u{947}ष\u{94d}मि",
-    "व\u{947}व\u{947}ष\u{94d}टि" IND_ACT_1_DU "व\u{947}विष\u{94d}वः",
-    "व\u{947}व\u{947}ष\u{94d}टि" IND_ACT_1_PL "व\u{947}विष\u{94d}मः",
-    "व\u{947}व\u{947}ष\u{94d}टि" IND_ACT_2_SG "व\u{947}व\u{947}क\u{94d}षि",
-    "व\u{947}व\u{947}ष\u{94d}टि" IND_ACT_2_DU "व\u{947}विष\u{94d}ठः",
-    "व\u{947}व\u{947}ष\u{94d}टि" IND_ACT_2_PL "व\u{947}विष\u{94d}ठ",
-    "व\u{947}व\u{947}ष\u{94d}टि" IND_ACT_3_SG "व\u{947}व\u{947}ष\u{94d}टि",
-    "व\u{947}व\u{947}ष\u{94d}टि" IND_ACT_3_DU "व\u{947}विष\u{94d}टः",
-    "व\u{947}व\u{947}ष\u{94d}टि" IND_ACT_3_PL "व\u{947}विषति",
-    "व\u{947}व\u{947}ष\u{94d}टि" IMP_ACT_1_SG "व\u{947}विषाणि",
-    "व\u{947}व\u{947}ष\u{94d}टि" IMP_ACT_1_DU "व\u{947}विषाव",
-    "व\u{947}व\u{947}ष\u{94d}टि" IMP_ACT_1_PL "व\u{947}विषाम",
-    "व\u{947}व\u{947}ष\u{94d}टि" IMP_ACT_2_SG "व\u{947}विड\u{94d}ढि",
-    "व\u{947}व\u{947}ष\u{94d}टि" IMP_ACT_2_DU "व\u{947}विष\u{94d}टम\u{94d}",
-    "व\u{947}व\u{947}ष\u{94d}टि" IMP_ACT_2_PL "व\u{947}विष\u{94d}ट",
-    "व\u{947}व\u{947}ष\u{94d}टि" IMP_ACT_3_SG "व\u{947}व\u{947}ष\u{94d}ट\u{941}",
-    "व\u{947}व\u{947}ष\u{94d}टि" IMP_ACT_3_DU "व\u{947}विष\u{94d}टाम\u{94d}",
-    "व\u{947}व\u{947}ष\u{94d}टि" IMP_ACT_3_PL "व\u{947}विषत\u{941}",
-    "व\u{947}व\u{947}ष\u{94d}टि" OPT_ACT_1_SG "व\u{947}विष\u{94d}याम\u{94d}",
-    "व\u{947}व\u{947}ष\u{94d}टि" OPT_ACT_1_DU "व\u{947}विष\u{94d}याव",
-    "व\u{947}व\u{947}ष\u{94d}टि" OPT_ACT_1_PL "व\u{947}विष\u{94d}याम",
-    "व\u{947}व\u{947}ष\u{94d}टि" OPT_ACT_2_SG "व\u{947}विष\u{94d}याः",
-    "व\u{947}व\u{947}ष\u{94d}टि" OPT_ACT_2_DU "व\u{947}विष\u{94d}यातम\u{94d}",
-    "व\u{947}व\u{947}ष\u{94d}टि" OPT_ACT_2_PL "व\u{947}विष\u{94d}यात",
-    "व\u{947}व\u{947}ष\u{94d}टि" OPT_ACT_3_SG "व\u{947}विष\u{94d}यात\u{94d}",
-    "व\u{947}व\u{947}ष\u{94d}टि" OPT_ACT_3_DU "व\u{947}विष\u{94d}याताम\u{94d}",
-    "व\u{947}व\u{947}ष\u{94d}टि" OPT_ACT_3_PL "व\u{947}विष\u{94d}य\u{941}ः",
-    "व\u{947}व\u{947}ष\u{94d}टि" SUBJ_ACT_1_SG "व\u{947}विषाणि",
-    "व\u{947}व\u{947}ष\u{94d}टि" SUBJ_ACT_1_DU "व\u{947}विषाव",
-    "व\u{947}व\u{947}ष\u{94d}टि" SUBJ_ACT_1_PL "व\u{947}विषाम",
-    "व\u{947}व\u{947}ष\u{94d}टि" SUBJ_ACT_2_SG "व\u{947}विषः",
-    "व\u{947}व\u{947}ष\u{94d}टि" SUBJ_ACT_2_DU "व\u{947}विषथः",
-    "व\u{947}व\u{947}ष\u{94d}टि" SUBJ_ACT_2_PL "व\u{947}विषथ",
-    "व\u{947}व\u{947}ष\u{94d}टि" SUBJ_ACT_3_SG "व\u{947}विषत\u{94d}",
-    "व\u{947}व\u{947}ष\u{94d}टि" SUBJ_ACT_3_DU "व\u{947}विषतः",
-    "व\u{947}व\u{947}ष\u{94d}टि" SUBJ_ACT_3_PL "व\u{947}विषन\u{94d}",
-    "व\u{947}व\u{947}ष\u{94d}टि" IMPERFECT_ACT_1_SG "अव\u{947}विषम\u{94d}",
-    "व\u{947}व\u{947}ष\u{94d}टि" IMPERFECT_ACT_1_DU "अव\u{947}विष\u{94d}व",
-    "व\u{947}व\u{947}ष\u{94d}टि" IMPERFECT_ACT_1_PL "अव\u{947}विष\u{94d}म",
-    "व\u{947}व\u{947}ष\u{94d}टि" IMPERFECT_ACT_2_SG "अव\u{947}व\u{947}ट\u{94d}",
-    "व\u{947}व\u{947}ष\u{94d}टि" IMPERFECT_ACT_2_DU "अव\u{947}विष\u{94d}टम\u{94d}",
-    "व\u{947}व\u{947}ष\u{94d}टि" IMPERFECT_ACT_2_PL "अव\u{947}विष\u{94d}ट",
-    "व\u{947}व\u{947}ष\u{94d}टि" IMPERFECT_ACT_3_SG "अव\u{947}व\u{947}ट\u{94d}",
-    "व\u{947}व\u{947}ष\u{94d}टि" IMPERFECT_ACT_3_DU "अव\u{947}विष\u{94d}टाम\u{94d}",
-    "व\u{947}व\u{947}ष\u{94d}टि" IMPERFECT_ACT_3_PL "अव\u{947}विष\u{941}ः",
-    "व\u{947}व\u{947}ष\u{94d}टि" PARTICIPLE_PRES_ACT "व\u{947}विषत\u{94d}",
-    "शशाक" PERFECT_ACT_1_SG "शशक",
-    "शशाक" PERFECT_ACT_1_DU "श\u{947}किव",
-    "शशाक" PERFECT_ACT_1_PL "श\u{947}किम",
-    "शशाक" PERFECT_ACT_2_SG "शशक\u{94d}थ",
-    "शशाक" PERFECT_ACT_2_DU "श\u{947}कथ\u{941}ः",
-    "शशाक" PERFECT_ACT_2_PL "श\u{947}क",
-    "शशाक" PERFECT_ACT_3_DU "श\u{947}कत\u{941}ः",
-    "शशाक" PERFECT_ACT_3_PL "श\u{947}क\u{941}ः",
-    "शशाक" PERFECT_MID_1_SG "श\u{947}क\u{947}",
-    "शशाक" PERFECT_MID_1_DU "श\u{947}किवह\u{947}",
-    "शशाक" PERFECT_MID_1_PL "श\u{947}किमह\u{947}",
-    "शशाक" PERFECT_MID_2_SG "श\u{947}किष\u{947}",
-    "शशाक" PERFECT_MID_2_DU "श\u{947}काथ\u{947}",
-    "शशाक" PERFECT_MID_2_PL "श\u{947}किध\u{94d}व\u{947}",
-    "शशाक" PERFECT_MID_3_SG "श\u{947}क\u{947}",
-    "शशाक" PERFECT_MID_3_DU "श\u{947}कात\u{947}",
-    "शशाक" PERFECT_MID_3_PL "श\u{947}किर\u{947}",
-    "शशाक" PARTICIPLE_PERF_ACT "श\u{947}किवा\u{902}स\u{94d}",
-    "शशाक" PARTICIPLE_PERF_MID "श\u{947}कान",
-    "शास\u{94d}ति" IND_ACT_1_SG "शास\u{94d}मि",
-    "शास\u{94d}ति" IND_ACT_1_DU "शिष\u{94d}वः",
-    "शास\u{94d}ति" IND_ACT_1_PL "शिष\u{94d}मः",
-    "शास\u{94d}ति" IND_ACT_2_DU "शिष\u{94d}ठः",
-    "शास\u{94d}ति" IND_ACT_2_PL "शिष\u{94d}ठ",
-    "शास\u{94d}ति" IND_ACT_3_DU "शिष\u{94d}टः",
-    "शास\u{94d}ति" IND_ACT_3_PL "शासति",
-    "शास\u{94d}ति" IND_MID_1_SG "शास\u{947}",
-    "शास\u{94d}ति" IND_MID_1_DU "शास\u{94d}वह\u{947}",
-    "शास\u{94d}ति" IND_MID_1_PL "शास\u{94d}मह\u{947}",
-    "शास\u{94d}ति" IND_MID_2_DU "शासाथ\u{947}",
-    "शास\u{94d}ति" IND_MID_2_PL "शाद\u{94d}ध\u{94d}व\u{947}",
-    "शास\u{94d}ति" IND_MID_3_DU "शासात\u{947}",
-    "शास\u{94d}ति" IND_MID_3_PL "शासत\u{947}",
-    "शास\u{94d}ति" IMP_ACT_1_SG "शासानि",
-    "शास\u{94d}ति" IMP_ACT_1_DU "शासाव",
-    "शास\u{94d}ति" IMP_ACT_1_PL "शासाम",
-    "शास\u{94d}ति" IMP_ACT_2_SG "शाधि",
-    "शास\u{94d}ति" IMP_ACT_2_DU "शिष\u{94d}टम\u{94d}",
-    "शास\u{94d}ति" IMP_ACT_3_DU "शिष\u{94d}टाम\u{94d}",
-    "शास\u{94d}ति" IMP_ACT_3_PL "शासत\u{941}",
-    "शास\u{94d}ति" IMP_MID_1_SG "शास\u{948}",
-    "शास\u{94d}ति" IMP_MID_1_DU "शासावह\u{948}",
-    "शास\u{94d}ति" IMP_MID_1_PL "शासामह\u{948}",
-    "शास\u{94d}ति" IMP_MID_2_DU "शासाथाम\u{94d}",
-    "शास\u{94d}ति" IMP_MID_2_PL "शाद\u{94d}ध\u{94d}वम\u{94d}",
-    "शास\u{94d}ति" IMP_MID_3_DU "शासाताम\u{94d}",
-    "शास\u{94d}ति" IMP_MID_3_PL "शासताम\u{94d}",
-    "शास\u{94d}ति" OPT_ACT_1_SG "शिष\u{94d}याम\u{94d}",
-    "शास\u{94d}ति" OPT_ACT_1_DU "शिष\u{94d}याव",
-    "शास\u{94d}ति" OPT_ACT_1_PL "शिष\u{94d}याम",
-    "शास\u{94d}ति" OPT_ACT_2_SG "शिष\u{94d}याः",
-    "शास\u{94d}ति" OPT_ACT_2_DU "शिष\u{94d}यातम\u{94d}",
-    "शास\u{94d}ति" OPT_ACT_2_PL "शिष\u{94d}यात",
-    "शास\u{94d}ति" OPT_ACT_3_SG "शिष\u{94d}यात\u{94d}",
-    "शास\u{94d}ति" OPT_ACT_3_DU "शिष\u{94d}याताम\u{94d}",
-    "शास\u{94d}ति" OPT_ACT_3_PL "शिष\u{94d}य\u{941}ः",
-    "शास\u{94d}ति" OPT_MID_1_SG "शासीय",
-    "शास\u{94d}ति" OPT_MID_1_DU "शासीवहि",
-    "शास\u{94d}ति" OPT_MID_1_PL "शासीमहि",
-    "शास\u{94d}ति" OPT_MID_2_SG "शासीथाः",
-    "शास\u{94d}ति" OPT_MID_2_DU "शासीयाथाम\u{94d}",
-    "शास\u{94d}ति" OPT_MID_2_PL "शासीध\u{94d}वम\u{94d}",
-    "शास\u{94d}ति" OPT_MID_3_SG "शासीत",
-    "शास\u{94d}ति" OPT_MID_3_DU "शासीयाताम\u{94d}",
-    "शास\u{94d}ति" OPT_MID_3_PL "शासीरन\u{94d}",
-    "शास\u{94d}ति" SUBJ_ACT_1_SG "शासानि",
-    "शास\u{94d}ति" SUBJ_ACT_1_DU "शासाव",
-    "शास\u{94d}ति" SUBJ_ACT_1_PL "शासाम",
-    "शास\u{94d}ति" SUBJ_ACT_2_SG "शासः",
-    "शास\u{94d}ति" SUBJ_ACT_2_DU "शासथः",
-    "शास\u{94d}ति" SUBJ_ACT_2_PL "शासथ",
-    "शास\u{94d}ति" SUBJ_ACT_3_SG "शासत\u{94d}",
-    "शास\u{94d}ति" SUBJ_ACT_3_DU "शासतः",
-    "शास\u{94d}ति" SUBJ_ACT_3_PL "शासन\u{94d}",
-    "शास\u{94d}ति" SUBJ_MID_1_SG "शास\u{948}",
-    "शास\u{94d}ति" SUBJ_MID_1_DU "शासावह\u{948}",
-    "शास\u{94d}ति" SUBJ_MID_1_PL "शासामह\u{948}",
-    "शास\u{94d}ति" SUBJ_MID_2_SG "शासस\u{947}",
-    "शास\u{94d}ति" SUBJ_MID_2_DU "शास\u{948}थ\u{947}",
-    "शास\u{94d}ति" SUBJ_MID_2_PL "शासध\u{94d}व\u{947}",
-    "शास\u{94d}ति" SUBJ_MID_3_SG "शासत\u{947}",
-    "शास\u{94d}ति" SUBJ_MID_3_DU "शास\u{948}त\u{947}",
-    "शास\u{94d}ति" SUBJ_MID_3_PL "शासन\u{94d}त",
-    "शास\u{94d}ति" IMPERFECT_ACT_1_SG "अशासम\u{94d}",
-    "शास\u{94d}ति" IMPERFECT_ACT_1_DU "अशिष\u{94d}व",
-    "शास\u{94d}ति" IMPERFECT_ACT_1_PL "अशिष\u{94d}म",
-    "शास\u{94d}ति" IMPERFECT_ACT_2_SG "अशाः",
-    "शास\u{94d}ति" IMPERFECT_ACT_2_DU "अशिष\u{94d}टम\u{94d}",
-    "शास\u{94d}ति" IMPERFECT_ACT_2_PL "अशिष\u{94d}ट",
-    "शास\u{94d}ति" IMPERFECT_ACT_3_SG "अशात\u{94d}",
-    "शास\u{94d}ति" IMPERFECT_ACT_3_DU "अशिष\u{94d}टाम\u{94d}",
-    "शास\u{94d}ति" IMPERFECT_ACT_3_PL "अशास\u{941}ः",
-    "शास\u{94d}ति" IMPERFECT_MID_1_SG "अशासि",
-    "शास\u{94d}ति" IMPERFECT_MID_1_DU "अशास\u{94d}वहि",
-    "शास\u{94d}ति" IMPERFECT_MID_1_PL "अशास\u{94d}महि",
-    "शास\u{94d}ति" IMPERFECT_MID_2_DU "अशासाथाम\u{94d}",
-    "शास\u{94d}ति" IMPERFECT_MID_2_PL "अशाद\u{94d}ध\u{94d}वम\u{94d}",
-    "शास\u{94d}ति" IMPERFECT_MID_3_DU "अशासाताम\u{94d}",
-    "शास\u{94d}ति" IMPERFECT_MID_3_PL "अशासत",
-    "शास\u{94d}ति" PARTICIPLE_PRES_ACT "शासत\u{94d}",
-    "शास\u{94d}ति" PARTICIPLE_PRES_MID "शासान",
-    "शिनष\u{94d}टि" IND_ACT_1_SG "शिनष\u{94d}मि",
-    "शिनष\u{94d}टि" IND_ACT_1_DU "शि\u{902}ष\u{94d}वः",
-    "शिनष\u{94d}टि" IND_ACT_1_PL "शि\u{902}ष\u{94d}मः",
-    "शिनष\u{94d}टि" IND_ACT_2_SG "शिनक\u{94d}षि",
-    "शिनष\u{94d}टि" IND_ACT_2_DU "शि\u{902}ष\u{94d}ठः",
-    "शिनष\u{94d}टि" IND_ACT_2_PL "शि\u{902}ष\u{94d}ठ",
-    "शिनष\u{94d}टि" IND_ACT_3_SG "शिनष\u{94d}टि",
-    "शिनष\u{94d}टि" IND_ACT_3_DU "शि\u{902}ष\u{94d}टः",
-    "शिनष\u{94d}टि" IND_ACT_3_PL "शि\u{902}षन\u{94d}ति",
-    "शिनष\u{94d}टि" IND_MID_1_SG "शि\u{902}ष\u{947}",
-    "शिनष\u{94d}टि" IND_MID_1_DU "शि\u{902}ष\u{94d}वह\u{947}",
-    "शिनष\u{94d}टि" IND_MID_1_PL "शि\u{902}ष\u{94d}मह\u{947}",
-    "शिनष\u{94d}टि" IND_MID_2_SG "शिङ\u{94d}क\u{94d}ष\u{947}",
-    "शिनष\u{94d}टि" IND_MID_2_DU "शि\u{902}षाथ\u{947}",
-    "शिनष\u{94d}टि" IND_MID_2_PL "शिण\u{94d}ड\u{94d}ढ\u{94d}व\u{947}",
-    "शिनष\u{94d}टि" IND_MID_3_SG "शि\u{902}ष\u{94d}ट\u{947}",
-    "शिनष\u{94d}टि" IND_MID_3_DU "शि\u{902}षात\u{947}",
-    "शिनष\u{94d}टि" IND_MID_3_PL "शि\u{902}षत\u{947}",
-    "शिनष\u{94d}टि" IMP_ACT_1_SG "शिनषाणि",
-    "शिनष\u{94d}टि" IMP_ACT_1_DU "शिनषाव",
-    "शिनष\u{94d}टि" IMP_ACT_1_PL "शिनषाम",
-    "शिनष\u{94d}टि" IMP_ACT_2_SG "शिण\u{94d}ड\u{94d}ढि",
-    "शिनष\u{94d}टि" IMP_ACT_2_DU "शि\u{902}ष\u{94d}टम\u{94d}",
-    "शिनष\u{94d}टि" IMP_ACT_2_PL "शि\u{902}ष\u{94d}ट",
-    "शिनष\u{94d}टि" IMP_ACT_3_SG "शिनष\u{94d}ट\u{941}",
-    "शिनष\u{94d}टि" IMP_ACT_3_DU "शि\u{902}ष\u{94d}टाम\u{94d}",
-    "शिनष\u{94d}टि" IMP_ACT_3_PL "शि\u{902}षन\u{94d}त\u{941}",
-    "शिनष\u{94d}टि" IMP_MID_1_SG "शिनष\u{948}",
-    "शिनष\u{94d}टि" IMP_MID_1_DU "शिनषावह\u{948}",
-    "शिनष\u{94d}टि" IMP_MID_1_PL "शिनषामह\u{948}",
-    "शिनष\u{94d}टि" IMP_MID_2_SG "शिङ\u{94d}क\u{94d}ष\u{94d}व",
-    "शिनष\u{94d}टि" IMP_MID_2_DU "शि\u{902}षाथाम\u{94d}",
-    "शिनष\u{94d}टि" IMP_MID_2_PL "शिण\u{94d}ड\u{94d}ढ\u{94d}वम\u{94d}",
-    "शिनष\u{94d}टि" IMP_MID_3_SG "शि\u{902}ष\u{94d}टाम\u{94d}",
-    "शिनष\u{94d}टि" IMP_MID_3_DU "शि\u{902}षाताम\u{94d}",
-    "शिनष\u{94d}टि" IMP_MID_3_PL "शि\u{902}षताम\u{94d}",
-    "शिनष\u{94d}टि" OPT_ACT_1_SG "शि\u{902}ष\u{94d}याम\u{94d}",
-    "शिनष\u{94d}टि" OPT_ACT_1_DU "शि\u{902}ष\u{94d}याव",
-    "शिनष\u{94d}टि" OPT_ACT_1_PL "शि\u{902}ष\u{94d}याम",
-    "शिनष\u{94d}टि" OPT_ACT_2_SG "शि\u{902}ष\u{94d}याः",
-    "शिनष\u{94d}टि" OPT_ACT_2_DU "शि\u{902}ष\u{94d}यातम\u{94d}",
-    "शिनष\u{94d}टि" OPT_ACT_2_PL "शि\u{902}ष\u{94d}यात",
-    "शिनष\u{94d}टि" OPT_ACT_3_SG "शि\u{902}ष\u{94d}यात\u{94d}",
-    "शिनष\u{94d}टि" OPT_ACT_3_DU "शि\u{902}ष\u{94d}याताम\u{94d}",
-    "शिनष\u{94d}टि" OPT_ACT_3_PL "शि\u{902}ष\u{94d}य\u{941}ः",
-    "शिनष\u{94d}टि" OPT_MID_1_SG "शि\u{902}षीय",
-    "शिनष\u{94d}टि" OPT_MID_1_DU "शि\u{902}षीवहि",
-    "शिनष\u{94d}टि" OPT_MID_1_PL "शि\u{902}षीमहि",
-    "शिनष\u{94d}टि" OPT_MID_2_SG "शि\u{902}षीथाः",
-    "शिनष\u{94d}टि" OPT_MID_2_DU "शि\u{902}षीयाथाम\u{94d}",
-    "शिनष\u{94d}टि" OPT_MID_2_PL "शि\u{902}षीध\u{94d}वम\u{94d}",
-    "शिनष\u{94d}टि" OPT_MID_3_SG "शि\u{902}षीत",
-    "शिनष\u{94d}टि" OPT_MID_3_DU "शि\u{902}षीयाताम\u{94d}",
-    "शिनष\u{94d}टि" OPT_MID_3_PL "शि\u{902}षीरन\u{94d}",
-    "शिनष\u{94d}टि" SUBJ_ACT_1_SG "शिनषाणि",
-    "शिनष\u{94d}टि" SUBJ_ACT_1_DU "शिनषाव",
-    "शिनष\u{94d}टि" SUBJ_ACT_1_PL "शिनषाम",
-    "शिनष\u{94d}टि" SUBJ_ACT_2_SG "शिनषः",
-    "शिनष\u{94d}टि" SUBJ_ACT_2_DU "शिनषथः",
-    "शिनष\u{94d}टि" SUBJ_ACT_2_PL "शिनषथ",
-    "शिनष\u{94d}टि" SUBJ_ACT_3_SG "शिनषत\u{94d}",
-    "शिनष\u{94d}टि" SUBJ_ACT_3_DU "शिनषतः",
-    "शिनष\u{94d}टि" SUBJ_ACT_3_PL "शिनषन\u{94d}",
-    "शिनष\u{94d}टि" SUBJ_MID_1_SG "शिनष\u{948}",
-    "शिनष\u{94d}टि" SUBJ_MID_1_DU "शिनषावह\u{948}",
-    "शिनष\u{94d}टि" SUBJ_MID_1_PL "शिनषामह\u{948}",
-    "शिनष\u{94d}टि" SUBJ_MID_2_SG "शिनषस\u{947}",
-    "शिनष\u{94d}टि" SUBJ_MID_2_DU "शिनष\u{948}थ\u{947}",
-    "शिनष\u{94d}टि" SUBJ_MID_2_PL "शिनषध\u{94d}व\u{947}",
-    "शिनष\u{94d}टि" SUBJ_MID_3_SG "शिनषत\u{947}",
-    "शिनष\u{94d}टि" SUBJ_MID_3_DU "शिनष\u{948}त\u{947}",
-    "शिनष\u{94d}टि" SUBJ_MID_3_PL "शिनषन\u{94d}त",
-    "शिनष\u{94d}टि" IMPERFECT_ACT_1_SG "अशिनषम\u{94d}",
-    "शिनष\u{94d}टि" IMPERFECT_ACT_1_DU "अशि\u{902}ष\u{94d}व",
-    "शिनष\u{94d}टि" IMPERFECT_ACT_1_PL "अशि\u{902}ष\u{94d}म",
-    "शिनष\u{94d}टि" IMPERFECT_ACT_2_SG "अशिनट\u{94d}",
-    "शिनष\u{94d}टि" IMPERFECT_ACT_2_DU "अशि\u{902}ष\u{94d}टम\u{94d}",
-    "शिनष\u{94d}टि" IMPERFECT_ACT_2_PL "अशि\u{902}ष\u{94d}ट",
-    "शिनष\u{94d}टि" IMPERFECT_ACT_3_SG "अशिनट\u{94d}",
-    "शिनष\u{94d}टि" IMPERFECT_ACT_3_DU "अशि\u{902}ष\u{94d}टाम\u{94d}",
-    "शिनष\u{94d}टि" IMPERFECT_ACT_3_PL "अशि\u{902}षन\u{94d}",
-    "शिनष\u{94d}टि" IMPERFECT_MID_1_SG "अशि\u{902}षि",
-    "शिनष\u{94d}टि" IMPERFECT_MID_1_DU "अशि\u{902}ष\u{94d}वहि",
-    "शिनष\u{94d}टि" IMPERFECT_MID_1_PL "अशि\u{902}ष\u{94d}महि",
-    "शिनष\u{94d}टि" IMPERFECT_MID_2_SG "अशि\u{902}ष\u{94d}ठाः",
-    "शिनष\u{94d}टि" IMPERFECT_MID_2_DU "अशि\u{902}षाथाम\u{94d}",
-    "शिनष\u{94d}टि" IMPERFECT_MID_2_PL "अशिण\u{94d}ड\u{94d}ढ\u{94d}वम\u{94d}",
-    "शिनष\u{94d}टि" IMPERFECT_MID_3_SG "अशि\u{902}ष\u{94d}ट",
-    "शिनष\u{94d}टि" IMPERFECT_MID_3_DU "अशि\u{902}षाताम\u{94d}",
-    "शिनष\u{94d}टि" IMPERFECT_MID_3_PL "अशि\u{902}षत",
-    "शिनष\u{94d}टि" PARTICIPLE_PRES_ACT "शि\u{902}षत\u{94d}",
-    "शिनष\u{94d}टि" PARTICIPLE_PRES_MID "शि\u{902}षाण",
-    "श\u{943}णोति" IMPERFECT_ACT_3_PL "अश\u{943}न\u{94d}वन\u{94d}",
-    "श\u{943}णोति" IMPERFECT_MID_1_SG "अश\u{943}न\u{94d}वि",
-    "श\u{943}णोति" IMPERFECT_MID_2_DU "अश\u{943}न\u{94d}वाथाम\u{94d}",
-    "श\u{943}णोति" IMPERFECT_MID_3_DU "अश\u{943}न\u{94d}वाताम\u{94d}",
-    "श\u{943}णोति" IMPERFECT_MID_3_PL "अश\u{943}न\u{94d}वत",
-    "श\u{947}त\u{947}" IND_MID_1_SG "शय\u{947}",
-    "श\u{947}त\u{947}" IND_MID_1_DU "श\u{947}वह\u{947}",
-    "श\u{947}त\u{947}" IND_MID_1_PL "श\u{947}मह\u{947}",
-    "श\u{947}त\u{947}" IND_MID_2_SG "श\u{947}ष\u{947}",
-    "श\u{947}त\u{947}" IND_MID_2_DU "शयाथ\u{947}",
-    "श\u{947}त\u{947}" IND_MID_3_DU "शयात\u{947}",
-    "श\u{947}त\u{947}" IND_MID_3_PL "श\u{947}रत\u{947}",
-    "श\u{947}त\u{947}" IMP_MID_1_SG "शय\u{948}",
-    "श\u{947}त\u{947}" IMP_MID_1_DU "शयावह\u{948}",
-    "श\u{947}त\u{947}" IMP_MID_1_PL "शयामह\u{948}",
-    "श\u{947}त\u{947}" IMP_MID_2_SG "श\u{947}ष\u{94d}व",
-    "श\u{947}त\u{947}" IMP_MID_2_DU "शयाथाम\u{94d}",
-    "श\u{947}त\u{947}" IMP_MID_3_DU "शयाताम\u{94d}",
-    "श\u{947}त\u{947}" IMP_MID_3_PL "श\u{947}रताम\u{94d}",
-    "श\u{947}त\u{947}" OPT_MID_1_SG "शयीय",
-    "श\u{947}त\u{947}" OPT_MID_1_DU "शयीवहि",
-    "श\u{947}त\u{947}" OPT_MID_1_PL "शयीमहि",
-    "श\u{947}त\u{947}" OPT_MID_2_SG "शयीथाः",
-    "श\u{947}त\u{947}" OPT_MID_2_DU "शयीयाथाम\u{94d}",
-    "श\u{947}त\u{947}" OPT_MID_2_PL "शयीध\u{94d}वम\u{94d}",
-    "श\u{947}त\u{947}" OPT_MID_3_SG "शयीत",
-    "श\u{947}त\u{947}" OPT_MID_3_DU "शयीयाताम\u{94d}",
-    "श\u{947}त\u{947}" OPT_MID_3_PL "शयीरन\u{94d}",
-    "श\u{947}त\u{947}" SUBJ_MID_1_SG "शय\u{948}",
-    "श\u{947}त\u{947}" SUBJ_MID_1_DU "शयावह\u{948}",
-    "श\u{947}त\u{947}" SUBJ_MID_1_PL "शयामह\u{948}",
-    "श\u{947}त\u{947}" SUBJ_MID_2_SG "शयस\u{947}",
-    "श\u{947}त\u{947}" SUBJ_MID_2_DU "शय\u{948}थ\u{947}",
-    "श\u{947}त\u{947}" SUBJ_MID_2_PL "शयध\u{94d}व\u{947}",
-    "श\u{947}त\u{947}" SUBJ_MID_3_SG "शयत\u{947}",
-    "श\u{947}त\u{947}" SUBJ_MID_3_DU "शय\u{948}त\u{947}",
-    "श\u{947}त\u{947}" SUBJ_MID_3_PL "शयन\u{94d}त",
-    "श\u{947}त\u{947}" IMPERFECT_MID_1_SG "अशयि",
-    "श\u{947}त\u{947}" IMPERFECT_MID_1_DU "अश\u{947}वहि",
-    "श\u{947}त\u{947}" IMPERFECT_MID_1_PL "अश\u{947}महि",
-    "श\u{947}त\u{947}" IMPERFECT_MID_2_DU "अशयाथाम\u{94d}",
-    "श\u{947}त\u{947}" IMPERFECT_MID_3_DU "अशयाताम\u{94d}",
-    "श\u{947}त\u{947}" IMPERFECT_MID_3_PL "अश\u{947}रत",
-    "श\u{947}त\u{947}" PARTICIPLE_PRES_MID "शयान",
-    "श\u{94d}यास\u{94d}यत\u{947}" FUTURE_MID_1_SG "श\u{94d}यास\u{94d}य\u{947}",
-    "श\u{94d}यास\u{94d}यत\u{947}" FUTURE_MID_1_DU "श\u{94d}यास\u{94d}यावह\u{947}",
-    "श\u{94d}यास\u{94d}यत\u{947}" FUTURE_MID_1_PL "श\u{94d}यास\u{94d}यामह\u{947}",
-    "श\u{94d}यास\u{94d}यत\u{947}" FUTURE_MID_2_SG "श\u{94d}यास\u{94d}यस\u{947}",
-    "श\u{94d}यास\u{94d}यत\u{947}" FUTURE_MID_2_DU "श\u{94d}यास\u{94d}य\u{947}थ\u{947}",
-    "श\u{94d}यास\u{94d}यत\u{947}" FUTURE_MID_2_PL "श\u{94d}यास\u{94d}यध\u{94d}व\u{947}",
-    "श\u{94d}यास\u{94d}यत\u{947}" FUTURE_MID_3_SG "श\u{94d}यास\u{94d}यत\u{947}",
-    "श\u{94d}यास\u{94d}यत\u{947}" FUTURE_MID_3_DU "श\u{94d}यास\u{94d}य\u{947}त\u{947}",
-    "श\u{94d}यास\u{94d}यत\u{947}" FUTURE_MID_3_PL "श\u{94d}यास\u{94d}यन\u{94d}त\u{947}",
-    "श\u{94d}यास\u{94d}यत\u{947}" PARTICIPLE_FUT_MID "श\u{94d}यास\u{94d}यमान",
-    "श\u{94d}रद\u{94d}दधाति" IND_ACT_1_DU "श\u{94d}रद\u{94d}दध\u{94d}वः",
-    "श\u{94d}रद\u{94d}दधाति" IND_ACT_1_PL "श\u{94d}रद\u{94d}दध\u{94d}मः",
-    "श\u{94d}रद\u{94d}दधाति" IND_ACT_2_DU "श\u{94d}रद\u{94d}धत\u{94d}थः",
-    "श\u{94d}रद\u{94d}दधाति" IND_ACT_2_PL "श\u{94d}रद\u{94d}धत\u{94d}थ",
-    "श\u{94d}रद\u{94d}दधाति" IND_ACT_3_DU "श\u{94d}रद\u{94d}धत\u{94d}तः",
-    "श\u{94d}रद\u{94d}दधाति" IND_ACT_3_PL "श\u{94d}रद\u{94d}दधति",
-    "श\u{94d}रद\u{94d}दधाति" IND_MID_1_DU "श\u{94d}रद\u{94d}दध\u{94d}वह\u{947}",
-    "श\u{94d}रद\u{94d}दधाति" IND_MID_1_PL "श\u{94d}रद\u{94d}दध\u{94d}मह\u{947}",
-    "श\u{94d}रद\u{94d}दधाति" IND_MID_2_SG "श\u{94d}रद\u{94d}धत\u{94d}स\u{947}",
-    "श\u{94d}रद\u{94d}दधाति" IND_MID_2_PL "श\u{94d}रद\u{94d}धद\u{94d}ध\u{94d}व\u{947}",
-    "श\u{94d}रद\u{94d}दधाति" IND_MID_3_SG "श\u{94d}रद\u{94d}धत\u{94d}त\u{947}",
-    "श\u{94d}रद\u{94d}दधाति" IMP_ACT_2_SG "श\u{94d}रद\u{94d}ध\u{947}हि",
-    "श\u{94d}रद\u{94d}दधाति" IMP_ACT_2_DU "श\u{94d}रद\u{94d}धत\u{94d}तम\u{94d}",
-    "श\u{94d}रद\u{94d}दधाति" IMP_ACT_2_PL "श\u{94d}रद\u{94d}धत\u{94d}त",
-    "श\u{94d}रद\u{94d}दधाति" IMP_ACT_3_DU "श\u{94d}रद\u{94d}धत\u{94d}ताम\u{94d}",
-    "श\u{94d}रद\u{94d}दधाति" IMP_ACT_3_PL "श\u{94d}रद\u{94d}दधत\u{941}",
-    "श\u{94d}रद\u{94d}दधाति" IMP_MID_2_SG "श\u{94d}रद\u{94d}धत\u{94d}स\u{94d}व",
-    "श\u{94d}रद\u{94d}दधाति" IMP_MID_2_PL "श\u{94d}रद\u{94d}धद\u{94d}ध\u{94d}वम\u{94d}",
-    "श\u{94d}रद\u{94d}दधाति" IMP_MID_3_SG "श\u{94d}रद\u{94d}धत\u{94d}ताम\u{94d}",
-    "श\u{94d}रद\u{94d}दधाति" OPT_ACT_1_SG "श\u{94d}रद\u{94d}दध\u{94d}याम\u{94d}",
-    "श\u{94d}रद\u{94d}दधाति" OPT_ACT_1_DU "श\u{94d}रद\u{94d}दध\u{94d}याव",
-    "श\u{94d}रद\u{94d}दधाति" OPT_ACT_1_PL "श\u{94d}रद\u{94d}दध\u{94d}याम",
-    "श\u{94d}रद\u{94d}दधाति" OPT_ACT_2_SG "श\u{94d}रद\u{94d}दध\u{94d}याः",
-    "श\u{94d}रद\u{94d}दधाति" OPT_ACT_2_DU "श\u{94d}रद\u{94d}दध\u{94d}यातम\u{94d}",
-    "श\u{94d}रद\u{94d}दधाति" OPT_ACT_2_PL "श\u{94d}रद\u{94d}दध\u{94d}यात",
-    "श\u{94d}रद\u{94d}दधाति" OPT_ACT_3_SG "श\u{94d}रद\u{94d}दध\u{94d}यात\u{94d}",
-    "श\u{94d}रद\u{94d}दधाति" OPT_ACT_3_DU "श\u{94d}रद\u{94d}दध\u{94d}याताम\u{94d}",
-    "श\u{94d}रद\u{94d}दधाति" OPT_ACT_3_PL "श\u{94d}रद\u{94d}दध\u{94d}य\u{941}ः",
-    "श\u{94d}रद\u{94d}दधाति" OPT_MID_2_PL "श\u{94d}रद\u{94d}दधीध\u{94d}वम\u{94d}",
-    "श\u{94d}रद\u{94d}दधाति" IMPERFECT_ACT_1_DU "अश\u{94d}रद\u{94d}दध\u{94d}व",
-    "श\u{94d}रद\u{94d}दधाति" IMPERFECT_ACT_1_PL "अश\u{94d}रद\u{94d}दध\u{94d}म",
-    "श\u{94d}रद\u{94d}दधाति" IMPERFECT_ACT_2_DU "अश\u{94d}रद\u{94d}धत\u{94d}तम\u{94d}",
-    "श\u{94d}रद\u{94d}दधाति" IMPERFECT_ACT_2_PL "अश\u{94d}रद\u{94d}धत\u{94d}त",
-    "श\u{94d}रद\u{94d}दधाति" IMPERFECT_ACT_3_DU "अश\u{94d}रद\u{94d}धत\u{94d}ताम\u{94d}",
-    "श\u{94d}रद\u{94d}दधाति" IMPERFECT_ACT_3_PL "अश\u{94d}रद\u{94d}दध\u{941}ः",
-    "श\u{94d}रद\u{94d}दधाति" IMPERFECT_MID_1_DU "अश\u{94d}रद\u{94d}दध\u{94d}वहि",
-    "श\u{94d}रद\u{94d}दधाति" IMPERFECT_MID_1_PL "अश\u{94d}रद\u{94d}दध\u{94d}महि",
-    "श\u{94d}रद\u{94d}दधाति" IMPERFECT_MID_2_SG "अश\u{94d}रद\u{94d}धत\u{94d}थाः",
-    "श\u{94d}रद\u{94d}दधाति" IMPERFECT_MID_2_PL "अश\u{94d}रद\u{94d}धद\u{94d}ध\u{94d}वम\u{94d}",
-    "श\u{94d}रद\u{94d}दधाति" IMPERFECT_MID_3_SG "अश\u{94d}रद\u{94d}धत\u{94d}त",
-    "श\u{94d}वसिति" IND_ACT_1_SG "श\u{94d}वसिमि",
-    "श\u{94d}वसिति" IND_ACT_1_DU "श\u{94d}वसिवः",
-    "श\u{94d}वसिति" IND_ACT_1_PL "श\u{94d}वसिमः",
-    "श\u{94d}वसिति" IND_ACT_2_SG "श\u{94d}वसिषि",
-    "श\u{94d}वसिति" IND_ACT_3_PL "श\u{94d}वसन\u{94d}ति",
-    "श\u{94d}वसिति" IMP_ACT_1_SG "श\u{94d}वसानि",
-    "श\u{94d}वसिति" IMP_ACT_1_DU "श\u{94d}वसाव",
-    "श\u{94d}वसिति" IMP_ACT_1_PL "श\u{94d}वसाम",
-    "श\u{94d}वसिति" IMP_ACT_2_SG "श\u{94d}वसिहि",
-    "श\u{94d}वसिति" IMP_ACT_3_PL "श\u{94d}वसन\u{94d}त\u{941}",
-    "श\u{94d}वसिति" OPT_ACT_1_SG "श\u{94d}वस\u{94d}याम\u{94d}",
-    "श\u{94d}वसिति" OPT_ACT_1_DU "श\u{94d}वस\u{94d}याव",
-    "श\u{94d}वसिति" OPT_ACT_1_PL "श\u{94d}वस\u{94d}याम",
-    "श\u{94d}वसिति" OPT_ACT_2_SG "श\u{94d}वस\u{94d}याः",
-    "श\u{94d}वसिति" OPT_ACT_2_DU "श\u{94d}वस\u{94d}यातम\u{94d}",
-    "श\u{94d}वसिति" OPT_ACT_2_PL "श\u{94d}वस\u{94d}यात",
-    "श\u{94d}वसिति" OPT_ACT_3_SG "श\u{94d}वस\u{94d}यात\u{94d}",
-    "श\u{94d}वसिति" OPT_ACT_3_DU "श\u{94d}वस\u{94d}याताम\u{94d}",
-    "श\u{94d}वसिति" OPT_ACT_3_PL "श\u{94d}वस\u{94d}य\u{941}ः",
-    "श\u{94d}वसिति" SUBJ_ACT_1_SG "श\u{94d}वसानि",
-    "श\u{94d}वसिति" SUBJ_ACT_1_DU "श\u{94d}वसाव",
-    "श\u{94d}वसिति" SUBJ_ACT_1_PL "श\u{94d}वसाम",
-    "श\u{94d}वसिति" SUBJ_ACT_2_SG "श\u{94d}वसः",
-    "श\u{94d}वसिति" SUBJ_ACT_2_DU "श\u{94d}वसथः",
-    "श\u{94d}वसिति" SUBJ_ACT_2_PL "श\u{94d}वसथ",
-    "श\u{94d}वसिति" SUBJ_ACT_3_SG "श\u{94d}वसत\u{94d}",
-    "श\u{94d}वसिति" SUBJ_ACT_3_DU "श\u{94d}वसतः",
-    "श\u{94d}वसिति" SUBJ_ACT_3_PL "श\u{94d}वसन\u{94d}",
-    "श\u{94d}वसिति" IMPERFECT_ACT_1_SG "अश\u{94d}वसम\u{94d}",
-    "श\u{94d}वसिति" IMPERFECT_ACT_1_DU "अश\u{94d}वसिव",
-    "श\u{94d}वसिति" IMPERFECT_ACT_1_PL "अश\u{94d}वसिम",
-    "श\u{94d}वसिति" IMPERFECT_ACT_2_SG "अश\u{94d}वसीः",
-    "श\u{94d}वसिति" IMPERFECT_ACT_3_SG "अश\u{94d}वसीत\u{94d}",
-    "श\u{94d}वसिति" IMPERFECT_ACT_3_PL "अश\u{94d}वसन\u{94d}",
-    "श\u{94d}वसिति" PARTICIPLE_PRES_ACT "श\u{94d}वसत\u{94d}",
-    "स\u{902}तापयति" IND_ACT_1_SG "सन\u{94d}तापयामि",
-    "स\u{902}तापयति" IND_ACT_1_DU "सन\u{94d}तापयावः",
-    "स\u{902}तापयति" IND_ACT_1_PL "सन\u{94d}तापयामः",
-    "स\u{902}तापयति" IND_ACT_2_SG "सन\u{94d}तापयसि",
-    "स\u{902}तापयति" IND_ACT_2_DU "सन\u{94d}तापयथः",
-    "स\u{902}तापयति" IND_ACT_2_PL "सन\u{94d}तापयथ",
-    "स\u{902}तापयति" IND_ACT_3_SG "सन\u{94d}तापयति",
-    "स\u{902}तापयति" IND_ACT_3_DU "सन\u{94d}तापयतः",
-    "स\u{902}तापयति" IND_ACT_3_PL "सन\u{94d}तापयन\u{94d}ति",
-    "स\u{902}तापयति" IND_MID_1_SG "सन\u{94d}तापय\u{947}",
-    "स\u{902}तापयति" IND_MID_1_DU "सन\u{94d}तापयावह\u{947}",
-    "स\u{902}तापयति" IND_MID_1_PL "सन\u{94d}तापयामह\u{947}",
-    "स\u{902}तापयति" IND_MID_2_SG "सन\u{94d}तापयस\u{947}",
-    "स\u{902}तापयति" IND_MID_2_DU "सन\u{94d}तापय\u{947}थ\u{947}",
-    "स\u{902}तापयति" IND_MID_2_PL "सन\u{94d}तापयध\u{94d}व\u{947}",
-    "स\u{902}तापयति" IND_MID_3_SG "सन\u{94d}तापयत\u{947}",
-    "स\u{902}तापयति" IND_MID_3_DU "सन\u{94d}तापय\u{947}त\u{947}",
-    "स\u{902}तापयति" IND_MID_3_PL "सन\u{94d}तापयन\u{94d}त\u{947}",
-    "स\u{902}तापयति" IMP_ACT_1_SG "सन\u{94d}तापयानि",
-    "स\u{902}तापयति" IMP_ACT_1_DU "सन\u{94d}तापयाव",
-    "स\u{902}तापयति" IMP_ACT_1_PL "सन\u{94d}तापयाम",
-    "स\u{902}तापयति" IMP_ACT_2_SG "सन\u{94d}तापय",
-    "स\u{902}तापयति" IMP_ACT_2_DU "सन\u{94d}तापयतम\u{94d}",
-    "स\u{902}तापयति" IMP_ACT_2_PL "सन\u{94d}तापयत",
-    "स\u{902}तापयति" IMP_ACT_3_SG "सन\u{94d}तापयत\u{941}",
-    "स\u{902}तापयति" IMP_ACT_3_DU "सन\u{94d}तापयताम\u{94d}",
-    "स\u{902}तापयति" IMP_ACT_3_PL "सन\u{94d}तापयन\u{94d}त\u{941}",
-    "स\u{902}तापयति" IMP_MID_1_SG "सन\u{94d}तापय\u{948}",
-    "स\u{902}तापयति" IMP_MID_1_DU "सन\u{94d}तापयावह\u{948}",
-    "स\u{902}तापयति" IMP_MID_1_PL "सन\u{94d}तापयामह\u{948}",
-    "स\u{902}तापयति" IMP_MID_2_SG "सन\u{94d}तापयस\u{94d}व",
-    "स\u{902}तापयति" IMP_MID_2_DU "सन\u{94d}तापय\u{947}थाम\u{94d}",
-    "स\u{902}तापयति" IMP_MID_2_PL "सन\u{94d}तापयध\u{94d}वम\u{94d}",
-    "स\u{902}तापयति" IMP_MID_3_SG "सन\u{94d}तापयताम\u{94d}",
-    "स\u{902}तापयति" IMP_MID_3_DU "सन\u{94d}तापय\u{947}ताम\u{94d}",
-    "स\u{902}तापयति" IMP_MID_3_PL "सन\u{94d}तापयन\u{94d}ताम\u{94d}",
-    "स\u{902}तापयति" OPT_ACT_1_SG "सन\u{94d}तापय\u{947}यम\u{94d}",
-    "स\u{902}तापयति" OPT_ACT_1_DU "सन\u{94d}तापय\u{947}व",
-    "स\u{902}तापयति" OPT_ACT_1_PL "सन\u{94d}तापय\u{947}म",
-    "स\u{902}तापयति" OPT_ACT_2_SG "सन\u{94d}तापय\u{947}ः",
-    "स\u{902}तापयति" OPT_ACT_2_DU "सन\u{94d}तापय\u{947}तम\u{94d}",
-    "स\u{902}तापयति" OPT_ACT_2_PL "सन\u{94d}तापय\u{947}त",
-    "स\u{902}तापयति" OPT_ACT_3_SG "सन\u{94d}तापय\u{947}त\u{94d}",
-    "स\u{902}तापयति" OPT_ACT_3_DU "सन\u{94d}तापय\u{947}ताम\u{94d}",
-    "स\u{902}तापयति" OPT_ACT_3_PL "सन\u{94d}तापय\u{947}य\u{941}ः",
-    "स\u{902}तापयति" OPT_MID_1_SG "सन\u{94d}तापय\u{947}य",
-    "स\u{902}तापयति" OPT_MID_1_DU "सन\u{94d}तापय\u{947}वहि",
-    "स\u{902}तापयति" OPT_MID_1_PL "सन\u{94d}तापय\u{947}महि",
-    "स\u{902}तापयति" OPT_MID_2_SG "सन\u{94d}तापय\u{947}थाः",
-    "स\u{902}तापयति" OPT_MID_2_DU "सन\u{94d}तापय\u{947}याथाम\u{94d}",
-    "स\u{902}तापयति" OPT_MID_2_PL "सन\u{94d}तापय\u{947}ध\u{94d}वम\u{94d}",
-    "स\u{902}तापयति" OPT_MID_3_SG "सन\u{94d}तापय\u{947}त",
-    "स\u{902}तापयति" OPT_MID_3_DU "सन\u{94d}तापय\u{947}याताम\u{94d}",
-    "स\u{902}तापयति" OPT_MID_3_PL "सन\u{94d}तापय\u{947}रन\u{94d}",
-    "स\u{902}तापयति" SUBJ_ACT_1_SG "सन\u{94d}तापयानि",
-    "स\u{902}तापयति" SUBJ_ACT_1_DU "सन\u{94d}तापयाव",
-    "स\u{902}तापयति" SUBJ_ACT_1_PL "सन\u{94d}तापयाम",
-    "स\u{902}तापयति" SUBJ_ACT_2_SG "सन\u{94d}तापयाः",
-    "स\u{902}तापयति" SUBJ_ACT_2_DU "सन\u{94d}तापयाथः",
-    "स\u{902}तापयति" SUBJ_ACT_2_PL "सन\u{94d}तापयाथ",
-    "स\u{902}तापयति" SUBJ_ACT_3_SG "सन\u{94d}तापयात\u{94d}",
-    "स\u{902}तापयति" SUBJ_ACT_3_DU "सन\u{94d}तापयातः",
-    "स\u{902}तापयति" SUBJ_ACT_3_PL "सन\u{94d}तापयान\u{94d}",
-    "स\u{902}तापयति" SUBJ_MID_1_SG "सन\u{94d}तापय\u{948}",
-    "स\u{902}तापयति" SUBJ_MID_1_DU "सन\u{94d}तापयावह\u{948}",
-    "स\u{902}तापयति" SUBJ_MID_1_PL "सन\u{94d}तापयामह\u{948}",
-    "स\u{902}तापयति" SUBJ_MID_2_SG "सन\u{94d}तापयास\u{947}",
-    "स\u{902}तापयति" SUBJ_MID_2_DU "सन\u{94d}तापय\u{948}थ\u{947}",
-    "स\u{902}तापयति" SUBJ_MID_2_PL "सन\u{94d}तापयाध\u{94d}व\u{948}",
-    "स\u{902}तापयति" SUBJ_MID_3_SG "सन\u{94d}तापयात\u{947}",
-    "स\u{902}तापयति" SUBJ_MID_3_DU "सन\u{94d}तापय\u{948}त\u{947}",
-    "स\u{902}तापयति" SUBJ_MID_3_PL "सन\u{94d}तापयन\u{94d}त",
-    "स\u{902}तापयति" IMPERFECT_ACT_1_SG "असन\u{94d}तापयम\u{94d}",
-    "स\u{902}तापयति" IMPERFECT_ACT_1_DU "असन\u{94d}तापयाव",
-    "स\u{902}तापयति" IMPERFECT_ACT_1_PL "असन\u{94d}तापयाम",
-    "स\u{902}तापयति" IMPERFECT_ACT_2_SG "असन\u{94d}तापयः",
-    "स\u{902}तापयति" IMPERFECT_ACT_2_DU "असन\u{94d}तापयतम\u{94d}",
-    "स\u{902}तापयति" IMPERFECT_ACT_2_PL "असन\u{94d}तापयत",
-    "स\u{902}तापयति" IMPERFECT_ACT_3_SG "असन\u{94d}तापयत\u{94d}",
-    "स\u{902}तापयति" IMPERFECT_ACT_3_DU "असन\u{94d}तापयताम\u{94d}",
-    "स\u{902}तापयति" IMPERFECT_ACT_3_PL "असन\u{94d}तापयन\u{94d}",
-    "स\u{902}तापयति" IMPERFECT_MID_1_SG "असन\u{94d}तापय\u{947}",
-    "स\u{902}तापयति" IMPERFECT_MID_1_DU "असन\u{94d}तापयावहि",
-    "स\u{902}तापयति" IMPERFECT_MID_1_PL "असन\u{94d}तापयामहि",
-    "स\u{902}तापयति" IMPERFECT_MID_2_SG "असन\u{94d}तापयथाः",
-    "स\u{902}तापयति" IMPERFECT_MID_2_DU "असन\u{94d}तापय\u{947}थाम\u{94d}",
-    "स\u{902}तापयति" IMPERFECT_MID_2_PL "असन\u{94d}तापयध\u{94d}वम\u{94d}",
-    "स\u{902}तापयति" IMPERFECT_MID_3_SG "असन\u{94d}तापयत",
-    "स\u{902}तापयति" IMPERFECT_MID_3_DU "असन\u{94d}तापय\u{947}ताम\u{94d}",
-    "स\u{902}तापयति" IMPERFECT_MID_3_PL "असन\u{94d}तापयन\u{94d}त",
-    "स\u{902}तापयति" FUTURE_ACT_1_SG "सन\u{94d}तापयिष\u{94d}यामि",
-    "स\u{902}तापयति" FUTURE_ACT_1_DU "सन\u{94d}तापयिष\u{94d}यावः",
-    "स\u{902}तापयति" FUTURE_ACT_1_PL "सन\u{94d}तापयिष\u{94d}यामः",
-    "स\u{902}तापयति" FUTURE_ACT_2_SG "सन\u{94d}तापयिष\u{94d}यसि",
-    "स\u{902}तापयति" FUTURE_ACT_2_DU "सन\u{94d}तापयिष\u{94d}यथः",
-    "स\u{902}तापयति" FUTURE_ACT_2_PL "सन\u{94d}तापयिष\u{94d}यथ",
-    "स\u{902}तापयति" FUTURE_ACT_3_SG "सन\u{94d}तापयिष\u{94d}यति",
-    "स\u{902}तापयति" FUTURE_ACT_3_DU "सन\u{94d}तापयिष\u{94d}यतः",
-    "स\u{902}तापयति" FUTURE_ACT_3_PL "सन\u{94d}तापयिष\u{94d}यन\u{94d}ति",
-    "स\u{902}तापयति" FUTURE_MID_1_SG "सन\u{94d}तापयिष\u{94d}य\u{947}",
-    "स\u{902}तापयति" FUTURE_MID_1_DU "सन\u{94d}तापयिष\u{94d}यावह\u{947}",
-    "स\u{902}तापयति" FUTURE_MID_1_PL "सन\u{94d}तापयिष\u{94d}यामह\u{947}",
-    "स\u{902}तापयति" FUTURE_MID_2_SG "सन\u{94d}तापयिष\u{94d}यस\u{947}",
-    "स\u{902}तापयति" FUTURE_MID_2_DU "सन\u{94d}तापयिष\u{94d}य\u{947}थ\u{947}",
-    "स\u{902}तापयति" FUTURE_MID_2_PL "सन\u{94d}तापयिष\u{94d}यध\u{94d}व\u{947}",
-    "स\u{902}तापयति" FUTURE_MID_3_SG "सन\u{94d}तापयिष\u{94d}यत\u{947}",
-    "स\u{902}तापयति" FUTURE_MID_3_DU "सन\u{94d}तापयिष\u{94d}य\u{947}त\u{947}",
-    "स\u{902}तापयति" FUTURE_MID_3_PL "सन\u{94d}तापयिष\u{94d}यन\u{94d}त\u{947}",
-    "स\u{902}तापयति" CONDITIONAL_ACT_1_SG "असन\u{94d}तापयिष\u{94d}यम\u{94d}",
-    "स\u{902}तापयति" CONDITIONAL_ACT_1_DU "असन\u{94d}तापयिष\u{94d}याव",
-    "स\u{902}तापयति" CONDITIONAL_ACT_1_PL "असन\u{94d}तापयिष\u{94d}याम",
-    "स\u{902}तापयति" CONDITIONAL_ACT_2_SG "असन\u{94d}तापयिष\u{94d}यः",
-    "स\u{902}तापयति" CONDITIONAL_ACT_2_DU "असन\u{94d}तापयिष\u{94d}यतम\u{94d}",
-    "स\u{902}तापयति" CONDITIONAL_ACT_2_PL "असन\u{94d}तापयिष\u{94d}यत",
-    "स\u{902}तापयति" CONDITIONAL_ACT_3_SG "असन\u{94d}तापयिष\u{94d}यत\u{94d}",
-    "स\u{902}तापयति" CONDITIONAL_ACT_3_DU "असन\u{94d}तापयिष\u{94d}यताम\u{94d}",
-    "स\u{902}तापयति" CONDITIONAL_ACT_3_PL "असन\u{94d}तापयिष\u{94d}यन\u{94d}",
-    "स\u{902}तापयति" CONDITIONAL_MID_1_SG "असन\u{94d}तापयिष\u{94d}य\u{947}",
-    "स\u{902}तापयति" CONDITIONAL_MID_1_DU "असन\u{94d}तापयिष\u{94d}यावहि",
-    "स\u{902}तापयति" CONDITIONAL_MID_1_PL "असन\u{94d}तापयिष\u{94d}यामहि",
-    "स\u{902}तापयति" CONDITIONAL_MID_2_SG "असन\u{94d}तापयिष\u{94d}यथाः",
-    "स\u{902}तापयति" CONDITIONAL_MID_2_DU "असन\u{94d}तापयिष\u{94d}य\u{947}थाम\u{94d}",
-    "स\u{902}तापयति" CONDITIONAL_MID_2_PL "असन\u{94d}तापयिष\u{94d}यध\u{94d}वम\u{94d}",
-    "स\u{902}तापयति" CONDITIONAL_MID_3_SG "असन\u{94d}तापयिष\u{94d}यत",
-    "स\u{902}तापयति" CONDITIONAL_MID_3_DU "असन\u{94d}तापयिष\u{94d}य\u{947}ताम\u{94d}",
-    "स\u{902}तापयति" CONDITIONAL_MID_3_PL "असन\u{94d}तापयिष\u{94d}यन\u{94d}त",
-    "स\u{902}तापयति" PERFECT_ACT_1_SG "सन\u{94d}तापयामास",
-    "स\u{902}तापयति" PERFECT_ACT_1_DU "सन\u{94d}तापयामासिव",
-    "स\u{902}तापयति" PERFECT_ACT_1_PL "सन\u{94d}तापयामासिम",
-    "स\u{902}तापयति" PERFECT_ACT_2_SG "सन\u{94d}तापयामासिथ",
-    "स\u{902}तापयति" PERFECT_ACT_2_DU "सन\u{94d}तापयामासथ\u{941}ः",
-    "स\u{902}तापयति" PERFECT_ACT_2_PL "सन\u{94d}तापयामास",
-    "स\u{902}तापयति" PERFECT_ACT_3_SG "सन\u{94d}तापयामास",
-    "स\u{902}तापयति" PERFECT_ACT_3_DU "सन\u{94d}तापयामासत\u{941}ः",
-    "स\u{902}तापयति" PERFECT_ACT_3_PL "सन\u{94d}तापयामास\u{941}ः",
-    "स\u{902}तापयति" PERFECT_MID_1_SG "सन\u{94d}तापया\u{902}चक\u{94d}र\u{947}",
-    "स\u{902}तापयति" PERFECT_MID_1_DU "सन\u{94d}तापया\u{902}चक\u{943}वह\u{947}",
-    "स\u{902}तापयति" PERFECT_MID_1_PL "सन\u{94d}तापया\u{902}चक\u{943}मह\u{947}",
-    "स\u{902}तापयति" PERFECT_MID_2_SG "सन\u{94d}तापया\u{902}चक\u{943}ष\u{947}",
-    "स\u{902}तापयति" PERFECT_MID_2_DU "सन\u{94d}तापया\u{902}चक\u{94d}राथ\u{947}",
-    "स\u{902}तापयति" PERFECT_MID_2_PL "सन\u{94d}तापया\u{902}चक\u{943}ध\u{94d}व\u{947}",
-    "स\u{902}तापयति" PERFECT_MID_3_SG "सन\u{94d}तापया\u{902}चक\u{94d}र\u{947}",
-    "स\u{902}तापयति" PERFECT_MID_3_DU "सन\u{94d}तापया\u{902}चक\u{94d}रात\u{947}",
-    "स\u{902}तापयति" PERFECT_MID_3_PL "सन\u{94d}तापया\u{902}चक\u{94d}रिर\u{947}",
-    "स\u{902}तापयति" INFINITIVE "सन\u{94d}तापयित\u{941}म\u{94d}",
-    "स\u{902}तापयति" GERUND "सन\u{94d}तापयित\u{94d}वा",
-    "स\u{902}तापयति" PARTICIPLE_PRES_ACT "सन\u{94d}तापयत\u{94d}",
-    "स\u{902}तापयति" PARTICIPLE_PRES_MID "सन\u{94d}तापयमान",
-    "स\u{902}तापयति" PARTICIPLE_FUT_ACT "सन\u{94d}तापयिष\u{94d}यत\u{94d}",
-    "स\u{902}तापयति" PARTICIPLE_FUT_MID "सन\u{94d}तापयिष\u{94d}यमाण",
-    "स\u{902}तापयति" PARTICIPLE_PERF_ACT "सन\u{94d}तापयामासिवा\u{902}स\u{94d}",
-    "स\u{902}तापयति" PARTICIPLE_PERF_MID "सन\u{94d}तापया\u{902}चक\u{94d}राण",
-    "समर\u{94d}पयति" IMPERFECT_ACT_1_SG "समार\u{94d}पयम\u{94d}",
-    "समर\u{94d}पयति" IMPERFECT_ACT_1_DU "समार\u{94d}पयाव",
-    "समर\u{94d}पयति" IMPERFECT_ACT_1_PL "समार\u{94d}पयाम",
-    "समर\u{94d}पयति" IMPERFECT_ACT_2_SG "समार\u{94d}पयः",
-    "समर\u{94d}पयति" IMPERFECT_ACT_2_DU "समार\u{94d}पयतम\u{94d}",
-    "समर\u{94d}पयति" IMPERFECT_ACT_2_PL "समार\u{94d}पयत",
-    "समर\u{94d}पयति" IMPERFECT_ACT_3_SG "समार\u{94d}पयत\u{94d}",
-    "समर\u{94d}पयति" IMPERFECT_ACT_3_DU "समार\u{94d}पयताम\u{94d}",
-    "समर\u{94d}पयति" IMPERFECT_ACT_3_PL "समार\u{94d}पयन\u{94d}",
-    "समर\u{94d}पयति" IMPERFECT_MID_1_SG "समार\u{94d}पय\u{947}",
-    "समर\u{94d}पयति" IMPERFECT_MID_1_DU "समार\u{94d}पयावहि",
-    "समर\u{94d}पयति" IMPERFECT_MID_1_PL "समार\u{94d}पयामहि",
-    "समर\u{94d}पयति" IMPERFECT_MID_2_SG "समार\u{94d}पयथाः",
-    "समर\u{94d}पयति" IMPERFECT_MID_2_DU "समार\u{94d}पय\u{947}थाम\u{94d}",
-    "समर\u{94d}पयति" IMPERFECT_MID_2_PL "समार\u{94d}पयध\u{94d}वम\u{94d}",
-    "समर\u{94d}पयति" IMPERFECT_MID_3_SG "समार\u{94d}पयत",
-    "समर\u{94d}पयति" IMPERFECT_MID_3_DU "समार\u{94d}पय\u{947}ताम\u{94d}",
-    "समर\u{94d}पयति" IMPERFECT_MID_3_PL "समार\u{94d}पयन\u{94d}त",
-    "सम\u{94d}प\u{94d}रददाति" IND_ACT_1_DU "सम\u{94d}प\u{94d}रदद\u{94d}वः",
-    "सम\u{94d}प\u{94d}रददाति" IND_ACT_1_PL "सम\u{94d}प\u{94d}रदद\u{94d}मः",
-    "सम\u{94d}प\u{94d}रददाति" IND_ACT_2_DU "सम\u{94d}प\u{94d}रदत\u{94d}थः",
-    "सम\u{94d}प\u{94d}रददाति" IND_ACT_2_PL "सम\u{94d}प\u{94d}रदत\u{94d}थ",
-    "सम\u{94d}प\u{94d}रददाति" IND_ACT_3_DU "सम\u{94d}प\u{94d}रदत\u{94d}तः",
-    "सम\u{94d}प\u{94d}रददाति" IND_ACT_3_PL "सम\u{94d}प\u{94d}रददति",
-    "सम\u{94d}प\u{94d}रददाति" IND_MID_1_DU "सम\u{94d}प\u{94d}रदद\u{94d}वह\u{947}",
-    "सम\u{94d}प\u{94d}रददाति" IND_MID_1_PL "सम\u{94d}प\u{94d}रदद\u{94d}मह\u{947}",
-    "सम\u{94d}प\u{94d}रददाति" IND_MID_2_SG "सम\u{94d}प\u{94d}रदत\u{94d}स\u{947}",
-    "सम\u{94d}प\u{94d}रददाति" IND_MID_2_PL "सम\u{94d}प\u{94d}रदद\u{94d}ध\u{94d}व\u{947}",
-    "सम\u{94d}प\u{94d}रददाति" IND_MID_3_SG "सम\u{94d}प\u{94d}रदत\u{94d}त\u{947}",
-    "सम\u{94d}प\u{94d}रददाति" IMP_ACT_2_SG "सम\u{94d}प\u{94d}रदद\u{94d}धि",
-    "सम\u{94d}प\u{94d}रददाति" IMP_ACT_2_DU "सम\u{94d}प\u{94d}रदत\u{94d}तम\u{94d}",
-    "सम\u{94d}प\u{94d}रददाति" IMP_ACT_2_PL "सम\u{94d}प\u{94d}रदत\u{94d}त",
-    "सम\u{94d}प\u{94d}रददाति" IMP_ACT_3_DU "सम\u{94d}प\u{94d}रदत\u{94d}ताम\u{94d}",
-    "सम\u{94d}प\u{94d}रददाति" IMP_ACT_3_PL "सम\u{94d}प\u{94d}रददत\u{941}",
-    "सम\u{94d}प\u{94d}रददाति" IMP_MID_2_SG "सम\u{94d}प\u{94d}रदत\u{94d}स\u{94d}व",
-    "सम\u{94d}प\u{94d}रददाति" IMP_MID_2_PL "सम\u{94d}प\u{94d}रदद\u{94d}ध\u{94d}वम\u{94d}",
-    "सम\u{94d}प\u{94d}रददाति" IMP_MID_3_SG "सम\u{94d}प\u{94d}रदत\u{94d}ताम\u{94d}",
-    "सम\u{94d}प\u{94d}रददाति" OPT_ACT_1_SG "सम\u{94d}प\u{94d}रदद\u{94d}याम\u{94d}",
-    "सम\u{94d}प\u{94d}रददाति" OPT_ACT_1_DU "सम\u{94d}प\u{94d}रदद\u{94d}याव",
-    "सम\u{94d}प\u{94d}रददाति" OPT_ACT_1_PL "सम\u{94d}प\u{94d}रदद\u{94d}याम",
-    "सम\u{94d}प\u{94d}रददाति" OPT_ACT_2_SG "सम\u{94d}प\u{94d}रदद\u{94d}याः",
-    "सम\u{94d}प\u{94d}रददाति" OPT_ACT_2_DU "सम\u{94d}प\u{94d}रदद\u{94d}यातम\u{94d}",
-    "सम\u{94d}प\u{94d}रददाति" OPT_ACT_2_PL "सम\u{94d}प\u{94d}रदद\u{94d}यात",
-    "सम\u{94d}प\u{94d}रददाति" OPT_ACT_3_SG "सम\u{94d}प\u{94d}रदद\u{94d}यात\u{94d}",
-    "सम\u{94d}प\u{94d}रददाति" OPT_ACT_3_DU "सम\u{94d}प\u{94d}रदद\u{94d}याताम\u{94d}",
-    "सम\u{94d}प\u{94d}रददाति" OPT_ACT_3_PL "सम\u{94d}प\u{94d}रदद\u{94d}य\u{941}ः",
-    "सम\u{94d}प\u{94d}रददाति" OPT_MID_2_PL "सम\u{94d}प\u{94d}रददीध\u{94d}वम\u{94d}",
-    "सम\u{94d}प\u{94d}रददाति" IMPERFECT_ACT_1_SG "सम\u{94d}प\u{94d}राददाम\u{94d}",
-    "सम\u{94d}प\u{94d}रददाति" IMPERFECT_ACT_1_DU "सम\u{94d}प\u{94d}रादद\u{94d}व",
-    "सम\u{94d}प\u{94d}रददाति" IMPERFECT_ACT_1_PL "सम\u{94d}प\u{94d}रादद\u{94d}म",
-    "सम\u{94d}प\u{94d}रददाति" IMPERFECT_ACT_2_SG "सम\u{94d}प\u{94d}राददाः",
-    "सम\u{94d}प\u{94d}रददाति" IMPERFECT_ACT_2_DU "सम\u{94d}प\u{94d}रादत\u{94d}तम\u{94d}",
-    "सम\u{94d}प\u{94d}रददाति" IMPERFECT_ACT_2_PL "सम\u{94d}प\u{94d}रादत\u{94d}त",
-    "सम\u{94d}प\u{94d}रददाति" IMPERFECT_ACT_3_SG "सम\u{94d}प\u{94d}राददात\u{94d}",
-    "सम\u{94d}प\u{94d}रददाति" IMPERFECT_ACT_3_DU "सम\u{94d}प\u{94d}रादत\u{94d}ताम\u{94d}",
-    "सम\u{94d}प\u{94d}रददाति" IMPERFECT_ACT_3_PL "सम\u{94d}प\u{94d}रादद\u{941}ः",
-    "सम\u{94d}प\u{94d}रददाति" IMPERFECT_MID_1_SG "सम\u{94d}प\u{94d}राददि",
-    "सम\u{94d}प\u{94d}रददाति" IMPERFECT_MID_1_DU "सम\u{94d}प\u{94d}रादद\u{94d}वहि",
-    "सम\u{94d}प\u{94d}रददाति" IMPERFECT_MID_1_PL "सम\u{94d}प\u{94d}रादद\u{94d}महि",
-    "सम\u{94d}प\u{94d}रददाति" IMPERFECT_MID_2_SG "सम\u{94d}प\u{94d}रादत\u{94d}थाः",
-    "सम\u{94d}प\u{94d}रददाति" IMPERFECT_MID_2_DU "सम\u{94d}प\u{94d}राददाथाम\u{94d}",
-    "सम\u{94d}प\u{94d}रददाति" IMPERFECT_MID_2_PL "सम\u{94d}प\u{94d}रादद\u{94d}ध\u{94d}वम\u{94d}",
-    "सम\u{94d}प\u{94d}रददाति" IMPERFECT_MID_3_SG "सम\u{94d}प\u{94d}रादत\u{94d}त",
-    "सम\u{94d}प\u{94d}रददाति" IMPERFECT_MID_3_DU "सम\u{94d}प\u{94d}राददाताम\u{94d}",
-    "सम\u{94d}प\u{94d}रददाति" IMPERFECT_MID_3_PL "सम\u{94d}प\u{94d}राददत",
-    "सम\u{94d}ब\u{941}ध\u{94d}यत\u{947}" IMPERFECT_MID_1_SG "समब\u{941}ध\u{94d}य\u{947}",
-    "सम\u{94d}ब\u{941}ध\u{94d}यत\u{947}" IMPERFECT_MID_1_DU "समब\u{941}ध\u{94d}यावहि",
-    "सम\u{94d}ब\u{941}ध\u{94d}यत\u{947}" IMPERFECT_MID_1_PL "समब\u{941}ध\u{94d}यामहि",
-    "सम\u{94d}ब\u{941}ध\u{94d}यत\u{947}" IMPERFECT_MID_2_SG "समब\u{941}ध\u{94d}यथाः",
-    "सम\u{94d}ब\u{941}ध\u{94d}यत\u{947}" IMPERFECT_MID_2_DU "समब\u{941}ध\u{94d}य\u{947}थाम\u{94d}",
-    "सम\u{94d}ब\u{941}ध\u{94d}यत\u{947}" IMPERFECT_MID_2_PL "समब\u{941}ध\u{94d}यध\u{94d}वम\u{94d}",
-    "सम\u{94d}ब\u{941}ध\u{94d}यत\u{947}" IMPERFECT_MID_3_SG "समब\u{941}ध\u{94d}यत",
-    "सम\u{94d}ब\u{941}ध\u{94d}यत\u{947}" IMPERFECT_MID_3_DU "समब\u{941}ध\u{94d}य\u{947}ताम\u{94d}",
-    "सम\u{94d}ब\u{941}ध\u{94d}यत\u{947}" IMPERFECT_MID_3_PL "समब\u{941}ध\u{94d}यन\u{94d}त",
-    "सम\u{94d}मीलति" IMPERFECT_ACT_1_SG "सममीलम\u{94d}",
-    "सम\u{94d}मीलति" IMPERFECT_ACT_1_DU "सममीलाव",
-    "सम\u{94d}मीलति" IMPERFECT_ACT_1_PL "सममीलाम",
-    "सम\u{94d}मीलति" IMPERFECT_ACT_2_SG "सममीलः",
-    "सम\u{94d}मीलति" IMPERFECT_ACT_2_DU "सममीलतम\u{94d}",
-    "सम\u{94d}मीलति" IMPERFECT_ACT_2_PL "सममीलत",
-    "सम\u{94d}मीलति" IMPERFECT_ACT_3_SG "सममीलत\u{94d}",
-    "सम\u{94d}मीलति" IMPERFECT_ACT_3_DU "सममीलताम\u{94d}",
-    "सम\u{94d}मीलति" IMPERFECT_ACT_3_PL "सममीलन\u{94d}",
-    "सम\u{94d}मीलति" IMPERFECT_MID_1_SG "सममील\u{947}",
-    "सम\u{94d}मीलति" IMPERFECT_MID_1_DU "सममीलावहि",
-    "सम\u{94d}मीलति" IMPERFECT_MID_1_PL "सममीलामहि",
-    "सम\u{94d}मीलति" IMPERFECT_MID_2_SG "सममीलथाः",
-    "सम\u{94d}मीलति" IMPERFECT_MID_2_DU "सममील\u{947}थाम\u{94d}",
-    "सम\u{94d}मीलति" IMPERFECT_MID_2_PL "सममीलध\u{94d}वम\u{94d}",
-    "सम\u{94d}मीलति" IMPERFECT_MID_3_SG "सममीलत",
-    "सम\u{94d}मीलति" IMPERFECT_MID_3_DU "सममील\u{947}ताम\u{94d}",
-    "सम\u{94d}मीलति" IMPERFECT_MID_3_PL "सममीलन\u{94d}त",
-    "ससाद" PERFECT_ACT_1_SG "ससद",
-    "ससाद" PERFECT_ACT_1_DU "स\u{947}दिव",
-    "ससाद" PERFECT_ACT_1_PL "स\u{947}दिम",
-    "ससाद" PERFECT_ACT_2_SG "ससत\u{94d}थ",
-    "ससाद" PERFECT_ACT_2_DU "स\u{947}दथ\u{941}ः",
-    "ससाद" PERFECT_ACT_2_PL "स\u{947}द",
-    "ससाद" PERFECT_ACT_3_DU "स\u{947}दत\u{941}ः",
-    "ससाद" PERFECT_ACT_3_PL "स\u{947}द\u{941}ः",
-    "ससाद" PERFECT_MID_1_SG "स\u{947}द\u{947}",
-    "ससाद" PERFECT_MID_1_DU "स\u{947}दिवह\u{947}",
-    "ससाद" PERFECT_MID_1_PL "स\u{947}दिमह\u{947}",
-    "ससाद" PERFECT_MID_2_SG "स\u{947}दिष\u{947}",
-    "ससाद" PERFECT_MID_2_DU "स\u{947}दाथ\u{947}",
-    "ससाद" PERFECT_MID_2_PL "स\u{947}दिध\u{94d}व\u{947}",
-    "ससाद" PERFECT_MID_3_SG "स\u{947}द\u{947}",
-    "ससाद" PERFECT_MID_3_DU "स\u{947}दात\u{947}",
-    "ससाद" PERFECT_MID_3_PL "स\u{947}दिर\u{947}",
-    "ससाद" PARTICIPLE_PERF_ACT "स\u{947}दिवा\u{902}स\u{94d}",
-    "ससाद" PARTICIPLE_PERF_MID "स\u{947}दान",
-    "ससान" PERFECT_ACT_1_SG "ससन",
-    "ससान" PERFECT_ACT_1_DU "ससनिव",
-    "ससान" PERFECT_ACT_1_PL "ससनिम",
-    "ससान" PERFECT_ACT_2_SG "ससनिथ",
-    "ससान" PERFECT_ACT_2_DU "ससनथ\u{941}ः",
-    "ससान" PERFECT_ACT_2_PL "ससन",
-    "ससान" PERFECT_ACT_3_DU "ससनत\u{941}ः",
-    "ससान" PERFECT_ACT_3_PL "ससन\u{941}ः",
-    "ससान" PARTICIPLE_PERF_ACT "ससन\u{94d}वा\u{902}स\u{94d}",
-    "सस\u{94d}ति" IND_ACT_1_SG "सस\u{94d}मि",
-    "सस\u{94d}ति" IND_ACT_1_DU "सस\u{94d}वः",
-    "सस\u{94d}ति" IND_ACT_1_PL "सस\u{94d}मः",
-    "सस\u{94d}ति" IND_ACT_3_PL "ससन\u{94d}ति",
-    "सस\u{94d}ति" IMP_ACT_1_SG "ससानि",
-    "सस\u{94d}ति" IMP_ACT_1_DU "ससाव",
-    "सस\u{94d}ति" IMP_ACT_1_PL "ससाम",
-    "सस\u{94d}ति" IMP_ACT_2_SG "सद\u{94d}धि",
-    "सस\u{94d}ति" IMP_ACT_3_PL "ससन\u{94d}त\u{941}",
-    "सस\u{94d}ति" OPT_ACT_1_SG "सस\u{94d}याम\u{94d}",
-    "सस\u{94d}ति" OPT_ACT_1_DU "सस\u{94d}याव",
-    "सस\u{94d}ति" OPT_ACT_1_PL "सस\u{94d}याम",
-    "सस\u{94d}ति" OPT_ACT_2_SG "सस\u{94d}याः",
-    "सस\u{94d}ति" OPT_ACT_2_DU "सस\u{94d}यातम\u{94d}",
-    "सस\u{94d}ति" OPT_ACT_2_PL "सस\u{94d}यात",
-    "सस\u{94d}ति" OPT_ACT_3_SG "सस\u{94d}यात\u{94d}",
-    "सस\u{94d}ति" OPT_ACT_3_DU "सस\u{94d}याताम\u{94d}",
-    "सस\u{94d}ति" OPT_ACT_3_PL "सस\u{94d}य\u{941}ः",
-    "सस\u{94d}ति" SUBJ_ACT_1_SG "ससानि",
-    "सस\u{94d}ति" SUBJ_ACT_1_DU "ससाव",
-    "सस\u{94d}ति" SUBJ_ACT_1_PL "ससाम",
-    "सस\u{94d}ति" SUBJ_ACT_2_SG "ससः",
-    "सस\u{94d}ति" SUBJ_ACT_2_DU "ससथः",
-    "सस\u{94d}ति" SUBJ_ACT_2_PL "ससथ",
-    "सस\u{94d}ति" SUBJ_ACT_3_SG "ससत\u{94d}",
-    "सस\u{94d}ति" SUBJ_ACT_3_DU "ससतः",
-    "सस\u{94d}ति" SUBJ_ACT_3_PL "ससन\u{94d}",
-    "सस\u{94d}ति" IMPERFECT_ACT_1_SG "अससम\u{94d}",
-    "सस\u{94d}ति" IMPERFECT_ACT_1_DU "असस\u{94d}व",
-    "सस\u{94d}ति" IMPERFECT_ACT_1_PL "असस\u{94d}म",
-    "सस\u{94d}ति" IMPERFECT_ACT_2_SG "असः",
-    "सस\u{94d}ति" IMPERFECT_ACT_3_SG "असः",
-    "सस\u{94d}ति" IMPERFECT_ACT_3_PL "अससन\u{94d}",
-    "सस\u{94d}ति" PARTICIPLE_PRES_ACT "ससत\u{94d}",
-    "स\u{941}ष\u{94d}वाप" PERFECT_ACT_1_SG "स\u{941}ष\u{94d}वप",
-    "स\u{941}ष\u{94d}वाप" PERFECT_ACT_1_DU "स\u{941}ष\u{941}पिव",
-    "स\u{941}ष\u{94d}वाप" PERFECT_ACT_1_PL "स\u{941}ष\u{941}पिम",
-    "स\u{941}ष\u{94d}वाप" PERFECT_ACT_2_SG "स\u{941}ष\u{94d}वपिथ",
-    "स\u{941}ष\u{94d}वाप" PERFECT_ACT_2_DU "स\u{941}ष\u{941}पथ\u{941}ः",
-    "स\u{941}ष\u{94d}वाप" PERFECT_ACT_2_PL "स\u{941}ष\u{941}प",
-    "स\u{941}ष\u{94d}वाप" PERFECT_ACT_3_DU "स\u{941}ष\u{941}पत\u{941}ः",
-    "स\u{941}ष\u{94d}वाप" PERFECT_ACT_3_PL "स\u{941}ष\u{941}प\u{941}ः",
-    "स\u{941}ष\u{94d}वाप" PERFECT_MID_1_SG "स\u{941}ष\u{941}प\u{947}",
-    "स\u{941}ष\u{94d}वाप" PERFECT_MID_1_DU "स\u{941}ष\u{941}पिवह\u{947}",
-    "स\u{941}ष\u{94d}वाप" PERFECT_MID_1_PL "स\u{941}ष\u{941}पिमह\u{947}",
-    "स\u{941}ष\u{94d}वाप" PERFECT_MID_2_SG "स\u{941}ष\u{941}पिष\u{947}",
-    "स\u{941}ष\u{94d}वाप" PERFECT_MID_2_DU "स\u{941}ष\u{941}पाथ\u{947}",
-    "स\u{941}ष\u{94d}वाप" PERFECT_MID_2_PL "स\u{941}ष\u{941}पिध\u{94d}व\u{947}",
-    "स\u{941}ष\u{94d}वाप" PERFECT_MID_3_SG "स\u{941}ष\u{941}प\u{947}",
-    "स\u{941}ष\u{94d}वाप" PERFECT_MID_3_DU "स\u{941}ष\u{941}पात\u{947}",
-    "स\u{941}ष\u{94d}वाप" PERFECT_MID_3_PL "स\u{941}ष\u{941}पिर\u{947}",
-    "स\u{941}ष\u{94d}वाप" PARTICIPLE_PERF_ACT "स\u{941}ष\u{941}प\u{94d}वा\u{902}स\u{94d}",
-    "स\u{941}ष\u{94d}वाप" PARTICIPLE_PERF_MID "स\u{941}ष\u{941}पाण",
-    "स\u{94d}तिघ\u{94d}नोति" FUTURE_ACT_1_SG "स\u{94d}त\u{947}घिष\u{94d}यामि",
-    "स\u{94d}तिघ\u{94d}नोति" FUTURE_ACT_1_DU "स\u{94d}त\u{947}घिष\u{94d}यावः",
-    "स\u{94d}तिघ\u{94d}नोति" FUTURE_ACT_1_PL "स\u{94d}त\u{947}घिष\u{94d}यामः",
-    "स\u{94d}तिघ\u{94d}नोति" FUTURE_ACT_2_SG "स\u{94d}त\u{947}घिष\u{94d}यसि",
-    "स\u{94d}तिघ\u{94d}नोति" FUTURE_ACT_2_DU "स\u{94d}त\u{947}घिष\u{94d}यथः",
-    "स\u{94d}तिघ\u{94d}नोति" FUTURE_ACT_2_PL "स\u{94d}त\u{947}घिष\u{94d}यथ",
-    "स\u{94d}तिघ\u{94d}नोति" FUTURE_ACT_3_SG "स\u{94d}त\u{947}घिष\u{94d}यति",
-    "स\u{94d}तिघ\u{94d}नोति" FUTURE_ACT_3_DU "स\u{94d}त\u{947}घिष\u{94d}यतः",
-    "स\u{94d}तिघ\u{94d}नोति" FUTURE_ACT_3_PL "स\u{94d}त\u{947}घिष\u{94d}यन\u{94d}ति",
-    "स\u{94d}तिघ\u{94d}नोति" FUTURE_MID_1_SG "स\u{94d}त\u{947}घिष\u{94d}य\u{947}",
-    "स\u{94d}तिघ\u{94d}नोति" FUTURE_MID_1_DU "स\u{94d}त\u{947}घिष\u{94d}यावह\u{947}",
-    "स\u{94d}तिघ\u{94d}नोति" FUTURE_MID_1_PL "स\u{94d}त\u{947}घिष\u{94d}यामह\u{947}",
-    "स\u{94d}तिघ\u{94d}नोति" FUTURE_MID_2_SG "स\u{94d}त\u{947}घिष\u{94d}यस\u{947}",
-    "स\u{94d}तिघ\u{94d}नोति" FUTURE_MID_2_DU "स\u{94d}त\u{947}घिष\u{94d}य\u{947}थ\u{947}",
-    "स\u{94d}तिघ\u{94d}नोति" FUTURE_MID_2_PL "स\u{94d}त\u{947}घिष\u{94d}यध\u{94d}व\u{947}",
-    "स\u{94d}तिघ\u{94d}नोति" FUTURE_MID_3_SG "स\u{94d}त\u{947}घिष\u{94d}यत\u{947}",
-    "स\u{94d}तिघ\u{94d}नोति" FUTURE_MID_3_DU "स\u{94d}त\u{947}घिष\u{94d}य\u{947}त\u{947}",
-    "स\u{94d}तिघ\u{94d}नोति" FUTURE_MID_3_PL "स\u{94d}त\u{947}घिष\u{94d}यन\u{94d}त\u{947}",
-    "स\u{94d}तिघ\u{94d}नोति" CONDITIONAL_ACT_1_SG "अस\u{94d}त\u{947}घिष\u{94d}यम\u{94d}",
-    "स\u{94d}तिघ\u{94d}नोति" CONDITIONAL_ACT_1_DU "अस\u{94d}त\u{947}घिष\u{94d}याव",
-    "स\u{94d}तिघ\u{94d}नोति" CONDITIONAL_ACT_1_PL "अस\u{94d}त\u{947}घिष\u{94d}याम",
-    "स\u{94d}तिघ\u{94d}नोति" CONDITIONAL_ACT_2_SG "अस\u{94d}त\u{947}घिष\u{94d}यः",
-    "स\u{94d}तिघ\u{94d}नोति" CONDITIONAL_ACT_2_DU "अस\u{94d}त\u{947}घिष\u{94d}यतम\u{94d}",
-    "स\u{94d}तिघ\u{94d}नोति" CONDITIONAL_ACT_2_PL "अस\u{94d}त\u{947}घिष\u{94d}यत",
-    "स\u{94d}तिघ\u{94d}नोति" CONDITIONAL_ACT_3_SG "अस\u{94d}त\u{947}घिष\u{94d}यत\u{94d}",
-    "स\u{94d}तिघ\u{94d}नोति" CONDITIONAL_ACT_3_DU "अस\u{94d}त\u{947}घिष\u{94d}यताम\u{94d}",
-    "स\u{94d}तिघ\u{94d}नोति" CONDITIONAL_ACT_3_PL "अस\u{94d}त\u{947}घिष\u{94d}यन\u{94d}",
-    "स\u{94d}तिघ\u{94d}नोति" CONDITIONAL_MID_1_SG "अस\u{94d}त\u{947}घिष\u{94d}य\u{947}",
-    "स\u{94d}तिघ\u{94d}नोति" CONDITIONAL_MID_1_DU "अस\u{94d}त\u{947}घिष\u{94d}यावहि",
-    "स\u{94d}तिघ\u{94d}नोति" CONDITIONAL_MID_1_PL "अस\u{94d}त\u{947}घिष\u{94d}यामहि",
-    "स\u{94d}तिघ\u{94d}नोति" CONDITIONAL_MID_2_SG "अस\u{94d}त\u{947}घिष\u{94d}यथाः",
-    "स\u{94d}तिघ\u{94d}नोति" CONDITIONAL_MID_2_DU "अस\u{94d}त\u{947}घिष\u{94d}य\u{947}थाम\u{94d}",
-    "स\u{94d}तिघ\u{94d}नोति" CONDITIONAL_MID_2_PL "अस\u{94d}त\u{947}घिष\u{94d}यध\u{94d}वम\u{94d}",
-    "स\u{94d}तिघ\u{94d}नोति" CONDITIONAL_MID_3_SG "अस\u{94d}त\u{947}घिष\u{94d}यत",
-    "स\u{94d}तिघ\u{94d}नोति" CONDITIONAL_MID_3_DU "अस\u{94d}त\u{947}घिष\u{94d}य\u{947}ताम\u{94d}",
-    "स\u{94d}तिघ\u{94d}नोति" CONDITIONAL_MID_3_PL "अस\u{94d}त\u{947}घिष\u{94d}यन\u{94d}त",
-    "स\u{94d}तिघ\u{94d}नोति" PERFECT_ACT_1_SG "तिष\u{94d}ट\u{947}घ",
-    "स\u{94d}तिघ\u{94d}नोति" PERFECT_ACT_1_DU "तिष\u{94d}टिघिव",
-    "स\u{94d}तिघ\u{94d}नोति" PERFECT_ACT_1_PL "तिष\u{94d}टिघिम",
-    "स\u{94d}तिघ\u{94d}नोति" PERFECT_ACT_2_SG "तिष\u{94d}ट\u{947}घिथ",
-    "स\u{94d}तिघ\u{94d}नोति" PERFECT_ACT_2_DU "तिष\u{94d}टिघथ\u{941}ः",
-    "स\u{94d}तिघ\u{94d}नोति" PERFECT_ACT_2_PL "तिष\u{94d}टिघ",
-    "स\u{94d}तिघ\u{94d}नोति" PERFECT_ACT_3_SG "तिष\u{94d}ट\u{947}घ",
-    "स\u{94d}तिघ\u{94d}नोति" PERFECT_ACT_3_DU "तिष\u{94d}टिघत\u{941}ः",
-    "स\u{94d}तिघ\u{94d}नोति" PERFECT_ACT_3_PL "तिष\u{94d}टिघ\u{941}ः",
-    "स\u{94d}तिघ\u{94d}नोति" PERFECT_MID_1_SG "तिष\u{94d}टिघ\u{947}",
-    "स\u{94d}तिघ\u{94d}नोति" PERFECT_MID_1_DU "तिष\u{94d}टिघिवह\u{947}",
-    "स\u{94d}तिघ\u{94d}नोति" PERFECT_MID_1_PL "तिष\u{94d}टिघिमह\u{947}",
-    "स\u{94d}तिघ\u{94d}नोति" PERFECT_MID_2_SG "तिष\u{94d}टिघिष\u{947}",
-    "स\u{94d}तिघ\u{94d}नोति" PERFECT_MID_2_DU "तिष\u{94d}टिघाथ\u{947}",
-    "स\u{94d}तिघ\u{94d}नोति" PERFECT_MID_2_PL "तिष\u{94d}टिघिध\u{94d}व\u{947}",
-    "स\u{94d}तिघ\u{94d}नोति" PERFECT_MID_3_SG "तिष\u{94d}टिघ\u{947}",
-    "स\u{94d}तिघ\u{94d}नोति" PERFECT_MID_3_DU "तिष\u{94d}टिघात\u{947}",
-    "स\u{94d}तिघ\u{94d}नोति" PERFECT_MID_3_PL "तिष\u{94d}टिघिर\u{947}",
-    "स\u{94d}तिघ\u{94d}नोति" AORIST_MID_1_SG "अस\u{94d}त\u{947}घिषि",
-    "स\u{94d}तिघ\u{94d}नोति" AORIST_MID_1_DU "अस\u{94d}त\u{947}घिष\u{94d}वहि",
-    "स\u{94d}तिघ\u{94d}नोति" AORIST_MID_1_PL "अस\u{94d}त\u{947}घिष\u{94d}महि",
-    "स\u{94d}तिघ\u{94d}नोति" AORIST_MID_2_SG "अस\u{94d}त\u{947}घिष\u{94d}ठाः",
-    "स\u{94d}तिघ\u{94d}नोति" AORIST_MID_2_DU "अस\u{94d}त\u{947}घिषाथाम\u{94d}",
-    "स\u{94d}तिघ\u{94d}नोति" AORIST_MID_2_PL "अस\u{94d}त\u{947}घिढ\u{94d}वम\u{94d}",
-    "स\u{94d}तिघ\u{94d}नोति" AORIST_MID_3_SG "अस\u{94d}त\u{947}घिष\u{94d}ट",
-    "स\u{94d}तिघ\u{94d}नोति" AORIST_MID_3_DU "अस\u{94d}त\u{947}घिषाताम\u{94d}",
-    "स\u{94d}तिघ\u{94d}नोति" AORIST_MID_3_PL "अस\u{94d}त\u{947}घिषत",
-    "स\u{94d}तिघ\u{94d}नोति" INFINITIVE "स\u{94d}त\u{947}घित\u{941}म\u{94d}",
-    "स\u{94d}तिघ\u{94d}नोति" GERUND "स\u{94d}तिघित\u{94d}वा",
-    "स\u{94d}तिघ\u{94d}नोति" PARTICIPLE_FUT_ACT "स\u{94d}त\u{947}घिष\u{94d}यत\u{94d}",
-    "स\u{94d}तिघ\u{94d}नोति" PARTICIPLE_FUT_MID "स\u{94d}त\u{947}घिष\u{94d}यमाण",
-    "स\u{94d}तिघ\u{94d}नोति" PARTICIPLE_PERF_ACT "तिष\u{94d}टिघ\u{94d}वा\u{902}स\u{94d}",
-    "स\u{94d}तिघ\u{94d}नोति" PARTICIPLE_PERF_MID "तिष\u{94d}टिघान",
-    "स\u{94d}तौति" IND_ACT_1_SG "स\u{94d}तौमि",
-    "स\u{94d}तौति" IND_ACT_1_DU "स\u{94d}त\u{941}वः",
-    "स\u{94d}तौति" IND_ACT_1_PL "स\u{94d}त\u{941}मः",
-    "स\u{94d}तौति" IND_ACT_2_SG "स\u{94d}तौषि",
-    "स\u{94d}तौति" IND_ACT_2_DU "स\u{94d}त\u{941}थः",
-    "स\u{94d}तौति" IND_ACT_2_PL "स\u{94d}त\u{941}थ",
-    "स\u{94d}तौति" IND_ACT_3_DU "स\u{94d}त\u{941}तः",
-    "स\u{94d}तौति" IND_ACT_3_PL "स\u{94d}त\u{941}वन\u{94d}ति",
-    "स\u{94d}तौति" IND_MID_1_SG "स\u{94d}त\u{941}व\u{947}",
-    "स\u{94d}तौति" IND_MID_1_DU "स\u{94d}त\u{941}वह\u{947}",
-    "स\u{94d}तौति" IND_MID_1_PL "स\u{94d}त\u{941}मह\u{947}",
-    "स\u{94d}तौति" IND_MID_2_SG "स\u{94d}त\u{941}ष\u{947}",
-    "स\u{94d}तौति" IND_MID_2_DU "स\u{94d}त\u{941}वाथ\u{947}",
-    "स\u{94d}तौति" IND_MID_2_PL "स\u{94d}त\u{941}ध\u{94d}व\u{947}",
-    "स\u{94d}तौति" IND_MID_3_SG "स\u{94d}त\u{941}त\u{947}",
-    "स\u{94d}तौति" IND_MID_3_DU "स\u{94d}त\u{941}वात\u{947}",
-    "स\u{94d}तौति" IND_MID_3_PL "स\u{94d}त\u{941}वत\u{947}",
-    "स\u{94d}तौति" IMP_ACT_1_SG "स\u{94d}तवानि",
-    "स\u{94d}तौति" IMP_ACT_1_DU "स\u{94d}तवाव",
-    "स\u{94d}तौति" IMP_ACT_1_PL "स\u{94d}तवाम",
-    "स\u{94d}तौति" IMP_ACT_2_SG "स\u{94d}त\u{941}हि",
-    "स\u{94d}तौति" IMP_ACT_2_DU "स\u{94d}त\u{941}तम\u{94d}",
-    "स\u{94d}तौति" IMP_ACT_2_PL "स\u{94d}त\u{941}त",
-    "स\u{94d}तौति" IMP_ACT_3_DU "स\u{94d}त\u{941}ताम\u{94d}",
-    "स\u{94d}तौति" IMP_ACT_3_PL "स\u{94d}त\u{941}वन\u{94d}त\u{941}",
-    "स\u{94d}तौति" IMP_MID_1_SG "स\u{94d}तव\u{948}",
-    "स\u{94d}तौति" IMP_MID_1_DU "स\u{94d}तवावह\u{948}",
-    "स\u{94d}तौति" IMP_MID_1_PL "स\u{94d}तवामह\u{948}",
-    "स\u{94d}तौति" IMP_MID_2_SG "स\u{94d}त\u{941}ष\u{94d}व",
-    "स\u{94d}तौति" IMP_MID_2_DU "स\u{94d}त\u{941}वाथाम\u{94d}",
-    "स\u{94d}तौति" IMP_MID_2_PL "स\u{94d}त\u{941}ध\u{94d}वम\u{94d}",
-    "स\u{94d}तौति" IMP_MID_3_SG "स\u{94d}त\u{941}ताम\u{94d}",
-    "स\u{94d}तौति" IMP_MID_3_DU "स\u{94d}त\u{941}वाताम\u{94d}",
-    "स\u{94d}तौति" IMP_MID_3_PL "स\u{94d}त\u{941}वताम\u{94d}",
-    "स\u{94d}तौति" OPT_ACT_1_SG "स\u{94d}त\u{941}याम\u{94d}",
-    "स\u{94d}तौति" OPT_ACT_1_DU "स\u{94d}त\u{941}याव",
-    "स\u{94d}तौति" OPT_ACT_1_PL "स\u{94d}त\u{941}याम",
-    "स\u{94d}तौति" OPT_ACT_2_SG "स\u{94d}त\u{941}याः",
-    "स\u{94d}तौति" OPT_ACT_2_DU "स\u{94d}त\u{941}यातम\u{94d}",
-    "स\u{94d}तौति" OPT_ACT_2_PL "स\u{94d}त\u{941}यात",
-    "स\u{94d}तौति" OPT_ACT_3_SG "स\u{94d}त\u{941}यात\u{94d}",
-    "स\u{94d}तौति" OPT_ACT_3_DU "स\u{94d}त\u{941}याताम\u{94d}",
-    "स\u{94d}तौति" OPT_ACT_3_PL "स\u{94d}त\u{941}य\u{941}ः",
-    "स\u{94d}तौति" OPT_MID_1_SG "स\u{94d}त\u{941}वीय",
-    "स\u{94d}तौति" OPT_MID_1_DU "स\u{94d}त\u{941}वीवहि",
-    "स\u{94d}तौति" OPT_MID_1_PL "स\u{94d}त\u{941}वीमहि",
-    "स\u{94d}तौति" OPT_MID_2_SG "स\u{94d}त\u{941}वीथाः",
-    "स\u{94d}तौति" OPT_MID_2_DU "स\u{94d}त\u{941}वीयाथाम\u{94d}",
-    "स\u{94d}तौति" OPT_MID_2_PL "स\u{94d}त\u{941}वीध\u{94d}वम\u{94d}",
-    "स\u{94d}तौति" OPT_MID_3_SG "स\u{94d}त\u{941}वीत",
-    "स\u{94d}तौति" OPT_MID_3_DU "स\u{94d}त\u{941}वीयाताम\u{94d}",
-    "स\u{94d}तौति" OPT_MID_3_PL "स\u{94d}त\u{941}वीरन\u{94d}",
-    "स\u{94d}तौति" SUBJ_ACT_1_SG "स\u{94d}तवानि",
-    "स\u{94d}तौति" SUBJ_ACT_1_DU "स\u{94d}तवाव",
-    "स\u{94d}तौति" SUBJ_ACT_1_PL "स\u{94d}तवाम",
-    "स\u{94d}तौति" SUBJ_ACT_2_SG "स\u{94d}तवः",
-    "स\u{94d}तौति" SUBJ_ACT_2_DU "स\u{94d}तवथः",
-    "स\u{94d}तौति" SUBJ_ACT_2_PL "स\u{94d}तवथ",
-    "स\u{94d}तौति" SUBJ_ACT_3_SG "स\u{94d}तवत\u{94d}",
-    "स\u{94d}तौति" SUBJ_ACT_3_DU "स\u{94d}तवतः",
-    "स\u{94d}तौति" SUBJ_ACT_3_PL "स\u{94d}तवन\u{94d}",
-    "स\u{94d}तौति" SUBJ_MID_1_SG "स\u{94d}तव\u{948}",
-    "स\u{94d}तौति" SUBJ_MID_1_DU "स\u{94d}तवावह\u{948}",
-    "स\u{94d}तौति" SUBJ_MID_1_PL "स\u{94d}तवामह\u{948}",
-    "स\u{94d}तौति" SUBJ_MID_2_SG "स\u{94d}तवस\u{947}",
-    "स\u{94d}तौति" SUBJ_MID_2_DU "स\u{94d}तव\u{948}थ\u{947}",
-    "स\u{94d}तौति" SUBJ_MID_2_PL "स\u{94d}तवध\u{94d}व\u{947}",
-    "स\u{94d}तौति" SUBJ_MID_3_SG "स\u{94d}तवत\u{947}",
-    "स\u{94d}तौति" SUBJ_MID_3_DU "स\u{94d}तव\u{948}त\u{947}",
-    "स\u{94d}तौति" SUBJ_MID_3_PL "स\u{94d}तवन\u{94d}त",
-    "स\u{94d}तौति" IMPERFECT_ACT_1_SG "अस\u{94d}तवम\u{94d}",
-    "स\u{94d}तौति" IMPERFECT_ACT_1_DU "अस\u{94d}त\u{941}व",
-    "स\u{94d}तौति" IMPERFECT_ACT_1_PL "अस\u{94d}त\u{941}म",
-    "स\u{94d}तौति" IMPERFECT_ACT_2_DU "अस\u{94d}त\u{941}तम\u{94d}",
-    "स\u{94d}तौति" IMPERFECT_ACT_2_PL "अस\u{94d}त\u{941}त",
-    "स\u{94d}तौति" IMPERFECT_ACT_3_DU "अस\u{94d}त\u{941}ताम\u{94d}",
-    "स\u{94d}तौति" IMPERFECT_ACT_3_PL "अस\u{94d}त\u{941}वन\u{94d}",
-    "स\u{94d}तौति" IMPERFECT_MID_1_SG "अस\u{94d}त\u{941}वि",
-    "स\u{94d}तौति" IMPERFECT_MID_1_DU "अस\u{94d}त\u{941}वहि",
-    "स\u{94d}तौति" IMPERFECT_MID_1_PL "अस\u{94d}त\u{941}महि",
-    "स\u{94d}तौति" IMPERFECT_MID_2_SG "अस\u{94d}त\u{941}थाः",
-    "स\u{94d}तौति" IMPERFECT_MID_2_DU "अस\u{94d}त\u{941}वाथाम\u{94d}",
-    "स\u{94d}तौति" IMPERFECT_MID_2_PL "अस\u{94d}त\u{941}ध\u{94d}वम\u{94d}",
-    "स\u{94d}तौति" IMPERFECT_MID_3_SG "अस\u{94d}त\u{941}त",
-    "स\u{94d}तौति" IMPERFECT_MID_3_DU "अस\u{94d}त\u{941}वाताम\u{94d}",
-    "स\u{94d}तौति" IMPERFECT_MID_3_PL "अस\u{94d}त\u{941}वत",
-    "स\u{94d}तौति" PARTICIPLE_PRES_ACT "स\u{94d}त\u{941}वत\u{94d}",
-    "स\u{94d}तौति" PARTICIPLE_PRES_MID "स\u{94d}त\u{941}वान",
-    "स\u{94d}वपिति" IND_ACT_1_SG "स\u{94d}वपिमि",
-    "स\u{94d}वपिति" IND_ACT_1_DU "स\u{94d}वपिवः",
-    "स\u{94d}वपिति" IND_ACT_1_PL "स\u{94d}वपिमः",
-    "स\u{94d}वपिति" IND_ACT_2_SG "स\u{94d}वपिषि",
-    "स\u{94d}वपिति" IND_ACT_3_PL "स\u{94d}वपन\u{94d}ति",
-    "स\u{94d}वपिति" IND_MID_1_SG "स\u{94d}वप\u{947}",
-    "स\u{94d}वपिति" IND_MID_1_DU "स\u{94d}वपिवह\u{947}",
-    "स\u{94d}वपिति" IND_MID_1_PL "स\u{94d}वपिमह\u{947}",
-    "स\u{94d}वपिति" IND_MID_2_SG "स\u{94d}वपिष\u{947}",
-    "स\u{94d}वपिति" IND_MID_2_DU "स\u{94d}वपाथ\u{947}",
-    "स\u{94d}वपिति" IND_MID_3_DU "स\u{94d}वपात\u{947}",
-    "स\u{94d}वपिति" IND_MID_3_PL "स\u{94d}वपत\u{947}",
-    "स\u{94d}वपिति" IMP_ACT_1_SG "स\u{94d}वपानि",
-    "स\u{94d}वपिति" IMP_ACT_1_DU "स\u{94d}वपाव",
-    "स\u{94d}वपिति" IMP_ACT_1_PL "स\u{94d}वपाम",
-    "स\u{94d}वपिति" IMP_ACT_2_SG "स\u{94d}वपिहि",
-    "स\u{94d}वपिति" IMP_ACT_3_PL "स\u{94d}वपन\u{94d}त\u{941}",
-    "स\u{94d}वपिति" IMP_MID_1_SG "स\u{94d}वप\u{948}",
-    "स\u{94d}वपिति" IMP_MID_1_DU "स\u{94d}वपावह\u{948}",
-    "स\u{94d}वपिति" IMP_MID_1_PL "स\u{94d}वपामह\u{948}",
-    "स\u{94d}वपिति" IMP_MID_2_SG "स\u{94d}वपिष\u{94d}व",
-    "स\u{94d}वपिति" IMP_MID_2_DU "स\u{94d}वपाथाम\u{94d}",
-    "स\u{94d}वपिति" IMP_MID_3_DU "स\u{94d}वपाताम\u{94d}",
-    "स\u{94d}वपिति" IMP_MID_3_PL "स\u{94d}वपताम\u{94d}",
-    "स\u{94d}वपिति" OPT_ACT_1_SG "स\u{94d}वप\u{94d}याम\u{94d}",
-    "स\u{94d}वपिति" OPT_ACT_1_DU "स\u{94d}वप\u{94d}याव",
-    "स\u{94d}वपिति" OPT_ACT_1_PL "स\u{94d}वप\u{94d}याम",
-    "स\u{94d}वपिति" OPT_ACT_2_SG "स\u{94d}वप\u{94d}याः",
-    "स\u{94d}वपिति" OPT_ACT_2_DU "स\u{94d}वप\u{94d}यातम\u{94d}",
-    "स\u{94d}वपिति" OPT_ACT_2_PL "स\u{94d}वप\u{94d}यात",
-    "स\u{94d}वपिति" OPT_ACT_3_SG "स\u{94d}वप\u{94d}यात\u{94d}",
-    "स\u{94d}वपिति" OPT_ACT_3_DU "स\u{94d}वप\u{94d}याताम\u{94d}",
-    "स\u{94d}वपिति" OPT_ACT_3_PL "स\u{94d}वप\u{94d}य\u{941}ः",
-    "स\u{94d}वपिति" OPT_MID_1_SG "स\u{94d}वपीय",
-    "स\u{94d}वपिति" OPT_MID_1_DU "स\u{94d}वपीवहि",
-    "स\u{94d}वपिति" OPT_MID_1_PL "स\u{94d}वपीमहि",
-    "स\u{94d}वपिति" OPT_MID_2_SG "स\u{94d}वपीथाः",
-    "स\u{94d}वपिति" OPT_MID_2_DU "स\u{94d}वपीयाथाम\u{94d}",
-    "स\u{94d}वपिति" OPT_MID_2_PL "स\u{94d}वपीध\u{94d}वम\u{94d}",
-    "स\u{94d}वपिति" OPT_MID_3_SG "स\u{94d}वपीत",
-    "स\u{94d}वपिति" OPT_MID_3_DU "स\u{94d}वपीयाताम\u{94d}",
-    "स\u{94d}वपिति" OPT_MID_3_PL "स\u{94d}वपीरन\u{94d}",
-    "स\u{94d}वपिति" SUBJ_ACT_1_SG "स\u{94d}वपानि",
-    "स\u{94d}वपिति" SUBJ_ACT_1_DU "स\u{94d}वपाव",
-    "स\u{94d}वपिति" SUBJ_ACT_1_PL "स\u{94d}वपाम",
-    "स\u{94d}वपिति" SUBJ_ACT_2_SG "स\u{94d}वपः",
-    "स\u{94d}वपिति" SUBJ_ACT_2_DU "स\u{94d}वपथः",
-    "स\u{94d}वपिति" SUBJ_ACT_2_PL "स\u{94d}वपथ",
-    "स\u{94d}वपिति" SUBJ_ACT_3_SG "स\u{94d}वपत\u{94d}",
-    "स\u{94d}वपिति" SUBJ_ACT_3_DU "स\u{94d}वपतः",
-    "स\u{94d}वपिति" SUBJ_ACT_3_PL "स\u{94d}वपन\u{94d}",
-    "स\u{94d}वपिति" SUBJ_MID_1_SG "स\u{94d}वप\u{948}",
-    "स\u{94d}वपिति" SUBJ_MID_1_DU "स\u{94d}वपावह\u{948}",
-    "स\u{94d}वपिति" SUBJ_MID_1_PL "स\u{94d}वपामह\u{948}",
-    "स\u{94d}वपिति" SUBJ_MID_2_SG "स\u{94d}वपस\u{947}",
-    "स\u{94d}वपिति" SUBJ_MID_2_DU "स\u{94d}वप\u{948}थ\u{947}",
-    "स\u{94d}वपिति" SUBJ_MID_2_PL "स\u{94d}वपध\u{94d}व\u{947}",
-    "स\u{94d}वपिति" SUBJ_MID_3_SG "स\u{94d}वपत\u{947}",
-    "स\u{94d}वपिति" SUBJ_MID_3_DU "स\u{94d}वप\u{948}त\u{947}",
-    "स\u{94d}वपिति" SUBJ_MID_3_PL "स\u{94d}वपन\u{94d}त",
-    "स\u{94d}वपिति" IMPERFECT_ACT_1_SG "अस\u{94d}वपम\u{94d}",
-    "स\u{94d}वपिति" IMPERFECT_ACT_1_DU "अस\u{94d}वपिव",
-    "स\u{94d}वपिति" IMPERFECT_ACT_1_PL "अस\u{94d}वपिम",
-    "स\u{94d}वपिति" IMPERFECT_ACT_2_SG "अस\u{94d}वपीः",
-    "स\u{94d}वपिति" IMPERFECT_ACT_3_SG "अस\u{94d}वपीत\u{94d}",
-    "स\u{94d}वपिति" IMPERFECT_ACT_3_PL "अस\u{94d}वपन\u{94d}",
-    "स\u{94d}वपिति" IMPERFECT_MID_1_SG "अस\u{94d}वपि",
-    "स\u{94d}वपिति" IMPERFECT_MID_1_DU "अस\u{94d}वपिवहि",
-    "स\u{94d}वपिति" IMPERFECT_MID_1_PL "अस\u{94d}वपिमहि",
-    "स\u{94d}वपिति" IMPERFECT_MID_2_DU "अस\u{94d}वपाथाम\u{94d}",
-    "स\u{94d}वपिति" IMPERFECT_MID_3_DU "अस\u{94d}वपाताम\u{94d}",
-    "स\u{94d}वपिति" IMPERFECT_MID_3_PL "अस\u{94d}वपत",
-    "स\u{94d}वपिति" PARTICIPLE_PRES_ACT "स\u{94d}वपत\u{94d}",
-    "स\u{94d}वपिति" PARTICIPLE_PRES_MID "स\u{94d}वपान",
-    "स\u{94d}वीकरोति" IND_ACT_1_DU "स\u{94d}वीक\u{941}र\u{94d}वः",
-    "स\u{94d}वीकरोति" IND_ACT_1_PL "स\u{94d}वीक\u{941}र\u{94d}मः",
-    "स\u{94d}वीकरोति" IND_ACT_2_DU "स\u{94d}वीक\u{941}र\u{941}थः",
-    "स\u{94d}वीकरोति" IND_ACT_2_PL "स\u{94d}वीक\u{941}र\u{941}थ",
-    "स\u{94d}वीकरोति" IND_ACT_3_DU "स\u{94d}वीक\u{941}र\u{941}तः",
-    "स\u{94d}वीकरोति" IND_ACT_3_PL "स\u{94d}वीक\u{941}र\u{94d}वन\u{94d}ति",
-    "स\u{94d}वीकरोति" IND_MID_1_SG "स\u{94d}वीक\u{941}र\u{94d}व\u{947}",
-    "स\u{94d}वीकरोति" IND_MID_1_DU "स\u{94d}वीक\u{941}र\u{94d}वह\u{947}",
-    "स\u{94d}वीकरोति" IND_MID_1_PL "स\u{94d}वीक\u{941}र\u{94d}मह\u{947}",
-    "स\u{94d}वीकरोति" IND_MID_2_SG "स\u{94d}वीक\u{941}र\u{941}ष\u{947}",
-    "स\u{94d}वीकरोति" IND_MID_2_DU "स\u{94d}वीक\u{941}र\u{94d}वाथ\u{947}",
-    "स\u{94d}वीकरोति" IND_MID_2_PL "स\u{94d}वीक\u{941}र\u{941}ध\u{94d}व\u{947}",
-    "स\u{94d}वीकरोति" IND_MID_3_SG "स\u{94d}वीक\u{941}र\u{941}त\u{947}",
-    "स\u{94d}वीकरोति" IND_MID_3_DU "स\u{94d}वीक\u{941}र\u{94d}वात\u{947}",
-    "स\u{94d}वीकरोति" IND_MID_3_PL "स\u{94d}वीक\u{941}र\u{94d}वत\u{947}",
-    "स\u{94d}वीकरोति" IMP_ACT_1_SG "स\u{94d}वीकरवाणि",
-    "स\u{94d}वीकरोति" IMP_ACT_2_SG "स\u{94d}वीक\u{941}र\u{941}हि",
-    "स\u{94d}वीकरोति" IMP_ACT_2_DU "स\u{94d}वीक\u{941}र\u{941}तम\u{94d}",
-    "स\u{94d}वीकरोति" IMP_ACT_2_PL "स\u{94d}वीक\u{941}र\u{941}त",
-    "स\u{94d}वीकरोति" IMP_ACT_3_DU "स\u{94d}वीक\u{941}र\u{941}ताम\u{94d}",
-    "स\u{94d}वीकरोति" IMP_ACT_3_PL "स\u{94d}वीक\u{941}र\u{94d}वन\u{94d}त\u{941}",
-    "स\u{94d}वीकरोति" IMP_MID_2_SG "स\u{94d}वीक\u{941}र\u{941}ष\u{94d}व",
-    "स\u{94d}वीकरोति" IMP_MID_2_DU "स\u{94d}वीक\u{941}र\u{94d}वाथाम\u{94d}",
-    "स\u{94d}वीकरोति" IMP_MID_2_PL "स\u{94d}वीक\u{941}र\u{941}ध\u{94d}वम\u{94d}",
-    "स\u{94d}वीकरोति" IMP_MID_3_SG "स\u{94d}वीक\u{941}र\u{941}ताम\u{94d}",
-    "स\u{94d}वीकरोति" IMP_MID_3_DU "स\u{94d}वीक\u{941}र\u{94d}वाताम\u{94d}",
-    "स\u{94d}वीकरोति" IMP_MID_3_PL "स\u{94d}वीक\u{941}र\u{94d}वताम\u{94d}",
-    "स\u{94d}वीकरोति" OPT_ACT_1_SG "स\u{94d}वीक\u{941}र\u{94d}याम\u{94d}",
-    "स\u{94d}वीकरोति" OPT_ACT_1_DU "स\u{94d}वीक\u{941}र\u{94d}याव",
-    "स\u{94d}वीकरोति" OPT_ACT_1_PL "स\u{94d}वीक\u{941}र\u{94d}याम",
-    "स\u{94d}वीकरोति" OPT_ACT_2_SG "स\u{94d}वीक\u{941}र\u{94d}याः",
-    "स\u{94d}वीकरोति" OPT_ACT_2_DU "स\u{94d}वीक\u{941}र\u{94d}यातम\u{94d}",
-    "स\u{94d}वीकरोति" OPT_ACT_2_PL "स\u{94d}वीक\u{941}र\u{94d}यात",
-    "स\u{94d}वीकरोति" OPT_ACT_3_SG "स\u{94d}वीक\u{941}र\u{94d}यात\u{94d}",
-    "स\u{94d}वीकरोति" OPT_ACT_3_DU "स\u{94d}वीक\u{941}र\u{94d}याताम\u{94d}",
-    "स\u{94d}वीकरोति" OPT_ACT_3_PL "स\u{94d}वीक\u{941}र\u{94d}य\u{941}ः",
-    "स\u{94d}वीकरोति" OPT_MID_1_SG "स\u{94d}वीक\u{941}र\u{94d}वीय",
-    "स\u{94d}वीकरोति" OPT_MID_1_DU "स\u{94d}वीक\u{941}र\u{94d}वीवहि",
-    "स\u{94d}वीकरोति" OPT_MID_1_PL "स\u{94d}वीक\u{941}र\u{94d}वीमहि",
-    "स\u{94d}वीकरोति" OPT_MID_2_SG "स\u{94d}वीक\u{941}र\u{94d}वीथाः",
-    "स\u{94d}वीकरोति" OPT_MID_2_DU "स\u{94d}वीक\u{941}र\u{94d}वीयाथाम\u{94d}",
-    "स\u{94d}वीकरोति" OPT_MID_2_PL "स\u{94d}वीक\u{941}र\u{94d}वीध\u{94d}वम\u{94d}",
-    "स\u{94d}वीकरोति" OPT_MID_3_SG "स\u{94d}वीक\u{941}र\u{94d}वीत",
-    "स\u{94d}वीकरोति" OPT_MID_3_DU "स\u{94d}वीक\u{941}र\u{94d}वीयाताम\u{94d}",
-    "स\u{94d}वीकरोति" OPT_MID_3_PL "स\u{94d}वीक\u{941}र\u{94d}वीरन\u{94d}",
-    "स\u{94d}वीकरोति" SUBJ_ACT_1_SG "स\u{94d}वीकरवाणि",
-    "स\u{94d}वीकरोति" IMPERFECT_ACT_1_SG "स\u{94d}व\u{94d}यकरवम\u{94d}",
-    "स\u{94d}वीकरोति" IMPERFECT_ACT_1_DU "स\u{94d}व\u{94d}यक\u{941}र\u{94d}व",
-    "स\u{94d}वीकरोति" IMPERFECT_ACT_1_PL "स\u{94d}व\u{94d}यक\u{941}र\u{94d}म",
-    "स\u{94d}वीकरोति" IMPERFECT_ACT_2_SG "स\u{94d}व\u{94d}यकरोः",
-    "स\u{94d}वीकरोति" IMPERFECT_ACT_2_DU "स\u{94d}व\u{94d}यक\u{941}र\u{941}तम\u{94d}",
-    "स\u{94d}वीकरोति" IMPERFECT_ACT_2_PL "स\u{94d}व\u{94d}यक\u{941}र\u{941}त",
-    "स\u{94d}वीकरोति" IMPERFECT_ACT_3_SG "स\u{94d}व\u{94d}यकरोत\u{94d}",
-    "स\u{94d}वीकरोति" IMPERFECT_ACT_3_DU "स\u{94d}व\u{94d}यक\u{941}र\u{941}ताम\u{94d}",
-    "स\u{94d}वीकरोति" IMPERFECT_ACT_3_PL "स\u{94d}व\u{94d}यक\u{941}र\u{94d}वन\u{94d}",
-    "स\u{94d}वीकरोति" IMPERFECT_MID_1_SG "स\u{94d}व\u{94d}यक\u{941}र\u{94d}वि",
-    "स\u{94d}वीकरोति" IMPERFECT_MID_1_DU "स\u{94d}व\u{94d}यक\u{941}र\u{94d}वहि",
-    "स\u{94d}वीकरोति" IMPERFECT_MID_1_PL "स\u{94d}व\u{94d}यक\u{941}र\u{94d}महि",
-    "स\u{94d}वीकरोति" IMPERFECT_MID_2_SG "स\u{94d}व\u{94d}यक\u{941}र\u{941}थाः",
-    "स\u{94d}वीकरोति" IMPERFECT_MID_2_DU "स\u{94d}व\u{94d}यक\u{941}र\u{94d}वाथाम\u{94d}",
-    "स\u{94d}वीकरोति" IMPERFECT_MID_2_PL "स\u{94d}व\u{94d}यक\u{941}र\u{941}ध\u{94d}वम\u{94d}",
-    "स\u{94d}वीकरोति" IMPERFECT_MID_3_SG "स\u{94d}व\u{94d}यक\u{941}र\u{941}त",
-    "स\u{94d}वीकरोति" IMPERFECT_MID_3_DU "स\u{94d}व\u{94d}यक\u{941}र\u{94d}वाताम\u{94d}",
-    "स\u{94d}वीकरोति" IMPERFECT_MID_3_PL "स\u{94d}व\u{94d}यक\u{941}र\u{94d}वत",
-    "स\u{94d}वीकरोति" PARTICIPLE_PRES_ACT "स\u{94d}वीक\u{941}र\u{94d}वत\u{94d}",
-    "स\u{94d}वीकरोति" PARTICIPLE_PRES_MID "स\u{94d}वीक\u{941}र\u{94d}वाण",
-    "हन\u{94d}ति" IND_ACT_1_SG "हन\u{94d}मि",
-    "हन\u{94d}ति" IND_ACT_1_DU "हन\u{94d}वः",
-    "हन\u{94d}ति" IND_ACT_1_PL "हन\u{94d}मः",
-    "हन\u{94d}ति" IND_ACT_2_SG "ह\u{902}सि",
-    "हन\u{94d}ति" IND_ACT_2_DU "हथः",
-    "हन\u{94d}ति" IND_ACT_2_PL "हथ",
-    "हन\u{94d}ति" IND_ACT_3_DU "हतः",
-    "हन\u{94d}ति" IND_ACT_3_PL "घ\u{94d}नन\u{94d}ति",
-    "हन\u{94d}ति" IND_MID_1_SG "घ\u{94d}न\u{947}",
-    "हन\u{94d}ति" IND_MID_1_DU "हन\u{94d}वह\u{947}",
-    "हन\u{94d}ति" IND_MID_1_PL "हन\u{94d}मह\u{947}",
-    "हन\u{94d}ति" IND_MID_2_SG "हस\u{947}",
-    "हन\u{94d}ति" IND_MID_2_DU "घ\u{94d}नाथ\u{947}",
-    "हन\u{94d}ति" IND_MID_2_PL "हध\u{94d}व\u{947}",
-    "हन\u{94d}ति" IND_MID_3_SG "हत\u{947}",
-    "हन\u{94d}ति" IND_MID_3_DU "घ\u{94d}नात\u{947}",
-    "हन\u{94d}ति" IND_MID_3_PL "घ\u{94d}नत\u{947}",
-    "हन\u{94d}ति" IMP_ACT_1_SG "हनानि",
-    "हन\u{94d}ति" IMP_ACT_1_DU "हनाव",
-    "हन\u{94d}ति" IMP_ACT_1_PL "हनाम",
-    "हन\u{94d}ति" IMP_ACT_2_SG "जहि",
-    "हन\u{94d}ति" IMP_ACT_2_DU "हतम\u{94d}",
-    "हन\u{94d}ति" IMP_ACT_2_PL "हत",
-    "हन\u{94d}ति" IMP_ACT_3_DU "हताम\u{94d}",
-    "हन\u{94d}ति" IMP_ACT_3_PL "घ\u{94d}नन\u{94d}त\u{941}",
-    "हन\u{94d}ति" IMP_MID_1_SG "हन\u{948}",
-    "हन\u{94d}ति" IMP_MID_1_DU "हनावह\u{948}",
-    "हन\u{94d}ति" IMP_MID_1_PL "हनामह\u{948}",
-    "हन\u{94d}ति" IMP_MID_2_SG "हस\u{94d}व",
-    "हन\u{94d}ति" IMP_MID_2_DU "घ\u{94d}नाथाम\u{94d}",
-    "हन\u{94d}ति" IMP_MID_2_PL "हध\u{94d}वम\u{94d}",
-    "हन\u{94d}ति" IMP_MID_3_SG "हताम\u{94d}",
-    "हन\u{94d}ति" IMP_MID_3_DU "घ\u{94d}नाताम\u{94d}",
-    "हन\u{94d}ति" IMP_MID_3_PL "घ\u{94d}नताम\u{94d}",
-    "हन\u{94d}ति" OPT_ACT_1_SG "हन\u{94d}याम\u{94d}",
-    "हन\u{94d}ति" OPT_ACT_1_DU "हन\u{94d}याव",
-    "हन\u{94d}ति" OPT_ACT_1_PL "हन\u{94d}याम",
-    "हन\u{94d}ति" OPT_ACT_2_SG "हन\u{94d}याः",
-    "हन\u{94d}ति" OPT_ACT_2_DU "हन\u{94d}यातम\u{94d}",
-    "हन\u{94d}ति" OPT_ACT_2_PL "हन\u{94d}यात",
-    "हन\u{94d}ति" OPT_ACT_3_SG "हन\u{94d}यात\u{94d}",
-    "हन\u{94d}ति" OPT_ACT_3_DU "हन\u{94d}याताम\u{94d}",
-    "हन\u{94d}ति" OPT_ACT_3_PL "हन\u{94d}य\u{941}ः",
-    "हन\u{94d}ति" OPT_MID_1_SG "हनीय",
-    "हन\u{94d}ति" OPT_MID_1_DU "हनीवहि",
-    "हन\u{94d}ति" OPT_MID_1_PL "हनीमहि",
-    "हन\u{94d}ति" OPT_MID_2_SG "हनीथाः",
-    "हन\u{94d}ति" OPT_MID_2_DU "हनीयाथाम\u{94d}",
-    "हन\u{94d}ति" OPT_MID_2_PL "हनीध\u{94d}वम\u{94d}",
-    "हन\u{94d}ति" OPT_MID_3_SG "हनीत",
-    "हन\u{94d}ति" OPT_MID_3_DU "हनीयाताम\u{94d}",
-    "हन\u{94d}ति" OPT_MID_3_PL "हनीरन\u{94d}",
-    "हन\u{94d}ति" SUBJ_ACT_1_SG "हनानि",
-    "हन\u{94d}ति" SUBJ_ACT_1_DU "हनाव",
-    "हन\u{94d}ति" SUBJ_ACT_1_PL "हनाम",
-    "हन\u{94d}ति" SUBJ_ACT_2_SG "हनः",
-    "हन\u{94d}ति" SUBJ_ACT_2_DU "हनथः",
-    "हन\u{94d}ति" SUBJ_ACT_2_PL "हनथ",
-    "हन\u{94d}ति" SUBJ_ACT_3_SG "हनत\u{94d}",
-    "हन\u{94d}ति" SUBJ_ACT_3_DU "हनतः",
-    "हन\u{94d}ति" SUBJ_ACT_3_PL "हनन\u{94d}",
-    "हन\u{94d}ति" SUBJ_MID_1_SG "हन\u{948}",
-    "हन\u{94d}ति" SUBJ_MID_1_DU "हनावह\u{948}",
-    "हन\u{94d}ति" SUBJ_MID_1_PL "हनामह\u{948}",
-    "हन\u{94d}ति" SUBJ_MID_2_SG "हनस\u{947}",
-    "हन\u{94d}ति" SUBJ_MID_2_DU "हन\u{948}थ\u{947}",
-    "हन\u{94d}ति" SUBJ_MID_2_PL "हनध\u{94d}व\u{947}",
-    "हन\u{94d}ति" SUBJ_MID_3_SG "हनत\u{947}",
-    "हन\u{94d}ति" SUBJ_MID_3_DU "हन\u{948}त\u{947}",
-    "हन\u{94d}ति" SUBJ_MID_3_PL "हनन\u{94d}त",
-    "हन\u{94d}ति" IMPERFECT_ACT_1_SG "अहनम\u{94d}",
-    "हन\u{94d}ति" IMPERFECT_ACT_1_DU "अहन\u{94d}व",
-    "हन\u{94d}ति" IMPERFECT_ACT_1_PL "अहन\u{94d}म",
-    "हन\u{94d}ति" IMPERFECT_ACT_2_SG "अहन\u{94d}",
-    "हन\u{94d}ति" IMPERFECT_ACT_2_DU "अहतम\u{94d}",
-    "हन\u{94d}ति" IMPERFECT_ACT_2_PL "अहत",
-    "हन\u{94d}ति" IMPERFECT_ACT_3_SG "अहन\u{94d}",
-    "हन\u{94d}ति" IMPERFECT_ACT_3_DU "अहताम\u{94d}",
-    "हन\u{94d}ति" IMPERFECT_ACT_3_PL "अघ\u{94d}नन\u{94d}",
-    "हन\u{94d}ति" IMPERFECT_MID_1_SG "अघ\u{94d}नि",
-    "हन\u{94d}ति" IMPERFECT_MID_1_DU "अहन\u{94d}वहि",
-    "हन\u{94d}ति" IMPERFECT_MID_1_PL "अहन\u{94d}महि",
-    "हन\u{94d}ति" IMPERFECT_MID_2_SG "अहथाः",
-    "हन\u{94d}ति" IMPERFECT_MID_2_DU "अघ\u{94d}नाथाम\u{94d}",
-    "हन\u{94d}ति" IMPERFECT_MID_2_PL "अहध\u{94d}वम\u{94d}",
-    "हन\u{94d}ति" IMPERFECT_MID_3_SG "अहत",
-    "हन\u{94d}ति" IMPERFECT_MID_3_DU "अघ\u{94d}नाताम\u{94d}",
-    "हन\u{94d}ति" IMPERFECT_MID_3_PL "अघ\u{94d}नत",
-    "हन\u{94d}ति" PARTICIPLE_PRES_ACT "घ\u{94d}नत\u{94d}",
-    "हन\u{94d}ति" PARTICIPLE_PRES_MID "घ\u{94d}नान",
-    "हिनस\u{94d}ति" IND_ACT_1_SG "हिनस\u{94d}मि",
-    "हिनस\u{94d}ति" IND_ACT_1_DU "हि\u{902}स\u{94d}वः",
-    "हिनस\u{94d}ति" IND_ACT_1_PL "हि\u{902}स\u{94d}मः",
-    "हिनस\u{94d}ति" IND_ACT_2_DU "हि\u{902}स\u{94d}थः",
-    "हिनस\u{94d}ति" IND_ACT_2_PL "हि\u{902}स\u{94d}थ",
-    "हिनस\u{94d}ति" IND_ACT_3_DU "हि\u{902}स\u{94d}तः",
-    "हिनस\u{94d}ति" IND_ACT_3_PL "हि\u{902}सन\u{94d}ति",
-    "हिनस\u{94d}ति" IND_MID_1_SG "हि\u{902}स\u{947}",
-    "हिनस\u{94d}ति" IND_MID_1_DU "हि\u{902}स\u{94d}वह\u{947}",
-    "हिनस\u{94d}ति" IND_MID_1_PL "हि\u{902}स\u{94d}मह\u{947}",
-    "हिनस\u{94d}ति" IND_MID_2_SG "हि\u{902}स\u{94d}स\u{947}",
-    "हिनस\u{94d}ति" IND_MID_2_DU "हि\u{902}साथ\u{947}",
-    "हिनस\u{94d}ति" IND_MID_2_PL "हिन\u{94d}द\u{94d}ध\u{94d}व\u{947}",
-    "हिनस\u{94d}ति" IND_MID_3_SG "हि\u{902}स\u{94d}त\u{947}",
-    "हिनस\u{94d}ति" IND_MID_3_DU "हि\u{902}सात\u{947}",
-    "हिनस\u{94d}ति" IND_MID_3_PL "हि\u{902}सत\u{947}",
-    "हिनस\u{94d}ति" IMP_ACT_1_SG "हिनसानि",
-    "हिनस\u{94d}ति" IMP_ACT_1_DU "हिनसाव",
-    "हिनस\u{94d}ति" IMP_ACT_1_PL "हिनसाम",
-    "हिनस\u{94d}ति" IMP_ACT_2_SG "हिन\u{94d}द\u{94d}धि",
-    "हिनस\u{94d}ति" IMP_ACT_2_DU "हि\u{902}स\u{94d}तम\u{94d}",
-    "हिनस\u{94d}ति" IMP_ACT_2_PL "हि\u{902}स\u{94d}त",
-    "हिनस\u{94d}ति" IMP_ACT_3_DU "हि\u{902}स\u{94d}ताम\u{94d}",
-    "हिनस\u{94d}ति" IMP_ACT_3_PL "हि\u{902}सन\u{94d}त\u{941}",
-    "हिनस\u{94d}ति" IMP_MID_1_SG "हिनस\u{948}",
-    "हिनस\u{94d}ति" IMP_MID_1_DU "हिनसावह\u{948}",
-    "हिनस\u{94d}ति" IMP_MID_1_PL "हिनसामह\u{948}",
-    "हिनस\u{94d}ति" IMP_MID_2_SG "हि\u{902}स\u{94d}स\u{94d}व",
-    "हिनस\u{94d}ति" IMP_MID_2_DU "हि\u{902}साथाम\u{94d}",
-    "हिनस\u{94d}ति" IMP_MID_2_PL "हिन\u{94d}द\u{94d}ध\u{94d}वम\u{94d}",
-    "हिनस\u{94d}ति" IMP_MID_3_SG "हि\u{902}स\u{94d}ताम\u{94d}",
-    "हिनस\u{94d}ति" IMP_MID_3_DU "हि\u{902}साताम\u{94d}",
-    "हिनस\u{94d}ति" IMP_MID_3_PL "हि\u{902}सताम\u{94d}",
-    "हिनस\u{94d}ति" OPT_ACT_1_SG "हि\u{902}स\u{94d}याम\u{94d}",
-    "हिनस\u{94d}ति" OPT_ACT_1_DU "हि\u{902}स\u{94d}याव",
-    "हिनस\u{94d}ति" OPT_ACT_1_PL "हि\u{902}स\u{94d}याम",
-    "हिनस\u{94d}ति" OPT_ACT_2_SG "हि\u{902}स\u{94d}याः",
-    "हिनस\u{94d}ति" OPT_ACT_2_DU "हि\u{902}स\u{94d}यातम\u{94d}",
-    "हिनस\u{94d}ति" OPT_ACT_2_PL "हि\u{902}स\u{94d}यात",
-    "हिनस\u{94d}ति" OPT_ACT_3_SG "हि\u{902}स\u{94d}यात\u{94d}",
-    "हिनस\u{94d}ति" OPT_ACT_3_DU "हि\u{902}स\u{94d}याताम\u{94d}",
-    "हिनस\u{94d}ति" OPT_ACT_3_PL "हि\u{902}स\u{94d}य\u{941}ः",
-    "हिनस\u{94d}ति" OPT_MID_1_SG "हि\u{902}सीय",
-    "हिनस\u{94d}ति" OPT_MID_1_DU "हि\u{902}सीवहि",
-    "हिनस\u{94d}ति" OPT_MID_1_PL "हि\u{902}सीमहि",
-    "हिनस\u{94d}ति" OPT_MID_2_SG "हि\u{902}सीथाः",
-    "हिनस\u{94d}ति" OPT_MID_2_DU "हि\u{902}सीयाथाम\u{94d}",
-    "हिनस\u{94d}ति" OPT_MID_2_PL "हि\u{902}सीध\u{94d}वम\u{94d}",
-    "हिनस\u{94d}ति" OPT_MID_3_SG "हि\u{902}सीत",
-    "हिनस\u{94d}ति" OPT_MID_3_DU "हि\u{902}सीयाताम\u{94d}",
-    "हिनस\u{94d}ति" OPT_MID_3_PL "हि\u{902}सीरन\u{94d}",
-    "हिनस\u{94d}ति" SUBJ_ACT_1_SG "हिनसानि",
-    "हिनस\u{94d}ति" SUBJ_ACT_1_DU "हिनसाव",
-    "हिनस\u{94d}ति" SUBJ_ACT_1_PL "हिनसाम",
-    "हिनस\u{94d}ति" SUBJ_ACT_2_SG "हिनसः",
-    "हिनस\u{94d}ति" SUBJ_ACT_2_DU "हिनसथः",
-    "हिनस\u{94d}ति" SUBJ_ACT_2_PL "हिनसथ",
-    "हिनस\u{94d}ति" SUBJ_ACT_3_SG "हिनसत\u{94d}",
-    "हिनस\u{94d}ति" SUBJ_ACT_3_DU "हिनसतः",
-    "हिनस\u{94d}ति" SUBJ_ACT_3_PL "हिनसन\u{94d}",
-    "हिनस\u{94d}ति" SUBJ_MID_1_SG "हिनस\u{948}",
-    "हिनस\u{94d}ति" SUBJ_MID_1_DU "हिनसावह\u{948}",
-    "हिनस\u{94d}ति" SUBJ_MID_1_PL "हिनसामह\u{948}",
-    "हिनस\u{94d}ति" SUBJ_MID_2_SG "हिनसस\u{947}",
-    "हिनस\u{94d}ति" SUBJ_MID_2_DU "हिनस\u{948}थ\u{947}",
-    "हिनस\u{94d}ति" SUBJ_MID_2_PL "हिनसध\u{94d}व\u{947}",
-    "हिनस\u{94d}ति" SUBJ_MID_3_SG "हिनसत\u{947}",
-    "हिनस\u{94d}ति" SUBJ_MID_3_DU "हिनस\u{948}त\u{947}",
-    "हिनस\u{94d}ति" SUBJ_MID_3_PL "हिनसन\u{94d}त",
-    "हिनस\u{94d}ति" IMPERFECT_ACT_1_SG "अहिनसम\u{94d}",
-    "हिनस\u{94d}ति" IMPERFECT_ACT_1_DU "अहि\u{902}स\u{94d}व",
-    "हिनस\u{94d}ति" IMPERFECT_ACT_1_PL "अहि\u{902}स\u{94d}म",
-    "हिनस\u{94d}ति" IMPERFECT_ACT_2_SG "अहिनः",
-    "हिनस\u{94d}ति" IMPERFECT_ACT_2_DU "अहि\u{902}स\u{94d}तम\u{94d}",
-    "हिनस\u{94d}ति" IMPERFECT_ACT_2_PL "अहि\u{902}स\u{94d}त",
-    "हिनस\u{94d}ति" IMPERFECT_ACT_3_SG "अहिनः",
-    "हिनस\u{94d}ति" IMPERFECT_ACT_3_DU "अहि\u{902}स\u{94d}ताम\u{94d}",
-    "हिनस\u{94d}ति" IMPERFECT_ACT_3_PL "अहि\u{902}सन\u{94d}",
-    "हिनस\u{94d}ति" IMPERFECT_MID_1_SG "अहि\u{902}सि",
-    "हिनस\u{94d}ति" IMPERFECT_MID_1_DU "अहि\u{902}स\u{94d}वहि",
-    "हिनस\u{94d}ति" IMPERFECT_MID_1_PL "अहि\u{902}स\u{94d}महि",
-    "हिनस\u{94d}ति" IMPERFECT_MID_2_SG "अहि\u{902}स\u{94d}थाः",
-    "हिनस\u{94d}ति" IMPERFECT_MID_2_DU "अहि\u{902}साथाम\u{94d}",
-    "हिनस\u{94d}ति" IMPERFECT_MID_2_PL "अहिन\u{94d}द\u{94d}ध\u{94d}वम\u{94d}",
-    "हिनस\u{94d}ति" IMPERFECT_MID_3_SG "अहि\u{902}स\u{94d}त",
-    "हिनस\u{94d}ति" IMPERFECT_MID_3_DU "अहि\u{902}साताम\u{94d}",
-    "हिनस\u{94d}ति" IMPERFECT_MID_3_PL "अहि\u{902}सत",
-    "हिनस\u{94d}ति" PARTICIPLE_PRES_ACT "हि\u{902}सत\u{94d}",
-    "हिनस\u{94d}ति" PARTICIPLE_PRES_MID "हि\u{902}सान",
-    "हिनोति" FUTURE_ACT_1_SG "ह\u{947}ष\u{94d}यामि",
-    "हिनोति" FUTURE_ACT_1_DU "ह\u{947}ष\u{94d}यावः",
-    "हिनोति" FUTURE_ACT_1_PL "ह\u{947}ष\u{94d}यामः",
-    "हिनोति" FUTURE_ACT_2_SG "ह\u{947}ष\u{94d}यसि",
-    "हिनोति" FUTURE_ACT_2_DU "ह\u{947}ष\u{94d}यथः",
-    "हिनोति" FUTURE_ACT_2_PL "ह\u{947}ष\u{94d}यथ",
-    "हिनोति" FUTURE_ACT_3_SG "ह\u{947}ष\u{94d}यति",
-    "हिनोति" FUTURE_ACT_3_DU "ह\u{947}ष\u{94d}यतः",
-    "हिनोति" FUTURE_ACT_3_PL "ह\u{947}ष\u{94d}यन\u{94d}ति",
-    "हिनोति" FUTURE_MID_1_SG "ह\u{947}ष\u{94d}य\u{947}",
-    "हिनोति" FUTURE_MID_1_DU "ह\u{947}ष\u{94d}यावह\u{947}",
-    "हिनोति" FUTURE_MID_1_PL "ह\u{947}ष\u{94d}यामह\u{947}",
-    "हिनोति" FUTURE_MID_2_SG "ह\u{947}ष\u{94d}यस\u{947}",
-    "हिनोति" FUTURE_MID_2_DU "ह\u{947}ष\u{94d}य\u{947}थ\u{947}",
-    "हिनोति" FUTURE_MID_2_PL "ह\u{947}ष\u{94d}यध\u{94d}व\u{947}",
-    "हिनोति" FUTURE_MID_3_SG "ह\u{947}ष\u{94d}यत\u{947}",
-    "हिनोति" FUTURE_MID_3_DU "ह\u{947}ष\u{94d}य\u{947}त\u{947}",
-    "हिनोति" FUTURE_MID_3_PL "ह\u{947}ष\u{94d}यन\u{94d}त\u{947}",
-    "हिनोति" CONDITIONAL_ACT_1_SG "अह\u{947}ष\u{94d}यम\u{94d}",
-    "हिनोति" CONDITIONAL_ACT_1_DU "अह\u{947}ष\u{94d}याव",
-    "हिनोति" CONDITIONAL_ACT_1_PL "अह\u{947}ष\u{94d}याम",
-    "हिनोति" CONDITIONAL_ACT_2_SG "अह\u{947}ष\u{94d}यः",
-    "हिनोति" CONDITIONAL_ACT_2_DU "अह\u{947}ष\u{94d}यतम\u{94d}",
-    "हिनोति" CONDITIONAL_ACT_2_PL "अह\u{947}ष\u{94d}यत",
-    "हिनोति" CONDITIONAL_ACT_3_SG "अह\u{947}ष\u{94d}यत\u{94d}",
-    "हिनोति" CONDITIONAL_ACT_3_DU "अह\u{947}ष\u{94d}यताम\u{94d}",
-    "हिनोति" CONDITIONAL_ACT_3_PL "अह\u{947}ष\u{94d}यन\u{94d}",
-    "हिनोति" CONDITIONAL_MID_1_SG "अह\u{947}ष\u{94d}य\u{947}",
-    "हिनोति" CONDITIONAL_MID_1_DU "अह\u{947}ष\u{94d}यावहि",
-    "हिनोति" CONDITIONAL_MID_1_PL "अह\u{947}ष\u{94d}यामहि",
-    "हिनोति" CONDITIONAL_MID_2_SG "अह\u{947}ष\u{94d}यथाः",
-    "हिनोति" CONDITIONAL_MID_2_DU "अह\u{947}ष\u{94d}य\u{947}थाम\u{94d}",
-    "हिनोति" CONDITIONAL_MID_2_PL "अह\u{947}ष\u{94d}यध\u{94d}वम\u{94d}",
-    "हिनोति" CONDITIONAL_MID_3_SG "अह\u{947}ष\u{94d}यत",
-    "हिनोति" CONDITIONAL_MID_3_DU "अह\u{947}ष\u{94d}य\u{947}ताम\u{94d}",
-    "हिनोति" CONDITIONAL_MID_3_PL "अह\u{947}ष\u{94d}यन\u{94d}त",
-    "हिनोति" PERFECT_ACT_1_SG "जिघय",
-    "हिनोति" PERFECT_ACT_1_DU "जिघिव",
-    "हिनोति" PERFECT_ACT_1_PL "जिघिम",
-    "हिनोति" PERFECT_ACT_2_SG "जिघ\u{947}थ",
-    "हिनोति" PERFECT_ACT_2_DU "जिघथ\u{941}ः",
-    "हिनोति" PERFECT_ACT_2_PL "जिघ",
-    "हिनोति" PERFECT_ACT_3_SG "जिघाय",
-    "हिनोति" PERFECT_ACT_3_DU "जिघत\u{941}ः",
-    "हिनोति" PERFECT_ACT_3_PL "जिघ\u{941}ः",
-    "हिनोति" PERFECT_MID_1_SG "जिघ\u{947}",
-    "हिनोति" PERFECT_MID_1_DU "जिघिवह\u{947}",
-    "हिनोति" PERFECT_MID_1_PL "जिघिमह\u{947}",
-    "हिनोति" PERFECT_MID_2_SG "जिघिष\u{947}",
-    "हिनोति" PERFECT_MID_2_DU "जिघाथ\u{947}",
-    "हिनोति" PERFECT_MID_2_PL "जिघिध\u{94d}व\u{947}",
-    "हिनोति" PERFECT_MID_3_SG "जिघ\u{947}",
-    "हिनोति" PERFECT_MID_3_DU "जिघात\u{947}",
-    "हिनोति" PERFECT_MID_3_PL "जिघिर\u{947}",
-    "हिनोति" AORIST_ACT_1_SG "अह\u{948}षम\u{94d}",
-    "हिनोति" AORIST_ACT_1_DU "अह\u{948}ष\u{94d}व",
-    "हिनोति" AORIST_ACT_1_PL "अह\u{948}ष\u{94d}म",
-    "हिनोति" AORIST_ACT_2_SG "अह\u{948}षीः",
-    "हिनोति" AORIST_ACT_2_DU "अह\u{948}ष\u{94d}टम\u{94d}",
-    "हिनोति" AORIST_ACT_2_PL "अह\u{948}ष\u{94d}ट",
-    "हिनोति" AORIST_ACT_3_SG "अह\u{948}षीत\u{94d}",
-    "हिनोति" AORIST_ACT_3_DU "अह\u{948}ष\u{94d}टाम\u{94d}",
-    "हिनोति" AORIST_ACT_3_PL "अह\u{948}ष\u{941}ः",
-    "हिनोति" AORIST_MID_1_SG "अह\u{947}षि",
-    "हिनोति" AORIST_MID_1_DU "अह\u{947}ष\u{94d}वहि",
-    "हिनोति" AORIST_MID_1_PL "अह\u{947}ष\u{94d}महि",
-    "हिनोति" AORIST_MID_2_SG "अह\u{947}ष\u{94d}ठाः",
-    "हिनोति" AORIST_MID_2_DU "अह\u{947}षाथाम\u{94d}",
-    "हिनोति" AORIST_MID_2_PL "अह\u{947}ढ\u{94d}वम\u{94d}",
-    "हिनोति" AORIST_MID_3_SG "अह\u{947}ष\u{94d}ट",
-    "हिनोति" AORIST_MID_3_DU "अह\u{947}षाताम\u{94d}",
-    "हिनोति" AORIST_MID_3_PL "अह\u{947}षत",
-    "हिनोति" INFINITIVE "ह\u{947}त\u{941}म\u{94d}",
-    "हिनोति" GERUND "हित\u{94d}वा",
-    "हिनोति" PARTICIPLE_FUT_ACT "ह\u{947}ष\u{94d}यत\u{94d}",
-    "हिनोति" PARTICIPLE_FUT_MID "ह\u{947}ष\u{94d}यमाण",
-    "हिनोति" PARTICIPLE_PERF_ACT "जिघिवा\u{902}स\u{94d}",
-    "हिनोति" PARTICIPLE_PERF_MID "जिघान",
+/// 8,437 forms.
+pub(super) const IRREGULAR: Irregular<'static> = Irregular {
+    table: Cow::Borrowed(
+        r#"अकर्	144	अकरम्
+अकर्	145	अकर्व
+अकर्	146	अकर्म
+अकर्	147	अकः
+अकर्	150	अकः
+अकर्	152	अक्रन्
+अकर्	153	अक्रि
+अकर्	154	अकृवहि
+अकर्	155	अकृमहि
+अकर्	156	अकृथाः
+अकर्	157	अक्राथाम्
+अकर्	158	अकृध्वम्
+अकर्	159	अकृत
+अकर्	160	अक्राताम्
+अकर्	161	अक्रत
+अकाङ्क्षीत्	144	अकाङ्क्षम्
+अकाङ्क्षीत्	145	अकाङ्क्ष्व
+अकाङ्क्षीत्	146	अकाङ्क्ष्म
+अकाङ्क्षीत्	148	अकाङ्क्तम्
+अकाङ्क्षीत्	149	अकाङ्क्त
+अकाङ्क्षीत्	151	अकाङ्क्ताम्
+अकाङ्क्षीत्	152	अकाङ्क्षुः
+अक्रन्	144	अक्रन्दम्
+अक्रन्	145	अक्रन्द्व
+अक्रन्	146	अक्रन्द्म
+अक्रन्	147	अक्रन्
+अक्रन्	148	अक्रन्त्तम्
+अक्रन्	149	अक्रन्त्त
+अक्रन्	150	अक्रन्
+अक्रन्	151	अक्रन्त्ताम्
+अक्रन्	152	अक्रदन्
+अक्षति	18	अक्षाणि
+अक्षति	54	अक्षाणि
+अक्षति	165	अक्षमाण
+अगन्	144	अगमम्
+अगन्	145	अगन्व
+अगन्	146	अगन्म
+अगन्	147	अगन्
+अगन्	150	अगन्
+अगन्	152	अग्मन्
+अगन्	153	अग्मि
+अगन्	154	अगन्वहि
+अगन्	155	अगन्महि
+अगन्	156	अगथाः
+अगन्	157	अग्माथाम्
+अगन्	158	अगध्वम्
+अगन्	159	अगत
+अगन्	160	अग्माताम्
+अगन्	161	अग्मत
+अग्रहीत्	144	अग्रहीषम्
+अग्रहीत्	145	अग्रहीष्व
+अग्रहीत्	146	अग्रहीष्म
+अग्रहीत्	148	अग्रहीष्टम्
+अग्रहीत्	149	अग्रहीष्ट
+अग्रहीत्	151	अग्रहीष्टाम्
+अग्रहीत्	152	अग्रहीषुः
+अग्रहीत्	153	अग्रहीषि
+अग्रहीत्	154	अग्रहीष्वहि
+अग्रहीत्	155	अग्रहीष्महि
+अग्रहीत्	156	अग्रहीष्ठाः
+अग्रहीत्	157	अग्रहीषाथाम्
+अग्रहीत्	158	अग्रहीढ्वम्
+अग्रहीत्	159	अग्रहीष्ट
+अग्रहीत्	160	अग्रहीषाताम्
+अग्रहीत्	161	अग्रहीषत
+अघस्	144	अघसम्
+अघस्	145	अघस्व
+अघस्	146	अघस्म
+अघस्	147	अघः
+अघस्	150	अघः
+अघस्	152	अक्षन्
+अघस्	153	अक्षि
+अघस्	154	अक्ष्वहि
+अघस्	155	अक्ष्महि
+अघस्	156	अग्धाः
+अघस्	157	अक्षाथाम्
+अघस्	158	अग्ध्वम्
+अघस्	159	अग्ध
+अघस्	160	अक्षाताम्
+अघस्	161	अक्षत
+अचेत्	144	अचयम्
+अचेत्	145	अचेव
+अचेत्	146	अचेम
+अचेत्	152	अच्यन्
+अच्छेत्	144	अच्छेदम्
+अच्छेत्	145	अच्छेद्व
+अच्छेत्	146	अच्छेद्म
+अच्छेत्	147	अच्छेत्
+अच्छेत्	148	अच्छेत्तम्
+अच्छेत्	149	अच्छेत्त
+अच्छेत्	151	अच्छेत्ताम्
+अच्छेत्	152	अच्छिदन्
+अजनिष्ट	153	अजनिषि
+अजनिष्ट	154	अजनिष्वहि
+अजनिष्ट	155	अजनिष्महि
+अजनिष्ट	156	अजनिष्ठाः
+अजनिष्ट	157	अजनिषाथाम्
+अजनिष्ट	158	अजनिढ्वम्
+अजनिष्ट	159	अजनिष्ट
+अजनिष्ट	160	अजनिषाताम्
+अजनिष्ट	161	अजनिषत
+अजन्त	153	अजनि
+अजन्त	154	अजन्वहि
+अजन्त	155	अजन्महि
+अजन्त	156	अजन्थाः
+अजन्त	157	अजनाथाम्
+अजन्त	158	अजन्ध्वम्
+अजन्त	159	अजन्त
+अजन्त	160	अजनाताम्
+अजन्त	161	अजनत
+अजीवत्	72	अजीवम्
+अजीवत्	73	अजीवाव
+अजीवत्	74	अजीवाम
+अजीवत्	75	अजीवः
+अजीवत्	76	अजीवतम्
+अजीवत्	77	अजीवत
+अजीवत्	78	अजीवत्
+अजीवत्	79	अजीवताम्
+अजीवत्	80	अजीवन्
+अजीवत्	81	अजीवे
+अजीवत्	82	अजीवावहि
+अजीवत्	83	अजीवामहि
+अजीवत्	84	अजीवथाः
+अजीवत्	85	अजीवेथाम्
+अजीवत्	86	अजीवध्वम्
+अजीवत्	87	अजीवत
+अजीवत्	88	अजीवेताम्
+अजीवत्	89	अजीवन्त
+अजीविष्यत्	108	अजीविष्यम्
+अजीविष्यत्	109	अजीविष्याव
+अजीविष्यत्	110	अजीविष्याम
+अजीविष्यत्	111	अजीविष्यः
+अजीविष्यत्	112	अजीविष्यतम्
+अजीविष्यत्	113	अजीविष्यत
+अजीविष्यत्	114	अजीविष्यत्
+अजीविष्यत्	115	अजीविष्यताम्
+अजीविष्यत्	116	अजीविष्यन्
+अजीविष्यत्	117	अजीविष्ये
+अजीविष्यत्	118	अजीविष्यावहि
+अजीविष्यत्	119	अजीविष्यामहि
+अजीविष्यत्	120	अजीविष्यथाः
+अजीविष्यत्	121	अजीविष्येथाम्
+अजीविष्यत्	122	अजीविष्यध्वम्
+अजीविष्यत्	123	अजीविष्यत
+अजीविष्यत्	124	अजीविष्येताम्
+अजीविष्यत्	125	अजीविष्यन्त
+अजुषत्	144	अजुसम्
+अजुषत्	145	अजुसाव
+अजुषत्	146	अजुसाम
+अजुषत्	147	अजुसः
+अजुषत्	148	अजुसतम्
+अजुषत्	149	अजुसत
+अजुषत्	150	अजुसत्
+अजुषत्	151	अजुसताम्
+अजुषत्	152	अजुसन्
+अजुषत्	153	अजुसे
+अजुषत्	154	अजुसावहि
+अजुषत्	155	अजुसामहि
+अजुषत्	156	अजुसथाः
+अजुषत्	157	अजुसेथाम्
+अजुषत्	158	अजुसध्वम्
+अजुषत्	159	अजुसत
+अजुषत्	160	अजुसेताम्
+अजुषत्	161	अजुसन्त
+अञ्चिष्यति	108	आञ्चिष्यम्
+अञ्चिष्यति	109	आञ्चिष्याव
+अञ्चिष्यति	110	आञ्चिष्याम
+अञ्चिष्यति	111	आञ्चिष्यः
+अञ्चिष्यति	112	आञ्चिष्यतम्
+अञ्चिष्यति	113	आञ्चिष्यत
+अञ्चिष्यति	114	आञ्चिष्यत्
+अञ्चिष्यति	115	आञ्चिष्यताम्
+अञ्चिष्यति	116	आञ्चिष्यन्
+अञ्चिष्यति	117	आञ्चिष्ये
+अञ्चिष्यति	118	आञ्चिष्यावहि
+अञ्चिष्यति	119	आञ्चिष्यामहि
+अञ्चिष्यति	120	आञ्चिष्यथाः
+अञ्चिष्यति	121	आञ्चिष्येथाम्
+अञ्चिष्यति	122	आञ्चिष्यध्वम्
+अञ्चिष्यति	123	आञ्चिष्यत
+अञ्चिष्यति	124	आञ्चिष्येताम्
+अञ्चिष्यति	125	आञ्चिष्यन्त
+अतन्	144	अतनम्
+अतन्	145	अतन्व
+अतन्	146	अतन्म
+अतन्	147	अतन्
+अतन्	150	अतन्
+अतन्	152	अत्नन्
+अतन्	153	अत्नि
+अतन्	154	अतन्वहि
+अतन्	155	अतन्महि
+अतन्	156	अतथाः
+अतन्	157	अत्नाथाम्
+अतन्	158	अतध्वम्
+अतन्	159	अतत
+अतन्	160	अत्नाताम्
+अतन्	161	अत्नत
+अतांसीत्	153	अतंसि
+अतांसीत्	154	अतंस्वहि
+अतांसीत्	155	अतंस्महि
+अतांसीत्	156	अतंस्थाः
+अतांसीत्	157	अतंसाथाम्
+अतांसीत्	158	अतन्ध्वम्
+अतांसीत्	159	अतंस्त
+अतांसीत्	160	अतंसाताम्
+अतांसीत्	161	अतंसत
+अताप्सीत्	148	अताप्तम्
+अताप्सीत्	149	अताप्त
+अताप्सीत्	151	अताप्ताम्
+अत्ति	0	अद्मि
+अत्ति	1	अद्वः
+अत्ति	2	अद्मः
+अत्ति	8	अदन्ति
+अत्ति	9	अदे
+अत्ति	10	अद्वहे
+अत्ति	11	अद्महे
+अत्ति	13	अदाथे
+अत्ति	14	अद्ध्वे
+अत्ति	16	अदाते
+अत्ति	17	अदते
+अत्ति	18	अदानि
+अत्ति	19	अदाव
+अत्ति	20	अदाम
+अत्ति	21	अद्धि
+अत्ति	26	अदन्तु
+अत्ति	27	अदै
+अत्ति	28	अदावहै
+अत्ति	29	अदामहै
+अत्ति	31	अदाथाम्
+अत्ति	32	अद्ध्वम्
+अत्ति	34	अदाताम्
+अत्ति	35	अदताम्
+अत्ति	36	अद्याम्
+अत्ति	37	अद्याव
+अत्ति	38	अद्याम
+अत्ति	39	अद्याः
+अत्ति	40	अद्यातम्
+अत्ति	41	अद्यात
+अत्ति	42	अद्यात्
+अत्ति	43	अद्याताम्
+अत्ति	44	अद्युः
+अत्ति	45	अदीय
+अत्ति	46	अदीवहि
+अत्ति	47	अदीमहि
+अत्ति	48	अदीथाः
+अत्ति	49	अदीयाथाम्
+अत्ति	50	अदीध्वम्
+अत्ति	51	अदीत
+अत्ति	52	अदीयाताम्
+अत्ति	53	अदीरन्
+अत्ति	54	अदानि
+अत्ति	55	अदाव
+अत्ति	56	अदाम
+अत्ति	57	अदः
+अत्ति	58	अदथः
+अत्ति	59	अदथ
+अत्ति	60	अदत्
+अत्ति	61	अदतः
+अत्ति	62	अदन्
+अत्ति	63	अदै
+अत्ति	64	अदावहै
+अत्ति	65	अदामहै
+अत्ति	66	अदसे
+अत्ति	67	अदैथे
+अत्ति	68	अदध्वे
+अत्ति	69	अदते
+अत्ति	70	अदैते
+अत्ति	71	अदन्त
+अत्ति	72	आदम्
+अत्ति	73	आद्व
+अत्ति	74	आद्म
+अत्ति	75	आदः
+अत्ति	78	आदत्
+अत्ति	80	आदन्
+अत्ति	81	आदि
+अत्ति	82	आद्वहि
+अत्ति	83	आद्महि
+अत्ति	85	आदाथाम्
+अत्ति	86	आद्ध्वम्
+अत्ति	88	आदाताम्
+अत्ति	89	आदत
+अत्ति	164	अदत्
+अत्ति	165	अदान
+अदर्क्	144	अदर्शम्
+अदर्क्	145	अदर्श्व
+अदर्क्	146	अदर्श्म
+अदर्क्	147	अदर्क्
+अदर्क्	148	अदर्ष्टम्
+अदर्क्	149	अदर्ष्ट
+अदर्क्	150	अदर्क्
+अदर्क्	151	अदर्ष्टाम्
+अदर्क्	152	अदृशन्
+अदात्	161	अदत
+अद्राक्षीत्	144	अद्राक्षम्
+अद्राक्षीत्	145	अद्राक्ष्व
+अद्राक्षीत्	146	अद्राक्ष्म
+अद्राक्षीत्	148	अद्राष्टम्
+अद्राक्षीत्	149	अद्राष्ट
+अद्राक्षीत्	151	अद्राष्टाम्
+अद्राक्षीत्	152	अद्राक्षुः
+अद्राक्षीत्	153	अदृक्षि
+अद्राक्षीत्	154	अदृक्ष्वहि
+अद्राक्षीत्	155	अदृक्ष्महि
+अद्राक्षीत्	156	अदृष्ठाः
+अद्राक्षीत्	157	अदृक्षाथाम्
+अद्राक्षीत्	158	अदृड्ढ्वम्
+अद्राक्षीत्	159	अदृष्ट
+अद्राक्षीत्	160	अदृक्षाताम्
+अद्राक्षीत्	161	अदृक्षत
+अधाक्षीत्	144	अधाक्षम्
+अधाक्षीत्	145	अधाक्ष्व
+अधाक्षीत्	146	अधाक्ष्म
+अधाक्षीत्	148	अधाक्तम्
+अधाक्षीत्	149	अधाक्त
+अधाक्षीत्	151	अधाक्ताम्
+अधाक्षीत्	152	अधाक्षुः
+अधात्	154	अधीवहि
+अधात्	155	अधीमहि
+अधात्	161	अधत
+अधिगच्छति	72	अध्यगच्छम्
+अधिगच्छति	73	अध्यगच्छाव
+अधिगच्छति	74	अध्यगच्छाम
+अधिगच्छति	75	अध्यगच्छः
+अधिगच्छति	76	अध्यगच्छतम्
+अधिगच्छति	77	अध्यगच्छत
+अधिगच्छति	78	अध्यगच्छत्
+अधिगच्छति	79	अध्यगच्छताम्
+अधिगच्छति	80	अध्यगच्छन्
+अधिगच्छति	81	अध्यगच्छे
+अधिगच्छति	82	अध्यगच्छावहि
+अधिगच्छति	83	अध्यगच्छामहि
+अधिगच्छति	84	अध्यगच्छथाः
+अधिगच्छति	85	अध्यगच्छेथाम्
+अधिगच्छति	86	अध्यगच्छध्वम्
+अधिगच्छति	87	अध्यगच्छत
+अधिगच्छति	88	अध्यगच्छेताम्
+अधिगच्छति	89	अध्यगच्छन्त
+अधिगच्छति	90	अधिगंस्यामि
+अधिगच्छति	91	अधिगंस्यावः
+अधिगच्छति	92	अधिगंस्यामः
+अधिगच्छति	93	अधिगंस्यसि
+अधिगच्छति	94	अधिगंस्यथः
+अधिगच्छति	95	अधिगंस्यथ
+अधिगच्छति	96	अधिगंस्यति
+अधिगच्छति	97	अधिगंस्यतः
+अधिगच्छति	98	अधिगंस्यन्ति
+अधिगच्छति	99	अधिगंस्ये
+अधिगच्छति	100	अधिगंस्यावहे
+अधिगच्छति	101	अधिगंस्यामहे
+अधिगच्छति	102	अधिगंस्यसे
+अधिगच्छति	103	अधिगंस्येथे
+अधिगच्छति	104	अधिगंस्यध्वे
+अधिगच्छति	105	अधिगंस्यते
+अधिगच्छति	106	अधिगंस्येते
+अधिगच्छति	107	अधिगंस्यन्ते
+अधिगच्छति	108	अध्यगंस्यम्
+अधिगच्छति	109	अध्यगंस्याव
+अधिगच्छति	110	अध्यगंस्याम
+अधिगच्छति	111	अध्यगंस्यः
+अधिगच्छति	112	अध्यगंस्यतम्
+अधिगच्छति	113	अध्यगंस्यत
+अधिगच्छति	114	अध्यगंस्यत्
+अधिगच्छति	115	अध्यगंस्यताम्
+अधिगच्छति	116	अध्यगंस्यन्
+अधिगच्छति	117	अध्यगंस्ये
+अधिगच्छति	118	अध्यगंस्यावहि
+अधिगच्छति	119	अध्यगंस्यामहि
+अधिगच्छति	120	अध्यगंस्यथाः
+अधिगच्छति	121	अध्यगंस्येथाम्
+अधिगच्छति	122	अध्यगंस्यध्वम्
+अधिगच्छति	123	अध्यगंस्यत
+अधिगच्छति	124	अध्यगंस्येताम्
+अधिगच्छति	125	अध्यगंस्यन्त
+अधिगच्छति	126	अधिजगम
+अधिगच्छति	127	अधिजग्मिव
+अधिगच्छति	128	अधिजग्मिम
+अधिगच्छति	129	अधिजगन्थ
+अधिगच्छति	130	अधिजग्मथुः
+अधिगच्छति	131	अधिजग्म
+अधिगच्छति	132	अधिजगाम
+अधिगच्छति	133	अधिजग्मतुः
+अधिगच्छति	134	अधिजग्मुः
+अधिगच्छति	135	अधिजग्मे
+अधिगच्छति	136	अधिजग्मिवहे
+अधिगच्छति	137	अधिजग्मिमहे
+अधिगच्छति	138	अधिजग्मिषे
+अधिगच्छति	139	अधिजग्माथे
+अधिगच्छति	140	अधिजग्मिध्वे
+अधिगच्छति	141	अधिजग्मे
+अधिगच्छति	142	अधिजग्माते
+अधिगच्छति	143	अधिजग्मिरे
+अधिगच्छति	144	अध्यगमम्
+अधिगच्छति	145	अध्यगमाव
+अधिगच्छति	146	अध्यगमाम
+अधिगच्छति	147	अध्यगमः
+अधिगच्छति	148	अध्यगमतम्
+अधिगच्छति	149	अध्यगमत
+अधिगच्छति	150	अध्यगमत्
+अधिगच्छति	151	अध्यगमताम्
+अधिगच्छति	152	अध्यगमन्
+अधिगच्छति	153	अध्यगंसि
+अधिगच्छति	154	अध्यगंस्वहि
+अधिगच्छति	155	अध्यगंस्महि
+अधिगच्छति	156	अध्यगंस्थाः
+अधिगच्छति	157	अध्यगंसाथाम्
+अधिगच्छति	158	अध्यगन्ध्वम्
+अधिगच्छति	159	अध्यगंस्त
+अधिगच्छति	160	अध्यगंसाताम्
+अधिगच्छति	161	अध्यगंसत
+अधिगच्छति	162	अधिगन्तुम्
+अधिगच्छति	163	अधिगत्वा
+अधिगच्छति	166	अधिगंस्यत्
+अधिगच्छति	167	अधिगंस्यमान
+अधिगच्छति	168	अधिजगन्वांस्
+अधिगच्छति	169	अधिजग्मान
+अधितिष्ठति	72	अध्यतिष्ठम्
+अधितिष्ठति	73	अध्यतिष्ठाव
+अधितिष्ठति	74	अध्यतिष्ठाम
+अधितिष्ठति	75	अध्यतिष्ठः
+अधितिष्ठति	76	अध्यतिष्ठतम्
+अधितिष्ठति	77	अध्यतिष्ठत
+अधितिष्ठति	78	अध्यतिष्ठत्
+अधितिष्ठति	79	अध्यतिष्ठताम्
+अधितिष्ठति	80	अध्यतिष्ठन्
+अधितिष्ठति	81	अध्यतिष्ठे
+अधितिष्ठति	82	अध्यतिष्ठावहि
+अधितिष्ठति	83	अध्यतिष्ठामहि
+अधितिष्ठति	84	अध्यतिष्ठथाः
+अधितिष्ठति	85	अध्यतिष्ठेथाम्
+अधितिष्ठति	86	अध्यतिष्ठध्वम्
+अधितिष्ठति	87	अध्यतिष्ठत
+अधितिष्ठति	88	अध्यतिष्ठेताम्
+अधितिष्ठति	89	अध्यतिष्ठन्त
+अनक्ति	72	आनजम्
+अनक्ति	73	आञ्ज्व
+अनक्ति	74	आञ्ज्म
+अनक्ति	75	आनक्
+अनक्ति	76	आङ्क्तम्
+अनक्ति	77	आङ्क्त
+अनक्ति	78	आनक्
+अनक्ति	79	आङ्क्ताम्
+अनक्ति	80	आञ्जन्
+अनक्ति	81	आञ्जि
+अनक्ति	82	आञ्ज्वहि
+अनक्ति	83	आञ्ज्महि
+अनक्ति	84	आङ्क्थाः
+अनक्ति	85	आञ्जाथाम्
+अनक्ति	86	आङ्ग्ध्वम्
+अनक्ति	87	आङ्क्त
+अनक्ति	88	आञ्जाताम्
+अनक्ति	89	आञ्जत
+अनिति	0	अनिमि
+अनिति	1	अनिवः
+अनिति	2	अनिमः
+अनिति	3	अनिषि
+अनिति	8	अनन्ति
+अनिति	18	अनानि
+अनिति	19	अनाव
+अनिति	20	अनाम
+अनिति	21	अनिहि
+अनिति	26	अनन्तु
+अनिति	36	अन्याम्
+अनिति	37	अन्याव
+अनिति	38	अन्याम
+अनिति	39	अन्याः
+अनिति	40	अन्यातम्
+अनिति	41	अन्यात
+अनिति	42	अन्यात्
+अनिति	43	अन्याताम्
+अनिति	44	अन्युः
+अनिति	54	अनानि
+अनिति	55	अनाव
+अनिति	56	अनाम
+अनिति	57	अनः
+अनिति	58	अनथः
+अनिति	59	अनथ
+अनिति	60	अनत्
+अनिति	61	अनतः
+अनिति	62	अनन्
+अनिति	72	आनम्
+अनिति	73	आनिव
+अनिति	74	आनिम
+अनिति	75	आनीः
+अनिति	78	आनीत्
+अनिति	80	आनन्
+अनिति	164	अनत्
+अनौत्सीत्	148	अनौत्तम्
+अनौत्सीत्	149	अनौत्त
+अनौत्सीत्	151	अनौत्ताम्
+अनौत्सीत्	153	अनुत्सि
+अनौत्सीत्	154	अनुत्स्वहि
+अनौत्सीत्	155	अनुत्स्महि
+अनौत्सीत्	156	अनुत्थाः
+अनौत्सीत्	157	अनुत्साथाम्
+अनौत्सीत्	158	अनुद्ध्वम्
+अनौत्सीत्	159	अनुत्त
+अनौत्सीत्	160	अनुत्साताम्
+अनौत्सीत्	161	अनुत्सत
+अपत्त	153	अपदि
+अपत्त	154	अपद्वहि
+अपत्त	155	अपद्महि
+अपत्त	156	अपत्थाः
+अपत्त	157	अपदाथाम्
+अपत्त	158	अपद्ध्वम्
+अपत्त	159	अपत्त
+अपत्त	160	अपदाताम्
+अपत्त	161	अपदत
+अपोहति	72	अपौहम्
+अपोहति	73	अपौहाव
+अपोहति	74	अपौहाम
+अपोहति	75	अपौहः
+अपोहति	76	अपौहतम्
+अपोहति	77	अपौहत
+अपोहति	78	अपौहत्
+अपोहति	79	अपौहताम्
+अपोहति	80	अपौहन्
+अपोहति	81	अपौहे
+अपोहति	82	अपौहावहि
+अपोहति	83	अपौहामहि
+अपोहति	84	अपौहथाः
+अपोहति	85	अपौहेथाम्
+अपोहति	86	अपौहध्वम्
+अपोहति	87	अपौहत
+अपोहति	88	अपौहेताम्
+अपोहति	89	अपौहन्त
+अप्राक्	144	अप्राक्षम्
+अप्राक्	145	अप्राक्ष्व
+अप्राक्	146	अप्राक्ष्म
+अप्राक्	147	अप्राक्
+अप्राक्	150	अप्राक्
+अप्राक्	152	अप्राक्षुः
+अप्राक्	153	अपृक्षि
+अप्राक्	154	अपृक्ष्वहि
+अप्राक्	155	अपृक्ष्महि
+अप्राक्	156	अपृक्थाः
+अप्राक्	157	अपृक्षाथाम्
+अप्राक्	158	अपृग्ध्वम्
+अप्राक्	159	अपृक्त
+अप्राक्	160	अपृक्षाताम्
+अप्राक्	161	अपृक्षत
+अप्राक्षीत्	144	अप्राक्षम्
+अप्राक्षीत्	145	अप्राक्ष्व
+अप्राक्षीत्	146	अप्राक्ष्म
+अप्राक्षीत्	148	अप्राष्टम्
+अप्राक्षीत्	149	अप्राष्ट
+अप्राक्षीत्	151	अप्राष्टाम्
+अप्राक्षीत्	152	अप्राक्षुः
+अप्राक्षीत्	153	अप्रक्षि
+अप्राक्षीत्	154	अप्रक्ष्वहि
+अप्राक्षीत्	155	अप्रक्ष्महि
+अप्राक्षीत्	156	अप्रष्ठाः
+अप्राक्षीत्	157	अप्रक्षाथाम्
+अप्राक्षीत्	158	अप्रड्ढ्वम्
+अप्राक्षीत्	159	अप्रष्ट
+अप्राक्षीत्	160	अप्रक्षाताम्
+अप्राक्षीत्	161	अप्रक्षत
+अबुद्ध	153	अभुत्सि
+अबुद्ध	154	अभुत्स्वहि
+अबुद्ध	155	अभुत्स्महि
+अबुद्ध	156	अबुद्धाः
+अबुद्ध	157	अभुत्साथाम्
+अबुद्ध	158	अभुद्ध्वम्
+अबुद्ध	159	अबुद्ध
+अबुद्ध	160	अभुत्साताम्
+अबुद्ध	161	अभुत्सत
+अभाक्षीत्	144	अभाक्षम्
+अभाक्षीत्	145	अभाक्ष्व
+अभाक्षीत्	146	अभाक्ष्म
+अभाक्षीत्	148	अभाक्तम्
+अभाक्षीत्	149	अभाक्त
+अभाक्षीत्	151	अभाक्ताम्
+अभाक्षीत्	152	अभाक्षुः
+अभाक्षीत्	153	अभक्षि
+अभाक्षीत्	154	अभक्ष्वहि
+अभाक्षीत्	155	अभक्ष्महि
+अभाक्षीत्	156	अभक्थाः
+अभाक्षीत्	157	अभक्षाथाम्
+अभाक्षीत्	158	अभग्ध्वम्
+अभाक्षीत्	159	अभक्त
+अभाक्षीत्	160	अभक्षाताम्
+अभाक्षीत्	161	अभक्षत
+अभूत्	144	अभूवम्
+अभूत्	145	अभूव
+अभूत्	146	अभूम
+अभूत्	152	अभूवन्
+अभेत्	144	अभेदम्
+अभेत्	145	अभेद्व
+अभेत्	146	अभेद्म
+अभेत्	147	अभेत्
+अभेत्	148	अभेत्तम्
+अभेत्	149	अभेत्त
+अभेत्	151	अभेत्ताम्
+अभेत्	152	अभिदन्
+अभोक्	144	अभोजम्
+अभोक्	145	अभोज्व
+अभोक्	146	अभोज्म
+अभोक्	147	अभोक्
+अभोक्	150	अभोक्
+अभोक्	152	अभुजन्
+अभोक्	153	अभुजि
+अभोक्	154	अभुज्वहि
+अभोक्	155	अभुज्महि
+अभोक्	156	अभुक्थाः
+अभोक्	157	अभुजाथाम्
+अभोक्	158	अभुग्ध्वम्
+अभोक्	159	अभुक्त
+अभोक्	160	अभुजाताम्
+अभोक्	161	अभुजत
+अमत	153	अम्नि
+अमत	154	अमन्वहि
+अमत	155	अमन्महि
+अमत	156	अमथाः
+अमत	157	अम्नाथाम्
+अमत	158	अमध्वम्
+अमत	159	अमत
+अमत	160	अम्नाताम्
+अमत	161	अम्नत
+अमृत	153	अम्रि
+अमृत	154	अमृवहि
+अमृत	155	अमृमहि
+अमृत	156	अमृथाः
+अमृत	157	अम्राथाम्
+अमृत	158	अमृध्वम्
+अमृत	159	अमृत
+अमृत	160	अम्राताम्
+अमृत	161	अम्रत
+अमोक्	144	अमोचम्
+अमोक्	145	अमोच्व
+अमोक्	146	अमोच्म
+अमोक्	147	अमोक्
+अमोक्	150	अमोक्
+अमोक्	152	अमुचन्
+अमोक्	153	अमुचि
+अमोक्	154	अमुच्वहि
+अमोक्	155	अमुच्महि
+अमोक्	156	अमुक्थाः
+अमोक्	157	अमुचाथाम्
+अमोक्	158	अमुग्ध्वम्
+अमोक्	159	अमुक्त
+अमोक्	160	अमुचाताम्
+अमोक्	161	अमुचत
+अमौक्	144	अमौक्षम्
+अमौक्	145	अमौक्ष्व
+अमौक्	146	अमौक्ष्म
+अमौक्	147	अमौक्
+अमौक्	150	अमौक्
+अमौक्	152	अमौक्षुः
+अमौक्	153	अमुक्षि
+अमौक्	154	अमुक्ष्वहि
+अमौक्	155	अमुक्ष्महि
+अमौक्	156	अमुक्थाः
+अमौक्	157	अमुक्षाथाम्
+अमौक्	158	अमुग्ध्वम्
+अमौक्	159	अमुक्त
+अमौक्	160	अमुक्षाताम्
+अमौक्	161	अमुक्षत
+अयाक्षीत्	144	अयाक्षम्
+अयाक्षीत्	145	अयाक्ष्व
+अयाक्षीत्	146	अयाक्ष्म
+अयाक्षीत्	148	अयाष्टम्
+अयाक्षीत्	149	अयाष्ट
+अयाक्षीत्	151	अयाष्टाम्
+अयाक्षीत्	152	अयाक्षुः
+अयाक्षीत्	153	अयक्षि
+अयाक्षीत्	154	अयक्ष्वहि
+अयाक्षीत्	155	अयक्ष्महि
+अयाक्षीत्	156	अयष्ठाः
+अयाक्षीत्	157	अयक्षाथाम्
+अयाक्षीत्	158	अयड्ढ्वम्
+अयाक्षीत्	159	अयष्ट
+अयाक्षीत्	160	अयक्षाताम्
+अयाक्षीत्	161	अयक्षत
+अयोक्	144	अयोजम्
+अयोक्	145	अयोज्व
+अयोक्	146	अयोज्म
+अयोक्	147	अयोक्
+अयोक्	150	अयोक्
+अयोक्	152	अयुजन्
+अयोक्	153	अयुजि
+अयोक्	154	अयुज्वहि
+अयोक्	155	अयुज्महि
+अयोक्	156	अयुक्थाः
+अयोक्	157	अयुजाथाम्
+अयोक्	158	अयुग्ध्वम्
+अयोक्	159	अयुक्त
+अयोक्	160	अयुजाताम्
+अयोक्	161	अयुजत
+अरोत्	144	अरोधम्
+अरोत्	145	अरोध्व
+अरोत्	146	अरोध्म
+अरोत्	147	अरोत्
+अरोत्	148	अरोद्धम्
+अरोत्	149	अरोद्ध
+अरोत्	151	अरोद्धाम्
+अरोत्	152	अरुधन्
+अरौत्सीत्	148	अरौद्धम्
+अरौत्सीत्	149	अरौद्ध
+अरौत्सीत्	151	अरौद्धाम्
+अरौत्सीत्	153	अरुत्सि
+अरौत्सीत्	154	अरुत्स्वहि
+अरौत्सीत्	155	अरुत्स्महि
+अरौत्सीत्	156	अरुद्धाः
+अरौत्सीत्	157	अरुत्साथाम्
+अरौत्सीत्	158	अरुद्ध्वम्
+अरौत्सीत्	159	अरुद्ध
+अरौत्सीत्	160	अरुत्साताम्
+अरौत्सीत्	161	अरुत्सत
+अर्पयति	18	अर्पयाणि
+अर्पयति	54	अर्पयाणि
+अर्पयति	165	अर्पयमाण
+अर्हति	18	अर्हाणि
+अर्हति	54	अर्हाणि
+अर्हति	126	आनर्ह
+अर्हति	127	आनर्हिव
+अर्हति	128	आनर्हिम
+अर्हति	129	आनर्हिथ
+अर्हति	130	आनर्हथुः
+अर्हति	131	आनर्ह
+अर्हति	132	आनर्ह
+अर्हति	133	आनर्हतुः
+अर्हति	134	आनर्हुः
+अर्हति	135	आनर्हे
+अर्हति	136	आनर्हिवहे
+अर्हति	137	आनर्हिमहे
+अर्हति	138	आनर्हिषे
+अर्हति	139	आनर्हाथे
+अर्हति	140	आनर्हिध्वे
+अर्हति	141	आनर्हे
+अर्हति	142	आनर्हाते
+अर्हति	143	आनर्हिरे
+अर्हति	168	आनर्ह्वांस्
+अर्हति	169	आनर्हाण
+अलेकिष्यत्	108	अलेकिष्यम्
+अलेकिष्यत्	109	अलेकिष्याव
+अलेकिष्यत्	110	अलेकिष्याम
+अलेकिष्यत्	111	अलेकिष्यः
+अलेकिष्यत्	112	अलेकिष्यतम्
+अलेकिष्यत्	113	अलेकिष्यत
+अलेकिष्यत्	114	अलेकिष्यत्
+अलेकिष्यत्	115	अलेकिष्यताम्
+अलेकिष्यत्	116	अलेकिष्यन्
+अवगच्छति	72	अवागच्छम्
+अवगच्छति	73	अवागच्छाव
+अवगच्छति	74	अवागच्छाम
+अवगच्छति	75	अवागच्छः
+अवगच्छति	76	अवागच्छतम्
+अवगच्छति	77	अवागच्छत
+अवगच्छति	78	अवागच्छत्
+अवगच्छति	79	अवागच्छताम्
+अवगच्छति	80	अवागच्छन्
+अवगच्छति	81	अवागच्छे
+अवगच्छति	82	अवागच्छावहि
+अवगच्छति	83	अवागच्छामहि
+अवगच्छति	84	अवागच्छथाः
+अवगच्छति	85	अवागच्छेथाम्
+अवगच्छति	86	अवागच्छध्वम्
+अवगच्छति	87	अवागच्छत
+अवगच्छति	88	अवागच्छेताम्
+अवगच्छति	89	अवागच्छन्त
+अवगच्छति	90	अवगमिष्यामि
+अवगच्छति	91	अवगमिष्यावः
+अवगच्छति	92	अवगमिष्यामः
+अवगच्छति	93	अवगमिष्यसि
+अवगच्छति	94	अवगमिष्यथः
+अवगच्छति	95	अवगमिष्यथ
+अवगच्छति	96	अवगमिष्यति
+अवगच्छति	97	अवगमिष्यतः
+अवगच्छति	98	अवगमिष्यन्ति
+अवगच्छति	99	अवगमिष्ये
+अवगच्छति	100	अवगमिष्यावहे
+अवगच्छति	101	अवगमिष्यामहे
+अवगच्छति	102	अवगमिष्यसे
+अवगच्छति	103	अवगमिष्येथे
+अवगच्छति	104	अवगमिष्यध्वे
+अवगच्छति	105	अवगमिष्यते
+अवगच्छति	106	अवगमिष्येते
+अवगच्छति	107	अवगमिष्यन्ते
+अवगच्छति	108	अवागमिष्यम्
+अवगच्छति	109	अवागमिष्याव
+अवगच्छति	110	अवागमिष्याम
+अवगच्छति	111	अवागमिष्यः
+अवगच्छति	112	अवागमिष्यतम्
+अवगच्छति	113	अवागमिष्यत
+अवगच्छति	114	अवागमिष्यत्
+अवगच्छति	115	अवागमिष्यताम्
+अवगच्छति	116	अवागमिष्यन्
+अवगच्छति	117	अवागमिष्ये
+अवगच्छति	118	अवागमिष्यावहि
+अवगच्छति	119	अवागमिष्यामहि
+अवगच्छति	120	अवागमिष्यथाः
+अवगच्छति	121	अवागमिष्येथाम्
+अवगच्छति	122	अवागमिष्यध्वम्
+अवगच्छति	123	अवागमिष्यत
+अवगच्छति	124	अवागमिष्येताम्
+अवगच्छति	125	अवागमिष्यन्त
+अवगच्छति	126	अवजगम
+अवगच्छति	127	अवजग्मिव
+अवगच्छति	128	अवजग्मिम
+अवगच्छति	129	अवजगन्थ
+अवगच्छति	130	अवजग्मथुः
+अवगच्छति	131	अवजग्म
+अवगच्छति	132	अवजगाम
+अवगच्छति	133	अवजग्मतुः
+अवगच्छति	134	अवजग्मुः
+अवगच्छति	135	अवजग्मे
+अवगच्छति	136	अवजग्मिवहे
+अवगच्छति	137	अवजग्मिमहे
+अवगच्छति	138	अवजग्मिषे
+अवगच्छति	139	अवजग्माथे
+अवगच्छति	140	अवजग्मिध्वे
+अवगच्छति	141	अवजग्मे
+अवगच्छति	142	अवजग्माते
+अवगच्छति	143	अवजग्मिरे
+अवगच्छति	144	अवागमम्
+अवगच्छति	145	अवागमाव
+अवगच्छति	146	अवागमाम
+अवगच्छति	147	अवागमः
+अवगच्छति	148	अवागमतम्
+अवगच्छति	149	अवागमत
+अवगच्छति	150	अवागमत्
+अवगच्छति	151	अवागमताम्
+अवगच्छति	152	अवागमन्
+अवगच्छति	153	अवागमिषि
+अवगच्छति	154	अवागमिष्वहि
+अवगच्छति	155	अवागमिष्महि
+अवगच्छति	156	अवागमिष्ठाः
+अवगच्छति	157	अवागमिषाथाम्
+अवगच्छति	158	अवागमिड्ढ्वम्
+अवगच्छति	159	अवागमिष्ट
+अवगच्छति	160	अवागमिषाताम्
+अवगच्छति	161	अवागमिषत
+अवगच्छति	162	अवगन्तुम्
+अवगच्छति	163	अवगत्वा
+अवगच्छति	166	अवगमिष्यत्
+अवगच्छति	167	अवगमिष्यमाण
+अवगच्छति	168	अवजगन्वांस्
+अवगच्छति	169	अवजग्मान
+अवर्	144	अवरम्
+अवर्	145	अवर्व
+अवर्	146	अवर्म
+अवर्	147	अवर्
+अवर्	150	अवर्
+अवर्	152	अव्रन्
+अवर्	153	अव्रि
+अवर्	154	अवृवहि
+अवर्	155	अवृमहि
+अवर्	156	अवृथाः
+अवर्	157	अव्राथाम्
+अवर्	158	अवृध्वम्
+अवर्	159	अवृत
+अवर्	160	अव्राताम्
+अवर्	161	अव्रत
+अवर्क्	144	अवर्जम्
+अवर्क्	145	अवर्ज्व
+अवर्क्	146	अवर्ज्म
+अवर्क्	147	अवर्क्
+अवर्क्	150	अवर्क्
+अवर्क्	152	अवृजन्
+अवर्क्	153	अवृजि
+अवर्क्	154	अवृज्वहि
+अवर्क्	155	अवृज्महि
+अवर्क्	156	अवृक्थाः
+अवर्क्	157	अवृजाथाम्
+अवर्क्	158	अवृग्ध्वम्
+अवर्क्	159	अवृक्त
+अवर्क्	160	अवृजाताम्
+अवर्क्	161	अवृजत
+अवर्त्	144	अवर्तम्
+अवर्त्	145	अवर्त्व
+अवर्त्	146	अवर्त्म
+अवर्त्	147	अवर्त्
+अवर्त्	148	अवर्त्तम्
+अवर्त्	149	अवर्त्त
+अवर्त्	151	अवर्त्ताम्
+अवर्त्	152	अवृतन्
+अवाक्षीत्	144	अवाक्षम्
+अवाक्षीत्	145	अवाक्ष्व
+अवाक्षीत्	146	अवाक्ष्म
+अवाक्षीत्	148	अवाढम्
+अवाक्षीत्	149	अवाढ
+अवाक्षीत्	151	अवाढाम्
+अवाक्षीत्	152	अवाक्षुः
+अवात्सीत्	148	अवास्तम्
+अवात्सीत्	149	अवास्त
+अवात्सीत्	151	अवास्ताम्
+अवार्क्षीत्	144	अवार्क्षम्
+अवार्क्षीत्	145	अवार्क्ष्व
+अवार्क्षीत्	146	अवार्क्ष्म
+अवार्क्षीत्	148	अवार्क्तम्
+अवार्क्षीत्	149	अवार्क्त
+अवार्क्षीत्	151	अवार्क्ताम्
+अवार्क्षीत्	152	अवार्क्षुः
+अवार्क्षीत्	153	अवृक्षि
+अवार्क्षीत्	154	अवृक्ष्वहि
+अवार्क्षीत्	155	अवृक्ष्महि
+अवार्क्षीत्	156	अवृक्थाः
+अवार्क्षीत्	157	अवृक्षाथाम्
+अवार्क्षीत्	158	अवृग्ध्वम्
+अवार्क्षीत्	159	अवृक्त
+अवार्क्षीत्	160	अवृक्षाताम्
+अवार्क्षीत्	161	अवृक्षत
+अश्रेत्	144	अश्रयम्
+अश्रेत्	145	अश्रेव
+अश्रेत्	146	अश्रेम
+अश्रेत्	152	अश्रियन्
+अश्रोत्	144	अश्रवम्
+अश्रोत्	145	अश्रोव
+अश्रोत्	146	अश्रोम
+अश्रोत्	152	अश्रुवन्
+अश्रौषीत्	144	अश्रौषम्
+अश्रौषीत्	145	अश्रौष्व
+अश्रौषीत्	146	अश्रौष्म
+अश्रौषीत्	148	अश्रौष्टम्
+अश्रौषीत्	149	अश्रौष्ट
+अश्रौषीत्	151	अश्रौष्टाम्
+अश्रौषीत्	152	अश्रौषुः
+अस्ति	0	अस्मि
+अस्ति	1	स्वः
+अस्ति	2	स्मः
+अस्ति	3	असि
+अस्ति	4	स्थः
+अस्ति	5	स्थ
+अस्ति	7	स्तः
+अस्ति	8	सन्ति
+अस्ति	9	हे
+अस्ति	10	स्वहे
+अस्ति	11	स्महे
+अस्ति	12	से
+अस्ति	13	साथे
+अस्ति	14	ध्वे
+अस्ति	15	स्ते
+अस्ति	16	साते
+अस्ति	17	सते
+अस्ति	18	असानि
+अस्ति	19	असाव
+अस्ति	20	असाम
+अस्ति	21	एधि
+अस्ति	22	स्तम्
+अस्ति	23	स्त
+अस्ति	25	स्ताम्
+अस्ति	26	सन्तु
+अस्ति	27	असै
+अस्ति	28	असावहै
+अस्ति	29	असामहै
+अस्ति	30	स्व
+अस्ति	31	साथाम्
+अस्ति	32	ध्वम्
+अस्ति	33	स्ताम्
+अस्ति	34	साताम्
+अस्ति	35	सताम्
+अस्ति	36	स्याम्
+अस्ति	37	स्याव
+अस्ति	38	स्याम
+अस्ति	39	स्याः
+अस्ति	40	स्यातम्
+अस्ति	41	स्यात
+अस्ति	42	स्यात्
+अस्ति	43	स्याताम्
+अस्ति	44	स्युः
+अस्ति	45	सीय
+अस्ति	46	सीवहि
+अस्ति	47	सीमहि
+अस्ति	48	सीथाः
+अस्ति	49	सीयाथाम्
+अस्ति	50	सीध्वम्
+अस्ति	51	सीत
+अस्ति	52	सीयाताम्
+अस्ति	53	सीरन्
+अस्ति	54	असानि
+अस्ति	55	असाव
+अस्ति	56	असाम
+अस्ति	57	असः
+अस्ति	58	असथः
+अस्ति	59	असथ
+अस्ति	60	असत्
+अस्ति	61	असतः
+अस्ति	62	असन्
+अस्ति	63	असै
+अस्ति	64	असावहै
+अस्ति	65	असामहै
+अस्ति	66	अससे
+अस्ति	67	असैथे
+अस्ति	68	असध्वे
+अस्ति	69	असते
+अस्ति	70	असैते
+अस्ति	71	असन्त
+अस्ति	72	आसम्
+अस्ति	73	आस्व
+अस्ति	74	आस्म
+अस्ति	75	आसीः
+अस्ति	78	आसीत्
+अस्ति	80	आसन्
+अस्ति	81	आसि
+अस्ति	82	आस्वहि
+अस्ति	83	आस्महि
+अस्ति	85	आसाथाम्
+अस्ति	86	आद्ध्वम्
+अस्ति	88	आसाताम्
+अस्ति	89	आसत
+अस्ति	164	सत्
+अस्ति	165	सान
+अस्राक्षीत्	144	अस्राक्षम्
+अस्राक्षीत्	145	अस्राक्ष्व
+अस्राक्षीत्	146	अस्राक्ष्म
+अस्राक्षीत्	148	अस्राष्टम्
+अस्राक्षीत्	149	अस्राष्ट
+अस्राक्षीत्	151	अस्राष्टाम्
+अस्राक्षीत्	152	अस्राक्षुः
+अस्राक्षीत्	153	असृक्षि
+अस्राक्षीत्	154	असृक्ष्वहि
+अस्राक्षीत्	155	असृक्ष्महि
+अस्राक्षीत्	156	असृष्ठाः
+अस्राक्षीत्	157	असृक्षाथाम्
+अस्राक्षीत्	158	असृड्ढ्वम्
+अस्राक्षीत्	159	असृष्ट
+अस्राक्षीत्	160	असृक्षाताम्
+अस्राक्षीत्	161	असृक्षत
+अस्वार्	144	अस्वार्षम्
+अस्वार्	145	अस्वार्ष्व
+अस्वार्	146	अस्वार्ष्म
+अस्वार्	147	अस्वाः
+अस्वार्	148	अस्वार्ष्टम्
+अस्वार्	149	अस्वार्ष्ट
+अस्वार्	150	अस्वाः
+अस्वार्	151	अस्वार्ष्टाम्
+अस्वार्	152	अस्वार्षुः
+अहेत्	144	अहयम्
+अहेत्	145	अहेव
+अहेत्	146	अहेम
+अहेत्	152	अह्यन्
+आक्षेति	0	आक्षेमि
+आक्षेति	1	आक्षिवः
+आक्षेति	2	आक्षिमः
+आक्षेति	3	आक्षेषि
+आक्षेति	4	आक्षिथः
+आक्षेति	5	आक्षिथ
+आक्षेति	7	आक्षितः
+आक्षेति	8	आक्षियन्ति
+आक्षेति	9	आक्षिये
+आक्षेति	10	आक्षिवहे
+आक्षेति	11	आक्षिमहे
+आक्षेति	12	आक्षिषे
+आक्षेति	13	आक्षियाथे
+आक्षेति	14	आक्षिध्वे
+आक्षेति	15	आक्षिते
+आक्षेति	16	आक्षियाते
+आक्षेति	17	आक्षियते
+आक्षेति	18	आक्षयाणि
+आक्षेति	19	आक्षयाव
+आक्षेति	20	आक्षयाम
+आक्षेति	21	आक्षिहि
+आक्षेति	22	आक्षितम्
+आक्षेति	23	आक्षित
+आक्षेति	25	आक्षिताम्
+आक्षेति	26	आक्षियन्तु
+आक्षेति	27	आक्षयै
+आक्षेति	28	आक्षयावहै
+आक्षेति	29	आक्षयामहै
+आक्षेति	30	आक्षिष्व
+आक्षेति	31	आक्षियाथाम्
+आक्षेति	32	आक्षिध्वम्
+आक्षेति	33	आक्षिताम्
+आक्षेति	34	आक्षियाताम्
+आक्षेति	35	आक्षियताम्
+आक्षेति	36	आक्षियाम्
+आक्षेति	37	आक्षियाव
+आक्षेति	38	आक्षियाम
+आक्षेति	39	आक्षियाः
+आक्षेति	40	आक्षियातम्
+आक्षेति	41	आक्षियात
+आक्षेति	42	आक्षियात्
+आक्षेति	43	आक्षियाताम्
+आक्षेति	44	आक्षियुः
+आक्षेति	45	आक्षियीय
+आक्षेति	46	आक्षियीवहि
+आक्षेति	47	आक्षियीमहि
+आक्षेति	48	आक्षियीथाः
+आक्षेति	49	आक्षियीयाथाम्
+आक्षेति	50	आक्षियीध्वम्
+आक्षेति	51	आक्षियीत
+आक्षेति	52	आक्षियीयाताम्
+आक्षेति	53	आक्षियीरन्
+आक्षेति	54	आक्षयाणि
+आक्षेति	55	आक्षयाव
+आक्षेति	56	आक्षयाम
+आक्षेति	57	आक्षयः
+आक्षेति	58	आक्षयथः
+आक्षेति	59	आक्षयथ
+आक्षेति	60	आक्षयत्
+आक्षेति	61	आक्षयतः
+आक्षेति	62	आक्षयन्
+आक्षेति	63	आक्षयै
+आक्षेति	64	आक्षयावहै
+आक्षेति	65	आक्षयामहै
+आक्षेति	66	आक्षयसे
+आक्षेति	67	आक्षयैथे
+आक्षेति	68	आक्षयध्वे
+आक्षेति	69	आक्षयते
+आक्षेति	70	आक्षयैते
+आक्षेति	71	आक्षयन्त
+आक्षेति	164	आक्षियत्
+आक्षेति	165	आक्षियाण
+आनंश	127	आनशिव
+आनंश	128	आनशिम
+आनंश	130	आनशथुः
+आनंश	131	आनश
+आनंश	133	आनशतुः
+आनंश	134	आनशुः
+आनंश	135	आनशे
+आनंश	136	आनशिवहे
+आनंश	137	आनशिमहे
+आनंश	138	आनशिषे
+आनंश	139	आनशाथे
+आनंश	140	आनशिध्वे
+आनंश	141	आनशे
+आनंश	142	आनशाते
+आनंश	143	आनशिरे
+आनंश	168	आनश्वांस्
+आनंश	169	आनशान
+आनञ्ज	127	आनजिव
+आनञ्ज	128	आनजिम
+आनञ्ज	130	आनजथुः
+आनञ्ज	131	आनज
+आनञ्ज	133	आनजतुः
+आनञ्ज	134	आनजुः
+आनञ्ज	135	आनजे
+आनञ्ज	136	आनजिवहे
+आनञ्ज	137	आनजिमहे
+आनञ्ज	138	आनजिषे
+आनञ्ज	139	आनजाथे
+आनञ्ज	140	आनजिध्वे
+आनञ्ज	141	आनजे
+आनञ्ज	142	आनजाते
+आनञ्ज	143	आनजिरे
+आनञ्ज	168	आनग्वांस्
+आनञ्ज	169	आनजान
+आनट्	144	आनशम्
+आनट्	145	आनश्व
+आनट्	146	आनश्म
+आनट्	147	आनट्
+आनट्	148	आनष्टम्
+आनट्	149	आनष्ट
+आनट्	150	आनट्
+आनट्	151	आनष्टाम्
+आनट्	152	आनशन्
+आनट्	153	आशि
+आनट्	154	आश्वहि
+आनट्	155	आश्महि
+आनट्	156	आष्ठाः
+आनट्	157	आशाथाम्
+आनट्	158	आड्ढ्वम्
+आनट्	159	आष्ट
+आनट्	160	आशाताम्
+आनट्	161	आशत
+आनर्च	127	आनृचिव
+आनर्च	128	आनृचिम
+आनर्च	130	आनृचथुः
+आनर्च	131	आनृच
+आनर्च	133	आनृचतुः
+आनर्च	134	आनृचुः
+आनर्च	135	आनृचे
+आनर्च	136	आनृचिवहे
+आनर्च	137	आनृचिमहे
+आनर्च	138	आनृचिषे
+आनर्च	139	आनृचाथे
+आनर्च	140	आनृचिध्वे
+आनर्च	141	आनृचे
+आनर्च	142	आनृचाते
+आनर्च	143	आनृचिरे
+आनर्च	168	आनृक्वांस्
+आनर्च	169	आनृचान
+आनाश	127	आशिव
+आनाश	128	आशिम
+आनाश	130	आशथुः
+आनाश	131	आश
+आनाश	133	आशतुः
+आनाश	134	आशुः
+आनाश	135	आशे
+आनाश	136	आशिवहे
+आनाश	137	आशिमहे
+आनाश	138	आशिषे
+आनाश	139	आशाथे
+आनाश	140	आशिध्वे
+आनाश	141	आशे
+आनाश	142	आशाते
+आनाश	143	आशिरे
+आनाश	168	आशिवांस्
+आनाश	169	आशान
+आप्नोति	72	आप्नवम्
+आप्नोति	73	आप्नुव
+आप्नोति	74	आप्नुम
+आप्नोति	75	आप्नोः
+आप्नोति	76	आप्नुतम्
+आप्नोति	77	आप्नुत
+आप्नोति	78	आप्नोत्
+आप्नोति	79	आप्नुताम्
+आप्नोति	80	आप्नुवन्
+आप्नोति	81	आप्नुवि
+आप्नोति	82	आप्नुवहि
+आप्नोति	83	आप्नुमहि
+आप्नोति	84	आप्नुथाः
+आप्नोति	85	आप्नुवाथाम्
+आप्नोति	86	आप्नुध्वम्
+आप्नोति	87	आप्नुत
+आप्नोति	88	आप्नुवाताम्
+आप्नोति	89	आप्नुवत
+आमन्त्रयते	81	आमन्त्रये
+आमन्त्रयते	82	आमन्त्रयावहि
+आमन्त्रयते	83	आमन्त्रयामहि
+आमन्त्रयते	84	आमन्त्रयथाः
+आमन्त्रयते	85	आमन्त्रयेथाम्
+आमन्त्रयते	86	आमन्त्रयध्वम्
+आमन्त्रयते	87	आमन्त्रयत
+आमन्त्रयते	88	आमन्त्रयेताम्
+आमन्त्रयते	89	आमन्त्रयन्त
+आयाति	72	आयाम्
+आयाति	73	आयाव
+आयाति	74	आयाम
+आयाति	75	आयाः
+आयाति	76	आयातम्
+आयाति	77	आयात
+आयाति	78	आयात्
+आयाति	79	आयाताम्
+आयाति	80	आयुः
+आयाति	81	आये
+आयाति	82	आयावहि
+आयाति	83	आयामहि
+आयाति	84	आयाथाः
+आयाति	85	आयाथाम्
+आयाति	86	आयाध्वम्
+आयाति	87	आयात
+आयाति	88	आयाताम्
+आयाति	89	आयात
+आर	169	आराण
+आर्त	153	आरि
+आर्त	154	आर्वहि
+आर्त	155	आर्महि
+आर्त	156	आर्थाः
+आर्त	157	आराथाम्
+आर्त	158	आर्ध्वम्
+आर्त	159	आर्त
+आर्त	160	आराताम्
+आर्त	161	आरत
+आर्त्	144	आर्धम्
+आर्त्	145	आर्ध्व
+आर्त्	146	आर्ध्म
+आर्त्	147	आर्त्
+आर्त्	148	आर्द्धम्
+आर्त्	149	आर्द्ध
+आर्त्	151	आर्द्धाम्
+आर्त्	152	आर्धुः
+आर्त्	153	आर्धि
+आर्त्	154	आर्ध्वहि
+आर्त्	155	आर्ध्महि
+आर्त्	156	आर्द्धाः
+आर्त्	157	आर्धाथाम्
+आर्त्	158	आर्द्ध्वम्
+आर्त्	159	आर्द्ध
+आर्त्	160	आर्धाताम्
+आर्त्	161	आर्धत
+आस्ते	9	आसे
+आस्ते	10	आस्वहे
+आस्ते	11	आस्महे
+आस्ते	13	आसाथे
+आस्ते	14	आद्ध्वे
+आस्ते	16	आसाते
+आस्ते	17	आसते
+आस्ते	27	आसै
+आस्ते	28	आसावहै
+आस्ते	29	आसामहै
+आस्ते	31	आसाथाम्
+आस्ते	32	आद्ध्वम्
+आस्ते	34	आसाताम्
+आस्ते	35	आसताम्
+आस्ते	45	आसीय
+आस्ते	46	आसीवहि
+आस्ते	47	आसीमहि
+आस्ते	48	आसीथाः
+आस्ते	49	आसीयाथाम्
+आस्ते	50	आसीध्वम्
+आस्ते	51	आसीत
+आस्ते	52	आसीयाताम्
+आस्ते	53	आसीरन्
+आस्ते	63	आसै
+आस्ते	64	आसावहै
+आस्ते	65	आसामहै
+आस्ते	66	आससे
+आस्ते	67	आसैथे
+आस्ते	68	आसध्वे
+आस्ते	69	आसते
+आस्ते	70	आसैते
+आस्ते	71	आसन्त
+आस्ते	81	आसि
+आस्ते	82	आस्वहि
+आस्ते	83	आस्महि
+आस्ते	84	आस्थाः
+आस्ते	85	आसाथाम्
+आस्ते	86	आद्ध्वम्
+आस्ते	87	आस्त
+आस्ते	88	आसाताम्
+आस्ते	89	आसत
+आस्ते	165	आसीन
+आह	129	आत्थ
+इन्द्धे	9	इन्धे
+इन्द्धे	10	इन्ध्वहे
+इन्द्धे	11	इन्ध्महे
+इन्द्धे	12	इन्त्से
+इन्द्धे	13	इन्धाथे
+इन्द्धे	14	इन्द्ध्वे
+इन्द्धे	15	इन्द्धे
+इन्द्धे	16	इन्धाते
+इन्द्धे	17	इन्धते
+इन्द्धे	27	इनधै
+इन्द्धे	28	इनधावहै
+इन्द्धे	29	इनधामहै
+इन्द्धे	30	इन्त्स्व
+इन्द्धे	31	इन्धाथाम्
+इन्द्धे	32	इन्द्ध्वम्
+इन्द्धे	33	इन्द्धाम्
+इन्द्धे	34	इन्धाताम्
+इन्द्धे	35	इन्धताम्
+इन्द्धे	45	इन्धीय
+इन्द्धे	46	इन्धीवहि
+इन्द्धे	47	इन्धीमहि
+इन्द्धे	48	इन्धीथाः
+इन्द्धे	49	इन्धीयाथाम्
+इन्द्धे	50	इन्धीध्वम्
+इन्द्धे	51	इन्धीत
+इन्द्धे	52	इन्धीयाताम्
+इन्द्धे	53	इन्धीरन्
+इन्द्धे	63	इनधै
+इन्द्धे	64	इनधावहै
+इन्द्धे	65	इनधामहै
+इन्द्धे	66	इनधसे
+इन्द्धे	67	इनधैथे
+इन्द्धे	68	इनधध्वे
+इन्द्धे	69	इनधते
+इन्द्धे	70	इनधैते
+इन्द्धे	71	इनधन्त
+इन्द्धे	81	ऐन्धि
+इन्द्धे	82	ऐन्ध्वहि
+इन्द्धे	83	ऐन्ध्महि
+इन्द्धे	84	ऐन्द्धाः
+इन्द्धे	85	ऐन्धाथाम्
+इन्द्धे	86	ऐन्द्ध्वम्
+इन्द्धे	87	ऐन्द्ध
+इन्द्धे	88	ऐन्धाताम्
+इन्द्धे	89	ऐन्धत
+इन्द्धे	165	इन्धान
+इयर्ति	1	ईर्वः
+इयर्ति	2	ईर्मः
+इयर्ति	4	ईर्थः
+इयर्ति	5	ईर्थ
+इयर्ति	7	ईर्तः
+इयर्ति	8	ईरति
+इयर्ति	9	ईरे
+इयर्ति	10	ईर्वहे
+इयर्ति	11	ईर्महे
+इयर्ति	12	ईर्षे
+इयर्ति	13	ईराथे
+इयर्ति	14	ईर्ध्वे
+इयर्ति	15	ईर्ते
+इयर्ति	16	ईराते
+इयर्ति	17	ईरते
+इयर्ति	21	ईर्धि
+इयर्ति	22	ईर्तम्
+इयर्ति	23	ईर्त
+इयर्ति	25	ईर्ताम्
+इयर्ति	26	ईरतु
+इयर्ति	30	ईर्ष्व
+इयर्ति	31	ईराथाम्
+इयर्ति	32	ईर्ध्वम्
+इयर्ति	33	ईर्ताम्
+इयर्ति	34	ईराताम्
+इयर्ति	35	ईरताम्
+इयर्ति	36	ईर्याम्
+इयर्ति	37	ईर्याव
+इयर्ति	38	ईर्याम
+इयर्ति	39	ईर्याः
+इयर्ति	40	ईर्यातम्
+इयर्ति	41	ईर्यात
+इयर्ति	42	ईर्यात्
+इयर्ति	43	ईर्याताम्
+इयर्ति	44	ईर्युः
+इयर्ति	45	ईरीय
+इयर्ति	46	ईरीवहि
+इयर्ति	47	ईरीमहि
+इयर्ति	48	ईरीथाः
+इयर्ति	49	ईरीयाथाम्
+इयर्ति	50	ईरीध्वम्
+इयर्ति	51	ईरीत
+इयर्ति	52	ईरीयाताम्
+इयर्ति	53	ईरीरन्
+इयर्ति	72	ऐयरम्
+इयर्ति	73	ऐर्व
+इयर्ति	74	ऐर्म
+इयर्ति	75	ऐयः
+इयर्ति	76	ऐर्तम्
+इयर्ति	77	ऐर्त
+इयर्ति	78	ऐयः
+इयर्ति	79	ऐर्ताम्
+इयर्ति	80	ऐयरुः
+इयर्ति	81	ऐरि
+इयर्ति	82	ऐर्वहि
+इयर्ति	83	ऐर्महि
+इयर्ति	84	ऐर्थाः
+इयर्ति	85	ऐराथाम्
+इयर्ति	86	ऐर्ध्वम्
+इयर्ति	87	ऐर्त
+इयर्ति	88	ऐराताम्
+इयर्ति	89	ऐरत
+इयर्ति	164	ईरत्
+इयर्ति	165	ईराण
+इयाज	126	इयज
+इयाज	127	ईजिव
+इयाज	128	ईजिम
+इयाज	129	इयष्ठ
+इयाज	130	ईजथुः
+इयाज	131	ईज
+इयाज	133	ईजतुः
+इयाज	134	ईजुः
+इयाज	135	ईजे
+इयाज	136	ईजिवहे
+इयाज	137	ईजिमहे
+इयाज	138	ईजिषे
+इयाज	139	ईजाथे
+इयाज	140	ईजिध्वे
+इयाज	141	ईजे
+इयाज	142	ईजाते
+इयाज	143	ईजिरे
+इयाज	168	ईजिवांस्
+इयाज	169	ईजान
+इयाय	127	ईयिव
+इयाय	128	ईयिम
+इयाय	130	ईयथुः
+इयाय	131	ईय
+इयाय	133	ईयतुः
+इयाय	134	ईयुः
+इयाय	168	ईयिवांस्
+इयेष	127	ईषिव
+इयेष	128	ईषिम
+इयेष	130	ईषथुः
+इयेष	131	ईष
+इयेष	133	ईषतुः
+इयेष	134	ईषुः
+इयेष	135	ईषे
+इयेष	136	ईषिवहे
+इयेष	137	ईषिमहे
+इयेष	138	ईषिषे
+इयेष	139	ईषाथे
+इयेष	140	ईषिध्वे
+इयेष	141	ईषे
+इयेष	142	ईषाते
+इयेष	143	ईषिरे
+इयेष	168	ईषिवांस्
+इयेष	169	ईषाण
+इष्णाति	72	ऐष्णाम्
+इष्णाति	73	ऐष्णीव
+इष्णाति	74	ऐष्णीम
+इष्णाति	75	ऐष्णाः
+इष्णाति	76	ऐष्णीतम्
+इष्णाति	77	ऐष्णीत
+इष्णाति	78	ऐष्णात्
+इष्णाति	79	ऐष्णीताम्
+इष्णाति	80	ऐष्णन्
+इष्णाति	81	ऐष्णि
+इष्णाति	82	ऐष्णीवहि
+इष्णाति	83	ऐष्णीमहि
+इष्णाति	84	ऐष्णीथाः
+इष्णाति	85	ऐष्णाथाम्
+इष्णाति	86	ऐष्णीध्वम्
+इष्णाति	87	ऐष्णीत
+इष्णाति	88	ऐष्णाताम्
+इष्णाति	89	ऐष्णत
+ईक्षते	81	ऐक्षे
+ईक्षते	82	ऐक्षावहि
+ईक्षते	83	ऐक्षामहि
+ईक्षते	84	ऐक्षथाः
+ईक्षते	85	ऐक्षेथाम्
+ईक्षते	86	ऐक्षध्वम्
+ईक्षते	87	ऐक्षत
+ईक्षते	88	ऐक्षेताम्
+ईक्षते	89	ऐक्षन्त
+ईट्टे	9	ईडे
+ईट्टे	10	ईड्वहे
+ईट्टे	11	ईड्महे
+ईट्टे	12	ईडिषे
+ईट्टे	13	ईडाथे
+ईट्टे	14	ईड्ढ्वे
+ईट्टे	15	ईट्टे
+ईट्टे	16	ईडाते
+ईट्टे	17	ईडते
+ईट्टे	27	ईडै
+ईट्टे	28	ईडावहै
+ईट्टे	29	ईडामहै
+ईट्टे	30	ईडिष्व
+ईट्टे	31	ईडाथाम्
+ईट्टे	32	ईड्ढ्वम्
+ईट्टे	33	ईट्टाम्
+ईट्टे	34	ईडाताम्
+ईट्टे	35	ईडताम्
+ईट्टे	45	ईडीय
+ईट्टे	46	ईडीवहि
+ईट्टे	47	ईडीमहि
+ईट्टे	48	ईडीथाः
+ईट्टे	49	ईडीयाथाम्
+ईट्टे	50	ईडीध्वम्
+ईट्टे	51	ईडीत
+ईट्टे	52	ईडीयाताम्
+ईट्टे	53	ईडीरन्
+ईट्टे	63	ईडै
+ईट्टे	64	ईडावहै
+ईट्टे	65	ईडामहै
+ईट्टे	66	ईडसे
+ईट्टे	67	ईडैथे
+ईट्टे	68	ईडध्वे
+ईट्टे	69	ईडते
+ईट्टे	70	ईडैते
+ईट्टे	71	ईडन्त
+ईट्टे	81	ऐडि
+ईट्टे	82	ऐड्वहि
+ईट्टे	83	ऐड्महि
+ईट्टे	84	ऐट्ठाः
+ईट्टे	85	ऐडाथाम्
+ईट्टे	86	ऐड्ढ्वम्
+ईट्टे	87	ऐट्ट
+ईट्टे	88	ऐडाताम्
+ईट्टे	89	ऐडत
+ईट्टे	165	ईडान
+ईर्ष्यति	72	ऐर्ष्यम्
+ईर्ष्यति	73	ऐर्ष्याव
+ईर्ष्यति	74	ऐर्ष्याम
+ईर्ष्यति	75	ऐर्ष्यः
+ईर्ष्यति	76	ऐर्ष्यतम्
+ईर्ष्यति	77	ऐर्ष्यत
+ईर्ष्यति	78	ऐर्ष्यत्
+ईर्ष्यति	79	ऐर्ष्यताम्
+ईर्ष्यति	80	ऐर्ष्यन्
+ईर्ष्यति	81	ऐर्ष्ये
+ईर्ष्यति	82	ऐर्ष्यावहि
+ईर्ष्यति	83	ऐर्ष्यामहि
+ईर्ष्यति	84	ऐर्ष्यथाः
+ईर्ष्यति	85	ऐर्ष्येथाम्
+ईर्ष्यति	86	ऐर्ष्यध्वम्
+ईर्ष्यति	87	ऐर्ष्यत
+ईर्ष्यति	88	ऐर्ष्येताम्
+ईर्ष्यति	89	ऐर्ष्यन्त
+ईष्टे	9	ईशे
+ईष्टे	10	ईश्वहे
+ईष्टे	11	ईश्महे
+ईष्टे	12	ईशिषे
+ईष्टे	13	ईशाथे
+ईष्टे	14	ईशिध्वे
+ईष्टे	15	ईष्टे
+ईष्टे	16	ईशाते
+ईष्टे	17	ईशते
+ईष्टे	27	ईशै
+ईष्टे	28	ईशावहै
+ईष्टे	29	ईशामहै
+ईष्टे	30	ईशिष्व
+ईष्टे	31	ईशाथाम्
+ईष्टे	32	ईशिध्वम्
+ईष्टे	33	ईष्टाम्
+ईष्टे	34	ईशाताम्
+ईष्टे	35	ईशताम्
+ईष्टे	45	ईशीय
+ईष्टे	46	ईशीवहि
+ईष्टे	47	ईशीमहि
+ईष्टे	48	ईशीथाः
+ईष्टे	49	ईशीयाथाम्
+ईष्टे	50	ईशीध्वम्
+ईष्टे	51	ईशीत
+ईष्टे	52	ईशीयाताम्
+ईष्टे	53	ईशीरन्
+ईष्टे	63	ईशै
+ईष्टे	64	ईशावहै
+ईष्टे	65	ईशामहै
+ईष्टे	66	ईशसे
+ईष्टे	67	ईशैथे
+ईष्टे	68	ईशध्वे
+ईष्टे	69	ईशते
+ईष्टे	70	ईशैते
+ईष्टे	71	ईशन्त
+ईष्टे	81	ऐशि
+ईष्टे	82	ऐश्वहि
+ईष्टे	83	ऐश्महि
+ईष्टे	84	ऐष्ठाः
+ईष्टे	85	ऐशाथाम्
+ईष्टे	86	ऐशिध्वम्
+ईष्टे	87	ऐष्ट
+ईष्टे	88	ऐशाताम्
+ईष्टे	89	ऐशत
+ईष्टे	165	ईशान
+ईहति	72	ऐहम्
+ईहति	73	ऐहाव
+ईहति	74	ऐहाम
+ईहति	75	ऐहः
+ईहति	76	ऐहतम्
+ईहति	77	ऐहत
+ईहति	78	ऐहत्
+ईहति	79	ऐहताम्
+ईहति	80	ऐहन्
+ईहति	81	ऐहे
+ईहति	82	ऐहावहि
+ईहति	83	ऐहामहि
+ईहति	84	ऐहथाः
+ईहति	85	ऐहेथाम्
+ईहति	86	ऐहध्वम्
+ईहति	87	ऐहत
+ईहति	88	ऐहेताम्
+ईहति	89	ऐहन्त
+उक्षति	18	उक्षाणि
+उक्षति	54	उक्षाणि
+उक्षति	165	उक्षमाण
+उच्छ्वसिति	0	उच्छ्वसिमि
+उच्छ्वसिति	1	उच्छ्वसिवः
+उच्छ्वसिति	2	उच्छ्वसिमः
+उच्छ्वसिति	3	उच्छ्वसिषि
+उच्छ्वसिति	8	उच्छ्वसन्ति
+उच्छ्वसिति	9	उच्छ्वसे
+उच्छ्वसिति	10	उच्छ्वसिवहे
+उच्छ्वसिति	11	उच्छ्वसिमहे
+उच्छ्वसिति	12	उच्छ्वसिषे
+उच्छ्वसिति	13	उच्छ्वसाथे
+उच्छ्वसिति	16	उच्छ्वसाते
+उच्छ्वसिति	17	उच्छ्वसते
+उच्छ्वसिति	18	उच्छ्वस्यानि
+उच्छ्वसिति	19	उच्छ्वस्याव
+उच्छ्वसिति	20	उच्छ्वस्याम
+उच्छ्वसिति	21	उच्छ्वसिहि
+उच्छ्वसिति	26	उच्छ्वसन्तु
+उच्छ्वसिति	27	उच्छ्वस्यै
+उच्छ्वसिति	28	उच्छ्वस्यावहै
+उच्छ्वसिति	29	उच्छ्वस्यामहै
+उच्छ्वसिति	30	उच्छ्वसिष्व
+उच्छ्वसिति	31	उच्छ्वसाथाम्
+उच्छ्वसिति	34	उच्छ्वसाताम्
+उच्छ्वसिति	35	उच्छ्वसताम्
+उच्छ्वसिति	36	उच्छ्वसियाम्
+उच्छ्वसिति	37	उच्छ्वसियाव
+उच्छ्वसिति	38	उच्छ्वसियाम
+उच्छ्वसिति	39	उच्छ्वसियाः
+उच्छ्वसिति	40	उच्छ्वसियातम्
+उच्छ्वसिति	41	उच्छ्वसियात
+उच्छ्वसिति	42	उच्छ्वसियात्
+उच्छ्वसिति	43	उच्छ्वसियाताम्
+उच्छ्वसिति	44	उच्छ्वसियुः
+उच्छ्वसिति	45	उच्छ्वसीय
+उच्छ्वसिति	46	उच्छ्वसीवहि
+उच्छ्वसिति	47	उच्छ्वसीमहि
+उच्छ्वसिति	48	उच्छ्वसीथाः
+उच्छ्वसिति	49	उच्छ्वसीयाथाम्
+उच्छ्वसिति	50	उच्छ्वसीध्वम्
+उच्छ्वसिति	51	उच्छ्वसीत
+उच्छ्वसिति	52	उच्छ्वसीयाताम्
+उच्छ्वसिति	53	उच्छ्वसीरन्
+उच्छ्वसिति	54	उच्छ्वस्यानि
+उच्छ्वसिति	55	उच्छ्वस्याव
+उच्छ्वसिति	56	उच्छ्वस्याम
+उच्छ्वसिति	57	उच्छ्वस्यः
+उच्छ्वसिति	58	उच्छ्वस्यथः
+उच्छ्वसिति	59	उच्छ्वस्यथ
+उच्छ्वसिति	60	उच्छ्वस्यत्
+उच्छ्वसिति	61	उच्छ्वस्यतः
+उच्छ्वसिति	62	उच्छ्वस्यन्
+उच्छ्वसिति	63	उच्छ्वस्यै
+उच्छ्वसिति	64	उच्छ्वस्यावहै
+उच्छ्वसिति	65	उच्छ्वस्यामहै
+उच्छ्वसिति	66	उच्छ्वस्यसे
+उच्छ्वसिति	67	उच्छ्वस्यैथे
+उच्छ्वसिति	68	उच्छ्वस्यध्वे
+उच्छ्वसिति	69	उच्छ्वस्यते
+उच्छ्वसिति	70	उच्छ्वस्यैते
+उच्छ्वसिति	71	उच्छ्वस्यन्त
+उच्छ्वसिति	164	उच्छ्वसत्
+उच्छ्वसिति	165	उच्छ्वसमान
+उच्यते	81	औच्ये
+उच्यते	82	औच्यावहि
+उच्यते	83	औच्यामहि
+उच्यते	84	औच्यथाः
+उच्यते	85	औच्येथाम्
+उच्यते	86	औच्यध्वम्
+उच्यते	87	औच्यत
+उच्यते	88	औच्येताम्
+उच्यते	89	औच्यन्त
+उत्तिष्ठति	72	उदतिष्ठम्
+उत्तिष्ठति	73	उदतिष्ठाव
+उत्तिष्ठति	74	उदतिष्ठाम
+उत्तिष्ठति	75	उदतिष्ठः
+उत्तिष्ठति	76	उदतिष्ठतम्
+उत्तिष्ठति	77	उदतिष्ठत
+उत्तिष्ठति	78	उदतिष्ठत्
+उत्तिष्ठति	79	उदतिष्ठताम्
+उत्तिष्ठति	80	उदतिष्ठन्
+उत्तिष्ठति	81	उदतिष्ठे
+उत्तिष्ठति	82	उदतिष्ठावहि
+उत्तिष्ठति	83	उदतिष्ठामहि
+उत्तिष्ठति	84	उदतिष्ठथाः
+उत्तिष्ठति	85	उदतिष्ठेथाम्
+उत्तिष्ठति	86	उदतिष्ठध्वम्
+उत्तिष्ठति	87	उदतिष्ठत
+उत्तिष्ठति	88	उदतिष्ठेताम्
+उत्तिष्ठति	89	उदतिष्ठन्त
+उत्थाति	13	उत्थैथे
+उत्थाति	16	उत्थैते
+उत्थाति	17	उत्थान्ते
+उत्थाति	21	उत्था
+उत्थाति	31	उत्थैथाम्
+उत्थाति	34	उत्थैताम्
+उत्थाति	35	उत्थान्ताम्
+उत्थाति	36	उत्थैयम्
+उत्थाति	37	उत्थैव
+उत्थाति	38	उत्थैम
+उत्थाति	39	उत्थैः
+उत्थाति	40	उत्थैतम्
+उत्थाति	41	उत्थैत
+उत्थाति	42	उत्थैत्
+उत्थाति	43	उत्थैताम्
+उत्थाति	44	उत्थैयुः
+उत्थाति	45	उत्थैय
+उत्थाति	46	उत्थैवहि
+उत्थाति	47	उत्थैमहि
+उत्थाति	48	उत्थैथाः
+उत्थाति	49	उत्थैयाथाम्
+उत्थाति	50	उत्थैध्वम्
+उत्थाति	51	उत्थैत
+उत्थाति	52	उत्थैयाताम्
+उत्थाति	53	उत्थैरन्
+उत्थाति	68	उत्थाध्वै
+उत्थाति	165	उत्थामान
+उत्पद्यते	81	उदपद्ये
+उत्पद्यते	82	उदपद्यावहि
+उत्पद्यते	83	उदपद्यामहि
+उत्पद्यते	84	उदपद्यथाः
+उत्पद्यते	85	उदपद्येथाम्
+उत्पद्यते	86	उदपद्यध्वम्
+उत्पद्यते	87	उदपद्यत
+उत्पद्यते	88	उदपद्येताम्
+उत्पद्यते	89	उदपद्यन्त
+उदच्यते	81	उदाच्ये
+उदच्यते	82	उदाच्यावहि
+उदच्यते	83	उदाच्यामहि
+उदच्यते	84	उदाच्यथाः
+उदच्यते	85	उदाच्येथाम्
+उदच्यते	86	उदाच्यध्वम्
+उदच्यते	87	उदाच्यत
+उदच्यते	88	उदाच्येताम्
+उदच्यते	89	उदाच्यन्त
+उद्यते	81	औद्ये
+उद्यते	82	औद्यावहि
+उद्यते	83	औद्यामहि
+उद्यते	84	औद्यथाः
+उद्यते	85	औद्येथाम्
+उद्यते	86	औद्यध्वम्
+उद्यते	87	औद्यत
+उद्यते	88	औद्येताम्
+उद्यते	89	औद्यन्त
+उद्विजते	81	उदविजे
+उद्विजते	82	उदविजावहि
+उद्विजते	83	उदविजामहि
+उद्विजते	84	उदविजथाः
+उद्विजते	85	उदविजेथाम्
+उद्विजते	86	उदविजध्वम्
+उद्विजते	87	उदविजत
+उद्विजते	88	उदविजेताम्
+उद्विजते	89	उदविजन्त
+उनत्ति	0	उनद्मि
+उनत्ति	1	उन्द्वः
+उनत्ति	2	उन्द्मः
+उनत्ति	4	उन्त्थः
+उनत्ति	5	उन्त्थ
+उनत्ति	7	उन्त्तः
+उनत्ति	8	उन्दन्ति
+उनत्ति	9	उन्दे
+उनत्ति	10	उन्द्वहे
+उनत्ति	11	उन्द्महे
+उनत्ति	12	उन्त्से
+उनत्ति	13	उन्दाथे
+उनत्ति	14	उन्द्ध्वे
+उनत्ति	15	उन्त्ते
+उनत्ति	16	उन्दाते
+उनत्ति	17	उन्दते
+उनत्ति	18	उनदानि
+उनत्ति	19	उनदाव
+उनत्ति	20	उनदाम
+उनत्ति	21	उन्द्धि
+उनत्ति	22	उन्त्तम्
+उनत्ति	23	उन्त्त
+उनत्ति	25	उन्त्ताम्
+उनत्ति	26	उन्दन्तु
+उनत्ति	27	उनदै
+उनत्ति	28	उनदावहै
+उनत्ति	29	उनदामहै
+उनत्ति	30	उन्त्स्व
+उनत्ति	31	उन्दाथाम्
+उनत्ति	32	उन्द्ध्वम्
+उनत्ति	33	उन्त्ताम्
+उनत्ति	34	उन्दाताम्
+उनत्ति	35	उन्दताम्
+उनत्ति	36	उन्द्याम्
+उनत्ति	37	उन्द्याव
+उनत्ति	38	उन्द्याम
+उनत्ति	39	उन्द्याः
+उनत्ति	40	उन्द्यातम्
+उनत्ति	41	उन्द्यात
+उनत्ति	42	उन्द्यात्
+उनत्ति	43	उन्द्याताम्
+उनत्ति	44	उन्द्युः
+उनत्ति	45	उन्दीय
+उनत्ति	46	उन्दीवहि
+उनत्ति	47	उन्दीमहि
+उनत्ति	48	उन्दीथाः
+उनत्ति	49	उन्दीयाथाम्
+उनत्ति	50	उन्दीध्वम्
+उनत्ति	51	उन्दीत
+उनत्ति	52	उन्दीयाताम्
+उनत्ति	53	उन्दीरन्
+उनत्ति	54	उनदानि
+उनत्ति	55	उनदाव
+उनत्ति	56	उनदाम
+उनत्ति	57	उनदः
+उनत्ति	58	उनदथः
+उनत्ति	59	उनदथ
+उनत्ति	60	उनदत्
+उनत्ति	61	उनदतः
+उनत्ति	62	उनदन्
+उनत्ति	63	उनदै
+उनत्ति	64	उनदावहै
+उनत्ति	65	उनदामहै
+उनत्ति	66	उनदसे
+उनत्ति	67	उनदैथे
+उनत्ति	68	उनदध्वे
+उनत्ति	69	उनदते
+उनत्ति	70	उनदैते
+उनत्ति	71	उनदन्त
+उनत्ति	72	औनदम्
+उनत्ति	73	औन्द्व
+उनत्ति	74	औन्द्म
+उनत्ति	75	औनत्
+उनत्ति	76	औन्त्तम्
+उनत्ति	77	औन्त्त
+उनत्ति	78	औनत्
+उनत्ति	79	औन्त्ताम्
+उनत्ति	80	औन्दन्
+उनत्ति	81	औन्दि
+उनत्ति	82	औन्द्वहि
+उनत्ति	83	औन्द्महि
+उनत्ति	84	औन्त्थाः
+उनत्ति	85	औन्दाथाम्
+उनत्ति	86	औन्द्ध्वम्
+उनत्ति	87	औन्त्त
+उनत्ति	88	औन्दाताम्
+उनत्ति	89	औन्दत
+उनत्ति	164	उन्दत्
+उनत्ति	165	उन्दान
+उपनह्यति	72	उपानह्यम्
+उपनह्यति	73	उपानह्याव
+उपनह्यति	74	उपानह्याम
+उपनह्यति	75	उपानह्यः
+उपनह्यति	76	उपानह्यतम्
+उपनह्यति	77	उपानह्यत
+उपनह्यति	78	उपानह्यत्
+उपनह्यति	79	उपानह्यताम्
+उपनह्यति	80	उपानह्यन्
+उपनह्यति	81	उपानह्ये
+उपनह्यति	82	उपानह्यावहि
+उपनह्यति	83	उपानह्यामहि
+उपनह्यति	84	उपानह्यथाः
+उपनह्यति	85	उपानह्येथाम्
+उपनह्यति	86	उपानह्यध्वम्
+उपनह्यति	87	उपानह्यत
+उपनह्यति	88	उपानह्येताम्
+उपनह्यति	89	उपानह्यन्त
+उपनह्यति	163	उपनद्ध्वा
+उपन्यस्यति	72	उपन्यास्यम्
+उपन्यस्यति	73	उपन्यास्याव
+उपन्यस्यति	74	उपन्यास्याम
+उपन्यस्यति	75	उपन्यास्यः
+उपन्यस्यति	76	उपन्यास्यतम्
+उपन्यस्यति	77	उपन्यास्यत
+उपन्यस्यति	78	उपन्यास्यत्
+उपन्यस्यति	79	उपन्यास्यताम्
+उपन्यस्यति	80	उपन्यास्यन्
+उपन्यस्यति	81	उपन्यास्ये
+उपन्यस्यति	82	उपन्यास्यावहि
+उपन्यस्यति	83	उपन्यास्यामहि
+उपन्यस्यति	84	उपन्यास्यथाः
+उपन्यस्यति	85	उपन्यास्येथाम्
+उपन्यस्यति	86	उपन्यास्यध्वम्
+उपन्यस्यति	87	उपन्यास्यत
+उपन्यस्यति	88	उपन्यास्येताम्
+उपन्यस्यति	89	उपन्यास्यन्त
+उभ्नाति	72	औभ्नाम्
+उभ्नाति	73	औभ्नीव
+उभ्नाति	74	औभ्नीम
+उभ्नाति	75	औभ्नाः
+उभ्नाति	76	औभ्नीतम्
+उभ्नाति	77	औभ्नीत
+उभ्नाति	78	औभ्नात्
+उभ्नाति	79	औभ्नीताम्
+उभ्नाति	80	औभ्नन्
+उभ्नाति	81	औभ्नि
+उभ्नाति	82	औभ्नीवहि
+उभ्नाति	83	औभ्नीमहि
+उभ्नाति	84	औभ्नीथाः
+उभ्नाति	85	औभ्नाथाम्
+उभ्नाति	86	औभ्नीध्वम्
+उभ्नाति	87	औभ्नीत
+उभ्नाति	88	औभ्नाताम्
+उभ्नाति	89	औभ्नत
+उल्लसति	72	उदलसम्
+उल्लसति	73	उदलसाव
+उल्लसति	74	उदलसाम
+उल्लसति	75	उदलसः
+उल्लसति	76	उदलसतम्
+उल्लसति	77	उदलसत
+उल्लसति	78	उदलसत्
+उल्लसति	79	उदलसताम्
+उल्लसति	80	उदलसन्
+उल्लसति	81	उदलसे
+उल्लसति	82	उदलसावहि
+उल्लसति	83	उदलसामहि
+उल्लसति	84	उदलसथाः
+उल्लसति	85	उदलसेथाम्
+उल्लसति	86	उदलसध्वम्
+उल्लसति	87	उदलसत
+उल्लसति	88	उदलसेताम्
+उल्लसति	89	उदलसन्त
+उल्लिखति	72	उदलिखम्
+उल्लिखति	73	उदलिखाव
+उल्लिखति	74	उदलिखाम
+उल्लिखति	75	उदलिखः
+उल्लिखति	76	उदलिखतम्
+उल्लिखति	77	उदलिखत
+उल्लिखति	78	उदलिखत्
+उल्लिखति	79	उदलिखताम्
+उल्लिखति	80	उदलिखन्
+उल्लिखति	81	उदलिखे
+उल्लिखति	82	उदलिखावहि
+उल्लिखति	83	उदलिखामहि
+उल्लिखति	84	उदलिखथाः
+उल्लिखति	85	उदलिखेथाम्
+उल्लिखति	86	उदलिखध्वम्
+उल्लिखति	87	उदलिखत
+उल्लिखति	88	उदलिखेताम्
+उल्लिखति	89	उदलिखन्त
+उवाच	126	उवच
+उवाच	127	ऊचिव
+उवाच	128	ऊचिम
+उवाच	129	उवक्थ
+उवाच	130	ऊचथुः
+उवाच	131	ऊच
+उवाच	133	ऊचतुः
+उवाच	134	ऊचुः
+उवाच	135	ऊचे
+उवाच	136	ऊचिवहे
+उवाच	137	ऊचिमहे
+उवाच	138	ऊचिषे
+उवाच	139	ऊचाथे
+उवाच	140	ऊचिध्वे
+उवाच	141	ऊचे
+उवाच	142	ऊचाते
+उवाच	143	ऊचिरे
+उवाच	168	ऊचिवांस्
+उवाच	169	ऊचान
+उवाद	126	उवद
+उवाद	127	ऊदिव
+उवाद	128	ऊदिम
+उवाद	129	उवत्थ
+उवाद	130	ऊदथुः
+उवाद	131	ऊद
+उवाद	133	ऊदतुः
+उवाद	134	ऊदुः
+उवाद	135	ऊदे
+उवाद	136	ऊदिवहे
+उवाद	137	ऊदिमहे
+उवाद	138	ऊदिषे
+उवाद	139	ऊदाथे
+उवाद	140	ऊदिध्वे
+उवाद	141	ऊदे
+उवाद	142	ऊदाते
+उवाद	143	ऊदिरे
+उवाद	168	ऊदिवांस्
+उवाद	169	ऊदान
+उवाप	126	उवप
+उवाप	127	ऊपिव
+उवाप	128	ऊपिम
+उवाप	129	उवप्थ
+उवाप	130	ऊपथुः
+उवाप	131	ऊप
+उवाप	133	ऊपतुः
+उवाप	134	ऊपुः
+उवाप	135	ऊपे
+उवाप	136	ऊपिवहे
+उवाप	137	ऊपिमहे
+उवाप	138	ऊपिषे
+उवाप	139	ऊपाथे
+उवाप	140	ऊपिध्वे
+उवाप	141	ऊपे
+उवाप	142	ऊपाते
+उवाप	143	ऊपिरे
+उवाप	168	ऊपिवांस्
+उवाप	169	ऊपान
+उवास	126	उवस
+उवास	127	ऊषिव
+उवास	128	ऊषिम
+उवास	129	उवस्थ
+उवास	130	ऊषथुः
+उवास	131	ऊष
+उवास	133	ऊषतुः
+उवास	134	ऊषुः
+उवास	168	ऊषिवांस्
+उवाह	126	उवह
+उवाह	127	ऊहिव
+उवाह	128	ऊहिम
+उवाह	129	उवोढ
+उवाह	130	ऊहथुः
+उवाह	131	ऊह
+उवाह	133	ऊहतुः
+उवाह	134	ऊहुः
+उवाह	135	ऊहे
+उवाह	136	ऊहिवहे
+उवाह	137	ऊहिमहे
+उवाह	138	ऊहिषे
+उवाह	139	ऊहाथे
+उवाह	140	ऊहिध्वे
+उवाह	141	ऊहे
+उवाह	142	ऊहाते
+उवाह	143	ऊहिरे
+उवाह	168	ऊहिवांस्
+उवाह	169	ऊहान
+उवोच	127	ऊचिव
+उवोच	128	ऊचिम
+उवोच	130	ऊचथुः
+उवोच	131	ऊच
+उवोच	133	ऊचतुः
+उवोच	134	ऊचुः
+उवोच	135	ऊचे
+उवोच	136	ऊचिवहे
+उवोच	137	ऊचिमहे
+उवोच	138	ऊचिषे
+उवोच	139	ऊचाथे
+उवोच	140	ऊचिध्वे
+उवोच	141	ऊचे
+उवोच	142	ऊचाते
+उवोच	143	ऊचिरे
+उवोच	168	ऊचिवांस्
+उवोच	169	ऊचान
+ऊर्दते	81	और्दे
+ऊर्दते	82	और्दावहि
+ऊर्दते	83	और्दामहि
+ऊर्दते	84	और्दथाः
+ऊर्दते	85	और्देथाम्
+ऊर्दते	86	और्दध्वम्
+ऊर्दते	87	और्दत
+ऊर्दते	88	और्देताम्
+ऊर्दते	89	और्दन्त
+ऊर्दते	117	और्दिष्ये
+ऊर्दते	118	और्दिष्यावहि
+ऊर्दते	119	और्दिष्यामहि
+ऊर्दते	120	और्दिष्यथाः
+ऊर्दते	121	और्दिष्येथाम्
+ऊर्दते	122	और्दिष्यध्वम्
+ऊर्दते	123	और्दिष्यत
+ऊर्दते	124	और्दिष्येताम्
+ऊर्दते	125	और्दिष्यन्त
+ऊर्दते	135	ऊर्दाञ्चक्रे
+ऊर्दते	136	ऊर्दाञ्चकृवहे
+ऊर्दते	137	ऊर्दाञ्चकृमहे
+ऊर्दते	138	ऊर्दाञ्चकृषे
+ऊर्दते	139	ऊर्दाञ्चक्राथे
+ऊर्दते	140	ऊर्दाञ्चकृध्वे
+ऊर्दते	141	ऊर्दाञ्चक्रे
+ऊर्दते	142	ऊर्दाञ्चक्राते
+ऊर्दते	143	ऊर्दाञ्चक्रिरे
+ऊर्दते	153	और्दिषि
+ऊर्दते	154	और्दिष्वहि
+ऊर्दते	155	और्दिष्महि
+ऊर्दते	156	और्दिष्ठाः
+ऊर्दते	157	और्दिषाथाम्
+ऊर्दते	158	और्दिढ्वम्
+ऊर्दते	159	और्दिष्ट
+ऊर्दते	160	और्दिषाताम्
+ऊर्दते	161	और्दिषत
+ऊर्दते	169	ऊर्दाञ्चक्रान
+ऊहति	72	औहम्
+ऊहति	73	औहाव
+ऊहति	74	औहाम
+ऊहति	75	औहः
+ऊहति	76	औहतम्
+ऊहति	77	औहत
+ऊहति	78	औहत्
+ऊहति	79	औहताम्
+ऊहति	80	औहन्
+ऊहति	81	औहे
+ऊहति	82	औहावहि
+ऊहति	83	औहामहि
+ऊहति	84	औहथाः
+ऊहति	85	औहेथाम्
+ऊहति	86	औहध्वम्
+ऊहति	87	औहत
+ऊहति	88	औहेताम्
+ऊहति	89	औहन्त
+ऊह्यते	81	औह्ये
+ऊह्यते	82	औह्यावहि
+ऊह्यते	83	औह्यामहि
+ऊह्यते	84	औह्यथाः
+ऊह्यते	85	औह्येथाम्
+ऊह्यते	86	औह्यध्वम्
+ऊह्यते	87	औह्यत
+ऊह्यते	88	औह्येताम्
+ऊह्यते	89	औह्यन्त
+ऋघायति	72	आर्घायम्
+ऋघायति	73	आर्घायाव
+ऋघायति	74	आर्घायाम
+ऋघायति	75	आर्घायः
+ऋघायति	76	आर्घायतम्
+ऋघायति	77	आर्घायत
+ऋघायति	78	आर्घायत्
+ऋघायति	79	आर्घायताम्
+ऋघायति	80	आर्घायन्
+ऋघायति	81	आर्घाये
+ऋघायति	82	आर्घायावहि
+ऋघायति	83	आर्घायामहि
+ऋघायति	84	आर्घायथाः
+ऋघायति	85	आर्घायेथाम्
+ऋघायति	86	आर्घायध्वम्
+ऋघायति	87	आर्घायत
+ऋघायति	88	आर्घायेताम्
+ऋघायति	89	आर्घायन्त
+ऋच्छति	72	आर्च्छम्
+ऋच्छति	73	आर्च्छाव
+ऋच्छति	74	आर्च्छाम
+ऋच्छति	75	आर्च्छः
+ऋच्छति	76	आर्च्छतम्
+ऋच्छति	77	आर्च्छत
+ऋच्छति	78	आर्च्छत्
+ऋच्छति	79	आर्च्छताम्
+ऋच्छति	80	आर्च्छन्
+ऋच्छति	81	आर्च्छे
+ऋच्छति	82	आर्च्छावहि
+ऋच्छति	83	आर्च्छामहि
+ऋच्छति	84	आर्च्छथाः
+ऋच्छति	85	आर्च्छेथाम्
+ऋच्छति	86	आर्च्छध्वम्
+ऋच्छति	87	आर्च्छत
+ऋच्छति	88	आर्च्छेताम्
+ऋच्छति	89	आर्च्छन्त
+ऋच्यते	81	अर्च्ये
+ऋच्यते	82	अर्च्यावहि
+ऋच्यते	83	अर्च्यामहि
+ऋच्यते	84	अर्च्यथाः
+ऋच्यते	85	अर्च्येथाम्
+ऋच्यते	86	अर्च्यध्वम्
+ऋच्यते	87	अर्च्यत
+ऋच्यते	88	अर्च्येताम्
+ऋच्यते	89	अर्च्यन्त
+ऋणोति	72	आर्णवम्
+ऋणोति	73	आर्णुव
+ऋणोति	74	आर्णुम
+ऋणोति	75	आर्णोः
+ऋणोति	76	आर्णुतम्
+ऋणोति	77	आर्णुत
+ऋणोति	78	आर्णोत्
+ऋणोति	79	आर्णुताम्
+ऋणोति	80	आर्णुवन्
+ऋणोति	81	आर्णुवि
+ऋणोति	82	आर्णुवहि
+ऋणोति	83	आर्णुमहि
+ऋणोति	84	आर्णुथाः
+ऋणोति	85	आर्णुवाथाम्
+ऋणोति	86	आर्णुध्वम्
+ऋणोति	87	आर्णुत
+ऋणोति	88	आर्णुवाताम्
+ऋणोति	89	आर्णुवत
+ऋध्नोति	72	आर्ध्नवम्
+ऋध्नोति	73	आर्ध्नुव
+ऋध्नोति	74	आर्ध्नुम
+ऋध्नोति	75	आर्ध्नोः
+ऋध्नोति	76	आर्ध्नुतम्
+ऋध्नोति	77	आर्ध्नुत
+ऋध्नोति	78	आर्ध्नोत्
+ऋध्नोति	79	आर्ध्नुताम्
+ऋध्नोति	80	आर्ध्नुवन्
+ऋध्यति	72	आर्ध्यम्
+ऋध्यति	73	आर्ध्याव
+ऋध्यति	74	आर्ध्याम
+ऋध्यति	75	आर्ध्यः
+ऋध्यति	76	आर्ध्यतम्
+ऋध्यति	77	आर्ध्यत
+ऋध्यति	78	आर्ध्यत्
+ऋध्यति	79	आर्ध्यताम्
+ऋध्यति	80	आर्ध्यन्
+ऋध्यति	81	आर्ध्ये
+ऋध्यति	82	आर्ध्यावहि
+ऋध्यति	83	आर्ध्यामहि
+ऋध्यति	84	आर्ध्यथाः
+ऋध्यति	85	आर्ध्येथाम्
+ऋध्यति	86	आर्ध्यध्वम्
+ऋध्यति	87	आर्ध्यत
+ऋध्यति	88	आर्ध्येताम्
+ऋध्यति	89	आर्ध्यन्त
+एकीभवति	72	एक्यभवम्
+एकीभवति	73	एक्यभवाव
+एकीभवति	74	एक्यभवाम
+एकीभवति	75	एक्यभवः
+एकीभवति	76	एक्यभवतम्
+एकीभवति	77	एक्यभवत
+एकीभवति	78	एक्यभवत्
+एकीभवति	79	एक्यभवताम्
+एकीभवति	80	एक्यभवन्
+एकीभवति	81	एक्यभवे
+एकीभवति	82	एक्यभवावहि
+एकीभवति	83	एक्यभवामहि
+एकीभवति	84	एक्यभवथाः
+एकीभवति	85	एक्यभवेथाम्
+एकीभवति	86	एक्यभवध्वम्
+एकीभवति	87	एक्यभवत
+एकीभवति	88	एक्यभवेताम्
+एकीभवति	89	एक्यभवन्त
+एति	0	एमि
+एति	1	इवः
+एति	2	इमः
+एति	3	एषि
+एति	4	इथः
+एति	5	इथ
+एति	7	इतः
+एति	8	यन्ति
+एति	18	अयानि
+एति	19	अयाव
+एति	20	अयाम
+एति	21	इहि
+एति	22	इतम्
+एति	23	इत
+एति	25	इताम्
+एति	26	यन्तु
+एति	36	इयाम्
+एति	37	इयाव
+एति	38	इयाम
+एति	39	इयाः
+एति	40	इयातम्
+एति	41	इयात
+एति	42	इयात्
+एति	43	इयाताम्
+एति	44	इयुः
+एति	54	अयानि
+एति	55	अयाव
+एति	56	अयाम
+एति	57	अयः
+एति	58	अयथः
+एति	59	अयथ
+एति	60	अयत्
+एति	61	अयतः
+एति	62	अयन्
+एति	72	आयम्
+एति	73	ऐव
+एति	74	ऐम
+एति	75	ऐः
+एति	76	ऐतम्
+एति	77	ऐत
+एति	78	ऐत्
+एति	79	ऐताम्
+एति	80	आयन्
+एति	164	यत्
+एधते	81	ऐधे
+एधते	82	ऐधावहि
+एधते	83	ऐधामहि
+एधते	84	ऐधथाः
+एधते	85	ऐधेथाम्
+एधते	86	ऐधध्वम्
+एधते	87	ऐधत
+एधते	88	ऐधेताम्
+एधते	89	ऐधन्त
+एष्यति	108	ऐष्यम्
+एष्यति	109	ऐष्याव
+एष्यति	110	ऐष्याम
+एष्यति	111	ऐष्यः
+एष्यति	112	ऐष्यतम्
+एष्यति	113	ऐष्यत
+एष्यति	114	ऐष्यत्
+एष्यति	115	ऐष्यताम्
+एष्यति	116	ऐष्यन्
+एष्यति	117	ऐष्ये
+एष्यति	118	ऐष्यावहि
+एष्यति	119	ऐष्यामहि
+एष्यति	120	ऐष्यथाः
+एष्यति	121	ऐष्येथाम्
+एष्यति	122	ऐष्यध्वम्
+एष्यति	123	ऐष्यत
+एष्यति	124	ऐष्येताम्
+एष्यति	125	ऐष्यन्त
+ओषति	72	औषम्
+ओषति	73	औषाव
+ओषति	74	औषाम
+ओषति	75	औषः
+ओषति	76	औषतम्
+ओषति	77	औषत
+ओषति	78	औषत्
+ओषति	79	औषताम्
+ओषति	80	औषन्
+करोति	1	कुर्वः
+करोति	2	कुर्मः
+करोति	4	कुरुथः
+करोति	5	कुरुथ
+करोति	7	कुरुतः
+करोति	8	कुर्वन्ति
+करोति	9	कुर्वे
+करोति	10	कुर्वहे
+करोति	11	कुर्महे
+करोति	12	कुरुषे
+करोति	13	कुर्वाथे
+करोति	14	कुरुध्वे
+करोति	15	कुरुते
+करोति	16	कुर्वाते
+करोति	17	कुर्वते
+करोति	18	करवाणि
+करोति	21	कुरु
+करोति	22	कुरुतम्
+करोति	23	कुरुत
+करोति	25	कुरुताम्
+करोति	26	कुर्वन्तु
+करोति	30	कुरुष्व
+करोति	31	कुर्वाथाम्
+करोति	32	कुरुध्वम्
+करोति	33	कुरुताम्
+करोति	34	कुर्वाताम्
+करोति	35	कुर्वताम्
+करोति	36	कुर्याम्
+करोति	37	कुर्याव
+करोति	38	कुर्याम
+करोति	39	कुर्याः
+करोति	40	कुर्यातम्
+करोति	41	कुर्यात
+करोति	42	कुर्यात्
+करोति	43	कुर्याताम्
+करोति	44	कुर्युः
+करोति	45	कुर्वीय
+करोति	46	कुर्वीवहि
+करोति	47	कुर्वीमहि
+करोति	48	कुर्वीथाः
+करोति	49	कुर्वीयाथाम्
+करोति	50	कुर्वीध्वम्
+करोति	51	कुर्वीत
+करोति	52	कुर्वीयाताम्
+करोति	53	कुर्वीरन्
+करोति	54	करवाणि
+करोति	73	अकुर्व
+करोति	74	अकुर्म
+करोति	76	अकुरुतम्
+करोति	77	अकुरुत
+करोति	79	अकुरुताम्
+करोति	80	अकुर्वन्
+करोति	81	अकुर्वि
+करोति	82	अकुर्वहि
+करोति	83	अकुर्महि
+करोति	84	अकुरुथाः
+करोति	85	अकुर्वाथाम्
+करोति	86	अकुरुध्वम्
+करोति	87	अकुरुत
+करोति	88	अकुर्वाताम्
+करोति	89	अकुर्वत
+करोति	164	कुर्वत्
+करोति	165	कुर्वाण
+कर्तति	126	चकर्त
+कर्तति	127	चकृतिव
+कर्तति	128	चकृतिम
+कर्तति	129	चकर्तिथ
+कर्तति	130	चकृतथुः
+कर्तति	131	चकृत
+कर्तति	132	चकर्त
+कर्तति	133	चकृततुः
+कर्तति	134	चकृतुः
+कर्तति	135	चकृते
+कर्तति	136	चकृतिवहे
+कर्तति	137	चकृतिमहे
+कर्तति	138	चकृतिषे
+कर्तति	139	चकृताथे
+कर्तति	140	चकृतिध्वे
+कर्तति	141	चकृते
+कर्तति	142	चकृताते
+कर्तति	143	चकृतिरे
+कर्तति	162	कर्त्तुम्
+कर्तति	163	कृत्त्वा
+कर्तति	168	चकृत्वांस्
+कर्तति	169	चकृतान
+कर्ति	8	क्रन्ति
+कर्ति	26	क्रन्तु
+कर्ति	80	अक्रन्
+कृणत्ति	0	कृणत्मि
+कृणत्ति	1	कृन्त्वः
+कृणत्ति	2	कृन्त्मः
+कृणत्ति	4	कृन्त्थः
+कृणत्ति	5	कृन्त्थ
+कृणत्ति	7	कृन्त्तः
+कृणत्ति	8	कृन्तन्ति
+कृणत्ति	9	कृन्ते
+कृणत्ति	10	कृन्त्वहे
+कृणत्ति	11	कृन्त्महे
+कृणत्ति	12	कृन्त्से
+कृणत्ति	13	कृन्ताथे
+कृणत्ति	14	कृन्द्ध्वे
+कृणत्ति	15	कृन्त्ते
+कृणत्ति	16	कृन्ताते
+कृणत्ति	17	कृन्तते
+कृणत्ति	18	कृणतानि
+कृणत्ति	19	कृणताव
+कृणत्ति	20	कृणताम
+कृणत्ति	21	कृन्द्धि
+कृणत्ति	22	कृन्त्तम्
+कृणत्ति	23	कृन्त्त
+कृणत्ति	25	कृन्त्ताम्
+कृणत्ति	26	कृन्तन्तु
+कृणत्ति	27	कृणतै
+कृणत्ति	28	कृणतावहै
+कृणत्ति	29	कृणतामहै
+कृणत्ति	30	कृन्त्स्व
+कृणत्ति	31	कृन्ताथाम्
+कृणत्ति	32	कृन्द्ध्वम्
+कृणत्ति	33	कृन्त्ताम्
+कृणत्ति	34	कृन्ताताम्
+कृणत्ति	35	कृन्तताम्
+कृणत्ति	36	कृन्त्याम्
+कृणत्ति	37	कृन्त्याव
+कृणत्ति	38	कृन्त्याम
+कृणत्ति	39	कृन्त्याः
+कृणत्ति	40	कृन्त्यातम्
+कृणत्ति	41	कृन्त्यात
+कृणत्ति	42	कृन्त्यात्
+कृणत्ति	43	कृन्त्याताम्
+कृणत्ति	44	कृन्त्युः
+कृणत्ति	45	कृन्तीय
+कृणत्ति	46	कृन्तीवहि
+कृणत्ति	47	कृन्तीमहि
+कृणत्ति	48	कृन्तीथाः
+कृणत्ति	49	कृन्तीयाथाम्
+कृणत्ति	50	कृन्तीध्वम्
+कृणत्ति	51	कृन्तीत
+कृणत्ति	52	कृन्तीयाताम्
+कृणत्ति	53	कृन्तीरन्
+कृणत्ति	54	कृणतानि
+कृणत्ति	55	कृणताव
+कृणत्ति	56	कृणताम
+कृणत्ति	57	कृणतः
+कृणत्ति	58	कृणतथः
+कृणत्ति	59	कृणतथ
+कृणत्ति	60	कृणतत्
+कृणत्ति	61	कृणततः
+कृणत्ति	62	कृणतन्
+कृणत्ति	63	कृणतै
+कृणत्ति	64	कृणतावहै
+कृणत्ति	65	कृणतामहै
+कृणत्ति	66	कृणतसे
+कृणत्ति	67	कृणतैथे
+कृणत्ति	68	कृणतध्वे
+कृणत्ति	69	कृणतते
+कृणत्ति	70	कृणतैते
+कृणत्ति	71	कृणतन्त
+कृणत्ति	72	अकृणतम्
+कृणत्ति	73	अकृन्त्व
+कृणत्ति	74	अकृन्त्म
+कृणत्ति	75	अकृणत्
+कृणत्ति	76	अकृन्त्तम्
+कृणत्ति	77	अकृन्त्त
+कृणत्ति	78	अकृणत्
+कृणत्ति	79	अकृन्त्ताम्
+कृणत्ति	80	अकृन्तन्
+कृणत्ति	81	अकृन्ति
+कृणत्ति	82	अकृन्त्वहि
+कृणत्ति	83	अकृन्त्महि
+कृणत्ति	84	अकृन्त्थाः
+कृणत्ति	85	अकृन्ताथाम्
+कृणत्ति	86	अकृन्द्ध्वम्
+कृणत्ति	87	अकृन्त्त
+कृणत्ति	88	अकृन्ताताम्
+कृणत्ति	89	अकृन्तत
+कृणत्ति	164	कृन्तत्
+कृणत्ति	165	कृन्तान
+कृन्तति	90	कर्तिष्यामि
+कृन्तति	91	कर्तिष्यावः
+कृन्तति	92	कर्तिष्यामः
+कृन्तति	93	कर्तिष्यसि
+कृन्तति	94	कर्तिष्यथः
+कृन्तति	95	कर्तिष्यथ
+कृन्तति	96	कर्तिष्यति
+कृन्तति	97	कर्तिष्यतः
+कृन्तति	98	कर्तिष्यन्ति
+कृन्तति	99	कर्तिष्ये
+कृन्तति	100	कर्तिष्यावहे
+कृन्तति	101	कर्तिष्यामहे
+कृन्तति	102	कर्तिष्यसे
+कृन्तति	103	कर्तिष्येथे
+कृन्तति	104	कर्तिष्यध्वे
+कृन्तति	105	कर्तिष्यते
+कृन्तति	106	कर्तिष्येते
+कृन्तति	107	कर्तिष्यन्ते
+कृन्तति	108	अकर्तिष्यम्
+कृन्तति	109	अकर्तिष्याव
+कृन्तति	110	अकर्तिष्याम
+कृन्तति	111	अकर्तिष्यः
+कृन्तति	112	अकर्तिष्यतम्
+कृन्तति	113	अकर्तिष्यत
+कृन्तति	114	अकर्तिष्यत्
+कृन्तति	115	अकर्तिष्यताम्
+कृन्तति	116	अकर्तिष्यन्
+कृन्तति	117	अकर्तिष्ये
+कृन्तति	118	अकर्तिष्यावहि
+कृन्तति	119	अकर्तिष्यामहि
+कृन्तति	120	अकर्तिष्यथाः
+कृन्तति	121	अकर्तिष्येथाम्
+कृन्तति	122	अकर्तिष्यध्वम्
+कृन्तति	123	अकर्तिष्यत
+कृन्तति	124	अकर्तिष्येताम्
+कृन्तति	125	अकर्तिष्यन्त
+कृन्तति	126	चकर्त
+कृन्तति	127	चकृतिव
+कृन्तति	128	चकृतिम
+कृन्तति	129	चकर्तिथ
+कृन्तति	130	चकृतथुः
+कृन्तति	131	चकृत
+कृन्तति	132	चकर्त
+कृन्तति	133	चकृततुः
+कृन्तति	134	चकृतुः
+कृन्तति	135	चकृते
+कृन्तति	136	चकृतिवहे
+कृन्तति	137	चकृतिमहे
+कृन्तति	138	चकृतिषे
+कृन्तति	139	चकृताथे
+कृन्तति	140	चकृतिध्वे
+कृन्तति	141	चकृते
+कृन्तति	142	चकृताते
+कृन्तति	143	चकृतिरे
+कृन्तति	144	अकर्तिषम्
+कृन्तति	145	अकर्तिष्व
+कृन्तति	146	अकर्तिष्म
+कृन्तति	147	अकर्तीः
+कृन्तति	148	अकर्तिष्टम्
+कृन्तति	149	अकर्तिष्ट
+कृन्तति	150	अकर्तीत्
+कृन्तति	151	अकर्तिष्टाम्
+कृन्तति	152	अकर्तिषुः
+कृन्तति	153	अकर्तिषि
+कृन्तति	154	अकर्तिष्वहि
+कृन्तति	155	अकर्तिष्महि
+कृन्तति	156	अकर्तिष्ठाः
+कृन्तति	157	अकर्तिषाथाम्
+कृन्तति	158	अकर्तिढ्वम्
+कृन्तति	159	अकर्तिष्ट
+कृन्तति	160	अकर्तिषाताम्
+कृन्तति	161	अकर्तिषत
+कृन्तति	162	कर्त्तुम्
+कृन्तति	163	कृत्त्वा
+कृन्तति	166	कर्तिष्यत्
+कृन्तति	167	कर्तिष्यमाण
+कृन्तति	168	चकृत्वांस्
+कृन्तति	169	चकृतान
+क्रामति	9	क्रमे
+क्रामति	10	क्रमावहे
+क्रामति	11	क्रमामहे
+क्रामति	12	क्रमसे
+क्रामति	13	क्रमेथे
+क्रामति	14	क्रमध्वे
+क्रामति	15	क्रमते
+क्रामति	16	क्रमेते
+क्रामति	17	क्रमन्ते
+क्रामति	27	क्रमै
+क्रामति	28	क्रमावहै
+क्रामति	29	क्रमामहै
+क्रामति	30	क्रमस्व
+क्रामति	31	क्रमेथाम्
+क्रामति	32	क्रमध्वम्
+क्रामति	33	क्रमताम्
+क्रामति	34	क्रमेताम्
+क्रामति	35	क्रमन्ताम्
+क्रामति	45	क्रमेय
+क्रामति	46	क्रमेवहि
+क्रामति	47	क्रमेमहि
+क्रामति	48	क्रमेथाः
+क्रामति	49	क्रमेयाथाम्
+क्रामति	50	क्रमेध्वम्
+क्रामति	51	क्रमेत
+क्रामति	52	क्रमेयाताम्
+क्रामति	53	क्रमेरन्
+क्रामति	63	क्रमै
+क्रामति	64	क्रमावहै
+क्रामति	65	क्रमामहै
+क्रामति	66	क्रमासे
+क्रामति	67	क्रमैथे
+क्रामति	68	क्रमाध्वै
+क्रामति	69	क्रमाते
+क्रामति	70	क्रमैते
+क्रामति	71	क्रमन्त
+क्रामति	165	क्रममाण
+क्षमते	99	क्षंस्ये
+क्षमते	100	क्षंस्यावहे
+क्षमते	101	क्षंस्यामहे
+क्षमते	102	क्षंस्यसे
+क्षमते	103	क्षंस्येथे
+क्षमते	104	क्षंस्यध्वे
+क्षमते	105	क्षंस्यते
+क्षमते	106	क्षंस्येते
+क्षमते	107	क्षंस्यन्ते
+क्षमते	117	अक्षंस्ये
+क्षमते	118	अक्षंस्यावहि
+क्षमते	119	अक्षंस्यामहि
+क्षमते	120	अक्षंस्यथाः
+क्षमते	121	अक्षंस्येथाम्
+क्षमते	122	अक्षंस्यध्वम्
+क्षमते	123	अक्षंस्यत
+क्षमते	124	अक्षंस्येताम्
+क्षमते	125	अक्षंस्यन्त
+क्षमते	135	चक्षमे
+क्षमते	136	चक्षमिवहे
+क्षमते	137	चक्षमिमहे
+क्षमते	138	चक्षमिषे
+क्षमते	139	चक्षमाथे
+क्षमते	140	चक्षमिध्वे
+क्षमते	141	चक्षमे
+क्षमते	142	चक्षमाते
+क्षमते	143	चक्षमिरे
+क्षमते	153	अक्षंसि
+क्षमते	154	अक्षंस्वहि
+क्षमते	155	अक्षंस्महि
+क्षमते	156	अक्षंस्थाः
+क्षमते	157	अक्षंसाथाम्
+क्षमते	158	अक्षन्ध्वम्
+क्षमते	159	अक्षंस्त
+क्षमते	160	अक्षंसाताम्
+क्षमते	161	अक्षंसत
+क्षमते	162	क्षन्तुम्
+क्षमते	167	क्षंस्यमान
+क्षमते	169	चक्षमाण
+क्षेति	0	क्षेमि
+क्षेति	1	क्षिवः
+क्षेति	2	क्षिमः
+क्षेति	3	क्षेषि
+क्षेति	4	क्षिथः
+क्षेति	5	क्षिथ
+क्षेति	7	क्षितः
+क्षेति	8	क्षियन्ति
+क्षेति	9	क्षिये
+क्षेति	10	क्षिवहे
+क्षेति	11	क्षिमहे
+क्षेति	12	क्षिषे
+क्षेति	13	क्षियाथे
+क्षेति	14	क्षिध्वे
+क्षेति	15	क्षिते
+क्षेति	16	क्षियाते
+क्षेति	17	क्षियते
+क्षेति	18	क्षयाणि
+क्षेति	19	क्षयाव
+क्षेति	20	क्षयाम
+क्षेति	21	क्षिहि
+क्षेति	22	क्षितम्
+क्षेति	23	क्षित
+क्षेति	25	क्षिताम्
+क्षेति	26	क्षियन्तु
+क्षेति	27	क्षयै
+क्षेति	28	क्षयावहै
+क्षेति	29	क्षयामहै
+क्षेति	30	क्षिष्व
+क्षेति	31	क्षियाथाम्
+क्षेति	32	क्षिध्वम्
+क्षेति	33	क्षिताम्
+क्षेति	34	क्षियाताम्
+क्षेति	35	क्षियताम्
+क्षेति	36	क्षियाम्
+क्षेति	37	क्षियाव
+क्षेति	38	क्षियाम
+क्षेति	39	क्षियाः
+क्षेति	40	क्षियातम्
+क्षेति	41	क्षियात
+क्षेति	42	क्षियात्
+क्षेति	43	क्षियाताम्
+क्षेति	44	क्षियुः
+क्षेति	45	क्षियीय
+क्षेति	46	क्षियीवहि
+क्षेति	47	क्षियीमहि
+क्षेति	48	क्षियीथाः
+क्षेति	49	क्षियीयाथाम्
+क्षेति	50	क्षियीध्वम्
+क्षेति	51	क्षियीत
+क्षेति	52	क्षियीयाताम्
+क्षेति	53	क्षियीरन्
+क्षेति	54	क्षयाणि
+क्षेति	55	क्षयाव
+क्षेति	56	क्षयाम
+क्षेति	57	क्षयः
+क्षेति	58	क्षयथः
+क्षेति	59	क्षयथ
+क्षेति	60	क्षयत्
+क्षेति	61	क्षयतः
+क्षेति	62	क्षयन्
+क्षेति	63	क्षयै
+क्षेति	64	क्षयावहै
+क्षेति	65	क्षयामहै
+क्षेति	66	क्षयसे
+क्षेति	67	क्षयैथे
+क्षेति	68	क्षयध्वे
+क्षेति	69	क्षयते
+क्षेति	70	क्षयैते
+क्षेति	71	क्षयन्त
+क्षेति	72	अक्षयम्
+क्षेति	73	अक्षिव
+क्षेति	74	अक्षिम
+क्षेति	76	अक्षितम्
+क्षेति	77	अक्षित
+क्षेति	79	अक्षिताम्
+क्षेति	80	अक्षियन्
+क्षेति	81	अक्षियि
+क्षेति	82	अक्षिवहि
+क्षेति	83	अक्षिमहि
+क्षेति	84	अक्षिथाः
+क्षेति	85	अक्षियाथाम्
+क्षेति	86	अक्षिध्वम्
+क्षेति	87	अक्षित
+क्षेति	88	अक्षियाताम्
+क्षेति	89	अक्षियत
+क्षेति	164	क्षियत्
+क्षेति	165	क्षियाण
+गन्ति	0	गन्मि
+गन्ति	1	गन्वः
+गन्ति	2	गन्मः
+गन्ति	3	गंसि
+गन्ति	4	गथः
+गन्ति	5	गथ
+गन्ति	7	गतः
+गन्ति	8	ग्मन्ति
+गन्ति	18	गमानि
+गन्ति	19	गमाव
+गन्ति	20	गमाम
+गन्ति	21	गहि
+गन्ति	22	गतम्
+गन्ति	23	गत
+गन्ति	25	गताम्
+गन्ति	26	ग्मन्तु
+गन्ति	36	गम्याम्
+गन्ति	37	गम्याव
+गन्ति	38	गम्याम
+गन्ति	39	गम्याः
+गन्ति	40	गम्यातम्
+गन्ति	41	गम्यात
+गन्ति	42	गम्यात्
+गन्ति	43	गम्याताम्
+गन्ति	44	गम्युः
+गन्ति	54	गमानि
+गन्ति	55	गमाव
+गन्ति	56	गमाम
+गन्ति	57	गमः
+गन्ति	58	गमथः
+गन्ति	59	गमथ
+गन्ति	60	गमत्
+गन्ति	61	गमतः
+गन्ति	62	गमन्
+गन्ति	72	अगमम्
+गन्ति	73	अगन्व
+गन्ति	74	अगन्म
+गन्ति	75	अगन्
+गन्ति	76	अगतम्
+गन्ति	77	अगत
+गन्ति	78	अगन्
+गन्ति	79	अगताम्
+गन्ति	80	अग्मन्
+गन्ति	164	ग्मत्
+घृणोति	72	अघृनवम्
+घृणोति	73	अघृन्व
+घृणोति	74	अघृन्म
+घृणोति	75	अघृनोः
+घृणोति	78	अघृनोत्
+घृणोति	82	अघृन्वहि
+घृणोति	83	अघृन्महि
+चकर्ष	127	चकृषिव
+चकर्ष	128	चकृषिम
+चकर्ष	130	चकृषथुः
+चकर्ष	131	चकृष
+चकर्ष	133	चकृषतुः
+चकर्ष	134	चकृषुः
+चकर्ष	135	चकृषे
+चकर्ष	136	चकृषिवहे
+चकर्ष	137	चकृषिमहे
+चकर्ष	138	चकृषिषे
+चकर्ष	139	चकृषाथे
+चकर्ष	140	चकृषिध्वे
+चकर्ष	141	चकृषे
+चकर्ष	142	चकृषाते
+चकर्ष	143	चकृषिरे
+चकर्ष	168	चकृष्वांस्
+चकर्ष	169	चकृषाण
+चकल्प	127	चाकॢपिव
+चकल्प	128	चाकॢपिम
+चकल्प	130	चाकॢपथुः
+चकल्प	131	चाकॢप
+चकल्प	133	चाकॢपतुः
+चकल्प	134	चाकॢपुः
+चकल्प	135	चाकॢपे
+चकल्प	136	चाकॢपिवहे
+चकल्प	137	चाकॢपिमहे
+चकल्प	138	चाकॢपिषे
+चकल्प	139	चाकॢपाथे
+चकल्प	140	चाकॢपिध्वे
+चकल्प	141	चाकॢपे
+चकल्प	142	चाकॢपाते
+चकल्प	143	चाकॢपिरे
+चकल्प	168	चाकॢप्वांस्
+चकल्प	169	चाकॢपान
+चकाङ्क्ष	169	चकाङ्क्षाण
+चखान	126	चखन
+चखान	127	चख्निव
+चखान	128	चख्निम
+चखान	129	चखन्थ
+चखान	130	चख्नथुः
+चखान	131	चख्न
+चखान	133	चख्नतुः
+चखान	134	चख्नुः
+चखान	135	चख्ने
+चखान	136	चख्निवहे
+चखान	137	चख्निमहे
+चखान	138	चख्निषे
+चखान	139	चख्नाथे
+चखान	140	चख्निध्वे
+चखान	141	चख्ने
+चखान	142	चख्नाते
+चखान	143	चख्निरे
+चखान	168	चख्निवांस्
+चखान	169	चख्नान
+चचक्ष	169	चचक्षाण
+चचार	127	चेरिव
+चचार	128	चेरिम
+चचार	130	चेरथुः
+चचार	131	चेर
+चचार	133	चेरतुः
+चचार	134	चेरुः
+चचार	135	चेरे
+चचार	136	चेरिवहे
+चचार	137	चेरिमहे
+चचार	138	चेरिषे
+चचार	139	चेराथे
+चचार	140	चेरिध्वे
+चचार	141	चेरे
+चचार	142	चेराते
+चचार	143	चेरिरे
+चचार	168	चेरिवांस्
+चचार	169	चेराण
+चष्टे	9	चक्षे
+चष्टे	10	चक्ष्वहे
+चष्टे	11	चक्ष्महे
+चष्टे	12	चक्षे
+चष्टे	13	चक्षाथे
+चष्टे	14	चड्ढ्वे
+चष्टे	15	चष्टे
+चष्टे	16	चक्षाते
+चष्टे	17	चक्षते
+चष्टे	27	चक्षै
+चष्टे	28	चक्षावहै
+चष्टे	29	चक्षामहै
+चष्टे	30	चक्ष्व
+चष्टे	31	चक्षाथाम्
+चष्टे	32	चड्ढ्वम्
+चष्टे	33	चष्टाम्
+चष्टे	34	चक्षाताम्
+चष्टे	35	चक्षताम्
+चष्टे	45	चक्षीय
+चष्टे	46	चक्षीवहि
+चष्टे	47	चक्षीमहि
+चष्टे	48	चक्षीथाः
+चष्टे	49	चक्षीयाथाम्
+चष्टे	50	चक्षीध्वम्
+चष्टे	51	चक्षीत
+चष्टे	52	चक्षीयाताम्
+चष्टे	53	चक्षीरन्
+चष्टे	63	चक्षै
+चष्टे	64	चक्षावहै
+चष्टे	65	चक्षामहै
+चष्टे	66	चक्षसे
+चष्टे	67	चक्षैथे
+चष्टे	68	चक्षध्वे
+चष्टे	69	चक्षते
+चष्टे	70	चक्षैते
+चष्टे	71	चक्षन्त
+चष्टे	81	अचक्षि
+चष्टे	82	अचक्ष्वहि
+चष्टे	83	अचक्ष्महि
+चष्टे	84	अचष्ठाः
+चष्टे	85	अचक्षाथाम्
+चष्टे	86	अचड्ढ्वम्
+चष्टे	87	अचष्ट
+चष्टे	88	अचक्षाताम्
+चष्टे	89	अचक्षत
+चष्टे	165	चक्षाण
+चिकेति	0	चिकेमि
+चिकेति	1	चिकिवः
+चिकेति	2	चिकिमः
+चिकेति	3	चिकेषि
+चिकेति	4	चिकिथः
+चिकेति	5	चिकिथ
+चिकेति	7	चिकितः
+चिकेति	8	चिक्यति
+चिकेति	9	चिक्ये
+चिकेति	10	चिकिवहे
+चिकेति	11	चिकिमहे
+चिकेति	12	चिकिषे
+चिकेति	13	चिक्याथे
+चिकेति	14	चिकिध्वे
+चिकेति	15	चिकिते
+चिकेति	16	चिक्याते
+चिकेति	17	चिक्यते
+चिकेति	18	चिकयानि
+चिकेति	19	चिकयाव
+चिकेति	20	चिकयाम
+चिकेति	21	चिकिहि
+चिकेति	22	चिकितम्
+चिकेति	23	चिकित
+चिकेति	25	चिकिताम्
+चिकेति	26	चिक्यतु
+चिकेति	27	चिकयै
+चिकेति	28	चिकयावहै
+चिकेति	29	चिकयामहै
+चिकेति	30	चिकिष्व
+चिकेति	31	चिक्याथाम्
+चिकेति	32	चिकिध्वम्
+चिकेति	33	चिकिताम्
+चिकेति	34	चिक्याताम्
+चिकेति	35	चिक्यताम्
+चिकेति	36	चिकियाम्
+चिकेति	37	चिकियाव
+चिकेति	38	चिकियाम
+चिकेति	39	चिकियाः
+चिकेति	40	चिकियातम्
+चिकेति	41	चिकियात
+चिकेति	42	चिकियात्
+चिकेति	43	चिकियाताम्
+चिकेति	44	चिकियुः
+चिकेति	45	चिक्यीय
+चिकेति	46	चिक्यीवहि
+चिकेति	47	चिक्यीमहि
+चिकेति	48	चिक्यीथाः
+चिकेति	49	चिक्यीयाथाम्
+चिकेति	50	चिक्यीध्वम्
+चिकेति	51	चिक्यीत
+चिकेति	52	चिक्यीयाताम्
+चिकेति	53	चिक्यीरन्
+चिकेति	54	चिकयानि
+चिकेति	55	चिकयाव
+चिकेति	56	चिकयाम
+चिकेति	57	चिकयः
+चिकेति	58	चिकयथः
+चिकेति	59	चिकयथ
+चिकेति	60	चिकयत्
+चिकेति	61	चिकयतः
+चिकेति	62	चिकयन्
+चिकेति	63	चिकयै
+चिकेति	64	चिकयावहै
+चिकेति	65	चिकयामहै
+चिकेति	66	चिकयसे
+चिकेति	67	चिकयैथे
+चिकेति	68	चिकयध्वे
+चिकेति	69	चिकयते
+चिकेति	70	चिकयैते
+चिकेति	71	चिकयन्त
+चिकेति	72	अचिकयम्
+चिकेति	73	अचिकिव
+चिकेति	74	अचिकिम
+चिकेति	76	अचिकितम्
+चिकेति	77	अचिकित
+चिकेति	79	अचिकिताम्
+चिकेति	80	अचिकयुः
+चिकेति	81	अचिक्यि
+चिकेति	82	अचिकिवहि
+चिकेति	83	अचिकिमहि
+चिकेति	84	अचिकिथाः
+चिकेति	85	अचिक्याथाम्
+चिकेति	86	अचिकिध्वम्
+चिकेति	87	अचिकित
+चिकेति	88	अचिक्याताम्
+चिकेति	89	अचिक्यत
+चिकेति	164	चिक्यत्
+चिकेति	165	चिक्यान
+चिच्छेद	127	चिच्छिदिव
+चिच्छेद	128	चिच्छिदिम
+चिच्छेद	130	चिच्छिदथुः
+चिच्छेद	131	चिच्छिद
+चिच्छेद	133	चिच्छिदतुः
+चिच्छेद	134	चिच्छिदुः
+चिच्छेद	135	चिच्छिदे
+चिच्छेद	136	चिच्छिदिवहे
+चिच्छेद	137	चिच्छिदिमहे
+चिच्छेद	138	चिच्छिदिषे
+चिच्छेद	139	चिच्छिदाथे
+चिच्छेद	140	चिच्छिदिध्वे
+चिच्छेद	141	चिच्छिदे
+चिच्छेद	142	चिच्छिदाते
+चिच्छेद	143	चिच्छिदिरे
+चिच्छेद	168	चिच्छिद्वांस्
+चिच्छेद	169	चिच्छिदान
+छिक्कति	72	अच्छिक्कम्
+छिक्कति	73	अच्छिक्काव
+छिक्कति	74	अच्छिक्काम
+छिक्कति	75	अच्छिक्कः
+छिक्कति	76	अच्छिक्कतम्
+छिक्कति	77	अच्छिक्कत
+छिक्कति	78	अच्छिक्कत्
+छिक्कति	79	अच्छिक्कताम्
+छिक्कति	80	अच्छिक्कन्
+छिक्कति	81	अच्छिक्के
+छिक्कति	82	अच्छिक्कावहि
+छिक्कति	83	अच्छिक्कामहि
+छिक्कति	84	अच्छिक्कथाः
+छिक्कति	85	अच्छिक्केथाम्
+छिक्कति	86	अच्छिक्कध्वम्
+छिक्कति	87	अच्छिक्कत
+छिक्कति	88	अच्छिक्केताम्
+छिक्कति	89	अच्छिक्कन्त
+छिनत्ति	0	छिनद्मि
+छिनत्ति	1	छिन्द्वः
+छिनत्ति	2	छिन्द्मः
+छिनत्ति	4	छिन्त्थः
+छिनत्ति	5	छिन्त्थ
+छिनत्ति	7	छिन्त्तः
+छिनत्ति	8	छिन्दन्ति
+छिनत्ति	9	छिन्दे
+छिनत्ति	10	छिन्द्वहे
+छिनत्ति	11	छिन्द्महे
+छिनत्ति	12	छिन्त्से
+छिनत्ति	13	छिन्दाथे
+छिनत्ति	14	छिन्द्ध्वे
+छिनत्ति	15	छिन्त्ते
+छिनत्ति	16	छिन्दाते
+छिनत्ति	17	छिन्दते
+छिनत्ति	18	छिनदानि
+छिनत्ति	19	छिनदाव
+छिनत्ति	20	छिनदाम
+छिनत्ति	21	छिन्द्धि
+छिनत्ति	22	छिन्त्तम्
+छिनत्ति	23	छिन्त्त
+छिनत्ति	25	छिन्त्ताम्
+छिनत्ति	26	छिन्दन्तु
+छिनत्ति	27	छिनदै
+छिनत्ति	28	छिनदावहै
+छिनत्ति	29	छिनदामहै
+छिनत्ति	30	छिन्त्स्व
+छिनत्ति	31	छिन्दाथाम्
+छिनत्ति	32	छिन्द्ध्वम्
+छिनत्ति	33	छिन्त्ताम्
+छिनत्ति	34	छिन्दाताम्
+छिनत्ति	35	छिन्दताम्
+छिनत्ति	36	छिन्द्याम्
+छिनत्ति	37	छिन्द्याव
+छिनत्ति	38	छिन्द्याम
+छिनत्ति	39	छिन्द्याः
+छिनत्ति	40	छिन्द्यातम्
+छिनत्ति	41	छिन्द्यात
+छिनत्ति	42	छिन्द्यात्
+छिनत्ति	43	छिन्द्याताम्
+छिनत्ति	44	छिन्द्युः
+छिनत्ति	45	छिन्दीय
+छिनत्ति	46	छिन्दीवहि
+छिनत्ति	47	छिन्दीमहि
+छिनत्ति	48	छिन्दीथाः
+छिनत्ति	49	छिन्दीयाथाम्
+छिनत्ति	50	छिन्दीध्वम्
+छिनत्ति	51	छिन्दीत
+छिनत्ति	52	छिन्दीयाताम्
+छिनत्ति	53	छिन्दीरन्
+छिनत्ति	54	छिनदानि
+छिनत्ति	55	छिनदाव
+छिनत्ति	56	छिनदाम
+छिनत्ति	57	छिनदः
+छिनत्ति	58	छिनदथः
+छिनत्ति	59	छिनदथ
+छिनत्ति	60	छिनदत्
+छिनत्ति	61	छिनदतः
+छिनत्ति	62	छिनदन्
+छिनत्ति	63	छिनदै
+छिनत्ति	64	छिनदावहै
+छिनत्ति	65	छिनदामहै
+छिनत्ति	66	छिनदसे
+छिनत्ति	67	छिनदैथे
+छिनत्ति	68	छिनदध्वे
+छिनत्ति	69	छिनदते
+छिनत्ति	70	छिनदैते
+छिनत्ति	71	छिनदन्त
+छिनत्ति	72	अच्छिनदम्
+छिनत्ति	73	अच्छिन्द्व
+छिनत्ति	74	अच्छिन्द्म
+छिनत्ति	75	अच्छिनत्
+छिनत्ति	76	अच्छिन्त्तम्
+छिनत्ति	77	अच्छिन्त्त
+छिनत्ति	78	अच्छिनत्
+छिनत्ति	79	अच्छिन्त्ताम्
+छिनत्ति	80	अच्छिन्दन्
+छिनत्ति	81	अच्छिन्दि
+छिनत्ति	82	अच्छिन्द्वहि
+छिनत्ति	83	अच्छिन्द्महि
+छिनत्ति	84	अच्छिन्त्थाः
+छिनत्ति	85	अच्छिन्दाथाम्
+छिनत्ति	86	अच्छिन्द्ध्वम्
+छिनत्ति	87	अच्छिन्त्त
+छिनत्ति	88	अच्छिन्दाताम्
+छिनत्ति	89	अच्छिन्दत
+छिनत्ति	164	छिन्दत्
+छिनत्ति	165	छिन्दान
+छृणत्ति	0	छृणद्मि
+छृणत्ति	1	छृन्द्वः
+छृणत्ति	2	छृन्द्मः
+छृणत्ति	4	छृन्त्थः
+छृणत्ति	5	छृन्त्थ
+छृणत्ति	7	छृन्त्तः
+छृणत्ति	8	छृन्दन्ति
+छृणत्ति	9	छृन्दे
+छृणत्ति	10	छृन्द्वहे
+छृणत्ति	11	छृन्द्महे
+छृणत्ति	12	छृन्त्से
+छृणत्ति	13	छृन्दाथे
+छृणत्ति	14	छृन्द्ध्वे
+छृणत्ति	15	छृन्त्ते
+छृणत्ति	16	छृन्दाते
+छृणत्ति	17	छृन्दते
+छृणत्ति	18	छृणदानि
+छृणत्ति	19	छृणदाव
+छृणत्ति	20	छृणदाम
+छृणत्ति	21	छृन्द्धि
+छृणत्ति	22	छृन्त्तम्
+छृणत्ति	23	छृन्त्त
+छृणत्ति	25	छृन्त्ताम्
+छृणत्ति	26	छृन्दन्तु
+छृणत्ति	27	छृणदै
+छृणत्ति	28	छृणदावहै
+छृणत्ति	29	छृणदामहै
+छृणत्ति	30	छृन्त्स्व
+छृणत्ति	31	छृन्दाथाम्
+छृणत्ति	32	छृन्द्ध्वम्
+छृणत्ति	33	छृन्त्ताम्
+छृणत्ति	34	छृन्दाताम्
+छृणत्ति	35	छृन्दताम्
+छृणत्ति	36	छृन्द्याम्
+छृणत्ति	37	छृन्द्याव
+छृणत्ति	38	छृन्द्याम
+छृणत्ति	39	छृन्द्याः
+छृणत्ति	40	छृन्द्यातम्
+छृणत्ति	41	छृन्द्यात
+छृणत्ति	42	छृन्द्यात्
+छृणत्ति	43	छृन्द्याताम्
+छृणत्ति	44	छृन्द्युः
+छृणत्ति	45	छृन्दीय
+छृणत्ति	46	छृन्दीवहि
+छृणत्ति	47	छृन्दीमहि
+छृणत्ति	48	छृन्दीथाः
+छृणत्ति	49	छृन्दीयाथाम्
+छृणत्ति	50	छृन्दीध्वम्
+छृणत्ति	51	छृन्दीत
+छृणत्ति	52	छृन्दीयाताम्
+छृणत्ति	53	छृन्दीरन्
+छृणत्ति	54	छृणदानि
+छृणत्ति	55	छृणदाव
+छृणत्ति	56	छृणदाम
+छृणत्ति	57	छृणदः
+छृणत्ति	58	छृणदथः
+छृणत्ति	59	छृणदथ
+छृणत्ति	60	छृणदत्
+छृणत्ति	61	छृणदतः
+छृणत्ति	62	छृणदन्
+छृणत्ति	63	छृणदै
+छृणत्ति	64	छृणदावहै
+छृणत्ति	65	छृणदामहै
+छृणत्ति	66	छृणदसे
+छृणत्ति	67	छृणदैथे
+छृणत्ति	68	छृणदध्वे
+छृणत्ति	69	छृणदते
+छृणत्ति	70	छृणदैते
+छृणत्ति	71	छृणदन्त
+छृणत्ति	72	अच्छृणदम्
+छृणत्ति	73	अच्छृन्द्व
+छृणत्ति	74	अच्छृन्द्म
+छृणत्ति	75	अच्छृणत्
+छृणत्ति	76	अच्छृन्त्तम्
+छृणत्ति	77	अच्छृन्त्त
+छृणत्ति	78	अच्छृणत्
+छृणत्ति	79	अच्छृन्त्ताम्
+छृणत्ति	80	अच्छृन्दन्
+छृणत्ति	81	अच्छृन्दि
+छृणत्ति	82	अच्छृन्द्वहि
+छृणत्ति	83	अच्छृन्द्महि
+छृणत्ति	84	अच्छृन्त्थाः
+छृणत्ति	85	अच्छृन्दाथाम्
+छृणत्ति	86	अच्छृन्द्ध्वम्
+छृणत्ति	87	अच्छृन्त्त
+छृणत्ति	88	अच्छृन्दाताम्
+छृणत्ति	89	अच्छृन्दत
+छृणत्ति	164	छृन्दत्
+छृणत्ति	165	छृन्दान
+जगर्ध	127	जगृधिव
+जगर्ध	128	जगृधिम
+जगर्ध	130	जगृधथुः
+जगर्ध	131	जगृध
+जगर्ध	133	जगृधतुः
+जगर्ध	134	जगृधुः
+जगर्ध	168	जगृध्वांस्
+जगाम	126	जगम
+जगाम	127	जग्मिव
+जगाम	128	जग्मिम
+जगाम	129	जगन्थ
+जगाम	130	जग्मथुः
+जगाम	131	जग्म
+जगाम	133	जग्मतुः
+जगाम	134	जग्मुः
+जगाम	135	जग्मे
+जगाम	136	जग्मिवहे
+जगाम	137	जग्मिमहे
+जगाम	138	जग्मिषे
+जगाम	139	जग्माथे
+जगाम	140	जग्मिध्वे
+जगाम	141	जग्मे
+जगाम	142	जग्माते
+जगाम	143	जग्मिरे
+जगाम	168	जग्मिवांस्
+जगाम	169	जग्मान
+जघान	126	जघन
+जघान	127	जघ्निव
+जघान	128	जघ्निम
+जघान	129	जघन्थ
+जघान	130	जघ्नथुः
+जघान	131	जघ्न
+जघान	133	जघ्नतुः
+जघान	134	जघ्नुः
+जघान	135	जघ्ने
+जघान	136	जघ्निवहे
+जघान	137	जघ्निमहे
+जघान	138	जघ्निषे
+जघान	139	जघ्नाथे
+जघान	140	जघ्निध्वे
+जघान	141	जघ्ने
+जघान	142	जघ्नाते
+जघान	143	जघ्निरे
+जघान	168	जघ्निवांस्
+जघान	169	जघ्नान
+जघास	126	जघस
+जघास	127	जक्षिव
+जघास	128	जक्षिम
+जघास	129	जघस्थ
+जघास	130	जक्षथुः
+जघास	131	जक्ष
+जघास	133	जक्षतुः
+जघास	134	जक्षुः
+जघास	168	जक्षिवांस्
+जजान	126	जजन
+जजान	127	जज्ञिव
+जजान	128	जज्ञिम
+जजान	129	जजन्थ
+जजान	130	जज्ञथुः
+जजान	131	जज्ञ
+जजान	133	जज्ञतुः
+जजान	134	जज्ञुः
+जजान	135	जज्ञे
+जजान	136	जज्ञिवहे
+जजान	137	जज्ञिमहे
+जजान	138	जज्ञिषे
+जजान	139	जज्ञाथे
+जजान	140	जज्ञिध्वे
+जजान	141	जज्ञे
+जजान	142	जज्ञाते
+जजान	143	जज्ञिरे
+जजान	168	जज्ञिवांस्
+जजान	169	जज्ञान
+जहाति	8	जहति
+जहाति	26	जहतु
+जहाति	36	जह्याम्
+जहाति	37	जह्याव
+जहाति	38	जह्याम
+जहाति	39	जह्याः
+जहाति	40	जह्यातम्
+जहाति	41	जह्यात
+जहाति	42	जह्यात्
+जहाति	43	जह्याताम्
+जहाति	44	जह्युः
+जहाति	80	अजहुः
+जागर्ति	80	अजाग्रुः
+जिगाति	8	जिगति
+जिगाति	26	जिगतु
+जिगाति	80	अजिगुः
+जिघर्ति	90	घरिष्यामि
+जिघर्ति	91	घरिष्यावः
+जिघर्ति	92	घरिष्यामः
+जिघर्ति	93	घरिष्यसि
+जिघर्ति	94	घरिष्यथः
+जिघर्ति	95	घरिष्यथ
+जिघर्ति	96	घरिष्यति
+जिघर्ति	97	घरिष्यतः
+जिघर्ति	98	घरिष्यन्ति
+जिघर्ति	108	अघरिष्यम्
+जिघर्ति	109	अघरिष्याव
+जिघर्ति	110	अघरिष्याम
+जिघर्ति	111	अघरिष्यः
+जिघर्ति	112	अघरिष्यतम्
+जिघर्ति	113	अघरिष्यत
+जिघर्ति	114	अघरिष्यत्
+जिघर्ति	115	अघरिष्यताम्
+जिघर्ति	116	अघरिष्यन्
+जिघर्ति	126	जघर
+जिघर्ति	127	जघृव
+जिघर्ति	128	जघृम
+जिघर्ति	129	जघर्थ
+जिघर्ति	130	जघ्रथुः
+जिघर्ति	131	जघ्र
+जिघर्ति	132	जघार
+जिघर्ति	133	जघ्रतुः
+जिघर्ति	134	जघ्रुः
+जिघर्ति	144	अघार्षम्
+जिघर्ति	145	अघार्ष्व
+जिघर्ति	146	अघार्ष्म
+जिघर्ति	147	अघार्षीः
+जिघर्ति	148	अघार्ष्टम्
+जिघर्ति	149	अघार्ष्ट
+जिघर्ति	150	अघार्षीत्
+जिघर्ति	151	अघार्ष्टाम्
+जिघर्ति	152	अघार्षुः
+जिघर्ति	162	घर्तुम्
+जिघर्ति	163	घृत्वा
+जिघर्ति	166	घरिष्यत्
+जिघर्ति	168	जघृवांस्
+जिघाय	168	जिघिवांस्
+जिह्रेति	0	जिह्रेमि
+जिह्रेति	1	जिह्रीवः
+जिह्रेति	2	जिह्रीमः
+जिह्रेति	3	जिह्रेषि
+जिह्रेति	4	जिह्रीथः
+जिह्रेति	5	जिह्रीथ
+जिह्रेति	7	जिह्रीतः
+जिह्रेति	8	जिह्रियति
+जिह्रेति	18	जिह्रयाणि
+जिह्रेति	19	जिह्रयाव
+जिह्रेति	20	जिह्रयाम
+जिह्रेति	21	जिह्रीहि
+जिह्रेति	22	जिह्रीतम्
+जिह्रेति	23	जिह्रीत
+जिह्रेति	25	जिह्रीताम्
+जिह्रेति	26	जिह्रियतु
+जिह्रेति	36	जिह्रीयाम्
+जिह्रेति	37	जिह्रीयाव
+जिह्रेति	38	जिह्रीयाम
+जिह्रेति	39	जिह्रीयाः
+जिह्रेति	40	जिह्रीयातम्
+जिह्रेति	41	जिह्रीयात
+जिह्रेति	42	जिह्रीयात्
+जिह्रेति	43	जिह्रीयाताम्
+जिह्रेति	44	जिह्रीयुः
+जिह्रेति	54	जिह्रयाणि
+जिह्रेति	55	जिह्रयाव
+जिह्रेति	56	जिह्रयाम
+जिह्रेति	57	जिह्रयः
+जिह्रेति	58	जिह्रयथः
+जिह्रेति	59	जिह्रयथ
+जिह्रेति	60	जिह्रयत्
+जिह्रेति	61	जिह्रयतः
+जिह्रेति	62	जिह्रयन्
+जिह्रेति	72	अजिह्रयम्
+जिह्रेति	73	अजिह्रीव
+जिह्रेति	74	अजिह्रीम
+जिह्रेति	76	अजिह्रीतम्
+जिह्रेति	77	अजिह्रीत
+जिह्रेति	79	अजिह्रीताम्
+जिह्रेति	80	अजिह्रियन्
+जिह्रेति	164	जिह्रियत्
+जुजोष	127	जुजुषिव
+जुजोष	128	जुजुषिम
+जुजोष	130	जुजुषथुः
+जुजोष	131	जुजुष
+जुजोष	133	जुजुषतुः
+जुजोष	134	जुजुषुः
+जुजोष	135	जुजुषे
+जुजोष	136	जुजुषिवहे
+जुजोष	137	जुजुषिमहे
+जुजोष	138	जुजुषिषे
+जुजोष	139	जुजुषाथे
+जुजोष	140	जुजुषिध्वे
+जुजोष	141	जुजुषे
+जुजोष	142	जुजुषाते
+जुजोष	143	जुजुषिरे
+जुजोष	168	जुजुष्वांस्
+जुजोष	169	जुजुषाण
+जुषते	90	जोषिष्यामि
+जुषते	91	जोषिष्यावः
+जुषते	92	जोषिष्यामः
+जुषते	93	जोषिष्यसि
+जुषते	94	जोषिष्यथः
+जुषते	95	जोषिष्यथ
+जुषते	96	जोषिष्यति
+जुषते	97	जोषिष्यतः
+जुषते	98	जोषिष्यन्ति
+जुषते	99	जोषिष्ये
+जुषते	100	जोषिष्यावहे
+जुषते	101	जोषिष्यामहे
+जुषते	102	जोषिष्यसे
+जुषते	103	जोषिष्येथे
+जुषते	104	जोषिष्यध्वे
+जुषते	105	जोषिष्यते
+जुषते	106	जोषिष्येते
+जुषते	107	जोषिष्यन्ते
+जुषते	108	अजोषिष्यम्
+जुषते	109	अजोषिष्याव
+जुषते	110	अजोषिष्याम
+जुषते	111	अजोषिष्यः
+जुषते	112	अजोषिष्यतम्
+जुषते	113	अजोषिष्यत
+जुषते	114	अजोषिष्यत्
+जुषते	115	अजोषिष्यताम्
+जुषते	116	अजोषिष्यन्
+जुषते	117	अजोषिष्ये
+जुषते	118	अजोषिष्यावहि
+जुषते	119	अजोषिष्यामहि
+जुषते	120	अजोषिष्यथाः
+जुषते	121	अजोषिष्येथाम्
+जुषते	122	अजोषिष्यध्वम्
+जुषते	123	अजोषिष्यत
+जुषते	124	अजोषिष्येताम्
+जुषते	125	अजोषिष्यन्त
+जुषते	135	जुजुषे
+जुषते	136	जुजुषिवहे
+जुषते	137	जुजुषिमहे
+जुषते	138	जुजुषिषे
+जुषते	139	जुजुषाथे
+जुषते	140	जुजुषिध्वे
+जुषते	141	जुजुषे
+जुषते	142	जुजुषाते
+जुषते	143	जुजुषिरे
+जुषते	153	अजोषिषि
+जुषते	154	अजोषिष्वहि
+जुषते	155	अजोषिष्महि
+जुषते	156	अजोषिष्ठाः
+जुषते	157	अजोषिषाथाम्
+जुषते	158	अजोषिढ्वम्
+जुषते	159	अजोषिष्ट
+जुषते	160	अजोषिषाताम्
+जुषते	161	अजोषिषत
+जुषते	166	जोषिष्यत्
+जुषते	167	जोषिष्यमाण
+जुषते	169	जुजुषाण
+जुहाव	127	जुहुविव
+जुहाव	128	जुहुविम
+जुहाव	136	जुहुविवहे
+जुहाव	137	जुहुविमहे
+जुहाव	138	जुहुविषे
+जुहाव	140	जुहुविध्वे
+जुहाव	168	जुहूवांस्
+जुहाव	169	जुहुवान
+जुहोति	1	जुहुवः
+जुहोति	2	जुहुमः
+जुहोति	8	जुह्वति
+जुहोति	10	जुहुवहे
+जुहोति	11	जुहुमहे
+जुहोति	21	जुहुधि
+जुहोति	26	जुह्वतु
+जुहोति	73	अजुहुव
+जुहोति	74	अजुहुम
+जुहोति	80	अजुहवुः
+जुहोति	82	अजुहुवहि
+जुहोति	83	अजुहुमहि
+जृम्भते	135	जजृम्भे
+जृम्भते	136	जजृम्भिवहे
+जृम्भते	137	जजृम्भिमहे
+जृम्भते	138	जजृम्भिषे
+जृम्भते	139	जजृम्भाथे
+जृम्भते	140	जजृम्भिध्वे
+जृम्भते	141	जजृम्भे
+जृम्भते	142	जजृम्भाते
+जृम्भते	143	जजृम्भिरे
+जृम्भते	153	अजृम्भिषि
+जृम्भते	154	अजृम्भिष्वहि
+जृम्भते	155	अजृम्भिष्महि
+जृम्भते	156	अजृम्भिष्ठाः
+जृम्भते	157	अजृम्भिषाथाम्
+जृम्भते	158	अजृम्भिढ्वम्
+जृम्भते	159	अजृम्भिष्ट
+जृम्भते	160	अजृम्भिषाताम्
+जृम्भते	161	अजृम्भिषत
+जृम्भते	169	जजृम्भाण
+तक्ति	0	तक्मि
+तक्ति	1	तक्वः
+तक्ति	2	तक्मः
+तक्ति	3	तक्षि
+तक्ति	8	तकन्ति
+तक्ति	9	तके
+तक्ति	10	तक्वहे
+तक्ति	11	तक्महे
+तक्ति	12	तक्षे
+तक्ति	13	तकाथे
+तक्ति	14	तग्ध्वे
+तक्ति	16	तकाते
+तक्ति	17	तकते
+तक्ति	18	तकानि
+तक्ति	19	तकाव
+तक्ति	20	तकाम
+तक्ति	21	तग्धि
+तक्ति	26	तकन्तु
+तक्ति	27	तकै
+तक्ति	28	तकावहै
+तक्ति	29	तकामहै
+तक्ति	30	तक्ष्व
+तक्ति	31	तकाथाम्
+तक्ति	32	तग्ध्वम्
+तक्ति	34	तकाताम्
+तक्ति	35	तकताम्
+तक्ति	36	तक्याम्
+तक्ति	37	तक्याव
+तक्ति	38	तक्याम
+तक्ति	39	तक्याः
+तक्ति	40	तक्यातम्
+तक्ति	41	तक्यात
+तक्ति	42	तक्यात्
+तक्ति	43	तक्याताम्
+तक्ति	44	तक्युः
+तक्ति	45	तकीय
+तक्ति	46	तकीवहि
+तक्ति	47	तकीमहि
+तक्ति	48	तकीथाः
+तक्ति	49	तकीयाथाम्
+तक्ति	50	तकीध्वम्
+तक्ति	51	तकीत
+तक्ति	52	तकीयाताम्
+तक्ति	53	तकीरन्
+तक्ति	54	तकानि
+तक्ति	55	तकाव
+तक्ति	56	तकाम
+तक्ति	57	तकः
+तक्ति	58	तकथः
+तक्ति	59	तकथ
+तक्ति	60	तकत्
+तक्ति	61	तकतः
+तक्ति	62	तकन्
+तक्ति	63	तकै
+तक्ति	64	तकावहै
+तक्ति	65	तकामहै
+तक्ति	66	तकसे
+तक्ति	67	तकैथे
+तक्ति	68	तकध्वे
+तक्ति	69	तकते
+तक्ति	70	तकैते
+तक्ति	71	तकन्त
+तक्ति	72	अतकम्
+तक्ति	73	अतक्व
+तक्ति	74	अतक्म
+तक्ति	75	अतक्
+तक्ति	78	अतक्
+तक्ति	80	अतकन्
+तक्ति	81	अतकि
+तक्ति	82	अतक्वहि
+तक्ति	83	अतक्महि
+तक्ति	85	अतकाथाम्
+तक्ति	86	अतग्ध्वम्
+तक्ति	88	अतकाताम्
+तक्ति	89	अतकत
+तक्ति	164	तकत्
+तक्ति	165	तकान
+तक्षयति	108	अतक्सयिष्यम्
+तक्षयति	109	अतक्सयिष्याव
+तक्षयति	110	अतक्सयिष्याम
+तक्षयति	111	अतक्सयिष्यः
+तक्षयति	112	अतक्सयिष्यतम्
+तक्षयति	113	अतक्सयिष्यत
+तक्षयति	114	अतक्सयिष्यत्
+तक्षयति	115	अतक्सयिष्यताम्
+तक्षयति	116	अतक्सयिष्यन्
+तक्षयति	117	अतक्सयिष्ये
+तक्षयति	118	अतक्सयिष्यावहि
+तक्षयति	119	अतक्सयिष्यामहि
+तक्षयति	120	अतक्सयिष्यथाः
+तक्षयति	121	अतक्सयिष्येथाम्
+तक्षयति	122	अतक्सयिष्यध्वम्
+तक्षयति	123	अतक्सयिष्यत
+तक्षयति	124	अतक्सयिष्येताम्
+तक्षयति	125	अतक्सयिष्यन्त
+तक्षयति	135	तक्षयामासे
+तक्षयति	136	तक्षयामासिवहे
+तक्षयति	137	तक्षयामासिमहे
+तक्षयति	138	तक्षयामासिषे
+तक्षयति	139	तक्षयामासाथे
+तक्षयति	140	तक्षयामासिध्वे
+तक्षयति	141	तक्षयामासे
+तक्षयति	142	तक्षयामासाते
+तक्षयति	143	तक्षयामासिरे
+तक्षयति	168	तक्षयामास्वांस्
+तक्षयति	169	तक्षयामासान
+ततक्ष	169	ततक्षाण
+ततर्ह	127	ततृहिव
+ततर्ह	128	ततृहिम
+ततर्ह	130	ततृहथुः
+ततर्ह	131	ततृह
+ततर्ह	133	ततृहतुः
+ततर्ह	134	ततृहुः
+ततर्ह	168	ततृह्वांस्
+ततान	126	ततन
+ततान	127	तेनिव
+ततान	128	तेनिम
+ततान	129	ततन्थ
+ततान	130	तेनथुः
+ततान	131	तेन
+ततान	133	तेनतुः
+ततान	134	तेनुः
+ततान	135	तेने
+ततान	136	तेनिवहे
+ततान	137	तेनिमहे
+ततान	138	तेनिषे
+ततान	139	तेनाथे
+ततान	140	तेनिध्वे
+ततान	141	तेने
+ततान	142	तेनाते
+ततान	143	तेनिरे
+ततान	168	तेनिवांस्
+ततान	169	तेनान
+तताप	126	ततप
+तताप	127	तेपिव
+तताप	128	तेपिम
+तताप	129	ततप्थ
+तताप	130	तेपथुः
+तताप	131	तेप
+तताप	133	तेपतुः
+तताप	134	तेपुः
+तताप	135	तेपे
+तताप	136	तेपिवहे
+तताप	137	तेपिमहे
+तताप	138	तेपिषे
+तताप	139	तेपाथे
+तताप	140	तेपिध्वे
+तताप	141	तेपे
+तताप	142	तेपाते
+तताप	143	तेपिरे
+तताप	168	तेपिवांस्
+तताप	169	तेपान
+तनक्ति	0	तनच्मि
+तनक्ति	1	तञ्च्वः
+तनक्ति	2	तञ्च्मः
+तनक्ति	8	तञ्चन्ति
+तनक्ति	18	तनचानि
+तनक्ति	19	तनचाव
+तनक्ति	20	तनचाम
+तनक्ति	26	तञ्चन्तु
+तनक्ति	36	तञ्च्याम्
+तनक्ति	37	तञ्च्याव
+तनक्ति	38	तञ्च्याम
+तनक्ति	39	तञ्च्याः
+तनक्ति	40	तञ्च्यातम्
+तनक्ति	41	तञ्च्यात
+तनक्ति	42	तञ्च्यात्
+तनक्ति	43	तञ्च्याताम्
+तनक्ति	44	तञ्च्युः
+तनक्ति	54	तनचानि
+तनक्ति	55	तनचाव
+तनक्ति	56	तनचाम
+तनक्ति	57	तनचः
+तनक्ति	58	तनचथः
+तनक्ति	59	तनचथ
+तनक्ति	60	तनचत्
+तनक्ति	61	तनचतः
+तनक्ति	62	तनचन्
+तनक्ति	72	अतनचम्
+तनक्ति	73	अतञ्च्व
+तनक्ति	74	अतञ्च्म
+तनक्ति	80	अतञ्चन्
+तनक्ति	164	तञ्चत्
+ताष्टि	0	ताक्ष्मि
+ताष्टि	1	तक्ष्वः
+ताष्टि	2	तक्ष्मः
+ताष्टि	3	ताक्षि
+ताष्टि	4	तष्ठः
+ताष्टि	5	तष्ठ
+ताष्टि	6	ताष्टि
+ताष्टि	7	तष्टः
+ताष्टि	8	तक्षति
+ताष्टि	18	तक्षाणि
+ताष्टि	19	तक्षाव
+ताष्टि	20	तक्षाम
+ताष्टि	21	ताढि
+ताष्टि	22	तष्टम्
+ताष्टि	23	तष्ट
+ताष्टि	24	ताष्टु
+ताष्टि	25	तष्टाम्
+ताष्टि	26	तक्षतु
+ताष्टि	36	तक्ष्याम्
+ताष्टि	37	तक्ष्याव
+ताष्टि	38	तक्ष्याम
+ताष्टि	39	तक्ष्याः
+ताष्टि	40	तक्ष्यातम्
+ताष्टि	41	तक्ष्यात
+ताष्टि	42	तक्ष्यात्
+ताष्टि	43	तक्ष्याताम्
+ताष्टि	44	तक्ष्युः
+ताष्टि	54	तक्षाणि
+ताष्टि	55	तक्षाव
+ताष्टि	56	तक्षाम
+ताष्टि	57	तक्षः
+ताष्टि	58	तक्षथः
+ताष्टि	59	तक्षथ
+ताष्टि	60	तक्षत्
+ताष्टि	61	तक्षतः
+ताष्टि	62	तक्षन्
+ताष्टि	72	अताक्षम्
+ताष्टि	73	अतक्ष्व
+ताष्टि	74	अतक्ष्म
+ताष्टि	75	अताट्
+ताष्टि	76	अतष्टम्
+ताष्टि	77	अतष्ट
+ताष्टि	78	अताट्
+ताष्टि	79	अतष्टाम्
+ताष्टि	80	अतक्षुः
+ताष्टि	164	तक्षत्
+तुष्टाव	169	तुष्टुवान
+तृणेढि	0	तृणेह्मि
+तृणेढि	1	तृंह्वः
+तृणेढि	2	तृंह्मः
+तृणेढि	3	तृणेक्षि
+तृणेढि	4	तृण्ढः
+तृणेढि	5	तृण्ढ
+तृणेढि	6	तृणेढि
+तृणेढि	7	तृण्ढः
+तृणेढि	8	तृंहन्ति
+तृणेढि	18	तृणेहानि
+तृणेढि	19	तृणेहाव
+तृणेढि	20	तृणेहाम
+तृणेढि	21	तृण्ढि
+तृणेढि	22	तृण्ढम्
+तृणेढि	23	तृण्ढ
+तृणेढि	24	तृणेढु
+तृणेढि	25	तृण्ढाम्
+तृणेढि	26	तृंहन्तु
+तृणेढि	36	तृंह्याम्
+तृणेढि	37	तृंह्याव
+तृणेढि	38	तृंह्याम
+तृणेढि	39	तृंह्याः
+तृणेढि	40	तृंह्यातम्
+तृणेढि	41	तृंह्यात
+तृणेढि	42	तृंह्यात्
+तृणेढि	43	तृंह्याताम्
+तृणेढि	44	तृंह्युः
+तृणेढि	54	तृणेहानि
+तृणेढि	55	तृणेहाव
+तृणेढि	56	तृणेहाम
+तृणेढि	57	तृणेहः
+तृणेढि	58	तृणेहथः
+तृणेढि	59	तृणेहथ
+तृणेढि	60	तृणेहत्
+तृणेढि	61	तृणेहतः
+तृणेढि	62	तृणेहन्
+तृणेढि	72	अतृणेहम्
+तृणेढि	73	अतृंह्व
+तृणेढि	74	अतृंह्म
+तृणेढि	75	अतृणेट्
+तृणेढि	76	अतृण्ढम्
+तृणेढि	77	अतृण्ढ
+तृणेढि	78	अतृणेट्
+तृणेढि	79	अतृण्ढाम्
+तृणेढि	80	अतृंहन्
+तृणेढि	164	तृंहत्
+तृष्यति	72	अतृस्यम्
+तृष्यति	73	अतृस्याव
+तृष्यति	74	अतृस्याम
+तृष्यति	75	अतृस्यः
+तृष्यति	76	अतृस्यतम्
+तृष्यति	77	अतृस्यत
+तृष्यति	78	अतृस्यत्
+तृष्यति	79	अतृस्यताम्
+तृष्यति	80	अतृस्यन्
+तृष्यति	81	अतृस्ये
+तृष्यति	82	अतृस्यावहि
+तृष्यति	83	अतृस्यामहि
+तृष्यति	84	अतृस्यथाः
+तृष्यति	85	अतृस्येथाम्
+तृष्यति	86	अतृस्यध्वम्
+तृष्यति	87	अतृस्यत
+तृष्यति	88	अतृस्येताम्
+तृष्यति	89	अतृस्यन्त
+ददर्श	127	ददृशिव
+ददर्श	128	ददृशिम
+ददर्श	130	ददृशथुः
+ददर्श	131	ददृश
+ददर्श	133	ददृशतुः
+ददर्श	134	ददृशुः
+ददर्श	135	ददृशे
+ददर्श	136	ददृशिवहे
+ददर्श	137	ददृशिमहे
+ददर्श	138	ददृशिषे
+ददर्श	139	ददृशाथे
+ददर्श	140	ददृशिध्वे
+ददर्श	141	ददृशे
+ददर्श	142	ददृशाते
+ददर्श	143	ददृशिरे
+ददर्श	168	ददृश्वांस्
+ददर्श	169	ददृशान
+ददाति	1	दद्वः
+ददाति	2	दद्मः
+ददाति	4	दत्थः
+ददाति	5	दत्थ
+ददाति	7	दत्तः
+ददाति	8	ददति
+ददाति	10	दद्वहे
+ददाति	11	दद्महे
+ददाति	12	दत्से
+ददाति	14	दद्ध्वे
+ददाति	15	दत्ते
+ददाति	21	देहि
+ददाति	22	दत्तम्
+ददाति	23	दत्त
+ददाति	25	दत्ताम्
+ददाति	26	ददतु
+ददाति	30	दत्स्व
+ददाति	32	दद्ध्वम्
+ददाति	33	दत्ताम्
+ददाति	36	दद्याम्
+ददाति	37	दद्याव
+ददाति	38	दद्याम
+ददाति	39	दद्याः
+ददाति	40	दद्यातम्
+ददाति	41	दद्यात
+ददाति	42	दद्यात्
+ददाति	43	दद्याताम्
+ददाति	44	दद्युः
+ददाति	50	ददीध्वम्
+ददाति	73	अदद्व
+ददाति	74	अदद्म
+ददाति	76	अदत्तम्
+ददाति	77	अदत्त
+ददाति	79	अदत्ताम्
+ददाति	80	अददुः
+ददाति	82	अदद्वहि
+ददाति	83	अदद्महि
+ददाति	84	अदत्थाः
+ददाति	86	अदद्ध्वम्
+ददाति	87	अदत्त
+ददाह	126	ददह
+ददाह	127	देहिव
+ददाह	128	देहिम
+ददाह	129	ददग्ध
+ददाह	130	देहथुः
+ददाह	131	देह
+ददाह	133	देहतुः
+ददाह	134	देहुः
+ददाह	135	देहे
+ददाह	136	देहिवहे
+ददाह	137	देहिमहे
+ददाह	138	देहिषे
+ददाह	139	देहाथे
+ददाह	140	देहिध्वे
+ददाह	141	देहे
+ददाह	142	देहाते
+ददाह	143	देहिरे
+ददाह	168	देहिवांस्
+ददाह	169	देहान
+दधाति	1	दध्वः
+दधाति	2	दध्मः
+दधाति	4	धत्थः
+दधाति	5	धत्थ
+दधाति	7	धत्तः
+दधाति	8	दधति
+दधाति	10	दध्वहे
+दधाति	11	दध्महे
+दधाति	12	धत्से
+दधाति	14	धद्ध्वे
+दधाति	15	धत्ते
+दधाति	21	धेहि
+दधाति	22	धत्तम्
+दधाति	23	धत्त
+दधाति	25	धत्ताम्
+दधाति	26	दधतु
+दधाति	30	धत्स्व
+दधाति	32	धद्ध्वम्
+दधाति	33	धत्ताम्
+दधाति	36	दध्याम्
+दधाति	37	दध्याव
+दधाति	38	दध्याम
+दधाति	39	दध्याः
+दधाति	40	दध्यातम्
+दधाति	41	दध्यात
+दधाति	42	दध्यात्
+दधाति	43	दध्याताम्
+दधाति	44	दध्युः
+दधाति	50	दधीध्वम्
+दधाति	73	अदध्व
+दधाति	74	अदध्म
+दधाति	76	अधत्तम्
+दधाति	77	अधत्त
+दधाति	79	अधत्ताम्
+दधाति	80	अदधुः
+दधाति	82	अदध्वहि
+दधाति	83	अदध्महि
+दधाति	84	अधत्थाः
+दधाति	86	अधद्ध्वम्
+दधाति	87	अधत्त
+दिदेष्टि	0	दिदेश्मि
+दिदेष्टि	1	दिदिश्वः
+दिदेष्टि	2	दिदिश्मः
+दिदेष्टि	3	दिदेक्षि
+दिदेष्टि	4	दिदिष्ठः
+दिदेष्टि	5	दिदिष्ठ
+दिदेष्टि	6	दिदेष्टि
+दिदेष्टि	7	दिदिष्टः
+दिदेष्टि	8	दिदिशति
+दिदेष्टि	9	दिदिशे
+दिदेष्टि	10	दिदिश्वहे
+दिदेष्टि	11	दिदिश्महे
+दिदेष्टि	12	दिदिक्षे
+दिदेष्टि	13	दिदिशाथे
+दिदेष्टि	14	दिदिड्ढ्वे
+दिदेष्टि	15	दिदिष्टे
+दिदेष्टि	16	दिदिशाते
+दिदेष्टि	17	दिदिशते
+दिदेष्टि	18	दिदेशानि
+दिदेष्टि	19	दिदेशाव
+दिदेष्टि	20	दिदेशाम
+दिदेष्टि	21	दिदिड्ढि
+दिदेष्टि	22	दिदिष्टम्
+दिदेष्टि	23	दिदिष्ट
+दिदेष्टि	24	दिदेष्टु
+दिदेष्टि	25	दिदिष्टाम्
+दिदेष्टि	26	दिदिशतु
+दिदेष्टि	27	दिदेशै
+दिदेष्टि	28	दिदेशावहै
+दिदेष्टि	29	दिदेशामहै
+दिदेष्टि	30	दिदिक्ष्व
+दिदेष्टि	31	दिदिशाथाम्
+दिदेष्टि	32	दिदिड्ढ्वम्
+दिदेष्टि	33	दिदिष्टाम्
+दिदेष्टि	34	दिदिशाताम्
+दिदेष्टि	35	दिदिशताम्
+दिदेष्टि	36	दिदिश्याम्
+दिदेष्टि	37	दिदिश्याव
+दिदेष्टि	38	दिदिश्याम
+दिदेष्टि	39	दिदिश्याः
+दिदेष्टि	40	दिदिश्यातम्
+दिदेष्टि	41	दिदिश्यात
+दिदेष्टि	42	दिदिश्यात्
+दिदेष्टि	43	दिदिश्याताम्
+दिदेष्टि	44	दिदिश्युः
+दिदेष्टि	45	दिदिशीय
+दिदेष्टि	46	दिदिशीवहि
+दिदेष्टि	47	दिदिशीमहि
+दिदेष्टि	48	दिदिशीथाः
+दिदेष्टि	49	दिदिशीयाथाम्
+दिदेष्टि	50	दिदिशीध्वम्
+दिदेष्टि	51	दिदिशीत
+दिदेष्टि	52	दिदिशीयाताम्
+दिदेष्टि	53	दिदिशीरन्
+दिदेष्टि	54	दिदेशानि
+दिदेष्टि	55	दिदेशाव
+दिदेष्टि	56	दिदेशाम
+दिदेष्टि	57	दिदेशः
+दिदेष्टि	58	दिदेशथः
+दिदेष्टि	59	दिदेशथ
+दिदेष्टि	60	दिदेशत्
+दिदेष्टि	61	दिदेशतः
+दिदेष्टि	62	दिदेशन्
+दिदेष्टि	63	दिदेशै
+दिदेष्टि	64	दिदेशावहै
+दिदेष्टि	65	दिदेशामहै
+दिदेष्टि	66	दिदेशसे
+दिदेष्टि	67	दिदेशैथे
+दिदेष्टि	68	दिदेशध्वे
+दिदेष्टि	69	दिदेशते
+दिदेष्टि	70	दिदेशैते
+दिदेष्टि	71	दिदेशन्त
+दिदेष्टि	72	अदिदेशम्
+दिदेष्टि	73	अदिदिश्व
+दिदेष्टि	74	अदिदिश्म
+दिदेष्टि	75	अदिदेक्
+दिदेष्टि	76	अदिदिष्टम्
+दिदेष्टि	77	अदिदिष्ट
+दिदेष्टि	78	अदिदेक्
+दिदेष्टि	79	अदिदिष्टाम्
+दिदेष्टि	80	अदिदिशुः
+दिदेष्टि	81	अदिदिशि
+दिदेष्टि	82	अदिदिश्वहि
+दिदेष्टि	83	अदिदिश्महि
+दिदेष्टि	84	अदिदिष्ठाः
+दिदेष्टि	85	अदिदिशाथाम्
+दिदेष्टि	86	अदिदिड्ढ्वम्
+दिदेष्टि	87	अदिदिष्ट
+दिदेष्टि	88	अदिदिशाताम्
+दिदेष्टि	89	अदिदिशत
+दिदेष्टि	164	दिदिशत्
+दिदेष्टि	165	दिदिशान
+दुदोह	127	दुदुहिव
+दुदोह	128	दुदुहिम
+दुदोह	130	दुदुहथुः
+दुदोह	131	दुदुह
+दुदोह	133	दुदुहतुः
+दुदोह	134	दुदुहुः
+दुदोह	135	दुदुहे
+दुदोह	136	दुदुहिवहे
+दुदोह	137	दुदुहिमहे
+दुदोह	138	दुदुहिषे
+दुदोह	139	दुदुहाथे
+दुदोह	140	दुदुहिध्वे
+दुदोह	141	दुदुहे
+दुदोह	142	दुदुहाते
+दुदोह	143	दुदुहिरे
+दुदोह	168	दुदुघ्वांस्
+दुदोह	169	दुदुहान
+दुद्रोह	127	दुद्रुहिव
+दुद्रोह	128	दुद्रुहिम
+दुद्रोह	130	दुद्रुहथुः
+दुद्रोह	131	दुद्रुह
+दुद्रोह	133	दुद्रुहतुः
+दुद्रोह	134	दुद्रुहुः
+दुद्रोह	135	दुद्रुहे
+दुद्रोह	136	दुद्रुहिवहे
+दुद्रोह	137	दुद्रुहिमहे
+दुद्रोह	138	दुद्रुहिषे
+दुद्रोह	139	दुद्रुहाथे
+दुद्रोह	140	दुद्रुहिध्वे
+दुद्रोह	141	दुद्रुहे
+दुद्रोह	142	दुद्रुहाते
+दुद्रोह	143	दुद्रुहिरे
+दुद्रोह	168	दुद्रुह्वांस्
+दुद्रोह	169	दुद्रुहाण
+दुनोति	90	दोष्यामि
+दुनोति	91	दोष्यावः
+दुनोति	92	दोष्यामः
+दुनोति	93	दोष्यसि
+दुनोति	94	दोष्यथः
+दुनोति	95	दोष्यथ
+दुनोति	96	दोष्यति
+दुनोति	97	दोष्यतः
+दुनोति	98	दोष्यन्ति
+दुनोति	108	अदोष्यम्
+दुनोति	109	अदोष्याव
+दुनोति	110	अदोष्याम
+दुनोति	111	अदोष्यः
+दुनोति	112	अदोष्यतम्
+दुनोति	113	अदोष्यत
+दुनोति	114	अदोष्यत्
+दुनोति	115	अदोष्यताम्
+दुनोति	116	अदोष्यन्
+दुनोति	126	दुदव
+दुनोति	127	दुदुविव
+दुनोति	128	दुदुविम
+दुनोति	129	दुदोथ
+दुनोति	130	दुदुवथुः
+दुनोति	131	दुदुव
+दुनोति	132	दुदाव
+दुनोति	133	दुदुवतुः
+दुनोति	134	दुदुवुः
+दुनोति	144	अदौषम्
+दुनोति	145	अदौष्व
+दुनोति	146	अदौष्म
+दुनोति	147	अदौषीः
+दुनोति	148	अदौष्टम्
+दुनोति	149	अदौष्ट
+दुनोति	150	अदौषीत्
+दुनोति	151	अदौष्टाम्
+दुनोति	152	अदौषुः
+दुनोति	162	दोतुम्
+दुनोति	163	दूत्वा
+दुनोति	166	दोष्यत्
+दुनोति	168	दुदुवांस्
+देग्धि	0	देह्मि
+देग्धि	1	दिह्वः
+देग्धि	2	दिह्मः
+देग्धि	3	धेक्षि
+देग्धि	4	दिग्धः
+देग्धि	5	दिग्ध
+देग्धि	6	देग्धि
+देग्धि	7	दिग्धः
+देग्धि	8	दिहन्ति
+देग्धि	9	दिहे
+देग्धि	10	दिह्वहे
+देग्धि	11	दिह्महे
+देग्धि	12	धिक्षे
+देग्धि	13	दिहाथे
+देग्धि	14	धिग्ध्वे
+देग्धि	15	दिग्धे
+देग्धि	16	दिहाते
+देग्धि	17	दिहते
+देग्धि	18	देहानि
+देग्धि	19	देहाव
+देग्धि	20	देहाम
+देग्धि	21	दिग्धि
+देग्धि	22	दिग्धम्
+देग्धि	23	दिग्ध
+देग्धि	24	देग्धु
+देग्धि	25	दिग्धाम्
+देग्धि	26	दिहन्तु
+देग्धि	27	देहै
+देग्धि	28	देहावहै
+देग्धि	29	देहामहै
+देग्धि	30	धिक्ष्व
+देग्धि	31	दिहाथाम्
+देग्धि	32	धिग्ध्वम्
+देग्धि	33	दिग्धाम्
+देग्धि	34	दिहाताम्
+देग्धि	35	दिहताम्
+देग्धि	36	दिह्याम्
+देग्धि	37	दिह्याव
+देग्धि	38	दिह्याम
+देग्धि	39	दिह्याः
+देग्धि	40	दिह्यातम्
+देग्धि	41	दिह्यात
+देग्धि	42	दिह्यात्
+देग्धि	43	दिह्याताम्
+देग्धि	44	दिह्युः
+देग्धि	45	दिहीय
+देग्धि	46	दिहीवहि
+देग्धि	47	दिहीमहि
+देग्धि	48	दिहीथाः
+देग्धि	49	दिहीयाथाम्
+देग्धि	50	दिहीध्वम्
+देग्धि	51	दिहीत
+देग्धि	52	दिहीयाताम्
+देग्धि	53	दिहीरन्
+देग्धि	54	देहानि
+देग्धि	55	देहाव
+देग्धि	56	देहाम
+देग्धि	57	देहः
+देग्धि	58	देहथः
+देग्धि	59	देहथ
+देग्धि	60	देहत्
+देग्धि	61	देहतः
+देग्धि	62	देहन्
+देग्धि	63	देहै
+देग्धि	64	देहावहै
+देग्धि	65	देहामहै
+देग्धि	66	देहसे
+देग्धि	67	देहैथे
+देग्धि	68	देहध्वे
+देग्धि	69	देहते
+देग्धि	70	देहैते
+देग्धि	71	देहन्त
+देग्धि	72	अदेहम्
+देग्धि	73	अदिह्व
+देग्धि	74	अदिह्म
+देग्धि	75	अधेक्
+देग्धि	76	अदिग्धम्
+देग्धि	77	अदिग्ध
+देग्धि	78	अधेक्
+देग्धि	79	अदिग्धाम्
+देग्धि	80	अदिहन्
+देग्धि	81	अदिहि
+देग्धि	82	अदिह्वहि
+देग्धि	83	अदिह्महि
+देग्धि	84	अदिग्धाः
+देग्धि	85	अदिहाथाम्
+देग्धि	86	अधिग्ध्वम्
+देग्धि	87	अदिग्ध
+देग्धि	88	अदिहाताम्
+देग्धि	89	अदिहत
+देग्धि	164	दिहत्
+देग्धि	165	दिहान
+दोग्धि	0	दोह्मि
+दोग्धि	1	दुह्वः
+दोग्धि	2	दुह्मः
+दोग्धि	3	धोक्षि
+दोग्धि	4	दुग्धः
+दोग्धि	5	दुग्ध
+दोग्धि	6	दोग्धि
+दोग्धि	7	दुग्धः
+दोग्धि	8	दुहन्ति
+दोग्धि	9	दुहे
+दोग्धि	10	दुह्वहे
+दोग्धि	11	दुह्महे
+दोग्धि	12	धुक्षे
+दोग्धि	13	दुहाथे
+दोग्धि	14	धुग्ध्वे
+दोग्धि	15	दुग्धे
+दोग्धि	16	दुहाते
+दोग्धि	17	दुहते
+दोग्धि	18	दोहानि
+दोग्धि	19	दोहाव
+दोग्धि	20	दोहाम
+दोग्धि	21	दुग्धि
+दोग्धि	22	दुग्धम्
+दोग्धि	23	दुग्ध
+दोग्धि	24	दोग्धु
+दोग्धि	25	दुग्धाम्
+दोग्धि	26	दुहन्तु
+दोग्धि	27	दोहै
+दोग्धि	28	दोहावहै
+दोग्धि	29	दोहामहै
+दोग्धि	30	धुक्ष्व
+दोग्धि	31	दुहाथाम्
+दोग्धि	32	धुग्ध्वम्
+दोग्धि	33	दुग्धाम्
+दोग्धि	34	दुहाताम्
+दोग्धि	35	दुहताम्
+दोग्धि	36	दुह्याम्
+दोग्धि	37	दुह्याव
+दोग्धि	38	दुह्याम
+दोग्धि	39	दुह्याः
+दोग्धि	40	दुह्यातम्
+दोग्धि	41	दुह्यात
+दोग्धि	42	दुह्यात्
+दोग्धि	43	दुह्याताम्
+दोग्धि	44	दुह्युः
+दोग्धि	45	दुहीय
+दोग्धि	46	दुहीवहि
+दोग्धि	47	दुहीमहि
+दोग्धि	48	दुहीथाः
+दोग्धि	49	दुहीयाथाम्
+दोग्धि	50	दुहीध्वम्
+दोग्धि	51	दुहीत
+दोग्धि	52	दुहीयाताम्
+दोग्धि	53	दुहीरन्
+दोग्धि	54	दोहानि
+दोग्धि	55	दोहाव
+दोग्धि	56	दोहाम
+दोग्धि	57	दोहः
+दोग्धि	58	दोहथः
+दोग्धि	59	दोहथ
+दोग्धि	60	दोहत्
+दोग्धि	61	दोहतः
+दोग्धि	62	दोहन्
+दोग्धि	63	दोहै
+दोग्धि	64	दोहावहै
+दोग्धि	65	दोहामहै
+दोग्धि	66	दोहसे
+दोग्धि	67	दोहैथे
+दोग्धि	68	दोहध्वे
+दोग्धि	69	दोहते
+दोग्धि	70	दोहैते
+दोग्धि	71	दोहन्त
+दोग्धि	72	अदोहम्
+दोग्धि	73	अदुह्व
+दोग्धि	74	अदुह्म
+दोग्धि	75	अधोक्
+दोग्धि	76	अदुग्धम्
+दोग्धि	77	अदुग्ध
+दोग्धि	78	अधोक्
+दोग्धि	79	अदुग्धाम्
+दोग्धि	80	अदुहन्
+दोग्धि	81	अदुहि
+दोग्धि	82	अदुह्वहि
+दोग्धि	83	अदुह्महि
+दोग्धि	84	अदुग्धाः
+दोग्धि	85	अदुहाथाम्
+दोग्धि	86	अधुग्ध्वम्
+दोग्धि	87	अदुग्ध
+दोग्धि	88	अदुहाताम्
+दोग्धि	89	अदुहत
+दोग्धि	164	दुहत्
+दोग्धि	165	दुहान
+द्रवति	126	दुद्रव
+द्रवति	127	दुद्रुव
+द्रवति	128	दुद्रुम
+द्रवति	129	दुद्रोथ
+द्रवति	130	दुद्रुवथुः
+द्रवति	131	दुद्रुव
+द्रवति	132	दुद्राव
+द्रवति	133	दुद्रुवतुः
+द्रवति	134	दुद्रुवुः
+द्रवति	135	दुद्रुवे
+द्रवति	136	दुद्रुवहे
+द्रवति	137	दुद्रुमहे
+द्रवति	138	दुद्रुषे
+द्रवति	139	दुद्रुवाथे
+द्रवति	140	दुद्रुध्वे
+द्रवति	141	दुद्रुवे
+द्रवति	142	दुद्रुवाते
+द्रवति	143	दुद्रुविरे
+द्रवति	168	दुद्रुवांस्
+द्रवति	169	दुद्रुवाण
+द्राति	18	द्राणि
+द्राति	54	द्राणि
+द्राति	165	द्राण
+द्वेष्टि	0	द्वेष्मि
+द्वेष्टि	1	द्विष्वः
+द्वेष्टि	2	द्विष्मः
+द्वेष्टि	3	द्वेक्षि
+द्वेष्टि	4	द्विष्ठः
+द्वेष्टि	5	द्विष्ठ
+द्वेष्टि	6	द्वेष्टि
+द्वेष्टि	7	द्विष्टः
+द्वेष्टि	8	द्विषन्ति
+द्वेष्टि	9	द्विषे
+द्वेष्टि	10	द्विष्वहे
+द्वेष्टि	11	द्विष्महे
+द्वेष्टि	12	द्विक्षे
+द्वेष्टि	13	द्विषाथे
+द्वेष्टि	14	द्विड्ढ्वे
+द्वेष्टि	15	द्विष्टे
+द्वेष्टि	16	द्विषाते
+द्वेष्टि	17	द्विषते
+द्वेष्टि	18	द्वेषाणि
+द्वेष्टि	19	द्वेषाव
+द्वेष्टि	20	द्वेषाम
+द्वेष्टि	21	द्विड्ढि
+द्वेष्टि	22	द्विष्टम्
+द्वेष्टि	23	द्विष्ट
+द्वेष्टि	24	द्वेष्टु
+द्वेष्टि	25	द्विष्टाम्
+द्वेष्टि	26	द्विषन्तु
+द्वेष्टि	27	द्वेषै
+द्वेष्टि	28	द्वेषावहै
+द्वेष्टि	29	द्वेषामहै
+द्वेष्टि	30	द्विक्ष्व
+द्वेष्टि	31	द्विषाथाम्
+द्वेष्टि	32	द्विड्ढ्वम्
+द्वेष्टि	33	द्विष्टाम्
+द्वेष्टि	34	द्विषाताम्
+द्वेष्टि	35	द्विषताम्
+द्वेष्टि	36	द्विष्याम्
+द्वेष्टि	37	द्विष्याव
+द्वेष्टि	38	द्विष्याम
+द्वेष्टि	39	द्विष्याः
+द्वेष्टि	40	द्विष्यातम्
+द्वेष्टि	41	द्विष्यात
+द्वेष्टि	42	द्विष्यात्
+द्वेष्टि	43	द्विष्याताम्
+द्वेष्टि	44	द्विष्युः
+द्वेष्टि	45	द्विषीय
+द्वेष्टि	46	द्विषीवहि
+द्वेष्टि	47	द्विषीमहि
+द्वेष्टि	48	द्विषीथाः
+द्वेष्टि	49	द्विषीयाथाम्
+द्वेष्टि	50	द्विषीध्वम्
+द्वेष्टि	51	द्विषीत
+द्वेष्टि	52	द्विषीयाताम्
+द्वेष्टि	53	द्विषीरन्
+द्वेष्टि	54	द्वेषाणि
+द्वेष्टि	55	द्वेषाव
+द्वेष्टि	56	द्वेषाम
+द्वेष्टि	57	द्वेषः
+द्वेष्टि	58	द्वेषथः
+द्वेष्टि	59	द्वेषथ
+द्वेष्टि	60	द्वेषत्
+द्वेष्टि	61	द्वेषतः
+द्वेष्टि	62	द्वेषन्
+द्वेष्टि	63	द्वेषै
+द्वेष्टि	64	द्वेषावहै
+द्वेष्टि	65	द्वेषामहै
+द्वेष्टि	66	द्वेषसे
+द्वेष्टि	67	द्वेषैथे
+द्वेष्टि	68	द्वेषध्वे
+द्वेष्टि	69	द्वेषते
+द्वेष्टि	70	द्वेषैते
+द्वेष्टि	71	द्वेषन्त
+द्वेष्टि	72	अद्वेषम्
+द्वेष्टि	73	अद्विष्व
+द्वेष्टि	74	अद्विष्म
+द्वेष्टि	75	अद्वेट्
+द्वेष्टि	76	अद्विष्टम्
+द्वेष्टि	77	अद्विष्ट
+द्वेष्टि	78	अद्वेट्
+द्वेष्टि	79	अद्विष्टाम्
+द्वेष्टि	80	अद्विषन्
+द्वेष्टि	81	अद्विषि
+द्वेष्टि	82	अद्विष्वहि
+द्वेष्टि	83	अद्विष्महि
+द्वेष्टि	84	अद्विष्ठाः
+द्वेष्टि	85	अद्विषाथाम्
+द्वेष्टि	86	अद्विड्ढ्वम्
+द्वेष्टि	87	अद्विष्ट
+द्वेष्टि	88	अद्विषाताम्
+द्वेष्टि	89	अद्विषत
+द्वेष्टि	164	द्विषत्
+द्वेष्टि	165	द्विषाण
+धृष्णोति	72	अधृष्नवम्
+धृष्णोति	75	अधृष्नोः
+धृष्णोति	78	अधृष्नोत्
+ननाम	126	ननम
+ननाम	127	नेमिव
+ननाम	128	नेमिम
+ननाम	129	ननन्थ
+ननाम	130	नेमथुः
+ननाम	131	नेम
+ननाम	133	नेमतुः
+ननाम	134	नेमुः
+ननाम	135	नेमे
+ननाम	136	नेमिवहे
+ननाम	137	नेमिमहे
+ननाम	138	नेमिषे
+ननाम	139	नेमाथे
+ननाम	140	नेमिध्वे
+ननाम	141	नेमे
+ननाम	142	नेमाते
+ननाम	143	नेमिरे
+ननाम	168	नेमिवांस्
+ननाम	169	नेमान
+ननाश	126	ननश
+ननाश	127	नेशिव
+ननाश	128	नेशिम
+ननाश	129	ननष्ठ
+ननाश	130	नेशथुः
+ननाश	131	नेश
+ननाश	133	नेशतुः
+ननाश	134	नेशुः
+ननाश	168	नेशिवांस्
+निन्दति	126	निनिन्द
+निन्दति	127	निनिन्दिव
+निन्दति	128	निनिन्दिम
+निन्दति	129	निनिन्दिथ
+निन्दति	130	निनिन्दथुः
+निन्दति	131	निनिन्द
+निन्दति	132	निनिन्द
+निन्दति	133	निनिन्दतुः
+निन्दति	134	निनिन्दुः
+निन्दति	135	निनिन्दे
+निन्दति	136	निनिन्दिवहे
+निन्दति	137	निनिन्दिमहे
+निन्दति	138	निनिन्दिषे
+निन्दति	139	निनिन्दाथे
+निन्दति	140	निनिन्दिध्वे
+निन्दति	141	निनिन्दे
+निन्दति	142	निनिन्दाते
+निन्दति	143	निनिन्दिरे
+निन्दति	168	निनिन्द्वांस्
+निन्दति	169	निनिन्दान
+निर्वाहयति	72	निरवाहयम्
+निर्वाहयति	73	निरवाहयाव
+निर्वाहयति	74	निरवाहयाम
+निर्वाहयति	75	निरवाहयः
+निर्वाहयति	76	निरवाहयतम्
+निर्वाहयति	77	निरवाहयत
+निर्वाहयति	78	निरवाहयत्
+निर्वाहयति	79	निरवाहयताम्
+निर्वाहयति	80	निरवाहयन्
+नुनोद	127	नुनुदिव
+नुनोद	128	नुनुदिम
+नुनोद	130	नुनुदथुः
+नुनोद	131	नुनुद
+नुनोद	133	नुनुदतुः
+नुनोद	134	नुनुदुः
+नुनोद	135	नुनुदे
+नुनोद	136	नुनुदिवहे
+नुनोद	137	नुनुदिमहे
+नुनोद	138	नुनुदिषे
+नुनोद	139	नुनुदाथे
+नुनोद	140	नुनुदिध्वे
+नुनोद	141	नुनुदे
+नुनोद	142	नुनुदाते
+नुनोद	143	नुनुदिरे
+नुनोद	168	नुनुद्वांस्
+नुनोद	169	नुनुदान
+नेनेक्ति	0	नेनेज्मि
+नेनेक्ति	1	नेनिज्वः
+नेनेक्ति	2	नेनिज्मः
+नेनेक्ति	3	नेनेक्षि
+नेनेक्ति	4	नेनिक्थः
+नेनेक्ति	5	नेनिक्थ
+नेनेक्ति	7	नेनिक्तः
+नेनेक्ति	8	नेनिजति
+नेनेक्ति	9	नेनिजे
+नेनेक्ति	10	नेनिज्वहे
+नेनेक्ति	11	नेनिज्महे
+नेनेक्ति	12	नेनिक्षे
+नेनेक्ति	13	नेनिजाथे
+नेनेक्ति	14	नेनिग्ध्वे
+नेनेक्ति	15	नेनिक्ते
+नेनेक्ति	16	नेनिजाते
+नेनेक्ति	17	नेनिजते
+नेनेक्ति	18	नेनेजानि
+नेनेक्ति	19	नेनेजाव
+नेनेक्ति	20	नेनेजाम
+नेनेक्ति	21	नेनिग्धि
+नेनेक्ति	22	नेनिक्तम्
+नेनेक्ति	23	नेनिक्त
+नेनेक्ति	25	नेनिक्ताम्
+नेनेक्ति	26	नेनिजतु
+नेनेक्ति	27	नेनेजै
+नेनेक्ति	28	नेनेजावहै
+नेनेक्ति	29	नेनेजामहै
+नेनेक्ति	30	नेनिक्ष्व
+नेनेक्ति	31	नेनिजाथाम्
+नेनेक्ति	32	नेनिग्ध्वम्
+नेनेक्ति	33	नेनिक्ताम्
+नेनेक्ति	34	नेनिजाताम्
+नेनेक्ति	35	नेनिजताम्
+नेनेक्ति	36	नेनिज्याम्
+नेनेक्ति	37	नेनिज्याव
+नेनेक्ति	38	नेनिज्याम
+नेनेक्ति	39	नेनिज्याः
+नेनेक्ति	40	नेनिज्यातम्
+नेनेक्ति	41	नेनिज्यात
+नेनेक्ति	42	नेनिज्यात्
+नेनेक्ति	43	नेनिज्याताम्
+नेनेक्ति	44	नेनिज्युः
+नेनेक्ति	45	नेनिजीय
+नेनेक्ति	46	नेनिजीवहि
+नेनेक्ति	47	नेनिजीमहि
+नेनेक्ति	48	नेनिजीथाः
+नेनेक्ति	49	नेनिजीयाथाम्
+नेनेक्ति	50	नेनिजीध्वम्
+नेनेक्ति	51	नेनिजीत
+नेनेक्ति	52	नेनिजीयाताम्
+नेनेक्ति	53	नेनिजीरन्
+नेनेक्ति	54	नेनेजानि
+नेनेक्ति	55	नेनेजाव
+नेनेक्ति	56	नेनेजाम
+नेनेक्ति	57	नेनेजः
+नेनेक्ति	58	नेनेजथः
+नेनेक्ति	59	नेनेजथ
+नेनेक्ति	60	नेनेजत्
+नेनेक्ति	61	नेनेजतः
+नेनेक्ति	62	नेनेजन्
+नेनेक्ति	63	नेनेजै
+नेनेक्ति	64	नेनेजावहै
+नेनेक्ति	65	नेनेजामहै
+नेनेक्ति	66	नेनेजसे
+नेनेक्ति	67	नेनेजैथे
+नेनेक्ति	68	नेनेजध्वे
+नेनेक्ति	69	नेनेजते
+नेनेक्ति	70	नेनेजैते
+नेनेक्ति	71	नेनेजन्त
+नेनेक्ति	72	अनेनेजम्
+नेनेक्ति	73	अनेनिज्व
+नेनेक्ति	74	अनेनिज्म
+नेनेक्ति	75	अनेनेक्
+नेनेक्ति	76	अनेनिक्तम्
+नेनेक्ति	77	अनेनिक्त
+नेनेक्ति	78	अनेनेक्
+नेनेक्ति	79	अनेनिक्ताम्
+नेनेक्ति	80	अनेनिजुः
+नेनेक्ति	81	अनेनिजि
+नेनेक्ति	82	अनेनिज्वहि
+नेनेक्ति	83	अनेनिज्महि
+नेनेक्ति	84	अनेनिक्थाः
+नेनेक्ति	85	अनेनिजाथाम्
+नेनेक्ति	86	अनेनिग्ध्वम्
+नेनेक्ति	87	अनेनिक्त
+नेनेक्ति	88	अनेनिजाताम्
+नेनेक्ति	89	अनेनिजत
+नेनेक्ति	164	नेनिजत्
+नेनेक्ति	165	नेनिजान
+नौति	0	नौमि
+नौति	1	नुवः
+नौति	2	नुमः
+नौति	3	नौषि
+नौति	4	नुथः
+नौति	5	नुथ
+नौति	7	नुतः
+नौति	8	नुवन्ति
+नौति	18	नवानि
+नौति	19	नवाव
+नौति	20	नवाम
+नौति	21	नुहि
+नौति	22	नुतम्
+नौति	23	नुत
+नौति	25	नुताम्
+नौति	26	नुवन्तु
+नौति	36	नुयाम्
+नौति	37	नुयाव
+नौति	38	नुयाम
+नौति	39	नुयाः
+नौति	40	नुयातम्
+नौति	41	नुयात
+नौति	42	नुयात्
+नौति	43	नुयाताम्
+नौति	44	नुयुः
+नौति	54	नवानि
+नौति	55	नवाव
+नौति	56	नवाम
+नौति	57	नवः
+नौति	58	नवथः
+नौति	59	नवथ
+नौति	60	नवत्
+नौति	61	नवतः
+नौति	62	नवन्
+नौति	72	अनवम्
+नौति	73	अनुव
+नौति	74	अनुम
+नौति	76	अनुतम्
+नौति	77	अनुत
+नौति	79	अनुताम्
+नौति	80	अनुवन्
+नौति	164	नुवत्
+पतति	126	पपत
+पतति	127	पेचिव
+पतति	128	पेचिम
+पतति	129	पपत्थ
+पतति	130	पेचथुः
+पतति	131	पेच
+पतति	132	पपात
+पतति	133	पेचतुः
+पतति	134	पेचुः
+पतति	135	पेचे
+पतति	136	पेचिवहे
+पतति	137	पेचिमहे
+पतति	138	पेचिषे
+पतति	139	पेचाथे
+पतति	140	पेचिध्वे
+पतति	141	पेचे
+पतति	142	पेचाते
+पतति	143	पेचिरे
+पतति	144	अपप्तम्
+पतति	145	अपप्ताव
+पतति	146	अपप्ताम
+पतति	147	अपप्तः
+पतति	148	अपप्ततम्
+पतति	149	अपप्तत
+पतति	150	अपप्तत्
+पतति	151	अपप्तताम्
+पतति	152	अपप्तन्
+पतति	168	पेचिवांस्
+पतति	169	पेचान
+पपर्च	127	पपृचिव
+पपर्च	128	पपृचिम
+पपर्च	130	पपृचथुः
+पपर्च	131	पपृच
+पपर्च	133	पपृचतुः
+पपर्च	134	पपृचुः
+पपर्च	135	पपृचे
+पपर्च	136	पपृचिवहे
+पपर्च	137	पपृचिमहे
+पपर्च	138	पपृचिषे
+पपर्च	139	पपृचाथे
+पपर्च	140	पपृचिध्वे
+पपर्च	141	पपृचे
+पपर्च	142	पपृचाते
+पपर्च	143	पपृचिरे
+पपर्च	168	पपृक्वांस्
+पपर्च	169	पपृचान
+पपात	126	पपत
+पपात	127	पेतिव
+पपात	128	पेतिम
+पपात	129	पपत्थ
+पपात	130	पेतथुः
+पपात	131	पेत
+पपात	133	पेततुः
+पपात	134	पेतुः
+पपात	168	पेतिवांस्
+पपाद	126	पपद
+पपाद	127	पेदिव
+पपाद	128	पेदिम
+पपाद	129	पपत्थ
+पपाद	130	पेदथुः
+पपाद	131	पेद
+पपाद	133	पेदतुः
+पपाद	134	पेदुः
+पपाद	135	पेदे
+पपाद	136	पेदिवहे
+पपाद	137	पेदिमहे
+पपाद	138	पेदिषे
+पपाद	139	पेदाथे
+पपाद	140	पेदिध्वे
+पपाद	141	पेदे
+पपाद	142	पेदाते
+पपाद	143	पेदिरे
+पपाद	168	पेदिवांस्
+पपाद	169	पेदान
+पप्रौ	169	पप्राण
+परिवर्तते	81	पर्यवर्ते
+परिवर्तते	82	पर्यवर्तावहि
+परिवर्तते	83	पर्यवर्तामहि
+परिवर्तते	84	पर्यवर्तथाः
+परिवर्तते	85	पर्यवर्तेथाम्
+परिवर्तते	86	पर्यवर्तध्वम्
+परिवर्तते	87	पर्यवर्तत
+परिवर्तते	88	पर्यवर्तेताम्
+परिवर्तते	89	पर्यवर्तन्त
+परिहरति	72	पर्यहरम्
+परिहरति	73	पर्यहराव
+परिहरति	74	पर्यहराम
+परिहरति	75	पर्यहरः
+परिहरति	76	पर्यहरतम्
+परिहरति	77	पर्यहरत
+परिहरति	78	पर्यहरत्
+परिहरति	79	पर्यहरताम्
+परिहरति	80	पर्यहरन्
+परिहरति	81	पर्यहरे
+परिहरति	82	पर्यहरावहि
+परिहरति	83	पर्यहरामहि
+परिहरति	84	पर्यहरथाः
+परिहरति	85	पर्यहरेथाम्
+परिहरति	86	पर्यहरध्वम्
+परिहरति	87	पर्यहरत
+परिहरति	88	पर्यहरेताम्
+परिहरति	89	पर्यहरन्त
+परीक्षते	81	पर्यैक्षे
+परीक्षते	82	पर्यैक्षावहि
+परीक्षते	83	पर्यैक्षामहि
+परीक्षते	84	पर्यैक्षथाः
+परीक्षते	85	पर्यैक्षेथाम्
+परीक्षते	86	पर्यैक्षध्वम्
+परीक्षते	87	पर्यैक्षत
+परीक्षते	88	पर्यैक्षेताम्
+परीक्षते	89	पर्यैक्षन्त
+पर्दते	81	पर्दे
+पर्दते	82	पर्दावहि
+पर्दते	83	पर्दामहि
+पर्दते	84	पर्दथाः
+पर्दते	85	पर्देथाम्
+पर्दते	86	पर्दध्वम्
+पर्दते	87	पर्दत
+पर्दते	88	पर्देताम्
+पर्दते	89	पर्दन्त
+पापतीति	0	पापतीमि
+पापतीति	1	पापत्वः
+पापतीति	2	पापत्मः
+पापतीति	3	पापतीषि
+पापतीति	4	पापत्थः
+पापतीति	5	पापत्थ
+पापतीति	7	पापत्तः
+पापतीति	8	पापतति
+पापतीति	18	पापतानि
+पापतीति	19	पापताव
+पापतीति	20	पापताम
+पापतीति	21	पापद्धि
+पापतीति	22	पापत्तम्
+पापतीति	23	पापत्त
+पापतीति	25	पापत्ताम्
+पापतीति	26	पापततु
+पापतीति	36	पापत्याम्
+पापतीति	37	पापत्याव
+पापतीति	38	पापत्याम
+पापतीति	39	पापत्याः
+पापतीति	40	पापत्यातम्
+पापतीति	41	पापत्यात
+पापतीति	42	पापत्यात्
+पापतीति	43	पापत्याताम्
+पापतीति	44	पापत्युः
+पापतीति	54	पापतानि
+पापतीति	55	पापताव
+पापतीति	56	पापताम
+पापतीति	57	पापतः
+पापतीति	58	पापतथः
+पापतीति	59	पापतथ
+पापतीति	60	पापतत्
+पापतीति	61	पापततः
+पापतीति	62	पापतन्
+पापतीति	72	अपापतम्
+पापतीति	73	अपापत्व
+पापतीति	74	अपापत्म
+पापतीति	76	अपापत्तम्
+पापतीति	77	अपापत्त
+पापतीति	79	अपापत्ताम्
+पापतीति	80	अपापतुः
+पापतीति	164	पापतत्
+पिङ्क्ते	9	पिञ्जे
+पिङ्क्ते	10	पिञ्ज्वहे
+पिङ्क्ते	11	पिञ्ज्महे
+पिङ्क्ते	12	पिङ्क्षे
+पिङ्क्ते	13	पिञ्जाथे
+पिङ्क्ते	14	पिङ्ग्ध्वे
+पिङ्क्ते	16	पिञ्जाते
+पिङ्क्ते	17	पिञ्जते
+पिङ्क्ते	30	पिङ्क्ष्व
+पिङ्क्ते	31	पिञ्जाथाम्
+पिङ्क्ते	32	पिङ्ग्ध्वम्
+पिङ्क्ते	34	पिञ्जाताम्
+पिङ्क्ते	35	पिञ्जताम्
+पिङ्क्ते	45	पिञ्जीय
+पिङ्क्ते	46	पिञ्जीवहि
+पिङ्क्ते	47	पिञ्जीमहि
+पिङ्क्ते	48	पिञ्जीथाः
+पिङ्क्ते	49	पिञ्जीयाथाम्
+पिङ्क्ते	50	पिञ्जीध्वम्
+पिङ्क्ते	51	पिञ्जीत
+पिङ्क्ते	52	पिञ्जीयाताम्
+पिङ्क्ते	53	पिञ्जीरन्
+पिङ्क्ते	81	अपिन्जि
+पिङ्क्ते	82	अपिन्ज्वहि
+पिङ्क्ते	83	अपिन्ज्महि
+पिङ्क्ते	84	अपिन्क्थाः
+पिङ्क्ते	85	अपिन्जाथाम्
+पिङ्क्ते	86	अपिन्ग्ध्वम्
+पिङ्क्ते	87	अपिन्क्त
+पिङ्क्ते	88	अपिन्जाताम्
+पिङ्क्ते	89	अपिन्जत
+पिङ्क्ते	165	पिञ्जान
+पिनष्टि	0	पिनष्मि
+पिनष्टि	1	पिंष्वः
+पिनष्टि	2	पिंष्मः
+पिनष्टि	3	पिनक्षि
+पिनष्टि	4	पिंष्ठः
+पिनष्टि	5	पिंष्ठ
+पिनष्टि	6	पिनष्टि
+पिनष्टि	7	पिंष्टः
+पिनष्टि	8	पिंषन्ति
+पिनष्टि	9	पिंषे
+पिनष्टि	10	पिंष्वहे
+पिनष्टि	11	पिंष्महे
+पिनष्टि	12	पिङ्क्षे
+पिनष्टि	13	पिंषाथे
+पिनष्टि	14	पिण्ड्ढ्वे
+पिनष्टि	15	पिंष्टे
+पिनष्टि	16	पिंषाते
+पिनष्टि	17	पिंषते
+पिनष्टि	18	पिनषाणि
+पिनष्टि	19	पिनषाव
+पिनष्टि	20	पिनषाम
+पिनष्टि	21	पिण्ड्ढि
+पिनष्टि	22	पिंष्टम्
+पिनष्टि	23	पिंष्ट
+पिनष्टि	24	पिनष्टु
+पिनष्टि	25	पिंष्टाम्
+पिनष्टि	26	पिंषन्तु
+पिनष्टि	27	पिनषै
+पिनष्टि	28	पिनषावहै
+पिनष्टि	29	पिनषामहै
+पिनष्टि	30	पिङ्क्ष्व
+पिनष्टि	31	पिंषाथाम्
+पिनष्टि	32	पिण्ड्ढ्वम्
+पिनष्टि	33	पिंष्टाम्
+पिनष्टि	34	पिंषाताम्
+पिनष्टि	35	पिंषताम्
+पिनष्टि	36	पिंष्याम्
+पिनष्टि	37	पिंष्याव
+पिनष्टि	38	पिंष्याम
+पिनष्टि	39	पिंष्याः
+पिनष्टि	40	पिंष्यातम्
+पिनष्टि	41	पिंष्यात
+पिनष्टि	42	पिंष्यात्
+पिनष्टि	43	पिंष्याताम्
+पिनष्टि	44	पिंष्युः
+पिनष्टि	45	पिंषीय
+पिनष्टि	46	पिंषीवहि
+पिनष्टि	47	पिंषीमहि
+पिनष्टि	48	पिंषीथाः
+पिनष्टि	49	पिंषीयाथाम्
+पिनष्टि	50	पिंषीध्वम्
+पिनष्टि	51	पिंषीत
+पिनष्टि	52	पिंषीयाताम्
+पिनष्टि	53	पिंषीरन्
+पिनष्टि	54	पिनषाणि
+पिनष्टि	55	पिनषाव
+पिनष्टि	56	पिनषाम
+पिनष्टि	57	पिनषः
+पिनष्टि	58	पिनषथः
+पिनष्टि	59	पिनषथ
+पिनष्टि	60	पिनषत्
+पिनष्टि	61	पिनषतः
+पिनष्टि	62	पिनषन्
+पिनष्टि	63	पिनषै
+पिनष्टि	64	पिनषावहै
+पिनष्टि	65	पिनषामहै
+पिनष्टि	66	पिनषसे
+पिनष्टि	67	पिनषैथे
+पिनष्टि	68	पिनषध्वे
+पिनष्टि	69	पिनषते
+पिनष्टि	70	पिनषैते
+पिनष्टि	71	पिनषन्त
+पिनष्टि	72	अपिनषम्
+पिनष्टि	73	अपिंष्व
+पिनष्टि	74	अपिंष्म
+पिनष्टि	75	अपिनट्
+पिनष्टि	76	अपिंष्टम्
+पिनष्टि	77	अपिंष्ट
+पिनष्टि	78	अपिनट्
+पिनष्टि	79	अपिंष्टाम्
+पिनष्टि	80	अपिंषन्
+पिनष्टि	81	अपिंषि
+पिनष्टि	82	अपिंष्वहि
+पिनष्टि	83	अपिंष्महि
+पिनष्टि	84	अपिंष्ठाः
+पिनष्टि	85	अपिंषाथाम्
+पिनष्टि	86	अपिण्ड्ढ्वम्
+पिनष्टि	87	अपिंष्ट
+पिनष्टि	88	अपिंषाताम्
+पिनष्टि	89	अपिंषत
+पिनष्टि	164	पिंषत्
+पिनष्टि	165	पिंषाण
+पिबति	90	पास्यामि
+पिबति	91	पास्यावः
+पिबति	92	पास्यामः
+पिबति	93	पास्यसि
+पिबति	94	पास्यथः
+पिबति	95	पास्यथ
+पिबति	96	पास्यति
+पिबति	97	पास्यतः
+पिबति	98	पास्यन्ति
+पिबति	99	पास्ये
+पिबति	100	पास्यावहे
+पिबति	101	पास्यामहे
+पिबति	102	पास्यसे
+पिबति	103	पास्येथे
+पिबति	104	पास्यध्वे
+पिबति	105	पास्यते
+पिबति	106	पास्येते
+पिबति	107	पास्यन्ते
+पिबति	166	पास्यत्
+पिबति	167	पास्यमान
+पुपोष	127	पुपुषिव
+पुपोष	128	पुपुषिम
+पुपोष	130	पुपुषथुः
+पुपोष	131	पुपुष
+पुपोष	133	पुपुषतुः
+पुपोष	134	पुपुषुः
+पुपोष	135	पुपुषे
+पुपोष	136	पुपुषिवहे
+पुपोष	137	पुपुषिमहे
+पुपोष	138	पुपुषिषे
+पुपोष	139	पुपुषाथे
+पुपोष	140	पुपुषिध्वे
+पुपोष	141	पुपुषे
+पुपोष	142	पुपुषाते
+पुपोष	143	पुपुषिरे
+पुपोष	168	पुपुष्वांस्
+पुपोष	169	पुपुषाण
+पृणक्ति	0	पृणच्मि
+पृणक्ति	1	पृञ्च्वः
+पृणक्ति	2	पृञ्च्मः
+पृणक्ति	3	पृणक्षि
+पृणक्ति	4	पृङ्क्थः
+पृणक्ति	5	पृङ्क्थ
+पृणक्ति	7	पृङ्क्तः
+पृणक्ति	8	पृञ्चन्ति
+पृणक्ति	9	पृञ्चे
+पृणक्ति	10	पृञ्च्वहे
+पृणक्ति	11	पृञ्च्महे
+पृणक्ति	12	पृङ्क्षे
+पृणक्ति	13	पृञ्चाथे
+पृणक्ति	14	पृङ्ग्ध्वे
+पृणक्ति	15	पृङ्क्ते
+पृणक्ति	16	पृञ्चाते
+पृणक्ति	17	पृञ्चते
+पृणक्ति	18	पृणचानि
+पृणक्ति	19	पृणचाव
+पृणक्ति	20	पृणचाम
+पृणक्ति	21	पृङ्ग्धि
+पृणक्ति	22	पृङ्क्तम्
+पृणक्ति	23	पृङ्क्त
+पृणक्ति	25	पृङ्क्ताम्
+पृणक्ति	26	पृञ्चन्तु
+पृणक्ति	27	पृणचै
+पृणक्ति	28	पृणचावहै
+पृणक्ति	29	पृणचामहै
+पृणक्ति	30	पृङ्क्ष्व
+पृणक्ति	31	पृञ्चाथाम्
+पृणक्ति	32	पृङ्ग्ध्वम्
+पृणक्ति	33	पृङ्क्ताम्
+पृणक्ति	34	पृञ्चाताम्
+पृणक्ति	35	पृञ्चताम्
+पृणक्ति	36	पृञ्च्याम्
+पृणक्ति	37	पृञ्च्याव
+पृणक्ति	38	पृञ्च्याम
+पृणक्ति	39	पृञ्च्याः
+पृणक्ति	40	पृञ्च्यातम्
+पृणक्ति	41	पृञ्च्यात
+पृणक्ति	42	पृञ्च्यात्
+पृणक्ति	43	पृञ्च्याताम्
+पृणक्ति	44	पृञ्च्युः
+पृणक्ति	45	पृञ्चीय
+पृणक्ति	46	पृञ्चीवहि
+पृणक्ति	47	पृञ्चीमहि
+पृणक्ति	48	पृञ्चीथाः
+पृणक्ति	49	पृञ्चीयाथाम्
+पृणक्ति	50	पृञ्चीध्वम्
+पृणक्ति	51	पृञ्चीत
+पृणक्ति	52	पृञ्चीयाताम्
+पृणक्ति	53	पृञ्चीरन्
+पृणक्ति	54	पृणचानि
+पृणक्ति	55	पृणचाव
+पृणक्ति	56	पृणचाम
+पृणक्ति	57	पृणचः
+पृणक्ति	58	पृणचथः
+पृणक्ति	59	पृणचथ
+पृणक्ति	60	पृणचत्
+पृणक्ति	61	पृणचतः
+पृणक्ति	62	पृणचन्
+पृणक्ति	63	पृणचै
+पृणक्ति	64	पृणचावहै
+पृणक्ति	65	पृणचामहै
+पृणक्ति	66	पृणचसे
+पृणक्ति	67	पृणचैथे
+पृणक्ति	68	पृणचध्वे
+पृणक्ति	69	पृणचते
+पृणक्ति	70	पृणचैते
+पृणक्ति	71	पृणचन्त
+पृणक्ति	72	अपृणचम्
+पृणक्ति	73	अपृञ्च्व
+पृणक्ति	74	अपृञ्च्म
+पृणक्ति	75	अपृणक्
+पृणक्ति	76	अपृङ्क्तम्
+पृणक्ति	77	अपृङ्क्त
+पृणक्ति	78	अपृणक्
+पृणक्ति	79	अपृङ्क्ताम्
+पृणक्ति	80	अपृञ्चन्
+पृणक्ति	81	अपृञ्चि
+पृणक्ति	82	अपृञ्च्वहि
+पृणक्ति	83	अपृञ्च्महि
+पृणक्ति	84	अपृङ्क्थाः
+पृणक्ति	85	अपृञ्चाथाम्
+पृणक्ति	86	अपृङ्ग्ध्वम्
+पृणक्ति	87	अपृङ्क्त
+पृणक्ति	88	अपृञ्चाताम्
+पृणक्ति	89	अपृञ्चत
+पृणक्ति	164	पृञ्चत्
+पृणक्ति	165	पृञ्चान
+प्रक्षालयति	72	प्राक्षालयम्
+प्रक्षालयति	73	प्राक्षालयाव
+प्रक्षालयति	74	प्राक्षालयाम
+प्रक्षालयति	75	प्राक्षालयः
+प्रक्षालयति	76	प्राक्षालयतम्
+प्रक्षालयति	77	प्राक्षालयत
+प्रक्षालयति	78	प्राक्षालयत्
+प्रक्षालयति	79	प्राक्षालयताम्
+प्रक्षालयति	80	प्राक्षालयन्
+प्रक्षालयति	81	प्राक्षालये
+प्रक्षालयति	82	प्राक्षालयावहि
+प्रक्षालयति	83	प्राक्षालयामहि
+प्रक्षालयति	84	प्राक्षालयथाः
+प्रक्षालयति	85	प्राक्षालयेथाम्
+प्रक्षालयति	86	प्राक्षालयध्वम्
+प्रक्षालयति	87	प्राक्षालयत
+प्रक्षालयति	88	प्राक्षालयेताम्
+प्रक्षालयति	89	प्राक्षालयन्त
+प्रचष्टे	9	प्रचक्षे
+प्रचष्टे	10	प्रचक्ष्वहे
+प्रचष्टे	11	प्रचक्ष्महे
+प्रचष्टे	12	प्रचक्षे
+प्रचष्टे	13	प्रचक्षाथे
+प्रचष्टे	14	प्रचड्ढ्वे
+प्रचष्टे	15	प्रचष्टे
+प्रचष्टे	16	प्रचक्षाते
+प्रचष्टे	17	प्रचक्षते
+प्रचष्टे	27	चक्षै
+प्रचष्टे	28	चक्षावहै
+प्रचष्टे	29	चक्षामहै
+प्रचष्टे	30	प्रचक्ष्व
+प्रचष्टे	31	प्रचक्षाथाम्
+प्रचष्टे	32	प्रचड्ढ्वम्
+प्रचष्टे	33	प्रचष्टाम्
+प्रचष्टे	34	प्रचक्षाताम्
+प्रचष्टे	35	प्रचक्षताम्
+प्रचष्टे	45	प्रचक्षीय
+प्रचष्टे	46	प्रचक्षीवहि
+प्रचष्टे	47	प्रचक्षीमहि
+प्रचष्टे	48	प्रचक्षीथाः
+प्रचष्टे	49	प्रचक्षीयाथाम्
+प्रचष्टे	50	प्रचक्षीध्वम्
+प्रचष्टे	51	प्रचक्षीत
+प्रचष्टे	52	प्रचक्षीयाताम्
+प्रचष्टे	53	प्रचक्षीरन्
+प्रचष्टे	63	चक्षै
+प्रचष्टे	64	चक्षावहै
+प्रचष्टे	65	चक्षामहै
+प्रचष्टे	66	चक्षसे
+प्रचष्टे	67	चक्षैथे
+प्रचष्टे	68	चक्षध्वे
+प्रचष्टे	69	चक्षते
+प्रचष्टे	70	चक्षैते
+प्रचष्टे	71	चक्षन्त
+प्रचष्टे	165	प्रचक्षाण
+प्रभाति	18	प्रभाणि
+प्रभाति	54	प्रभाणि
+प्रभाति	72	प्राभाम्
+प्रभाति	73	प्राभाव
+प्रभाति	74	प्राभाम
+प्रभाति	75	प्राभाः
+प्रभाति	76	प्राभातम्
+प्रभाति	77	प्राभात
+प्रभाति	78	प्राभात्
+प्रभाति	79	प्राभाताम्
+प्रभाति	80	प्राभुः
+प्रवदति	72	प्रावदम्
+प्रवदति	73	प्रावदाव
+प्रवदति	74	प्रावदाम
+प्रवदति	75	प्रावदः
+प्रवदति	76	प्रावदतम्
+प्रवदति	77	प्रावदत
+प्रवदति	78	प्रावदत्
+प्रवदति	79	प्रावदताम्
+प्रवदति	80	प्रावदन्
+प्रवदति	81	प्रावदे
+प्रवदति	82	प्रावदावहि
+प्रवदति	83	प्रावदामहि
+प्रवदति	84	प्रावदथाः
+प्रवदति	85	प्रावदेथाम्
+प्रवदति	86	प्रावदध्वम्
+प्रवदति	87	प्रावदत
+प्रवदति	88	प्रावदेताम्
+प्रवदति	89	प्रावदन्त
+प्रवहति	72	प्रावहम्
+प्रवहति	73	प्रावहाव
+प्रवहति	74	प्रावहाम
+प्रवहति	75	प्रावहः
+प्रवहति	76	प्रावहतम्
+प्रवहति	77	प्रावहत
+प्रवहति	78	प्रावहत्
+प्रवहति	79	प्रावहताम्
+प्रवहति	80	प्रावहन्
+प्रवहति	81	प्रावहे
+प्रवहति	82	प्रावहावहि
+प्रवहति	83	प्रावहामहि
+प्रवहति	84	प्रावहथाः
+प्रवहति	85	प्रावहेथाम्
+प्रवहति	86	प्रावहध्वम्
+प्रवहति	87	प्रावहत
+प्रवहति	88	प्रावहेताम्
+प्रवहति	89	प्रावहन्त
+प्रुष्णोति	72	अप्रुष्नवम्
+प्रुष्णोति	75	अप्रुष्नोः
+प्रुष्णोति	78	अप्रुष्नोत्
+प्साति	13	प्सैथे
+प्साति	16	प्सैते
+प्साति	17	प्सान्ते
+प्साति	21	प्सा
+प्साति	31	प्सैथाम्
+प्साति	34	प्सैताम्
+प्साति	35	प्सान्ताम्
+प्साति	36	प्सैयम्
+प्साति	37	प्सैव
+प्साति	38	प्सैम
+प्साति	39	प्सैः
+प्साति	40	प्सैतम्
+प्साति	41	प्सैत
+प्साति	42	प्सैत्
+प्साति	43	प्सैताम्
+प्साति	44	प्सैयुः
+प्साति	45	प्सैय
+प्साति	46	प्सैवहि
+प्साति	47	प्सैमहि
+प्साति	48	प्सैथाः
+प्साति	49	प्सैयाथाम्
+प्साति	50	प्सैध्वम्
+प्साति	51	प्सैत
+प्साति	52	प्सैयाताम्
+प्साति	53	प्सैरन्
+प्साति	68	प्साध्वै
+प्साति	80	अप्सान्
+प्साति	81	अप्सै
+प्साति	85	अप्सैथाम्
+प्साति	88	अप्सैताम्
+प्साति	89	अप्सान्त
+प्साति	165	प्सामान
+बबन्ध	129	बबन्द्ध
+बबर्ह	127	बबृहिव
+बबर्ह	128	बबृहिम
+बबर्ह	130	बबृहथुः
+बबर्ह	131	बबृह
+बबर्ह	133	बबृहतुः
+बबर्ह	134	बबृहुः
+बबर्ह	135	बबृहे
+बबर्ह	136	बबृहिवहे
+बबर्ह	137	बबृहिमहे
+बबर्ह	138	बबृहिषे
+बबर्ह	139	बबृहाथे
+बबर्ह	140	बबृहिध्वे
+बबर्ह	141	बबृहे
+बबर्ह	142	बबृहाते
+बबर्ह	143	बबृहिरे
+बबर्ह	168	बबृह्वांस्
+बबर्ह	169	बबृहाण
+बभस्ति	0	बभस्मि
+बभस्ति	1	बप्स्वः
+बभस्ति	2	बप्स्मः
+बभस्ति	4	बब्धः
+बभस्ति	5	बब्ध
+बभस्ति	7	बब्धः
+बभस्ति	8	बप्सति
+बभस्ति	18	बभसानि
+बभस्ति	19	बभसाव
+बभस्ति	20	बभसाम
+बभस्ति	21	बब्धि
+बभस्ति	22	बब्धम्
+बभस्ति	23	बब्ध
+बभस्ति	25	बब्धाम्
+बभस्ति	26	बप्सतु
+बभस्ति	36	बप्स्याम्
+बभस्ति	37	बप्स्याव
+बभस्ति	38	बप्स्याम
+बभस्ति	39	बप्स्याः
+बभस्ति	40	बप्स्यातम्
+बभस्ति	41	बप्स्यात
+बभस्ति	42	बप्स्यात्
+बभस्ति	43	बप्स्याताम्
+बभस्ति	44	बप्स्युः
+बभस्ति	54	बभसानि
+बभस्ति	55	बभसाव
+बभस्ति	56	बभसाम
+बभस्ति	57	बभसः
+बभस्ति	58	बभसथः
+बभस्ति	59	बभसथ
+बभस्ति	60	बभसत्
+बभस्ति	61	बभसतः
+बभस्ति	62	बभसन्
+बभस्ति	72	अबभसम्
+बभस्ति	73	अबप्स्व
+बभस्ति	74	अबप्स्म
+बभस्ति	75	अबभः
+बभस्ति	76	अबब्धम्
+बभस्ति	77	अबब्ध
+बभस्ति	78	अबभः
+बभस्ति	79	अबब्धाम्
+बभस्ति	80	अबप्सुः
+बभस्ति	164	बप्सत्
+बभाज	126	बभज
+बभाज	127	भेजिव
+बभाज	128	भेजिम
+बभाज	129	बभक्थ
+बभाज	130	भेजथुः
+बभाज	131	भेज
+बभाज	133	भेजतुः
+बभाज	134	भेजुः
+बभाज	135	भेजे
+बभाज	136	भेजिवहे
+बभाज	137	भेजिमहे
+बभाज	138	भेजिषे
+बभाज	139	भेजाथे
+बभाज	140	भेजिध्वे
+बभाज	141	भेजे
+बभाज	142	भेजाते
+बभाज	143	भेजिरे
+बभाज	168	भेजिवांस्
+बभाज	169	भेजान
+बभूव	129	बभूथ
+बभूव	168	बभूवांस्
+बाधिष्यते	99	बाधिष्ये
+बाधिष्यते	100	बाधिष्यावहे
+बाधिष्यते	101	बाधिष्यामहे
+बाधिष्यते	102	बाधिष्यसे
+बाधिष्यते	103	बाधिष्येथे
+बाधिष्यते	104	बाधिष्यध्वे
+बाधिष्यते	105	बाधिष्यते
+बाधिष्यते	106	बाधिष्येते
+बाधिष्यते	107	बाधिष्यन्ते
+बाधिष्यते	117	अबाधिष्ये
+बाधिष्यते	118	अबाधिष्यावहि
+बाधिष्यते	119	अबाधिष्यामहि
+बाधिष्यते	120	अबाधिष्यथाः
+बाधिष्यते	121	अबाधिष्येथाम्
+बाधिष्यते	122	अबाधिष्यध्वम्
+बाधिष्यते	123	अबाधिष्यत
+बाधिष्यते	124	अबाधिष्येताम्
+बाधिष्यते	125	अबाधिष्यन्त
+बाधिष्यते	167	बाधिष्यमाण
+बिभेति	0	बिभेमि
+बिभेति	1	बिभीवः
+बिभेति	2	बिभीमः
+बिभेति	3	बिभेषि
+बिभेति	4	बिभीथः
+बिभेति	5	बिभीथ
+बिभेति	7	बिभीतः
+बिभेति	8	बिभ्यति
+बिभेति	9	बिभ्ये
+बिभेति	10	बिभीवहे
+बिभेति	11	बिभीमहे
+बिभेति	12	बिभीषे
+बिभेति	13	बिभ्याथे
+बिभेति	14	बिभीध्वे
+बिभेति	15	बिभीते
+बिभेति	16	बिभ्याते
+बिभेति	17	बिभ्यते
+बिभेति	18	बिभयानि
+बिभेति	19	बिभयाव
+बिभेति	20	बिभयाम
+बिभेति	21	बिभीहि
+बिभेति	22	बिभीतम्
+बिभेति	23	बिभीत
+बिभेति	25	बिभीताम्
+बिभेति	26	बिभ्यतु
+बिभेति	27	बिभयै
+बिभेति	28	बिभयावहै
+बिभेति	29	बिभयामहै
+बिभेति	30	बिभीष्व
+बिभेति	31	बिभ्याथाम्
+बिभेति	32	बिभीध्वम्
+बिभेति	33	बिभीताम्
+बिभेति	34	बिभ्याताम्
+बिभेति	35	बिभ्यताम्
+बिभेति	36	बिभीयाम्
+बिभेति	37	बिभीयाव
+बिभेति	38	बिभीयाम
+बिभेति	39	बिभीयाः
+बिभेति	40	बिभीयातम्
+बिभेति	41	बिभीयात
+बिभेति	42	बिभीयात्
+बिभेति	43	बिभीयाताम्
+बिभेति	44	बिभीयुः
+बिभेति	45	बिभ्यीय
+बिभेति	46	बिभ्यीवहि
+बिभेति	47	बिभ्यीमहि
+बिभेति	48	बिभ्यीथाः
+बिभेति	49	बिभ्यीयाथाम्
+बिभेति	50	बिभ्यीध्वम्
+बिभेति	51	बिभ्यीत
+बिभेति	52	बिभ्यीयाताम्
+बिभेति	53	बिभ्यीरन्
+बिभेति	54	बिभयानि
+बिभेति	55	बिभयाव
+बिभेति	56	बिभयाम
+बिभेति	57	बिभयः
+बिभेति	58	बिभयथः
+बिभेति	59	बिभयथ
+बिभेति	60	बिभयत्
+बिभेति	61	बिभयतः
+बिभेति	62	बिभयन्
+बिभेति	63	बिभयै
+बिभेति	64	बिभयावहै
+बिभेति	65	बिभयामहै
+बिभेति	66	बिभयसे
+बिभेति	67	बिभयैथे
+बिभेति	68	बिभयध्वे
+बिभेति	69	बिभयते
+बिभेति	70	बिभयैते
+बिभेति	71	बिभयन्त
+बिभेति	72	अबिभयम्
+बिभेति	73	अबिभीव
+बिभेति	74	अबिभीम
+बिभेति	76	अबिभीतम्
+बिभेति	77	अबिभीत
+बिभेति	79	अबिभीताम्
+बिभेति	80	अबिभयुः
+बिभेति	81	अबिभ्यि
+बिभेति	82	अबिभीवहि
+बिभेति	83	अबिभीमहि
+बिभेति	84	अबिभीथाः
+बिभेति	85	अबिभ्याथाम्
+बिभेति	86	अबिभीध्वम्
+बिभेति	87	अबिभीत
+बिभेति	88	अबिभ्याताम्
+बिभेति	89	अबिभ्यत
+बिभेति	164	बिभ्यत्
+बिभेति	165	बिभ्यान
+बुबोध	127	बुबुधिव
+बुबोध	128	बुबुधिम
+बुबोध	130	बुबुधथुः
+बुबोध	131	बुबुध
+बुबोध	133	बुबुधतुः
+बुबोध	134	बुबुधुः
+बुबोध	135	बुबुधे
+बुबोध	136	बुबुधिवहे
+बुबोध	137	बुबुधिमहे
+बुबोध	138	बुबुधिषे
+बुबोध	139	बुबुधाथे
+बुबोध	140	बुबुधिध्वे
+बुबोध	141	बुबुधे
+बुबोध	142	बुबुधाते
+बुबोध	143	बुबुधिरे
+बुबोध	168	बुबुध्वांस्
+बुबोध	169	बुबुधान
+बुभूषति	164	बुभूषु
+बोभवीति	0	बोभवीमि
+बोभवीति	1	बोभूवः
+बोभवीति	2	बोभूमः
+बोभवीति	3	बोभवीषि
+बोभवीति	4	बोभूथः
+बोभवीति	5	बोभूथ
+बोभवीति	7	बोभूतः
+बोभवीति	8	बोभुवति
+बोभवीति	18	बोभवानि
+बोभवीति	19	बोभवाव
+बोभवीति	20	बोभवाम
+बोभवीति	21	बोभूहि
+बोभवीति	22	बोभूतम्
+बोभवीति	23	बोभूत
+बोभवीति	25	बोभूताम्
+बोभवीति	26	बोभुवतु
+बोभवीति	36	बोभूयाम्
+बोभवीति	37	बोभूयाव
+बोभवीति	38	बोभूयाम
+बोभवीति	39	बोभूयाः
+बोभवीति	40	बोभूयातम्
+बोभवीति	41	बोभूयात
+बोभवीति	42	बोभूयात्
+बोभवीति	43	बोभूयाताम्
+बोभवीति	44	बोभूयुः
+बोभवीति	54	बोभवानि
+बोभवीति	55	बोभवाव
+बोभवीति	56	बोभवाम
+बोभवीति	57	बोभवः
+बोभवीति	58	बोभवथः
+बोभवीति	59	बोभवथ
+बोभवीति	60	बोभवत्
+बोभवीति	61	बोभवतः
+बोभवीति	62	बोभवन्
+बोभवीति	72	अबोभवम्
+बोभवीति	73	अबोभूव
+बोभवीति	74	अबोभूम
+बोभवीति	76	अबोभूतम्
+बोभवीति	77	अबोभूत
+बोभवीति	79	अबोभूताम्
+बोभवीति	80	अबोभुवुः
+बोभवीति	164	बोभुवत्
+ब्रवीति	0	ब्रवीमि
+ब्रवीति	1	ब्रूवः
+ब्रवीति	2	ब्रूमः
+ब्रवीति	3	ब्रवीषि
+ब्रवीति	4	ब्रूथः
+ब्रवीति	5	ब्रूथ
+ब्रवीति	7	ब्रूतः
+ब्रवीति	8	ब्रुवन्ति
+ब्रवीति	9	ब्रुवे
+ब्रवीति	10	ब्रूवहे
+ब्रवीति	11	ब्रूमहे
+ब्रवीति	12	ब्रूषे
+ब्रवीति	13	ब्रुवाथे
+ब्रवीति	14	ब्रूध्वे
+ब्रवीति	15	ब्रूते
+ब्रवीति	16	ब्रुवाते
+ब्रवीति	17	ब्रुवते
+ब्रवीति	18	ब्रवाणि
+ब्रवीति	19	ब्रवाव
+ब्रवीति	20	ब्रवाम
+ब्रवीति	21	ब्रूहि
+ब्रवीति	22	ब्रूतम्
+ब्रवीति	23	ब्रूत
+ब्रवीति	25	ब्रूताम्
+ब्रवीति	26	ब्रुवन्तु
+ब्रवीति	27	ब्रवै
+ब्रवीति	28	ब्रवावहै
+ब्रवीति	29	ब्रवामहै
+ब्रवीति	30	ब्रूष्व
+ब्रवीति	31	ब्रुवाथाम्
+ब्रवीति	32	ब्रूध्वम्
+ब्रवीति	33	ब्रूताम्
+ब्रवीति	34	ब्रुवाताम्
+ब्रवीति	35	ब्रुवताम्
+ब्रवीति	36	ब्रूयाम्
+ब्रवीति	37	ब्रूयाव
+ब्रवीति	38	ब्रूयाम
+ब्रवीति	39	ब्रूयाः
+ब्रवीति	40	ब्रूयातम्
+ब्रवीति	41	ब्रूयात
+ब्रवीति	42	ब्रूयात्
+ब्रवीति	43	ब्रूयाताम्
+ब्रवीति	44	ब्रूयुः
+ब्रवीति	45	ब्रुवीय
+ब्रवीति	46	ब्रुवीवहि
+ब्रवीति	47	ब्रुवीमहि
+ब्रवीति	48	ब्रुवीथाः
+ब्रवीति	49	ब्रुवीयाथाम्
+ब्रवीति	50	ब्रुवीध्वम्
+ब्रवीति	51	ब्रुवीत
+ब्रवीति	52	ब्रुवीयाताम्
+ब्रवीति	53	ब्रुवीरन्
+ब्रवीति	54	ब्रवाणि
+ब्रवीति	55	ब्रवाव
+ब्रवीति	56	ब्रवाम
+ब्रवीति	57	ब्रवः
+ब्रवीति	58	ब्रवथः
+ब्रवीति	59	ब्रवथ
+ब्रवीति	60	ब्रवत्
+ब्रवीति	61	ब्रवतः
+ब्रवीति	62	ब्रवन्
+ब्रवीति	63	ब्रवै
+ब्रवीति	64	ब्रवावहै
+ब्रवीति	65	ब्रवामहै
+ब्रवीति	66	ब्रवसे
+ब्रवीति	67	ब्रवैथे
+ब्रवीति	68	ब्रवध्वे
+ब्रवीति	69	ब्रवते
+ब्रवीति	70	ब्रवैते
+ब्रवीति	71	ब्रवन्त
+ब्रवीति	72	अब्रुवम्
+ब्रवीति	73	अब्रूव
+ब्रवीति	74	अब्रूम
+ब्रवीति	76	अब्रूतम्
+ब्रवीति	77	अब्रूत
+ब्रवीति	79	अब्रूताम्
+ब्रवीति	80	अब्रुवन्
+ब्रवीति	81	अब्रुवि
+ब्रवीति	82	अब्रूवहि
+ब्रवीति	83	अब्रूमहि
+ब्रवीति	84	अब्रूथाः
+ब्रवीति	85	अब्रुवाथाम्
+ब्रवीति	86	अब्रूध्वम्
+ब्रवीति	87	अब्रूत
+ब्रवीति	88	अब्रुवाताम्
+ब्रवीति	89	अब्रुवत
+ब्रवीति	164	ब्रुवत्
+ब्रवीति	165	ब्रुवाण
+भिनत्ति	0	भिनद्मि
+भिनत्ति	1	भिन्द्वः
+भिनत्ति	2	भिन्द्मः
+भिनत्ति	4	भिन्त्थः
+भिनत्ति	5	भिन्त्थ
+भिनत्ति	7	भिन्त्तः
+भिनत्ति	8	भिन्दन्ति
+भिनत्ति	9	भिन्दे
+भिनत्ति	10	भिन्द्वहे
+भिनत्ति	11	भिन्द्महे
+भिनत्ति	12	भिन्त्से
+भिनत्ति	13	भिन्दाथे
+भिनत्ति	14	भिन्द्ध्वे
+भिनत्ति	15	भिन्त्ते
+भिनत्ति	16	भिन्दाते
+भिनत्ति	17	भिन्दते
+भिनत्ति	18	भिनदानि
+भिनत्ति	19	भिनदाव
+भिनत्ति	20	भिनदाम
+भिनत्ति	21	भिन्द्धि
+भिनत्ति	22	भिन्त्तम्
+भिनत्ति	23	भिन्त्त
+भिनत्ति	25	भिन्त्ताम्
+भिनत्ति	26	भिन्दन्तु
+भिनत्ति	27	भिनदै
+भिनत्ति	28	भिनदावहै
+भिनत्ति	29	भिनदामहै
+भिनत्ति	30	भिन्त्स्व
+भिनत्ति	31	भिन्दाथाम्
+भिनत्ति	32	भिन्द्ध्वम्
+भिनत्ति	33	भिन्त्ताम्
+भिनत्ति	34	भिन्दाताम्
+भिनत्ति	35	भिन्दताम्
+भिनत्ति	36	भिन्द्याम्
+भिनत्ति	37	भिन्द्याव
+भिनत्ति	38	भिन्द्याम
+भिनत्ति	39	भिन्द्याः
+भिनत्ति	40	भिन्द्यातम्
+भिनत्ति	41	भिन्द्यात
+भिनत्ति	42	भिन्द्यात्
+भिनत्ति	43	भिन्द्याताम्
+भिनत्ति	44	भिन्द्युः
+भिनत्ति	45	भिन्दीय
+भिनत्ति	46	भिन्दीवहि
+भिनत्ति	47	भिन्दीमहि
+भिनत्ति	48	भिन्दीथाः
+भिनत्ति	49	भिन्दीयाथाम्
+भिनत्ति	50	भिन्दीध्वम्
+भिनत्ति	51	भिन्दीत
+भिनत्ति	52	भिन्दीयाताम्
+भिनत्ति	53	भिन्दीरन्
+भिनत्ति	54	भिनदानि
+भिनत्ति	55	भिनदाव
+भिनत्ति	56	भिनदाम
+भिनत्ति	57	भिनदः
+भिनत्ति	58	भिनदथः
+भिनत्ति	59	भिनदथ
+भिनत्ति	60	भिनदत्
+भिनत्ति	61	भिनदतः
+भिनत्ति	62	भिनदन्
+भिनत्ति	63	भिनदै
+भिनत्ति	64	भिनदावहै
+भिनत्ति	65	भिनदामहै
+भिनत्ति	66	भिनदसे
+भिनत्ति	67	भिनदैथे
+भिनत्ति	68	भिनदध्वे
+भिनत्ति	69	भिनदते
+भिनत्ति	70	भिनदैते
+भिनत्ति	71	भिनदन्त
+भिनत्ति	72	अभिनदम्
+भिनत्ति	73	अभिन्द्व
+भिनत्ति	74	अभिन्द्म
+भिनत्ति	75	अभिनत्
+भिनत्ति	76	अभिन्त्तम्
+भिनत्ति	77	अभिन्त्त
+भिनत्ति	78	अभिनत्
+भिनत्ति	79	अभिन्त्ताम्
+भिनत्ति	80	अभिन्दन्
+भिनत्ति	81	अभिन्दि
+भिनत्ति	82	अभिन्द्वहि
+भिनत्ति	83	अभिन्द्महि
+भिनत्ति	84	अभिन्त्थाः
+भिनत्ति	85	अभिन्दाथाम्
+भिनत्ति	86	अभिन्द्ध्वम्
+भिनत्ति	87	अभिन्त्त
+भिनत्ति	88	अभिन्दाताम्
+भिनत्ति	89	अभिन्दत
+भिनत्ति	164	भिन्दत्
+भिनत्ति	165	भिन्दान
+भिषक्ति	0	भिषज्मि
+भिषक्ति	1	भिषज्वः
+भिषक्ति	2	भिषज्मः
+भिषक्ति	3	भिषक्षि
+भिषक्ति	8	भिषजन्ति
+भिषक्ति	9	भिषजे
+भिषक्ति	10	भिषज्वहे
+भिषक्ति	11	भिषज्महे
+भिषक्ति	12	भिषक्षे
+भिषक्ति	13	भिषजाथे
+भिषक्ति	14	भिषग्ध्वे
+भिषक्ति	16	भिषजाते
+भिषक्ति	17	भिषजते
+भिषक्ति	18	भिषजानि
+भिषक्ति	19	भिषजाव
+भिषक्ति	20	भिषजाम
+भिषक्ति	21	भिषग्धि
+भिषक्ति	26	भिषजन्तु
+भिषक्ति	27	भिषजै
+भिषक्ति	28	भिषजावहै
+भिषक्ति	29	भिषजामहै
+भिषक्ति	30	भिषक्ष्व
+भिषक्ति	31	भिषजाथाम्
+भिषक्ति	32	भिषग्ध्वम्
+भिषक्ति	34	भिषजाताम्
+भिषक्ति	35	भिषजताम्
+भिषक्ति	36	भिषज्याम्
+भिषक्ति	37	भिषज्याव
+भिषक्ति	38	भिषज्याम
+भिषक्ति	39	भिषज्याः
+भिषक्ति	40	भिषज्यातम्
+भिषक्ति	41	भिषज्यात
+भिषक्ति	42	भिषज्यात्
+भिषक्ति	43	भिषज्याताम्
+भिषक्ति	44	भिषज्युः
+भिषक्ति	45	भिषजीय
+भिषक्ति	46	भिषजीवहि
+भिषक्ति	47	भिषजीमहि
+भिषक्ति	48	भिषजीथाः
+भिषक्ति	49	भिषजीयाथाम्
+भिषक्ति	50	भिषजीध्वम्
+भिषक्ति	51	भिषजीत
+भिषक्ति	52	भिषजीयाताम्
+भिषक्ति	53	भिषजीरन्
+भिषक्ति	54	भिषजानि
+भिषक्ति	55	भिषजाव
+भिषक्ति	56	भिषजाम
+भिषक्ति	57	भिषजः
+भिषक्ति	58	भिषजथः
+भिषक्ति	59	भिषजथ
+भिषक्ति	60	भिषजत्
+भिषक्ति	61	भिषजतः
+भिषक्ति	62	भिषजन्
+भिषक्ति	63	भिषजै
+भिषक्ति	64	भिषजावहै
+भिषक्ति	65	भिषजामहै
+भिषक्ति	66	भिषजसे
+भिषक्ति	67	भिषजैथे
+भिषक्ति	68	भिषजध्वे
+भिषक्ति	69	भिषजते
+भिषक्ति	70	भिषजैते
+भिषक्ति	71	भिषजन्त
+भिषक्ति	72	अभिषजम्
+भिषक्ति	73	अभिषज्व
+भिषक्ति	74	अभिषज्म
+भिषक्ति	75	अभिषक्
+भिषक्ति	78	अभिषक्
+भिषक्ति	80	अभिषजन्
+भिषक्ति	81	अभिषजि
+भिषक्ति	82	अभिषज्वहि
+भिषक्ति	83	अभिषज्महि
+भिषक्ति	85	अभिषजाथाम्
+भिषक्ति	86	अभिषग्ध्वम्
+भिषक्ति	88	अभिषजाताम्
+भिषक्ति	89	अभिषजत
+भिषक्ति	164	भिषजत्
+भिषक्ति	165	भिषजान
+ममार्ज	127	ममृजिव
+ममार्ज	128	ममृजिम
+ममार्ज	130	ममृजथुः
+ममार्ज	131	ममृज
+ममार्ज	133	ममृजतुः
+ममार्ज	134	ममृजुः
+ममार्ज	135	ममृजे
+ममार्ज	136	ममृजिवहे
+ममार्ज	137	ममृजिमहे
+ममार्ज	138	ममृजिषे
+ममार्ज	139	ममृजाथे
+ममार्ज	140	ममृजिध्वे
+ममार्ज	141	ममृजे
+ममार्ज	142	ममृजाते
+ममार्ज	143	ममृजिरे
+ममार्ज	168	ममृज्वांस्
+ममार्ज	169	ममृजान
+मार्ष्टि	0	मार्ज्मि
+मार्ष्टि	1	मृज्वः
+मार्ष्टि	2	मृज्मः
+मार्ष्टि	3	मार्क्षि
+मार्ष्टि	4	मृष्ठः
+मार्ष्टि	5	मृष्ठ
+मार्ष्टि	6	मार्ष्टि
+मार्ष्टि	7	मृष्टः
+मार्ष्टि	8	मृजन्ति
+मार्ष्टि	9	मृजे
+मार्ष्टि	10	मृज्वहे
+मार्ष्टि	11	मृज्महे
+मार्ष्टि	12	मृक्षे
+मार्ष्टि	13	मृजाथे
+मार्ष्टि	14	मृड्ढ्वे
+मार्ष्टि	15	मृष्टे
+मार्ष्टि	16	मृजाते
+मार्ष्टि	17	मृजते
+मार्ष्टि	18	मार्जानि
+मार्ष्टि	19	मार्जाव
+मार्ष्टि	20	मार्जाम
+मार्ष्टि	21	मृड्ढि
+मार्ष्टि	22	मृष्टम्
+मार्ष्टि	23	मृष्ट
+मार्ष्टि	24	मार्ष्टु
+मार्ष्टि	25	मृष्टाम्
+मार्ष्टि	26	मृजन्तु
+मार्ष्टि	27	मार्जै
+मार्ष्टि	28	मार्जावहै
+मार्ष्टि	29	मार्जामहै
+मार्ष्टि	30	मृक्ष्व
+मार्ष्टि	31	मृजाथाम्
+मार्ष्टि	32	मृड्ढ्वम्
+मार्ष्टि	33	मृष्टाम्
+मार्ष्टि	34	मृजाताम्
+मार्ष्टि	35	मृजताम्
+मार्ष्टि	36	मृज्याम्
+मार्ष्टि	37	मृज्याव
+मार्ष्टि	38	मृज्याम
+मार्ष्टि	39	मृज्याः
+मार्ष्टि	40	मृज्यातम्
+मार्ष्टि	41	मृज्यात
+मार्ष्टि	42	मृज्यात्
+मार्ष्टि	43	मृज्याताम्
+मार्ष्टि	44	मृज्युः
+मार्ष्टि	45	मृजीय
+मार्ष्टि	46	मृजीवहि
+मार्ष्टि	47	मृजीमहि
+मार्ष्टि	48	मृजीथाः
+मार्ष्टि	49	मृजीयाथाम्
+मार्ष्टि	50	मृजीध्वम्
+मार्ष्टि	51	मृजीत
+मार्ष्टि	52	मृजीयाताम्
+मार्ष्टि	53	मृजीरन्
+मार्ष्टि	54	मार्जानि
+मार्ष्टि	55	मार्जाव
+मार्ष्टि	56	मार्जाम
+मार्ष्टि	57	मार्जः
+मार्ष्टि	58	मार्जथः
+मार्ष्टि	59	मार्जथ
+मार्ष्टि	60	मार्जत्
+मार्ष्टि	61	मार्जतः
+मार्ष्टि	62	मार्जन्
+मार्ष्टि	63	मार्जै
+मार्ष्टि	64	मार्जावहै
+मार्ष्टि	65	मार्जामहै
+मार्ष्टि	66	मार्जसे
+मार्ष्टि	67	मार्जैथे
+मार्ष्टि	68	मार्जध्वे
+मार्ष्टि	69	मार्जते
+मार्ष्टि	70	मार्जैते
+मार्ष्टि	71	मार्जन्त
+मार्ष्टि	72	अमार्जम्
+मार्ष्टि	73	अमृज्व
+मार्ष्टि	74	अमृज्म
+मार्ष्टि	75	अमार्ट्
+मार्ष्टि	76	अमृष्टम्
+मार्ष्टि	77	अमृष्ट
+मार्ष्टि	78	अमार्ट्
+मार्ष्टि	79	अमृष्टाम्
+मार्ष्टि	80	अमृजन्
+मार्ष्टि	81	अमृजि
+मार्ष्टि	82	अमृज्वहि
+मार्ष्टि	83	अमृज्महि
+मार्ष्टि	84	अमृष्ठाः
+मार्ष्टि	85	अमृजाथाम्
+मार्ष्टि	86	अमृड्ढ्वम्
+मार्ष्टि	87	अमृष्ट
+मार्ष्टि	88	अमृजाताम्
+मार्ष्टि	89	अमृजत
+मार्ष्टि	164	मृजत्
+मार्ष्टि	165	मृजान
+ययाम	126	ययम
+ययाम	127	येमिव
+ययाम	128	येमिम
+ययाम	129	ययन्थ
+ययाम	130	येमथुः
+ययाम	131	येम
+ययाम	133	येमतुः
+ययाम	134	येमुः
+ययाम	135	येमे
+ययाम	136	येमिवहे
+ययाम	137	येमिमहे
+ययाम	138	येमिषे
+ययाम	139	येमाथे
+ययाम	140	येमिध्वे
+ययाम	141	येमे
+ययाम	142	येमाते
+ययाम	143	येमिरे
+ययाम	168	येमिवांस्
+ययाम	169	येमान
+युयोज	127	युयुजिव
+युयोज	128	युयुजिम
+युयोज	130	युयुजथुः
+युयोज	131	युयुज
+युयोज	133	युयुजतुः
+युयोज	134	युयुजुः
+युयोज	135	युयुजे
+युयोज	136	युयुजिवहे
+युयोज	137	युयुजिमहे
+युयोज	138	युयुजिषे
+युयोज	139	युयुजाथे
+युयोज	140	युयुजिध्वे
+युयोज	141	युयुजे
+युयोज	142	युयुजाते
+युयोज	143	युयुजिरे
+युयोज	168	युयुग्वांस्
+युयोज	169	युयुजान
+रंहति	72	अरम्हम्
+रंहति	73	अरम्हाव
+रंहति	74	अरम्हाम
+रंहति	75	अरम्हः
+रंहति	76	अरम्हतम्
+रंहति	77	अरम्हत
+रंहति	78	अरम्हत्
+रंहति	79	अरम्हताम्
+रंहति	80	अरम्हन्
+रंहति	81	अरम्हे
+रंहति	82	अरम्हावहि
+रंहति	83	अरम्हामहि
+रंहति	84	अरम्हथाः
+रंहति	85	अरम्हेथाम्
+रंहति	86	अरम्हध्वम्
+रंहति	87	अरम्हत
+रंहति	88	अरम्हेताम्
+रंहति	89	अरम्हन्त
+ररंह	169	ररंहाण
+ररौ	169	रराण
+रिणक्ति	0	रिणच्मि
+रिणक्ति	1	रिञ्च्वः
+रिणक्ति	2	रिञ्च्मः
+रिणक्ति	3	रिणक्षि
+रिणक्ति	4	रिङ्क्थः
+रिणक्ति	5	रिङ्क्थ
+रिणक्ति	7	रिङ्क्तः
+रिणक्ति	8	रिञ्चन्ति
+रिणक्ति	9	रिञ्चे
+रिणक्ति	10	रिञ्च्वहे
+रिणक्ति	11	रिञ्च्महे
+रिणक्ति	12	रिङ्क्षे
+रिणक्ति	13	रिञ्चाथे
+रिणक्ति	14	रिङ्ग्ध्वे
+रिणक्ति	15	रिङ्क्ते
+रिणक्ति	16	रिञ्चाते
+रिणक्ति	17	रिञ्चते
+रिणक्ति	18	रिणचानि
+रिणक्ति	19	रिणचाव
+रिणक्ति	20	रिणचाम
+रिणक्ति	21	रिङ्ग्धि
+रिणक्ति	22	रिङ्क्तम्
+रिणक्ति	23	रिङ्क्त
+रिणक्ति	25	रिङ्क्ताम्
+रिणक्ति	26	रिञ्चन्तु
+रिणक्ति	27	रिणचै
+रिणक्ति	28	रिणचावहै
+रिणक्ति	29	रिणचामहै
+रिणक्ति	30	रिङ्क्ष्व
+रिणक्ति	31	रिञ्चाथाम्
+रिणक्ति	32	रिङ्ग्ध्वम्
+रिणक्ति	33	रिङ्क्ताम्
+रिणक्ति	34	रिञ्चाताम्
+रिणक्ति	35	रिञ्चताम्
+रिणक्ति	36	रिञ्च्याम्
+रिणक्ति	37	रिञ्च्याव
+रिणक्ति	38	रिञ्च्याम
+रिणक्ति	39	रिञ्च्याः
+रिणक्ति	40	रिञ्च्यातम्
+रिणक्ति	41	रिञ्च्यात
+रिणक्ति	42	रिञ्च्यात्
+रिणक्ति	43	रिञ्च्याताम्
+रिणक्ति	44	रिञ्च्युः
+रिणक्ति	45	रिञ्चीय
+रिणक्ति	46	रिञ्चीवहि
+रिणक्ति	47	रिञ्चीमहि
+रिणक्ति	48	रिञ्चीथाः
+रिणक्ति	49	रिञ्चीयाथाम्
+रिणक्ति	50	रिञ्चीध्वम्
+रिणक्ति	51	रिञ्चीत
+रिणक्ति	52	रिञ्चीयाताम्
+रिणक्ति	53	रिञ्चीरन्
+रिणक्ति	54	रिणचानि
+रिणक्ति	55	रिणचाव
+रिणक्ति	56	रिणचाम
+रिणक्ति	57	रिणचः
+रिणक्ति	58	रिणचथः
+रिणक्ति	59	रिणचथ
+रिणक्ति	60	रिणचत्
+रिणक्ति	61	रिणचतः
+रिणक्ति	62	रिणचन्
+रिणक्ति	63	रिणचै
+रिणक्ति	64	रिणचावहै
+रिणक्ति	65	रिणचामहै
+रिणक्ति	66	रिणचसे
+रिणक्ति	67	रिणचैथे
+रिणक्ति	68	रिणचध्वे
+रिणक्ति	69	रिणचते
+रिणक्ति	70	रिणचैते
+रिणक्ति	71	रिणचन्त
+रिणक्ति	72	अरिणचम्
+रिणक्ति	73	अरिञ्च्व
+रिणक्ति	74	अरिञ्च्म
+रिणक्ति	75	अरिणक्
+रिणक्ति	76	अरिङ्क्तम्
+रिणक्ति	77	अरिङ्क्त
+रिणक्ति	78	अरिणक्
+रिणक्ति	79	अरिङ्क्ताम्
+रिणक्ति	80	अरिञ्चन्
+रिणक्ति	81	अरिञ्चि
+रिणक्ति	82	अरिञ्च्वहि
+रिणक्ति	83	अरिञ्च्महि
+रिणक्ति	84	अरिङ्क्थाः
+रिणक्ति	85	अरिञ्चाथाम्
+रिणक्ति	86	अरिङ्ग्ध्वम्
+रिणक्ति	87	अरिङ्क्त
+रिणक्ति	88	अरिञ्चाताम्
+रिणक्ति	89	अरिञ्चत
+रिणक्ति	164	रिञ्चत्
+रिणक्ति	165	रिञ्चान
+रिरेच	127	रिरिचिव
+रिरेच	128	रिरिचिम
+रिरेच	130	रिरिचथुः
+रिरेच	131	रिरिच
+रिरेच	133	रिरिचतुः
+रिरेच	134	रिरिचुः
+रिरेच	135	रिरिचे
+रिरेच	136	रिरिचिवहे
+रिरेच	137	रिरिचिमहे
+रिरेच	138	रिरिचिषे
+रिरेच	139	रिरिचाथे
+रिरेच	140	रिरिचिध्वे
+रिरेच	141	रिरिचे
+रिरेच	142	रिरिचाते
+रिरेच	143	रिरिचिरे
+रिरेच	168	रिरिक्वांस्
+रिरेच	169	रिरिचान
+रुणद्धि	0	रुणध्मि
+रुणद्धि	1	रुन्ध्वः
+रुणद्धि	2	रुन्ध्मः
+रुणद्धि	3	रुणत्सि
+रुणद्धि	4	रुन्द्धः
+रुणद्धि	5	रुन्द्ध
+रुणद्धि	6	रुणद्धि
+रुणद्धि	7	रुन्द्धः
+रुणद्धि	8	रुन्धन्ति
+रुणद्धि	9	रुन्धे
+रुणद्धि	10	रुन्ध्वहे
+रुणद्धि	11	रुन्ध्महे
+रुणद्धि	12	रुन्त्से
+रुणद्धि	13	रुन्धाथे
+रुणद्धि	14	रुन्द्ध्वे
+रुणद्धि	15	रुन्द्धे
+रुणद्धि	16	रुन्धाते
+रुणद्धि	17	रुन्धते
+रुणद्धि	18	रुणधानि
+रुणद्धि	19	रुणधाव
+रुणद्धि	20	रुणधाम
+रुणद्धि	21	रुन्द्धि
+रुणद्धि	22	रुन्द्धम्
+रुणद्धि	23	रुन्द्ध
+रुणद्धि	24	रुणद्धु
+रुणद्धि	25	रुन्द्धाम्
+रुणद्धि	26	रुन्धन्तु
+रुणद्धि	27	रुणधै
+रुणद्धि	28	रुणधावहै
+रुणद्धि	29	रुणधामहै
+रुणद्धि	30	रुन्त्स्व
+रुणद्धि	31	रुन्धाथाम्
+रुणद्धि	32	रुन्द्ध्वम्
+रुणद्धि	33	रुन्द्धाम्
+रुणद्धि	34	रुन्धाताम्
+रुणद्धि	35	रुन्धताम्
+रुणद्धि	36	रुन्ध्याम्
+रुणद्धि	37	रुन्ध्याव
+रुणद्धि	38	रुन्ध्याम
+रुणद्धि	39	रुन्ध्याः
+रुणद्धि	40	रुन्ध्यातम्
+रुणद्धि	41	रुन्ध्यात
+रुणद्धि	42	रुन्ध्यात्
+रुणद्धि	43	रुन्ध्याताम्
+रुणद्धि	44	रुन्ध्युः
+रुणद्धि	45	रुन्धीय
+रुणद्धि	46	रुन्धीवहि
+रुणद्धि	47	रुन्धीमहि
+रुणद्धि	48	रुन्धीथाः
+रुणद्धि	49	रुन्धीयाथाम्
+रुणद्धि	50	रुन्धीध्वम्
+रुणद्धि	51	रुन्धीत
+रुणद्धि	52	रुन्धीयाताम्
+रुणद्धि	53	रुन्धीरन्
+रुणद्धि	54	रुणधानि
+रुणद्धि	55	रुणधाव
+रुणद्धि	56	रुणधाम
+रुणद्धि	57	रुणधः
+रुणद्धि	58	रुणधथः
+रुणद्धि	59	रुणधथ
+रुणद्धि	60	रुणधत्
+रुणद्धि	61	रुणधतः
+रुणद्धि	62	रुणधन्
+रुणद्धि	63	रुणधै
+रुणद्धि	64	रुणधावहै
+रुणद्धि	65	रुणधामहै
+रुणद्धि	66	रुणधसे
+रुणद्धि	67	रुणधैथे
+रुणद्धि	68	रुणधध्वे
+रुणद्धि	69	रुणधते
+रुणद्धि	70	रुणधैते
+रुणद्धि	71	रुणधन्त
+रुणद्धि	72	अरुणधम्
+रुणद्धि	73	अरुन्ध्व
+रुणद्धि	74	अरुन्ध्म
+रुणद्धि	75	अरुणत्
+रुणद्धि	76	अरुन्द्धम्
+रुणद्धि	77	अरुन्द्ध
+रुणद्धि	78	अरुणत्
+रुणद्धि	79	अरुन्द्धाम्
+रुणद्धि	80	अरुन्धन्
+रुणद्धि	81	अरुन्धि
+रुणद्धि	82	अरुन्ध्वहि
+रुणद्धि	83	अरुन्ध्महि
+रुणद्धि	84	अरुन्द्धाः
+रुणद्धि	85	अरुन्धाथाम्
+रुणद्धि	86	अरुन्द्ध्वम्
+रुणद्धि	87	अरुन्द्ध
+रुणद्धि	88	अरुन्धाताम्
+रुणद्धि	89	अरुन्धत
+रुणद्धि	164	रुन्धत्
+रुणद्धि	165	रुन्धान
+रुरोध	127	रुरुधिव
+रुरोध	128	रुरुधिम
+रुरोध	130	रुरुधथुः
+रुरोध	131	रुरुध
+रुरोध	133	रुरुधतुः
+रुरोध	134	रुरुधुः
+रुरोध	135	रुरुधे
+रुरोध	136	रुरुधिवहे
+रुरोध	137	रुरुधिमहे
+रुरोध	138	रुरुधिषे
+रुरोध	139	रुरुधाथे
+रुरोध	140	रुरुधिध्वे
+रुरोध	141	रुरुधे
+रुरोध	142	रुरुधाते
+रुरोध	143	रुरुधिरे
+रुरोध	168	रुरुध्वांस्
+रुरोध	169	रुरुधान
+रुरोह	127	रुरुहिव
+रुरोह	128	रुरुहिम
+रुरोह	130	रुरुहथुः
+रुरोह	131	रुरुह
+रुरोह	133	रुरुहतुः
+रुरोह	134	रुरुहुः
+रुरोह	135	रुरुहे
+रुरोह	136	रुरुहिवहे
+रुरोह	137	रुरुहिमहे
+रुरोह	138	रुरुहिषे
+रुरोह	139	रुरुहाथे
+रुरोह	140	रुरुहिध्वे
+रुरोह	141	रुरुहे
+रुरोह	142	रुरुहाते
+रुरोह	143	रुरुहिरे
+रुरोह	168	रुरुह्वांस्
+रुरोह	169	रुरुहाण
+रेक्ष्यते	99	रेक्ष्ये
+रेक्ष्यते	100	रेक्ष्यावहे
+रेक्ष्यते	101	रेक्ष्यामहे
+रेक्ष्यते	102	रेक्ष्यसे
+रेक्ष्यते	103	रेक्ष्येथे
+रेक्ष्यते	104	रेक्ष्यध्वे
+रेक्ष्यते	105	रेक्ष्यते
+रेक्ष्यते	106	रेक्ष्येते
+रेक्ष्यते	107	रेक्ष्यन्ते
+रेक्ष्यते	117	अरेक्ष्ये
+रेक्ष्यते	118	अरेक्ष्यावहि
+रेक्ष्यते	119	अरेक्ष्यामहि
+रेक्ष्यते	120	अरेक्ष्यथाः
+रेक्ष्यते	121	अरेक्ष्येथाम्
+रेक्ष्यते	122	अरेक्ष्यध्वम्
+रेक्ष्यते	123	अरेक्ष्यत
+रेक्ष्यते	124	अरेक्ष्येताम्
+रेक्ष्यते	125	अरेक्ष्यन्त
+रेक्ष्यते	167	रेक्ष्यमाण
+रेळ्हि	0	रेह्मि
+रेळ्हि	1	रिह्वः
+रेळ्हि	2	रिह्मः
+रेळ्हि	3	रेक्षि
+रेळ्हि	4	रीळ्हः
+रेळ्हि	5	रीळ्ह
+रेळ्हि	6	रेळ्हि
+रेळ्हि	7	रीळ्हः
+रेळ्हि	8	रिहन्ति
+रेळ्हि	9	रिहे
+रेळ्हि	10	रिह्वहे
+रेळ्हि	11	रिह्महे
+रेळ्हि	12	रिक्षे
+रेळ्हि	13	रिहाथे
+रेळ्हि	14	रीढ्वे
+रेळ्हि	15	रीळ्हे
+रेळ्हि	16	रिहाते
+रेळ्हि	17	रिहते
+रेळ्हि	18	रेहाणि
+रेळ्हि	19	रेहाव
+रेळ्हि	20	रेहाम
+रेळ्हि	21	रीळ्हि
+रेळ्हि	22	रीळ्हम्
+रेळ्हि	23	रीळ्ह
+रेळ्हि	24	रेळ्हु
+रेळ्हि	25	रीळ्हाम्
+रेळ्हि	26	रिहन्तु
+रेळ्हि	27	रेहै
+रेळ्हि	28	रेहावहै
+रेळ्हि	29	रेहामहै
+रेळ्हि	30	रिक्ष्व
+रेळ्हि	31	रिहाथाम्
+रेळ्हि	32	रीढ्वम्
+रेळ्हि	33	रीळ्हाम्
+रेळ्हि	34	रिहाताम्
+रेळ्हि	35	रिहताम्
+रेळ्हि	36	रिह्याम्
+रेळ्हि	37	रिह्याव
+रेळ्हि	38	रिह्याम
+रेळ्हि	39	रिह्याः
+रेळ्हि	40	रिह्यातम्
+रेळ्हि	41	रिह्यात
+रेळ्हि	42	रिह्यात्
+रेळ्हि	43	रिह्याताम्
+रेळ्हि	44	रिह्युः
+रेळ्हि	45	रिहीय
+रेळ्हि	46	रिहीवहि
+रेळ्हि	47	रिहीमहि
+रेळ्हि	48	रिहीथाः
+रेळ्हि	49	रिहीयाथाम्
+रेळ्हि	50	रिहीध्वम्
+रेळ्हि	51	रिहीत
+रेळ्हि	52	रिहीयाताम्
+रेळ्हि	53	रिहीरन्
+रेळ्हि	54	रेहाणि
+रेळ्हि	55	रेहाव
+रेळ्हि	56	रेहाम
+रेळ्हि	57	रेहः
+रेळ्हि	58	रेहथः
+रेळ्हि	59	रेहथ
+रेळ्हि	60	रेहत्
+रेळ्हि	61	रेहतः
+रेळ्हि	62	रेहन्
+रेळ्हि	63	रेहै
+रेळ्हि	64	रेहावहै
+रेळ्हि	65	रेहामहै
+रेळ्हि	66	रेहसे
+रेळ्हि	67	रेहैथे
+रेळ्हि	68	रेहध्वे
+रेळ्हि	69	रेहते
+रेळ्हि	70	रेहैते
+रेळ्हि	71	रेहन्त
+रेळ्हि	72	अरेहम्
+रेळ्हि	73	अरिह्व
+रेळ्हि	74	अरिह्म
+रेळ्हि	75	अरेट्
+रेळ्हि	76	अरीळ्हम्
+रेळ्हि	77	अरीळ्ह
+रेळ्हि	78	अरेट्
+रेळ्हि	79	अरीळ्हाम्
+रेळ्हि	80	अरिहन्
+रेळ्हि	81	अरिहि
+रेळ्हि	82	अरिह्वहि
+रेळ्हि	83	अरिह्महि
+रेळ्हि	84	अरीळ्हाः
+रेळ्हि	85	अरिहाथाम्
+रेळ्हि	86	अरीढ्वम्
+रेळ्हि	87	अरीळ्ह
+रेळ्हि	88	अरिहाताम्
+रेळ्हि	89	अरिहत
+रेळ्हि	164	रिहत्
+रेळ्हि	165	रिहाण
+रोदिति	0	रोदिमि
+रोदिति	1	रुदिवः
+रोदिति	2	रुदिमः
+रोदिति	3	रोदिषि
+रोदिति	4	रुदिथः
+रोदिति	5	रुदिथ
+रोदिति	7	रुदितः
+रोदिति	8	रुदन्ति
+रोदिति	9	रुदे
+रोदिति	10	रुदिवहे
+रोदिति	11	रुदिमहे
+रोदिति	12	रुदिषे
+रोदिति	13	रुदाथे
+रोदिति	14	रुदिध्वे
+रोदिति	15	रुदिते
+रोदिति	16	रुदाते
+रोदिति	17	रुदते
+रोदिति	18	रोदानि
+रोदिति	19	रोदाव
+रोदिति	20	रोदाम
+रोदिति	21	रुदिहि
+रोदिति	22	रुदितम्
+रोदिति	23	रुदित
+रोदिति	25	रुदिताम्
+रोदिति	26	रुदन्तु
+रोदिति	27	रोदै
+रोदिति	28	रोदावहै
+रोदिति	29	रोदामहै
+रोदिति	30	रुदिष्व
+रोदिति	31	रुदाथाम्
+रोदिति	32	रुदिध्वम्
+रोदिति	33	रुदिताम्
+रोदिति	34	रुदाताम्
+रोदिति	35	रुदताम्
+रोदिति	36	रुद्याम्
+रोदिति	37	रुद्याव
+रोदिति	38	रुद्याम
+रोदिति	39	रुद्याः
+रोदिति	40	रुद्यातम्
+रोदिति	41	रुद्यात
+रोदिति	42	रुद्यात्
+रोदिति	43	रुद्याताम्
+रोदिति	44	रुद्युः
+रोदिति	45	रुदीय
+रोदिति	46	रुदीवहि
+रोदिति	47	रुदीमहि
+रोदिति	48	रुदीथाः
+रोदिति	49	रुदीयाथाम्
+रोदिति	50	रुदीध्वम्
+रोदिति	51	रुदीत
+रोदिति	52	रुदीयाताम्
+रोदिति	53	रुदीरन्
+रोदिति	54	रोदानि
+रोदिति	55	रोदाव
+रोदिति	56	रोदाम
+रोदिति	57	रोदः
+रोदिति	58	रोदथः
+रोदिति	59	रोदथ
+रोदिति	60	रोदत्
+रोदिति	61	रोदतः
+रोदिति	62	रोदन्
+रोदिति	63	रोदै
+रोदिति	64	रोदावहै
+रोदिति	65	रोदामहै
+रोदिति	66	रोदसे
+रोदिति	67	रोदैथे
+रोदिति	68	रोदध्वे
+रोदिति	69	रोदते
+रोदिति	70	रोदैते
+रोदिति	71	रोदन्त
+रोदिति	72	अरोदम्
+रोदिति	73	अरुदिव
+रोदिति	74	अरुदिम
+रोदिति	75	अरोदीः
+रोदिति	76	अरुदितम्
+रोदिति	77	अरुदित
+रोदिति	78	अरोदीत्
+रोदिति	79	अरुदिताम्
+रोदिति	80	अरुदन्
+रोदिति	81	अरुदि
+रोदिति	82	अरुदिवहि
+रोदिति	83	अरुदिमहि
+रोदिति	84	अरुदिथाः
+रोदिति	85	अरुदाथाम्
+रोदिति	86	अरुदिध्वम्
+रोदिति	87	अरुदित
+रोदिति	88	अरुदाताम्
+रोदिति	89	अरुदत
+रोदिति	164	रुदत्
+रोदिति	165	रुदान
+रोरवीति	0	रोरवीमि
+रोरवीति	1	रोरुवः
+रोरवीति	2	रोरुमः
+रोरवीति	3	रोरवीषि
+रोरवीति	4	रोरुथः
+रोरवीति	5	रोरुथ
+रोरवीति	7	रोरुतः
+रोरवीति	8	रोरुवति
+रोरवीति	18	रोरवाणि
+रोरवीति	19	रोरवाव
+रोरवीति	20	रोरवाम
+रोरवीति	21	रोरुहि
+रोरवीति	22	रोरुतम्
+रोरवीति	23	रोरुत
+रोरवीति	25	रोरुताम्
+रोरवीति	26	रोरुवतु
+रोरवीति	36	रोरुयाम्
+रोरवीति	37	रोरुयाव
+रोरवीति	38	रोरुयाम
+रोरवीति	39	रोरुयाः
+रोरवीति	40	रोरुयातम्
+रोरवीति	41	रोरुयात
+रोरवीति	42	रोरुयात्
+रोरवीति	43	रोरुयाताम्
+रोरवीति	44	रोरुयुः
+रोरवीति	54	रोरवाणि
+रोरवीति	55	रोरवाव
+रोरवीति	56	रोरवाम
+रोरवीति	57	रोरवः
+रोरवीति	58	रोरवथः
+रोरवीति	59	रोरवथ
+रोरवीति	60	रोरवत्
+रोरवीति	61	रोरवतः
+रोरवीति	62	रोरवन्
+रोरवीति	72	अरोरवम्
+रोरवीति	73	अरोरुव
+रोरवीति	74	अरोरुम
+रोरवीति	76	अरोरुतम्
+रोरवीति	77	अरोरुत
+रोरवीति	79	अरोरुताम्
+रोरवीति	80	अरोरवुः
+रोरवीति	164	रोरुवत्
+रौति	0	रौमि
+रौति	1	रुवः
+रौति	2	रुमः
+रौति	3	रौषि
+रौति	4	रुथः
+रौति	5	रुथ
+रौति	7	रुतः
+रौति	8	रुवन्ति
+रौति	18	रवाणि
+रौति	19	रवाव
+रौति	20	रवाम
+रौति	21	रुहि
+रौति	22	रुतम्
+रौति	23	रुत
+रौति	25	रुताम्
+रौति	26	रुवन्तु
+रौति	36	रुयाम्
+रौति	37	रुयाव
+रौति	38	रुयाम
+रौति	39	रुयाः
+रौति	40	रुयातम्
+रौति	41	रुयात
+रौति	42	रुयात्
+रौति	43	रुयाताम्
+रौति	44	रुयुः
+रौति	54	रवाणि
+रौति	55	रवाव
+रौति	56	रवाम
+रौति	57	रवः
+रौति	58	रवथः
+रौति	59	रवथ
+रौति	60	रवत्
+रौति	61	रवतः
+रौति	62	रवन्
+रौति	72	अरवम्
+रौति	73	अरुव
+रौति	74	अरुम
+रौति	76	अरुतम्
+रौति	77	अरुत
+रौति	79	अरुताम्
+रौति	80	अरुवन्
+रौति	164	रुवत्
+लिलेख	127	लिलिखिव
+लिलेख	128	लिलिखिम
+लिलेख	130	लिलिखथुः
+लिलेख	131	लिलिख
+लिलेख	133	लिलिखतुः
+लिलेख	134	लिलिखुः
+लिलेख	168	लिलिख्वांस्
+लेढि	0	लेह्मि
+लेढि	1	लिह्वः
+लेढि	2	लिह्मः
+लेढि	3	लेक्षि
+लेढि	4	लीढः
+लेढि	5	लीढ
+लेढि	6	लेढि
+लेढि	7	लीढः
+लेढि	8	लिहन्ति
+लेढि	9	लिहे
+लेढि	10	लिह्वहे
+लेढि	11	लिह्महे
+लेढि	12	लिक्षे
+लेढि	13	लिहाथे
+लेढि	14	लीढ्वे
+लेढि	15	लीढे
+लेढि	16	लिहाते
+लेढि	17	लिहते
+लेढि	18	लेहानि
+लेढि	19	लेहाव
+लेढि	20	लेहाम
+लेढि	21	लीढि
+लेढि	22	लीढम्
+लेढि	23	लीढ
+लेढि	24	लेढु
+लेढि	25	लीढाम्
+लेढि	26	लिहन्तु
+लेढि	27	लेहै
+लेढि	28	लेहावहै
+लेढि	29	लेहामहै
+लेढि	30	लिक्ष्व
+लेढि	31	लिहाथाम्
+लेढि	32	लीढ्वम्
+लेढि	33	लीढाम्
+लेढि	34	लिहाताम्
+लेढि	35	लिहताम्
+लेढि	36	लिह्याम्
+लेढि	37	लिह्याव
+लेढि	38	लिह्याम
+लेढि	39	लिह्याः
+लेढि	40	लिह्यातम्
+लेढि	41	लिह्यात
+लेढि	42	लिह्यात्
+लेढि	43	लिह्याताम्
+लेढि	44	लिह्युः
+लेढि	45	लिहीय
+लेढि	46	लिहीवहि
+लेढि	47	लिहीमहि
+लेढि	48	लिहीथाः
+लेढि	49	लिहीयाथाम्
+लेढि	50	लिहीध्वम्
+लेढि	51	लिहीत
+लेढि	52	लिहीयाताम्
+लेढि	53	लिहीरन्
+लेढि	54	लेहानि
+लेढि	55	लेहाव
+लेढि	56	लेहाम
+लेढि	57	लेहः
+लेढि	58	लेहथः
+लेढि	59	लेहथ
+लेढि	60	लेहत्
+लेढि	61	लेहतः
+लेढि	62	लेहन्
+लेढि	63	लेहै
+लेढि	64	लेहावहै
+लेढि	65	लेहामहै
+लेढि	66	लेहसे
+लेढि	67	लेहैथे
+लेढि	68	लेहध्वे
+लेढि	69	लेहते
+लेढि	70	लेहैते
+लेढि	71	लेहन्त
+लेढि	72	अलेहम्
+लेढि	73	अलिह्व
+लेढि	74	अलिह्म
+लेढि	75	अलेट्
+लेढि	76	अलीढम्
+लेढि	77	अलीढ
+लेढि	78	अलेट्
+लेढि	79	अलीढाम्
+लेढि	80	अलिहन्
+लेढि	81	अलिहि
+लेढि	82	अलिह्वहि
+लेढि	83	अलिह्महि
+लेढि	84	अलीढाः
+लेढि	85	अलिहाथाम्
+लेढि	86	अलीढ्वम्
+लेढि	87	अलीढ
+लेढि	88	अलिहाताम्
+लेढि	89	अलिहत
+लेढि	90	लेक्ष्यामि
+लेढि	91	लेक्ष्यावः
+लेढि	92	लेक्ष्यामः
+लेढि	93	लेक्ष्यसि
+लेढि	94	लेक्ष्यथः
+लेढि	95	लेक्ष्यथ
+लेढि	96	लेक्ष्यति
+लेढि	97	लेक्ष्यतः
+लेढि	98	लेक्ष्यन्ति
+लेढि	99	लेक्ष्ये
+लेढि	100	लेक्ष्यावहे
+लेढि	101	लेक्ष्यामहे
+लेढि	102	लेक्ष्यसे
+लेढि	103	लेक्ष्येथे
+लेढि	104	लेक्ष्यध्वे
+लेढि	105	लेक्ष्यते
+लेढि	106	लेक्ष्येते
+लेढि	107	लेक्ष्यन्ते
+लेढि	108	अलेक्ष्यम्
+लेढि	109	अलेक्ष्याव
+लेढि	110	अलेक्ष्याम
+लेढि	111	अलेक्ष्यः
+लेढि	112	अलेक्ष्यतम्
+लेढि	113	अलेक्ष्यत
+लेढि	114	अलेक्ष्यत्
+लेढि	115	अलेक्ष्यताम्
+लेढि	116	अलेक्ष्यन्
+लेढि	117	अलेक्ष्ये
+लेढि	118	अलेक्ष्यावहि
+लेढि	119	अलेक्ष्यामहि
+लेढि	120	अलेक्ष्यथाः
+लेढि	121	अलेक्ष्येथाम्
+लेढि	122	अलेक्ष्यध्वम्
+लेढि	123	अलेक्ष्यत
+लेढि	124	अलेक्ष्येताम्
+लेढि	125	अलेक्ष्यन्त
+लेढि	126	लिलेह
+लेढि	127	लिलिहिव
+लेढि	128	लिलिहिम
+लेढि	129	लिलेहिथ
+लेढि	130	लिलिहथुः
+लेढि	131	लिलिह
+लेढि	132	लिलेह
+लेढि	133	लिलिहतुः
+लेढि	134	लिलिहुः
+लेढि	135	लिलिहे
+लेढि	136	लिलिहिवहे
+लेढि	137	लिलिहिमहे
+लेढि	138	लिलिहिषे
+लेढि	139	लिलिहाथे
+लेढि	140	लिलिहिध्वे
+लेढि	141	लिलिहे
+लेढि	142	लिलिहाते
+लेढि	143	लिलिहिरे
+लेढि	144	अलिक्षम्
+लेढि	145	अलिक्षाव
+लेढि	146	अलिक्षाम
+लेढि	147	अलिक्षः
+लेढि	148	अलिक्षतम्
+लेढि	149	अलिक्षत
+लेढि	150	अलिक्षत्
+लेढि	151	अलिक्षताम्
+लेढि	152	अलिक्षन्
+लेढि	153	अलिक्षि
+लेढि	154	अलिक्षावहि
+लेढि	155	अलिक्षामहि
+लेढि	156	अलिक्षथाः
+लेढि	157	अलिक्षाथाम्
+लेढि	158	अलिक्षध्वम्
+लेढि	159	अलिक्षत
+लेढि	160	अलिक्षाताम्
+लेढि	161	अलिक्षन्त
+लेढि	162	लेढुम्
+लेढि	163	लीढ्वा
+लेढि	164	लिहत्
+लेढि	165	लिहान
+लेढि	166	लेक्ष्यत्
+लेढि	167	लेक्ष्यमाण
+लेढि	168	लिलिह्वांस्
+लेढि	169	लिलिहान
+वक्ति	0	वच्मि
+वक्ति	1	वच्वः
+वक्ति	2	वच्मः
+वक्ति	3	वक्षि
+वक्ति	8	वचन्ति
+वक्ति	9	वचे
+वक्ति	10	वच्वहे
+वक्ति	11	वच्महे
+वक्ति	12	वक्षे
+वक्ति	13	वचाथे
+वक्ति	14	वग्ध्वे
+वक्ति	16	वचाते
+वक्ति	17	वचते
+वक्ति	18	वचानि
+वक्ति	19	वचाव
+वक्ति	20	वचाम
+वक्ति	21	वग्धि
+वक्ति	26	वचन्तु
+वक्ति	27	वचै
+वक्ति	28	वचावहै
+वक्ति	29	वचामहै
+वक्ति	30	वक्ष्व
+वक्ति	31	वचाथाम्
+वक्ति	32	वग्ध्वम्
+वक्ति	34	वचाताम्
+वक्ति	35	वचताम्
+वक्ति	36	वच्याम्
+वक्ति	37	वच्याव
+वक्ति	38	वच्याम
+वक्ति	39	वच्याः
+वक्ति	40	वच्यातम्
+वक्ति	41	वच्यात
+वक्ति	42	वच्यात्
+वक्ति	43	वच्याताम्
+वक्ति	44	वच्युः
+वक्ति	45	वचीय
+वक्ति	46	वचीवहि
+वक्ति	47	वचीमहि
+वक्ति	48	वचीथाः
+वक्ति	49	वचीयाथाम्
+वक्ति	50	वचीध्वम्
+वक्ति	51	वचीत
+वक्ति	52	वचीयाताम्
+वक्ति	53	वचीरन्
+वक्ति	54	वचानि
+वक्ति	55	वचाव
+वक्ति	56	वचाम
+वक्ति	57	वचः
+वक्ति	58	वचथः
+वक्ति	59	वचथ
+वक्ति	60	वचत्
+वक्ति	61	वचतः
+वक्ति	62	वचन्
+वक्ति	63	वचै
+वक्ति	64	वचावहै
+वक्ति	65	वचामहै
+वक्ति	66	वचसे
+वक्ति	67	वचैथे
+वक्ति	68	वचध्वे
+वक्ति	69	वचते
+वक्ति	70	वचैते
+वक्ति	71	वचन्त
+वक्ति	72	अवचाम्
+वक्ति	73	अवच्व
+वक्ति	74	अवच्म
+वक्ति	75	अवचः
+वक्ति	78	अवचत्
+वक्ति	80	अवचन्
+वक्ति	81	अवचि
+वक्ति	82	अवच्वहि
+वक्ति	83	अवच्महि
+वक्ति	85	अवचाथाम्
+वक्ति	86	अवग्ध्वम्
+वक्ति	88	अवचाताम्
+वक्ति	89	अवचत
+वक्ति	164	वचत्
+वक्ति	165	वचान
+ववर्त	127	ववृतिव
+ववर्त	128	ववृतिम
+ववर्त	130	ववृतथुः
+ववर्त	131	ववृत
+ववर्त	133	ववृततुः
+ववर्त	134	ववृतुः
+ववर्त	135	ववृते
+ववर्त	136	ववृतिवहे
+ववर्त	137	ववृतिमहे
+ववर्त	138	ववृतिषे
+ववर्त	139	ववृताथे
+ववर्त	140	ववृतिध्वे
+ववर्त	141	ववृते
+ववर्त	142	ववृताते
+ववर्त	143	ववृतिरे
+ववर्त	168	ववृत्वांस्
+ववर्त	169	ववृतान
+वष्टि	0	वश्मि
+वष्टि	1	उश्वः
+वष्टि	2	उश्मः
+वष्टि	3	वक्षि
+वष्टि	4	उष्ठः
+वष्टि	5	उष्ठ
+वष्टि	6	वष्टि
+वष्टि	7	उष्टः
+वष्टि	8	उशन्ति
+वष्टि	18	वशानि
+वष्टि	19	वशाव
+वष्टि	20	वशाम
+वष्टि	21	उड्ढि
+वष्टि	22	उष्टम्
+वष्टि	23	उष्ट
+वष्टि	24	वष्टु
+वष्टि	25	उष्टाम्
+वष्टि	26	उशन्तु
+वष्टि	36	उश्याम्
+वष्टि	37	उश्याव
+वष्टि	38	उश्याम
+वष्टि	39	उश्याः
+वष्टि	40	उश्यातम्
+वष्टि	41	उश्यात
+वष्टि	42	उश्यात्
+वष्टि	43	उश्याताम्
+वष्टि	44	उश्युः
+वष्टि	54	वशानि
+वष्टि	55	वशाव
+वष्टि	56	वशाम
+वष्टि	57	वशः
+वष्टि	58	वशथः
+वष्टि	59	वशथ
+वष्टि	60	वशत्
+वष्टि	61	वशतः
+वष्टि	62	वशन्
+वष्टि	72	अवशम्
+वष्टि	73	औश्व
+वष्टि	74	औश्म
+वष्टि	75	अवट्
+वष्टि	76	औष्टम्
+वष्टि	77	औष्ट
+वष्टि	78	अवट्
+वष्टि	79	औष्टाम्
+वष्टि	80	औशन्
+वष्टि	164	उशत्
+वस्ते	9	वसे
+वस्ते	10	वस्वहे
+वस्ते	11	वस्महे
+वस्ते	13	वसाथे
+वस्ते	14	वद्ध्वे
+वस्ते	16	वसाते
+वस्ते	17	वसते
+वस्ते	27	वसै
+वस्ते	28	वसावहै
+वस्ते	29	वसामहै
+वस्ते	31	वसाथाम्
+वस्ते	32	वद्ध्वम्
+वस्ते	34	वसाताम्
+वस्ते	35	वसताम्
+वस्ते	45	वसीय
+वस्ते	46	वसीवहि
+वस्ते	47	वसीमहि
+वस्ते	48	वसीथाः
+वस्ते	49	वसीयाथाम्
+वस्ते	50	वसीध्वम्
+वस्ते	51	वसीत
+वस्ते	52	वसीयाताम्
+वस्ते	53	वसीरन्
+वस्ते	63	वसै
+वस्ते	64	वसावहै
+वस्ते	65	वसामहै
+वस्ते	66	वससे
+वस्ते	67	वसैथे
+वस्ते	68	वसध्वे
+वस्ते	69	वसते
+वस्ते	70	वसैते
+वस्ते	71	वसन्त
+वस्ते	81	अवसि
+वस्ते	82	अवस्वहि
+वस्ते	83	अवस्महि
+वस्ते	85	अवसाथाम्
+वस्ते	86	अवद्ध्वम्
+वस्ते	88	अवसाताम्
+वस्ते	89	अवसत
+वस्ते	165	वसान
+विनक्ति	0	विनच्मि
+विनक्ति	1	विञ्च्वः
+विनक्ति	2	विञ्च्मः
+विनक्ति	8	विञ्चन्ति
+विनक्ति	18	विनचानि
+विनक्ति	19	विनचाव
+विनक्ति	20	विनचाम
+विनक्ति	26	विञ्चन्तु
+विनक्ति	36	विञ्च्याम्
+विनक्ति	37	विञ्च्याव
+विनक्ति	38	विञ्च्याम
+विनक्ति	39	विञ्च्याः
+विनक्ति	40	विञ्च्यातम्
+विनक्ति	41	विञ्च्यात
+विनक्ति	42	विञ्च्यात्
+विनक्ति	43	विञ्च्याताम्
+विनक्ति	44	विञ्च्युः
+विनक्ति	54	विनचानि
+विनक्ति	55	विनचाव
+विनक्ति	56	विनचाम
+विनक्ति	57	विनचः
+विनक्ति	58	विनचथः
+विनक्ति	59	विनचथ
+विनक्ति	60	विनचत्
+विनक्ति	61	विनचतः
+विनक्ति	62	विनचन्
+विनक्ति	72	अविनचम्
+विनक्ति	73	अविञ्च्व
+विनक्ति	74	अविञ्च्म
+विनक्ति	80	अविञ्चन्
+विनक्ति	164	विञ्चत्
+विराजति	72	व्यराजम्
+विराजति	73	व्यराजाव
+विराजति	74	व्यराजाम
+विराजति	75	व्यराजः
+विराजति	76	व्यराजतम्
+विराजति	77	व्यराजत
+विराजति	78	व्यराजत्
+विराजति	79	व्यराजताम्
+विराजति	80	व्यराजन्
+विराजति	81	व्यराजे
+विराजति	82	व्यराजावहि
+विराजति	83	व्यराजामहि
+विराजति	84	व्यराजथाः
+विराजति	85	व्यराजेथाम्
+विराजति	86	व्यराजध्वम्
+विराजति	87	व्यराजत
+विराजति	88	व्यराजेताम्
+विराजति	89	व्यराजन्त
+विलीयते	81	व्यलीये
+विलीयते	82	व्यलीयावहि
+विलीयते	83	व्यलीयामहि
+विलीयते	84	व्यलीयथाः
+विलीयते	85	व्यलीयेथाम्
+विलीयते	86	व्यलीयध्वम्
+विलीयते	87	व्यलीयत
+विलीयते	88	व्यलीयेताम्
+विलीयते	89	व्यलीयन्त
+विवेद	127	विविदिव
+विवेद	128	विविदिम
+विवेद	130	विविदथुः
+विवेद	131	विविद
+विवेद	133	विविदतुः
+विवेद	134	विविदुः
+विवेद	135	विविदे
+विवेद	136	विविदिवहे
+विवेद	137	विविदिमहे
+विवेद	138	विविदिषे
+विवेद	139	विविदाथे
+विवेद	140	विविदिध्वे
+विवेद	141	विविदे
+विवेद	142	विविदाते
+विवेद	143	विविदिरे
+विवेद	168	विविद्वांस्
+विवेद	169	विविदान
+विवेश	127	विविशिव
+विवेश	128	विविशिम
+विवेश	130	विविशथुः
+विवेश	131	विविश
+विवेश	133	विविशतुः
+विवेश	134	विविशुः
+विवेश	135	विविशे
+विवेश	136	विविशिवहे
+विवेश	137	विविशिमहे
+विवेश	138	विविशिषे
+विवेश	139	विविशाथे
+विवेश	140	विविशिध्वे
+विवेश	141	विविशे
+विवेश	142	विविशाते
+विवेश	143	विविशिरे
+विवेश	168	विविश्वांस्
+विवेश	169	विविशान
+विवेष्टि	0	विवेष्मि
+विवेष्टि	1	विविष्वः
+विवेष्टि	2	विविष्मः
+विवेष्टि	3	विवेक्षि
+विवेष्टि	4	विविष्ठः
+विवेष्टि	5	विविष्ठ
+विवेष्टि	6	विवेष्टि
+विवेष्टि	7	विविष्टः
+विवेष्टि	8	विविषति
+विवेष्टि	18	विवेषाणि
+विवेष्टि	19	विवेषाव
+विवेष्टि	20	विवेषाम
+विवेष्टि	21	विविड्ढि
+विवेष्टि	22	विविष्टम्
+विवेष्टि	23	विविष्ट
+विवेष्टि	24	विवेष्टु
+विवेष्टि	25	विविष्टाम्
+विवेष्टि	26	विविषतु
+विवेष्टि	36	विविष्याम्
+विवेष्टि	37	विविष्याव
+विवेष्टि	38	विविष्याम
+विवेष्टि	39	विविष्याः
+विवेष्टि	40	विविष्यातम्
+विवेष्टि	41	विविष्यात
+विवेष्टि	42	विविष्यात्
+विवेष्टि	43	विविष्याताम्
+विवेष्टि	44	विविष्युः
+विवेष्टि	54	विवेषाणि
+विवेष्टि	55	विवेषाव
+विवेष्टि	56	विवेषाम
+विवेष्टि	57	विवेषः
+विवेष्टि	58	विवेषथः
+विवेष्टि	59	विवेषथ
+विवेष्टि	60	विवेषत्
+विवेष्टि	61	विवेषतः
+विवेष्टि	62	विवेषन्
+विवेष्टि	72	अविवेषम्
+विवेष्टि	73	अविविष्व
+विवेष्टि	74	अविविष्म
+विवेष्टि	75	अविवेट्
+विवेष्टि	76	अविविष्टम्
+विवेष्टि	77	अविविष्ट
+विवेष्टि	78	अविवेट्
+विवेष्टि	79	अविविष्टाम्
+विवेष्टि	80	अविविषुः
+विवेष्टि	164	विविषत्
+वृक्ते	9	वृजे
+वृक्ते	10	वृज्वहे
+वृक्ते	11	वृज्महे
+वृक्ते	12	वृक्षे
+वृक्ते	13	वृजाथे
+वृक्ते	14	वृग्ध्वे
+वृक्ते	16	वृजाते
+वृक्ते	17	वृजते
+वृक्ते	30	वृक्ष्व
+वृक्ते	31	वृजाथाम्
+वृक्ते	32	वृग्ध्वम्
+वृक्ते	34	वृजाताम्
+वृक्ते	35	वृजताम्
+वृक्ते	45	वृजीय
+वृक्ते	46	वृजीवहि
+वृक्ते	47	वृजीमहि
+वृक्ते	48	वृजीथाः
+वृक्ते	49	वृजीयाथाम्
+वृक्ते	50	वृजीध्वम्
+वृक्ते	51	वृजीत
+वृक्ते	52	वृजीयाताम्
+वृक्ते	53	वृजीरन्
+वृक्ते	81	अवृजि
+वृक्ते	82	अवृज्वहि
+वृक्ते	83	अवृज्महि
+वृक्ते	85	अवृजाथाम्
+वृक्ते	86	अवृग्ध्वम्
+वृक्ते	88	अवृजाताम्
+वृक्ते	89	अवृजत
+वृक्ते	165	वृजान
+वृणक्ति	0	वृणज्मि
+वृणक्ति	1	वृञ्ज्वः
+वृणक्ति	2	वृञ्ज्मः
+वृणक्ति	3	वृणक्षि
+वृणक्ति	4	वृङ्क्थः
+वृणक्ति	5	वृङ्क्थ
+वृणक्ति	7	वृङ्क्तः
+वृणक्ति	8	वृञ्जन्ति
+वृणक्ति	9	वृञ्जे
+वृणक्ति	10	वृञ्ज्वहे
+वृणक्ति	11	वृञ्ज्महे
+वृणक्ति	12	वृङ्क्षे
+वृणक्ति	13	वृञ्जाथे
+वृणक्ति	14	वृङ्ग्ध्वे
+वृणक्ति	15	वृङ्क्ते
+वृणक्ति	16	वृञ्जाते
+वृणक्ति	17	वृञ्जते
+वृणक्ति	18	वृणजानि
+वृणक्ति	19	वृणजाव
+वृणक्ति	20	वृणजाम
+वृणक्ति	21	वृङ्ग्धि
+वृणक्ति	22	वृङ्क्तम्
+वृणक्ति	23	वृङ्क्त
+वृणक्ति	25	वृङ्क्ताम्
+वृणक्ति	26	वृञ्जन्तु
+वृणक्ति	27	वृणजै
+वृणक्ति	28	वृणजावहै
+वृणक्ति	29	वृणजामहै
+वृणक्ति	30	वृङ्क्ष्व
+वृणक्ति	31	वृञ्जाथाम्
+वृणक्ति	32	वृङ्ग्ध्वम्
+वृणक्ति	33	वृङ्क्ताम्
+वृणक्ति	34	वृञ्जाताम्
+वृणक्ति	35	वृञ्जताम्
+वृणक्ति	36	वृञ्ज्याम्
+वृणक्ति	37	वृञ्ज्याव
+वृणक्ति	38	वृञ्ज्याम
+वृणक्ति	39	वृञ्ज्याः
+वृणक्ति	40	वृञ्ज्यातम्
+वृणक्ति	41	वृञ्ज्यात
+वृणक्ति	42	वृञ्ज्यात्
+वृणक्ति	43	वृञ्ज्याताम्
+वृणक्ति	44	वृञ्ज्युः
+वृणक्ति	45	वृञ्जीय
+वृणक्ति	46	वृञ्जीवहि
+वृणक्ति	47	वृञ्जीमहि
+वृणक्ति	48	वृञ्जीथाः
+वृणक्ति	49	वृञ्जीयाथाम्
+वृणक्ति	50	वृञ्जीध्वम्
+वृणक्ति	51	वृञ्जीत
+वृणक्ति	52	वृञ्जीयाताम्
+वृणक्ति	53	वृञ्जीरन्
+वृणक्ति	54	वृणजानि
+वृणक्ति	55	वृणजाव
+वृणक्ति	56	वृणजाम
+वृणक्ति	57	वृणजः
+वृणक्ति	58	वृणजथः
+वृणक्ति	59	वृणजथ
+वृणक्ति	60	वृणजत्
+वृणक्ति	61	वृणजतः
+वृणक्ति	62	वृणजन्
+वृणक्ति	63	वृणजै
+वृणक्ति	64	वृणजावहै
+वृणक्ति	65	वृणजामहै
+वृणक्ति	66	वृणजसे
+वृणक्ति	67	वृणजैथे
+वृणक्ति	68	वृणजध्वे
+वृणक्ति	69	वृणजते
+वृणक्ति	70	वृणजैते
+वृणक्ति	71	वृणजन्त
+वृणक्ति	72	अवृणजम्
+वृणक्ति	73	अवृञ्ज्व
+वृणक्ति	74	अवृञ्ज्म
+वृणक्ति	75	अवृणक्
+वृणक्ति	76	अवृङ्क्तम्
+वृणक्ति	77	अवृङ्क्त
+वृणक्ति	78	अवृणक्
+वृणक्ति	79	अवृङ्क्ताम्
+वृणक्ति	80	अवृञ्जन्
+वृणक्ति	81	अवृञ्जि
+वृणक्ति	82	अवृञ्ज्वहि
+वृणक्ति	83	अवृञ्ज्महि
+वृणक्ति	84	अवृङ्क्थाः
+वृणक्ति	85	अवृञ्जाथाम्
+वृणक्ति	86	अवृङ्ग्ध्वम्
+वृणक्ति	87	अवृङ्क्त
+वृणक्ति	88	अवृञ्जाताम्
+वृणक्ति	89	अवृञ्जत
+वृणक्ति	164	वृञ्जत्
+वृणक्ति	165	वृञ्जान
+वृणोति	76	अवृनुतम्
+वृणोति	77	अवृनुत
+वृणोति	79	अवृनुताम्
+वृणोति	80	अवृन्वन्
+वृणोति	81	अवृन्वि
+वृणोति	84	अवृनुथाः
+वृणोति	85	अवृन्वाथाम्
+वृणोति	86	अवृनुध्वम्
+वृणोति	87	अवृनुत
+वृणोति	88	अवृन्वाताम्
+वृणोति	89	अवृन्वत
+वेति	0	वेमि
+वेति	1	वीवः
+वेति	2	वीमः
+वेति	3	वेषि
+वेति	4	वीथः
+वेति	5	वीथ
+वेति	7	वीतः
+वेति	8	व्यन्ति
+वेति	18	वयानि
+वेति	19	वयाव
+वेति	20	वयाम
+वेति	21	वीहि
+वेति	22	वीतम्
+वेति	23	वीत
+वेति	25	वीताम्
+वेति	26	व्यन्तु
+वेति	36	वीयाम्
+वेति	37	वीयाव
+वेति	38	वीयाम
+वेति	39	वीयाः
+वेति	40	वीयातम्
+वेति	41	वीयात
+वेति	42	वीयात्
+वेति	43	वीयाताम्
+वेति	44	वीयुः
+वेति	54	वयानि
+वेति	55	वयाव
+वेति	56	वयाम
+वेति	57	वयः
+वेति	58	वयथः
+वेति	59	वयथ
+वेति	60	वयत्
+वेति	61	वयतः
+वेति	62	वयन्
+वेति	72	अवयम्
+वेति	73	अवीव
+वेति	74	अवीम
+वेति	76	अवीतम्
+वेति	77	अवीत
+वेति	79	अवीताम्
+वेति	80	अव्यन्
+वेति	90	वेष्यामि
+वेति	91	वेष्यावः
+वेति	92	वेष्यामः
+वेति	93	वेष्यसि
+वेति	94	वेष्यथः
+वेति	95	वेष्यथ
+वेति	96	वेष्यति
+वेति	97	वेष्यतः
+वेति	98	वेष्यन्ति
+वेति	99	वेष्ये
+वेति	100	वेष्यावहे
+वेति	101	वेष्यामहे
+वेति	102	वेष्यसे
+वेति	103	वेष्येथे
+वेति	104	वेष्यध्वे
+वेति	105	वेष्यते
+वेति	106	वेष्येते
+वेति	107	वेष्यन्ते
+वेति	108	अवेष्यम्
+वेति	109	अवेष्याव
+वेति	110	अवेष्याम
+वेति	111	अवेष्यः
+वेति	112	अवेष्यतम्
+वेति	113	अवेष्यत
+वेति	114	अवेष्यत्
+वेति	115	अवेष्यताम्
+वेति	116	अवेष्यन्
+वेति	117	अवेष्ये
+वेति	118	अवेष्यावहि
+वेति	119	अवेष्यामहि
+वेति	120	अवेष्यथाः
+वेति	121	अवेष्येथाम्
+वेति	122	अवेष्यध्वम्
+वेति	123	अवेष्यत
+वेति	124	अवेष्येताम्
+वेति	125	अवेष्यन्त
+वेति	126	विवय
+वेति	127	विव्यिव
+वेति	128	विव्यिम
+वेति	129	विवेथ
+वेति	130	विव्यथुः
+वेति	131	विव्य
+वेति	132	विवाय
+वेति	133	विव्यतुः
+वेति	134	विव्युः
+वेति	135	विव्ये
+वेति	136	विव्यिवहे
+वेति	137	विव्यिमहे
+वेति	138	विव्यिषे
+वेति	139	विव्याथे
+वेति	140	विव्यिध्वे
+वेति	141	विव्ये
+वेति	142	विव्याते
+वेति	143	विव्यिरे
+वेति	144	अवैषम्
+वेति	145	अवैष्व
+वेति	146	अवैष्म
+वेति	147	अवैषीः
+वेति	148	अवैष्टम्
+वेति	149	अवैष्ट
+वेति	150	अवैषीत्
+वेति	151	अवैष्टाम्
+वेति	152	अवैषुः
+वेति	153	अवेषि
+वेति	154	अवेष्वहि
+वेति	155	अवेष्महि
+वेति	156	अवेष्ठाः
+वेति	157	अवेषाथाम्
+वेति	158	अवेढ्वम्
+वेति	159	अवेष्ट
+वेति	160	अवेषाताम्
+वेति	161	अवेषत
+वेति	162	वेतुम्
+वेति	163	वीत्वा
+वेति	164	व्यत्
+वेति	166	वेष्यत्
+वेति	167	वेष्यमाण
+वेति	168	विवीवांस्
+वेति	169	विव्यान
+वेत्ति	0	वेद्मि
+वेत्ति	1	विद्वः
+वेत्ति	2	विद्मः
+वेत्ति	4	वित्थः
+वेत्ति	5	वित्थ
+वेत्ति	7	वित्तः
+वेत्ति	8	विदन्ति
+वेत्ति	9	विदे
+वेत्ति	10	विद्वहे
+वेत्ति	11	विद्महे
+वेत्ति	12	वित्से
+वेत्ति	13	विदाथे
+वेत्ति	14	विद्ध्वे
+वेत्ति	15	वित्ते
+वेत्ति	16	विदाते
+वेत्ति	17	विदते
+वेत्ति	18	वेदानि
+वेत्ति	19	वेदाव
+वेत्ति	20	वेदाम
+वेत्ति	21	विद्धि
+वेत्ति	22	वित्तम्
+वेत्ति	23	वित्त
+वेत्ति	25	वित्ताम्
+वेत्ति	26	विदन्तु
+वेत्ति	27	वेदै
+वेत्ति	28	वेदावहै
+वेत्ति	29	वेदामहै
+वेत्ति	30	वित्स्व
+वेत्ति	31	विदाथाम्
+वेत्ति	32	विद्ध्वम्
+वेत्ति	33	वित्ताम्
+वेत्ति	34	विदाताम्
+वेत्ति	35	विदताम्
+वेत्ति	36	विद्याम्
+वेत्ति	37	विद्याव
+वेत्ति	38	विद्याम
+वेत्ति	39	विद्याः
+वेत्ति	40	विद्यातम्
+वेत्ति	41	विद्यात
+वेत्ति	42	विद्यात्
+वेत्ति	43	विद्याताम्
+वेत्ति	44	विद्युः
+वेत्ति	45	विदीय
+वेत्ति	46	विदीवहि
+वेत्ति	47	विदीमहि
+वेत्ति	48	विदीथाः
+वेत्ति	49	विदीयाथाम्
+वेत्ति	50	विदीध्वम्
+वेत्ति	51	विदीत
+वेत्ति	52	विदीयाताम्
+वेत्ति	53	विदीरन्
+वेत्ति	54	वेदानि
+वेत्ति	55	वेदाव
+वेत्ति	56	वेदाम
+वेत्ति	57	वेदः
+वेत्ति	58	वेदथः
+वेत्ति	59	वेदथ
+वेत्ति	60	वेदत्
+वेत्ति	61	वेदतः
+वेत्ति	62	वेदन्
+वेत्ति	63	वेदै
+वेत्ति	64	वेदावहै
+वेत्ति	65	वेदामहै
+वेत्ति	66	वेदसे
+वेत्ति	67	वेदैथे
+वेत्ति	68	वेदध्वे
+वेत्ति	69	वेदते
+वेत्ति	70	वेदैते
+वेत्ति	71	वेदन्त
+वेत्ति	72	अवेदम्
+वेत्ति	73	अविद्व
+वेत्ति	74	अविद्म
+वेत्ति	75	अवेत्
+वेत्ति	76	अवित्तम्
+वेत्ति	77	अवित्त
+वेत्ति	78	अवेत्
+वेत्ति	79	अवित्ताम्
+वेत्ति	80	अविदन्
+वेत्ति	81	अविदि
+वेत्ति	82	अविद्वहि
+वेत्ति	83	अविद्महि
+वेत्ति	84	अवित्थाः
+वेत्ति	85	अविदाथाम्
+वेत्ति	86	अविद्ध्वम्
+वेत्ति	87	अवित्त
+वेत्ति	88	अविदाताम्
+वेत्ति	89	अविदत
+वेत्ति	164	विदत्
+वेत्ति	165	विदान
+वेद	127	विद्व
+वेद	128	विद्म
+वेद	129	वेत्थ
+वेद	130	विदथुः
+वेद	131	विद
+वेद	133	विदतुः
+वेद	134	विदुः
+वेद	135	विदे
+वेद	136	विद्वहे
+वेद	137	विद्महे
+वेद	138	वित्से
+वेद	139	विदाथे
+वेद	140	विद्ध्वे
+वेद	141	विदे
+वेद	142	विदाते
+वेद	143	विदिरे
+वेद	168	विद्वांस्
+वेद	169	विदान
+वेवेत्ति	0	वेवेद्मि
+वेवेत्ति	1	वेविद्वः
+वेवेत्ति	2	वेविद्मः
+वेवेत्ति	4	वेवित्थः
+वेवेत्ति	5	वेवित्थ
+वेवेत्ति	7	वेवित्तः
+वेवेत्ति	8	वेविदति
+वेवेत्ति	18	वेविदानि
+वेवेत्ति	19	वेविदाव
+वेवेत्ति	20	वेविदाम
+वेवेत्ति	21	वेविद्धि
+वेवेत्ति	22	वेवित्तम्
+वेवेत्ति	23	वेवित्त
+वेवेत्ति	25	वेवित्ताम्
+वेवेत्ति	26	वेविदतु
+वेवेत्ति	36	वेविद्याम्
+वेवेत्ति	37	वेविद्याव
+वेवेत्ति	38	वेविद्याम
+वेवेत्ति	39	वेविद्याः
+वेवेत्ति	40	वेविद्यातम्
+वेवेत्ति	41	वेविद्यात
+वेवेत्ति	42	वेविद्यात्
+वेवेत्ति	43	वेविद्याताम्
+वेवेत्ति	44	वेविद्युः
+वेवेत्ति	54	वेविदानि
+वेवेत्ति	55	वेविदाव
+वेवेत्ति	56	वेविदाम
+वेवेत्ति	57	वेविदः
+वेवेत्ति	58	वेविदथः
+वेवेत्ति	59	वेविदथ
+वेवेत्ति	60	वेविदत्
+वेवेत्ति	61	वेविदतः
+वेवेत्ति	62	वेविदन्
+वेवेत्ति	72	अवेविदम्
+वेवेत्ति	73	अवेविद्व
+वेवेत्ति	74	अवेविद्म
+वेवेत्ति	75	अवेवेत्
+वेवेत्ति	76	अवेवित्तम्
+वेवेत्ति	77	अवेवित्त
+वेवेत्ति	78	अवेवेत्
+वेवेत्ति	79	अवेवित्ताम्
+वेवेत्ति	80	अवेविदुः
+वेवेत्ति	164	वेविदत्
+वेवेष्टि	0	वेवेष्मि
+वेवेष्टि	1	वेविष्वः
+वेवेष्टि	2	वेविष्मः
+वेवेष्टि	3	वेवेक्षि
+वेवेष्टि	4	वेविष्ठः
+वेवेष्टि	5	वेविष्ठ
+वेवेष्टि	6	वेवेष्टि
+वेवेष्टि	7	वेविष्टः
+वेवेष्टि	8	वेविषति
+वेवेष्टि	18	वेविषाणि
+वेवेष्टि	19	वेविषाव
+वेवेष्टि	20	वेविषाम
+वेवेष्टि	21	वेविड्ढि
+वेवेष्टि	22	वेविष्टम्
+वेवेष्टि	23	वेविष्ट
+वेवेष्टि	24	वेवेष्टु
+वेवेष्टि	25	वेविष्टाम्
+वेवेष्टि	26	वेविषतु
+वेवेष्टि	36	वेविष्याम्
+वेवेष्टि	37	वेविष्याव
+वेवेष्टि	38	वेविष्याम
+वेवेष्टि	39	वेविष्याः
+वेवेष्टि	40	वेविष्यातम्
+वेवेष्टि	41	वेविष्यात
+वेवेष्टि	42	वेविष्यात्
+वेवेष्टि	43	वेविष्याताम्
+वेवेष्टि	44	वेविष्युः
+वेवेष्टि	54	वेविषाणि
+वेवेष्टि	55	वेविषाव
+वेवेष्टि	56	वेविषाम
+वेवेष्टि	57	वेविषः
+वेवेष्टि	58	वेविषथः
+वेवेष्टि	59	वेविषथ
+वेवेष्टि	60	वेविषत्
+वेवेष्टि	61	वेविषतः
+वेवेष्टि	62	वेविषन्
+वेवेष्टि	72	अवेविषम्
+वेवेष्टि	73	अवेविष्व
+वेवेष्टि	74	अवेविष्म
+वेवेष्टि	75	अवेवेट्
+वेवेष्टि	76	अवेविष्टम्
+वेवेष्टि	77	अवेविष्ट
+वेवेष्टि	78	अवेवेट्
+वेवेष्टि	79	अवेविष्टाम्
+वेवेष्टि	80	अवेविषुः
+वेवेष्टि	164	वेविषत्
+शशाक	126	शशक
+शशाक	127	शेकिव
+शशाक	128	शेकिम
+शशाक	129	शशक्थ
+शशाक	130	शेकथुः
+शशाक	131	शेक
+शशाक	133	शेकतुः
+शशाक	134	शेकुः
+शशाक	135	शेके
+शशाक	136	शेकिवहे
+शशाक	137	शेकिमहे
+शशाक	138	शेकिषे
+शशाक	139	शेकाथे
+शशाक	140	शेकिध्वे
+शशाक	141	शेके
+शशाक	142	शेकाते
+शशाक	143	शेकिरे
+शशाक	168	शेकिवांस्
+शशाक	169	शेकान
+शास्ति	0	शास्मि
+शास्ति	1	शिष्वः
+शास्ति	2	शिष्मः
+शास्ति	4	शिष्ठः
+शास्ति	5	शिष्ठ
+शास्ति	7	शिष्टः
+शास्ति	8	शासति
+शास्ति	9	शासे
+शास्ति	10	शास्वहे
+शास्ति	11	शास्महे
+शास्ति	13	शासाथे
+शास्ति	14	शाद्ध्वे
+शास्ति	16	शासाते
+शास्ति	17	शासते
+शास्ति	18	शासानि
+शास्ति	19	शासाव
+शास्ति	20	शासाम
+शास्ति	21	शाधि
+शास्ति	22	शिष्टम्
+शास्ति	25	शिष्टाम्
+शास्ति	26	शासतु
+शास्ति	27	शासै
+शास्ति	28	शासावहै
+शास्ति	29	शासामहै
+शास्ति	31	शासाथाम्
+शास्ति	32	शाद्ध्वम्
+शास्ति	34	शासाताम्
+शास्ति	35	शासताम्
+शास्ति	36	शिष्याम्
+शास्ति	37	शिष्याव
+शास्ति	38	शिष्याम
+शास्ति	39	शिष्याः
+शास्ति	40	शिष्यातम्
+शास्ति	41	शिष्यात
+शास्ति	42	शिष्यात्
+शास्ति	43	शिष्याताम्
+शास्ति	44	शिष्युः
+शास्ति	45	शासीय
+शास्ति	46	शासीवहि
+शास्ति	47	शासीमहि
+शास्ति	48	शासीथाः
+शास्ति	49	शासीयाथाम्
+शास्ति	50	शासीध्वम्
+शास्ति	51	शासीत
+शास्ति	52	शासीयाताम्
+शास्ति	53	शासीरन्
+शास्ति	54	शासानि
+शास्ति	55	शासाव
+शास्ति	56	शासाम
+शास्ति	57	शासः
+शास्ति	58	शासथः
+शास्ति	59	शासथ
+शास्ति	60	शासत्
+शास्ति	61	शासतः
+शास्ति	62	शासन्
+शास्ति	63	शासै
+शास्ति	64	शासावहै
+शास्ति	65	शासामहै
+शास्ति	66	शाससे
+शास्ति	67	शासैथे
+शास्ति	68	शासध्वे
+शास्ति	69	शासते
+शास्ति	70	शासैते
+शास्ति	71	शासन्त
+शास्ति	72	अशासम्
+शास्ति	73	अशिष्व
+शास्ति	74	अशिष्म
+शास्ति	75	अशाः
+शास्ति	76	अशिष्टम्
+शास्ति	77	अशिष्ट
+शास्ति	78	अशात्
+शास्ति	79	अशिष्टाम्
+शास्ति	80	अशासुः
+शास्ति	81	अशासि
+शास्ति	82	अशास्वहि
+शास्ति	83	अशास्महि
+शास्ति	85	अशासाथाम्
+शास्ति	86	अशाद्ध्वम्
+शास्ति	88	अशासाताम्
+शास्ति	89	अशासत
+शास्ति	164	शासत्
+शास्ति	165	शासान
+शिनष्टि	0	शिनष्मि
+शिनष्टि	1	शिंष्वः
+शिनष्टि	2	शिंष्मः
+शिनष्टि	3	शिनक्षि
+शिनष्टि	4	शिंष्ठः
+शिनष्टि	5	शिंष्ठ
+शिनष्टि	6	शिनष्टि
+शिनष्टि	7	शिंष्टः
+शिनष्टि	8	शिंषन्ति
+शिनष्टि	9	शिंषे
+शिनष्टि	10	शिंष्वहे
+शिनष्टि	11	शिंष्महे
+शिनष्टि	12	शिङ्क्षे
+शिनष्टि	13	शिंषाथे
+शिनष्टि	14	शिण्ड्ढ्वे
+शिनष्टि	15	शिंष्टे
+शिनष्टि	16	शिंषाते
+शिनष्टि	17	शिंषते
+शिनष्टि	18	शिनषाणि
+शिनष्टि	19	शिनषाव
+शिनष्टि	20	शिनषाम
+शिनष्टि	21	शिण्ड्ढि
+शिनष्टि	22	शिंष्टम्
+शिनष्टि	23	शिंष्ट
+शिनष्टि	24	शिनष्टु
+शिनष्टि	25	शिंष्टाम्
+शिनष्टि	26	शिंषन्तु
+शिनष्टि	27	शिनषै
+शिनष्टि	28	शिनषावहै
+शिनष्टि	29	शिनषामहै
+शिनष्टि	30	शिङ्क्ष्व
+शिनष्टि	31	शिंषाथाम्
+शिनष्टि	32	शिण्ड्ढ्वम्
+शिनष्टि	33	शिंष्टाम्
+शिनष्टि	34	शिंषाताम्
+शिनष्टि	35	शिंषताम्
+शिनष्टि	36	शिंष्याम्
+शिनष्टि	37	शिंष्याव
+शिनष्टि	38	शिंष्याम
+शिनष्टि	39	शिंष्याः
+शिनष्टि	40	शिंष्यातम्
+शिनष्टि	41	शिंष्यात
+शिनष्टि	42	शिंष्यात्
+शिनष्टि	43	शिंष्याताम्
+शिनष्टि	44	शिंष्युः
+शिनष्टि	45	शिंषीय
+शिनष्टि	46	शिंषीवहि
+शिनष्टि	47	शिंषीमहि
+शिनष्टि	48	शिंषीथाः
+शिनष्टि	49	शिंषीयाथाम्
+शिनष्टि	50	शिंषीध्वम्
+शिनष्टि	51	शिंषीत
+शिनष्टि	52	शिंषीयाताम्
+शिनष्टि	53	शिंषीरन्
+शिनष्टि	54	शिनषाणि
+शिनष्टि	55	शिनषाव
+शिनष्टि	56	शिनषाम
+शिनष्टि	57	शिनषः
+शिनष्टि	58	शिनषथः
+शिनष्टि	59	शिनषथ
+शिनष्टि	60	शिनषत्
+शिनष्टि	61	शिनषतः
+शिनष्टि	62	शिनषन्
+शिनष्टि	63	शिनषै
+शिनष्टि	64	शिनषावहै
+शिनष्टि	65	शिनषामहै
+शिनष्टि	66	शिनषसे
+शिनष्टि	67	शिनषैथे
+शिनष्टि	68	शिनषध्वे
+शिनष्टि	69	शिनषते
+शिनष्टि	70	शिनषैते
+शिनष्टि	71	शिनषन्त
+शिनष्टि	72	अशिनषम्
+शिनष्टि	73	अशिंष्व
+शिनष्टि	74	अशिंष्म
+शिनष्टि	75	अशिनट्
+शिनष्टि	76	अशिंष्टम्
+शिनष्टि	77	अशिंष्ट
+शिनष्टि	78	अशिनट्
+शिनष्टि	79	अशिंष्टाम्
+शिनष्टि	80	अशिंषन्
+शिनष्टि	81	अशिंषि
+शिनष्टि	82	अशिंष्वहि
+शिनष्टि	83	अशिंष्महि
+शिनष्टि	84	अशिंष्ठाः
+शिनष्टि	85	अशिंषाथाम्
+शिनष्टि	86	अशिण्ड्ढ्वम्
+शिनष्टि	87	अशिंष्ट
+शिनष्टि	88	अशिंषाताम्
+शिनष्टि	89	अशिंषत
+शिनष्टि	164	शिंषत्
+शिनष्टि	165	शिंषाण
+शृणोति	80	अशृन्वन्
+शृणोति	81	अशृन्वि
+शृणोति	85	अशृन्वाथाम्
+शृणोति	88	अशृन्वाताम्
+शृणोति	89	अशृन्वत
+शेते	9	शये
+शेते	10	शेवहे
+शेते	11	शेमहे
+शेते	12	शेषे
+शेते	13	शयाथे
+शेते	16	शयाते
+शेते	17	शेरते
+शेते	27	शयै
+शेते	28	शयावहै
+शेते	29	शयामहै
+शेते	30	शेष्व
+शेते	31	शयाथाम्
+शेते	34	शयाताम्
+शेते	35	शेरताम्
+शेते	45	शयीय
+शेते	46	शयीवहि
+शेते	47	शयीमहि
+शेते	48	शयीथाः
+शेते	49	शयीयाथाम्
+शेते	50	शयीध्वम्
+शेते	51	शयीत
+शेते	52	शयीयाताम्
+शेते	53	शयीरन्
+शेते	63	शयै
+शेते	64	शयावहै
+शेते	65	शयामहै
+शेते	66	शयसे
+शेते	67	शयैथे
+शेते	68	शयध्वे
+शेते	69	शयते
+शेते	70	शयैते
+शेते	71	शयन्त
+शेते	81	अशयि
+शेते	82	अशेवहि
+शेते	83	अशेमहि
+शेते	85	अशयाथाम्
+शेते	88	अशयाताम्
+शेते	89	अशेरत
+शेते	165	शयान
+श्यास्यते	99	श्यास्ये
+श्यास्यते	100	श्यास्यावहे
+श्यास्यते	101	श्यास्यामहे
+श्यास्यते	102	श्यास्यसे
+श्यास्यते	103	श्यास्येथे
+श्यास्यते	104	श्यास्यध्वे
+श्यास्यते	105	श्यास्यते
+श्यास्यते	106	श्यास्येते
+श्यास्यते	107	श्यास्यन्ते
+श्यास्यते	167	श्यास्यमान
+श्रद्दधाति	1	श्रद्दध्वः
+श्रद्दधाति	2	श्रद्दध्मः
+श्रद्दधाति	4	श्रद्धत्थः
+श्रद्दधाति	5	श्रद्धत्थ
+श्रद्दधाति	7	श्रद्धत्तः
+श्रद्दधाति	8	श्रद्दधति
+श्रद्दधाति	10	श्रद्दध्वहे
+श्रद्दधाति	11	श्रद्दध्महे
+श्रद्दधाति	12	श्रद्धत्से
+श्रद्दधाति	14	श्रद्धद्ध्वे
+श्रद्दधाति	15	श्रद्धत्ते
+श्रद्दधाति	21	श्रद्धेहि
+श्रद्दधाति	22	श्रद्धत्तम्
+श्रद्दधाति	23	श्रद्धत्त
+श्रद्दधाति	25	श्रद्धत्ताम्
+श्रद्दधाति	26	श्रद्दधतु
+श्रद्दधाति	30	श्रद्धत्स्व
+श्रद्दधाति	32	श्रद्धद्ध्वम्
+श्रद्दधाति	33	श्रद्धत्ताम्
+श्रद्दधाति	36	श्रद्दध्याम्
+श्रद्दधाति	37	श्रद्दध्याव
+श्रद्दधाति	38	श्रद्दध्याम
+श्रद्दधाति	39	श्रद्दध्याः
+श्रद्दधाति	40	श्रद्दध्यातम्
+श्रद्दधाति	41	श्रद्दध्यात
+श्रद्दधाति	42	श्रद्दध्यात्
+श्रद्दधाति	43	श्रद्दध्याताम्
+श्रद्दधाति	44	श्रद्दध्युः
+श्रद्दधाति	50	श्रद्दधीध्वम्
+श्रद्दधाति	73	अश्रद्दध्व
+श्रद्दधाति	74	अश्रद्दध्म
+श्रद्दधाति	76	अश्रद्धत्तम्
+श्रद्दधाति	77	अश्रद्धत्त
+श्रद्दधाति	79	अश्रद्धत्ताम्
+श्रद्दधाति	80	अश्रद्दधुः
+श्रद्दधाति	82	अश्रद्दध्वहि
+श्रद्दधाति	83	अश्रद्दध्महि
+श्रद्दधाति	84	अश्रद्धत्थाः
+श्रद्दधाति	86	अश्रद्धद्ध्वम्
+श्रद्दधाति	87	अश्रद्धत्त
+श्वसिति	0	श्वसिमि
+श्वसिति	1	श्वसिवः
+श्वसिति	2	श्वसिमः
+श्वसिति	3	श्वसिषि
+श्वसिति	8	श्वसन्ति
+श्वसिति	18	श्वसानि
+श्वसिति	19	श्वसाव
+श्वसिति	20	श्वसाम
+श्वसिति	21	श्वसिहि
+श्वसिति	26	श्वसन्तु
+श्वसिति	36	श्वस्याम्
+श्वसिति	37	श्वस्याव
+श्वसिति	38	श्वस्याम
+श्वसिति	39	श्वस्याः
+श्वसिति	40	श्वस्यातम्
+श्वसिति	41	श्वस्यात
+श्वसिति	42	श्वस्यात्
+श्वसिति	43	श्वस्याताम्
+श्वसिति	44	श्वस्युः
+श्वसिति	54	श्वसानि
+श्वसिति	55	श्वसाव
+श्वसिति	56	श्वसाम
+श्वसिति	57	श्वसः
+श्वसिति	58	श्वसथः
+श्वसिति	59	श्वसथ
+श्वसिति	60	श्वसत्
+श्वसिति	61	श्वसतः
+श्वसिति	62	श्वसन्
+श्वसिति	72	अश्वसम्
+श्वसिति	73	अश्वसिव
+श्वसिति	74	अश्वसिम
+श्वसिति	75	अश्वसीः
+श्वसिति	78	अश्वसीत्
+श्वसिति	80	अश्वसन्
+श्वसिति	164	श्वसत्
+संतापयति	0	सन्तापयामि
+संतापयति	1	सन्तापयावः
+संतापयति	2	सन्तापयामः
+संतापयति	3	सन्तापयसि
+संतापयति	4	सन्तापयथः
+संतापयति	5	सन्तापयथ
+संतापयति	6	सन्तापयति
+संतापयति	7	सन्तापयतः
+संतापयति	8	सन्तापयन्ति
+संतापयति	9	सन्तापये
+संतापयति	10	सन्तापयावहे
+संतापयति	11	सन्तापयामहे
+संतापयति	12	सन्तापयसे
+संतापयति	13	सन्तापयेथे
+संतापयति	14	सन्तापयध्वे
+संतापयति	15	सन्तापयते
+संतापयति	16	सन्तापयेते
+संतापयति	17	सन्तापयन्ते
+संतापयति	18	सन्तापयानि
+संतापयति	19	सन्तापयाव
+संतापयति	20	सन्तापयाम
+संतापयति	21	सन्तापय
+संतापयति	22	सन्तापयतम्
+संतापयति	23	सन्तापयत
+संतापयति	24	सन्तापयतु
+संतापयति	25	सन्तापयताम्
+संतापयति	26	सन्तापयन्तु
+संतापयति	27	सन्तापयै
+संतापयति	28	सन्तापयावहै
+संतापयति	29	सन्तापयामहै
+संतापयति	30	सन्तापयस्व
+संतापयति	31	सन्तापयेथाम्
+संतापयति	32	सन्तापयध्वम्
+संतापयति	33	सन्तापयताम्
+संतापयति	34	सन्तापयेताम्
+संतापयति	35	सन्तापयन्ताम्
+संतापयति	36	सन्तापयेयम्
+संतापयति	37	सन्तापयेव
+संतापयति	38	सन्तापयेम
+संतापयति	39	सन्तापयेः
+संतापयति	40	सन्तापयेतम्
+संतापयति	41	सन्तापयेत
+संतापयति	42	सन्तापयेत्
+संतापयति	43	सन्तापयेताम्
+संतापयति	44	सन्तापयेयुः
+संतापयति	45	सन्तापयेय
+संतापयति	46	सन्तापयेवहि
+संतापयति	47	सन्तापयेमहि
+संतापयति	48	सन्तापयेथाः
+संतापयति	49	सन्तापयेयाथाम्
+संतापयति	50	सन्तापयेध्वम्
+संतापयति	51	सन्तापयेत
+संतापयति	52	सन्तापयेयाताम्
+संतापयति	53	सन्तापयेरन्
+संतापयति	54	सन्तापयानि
+संतापयति	55	सन्तापयाव
+संतापयति	56	सन्तापयाम
+संतापयति	57	सन्तापयाः
+संतापयति	58	सन्तापयाथः
+संतापयति	59	सन्तापयाथ
+संतापयति	60	सन्तापयात्
+संतापयति	61	सन्तापयातः
+संतापयति	62	सन्तापयान्
+संतापयति	63	सन्तापयै
+संतापयति	64	सन्तापयावहै
+संतापयति	65	सन्तापयामहै
+संतापयति	66	सन्तापयासे
+संतापयति	67	सन्तापयैथे
+संतापयति	68	सन्तापयाध्वै
+संतापयति	69	सन्तापयाते
+संतापयति	70	सन्तापयैते
+संतापयति	71	सन्तापयन्त
+संतापयति	72	असन्तापयम्
+संतापयति	73	असन्तापयाव
+संतापयति	74	असन्तापयाम
+संतापयति	75	असन्तापयः
+संतापयति	76	असन्तापयतम्
+संतापयति	77	असन्तापयत
+संतापयति	78	असन्तापयत्
+संतापयति	79	असन्तापयताम्
+संतापयति	80	असन्तापयन्
+संतापयति	81	असन्तापये
+संतापयति	82	असन्तापयावहि
+संतापयति	83	असन्तापयामहि
+संतापयति	84	असन्तापयथाः
+संतापयति	85	असन्तापयेथाम्
+संतापयति	86	असन्तापयध्वम्
+संतापयति	87	असन्तापयत
+संतापयति	88	असन्तापयेताम्
+संतापयति	89	असन्तापयन्त
+संतापयति	90	सन्तापयिष्यामि
+संतापयति	91	सन्तापयिष्यावः
+संतापयति	92	सन्तापयिष्यामः
+संतापयति	93	सन्तापयिष्यसि
+संतापयति	94	सन्तापयिष्यथः
+संतापयति	95	सन्तापयिष्यथ
+संतापयति	96	सन्तापयिष्यति
+संतापयति	97	सन्तापयिष्यतः
+संतापयति	98	सन्तापयिष्यन्ति
+संतापयति	99	सन्तापयिष्ये
+संतापयति	100	सन्तापयिष्यावहे
+संतापयति	101	सन्तापयिष्यामहे
+संतापयति	102	सन्तापयिष्यसे
+संतापयति	103	सन्तापयिष्येथे
+संतापयति	104	सन्तापयिष्यध्वे
+संतापयति	105	सन्तापयिष्यते
+संतापयति	106	सन्तापयिष्येते
+संतापयति	107	सन्तापयिष्यन्ते
+संतापयति	108	असन्तापयिष्यम्
+संतापयति	109	असन्तापयिष्याव
+संतापयति	110	असन्तापयिष्याम
+संतापयति	111	असन्तापयिष्यः
+संतापयति	112	असन्तापयिष्यतम्
+संतापयति	113	असन्तापयिष्यत
+संतापयति	114	असन्तापयिष्यत्
+संतापयति	115	असन्तापयिष्यताम्
+संतापयति	116	असन्तापयिष्यन्
+संतापयति	117	असन्तापयिष्ये
+संतापयति	118	असन्तापयिष्यावहि
+संतापयति	119	असन्तापयिष्यामहि
+संतापयति	120	असन्तापयिष्यथाः
+संतापयति	121	असन्तापयिष्येथाम्
+संतापयति	122	असन्तापयिष्यध्वम्
+संतापयति	123	असन्तापयिष्यत
+संतापयति	124	असन्तापयिष्येताम्
+संतापयति	125	असन्तापयिष्यन्त
+संतापयति	126	सन्तापयामास
+संतापयति	127	सन्तापयामासिव
+संतापयति	128	सन्तापयामासिम
+संतापयति	129	सन्तापयामासिथ
+संतापयति	130	सन्तापयामासथुः
+संतापयति	131	सन्तापयामास
+संतापयति	132	सन्तापयामास
+संतापयति	133	सन्तापयामासतुः
+संतापयति	134	सन्तापयामासुः
+संतापयति	135	सन्तापयांचक्रे
+संतापयति	136	सन्तापयांचकृवहे
+संतापयति	137	सन्तापयांचकृमहे
+संतापयति	138	सन्तापयांचकृषे
+संतापयति	139	सन्तापयांचक्राथे
+संतापयति	140	सन्तापयांचकृध्वे
+संतापयति	141	सन्तापयांचक्रे
+संतापयति	142	सन्तापयांचक्राते
+संतापयति	143	सन्तापयांचक्रिरे
+संतापयति	162	सन्तापयितुम्
+संतापयति	163	सन्तापयित्वा
+संतापयति	164	सन्तापयत्
+संतापयति	165	सन्तापयमान
+संतापयति	166	सन्तापयिष्यत्
+संतापयति	167	सन्तापयिष्यमाण
+संतापयति	168	सन्तापयामासिवांस्
+संतापयति	169	सन्तापयांचक्राण
+समर्पयति	72	समार्पयम्
+समर्पयति	73	समार्पयाव
+समर्पयति	74	समार्पयाम
+समर्पयति	75	समार्पयः
+समर्पयति	76	समार्पयतम्
+समर्पयति	77	समार्पयत
+समर्पयति	78	समार्पयत्
+समर्पयति	79	समार्पयताम्
+समर्पयति	80	समार्पयन्
+समर्पयति	81	समार्पये
+समर्पयति	82	समार्पयावहि
+समर्पयति	83	समार्पयामहि
+समर्पयति	84	समार्पयथाः
+समर्पयति	85	समार्पयेथाम्
+समर्पयति	86	समार्पयध्वम्
+समर्पयति	87	समार्पयत
+समर्पयति	88	समार्पयेताम्
+समर्पयति	89	समार्पयन्त
+सम्प्रददाति	1	सम्प्रदद्वः
+सम्प्रददाति	2	सम्प्रदद्मः
+सम्प्रददाति	4	सम्प्रदत्थः
+सम्प्रददाति	5	सम्प्रदत्थ
+सम्प्रददाति	7	सम्प्रदत्तः
+सम्प्रददाति	8	सम्प्रददति
+सम्प्रददाति	10	सम्प्रदद्वहे
+सम्प्रददाति	11	सम्प्रदद्महे
+सम्प्रददाति	12	सम्प्रदत्से
+सम्प्रददाति	14	सम्प्रदद्ध्वे
+सम्प्रददाति	15	सम्प्रदत्ते
+सम्प्रददाति	21	सम्प्रदद्धि
+सम्प्रददाति	22	सम्प्रदत्तम्
+सम्प्रददाति	23	सम्प्रदत्त
+सम्प्रददाति	25	सम्प्रदत्ताम्
+सम्प्रददाति	26	सम्प्रददतु
+सम्प्रददाति	30	सम्प्रदत्स्व
+सम्प्रददाति	32	सम्प्रदद्ध्वम्
+सम्प्रददाति	33	सम्प्रदत्ताम्
+सम्प्रददाति	36	सम्प्रदद्याम्
+सम्प्रददाति	37	सम्प्रदद्याव
+सम्प्रददाति	38	सम्प्रदद्याम
+सम्प्रददाति	39	सम्प्रदद्याः
+सम्प्रददाति	40	सम्प्रदद्यातम्
+सम्प्रददाति	41	सम्प्रदद्यात
+सम्प्रददाति	42	सम्प्रदद्यात्
+सम्प्रददाति	43	सम्प्रदद्याताम्
+सम्प्रददाति	44	सम्प्रदद्युः
+सम्प्रददाति	50	सम्प्रददीध्वम्
+सम्प्रददाति	72	सम्प्राददाम्
+सम्प्रददाति	73	सम्प्रादद्व
+सम्प्रददाति	74	सम्प्रादद्म
+सम्प्रददाति	75	सम्प्राददाः
+सम्प्रददाति	76	सम्प्रादत्तम्
+सम्प्रददाति	77	सम्प्रादत्त
+सम्प्रददाति	78	सम्प्राददात्
+सम्प्रददाति	79	सम्प्रादत्ताम्
+सम्प्रददाति	80	सम्प्राददुः
+सम्प्रददाति	81	सम्प्राददि
+सम्प्रददाति	82	सम्प्रादद्वहि
+सम्प्रददाति	83	सम्प्रादद्महि
+सम्प्रददाति	84	सम्प्रादत्थाः
+सम्प्रददाति	85	सम्प्राददाथाम्
+सम्प्रददाति	86	सम्प्रादद्ध्वम्
+सम्प्रददाति	87	सम्प्रादत्त
+सम्प्रददाति	88	सम्प्राददाताम्
+सम्प्रददाति	89	सम्प्राददत
+सम्बुध्यते	81	समबुध्ये
+सम्बुध्यते	82	समबुध्यावहि
+सम्बुध्यते	83	समबुध्यामहि
+सम्बुध्यते	84	समबुध्यथाः
+सम्बुध्यते	85	समबुध्येथाम्
+सम्बुध्यते	86	समबुध्यध्वम्
+सम्बुध्यते	87	समबुध्यत
+सम्बुध्यते	88	समबुध्येताम्
+सम्बुध्यते	89	समबुध्यन्त
+सम्मीलति	72	सममीलम्
+सम्मीलति	73	सममीलाव
+सम्मीलति	74	सममीलाम
+सम्मीलति	75	सममीलः
+सम्मीलति	76	सममीलतम्
+सम्मीलति	77	सममीलत
+सम्मीलति	78	सममीलत्
+सम्मीलति	79	सममीलताम्
+सम्मीलति	80	सममीलन्
+सम्मीलति	81	सममीले
+सम्मीलति	82	सममीलावहि
+सम्मीलति	83	सममीलामहि
+सम्मीलति	84	सममीलथाः
+सम्मीलति	85	सममीलेथाम्
+सम्मीलति	86	सममीलध्वम्
+सम्मीलति	87	सममीलत
+सम्मीलति	88	सममीलेताम्
+सम्मीलति	89	सममीलन्त
+ससाद	126	ससद
+ससाद	127	सेदिव
+ससाद	128	सेदिम
+ससाद	129	ससत्थ
+ससाद	130	सेदथुः
+ससाद	131	सेद
+ससाद	133	सेदतुः
+ससाद	134	सेदुः
+ससाद	135	सेदे
+ससाद	136	सेदिवहे
+ससाद	137	सेदिमहे
+ससाद	138	सेदिषे
+ससाद	139	सेदाथे
+ससाद	140	सेदिध्वे
+ससाद	141	सेदे
+ससाद	142	सेदाते
+ससाद	143	सेदिरे
+ससाद	168	सेदिवांस्
+ससाद	169	सेदान
+ससान	126	ससन
+ससान	127	ससनिव
+ससान	128	ससनिम
+ससान	129	ससनिथ
+ससान	130	ससनथुः
+ससान	131	ससन
+ससान	133	ससनतुः
+ससान	134	ससनुः
+ससान	168	ससन्वांस्
+सस्ति	0	सस्मि
+सस्ति	1	सस्वः
+सस्ति	2	सस्मः
+सस्ति	8	ससन्ति
+सस्ति	18	ससानि
+सस्ति	19	ससाव
+सस्ति	20	ससाम
+सस्ति	21	सद्धि
+सस्ति	26	ससन्तु
+सस्ति	36	सस्याम्
+सस्ति	37	सस्याव
+सस्ति	38	सस्याम
+सस्ति	39	सस्याः
+सस्ति	40	सस्यातम्
+सस्ति	41	सस्यात
+सस्ति	42	सस्यात्
+सस्ति	43	सस्याताम्
+सस्ति	44	सस्युः
+सस्ति	54	ससानि
+सस्ति	55	ससाव
+सस्ति	56	ससाम
+सस्ति	57	ससः
+सस्ति	58	ससथः
+सस्ति	59	ससथ
+सस्ति	60	ससत्
+सस्ति	61	ससतः
+सस्ति	62	ससन्
+सस्ति	72	अससम्
+सस्ति	73	असस्व
+सस्ति	74	असस्म
+सस्ति	75	असः
+सस्ति	78	असः
+सस्ति	80	अससन्
+सस्ति	164	ससत्
+सुष्वाप	126	सुष्वप
+सुष्वाप	127	सुषुपिव
+सुष्वाप	128	सुषुपिम
+सुष्वाप	129	सुष्वपिथ
+सुष्वाप	130	सुषुपथुः
+सुष्वाप	131	सुषुप
+सुष्वाप	133	सुषुपतुः
+सुष्वाप	134	सुषुपुः
+सुष्वाप	135	सुषुपे
+सुष्वाप	136	सुषुपिवहे
+सुष्वाप	137	सुषुपिमहे
+सुष्वाप	138	सुषुपिषे
+सुष्वाप	139	सुषुपाथे
+सुष्वाप	140	सुषुपिध्वे
+सुष्वाप	141	सुषुपे
+सुष्वाप	142	सुषुपाते
+सुष्वाप	143	सुषुपिरे
+सुष्वाप	168	सुषुप्वांस्
+सुष्वाप	169	सुषुपाण
+स्तिघ्नोति	90	स्तेघिष्यामि
+स्तिघ्नोति	91	स्तेघिष्यावः
+स्तिघ्नोति	92	स्तेघिष्यामः
+स्तिघ्नोति	93	स्तेघिष्यसि
+स्तिघ्नोति	94	स्तेघिष्यथः
+स्तिघ्नोति	95	स्तेघिष्यथ
+स्तिघ्नोति	96	स्तेघिष्यति
+स्तिघ्नोति	97	स्तेघिष्यतः
+स्तिघ्नोति	98	स्तेघिष्यन्ति
+स्तिघ्नोति	99	स्तेघिष्ये
+स्तिघ्नोति	100	स्तेघिष्यावहे
+स्तिघ्नोति	101	स्तेघिष्यामहे
+स्तिघ्नोति	102	स्तेघिष्यसे
+स्तिघ्नोति	103	स्तेघिष्येथे
+स्तिघ्नोति	104	स्तेघिष्यध्वे
+स्तिघ्नोति	105	स्तेघिष्यते
+स्तिघ्नोति	106	स्तेघिष्येते
+स्तिघ्नोति	107	स्तेघिष्यन्ते
+स्तिघ्नोति	108	अस्तेघिष्यम्
+स्तिघ्नोति	109	अस्तेघिष्याव
+स्तिघ्नोति	110	अस्तेघिष्याम
+स्तिघ्नोति	111	अस्तेघिष्यः
+स्तिघ्नोति	112	अस्तेघिष्यतम्
+स्तिघ्नोति	113	अस्तेघिष्यत
+स्तिघ्नोति	114	अस्तेघिष्यत्
+स्तिघ्नोति	115	अस्तेघिष्यताम्
+स्तिघ्नोति	116	अस्तेघिष्यन्
+स्तिघ्नोति	117	अस्तेघिष्ये
+स्तिघ्नोति	118	अस्तेघिष्यावहि
+स्तिघ्नोति	119	अस्तेघिष्यामहि
+स्तिघ्नोति	120	अस्तेघिष्यथाः
+स्तिघ्नोति	121	अस्तेघिष्येथाम्
+स्तिघ्नोति	122	अस्तेघिष्यध्वम्
+स्तिघ्नोति	123	अस्तेघिष्यत
+स्तिघ्नोति	124	अस्तेघिष्येताम्
+स्तिघ्नोति	125	अस्तेघिष्यन्त
+स्तिघ्नोति	126	तिष्टेघ
+स्तिघ्नोति	127	तिष्टिघिव
+स्तिघ्नोति	128	तिष्टिघिम
+स्तिघ्नोति	129	तिष्टेघिथ
+स्तिघ्नोति	130	तिष्टिघथुः
+स्तिघ्नोति	131	तिष्टिघ
+स्तिघ्नोति	132	तिष्टेघ
+स्तिघ्नोति	133	तिष्टिघतुः
+स्तिघ्नोति	134	तिष्टिघुः
+स्तिघ्नोति	135	तिष्टिघे
+स्तिघ्नोति	136	तिष्टिघिवहे
+स्तिघ्नोति	137	तिष्टिघिमहे
+स्तिघ्नोति	138	तिष्टिघिषे
+स्तिघ्नोति	139	तिष्टिघाथे
+स्तिघ्नोति	140	तिष्टिघिध्वे
+स्तिघ्नोति	141	तिष्टिघे
+स्तिघ्नोति	142	तिष्टिघाते
+स्तिघ्नोति	143	तिष्टिघिरे
+स्तिघ्नोति	153	अस्तेघिषि
+स्तिघ्नोति	154	अस्तेघिष्वहि
+स्तिघ्नोति	155	अस्तेघिष्महि
+स्तिघ्नोति	156	अस्तेघिष्ठाः
+स्तिघ्नोति	157	अस्तेघिषाथाम्
+स्तिघ्नोति	158	अस्तेघिढ्वम्
+स्तिघ्नोति	159	अस्तेघिष्ट
+स्तिघ्नोति	160	अस्तेघिषाताम्
+स्तिघ्नोति	161	अस्तेघिषत
+स्तिघ्नोति	162	स्तेघितुम्
+स्तिघ्नोति	163	स्तिघित्वा
+स्तिघ्नोति	166	स्तेघिष्यत्
+स्तिघ्नोति	167	स्तेघिष्यमाण
+स्तिघ्नोति	168	तिष्टिघ्वांस्
+स्तिघ्नोति	169	तिष्टिघान
+स्तौति	0	स्तौमि
+स्तौति	1	स्तुवः
+स्तौति	2	स्तुमः
+स्तौति	3	स्तौषि
+स्तौति	4	स्तुथः
+स्तौति	5	स्तुथ
+स्तौति	7	स्तुतः
+स्तौति	8	स्तुवन्ति
+स्तौति	9	स्तुवे
+स्तौति	10	स्तुवहे
+स्तौति	11	स्तुमहे
+स्तौति	12	स्तुषे
+स्तौति	13	स्तुवाथे
+स्तौति	14	स्तुध्वे
+स्तौति	15	स्तुते
+स्तौति	16	स्तुवाते
+स्तौति	17	स्तुवते
+स्तौति	18	स्तवानि
+स्तौति	19	स्तवाव
+स्तौति	20	स्तवाम
+स्तौति	21	स्तुहि
+स्तौति	22	स्तुतम्
+स्तौति	23	स्तुत
+स्तौति	25	स्तुताम्
+स्तौति	26	स्तुवन्तु
+स्तौति	27	स्तवै
+स्तौति	28	स्तवावहै
+स्तौति	29	स्तवामहै
+स्तौति	30	स्तुष्व
+स्तौति	31	स्तुवाथाम्
+स्तौति	32	स्तुध्वम्
+स्तौति	33	स्तुताम्
+स्तौति	34	स्तुवाताम्
+स्तौति	35	स्तुवताम्
+स्तौति	36	स्तुयाम्
+स्तौति	37	स्तुयाव
+स्तौति	38	स्तुयाम
+स्तौति	39	स्तुयाः
+स्तौति	40	स्तुयातम्
+स्तौति	41	स्तुयात
+स्तौति	42	स्तुयात्
+स्तौति	43	स्तुयाताम्
+स्तौति	44	स्तुयुः
+स्तौति	45	स्तुवीय
+स्तौति	46	स्तुवीवहि
+स्तौति	47	स्तुवीमहि
+स्तौति	48	स्तुवीथाः
+स्तौति	49	स्तुवीयाथाम्
+स्तौति	50	स्तुवीध्वम्
+स्तौति	51	स्तुवीत
+स्तौति	52	स्तुवीयाताम्
+स्तौति	53	स्तुवीरन्
+स्तौति	54	स्तवानि
+स्तौति	55	स्तवाव
+स्तौति	56	स्तवाम
+स्तौति	57	स्तवः
+स्तौति	58	स्तवथः
+स्तौति	59	स्तवथ
+स्तौति	60	स्तवत्
+स्तौति	61	स्तवतः
+स्तौति	62	स्तवन्
+स्तौति	63	स्तवै
+स्तौति	64	स्तवावहै
+स्तौति	65	स्तवामहै
+स्तौति	66	स्तवसे
+स्तौति	67	स्तवैथे
+स्तौति	68	स्तवध्वे
+स्तौति	69	स्तवते
+स्तौति	70	स्तवैते
+स्तौति	71	स्तवन्त
+स्तौति	72	अस्तवम्
+स्तौति	73	अस्तुव
+स्तौति	74	अस्तुम
+स्तौति	76	अस्तुतम्
+स्तौति	77	अस्तुत
+स्तौति	79	अस्तुताम्
+स्तौति	80	अस्तुवन्
+स्तौति	81	अस्तुवि
+स्तौति	82	अस्तुवहि
+स्तौति	83	अस्तुमहि
+स्तौति	84	अस्तुथाः
+स्तौति	85	अस्तुवाथाम्
+स्तौति	86	अस्तुध्वम्
+स्तौति	87	अस्तुत
+स्तौति	88	अस्तुवाताम्
+स्तौति	89	अस्तुवत
+स्तौति	164	स्तुवत्
+स्तौति	165	स्तुवान
+स्वपिति	0	स्वपिमि
+स्वपिति	1	स्वपिवः
+स्वपिति	2	स्वपिमः
+स्वपिति	3	स्वपिषि
+स्वपिति	8	स्वपन्ति
+स्वपिति	9	स्वपे
+स्वपिति	10	स्वपिवहे
+स्वपिति	11	स्वपिमहे
+स्वपिति	12	स्वपिषे
+स्वपिति	13	स्वपाथे
+स्वपिति	16	स्वपाते
+स्वपिति	17	स्वपते
+स्वपिति	18	स्वपानि
+स्वपिति	19	स्वपाव
+स्वपिति	20	स्वपाम
+स्वपिति	21	स्वपिहि
+स्वपिति	26	स्वपन्तु
+स्वपिति	27	स्वपै
+स्वपिति	28	स्वपावहै
+स्वपिति	29	स्वपामहै
+स्वपिति	30	स्वपिष्व
+स्वपिति	31	स्वपाथाम्
+स्वपिति	34	स्वपाताम्
+स्वपिति	35	स्वपताम्
+स्वपिति	36	स्वप्याम्
+स्वपिति	37	स्वप्याव
+स्वपिति	38	स्वप्याम
+स्वपिति	39	स्वप्याः
+स्वपिति	40	स्वप्यातम्
+स्वपिति	41	स्वप्यात
+स्वपिति	42	स्वप्यात्
+स्वपिति	43	स्वप्याताम्
+स्वपिति	44	स्वप्युः
+स्वपिति	45	स्वपीय
+स्वपिति	46	स्वपीवहि
+स्वपिति	47	स्वपीमहि
+स्वपिति	48	स्वपीथाः
+स्वपिति	49	स्वपीयाथाम्
+स्वपिति	50	स्वपीध्वम्
+स्वपिति	51	स्वपीत
+स्वपिति	52	स्वपीयाताम्
+स्वपिति	53	स्वपीरन्
+स्वपिति	54	स्वपानि
+स्वपिति	55	स्वपाव
+स्वपिति	56	स्वपाम
+स्वपिति	57	स्वपः
+स्वपिति	58	स्वपथः
+स्वपिति	59	स्वपथ
+स्वपिति	60	स्वपत्
+स्वपिति	61	स्वपतः
+स्वपिति	62	स्वपन्
+स्वपिति	63	स्वपै
+स्वपिति	64	स्वपावहै
+स्वपिति	65	स्वपामहै
+स्वपिति	66	स्वपसे
+स्वपिति	67	स्वपैथे
+स्वपिति	68	स्वपध्वे
+स्वपिति	69	स्वपते
+स्वपिति	70	स्वपैते
+स्वपिति	71	स्वपन्त
+स्वपिति	72	अस्वपम्
+स्वपिति	73	अस्वपिव
+स्वपिति	74	अस्वपिम
+स्वपिति	75	अस्वपीः
+स्वपिति	78	अस्वपीत्
+स्वपिति	80	अस्वपन्
+स्वपिति	81	अस्वपि
+स्वपिति	82	अस्वपिवहि
+स्वपिति	83	अस्वपिमहि
+स्वपिति	85	अस्वपाथाम्
+स्वपिति	88	अस्वपाताम्
+स्वपिति	89	अस्वपत
+स्वपिति	164	स्वपत्
+स्वपिति	165	स्वपान
+स्वीकरोति	1	स्वीकुर्वः
+स्वीकरोति	2	स्वीकुर्मः
+स्वीकरोति	4	स्वीकुरुथः
+स्वीकरोति	5	स्वीकुरुथ
+स्वीकरोति	7	स्वीकुरुतः
+स्वीकरोति	8	स्वीकुर्वन्ति
+स्वीकरोति	9	स्वीकुर्वे
+स्वीकरोति	10	स्वीकुर्वहे
+स्वीकरोति	11	स्वीकुर्महे
+स्वीकरोति	12	स्वीकुरुषे
+स्वीकरोति	13	स्वीकुर्वाथे
+स्वीकरोति	14	स्वीकुरुध्वे
+स्वीकरोति	15	स्वीकुरुते
+स्वीकरोति	16	स्वीकुर्वाते
+स्वीकरोति	17	स्वीकुर्वते
+स्वीकरोति	18	स्वीकरवाणि
+स्वीकरोति	21	स्वीकुरुहि
+स्वीकरोति	22	स्वीकुरुतम्
+स्वीकरोति	23	स्वीकुरुत
+स्वीकरोति	25	स्वीकुरुताम्
+स्वीकरोति	26	स्वीकुर्वन्तु
+स्वीकरोति	30	स्वीकुरुष्व
+स्वीकरोति	31	स्वीकुर्वाथाम्
+स्वीकरोति	32	स्वीकुरुध्वम्
+स्वीकरोति	33	स्वीकुरुताम्
+स्वीकरोति	34	स्वीकुर्वाताम्
+स्वीकरोति	35	स्वीकुर्वताम्
+स्वीकरोति	36	स्वीकुर्याम्
+स्वीकरोति	37	स्वीकुर्याव
+स्वीकरोति	38	स्वीकुर्याम
+स्वीकरोति	39	स्वीकुर्याः
+स्वीकरोति	40	स्वीकुर्यातम्
+स्वीकरोति	41	स्वीकुर्यात
+स्वीकरोति	42	स्वीकुर्यात्
+स्वीकरोति	43	स्वीकुर्याताम्
+स्वीकरोति	44	स्वीकुर्युः
+स्वीकरोति	45	स्वीकुर्वीय
+स्वीकरोति	46	स्वीकुर्वीवहि
+स्वीकरोति	47	स्वीकुर्वीमहि
+स्वीकरोति	48	स्वीकुर्वीथाः
+स्वीकरोति	49	स्वीकुर्वीयाथाम्
+स्वीकरोति	50	स्वीकुर्वीध्वम्
+स्वीकरोति	51	स्वीकुर्वीत
+स्वीकरोति	52	स्वीकुर्वीयाताम्
+स्वीकरोति	53	स्वीकुर्वीरन्
+स्वीकरोति	54	स्वीकरवाणि
+स्वीकरोति	72	स्व्यकरवम्
+स्वीकरोति	73	स्व्यकुर्व
+स्वीकरोति	74	स्व्यकुर्म
+स्वीकरोति	75	स्व्यकरोः
+स्वीकरोति	76	स्व्यकुरुतम्
+स्वीकरोति	77	स्व्यकुरुत
+स्वीकरोति	78	स्व्यकरोत्
+स्वीकरोति	79	स्व्यकुरुताम्
+स्वीकरोति	80	स्व्यकुर्वन्
+स्वीकरोति	81	स्व्यकुर्वि
+स्वीकरोति	82	स्व्यकुर्वहि
+स्वीकरोति	83	स्व्यकुर्महि
+स्वीकरोति	84	स्व्यकुरुथाः
+स्वीकरोति	85	स्व्यकुर्वाथाम्
+स्वीकरोति	86	स्व्यकुरुध्वम्
+स्वीकरोति	87	स्व्यकुरुत
+स्वीकरोति	88	स्व्यकुर्वाताम्
+स्वीकरोति	89	स्व्यकुर्वत
+स्वीकरोति	164	स्वीकुर्वत्
+स्वीकरोति	165	स्वीकुर्वाण
+हन्ति	0	हन्मि
+हन्ति	1	हन्वः
+हन्ति	2	हन्मः
+हन्ति	3	हंसि
+हन्ति	4	हथः
+हन्ति	5	हथ
+हन्ति	7	हतः
+हन्ति	8	घ्नन्ति
+हन्ति	9	घ्ने
+हन्ति	10	हन्वहे
+हन्ति	11	हन्महे
+हन्ति	12	हसे
+हन्ति	13	घ्नाथे
+हन्ति	14	हध्वे
+हन्ति	15	हते
+हन्ति	16	घ्नाते
+हन्ति	17	घ्नते
+हन्ति	18	हनानि
+हन्ति	19	हनाव
+हन्ति	20	हनाम
+हन्ति	21	जहि
+हन्ति	22	हतम्
+हन्ति	23	हत
+हन्ति	25	हताम्
+हन्ति	26	घ्नन्तु
+हन्ति	27	हनै
+हन्ति	28	हनावहै
+हन्ति	29	हनामहै
+हन्ति	30	हस्व
+हन्ति	31	घ्नाथाम्
+हन्ति	32	हध्वम्
+हन्ति	33	हताम्
+हन्ति	34	घ्नाताम्
+हन्ति	35	घ्नताम्
+हन्ति	36	हन्याम्
+हन्ति	37	हन्याव
+हन्ति	38	हन्याम
+हन्ति	39	हन्याः
+हन्ति	40	हन्यातम्
+हन्ति	41	हन्यात
+हन्ति	42	हन्यात्
+हन्ति	43	हन्याताम्
+हन्ति	44	हन्युः
+हन्ति	45	हनीय
+हन्ति	46	हनीवहि
+हन्ति	47	हनीमहि
+हन्ति	48	हनीथाः
+हन्ति	49	हनीयाथाम्
+हन्ति	50	हनीध्वम्
+हन्ति	51	हनीत
+हन्ति	52	हनीयाताम्
+हन्ति	53	हनीरन्
+हन्ति	54	हनानि
+हन्ति	55	हनाव
+हन्ति	56	हनाम
+हन्ति	57	हनः
+हन्ति	58	हनथः
+हन्ति	59	हनथ
+हन्ति	60	हनत्
+हन्ति	61	हनतः
+हन्ति	62	हनन्
+हन्ति	63	हनै
+हन्ति	64	हनावहै
+हन्ति	65	हनामहै
+हन्ति	66	हनसे
+हन्ति	67	हनैथे
+हन्ति	68	हनध्वे
+हन्ति	69	हनते
+हन्ति	70	हनैते
+हन्ति	71	हनन्त
+हन्ति	72	अहनम्
+हन्ति	73	अहन्व
+हन्ति	74	अहन्म
+हन्ति	75	अहन्
+हन्ति	76	अहतम्
+हन्ति	77	अहत
+हन्ति	78	अहन्
+हन्ति	79	अहताम्
+हन्ति	80	अघ्नन्
+हन्ति	81	अघ्नि
+हन्ति	82	अहन्वहि
+हन्ति	83	अहन्महि
+हन्ति	84	अहथाः
+हन्ति	85	अघ्नाथाम्
+हन्ति	86	अहध्वम्
+हन्ति	87	अहत
+हन्ति	88	अघ्नाताम्
+हन्ति	89	अघ्नत
+हन्ति	164	घ्नत्
+हन्ति	165	घ्नान
+हिनस्ति	0	हिनस्मि
+हिनस्ति	1	हिंस्वः
+हिनस्ति	2	हिंस्मः
+हिनस्ति	4	हिंस्थः
+हिनस्ति	5	हिंस्थ
+हिनस्ति	7	हिंस्तः
+हिनस्ति	8	हिंसन्ति
+हिनस्ति	9	हिंसे
+हिनस्ति	10	हिंस्वहे
+हिनस्ति	11	हिंस्महे
+हिनस्ति	12	हिंस्से
+हिनस्ति	13	हिंसाथे
+हिनस्ति	14	हिन्द्ध्वे
+हिनस्ति	15	हिंस्ते
+हिनस्ति	16	हिंसाते
+हिनस्ति	17	हिंसते
+हिनस्ति	18	हिनसानि
+हिनस्ति	19	हिनसाव
+हिनस्ति	20	हिनसाम
+हिनस्ति	21	हिन्द्धि
+हिनस्ति	22	हिंस्तम्
+हिनस्ति	23	हिंस्त
+हिनस्ति	25	हिंस्ताम्
+हिनस्ति	26	हिंसन्तु
+हिनस्ति	27	हिनसै
+हिनस्ति	28	हिनसावहै
+हिनस्ति	29	हिनसामहै
+हिनस्ति	30	हिंस्स्व
+हिनस्ति	31	हिंसाथाम्
+हिनस्ति	32	हिन्द्ध्वम्
+हिनस्ति	33	हिंस्ताम्
+हिनस्ति	34	हिंसाताम्
+हिनस्ति	35	हिंसताम्
+हिनस्ति	36	हिंस्याम्
+हिनस्ति	37	हिंस्याव
+हिनस्ति	38	हिंस्याम
+हिनस्ति	39	हिंस्याः
+हिनस्ति	40	हिंस्यातम्
+हिनस्ति	41	हिंस्यात
+हिनस्ति	42	हिंस्यात्
+हिनस्ति	43	हिंस्याताम्
+हिनस्ति	44	हिंस्युः
+हिनस्ति	45	हिंसीय
+हिनस्ति	46	हिंसीवहि
+हिनस्ति	47	हिंसीमहि
+हिनस्ति	48	हिंसीथाः
+हिनस्ति	49	हिंसीयाथाम्
+हिनस्ति	50	हिंसीध्वम्
+हिनस्ति	51	हिंसीत
+हिनस्ति	52	हिंसीयाताम्
+हिनस्ति	53	हिंसीरन्
+हिनस्ति	54	हिनसानि
+हिनस्ति	55	हिनसाव
+हिनस्ति	56	हिनसाम
+हिनस्ति	57	हिनसः
+हिनस्ति	58	हिनसथः
+हिनस्ति	59	हिनसथ
+हिनस्ति	60	हिनसत्
+हिनस्ति	61	हिनसतः
+हिनस्ति	62	हिनसन्
+हिनस्ति	63	हिनसै
+हिनस्ति	64	हिनसावहै
+हिनस्ति	65	हिनसामहै
+हिनस्ति	66	हिनससे
+हिनस्ति	67	हिनसैथे
+हिनस्ति	68	हिनसध्वे
+हिनस्ति	69	हिनसते
+हिनस्ति	70	हिनसैते
+हिनस्ति	71	हिनसन्त
+हिनस्ति	72	अहिनसम्
+हिनस्ति	73	अहिंस्व
+हिनस्ति	74	अहिंस्म
+हिनस्ति	75	अहिनः
+हिनस्ति	76	अहिंस्तम्
+हिनस्ति	77	अहिंस्त
+हिनस्ति	78	अहिनः
+हिनस्ति	79	अहिंस्ताम्
+हिनस्ति	80	अहिंसन्
+हिनस्ति	81	अहिंसि
+हिनस्ति	82	अहिंस्वहि
+हिनस्ति	83	अहिंस्महि
+हिनस्ति	84	अहिंस्थाः
+हिनस्ति	85	अहिंसाथाम्
+हिनस्ति	86	अहिन्द्ध्वम्
+हिनस्ति	87	अहिंस्त
+हिनस्ति	88	अहिंसाताम्
+हिनस्ति	89	अहिंसत
+हिनस्ति	164	हिंसत्
+हिनस्ति	165	हिंसान
+हिनोति	90	हेष्यामि
+हिनोति	91	हेष्यावः
+हिनोति	92	हेष्यामः
+हिनोति	93	हेष्यसि
+हिनोति	94	हेष्यथः
+हिनोति	95	हेष्यथ
+हिनोति	96	हेष्यति
+हिनोति	97	हेष्यतः
+हिनोति	98	हेष्यन्ति
+हिनोति	99	हेष्ये
+हिनोति	100	हेष्यावहे
+हिनोति	101	हेष्यामहे
+हिनोति	102	हेष्यसे
+हिनोति	103	हेष्येथे
+हिनोति	104	हेष्यध्वे
+हिनोति	105	हेष्यते
+हिनोति	106	हेष्येते
+हिनोति	107	हेष्यन्ते
+हिनोति	108	अहेष्यम्
+हिनोति	109	अहेष्याव
+हिनोति	110	अहेष्याम
+हिनोति	111	अहेष्यः
+हिनोति	112	अहेष्यतम्
+हिनोति	113	अहेष्यत
+हिनोति	114	अहेष्यत्
+हिनोति	115	अहेष्यताम्
+हिनोति	116	अहेष्यन्
+हिनोति	117	अहेष्ये
+हिनोति	118	अहेष्यावहि
+हिनोति	119	अहेष्यामहि
+हिनोति	120	अहेष्यथाः
+हिनोति	121	अहेष्येथाम्
+हिनोति	122	अहेष्यध्वम्
+हिनोति	123	अहेष्यत
+हिनोति	124	अहेष्येताम्
+हिनोति	125	अहेष्यन्त
+हिनोति	126	जिघय
+हिनोति	127	जिघिव
+हिनोति	128	जिघिम
+हिनोति	129	जिघेथ
+हिनोति	130	जिघथुः
+हिनोति	131	जिघ
+हिनोति	132	जिघाय
+हिनोति	133	जिघतुः
+हिनोति	134	जिघुः
+हिनोति	135	जिघे
+हिनोति	136	जिघिवहे
+हिनोति	137	जिघिमहे
+हिनोति	138	जिघिषे
+हिनोति	139	जिघाथे
+हिनोति	140	जिघिध्वे
+हिनोति	141	जिघे
+हिनोति	142	जिघाते
+हिनोति	143	जिघिरे
+हिनोति	144	अहैषम्
+हिनोति	145	अहैष्व
+हिनोति	146	अहैष्म
+हिनोति	147	अहैषीः
+हिनोति	148	अहैष्टम्
+हिनोति	149	अहैष्ट
+हिनोति	150	अहैषीत्
+हिनोति	151	अहैष्टाम्
+हिनोति	152	अहैषुः
+हिनोति	153	अहेषि
+हिनोति	154	अहेष्वहि
+हिनोति	155	अहेष्महि
+हिनोति	156	अहेष्ठाः
+हिनोति	157	अहेषाथाम्
+हिनोति	158	अहेढ्वम्
+हिनोति	159	अहेष्ट
+हिनोति	160	अहेषाताम्
+हिनोति	161	अहेषत
+हिनोति	162	हेतुम्
+हिनोति	163	हित्वा
+हिनोति	166	हेष्यत्
+हिनोति	167	हेष्यमाण
+हिनोति	168	जिघिवांस्
+हिनोति	169	जिघान
+"#,
+    ),
 };

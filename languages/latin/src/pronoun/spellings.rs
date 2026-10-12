@@ -4,36 +4,31 @@
 
 use std::borrow::Cow;
 
-/// 30 words.
+/// 25 words.
 pub(super) static SPELLINGS: &[(Cow<'static, str>, Cow<'static, str>)] = flexion::spellings! {
-    "aliqui" => "aliquī",
-    "complura" => "complūra",
-    "complures" => "complūrēs",
-    "compluria" => "complūria",
     "complusculi" => "complūsculī",
-    "conplura" => "conplūra",
-    "conplures" => "conplūrēs",
-    "conpluria" => "conplūria",
-    "cuiusvis" => "cuiusvīs",
+    "ecquinam" => "ecquīnam",
     "idem" => "īdem",
+    "nemo" => "nēmō",
     "nequis" => "nēquis",
-    "nescioquis" => "nesciōquis",
     "nosmet" => "nōsmet",
     "nullus" => "nūllus",
     "qualis" => "quālis",
     "qualiscumque" => "quāliscumque",
     "quicumque" => "quīcumque",
     "quicunque" => "quīcunque",
+    "quidam" => "quīdam",
     "quilibet" => "quīlibet",
     "quilubet" => "quīlubet",
+    "quinam" => "quīnam",
     "quivis" => "quīvīs",
     "quiviscumque" => "quīvīscumque",
+    "se" => "sē",
     "semet" => "sēmet",
-    "sibi" => "sibī",
+    "sese" => "sēsē",
     "siquis" => "sīquis",
     "tutemet" => "tūtemet",
     "ullus" => "ūllus",
     "unusquisque" => "ūnusquisque",
-    "utervis" => "utervīs",
     "vosmet" => "vōsmet",
 };
