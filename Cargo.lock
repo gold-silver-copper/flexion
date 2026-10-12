@@ -71,6 +71,7 @@ dependencies = [
  "flexion",
  "serde",
  "serde_json",
+ "sound-law",
  "unicode-normalization",
 ]
 

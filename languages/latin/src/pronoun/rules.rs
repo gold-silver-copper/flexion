@@ -7,7 +7,7 @@
 use super::paradigms::Declension::{self, *};
 use flexion::Choice;
 
-/// 15 rules and 61 listed words.
+/// 15 rules and 60 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
         "" => [Quis 27, Ipse 12, Uter 12, Alius 8, Utervīs 8, Complūrēs 2, Complūra 2, Is 1, Sē 1, Ea 1, Nēmō 1, Id 1, Quī 1, Quīdam 1, Ecquī 1, Suī 1, Ambō 1, Sēsē 1, Quīnam 1, Quīvīs 1, Complūsculī 1, Ecquīnam 1],
@@ -52,7 +52,6 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "numquis" => Quis,
         "qualis" => Quis,
         "qualiscumque" => Ipse,
-        "qui" => Quī,
         "quicquid" => Quis,
         "quicquidlibet" => Quis,
         "quicumque" => Ipse,

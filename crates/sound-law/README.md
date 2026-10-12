@@ -39,11 +39,12 @@ searching it.
 ## In flexion
 
 [flexion](../../README.md) learns each part of speech's sound laws from its inflection
-tables and runs them with this crate: an edit carries a trigger character (U+E000…), and a
-rule rewrites the stem's edge next to it, `"{x:S0}" => "{x|M0}" / "" _ "⟨T⟩"`, or copies the
-stem's first consonant after it (Greek reduplication). The trainer builds rule sets at
-runtime from `Class`, `Map` and `Rule` values and compiles them; a generated crate holds the
-compiled program as static data (see below), so it never compiles anything.
+tables and runs them with this crate. A built form marks where its stem meets its ending
+with `+`, and a law rewrites the letters around it (Greek `"ε+ο" => "+ου"`, Russian
+`"{x:[к|г|х]}+ы" => "{x}+и"`), or changes a letter of the ending by the nearest letter of a
+tier before it (Sanskrit `"न" => "ण" / "{t:[र|ष|ृ]}{a:![…]*}+{b:![…]*}" _ ""`, unless `्`
+follows). The trainer builds rules at runtime and compiles them; a generated crate holds
+the compiled program as static data (see below), so it never compiles anything.
 
 ## Programs as static data
 

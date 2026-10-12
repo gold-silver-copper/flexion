@@ -1,26 +1,11 @@
-//! Animacy, which decides the cells some declensions refer to others, and which
-//! words have which. The rule with the longest ending the word has decides;
-//! the words no rule gets right are listed.
+//! A word's animacy, which decides which cell some cells' forms come from
+//! (see `relations.rs`). The rule with the longest ending the word has
+//! decides; the words no rule gets right are listed.
 
-use super::cell::*;
 use crate::Animacy::{self, *};
-use flexion::{Choice, Referral};
-use std::borrow::Cow;
+use flexion::Choice;
 
-/// The cells whose form, in the declensions that say `referred`, is another
-/// cell's: per animacy, in order (Animate, Inanimate), the cell.
-pub(super) static REFERRALS: [Referral<'static>; 2] = [
-    Referral {
-        cell: ACC_SG,
-        to: Cow::Borrowed(&[GEN_SG, NOM_SG]),
-    },
-    Referral {
-        cell: ACC_PL,
-        to: Cow::Borrowed(&[GEN_PL, NOM_PL]),
-    },
-];
-
-/// Which animacy a word has: 2,206 rules and 13,544 listed words.
+/// 2,206 rules and 13,544 listed words.
 pub(super) const ANIMACY: Choice<'static, Animacy> = flexion::choice! {
     rules {
         "" => [Inanimate 79102, Animate 28934],

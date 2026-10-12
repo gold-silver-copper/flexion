@@ -77,36 +77,17 @@ impl<'a> Cells<'a> {
             .find(|g| cell >= g.offset && cell < g.offset + g.len())
     }
 
-    /// The cell `cell` uses where a word has no form of its own there (see
-    /// [`crate::spec::Group::fallbacks`]).
-    pub fn fallback(&self, cell: usize) -> Option<usize> {
-        let g = self.group_of(cell)?;
-        let names: Vec<&str> = g
-            .features
-            .iter()
-            .zip(g.values(cell))
-            .filter_map(|(f, v)| f.values.get(v).map(|x| x.name))
-            .collect();
-        g.group
-            .fallbacks
-            .iter()
-            .find(|(values, _, _)| values.iter().all(|v| names.contains(v)))
-            .and_then(|(_, group, to)| self.find(group, to))
-    }
-
     /// `noun.gen.pl`
     pub fn name(&self, cell: usize) -> String {
         let Some(g) = self.group_of(cell) else {
             return format!("cell{cell}");
         };
-        let mut s = g.name.to_string();
-        for (f, v) in g.features.iter().zip(g.values(cell)) {
-            if let Some(val) = f.values.get(v) {
-                s.push('.');
-                s.push_str(val.short);
-            }
-        }
-        s
+        let values = g.features.iter().zip(g.values(cell));
+        let shorts = values.filter_map(|(f, v)| Some(f.values.get(v)?.short));
+        std::iter::once(g.name)
+            .chain(shorts)
+            .collect::<Vec<_>>()
+            .join(".")
     }
 
     pub fn find(&self, group: &str, values: &[&str]) -> Option<usize> {
@@ -167,21 +148,20 @@ impl<'a> Cells<'a> {
             if choices.iter().any(Vec::is_empty) {
                 continue;
             }
-            let mut combos: Vec<Vec<usize>> = vec![Vec::new()];
-            for c in &choices {
-                combos = combos
-                    .into_iter()
-                    .flat_map(|prefix| {
-                        c.iter().map(move |&v| {
-                            let mut p = prefix.clone();
-                            p.push(v);
-                            p
-                        })
-                    })
-                    .collect();
-            }
-            out.extend(combos.iter().map(|vals| g.index(vals)));
+            out.extend(combinations(choices).iter().map(|vals| g.index(vals)));
         }
         out
     }
+}
+
+/// Every way of taking one of each of `choices`, in order.
+pub fn combinations(choices: impl IntoIterator<Item = Vec<usize>>) -> Vec<Vec<usize>> {
+    let mut combos: Vec<Vec<usize>> = vec![Vec::new()];
+    for c in choices {
+        combos = combos
+            .into_iter()
+            .flat_map(|prefix| c.iter().map(move |&v| [prefix.as_slice(), &[v]].concat()))
+            .collect();
+    }
+    combos
 }

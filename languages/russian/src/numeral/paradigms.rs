@@ -7,8 +7,10 @@
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, then a row of patterns per line (`referred`: the form
-/// is another cell's, as the word's feature says):
+/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
+/// they share them), the declension it is like (if any), then a row of patterns
+/// per line (`derived`: the form comes from another cell's, see
+/// `relations.rs`; `_`: the form is the declension's it is like):
 /// `nominative_masculine` (anim, inan)
 /// `nominative_feminine` (anim, inan)
 /// `nominative_neuter` (anim, inan)
@@ -34,7 +36,7 @@ use flexion::Paradigm;
 /// `prepositional_neuter` (anim, inan)
 /// `prepositional_plural` (anim, inan)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident)?;
      nominative_masculine: $c0:tt, $c1:tt;
      nominative_feminine: $c2:tt, $c3:tt;
      nominative_neuter: $c4:tt, $c5:tt;
@@ -64,67 +66,77 @@ macro_rules! declension {
             name: ::std::borrow::Cow::Borrowed($name),
             words: $words,
             lemma: ::std::borrow::Cow::Borrowed($lemma),
-            forms: ::std::borrow::Cow::Borrowed(&[
-                flexion::form!($c0),
-                flexion::form!($c1),
-                flexion::form!($c2),
-                flexion::form!($c3),
-                flexion::form!($c4),
-                flexion::form!($c5),
-                flexion::form!($c6),
-                flexion::form!($c7),
-                flexion::form!($c8),
-                flexion::form!($c9),
-                flexion::form!($c10),
-                flexion::form!($c11),
-                flexion::form!($c12),
-                flexion::form!($c13),
-                flexion::form!($c14),
-                flexion::form!($c15),
-                flexion::form!($c16),
-                flexion::form!($c17),
-                flexion::form!($c18),
-                flexion::form!($c19),
-                flexion::form!($c20),
-                flexion::form!($c21),
-                flexion::form!($c22),
-                flexion::form!($c23),
-                flexion::form!($c24),
-                flexion::form!($c25),
-                flexion::form!($c26),
-                flexion::form!($c27),
-                flexion::form!($c28),
-                flexion::form!($c29),
-                flexion::form!($c30),
-                flexion::form!($c31),
-                flexion::form!($c32),
-                flexion::form!($c33),
-                flexion::form!($c34),
-                flexion::form!($c35),
-                flexion::form!($c36),
-                flexion::form!($c37),
-                flexion::form!($c38),
-                flexion::form!($c39),
-                flexion::form!($c40),
-                flexion::form!($c41),
-                flexion::form!($c42),
-                flexion::form!($c43),
-                flexion::form!($c44),
-                flexion::form!($c45),
-                flexion::form!($c46),
-                flexion::form!($c47),
-            ]),
+            parent: like!($($parent)?),
+            inherent: ::std::borrow::Cow::Borrowed(&[]),
+            table: ::std::borrow::Cow::Borrowed(concat!(
+                flexion::cell!($c0), "\t",
+                flexion::cell!($c1), "\t",
+                flexion::cell!($c2), "\t",
+                flexion::cell!($c3), "\t",
+                flexion::cell!($c4), "\t",
+                flexion::cell!($c5), "\t",
+                flexion::cell!($c6), "\t",
+                flexion::cell!($c7), "\t",
+                flexion::cell!($c8), "\t",
+                flexion::cell!($c9), "\t",
+                flexion::cell!($c10), "\t",
+                flexion::cell!($c11), "\t",
+                flexion::cell!($c12), "\t",
+                flexion::cell!($c13), "\t",
+                flexion::cell!($c14), "\t",
+                flexion::cell!($c15), "\t",
+                flexion::cell!($c16), "\t",
+                flexion::cell!($c17), "\t",
+                flexion::cell!($c18), "\t",
+                flexion::cell!($c19), "\t",
+                flexion::cell!($c20), "\t",
+                flexion::cell!($c21), "\t",
+                flexion::cell!($c22), "\t",
+                flexion::cell!($c23), "\t",
+                flexion::cell!($c24), "\t",
+                flexion::cell!($c25), "\t",
+                flexion::cell!($c26), "\t",
+                flexion::cell!($c27), "\t",
+                flexion::cell!($c28), "\t",
+                flexion::cell!($c29), "\t",
+                flexion::cell!($c30), "\t",
+                flexion::cell!($c31), "\t",
+                flexion::cell!($c32), "\t",
+                flexion::cell!($c33), "\t",
+                flexion::cell!($c34), "\t",
+                flexion::cell!($c35), "\t",
+                flexion::cell!($c36), "\t",
+                flexion::cell!($c37), "\t",
+                flexion::cell!($c38), "\t",
+                flexion::cell!($c39), "\t",
+                flexion::cell!($c40), "\t",
+                flexion::cell!($c41), "\t",
+                flexion::cell!($c42), "\t",
+                flexion::cell!($c43), "\t",
+                flexion::cell!($c44), "\t",
+                flexion::cell!($c45), "\t",
+                flexion::cell!($c46), "\t",
+                flexion::cell!($c47), "\t",
+            )),
         }
+    };
+}
+
+/// The declension a declension is like, by its name.
+macro_rules! like {
+    () => {
+        None
+    };
+    ($parent:ident) => {
+        Some(Declension::$parent as u16)
     };
 }
 
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `один`: 42 words.
+    /// Like `один`: 61 words.
     Один,
-    /// Like `пять`: 19 words.
-    Пять,
     /// Like `пятеро`: 7 words.
     Пятеро,
     /// Like `пятьсот`: 5 words.
@@ -135,9 +147,8 @@ pub enum Declension {
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 5] = [
+    pub const ALL: [Declension; 4] = [
         Declension::Один,
-        Declension::Пять,
         Declension::Пятеро,
         Declension::Пятьсот,
         Declension::Пятьдесят,
@@ -158,9 +169,9 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 5] = [
-    // Один: 42 words (один, два, три, четыре, сто, сорок).
-    declension!("один", 42, "~";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 4] = [
+    // Один: 61 words (шесть, один, два, три, четыре, пять).
+    declension!("один", 61, "~";
         nominative_masculine: "~", "~";
         nominative_feminine: "~", "~";
         nominative_neuter: "~", "~";
@@ -186,85 +197,58 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 5] = [
         prepositional_neuter: "~е", "~е";
         prepositional_plural: "~е|~ах", "~е|~ах";
     ),
-    // Пять: 19 words (шесть, пять, семь, восемь, девять, десять).
-    declension!("пять", 19, "~ь";
-        nominative_masculine: "~ь", "~ь";
-        nominative_feminine: "~ь", "~ь";
-        nominative_neuter: "~ь", "~ь";
-        nominative_plural: "~ь", "~ь";
-        genitive_masculine: "~и", "~и";
-        genitive_feminine: "~и", "~и";
-        genitive_neuter: "~и", "~и";
-        genitive_plural: "~и", "~и";
-        dative_masculine: "~и", "~и";
-        dative_feminine: "~и", "~и";
-        dative_neuter: "~и", "~и";
-        dative_plural: "~и", "~и";
-        accusative_masculine: "~ь", "~ь";
-        accusative_feminine: "~ь", "~ь";
-        accusative_neuter: "~ь", "~ь";
-        accusative_plural: "~ь", "~ь";
-        instrumental_masculine: "~ью", "~ью";
-        instrumental_feminine: "~ью", "~ью";
-        instrumental_neuter: "~ью", "~ью";
-        instrumental_plural: "~ью", "~ью";
-        prepositional_masculine: "~и", "~и";
-        prepositional_feminine: "~и", "~и";
-        prepositional_neuter: "~и", "~и";
-        prepositional_plural: "~и", "~и";
-    ),
     // Пятеро: 7 words (четверо, шестеро, семеро, восьмеро, десятеро, пятеро).
     declension!("пятеро", 7, "~о";
-        nominative_masculine: "~", "~";
-        nominative_feminine: "~", "~";
-        nominative_neuter: "~", "~";
+        nominative_masculine: derived, "~о";
+        nominative_feminine: derived, derived;
+        nominative_neuter: derived, derived;
         nominative_plural: "~о", "~о";
-        genitive_masculine: "~а", "~а";
-        genitive_feminine: "~а", "~а";
-        genitive_neuter: "~а", "~а";
+        genitive_masculine: derived, derived;
+        genitive_feminine: derived, derived;
+        genitive_neuter: derived, derived;
         genitive_plural: "~ых", "~ых";
-        dative_masculine: "~у", "~у";
-        dative_feminine: "~у", "~у";
-        dative_neuter: "~у", "~у";
+        dative_masculine: derived, derived;
+        dative_feminine: derived, derived;
+        dative_neuter: derived, derived;
         dative_plural: "~ым", "~ым";
-        accusative_masculine: "~", "~";
-        accusative_feminine: "~", "~";
-        accusative_neuter: "~", "~";
+        accusative_masculine: derived, derived;
+        accusative_feminine: derived, derived;
+        accusative_neuter: derived, derived;
         accusative_plural: "~ых", "~о";
-        instrumental_masculine: "~ом", "~ом";
-        instrumental_feminine: "~ом", "~ом";
-        instrumental_neuter: "~ом", "~ом";
+        instrumental_masculine: derived, derived;
+        instrumental_feminine: derived, derived;
+        instrumental_neuter: derived, derived;
         instrumental_plural: "~ыми", "~ыми";
-        prepositional_masculine: "~е", "~е";
-        prepositional_feminine: "~е", "~е";
-        prepositional_neuter: "~е", "~е";
+        prepositional_masculine: derived, derived;
+        prepositional_feminine: derived, derived;
+        prepositional_neuter: derived, derived;
         prepositional_plural: "~ых", "~ых";
     ),
     // Пятьсот: 5 words (пятьсот, шестьсот, семьсот, восемьсот, девятьсот).
     declension!("пятьсот", 5, "~ь~о~";
-        nominative_masculine: "~ь~о~", "~ь~о~";
-        nominative_feminine: "~ь~о~", "~ь~о~";
-        nominative_neuter: "~ь~о~", "~ь~о~";
+        nominative_masculine: derived, "~ь~о~";
+        nominative_feminine: derived, derived;
+        nominative_neuter: derived, derived;
         nominative_plural: "~ь~о~", "~ь~о~";
-        genitive_masculine: "~ь~о~", "~ь~о~";
-        genitive_feminine: "~ь~о~", "~ь~о~";
-        genitive_neuter: "~ь~о~", "~ь~о~";
+        genitive_masculine: derived, derived;
+        genitive_feminine: derived, derived;
+        genitive_neuter: derived, derived;
         genitive_plural: "~и~о~|~и~~а", "~и~о~|~и~~а";
-        dative_masculine: "~ь~о~", "~ь~о~";
-        dative_feminine: "~ь~о~", "~ь~о~";
-        dative_neuter: "~ь~о~", "~ь~о~";
+        dative_masculine: derived, derived;
+        dative_feminine: derived, derived;
+        dative_neuter: derived, derived;
         dative_plural: "~и~~ам", "~и~~ам";
-        accusative_masculine: "~ь~о~", "~ь~о~";
-        accusative_feminine: "~ь~о~", "~ь~о~";
-        accusative_neuter: "~ь~о~", "~ь~о~";
+        accusative_masculine: derived, derived;
+        accusative_feminine: derived, derived;
+        accusative_neuter: derived, derived;
         accusative_plural: "~ь~о~", "~ь~о~";
-        instrumental_masculine: "~ь~о~", "~ь~о~";
-        instrumental_feminine: "~ь~о~", "~ь~о~";
-        instrumental_neuter: "~ь~о~", "~ь~о~";
+        instrumental_masculine: derived, derived;
+        instrumental_feminine: derived, derived;
+        instrumental_neuter: derived, derived;
         instrumental_plural: "~ью~~ами", "~ью~~ами";
-        prepositional_masculine: "~ь~о~", "~ь~о~";
-        prepositional_feminine: "~ь~о~", "~ь~о~";
-        prepositional_neuter: "~ь~о~", "~ь~о~";
+        prepositional_masculine: derived, derived;
+        prepositional_feminine: derived, derived;
+        prepositional_neuter: derived, derived;
         prepositional_plural: "~и~~ах", "~и~~ах";
     ),
     // Пятьдесят: 4 words (пятьдесят, шестьдесят, семьдесят, восемьдесят).

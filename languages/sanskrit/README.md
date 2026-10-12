@@ -11,6 +11,11 @@ use sanskrit::*;
 assert_eq!(noun("देव", Case::Instrumental, Number::Singular), "देवेन");
 assert_eq!(noun("देव", Case::Genitive, Number::Plural), "देवानाम्");
 assert_eq!(adjective("नव", Case::Nominative, Gender::Feminine, Number::Singular), "नवा");
+
+// A noun the dictionary lacks: by its ending masculine, unless you say otherwise.
+assert_eq!(noun("सुकुल", Case::Nominative, Number::Singular), "सुकुलः");
+let neuter = Noun::new("सुकुल").gender(Gender::Neuter);
+assert_eq!(neuter.form((Case::Nominative, Number::Singular)), "सुकुलम्");
 ```
 
 Nouns and adjectives are cited by their stem, as Sanskrit dictionaries do;
@@ -25,8 +30,12 @@ Sanskrit entries. Each part of speech is a module under `src/`, and has what its
 grammar needs of:
 
 - `paradigms.rs`: how words inflect, one table per paradigm, named after a word that
-  follows it, with a pattern per form (`~а`: the stem, then `а`; `referred`: another
-  cell's form, as the word's feature says);
+  follows it, with a pattern per form (`~а`: the stem, then `а`; `derived`: another
+  cell's form, changed);
+- `relations.rs`: which cell each cell's form is told from, and the rules on that
+  form's ending that change it;
+- `laws.rs`: sound laws where a stem meets its ending (or along a tier), each with the
+  words whose forms it gives and the forms it gets wrong;
 - `rules.rs`: which paradigm a word takes, as rules on its ending, each with how many of
   the dictionary's words with that ending follow each paradigm, and the words no rule
   gets right, listed;
@@ -46,15 +55,15 @@ reason (the rule and its counts).
 
 ## The grammar
 
-| | words | systems | paradigms | rules | listed words | irregular forms |
+| | words | paradigms | sound laws | rules | listed words | irregular forms |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 5023 | 1 | 56 | 292 | 1058 | 1319 |
-| adjective | 1964 | 1 | 36 | 127 | 413 | 2700 |
-| verb | 1014 | 1 | 40 | 127 | 429 | 8458 |
-| pronoun | 15 | 1 | 1 | 1 | 11 | 308 |
+| noun | 5023 | 44 | 7 | 166 | 958 | 527 |
+| adjective | 1964 | 36 | 5 | 125 | 426 | 472 |
+| verb | 1014 | 40 | 14 | 129 | 427 | 1917 |
+| pronoun | 15 | 1 | 0 | 1 | 11 | 77 |
 
-*Words*: the dictionary's words the grammar is learned from. *Systems*: the principal
-parts a part of speech is built on (1: its lemma alone). *Rules*: the endings that
+*Words*: the dictionary's words the grammar is learned from. *Sound laws*: changes
+where a stem meets its ending (or farther, along a tier). *Rules*: the endings that
 choose a paradigm. *Listed words*: words no rule gets right, listed with their paradigm.
 *Irregular forms*: forms no paradigm gives, listed.
 
@@ -68,22 +77,26 @@ its stated probabilities are, on average, from how often it is right (0 is perfe
 The margin after top-1 is a 95% interval, counting words. *Lemma in full*: top-1 typed
 with every mark the dictionary's table writes, and said to be so (`spelled_in_full`).
 *Principal parts given*: top-1 of the other forms, given the dictionary's principal
-parts. *Floor*: the longest-suffix rule (the SIGMORPHON shared tasks' non-neural
-baseline; letters only). *Attested*: top-1 of the shipped grammar on the dictionary's
-own words, typed in full.
+parts. *Features given*: top-1 from the headword, told the word's inherent features
+(its gender, as `.gender(…)` tells it). *Seen* and *unseen cells*: top-1 on the cells
+some training word of the word's paradigm has a form in, and on the others, derived
+from other cells (with the number of forms). *Floor*: the CoNLL–SIGMORPHON 2017
+shared task's non-neural baseline (letters only). *Attested*: top-1 of the shipped
+grammar on the dictionary's own words, typed in full.
 
-| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | floor | attested |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 576 | 13801 | **91.58%** ± 2.3 | 98.51% | 0.022 | 91.58% |  | 92.04% | 100.00% |
-| adjective | 190 | 13456 | **90.21%** ± 4.2 | 98.36% | 0.039 | 90.21% |  | 91.12% | 100.00% |
-| verb | 88 | 7237 | **87.61%** ± 6.9 | 88.77% | 0.101 | 87.61% | 87.94% | 72.49% | 100.00% |
-| pronoun | 3 | 207 | **67.15%** ± 53.1 | 67.15% | 0.329 | 67.15% |  | 70.53% | 100.00% |
+| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | features given | seen cells | unseen cells | floor | attested |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 576 | 13801 | **91.90%** ± 2.2 | 98.72% | 0.013 | 91.90% |  | 97.16% | 91.90% (13801) |  | 91.70% | 100.00% |
+| adjective | 190 | 13456 | **91.64%** ± 3.9 | 98.73% | 0.030 | 91.64% |  |  | 91.69% (13449) | 0.00% (7) | 89.95% | 100.00% |
+| verb | 88 | 7237 | **87.74%** ± 6.9 | 91.93% | 0.085 | 87.74% | 88.06% |  | 88.01% (7173) | 57.81% (64) | 90.01% | 100.00% |
+| pronoun | 3 | 207 | **67.15%** ± 53.1 | 67.15% | 0.329 | 67.15% |  |  | 67.15% (207) |  | 70.53% | 100.00% |
+
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 4820 | 229573 |
-| adjective | 4877 | 261267 |
-| verb | 12471 | 727937 |
-| pronoun | 821 | 33639 |
+| noun | 9542 | 364913 |
+| adjective | 5477 | 236581 |
+| verb | 9892 | 454473 |
+| pronoun | 1628 | 50221 |
 
 ## Data and license
 

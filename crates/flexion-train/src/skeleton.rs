@@ -23,25 +23,20 @@ fn lcs(a: &[char], b: &[char]) -> (Vec<usize>, Vec<usize>) {
     let width = m.saturating_add(1);
     let mut table = vec![0u16; n.saturating_add(1).saturating_mul(width)];
     let at = |i: usize, j: usize| i.saturating_mul(width).saturating_add(j);
+    let get = |table: &[u16], i: usize, j: usize| table.get(at(i, j)).copied().unwrap_or(0);
     for i in (0..n).rev() {
         for j in (0..m).rev() {
             let v = if a.get(i) == b.get(j) {
-                table
-                    .get(at(i + 1, j + 1))
-                    .copied()
-                    .unwrap_or(0)
-                    .saturating_add(1)
+                get(&table, i + 1, j + 1).saturating_add(1)
             } else {
-                let down = table.get(at(i + 1, j)).copied().unwrap_or(0);
-                let right = table.get(at(i, j + 1)).copied().unwrap_or(0);
-                down.max(right)
+                get(&table, i + 1, j).max(get(&table, i, j + 1))
             };
             if let Some(slot) = table.get_mut(at(i, j)) {
                 *slot = v;
             }
         }
     }
-    let get = |i: usize, j: usize| table.get(at(i, j)).copied().unwrap_or(0);
+    let get = |i: usize, j: usize| get(&table, i, j);
     let (mut i, mut j) = (0, 0);
     let (mut keep, mut pos) = (Vec::new(), Vec::new());
     while i < n && j < m {
@@ -66,19 +61,17 @@ pub fn analyze(lemma: &str, forms: &[&str]) -> Analysis {
         .chain(forms.iter().map(|f| f.chars().collect()))
         .collect();
     // The lemma letters every form keeps.
+    let letters = |kept: &[usize]| -> Vec<char> {
+        kept.iter()
+            .filter_map(|&i| lemma_chars.get(i).copied())
+            .collect()
+    };
     let mut kept: Vec<usize> = (0..lemma_chars.len()).collect();
     for form in all.iter().skip(1) {
-        let sub: Vec<char> = kept
-            .iter()
-            .filter_map(|&i| lemma_chars.get(i).copied())
-            .collect();
-        let (keep, _) = lcs(&sub, form);
+        let (keep, _) = lcs(&letters(&kept), form);
         kept = keep.iter().filter_map(|&k| kept.get(k).copied()).collect();
     }
-    let sub: Vec<char> = kept
-        .iter()
-        .filter_map(|&i| lemma_chars.get(i).copied())
-        .collect();
+    let sub = letters(&kept);
     // Where each kept letter is in each word.
     let places: Vec<Option<Vec<usize>>> = all
         .iter()

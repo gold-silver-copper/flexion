@@ -5,15 +5,16 @@
 
 pub mod accent;
 mod irregular;
+mod laws;
 mod marks;
 mod paradigms;
+mod relations;
 mod rules;
 mod spellings;
 
 pub use paradigms::Declension;
 
-use flexion::Grammar;
-use flexion::{Candidate, Known, Reading};
+use flexion::{Candidate, Grammar, Known, Reading};
 use std::borrow::Cow;
 
 /// Each cell's place in a paradigm.
@@ -44,7 +45,7 @@ pub static GRAMMAR: Grammar<'static, Declension, accent::AccentClass> = Grammar 
     capitalized: false,
     paradigms: Cow::Borrowed(&paradigms::DECLENSIONS),
     paradigm: rules::DECLENSION,
-    referrals: Cow::Borrowed(&[]),
+    relations: Cow::Borrowed(&relations::RELATIONS),
     feature: None,
     compound: None,
     prefixes: None,
@@ -55,7 +56,7 @@ pub static GRAMMAR: Grammar<'static, Declension, accent::AccentClass> = Grammar 
         circumflex: Cow::Borrowed(&accent::CIRCUMFLEX),
         long_finals: Cow::Borrowed(&accent::LONG_FINALS),
     }),
-    laws: None,
+    laws: Some(laws::LAWS),
     spellings: Cow::Borrowed(spellings::SPELLINGS),
     marks: Some(marks::MARKS),
     irregular: irregular::IRREGULAR,
@@ -106,6 +107,7 @@ impl From<(crate::Case, crate::Number)> for Cell {
 pub struct Noun<'w> {
     lemma: &'w str,
     given: Vec<(usize, &'w str)>,
+    inherent: Vec<(u8, u8)>,
     full: bool,
 }
 
@@ -116,6 +118,7 @@ impl<'w> Noun<'w> {
         Noun {
             lemma,
             given: Vec::new(),
+            inherent: Vec::new(),
             full: false,
         }
     }
@@ -128,6 +131,13 @@ impl<'w> Noun<'w> {
         self
     }
 
+    /// Its gender: only declensions of words of that gender are read.
+    #[must_use]
+    pub fn gender(mut self, gender: crate::Gender) -> Self {
+        self.inherent.push((0, gender as u8));
+        self
+    }
+
     /// Its lemma is spelled with every mark the dictionary writes, so
     /// none is hidden (without this, a lemma typed without marks may be
     /// missing some, and its forms are less sure).
@@ -137,10 +147,10 @@ impl<'w> Noun<'w> {
         self
     }
 
-    fn known(&self) -> Known<'_, u8> {
+    fn known(&self) -> Known<'_> {
         Known {
             forms: &self.given,
-            feature: None,
+            inherent: &self.inherent,
             full: self.full,
         }
     }

@@ -7,7 +7,6 @@ mod orthography;
 mod paradigm;
 pub mod pattern;
 mod stress;
-mod systems;
 
 pub use choice::{Choice, Reading, Rule, Side, Status, by_ending, tolerance};
 pub use grammar::{
@@ -15,13 +14,12 @@ pub use grammar::{
     restore, sharpen,
 };
 pub use orthography::{Casing, Orthography, Stress, Written, recase};
-pub use paradigm::{Form, Paradigm, Referral};
+pub use paradigm::{DERIVED, Form, Paradigm, Relation};
 pub use sound_law;
 pub use stress::{
     Accent, AccentPattern, Finals, Place, Prosody, StressClass, Syllable, place as stress_place,
     position as stress_position, positions as stress_positions,
 };
-pub use systems::{Inflect, System, Systems};
 
 use std::fmt;
 
@@ -103,16 +101,19 @@ impl fmt::Display for Evidence<'_> {
 }
 
 impl fmt::Display for Candidate<'_> {
-    /// `книги (97%, regular): like книга; 1203 of 1210 words in -га`
+    /// `книги (97%, regular): like книга; 1203 of 1210 words in -га`; a
+    /// listed form: `adiūvistī (100%, listed)`.
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
-            "{} ({:.0}%, {}): like {}",
+            "{} ({:.0}%, {})",
             self.form,
             self.probability * 100.0,
-            self.status,
-            self.paradigm
+            self.status
         )?;
+        if !self.paradigm.is_empty() {
+            write!(f, ": like {}", self.paradigm)?;
+        }
         if let Some(e) = self.evidence {
             write!(f, "; {e}")?;
         }
@@ -186,6 +187,14 @@ macro_rules! choice {
     };
 }
 
+/// A relation's changes written as data: `(old ending, new ending)`.
+#[macro_export]
+macro_rules! changes {
+    ( $( ($old:literal, $new:literal) ),* $(,)? ) => {
+        ::std::borrow::Cow::Borrowed(&[ $( (::std::borrow::Cow::Borrowed($old), ::std::borrow::Cow::Borrowed($new)) ),* ])
+    };
+}
+
 /// Spellings written as data: `key => letters`, sorted by key.
 #[macro_export]
 macro_rules! spellings {
@@ -194,14 +203,18 @@ macro_rules! spellings {
     };
 }
 
-/// A cell of a paradigm table: a pattern (`"~а"`), or `referred` for a
-/// cell whose form is another cell's (see [`Referral`]).
+/// A cell of a paradigm table, as text: a pattern (`"~а"`), `derived` (see
+/// [`Relation`]), or `_` for the parent's.
 #[macro_export]
-macro_rules! form {
-    (referred) => {
-        $crate::Form::Referred
+macro_rules! cell {
+    // `concat!` takes literals only: this is `DERIVED`.
+    (derived) => {
+        "="
+    };
+    (_) => {
+        ""
     };
     ($pattern:literal) => {
-        $crate::Form::Pattern(::std::borrow::Cow::Borrowed($pattern))
+        $pattern
     };
 }

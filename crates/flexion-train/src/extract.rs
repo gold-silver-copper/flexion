@@ -6,7 +6,7 @@ use crate::cells::Cells;
 use crate::kaikki::{self, Entry};
 use crate::spec::{FormSource, Language};
 use flexion::Orthography;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
 /// The longest lemma or form read, in bytes (see the format's edit record).
@@ -38,10 +38,14 @@ pub struct Lexeme {
     /// language's edition `i`.
     #[serde(default)]
     pub source: u8,
+    /// A sense of it is vulgar or offensive: not a word to name a paradigm
+    /// after.
+    #[serde(default)]
+    pub vulgar: bool,
 }
 
 /// Every lexeme of one part of speech.
-#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 pub struct PosData {
     pub lexemes: Vec<Lexeme>,
     /// What each edition added, in the order the language lists them.
@@ -70,22 +74,6 @@ pub struct EditionStats {
     pub same_letters: usize,
 }
 
-impl PosData {
-    /// The main dump's entries only: for numbers comparable with a build
-    /// that reads no edition.
-    pub fn main_only(&self) -> PosData {
-        PosData {
-            lexemes: self
-                .lexemes
-                .iter()
-                .filter(|l| l.source == 0)
-                .cloned()
-                .collect(),
-            editions: Vec::new(),
-        }
-    }
-}
-
 /// Lexemes grouped by lookup key: what a caller asking for that word means.
 pub struct Word<'a> {
     pub key: &'a str,
@@ -93,15 +81,6 @@ pub struct Word<'a> {
 }
 
 impl Word<'_> {
-    /// The primary attested form of a cell: the first-listed form of the
-    /// first entry (in dump order) that attests the cell.
-    pub fn primary(&self, cell: usize) -> Option<&str> {
-        self.lexemes
-            .iter()
-            .find_map(|l| l.cells.get(cell).and_then(|c| c.first()))
-            .map(String::as_str)
-    }
-
     /// Every plain attested form of a cell, across entries.
     pub fn attested(&self, cell: usize) -> Vec<&str> {
         let mut out: Vec<&str> = Vec::new();
@@ -141,14 +120,7 @@ pub fn extract(
     dump: &Path,
 ) -> Result<Vec<PosData>, String> {
     let cells = all_cells(lang)?;
-    let mut out: Vec<PosData> = lang
-        .parts
-        .iter()
-        .map(|_| PosData {
-            lexemes: Vec::new(),
-            editions: Vec::new(),
-        })
-        .collect();
+    let mut out = vec![PosData::default(); lang.parts.len()];
     let mut order = 0usize;
     let stats = kaikki::for_each_entry(dump, |entry| {
         order += 1;
@@ -179,14 +151,7 @@ pub fn add_edition(
         .ok_or(format!("{}: no edition {index}", lang.name))?;
     let source = u8::try_from(index + 1).map_err(|_| "too many editions")?;
     let cells = all_cells(lang)?;
-    let mut read: Vec<PosData> = lang
-        .parts
-        .iter()
-        .map(|_| PosData {
-            lexemes: Vec::new(),
-            editions: Vec::new(),
-        })
-        .collect();
+    let mut read = vec![PosData::default(); lang.parts.len()];
     // Entries order after every main-dump entry, so a word's main entries
     // stay its first.
     let mut order = data
@@ -216,8 +181,7 @@ pub fn add_edition(
         for l in d.lexemes.iter().filter(|l| l.source == 0) {
             main.entry(&l.key).or_default().push(l);
         }
-        let mut new_keys: std::collections::BTreeSet<&str> = std::collections::BTreeSet::new();
-        let mut shared_keys: std::collections::BTreeSet<&str> = std::collections::BTreeSet::new();
+        let (mut new_keys, mut shared_keys) = (BTreeSet::new(), BTreeSet::new());
         let mut kept = Vec::new();
         for l in &r.lexemes {
             let Some(m) = main.get(l.key.as_str()) else {
@@ -314,31 +278,29 @@ fn read_entry(
             continue;
         }
         let mut repaired = entry.clone();
-        match edition {
-            Some((_, code)) => {
-                if !lang.hooks.adapt(code, part.name, &mut repaired) {
-                    continue;
-                }
-            }
+        let read = match edition {
+            Some((_, code)) => lang.hooks.adapt(code, part.name, &mut repaired),
             None => {
-                if !part.templates.is_empty() {
-                    let template = entry
-                        .forms
-                        .iter()
-                        .find(|f| f.tags.iter().any(|t| t == "inflection-template"));
-                    // A template name ending in `*` matches by prefix.
-                    let matches = |t: &str| {
-                        part.templates.iter().any(|p| match p.strip_suffix('*') {
-                            Some(prefix) => t.starts_with(prefix),
-                            None => t == *p,
-                        })
-                    };
-                    if !template.is_some_and(|t| matches(&t.form)) {
-                        continue;
-                    }
+                let template = entry
+                    .forms
+                    .iter()
+                    .find(|f| f.tags.iter().any(|t| t == "inflection-template"));
+                // A template name ending in `*` matches by prefix.
+                let matches = |t: &str| {
+                    part.templates.iter().any(|p| match p.strip_suffix('*') {
+                        Some(prefix) => t.starts_with(prefix),
+                        None => t == *p,
+                    })
+                };
+                let read = part.templates.is_empty() || template.is_some_and(|t| matches(&t.form));
+                if read {
+                    lang.hooks.repair(part.name, &mut repaired);
                 }
-                lang.hooks.repair(part.name, &mut repaired);
+                read
             }
+        };
+        if !read {
+            continue;
         }
         let (Some(c), Some(sink)) = (cells.get(pi), out.get_mut(pi)) else {
             continue;
@@ -487,5 +449,10 @@ fn lexeme(
         order,
         senses: u16::try_from(entry.senses.len()).unwrap_or(u16::MAX),
         source: 0,
+        vulgar: entry.senses.iter().any(|s| {
+            s.tags
+                .iter()
+                .any(|t| matches!(t.as_str(), "vulgar" | "offensive" | "derogatory" | "slur"))
+        }),
     })
 }

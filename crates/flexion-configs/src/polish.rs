@@ -158,7 +158,6 @@ pub fn language() -> Language {
                             "nonvirile",
                         ],
                         from_head: false,
-                        fallbacks: Vec::new(),
                     },
                     group(
                         "past",
@@ -316,7 +315,6 @@ fn group(
         any: vec![],
         none: none.to_vec(),
         from_head: false,
-        fallbacks: Vec::new(),
     }
 }
 

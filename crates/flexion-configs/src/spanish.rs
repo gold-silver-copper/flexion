@@ -152,8 +152,7 @@ pub fn language() -> Language {
                         &[],
                         &["before-noun"],
                         &[],
-                    )
-                    .fallback(&[], "adjective", &["Masculine", "Singular"]),
+                    ),
                 ],
                 lemma: Some(("adjective", vec!["Masculine", "Singular"])),
                 citation: vec![

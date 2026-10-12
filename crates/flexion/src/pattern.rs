@@ -120,6 +120,22 @@ fn place<'w>(
     None
 }
 
+/// Where a built form's stem ends and its ending begins, for sound laws to
+/// see (`ε+ο` → `+ου`). Never part of a word.
+pub const BOUNDARY: char = '+';
+
+/// [`fill`], with [`BOUNDARY`] after the last stem piece (at the start, for
+/// a pattern with none).
+pub fn fill_marked(pattern: &str, stems: &[&str]) -> String {
+    match pattern.rfind('~') {
+        Some(at) => {
+            let (head, tail) = pattern.split_at(at + 1);
+            format!("{}{BOUNDARY}{tail}", fill(head, stems))
+        }
+        None => format!("{BOUNDARY}{pattern}"),
+    }
+}
+
 /// Build a form: `pattern` (one alternative) with `stems` at its `~`s.
 /// Missing stem pieces leave their place empty.
 pub fn fill(pattern: &str, stems: &[&str]) -> String {
@@ -139,21 +155,8 @@ pub fn fill(pattern: &str, stems: &[&str]) -> String {
 /// Where the ending starts in a form `pattern` builds: the byte after the
 /// last stem piece (the start of the form when it has none).
 pub fn ending_start(pattern: &str, stems: &[&str]) -> usize {
-    let Some((head, _)) = pattern.rsplit_once('~') else {
-        return 0;
-    };
-    let mut at = 0usize;
-    let mut stems = stems.iter();
-    for (i, lit) in head.split('~').enumerate() {
-        if i > 0
-            && let Some(s) = stems.next()
-        {
-            at = at.saturating_add(s.len());
-        }
-        at = at.saturating_add(lit.len());
-    }
-    // The last stem piece.
-    stems.next().map_or(at, |s| at.saturating_add(s.len()))
+    let head = pattern.rfind('~').and_then(|at| pattern.get(..=at));
+    head.map_or(0, |head| fill(head, stems).len())
 }
 
 #[cfg(test)]

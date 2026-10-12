@@ -11,8 +11,7 @@ concurrency:
 
 env:
   CARGO_TERM_COLOR: always
-  # The largest grammar crate peaks near 11 GB to compile: at most two crates
-  # at once on CI's 16 GB.
+  # Two crates at once: the grammar crates are large to compile.
   CARGO_BUILD_JOBS: 2
 
 jobs:

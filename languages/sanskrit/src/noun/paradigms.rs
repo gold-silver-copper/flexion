@@ -7,8 +7,10 @@
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, then a row of patterns per line (`referred`: the form
-/// is another cell's, as the word's gender says):
+/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
+/// they share them), the declension it is like (if any), then a row of patterns
+/// per line (`derived`: the form comes from another cell's, see
+/// `relations.rs`; `_`: the form is the declension's it is like):
 /// `nominative` (sg, du, pl)
 /// `accusative` (sg, du, pl)
 /// `instrumental` (sg, du, pl)
@@ -18,7 +20,7 @@ use flexion::Paradigm;
 /// `locative` (sg, du, pl)
 /// `vocative` (sg, du, pl)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal;
+    ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident)?;
      nominative: $c0:tt, $c1:tt, $c2:tt;
      accusative: $c3:tt, $c4:tt, $c5:tt;
      instrumental: $c6:tt, $c7:tt, $c8:tt;
@@ -32,117 +34,108 @@ macro_rules! declension {
             name: ::std::borrow::Cow::Borrowed($name),
             words: $words,
             lemma: ::std::borrow::Cow::Borrowed($lemma),
-            forms: ::std::borrow::Cow::Borrowed(&[
-                flexion::form!($c0),
-                flexion::form!($c1),
-                flexion::form!($c2),
-                flexion::form!($c3),
-                flexion::form!($c4),
-                flexion::form!($c5),
-                flexion::form!($c6),
-                flexion::form!($c7),
-                flexion::form!($c8),
-                flexion::form!($c9),
-                flexion::form!($c10),
-                flexion::form!($c11),
-                flexion::form!($c12),
-                flexion::form!($c13),
-                flexion::form!($c14),
-                flexion::form!($c15),
-                flexion::form!($c16),
-                flexion::form!($c17),
-                flexion::form!($c18),
-                flexion::form!($c19),
-                flexion::form!($c20),
-                flexion::form!($c21),
-                flexion::form!($c22),
-                flexion::form!($c23),
-            ]),
+            parent: like!($($parent)?),
+            inherent: ::std::borrow::Cow::Borrowed(&[$($(feature!($f: $v)),*)?]),
+            table: ::std::borrow::Cow::Borrowed(concat!(
+                flexion::cell!($c0), "\t",
+                flexion::cell!($c1), "\t",
+                flexion::cell!($c2), "\t",
+                flexion::cell!($c3), "\t",
+                flexion::cell!($c4), "\t",
+                flexion::cell!($c5), "\t",
+                flexion::cell!($c6), "\t",
+                flexion::cell!($c7), "\t",
+                flexion::cell!($c8), "\t",
+                flexion::cell!($c9), "\t",
+                flexion::cell!($c10), "\t",
+                flexion::cell!($c11), "\t",
+                flexion::cell!($c12), "\t",
+                flexion::cell!($c13), "\t",
+                flexion::cell!($c14), "\t",
+                flexion::cell!($c15), "\t",
+                flexion::cell!($c16), "\t",
+                flexion::cell!($c17), "\t",
+                flexion::cell!($c18), "\t",
+                flexion::cell!($c19), "\t",
+                flexion::cell!($c20), "\t",
+                flexion::cell!($c21), "\t",
+                flexion::cell!($c22), "\t",
+                flexion::cell!($c23), "\t",
+            )),
         }
+    };
+}
+
+/// The declension a declension is like, by its name.
+macro_rules! like {
+    () => {
+        None
+    };
+    ($parent:ident) => {
+        Some(Declension::$parent as u16)
+    };
+}
+
+/// An inherent feature's value, as `(feature, value)` by their places.
+macro_rules! feature {
+    (gender: $v:ident) => {
+        (0, crate::Gender::$v as u8)
     };
 }
 
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `योग`: 1,486 words.
+    /// Like `योग`: 2,120 words.
     योग,
-    /// Like `साधन`: 859 words.
+    /// Like `साधन`: 1,091 words.
     साधन,
-    /// Like `विषय`: 634 words.
-    विषय,
-    /// Like `कला`: 385 words.
+    /// Like `कला`: 506 words.
     कला,
-    /// Like `गति`: 244 words.
+    /// Like `गति`: 261 words.
     गति,
-    /// Like `गौरव`: 232 words.
-    गौरव,
-    /// Like `नाडी`: 184 words.
+    /// Like `नाडी`: 233 words.
     नाडी,
-    /// Like `परा`: 121 words.
-    परा,
-    /// Like `संधि`: 107 words.
+    /// Like `संधि`: 134 words.
     संधि,
+    /// Like `केतु`: 127 words.
+    केतु,
     /// Like `अप्सस्`: 104 words.
     अपसस,
-    /// Like `केतु`: 92 words.
-    केतु,
     /// Like `दातृ`: 56 words.
     दातृ,
-    /// Like `पुरी`: 49 words.
-    पुरी,
-    /// Like `मरु`: 36 words.
-    मरु,
-    /// Like `स्वामिन्`: 35 words.
-    सवामिन,
-    /// Like `हरि`: 27 words.
-    हरि,
-    /// Like `मूर्धन्`: 24 words.
+    /// Like `मूर्धन्`: 51 words.
     मूरधन,
+    /// Like `स्वामिन्`: 49 words.
+    सवामिन,
+    /// Like `धामन्`: 46 words.
+    धामन,
     /// Like `मरुत्`: 19 words.
     मरुत,
-    /// Like `धामन्`: 18 words.
-    धामन,
-    /// Like `मषि`: 17 words.
-    मषि,
+    /// Like `जतु`: 19 words.
+    जतु,
     /// Like `तनु`: 17 words.
     तनु,
-    /// Like `पर्वन्`: 15 words.
-    परवन,
+    /// Like `चमू`: 16 words.
+    चमू,
     /// Like `सम्पद्`: 15 words.
     समपद,
-    /// Like `जतु`: 14 words.
-    जतु,
-    /// Like `वारकिन्`: 14 words.
-    वारकिन,
     /// Like `ज्योतिस्`: 14 words.
     जयोतिस,
     /// Like `युज्`: 13 words.
     युज,
-    /// Like `आत्मन्`: 13 words.
-    आतमन,
-    /// Like `ग्रावन्`: 11 words.
-    गरावन,
-    /// Like `चमू`: 11 words.
-    चमू,
     /// Like `धी`: 10 words.
     धी,
     /// Like `पुंस्`: 10 words.
     पुंस,
     /// Like `त्वच्`: 9 words.
     तवच,
-    /// Like `जन्मन्`: 9 words.
-    जनमन,
-    /// Like `ऊष्मन्`: 8 words.
-    ऊषमन,
     /// Like `स्पृध्`: 8 words.
     सपृध,
     /// Like `गोपा`: 7 words.
     गोपा,
     /// Like `वारि`: 7 words.
     वारि,
-    /// Like `भरीमन्`: 7 words.
-    भरीमन,
     /// Like `त्विष्`: 6 words.
     तविष,
     /// Like `उसृ`: 6 words.
@@ -157,12 +150,10 @@ pub enum Declension {
     चकषुस,
     /// Like `महत्`: 6 words.
     महत,
+    /// Like `आत्मन्`: 5 words.
+    आतमन,
     /// Like `तृ`: 5 words.
     तृ,
-    /// Like `दारु`: 5 words.
-    दारु,
-    /// Like `पितृभू`: 5 words.
-    पितृभू,
     /// Like `जगत्`: 4 words.
     जगत,
     /// Like `राड्राजन्`: 4 words.
@@ -177,50 +168,42 @@ pub enum Declension {
     लकषमी,
     /// Like `विराज्`: 3 words.
     विराज,
+    /// Like `पर्वन्`: 2 words.
+    परवन,
+    /// Like `मरु`: 1 words.
+    मरु,
+    /// Like `जन्मन्`: 1 words.
+    जनमन,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 56] = [
+    pub const ALL: [Declension; 44] = [
         Declension::योग,
         Declension::साधन,
-        Declension::विषय,
         Declension::कला,
         Declension::गति,
-        Declension::गौरव,
         Declension::नाडी,
-        Declension::परा,
         Declension::संधि,
-        Declension::अपसस,
         Declension::केतु,
+        Declension::अपसस,
         Declension::दातृ,
-        Declension::पुरी,
-        Declension::मरु,
-        Declension::सवामिन,
-        Declension::हरि,
         Declension::मूरधन,
-        Declension::मरुत,
+        Declension::सवामिन,
         Declension::धामन,
-        Declension::मषि,
-        Declension::तनु,
-        Declension::परवन,
-        Declension::समपद,
+        Declension::मरुत,
         Declension::जतु,
-        Declension::वारकिन,
+        Declension::तनु,
+        Declension::चमू,
+        Declension::समपद,
         Declension::जयोतिस,
         Declension::युज,
-        Declension::आतमन,
-        Declension::गरावन,
-        Declension::चमू,
         Declension::धी,
         Declension::पुंस,
         Declension::तवच,
-        Declension::जनमन,
-        Declension::ऊषमन,
         Declension::सपृध,
         Declension::गोपा,
         Declension::वारि,
-        Declension::भरीमन,
         Declension::तविष,
         Declension::उसृ,
         Declension::भू,
@@ -228,9 +211,8 @@ impl Declension {
         Declension::अरहत,
         Declension::चकषुस,
         Declension::महत,
+        Declension::आतमन,
         Declension::तृ,
-        Declension::दारु,
-        Declension::पितृभू,
         Declension::जगत,
         Declension::राडराजन,
         Declension::रिप,
@@ -238,6 +220,9 @@ impl Declension {
         Declension::गलौ,
         Declension::लकषमी,
         Declension::विराज,
+        Declension::परवन,
+        Declension::मरु,
+        Declension::जनमन,
     ];
 
     /// Its table.
@@ -255,621 +240,489 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 56] = [
-    // योग: 1,486 words (क, ङ, ज, ञ, ट, ण).
-    declension!("योग", 1486, "~";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 44] = [
+    // योग: 2,120 words (क, ङ, ज, ञ, ट, ण).
+    declension!("योग", 2120, "~", [gender: Masculine];
         nominative: "~ः", "~ौ", "~ाः";
-        accusative: "~म\u{94d}", "~ौ", "~ान\u{94d}";
-        instrumental: "~\u{947}न", "~ाभ\u{94d}याम\u{94d}", "~\u{948}ः";
-        dative: "~ाय", "~ाभ\u{94d}याम\u{94d}", "~\u{947}भ\u{94d}यः";
-        ablative: "~ात\u{94d}", "~ाभ\u{94d}याम\u{94d}", "~\u{947}भ\u{94d}यः";
-        genitive: "~स\u{94d}य", "~योः", "~ानाम\u{94d}";
-        locative: "~\u{947}", "~योः", "~\u{947}ष\u{941}";
-        vocative: "~", referred, "~ाः";
+        accusative: "~म्", "~ौ", "~ान्";
+        instrumental: "~ेन", "~ाभ्याम्", "~ैः";
+        dative: "~ाय", "~ाभ्याम्", "~ेभ्यः";
+        ablative: "~ात्", "~ाभ्याम्", "~ेभ्यः";
+        genitive: "~स्य", "~योः", "~ानाम्";
+        locative: "~े", "~योः", "~ेषु";
+        vocative: "~", derived, "~ाः";
     ),
-    // साधन: 859 words (विश्व, ख, साम्य, तृण, आसन, वन).
-    declension!("साधन", 859, "~";
-        nominative: "~म\u{94d}", "~\u{947}", "~ानि";
-        accusative: "~म\u{94d}", "~\u{947}", "~ानि";
-        instrumental: "~\u{947}न", "~ाभ\u{94d}याम\u{94d}", "~\u{948}ः";
-        dative: "~ाय", "~ाभ\u{94d}याम\u{94d}", "~\u{947}भ\u{94d}यः";
-        ablative: "~ात\u{94d}", "~ाभ\u{94d}याम\u{94d}", "~\u{947}भ\u{94d}यः";
-        genitive: "~स\u{94d}य", "~योः", "~ानाम\u{94d}";
-        locative: "~\u{947}", "~योः", "~\u{947}ष\u{941}";
-        vocative: "~", referred, "~ानि";
+    // साधन: 1,091 words (विश्व, ख, साम्य, तृण, आसन, तीर). Like योग, except in 6 cells: nominative sg, nominative du, nominative pl, accusative du, accusative pl, vocative pl.
+    declension!("साधन", 1091, "~", [gender: Neuter], like योग;
+        nominative: "~म्", "~े", "~ानि";
+        accusative: _, "~े", "~ानि";
+        instrumental: _, _, _;
+        dative: _, _, _;
+        ablative: _, _, _;
+        genitive: _, _, _;
+        locative: _, _, _;
+        vocative: _, _, "~ानि";
     ),
-    // विषय: 634 words (वृक्ष, समुद्र, तरंग, गृह, मूर्ख, मधुर).
-    declension!("विषय", 634, "~";
-        nominative: "~ः", "~ौ", "~ाः";
-        accusative: "~म\u{94d}", "~ौ", "~ान\u{94d}";
-        instrumental: "~\u{947}ण", "~ाभ\u{94d}याम\u{94d}", "~\u{948}ः";
-        dative: "~ाय", "~ाभ\u{94d}याम\u{94d}", "~\u{947}भ\u{94d}यः";
-        ablative: "~ात\u{94d}", "~ाभ\u{94d}याम\u{94d}", "~\u{947}भ\u{94d}यः";
-        genitive: "~स\u{94d}य", "~योः", "~ाणाम\u{94d}";
-        locative: "~\u{947}", "~योः", "~\u{947}ष\u{941}";
-        vocative: "~", referred, "~ाः";
+    // कला: 506 words (देवता, काला, घृणा, भाषा, जरा, अहिंसा).
+    declension!("कला", 506, "~ा", [gender: Feminine];
+        nominative: "~ा", "~े", "~ाः";
+        accusative: "~ाम्", "~े", "~ाः";
+        instrumental: "~या", "~ाभ्याम्", "~ाभिः";
+        dative: "~ायै", "~ाभ्याम्", "~ाभ्यः";
+        ablative: "~ायाः", "~ाभ्याम्", "~ाभ्यः";
+        genitive: "~ायाः", "~योः", "~ानाम्";
+        locative: "~ायाम्", "~योः", "~ासु";
+        vocative: "~े", derived, "~ाः";
     ),
-    // कला: 385 words (देवता, काला, घृणा, अहिंसा, दया, तुला).
-    declension!("कला", 385, "~ा";
-        nominative: "~ा", "~\u{947}", "~ाः";
-        accusative: "~ाम\u{94d}", "~\u{947}", "~ाः";
-        instrumental: "~या", "~ाभ\u{94d}याम\u{94d}", "~ाभिः";
-        dative: "~ाय\u{948}", "~ाभ\u{94d}याम\u{94d}", "~ाभ\u{94d}यः";
-        ablative: "~ायाः", "~ाभ\u{94d}याम\u{94d}", "~ाभ\u{94d}यः";
-        genitive: "~ायाः", "~योः", "~ानाम\u{94d}";
-        locative: "~ायाम\u{94d}", "~योः", "~ास\u{941}";
-        vocative: "~\u{947}", referred, "~ाः";
-    ),
-    // गति: 244 words (मुक्ति, संस्कृति, बुद्धि, नाभि, राजनीति, गति).
-    declension!("गति", 244, "~ि";
+    // गति: 261 words (मुक्ति, संस्कृति, बुद्धि, नाभि, राजनीति, कृषि).
+    declension!("गति", 261, "~ि", [gender: Feminine];
         nominative: "~िः", "~ी", "~यः";
-        accusative: "~िम\u{94d}", "~ी", "~ीः";
-        instrumental: "~\u{94d}या", "~िभ\u{94d}याम\u{94d}", "~िभिः";
-        dative: "~य\u{947}|~\u{94d}य\u{948}", "~िभ\u{94d}याम\u{94d}", "~िभ\u{94d}यः";
-        ablative: "~\u{947}ः|~\u{94d}याः", "~िभ\u{94d}याम\u{94d}", "~िभ\u{94d}यः";
-        genitive: "~\u{947}ः|~\u{94d}याः", "~\u{94d}योः", "~ीनाम\u{94d}";
-        locative: "~ौ|~\u{94d}याम\u{94d}", "~\u{94d}योः", "~िष\u{941}";
-        vocative: "~\u{947}", referred, "~यः";
+        accusative: "~िम्", "~ी", "~ीः";
+        instrumental: "~्या", "~िभ्याम्", "~िभिः";
+        dative: "~ये|~्यै", "~िभ्याम्", "~िभ्यः";
+        ablative: "~ेः|~्याः", "~िभ्याम्", "~िभ्यः";
+        genitive: "~ेः|~्याः", "~्योः", "~ीनाम्";
+        locative: "~ौ|~्याम्", "~्योः", "~िषु";
+        vocative: "~े", derived, "~यः";
     ),
-    // गौरव: 232 words (तीर, ताम्र, द्वार, अभ्र, कार्य, क्षेत्र).
-    declension!("गौरव", 232, "~";
-        nominative: "~म\u{94d}", "~\u{947}", "~ाणि";
-        accusative: "~म\u{94d}", "~\u{947}", "~ाणि";
-        instrumental: "~\u{947}ण", "~ाभ\u{94d}याम\u{94d}", "~\u{948}ः";
-        dative: "~ाय", "~ाभ\u{94d}याम\u{94d}", "~\u{947}भ\u{94d}यः";
-        ablative: "~ात\u{94d}", "~ाभ\u{94d}याम\u{94d}", "~\u{947}भ\u{94d}यः";
-        genitive: "~स\u{94d}य", "~योः", "~ाणाम\u{94d}";
-        locative: "~\u{947}", "~योः", "~\u{947}ष\u{941}";
-        vocative: "~", referred, "~ाणि";
+    // नाडी: 233 words (वली, ताली, पत्नी, रोटी, नदी, पृथ्वी).
+    declension!("नाडी", 233, "~ी", [gender: Feminine];
+        nominative: "~ी", "~्यौ", "~्यः";
+        accusative: "~ीम्", "~्यौ", "~ीः";
+        instrumental: "~्या", "~ीभ्याम्", "~ीभिः";
+        dative: "~्यै", "~ीभ्याम्", "~ीभ्यः";
+        ablative: "~्याः", "~ीभ्याम्", "~ीभ्यः";
+        genitive: "~्याः", "~्योः", "~ीनाम्";
+        locative: "~्याम्", "~्योः", "~ीषु";
+        vocative: "~ि", derived, "~्यः";
     ),
-    // नाडी: 184 words (वली, ताली, पत्नी, रोटी, नदी, पृथ्वी).
-    declension!("नाडी", 184, "~ी";
-        nominative: "~ी", "~\u{94d}यौ", "~\u{94d}यः";
-        accusative: "~ीम\u{94d}", "~\u{94d}यौ", "~ीः";
-        instrumental: "~\u{94d}या", "~ीभ\u{94d}याम\u{94d}", "~ीभिः";
-        dative: "~\u{94d}य\u{948}", "~ीभ\u{94d}याम\u{94d}", "~ीभ\u{94d}यः";
-        ablative: "~\u{94d}याः", "~ीभ\u{94d}याम\u{94d}", "~ीभ\u{94d}यः";
-        genitive: "~\u{94d}याः", "~\u{94d}योः", "~ीनाम\u{94d}";
-        locative: "~\u{94d}याम\u{94d}", "~\u{94d}योः", "~ीष\u{941}";
-        vocative: "~ि", referred, "~\u{94d}यः";
+    // संधि: 134 words (संधि, अग्नि, रयि, गणपति, आदि, समाधि). Like गति, except in 6 cells: accusative pl, instrumental sg, dative sg, ablative sg, genitive sg, locative sg.
+    declension!("संधि", 134, "~ि", [gender: Masculine], like गति;
+        nominative: _, _, _;
+        accusative: _, _, "~ीन्";
+        instrumental: "~िना", _, _;
+        dative: "~ये", _, _;
+        ablative: "~ेः", _, _;
+        genitive: "~ेः", _, _;
+        locative: "~ौ", _, _;
+        vocative: _, _, _;
     ),
-    // परा: 121 words (भाषा, जरा, हीरा, क्रिया, ईर्षा, तारा).
-    declension!("परा", 121, "~ा";
-        nominative: "~ा", "~\u{947}", "~ाः";
-        accusative: "~ाम\u{94d}", "~\u{947}", "~ाः";
-        instrumental: "~या", "~ाभ\u{94d}याम\u{94d}", "~ाभिः";
-        dative: "~ाय\u{948}", "~ाभ\u{94d}याम\u{94d}", "~ाभ\u{94d}यः";
-        ablative: "~ायाः", "~ाभ\u{94d}याम\u{94d}", "~ाभ\u{94d}यः";
-        genitive: "~ायाः", "~योः", "~ाणाम\u{94d}";
-        locative: "~ायाम\u{94d}", "~योः", "~ास\u{941}";
-        vocative: "~\u{947}", referred, "~ाः";
-    ),
-    // संधि: 107 words (संधि, अग्नि, गणपति, आदि, समाधि, पति).
-    declension!("स\u{902}धि", 107, "~ि";
-        nominative: "~िः", "~ी", "~यः";
-        accusative: "~िम\u{94d}", "~ी", "~ीन\u{94d}";
-        instrumental: "~िना", "~िभ\u{94d}याम\u{94d}", "~िभिः";
-        dative: "~य\u{947}", "~िभ\u{94d}याम\u{94d}", "~िभ\u{94d}यः";
-        ablative: "~\u{947}ः", "~िभ\u{94d}याम\u{94d}", "~िभ\u{94d}यः";
-        genitive: "~\u{947}ः", "~\u{94d}योः", "~ीनाम\u{94d}";
-        locative: "~ौ", "~\u{94d}योः", "~िष\u{941}";
-        vocative: "~\u{947}", referred, "~यः";
+    // केतु: 127 words (सूनु, पशु, परमाणु, गुरु, अणु, ऋतु).
+    declension!("केतु", 127, "~ु", [gender: Masculine];
+        nominative: "~ुः", "~ू", "~वः";
+        accusative: "~ुम्", "~ू", "~ून्";
+        instrumental: "~ुना", "~ुभ्याम्", "~ुभिः";
+        dative: "~वे", "~ुभ्याम्", "~ुभ्यः";
+        ablative: "~ोः", "~ुभ्याम्", "~ुभ्यः";
+        genitive: "~ोः", "~्वोः", "~ूनाम्";
+        locative: "~ौ", "~्वोः", "~ुषु";
+        vocative: "~ो", derived, "~वः";
     ),
     // अपसस: 104 words (मनस्, शिरस्, अयस्, आस्, पसस्, नभस्).
-    declension!("अप\u{94d}सस\u{94d}", 104, "~स\u{94d}";
-        nominative: "~ः", "~सी", "~ा\u{902}सि";
-        accusative: "~ः", "~सी", "~ा\u{902}सि";
-        instrumental: "~सा", "~ोभ\u{94d}याम\u{94d}", "~ोभिः";
-        dative: "~स\u{947}", "~ोभ\u{94d}याम\u{94d}", "~ोभ\u{94d}यः";
-        ablative: "~सः", "~ोभ\u{94d}याम\u{94d}", "~ोभ\u{94d}यः";
-        genitive: "~सः", "~सोः", "~साम\u{94d}";
-        locative: "~सि", "~सोः", "~ःस\u{941}|~स\u{94d}स\u{941}";
-        vocative: "~ः", referred, "~ा\u{902}सि";
-    ),
-    // केतु: 92 words (सूनु, पशु, परमाणु, अणु, ऋतु, परशु).
-    declension!("क\u{947}त\u{941}", 92, "~\u{941}";
-        nominative: "~\u{941}ः", "~\u{942}", "~वः";
-        accusative: "~\u{941}म\u{94d}", "~\u{942}", "~\u{942}न\u{94d}";
-        instrumental: "~\u{941}ना", "~\u{941}भ\u{94d}याम\u{94d}", "~\u{941}भिः";
-        dative: "~व\u{947}", "~\u{941}भ\u{94d}याम\u{94d}", "~\u{941}भ\u{94d}यः";
-        ablative: "~ोः", "~\u{941}भ\u{94d}याम\u{94d}", "~\u{941}भ\u{94d}यः";
-        genitive: "~ोः", "~\u{94d}वोः", "~\u{942}नाम\u{94d}";
-        locative: "~ौ", "~\u{94d}वोः", "~\u{941}ष\u{941}";
-        vocative: "~ो", referred, "~वः";
+    declension!("अप्सस्", 104, "~स्", [gender: Neuter];
+        nominative: "~ः", "~सी", "~ांसि";
+        accusative: "~ः", "~सी", "~ांसि";
+        instrumental: "~सा", "~ोभ्याम्", "~ोभिः";
+        dative: "~से", "~ोभ्याम्", "~ोभ्यः";
+        ablative: "~सः", "~ोभ्याम्", "~ोभ्यः";
+        genitive: "~सः", "~सोः", "~साम्";
+        locative: "~सि", "~सोः", "~ःसु|~स्सु";
+        vocative: "~ः", derived, "~ांसि";
     ),
     // दातृ: 56 words (दातृ, सवितृ, नप्तृ, होतृ, उद्गातृ, धातृ).
-    declension!("दात\u{943}", 56, "~\u{943}";
+    declension!("दातृ", 56, "~ृ", [gender: Masculine];
         nominative: "~ा", "~ारौ", "~ारः";
-        accusative: "~ारम\u{94d}", "~ारौ", "~\u{944}न\u{94d}";
-        instrumental: "~\u{94d}रा", "~\u{943}भ\u{94d}याम\u{94d}", "~\u{943}भिः";
-        dative: "~\u{94d}र\u{947}", "~\u{943}भ\u{94d}याम\u{94d}", "~\u{943}भ\u{94d}यः";
-        ablative: "~\u{941}ः", "~\u{943}भ\u{94d}याम\u{94d}", "~\u{943}भ\u{94d}यः";
-        genitive: "~\u{941}ः", "~\u{94d}रोः", "~\u{944}णाम\u{94d}";
-        locative: "~रि", "~\u{94d}रोः", "~\u{943}ष\u{941}";
-        vocative: "~ः", referred, "~ारः";
+        accusative: "~ारम्", "~ारौ", "~ॄन्";
+        instrumental: "~्रा", "~ृभ्याम्", "~ृभिः";
+        dative: "~्रे", "~ृभ्याम्", "~ृभ्यः";
+        ablative: "~ुः", "~ृभ्याम्", "~ृभ्यः";
+        genitive: "~ुः", "~्रोः", "~ॄणाम्";
+        locative: "~रि", "~्रोः", "~ृषु";
+        vocative: "~ः", derived, "~ारः";
     ),
-    // पुरी: 49 words (पुत्री, किशोरी, क्षौरी, नारी, धरित्री, पुरी).
-    declension!("प\u{941}री", 49, "~ी";
-        nominative: "~ी", "~\u{94d}यौ", "~\u{94d}यः";
-        accusative: "~ीम\u{94d}", "~\u{94d}यौ", "~ीः";
-        instrumental: "~\u{94d}या", "~ीभ\u{94d}याम\u{94d}", "~ीभिः";
-        dative: "~\u{94d}य\u{948}", "~ीभ\u{94d}याम\u{94d}", "~ीभ\u{94d}यः";
-        ablative: "~\u{94d}याः", "~ीभ\u{94d}याम\u{94d}", "~ीभ\u{94d}यः";
-        genitive: "~\u{94d}याः", "~\u{94d}योः", "~ीणाम\u{94d}";
-        locative: "~\u{94d}याम\u{94d}", "~\u{94d}योः", "~ीष\u{941}";
-        vocative: "~ि", referred, "~\u{94d}यः";
-    ),
-    // मरु: 36 words (गुरु, अगुरु, तर्कु, तरु, प्रियङ्गु, द्रु).
-    declension!("मर\u{941}", 36, "~\u{941}";
-        nominative: "~\u{941}ः", "~\u{942}", "~वः";
-        accusative: "~\u{941}म\u{94d}", "~\u{942}", "~\u{942}न\u{94d}";
-        instrumental: "~\u{941}णा", "~\u{941}भ\u{94d}याम\u{94d}", "~\u{941}भिः";
-        dative: "~व\u{947}", "~\u{941}भ\u{94d}याम\u{94d}", "~\u{941}भ\u{94d}यः";
-        ablative: "~ोः", "~\u{941}भ\u{94d}याम\u{94d}", "~\u{941}भ\u{94d}यः";
-        genitive: "~ोः", "~\u{94d}वोः", "~\u{942}णाम\u{94d}";
-        locative: "~ौ", "~\u{94d}वोः", "~\u{941}ष\u{941}";
-        vocative: "~ो", referred, "~वः";
-    ),
-    // सवामिन: 35 words (हस्तिन्, फणिन्, केशिन्, ज्ञानिन्, घातिन्, स्वामिन्).
-    declension!("स\u{94d}वामिन\u{94d}", 35, "~िन\u{94d}";
-        nominative: "~ी", "~िनौ", "~िनः";
-        accusative: "~िनम\u{94d}", "~िनौ", "~िनः";
-        instrumental: "~िना", "~िभ\u{94d}याम\u{94d}", "~िभिः";
-        dative: "~िन\u{947}", "~िभ\u{94d}याम\u{94d}", "~िभ\u{94d}यः";
-        ablative: "~िनः", "~िभ\u{94d}याम\u{94d}", "~िभ\u{94d}यः";
-        genitive: "~िनः", "~िनोः", "~िनाम\u{94d}";
-        locative: "~िनि", "~िनोः", "~िष\u{941}";
-        vocative: "~िन\u{94d}", referred, "~िनः";
-    ),
-    // हरि: 27 words (रयि, गिरि, हरि, कृमि, अंह्रि, बहुव्रीहि).
-    declension!("हरि", 27, "~ि";
-        nominative: "~िः", "~ी", "~यः";
-        accusative: "~िम\u{94d}", "~ी", "~ीन\u{94d}";
-        instrumental: "~िणा", "~िभ\u{94d}याम\u{94d}", "~िभिः";
-        dative: "~य\u{947}", "~िभ\u{94d}याम\u{94d}", "~िभ\u{94d}यः";
-        ablative: "~\u{947}ः", "~िभ\u{94d}याम\u{94d}", "~िभ\u{94d}यः";
-        genitive: "~\u{947}ः", "~\u{94d}योः", "~ीणाम\u{94d}";
-        locative: "~ौ", "~\u{94d}योः", "~िष\u{941}";
-        vocative: "~\u{947}", referred, "~यः";
-    ),
-    // मूरधन: 24 words (श्वन्, क्लोमन्, युवन्, रक्षोहन्, व्योमन्, प्लीहन्).
-    declension!("म\u{942}र\u{94d}धन\u{94d}", 24, "~न\u{94d}";
+    // मूरधन: 51 words (अश्मन्, ग्रावन्, श्वन्, क्लोमन्, युवन्, रक्षोहन्).
+    declension!("मूर्धन्", 51, "~न्", [gender: Masculine];
         nominative: "~ा", "~ानौ", "~ानः";
-        accusative: "~ानम\u{94d}", "~ानौ", "~\u{94d}नः";
-        instrumental: "~\u{94d}ना", "~भ\u{94d}याम\u{94d}", "~भिः";
-        dative: "~\u{94d}न\u{947}", "~भ\u{94d}याम\u{94d}", "~भ\u{94d}यः";
-        ablative: "~\u{94d}नः", "~भ\u{94d}याम\u{94d}", "~भ\u{94d}यः";
-        genitive: "~\u{94d}नः", "~\u{94d}नोः", "~\u{94d}नाम\u{94d}";
-        locative: "~\u{94d}नि|~नि", "~\u{94d}नोः", "~स\u{941}";
-        vocative: "~न\u{94d}", referred, "~ानः";
+        accusative: "~ानम्", "~ानौ", "~्नः";
+        instrumental: "~्ना", "~भ्याम्", "~भिः";
+        dative: "~्ने", "~भ्याम्", "~भ्यः";
+        ablative: "~्नः", "~भ्याम्", "~भ्यः";
+        genitive: "~्नः", "~्नोः", "~्नाम्";
+        locative: "~्नि|~नि", "~्नोः", "~सु";
+        vocative: "~न्", derived, "~ानः";
+    ),
+    // सवामिन: 49 words (हस्तिन्, मन्त्रिन्, फणिन्, अन्तर्यामिन्, केशिन्, रुधिरोद्गारिन्).
+    declension!("स्वामिन्", 49, "~िन्", [gender: Masculine];
+        nominative: "~ी", "~िनौ", "~िनः";
+        accusative: "~िनम्", "~िनौ", "~िनः";
+        instrumental: "~िना", "~िभ्याम्", "~िभिः";
+        dative: "~िने", "~िभ्याम्", "~िभ्यः";
+        ablative: "~िनः", "~िभ्याम्", "~िभ्यः";
+        genitive: "~िनः", "~िनोः", "~िनाम्";
+        locative: "~िनि", "~िनोः", "~िषु";
+        vocative: "~िन्", derived, "~िनः";
+    ),
+    // धामन: 46 words (चर्मन्, नामन्, उदन्, अकर्मन्, ब्रह्मन्, कर्मन्). Like मूरधन, except in 8 cells: nominative sg, nominative du, nominative pl, accusative sg, accusative du, accusative pl, ….
+    declension!("धामन्", 46, "~न्", [gender: Neuter], like मूरधन;
+        nominative: "~", "~्नी|~नी", "~ानि";
+        accusative: "~", "~्नी|~नी", "~ानि";
+        instrumental: _, _, _;
+        dative: _, _, _;
+        ablative: _, _, _;
+        genitive: _, _, _;
+        locative: _, _, _;
+        vocative: "~न्|~", _, "~ानि";
     ),
     // मरुत: 19 words (मरुत्, नपात्, विद्युत्, दशत्, कृत्, हरित्).
-    declension!("मर\u{941}त\u{94d}", 19, "~त\u{94d}";
-        nominative: "~त\u{94d}", "~तौ", "~तः";
-        accusative: "~तम\u{94d}", "~तौ", "~तः";
-        instrumental: "~ता", "~द\u{94d}भ\u{94d}याम\u{94d}", "~द\u{94d}भिः";
-        dative: "~त\u{947}", "~द\u{94d}भ\u{94d}याम\u{94d}", "~द\u{94d}भ\u{94d}यः";
-        ablative: "~तः", "~द\u{94d}भ\u{94d}याम\u{94d}", "~द\u{94d}भ\u{94d}यः";
-        genitive: "~तः", "~तोः", "~ताम\u{94d}";
-        locative: "~ति", "~तोः", "~त\u{94d}स\u{941}";
-        vocative: "~त\u{94d}", referred, "~तः";
+    declension!("मरुत्", 19, "~त्";
+        nominative: "~त्", "~तौ", "~तः";
+        accusative: "~तम्", "~तौ", "~तः";
+        instrumental: "~ता", "~द्भ्याम्", "~द्भिः";
+        dative: "~ते", "~द्भ्याम्", "~द्भ्यः";
+        ablative: "~तः", "~द्भ्याम्", "~द्भ्यः";
+        genitive: "~तः", "~तोः", "~ताम्";
+        locative: "~ति", "~तोः", "~त्सु";
+        vocative: "~त्", derived, "~तः";
     ),
-    // धामन: 18 words (नामन्, उदन्, सामन्, भूमन्, जनिमन्, स्नावन्).
-    declension!("धामन\u{94d}", 18, "~न\u{94d}";
-        nominative: "~", "~\u{94d}नी|~नी", "~ानि";
-        accusative: "~", "~\u{94d}नी|~नी", "~ानि";
-        instrumental: "~\u{94d}ना", "~भ\u{94d}याम\u{94d}", "~भिः";
-        dative: "~\u{94d}न\u{947}", "~भ\u{94d}याम\u{94d}", "~भ\u{94d}यः";
-        ablative: "~\u{94d}नः", "~भ\u{94d}याम\u{94d}", "~भ\u{94d}यः";
-        genitive: "~\u{94d}नः", "~\u{94d}नोः", "~\u{94d}नाम\u{94d}";
-        locative: "~\u{94d}नि|~नि", "~\u{94d}नोः", "~स\u{941}";
-        vocative: "~न\u{94d}|~", referred, "~ानि";
+    // जतु: 19 words (वस्तु, आयु, मधु, अश्रु, दारु, जानु).
+    declension!("जतु", 19, "~ु";
+        nominative: "~ु", "~ुनी", "~ूनि";
+        accusative: "~ु", "~ुनी", "~ूनि";
+        instrumental: "~ुना", "~ुभ्याम्", "~ुभिः";
+        dative: "~ुने", "~ुभ्याम्", "~ुभ्यः";
+        ablative: "~ुनः", "~ुभ्याम्", "~ुभ्यः";
+        genitive: "~ुनः", "~ुनोः", "~ूनाम्";
+        locative: "~ुनि", "~ुनोः", "~ुषु";
+        vocative: "~ु|~ो", derived, "~ूनि";
     ),
-    // मषि: 17 words (कृषि, रात्रि, अश्रि, शारि, अङ्गुरि, मषि).
-    declension!("मषि", 17, "~ि";
-        nominative: "~िः", "~ी", "~यः";
-        accusative: "~िम\u{94d}", "~ी", "~ीः";
-        instrumental: "~\u{94d}या", "~िभ\u{94d}याम\u{94d}", "~िभिः";
-        dative: "~य\u{947}|~\u{94d}य\u{948}", "~िभ\u{94d}याम\u{94d}", "~िभ\u{94d}यः";
-        ablative: "~\u{947}ः|~\u{94d}याः", "~िभ\u{94d}याम\u{94d}", "~िभ\u{94d}यः";
-        genitive: "~\u{947}ः|~\u{94d}याः", "~\u{94d}योः", "~ीणाम\u{94d}";
-        locative: "~ौ|~\u{94d}याम\u{94d}", "~\u{94d}योः", "~िष\u{941}";
-        vocative: "~\u{947}", referred, "~यः";
+    // तनु: 17 words (आलु, हनु, लघु, धेनु, तनु, कु). Like केतु, except in 6 cells: accusative pl, instrumental sg, dative sg, ablative sg, genitive sg, locative sg.
+    declension!("तनु", 17, "~ु", like केतु;
+        nominative: _, _, _;
+        accusative: _, _, "~ूः";
+        instrumental: "~्वा", _, _;
+        dative: "~वे|~्वै", _, _;
+        ablative: "~ोः|~्वाः", _, _;
+        genitive: "~ोः|~्वाः", _, _;
+        locative: "~ौ|~्वाम्", _, _;
+        vocative: _, _, _;
     ),
-    // तनु: 17 words (आलु, हनु, लघु, धेनु, तनु, कु).
-    declension!("तन\u{941}", 17, "~\u{941}";
-        nominative: "~\u{941}ः", "~\u{942}", "~वः";
-        accusative: "~\u{941}म\u{94d}", "~\u{942}", "~\u{942}ः";
-        instrumental: "~\u{94d}वा", "~\u{941}भ\u{94d}याम\u{94d}", "~\u{941}भिः";
-        dative: "~व\u{947}|~\u{94d}व\u{948}", "~\u{941}भ\u{94d}याम\u{94d}", "~\u{941}भ\u{94d}यः";
-        ablative: "~ोः|~\u{94d}वाः", "~\u{941}भ\u{94d}याम\u{94d}", "~\u{941}भ\u{94d}यः";
-        genitive: "~ोः|~\u{94d}वाः", "~\u{94d}वोः", "~\u{942}नाम\u{94d}";
-        locative: "~ौ|~\u{94d}वाम\u{94d}", "~\u{94d}वोः", "~\u{941}ष\u{941}";
-        vocative: "~ो", referred, "~वः";
-    ),
-    // परवन: 15 words (चर्मन्, अकर्मन्, ब्रह्मन्, कर्मन्, मर्मन्, शर्मन्).
-    declension!("पर\u{94d}वन\u{94d}", 15, "~न\u{94d}";
-        nominative: "~", "~णी", "~ाणि";
-        accusative: "~", "~णी", "~ाणि";
-        instrumental: "~णा", "~भ\u{94d}याम\u{94d}", "~भिः";
-        dative: "~ण\u{947}", "~भ\u{94d}याम\u{94d}", "~भ\u{94d}यः";
-        ablative: "~णः", "~भ\u{94d}याम\u{94d}", "~भ\u{94d}यः";
-        genitive: "~णः", "~णोः", "~णाम\u{94d}";
-        locative: "~णि", "~णोः", "~स\u{941}";
-        vocative: "~न\u{94d}|~", referred, "~ाणि";
+    // चमू: 16 words (वधू, तनू, श्वश्रू, जुहू, निम्बू, जनू).
+    declension!("चमू", 16, "~ू";
+        nominative: "~ूः", "~्वौ", "~्वः";
+        accusative: "~ूम्", "~्वौ", "~ूः";
+        instrumental: "~्वा", "~ूभ्याम्", "~ूभिः";
+        dative: "~्वै", "~ूभ्याम्", "~ूभ्यः";
+        ablative: "~्वाः", "~ूभ्याम्", "~ूभ्यः";
+        genitive: "~्वाः", "~्वोः", "~ूनाम्";
+        locative: "~्वाम्", "~्वोः", "~ूषु";
+        vocative: "~ु", derived, "~्वः";
     ),
     // समपद: 15 words (हृद्, पद्, विद्, शरद्, मृद्, परिषद्).
-    declension!("सम\u{94d}पद\u{94d}", 15, "~द\u{94d}";
-        nominative: "~त\u{94d}", "~दौ", "~दः";
-        accusative: "~दम\u{94d}", "~दौ", "~दः";
-        instrumental: "~दा", "~द\u{94d}भ\u{94d}याम\u{94d}", "~द\u{94d}भिः";
-        dative: "~द\u{947}", "~द\u{94d}भ\u{94d}याम\u{94d}", "~द\u{94d}भ\u{94d}यः";
-        ablative: "~दः", "~द\u{94d}भ\u{94d}याम\u{94d}", "~द\u{94d}भ\u{94d}यः";
-        genitive: "~दः", "~दोः", "~दाम\u{94d}";
-        locative: "~दि", "~दोः", "~त\u{94d}स\u{941}";
-        vocative: "~त\u{94d}", referred, "~दः";
-    ),
-    // जतु: 14 words (वस्तु, आयु, मधु, जानु, अंहु, वास्तु).
-    declension!("जत\u{941}", 14, "~\u{941}";
-        nominative: "~\u{941}", "~\u{941}नी", "~\u{942}नि";
-        accusative: "~\u{941}", "~\u{941}नी", "~\u{942}नि";
-        instrumental: "~\u{941}ना", "~\u{941}भ\u{94d}याम\u{94d}", "~\u{941}भिः";
-        dative: "~\u{941}न\u{947}", "~\u{941}भ\u{94d}याम\u{94d}", "~\u{941}भ\u{94d}यः";
-        ablative: "~\u{941}नः", "~\u{941}भ\u{94d}याम\u{94d}", "~\u{941}भ\u{94d}यः";
-        genitive: "~\u{941}नः", "~\u{941}नोः", "~\u{942}नाम\u{94d}";
-        locative: "~\u{941}नि", "~\u{941}नोः", "~\u{941}ष\u{941}";
-        vocative: "~\u{941}|~ो", referred, "~\u{942}नि";
-    ),
-    // वारकिन: 14 words (मन्त्रिन्, अन्तर्यामिन्, रुधिरोद्गारिन्, शास्त्रिन्, रोगिन्, साक्षिन्).
-    declension!("वारकिन\u{94d}", 14, "~िन\u{94d}";
-        nominative: "~ी", "~िणौ", "~िणः";
-        accusative: "~िणम\u{94d}", "~िणौ", "~िणः";
-        instrumental: "~िणा", "~िभ\u{94d}याम\u{94d}", "~िभिः";
-        dative: "~िण\u{947}", "~िभ\u{94d}याम\u{94d}", "~िभ\u{94d}यः";
-        ablative: "~िणः", "~िभ\u{94d}याम\u{94d}", "~िभ\u{94d}यः";
-        genitive: "~िणः", "~िणोः", "~िणाम\u{94d}";
-        locative: "~िणि", "~िणोः", "~िष\u{941}";
-        vocative: "~िन\u{94d}", referred, "~िणः";
+    declension!("सम्पद्", 15, "~द्";
+        nominative: "~त्", "~दौ", "~दः";
+        accusative: "~दम्", "~दौ", "~दः";
+        instrumental: "~दा", "~द्भ्याम्", "~द्भिः";
+        dative: "~दे", "~द्भ्याम्", "~द्भ्यः";
+        ablative: "~दः", "~द्भ्याम्", "~द्भ्यः";
+        genitive: "~दः", "~दोः", "~दाम्";
+        locative: "~दि", "~दोः", "~त्सु";
+        vocative: "~त्", derived, "~दः";
     ),
     // जयोतिस: 14 words (दोस्, क्रविस्, सर्पिस्, बर्हिस्, हविस्, रोचिस्).
-    declension!("ज\u{94d}योतिस\u{94d}", 14, "~~स\u{94d}";
-        nominative: "~~ः", "~~षी", "~ी\u{902}ष~";
-        accusative: "~~ः", "~~षी", "~ी\u{902}ष~";
-        instrumental: "~~षा", "~~र\u{94d}भ\u{94d}याम\u{94d}", "~~र\u{94d}भिः";
-        dative: "~~ष\u{947}", "~~र\u{94d}भ\u{94d}याम\u{94d}", "~~र\u{94d}भ\u{94d}यः";
-        ablative: "~~षः", "~~र\u{94d}भ\u{94d}याम\u{94d}", "~~र\u{94d}भ\u{94d}यः";
-        genitive: "~~षः", "~~षोः", "~~षाम\u{94d}";
-        locative: "~~षि", "~~षोः", "~~ःष\u{941}|~~ष\u{94d}ष\u{941}";
-        vocative: "~~ः", referred, "~ी\u{902}ष~";
+    declension!("ज्योतिस्", 14, "~~स्";
+        nominative: "~~ः", "~~षी", "~ींष~";
+        accusative: "~~ः", "~~षी", "~ींष~";
+        instrumental: "~~षा", "~~र्भ्याम्", "~~र्भिः";
+        dative: "~~षे", "~~र्भ्याम्", "~~र्भ्यः";
+        ablative: "~~षः", "~~र्भ्याम्", "~~र्भ्यः";
+        genitive: "~~षः", "~~षोः", "~~षाम्";
+        locative: "~~षि", "~~षोः", "~~ःषु|~~ष्षु";
+        vocative: "~~ः", derived, "~ींष~";
     ),
     // युज: 13 words (असृज्, बणिज्, वणिज्, भुज्, भिषज्, उशिज्).
-    declension!("य\u{941}ज\u{94d}", 13, "~ज\u{94d}";
-        nominative: "~क\u{94d}", "~जौ", "~जः";
-        accusative: "~जम\u{94d}", "~जौ", "~जः";
-        instrumental: "~जा", "~ग\u{94d}भ\u{94d}याम\u{94d}", "~ग\u{94d}भिः";
-        dative: "~ज\u{947}", "~ग\u{94d}भ\u{94d}याम\u{94d}", "~ग\u{94d}भ\u{94d}यः";
-        ablative: "~जः", "~ग\u{94d}भ\u{94d}याम\u{94d}", "~ग\u{94d}भ\u{94d}यः";
-        genitive: "~जः", "~जोः", "~जाम\u{94d}";
-        locative: "~जि", "~जोः", "~क\u{94d}ष\u{941}";
-        vocative: "~क\u{94d}", referred, "~जः";
-    ),
-    // आतमन: 13 words (अश्मन्, तक्मन्, आत्मन्, महात्मन्, वन्, रश्मन्).
-    declension!("आत\u{94d}मन\u{94d}", 13, "~न\u{94d}";
-        nominative: "~ा", "~ानौ", "~ानः";
-        accusative: "~ानम\u{94d}", "~ानौ", "~नः";
-        instrumental: "~ना", "~भ\u{94d}याम\u{94d}", "~भिः";
-        dative: "~न\u{947}", "~भ\u{94d}याम\u{94d}", "~भ\u{94d}यः";
-        ablative: "~नः", "~भ\u{94d}याम\u{94d}", "~भ\u{94d}यः";
-        genitive: "~नः", "~नोः", "~नाम\u{94d}";
-        locative: "~नि", "~नोः", "~स\u{941}";
-        vocative: "~न\u{94d}", referred, "~ानः";
-    ),
-    // गरावन: 11 words (ग्रावन्, वृषन्, अर्यमन्, उक्षन्, शीर्षन्, तक्षन्).
-    declension!("ग\u{94d}रावन\u{94d}", 11, "~न\u{94d}";
-        nominative: "~ा", "~ाणौ", "~ाणः";
-        accusative: "~ाणम\u{94d}", "~ाणौ", "~\u{94d}णः";
-        instrumental: "~\u{94d}णा", "~भ\u{94d}याम\u{94d}", "~भिः";
-        dative: "~\u{94d}ण\u{947}", "~भ\u{94d}याम\u{94d}", "~भ\u{94d}यः";
-        ablative: "~\u{94d}णः", "~भ\u{94d}याम\u{94d}", "~भ\u{94d}यः";
-        genitive: "~\u{94d}णः", "~\u{94d}णोः", "~\u{94d}णाम\u{94d}";
-        locative: "~\u{94d}णि|~णि", "~\u{94d}णोः", "~स\u{941}";
-        vocative: "~न\u{94d}", referred, "~ाणः";
-    ),
-    // चमू: 11 words (वधू, तनू, जुहू, निम्बू, जनू, चमू).
-    declension!("चम\u{942}", 11, "~\u{942}";
-        nominative: "~\u{942}ः", "~\u{94d}वौ", "~\u{94d}वः";
-        accusative: "~\u{942}म\u{94d}", "~\u{94d}वौ", "~\u{942}ः";
-        instrumental: "~\u{94d}वा", "~\u{942}भ\u{94d}याम\u{94d}", "~\u{942}भिः";
-        dative: "~\u{94d}व\u{948}", "~\u{942}भ\u{94d}याम\u{94d}", "~\u{942}भ\u{94d}यः";
-        ablative: "~\u{94d}वाः", "~\u{942}भ\u{94d}याम\u{94d}", "~\u{942}भ\u{94d}यः";
-        genitive: "~\u{94d}वाः", "~\u{94d}वोः", "~\u{942}नाम\u{94d}";
-        locative: "~\u{94d}वाम\u{94d}", "~\u{94d}वोः", "~\u{942}ष\u{941}";
-        vocative: "~\u{941}", referred, "~\u{94d}वः";
+    declension!("युज्", 13, "~ज्";
+        nominative: "~क्", "~जौ", "~जः";
+        accusative: "~जम्", "~जौ", "~जः";
+        instrumental: "~जा", "~ग्भ्याम्", "~ग्भिः";
+        dative: "~जे", "~ग्भ्याम्", "~ग्भ्यः";
+        ablative: "~जः", "~ग्भ्याम्", "~ग्भ्यः";
+        genitive: "~जः", "~जोः", "~जाम्";
+        locative: "~जि", "~जोः", "~क्षु";
+        vocative: "~क्", derived, "~जः";
     ),
     // धी: 10 words (ह्री, स्त्री, धी, श्री, भी, ली).
     declension!("धी", 10, "~ी";
         nominative: "~ीः", "~ियौ", "~ियः";
-        accusative: "~ियम\u{94d}", "~ियौ", "~ियः";
-        instrumental: "~िया", "~ीभ\u{94d}याम\u{94d}", "~ीभिः";
-        dative: "~िय\u{947}", "~ीभ\u{94d}याम\u{94d}", "~ीभ\u{94d}यः";
-        ablative: "~ियः", "~ीभ\u{94d}याम\u{94d}", "~ीभ\u{94d}यः";
-        genitive: "~ियः", "~ियोः", "~ियाम\u{94d}|~ीनाम\u{94d}";
-        locative: "~ियि", "~ियोः", "~ीष\u{941}";
-        vocative: "~ीः", referred, "~ियः";
+        accusative: "~ियम्", "~ियौ", "~ियः";
+        instrumental: "~िया", "~ीभ्याम्", "~ीभिः";
+        dative: "~िये", "~ीभ्याम्", "~ीभ्यः";
+        ablative: "~ियः", "~ीभ्याम्", "~ीभ्यः";
+        genitive: "~ियः", "~ियोः", "~ियाम्|~ीनाम्";
+        locative: "~ियि", "~ियोः", "~ीषु";
+        vocative: "~ीः", derived, "~ियः";
     ),
-    // पुंस: 10 words (ऊधस्, उषस्, श्रेयस्, मास्, अप्सरस्, पुंस्).
-    declension!("प\u{941}\u{902}स\u{94d}", 10, "~स\u{94d}";
+    // पुंस: 10 words (ऊधस्, उषस्, श्रेयस्, मास्, अप्सरस्, पुंस्). Like अपसस, except in 7 cells: nominative sg, nominative du, nominative pl, accusative sg, accusative du, accusative pl, ….
+    declension!("पुंस्", 10, "~स्", like अपसस;
         nominative: "~ाः", "~सौ", "~सः";
-        accusative: "~सम\u{94d}", "~सौ", "~सः";
-        instrumental: "~सा", "~ोभ\u{94d}याम\u{94d}", "~ोभिः";
-        dative: "~स\u{947}", "~ोभ\u{94d}याम\u{94d}", "~ोभ\u{94d}यः";
-        ablative: "~सः", "~ोभ\u{94d}याम\u{94d}", "~ोभ\u{94d}यः";
-        genitive: "~सः", "~सोः", "~साम\u{94d}";
-        locative: "~सि", "~सोः", "~ःस\u{941}|~स\u{94d}स\u{941}";
-        vocative: "~ः", referred, "~सः";
+        accusative: "~सम्", "~सौ", "~सः";
+        instrumental: _, _, _;
+        dative: _, _, _;
+        ablative: _, _, _;
+        genitive: _, _, _;
+        locative: _, _, _;
+        vocative: _, _, "~सः";
     ),
     // तवच: 9 words (त्वच्, ऋच्, रुच्, शुच्, मुच्, स्फिच्).
-    declension!("त\u{94d}वच\u{94d}", 9, "~च\u{94d}";
-        nominative: "~क\u{94d}", "~चौ", "~चः";
-        accusative: "~चम\u{94d}", "~चौ", "~चः";
-        instrumental: "~चा", "~ग\u{94d}भ\u{94d}याम\u{94d}", "~ग\u{94d}भिः";
-        dative: "~च\u{947}", "~ग\u{94d}भ\u{94d}याम\u{94d}", "~ग\u{94d}भ\u{94d}यः";
-        ablative: "~चः", "~ग\u{94d}भ\u{94d}याम\u{94d}", "~ग\u{94d}भ\u{94d}यः";
-        genitive: "~चः", "~चोः", "~चाम\u{94d}";
-        locative: "~चि", "~चोः", "~क\u{94d}ष\u{941}";
-        vocative: "~क\u{94d}", referred, "~चः";
-    ),
-    // जनमन: 9 words (वस्मन्, वर्त्मन्, जन्मन्, भस्मन्, धन्वन्, छद्मन्).
-    declension!("जन\u{94d}मन\u{94d}", 9, "~न\u{94d}";
-        nominative: "~", "~नी", "~ानि";
-        accusative: "~", "~नी", "~ानि";
-        instrumental: "~ना", "~भ\u{94d}याम\u{94d}", "~भिः";
-        dative: "~न\u{947}", "~भ\u{94d}याम\u{94d}", "~भ\u{94d}यः";
-        ablative: "~नः", "~भ\u{94d}याम\u{94d}", "~भ\u{94d}यः";
-        genitive: "~नः", "~नोः", "~नाम\u{94d}";
-        locative: "~नि", "~नोः", "~स\u{941}";
-        vocative: "~न\u{94d}|~", referred, "~ानि";
-    ),
-    // ऊषमन: 8 words (अथर्वन्, धर्मन्, दर्मन्, भार्मन्, द्राघ्मन्, ऊष्मन्).
-    declension!("ऊष\u{94d}मन\u{94d}", 8, "~न\u{94d}";
-        nominative: "~ा", "~ाणौ", "~ाणः";
-        accusative: "~ाणम\u{94d}", "~ाणौ", "~णः";
-        instrumental: "~णा", "~भ\u{94d}याम\u{94d}", "~भिः";
-        dative: "~ण\u{947}", "~भ\u{94d}याम\u{94d}", "~भ\u{94d}यः";
-        ablative: "~णः", "~भ\u{94d}याम\u{94d}", "~भ\u{94d}यः";
-        genitive: "~णः", "~णोः", "~णाम\u{94d}";
-        locative: "~णि", "~णोः", "~स\u{941}";
-        vocative: "~न\u{94d}", referred, "~ाणः";
+    declension!("त्वच्", 9, "~च्";
+        nominative: "~क्", "~चौ", "~चः";
+        accusative: "~चम्", "~चौ", "~चः";
+        instrumental: "~चा", "~ग्भ्याम्", "~ग्भिः";
+        dative: "~चे", "~ग्भ्याम्", "~ग्भ्यः";
+        ablative: "~चः", "~ग्भ्याम्", "~ग्भ्यः";
+        genitive: "~चः", "~चोः", "~चाम्";
+        locative: "~चि", "~चोः", "~क्षु";
+        vocative: "~क्", derived, "~चः";
     ),
     // सपृध: 8 words (प्रबुध्, स्पृध्, क्षुध्, युध्, वीरुध्, श्वाविध्).
-    declension!("स\u{94d}प\u{943}ध\u{94d}", 8, "~ध\u{94d}";
-        nominative: "~त\u{94d}", "~धौ", "~धः";
-        accusative: "~धम\u{94d}", "~धौ", "~धः";
-        instrumental: "~धा", "~द\u{94d}भ\u{94d}याम\u{94d}", "~द\u{94d}भिः";
-        dative: "~ध\u{947}", "~द\u{94d}भ\u{94d}याम\u{94d}", "~द\u{94d}भ\u{94d}यः";
-        ablative: "~धः", "~द\u{94d}भ\u{94d}याम\u{94d}", "~द\u{94d}भ\u{94d}यः";
-        genitive: "~धः", "~धोः", "~धाम\u{94d}";
-        locative: "~धि", "~धोः", "~त\u{94d}स\u{941}";
-        vocative: "~त\u{94d}", referred, "~धः";
+    declension!("स्पृध्", 8, "~ध्";
+        nominative: "~त्", "~धौ", "~धः";
+        accusative: "~धम्", "~धौ", "~धः";
+        instrumental: "~धा", "~द्भ्याम्", "~द्भिः";
+        dative: "~धे", "~द्भ्याम्", "~द्भ्यः";
+        ablative: "~धः", "~द्भ्याम्", "~द्भ्यः";
+        genitive: "~धः", "~धोः", "~धाम्";
+        locative: "~धि", "~धोः", "~त्सु";
+        vocative: "~त्", derived, "~धः";
     ),
-    // गोपा: 7 words (जा, पन्था, प्रतिमा, दा, गोपा, रथेष्ठा).
-    declension!("गोपा", 7, "~ा";
-        nominative: "~ाः", "~ौ", "~ाः";
-        accusative: "~ाम\u{94d}", "~ौ", "~ः";
-        instrumental: "~ा", "~ाभ\u{94d}याम\u{94d}", "~ाभिः";
-        dative: "~\u{947}", "~ाभ\u{94d}याम\u{94d}", "~ाभ\u{94d}यः";
-        ablative: "~ः", "~ाभ\u{94d}याम\u{94d}", "~ाभ\u{94d}यः";
-        genitive: "~ः", "~ोः", "~ानाम\u{94d}";
-        locative: "~ि", "~ोः", "~ास\u{941}";
-        vocative: "~ाः", referred, "~ाः";
+    // गोपा: 7 words (जा, पन्था, प्रतिमा, दा, गोपा, रथेष्ठा). Like कला, except in 12 cells: nominative sg, nominative du, accusative du, accusative pl, instrumental sg, dative sg, ….
+    declension!("गोपा", 7, "~ा", [gender: Masculine], like कला;
+        nominative: "~ाः", "~ौ", _;
+        accusative: _, "~ौ", "~ः";
+        instrumental: "~ा", _, _;
+        dative: "~े", _, _;
+        ablative: "~ः", _, _;
+        genitive: "~ः", "~ोः", _;
+        locative: "~ि", "~ोः", _;
+        vocative: "~ाः", _, _;
     ),
-    // वारि: 7 words (वारि, अस्थि, अक्षि, इदानि, सेवि, दधि).
-    declension!("वारि", 7, "~ि";
+    // वारि: 7 words (वारि, अस्थि, अक्षि, इदानि, सेवि, दधि). Like सवामिन, except in 9 cells: nominative sg, nominative du, nominative pl, accusative sg, accusative du, accusative pl, ….
+    declension!("वारि", 7, "~ि", [gender: Neuter], like सवामिन;
         nominative: "~ि", "~िनी", "~ीनि";
         accusative: "~ि", "~िनी", "~ीनि";
-        instrumental: "~िना", "~िभ\u{94d}याम\u{94d}", "~िभिः";
-        dative: "~िन\u{947}", "~िभ\u{94d}याम\u{94d}", "~िभ\u{94d}यः";
-        ablative: "~िनः", "~िभ\u{94d}याम\u{94d}", "~िभ\u{94d}यः";
-        genitive: "~िनः", "~िनोः", "~ीनाम\u{94d}";
-        locative: "~िनि", "~िनोः", "~िष\u{941}";
-        vocative: "~ि|~\u{947}", referred, "~ीनि";
-    ),
-    // भरीमन: 7 words (रोमन्, दरीमन्, भरीमन्, स्तरीमन्, परीमन्, परेमन्).
-    declension!("भरीमन\u{94d}", 7, "~न\u{94d}";
-        nominative: "~", "~\u{94d}णी|~णी", "~ाणि";
-        accusative: "~", "~\u{94d}णी|~णी", "~ाणि";
-        instrumental: "~\u{94d}णा", "~भ\u{94d}याम\u{94d}", "~भिः";
-        dative: "~\u{94d}ण\u{947}", "~भ\u{94d}याम\u{94d}", "~भ\u{94d}यः";
-        ablative: "~\u{94d}णः", "~भ\u{94d}याम\u{94d}", "~भ\u{94d}यः";
-        genitive: "~\u{94d}णः", "~\u{94d}णोः", "~\u{94d}णाम\u{94d}";
-        locative: "~\u{94d}णि|~णि", "~\u{94d}णोः", "~स\u{941}";
-        vocative: "~न\u{94d}|~", referred, "~ाणि";
+        instrumental: _, _, _;
+        dative: _, _, _;
+        ablative: _, _, _;
+        genitive: _, _, "~ीनाम्";
+        locative: _, _, _;
+        vocative: "~ि|~े", _, "~ीनि";
     ),
     // तविष: 6 words (त्विष्, विष्, प्रेष्, प्रावृष्, द्विष्, रुष्).
-    declension!("त\u{94d}विष\u{94d}", 6, "~ष\u{94d}";
-        nominative: "~ट\u{94d}", "~षौ", "~षः";
-        accusative: "~षम\u{94d}", "~षौ", "~षः";
-        instrumental: "~षा", "~ड\u{94d}भ\u{94d}याम\u{94d}", "~ड\u{94d}भिः";
-        dative: "~ष\u{947}", "~ड\u{94d}भ\u{94d}याम\u{94d}", "~ड\u{94d}भ\u{94d}यः";
-        ablative: "~षः", "~ड\u{94d}भ\u{94d}याम\u{94d}", "~ड\u{94d}भ\u{94d}यः";
-        genitive: "~षः", "~षोः", "~षाम\u{94d}";
-        locative: "~षि", "~षोः", "~ट\u{94d}स\u{941}";
-        vocative: "~ट\u{94d}", referred, "~षः";
+    declension!("त्विष्", 6, "~ष्", [gender: Feminine];
+        nominative: "~ट्", "~षौ", "~षः";
+        accusative: "~षम्", "~षौ", "~षः";
+        instrumental: "~षा", "~ड्भ्याम्", "~ड्भिः";
+        dative: "~षे", "~ड्भ्याम्", "~ड्भ्यः";
+        ablative: "~षः", "~ड्भ्याम्", "~ड्भ्यः";
+        genitive: "~षः", "~षोः", "~षाम्";
+        locative: "~षि", "~षोः", "~ट्सु";
+        vocative: "~ट्", derived, "~षः";
     ),
-    // उसृ: 6 words (मातृ, दुहितृ, यातृ, ननान्दृ, उसृ, विमातृ).
-    declension!("उस\u{943}", 6, "~\u{943}";
-        nominative: "~ा", "~रौ", "~रः";
-        accusative: "~रम\u{94d}", "~रौ", "~\u{944}ः";
-        instrumental: "~\u{94d}रा", "~\u{943}भ\u{94d}याम\u{94d}", "~\u{943}भिः";
-        dative: "~\u{94d}र\u{947}", "~\u{943}भ\u{94d}याम\u{94d}", "~\u{943}भ\u{94d}यः";
-        ablative: "~\u{941}ः", "~\u{943}भ\u{94d}याम\u{94d}", "~\u{943}भ\u{94d}यः";
-        genitive: "~\u{941}ः", "~\u{94d}रोः", "~\u{944}णाम\u{94d}";
-        locative: "~रि", "~\u{94d}रोः", "~\u{943}ष\u{941}";
-        vocative: "~ः", referred, "~रः";
+    // उसृ: 6 words (मातृ, दुहितृ, यातृ, ननान्दृ, उसृ, विमातृ). Like दातृ, except in 6 cells: nominative du, nominative pl, accusative sg, accusative du, accusative pl, vocative pl.
+    declension!("उसृ", 6, "~ृ", [gender: Feminine], like दातृ;
+        nominative: _, "~रौ", "~रः";
+        accusative: "~रम्", "~रौ", "~ॄः";
+        instrumental: _, _, _;
+        dative: _, _, _;
+        ablative: _, _, _;
+        genitive: _, _, _;
+        locative: _, _, _;
+        vocative: _, _, "~रः";
     ),
     // भू: 6 words (भ्रू, भू, स्वपू, सू, जू, मू).
-    declension!("भ\u{942}", 6, "~\u{942}";
-        nominative: "~\u{942}ः", "~\u{941}वौ", "~\u{941}वः";
-        accusative: "~\u{941}वम\u{94d}", "~\u{941}वौ", "~\u{941}वः";
-        instrumental: "~\u{941}वा", "~\u{942}भ\u{94d}याम\u{94d}", "~\u{942}भिः";
-        dative: "~\u{941}व\u{947}", "~\u{942}भ\u{94d}याम\u{94d}", "~\u{942}भ\u{94d}यः";
-        ablative: "~\u{941}वः", "~\u{942}भ\u{94d}याम\u{94d}", "~\u{942}भ\u{94d}यः";
-        genitive: "~\u{941}वः", "~\u{941}वोः", "~\u{941}वाम\u{94d}|~\u{942}नाम\u{94d}";
-        locative: "~\u{941}वि", "~\u{941}वोः", "~\u{942}ष\u{941}";
-        vocative: "~\u{942}ः", referred, "~\u{941}वः";
+    declension!("भू", 6, "~ू";
+        nominative: "~ूः", "~ुवौ", "~ुवः";
+        accusative: "~ुवम्", "~ुवौ", "~ुवः";
+        instrumental: "~ुवा", "~ूभ्याम्", "~ूभिः";
+        dative: "~ुवे", "~ूभ्याम्", "~ूभ्यः";
+        ablative: "~ुवः", "~ूभ्याम्", "~ूभ्यः";
+        genitive: "~ुवः", "~ुवोः", "~ुवाम्|~ूनाम्";
+        locative: "~ुवि", "~ुवोः", "~ूषु";
+        vocative: "~ूः", derived, "~ुवः";
     ),
-    // पितृ: 6 words (भ्रातृ, पितृ, देवृ, नृ, जामातृ, मातापितृ).
-    declension!("पित\u{943}", 6, "~\u{943}";
-        nominative: "~ा", "~रौ", "~रः";
-        accusative: "~रम\u{94d}", "~रौ", "~\u{944}न\u{94d}";
-        instrumental: "~\u{94d}रा", "~\u{943}भ\u{94d}याम\u{94d}", "~\u{943}भिः";
-        dative: "~\u{94d}र\u{947}", "~\u{943}भ\u{94d}याम\u{94d}", "~\u{943}भ\u{94d}यः";
-        ablative: "~\u{941}ः", "~\u{943}भ\u{94d}याम\u{94d}", "~\u{943}भ\u{94d}यः";
-        genitive: "~\u{941}ः", "~\u{94d}रोः", "~\u{944}णाम\u{94d}";
-        locative: "~रि", "~\u{94d}रोः", "~\u{943}ष\u{941}";
-        vocative: "~ः", referred, "~रः";
+    // पितृ: 6 words (भ्रातृ, पितृ, देवृ, नृ, जामातृ, मातापितृ). Like उसृ, except in 1 cell: accusative pl.
+    declension!("पितृ", 6, "~ृ", [gender: Masculine], like उसृ;
+        nominative: _, _, _;
+        accusative: _, _, "~ॄन्";
+        instrumental: _, _, _;
+        dative: _, _, _;
+        ablative: _, _, _;
+        genitive: _, _, _;
+        locative: _, _, _;
+        vocative: _, _, _;
     ),
-    // अरहत: 6 words (दत्, सत्, पृषत्, अर्हत्, सरत्, अर्वत्).
-    declension!("अर\u{94d}हत\u{94d}", 6, "~त\u{94d}";
-        nominative: "~न\u{94d}", "~न\u{94d}तौ", "~न\u{94d}तः";
-        accusative: "~न\u{94d}तम\u{94d}", "~न\u{94d}तौ", "~तः";
-        instrumental: "~ता", "~द\u{94d}भ\u{94d}याम\u{94d}", "~द\u{94d}भिः";
-        dative: "~त\u{947}", "~द\u{94d}भ\u{94d}याम\u{94d}", "~द\u{94d}भ\u{94d}यः";
-        ablative: "~तः", "~द\u{94d}भ\u{94d}याम\u{94d}", "~द\u{94d}भ\u{94d}यः";
-        genitive: "~तः", "~तोः", "~ताम\u{94d}";
-        locative: "~ति", "~तोः", "~त\u{94d}स\u{941}";
-        vocative: "~न\u{94d}", referred, "~न\u{94d}तः";
+    // अरहत: 6 words (दत्, सत्, पृषत्, अर्हत्, सरत्, अर्वत्). Like मरुत, except in 7 cells: nominative sg, nominative du, nominative pl, accusative sg, accusative du, vocative sg, ….
+    declension!("अर्हत्", 6, "~त्", [gender: Masculine], like मरुत;
+        nominative: "~न्", "~न्तौ", "~न्तः";
+        accusative: "~न्तम्", "~न्तौ", _;
+        instrumental: _, _, _;
+        dative: _, _, _;
+        ablative: _, _, _;
+        genitive: _, _, _;
+        locative: _, _, _;
+        vocative: "~न्", _, "~न्तः";
     ),
     // चकषुस: 6 words (यजुस्, आयुस्, वपुस्, तरुस्, चक्षुस्, धनुस्).
-    declension!("चक\u{94d}ष\u{941}स\u{94d}", 6, "~\u{941}स\u{94d}";
-        nominative: "~\u{941}ः", "~\u{941}षी", "~\u{942}\u{902}षि";
-        accusative: "~\u{941}ः", "~\u{941}षी", "~\u{942}\u{902}षि";
-        instrumental: "~\u{941}षा", "~\u{941}र\u{94d}भ\u{94d}याम\u{94d}", "~\u{941}र\u{94d}भिः";
-        dative: "~\u{941}ष\u{947}", "~\u{941}र\u{94d}भ\u{94d}याम\u{94d}", "~\u{941}र\u{94d}भ\u{94d}यः";
-        ablative: "~\u{941}षः", "~\u{941}र\u{94d}भ\u{94d}याम\u{94d}", "~\u{941}र\u{94d}भ\u{94d}यः";
-        genitive: "~\u{941}षः", "~\u{941}षोः", "~\u{941}षाम\u{94d}";
-        locative: "~\u{941}षि", "~\u{941}षोः", "~\u{941}ःष\u{941}|~\u{941}ष\u{94d}ष\u{941}";
-        vocative: "~\u{941}ः", referred, "~\u{942}\u{902}षि";
+    declension!("चक्षुस्", 6, "~ुस्";
+        nominative: "~ुः", "~ुषी", "~ूंषि";
+        accusative: "~ुः", "~ुषी", "~ूंषि";
+        instrumental: "~ुषा", "~ुर्भ्याम्", "~ुर्भिः";
+        dative: "~ुषे", "~ुर्भ्याम्", "~ुर्भ्यः";
+        ablative: "~ुषः", "~ुर्भ्याम्", "~ुर्भ्यः";
+        genitive: "~ुषः", "~ुषोः", "~ुषाम्";
+        locative: "~ुषि", "~ुषोः", "~ुःषु|~ुष्षु";
+        vocative: "~ुः", derived, "~ूंषि";
     ),
-    // महत: 6 words (हिमवत्, महत्, परस्वत्, श्रीमत्, इरावत्, बलवत्).
-    declension!("महत\u{94d}", 6, "~त\u{94d}";
-        nominative: "~ान\u{94d}", "~न\u{94d}तौ", "~न\u{94d}तः";
-        accusative: "~न\u{94d}तम\u{94d}", "~न\u{94d}तौ", "~तः";
-        instrumental: "~ता", "~द\u{94d}भ\u{94d}याम\u{94d}", "~द\u{94d}भिः";
-        dative: "~त\u{947}", "~द\u{94d}भ\u{94d}याम\u{94d}", "~द\u{94d}भ\u{94d}यः";
-        ablative: "~तः", "~द\u{94d}भ\u{94d}याम\u{94d}", "~द\u{94d}भ\u{94d}यः";
-        genitive: "~तः", "~तोः", "~ताम\u{94d}";
-        locative: "~ति", "~तोः", "~त\u{94d}स\u{941}";
-        vocative: "~न\u{94d}", referred, "~न\u{94d}तः";
+    // महत: 6 words (हिमवत्, महत्, परस्वत्, श्रीमत्, इरावत्, बलवत्). Like अरहत, except in 1 cell: nominative sg.
+    declension!("महत्", 6, "~त्", [gender: Masculine], like अरहत;
+        nominative: "~ान्", _, _;
+        accusative: _, _, _;
+        instrumental: _, _, _;
+        dative: _, _, _;
+        ablative: _, _, _;
+        genitive: _, _, _;
+        locative: _, _, _;
+        vocative: _, _, _;
     ),
-    // तृ: 5 words (स्वसृ, स्तृ, तृ, पितृष्वसृ, पितुःष्वसृ).
-    declension!("त\u{943}", 5, "~\u{943}";
-        nominative: "~ा", "~ारौ", "~ारः";
-        accusative: "~ारम\u{94d}", "~ारौ", "~\u{944}ः";
-        instrumental: "~\u{94d}रा", "~\u{943}भ\u{94d}याम\u{94d}", "~\u{943}भिः";
-        dative: "~\u{94d}र\u{947}", "~\u{943}भ\u{94d}याम\u{94d}", "~\u{943}भ\u{94d}यः";
-        ablative: "~\u{941}ः", "~\u{943}भ\u{94d}याम\u{94d}", "~\u{943}भ\u{94d}यः";
-        genitive: "~\u{941}ः", "~\u{94d}रोः", "~\u{944}णाम\u{94d}";
-        locative: "~रि", "~\u{94d}रोः", "~\u{943}ष\u{941}";
-        vocative: "~ः", referred, "~ारः";
+    // आतमन: 5 words (अथर्वन्, वन्, अध्वन्, यज्वन्, प्रातरित्वन्). Like मूरधन, except in 9 cells: accusative pl, instrumental sg, dative sg, ablative sg, genitive sg, genitive du, ….
+    declension!("आत्मन्", 5, "~न्", [gender: Masculine], like मूरधन;
+        nominative: _, _, _;
+        accusative: _, _, "~नः";
+        instrumental: "~ना", _, _;
+        dative: "~ने", _, _;
+        ablative: "~नः", _, _;
+        genitive: "~नः", "~नोः", "~नाम्";
+        locative: "~नि", "~नोः", _;
+        vocative: _, _, _;
     ),
-    // दारु: 5 words (अश्रु, दारु, त्रपु, श्मश्रु, क्षु).
-    declension!("दार\u{941}", 5, "~\u{941}";
-        nominative: "~\u{941}", "~\u{941}णी", "~\u{942}णि";
-        accusative: "~\u{941}", "~\u{941}णी", "~\u{942}णि";
-        instrumental: "~\u{941}णा", "~\u{941}भ\u{94d}याम\u{94d}", "~\u{941}भिः";
-        dative: "~\u{941}ण\u{947}", "~\u{941}भ\u{94d}याम\u{94d}", "~\u{941}भ\u{94d}यः";
-        ablative: "~\u{941}णः", "~\u{941}भ\u{94d}याम\u{94d}", "~\u{941}भ\u{94d}यः";
-        genitive: "~\u{941}णः", "~\u{941}णोः", "~\u{942}णाम\u{94d}";
-        locative: "~\u{941}णि", "~\u{941}णोः", "~\u{941}ष\u{941}";
-        vocative: "~\u{941}|~ो", referred, "~\u{942}णि";
+    // तृ: 5 words (स्वसृ, स्तृ, तृ, पितृष्वसृ, पितुःष्वसृ). Like दातृ, except in 1 cell: accusative pl.
+    declension!("तृ", 5, "~ृ", [gender: Feminine], like दातृ;
+        nominative: _, _, _;
+        accusative: _, _, "~ॄः";
+        instrumental: _, _, _;
+        dative: _, _, _;
+        ablative: _, _, _;
+        genitive: _, _, _;
+        locative: _, _, _;
+        vocative: _, _, _;
     ),
-    // पितृभू: 5 words (श्वश्रू, अग्रू, वर्षाहू, पितृभू, उर्वारू).
-    declension!("पित\u{943}भ\u{942}", 5, "~\u{942}";
-        nominative: "~\u{942}ः", "~\u{94d}वौ", "~\u{94d}वः";
-        accusative: "~\u{942}म\u{94d}", "~\u{94d}वौ", "~\u{942}ः";
-        instrumental: "~\u{94d}वा", "~\u{942}भ\u{94d}याम\u{94d}", "~\u{942}भिः";
-        dative: "~\u{94d}व\u{948}", "~\u{942}भ\u{94d}याम\u{94d}", "~\u{942}भ\u{94d}यः";
-        ablative: "~\u{94d}वाः", "~\u{942}भ\u{94d}याम\u{94d}", "~\u{942}भ\u{94d}यः";
-        genitive: "~\u{94d}वाः", "~\u{94d}वोः", "~\u{942}णाम\u{94d}";
-        locative: "~\u{94d}वाम\u{94d}", "~\u{94d}वोः", "~\u{942}ष\u{941}";
-        vocative: "~\u{941}", referred, "~\u{94d}वः";
+    // जगत: 4 words (जगत्, यकृत्, बृहत्, असत्). Like मरुत, except in 6 cells: nominative du, nominative pl, accusative sg, accusative du, accusative pl, vocative pl.
+    declension!("जगत्", 4, "~त्", [gender: Neuter], like मरुत;
+        nominative: _, "~ती", "~न्ति";
+        accusative: "~त्", "~ती", "~न्ति";
+        instrumental: _, _, _;
+        dative: _, _, _;
+        ablative: _, _, _;
+        genitive: _, _, _;
+        locative: _, _, _;
+        vocative: _, _, "~न्ति";
     ),
-    // जगत: 4 words (जगत्, यकृत्, बृहत्, असत्).
-    declension!("जगत\u{94d}", 4, "~त\u{94d}";
-        nominative: "~त\u{94d}", "~ती", "~न\u{94d}ति";
-        accusative: "~त\u{94d}", "~ती", "~न\u{94d}ति";
-        instrumental: "~ता", "~द\u{94d}भ\u{94d}याम\u{94d}", "~द\u{94d}भिः";
-        dative: "~त\u{947}", "~द\u{94d}भ\u{94d}याम\u{94d}", "~द\u{94d}भ\u{94d}यः";
-        ablative: "~तः", "~द\u{94d}भ\u{94d}याम\u{94d}", "~द\u{94d}भ\u{94d}यः";
-        genitive: "~तः", "~तोः", "~ताम\u{94d}";
-        locative: "~ति", "~तोः", "~त\u{94d}स\u{941}";
-        vocative: "~त\u{94d}", referred, "~न\u{94d}ति";
-    ),
-    // राडराजन: 4 words (राजन्, मज्जन्, महाराजन्, राड्राजन्).
-    declension!("राड\u{94d}राजन\u{94d}", 4, "~न\u{94d}";
-        nominative: "~ा", "~ानौ", "~ानः";
-        accusative: "~ानम\u{94d}", "~ानौ", "~\u{94d}ञः";
-        instrumental: "~\u{94d}ञा", "~भ\u{94d}याम\u{94d}", "~भिः";
-        dative: "~\u{94d}ञ\u{947}", "~भ\u{94d}याम\u{94d}", "~भ\u{94d}यः";
-        ablative: "~\u{94d}ञः", "~भ\u{94d}याम\u{94d}", "~भ\u{94d}यः";
-        genitive: "~\u{94d}ञः", "~\u{94d}ञोः", "~\u{94d}ञाम\u{94d}";
-        locative: "~\u{94d}ञि|~नि", "~\u{94d}ञोः", "~स\u{941}";
-        vocative: "~न\u{94d}", referred, "~ानः";
+    // राडराजन: 4 words (राजन्, मज्जन्, महाराजन्, राड्राजन्). Like मूरधन, except in 9 cells: accusative pl, instrumental sg, dative sg, ablative sg, genitive sg, genitive du, ….
+    declension!("राड्राजन्", 4, "~न्", [gender: Masculine], like मूरधन;
+        nominative: _, _, _;
+        accusative: _, _, "~्ञः";
+        instrumental: "~्ञा", _, _;
+        dative: "~्ञे", _, _;
+        ablative: "~्ञः", _, _;
+        genitive: "~्ञः", "~्ञोः", "~्ञाम्";
+        locative: "~्ञि|~नि", "~्ञोः", _;
+        vocative: _, _, _;
     ),
     // रिप: 4 words (अप्, क्षप्, कृप्, रिप्).
-    declension!("रिप\u{94d}", 4, "~प\u{94d}";
-        nominative: "~प\u{94d}", "~पौ", "~पः";
-        accusative: "~पम\u{94d}", "~पौ", "~पः";
-        instrumental: "~पा", "~ब\u{94d}भ\u{94d}याम\u{94d}", "~ब\u{94d}भिः";
-        dative: "~प\u{947}", "~ब\u{94d}भ\u{94d}याम\u{94d}", "~ब\u{94d}भ\u{94d}यः";
-        ablative: "~पः", "~ब\u{94d}भ\u{94d}याम\u{94d}", "~ब\u{94d}भ\u{94d}यः";
-        genitive: "~पः", "~पोः", "~पाम\u{94d}";
-        locative: "~पि", "~पोः", "~प\u{94d}स\u{941}";
-        vocative: "~प\u{94d}", referred, "~पः";
+    declension!("रिप्", 4, "~प्", [gender: Feminine];
+        nominative: "~प्", "~पौ", "~पः";
+        accusative: "~पम्", "~पौ", "~पः";
+        instrumental: "~पा", "~ब्भ्याम्", "~ब्भिः";
+        dative: "~पे", "~ब्भ्याम्", "~ब्भ्यः";
+        ablative: "~पः", "~ब्भ्याम्", "~ब्भ्यः";
+        genitive: "~पः", "~पोः", "~पाम्";
+        locative: "~पि", "~पोः", "~प्सु";
+        vocative: "~प्", derived, "~पः";
     ),
     // शुभ: 4 words (गृभ्, क्षुभ्, शुभ्, अनुष्टुभ्).
-    declension!("श\u{941}भ\u{94d}", 4, "~भ\u{94d}";
-        nominative: "~प\u{94d}", "~भौ", "~भः";
-        accusative: "~भम\u{94d}", "~भौ", "~भः";
-        instrumental: "~भा", "~ब\u{94d}भ\u{94d}याम\u{94d}", "~ब\u{94d}भिः";
-        dative: "~भ\u{947}", "~ब\u{94d}भ\u{94d}याम\u{94d}", "~ब\u{94d}भ\u{94d}यः";
-        ablative: "~भः", "~ब\u{94d}भ\u{94d}याम\u{94d}", "~ब\u{94d}भ\u{94d}यः";
-        genitive: "~भः", "~भोः", "~भाम\u{94d}";
-        locative: "~भि", "~भोः", "~प\u{94d}स\u{941}";
-        vocative: "~प\u{94d}", referred, "~भः";
+    declension!("शुभ्", 4, "~भ्", [gender: Feminine];
+        nominative: "~प्", "~भौ", "~भः";
+        accusative: "~भम्", "~भौ", "~भः";
+        instrumental: "~भा", "~ब्भ्याम्", "~ब्भिः";
+        dative: "~भे", "~ब्भ्याम्", "~ब्भ्यः";
+        ablative: "~भः", "~ब्भ्याम्", "~ब्भ्यः";
+        genitive: "~भः", "~भोः", "~भाम्";
+        locative: "~भि", "~भोः", "~प्सु";
+        vocative: "~प्", derived, "~भः";
     ),
     // गलौ: 3 words (नौ, ज्यौ, ग्लौ).
-    declension!("ग\u{94d}लौ", 3, "~ौ";
+    declension!("ग्लौ", 3, "~ौ";
         nominative: "~ौः", "~ावौ", "~ावः";
-        accusative: "~ावम\u{94d}", "~ावौ", "~ावः";
-        instrumental: "~ावा", "~ौभ\u{94d}याम\u{94d}", "~ौभिः";
-        dative: "~ाव\u{947}", "~ौभ\u{94d}याम\u{94d}", "~ौभ\u{94d}यः";
-        ablative: "~ावः", "~ौभ\u{94d}याम\u{94d}", "~ौभ\u{94d}यः";
-        genitive: "~ावः", "~ावोः", "~ावाम\u{94d}";
-        locative: "~ावि", "~ावोः", "~ौष\u{941}";
-        vocative: "~ौः", referred, "~ावः";
+        accusative: "~ावम्", "~ावौ", "~ावः";
+        instrumental: "~ावा", "~ौभ्याम्", "~ौभिः";
+        dative: "~ावे", "~ौभ्याम्", "~ौभ्यः";
+        ablative: "~ावः", "~ौभ्याम्", "~ौभ्यः";
+        genitive: "~ावः", "~ावोः", "~ावाम्";
+        locative: "~ावि", "~ावोः", "~ौषु";
+        vocative: "~ौः", derived, "~ावः";
     ),
-    // लकषमी: 3 words (लक्ष्मी, तन्त्री, तन्द्री).
-    declension!("लक\u{94d}ष\u{94d}मी", 3, "~ी";
-        nominative: "~ीः|~ी", "~\u{94d}यौ", "~\u{94d}यः";
-        accusative: "~ीम\u{94d}", "~\u{94d}यौ", "~ीः";
-        instrumental: "~\u{94d}या", "~ीभ\u{94d}याम\u{94d}", "~ीभिः";
-        dative: "~\u{94d}य\u{948}", "~ीभ\u{94d}याम\u{94d}", "~ीभ\u{94d}यः";
-        ablative: "~\u{94d}याः", "~ीभ\u{94d}याम\u{94d}", "~ीभ\u{94d}यः";
-        genitive: "~\u{94d}याः", "~\u{94d}योः", "~ीणाम\u{94d}";
-        locative: "~\u{94d}याम\u{94d}", "~\u{94d}योः", "~ीष\u{941}";
-        vocative: "~ि", referred, "~\u{94d}यः";
+    // लकषमी: 3 words (लक्ष्मी, तन्त्री, तन्द्री). Like नाडी, except in 2 cells: nominative sg, genitive pl.
+    declension!("लक्ष्मी", 3, "~ी", [gender: Feminine], like नाडी;
+        nominative: "~ीः|~ी", _, _;
+        accusative: _, _, _;
+        instrumental: _, _, _;
+        dative: _, _, _;
+        ablative: _, _, _;
+        genitive: _, _, "~ीणाम्";
+        locative: _, _, _;
+        vocative: _, _, _;
     ),
-    // विराज: 3 words (विराज्, राज्, सम्राज्).
-    declension!("विराज\u{94d}", 3, "~ज\u{94d}";
-        nominative: "~ट\u{94d}", "~जौ", "~जः";
-        accusative: "~जम\u{94d}", "~जौ", "~जः";
-        instrumental: "~जा", "~ड\u{94d}भ\u{94d}याम\u{94d}", "~ड\u{94d}भिः";
-        dative: "~ज\u{947}", "~ड\u{94d}भ\u{94d}याम\u{94d}", "~ड\u{94d}भ\u{94d}यः";
-        ablative: "~जः", "~ड\u{94d}भ\u{94d}याम\u{94d}", "~ड\u{94d}भ\u{94d}यः";
-        genitive: "~जः", "~जोः", "~जाम\u{94d}";
-        locative: "~जि", "~जोः", "~ट\u{94d}स\u{941}";
-        vocative: "~ट\u{94d}", referred, "~जः";
+    // विराज: 3 words (विराज्, राज्, सम्राज्). Like युज, except in 9 cells: nominative sg, instrumental du, instrumental pl, dative du, dative pl, ablative du, ….
+    declension!("विराज्", 3, "~ज्", like युज;
+        nominative: "~ट्", _, _;
+        accusative: _, _, _;
+        instrumental: _, "~ड्भ्याम्", "~ड्भिः";
+        dative: _, "~ड्भ्याम्", "~ड्भ्यः";
+        ablative: _, "~ड्भ्याम्", "~ड्भ्यः";
+        genitive: _, _, _;
+        locative: _, _, "~ट्सु";
+        vocative: "~ट्", _, _;
+    ),
+    // परवन: 2 words (पर्वन्, भुर्वन्).
+    declension!("पर्वन्", 2, "~न्";
+        nominative: "~", "~णी", "~ाणि";
+        accusative: "~", "~णी", "~ाणि";
+        instrumental: "~णा", "~भ्याम्", "~भिः";
+        dative: "~णे", "~भ्याम्", "~भ्यः";
+        ablative: "~णः", "~भ्याम्", "~भ्यः";
+        genitive: "~णः", "~णोः", "~णाम्";
+        locative: "~णि", "~णोः", "~सु";
+        vocative: "~न्|~", derived, "~ाणि";
+    ),
+    // मरु: 1 words (ऋभु). Like केतु, except in 2 cells: instrumental sg, genitive pl.
+    declension!("मरु", 1, "~ु", like केतु;
+        nominative: _, _, _;
+        accusative: _, _, _;
+        instrumental: "~ुणा", _, _;
+        dative: _, _, _;
+        ablative: _, _, _;
+        genitive: _, _, "~ूणाम्";
+        locative: _, _, _;
+        vocative: _, _, _;
+    ),
+    // जनमन: 1 words (धन्वन्). Like आतमन, except in 8 cells: nominative sg, nominative du, nominative pl, accusative sg, accusative du, accusative pl, ….
+    declension!("जन्मन्", 1, "~न्", like आतमन;
+        nominative: "~", "~नी", "~ानि";
+        accusative: "~", "~नी", "~ानि";
+        instrumental: _, _, _;
+        dative: _, _, _;
+        ablative: _, _, _;
+        genitive: _, _, _;
+        locative: _, _, _;
+        vocative: "~न्|~", _, "~ानि";
     ),
 ];

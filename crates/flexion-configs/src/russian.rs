@@ -94,9 +94,7 @@ pub fn language() -> Language {
                         &["SecondCase"],
                         &["singular"],
                         &[],
-                    )
-                    .fallback(&["Partitive"], "noun", &["Genitive", "Singular"])
-                    .fallback(&["Locative"], "noun", &["Prepositional", "Singular"]),
+                    ),
                 ],
                 lemma: Some(("noun", vec!["Nominative", "Singular"])),
                 citation: vec![("noun", vec!["Genitive", "Singular"])],
@@ -149,7 +147,6 @@ pub fn language() -> Language {
                         any: vec!["present", "future"],
                         none: vec!["participle", "adverbial", "imperative"],
                         from_head: false,
-                        fallbacks: Vec::new(),
                     },
                     group(
                         "past",
@@ -300,7 +297,6 @@ fn group(
         any: vec![],
         none: none.to_vec(),
         from_head: false,
-        fallbacks: Vec::new(),
     }
 }
 

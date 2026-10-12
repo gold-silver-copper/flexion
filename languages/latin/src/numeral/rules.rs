@@ -7,7 +7,7 @@
 use super::paradigms::Declension::{self, *};
 use flexion::Choice;
 
-/// 11 rules and 5 listed words.
+/// 11 rules and 4 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
         "" => [Singulus 62, Bīnus 34, Sescentī 9, Nōnusdecimus 7, Mīlle 2, Trēs 1, Duo 1, Nūlla 1, Milliō 1],
@@ -23,7 +23,6 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "nus" => [Bīnus 34, Singulus 2],
     }
     listed {
-        "duo" => Duo,
         "millio" => Milliō,
         "nonus" => Singulus,
         "nulla" => Nūlla,
