@@ -605,13 +605,13 @@ impl flexion::Label for Auxiliary {
 /// A noun in a case and number.
 #[must_use]
 pub fn noun(lemma: &str, case: Case, number: Number) -> String {
-    Noun::new(lemma).form(noun::Cell::Form(case, number))
+    noun::Noun::new(lemma).form(noun::Cell::Form(case, number))
 }
 
 /// An adjective before a noun: its declension (which article, if any, comes before it), case and agreement.
 #[must_use]
 pub fn adjective(lemma: &str, declension: Declension, case: Case, agreement: Agreement) -> String {
-    Adjective::new(lemma).form(adjective::Cell::Form(declension, case, agreement))
+    adjective::Adjective::new(lemma).form(adjective::Cell::Form(declension, case, agreement))
 }
 
 /// The comparative before a noun (`ein schönerer Tag`).
@@ -622,7 +622,7 @@ pub fn comparative(
     case: Case,
     agreement: Agreement,
 ) -> String {
-    Adjective::new(lemma).form(adjective::Cell::Comparative(declension, case, agreement))
+    adjective::Adjective::new(lemma).form(adjective::Cell::Comparative(declension, case, agreement))
 }
 
 /// The superlative before a noun (`der schönste Tag`).
@@ -633,53 +633,53 @@ pub fn superlative(
     case: Case,
     agreement: Agreement,
 ) -> String {
-    Adjective::new(lemma).form(adjective::Cell::Superlative(declension, case, agreement))
+    adjective::Adjective::new(lemma).form(adjective::Cell::Superlative(declension, case, agreement))
 }
 
 /// The form after a verb (`er ist schön`, `schöner`, `am schönsten`).
 #[must_use]
 pub fn predicative(lemma: &str, degree: Degree) -> String {
-    Adjective::new(lemma).form(adjective::Cell::Predicative(degree))
+    adjective::Adjective::new(lemma).form(adjective::Cell::Predicative(degree))
 }
 
 /// A finite form, as in a main clause (`er fängt an`).
 #[must_use]
 pub fn verb(lemma: &str, tense: Tense, person: Person, number: Number) -> String {
-    Verb::new(lemma).form(verb::Cell::Form(tense, person, number))
+    verb::Verb::new(lemma).form(verb::Cell::Form(tense, person, number))
 }
 
 /// A finite form as in a subordinate clause (`dass er anfängt`): the same as [`verb`] except for separable verbs.
 #[must_use]
 pub fn subordinate(lemma: &str, tense: Tense, person: Person, number: Number) -> String {
-    Verb::new(lemma).form(verb::Cell::Subordinate(tense, person, number))
+    verb::Verb::new(lemma).form(verb::Cell::Subordinate(tense, person, number))
 }
 
 /// The imperative (second person).
 #[must_use]
 pub fn imperative(lemma: &str, number: Number) -> String {
-    Verb::new(lemma).form(verb::Cell::Imperative(number))
+    verb::Verb::new(lemma).form(verb::Cell::Imperative(number))
 }
 
 /// The infinitive.
 #[must_use]
 pub fn infinitive(lemma: &str) -> String {
-    Verb::new(lemma).form(verb::Cell::Infinitive)
+    verb::Verb::new(lemma).form(verb::Cell::Infinitive)
 }
 
 /// The one-word infinitive with `zu` of a separable verb (`anzufangen`).
 #[must_use]
 pub fn zu_infinitive(lemma: &str) -> String {
-    Verb::new(lemma).form(verb::Cell::ZuInfinitive)
+    verb::Verb::new(lemma).form(verb::Cell::ZuInfinitive)
 }
 
 /// A participle.
 #[must_use]
 pub fn participle(lemma: &str, participle: Participle) -> String {
-    Verb::new(lemma).form(verb::Cell::Participle(participle))
+    verb::Verb::new(lemma).form(verb::Cell::Participle(participle))
 }
 
 /// A declined article, determiner or pronoun.
 #[must_use]
 pub fn determiner(lemma: &str, case: Case, agreement: Agreement) -> String {
-    Determiner::new(lemma).form(determiner::Cell::Form(case, agreement))
+    determiner::Determiner::new(lemma).form(determiner::Cell::Form(case, agreement))
 }

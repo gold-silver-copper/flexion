@@ -495,7 +495,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
 
     /// The paradigms `lemma` can follow, likeliest first, each with how
     /// sure and why, given what the caller knows.
-    pub fn readings(&self, lemma: &str, known: &Known<'_, F>) -> Vec<Reading<'_, 'a, P>> {
+    pub fn readings<K: Label>(&self, lemma: &str, known: &Known<'_, K>) -> Vec<Reading<'_, 'a, P>> {
         let mut letters = self.orthography.read(lemma).letters;
         let key = self.orthography.key(&letters);
         if let Some(listed) = self.spelling(&letters, &key).filter(|_| !known.full) {

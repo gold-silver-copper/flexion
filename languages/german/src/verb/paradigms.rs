@@ -151,7 +151,7 @@ pub enum Conjugation {
     Schreiben,
     /// Like `nehmen`: 30 words.
     Nehmen,
-    /// Like `sein`: 29 words.
+    /// Like `sein`: 28 words.
     Sein,
     /// Like `langmachen`: 24 words.
     Langmachen,
@@ -227,6 +227,8 @@ pub enum Conjugation {
     Bekennen,
     /// Like `beklimmen`: 5 words.
     Beklimmen,
+    /// Like `begegnen`: 5 words.
+    Begegnen,
     /// Like `brennen`: 4 words.
     Brennen,
     /// Like `reiten`: 4 words.
@@ -245,8 +247,6 @@ pub enum Conjugation {
     Umhinkönnen,
     /// Like `behalten`: 4 words.
     Behalten,
-    /// Like `begegnen`: 4 words.
-    Begegnen,
     /// Like `reien`: 3 words.
     Reien,
     /// Like `scheren`: 3 words.
@@ -314,6 +314,7 @@ impl Conjugation {
         Conjugation::Darüberliegen,
         Conjugation::Bekennen,
         Conjugation::Beklimmen,
+        Conjugation::Begegnen,
         Conjugation::Brennen,
         Conjugation::Reiten,
         Conjugation::Vierteilen,
@@ -323,7 +324,6 @@ impl Conjugation {
         Conjugation::Fechten,
         Conjugation::Umhinkönnen,
         Conjugation::Behalten,
-        Conjugation::Begegnen,
         Conjugation::Reien,
         Conjugation::Scheren,
         Conjugation::Pflegen,
@@ -598,8 +598,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
         zu_infinitive: "zu~e~en";
         participle: "~e~end", "~e~en";
     ),
-    // Sein: 29 words (regnen, sein, öffnen, atmen, rechnen, leugnen).
-    conjugation!("sein", 29, "~n";
+    // Sein: 28 words (regnen, sein, öffnen, atmen, rechnen, leugnen).
+    conjugation!("sein", 28, "~n";
         present_first: "~", "~n";
         present_second: "~st", "~t";
         present_third: "~t", "~n";
@@ -1776,6 +1776,37 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
         zu_infinitive: "zu~i~en";
         participle: "~i~end", "~o~en";
     ),
+    // Begegnen: 5 words (begegnen, entgegnen, zwangsenteignen, unterzeichnen, berechnen).
+    conjugation!("begegnen", 5, "~n";
+        present_first: "~", "~n";
+        present_second: "~st", "~t";
+        present_third: "~t", "~n";
+        preterite_first: "~te", "~ten";
+        preterite_second: "~test", "~tet";
+        preterite_third: "~te", "~ten";
+        subjunctive_i_first: "~", "~n";
+        subjunctive_i_second: "~st", "~t";
+        subjunctive_i_third: "~", "~n";
+        subjunctive_i_i_first: "~te", "~ten";
+        subjunctive_i_i_second: "~test", "~tet";
+        subjunctive_i_i_third: "~te", "~ten";
+        subordinate_present_first: "~", "~n";
+        subordinate_present_second: "~st", "~t";
+        subordinate_present_third: "~t", "~n";
+        subordinate_preterite_first: "~te", "~ten";
+        subordinate_preterite_second: "~test", "~tet";
+        subordinate_preterite_third: "~te", "~ten";
+        subordinate_subjunctive_i_first: "~", "~n";
+        subordinate_subjunctive_i_second: "~st", "~t";
+        subordinate_subjunctive_i_third: "~", "~n";
+        subordinate_subjunctive_i_i_first: "~te", "~ten";
+        subordinate_subjunctive_i_i_second: "~test", "~tet";
+        subordinate_subjunctive_i_i_third: "~te", "~ten";
+        imperative: "~", "~t";
+        infinitive: referred;
+        zu_infinitive: "zu~n";
+        participle: "~nd", "~t";
+    ),
     // Brennen: 4 words (rennen, nennen, kennen, brennen).
     conjugation!("brennen", 4, "~e~en";
         present_first: "~e~e", "~e~en";
@@ -2054,37 +2085,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
         infinitive: referred;
         zu_infinitive: "zu~a~en";
         participle: "~a~end", "~a~en";
-    ),
-    // Begegnen: 4 words (begegnen, entgegnen, zwangsenteignen, unterzeichnen).
-    conjugation!("begegnen", 4, "~~n";
-        present_first: "~~", "~~n";
-        present_second: "~~st", "~~t";
-        present_third: "~~t", "~~n";
-        preterite_first: "~~te", "~~ten";
-        preterite_second: "~~test", "~~tet";
-        preterite_third: "~~te", "~~ten";
-        subjunctive_i_first: "~~", "~~n";
-        subjunctive_i_second: "~~st", "~~t";
-        subjunctive_i_third: "~~", "~~n";
-        subjunctive_i_i_first: "~~te", "~~ten";
-        subjunctive_i_i_second: "~~test", "~~tet";
-        subjunctive_i_i_third: "~~te", "~~ten";
-        subordinate_present_first: "~~", "~~n";
-        subordinate_present_second: "~~st", "~~t";
-        subordinate_present_third: "~~t", "~~n";
-        subordinate_preterite_first: "~~te", "~~ten";
-        subordinate_preterite_second: "~~test", "~~tet";
-        subordinate_preterite_third: "~~te", "~~ten";
-        subordinate_subjunctive_i_first: "~~", "~~n";
-        subordinate_subjunctive_i_second: "~~st", "~~t";
-        subordinate_subjunctive_i_third: "~~", "~~n";
-        subordinate_subjunctive_i_i_first: "~~te", "~~ten";
-        subordinate_subjunctive_i_i_second: "~~test", "~~tet";
-        subordinate_subjunctive_i_i_third: "~~te", "~~ten";
-        imperative: "~~", "~~t";
-        infinitive: referred;
-        zu_infinitive: "z~u~n";
-        participle: "~~nd", "~~t";
     ),
     // Reien: 3 words (schreien, speien, reien).
     conjugation!("reien", 3, "~e~en";

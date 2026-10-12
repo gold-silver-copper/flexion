@@ -25,7 +25,7 @@ pub mod cell {
 }
 
 /// The systems, the lemma's first.
-pub static GRAMMAR: Systems<'static, u8> = Systems {
+pub static GRAMMAR: Systems<'static, crate::Gender> = Systems {
     cells: 8,
     parts: &[
         System {
@@ -82,6 +82,7 @@ impl From<(crate::Case, crate::Number)> for Cell {
 pub struct Noun<'w> {
     lemma: &'w str,
     given: Vec<(usize, &'w str)>,
+    gender: Option<crate::Gender>,
 }
 
 impl<'w> Noun<'w> {
@@ -91,6 +92,7 @@ impl<'w> Noun<'w> {
         Noun {
             lemma,
             given: Vec::new(),
+            gender: None,
         }
     }
 
@@ -102,10 +104,18 @@ impl<'w> Noun<'w> {
         self
     }
 
-    fn known(&self) -> Known<'_, u8> {
+    /// Its gender, which says which cell its `referred` forms (see its
+    /// declension) are taken from.
+    #[must_use]
+    pub fn gender(mut self, gender: crate::Gender) -> Self {
+        self.gender = Some(gender);
+        self
+    }
+
+    fn known(&self) -> Known<'_, crate::Gender> {
         Known {
             forms: &self.given,
-            feature: None,
+            feature: self.gender,
             full: false,
         }
     }

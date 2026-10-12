@@ -609,71 +609,71 @@ impl flexion::Label for Tense {
 /// A noun in a case and number.
 #[must_use]
 pub fn noun(lemma: &str, case: Case, number: Number) -> String {
-    Noun::new(lemma).form(noun::Cell::Form(case, number))
+    noun::Noun::new(lemma).form(noun::Cell::Form(case, number))
 }
 
 /// The second genitive or second locative singular. A noun without one gives its genitive or prepositional singular.
 #[must_use]
 pub fn noun_second_case(lemma: &str, second_case: SecondCase) -> String {
-    Noun::new(lemma).form(noun::Cell::SecondCase(second_case))
+    noun::Noun::new(lemma).form(noun::Cell::SecondCase(second_case))
 }
 
 /// The long (attributive) form.
 #[must_use]
 pub fn adjective(lemma: &str, case: Case, agreement: Agreement, animacy: Animacy) -> String {
-    Adjective::new(lemma).form(adjective::Cell::Form(case, agreement, animacy))
+    adjective::Adjective::new(lemma).form(adjective::Cell::Form(case, agreement, animacy))
 }
 
 /// The short (predicative) form.
 #[must_use]
 pub fn short_adjective(lemma: &str, agreement: Agreement) -> String {
-    Adjective::new(lemma).form(adjective::Cell::ShortAdjective(agreement))
+    adjective::Adjective::new(lemma).form(adjective::Cell::ShortAdjective(agreement))
 }
 
 /// The infinitive.
 #[must_use]
 pub fn infinitive(lemma: &str) -> String {
-    Verb::new(lemma).form(verb::Cell::Infinitive)
+    verb::Verb::new(lemma).form(verb::Cell::Infinitive)
 }
 
 /// The non-past: present tense for imperfective verbs, future for perfective ones. (The imperfective future is `буду` + infinitive and is not a form of the verb.)
 #[must_use]
 pub fn non_past(lemma: &str, person: Person, number: Number) -> String {
-    Verb::new(lemma).form(verb::Cell::NonPast(person, number))
+    verb::Verb::new(lemma).form(verb::Cell::NonPast(person, number))
 }
 
 /// The past tense.
 #[must_use]
 pub fn past(lemma: &str, agreement: Agreement) -> String {
-    Verb::new(lemma).form(verb::Cell::Past(agreement))
+    verb::Verb::new(lemma).form(verb::Cell::Past(agreement))
 }
 
 /// The imperative.
 #[must_use]
 pub fn imperative(lemma: &str, number: Number) -> String {
-    Verb::new(lemma).form(verb::Cell::Imperative(number))
+    verb::Verb::new(lemma).form(verb::Cell::Imperative(number))
 }
 
 /// A participle's citation form (masculine nominative singular); decline it with `adjective`.
 #[must_use]
 pub fn participle(lemma: &str, participle: Participle) -> String {
-    Verb::new(lemma).form(verb::Cell::Participle(participle))
+    verb::Verb::new(lemma).form(verb::Cell::Participle(participle))
 }
 
 /// A gerund (adverbial participle).
 #[must_use]
 pub fn gerund(lemma: &str, tense: Tense) -> String {
-    Verb::new(lemma).form(verb::Cell::Gerund(tense))
+    verb::Verb::new(lemma).form(verb::Cell::Gerund(tense))
 }
 
 /// A declined pronoun or determiner.
 #[must_use]
 pub fn pronoun(lemma: &str, case: Case, agreement: Agreement, animacy: Animacy) -> String {
-    Pronoun::new(lemma).form(pronoun::Cell::Form(case, agreement, animacy))
+    pronoun::Pronoun::new(lemma).form(pronoun::Cell::Form(case, agreement, animacy))
 }
 
 /// A declined numeral.
 #[must_use]
 pub fn numeral(lemma: &str, case: Case, agreement: Agreement, animacy: Animacy) -> String {
-    Numeral::new(lemma).form(numeral::Cell::Form(case, agreement, animacy))
+    numeral::Numeral::new(lemma).form(numeral::Cell::Form(case, agreement, animacy))
 }

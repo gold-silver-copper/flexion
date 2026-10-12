@@ -16,7 +16,6 @@ pub mod verb;
 pub use adjective::Adjective;
 pub use determiner::Determiner;
 pub use noun::Noun;
-pub use participle::Participle;
 pub use verb::Verb;
 
 /// Grammatical number.
@@ -436,53 +435,53 @@ impl flexion::Label for Participle {
 /// A noun in the given number.
 #[must_use]
 pub fn noun(lemma: &str, number: Number) -> String {
-    Noun::new(lemma).form(noun::Cell::Form(number))
+    noun::Noun::new(lemma).form(noun::Cell::Form(number))
 }
 
 /// An adjective agreeing in gender and number.
 #[must_use]
 pub fn adjective(lemma: &str, gender: Gender, number: Number) -> String {
-    Adjective::new(lemma).form(adjective::Cell::Form(gender, number))
+    adjective::Adjective::new(lemma).form(adjective::Cell::Form(gender, number))
 }
 
 /// The masculine singular before a vowel (`bel`, `nouvel`, `vieil`). An adjective without one gives its masculine singular.
 #[must_use]
 pub fn before_vowel(lemma: &str) -> String {
-    Adjective::new(lemma).form(adjective::Cell::BeforeVowel)
+    adjective::Adjective::new(lemma).form(adjective::Cell::BeforeVowel)
 }
 
 /// A finite form. A pronominal verb's form comes without its pronoun (`souvenir` → `souviens`, as in `je me souviens`).
 #[must_use]
 pub fn verb(lemma: &str, tense: Tense, person: Person, number: Number) -> String {
-    Verb::new(lemma).form(verb::Cell::Form(tense, person, number))
+    verb::Verb::new(lemma).form(verb::Cell::Form(tense, person, number))
 }
 
 /// The imperative.
 #[must_use]
 pub fn imperative(lemma: &str, addressee: Addressee) -> String {
-    Verb::new(lemma).form(verb::Cell::Imperative(addressee))
+    verb::Verb::new(lemma).form(verb::Cell::Imperative(addressee))
 }
 
 /// The infinitive.
 #[must_use]
 pub fn infinitive(lemma: &str) -> String {
-    Verb::new(lemma).form(verb::Cell::Infinitive)
+    verb::Verb::new(lemma).form(verb::Cell::Infinitive)
 }
 
 /// A participle (the past participle in the masculine singular; [`agreeing_participle`] makes it agree).
 #[must_use]
 pub fn participle(lemma: &str, participle: Participle) -> String {
-    Verb::new(lemma).form(verb::Cell::Participle(participle))
+    verb::Verb::new(lemma).form(verb::Cell::Participle(participle))
 }
 
 /// A past participle (given in the masculine singular: `pris`) agreeing in gender and number (`prises`).
 #[must_use]
 pub fn past_participle(lemma: &str, gender: Gender, number: Number) -> String {
-    Participle::new(lemma).form(participle::Cell::PastParticiple(gender, number))
+    participle::Participle::new(lemma).form(participle::Cell::PastParticiple(gender, number))
 }
 
 /// A determiner or numeral agreeing in gender and number.
 #[must_use]
 pub fn determiner(lemma: &str, gender: Gender, number: Number) -> String {
-    Determiner::new(lemma).form(determiner::Cell::Form(gender, number))
+    determiner::Determiner::new(lemma).form(determiner::Cell::Form(gender, number))
 }

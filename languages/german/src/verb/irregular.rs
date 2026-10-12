@@ -5,7 +5,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 7,999 forms.
+/// 8,027 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"abandonnieren	0	abandonniere
@@ -2827,6 +2827,33 @@ gegenchecken	15	checket gegen
 gegenchecken	16	checke gegen
 gegenchecken	17	checken gegen
 gegenchecken	49	checkt gegen
+gegenzeichnen	0	zeichne gegen
+gegenzeichnen	1	zeichnen gegen
+gegenzeichnen	2	zeichnest gegen
+gegenzeichnen	3	zeichnet gegen
+gegenzeichnen	4	zeichnet gegen
+gegenzeichnen	5	zeichnen gegen
+gegenzeichnen	6	zeichnete gegen
+gegenzeichnen	7	zeichneten gegen
+gegenzeichnen	8	zeichnetest gegen
+gegenzeichnen	9	zeichnetet gegen
+gegenzeichnen	10	zeichnete gegen
+gegenzeichnen	11	zeichneten gegen
+gegenzeichnen	12	zeichne gegen
+gegenzeichnen	13	zeichnen gegen
+gegenzeichnen	14	zeichnest gegen
+gegenzeichnen	15	zeichnet gegen
+gegenzeichnen	16	zeichne gegen
+gegenzeichnen	17	zeichnen gegen
+gegenzeichnen	18	zeichnete gegen
+gegenzeichnen	19	zeichneten gegen
+gegenzeichnen	20	zeichnetest gegen
+gegenzeichnen	21	zeichnetet gegen
+gegenzeichnen	22	zeichnete gegen
+gegenzeichnen	23	zeichneten gegen
+gegenzeichnen	48	zeichne gegen
+gegenzeichnen	49	zeichnet gegen
+gegenzeichnen	53	gegengezeichnet
 gehen	6	ging
 gehen	7	gingen
 gehen	8	gingst
@@ -6122,6 +6149,7 @@ umherbewegen	51	umherzubewegen
 umherbewegen	53	umherbewegt
 umleiten	53	umgeleitet
 umpolen	53	umgepolt
+umrechnen	53	umgerechnet
 umschmelzen	2	umschmilzt
 umschmelzen	8	umschmolzest
 umschmelzen	26	umschmilzt

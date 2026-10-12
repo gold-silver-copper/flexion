@@ -21,7 +21,8 @@ allows.
 ```rust
 use ancient_greek::*;
 
-assert_eq!(noun("ἄνθρωπος", Case::Genitive, Number::Singular), "ἀνθρώπου");
+// Vowel length is marked on α, ι, υ, as Wiktionary's tables do.
+assert_eq!(noun("ἄνθρωπος", Case::Genitive, Number::Singular), "ᾰ̓νθρώπου");
 assert_eq!(noun("δῶρον", Case::Nominative, Number::Plural), "δῶρᾰ");
 ```
 
@@ -89,7 +90,6 @@ to be so (`spelled_in_full`).
 | verb | 261 | 64485 | **45.92%** | 50.95% | 0.069 | 53.46% |
 | pronoun | 11 | 375 | **2.40%** | 2.40% | 0.631 | 26.67% |
 | numeral | 2 | 30 | **100.00%** | 100.00% | 0.284 | 100.00% |
-
 
 ## Data and license
 

@@ -7,11 +7,11 @@
 use super::paradigms::Conjugation::{self, *};
 use flexion::Choice;
 
-/// 225 rules and 681 listed words.
+/// 225 rules and 682 listed words.
 pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
     rules {
-        "" => [Machen 1407, Kassieren 1247, Nudeln 812, Richten 324, Lösen 313, Lagen 33, Schreiben 32, Nehmen 30, Sein 29, Langmachen 24, Befördern 19, Dagegenhalten 19, Schwingen 18, Bereiten 18, Zeigen 16, Werden 12, Drangehen 12, Fliegen 11, Wahrnehmen 11, Vorfallen 10, Schwimmen 9, Schmelzen 9, Gelten 8, Schmeißen 8, Halten 8, Bieten 8, Schießen 8, Gegenüberstellen 8, Wehtun 8, Tun 7, Zetteln 7, Drankommen 7, Versetzen 7, Stehen 7, Beissen 6, Binden 6, Gucken 6, Ziehen 6, Verwenden 6, Greifen 5, Schleichen 5, Glänzen 5, Gabeln 5, Darüberliegen 5, Bekennen 5, Beklimmen 5, Brennen 4, Reiten 4, Vierteilen 4, Eilen 4, Notlanden 4, Gegenüberstehen 4, Fechten 4, Umhinkönnen 4, Behalten 4, Begegnen 4, Reien 3, Scheren 3, Pflegen 3, Zucken 3, Ekeln 3, Schlechtmachen 3, Lüsten 3, Endlagern 3],
-        "en" => [Machen 1407, Kassieren 1247, Richten 324, Lösen 313, Lagen 33, Schreiben 32, Nehmen 30, Sein 28, Langmachen 24, Dagegenhalten 19, Schwingen 18, Bereiten 18, Zeigen 16, Werden 12, Drangehen 12, Fliegen 11, Wahrnehmen 11, Vorfallen 10, Schwimmen 9, Schmelzen 9, Gelten 8, Schmeißen 8, Halten 8, Bieten 8, Schießen 8, Gegenüberstellen 8, Drankommen 7, Versetzen 7, Stehen 7, Beissen 6, Binden 6, Gucken 6, Ziehen 6, Verwenden 6, Greifen 5, Schleichen 5, Glänzen 5, Darüberliegen 5, Bekennen 5, Beklimmen 5, Brennen 4, Reiten 4, Vierteilen 4, Eilen 4, Notlanden 4, Gegenüberstehen 4, Fechten 4, Umhinkönnen 4, Behalten 4, Begegnen 4, Reien 3, Scheren 3, Pflegen 3, Zucken 3, Schlechtmachen 3, Lüsten 2],
+        "" => [Machen 1407, Kassieren 1247, Nudeln 812, Richten 324, Lösen 313, Lagen 33, Schreiben 32, Nehmen 30, Sein 28, Langmachen 24, Befördern 19, Dagegenhalten 19, Schwingen 18, Bereiten 18, Zeigen 16, Werden 12, Drangehen 12, Fliegen 11, Wahrnehmen 11, Vorfallen 10, Schwimmen 9, Schmelzen 9, Gelten 8, Schmeißen 8, Halten 8, Bieten 8, Schießen 8, Gegenüberstellen 8, Wehtun 8, Tun 7, Zetteln 7, Drankommen 7, Versetzen 7, Stehen 7, Beissen 6, Binden 6, Gucken 6, Ziehen 6, Verwenden 6, Greifen 5, Schleichen 5, Glänzen 5, Gabeln 5, Darüberliegen 5, Bekennen 5, Beklimmen 5, Begegnen 5, Brennen 4, Reiten 4, Vierteilen 4, Eilen 4, Notlanden 4, Gegenüberstehen 4, Fechten 4, Umhinkönnen 4, Behalten 4, Reien 3, Scheren 3, Pflegen 3, Zucken 3, Ekeln 3, Schlechtmachen 3, Lüsten 3, Endlagern 3],
+        "en" => [Machen 1407, Kassieren 1247, Richten 324, Lösen 313, Lagen 33, Schreiben 32, Nehmen 30, Sein 27, Langmachen 24, Dagegenhalten 19, Schwingen 18, Bereiten 18, Zeigen 16, Werden 12, Drangehen 12, Fliegen 11, Wahrnehmen 11, Vorfallen 10, Schwimmen 9, Schmelzen 9, Gelten 8, Schmeißen 8, Halten 8, Bieten 8, Schießen 8, Gegenüberstellen 8, Drankommen 7, Versetzen 7, Stehen 7, Beissen 6, Binden 6, Gucken 6, Ziehen 6, Verwenden 6, Greifen 5, Schleichen 5, Glänzen 5, Darüberliegen 5, Bekennen 5, Beklimmen 5, Begegnen 5, Brennen 4, Reiten 4, Vierteilen 4, Eilen 4, Notlanden 4, Gegenüberstehen 4, Fechten 4, Umhinkönnen 4, Behalten 4, Reien 3, Scheren 3, Pflegen 3, Zucken 3, Schlechtmachen 3, Lüsten 2],
         "ben" => [Machen 67, Schreiben 17, Nehmen 10, Kassieren 5, Werden 3, Fliegen 2, Lagen 1, Scheren 1],
         "aben" => [Machen 13, Kassieren 1, Lagen 1],
         "bben" => [Machen 7],
@@ -125,11 +125,11 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "oomen" => [Machen 1, Zeigen 1],
         "rmen" => [Machen 16],
         "umen" => [Machen 8, Kassieren 1, Zeigen 1],
-        "nen" => [Machen 84, Sein 21, Schwimmen 6, Kassieren 4, Brennen 4, Umhinkönnen 4, Begegnen 4, Bekennen 3, Beklimmen 3, Schreiben 1, Zeigen 1, Gucken 1],
+        "nen" => [Machen 84, Sein 20, Schwimmen 6, Begegnen 5, Kassieren 4, Brennen 4, Umhinkönnen 4, Bekennen 3, Beklimmen 3, Schreiben 1, Zeigen 1, Gucken 1],
         "fnen" => [Sein 3],
         "gnen" => [Sein 6, Begegnen 3, Kassieren 1],
-        "hnen" => [Machen 19, Sein 4, Kassieren 1, Gucken 1, Begegnen 1],
-        "chnen" => [Sein 4, Begegnen 1],
+        "hnen" => [Machen 19, Sein 3, Begegnen 2, Kassieren 1, Gucken 1],
+        "chnen" => [Sein 3, Begegnen 2],
         "inen" => [Machen 8, Schreiben 1],
         "knen" => [Sein 2],
         "mnen" => [Sein 2],
@@ -291,6 +291,7 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "bemitleiden" => Verwenden,
         "benennen" => Bekennen,
         "beraumen" => Kassieren,
+        "berechnen" => Begegnen,
         "bereiten" => Bereiten,
         "bergen" => Gelten,
         "beringen" => Kassieren,

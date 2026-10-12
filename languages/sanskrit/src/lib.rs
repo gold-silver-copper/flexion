@@ -446,83 +446,83 @@ impl flexion::Label for Tense {
 /// A noun in a case and number.
 #[must_use]
 pub fn noun(lemma: &str, case: Case, number: Number) -> String {
-    Noun::new(lemma).form(noun::Cell::Form(case, number))
+    noun::Noun::new(lemma).form(noun::Cell::Form(case, number))
 }
 
 /// An adjective agreeing in case, gender and number.
 #[must_use]
 pub fn adjective(lemma: &str, case: Case, gender: Gender, number: Number) -> String {
-    Adjective::new(lemma).form(adjective::Cell::Form(case, gender, number))
+    adjective::Adjective::new(lemma).form(adjective::Cell::Form(case, gender, number))
 }
 
 /// The comparative's stem.
 #[must_use]
 pub fn comparative(lemma: &str) -> String {
-    Adjective::new(lemma).form(adjective::Cell::Comparative)
+    adjective::Adjective::new(lemma).form(adjective::Cell::Comparative)
 }
 
 /// The superlative's stem.
 #[must_use]
 pub fn superlative(lemma: &str) -> String {
-    Adjective::new(lemma).form(adjective::Cell::Superlative)
+    adjective::Adjective::new(lemma).form(adjective::Cell::Superlative)
 }
 
 /// The present system: indicative, imperative, optative and subjunctive.
 #[must_use]
 pub fn present(lemma: &str, mood: Mood, voice: Voice, person: Person, number: Number) -> String {
-    Verb::new(lemma).form(verb::Cell::Present(mood, voice, person, number))
+    verb::Verb::new(lemma).form(verb::Cell::Present(mood, voice, person, number))
 }
 
 /// The imperfect.
 #[must_use]
 pub fn imperfect(lemma: &str, voice: Voice, person: Person, number: Number) -> String {
-    Verb::new(lemma).form(verb::Cell::Imperfect(voice, person, number))
+    verb::Verb::new(lemma).form(verb::Cell::Imperfect(voice, person, number))
 }
 
 /// The future.
 #[must_use]
 pub fn future(lemma: &str, voice: Voice, person: Person, number: Number) -> String {
-    Verb::new(lemma).form(verb::Cell::Future(voice, person, number))
+    verb::Verb::new(lemma).form(verb::Cell::Future(voice, person, number))
 }
 
 /// The conditional.
 #[must_use]
 pub fn conditional(lemma: &str, voice: Voice, person: Person, number: Number) -> String {
-    Verb::new(lemma).form(verb::Cell::Conditional(voice, person, number))
+    verb::Verb::new(lemma).form(verb::Cell::Conditional(voice, person, number))
 }
 
 /// The perfect.
 #[must_use]
 pub fn perfect(lemma: &str, voice: Voice, person: Person, number: Number) -> String {
-    Verb::new(lemma).form(verb::Cell::Perfect(voice, person, number))
+    verb::Verb::new(lemma).form(verb::Cell::Perfect(voice, person, number))
 }
 
 /// The aorist (indicative).
 #[must_use]
 pub fn aorist(lemma: &str, voice: Voice, person: Person, number: Number) -> String {
-    Verb::new(lemma).form(verb::Cell::Aorist(voice, person, number))
+    verb::Verb::new(lemma).form(verb::Cell::Aorist(voice, person, number))
 }
 
 /// The infinitive.
 #[must_use]
 pub fn infinitive(lemma: &str) -> String {
-    Verb::new(lemma).form(verb::Cell::Infinitive)
+    verb::Verb::new(lemma).form(verb::Cell::Infinitive)
 }
 
 /// The gerund (absolutive: `having done`).
 #[must_use]
 pub fn gerund(lemma: &str) -> String {
-    Verb::new(lemma).form(verb::Cell::Gerund)
+    verb::Verb::new(lemma).form(verb::Cell::Gerund)
 }
 
 /// A participle's stem; decline it as an adjective.
 #[must_use]
 pub fn participle(lemma: &str, tense: Tense, voice: Voice) -> String {
-    Verb::new(lemma).form(verb::Cell::Participle(tense, voice))
+    verb::Verb::new(lemma).form(verb::Cell::Participle(tense, voice))
 }
 
 /// A declined pronoun.
 #[must_use]
 pub fn pronoun(lemma: &str, case: Case, gender: Gender, number: Number) -> String {
-    Pronoun::new(lemma).form(pronoun::Cell::Form(case, gender, number))
+    pronoun::Pronoun::new(lemma).form(pronoun::Cell::Form(case, gender, number))
 }

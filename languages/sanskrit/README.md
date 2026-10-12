@@ -50,7 +50,7 @@ reason (the rule and its counts).
 |---|---:|---:|---:|---:|---:|---:|
 | noun | 5023 | 1 | 56 | 292 | 1058 | 1319 |
 | adjective | 1964 | 1 | 36 | 127 | 413 | 2700 |
-| verb | 1014 | 1 | 41 | 133 | 445 | 8437 |
+| verb | 1014 | 1 | 41 | 133 | 440 | 8437 |
 | pronoun | 15 | 1 | 1 | 1 | 11 | 308 |
 
 *Words*: the dictionary's words the grammar is learned from. *Systems*: the principal

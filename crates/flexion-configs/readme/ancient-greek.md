@@ -19,7 +19,8 @@ allows.
 ```rust
 use ancient_greek::*;
 
-assert_eq!(noun("ἄνθρωπος", Case::Genitive, Number::Singular), "ἀνθρώπου");
+// Vowel length is marked on α, ι, υ, as Wiktionary's tables do.
+assert_eq!(noun("ἄνθρωπος", Case::Genitive, Number::Singular), "ᾰ̓νθρώπου");
 assert_eq!(noun("δῶρον", Case::Nominative, Number::Plural), "δῶρᾰ");
 ```
 

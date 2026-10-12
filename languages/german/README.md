@@ -63,7 +63,7 @@ reason (the rule and its counts).
 |---|---:|---:|---:|---:|---:|---:|
 | noun | 143828 | 2 | 233 | 9870 | 18601 | 222 |
 | adjective | 14840 | 3 | 61 | 440 | 1991 | 1698 |
-| verb | 9323 | 1 | 64 | 225 | 681 | 7999 |
+| verb | 9323 | 1 | 64 | 225 | 682 | 8027 |
 | determiner | 37 | 1 | 4 | 7 | 9 | 43 |
 
 *Words*: the dictionary's words the grammar is learned from. *Systems*: the principal

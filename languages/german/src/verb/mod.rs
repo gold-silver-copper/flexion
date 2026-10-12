@@ -384,7 +384,7 @@ impl<'w> Verb<'w> {
     /// Its auxiliary, which says which cell its `referred` forms (see its
     /// conjugation) are taken from.
     #[must_use]
-    pub fn auxiliary(mut self, auxiliary: Auxiliary) -> Self {
+    pub fn auxiliary(mut self, auxiliary: crate::Auxiliary) -> Self {
         self.auxiliary = Some(auxiliary);
         self
     }

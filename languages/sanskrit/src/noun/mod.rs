@@ -142,7 +142,7 @@ impl<'w> Noun<'w> {
     /// Its gender, which says which cell its `referred` forms (see its
     /// declension) are taken from.
     #[must_use]
-    pub fn gender(mut self, gender: Gender) -> Self {
+    pub fn gender(mut self, gender: crate::Gender) -> Self {
         self.gender = Some(gender);
         self
     }
