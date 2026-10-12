@@ -496,7 +496,7 @@ fn grammar_files(
         "::{self, *}"
     };
     let r = format!(
-        "//! Which {one} a word takes. The rule with the longest ending the word has\n//! decides, giving each {one} with how many of the dictionary's words with\n//! that ending follow it (`+ N`: words of {many} too few to list); the words\n//! no rule gets right are listed. A rule is kept only when it says something\n//! the broader rule doesn't (another {one}, or whether speakers extend it)\n//! and pays for itself: it must describe the words it covers in fewer bits\n//! than the broader rule does, by more than the rule costs.\n\nuse super::paradigms::{ty}{uses};\nuse flexion::Choice;\n\n{}",
+        "//! Which {one} a word takes. The rule with the longest ending the word has\n//! decides, giving each {one} with how many of the dictionary's words with\n//! that ending follow it; the words no rule gets right are listed. A rule is\n//! kept only when it says something the broader rule doesn't (another {one},\n//! or whether speakers extend it) and pays for itself: it must describe the words it covers in fewer bits\n//! than the broader rule does, by more than the rule costs.\n\nuse super::paradigms::{ty}{uses};\nuse flexion::Choice;\n\n{}",
         choice_const(&one.to_uppercase(), ty, "words", &g.paradigm, name_of)
     );
     files.push((format!("{dir}/rules.rs"), r));
@@ -886,14 +886,9 @@ fn choice_macro<L: flexion::Label>(
             .iter()
             .map(|&(l, n)| format!("{} {n}", name(l)))
             .collect();
-        let rest = if rule.rest > 0 {
-            format!(" + {}", rule.rest)
-        } else {
-            String::new()
-        };
         let _ = writeln!(
             s,
-            "        {} => [{}]{rest},",
+            "        {} => [{}],",
             Lit(&rule.ending),
             counts.join(", ")
         );

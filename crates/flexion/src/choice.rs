@@ -36,10 +36,8 @@ pub enum Side {
 pub struct Rule<'a, L: Label> {
     pub ending: Cow<'a, str>,
     /// How many of the dictionary's words with this ending take each value,
-    /// commonest first: the main ones.
+    /// commonest first.
     pub counts: Cow<'a, [(L, u32)]>,
-    /// How many take the others, each too few to list.
-    pub rest: u32,
 }
 
 /// How sure a choice is about a word.
@@ -100,7 +98,7 @@ impl<L: Label> std::fmt::Display for Reading<'_, '_, L> {
 impl<'a, L: Label> Rule<'a, L> {
     /// How many words the rule covers.
     pub fn total(&self) -> u32 {
-        self.counts.iter().map(|&(_, n)| n).sum::<u32>() + self.rest
+        self.counts.iter().map(|&(_, n)| n).sum()
     }
 
     /// How many of them take `value`.
@@ -261,17 +259,14 @@ mod tests {
                 Rule {
                     ending: "".into(),
                     counts: Cow::Owned(vec![(0, 100), (1, 40), (2, 50)]),
-                    rest: 0,
                 },
                 Rule {
                     ending: "а".into(),
                     counts: Cow::Owned(vec![(1, 30), (0, 2)]),
-                    rest: 0,
                 },
                 Rule {
                     ending: "ость".into(),
                     counts: Cow::Owned(vec![(2, 50), (0, 1)]),
-                    rest: 0,
                 },
             ]),
             exceptions: Cow::Owned(vec![("путь".into(), 3)]),
@@ -306,7 +301,6 @@ mod tests {
         let even = Rule {
             ending: "".into(),
             counts: Cow::Owned(vec![(0u16, 837), (1, 516)]),
-            rest: 0,
         };
         // Polish masculine genitives in -a and -u: neither is productive.
         assert!(!even.productive());

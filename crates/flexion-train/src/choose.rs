@@ -109,7 +109,6 @@ pub fn learn<'a, L: Label + Hash + Ord>(
             Some(Rule {
                 ending: Cow::Owned(ending.to_string()),
                 counts: Cow::Owned(list),
-                rest: 0,
             })
         })
         .collect();
@@ -160,7 +159,6 @@ pub fn learn_starts<'a, L: Label + Hash + Ord>(
         .map(|r| Rule {
             ending: Cow::Owned(back(&r.ending)),
             counts: r.counts.clone(),
-            rest: r.rest,
         })
         .collect();
     rules.sort_by(|a, b| a.ending.cmp(&b.ending));

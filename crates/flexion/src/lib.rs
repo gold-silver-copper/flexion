@@ -157,25 +157,24 @@ impl std::error::Error for UnknownValue {}
 #[macro_export]
 macro_rules! choice {
     (
-        rules { $( $ending:literal => [ $( $value:tt $count:literal ),* $(,)? ] $(+ $rest:literal)? ),* $(,)? }
+        rules { $( $ending:literal => [ $( $value:tt $count:literal ),* $(,)? ] ),* $(,)? }
         listed { $( $word:literal => $listed:tt ),* $(,)? }
     ) => {
-        $crate::choice!(@ $crate::Side::End; $( $ending => [ $( $value $count ),* ] (0 $(+ $rest)?) ),*; $( $word => $listed ),*)
+        $crate::choice!(@ $crate::Side::End; $( $ending => [ $( $value $count ),* ] ),*; $( $word => $listed ),*)
     };
     (
-        starts { $( $ending:literal => [ $( $value:tt $count:literal ),* $(,)? ] $(+ $rest:literal)? ),* $(,)? }
+        starts { $( $ending:literal => [ $( $value:tt $count:literal ),* $(,)? ] ),* $(,)? }
         listed { $( $word:literal => $listed:tt ),* $(,)? }
     ) => {
-        $crate::choice!(@ $crate::Side::Start; $( $ending => [ $( $value $count ),* ] (0 $(+ $rest)?) ),*; $( $word => $listed ),*)
+        $crate::choice!(@ $crate::Side::Start; $( $ending => [ $( $value $count ),* ] ),*; $( $word => $listed ),*)
     };
-    (@ $side:expr; $( $ending:literal => [ $( $value:tt $count:literal ),* ] ($($rest:tt)*) ),*; $( $word:literal => $listed:tt ),*) => {
+    (@ $side:expr; $( $ending:literal => [ $( $value:tt $count:literal ),* ] ),*; $( $word:literal => $listed:tt ),*) => {
         $crate::Choice {
             side: $side,
             rules: ::std::borrow::Cow::Borrowed(&[ $(
                 $crate::Rule {
                     ending: ::std::borrow::Cow::Borrowed($ending),
                     counts: ::std::borrow::Cow::Borrowed(&[ $( ($value, $count) ),* ]),
-                    rest: $($rest)*,
                 }
             ),* ]),
             exceptions: ::std::borrow::Cow::Borrowed(&[ $(

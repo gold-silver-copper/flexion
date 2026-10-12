@@ -187,10 +187,10 @@ it pays for itself.
   that does as well as its paradigm.
 - **Choices.** Which paradigm a word takes is a list of rules on its ending: the longest
   rule the word has decides, with how many of the dictionary's words with that ending
-  take each paradigm (its main ones; the rest lumped, `+ N`). A rule is kept only when it
-  says something the broader rule doesn't (another paradigm, or another productivity:
-  Wilson & Li's pruning) and describes its words in fewer bits than the broader rule
-  does, by more than the rule costs (minimum description length). Words no rule gets
+  take each paradigm. A rule is kept only when it says something the broader rule
+  doesn't (another paradigm, or another productivity: Wilson & Li's pruning) and
+  describes its words in fewer bits than the broader rule does, by more than the rule
+  costs (minimum description length). Words no rule gets
   right are listed. A rule's status follows Yang's Tolerance Principle: a rule with few
   enough exceptions is productive (`regular`); otherwise speakers vary (`unsettled`).
   (The principle wants a core of frequent words; with no frequencies in the dumps it is
