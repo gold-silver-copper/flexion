@@ -228,16 +228,20 @@ fn try_language(
         if errors > 0 {
             let mut shown = 0;
             'words: for l in test.iter().step_by(7) {
-                let plain = g.orthography.write(&l.key, None, flexion::Casing::Lower);
+                let full = flexion::Known {
+                    full: true,
+                    ..flexion::Known::default()
+                };
                 for (cell, fs) in l.cells.iter().enumerate() {
                     let Some(want) = fs.first() else { continue };
-                    let c = g.candidates(&plain, cell, &flexion::Known::default());
+                    let c = g.candidates(&l.full, cell, &full);
                     if c.first()
                         .is_some_and(|c| !eval::same_form(&g.orthography, &c.form, want))
                     {
                         let top: Vec<String> = c.iter().take(2).map(ToString::to_string).collect();
                         println!(
-                            "    {plain} cell {cell}: want {want}; got {}",
+                            "    {} cell {cell}: want {want}; got {}",
+                            l.full,
                             top.join(" | ")
                         );
                         shown += 1;
@@ -327,12 +331,7 @@ fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Res
                 let class = a.class_of(r.value);
                 let places: String = class
                     .and_then(|c| a.pattern_of(c))
-                    .map(|p| {
-                        p.places
-                            .iter()
-                            .map(|x| if *x == flexion::Place::Stem { 's' } else { 'E' })
-                            .collect()
-                    })
+                    .map(|p| p.places.iter().map(|&x| place_letter(x)).collect())
                     .unwrap_or_default();
                 println!(
                     "stress class {:?} vowel {:?} {places}: {:.2} (rule -{} {:?})",
@@ -378,14 +377,7 @@ fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Res
     println!("paradigms {}, with one word {singles}", g.paradigms.len());
     if let Some(a) = &g.accent {
         for p in a.patterns.iter().take(30) {
-            let places: String = p
-                .places
-                .iter()
-                .map(|x| match x {
-                    flexion::Place::Stem => 's',
-                    flexion::Place::Ending => 'E',
-                })
-                .collect();
+            let places: String = p.places.iter().map(|&x| place_letter(x)).collect();
             println!("accent {:4} {:6} {places}", p.name, p.words);
         }
     }
@@ -454,4 +446,13 @@ fn build(lang: &Language) -> Result<(), String> {
         t.elapsed().as_secs_f64()
     );
     Ok(())
+}
+
+/// One letter per accent place, for patterns printed in a row.
+fn place_letter(p: flexion::Place) -> char {
+    match p {
+        flexion::Place::Stem => 's',
+        flexion::Place::Ending => 'E',
+        flexion::Place::Recessive => 'r',
+    }
 }

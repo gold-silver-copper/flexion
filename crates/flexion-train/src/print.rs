@@ -271,6 +271,9 @@ fn part_files(
     if let Some(f) = feature_name {
         let _ = writeln!(m, "mod {};", snake(f));
     }
+    if g.accent.is_some() {
+        m.push_str("pub mod accent;\n");
+    }
     if g.compound.is_some() {
         m.push_str("mod compounds;\n");
     }
@@ -284,7 +287,7 @@ fn part_files(
     m.push_str("}\n\n");
     let _ = writeln!(
         m,
-        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    referrals: {referrals},\n    feature: {feature},\n    compound: {},\n    accent: None,\n    laws: None,\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    hidden: {hidden:?},\n    irregular: Cow::Borrowed(irregular::IRREGULAR),\n    smoothing: {:?},\n    sharpness: {:?},\n}};",
+        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    referrals: {referrals},\n    feature: {feature},\n    compound: {},\n    accent: {accent},\n    laws: None,\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    hidden: {hidden:?},\n    irregular: Cow::Borrowed(irregular::IRREGULAR),\n    smoothing: {:?},\n    sharpness: {:?},\n}};",
         g.cells,
         g.lemma_cell,
         g.capitalized,
@@ -298,7 +301,17 @@ fn part_files(
         g.smoothing,
         g.sharpness,
         hidden = g.hidden,
-        generics = feature_name.map_or(String::new(), |f| format!(", u8, crate::{f}")),
+        generics = match (g.accent.is_some(), feature_name) {
+            (false, None) => String::new(),
+            (true, None) => ", accent::AccentClass".to_string(),
+            (false, Some(f)) => format!(", u8, crate::{f}"),
+            (true, Some(f)) => format!(", accent::AccentClass, crate::{f}"),
+        },
+        accent = if g.accent.is_some() {
+            "Some(flexion::Accent {\n        patterns: Cow::Borrowed(&accent::PATTERNS),\n        classes: Cow::Borrowed(&accent::CLASSES),\n        class: accent::CLASS,\n        circumflex: Cow::Borrowed(&accent::CIRCUMFLEX),\n        long_finals: Cow::Borrowed(&accent::LONG_FINALS),\n    })"
+        } else {
+            "None"
+        },
         referrals = feature_name.map_or("Cow::Borrowed(&[])".to_string(), |f| format!(
             "Cow::Borrowed(&{}::REFERRALS)",
             snake(f)
@@ -436,6 +449,9 @@ fn part_files(
         p.push_str("    ),\n");
     }
     p.push_str("];\n");
+    if g.paradigms.is_empty() {
+        p = without_macro(&p, "/// Writes one", "/// Every ");
+    }
     files.push((format!("{dir}/paradigms.rs"), p));
 
     // rules.rs
@@ -446,7 +462,12 @@ fn part_files(
     );
     let _ = writeln!(
         r,
-        "use super::paradigms::{ty}::{{self, *}};\nuse flexion::Choice;\n"
+        "use super::paradigms::{ty}{};\nuse flexion::Choice;\n",
+        if g.paradigm.rules.is_empty() && g.paradigm.exceptions.is_empty() {
+            ""
+        } else {
+            "::{self, *}"
+        }
     );
     let _ = writeln!(
         r,
@@ -543,6 +564,13 @@ fn part_files(
         files.push((format!("{dir}/{}.rs", snake(f)), r));
     }
 
+    if let Some(a) = &g.accent {
+        files.push((
+            format!("{dir}/accent.rs"),
+            accent_file(a, layout, &variants, many),
+        ));
+    }
+
     // compounds.rs
     if let Some(c) = &g.compound {
         let mut r = String::new();
@@ -600,7 +628,10 @@ fn part_files(
         ir,
         "//! The dictionary's forms no {one} gives, as it writes them: `(word, cell,\n//! form)`, sorted. They are the answer for that word and cell.\n"
     );
-    ir.push_str("use super::cell::*;\nuse std::borrow::Cow;\n\n");
+    if !part.learned.irregular.is_empty() {
+        ir.push_str("use super::cell::*;\n");
+    }
+    ir.push_str("use std::borrow::Cow;\n\n");
     let _ = writeln!(
         ir,
         "pub(super) static IRREGULAR: &[(Cow<'static, str>, u16, Cow<'static, str>)] = flexion::irregular! {{"
@@ -633,7 +664,7 @@ fn orthography(script: &Script) -> String {
         .map(|(c, p, k)| format!("({c:?}, {p:?}, {k})"))
         .collect();
     format!(
-        "//! How the language is written: its vowels, and the marks it reads and\n//! writes.\n\nuse flexion::Orthography;\n\npub(crate) const ORTHOGRAPHY: Orthography<'static> = Orthography {{\n    lowercase: {},\n    vowels: {:?},\n    stress_marks: {:?},\n    stressed: &[{}],\n    implicit: {:?},\n    dropped: {:?},\n    mark_monosyllables: {},\n    folded: &[{}],\n}};\n",
+        "//! How the language is written: its vowels, and the marks it reads and\n//! writes.\n\nuse flexion::Orthography;\n\npub(crate) const ORTHOGRAPHY: Orthography<'static> = Orthography {{\n    lowercase: {},\n    vowels: {:?},\n    stress_marks: {:?},\n    stressed: &[{}],\n    implicit: {:?},\n    dropped: {:?},\n    mark_monosyllables: {},\n    folded: &[{}],\n    prosody: {},\n}};\n",
         script.lowercase,
         script.vowels,
         script.stress_marks,
@@ -647,6 +678,10 @@ fn orthography(script: &Script) -> String {
             .map(|(a, b)| format!("({a:?}, {b:?})"))
             .collect::<Vec<_>>()
             .join(", "),
+        script.prosody.as_ref().map_or("None".to_string(), |p| format!(
+            "Some(flexion::Prosody {{\n        diphthongs: &{:?},\n        hiatus: {:?},\n        long: {:?},\n        short_finals: &{:?},\n        acute: {},\n        circumflex: {},\n    }})",
+            p.diphthongs, p.hiatus, p.long, p.short_finals, p.acute, p.circumflex
+        )),
     )
 }
 
@@ -724,6 +759,231 @@ fn library(lang: &Language, parts: &[Part<'_, '_>]) -> Result<String, String> {
         }
     }
     Ok(s)
+}
+
+/// A part of speech's accent, written out: its patterns as tables of places
+/// (in the paradigms' rows), its classes, the rules choosing a class, and
+/// what endings say about the last syllable.
+fn accent_file(
+    a: &flexion::Accent<'_, u16>,
+    layout: &Layout,
+    paradigms: &[String],
+    many: &str,
+) -> String {
+    let mut s = String::from(
+        "//! Accent. Each word has a class: an accent pattern, which says cell by cell\n\
+         //! which rule places the accent, and the syllable its stem is accented on,\n\
+         //! counted from the lemma's end. `Stem`: where the lemma has it (persistent);\n\
+         //! `Ending`: on the ending's first syllable; `Recessive`: as far from the end\n\
+         //! as the law of limitation allows. The law then moves it where it must, and\n\
+         //! chooses acute or circumflex by the syllables' length.\n\n\
+         use flexion::{AccentPattern, Choice, StressClass};\n\
+         use std::borrow::Cow;\n",
+    );
+    if a.circumflex.iter().any(|c| !c.is_empty()) || !a.long_finals.is_empty() {
+        s.push_str("use super::cell::*;\n");
+    }
+    if !a.patterns.is_empty() {
+        s.push_str("use flexion::Place::*;\n");
+    }
+    s.push('\n');
+    let cell_name = |c: u16| {
+        layout
+            .names
+            .get(usize::from(c))
+            .cloned()
+            .unwrap_or_default()
+    };
+    // The pattern table macro.
+    s.push_str(
+        "/// Writes one accent pattern: the word it is named after, how many words\n/// follow it, then a row of places per line, as the paradigm tables are laid out.\nmacro_rules! pattern {\n    ($name:literal, $words:literal;\n",
+    );
+    let mut k = 0usize;
+    let mut order: Vec<usize> = Vec::new();
+    for row in &layout.rows {
+        let args: Vec<String> = row
+            .cells
+            .iter()
+            .map(|&c| {
+                order.push(c);
+                k += 1;
+                format!("$c{}:ident", k - 1)
+            })
+            .collect();
+        let _ = writeln!(s, "     {}: {};", row.label, args.join(", "));
+    }
+    let mut by_cell: Vec<usize> = vec![0; order.len()];
+    for (arg, &cell) in order.iter().enumerate() {
+        if let Some(slot) = by_cell.get_mut(cell) {
+            *slot = arg;
+        }
+    }
+    s.push_str("    ) => {\n        AccentPattern {\n            name: Cow::Borrowed($name),\n            words: $words,\n            places: Cow::Borrowed(&[");
+    let places: Vec<String> = by_cell.iter().map(|a| format!("$c{a}")).collect();
+    s.push_str(&places.join(", "));
+    s.push_str("]),\n        }\n    };\n}\n\n");
+    let _ = writeln!(
+        s,
+        "/// The accent patterns, commonest first.\npub static PATTERNS: [AccentPattern<'static>; {}] = [",
+        a.patterns.len()
+    );
+    for p in a.patterns.iter() {
+        let _ = writeln!(
+            s,
+            "    // Like `{}`: {} words.\n    pattern!({:?}, {};",
+            p.name,
+            thousands(u64::from(p.words)),
+            p.name.as_ref(),
+            p.words
+        );
+        for row in &layout.rows {
+            let cells: Vec<String> = row
+                .cells
+                .iter()
+                .map(|&c| {
+                    format!(
+                        "{:?}",
+                        p.places.get(c).copied().unwrap_or(flexion::Place::Stem)
+                    )
+                })
+                .collect();
+            let _ = writeln!(s, "        {}: {};", row.label, cells.join(", "));
+        }
+        s.push_str("    ),\n");
+    }
+    s.push_str("];\n\n");
+    // Classes.
+    let mut names: Vec<String> = Vec::new();
+    for c in a.classes.iter() {
+        let base = variant(&c.name);
+        let mut v = base.clone();
+        let mut n = 2;
+        while names.contains(&v) {
+            v = format!("{base}{n}");
+            n += 1;
+        }
+        names.push(v);
+    }
+    s.push_str(
+        "/// Every accent class: a pattern and the stem's accented syllable.\n#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]\npub enum AccentClass {\n",
+    );
+    for (v, c) in names.iter().zip(a.classes.iter()) {
+        let pattern = a
+            .patterns
+            .get(usize::from(c.pattern))
+            .map_or("", |p| p.name.as_ref());
+        let syllable = c
+            .vowel
+            .map_or("never on the stem".to_string(), |v| match v {
+                0 => "the stem accented on the lemma's last syllable".to_string(),
+                1 => "the stem accented on its next-to-last".to_string(),
+                n => format!("the stem accented on its syllable {} from the end", n + 1),
+            });
+        let _ = writeln!(
+            s,
+            "    /// Pattern `{pattern}`, {syllable}: {} words.\n    {v},",
+            thousands(u64::from(c.words))
+        );
+    }
+    let _ = writeln!(
+        s,
+        "}}\n\nimpl AccentClass {{\n    /// Every class, in order.\n    pub const ALL: [AccentClass; {n}] = [{}];\n}}\n\nimpl flexion::Label for AccentClass {{\n    fn index(self) -> usize {{\n        self as usize\n    }}\n    fn from_index(index: usize) -> Option<Self> {{\n        Self::ALL.get(index).copied()\n    }}\n}}\n",
+        names
+            .iter()
+            .map(|v| format!("AccentClass::{v}"))
+            .collect::<Vec<_>>()
+            .join(", "),
+        n = names.len()
+    );
+    let _ = writeln!(
+        s,
+        "/// The classes' patterns and stem syllables.\npub static CLASSES: [StressClass<'static>; {}] = [",
+        a.classes.len()
+    );
+    for c in a.classes.iter() {
+        let pattern = a
+            .patterns
+            .get(usize::from(c.pattern))
+            .map_or("", |p| p.name.as_ref());
+        let _ = writeln!(
+            s,
+            "    StressClass {{\n        name: Cow::Borrowed({:?}),\n        pattern: {}, // {pattern}\n        vowel: {:?},\n        words: {},\n    }},",
+            c.name.as_ref(),
+            c.pattern,
+            c.vowel,
+            c.words
+        );
+    }
+    s.push_str("];\n\n");
+    let value = |l: u16| names.get(usize::from(l)).cloned().unwrap_or_default();
+    let _ = writeln!(
+        s,
+        "{}/// Which class a word is of: {} rules and {} listed words.\npub const CLASS: Choice<'static, AccentClass> = flexion::choice! {{\n    rules {{",
+        if a.class.rules.is_empty() && a.class.exceptions.is_empty() {
+            ""
+        } else {
+            "use AccentClass::*;\n\n"
+        },
+        thousands(a.class.rules.len() as u64),
+        thousands(a.class.exceptions.len() as u64)
+    );
+    for rule in a.class.rules.iter() {
+        let counts: Vec<String> = rule
+            .counts
+            .iter()
+            .map(|&(l, n)| format!("{} {n}", value(l)))
+            .collect();
+        let _ = writeln!(
+            s,
+            "        {:?} => [{}],",
+            rule.ending.as_ref(),
+            counts.join(", ")
+        );
+    }
+    s.push_str("    }\n    listed {\n");
+    for (w, l) in a.class.exceptions.iter() {
+        let _ = writeln!(s, "        {:?} => {},", w.as_ref(), value(*l));
+    }
+    s.push_str("    }\n};\n\n");
+    let _ = writeln!(
+        s,
+        "/// Per {}, the cells whose ending takes the circumflex when accented on\n/// its last syllable (`θεοῦ`).\npub static CIRCUMFLEX: [Cow<'static, [u16]>; {}] = [",
+        many.trim_end_matches('s'),
+        a.circumflex.len()
+    );
+    for (cells, p) in a.circumflex.iter().zip(paradigms) {
+        let names: Vec<String> = cells.iter().map(|&c| cell_name(c)).collect();
+        let _ = writeln!(s, "    Cow::Borrowed(&[{}]), // {p}", names.join(", "));
+    }
+    s.push_str("];\n\n");
+    if a.patterns.is_empty() {
+        s = without_macro(
+            &s,
+            "/// Writes one accent pattern",
+            "/// The accent patterns",
+        );
+    }
+    let finals: Vec<String> = a.long_finals.iter().map(|&c| cell_name(c)).collect();
+    let _ = writeln!(
+        s,
+        "/// The cells whose final `-αι`, `-οι` counts as long.\npub static LONG_FINALS: [u16; {}] = [{}];",
+        finals.len(),
+        finals.join(", ")
+    );
+    s
+}
+
+/// `text` without the macro that starts at `from`, up to `to` (a table
+/// with no rows doesn't need its macro).
+fn without_macro(text: &str, from: &str, to: &str) -> String {
+    match (text.find(from), text.find(to)) {
+        (Some(a), Some(b)) if a < b => format!(
+            "{}{}",
+            text.get(..a).unwrap_or(""),
+            text.get(b..).unwrap_or("")
+        ),
+        _ => text.to_string(),
+    }
 }
 
 /// A cell group's variant of a part of speech's `Cell`: `noun_second_case`

@@ -251,6 +251,13 @@ pub fn language() -> Language {
             // diaeresis.
             diphthongs: vec!["αι", "ει", "οι", "υι", "αυ", "ευ", "ηυ", "ου", "ωυ"],
             hiatus_mark: Some('\u{308}'),
+            // The law of limitation: η, ω, a macron or an iota subscript make
+            // a vowel long, the circumflex stands only on a long one, and a
+            // final -αι, -οι counts as short.
+            long_vowels: "ηω",
+            long_marks: "\u{304}\u{345}",
+            short_finals: vec!["αι", "οι"],
+            circumflex: Some('\u{342}'),
             stress_setting: "accents",
             marks_setting: "length_marks",
             ..Spelling::default()

@@ -419,36 +419,41 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             return vec![(None, 1.0)];
         };
         let letters = word.letters.as_str();
-        let vowels = self.orthography.vowel_count(letters);
-        // Where the lemma's own ending starts: a stress the caller wrote
+        let o = &self.orthography;
+        let positions = stress::positions(o, letters);
+        // Where the lemma's own ending starts: an accent the caller wrote
         // says which patterns the word can follow, and where its stem is
-        // stressed.
+        // accented.
         let lemma_ending = pattern::ending_start(&inf.paradigm.lemma, &inf.stems);
-        let class_place = |class: &crate::StressClass| {
+        let paradigm = inf.reading.value.index();
+        let lemma_finals = self
+            .lemma_cell
+            .map(|c| accent.finals(paradigm, c))
+            .unwrap_or_default();
+        let finals = accent.finals(paradigm, cell);
+        let class_place = |class: &crate::StressClass<'_>| {
             let c = self.lemma_cell?;
             accent.pattern_of(class)?.places.get(c).copied()
         };
         let given = word.stress;
-        let on_stem = given.is_some_and(|g| {
-            let at = letters
-                .char_indices()
-                .filter(|&(_, c)| self.orthography.is_vowel(c))
-                .nth(usize::from(g.vowel))
-                .map_or(letters.len(), |(i, _)| i);
-            at < lemma_ending
-        });
-        // A class fits a stress the caller wrote when its pattern puts the
-        // lemma's stress there (the stem's vowel is then the one written).
+        let given_at = given.map(|g| stress::position(o, letters, g));
+        // A class fits an accent the caller wrote when its pattern puts the
+        // lemma's accent there.
         let fits = |a: A| {
             let Some(class) = accent.class_of(a) else {
                 return false;
             };
             match (given, class_place(class)) {
-                (Some(g), Some(Place::Ending)) => {
-                    stress::place(&self.orthography, letters, lemma_ending, Place::Ending, 0)
-                        == Some(g)
+                (Some(g), Some(place)) => {
+                    stress::place(
+                        o,
+                        letters,
+                        lemma_ending,
+                        lemma_finals,
+                        place,
+                        given_at.unwrap_or(0),
+                    ) == Some(g)
                 }
-                (Some(_), Some(Place::Stem)) => on_stem,
                 _ => true,
             }
         };
@@ -473,16 +478,16 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             else {
                 continue;
             };
-            // The stem's vowel: the one written, when the lemma is stressed
-            // on its stem; else the class's, from the lemma's end.
-            let k = match given {
-                Some(g) if on_stem && class_place(class) == Some(Place::Stem) => Some(g.vowel),
+            // The stem's accented syllable: the one written, when the
+            // lemma's accent is on its stem; else the class's, from the
+            // lemma's end.
+            let k = match given_at {
+                Some(at) if class_place(class) == Some(Place::Stem) => Some(at),
                 _ => class
                     .vowel
-                    .and_then(|v| vowels.checked_sub(1)?.checked_sub(usize::from(v)))
-                    .and_then(|k| u8::try_from(k).ok()),
+                    .and_then(|v| positions.checked_sub(1)?.checked_sub(usize::from(v))),
             };
-            let s = stress::place(&self.orthography, &form, ending, place, k.unwrap_or(0));
+            let s = stress::place(o, &form, ending, finals, place, k.unwrap_or(0));
             match out.iter_mut().find(|e| e.0 == s) {
                 Some(e) => e.1 += reading.probability,
                 None => out.push((s, reading.probability)),

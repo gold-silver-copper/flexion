@@ -159,7 +159,15 @@ fn a_word_the_dictionary_lacks_takes_its_paradigm_with_evidence() {
 
 #[test]
 fn a_printed_grammar_answers_as_the_grammar_it_was_printed_from() {
-    let lang = flexion_configs::russian::language();
+    // Russian has referrals and compounds; Ancient Greek, accent.
+    print_and_compare(flexion_configs::russian::language());
+    print_and_compare(flexion_configs::ancient_greek::language());
+}
+
+/// Print `lang`'s fixture grammar as a crate and check, by compiling and
+/// running it, that it answers every word's every cell as the grammar does.
+fn print_and_compare(lang: Language) {
+    let crate_name = lang.name.replace('-', "_");
     let script = Script::new(&lang.spelling);
     let data = data(&lang, &script);
     let grammars = grammars(&lang, &script, &data);
@@ -170,15 +178,16 @@ fn a_printed_grammar_answers_as_the_grammar_it_was_printed_from() {
         .map(|(spec, learned)| flexion_train::print::Part { spec, learned })
         .collect();
     let files = flexion_train::print::files(&lang, &script, &parts, "").expect("printed");
-    let dir = PathBuf::from(env!("CARGO_TARGET_TMPDIR")).join("printed-russian");
+    let dir = PathBuf::from(env!("CARGO_TARGET_TMPDIR")).join(format!("printed-{}", lang.name));
     flexion_train::print::write(&dir, &files).expect("written");
     // A crate of its own, depending on this workspace's runtime.
     let runtime = Path::new(env!("CARGO_MANIFEST_DIR")).join("../flexion");
     std::fs::write(
         dir.join("Cargo.toml"),
         format!(
-            "[package]\nname = \"russian\"\nversion = \"0.0.0\"\nedition = \"2024\"\npublish = false\n\n\
+            "[package]\nname = \"{}\"\nversion = \"0.0.0\"\nedition = \"2024\"\npublish = false\n\n\
              [dependencies]\nflexion = {{ path = {:?} }}\n\n[workspace]\n",
+            lang.name,
             runtime.display().to_string()
         ),
     )
@@ -198,7 +207,7 @@ fn a_printed_grammar_answers_as_the_grammar_it_was_printed_from() {
                     .collect();
                 let _ = writeln!(
                     test,
-                    "    let c = russian::{}::GRAMMAR.candidates({:?}, {cell}, &Known::default());\n    \
+                    "    let c = {crate_name}::{}::GRAMMAR.candidates({:?}, {cell}, &Known::default());\n    \
                      assert_eq!(c.iter().map(|c| c.form.as_str()).collect::<Vec<_>>(), {forms:?});\n    \
                      assert_eq!(c.iter().map(|c| c.probability).collect::<Vec<f32>>(), [{}]);",
                     part.name,
@@ -223,6 +232,8 @@ fn a_printed_grammar_answers_as_the_grammar_it_was_printed_from() {
         ])
         .current_dir(&dir)
         .env("CARGO_TARGET_DIR", dir.join("target"))
+        // The printed code is as clean as code written by hand.
+        .env("RUSTFLAGS", "-D warnings")
         .status()
         .expect("cargo runs");
     assert!(

@@ -212,6 +212,16 @@ pub struct Spelling {
     /// The mark that keeps two vowels apart (the diaeresis): letters with it
     /// never close a diphthong.
     pub hiatus_mark: Option<char>,
+    /// Vowels that are always long (Greek `η`, `ω`); set for a language with
+    /// a law of limitation (see [`flexion::Prosody`]).
+    pub long_vowels: &'static str,
+    /// Marks that make a vowel long (the macron, the iota subscript).
+    pub long_marks: &'static str,
+    /// Diphthongs short at a word's end (`αι`, `οι`).
+    pub short_finals: Vec<&'static str>,
+    /// The stress mark that can only stand on a long vowel (the circumflex):
+    /// a vowel read with it is read long (`ᾶ` as `ᾱ`).
+    pub circumflex: Option<char>,
     /// Name of the generated setting that turns stress marks off (`stress`,
     /// `accents`); empty for no setting.
     pub stress_setting: &'static str,

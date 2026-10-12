@@ -5,6 +5,7 @@
 use crate::choose::{self, Settings};
 use crate::extract::Lexeme;
 use crate::skeleton;
+use flexion::Finals;
 use flexion::pattern;
 use flexion::{
     Accent, AccentPattern, Compound, Form, Grammar, Orthography, Paradigm, Place, Referral,
@@ -796,97 +797,193 @@ fn accent<'s>(
     shape: &Shape,
     settings: Settings,
 ) -> (Accent<'s, u16>, HashMap<String, u16>) {
-    // Per word: per cell, the places that give its stress; and its stem vowel.
-    struct Seen {
-        places: Vec<Option<(bool, bool)>>,
-        stem_vowel: Option<u8>,
-        complete: bool,
-    }
-    let mut seen: Vec<Seen> = Vec::with_capacity(words.len());
+    // Per word: per cell, its accent, letters and where the ending starts;
+    // and where its lemma accents its stem.
+    type Fact = (flexion::Stress, String, usize);
+    let mut facts: Vec<(u16, Vec<Option<Fact>>, Option<usize>)> = Vec::with_capacity(words.len());
     for (w, &p) in words.iter().zip(assignment) {
         let Some(par) = paradigms.get(usize::from(p)) else {
-            seen.push(Seen {
-                places: vec![None; shape.cells],
-                stem_vowel: None,
-                complete: false,
-            });
+            facts.push((p, vec![None; shape.cells], None));
             continue;
         };
         let stems = par.stems(orthography, &w.letters).unwrap_or_default();
-        // The stem's vowel: where cells stressed before their ending are.
-        let mut stem_votes: BTreeMap<u8, u32> = BTreeMap::new();
-        let mut facts: Vec<Option<(flexion::Stress, String, usize)>> = Vec::new();
-        for c in 0..shape.cells {
-            let fact = w.cells.get(c).and_then(|fs| fs.first()).and_then(|f| {
-                let s = f.stress?;
+        let form = |c: usize| w.cells.get(c).and_then(|fs| fs.first());
+        let cells: Vec<Option<Fact>> = (0..shape.cells)
+            .map(|c| {
+                let f = form(c)?;
                 let pat = par.pattern(c).map(usual)?;
-                let ending = pattern::ending_start(pat, &stems);
-                Some((s, f.letters.clone(), ending))
-            });
-            if let Some((s, letters, ending)) = &fact {
-                let at = vowel_at(orthography, letters, s.vowel);
-                if at < *ending {
-                    *stem_votes.entry(s.vowel).or_default() += 1;
-                }
-            }
-            facts.push(fact);
-        }
-        let stem_vowel = stem_votes.iter().max_by_key(|e| *e.1).map(|e| *e.0);
-        let places: Vec<Option<(bool, bool)>> = facts
-            .iter()
-            .map(|fact| {
-                fact.as_ref().map(|(s, letters, ending)| {
-                    let e = flexion::stress_place(orthography, letters, *ending, Place::Ending, 0)
-                        == Some(*s);
-                    let st = match stem_vowel {
-                        Some(k) => {
-                            flexion::stress_place(orthography, letters, *ending, Place::Stem, k)
-                                == Some(*s)
-                        }
-                        None => vowel_at(orthography, letters, s.vowel) < *ending,
-                    };
-                    (st, e)
-                })
+                Some((
+                    f.stress?,
+                    f.letters.clone(),
+                    pattern::ending_start(pat, &stems),
+                ))
             })
             .collect();
-        let complete = places
-            .iter()
-            .enumerate()
-            .all(|(c, p)| p.is_some() || shape.fallback.get(c).is_some_and(Option::is_some));
-        seen.push(Seen {
-            places,
-            stem_vowel,
-            complete,
-        });
+        // The lemma's accent; else where the cells accented before their
+        // ending have it most often.
+        let lemma = shape
+            .lemma_cell
+            .and_then(form)
+            .filter(|f| f.stress.is_some());
+        let stem = match lemma {
+            Some(f) => f
+                .stress
+                .map(|s| flexion::stress_position(orthography, &f.letters, s)),
+            None => {
+                let mut votes: BTreeMap<usize, u32> = BTreeMap::new();
+                for (s, letters, ending) in cells.iter().flatten() {
+                    if vowel_at(orthography, letters, s.vowel) < *ending {
+                        *votes
+                            .entry(flexion::stress_position(orthography, letters, *s))
+                            .or_default() += 1;
+                    }
+                }
+                votes.iter().max_by_key(|e| *e.1).map(|e| *e.0)
+            }
+        };
+        facts.push((p, cells, stem));
     }
-    // Patterns: the stress of complete words, each cell on the ending where
-    // the ending gives its stress; kept if MIN_WORDS words have it.
-    let fits = |pat: &[Place], places: &[Option<(bool, bool)>]| {
-        pat.iter().zip(places).all(|(pl, p)| match (pl, p) {
-            (_, None) => true,
-            (Place::Stem, Some((s, _))) => *s,
-            (Place::Ending, Some((_, e))) => *e,
+    let explains = |fact: &Fact, finals: Finals, place: Place, stem: Option<usize>| {
+        (place != Place::Stem || stem.is_some())
+            && flexion::stress_place(
+                orthography,
+                &fact.1,
+                fact.2,
+                finals,
+                place,
+                stem.unwrap_or(0),
+            ) == Some(fact.0)
+    };
+    let explained = |fact: &Fact, long: bool, stem: Option<usize>| {
+        [false, true].iter().any(|&circumflex| {
+            Place::ALL
+                .iter()
+                .any(|&place| explains(fact, Finals { circumflex, long }, place, stem))
         })
     };
-    let agreement = |pat: &[Place], places: &[Option<(bool, bool)>]| {
+    // Cells whose final -αι, -οι is long: where reading it long explains
+    // more words' accents.
+    let long_finals: Vec<u16> = (0..shape.cells)
+        .filter(|&c| {
+            let (mut short, mut long) = (0u32, 0u32);
+            for (_, cells, stem) in &facts {
+                if let Some(Some(fact)) = cells.get(c) {
+                    short += u32::from(explained(fact, false, *stem));
+                    long += u32::from(explained(fact, true, *stem));
+                }
+            }
+            long > short
+        })
+        .filter_map(|c| u16::try_from(c).ok())
+        .collect();
+    let is_long = |c: usize| u16::try_from(c).is_ok_and(|c| long_finals.binary_search(&c).is_ok());
+    // Per paradigm, the cells whose ending's last syllable, accented, most
+    // often takes the circumflex.
+    let mut votes: HashMap<(u16, usize), (u32, u32)> = HashMap::new();
+    for (p, cells, stem) in &facts {
+        for (c, fact) in cells.iter().enumerate() {
+            let Some(fact) = fact else { continue };
+            let long = is_long(c);
+            let vote = votes.entry((*p, c)).or_default();
+            let any = |circumflex: bool| {
+                Place::ALL
+                    .iter()
+                    .any(|&place| explains(fact, Finals { circumflex, long }, place, *stem))
+            };
+            let (acute, circ) = (any(false), any(true));
+            // Only an accent the choice of kind decides counts.
+            if acute != circ {
+                vote.0 += u32::from(acute);
+                vote.1 += u32::from(circ);
+            }
+        }
+    }
+    let mut circumflex: Vec<Vec<u16>> = vec![Vec::new(); paradigms.len()];
+    for (&(p, c), &(acute, circ)) in &votes {
+        if circ > acute
+            && let (Some(cells), Ok(c)) = (circumflex.get_mut(usize::from(p)), u16::try_from(c))
+        {
+            cells.push(c);
+        }
+    }
+    for cells in &mut circumflex {
+        cells.sort_unstable();
+    }
+    let finals = |p: u16, c: usize| Finals {
+        circumflex: circumflex
+            .get(usize::from(p))
+            .is_some_and(|cells| u16::try_from(c).is_ok_and(|c| cells.binary_search(&c).is_ok())),
+        long: is_long(c),
+    };
+    // Per word: per cell, the places that give its accent (a bit per place
+    // of `Place::ALL`).
+    struct Seen {
+        places: Vec<Option<u8>>,
+        stem: Option<usize>,
+    }
+    let bit = |p: Place| 1u8 << Place::ALL.iter().position(|&x| x == p).unwrap_or(0);
+    let seen: Vec<Seen> = facts
+        .iter()
+        .map(|(p, cells, stem)| Seen {
+            places: cells
+                .iter()
+                .enumerate()
+                .map(|(c, fact)| {
+                    let fact = fact.as_ref()?;
+                    Some(
+                        Place::ALL
+                            .iter()
+                            .filter(|&&place| explains(fact, finals(*p, c), place, *stem))
+                            .fold(0u8, |m, &place| m | bit(place)),
+                    )
+                })
+                .collect(),
+            stem: *stem,
+        })
+        .collect();
+    // Per cell, how many words each place fits: of the places that fit a
+    // word, it is read as the one most words share.
+    let mut usual_place: Vec<[u32; 3]> = vec![[0; 3]; shape.cells];
+    for s in &seen {
+        for (c, p) in s.places.iter().enumerate() {
+            if let (Some(m), Some(counts)) = (p, usual_place.get_mut(c)) {
+                for (i, n) in counts.iter_mut().enumerate() {
+                    if m & (1 << i) != 0 {
+                        *n += 1;
+                    }
+                }
+            }
+        }
+    }
+    let read = |c: usize, mask: Option<u8>| -> Place {
+        let counts = usual_place.get(c).copied().unwrap_or([0; 3]);
+        Place::ALL
+            .iter()
+            .enumerate()
+            .filter(|(i, _)| mask.is_none_or(|m| m & (1 << i) != 0))
+            .max_by_key(|(i, _)| (counts.get(*i).copied().unwrap_or(0), std::cmp::Reverse(*i)))
+            .map_or(Place::Stem, |(_, &p)| p)
+    };
+    let fits = |pat: &[Place], places: &[Option<u8>]| {
         pat.iter()
             .zip(places)
-            .filter(|(pl, p)| match (pl, p) {
-                (Place::Stem, Some((st, _))) => *st,
-                (Place::Ending, Some((_, e))) => *e,
-                _ => false,
-            })
+            .all(|(&pl, p)| p.is_none_or(|m| m & bit(pl) != 0))
+    };
+    let agreement = |pat: &[Place], places: &[Option<u8>]| {
+        pat.iter()
+            .zip(places)
+            .filter(|(pl, p)| p.is_some_and(|m| m & bit(**pl) != 0))
             .count()
     };
+    // Patterns: each word's places, its cells without a form read as most
+    // words have them; kept if MIN_WORDS words have it.
     let mut vectors: BTreeMap<Vec<Place>, u32> = BTreeMap::new();
-    for s in seen.iter().filter(|s| s.complete) {
+    for s in seen.iter().filter(|s| s.places.iter().any(Option::is_some)) {
         let pat: Vec<Place> = s
             .places
             .iter()
-            .map(|p| match p {
-                Some((_, true)) => Place::Ending,
-                _ => Place::Stem,
-            })
+            .enumerate()
+            .map(|(c, &m)| read(c, m))
             .collect();
         *vectors.entry(pat).or_default() += 1;
     }
@@ -935,26 +1032,34 @@ fn accent<'s>(
         .enumerate()
         .map(|(new, &old)| (old, u16::try_from(new).unwrap_or(u16::MAX)))
         .collect();
+    let chosen: Vec<usize> = of_word
+        .iter()
+        .map(|k| {
+            k.and_then(|k| renumber.get(&k))
+                .map_or(usize::MAX, |&k| usize::from(k))
+        })
+        .collect();
     let accent_patterns: Vec<AccentPattern<'s>> = order
         .iter()
         .filter_map(|&k| patterns.get(k))
         .enumerate()
         .map(|(i, (pat, n))| AccentPattern {
-            name: Cow::Owned(format!("{}", i + 1)),
+            name: Cow::Owned(name(words, &chosen, i)),
             words: *n,
             places: Cow::Owned(pat.clone()),
         })
         .collect();
     // Classes: a pattern and the stem's stressed vowel, from the lemma's end.
-    let mut class_of: Vec<Option<StressClass>> = Vec::with_capacity(words.len());
+    let mut class_of: Vec<Option<StressClass<'s>>> = Vec::with_capacity(words.len());
     for ((w, k), s) in words.iter().zip(&of_word).zip(&seen) {
         let class = k.and_then(|k| renumber.get(&k)).map(|&pattern| {
-            let n = orthography.vowel_count(&w.key);
+            let n = flexion::stress_positions(orthography, &w.letters);
             let vowel = s
-                .stem_vowel
-                .and_then(|k| n.checked_sub(1)?.checked_sub(usize::from(k)))
+                .stem
+                .and_then(|k| n.checked_sub(1)?.checked_sub(k))
                 .and_then(|v| u8::try_from(v).ok());
             StressClass {
+                name: Cow::Borrowed(""),
                 pattern,
                 vowel,
                 words: 0,
@@ -966,9 +1071,10 @@ fn accent<'s>(
     for c in class_of.iter().flatten() {
         *counts.entry((c.pattern, c.vowel)).or_default() += 1;
     }
-    let mut classes: Vec<StressClass> = counts
+    let mut classes: Vec<StressClass<'s>> = counts
         .into_iter()
         .map(|((pattern, vowel), words)| StressClass {
+            name: Cow::Borrowed(""),
             pattern,
             vowel,
             words,
@@ -984,6 +1090,17 @@ fn accent<'s>(
         .enumerate()
         .map(|(i, c)| ((c.pattern, c.vowel), u16::try_from(i).unwrap_or(u16::MAX)))
         .collect();
+    let chosen: Vec<usize> = class_of
+        .iter()
+        .map(|c| {
+            c.as_ref()
+                .and_then(|c| id.get(&(c.pattern, c.vowel)))
+                .map_or(usize::MAX, |&i| usize::from(i))
+        })
+        .collect();
+    for (i, class) in classes.iter_mut().enumerate() {
+        class.name = Cow::Owned(name(words, &chosen, i));
+    }
     let mut labels: HashMap<String, u16> = HashMap::new();
     let examples: Vec<(String, u16)> = words
         .iter()
@@ -996,17 +1113,19 @@ fn accent<'s>(
     for (w, c) in &examples {
         labels.entry(w.clone()).or_insert(*c);
     }
-    // A class whose stem vowel the word hasn't got can't be its.
+    // A class whose stem syllable the word hasn't got can't be its.
     let class = choose::learn(&examples, settings, |word, c| {
         classes.get(usize::from(c)).is_some_and(|c| {
             c.vowel
-                .is_none_or(|v| usize::from(v) < orthography.vowel_count(word))
+                .is_none_or(|v| usize::from(v) < flexion::stress_positions(orthography, word))
         })
     });
     let accent = Accent {
         patterns: Cow::Owned(accent_patterns),
         classes: Cow::Owned(classes),
         class,
+        circumflex: Cow::Owned(circumflex.into_iter().map(Cow::Owned).collect()),
+        long_finals: Cow::Owned(long_finals),
     };
     (accent, labels)
 }

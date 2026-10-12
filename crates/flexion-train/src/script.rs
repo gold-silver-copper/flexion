@@ -19,6 +19,19 @@ pub struct Script {
     /// Letters a lookup reads as another, sorted (see
     /// [`flexion::Orthography::folded`]).
     pub folded: Vec<(char, char)>,
+    /// The law of limitation's facts, where the language has one.
+    pub prosody: Option<Prosody>,
+}
+
+/// What [`flexion::Prosody`] needs, owned.
+#[derive(Debug, Clone)]
+pub struct Prosody {
+    pub diphthongs: Vec<&'static str>,
+    pub hiatus: String,
+    pub long: String,
+    pub short_finals: Vec<&'static str>,
+    pub acute: u8,
+    pub circumflex: u8,
 }
 
 /// The Unicode blocks the ten languages write in.
@@ -36,8 +49,10 @@ impl Script {
         let marks: Vec<char> = s.stress_marks.chars().collect();
         let base_vowels: Vec<char> = s.vowels.chars().collect();
         let mut vowels = String::new();
-        let mut stressed = Vec::new();
+        let mut stressed: Vec<(bool, char, char, u8)> = Vec::new();
         let mut folded: Vec<(char, char)> = s.fold.iter().chain(&s.unmark).copied().collect();
+        let mut long = String::new();
+        let mut hiatus = String::new();
         for c in BLOCKS
             .iter()
             .flat_map(|&(a, b)| (a..=b).filter_map(char::from_u32))
@@ -90,29 +105,75 @@ impl Script {
             });
             match kind {
                 Some(kind) => {
-                    let plain: String = std::iter::once(base)
-                        .chain(rest.iter().copied().filter(|m| {
+                    let without: Vec<char> = rest
+                        .iter()
+                        .copied()
+                        .filter(|m| {
                             !marks.contains(m) && !s.stress_aliases.iter().any(|(f, _)| f == m)
-                        }))
-                        .collect::<String>()
-                        .nfc()
+                        })
                         .collect();
-                    let mut p = plain.chars();
-                    if let (Some(plain), None) = (p.next(), p.next()) {
-                        stressed.push((c, plain, u8::try_from(kind).unwrap_or(0)));
+                    let compose = |marks: &[char]| -> Option<char> {
+                        let s: String = std::iter::once(base)
+                            .chain(marks.iter().copied())
+                            .collect::<String>()
+                            .nfc()
+                            .collect();
+                        let mut p = s.chars();
+                        match (p.next(), p.next()) {
+                            (Some(c), None) => Some(c),
+                            _ => None,
+                        }
+                    };
+                    // A circumflex stands on a long vowel: `ᾶ` reads `ᾱ`
+                    // (where the long letter is one character).
+                    let circumflexed = s.circumflex.is_some_and(|m| rest.contains(&m));
+                    let lengthened = (circumflexed && !s.long_vowels.contains(base))
+                        .then(|| compose(&[&['\u{304}'][..], &without].concat()))
+                        .flatten();
+                    if let Some(plain) = lengthened.or_else(|| compose(&without)) {
+                        // A letter whose mark is only read as a stress mark (the
+                        // grave) is never written: it goes after the others.
+                        let aliased = !rest.iter().any(|m| marks.contains(m));
+                        stressed.push((aliased, c, plain, u8::try_from(kind).unwrap_or(0)));
                     }
                 }
-                None => vowels.push(c),
+                None => {
+                    vowels.push(c);
+                    if s.long_vowels.contains(base)
+                        || rest.iter().any(|m| s.long_marks.contains(*m))
+                    {
+                        long.push(c);
+                    }
+                    if s.hiatus_mark.is_some_and(|h| rest.contains(&h)) {
+                        hiatus.push(c);
+                    }
+                }
             }
         }
+        let mark_kind = |m: char| {
+            s.stress_marks
+                .chars()
+                .position(|x| x == m)
+                .and_then(|k| u8::try_from(k).ok())
+        };
+        let prosody = (!s.long_vowels.is_empty()).then(|| Prosody {
+            diphthongs: s.diphthongs.clone(),
+            hiatus,
+            long,
+            short_finals: s.short_finals.clone(),
+            acute: 0,
+            circumflex: s.circumflex.and_then(mark_kind).unwrap_or(0),
+        });
+        stressed.sort_by_key(|e| e.0);
         folded.sort_unstable();
         folded.dedup_by_key(|e| e.0);
         Script {
             folded,
+            prosody,
             lowercase: s.fold_case,
             vowels,
             stress_marks: s.stress_marks.to_string(),
-            stressed,
+            stressed: stressed.into_iter().map(|(_, c, p, k)| (c, p, k)).collect(),
             implicit: s.implicit.to_string(),
             dropped: s.strip_marks.to_string(),
             mark_monosyllables: s.mark_monosyllables,
@@ -129,6 +190,14 @@ impl Script {
             dropped: &self.dropped,
             mark_monosyllables: self.mark_monosyllables,
             folded: &self.folded,
+            prosody: self.prosody.as_ref().map(|p| flexion::Prosody {
+                diphthongs: &p.diphthongs,
+                hiatus: &p.hiatus,
+                long: &p.long,
+                short_finals: &p.short_finals,
+                acute: p.acute,
+                circumflex: p.circumflex,
+            }),
         }
     }
 }

@@ -27,7 +27,10 @@ pub use grammar::{Compound, Grammar, Known, sharpen};
 pub use orthography::{Casing, Orthography, Stress, Written, recase};
 pub use paradigm::{Form, Paradigm, Referral};
 pub use sound_law;
-pub use stress::{Accent, AccentPattern, Place, StressClass, place as stress_place};
+pub use stress::{
+    Accent, AccentPattern, Finals, Place, Prosody, StressClass, Syllable, place as stress_place,
+    position as stress_position, positions as stress_positions,
+};
 
 use std::fmt;
 

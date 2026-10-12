@@ -29,6 +29,9 @@ pub struct Orthography<'a> {
     /// mark as the letter without it (Latin `ā` as `a`), Russian `ё` as `е`,
     /// Greek `ἀ` as `α`. A caller may type either.
     pub folded: &'a [(char, char)],
+    /// The law that limits where the accent falls, where the language has
+    /// one (Ancient Greek).
+    pub prosody: Option<crate::Prosody<'a>>,
 }
 
 /// Where a word is stressed: its `vowel`-th vowel from the start (from 0),
@@ -254,6 +257,7 @@ mod tests {
         dropped: "\u{300}",
         mark_monosyllables: false,
         folded: &[('ё', 'е')],
+        prosody: None,
     };
 
     #[test]
