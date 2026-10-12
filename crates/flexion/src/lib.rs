@@ -15,7 +15,7 @@ pub use grammar::{
     restore, sharpen,
 };
 pub use orthography::{Casing, Orthography, Stress, Written, recase};
-pub use paradigm::{Form, Paradigm, Referral};
+pub use paradigm::{Form, Paradigm, REFERRED, Referral};
 pub use sound_law;
 pub use stress::{
     Accent, AccentPattern, Finals, Place, Prosody, StressClass, Syllable, place as stress_place,
@@ -194,14 +194,17 @@ macro_rules! spellings {
     };
 }
 
-/// A cell of a paradigm table: a pattern (`"~а"`), or `referred` for a
-/// cell whose form is another cell's (see [`Referral`]).
+/// A cell of a paradigm table, as text: a pattern (`"~а"`), `referred` (see
+/// [`Referral`]), or `_` for the parent's.
 #[macro_export]
-macro_rules! form {
+macro_rules! cell {
     (referred) => {
-        $crate::Form::Referred
+        $crate::REFERRED
+    };
+    (_) => {
+        ""
     };
     ($pattern:literal) => {
-        $crate::Form::Pattern(::std::borrow::Cow::Borrowed($pattern))
+        $pattern
     };
 }

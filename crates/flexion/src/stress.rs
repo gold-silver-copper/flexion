@@ -45,8 +45,33 @@ pub struct AccentPattern<'a> {
     pub name: Cow<'a, str>,
     /// How many of the dictionary's words follow it.
     pub words: u32,
-    /// One place per cell, in the part of speech's cell order.
-    pub places: Cow<'a, [Place]>,
+    /// One place per cell (its name: `Stem`), in the part of speech's cell
+    /// order, a tab after each.
+    pub places: Cow<'a, str>,
+}
+
+impl AccentPattern<'_> {
+    /// The place of `cell`'s accent.
+    pub fn place(&self, cell: usize) -> Option<Place> {
+        self.places.split('\t').nth(cell)?.parse().ok()
+    }
+
+    /// The table of `places`.
+    pub fn table(places: &[Place]) -> String {
+        places.iter().map(|p| format!("{p:?}\t")).collect()
+    }
+}
+
+impl std::str::FromStr for Place {
+    type Err = ();
+
+    /// By its name: `Stem`, `Ending`, `Recessive`.
+    fn from_str(name: &str) -> Result<Self, ()> {
+        Place::ALL
+            .into_iter()
+            .find(|p| format!("{p:?}") == name)
+            .ok_or(())
+    }
 }
 
 /// An accent class: a pattern, and which syllable (a vowel, in a language

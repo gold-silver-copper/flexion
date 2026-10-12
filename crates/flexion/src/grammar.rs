@@ -421,7 +421,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         }
         let referred = self.referred(&key, cell, known.feature);
         let cells = |inf: &Inflection<'_, 'a, '_, P>| -> Vec<(usize, f32)> {
-            if inf.paradigm.refers(cell) {
+            if inf.paradigm.refers(&self.paradigms, cell) {
                 referred.clone()
             } else {
                 vec![(cell, 1.0)]
@@ -432,7 +432,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             .take(KEEP)
             .flat_map(|inf| cells(inf).into_iter().map(move |c| (inf, c)))
         {
-            let forms = inf.paradigm.forms(cell, &inf.stems);
+            let forms = inf.paradigm.forms(&self.paradigms, cell, &inf.stems);
             let Some((first, also)) = forms.split_first() else {
                 continue;
             };
@@ -449,7 +449,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             });
             let ending = inf
                 .paradigm
-                .pattern(cell)
+                .pattern(&self.paradigms, cell)
                 .and_then(|p| pattern::variants(p).next())
                 .map_or(0, |p| pattern::ending_start(p, &inf.stems));
             for (stress, p_stress) in self.stresses(&word, inf, cell, ending) {
@@ -572,8 +572,8 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 return false;
             };
             given.iter().all(|(cell, form)| {
-                p.refers(*cell)
-                    || p.pattern(*cell).is_some_and(|pat| {
+                p.refers(&self.paradigms, *cell)
+                    || p.pattern(&self.paradigms, *cell).is_some_and(|pat| {
                         pattern::variants(pat).any(|v| {
                             let built = pattern::fill(v, &stems);
                             let built = match &self.laws {
@@ -657,7 +657,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         let finals = accent.finals(paradigm, cell);
         let class_place = |class: &crate::StressClass<'_>| {
             let c = self.lemma_cell?;
-            accent.pattern_of(class)?.places.get(c).copied()
+            accent.pattern_of(class)?.place(c)
         };
         let given = word.stress;
         let given_at = given.map(|g| stress::position(o, letters, g));
@@ -688,7 +688,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         // The form's letters, to place the stress in.
         let form = inf
             .paradigm
-            .pattern(cell)
+            .pattern(&self.paradigms, cell)
             .and_then(|p| pattern::variants(p).next())
             .map(|p| pattern::fill(p, &inf.stems))
             .unwrap_or_default();
@@ -696,10 +696,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             let Some(class) = accent.class_of(reading.value) else {
                 continue;
             };
-            let Some(place) = accent
-                .pattern_of(class)
-                .and_then(|p| p.places.get(cell).copied())
-            else {
+            let Some(place) = accent.pattern_of(class).and_then(|p| p.place(cell)) else {
                 continue;
             };
             // The stem's accented syllable: the one written, when the

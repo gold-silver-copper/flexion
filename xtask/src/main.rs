@@ -518,7 +518,13 @@ fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Res
                 let class = a.class_of(r.value);
                 let places: String = class
                     .and_then(|c| a.pattern_of(c))
-                    .map(|p| p.places.iter().map(|&x| place_letter(x)).collect())
+                    .map(|p| {
+                        p.places
+                            .split('\t')
+                            .filter_map(|x| x.parse().ok())
+                            .map(place_letter)
+                            .collect()
+                    })
                     .unwrap_or_default();
                 println!(
                     "stress class {:?} vowel {:?} {places}: {:.2} (rule -{} {:?})",
@@ -553,18 +559,19 @@ fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Res
             100.0 * f64::from(cum) / f64::from(total.max(1)),
             p.name,
             p.lemma,
-            p.forms
-                .iter()
-                .map(ToString::to_string)
-                .collect::<Vec<_>>()
-                .join(" ")
+            p.table.replace('\t', " ")
         );
     }
     let singles = g.paradigms.iter().filter(|p| p.words == 1).count();
     println!("paradigms {}, with one word {singles}", g.paradigms.len());
     if let Some(a) = &g.accent {
         for p in a.patterns.iter().take(30) {
-            let places: String = p.places.iter().map(|&x| place_letter(x)).collect();
+            let places: String = p
+                .places
+                .split('\t')
+                .filter_map(|x| x.parse().ok())
+                .map(place_letter)
+                .collect();
             println!("accent {:4} {:6} {places}", p.name, p.words);
         }
     }

@@ -9,7 +9,7 @@ use crate::skeleton;
 use flexion::Finals;
 use flexion::pattern;
 use flexion::{
-    Accent, AccentPattern, Compound, Form, Grammar, Orthography, Paradigm, Place, Referral,
+    Accent, AccentPattern, Compound, Grammar, Orthography, Paradigm, Place, REFERRED, Referral,
     StressClass, Written,
 };
 use std::borrow::Cow;
@@ -296,6 +296,9 @@ pub fn learn<'s>(
     irregular.extend(self::irregular(&grammar, all_lexemes, all_words, made));
     irregular.sort();
     grammar.irregular = flexion::Irregular::new(&irregular);
+    if let Cow::Owned(paradigms) = &mut grammar.paradigms {
+        inherit(paradigms);
+    }
     let stats = Stats {
         words: all_words.len(),
         paradigms: grammar.paradigms.len(),
@@ -330,6 +333,57 @@ fn compound(w: &Word) -> Option<(String, Compound)> {
             Compound::Last
         },
     ))
+}
+
+/// Make each paradigm like the earlier (commoner) one it shares the most
+/// cells with, when that is at least half of them: its own table keeps only
+/// the cells that differ. Every paradigm still has the same forms.
+fn inherit(paradigms: &mut [Paradigm<'_>]) {
+    let cells: Vec<Vec<String>> = paradigms
+        .iter()
+        .map(|p| p.table.split('\t').map(str::to_string).collect())
+        .collect();
+    let pieces: Vec<usize> = paradigms
+        .iter()
+        .map(|p| pattern::pieces(&p.lemma))
+        .collect();
+    for (i, paradigm) in paradigms.iter_mut().enumerate() {
+        let (Some(mine), Some(&my_pieces)) = (cells.get(i), pieces.get(i)) else {
+            continue;
+        };
+        let shared = |j: usize| {
+            cells.get(j).map_or(0, |theirs| {
+                mine.iter()
+                    .zip(theirs)
+                    .filter(|(a, b)| a == b && !a.is_empty())
+                    .count()
+            })
+        };
+        let best = (0..i)
+            .filter(|&j| pieces.get(j) == Some(&my_pieces))
+            .map(|j| (shared(j), j))
+            .max_by(|a, b| a.0.cmp(&b.0).then(b.1.cmp(&a.1)));
+        let filled = mine.iter().filter(|c| !c.is_empty()).count();
+        let Some((n, j)) = best.filter(|&(n, _)| n > 0 && 2 * n >= filled) else {
+            continue;
+        };
+        let Some(theirs) = cells.get(j) else { continue };
+        let _ = n;
+        let table: String = mine
+            .iter()
+            .zip(theirs.iter().map(Some).chain(std::iter::repeat(None)))
+            .take(mine.len().saturating_sub(1))
+            .map(|(m, t)| {
+                if t == Some(m) {
+                    "\t".to_string()
+                } else {
+                    format!("{m}\t")
+                }
+            })
+            .collect();
+        paradigm.parent = u16::try_from(j).ok();
+        paradigm.table = Cow::Owned(table);
+    }
 }
 
 /// The letters of a word's usual form in cell `c`.
@@ -621,9 +675,6 @@ fn marks<'a>(
     choice.exceptions = Cow::Owned(Vec::new());
     Some(choice)
 }
-
-/// What the trainer writes for a referred cell while it learns paradigms.
-const REFERRED: &str = "=";
 
 /// Of the words with each value of a feature, the share whose form of a
 /// cell must be one other cell's form for the cell to be a referral.
@@ -1002,7 +1053,7 @@ fn paradigms<'s>(
             continue;
         };
         let name = name(words, &chosen, s);
-        let forms: Vec<Form<'s>> = cells
+        let table: String = cells
             .iter()
             .enumerate()
             .map(|(cell, p)| {
@@ -1017,18 +1068,15 @@ fn paradigms<'s>(
                     .and_then(|v| v.iter().max_by_key(|e| *e.1))
                     .filter(|e| usual(e.0) == usual_p && 2 * *e.1 > n)
                     .map_or(usual_p, |(p, _)| p.clone());
-                if full == REFERRED {
-                    Form::Referred
-                } else {
-                    Form::Pattern(Cow::Owned(full))
-                }
+                format!("{full}\t")
             })
             .collect();
         out.push(Paradigm {
             name: Cow::Owned(name),
             words: n,
             lemma: Cow::Owned(lemma.clone()),
-            forms: Cow::Owned(forms),
+            parent: None,
+            table: Cow::Owned(table),
         });
     }
     let assignment = chosen
@@ -1135,7 +1183,7 @@ fn accent<'s>(
         let cells: Vec<Option<Fact>> = (0..shape.cells)
             .map(|c| {
                 let f = form(c)?;
-                let pat = par.pattern(c).map(usual)?;
+                let pat = par.pattern(paradigms, c).map(usual)?;
                 Some((
                     f.stress?,
                     f.letters.clone(),
@@ -1370,7 +1418,7 @@ fn accent<'s>(
         .map(|(i, (pat, n))| AccentPattern {
             name: Cow::Owned(name(words, &chosen, i)),
             words: *n,
-            places: Cow::Owned(pat.clone()),
+            places: Cow::Owned(AccentPattern::table(pat)),
         })
         .collect();
     // Classes: a pattern and the stem's stressed vowel, from the lemma's end.

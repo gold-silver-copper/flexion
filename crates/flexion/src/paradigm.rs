@@ -6,7 +6,9 @@ use crate::pattern::{self, Stems};
 use std::borrow::Cow;
 
 /// One way of inflecting: the lemma's pattern, and a pattern per cell (see
-/// [`crate::pattern`]). Named after its commonest word.
+/// [`crate::pattern`]). Named after its commonest word. A paradigm can be
+/// *like* another (its parent): the cells its own table leaves empty are the
+/// parent's.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Paradigm<'a> {
     /// The commonest word that inflects this way (`книга`).
@@ -16,15 +18,22 @@ pub struct Paradigm<'a> {
     /// The lemma's pattern: which words can inflect this way at all
     /// (`~а` takes words in `-а`).
     pub lemma: Cow<'a, str>,
-    /// What it has in each cell, in the part of speech's cell order.
-    pub forms: Cow<'a, [Form<'a>]>,
+    /// The paradigm (its place among its part of speech's) this one is like.
+    pub parent: Option<u16>,
+    /// What it has in each cell, in the part of speech's cell order, a tab
+    /// after each: a pattern (`~а`, alternatives after `|`), [`REFERRED`],
+    /// or nothing, for the parent's.
+    pub table: Cow<'a, str>,
 }
 
+/// What a paradigm's table writes for a referred cell.
+pub const REFERRED: &str = "=";
+
 /// What a paradigm has in a cell.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum Form<'a> {
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Form<'t> {
     /// A pattern (see [`crate::pattern`]): `~а`; alternatives after `|`.
-    Pattern(Cow<'a, str>),
+    Pattern(&'t str),
     /// Another cell's form, which one the word's [`Referral`] says: the
     /// accusative of `стол` is its nominative, of `кот` its genitive.
     Referred,
@@ -55,23 +64,46 @@ impl<'a> Paradigm<'a> {
         pattern::bind_by(&self.lemma, lemma, |a, b| orthography.same_letter(a, b))
     }
 
+    /// What its own table has in `cell`; `None` where it is the parent's.
+    pub fn own(&self, cell: usize) -> Option<Form<'_>> {
+        match self.table.split('\t').nth(cell)? {
+            "" => None,
+            REFERRED => Some(Form::Referred),
+            pattern => Some(Form::Pattern(pattern)),
+        }
+    }
+
+    /// What it has in `cell`, its own or its parent's (`family`: its part of
+    /// speech's paradigms).
+    pub fn form<'s>(&'s self, family: &'s [Paradigm<'a>], cell: usize) -> Option<Form<'s>> {
+        let mut paradigm = self;
+        // Parents come before their children, so this ends.
+        for _ in 0..=family.len() {
+            if let Some(form) = paradigm.own(cell) {
+                return Some(form);
+            }
+            paradigm = family.get(usize::from(paradigm.parent?))?;
+        }
+        None
+    }
+
     /// The cell's pattern (all its alternatives); `None` for a referred
     /// cell.
-    pub fn pattern(&self, cell: usize) -> Option<&str> {
-        match self.forms.get(cell)? {
+    pub fn pattern<'s>(&'s self, family: &'s [Paradigm<'a>], cell: usize) -> Option<&'s str> {
+        match self.form(family, cell)? {
             Form::Pattern(p) => Some(p),
             Form::Referred => None,
         }
     }
 
     /// Whether the paradigm takes the cell's form from another cell.
-    pub fn refers(&self, cell: usize) -> bool {
-        self.forms.get(cell) == Some(&Form::Referred)
+    pub fn refers(&self, family: &[Paradigm<'a>], cell: usize) -> bool {
+        self.form(family, cell) == Some(Form::Referred)
     }
 
     /// The forms of `cell` for these stems, the usual one first.
-    pub fn forms(&self, cell: usize, stems: &[&str]) -> Vec<String> {
-        self.pattern(cell)
+    pub fn forms(&self, family: &[Paradigm<'a>], cell: usize, stems: &[&str]) -> Vec<String> {
+        self.pattern(family, cell)
             .map(|p| {
                 pattern::variants(p)
                     .map(|v| pattern::fill(v, stems))

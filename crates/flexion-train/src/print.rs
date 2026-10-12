@@ -540,7 +540,7 @@ fn grammar_files(
     // The table macro.
     let _ = writeln!(
         p,
-        "/// Writes one {one}: the word it is named after, how many words follow it,\n/// the lemma's pattern, then a row of patterns per line (`referred`: the form\n/// is another cell's, as the word's {feature} says):",
+        "/// Writes one {one}: the word it is named after, how many words follow it,\n/// the lemma's pattern, the {one} it is like (if any), then a row of patterns\n/// per line (`referred`: the form is another cell's, as the word's {feature}\n/// says; `_`: the form is the {one}'s it is like):",
         feature = feature_name.map_or_else(|| "feature".to_string(), str::to_lowercase)
     );
     for row in &layout.rows {
@@ -552,7 +552,7 @@ fn grammar_files(
         let _ = writeln!(p, "/// `{}`{cols}", row.label);
     }
     let _ = writeln!(p, "macro_rules! {one} {{");
-    p.push_str("    ($name:literal, $words:literal, $lemma:literal;\n");
+    p.push_str("    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident)?;\n");
     let mut k = 0usize;
     let mut order: Vec<usize> = Vec::new();
     for row in &layout.rows {
@@ -568,7 +568,7 @@ fn grammar_files(
             .collect();
         let _ = writeln!(p, "     {}: {};", row.label, args.join(", "));
     }
-    p.push_str("    ) => {\n        Paradigm {\n            name: ::std::borrow::Cow::Borrowed($name),\n            words: $words,\n            lemma: ::std::borrow::Cow::Borrowed($lemma),\n            forms: ::std::borrow::Cow::Borrowed(&[\n");
+    p.push_str("    ) => {\n        Paradigm {\n            name: ::std::borrow::Cow::Borrowed($name),\n            words: $words,\n            lemma: ::std::borrow::Cow::Borrowed($lemma),\n            parent: like!($($parent)?),\n            table: ::std::borrow::Cow::Borrowed(concat!(\n");
     // Forms in cell order: the k-th argument is cell order[k].
     let mut by_cell: Vec<usize> = vec![0; order.len()];
     for (arg, &cell) in order.iter().enumerate() {
@@ -577,9 +577,13 @@ fn grammar_files(
         }
     }
     for arg in &by_cell {
-        let _ = writeln!(p, "                flexion::form!($c{arg}),");
+        let _ = writeln!(p, "                flexion::cell!($c{arg}), \"\\t\",");
     }
-    p.push_str("            ]),\n        }\n    };\n}\n\n");
+    p.push_str("            )),\n        }\n    };\n}\n\n");
+    let _ = writeln!(
+        p,
+        "/// The {one} a {one} is like, by its name.\nmacro_rules! like {{\n    () => {{\n        None\n    }};\n    ($parent:ident) => {{\n        Some({ty}::$parent as u16)\n    }};\n}}\n"
+    );
     let _ = writeln!(
         p,
         "/// Every {one} learned.\n#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]\npub enum {ty} {{"
@@ -623,28 +627,31 @@ fn grammar_files(
             .get(i)
             .map(|m| m.iter().map(String::as_str).take(6).collect())
             .unwrap_or_default();
+        let parent = par.parent.and_then(|q| variants.get(usize::from(q)));
         let _ = writeln!(
             p,
-            "    // {}: {} words ({}).",
+            "    // {}: {} words ({}).{}",
             variants.get(i).map_or("", String::as_str),
             thousands(u64::from(par.words)),
-            examples.join(", ")
+            examples.join(", "),
+            parent.map_or(String::new(), |q| format!(" Like {q} where `_`."))
         );
         let _ = writeln!(
             p,
-            "    {one}!({:?}, {}, {:?};",
-            par.name.as_ref(),
+            "    {one}!({}, {}, {}{};",
+            Lit(&par.name),
             par.words,
-            par.lemma.as_ref()
+            Lit(&par.lemma),
+            parent.map_or(String::new(), |q| format!(", like {q}"))
         );
         for row in &layout.rows {
             let pats: Vec<String> = row
                 .cells
                 .iter()
-                .map(|&c| match par.forms.get(c) {
-                    Some(flexion::Form::Pattern(p)) => format!("{:?}", p.as_ref()),
+                .map(|&c| match par.own(c) {
+                    Some(flexion::Form::Pattern(p)) => Lit(p).to_string(),
                     Some(flexion::Form::Referred) => "referred".to_string(),
-                    None => "\"\"".to_string(),
+                    None => "_".to_string(),
                 })
                 .collect();
             let _ = writeln!(p, "        {}: {};", row.label, pats.join(", "));
@@ -793,7 +800,7 @@ fn grammar_files(
         thousands(g.spellings.len() as u64)
     );
     for (k, w) in g.spellings.iter() {
-        let _ = writeln!(sp, "    {:?} => {:?},", k.as_ref(), w.as_ref());
+        let _ = writeln!(sp, "    {} => {},", Lit(k), Lit(w));
     }
     sp.push_str("};\n");
     files.push((format!("{dir}/spellings.rs"), sp));
@@ -957,9 +964,6 @@ fn accent_file(
     if a.circumflex.iter().any(|c| !c.is_empty()) || !a.long_finals.is_empty() {
         s.push_str("use super::cell::*;\n");
     }
-    if !a.patterns.is_empty() {
-        s.push_str("use flexion::Place::*;\n");
-    }
     s.push('\n');
     let cell_name = |c: u16| {
         layout
@@ -992,10 +996,13 @@ fn accent_file(
             *slot = arg;
         }
     }
-    s.push_str("    ) => {\n        AccentPattern {\n            name: Cow::Borrowed($name),\n            words: $words,\n            places: Cow::Borrowed(&[");
-    let places: Vec<String> = by_cell.iter().map(|a| format!("$c{a}")).collect();
+    s.push_str("    ) => {\n        AccentPattern {\n            name: Cow::Borrowed($name),\n            words: $words,\n            places: Cow::Borrowed(concat!(");
+    let places: Vec<String> = by_cell
+        .iter()
+        .map(|a| format!("stringify!($c{a}), \"\\t\""))
+        .collect();
     s.push_str(&places.join(", "));
-    s.push_str("]),\n        }\n    };\n}\n\n");
+    s.push_str(")),\n        }\n    };\n}\n\n");
     let _ = writeln!(
         s,
         "/// The accent patterns, commonest first.\npub static PATTERNS: [AccentPattern<'static>; {}] = [",
@@ -1004,22 +1011,17 @@ fn accent_file(
     for p in a.patterns.iter() {
         let _ = writeln!(
             s,
-            "    // Like `{}`: {} words.\n    pattern!({:?}, {};",
+            "    // Like `{}`: {} words.\n    pattern!({}, {};",
             p.name,
             thousands(u64::from(p.words)),
-            p.name.as_ref(),
+            Lit(&p.name),
             p.words
         );
         for row in &layout.rows {
             let cells: Vec<String> = row
                 .cells
                 .iter()
-                .map(|&c| {
-                    format!(
-                        "{:?}",
-                        p.places.get(c).copied().unwrap_or(flexion::Place::Stem)
-                    )
-                })
+                .map(|&c| format!("{:?}", p.place(c).unwrap_or(flexion::Place::Stem)))
                 .collect();
             let _ = writeln!(s, "        {}: {};", row.label, cells.join(", "));
         }
@@ -1081,8 +1083,8 @@ fn accent_file(
             .map_or("", |p| p.name.as_ref());
         let _ = writeln!(
             s,
-            "    StressClass {{\n        name: Cow::Borrowed({:?}),\n        pattern: {}, // {pattern}\n        vowel: {:?},\n        words: {},\n    }},",
-            c.name.as_ref(),
+            "    StressClass {{\n        name: Cow::Borrowed({}),\n        pattern: {}, // {pattern}\n        vowel: {:?},\n        words: {},\n    }},",
+            Lit(&c.name),
             c.pattern,
             c.vowel,
             c.words
@@ -1147,14 +1149,14 @@ fn choice_body<L: flexion::Label>(
             .collect();
         let _ = writeln!(
             s,
-            "        {:?} => [{}],",
-            rule.ending.as_ref(),
+            "        {} => [{}],",
+            Lit(&rule.ending),
             counts.join(", ")
         );
     }
     s.push_str("    }\n    listed {\n");
     for (w, l) in choice.exceptions.iter() {
-        let _ = writeln!(s, "        {:?} => {},", w.as_ref(), name(*l));
+        let _ = writeln!(s, "        {} => {},", Lit(w), name(*l));
     }
     s
 }
@@ -1196,8 +1198,8 @@ fn prefixes_file(p: &flexion::Prefixes<'_>, layout: &Layout) -> String {
     for x in p.prefixes.iter() {
         let _ = writeln!(
             s,
-            "        Prefix {{ letters: Cow::Borrowed({:?}), separable: {}, inseparable: {}, words: {} }},",
-            x.letters.as_ref(),
+            "        Prefix {{ letters: Cow::Borrowed({}), separable: {}, inseparable: {}, words: {} }},",
+            Lit(&x.letters),
             x.separable,
             x.inseparable,
             x.words
@@ -1207,8 +1209,8 @@ fn prefixes_file(p: &flexion::Prefixes<'_>, layout: &Layout) -> String {
     for (w, sep) in p.listed.iter() {
         let _ = writeln!(
             s,
-            "        (Cow::Borrowed({:?}), Separation::{sep:?}),",
-            w.as_ref()
+            "        (Cow::Borrowed({}), Separation::{sep:?}),",
+            Lit(w)
         );
     }
     s.push_str("    ]),\n    placement: Cow::Borrowed(&[\n");
@@ -1219,10 +1221,28 @@ fn prefixes_file(p: &flexion::Prefixes<'_>, layout: &Layout) -> String {
     s.push_str("    ]),\n    drops: Cow::Borrowed(&[\n");
     for (c, d) in p.drops.iter().enumerate() {
         let name = layout.names.get(c).map_or("", String::as_str);
-        let _ = writeln!(s, "        Cow::Borrowed({:?}), // {name}", d.as_ref());
+        let _ = writeln!(s, "        Cow::Borrowed({}), // {name}", Lit(d));
     }
     s.push_str("    ]),\n};\n");
     s
+}
+
+/// A Rust string literal of its text, written as it is: only `"`, `\` and
+/// control characters are escaped (combining accents stay readable).
+struct Lit<'a>(&'a str);
+
+impl std::fmt::Display for Lit<'_> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_char('"')?;
+        for c in self.0.chars() {
+            match c {
+                '"' | '\\' => write!(f, "\\{c}")?,
+                c if c.is_control() => write!(f, "{}", c.escape_default())?,
+                c => f.write_char(c)?,
+            }
+        }
+        f.write_char('"')
+    }
 }
 
 /// A cell group's variant of a part of speech's `Cell`: `noun_second_case`
