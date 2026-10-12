@@ -3,7 +3,7 @@
 //! probabilities match how often the answers are right is measured.
 
 use crate::extract::Lexeme;
-use flexion::{Grammar, Label};
+use flexion::{Inflect, Label};
 
 /// The tenth scored and never trained on.
 pub const TEST: u64 = 0;
@@ -23,10 +23,12 @@ pub fn bucket(key: &str) -> u64 {
 /// How a held-out word is typed.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Input {
-    /// As the dictionary writes it (stress marks, macrons).
+    /// In full, as the dictionary's table writes it (with every mark:
+    /// accents, vowel length), and said to be so ([`flexion::Known::full`]).
     Full,
-    /// Without stress marks.
-    Plain,
+    /// As the dictionary's headword writes it (Latin `rosa`, Greek `λύω`:
+    /// no vowel length), as people type it.
+    Headword,
 }
 
 /// Scores for one input mode.
@@ -87,8 +89,9 @@ pub fn same_form(orthography: &flexion::Orthography<'_>, a: &str, b: &str) -> bo
 
 /// Score `grammar` on `lexemes` (held out), every cell the dictionary lists,
 /// against its first form, typed as `input`.
-pub fn score<P: Label, A: Label, F: Label>(
-    grammar: &Grammar<'_, P, A, F>,
+pub fn score<F: Label, G: Inflect<F> + ?Sized>(
+    grammar: &G,
+    orthography: &flexion::Orthography<'_>,
     lexemes: &[&Lexeme],
     input: Input,
 ) -> Score {
@@ -96,9 +99,7 @@ pub fn score<P: Label, A: Label, F: Label>(
     for l in lexemes {
         let typed = match input {
             Input::Full => l.full.clone(),
-            Input::Plain => grammar
-                .orthography
-                .write(&l.key, None, flexion::Casing::Lower),
+            Input::Headword => l.lemma.clone(),
         };
         for (cell, forms) in l.cells.iter().enumerate() {
             let Some(want) = forms.first() else {
@@ -110,13 +111,13 @@ pub fn score<P: Label, A: Label, F: Label>(
             };
             let candidates = grammar.candidates(&typed, cell, &known);
             s.forms += 1;
-            let same = |form: &str| same_form(&grammar.orthography, form, want);
+            let same = |form: &str| same_form(orthography, form, want);
             let right = candidates.first().is_some_and(|c| same(&c.form));
             if right {
                 s.right += 1;
             }
             if candidates.first().is_some_and(|c| {
-                grammar.orthography.read(&c.form).letters == grammar.orthography.read(want).letters
+                orthography.read(&c.form).letters == orthography.read(want).letters
             }) {
                 s.letters += 1;
             }
@@ -138,19 +139,17 @@ pub fn score<P: Label, A: Label, F: Label>(
 
 /// The sharpness (see [`flexion::Grammar::sharpness`]) that makes `grammar`'s
 /// stated probabilities match how often its answers are right on `words`
-/// (held out, typed plain and in full): the one, of a grid from 0.5 to 4,
+/// (held out, typed as their headwords and in full): the one, of a grid from 0.5 to 4,
 /// with the smallest calibration error.
-pub fn fit_sharpness<P: Label, A: Label, F: Label>(
-    grammar: &Grammar<'_, P, A, F>,
+pub fn fit_sharpness<F: Label, G: Inflect<F> + ?Sized>(
+    grammar: &G,
+    orthography: &flexion::Orthography<'_>,
     words: &[&Lexeme],
 ) -> f32 {
     // Every scored form's candidates: (probability, right) each.
     let mut forms: Vec<Vec<(f32, bool)>> = Vec::new();
     for l in words {
-        let plain = grammar
-            .orthography
-            .write(&l.key, None, flexion::Casing::Lower);
-        for (typed, full) in [(l.full.as_str(), true), (plain.as_str(), false)] {
+        for (typed, full) in [(l.full.as_str(), true), (l.lemma.as_str(), false)] {
             let known = flexion::Known {
                 full,
                 ..flexion::Known::default()
@@ -162,12 +161,7 @@ pub fn fit_sharpness<P: Label, A: Label, F: Label>(
                 let c = grammar.candidates(typed, cell, &known);
                 forms.push(
                     c.iter()
-                        .map(|c| {
-                            (
-                                c.probability,
-                                same_form(&grammar.orthography, &c.form, want),
-                            )
-                        })
+                        .map(|c| (c.probability, same_form(orthography, &c.form, want)))
                         .collect(),
                 );
             }

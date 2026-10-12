@@ -39,104 +39,92 @@ macro_rules! declension {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `duro`: 9,762 words.
+    /// Like `duro`: 7,674 words.
     Duro,
-    /// Like `loco`: 3,762 words.
+    /// Like `loco`: 2,377 words.
     Loco,
-    /// Like `natural`: 2,687 words.
+    /// Like `ste`: 1,876 words.
+    Ste,
+    /// Like `natural`: 1,722 words.
     Natural,
-    /// Like `verde`: 2,318 words.
-    Verde,
-    /// Like `piola`: 1,736 words.
-    Piola,
-    /// Like `simple`: 1,138 words.
-    Simple,
-    /// Like `entrador`: 979 words.
-    Entrador,
-    /// Like `medio`: 872 words.
-    Medio,
-    /// Like `tuanis`: 509 words.
-    Tuanis,
-    /// Like `santiagués`: 262 words.
-    Santiagués,
-    /// Like `pelón`: 248 words.
-    Pelón,
-    /// Like `sagaz`: 49 words.
-    Sagaz,
-    /// Like `bacán`: 38 words.
-    Bacán,
-    /// Like `catrín`: 31 words.
-    Catrín,
-    /// Like `malo`: 30 words.
-    Malo,
-    /// Like `fácil`: 28 words.
+    /// Like `ola`: 1,538 words.
+    Ola,
+    /// Like `mple`: 899 words.
+    Mple,
+    /// Like `turbador`: 809 words.
+    Turbador,
+    /// Like `rbio`: 693 words.
+    Rbio,
+    /// Like `anis`: 472 words.
+    Anis,
+    /// Like `tiagués`: 227 words.
+    Tiagués,
+    /// Like `lón`: 200 words.
+    Lón,
+    /// Like `gaz`: 37 words.
+    Gaz,
+    /// Like `cán`: 29 words.
+    Cán,
+    /// Like `rín`: 27 words.
+    Rín,
+    /// Like `eno`: 21 words.
+    Eno,
+    /// Like `fácil`: 17 words.
     Fácil,
-    /// Like `fiel`: 14 words.
+    /// Like `fiel`: 13 words.
     Fiel,
-    /// Like `aweonao`: 14 words.
+    /// Like `aweonao`: 13 words.
     Aweonao,
-    /// Like `grandote`: 11 words.
-    Grandote,
-    /// Like `antiguo`: 8 words.
-    Antiguo,
-    /// Like `común`: 8 words.
-    Común,
-    /// Like `siniestro`: 7 words.
-    Siniestro,
-    /// Like `afín`: 7 words.
-    Afín,
-    /// Like `sacro`: 6 words.
-    Sacro,
+    /// Like `dote`: 10 words.
+    Dote,
+    /// Like `mún`: 7 words.
+    Mún,
     /// Like `tontolaba`: 6 words.
     Tontolaba,
-    /// Like `euscaldún`: 5 words.
-    Euscaldún,
-    /// Like `cortés`: 4 words.
-    Cortés,
-    /// Like `noruego`: 4 words.
-    Noruego,
-    /// Like `automotor`: 3 words.
-    Automotor,
-    /// Like `ambos`: 3 words.
-    Ambos,
-    /// Like `marrón`: 3 words.
-    Marrón,
+    /// Like `cro`: 6 words.
+    Cro,
+    /// Like `afín`: 5 words.
+    Afín,
+    /// Like `scaldún`: 5 words.
+    Scaldún,
+    /// Like `áspero`: 4 words.
+    Áspero,
+    /// Like `rón`: 3 words.
+    Rón,
+    /// Like `isién`: 3 words.
+    Isién,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 31] = [
+    pub const ALL: [Declension; 27] = [
         Declension::Duro,
         Declension::Loco,
+        Declension::Ste,
         Declension::Natural,
-        Declension::Verde,
-        Declension::Piola,
-        Declension::Simple,
-        Declension::Entrador,
-        Declension::Medio,
-        Declension::Tuanis,
-        Declension::Santiagués,
-        Declension::Pelón,
-        Declension::Sagaz,
-        Declension::Bacán,
-        Declension::Catrín,
-        Declension::Malo,
+        Declension::Ola,
+        Declension::Mple,
+        Declension::Turbador,
+        Declension::Rbio,
+        Declension::Anis,
+        Declension::Tiagués,
+        Declension::Lón,
+        Declension::Gaz,
+        Declension::Cán,
+        Declension::Rín,
+        Declension::Eno,
         Declension::Fácil,
         Declension::Fiel,
         Declension::Aweonao,
-        Declension::Grandote,
-        Declension::Antiguo,
-        Declension::Común,
-        Declension::Siniestro,
-        Declension::Afín,
-        Declension::Sacro,
+        Declension::Dote,
+        Declension::Mún,
         Declension::Tontolaba,
-        Declension::Euscaldún,
-        Declension::Cortés,
-        Declension::Noruego,
-        Declension::Automotor,
-        Declension::Ambos,
-        Declension::Marrón,
+        Declension::Cro,
+        Declension::Afín,
+        Declension::Scaldún,
+        Declension::Áspero,
+        Declension::Rón,
+        Declension::Isién,
     ];
 
     /// Its table.
@@ -154,222 +142,194 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 31] = [
-    // Duro: 9,762 words (perro, centavo, derecho, paceño, gringo, barato).
-    declension!("duro", 9762, "~o";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 27] = [
+    // Duro: 7,674 words (gringo, juramentado, moro, helado, vero, dino).
+    declension!("duro", 7674, "~o";
         masculine: "~o", "~os";
         feminine: "~a", "~as";
         superlative: "~ísimo";
         before_noun: "~o";
     ),
-    // Loco: 3,762 words (chiapaneco, guanaco, loco, rauco, flamenco, polaco).
-    declension!("loco", 3762, "~co";
+    // Loco: 2,377 words (guanaco, loco, seco, hueco, blanco, naco).
+    declension!("loco", 2377, "~co";
         masculine: "~co", "~cos";
         feminine: "~ca", "~cas";
         superlative: "~quísimo";
         before_noun: "~co";
     ),
-    // Natural: 2,687 words (deal, abactinal, abaxial, abdominal, aboral, accidental).
-    declension!("natural", 2687, "~";
-        masculine: "~", "~es";
-        feminine: "~", "~es";
-        superlative: "~ísimo";
-        before_noun: "~";
-    ),
-    // Verde: 2,318 words (libre, andante, chihuahuense, estadounidense, acre, mate).
-    declension!("verde", 2318, "~e";
+    // Ste: 1,876 words (libre, acre, mate, breve, fome, grave).
+    declension!("ste", 1876, "~e";
         masculine: "~e", "~es";
         feminine: "~e", "~es";
         superlative: "~ísimo";
         before_noun: "~e";
     ),
-    // Piola: 1,736 words (panista, foxista, yanqui, plata, simba, larva).
-    declension!("piola", 1736, "~";
+    // Natural: 1,722 words (deal, amoral, fiscal, global, general, dual).
+    declension!("natural", 1722, "~";
+        masculine: "~", "~es";
+        feminine: "~", "~es";
+        superlative: "~ísimo";
+        before_noun: "~";
+    ),
+    // Ola: 1,538 words (yanqui, fit, heavy, teen, gourmet, nazi).
+    declension!("ola", 1538, "~";
         masculine: "~", "~s";
         feminine: "~", "~s";
         superlative: "~lísimo";
         before_noun: "~";
     ),
-    // Simple: 1,138 words (abominable, abrogable, acceptable, viable, vegetable, habitable).
-    declension!("simple", 1138, "~~e";
+    // Mple: 899 words (vegetable, habitable, mole, tile, ostensible, fungible).
+    declension!("mple", 899, "~~e";
         masculine: "~~e", "~~es";
         feminine: "~~e", "~~es";
         superlative: "~i~ísimo";
         before_noun: "~~e";
     ),
-    // Entrador: 979 words (accelerator, bel, español, tractor, semiconductor, computador).
-    declension!("entrador", 979, "~";
+    // Turbador: 809 words (bel, bon, hablador, quemador, luchador, fundador).
+    declension!("turbador", 809, "~";
         masculine: "~", "~es";
         feminine: "~a", "~as";
         superlative: "~ísimo";
         before_noun: "~";
     ),
-    // Medio: 872 words (monetario, bancario, ordinario, oratorio, zafio, utilitario).
-    declension!("medio", 872, "~~o";
+    // Rbio: 693 words (ordinario, oratorio, zafio, utilitario, urinario, sabio).
+    declension!("rbio", 693, "~~o";
         masculine: "~~o", "~~os";
         feminine: "~~a", "~~as";
         superlative: "~ís~mo";
         before_noun: "~~o";
     ),
-    // Tuanis: 509 words (gratis, acid, tao, bio, beige, magenta).
-    declension!("tuanis", 509, "~";
+    // Anis: 472 words (acid, tao, bio, beige, hot, cool).
+    declension!("anis", 472, "~";
         masculine: "~", "~";
         feminine: "~", "~";
         superlative: "~ísimo";
         before_noun: "~";
     ),
-    // Santiagués: 262 words (japonés, luxemburgués, inglés, francés, ugandés, javanés).
-    declension!("santiagués", 262, "~é~";
+    // Tiagués: 227 words (japonés, luxemburgués, ugandés, javanés, finlandés, galés).
+    declension!("tiagués", 227, "~é~";
         masculine: "~é~", "~e~es";
         feminine: "~e~a", "~e~as";
         superlative: "~i~ísimo";
         before_noun: "~é~";
     ),
-    // Pelón: 248 words (chingón, juguetón, cabrón, llorón, zorrastrón, cabezón).
-    declension!("pelón", 248, "~ó~";
+    // Lón: 200 words (juguetón, llorón, zorrastrón, nalgón, glotón, bretón).
+    declension!("lón", 200, "~ó~";
         masculine: "~ó~", "~o~es";
         feminine: "~o~a", "~o~as";
         superlative: "~i~ísimo";
         before_noun: "~ó~";
     ),
-    // Sagaz: 49 words (rapaz, fugaz, feliz, locuaz, capaz, incapaz).
-    declension!("sagaz", 49, "~z";
+    // Gaz: 37 words (fugaz, locuaz, eficaz, veloz, audaz, agraz).
+    declension!("gaz", 37, "~z";
         masculine: "~z", "~ces";
         feminine: "~z", "~ces";
         superlative: "~císimo";
         before_noun: "~z";
     ),
-    // Bacán: 38 words (catalán, musulmán, alemán, charlatán, chuán, haragán).
-    declension!("bacán", 38, "~á~";
+    // Cán: 29 words (haragán, holgazán, galán, yagán, jayán, protalibán).
+    declension!("cán", 29, "~á~";
         masculine: "~á~", "~a~es";
         feminine: "~a~a", "~a~as";
         superlative: "~a~ísimo";
         before_noun: "~á~";
     ),
-    // Catrín: 31 words (parlanchín, chiquitín, comodín, bailarín, borrachín, pequeñín).
-    declension!("catrín", 31, "~í~";
+    // Rín: 27 words (kirguís, benjamín, guapín, danzarín, benimerín, luanquín).
+    declension!("rín", 27, "~í~";
         masculine: "~í~", "~i~es";
         feminine: "~i~a", "~i~as";
         superlative: "~i~ísimo";
         before_noun: "~í~";
     ),
-    // Malo: 30 words (bueno, malo, primero, tercero, galo, decimotercero).
-    declension!("malo", 30, "~o";
+    // Eno: 21 words (malo, mero, galo, ralo, güeno, ítalo).
+    declension!("eno", 21, "~o";
         masculine: "~o", "~os";
         feminine: "~a", "~as";
         superlative: "~ísimo";
         before_noun: "~";
     ),
-    // Fácil: 28 words (grácil, versátil, hábil, fácil, estándar, frágil).
-    declension!("fácil", 28, "~á~";
+    // Fácil: 17 words (grácil, hábil, fácil, volátil, táctil, pulsátil).
+    declension!("fácil", 17, "~á~";
         masculine: "~á~", "~á~es";
         feminine: "~á~", "~á~es";
         superlative: "~a~ísimo";
         before_noun: "~á~";
     ),
-    // Fiel: 14 words (cruel, novel, burel, fiel, infiel, kakchikel).
-    declension!("fiel", 14, "~~";
+    // Fiel: 13 words (cruel, fiel, kakchikel, kakchiquel, nóvel, kaqchikel).
+    declension!("fiel", 13, "~~";
         masculine: "~~", "~~es";
         feminine: "~~", "~~es";
         superlative: "~d~ísimo";
         before_noun: "~~";
     ),
-    // Aweonao: 14 words (culiao, pringao, aweonao, ahueonao, deguabinao, pelao).
-    declension!("aweonao", 14, "~ao";
+    // Aweonao: 13 words (aweonao, ahueonao, pelao, zumbao, azarao, liao).
+    declension!("aweonao", 13, "~ao";
         masculine: "~ao", "~aos";
         feminine: "~á", "~ás";
         superlative: "~ísimo";
         before_noun: "~ao";
     ),
-    // Grandote: 11 words (grandote, cerote, chilote, regordete, franchute, hugonote).
-    declension!("grandote", 11, "~e";
+    // Dote: 10 words (regordete, hugonote, amarrete, puercote, dote, rote).
+    declension!("dote", 10, "~e";
         masculine: "~e", "~es";
         feminine: "~a", "~as";
         superlative: "~ísimo";
         before_noun: "~e";
     ),
-    // Antiguo: 8 words (antiguo, ingenuo, contiguo, ambiguo, exiguo, ignífluo).
-    declension!("antiguo", 8, "~g~o";
-        masculine: "~g~o", "~g~os";
-        feminine: "~g~a", "~g~as";
-        superlative: "~q~ísimo";
-        before_noun: "~g~o";
-    ),
-    // Común: 8 words (común, supercomún, incomún, cajún, bidún, putún).
-    declension!("común", 8, "~ú~";
+    // Mún: 7 words (putún, fiacún, mún, común, jún, dún).
+    declension!("mún", 7, "~ú~";
         masculine: "~ú~", "~u~es";
         feminine: "~ú~", "~u~es";
         superlative: "~i~ísimo";
         before_noun: "~ú~";
     ),
-    // Siniestro: 7 words (diestro, siniestro, ambidextro, triquetro, ambidiestro, conirrostro).
-    declension!("siniestro", 7, "~i~o";
-        masculine: "~i~o", "~i~os";
-        feminine: "~i~a", "~i~as";
-        superlative: "~i~ísimo";
-        before_noun: "~i~o";
-    ),
-    // Afín: 7 words (afín, carmesín, machín, argentafín, cinzolín, coronigrís).
-    declension!("afín", 7, "~í~";
-        masculine: "~í~", "~i~es";
-        feminine: "~í~", "~i~es";
-        superlative: "~i~ísimo";
-        before_noun: "~í~";
-    ),
-    // Sacro: 6 words (sacro, teucro, pulcro, lumbosacro, presacro, lúdicro).
-    declension!("sacro", 6, "~o";
-        masculine: "~o", "~os";
-        feminine: "~a", "~as";
-        superlative: "~atísimo";
-        before_noun: "~o";
-    ),
-    // Tontolaba: 6 words (tropecientos, tontolaba, cuchucientos, sopotocientos, chorrocientos, tontolava).
+    // Tontolaba: 6 words (tontolaba, tontolava, opecientos, chucientos, potocientos, orrocientos).
     declension!("tontolaba", 6, "~o~";
         masculine: "~o~", "~o~s";
         feminine: "~a~", "~a~s";
         superlative: "~i~ísimo";
         before_noun: "~o~";
     ),
-    // Euscaldún: 5 words (pastún, euscaldún, euskaldún, pashtún, zunzún).
-    declension!("euscaldún", 5, "~ú~";
+    // Cro: 6 words (pulcro, lumbosacro, lúdicro, cro, ucro, sacro).
+    declension!("cro", 6, "~o";
+        masculine: "~o", "~os";
+        feminine: "~a", "~as";
+        superlative: "~atísimo";
+        before_noun: "~o";
+    ),
+    // Afín: 5 words (afín, mesín, chín, gentafín, nzolín).
+    declension!("afín", 5, "~í~";
+        masculine: "~í~", "~i~es";
+        feminine: "~í~", "~i~es";
+        superlative: "~i~ísimo";
+        before_noun: "~í~";
+    ),
+    // Scaldún: 5 words (zunzún, stún, scaldún, skaldún, shtún).
+    declension!("scaldún", 5, "~ú~";
         masculine: "~ú~", "~u~es";
         feminine: "~u~a", "~u~as";
         superlative: "~i~ísimo";
         before_noun: "~ú~";
     ),
-    // Cortés: 4 words (cortés, descortés, parisién, mosetén).
-    declension!("cortés", 4, "~é~";
-        masculine: "~é~", "~e~es";
-        feminine: "~é~", "~e~es";
-        superlative: "~i~ísimo";
-        before_noun: "~é~";
+    // Áspero: 4 words (áspero, ácero, áquero, ámero).
+    declension!("áspero", 4, "á~o";
+        masculine: "á~o", "á~os";
+        feminine: "á~a", "á~as";
+        superlative: "a~ísimo";
+        before_noun: "á~o";
     ),
-    // Noruego: 4 words (noruego, cuellilargo, luengo, nuevingo).
-    declension!("noruego", 4, "~ue~o";
-        masculine: "~ue~o", "~ue~os";
-        feminine: "~ue~a", "~ue~as";
-        superlative: "~o~uísimo";
-        before_noun: "~ue~o";
-    ),
-    // Automotor: 3 words (protector, automotor, audiomotor).
-    declension!("automotor", 3, "~o~";
-        masculine: "~o~", "~o~es";
-        feminine: "~o~a|~~iz", "~o~as|~~ices";
-        superlative: "~i~ísimo";
-        before_noun: "~o~";
-    ),
-    // Ambos: 3 words (ambos, entrambos, entreambos).
-    declension!("ambos", 3, "~o~";
-        masculine: "~o~", "~o~s";
-        feminine: "~a~", "~a~";
-        superlative: "~i~ísimo";
-        before_noun: "~o~";
-    ),
-    // Marrón: 3 words (marrón, dicotiledón, alegrón).
-    declension!("marrón", 3, "~ó~";
+    // Rón: 3 words (rón, cotiledón, egrón).
+    declension!("rón", 3, "~ó~";
         masculine: "~ó~", "~o~es";
         feminine: "~ó~", "~o~es";
         superlative: "~i~ísimo";
         before_noun: "~ó~";
+    ),
+    // Isién: 3 words (cortés, isién, setén).
+    declension!("isién", 3, "~é~";
+        masculine: "~é~", "~e~es";
+        feminine: "~é~", "~e~es";
+        superlative: "~i~ísimo";
+        before_noun: "~é~";
     ),
 ];

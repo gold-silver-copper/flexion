@@ -11,7 +11,7 @@ mod spellings;
 pub use paradigms::Declension;
 
 use crate::*;
-use flexion::{Candidate, Grammar, Known, Reading};
+use flexion::{{Candidate, Grammar, Known, Reading}};
 use std::borrow::Cow;
 
 /// Each cell's place in a paradigm.
@@ -102,6 +102,7 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
     referrals: Cow::Borrowed(&[]),
     feature: None,
     compound: None,
+    prefixes: None,
     accent: None,
     laws: None,
     spellings: Cow::Borrowed(spellings::SPELLINGS),

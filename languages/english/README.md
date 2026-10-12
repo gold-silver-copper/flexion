@@ -58,9 +58,9 @@ reason (the rule and its counts).
 
 | | words | paradigms | rules | listed words | irregular forms |
 |---|---:|---:|---:|---:|---:|
-| noun | 228072 | 130 | 2373 | 6934 | 253 |
-| verb | 38230 | 110 | 862 | 1421 | 243 |
-| adjective | 61454 | 65 | 5012 | 20155 | 22737 |
+| noun | 228072 | 109 | 1403 | 4782 | 5803 |
+| verb | 38230 | 88 | 472 | 1211 | 2790 |
+| adjective | 61454 | 68 | 4990 | 19951 | 22855 |
 | adverb | 12620 | 28 | 838 | 3869 | 4613 |
 
 *Words*: the dictionary's words the grammar is learned from. *Rules*: the endings that
@@ -77,9 +77,9 @@ from how often it is right (0 is perfect).
 
 | | held-out words | forms | top-1 | top-3 | calibration error |
 |---|---:|---:|---:|---:|---:|
-| noun | 23733 | 47466 | **98.60%** | 99.84% | 0.001 |
-| verb | 4151 | 20745 | **97.87%** | 99.79% | 0.005 |
-| adjective | 6239 | 18715 | **96.53%** | 99.55% | 0.050 |
+| noun | 23733 | 47466 | **97.64%** | 99.79% | 0.010 |
+| verb | 4151 | 20745 | **96.62%** | 99.72% | 0.016 |
+| adjective | 6239 | 18715 | **96.62%** | 99.50% | 0.052 |
 | adverb | 1207 | 3621 | **99.17%** | 99.70% | 0.070 |
 
 

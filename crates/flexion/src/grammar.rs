@@ -10,6 +10,9 @@ use crate::stress::{self, Accent, Place};
 use crate::{Candidate, Evidence, Label};
 use std::borrow::Cow;
 
+/// How [`Grammar::marks`] writes a word's ends.
+pub const WORD_END: char = '#';
+
 /// Readings of each kind kept when combining them into candidates.
 const KEEP: usize = 4;
 
@@ -178,10 +181,12 @@ pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
     /// them: `(key, letters)`, sorted. A caller who types `fox` means `fōx`;
     /// marks a paradigm writes (the `ō` of `ratiō`) aren't listed.
     pub spellings: Cow<'a, [(Cow<'a, str>, Cow<'a, str>)]>,
-    /// Of the dictionary's words with a letter a mark could hide on, the
-    /// share listed in [`Grammar::spellings`]: the chance that a word typed
-    /// without marks, and not listed, is spelled with marks no one can tell.
-    pub hidden: f32,
+    /// How a letter typed without its mark is written, by the letter before
+    /// it, it and the letters after it (rules on the beginning of that, the
+    /// word's ends written [`WORD_END`]: Latin `tatio#` → `ā`, as in `-ātiō`;
+    /// `#de` → `ē`, as in `dē-`; `ae` → `e`, a diphthong): the spelling of a
+    /// word that isn't listed.
+    pub marks: Option<Choice<'a, char>>,
     /// Forms no rule gives, as the dictionary writes them: `(word, cell,
     /// form)`, sorted by word and cell. They are the answer for that word.
     pub irregular: Cow<'a, [(Cow<'a, str>, u16, Cow<'a, str>)]>,
@@ -220,13 +225,14 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     fn unsharpened(&self, lemma: &str, cell: usize, known: &Known<'_, F>) -> Vec<Candidate<'_>> {
         let mut word = self.orthography.read(lemma);
         let key = self.orthography.key(&word.letters);
-        // A word typed without its marks: as listed, or a guess.
+        // A word typed without some of its marks: as listed, or as its
+        // letters say.
         let mut spelled = 1.0;
-        match self.spelling(&word.letters, &key) {
-            _ if known.full => {}
-            Some(letters) => word.letters = letters.to_string(),
-            None if word.letters == key && self.could_hide(&key) => spelled = 1.0 - self.hidden,
-            None => {}
+        if !known.full {
+            match self.spelling(&word.letters, &key) {
+                Some(letters) => word.letters = letters.to_string(),
+                None => (word.letters, spelled) = self.restore(&word.letters, &key),
+            }
         }
         let casing = if self.capitalized {
             Casing::Title
@@ -435,23 +441,31 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         readings
     }
 
-    /// The dictionary's spelling of a word typed as `letters` without the
-    /// marks it has (`fox` for `fōx`), if it lists one.
+    /// The dictionary's spelling of a word typed as `letters` without some
+    /// of the marks it has (`fox` for `fōx`), if it lists one that agrees
+    /// with the marks typed.
     pub fn spelling(&self, letters: &str, key: &str) -> Option<&str> {
-        if letters != key {
-            return None;
-        }
         let at = self
             .spellings
             .binary_search_by(|(k, _)| k.as_ref().cmp(key))
             .ok()?;
-        self.spellings.get(at).map(|(_, s)| s.as_ref())
+        let listed = self.spellings.get(at).map(|(_, s)| s.as_ref())?;
+        let agrees = listed.chars().count() == letters.chars().count()
+            && letters
+                .chars()
+                .zip(listed.chars())
+                .all(|(t, l)| t == l || self.orthography.fold(t) == t);
+        agrees.then_some(listed)
     }
 
-    /// Whether a word looked up as `key` has a letter a mark could hide on.
-    pub fn could_hide(&self, key: &str) -> bool {
-        key.chars()
-            .any(|c| self.orthography.folded.iter().any(|e| e.1 == c))
+    /// The spelling of a word typed as `letters` (looked up as `key`) whose
+    /// unmarked letters [`Grammar::marks`] marks as it says, and how likely
+    /// it is.
+    pub fn restore(&self, letters: &str, key: &str) -> (String, f32) {
+        match &self.marks {
+            Some(marks) => restore(&self.orthography, marks, self.smoothing, letters, key),
+            None => (letters.to_string(), 1.0),
+        }
     }
 
     /// The listed form of `cell` for the word looked up as `key`, if any.
@@ -638,6 +652,43 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     }
 }
 
+/// The spelling of a word typed as `letters` (looked up as `key`) whose
+/// unmarked letters `marks` marks as it says (see [`Grammar::marks`]), and how
+/// likely it is.
+pub fn restore(
+    orthography: &Orthography<'_>,
+    marks: &Choice<'_, char>,
+    smoothing: f32,
+    letters: &str,
+    key: &str,
+) -> (String, f32) {
+    let o = orthography;
+    let mut p = 1.0;
+    let mut out = String::with_capacity(letters.len().saturating_add(8));
+    let mut before = WORD_END;
+    for ((i, k), c) in key.char_indices().zip(letters.chars()) {
+        let markable = c == k && o.folded.iter().any(|e| e.1 == c);
+        let around = format!("{before}{}{WORD_END}", key.get(i..).unwrap_or(""));
+        before = k;
+        let reading = markable
+            .then(|| {
+                marks
+                    .read(&around, smoothing, |m| o.fold(m) == c)
+                    .into_iter()
+                    .next()
+            })
+            .flatten();
+        match reading {
+            Some(r) => {
+                out.push(r.value);
+                p *= r.probability;
+            }
+            None => out.push(c),
+        }
+    }
+    (out, p)
+}
+
 /// The likeliest few of `candidates`.
 fn top(mut candidates: Vec<Candidate<'_>>) -> Vec<Candidate<'_>> {
     candidates.sort_by(|a, b| b.probability.total_cmp(&a.probability));
@@ -661,5 +712,15 @@ pub fn sharpen<'p>(probabilities: impl Iterator<Item = &'p mut f32>, power: f32)
         for p in &mut all {
             **p *= before / after;
         }
+    }
+}
+
+impl<P: Label, A: Label, F: Label> crate::Inflect<F> for Grammar<'_, P, A, F> {
+    fn cells(&self) -> usize {
+        self.cells
+    }
+
+    fn candidates(&self, lemma: &str, cell: usize, known: &Known<'_, F>) -> Vec<Candidate<'_>> {
+        Grammar::candidates(self, lemma, cell, known)
     }
 }

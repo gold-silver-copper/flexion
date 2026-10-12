@@ -10,13 +10,13 @@ use flexion::Choice;
 /// 4 rules and 2 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
-        "" => [Smerdato 7984, Andatosene 103],
-        "e" => [Andatosene 14],
-        "i" => [Andatosene 89],
-        "o" => [Smerdato 7984],
+        "" => [Erdato 5205, Datosene 97],
+        "e" => [Datosene 14],
+        "i" => [Datosene 83],
+        "o" => [Erdato 5205],
     }
     listed {
-        "affidatole" => Andatosene,
-        "vendico" => Smerdato,
+        "affidatole" => Datosene,
+        "vendico" => Erdato,
     }
 };

@@ -21,9 +21,12 @@ mod orthography;
 mod paradigm;
 pub mod pattern;
 mod stress;
+mod systems;
 
-pub use choice::{Choice, Reading, Rule, Status, by_ending, tolerance};
-pub use grammar::{Compound, Grammar, Known, Placement, Prefix, Prefixes, Separation, sharpen};
+pub use choice::{Choice, Reading, Rule, Side, Status, by_ending, tolerance};
+pub use grammar::{
+    Compound, Grammar, Known, Placement, Prefix, Prefixes, Separation, WORD_END, restore, sharpen,
+};
 pub use orthography::{Casing, Orthography, Stress, Written, recase};
 pub use paradigm::{Form, Paradigm, Referral};
 pub use sound_law;
@@ -31,6 +34,7 @@ pub use stress::{
     Accent, AccentPattern, Finals, Place, Prosody, StressClass, Syllable, place as stress_place,
     position as stress_position, positions as stress_positions,
 };
+pub use systems::{Inflect, System, Systems};
 
 use std::fmt;
 
@@ -50,6 +54,16 @@ impl Label for u8 {
     }
     fn from_index(index: usize) -> Option<Self> {
         u8::try_from(index).ok()
+    }
+}
+
+/// A letter: what [`Grammar::marks`](crate::Grammar::marks) gives.
+impl Label for char {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        u32::try_from(index).ok().and_then(char::from_u32)
     }
 }
 
@@ -138,8 +152,8 @@ impl fmt::Display for UnknownValue {
 impl std::error::Error for UnknownValue {}
 
 /// A [`Choice`] written as data: its rules (`ending => [value count, …]`,
-/// sorted by ending read backwards) and its listed words (`word => value`,
-/// sorted).
+/// sorted by ending read backwards; or `starts { beginning => … }`, sorted)
+/// and its listed words (`word => value`, sorted).
 ///
 /// ```
 /// use flexion::{Choice, choice};
@@ -161,7 +175,17 @@ macro_rules! choice {
         rules { $( $ending:literal => [ $( $value:tt $count:literal ),* $(,)? ] ),* $(,)? }
         listed { $( $word:literal => $listed:tt ),* $(,)? }
     ) => {
+        $crate::choice!(@ $crate::Side::End; $( $ending => [ $( $value $count ),* ] ),*; $( $word => $listed ),*)
+    };
+    (
+        starts { $( $ending:literal => [ $( $value:tt $count:literal ),* $(,)? ] ),* $(,)? }
+        listed { $( $word:literal => $listed:tt ),* $(,)? }
+    ) => {
+        $crate::choice!(@ $crate::Side::Start; $( $ending => [ $( $value $count ),* ] ),*; $( $word => $listed ),*)
+    };
+    (@ $side:expr; $( $ending:literal => [ $( $value:tt $count:literal ),* ] ),*; $( $word:literal => $listed:tt ),*) => {
         $crate::Choice {
+            side: $side,
             rules: ::std::borrow::Cow::Borrowed(&[ $(
                 $crate::Rule {
                     ending: ::std::borrow::Cow::Borrowed($ending),

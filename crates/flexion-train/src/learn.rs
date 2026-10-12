@@ -216,13 +216,21 @@ pub fn learn<'s>(
     }
     spellings.sort();
     spellings.dedup_by(|a, b| a.0 == b.0);
-    let could_hide = |key: &str| {
-        key.chars()
-            .any(|c| orthography.folded.iter().any(|e| e.1 == c))
-    };
-    let hiding = words.iter().filter(|w| could_hide(&w.key)).count();
-    #[allow(clippy::cast_precision_loss)]
-    let hidden = spellings.len() as f32 / hiding.max(1) as f32;
+    // How a letter typed without its mark is written, by what follows it;
+    // the words it doesn't spell are listed.
+    let marks = marks(&orthography, &words, settings);
+    if let Some(marks) = &marks {
+        spellings = words
+            .iter()
+            .filter(|w| {
+                flexion::restore(&orthography, marks, settings.smoothing, &w.key, &w.key).0
+                    != w.letters
+            })
+            .map(|w| (Cow::Owned(w.key.clone()), Cow::Owned(w.letters.clone())))
+            .collect();
+        spellings.sort();
+        spellings.dedup_by(|a, b| a.0 == b.0);
+    }
     let mut members: Vec<Vec<String>> = vec![Vec::new(); paradigms.len()];
     for (w, &p) in words.iter().zip(&assignment) {
         if let Some(m) = members.get_mut(usize::from(p))
@@ -245,7 +253,7 @@ pub fn learn<'s>(
         accent,
         laws: None,
         spellings: Cow::Owned(spellings),
-        hidden,
+        marks,
         irregular: Cow::Owned(Vec::new()),
         smoothing: settings.smoothing,
         sharpness: 1.0,
@@ -351,7 +359,9 @@ fn first_form(w: &Word, c: usize) -> Option<&str> {
 const PREFIX_LETTERS: std::ops::RangeInclusive<usize> = 2..=12;
 
 /// Prefixes words inflect behind, and the words made of one with their
-/// bases: `(word's key, base)`.
+/// bases: `(word's key, base)`. Only where words separate prefixes: a
+/// dictionary that never writes one apart has none to learn (a prefix it
+/// keeps in front is no more than the start of a word).
 ///
 /// A word separates a prefix when a form of it puts the prefix after the
 /// rest, as a word of its own (`räuchre aus`). It keeps one in front when
@@ -466,7 +476,7 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
         }
     }
     counted.retain(|p, (s, _)| *s >= MIN_WORDS || proven.get(p).is_some_and(|&n| n >= MIN_WORDS));
-    if counted.is_empty() {
+    if !counted.values().any(|(s, _)| *s >= MIN_WORDS) {
         return (None, Vec::new());
     }
     // Every word that begins with a prefix: what it does with it.
@@ -586,6 +596,45 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
         drops: Cow::Owned(drops.into_iter().map(Cow::Owned).collect()),
     };
     (Some(prefixes), bases)
+}
+
+/// How a letter typed without its mark is written (see
+/// [`flexion::Grammar::marks`]): learned from every letter of the words that
+/// a mark could stand on, by the letter before it and the letters from it
+/// on. `None`
+/// where no word writes such a mark.
+fn marks<'a>(
+    orthography: &Orthography<'_>,
+    words: &[Word],
+    settings: Settings,
+) -> Option<flexion::Choice<'a, char>> {
+    let markable = |c: char| orthography.folded.iter().any(|e| e.1 == c);
+    let mut examples: Vec<(String, char)> = Vec::new();
+    let mut marked = false;
+    for w in words {
+        let mut before = flexion::WORD_END;
+        for ((i, k), l) in w.key.char_indices().zip(w.letters.chars()) {
+            if markable(k)
+                && let Some(rest) = w.key.get(i..)
+            {
+                marked |= l != k;
+                examples.push((format!("{before}{rest}{}", flexion::WORD_END), l));
+            }
+            before = k;
+        }
+    }
+    if !marked {
+        return None;
+    }
+    let mut choice = choose::learn_starts(&examples, settings, |around, m| {
+        around
+            .chars()
+            .nth(1)
+            .is_some_and(|c| orthography.fold(m) == c)
+    });
+    // What the rules get wrong is a word's own spelling, listed with it.
+    choice.exceptions = Cow::Owned(Vec::new());
+    Some(choice)
 }
 
 /// What the trainer writes for a referred cell while it learns paradigms.

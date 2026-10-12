@@ -104,6 +104,7 @@ pub fn learn<'a, L: Label + Hash + Ord>(
         .collect();
     rules.sort_by(|a, b| flexion::by_ending(&a.ending, &b.ending));
     let mut choice = Choice {
+        side: flexion::Side::End,
         rules: Cow::Owned(rules),
         exceptions: Cow::Owned(Vec::new()),
     };
@@ -130,6 +131,38 @@ pub fn learn<'a, L: Label + Hash + Ord>(
     exceptions.sort_by(|a, b| a.0.cmp(&b.0).then_with(|| a.1.cmp(&b.1)));
     choice.exceptions = Cow::Owned(exceptions);
     choice
+}
+
+/// [`learn`], for a choice that reads beginnings (see [`flexion::Side`]):
+/// its rules are learned on the words read backwards.
+pub fn learn_starts<'a, L: Label + Hash + Ord>(
+    examples: &[(String, L)],
+    settings: Settings,
+    fits: impl Fn(&str, L) -> bool,
+) -> Choice<'a, L> {
+    let back = |s: &str| -> String { s.chars().rev().collect() };
+    let reversed: Vec<(String, L)> = examples.iter().map(|(w, l)| (back(w), *l)).collect();
+    let learned = learn(&reversed, settings, |w, l| fits(&back(w), l));
+    let mut rules: Vec<Rule<'a, L>> = learned
+        .rules
+        .iter()
+        .map(|r| Rule {
+            ending: Cow::Owned(back(&r.ending)),
+            counts: r.counts.clone(),
+        })
+        .collect();
+    rules.sort_by(|a, b| a.ending.cmp(&b.ending));
+    let mut exceptions: Vec<(Cow<'a, str>, L)> = learned
+        .exceptions
+        .iter()
+        .map(|(w, l)| (Cow::Owned(back(w)), *l))
+        .collect();
+    exceptions.sort_by(|a, b| a.0.cmp(&b.0).then_with(|| a.1.cmp(&b.1)));
+    Choice {
+        side: flexion::Side::Start,
+        rules: Cow::Owned(rules),
+        exceptions: Cow::Owned(exceptions),
+    }
 }
 
 /// The bits saved telling the values of words counted `own` by their own

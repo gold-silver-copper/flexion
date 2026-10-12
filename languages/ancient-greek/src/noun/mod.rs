@@ -6,6 +6,7 @@
 pub mod accent;
 mod irregular;
 mod paradigms;
+mod prefixes;
 mod rules;
 mod spellings;
 
@@ -46,6 +47,7 @@ pub static GRAMMAR: Grammar<'static, Declension, accent::AccentClass> = Grammar 
     referrals: Cow::Borrowed(&[]),
     feature: None,
     compound: None,
+    prefixes: Some(prefixes::PREFIXES),
     accent: Some(flexion::Accent {
         patterns: Cow::Borrowed(&accent::PATTERNS),
         classes: Cow::Borrowed(&accent::CLASSES),

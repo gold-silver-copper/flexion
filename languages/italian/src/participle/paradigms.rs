@@ -33,15 +33,15 @@ macro_rules! declension {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `smerdato`: 7,984 words.
-    Smerdato,
-    /// Like `andatosene`: 103 words.
-    Andatosene,
+    /// Like `erdato`: 5,205 words.
+    Erdato,
+    /// Like `datosene`: 97 words.
+    Datosene,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 2] = [Declension::Smerdato, Declension::Andatosene];
+    pub const ALL: [Declension; 2] = [Declension::Erdato, Declension::Datosene];
 
     /// Its table.
     pub fn paradigm(self) -> Option<&'static Paradigm<'static>> {
@@ -59,13 +59,13 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 2] = [
-    // Smerdato: 7,984 words (barato, appassionato, accusato, castrato, pizzicato, potato).
-    declension!("smerdato", 7984, "~o";
+    // Erdato: 5,205 words (pizzicato, vinto, punto, domo, moderato, legato).
+    declension!("erdato", 5205, "~o";
         masculine: "~o", "~i";
         feminine: "~a", "~e";
     ),
-    // Andatosene: 103 words (indottomi, avutone, avutosi, affidatoci, affidatogli, affidatole).
-    declension!("andatosene", 103, "~o~";
+    // Datosene: 97 words (affidatole, datoci, datogli, datomi, vedutole, fattole).
+    declension!("datosene", 97, "~o~";
         masculine: "~o~", "~i~";
         feminine: "~a~", "~e~";
     ),

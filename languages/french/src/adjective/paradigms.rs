@@ -36,83 +36,74 @@ macro_rules! declension {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `sauvage`: 8,973 words.
-    Sauvage,
-    /// Like `fini`: 4,059 words.
-    Fini,
-    /// Like `bon`: 1,284 words.
+    /// Like `uvage`: 6,771 words.
+    Uvage,
+    /// Like `aud`: 3,455 words.
+    Aud,
+    /// Like `bon`: 1,170 words.
     Bon,
-    /// Like `trivial`: 888 words.
-    Trivial,
-    /// Like `chaleureux`: 585 words.
-    Chaleureux,
-    /// Like `vif`: 543 words.
+    /// Like `vial`: 686 words.
+    Vial,
+    /// Like `aleureux`: 516 words.
+    Aleureux,
+    /// Like `cis`: 435 words.
+    Cis,
+    /// Like `vif`: 400 words.
     Vif,
-    /// Like `précis`: 479 words.
-    Précis,
-    /// Like `gentil`: 367 words.
-    Gentil,
-    /// Like `dar`: 284 words.
+    /// Like `dar`: 278 words.
     Dar,
-    /// Like `régulier`: 222 words.
-    Régulier,
-    /// Like `fellateur`: 209 words.
-    Fellateur,
-    /// Like `rageur`: 140 words.
-    Rageur,
-    /// Like `net`: 51 words.
+    /// Like `gentil`: 251 words.
+    Gentil,
+    /// Like `gulier`: 207 words.
+    Gulier,
+    /// Like `émoteur`: 178 words.
+    Émoteur,
+    /// Like `ladeur`: 133 words.
+    Ladeur,
+    /// Like `net`: 50 words.
     Net,
-    /// Like `banal`: 12 words.
-    Banal,
-    /// Like `public`: 10 words.
-    Public,
-    /// Like `beau`: 10 words.
-    Beau,
+    /// Like `nal`: 11 words.
+    Nal,
     /// Like `gros`: 9 words.
     Gros,
-    /// Like `aigu`: 7 words.
+    /// Like `beau`: 9 words.
+    Beau,
+    /// Like `public`: 7 words.
+    Public,
+    /// Like `aigu`: 5 words.
     Aigu,
-    /// Like `long`: 3 words.
-    Long,
-    /// Like `franc`: 3 words.
-    Franc,
-    /// Like `faux`: 3 words.
-    Faux,
-    /// Like `bateau`: 3 words.
-    Bateau,
     /// Like `hébreu`: 3 words.
     Hébreu,
-    /// Like `précurseur`: 3 words.
-    Précurseur,
+    /// Like `curseur`: 3 words.
+    Curseur,
+    /// Like `cheur`: 3 words.
+    Cheur,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 24] = [
-        Declension::Sauvage,
-        Declension::Fini,
+    pub const ALL: [Declension; 21] = [
+        Declension::Uvage,
+        Declension::Aud,
         Declension::Bon,
-        Declension::Trivial,
-        Declension::Chaleureux,
+        Declension::Vial,
+        Declension::Aleureux,
+        Declension::Cis,
         Declension::Vif,
-        Declension::Précis,
-        Declension::Gentil,
         Declension::Dar,
-        Declension::Régulier,
-        Declension::Fellateur,
-        Declension::Rageur,
+        Declension::Gentil,
+        Declension::Gulier,
+        Declension::Émoteur,
+        Declension::Ladeur,
         Declension::Net,
-        Declension::Banal,
-        Declension::Public,
-        Declension::Beau,
+        Declension::Nal,
         Declension::Gros,
+        Declension::Beau,
+        Declension::Public,
         Declension::Aigu,
-        Declension::Long,
-        Declension::Franc,
-        Declension::Faux,
-        Declension::Bateau,
         Declension::Hébreu,
-        Declension::Précurseur,
+        Declension::Curseur,
+        Declension::Cheur,
     ];
 
     /// Its table.
@@ -130,138 +121,114 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 24] = [
-    // Sauvage: 8,973 words (abaxial, abominable, absorbable, acceptable, accessible, accordable).
-    declension!("sauvage", 8973, "~";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 21] = [
+    // Uvage: 6,771 words (abaxial, viable, minuscule, beige, black, mauve).
+    declension!("uvage", 6771, "~";
         masculine: "~", "~s";
         feminine: "~", "~s";
         before_vowel: "~";
     ),
-    // Fini: 4,059 words (gratuit, aberrant, abject, abrupt, nu, absent).
-    declension!("fini", 4059, "~";
+    // Aud: 3,455 words (gratuit, nu, second, flatulent, bot, standard).
+    declension!("aud", 3455, "~";
         masculine: "~", "~s";
         feminine: "~e", "~es";
         before_vowel: "~";
     ),
-    // Bon: 1,284 words (chien, moron, con, tien, mien, alsacien).
-    declension!("bon", 1284, "~";
+    // Bon: 1,170 words (con, tien, mien, bon, italien, breton).
+    declension!("bon", 1170, "~";
         masculine: "~", "~s";
         feminine: "~ne", "~nes";
         before_vowel: "~";
     ),
-    // Trivial: 888 words (adjectival, abbatial, abdominal, abnormal, abyssal, plural).
-    declension!("trivial", 888, "~l";
+    // Vial: 686 words (plural, fiscal, global, mental, musical, dual).
+    declension!("vial", 686, "~l";
         masculine: "~l", "~ux";
         feminine: "~le", "~les";
         before_vowel: "~l";
     ),
-    // Chaleureux: 585 words (doux, gueux, heureux, paresseux, nuageux, douteux).
-    declension!("chaleureux", 585, "~x";
+    // Aleureux: 516 words (faux, doux, roux, gueux, heureux, nuageux).
+    declension!("aleureux", 516, "~x";
         masculine: "~x", "~x";
         feminine: "~se", "~ses";
         before_vowel: "~x";
     ),
-    // Vif: 543 words (vif, neuf, massif, serf, naïf, sauf).
-    declension!("vif", 543, "~f";
-        masculine: "~f", "~fs";
-        feminine: "~ve", "~ves";
-        before_vowel: "~f";
-    ),
-    // Précis: 479 words (japonais, bourgeois, anglais, pers, français, gris).
-    declension!("précis", 479, "~";
+    // Cis: 435 words (japonais, pers, gris, gaulois, hongrois, pris).
+    declension!("cis", 435, "~";
         masculine: "~", "~";
         feminine: "~e", "~es";
         before_vowel: "~";
     ),
-    // Gentil: 367 words (duel, cruel, éventuel, pluriel, mortel, gentil).
-    declension!("gentil", 367, "~";
-        masculine: "~", "~s";
-        feminine: "~le", "~les";
-        before_vowel: "~";
+    // Vif: 400 words (vif, neuf, massif, serf, naïf, sauf).
+    declension!("vif", 400, "~f";
+        masculine: "~f", "~fs";
+        feminine: "~ve", "~ves";
+        before_vowel: "~f";
     ),
-    // Dar: 284 words (gratis, orange, bio, poison, dar, nickel).
-    declension!("dar", 284, "~";
+    // Dar: 278 words (gratis, bio, poison, dar, nickel, x).
+    declension!("dar", 278, "~";
         masculine: "~", "~";
         feminine: "~", "~";
         before_vowel: "~";
     ),
-    // Régulier: 222 words (secret, quiet, fier, premier, cher, léger).
-    declension!("régulier", 222, "~e~";
+    // Gentil: 251 words (duel, cruel, éventuel, pluriel, gentil, matériel).
+    declension!("gentil", 251, "~";
+        masculine: "~", "~s";
+        feminine: "~le", "~les";
+        before_vowel: "~";
+    ),
+    // Gulier: 207 words (secret, quiet, fier, premier, cher, léger).
+    declension!("gulier", 207, "~e~";
         masculine: "~e~", "~e~s";
         feminine: "~è~e", "~è~es";
         before_vowel: "~e~";
     ),
-    // Fellateur: 209 words (observateur, moteur, directeur, provocateur, transformateur, formateur).
-    declension!("fellateur", 209, "~eu~";
+    // Émoteur: 178 words (formateur, éjaculateur, vecteur, destructeur, migrateur, spéculateur).
+    declension!("émoteur", 178, "~eu~";
         masculine: "~eu~", "~eu~s";
         feminine: "~~ice", "~~ices";
         before_vowel: "~eu~";
     ),
-    // Rageur: 140 words (poseur, bricoleur, joueur, voyageur, voleur, songeur).
-    declension!("rageur", 140, "~r";
+    // Ladeur: 133 words (poseur, bricoleur, joueur, voyageur, voleur, songeur).
+    declension!("ladeur", 133, "~r";
         masculine: "~r", "~rs";
         feminine: "~se", "~ses";
         before_vowel: "~r";
     ),
-    // Net: 51 words (violet, sot, net, chou, cadet, gringalet).
-    declension!("net", 51, "~";
+    // Net: 50 words (violet, sot, net, chou, gringalet, coi).
+    declension!("net", 50, "~";
         masculine: "~", "~s";
         feminine: "~te", "~tes";
         before_vowel: "~";
     ),
-    // Banal: 12 words (natal, banal, final, atonal, tribal, tonal).
-    declension!("banal", 12, "~l";
+    // Nal: 11 words (final, tonal, cérémonial, nymphal, tombal, tal).
+    declension!("nal", 11, "~l";
         masculine: "~l", "~ls|~ux";
         feminine: "~le", "~les";
         before_vowel: "~l";
     ),
-    // Public: 10 words (public, turc, ammoniac, caduc, laïc, parapublic).
-    declension!("public", 10, "~c";
-        masculine: "~c", "~cs";
-        feminine: "~que", "~ques";
-        before_vowel: "~c";
-    ),
-    // Beau: 10 words (beau, nouveau, puceau, tourangeau, manceau, quadrijumeau).
-    declension!("beau", 10, "~au";
-        masculine: "~au", "~aux";
-        feminine: "~lle", "~lles";
-        before_vowel: "~au";
-    ),
-    // Gros: 9 words (las, gras, bas, coulis, gros, épais).
+    // Gros: 9 words (las, gras, bas, gros, épais, maous).
     declension!("gros", 9, "~";
         masculine: "~", "~";
         feminine: "~se", "~ses";
         before_vowel: "~";
     ),
-    // Aigu: 7 words (aigu, ambigu, contigu, subaigu, exigu, suraigu).
-    declension!("aigu", 7, "~u";
+    // Beau: 9 words (beau, puceau, tourangeau, manceau, esquimau, uveau).
+    declension!("beau", 9, "~au";
+        masculine: "~au", "~aux";
+        feminine: "~lle", "~lles";
+        before_vowel: "~au";
+    ),
+    // Public: 7 words (public, turc, laïc, vioc, maufranc, moniac).
+    declension!("public", 7, "~c";
+        masculine: "~c", "~cs";
+        feminine: "~que", "~ques";
+        before_vowel: "~c";
+    ),
+    // Aigu: 5 words (aigu, bégu, bigu, tigu, igu).
+    declension!("aigu", 5, "~u";
         masculine: "~u", "~us";
         feminine: "~uë|~üe", "~uës|~ües";
         before_vowel: "~u";
-    ),
-    // Long: 3 words (long, oblong, barlong).
-    declension!("long", 3, "~";
-        masculine: "~", "~s";
-        feminine: "~ue", "~ues";
-        before_vowel: "~";
-    ),
-    // Franc: 3 words (franc, blanc, antiblanc).
-    declension!("franc", 3, "~";
-        masculine: "~", "~s";
-        feminine: "~he", "~hes";
-        before_vowel: "~";
-    ),
-    // Faux: 3 words (faux, roux, archifaux).
-    declension!("faux", 3, "~x";
-        masculine: "~x", "~x";
-        feminine: "~sse", "~sses";
-        before_vowel: "~x";
-    ),
-    // Bateau: 3 words (bateau, marteau, morvandiau).
-    declension!("bateau", 3, "~";
-        masculine: "~", "~x";
-        feminine: "~", "~x";
-        before_vowel: "~";
     ),
     // Hébreu: 3 words (hébreu, scrogneugneu, mantchou).
     declension!("hébreu", 3, "~";
@@ -269,10 +236,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 24] = [
         feminine: "~e", "~es";
         before_vowel: "~";
     ),
-    // Précurseur: 3 words (avant-coureur, précurseur, entremetteur).
-    declension!("précurseur", 3, "~~ur";
+    // Curseur: 3 words (avant-coureur, curseur, tremetteur).
+    declension!("curseur", 3, "~~ur";
         masculine: "~~ur", "~~urs";
         feminine: "~~use", "~~uses";
         before_vowel: "~~ur";
+    ),
+    // Cheur: 3 words (vengeur, enchanteur, cheur).
+    declension!("cheur", 3, "~u~";
+        masculine: "~u~", "~u~s";
+        feminine: "~~esse", "~~esses";
+        before_vowel: "~u~";
     ),
 ];

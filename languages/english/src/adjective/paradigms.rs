@@ -40,10 +40,10 @@ pub enum Declension {
     Major,
     /// Like `external`: 2,023 words.
     External,
-    /// Like `heavy`: 1,776 words.
-    Heavy,
     /// Like `open`: 1,655 words.
     Open,
+    /// Like `heavy`: 1,475 words.
+    Heavy,
     /// Like `round`: 1,151 words.
     Round,
     /// Like `regular`: 927 words.
@@ -52,31 +52,31 @@ pub enum Declension {
     Stacked,
     /// Like `mental`: 541 words.
     Mental,
-    /// Like `soft`: 399 words.
+    /// Like `soft`: 370 words.
     Soft,
     /// Like `modal`: 330 words.
     Modal,
-    /// Like `free`: 225 words.
+    /// Like `free`: 203 words.
     Free,
     /// Like `organic`: 174 words.
     Organic,
-    /// Like `clayey`: 116 words.
-    Clayey,
-    /// Like `easy`: 87 words.
+    /// Like `ayey`: 107 words.
+    Ayey,
+    /// Like `easy`: 62 words.
     Easy,
     /// Like `mortal`: 50 words.
     Mortal,
-    /// Like `rich`: 40 words.
-    Rich,
     /// Like `fiery`: 40 words.
     Fiery,
     /// Like `oscarworthy`: 35 words.
     Oscarworthy,
+    /// Like `rich`: 34 words.
+    Rich,
     /// Like `moot`: 32 words.
     Moot,
     /// Like `ostentatious`: 31 words.
     Ostentatious,
-    /// Like `simple`: 26 words.
+    /// Like `simple`: 28 words.
     Simple,
     /// Like `motile`: 25 words.
     Motile,
@@ -86,12 +86,12 @@ pub enum Declension {
     Mosey,
     /// Like `right`: 19 words.
     Right,
-    /// Like `awful`: 14 words.
-    Awful,
     /// Like `slim`: 13 words.
     Slim,
     /// Like `otiose`: 13 words.
     Otiose,
+    /// Like `awful`: 13 words.
+    Awful,
     /// Like `reeded`: 12 words.
     Reeded,
     /// Like `momental`: 12 words.
@@ -102,12 +102,10 @@ pub enum Declension {
     Upstream,
     /// Like `oedemic`: 11 words.
     Oedemic,
-    /// Like `flat`: 10 words.
-    Flat,
     /// Like `ottawian`: 10 words.
     Ottawian,
-    /// Like `sad`: 9 words.
-    Sad,
+    /// Like `flat`: 9 words.
+    Flat,
     /// Like `eevn`: 9 words.
     Eevn,
     /// Like `switchy`: 9 words.
@@ -116,10 +114,16 @@ pub enum Declension {
     Big,
     /// Like `advanced`: 8 words.
     Advanced,
+    /// Like `mellow`: 8 words.
+    Mellow,
     /// Like `motoric`: 8 words.
     Motoric,
     /// Like `meetable`: 8 words.
     Meetable,
+    /// Like `oodthirsty`: 8 words.
+    Oodthirsty,
+    /// Like `sad`: 7 words.
+    Sad,
     /// Like `mid`: 7 words.
     Mid,
     /// Like `orotund`: 7 words.
@@ -138,40 +142,42 @@ pub enum Declension {
     Memetic,
     /// Like `mossful`: 5 words.
     Mossful,
+    /// Like `evil`: 4 words.
+    Evil,
     /// Like `moreish`: 4 words.
     Moreish,
     /// Like `tonguey`: 4 words.
     Tonguey,
     /// Like `morrisian`: 4 words.
     Morrisian,
+    /// Like `otesque`: 3 words.
+    Otesque,
     /// Like `flip`: 3 words.
     Flip,
     /// Like `thin`: 3 words.
     Thin,
-    /// Like `evil`: 3 words.
-    Evil,
     /// Like `moronic`: 3 words.
     Moronic,
-    /// Like `mellow`: 3 words.
-    Mellow,
     /// Like `damned`: 3 words.
     Damned,
     /// Like `motty`: 3 words.
     Motty,
     /// Like `mommish`: 3 words.
     Mommish,
+    /// Like `ossomy`: 3 words.
+    Ossomy,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 65] = [
+    pub const ALL: [Declension; 68] = [
         Declension::Good,
         Declension::Solid,
         Declension::Trivial,
         Declension::Major,
         Declension::External,
-        Declension::Heavy,
         Declension::Open,
+        Declension::Heavy,
         Declension::Round,
         Declension::Regular,
         Declension::Stacked,
@@ -180,12 +186,12 @@ impl Declension {
         Declension::Modal,
         Declension::Free,
         Declension::Organic,
-        Declension::Clayey,
+        Declension::Ayey,
         Declension::Easy,
         Declension::Mortal,
-        Declension::Rich,
         Declension::Fiery,
         Declension::Oscarworthy,
+        Declension::Rich,
         Declension::Moot,
         Declension::Ostentatious,
         Declension::Simple,
@@ -193,23 +199,25 @@ impl Declension {
         Declension::Memorial,
         Declension::Mosey,
         Declension::Right,
-        Declension::Awful,
         Declension::Slim,
         Declension::Otiose,
+        Declension::Awful,
         Declension::Reeded,
         Declension::Momental,
         Declension::Ooc,
         Declension::Upstream,
         Declension::Oedemic,
-        Declension::Flat,
         Declension::Ottawian,
-        Declension::Sad,
+        Declension::Flat,
         Declension::Eevn,
         Declension::Switchy,
         Declension::Big,
         Declension::Advanced,
+        Declension::Mellow,
         Declension::Motoric,
         Declension::Meetable,
+        Declension::Oodthirsty,
+        Declension::Sad,
         Declension::Mid,
         Declension::Orotund,
         Declension::Orectic,
@@ -219,17 +227,18 @@ impl Declension {
         Declension::Otomian,
         Declension::Memetic,
         Declension::Mossful,
+        Declension::Evil,
         Declension::Moreish,
         Declension::Tonguey,
         Declension::Morrisian,
+        Declension::Otesque,
         Declension::Flip,
         Declension::Thin,
-        Declension::Evil,
         Declension::Moronic,
-        Declension::Mellow,
         Declension::Damned,
         Declension::Motty,
         Declension::Mommish,
+        Declension::Ossomy,
     ];
 
     /// Its table.
@@ -247,7 +256,7 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 65] = [
+pub(super) static DECLENSIONS: [Paradigm<'static>; 68] = [
     // Good: 40,940 words (nonsense, polysemic, adjectival, fabaceous, fabian, abandoned).
     declension!("good", 40940, "~";
         adjective: "~", "more ~", "most ~";
@@ -268,13 +277,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 65] = [
     declension!("external", 2023, "~~";
         adjective: "~~", "mor~ e~", "most ~~";
     ),
-    // Heavy: 1,776 words (craggy, country, early, baby, cherry, yeasty).
-    declension!("heavy", 1776, "~y";
-        adjective: "~y", "~ier", "~iest";
-    ),
     // Open: 1,655 words (obfuscate, open, offset, olive, overweight, oa).
     declension!("open", 1655, "~~";
         adjective: "~~", "m~re o~", "m~st o~";
+    ),
+    // Heavy: 1,475 words (country, early, baby, yeasty, angry, pinky).
+    declension!("heavy", 1475, "~y";
+        adjective: "~y", "~ier", "~iest";
     ),
     // Round: 1,151 words (raven, russian, rational, room, russet, ruby).
     declension!("round", 1151, "~~";
@@ -292,37 +301,33 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 65] = [
     declension!("mental", 541, "~~~";
         adjective: "~~~", "~or~ me~", "~ost m~~";
     ),
-    // Soft: 399 words (brown, august, abject, odd, absent, acid).
-    declension!("soft", 399, "~";
+    // Soft: 370 words (august, abject, odd, absent, acid, slow).
+    declension!("soft", 370, "~";
         adjective: "~", "~er", "~est";
     ),
     // Modal: 330 words (mobile, money, modest, mongolian, mozambican, monastic).
     declension!("modal", 330, "~~";
         adjective: "~~", "~re mo~", "~st mo~";
     ),
-    // Free: 225 words (free, able, abstruse, orange, crude, false).
-    declension!("free", 225, "~";
+    // Free: 203 words (free, able, abstruse, false, welcome, beige).
+    declension!("free", 203, "~";
         adjective: "~", "~r", "~st";
     ),
     // Organic: 174 words (ordinate, original, ordinary, orthodox, ornamental, orbed).
     declension!("organic", 174, "~~~";
         adjective: "~~~", "m~~e or~", "m~st o~~";
     ),
-    // Clayey: 116 words (smiley, horsey, dykey, limey, cagey, dickey).
-    declension!("clayey", 116, "~~y";
+    // Ayey: 107 words (smiley, horsey, dykey, limey, cagey, dickey).
+    declension!("ayey", 107, "~~y";
         adjective: "~~y", "~i~r", "~i~st";
     ),
-    // Easy: 87 words (shiny, stodgy, easy, rocky, shy, moldy).
-    declension!("easy", 87, "~~y";
-        adjective: "~~y", "~~ier|more ~~y", "~~iest";
+    // Easy: 62 words (easy, rocky, shy, moldy, mushy, shapely).
+    declension!("easy", 62, "~~y";
+        adjective: "~~y", "~~ier", "~~iest";
     ),
     // Mortal: 50 words (moral, mortal, mordant, moriform, morbid, morto).
     declension!("mortal", 50, "~~~";
         adjective: "~~~", "~~e mor~", "~st mo~~";
-    ),
-    // Rich: 40 words (skew, stay, swear, shallow, rotten, still).
-    declension!("rich", 40, "~~";
-        adjective: "~~", "~~er|more ~~", "~~est";
     ),
     // Fiery: 40 words (fiery, brotherly, likely, cringeworthy, priestly, namely).
     declension!("fiery", 40, "~y";
@@ -332,6 +337,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 65] = [
     declension!("oscarworthy", 35, "~~~";
         adjective: "~~~", "m~re o~~", "m~~t os~";
     ),
+    // Rich: 34 words (skew, stay, swear, rotten, real, rigid).
+    declension!("rich", 34, "~~";
+        adjective: "~~", "~~er", "~~est";
+    ),
     // Moot: 32 words (moot, moonbat, mooted, moonlit, moorish, moonish).
     declension!("moot", 32, "~~~";
         adjective: "~~~", "~re m~o~", "~st m~o~";
@@ -340,9 +349,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 65] = [
     declension!("ostentatious", 31, "~~~";
         adjective: "~~~", "m~re o~~", "m~~ ost~";
     ),
-    // Simple: 26 words (minute, mauve, male, safe, simple, true).
-    declension!("simple", 26, "~~";
-        adjective: "~~", "~~r|more ~~", "~~st";
+    // Simple: 28 words (minute, mauve, male, safe, simple, true).
+    declension!("simple", 28, "~~";
+        adjective: "~~", "~~r", "~~st";
     ),
     // Motile: 25 words (motherly, motile, motivating, motherish, motivational, mothered).
     declension!("motile", 25, "~~~";
@@ -360,10 +369,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 65] = [
     declension!("right", 19, "~";
         adjective: "~", "further ~|farther ~", "furthest ~|farthest ~";
     ),
-    // Awful: 14 words (painful, awful, grateful, wonderful, plentiful, joyful).
-    declension!("awful", 14, "~";
-        adjective: "~", "~ler|more ~", "~lest|most ~";
-    ),
     // Slim: 13 words (slim, bum, prim, clam, dim, rum).
     declension!("slim", 13, "~";
         adjective: "~", "~mer", "~mest";
@@ -371,6 +376,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 65] = [
     // Otiose: 13 words (otiose, otherworldly, otaheite, otherworldy, otherworldish, otherly).
     declension!("otiose", 13, "~~~";
         adjective: "~~~", "m~re o~~", "m~s~ ot~";
+    ),
+    // Awful: 13 words (painful, awful, wonderful, joyful, woeful, harmful).
+    declension!("awful", 13, "~";
+        adjective: "~", "~ler|more ~", "~lest|most ~";
     ),
     // Reeded: 12 words (reeded, reeling, reexamined, reefed, reedlike, reezed).
     declension!("reeded", 12, "~~~";
@@ -392,17 +401,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 65] = [
     declension!("oedemic", 11, "~~~";
         adjective: "~~~", "m~r~ oe~", "m~st o~~";
     ),
-    // Flat: 10 words (shit, hot, fit, wet, flat, jet).
-    declension!("flat", 10, "~";
-        adjective: "~", "~ter", "~test";
-    ),
     // Ottawian: 10 words (ottawan, otterlike, ottery, otterish, ottomanic, ottawian).
     declension!("ottawian", 10, "~~~~";
         adjective: "~~~~", "m~re o~~~", "m~s~ o~t~";
     ),
-    // Sad: 9 words (red, dud, glad, rad, sad, mad).
-    declension!("sad", 9, "~";
-        adjective: "~", "~der", "~dest";
+    // Flat: 9 words (shit, hot, fit, wet, flat, jet).
+    declension!("flat", 9, "~";
+        adjective: "~", "~ter", "~test";
     ),
     // Eevn: 9 words (eeyorish, eensy, eesome, eellike, eevn, eentsy).
     declension!("eevn", 9, "~~~";
@@ -420,6 +425,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 65] = [
     declension!("advanced", 8, "~~";
         adjective: "~~", "more ~~", "most ~~";
     ),
+    // Mellow: 8 words (mellow, reef, reem, oopid, eet, oro).
+    declension!("mellow", 8, "~~~";
+        adjective: "~~~", "~~~er", "~~~est";
+    ),
     // Motoric: 8 words (motormouthed, motoric, motorable, motorik, motorlike, motogenic).
     declension!("motoric", 8, "~~~~";
         adjective: "~~~~", "~re mo~~~", "~s~ m~to~";
@@ -427,6 +436,14 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 65] = [
     // Meetable: 8 words (meetable, meetinglike, meedful, meekish, meedless, meedy).
     declension!("meetable", 8, "~~~~";
         adjective: "~~~~", "~or~ m~e~", "~ost m~~~";
+    ),
+    // Oodthirsty: 8 words (orly, oodthirsty, eppy, oopy, eechworthy, reetworthy).
+    declension!("oodthirsty", 8, "~~~y";
+        adjective: "~~~y", "~~~ier", "~~~iest";
+    ),
+    // Sad: 7 words (red, dud, glad, rad, sad, mad).
+    declension!("sad", 7, "~";
+        adjective: "~", "~der", "~dest";
     ),
     // Mid: 7 words (first, ben, middle, fore, mid, rightern).
     declension!("mid", 7, "~";
@@ -444,7 +461,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 65] = [
     declension!("ossified", 6, "~~~~";
         adjective: "~~~~", "m~re o~~~", "m~~t o~s~";
     ),
-    // Inner: 6 words (thither, upper, outer, inner, nether, nither).
+    // Inner: 6 words (upper, outer, inner, nether, nither, ither).
     declension!("inner", 6, "~";
         adjective: "~", "~more", "~most";
     ),
@@ -464,6 +481,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 65] = [
     declension!("mossful", 5, "~~~~";
         adjective: "~~~~", "~re mo~~~", "~~t mo~s~";
     ),
+    // Evil: 4 words (evil, mournful, mirthful, entiful).
+    declension!("evil", 4, "~~";
+        adjective: "~~", "~~ler", "~~lest";
+    ),
     // Moreish: 4 words (moreish, moresque, moreauvian, morescan).
     declension!("moreish", 4, "~~~";
         adjective: "~~~", "~~ more~", "~st mo~~";
@@ -476,6 +497,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 65] = [
     declension!("morrisian", 4, "~~~~";
         adjective: "~~~~", "~~e mo~r~", "~st mo~~~";
     ),
+    // Otesque: 3 words (orange, otesque, ophane).
+    declension!("otesque", 3, "~~~";
+        adjective: "~~~", "~~~r", "~~~st";
+    ),
     // Flip: 3 words (crap, hip, flip).
     declension!("flip", 3, "~";
         adjective: "~", "~per", "~pest";
@@ -484,17 +509,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 65] = [
     declension!("thin", 3, "~";
         adjective: "~", "~ner", "~nest";
     ),
-    // Evil: 3 words (evil, mournful, mirthful).
-    declension!("evil", 3, "~~";
-        adjective: "~~", "~~ler", "~~lest";
-    ),
     // Moronic: 3 words (morose, moronic, moronical).
     declension!("moronic", 3, "~~~~";
         adjective: "~~~~", "~~e m~ro~", "~st mo~~~";
-    ),
-    // Mellow: 3 words (mellow, reef, reem).
-    declension!("mellow", 3, "~~~";
-        adjective: "~~~", "~~~er|mo~ r~e~", "~~~est|most ~~~";
     ),
     // Damned: 3 words (damned, darned, doggoned).
     declension!("damned", 3, "~e~";
@@ -507,5 +524,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 65] = [
     // Mommish: 3 words (mommyish, mommylike, mommish).
     declension!("mommish", 3, "~~~~";
         adjective: "~~~~", "~re ~o~m~", "~st ~o~m~";
+    ),
+    // Ossomy: 3 words (mormony, otchety, ossomy).
+    declension!("ossomy", 3, "~~~~y";
+        adjective: "~~~~y", "~~~~ier", "~~~~iest";
     ),
 ];

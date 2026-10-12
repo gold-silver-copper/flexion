@@ -151,40 +151,40 @@ macro_rules! declension {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `धृत`: 942 words.
+    /// Like `धृत`: 907 words.
     धृत,
-    /// Like `अवर`: 246 words.
+    /// Like `अवर`: 245 words.
     अवर,
-    /// Like `मूढ`: 183 words.
+    /// Like `मूढ`: 181 words.
     मूढ,
-    /// Like `वामन`: 114 words.
+    /// Like `वामन`: 110 words.
     वामन,
     /// Like `हार`: 60 words.
     हार,
     /// Like `भाविन्`: 59 words.
     भाविन,
-    /// Like `मनु`: 34 words.
-    मनु,
+    /// Like `ांशु`: 34 words.
+    ांशु,
     /// Like `शुचि`: 32 words.
     शुचि,
     /// Like `रसवत्`: 31 words.
     रसवत,
-    /// Like `हितकर`: 23 words.
-    हितकर,
-    /// Like `घटक`: 22 words.
-    घटक,
-    /// Like `धायस्`: 19 words.
-    धायस,
+    /// Like `काशक`: 22 words.
+    काशक,
+    /// Like `मनस्`: 19 words.
+    मनस,
     /// Like `भारिन्`: 18 words.
     भारिन,
+    /// Like `हितकर`: 18 words.
+    हितकर,
     /// Like `ऋतावन्`: 15 words.
     ऋतावन,
     /// Like `ज्यायस्`: 15 words.
     जयायस,
     /// Like `धृषु`: 13 words.
     धृषु,
-    /// Like `चिर`: 13 words.
-    चिर,
+    /// Like `थिर`: 13 words.
+    थिर,
     /// Like `लघु`: 11 words.
     लघु,
     /// Like `लीन`: 11 words.
@@ -207,14 +207,14 @@ pub enum Declension {
     असत,
     /// Like `महात्मन्`: 6 words.
     महातमन,
-    /// Like `उशिज्`: 6 words.
-    उशिज,
+    /// Like `राज्`: 6 words.
+    राज,
     /// Like `पा`: 6 words.
     पा,
     /// Like `हरि`: 6 words.
     हरि,
-    /// Like `स्पृश्`: 5 words.
-    सपृश,
+    /// Like `पृश्`: 5 words.
+    पृश,
     /// Like `नीरोग`: 4 words.
     नीरोग,
     /// Like `अमनस्`: 4 words.
@@ -234,17 +234,17 @@ impl Declension {
         Declension::वामन,
         Declension::हार,
         Declension::भाविन,
-        Declension::मनु,
+        Declension::ांशु,
         Declension::शुचि,
         Declension::रसवत,
-        Declension::हितकर,
-        Declension::घटक,
-        Declension::धायस,
+        Declension::काशक,
+        Declension::मनस,
         Declension::भारिन,
+        Declension::हितकर,
         Declension::ऋतावन,
         Declension::जयायस,
         Declension::धृषु,
-        Declension::चिर,
+        Declension::थिर,
         Declension::लघु,
         Declension::लीन,
         Declension::छिद,
@@ -256,10 +256,10 @@ impl Declension {
         Declension::परिय,
         Declension::असत,
         Declension::महातमन,
-        Declension::उशिज,
+        Declension::राज,
         Declension::पा,
         Declension::हरि,
-        Declension::सपृश,
+        Declension::पृश,
         Declension::नीरोग,
         Declension::अमनस,
         Declension::बहुवरीहि,
@@ -282,8 +282,8 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
-    // धृत: 942 words (विश्व, ज, द, कमल, बुद्ध, स्निह्).
-    declension!("ध\u{943}त", 942, "~";
+    // धृत: 907 words (ज, द, कमल, बुद्ध, सह, आद).
+    declension!("ध\u{943}त", 907, "~";
         nominative_masculine: "~ः", "~ौ", "~ाः";
         nominative_feminine: "~ा", "~\u{947}", "~ाः";
         nominative_neuter: "~म\u{94d}", "~\u{947}", "~ानि";
@@ -311,8 +311,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         comparative: "~तर";
         superlative: "~तम";
     ),
-    // अवर: 246 words (मूर्ख, मधुर, ताम्र, सूर्य, कार्य, निर्मम).
-    declension!("अवर", 246, "~";
+    // अवर: 245 words (मूर्ख, मधुर, ताम्र, सूर्य, कार्य, मनुष्य).
+    declension!("अवर", 245, "~";
         nominative_masculine: "~ः", "~ौ", "~ाः";
         nominative_feminine: "~ा", "~\u{947}", "~ाः";
         nominative_neuter: "~म\u{94d}", "~\u{947}", "~ाणि";
@@ -340,8 +340,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         comparative: "~तर";
         superlative: "~तम";
     ),
-    // मूढ: 183 words (भारत, देव, गणित, विशेषण, लेखन, दैव).
-    declension!("म\u{942}ढ", 183, "~";
+    // मूढ: 181 words (भारत, देव, गणित, लेखन, दैव, मर्दन).
+    declension!("म\u{942}ढ", 181, "~";
         nominative_masculine: "~ः", "~ौ", "~ाः";
         nominative_feminine: "~ी", "~\u{94d}यौ", "~\u{94d}यः";
         nominative_neuter: "~म\u{94d}", "~\u{947}", "~ानि";
@@ -369,8 +369,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         comparative: "~तर";
         superlative: "~तम";
     ),
-    // वामन: 114 words (जन, इन, दूरदर्शन, दिन, कठिन, बुध्न).
-    declension!("वामन", 114, "~";
+    // वामन: 110 words (जन, इन, दूरदर्शन, दिन, कठिन, बुध्न).
+    declension!("वामन", 110, "~";
         nominative_masculine: "~ः", "~ौ", "~ाः";
         nominative_feminine: "~ा", "~\u{947}", "~ाः";
         nominative_neuter: "~म\u{94d}", "~\u{947}", "~ानि";
@@ -456,8 +456,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         comparative: "~तर";
         superlative: "~तम";
     ),
-    // मनु: 34 words (वायु, पृदाकुसानु, मनु, स्थाणु, पाण्डु, सेतु).
-    declension!("मन\u{941}", 34, "~\u{941}";
+    // ांशु: 34 words (वायु, पृदाकुसानु, मनु, पाण्डु, सेतु, शम्भु).
+    declension!("ा\u{902}श\u{941}", 34, "~\u{941}";
         nominative_masculine: "~\u{941}ः", "~\u{942}", "~वः";
         nominative_feminine: "~\u{941}ः", "~\u{942}", "~वः";
         nominative_neuter: "~\u{941}", "~\u{941}नी", "~\u{942}नि";
@@ -543,37 +543,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         comparative: "~त\u{94d}तर";
         superlative: "~त\u{94d}तम";
     ),
-    // हितकर: 23 words (अरित्र, अग्निहोत्र, चित्र, सिंहदंष्ट्र, दरिद्र, विचित्र).
-    declension!("हितकर", 23, "~ि~~र";
-        nominative_masculine: "~ि~~रः", "~ि~~रौ", "~ि~~राः";
-        nominative_feminine: "~ि~~रा", "~ि~~र\u{947}", "~ि~~राः";
-        nominative_neuter: "~ि~~रम\u{94d}", "~ि~~र\u{947}", "~ि~~राणि";
-        accusative_masculine: "~ि~~रम\u{94d}", "~ि~~रौ", "~ि~~रान\u{94d}";
-        accusative_feminine: "~ि~~राम\u{94d}", "~ि~~र\u{947}", "~ि~~राः";
-        accusative_neuter: "~ि~~रम\u{94d}", "~ि~~र\u{947}", "~ि~~राणि";
-        instrumental_masculine: "~ि~~र\u{947}ण", "~ि~~राभ\u{94d}याम\u{94d}", "~ि~~र\u{948}ः";
-        instrumental_feminine: "~ि~~रया", "~ि~~राभ\u{94d}याम\u{94d}", "~ि~~राभिः";
-        instrumental_neuter: "~ि~~र\u{947}ण", "~ि~~राभ\u{94d}याम\u{94d}", "~ि~~र\u{948}ः";
-        dative_masculine: "~ि~~राय", "~ि~~राभ\u{94d}याम\u{94d}", "~ि~~र\u{947}भ\u{94d}यः";
-        dative_feminine: "~ि~~राय\u{948}", "~ि~~राभ\u{94d}याम\u{94d}", "~ि~~राभ\u{94d}यः";
-        dative_neuter: "~ि~~राय", "~ि~~राभ\u{94d}याम\u{94d}", "~ि~~र\u{947}भ\u{94d}यः";
-        ablative_masculine: "~ि~~रात\u{94d}", "~ि~~राभ\u{94d}याम\u{94d}", "~ि~~र\u{947}भ\u{94d}यः";
-        ablative_feminine: "~ि~~रायाः", "~ि~~राभ\u{94d}याम\u{94d}", "~ि~~राभ\u{94d}यः";
-        ablative_neuter: "~ि~~रात\u{94d}", "~ि~~राभ\u{94d}याम\u{94d}", "~ि~~र\u{947}भ\u{94d}यः";
-        genitive_masculine: "~ि~~रस\u{94d}य", "~ि~~रयोः", "~ि~~राणाम\u{94d}";
-        genitive_feminine: "~ि~~रायाः", "~ि~~रयोः", "~ि~~राणाम\u{94d}";
-        genitive_neuter: "~ि~~रस\u{94d}य", "~ि~~रयोः", "~ि~~राणाम\u{94d}";
-        locative_masculine: "~ि~~र\u{947}", "~ि~~रयोः", "~ि~~र\u{947}ष\u{941}";
-        locative_feminine: "~ि~~रायाम\u{94d}", "~ि~~रयोः", "~ि~~रास\u{941}";
-        locative_neuter: "~ि~~र\u{947}", "~ि~~रयोः", "~ि~~र\u{947}ष\u{941}";
-        vocative_masculine: "~ि~~र", "~ि~~रौ", "~ि~~राः";
-        vocative_feminine: "~ि~~र\u{947}", "~ि~~र\u{947}", "~ि~~राः";
-        vocative_neuter: "~ि~~र", "~ि~~र\u{947}", "~ि~~राणि";
-        comparative: "~\u{947}~ीयस~";
-        superlative: "~\u{947}~िष~ठ";
-    ),
-    // घटक: 22 words (आवश्यक, अंशक, जनक, नन्दक, खानक, पालक).
-    declension!("घटक", 22, "~~";
+    // काशक: 22 words (आवश्यक, अंशक, जनक, नन्दक, खानक, पालक).
+    declension!("काशक", 22, "~~";
         nominative_masculine: "~~ः", "~~ौ", "~~ाः";
         nominative_feminine: "~ि~ा", "~ि~\u{947}", "~ि~ाः";
         nominative_neuter: "~~म\u{94d}", "~~\u{947}", "~~ानि";
@@ -601,8 +572,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         comparative: "~~";
         superlative: "~~";
     ),
-    // धायस: 19 words (रिशादस्, स्वपस्, सुश्रवस्, सुशेवस्, वीतिराधस्, वपुस्).
-    declension!("धायस\u{94d}", 19, "~स\u{94d}";
+    // मनस: 19 words (रिशादस्, वीतिराधस्, वपुस्, तवस्, दुर्मनस्, अपस्).
+    declension!("मनस\u{94d}", 19, "~स\u{94d}";
         nominative_masculine: "~ाः", "~सौ", "~सः";
         nominative_feminine: "~ाः", "~सौ", "~सः";
         nominative_neuter: "~ः", "~सी", "~ा\u{902}सि";
@@ -658,6 +629,35 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         vocative_neuter: "~ि|~िन\u{94d}", "~िणी", "~ीणि";
         comparative: "~तर";
         superlative: "~तम";
+    ),
+    // हितकर: 18 words (अरित्र, अग्निहोत्र, चित्र, सिंहदंष्ट्र, दरिद्र, अमित्र).
+    declension!("हितकर", 18, "~ि~~र";
+        nominative_masculine: "~ि~~रः", "~ि~~रौ", "~ि~~राः";
+        nominative_feminine: "~ि~~रा", "~ि~~र\u{947}", "~ि~~राः";
+        nominative_neuter: "~ि~~रम\u{94d}", "~ि~~र\u{947}", "~ि~~राणि";
+        accusative_masculine: "~ि~~रम\u{94d}", "~ि~~रौ", "~ि~~रान\u{94d}";
+        accusative_feminine: "~ि~~राम\u{94d}", "~ि~~र\u{947}", "~ि~~राः";
+        accusative_neuter: "~ि~~रम\u{94d}", "~ि~~र\u{947}", "~ि~~राणि";
+        instrumental_masculine: "~ि~~र\u{947}ण", "~ि~~राभ\u{94d}याम\u{94d}", "~ि~~र\u{948}ः";
+        instrumental_feminine: "~ि~~रया", "~ि~~राभ\u{94d}याम\u{94d}", "~ि~~राभिः";
+        instrumental_neuter: "~ि~~र\u{947}ण", "~ि~~राभ\u{94d}याम\u{94d}", "~ि~~र\u{948}ः";
+        dative_masculine: "~ि~~राय", "~ि~~राभ\u{94d}याम\u{94d}", "~ि~~र\u{947}भ\u{94d}यः";
+        dative_feminine: "~ि~~राय\u{948}", "~ि~~राभ\u{94d}याम\u{94d}", "~ि~~राभ\u{94d}यः";
+        dative_neuter: "~ि~~राय", "~ि~~राभ\u{94d}याम\u{94d}", "~ि~~र\u{947}भ\u{94d}यः";
+        ablative_masculine: "~ि~~रात\u{94d}", "~ि~~राभ\u{94d}याम\u{94d}", "~ि~~र\u{947}भ\u{94d}यः";
+        ablative_feminine: "~ि~~रायाः", "~ि~~राभ\u{94d}याम\u{94d}", "~ि~~राभ\u{94d}यः";
+        ablative_neuter: "~ि~~रात\u{94d}", "~ि~~राभ\u{94d}याम\u{94d}", "~ि~~र\u{947}भ\u{94d}यः";
+        genitive_masculine: "~ि~~रस\u{94d}य", "~ि~~रयोः", "~ि~~राणाम\u{94d}";
+        genitive_feminine: "~ि~~रायाः", "~ि~~रयोः", "~ि~~राणाम\u{94d}";
+        genitive_neuter: "~ि~~रस\u{94d}य", "~ि~~रयोः", "~ि~~राणाम\u{94d}";
+        locative_masculine: "~ि~~र\u{947}", "~ि~~रयोः", "~ि~~र\u{947}ष\u{941}";
+        locative_feminine: "~ि~~रायाम\u{94d}", "~ि~~रयोः", "~ि~~रास\u{941}";
+        locative_neuter: "~ि~~र\u{947}", "~ि~~रयोः", "~ि~~र\u{947}ष\u{941}";
+        vocative_masculine: "~ि~~र", "~ि~~रौ", "~ि~~राः";
+        vocative_feminine: "~ि~~र\u{947}", "~ि~~र\u{947}", "~ि~~राः";
+        vocative_neuter: "~ि~~र", "~ि~~र\u{947}", "~ि~~राणि";
+        comparative: "~\u{947}~ीयस~";
+        superlative: "~\u{947}~िष~ठ";
     ),
     // ऋतावन: 15 words (वृत्रहन्, ऋतावन्, रक्षोहन्, वृषन्, हन्, यावन्).
     declension!("ऋतावन\u{94d}", 15, "~न\u{94d}";
@@ -746,8 +746,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         comparative: "~ीयस\u{94d}";
         superlative: "~िष\u{94d}ठ";
     ),
-    // चिर: 13 words (शिशिर, अजिर, रुधिर, स्थिर, बधिर, मेधिर).
-    declension!("चिर", 13, "~िर";
+    // थिर: 13 words (शिशिर, अजिर, रुधिर, बधिर, मेधिर, अस्थिर).
+    declension!("थिर", 13, "~िर";
         nominative_masculine: "~िरः", "~िरौ", "~िराः";
         nominative_feminine: "~िरा", "~िर\u{947}", "~िराः";
         nominative_neuter: "~िरम\u{94d}", "~िर\u{947}", "~िराणि";
@@ -804,7 +804,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         comparative: "~ीयस\u{94d}";
         superlative: "~िष\u{94d}ठ";
     ),
-    // लीन: 11 words (दीन, कनीन, प्राचीन, हीन, कालीन, कुलीन).
+    // लीन: 11 words (दीन, कनीन, हीन, कालीन, कुलीन, पीन).
     declension!("लीन", 11, "~ीन";
         nominative_masculine: "~ीनः", "~ीनौ", "~ीनाः";
         nominative_feminine: "~ीना", "~ीन\u{947}", "~ीनाः";
@@ -891,7 +891,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         comparative: "~ीयस\u{94d}";
         superlative: "~स\u{94d}तम";
     ),
-    // अनूप: 8 words (अल्प, तप, सत्संकल्प, स्वल्प, कश्यप, कल्प).
+    // अनूप: 8 words (अल्प, तप, सत्संकल्प, कश्यप, कल्प, अनूप).
     declension!("अन\u{942}प", 8, "~";
         nominative_masculine: "~ः", "~ौ", "~ाः";
         nominative_feminine: "~ा", "~\u{947}", "~ाः";
@@ -920,7 +920,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         comparative: "~तर";
         superlative: "~िष\u{94d}ठ";
     ),
-    // कारक: 8 words (विदूषक, कारक, तारक, सारक, प्रियकारक, क्षुद्रक).
+    // कारक: 8 words (कारक, तारक, सारक, क्षुद्रक, टेरक, दारक).
     declension!("कारक", 8, "~~";
         nominative_masculine: "~~ः", "~~ौ", "~~ाः";
         nominative_feminine: "~ि~ा", "~ि~\u{947}", "~ि~ाः";
@@ -978,7 +978,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         comparative: "~\u{947}यस\u{94d}";
         superlative: "~तम";
     ),
-    // सरवजित: 7 words (विद्युत्, दशत्, हरित्, सर्वजित्, च्युत्, श्चुत्).
+    // सरवजित: 7 words (दशत्, हरित्, सर्वजित्, च्युत्, श्चुत्, रोहित्).
     declension!("सर\u{94d}वजित\u{94d}", 7, "~त\u{94d}";
         nominative_masculine: "~त\u{94d}", "~तौ", "~तः";
         nominative_feminine: "~त\u{94d}", "~तौ", "~तः";
@@ -1065,7 +1065,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         comparative: "~त\u{94d}तर";
         superlative: "~त\u{94d}तम";
     ),
-    // महातमन: 6 words (प्रज्ञात्मन्, शर्मन्, महात्मन्, भस्मन्, युग्मन्, अकृतात्मन्).
+    // महातमन: 6 words (शर्मन्, महात्मन्, भस्मन्, युग्मन्, अकृतात्मन्, ज्ञात्मन्).
     declension!("महात\u{94d}मन\u{94d}", 6, "~न\u{94d}";
         nominative_masculine: "~ा", "~ानौ", "~ानः";
         nominative_feminine: "~ा", "~ानौ", "~ानः";
@@ -1094,8 +1094,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         comparative: "~तर";
         superlative: "~तम";
     ),
-    // उशिज: 6 words (विराज्, भुज्, उशिज्, त्यज्, रुज्, सयुज्).
-    declension!("उशिज\u{94d}", 6, "~ज\u{94d}";
+    // राज: 6 words (भुज्, उशिज्, त्यज्, रुज्, सयुज्, राज्).
+    declension!("राज\u{94d}", 6, "~ज\u{94d}";
         nominative_masculine: "~क\u{94d}", "~जौ", "~जः";
         nominative_feminine: "~क\u{94d}", "~जौ", "~जः";
         nominative_neuter: "~क\u{94d}", "~जी", "~ञ\u{94d}जि";
@@ -1123,7 +1123,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         comparative: "~तर";
         superlative: "~तम";
     ),
-    // पा: 6 words (सा, वर्चोदा, वर्चोधा, पा, रथेष्ठा, विश्वपा).
+    // पा: 6 words (सा, वर्चोदा, वर्चोधा, पा, रथेष्ठा, श्वपा).
     declension!("पा", 6, "~ा";
         nominative_masculine: "~ाः", "~ौ", "~ाः";
         nominative_feminine: "~ा", "~\u{947}", "~ाः";
@@ -1181,8 +1181,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         comparative: "~यस\u{94d}";
         superlative: "~यिष\u{94d}ठ";
     ),
-    // सपृश: 5 words (सदृश्, स्पृश्, हृदिस्पृश्, कीदृश्, ईदृश्).
-    declension!("स\u{94d}प\u{943}श\u{94d}", 5, "~श\u{94d}";
+    // पृश: 5 words (सदृश्, हृदिस्पृश्, कीदृश्, ईदृश्, पृश्).
+    declension!("प\u{943}श\u{94d}", 5, "~श\u{94d}";
         nominative_masculine: "~क\u{94d}", "~शौ", "~शः";
         nominative_feminine: "~क\u{94d}", "~शौ", "~शः";
         nominative_neuter: "~क\u{94d}", "~शी", "~\u{902}शि";

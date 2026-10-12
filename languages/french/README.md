@@ -45,10 +45,10 @@ reason (the rule and its counts).
 
 | | words | paradigms | rules | listed words | irregular forms |
 |---|---:|---:|---:|---:|---:|
-| noun | 43092 | 24 | 274 | 676 | 284 |
-| adjective | 18164 | 24 | 197 | 478 | 103 |
-| verb | 7295 | 65 | 191 | 162 | 1343 |
-| participle | 6504 | 6 | 20 | 22 | 0 |
+| noun | 43092 | 30 | 466 | 934 | 833 |
+| adjective | 18164 | 21 | 177 | 473 | 295 |
+| verb | 7295 | 40 | 125 | 181 | 4603 |
+| participle | 6504 | 5 | 16 | 23 | 33 |
 | determiner | 49 | 7 | 12 | 14 | 30 |
 
 *Words*: the dictionary's words the grammar is learned from. *Rules*: the endings that
@@ -65,10 +65,10 @@ from how often it is right (0 is perfect).
 
 | | held-out words | forms | top-1 | top-3 | calibration error |
 |---|---:|---:|---:|---:|---:|
-| noun | 4318 | 8636 | **98.81%** | 99.81% | 0.002 |
-| adjective | 1839 | 7356 | **98.25%** | 99.74% | 0.003 |
-| verb | 743 | 35550 | **98.67%** | 99.36% | 0.005 |
-| participle | 627 | 2508 | **99.76%** | 100.00% | 0.005 |
+| noun | 4318 | 8636 | **98.53%** | 99.69% | 0.004 |
+| adjective | 1839 | 7356 | **98.18%** | 99.74% | 0.006 |
+| verb | 743 | 35550 | **97.90%** | 99.27% | 0.016 |
+| participle | 627 | 2508 | **99.76%** | 100.00% | 0.003 |
 | determiner | 6 | 19 | **63.16%** | 63.16% | 0.187 |
 
 

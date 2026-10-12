@@ -26,95 +26,83 @@ macro_rules! declension {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `mano`: 16,634 words.
+    /// Like `mano`: 8,849 words.
     Mano,
-    /// Like `mercatanzia`: 15,701 words.
-    Mercatanzia,
-    /// Like `lume`: 13,482 words.
+    /// Like `catanzia`: 8,076 words.
+    Catanzia,
+    /// Like `lume`: 7,480 words.
     Lume,
-    /// Like `autorità`: 7,297 words.
-    Autorità,
-    /// Like `testimonio`: 3,698 words.
-    Testimonio,
-    /// Like `programma`: 2,282 words.
-    Programma,
-    /// Like `mosca`: 1,323 words.
-    Mosca,
-    /// Like `banco`: 746 words.
-    Banco,
-    /// Like `traccia`: 290 words.
-    Traccia,
-    /// Like `capolista`: 86 words.
+    /// Like `rità`: 5,381 words.
+    Rità,
+    /// Like `timonio`: 2,056 words.
+    Timonio,
+    /// Like `evangelista`: 1,346 words.
+    Evangelista,
+    /// Like `esca`: 688 words.
+    Esca,
+    /// Like `cco`: 397 words.
+    Cco,
+    /// Like `fascia`: 141 words.
+    Fascia,
+    /// Like `capolista`: 88 words.
     Capolista,
-    /// Like `gerarca`: 35 words.
-    Gerarca,
-    /// Like `mezzaluna`: 34 words.
+    /// Like `mezzaluna`: 32 words.
     Mezzaluna,
-    /// Like `spoiler`: 32 words.
-    Spoiler,
-    /// Like `braccio`: 22 words.
-    Braccio,
-    /// Like `bassofondo`: 14 words.
+    /// Like `boy`: 27 words.
+    Boy,
+    /// Like `garca`: 27 words.
+    Garca,
+    /// Like `ccio`: 16 words.
+    Ccio,
+    /// Like `bassofondo`: 12 words.
     Bassofondo,
-    /// Like `uomo`: 13 words.
+    /// Like `uomo`: 11 words.
     Uomo,
-    /// Like `acquaforte`: 10 words.
-    Acquaforte,
-    /// Like `superficie`: 8 words.
-    Superficie,
-    /// Like `frogia`: 8 words.
-    Frogia,
-    /// Like `mezzasega`: 8 words.
+    /// Like `zzaforte`: 10 words.
+    Zzaforte,
+    /// Like `mezzasega`: 7 words.
     Mezzasega,
-    /// Like `capodanno`: 7 words.
-    Capodanno,
-    /// Like `bimbaminkia`: 6 words.
-    Bimbaminkia,
-    /// Like `capoccia`: 4 words.
-    Capoccia,
-    /// Like `heroon`: 4 words.
-    Heroon,
-    /// Like `capsa`: 3 words.
-    Capsa,
-    /// Like `gattomammone`: 3 words.
+    /// Like `olaguida`: 6 words.
+    Olaguida,
+    /// Like `gattomammone`: 5 words.
     Gattomammone,
+    /// Like `ficie`: 4 words.
+    Ficie,
+    /// Like `liegia`: 4 words.
+    Liegia,
+    /// Like `otorto`: 4 words.
+    Otorto,
     /// Like `capofficina`: 3 words.
     Capofficina,
-    /// Like `doppiosenso`: 3 words.
-    Doppiosenso,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 28] = [
+    pub const ALL: [Declension; 24] = [
         Declension::Mano,
-        Declension::Mercatanzia,
+        Declension::Catanzia,
         Declension::Lume,
-        Declension::Autorità,
-        Declension::Testimonio,
-        Declension::Programma,
-        Declension::Mosca,
-        Declension::Banco,
-        Declension::Traccia,
+        Declension::Rità,
+        Declension::Timonio,
+        Declension::Evangelista,
+        Declension::Esca,
+        Declension::Cco,
+        Declension::Fascia,
         Declension::Capolista,
-        Declension::Gerarca,
         Declension::Mezzaluna,
-        Declension::Spoiler,
-        Declension::Braccio,
+        Declension::Boy,
+        Declension::Garca,
+        Declension::Ccio,
         Declension::Bassofondo,
         Declension::Uomo,
-        Declension::Acquaforte,
-        Declension::Superficie,
-        Declension::Frogia,
+        Declension::Zzaforte,
         Declension::Mezzasega,
-        Declension::Capodanno,
-        Declension::Bimbaminkia,
-        Declension::Capoccia,
-        Declension::Heroon,
-        Declension::Capsa,
+        Declension::Olaguida,
         Declension::Gattomammone,
+        Declension::Ficie,
+        Declension::Liegia,
+        Declension::Otorto,
         Declension::Capofficina,
-        Declension::Doppiosenso,
     ];
 
     /// Its table.
@@ -132,117 +120,101 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 28] = [
-    // Mano: 16,634 words (zero, sabato, peso, centavo, libero, euro).
-    declension!("mano", 16634, "~o";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 24] = [
+    // Mano: 8,849 words (zero, peso, euro, moro, dodo, limo).
+    declension!("mano", 8849, "~o";
         noun: "~o", "~i";
     ),
-    // Mercatanzia: 15,701 words (aquila, acicula, aria, arietta, guerra, acacia).
-    declension!("mercatanzia", 15701, "~a";
+    // Catanzia: 8,076 words (aquila, aria, henna, tuba, zebra, lama).
+    declension!("catanzia", 8076, "~a";
         noun: "~a", "~e";
     ),
-    // Lume: 13,482 words (abate, lente, decade, seme, are, andante).
-    declension!("lume", 13482, "~e";
+    // Lume: 7,480 words (seme, are, cane, male, face, sale).
+    declension!("lume", 7480, "~e";
         noun: "~e", "~i";
     ),
-    // Autorità: 7,297 words (fa, abaca, abracadabra, quiz, nu, robot).
-    declension!("autorità", 7297, "~";
+    // Rità: 5,381 words (fa, quiz, nu, van, die, star).
+    declension!("rità", 5381, "~";
         noun: "~", "~";
     ),
-    // Testimonio: 3,698 words (radio, bancario, curio, scenario, pugio, sorcio).
-    declension!("testimonio", 3698, "~o";
+    // Timonio: 2,056 words (radio, curio, olio, saio, agio, studio).
+    declension!("timonio", 2056, "~o";
         noun: "~o", "~";
     ),
-    // Programma: 2,282 words (abada, comma, plasma, miasma, papa, poeta).
-    declension!("programma", 2282, "~a";
+    // Evangelista: 1,346 words (miasma, papa, poeta, arma, tema, profeta).
+    declension!("evangelista", 1346, "~a";
         noun: "~a", "~i|~e";
     ),
-    // Mosca: 1,323 words (replica, musica, pesca, riga, vacca, fuga).
-    declension!("mosca", 1323, "~a";
+    // Esca: 688 words (riga, fuga, nuca, oca, giga, toga).
+    declension!("esca", 688, "~a";
         noun: "~a", "~he";
     ),
-    // Banco: 746 words (tago, guanaco, bongo, abaco, loco, mango).
-    declension!("banco", 746, "~o";
+    // Cco: 397 words (tago, loco, lago, ago, ubriaco, arco).
+    declension!("cco", 397, "~o";
         noun: "~o", "~hi";
     ),
-    // Traccia: 290 words (faccia, pioggia, pronuncia, fascia, lancia, goccia).
-    declension!("traccia", 290, "~ia";
+    // Fascia: 141 words (fascia, arancia, guancia, rovescia, striscia, angoscia).
+    declension!("fascia", 141, "~ia";
         noun: "~ia", "~e";
     ),
-    // Capolista: 86 words (capotavola, capobranco, caporeparto, capolinea, bagnoschiuma, capogruppo).
-    declension!("capolista", 86, "~o~";
+    // Capolista: 88 words (capotavola, capobranco, caporeparto, capolinea, capogruppo, capotribù).
+    declension!("capolista", 88, "~o~";
         noun: "~o~", "~i~";
     ),
-    // Gerarca: 35 words (transfuga, auriga, collega, monarca, tetrarca, gerarca).
-    declension!("gerarca", 35, "~a";
-        noun: "~a", "~hi";
-    ),
-    // Mezzaluna: 34 words (terracotta, belladonna, capasanta, mezzaluna, primadonna, terraferma).
-    declension!("mezzaluna", 34, "~a~a";
+    // Mezzaluna: 32 words (terracotta, mezzaluna, primadonna, terraferma, malalingua, acquasanta).
+    declension!("mezzaluna", 32, "~a~a";
         noun: "~a~a", "~e~e";
     ),
-    // Spoiler: 32 words (boy, croissant, fan, magazine, yard, manager).
-    declension!("spoiler", 32, "~";
+    // Boy: 27 words (boy, fan, yard, blanco, yuppie, indio).
+    declension!("boy", 27, "~";
         noun: "~", "~s";
     ),
-    // Braccio: 22 words (uovo, labbro, braccio, centinaio, migliaio, ginocchio).
-    declension!("braccio", 22, "~o";
+    // Garca: 27 words (transfuga, auriga, gerarca, duca, patriarca, stratega).
+    declension!("garca", 27, "~a";
+        noun: "~a", "~hi";
+    ),
+    // Ccio: 16 words (uovo, migliaio, ginocchio, paio, ovo, riso).
+    declension!("ccio", 16, "~o";
         noun: "~o", "~a";
     ),
-    // Bassofondo: 14 words (altoforno, bassofondo, camposanto, caposaldo, caposcarico, collotorto).
-    declension!("bassofondo", 14, "~o~o";
+    // Bassofondo: 12 words (altoforno, bassofondo, caposaldo, caposcarico, capofreddo, mezzopunto).
+    declension!("bassofondo", 12, "~o~o";
         noun: "~o~o", "~i~i";
     ),
-    // Uomo: 13 words (homo, uomo, galantuomo, gentiluomo, superuomo, nobiluomo).
-    declension!("uomo", 13, "~o";
+    // Uomo: 11 words (homo, uomo, omo, huomo, antuomo, tiluomo).
+    declension!("uomo", 11, "~o";
         noun: "~o", "~ini";
     ),
-    // Acquaforte: 10 words (mezzanotte, malafede, cassaforte, mezzanave, acquaforte, piazzaforte).
-    declension!("acquaforte", 10, "~a~e";
+    // Zzaforte: 10 words (mezzanotte, malafede, mezzanave, acquaforte, casamobile, casaforte).
+    declension!("zzaforte", 10, "~a~e";
         noun: "~a~e", "~e~i";
     ),
-    // Superficie: 8 words (moglie, superficie, effigie, aviosuperficie, ipersuperficie, isosuperficie).
-    declension!("superficie", 8, "~e";
-        noun: "~e", "~";
-    ),
-    // Frogia: 8 words (valigia, ciliegia, frogia, guarentigia, bragia, cervogia).
-    declension!("frogia", 8, "~ia";
-        noun: "~ia", "~ie|~e";
-    ),
-    // Mezzasega: 8 words (cappalunga, cassapanca, cartasuga, gambasecca, mezzasega, mezzatacca).
-    declension!("mezzasega", 8, "~a~a";
+    // Mezzasega: 7 words (cartasuga, mezzasega, mezzatacca, palunga, sapanca, basecca).
+    declension!("mezzasega", 7, "~a~a";
         noun: "~a~a", "~e~he";
     ),
-    // Capodanno: 7 words (pomodoro, caciocavallo, capodanno, altopiano, capomastro, capogatto).
-    declension!("capodanno", 7, "~o~o";
-        noun: "~o~o", "~o~i|~i~i";
-    ),
-    // Bimbaminkia: 6 words (cartacarbone, scuolaguida, spinacristi, zappacavallo, bimbaminkia, mostramercato).
-    declension!("bimbaminkia", 6, "~a~";
+    // Olaguida: 6 words (cartacarbone, azza-copertina, olaguida, ppacavallo, mbaminkia, tramercato).
+    declension!("olaguida", 6, "~a~";
         noun: "~a~", "~e~";
     ),
-    // Capoccia: 4 words (maracaia, capoccia, correggia, porteria).
-    declension!("capoccia", 4, "~a";
-        noun: "~a", "~";
-    ),
-    // Heroon: 4 words (rhyton, heroon, megaron, abaton).
-    declension!("heroon", 4, "~on";
-        noun: "~on", "~a";
-    ),
-    // Capsa: 3 words (tabula, fabula, capsa).
-    declension!("capsa", 3, "~";
-        noun: "~", "~e";
-    ),
-    // Gattomammone: 3 words (gattomammone, capocarceriere, capotimoniere).
-    declension!("gattomammone", 3, "~o~e";
+    // Gattomammone: 5 words (gattomammone, capocarceriere, capotimoniere, mmo-equivalente, mmo-mole).
+    declension!("gattomammone", 5, "~o~e";
         noun: "~o~e", "~i~i";
     ),
-    // Capofficina: 3 words (capofficina, decanapulazione, vetrofusione).
+    // Ficie: 4 words (glie, ficie, figie, superficie).
+    declension!("ficie", 4, "~e";
+        noun: "~e", "~";
+    ),
+    // Liegia: 4 words (liegia, entigia, vogia, lovaligia).
+    declension!("liegia", 4, "~ia";
+        noun: "~ia", "~ie|~e";
+    ),
+    // Otorto: 4 words (osanto, otorto, oviro, obuono).
+    declension!("otorto", 4, "o~o";
+        noun: "o~o", "i~i";
+    ),
+    // Capofficina: 3 words (capofficina, vetrofusione, napulazione).
     declension!("capofficina", 3, "~~";
         noun: "~~", "~i~";
-    ),
-    // Doppiosenso: 3 words (doppiovetro, occhiogrosso, doppiosenso).
-    declension!("doppiosenso", 3, "~o~o";
-        noun: "~o~o", "~~i";
     ),
 ];

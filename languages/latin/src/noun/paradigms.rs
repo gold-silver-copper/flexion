@@ -53,200 +53,196 @@ macro_rules! declension {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `opera`: 3,398 words.
+    /// Like `opera`: 3,178 words.
     Opera,
-    /// Like `iugum`: 2,612 words.
+    /// Like `iugum`: 2,442 words.
     Iugum,
-    /// Like `ratiō`: 2,233 words.
+    /// Like `nnus`: 2,090 words.
+    Nnus,
+    /// Like `ratiō`: 1,595 words.
     Ratiō,
-    /// Like `bannus`: 2,210 words.
-    Bannus,
-    /// Like `amor`: 903 words.
+    /// Like `amor`: 731 words.
     Amor,
-    /// Like `auctōritās`: 623 words.
-    Auctōritās,
-    /// Like `manus`: 510 words.
+    /// Like `ctōritās`: 561 words.
+    Ctōritās,
+    /// Like `manus`: 398 words.
     Manus,
-    /// Like `lūx`: 342 words.
+    /// Like `lūx`: 316 words.
     Lūx,
-    /// Like `fīnis`: 233 words.
+    /// Like `fīnis`: 218 words.
     Fīnis,
-    /// Like `imāgō`: 228 words.
-    Imāgō,
-    /// Like `lapis`: 204 words.
+    /// Like `āgō`: 212 words.
+    Āgō,
+    /// Like `lapis`: 194 words.
     Lapis,
-    /// Like `metōpion`: 176 words.
-    Metōpion,
-    /// Like `carmen`: 160 words.
-    Carmen,
-    /// Like `lēmma`: 147 words.
-    Lēmma,
+    /// Like `maton`: 172 words.
+    Maton,
+    /// Like `rmen`: 147 words.
+    Rmen,
     /// Like `logos`: 146 words.
     Logos,
-    /// Like `arma`: 118 words.
+    /// Like `lēmma`: 138 words.
+    Lēmma,
+    /// Like `arma`: 116 words.
     Arma,
-    /// Like `commūne`: 114 words.
-    Commūne,
-    /// Like `arrhenocoetēs`: 104 words.
-    Arrhenocoetēs,
-    /// Like `ancōn`: 97 words.
-    Ancōn,
-    /// Like `dēliciae`: 89 words.
+    /// Like `mūne`: 109 words.
+    Mūne,
+    /// Like `rhenocoetēs`: 102 words.
+    Rhenocoetēs,
+    /// Like `sul`: 90 words.
+    Sul,
+    /// Like `dēliciae`: 87 words.
     Dēliciae,
-    /// Like `aloē`: 87 words.
+    /// Like `aloē`: 86 words.
     Aloē,
-    /// Like `speciēs`: 82 words.
+    /// Like `speciēs`: 76 words.
     Speciēs,
-    /// Like `synthesis`: 78 words.
+    /// Like `synthesis`: 72 words.
     Synthesis,
-    /// Like `apex`: 72 words.
+    /// Like `apex`: 70 words.
     Apex,
-    /// Like `mōlēs`: 66 words.
+    /// Like `mōlēs`: 63 words.
     Mōlēs,
-    /// Like `puer`: 57 words.
+    /// Like `puer`: 51 words.
     Puer,
-    /// Like `trēsvirī`: 49 words.
+    /// Like `trēsvirī`: 47 words.
     Trēsvirī,
-    /// Like `ambāgēs`: 46 words.
-    Ambāgēs,
-    /// Like `ager`: 45 words.
+    /// Like `bāgēs`: 46 words.
+    Bāgēs,
+    /// Like `ager`: 43 words.
     Ager,
     /// Like `vās`: 41 words.
     Vās,
     /// Like `hospitālia`: 38 words.
     Hospitālia,
-    /// Like `tribūnal`: 34 words.
-    Tribūnal,
-    /// Like `boreās`: 31 words.
+    /// Like `būnal`: 34 words.
+    Būnal,
+    /// Like `boreās`: 30 words.
     Boreās,
-    /// Like `līmes`: 31 words.
+    /// Like `līmes`: 30 words.
     Līmes,
-    /// Like `ops`: 30 words.
+    /// Like `ops`: 29 words.
     Ops,
-    /// Like `lēx`: 29 words.
+    /// Like `lēx`: 28 words.
     Lēx,
-    /// Like `opus`: 23 words.
+    /// Like `opus`: 22 words.
     Opus,
     /// Like `corpus`: 22 words.
     Corpus,
-    /// Like `canōn`: 19 words.
-    Canōn,
-    /// Like `genius`: 19 words.
+    /// Like `nōn`: 19 words.
+    Nōn,
+    /// Like `genius`: 17 words.
     Genius,
-    /// Like `gēns`: 17 words.
-    Gēns,
-    /// Like `familiāris`: 16 words.
-    Familiāris,
-    /// Like `pars`: 15 words.
-    Pars,
-    /// Like `aegis`: 15 words.
-    Aegis,
-    /// Like `pecten`: 15 words.
-    Pecten,
-    /// Like `māter`: 14 words.
-    Māter,
-    /// Like `rūdēns`: 14 words.
+    /// Like `rūdēns`: 15 words.
     Rūdēns,
-    /// Like `tripūs`: 13 words.
-    Tripūs,
+    /// Like `familiāris`: 14 words.
+    Familiāris,
+    /// Like `pars`: 14 words.
+    Pars,
+    /// Like `pecten`: 14 words.
+    Pecten,
+    /// Like `gēns`: 13 words.
+    Gēns,
+    /// Like `aegis`: 13 words.
+    Aegis,
+    /// Like `māter`: 12 words.
+    Māter,
     /// Like `arx`: 12 words.
     Arx,
+    /// Like `lagōpūs`: 12 words.
+    Lagōpūs,
     /// Like `vīs`: 12 words.
     Vīs,
-    /// Like `pēs`: 12 words.
-    Pēs,
     /// Like `aes`: 12 words.
     Aes,
-    /// Like `sextāns`: 9 words.
-    Sextāns,
     /// Like `ēchō`: 9 words.
     Ēchō,
-    /// Like `cornū`: 8 words.
-    Cornū,
-    /// Like `tenōn`: 8 words.
-    Tenōn,
+    /// Like `sextāns`: 8 words.
+    Sextāns,
+    /// Like `rnū`: 8 words.
+    Rnū,
+    /// Like `pēs`: 8 words.
+    Pēs,
+    /// Like `chōn`: 8 words.
+    Chōn,
     /// Like `gaster`: 8 words.
     Gaster,
-    /// Like `cacoēthes`: 8 words.
-    Cacoēthes,
-    /// Like `vetera`: 7 words.
-    Vetera,
+    /// Like `coēthes`: 8 words.
+    Coēthes,
+    /// Like `ēmina`: 7 words.
+    Ēmina,
     /// Like `quadrāns`: 7 words.
     Quadrāns,
     /// Like `onyx`: 7 words.
     Onyx,
-    /// Like `prīnceps`: 7 words.
-    Prīnceps,
     /// Like `frōns`: 6 words.
     Frōns,
-    /// Like `adamās`: 6 words.
-    Adamās,
-    /// Like `vīrus`: 6 words.
-    Vīrus,
-    /// Like `specus`: 6 words.
-    Specus,
-    /// Like `basis`: 5 words.
-    Basis,
-    /// Like `sāl`: 5 words.
-    Sāl,
+    /// Like `prīnceps`: 6 words.
+    Prīnceps,
     /// Like `ellīpsis`: 5 words.
     Ellīpsis,
     /// Like `stirps`: 5 words.
     Stirps,
-    /// Like `venter`: 5 words.
-    Venter,
-    /// Like `līchēn`: 5 words.
-    Līchēn,
-    /// Like `plērumque`: 5 words.
-    Plērumque,
-    /// Like `canis`: 4 words.
-    Canis,
+    /// Like `elephās`: 5 words.
+    Elephās,
+    /// Like `vīrus`: 5 words.
+    Vīrus,
+    /// Like `specus`: 5 words.
+    Specus,
+    /// Like `sis`: 5 words.
+    Sis,
+    /// Like `ērumque`: 5 words.
+    Ērumque,
+    /// Like `nis`: 4 words.
+    Nis,
     /// Like `fāta`: 4 words.
     Fāta,
     /// Like `fel`: 4 words.
     Fel,
     /// Like `cucumis`: 4 words.
     Cucumis,
-    /// Like `caput`: 4 words.
-    Caput,
-    /// Like `cēphēnes`: 4 words.
-    Cēphēnes,
+    /// Like `venter`: 4 words.
+    Venter,
+    /// Like `līchēn`: 4 words.
+    Līchēn,
+    /// Like `put`: 4 words.
+    Put,
+    /// Like `rōtides`: 4 words.
+    Rōtides,
     /// Like `cȳma`: 4 words.
     Cȳma,
-    /// Like `acoetis`: 3 words.
-    Acoetis,
-    /// Like `ariēs`: 3 words.
-    Ariēs,
     /// Like `aethēr`: 3 words.
     Aethēr,
     /// Like `pepō`: 3 words.
     Pepō,
-    /// Like `barbās`: 3 words.
-    Barbās,
+    /// Like `rbās`: 3 words.
+    Rbās,
+    /// Like `polis`: 3 words.
+    Polis,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 85] = [
+    pub const ALL: [Declension; 83] = [
         Declension::Opera,
         Declension::Iugum,
+        Declension::Nnus,
         Declension::Ratiō,
-        Declension::Bannus,
         Declension::Amor,
-        Declension::Auctōritās,
+        Declension::Ctōritās,
         Declension::Manus,
         Declension::Lūx,
         Declension::Fīnis,
-        Declension::Imāgō,
+        Declension::Āgō,
         Declension::Lapis,
-        Declension::Metōpion,
-        Declension::Carmen,
-        Declension::Lēmma,
+        Declension::Maton,
+        Declension::Rmen,
         Declension::Logos,
+        Declension::Lēmma,
         Declension::Arma,
-        Declension::Commūne,
-        Declension::Arrhenocoetēs,
-        Declension::Ancōn,
+        Declension::Mūne,
+        Declension::Rhenocoetēs,
+        Declension::Sul,
         Declension::Dēliciae,
         Declension::Aloē,
         Declension::Speciēs,
@@ -255,64 +251,62 @@ impl Declension {
         Declension::Mōlēs,
         Declension::Puer,
         Declension::Trēsvirī,
-        Declension::Ambāgēs,
+        Declension::Bāgēs,
         Declension::Ager,
         Declension::Vās,
         Declension::Hospitālia,
-        Declension::Tribūnal,
+        Declension::Būnal,
         Declension::Boreās,
         Declension::Līmes,
         Declension::Ops,
         Declension::Lēx,
         Declension::Opus,
         Declension::Corpus,
-        Declension::Canōn,
+        Declension::Nōn,
         Declension::Genius,
-        Declension::Gēns,
+        Declension::Rūdēns,
         Declension::Familiāris,
         Declension::Pars,
-        Declension::Aegis,
         Declension::Pecten,
+        Declension::Gēns,
+        Declension::Aegis,
         Declension::Māter,
-        Declension::Rūdēns,
-        Declension::Tripūs,
         Declension::Arx,
+        Declension::Lagōpūs,
         Declension::Vīs,
-        Declension::Pēs,
         Declension::Aes,
-        Declension::Sextāns,
         Declension::Ēchō,
-        Declension::Cornū,
-        Declension::Tenōn,
+        Declension::Sextāns,
+        Declension::Rnū,
+        Declension::Pēs,
+        Declension::Chōn,
         Declension::Gaster,
-        Declension::Cacoēthes,
-        Declension::Vetera,
+        Declension::Coēthes,
+        Declension::Ēmina,
         Declension::Quadrāns,
         Declension::Onyx,
-        Declension::Prīnceps,
         Declension::Frōns,
-        Declension::Adamās,
-        Declension::Vīrus,
-        Declension::Specus,
-        Declension::Basis,
-        Declension::Sāl,
+        Declension::Prīnceps,
         Declension::Ellīpsis,
         Declension::Stirps,
-        Declension::Venter,
-        Declension::Līchēn,
-        Declension::Plērumque,
-        Declension::Canis,
+        Declension::Elephās,
+        Declension::Vīrus,
+        Declension::Specus,
+        Declension::Sis,
+        Declension::Ērumque,
+        Declension::Nis,
         Declension::Fāta,
         Declension::Fel,
         Declension::Cucumis,
-        Declension::Caput,
-        Declension::Cēphēnes,
+        Declension::Venter,
+        Declension::Līchēn,
+        Declension::Put,
+        Declension::Rōtides,
         Declension::Cȳma,
-        Declension::Acoetis,
-        Declension::Ariēs,
         Declension::Aethēr,
         Declension::Pepō,
-        Declension::Barbās,
+        Declension::Rbās,
+        Declension::Polis,
     ];
 
     /// Its table.
@@ -330,9 +324,9 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
-    // Opera: 3,398 words (encyclopaedīa, aquila, fābella, abscissa, acicula, guerra).
-    declension!("opera", 3398, "~a";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
+    // Opera: 3,178 words (encyclopaedīa, aquila, fābella, acicula, guerra, acācia).
+    declension!("opera", 3178, "~a";
         nominative: "~a", "~ae";
         genitive: "~ae", "~ārum";
         dative: "~ae", "~īs";
@@ -341,8 +335,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~a", "~ae";
         noun_locative: "~ae", "~īs";
     ),
-    // Iugum: 2,612 words (abomāsum, mīllennium, absinthium, dictiōnārium, crēdendum, darmstadtium).
-    declension!("iugum", 2612, "~um";
+    // Iugum: 2,442 words (mīllennium, dictiōnārium, crēdendum, darmstadtium, vacuum, neutronium).
+    declension!("iugum", 2442, "~um";
         nominative: "~um", "~a";
         genitive: "~ī", "~ōrum";
         dative: "~ō", "~īs";
@@ -351,18 +345,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~um", "~a";
         noun_locative: "~ī", "~īs";
     ),
-    // Ratiō: 2,233 words (eurō, as, abaliēnātiō, abdicātiō, limo, tālō).
-    declension!("ratiō", 2233, "~";
-        nominative: "~", "~nēs";
-        genitive: "~nis", "~num";
-        dative: "~nī", "~nibus";
-        accusative: "~nem", "~nēs";
-        ablative: "~ne", "~nibus";
-        vocative: "~", "~nēs";
-        noun_locative: "~ae", "~īs";
-    ),
-    // Bannus: 2,210 words (thēsaurus, abaculus, abacus, acanthus, stylus, citrus).
-    declension!("bannus", 2210, "~us";
+    // Nnus: 2,090 words (thēsaurus, abacus, acanthus, stylus, citrus, lupus).
+    declension!("nnus", 2090, "~us";
         nominative: "~us", "~ī";
         genitive: "~ī", "~ōrum";
         dative: "~ō", "~īs";
@@ -371,8 +355,18 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~e", "~ī";
         noun_locative: "~ī", "~īs";
     ),
-    // Amor: 903 words (abāctor, abbreviātor, abductor, abnegātor, raptor, acceptor).
-    declension!("amor", 903, "~o~";
+    // Ratiō: 1,595 words (eurō, as, limo, sāl, tālō, accūsātiō).
+    declension!("ratiō", 1595, "~";
+        nominative: "~", "~nēs";
+        genitive: "~nis", "~num";
+        dative: "~nī", "~nibus";
+        accusative: "~nem", "~nēs";
+        ablative: "~ne", "~nibus";
+        vocative: "~", "~nēs";
+        noun_locative: "~ae", "~īs";
+    ),
+    // Amor: 731 words (raptor, acceptor, accumulātor, hūmor, alligātor, vapor).
+    declension!("amor", 731, "~o~";
         nominative: "~o~", "~ō~ēs";
         genitive: "~ō~is", "~ō~um";
         dative: "~ō~ī", "~ō~ibus";
@@ -381,8 +375,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~o~", "~ō~ēs";
         noun_locative: "~o~", "~o~";
     ),
-    // Auctōritās: 623 words (pancreas, rhīnocerōs, cōs, abbās, servitūs, kadamitās).
-    declension!("auctōritās", 623, "~s";
+    // Ctōritās: 561 words (pancreas, rhīnocerōs, cōs, servitūs, kadamitās, dōs).
+    declension!("ctōritās", 561, "~s";
         nominative: "~s", "~tēs";
         genitive: "~tis", "~tum";
         dative: "~tī", "~tibus";
@@ -391,8 +385,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~s", "~tēs";
         noun_locative: "~rī", "~īs";
     ),
-    // Manus: 510 words (cōnsēnsus, apparātus, senātus, foetus, nexus, afflātus).
-    declension!("manus", 510, "~us";
+    // Manus: 398 words (apparātus, senātus, foetus, nexus, afflātus, aquaeductus).
+    declension!("manus", 398, "~us";
         nominative: "~us", "~ūs";
         genitive: "~ūs", "~uum";
         dative: "~uī", "~ibus";
@@ -401,8 +395,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~us", "~ūs";
         noun_locative: "~ī", "~īs";
     ),
-    // Lūx: 342 words (bōx, lynx, hallux, generātrīx, mātrīx, lūx).
-    declension!("lūx", 342, "~x";
+    // Lūx: 316 words (bōx, lynx, hallux, generātrīx, mātrīx, lūx).
+    declension!("lūx", 316, "~x";
         nominative: "~x", "~cēs";
         genitive: "~cis", "~cum";
         dative: "~cī", "~cibus";
@@ -411,8 +405,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~x", "~cēs";
         noun_locative: "~ae", "~īs";
     ),
-    // Fīnis: 233 words (pēnis, apotheōsis, axis, avis, thesis, nāvis).
-    declension!("fīnis", 233, "~is";
+    // Fīnis: 218 words (pēnis, axis, avis, thesis, nāvis, vermis).
+    declension!("fīnis", 218, "~is";
         nominative: "~is", "~ēs";
         genitive: "~is", "~ium";
         dative: "~ī", "~ibus";
@@ -421,8 +415,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~is", "~ēs";
         noun_locative: "~ī", "~ibus";
     ),
-    // Imāgō: 228 words (homō, servitūdō, virgō, libīdō, cupīdō, hirūdō).
-    declension!("imāgō", 228, "~ō";
+    // Āgō: 212 words (homō, servitūdō, virgō, libīdō, cupīdō, hirūdō).
+    declension!("āgō", 212, "~ō";
         nominative: "~ō", "~inēs";
         genitive: "~inis", "~inum";
         dative: "~inī", "~inibus";
@@ -431,8 +425,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~ō", "~inēs";
         noun_locative: "~ae", "~īs";
     ),
-    // Lapis: 204 words (pȳramis, laus, clītoris, syphilis, achaemenis, palūs).
-    declension!("lapis", 204, "~s";
+    // Lapis: 194 words (pȳramis, laus, syphilis, achaemenis, palūs, īcas).
+    declension!("lapis", 194, "~s";
         nominative: "~s", "~dēs";
         genitive: "~dis", "~dum";
         dative: "~dī", "~dibus";
@@ -441,8 +435,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~s", "~dēs";
         noun_locative: "~rī", "~īs";
     ),
-    // Metōpion: 176 words (colon, neon, ārgon, xenon, radon, lexicon).
-    declension!("metōpion", 176, "~on";
+    // Maton: 172 words (neon, xenon, radon, lexicon, būnion, criterion).
+    declension!("maton", 172, "~on";
         nominative: "~on", "~a";
         genitive: "~ī", "~ōrum";
         dative: "~ō", "~īs";
@@ -451,8 +445,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~on", "~a";
         noun_locative: "~ī", "~īs";
     ),
-    // Carmen: 160 words (abdōmen, lūmen, stāmen, femur, acūmen, ōmen).
-    declension!("carmen", 160, "~e~";
+    // Rmen: 147 words (lūmen, stāmen, femur, acūmen, ōmen, pollen).
+    declension!("rmen", 147, "~e~";
         nominative: "~e~", "~i~a";
         genitive: "~i~is", "~i~um";
         dative: "~i~ī", "~i~ibus";
@@ -461,17 +455,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~e~", "~i~a";
         noun_locative: "~e~", "~e~";
     ),
-    // Lēmma: 147 words (comma, far, cor, smēgma, drāma, anaphysema).
-    declension!("lēmma", 147, "~";
-        nominative: "~", "~ta";
-        genitive: "~tis", "~tum";
-        dative: "~tī", "~tibus";
-        accusative: "~", "~ta";
-        ablative: "~te", "~tibus";
-        vocative: "~", "~ta";
-        noun_locative: "~ae", "~īs";
-    ),
-    // Logos: 146 words (chaos, chrȳsos, psōleos, hippodromos, mȳthos, dialectos).
+    // Logos: 146 words (chaos, chrȳsos, psōleos, mȳthos, topazos, logos).
     declension!("logos", 146, "~os";
         nominative: "~os", "~ī|~oe";
         genitive: "~ī", "~ōrum";
@@ -481,8 +465,18 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~e", "~ī|~oe";
         noun_locative: "~ī", "~īs";
     ),
-    // Arma: 118 words (arma, sata, cētera, comitia, anaesthēsia, futūra).
-    declension!("arma", 118, "~a";
+    // Lēmma: 138 words (far, cor, smēgma, drāma, aenigma, kilogramma).
+    declension!("lēmma", 138, "~";
+        nominative: "~", "~ta";
+        genitive: "~tis", "~tum";
+        dative: "~tī", "~tibus";
+        accusative: "~", "~ta";
+        ablative: "~te", "~tibus";
+        vocative: "~", "~ta";
+        noun_locative: "~ae", "~īs";
+    ),
+    // Arma: 116 words (arma, sata, cētera, futūra, ācta, samosata).
+    declension!("arma", 116, "~a";
         nominative: "~a", "~a";
         genitive: "~ae", "~ōrum";
         dative: "~ae", "~īs";
@@ -491,8 +485,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~a", "~a";
         noun_locative: "~ae", "~īs";
     ),
-    // Commūne: 114 words (mare, īle, textile, rēptile, conclāve, missile).
-    declension!("commūne", 114, "~e";
+    // Mūne: 109 words (mare, īle, textile, missile, rēte, ratiōnāle).
+    declension!("mūne", 109, "~e";
         nominative: "~e", "~ia";
         genitive: "~is", "~ium";
         dative: "~ī", "~ibus";
@@ -501,8 +495,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~e", "~ia";
         noun_locative: "~ī", "~ibus";
     ),
-    // Arrhenocoetēs: 104 words (comētēs, peltastēs, dynastēs, sophistēs, diabētēs, pyrītēs).
-    declension!("arrhenocoetēs", 104, "~ēs";
+    // Rhenocoetēs: 102 words (peltastēs, dynastēs, sophistēs, pyrītēs, hermēs, xerxēs).
+    declension!("rhenocoetēs", 102, "~ēs";
         nominative: "~ēs", "~ae";
         genitive: "~ae", "~ārum";
         dative: "~ae", "~īs";
@@ -511,8 +505,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~ē", "~ae";
         noun_locative: "~ē", "~ēbus";
     ),
-    // Ancōn: 97 words (sōl, martyr, ēr, massētēr, arbor, passer).
-    declension!("ancōn", 97, "~";
+    // Sul: 90 words (sōl, martyr, ēr, massētēr, passer, rēn).
+    declension!("sul", 90, "~";
         nominative: "~", "~ēs";
         genitive: "~is", "~um";
         dative: "~ī", "~ibus";
@@ -521,8 +515,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~", "~ēs";
         noun_locative: "~ī", "~ibus";
     ),
-    // Dēliciae: 89 words (hippotoxotae, epulae, exuviae, tenebrae, quadrīgae, dīvitiae).
-    declension!("dēliciae", 89, "~ae";
+    // Dēliciae: 87 words (epulae, tenebrae, quadrīgae, dīvitiae, nūptiae, phalerae).
+    declension!("dēliciae", 87, "~ae";
         nominative: "~a", "~ae";
         genitive: "~ae", "~ārum";
         dative: "~ae", "~īs";
@@ -531,8 +525,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~a", "~ae";
         noun_locative: "~ae", "~īs";
     ),
-    // Aloē: 87 words (apostrophē, hyperbolē, palē, actē, alcē, argyranchē).
-    declension!("aloē", 87, "~ē";
+    // Aloē: 86 words (hyperbolē, palē, actē, alcē, harpē, hecatombē).
+    declension!("aloē", 86, "~ē";
         nominative: "~ē", "~ae";
         genitive: "~ēs", "~ārum";
         dative: "~ae", "~īs";
@@ -541,8 +535,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~ē", "~ae";
         noun_locative: "~ae", "~īs";
     ),
-    // Speciēs: 82 words (diēs, speciēs, seriēs, merīdiēs, rēs, rabiēs).
-    declension!("speciēs", 82, "~ēs";
+    // Speciēs: 76 words (diēs, speciēs, seriēs, rēs, rabiēs, fidēs).
+    declension!("speciēs", 76, "~ēs";
         nominative: "~ēs", "~ēs";
         genitive: "~ēī", "~ērum";
         dative: "~ēī", "~ēbus";
@@ -551,8 +545,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~ēs", "~ēs";
         noun_locative: "~ē", "~ēbus";
     ),
-    // Synthesis: 78 words (analysis, crisis, tūberculōsis, paralysis, hypothesis, synthesis).
-    declension!("synthesis", 78, "~is";
+    // Synthesis: 72 words (crisis, tūberculōsis, hypothesis, synthesis, synopsis, secūris).
+    declension!("synthesis", 72, "~is";
         nominative: "~is", "~ēs|~eis";
         genitive: "~is|~eōs|~ios", "~ium";
         dative: "~ī", "~ibus";
@@ -561,8 +555,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~is|~i", "~ēs|~eis";
         noun_locative: "~ī", "~ibus";
     ),
-    // Apex: 72 words (index, complex, apex, ībex, pollex, iūdex).
-    declension!("apex", 72, "~ex";
+    // Apex: 70 words (apex, ībex, pollex, iūdex, vertex, pontifex).
+    declension!("apex", 70, "~ex";
         nominative: "~ex", "~icēs";
         genitive: "~icis", "~icum";
         dative: "~icī", "~icibus";
@@ -571,8 +565,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~ex", "~icēs";
         noun_locative: "~ae", "~īs";
     ),
-    // Mōlēs: 66 words (verrēs, vulpēs, volantēs, acīnacēs, antēs, martēs).
-    declension!("mōlēs", 66, "~ēs";
+    // Mōlēs: 63 words (verrēs, vulpēs, volantēs, acīnacēs, martēs, fēlēs).
+    declension!("mōlēs", 63, "~ēs";
         nominative: "~ēs", "~ēs";
         genitive: "~is", "~ium";
         dative: "~ī", "~ibus";
@@ -581,8 +575,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~ēs", "~ēs";
         noun_locative: "~ē", "~ēbus";
     ),
-    // Puer: 57 words (puer, vir, līber, tridentiger, armiger, triumvir).
-    declension!("puer", 57, "~";
+    // Puer: 51 words (puer, vir, līber, lēvir, socer, presbyter).
+    declension!("puer", 51, "~";
         nominative: "~", "~ī";
         genitive: "~ī", "~ōrum";
         dative: "~ō", "~īs";
@@ -591,8 +585,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~", "~ī";
         noun_locative: "~ī", "~īs";
     ),
-    // Trēsvirī: 49 words (geminī, līberī, canachēnī, morbillī, hastātī, beātī).
-    declension!("trēsvirī", 49, "~ī";
+    // Trēsvirī: 47 words (geminī, līberī, morbillī, hastātī, beātī, ūniversī).
+    declension!("trēsvirī", 47, "~ī";
         nominative: "~us", "~ī";
         genitive: "~ī", "~ōrum";
         dative: "~ō", "~īs";
@@ -601,8 +595,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~e", "~ī";
         noun_locative: "~ī", "~īs";
     ),
-    // Ambāgēs: 46 words (veterēs, euphrātēs, cinyphēs, ambāgēs, canēs, aborīginēs).
-    declension!("ambāgēs", 46, "~ēs";
+    // Bāgēs: 46 words (veterēs, euphrātēs, cinyphēs, prīncipēs, larēs, satrapēs).
+    declension!("bāgēs", 46, "~ēs";
         nominative: "~ēs", "~ēs";
         genitive: "~is", "~um";
         dative: "~ī", "~ibus";
@@ -611,8 +605,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~ēs", "~ēs";
         noun_locative: "~ē", "~ēbus";
     ),
-    // Ager: 45 words (minister, aper, ager, beber, cancer, onager).
-    declension!("ager", 45, "~e~";
+    // Ager: 43 words (minister, aper, ager, beber, onager, fiber).
+    declension!("ager", 43, "~e~";
         nominative: "~e~", "~~ī";
         genitive: "~~ī", "~~ōrum";
         dative: "~~ō", "~~īs";
@@ -621,7 +615,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~e~", "~~ī";
         noun_locative: "~e~", "~e~";
     ),
-    // Vās: 41 words (gas, vēr, lāser, sulfur, sulphur, cadāver).
+    // Vās: 41 words (gas, vēr, lāser, sulfur, sulphur, elixir).
     declension!("vās", 41, "~";
         nominative: "~", "~a";
         genitive: "~is", "~um";
@@ -631,7 +625,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~", "~a";
         noun_locative: "~ī", "~ibus";
     ),
-    // Hospitālia: 38 words (rēgālia, mīlitāria, moenia, penetrālia, mūnia, omnia).
+    // Hospitālia: 38 words (mīlitāria, moenia, penetrālia, mūnia, omnia, mōbilia).
     declension!("hospitālia", 38, "~a";
         nominative: "~a", "~a";
         genitive: "~ae", "~um";
@@ -641,8 +635,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~a", "~a";
         noun_locative: "~ae", "~īs";
     ),
-    // Tribūnal: 34 words (mammal, animal, capital, altar, marsūpial, bidental).
-    declension!("tribūnal", 34, "~a~";
+    // Būnal: 34 words (mammal, altar, marsūpial, cervīcal, lupānar, laquear).
+    declension!("būnal", 34, "~a~";
         nominative: "~a~", "~ā~ia";
         genitive: "~ā~is", "~ā~ium";
         dative: "~ā~ī", "~ā~ibus";
@@ -651,8 +645,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~a~", "~ā~ia";
         noun_locative: "~a~", "~a~";
     ),
-    // Boreās: 31 words (xiphiās, mandragorās, catōblepās, palmatiās, galaxiās, aparctiās).
-    declension!("boreās", 31, "~ās";
+    // Boreās: 30 words (xiphiās, mandragorās, palmatiās, galaxiās, aparctiās, amās).
+    declension!("boreās", 30, "~ās";
         nominative: "~ās", "~ae";
         genitive: "~ae", "~ārum";
         dative: "~ae", "~īs";
@@ -661,8 +655,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~ā", "~ae";
         noun_locative: "~ae", "~īs";
     ),
-    // Līmes: 31 words (eques, mīles, stīpes, dīves, comes, āles).
-    declension!("līmes", 31, "~es";
+    // Līmes: 30 words (eques, mīles, stīpes, dīves, āles, hospes).
+    declension!("līmes", 30, "~es";
         nominative: "~es", "~itēs";
         genitive: "~itis", "~itum";
         dative: "~itī", "~itibus";
@@ -671,8 +665,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~es", "~itēs";
         noun_locative: "~ae", "~īs";
     ),
-    // Ops: 30 words (cyclōps, hiems, thrīps, hērōs, ops, arabs).
-    declension!("ops", 30, "~s";
+    // Ops: 29 words (cyclōps, hiems, thrīps, hērōs, ops, daps).
+    declension!("ops", 29, "~s";
         nominative: "~s", "~ēs";
         genitive: "~is", "~um";
         dative: "~ī", "~ibus";
@@ -681,8 +675,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~s", "~ēs";
         noun_locative: "~rī", "~ibus";
     ),
-    // Lēx: 29 words (phalanx, oryx, rēx, lēx, sphinx, larynx).
-    declension!("lēx", 29, "~x";
+    // Lēx: 28 words (phalanx, oryx, rēx, lēx, sphinx, larynx).
+    declension!("lēx", 28, "~x";
         nominative: "~x", "~gēs";
         genitive: "~gis", "~gum";
         dative: "~gī", "~gibus";
@@ -691,8 +685,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~x", "~gēs";
         noun_locative: "~ae", "~īs";
     ),
-    // Opus: 23 words (genus, onus, vulnus, opus, latus, sīdus).
-    declension!("opus", 23, "~us";
+    // Opus: 22 words (genus, onus, vulnus, opus, latus, sīdus).
+    declension!("opus", 22, "~us";
         nominative: "~us", "~era";
         genitive: "~eris", "~erum";
         dative: "~erī", "~eribus";
@@ -711,8 +705,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~us", "~ora";
         noun_locative: "~orī", "~oribus";
     ),
-    // Canōn: 19 words (īcōn, canōn, gnōmōn, amāzōn, halcyōn, artemōn).
-    declension!("canōn", 19, "~ō~";
+    // Nōn: 19 words (īcōn, gnōmōn, halcyōn, phlegmōn, axōn, ichneumōn).
+    declension!("nōn", 19, "~ō~";
         nominative: "~ō~", "~o~ēs";
         genitive: "~o~is", "~o~um";
         dative: "~o~ī", "~o~ibus";
@@ -721,8 +715,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~ō~", "~o~ēs";
         noun_locative: "~ō~", "~ō~";
     ),
-    // Genius: 19 words (fīlius, mercurius, genius, lanius, lūcius, obituārius).
-    declension!("genius", 19, "~ius";
+    // Genius: 17 words (fīlius, genius, lanius, lūcius, sellārius, vandalius).
+    declension!("genius", 17, "~ius";
         nominative: "~ius", "~iī";
         genitive: "~iī|~ī", "~iōrum";
         dative: "~iō", "~iīs";
@@ -731,68 +725,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~ī", "~iī";
         noun_locative: "~ae", "~īs";
     ),
-    // Gēns: 17 words (lēns, dēns, mēns, gēns, serpēns, triēns).
-    declension!("gēns", 17, "~ē~s";
-        nominative: "~ē~s", "~e~tēs";
-        genitive: "~e~tis", "~e~tium";
-        dative: "~e~tī", "~e~tibus";
-        accusative: "~e~tem", "~e~tēs|~e~tīs";
-        ablative: "~e~te", "~e~tibus";
-        vocative: "~ē~s", "~e~tēs";
-        noun_locative: "~ē~s", "~ē~s";
-    ),
-    // Familiāris: 16 words (ignis, aedīlis, bīlis, gentīlis, canālis, familiāris).
-    declension!("familiāris", 16, "~is";
-        nominative: "~is", "~ēs";
-        genitive: "~is", "~ium";
-        dative: "~ī", "~ibus";
-        accusative: "~em", "~ēs|~īs";
-        ablative: "~ī", "~ibus";
-        vocative: "~is", "~ēs";
-        noun_locative: "~ī", "~ibus";
-    ),
-    // Pars: 15 words (ars, līs, mors, pars, sors, cohors).
-    declension!("pars", 15, "~s";
-        nominative: "~s", "~tēs";
-        genitive: "~tis", "~tium";
-        dative: "~tī", "~tibus";
-        accusative: "~tem", "~tēs|~tīs";
-        ablative: "~te", "~tibus";
-        vocative: "~s", "~tēs";
-        noun_locative: "~rī", "~īs";
-    ),
-    // Aegis: 15 words (aegis, chlamys, āclys, persis, lampas, bāris).
-    declension!("aegis", 15, "~s";
-        nominative: "~s", "~des|~dēs";
-        genitive: "~dos|~dis", "~dum";
-        dative: "~dī", "~dibus";
-        accusative: "~da|~dem", "~das|~dēs";
-        ablative: "~de", "~dibus";
-        vocative: "~s|~", "~des|~dēs";
-        noun_locative: "~rī", "~īs";
-    ),
-    // Pecten: 15 words (flāmen, pecten, cornicen, tībīcen, prōflāmen, tubicen).
-    declension!("pecten", 15, "~e~";
-        nominative: "~e~", "~i~ēs";
-        genitive: "~i~is", "~i~um";
-        dative: "~i~ī", "~i~ibus";
-        accusative: "~i~em", "~i~ēs";
-        ablative: "~i~e", "~i~ibus";
-        vocative: "~e~", "~i~ēs";
-        noun_locative: "~e~", "~e~";
-    ),
-    // Māter: 14 words (accipiter, pater, māter, frāter, sequester, campester).
-    declension!("māter", 14, "~e~";
-        nominative: "~e~", "~~ēs";
-        genitive: "~~is", "~~um";
-        dative: "~~ī", "~~ibus";
-        accusative: "~~em", "~~ēs";
-        ablative: "~~e", "~~ibus";
-        vocative: "~e~", "~~ēs";
-        noun_locative: "~e~", "~e~";
-    ),
-    // Rūdēns: 14 words (parēns, continēns, benevolēns, serviēns, rūdēns, pestilēns).
-    declension!("rūdēns", 14, "~ē~s";
+    // Rūdēns: 15 words (parēns, serviēns, rūdēns, pestilēns, rōdēns, occidēns).
+    declension!("rūdēns", 15, "~ē~s";
         nominative: "~ē~s", "~e~tēs";
         genitive: "~e~tis", "~e~tum";
         dative: "~e~tī", "~e~tibus";
@@ -801,15 +735,65 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~ē~s", "~e~tēs";
         noun_locative: "~ē~s", "~ē~s";
     ),
-    // Tripūs: 13 words (octōpūs, apūs, dasypūs, tripūs, cytropūs, lagōpūs).
-    declension!("tripūs", 13, "~ūs";
-        nominative: "~ūs", "~odēs";
-        genitive: "~odis", "~odum";
-        dative: "~odī", "~odibus";
-        accusative: "~odem", "~odēs";
-        ablative: "~ode", "~odibus";
-        vocative: "~ūs", "~odēs";
-        noun_locative: "~ae", "~īs";
+    // Familiāris: 14 words (ignis, aedīlis, bīlis, gentīlis, familiāris, populāris).
+    declension!("familiāris", 14, "~is";
+        nominative: "~is", "~ēs";
+        genitive: "~is", "~ium";
+        dative: "~ī", "~ibus";
+        accusative: "~em", "~ēs|~īs";
+        ablative: "~ī", "~ibus";
+        vocative: "~is", "~ēs";
+        noun_locative: "~ī", "~ibus";
+    ),
+    // Pars: 14 words (ars, līs, mors, pars, sors, penās).
+    declension!("pars", 14, "~s";
+        nominative: "~s", "~tēs";
+        genitive: "~tis", "~tium";
+        dative: "~tī", "~tibus";
+        accusative: "~tem", "~tēs|~tīs";
+        ablative: "~te", "~tibus";
+        vocative: "~s", "~tēs";
+        noun_locative: "~rī", "~īs";
+    ),
+    // Pecten: 14 words (flāmen, pecten, tībīcen, tubicen, cicūticen, citharicen).
+    declension!("pecten", 14, "~e~";
+        nominative: "~e~", "~i~ēs";
+        genitive: "~i~is", "~i~um";
+        dative: "~i~ī", "~i~ibus";
+        accusative: "~i~em", "~i~ēs";
+        ablative: "~i~e", "~i~ibus";
+        vocative: "~e~", "~i~ēs";
+        noun_locative: "~e~", "~e~";
+    ),
+    // Gēns: 13 words (lēns, dēns, mēns, gēns, serpēns, tangēns).
+    declension!("gēns", 13, "~ē~s";
+        nominative: "~ē~s", "~e~tēs";
+        genitive: "~e~tis", "~e~tium";
+        dative: "~e~tī", "~e~tibus";
+        accusative: "~e~tem", "~e~tēs|~e~tīs";
+        ablative: "~e~te", "~e~tibus";
+        vocative: "~ē~s", "~e~tēs";
+        noun_locative: "~ē~s", "~ē~s";
+    ),
+    // Aegis: 13 words (aegis, chlamys, āclys, lampas, hērōis, epūlis).
+    declension!("aegis", 13, "~s";
+        nominative: "~s", "~des|~dēs";
+        genitive: "~dos|~dis", "~dum";
+        dative: "~dī", "~dibus";
+        accusative: "~da|~dem", "~das|~dēs";
+        ablative: "~de", "~dibus";
+        vocative: "~s", "~des|~dēs";
+        noun_locative: "~rī", "~īs";
+    ),
+    // Māter: 12 words (accipiter, pater, māter, frāter, sequester, september).
+    declension!("māter", 12, "~e~";
+        nominative: "~e~", "~~ēs";
+        genitive: "~~is", "~~um";
+        dative: "~~ī", "~~ibus";
+        accusative: "~~em", "~~ēs";
+        ablative: "~~e", "~~ibus";
+        vocative: "~e~", "~~ēs";
+        noun_locative: "~e~", "~e~";
     ),
     // Arx: 12 words (phoenīx, fōx, arx, calx, faux, quīncūnx).
     declension!("arx", 12, "~x";
@@ -819,6 +803,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         accusative: "~cem", "~cēs|~cīs";
         ablative: "~ce", "~cibus";
         vocative: "~x", "~cēs";
+        noun_locative: "~ae", "~īs";
+    ),
+    // Lagōpūs: 12 words (octōpūs, apūs, dasypūs, cytropūs, lagōpūs, erythropūs).
+    declension!("lagōpūs", 12, "~ūs";
+        nominative: "~ūs", "~odēs";
+        genitive: "~odis", "~odum";
+        dative: "~odī", "~odibus";
+        accusative: "~odem", "~odēs";
+        ablative: "~ode", "~odibus";
+        vocative: "~ūs", "~odēs";
         noun_locative: "~ae", "~īs";
     ),
     // Vīs: 12 words (flōs, mūs, rōs, mōs, vīs, tellūs).
@@ -831,16 +825,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~s", "~rēs";
         noun_locative: "~rī", "~īs";
     ),
-    // Pēs: 12 words (cornipēs, quadrupēs, pēs, stapēs, tripēs, centipēs).
-    declension!("pēs", 12, "~ēs";
-        nominative: "~ēs", "~edēs";
-        genitive: "~edis", "~edum";
-        dative: "~edī", "~edibus";
-        accusative: "~edem", "~edēs";
-        ablative: "~ede", "~edibus";
-        vocative: "~ēs", "~edēs";
-        noun_locative: "~ē", "~ēbus";
-    ),
     // Aes: 12 words (ōs, crūs, jūs, thūs, pūs, aes).
     declension!("aes", 12, "~s";
         nominative: "~s", "~ra";
@@ -850,16 +834,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         ablative: "~re", "~ribus";
         vocative: "~s", "~ra";
         noun_locative: "~rī", "~īs";
-    ),
-    // Sextāns: 9 words (accūsāns, īnfāns, octāns, sextāns, nāns, amāns).
-    declension!("sextāns", 9, "~ā~s";
-        nominative: "~ā~s", "~a~tēs";
-        genitive: "~a~tis", "~a~tium";
-        dative: "~a~tī", "~a~tibus";
-        accusative: "~a~tem", "~a~tēs|~a~tīs";
-        ablative: "~a~te", "~a~tibus";
-        vocative: "~ā~s", "~a~tēs";
-        noun_locative: "~ā~s", "~ā~s";
     ),
     // Ēchō: 9 words (ēchō, cherūb, seraph, mīlle, manna, harmagedōn).
     declension!("ēchō", 9, "~";
@@ -871,8 +845,18 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~", "~īm";
         noun_locative: "~ae", "~īs";
     ),
-    // Cornū: 8 words (cornū, genū, gelū, astū, verū, pecū).
-    declension!("cornū", 8, "~ū";
+    // Sextāns: 8 words (accūsāns, octāns, sextāns, nāns, dēxtāns, fāns).
+    declension!("sextāns", 8, "~ā~s";
+        nominative: "~ā~s", "~a~tēs";
+        genitive: "~a~tis", "~a~tium";
+        dative: "~a~tī", "~a~tibus";
+        accusative: "~a~tem", "~a~tēs|~a~tīs";
+        ablative: "~a~te", "~a~tibus";
+        vocative: "~ā~s", "~a~tēs";
+        noun_locative: "~ā~s", "~ā~s";
+    ),
+    // Rnū: 8 words (genū, gelū, astū, verū, pecū, testū).
+    declension!("rnū", 8, "~ū";
         nominative: "~ū", "~ua";
         genitive: "~ūs|~ū", "~uum";
         dative: "~ū|~uī", "~ibus";
@@ -881,8 +865,18 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~ū", "~ua";
         noun_locative: "~ī", "~ibus";
     ),
-    // Tenōn: 8 words (tenōn, horizōn, archōn, scazōn, pteranodōn, poppyzōn).
-    declension!("tenōn", 8, "~ō~";
+    // Pēs: 8 words (quadrupēs, pēs, stapēs, centipēs, sonipēs, trēspēs).
+    declension!("pēs", 8, "~ēs";
+        nominative: "~ēs", "~edēs";
+        genitive: "~edis", "~edum";
+        dative: "~edī", "~edibus";
+        accusative: "~edem", "~edēs";
+        ablative: "~ede", "~edibus";
+        vocative: "~ēs", "~edēs";
+        noun_locative: "~ē", "~ēbus";
+    ),
+    // Chōn: 8 words (tenōn, horizōn, scazōn, pteranodōn, poppyzōn, lignyizōn).
+    declension!("chōn", 8, "~ō~";
         nominative: "~ō~", "~o~tēs";
         genitive: "~o~tis", "~o~tum";
         dative: "~o~tī", "~o~tibus";
@@ -891,7 +885,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~ō~", "~o~tēs";
         noun_locative: "~ō~", "~ō~";
     ),
-    // Gaster: 8 words (gaster, melanogaster, leucogaster, erythrogaster, xanthogaster, chrysogaster).
+    // Gaster: 8 words (gaster, leucogaster, erythrogaster, xanthogaster, chrysogaster, rufigaster).
     declension!("gaster", 8, "~e~";
         nominative: "~e~", "~e~ēs|~~ī";
         genitive: "~e~is|~~ī", "~e~um|~~ōrum";
@@ -901,8 +895,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~e~", "~e~ēs|~~ī";
         noun_locative: "~e~", "~e~";
     ),
-    // Cacoēthes: 8 words (cacoēthes, cynoīdes, erysithales, neuroīdes, eusebes, androsaces).
-    declension!("cacoēthes", 8, "~es";
+    // Coēthes: 8 words (cynoīdes, erysithales, neuroīdes, eusebes, hippomanes, sēsamoīdes).
+    declension!("coēthes", 8, "~es";
         nominative: "~es", "~a";
         genitive: "~is", "~um";
         dative: "~ī", "~ibus";
@@ -911,8 +905,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~es", "~a";
         noun_locative: "~ī", "~ibus";
     ),
-    // Vetera: 7 words (vetera, tormina, arōmata, posteriōra, vermina, plēmina).
-    declension!("vetera", 7, "~a";
+    // Ēmina: 7 words (vetera, tormina, posteriōra, vermina, dēcermina, ōmata).
+    declension!("ēmina", 7, "~a";
         nominative: "~a", "~a";
         genitive: "~ae", "~um";
         dative: "~ae", "~ibus";
@@ -931,7 +925,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~ā~s", "~a~tēs";
         noun_locative: "~ā~s", "~ā~s";
     ),
-    // Onyx: 7 words (onyx, sardonyx, sardonix, iasponyx, sētonix, callithrix).
+    // Onyx: 7 words (onyx, sardonyx, sardonix, iasponyx, sētonix, llithrix).
     declension!("onyx", 7, "~x";
         nominative: "~x", "~chēs";
         genitive: "~chis", "~chum";
@@ -940,16 +934,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         ablative: "~che", "~chibus";
         vocative: "~x", "~chēs";
         noun_locative: "~ae", "~īs";
-    ),
-    // Prīnceps: 7 words (adeps, forceps, prīnceps, mūniceps, particeps, manceps).
-    declension!("prīnceps", 7, "~e~s";
-        nominative: "~e~s", "~i~ēs";
-        genitive: "~i~is", "~i~um";
-        dative: "~i~ī", "~i~ibus";
-        accusative: "~i~em", "~i~ēs";
-        ablative: "~i~e", "~i~ibus";
-        vocative: "~e~s", "~i~ēs";
-        noun_locative: "~e~s", "~e~s";
     ),
     // Frōns: 6 words (pōns, sōns, fōns, frōns, mōns, spōns).
     declension!("frōns", 6, "~ō~s";
@@ -961,55 +945,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~ō~s", "~o~tēs";
         noun_locative: "~ō~s", "~ō~s";
     ),
-    // Adamās: 6 words (elephās, gigās, adamās, androdamās, epimelās, corybās).
-    declension!("adamās", 6, "~ās";
-        nominative: "~ās", "~antēs";
-        genitive: "~antis", "~antum";
-        dative: "~antī", "~antibus";
-        accusative: "~antem", "~antēs";
-        ablative: "~ante", "~antibus";
-        vocative: "~ās", "~antēs";
-        noun_locative: "~ae", "~īs";
-    ),
-    // Vīrus: 6 words (vīrus, pelagus, vulgus, volgus, waldus, archipelagus).
-    declension!("vīrus", 6, "~us";
-        nominative: "~us", "~ē";
-        genitive: "~ī", "~ōrum";
-        dative: "~ō", "~īs";
-        accusative: "~us", "~ē";
-        ablative: "~ō", "~īs";
-        vocative: "~us", "~ē";
-        noun_locative: "~ī", "~īs";
-    ),
-    // Specus: 6 words (lacus, quercus, arcus, tribus, artus, specus).
-    declension!("specus", 6, "~us";
-        nominative: "~us", "~ūs";
-        genitive: "~ūs", "~uum";
-        dative: "~uī", "~ubus";
-        accusative: "~um", "~ūs";
-        ablative: "~ū", "~ubus";
-        vocative: "~us", "~ūs";
-        noun_locative: "~ī", "~īs";
-    ),
-    // Basis: 5 words (basis, cannabis, sināpis, fūtis, senāpis).
-    declension!("basis", 5, "~is";
-        nominative: "~is", "~ēs";
-        genitive: "~is", "~ium";
-        dative: "~ī", "~ibus";
-        accusative: "~im", "~ēs|~īs";
-        ablative: "~e|~ī", "~ibus";
-        vocative: "~is", "~ēs";
-        noun_locative: "~ī", "~ibus";
-    ),
-    // Sāl: 5 words (sāl, pār, lār, compār, conpār).
-    declension!("sāl", 5, "~ā~";
-        nominative: "~ā~", "~a~ēs";
-        genitive: "~a~is", "~a~um";
-        dative: "~a~ī", "~a~ibus";
-        accusative: "~a~em", "~a~ēs";
-        ablative: "~a~e", "~a~ibus";
-        vocative: "~ā~", "~a~ēs";
-        noun_locative: "~ā~", "~ā~";
+    // Prīnceps: 6 words (forceps, prīnceps, mūniceps, particeps, manceps, mūriceps).
+    declension!("prīnceps", 6, "~e~s";
+        nominative: "~e~s", "~i~ēs";
+        genitive: "~i~is", "~i~um";
+        dative: "~i~ī", "~i~ibus";
+        accusative: "~i~em", "~i~ēs";
+        ablative: "~i~e", "~i~ibus";
+        vocative: "~e~s", "~i~ēs";
+        noun_locative: "~e~s", "~e~s";
     ),
     // Ellīpsis: 5 words (ellīpsis, tmēsis, elephantiasis, curis, acroāsis).
     declension!("ellīpsis", 5, "~is";
@@ -1021,7 +965,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~is", "~ēs";
         noun_locative: "~ī", "~ibus";
     ),
-    // Stirps: 5 words (urbs, grȳps, plēbs, grīps, stirps).
+    // Stirps: 5 words (urbs, grȳps, grīps, stirps, ēbs).
     declension!("stirps", 5, "~s";
         nominative: "~s", "~ēs";
         genitive: "~is", "~ium";
@@ -1031,28 +975,48 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~s", "~ēs";
         noun_locative: "~rī", "~ibus";
     ),
-    // Venter: 5 words (linter, uter, imber, venter, ymber).
-    declension!("venter", 5, "~e~";
-        nominative: "~e~", "~~ēs";
-        genitive: "~~is", "~~ium";
-        dative: "~~ī", "~~ibus";
-        accusative: "~~em", "~~ēs|~~īs";
-        ablative: "~~e", "~~ibus";
-        vocative: "~e~", "~~ēs";
-        noun_locative: "~e~", "~e~";
+    // Elephās: 5 words (elephās, gigās, drodamās, melās, ybās).
+    declension!("elephās", 5, "~ās";
+        nominative: "~ās", "~antēs";
+        genitive: "~antis", "~antum";
+        dative: "~antī", "~antibus";
+        accusative: "~antem", "~antēs";
+        ablative: "~ante", "~antibus";
+        vocative: "~ās", "~antēs";
+        noun_locative: "~ae", "~īs";
     ),
-    // Līchēn: 5 words (līchēn, trītōn, daphnōn, delphīn, ēlacatēn).
-    declension!("līchēn", 5, "~";
-        nominative: "~", "~es|~ēs";
-        genitive: "~os", "~um";
+    // Vīrus: 5 words (vīrus, pelagus, vulgus, volgus, waldus).
+    declension!("vīrus", 5, "~us";
+        nominative: "~us", "~ē";
+        genitive: "~ī", "~ōrum";
+        dative: "~ō", "~īs";
+        accusative: "~us|~um", "~ē";
+        ablative: "~ō", "~īs";
+        vocative: "~us", "~ē";
+        noun_locative: "~ī", "~īs";
+    ),
+    // Specus: 5 words (lacus, quercus, artus, specus, bus).
+    declension!("specus", 5, "~us";
+        nominative: "~us", "~ūs";
+        genitive: "~ūs", "~uum";
+        dative: "~uī", "~ubus";
+        accusative: "~um", "~ūs";
+        ablative: "~ū", "~ubus";
+        vocative: "~us", "~ūs";
+        noun_locative: "~ī", "~īs";
+    ),
+    // Sis: 5 words (sināpis, fūtis, senāpis, sis, nnabis).
+    declension!("sis", 5, "~is";
+        nominative: "~is", "~ēs";
+        genitive: "~is", "~ium";
         dative: "~ī", "~ibus";
-        accusative: "~a|~em", "~as|~ēs";
-        ablative: "~e", "~ibus";
-        vocative: "~", "~es|~ēs";
+        accusative: "~im", "~ēs|~īs";
+        ablative: "~e|~ī", "~ibus";
+        vocative: "~is", "~ēs";
         noun_locative: "~ī", "~ibus";
     ),
-    // Plērumque: 5 words (quantumvīs, plērumque, quantumque, quantulumlibet, quantulumcumque).
-    declension!("plērumque", 5, "~um~";
+    // Ērumque: 5 words (quantumvīs, quantumque, quantulumlibet, quantulumcumque, ērumque).
+    declension!("ērumque", 5, "~um~";
         nominative: "~um~", "~a~";
         genitive: "~ī~", "~ōrum~";
         dative: "~ō~", "~īs~";
@@ -1061,8 +1025,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~um~", "~a~";
         noun_locative: "~um~", "~um~";
     ),
-    // Canis: 4 words (canis, apis, iuvenis, chanis).
-    declension!("canis", 4, "~is";
+    // Nis: 4 words (apis, iuvenis, chanis, nis).
+    declension!("nis", 4, "~is";
         nominative: "~is", "~ēs";
         genitive: "~is", "~um";
         dative: "~ī", "~ibus";
@@ -1081,7 +1045,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~a", "~ae";
         noun_locative: "~ae", "~īs";
     ),
-    // Fel: 4 words (mel, fel, hydromel, subtel).
+    // Fel: 4 words (mel, fel, hydromel, tel).
     declension!("fel", 4, "~";
         nominative: "~", "~la";
         genitive: "~lis", "~lium";
@@ -1101,8 +1065,28 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~is", "~erēs";
         noun_locative: "~ī", "~ibus";
     ),
-    // Caput: 4 words (caput, occiput, sinciput, capud).
-    declension!("caput", 4, "~u~";
+    // Venter: 4 words (linter, uter, venter, ymber).
+    declension!("venter", 4, "~e~";
+        nominative: "~e~", "~~ēs";
+        genitive: "~~is", "~~ium";
+        dative: "~~ī", "~~ibus";
+        accusative: "~~em", "~~ēs|~~īs";
+        ablative: "~~e", "~~ibus";
+        vocative: "~e~", "~~ēs";
+        noun_locative: "~e~", "~e~";
+    ),
+    // Līchēn: 4 words (līchēn, daphnōn, delphīn, ēlacatēn).
+    declension!("līchēn", 4, "~";
+        nominative: "~", "~es";
+        genitive: "~os", "~um";
+        dative: "~ī", "~ibus";
+        accusative: "~a", "~as";
+        ablative: "~e", "~ibus";
+        vocative: "~", "~es";
+        noun_locative: "~ī", "~ibus";
+    ),
+    // Put: 4 words (occiput, sinciput, put, pud).
+    declension!("put", 4, "~u~";
         nominative: "~u~", "~i~a";
         genitive: "~i~is", "~i~um";
         dative: "~i~ī", "~i~ibus";
@@ -1111,8 +1095,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~u~", "~i~a";
         noun_locative: "~u~", "~u~";
     ),
-    // Cēphēnes: 4 words (sȳringes, cēphēnes, carōtides, homēromastīges).
-    declension!("cēphēnes", 4, "~es";
+    // Rōtides: 4 words (sȳringes, cēphēnes, homēromastīges, rōtides).
+    declension!("rōtides", 4, "~es";
         nominative: "~es", "~es";
         genitive: "~is", "~um";
         dative: "~ī", "~ibus";
@@ -1121,7 +1105,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~es", "~es";
         noun_locative: "~ī", "~ibus";
     ),
-    // Cȳma: 4 words (diadēma, cȳma, malagma, celeusma).
+    // Cȳma: 4 words (cȳma, malagma, celeusma, dēma).
     declension!("cȳma", 4, "~a";
         nominative: "~a", "~ata|~ae";
         genitive: "~atis|~ae", "~atum|~ārum";
@@ -1131,27 +1115,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~a", "~ata|~ae";
         noun_locative: "~ae", "~īs";
     ),
-    // Acoetis: 3 words (propolis, phrenēsis, acoetis).
-    declension!("acoetis", 3, "~is";
-        nominative: "~is", "~ēs";
-        genitive: "~is", "~ium";
-        dative: "~ī", "~ibus";
-        accusative: "~in", "~ēs|~īs";
-        ablative: "~e", "~ibus";
-        vocative: "~is", "~ēs";
-        noun_locative: "~ī", "~ibus";
-    ),
-    // Ariēs: 3 words (ariēs, pariēs, abiēs).
-    declension!("ariēs", 3, "~ēs";
-        nominative: "~ēs", "~etēs";
-        genitive: "~etis", "~etum";
-        dative: "~etī", "~etibus";
-        accusative: "~etem", "~etēs";
-        ablative: "~ete", "~etibus";
-        vocative: "~ēs", "~etēs";
-        noun_locative: "~ē", "~ēbus";
-    ),
-    // Aethēr: 3 words (āēr, astēr, aethēr).
+    // Aethēr: 3 words (āēr, aethēr, tēr).
     declension!("aethēr", 3, "~ē~";
         nominative: "~ē~", "~e~ēs";
         genitive: "~e~is", "~e~um";
@@ -1161,7 +1125,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~ē~", "~e~ēs";
         noun_locative: "~ē~", "~ē~";
     ),
-    // Pepō: 3 words (pepō, taxō, mēlopepō).
+    // Pepō: 3 words (pepō, taxō, lopepō).
     declension!("pepō", 3, "~ō";
         nominative: "~ō", "~onēs";
         genitive: "~onis", "~onum";
@@ -1171,8 +1135,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         vocative: "~ō", "~onēs";
         noun_locative: "~ae", "~īs";
     ),
-    // Barbās: 3 words (pollis, barbās, lendis).
-    declension!("barbās", 3, "~s";
+    // Rbās: 3 words (pollis, lendis, rbās).
+    declension!("rbās", 3, "~s";
         nominative: "~s", "~nēs";
         genitive: "~nis", "~num";
         dative: "~nī", "~nibus";
@@ -1180,5 +1144,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 85] = [
         ablative: "~ne", "~nibus";
         vocative: "~s", "~nēs";
         noun_locative: "~rī", "~īs";
+    ),
+    // Polis: 3 words (phrenēsis, acoetis, polis).
+    declension!("polis", 3, "~is";
+        nominative: "~is", "~ēs";
+        genitive: "~is", "~ium";
+        dative: "~ī", "~ibus";
+        accusative: "~in", "~ēs|~īs";
+        ablative: "~e", "~ibus";
+        vocative: "~is", "~ēs";
+        noun_locative: "~ī", "~ibus";
     ),
 ];

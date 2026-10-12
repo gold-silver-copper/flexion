@@ -26,80 +26,74 @@ macro_rules! declension {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `medio`: 46,322 words.
-    Medio,
-    /// Like `flor`: 6,068 words.
+    /// Like `lata`: 26,934 words.
+    Lata,
+    /// Like `flor`: 3,814 words.
     Flor,
-    /// Like `lastón`: 4,740 words.
-    Lastón,
-    /// Like `análisis`: 1,707 words.
-    Análisis,
-    /// Like `almacén`: 339 words.
-    Almacén,
-    /// Like `comodín`: 337 words.
-    Comodín,
-    /// Like `matriz`: 288 words.
-    Matriz,
-    /// Like `bacán`: 273 words.
-    Bacán,
-    /// Like `canon`: 46 words.
+    /// Like `visión`: 2,405 words.
+    Visión,
+    /// Like `cocos`: 1,413 words.
+    Cocos,
+    /// Like `cén`: 231 words.
+    Cén,
+    /// Like `luz`: 201 words.
+    Luz,
+    /// Like `odín`: 197 words.
+    Odín,
+    /// Like `pás`: 169 words.
+    Pás,
+    /// Like `canon`: 33 words.
     Canon,
-    /// Like `betún`: 38 words.
-    Betún,
-    /// Like `desorden`: 27 words.
-    Desorden,
-    /// Like `mitin`: 18 words.
+    /// Like `tún`: 29 words.
+    Tún,
+    /// Like `bolon`: 17 words.
+    Bolon,
+    /// Like `mitin`: 15 words.
     Mitin,
-    /// Like `volumen`: 17 words.
-    Volumen,
-    /// Like `body`: 8 words.
-    Body,
-    /// Like `germen`: 8 words.
-    Germen,
+    /// Like `dumen`: 12 words.
+    Dumen,
     /// Like `psi`: 7 words.
     Psi,
-    /// Like `lobby`: 5 words.
-    Lobby,
-    /// Like `bicúbico`: 4 words.
-    Bicúbico,
-    /// Like `copín`: 4 words.
-    Copín,
+    /// Like `germen`: 6 words.
+    Germen,
+    /// Like `rry`: 5 words.
+    Rry,
+    /// Like `ivery`: 4 words.
+    Ivery,
+    /// Like `cheto`: 4 words.
+    Cheto,
     /// Like `barman`: 3 words.
     Barman,
-    /// Like `fijodalgo`: 3 words.
-    Fijodalgo,
-    /// Like `régimen`: 3 words.
-    Régimen,
     /// Like `clac`: 3 words.
     Clac,
+    /// Like `agen`: 3 words.
+    Agen,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 23] = [
-        Declension::Medio,
+    pub const ALL: [Declension; 21] = [
+        Declension::Lata,
         Declension::Flor,
-        Declension::Lastón,
-        Declension::Análisis,
-        Declension::Almacén,
-        Declension::Comodín,
-        Declension::Matriz,
-        Declension::Bacán,
+        Declension::Visión,
+        Declension::Cocos,
+        Declension::Cén,
+        Declension::Luz,
+        Declension::Odín,
+        Declension::Pás,
         Declension::Canon,
-        Declension::Betún,
-        Declension::Desorden,
+        Declension::Tún,
+        Declension::Bolon,
         Declension::Mitin,
-        Declension::Volumen,
-        Declension::Body,
-        Declension::Germen,
+        Declension::Dumen,
         Declension::Psi,
-        Declension::Lobby,
-        Declension::Bicúbico,
-        Declension::Copín,
+        Declension::Germen,
+        Declension::Rry,
+        Declension::Ivery,
+        Declension::Cheto,
         Declension::Barman,
-        Declension::Fijodalgo,
-        Declension::Régimen,
         Declension::Clac,
+        Declension::Agen,
     ];
 
     /// Its table.
@@ -117,97 +111,89 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 23] = [
-    // Medio: 46,322 words (pie, swap, deal, abada, abate, quiz).
-    declension!("medio", 46322, "~";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 21] = [
+    // Lata: 26,934 words (pie, swap, deal, quiz, de, te).
+    declension!("lata", 26934, "~";
         noun: "~", "~s";
     ),
-    // Flor: 6,068 words (abdominal, abductor, aboriginal, raptor, accidental, plural).
-    declension!("flor", 6068, "~";
+    // Flor: 3,814 words (van, can, o, gas, país, grey).
+    declension!("flor", 3814, "~";
         noun: "~", "~es";
     ),
-    // Lastón: 4,740 words (barón, varón, chingón, corazón, millón, pronunciación).
-    declension!("lastón", 4740, "~ó~";
+    // Visión: 2,405 words (ibón, zircón, utilización, ubicación, ulceración, neón).
+    declension!("visión", 2405, "~ó~";
         noun: "~ó~", "~o~es";
     ),
-    // Análisis: 1,707 words (fa, gnosis, ime, menos, sms, paraguas).
-    declension!("análisis", 1707, "~";
+    // Cocos: 1,413 words (fa, gnosis, ime, sms, dna, stylus).
+    declension!("cocos", 1413, "~";
         noun: "~", "~";
     ),
-    // Almacén: 339 words (japonés, luxemburgués, inglés, francés, ugandés, javanés).
-    declension!("almacén", 339, "~é~";
+    // Cén: 231 words (ugandés, jején, ghanés, edén, kinés, eibarrés).
+    declension!("cén", 231, "~é~";
         noun: "~é~", "~e~es";
     ),
-    // Comodín: 337 words (zepelín, jardín, jazmín, querubín, pudín, delfín).
-    declension!("comodín", 337, "~í~";
-        noun: "~í~", "~i~es";
-    ),
-    // Matriz: 288 words (pez, voz, juez, luz, diez, vez).
-    declension!("matriz", 288, "~z";
+    // Luz: 201 words (pez, voz, juez, luz, diez, vez).
+    declension!("luz", 201, "~z";
         noun: "~z", "~ces";
     ),
-    // Bacán: 273 words (tulipán, catalán, zaguán, restorán, carácter, guardián).
-    declension!("bacán", 273, "~á~";
+    // Odín: 197 words (zepelín, orín, afín, kirguís, ukelín, theremín).
+    declension!("odín", 197, "~í~";
+        noun: "~í~", "~i~es";
+    ),
+    // Pás: 169 words (ruán, imán, afán, arán, edecán, peán).
+    declension!("pás", 169, "~á~";
         noun: "~á~", "~a~es";
     ),
-    // Canon: 46 words (baden, canon, taxon, gravamen, brahman, nasion).
-    declension!("canon", 46, "~a~";
+    // Canon: 33 words (baden, canon, taxon, brahman, nasion, margen).
+    declension!("canon", 33, "~a~";
         noun: "~a~", "~á~es";
     ),
-    // Betún: 38 words (autobús, microbús, común, atún, runrún, betún).
-    declension!("betún", 38, "~ú~";
+    // Tún: 29 words (atún, obús, kuskús, bús, mún, nrún).
+    declension!("tún", 29, "~ú~";
         noun: "~ú~", "~u~es";
     ),
-    // Desorden: 27 words (abdomen, colon, poison, token, loden, joven).
-    declension!("desorden", 27, "~o~";
+    // Bolon: 17 words (colon, poison, token, loden, joven, polen).
+    declension!("bolon", 17, "~o~";
         noun: "~o~", "~ó~es";
     ),
-    // Mitin: 18 words (hooligan, crimen, origen, shamisen, mitin, limen).
-    declension!("mitin", 18, "~i~";
+    // Mitin: 15 words (crimen, origen, mitin, limen, virgen, pilsen).
+    declension!("mitin", 15, "~i~";
         noun: "~i~", "~í~es";
     ),
-    // Volumen: 17 words (lumen, acumen, rumen, numen, gluten, albumen).
-    declension!("volumen", 17, "~u~";
+    // Dumen: 12 words (lumen, acumen, rumen, numen, gluten, lumpen).
+    declension!("dumen", 12, "~u~";
         noun: "~u~", "~ú~es";
-    ),
-    // Body: 8 words (cherry, body, party, ferry, brandy, bully).
-    declension!("body", 8, "~y";
-        noun: "~y", "~ys|~ies";
-    ),
-    // Germen: 8 words (gentleman, semen, theremin, germen, penetron, beicon).
-    declension!("germen", 8, "~e~";
-        noun: "~e~", "~é~es";
     ),
     // Psi: 7 words (mi, pi, ni, xi, psi, fi).
     declension!("psi", 7, "~i";
         noun: "~i", "~íes";
     ),
-    // Lobby: 5 words (reality, lady, delivery, lobby, estadity).
-    declension!("lobby", 5, "~y";
+    // Germen: 6 words (semen, theremin, germen, beicon, cemen, ntleman).
+    declension!("germen", 6, "~e~";
+        noun: "~e~", "~é~es";
+    ),
+    // Rry: 5 words (body, docureality, exgay, rry, rty).
+    declension!("rry", 5, "~y";
+        noun: "~y", "~ys|~ies";
+    ),
+    // Ivery: 4 words (lady, lity, ivery, dity).
+    declension!("ivery", 4, "~y";
         noun: "~y", "~ies";
     ),
-    // Bicúbico: 4 words (sanjuanero, concheto, pornocrático, bicúbico).
-    declension!("bicúbico", 4, "~o";
+    // Cheto: 4 words (juanero, cheto, crático, cúbico).
+    declension!("cheto", 4, "~o";
         noun: "~o", "~os|~as";
-    ),
-    // Copín: 4 words (vasín, vinín, huevín, copín).
-    declension!("copín", 4, "~í~";
-        noun: "~í~", "~i~os";
     ),
     // Barman: 3 words (barman, campin, dauntaun).
     declension!("barman", 3, "~a~";
         noun: "~a~", "~á~s|~á~es";
     ),
-    // Fijodalgo: 3 words (hijodalgo, hijadalgo, fijodalgo).
-    declension!("fijodalgo", 3, "~~";
-        noun: "~~", "~s~";
-    ),
-    // Régimen: 3 words (espécimen, régimen, narcorrégimen).
-    declension!("régimen", 3, "~é~i~";
-        noun: "~é~i~", "~e~í~es";
-    ),
-    // Clac: 3 words (clac, vivac, alcasínic).
+    // Clac: 3 words (clac, vac, sínic).
     declension!("clac", 3, "~c";
         noun: "~c", "~ques";
+    ),
+    // Agen: 3 words (agen, amen, asmon).
+    declension!("agen", 3, "a~";
+        noun: "a~", "á~es";
     ),
 ];

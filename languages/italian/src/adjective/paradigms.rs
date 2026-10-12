@@ -36,53 +36,56 @@ macro_rules! declension {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `gagliardo`: 10,273 words.
-    Gagliardo,
-    /// Like `maggiore`: 7,517 words.
-    Maggiore,
-    /// Like `lubrico`: 5,290 words.
-    Lubrico,
-    /// Like `sezzaio`: 906 words.
-    Sezzaio,
-    /// Like `rossoblu`: 636 words.
-    Rossoblu,
-    /// Like `centrista`: 504 words.
-    Centrista,
-    /// Like `carico`: 438 words.
-    Carico,
-    /// Like `riparatore`: 392 words.
-    Riparatore,
-    /// Like `versipelle`: 144 words.
-    Versipelle,
-    /// Like `acconcio`: 132 words.
-    Acconcio,
-    /// Like `birbone`: 28 words.
-    Birbone,
-    /// Like `acre`: 13 words.
-    Acre,
-    /// Like `ampio`: 13 words.
+    /// Like `gliardo`: 7,307 words.
+    Gliardo,
+    /// Like `ggiore`: 5,218 words.
+    Ggiore,
+    /// Like `ntastico`: 2,994 words.
+    Ntastico,
+    /// Like `zzaio`: 689 words.
+    Zzaio,
+    /// Like `ari`: 583 words.
+    Ari,
+    /// Like `berista`: 423 words.
+    Berista,
+    /// Like `vago`: 367 words.
+    Vago,
+    /// Like `morzatore`: 328 words.
+    Morzatore,
+    /// Like `rsipelle`: 130 words.
+    Rsipelle,
+    /// Like `vescio`: 106 words.
+    Vescio,
+    /// Like `rbone`: 28 words.
+    Rbone,
+    /// Like `ampio`: 12 words.
     Ampio,
-    /// Like `caduco`: 4 words.
-    Caduco,
+    /// Like `dona`: 12 words.
+    Dona,
+    /// Like `acre`: 9 words.
+    Acre,
+    /// Like `duco`: 4 words.
+    Duco,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 14] = [
-        Declension::Gagliardo,
-        Declension::Maggiore,
-        Declension::Lubrico,
-        Declension::Sezzaio,
-        Declension::Rossoblu,
-        Declension::Centrista,
-        Declension::Carico,
-        Declension::Riparatore,
-        Declension::Versipelle,
-        Declension::Acconcio,
-        Declension::Birbone,
-        Declension::Acre,
+    pub const ALL: [Declension; 15] = [
+        Declension::Gliardo,
+        Declension::Ggiore,
+        Declension::Ntastico,
+        Declension::Zzaio,
+        Declension::Ari,
+        Declension::Berista,
+        Declension::Vago,
+        Declension::Morzatore,
+        Declension::Rsipelle,
+        Declension::Vescio,
+        Declension::Rbone,
         Declension::Ampio,
-        Declension::Caduco,
+        Declension::Dona,
+        Declension::Acre,
+        Declension::Duco,
     ];
 
     /// Its table.
@@ -100,87 +103,93 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 14] = [
-    // Gagliardo: 10,273 words (peso, libero, fero, secondo, moro, gallo).
-    declension!("gagliardo", 10273, "~o";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 15] = [
+    // Gliardo: 7,307 words (peso, fero, moro, rato, vero, talo).
+    declension!("gliardo", 7307, "~o";
         masculine: "~o", "~i";
         feminine: "~a", "~e";
         superlative: "~issimo";
     ),
-    // Maggiore: 7,517 words (acclive, andante, mobile, dilettante, finale, simile).
-    declension!("maggiore", 7517, "~e";
+    // Ggiore: 5,218 words (acclive, volatile, numerale, rude, locale, fine).
+    declension!("ggiore", 5218, "~e";
         masculine: "~e", "~i";
         feminine: "~e", "~i";
         superlative: "~issimo";
     ),
-    // Lubrico: 5,290 words (eccentrico, sacrifico, magnifico, lesbico, acetico, porco).
-    declension!("lubrico", 5290, "~o";
+    // Ntastico: 2,994 words (lesbico, ebraico, pubblico, zotico, utopistico, identico).
+    declension!("ntastico", 2994, "~o";
         masculine: "~o", "~i";
         feminine: "~a", "~he";
         superlative: "~issimo";
     ),
-    // Sezzaio: 906 words (monetario, bancario, ordinario, ovvio, buio, oratorio).
-    declension!("sezzaio", 906, "~o";
+    // Zzaio: 689 words (buio, utilitario, urinario, rodio, vario, medio).
+    declension!("zzaio", 689, "~o";
         masculine: "~o", "~";
         feminine: "~a", "~e";
         superlative: "~ssimo";
     ),
-    // Rossoblu: 636 words (gratis, wireless, standard, bio, baby, banana).
-    declension!("rossoblu", 636, "~";
-        masculine: "~", "~";
-        feminine: "~", "~";
-        superlative: "~ssimo";
+    // Ari: 583 words (wireless, bio, baby, ac, beat, touch).
+    declension!("ari", 583, "~~";
+        masculine: "~~", "~~";
+        feminine: "~~", "~~";
+        superlative: "~issim~";
     ),
-    // Centrista: 504 words (idiota, antisemita, vietnamita, zarista, yemenita, socialista).
-    declension!("centrista", 504, "~a";
+    // Berista: 423 words (idiota, zarista, yemenita, rasta, dalmata, autista).
+    declension!("berista", 423, "~a";
         masculine: "~a", "~i";
         feminine: "~a", "~e";
         superlative: "~issimo";
     ),
-    // Carico: 438 words (largo, ubriaco, bianco, fresco, sago, polacco).
-    declension!("carico", 438, "~o";
+    // Vago: 367 words (ubriaco, sago, zingaresco, pago, vago, mago).
+    declension!("vago", 367, "~o";
         masculine: "~o", "~hi";
         feminine: "~a", "~he";
         superlative: "~hissimo";
     ),
-    // Riparatore: 392 words (allenatore, conduttore, calcolatore, pescatore, lavoratore, motore).
-    declension!("riparatore", 392, "~o~e";
+    // Morzatore: 328 words (urlatore, elaboratore, smorzatore, localizzatore, rallentatore, elevatore).
+    declension!("morzatore", 328, "~o~e";
         masculine: "~o~e", "~o~i";
         feminine: "~~ice", "~~ici";
-        superlative: "~l~ssimo";
+        superlative: "~issim~";
     ),
-    // Versipelle: 144 words (cane, nature, live, online, sabre, single).
-    declension!("versipelle", 144, "~e";
+    // Rsipelle: 130 words (cane, live, yankee, bene, champagne, noce).
+    declension!("rsipelle", 130, "~e";
         masculine: "~e", "~e";
         feminine: "~e", "~e";
         superlative: "~issimo";
     ),
-    // Acconcio: 132 words (ghiaccio, sudicio, bigio, accio, riccio, liscio).
-    declension!("acconcio", 132, "~io";
+    // Vescio: 106 words (ghiaccio, inconscio, lercio, rancio, guercio, subconscio).
+    declension!("vescio", 106, "~io";
         masculine: "~io", "~i";
         feminine: "~ia", "~e";
         superlative: "~issimo";
     ),
-    // Birbone: 28 words (leggere, signore, poltrone, zuccone, chiacchierone, credulone).
-    declension!("birbone", 28, "~e";
+    // Rbone: 28 words (leggere, zuccone, sgobbone, guascone, buzzicone, gocciolone).
+    declension!("rbone", 28, "~e";
         masculine: "~e", "~i";
         feminine: "~a", "~e";
         superlative: "~issimo";
     ),
-    // Acre: 13 words (acre, alacre, mediocre, celebre, insalubre, funebre).
-    declension!("acre", 13, "~~e";
-        masculine: "~~e", "~~i";
-        feminine: "~~e", "~~i";
-        superlative: "~e~rimo";
-    ),
-    // Ampio: 13 words (empio, doppio, propio, ampio, storpio, olimpio).
-    declension!("ampio", 13, "~~o";
+    // Ampio: 12 words (empio, propio, ampio, sapio, appio, ciclopio).
+    declension!("ampio", 12, "~~o";
         masculine: "~~o", "~~";
         feminine: "~~a", "~~e";
         superlative: "~l~ssimo";
     ),
-    // Caduco: 4 words (rauco, caduco, ciuco, glauco).
-    declension!("caduco", 4, "~o";
+    // Dona: 12 words (nullipara, occhiona, durona, iofa, sorella, nella).
+    declension!("dona", 12, "~a";
+        masculine: "~a", "~e";
+        feminine: "~a", "~e";
+        superlative: "~issimo";
+    ),
+    // Acre: 9 words (acre, funebre, cre, lebre, alubre, gubre).
+    declension!("acre", 9, "~~e";
+        masculine: "~~e", "~~i";
+        feminine: "~~e", "~~i";
+        superlative: "~e~rimo";
+    ),
+    // Duco: 4 words (rauco, glauco, duco, uco).
+    declension!("duco", 4, "~o";
         masculine: "~o", "~hi";
         feminine: "~a", "~he";
         superlative: "~issimo";

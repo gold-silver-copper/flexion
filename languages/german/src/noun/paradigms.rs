@@ -41,692 +41,632 @@ macro_rules! declension {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `platte`: 23,959 words.
+    /// Like `bahn`: 9,510 words.
+    Bahn,
+    /// Like `platte`: 8,346 words.
     Platte,
-    /// Like `minderung`: 23,444 words.
-    Minderung,
-    /// Like `dämpfer`: 16,613 words.
+    /// Like `dämpfer`: 6,464 words.
     Dämpfer,
-    /// Like `tag`: 16,150 words.
+    /// Like `tag`: 5,820 words.
     Tag,
-    /// Like `leben`: 9,107 words.
-    Leben,
-    /// Like `stein`: 8,228 words.
-    Stein,
-    /// Like `hündin`: 7,316 words.
-    Hündin,
-    /// Like `kanon`: 5,634 words.
+    /// Like `revier`: 5,746 words.
+    Revier,
+    /// Like `tzen`: 3,816 words.
+    Tzen,
+    /// Like `kanon`: 3,634 words.
     Kanon,
-    /// Like `einsatz`: 4,914 words.
-    Einsatz,
-    /// Like `pilot`: 2,162 words.
-    Pilot,
-    /// Like `fuchs`: 1,958 words.
-    Fuchs,
-    /// Like `action`: 1,880 words.
-    Action,
-    /// Like `blatt`: 1,678 words.
-    Blatt,
-    /// Like `hausgenosse`: 1,298 words.
-    Hausgenosse,
-    /// Like `bild`: 1,163 words.
-    Bild,
-    /// Like `scham`: 1,099 words.
-    Scham,
-    /// Like `chauvinismus`: 1,021 words.
-    Chauvinismus,
-    /// Like `korb`: 991 words.
-    Korb,
-    /// Like `grüner`: 975 words.
-    Grüner,
-    /// Like `langohr`: 957 words.
-    Langohr,
-    /// Like `leuchtkraft`: 877 words.
-    Leuchtkraft,
-    /// Like `zentrum`: 851 words.
-    Zentrum,
-    /// Like `loch`: 605 words.
-    Loch,
-    /// Like `wurm`: 581 words.
-    Wurm,
-    /// Like `visum`: 512 words.
-    Visum,
-    /// Like `kasten`: 497 words.
-    Kasten,
-    /// Like `linke`: 496 words.
-    Linke,
-    /// Like `anhang`: 459 words.
-    Anhang,
-    /// Like `zerwürfnis`: 433 words.
-    Zerwürfnis,
-    /// Like `kunst`: 430 words.
-    Kunst,
-    /// Like `lava`: 427 words.
+    /// Like `hündin`: 3,435 words.
+    Hündin,
+    /// Like `lava`: 1,483 words.
     Lava,
-    /// Like `ohr`: 405 words.
-    Ohr,
-    /// Like `auge`: 359 words.
+    /// Like `platz`: 1,164 words.
+    Platz,
+    /// Like `pilot`: 1,132 words.
+    Pilot,
+    /// Like `ham`: 904 words.
+    Ham,
+    /// Like `uvinismus`: 648 words.
+    Uvinismus,
+    /// Like `rsche`: 641 words.
+    Rsche,
+    /// Like `üner`: 533 words.
+    Üner,
+    /// Like `ntrum`: 502 words.
+    Ntrum,
+    /// Like `langohr`: 487 words.
+    Langohr,
+    /// Like `anhang`: 414 words.
+    Anhang,
+    /// Like `fuchs`: 396 words.
+    Fuchs,
+    /// Like `band`: 394 words.
+    Band,
+    /// Like `sum`: 360 words.
+    Sum,
+    /// Like `bild`: 291 words.
+    Bild,
+    /// Like `iße`: 291 words.
+    Iße,
+    /// Like `korb`: 290 words.
+    Korb,
+    /// Like `ena`: 273 words.
+    Ena,
+    /// Like `acé`: 220 words.
+    Acé,
+    /// Like `maus`: 164 words.
+    Maus,
+    /// Like `rks`: 162 words.
+    Rks,
+    /// Like `auge`: 154 words.
     Auge,
-    /// Like `talmi`: 319 words.
-    Talmi,
-    /// Like `mantel`: 266 words.
-    Mantel,
-    /// Like `name`: 201 words.
-    Name,
-    /// Like `zirkus`: 187 words.
-    Zirkus,
-    /// Like `kapital`: 180 words.
-    Kapital,
-    /// Like `boden`: 177 words.
-    Boden,
-    /// Like `murks`: 174 words.
-    Murks,
-    /// Like `bau`: 159 words.
-    Bau,
-    /// Like `rammbock`: 143 words.
-    Rammbock,
-    /// Like `mail`: 143 words.
+    /// Like `wurm`: 141 words.
+    Wurm,
+    /// Like `würfnis`: 135 words.
+    Würfnis,
+    /// Like `überzug`: 132 words.
+    Überzug,
+    /// Like `ohr`: 126 words.
+    Ohr,
+    /// Like `mail`: 125 words.
     Mail,
-    /// Like `basis`: 142 words.
-    Basis,
-    /// Like `guß`: 142 words.
-    Guß,
-    /// Like `schwung`: 140 words.
-    Schwung,
-    /// Like `gaden`: 136 words.
-    Gaden,
-    /// Like `thema`: 130 words.
-    Thema,
-    /// Like `modus`: 127 words.
-    Modus,
-    /// Like `brösel`: 126 words.
-    Brösel,
-    /// Like `lexikon`: 114 words.
-    Lexikon,
-    /// Like `spital`: 112 words.
+    /// Like `mmbock`: 124 words.
+    Mmbock,
+    /// Like `loch`: 112 words.
+    Loch,
+    /// Like `rkus`: 111 words.
+    Rkus,
+    /// Like `ius`: 102 words.
+    Ius,
+    /// Like `dank`: 102 words.
+    Dank,
+    /// Like `itis`: 100 words.
+    Itis,
+    /// Like `moron`: 99 words.
+    Moron,
+    /// Like `schlecht`: 96 words.
+    Schlecht,
+    /// Like `kunst`: 94 words.
+    Kunst,
+    /// Like `spital`: 94 words.
     Spital,
-    /// Like `inneres`: 111 words.
-    Inneres,
-    /// Like `pyxis`: 108 words.
-    Pyxis,
-    /// Like `start`: 100 words.
-    Start,
-    /// Like `geschlecht`: 98 words.
-    Geschlecht,
-    /// Like `vogel`: 91 words.
-    Vogel,
-    /// Like `konto`: 85 words.
-    Konto,
-    /// Like `heu`: 80 words.
-    Heu,
-    /// Like `geschoß`: 79 words.
-    Geschoß,
-    /// Like `gauch`: 76 words.
-    Gauch,
-    /// Like `billett`: 74 words.
-    Billett,
-    /// Like `lager`: 61 words.
-    Lager,
-    /// Like `reichtum`: 61 words.
-    Reichtum,
-    /// Like `vorbau`: 58 words.
+    /// Like `kasten`: 93 words.
+    Kasten,
+    /// Like `praxis`: 85 words.
+    Praxis,
+    /// Like `ital`: 79 words.
+    Ital,
+    /// Like `wohl`: 74 words.
+    Wohl,
+    /// Like `mantel`: 71 words.
+    Mantel,
+    /// Like `eres`: 69 words.
+    Eres,
+    /// Like `ösel`: 62 words.
+    Ösel,
+    /// Like `lma`: 59 words.
+    Lma,
+    /// Like `rgott`: 51 words.
+    Rgott,
+    /// Like `vorbau`: 45 words.
     Vorbau,
-    /// Like `obmann`: 55 words.
-    Obmann,
-    /// Like `ohrloch`: 54 words.
-    Ohrloch,
-    /// Like `großmutter`: 51 words.
-    Großmutter,
-    /// Like `kommando`: 51 words.
-    Kommando,
-    /// Like `mythos`: 51 words.
-    Mythos,
-    /// Like `zores`: 51 words.
+    /// Like `ichtum`: 42 words.
+    Ichtum,
+    /// Like `mando`: 41 words.
+    Mando,
+    /// Like `nto`: 41 words.
+    Nto,
+    /// Like `zores`: 41 words.
     Zores,
-    /// Like `power`: 49 words.
-    Power,
-    /// Like `saal`: 49 words.
-    Saal,
-    /// Like `kita`: 48 words.
-    Kita,
-    /// Like `bruder`: 44 words.
-    Bruder,
-    /// Like `pfosten`: 41 words.
-    Pfosten,
-    /// Like `platt`: 40 words.
-    Platt,
-    /// Like `lemma`: 40 words.
-    Lemma,
-    /// Like `ablaß`: 39 words.
-    Ablaß,
-    /// Like `retina`: 38 words.
-    Retina,
-    /// Like `stadion`: 38 words.
-    Stadion,
-    /// Like `herr`: 37 words.
-    Herr,
-    /// Like `putto`: 37 words.
-    Putto,
-    /// Like `nomen`: 35 words.
-    Nomen,
-    /// Like `korporal`: 35 words.
-    Korporal,
-    /// Like `schlot`: 35 words.
-    Schlot,
-    /// Like `klerus`: 34 words.
-    Klerus,
-    /// Like `verbund`: 33 words.
-    Verbund,
-    /// Like `triangel`: 33 words.
-    Triangel,
-    /// Like `scheit`: 31 words.
-    Scheit,
-    /// Like `tochter`: 25 words.
-    Tochter,
-    /// Like `haruspex`: 25 words.
-    Haruspex,
-    /// Like `xerophyt`: 24 words.
-    Xerophyt,
-    /// Like `kokos`: 22 words.
-    Kokos,
-    /// Like `miss`: 21 words.
+    /// Like `geschoß`: 40 words.
+    Geschoß,
+    /// Like `chel`: 38 words.
+    Chel,
+    /// Like `torbogen`: 37 words.
+    Torbogen,
+    /// Like `heu`: 36 words.
+    Heu,
+    /// Like `adion`: 35 words.
+    Adion,
+    /// Like `boden`: 34 words.
+    Boden,
+    /// Like `zwa`: 33 words.
+    Zwa,
+    /// Like `name`: 32 words.
+    Name,
+    /// Like `guß`: 32 words.
+    Guß,
+    /// Like `zea`: 31 words.
+    Zea,
+    /// Like `fioso`: 30 words.
+    Fioso,
+    /// Like `spalt`: 29 words.
+    Spalt,
+    /// Like `wagen`: 29 words.
+    Wagen,
+    /// Like `thos`: 28 words.
+    Thos,
+    /// Like `erus`: 27 words.
+    Erus,
+    /// Like `poral`: 25 words.
+    Poral,
+    /// Like `amm`: 24 words.
+    Amm,
+    /// Like `bau`: 23 words.
+    Bau,
+    /// Like `eit`: 23 words.
+    Eit,
+    /// Like `bug`: 22 words.
+    Bug,
+    /// Like `tophyt`: 22 words.
+    Tophyt,
+    /// Like `uspex`: 22 words.
+    Uspex,
+    /// Like `vogel`: 21 words.
+    Vogel,
+    /// Like `ross`: 21 words.
+    Ross,
+    /// Like `kos`: 21 words.
+    Kos,
+    /// Like `laß`: 18 words.
+    Laß,
+    /// Like `emens`: 18 words.
+    Emens,
+    /// Like `amisandwich`: 18 words.
+    Amisandwich,
+    /// Like `ima`: 17 words.
+    Ima,
+    /// Like `diz`: 16 words.
+    Diz,
+    /// Like `lta`: 16 words.
+    Lta,
+    /// Like `inquagesima`: 16 words.
+    Inquagesima,
+    /// Like `lager`: 15 words.
+    Lager,
+    /// Like `miss`: 14 words.
     Miss,
-    /// Like `not`: 21 words.
-    Not,
-    /// Like `angelus`: 21 words.
-    Angelus,
-    /// Like `siemens`: 20 words.
-    Siemens,
-    /// Like `muß`: 19 words.
-    Muß,
-    /// Like `landsmann`: 19 words.
+    /// Like `landsmann`: 14 words.
     Landsmann,
-    /// Like `vieh`: 18 words.
-    Vieh,
-    /// Like `eiersandwich`: 18 words.
-    Eiersandwich,
-    /// Like `eis`: 17 words.
+    /// Like `iasis`: 14 words.
+    Iasis,
+    /// Like `epen`: 14 words.
+    Epen,
+    /// Like `smann`: 14 words.
+    Smann,
+    /// Like `eis`: 13 words.
     Eis,
-    /// Like `indiz`: 17 words.
-    Indiz,
-    /// Like `quinquagesima`: 17 words.
-    Quinquagesima,
-    /// Like `yoni`: 16 words.
-    Yoni,
-    /// Like `polio`: 15 words.
-    Polio,
-    /// Like `gravis`: 15 words.
-    Gravis,
-    /// Like `quark`: 15 words.
-    Quark,
-    /// Like `schloß`: 14 words.
-    Schloß,
-    /// Like `wiek`: 14 words.
-    Wiek,
-    /// Like `delta`: 13 words.
-    Delta,
-    /// Like `kodex`: 13 words.
-    Kodex,
-    /// Like `faß`: 13 words.
-    Faß,
-    /// Like `sinto`: 13 words.
-    Sinto,
-    /// Like `normanne`: 12 words.
-    Normanne,
-    /// Like `genitale`: 12 words.
-    Genitale,
-    /// Like `männchen`: 11 words.
-    Männchen,
-    /// Like `präsens`: 11 words.
-    Präsens,
+    /// Like `amen`: 13 words.
+    Amen,
+    /// Like `ace`: 12 words.
+    Ace,
+    /// Like `ilo`: 12 words.
+    Ilo,
+    /// Like `knochenmark`: 12 words.
+    Knochenmark,
+    /// Like `tatt`: 12 words.
+    Tatt,
+    /// Like `atio`: 12 words.
+    Atio,
+    /// Like `mutter`: 11 words.
+    Mutter,
     /// Like `großbetrieb`: 11 words.
     Großbetrieb,
-    /// Like `wegwarte`: 11 words.
-    Wegwarte,
-    /// Like `herz`: 10 words.
-    Herz,
-    /// Like `matrix`: 10 words.
-    Matrix,
-    /// Like `sphinx`: 10 words.
-    Sphinx,
-    /// Like `gondoliere`: 10 words.
-    Gondoliere,
-    /// Like `eponym`: 10 words.
+    /// Like `eponym`: 11 words.
     Eponym,
-    /// Like `krake`: 9 words.
-    Krake,
-    /// Like `crash`: 9 words.
-    Crash,
-    /// Like `vitiligo`: 9 words.
-    Vitiligo,
-    /// Like `straß`: 9 words.
-    Straß,
+    /// Like `dex`: 10 words.
+    Dex,
+    /// Like `porale`: 10 words.
+    Porale,
+    /// Like `hinx`: 10 words.
+    Hinx,
+    /// Like `sikans`: 10 words.
+    Sikans,
+    /// Like `enovirus`: 10 words.
+    Enovirus,
+    /// Like `uhl`: 10 words.
+    Uhl,
+    /// Like `saal`: 9 words.
+    Saal,
     /// Like `hiatus`: 9 words.
     Hiatus,
-    /// Like `gravamen`: 9 words.
-    Gravamen,
-    /// Like `abt`: 8 words.
-    Abt,
-    /// Like `bonus`: 8 words.
-    Bonus,
-    /// Like `finale`: 8 words.
-    Finale,
-    /// Like `druckbuchstabe`: 8 words.
-    Druckbuchstabe,
-    /// Like `ypsilon`: 8 words.
-    Ypsilon,
+    /// Like `gondoliere`: 9 words.
+    Gondoliere,
+    /// Like `vieh`: 9 words.
+    Vieh,
+    /// Like `avamen`: 9 words.
+    Avamen,
+    /// Like `tin`: 9 words.
+    Tin,
+    /// Like `herz`: 9 words.
+    Herz,
+    /// Like `feß`: 9 words.
+    Feß,
+    /// Like `crash`: 8 words.
+    Crash,
     /// Like `zagel`: 8 words.
     Zagel,
-    /// Like `bocher`: 8 words.
-    Bocher,
-    /// Like `numerale`: 8 words.
-    Numerale,
     /// Like `ciabatta`: 8 words.
     Ciabatta,
-    /// Like `idiotikon`: 8 words.
-    Idiotikon,
-    /// Like `syndikus`: 8 words.
-    Syndikus,
-    /// Like `kleinvieh`: 8 words.
-    Kleinvieh,
-    /// Like `kappes`: 8 words.
-    Kappes,
-    /// Like `fiduz`: 8 words.
-    Fiduz,
-    /// Like `chassid`: 8 words.
-    Chassid,
-    /// Like `party`: 7 words.
-    Party,
-    /// Like `risiko`: 7 words.
-    Risiko,
-    /// Like `dressman`: 7 words.
-    Dressman,
-    /// Like `causa`: 7 words.
+    /// Like `causa`: 8 words.
     Causa,
-    /// Like `amtfrau`: 7 words.
-    Amtfrau,
-    /// Like `helix`: 7 words.
-    Helix,
-    /// Like `kurpark`: 7 words.
-    Kurpark,
+    /// Like `üffel`: 8 words.
+    Üffel,
+    /// Like `wegwarte`: 8 words.
+    Wegwarte,
+    /// Like `duz`: 8 words.
+    Duz,
+    /// Like `issa`: 8 words.
+    Issa,
+    /// Like `bruder`: 8 words.
+    Bruder,
+    /// Like `männchen`: 7 words.
+    Männchen,
+    /// Like `ypsilon`: 7 words.
+    Ypsilon,
+    /// Like `law`: 7 words.
+    Law,
+    /// Like `stichon`: 7 words.
+    Stichon,
+    /// Like `lix`: 7 words.
+    Lix,
     /// Like `yeoman`: 7 words.
     Yeoman,
+    /// Like `tiligo`: 7 words.
+    Tiligo,
     /// Like `krebsrisiko`: 7 words.
     Krebsrisiko,
-    /// Like `bruderherz`: 7 words.
-    Bruderherz,
-    /// Like `sephardi`: 6 words.
-    Sephardi,
-    /// Like `trauma`: 6 words.
-    Trauma,
-    /// Like `moos`: 6 words.
-    Moos,
-    /// Like `fluor`: 6 words.
-    Fluor,
-    /// Like `alija`: 6 words.
-    Alija,
-    /// Like `marend`: 6 words.
-    Marend,
-    /// Like `equilibrium`: 6 words.
-    Equilibrium,
-    /// Like `babbelas`: 6 words.
-    Babbelas,
-    /// Like `manna`: 6 words.
-    Manna,
-    /// Like `masematte`: 6 words.
-    Masematte,
-    /// Like `kronjuwel`: 6 words.
-    Kronjuwel,
+    /// Like `trix`: 7 words.
+    Trix,
+    /// Like `merale`: 7 words.
+    Merale,
+    /// Like `essman`: 7 words.
+    Essman,
+    /// Like `ssid`: 7 words.
+    Ssid,
+    /// Like `apfel`: 6 words.
+    Apfel,
+    /// Like `druckbuchstabe`: 6 words.
+    Druckbuchstabe,
+    /// Like `kenasi`: 6 words.
+    Kenasi,
+    /// Like `pes`: 6 words.
+    Pes,
+    /// Like `bbelas`: 6 words.
+    Bbelas,
+    /// Like `uor`: 6 words.
+    Uor,
     /// Like `mehrzweck`: 6 words.
     Mehrzweck,
-    /// Like `iris`: 5 words.
-    Iris,
-    /// Like `häs`: 5 words.
-    Häs,
-    /// Like `korpus`: 5 words.
-    Korpus,
-    /// Like `glottis`: 5 words.
-    Glottis,
+    /// Like `dikus`: 6 words.
+    Dikus,
     /// Like `niederdruck`: 5 words.
     Niederdruck,
     /// Like `bütterken`: 5 words.
     Bütterken,
-    /// Like `koog`: 5 words.
-    Koog,
-    /// Like `artemis`: 5 words.
-    Artemis,
-    /// Like `zane`: 5 words.
-    Zane,
-    /// Like `griwna`: 5 words.
-    Griwna,
+    /// Like `akus`: 5 words.
+    Akus,
+    /// Like `marend`: 5 words.
+    Marend,
+    /// Like `rty`: 5 words.
+    Rty,
+    /// Like `equilibrium`: 5 words.
+    Equilibrium,
+    /// Like `iwna`: 5 words.
+    Iwna,
+    /// Like `uma`: 5 words.
+    Uma,
     /// Like `seeklima`: 5 words.
     Seeklima,
+    /// Like `cile`: 5 words.
+    Cile,
+    /// Like `ock`: 5 words.
+    Ock,
+    /// Like `nale`: 5 words.
+    Nale,
+    /// Like `ust`: 5 words.
+    Ust,
+    /// Like `ija`: 5 words.
+    Ija,
     /// Like `rom`: 4 words.
     Rom,
-    /// Like `apfel`: 4 words.
-    Apfel,
-    /// Like `prosecco`: 4 words.
-    Prosecco,
-    /// Like `hobby`: 4 words.
-    Hobby,
-    /// Like `embryo`: 4 words.
-    Embryo,
-    /// Like `lump`: 4 words.
-    Lump,
+    /// Like `aft`: 4 words.
+    Aft,
+    /// Like `anke`: 4 words.
+    Anke,
+    /// Like `mmy`: 4 words.
+    Mmy,
+    /// Like `häs`: 4 words.
+    Häs,
+    /// Like `muß`: 4 words.
+    Muß,
     /// Like `nordmann`: 4 words.
     Nordmann,
-    /// Like `pater`: 4 words.
-    Pater,
-    /// Like `dinucleotid`: 4 words.
-    Dinucleotid,
-    /// Like `pharmazeutik`: 4 words.
-    Pharmazeutik,
-    /// Like `genus`: 4 words.
-    Genus,
     /// Like `erhaltungszustand`: 4 words.
     Erhaltungszustand,
-    /// Like `heros`: 4 words.
-    Heros,
     /// Like `kipppunkt`: 4 words.
     Kipppunkt,
     /// Like `pharynx`: 4 words.
     Pharynx,
-    /// Like `tondo`: 4 words.
-    Tondo,
-    /// Like `beach`: 4 words.
-    Beach,
-    /// Like `graduale`: 4 words.
-    Graduale,
-    /// Like `natanger`: 4 words.
-    Natanger,
+    /// Like `ottis`: 4 words.
+    Ottis,
     /// Like `slash`: 4 words.
     Slash,
+    /// Like `zeutik`: 4 words.
+    Zeutik,
     /// Like `emissionsverb`: 4 words.
     Emissionsverb,
-    /// Like `penis`: 3 words.
-    Penis,
-    /// Like `kaktus`: 3 words.
-    Kaktus,
-    /// Like `mikwe`: 3 words.
-    Mikwe,
+    /// Like `ematte`: 4 words.
+    Ematte,
+    /// Like `wiek`: 4 words.
+    Wiek,
+    /// Like `ecco`: 4 words.
+    Ecco,
+    /// Like `uale`: 4 words.
+    Uale,
+    /// Like `emis`: 4 words.
+    Emis,
+    /// Like `herr`: 3 words.
+    Herr,
+    /// Like `iris`: 3 words.
+    Iris,
+    /// Like `not`: 3 words.
+    Not,
+    /// Like `korpus`: 3 words.
+    Korpus,
+    /// Like `tochter`: 3 words.
+    Tochter,
+    /// Like `att`: 3 words.
+    Att,
+    /// Like `lump`: 3 words.
+    Lump,
     /// Like `seemann`: 3 words.
     Seemann,
     /// Like `ballsaal`: 3 words.
     Ballsaal,
-    /// Like `thorax`: 3 words.
-    Thorax,
-    /// Like `antioxidans`: 3 words.
-    Antioxidans,
-    /// Like `konklave`: 3 words.
-    Konklave,
-    /// Like `codex`: 3 words.
-    Codex,
-    /// Like `zingulum`: 3 words.
-    Zingulum,
-    /// Like `vigil`: 3 words.
-    Vigil,
-    /// Like `forzeps`: 3 words.
-    Forzeps,
-    /// Like `subsellium`: 3 words.
-    Subsellium,
-    /// Like `bitok`: 3 words.
-    Bitok,
-    /// Like `kursus`: 3 words.
-    Kursus,
-    /// Like `profoss`: 3 words.
-    Profoss,
-    /// Like `achtgroschenjunge`: 3 words.
-    Achtgroschenjunge,
-    /// Like `azymon`: 3 words.
-    Azymon,
-    /// Like `fettwulst`: 3 words.
-    Fettwulst,
-    /// Like `freie`: 3 words.
-    Freie,
-    /// Like `gelpolster`: 3 words.
-    Gelpolster,
-    /// Like `repräsentativsystem`: 3 words.
-    Repräsentativsystem,
+    /// Like `ngulum`: 3 words.
+    Ngulum,
+    /// Like `onus`: 3 words.
+    Onus,
+    /// Like `tlatsch`: 3 words.
+    Tlatsch,
     /// Like `espartogras`: 3 words.
     Espartogras,
+    /// Like `präsentativsystem`: 3 words.
+    Präsentativsystem,
+    /// Like `faterer`: 3 words.
+    Faterer,
+    /// Like `afrikaurlaub`: 3 words.
+    Afrikaurlaub,
+    /// Like `loß`: 3 words.
+    Loß,
+    /// Like `orax`: 3 words.
+    Orax,
+    /// Like `oxidans`: 3 words.
+    Oxidans,
+    /// Like `gil`: 3 words.
+    Gil,
+    /// Like `ros`: 3 words.
+    Ros,
+    /// Like `oos`: 3 words.
+    Oos,
+    /// Like `sellium`: 3 words.
+    Sellium,
+    /// Like `tok`: 3 words.
+    Tok,
     /// Like `eva`: 3 words.
     Eva,
-    /// Like `kalfaterer`: 3 words.
-    Kalfaterer,
-    /// Like `narrenattribut`: 3 words.
-    Narrenattribut,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 227] = [
+    pub const ALL: [Declension; 207] = [
+        Declension::Bahn,
         Declension::Platte,
-        Declension::Minderung,
         Declension::Dämpfer,
         Declension::Tag,
-        Declension::Leben,
-        Declension::Stein,
-        Declension::Hündin,
+        Declension::Revier,
+        Declension::Tzen,
         Declension::Kanon,
-        Declension::Einsatz,
-        Declension::Pilot,
-        Declension::Fuchs,
-        Declension::Action,
-        Declension::Blatt,
-        Declension::Hausgenosse,
-        Declension::Bild,
-        Declension::Scham,
-        Declension::Chauvinismus,
-        Declension::Korb,
-        Declension::Grüner,
-        Declension::Langohr,
-        Declension::Leuchtkraft,
-        Declension::Zentrum,
-        Declension::Loch,
-        Declension::Wurm,
-        Declension::Visum,
-        Declension::Kasten,
-        Declension::Linke,
-        Declension::Anhang,
-        Declension::Zerwürfnis,
-        Declension::Kunst,
+        Declension::Hündin,
         Declension::Lava,
-        Declension::Ohr,
+        Declension::Platz,
+        Declension::Pilot,
+        Declension::Ham,
+        Declension::Uvinismus,
+        Declension::Rsche,
+        Declension::Üner,
+        Declension::Ntrum,
+        Declension::Langohr,
+        Declension::Anhang,
+        Declension::Fuchs,
+        Declension::Band,
+        Declension::Sum,
+        Declension::Bild,
+        Declension::Iße,
+        Declension::Korb,
+        Declension::Ena,
+        Declension::Acé,
+        Declension::Maus,
+        Declension::Rks,
         Declension::Auge,
-        Declension::Talmi,
-        Declension::Mantel,
-        Declension::Name,
-        Declension::Zirkus,
-        Declension::Kapital,
-        Declension::Boden,
-        Declension::Murks,
-        Declension::Bau,
-        Declension::Rammbock,
+        Declension::Wurm,
+        Declension::Würfnis,
+        Declension::Überzug,
+        Declension::Ohr,
         Declension::Mail,
-        Declension::Basis,
-        Declension::Guß,
-        Declension::Schwung,
-        Declension::Gaden,
-        Declension::Thema,
-        Declension::Modus,
-        Declension::Brösel,
-        Declension::Lexikon,
+        Declension::Mmbock,
+        Declension::Loch,
+        Declension::Rkus,
+        Declension::Ius,
+        Declension::Dank,
+        Declension::Itis,
+        Declension::Moron,
+        Declension::Schlecht,
+        Declension::Kunst,
         Declension::Spital,
-        Declension::Inneres,
-        Declension::Pyxis,
-        Declension::Start,
-        Declension::Geschlecht,
-        Declension::Vogel,
-        Declension::Konto,
-        Declension::Heu,
-        Declension::Geschoß,
-        Declension::Gauch,
-        Declension::Billett,
-        Declension::Lager,
-        Declension::Reichtum,
+        Declension::Kasten,
+        Declension::Praxis,
+        Declension::Ital,
+        Declension::Wohl,
+        Declension::Mantel,
+        Declension::Eres,
+        Declension::Ösel,
+        Declension::Lma,
+        Declension::Rgott,
         Declension::Vorbau,
-        Declension::Obmann,
-        Declension::Ohrloch,
-        Declension::Großmutter,
-        Declension::Kommando,
-        Declension::Mythos,
+        Declension::Ichtum,
+        Declension::Mando,
+        Declension::Nto,
         Declension::Zores,
-        Declension::Power,
-        Declension::Saal,
-        Declension::Kita,
-        Declension::Bruder,
-        Declension::Pfosten,
-        Declension::Platt,
-        Declension::Lemma,
-        Declension::Ablaß,
-        Declension::Retina,
-        Declension::Stadion,
-        Declension::Herr,
-        Declension::Putto,
-        Declension::Nomen,
-        Declension::Korporal,
-        Declension::Schlot,
-        Declension::Klerus,
-        Declension::Verbund,
-        Declension::Triangel,
-        Declension::Scheit,
-        Declension::Tochter,
-        Declension::Haruspex,
-        Declension::Xerophyt,
-        Declension::Kokos,
+        Declension::Geschoß,
+        Declension::Chel,
+        Declension::Torbogen,
+        Declension::Heu,
+        Declension::Adion,
+        Declension::Boden,
+        Declension::Zwa,
+        Declension::Name,
+        Declension::Guß,
+        Declension::Zea,
+        Declension::Fioso,
+        Declension::Spalt,
+        Declension::Wagen,
+        Declension::Thos,
+        Declension::Erus,
+        Declension::Poral,
+        Declension::Amm,
+        Declension::Bau,
+        Declension::Eit,
+        Declension::Bug,
+        Declension::Tophyt,
+        Declension::Uspex,
+        Declension::Vogel,
+        Declension::Ross,
+        Declension::Kos,
+        Declension::Laß,
+        Declension::Emens,
+        Declension::Amisandwich,
+        Declension::Ima,
+        Declension::Diz,
+        Declension::Lta,
+        Declension::Inquagesima,
+        Declension::Lager,
         Declension::Miss,
-        Declension::Not,
-        Declension::Angelus,
-        Declension::Siemens,
-        Declension::Muß,
         Declension::Landsmann,
-        Declension::Vieh,
-        Declension::Eiersandwich,
+        Declension::Iasis,
+        Declension::Epen,
+        Declension::Smann,
         Declension::Eis,
-        Declension::Indiz,
-        Declension::Quinquagesima,
-        Declension::Yoni,
-        Declension::Polio,
-        Declension::Gravis,
-        Declension::Quark,
-        Declension::Schloß,
-        Declension::Wiek,
-        Declension::Delta,
-        Declension::Kodex,
-        Declension::Faß,
-        Declension::Sinto,
-        Declension::Normanne,
-        Declension::Genitale,
-        Declension::Männchen,
-        Declension::Präsens,
+        Declension::Amen,
+        Declension::Ace,
+        Declension::Ilo,
+        Declension::Knochenmark,
+        Declension::Tatt,
+        Declension::Atio,
+        Declension::Mutter,
         Declension::Großbetrieb,
-        Declension::Wegwarte,
-        Declension::Herz,
-        Declension::Matrix,
-        Declension::Sphinx,
-        Declension::Gondoliere,
         Declension::Eponym,
-        Declension::Krake,
-        Declension::Crash,
-        Declension::Vitiligo,
-        Declension::Straß,
+        Declension::Dex,
+        Declension::Porale,
+        Declension::Hinx,
+        Declension::Sikans,
+        Declension::Enovirus,
+        Declension::Uhl,
+        Declension::Saal,
         Declension::Hiatus,
-        Declension::Gravamen,
-        Declension::Abt,
-        Declension::Bonus,
-        Declension::Finale,
-        Declension::Druckbuchstabe,
-        Declension::Ypsilon,
+        Declension::Gondoliere,
+        Declension::Vieh,
+        Declension::Avamen,
+        Declension::Tin,
+        Declension::Herz,
+        Declension::Feß,
+        Declension::Crash,
         Declension::Zagel,
-        Declension::Bocher,
-        Declension::Numerale,
         Declension::Ciabatta,
-        Declension::Idiotikon,
-        Declension::Syndikus,
-        Declension::Kleinvieh,
-        Declension::Kappes,
-        Declension::Fiduz,
-        Declension::Chassid,
-        Declension::Party,
-        Declension::Risiko,
-        Declension::Dressman,
         Declension::Causa,
-        Declension::Amtfrau,
-        Declension::Helix,
-        Declension::Kurpark,
+        Declension::Üffel,
+        Declension::Wegwarte,
+        Declension::Duz,
+        Declension::Issa,
+        Declension::Bruder,
+        Declension::Männchen,
+        Declension::Ypsilon,
+        Declension::Law,
+        Declension::Stichon,
+        Declension::Lix,
         Declension::Yeoman,
+        Declension::Tiligo,
         Declension::Krebsrisiko,
-        Declension::Bruderherz,
-        Declension::Sephardi,
-        Declension::Trauma,
-        Declension::Moos,
-        Declension::Fluor,
-        Declension::Alija,
-        Declension::Marend,
-        Declension::Equilibrium,
-        Declension::Babbelas,
-        Declension::Manna,
-        Declension::Masematte,
-        Declension::Kronjuwel,
+        Declension::Trix,
+        Declension::Merale,
+        Declension::Essman,
+        Declension::Ssid,
+        Declension::Apfel,
+        Declension::Druckbuchstabe,
+        Declension::Kenasi,
+        Declension::Pes,
+        Declension::Bbelas,
+        Declension::Uor,
         Declension::Mehrzweck,
-        Declension::Iris,
-        Declension::Häs,
-        Declension::Korpus,
-        Declension::Glottis,
+        Declension::Dikus,
         Declension::Niederdruck,
         Declension::Bütterken,
-        Declension::Koog,
-        Declension::Artemis,
-        Declension::Zane,
-        Declension::Griwna,
+        Declension::Akus,
+        Declension::Marend,
+        Declension::Rty,
+        Declension::Equilibrium,
+        Declension::Iwna,
+        Declension::Uma,
         Declension::Seeklima,
+        Declension::Cile,
+        Declension::Ock,
+        Declension::Nale,
+        Declension::Ust,
+        Declension::Ija,
         Declension::Rom,
-        Declension::Apfel,
-        Declension::Prosecco,
-        Declension::Hobby,
-        Declension::Embryo,
-        Declension::Lump,
+        Declension::Aft,
+        Declension::Anke,
+        Declension::Mmy,
+        Declension::Häs,
+        Declension::Muß,
         Declension::Nordmann,
-        Declension::Pater,
-        Declension::Dinucleotid,
-        Declension::Pharmazeutik,
-        Declension::Genus,
         Declension::Erhaltungszustand,
-        Declension::Heros,
         Declension::Kipppunkt,
         Declension::Pharynx,
-        Declension::Tondo,
-        Declension::Beach,
-        Declension::Graduale,
-        Declension::Natanger,
+        Declension::Ottis,
         Declension::Slash,
+        Declension::Zeutik,
         Declension::Emissionsverb,
-        Declension::Penis,
-        Declension::Kaktus,
-        Declension::Mikwe,
+        Declension::Ematte,
+        Declension::Wiek,
+        Declension::Ecco,
+        Declension::Uale,
+        Declension::Emis,
+        Declension::Herr,
+        Declension::Iris,
+        Declension::Not,
+        Declension::Korpus,
+        Declension::Tochter,
+        Declension::Att,
+        Declension::Lump,
         Declension::Seemann,
         Declension::Ballsaal,
-        Declension::Thorax,
-        Declension::Antioxidans,
-        Declension::Konklave,
-        Declension::Codex,
-        Declension::Zingulum,
-        Declension::Vigil,
-        Declension::Forzeps,
-        Declension::Subsellium,
-        Declension::Bitok,
-        Declension::Kursus,
-        Declension::Profoss,
-        Declension::Achtgroschenjunge,
-        Declension::Azymon,
-        Declension::Fettwulst,
-        Declension::Freie,
-        Declension::Gelpolster,
-        Declension::Repräsentativsystem,
+        Declension::Ngulum,
+        Declension::Onus,
+        Declension::Tlatsch,
         Declension::Espartogras,
+        Declension::Präsentativsystem,
+        Declension::Faterer,
+        Declension::Afrikaurlaub,
+        Declension::Loß,
+        Declension::Orax,
+        Declension::Oxidans,
+        Declension::Gil,
+        Declension::Ros,
+        Declension::Oos,
+        Declension::Sellium,
+        Declension::Tok,
         Declension::Eva,
-        Declension::Kalfaterer,
-        Declension::Narrenattribut,
     ];
 
     /// Its table.
@@ -744,1217 +684,1049 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 227] = [
-    // Platte: 23,959 words (schadenfreude, kugelschnecke, kugel, feder, straße, zigarette).
-    declension!("platte", 23959, "~";
-        nominative: "~", "~n";
-        genitive: "~", "~n";
-        dative: referred, "~n";
-        accusative: "~", "~n";
-    ),
-    // Minderung: 23,444 words (eu, uhr, pr, wv, bestellung, wissenschaft).
-    declension!("minderung", 23444, "~";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 207] = [
+    // Bahn: 9,510 words (eu, uhr, pr, wv, vl, welt).
+    declension!("bahn", 9510, "~";
         nominative: "~", "~en";
         genitive: "~", "~en";
         dative: referred, "~en";
         accusative: "~", "~en";
     ),
-    // Dämpfer: 16,613 words (september, november, dezember, taiwaner, papierflieger, nachtwächter).
-    declension!("dämpfer", 16613, "~";
+    // Platte: 8,346 words (kugel, rebe, waffe, xanthippe, sekunde, oktave).
+    declension!("platte", 8346, "~";
+        nominative: "~", "~n";
+        genitive: "~", "~n";
+        dative: referred, "~n";
+        accusative: "~", "~n";
+    ),
+    // Dämpfer: 6,464 words (büffel, käfer, zabel, räuber, käse, londoner).
+    declension!("dämpfer", 6464, "~";
         nominative: "~", "~";
         genitive: "~s", "~";
         dative: referred, "~n";
         accusative: "~", "~";
     ),
-    // Tag: 16,150 words (samstag, parlament, fisch, schaf, nilpferd, flusspferd).
-    declension!("tag", 16150, "~";
+    // Tag: 5,820 words (witz, jod, ysop, bann, öl, wein).
+    declension!("tag", 5820, "~";
         nominative: "~", "~e";
         genitive: "~es|~s", "~e";
         dative: referred, "~en";
         accusative: "~", "~e";
     ),
-    // Leben: 9,107 words (westen, wermut, rappen, eskimo, eisen, reifen).
-    declension!("leben", 9107, "~";
-        nominative: "~", "~";
-        genitive: "~s", "~";
-        dative: referred, "~";
-        accusative: "~", "~";
-    ),
-    // Stein: 8,228 words (german, muslim, sonnabend, honig, milan, schicksal).
-    declension!("stein", 8228, "~";
+    // Revier: 5,746 words (german, honig, mittag, yperit, thor, satan).
+    declension!("revier", 5746, "~";
         nominative: "~", "~e";
         genitive: "~s", "~e";
         dative: referred, "~en";
         accusative: "~", "~e";
     ),
-    // Hündin: 7,316 words (ärztin, freundin, ehegattin, gattin, gemahlin, sekretärin).
-    declension!("hündin", 7316, "~";
+    // Tzen: 3,816 words (wermut, eskimo, eisen, häuschen, mädchen, aasen).
+    declension!("tzen", 3816, "~";
+        nominative: "~", "~";
+        genitive: "~s", "~";
+        dative: referred, "~";
+        accusative: "~", "~";
+    ),
+    // Kanon: 3,634 words (ram, am, ufo, mg, pb, moslem).
+    declension!("kanon", 3634, "~";
+        nominative: "~", "~s";
+        genitive: "~s", "~s";
+        dative: referred, "~s";
+        accusative: "~", "~s";
+    ),
+    // Hündin: 3,435 words (ärztin, göttin, königin, löwin, jüdin, hündin).
+    declension!("hündin", 3435, "~";
         nominative: "~", "~nen";
         genitive: "~", "~nen";
         dative: referred, "~nen";
         accusative: "~", "~nen";
     ),
-    // Kanon: 5,634 words (ram, am, ufo, mg, pb, moslem).
-    declension!("kanon", 5634, "~";
-        nominative: "~", "~s";
-        genitive: "~s", "~s";
-        dative: referred, "~s";
-        accusative: "~", "~s";
-    ),
-    // Einsatz: 4,914 words (schneeball, zahn, zahnarzt, raum, schatz, zusammenklang).
-    declension!("einsatz", 4914, "~a~";
-        nominative: "~a~", "~ä~e";
-        genitive: "~a~es|~a~s", "~ä~e";
-        dative: referred, "~ä~en";
-        accusative: "~a~", "~ä~e";
-    ),
-    // Pilot: 2,162 words (christ, präsident, narr, magyar, buddhist, gigant).
-    declension!("pilot", 2162, "~";
-        nominative: "~", "~en";
-        genitive: "~en", "~en";
-        dative: "~en", "~en";
-        accusative: "~en", "~en";
-    ),
-    // Fuchs: 1,958 words (ehebruch, fuchs, zug, aufzug, turm, fuß).
-    declension!("fuchs", 1958, "~u~";
-        nominative: "~u~", "~ü~e";
-        genitive: "~u~es|~u~s", "~ü~e";
-        dative: referred, "~ü~en";
-        accusative: "~u~", "~ü~e";
-    ),
-    // Action: 1,880 words (led, dvd, aborigine, digitalkamera, diaspora, jodhpur).
-    declension!("action", 1880, "~";
+    // Lava: 1,483 words (led, dvd, armut, aam, aba, albedo).
+    declension!("lava", 1483, "~";
         nominative: "~", "~s";
         genitive: "~", "~s";
         dative: referred, "~s";
         accusative: "~", "~s";
     ),
-    // Blatt: 1,678 words (haus, schiebedach, kraut, glücksrad, wald, blatt).
-    declension!("blatt", 1678, "~a~";
-        nominative: "~a~", "~ä~er";
-        genitive: "~a~es|~a~s", "~ä~er";
-        dative: referred, "~ä~ern";
-        accusative: "~a~", "~ä~er";
+    // Platz: 1,164 words (zahn, raum, baum, sarg, bach, ball).
+    declension!("platz", 1164, "~a~";
+        nominative: "~a~", "~ä~e";
+        genitive: "~a~es|~a~s", "~ä~e";
+        dative: referred, "~ä~en";
+        accusative: "~a~", "~ä~e";
     ),
-    // Hausgenosse: 1,298 words (japanese, chinese, vietnamese, nepalese, togolese, hesse).
-    declension!("hausgenosse", 1298, "~";
-        nominative: "~", "~n";
-        genitive: "~n", "~n";
-        dative: "~n", "~n";
-        accusative: "~n", "~n";
+    // Pilot: 1,132 words (christ, narr, gigant, islamist, jesuit, artist).
+    declension!("pilot", 1132, "~";
+        nominative: "~", "~en";
+        genitive: "~en", "~en";
+        dative: "~en", "~en";
+        accusative: "~en", "~en";
     ),
-    // Bild: 1,163 words (zeitgeist, geist, licht, schwert, bild, brett).
-    declension!("bild", 1163, "~";
-        nominative: "~", "~er";
-        genitive: "~es|~s", "~er";
-        dative: referred, "~ern";
-        accusative: "~", "~er";
-    ),
-    // Scham: 1,099 words (a, f, y, o, aids, x).
-    declension!("scham", 1099, "~";
+    // Ham: 904 words (a, f, y, o, aids, x).
+    declension!("ham", 904, "~";
         nominative: "~", "~";
         genitive: "~", "~";
         dative: referred, "~";
         accusative: "~", "~";
     ),
-    // Chauvinismus: 1,021 words (monotheismus, vandalismus, kapitalismus, analphabetismus, chiasmus, humus).
-    declension!("chauvinismus", 1021, "~us";
+    // Uvinismus: 648 words (vandalismus, humus, ritus, faschismus, globus, okkultismus).
+    declension!("uvinismus", 648, "~us";
         nominative: "~us", "~en";
         genitive: "~us", "~en";
         dative: referred, "~en";
         accusative: "~us", "~en";
     ),
-    // Korb: 991 words (warenkorb, kopf, dummkopf, block, bock, borg).
-    declension!("korb", 991, "~o~";
-        nominative: "~o~", "~ö~e";
-        genitive: "~o~es|~o~s", "~ö~e";
-        dative: referred, "~ö~en";
-        accusative: "~o~", "~ö~e";
+    // Rsche: 641 words (affe, bube, bote, löwe, junge, doge).
+    declension!("rsche", 641, "~";
+        nominative: "~", "~n";
+        genitive: "~n", "~n";
+        dative: "~n", "~n";
+        accusative: "~n", "~n";
     ),
-    // Grüner: 975 words (homosexueller, deutscher, windischer, süßer, federweißer, lieber).
-    declension!("grüner", 975, "~r";
+    // Üner: 533 words (süßer, lieber, erster, wilder, wolhyniendeutscher, dummer).
+    declension!("üner", 533, "~r";
         nominative: "~r", "~";
         genitive: "~n", "~r";
         dative: "~m", "~n";
         accusative: "~n", "~";
     ),
-    // Langohr: 957 words (administrator, aggressor, agitator, alligator, autor, boson).
-    declension!("langohr", 957, "~";
-        nominative: "~", "~en";
-        genitive: "~s", "~en";
-        dative: referred, "~en";
-        accusative: "~", "~en";
-    ),
-    // Leuchtkraft: 877 words (maus, stadt, nacht, sau, panzerfaust, bank).
-    declension!("leuchtkraft", 877, "~a~";
-        nominative: "~a~", "~ä~e";
-        genitive: "~a~", "~ä~e";
-        dative: referred, "~ä~en";
-        accusative: "~a~", "~ä~e";
-    ),
-    // Zentrum: 851 words (impressum, elysium, actinium, album, aluminium, americium).
-    declension!("zentrum", 851, "~um";
+    // Ntrum: 502 words (cadmium, calcium, californium, curium, dubnium, gymnasium).
+    declension!("ntrum", 502, "~um";
         nominative: "~um", "~en";
         genitive: "~ums", "~en";
         dative: referred, "~en";
         accusative: "~um", "~en";
     ),
-    // Loch: 605 words (vorhängeschloss, zorn, horn, loch, wort, herrenvolk).
-    declension!("loch", 605, "~o~";
-        nominative: "~o~", "~ö~er";
-        genitive: "~o~es|~o~s", "~ö~er";
-        dative: referred, "~ö~ern";
-        accusative: "~o~", "~ö~er";
+    // Langohr: 487 words (autor, germ, horror, ion, juror, motor).
+    declension!("langohr", 487, "~";
+        nominative: "~", "~en";
+        genitive: "~s", "~en";
+        dative: referred, "~en";
+        accusative: "~", "~en";
     ),
-    // Wurm: 581 words (buch, übersetzungswörterbuch, wörterbuch, wurm, gut, knoblauch).
-    declension!("wurm", 581, "~u~";
-        nominative: "~u~", "~ü~er";
-        genitive: "~u~es|~u~s", "~ü~er";
-        dative: referred, "~ü~ern";
-        accusative: "~u~", "~ü~er";
-    ),
-    // Visum: 512 words (vakuum, laudanum, maximum, minimum, neutrum, optimum).
-    declension!("visum", 512, "~um";
-        nominative: "~um", "~a";
-        genitive: "~ums", "~a";
-        dative: referred, "~a";
-        accusative: "~um", "~a";
-    ),
-    // Kasten: 497 words (garten, baden, laden, kindergarten, schaden, flughafen).
-    declension!("kasten", 497, "~a~";
-        nominative: "~a~", "~ä~";
-        genitive: "~a~s", "~ä~";
-        dative: referred, "~ä~";
-        accusative: "~a~", "~ä~";
-    ),
-    // Linke: 496 words (arme, deutsche, homosexuelle, variable, obdachlose, alte).
-    declension!("linke", 496, "~";
-        nominative: "~", "~";
-        genitive: "~r", "~r";
-        dative: referred, "~n";
-        accusative: "~", "~";
-    ),
-    // Anhang: 459 words (gaul, zugzwang, geschäftsablauf, waffenstillstand, eckzahn, stuhlgang).
-    declension!("anhang", 459, "~a~";
+    // Anhang: 414 words (gaul, zugzwang, geschäftsablauf, waffenstillstand, eckzahn, stuhlgang).
+    declension!("anhang", 414, "~a~";
         nominative: "~a~", "~ä~e";
         genitive: "~a~s", "~ä~e";
         dative: referred, "~ä~en";
         accusative: "~a~", "~ä~e";
     ),
-    // Zerwürfnis: 433 words (verhältnis, as, autobus, omnibus, bus, bambus).
-    declension!("zerwürfnis", 433, "~";
-        nominative: "~", "~se";
-        genitive: "~ses", "~se";
-        dative: referred, "~sen";
-        accusative: "~", "~se";
-    ),
-    // Kunst: 430 words (kuh, sehnsucht, missgunst, frucht, erdnuss, bratwurst).
-    declension!("kunst", 430, "~u~";
+    // Fuchs: 396 words (fuchs, zug, turm, fuß, gruß, bund).
+    declension!("fuchs", 396, "~u~";
         nominative: "~u~", "~ü~e";
-        genitive: "~u~", "~ü~e";
+        genitive: "~u~es|~u~s", "~ü~e";
         dative: referred, "~ü~en";
         accusative: "~u~", "~ü~e";
     ),
-    // Lava: 427 words (lyssa, tara, agenda, algebra, ambrosia, aura).
-    declension!("lava", 427, "~a";
+    // Band: 394 words (haus, wald, bad, band, glas, grab).
+    declension!("band", 394, "~a~";
+        nominative: "~a~", "~ä~er";
+        genitive: "~a~es|~a~s", "~ä~er";
+        dative: referred, "~ä~ern";
+        accusative: "~a~", "~ä~er";
+    ),
+    // Sum: 360 words (vakuum, minimum, publikum, skrotum, knochenwachstum, zellwachstum).
+    declension!("sum", 360, "~um";
+        nominative: "~um", "~a";
+        genitive: "~ums", "~a";
+        dative: referred, "~a";
+        accusative: "~um", "~a";
+    ),
+    // Bild: 291 words (geist, bild, ei, geld, kind, lid).
+    declension!("bild", 291, "~";
+        nominative: "~", "~er";
+        genitive: "~es|~s", "~er";
+        dative: referred, "~ern";
+        accusative: "~", "~er";
+    ),
+    // Iße: 291 words (arme, variable, alte, irre, gerade, tote).
+    declension!("iße", 291, "~";
+        nominative: "~", "~";
+        genitive: "~r", "~r";
+        dative: referred, "~n";
+        accusative: "~", "~";
+    ),
+    // Korb: 290 words (kopf, bock, borg, frost, rock, strom).
+    declension!("korb", 290, "~o~";
+        nominative: "~o~", "~ö~e";
+        genitive: "~o~es|~o~s", "~ö~e";
+        dative: referred, "~ö~en";
+        accusative: "~o~", "~ö~e";
+    ),
+    // Ena: 273 words (lyssa, tara, aura, fauna, lyra, media).
+    declension!("ena", 273, "~a";
         nominative: "~a", "~en";
         genitive: "~a", "~en";
         dative: referred, "~en";
         accusative: "~a", "~en";
     ),
-    // Ohr: 405 words (weltschmerz, schmerz, aug, ohr, gör, insekt).
-    declension!("ohr", 405, "~";
-        nominative: "~", "~en";
-        genitive: "~es|~s", "~en";
-        dative: referred, "~en";
-        accusative: "~", "~en";
-    ),
-    // Auge: 359 words (auge, jade, jul, karaoke, satyr, see).
-    declension!("auge", 359, "~";
-        nominative: "~", "~n";
-        genitive: "~s", "~n";
-        dative: referred, "~n";
-        accusative: "~", "~n";
-    ),
-    // Talmi: 319 words (yak, zucchini, jogurt, kaugummi, schaumgummi, sellerie).
-    declension!("talmi", 319, "~";
+    // Acé: 220 words (yak, jogurt, catenaccio, alu, mami, skonto).
+    declension!("acé", 220, "~";
         nominative: "~", "~s";
         genitive: "~s", "~s";
         dative: "~", "~s";
         accusative: "~", "~s";
     ),
-    // Mantel: 266 words (vater, hammer, nagel, erdapfel, handel, schnabel).
-    declension!("mantel", 266, "~a~";
-        nominative: "~a~", "~ä~";
-        genitive: "~a~s", "~ä~";
-        dative: referred, "~ä~n";
-        accusative: "~a~", "~ä~";
+    // Maus: 164 words (maus, stadt, nacht, sau, bank, faust).
+    declension!("maus", 164, "~a~";
+        nominative: "~a~", "~ä~e";
+        genitive: "~a~", "~ä~e";
+        dative: referred, "~ä~en";
+        accusative: "~a~", "~ä~e";
     ),
-    // Name: 201 words (eigenname, familienname, name, kurzname, buchstabe, funke).
-    declension!("name", 201, "~";
-        nominative: "~", "~n";
-        genitive: "~ns", "~n";
-        dative: "~n", "~n";
-        accusative: "~n", "~n";
-    ),
-    // Zirkus: 187 words (exodus, mercedes, albatros, circus, judas, minus).
-    declension!("zirkus", 187, "~";
-        nominative: "~", "~se";
-        genitive: "~", "~se";
-        dative: referred, "~sen";
-        accusative: "~", "~se";
-    ),
-    // Kapital: 180 words (material, partizip, filmmaterial, reptil, myzel, kapital).
-    declension!("kapital", 180, "~";
-        nominative: "~", "~ien";
-        genitive: "~s", "~ien";
-        dative: referred, "~ien";
-        accusative: "~", "~ien";
-    ),
-    // Boden: 177 words (boden, fußboden, bogen, backofen, norden, teppichboden).
-    declension!("boden", 177, "~o~";
-        nominative: "~o~", "~ö~";
-        genitive: "~o~s", "~ö~";
-        dative: referred, "~ö~";
-        accusative: "~o~", "~ö~";
-    ),
-    // Murks: 174 words (april, märz, august, gross, mars, nichts).
-    declension!("murks", 174, "~";
+    // Rks: 162 words (märz, mars, nichts, pentagon, phönix, asd).
+    declension!("rks", 162, "~";
         nominative: "~", "~e";
         genitive: "~", "~e";
         dative: referred, "~en";
         accusative: "~", "~e";
     ),
-    // Bau: 159 words (bau, aufbau, ackerbau, ozonabbau, automobilbau, flugzeugbau).
-    declension!("bau", 159, "~";
-        nominative: "~", "~ten";
-        genitive: "~es|~s", "~ten";
-        dative: referred, "~ten";
-        accusative: "~", "~ten";
+    // Auge: 154 words (auge, jade, jul, see, mogul, fleischlaberl).
+    declension!("auge", 154, "~";
+        nominative: "~", "~n";
+        genitive: "~s", "~n";
+        dative: referred, "~n";
+        accusative: "~", "~n";
     ),
-    // Rammbock: 143 words (tenor, bahnhof, erzbischof, herzog, koch, floh).
-    declension!("rammbock", 143, "~o~";
-        nominative: "~o~", "~ö~e";
-        genitive: "~o~s", "~ö~e";
-        dative: referred, "~ö~en";
-        accusative: "~o~", "~ö~e";
+    // Wurm: 141 words (buch, wurm, gut, mund, tuch, huhn).
+    declension!("wurm", 141, "~u~";
+        nominative: "~u~", "~ü~er";
+        genitive: "~u~es|~u~s", "~ü~er";
+        dative: referred, "~ü~ern";
+        accusative: "~u~", "~ü~er";
     ),
-    // Mail: 143 words (e-mail, kurzweil, hightech, mail, furry, nato).
-    declension!("mail", 143, "~";
-        nominative: "~", "~s";
-        genitive: "~|~s", "~s";
-        dative: "~", "~s";
-        accusative: "~", "~s";
+    // Würfnis: 135 words (as, bus, maas, kürbis, aha-erlebnis, ärgernis).
+    declension!("würfnis", 135, "~";
+        nominative: "~", "~se";
+        genitive: "~ses", "~se";
+        dative: referred, "~sen";
+        accusative: "~", "~se";
     ),
-    // Basis: 142 words (amaryllis, analysis, basis, galaxis, genesis, praxis).
-    declension!("basis", 142, "~is";
-        nominative: "~is", "~en";
-        genitive: "~is", "~en";
-        dative: referred, "~en";
-        accusative: "~is", "~en";
-    ),
-    // Guß: 142 words (kuß, schluß, guß, fluß, genuß, abfluß).
-    declension!("guß", 142, "~uß";
-        nominative: "~uß", "~üsse";
-        genitive: "~usses", "~üsse";
-        dative: referred, "~üssen";
-        accusative: "~uß", "~üsse";
-    ),
-    // Schwung: 140 words (schwung, seehund, fahrstuhl, einspruch, leuchtturm, sonderzug).
-    declension!("schwung", 140, "~u~";
+    // Überzug: 132 words (seehund, fahrstuhl, einspruch, leuchtturm, sonderzug, überdruck).
+    declension!("überzug", 132, "~u~";
         nominative: "~u~", "~ü~e";
         genitive: "~u~s", "~ü~e";
         dative: referred, "~ü~en";
         accusative: "~u~", "~ü~e";
     ),
-    // Gaden: 136 words (wagen, kragen, streitwagen, volkswagen, leichenwagen, lastkraftwagen).
-    declension!("gaden", 136, "~a~";
-        nominative: "~a~", "~a~|~ä~";
-        genitive: "~a~s", "~a~|~ä~";
-        dative: referred, "~a~|~ä~";
-        accusative: "~a~", "~a~|~ä~";
-    ),
-    // Thema: 130 words (aroma, asthma, charisma, diorama, dogma, drama).
-    declension!("thema", 130, "~a";
-        nominative: "~a", "~en";
-        genitive: "~as", "~en";
+    // Ohr: 126 words (aug, ohr, gör, insekt, mast, verb).
+    declension!("ohr", 126, "~";
+        nominative: "~", "~en";
+        genitive: "~es|~s", "~en";
         dative: referred, "~en";
-        accusative: "~a", "~en";
+        accusative: "~", "~en";
     ),
-    // Modus: 127 words (venus, anus, hippocampus, incubus, phallus, radius).
-    declension!("modus", 127, "~us";
+    // Mail: 125 words (hightech, mail, pluto, furry, nato, dönerkebab).
+    declension!("mail", 125, "~";
+        nominative: "~", "~s";
+        genitive: "~|~s", "~s";
+        dative: "~", "~s";
+        accusative: "~", "~s";
+    ),
+    // Mmbock: 124 words (tenor, bahnhof, koch, floh, wechselstrom, schraubstock).
+    declension!("mmbock", 124, "~o~";
+        nominative: "~o~", "~ö~e";
+        genitive: "~o~s", "~ö~e";
+        dative: referred, "~ö~en";
+        accusative: "~o~", "~ö~e";
+    ),
+    // Loch: 112 words (horn, loch, wort, holz, gott, schloss).
+    declension!("loch", 112, "~o~";
+        nominative: "~o~", "~ö~er";
+        genitive: "~o~es|~o~s", "~ö~er";
+        dative: referred, "~ö~ern";
+        accusative: "~o~", "~ö~er";
+    ),
+    // Rkus: 111 words (circus, judas, rebus, tennis, johannes, gros).
+    declension!("rkus", 111, "~";
+        nominative: "~", "~se";
+        genitive: "~", "~se";
+        dative: referred, "~sen";
+        accusative: "~", "~se";
+    ),
+    // Ius: 102 words (anus, hippocampus, phallus, terminus, kubus, tetanus).
+    declension!("ius", 102, "~us";
         nominative: "~us", "~i";
         genitive: "~us", "~i";
         dative: referred, "~i";
         accusative: "~us", "~i";
     ),
-    // Brösel: 126 words (brösel, semmelbrösel, kindesbeine, quadratmikrometer, vesikel, netzfilter).
-    declension!("brösel", 126, "~";
-        nominative: "~", "~";
-        genitive: "~s", "~";
-        dative: "~", "~n";
-        accusative: "~", "~";
-    ),
-    // Lexikon: 114 words (lexikon, macron, mitochondrion, oxymoron, xenon, periastron).
-    declension!("lexikon", 114, "~on";
-        nominative: "~on", "~a";
-        genitive: "~ons", "~a";
-        dative: referred, "~a";
-        accusative: "~on", "~a";
-    ),
-    // Spital: 112 words (fahrrad, geschmack, schwimmbad, unkraut, goalmann, dreirad).
-    declension!("spital", 112, "~a~";
-        nominative: "~a~", "~ä~er";
-        genitive: "~a~s", "~ä~er";
-        dative: referred, "~ä~ern";
-        accusative: "~a~", "~ä~er";
-    ),
-    // Inneres: 111 words (adlerjunges, schwanenjunges, junges, neugeborenes, vielfaches, immaterielles).
-    declension!("inneres", 111, "~s";
-        nominative: "~s", "~";
-        genitive: "~n", "~r";
-        dative: "~m", "~n";
-        accusative: "~s", "~";
-    ),
-    // Pyxis: 108 words (epiglottis, pyxis, apsis, tonsillitis, appendizitis, sinusitis).
-    declension!("pyxis", 108, "~s";
-        nominative: "~s", "~den";
-        genitive: "~s", "~den";
-        dative: referred, "~den";
-        accusative: "~s", "~den";
-    ),
-    // Start: 100 words (start, blankett, projektstart, sprachtest, kartoffelomelett, eignungstest).
-    declension!("start", 100, "~";
+    // Dank: 102 words (dank, zank, start, sprachtest, kartoffelomelett, aidstest).
+    declension!("dank", 102, "~";
         nominative: "~", "~s|~e";
         genitive: "~es|~s", "~e|~s";
         dative: referred, "~s|~en";
         accusative: "~", "~s|~e";
     ),
-    // Geschlecht: 98 words (regiment, ski, geschlecht, schalenwild, schild, abblendlicht).
-    declension!("geschlecht", 98, "~";
+    // Itis: 100 words (epiglottis, vasculitis, pneumonitis, vaskulitis, keratoconjunctivitis, holarktis).
+    declension!("itis", 100, "~s";
+        nominative: "~s", "~den";
+        genitive: "~s", "~den";
+        dative: referred, "~den";
+        accusative: "~s", "~den";
+    ),
+    // Moron: 99 words (xenon, pharmakon, phrasikon, skandalon, onomatopoetikon, propylon).
+    declension!("moron", 99, "~on";
+        nominative: "~on", "~a";
+        genitive: "~ons", "~a";
+        dative: referred, "~a";
+        accusative: "~on", "~a";
+    ),
+    // Schlecht: 96 words (ski, schalenwild, trinkgeld, schlachtfeld, schi, abordnungsgeld).
+    declension!("schlecht", 96, "~";
         nominative: "~", "~er";
         genitive: "~s", "~er";
         dative: referred, "~ern";
         accusative: "~", "~er";
     ),
-    // Vogel: 91 words (vogel, watvogel, greifvogel, kloster, kanarienvogel, eisvogel).
-    declension!("vogel", 91, "~o~";
-        nominative: "~o~", "~ö~";
-        genitive: "~o~s", "~ö~";
-        dative: referred, "~ö~n";
-        accusative: "~o~", "~ö~";
+    // Kunst: 94 words (kuh, luft, lust, wurst, kunst, nuss).
+    declension!("kunst", 94, "~u~";
+        nominative: "~u~", "~ü~e";
+        genitive: "~u~", "~ü~e";
+        dative: referred, "~ü~en";
+        accusative: "~u~", "~ü~e";
     ),
-    // Konto: 85 words (konto, szenario, saldo, fresko, benutzerkonto, bankkonto).
-    declension!("konto", 85, "~o";
-        nominative: "~o", "~en";
-        genitive: "~os", "~en";
+    // Spital: 94 words (fahrrad, schwimmbad, unkraut, goalmann, dreirad, liegerad).
+    declension!("spital", 94, "~a~";
+        nominative: "~a~", "~ä~er";
+        genitive: "~a~s", "~ä~er";
+        dative: referred, "~ä~ern";
+        accusative: "~a~", "~ä~er";
+    ),
+    // Kasten: 93 words (garten, laden, schaden, hafen, kasten, kastenwagen).
+    declension!("kasten", 93, "~a~";
+        nominative: "~a~", "~ä~";
+        genitive: "~a~s", "~ä~";
+        dative: referred, "~ä~";
+        accusative: "~a~", "~ä~";
+    ),
+    // Praxis: 85 words (praxis, syphilis, tmesis, skepsis, gnosis, ptosis).
+    declension!("praxis", 85, "~is";
+        nominative: "~is", "~en";
+        genitive: "~is", "~en";
         dative: referred, "~en";
-        accusative: "~o", "~en";
+        accusative: "~is", "~en";
     ),
-    // Heu: 80 words (heu, färberwegedorn, phonetiksystem, scherzkeks, andelheu, rechtkant).
-    declension!("heu", 80, "~";
-        nominative: "~", "~e";
-        genitive: "~es|~s", "~e";
-        dative: "~", "~en";
-        accusative: "~", "~e";
+    // Ital: 79 words (selenmineral, textil, silbermineral, zinnmineral, szenar, yggdrasil).
+    declension!("ital", 79, "~";
+        nominative: "~", "~ien";
+        genitive: "~s", "~ien";
+        dative: referred, "~ien";
+        accusative: "~", "~ien";
     ),
-    // Geschoß: 79 words (biß, schiß, riß, imbiß, abszeß, beschiß).
-    declension!("geschoß", 79, "~ß";
-        nominative: "~ß", "~sse";
-        genitive: "~sses", "~sse";
-        dative: referred, "~ssen";
-        accusative: "~ß", "~sse";
-    ),
-    // Gauch: 76 words (sand, zwieback, rahm, pasch, verlag, bausch).
-    declension!("gauch", 76, "~a~";
-        nominative: "~a~", "~a~e|~ä~e";
-        genitive: "~a~es|~a~s", "~a~e|~ä~e";
-        dative: referred, "~a~en|~ä~en";
-        accusative: "~a~", "~a~e|~ä~e";
-    ),
-    // Billett: 74 words (billet, deck, toast, hungerstreik, börsencrash, nationalpark).
-    declension!("billett", 74, "~";
+    // Wohl: 74 words (deck, toast, wohl, hungerstreik, börsencrash, nationalpark).
+    declension!("wohl", 74, "~";
         nominative: "~", "~s";
         genitive: "~es|~s", "~s";
         dative: referred, "~s";
         accusative: "~", "~s";
     ),
-    // Lager: 61 words (wasser, lager, hammel, wildwasser, hochwasser, grundwasser).
-    declension!("lager", 61, "~a~";
-        nominative: "~a~", "~a~|~ä~";
-        genitive: "~a~s", "~a~|~ä~";
-        dative: referred, "~a~n|~ä~n";
-        accusative: "~a~", "~a~|~ä~";
+    // Mantel: 71 words (vater, hammer, nagel, handel, mantel, salzwasser).
+    declension!("mantel", 71, "~a~";
+        nominative: "~a~", "~ä~";
+        genitive: "~a~s", "~ä~";
+        dative: referred, "~ä~n";
+        accusative: "~a~", "~ä~";
     ),
-    // Reichtum: 61 words (coulomb, gefahrgut, reichtum, priapswurm, bistum, justizirrtum).
-    declension!("reichtum", 61, "~u~";
-        nominative: "~u~", "~ü~er";
-        genitive: "~u~s", "~ü~er";
-        dative: referred, "~ü~ern";
-        accusative: "~u~", "~ü~er";
+    // Eres: 69 words (junges, gutes, gelbes, süßes, böses, faschiertes).
+    declension!("eres", 69, "~s";
+        nominative: "~s", "~";
+        genitive: "~n", "~r";
+        dative: "~m", "~n";
+        accusative: "~s", "~";
     ),
-    // Vorbau: 58 words (mastodon, messebau, altbau, bergbau, vorbau, landbau).
-    declension!("vorbau", 58, "~";
-        nominative: "~", "~ten";
-        genitive: "~s", "~ten";
-        dative: referred, "~ten";
-        accusative: "~", "~ten";
+    // Ösel: 62 words (esther, furunkel, vogelbauer, bruttier, gigerl, hifel).
+    declension!("ösel", 62, "~";
+        nominative: "~", "~";
+        genitive: "~s", "~";
+        dative: "~", "~n";
+        accusative: "~", "~";
     ),
-    // Obmann: 55 words (ackermann, gefolgsmann, kaufmann, fuhrmann, schutzmann, mittelsmann).
-    declension!("obmann", 55, "~mann";
-        nominative: "~mann", "~männer|~leute";
-        genitive: "~mannes|~manns", "~männer|~leute";
-        dative: referred, "~männern|~leuten";
-        accusative: "~mann", "~männer|~leute";
+    // Lma: 59 words (aroma, plasma, smegma, phlegma, änigma, fujiyama).
+    declension!("lma", 59, "~a";
+        nominative: "~a", "~en";
+        genitive: "~as", "~en";
+        dative: referred, "~en";
+        accusative: "~a", "~en";
     ),
-    // Ohrloch: 54 words (sommerloch, nebelhorn, herrgott, fachwort, affenarschloch, gebirgsdorf).
-    declension!("ohrloch", 54, "~o~";
+    // Rgott: 51 words (sommerloch, nebelhorn, fachwort, affenarschloch, gebirgsdorf, alpenhorn).
+    declension!("rgott", 51, "~o~";
         nominative: "~o~", "~ö~er";
         genitive: "~o~s", "~ö~er";
         dative: referred, "~ö~ern";
         accusative: "~o~", "~ö~er";
     ),
-    // Großmutter: 51 words (puffmutter, mutter, großmutter, schwiegermutter, urgroßmutter, stiefmutter).
-    declension!("großmutter", 51, "~u~";
-        nominative: "~u~", "~ü~";
-        genitive: "~u~", "~ü~";
-        dative: referred, "~ü~n";
-        accusative: "~u~", "~ü~";
+    // Vorbau: 45 words (messebau, altbau, bergbau, vorbau, landbau, maschinenbau).
+    declension!("vorbau", 45, "~";
+        nominative: "~", "~ten";
+        genitive: "~s", "~ten";
+        dative: referred, "~ten";
+        accusative: "~", "~ten";
     ),
-    // Kommando: 51 words (cello, cembalo, ghetto, torso, kommando, fiasko).
-    declension!("kommando", 51, "~o";
+    // Ichtum: 42 words (justizirrtum, fürstenthum, weißbuch, grossherzogtum, fürtuch, volkseigentum).
+    declension!("ichtum", 42, "~u~";
+        nominative: "~u~", "~ü~er";
+        genitive: "~u~s", "~ü~er";
+        dative: referred, "~ü~ern";
+        accusative: "~u~", "~ü~er";
+    ),
+    // Mando: 41 words (cello, cembalo, ghetto, agio, motto, sgraffito).
+    declension!("mando", 41, "~o";
         nominative: "~o", "~os|~i";
         genitive: "~os", "~os|~i";
         dative: referred, "~os|~i";
         accusative: "~o", "~os|~i";
     ),
-    // Mythos: 51 words (chaos, mythos, kosmos, epos, amphiprostylos, pathos).
-    declension!("mythos", 51, "~os";
-        nominative: "~os", "~en";
+    // Nto: 41 words (risiko, szenario, girokonto, jedermann-konto, disagio, shinto).
+    declension!("nto", 41, "~o";
+        nominative: "~o", "~en";
         genitive: "~os", "~en";
         dative: referred, "~en";
-        accusative: "~os", "~en";
+        accusative: "~o", "~en";
     ),
-    // Zores: 51 words (bgs, zeugs, shorts, darts, tortellini, jorts).
-    declension!("zores", 51, "~";
+    // Zores: 41 words (bgs, hotpants, shorts, jorts, zores, sms).
+    declension!("zores", 41, "~";
         nominative: "~", "~";
         genitive: "~", "~";
         dative: "~", "~";
         accusative: "~", "~";
     ),
-    // Power: 49 words (e, ave, michel, sichtverhältnisse, randale, power).
-    declension!("power", 49, "~";
+    // Geschoß: 40 words (faß, biß, riß, geschoß, bluterguß, kompaß).
+    declension!("geschoß", 40, "~ß";
+        nominative: "~ß", "~sse";
+        genitive: "~sses", "~sse";
+        dative: referred, "~ssen";
+        accusative: "~ß", "~sse";
+    ),
+    // Chel: 38 words (e, ave, tage, randale, gesamtmasse, zinkorganyle).
+    declension!("chel", 38, "~";
         nominative: "~", "~";
         genitive: "~", "~";
         dative: referred, "~n";
         accusative: "~", "~";
     ),
-    // Saal: 49 words (saal, prunksaal, operationssaal, hörsaal, wartesaal, kursaal).
-    declension!("saal", 49, "~aa~";
-        nominative: "~aa~", "~ä~e";
-        genitive: "~aa~es|~aa~s", "~ä~e";
-        dative: referred, "~ä~en";
-        accusative: "~aa~", "~ä~e";
-    ),
-    // Kita: 48 words (balalaika, junta, swastika, mafia, plazenta, mitzwa).
-    declension!("kita", 48, "~a";
-        nominative: "~a", "~as|~en";
-        genitive: "~a", "~as|~en";
-        dative: referred, "~as|~en";
-        accusative: "~a", "~as|~en";
-    ),
-    // Bruder: 44 words (bruder, stiefbruder, halbbruder, blutsbruder, zwillingsbruder, glaubensbruder).
-    declension!("bruder", 44, "~u~";
-        nominative: "~u~", "~ü~";
-        genitive: "~u~s", "~ü~";
-        dative: referred, "~ü~n";
-        accusative: "~u~", "~ü~";
-    ),
-    // Pfosten: 41 words (spannungsbogen, regenbogen, pfosten, fragebogen, triumphbogen, lichtbogen).
-    declension!("pfosten", 41, "~o~";
+    // Torbogen: 37 words (spannungsbogen, regenbogen, fragebogen, triumphbogen, lichtbogen, aortenbogen).
+    declension!("torbogen", 37, "~o~";
         nominative: "~o~", "~o~|~ö~";
         genitive: "~o~s", "~o~|~ö~";
         dative: referred, "~o~|~ö~";
         accusative: "~o~", "~o~|~ö~";
     ),
-    // Platt: 40 words (werkstatt, autoreparaturwerkstatt, statt, platt, zinngießerwerkstatt, walstatt).
-    declension!("platt", 40, "~a~";
-        nominative: "~a~", "~ä~en";
-        genitive: "~a~", "~ä~en";
-        dative: referred, "~ä~en";
-        accusative: "~a~", "~ä~en";
-    ),
-    // Lemma: 40 words (klima, lemma, weltklima, analemma, trilemma, tropenklima).
-    declension!("lemma", 40, "~";
-        nominative: "~", "~ta";
-        genitive: "~s", "~ta";
-        dative: referred, "~ta";
-        accusative: "~", "~ta";
-    ),
-    // Ablaß: 39 words (haß, naß, ablaß, paß, judenhaß, anlaß).
-    declension!("ablaß", 39, "~aß";
-        nominative: "~aß", "~ässe";
-        genitive: "~asses", "~ässe";
-        dative: referred, "~ässen";
-        accusative: "~aß", "~ässe";
-    ),
-    // Retina: 38 words (amygdala, retina, supernova, interferon-gamma, rosazea, subfamilia).
-    declension!("retina", 38, "~";
+    // Heu: 36 words (heu, büngelkraut, googolplex, maiß, lüftungsbauteil, wrackteil).
+    declension!("heu", 36, "~";
         nominative: "~", "~e";
-        genitive: "~", "~e";
-        dative: referred, "~e";
+        genitive: "~es|~s", "~e";
+        dative: "~", "~en";
         accusative: "~", "~e";
     ),
-    // Stadion: 38 words (ganglion, skioptikon, stadion, olympiastadion, distichon, scholion).
-    declension!("stadion", 38, "~o~";
+    // Adion: 35 words (kymation, zion, kellion, xenion, gynäkeion, gymnasion).
+    declension!("adion", 35, "~o~";
         nominative: "~o~", "~e~";
         genitive: "~o~s", "~e~";
         dative: referred, "~e~";
         accusative: "~o~", "~e~";
     ),
-    // Herr: 37 words (herr, lehnsherr, kriegsherr, feldherr, freiherr, schirmherr).
-    declension!("herr", 37, "~";
-        nominative: "~", "~en";
-        genitive: "~n|~en", "~en";
-        dative: "~n|~en", "~en";
-        accusative: "~n|~en", "~en";
+    // Boden: 34 words (boden, bogen, ackerboden, zoch, temperofen, mosaikboden).
+    declension!("boden", 34, "~o~";
+        nominative: "~o~", "~ö~";
+        genitive: "~o~s", "~ö~";
+        dative: referred, "~ö~";
+        accusative: "~o~", "~ö~";
     ),
-    // Putto: 37 words (tempo, mafioso, limoncello, paparazzo, scherzo, peperoncino).
-    declension!("putto", 37, "~o";
+    // Zwa: 33 words (junta, swastika, plazenta, vuvuzela, kita, fatamorgana).
+    declension!("zwa", 33, "~a";
+        nominative: "~a", "~as|~en";
+        genitive: "~a", "~as|~en";
+        dative: referred, "~as|~en";
+        accusative: "~a", "~as|~en";
+    ),
+    // Name: 32 words (name, funke, glaube, wille, schade, köhlerglaube).
+    declension!("name", 32, "~";
+        nominative: "~", "~n";
+        genitive: "~ns", "~n";
+        dative: "~n", "~n";
+        accusative: "~n", "~n";
+    ),
+    // Guß: 32 words (kuß, guß, fluß, genuß, verdruß, luß).
+    declension!("guß", 32, "~uß";
+        nominative: "~uß", "~üsse";
+        genitive: "~usses", "~üsse";
+        dative: referred, "~üssen";
+        accusative: "~uß", "~üsse";
+    ),
+    // Zea: 31 words (italia, buschveld, uvula, cella, nova, vena).
+    declension!("zea", 31, "~";
+        nominative: "~", "~e";
+        genitive: "~", "~e";
+        dative: referred, "~e";
+        accusative: "~", "~e";
+    ),
+    // Fioso: 30 words (tempo, putto, clavicembalo, mizo, molo, fioso).
+    declension!("fioso", 30, "~o";
         nominative: "~o", "~i";
         genitive: "~os", "~i";
         dative: referred, "~i";
         accusative: "~o", "~i";
     ),
-    // Nomen: 35 words (possessivpronomen, abdomen, omen, pronomen, demonstrativpronomen, volumen).
-    declension!("nomen", 35, "~e~";
-        nominative: "~e~", "~e~|~i~a";
-        genitive: "~e~s", "~e~|~i~a";
-        dative: referred, "~e~|~i~a";
-        accusative: "~e~", "~e~|~i~a";
-    ),
-    // Korporal: 35 words (admiral, unband, hospital, schalk, ordensgeneral, vizeadmiral).
-    declension!("korporal", 35, "~a~";
+    // Spalt: 29 words (sand, zwieback, verlag, verdacht, edelstahl, spat).
+    declension!("spalt", 29, "~a~";
         nominative: "~a~", "~a~e|~ä~e";
-        genitive: "~a~s", "~a~e|~ä~e";
+        genitive: "~a~es|~a~s", "~a~e|~ä~e";
         dative: referred, "~a~en|~ä~en";
         accusative: "~a~", "~a~e|~ä~e";
     ),
-    // Schlot: 35 words (ross, schlot, walross, herkunftsort, bloch, ursprungsort).
-    declension!("schlot", 35, "~o~";
-        nominative: "~o~", "~o~e|~ö~er";
-        genitive: "~o~es|~o~s", "~o~e|~ö~er";
-        dative: referred, "~o~en|~ö~ern";
-        accusative: "~o~", "~o~e|~ö~er";
+    // Wagen: 29 words (wagen, erste-hilfe-kasten, kübelwagen, kraftwagen, kampfwagen, antenwagen).
+    declension!("wagen", 29, "~a~";
+        nominative: "~a~", "~a~|~ä~";
+        genitive: "~a~s", "~a~|~ä~";
+        dative: referred, "~a~|~ä~";
+        accusative: "~a~", "~a~|~ä~";
     ),
-    // Klerus: 34 words (ikterus, klerus, kernikterus, clerus, aujeszkyvirus, newcastlevirus).
-    declension!("klerus", 34, "~us";
+    // Thos: 28 words (epos, ogmios, naos, xystos, gynanthropos, zakynthos).
+    declension!("thos", 28, "~os";
+        nominative: "~os", "~en";
+        genitive: "~os", "~en";
+        dative: referred, "~en";
+        accusative: "~os", "~en";
+    ),
+    // Erus: 27 words (ikterus, clerus, aetosaurus, plateosaurus, östrus, mosasaurus).
+    declension!("erus", 27, "~us";
         nominative: "~us", "~ier";
         genitive: "~us", "~ier";
         dative: referred, "~iern";
         accusative: "~us", "~ier";
     ),
-    // Verbund: 33 words (bug, fund, huf, schluck, mundschutz, hanswurst).
-    declension!("verbund", 33, "~u~";
-        nominative: "~u~", "~u~e|~ü~e";
-        genitive: "~u~es|~u~s", "~u~e|~ü~e";
-        dative: referred, "~u~en|~ü~en";
-        accusative: "~u~", "~u~e|~ü~e";
+    // Poral: 25 words (unband, hospital, schalk, ordensgeneral, tankwart, kassenwart).
+    declension!("poral", 25, "~a~";
+        nominative: "~a~", "~a~e|~ä~e";
+        genitive: "~a~s", "~a~e|~ä~e";
+        dative: referred, "~a~en|~ä~en";
+        accusative: "~a~", "~a~e|~ä~e";
     ),
-    // Triangel: 33 words (trüffel, triangel, glace, hornissenschwebfliege, nachtviole, klippenmöwe).
-    declension!("triangel", 33, "~";
-        nominative: "~", "~n";
-        genitive: "~", "~n";
-        dative: "~", "~n";
-        accusative: "~", "~n";
+    // Amm: 24 words (arzt, abt, all, arsch, ast, artzt).
+    declension!("amm", 24, "a~";
+        nominative: "a~", "ä~e";
+        genitive: "a~es|a~s", "ä~e";
+        dative: referred, "ä~en";
+        accusative: "a~", "ä~e";
     ),
-    // Scheit: 31 words (scheit, joghurt, holzscheit, kausativ, aval, purim).
-    declension!("scheit", 31, "~";
+    // Bau: 23 words (bau, dachausbau, weltraumbergbau, kohlenbergbau, tiefseebergbau, uranbergbau).
+    declension!("bau", 23, "~";
+        nominative: "~", "~ten";
+        genitive: "~es|~s", "~ten";
+        dative: referred, "~ten";
+        accusative: "~", "~ten";
+    ),
+    // Eit: 23 words (joghurt, aval, habit, hippodrom, warp, β-hydroxyaldehyd).
+    declension!("eit", 23, "~";
         nominative: "~", "~e";
         genitive: "~s", "~e";
         dative: "~", "~en";
         accusative: "~", "~e";
     ),
-    // Tochter: 25 words (tochter, schwiegertochter, stieftochter, königstochter, ziehtochter, bauerntochter).
-    declension!("tochter", 25, "~o~";
-        nominative: "~o~", "~ö~";
-        genitive: "~o~", "~ö~";
-        dative: referred, "~ö~n";
-        accusative: "~o~", "~ö~";
+    // Bug: 22 words (bug, fund, huf, dampfdruck, augeninnendruck, luftdruck).
+    declension!("bug", 22, "~u~";
+        nominative: "~u~", "~u~e|~ü~e";
+        genitive: "~u~es|~u~s", "~u~e|~ü~e";
+        dative: referred, "~u~en|~ü~en";
+        accusative: "~u~", "~u~e|~ü~e";
     ),
-    // Haruspex: 25 words (haruspex, oralsex, cybersex, brechungsindex, aktienindex, ehrenkodex).
-    declension!("haruspex", 25, "~~x";
-        nominative: "~~x", "~~xe";
-        genitive: "~~x", "~~xe";
-        dative: referred, "~~xen";
-        accusative: "~~x", "~~xe";
-    ),
-    // Xerophyt: 24 words (prinzess, karrierist, minorist, xerophyt, sporophyt, gametophyt).
-    declension!("xerophyt", 24, "~";
+    // Tophyt: 22 words (teydefink, moselromanisch, nikolait, okolyt, gynogamet, ministerialdirigent).
+    declension!("tophyt", 22, "~";
         nominative: "~", "~en";
         genitive: "~en", "~en";
         dative: referred, "~en";
         accusative: "~", "~en";
     ),
-    // Kokos: 22 words (prostylos, topos, kokos, uroboros, aulos, kantharos).
-    declension!("kokos", 22, "~s";
+    // Uspex: 22 words (cybersex, aktienindex, ehrenkodex, texmex, telefonsex, vanillasex).
+    declension!("uspex", 22, "~~x";
+        nominative: "~~x", "~~xe";
+        genitive: "~~x", "~~xe";
+        dative: referred, "~~xen";
+        accusative: "~~x", "~~xe";
+    ),
+    // Vogel: 21 words (vogel, kloster, arienvogel, mennigvogel, nnigvogel, erlingsvogel).
+    declension!("vogel", 21, "~o~";
+        nominative: "~o~", "~ö~";
+        genitive: "~o~s", "~ö~";
+        dative: referred, "~ö~n";
+        accusative: "~o~", "~ö~";
+    ),
+    // Ross: 21 words (ross, schimpfwort, schmähwort, hohnwort, kraftwort, schreckwort).
+    declension!("ross", 21, "~o~";
+        nominative: "~o~", "~o~e|~ö~er";
+        genitive: "~o~es|~o~s", "~o~e|~ö~er";
+        dative: referred, "~o~en|~ö~ern";
+        accusative: "~o~", "~o~e|~ö~er";
+    ),
+    // Kos: 21 words (topos, aulos, oikos, okeanos, ithyphallos, skyphos).
+    declension!("kos", 21, "~s";
         nominative: "~s", "~i";
         genitive: "~s", "~i";
         dative: referred, "~i";
         accusative: "~s", "~i";
     ),
-    // Miss: 21 words (miss, kautsch, ranch, smartwatch, inbox, bugfix).
-    declension!("miss", 21, "~";
-        nominative: "~", "~es";
-        genitive: "~", "~es";
-        dative: referred, "~es";
-        accusative: "~", "~es";
+    // Laß: 18 words (haß, naß, paß, kwaß, baß, wurzenpaß).
+    declension!("laß", 18, "~aß";
+        nominative: "~aß", "~ässe";
+        genitive: "~asses", "~ässe";
+        dative: referred, "~ässen";
+        accusative: "~aß", "~ässe";
     ),
-    // Not: 21 words (not, hungersnot, schwerenot, atemnot, seenot, zeitnot).
-    declension!("not", 21, "~o~";
-        nominative: "~o~", "~ö~e";
-        genitive: "~o~", "~ö~e";
-        dative: referred, "~ö~en";
-        accusative: "~o~", "~ö~e";
-    ),
-    // Angelus: 21 words (killervirus, influenzavirus, schweinegrippevirus, vogelgrippevirus, aidsvirus, computervirus).
-    declension!("angelus", 21, "~us";
-        nominative: "~us", "~en";
-        genitive: "~us", "~en";
-        dative: "~us", "~en";
-        accusative: "~us", "~en";
-    ),
-    // Siemens: 20 words (siemens, stimulans, gottseibeiuns, ingrediens, formans, adjuvans).
-    declension!("siemens", 20, "~s";
+    // Emens: 18 words (semideponens, movens, purgans, emens, imulans, seibeiuns).
+    declension!("emens", 18, "~s";
         nominative: "~s", "~zien";
         genitive: "~s", "~zien";
         dative: referred, "~zien";
         accusative: "~s", "~zien";
     ),
-    // Muß: 19 words (erdnuß, muskatnuß, nuß, haselnuß, waschnuß, muß).
-    declension!("muß", 19, "~uß";
-        nominative: "~uß", "~üsse";
-        genitive: "~uß", "~üsse";
-        dative: referred, "~üssen";
-        accusative: "~uß", "~üsse";
-    ),
-    // Landsmann: 19 words (landsmann, feuerwehrmann, geschäftsmann, hauptmann, landeshauptmann, vertrauensmann).
-    declension!("landsmann", 19, "~mann";
-        nominative: "~mann", "~leute|~männer";
-        genitive: "~mannes|~manns", "~leute|~männer";
-        dative: referred, "~leuten|~männern";
-        accusative: "~mann", "~leute|~männer";
-    ),
-    // Vieh: 18 words (vieh, milchvieh, rindvieh, mastvieh, nutzvieh, krabbelvieh).
-    declension!("vieh", 18, "~~";
-        nominative: "~~", "~c~er";
-        genitive: "~~es", "~c~er";
-        dative: referred, "~c~ern";
-        accusative: "~~", "~c~er";
-    ),
-    // Eiersandwich: 18 words (putensandwich, schinkensandwich, salamisandwich, wurstsandwich, steaksandwich, erdnussbuttersandwich).
-    declension!("eiersandwich", 18, "~";
+    // Amisandwich: 18 words (putensandwich, schinkensandwich, wurstsandwich, steaksandwich, truthahnsandwich, eiersandwich).
+    declension!("amisandwich", 18, "~";
         nominative: "~", "~s|~es|~e";
         genitive: "~es|~|~s", "~es|~e|~s";
         dative: referred, "~s|~es|~en";
         accusative: "~", "~s|~es|~e";
     ),
-    // Eis: 17 words (eis, cross, nein, packeis, kirsch, gelbbleierz).
-    declension!("eis", 17, "~";
-        nominative: "~", "~";
-        genitive: "~es", "~";
-        dative: referred, "~";
-        accusative: "~", "~";
+    // Ima: 17 words (anathema, hyphäma, stoma, soma, apothema, bema).
+    declension!("ima", 17, "~";
+        nominative: "~", "~ta";
+        genitive: "~s", "~ta";
+        dative: referred, "~ta";
+        accusative: "~", "~ta";
     ),
-    // Indiz: 17 words (mineral, adverb, fossil, indiz, privileg, gründungsprivileg).
-    declension!("indiz", 17, "~";
+    // Diz: 16 words (adverb, eigenkapital, gesamtkapital, postregal, gründungskapital, neral).
+    declension!("diz", 16, "~";
         nominative: "~", "~ien";
         genitive: "~es|~s", "~ien";
         dative: referred, "~ien";
         accusative: "~", "~ien";
     ),
-    // Quinquagesima: 17 words (quinquagesima, präantepänultima, liquida, muta, pänultima, antepänultima).
-    declension!("quinquagesima", 17, "~a";
-        nominative: "~a", "~ä";
-        genitive: "~a", "~ä";
-        dative: referred, "~ä";
-        accusative: "~a", "~ä";
-    ),
-    // Yoni: 16 words (yoni, blutspenden, kardinälchen, wurzelballen, ehrwürden, pipchen).
-    declension!("yoni", 16, "~";
-        nominative: "~", "~";
-        genitive: "~s", "~";
-        dative: "~", "~";
-        accusative: "~", "~";
-    ),
-    // Polio: 15 words (fellatio, ratio, autofellatio, polio, defensio, subdivisio).
-    declension!("polio", 15, "~";
-        nominative: "~", "~nes";
-        genitive: "~", "~nes";
-        dative: referred, "~nes";
-        accusative: "~", "~nes";
-    ),
-    // Gravis: 15 words (gravis, tenuis, myiasis, acidosis, classis, amanuensis).
-    declension!("gravis", 15, "~i~";
-        nominative: "~i~", "~e~";
-        genitive: "~i~", "~e~";
-        dative: referred, "~e~";
-        accusative: "~i~", "~e~";
-    ),
-    // Quark: 15 words (quark, knochenmark, früchtequark, fruchtquark, windpark, solarpark).
-    declension!("quark", 15, "~a~";
-        nominative: "~a~", "~a~s";
-        genitive: "~a~es", "~a~e";
-        dative: referred, "~a~s";
-        accusative: "~a~", "~a~s";
-    ),
-    // Schloß: 14 words (schloß, vorhängeschloß, barockschloß, königsschloß, luftschloß, zahlenschloß).
-    declension!("schloß", 14, "~oß";
-        nominative: "~oß", "~össer";
-        genitive: "~osses", "~össer";
-        dative: referred, "~össern";
-        accusative: "~oß", "~össer";
-    ),
-    // Wiek: 14 words (befehlswirtschaft, türkisch, proform, flunsch, alttürkisch, prototürkisch).
-    declension!("wiek", 14, "~";
-        nominative: "~", "~en";
-        genitive: "~", "~en";
-        dative: "~", "~en";
-        accusative: "~", "~en";
-    ),
-    // Delta: 13 words (delta, grundschema, chakra, utopia, lüftungsschema, berechnungsschema).
-    declension!("delta", 13, "~a";
+    // Lta: 16 words (grundschema, chakra, utopia, lüftungsschema, bewertungsschema, reimschema).
+    declension!("lta", 16, "~a";
         nominative: "~a", "~as|~ata|~en";
         genitive: "~as", "~as|~ata|~en";
         dative: referred, "~as|~ata|~en";
         accusative: "~a", "~as|~ata|~en";
     ),
-    // Kodex: 13 words (index, hitzeindex, apex, kodex, verbraucherpreisindex, synthese-index).
-    declension!("kodex", 13, "~~x";
-        nominative: "~~x", "~iz~s";
-        genitive: "~~x", "~iz~s";
-        dative: referred, "~iz~s";
-        accusative: "~~x", "~iz~s";
+    // Inquagesima: 16 words (muta, pänultima, puerpera, ädikula, eskrima, inquagesima).
+    declension!("inquagesima", 16, "~a";
+        nominative: "~a", "~ä";
+        genitive: "~a", "~ä";
+        dative: referred, "~ä";
+        accusative: "~a", "~ä";
     ),
-    // Faß: 13 words (faß, weinfaß, pulverfaß, tintenfaß, wasserfaß, holzfaß).
-    declension!("faß", 13, "~aß";
-        nominative: "~aß", "~ässer";
-        genitive: "~asses", "~ässer";
-        dative: referred, "~ässern";
-        accusative: "~aß", "~ässer";
+    // Lager: 15 words (wasser, lager, kölnischwasser, icwasser, lterswasser, hochwasser).
+    declension!("lager", 15, "~a~";
+        nominative: "~a~", "~a~|~ä~";
+        genitive: "~a~s", "~a~|~ä~";
+        dative: referred, "~a~n|~ä~n";
+        accusative: "~a~", "~a~|~ä~";
     ),
-    // Sinto: 13 words (sinto, antipasto, guerrigliero, kyudo, tifoso, fianchetto).
-    declension!("sinto", 13, "~o";
-        nominative: "~o", "~i";
-        genitive: "~o", "~i";
-        dative: referred, "~i";
-        accusative: "~o", "~i";
+    // Miss: 14 words (miss, smartwatch, inbox, bugfix, clutch, hoax).
+    declension!("miss", 14, "~";
+        nominative: "~", "~es";
+        genitive: "~", "~es";
+        dative: referred, "~es";
+        accusative: "~", "~es";
     ),
-    // Normanne: 12 words (kabyle, peschmerge, straßenjunge, normanne, paröke, strassenjunge).
-    declension!("normanne", 12, "~";
+    // Landsmann: 14 words (landsmann, feuerwehrmann, geschäftsmann, hauptmann, vertrauensmann, mauermann).
+    declension!("landsmann", 14, "~mann";
+        nominative: "~mann", "~leute|~männer";
+        genitive: "~mannes|~manns", "~leute|~männer";
+        dative: referred, "~leuten|~männern";
+        accusative: "~mann", "~leute|~männer";
+    ),
+    // Iasis: 14 words (gravis, tenuis, classis, axis, ovotestis, iasis).
+    declension!("iasis", 14, "~i~";
+        nominative: "~i~", "~e~";
+        genitive: "~i~", "~e~";
+        dative: referred, "~e~";
+        accusative: "~i~", "~e~";
+    ),
+    // Epen: 14 words (yoni, iden, bähnchen, epen, tern, richten).
+    declension!("epen", 14, "~";
+        nominative: "~", "~";
+        genitive: "~s", "~";
+        dative: "~", "~";
+        accusative: "~", "~";
+    ),
+    // Smann: 14 words (stabshauptmann, räuberhauptmann, bezirkshauptmann, schiffszimmermann, sd-mann, folgsmann).
+    declension!("smann", 14, "~mann";
+        nominative: "~mann", "~männer|~leute";
+        genitive: "~mannes|~manns", "~männer|~leute";
+        dative: referred, "~männern|~leuten";
+        accusative: "~mann", "~männer|~leute";
+    ),
+    // Eis: 13 words (eis, cross, nein, gelbbleierz, ries, kammerstück).
+    declension!("eis", 13, "~";
+        nominative: "~", "~";
+        genitive: "~es|~s", "~";
+        dative: referred, "~";
+        accusative: "~", "~";
+    ),
+    // Amen: 13 words (amen, omen, molvolumen, pronomen, domen, nomen).
+    declension!("amen", 13, "~e~";
+        nominative: "~e~", "~e~|~i~a";
+        genitive: "~e~s", "~e~|~i~a";
+        dative: referred, "~e~|~i~a";
+        accusative: "~e~", "~e~|~i~a";
+    ),
+    // Ace: 12 words (straßenjunge, strassenjunge, balljunge, rätoromane, körndlbauer, duchoborze).
+    declension!("ace", 12, "~";
         nominative: "~", "~n";
         genitive: "~n", "~n";
         dative: referred, "~n";
         accusative: "~", "~n";
     ),
-    // Genitale: 12 words (generale, korporale, genitale, dimissoriale, adverbiale, insigne).
-    declension!("genitale", 12, "~~";
-        nominative: "~~", "~i~n";
-        genitive: "~~s", "~i~n";
-        dative: referred, "~i~n";
-        accusative: "~~", "~i~n";
+    // Ilo: 12 words (guerrigliero, kyudo, cannolo, pasto, foso, anchetto).
+    declension!("ilo", 12, "~o";
+        nominative: "~o", "~i";
+        genitive: "~o", "~i";
+        dative: referred, "~i";
+        accusative: "~o", "~i";
     ),
-    // Männchen: 11 words (männchen, eichen, liedchen, lämmchen, hühnchen, lichtchen).
-    declension!("männchen", 11, "~~";
-        nominative: "~~", "~~|~er~";
-        genitive: "~~s", "~~|~er~";
-        dative: referred, "~~|~er~";
-        accusative: "~~", "~~|~er~";
+    // Knochenmark: 12 words (knochenmark, windpark, solarpark, zahnmark, privatpark, holundermark).
+    declension!("knochenmark", 12, "~a~";
+        nominative: "~a~", "~a~s";
+        genitive: "~a~es", "~a~e";
+        dative: referred, "~a~s";
+        accusative: "~a~", "~a~s";
     ),
-    // Präsens: 11 words (präsens, deponens, definiens, präteritopräsens, präterito-präsens, rubefaziens).
-    declension!("präsens", 11, "~s";
-        nominative: "~s", "~tia";
-        genitive: "~s", "~tia";
-        dative: referred, "~tia";
-        accusative: "~s", "~tia";
+    // Tatt: 12 words (platt, fälscherwerkstatt, böttcherwerkstatt, tatt, eparaturwerkstatt, gießerwerkstatt).
+    declension!("tatt", 12, "~a~";
+        nominative: "~a~", "~ä~en";
+        genitive: "~a~", "~ä~en";
+        dative: referred, "~ä~en";
+        accusative: "~a~", "~ä~en";
     ),
-    // Großbetrieb: 11 words (portfolioumschlag, finanzierungsvorgang, anlagehorizont, anlageparameter, anlagezeitraum, portfolioumsatz).
+    // Atio: 12 words (cio, atio, fellatio, fensio, divisio, ratio).
+    declension!("atio", 12, "~";
+        nominative: "~", "~nes";
+        genitive: "~", "~nes";
+        dative: referred, "~nes";
+        accusative: "~", "~nes";
+    ),
+    // Mutter: 11 words (mutter, ältermutter, junkiemutter, großmutter, -mutter, grossmutter).
+    declension!("mutter", 11, "~u~";
+        nominative: "~u~", "~ü~";
+        genitive: "~u~", "~ü~";
+        dative: referred, "~ü~n";
+        accusative: "~u~", "~ü~";
+    ),
+    // Großbetrieb: 11 words (anlagehorizont, anlageparameter, anlagezeitraum, skaleneffekt, größenvorteil, wettbewerbsvorteil).
     declension!("großbetrieb", 11, "~";
         nominative: "~", "~-e";
         genitive: "~s", "~-e";
         dative: referred, "~-en";
         accusative: "~", "~-e";
     ),
-    // Wegwarte: 11 words (wegwarte, hitzeglocke, serge, schicksl, aphrodite, purpurfriesel).
-    declension!("wegwarte", 11, "~";
-        nominative: "~", "~n";
-        genitive: "~s", "~n";
-        dative: "~", "~n";
-        accusative: "~", "~n";
-    ),
-    // Herz: 10 words (herz, schwesterherz, sportlerherz, sportherz, athletenherz, spenderherz).
-    declension!("herz", 10, "~";
-        nominative: "~", "~en";
-        genitive: "~ens", "~en";
-        dative: "~en", "~en";
-        accusative: "~", "~en";
-    ),
-    // Matrix: 10 words (matrix, varix, bellatrix, diagonalmatrix, fallmatrix, brandfallmatrix).
-    declension!("matrix", 10, "~x";
-        nominative: "~x", "~zen";
-        genitive: "~x", "~zen";
-        dative: referred, "~zen";
-        accusative: "~x", "~zen";
-    ),
-    // Sphinx: 10 words (sphinx, anthrax, archaeopteryx, rax, cephalothorax, zephalothorax).
-    declension!("sphinx", 10, "~x";
-        nominative: "~x", "~xe";
-        genitive: "~x", "~xe";
-        dative: referred, "~xen";
-        accusative: "~x", "~xe";
-    ),
-    // Gondoliere: 10 words (gondoliere, monsignore, panettone, minestrone, visconte, bersagliere).
-    declension!("gondoliere", 10, "~e";
-        nominative: "~e", "~i";
-        genitive: "~e", "~i";
-        dative: referred, "~i";
-        accusative: "~e", "~i";
-    ),
-    // Eponym: 10 words (eponym, butterkeks, telex, pipox, vélosolex, jausem).
-    declension!("eponym", 10, "~";
+    // Eponym: 11 words (eponym, butterkeks, telex, vélosolex, laufdress, nyx).
+    declension!("eponym", 11, "~";
         nominative: "~", "~e";
         genitive: "~", "~e";
         dative: "~", "~en";
         accusative: "~", "~e";
     ),
-    // Krake: 9 words (anke, krake, bracke, banse, karnivore, carnivore).
-    declension!("krake", 9, "~";
-        nominative: "~", "~n";
-        genitive: "~n|~", "~n";
-        dative: referred, "~n";
-        accusative: "~n|~", "~n";
+    // Dex: 10 words (apex, pressekodex, dex, index, preisindex, these-index).
+    declension!("dex", 10, "~~x";
+        nominative: "~~x", "~iz~s";
+        genitive: "~~x", "~iz~s";
+        dative: referred, "~iz~s";
+        accusative: "~~x", "~iz~s";
     ),
-    // Crash: 9 words (lunch, cash, match, coach, crash, lachflash).
-    declension!("crash", 9, "~";
-        nominative: "~", "~es";
-        genitive: "~es|~s", "~es";
-        dative: referred, "~es";
-        accusative: "~", "~es";
+    // Porale: 10 words (archivale, porale, missoriale, iale, signe, fonale).
+    declension!("porale", 10, "~~";
+        nominative: "~~", "~i~n";
+        genitive: "~~s", "~i~n";
+        dative: referred, "~i~n";
+        accusative: "~~", "~i~n";
     ),
-    // Vitiligo: 9 words (vitiligo, vertigo, subordo, infraordo, ich-jetzt-hier-origo, ordo).
-    declension!("vitiligo", 9, "~o";
-        nominative: "~o", "~ines";
-        genitive: "~o", "~ines";
-        dative: referred, "~ines";
-        accusative: "~o", "~ines";
+    // Hinx: 10 words (rax, cephalothorax, hemithorax, hämothorax, hinx, hrax).
+    declension!("hinx", 10, "~x";
+        nominative: "~x", "~xe";
+        genitive: "~x", "~xe";
+        dative: referred, "~xen";
+        accusative: "~x", "~xe";
     ),
-    // Straß: 9 words (prinzeß, bekandtnuß, verdammniß, verdamniß, straß, profeß).
-    declension!("straß", 9, "~ß";
-        nominative: "~ß", "~sse";
-        genitive: "~ß", "~sse";
-        dative: referred, "~ssen";
-        accusative: "~ß", "~sse";
+    // Sikans: 10 words (rubefaziens, ponens, finiens, teritopräsens, terito-präsens, borans).
+    declension!("sikans", 10, "~s";
+        nominative: "~s", "~tia";
+        genitive: "~s", "~tia";
+        dative: referred, "~tia";
+        accusative: "~s", "~tia";
     ),
-    // Hiatus: 9 words (hiatus, palpus, maxillarpalpus, iktus, zirrus, lüftungsbonus).
+    // Enovirus: 10 words (ebolavirus, fsme-virus, fluenzavirus, grippevirus, -nil-virus, enovirus).
+    declension!("enovirus", 10, "~us";
+        nominative: "~us", "~en";
+        genitive: "~us", "~en";
+        dative: "~us", "~en";
+        accusative: "~us", "~en";
+    ),
+    // Uhl: 10 words (unk, uhl, uck, uss, umpf, urm).
+    declension!("uhl", 10, "u~";
+        nominative: "u~", "ü~e";
+        genitive: "u~es|u~s", "ü~e";
+        dative: referred, "ü~en";
+        accusative: "u~", "ü~e";
+    ),
+    // Saal: 9 words (saal, kursaal, plenarsaal, eißsaal, -saal, wartesaal).
+    declension!("saal", 9, "~aa~";
+        nominative: "~aa~", "~ä~e";
+        genitive: "~aa~es|~aa~s", "~ä~e";
+        dative: referred, "~ä~en";
+        accusative: "~aa~", "~ä~e";
+    ),
+    // Hiatus: 9 words (hiatus, palpus, iktus, lüftungsbonus, hippopotamus, umweltbonus).
     declension!("hiatus", 9, "~us";
         nominative: "~us", "~us";
         genitive: "~us", "~us";
         dative: referred, "~us";
         accusative: "~us", "~us";
     ),
-    // Gravamen: 9 words (wasservolumen, wurzelnomen, notexamen, gravamen, lungenvolumen, juraexamen).
-    declension!("gravamen", 9, "~e~";
+    // Gondoliere: 9 words (gondoliere, cavaliere, signore, ettone, nestrone, conte).
+    declension!("gondoliere", 9, "~e";
+        nominative: "~e", "~i";
+        genitive: "~e", "~i";
+        dative: referred, "~i";
+        accusative: "~e", "~i";
+    ),
+    // Vieh: 9 words (vieh, stimmvieh, kleinvieh, urvieh, drecksvieh, katzenvieh).
+    declension!("vieh", 9, "~~";
+        nominative: "~~", "~c~er";
+        genitive: "~~s", "~c~er";
+        dative: referred, "~c~ern";
+        accusative: "~~", "~c~er";
+    ),
+    // Avamen: 9 words (wasservolumen, wurzelnomen, notexamen, lungenvolumen, juraexamen, abgangsexamen).
+    declension!("avamen", 9, "~e~";
         nominative: "~e~", "~i~a";
         genitive: "~e~s", "~i~a";
         dative: referred, "~i~a";
         accusative: "~e~", "~i~a";
     ),
-    // Abt: 8 words (arzt, abt, angst, arsch, axt, ast).
-    declension!("abt", 8, "a~";
-        nominative: "a~", "ä~e";
-        genitive: "a~es|a~s", "ä~e";
-        dative: referred, "ä~en";
-        accusative: "a~", "ä~e";
+    // Tin: 9 words (gayo, komedo, tin, bryo, sulin, idin).
+    declension!("tin", 9, "~";
+        nominative: "~", "~nen";
+        genitive: "~s", "~nen";
+        dative: referred, "~nen";
+        accusative: "~", "~nen";
     ),
-    // Bonus: 8 words (abakus, bonus, nimbus, nonius, konus, werkzeugkonus).
-    declension!("bonus", 8, "~us";
-        nominative: "~us", "~usse";
-        genitive: "~us", "~usse";
-        dative: referred, "~ussen";
-        accusative: "~us", "~usse";
+    // Herz: 9 words (herz, bruderherz, menschenherz, frauenherz, pferdeherz, scheißherz).
+    declension!("herz", 9, "~";
+        nominative: "~", "~en";
+        genitive: "~ens", "~en";
+        dative: referred, "~en";
+        accusative: "~", "~en";
     ),
-    // Finale: 8 words (finale, achtelfinale, champions-league-finale, sechzehntelfinale, pokalfinale, herzschlagfinale).
-    declension!("finale", 8, "~e";
-        nominative: "~e", "~e|~s";
-        genitive: "~es", "~e|~s";
-        dative: referred, "~en|~s";
-        accusative: "~e", "~e|~s";
+    // Feß: 9 words (inzeß, kandtnuß, ammniß, amniß, raß, feß).
+    declension!("feß", 9, "~ß";
+        nominative: "~ß", "~sse";
+        genitive: "~ß", "~sse";
+        dative: referred, "~ssen";
+        accusative: "~ß", "~sse";
     ),
-    // Druckbuchstabe: 8 words (kleinbuchstabe, haufe, druckbuchstabe, großdruckbuchstabe, kursivbuchstabe, doppelbuchstabe).
-    declension!("druckbuchstabe", 8, "~";
-        nominative: "~", "~n";
-        genitive: "~ns|~n", "~n";
-        dative: referred, "~n";
-        accusative: "~", "~n";
+    // Crash: 8 words (lunch, coach, crash, inch, tch, etsch).
+    declension!("crash", 8, "~";
+        nominative: "~", "~es";
+        genitive: "~es|~s", "~es";
+        dative: referred, "~es";
+        accusative: "~", "~es";
     ),
-    // Ypsilon: 8 words (ypsilon, semikolon, kolon, telencephalon, diencephalon, mesencephalon).
-    declension!("ypsilon", 8, "~on";
-        nominative: "~on", "~ons|~a";
-        genitive: "~ons", "~ons|~a";
-        dative: referred, "~ons|~a";
-        accusative: "~on", "~ons|~a";
-    ),
-    // Zagel: 8 words (gegacker, zagel, gemecker, quargel, röhrenfernseher, anzettel).
+    // Zagel: 8 words (zagel, gemecker, röhrenfernseher, anzettel, sammelbehälter, hundefänger).
     declension!("zagel", 8, "~";
         nominative: "~", "~";
         genitive: "~es|~s", "~";
         dative: referred, "~n";
         accusative: "~", "~";
     ),
-    // Bocher: 8 words (zaddik, cherub, bocher, pilaw, moschaw, kerub).
-    declension!("bocher", 8, "~";
-        nominative: "~", "~im";
-        genitive: "~s", "~im";
-        dative: referred, "~im";
-        accusative: "~", "~im";
-    ),
-    // Numerale: 8 words (kardinale, ordinale, numerale, pronominale, antifebrile, quale).
-    declension!("numerale", 8, "~e";
-        nominative: "~e", "~ia";
-        genitive: "~es", "~ia";
-        dative: referred, "~ia";
-        accusative: "~e", "~ia";
-    ),
-    // Ciabatta: 8 words (pulcinella, stracciatella, ciabatta, aranciata, viscontessa, pannacotta).
+    // Ciabatta: 8 words (pulcinella, ciabatta, viscontessa, lira, acciatella, anciata).
     declension!("ciabatta", 8, "~a";
         nominative: "~a", "~e";
         genitive: "~a", "~e";
         dative: referred, "~e";
         accusative: "~a", "~e";
     ),
-    // Idiotikon: 8 words (idiotikon, akrostichon, plektron, telestichon, pastophorion, pyramidion).
-    declension!("idiotikon", 8, "~on";
-        nominative: "~on", "~en|~a";
-        genitive: "~ons", "~en|~a";
-        dative: referred, "~en|~a";
-        accusative: "~on", "~en|~a";
-    ),
-    // Syndikus: 8 words (syndikus, kretikus, prokeleusmatikus, spondiakus, askus, medikus).
-    declension!("syndikus", 8, "~kus";
-        nominative: "~kus", "~zi";
-        genitive: "~kus", "~zi";
-        dative: referred, "~zi";
-        accusative: "~kus", "~zi";
-    ),
-    // Kleinvieh: 8 words (stimmvieh, kleinvieh, urvieh, merzvieh, drecksvieh, katzenvieh).
-    declension!("kleinvieh", 8, "~~";
-        nominative: "~~", "~c~er";
-        genitive: "~~s", "~c~er";
-        dative: referred, "~c~ern";
-        accusative: "~~", "~c~er";
-    ),
-    // Kappes: 8 words (kappes, fuppes, nippes, varietas, gens, regens).
-    declension!("kappes", 8, "~~";
-        nominative: "~~", "~te~";
-        genitive: "~~", "~te~";
-        dative: referred, "~te~";
-        accusative: "~~", "~te~";
-    ),
-    // Fiduz: 8 words (pferdefuhrwerk, fiduz, baustil, kornkreis, garbenbund, pferdewirt).
-    declension!("fiduz", 8, "~";
-        nominative: "~", "~e";
-        genitive: "~es|~s", "~e";
-        dative: "~e", "~en";
-        accusative: "~", "~e";
-    ),
-    // Chassid: 8 words (kibbuz, kubbuz, chassid, sofer, soferet, gennesaret).
-    declension!("chassid", 8, "~";
-        nominative: "~", "~im";
-        genitive: "~", "~im";
-        dative: referred, "~im";
-        accusative: "~", "~im";
-    ),
-    // Party: 7 words (party, fantasy, coronaparty, lovestory, abschiedsparty, pussy).
-    declension!("party", 7, "~y";
-        nominative: "~y", "~ys|~ies";
-        genitive: "~y", "~ys|~ies";
-        dative: referred, "~ys|~ies";
-        accusative: "~y", "~ys|~ies";
-    ),
-    // Risiko: 7 words (risiko, brandrisiko, gesundheitsrisiko, krankheitsrisiko, berufsrisiko, entdeckungsrisiko).
-    declension!("risiko", 7, "~i~o";
-        nominative: "~i~o", "~i~en|~i~os|~~en";
-        genitive: "~i~os", "~i~en|~i~os|~~en";
-        dative: referred, "~i~en|~i~os|~~en";
-        accusative: "~i~o", "~i~en|~i~os|~~en";
-    ),
-    // Dressman: 7 words (anchorman, gentleman, dressman, ironman, dutchman, gunman).
-    declension!("dressman", 7, "~a~";
-        nominative: "~a~", "~e~";
-        genitive: "~a~s", "~e~";
-        dative: referred, "~e~";
-        accusative: "~a~", "~e~";
-    ),
-    // Causa: 7 words (causa, matta, vita, nympha, pulpa, lunula).
-    declension!("causa", 7, "~a";
+    // Causa: 8 words (causa, vita, nympha, pulpa, lunula, xiokratusa).
+    declension!("causa", 8, "~a";
         nominative: "~a", "~ae|~en";
         genitive: "~a", "~ae|~en";
         dative: referred, "~ae|~en";
         accusative: "~a", "~ae|~en";
     ),
-    // Amtfrau: 7 words (kamerafrau, amtfrau, fuhrfrau, instfrau, kirchenfrau, ss-frau).
-    declension!("amtfrau", 7, "~fra~";
-        nominative: "~fra~", "~fra~en|~le~te";
-        genitive: "~fra~", "~fra~en|~le~te";
-        dative: referred, "~fra~en|~le~ten";
-        accusative: "~fra~", "~fra~en|~le~te";
+    // Üffel: 8 words (turbanschnecke, hybride, aarweihe, üffel, viole, pplandmeise).
+    declension!("üffel", 8, "~";
+        nominative: "~", "~n";
+        genitive: "~", "~n";
+        dative: "~", "~n";
+        accusative: "~", "~n";
     ),
-    // Helix: 7 words (helix, vox, unix, volvox, obstetrix, dux).
-    declension!("helix", 7, "~x";
+    // Wegwarte: 8 words (wegwarte, hitzeglocke, dieselrußpartikel, hekate, cksl, hrodite).
+    declension!("wegwarte", 8, "~";
+        nominative: "~", "~n";
+        genitive: "~s", "~n";
+        dative: "~", "~n";
+        accusative: "~", "~n";
+    ),
+    // Duz: 8 words (pferdefuhrwerk, baustil, kornkreis, pferdewirt, traubengeschmack, sportheim).
+    declension!("duz", 8, "~";
+        nominative: "~", "~e";
+        genitive: "~es|~s", "~e";
+        dative: "~e", "~en";
+        accusative: "~", "~e";
+    ),
+    // Issa: 8 words (hiragana, nsa, hyläa, liläa, harevousa, issa).
+    declension!("issa", 8, "~a";
+        nominative: "~a", "~en";
+        genitive: "~a", "~en";
+        dative: "~a", "~en";
+        accusative: "~a", "~en";
+    ),
+    // Bruder: 8 words (bruder, zbruder, ngesbruder, slimbruder, valbruder, -bruder).
+    declension!("bruder", 8, "~u~";
+        nominative: "~u~", "~ü~";
+        genitive: "~u~s", "~ü~";
+        dative: referred, "~ü~n";
+        accusative: "~u~", "~ü~";
+    ),
+    // Männchen: 7 words (männchen, lämmchen, hühnchen, männlein, lämmlein, rädchen).
+    declension!("männchen", 7, "~~";
+        nominative: "~~", "~~|~er~";
+        genitive: "~~s", "~~|~er~";
+        dative: referred, "~~|~er~";
+        accusative: "~~", "~~|~er~";
+    ),
+    // Ypsilon: 7 words (ypsilon, diencephalon, metencephalon, kolon, ncephalon, sencephalon).
+    declension!("ypsilon", 7, "~on";
+        nominative: "~on", "~ons|~a";
+        genitive: "~ons", "~ons|~a";
+        dative: referred, "~ons|~a";
+        accusative: "~on", "~ons|~a";
+    ),
+    // Law: 7 words (zaddik, moschaw, kerub, erub, law, octaw).
+    declension!("law", 7, "~";
+        nominative: "~", "~im";
+        genitive: "~s", "~im";
+        dative: referred, "~im";
+        accusative: "~", "~im";
+    ),
+    // Stichon: 7 words (idiotikon, plektron, stichon, stophorion, amidion, mosorion).
+    declension!("stichon", 7, "~on";
+        nominative: "~on", "~en|~a";
+        genitive: "~ons", "~en|~a";
+        dative: referred, "~en|~a";
+        accusative: "~on", "~en|~a";
+    ),
+    // Lix: 7 words (vox, unix, dux, lix, lvox, etrix).
+    declension!("lix", 7, "~x";
         nominative: "~x", "~ces";
         genitive: "~x", "~ces";
         dative: referred, "~ces";
         accusative: "~x", "~ces";
     ),
-    // Kurpark: 7 words (kurpark, naturpark, walkman, bärenpark, landschaftspark, stadtpark).
-    declension!("kurpark", 7, "~a~";
-        nominative: "~a~", "~a~s|~a~e|~ä~e";
-        genitive: "~a~s", "~a~s|~a~e|~ä~e";
-        dative: referred, "~a~s|~a~en|~ä~en";
-        accusative: "~a~", "~a~s|~a~e|~ä~e";
-    ),
-    // Yeoman: 7 words (stuntman, yeoman, selfmademan, heman, mediaman, anchorwoman).
+    // Yeoman: 7 words (stuntman, yeoman, heman, goatman, lfmademan, diaman).
     declension!("yeoman", 7, "~a~";
         nominative: "~a~", "~e~";
         genitive: "~a~", "~e~";
         dative: referred, "~e~";
         accusative: "~a~", "~e~";
     ),
-    // Krebsrisiko: 7 words (krebsrisiko, verletzungsrisiko, spielrisiko, gefährdungsrisiko, armutsrisiko, unfallrisiko).
+    // Tiligo: 7 words (ordo, tendo, tiligo, tigo, jetzt-hier-origo, trigo).
+    declension!("tiligo", 7, "~o";
+        nominative: "~o", "~ines";
+        genitive: "~o", "~ines";
+        dative: referred, "~ines";
+        accusative: "~o", "~ines";
+    ),
+    // Krebsrisiko: 7 words (krebsrisiko, verletzungsrisiko, spielrisiko, armutsrisiko, unfallrisiko, sterberisiko).
     declension!("krebsrisiko", 7, "~i~o";
         nominative: "~i~o", "~i~os|~i~en|~~en";
         genitive: "~i~os", "~i~os|~i~en|~~en";
         dative: referred, "~i~os|~i~en|~~en";
         accusative: "~i~o", "~i~os|~i~en|~~en";
     ),
-    // Bruderherz: 7 words (artischockenherz, bruderherz, menschenherz, frauenherz, pferdeherz, scheißherz).
-    declension!("bruderherz", 7, "~";
-        nominative: "~", "~en";
-        genitive: "~ens|~es", "~en";
-        dative: referred, "~en";
-        accusative: "~", "~en";
+    // Trix: 7 words (varix, trix, latrix, matrix, fallmatrix, fallsteuermatrix).
+    declension!("trix", 7, "~x";
+        nominative: "~x", "~zen";
+        genitive: "~x", "~zen";
+        dative: referred, "~zen";
+        accusative: "~x", "~zen";
     ),
-    // Sephardi: 6 words (sephardi, energieaufnahme, aschkenasi, charedi, mizrachi, misrachi).
-    declension!("sephardi", 6, "~";
+    // Merale: 7 words (quale, dinale, merale, nominale, febrile, personale).
+    declension!("merale", 7, "~e";
+        nominative: "~e", "~ia";
+        genitive: "~es", "~ia";
+        dative: referred, "~ia";
+        accusative: "~e", "~ia";
+    ),
+    // Essman: 7 words (dutchman, gunman, chorman, tleman, essman, onman).
+    declension!("essman", 7, "~a~";
+        nominative: "~a~", "~e~";
+        genitive: "~a~s", "~e~";
+        dative: referred, "~e~";
+        accusative: "~a~", "~e~";
+    ),
+    // Ssid: 7 words (bbuz, buz, ssid, feret, nesaret, ddur).
+    declension!("ssid", 7, "~";
+        nominative: "~", "~im";
+        genitive: "~", "~im";
+        dative: referred, "~im";
+        accusative: "~", "~im";
+    ),
+    // Apfel: 6 words (apfel, appel, acker, aiw, abel, aben).
+    declension!("apfel", 6, "a~";
+        nominative: "a~", "ä~";
+        genitive: "a~s", "ä~";
+        dative: referred, "ä~n";
+        accusative: "a~", "ä~";
+    ),
+    // Druckbuchstabe: 6 words (kleinbuchstabe, druckbuchstabe, doppelbuchstabe, vereinsname, ivbuchstabe, reibebuchstabe).
+    declension!("druckbuchstabe", 6, "~";
+        nominative: "~", "~n";
+        genitive: "~ns|~n", "~n";
+        dative: referred, "~n";
+        accusative: "~", "~n";
+    ),
+    // Kenasi: 6 words (energieaufnahme, phardi, kenasi, redi, zrachi, rachi).
+    declension!("kenasi", 6, "~";
         nominative: "~", "~m";
         genitive: "~", "~m";
         dative: referred, "~m";
         accusative: "~", "~m";
     ),
-    // Trauma: 6 words (schema, trauma, stigma, chiasma, leitthema, schwerpunktthema).
-    declension!("trauma", 6, "~a";
-        nominative: "~a", "~ata|~en";
-        genitive: "~as", "~ata|~en";
-        dative: referred, "~ata|~en";
-        accusative: "~a", "~ata|~en";
+    // Pes: 6 words (fuppes, nippes, varietas, gens, pes, herpes).
+    declension!("pes", 6, "~~";
+        nominative: "~~", "~te~";
+        genitive: "~~", "~te~";
+        dative: referred, "~te~";
+        accusative: "~~", "~te~";
     ),
-    // Moos: 6 words (moos, lebermoos, schlafmoos, gillamoos, wikingerboot, islandmoos).
-    declension!("moos", 6, "~oo~";
-        nominative: "~oo~", "~oo~e";
-        genitive: "~oo~es", "~oo~e";
-        dative: referred, "~oo~en";
-        accusative: "~oo~", "~oo~e";
-    ),
-    // Fluor: 6 words (fluor, tremor, liquor, real, odor, pikador).
-    declension!("fluor", 6, "~";
-        nominative: "~", "~es";
-        genitive: "~s", "~es";
-        dative: referred, "~es";
-        accusative: "~", "~es";
-    ),
-    // Alija: 6 words (aliya, alija, chanukkia, mesusa, semicha, halacha).
-    declension!("alija", 6, "~a";
-        nominative: "~a", "~ot";
-        genitive: "~a", "~ot";
-        dative: referred, "~ot";
-        accusative: "~a", "~ot";
-    ),
-    // Marend: 6 words (marend, pelmen, owrag, somal, signor, silowik).
-    declension!("marend", 6, "~";
-        nominative: "~", "~i";
-        genitive: "~s", "~i";
-        dative: referred, "~i";
-        accusative: "~", "~i";
-    ),
-    // Equilibrium: 6 words (equilibrium, trichobothrium, ostium, subphylum, cranium, enklitikum).
-    declension!("equilibrium", 6, "~um";
-        nominative: "~um", "~a";
-        genitive: "~um", "~a";
-        dative: referred, "~a";
-        accusative: "~um", "~a";
-    ),
-    // Babbelas: 6 words (sprachatlas, autoatlas, weltatlas, stadtatlas, babbelas, reiseatlas).
-    declension!("babbelas", 6, "~s";
+    // Bbelas: 6 words (sprachatlas, autoatlas, weltatlas, stadtatlas, reiseatlas, bbelas).
+    declension!("bbelas", 6, "~s";
         nominative: "~s", "~sse|~nten";
         genitive: "~s|~sses", "~sse|~nten";
         dative: referred, "~ssen|~nten";
         accusative: "~s", "~sse|~nten";
     ),
-    // Manna: 6 words (hiragana, manna, galiläa, hyläa, tahina, tramontana).
-    declension!("manna", 6, "~a";
-        nominative: "~a", "~en";
-        genitive: "~a", "~en";
-        dative: "~a", "~en";
-        accusative: "~a", "~en";
+    // Uor: 6 words (real, odor, uor, emor, quor, ador).
+    declension!("uor", 6, "~";
+        nominative: "~", "~es";
+        genitive: "~s", "~es";
+        dative: referred, "~es";
+        accusative: "~", "~es";
     ),
-    // Masematte: 6 words (kandel, masematte, molekel, quandel, sowjetzone, sone).
-    declension!("masematte", 6, "~";
-        nominative: "~", "~";
-        genitive: "~|~s", "~";
-        dative: "~", "~n";
-        accusative: "~", "~";
-    ),
-    // Kronjuwel: 6 words (gof, bodenmosaik, zelltyp, zellrezeptor, kronjuwel, nanoplastik).
-    declension!("kronjuwel", 6, "~";
-        nominative: "~", "~en";
-        genitive: "~s", "~en";
-        dative: "~", "~en";
-        accusative: "~", "~en";
-    ),
-    // Mehrzweck: 6 words (verdachtsmoment, häufungspunkt, mehrzweck, nierenfett, erkrankungsbeginn, tragegefühl).
+    // Mehrzweck: 6 words (verdachtsmoment, häufungspunkt, mehrzweck, nierenfett, tragegefühl, krankungsbeginn).
     declension!("mehrzweck", 6, "~";
         nominative: "~", "~e";
         genitive: "~es|~s", "~e";
         dative: referred, "~e";
         accusative: "~", "~e";
     ),
-    // Iris: 5 words (iris, spezies, pflanzenspezies, tierspezies, patiens).
-    declension!("iris", 5, "~s";
-        nominative: "~s", "~s|~n";
-        genitive: "~s", "~s|~n";
-        dative: referred, "~s|~n";
-        accusative: "~s", "~s|~n";
-    ),
-    // Häs: 5 words (os, häß, lälles, häs, narrenhäs).
-    declension!("häs", 5, "~";
-        nominative: "~", "~er|~";
-        genitive: "~|~es", "~er|~";
-        dative: referred, "~ern|~";
-        accusative: "~", "~er|~";
-    ),
-    // Korpus: 5 words (tempus, korpus, sprachkorpus, corpus, textkorpus).
-    declension!("korpus", 5, "~us";
-        nominative: "~us", "~ora";
-        genitive: "~us", "~ora";
-        dative: referred, "~ora";
-        accusative: "~us", "~ora";
-    ),
-    // Glottis: 5 words (glottis, klitoris, glans, capsulitis, conjunctivitis).
-    declension!("glottis", 5, "~~";
-        nominative: "~~", "~de~";
-        genitive: "~~", "~de~";
-        dative: referred, "~de~";
-        accusative: "~~", "~de~";
+    // Dikus: 6 words (dikus, etikus, keleusmatikus, ondiakus, pathikus, sympathikus).
+    declension!("dikus", 6, "~kus";
+        nominative: "~kus", "~zi";
+        genitive: "~kus", "~zi";
+        dative: referred, "~zi";
+        accusative: "~kus", "~zi";
     ),
     // Niederdruck: 5 words (puff, bronzefund, niederdruck, luch, rumpunsch).
     declension!("niederdruck", 5, "~u~";
@@ -1963,40 +1735,54 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 227] = [
         dative: referred, "~u~en|~ü~en";
         accusative: "~u~", "~u~e|~ü~e";
     ),
-    // Bütterken: 5 words (bütterken, döneken, pädken, fietsken, dönneken).
+    // Bütterken: 5 words (bütterken, döneken, pädken, dönneken, etsken).
     declension!("bütterken", 5, "~n";
         nominative: "~n", "~s|~ns|~n";
         genitive: "~ns", "~s|~ns|~n";
         dative: referred, "~s|~ns|~n";
         accusative: "~n", "~s|~ns|~n";
     ),
-    // Koog: 5 words (koog, hook, schooß, schoos, schooss).
-    declension!("koog", 5, "~oo~";
-        nominative: "~oo~", "~ö~e";
-        genitive: "~oo~es", "~ö~e";
-        dative: referred, "~ö~en";
-        accusative: "~oo~", "~ö~e";
+    // Akus: 5 words (nimbus, branchenprimus, nus, akus, konus).
+    declension!("akus", 5, "~us";
+        nominative: "~us", "~usse";
+        genitive: "~us", "~usse";
+        dative: referred, "~ussen";
+        accusative: "~us", "~usse";
     ),
-    // Artemis: 5 words (abatis, artemis, beschwernis, verwandtschaftsverhältnis, themis).
-    declension!("artemis", 5, "~";
-        nominative: "~", "~se";
-        genitive: "~", "~se";
-        dative: "~", "~sen";
-        accusative: "~", "~se";
-    ),
-    // Zane: 5 words (condottiere, kondottiere, bacile, zanne, zane).
-    declension!("zane", 5, "~e";
-        nominative: "~e", "~i";
-        genitive: "~es", "~i";
+    // Marend: 5 words (marend, owrag, somal, lmen, lowik).
+    declension!("marend", 5, "~";
+        nominative: "~", "~i";
+        genitive: "~s", "~i";
         dative: referred, "~i";
-        accusative: "~e", "~i";
+        accusative: "~", "~i";
     ),
-    // Griwna: 5 words (isba, stotinka, papirossa, naliwka, griwna).
-    declension!("griwna", 5, "~a";
+    // Rty: 5 words (lovestory, pussy, celebrity, rty, tasy).
+    declension!("rty", 5, "~y";
+        nominative: "~y", "~ys|~ies";
+        genitive: "~y", "~ys|~ies";
+        dative: referred, "~ys|~ies";
+        accusative: "~y", "~ys|~ies";
+    ),
+    // Equilibrium: 5 words (equilibrium, subphylum, cranium, chobothrium, klitikum).
+    declension!("equilibrium", 5, "~um";
+        nominative: "~um", "~a";
+        genitive: "~um", "~a";
+        dative: referred, "~a";
+        accusative: "~um", "~a";
+    ),
+    // Iwna: 5 words (isba, otinka, pirossa, liwka, iwna).
+    declension!("iwna", 5, "~a";
         nominative: "~a", "~i";
         genitive: "~a", "~i";
         dative: referred, "~i";
         accusative: "~a", "~i";
+    ),
+    // Uma: 5 words (leitthema, ema, uma, igma, punktthema).
+    declension!("uma", 5, "~a";
+        nominative: "~a", "~ata|~en";
+        genitive: "~as", "~ata|~en";
+        dative: referred, "~ata|~en";
+        accusative: "~a", "~ata|~en";
     ),
     // Seeklima: 5 words (eisklima, trockenklima, kontinentalklima, seeklima, polarklima).
     declension!("seeklima", 5, "~";
@@ -2005,47 +1791,82 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 227] = [
         dative: referred, "~ten";
         accusative: "~", "~te";
     ),
-    // Rom: 4 words (rom, artepithet, palliativ, tuber).
+    // Cile: 5 words (zanne, zane, ndottiere, dottiere, cile).
+    declension!("cile", 5, "~e";
+        nominative: "~e", "~i";
+        genitive: "~es", "~i";
+        dative: referred, "~i";
+        accusative: "~e", "~i";
+    ),
+    // Ock: 5 words (ock, osch, otz, orch, opf).
+    declension!("ock", 5, "o~";
+        nominative: "o~", "ö~e";
+        genitive: "o~es|o~s", "ö~e";
+        dative: referred, "ö~en";
+        accusative: "o~", "ö~e";
+    ),
+    // Nale: 5 words (nale, mpions-league-finale, zehntelfinale, schlagfinale, halbfinale).
+    declension!("nale", 5, "~e";
+        nominative: "~e", "~e|~s";
+        genitive: "~es", "~e|~s";
+        dative: referred, "~en|~s";
+        accusative: "~e", "~e|~s";
+    ),
+    // Ust: 5 words (ust, unst, uft, unft, ulst).
+    declension!("ust", 5, "u~";
+        nominative: "u~", "ü~e";
+        genitive: "u~", "ü~e";
+        dative: referred, "ü~en";
+        accusative: "u~", "ü~e";
+    ),
+    // Ija: 5 words (iya, ija, nukkia, susa, lacha).
+    declension!("ija", 5, "~a";
+        nominative: "~a", "~ot";
+        genitive: "~a", "~ot";
+        dative: referred, "~ot";
+        accusative: "~a", "~ot";
+    ),
+    // Rom: 4 words (rom, tuber, epithet, liativ).
     declension!("rom", 4, "~";
         nominative: "~", "~a";
         genitive: "~s", "~a";
         dative: referred, "~a";
         accusative: "~", "~a";
     ),
-    // Apfel: 4 words (apfel, appel, acker, aiw).
-    declension!("apfel", 4, "a~";
-        nominative: "a~", "ä~";
-        genitive: "a~s", "ä~";
-        dative: referred, "ä~n";
-        accusative: "a~", "ä~";
+    // Aft: 4 words (angst, axt, aft, afft).
+    declension!("aft", 4, "a~";
+        nominative: "a~", "ä~e";
+        genitive: "a~", "ä~e";
+        dative: referred, "ä~en";
+        accusative: "a~", "ä~e";
     ),
-    // Prosecco: 4 words (prosecco, virago, papagallo, lachsrisotto).
-    declension!("prosecco", 4, "~o";
-        nominative: "~o", "~os";
-        genitive: "~o|~os", "~os";
-        dative: referred, "~os";
-        accusative: "~o", "~os";
+    // Anke: 4 words (anke, uskoke, nivore, fritze).
+    declension!("anke", 4, "~";
+        nominative: "~", "~n";
+        genitive: "~n", "~n";
+        dative: referred, "~n";
+        accusative: "~n", "~n";
     ),
-    // Hobby: 4 words (tommy, hobby, rowdy, shanty).
-    declension!("hobby", 4, "~y";
+    // Mmy: 4 words (hobby, shanty, mmy, wdy).
+    declension!("mmy", 4, "~y";
         nominative: "~y", "~ys|~ies";
         genitive: "~ys", "~ys|~ies";
         dative: referred, "~ys|~ies";
         accusative: "~y", "~ys|~ies";
     ),
-    // Embryo: 4 words (embryo, gayo, zenturio, komedo).
-    declension!("embryo", 4, "~";
-        nominative: "~", "~nen";
-        genitive: "~s", "~nen";
-        dative: referred, "~nen";
-        accusative: "~", "~nen";
+    // Häs: 4 words (os, häß, lälles, häs).
+    declension!("häs", 4, "~";
+        nominative: "~", "~er";
+        genitive: "~", "~er";
+        dative: referred, "~ern";
+        accusative: "~", "~er";
     ),
-    // Lump: 4 words (lump, tetragraph, vorführherr, apochromat).
-    declension!("lump", 4, "~";
-        nominative: "~", "~en";
-        genitive: "~en|~s", "~en";
-        dative: referred, "~en";
-        accusative: "~en|~", "~en";
+    // Muß: 4 words (nuß, muß, cashewnuß, adamianuß).
+    declension!("muß", 4, "~uß";
+        nominative: "~uß", "~üsse";
+        genitive: "~uß", "~üsse";
+        dative: referred, "~üssen";
+        accusative: "~uß", "~üsse";
     ),
     // Nordmann: 4 words (zimmermann, barmann, nordmann, wachmann).
     declension!("nordmann", 4, "~mann";
@@ -2054,34 +1875,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 227] = [
         dative: referred, "~männern|~leuten";
         accusative: "~mann", "~männer|~leute";
     ),
-    // Pater: 4 words (pater, frater, jesuitenpater, konfrater).
-    declension!("pater", 4, "~e~";
-        nominative: "~e~", "~~es";
-        genitive: "~e~s", "~~es";
-        dative: referred, "~~es";
-        accusative: "~e~", "~~es";
-    ),
-    // Dinucleotid: 4 words (dinucleotid, mononucleotid, polynucleotid, ribonucleotid).
-    declension!("dinucleotid", 4, "~";
-        nominative: "~", "~en";
-        genitive: "~e", "~en";
-        dative: referred, "~en";
-        accusative: "~", "~en";
-    ),
-    // Pharmazeutik: 4 words (pharmazeutik, kislew, lew, naturkosmetik).
-    declension!("pharmazeutik", 4, "~";
-        nominative: "~", "~a";
-        genitive: "~", "~a";
-        dative: referred, "~a";
-        accusative: "~", "~a";
-    ),
-    // Genus: 4 words (genus, opus, onus, subgenus).
-    declension!("genus", 4, "~us";
-        nominative: "~us", "~era";
-        genitive: "~us", "~era";
-        dative: referred, "~era";
-        accusative: "~us", "~era";
-    ),
     // Erhaltungszustand: 4 words (spannungszustand, belagerungszustand, erhaltungszustand, ausgangszustand).
     declension!("erhaltungszustand", 4, "~s~a~";
         nominative: "~s~a~", "~~ä~e";
@@ -2089,54 +1882,26 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 227] = [
         dative: referred, "~~ä~en";
         accusative: "~s~a~", "~~ä~e";
     ),
-    // Heros: 4 words (heros, taxis, topotaxis, kulturheros).
-    declension!("heros", 4, "~s";
-        nominative: "~s", "~en";
-        genitive: "~s", "~en";
-        dative: referred, "~en";
-        accusative: "~s", "~en";
-    ),
-    // Kipppunkt: 4 words (liebesakt, kipppunkt, kippunkt, kipp-punkt).
+    // Kipppunkt: 4 words (liebesakt, kipppunkt, unkt, -punkt).
     declension!("kipppunkt", 4, "~";
         nominative: "~", "~e";
         genitive: "~e|~es", "~e";
         dative: referred, "~en";
         accusative: "~", "~e";
     ),
-    // Pharynx: 4 words (pharynx, quinkunx, larynx, phorminx).
+    // Pharynx: 4 words (pharynx, inkunx, rynx, rminx).
     declension!("pharynx", 4, "~x";
         nominative: "~x", "~gen";
         genitive: "~x", "~gen";
         dative: referred, "~gen";
         accusative: "~x", "~gen";
     ),
-    // Tondo: 4 words (skonto, ostinato, arbeiterghetto, tondo).
-    declension!("tondo", 4, "~o";
-        nominative: "~o", "~os|~i";
-        genitive: "~os", "~os|~i";
-        dative: "~o", "~os|~i";
-        accusative: "~o", "~os|~i";
-    ),
-    // Beach: 4 words (beach, launch, bietsch, augenpatch).
-    declension!("beach", 4, "~";
-        nominative: "~", "~es";
-        genitive: "~es", "~es";
-        dative: "~", "~es";
-        accusative: "~", "~es";
-    ),
-    // Graduale: 4 words (pontifikale, graduale, zeremoniale, rationale).
-    declension!("graduale", 4, "~~";
-        nominative: "~~", "~i~n";
-        genitive: "~~", "~i~n";
-        dative: referred, "~i~n";
-        accusative: "~~", "~i~n";
-    ),
-    // Natanger: 4 words (natanger, schalauer, staufer, silurer).
-    declension!("natanger", 4, "~r";
-        nominative: "~r", "~r|~n";
-        genitive: "~rs", "~r|~n";
-        dative: referred, "~rn|~n";
-        accusative: "~r", "~r|~n";
+    // Ottis: 4 words (capsulitis, ottis, itoris, njunctivitis).
+    declension!("ottis", 4, "~~";
+        nominative: "~~", "~de~";
+        genitive: "~~", "~de~";
+        dative: referred, "~de~";
+        accusative: "~~", "~de~";
     ),
     // Slash: 4 words (slash, spielekanon, fächerkanon, wertekanon).
     declension!("slash", 4, "~";
@@ -2145,33 +1910,103 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 227] = [
         dative: referred, "~s|~es";
         accusative: "~", "~s|~es";
     ),
-    // Emissionsverb: 4 words (emissionsverb, visegrád-staat, eu-staat, gus-staat).
+    // Zeutik: 4 words (lew, zeutik, slew, kosmetik).
+    declension!("zeutik", 4, "~";
+        nominative: "~", "~a";
+        genitive: "~", "~a";
+        dative: referred, "~a";
+        accusative: "~", "~a";
+    ),
+    // Emissionsverb: 4 words (emissionsverb, eu-staat, gus-staat, egrád-staat).
     declension!("emissionsverb", 4, "~";
         nominative: "~", "~en";
         genitive: "~es|~s", "~en";
         dative: "~e|~", "~en";
         accusative: "~", "~en";
     ),
-    // Penis: 3 words (penis, saxophonpenis, hemipenis).
-    declension!("penis", 3, "~i~";
-        nominative: "~i~", "~i~se|~e~";
-        genitive: "~i~", "~i~se|~e~";
-        dative: referred, "~i~sen|~e~";
-        accusative: "~i~", "~i~se|~e~";
+    // Ematte: 4 words (molekel, quandel, sone, ematte).
+    declension!("ematte", 4, "~";
+        nominative: "~", "~";
+        genitive: "~|~s", "~";
+        dative: "~", "~n";
+        accusative: "~", "~";
     ),
-    // Kaktus: 3 words (kaktus, feigenkaktus, blattkaktus).
-    declension!("kaktus", 3, "~us";
-        nominative: "~us", "~een|~usse";
-        genitive: "~us|~usses", "~een|~usse";
-        dative: referred, "~een|~ussen";
-        accusative: "~us", "~een|~usse";
+    // Wiek: 4 words (wiek, unsch, türkisch, frequenzüberwachung).
+    declension!("wiek", 4, "~";
+        nominative: "~", "~en";
+        genitive: "~", "~en";
+        dative: "~", "~en";
+        accusative: "~", "~en";
     ),
-    // Mikwe: 3 words (marone, mikwe, abbate).
-    declension!("mikwe", 3, "~e";
-        nominative: "~e", "~en|~i";
-        genitive: "~e", "~en|~i";
-        dative: referred, "~en|~i";
-        accusative: "~e", "~en|~i";
+    // Ecco: 4 words (lachsrisotto, ecco, rago, pagallo).
+    declension!("ecco", 4, "~o";
+        nominative: "~o", "~os";
+        genitive: "~o|~os", "~os";
+        dative: referred, "~os";
+        accusative: "~o", "~os";
+    ),
+    // Uale: 4 words (ntifikale, uale, emoniale, ionale).
+    declension!("uale", 4, "~~";
+        nominative: "~~", "~i~n";
+        genitive: "~~", "~i~n";
+        dative: referred, "~i~n";
+        accusative: "~~", "~i~n";
+    ),
+    // Emis: 4 words (atis, emis, wernis, wandtschaftsverhältnis).
+    declension!("emis", 4, "~";
+        nominative: "~", "~se";
+        genitive: "~", "~se";
+        dative: "~", "~sen";
+        accusative: "~", "~se";
+    ),
+    // Herr: 3 words (herr, ingherr, henherr).
+    declension!("herr", 3, "~";
+        nominative: "~", "~en";
+        genitive: "~n|~en", "~en";
+        dative: "~n|~en", "~en";
+        accusative: "~n|~en", "~en";
+    ),
+    // Iris: 3 words (iris, ezies, tiens).
+    declension!("iris", 3, "~s";
+        nominative: "~s", "~s";
+        genitive: "~s", "~s";
+        dative: referred, "~s";
+        accusative: "~s", "~s";
+    ),
+    // Not: 3 words (not, noth, snot).
+    declension!("not", 3, "~o~";
+        nominative: "~o~", "~ö~e";
+        genitive: "~o~", "~ö~e";
+        dative: referred, "~ö~en";
+        accusative: "~o~", "~ö~e";
+    ),
+    // Korpus: 3 words (tempus, korpus, corpus).
+    declension!("korpus", 3, "~us";
+        nominative: "~us", "~ora";
+        genitive: "~us", "~ora";
+        dative: referred, "~ora";
+        accusative: "~us", "~ora";
+    ),
+    // Tochter: 3 words (tochter, stochter, storentochter).
+    declension!("tochter", 3, "~o~";
+        nominative: "~o~", "~ö~";
+        genitive: "~o~", "~ö~";
+        dative: referred, "~ö~n";
+        accusative: "~o~", "~ö~";
+    ),
+    // Att: 3 words (amt, aut, att).
+    declension!("att", 3, "a~";
+        nominative: "a~", "ä~er";
+        genitive: "a~es|a~s", "ä~er";
+        dative: referred, "ä~ern";
+        accusative: "a~", "ä~er";
+    ),
+    // Lump: 3 words (lump, apochromat, führherr).
+    declension!("lump", 3, "~";
+        nominative: "~", "~en|~e";
+        genitive: "~en|~s", "~en|~e";
+        dative: referred, "~en";
+        accusative: "~en|~", "~en|~e";
     ),
     // Seemann: 3 words (seemann, fährmann, buschmann).
     declension!("seemann", 3, "~mann";
@@ -2187,151 +2022,116 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 227] = [
         dative: referred, "~ä~en";
         accusative: "~aa~", "~ä~e";
     ),
-    // Thorax: 3 words (thorax, borax, pneumothorax).
-    declension!("thorax", 3, "~x";
-        nominative: "~x", "~xe";
-        genitive: "~xes", "~xe";
-        dative: referred, "~xen";
-        accusative: "~x", "~xe";
-    ),
-    // Antioxidans: 3 words (antioxidans, antikoagulans, determinans).
-    declension!("antioxidans", 3, "~s";
-        nominative: "~s", "~tien";
-        genitive: "~s", "~tien";
-        dative: referred, "~tien";
-        accusative: "~s", "~tien";
-    ),
-    // Konklave: 3 words (konklave, extemporale, missale).
-    declension!("konklave", 3, "~~";
-        nominative: "~~", "~~n|~i~n";
-        genitive: "~~s|~~", "~~n|~i~n";
-        dative: referred, "~~n|~i~n";
-        accusative: "~~", "~~n|~i~n";
-    ),
-    // Codex: 3 words (codex, pollex, vertex).
-    declension!("codex", 3, "~~x";
-        nominative: "~~x", "~ic~s";
-        genitive: "~~x", "~ic~s";
-        dative: referred, "~ic~s";
-        accusative: "~~x", "~ic~s";
-    ),
-    // Zingulum: 3 words (cingulum, zingulum, faktotum).
-    declension!("zingulum", 3, "~um";
+    // Ngulum: 3 words (cingulum, faktotum, ngulum).
+    declension!("ngulum", 3, "~um";
         nominative: "~um", "~ums|~a";
         genitive: "~ums", "~ums|~a";
         dative: referred, "~ums|~a";
         accusative: "~um", "~ums|~a";
     ),
-    // Vigil: 3 words (vigil, epithel, antezedenz).
-    declension!("vigil", 3, "~";
-        nominative: "~", "~ien";
-        genitive: "~", "~ien";
-        dative: referred, "~ien";
-        accusative: "~", "~ien";
+    // Onus: 3 words (opus, onus, genus).
+    declension!("onus", 3, "~us";
+        nominative: "~us", "~era";
+        genitive: "~us", "~era";
+        dative: referred, "~era";
+        accusative: "~us", "~era";
     ),
-    // Forzeps: 3 words (forzeps, forceps, paterfamilias).
-    declension!("forzeps", 3, "~e~~";
-        nominative: "~e~~", "~e~~|~i~e~";
-        genitive: "~e~~", "~e~~|~i~e~";
-        dative: referred, "~e~~|~i~e~";
-        accusative: "~e~~", "~e~~|~i~e~";
+    // Tlatsch: 3 words (beach, augenpatch, tlatsch).
+    declension!("tlatsch", 3, "~";
+        nominative: "~", "~es";
+        genitive: "~es", "~es";
+        dative: "~", "~es";
+        accusative: "~", "~es";
     ),
-    // Subsellium: 3 words (rekrutierungszentrum, subsellium, vedastudium).
-    declension!("subsellium", 3, "~um";
-        nominative: "~um", "~en";
-        genitive: "~ums", "~en";
-        dative: "~um", "~en";
-        accusative: "~um", "~en";
-    ),
-    // Bitok: 3 words (kintopp, orchestrion, bitok).
-    declension!("bitok", 3, "~o~";
-        nominative: "~o~", "~o~s";
-        genitive: "~o~s", "~o~s";
-        dative: referred, "~o~s";
-        accusative: "~o~", "~o~s";
-    ),
-    // Kursus: 3 words (kursus, sprachkursus, abendkursus).
-    declension!("kursus", 3, "~us";
-        nominative: "~us", "~e";
-        genitive: "~us", "~e";
-        dative: referred, "~en";
-        accusative: "~us", "~e";
-    ),
-    // Profoss: 3 words (steinmetz, sauhirt, profoss).
-    declension!("profoss", 3, "~";
-        nominative: "~", "~e|~en";
-        genitive: "~en", "~e|~en";
-        dative: "~en", "~en";
-        accusative: "~en", "~e|~en";
-    ),
-    // Achtgroschenjunge: 3 words (achtgroschenjunge, negerjunge, gassenjunge).
-    declension!("achtgroschenjunge", 3, "~e";
-        nominative: "~e", "~en|~s|~ens";
-        genitive: "~en", "~en|~s|~ens";
-        dative: "~en", "~en|~s|~ens";
-        accusative: "~en", "~en|~s|~ens";
-    ),
-    // Azymon: 3 words (anantapodoton, azymon, eidolon).
-    declension!("azymon", 3, "~on";
-        nominative: "~on", "~a";
-        genitive: "~on|~ons", "~a";
-        dative: referred, "~a";
-        accusative: "~on", "~a";
-    ),
-    // Fettwulst: 3 words (nachfluchtgrund, scheingeschwulst, fettwulst).
-    declension!("fettwulst", 3, "~u~";
-        nominative: "~u~", "~ü~e|~u~e";
-        genitive: "~u~es|~u~|~u~s", "~ü~e|~u~e";
-        dative: "~u~", "~ü~en|~u~en";
-        accusative: "~u~", "~ü~e|~u~e";
-    ),
-    // Freie: 3 words (freie, aranese, sinnesphysiologe).
-    declension!("freie", 3, "~";
-        nominative: "~", "~n";
-        genitive: "~n", "~n";
-        dative: "~n", "~n";
-        accusative: "~", "~n";
-    ),
-    // Gelpolster: 3 words (sitzpolster, fettpolster, gelpolster).
-    declension!("gelpolster", 3, "~o~";
-        nominative: "~o~", "~o~|~ö~";
-        genitive: "~o~s", "~o~|~ö~";
-        dative: "~o~", "~o~n|~ö~n";
-        accusative: "~o~", "~o~|~ö~";
-    ),
-    // Repräsentativsystem: 3 words (dynatron, bürgerheer, repräsentativsystem).
-    declension!("repräsentativsystem", 3, "~";
-        nominative: "~", "~e";
-        genitive: "~s", "~e";
-        dative: referred, "~e";
-        accusative: "~", "~e";
-    ),
-    // Espartogras: 3 words (mithras-kult, espartogras, minimalgehalt).
+    // Espartogras: 3 words (espartogras, minimalgehalt, hras-kult).
     declension!("espartogras", 3, "~a~";
         nominative: "~a~", "~ä~er";
         genitive: "~a~es", "~ä~er";
         dative: "~a~", "~ä~ern";
         accusative: "~a~", "~ä~er";
     ),
-    // Eva: 3 words (eva, minerva, laurisilva).
-    declension!("eva", 3, "~";
+    // Präsentativsystem: 3 words (bürgerheer, natron, präsentativsystem).
+    declension!("präsentativsystem", 3, "~";
         nominative: "~", "~e";
         genitive: "~s", "~e";
-        dative: "~", "~e";
+        dative: referred, "~e";
         accusative: "~", "~e";
     ),
-    // Kalfaterer: 3 words (sicherheitsroboter, kalfaterer, kampfroboter).
-    declension!("kalfaterer", 3, "~";
+    // Faterer: 3 words (sicherheitsroboter, kampfroboter, faterer).
+    declension!("faterer", 3, "~";
         nominative: "~", "~";
         genitive: "~s", "~";
         dative: referred, "~n";
         accusative: "~n", "~";
     ),
-    // Narrenattribut: 3 words (narrenattribut, südafrikaurlaub, fischerei-verein).
-    declension!("narrenattribut", 3, "~";
+    // Afrikaurlaub: 3 words (narrenattribut, afrikaurlaub, -verein).
+    declension!("afrikaurlaub", 3, "~";
         nominative: "~", "~e";
         genitive: "~es|~s", "~e";
         dative: referred, "~en";
         accusative: "~", "~";
+    ),
+    // Loß: 3 words (loß, hängeschloß, schloß).
+    declension!("loß", 3, "~oß";
+        nominative: "~oß", "~össer";
+        genitive: "~osses", "~össer";
+        dative: referred, "~össern";
+        accusative: "~oß", "~össer";
+    ),
+    // Orax: 3 words (borax, pneumothorax, orax).
+    declension!("orax", 3, "~x";
+        nominative: "~x", "~xe";
+        genitive: "~xes", "~xe";
+        dative: referred, "~xen";
+        accusative: "~x", "~xe";
+    ),
+    // Oxidans: 3 words (oxidans, koagulans, terminans).
+    declension!("oxidans", 3, "~s";
+        nominative: "~s", "~tien";
+        genitive: "~s", "~tien";
+        dative: referred, "~tien";
+        accusative: "~s", "~tien";
+    ),
+    // Gil: 3 words (gil, thel, ezedenz).
+    declension!("gil", 3, "~";
+        nominative: "~", "~ien";
+        genitive: "~", "~ien";
+        dative: referred, "~ien";
+        accusative: "~", "~ien";
+    ),
+    // Ros: 3 words (ros, taxis, heros).
+    declension!("ros", 3, "~s";
+        nominative: "~s", "~en";
+        genitive: "~s", "~en";
+        dative: referred, "~en";
+        accusative: "~s", "~en";
+    ),
+    // Oos: 3 words (ooß, oos, ooss).
+    declension!("oos", 3, "oo~";
+        nominative: "oo~", "ö~e";
+        genitive: "oo~es", "ö~e";
+        dative: referred, "ö~en";
+        accusative: "oo~", "ö~e";
+    ),
+    // Sellium: 3 words (krutierungszentrum, sellium, dastudium).
+    declension!("sellium", 3, "~um";
+        nominative: "~um", "~en";
+        genitive: "~ums", "~en";
+        dative: "~um", "~en";
+        accusative: "~um", "~en";
+    ),
+    // Tok: 3 words (ntopp, chestrion, tok).
+    declension!("tok", 3, "~o~";
+        nominative: "~o~", "~o~s";
+        genitive: "~o~s", "~o~s";
+        dative: referred, "~o~s";
+        accusative: "~o~", "~o~s";
+    ),
+    // Eva: 3 words (eva, nerva, risilva).
+    declension!("eva", 3, "~";
+        nominative: "~", "~e";
+        genitive: "~s", "~e";
+        dative: "~", "~e";
+        accusative: "~", "~e";
     ),
 ];

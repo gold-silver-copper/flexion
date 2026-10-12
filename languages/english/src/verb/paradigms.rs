@@ -32,341 +32,275 @@ macro_rules! conjugation {
 /// Every conjugation learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Conjugation {
-    /// Like `have`: 16,893 words.
-    Have,
-    /// Like `burn`: 13,595 words.
-    Burn,
-    /// Like `pass`: 2,042 words.
+    /// Like `ike`: 9,547 words.
+    Ike,
+    /// Like `eak`: 6,603 words.
+    Eak,
+    /// Like `pass`: 934 words.
     Pass,
-    /// Like `carry`: 1,477 words.
-    Carry,
-    /// Like `drop`: 493 words.
+    /// Like `try`: 867 words.
+    Try,
+    /// Like `drop`: 208 words.
     Drop,
-    /// Like `spot`: 402 words.
+    /// Like `spot`: 200 words.
     Spot,
-    /// Like `bag`: 313 words.
+    /// Like `bag`: 173 words.
     Bag,
-    /// Like `skin`: 214 words.
-    Skin,
-    /// Like `hear`: 183 words.
+    /// Like `hear`: 136 words.
     Hear,
-    /// Like `scrub`: 182 words.
-    Scrub,
-    /// Like `slam`: 179 words.
-    Slam,
-    /// Like `cast`: 141 words.
-    Cast,
-    /// Like `stir`: 130 words.
-    Stir,
-    /// Like `set`: 128 words.
-    Set,
-    /// Like `shred`: 116 words.
-    Shred,
-    /// Like `distil`: 89 words.
-    Distil,
-    /// Like `bend`: 68 words.
-    Bend,
-    /// Like `die`: 62 words.
-    Die,
-    /// Like `bleed`: 61 words.
-    Bleed,
-    /// Like `bind`: 60 words.
-    Bind,
-    /// Like `keep`: 56 words.
-    Keep,
-    /// Like `panic`: 55 words.
-    Panic,
-    /// Like `spring`: 46 words.
-    Spring,
-    /// Like `lay`: 46 words.
-    Lay,
-    /// Like `blow`: 46 words.
-    Blow,
-    /// Like `break`: 46 words.
-    Break,
-    /// Like `take`: 41 words.
-    Take,
-    /// Like `show`: 40 words.
-    Show,
-    /// Like `wring`: 39 words.
-    Wring,
-    /// Like `drive`: 36 words.
-    Drive,
-    /// Like `fix`: 28 words.
-    Fix,
-    /// Like `wear`: 28 words.
-    Wear,
-    /// Like `sit`: 28 words.
-    Sit,
-    /// Like `write`: 27 words.
-    Write,
-    /// Like `hold`: 25 words.
-    Hold,
-    /// Like `stand`: 23 words.
-    Stand,
-    /// Like `draw`: 23 words.
-    Draw,
-    /// Like `tell`: 23 words.
-    Tell,
-    /// Like `queue`: 22 words.
-    Queue,
-    /// Like `rid`: 22 words.
-    Rid,
-    /// Like `ride`: 22 words.
-    Ride,
-    /// Like `make`: 20 words.
-    Make,
-    /// Like `give`: 18 words.
-    Give,
-    /// Like `dive`: 18 words.
-    Dive,
-    /// Like `mislead`: 18 words.
-    Mislead,
-    /// Like `run`: 18 words.
+    /// Like `club`: 119 words.
+    Club,
+    /// Like `run`: 111 words.
     Run,
-    /// Like `think`: 17 words.
-    Think,
-    /// Like `shoot`: 17 words.
-    Shoot,
-    /// Like `alight`: 17 words.
-    Alight,
-    /// Like `gild`: 17 words.
-    Gild,
-    /// Like `forbear`: 16 words.
+    /// Like `slam`: 102 words.
+    Slam,
+    /// Like `bed`: 70 words.
+    Bed,
+    /// Like `cur`: 59 words.
+    Cur,
+    /// Like `til`: 50 words.
+    Til,
+    /// Like `nic`: 48 words.
+    Nic,
+    /// Like `cast`: 48 words.
+    Cast,
+    /// Like `die`: 44 words.
+    Die,
+    /// Like `set`: 37 words.
+    Set,
+    /// Like `sink`: 23 words.
+    Sink,
+    /// Like `bend`: 21 words.
+    Bend,
+    /// Like `bind`: 21 words.
+    Bind,
+    /// Like `fix`: 19 words.
+    Fix,
+    /// Like `forbear`: 18 words.
     Forbear,
-    /// Like `overgo`: 16 words.
-    Overgo,
-    /// Like `should`: 16 words.
-    Should,
-    /// Like `see`: 15 words.
-    See,
-    /// Like `beat`: 15 words.
-    Beat,
-    /// Like `bite`: 15 words.
-    Bite,
-    /// Like `come`: 15 words.
-    Come,
-    /// Like `fall`: 14 words.
-    Fall,
-    /// Like `spill`: 14 words.
-    Spill,
-    /// Like `spin`: 14 words.
-    Spin,
-    /// Like `undo`: 13 words.
-    Undo,
-    /// Like `slide`: 13 words.
-    Slide,
-    /// Like `weave`: 12 words.
-    Weave,
-    /// Like `abide`: 11 words.
-    Abide,
-    /// Like `quiz`: 11 words.
-    Quiz,
-    /// Like `buy`: 11 words.
-    Buy,
-    /// Like `bring`: 11 words.
-    Bring,
-    /// Like `freeze`: 11 words.
-    Freeze,
-    /// Like `rec`: 11 words.
-    Rec,
-    /// Like `beteach`: 11 words.
-    Beteach,
+    /// Like `dig`: 18 words.
+    Dig,
+    /// Like `show`: 17 words.
+    Show,
+    /// Like `eed`: 17 words.
+    Eed,
+    /// Like `take`: 16 words.
+    Take,
+    /// Like `mislead`: 16 words.
+    Mislead,
+    /// Like `daylight`: 16 words.
+    Daylight,
+    /// Like `ould`: 16 words.
+    Ould,
+    /// Like `keep`: 14 words.
+    Keep,
+    /// Like `tgo`: 13 words.
+    Tgo,
+    /// Like `bespeak`: 13 words.
+    Bespeak,
+    /// Like `eue`: 12 words.
+    Eue,
+    /// Like `rise`: 12 words.
+    Rise,
+    /// Like `fic`: 11 words.
+    Fic,
     /// Like `octopus`: 11 words.
     Octopus,
-    /// Like `catch`: 10 words.
-    Catch,
-    /// Like `chef`: 10 words.
+    /// Like `quiz`: 10 words.
+    Quiz,
+    /// Like `lay`: 10 words.
+    Lay,
+    /// Like `sit`: 10 words.
+    Sit,
+    /// Like `rdo`: 10 words.
+    Rdo,
+    /// Like `make`: 10 words.
+    Make,
+    /// Like `rid`: 9 words.
+    Rid,
+    /// Like `blow`: 8 words.
+    Blow,
+    /// Like `beat`: 8 words.
+    Beat,
+    /// Like `chef`: 8 words.
     Chef,
-    /// Like `hang`: 9 words.
-    Hang,
-    /// Like `lie`: 9 words.
-    Lie,
-    /// Like `seek`: 9 words.
-    Seek,
-    /// Like `strike`: 9 words.
-    Strike,
-    /// Like `forget`: 8 words.
-    Forget,
-    /// Like `leave`: 8 words.
-    Leave,
-    /// Like `overeat`: 8 words.
-    Overeat,
-    /// Like `swim`: 8 words.
-    Swim,
-    /// Like `tread`: 8 words.
-    Tread,
-    /// Like `melt`: 8 words.
-    Melt,
-    /// Like `gale`: 8 words.
-    Gale,
-    /// Like `gas`: 7 words.
-    Gas,
-    /// Like `dig`: 7 words.
-    Dig,
-    /// Like `light`: 7 words.
-    Light,
-    /// Like `wind`: 7 words.
-    Wind,
-    /// Like `shiv`: 7 words.
+    /// Like `oot`: 8 words.
+    Oot,
+    /// Like `wear`: 7 words.
+    Wear,
+    /// Like `stand`: 7 words.
+    Stand,
+    /// Like `draw`: 7 words.
+    Draw,
+    /// Like `hold`: 7 words.
+    Hold,
+    /// Like `give`: 6 words.
+    Give,
+    /// Like `think`: 6 words.
+    Think,
+    /// Like `ride`: 6 words.
+    Ride,
+    /// Like `spin`: 6 words.
+    Spin,
+    /// Like `shiv`: 6 words.
     Shiv,
-    /// Like `win`: 6 words.
-    Win,
-    /// Like `wake`: 6 words.
-    Wake,
-    /// Like `choose`: 6 words.
-    Choose,
-    /// Like `fly`: 6 words.
-    Fly,
-    /// Like `backslide`: 6 words.
-    Backslide,
-    /// Like `belay`: 6 words.
-    Belay,
     /// Like `larn`: 6 words.
     Larn,
-    /// Like `lose`: 5 words.
-    Lose,
-    /// Like `dwell`: 5 words.
+    /// Like `bite`: 5 words.
+    Bite,
+    /// Like `dive`: 5 words.
+    Dive,
+    /// Like `belay`: 5 words.
+    Belay,
+    /// Like `write`: 5 words.
+    Write,
+    /// Like `shine`: 5 words.
+    Shine,
+    /// Like `restrike`: 5 words.
+    Restrike,
+    /// Like `weave`: 4 words.
+    Weave,
+    /// Like `fall`: 4 words.
+    Fall,
+    /// Like `dwell`: 4 words.
     Dwell,
-    /// Like `flee`: 5 words.
-    Flee,
-    /// Like `get`: 5 words.
+    /// Like `get`: 4 words.
     Get,
-    /// Like `begin`: 4 words.
-    Begin,
-    /// Like `plead`: 4 words.
-    Plead,
-    /// Like `trolley`: 4 words.
-    Trolley,
-    /// Like `birdie`: 4 words.
-    Birdie,
-    /// Like `might`: 4 words.
-    Might,
-    /// Like `slay`: 3 words.
-    Slay,
-    /// Like `swell`: 3 words.
-    Swell,
-    /// Like `dress`: 3 words.
-    Dress,
-    /// Like `braai`: 3 words.
-    Braai,
-    /// Like `downstrike`: 3 words.
-    Downstrike,
+    /// Like `seek`: 4 words.
+    Seek,
+    /// Like `swim`: 4 words.
+    Swim,
+    /// Like `gild`: 4 words.
+    Gild,
+    /// Like `rede`: 4 words.
+    Rede,
+    /// Like `ell`: 4 words.
+    Ell,
+    /// Like `eave`: 4 words.
+    Eave,
+    /// Like `ive`: 4 words.
+    Ive,
+    /// Like `olley`: 4 words.
+    Olley,
+    /// Like `rdie`: 4 words.
+    Rdie,
+    /// Like `gas`: 3 words.
+    Gas,
+    /// Like `see`: 3 words.
+    See,
+    /// Like `lose`: 3 words.
+    Lose,
+    /// Like `wake`: 3 words.
+    Wake,
+    /// Like `hang`: 3 words.
+    Hang,
+    /// Like `backslide`: 3 words.
+    Backslide,
+    /// Like `tell`: 3 words.
+    Tell,
+    /// Like `wind`: 3 words.
+    Wind,
+    /// Like `melt`: 3 words.
+    Melt,
+    /// Like `aai`: 3 words.
+    Aai,
+    /// Like `must`: 3 words.
+    Must,
+    /// Like `light`: 3 words.
+    Light,
 }
 
 impl Conjugation {
     /// Every conjugation, in order.
-    pub const ALL: [Conjugation; 110] = [
-        Conjugation::Have,
-        Conjugation::Burn,
+    pub const ALL: [Conjugation; 88] = [
+        Conjugation::Ike,
+        Conjugation::Eak,
         Conjugation::Pass,
-        Conjugation::Carry,
+        Conjugation::Try,
         Conjugation::Drop,
         Conjugation::Spot,
         Conjugation::Bag,
-        Conjugation::Skin,
         Conjugation::Hear,
-        Conjugation::Scrub,
+        Conjugation::Club,
+        Conjugation::Run,
         Conjugation::Slam,
+        Conjugation::Bed,
+        Conjugation::Cur,
+        Conjugation::Til,
+        Conjugation::Nic,
         Conjugation::Cast,
-        Conjugation::Stir,
-        Conjugation::Set,
-        Conjugation::Shred,
-        Conjugation::Distil,
-        Conjugation::Bend,
         Conjugation::Die,
-        Conjugation::Bleed,
+        Conjugation::Set,
+        Conjugation::Sink,
+        Conjugation::Bend,
         Conjugation::Bind,
-        Conjugation::Keep,
-        Conjugation::Panic,
-        Conjugation::Spring,
-        Conjugation::Lay,
-        Conjugation::Blow,
-        Conjugation::Break,
-        Conjugation::Take,
-        Conjugation::Show,
-        Conjugation::Wring,
-        Conjugation::Drive,
         Conjugation::Fix,
-        Conjugation::Wear,
+        Conjugation::Forbear,
+        Conjugation::Dig,
+        Conjugation::Show,
+        Conjugation::Eed,
+        Conjugation::Take,
+        Conjugation::Mislead,
+        Conjugation::Daylight,
+        Conjugation::Ould,
+        Conjugation::Keep,
+        Conjugation::Tgo,
+        Conjugation::Bespeak,
+        Conjugation::Eue,
+        Conjugation::Rise,
+        Conjugation::Fic,
+        Conjugation::Octopus,
+        Conjugation::Quiz,
+        Conjugation::Lay,
         Conjugation::Sit,
-        Conjugation::Write,
-        Conjugation::Hold,
+        Conjugation::Rdo,
+        Conjugation::Make,
+        Conjugation::Rid,
+        Conjugation::Blow,
+        Conjugation::Beat,
+        Conjugation::Chef,
+        Conjugation::Oot,
+        Conjugation::Wear,
         Conjugation::Stand,
         Conjugation::Draw,
-        Conjugation::Tell,
-        Conjugation::Queue,
-        Conjugation::Rid,
-        Conjugation::Ride,
-        Conjugation::Make,
+        Conjugation::Hold,
         Conjugation::Give,
-        Conjugation::Dive,
-        Conjugation::Mislead,
-        Conjugation::Run,
         Conjugation::Think,
-        Conjugation::Shoot,
-        Conjugation::Alight,
-        Conjugation::Gild,
-        Conjugation::Forbear,
-        Conjugation::Overgo,
-        Conjugation::Should,
-        Conjugation::See,
-        Conjugation::Beat,
-        Conjugation::Bite,
-        Conjugation::Come,
-        Conjugation::Fall,
-        Conjugation::Spill,
+        Conjugation::Ride,
         Conjugation::Spin,
-        Conjugation::Undo,
-        Conjugation::Slide,
-        Conjugation::Weave,
-        Conjugation::Abide,
-        Conjugation::Quiz,
-        Conjugation::Buy,
-        Conjugation::Bring,
-        Conjugation::Freeze,
-        Conjugation::Rec,
-        Conjugation::Beteach,
-        Conjugation::Octopus,
-        Conjugation::Catch,
-        Conjugation::Chef,
-        Conjugation::Hang,
-        Conjugation::Lie,
-        Conjugation::Seek,
-        Conjugation::Strike,
-        Conjugation::Forget,
-        Conjugation::Leave,
-        Conjugation::Overeat,
-        Conjugation::Swim,
-        Conjugation::Tread,
-        Conjugation::Melt,
-        Conjugation::Gale,
-        Conjugation::Gas,
-        Conjugation::Dig,
-        Conjugation::Light,
-        Conjugation::Wind,
         Conjugation::Shiv,
-        Conjugation::Win,
-        Conjugation::Wake,
-        Conjugation::Choose,
-        Conjugation::Fly,
-        Conjugation::Backslide,
-        Conjugation::Belay,
         Conjugation::Larn,
-        Conjugation::Lose,
+        Conjugation::Bite,
+        Conjugation::Dive,
+        Conjugation::Belay,
+        Conjugation::Write,
+        Conjugation::Shine,
+        Conjugation::Restrike,
+        Conjugation::Weave,
+        Conjugation::Fall,
         Conjugation::Dwell,
-        Conjugation::Flee,
         Conjugation::Get,
-        Conjugation::Begin,
-        Conjugation::Plead,
-        Conjugation::Trolley,
-        Conjugation::Birdie,
-        Conjugation::Might,
-        Conjugation::Slay,
-        Conjugation::Swell,
-        Conjugation::Dress,
-        Conjugation::Braai,
-        Conjugation::Downstrike,
+        Conjugation::Seek,
+        Conjugation::Swim,
+        Conjugation::Gild,
+        Conjugation::Rede,
+        Conjugation::Ell,
+        Conjugation::Eave,
+        Conjugation::Ive,
+        Conjugation::Olley,
+        Conjugation::Rdie,
+        Conjugation::Gas,
+        Conjugation::See,
+        Conjugation::Lose,
+        Conjugation::Wake,
+        Conjugation::Hang,
+        Conjugation::Backslide,
+        Conjugation::Tell,
+        Conjugation::Wind,
+        Conjugation::Melt,
+        Conjugation::Aai,
+        Conjugation::Must,
+        Conjugation::Light,
     ];
 
     /// Its table.
@@ -384,445 +318,357 @@ impl flexion::Label for Conjugation {
     }
 }
 
-pub(super) static CONJUGATIONS: [Paradigm<'static>; 110] = [
-    // Have: 16,893 words (nonsense, minute, trade, adjective, substantive, patronage).
-    conjugation!("have", 16893, "~e";
+pub(super) static CONJUGATIONS: [Paradigm<'static>; 88] = [
+    // Ike: 9,547 words (eagle, name, abegge, able, bone, google).
+    conjugation!("ike", 9547, "~e";
         verb: "~e", "~es", "~ed", "~ing", "~ed";
     ),
-    // Burn: 13,595 words (portmanteau, word, book, pound, pond, crow).
-    conjugation!("burn", 13595, "~";
+    // Eak: 6,603 words (word, book, pond, crow, october, day).
+    conjugation!("eak", 6603, "~";
         verb: "~", "~s", "~ed", "~ing", "~ed";
     ),
-    // Pass: 2,042 words (march, abash, abolish, abroach, abscess, absciss).
-    conjugation!("pass", 2042, "~";
+    // Pass: 934 words (lens, zero, tax, sms, affix, pi).
+    conjugation!("pass", 934, "~";
         verb: "~", "~es", "~ed", "~ing", "~ed";
     ),
-    // Carry: 1,477 words (dictionary, sky, vivify, nullify, treaty, policy).
-    conjugation!("carry", 1477, "~y";
+    // Try: 867 words (sky, nullify, baby, ruby, cry, fly).
+    conjugation!("try", 867, "~y";
         verb: "~y", "~ies", "~ied", "~ying", "~ied";
     ),
-    // Drop: 493 words (swap, swop, crap, map, pip, bap).
-    conjugation!("drop", 493, "~";
+    // Drop: 208 words (swap, swop, crap, map, pip, bap).
+    conjugation!("drop", 208, "~";
         verb: "~", "~s", "~ped", "~ping", "~ped";
     ),
-    // Spot: 402 words (cat, abet, abut, het, bit, bot).
-    conjugation!("spot", 402, "~";
+    // Spot: 200 words (cat, abet, abut, het, bit, bot).
+    conjugation!("spot", 200, "~";
         verb: "~", "~s", "~ted", "~ting", "~ted";
     ),
-    // Bag: 313 words (big, gag, drug, twig, beg, leg).
-    conjugation!("bag", 313, "~";
+    // Bag: 173 words (big, gag, drug, twig, beg, leg).
+    conjugation!("bag", 173, "~";
         verb: "~", "~s", "~ged", "~ging", "~ged";
     ),
-    // Skin: 214 words (van, in, sun, man, thin, son).
-    conjugation!("skin", 214, "~";
-        verb: "~", "~s", "~ned", "~ning", "~ned";
-    ),
-    // Hear: 183 words (free, pie, thee, toe, cooee, tree).
-    conjugation!("hear", 183, "~";
+    // Hear: 136 words (free, pie, thee, toe, tree, dye).
+    conjugation!("hear", 136, "~";
         verb: "~", "~s", "~d", "~ing", "~d";
     ),
-    // Scrub: 182 words (ab, lob, dub, bib, stab, pub).
-    conjugation!("scrub", 182, "~";
+    // Club: 119 words (ab, lob, dub, bib, stab, pub).
+    conjugation!("club", 119, "~";
         verb: "~", "~s", "~bed", "~bing", "~bed";
     ),
-    // Slam: 179 words (dotcom, cum, um, stem, plum, om).
-    conjugation!("slam", 179, "~";
+    // Run: 111 words (van, in, sun, man, win, thin).
+    conjugation!("run", 111, "~";
+        verb: "~", "~s", "~ned", "~ning", "~ned";
+    ),
+    // Slam: 102 words (cum, um, stem, plum, om, bam).
+    conjugation!("slam", 102, "~";
         verb: "~", "~s", "~med", "~ming", "~med";
     ),
-    // Cast: 141 words (forecast, cast, read, broadcast, burst, cost).
-    conjugation!("cast", 141, "~";
-        verb: "~", "~s", "~", "~ing", "~";
-    ),
-    // Stir: 130 words (abhor, star, war, defer, upbar, er).
-    conjugation!("stir", 130, "~";
-        verb: "~", "~s", "~red", "~ring", "~red";
-    ),
-    // Set: 128 words (offset, yet, bet, cut, hit, input).
-    conjugation!("set", 128, "~";
-        verb: "~", "~s", "~", "~ting", "~";
-    ),
-    // Shred: 116 words (cod, red, squid, god, bad, bed).
-    conjugation!("shred", 116, "~";
+    // Bed: 70 words (cod, red, squid, god, bad, bed).
+    conjugation!("bed", 70, "~";
         verb: "~", "~s", "~ded", "~ding", "~ded";
     ),
-    // Distil: 89 words (canal, control, appel, halal, compel, gel).
-    conjugation!("distil", 89, "~";
+    // Cur: 59 words (star, war, er, far, stir, sir).
+    conjugation!("cur", 59, "~";
+        verb: "~", "~s", "~red", "~ring", "~red";
+    ),
+    // Til: 50 words (gel, avel, pal, wel, yel, skol).
+    conjugation!("til", 50, "~";
         verb: "~", "~s", "~led", "~ling", "~led";
     ),
-    // Bend: 68 words (send, bend, build, lend, rebuild, spend).
-    conjugation!("bend", 68, "~d";
-        verb: "~d", "~ds", "~t", "~ding", "~t";
-    ),
-    // Die: 62 words (die, noogie, tie, sie, auntie, vie).
-    conjugation!("die", 62, "~~e";
-        verb: "~~e", "~~es", "~~ed", "~y~ng", "~~ed";
-    ),
-    // Bleed: 61 words (upbreed, bleed, breed, feed, interbreed, meet).
-    conjugation!("bleed", 61, "~e~";
-        verb: "~e~", "~e~s", "~~", "~e~ing", "~~";
-    ),
-    // Bind: 60 words (upbind, bind, fight, find, grind, rebind).
-    conjugation!("bind", 60, "~i~";
-        verb: "~i~", "~i~s", "~ou~", "~i~ing", "~ou~";
-    ),
-    // Keep: 56 words (creep, feel, keep, kneel, oversleep, sleep).
-    conjugation!("keep", 56, "~e~";
-        verb: "~e~", "~e~s", "~~t", "~e~ing", "~~t";
-    ),
-    // Panic: 55 words (metric, grok, music, hydraulic, yak, traffic).
-    conjugation!("panic", 55, "~";
+    // Nic: 48 words (grok, music, yak, kek, logic, bok).
+    conjugation!("nic", 48, "~";
         verb: "~", "~s", "~ked", "~king", "~ked";
     ),
-    // Spring: 46 words (spring, shrink, drink, sing, stink, sink).
-    conjugation!("spring", 46, "~i~";
+    // Cast: 48 words (cast, read, burst, cost, hurt, thrust).
+    conjugation!("cast", 48, "~";
+        verb: "~", "~s", "~", "~ing", "~";
+    ),
+    // Die: 44 words (die, lie, tie, sie, vie, hie).
+    conjugation!("die", 44, "~~e";
+        verb: "~~e", "~~es", "~~ed", "~y~ng", "~~ed";
+    ),
+    // Set: 37 words (yet, bet, cut, hit, knit, let).
+    conjugation!("set", 37, "~";
+        verb: "~", "~s", "~", "~ting", "~";
+    ),
+    // Sink: 23 words (shrink, drink, sing, begin, stink, rin).
+    conjugation!("sink", 23, "~i~";
         verb: "~i~", "~i~s", "~a~", "~i~ing", "~u~";
     ),
-    // Lay: 46 words (say, lay, mislay, overlay, overpay, pay).
-    conjugation!("lay", 46, "~y";
-        verb: "~y", "~ys", "~id", "~ying", "~id";
+    // Bend: 21 words (send, bend, build, lend, spend, rend).
+    conjugation!("bend", 21, "~d";
+        verb: "~d", "~ds", "~t", "~ding", "~t";
     ),
-    // Blow: 46 words (know, upblow, blow, grow, outgrow, overthrow).
-    conjugation!("blow", 46, "~o~";
-        verb: "~o~", "~o~s", "~e~", "~o~ing", "~o~n";
+    // Bind: 21 words (bind, fight, find, rewind, unwind, upwind).
+    conjugation!("bind", 21, "~i~";
+        verb: "~i~", "~i~s", "~ou~", "~i~ing", "~ou~";
     ),
-    // Break: 46 words (upbreak, break, speak, housebreak, misspeak, outbreak).
-    conjugation!("break", 46, "~ea~";
-        verb: "~ea~", "~ea~s", "~o~e", "~ea~ing", "~o~en";
+    // Fix: 19 words (deal, born, gar, fix, daydream, uplean).
+    conjugation!("fix", 19, "~";
+        verb: "~", "~s", "~t|~ed", "~ing", "~t|~ed";
     ),
-    // Take: 41 words (take, forsake, mistake, overtake, partake, shake).
-    conjugation!("take", 41, "~a~e";
-        verb: "~a~e", "~a~es", "~oo~", "~a~ing", "~a~en";
-    ),
-    // Show: 40 words (shew, mow, sew, show, strew, sow).
-    conjugation!("show", 40, "~";
-        verb: "~", "~s", "~ed", "~ing", "~n";
-    ),
-    // Wring: 39 words (wring, cling, fling, hamstring, sling, sting).
-    conjugation!("wring", 39, "~i~";
-        verb: "~i~", "~i~s", "~u~", "~i~ing", "~u~";
-    ),
-    // Drive: 36 words (arise, drive, rise, strive, uprise, shrive).
-    conjugation!("drive", 36, "~i~e";
-        verb: "~i~e", "~i~es", "~o~e", "~i~ing", "~i~en";
-    ),
-    // Fix: 28 words (deal, born, gar, fix, misdeal, daydream).
-    conjugation!("fix", 28, "~";
-        verb: "~", "~s", "~t", "~ing", "~t";
-    ),
-    // Wear: 28 words (abear, tear, swear, wear, forswear, foreswear).
-    conjugation!("wear", 28, "~ea~";
-        verb: "~ea~", "~ea~s", "~o~e", "~ea~ing", "~o~n";
-    ),
-    // Sit: 28 words (shit, sit, babysit, resit, housesit, birdsit).
-    conjugation!("sit", 28, "~i~";
-        verb: "~i~", "~i~s", "~a~", "~i~ting", "~a~";
-    ),
-    // Write: 27 words (write, rewrite, underwrite, smite, ghostwrite, typewrite).
-    conjugation!("write", 27, "~i~e";
-        verb: "~i~e", "~i~es", "~o~e", "~i~ing", "~i~ten";
-    ),
-    // Hold: 25 words (behold, hold, uphold, withhold, stranglehold, handhold).
-    conjugation!("hold", 25, "~o~";
-        verb: "~o~", "~o~s", "~e~", "~o~ing", "~e~";
-    ),
-    // Stand: 23 words (stand, misunderstand, understand, withstand, handstand, headstand).
-    conjugation!("stand", 23, "~an~";
-        verb: "~an~", "~an~s", "~oo~", "~an~ing", "~oo~";
-    ),
-    // Draw: 23 words (draw, overdraw, withdraw, updraw, redraw, outdraw).
-    conjugation!("draw", 23, "~a~";
-        verb: "~a~", "~a~s", "~e~", "~a~ing", "~a~n";
-    ),
-    // Tell: 23 words (foretell, outsell, oversell, resell, sell, tell).
-    conjugation!("tell", 23, "~e~l";
-        verb: "~e~l", "~e~ls", "~o~d", "~e~ling", "~o~d";
-    ),
-    // Queue: 22 words (blue, true, horseshoe, coyote, meme, queue).
-    conjugation!("queue", 22, "~e";
-        verb: "~e", "~es", "~ed", "~eing|~ing", "~ed";
-    ),
-    // Rid: 22 words (bid, outbid, rid, shed, wed, clad).
-    conjugation!("rid", 22, "~";
-        verb: "~", "~s", "~", "~ding", "~";
-    ),
-    // Ride: 22 words (override, ride, stride, joyride, hagride, outride).
-    conjugation!("ride", 22, "~i~e";
-        verb: "~i~e", "~i~es", "~o~e", "~i~ing", "~i~den";
-    ),
-    // Make: 20 words (make, remake, matchmake, unmake, premake, merrymake).
-    conjugation!("make", 20, "~ke";
-        verb: "~ke", "~kes", "~de", "~king", "~de";
-    ),
-    // Give: 18 words (give, forgive, upgive, foregive, misgive, regive).
-    conjugation!("give", 18, "~i~e";
-        verb: "~i~e", "~i~es", "~a~e", "~i~ing", "~i~en";
-    ),
-    // Dive: 18 words (dive, updive, skydive, shite, rive, nosedive).
-    conjugation!("dive", 18, "~i~e";
-        verb: "~i~e", "~i~es", "~i~ed|~o~e", "~i~ing", "~i~ed";
-    ),
-    // Mislead: 18 words (mislead, uplead, colead, cheerlead, underlead, aread).
-    conjugation!("mislead", 18, "~a~";
-        verb: "~a~", "~a~s", "~~", "~a~ing", "~~";
-    ),
-    // Run: 18 words (outrun, overrun, rerun, run, assrun, speedrun).
-    conjugation!("run", 18, "~u~";
-        verb: "~u~", "~u~s", "~a~", "~u~ning", "~u~";
-    ),
-    // Think: 17 words (think, rethink, doublethink, outthink, crimethink, misthink).
-    conjugation!("think", 17, "~ink";
-        verb: "~ink", "~inks", "~ought", "~inking", "~ought";
-    ),
-    // Shoot: 17 words (overshoot, shoot, troubleshoot, undershoot, reshoot, sharpshoot).
-    conjugation!("shoot", 17, "~o~";
-        verb: "~o~", "~o~s", "~~", "~o~ing", "~~";
-    ),
-    // Alight: 17 words (alight, relight, gaslight, spotlight, daylight, backlight).
-    conjugation!("alight", 17, "~gh~";
-        verb: "~gh~", "~gh~s", "~gh~ed|~~", "~gh~ing", "~gh~ed|~~";
-    ),
-    // Gild: 17 words (blend, undergird, gird, gild, backbend, regild).
-    conjugation!("gild", 17, "~d";
-        verb: "~d", "~ds", "~ded|~t", "~ding", "~ded|~t";
-    ),
-    // Forbear: 16 words (upbear, forebear, forbear, overbear, rebear, underbear).
-    conjugation!("forbear", 16, "~ea~";
+    // Forbear: 18 words (upbear, forebear, forbear, overbear, rebear, awreak).
+    conjugation!("forbear", 18, "~ea~";
         verb: "~ea~", "~ea~s", "~o~e", "~ea~ing", "~o~ne";
     ),
-    // Overgo: 16 words (forego, forgo, undergo, togo, outgo, misgo).
-    conjugation!("overgo", 16, "~go";
-        verb: "~go", "~goes", "~went", "~going", "~gone";
+    // Dig: 18 words (dig, slink, resting, unstick, bestick, restick).
+    conjugation!("dig", 18, "~i~";
+        verb: "~i~", "~i~s", "~u~", "~i~ing", "~u~";
     ),
-    // Should: 16 words (may, can, got, will, shall, should).
-    conjugation!("should", 16, "~";
+    // Show: 17 words (shew, mow, sew, show, sow, hew).
+    conjugation!("show", 17, "~";
+        verb: "~", "~s", "~ed", "~ing", "~n";
+    ),
+    // Eed: 17 words (feed, meet, xbreed, xfeed, breed, eed).
+    conjugation!("eed", 17, "~e~";
+        verb: "~e~", "~e~s", "~~", "~e~ing", "~~";
+    ),
+    // Take: 16 words (take, shake, retake, eate, wayfare, drawe).
+    conjugation!("take", 16, "~a~e";
+        verb: "~a~e", "~a~es", "~oo~", "~a~ing", "~a~en";
+    ),
+    // Mislead: 16 words (mislead, uplead, underlead, inlead, outlead, forthlead).
+    conjugation!("mislead", 16, "~a~";
+        verb: "~a~", "~a~s", "~~", "~a~ing", "~~";
+    ),
+    // Daylight: 16 words (relight, daylight, backlight, limelight, greenlight, downlight).
+    conjugation!("daylight", 16, "~gh~";
+        verb: "~gh~", "~gh~s", "~gh~ed|~~", "~gh~ing", "~gh~ed|~~";
+    ),
+    // Ould: 16 words (may, can, got, will, mote, darf).
+    conjugation!("ould", 16, "~";
         verb: "~", "~", "~ed", "~ing", "~ed";
     ),
-    // See: 15 words (see, foresee, oversee, forsee, sightsee, unsee).
-    conjugation!("see", 15, "~ee";
-        verb: "~ee", "~ees", "~aw", "~eeing", "~een";
+    // Keep: 14 words (creep, feel, keep, kneel, sleep, sweep).
+    conjugation!("keep", 14, "~e~";
+        verb: "~e~", "~e~s", "~~t", "~e~ing", "~~t";
     ),
-    // Beat: 15 words (be, beat, browbeat, wright, tyek, forbeat).
-    conjugation!("beat", 15, "~";
-        verb: "~", "~s", "~", "~ing", "~en";
+    // Tgo: 13 words (forego, togo, bego, umbego, atgo, ongo).
+    conjugation!("tgo", 13, "~go";
+        verb: "~go", "~goes", "~went", "~going", "~gone";
     ),
-    // Bite: 15 words (bite, frostbite, backbite, overbite, abite, forbite).
-    conjugation!("bite", 15, "~e";
-        verb: "~e", "~es", "~", "~ing", "~ten";
+    // Bespeak: 13 words (misspeak, bespeak, jailbreak, unspeak, tiebreak, respeak).
+    conjugation!("bespeak", 13, "~ea~";
+        verb: "~ea~", "~ea~s", "~o~e", "~ea~ing", "~o~en";
     ),
-    // Come: 15 words (become, come, overcome, misbecome, oncome, undercome).
-    conjugation!("come", 15, "~o~e";
-        verb: "~o~e", "~o~es", "~a~e", "~o~ing", "~o~e";
+    // Eue: 12 words (blue, true, horseshoe, coyote, meme, dude).
+    conjugation!("eue", 12, "~e";
+        verb: "~e", "~es", "~ed", "~eing|~ing", "~ed";
     ),
-    // Fall: 14 words (fall, befall, eat, freefall, pratfall, downfall).
-    conjugation!("fall", 14, "~a~";
-        verb: "~a~", "~a~s", "~e~", "~a~ing", "~a~en";
+    // Rise: 12 words (rise, thrive, belive, rize, outrive, bedrive).
+    conjugation!("rise", 12, "~i~e";
+        verb: "~i~e", "~i~es", "~o~e", "~i~ing", "~i~en";
     ),
-    // Spill: 14 words (smell, spill, respell, indwell, overspill, outspell).
-    conjugation!("spill", 14, "~l";
-        verb: "~l", "~ls", "~led|~t", "~ling", "~led|~t";
-    ),
-    // Spin: 14 words (spin, tailspin, backspin, topspin, overspin, wheelspin).
-    conjugation!("spin", 14, "~i~";
-        verb: "~i~", "~i~s", "~u~", "~i~ning", "~u~";
-    ),
-    // Undo: 13 words (do, go, outdo, overdo, redo, undo).
-    conjugation!("undo", 13, "~o";
-        verb: "~o", "~oes", "~id", "~oing", "~one";
-    ),
-    // Slide: 13 words (slide, chide, landslide, rede, betide, slite).
-    conjugation!("slide", 13, "~e";
-        verb: "~e", "~es", "~", "~ing", "~";
-    ),
-    // Weave: 12 words (weave, interweave, reweave, forcleave, unweave, tocleave).
-    conjugation!("weave", 12, "~~ave";
-        verb: "~~ave", "~~aves", "~ov~", "~~aving", "~ov~n";
-    ),
-    // Abide: 11 words (abide, shine, bestride, outshine, overstride, beshine).
-    conjugation!("abide", 11, "~i~e";
-        verb: "~i~e", "~i~es", "~o~e", "~i~ing", "~o~e";
-    ),
-    // Quiz: 11 words (quiz, spaz, whiz, buz, wiz, diz).
-    conjugation!("quiz", 11, "~";
-        verb: "~", "~zes", "~zed", "~zing", "~zed";
-    ),
-    // Buy: 11 words (buy, rebuy, overbuy, underbuy, prebuy, forbuy).
-    conjugation!("buy", 11, "~~y";
-        verb: "~~y", "~~ys", "~o~ght", "~~ying", "~o~ght";
-    ),
-    // Bring: 11 words (bring, upbring, underbring, forthbring, inbring, imbring).
-    conjugation!("bring", 11, "~in~";
-        verb: "~in~", "~in~s", "~ou~ht", "~in~ing", "~ou~ht";
-    ),
-    // Freeze: 11 words (freeze, unfreeze, refreeze, enfreeze, befreeze, prefreeze).
-    conjugation!("freeze", 11, "~~eze";
-        verb: "~~eze", "~~ezes", "~oz~", "~~ezing", "~oz~n";
-    ),
-    // Rec: 11 words (sic, floc, tic, vac, proc, fanfic).
-    conjugation!("rec", 11, "~";
+    // Fic: 11 words (sic, floc, tic, vac, proc, spec).
+    conjugation!("fic", 11, "~";
         verb: "~", "~s", "~ced", "~cing", "~ced";
     ),
-    // Beteach: 11 words (teach, reteach, overteach, misteach, beteach, unteach).
-    conjugation!("beteach", 11, "~e~c~";
-        verb: "~e~c~", "~e~c~es", "~~ug~t", "~e~c~ing", "~~ug~t";
-    ),
-    // Octopus: 11 words (octopus, nonplus, dis, pus, res, dorcas).
+    // Octopus: 11 words (octopus, nonplus, dis, pus, res, sus).
     conjugation!("octopus", 11, "~";
         verb: "~", "~ses", "~sed", "~sing", "~sed";
     ),
-    // Catch: 10 words (catch, bycatch, recatch, overcatch, becatch, outcatch).
-    conjugation!("catch", 10, "~tc~";
-        verb: "~tc~", "~tc~es", "~ug~t", "~tc~ing", "~ug~t";
+    // Quiz: 10 words (quiz, spaz, whiz, buz, wiz, diz).
+    conjugation!("quiz", 10, "~";
+        verb: "~", "~zes", "~zed", "~zing", "~zed";
     ),
-    // Chef: 10 words (ref, chef, crossref, coif, stuf, indef).
-    conjugation!("chef", 10, "~";
+    // Lay: 10 words (say, lay, pay, waylay, yeasay, ysay).
+    conjugation!("lay", 10, "~y";
+        verb: "~y", "~ys", "~id", "~ying", "~id";
+    ),
+    // Sit: 10 words (shit, sit, bespit, puppysit, outspit, misspit).
+    conjugation!("sit", 10, "~i~";
+        verb: "~i~", "~i~s", "~a~", "~i~ting", "~a~";
+    ),
+    // Rdo: 10 words (do, go, redo, undo, bedo, tdo).
+    conjugation!("rdo", 10, "~o";
+        verb: "~o", "~oes", "~id", "~oing", "~one";
+    ),
+    // Make: 10 words (make, demake, kingmake, lawmake, mythmake, chmake).
+    conjugation!("make", 10, "~ke";
+        verb: "~ke", "~kes", "~de", "~king", "~de";
+    ),
+    // Rid: 9 words (bid, rid, shed, wed, clad, shid).
+    conjugation!("rid", 9, "~";
+        verb: "~", "~s", "~", "~ding", "~";
+    ),
+    // Blow: 8 words (know, blow, grow, throw, forthrow, aknow).
+    conjugation!("blow", 8, "~o~";
+        verb: "~o~", "~o~s", "~e~", "~o~ing", "~o~n";
+    ),
+    // Beat: 8 words (be, beat, eat, tyek, unbe, burnbeat).
+    conjugation!("beat", 8, "~";
+        verb: "~", "~s", "~", "~ing", "~en";
+    ),
+    // Chef: 8 words (ref, chef, coif, stuf, bauf, smof).
+    conjugation!("chef", 8, "~";
         verb: "~", "~s", "~fed", "~fing", "~fed";
     ),
-    // Hang: 9 words (hang, overhang, uphang, cliffhang, behang, unhang).
-    conjugation!("hang", 9, "~a~";
-        verb: "~a~", "~a~s", "~u~", "~a~ing", "~u~";
+    // Oot: 8 words (reshoot, unshoot, misshoot, shoot, oot, oubleshoot).
+    conjugation!("oot", 8, "~o~";
+        verb: "~o~", "~o~s", "~~", "~o~ing", "~~";
     ),
-    // Lie: 9 words (lie, overlie, underlie, belie, superlie, forelie).
-    conjugation!("lie", 9, "~ie";
-        verb: "~ie", "~ies", "~ay", "~ying", "~ain";
+    // Wear: 7 words (abear, tear, swear, wear, retear, toshear).
+    conjugation!("wear", 7, "~ea~";
+        verb: "~ea~", "~ea~s", "~o~e", "~ea~ing", "~o~n";
     ),
-    // Seek: 9 words (seek, upseek, beseek, outseek, reseek, misseek).
-    conjugation!("seek", 9, "~eek";
-        verb: "~eek", "~eeks", "~ought", "~eeking", "~ought";
+    // Stand: 7 words (stand, understand, tand, nerstand, ainstand, nuhstand).
+    conjugation!("stand", 7, "~an~";
+        verb: "~an~", "~an~s", "~oo~", "~an~ing", "~oo~";
     ),
-    // Strike: 9 words (strike, airstrike, restrike, counterstrike, overstrike, outstrike).
-    conjugation!("strike", 9, "~i~e";
-        verb: "~i~e", "~i~es", "~uc~", "~i~ing", "~uc~";
+    // Draw: 7 words (draw, redraw, bedraw, adraw, edraw, nedraw).
+    conjugation!("draw", 7, "~a~";
+        verb: "~a~", "~a~s", "~e~", "~a~ing", "~a~n";
     ),
-    // Forget: 8 words (forget, beget, unbeget, misget, unforget, rebeget).
-    conjugation!("forget", 8, "~e~";
-        verb: "~e~", "~e~s", "~o~", "~e~ting", "~o~ten";
+    // Hold: 7 words (hold, unthrow, anglehold, holde, eathhold, withhold).
+    conjugation!("hold", 7, "~o~";
+        verb: "~o~", "~o~s", "~e~", "~o~ing", "~e~";
     ),
-    // Leave: 8 words (leave, cleave, beleave, toreave, dreave, forleave).
-    conjugation!("leave", 8, "~ave";
-        verb: "~ave", "~aves", "~ft", "~aving", "~ft";
+    // Give: 6 words (give, yive, giue, anksgive, forgive, egive).
+    conjugation!("give", 6, "~i~e";
+        verb: "~i~e", "~i~es", "~a~e", "~i~ing", "~i~en";
     ),
-    // Overeat: 8 words (overeat, outeat, undereat, sleepeat, uneat, miseat).
-    conjugation!("overeat", 8, "~e~";
-        verb: "~e~", "~e~s", "~~e", "~e~ing", "~e~en";
+    // Think: 6 words (think, rethink, forthink, imethink, ethink, bethink).
+    conjugation!("think", 6, "~ink";
+        verb: "~ink", "~inks", "~ought", "~inking", "~ought";
     ),
-    // Swim: 8 words (swim, nim, benim, outswim, overnim, overswim).
-    conjugation!("swim", 8, "~i~";
-        verb: "~i~", "~i~s", "~a~", "~i~ming", "~u~";
+    // Ride: 6 words (ride, hagride, overbide, ghostride, stride, atride).
+    conjugation!("ride", 6, "~i~e";
+        verb: "~i~e", "~i~es", "~o~e", "~i~ing", "~i~den";
     ),
-    // Tread: 8 words (tread, totread, fortread, betread, untread, overtread).
-    conjugation!("tread", 8, "~ea~";
-        verb: "~ea~", "~ea~s", "~o~", "~ea~ing", "~o~den";
+    // Spin: 6 words (spin, respin, unspin, bespin, despin, misspin).
+    conjugation!("spin", 6, "~i~";
+        verb: "~i~", "~i~s", "~u~", "~i~ning", "~u~";
     ),
-    // Melt: 8 words (melt, speedwalk, upswell, outswell, dispeed, formelt).
-    conjugation!("melt", 8, "~e~";
-        verb: "~e~", "~e~s", "~e~ed", "~e~ing", "~e~ed";
-    ),
-    // Gale: 8 words (gale, handshake, bename, begrave, bedare, afare).
-    conjugation!("gale", 8, "~a~e";
-        verb: "~a~e", "~a~es", "~a~ed|~o~e", "~a~ing", "~a~ed|~o~e|~a~en";
-    ),
-    // Gas: 7 words (gas, yes, teargas, outgas, degas, regas).
-    conjugation!("gas", 7, "~";
-        verb: "~", "~es|~ses", "~sed", "~sing", "~sed";
-    ),
-    // Dig: 7 words (dig, underdig, undig, redig, misdig, outdig).
-    conjugation!("dig", 7, "~i~";
-        verb: "~i~", "~i~s", "~u~", "~i~ging", "~u~";
-    ),
-    // Light: 7 words (light, flashlight, twilight, floodlight, prelight, overlight).
-    conjugation!("light", 7, "~gh~";
-        verb: "~gh~", "~gh~s", "~~|~gh~ed", "~gh~ing", "~~|~gh~ed";
-    ),
-    // Wind: 7 words (wind, upclimb, heatsink, sidewind, shitpost, pigstick).
-    conjugation!("wind", 7, "~i~";
-        verb: "~i~", "~i~s", "~i~ed", "~i~ing", "~i~ed";
-    ),
-    // Shiv: 7 words (shiv, rev, nav, improv, chiv, overrev).
-    conjugation!("shiv", 7, "~";
+    // Shiv: 6 words (shiv, rev, nav, chiv, scav, prov).
+    conjugation!("shiv", 6, "~";
         verb: "~", "~s", "~ved", "~ving", "~ved";
     ),
-    // Win: 6 words (win, overwin, rewin, outwin, bewin, electrowin).
-    conjugation!("win", 6, "~i~";
-        verb: "~i~", "~i~s", "~o~", "~i~ning", "~o~";
-    ),
-    // Wake: 6 words (awake, wake, reawake, forcarve, rewake, outwake).
-    conjugation!("wake", 6, "~a~e";
-        verb: "~a~e", "~a~es", "~o~e|~a~ed", "~a~ing", "~o~en|~a~ed";
-    ),
-    // Choose: 6 words (choose, forechoose, rechoose, mischoose, unchoose, prechoose).
-    conjugation!("choose", 6, "~o~e";
-        verb: "~o~e", "~o~es", "~~e", "~o~ing", "~~en";
-    ),
-    // Fly: 6 words (fly, overfly, outfly, refly, befly, upfly).
-    conjugation!("fly", 6, "~y";
-        verb: "~y", "~ies", "~ew", "~ying", "~own";
-    ),
-    // Backslide: 6 words (hide, backslide, unhide, rehide, autohide, hyde).
-    conjugation!("backslide", 6, "~e";
-        verb: "~e", "~es", "~", "~ing", "~den";
-    ),
-    // Belay: 6 words (why, belay, daresay, apay, beflay, appay).
-    conjugation!("belay", 6, "~y";
-        verb: "~y", "~ys", "~yed|~id", "~ying", "~yed|~id";
-    ),
-    // Larn: 6 words (de, dee, myek, deek, larn, stott).
+    // Larn: 6 words (de, dee, myek, deek, larn, ott).
     conjugation!("larn", 6, "~";
         verb: "~", "~s", "~ed", "~in", "~ed";
     ),
-    // Lose: 5 words (lose, kape, beclepe, unlose, relose).
-    conjugation!("lose", 5, "~e";
-        verb: "~e", "~es", "~t", "~ing", "~t";
+    // Bite: 5 words (bite, ostbite, hite, istbite, izbite).
+    conjugation!("bite", 5, "~e";
+        verb: "~e", "~es", "~", "~ing", "~ten";
     ),
-    // Dwell: 5 words (dwell, misspell, foresmell, outdwell, bedwell).
-    conjugation!("dwell", 5, "~l";
-        verb: "~l", "~ls", "~t|~led", "~ling", "~t|~led";
+    // Dive: 5 words (dive, rive, gainstrive, unthrive, agedive).
+    conjugation!("dive", 5, "~i~e";
+        verb: "~i~e", "~i~es", "~i~ed|~o~e", "~i~ing", "~i~ed";
     ),
-    // Flee: 5 words (flee, shoe, beflee, outflee, arede).
-    conjugation!("flee", 5, "~e";
-        verb: "~e", "~es", "~d", "~eing", "~d";
+    // Belay: 5 words (why, belay, daresay, apay, appay).
+    conjugation!("belay", 5, "~y";
+        verb: "~y", "~ys", "~yed|~id", "~ying", "~yed|~id";
     ),
-    // Get: 5 words (get, reget, unget, overget, underget).
-    conjugation!("get", 5, "~e~";
-        verb: "~e~", "~e~s", "~o~", "~e~ting", "~o~|~o~ten";
+    // Write: 5 words (ghostwrite, write, rite, smite, ngwrite).
+    conjugation!("write", 5, "~i~e";
+        verb: "~i~e", "~i~es", "~o~e", "~i~ing", "~i~ten";
     ),
-    // Begin: 4 words (begin, rin, rebegin, atrin).
-    conjugation!("begin", 4, "~i~";
-        verb: "~i~", "~i~s", "~a~", "~i~ning", "~u~";
+    // Shine: 5 words (overstride, understride, tride, shine, hine).
+    conjugation!("shine", 5, "~i~e";
+        verb: "~i~e", "~i~es", "~o~e", "~i~ing", "~o~e";
     ),
-    // Plead: 4 words (plead, rehang, implead, interplead).
-    conjugation!("plead", 4, "~a~";
-        verb: "~a~", "~a~s", "~a~ed", "~a~ing", "~a~ed";
+    // Restrike: 5 words (restrike, misstrike, awestrike, unstrike, strike).
+    conjugation!("restrike", 5, "~i~e";
+        verb: "~i~e", "~i~es", "~uc~", "~i~ing", "~uc~|~ic~en";
     ),
-    // Trolley: 4 words (monkey, bogey, curtsey, trolley).
-    conjugation!("trolley", 4, "~~y";
+    // Weave: 4 words (weave, forcleave, tocleave, overheave).
+    conjugation!("weave", 4, "~~ave";
+        verb: "~~ave", "~~aves", "~ov~", "~~aving", "~ov~n";
+    ),
+    // Fall: 4 words (fall, atfall, befall, fal).
+    conjugation!("fall", 4, "~a~";
+        verb: "~a~", "~a~s", "~e~", "~a~ing", "~a~en";
+    ),
+    // Dwell: 4 words (dwell, misspell, foresmell, bedwell).
+    conjugation!("dwell", 4, "~l";
+        verb: "~l", "~ls", "~t", "~ling", "~t";
+    ),
+    // Get: 4 words (forget, get, beget, misget).
+    conjugation!("get", 4, "~e~";
+        verb: "~e~", "~e~s", "~o~", "~e~ting", "~o~ten";
+    ),
+    // Seek: 4 words (seek, beseek, reseek, misseek).
+    conjugation!("seek", 4, "~eek";
+        verb: "~eek", "~eeks", "~ought", "~eeking", "~ought";
+    ),
+    // Swim: 4 words (swim, nim, benim, wim).
+    conjugation!("swim", 4, "~i~";
+        verb: "~i~", "~i~s", "~a~", "~i~ming", "~u~";
+    ),
+    // Gild: 4 words (gird, gild, backbend, inbend).
+    conjugation!("gild", 4, "~d";
+        verb: "~d", "~ds", "~ded|~t", "~ding", "~ded|~t";
+    ),
+    // Rede: 4 words (rede, betide, slide, chide).
+    conjugation!("rede", 4, "~e";
+        verb: "~e", "~es", "~", "~ing", "~";
+    ),
+    // Ell: 4 words (indwell, ell, spill, smell).
+    conjugation!("ell", 4, "~l";
+        verb: "~l", "~ls", "~led|~t", "~ling", "~led|~t";
+    ),
+    // Eave: 4 words (toreave, eave, leave, cleave).
+    conjugation!("eave", 4, "~ave";
+        verb: "~ave", "~aves", "~ft", "~aving", "~ft";
+    ),
+    // Ive: 4 words (ide, ise, ive, iue).
+    conjugation!("ive", 4, "i~e";
+        verb: "i~e", "i~es", "o~e", "i~ing", "i~en";
+    ),
+    // Olley: 4 words (nkey, gey, tsey, olley).
+    conjugation!("olley", 4, "~~y";
         verb: "~~y", "~~ys", "~~yed|~i~d", "~~ying", "~~yed|~i~d";
     ),
-    // Birdie: 4 words (wheelie, stymie, birdie, assoilzie).
-    conjugation!("birdie", 4, "~~e";
+    // Rdie: 4 words (eelie, ymie, rdie, oilzie).
+    conjugation!("rdie", 4, "~~e";
         verb: "~~e", "~~es", "~~ed", "~~eing|~y~ng", "~~ed";
     ),
-    // Might: 4 words (might, must, gaf, wfh).
-    conjugation!("might", 4, "~";
-        verb: "~", "~", "~", "~", "~";
+    // Gas: 3 words (gas, yes, rgas).
+    conjugation!("gas", 3, "~";
+        verb: "~", "~es|~ses", "~sed", "~sing", "~sed";
     ),
-    // Slay: 3 words (slay, foreslay, reslay).
-    conjugation!("slay", 3, "~ay";
-        verb: "~ay", "~ays", "~ew", "~aying", "~ain";
+    // See: 3 words (see, looksee, ghtsee).
+    conjugation!("see", 3, "~ee";
+        verb: "~ee", "~ees", "~aw", "~eeing", "~een";
     ),
-    // Swell: 3 words (swell, unswell, reswell).
-    conjugation!("swell", 3, "~e~";
-        verb: "~e~", "~e~s", "~e~ed", "~e~ing", "~o~en|~e~ed";
+    // Lose: 3 words (lose, kape, beclepe).
+    conjugation!("lose", 3, "~e";
+        verb: "~e", "~es", "~t", "~ing", "~t";
     ),
-    // Dress: 3 words (dress, press, possess).
-    conjugation!("dress", 3, "~s";
-        verb: "~s", "~ses", "~sed", "~sing", "~sed|~t";
+    // Wake: 3 words (awake, wake, forcarve).
+    conjugation!("wake", 3, "~a~e";
+        verb: "~a~e", "~a~es", "~o~e|~a~ed", "~a~ing", "~o~en|~a~ed";
     ),
-    // Braai: 3 words (braai, luigi, skibidi).
-    conjugation!("braai", 3, "~";
+    // Hang: 3 words (hang, iffhang, aphang).
+    conjugation!("hang", 3, "~a~";
+        verb: "~a~", "~a~s", "~u~", "~a~ing", "~u~";
+    ),
+    // Backslide: 3 words (hide, backslide, hyde).
+    conjugation!("backslide", 3, "~e";
+        verb: "~e", "~es", "~", "~ing", "~den";
+    ),
+    // Tell: 3 words (sell, tell, luntell).
+    conjugation!("tell", 3, "~e~l";
+        verb: "~e~l", "~e~ls", "~o~d", "~e~ling", "~o~d";
+    ),
+    // Wind: 3 words (wind, heatsink, climb).
+    conjugation!("wind", 3, "~i~";
+        verb: "~i~", "~i~s", "~i~ed", "~i~ing", "~i~ed";
+    ),
+    // Melt: 3 words (melt, upswell, outswell).
+    conjugation!("melt", 3, "~e~";
+        verb: "~e~", "~e~s", "~e~ed", "~e~ing", "~e~ed|~o~en";
+    ),
+    // Aai: 3 words (luigi, aai, bidi).
+    conjugation!("aai", 3, "~";
         verb: "~", "~s", "~ed", "~ng", "~ed";
     ),
-    // Downstrike: 3 words (thunderstrike, downstrike, copystrike).
-    conjugation!("downstrike", 3, "~i~e";
-        verb: "~i~e", "~i~es", "~uc~", "~i~ing", "~ic~en";
+    // Must: 3 words (must, gaf, wfh).
+    conjugation!("must", 3, "~";
+        verb: "~", "~", "~", "~", "~";
+    ),
+    // Light: 3 words (light, ilight, oodlight).
+    conjugation!("light", 3, "~gh~";
+        verb: "~gh~", "~gh~s", "~~|~gh~ed", "~gh~ing", "~~|~gh~ed";
     ),
 ];

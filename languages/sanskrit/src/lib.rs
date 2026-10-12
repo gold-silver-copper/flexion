@@ -5,15 +5,15 @@
 
 pub use flexion::{Candidate, Reading, Status, UnknownValue};
 
-pub mod adjective;
-pub mod noun;
 mod orthography;
-pub mod pronoun;
+pub mod noun;
+pub mod adjective;
 pub mod verb;
-pub use adjective::Adjective;
+pub mod pronoun;
 pub use noun::Noun;
-pub use pronoun::Pronoun;
+pub use adjective::Adjective;
 pub use verb::Verb;
+pub use pronoun::Pronoun;
 
 /// Grammatical case.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
@@ -106,7 +106,11 @@ pub enum Number {
 
 impl Number {
     /// Every value, in order.
-    pub const ALL: [Number; 3] = [Number::Singular, Number::Dual, Number::Plural];
+    pub const ALL: [Number; 3] = [
+        Number::Singular,
+        Number::Dual,
+        Number::Plural,
+    ];
 
     /// Short name, as in cell names.
     pub const fn short(self) -> &'static str {
@@ -163,7 +167,11 @@ pub enum Gender {
 
 impl Gender {
     /// Every value, in order.
-    pub const ALL: [Gender; 3] = [Gender::Masculine, Gender::Feminine, Gender::Neuter];
+    pub const ALL: [Gender; 3] = [
+        Gender::Masculine,
+        Gender::Feminine,
+        Gender::Neuter,
+    ];
 
     /// Short name, as in cell names.
     pub const fn short(self) -> &'static str {
@@ -284,7 +292,10 @@ pub enum Voice {
 
 impl Voice {
     /// Every value, in order.
-    pub const ALL: [Voice; 2] = [Voice::Active, Voice::Middle];
+    pub const ALL: [Voice; 2] = [
+        Voice::Active,
+        Voice::Middle,
+    ];
 
     /// Short name, as in cell names.
     pub const fn short(self) -> &'static str {
@@ -339,7 +350,11 @@ pub enum Person {
 
 impl Person {
     /// Every value, in order.
-    pub const ALL: [Person; 3] = [Person::First, Person::Second, Person::Third];
+    pub const ALL: [Person; 3] = [
+        Person::First,
+        Person::Second,
+        Person::Third,
+    ];
 
     /// Short name, as in cell names.
     pub const fn short(self) -> &'static str {
@@ -396,7 +411,11 @@ pub enum Tense {
 
 impl Tense {
     /// Every value, in order.
-    pub const ALL: [Tense; 3] = [Tense::Present, Tense::Future, Tense::Perfect];
+    pub const ALL: [Tense; 3] = [
+        Tense::Present,
+        Tense::Future,
+        Tense::Perfect,
+    ];
 
     /// Short name, as in cell names.
     pub const fn short(self) -> &'static str {
@@ -526,3 +545,4 @@ pub fn participle(lemma: &str, tense: Tense, voice: Voice) -> String {
 pub fn pronoun(lemma: &str, case: Case, gender: Gender, number: Number) -> String {
     Pronoun::new(lemma).form(pronoun::Cell::Form(case, gender, number))
 }
+

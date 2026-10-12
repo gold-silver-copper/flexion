@@ -5,4 +5,5 @@
 use std::borrow::Cow;
 
 /// 0 words.
-pub(super) static SPELLINGS: &[(Cow<'static, str>, Cow<'static, str>)] = flexion::spellings! {};
+pub(super) static SPELLINGS: &[(Cow<'static, str>, Cow<'static, str>)] = flexion::spellings! {
+};

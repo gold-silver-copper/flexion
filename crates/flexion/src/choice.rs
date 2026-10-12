@@ -7,9 +7,12 @@ use std::borrow::Cow;
 
 /// One learned choice: rules on the word's ending (the longest ending the
 /// word has decides; the rule with the empty ending covers every word), and
-/// the words the rules get wrong.
+/// the words the rules get wrong. A choice can read beginnings instead (see
+/// [`Side`]).
 #[derive(Debug, Clone, PartialEq)]
 pub struct Choice<'a, L: Label> {
+    /// Which end of a word its rules read.
+    pub side: Side,
     /// Sorted by their endings read backwards (see [`by_ending`]), so rules
     /// on related endings stand together: `а`, `ка`, `ска`, `ца`.
     pub rules: Cow<'a, [Rule<'a, L>]>,
@@ -17,7 +20,18 @@ pub struct Choice<'a, L: Label> {
     pub exceptions: Cow<'a, [(Cow<'a, str>, L)]>,
 }
 
-/// One rule: the words with this ending, and how they split.
+/// Which end of a word a choice's rules read.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum Side {
+    /// Its ending (the paradigm of `книга` is told by `-а`).
+    #[default]
+    End,
+    /// Its beginning (the length of a vowel is told by the vowel and what
+    /// follows it: `āti`).
+    Start,
+}
+
+/// One rule: the words with this ending (or beginning), and how they split.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Rule<'a, L: Label> {
     pub ending: Cow<'a, str>,
@@ -130,23 +144,35 @@ impl<'a, L: Label> Choice<'a, L> {
             .map(|&(_, l)| l)
     }
 
-    /// The rules whose ending `word` has, least specific first.
+    /// The rules whose ending (or beginning) `word` has, least specific
+    /// first.
     pub fn chain(&self, word: &str) -> Vec<&Rule<'a, L>> {
-        let starts = word
+        let cuts = word
             .char_indices()
             .map(|(i, _)| i)
             .chain(std::iter::once(word.len()));
-        let mut chain: Vec<&Rule<'a, L>> = starts
-            .filter_map(|i| word.get(i..))
-            .filter_map(|ending| {
-                let at = self
+        let find = |affix: &str| {
+            let at = match self.side {
+                Side::End => self.rules.binary_search_by(|r| by_ending(&r.ending, affix)),
+                Side::Start => self
                     .rules
-                    .binary_search_by(|r| by_ending(&r.ending, ending))
-                    .ok()?;
-                self.rules.get(at)
-            })
-            .collect();
-        chain.reverse();
+                    .binary_search_by(|r| r.ending.as_ref().cmp(affix)),
+            };
+            self.rules.get(at.ok()?)
+        };
+        let mut chain: Vec<&Rule<'a, L>> = match self.side {
+            Side::End => cuts
+                .filter_map(|i| word.get(i..))
+                .filter_map(find)
+                .collect(),
+            Side::Start => cuts
+                .filter_map(|i| word.get(..i))
+                .filter_map(find)
+                .collect(),
+        };
+        if self.side == Side::End {
+            chain.reverse();
+        }
         chain
     }
 
@@ -234,6 +260,7 @@ mod tests {
 
     fn choice() -> Choice<'static, u16> {
         Choice {
+            side: Side::End,
             rules: Cow::Owned(vec![
                 Rule {
                     ending: "".into(),

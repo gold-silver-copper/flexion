@@ -76,6 +76,7 @@ pub static GRAMMAR: Grammar<'static, Declension, accent::AccentClass> = Grammar 
     referrals: Cow::Borrowed(&[]),
     feature: None,
     compound: None,
+    prefixes: None,
     accent: Some(flexion::Accent {
         patterns: Cow::Borrowed(&accent::PATTERNS),
         classes: Cow::Borrowed(&accent::CLASSES),

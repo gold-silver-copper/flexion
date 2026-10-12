@@ -33,29 +33,26 @@ macro_rules! declension {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `aveindzu`: 6,425 words.
+    /// Like `aveindzu`: 4,672 words.
     Aveindzu,
-    /// Like `mis`: 44 words.
-    Mis,
-    /// Like `été`: 22 words.
+    /// Like `été`: 23 words.
     Été,
-    /// Like `parlée`: 6 words.
-    Parlée,
+    /// Like `los`: 17 words.
+    Los,
+    /// Like `lée`: 6 words.
+    Lée,
     /// Like `crû`: 4 words.
     Crû,
-    /// Like `absous`: 3 words.
-    Absous,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 6] = [
+    pub const ALL: [Declension; 5] = [
         Declension::Aveindzu,
-        Declension::Mis,
         Declension::Été,
-        Declension::Parlée,
+        Declension::Los,
+        Declension::Lée,
         Declension::Crû,
-        Declension::Absous,
     ];
 
     /// Its table.
@@ -73,24 +70,24 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 6] = [
-    // Aveindzu: 6,425 words (point, animé, massé, mu, eu, lu).
-    declension!("aveindzu", 6425, "~";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 5] = [
+    // Aveindzu: 4,672 words (point, mu, eu, lu, tu, frappé).
+    declension!("aveindzu", 4672, "~";
         masculine: "~", "~s";
         feminine: "~e", "~es";
     ),
-    // Mis: 44 words (remis, quis, mis, pris, commis, assis).
-    declension!("mis", 44, "~";
-        masculine: "~", "~";
-        feminine: "~e", "~es";
-    ),
-    // Été: 22 words (été, lui, pu, agi, bondi, nui).
-    declension!("été", 22, "~";
+    // Été: 23 words (été, lui, pu, agi, bondi, nui).
+    declension!("été", 23, "~";
         masculine: "~", "~";
         feminine: "~", "~";
     ),
-    // Parlée: 6 words (fatiguée, parlée, musclée, sténographie, tripatouillée, patelinée).
-    declension!("parlée", 6, "~";
+    // Los: 17 words (quis, mis, pris, sis, clos, émis).
+    declension!("los", 17, "~";
+        masculine: "~", "~";
+        feminine: "~e", "~es";
+    ),
+    // Lée: 6 words (fatiguée, musclée, sténographie, lée, ipatouillée, telinée).
+    declension!("lée", 6, "~";
         masculine: "~", "~s";
         feminine: "~", "~s";
     ),
@@ -98,10 +95,5 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 6] = [
     declension!("crû", 4, "~û";
         masculine: "~û", "~us";
         feminine: "~ue", "~ues";
-    ),
-    // Absous: 3 words (résous, dissous, absous).
-    declension!("absous", 3, "~s";
-        masculine: "~s", "~s";
-        feminine: "~te", "~tes";
     ),
 ];

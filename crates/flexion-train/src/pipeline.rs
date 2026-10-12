@@ -5,9 +5,11 @@
 use crate::choose::Settings;
 use crate::eval::{self, Input, Score};
 use crate::extract::{Lexeme, PosData};
-use crate::learn::{self, Learned};
+use crate::learn::{self, Learned, Shape};
 use crate::script::Script;
 use crate::spec::Language;
+use crate::systems::{self, LearnedSystems};
+use flexion::Inflect;
 use std::fmt::Write as _;
 
 /// What was measured about one part of speech.
@@ -17,21 +19,83 @@ pub struct Measured {
     pub sharpness: f32,
     pub test_words: usize,
     pub full: Score,
-    pub plain: Score,
+    pub headword: Score,
+}
+
+/// A learned part of speech: one grammar, or the systems of its principal
+/// parts.
+#[derive(Debug, Clone)]
+pub enum Inflection<'s> {
+    Grammar(Learned<'s>),
+    Systems(LearnedSystems<'s>),
+}
+
+impl<'s> Inflection<'s> {
+    /// Learn `lexemes` as one grammar, or as systems of `parts` when given.
+    pub fn learn(
+        script: &'s Script,
+        shape: &Shape,
+        parts: Option<&[usize]>,
+        lexemes: &[Lexeme],
+        settings: Settings,
+    ) -> Self {
+        match parts {
+            Some(parts) => Inflection::Systems(systems::learn(
+                script.orthography(),
+                shape,
+                parts,
+                lexemes,
+                settings,
+            )),
+            None => {
+                Inflection::Grammar(learn::learn(script.orthography(), shape, lexemes, settings))
+            }
+        }
+    }
+
+    /// Run `f` with what inflects.
+    pub fn with<R>(&self, f: impl FnOnce(&dyn Inflect<u8>) -> R) -> R {
+        match self {
+            Inflection::Grammar(l) => f(&l.grammar),
+            Inflection::Systems(s) => s.with_runtime(|s| f(s)),
+        }
+    }
+
+    pub fn set_sharpness(&mut self, sharpness: f32) {
+        match self {
+            Inflection::Grammar(l) => l.grammar.sharpness = sharpness,
+            Inflection::Systems(s) => s.sharpness = sharpness,
+        }
+    }
+
+    /// Every grammar in it: one, or each system's and each part's.
+    pub fn grammars(&self) -> Vec<&Learned<'s>> {
+        match self {
+            Inflection::Grammar(l) => vec![l],
+            Inflection::Systems(s) => s
+                .systems
+                .iter()
+                .flat_map(|s| std::iter::once(&s.grammar).chain(s.from_lemma.as_ref()))
+                .collect(),
+        }
+    }
 }
 
 /// Learn every part of speech of `lang` (the shipped grammars) and measure
-/// each on its held-out tenth.
+/// each on its held-out tenth. A part of speech with principal parts is
+/// learned as their systems when that does better on the dev tenth.
 pub fn build<'s>(
     lang: &Language,
     script: &'s Script,
     data: &[PosData],
     settings: Settings,
-) -> Result<(Vec<Learned<'s>>, Vec<Measured>), String> {
+) -> Result<(Vec<Inflection<'s>>, Vec<Measured>), String> {
+    let orthography = script.orthography();
     let mut grammars = Vec::new();
     let mut measured = Vec::new();
     for (part, d) in lang.parts.iter().zip(data) {
         let shape = crate::shape(lang, part)?;
+        let parts = crate::parts(lang, part)?;
         let not = |b: u64| -> Vec<Lexeme> {
             d.lexemes
                 .iter()
@@ -49,35 +113,54 @@ pub fn build<'s>(
             .iter()
             .filter(|l| eval::bucket(&l.key) == eval::DEV && l.source == 0)
             .collect();
-        let sharpness = eval::fit_sharpness(
-            &learn::learn(script.orthography(), &shape, &fit, settings).grammar,
-            &dev,
-        );
-        let mut scored = learn::learn(script.orthography(), &shape, &train, settings).grammar;
-        scored.sharpness = sharpness;
+        // One grammar, or principal parts' systems: whichever does better.
+        let mut kinds: Vec<Option<&[usize]>> = vec![None];
+        if !parts.is_empty() {
+            kinds.push(Some(&parts));
+        }
+        let (kind, sharpness, _) = kinds
+            .into_iter()
+            .map(|kind| {
+                let mut fitted = Inflection::learn(script, &shape, kind, &fit, settings);
+                let sharpness = fitted.with(|g| eval::fit_sharpness(g, &orthography, &dev));
+                fitted.set_sharpness(sharpness);
+                let right =
+                    fitted.with(|g| eval::score(g, &orthography, &dev, Input::Headword).accuracy());
+                (kind, sharpness, right)
+            })
+            .fold(
+                (None, 1.0, -1.0),
+                |best, x| if x.2 > best.2 { x } else { best },
+            );
+        let mut scored = Inflection::learn(script, &shape, kind, &train, settings);
+        scored.set_sharpness(sharpness);
         let test: Vec<&Lexeme> = d
             .lexemes
             .iter()
             .filter(|l| eval::bucket(&l.key) == eval::TEST && l.source == 0)
             .collect();
-        let full = eval::score(&scored, &test, Input::Full);
-        let plain = eval::score(&scored, &test, Input::Plain);
-        let mut shipped = learn::learn(script.orthography(), &shape, &d.lexemes, settings);
-        shipped.grammar.sharpness = sharpness;
+        let full = scored.with(|g| eval::score(g, &orthography, &test, Input::Full));
+        let headword = scored.with(|g| eval::score(g, &orthography, &test, Input::Headword));
+        let mut shipped = Inflection::learn(script, &shape, kind, &d.lexemes, settings);
+        shipped.set_sharpness(sharpness);
         eprintln!(
-            "{} {}: {} paradigms, held-out top-1 {:.2}% (plain {:.2}%)",
+            "{} {}{}: held-out top-1 {:.2}% from the headword ({:.2}% in full)",
             lang.name,
             part.name,
-            shipped.stats.paradigms,
-            100.0 * full.accuracy(),
-            100.0 * plain.accuracy()
+            if kind.is_some() {
+                " (principal parts)"
+            } else {
+                ""
+            },
+            100.0 * headword.accuracy(),
+            100.0 * full.accuracy()
         );
         measured.push(Measured {
             name: part.name.to_string(),
             sharpness,
             test_words: test.len(),
             full,
-            plain,
+            headword,
         });
         grammars.push(shipped);
     }
@@ -85,62 +168,55 @@ pub fn build<'s>(
 }
 
 /// The README's report: the grammar's size and how well it does.
-pub fn report(lang: &Language, grammars: &[Learned<'_>], measured: &[Measured]) -> String {
-    let stress = !lang.spelling.stress_marks.is_empty();
+pub fn report(lang: &Language, inflections: &[Inflection<'_>], measured: &[Measured]) -> String {
     let mut s = String::from("## The grammar\n\n");
-    s.push_str("| | words | paradigms | rules | listed words | irregular forms |\n|---|---:|---:|---:|---:|---:|\n");
-    for (part, g) in lang.parts.iter().zip(grammars) {
+    s.push_str("| | words | systems | paradigms | rules | listed words | irregular forms |\n|---|---:|---:|---:|---:|---:|---:|\n");
+    for (part, inflection) in lang.parts.iter().zip(inflections) {
+        let grammars = inflection.grammars();
+        let sum = |f: &dyn Fn(&Learned<'_>) -> usize| grammars.iter().map(|g| f(g)).sum::<usize>();
+        let systems = match inflection {
+            Inflection::Grammar(_) => 1,
+            Inflection::Systems(s) => s.systems.len(),
+        };
         let _ = writeln!(
             s,
-            "| {} | {} | {} | {} | {} | {} |",
+            "| {} | {} | {systems} | {} | {} | {} | {} |",
             part.name,
-            g.stats.words,
-            g.stats.paradigms,
-            g.grammar.paradigm.rules.len(),
-            g.grammar.paradigm.exceptions.len(),
-            g.stats.irregular_forms
+            grammars.first().map_or(0, |g| g.stats.words),
+            sum(&|g| g.stats.paradigms),
+            sum(&|g| g.grammar.paradigm.rules.len()),
+            sum(&|g| g.grammar.paradigm.exceptions.len()),
+            sum(&|g| g.stats.irregular_forms),
         );
     }
     s.push_str(
-        "\n*Words*: the dictionary's words the grammar is learned from. *Rules*: the endings that\n\
+        "\n*Words*: the dictionary's words the grammar is learned from. *Systems*: the principal\n\
+         parts a part of speech is built on (1: its lemma alone). *Rules*: the endings that\n\
          choose a paradigm. *Listed words*: words no rule gets right, listed with their paradigm.\n\
          *Irregular forms*: forms no paradigm gives, listed.\n\n## How well it does\n\n\
          A tenth of the words (by a hash of the word) was held out: the grammar scored here was\n\
          learned from the other nine tenths, and asked for every form the dictionary lists of\n\
-         each held-out word. *Top-1*: its first answer is right; *top-3*: the right answer is among\n\
-         its first three. *Calibration error*: how far its stated probabilities are, on average,\n\
-         from how often it is right (0 is perfect).\n\n",
+         each held-out word, typed as the dictionary's headword. *Top-1*: its first answer is\n\
+         right; *top-3*: the right answer is among its first three. *Calibration error*: how far\n\
+         its stated probabilities are, on average, from how often it is right (0 is perfect).\n\
+         *Top-1, lemma in full*: typed with every mark the dictionary's table writes, and said\n\
+         to be so (`spelled_in_full`).\n\n",
     );
-    if stress {
-        s.push_str("| | held-out words | forms | top-1 | top-1, lemma typed without stress | top-3 | calibration error |\n|---|---:|---:|---:|---:|---:|---:|\n");
-    } else {
-        s.push_str("| | held-out words | forms | top-1 | top-3 | calibration error |\n|---|---:|---:|---:|---:|---:|\n");
-    }
+    s.push_str(
+        "| | held-out words | forms | top-1 | top-3 | calibration error | top-1, lemma in full |\n|---|---:|---:|---:|---:|---:|---:|\n",
+    );
     for m in measured {
-        if stress {
-            let _ = writeln!(
-                s,
-                "| {} | {} | {} | **{:.2}%** | {:.2}% | {:.2}% | {:.3} |",
-                m.name,
-                m.test_words,
-                m.full.forms,
-                100.0 * m.full.accuracy(),
-                100.0 * m.plain.accuracy(),
-                100.0 * m.full.top3_accuracy(),
-                m.full.calibration_error()
-            );
-        } else {
-            let _ = writeln!(
-                s,
-                "| {} | {} | {} | **{:.2}%** | {:.2}% | {:.3} |",
-                m.name,
-                m.test_words,
-                m.full.forms,
-                100.0 * m.full.accuracy(),
-                100.0 * m.full.top3_accuracy(),
-                m.full.calibration_error()
-            );
-        }
+        let _ = writeln!(
+            s,
+            "| {} | {} | {} | **{:.2}%** | {:.2}% | {:.3} | {:.2}% |",
+            m.name,
+            m.test_words,
+            m.headword.forms,
+            100.0 * m.headword.accuracy(),
+            100.0 * m.headword.top3_accuracy(),
+            m.headword.calibration_error(),
+            100.0 * m.full.accuracy(),
+        );
     }
     s.push('\n');
     s

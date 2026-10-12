@@ -48,9 +48,9 @@ reason (the rule and its counts).
 
 | | words | paradigms | rules | listed words | irregular forms |
 |---|---:|---:|---:|---:|---:|
-| noun | 5023 | 56 | 292 | 1058 | 1319 |
-| adjective | 1964 | 36 | 127 | 413 | 2700 |
-| verb | 1014 | 40 | 127 | 429 | 8458 |
+| noun | 5023 | 55 | 268 | 1045 | 1510 |
+| adjective | 1964 | 36 | 122 | 401 | 2658 |
+| verb | 1014 | 41 | 133 | 440 | 8437 |
 | pronoun | 15 | 1 | 1 | 11 | 308 |
 
 *Words*: the dictionary's words the grammar is learned from. *Rules*: the endings that
@@ -67,9 +67,9 @@ from how often it is right (0 is perfect).
 
 | | held-out words | forms | top-1 | top-3 | calibration error |
 |---|---:|---:|---:|---:|---:|
-| noun | 576 | 13801 | **91.58%** | 98.51% | 0.022 |
-| adjective | 190 | 13456 | **90.21%** | 98.36% | 0.039 |
-| verb | 88 | 7237 | **87.61%** | 88.77% | 0.101 |
+| noun | 576 | 13801 | **91.80%** | 98.46% | 0.022 |
+| adjective | 190 | 13456 | **91.52%** | 98.89% | 0.027 |
+| verb | 88 | 7237 | **87.61%** | 88.77% | 0.102 |
 | pronoun | 3 | 207 | **67.15%** | 67.15% | 0.329 |
 
 

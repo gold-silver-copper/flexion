@@ -246,118 +246,112 @@ macro_rules! declension {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `veraltet`: 10,471 words.
+    /// Like `veraltet`: 8,389 words.
     Veraltet,
-    /// Like `glatt`: 2,650 words.
+    /// Like `glatt`: 2,293 words.
     Glatt,
     /// Like `erkoren`: 386 words.
     Erkoren,
     /// Like `affig`: 301 words.
     Affig,
-    /// Like `böse`: 255 words.
-    Böse,
     /// Like `muffig`: 177 words.
     Muffig,
-    /// Like `edel`: 99 words.
+    /// Like `böse`: 130 words.
+    Böse,
+    /// Like `edel`: 90 words.
     Edel,
     /// Like `aufrecht`: 88 words.
     Aufrecht,
     /// Like `maßlos`: 60 words.
     Maßlos,
-    /// Like `scharf`: 43 words.
-    Scharf,
     /// Like `überfinanziert`: 40 words.
     Überfinanziert,
-    /// Like `schwarz`: 36 words.
-    Schwarz,
-    /// Like `unsicher`: 27 words.
+    /// Like `scharf`: 37 words.
+    Scharf,
+    /// Like `unsicher`: 25 words.
     Unsicher,
     /// Like `träge`: 24 words.
     Träge,
-    /// Like `karg`: 23 words.
+    /// Like `karg`: 19 words.
     Karg,
-    /// Like `zeitnah`: 17 words.
+    /// Like `schwarz`: 17 words.
+    Schwarz,
+    /// Like `zeitnah`: 15 words.
     Zeitnah,
     /// Like `gedacht`: 13 words.
     Gedacht,
     /// Like `verschieden`: 12 words.
     Verschieden,
-    /// Like `groß`: 11 words.
-    Groß,
     /// Like `fade`: 10 words.
     Fade,
-    /// Like `kurz`: 9 words.
-    Kurz,
-    /// Like `dumm`: 9 words.
-    Dumm,
+    /// Like `rot`: 10 words.
+    Rot,
     /// Like `unedel`: 9 words.
     Unedel,
-    /// Like `oberer`: 9 words.
-    Oberer,
-    /// Like `rot`: 7 words.
-    Rot,
-    /// Like `grob`: 7 words.
+    /// Like `nug`: 8 words.
+    Nug,
+    /// Like `terer`: 8 words.
+    Terer,
+    /// Like `kurz`: 7 words.
+    Kurz,
+    /// Like `grob`: 6 words.
     Grob,
-    /// Like `lila`: 6 words.
-    Lila,
-    /// Like `hoch`: 6 words.
-    Hoch,
     /// Like `amyloid`: 5 words.
     Amyloid,
+    /// Like `hoch`: 5 words.
+    Hoch,
     /// Like `amtlich`: 5 words.
     Amtlich,
+    /// Like `naß`: 5 words.
+    Naß,
     /// Like `abgeschlossen`: 4 words.
     Abgeschlossen,
+    /// Like `lila`: 3 words.
+    Lila,
     /// Like `aper`: 3 words.
     Aper,
-    /// Like `naß`: 3 words.
-    Naß,
     /// Like `affabel`: 3 words.
     Affabel,
-    /// Like `kraß`: 3 words.
-    Kraß,
     /// Like `aschearm`: 3 words.
     Aschearm,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 36] = [
+    pub const ALL: [Declension; 34] = [
         Declension::Veraltet,
         Declension::Glatt,
         Declension::Erkoren,
         Declension::Affig,
-        Declension::Böse,
         Declension::Muffig,
+        Declension::Böse,
         Declension::Edel,
         Declension::Aufrecht,
         Declension::Maßlos,
-        Declension::Scharf,
         Declension::Überfinanziert,
-        Declension::Schwarz,
+        Declension::Scharf,
         Declension::Unsicher,
         Declension::Träge,
         Declension::Karg,
+        Declension::Schwarz,
         Declension::Zeitnah,
         Declension::Gedacht,
         Declension::Verschieden,
-        Declension::Groß,
         Declension::Fade,
-        Declension::Kurz,
-        Declension::Dumm,
-        Declension::Unedel,
-        Declension::Oberer,
         Declension::Rot,
+        Declension::Unedel,
+        Declension::Nug,
+        Declension::Terer,
+        Declension::Kurz,
         Declension::Grob,
-        Declension::Lila,
-        Declension::Hoch,
         Declension::Amyloid,
+        Declension::Hoch,
         Declension::Amtlich,
-        Declension::Abgeschlossen,
-        Declension::Aper,
         Declension::Naß,
+        Declension::Abgeschlossen,
+        Declension::Lila,
+        Declension::Aper,
         Declension::Affabel,
-        Declension::Kraß,
         Declension::Aschearm,
     ];
 
@@ -376,9 +370,9 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
-    // Veraltet: 10,471 words (synonym, abaxial, abdominal, aboral, plural, dick).
-    declension!("veraltet", 10471, "~";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 34] = [
+    // Veraltet: 8,389 words (plural, dick, hell, urban, global, mental).
+    declension!("veraltet", 8389, "~";
         strong_nominative: "~er", "~e", "~es", "~e";
         strong_genitive: "~en", "~er", "~en", "~er";
         strong_dative: "~em", "~er", "~em", "~en";
@@ -417,8 +411,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         superlative_mixed_accusative: "~sten", "~ste", "~stes", "~sten";
         predicative: "~", "~er", "am ~sten";
     ),
-    // Glatt: 2,650 words (frei, absent, abstinent, flatulent, feist, new).
-    declension!("glatt", 2650, "~";
+    // Glatt: 2,293 words (frei, flatulent, feist, new, pedant, blond).
+    declension!("glatt", 2293, "~";
         strong_nominative: "~er", "~e", "~es", "~e";
         strong_genitive: "~en", "~er", "~en", "~er";
         strong_dative: "~em", "~er", "~em", "~en";
@@ -537,46 +531,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         superlative_mixed_accusative: "~~sten", "~~ste", "~~stes", "~~sten";
         predicative: "~~", "~~er", "~m a~sten";
     ),
-    // Böse: 255 words (orange, safe, lose, woke, nice, müde).
-    declension!("böse", 255, "~";
-        strong_nominative: "~r", "~", "~s", "~";
-        strong_genitive: "~n", "~r", "~n", "~r";
-        strong_dative: "~m", "~r", "~m", "~n";
-        strong_accusative: "~n", "~", "~s", "~";
-        weak_nominative: "~", "~", "~", "~n";
-        weak_genitive: "~n", "~n", "~n", "~n";
-        weak_dative: "~n", "~n", "~n", "~n";
-        weak_accusative: "~n", "~", "~", "~n";
-        mixed_nominative: "~r", "~", "~s", "~n";
-        mixed_genitive: "~n", "~n", "~n", "~n";
-        mixed_dative: "~n", "~n", "~n", "~n";
-        mixed_accusative: "~n", "~", "~s", "~n";
-        comparative_strong_nominative: "~rer", "~re", "~res", "~re";
-        comparative_strong_genitive: "~ren", "~rer", "~ren", "~rer";
-        comparative_strong_dative: "~rem", "~rer", "~rem", "~ren";
-        comparative_strong_accusative: "~ren", "~re", "~res", "~re";
-        comparative_weak_nominative: "~re", "~re", "~re", "~ren";
-        comparative_weak_genitive: "~ren", "~ren", "~ren", "~ren";
-        comparative_weak_dative: "~ren", "~ren", "~ren", "~ren";
-        comparative_weak_accusative: "~ren", "~re", "~re", "~ren";
-        comparative_mixed_nominative: "~rer", "~re", "~res", "~ren";
-        comparative_mixed_genitive: "~ren", "~ren", "~ren", "~ren";
-        comparative_mixed_dative: "~ren", "~ren", "~ren", "~ren";
-        comparative_mixed_accusative: "~ren", "~re", "~res", "~ren";
-        superlative_strong_nominative: "~ster", "~ste", "~stes", "~ste";
-        superlative_strong_genitive: "~sten", "~ster", "~sten", "~ster";
-        superlative_strong_dative: "~stem", "~ster", "~stem", "~sten";
-        superlative_strong_accusative: "~sten", "~ste", "~stes", "~ste";
-        superlative_weak_nominative: "~ste", "~ste", "~ste", "~sten";
-        superlative_weak_genitive: "~sten", "~sten", "~sten", "~sten";
-        superlative_weak_dative: "~sten", "~sten", "~sten", "~sten";
-        superlative_weak_accusative: "~sten", "~ste", "~ste", "~sten";
-        superlative_mixed_nominative: "~ster", "~ste", "~stes", "~sten";
-        superlative_mixed_genitive: "~sten", "~sten", "~sten", "~sten";
-        superlative_mixed_dative: "~sten", "~sten", "~sten", "~sten";
-        superlative_mixed_accusative: "~sten", "~ste", "~stes", "~sten";
-        predicative: "~", "~r", "am ~sten";
-    ),
     // Muffig: 177 words (mutig, mobil, minim, modern, modular, männlich).
     declension!("muffig", 177, "~~";
         strong_nominative: "~~er", "~~e", "~~es", "~~e";
@@ -617,8 +571,48 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         superlative_mixed_accusative: "~~sten", "~~ste", "~~stes", "~~sten";
         predicative: "~~", "~~er", "a~ m~sten";
     ),
-    // Edel: 99 words (übel, nobel, dunkel, simpel, sauer, teuer).
-    declension!("edel", 99, "~e~";
+    // Böse: 130 words (orange, safe, lose, woke, nice, müde).
+    declension!("böse", 130, "~";
+        strong_nominative: "~r", "~", "~s", "~";
+        strong_genitive: "~n", "~r", "~n", "~r";
+        strong_dative: "~m", "~r", "~m", "~n";
+        strong_accusative: "~n", "~", "~s", "~";
+        weak_nominative: "~", "~", "~", "~n";
+        weak_genitive: "~n", "~n", "~n", "~n";
+        weak_dative: "~n", "~n", "~n", "~n";
+        weak_accusative: "~n", "~", "~", "~n";
+        mixed_nominative: "~r", "~", "~s", "~n";
+        mixed_genitive: "~n", "~n", "~n", "~n";
+        mixed_dative: "~n", "~n", "~n", "~n";
+        mixed_accusative: "~n", "~", "~s", "~n";
+        comparative_strong_nominative: "~rer", "~re", "~res", "~re";
+        comparative_strong_genitive: "~ren", "~rer", "~ren", "~rer";
+        comparative_strong_dative: "~rem", "~rer", "~rem", "~ren";
+        comparative_strong_accusative: "~ren", "~re", "~res", "~re";
+        comparative_weak_nominative: "~re", "~re", "~re", "~ren";
+        comparative_weak_genitive: "~ren", "~ren", "~ren", "~ren";
+        comparative_weak_dative: "~ren", "~ren", "~ren", "~ren";
+        comparative_weak_accusative: "~ren", "~re", "~re", "~ren";
+        comparative_mixed_nominative: "~rer", "~re", "~res", "~ren";
+        comparative_mixed_genitive: "~ren", "~ren", "~ren", "~ren";
+        comparative_mixed_dative: "~ren", "~ren", "~ren", "~ren";
+        comparative_mixed_accusative: "~ren", "~re", "~res", "~ren";
+        superlative_strong_nominative: "~ster", "~ste", "~stes", "~ste";
+        superlative_strong_genitive: "~sten", "~ster", "~sten", "~ster";
+        superlative_strong_dative: "~stem", "~ster", "~stem", "~sten";
+        superlative_strong_accusative: "~sten", "~ste", "~stes", "~ste";
+        superlative_weak_nominative: "~ste", "~ste", "~ste", "~sten";
+        superlative_weak_genitive: "~sten", "~sten", "~sten", "~sten";
+        superlative_weak_dative: "~sten", "~sten", "~sten", "~sten";
+        superlative_weak_accusative: "~sten", "~ste", "~ste", "~sten";
+        superlative_mixed_nominative: "~ster", "~ste", "~stes", "~sten";
+        superlative_mixed_genitive: "~sten", "~sten", "~sten", "~sten";
+        superlative_mixed_dative: "~sten", "~sten", "~sten", "~sten";
+        superlative_mixed_accusative: "~sten", "~ste", "~stes", "~sten";
+        predicative: "~", "~r", "am ~sten";
+    ),
+    // Edel: 90 words (übel, nobel, dunkel, simpel, sauer, teuer).
+    declension!("edel", 90, "~e~";
         strong_nominative: "~~er", "~~e", "~~es", "~~e";
         strong_genitive: "~~en", "~~er", "~~en", "~~er";
         strong_dative: "~~em", "~~er", "~~em", "~~en";
@@ -737,46 +731,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         superlative_mixed_accusative: "~~esten", "~~este", "~~estes", "~~esten";
         predicative: "~~", "~~er", "a~ m~esten";
     ),
-    // Scharf: 43 words (warm, stark, lang, scharf, schwach, krank).
-    declension!("scharf", 43, "~a~";
-        strong_nominative: "~a~er", "~a~e", "~a~es", "~a~e";
-        strong_genitive: "~a~en", "~a~er", "~a~en", "~a~er";
-        strong_dative: "~a~em", "~a~er", "~a~em", "~a~en";
-        strong_accusative: "~a~en", "~a~e", "~a~es", "~a~e";
-        weak_nominative: "~a~e", "~a~e", "~a~e", "~a~en";
-        weak_genitive: "~a~en", "~a~en", "~a~en", "~a~en";
-        weak_dative: "~a~en", "~a~en", "~a~en", "~a~en";
-        weak_accusative: "~a~en", "~a~e", "~a~e", "~a~en";
-        mixed_nominative: "~a~er", "~a~e", "~a~es", "~a~en";
-        mixed_genitive: "~a~en", "~a~en", "~a~en", "~a~en";
-        mixed_dative: "~a~en", "~a~en", "~a~en", "~a~en";
-        mixed_accusative: "~a~en", "~a~e", "~a~es", "~a~en";
-        comparative_strong_nominative: "~ä~erer", "~ä~ere", "~ä~eres", "~ä~ere";
-        comparative_strong_genitive: "~ä~eren", "~ä~erer", "~ä~eren", "~ä~erer";
-        comparative_strong_dative: "~ä~erem", "~ä~erer", "~ä~erem", "~ä~eren";
-        comparative_strong_accusative: "~ä~eren", "~ä~ere", "~ä~eres", "~ä~ere";
-        comparative_weak_nominative: "~ä~ere", "~ä~ere", "~ä~ere", "~ä~eren";
-        comparative_weak_genitive: "~ä~eren", "~ä~eren", "~ä~eren", "~ä~eren";
-        comparative_weak_dative: "~ä~eren", "~ä~eren", "~ä~eren", "~ä~eren";
-        comparative_weak_accusative: "~ä~eren", "~ä~ere", "~ä~ere", "~ä~eren";
-        comparative_mixed_nominative: "~ä~erer", "~ä~ere", "~ä~eres", "~ä~eren";
-        comparative_mixed_genitive: "~ä~eren", "~ä~eren", "~ä~eren", "~ä~eren";
-        comparative_mixed_dative: "~ä~eren", "~ä~eren", "~ä~eren", "~ä~eren";
-        comparative_mixed_accusative: "~ä~eren", "~ä~ere", "~ä~eres", "~ä~eren";
-        superlative_strong_nominative: "~ä~ster", "~ä~ste", "~ä~stes", "~ä~ste";
-        superlative_strong_genitive: "~ä~sten", "~ä~ster", "~ä~sten", "~ä~ster";
-        superlative_strong_dative: "~ä~stem", "~ä~ster", "~ä~stem", "~ä~sten";
-        superlative_strong_accusative: "~ä~sten", "~ä~ste", "~ä~stes", "~ä~ste";
-        superlative_weak_nominative: "~ä~ste", "~ä~ste", "~ä~ste", "~ä~sten";
-        superlative_weak_genitive: "~ä~sten", "~ä~sten", "~ä~sten", "~ä~sten";
-        superlative_weak_dative: "~ä~sten", "~ä~sten", "~ä~sten", "~ä~sten";
-        superlative_weak_accusative: "~ä~sten", "~ä~ste", "~ä~ste", "~ä~sten";
-        superlative_mixed_nominative: "~ä~ster", "~ä~ste", "~ä~stes", "~ä~sten";
-        superlative_mixed_genitive: "~ä~sten", "~ä~sten", "~ä~sten", "~ä~sten";
-        superlative_mixed_dative: "~ä~sten", "~ä~sten", "~ä~sten", "~ä~sten";
-        superlative_mixed_accusative: "~ä~sten", "~ä~ste", "~ä~stes", "~ä~sten";
-        predicative: "~a~", "~ä~er", "am ~ä~sten";
-    ),
     // Überfinanziert: 40 words (interessiert, diskutiert, abandonniert, desillusioniert, fragmentiert, deaktiviert).
     declension!("überfinanziert", 40, "~~";
         strong_nominative: "~~er", "~~e", "~~es", "~~e";
@@ -817,8 +771,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         superlative_mixed_accusative: "~~sten", "~~ste", "~~stes", "~~sten";
         predicative: "ist ~~", "ist ~~er", "ist ~m a~sten";
     ),
-    // Schwarz: 36 words (hart, kalt, schwarz, galt, uralt, pechschwarz).
-    declension!("schwarz", 36, "~a~";
+    // Scharf: 37 words (warm, stark, lang, scharf, schwach, krank).
+    declension!("scharf", 37, "~a~";
         strong_nominative: "~a~er", "~a~e", "~a~es", "~a~e";
         strong_genitive: "~a~en", "~a~er", "~a~en", "~a~er";
         strong_dative: "~a~em", "~a~er", "~a~em", "~a~en";
@@ -843,22 +797,22 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         comparative_mixed_genitive: "~ä~eren", "~ä~eren", "~ä~eren", "~ä~eren";
         comparative_mixed_dative: "~ä~eren", "~ä~eren", "~ä~eren", "~ä~eren";
         comparative_mixed_accusative: "~ä~eren", "~ä~ere", "~ä~eres", "~ä~eren";
-        superlative_strong_nominative: "~ä~ester", "~ä~este", "~ä~estes", "~ä~este";
-        superlative_strong_genitive: "~ä~esten", "~ä~ester", "~ä~esten", "~ä~ester";
-        superlative_strong_dative: "~ä~estem", "~ä~ester", "~ä~estem", "~ä~esten";
-        superlative_strong_accusative: "~ä~esten", "~ä~este", "~ä~estes", "~ä~este";
-        superlative_weak_nominative: "~ä~este", "~ä~este", "~ä~este", "~ä~esten";
-        superlative_weak_genitive: "~ä~esten", "~ä~esten", "~ä~esten", "~ä~esten";
-        superlative_weak_dative: "~ä~esten", "~ä~esten", "~ä~esten", "~ä~esten";
-        superlative_weak_accusative: "~ä~esten", "~ä~este", "~ä~este", "~ä~esten";
-        superlative_mixed_nominative: "~ä~ester", "~ä~este", "~ä~estes", "~ä~esten";
-        superlative_mixed_genitive: "~ä~esten", "~ä~esten", "~ä~esten", "~ä~esten";
-        superlative_mixed_dative: "~ä~esten", "~ä~esten", "~ä~esten", "~ä~esten";
-        superlative_mixed_accusative: "~ä~esten", "~ä~este", "~ä~estes", "~ä~esten";
-        predicative: "~a~", "~ä~er", "am ~ä~esten";
+        superlative_strong_nominative: "~ä~ster", "~ä~ste", "~ä~stes", "~ä~ste";
+        superlative_strong_genitive: "~ä~sten", "~ä~ster", "~ä~sten", "~ä~ster";
+        superlative_strong_dative: "~ä~stem", "~ä~ster", "~ä~stem", "~ä~sten";
+        superlative_strong_accusative: "~ä~sten", "~ä~ste", "~ä~stes", "~ä~ste";
+        superlative_weak_nominative: "~ä~ste", "~ä~ste", "~ä~ste", "~ä~sten";
+        superlative_weak_genitive: "~ä~sten", "~ä~sten", "~ä~sten", "~ä~sten";
+        superlative_weak_dative: "~ä~sten", "~ä~sten", "~ä~sten", "~ä~sten";
+        superlative_weak_accusative: "~ä~sten", "~ä~ste", "~ä~ste", "~ä~sten";
+        superlative_mixed_nominative: "~ä~ster", "~ä~ste", "~ä~stes", "~ä~sten";
+        superlative_mixed_genitive: "~ä~sten", "~ä~sten", "~ä~sten", "~ä~sten";
+        superlative_mixed_dative: "~ä~sten", "~ä~sten", "~ä~sten", "~ä~sten";
+        superlative_mixed_accusative: "~ä~sten", "~ä~ste", "~ä~stes", "~ä~sten";
+        predicative: "~a~", "~ä~er", "am ~ä~sten";
     ),
-    // Unsicher: 27 words (sicher, clever, düster, hager, selbstsicher, unsicher).
-    declension!("unsicher", 27, "~~";
+    // Unsicher: 25 words (sicher, clever, düster, hager, selbstsicher, unsicher).
+    declension!("unsicher", 25, "~~";
         strong_nominative: "~~er", "~~e", "~~es", "~~e";
         strong_genitive: "~~en", "~~er", "~~en", "~~er";
         strong_dative: "~~em", "~~er", "~~em", "~~en";
@@ -897,7 +851,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         superlative_mixed_accusative: "~~sten", "~~ste", "~~stes", "~~sten";
         predicative: "~~", "~~er|~r~", "am ~~sten";
     ),
-    // Träge: 24 words (beige, broke, malle, fake, knorke, äußere).
+    // Träge: 24 words (broke, malle, fake, knorke, äußere, zähe).
     declension!("träge", 24, "~~";
         strong_nominative: "~~r", "~~", "~~s", "~~";
         strong_genitive: "~~n", "~~r", "~~n", "~~r";
@@ -937,8 +891,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         superlative_mixed_accusative: "~st~n", "~st~", "~st~s", "~st~n";
         predicative: "~~", "~~r", "am ~st~n";
     ),
-    // Karg: 23 words (bang, schmal, karg, wochenlang, tagelang, jahrelang).
-    declension!("karg", 23, "~a~";
+    // Karg: 19 words (bang, schmal, karg, wochenlang, jahrelang, geraum).
+    declension!("karg", 19, "~a~";
         strong_nominative: "~a~er", "~a~e", "~a~es", "~a~e";
         strong_genitive: "~a~en", "~a~er", "~a~en", "~a~er";
         strong_dative: "~a~em", "~a~er", "~a~em", "~a~en";
@@ -977,8 +931,48 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         superlative_mixed_accusative: "~a~sten", "~a~ste", "~a~stes", "~a~sten";
         predicative: "~a~", "~a~er", "am ~a~sten";
     ),
-    // Zeitnah: 17 words (nah, bodennah, oberflächennah, verbrauchernah, körpernah, zeitnah).
-    declension!("zeitnah", 17, "~a~";
+    // Schwarz: 17 words (hart, kalt, schwarz, galt, pechschwarz, schweinekalt).
+    declension!("schwarz", 17, "~a~";
+        strong_nominative: "~a~er", "~a~e", "~a~es", "~a~e";
+        strong_genitive: "~a~en", "~a~er", "~a~en", "~a~er";
+        strong_dative: "~a~em", "~a~er", "~a~em", "~a~en";
+        strong_accusative: "~a~en", "~a~e", "~a~es", "~a~e";
+        weak_nominative: "~a~e", "~a~e", "~a~e", "~a~en";
+        weak_genitive: "~a~en", "~a~en", "~a~en", "~a~en";
+        weak_dative: "~a~en", "~a~en", "~a~en", "~a~en";
+        weak_accusative: "~a~en", "~a~e", "~a~e", "~a~en";
+        mixed_nominative: "~a~er", "~a~e", "~a~es", "~a~en";
+        mixed_genitive: "~a~en", "~a~en", "~a~en", "~a~en";
+        mixed_dative: "~a~en", "~a~en", "~a~en", "~a~en";
+        mixed_accusative: "~a~en", "~a~e", "~a~es", "~a~en";
+        comparative_strong_nominative: "~ä~erer", "~ä~ere", "~ä~eres", "~ä~ere";
+        comparative_strong_genitive: "~ä~eren", "~ä~erer", "~ä~eren", "~ä~erer";
+        comparative_strong_dative: "~ä~erem", "~ä~erer", "~ä~erem", "~ä~eren";
+        comparative_strong_accusative: "~ä~eren", "~ä~ere", "~ä~eres", "~ä~ere";
+        comparative_weak_nominative: "~ä~ere", "~ä~ere", "~ä~ere", "~ä~eren";
+        comparative_weak_genitive: "~ä~eren", "~ä~eren", "~ä~eren", "~ä~eren";
+        comparative_weak_dative: "~ä~eren", "~ä~eren", "~ä~eren", "~ä~eren";
+        comparative_weak_accusative: "~ä~eren", "~ä~ere", "~ä~ere", "~ä~eren";
+        comparative_mixed_nominative: "~ä~erer", "~ä~ere", "~ä~eres", "~ä~eren";
+        comparative_mixed_genitive: "~ä~eren", "~ä~eren", "~ä~eren", "~ä~eren";
+        comparative_mixed_dative: "~ä~eren", "~ä~eren", "~ä~eren", "~ä~eren";
+        comparative_mixed_accusative: "~ä~eren", "~ä~ere", "~ä~eres", "~ä~eren";
+        superlative_strong_nominative: "~ä~ester", "~ä~este", "~ä~estes", "~ä~este";
+        superlative_strong_genitive: "~ä~esten", "~ä~ester", "~ä~esten", "~ä~ester";
+        superlative_strong_dative: "~ä~estem", "~ä~ester", "~ä~estem", "~ä~esten";
+        superlative_strong_accusative: "~ä~esten", "~ä~este", "~ä~estes", "~ä~este";
+        superlative_weak_nominative: "~ä~este", "~ä~este", "~ä~este", "~ä~esten";
+        superlative_weak_genitive: "~ä~esten", "~ä~esten", "~ä~esten", "~ä~esten";
+        superlative_weak_dative: "~ä~esten", "~ä~esten", "~ä~esten", "~ä~esten";
+        superlative_weak_accusative: "~ä~esten", "~ä~este", "~ä~este", "~ä~esten";
+        superlative_mixed_nominative: "~ä~ester", "~ä~este", "~ä~estes", "~ä~esten";
+        superlative_mixed_genitive: "~ä~esten", "~ä~esten", "~ä~esten", "~ä~esten";
+        superlative_mixed_dative: "~ä~esten", "~ä~esten", "~ä~esten", "~ä~esten";
+        superlative_mixed_accusative: "~ä~esten", "~ä~este", "~ä~estes", "~ä~esten";
+        predicative: "~a~", "~ä~er", "am ~ä~esten";
+    ),
+    // Zeitnah: 15 words (nah, bodennah, körpernah, zeitnah, regierungsnah, citynah).
+    declension!("zeitnah", 15, "~a~";
         strong_nominative: "~a~er", "~a~e", "~a~es", "~a~e";
         strong_genitive: "~a~en", "~a~er", "~a~en", "~a~er";
         strong_dative: "~a~em", "~a~er", "~a~em", "~a~en";
@@ -1097,47 +1091,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         superlative_mixed_accusative: "~e~sten", "~e~ste", "~e~stes", "~e~sten";
         predicative: "~e~", "~e~er|~~er", "am ~e~sten";
     ),
-    // Groß: 11 words (groß, gross, riesengroß, mittelgroß, flächengroß, übergroß).
-    declension!("groß", 11, "~o~";
-        strong_nominative: "~o~er", "~o~e", "~o~es", "~o~e";
-        strong_genitive: "~o~en", "~o~er", "~o~en", "~o~er";
-        strong_dative: "~o~em", "~o~er", "~o~em", "~o~en";
-        strong_accusative: "~o~en", "~o~e", "~o~es", "~o~e";
-        weak_nominative: "~o~e", "~o~e", "~o~e", "~o~en";
-        weak_genitive: "~o~en", "~o~en", "~o~en", "~o~en";
-        weak_dative: "~o~en", "~o~en", "~o~en", "~o~en";
-        weak_accusative: "~o~en", "~o~e", "~o~e", "~o~en";
-        mixed_nominative: "~o~er", "~o~e", "~o~es", "~o~en";
-        mixed_genitive: "~o~en", "~o~en", "~o~en", "~o~en";
-        mixed_dative: "~o~en", "~o~en", "~o~en", "~o~en";
-        mixed_accusative: "~o~en", "~o~e", "~o~es", "~o~en";
-        comparative_strong_nominative: "~ö~erer", "~ö~ere", "~ö~eres", "~ö~ere";
-        comparative_strong_genitive: "~ö~eren", "~ö~erer", "~ö~eren", "~ö~erer";
-        comparative_strong_dative: "~ö~erem", "~ö~erer", "~ö~erem", "~ö~eren";
-        comparative_strong_accusative: "~ö~eren", "~ö~ere", "~ö~eres", "~ö~ere";
-        comparative_weak_nominative: "~ö~ere", "~ö~ere", "~ö~ere", "~ö~eren";
-        comparative_weak_genitive: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
-        comparative_weak_dative: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
-        comparative_weak_accusative: "~ö~eren", "~ö~ere", "~ö~ere", "~ö~eren";
-        comparative_mixed_nominative: "~ö~erer", "~ö~ere", "~ö~eres", "~ö~eren";
-        comparative_mixed_genitive: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
-        comparative_mixed_dative: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
-        comparative_mixed_accusative: "~ö~eren", "~ö~ere", "~ö~eres", "~ö~eren";
-        superlative_strong_nominative: "~ö~ter", "~ö~te", "~ö~tes", "~ö~te";
-        superlative_strong_genitive: "~ö~ten", "~ö~ter", "~ö~ten", "~ö~ter";
-        superlative_strong_dative: "~ö~tem", "~ö~ter", "~ö~tem", "~ö~ten";
-        superlative_strong_accusative: "~ö~ten", "~ö~te", "~ö~tes", "~ö~te";
-        superlative_weak_nominative: "~ö~te", "~ö~te", "~ö~te", "~ö~ten";
-        superlative_weak_genitive: "~ö~ten", "~ö~ten", "~ö~ten", "~ö~ten";
-        superlative_weak_dative: "~ö~ten", "~ö~ten", "~ö~ten", "~ö~ten";
-        superlative_weak_accusative: "~ö~ten", "~ö~te", "~ö~te", "~ö~ten";
-        superlative_mixed_nominative: "~ö~ter", "~ö~te", "~ö~tes", "~ö~ten";
-        superlative_mixed_genitive: "~ö~ten", "~ö~ten", "~ö~ten", "~ö~ten";
-        superlative_mixed_dative: "~ö~ten", "~ö~ten", "~ö~ten", "~ö~ten";
-        superlative_mixed_accusative: "~ö~ten", "~ö~te", "~ö~tes", "~ö~ten";
-        predicative: "~o~", "~ö~er", "am ~ö~ten";
-    ),
-    // Fade: 10 words (fade, ladylike, schnurgerade, helle, malade, gerade).
+    // Fade: 10 words (fade, ladylike, schnurgerade, helle, malade, dröge).
     declension!("fade", 10, "~~";
         strong_nominative: "~~r", "~~", "~~s", "~~";
         strong_genitive: "~~n", "~~r", "~~n", "~~r";
@@ -1177,85 +1131,45 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         superlative_mixed_accusative: "~~sten", "~~ste", "~~stes", "~~sten";
         predicative: "~~", "~~r", "am ~~sten";
     ),
-    // Kurz: 9 words (kurz, gesund, schnurz, ungesund, superkurz, ultrakurz).
-    declension!("kurz", 9, "~u~";
-        strong_nominative: "~u~er", "~u~e", "~u~es", "~u~e";
-        strong_genitive: "~u~en", "~u~er", "~u~en", "~u~er";
-        strong_dative: "~u~em", "~u~er", "~u~em", "~u~en";
-        strong_accusative: "~u~en", "~u~e", "~u~es", "~u~e";
-        weak_nominative: "~u~e", "~u~e", "~u~e", "~u~en";
-        weak_genitive: "~u~en", "~u~en", "~u~en", "~u~en";
-        weak_dative: "~u~en", "~u~en", "~u~en", "~u~en";
-        weak_accusative: "~u~en", "~u~e", "~u~e", "~u~en";
-        mixed_nominative: "~u~er", "~u~e", "~u~es", "~u~en";
-        mixed_genitive: "~u~en", "~u~en", "~u~en", "~u~en";
-        mixed_dative: "~u~en", "~u~en", "~u~en", "~u~en";
-        mixed_accusative: "~u~en", "~u~e", "~u~es", "~u~en";
-        comparative_strong_nominative: "~ü~erer", "~ü~ere", "~ü~eres", "~ü~ere";
-        comparative_strong_genitive: "~ü~eren", "~ü~erer", "~ü~eren", "~ü~erer";
-        comparative_strong_dative: "~ü~erem", "~ü~erer", "~ü~erem", "~ü~eren";
-        comparative_strong_accusative: "~ü~eren", "~ü~ere", "~ü~eres", "~ü~ere";
-        comparative_weak_nominative: "~ü~ere", "~ü~ere", "~ü~ere", "~ü~eren";
-        comparative_weak_genitive: "~ü~eren", "~ü~eren", "~ü~eren", "~ü~eren";
-        comparative_weak_dative: "~ü~eren", "~ü~eren", "~ü~eren", "~ü~eren";
-        comparative_weak_accusative: "~ü~eren", "~ü~ere", "~ü~ere", "~ü~eren";
-        comparative_mixed_nominative: "~ü~erer", "~ü~ere", "~ü~eres", "~ü~eren";
-        comparative_mixed_genitive: "~ü~eren", "~ü~eren", "~ü~eren", "~ü~eren";
-        comparative_mixed_dative: "~ü~eren", "~ü~eren", "~ü~eren", "~ü~eren";
-        comparative_mixed_accusative: "~ü~eren", "~ü~ere", "~ü~eres", "~ü~eren";
-        superlative_strong_nominative: "~ü~ester", "~ü~este", "~ü~estes", "~ü~este";
-        superlative_strong_genitive: "~ü~esten", "~ü~ester", "~ü~esten", "~ü~ester";
-        superlative_strong_dative: "~ü~estem", "~ü~ester", "~ü~estem", "~ü~esten";
-        superlative_strong_accusative: "~ü~esten", "~ü~este", "~ü~estes", "~ü~este";
-        superlative_weak_nominative: "~ü~este", "~ü~este", "~ü~este", "~ü~esten";
-        superlative_weak_genitive: "~ü~esten", "~ü~esten", "~ü~esten", "~ü~esten";
-        superlative_weak_dative: "~ü~esten", "~ü~esten", "~ü~esten", "~ü~esten";
-        superlative_weak_accusative: "~ü~esten", "~ü~este", "~ü~este", "~ü~esten";
-        superlative_mixed_nominative: "~ü~ester", "~ü~este", "~ü~estes", "~ü~esten";
-        superlative_mixed_genitive: "~ü~esten", "~ü~esten", "~ü~esten", "~ü~esten";
-        superlative_mixed_dative: "~ü~esten", "~ü~esten", "~ü~esten", "~ü~esten";
-        superlative_mixed_accusative: "~ü~esten", "~ü~este", "~ü~estes", "~ü~esten";
-        predicative: "~u~", "~ü~er", "am ~ü~esten";
-    ),
-    // Dumm: 9 words (dumm, jung, klug, genug, unklug, altklug).
-    declension!("dumm", 9, "~u~";
-        strong_nominative: "~u~er", "~u~e", "~u~es", "~u~e";
-        strong_genitive: "~u~en", "~u~er", "~u~en", "~u~er";
-        strong_dative: "~u~em", "~u~er", "~u~em", "~u~en";
-        strong_accusative: "~u~en", "~u~e", "~u~es", "~u~e";
-        weak_nominative: "~u~e", "~u~e", "~u~e", "~u~en";
-        weak_genitive: "~u~en", "~u~en", "~u~en", "~u~en";
-        weak_dative: "~u~en", "~u~en", "~u~en", "~u~en";
-        weak_accusative: "~u~en", "~u~e", "~u~e", "~u~en";
-        mixed_nominative: "~u~er", "~u~e", "~u~es", "~u~en";
-        mixed_genitive: "~u~en", "~u~en", "~u~en", "~u~en";
-        mixed_dative: "~u~en", "~u~en", "~u~en", "~u~en";
-        mixed_accusative: "~u~en", "~u~e", "~u~es", "~u~en";
-        comparative_strong_nominative: "~ü~erer", "~ü~ere", "~ü~eres", "~ü~ere";
-        comparative_strong_genitive: "~ü~eren", "~ü~erer", "~ü~eren", "~ü~erer";
-        comparative_strong_dative: "~ü~erem", "~ü~erer", "~ü~erem", "~ü~eren";
-        comparative_strong_accusative: "~ü~eren", "~ü~ere", "~ü~eres", "~ü~ere";
-        comparative_weak_nominative: "~ü~ere", "~ü~ere", "~ü~ere", "~ü~eren";
-        comparative_weak_genitive: "~ü~eren", "~ü~eren", "~ü~eren", "~ü~eren";
-        comparative_weak_dative: "~ü~eren", "~ü~eren", "~ü~eren", "~ü~eren";
-        comparative_weak_accusative: "~ü~eren", "~ü~ere", "~ü~ere", "~ü~eren";
-        comparative_mixed_nominative: "~ü~erer", "~ü~ere", "~ü~eres", "~ü~eren";
-        comparative_mixed_genitive: "~ü~eren", "~ü~eren", "~ü~eren", "~ü~eren";
-        comparative_mixed_dative: "~ü~eren", "~ü~eren", "~ü~eren", "~ü~eren";
-        comparative_mixed_accusative: "~ü~eren", "~ü~ere", "~ü~eres", "~ü~eren";
-        superlative_strong_nominative: "~ü~ster", "~ü~ste", "~ü~stes", "~ü~ste";
-        superlative_strong_genitive: "~ü~sten", "~ü~ster", "~ü~sten", "~ü~ster";
-        superlative_strong_dative: "~ü~stem", "~ü~ster", "~ü~stem", "~ü~sten";
-        superlative_strong_accusative: "~ü~sten", "~ü~ste", "~ü~stes", "~ü~ste";
-        superlative_weak_nominative: "~ü~ste", "~ü~ste", "~ü~ste", "~ü~sten";
-        superlative_weak_genitive: "~ü~sten", "~ü~sten", "~ü~sten", "~ü~sten";
-        superlative_weak_dative: "~ü~sten", "~ü~sten", "~ü~sten", "~ü~sten";
-        superlative_weak_accusative: "~ü~sten", "~ü~ste", "~ü~ste", "~ü~sten";
-        superlative_mixed_nominative: "~ü~ster", "~ü~ste", "~ü~stes", "~ü~sten";
-        superlative_mixed_genitive: "~ü~sten", "~ü~sten", "~ü~sten", "~ü~sten";
-        superlative_mixed_dative: "~ü~sten", "~ü~sten", "~ü~sten", "~ü~sten";
-        superlative_mixed_accusative: "~ü~sten", "~ü~ste", "~ü~stes", "~ü~sten";
-        predicative: "~u~", "~ü~er", "am ~ü~sten";
+    // Rot: 10 words (rot, groß, gross, riesengroß, roth, flächengroß).
+    declension!("rot", 10, "~o~";
+        strong_nominative: "~o~er", "~o~e", "~o~es", "~o~e";
+        strong_genitive: "~o~en", "~o~er", "~o~en", "~o~er";
+        strong_dative: "~o~em", "~o~er", "~o~em", "~o~en";
+        strong_accusative: "~o~en", "~o~e", "~o~es", "~o~e";
+        weak_nominative: "~o~e", "~o~e", "~o~e", "~o~en";
+        weak_genitive: "~o~en", "~o~en", "~o~en", "~o~en";
+        weak_dative: "~o~en", "~o~en", "~o~en", "~o~en";
+        weak_accusative: "~o~en", "~o~e", "~o~e", "~o~en";
+        mixed_nominative: "~o~er", "~o~e", "~o~es", "~o~en";
+        mixed_genitive: "~o~en", "~o~en", "~o~en", "~o~en";
+        mixed_dative: "~o~en", "~o~en", "~o~en", "~o~en";
+        mixed_accusative: "~o~en", "~o~e", "~o~es", "~o~en";
+        comparative_strong_nominative: "~ö~erer", "~ö~ere", "~ö~eres", "~ö~ere";
+        comparative_strong_genitive: "~ö~eren", "~ö~erer", "~ö~eren", "~ö~erer";
+        comparative_strong_dative: "~ö~erem", "~ö~erer", "~ö~erem", "~ö~eren";
+        comparative_strong_accusative: "~ö~eren", "~ö~ere", "~ö~eres", "~ö~ere";
+        comparative_weak_nominative: "~ö~ere", "~ö~ere", "~ö~ere", "~ö~eren";
+        comparative_weak_genitive: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
+        comparative_weak_dative: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
+        comparative_weak_accusative: "~ö~eren", "~ö~ere", "~ö~ere", "~ö~eren";
+        comparative_mixed_nominative: "~ö~erer", "~ö~ere", "~ö~eres", "~ö~eren";
+        comparative_mixed_genitive: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
+        comparative_mixed_dative: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
+        comparative_mixed_accusative: "~ö~eren", "~ö~ere", "~ö~eres", "~ö~eren";
+        superlative_strong_nominative: "~ö~ter", "~ö~te", "~ö~tes", "~ö~te";
+        superlative_strong_genitive: "~ö~ten", "~ö~ter", "~ö~ten", "~ö~ter";
+        superlative_strong_dative: "~ö~tem", "~ö~ter", "~ö~tem", "~ö~ten";
+        superlative_strong_accusative: "~ö~ten", "~ö~te", "~ö~tes", "~ö~te";
+        superlative_weak_nominative: "~ö~te", "~ö~te", "~ö~te", "~ö~ten";
+        superlative_weak_genitive: "~ö~ten", "~ö~ten", "~ö~ten", "~ö~ten";
+        superlative_weak_dative: "~ö~ten", "~ö~ten", "~ö~ten", "~ö~ten";
+        superlative_weak_accusative: "~ö~ten", "~ö~te", "~ö~te", "~ö~ten";
+        superlative_mixed_nominative: "~ö~ter", "~ö~te", "~ö~tes", "~ö~ten";
+        superlative_mixed_genitive: "~ö~ten", "~ö~ten", "~ö~ten", "~ö~ten";
+        superlative_mixed_dative: "~ö~ten", "~ö~ten", "~ö~ten", "~ö~ten";
+        superlative_mixed_accusative: "~ö~ten", "~ö~te", "~ö~tes", "~ö~ten";
+        predicative: "~o~", "~ö~er", "am ~ö~ten";
     ),
     // Unedel: 9 words (integer, schofel, illuster, makaber, speiübel, unedel).
     declension!("unedel", 9, "~e~";
@@ -1297,8 +1211,48 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         superlative_mixed_accusative: "~e~sten", "~e~ste", "~e~stes", "~e~sten";
         predicative: "~e~", "~~er", "am ~e~sten";
     ),
-    // Oberer: 9 words (nächster, vorkantscher, mittlerer, unterer, oberer, überdünischer).
-    declension!("oberer", 9, "~~r";
+    // Nug: 8 words (dumm, jung, klug, unklug, blutjung, neunmalklug).
+    declension!("nug", 8, "~u~";
+        strong_nominative: "~u~er", "~u~e", "~u~es", "~u~e";
+        strong_genitive: "~u~en", "~u~er", "~u~en", "~u~er";
+        strong_dative: "~u~em", "~u~er", "~u~em", "~u~en";
+        strong_accusative: "~u~en", "~u~e", "~u~es", "~u~e";
+        weak_nominative: "~u~e", "~u~e", "~u~e", "~u~en";
+        weak_genitive: "~u~en", "~u~en", "~u~en", "~u~en";
+        weak_dative: "~u~en", "~u~en", "~u~en", "~u~en";
+        weak_accusative: "~u~en", "~u~e", "~u~e", "~u~en";
+        mixed_nominative: "~u~er", "~u~e", "~u~es", "~u~en";
+        mixed_genitive: "~u~en", "~u~en", "~u~en", "~u~en";
+        mixed_dative: "~u~en", "~u~en", "~u~en", "~u~en";
+        mixed_accusative: "~u~en", "~u~e", "~u~es", "~u~en";
+        comparative_strong_nominative: "~ü~erer", "~ü~ere", "~ü~eres", "~ü~ere";
+        comparative_strong_genitive: "~ü~eren", "~ü~erer", "~ü~eren", "~ü~erer";
+        comparative_strong_dative: "~ü~erem", "~ü~erer", "~ü~erem", "~ü~eren";
+        comparative_strong_accusative: "~ü~eren", "~ü~ere", "~ü~eres", "~ü~ere";
+        comparative_weak_nominative: "~ü~ere", "~ü~ere", "~ü~ere", "~ü~eren";
+        comparative_weak_genitive: "~ü~eren", "~ü~eren", "~ü~eren", "~ü~eren";
+        comparative_weak_dative: "~ü~eren", "~ü~eren", "~ü~eren", "~ü~eren";
+        comparative_weak_accusative: "~ü~eren", "~ü~ere", "~ü~ere", "~ü~eren";
+        comparative_mixed_nominative: "~ü~erer", "~ü~ere", "~ü~eres", "~ü~eren";
+        comparative_mixed_genitive: "~ü~eren", "~ü~eren", "~ü~eren", "~ü~eren";
+        comparative_mixed_dative: "~ü~eren", "~ü~eren", "~ü~eren", "~ü~eren";
+        comparative_mixed_accusative: "~ü~eren", "~ü~ere", "~ü~eres", "~ü~eren";
+        superlative_strong_nominative: "~ü~ster", "~ü~ste", "~ü~stes", "~ü~ste";
+        superlative_strong_genitive: "~ü~sten", "~ü~ster", "~ü~sten", "~ü~ster";
+        superlative_strong_dative: "~ü~stem", "~ü~ster", "~ü~stem", "~ü~sten";
+        superlative_strong_accusative: "~ü~sten", "~ü~ste", "~ü~stes", "~ü~ste";
+        superlative_weak_nominative: "~ü~ste", "~ü~ste", "~ü~ste", "~ü~sten";
+        superlative_weak_genitive: "~ü~sten", "~ü~sten", "~ü~sten", "~ü~sten";
+        superlative_weak_dative: "~ü~sten", "~ü~sten", "~ü~sten", "~ü~sten";
+        superlative_weak_accusative: "~ü~sten", "~ü~ste", "~ü~ste", "~ü~sten";
+        superlative_mixed_nominative: "~ü~ster", "~ü~ste", "~ü~stes", "~ü~sten";
+        superlative_mixed_genitive: "~ü~sten", "~ü~sten", "~ü~sten", "~ü~sten";
+        superlative_mixed_dative: "~ü~sten", "~ü~sten", "~ü~sten", "~ü~sten";
+        superlative_mixed_accusative: "~ü~sten", "~ü~ste", "~ü~stes", "~ü~sten";
+        predicative: "~u~", "~ü~er", "am ~ü~sten";
+    ),
+    // Terer: 8 words (nächster, oberer, erstbester, kantscher, tlerer, terer).
+    declension!("terer", 8, "~~r";
         strong_nominative: "~~r", "~~", "~~s", "~~";
         strong_genitive: "~~n", "~~r", "~~n", "~~r";
         strong_dative: "~~m", "~~r", "~~m", "~~n";
@@ -1337,48 +1291,48 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         superlative_mixed_accusative: "~st~n", "~st~", "~st~s", "~st~n";
         predicative: "~~", "~~r", "am ~st~n";
     ),
-    // Rot: 7 words (rot, roth, orthognath, prognath, dunckelroth, dunkelroth).
-    declension!("rot", 7, "~o~";
-        strong_nominative: "~o~er", "~o~e", "~o~es", "~o~e";
-        strong_genitive: "~o~en", "~o~er", "~o~en", "~o~er";
-        strong_dative: "~o~em", "~o~er", "~o~em", "~o~en";
-        strong_accusative: "~o~en", "~o~e", "~o~es", "~o~e";
-        weak_nominative: "~o~e", "~o~e", "~o~e", "~o~en";
-        weak_genitive: "~o~en", "~o~en", "~o~en", "~o~en";
-        weak_dative: "~o~en", "~o~en", "~o~en", "~o~en";
-        weak_accusative: "~o~en", "~o~e", "~o~e", "~o~en";
-        mixed_nominative: "~o~er", "~o~e", "~o~es", "~o~en";
-        mixed_genitive: "~o~en", "~o~en", "~o~en", "~o~en";
-        mixed_dative: "~o~en", "~o~en", "~o~en", "~o~en";
-        mixed_accusative: "~o~en", "~o~e", "~o~es", "~o~en";
-        comparative_strong_nominative: "~ö~erer", "~ö~ere", "~ö~eres", "~ö~ere";
-        comparative_strong_genitive: "~ö~eren", "~ö~erer", "~ö~eren", "~ö~erer";
-        comparative_strong_dative: "~ö~erem", "~ö~erer", "~ö~erem", "~ö~eren";
-        comparative_strong_accusative: "~ö~eren", "~ö~ere", "~ö~eres", "~ö~ere";
-        comparative_weak_nominative: "~ö~ere", "~ö~ere", "~ö~ere", "~ö~eren";
-        comparative_weak_genitive: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
-        comparative_weak_dative: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
-        comparative_weak_accusative: "~ö~eren", "~ö~ere", "~ö~ere", "~ö~eren";
-        comparative_mixed_nominative: "~ö~erer", "~ö~ere", "~ö~eres", "~ö~eren";
-        comparative_mixed_genitive: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
-        comparative_mixed_dative: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
-        comparative_mixed_accusative: "~ö~eren", "~ö~ere", "~ö~eres", "~ö~eren";
-        superlative_strong_nominative: "~ö~ester", "~ö~este", "~ö~estes", "~ö~este";
-        superlative_strong_genitive: "~ö~esten", "~ö~ester", "~ö~esten", "~ö~ester";
-        superlative_strong_dative: "~ö~estem", "~ö~ester", "~ö~estem", "~ö~esten";
-        superlative_strong_accusative: "~ö~esten", "~ö~este", "~ö~estes", "~ö~este";
-        superlative_weak_nominative: "~ö~este", "~ö~este", "~ö~este", "~ö~esten";
-        superlative_weak_genitive: "~ö~esten", "~ö~esten", "~ö~esten", "~ö~esten";
-        superlative_weak_dative: "~ö~esten", "~ö~esten", "~ö~esten", "~ö~esten";
-        superlative_weak_accusative: "~ö~esten", "~ö~este", "~ö~este", "~ö~esten";
-        superlative_mixed_nominative: "~ö~ester", "~ö~este", "~ö~estes", "~ö~esten";
-        superlative_mixed_genitive: "~ö~esten", "~ö~esten", "~ö~esten", "~ö~esten";
-        superlative_mixed_dative: "~ö~esten", "~ö~esten", "~ö~esten", "~ö~esten";
-        superlative_mixed_accusative: "~ö~esten", "~ö~este", "~ö~estes", "~ö~esten";
-        predicative: "~o~", "~ö~er", "am ~ö~esten";
+    // Kurz: 7 words (kurz, gesund, schnurz, ungesund, megakurz, kurtz).
+    declension!("kurz", 7, "~u~";
+        strong_nominative: "~u~er", "~u~e", "~u~es", "~u~e";
+        strong_genitive: "~u~en", "~u~er", "~u~en", "~u~er";
+        strong_dative: "~u~em", "~u~er", "~u~em", "~u~en";
+        strong_accusative: "~u~en", "~u~e", "~u~es", "~u~e";
+        weak_nominative: "~u~e", "~u~e", "~u~e", "~u~en";
+        weak_genitive: "~u~en", "~u~en", "~u~en", "~u~en";
+        weak_dative: "~u~en", "~u~en", "~u~en", "~u~en";
+        weak_accusative: "~u~en", "~u~e", "~u~e", "~u~en";
+        mixed_nominative: "~u~er", "~u~e", "~u~es", "~u~en";
+        mixed_genitive: "~u~en", "~u~en", "~u~en", "~u~en";
+        mixed_dative: "~u~en", "~u~en", "~u~en", "~u~en";
+        mixed_accusative: "~u~en", "~u~e", "~u~es", "~u~en";
+        comparative_strong_nominative: "~ü~erer", "~ü~ere", "~ü~eres", "~ü~ere";
+        comparative_strong_genitive: "~ü~eren", "~ü~erer", "~ü~eren", "~ü~erer";
+        comparative_strong_dative: "~ü~erem", "~ü~erer", "~ü~erem", "~ü~eren";
+        comparative_strong_accusative: "~ü~eren", "~ü~ere", "~ü~eres", "~ü~ere";
+        comparative_weak_nominative: "~ü~ere", "~ü~ere", "~ü~ere", "~ü~eren";
+        comparative_weak_genitive: "~ü~eren", "~ü~eren", "~ü~eren", "~ü~eren";
+        comparative_weak_dative: "~ü~eren", "~ü~eren", "~ü~eren", "~ü~eren";
+        comparative_weak_accusative: "~ü~eren", "~ü~ere", "~ü~ere", "~ü~eren";
+        comparative_mixed_nominative: "~ü~erer", "~ü~ere", "~ü~eres", "~ü~eren";
+        comparative_mixed_genitive: "~ü~eren", "~ü~eren", "~ü~eren", "~ü~eren";
+        comparative_mixed_dative: "~ü~eren", "~ü~eren", "~ü~eren", "~ü~eren";
+        comparative_mixed_accusative: "~ü~eren", "~ü~ere", "~ü~eres", "~ü~eren";
+        superlative_strong_nominative: "~ü~ester", "~ü~este", "~ü~estes", "~ü~este";
+        superlative_strong_genitive: "~ü~esten", "~ü~ester", "~ü~esten", "~ü~ester";
+        superlative_strong_dative: "~ü~estem", "~ü~ester", "~ü~estem", "~ü~esten";
+        superlative_strong_accusative: "~ü~esten", "~ü~este", "~ü~estes", "~ü~este";
+        superlative_weak_nominative: "~ü~este", "~ü~este", "~ü~este", "~ü~esten";
+        superlative_weak_genitive: "~ü~esten", "~ü~esten", "~ü~esten", "~ü~esten";
+        superlative_weak_dative: "~ü~esten", "~ü~esten", "~ü~esten", "~ü~esten";
+        superlative_weak_accusative: "~ü~esten", "~ü~este", "~ü~este", "~ü~esten";
+        superlative_mixed_nominative: "~ü~ester", "~ü~este", "~ü~estes", "~ü~esten";
+        superlative_mixed_genitive: "~ü~esten", "~ü~esten", "~ü~esten", "~ü~esten";
+        superlative_mixed_dative: "~ü~esten", "~ü~esten", "~ü~esten", "~ü~esten";
+        superlative_mixed_accusative: "~ü~esten", "~ü~este", "~ü~estes", "~ü~esten";
+        predicative: "~u~", "~ü~er", "am ~ü~esten";
     ),
-    // Grob: 7 words (grob, fromm, aerob, anaerob, lammfromm, storr).
-    declension!("grob", 7, "~o~";
+    // Grob: 6 words (grob, fromm, aerob, lammfromm, storr, exaerob).
+    declension!("grob", 6, "~o~";
         strong_nominative: "~o~er", "~o~e", "~o~es", "~o~e";
         strong_genitive: "~o~en", "~o~er", "~o~en", "~o~er";
         strong_dative: "~o~em", "~o~er", "~o~em", "~o~en";
@@ -1416,86 +1370,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         superlative_mixed_dative: "~ö~sten", "~ö~sten", "~ö~sten", "~ö~sten";
         superlative_mixed_accusative: "~ö~sten", "~ö~ste", "~ö~stes", "~ö~sten";
         predicative: "~o~", "~ö~er", "am ~ö~sten";
-    ),
-    // Lila: 6 words (rosa, lila, altrosa, hellrosa, schweinchenrosa, blasslila).
-    declension!("lila", 6, "~";
-        strong_nominative: "~ner", "~ne", "~nes", "~ne";
-        strong_genitive: "~nen", "~ner", "~nen", "~ner";
-        strong_dative: "~nem", "~ner", "~nem", "~nen";
-        strong_accusative: "~nen", "~ne", "~nes", "~ne";
-        weak_nominative: "~ne", "~ne", "~ne", "~nen";
-        weak_genitive: "~nen", "~nen", "~nen", "~nen";
-        weak_dative: "~nen", "~nen", "~nen", "~nen";
-        weak_accusative: "~nen", "~ne", "~ne", "~nen";
-        mixed_nominative: "~ner", "~ne", "~nes", "~nen";
-        mixed_genitive: "~nen", "~nen", "~nen", "~nen";
-        mixed_dative: "~nen", "~nen", "~nen", "~nen";
-        mixed_accusative: "~nen", "~ne", "~nes", "~nen";
-        comparative_strong_nominative: "~nerer", "~nere", "~neres", "~nere";
-        comparative_strong_genitive: "~neren", "~nerer", "~neren", "~nerer";
-        comparative_strong_dative: "~nerem", "~nerer", "~nerem", "~neren";
-        comparative_strong_accusative: "~neren", "~nere", "~neres", "~nere";
-        comparative_weak_nominative: "~nere", "~nere", "~nere", "~neren";
-        comparative_weak_genitive: "~neren", "~neren", "~neren", "~neren";
-        comparative_weak_dative: "~neren", "~neren", "~neren", "~neren";
-        comparative_weak_accusative: "~neren", "~nere", "~nere", "~neren";
-        comparative_mixed_nominative: "~nerer", "~nere", "~neres", "~neren";
-        comparative_mixed_genitive: "~neren", "~neren", "~neren", "~neren";
-        comparative_mixed_dative: "~neren", "~neren", "~neren", "~neren";
-        comparative_mixed_accusative: "~neren", "~nere", "~neres", "~neren";
-        superlative_strong_nominative: "~nster", "~nste", "~nstes", "~nste";
-        superlative_strong_genitive: "~nsten", "~nster", "~nsten", "~nster";
-        superlative_strong_dative: "~nstem", "~nster", "~nstem", "~nsten";
-        superlative_strong_accusative: "~nsten", "~nste", "~nstes", "~nste";
-        superlative_weak_nominative: "~nste", "~nste", "~nste", "~nsten";
-        superlative_weak_genitive: "~nsten", "~nsten", "~nsten", "~nsten";
-        superlative_weak_dative: "~nsten", "~nsten", "~nsten", "~nsten";
-        superlative_weak_accusative: "~nsten", "~nste", "~nste", "~nsten";
-        superlative_mixed_nominative: "~nster", "~nste", "~nstes", "~nsten";
-        superlative_mixed_genitive: "~nsten", "~nsten", "~nsten", "~nsten";
-        superlative_mixed_dative: "~nsten", "~nsten", "~nsten", "~nsten";
-        superlative_mixed_accusative: "~nsten", "~nste", "~nstes", "~nsten";
-        predicative: "~", "~ner", "am ~nsten";
-    ),
-    // Hoch: 6 words (hoch, himmelhoch, ranghoch, wolkenhoch, hüfthoch, halbhoch).
-    declension!("hoch", 6, "~oc~";
-        strong_nominative: "~o~er", "~o~e", "~o~es", "~o~e";
-        strong_genitive: "~o~en", "~o~er", "~o~en", "~o~er";
-        strong_dative: "~o~em", "~o~er", "~o~em", "~o~en";
-        strong_accusative: "~o~en", "~o~e", "~o~es", "~o~e";
-        weak_nominative: "~o~e", "~o~e", "~o~e", "~o~en";
-        weak_genitive: "~o~en", "~o~en", "~o~en", "~o~en";
-        weak_dative: "~o~en", "~o~en", "~o~en", "~o~en";
-        weak_accusative: "~o~en", "~o~e", "~o~e", "~o~en";
-        mixed_nominative: "~o~er", "~o~e", "~o~es", "~o~en";
-        mixed_genitive: "~o~en", "~o~en", "~o~en", "~o~en";
-        mixed_dative: "~o~en", "~o~en", "~o~en", "~o~en";
-        mixed_accusative: "~o~en", "~o~e", "~o~es", "~o~en";
-        comparative_strong_nominative: "~ö~erer", "~ö~ere", "~ö~eres", "~ö~ere";
-        comparative_strong_genitive: "~ö~eren", "~ö~erer", "~ö~eren", "~ö~erer";
-        comparative_strong_dative: "~ö~erem", "~ö~erer", "~ö~erem", "~ö~eren";
-        comparative_strong_accusative: "~ö~eren", "~ö~ere", "~ö~eres", "~ö~ere";
-        comparative_weak_nominative: "~ö~ere", "~ö~ere", "~ö~ere", "~ö~eren";
-        comparative_weak_genitive: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
-        comparative_weak_dative: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
-        comparative_weak_accusative: "~ö~eren", "~ö~ere", "~ö~ere", "~ö~eren";
-        comparative_mixed_nominative: "~ö~erer", "~ö~ere", "~ö~eres", "~ö~eren";
-        comparative_mixed_genitive: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
-        comparative_mixed_dative: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
-        comparative_mixed_accusative: "~ö~eren", "~ö~ere", "~ö~eres", "~ö~eren";
-        superlative_strong_nominative: "~öc~ster", "~öc~ste", "~öc~stes", "~öc~ste";
-        superlative_strong_genitive: "~öc~sten", "~öc~ster", "~öc~sten", "~öc~ster";
-        superlative_strong_dative: "~öc~stem", "~öc~ster", "~öc~stem", "~öc~sten";
-        superlative_strong_accusative: "~öc~sten", "~öc~ste", "~öc~stes", "~öc~ste";
-        superlative_weak_nominative: "~öc~ste", "~öc~ste", "~öc~ste", "~öc~sten";
-        superlative_weak_genitive: "~öc~sten", "~öc~sten", "~öc~sten", "~öc~sten";
-        superlative_weak_dative: "~öc~sten", "~öc~sten", "~öc~sten", "~öc~sten";
-        superlative_weak_accusative: "~öc~sten", "~öc~ste", "~öc~ste", "~öc~sten";
-        superlative_mixed_nominative: "~öc~ster", "~öc~ste", "~öc~stes", "~öc~sten";
-        superlative_mixed_genitive: "~öc~sten", "~öc~sten", "~öc~sten", "~öc~sten";
-        superlative_mixed_dative: "~öc~sten", "~öc~sten", "~öc~sten", "~öc~sten";
-        superlative_mixed_accusative: "~öc~sten", "~öc~ste", "~öc~stes", "~öc~sten";
-        predicative: "~oc~", "~ö~er", "am ~öc~sten";
     ),
     // Amyloid: 5 words (ambivalent, amyloid, ambitiös, amüsant, ambitioniert).
     declension!("amyloid", 5, "~~";
@@ -1537,6 +1411,46 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         superlative_mixed_accusative: "~~esten", "~~este", "~~estes", "~~esten";
         predicative: "~~", "~~er", "~ am~esten";
     ),
+    // Hoch: 5 words (hoch, himmelhoch, ranghoch, wolkenhoch, hüfthoch).
+    declension!("hoch", 5, "~oc~";
+        strong_nominative: "~o~er", "~o~e", "~o~es", "~o~e";
+        strong_genitive: "~o~en", "~o~er", "~o~en", "~o~er";
+        strong_dative: "~o~em", "~o~er", "~o~em", "~o~en";
+        strong_accusative: "~o~en", "~o~e", "~o~es", "~o~e";
+        weak_nominative: "~o~e", "~o~e", "~o~e", "~o~en";
+        weak_genitive: "~o~en", "~o~en", "~o~en", "~o~en";
+        weak_dative: "~o~en", "~o~en", "~o~en", "~o~en";
+        weak_accusative: "~o~en", "~o~e", "~o~e", "~o~en";
+        mixed_nominative: "~o~er", "~o~e", "~o~es", "~o~en";
+        mixed_genitive: "~o~en", "~o~en", "~o~en", "~o~en";
+        mixed_dative: "~o~en", "~o~en", "~o~en", "~o~en";
+        mixed_accusative: "~o~en", "~o~e", "~o~es", "~o~en";
+        comparative_strong_nominative: "~ö~erer", "~ö~ere", "~ö~eres", "~ö~ere";
+        comparative_strong_genitive: "~ö~eren", "~ö~erer", "~ö~eren", "~ö~erer";
+        comparative_strong_dative: "~ö~erem", "~ö~erer", "~ö~erem", "~ö~eren";
+        comparative_strong_accusative: "~ö~eren", "~ö~ere", "~ö~eres", "~ö~ere";
+        comparative_weak_nominative: "~ö~ere", "~ö~ere", "~ö~ere", "~ö~eren";
+        comparative_weak_genitive: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
+        comparative_weak_dative: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
+        comparative_weak_accusative: "~ö~eren", "~ö~ere", "~ö~ere", "~ö~eren";
+        comparative_mixed_nominative: "~ö~erer", "~ö~ere", "~ö~eres", "~ö~eren";
+        comparative_mixed_genitive: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
+        comparative_mixed_dative: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
+        comparative_mixed_accusative: "~ö~eren", "~ö~ere", "~ö~eres", "~ö~eren";
+        superlative_strong_nominative: "~öc~ster", "~öc~ste", "~öc~stes", "~öc~ste";
+        superlative_strong_genitive: "~öc~sten", "~öc~ster", "~öc~sten", "~öc~ster";
+        superlative_strong_dative: "~öc~stem", "~öc~ster", "~öc~stem", "~öc~sten";
+        superlative_strong_accusative: "~öc~sten", "~öc~ste", "~öc~stes", "~öc~ste";
+        superlative_weak_nominative: "~öc~ste", "~öc~ste", "~öc~ste", "~öc~sten";
+        superlative_weak_genitive: "~öc~sten", "~öc~sten", "~öc~sten", "~öc~sten";
+        superlative_weak_dative: "~öc~sten", "~öc~sten", "~öc~sten", "~öc~sten";
+        superlative_weak_accusative: "~öc~sten", "~öc~ste", "~öc~ste", "~öc~sten";
+        superlative_mixed_nominative: "~öc~ster", "~öc~ste", "~öc~stes", "~öc~sten";
+        superlative_mixed_genitive: "~öc~sten", "~öc~sten", "~öc~sten", "~öc~sten";
+        superlative_mixed_dative: "~öc~sten", "~öc~sten", "~öc~sten", "~öc~sten";
+        superlative_mixed_accusative: "~öc~sten", "~öc~ste", "~öc~stes", "~öc~sten";
+        predicative: "~oc~", "~ö~er", "am ~öc~sten";
+    ),
     // Amtlich: 5 words (amerikanisch, amtlich, amharisch, amisch, amphibolisch).
     declension!("amtlich", 5, "~~";
         strong_nominative: "~~er", "~~e", "~~es", "~~e";
@@ -1576,6 +1490,46 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         superlative_mixed_dative: "~~sten", "~~sten", "~~sten", "~~sten";
         superlative_mixed_accusative: "~~sten", "~~ste", "~~stes", "~~sten";
         predicative: "~~", "~~er", "~ am~sten";
+    ),
+    // Naß: 5 words (naß, gewiß, ungewiß, kraß, blaß).
+    declension!("naß", 5, "~ß";
+        strong_nominative: "~sser", "~sse", "~sses", "~sse";
+        strong_genitive: "~ssen", "~sser", "~ssen", "~sser";
+        strong_dative: "~ssem", "~sser", "~ssem", "~ssen";
+        strong_accusative: "~ssen", "~sse", "~sses", "~sse";
+        weak_nominative: "~sse", "~sse", "~sse", "~ssen";
+        weak_genitive: "~ssen", "~ssen", "~ssen", "~ssen";
+        weak_dative: "~ssen", "~ssen", "~ssen", "~ssen";
+        weak_accusative: "~ssen", "~sse", "~sse", "~ssen";
+        mixed_nominative: "~sser", "~sse", "~sses", "~ssen";
+        mixed_genitive: "~ssen", "~ssen", "~ssen", "~ssen";
+        mixed_dative: "~ssen", "~ssen", "~ssen", "~ssen";
+        mixed_accusative: "~ssen", "~sse", "~sses", "~ssen";
+        comparative_strong_nominative: "~sserer", "~ssere", "~sseres", "~ssere";
+        comparative_strong_genitive: "~sseren", "~sserer", "~sseren", "~sserer";
+        comparative_strong_dative: "~sserem", "~sserer", "~sserem", "~sseren";
+        comparative_strong_accusative: "~sseren", "~ssere", "~sseres", "~ssere";
+        comparative_weak_nominative: "~ssere", "~ssere", "~ssere", "~sseren";
+        comparative_weak_genitive: "~sseren", "~sseren", "~sseren", "~sseren";
+        comparative_weak_dative: "~sseren", "~sseren", "~sseren", "~sseren";
+        comparative_weak_accusative: "~sseren", "~ssere", "~ssere", "~sseren";
+        comparative_mixed_nominative: "~sserer", "~ssere", "~sseres", "~sseren";
+        comparative_mixed_genitive: "~sseren", "~sseren", "~sseren", "~sseren";
+        comparative_mixed_dative: "~sseren", "~sseren", "~sseren", "~sseren";
+        comparative_mixed_accusative: "~sseren", "~ssere", "~sseres", "~sseren";
+        superlative_strong_nominative: "~ssester", "~sseste", "~ssestes", "~sseste";
+        superlative_strong_genitive: "~ssesten", "~ssester", "~ssesten", "~ssester";
+        superlative_strong_dative: "~ssestem", "~ssester", "~ssestem", "~ssesten";
+        superlative_strong_accusative: "~ssesten", "~sseste", "~ssestes", "~sseste";
+        superlative_weak_nominative: "~sseste", "~sseste", "~sseste", "~ssesten";
+        superlative_weak_genitive: "~ssesten", "~ssesten", "~ssesten", "~ssesten";
+        superlative_weak_dative: "~ssesten", "~ssesten", "~ssesten", "~ssesten";
+        superlative_weak_accusative: "~ssesten", "~sseste", "~sseste", "~ssesten";
+        superlative_mixed_nominative: "~ssester", "~sseste", "~ssestes", "~ssesten";
+        superlative_mixed_genitive: "~ssesten", "~ssesten", "~ssesten", "~ssesten";
+        superlative_mixed_dative: "~ssesten", "~ssesten", "~ssesten", "~ssesten";
+        superlative_mixed_accusative: "~ssesten", "~sseste", "~ssestes", "~ssesten";
+        predicative: "~ß", "~sser", "am ~ssesten";
     ),
     // Abgeschlossen: 4 words (angemessen, abgeschlossen, abgedroschen, aufgedunsen).
     declension!("abgeschlossen", 4, "~~e~";
@@ -1617,6 +1571,46 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         superlative_mixed_accusative: "~~e~sten", "~~e~ste", "~~e~stes", "~~e~sten";
         predicative: "~~e~", "~~e~er|~~~er", "~m a~e~sten";
     ),
+    // Lila: 3 words (rosa, lila, schweinchenrosa).
+    declension!("lila", 3, "~";
+        strong_nominative: "~ner", "~ne", "~nes", "~ne";
+        strong_genitive: "~nen", "~ner", "~nen", "~ner";
+        strong_dative: "~nem", "~ner", "~nem", "~nen";
+        strong_accusative: "~nen", "~ne", "~nes", "~ne";
+        weak_nominative: "~ne", "~ne", "~ne", "~nen";
+        weak_genitive: "~nen", "~nen", "~nen", "~nen";
+        weak_dative: "~nen", "~nen", "~nen", "~nen";
+        weak_accusative: "~nen", "~ne", "~ne", "~nen";
+        mixed_nominative: "~ner", "~ne", "~nes", "~nen";
+        mixed_genitive: "~nen", "~nen", "~nen", "~nen";
+        mixed_dative: "~nen", "~nen", "~nen", "~nen";
+        mixed_accusative: "~nen", "~ne", "~nes", "~nen";
+        comparative_strong_nominative: "~nerer", "~nere", "~neres", "~nere";
+        comparative_strong_genitive: "~neren", "~nerer", "~neren", "~nerer";
+        comparative_strong_dative: "~nerem", "~nerer", "~nerem", "~neren";
+        comparative_strong_accusative: "~neren", "~nere", "~neres", "~nere";
+        comparative_weak_nominative: "~nere", "~nere", "~nere", "~neren";
+        comparative_weak_genitive: "~neren", "~neren", "~neren", "~neren";
+        comparative_weak_dative: "~neren", "~neren", "~neren", "~neren";
+        comparative_weak_accusative: "~neren", "~nere", "~nere", "~neren";
+        comparative_mixed_nominative: "~nerer", "~nere", "~neres", "~neren";
+        comparative_mixed_genitive: "~neren", "~neren", "~neren", "~neren";
+        comparative_mixed_dative: "~neren", "~neren", "~neren", "~neren";
+        comparative_mixed_accusative: "~neren", "~nere", "~neres", "~neren";
+        superlative_strong_nominative: "~nster", "~nste", "~nstes", "~nste";
+        superlative_strong_genitive: "~nsten", "~nster", "~nsten", "~nster";
+        superlative_strong_dative: "~nstem", "~nster", "~nstem", "~nsten";
+        superlative_strong_accusative: "~nsten", "~nste", "~nstes", "~nste";
+        superlative_weak_nominative: "~nste", "~nste", "~nste", "~nsten";
+        superlative_weak_genitive: "~nsten", "~nsten", "~nsten", "~nsten";
+        superlative_weak_dative: "~nsten", "~nsten", "~nsten", "~nsten";
+        superlative_weak_accusative: "~nsten", "~nste", "~nste", "~nsten";
+        superlative_mixed_nominative: "~nster", "~nste", "~nstes", "~nsten";
+        superlative_mixed_genitive: "~nsten", "~nsten", "~nsten", "~nsten";
+        superlative_mixed_dative: "~nsten", "~nsten", "~nsten", "~nsten";
+        superlative_mixed_accusative: "~nsten", "~nste", "~nstes", "~nsten";
+        predicative: "~", "~ner", "am ~nsten";
+    ),
     // Aper: 3 words (aper, abhörsicher, auslaufsicher).
     declension!("aper", 3, "~~~";
         strong_nominative: "~~~er", "~~~e", "~~~es", "~~~e";
@@ -1657,46 +1651,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         superlative_mixed_accusative: "~~~sten", "~~~ste", "~~~stes", "~~~sten";
         predicative: "~~~", "~~~er|~~r~", "~m a~~sten";
     ),
-    // Naß: 3 words (naß, blaß, totenblaß).
-    declension!("naß", 3, "~aß";
-        strong_nominative: "~asser", "~asse", "~asses", "~asse";
-        strong_genitive: "~assen", "~asser", "~assen", "~asser";
-        strong_dative: "~assem", "~asser", "~assem", "~assen";
-        strong_accusative: "~assen", "~asse", "~asses", "~asse";
-        weak_nominative: "~asse", "~asse", "~asse", "~assen";
-        weak_genitive: "~assen", "~assen", "~assen", "~assen";
-        weak_dative: "~assen", "~assen", "~assen", "~assen";
-        weak_accusative: "~assen", "~asse", "~asse", "~assen";
-        mixed_nominative: "~asser", "~asse", "~asses", "~assen";
-        mixed_genitive: "~assen", "~assen", "~assen", "~assen";
-        mixed_dative: "~assen", "~assen", "~assen", "~assen";
-        mixed_accusative: "~assen", "~asse", "~asses", "~assen";
-        comparative_strong_nominative: "~asserer|~ässerer", "~assere|~ässere", "~asseres|~ässeres", "~assere|~ässere";
-        comparative_strong_genitive: "~asseren|~ässeren", "~asserer|~ässerer", "~asseren|~ässeren", "~asserer|~ässerer";
-        comparative_strong_dative: "~asserem|~ässerem", "~asserer|~ässerer", "~asserem|~ässerem", "~asseren|~ässeren";
-        comparative_strong_accusative: "~asseren|~ässeren", "~assere|~ässere", "~asseres|~ässeres", "~assere|~ässere";
-        comparative_weak_nominative: "~assere|~ässere", "~assere|~ässere", "~assere|~ässere", "~asseren|~ässeren";
-        comparative_weak_genitive: "~asseren|~ässeren", "~asseren|~ässeren", "~asseren|~ässeren", "~asseren|~ässeren";
-        comparative_weak_dative: "~asseren|~ässeren", "~asseren|~ässeren", "~asseren|~ässeren", "~asseren|~ässeren";
-        comparative_weak_accusative: "~asseren|~ässeren", "~assere|~ässere", "~assere|~ässere", "~asseren|~ässeren";
-        comparative_mixed_nominative: "~asserer|~ässerer", "~assere|~ässere", "~asseres|~ässeres", "~asseren|~ässeren";
-        comparative_mixed_genitive: "~asseren|~ässeren", "~asseren|~ässeren", "~asseren|~ässeren", "~asseren|~ässeren";
-        comparative_mixed_dative: "~asseren|~ässeren", "~asseren|~ässeren", "~asseren|~ässeren", "~asseren|~ässeren";
-        comparative_mixed_accusative: "~asseren|~ässeren", "~assere|~ässere", "~asseres|~ässeres", "~asseren|~ässeren";
-        superlative_strong_nominative: "~assester|~ässester", "~asseste|~ässeste", "~assestes|~ässestes", "~asseste|~ässeste";
-        superlative_strong_genitive: "~assesten|~ässesten", "~assester|~ässester", "~assesten|~ässesten", "~assester|~ässester";
-        superlative_strong_dative: "~assestem|~ässestem", "~assester|~ässester", "~assestem|~ässestem", "~assesten|~ässesten";
-        superlative_strong_accusative: "~assesten|~ässesten", "~asseste|~ässeste", "~assestes|~ässestes", "~asseste|~ässeste";
-        superlative_weak_nominative: "~asseste|~ässeste", "~asseste|~ässeste", "~asseste|~ässeste", "~assesten|~ässesten";
-        superlative_weak_genitive: "~assesten|~ässesten", "~assesten|~ässesten", "~assesten|~ässesten", "~assesten|~ässesten";
-        superlative_weak_dative: "~assesten|~ässesten", "~assesten|~ässesten", "~assesten|~ässesten", "~assesten|~ässesten";
-        superlative_weak_accusative: "~assesten|~ässesten", "~asseste|~ässeste", "~asseste|~ässeste", "~assesten|~ässesten";
-        superlative_mixed_nominative: "~assester|~ässester", "~asseste|~ässeste", "~assestes|~ässestes", "~assesten|~ässesten";
-        superlative_mixed_genitive: "~assesten|~ässesten", "~assesten|~ässesten", "~assesten|~ässesten", "~assesten|~ässesten";
-        superlative_mixed_dative: "~assesten|~ässesten", "~assesten|~ässesten", "~assesten|~ässesten", "~assesten|~ässesten";
-        superlative_mixed_accusative: "~assesten|~ässesten", "~asseste|~ässeste", "~assestes|~ässestes", "~assesten|~ässesten";
-        predicative: "~aß", "~asser|~ässer", "am ~assesten|am ~ässesten";
-    ),
     // Affabel: 3 words (akzeptabel, abominabel, affabel).
     declension!("affabel", 3, "~~e~";
         strong_nominative: "~~~er", "~~~e", "~~~es", "~~~e";
@@ -1736,46 +1690,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 36] = [
         superlative_mixed_dative: "~~e~sten", "~~e~sten", "~~e~sten", "~~e~sten";
         superlative_mixed_accusative: "~~e~sten", "~~e~ste", "~~e~stes", "~~e~sten";
         predicative: "~~e~", "~~~er", "~m a~e~sten";
-    ),
-    // Kraß: 3 words (gewiß, ungewiß, kraß).
-    declension!("kraß", 3, "~ß";
-        strong_nominative: "~sser", "~sse", "~sses", "~sse";
-        strong_genitive: "~ssen", "~sser", "~ssen", "~sser";
-        strong_dative: "~ssem", "~sser", "~ssem", "~ssen";
-        strong_accusative: "~ssen", "~sse", "~sses", "~sse";
-        weak_nominative: "~sse", "~sse", "~sse", "~ssen";
-        weak_genitive: "~ssen", "~ssen", "~ssen", "~ssen";
-        weak_dative: "~ssen", "~ssen", "~ssen", "~ssen";
-        weak_accusative: "~ssen", "~sse", "~sse", "~ssen";
-        mixed_nominative: "~sser", "~sse", "~sses", "~ssen";
-        mixed_genitive: "~ssen", "~ssen", "~ssen", "~ssen";
-        mixed_dative: "~ssen", "~ssen", "~ssen", "~ssen";
-        mixed_accusative: "~ssen", "~sse", "~sses", "~ssen";
-        comparative_strong_nominative: "~sserer", "~ssere", "~sseres", "~ssere";
-        comparative_strong_genitive: "~sseren", "~sserer", "~sseren", "~sserer";
-        comparative_strong_dative: "~sserem", "~sserer", "~sserem", "~sseren";
-        comparative_strong_accusative: "~sseren", "~ssere", "~sseres", "~ssere";
-        comparative_weak_nominative: "~ssere", "~ssere", "~ssere", "~sseren";
-        comparative_weak_genitive: "~sseren", "~sseren", "~sseren", "~sseren";
-        comparative_weak_dative: "~sseren", "~sseren", "~sseren", "~sseren";
-        comparative_weak_accusative: "~sseren", "~ssere", "~ssere", "~sseren";
-        comparative_mixed_nominative: "~sserer", "~ssere", "~sseres", "~sseren";
-        comparative_mixed_genitive: "~sseren", "~sseren", "~sseren", "~sseren";
-        comparative_mixed_dative: "~sseren", "~sseren", "~sseren", "~sseren";
-        comparative_mixed_accusative: "~sseren", "~ssere", "~sseres", "~sseren";
-        superlative_strong_nominative: "~ssester", "~sseste", "~ssestes", "~sseste";
-        superlative_strong_genitive: "~ssesten", "~ssester", "~ssesten", "~ssester";
-        superlative_strong_dative: "~ssestem", "~ssester", "~ssestem", "~ssesten";
-        superlative_strong_accusative: "~ssesten", "~sseste", "~ssestes", "~sseste";
-        superlative_weak_nominative: "~sseste", "~sseste", "~sseste", "~ssesten";
-        superlative_weak_genitive: "~ssesten", "~ssesten", "~ssesten", "~ssesten";
-        superlative_weak_dative: "~ssesten", "~ssesten", "~ssesten", "~ssesten";
-        superlative_weak_accusative: "~ssesten", "~sseste", "~sseste", "~ssesten";
-        superlative_mixed_nominative: "~ssester", "~sseste", "~ssestes", "~ssesten";
-        superlative_mixed_genitive: "~ssesten", "~ssesten", "~ssesten", "~ssesten";
-        superlative_mixed_dative: "~ssesten", "~ssesten", "~ssesten", "~ssesten";
-        superlative_mixed_accusative: "~ssesten", "~sseste", "~ssestes", "~ssesten";
-        predicative: "~ß", "~sser", "am ~ssesten";
     ),
     // Aschearm: 3 words (alkoholarm, anregungsarm, aschearm).
     declension!("aschearm", 3, "~~a~";
