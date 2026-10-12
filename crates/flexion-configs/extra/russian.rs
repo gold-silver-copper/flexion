@@ -1,0 +1,86 @@
+//! Personal and reflexive pronouns. Wiktionary keeps all of them in one table
+//! whose tags don't distinguish singular from plural (`я` and `мы` are both
+//! "first-person nominative") and mix romanizations in as forms, so this is a
+//! small fixed table rather than learned data.
+
+use crate::{Case, Number, Person};
+
+/// The gender of a third person singular pronoun.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum PronounGender {
+    Masculine,
+    Feminine,
+    Neuter,
+}
+
+/// A personal pronoun. Third person forms after a preposition take
+/// `н-` (`у него`): pass `after_preposition: true` for those.
+///
+/// ```
+/// use russian::*;
+/// assert_eq!(personal_pronoun(Person::First, Number::Singular, PronounGender::Masculine, Case::Genitive, false), "меня");
+/// assert_eq!(personal_pronoun(Person::Third, Number::Plural, PronounGender::Masculine, Case::Genitive, true), "них");
+/// ```
+pub fn personal_pronoun(
+    person: Person,
+    number: Number,
+    gender: PronounGender,
+    case: Case,
+    after_preposition: bool,
+) -> &'static str {
+    // nominative, genitive, dative, accusative, instrumental, prepositional
+    let (plain, prep): ([&'static str; 6], [&'static str; 6]) = match (person, number, gender) {
+        (Person::First, Number::Singular, _) => (
+            ["я", "меня", "мне", "меня", "мной", "мне"],
+            ["я", "меня", "мне", "меня", "мной", "мне"],
+        ),
+        (Person::Second, Number::Singular, _) => (
+            ["ты", "тебя", "тебе", "тебя", "тобой", "тебе"],
+            ["ты", "тебя", "тебе", "тебя", "тобой", "тебе"],
+        ),
+        (Person::Third, Number::Singular, PronounGender::Masculine) => (
+            ["он", "его", "ему", "его", "им", "нём"],
+            ["он", "него", "нему", "него", "ним", "нём"],
+        ),
+        (Person::Third, Number::Singular, PronounGender::Neuter) => (
+            ["оно", "его", "ему", "его", "им", "нём"],
+            ["оно", "него", "нему", "него", "ним", "нём"],
+        ),
+        (Person::Third, Number::Singular, PronounGender::Feminine) => (
+            ["она", "её", "ей", "её", "ей", "ней"],
+            ["она", "неё", "ней", "неё", "ней", "ней"],
+        ),
+        (Person::First, Number::Plural, _) => (
+            ["мы", "нас", "нам", "нас", "нами", "нас"],
+            ["мы", "нас", "нам", "нас", "нами", "нас"],
+        ),
+        (Person::Second, Number::Plural, _) => (
+            ["вы", "вас", "вам", "вас", "вами", "вас"],
+            ["вы", "вас", "вам", "вас", "вами", "вас"],
+        ),
+        (Person::Third, Number::Plural, _) => (
+            ["они", "их", "им", "их", "ими", "них"],
+            ["они", "них", "ним", "них", "ними", "них"],
+        ),
+    };
+    let row = if after_preposition { prep } else { plain };
+    let [nom, gen_, dat, acc, ins, prp] = row;
+    match case {
+        Case::Nominative => nom,
+        Case::Genitive => gen_,
+        Case::Dative => dat,
+        Case::Accusative => acc,
+        Case::Instrumental => ins,
+        Case::Prepositional => prp,
+    }
+}
+
+/// The reflexive pronoun `себя`. It has no nominative; asking for one
+/// returns `себя`, the form it is cited by.
+pub fn reflexive_pronoun(case: Case) -> &'static str {
+    match case {
+        Case::Nominative | Case::Genitive | Case::Accusative => "себя",
+        Case::Dative | Case::Prepositional => "себе",
+        Case::Instrumental => "собой",
+    }
+}

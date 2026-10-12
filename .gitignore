@@ -1,0 +1,5 @@
+/target
+# Dumps are never committed; the test fixtures are.
+*.jsonl
+*.jsonl.gz
+!crates/flexion-configs/tests/fixtures/*.jsonl

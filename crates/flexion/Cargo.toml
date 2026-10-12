@@ -1,0 +1,15 @@
+[package]
+name = "flexion"
+version = "0.2.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "The runtime of learned inflection grammars: paradigms, the rules that choose them, stress and sound laws, with candidates that explain themselves"
+
+[dependencies]
+sound-law = { workspace = true }
+
+[lints]
+workspace = true

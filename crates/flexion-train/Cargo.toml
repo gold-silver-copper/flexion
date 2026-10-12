@@ -1,0 +1,20 @@
+[package]
+name = "flexion-train"
+version = "0.2.0"
+description = "Learn a language's inflection grammar from Wiktionary and write it as a Rust crate"
+publish = false
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+flexion = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+flate2 = { workspace = true }
+unicode-normalization = { workspace = true }
+
+[lints]
+workspace = true
