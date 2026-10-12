@@ -164,8 +164,15 @@ pub fn build<'s>(
         let floor = eval::floor(&orthography, &main, &test);
         let mut shipped = Inflection::learn(script, &shape, kind, &d.lexemes, settings);
         shipped.set_sharpness(sharpness);
-        // Attested: an even sample of the dictionary's own words.
-        let own: Vec<&Lexeme> = d.lexemes.iter().filter(|l| l.source == 0).collect();
+        // Attested: an even sample of the dictionary's own words (of
+        // homographs, the first, which is the one the grammar answers for).
+        let mut by_order: Vec<&Lexeme> = d.lexemes.iter().collect();
+        by_order.sort_by_key(|l| (l.source, l.order));
+        let mut seen = crate::HashSet::default();
+        let own: Vec<&Lexeme> = by_order
+            .into_iter()
+            .filter(|l| seen.insert(l.key.as_str()) && l.source == 0)
+            .collect();
         let step = own.len().div_ceil(ATTESTED).max(1);
         let sample: Vec<&Lexeme> = own.into_iter().step_by(step).collect();
         let attested = shipped.with(|g| eval::score(g, &orthography, &sample, Input::Full));

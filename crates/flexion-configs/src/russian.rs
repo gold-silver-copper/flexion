@@ -240,7 +240,6 @@ pub fn language() -> Language {
         spelling: Spelling {
             fold_case: true,
             vowels: "аеёиоуыэюя",
-            fold: vec![('ё', 'е')],
             strip_marks: "\u{301}\u{300}",
             ..Spelling::default()
         },
