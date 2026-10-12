@@ -156,11 +156,11 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
          with every mark the dictionary's table writes, and said to be so (`spelled_in_full`).\n\
          *Principal parts given*: top-1 of the other forms, given the dictionary's principal\n\
          parts. *Features given*: top-1 from the headword, told the word's inherent features\n\
-         (its gender, as `.gender(…)` tells it). *Seen* and *unseen cells*: top-1 on the cells some training word of\n\
-         the word's paradigm has a form in, and on the others, derived from other cells (with\n\
-         the number of forms). *Floor*: the CoNLL–SIGMORPHON\n\
-         2017 shared task's non-neural baseline (letters only). *Attested*: top-1 of the shipped grammar on the dictionary's\n\
-         own words, typed in full.\n\n",
+         (its gender, as `.gender(…)` tells it). *Seen* and *unseen cells*: top-1 on the cells\n\
+         some training word of the word's paradigm has a form in, and on the others, derived\n\
+         from other cells (with the number of forms). *Floor*: the CoNLL–SIGMORPHON 2017\n\
+         shared task's non-neural baseline (letters only). *Attested*: top-1 of the shipped\n\
+         grammar on the dictionary's own words, typed in full.\n\n",
     );
     s.push_str(
         "| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | features given | seen cells | unseen cells | floor | attested |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n",

@@ -538,7 +538,7 @@ fn build(lang: &Language) -> Result<(), String> {
         .collect();
     // The code's size, per part of speech, goes into the report too.
     let files = flexion_train::print::files(lang, &script, &parts, &report)?;
-    let mut sizes = String::from("\n| | lines of grammar | bytes |\n|---|---:|---:|\n");
+    let mut sizes = String::from("\n\n| | lines of grammar | bytes |\n|---|---:|---:|\n");
     for part in &lang.parts {
         let dir = format!("src/{}/", part.name);
         let mine = files.iter().filter(|(p, _)| p.starts_with(&dir));

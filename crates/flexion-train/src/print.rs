@@ -496,7 +496,7 @@ fn grammar_files(
         "::{self, *}"
     };
     let r = format!(
-        "//! Which {one} a word takes. The rule with the longest ending the word has\n//! decides, giving each {one} with how many of the dictionary's words with\n//! that ending follow it; the words no rule gets right are listed. A rule is\n//! kept only when it says something the broader rule doesn't (another {one},\n//! or whether speakers extend it) and pays for itself: it must describe the words it covers in fewer bits\n//! than the broader rule does, by more than the rule costs.\n\nuse super::paradigms::{ty}{uses};\nuse flexion::Choice;\n\n{}",
+        "//! Which {one} a word takes. The rule with the longest ending the word has\n//! decides, giving each {one} with how many of the dictionary's words with\n//! that ending follow it; the words no rule gets right are listed. A rule is\n//! kept only when it pays for itself: it must describe the words it covers\n//! in fewer bits than the broader rule does, by more than the rule costs.\n\nuse super::paradigms::{ty}{uses};\nuse flexion::Choice;\n\n{}",
         choice_const(&one.to_uppercase(), ty, "words", &g.paradigm, name_of)
     );
     files.push((format!("{dir}/rules.rs"), r));
@@ -1267,6 +1267,8 @@ pub fn readme(lang: &Language, report: &str) -> String {
            cell's form, changed);\n\
          - `relations.rs`: which cell each cell's form is told from, and the rules on that\n  \
            form's ending that change it;\n\
+         - `laws.rs`: sound laws where a stem meets its ending (or along a tier), each with the\n  \
+           words whose forms it gives and the forms it gets wrong;\n\
          - `rules.rs`: which paradigm a word takes, as rules on its ending, each with how many of\n  \
            the dictionary's words with that ending follow each paradigm, and the words no rule\n  \
            gets right, listed;\n\

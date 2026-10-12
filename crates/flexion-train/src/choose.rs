@@ -1,12 +1,11 @@
 //! Learning a [`Choice`]: ordered ending rules and the words they get wrong.
 //!
 //! Endings are considered from short to long. An ending becomes a rule when
-//! it says something the broader rule that decides its words now doesn't
-//! (another value, or another productivity) and pays for itself (minimum
-//! description length): telling the values of the words with that ending by
-//! the rule's own counts, rather than by the broader rule's, saves more bits
-//! than writing the rule down costs. The words the finished rules still get
-//! wrong, judged exactly as the runtime reads them, are listed.
+//! it pays for itself (minimum description length): telling the values of
+//! the words with that ending by the rule's own counts, rather than by the
+//! broader rule that decides them now, saves more bits than writing the rule
+//! down costs. The words the finished rules still get wrong, judged exactly
+//! as the runtime reads them, are listed.
 
 use crate::HashMap;
 use flexion::{Choice, Label, Rule};
@@ -84,19 +83,11 @@ pub fn learn<'a, L: Label + Hash + Ord>(
         if total < settings.min_gain {
             continue;
         }
-        // The rule deciding these words now: the longest kept ending. A rule
-        // must pay for itself, and say something it doesn't: another value,
-        // or another productivity (Wilson & Li's pruning).
+        // The rule deciding these words now: the longest kept ending.
         let Some(current) = endings(ending).skip(1).find_map(|e| kept.get(e).copied()) else {
             continue;
         };
-        let productive = |c: &BTreeMap<L, u32>| {
-            let total: u32 = c.values().sum();
-            let top = c.values().max().copied().unwrap_or(0);
-            f64::from(total.saturating_sub(top)) <= flexion::tolerance(total)
-        };
-        let says = winner(c) != winner(current) || productive(c) != productive(current);
-        if says && saved_bits(c, current) >= settings.rule_bits {
+        if saved_bits(c, current) >= settings.rule_bits {
             kept.insert(ending.as_str(), c);
         }
     }
