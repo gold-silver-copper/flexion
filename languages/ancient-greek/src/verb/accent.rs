@@ -24987,11 +24987,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         INFINITIVE_AOR_ACT,
     ]), // Σῠνᾰγω
     Cow::Borrowed(&[
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-    ]), // Τᾰσσω
-    Cow::Borrowed(&[
         FUTURE_IND_ACT_1_SG,
         FUTURE_IND_ACT_2_SG,
         FUTURE_IND_ACT_3_SG,
@@ -25003,6 +24998,11 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         INFINITIVE_FUT_ACT,
         PARTICIPLE_FUT_ACT,
     ]), // Κᾰτεργαζομαι
+    Cow::Borrowed(&[
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+    ]), // Τᾰσσω
     Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
@@ -25307,13 +25307,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
-        AORIST_IMP_MID_2_SG,
-        INFINITIVE_AOR_ACT,
-    ]), // Πλησσω
-    Cow::Borrowed(&[
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
     ]), // Δῐᾰσῳζω
     Cow::Borrowed(&[
         FUTURE_IND_MID_2_SG,
@@ -25349,6 +25342,13 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         PARTICIPLE_PRES_ACT,
         PARTICIPLE_FUT_ACT,
     ]), // Τελεω
+    Cow::Borrowed(&[
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+        AORIST_IMP_MID_2_SG,
+        INFINITIVE_AOR_ACT,
+    ]), // Πλησσω
     Cow::Borrowed(&[
         SUBJ_ACT_1_SG,
         SUBJ_ACT_2_SG,
@@ -25508,6 +25508,11 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         PARTICIPLE_FUT_ACT,
     ]), // Ἀφᾰνῐζω
     Cow::Borrowed(&[
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+    ]), // Πᾰρᾰλλᾰσσω
+    Cow::Borrowed(&[
         FUTURE_IND_ACT_1_SG,
         FUTURE_IND_ACT_2_SG,
         FUTURE_IND_ACT_3_SG,
@@ -25531,11 +25536,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         IMPERFECT_PASS_2_SG,
     ]), // Ἐπῐτεχναομαι
     Cow::Borrowed(&[
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-    ]), // Νῑφω
-    Cow::Borrowed(&[
         FUTURE_IND_ACT_1_SG,
         FUTURE_IND_ACT_2_SG,
         FUTURE_IND_ACT_3_SG,
@@ -25546,6 +25546,11 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         INFINITIVE_FUT_ACT,
         PARTICIPLE_FUT_ACT,
     ]), // Καθιζω
+    Cow::Borrowed(&[
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+    ]), // Νῑφω
     Cow::Borrowed(&[
         IND_MID_2_SG,
         IND_PASS_2_SG,
@@ -25783,7 +25788,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         INFINITIVE_PRES_ACT,
         PARTICIPLE_PRES_ACT,
     ]), // Οἰκεω
-    Cow::Borrowed(&[]), // Ἐξᾰπτω
     Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
@@ -25829,11 +25833,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         INFINITIVE_FUT_ACT,
         PARTICIPLE_FUT_ACT,
     ]), // Σῠνοικῐζω
-    Cow::Borrowed(&[
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-    ]), // Πᾰρᾰλλᾰσσω
     Cow::Borrowed(&[]), // Μετερχομαι
     Cow::Borrowed(&[
         IND_ACT_1_SG,
@@ -25916,6 +25915,7 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         INFINITIVE_PRES_ACT,
         PARTICIPLE_PRES_ACT,
     ]), // Ὁμολογεω
+    Cow::Borrowed(&[]), // Ἐξᾰπτω
     Cow::Borrowed(&[
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,

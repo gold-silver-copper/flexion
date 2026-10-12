@@ -53,37 +53,37 @@ macro_rules! declension {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `приём`: 27,703 words.
+    /// Like `приём`: 27,734 words.
     Приём,
-    /// Like `ролик`: 10,035 words.
+    /// Like `ролик`: 10,046 words.
     Ролик,
-    /// Like `скопление`: 9,054 words.
+    /// Like `скопление`: 9,055 words.
     Скопление,
-    /// Like `склонность`: 7,474 words.
+    /// Like `склонность`: 7,489 words.
     Склонность,
-    /// Like `полнота`: 7,414 words.
+    /// Like `полнота`: 7,422 words.
     Полнота,
-    /// Like `стрелка`: 6,661 words.
+    /// Like `стрелка`: 6,672 words.
     Стрелка,
     /// Like `химия`: 6,582 words.
     Химия,
-    /// Like `какао`: 3,417 words.
+    /// Like `какао`: 3,419 words.
     Какао,
-    /// Like `хлопанье`: 2,658 words.
+    /// Like `хлопанье`: 2,662 words.
     Хлопанье,
-    /// Like `шоколадница`: 2,595 words.
+    /// Like `шоколадница`: 2,596 words.
     Шоколадница,
-    /// Like `дорожка`: 2,516 words.
+    /// Like `дорожка`: 2,519 words.
     Дорожка,
-    /// Like `сходство`: 2,327 words.
+    /// Like `сходство`: 2,331 words.
     Сходство,
-    /// Like `агнец`: 2,158 words.
+    /// Like `агнец`: 2,159 words.
     Агнец,
-    /// Like `тяга`: 2,131 words.
+    /// Like `тяга`: 2,133 words.
     Тяга,
     /// Like `медведь`: 1,983 words.
     Медведь,
-    /// Like `рожок`: 1,046 words.
+    /// Like `рожок`: 1,048 words.
     Рожок,
     /// Like `товарищ`: 945 words.
     Товарищ,
@@ -119,16 +119,16 @@ pub enum Declension {
     Счёты,
     /// Like `батарея`: 194 words.
     Батарея,
+    /// Like `русский`: 193 words.
+    Русский,
     /// Like `лососёвые`: 192 words.
     Лососёвые,
-    /// Like `русский`: 191 words.
-    Русский,
-    /// Like `отец`: 179 words.
+    /// Like `отец`: 180 words.
     Отец,
+    /// Like `постав`: 175 words.
+    Постав,
     /// Like `умелец`: 174 words.
     Умелец,
-    /// Like `постав`: 174 words.
-    Постав,
     /// Like `фофудья`: 151 words.
     Фофудья,
     /// Like `латы`: 150 words.
@@ -147,13 +147,13 @@ pub enum Declension {
     Второе,
     /// Like `кормчий`: 115 words.
     Кормчий,
+    /// Like `жнивьё`: 115 words.
+    Жнивьё,
     /// Like `овца`: 114 words.
     Овца,
-    /// Like `жнивьё`: 110 words.
-    Жнивьё,
     /// Like `камень`: 107 words.
     Камень,
-    /// Like `нападки`: 99 words.
+    /// Like `нападки`: 100 words.
     Нападки,
     /// Like `гусёк`: 92 words.
     Гусёк,
@@ -161,10 +161,10 @@ pub enum Declension {
     Ясли,
     /// Like `спальня`: 85 words.
     Спальня,
+    /// Like `помочь`: 79 words.
+    Помочь,
     /// Like `ход`: 78 words.
     Ход,
-    /// Like `помочь`: 77 words.
-    Помочь,
     /// Like `достопримечательность`: 77 words.
     Достопримечательность,
     /// Like `абзац`: 75 words.
@@ -193,10 +193,10 @@ pub enum Declension {
     Чужое,
     /// Like `хуище`: 40 words.
     Хуище,
+    /// Like `делёж`: 38 words.
+    Делёж,
     /// Like `мощи`: 38 words.
     Мощи,
-    /// Like `делёж`: 36 words.
-    Делёж,
     /// Like `положняк`: 35 words.
     Положняк,
     /// Like `дрязги`: 34 words.
@@ -205,6 +205,8 @@ pub enum Declension {
     Горючее,
     /// Like `ладья`: 30 words.
     Ладья,
+    /// Like `деревня`: 29 words.
+    Деревня,
     /// Like `верея`: 29 words.
     Верея,
     /// Like `кешью`: 29 words.
@@ -215,32 +217,30 @@ pub enum Declension {
     Шов,
     /// Like `егерь`: 27 words.
     Егерь,
-    /// Like `деревня`: 27 words.
-    Деревня,
     /// Like `пол-литра`: 26 words.
     Поллитра,
     /// Like `щит`: 24 words.
     Щит,
+    /// Like `член`: 24 words.
+    Член,
     /// Like `голец`: 24 words.
     Голец,
     /// Like `домашние`: 24 words.
     Домашние,
     /// Like `звезда`: 23 words.
     Звезда,
-    /// Like `член`: 23 words.
-    Член,
     /// Like `лицо`: 23 words.
     Лицо,
+    /// Like `козёл`: 22 words.
+    Козёл,
+    /// Like `ребро`: 22 words.
+    Ребро,
     /// Like `маракуйя`: 22 words.
     Маракуйя,
     /// Like `деньги`: 21 words.
     Деньги,
     /// Like `устье`: 21 words.
     Устье,
-    /// Like `ребро`: 21 words.
-    Ребро,
-    /// Like `козёл`: 20 words.
-    Козёл,
     /// Like `хуй`: 20 words.
     Хуй,
     /// Like `клин`: 19 words.
@@ -275,12 +275,12 @@ pub enum Declension {
     Губоцветные,
     /// Like `сердце`: 13 words.
     Сердце,
+    /// Like `гнездо`: 13 words.
+    Гнездо,
     /// Like `котёночек`: 13 words.
     Котёночек,
     /// Like `меринос`: 13 words.
     Меринос,
-    /// Like `гнездо`: 12 words.
-    Гнездо,
     /// Like `фекалии`: 12 words.
     Фекалии,
     /// Like `кольцо`: 12 words.
@@ -309,22 +309,20 @@ pub enum Declension {
     Коленце,
     /// Like `дом`: 9 words.
     Дом,
+    /// Like `кукла`: 9 words.
+    Кукла,
     /// Like `перешеек`: 9 words.
     Перешеек,
     /// Like `плечо`: 8 words.
     Плечо,
     /// Like `горе`: 8 words.
     Горе,
-    /// Like `кукла`: 8 words.
-    Кукла,
     /// Like `покой`: 8 words.
     Покой,
     /// Like `герц`: 8 words.
     Герц,
     /// Like `калашников`: 8 words.
     Калашников,
-    /// Like `остриё`: 8 words.
-    Остриё,
     /// Like `плюхино`: 8 words.
     Плюхино,
     /// Like `пол-юбки`: 8 words.
@@ -349,10 +347,14 @@ pub enum Declension {
     Заём,
     /// Like `весна`: 7 words.
     Весна,
+    /// Like `осётр`: 7 words.
+    Осётр,
     /// Like `чужой`: 7 words.
     Чужой,
     /// Like `полгода`: 7 words.
     Полгода,
+    /// Like `дитё`: 7 words.
+    Дитё,
     /// Like `пол-июля`: 7 words.
     Полиюля,
     /// Like `пол-игры`: 7 words.
@@ -365,8 +367,6 @@ pub enum Declension {
     Млекопитающее,
     /// Like `татарин`: 6 words.
     Татарин,
-    /// Like `осётр`: 6 words.
-    Осётр,
     /// Like `чукча`: 6 words.
     Чукча,
     /// Like `метёлка`: 6 words.
@@ -375,8 +375,6 @@ pub enum Declension {
     Макаронник,
     /// Like `ебеня`: 6 words.
     Ебеня,
-    /// Like `скло`: 6 words.
-    Скло,
     /// Like `исайя`: 6 words.
     Исайя,
     /// Like `пол-лета`: 6 words.
@@ -413,6 +411,8 @@ pub enum Declension {
     Копьё,
     /// Like `опий`: 4 words.
     Опий,
+    /// Like `небо`: 4 words.
+    Небо,
     /// Like `судно`: 4 words.
     Судно,
     /// Like `улей`: 4 words.
@@ -425,6 +425,8 @@ pub enum Declension {
     Капли,
     /// Like `пресмыкающееся`: 4 words.
     Пресмыкающееся,
+    /// Like `остриё`: 4 words.
+    Остриё,
     /// Like `ничья`: 4 words.
     Ничья,
     /// Like `яйки`: 4 words.
@@ -433,6 +435,8 @@ pub enum Declension {
     Горошек,
     /// Like `сынуля`: 4 words.
     Сынуля,
+    /// Like `карло`: 4 words.
+    Карло,
     /// Like `дитятко`: 4 words.
     Дитятко,
     /// Like `земля`: 3 words.
@@ -443,10 +447,6 @@ pub enum Declension {
     Угол,
     /// Like `сколько`: 3 words.
     Сколько,
-    /// Like `чудо`: 3 words.
-    Чудо,
-    /// Like `средостениё`: 3 words.
-    Средостениё,
     /// Like `смерть`: 3 words.
     Смерть,
     /// Like `кисель`: 3 words.
@@ -499,11 +499,11 @@ impl Declension {
         Declension::Червь,
         Declension::Счёты,
         Declension::Батарея,
-        Declension::Лососёвые,
         Declension::Русский,
+        Declension::Лососёвые,
         Declension::Отец,
-        Declension::Умелец,
         Declension::Постав,
+        Declension::Умелец,
         Declension::Фофудья,
         Declension::Латы,
         Declension::Молочко,
@@ -513,15 +513,15 @@ impl Declension {
         Declension::Подворотня,
         Declension::Второе,
         Declension::Кормчий,
-        Declension::Овца,
         Declension::Жнивьё,
+        Declension::Овца,
         Declension::Камень,
         Declension::Нападки,
         Declension::Гусёк,
         Declension::Ясли,
         Declension::Спальня,
-        Declension::Ход,
         Declension::Помочь,
+        Declension::Ход,
         Declension::Достопримечательность,
         Declension::Абзац,
         Declension::Кулички,
@@ -536,30 +536,30 @@ impl Declension {
         Declension::Каракуля,
         Declension::Чужое,
         Declension::Хуище,
-        Declension::Мощи,
         Declension::Делёж,
+        Declension::Мощи,
         Declension::Положняк,
         Declension::Дрязги,
         Declension::Горючее,
         Declension::Ладья,
+        Declension::Деревня,
         Declension::Верея,
         Declension::Кешью,
         Declension::Порубка,
         Declension::Шов,
         Declension::Егерь,
-        Declension::Деревня,
         Declension::Поллитра,
         Declension::Щит,
+        Declension::Член,
         Declension::Голец,
         Declension::Домашние,
         Declension::Звезда,
-        Declension::Член,
         Declension::Лицо,
+        Declension::Козёл,
+        Declension::Ребро,
         Declension::Маракуйя,
         Declension::Деньги,
         Declension::Устье,
-        Declension::Ребро,
-        Declension::Козёл,
         Declension::Хуй,
         Declension::Клин,
         Declension::Сенцы,
@@ -577,9 +577,9 @@ impl Declension {
         Declension::Ебала,
         Declension::Губоцветные,
         Declension::Сердце,
+        Declension::Гнездо,
         Declension::Котёночек,
         Declension::Меринос,
-        Declension::Гнездо,
         Declension::Фекалии,
         Declension::Кольцо,
         Declension::Рыльце,
@@ -594,14 +594,13 @@ impl Declension {
         Declension::Хлопья,
         Declension::Коленце,
         Declension::Дом,
+        Declension::Кукла,
         Declension::Перешеек,
         Declension::Плечо,
         Declension::Горе,
-        Declension::Кукла,
         Declension::Покой,
         Declension::Герц,
         Declension::Калашников,
-        Declension::Остриё,
         Declension::Плюхино,
         Declension::Полюбки,
         Declension::Ложь,
@@ -614,20 +613,20 @@ impl Declension {
         Declension::Стекло,
         Declension::Заём,
         Declension::Весна,
+        Declension::Осётр,
         Declension::Чужой,
         Declension::Полгода,
+        Declension::Дитё,
         Declension::Полиюля,
         Declension::Полигры,
         Declension::Бой,
         Declension::Кто,
         Declension::Млекопитающее,
         Declension::Татарин,
-        Declension::Осётр,
         Declension::Чукча,
         Declension::Метёлка,
         Declension::Макаронник,
         Declension::Ебеня,
-        Declension::Скло,
         Declension::Исайя,
         Declension::Поллета,
         Declension::Круг,
@@ -646,23 +645,24 @@ impl Declension {
         Declension::Тиса,
         Declension::Копьё,
         Declension::Опий,
+        Declension::Небо,
         Declension::Судно,
         Declension::Улей,
         Declension::Учащийся,
         Declension::Бугай,
         Declension::Капли,
         Declension::Пресмыкающееся,
+        Declension::Остриё,
         Declension::Ничья,
         Declension::Яйки,
         Declension::Горошек,
         Declension::Сынуля,
+        Declension::Карло,
         Declension::Дитятко,
         Declension::Земля,
         Declension::Путь,
         Declension::Угол,
         Declension::Сколько,
-        Declension::Чудо,
-        Declension::Средостениё,
         Declension::Смерть,
         Declension::Кисель,
         Declension::Епитимья,
@@ -688,8 +688,8 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
-    // Приём: 27,703 words (указ, зонт, кот, узус, скот, мэр).
-    declension!("приём", 27703, "~";
+    // Приём: 27,734 words (указ, зонт, кот, узус, скот, мэр).
+    declension!("приём", 27734, "~";
         nominative: "~", "~ы";
         genitive: "~а", "~ов";
         dative: "~у", "~ам";
@@ -698,8 +698,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~е", "~ах";
         noun_second_case: "~а", "~е";
     ),
-    // Ролик: 10,035 words (зонтик, бортник, бочаг, бредник, язык, гулаг).
-    declension!("ролик", 10035, "~";
+    // Ролик: 10,046 words (зонтик, бортник, бочаг, бредник, язык, гулаг).
+    declension!("ролик", 10046, "~";
         nominative: "~", "~и";
         genitive: "~а", "~ов";
         dative: "~у", "~ам";
@@ -708,8 +708,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~е", "~ах";
         noun_second_case: "~а", "~е";
     ),
-    // Скопление: 9,054 words (произношение, лезвие, распятие, деревенение, лесонасаждение, ведение).
-    declension!("скопление", 9054, "~е";
+    // Скопление: 9,055 words (произношение, лезвие, распятие, деревенение, лесонасаждение, ведение).
+    declension!("скопление", 9055, "~е";
         nominative: "~е", "~я";
         genitive: "~я", "~й";
         dative: "~ю", "~ям";
@@ -718,8 +718,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~и", "~ях";
         noun_second_case: "~я", "~и";
     ),
-    // Склонность: 7,474 words (знать, весь, гласность, деревянность, дверь, ртуть).
-    declension!("склонность", 7474, "~ь";
+    // Склонность: 7,489 words (знать, весь, гласность, деревянность, дверь, ртуть).
+    declension!("склонность", 7489, "~ь";
         nominative: "~ь", "~и";
         genitive: "~и", "~ей";
         dative: "~и", "~ям";
@@ -728,8 +728,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~и", "~ях";
         noun_second_case: "~и", "~и";
     ),
-    // Полнота: 7,414 words (буява, вата, работа, камера, липа, сера).
-    declension!("полнота", 7414, "~а";
+    // Полнота: 7,422 words (буява, вата, работа, камера, липа, сера).
+    declension!("полнота", 7422, "~а";
         nominative: "~а", "~ы";
         genitive: "~ы", "~";
         dative: "~е", "~ам";
@@ -738,8 +738,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~е", "~ах";
         noun_second_case: "~ы", "~е";
     ),
-    // Стрелка: 6,661 words (водка, цыпка, жилка, деревянка, лесопилка, доска).
-    declension!("стрелка", 6661, "~~а";
+    // Стрелка: 6,672 words (водка, цыпка, жилка, деревянка, лесопилка, доска).
+    declension!("стрелка", 6672, "~~а";
         nominative: "~~а", "~~и";
         genitive: "~~и", "~о~";
         dative: "~~е", "~~ам";
@@ -758,8 +758,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~и", "~ях";
         noun_second_case: "~и", "~и";
     ),
-    // Какао: 3,417 words (пальто, брачущиеся, брачующиеся, адажио, какао, полпути).
-    declension!("какао", 3417, "~";
+    // Какао: 3,419 words (пальто, все, брачущиеся, брачующиеся, адажио, какао).
+    declension!("какао", 3419, "~";
         nominative: "~", "~";
         genitive: "~", "~";
         dative: "~", "~";
@@ -768,8 +768,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~", "~";
         noun_second_case: "~", "~";
     ),
-    // Хлопанье: 2,658 words (запястье, воскресенье, варенье, воспитанье, отчаянье, уединенье).
-    declension!("хлопанье", 2658, "~ье";
+    // Хлопанье: 2,662 words (запястье, воскресенье, варенье, воспитанье, отчаянье, уединенье).
+    declension!("хлопанье", 2662, "~ье";
         nominative: "~ье", "~ья";
         genitive: "~ья", "~ий";
         dative: "~ью", "~ьям";
@@ -778,8 +778,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~ье", "~ьях";
         noun_second_case: "~ья", "~ье";
     ),
-    // Шоколадница: 2,595 words (былица, масленица, царица, лисица, птица, гусеница).
-    declension!("шоколадница", 2595, "~а";
+    // Шоколадница: 2,596 words (былица, масленица, царица, лисица, птица, гусеница).
+    declension!("шоколадница", 2596, "~а";
         nominative: "~а", "~ы";
         genitive: "~ы", "~";
         dative: "~е", "~ам";
@@ -788,8 +788,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~е", "~ах";
         noun_second_case: "~ы", "~е";
     ),
-    // Дорожка: 2,516 words (кошка, быличка, палочка, ручка, мошка, бабочка).
-    declension!("дорожка", 2516, "~~а";
+    // Дорожка: 2,519 words (кошка, быличка, палочка, ручка, мошка, бабочка).
+    declension!("дорожка", 2519, "~~а";
         nominative: "~~а", "~~и";
         genitive: "~~и", "~е~";
         dative: "~~е", "~~ам";
@@ -798,8 +798,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~~е", "~~ах";
         noun_second_case: "~~и", "~~е";
     ),
-    // Сходство: 2,327 words (буево, бёрдо, око, лето, жало, горло).
-    declension!("сходство", 2327, "~о";
+    // Сходство: 2,331 words (буево, бёрдо, око, лето, жало, горло).
+    declension!("сходство", 2331, "~о";
         nominative: "~о", "~а";
         genitive: "~а", "~";
         dative: "~у", "~ам";
@@ -808,8 +808,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~е", "~ах";
         noun_second_case: "~а", "~е";
     ),
-    // Агнец: 2,158 words (левантинец, древоточец, марганец, самозванец, разночинец, ньюйоркец).
-    declension!("агнец", 2158, "~е~";
+    // Агнец: 2,159 words (левантинец, древоточец, марганец, самозванец, разночинец, ньюйоркец).
+    declension!("агнец", 2159, "~е~";
         nominative: "~е~", "~~ы";
         genitive: "~~а", "~~ев";
         dative: "~~у", "~~ам";
@@ -818,8 +818,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~~е", "~~ах";
         noun_second_case: "~~а", "~~е";
     ),
-    // Тяга: 2,131 words (собака, мука, книга, керамика, вага, республика).
-    declension!("тяга", 2131, "~а";
+    // Тяга: 2,133 words (собака, мука, книга, керамика, вага, республика).
+    declension!("тяга", 2133, "~а";
         nominative: "~а", "~и";
         genitive: "~и", "~";
         dative: "~е", "~ам";
@@ -838,8 +838,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~е", "~ях";
         noun_second_case: "~я", "~е";
     ),
-    // Рожок: 1,046 words (щенок, бесёнок, лесок, замок, носок, подросток).
-    declension!("рожок", 1046, "~о~";
+    // Рожок: 1,048 words (щенок, бесёнок, лесок, замок, носок, подросток).
+    declension!("рожок", 1048, "~о~";
         nominative: "~о~", "~~и";
         genitive: "~~а", "~~ов";
         dative: "~~у", "~~ам";
@@ -1018,6 +1018,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~е", "~ях";
         noun_second_case: "~и", "~е";
     ),
+    // Русский: 193 words (русский, сербскохорватский, английский, норвежский, китайский, немецкий).
+    declension!("русский", 193, "~ий";
+        nominative: "~ий", "~ие";
+        genitive: "~ого", "~их";
+        dative: "~ому", "~им";
+        accusative: referred, referred;
+        instrumental: "~им", "~ими";
+        prepositional: "~ом", "~их";
+        noun_second_case: "~ого", "~ом";
+    ),
     // Лососёвые: 192 words (данные, чаевые, присные, месячные, наличные, родные).
     declension!("лососёвые", 192, "~е";
         nominative: "~е", "~е";
@@ -1028,18 +1038,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~и", "~х";
         noun_second_case: "~я", "~и";
     ),
-    // Русский: 191 words (русский, сербскохорватский, английский, норвежский, китайский, немецкий).
-    declension!("русский", 191, "~ий";
-        nominative: "~ий", "~ие";
-        genitive: "~ого", "~их";
-        dative: "~ому", "~им";
-        accusative: referred, referred;
-        instrumental: "~им", "~ими";
-        prepositional: "~ом", "~их";
-        noun_second_case: "~ого", "~ом";
-    ),
-    // Отец: 179 words (отец, свинец, ветер, купец, творец, дворец).
-    declension!("отец", 179, "~е~";
+    // Отец: 180 words (отец, свинец, ветер, купец, творец, дворец).
+    declension!("отец", 180, "~е~";
         nominative: "~е~", "~~ы";
         genitive: "~~а", "~~ов";
         dative: "~~у", "~~ам";
@@ -1047,6 +1047,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         instrumental: "~~ом", "~~ами";
         prepositional: "~~е", "~~ах";
         noun_second_case: "~~а", "~~е";
+    ),
+    // Постав: 175 words (город, пояс, адрес, бок, вечер, номер).
+    declension!("постав", 175, "~";
+        nominative: "~", "~а";
+        genitive: "~а", "~ов";
+        dative: "~у", "~ам";
+        accusative: referred, referred;
+        instrumental: "~ом", "~ами";
+        prepositional: "~е", "~ах";
+        noun_second_case: "~а", "~е";
     ),
     // Умелец: 174 words (палец, комсомолец, земледелец, бразилец, владелец, анголец).
     declension!("умелец", 174, "~е~";
@@ -1057,16 +1067,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         instrumental: "~ь~ем", "~ь~ами";
         prepositional: "~ь~е", "~ь~ах";
         noun_second_case: "~ь~а", "~ь~е";
-    ),
-    // Постав: 174 words (город, пояс, адрес, бок, вечер, номер).
-    declension!("постав", 174, "~";
-        nominative: "~", "~а";
-        genitive: "~а", "~ов";
-        dative: "~у", "~ам";
-        accusative: referred, referred;
-        instrumental: "~ом", "~ами";
-        prepositional: "~е", "~ах";
-        noun_second_case: "~а", "~е";
     ),
     // Фофудья: 151 words (гостья, авиаэскадрилья, эскадрилья, келья, тортилья, колдунья).
     declension!("фофудья", 151, "~ья";
@@ -1158,6 +1158,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~ем", "~их";
         noun_second_case: "~его", "~ем";
     ),
+    // Жнивьё: 115 words (питьё, ружьё, битьё, враньё, сырьё, жильё).
+    declension!("жнивьё", 115, "~ьё";
+        nominative: "~ьё", "~ья";
+        genitive: "~ья", "~ей";
+        dative: "~ью", "~ьям";
+        accusative: referred, referred;
+        instrumental: "~ьём", "~ьями";
+        prepositional: "~ье", "~ьях";
+        noun_second_case: "~ья", "~ье";
+    ),
     // Овца: 114 words (овца, сосна, домна, царевна, гривна, кошма).
     declension!("овца", 114, "~~а";
         nominative: "~~а", "~~ы";
@@ -1167,16 +1177,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         instrumental: "~~ой|~~ою", "~~ами";
         prepositional: "~~е", "~~ах";
         noun_second_case: "~~ы", "~~е";
-    ),
-    // Жнивьё: 110 words (питьё, ружьё, битьё, враньё, сырьё, жильё).
-    declension!("жнивьё", 110, "~ьё";
-        nominative: "~ьё", "~ья";
-        genitive: "~ья", "~ей";
-        dative: "~ью", "~ьям";
-        accusative: referred, referred;
-        instrumental: "~ьём", "~ьями";
-        prepositional: "~ье", "~ьях";
-        noun_second_case: "~ья", "~ье";
     ),
     // Камень: 107 words (бредень, оборотень, камень, парень, полдень, кашель).
     declension!("камень", 107, "~е~ь";
@@ -1188,8 +1188,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~~е", "~~ях";
         noun_second_case: "~~я", "~~е";
     ),
-    // Нападки: 99 words (лесопосадки, плавки, сутки, сливки, колготки, поминки).
-    declension!("нападки", 99, "~~и";
+    // Нападки: 100 words (лесопосадки, плавки, сутки, сливки, колготки, поминки).
+    declension!("нападки", 100, "~~и";
         nominative: "~~а", "~~и";
         genitive: "~~и", "~о~";
         dative: "~~е", "~~ам";
@@ -1228,6 +1228,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~ь~е", "~ь~ях";
         noun_second_case: "~ь~и", "~ь~е";
     ),
+    // Помочь: 79 words (ночь, мочь, тушь, помочь, печь, речь).
+    declension!("помочь", 79, "~ь";
+        nominative: "~ь", "~и";
+        genitive: "~и", "~ей";
+        dative: "~и", "~ам";
+        accusative: referred, referred;
+        instrumental: "~ью", "~ами";
+        prepositional: "~и", "~ах";
+        noun_second_case: "~и", "~и";
+    ),
     // Ход: 78 words (укроп, самогон, град, народ, аппетит, яд).
     declension!("ход", 78, "~";
         nominative: "~", "~ы";
@@ -1237,16 +1247,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         instrumental: "~ом", "~ами";
         prepositional: "~е", "~ах";
         noun_second_case: "~у", "~е";
-    ),
-    // Помочь: 77 words (ночь, мочь, тушь, помочь, печь, речь).
-    declension!("помочь", 77, "~ь";
-        nominative: "~ь", "~и";
-        genitive: "~и", "~ей";
-        dative: "~и", "~ам";
-        accusative: referred, referred;
-        instrumental: "~ью", "~ами";
-        prepositional: "~и", "~ах";
-        noun_second_case: "~и", "~и";
     ),
     // Достопримечательность: 77 words (лошадь, дочь, мать, сельдь, свекровь, достопримечательность).
     declension!("достопримечательность", 77, "~ь";
@@ -1388,6 +1388,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~е", "~ах";
         noun_second_case: "~а", "~е";
     ),
+    // Делёж: 38 words (падёж, пиздёж, чертёж, грабёж, платёж, мухлёж).
+    declension!("делёж", 38, "~ё~";
+        nominative: "~ё~", "~е~и";
+        genitive: "~е~а", "~е~ей";
+        dative: "~е~у", "~е~ам";
+        accusative: referred, referred;
+        instrumental: "~е~ом", "~е~ами";
+        prepositional: "~е~е", "~е~ах";
+        noun_second_case: "~е~а", "~е~е";
+    ),
     // Мощи: 38 words (вожжи, дрожжи, щи, клещи, пассатижи, мощи).
     declension!("мощи", 38, "~и";
         nominative: "~и", "~и";
@@ -1397,16 +1407,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         instrumental: "~и", "~ами";
         prepositional: "~и", "~ах";
         noun_second_case: "~и", "~и";
-    ),
-    // Делёж: 36 words (пиздёж, чертёж, грабёж, платёж, мухлёж, кутёж).
-    declension!("делёж", 36, "~ё~";
-        nominative: "~ё~", "~е~и";
-        genitive: "~е~а", "~е~ей";
-        dative: "~е~у", "~е~ам";
-        accusative: referred, referred;
-        instrumental: "~е~ом", "~е~ами";
-        prepositional: "~е~е", "~е~ах";
-        noun_second_case: "~е~а", "~е~е";
     ),
     // Положняк: 35 words (страх, горох, коньяк, лак, мак, грог).
     declension!("положняк", 35, "~";
@@ -1447,6 +1447,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         instrumental: "~ьёй|~ьёю", "~ьями";
         prepositional: "~ье", "~ьях";
         noun_second_case: "~ьи", "~ье";
+    ),
+    // Деревня: 29 words (торговля, сабля, капля, туфля, чапля, цапля).
+    declension!("деревня", 29, "~~я";
+        nominative: "~~я", "~~и";
+        genitive: "~~и", "~е~ь";
+        dative: "~~е", "~~ям";
+        accusative: "~~ю", referred;
+        instrumental: "~~ей|~~ею", "~~ями";
+        prepositional: "~~е", "~~ях";
+        noun_second_case: "~~и", "~~е";
     ),
     // Верея: 29 words (змея, колея, чешуя, швея, струя, алия).
     declension!("верея", 29, "~я";
@@ -1498,16 +1508,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~е", "~ях";
         noun_second_case: "~я", "~е";
     ),
-    // Деревня: 27 words (торговля, сабля, капля, туфля, чапля, цапля).
-    declension!("деревня", 27, "~~я";
-        nominative: "~~я", "~~и";
-        genitive: "~~и", "~е~ь";
-        dative: "~~е", "~~ям";
-        accusative: "~~ю", referred;
-        instrumental: "~~ей|~~ею", "~~ями";
-        prepositional: "~~е", "~~ях";
-        noun_second_case: "~~и", "~~е";
-    ),
     // Поллитра: 26 words (пол-очка, пол-литра, пол-оборота, пол-августа, пол-автобуса, пол-аршина).
     declension!("пол-литра", 26, "~-~а";
         nominative: "~-~а", "~у~ы";
@@ -1527,6 +1527,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         instrumental: "~ом", "~ами";
         prepositional: "~е", "~ах";
         noun_second_case: "~а", "~у";
+    ),
+    // Член: 24 words (клон, тип, член, кат, кекс, бас).
+    declension!("член", 24, "~";
+        nominative: "~", "~ы";
+        genitive: "~а", "~ов";
+        dative: "~у", "~ам";
+        accusative: "~а|~", "~ов|~ы";
+        instrumental: "~ом", "~ами";
+        prepositional: "~е", "~ах";
+        noun_second_case: "~а", "~е";
     ),
     // Голец: 24 words (лев, телец, стрелец, жилец, делец, малец).
     declension!("голец", 24, "~е~";
@@ -1558,16 +1568,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~е~е", "~ё~ах";
         noun_second_case: "~е~ы", "~е~е";
     ),
-    // Член: 23 words (клон, тип, член, кат, кекс, бас).
-    declension!("член", 23, "~";
-        nominative: "~", "~ы";
-        genitive: "~а", "~ов";
-        dative: "~у", "~ам";
-        accusative: "~а|~", "~ов|~ы";
-        instrumental: "~ом", "~ами";
-        prepositional: "~е", "~ах";
-        noun_second_case: "~а", "~е";
-    ),
     // Лицо: 23 words (существо, лицо, божество, чадо, чмо, падло).
     declension!("лицо", 23, "~о";
         nominative: "~о", "~а";
@@ -1577,6 +1577,26 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         instrumental: "~ом", "~ами";
         prepositional: "~е", "~ах";
         noun_second_case: "~а", "~е";
+    ),
+    // Козёл: 22 words (пёс, козёл, орёл, овёс, осёл, костёр).
+    declension!("козёл", 22, "~ё~";
+        nominative: "~ё~", "~~ы";
+        genitive: "~~а", "~~ов";
+        dative: "~~у", "~~ам";
+        accusative: referred, referred;
+        instrumental: "~~ом", "~~ами";
+        prepositional: "~~е", "~~ах";
+        noun_second_case: "~~а", "~~е";
+    ),
+    // Ребро: 22 words (сребро, серебро, ведро, ребро, весло, зерно).
+    declension!("ребро", 22, "~е~~о";
+        nominative: "~е~~о", "~ё~~а";
+        genitive: "~е~~а", "~ё~е~";
+        dative: "~е~~у", "~ё~~ам";
+        accusative: referred, referred;
+        instrumental: "~е~~ом", "~ё~~ами";
+        prepositional: "~е~~е", "~ё~~ах";
+        noun_second_case: "~е~~а", "~е~~е";
     ),
     // Маракуйя: 22 words (аллилуйя, секвойя, паранойя, папайя, пирайя, майя).
     declension!("маракуйя", 22, "~я";
@@ -1607,26 +1627,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         instrumental: "~ем", "~ями";
         prepositional: "~е", "~ях";
         noun_second_case: "~я", "~е";
-    ),
-    // Ребро: 21 words (сребро, серебро, ребро, весло, зерно, бедро).
-    declension!("ребро", 21, "~е~~о";
-        nominative: "~е~~о", "~ё~~а";
-        genitive: "~е~~а", "~ё~е~";
-        dative: "~е~~у", "~ё~~ам";
-        accusative: referred, referred;
-        instrumental: "~е~~ом", "~ё~~ами";
-        prepositional: "~е~~е", "~ё~~ах";
-        noun_second_case: "~е~~а", "~е~~е";
-    ),
-    // Козёл: 20 words (пёс, козёл, орёл, овёс, осёл, костёр).
-    declension!("козёл", 20, "~ё~";
-        nominative: "~ё~", "~~ы";
-        genitive: "~~а", "~~ов";
-        dative: "~~у", "~~ам";
-        accusative: referred, referred;
-        instrumental: "~~ом", "~~ами";
-        prepositional: "~~е", "~~ах";
-        noun_second_case: "~~а", "~~е";
     ),
     // Хуй: 20 words (хуй, рой, слой, буй, гай, пай).
     declension!("хуй", 20, "~й";
@@ -1798,6 +1798,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~~е", "~~ах";
         noun_second_case: "~~а", "~~е";
     ),
+    // Гнездо: 13 words (озеро, колесо, село, чело, решето, гнездо).
+    declension!("гнездо", 13, "~е~о";
+        nominative: "~е~о", "~ё~а";
+        genitive: "~е~а", "~ё~";
+        dative: "~е~у", "~ё~ам";
+        accusative: referred, referred;
+        instrumental: "~е~ом", "~ё~ами";
+        prepositional: "~е~е", "~ё~ах";
+        noun_second_case: "~е~а", "~е~е";
+    ),
     // Котёночек: 13 words (цыплёночек, котёночек, жеребёночек, козлёночек, утёночек, ягнёночек).
     declension!("котёночек", 13, "~ёноче~";
         nominative: "~ёноче~", "~ят~и";
@@ -1817,16 +1827,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         instrumental: "~ом", "~ами";
         prepositional: "~е", "~ах";
         noun_second_case: "~а", "~е";
-    ),
-    // Гнездо: 12 words (озеро, колесо, село, чело, решето, гнездо).
-    declension!("гнездо", 12, "~е~о";
-        nominative: "~е~о", "~ё~а";
-        genitive: "~е~а", "~ё~";
-        dative: "~е~у", "~ё~ам";
-        accusative: referred, referred;
-        instrumental: "~е~ом", "~ё~ами";
-        prepositional: "~е~е", "~ё~ах";
-        noun_second_case: "~е~а", "~е~е";
     ),
     // Фекалии: 12 words (химикалии, фекалии, авиалинии, гениталии, сатурналии, реалии).
     declension!("фекалии", 12, "~и";
@@ -1968,6 +1968,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~е", "~ах";
         noun_second_case: "~у", "~у";
     ),
+    // Кукла: 9 words (мгла, кукла, мошна, княжна, свёкла, свекла).
+    declension!("кукла", 9, "~~а";
+        nominative: "~~а", "~~ы";
+        genitive: "~~ы", "~о~";
+        dative: "~~е", "~~ам";
+        accusative: "~~у", referred;
+        instrumental: "~~ой|~~ою", "~~ами";
+        prepositional: "~~е", "~~ах";
+        noun_second_case: "~~ы", "~~е";
+    ),
     // Перешеек: 9 words (перешеек, закраек, зашеек, опоек, отроек, ошеек).
     declension!("перешеек", 9, "~е~";
         nominative: "~е~", "~й~и";
@@ -1998,16 +2008,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~е", "~ях";
         noun_second_case: "~я", "~е";
     ),
-    // Кукла: 8 words (мгла, кукла, мошна, княжна, свёкла, чухна).
-    declension!("кукла", 8, "~~а";
-        nominative: "~~а", "~~ы";
-        genitive: "~~ы", "~о~";
-        dative: "~~е", "~~ам";
-        accusative: "~~у", referred;
-        instrumental: "~~ой|~~ою", "~~ами";
-        prepositional: "~~е", "~~ах";
-        noun_second_case: "~~ы", "~~е";
-    ),
     // Покой: 8 words (гной, покой, иней, сельдерей, шалфей, перегной).
     declension!("покой", 8, "~й";
         nominative: "~й", "~и";
@@ -2037,16 +2037,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         instrumental: "~ым", "~ыми";
         prepositional: "~е", "~ых";
         noun_second_case: "~а", "~е";
-    ),
-    // Остриё: 8 words (остриё, дитё, востриё, хулиганьё, гадьё, мудачьё).
-    declension!("остриё", 8, "~ё";
-        nominative: "~ё", "~я";
-        genitive: "~я", "~ей";
-        dative: "~ю", "~ям";
-        accusative: "~ё", referred;
-        instrumental: "~ём", "~ями";
-        prepositional: "~е", "~ях";
-        noun_second_case: "~я", "~е";
     ),
     // Плюхино: 8 words (мотовство, плюхино, плюхново, кабаново, клементьево, бахтино).
     declension!("плюхино", 8, "~о";
@@ -2168,6 +2158,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~е~~е", "~ё~~ах";
         noun_second_case: "~е~~ы", "~е~~е";
     ),
+    // Осётр: 7 words (ксёндз, чёлн, осётр, черёд, перёд, клёст).
+    declension!("осётр", 7, "~ё~";
+        nominative: "~ё~", "~е~ы";
+        genitive: "~е~а", "~е~ов";
+        dative: "~е~у", "~е~ам";
+        accusative: referred, referred;
+        instrumental: "~е~ом", "~е~ами";
+        prepositional: "~е~е", "~е~ах";
+        noun_second_case: "~е~а", "~е~е";
+    ),
     // Чужой: 7 words (глухой, чужой, костромской, нитакой, старшой, большой).
     declension!("чужой", 7, "~ой";
         nominative: "~ой", "~ие";
@@ -2187,6 +2187,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         instrumental: "~у~ом", "~у~ами";
         prepositional: "~у~е", "~у~ах";
         noun_second_case: "~у~а", "~у~е";
+    ),
+    // Дитё: 7 words (мумиё, дитё, хулиганьё, гадьё, мудачьё, татарьё).
+    declension!("дитё", 7, "~ё";
+        nominative: "~ё", "~я";
+        genitive: "~я", "~ей";
+        dative: "~ю", "~ям";
+        accusative: "~ё", referred;
+        instrumental: "~ём", "~ями";
+        prepositional: "~е", "~ях";
+        noun_second_case: "~я", "~е";
     ),
     // Полиюля: 7 words (пол-апреля, пол-имения, пол-июля, пол-июня, пол-лагеря, пол-октября).
     declension!("пол-июля", 7, "~-~я";
@@ -2248,16 +2258,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~ине", "~ах";
         noun_second_case: "~ина", "~ине";
     ),
-    // Осётр: 6 words (ксёндз, чёлн, осётр, черёд, клёст, пётр).
-    declension!("осётр", 6, "~ё~";
-        nominative: "~ё~", "~е~ы";
-        genitive: "~е~а", "~е~ов";
-        dative: "~е~у", "~е~ам";
-        accusative: referred, referred;
-        instrumental: "~е~ом", "~е~ами";
-        prepositional: "~е~е", "~е~ах";
-        noun_second_case: "~е~а", "~е~е";
-    ),
     // Чукча: 6 words (юноша, чукча, раджа, обжа, корча, магараджа).
     declension!("чукча", 6, "~а";
         nominative: "~а", "~и";
@@ -2297,16 +2297,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         instrumental: "~ёй", "~ями";
         prepositional: "~е", "~ях";
         noun_second_case: "~и", "~е";
-    ),
-    // Скло: 6 words (скло, ракло, шарыпово, запевало, карло, сткло).
-    declension!("скло", 6, "~о";
-        nominative: "~о", "~ы";
-        genitive: "~а", "~";
-        dative: "~у", "~ам";
-        accusative: referred, referred;
-        instrumental: "~ом", "~ами";
-        prepositional: "~е", "~ах";
-        noun_second_case: "~а", "~е";
     ),
     // Исайя: 6 words (исайя, хориоидея, заурея, стеаторея, ципрея, персея).
     declension!("исайя", 6, "~я";
@@ -2488,6 +2478,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~и", "~ях";
         noun_second_case: "~ю", "~и";
     ),
+    // Небо: 4 words (чудо, небо, древо, худо).
+    declension!("небо", 4, "~о";
+        nominative: "~о", "~еса";
+        genitive: "~а", "~ес";
+        dative: "~у", "~есам";
+        accusative: referred, referred;
+        instrumental: "~ом", "~есами";
+        prepositional: "~е", "~есах";
+        noun_second_case: "~а", "~е";
+    ),
     // Судно: 4 words (судно, агитсудно, авиасудно, фальшдно).
     declension!("судно", 4, "~но";
         nominative: "~но", "~а";
@@ -2548,6 +2548,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         prepositional: "~ем~", "~их~";
         noun_second_case: "~его~", "~ем~";
     ),
+    // Остриё: 4 words (остриё, бытиё, востриё, лезвеё).
+    declension!("остриё", 4, "~ё";
+        nominative: "~ё", "~я";
+        genitive: "~я", "~ёв";
+        dative: "~ю", "~ям";
+        accusative: referred, referred;
+        instrumental: "~ём", "~ями";
+        prepositional: "~е", "~ях";
+        noun_second_case: "~я", "~е";
+    ),
     // Ничья: 4 words (ничья, третья, девичья, моя).
     declension!("ничья", 4, "~я";
         nominative: "~я", "~и";
@@ -2587,6 +2597,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         instrumental: "~ей|~ею", "~ями";
         prepositional: "~е", "~ях";
         noun_second_case: "~и", "~е";
+    ),
+    // Карло: 4 words (ракло, шарыпово, запевало, карло).
+    declension!("карло", 4, "~о";
+        nominative: "~о", "~ы";
+        genitive: "~а", "~";
+        dative: "~у", "~ам";
+        accusative: referred, referred;
+        instrumental: "~ом", "~ами";
+        prepositional: "~е", "~ах";
+        noun_second_case: "~а", "~е";
     ),
     // Дитятко: 4 words (дитятко, старичонко, золотко, мужичонко).
     declension!("дитятко", 4, "~~о";
@@ -2637,26 +2657,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 204] = [
         instrumental: "~ом", "~ими|~ими";
         prepositional: "~е", "~их|~их";
         noun_second_case: "~а", "~е";
-    ),
-    // Чудо: 3 words (чудо, древо, худо).
-    declension!("чудо", 3, "~о";
-        nominative: "~о", "~еса";
-        genitive: "~а", "~ес";
-        dative: "~у", "~есам";
-        accusative: referred, referred;
-        instrumental: "~ом", "~есами";
-        prepositional: "~е", "~есах";
-        noun_second_case: "~а", "~е";
-    ),
-    // Средостениё: 3 words (мумиё, средостениё, лезвеё).
-    declension!("средостениё", 3, "~ё";
-        nominative: "~ё", "~я";
-        genitive: "~я", "~й";
-        dative: "~ю", "~ям";
-        accusative: referred, referred;
-        instrumental: "~ём", "~ями";
-        prepositional: "~е", "~ях";
-        noun_second_case: "~я", "~е";
     ),
     // Смерть: 3 words (смерть, дрянь, мразь).
     declension!("смерть", 3, "~ь";

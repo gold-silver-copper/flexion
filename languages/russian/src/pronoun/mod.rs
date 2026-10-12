@@ -353,7 +353,6 @@ impl From<(crate::Case, crate::Agreement, crate::Animacy)> for Cell {
 pub struct Pronoun<'w> {
     lemma: &'w str,
     given: Vec<(usize, &'w str)>,
-    full: bool,
 }
 
 impl<'w> Pronoun<'w> {
@@ -363,7 +362,6 @@ impl<'w> Pronoun<'w> {
         Pronoun {
             lemma,
             given: Vec::new(),
-            full: false,
         }
     }
 
@@ -375,20 +373,11 @@ impl<'w> Pronoun<'w> {
         self
     }
 
-    /// Its lemma is spelled with every mark the dictionary writes, so
-    /// none is hidden (without this, a lemma typed without marks may be
-    /// missing some, and its forms are less sure).
-    #[must_use]
-    pub fn spelled_in_full(mut self) -> Self {
-        self.full = true;
-        self
-    }
-
     fn known(&self) -> Known<'_, u8> {
         Known {
             forms: &self.given,
             feature: None,
-            full: self.full,
+            full: false,
         }
     }
 

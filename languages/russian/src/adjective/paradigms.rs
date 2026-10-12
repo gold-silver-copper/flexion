@@ -127,29 +127,29 @@ macro_rules! declension {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `сведущий`: 24,133 words.
+    /// Like `сведущий`: 24,147 words.
     Сведущий,
-    /// Like `уместный`: 11,265 words.
+    /// Like `уместный`: 11,284 words.
     Уместный,
-    /// Like `устарелый`: 9,262 words.
+    /// Like `устарелый`: 9,274 words.
     Устарелый,
-    /// Like `пылкий`: 8,178 words.
+    /// Like `пылкий`: 8,180 words.
     Пылкий,
-    /// Like `снижающийся`: 5,126 words.
+    /// Like `снижающийся`: 5,127 words.
     Снижающийся,
-    /// Like `подверженный`: 3,646 words.
+    /// Like `подверженный`: 3,679 words.
     Подверженный,
     /// Like `вольный`: 2,209 words.
     Вольный,
-    /// Like `казнённый`: 923 words.
+    /// Like `казнённый`: 987 words.
     Казнённый,
     /// Like `прямой`: 576 words.
     Прямой,
+    /// Like `непринуждённый`: 453 words.
+    Непринуждённый,
     /// Like `показной`: 449 words.
     Показной,
-    /// Like `непринуждённый`: 448 words.
-    Непринуждённый,
-    /// Like `тайный`: 263 words.
+    /// Like `тайный`: 264 words.
     Тайный,
     /// Like `лисий`: 224 words.
     Лисий,
@@ -223,8 +223,8 @@ impl Declension {
         Declension::Вольный,
         Declension::Казнённый,
         Declension::Прямой,
-        Declension::Показной,
         Declension::Непринуждённый,
+        Declension::Показной,
         Declension::Тайный,
         Declension::Лисий,
         Declension::Средний,
@@ -273,8 +273,8 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
-    // Сведущий: 24,133 words (деревообрабатывающий, будущий, лесообрабатывающий, настоящий, следующий, рабочий).
-    declension!("сведущий", 24133, "~ий";
+    // Сведущий: 24,147 words (деревообрабатывающий, будущий, лесообрабатывающий, настоящий, следующий, рабочий).
+    declension!("сведущий", 24147, "~ий";
         nominative_masculine: "~ий", "~ий";
         nominative_feminine: "~ая", "~ая";
         nominative_neuter: "~ее", "~ее";
@@ -301,8 +301,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
         prepositional_plural: "~их", "~их";
         short_adjective: "~", "~а", "~е", "~и";
     ),
-    // Уместный: 11,265 words (браный, славный, крохотный, деревянный, древесный, лесоводственный).
-    declension!("уместный", 11265, "~~ый";
+    // Уместный: 11,284 words (браный, славный, крохотный, деревянный, древесный, лесоводственный).
+    declension!("уместный", 11284, "~~ый";
         nominative_masculine: "~~ый", "~~ый";
         nominative_feminine: "~~ая", "~~ая";
         nominative_neuter: "~~ое", "~~ое";
@@ -329,8 +329,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
         prepositional_plural: "~~ых", "~~ых";
         short_adjective: "~е~", "~~а", "~~о", "~~ы";
     ),
-    // Устарелый: 9,262 words (слабый, ласковый, деревянистый, лесистый, лесотундровый, тундровый).
-    declension!("устарелый", 9262, "~ый";
+    // Устарелый: 9,274 words (слабый, ласковый, деревянистый, лесистый, лесотундровый, тундровый).
+    declension!("устарелый", 9274, "~ый";
         nominative_masculine: "~ый", "~ый";
         nominative_feminine: "~ая", "~ая";
         nominative_neuter: "~ое", "~ое";
@@ -357,8 +357,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
         prepositional_plural: "~ых", "~ых";
         short_adjective: "~", "~а", "~о", "~ы";
     ),
-    // Пылкий: 8,178 words (русский, тайский, жалкий, лесоводческий, лесохимический, лесотехнический).
-    declension!("пылкий", 8178, "~~ий";
+    // Пылкий: 8,180 words (русский, тайский, жалкий, лесоводческий, лесохимический, лесотехнический).
+    declension!("пылкий", 8180, "~~ий";
         nominative_masculine: "~~ий", "~~ий";
         nominative_feminine: "~~ая", "~~ая";
         nominative_neuter: "~~ое", "~~ое";
@@ -385,8 +385,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
         prepositional_plural: "~~их", "~~их";
         short_adjective: "~о~", "~~а", "~~о", "~~и";
     ),
-    // Снижающийся: 5,126 words (снижающийся, невзрывающийся, неразорвавшийся, учащийся, трудящийся, полуразвалившийся).
-    declension!("снижающийся", 5126, "~ий~";
+    // Снижающийся: 5,127 words (снижающийся, невзрывающийся, неразорвавшийся, учащийся, трудящийся, полуразвалившийся).
+    declension!("снижающийся", 5127, "~ий~";
         nominative_masculine: "~ий~", "~ий~";
         nominative_feminine: "~ая~", "~ая~";
         nominative_neuter: "~ее~", "~ее~";
@@ -413,8 +413,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
         prepositional_plural: "~их~", "~их~";
         short_adjective: "~е~", "~~а", "~~о", "~~ы";
     ),
-    // Подверженный: 3,646 words (использованный, ученный, неприготовленный, непривязанный, неупакованный, неутрамбованный).
-    declension!("подверженный", 3646, "~ный";
+    // Подверженный: 3,679 words (использованный, ученный, неприготовленный, непривязанный, неупакованный, неутрамбованный).
+    declension!("подверженный", 3679, "~ный";
         nominative_masculine: "~ный", "~ный";
         nominative_feminine: "~ная", "~ная";
         nominative_neuter: "~ное", "~ное";
@@ -469,8 +469,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
         prepositional_plural: "~ь~ых", "~ь~ых";
         short_adjective: "~е~", "~ь~а", "~ь~о", "~ь~ы";
     ),
-    // Казнённый: 923 words (соединённый, обызвествлённый, одушевлённый, объединённый, приобретённый, неприкреплённый).
-    declension!("казнённый", 923, "~ё~ный";
+    // Казнённый: 987 words (соединённый, обызвествлённый, одушевлённый, объединённый, приобретённый, неприкреплённый).
+    declension!("казнённый", 987, "~ё~ный";
         nominative_masculine: "~ё~ный", "~ё~ный";
         nominative_feminine: "~ё~ная", "~ё~ная";
         nominative_neuter: "~ё~ное", "~ё~ное";
@@ -525,6 +525,34 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
         prepositional_plural: "~ых", "~ых";
         short_adjective: "~", "~а", "~о", "~ы";
     ),
+    // Непринуждённый: 453 words (сверхъестественный, неодушевлённый, несдержанный, неожиданный, недисциплинированный, непредвиденный).
+    declension!("непринуждённый", 453, "~ный";
+        nominative_masculine: "~ный", "~ный";
+        nominative_feminine: "~ная", "~ная";
+        nominative_neuter: "~ное", "~ное";
+        nominative_plural: "~ные", "~ные";
+        genitive_masculine: "~ного", "~ного";
+        genitive_feminine: "~ной", "~ной";
+        genitive_neuter: "~ного", "~ного";
+        genitive_plural: "~ных", "~ных";
+        dative_masculine: "~ному", "~ному";
+        dative_feminine: "~ной", "~ной";
+        dative_neuter: "~ному", "~ному";
+        dative_plural: "~ным", "~ным";
+        accusative_masculine: "~ного", "~ный";
+        accusative_feminine: "~ную", "~ную";
+        accusative_neuter: "~ное", "~ное";
+        accusative_plural: "~ных", "~ные";
+        instrumental_masculine: "~ным", "~ным";
+        instrumental_feminine: "~ной|~ною", "~ной|~ною";
+        instrumental_neuter: "~ным", "~ным";
+        instrumental_plural: "~ными", "~ными";
+        prepositional_masculine: "~ном", "~ном";
+        prepositional_feminine: "~ной", "~ной";
+        prepositional_neuter: "~ном", "~ном";
+        prepositional_plural: "~ных", "~ных";
+        short_adjective: "~", "~на", "~но", "~ны";
+    ),
     // Показной: 449 words (лесной, лесостепной, дровяной, губной, стальной, нефтяной).
     declension!("показной", 449, "~~ой";
         nominative_masculine: "~~ой", "~~ой";
@@ -553,36 +581,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
         prepositional_plural: "~~ых", "~~ых";
         short_adjective: "~е~", "~~а", "~~о", "~~ы";
     ),
-    // Непринуждённый: 448 words (сверхъестественный, неодушевлённый, несдержанный, неожиданный, недисциплинированный, непредвиденный).
-    declension!("непринуждённый", 448, "~ный";
-        nominative_masculine: "~ный", "~ный";
-        nominative_feminine: "~ная", "~ная";
-        nominative_neuter: "~ное", "~ное";
-        nominative_plural: "~ные", "~ные";
-        genitive_masculine: "~ного", "~ного";
-        genitive_feminine: "~ной", "~ной";
-        genitive_neuter: "~ного", "~ного";
-        genitive_plural: "~ных", "~ных";
-        dative_masculine: "~ному", "~ному";
-        dative_feminine: "~ной", "~ной";
-        dative_neuter: "~ному", "~ному";
-        dative_plural: "~ным", "~ным";
-        accusative_masculine: "~ного", "~ный";
-        accusative_feminine: "~ную", "~ную";
-        accusative_neuter: "~ное", "~ное";
-        accusative_plural: "~ных", "~ные";
-        instrumental_masculine: "~ным", "~ным";
-        instrumental_feminine: "~ной|~ною", "~ной|~ною";
-        instrumental_neuter: "~ным", "~ным";
-        instrumental_plural: "~ными", "~ными";
-        prepositional_masculine: "~ном", "~ном";
-        prepositional_feminine: "~ной", "~ной";
-        prepositional_neuter: "~ном", "~ном";
-        prepositional_plural: "~ных", "~ных";
-        short_adjective: "~", "~на", "~но", "~ны";
-    ),
-    // Тайный: 263 words (покойный, спокойный, семейный, случайный, партийный, комедийный).
-    declension!("тайный", 263, "~й~ый";
+    // Тайный: 264 words (покойный, спокойный, семейный, случайный, партийный, комедийный).
+    declension!("тайный", 264, "~й~ый";
         nominative_masculine: "~й~ый", "~й~ый";
         nominative_feminine: "~й~ая", "~й~ая";
         nominative_neuter: "~й~ое", "~й~ое";
