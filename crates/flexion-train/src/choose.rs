@@ -5,9 +5,8 @@
 //! (another value, or another productivity) and pays for itself (minimum
 //! description length): telling the values of the words with that ending by
 //! the rule's own counts, rather than by the broader rule's, saves more bits
-//! than writing the rule down costs. A rule lists its main values and lumps
-//! the rest. The words the finished rules still get wrong, judged exactly as
-//! the runtime reads them, are listed.
+//! than writing the rule down costs. The words the finished rules still get
+//! wrong, judged exactly as the runtime reads them, are listed.
 
 use crate::HashMap;
 use flexion::{Choice, Label, Rule};
@@ -17,10 +16,6 @@ use std::hash::Hash;
 
 /// The longest ending a rule looks at, in letters.
 pub const MAX_ENDING: usize = 8;
-/// A value a rule lists has at least this many of its words, and one in
-/// this many of them; the others are lumped.
-const MAIN_WORDS: u32 = 2;
-const MAIN_SHARE: u32 = 20;
 
 /// How a choice is learned.
 #[derive(Debug, Clone, Copy)]
@@ -111,27 +106,10 @@ pub fn learn<'a, L: Label + Hash + Ord>(
             let c = counts.get(ending)?;
             let mut list: Vec<(L, u32)> = c.iter().map(|(&l, &n)| (l, n)).collect();
             list.sort_by(|a, b| b.1.cmp(&a.1).then_with(|| a.0.cmp(&b.0)));
-            // The main values; the others lumped.
-            let total: u32 = list.iter().map(|e| e.1).sum();
-            let main = |(i, &(_, n)): (usize, &(L, u32))| {
-                i == 0 || (n >= MAIN_WORDS && n * MAIN_SHARE >= total)
-            };
-            let rest = list
-                .iter()
-                .enumerate()
-                .filter(|&e| !main(e))
-                .map(|(_, e)| e.1)
-                .sum();
-            let counts = list
-                .iter()
-                .enumerate()
-                .filter(|&e| main(e))
-                .map(|(_, &e)| e)
-                .collect();
             Some(Rule {
                 ending: Cow::Owned(ending.to_string()),
-                counts: Cow::Owned(counts),
-                rest,
+                counts: Cow::Owned(list),
+                rest: 0,
             })
         })
         .collect();

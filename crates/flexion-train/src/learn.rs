@@ -220,14 +220,7 @@ pub fn learn<'s>(
         .collect();
     let (laws, program, mut paradigms, assignment) =
         crate::laws::learn(&orthography, &law_words, paradigms, assignment);
-    inherent(
-        &words,
-        &assignment,
-        &mut paradigms,
-        found
-            .as_ref()
-            .map(|(f, rs)| (*f, rs.iter().map(|r| r.cell).collect())),
-    );
+    inherent(&words, &assignment, &mut paradigms);
     let mut seen = vec![vec![false; shape.cells]; paradigms.len()];
     for (w, &p) in words.iter().zip(&assignment) {
         for (c, fs) in w.cells.iter().enumerate() {
@@ -1170,16 +1163,9 @@ fn paradigms<'s>(
     (out, assignment)
 }
 
-/// Per paradigm, the inherent feature values (its gender) nine in ten of
-/// its words that have one share; not those of the feature `relational`
-/// cells of the paradigm depend on, which it leaves to them (one Russian
-/// declension serves animate and inanimate nouns).
-fn inherent(
-    words: &[Word],
-    assignment: &[u16],
-    paradigms: &mut [Paradigm<'_>],
-    relational: Option<(usize, Vec<u16>)>,
-) {
+/// Per paradigm, the inherent feature values (its gender) nineteen in
+/// twenty of its words that have one share (at least [`MIN_WORDS`]).
+fn inherent(words: &[Word], assignment: &[u16], paradigms: &mut [Paradigm<'_>]) {
     let mut counts: BTreeMap<(u16, u8, u8), u32> = BTreeMap::new();
     for (w, &p) in words.iter().zip(assignment) {
         for (f, &v) in w.inherent.iter().enumerate() {
@@ -1191,21 +1177,13 @@ fn inherent(
     let features = words.first().map_or(0, |w| w.inherent.len());
     for (p, paradigm) in paradigms.iter_mut().enumerate() {
         let Ok(p) = u16::try_from(p) else { continue };
-        let left = relational.as_ref().and_then(|(f, cells)| {
-            let derives = cells
-                .iter()
-                .any(|&c| paradigm.own(usize::from(c)) == Some(flexion::Form::Derived));
-            derives.then_some(*f)
-        });
         let mut values: Vec<(u8, u8)> = Vec::new();
-        for f in (0..features)
-            .filter(|&f| Some(f) != left)
-            .filter_map(|f| u8::try_from(f).ok())
-        {
+        for f in (0..features).filter_map(|f| u8::try_from(f).ok()) {
             let of = counts.range((p, f, 0)..=(p, f, u8::MAX));
             let total: u32 = of.clone().map(|(_, n)| n).sum();
             if let Some((&(_, _, v), &n)) = of.max_by_key(|(_, n)| **n)
-                && 10 * n >= 9 * total
+                && 20 * n >= 19 * total
+                && n >= MIN_WORDS
             {
                 values.push((f, v));
             }

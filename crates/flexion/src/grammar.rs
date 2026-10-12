@@ -13,6 +13,11 @@ use std::borrow::Cow;
 /// How [`Grammar::marks`] writes a word's ends.
 pub const WORD_END: char = '#';
 
+/// How much likelier a word's paradigm is to share its inherent feature
+/// values than not: a paradigm states a value nineteen in twenty of its
+/// words have.
+const OTHER_VALUES: f32 = 0.05;
+
 /// Readings of each kind kept when combining them into candidates.
 const KEEP: usize = 4;
 
@@ -633,8 +638,9 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     }
 
     /// The paradigms the word `letters` (looked up as `key`) can follow,
-    /// likeliest first, agreeing with `given` forms and, where some paradigm
-    /// does, the `inherent` feature values.
+    /// likeliest first, agreeing with `given` forms; a paradigm whose words
+    /// have other `inherent` feature values than these is less likely (by
+    /// [`OTHER_VALUES`]).
     fn inflections<'g, 'w>(
         &'g self,
         letters: &'w str,
@@ -646,13 +652,12 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             let Some(stems) = p.stems(&self.orthography, letters) else {
                 return false;
             };
-            p.has(inherent)
-                && given.iter().all(|(cell, form)| {
-                    p.derives(&self.paradigms, *cell)
-                        || p.built(&self.paradigms, self.laws.as_ref(), *cell, &stems)
-                            .iter()
-                            .any(|(built, _)| *built == form.letters)
-                })
+            given.iter().all(|(cell, form)| {
+                p.derives(&self.paradigms, *cell)
+                    || p.built(&self.paradigms, self.laws.as_ref(), *cell, &stems)
+                        .iter()
+                        .any(|(built, _)| *built == form.letters)
+            })
         };
         let fits = |p: P| self.paradigm_of(p).is_some_and(agrees);
         let mut readings = self.paradigm.read(key, self.smoothing, fits);
@@ -661,9 +666,12 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             // by how many words follow it.
             readings = self.fallback(agrees);
         }
-        if readings.is_empty() && !inherent.is_empty() {
-            return self.inflections(letters, key, given, &[]);
+        for r in &mut readings {
+            if self.paradigm_of(r.value).is_some_and(|p| !p.has(inherent)) {
+                r.probability *= OTHER_VALUES;
+            }
         }
+        readings.sort_by(|a, b| b.probability.total_cmp(&a.probability));
         readings
             .into_iter()
             .filter_map(|reading| {
