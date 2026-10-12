@@ -1258,7 +1258,8 @@ fn api_code(
         if fields.is_empty() {
             let _ = writeln!(s, "    {v},");
         } else {
-            let _ = writeln!(s, "    {v}({}),", fields.join(", "));
+            let paths: Vec<String> = fields.iter().map(|f| format!("crate::{f}")).collect();
+            let _ = writeln!(s, "    {v}({}),", paths.join(", "));
         }
     }
     s.push_str("}\n\nimpl Cell {\n    /// Its place in a paradigm.\n    pub const fn index(self) -> usize {\n        let cell = match self {\n");
@@ -1270,7 +1271,7 @@ fn api_code(
                 .features
                 .iter()
                 .zip(&values)
-                .map(|(f, &x)| format!("{}::{}", f.name, f.values.get(x).map_or("", |v| v.name)))
+                .map(|(f, &x)| format!("crate::{}::{}", f.name, f.values.get(x).map_or("", |v| v.name)))
                 .collect();
             let constant = layout.names.get(g.offset + i).map_or("", String::as_str);
             if args.is_empty() {
@@ -1299,11 +1300,12 @@ fn api_code(
         }
         let v = cell_variant(name, g.name);
         let vars: Vec<String> = g.features.iter().map(|f| snake(f.name)).collect();
+        let paths: Vec<String> = fields.iter().map(|f| format!("crate::{f}")).collect();
         let (ty_, pat) = if fields.len() == 1 {
-            (fields.join(""), vars.join(""))
+            (paths.join(""), vars.join(""))
         } else {
             (
-                format!("({})", fields.join(", ")),
+                format!("({})", paths.join(", ")),
                 format!("({})", vars.join(", ")),
             )
         };

@@ -6,6 +6,7 @@ rust-version.workspace = true
 license.workspace = true
 authors.workspace = true
 repository.workspace = true
+readme = "README.md"
 description = "The runtime of learned inflection grammars: paradigms, the rules that choose them, stress and sound laws, with candidates that explain themselves"
 
 [dependencies]
