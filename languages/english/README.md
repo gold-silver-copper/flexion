@@ -68,9 +68,9 @@ reason (the rule and its counts).
 | | words | systems | paradigms | rules | listed words | irregular forms |
 |---|---:|---:|---:|---:|---:|---:|
 | noun | 228072 | 1 | 130 | 2373 | 6934 | 253 |
-| verb | 38230 | 3 | 294 | 2388 | 3370 | 230 |
-| adjective | 61454 | 1 | 65 | 5012 | 20155 | 22737 |
-| adverb | 12620 | 1 | 28 | 838 | 3869 | 4613 |
+| verb | 38230 | 1 | 110 | 862 | 1421 | 243 |
+| adjective | 61454 | 3 | 137 | 6330 | 29049 | 22875 |
+| adverb | 12620 | 3 | 55 | 1058 | 5063 | 4651 |
 
 *Words*: the dictionary's words the grammar is learned from. *Systems*: the principal
 parts a part of speech is built on (1: its lemma alone). *Rules*: the endings that
@@ -84,16 +84,25 @@ learned from the other nine tenths, and asked for every form the dictionary list
 each held-out word, typed as the dictionary's headword. *Top-1*: its first answer is
 right; *top-3*: the right answer is among its first three. *Calibration error*: how far
 its stated probabilities are, on average, from how often it is right (0 is perfect).
-*Top-1, lemma in full*: typed with every mark the dictionary's table writes, and said
-to be so (`spelled_in_full`).
+The margin after top-1 is a 95% interval, counting words. *Lemma in full*: top-1 typed
+with every mark the dictionary's table writes, and said to be so (`spelled_in_full`).
+*Principal parts given*: top-1 of the other forms, given the dictionary's principal
+parts. *Floor*: the longest-suffix rule (the SIGMORPHON shared tasks' non-neural
+baseline; letters only). *Attested*: top-1 of the shipped grammar on the dictionary's
+own words, typed in full.
 
-| | held-out words | forms | top-1 | top-3 | calibration error | top-1, lemma in full |
-|---|---:|---:|---:|---:|---:|---:|
-| noun | 23733 | 47466 | **98.60%** | 99.84% | 0.001 | 98.60% |
-| verb | 4151 | 20745 | **97.78%** | 99.80% | 0.003 | 97.78% |
-| adjective | 6239 | 18715 | **96.53%** | 99.55% | 0.050 | 96.53% |
-| adverb | 1207 | 3621 | **99.17%** | 99.70% | 0.070 | 99.17% |
-
+| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | floor | attested |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 23733 | 47466 | **98.60%** ± 0.1 | 99.84% | 0.001 | 98.60% | 100.00% | 94.52% | 99.93% |
+| verb | 4151 | 20745 | **97.87%** ± 0.4 | 99.79% | 0.005 | 97.87% | 99.72% | 96.29% | 99.81% |
+| adjective | 6239 | 18715 | **96.59%** ± 0.5 | 99.56% | 0.024 | 96.59% | 100.00% | 36.21% | 99.96% |
+| adverb | 1207 | 3621 | **99.17%** ± 0.5 | 99.70% | 0.037 | 99.17% | 100.00% | 33.66% | 100.00% |
+| | lines of grammar | bytes |
+|---|---:|---:|
+| noun | 10685 | 352340 |
+| verb | 3520 | 106367 |
+| adjective | 60014 | 1974747 |
+| adverb | 11958 | 427694 |
 
 ## Data and license
 

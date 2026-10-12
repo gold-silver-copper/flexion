@@ -50,7 +50,7 @@ reason (the rule and its counts).
 |---|---:|---:|---:|---:|---:|---:|
 | noun | 5023 | 1 | 56 | 292 | 1058 | 1319 |
 | adjective | 1964 | 1 | 36 | 127 | 413 | 2700 |
-| verb | 1014 | 1 | 41 | 133 | 440 | 8437 |
+| verb | 1014 | 1 | 40 | 127 | 429 | 8458 |
 | pronoun | 15 | 1 | 1 | 1 | 11 | 308 |
 
 *Words*: the dictionary's words the grammar is learned from. *Systems*: the principal
@@ -65,16 +65,25 @@ learned from the other nine tenths, and asked for every form the dictionary list
 each held-out word, typed as the dictionary's headword. *Top-1*: its first answer is
 right; *top-3*: the right answer is among its first three. *Calibration error*: how far
 its stated probabilities are, on average, from how often it is right (0 is perfect).
-*Top-1, lemma in full*: typed with every mark the dictionary's table writes, and said
-to be so (`spelled_in_full`).
+The margin after top-1 is a 95% interval, counting words. *Lemma in full*: top-1 typed
+with every mark the dictionary's table writes, and said to be so (`spelled_in_full`).
+*Principal parts given*: top-1 of the other forms, given the dictionary's principal
+parts. *Floor*: the longest-suffix rule (the SIGMORPHON shared tasks' non-neural
+baseline; letters only). *Attested*: top-1 of the shipped grammar on the dictionary's
+own words, typed in full.
 
-| | held-out words | forms | top-1 | top-3 | calibration error | top-1, lemma in full |
-|---|---:|---:|---:|---:|---:|---:|
-| noun | 576 | 13801 | **91.58%** | 98.51% | 0.022 | 91.58% |
-| adjective | 190 | 13456 | **90.21%** | 98.36% | 0.039 | 90.21% |
-| verb | 88 | 7237 | **87.61%** | 88.77% | 0.101 | 87.61% |
-| pronoun | 3 | 207 | **67.15%** | 67.15% | 0.329 | 67.15% |
-
+| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | floor | attested |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 576 | 13801 | **91.58%** ± 2.3 | 98.51% | 0.022 | 91.58% |  | 92.04% | 98.13% |
+| adjective | 190 | 13456 | **90.21%** ± 4.2 | 98.36% | 0.039 | 90.21% |  | 91.12% | 99.90% |
+| verb | 88 | 7237 | **87.61%** ± 6.9 | 88.77% | 0.101 | 87.61% | 87.94% | 72.49% | 99.99% |
+| pronoun | 3 | 207 | **67.15%** ± 53.1 | 67.15% | 0.329 | 67.15% |  | 70.53% | 98.30% |
+| | lines of grammar | bytes |
+|---|---:|---:|
+| noun | 4820 | 229573 |
+| adjective | 4877 | 261267 |
+| verb | 12471 | 727937 |
+| pronoun | 821 | 33639 |
 
 ## Data and license
 

@@ -3,12 +3,12 @@
 //! system's grammar (inflecting its cells from its part), and each part's
 //! grammar (giving the part of a lemma).
 
+use crate::HashMap;
 use crate::choose::Settings;
 use crate::extract::Lexeme;
 use crate::learn::{self, Learned, Shape};
 use crate::skeleton;
 use flexion::Orthography;
-use std::collections::HashMap;
 
 /// A learned part of speech built on principal parts.
 #[derive(Debug, Clone)]
@@ -92,7 +92,7 @@ pub fn learn<'s>(
                 return k + 1;
             }
             let concentration = |k: usize| -> f64 {
-                let mut changes: HashMap<(String, String), usize> = HashMap::new();
+                let mut changes: HashMap<(String, String), usize> = HashMap::default();
                 let mut n = 0usize;
                 for l in lexemes {
                     let source = match k {

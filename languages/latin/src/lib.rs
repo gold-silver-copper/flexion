@@ -622,31 +622,31 @@ impl flexion::Label for Participle {
 /// A noun in a case and number.
 #[must_use]
 pub fn noun(lemma: &str, case: Case, number: Number) -> String {
-    Noun::new(lemma).form(noun::Cell::Form(case, number))
+    noun::Noun::new(lemma).form(noun::Cell::Form(case, number))
 }
 
 /// The locative (`Rōmae`, `domī`).
 #[must_use]
 pub fn noun_locative(lemma: &str, number: Number) -> String {
-    Noun::new(lemma).form(noun::Cell::Locative(number))
+    noun::Noun::new(lemma).form(noun::Cell::Locative(number))
 }
 
 /// An adjective agreeing in case, gender and number.
 #[must_use]
 pub fn adjective(lemma: &str, case: Case, gender: Gender, number: Number) -> String {
-    Adjective::new(lemma).form(adjective::Cell::Form(case, gender, number))
+    adjective::Adjective::new(lemma).form(adjective::Cell::Form(case, gender, number))
 }
 
 /// The comparative (masculine nominative singular; it declines as a third-declension adjective).
 #[must_use]
 pub fn comparative(lemma: &str) -> String {
-    Adjective::new(lemma).form(adjective::Cell::Comparative)
+    adjective::Adjective::new(lemma).form(adjective::Cell::Comparative)
 }
 
 /// The superlative (masculine nominative singular).
 #[must_use]
 pub fn superlative(lemma: &str) -> String {
-    Adjective::new(lemma).form(adjective::Cell::Superlative)
+    adjective::Adjective::new(lemma).form(adjective::Cell::Superlative)
 }
 
 /// A finite form.
@@ -659,7 +659,7 @@ pub fn verb(
     person: Person,
     number: Number,
 ) -> String {
-    Verb::new(lemma).form(verb::Cell::Form(mood, voice, tense, person, number))
+    verb::Verb::new(lemma).form(verb::Cell::Form(mood, voice, tense, person, number))
 }
 
 /// An imperative.
@@ -671,7 +671,7 @@ pub fn imperative(
     person: Person,
     number: Number,
 ) -> String {
-    Verb::new(lemma).form(verb::Cell::Imperative(
+    verb::Verb::new(lemma).form(verb::Cell::Imperative(
         voice,
         imperative_tense,
         person,
@@ -682,35 +682,35 @@ pub fn imperative(
 /// An infinitive (the one-word ones: the periphrastic perfect passive and future infinitives are phrases).
 #[must_use]
 pub fn infinitive(lemma: &str, voice: Voice, infinitive_tense: InfinitiveTense) -> String {
-    Verb::new(lemma).form(verb::Cell::Infinitive(voice, infinitive_tense))
+    verb::Verb::new(lemma).form(verb::Cell::Infinitive(voice, infinitive_tense))
 }
 
 /// A participle's citation form; decline it with `adjective`. The future passive participle is the gerundive.
 #[must_use]
 pub fn participle(lemma: &str, participle: Participle) -> String {
-    Verb::new(lemma).form(verb::Cell::Participle(participle))
+    verb::Verb::new(lemma).form(verb::Cell::Participle(participle))
 }
 
 /// The gerund (genitive, dative, accusative, ablative).
 #[must_use]
 pub fn gerund(lemma: &str, case: Case) -> String {
-    Verb::new(lemma).form(verb::Cell::Gerund(case))
+    verb::Verb::new(lemma).form(verb::Cell::Gerund(case))
 }
 
 /// The supine (accusative and ablative).
 #[must_use]
 pub fn supine(lemma: &str, case: Case) -> String {
-    Verb::new(lemma).form(verb::Cell::Supine(case))
+    verb::Verb::new(lemma).form(verb::Cell::Supine(case))
 }
 
 /// A declined pronoun or determiner.
 #[must_use]
 pub fn pronoun(lemma: &str, case: Case, gender: Gender, number: Number) -> String {
-    Pronoun::new(lemma).form(pronoun::Cell::Form(case, gender, number))
+    pronoun::Pronoun::new(lemma).form(pronoun::Cell::Form(case, gender, number))
 }
 
 /// A declined numeral.
 #[must_use]
 pub fn numeral(lemma: &str, case: Case, gender: Gender, number: Number) -> String {
-    Numeral::new(lemma).form(numeral::Cell::Form(case, gender, number))
+    numeral::Numeral::new(lemma).form(numeral::Cell::Form(case, gender, number))
 }

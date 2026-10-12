@@ -1,6 +1,13 @@
 //! Learn a language's inflection grammar from Wiktionary (Kaikki dumps), and
 //! write it as a Rust crate.
 
+/// Hash maps and sets with a fixed hasher: the same input fills them in the
+/// same order, so the trainer writes the same crate byte for byte.
+pub type HashMap<K, V> = std::collections::HashMap<K, V, Fixed>;
+pub type HashSet<K> = std::collections::HashSet<K, Fixed>;
+/// See [`HashMap`].
+pub type Fixed = std::hash::BuildHasherDefault<std::collections::hash_map::DefaultHasher>;
+
 pub mod cells;
 pub mod choose;
 pub mod eval;

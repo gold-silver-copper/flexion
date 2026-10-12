@@ -7,25 +7,24 @@
 use super::paradigms::Declension::{self, *};
 use flexion::Choice;
 
-/// 16 rules and 60 listed words.
+/// 15 rules and 61 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
-        "" => [Quis 24, Uter 15, Ipse 12, Alius 8, Utervīs 8, Complūrēs 2, Complūra 2, Is 1, Sē 1, Ea 1, Nēmō 1, Id 1, Quī 1, Quīdam 1, Ecquī 1, Suī 1, Ambō 1, Sēsē 1, Quīnam 1, Quīvīs 1, Complūsculī 1, Ecquīnam 1],
+        "" => [Quis 27, Ipse 12, Uter 12, Alius 8, Utervīs 8, Complūrēs 2, Complūra 2, Is 1, Sē 1, Ea 1, Nēmō 1, Id 1, Quī 1, Quīdam 1, Ecquī 1, Suī 1, Ambō 1, Sēsē 1, Quīnam 1, Quīvīs 1, Complūsculī 1, Ecquīnam 1],
         "a" => [Quis 2, Complūra 2, Ea 1],
         "c" => [Quis 4],
         "d" => [Quis 2, Id 1],
         "e" => [Ipse 12, Utervīs 2, Quis 1, Sē 1, Sēsē 1],
         "i" => [Quis 2, Quī 1, Ecquī 1, Suī 1, Complūsculī 1],
-        "m" => [Quis 4, Uter 2, Quīdam 1, Quīnam 1, Ecquīnam 1],
+        "m" => [Quis 5, Uter 1, Quīdam 1, Quīnam 1, Ecquīnam 1],
         "inam" => [Quīnam 1, Ecquīnam 1],
-        "em" => [Uter 2],
         "o" => [Nēmō 1, Ambō 1],
         "r" => [Uter 5],
         "s" => [Quis 9, Alius 8, Utervīs 2, Complūrēs 2, Is 1, Quīvīs 1],
         "es" => [Complūrēs 2],
         "is" => [Quis 9, Utervīs 2, Is 1, Quīvīs 1],
         "us" => [Alius 8],
-        "t" => [Uter 8, Utervīs 4],
+        "t" => [Uter 6, Utervīs 4, Quis 2],
     }
     listed {
         "aliqui" => Quis,
@@ -55,20 +54,21 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "qualiscumque" => Ipse,
         "qui" => Quī,
         "quicquid" => Quis,
-        "quicquidlibet" => Uter,
+        "quicquidlibet" => Quis,
         "quicumque" => Ipse,
         "quicunque" => Ipse,
         "quidam" => Quīdam,
         "quidquid" => Quis,
         "quidquidlibet" => Uter,
-        "quilibet" => Uter,
+        "quilibet" => Quis,
         "quilubet" => Uter,
+        "quinam" => Quīnam,
         "quis" => Quis,
         "quispiam" => Quis,
         "quisquam" => Quis,
         "quisquamne" => Ipse,
         "quisque" => Ipse,
-        "quisquidem" => Uter,
+        "quisquidem" => Quis,
         "quisquis" => Quis,
         "quivis" => Quīvīs,
         "quiviscumque" => Ipse,

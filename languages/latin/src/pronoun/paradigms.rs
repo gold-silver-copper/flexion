@@ -97,12 +97,12 @@ macro_rules! declension {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `quis`: 24 words.
+    /// Like `quis`: 27 words.
     Quis,
-    /// Like `uter`: 15 words.
-    Uter,
     /// Like `ipse`: 12 words.
     Ipse,
+    /// Like `uter`: 12 words.
+    Uter,
     /// Like `alius`: 8 words.
     Alius,
     /// Like `utervīs`: 8 words.
@@ -147,8 +147,8 @@ impl Declension {
     /// Every declension, in order.
     pub const ALL: [Declension; 22] = [
         Declension::Quis,
-        Declension::Uter,
         Declension::Ipse,
+        Declension::Uter,
         Declension::Alius,
         Declension::Utervīs,
         Declension::Complūrēs,
@@ -186,8 +186,8 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
-    // Quis: 24 words (hic, quis, aliquī, hice, quisquis, quidquid).
-    declension!("quis", 24, "~i~";
+    // Quis: 27 words (hic, quis, aliquī, hice, quisquis, quidquid).
+    declension!("quis", 27, "~i~";
         nominative_masculine: "~i~", "~īs~e";
         nominative_feminine: "~ae~", "~ae~";
         nominative_neuter: "~u~", "~ae~";
@@ -203,27 +203,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
         ablative_masculine: "~ō~", "~īs~e";
         ablative_feminine: "~ā~", "~īs~e";
         ablative_neuter: "~ō~", "~īs~e";
-        vocative_masculine: "~e~", "~~ī";
-        vocative_feminine: "~~a", "~~ae";
-        vocative_neuter: "~~um", "~~a";
-    ),
-    // Uter: 15 words (alter, noster, īdem, uter, vester, egomet).
-    declension!("uter", 15, "~e~";
-        nominative_masculine: "~e~", "~~ī";
-        nominative_feminine: "~~a", "~~ae";
-        nominative_neuter: "~~um", "~~a";
-        genitive_masculine: "~~ī", "~~ōrum";
-        genitive_feminine: "~~ae", "~~ārum";
-        genitive_neuter: "~~ī", "~~ōrum";
-        dative_masculine: "~~ō", "~~īs";
-        dative_feminine: "~~ae", "~~īs";
-        dative_neuter: "~~ō", "~~īs";
-        accusative_masculine: "~~um", "~~ōs";
-        accusative_feminine: "~~am", "~~ās";
-        accusative_neuter: "~~um", "~~a";
-        ablative_masculine: "~~ō", "~~īs";
-        ablative_feminine: "~~ā", "~~īs";
-        ablative_neuter: "~~ō", "~~īs";
         vocative_masculine: "~e~", "~~ī";
         vocative_feminine: "~~a", "~~ae";
         vocative_neuter: "~~um", "~~a";
@@ -248,6 +227,27 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
         vocative_masculine: "~e", "~ī";
         vocative_feminine: "~a", "~ae";
         vocative_neuter: "~um", "~a";
+    ),
+    // Uter: 12 words (alter, noster, īdem, uter, vester, egomet).
+    declension!("uter", 12, "~e~";
+        nominative_masculine: "~e~", "~~ī";
+        nominative_feminine: "~~a", "~~ae";
+        nominative_neuter: "~~um", "~~a";
+        genitive_masculine: "~~ī", "~~ōrum";
+        genitive_feminine: "~~ae", "~~ārum";
+        genitive_neuter: "~~ī", "~~ōrum";
+        dative_masculine: "~~ō", "~~īs";
+        dative_feminine: "~~ae", "~~īs";
+        dative_neuter: "~~ō", "~~īs";
+        accusative_masculine: "~~um", "~~ōs";
+        accusative_feminine: "~~am", "~~ās";
+        accusative_neuter: "~~um", "~~a";
+        ablative_masculine: "~~ō", "~~īs";
+        ablative_feminine: "~~ā", "~~īs";
+        ablative_neuter: "~~ō", "~~īs";
+        vocative_masculine: "~e~", "~~ī";
+        vocative_feminine: "~~a", "~~ae";
+        vocative_neuter: "~~um", "~~a";
     ),
     // Alius: 8 words (alius, tuus, meus, suus, ūllus, cuius).
     declension!("alius", 8, "~us";

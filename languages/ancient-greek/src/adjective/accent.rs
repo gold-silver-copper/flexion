@@ -2319,12 +2319,11 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 105] = [
     ]), // Τρῐπους
     Cow::Borrowed(&[]), // Ἡσσων
     Cow::Borrowed(&[]), // Παυων
+    Cow::Borrowed(&[]), // Ἀπατωρ
     Cow::Borrowed(&[]), // Ἀγων
     Cow::Borrowed(&[]), // Δειξᾱς
-    Cow::Borrowed(&[]), // Τοιοσδε
     Cow::Borrowed(&[]), // Ἀβατος
     Cow::Borrowed(&[]), // Ὑπαιθρος
-    Cow::Borrowed(&[GEN_F_PL]), // Ἀγνως
     Cow::Borrowed(&[]), // Ἀδιψος
     Cow::Borrowed(&[
         GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
@@ -2332,6 +2331,7 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 105] = [
         ADVERB,
     ]), // Ἀρχικος
     Cow::Borrowed(&[]), // Ἀκροτερος
+    Cow::Borrowed(&[GEN_F_PL]), // Ἀγνως
     Cow::Borrowed(&[]), // Φαῡλος
     Cow::Borrowed(&[]), // Ἀγοραῑος
     Cow::Borrowed(&[]), // Γαῡρος

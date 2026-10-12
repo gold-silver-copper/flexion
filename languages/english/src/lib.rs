@@ -200,23 +200,23 @@ impl flexion::Label for Degree {
 /// A noun in the given number.
 #[must_use]
 pub fn noun(lemma: &str, number: Number) -> String {
-    Noun::new(lemma).form(noun::Cell::Form(number))
+    noun::Noun::new(lemma).form(noun::Cell::Form(number))
 }
 
 /// A verb form.
 #[must_use]
 pub fn verb(lemma: &str, verb_form: VerbForm) -> String {
-    Verb::new(lemma).form(verb::Cell::Form(verb_form))
+    verb::Verb::new(lemma).form(verb::Cell::Form(verb_form))
 }
 
 /// An adjective in the given degree.
 #[must_use]
 pub fn adjective(lemma: &str, degree: Degree) -> String {
-    Adjective::new(lemma).form(adjective::Cell::Form(degree))
+    adjective::Adjective::new(lemma).form(adjective::Cell::Form(degree))
 }
 
 /// An adverb in the given degree.
 #[must_use]
 pub fn adverb(lemma: &str, degree: Degree) -> String {
-    Adverb::new(lemma).form(adverb::Cell::Form(degree))
+    adverb::Adverb::new(lemma).form(adverb::Cell::Form(degree))
 }

@@ -2,9 +2,9 @@
 //! one tenth is never trained on and scored, and how well the stated
 //! probabilities match how often the answers are right is measured.
 
+use crate::HashMap;
 use crate::extract::Lexeme;
 use flexion::{Inflect, Label};
-use std::collections::HashMap;
 
 /// The tenth scored and never trained on.
 pub const TEST: u64 = 0;
@@ -171,7 +171,7 @@ pub fn floor(orthography: &flexion::Orthography<'_>, train: &[&Lexeme], test: &[
                 continue;
             };
             if rules.len() <= cell {
-                rules.resize_with(cell + 1, HashMap::new);
+                rules.resize_with(cell + 1, HashMap::default);
             }
             let common = lemma.iter().zip(&form).take_while(|(a, b)| a == b).count();
             let cut = lemma.len() - common;

@@ -15,11 +15,11 @@ for c in Noun::new("бокр").candidates((Case::Genitive, Number::Singular)) {
 }
 ```
 
-Ten languages are built from the same trainer, with nothing language-specific in the
+Five languages are built from the same trainer, with nothing language-specific in the
 trainer or the runtime: [English](languages/english), [Russian](languages/russian),
-[Latin](languages/latin), [Polish](languages/polish), [German](languages/german),
-[Ancient Greek](languages/ancient-greek), [Sanskrit](languages/sanskrit),
-[Spanish](languages/spanish), [French](languages/french) and [Italian](languages/italian).
+[Latin](languages/latin), [Ancient Greek](languages/ancient-greek) and
+[Sanskrit](languages/sanskrit). Configs for Polish, German, Spanish, French and Italian
+are kept in `crates/flexion-configs`; `cargo xtask build german` builds one.
 
 RESULTS
 

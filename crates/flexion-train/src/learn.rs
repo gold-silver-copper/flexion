@@ -2,6 +2,7 @@
 //! paradigms, the choice of paradigm, its stress, and the forms no rule
 //! gives.
 
+use crate::HashMap;
 use crate::choose::{self, Settings};
 use crate::extract::Lexeme;
 use crate::skeleton;
@@ -12,7 +13,7 @@ use flexion::{
     StressClass, Written,
 };
 use std::borrow::Cow;
-use std::collections::{BTreeMap, HashMap};
+use std::collections::BTreeMap;
 
 /// What the learner needs to know about a part of speech.
 #[derive(Debug, Clone)]
@@ -83,13 +84,13 @@ pub fn learn<'s>(
     // One entry per word: the first the dictionaries give (the main
     // dictionary's, in its order).
     let key = |l: &Lexeme| orthography.key(&orthography.read(&l.full).letters);
-    let mut dictionaries: HashMap<String, std::collections::BTreeSet<u8>> = HashMap::new();
+    let mut dictionaries: HashMap<String, std::collections::BTreeSet<u8>> = HashMap::default();
     for l in lexemes {
         dictionaries.entry(key(l)).or_default().insert(l.source);
     }
     let mut by_order: Vec<&Lexeme> = lexemes.iter().collect();
     by_order.sort_by_key(|l| (l.source, l.order));
-    let mut seen = std::collections::HashSet::new();
+    let mut seen = crate::HashSet::default();
     let lexemes: Vec<Lexeme> = by_order
         .into_iter()
         .filter(|l| seen.insert(key(l)))
@@ -121,7 +122,7 @@ pub fn learn<'s>(
     let compounds: Vec<(String, Compound)> = words.iter().filter_map(compound).collect();
     let compound_choice =
         (!compounds.is_empty()).then(|| choose::learn(&compounds, settings, |_, _| true));
-    let parted: std::collections::HashSet<&str> = words
+    let parted: crate::HashSet<&str> = words
         .iter()
         .filter(|w| compound(w).is_some_and(|c| c.1 == Compound::Each))
         .map(|w| w.key.as_str())
@@ -130,8 +131,7 @@ pub fn learn<'s>(
     // Words that separate a particle are the grammar of the rest of them:
     // their bases are learned with the other words.
     let (prefixes, bases) = prefixes(all_words);
-    let separated: std::collections::HashSet<&str> =
-        bases.iter().map(|(k, _)| k.as_str()).collect();
+    let separated: crate::HashSet<&str> = bases.iter().map(|(k, _)| k.as_str()).collect();
     let mut words: Vec<Word> = all_words
         .iter()
         .filter(|w| !parted.contains(w.key.as_str()) && !separated.contains(w.key.as_str()))
@@ -188,7 +188,7 @@ pub fn learn<'s>(
     };
     let paradigm_choice = choose::learn(&paradigm_examples, settings, fits);
     let (accent, stress_labels) = if orthography.stress_marks.is_empty() {
-        (None, HashMap::new())
+        (None, HashMap::default())
     } else {
         let (a, labels) = accent(
             &orthography,
@@ -265,7 +265,7 @@ pub fn learn<'s>(
             .into_iter()
             .map(|(k, _, _)| k)
             .collect();
-    let mut paradigm_of: HashMap<&str, u16> = HashMap::new();
+    let mut paradigm_of: HashMap<&str, u16> = HashMap::default();
     for (w, &p) in words.iter().zip(&assignment) {
         paradigm_of.entry(w.key.as_str()).or_insert(p);
     }
@@ -361,7 +361,7 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
     let form = first_form;
     let by_key: HashMap<&str, &Word> = words.iter().map(|w| (w.key.as_str(), w)).collect();
     // Separable: a form with the prefix after the rest.
-    let mut separable: HashMap<&str, String> = HashMap::new();
+    let mut separable: HashMap<&str, String> = HashMap::default();
     for w in words {
         let prefix = w.cells.iter().filter_map(|fs| fs.first()).find_map(|f| {
             let (_, tail) = f.letters.rsplit_once(' ')?;
@@ -435,7 +435,7 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
         }
         seen > 0
     };
-    let mut inseparable: HashMap<&str, String> = HashMap::new();
+    let mut inseparable: HashMap<&str, String> = HashMap::default();
     let mut proven: BTreeMap<String, u32> = BTreeMap::new();
     for w in words
         .iter()
@@ -791,7 +791,7 @@ fn paradigms<'s>(
     shape: &Shape,
 ) -> (Vec<Paradigm<'s>>, Vec<u16>) {
     // Distinct signatures, and their words.
-    let mut index: HashMap<(String, Vec<Option<String>>), usize> = HashMap::new();
+    let mut index: HashMap<(String, Vec<Option<String>>), usize> = HashMap::default();
     let mut signatures: Vec<(String, Vec<Option<String>>)> = Vec::new();
     let mut own: Vec<usize> = Vec::with_capacity(words.len());
     for a in analyses {
@@ -814,7 +814,7 @@ fn paradigms<'s>(
             .map_or(0, |(_, c)| c.iter().flatten().count())
     };
     // Words per signature by ending.
-    let mut by_ending: HashMap<(usize, String), u32> = HashMap::new();
+    let mut by_ending: HashMap<(usize, String), u32> = HashMap::default();
     let mut size: Vec<u32> = vec![0; signatures.len()];
     for (w, &s) in words.iter().zip(&own) {
         if let Some(n) = size.get_mut(s) {
@@ -826,14 +826,14 @@ fn paradigms<'s>(
     }
     // Signatures by lemma pattern, fullest first; lemma patterns by their
     // last literal (what a word must end in to fit them).
-    let mut by_lemma: HashMap<&str, Vec<usize>> = HashMap::new();
+    let mut by_lemma: HashMap<&str, Vec<usize>> = HashMap::default();
     for (i, (lemma, _)) in signatures.iter().enumerate() {
         by_lemma.entry(lemma.as_str()).or_default().push(i);
     }
     for list in by_lemma.values_mut() {
         list.sort_by_key(|&s| std::cmp::Reverse(fullness(s)));
     }
-    let mut by_last: HashMap<&str, Vec<&str>> = HashMap::new();
+    let mut by_last: HashMap<&str, Vec<&str>> = HashMap::default();
     for &lp in by_lemma.keys() {
         let last_literal = lp.rsplit('~').next().unwrap_or("");
         by_last.entry(last_literal).or_default().push(lp);
@@ -905,12 +905,12 @@ fn paradigms<'s>(
     // A paradigm needs MIN_WORDS words; a word of a rarer one inflects like
     // the paradigm that builds the most of its forms (its other forms are
     // then listed as irregular).
-    let mut members: HashMap<usize, u32> = HashMap::new();
+    let mut members: HashMap<usize, u32> = HashMap::default();
     for &c in &chosen {
         *members.entry(c).or_default() += 1;
     }
     let supported = |s: usize| members.get(&s).copied().unwrap_or(0) >= MIN_WORDS;
-    let mut supported_by_lemma: HashMap<&str, Vec<usize>> = HashMap::new();
+    let mut supported_by_lemma: HashMap<&str, Vec<usize>> = HashMap::default();
     for (i, (lemma, _)) in signatures.iter().enumerate() {
         if supported(i) {
             supported_by_lemma
@@ -919,7 +919,7 @@ fn paradigms<'s>(
                 .push(i);
         }
     }
-    let mut supported_last: HashMap<&str, Vec<&str>> = HashMap::new();
+    let mut supported_last: HashMap<&str, Vec<&str>> = HashMap::default();
     for &lp in supported_by_lemma.keys() {
         supported_last
             .entry(lp.rsplit('~').next().unwrap_or(""))
@@ -984,7 +984,7 @@ fn paradigms<'s>(
         .map(|(i, &(s, _))| (s, u16::try_from(i).unwrap_or(u16::MAX)))
         .collect();
     // Variants: the alternatives most of a paradigm's words list in a cell.
-    let mut variants: HashMap<(usize, usize), BTreeMap<String, u32>> = HashMap::new();
+    let mut variants: HashMap<(usize, usize), BTreeMap<String, u32>> = HashMap::default();
     for (a, &c) in analyses.iter().zip(&chosen) {
         for (cell, p) in a.cells.iter().enumerate() {
             if let Some(p) = p {
@@ -1203,7 +1203,7 @@ fn accent<'s>(
     let is_long = |c: usize| u16::try_from(c).is_ok_and(|c| long_finals.binary_search(&c).is_ok());
     // Per paradigm, the cells whose ending's last syllable, accented, most
     // often takes the circumflex.
-    let mut votes: HashMap<(u16, usize), (u32, u32)> = HashMap::new();
+    let mut votes: HashMap<(u16, usize), (u32, u32)> = HashMap::default();
     for (p, cells, stem) in &facts {
         for (c, fact) in cells.iter().enumerate() {
             let Some(fact) = fact else { continue };
@@ -1425,7 +1425,7 @@ fn accent<'s>(
     for (i, class) in classes.iter_mut().enumerate() {
         class.name = Cow::Owned(name(words, &chosen, i));
     }
-    let mut labels: HashMap<String, u16> = HashMap::new();
+    let mut labels: HashMap<String, u16> = HashMap::default();
     let examples: Vec<(String, u16)> = words
         .iter()
         .zip(&class_of)

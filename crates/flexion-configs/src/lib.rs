@@ -15,22 +15,31 @@ pub mod spanish;
 
 use flexion_train::spec::Language;
 
-/// Every configured language, by crate name.
+/// The languages whose crates are built and tested.
 pub fn all() -> Vec<Language> {
     vec![
         english::language(),
         russian::language(),
         latin::language(),
-        polish::language(),
-        german::language(),
         ancient_greek::language(),
         sanskrit::language(),
-        spanish::language(),
-        french::language(),
-        italian::language(),
     ]
 }
 
+/// Every configured language, built or not.
+pub fn every() -> Vec<Language> {
+    let mut every = all();
+    every.extend([
+        polish::language(),
+        german::language(),
+        spanish::language(),
+        french::language(),
+        italian::language(),
+    ]);
+    every
+}
+
+/// A configured language by crate name, built or not.
 pub fn by_name(name: &str) -> Option<Language> {
-    all().into_iter().find(|l| l.name == name)
+    every().into_iter().find(|l| l.name == name)
 }

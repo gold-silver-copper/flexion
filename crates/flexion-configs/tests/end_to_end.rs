@@ -259,3 +259,24 @@ fn print_and_compare(lang: Language, systems: bool) {
         "the printed crate answers differently from its grammar"
     );
 }
+
+#[test]
+fn the_same_entries_print_the_same_crate() {
+    let print = || {
+        let lang = flexion_configs::russian::language();
+        let script = Script::new(&lang.spelling);
+        let data = data(&lang, &script);
+        let inflections: Vec<Inflection<'_>> = grammars(&lang, &script, &data)
+            .into_iter()
+            .map(|g| Inflection::Grammar(Box::new(g)))
+            .collect();
+        let parts: Vec<flexion_train::print::Part<'_, '_>> = lang
+            .parts
+            .iter()
+            .zip(&inflections)
+            .map(|(spec, inflection)| flexion_train::print::Part { spec, inflection })
+            .collect();
+        flexion_train::print::files(&lang, &script, &parts, "").expect("printed")
+    };
+    assert!(print() == print(), "two runs printed different crates");
+}

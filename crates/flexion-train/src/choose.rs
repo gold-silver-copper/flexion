@@ -7,9 +7,10 @@
 //! down costs. The words the finished rules still get wrong, judged exactly
 //! as the runtime reads them, are listed.
 
+use crate::HashMap;
 use flexion::{Choice, Label, Rule};
 use std::borrow::Cow;
-use std::collections::{BTreeMap, HashMap};
+use std::collections::BTreeMap;
 use std::hash::Hash;
 
 /// The longest ending a rule looks at, in letters.
@@ -45,7 +46,7 @@ pub fn learn<'a, L: Label + Hash + Ord>(
     fits: impl Fn(&str, L) -> bool,
 ) -> Choice<'a, L> {
     // Every ending's counts.
-    let mut counts: HashMap<String, BTreeMap<L, u32>> = HashMap::new();
+    let mut counts: HashMap<String, BTreeMap<L, u32>> = HashMap::default();
     for (word, value) in examples {
         for ending in endings(word) {
             *counts
@@ -69,7 +70,7 @@ pub fn learn<'a, L: Label + Hash + Ord>(
             .then_with(|| a.0.cmp(b.0))
     });
     // Kept rules, by ending.
-    let mut kept: HashMap<&str, &BTreeMap<L, u32>> = HashMap::new();
+    let mut kept: HashMap<&str, &BTreeMap<L, u32>> = HashMap::default();
     for (ending, c) in &by_length {
         if winner(c).is_none() {
             continue;

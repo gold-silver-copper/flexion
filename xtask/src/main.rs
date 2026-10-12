@@ -617,7 +617,8 @@ fn build(lang: &Language) -> Result<(), String> {
         sizes.push_str(&format!("| {} | {lines} | {bytes} |\n", part.name));
     }
     let report = format!("{}{sizes}", report.trim_end());
-    let files = flexion_train::print::files(lang, &script, &parts, &format!("{report}\n"))?;
+    let files =
+        flexion_train::print::files(lang, &script, &parts, &format!("{}\n", report.trim_end()))?;
     let dir = workspace().join("languages").join(lang.name);
     flexion_train::print::write(&dir, &files)?;
     let status = std::process::Command::new("rustfmt")
