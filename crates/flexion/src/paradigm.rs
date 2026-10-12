@@ -95,24 +95,23 @@ impl Relation<'_> {
     /// The forms `form` gives (its letters), each with where its change
     /// starts and how likely it is.
     pub fn apply(&self, form: &str, smoothing: f32) -> Vec<(String, usize, f32)> {
-        let Some(change) = &self.change else {
-            return vec![(form.to_string(), form.len(), 1.0)];
-        };
         let fits = |c: u16| {
             self.changes
                 .get(usize::from(c))
                 .is_some_and(|(old, _)| form.ends_with(old.as_ref()))
         };
-        let out: Vec<(String, usize, f32)> = change
-            .read(form, smoothing, fits)
-            .into_iter()
+        let readings = self
+            .change
+            .iter()
+            .flat_map(|c| c.read(form, smoothing, fits));
+        let out: Vec<(String, usize, f32)> = readings
             .filter_map(|r| {
                 let (old, new) = self.changes.get(usize::from(r.value))?;
                 let stem = form.strip_suffix(old.as_ref())?;
                 Some((format!("{stem}{new}"), stem.len(), r.probability))
             })
             .collect();
-        // No change fits its ending: the form itself, as a guess.
+        // No change, or none fits its ending: the form itself (as a guess).
         if out.is_empty() {
             return vec![(form.to_string(), form.len(), 1.0)];
         }

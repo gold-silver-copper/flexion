@@ -133,30 +133,25 @@ impl Baseline {
 fn align(a: &str, b: &str) -> (Vec<Option<char>>, Vec<Option<char>>) {
     let (x, y): (Vec<char>, Vec<char>) = (a.chars().collect(), b.chars().collect());
     let (n, m) = (x.len(), y.len());
-    // Costs in tenths.
-    let mut cost = vec![vec![0u32; m + 1]; n + 1];
-    for (i, row) in cost.iter_mut().enumerate() {
-        if let Some(c) = row.first_mut() {
-            *c = u32::try_from(i * 10).unwrap_or(u32::MAX);
-        }
-    }
-    if let Some(row) = cost.first_mut() {
-        for (j, c) in row.iter_mut().enumerate() {
-            *c = u32::try_from(j * 10).unwrap_or(u32::MAX);
-        }
-    }
     let at = |cost: &Vec<Vec<u32>>, i: usize, j: usize| {
         cost.get(i)
             .and_then(|r| r.get(j))
             .copied()
             .unwrap_or(u32::MAX)
     };
-    for i in 1..=n {
-        for j in 1..=m {
-            let same = x.get(i - 1) == y.get(j - 1);
-            let best = (at(&cost, i - 1, j - 1).saturating_add(if same { 0 } else { 11 }))
-                .min(at(&cost, i - 1, j).saturating_add(10))
-                .min(at(&cost, i, j - 1).saturating_add(10));
+    // Costs in tenths.
+    let mut cost = vec![vec![0u32; m + 1]; n + 1];
+    for i in 0..=n {
+        for j in 0..=m {
+            let best = if i == 0 || j == 0 {
+                // All insertions, or all deletions.
+                u32::try_from(10 * (i + j)).unwrap_or(u32::MAX)
+            } else {
+                let same = x.get(i - 1) == y.get(j - 1);
+                (at(&cost, i - 1, j - 1).saturating_add(if same { 0 } else { 11 }))
+                    .min(at(&cost, i - 1, j).saturating_add(10))
+                    .min(at(&cost, i, j - 1).saturating_add(10))
+            };
             if let Some(c) = cost.get_mut(i).and_then(|r| r.get_mut(j)) {
                 *c = best;
             }

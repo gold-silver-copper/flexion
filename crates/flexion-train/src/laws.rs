@@ -124,24 +124,21 @@ impl Change {
                 stem,
                 ending,
                 to,
-                keep: false,
-            } => [
-                stem.join("|") + &BOUNDARY.to_string() + ending,
-                to.clone(),
-                String::new(),
-                String::new(),
-            ],
-            Change::Edge {
-                stem,
-                ending,
-                to,
-                keep: true,
-            } => [
-                format!("{{x:[{}]}}{BOUNDARY}{ending}", stem.join("|")),
-                format!("{{x}}{to}"),
-                String::new(),
-                String::new(),
-            ],
+                keep,
+            } => {
+                let stem = stem.join("|");
+                let (target, to) = if *keep {
+                    (format!("{{x:[{stem}]}}"), format!("{{x}}{to}"))
+                } else {
+                    (stem, to.clone())
+                };
+                [
+                    format!("{target}{BOUNDARY}{ending}"),
+                    to,
+                    String::new(),
+                    String::new(),
+                ]
+            }
             // The letter is the ending's: the stem's are as the dictionary
             // writes them.
             Change::Tier {
@@ -564,15 +561,11 @@ fn pays(law: &Law, users: &[usize], forms: usize) -> bool {
 /// The letters around a build's boundary: up to two before, two after.
 fn window(built: &str) -> (String, String) {
     let (stem, ending) = built.split_once(BOUNDARY).unwrap_or(("", built));
-    let before: String = stem
-        .chars()
-        .rev()
-        .take(2)
-        .collect::<Vec<_>>()
-        .into_iter()
-        .rev()
-        .collect();
-    (before, ending.chars().take(2).collect())
+    let skip = stem.chars().count().saturating_sub(2);
+    (
+        stem.chars().skip(skip).collect(),
+        ending.chars().take(2).collect(),
+    )
 }
 
 /// Per paradigm, the more general paradigms with the same number of stem

@@ -48,14 +48,12 @@ pub fn build<'s>(
     for (part, d) in lang.parts.iter().zip(data) {
         let shape = crate::shape(lang, part)?;
         let parts = crate::parts(lang, part)?;
-        let not = |b: u64| -> Vec<Lexeme> {
-            d.lexemes
-                .iter()
-                .filter(|l| eval::bucket(&l.key) != b)
-                .cloned()
-                .collect()
-        };
-        let train = not(eval::TEST);
+        let train: Vec<Lexeme> = d
+            .lexemes
+            .iter()
+            .filter(|l| eval::bucket(&l.key) != eval::TEST)
+            .cloned()
+            .collect();
         let fit: Vec<Lexeme> = train
             .iter()
             .filter(|l| eval::bucket(&l.key) != eval::DEV)
@@ -77,19 +75,11 @@ pub fn build<'s>(
             .iter()
             .filter(|l| eval::bucket(&l.key) == eval::TEST && l.source == 0)
             .collect();
-        let full = eval::score(g, &orthography, &test, Input::Full, &scored.seen);
-        let headword = eval::score(g, &orthography, &test, Input::Headword, &scored.seen);
-        let citation = (!parts.is_empty()).then(|| {
-            eval::score(
-                g,
-                &orthography,
-                &test,
-                Input::Citation(&parts),
-                &scored.seen,
-            )
-        });
-        let features = (!part.inherent.is_empty())
-            .then(|| eval::score(g, &orthography, &test, Input::Features, &scored.seen));
+        let score = |input| eval::score(g, &orthography, &test, input, &scored.seen);
+        let full = score(Input::Full);
+        let headword = score(Input::Headword);
+        let citation = (!parts.is_empty()).then(|| score(Input::Citation(&parts)));
+        let features = (!part.inherent.is_empty()).then(|| score(Input::Features));
         let main: Vec<&Lexeme> = train.iter().filter(|l| l.source == 0).collect();
         let floor = eval::floor(&orthography, &main, &test);
         let mut shipped = learned(&d.lexemes);
@@ -185,6 +175,10 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
             format!("{p:.2}% ({forms})")
         }
     };
+    let accuracy = |s: &Option<Score>| {
+        s.as_ref()
+            .map_or(String::new(), |s| format!("{:.2}%", 100.0 * s.accuracy()))
+    };
     for m in measured {
         let p = m.headword.accuracy();
         #[allow(clippy::cast_precision_loss)]
@@ -200,12 +194,8 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
             100.0 * m.headword.top3_accuracy(),
             m.headword.calibration_error(),
             100.0 * m.full.accuracy(),
-            m.citation
-                .as_ref()
-                .map_or(String::new(), |c| format!("{:.2}%", 100.0 * c.accuracy())),
-            m.features
-                .as_ref()
-                .map_or(String::new(), |c| format!("{:.2}%", 100.0 * c.accuracy())),
+            accuracy(&m.citation),
+            accuracy(&m.features),
             share(m.headword.seen),
             share(m.headword.unseen),
             100.0 * m.floor,

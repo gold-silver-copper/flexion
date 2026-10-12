@@ -81,6 +81,18 @@ impl Score {
         let total = self.forms.max(1) as f64;
         e / total
     }
+
+    /// Count a form whose top candidate, said to be `p` likely, is `right`
+    /// or not, in its probability tenth.
+    fn calibrate(&mut self, p: f64, right: bool) {
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let bin = ((p * 10.0) as usize).min(9);
+        if let Some(b) = self.bins.get_mut(bin) {
+            b.0 += 1;
+            b.1 += usize::from(right);
+            b.2 += p;
+        }
+    }
 }
 
 fn ratio(a: usize, b: usize) -> f64 {
@@ -148,9 +160,7 @@ pub fn score<P: Label, A: Label, F: Label>(
             s.forms += 1;
             let same = |form: &str| same_form(orthography, form, want);
             let right = candidates.first().is_some_and(|c| same(&c.form));
-            if right {
-                s.right += 1;
-            }
+            s.right += usize::from(right);
             let split = if has.is_none_or(|h| h.get(cell).copied().unwrap_or(false)) {
                 &mut s.seen
             } else {
@@ -158,22 +168,17 @@ pub fn score<P: Label, A: Label, F: Label>(
             };
             split.0 += 1;
             split.1 += usize::from(right);
-            if candidates.first().is_some_and(|c| {
-                orthography.read(&c.form).letters == orthography.read(want).letters
-            }) {
-                s.letters += 1;
-            }
-            if candidates.iter().take(3).any(|c| same(&c.form)) {
-                s.top3 += 1;
-            }
-            let p = candidates.first().map_or(0.0, |c| f64::from(c.probability));
-            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-            let bin = ((p * 10.0) as usize).min(9);
-            if let Some(b) = s.bins.get_mut(bin) {
-                b.0 += 1;
-                b.1 += usize::from(right);
-                b.2 += p;
-            }
+            let letters = |form: &str| orthography.read(form).letters;
+            s.letters += usize::from(
+                candidates
+                    .first()
+                    .is_some_and(|c| letters(&c.form) == letters(want)),
+            );
+            s.top3 += usize::from(candidates.iter().take(3).any(|c| same(&c.form)));
+            s.calibrate(
+                candidates.first().map_or(0.0, |c| f64::from(c.probability)),
+                right,
+            );
         }
     }
     s
@@ -242,7 +247,10 @@ pub fn fit_sharpness<P: Label, A: Label, F: Label>(
         }
     }
     let error = |power: f32| {
-        let mut bins = [(0usize, 0usize, 0f64); 10];
+        let mut s = Score {
+            forms: forms.len(),
+            ..Score::default()
+        };
         for f in &forms {
             let total: f32 = f.iter().map(|x| x.0).sum();
             let sharp: f32 = f.iter().map(|x| x.0.powf(power)).sum();
@@ -254,19 +262,8 @@ pub fn fit_sharpness<P: Label, A: Label, F: Label>(
             } else {
                 0.0
             };
-            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-            let bin = ((p * 10.0) as usize).min(9);
-            if let Some(b) = bins.get_mut(bin) {
-                b.0 += 1;
-                b.1 += usize::from(right);
-                b.2 += p;
-            }
+            s.calibrate(p, right);
         }
-        let s = Score {
-            forms: forms.len(),
-            bins,
-            ..Score::default()
-        };
         s.calibration_error()
     };
     let grid = [0.5f32, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.5, 3.0, 3.5, 4.0];

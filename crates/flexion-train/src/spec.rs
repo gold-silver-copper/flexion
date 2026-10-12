@@ -56,18 +56,8 @@ pub enum Merge {
 }
 
 impl Edition {
-    /// Where Kaikki publishes the dump (its file name drops the spaces of
-    /// the language's name: `Grec ancien` → `Grecancien`).
-    pub fn url(&self) -> String {
-        format!(
-            "https://kaikki.org/{}wiktionary/{}/{}",
-            self.code,
-            self.dump.replace(' ', "%20"),
-            self.file()
-        )
-    }
-
-    /// The dump's file name.
+    /// The dump's file name: Kaikki's drops the spaces of the language's
+    /// name (`Grec ancien` → `Grecancien`).
     pub fn file(&self) -> String {
         format!("kaikki.org-dictionary-{}.jsonl", self.dump.replace(' ', ""))
     }
@@ -307,20 +297,18 @@ impl Language {
     /// Check internal consistency: every name refers to something that exists.
     pub fn validate(&self) -> Result<(), String> {
         for p in &self.parts {
+            let unknown =
+                |fs: &[&'static str]| fs.iter().find(|f| self.feature(f).is_none()).copied();
             for g in &p.groups {
-                for f in &g.features {
-                    if self.feature(f).is_none() {
-                        return Err(format!(
-                            "{}: group {} uses unknown feature {f}",
-                            p.name, g.name
-                        ));
-                    }
+                if let Some(f) = unknown(&g.features) {
+                    return Err(format!(
+                        "{}: group {} uses unknown feature {f}",
+                        p.name, g.name
+                    ));
                 }
             }
-            for f in &p.inherent {
-                if self.feature(f).is_none() {
-                    return Err(format!("{}: unknown inherent feature {f}", p.name));
-                }
+            if let Some(f) = unknown(&p.inherent) {
+                return Err(format!("{}: unknown inherent feature {f}", p.name));
             }
             let cells = crate::cells::Cells::new(self, p)?;
             if let Some((g, v)) = &p.lemma {
