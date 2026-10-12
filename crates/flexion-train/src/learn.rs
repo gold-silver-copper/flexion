@@ -51,7 +51,10 @@ pub struct Stats {
 /// One dictionary word, read.
 #[derive(Clone)]
 struct Word {
+    /// What it is looked up by: its letters, folded (`fox`).
     key: String,
+    /// Its letters as the dictionary writes them (`fōx`).
+    letters: String,
     /// Senses of its dictionary entry.
     senses: u16,
     /// How many of the dictionaries have the word.
@@ -78,29 +81,28 @@ pub fn learn<'s>(
 ) -> Learned<'s> {
     // One entry per word: the first the dictionaries give (the main
     // dictionary's, in its order).
+    let key = |l: &Lexeme| orthography.key(&orthography.read(&l.full).letters);
     let mut dictionaries: HashMap<String, std::collections::BTreeSet<u8>> = HashMap::new();
     for l in lexemes {
-        dictionaries
-            .entry(orthography.read(&l.full).letters)
-            .or_default()
-            .insert(l.source);
+        dictionaries.entry(key(l)).or_default().insert(l.source);
     }
     let mut by_order: Vec<&Lexeme> = lexemes.iter().collect();
     by_order.sort_by_key(|l| (l.source, l.order));
     let mut seen = std::collections::HashSet::new();
     let lexemes: Vec<Lexeme> = by_order
         .into_iter()
-        .filter(|l| seen.insert(orthography.read(&l.full).letters))
+        .filter(|l| seen.insert(key(l)))
         .cloned()
         .collect();
     let lexemes = lexemes.as_slice();
     let words: Vec<Word> = lexemes
         .iter()
         .map(|l| Word {
-            key: orthography.read(&l.full).letters,
+            key: key(l),
+            letters: orthography.read(&l.full).letters,
             senses: l.senses,
             dictionaries: dictionaries
-                .get(&orthography.read(&l.full).letters)
+                .get(&key(l))
                 .map_or(1, |s| u8::try_from(s.len()).unwrap_or(1)),
             inherent: l.inherent.clone(),
             cells: (0..shape.cells)
@@ -154,7 +156,7 @@ pub fn learn<'s>(
     let fits = |word: &str, p: u16| {
         paradigms
             .get(usize::from(p))
-            .is_some_and(|x| x.stems(word).is_some())
+            .is_some_and(|x| x.stems(&orthography, word).is_some())
     };
     let paradigm_choice = choose::learn(&paradigm_examples, settings, fits);
     let (accent, stress_labels) = if orthography.stress_marks.is_empty() {
@@ -170,12 +172,35 @@ pub fn learn<'s>(
         );
         (Some(a), labels)
     };
+    // Spellings a key doesn't show and the word's paradigm doesn't write.
+    let mut spellings: Vec<(Cow<'s, str>, Cow<'s, str>)> = Vec::new();
+    for (w, &p) in words.iter().zip(&assignment) {
+        if w.letters == w.key || spellings.last().is_some_and(|l| l.0 == w.key) {
+            continue;
+        }
+        let written = paradigms.get(usize::from(p)).and_then(|par| {
+            let stems = par.stems(&orthography, &w.key)?;
+            Some(pattern::fill(&par.lemma, &stems))
+        });
+        if written.as_deref() != Some(w.letters.as_str()) {
+            spellings.push((Cow::Owned(w.key.clone()), Cow::Owned(w.letters.clone())));
+        }
+    }
+    spellings.sort();
+    spellings.dedup_by(|a, b| a.0 == b.0);
+    let could_hide = |key: &str| {
+        key.chars()
+            .any(|c| orthography.folded.iter().any(|e| e.1 == c))
+    };
+    let hiding = words.iter().filter(|w| could_hide(&w.key)).count();
+    #[allow(clippy::cast_precision_loss)]
+    let hidden = spellings.len() as f32 / hiding.max(1) as f32;
     let mut members: Vec<Vec<String>> = vec![Vec::new(); paradigms.len()];
     for (w, &p) in words.iter().zip(&assignment) {
         if let Some(m) = members.get_mut(usize::from(p))
             && m.len() < 8
         {
-            m.push(w.key.clone());
+            m.push(w.letters.clone());
         }
     }
     let mut grammar = Grammar {
@@ -190,6 +215,8 @@ pub fn learn<'s>(
         compound: compound_choice,
         accent,
         laws: None,
+        spellings: Cow::Owned(spellings),
+        hidden,
         irregular: Cow::Owned(Vec::new()),
         smoothing: settings.smoothing,
         sharpness: 1.0,
@@ -247,7 +274,8 @@ pub fn learn<'s>(
 /// How a word written in parts inflects, keyed by its first part: each
 /// part when a form changes its first part. `None` for a word of one part.
 fn compound(w: &Word) -> Option<(String, Compound)> {
-    let (first, _) = w.key.split_once('-')?;
+    let (first, _) = w.letters.split_once('-')?;
+    let (first_key, _) = w.key.split_once('-')?;
     let changes = w
         .cells
         .iter()
@@ -255,7 +283,7 @@ fn compound(w: &Word) -> Option<(String, Compound)> {
         .filter_map(|f| f.letters.split_once('-'))
         .any(|(f, _)| f != first);
     Some((
-        first.to_string(),
+        first_key.to_string(),
         if changes {
             Compound::Each
         } else {
@@ -393,7 +421,7 @@ fn analyze(w: &Word, shape: &Shape) -> Analyzed {
             forms.push(&f.letters);
         }
     }
-    let a = skeleton::analyze(&w.key, &forms);
+    let a = skeleton::analyze(&w.letters, &forms);
     let mut cells: Vec<Option<String>> = slots
         .iter()
         .map(|idx| {
@@ -468,7 +496,7 @@ fn paradigms<'s>(
             *n += 1;
         }
         for n in 1..=3 {
-            *by_ending.entry((s, last(&w.key, n))).or_default() += 1;
+            *by_ending.entry((s, last(&w.letters, n))).or_default() += 1;
         }
     }
     // Signatures by lemma pattern, fullest first; lemma patterns by their
@@ -495,12 +523,12 @@ fn paradigms<'s>(
         }
         let mine = signatures.get(s);
         let mut best = (fullness(s), [0u32; 3], size.get(s).copied().unwrap_or(0), s);
-        let fitting = choose::endings(&w.key)
+        let fitting = choose::endings(&w.letters)
             .chain(std::iter::once(""))
             .filter_map(|e| by_last.get(e))
             .flatten();
         for &lp in fitting {
-            let Some(stems) = pattern::bind(lp, &w.key) else {
+            let Some(stems) = pattern::bind(lp, &w.letters) else {
                 continue;
             };
             for &cand in by_lemma.get(lp).into_iter().flatten() {
@@ -532,7 +560,7 @@ fn paradigms<'s>(
                 }
                 let ends = [3, 2, 1].map(|n| {
                     by_ending
-                        .get(&(cand, last(&w.key, n)))
+                        .get(&(cand, last(&w.letters, n)))
                         .copied()
                         .unwrap_or(0)
                 });
@@ -582,12 +610,12 @@ fn paradigms<'s>(
         }
         let mine = analyses.get(i);
         let mut best: Option<((usize, u32), usize)> = None;
-        let fitting = choose::endings(&w.key)
+        let fitting = choose::endings(&w.letters)
             .chain(std::iter::once(""))
             .filter_map(|e| supported_last.get(e))
             .flatten();
         for &lp in fitting {
-            let Some(stems) = pattern::bind(lp, &w.key) else {
+            let Some(stems) = pattern::bind(lp, &w.letters) else {
                 continue;
             };
             for &cand in supported_by_lemma.get(lp).into_iter().flatten() {
@@ -737,15 +765,17 @@ fn name(words: &[Word], chosen: &[usize], s: usize) -> String {
     let pick = |plain: bool| {
         mine()
             .filter(|w| {
-                !plain || (w.key.chars().count() >= 3 && w.key.chars().all(char::is_alphabetic))
+                !plain
+                    || (w.letters.chars().count() >= 3
+                        && w.letters.chars().all(char::is_alphabetic))
             })
             .max_by(|a, b| {
                 (a.dictionaries, a.senses)
                     .cmp(&(b.dictionaries, b.senses))
-                    .then_with(|| b.key.chars().count().cmp(&a.key.chars().count()))
-                    .then_with(|| b.key.cmp(&a.key))
+                    .then_with(|| b.letters.chars().count().cmp(&a.letters.chars().count()))
+                    .then_with(|| b.letters.cmp(&a.letters))
             })
-            .map(|w| w.key.clone())
+            .map(|w| w.letters.clone())
     };
     pick(true).or_else(|| pick(false)).unwrap_or_default()
 }
@@ -782,7 +812,7 @@ fn accent<'s>(
             });
             continue;
         };
-        let stems = par.stems(&w.key).unwrap_or_default();
+        let stems = par.stems(orthography, &w.letters).unwrap_or_default();
         // The stem's vowel: where cells stressed before their ending are.
         let mut stem_votes: BTreeMap<u8, u32> = BTreeMap::new();
         let mut facts: Vec<Option<(flexion::Stress, String, usize)>> = Vec::new();
@@ -1036,13 +1066,19 @@ fn irregular(
                             let Some(want) = forms.first() else {
                                 continue;
                             };
-                            let right = [l.full.as_str(), plain.as_str()].iter().all(|input| {
-                                crate::eval::same_form(
-                                    &grammar.orthography,
-                                    &grammar.best(input, cell, &flexion::Known::default()),
-                                    want,
-                                )
-                            });
+                            let right = [(l.full.as_str(), true), (plain.as_str(), false)]
+                                .iter()
+                                .all(|&(input, full)| {
+                                    let known = flexion::Known {
+                                        full,
+                                        ..flexion::Known::default()
+                                    };
+                                    crate::eval::same_form(
+                                        &grammar.orthography,
+                                        &grammar.best(input, cell, &known),
+                                        want,
+                                    )
+                                });
                             if !right {
                                 let read = grammar.orthography.read(want);
                                 let written = grammar.orthography.write(

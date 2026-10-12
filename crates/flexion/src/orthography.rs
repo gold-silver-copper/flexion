@@ -25,6 +25,10 @@ pub struct Orthography<'a> {
     pub dropped: &'a str,
     /// Whether a word of one syllable is written with its stress mark.
     pub mark_monosyllables: bool,
+    /// Letters a lookup reads as another, sorted: a letter with a length
+    /// mark as the letter without it (Latin `ā` as `a`), Russian `ё` as `е`,
+    /// Greek `ἀ` as `α`. A caller may type either.
+    pub folded: &'a [(char, char)],
 }
 
 /// Where a word is stressed: its `vowel`-th vowel from the start (from 0),
@@ -59,6 +63,24 @@ impl Orthography<'_> {
     /// Whether `c` carries a syllable.
     pub fn is_vowel(&self, c: char) -> bool {
         self.vowels.contains(c)
+    }
+
+    /// The letter a lookup reads `c` as (see [`Orthography::folded`]).
+    pub fn fold(&self, c: char) -> char {
+        match self.folded.binary_search_by_key(&c, |e| e.0) {
+            Ok(i) => self.folded.get(i).map_or(c, |e| e.1),
+            Err(_) => c,
+        }
+    }
+
+    /// Whether a lookup reads `a` and `b` as the same letter.
+    pub fn same_letter(&self, a: char, b: char) -> bool {
+        a == b || self.fold(a) == self.fold(b)
+    }
+
+    /// The key a word is looked up by: its letters, folded.
+    pub fn key(&self, letters: &str) -> String {
+        letters.chars().map(|c| self.fold(c)).collect()
     }
 
     /// How many vowels `letters` has.
@@ -231,6 +253,7 @@ mod tests {
         implicit: "ё",
         dropped: "\u{300}",
         mark_monosyllables: false,
+        folded: &[('ё', 'е')],
     };
 
     #[test]
@@ -249,5 +272,7 @@ mod tests {
             RUSSIAN.write("кот", Some(Stress { vowel: 0, kind: 0 }), Casing::Lower),
             "кот"
         );
+        // Typed with е, looked up as the word written with ё.
+        assert_eq!(RUSSIAN.key("ёжик"), RUSSIAN.key("ежик"));
     }
 }

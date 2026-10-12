@@ -418,8 +418,9 @@ fn lexeme(
     // The citation form: the lemma as the dictionary writes it in full (with
     // stress, macrons, ё): the table's lemma cell, else the canonical
     // headword form, else the headword.
-    let read = spelling.read(&lemma);
-    let same_word = |f: &String| spelling.read(f).letters == read.letters;
+    let key_of = |f: &str| spelling.key(&spelling.read(f).letters);
+    let lemma_key = key_of(&lemma);
+    let same_word = |f: &String| key_of(f) == lemma_key;
     let canonical = entry
         .forms
         .iter()
@@ -432,7 +433,7 @@ fn lexeme(
         .filter(same_word)
         .or(canonical)
         .unwrap_or_else(|| lemma.clone());
-    let key = spelling.read(&written).letters;
+    let key = key_of(&written);
     // Without a table, the lemma cell is the headword itself (English nouns
     // list only their plural).
     if !tables

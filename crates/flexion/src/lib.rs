@@ -181,6 +181,14 @@ macro_rules! irregular {
     };
 }
 
+/// Spellings written as data: `key => letters`, sorted by key.
+#[macro_export]
+macro_rules! spellings {
+    ( $( $key:literal => $letters:literal ),* $(,)? ) => {
+        &[ $( (::std::borrow::Cow::Borrowed($key), ::std::borrow::Cow::Borrowed($letters)) ),* ]
+    };
+}
+
 /// A cell of a paradigm table: a pattern (`"~а"`), or `referred` for a
 /// cell whose form is another cell's (see [`Referral`]).
 #[macro_export]

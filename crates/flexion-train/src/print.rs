@@ -274,7 +274,7 @@ fn part_files(
     if g.compound.is_some() {
         m.push_str("mod compounds;\n");
     }
-    m.push_str("mod irregular;\nmod paradigms;\nmod rules;\n\n");
+    m.push_str("mod irregular;\nmod paradigms;\nmod rules;\nmod spellings;\n\n");
     let _ = writeln!(m, "pub use paradigms::{ty};\n");
     m.push_str("use crate::*;\nuse flexion::{{Candidate, Grammar, Known, Reading}};\nuse std::borrow::Cow;\n\n");
     m.push_str("/// Each cell's place in a paradigm.\n#[allow(dead_code)]\npub mod cell {\n");
@@ -284,7 +284,7 @@ fn part_files(
     m.push_str("}\n\n");
     let _ = writeln!(
         m,
-        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    referrals: {referrals},\n    feature: {feature},\n    compound: {},\n    accent: None,\n    laws: None,\n    irregular: Cow::Borrowed(irregular::IRREGULAR),\n    smoothing: {:?},\n    sharpness: {:?},\n}};",
+        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    referrals: {referrals},\n    feature: {feature},\n    compound: {},\n    accent: None,\n    laws: None,\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    hidden: {hidden:?},\n    irregular: Cow::Borrowed(irregular::IRREGULAR),\n    smoothing: {:?},\n    sharpness: {:?},\n}};",
         g.cells,
         g.lemma_cell,
         g.capitalized,
@@ -297,6 +297,7 @@ fn part_files(
         },
         g.smoothing,
         g.sharpness,
+        hidden = g.hidden,
         generics = feature_name.map_or(String::new(), |f| format!(", u8, crate::{f}")),
         referrals = feature_name.map_or("Cow::Borrowed(&[])".to_string(), |f| format!(
             "Cow::Borrowed(&{}::REFERRALS)",
@@ -576,6 +577,23 @@ fn part_files(
         files.push((format!("{dir}/compounds.rs"), r));
     }
 
+    // spellings.rs
+    let mut sp = String::new();
+    let _ = writeln!(
+        sp,
+        "//! Words whose spelling their key doesn't show, as the dictionary writes\n//! them: a caller who types a word without its marks means this. Marks a\n//! {one} writes itself aren't listed.\n\nuse std::borrow::Cow;\n"
+    );
+    let _ = writeln!(
+        sp,
+        "/// {} words.\npub(super) static SPELLINGS: &[(Cow<'static, str>, Cow<'static, str>)] = flexion::spellings! {{",
+        thousands(g.spellings.len() as u64)
+    );
+    for (k, w) in g.spellings.iter() {
+        let _ = writeln!(sp, "    {:?} => {:?},", k.as_ref(), w.as_ref());
+    }
+    sp.push_str("};\n");
+    files.push((format!("{dir}/spellings.rs"), sp));
+
     // irregular.rs
     let mut ir = String::new();
     let _ = writeln!(
@@ -615,7 +633,7 @@ fn orthography(script: &Script) -> String {
         .map(|(c, p, k)| format!("({c:?}, {p:?}, {k})"))
         .collect();
     format!(
-        "//! How the language is written: its vowels, and the marks it reads and\n//! writes.\n\nuse flexion::Orthography;\n\npub(crate) const ORTHOGRAPHY: Orthography<'static> = Orthography {{\n    lowercase: {},\n    vowels: {:?},\n    stress_marks: {:?},\n    stressed: &[{}],\n    implicit: {:?},\n    dropped: {:?},\n    mark_monosyllables: {},\n}};\n",
+        "//! How the language is written: its vowels, and the marks it reads and\n//! writes.\n\nuse flexion::Orthography;\n\npub(crate) const ORTHOGRAPHY: Orthography<'static> = Orthography {{\n    lowercase: {},\n    vowels: {:?},\n    stress_marks: {:?},\n    stressed: &[{}],\n    implicit: {:?},\n    dropped: {:?},\n    mark_monosyllables: {},\n    folded: &[{}],\n}};\n",
         script.lowercase,
         script.vowels,
         script.stress_marks,
@@ -623,6 +641,12 @@ fn orthography(script: &Script) -> String {
         script.implicit,
         script.dropped,
         script.mark_monosyllables,
+        script
+            .folded
+            .iter()
+            .map(|(a, b)| format!("({a:?}, {b:?})"))
+            .collect::<Vec<_>>()
+            .join(", "),
     )
 }
 
@@ -806,6 +830,10 @@ fn api(
     if feature.is_some() {
         let _ = writeln!(s, "    {feature_field}: Option<{feature_type}>,");
     }
+    let folds = !part.learned.grammar.orthography.folded.is_empty();
+    if folds {
+        s.push_str("    full: bool,\n");
+    }
     s.push_str("}\n\n");
     let _ = writeln!(
         s,
@@ -813,6 +841,9 @@ fn api(
     );
     if feature.is_some() {
         let _ = writeln!(s, "            {feature_field}: None,");
+    }
+    if folds {
+        s.push_str("            full: false,\n");
     }
     s.push_str(
         "        }
@@ -832,6 +863,13 @@ fn api(
             many = ty.to_lowercase(),
         );
     }
+    if folds {
+        let _ = writeln!(
+            s,
+            "    /// Its lemma is spelled with every mark the dictionary writes, so\n    /// none is hidden (without this, a lemma typed without marks may be\n    /// missing some, and its forms are less sure).\n    #[must_use]\n    pub fn spelled_in_full(mut self) -> Self {{\n        self.full = true;\n        self\n    }}\n"
+        );
+    }
+    let full = if folds { "self.full" } else { "false" };
     let feature_value = if feature.is_some() {
         format!("self.{feature_field}")
     } else {
@@ -839,7 +877,7 @@ fn api(
     };
     let _ = writeln!(
         s,
-        "    fn known(&self) -> Known<'_, {feature_type}> {{\n        Known {{\n            forms: &self.given,\n            feature: {feature_value},\n        }}\n    }}\n"
+        "    fn known(&self) -> Known<'_, {feature_type}> {{\n        Known {{\n            forms: &self.given,\n            feature: {feature_value},\n            full: {full},\n        }}\n    }}\n"
     );
     let _ = writeln!(
         s,

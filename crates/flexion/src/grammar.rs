@@ -40,12 +40,16 @@ impl Label for Compound {
 }
 
 /// What the caller knows about a word besides its lemma: forms of it, such
-/// as principal parts, as `(cell, form)`, and the value of the feature its
-/// referrals depend on (its animacy). Readings that disagree are dropped.
+/// as principal parts, as `(cell, form)`; the value of the feature its
+/// referrals depend on (its animacy); and whether the lemma is spelled in
+/// full. Readings that disagree are dropped.
 #[derive(Debug, Clone, Copy)]
 pub struct Known<'q, F> {
     pub forms: &'q [(usize, &'q str)],
     pub feature: Option<F>,
+    /// The lemma is spelled with every mark the dictionary writes (`fōx`,
+    /// `ёж`, not `fox`, `еж`): none is hidden.
+    pub full: bool,
 }
 
 impl<F> Default for Known<'_, F> {
@@ -53,6 +57,7 @@ impl<F> Default for Known<'_, F> {
         Known {
             forms: &[],
             feature: None,
+            full: false,
         }
     }
 }
@@ -83,6 +88,14 @@ pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
     pub accent: Option<Accent<'a, A>>,
     /// Sound laws and spelling rules every built form goes through.
     pub laws: Option<sound_law::Program<'a>>,
+    /// Words whose spelling their key doesn't show, as the dictionary writes
+    /// them: `(key, letters)`, sorted. A caller who types `fox` means `fōx`;
+    /// marks a paradigm writes (the `ō` of `ratiō`) aren't listed.
+    pub spellings: Cow<'a, [(Cow<'a, str>, Cow<'a, str>)]>,
+    /// Of the dictionary's words with a letter a mark could hide on, the
+    /// share listed in [`Grammar::spellings`]: the chance that a word typed
+    /// without marks, and not listed, is spelled with marks no one can tell.
+    pub hidden: f32,
     /// Forms no rule gives, as the dictionary writes them: `(word, cell,
     /// form)`, sorted by word and cell. They are the answer for that word.
     pub irregular: Cow<'a, [(Cow<'a, str>, u16, Cow<'a, str>)]>,
@@ -119,13 +132,22 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
 
     /// [`Grammar::candidates`] before sharpening, in no order.
     fn unsharpened(&self, lemma: &str, cell: usize, known: &Known<'_, F>) -> Vec<Candidate<'_>> {
-        let word = self.orthography.read(lemma);
+        let mut word = self.orthography.read(lemma);
+        let key = self.orthography.key(&word.letters);
+        // A word typed without its marks: as listed, or a guess.
+        let mut spelled = 1.0;
+        match self.spelling(&word.letters, &key) {
+            _ if known.full => {}
+            Some(letters) => word.letters = letters.to_string(),
+            None if word.letters == key && self.could_hide(&key) => spelled = 1.0 - self.hidden,
+            None => {}
+        }
         let casing = if self.capitalized {
             Casing::Title
         } else {
             word.casing
         };
-        if let Some(form) = self.irregular_form(&word.letters, cell) {
+        if let Some(form) = self.irregular_form(&key, cell) {
             return vec![Candidate {
                 form: crate::recase(form, casing),
                 also: Vec::new(),
@@ -140,15 +162,15 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             .iter()
             .map(|&(c, f)| (c, self.orthography.read(f)))
             .collect();
-        let mut inflections = self.inflections(&word.letters, &given);
+        let mut inflections = self.inflections(&word.letters, &key, &given);
         if inflections.is_empty() {
-            inflections = self.inflections(&word.letters, &[]);
+            inflections = self.inflections(&word.letters, &key, &[]);
         }
         // A word written in parts: as one word, or part by part.
         let (whole, each) = match (&self.compound, lemma.split_once(JOINER)) {
             (Some(compound), Some((first, rest))) => {
-                let first_letters = self.orthography.read(first).letters;
-                let readings = compound.read(&first_letters, self.smoothing, |_| true);
+                let first_key = self.orthography.key(&self.orthography.read(first).letters);
+                let readings = compound.read(&first_key, self.smoothing, |_| true);
                 let p = |c: Compound| {
                     readings
                         .iter()
@@ -176,7 +198,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 }
             }
         }
-        let referred = self.referred(&word.letters, cell, known.feature);
+        let referred = self.referred(&key, cell, known.feature);
         let cells = |inf: &Inflection<'_, 'a, '_, P>| -> Vec<(usize, f32)> {
             if inf.paradigm.refers(cell) {
                 referred.clone()
@@ -214,7 +236,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 let candidate = Candidate {
                     form: write(&first),
                     also: also.iter().map(|f| write(f)).collect(),
-                    probability: whole * p_cell * inf.reading.probability * p_stress,
+                    probability: spelled * whole * p_cell * inf.reading.probability * p_stress,
                     status: inf.reading.status,
                     paradigm: inf.paradigm.name.as_ref(),
                     evidence,
@@ -229,16 +251,16 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         out
     }
 
-    /// The cells a referred `cell` of the word `letters` takes its form
-    /// from, with probabilities: by the feature's value, given or chosen.
-    fn referred(&self, letters: &str, cell: usize, given: Option<F>) -> Vec<(usize, f32)> {
+    /// The cells a referred `cell` of the word `key` takes its form from,
+    /// with probabilities: by the feature's value, given or chosen.
+    fn referred(&self, key: &str, cell: usize, given: Option<F>) -> Vec<(usize, f32)> {
         let Some(referral) = self.referrals.iter().find(|r| usize::from(r.cell) == cell) else {
             return Vec::new();
         };
         let values: Vec<(F, f32)> = match (given, &self.feature) {
             (Some(v), _) => vec![(v, 1.0)],
             (None, Some(feature)) => feature
-                .read(letters, self.smoothing, |_| true)
+                .read(key, self.smoothing, |_| true)
                 .into_iter()
                 .map(|r| (r.value, r.probability))
                 .collect(),
@@ -253,14 +275,18 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     /// The paradigms `lemma` can follow, likeliest first, each with how
     /// sure and why, given what the caller knows.
     pub fn readings(&self, lemma: &str, known: &Known<'_, F>) -> Vec<Reading<'_, 'a, P>> {
-        let letters = self.orthography.read(lemma).letters;
+        let mut letters = self.orthography.read(lemma).letters;
+        let key = self.orthography.key(&letters);
+        if let Some(listed) = self.spelling(&letters, &key).filter(|_| !known.full) {
+            letters = listed.to_string();
+        }
         let given: Vec<(usize, Written)> = known
             .forms
             .iter()
             .map(|&(c, f)| (c, self.orthography.read(f)))
             .collect();
         let mut readings: Vec<Reading<'_, 'a, P>> = self
-            .inflections(&letters, &given)
+            .inflections(&letters, &key, &given)
             .into_iter()
             .map(|i| i.reading)
             .collect();
@@ -271,12 +297,31 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         readings
     }
 
-    /// The listed form of `cell` for the word `letters`, if any.
-    pub fn irregular_form(&self, letters: &str, cell: usize) -> Option<&str> {
+    /// The dictionary's spelling of a word typed as `letters` without the
+    /// marks it has (`fox` for `fōx`), if it lists one.
+    pub fn spelling(&self, letters: &str, key: &str) -> Option<&str> {
+        if letters != key {
+            return None;
+        }
+        let at = self
+            .spellings
+            .binary_search_by(|(k, _)| k.as_ref().cmp(key))
+            .ok()?;
+        self.spellings.get(at).map(|(_, s)| s.as_ref())
+    }
+
+    /// Whether a word looked up as `key` has a letter a mark could hide on.
+    pub fn could_hide(&self, key: &str) -> bool {
+        key.chars()
+            .any(|c| self.orthography.folded.iter().any(|e| e.1 == c))
+    }
+
+    /// The listed form of `cell` for the word looked up as `key`, if any.
+    pub fn irregular_form(&self, key: &str, cell: usize) -> Option<&str> {
         let cell = u16::try_from(cell).ok()?;
         let at = self
             .irregular
-            .binary_search_by(|(w, c, _)| w.as_ref().cmp(letters).then(c.cmp(&cell)))
+            .binary_search_by(|(w, c, _)| w.as_ref().cmp(key).then(c.cmp(&cell)))
             .ok()?;
         self.irregular.get(at).map(|(_, _, f)| f.as_ref())
     }
@@ -290,15 +335,16 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             .map_or_else(|| lemma.to_string(), |c| c.form)
     }
 
-    /// The paradigms `letters` can follow, likeliest first, agreeing with
-    /// `given` forms.
+    /// The paradigms the word `letters` (looked up as `key`) can follow,
+    /// likeliest first, agreeing with `given` forms.
     fn inflections<'g, 'w>(
         &'g self,
         letters: &'w str,
+        key: &str,
         given: &[(usize, Written)],
     ) -> Vec<Inflection<'g, 'a, 'w, P>> {
         let agrees = |p: &Paradigm<'_>| {
-            let Some(stems) = p.stems(letters) else {
+            let Some(stems) = p.stems(&self.orthography, letters) else {
                 return false;
             };
             given.iter().all(|(cell, form)| {
@@ -316,7 +362,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             })
         };
         let fits = |p: P| self.paradigm_of(p).is_some_and(agrees);
-        let mut readings = self.paradigm.read(letters, self.smoothing, fits);
+        let mut readings = self.paradigm.read(key, self.smoothing, fits);
         if readings.is_empty() {
             // No rule knows a paradigm the word fits: every paradigm it does,
             // by how many words follow it.
@@ -326,7 +372,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             .into_iter()
             .filter_map(|reading| {
                 let paradigm = self.paradigm_of(reading.value)?;
-                let stems = paradigm.stems(letters)?;
+                let stems = paradigm.stems(&self.orthography, letters)?;
                 Some(Inflection {
                     reading,
                     paradigm,
@@ -406,7 +452,9 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 _ => true,
             }
         };
-        let classes = accent.class.read(letters, self.smoothing, fits);
+        let classes = accent
+            .class
+            .read(&self.orthography.key(letters), self.smoothing, fits);
         let mut out: Vec<(Option<crate::Stress>, f32)> = Vec::new();
         // The form's letters, to place the stress in.
         let form = inf

@@ -16,6 +16,9 @@ pub struct Script {
     pub implicit: String,
     pub dropped: String,
     pub mark_monosyllables: bool,
+    /// Letters a lookup reads as another, sorted (see
+    /// [`flexion::Orthography::folded`]).
+    pub folded: Vec<(char, char)>,
 }
 
 /// The Unicode blocks the ten languages write in.
@@ -34,6 +37,7 @@ impl Script {
         let base_vowels: Vec<char> = s.vowels.chars().collect();
         let mut vowels = String::new();
         let mut stressed = Vec::new();
+        let mut folded: Vec<(char, char)> = s.fold.iter().chain(&s.unmark).copied().collect();
         for c in BLOCKS
             .iter()
             .flat_map(|&(a, b)| (a..=b).filter_map(char::from_u32))
@@ -45,6 +49,23 @@ impl Script {
             let Some((&base, rest)) = decomposed.split_first() else {
                 continue;
             };
+            // A letter whose marks a lookup ignores reads as the letter
+            // without them (Greek `ᾰ` as `α`, `ἀ` as `α`).
+            let ignored = |m: &char| s.fold_marks.contains(*m) || s.unmark_marks.contains(*m);
+            if rest.iter().any(ignored) && !rest.iter().any(|m| marks.contains(m)) {
+                let kept: String = std::iter::once(base)
+                    .chain(rest.iter().copied().filter(|m| !ignored(m)))
+                    .collect::<String>()
+                    .nfc()
+                    .collect();
+                let mut k = kept.chars();
+                if let (Some(plain), None) = (k.next(), k.next())
+                    && plain != c
+                    && !folded.iter().any(|e| e.0 == c)
+                {
+                    folded.push((c, plain));
+                }
+            }
             // A vowel: listed, or a listed vowel with marks the language
             // writes on vowels (Greek breathings and length; stress marks).
             let vowel_marks = |m: &char| {
@@ -84,7 +105,10 @@ impl Script {
                 None => vowels.push(c),
             }
         }
+        folded.sort_unstable();
+        folded.dedup_by_key(|e| e.0);
         Script {
+            folded,
             lowercase: s.fold_case,
             vowels,
             stress_marks: s.stress_marks.to_string(),
@@ -104,6 +128,7 @@ impl Script {
             implicit: &self.implicit,
             dropped: &self.dropped,
             mark_monosyllables: self.mark_monosyllables,
+            folded: &self.folded,
         }
     }
 }

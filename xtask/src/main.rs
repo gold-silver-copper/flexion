@@ -181,6 +181,9 @@ fn try_language(
             st.accent_patterns,
             st.irregular_forms,
         );
+        if !g.spellings.is_empty() {
+            println!("  {} spellings listed", g.spellings.len());
+        }
         if let (Some(f), Some(choice)) = (learned.feature, &g.feature) {
             let to: Vec<String> = g
                 .referrals
@@ -295,20 +298,20 @@ fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Res
             irregular: std::borrow::Cow::Owned(Vec::new()),
             ..g.clone()
         };
+        let key = script
+            .orthography()
+            .key(&script.orthography().read(word).letters);
         let listed: Vec<String> = d
             .lexemes
             .iter()
-            .filter(|l| {
-                script.orthography().read(&l.full).letters
-                    == script.orthography().read(word).letters
-            })
+            .filter(|l| l.key == key)
             .map(|l| format!("{:?}", l.cells))
             .collect();
         println!("dictionary: {listed:?}");
         println!(
             "paradigm readings: {:?}",
             g.paradigm
-                .read(&script.orthography().read(word).letters, 2.0, |_| true)
+                .read(&key, 2.0, |_| true)
                 .iter()
                 .take(3)
                 .map(|r| (
@@ -320,7 +323,6 @@ fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Res
                 .collect::<Vec<_>>()
         );
         if let Some(a) = &g.accent {
-            let key = script.orthography().read(word).letters;
             for r in a.class.read(&key, 2.0, |_| true).iter().take(4) {
                 let class = a.class_of(r.value);
                 let places: String = class

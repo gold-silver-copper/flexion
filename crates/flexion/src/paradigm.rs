@@ -1,6 +1,7 @@
 //! Paradigms: how a group of words inflects, one pattern per cell; and
 //! referrals, cells whose form is another cell's.
 
+use crate::orthography::Orthography;
 use crate::pattern::{self, Stems};
 use std::borrow::Cow;
 
@@ -48,9 +49,10 @@ pub struct Referral<'a> {
 }
 
 impl<'a> Paradigm<'a> {
-    /// The stem pieces of a lemma that can inflect this way.
-    pub fn stems<'w>(&self, lemma: &'w str) -> Option<Stems<'w>> {
-        pattern::bind(&self.lemma, lemma)
+    /// The stem pieces of a lemma (its letters) that can inflect this way,
+    /// matching letters as `orthography` looks them up.
+    pub fn stems<'w>(&self, orthography: &Orthography<'_>, lemma: &'w str) -> Option<Stems<'w>> {
+        pattern::bind_by(&self.lemma, lemma, |a, b| orthography.same_letter(a, b))
     }
 
     /// The cell's pattern (all its alternatives); `None` for a referred

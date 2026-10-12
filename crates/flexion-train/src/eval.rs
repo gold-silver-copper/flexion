@@ -104,7 +104,11 @@ pub fn score<P: Label, A: Label, F: Label>(
             let Some(want) = forms.first() else {
                 continue;
             };
-            let candidates = grammar.candidates(&typed, cell, &flexion::Known::default());
+            let known = flexion::Known {
+                full: input == Input::Full,
+                ..flexion::Known::default()
+            };
+            let candidates = grammar.candidates(&typed, cell, &known);
             s.forms += 1;
             let same = |form: &str| same_form(&grammar.orthography, form, want);
             let right = candidates.first().is_some_and(|c| same(&c.form));
@@ -146,12 +150,16 @@ pub fn fit_sharpness<P: Label, A: Label, F: Label>(
         let plain = grammar
             .orthography
             .write(&l.key, None, flexion::Casing::Lower);
-        for typed in [l.full.as_str(), plain.as_str()] {
+        for (typed, full) in [(l.full.as_str(), true), (plain.as_str(), false)] {
+            let known = flexion::Known {
+                full,
+                ..flexion::Known::default()
+            };
             for (cell, fs) in l.cells.iter().enumerate() {
                 let Some(want) = fs.first() else {
                     continue;
                 };
-                let c = grammar.candidates(typed, cell, &flexion::Known::default());
+                let c = grammar.candidates(typed, cell, &known);
                 forms.push(
                     c.iter()
                         .map(|c| {
