@@ -45,18 +45,18 @@ version of these crates before PR #10 (a model, not a grammar), from the bare le
 | english | verb | **97.87%** ± 0.4 | 97.87% | 99.73% |  | 97.87% (20745) |  | 98.24% | 97.91% | 100.00% | 0.006 |
 | english | adjective | **96.53%** ± 0.5 | 96.53% | 100.00% |  | 96.53% (18715) |  | 95.02% | 96.69% | 100.00% | 0.050 |
 | english | adverb | **99.17%** ± 0.5 | 99.17% | 100.00% |  | 99.17% (3621) |  | 98.90% |  | 100.00% | 0.070 |
-| russian | noun | **95.03%** ± 0.8 | 95.03% | 96.16% | 97.57% | 95.03% (30193) | 87.50% (8) | 94.72% | 84.48% | 99.96% | 0.004 |
+| russian | noun | **95.03%** ± 0.8 | 95.03% | 96.19% | 97.57% | 95.03% (30193) | 87.50% (8) | 94.72% | 84.48% | 99.96% | 0.004 |
 | russian | adjective | **99.76%** ± 0.2 | 99.76% |  |  | 99.76% (171213) | 0.00% (12) | 99.78% | 96.60% | 100.00% | 0.002 |
 | russian | verb | **96.04%** ± 1.1 | 96.04% | 98.93% | 95.74% | 96.06% (21827) | 83.87% (31) | 96.17% | 92.37% | 100.00% | 0.009 |
-| latin | noun | **65.29%** ± 2.4 | 93.67% | 98.20% | 66.10% | 65.31% (18401) | 0.00% (6) | 59.70% | 68.91% | 100.00% | 0.048 |
+| latin | noun | **65.29%** ± 2.4 | 93.67% | 98.27% | 66.10% | 65.31% (18401) | 0.00% (6) | 59.70% | 68.91% | 100.00% | 0.048 |
 | latin | adjective | **81.70%** ± 1.4 | 99.24% | 99.47% |  | 81.71% (102281) | 0.00% (1) | 71.95% | 87.22% | 100.00% | 0.052 |
-| latin | verb | **70.53%** ± 3.6 | 85.26% | 95.78% |  | 70.50% (60859) | 85.71% (112) | 65.34% | 75.18% | 100.00% | 0.031 |
-| ancient-greek | noun | **61.94%** ± 3.3 | 78.80% | 88.96% | 62.59% | 61.89% (11658) | 100.00% (15) | 45.17% | 57.82% | 100.00% | 0.120 |
+| latin | verb | **70.53%** ± 3.6 | 85.26% | 97.59% |  | 70.50% (60859) | 85.71% (112) | 65.34% | 75.18% | 100.00% | 0.031 |
+| ancient-greek | noun | **61.94%** ± 3.3 | 78.80% | 89.50% | 62.59% | 61.89% (11658) | 100.00% (15) | 45.17% | 57.82% | 100.00% | 0.120 |
 | ancient-greek | adjective | **59.07%** ± 4.4 | 72.08% | 87.48% |  | 59.07% (22472) | 50.00% (12) | 39.77% | 63.66% | 100.00% | 0.100 |
-| ancient-greek | verb | **46.06%** ± 6.0 | 53.64% | 52.15% |  | 46.28% (64145) | 3.53% (340) | 42.64% | 54.26% | 100.00% | 0.065 |
+| ancient-greek | verb | **46.06%** ± 6.0 | 53.64% | 57.88% |  | 46.28% (64145) | 3.53% (340) | 42.64% | 54.26% | 100.00% | 0.065 |
 | sanskrit | noun | **91.90%** ± 2.2 | 91.90% |  | 97.16% | 91.90% (13801) |  | 91.70% | 93.55% | 100.00% | 0.013 |
 | sanskrit | adjective | **91.64%** ± 3.9 | 91.64% |  |  | 91.69% (13449) | 0.00% (7) | 89.95% | 91.21% | 100.00% | 0.030 |
-| sanskrit | verb | **87.74%** ± 6.9 | 87.74% | 85.44% |  | 88.01% (7173) | 57.81% (64) | 90.01% | 90.13% | 100.00% | 0.085 |
+| sanskrit | verb | **87.74%** ± 6.9 | 87.74% | 88.06% |  | 88.01% (7173) | 57.81% (64) | 90.01% | 90.13% | 100.00% | 0.085 |
 
 Where the grammar is below the baseline or the floor, and why:
 
@@ -65,7 +65,7 @@ Where the grammar is below the baseline or the floor, and why:
   around each vowel (`-ātiō`, `dē-`, a diphthong), but a stem's own lengths are lexical:
   `iūdex`, `bōlus` and `grūs` come back as `iudex`, `bolus`, `grus`. Typed in full the
   same grammars reach 93.7% (Latin nouns), 99.2% (adjectives), 85.3% (verbs), and with
-  the principal parts 96–99%. Latin adjectives also include participles, which the
+  the principal parts 97–99%. Latin adjectives also include participles, which the
   previous version spelled from their verbs' tables.
 - **Ancient Greek verbs.** The augment goes after a preverb (`περιέφερον`, `ἐπετίθην`)
   and the perfect reduplicates (`βέβλεφα`); neither is learned yet, so such forms are

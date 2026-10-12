@@ -7,8 +7,10 @@
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, then a row of patterns per line (`referred`: the form
-/// is another cell's, as the word's feature says):
+/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
+/// they share them), the declension it is like (if any), then a row of patterns
+/// per line (`derived`: the form comes from another cell's, see
+/// `relations.rs`; `_`: the form is the declension's it is like):
 /// `nominative_masculine` (sg, pl)
 /// `nominative_feminine` (sg, pl)
 /// `nominative_neuter` (sg, pl)
@@ -30,7 +32,7 @@ use flexion::Paradigm;
 /// `comparative`
 /// `superlative`
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident)?;
      nominative_masculine: $c0:tt, $c1:tt;
      nominative_feminine: $c2:tt, $c3:tt;
      nominative_neuter: $c4:tt, $c5:tt;
@@ -56,47 +58,59 @@ macro_rules! declension {
             name: ::std::borrow::Cow::Borrowed($name),
             words: $words,
             lemma: ::std::borrow::Cow::Borrowed($lemma),
-            forms: ::std::borrow::Cow::Borrowed(&[
-                flexion::form!($c0),
-                flexion::form!($c1),
-                flexion::form!($c2),
-                flexion::form!($c3),
-                flexion::form!($c4),
-                flexion::form!($c5),
-                flexion::form!($c6),
-                flexion::form!($c7),
-                flexion::form!($c8),
-                flexion::form!($c9),
-                flexion::form!($c10),
-                flexion::form!($c11),
-                flexion::form!($c12),
-                flexion::form!($c13),
-                flexion::form!($c14),
-                flexion::form!($c15),
-                flexion::form!($c16),
-                flexion::form!($c17),
-                flexion::form!($c18),
-                flexion::form!($c19),
-                flexion::form!($c20),
-                flexion::form!($c21),
-                flexion::form!($c22),
-                flexion::form!($c23),
-                flexion::form!($c24),
-                flexion::form!($c25),
-                flexion::form!($c26),
-                flexion::form!($c27),
-                flexion::form!($c28),
-                flexion::form!($c29),
-                flexion::form!($c30),
-                flexion::form!($c31),
-                flexion::form!($c32),
-                flexion::form!($c33),
-                flexion::form!($c34),
-                flexion::form!($c35),
-                flexion::form!($c36),
-                flexion::form!($c37),
-            ]),
+            parent: like!($($parent)?),
+            inherent: ::std::borrow::Cow::Borrowed(&[]),
+            table: ::std::borrow::Cow::Borrowed(concat!(
+                flexion::cell!($c0), "\t",
+                flexion::cell!($c1), "\t",
+                flexion::cell!($c2), "\t",
+                flexion::cell!($c3), "\t",
+                flexion::cell!($c4), "\t",
+                flexion::cell!($c5), "\t",
+                flexion::cell!($c6), "\t",
+                flexion::cell!($c7), "\t",
+                flexion::cell!($c8), "\t",
+                flexion::cell!($c9), "\t",
+                flexion::cell!($c10), "\t",
+                flexion::cell!($c11), "\t",
+                flexion::cell!($c12), "\t",
+                flexion::cell!($c13), "\t",
+                flexion::cell!($c14), "\t",
+                flexion::cell!($c15), "\t",
+                flexion::cell!($c16), "\t",
+                flexion::cell!($c17), "\t",
+                flexion::cell!($c18), "\t",
+                flexion::cell!($c19), "\t",
+                flexion::cell!($c20), "\t",
+                flexion::cell!($c21), "\t",
+                flexion::cell!($c22), "\t",
+                flexion::cell!($c23), "\t",
+                flexion::cell!($c24), "\t",
+                flexion::cell!($c25), "\t",
+                flexion::cell!($c26), "\t",
+                flexion::cell!($c27), "\t",
+                flexion::cell!($c28), "\t",
+                flexion::cell!($c29), "\t",
+                flexion::cell!($c30), "\t",
+                flexion::cell!($c31), "\t",
+                flexion::cell!($c32), "\t",
+                flexion::cell!($c33), "\t",
+                flexion::cell!($c34), "\t",
+                flexion::cell!($c35), "\t",
+                flexion::cell!($c36), "\t",
+                flexion::cell!($c37), "\t",
+            )),
         }
+    };
+}
+
+/// The declension a declension is like, by its name.
+macro_rules! like {
+    () => {
+        None
+    };
+    ($parent:ident) => {
+        Some(Declension::$parent as u16)
     };
 }
 
@@ -123,10 +137,10 @@ pub enum Declension {
     Fugāx,
     /// Like `pūbēs`: 72 words.
     Pūbēs,
+    /// Like `iners`: 56 words.
+    Iners,
     /// Like `ēlegāns`: 53 words.
     Ēlegāns,
-    /// Like `iners`: 51 words.
-    Iners,
     /// Like `hȳoīdēs`: 37 words.
     Hȳoīdēs,
     /// Like `āter`: 35 words.
@@ -173,8 +187,6 @@ pub enum Declension {
     Ūnus,
     /// Like `ācer`: 5 words.
     Ācer,
-    /// Like `inops`: 5 words.
-    Inops,
     /// Like `ītalis`: 5 words.
     Ītalis,
     /// Like `beneficus`: 5 words.
@@ -197,7 +209,7 @@ pub enum Declension {
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 45] = [
+    pub const ALL: [Declension; 44] = [
         Declension::Iacitūrus,
         Declension::Dēmittēns,
         Declension::Iactāns,
@@ -208,8 +220,8 @@ impl Declension {
         Declension::Recēns,
         Declension::Fugāx,
         Declension::Pūbēs,
-        Declension::Ēlegāns,
         Declension::Iners,
+        Declension::Ēlegāns,
         Declension::Hȳoīdēs,
         Declension::Āter,
         Declension::Simplex,
@@ -233,7 +245,6 @@ impl Declension {
         Declension::Ūber,
         Declension::Ūnus,
         Declension::Ācer,
-        Declension::Inops,
         Declension::Ītalis,
         Declension::Beneficus,
         Declension::Noerus,
@@ -260,7 +271,7 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 45] = [
+pub(super) static DECLENSIONS: [Paradigm<'static>; 44] = [
     // Iacitūrus: 17,999 words (cōnsēnsus, abditus, servus, apparātus, foetus, acerbātus).
     declension!("iacitūrus", 17999, "~us";
         nominative_masculine: "~us", "~ī";
@@ -353,26 +364,26 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 45] = [
         comparative: "~ior";
         superlative: "~issimus";
     ),
-    // Obnoxius: 963 words (sagittārius, amphibius, librārius, ānxius, zōnārius, māchinārius).
-    declension!("obnoxius", 963, "~us";
-        nominative_masculine: "~us", "~ī";
-        nominative_feminine: "~a", "~ae";
-        nominative_neuter: "~um", "~a";
-        genitive_masculine: "~ī", "~ōrum";
-        genitive_feminine: "~ae", "~ārum";
-        genitive_neuter: "~ī", "~ōrum";
-        dative_masculine: "~ō", "~īs";
-        dative_feminine: "~ae", "~īs";
-        dative_neuter: "~ō", "~īs";
-        accusative_masculine: "~um", "~ōs";
-        accusative_feminine: "~am", "~ās";
-        accusative_neuter: "~um", "~a";
-        ablative_masculine: "~ō", "~īs";
-        ablative_feminine: "~ā", "~īs";
-        ablative_neuter: "~ō", "~īs";
-        vocative_masculine: "~e", "~ī";
-        vocative_feminine: "~a", "~ae";
-        vocative_neuter: "~um", "~a";
+    // Obnoxius: 963 words (sagittārius, amphibius, librārius, ānxius, zōnārius, māchinārius). Like Iacitūrus, except in 2 cells: comparative, superlative.
+    declension!("obnoxius", 963, "~us", like Iacitūrus;
+        nominative_masculine: _, _;
+        nominative_feminine: _, _;
+        nominative_neuter: _, _;
+        genitive_masculine: _, _;
+        genitive_feminine: _, _;
+        genitive_neuter: _, _;
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        accusative_masculine: _, _;
+        accusative_feminine: _, _;
+        accusative_neuter: _, _;
+        ablative_masculine: _, _;
+        ablative_feminine: _, _;
+        ablative_neuter: _, _;
+        vocative_masculine: _, _;
+        vocative_feminine: _, _;
+        vocative_neuter: _, _;
         comparative: "~or";
         superlative: "~oximus";
     ),
@@ -396,54 +407,54 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 45] = [
         vocative_masculine: "~or", "~ōrēs";
         vocative_feminine: "~or", "~ōrēs";
         vocative_neuter: "~us", "~ōra";
-        comparative: "~ior";
+        comparative: derived;
         superlative: "~ssimus";
     ),
-    // Miser: 216 words (līber, līniger, venēnifer, urniger, turriger, tridentiger).
-    declension!("miser", 216, "~";
-        nominative_masculine: "~", "~ī";
-        nominative_feminine: "~a", "~ae";
-        nominative_neuter: "~um", "~a";
-        genitive_masculine: "~ī", "~ōrum";
-        genitive_feminine: "~ae", "~ārum";
-        genitive_neuter: "~ī", "~ōrum";
-        dative_masculine: "~ō", "~īs";
-        dative_feminine: "~ae", "~īs";
-        dative_neuter: "~ō", "~īs";
-        accusative_masculine: "~um", "~ōs";
-        accusative_feminine: "~am", "~ās";
-        accusative_neuter: "~um", "~a";
-        ablative_masculine: "~ō", "~īs";
-        ablative_feminine: "~ā", "~īs";
-        ablative_neuter: "~ō", "~īs";
-        vocative_masculine: "~", "~ī";
-        vocative_feminine: "~a", "~ae";
-        vocative_neuter: "~um", "~a";
-        comparative: "~ior";
+    // Miser: 216 words (līber, līniger, venēnifer, urniger, turriger, tridentiger). Like Iacitūrus, except in 3 cells: nominative_masculine sg, vocative_masculine sg, superlative.
+    declension!("miser", 216, "~", like Iacitūrus;
+        nominative_masculine: "~", _;
+        nominative_feminine: _, _;
+        nominative_neuter: _, _;
+        genitive_masculine: _, _;
+        genitive_feminine: _, _;
+        genitive_neuter: _, _;
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        accusative_masculine: _, _;
+        accusative_feminine: _, _;
+        accusative_neuter: _, _;
+        ablative_masculine: _, _;
+        ablative_feminine: _, _;
+        ablative_neuter: _, _;
+        vocative_masculine: "~", _;
+        vocative_feminine: _, _;
+        vocative_neuter: _, _;
+        comparative: _;
         superlative: "~rimus";
     ),
-    // Recēns: 131 words (recēns, clēmēns, battēns, adulēscēns, libēns, lubēns).
-    declension!("recēns", 131, "~ē~s";
-        nominative_masculine: "~ē~s", "~e~tēs";
-        nominative_feminine: "~ē~s", "~e~tēs";
-        nominative_neuter: "~ē~s", "~e~tia";
-        genitive_masculine: "~e~tis", "~e~tium";
-        genitive_feminine: "~e~tis", "~e~tium";
-        genitive_neuter: "~e~tis", "~e~tium";
-        dative_masculine: "~e~tī", "~e~tibus";
-        dative_feminine: "~e~tī", "~e~tibus";
-        dative_neuter: "~e~tī", "~e~tibus";
-        accusative_masculine: "~e~tem", "~e~tīs|~e~tēs";
-        accusative_feminine: "~e~tem", "~e~tīs|~e~tēs";
-        accusative_neuter: "~ē~s", "~e~tia";
-        ablative_masculine: "~e~tī|~e~te", "~e~tibus";
-        ablative_feminine: "~e~tī|~e~te", "~e~tibus";
-        ablative_neuter: "~e~tī|~e~te", "~e~tibus";
-        vocative_masculine: "~ē~s", "~e~tēs";
-        vocative_feminine: "~ē~s", "~e~tēs";
-        vocative_neuter: "~ē~s", "~e~tia";
-        comparative: "~e~tior";
-        superlative: "~e~tissimus";
+    // Recēns: 131 words (recēns, clēmēns, battēns, adulēscēns, libēns, lubēns). Like Dēmittēns, except in 5 cells: accusative_masculine pl, accusative_feminine pl, ablative_masculine sg, ablative_feminine sg, ablative_neuter sg.
+    declension!("recēns", 131, "~ē~s", like Dēmittēns;
+        nominative_masculine: _, _;
+        nominative_feminine: _, _;
+        nominative_neuter: _, _;
+        genitive_masculine: _, _;
+        genitive_feminine: _, _;
+        genitive_neuter: _, _;
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        accusative_masculine: _, "~e~tīs|~e~tēs";
+        accusative_feminine: _, "~e~tīs|~e~tēs";
+        accusative_neuter: _, _;
+        ablative_masculine: "~e~tī|~e~te", _;
+        ablative_feminine: "~e~tī|~e~te", _;
+        ablative_neuter: "~e~tī|~e~te", _;
+        vocative_masculine: _, _;
+        vocative_feminine: _, _;
+        vocative_neuter: _, _;
+        comparative: _;
+        superlative: _;
     ),
     // Fugāx: 95 words (phoenīx, senex, īnfēlīx, redux, fēlīx, atrōx).
     declension!("fugāx", 95, "~x";
@@ -488,34 +499,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 45] = [
         vocative_masculine: "~ēs", "~edēs";
         vocative_feminine: "~ēs", "~edēs";
         vocative_neuter: "~ēs", "~edia";
-        comparative: "~ior";
-        superlative: "~issimus";
+        comparative: derived;
+        superlative: derived;
     ),
-    // Ēlegāns: 53 words (īnfāns, ignicomāns, ēlegāns, auricomāns, radiodūrāns, incōnstāns).
-    declension!("ēlegāns", 53, "~ā~s";
-        nominative_masculine: "~ā~s", "~a~tēs";
-        nominative_feminine: "~ā~s", "~a~tēs";
-        nominative_neuter: "~ā~s", "~a~tia";
-        genitive_masculine: "~a~tis", "~a~tium";
-        genitive_feminine: "~a~tis", "~a~tium";
-        genitive_neuter: "~a~tis", "~a~tium";
-        dative_masculine: "~a~tī", "~a~tibus";
-        dative_feminine: "~a~tī", "~a~tibus";
-        dative_neuter: "~a~tī", "~a~tibus";
-        accusative_masculine: "~a~tem", "~a~tīs|~a~tēs";
-        accusative_feminine: "~a~tem", "~a~tīs|~a~tēs";
-        accusative_neuter: "~ā~s", "~a~tia";
-        ablative_masculine: "~a~tī|~a~te", "~a~tibus";
-        ablative_feminine: "~a~tī|~a~te", "~a~tibus";
-        ablative_neuter: "~a~tī|~a~te", "~a~tibus";
-        vocative_masculine: "~ā~s", "~a~tēs";
-        vocative_feminine: "~ā~s", "~a~tēs";
-        vocative_neuter: "~ā~s", "~a~tia";
-        comparative: "~a~tior";
-        superlative: "~a~tissimus";
-    ),
-    // Iners: 51 words (dīs, vetus, exos, plūs, mās, ēns).
-    declension!("iners", 51, "~s";
+    // Iners: 56 words (dīs, vetus, exos, inops, plūs, mās).
+    declension!("iners", 56, "~s";
         nominative_masculine: "~s", "~tēs";
         nominative_feminine: "~s", "~tēs";
         nominative_neuter: "~s", "~tia";
@@ -537,28 +525,51 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 45] = [
         comparative: "~tior";
         superlative: "~tissimus";
     ),
-    // Hȳoīdēs: 37 words (isoscelēs, deltoīdēs, cladosporioīdēs, gesnerioīdēs, pyogenēs, formigenēs).
-    declension!("hȳoīdēs", 37, "~ēs";
-        nominative_masculine: "~ēs", "~ēs";
-        nominative_feminine: "~ēs", "~ēs";
+    // Ēlegāns: 53 words (īnfāns, ignicomāns, ēlegāns, auricomāns, radiodūrāns, incōnstāns). Like Iactāns, except in 5 cells: accusative_masculine pl, accusative_feminine pl, ablative_masculine sg, ablative_feminine sg, ablative_neuter sg.
+    declension!("ēlegāns", 53, "~ā~s", like Iactāns;
+        nominative_masculine: _, _;
+        nominative_feminine: _, _;
+        nominative_neuter: _, _;
+        genitive_masculine: _, _;
+        genitive_feminine: _, _;
+        genitive_neuter: _, _;
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        accusative_masculine: _, "~a~tīs|~a~tēs";
+        accusative_feminine: _, "~a~tīs|~a~tēs";
+        accusative_neuter: _, _;
+        ablative_masculine: "~a~tī|~a~te", _;
+        ablative_feminine: "~a~tī|~a~te", _;
+        ablative_neuter: "~a~tī|~a~te", _;
+        vocative_masculine: _, _;
+        vocative_feminine: _, _;
+        vocative_neuter: _, _;
+        comparative: _;
+        superlative: _;
+    ),
+    // Hȳoīdēs: 37 words (isoscelēs, deltoīdēs, cladosporioīdēs, gesnerioīdēs, pyogenēs, formigenēs). Like Pinguis, except in 18 cells: nominative_masculine sg, nominative_feminine sg, nominative_neuter sg, nominative_neuter pl, genitive_masculine pl, genitive_feminine pl, ….
+    declension!("hȳoīdēs", 37, "~ēs", like Pinguis;
+        nominative_masculine: "~ēs", _;
+        nominative_feminine: "~ēs", _;
         nominative_neuter: "~es", "~a|~ia";
-        genitive_masculine: "~is", "~um|~ium";
-        genitive_feminine: "~is", "~um|~ium";
-        genitive_neuter: "~is", "~um|~ium";
-        dative_masculine: "~ī", "~ibus";
-        dative_feminine: "~ī", "~ibus";
-        dative_neuter: "~ī", "~ibus";
-        accusative_masculine: "~em", "~īs|~ēs";
-        accusative_feminine: "~em", "~īs|~ēs";
+        genitive_masculine: _, "~um|~ium";
+        genitive_feminine: _, "~um|~ium";
+        genitive_neuter: _, "~um|~ium";
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        accusative_masculine: _, _;
+        accusative_feminine: _, _;
         accusative_neuter: "~es", "~a|~ia";
-        ablative_masculine: "~e|~ī", "~ibus";
-        ablative_feminine: "~e|~ī", "~ibus";
-        ablative_neuter: "~e|~ī", "~ibus";
-        vocative_masculine: "~ēs", "~ēs";
-        vocative_feminine: "~ēs", "~ēs";
+        ablative_masculine: "~e|~ī", _;
+        ablative_feminine: "~e|~ī", _;
+        ablative_neuter: "~e|~ī", _;
+        vocative_masculine: "~ēs", _;
+        vocative_feminine: "~ēs", _;
         vocative_neuter: "~es", "~a|~ia";
-        comparative: "~ior";
-        superlative: "~rimus";
+        comparative: derived;
+        superlative: derived;
     ),
     // Āter: 35 words (neuter, integer, subniger, sinister, macer, umber).
     declension!("āter", 35, "~e~";
@@ -626,8 +637,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 45] = [
         vocative_masculine: "~iē~s", "~eu~tēs";
         vocative_feminine: "~iē~s", "~eu~tēs";
         vocative_neuter: "~iē~s", "~eu~tia";
-        comparative: "~e~tior";
-        superlative: "~e~tissimus";
+        comparative: derived;
+        superlative: derived;
     ),
     // Anceps: 25 words (centiceps, biceps, triceps, quadriceps, praeceps, anceps).
     declension!("anceps", 25, "~e~s";
@@ -649,8 +660,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 45] = [
         vocative_masculine: "~e~s", "~i~itēs";
         vocative_feminine: "~e~s", "~i~itēs";
         vocative_neuter: "~e~s", "~i~itia";
-        comparative: "~e~tior";
-        superlative: "~e~tissimus";
+        comparative: derived;
+        superlative: derived;
     ),
     // Discolor: 24 words (multicolor, tricolor, ūnicolor, bicolor, discolor, pudōricolor).
     declension!("discolor", 24, "~o~";
@@ -672,54 +683,54 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 45] = [
         vocative_masculine: "~o~", "~ō~ēs";
         vocative_feminine: "~o~", "~ō~ēs";
         vocative_neuter: "~o~", "~ō~ia";
-        comparative: "~e~tior";
-        superlative: "~e~tissimus";
+        comparative: derived;
+        superlative: derived;
     ),
-    // Amnigena: 18 words (undicola, dracōnigena, indigena, numida, rūricola, terrigena).
-    declension!("amnigena", 18, "~a";
+    // Amnigena: 18 words (undicola, dracōnigena, indigena, numida, rūricola, terrigena). Like Iacitūrus, except in 19 cells: nominative_masculine sg, nominative_masculine pl, nominative_neuter sg, genitive_masculine sg, genitive_masculine pl, genitive_neuter sg, ….
+    declension!("amnigena", 18, "~a", like Iacitūrus;
         nominative_masculine: "~a", "~ae";
-        nominative_feminine: "~a", "~ae";
-        nominative_neuter: "~a", "~a";
+        nominative_feminine: _, _;
+        nominative_neuter: "~a", _;
         genitive_masculine: "~ae", "~ārum";
-        genitive_feminine: "~ae", "~ārum";
+        genitive_feminine: _, _;
         genitive_neuter: "~ae", "~ārum";
-        dative_masculine: "~ae", "~īs";
-        dative_feminine: "~ae", "~īs";
-        dative_neuter: "~ae", "~īs";
+        dative_masculine: "~ae", _;
+        dative_feminine: _, _;
+        dative_neuter: "~ae", _;
         accusative_masculine: "~am", "~ās";
-        accusative_feminine: "~am", "~ās";
-        accusative_neuter: "~a", "~a";
-        ablative_masculine: "~ā", "~īs";
-        ablative_feminine: "~ā", "~īs";
-        ablative_neuter: "~ā", "~īs";
+        accusative_feminine: _, _;
+        accusative_neuter: "~a", _;
+        ablative_masculine: "~ā", _;
+        ablative_feminine: _, _;
+        ablative_neuter: "~ā", _;
         vocative_masculine: "~a", "~ae";
-        vocative_feminine: "~a", "~ae";
-        vocative_neuter: "~a", "~a";
-        comparative: "~ior";
-        superlative: "~issimus";
+        vocative_feminine: _, _;
+        vocative_neuter: "~a", _;
+        comparative: derived;
+        superlative: derived;
     ),
-    // Memor: 15 words (vigil, celer, memor, peritum, inpar, inmemor).
-    declension!("memor", 15, "~";
-        nominative_masculine: "~", "~ēs";
-        nominative_feminine: "~", "~ēs";
-        nominative_neuter: "~", "~ia";
-        genitive_masculine: "~is", "~ium";
-        genitive_feminine: "~is", "~ium";
-        genitive_neuter: "~is", "~ium";
-        dative_masculine: "~ī", "~ibus";
-        dative_feminine: "~ī", "~ibus";
-        dative_neuter: "~ī", "~ibus";
-        accusative_masculine: "~em", "~īs|~ēs";
-        accusative_feminine: "~em", "~īs|~ēs";
-        accusative_neuter: "~", "~ia";
-        ablative_masculine: "~ī|~e", "~ibus";
-        ablative_feminine: "~ī|~e", "~ibus";
-        ablative_neuter: "~ī|~e", "~ibus";
-        vocative_masculine: "~", "~ēs";
-        vocative_feminine: "~", "~ēs";
-        vocative_neuter: "~", "~ia";
-        comparative: "~ior";
-        superlative: "~issimus";
+    // Memor: 15 words (vigil, celer, memor, peritum, inpar, inmemor). Like Pinguis, except in 10 cells: nominative_masculine sg, nominative_feminine sg, nominative_neuter sg, accusative_neuter sg, ablative_masculine sg, ablative_feminine sg, ….
+    declension!("memor", 15, "~", like Pinguis;
+        nominative_masculine: "~", _;
+        nominative_feminine: "~", _;
+        nominative_neuter: "~", _;
+        genitive_masculine: _, _;
+        genitive_feminine: _, _;
+        genitive_neuter: _, _;
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        accusative_masculine: _, _;
+        accusative_feminine: _, _;
+        accusative_neuter: "~", _;
+        ablative_masculine: "~ī|~e", _;
+        ablative_feminine: "~ī|~e", _;
+        ablative_neuter: "~ī|~e", _;
+        vocative_masculine: "~", _;
+        vocative_feminine: "~", _;
+        vocative_neuter: "~", _;
+        comparative: _;
+        superlative: _;
     ),
     // Celeber: 15 words (campester, volucer, puter, palūster, alacer, equester).
     declension!("celeber", 15, "~e~";
@@ -744,28 +755,28 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 45] = [
         comparative: "~~ior";
         superlative: "~e~rimus";
     ),
-    // Adespotos: 15 words (diadūmenos, anōmalos, adiaphoros, hypocaustos, hērōos, bȳzantīnos).
-    declension!("adespotos", 15, "~os";
+    // Adespotos: 15 words (diadūmenos, anōmalos, adiaphoros, hypocaustos, hērōos, bȳzantīnos). Like Iacitūrus, except in 10 cells: nominative_masculine sg, nominative_masculine pl, nominative_neuter sg, accusative_masculine sg, accusative_feminine sg, accusative_neuter sg, ….
+    declension!("adespotos", 15, "~os", like Iacitūrus;
         nominative_masculine: "~os", "~ī|~oe";
-        nominative_feminine: "~a", "~ae";
-        nominative_neuter: "~on", "~a";
-        genitive_masculine: "~ī", "~ōrum";
-        genitive_feminine: "~ae", "~ārum";
-        genitive_neuter: "~ī", "~ōrum";
-        dative_masculine: "~ō", "~īs";
-        dative_feminine: "~ae", "~īs";
-        dative_neuter: "~ō", "~īs";
-        accusative_masculine: "~on", "~ōs";
-        accusative_feminine: "~ān", "~ās";
-        accusative_neuter: "~on", "~a";
-        ablative_masculine: "~ō", "~īs";
-        ablative_feminine: "~ā", "~īs";
-        ablative_neuter: "~ō", "~īs";
-        vocative_masculine: "~e", "~ī|~oe";
-        vocative_feminine: "~a", "~ae";
-        vocative_neuter: "~on", "~a";
-        comparative: "~or";
-        superlative: "~issimus";
+        nominative_feminine: _, _;
+        nominative_neuter: "~on", _;
+        genitive_masculine: _, _;
+        genitive_feminine: _, _;
+        genitive_neuter: _, _;
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        accusative_masculine: "~on", _;
+        accusative_feminine: "~ān", _;
+        accusative_neuter: "~on", _;
+        ablative_masculine: _, _;
+        ablative_feminine: _, _;
+        ablative_neuter: _, _;
+        vocative_masculine: _, "~ī|~oe";
+        vocative_feminine: _, _;
+        vocative_neuter: "~on", _;
+        comparative: derived;
+        superlative: derived;
     ),
     // Sōns: 14 words (sōns, īnsōns, latifrōns, nigrifrōns, angustifrōns, flāvifrōns).
     declension!("sōns", 14, "~ō~s";
@@ -787,54 +798,54 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 45] = [
         vocative_masculine: "~ō~s", "~o~tēs";
         vocative_feminine: "~ō~s", "~o~tēs";
         vocative_neuter: "~ō~s", "~o~tia";
-        comparative: "~e~tior";
-        superlative: "~e~tissimus";
+        comparative: derived;
+        superlative: derived;
     ),
     // Altrīx: 14 words (bellātrīx, peccātrīx, cōnservātrīx, victrīx, accelerātrīx, altrīx).
     declension!("altrīx", 14, "~x";
-        nominative_masculine: "~x", "~cēs";
+        nominative_masculine: "~x", derived;
         nominative_feminine: "~x", "~cēs";
-        nominative_neuter: "~x", "~cia";
-        genitive_masculine: "~cis", "~cium";
+        nominative_neuter: derived, "~cia";
+        genitive_masculine: derived, derived;
         genitive_feminine: "~cis", "~cium";
-        genitive_neuter: "~cis", "~cium";
-        dative_masculine: "~cī", "~cibus";
+        genitive_neuter: derived, "~cium";
+        dative_masculine: derived, derived;
         dative_feminine: "~cī", "~cibus";
-        dative_neuter: "~cī", "~cibus";
-        accusative_masculine: "~cem", "~cīs";
+        dative_neuter: derived, "~cibus";
+        accusative_masculine: derived, derived;
         accusative_feminine: "~cem", "~cēs";
-        accusative_neuter: "~x", "~cia";
-        ablative_masculine: "~cī", "~cibus";
+        accusative_neuter: derived, "~cia";
+        ablative_masculine: derived, derived;
         ablative_feminine: "~ce|~cī", "~cibus";
-        ablative_neuter: "~cī", "~cibus";
-        vocative_masculine: "~x", "~cēs";
+        ablative_neuter: derived, "~cibus";
+        vocative_masculine: derived, derived;
         vocative_feminine: "~x", "~cēs";
-        vocative_neuter: "~x", "~cia";
-        comparative: "~cior";
-        superlative: "~cissimus";
+        vocative_neuter: derived, "~cia";
+        comparative: derived;
+        superlative: derived;
     ),
-    // Dīcticos: 13 words (azygos, dichotomos, holocaustos, eccentros, synōnymos, chrȳsocarpos).
-    declension!("dīcticos", 13, "~os";
-        nominative_masculine: "~os", "~ī|~oe";
+    // Dīcticos: 13 words (azygos, dichotomos, holocaustos, eccentros, synōnymos, chrȳsocarpos). Like Adespotos, except in 10 cells: nominative_feminine sg, nominative_feminine pl, genitive_feminine sg, genitive_feminine pl, dative_feminine sg, accusative_feminine sg, ….
+    declension!("dīcticos", 13, "~os", like Adespotos;
+        nominative_masculine: _, _;
         nominative_feminine: "~os", "~ī|~oe";
-        nominative_neuter: "~on", "~a";
-        genitive_masculine: "~ī", "~ōrum";
+        nominative_neuter: _, _;
+        genitive_masculine: _, _;
         genitive_feminine: "~ī", "~ōrum";
-        genitive_neuter: "~ī", "~ōrum";
-        dative_masculine: "~ō", "~īs";
-        dative_feminine: "~ō", "~īs";
-        dative_neuter: "~ō", "~īs";
-        accusative_masculine: "~on", "~ōs";
+        genitive_neuter: _, _;
+        dative_masculine: _, _;
+        dative_feminine: "~ō", _;
+        dative_neuter: _, _;
+        accusative_masculine: _, _;
         accusative_feminine: "~on", "~ōs";
-        accusative_neuter: "~on", "~a";
-        ablative_masculine: "~ō", "~īs";
-        ablative_feminine: "~ō", "~īs";
-        ablative_neuter: "~ō", "~īs";
-        vocative_masculine: "~e", "~ī|~oe";
+        accusative_neuter: _, _;
+        ablative_masculine: _, _;
+        ablative_feminine: "~ō", _;
+        ablative_neuter: _, _;
+        vocative_masculine: _, _;
         vocative_feminine: "~e", "~ī|~oe";
-        vocative_neuter: "~on", "~a";
-        comparative: "~or";
-        superlative: "~issimus";
+        vocative_neuter: _, _;
+        comparative: _;
+        superlative: _;
     ),
     // Dulcissimus: 13 words (dītissimus, plēnissimus, amārissimus, amantissimus, dulcissimus, parissimus).
     declension!("dulcissimus", 13, "~ssimus";
@@ -857,7 +868,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 45] = [
         vocative_feminine: "~ssima", "~ssimae";
         vocative_neuter: "~ssimum", "~ssima";
         comparative: "~or";
-        superlative: "~oximus";
+        superlative: derived;
     ),
     // Socors: 12 words (concors, misericors, excors, vēcors, immisericors, inmisericors).
     declension!("socors", 12, "~s";
@@ -902,8 +913,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 45] = [
         vocative_masculine: "~es", "~itēs";
         vocative_feminine: "~es", "~itēs";
         vocative_neuter: "~es", "~ita";
-        comparative: "~ior";
-        superlative: "~issimus";
+        comparative: derived;
+        superlative: derived;
     ),
     // Plērusque: 9 words (quantuslibet, quantusvīs, plērusque, quantuscumque, tantusdem, quotuscumque).
     declension!("plērusque", 9, "~us~";
@@ -925,8 +936,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 45] = [
         vocative_masculine: "~e~", "~ī~";
         vocative_feminine: "~a~", "~ae~";
         vocative_neuter: "~um~", "~a~";
-        comparative: "~~ior";
-        superlative: "~e~rimus";
+        comparative: derived;
+        superlative: derived;
     ),
     // Pār: 7 words (pār, impār, dispār, compār, conpār, sēpār).
     declension!("pār", 7, "~ā~";
@@ -951,27 +962,27 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 45] = [
         comparative: "~a~ior";
         superlative: "~a~issimus";
     ),
-    // Facilis: 7 words (difficilis, facilis, gracilis, similis, humilis, dissimilis).
-    declension!("facilis", 7, "~is";
-        nominative_masculine: "~is", "~ēs";
-        nominative_feminine: "~is", "~ēs";
-        nominative_neuter: "~e", "~ia";
-        genitive_masculine: "~is", "~ium";
-        genitive_feminine: "~is", "~ium";
-        genitive_neuter: "~is", "~ium";
-        dative_masculine: "~ī", "~ibus";
-        dative_feminine: "~ī", "~ibus";
-        dative_neuter: "~ī", "~ibus";
-        accusative_masculine: "~em", "~īs|~ēs";
-        accusative_feminine: "~em", "~īs|~ēs";
-        accusative_neuter: "~e", "~ia";
-        ablative_masculine: "~ī", "~ibus";
-        ablative_feminine: "~ī", "~ibus";
-        ablative_neuter: "~ī", "~ibus";
-        vocative_masculine: "~is", "~ēs";
-        vocative_feminine: "~is", "~ēs";
-        vocative_neuter: "~e", "~ia";
-        comparative: "~ior";
+    // Facilis: 7 words (difficilis, facilis, gracilis, similis, humilis, dissimilis). Like Pinguis, except in 1 cell: superlative.
+    declension!("facilis", 7, "~is", like Pinguis;
+        nominative_masculine: _, _;
+        nominative_feminine: _, _;
+        nominative_neuter: _, _;
+        genitive_masculine: _, _;
+        genitive_feminine: _, _;
+        genitive_neuter: _, _;
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        accusative_masculine: _, _;
+        accusative_feminine: _, _;
+        accusative_neuter: _, _;
+        ablative_masculine: _, _;
+        ablative_feminine: _, _;
+        ablative_neuter: _, _;
+        vocative_masculine: _, _;
+        vocative_feminine: _, _;
+        vocative_neuter: _, _;
+        comparative: _;
         superlative: "~limus";
     ),
     // Caelebs: 7 words (prīnceps, caelebs, deinceps, comparticeps, conparticeps, particeps).
@@ -994,144 +1005,121 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 45] = [
         vocative_masculine: "~e~s", "~i~ēs";
         vocative_feminine: "~e~s", "~i~ēs";
         vocative_neuter: "~e~s", "~i~ia";
-        comparative: "~e~tior";
-        superlative: "~e~tissimus";
+        comparative: derived;
+        superlative: derived;
     ),
-    // Ūber: 6 words (pauper, congener, ūber, cicur, indecor, dēdecor).
-    declension!("ūber", 6, "~";
-        nominative_masculine: "~", "~ēs";
-        nominative_feminine: "~", "~ēs";
-        nominative_neuter: "~", "~a";
-        genitive_masculine: "~is", "~um";
-        genitive_feminine: "~is", "~um";
-        genitive_neuter: "~is", "~um";
-        dative_masculine: "~ī", "~ibus";
-        dative_feminine: "~ī", "~ibus";
-        dative_neuter: "~ī", "~ibus";
-        accusative_masculine: "~em", "~īs|~ēs";
-        accusative_feminine: "~em", "~īs|~ēs";
-        accusative_neuter: "~", "~a";
-        ablative_masculine: "~e", "~ibus";
-        ablative_feminine: "~e", "~ibus";
-        ablative_neuter: "~e", "~ibus";
-        vocative_masculine: "~", "~ēs";
-        vocative_feminine: "~", "~ēs";
-        vocative_neuter: "~", "~a";
-        comparative: "~ior";
+    // Ūber: 6 words (pauper, congener, ūber, cicur, indecor, dēdecor). Like Memor, except in 10 cells: nominative_neuter pl, genitive_masculine pl, genitive_feminine pl, genitive_neuter pl, accusative_neuter pl, ablative_masculine sg, ….
+    declension!("ūber", 6, "~", like Memor;
+        nominative_masculine: _, _;
+        nominative_feminine: _, _;
+        nominative_neuter: _, "~a";
+        genitive_masculine: _, "~um";
+        genitive_feminine: _, "~um";
+        genitive_neuter: _, "~um";
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        accusative_masculine: _, _;
+        accusative_feminine: _, _;
+        accusative_neuter: _, "~a";
+        ablative_masculine: "~e", _;
+        ablative_feminine: "~e", _;
+        ablative_neuter: "~e", _;
+        vocative_masculine: _, _;
+        vocative_feminine: _, _;
+        vocative_neuter: _, "~a";
+        comparative: _;
         superlative: "~rimus";
     ),
-    // Ūnus: 5 words (ūnus, sōlus, tōtus, nōnnūllus, triūnus).
-    declension!("ūnus", 5, "~us";
-        nominative_masculine: "~us", "~ī";
-        nominative_feminine: "~a", "~ae";
-        nominative_neuter: "~um", "~a";
-        genitive_masculine: "~īus", "~ōrum";
-        genitive_feminine: "~īus", "~ārum";
-        genitive_neuter: "~īus", "~ōrum";
-        dative_masculine: "~ī", "~īs";
-        dative_feminine: "~ī", "~īs";
-        dative_neuter: "~ī", "~īs";
-        accusative_masculine: "~um", "~ōs";
-        accusative_feminine: "~am", "~ās";
-        accusative_neuter: "~um", "~a";
-        ablative_masculine: "~ō", "~īs";
-        ablative_feminine: "~ā", "~īs";
-        ablative_neuter: "~ō", "~īs";
-        vocative_masculine: "~e", "~ī";
-        vocative_feminine: "~a", "~ae";
-        vocative_neuter: "~um", "~a";
-        comparative: "~ior";
-        superlative: "~issimus";
+    // Ūnus: 5 words (ūnus, sōlus, tōtus, nōnnūllus, triūnus). Like Iacitūrus, except in 8 cells: genitive_masculine sg, genitive_feminine sg, genitive_neuter sg, dative_masculine sg, dative_feminine sg, dative_neuter sg, ….
+    declension!("ūnus", 5, "~us", like Iacitūrus;
+        nominative_masculine: _, _;
+        nominative_feminine: _, _;
+        nominative_neuter: _, _;
+        genitive_masculine: "~īus", _;
+        genitive_feminine: "~īus", _;
+        genitive_neuter: "~īus", _;
+        dative_masculine: "~ī", _;
+        dative_feminine: "~ī", _;
+        dative_neuter: "~ī", _;
+        accusative_masculine: _, _;
+        accusative_feminine: _, _;
+        accusative_neuter: _, _;
+        ablative_masculine: _, _;
+        ablative_feminine: _, _;
+        ablative_neuter: _, _;
+        vocative_masculine: _, _;
+        vocative_feminine: _, _;
+        vocative_neuter: _, _;
+        comparative: derived;
+        superlative: derived;
     ),
-    // Ācer: 5 words (december, september, octōber, november, ācer).
-    declension!("ācer", 5, "~e~";
-        nominative_masculine: "~e~", "~~ēs";
-        nominative_feminine: "~~is", "~~ēs";
-        nominative_neuter: "~~e", "~~ia";
-        genitive_masculine: "~~is", "~~ium";
-        genitive_feminine: "~~is", "~~ium";
-        genitive_neuter: "~~is", "~~ium";
-        dative_masculine: "~~ī", "~~ibus";
-        dative_feminine: "~~ī", "~~ibus";
-        dative_neuter: "~~ī", "~~ibus";
-        accusative_masculine: "~~em", "~~ēs|~~īs";
-        accusative_feminine: "~~em", "~~ēs|~~īs";
-        accusative_neuter: "~~e", "~~ia";
-        ablative_masculine: "~~ī", "~~ibus";
-        ablative_feminine: "~~ī", "~~ibus";
-        ablative_neuter: "~~ī", "~~ibus";
-        vocative_masculine: "~e~", "~~ēs";
-        vocative_feminine: "~~is", "~~ēs";
-        vocative_neuter: "~~e", "~~ia";
-        comparative: "~~ior";
-        superlative: "~e~rimus";
+    // Ācer: 5 words (december, september, octōber, november, ācer). Like Celeber, except in 2 cells: accusative_masculine pl, accusative_feminine pl.
+    declension!("ācer", 5, "~e~", like Celeber;
+        nominative_masculine: _, _;
+        nominative_feminine: _, _;
+        nominative_neuter: _, _;
+        genitive_masculine: _, _;
+        genitive_feminine: _, _;
+        genitive_neuter: _, _;
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        accusative_masculine: _, "~~ēs|~~īs";
+        accusative_feminine: _, "~~ēs|~~īs";
+        accusative_neuter: _, _;
+        ablative_masculine: _, _;
+        ablative_feminine: _, _;
+        ablative_neuter: _, _;
+        vocative_masculine: _, _;
+        vocative_feminine: _, _;
+        vocative_neuter: _, _;
+        comparative: _;
+        superlative: _;
     ),
-    // Inops: 5 words (inops, cōps, mīcrōps, macrōps, megalōps).
-    declension!("inops", 5, "~s";
-        nominative_masculine: "~s", "~ēs";
-        nominative_feminine: "~s", "~ēs";
-        nominative_neuter: "~s", "~ia";
-        genitive_masculine: "~is", "~ium";
-        genitive_feminine: "~is", "~ium";
-        genitive_neuter: "~is", "~ium";
-        dative_masculine: "~ī", "~ibus";
-        dative_feminine: "~ī", "~ibus";
-        dative_neuter: "~ī", "~ibus";
-        accusative_masculine: "~em", "~īs|~ēs";
-        accusative_feminine: "~em", "~īs|~ēs";
-        accusative_neuter: "~s", "~ia";
-        ablative_masculine: "~ī|~e", "~ibus";
-        ablative_feminine: "~ī|~e", "~ibus";
-        ablative_neuter: "~ī|~e", "~ibus";
-        vocative_masculine: "~s", "~ēs";
-        vocative_feminine: "~s", "~ēs";
-        vocative_neuter: "~s", "~ia";
-        comparative: "~tior";
-        superlative: "~tissimus";
-    ),
-    // Ītalis: 5 words (ītalis, nīlōtis, memphītis, libystis, sarmatis).
-    declension!("ītalis", 5, "~s";
-        nominative_masculine: "~s", "~dēs";
+    // Ītalis: 5 words (ītalis, nīlōtis, memphītis, libystis, sarmatis). Like Altrīx, except in 19 cells: nominative_masculine sg, nominative_feminine sg, nominative_feminine pl, nominative_neuter pl, genitive_feminine sg, genitive_feminine pl, ….
+    declension!("ītalis", 5, "~s", like Altrīx;
+        nominative_masculine: "~s", _;
         nominative_feminine: "~s", "~dēs|~des";
-        nominative_neuter: "~s", "~dia";
-        genitive_masculine: "~dis", "~dium";
+        nominative_neuter: _, derived;
+        genitive_masculine: _, _;
         genitive_feminine: "~dis|~dos", "~dum";
-        genitive_neuter: "~dis", "~dium";
-        dative_masculine: "~dī", "~dibus";
+        genitive_neuter: _, derived;
+        dative_masculine: _, _;
         dative_feminine: "~dī", "~dibus";
-        dative_neuter: "~dī", "~dibus";
-        accusative_masculine: "~dem", "~dīs";
+        dative_neuter: _, derived;
+        accusative_masculine: _, _;
         accusative_feminine: "~dem|~da", "~dēs|~das";
-        accusative_neuter: "~s", "~dia";
-        ablative_masculine: "~dī", "~dibus";
+        accusative_neuter: _, derived;
+        ablative_masculine: _, _;
         ablative_feminine: "~de", "~dibus";
-        ablative_neuter: "~dī", "~dibus";
-        vocative_masculine: "~s", "~dēs";
+        ablative_neuter: _, derived;
+        vocative_masculine: _, _;
         vocative_feminine: "~s", "~dēs|~des";
-        vocative_neuter: "~s", "~dia";
-        comparative: "~dior";
-        superlative: "~dissimus";
+        vocative_neuter: _, derived;
+        comparative: _;
+        superlative: _;
     ),
-    // Beneficus: 5 words (beneficus, honōrificus, magnificus, malevolus, benevolus).
-    declension!("beneficus", 5, "~us";
-        nominative_masculine: "~us", "~ī";
-        nominative_feminine: "~a", "~ae";
-        nominative_neuter: "~um", "~a";
-        genitive_masculine: "~ī", "~ōrum";
-        genitive_feminine: "~ae", "~ārum";
-        genitive_neuter: "~ī", "~ōrum";
-        dative_masculine: "~ō", "~īs";
-        dative_feminine: "~ae", "~īs";
-        dative_neuter: "~ō", "~īs";
-        accusative_masculine: "~um", "~ōs";
-        accusative_feminine: "~am", "~ās";
-        accusative_neuter: "~um", "~a";
-        ablative_masculine: "~ō", "~īs";
-        ablative_feminine: "~ā", "~īs";
-        ablative_neuter: "~ō", "~īs";
-        vocative_masculine: "~e", "~ī";
-        vocative_feminine: "~a", "~ae";
-        vocative_neuter: "~um", "~a";
+    // Beneficus: 5 words (beneficus, honōrificus, magnificus, malevolus, benevolus). Like Iacitūrus, except in 2 cells: comparative, superlative.
+    declension!("beneficus", 5, "~us", like Iacitūrus;
+        nominative_masculine: _, _;
+        nominative_feminine: _, _;
+        nominative_neuter: _, _;
+        genitive_masculine: _, _;
+        genitive_feminine: _, _;
+        genitive_neuter: _, _;
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        accusative_masculine: _, _;
+        accusative_feminine: _, _;
+        accusative_neuter: _, _;
+        ablative_masculine: _, _;
+        ablative_feminine: _, _;
+        ablative_neuter: _, _;
+        vocative_masculine: _, _;
+        vocative_feminine: _, _;
+        vocative_neuter: _, _;
         comparative: "~entior";
         superlative: "~entissimus";
     ),
@@ -1155,31 +1143,31 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 45] = [
         vocative_masculine: "~ë~e", "~ë~ī";
         vocative_feminine: "~ë~a", "~ë~ae";
         vocative_neuter: "~ë~um", "~ë~a";
-        comparative: "~e~tior";
-        superlative: "~e~tissimus";
+        comparative: derived;
+        superlative: derived;
     ),
-    // Sphaeroīdēs: 4 words (sphaeroīdēs, quamplūrēs, monoīdēs, mēnoīdēs).
-    declension!("sphaeroīdēs", 4, "~ēs";
-        nominative_masculine: "~ēs", "~ēs";
-        nominative_feminine: "~ēs", "~ēs";
-        nominative_neuter: "~es", "~ia";
-        genitive_masculine: "~is", "~ium";
-        genitive_feminine: "~is", "~ium";
-        genitive_neuter: "~is", "~ium";
-        dative_masculine: "~ī", "~ibus";
-        dative_feminine: "~ī", "~ibus";
-        dative_neuter: "~ī", "~ibus";
-        accusative_masculine: "~em", "~īs|~ēs";
-        accusative_feminine: "~em", "~īs|~ēs";
-        accusative_neuter: "~es", "~ia";
-        ablative_masculine: "~ī|~e", "~ibus";
-        ablative_feminine: "~ī|~e", "~ibus";
-        ablative_neuter: "~ī|~e", "~ibus";
-        vocative_masculine: "~es", "~ēs";
-        vocative_feminine: "~es", "~ēs";
-        vocative_neuter: "~es", "~ia";
-        comparative: "~ior";
-        superlative: "~issimus";
+    // Sphaeroīdēs: 4 words (sphaeroīdēs, quamplūrēs, monoīdēs, mēnoīdēs). Like Memor, except in 9 cells: nominative_masculine sg, nominative_feminine sg, nominative_neuter sg, accusative_neuter sg, vocative_masculine sg, vocative_feminine sg, ….
+    declension!("sphaeroīdēs", 4, "~ēs", like Memor;
+        nominative_masculine: "~ēs", _;
+        nominative_feminine: "~ēs", _;
+        nominative_neuter: "~es", _;
+        genitive_masculine: _, _;
+        genitive_feminine: _, _;
+        genitive_neuter: _, _;
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        accusative_masculine: _, _;
+        accusative_feminine: _, _;
+        accusative_neuter: "~es", _;
+        ablative_masculine: _, _;
+        ablative_feminine: _, _;
+        ablative_neuter: _, _;
+        vocative_masculine: "~es", _;
+        vocative_feminine: "~es", _;
+        vocative_neuter: "~es", _;
+        comparative: derived;
+        superlative: derived;
     ),
     // Dexter: 3 words (dexter, citer, ulter).
     declension!("dexter", 3, "~er";
@@ -1204,28 +1192,28 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 45] = [
         comparative: "~erior";
         superlative: "~imus";
     ),
-    // Būcolicos: 3 words (būcolicos, colossicos, rhētoricōteros).
-    declension!("būcolicos", 3, "~os";
-        nominative_masculine: "~os", "~ī|~oe";
-        nominative_feminine: "~ē", "~ae";
-        nominative_neuter: "~on", "~a";
-        genitive_masculine: "~ī", "~ōrum";
-        genitive_feminine: "~ēs", "~ārum";
-        genitive_neuter: "~ī", "~ōrum";
-        dative_masculine: "~ō", "~īs";
-        dative_feminine: "~ae", "~īs";
-        dative_neuter: "~ō", "~īs";
-        accusative_masculine: "~on", "~ōs";
-        accusative_feminine: "~ēn", "~ās";
-        accusative_neuter: "~on", "~a";
-        ablative_masculine: "~ō", "~īs";
-        ablative_feminine: "~ē", "~īs";
-        ablative_neuter: "~ō", "~īs";
-        vocative_masculine: "~e", "~ī|~oe";
-        vocative_feminine: "~ē", "~ae";
-        vocative_neuter: "~on", "~a";
-        comparative: "~or";
-        superlative: "~issimus";
+    // Būcolicos: 3 words (būcolicos, colossicos, rhētoricōteros). Like Adespotos, except in 5 cells: nominative_feminine sg, genitive_feminine sg, accusative_feminine sg, ablative_feminine sg, vocative_feminine sg.
+    declension!("būcolicos", 3, "~os", like Adespotos;
+        nominative_masculine: _, _;
+        nominative_feminine: "~ē", _;
+        nominative_neuter: _, _;
+        genitive_masculine: _, _;
+        genitive_feminine: "~ēs", _;
+        genitive_neuter: _, _;
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        accusative_masculine: _, _;
+        accusative_feminine: "~ēn", _;
+        accusative_neuter: _, _;
+        ablative_masculine: _, _;
+        ablative_feminine: "~ē", _;
+        ablative_neuter: _, _;
+        vocative_masculine: _, _;
+        vocative_feminine: "~ē", _;
+        vocative_neuter: _, _;
+        comparative: _;
+        superlative: _;
     ),
     // Professus: 3 words (professus, profitendus, profundendus).
     declension!("professus", 3, "~o~us";
@@ -1247,53 +1235,53 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 45] = [
         vocative_masculine: "~ŏ~e", "~ŏ~ī";
         vocative_feminine: "~ŏ~a", "~ŏ~ae";
         vocative_neuter: "~ŏ~um", "~ŏ~a";
-        comparative: "~e~tior";
-        superlative: "~e~tissimus";
+        comparative: derived;
+        superlative: derived;
     ),
-    // Vīgēnus: 3 words (vīgēnus, duodēvīcēnus, duodēquadrāgēnus).
-    declension!("vīgēnus", 3, "~us";
-        nominative_masculine: "~us", "~ī";
-        nominative_feminine: "~a", "~ae";
-        nominative_neuter: "~um", "~a";
-        genitive_masculine: "~ī", "~um|~ōrum";
-        genitive_feminine: "~ae", "~um|~ārum";
-        genitive_neuter: "~ī", "~um|~ōrum";
-        dative_masculine: "~ō", "~īs";
-        dative_feminine: "~ae", "~īs";
-        dative_neuter: "~ō", "~īs";
-        accusative_masculine: "~um", "~ōs";
-        accusative_feminine: "~am", "~ās";
-        accusative_neuter: "~um", "~a";
-        ablative_masculine: "~ō", "~īs";
-        ablative_feminine: "~ā", "~īs";
-        ablative_neuter: "~ō", "~īs";
-        vocative_masculine: "~e", "~ī";
-        vocative_feminine: "~a", "~ae";
-        vocative_neuter: "~um", "~a";
-        comparative: "~ior";
-        superlative: "~issimus";
+    // Vīgēnus: 3 words (vīgēnus, duodēvīcēnus, duodēquadrāgēnus). Like Iacitūrus, except in 5 cells: genitive_masculine pl, genitive_feminine pl, genitive_neuter pl, comparative, superlative.
+    declension!("vīgēnus", 3, "~us", like Iacitūrus;
+        nominative_masculine: _, _;
+        nominative_feminine: _, _;
+        nominative_neuter: _, _;
+        genitive_masculine: _, "~um|~ōrum";
+        genitive_feminine: _, "~um|~ārum";
+        genitive_neuter: _, "~um|~ōrum";
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        accusative_masculine: _, _;
+        accusative_feminine: _, _;
+        accusative_neuter: _, _;
+        ablative_masculine: _, _;
+        ablative_feminine: _, _;
+        ablative_neuter: _, _;
+        vocative_masculine: _, _;
+        vocative_feminine: _, _;
+        vocative_neuter: _, _;
+        comparative: derived;
+        superlative: derived;
     ),
-    // Cȳanos: 3 words (cȳanos, callipȳgos, kallipȳgos).
-    declension!("cȳanos", 3, "~os";
-        nominative_masculine: "~os", "~ī|~oe";
-        nominative_feminine: "~os", "~ī|~oe";
-        nominative_neuter: "~on", "~a";
-        genitive_masculine: "~ī", "~ōn";
-        genitive_feminine: "~ī", "~ōn";
-        genitive_neuter: "~ī", "~ōn";
-        dative_masculine: "~ō", "~īs";
-        dative_feminine: "~ō", "~īs";
-        dative_neuter: "~ō", "~īs";
-        accusative_masculine: "~on", "~ōs";
-        accusative_feminine: "~on", "~ōs";
-        accusative_neuter: "~on", "~a";
-        ablative_masculine: "~ō", "~īs";
-        ablative_feminine: "~ō", "~īs";
-        ablative_neuter: "~ō", "~īs";
-        vocative_masculine: "~e", "~ī|~oe";
-        vocative_feminine: "~e", "~ī|~oe";
-        vocative_neuter: "~on", "~a";
+    // Cȳanos: 3 words (cȳanos, callipȳgos, kallipȳgos). Like Dīcticos, except in 4 cells: genitive_masculine pl, genitive_feminine pl, genitive_neuter pl, comparative.
+    declension!("cȳanos", 3, "~os", like Dīcticos;
+        nominative_masculine: _, _;
+        nominative_feminine: _, _;
+        nominative_neuter: _, _;
+        genitive_masculine: _, "~ōn";
+        genitive_feminine: _, "~ōn";
+        genitive_neuter: _, "~ōn";
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        accusative_masculine: _, _;
+        accusative_feminine: _, _;
+        accusative_neuter: _, _;
+        ablative_masculine: _, _;
+        ablative_feminine: _, _;
+        ablative_neuter: _, _;
+        vocative_masculine: _, _;
+        vocative_feminine: _, _;
+        vocative_neuter: _, _;
         comparative: "~or";
-        superlative: "~oximus";
+        superlative: _;
     ),
 ];

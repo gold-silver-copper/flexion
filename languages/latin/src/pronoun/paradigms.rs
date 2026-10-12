@@ -7,8 +7,10 @@
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, then a row of patterns per line (`referred`: the form
-/// is another cell's, as the word's feature says):
+/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
+/// they share them), the declension it is like (if any), then a row of patterns
+/// per line (`derived`: the form comes from another cell's, see
+/// `relations.rs`; `_`: the form is the declension's it is like):
 /// `nominative_masculine` (sg, pl)
 /// `nominative_feminine` (sg, pl)
 /// `nominative_neuter` (sg, pl)
@@ -28,7 +30,7 @@ use flexion::Paradigm;
 /// `vocative_feminine` (sg, pl)
 /// `vocative_neuter` (sg, pl)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident)?;
      nominative_masculine: $c0:tt, $c1:tt;
      nominative_feminine: $c2:tt, $c3:tt;
      nominative_neuter: $c4:tt, $c5:tt;
@@ -52,45 +54,57 @@ macro_rules! declension {
             name: ::std::borrow::Cow::Borrowed($name),
             words: $words,
             lemma: ::std::borrow::Cow::Borrowed($lemma),
-            forms: ::std::borrow::Cow::Borrowed(&[
-                flexion::form!($c0),
-                flexion::form!($c1),
-                flexion::form!($c2),
-                flexion::form!($c3),
-                flexion::form!($c4),
-                flexion::form!($c5),
-                flexion::form!($c6),
-                flexion::form!($c7),
-                flexion::form!($c8),
-                flexion::form!($c9),
-                flexion::form!($c10),
-                flexion::form!($c11),
-                flexion::form!($c12),
-                flexion::form!($c13),
-                flexion::form!($c14),
-                flexion::form!($c15),
-                flexion::form!($c16),
-                flexion::form!($c17),
-                flexion::form!($c18),
-                flexion::form!($c19),
-                flexion::form!($c20),
-                flexion::form!($c21),
-                flexion::form!($c22),
-                flexion::form!($c23),
-                flexion::form!($c24),
-                flexion::form!($c25),
-                flexion::form!($c26),
-                flexion::form!($c27),
-                flexion::form!($c28),
-                flexion::form!($c29),
-                flexion::form!($c30),
-                flexion::form!($c31),
-                flexion::form!($c32),
-                flexion::form!($c33),
-                flexion::form!($c34),
-                flexion::form!($c35),
-            ]),
+            parent: like!($($parent)?),
+            inherent: ::std::borrow::Cow::Borrowed(&[]),
+            table: ::std::borrow::Cow::Borrowed(concat!(
+                flexion::cell!($c0), "\t",
+                flexion::cell!($c1), "\t",
+                flexion::cell!($c2), "\t",
+                flexion::cell!($c3), "\t",
+                flexion::cell!($c4), "\t",
+                flexion::cell!($c5), "\t",
+                flexion::cell!($c6), "\t",
+                flexion::cell!($c7), "\t",
+                flexion::cell!($c8), "\t",
+                flexion::cell!($c9), "\t",
+                flexion::cell!($c10), "\t",
+                flexion::cell!($c11), "\t",
+                flexion::cell!($c12), "\t",
+                flexion::cell!($c13), "\t",
+                flexion::cell!($c14), "\t",
+                flexion::cell!($c15), "\t",
+                flexion::cell!($c16), "\t",
+                flexion::cell!($c17), "\t",
+                flexion::cell!($c18), "\t",
+                flexion::cell!($c19), "\t",
+                flexion::cell!($c20), "\t",
+                flexion::cell!($c21), "\t",
+                flexion::cell!($c22), "\t",
+                flexion::cell!($c23), "\t",
+                flexion::cell!($c24), "\t",
+                flexion::cell!($c25), "\t",
+                flexion::cell!($c26), "\t",
+                flexion::cell!($c27), "\t",
+                flexion::cell!($c28), "\t",
+                flexion::cell!($c29), "\t",
+                flexion::cell!($c30), "\t",
+                flexion::cell!($c31), "\t",
+                flexion::cell!($c32), "\t",
+                flexion::cell!($c33), "\t",
+                flexion::cell!($c34), "\t",
+                flexion::cell!($c35), "\t",
+            )),
         }
+    };
+}
+
+/// The declension a declension is like, by its name.
+macro_rules! like {
+    () => {
+        None
+    };
+    ($parent:ident) => {
+        Some(Declension::$parent as u16)
     };
 }
 
@@ -203,9 +217,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
         ablative_masculine: "~ō~", "~īs~e";
         ablative_feminine: "~ā~", "~īs~e";
         ablative_neuter: "~ō~", "~īs~e";
-        vocative_masculine: "~e~", "~~ī";
-        vocative_feminine: "~~a", "~~ae";
-        vocative_neuter: "~~um", "~~a";
+        vocative_masculine: derived, derived;
+        vocative_feminine: derived, derived;
+        vocative_neuter: derived, derived;
     ),
     // Ipse: 12 words (ille, iste, ipse, quisque, ūnusquisque, quīcumque).
     declension!("ipse", 12, "~e";
@@ -224,9 +238,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
         ablative_masculine: "~ō", "~īs";
         ablative_feminine: "~ā", "~īs";
         ablative_neuter: "~ō", "~īs";
-        vocative_masculine: "~e", "~ī";
-        vocative_feminine: "~a", "~ae";
-        vocative_neuter: "~um", "~a";
+        vocative_masculine: derived, derived;
+        vocative_feminine: derived, derived;
+        vocative_neuter: derived, derived;
     ),
     // Uter: 12 words (alter, noster, īdem, uter, vester, egomet).
     declension!("uter", 12, "~e~";
@@ -249,23 +263,23 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
         vocative_feminine: "~~a", "~~ae";
         vocative_neuter: "~~um", "~~a";
     ),
-    // Alius: 8 words (alius, tuus, meus, suus, ūllus, cuius).
-    declension!("alius", 8, "~us";
-        nominative_masculine: "~us", "~ī";
-        nominative_feminine: "~a", "~ae";
-        nominative_neuter: "~um", "~a";
-        genitive_masculine: "~ī", "~ōrum";
-        genitive_feminine: "~ae", "~ārum";
-        genitive_neuter: "~ī", "~ōrum";
-        dative_masculine: "~ō", "~īs";
-        dative_feminine: "~ae", "~īs";
-        dative_neuter: "~ō", "~īs";
-        accusative_masculine: "~um", "~ōs";
-        accusative_feminine: "~am", "~ās";
-        accusative_neuter: "~um", "~a";
-        ablative_masculine: "~ō", "~īs";
-        ablative_feminine: "~ā", "~īs";
-        ablative_neuter: "~ō", "~īs";
+    // Alius: 8 words (alius, tuus, meus, suus, ūllus, cuius). Like Ipse, except in 15 cells: nominative_masculine sg, nominative_neuter sg, genitive_masculine sg, genitive_feminine sg, genitive_neuter sg, dative_masculine sg, ….
+    declension!("alius", 8, "~us", like Ipse;
+        nominative_masculine: "~us", _;
+        nominative_feminine: _, _;
+        nominative_neuter: "~um", _;
+        genitive_masculine: "~ī", _;
+        genitive_feminine: "~ae", _;
+        genitive_neuter: "~ī", _;
+        dative_masculine: "~ō", _;
+        dative_feminine: "~ae", _;
+        dative_neuter: "~ō", _;
+        accusative_masculine: _, _;
+        accusative_feminine: _, _;
+        accusative_neuter: "~um", _;
+        ablative_masculine: _, _;
+        ablative_feminine: _, _;
+        ablative_neuter: _, _;
         vocative_masculine: "~e", "~ī";
         vocative_feminine: "~a", "~ae";
         vocative_neuter: "~um", "~a";
@@ -293,45 +307,45 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     ),
     // Complūrēs: 2 words (complūrēs, conplūrēs).
     declension!("complūrēs", 2, "~ēs";
-        nominative_masculine: "~us", "~ēs";
-        nominative_feminine: "~a", "~ēs";
-        nominative_neuter: "~um", "~a|~ia";
-        genitive_masculine: "~ī", "~ium|~um";
-        genitive_feminine: "~ae", "~ium|~um";
-        genitive_neuter: "~ī", "~ium|~um";
-        dative_masculine: "~ō", "~ibus";
-        dative_feminine: "~ae", "~ibus";
-        dative_neuter: "~ō", "~ibus";
-        accusative_masculine: "~um", "~īs|~ēs";
-        accusative_feminine: "~am", "~īs|~ēs";
-        accusative_neuter: "~um", "~a|~ia";
-        ablative_masculine: "~ō", "~ibus";
-        ablative_feminine: "~ā", "~ibus";
-        ablative_neuter: "~ō", "~ibus";
-        vocative_masculine: "~e", "~ēs";
-        vocative_feminine: "~a", "~ēs";
-        vocative_neuter: "~um", "~a|~ia";
+        nominative_masculine: "~ēs", "~ēs";
+        nominative_feminine: derived, "~ēs";
+        nominative_neuter: derived, "~a|~ia";
+        genitive_masculine: derived, "~ium|~um";
+        genitive_feminine: derived, "~ium|~um";
+        genitive_neuter: derived, "~ium|~um";
+        dative_masculine: derived, "~ibus";
+        dative_feminine: derived, "~ibus";
+        dative_neuter: derived, "~ibus";
+        accusative_masculine: derived, "~īs|~ēs";
+        accusative_feminine: derived, "~īs|~ēs";
+        accusative_neuter: derived, "~a|~ia";
+        ablative_masculine: derived, "~ibus";
+        ablative_feminine: derived, "~ibus";
+        ablative_neuter: derived, "~ibus";
+        vocative_masculine: derived, "~ēs";
+        vocative_feminine: derived, "~ēs";
+        vocative_neuter: derived, "~a|~ia";
     ),
-    // Complūra: 2 words (conplūra, complūra).
-    declension!("complūra", 2, "~a";
-        nominative_masculine: "~us", "~a|~ia";
-        nominative_feminine: "~a", "~a|~ia";
-        nominative_neuter: "~um", "~a|~ia";
-        genitive_masculine: "~ī", "~ium";
-        genitive_feminine: "~ae", "~ium";
-        genitive_neuter: "~ī", "~ium";
-        dative_masculine: "~ō", "~ibus";
-        dative_feminine: "~ae", "~ibus";
-        dative_neuter: "~ō", "~ibus";
-        accusative_masculine: "~um", "~a|~ia";
-        accusative_feminine: "~am", "~a|~ia";
-        accusative_neuter: "~um", "~a|~ia";
-        ablative_masculine: "~ō", "~ibus";
-        ablative_feminine: "~ā", "~ibus";
-        ablative_neuter: "~ō", "~ibus";
-        vocative_masculine: "~e", "~a|~ia";
-        vocative_feminine: "~a", "~a|~ia";
-        vocative_neuter: "~um", "~a|~ia";
+    // Complūra: 2 words (conplūra, complūra). Like Complūrēs, except in 10 cells: nominative_masculine sg, nominative_masculine pl, nominative_feminine pl, genitive_masculine pl, genitive_feminine pl, genitive_neuter pl, ….
+    declension!("complūra", 2, "~a", like Complūrēs;
+        nominative_masculine: "~a", "~a|~ia";
+        nominative_feminine: _, "~a|~ia";
+        nominative_neuter: _, _;
+        genitive_masculine: _, "~ium";
+        genitive_feminine: _, "~ium";
+        genitive_neuter: _, "~ium";
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        accusative_masculine: _, "~a|~ia";
+        accusative_feminine: _, "~a|~ia";
+        accusative_neuter: _, _;
+        ablative_masculine: _, _;
+        ablative_feminine: _, _;
+        ablative_neuter: _, _;
+        vocative_masculine: _, "~a|~ia";
+        vocative_feminine: _, "~a|~ia";
+        vocative_neuter: _, _;
     ),
     // Is: 1 words (is).
     declension!("is", 1, "is";
@@ -350,30 +364,30 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
         ablative_masculine: "eō", "iīs|eīs|īs";
         ablative_feminine: "eā", "iīs|eīs|īs";
         ablative_neuter: "eō", "iīs|eīs|īs";
-        vocative_masculine: "id", "ea";
-        vocative_feminine: "id", "ea";
-        vocative_neuter: "id", "ea";
+        vocative_masculine: derived, derived;
+        vocative_feminine: derived, derived;
+        vocative_neuter: derived, derived;
     ),
     // Sē: 1 words (sē).
     declension!("sē", 1, "~ē";
-        nominative_masculine: "~e", "~ī";
-        nominative_feminine: "~a", "~ae";
-        nominative_neuter: "~ud", "~a";
-        genitive_masculine: "~uī", "~ōrum";
-        genitive_feminine: "~uī", "~ārum";
-        genitive_neuter: "~uī", "~ōrum";
-        dative_masculine: "~ibī", "~īs";
-        dative_feminine: "~ibī", "~īs";
-        dative_neuter: "~ibī", "~īs";
-        accusative_masculine: "~ē|~ēsē", "~ōs";
-        accusative_feminine: "~ē|~ēsē", "~ās";
-        accusative_neuter: "~ē|~ēsē", "~a";
-        ablative_masculine: "~ē|~ēsē", "~īs";
-        ablative_feminine: "~ē|~ēsē", "~īs";
-        ablative_neuter: "~ē|~ēsē", "~īs";
-        vocative_masculine: "~e", "~ī";
-        vocative_feminine: "~a", "~ae";
-        vocative_neuter: "~um", "~a";
+        nominative_masculine: "~ē", derived;
+        nominative_feminine: derived, derived;
+        nominative_neuter: derived, derived;
+        genitive_masculine: "~uī", derived;
+        genitive_feminine: "~uī", derived;
+        genitive_neuter: "~uī", derived;
+        dative_masculine: "~ibī", derived;
+        dative_feminine: "~ibī", derived;
+        dative_neuter: "~ibī", derived;
+        accusative_masculine: "~ē|~ēsē", derived;
+        accusative_feminine: "~ē|~ēsē", derived;
+        accusative_neuter: "~ē|~ēsē", derived;
+        ablative_masculine: "~ē|~ēsē", derived;
+        ablative_feminine: "~ē|~ēsē", derived;
+        ablative_neuter: "~ē|~ēsē", derived;
+        vocative_masculine: derived, derived;
+        vocative_feminine: derived, derived;
+        vocative_neuter: derived, derived;
     ),
     // Ea: 1 words (ea).
     declension!("ea", 1, "ea";
@@ -396,26 +410,26 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
         vocative_feminine: "ea", "eae";
         vocative_neuter: "ea", "eae";
     ),
-    // Nēmō: 1 words (nēmō).
-    declension!("nēmō", 1, "~ēmō";
-        nominative_masculine: "~ēmō", "~ī";
-        nominative_feminine: "~ēmō", "~ae";
-        nominative_neuter: "~ēmō", "~a";
-        genitive_masculine: "~ūllīus|~ēminis", "~ōrum";
-        genitive_feminine: "~ūllīus|~ēminis", "~ārum";
-        genitive_neuter: "~ūllīus|~ēminis", "~ōrum";
-        dative_masculine: "~ēminī", "~īs";
-        dative_feminine: "~ēminī", "~īs";
-        dative_neuter: "~ēminī", "~īs";
-        accusative_masculine: "~ēminem", "~ōs";
-        accusative_feminine: "~ēminem", "~ās";
-        accusative_neuter: "~ēminem", "~a";
-        ablative_masculine: "~ūllō|~ēmine", "~īs";
-        ablative_feminine: "~ūllā|~ēmine", "~īs";
-        ablative_neuter: "~ō", "~īs";
-        vocative_masculine: "~e", "~ī";
-        vocative_feminine: "~a", "~ae";
-        vocative_neuter: "~um", "~a";
+    // Nēmō: 1 words (nēmō). Like Sē, except in 15 cells: nominative_masculine sg, nominative_feminine sg, nominative_neuter sg, genitive_masculine sg, genitive_feminine sg, genitive_neuter sg, ….
+    declension!("nēmō", 1, "~ēmō", like Sē;
+        nominative_masculine: "~ēmō", _;
+        nominative_feminine: "~ēmō", _;
+        nominative_neuter: "~ēmō", _;
+        genitive_masculine: "~ūllīus|~ēminis", _;
+        genitive_feminine: "~ūllīus|~ēminis", _;
+        genitive_neuter: "~ūllīus|~ēminis", _;
+        dative_masculine: "~ēminī", _;
+        dative_feminine: "~ēminī", _;
+        dative_neuter: "~ēminī", _;
+        accusative_masculine: "~ēminem", _;
+        accusative_feminine: "~ēminem", _;
+        accusative_neuter: "~ēminem", _;
+        ablative_masculine: "~ūllō|~ēmine", _;
+        ablative_feminine: "~ūllā|~ēmine", _;
+        ablative_neuter: derived, _;
+        vocative_masculine: _, _;
+        vocative_feminine: _, _;
+        vocative_neuter: _, _;
     ),
     // Id: 1 words (id).
     declension!("id", 1, "id";
@@ -455,9 +469,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
         ablative_masculine: "q~ō|q~ī", "q~ibus|q~īs|q~eis";
         ablative_feminine: "q~ā|q~ī", "q~ibus|q~īs|q~eis";
         ablative_neuter: "q~ō|q~ī", "q~ibus|q~īs|q~eis";
-        vocative_masculine: "~e", "~ī";
-        vocative_feminine: "~a", "~ae";
-        vocative_neuter: "~um", "~a";
+        vocative_masculine: derived, derived;
+        vocative_feminine: derived, derived;
+        vocative_neuter: derived, derived;
     ),
     // Quīdam: 1 words (quīdam).
     declension!("quīdam", 1, "q~ī~~";
@@ -476,9 +490,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
         ablative_masculine: "q~ō~~", "q~ibus~~";
         ablative_feminine: "q~ā~~", "q~ibus~~";
         ablative_neuter: "q~ō~~", "q~ibus~~";
-        vocative_masculine: "~e~~", "~~ī~";
-        vocative_feminine: "~~a~", "~~ae~";
-        vocative_neuter: "~~um~", "~~a~";
+        vocative_masculine: derived, derived;
+        vocative_feminine: derived, derived;
+        vocative_neuter: derived, derived;
     ),
     // Ecquī: 1 words (ecquī).
     declension!("ecquī", 1, "~q~ī";
@@ -497,72 +511,72 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
         ablative_masculine: "~q~ō", "~q~īs";
         ablative_feminine: "~q~ā", "~q~īs";
         ablative_neuter: "~q~ō", "~q~īs";
-        vocative_masculine: "~e~", "~~ī";
-        vocative_feminine: "~~a", "~~ae";
-        vocative_neuter: "~~um", "~~a";
+        vocative_masculine: derived, derived;
+        vocative_feminine: derived, derived;
+        vocative_neuter: derived, derived;
     ),
-    // Suī: 1 words (suī).
-    declension!("suī", 1, "~uī";
-        nominative_masculine: "~e", "~ī";
-        nominative_feminine: "~a", "~ae";
-        nominative_neuter: "~ud", "~a";
-        genitive_masculine: "~uī", "~ōrum";
-        genitive_feminine: "~uī", "~ārum";
-        genitive_neuter: "~uī", "~ōrum";
-        dative_masculine: "~ibī", "~īs";
-        dative_feminine: "~ibī", "~īs";
-        dative_neuter: "~ibī", "~īs";
-        accusative_masculine: "~ē|~ēsē", "~ōs";
-        accusative_feminine: "~ē|~ēsē", "~ās";
-        accusative_neuter: "~ē|~ēsē", "~a";
-        ablative_masculine: "~ē|~ēsē", "~īs";
-        ablative_feminine: "~ē|~ēsē", "~īs";
-        ablative_neuter: "~ē|~ēsē", "~īs";
-        vocative_masculine: "~e", "~ī";
-        vocative_feminine: "~a", "~ae";
-        vocative_neuter: "~um", "~a";
+    // Suī: 1 words (suī). Like Sē, except in 1 cell: nominative_masculine sg.
+    declension!("suī", 1, "~uī", like Sē;
+        nominative_masculine: "~uī", _;
+        nominative_feminine: _, _;
+        nominative_neuter: _, _;
+        genitive_masculine: _, _;
+        genitive_feminine: _, _;
+        genitive_neuter: _, _;
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        accusative_masculine: _, _;
+        accusative_feminine: _, _;
+        accusative_neuter: _, _;
+        ablative_masculine: _, _;
+        ablative_feminine: _, _;
+        ablative_neuter: _, _;
+        vocative_masculine: _, _;
+        vocative_feminine: _, _;
+        vocative_neuter: _, _;
     ),
     // Ambō: 1 words (ambō).
     declension!("ambō", 1, "~ō";
-        nominative_masculine: "~us", "~ō";
-        nominative_feminine: "~a", "~ae";
-        nominative_neuter: "~um", "~ō";
-        genitive_masculine: "~ī", "~ōrum";
-        genitive_feminine: "~ae", "~ārum";
-        genitive_neuter: "~ī", "~ōrum";
-        dative_masculine: "~ō", "~ōbus";
-        dative_feminine: "~ae", "~ābus";
-        dative_neuter: "~ō", "~ōbus";
-        accusative_masculine: "~um", "~ōs|~ō";
-        accusative_feminine: "~am", "~ās";
-        accusative_neuter: "~um", "~ō";
-        ablative_masculine: "~ō", "~ōbus";
-        ablative_feminine: "~ā", "~ābus";
-        ablative_neuter: "~ō", "~ōbus";
-        vocative_masculine: "~e", "~ō";
-        vocative_feminine: "~a", "~ae";
-        vocative_neuter: "~um", "~ō";
+        nominative_masculine: "~ō", "~ō";
+        nominative_feminine: derived, "~ae";
+        nominative_neuter: derived, "~ō";
+        genitive_masculine: derived, "~ōrum";
+        genitive_feminine: derived, "~ārum";
+        genitive_neuter: derived, "~ōrum";
+        dative_masculine: derived, "~ōbus";
+        dative_feminine: derived, "~ābus";
+        dative_neuter: derived, "~ōbus";
+        accusative_masculine: derived, "~ōs|~ō";
+        accusative_feminine: derived, "~ās";
+        accusative_neuter: derived, "~ō";
+        ablative_masculine: derived, "~ōbus";
+        ablative_feminine: derived, "~ābus";
+        ablative_neuter: derived, "~ōbus";
+        vocative_masculine: derived, "~ō";
+        vocative_feminine: derived, "~ae";
+        vocative_neuter: derived, "~ō";
     ),
-    // Sēsē: 1 words (sēsē).
-    declension!("sēsē", 1, "~ēsē";
-        nominative_masculine: "~e", "~ī";
-        nominative_feminine: "~a", "~ae";
-        nominative_neuter: "~ud", "~a";
-        genitive_masculine: "~uī", "~ōrum";
-        genitive_feminine: "~uī", "~ārum";
-        genitive_neuter: "~uī", "~ōrum";
-        dative_masculine: "~ibī", "~īs";
-        dative_feminine: "~ibī", "~īs";
-        dative_neuter: "~ibī", "~īs";
-        accusative_masculine: "~ē|~ēsē", "~ōs";
-        accusative_feminine: "~ē|~ēsē", "~ās";
-        accusative_neuter: "~ē|~ēsē", "~a";
-        ablative_masculine: "~ē|~ēsē", "~īs";
-        ablative_feminine: "~ē|~ēsē", "~īs";
-        ablative_neuter: "~ē|~ēsē", "~īs";
-        vocative_masculine: "~e", "~ī";
-        vocative_feminine: "~a", "~ae";
-        vocative_neuter: "~um", "~a";
+    // Sēsē: 1 words (sēsē). Like Sē, except in 1 cell: nominative_masculine sg.
+    declension!("sēsē", 1, "~ēsē", like Sē;
+        nominative_masculine: "~ēsē", _;
+        nominative_feminine: _, _;
+        nominative_neuter: _, _;
+        genitive_masculine: _, _;
+        genitive_feminine: _, _;
+        genitive_neuter: _, _;
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        accusative_masculine: _, _;
+        accusative_feminine: _, _;
+        accusative_neuter: _, _;
+        ablative_masculine: _, _;
+        ablative_feminine: _, _;
+        ablative_neuter: _, _;
+        vocative_masculine: _, _;
+        vocative_feminine: _, _;
+        vocative_neuter: _, _;
     ),
     // Quīnam: 1 words (quīnam).
     declension!("quīnam", 1, "q~īnam";
@@ -581,9 +595,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
         ablative_masculine: "q~ōnam|q~īnam", "q~ibusnam";
         ablative_feminine: "q~ānam|q~īnam", "q~ibusnam";
         ablative_neuter: "q~ōnam|q~īnam", "q~ibusnam";
-        vocative_masculine: "~e", "~ī";
-        vocative_feminine: "~a", "~ae";
-        vocative_neuter: "~um", "~a";
+        vocative_masculine: derived, derived;
+        vocative_feminine: derived, derived;
+        vocative_neuter: derived, derived;
     ),
     // Quīvīs: 1 words (quīvīs).
     declension!("quīvīs", 1, "q~ī~";
@@ -602,50 +616,50 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
         ablative_masculine: "q~ō~|q~ī~", "q~ibus~|q~īs~|q~eis~";
         ablative_feminine: "q~ā~|q~ī~", "q~ibus~|q~īs~|q~eis~";
         ablative_neuter: "q~ō~", "q~ibus~|q~īs~|q~eis~";
-        vocative_masculine: "~e~", "~~ī";
-        vocative_feminine: "~~a", "~~ae";
-        vocative_neuter: "~~um", "~~a";
+        vocative_masculine: derived, derived;
+        vocative_feminine: derived, derived;
+        vocative_neuter: derived, derived;
     ),
-    // Complūsculī: 1 words (complūsculī).
-    declension!("complūsculī", 1, "~ī";
-        nominative_masculine: "~us", "~ī";
-        nominative_feminine: "~a", "~ae";
-        nominative_neuter: "~um", "~a";
-        genitive_masculine: "~ī", "~ōrum";
-        genitive_feminine: "~ae", "~ārum";
-        genitive_neuter: "~ī", "~ōrum";
-        dative_masculine: "~ō", "~īs";
-        dative_feminine: "~ae", "~īs";
-        dative_neuter: "~ō", "~īs";
-        accusative_masculine: "~um", "~ōs";
-        accusative_feminine: "~am", "~ās";
-        accusative_neuter: "~um", "~a";
-        ablative_masculine: "~ō", "~īs";
-        ablative_feminine: "~ā", "~īs";
-        ablative_neuter: "~ō", "~īs";
-        vocative_masculine: "~e", "~ī";
-        vocative_feminine: "~a", "~ae";
-        vocative_neuter: "~um", "~a";
+    // Complūsculī: 1 words (complūsculī). Like Ambō, except in 13 cells: nominative_masculine sg, nominative_masculine pl, nominative_neuter pl, dative_masculine pl, dative_feminine pl, dative_neuter pl, ….
+    declension!("complūsculī", 1, "~ī", like Ambō;
+        nominative_masculine: "~ī", "~ī";
+        nominative_feminine: _, _;
+        nominative_neuter: _, "~a";
+        genitive_masculine: _, _;
+        genitive_feminine: _, _;
+        genitive_neuter: _, _;
+        dative_masculine: _, "~īs";
+        dative_feminine: _, "~īs";
+        dative_neuter: _, "~īs";
+        accusative_masculine: _, "~ōs";
+        accusative_feminine: _, _;
+        accusative_neuter: _, "~a";
+        ablative_masculine: _, "~īs";
+        ablative_feminine: _, "~īs";
+        ablative_neuter: _, "~īs";
+        vocative_masculine: _, "~ī";
+        vocative_feminine: _, _;
+        vocative_neuter: _, "~a";
     ),
     // Ecquīnam: 1 words (ecquīnam).
     declension!("ecquīnam", 1, "ecq~īnam";
         nominative_masculine: "ecq~īnam|ecq~einam|ecq~isnam", "ecq~īnam|ecq~einam";
         nominative_feminine: "ecq~aenam", "ecq~aenam";
         nominative_neuter: "ecq~odnam", "ecq~aenam";
-        genitive_masculine: "~īus", "~ōrum";
-        genitive_feminine: "~īus", "~ārum";
-        genitive_neuter: "~īus", "~ōrum";
-        dative_masculine: "ecc~inam|ecq~oinam|ecq~oī|q~oeinam|ecq~oiī|q~oieinam", "~īs";
-        dative_feminine: "ecc~inam|ecq~oinam|ecq~oī|q~oeinam|ecq~oiī|q~oieinam", "~īs";
-        dative_neuter: "ecc~inam|ecq~oinam|ecq~oī|q~oeinam|ecq~oiī|q~oieinam", "~īs";
+        genitive_masculine: derived, derived;
+        genitive_feminine: derived, derived;
+        genitive_neuter: derived, derived;
+        dative_masculine: "ecc~inam|ecq~oinam|ecq~oī|q~oeinam|ecq~oiī|q~oieinam", derived;
+        dative_feminine: "ecc~inam|ecq~oinam|ecq~oī|q~oeinam|ecq~oiī|q~oieinam", derived;
+        dative_neuter: "ecc~inam|ecq~oinam|ecq~oī|q~oeinam|ecq~oiī|q~oieinam", derived;
         accusative_masculine: "ecq~emnam", "ecq~ōsnam";
         accusative_feminine: "ecq~amnam", "ecq~āsnam";
         accusative_neuter: "ecq~odnam", "ecq~aenam";
-        ablative_masculine: "ecq~ōnam|ecq~īnam", "~īs";
-        ablative_feminine: "ecq~ānam|ecq~īnam", "~īs";
-        ablative_neuter: "ecq~ōnam|ecq~īnam", "~īs";
-        vocative_masculine: "~e", "~ī";
-        vocative_feminine: "~a", "~ae";
-        vocative_neuter: "~um", "~a";
+        ablative_masculine: "ecq~ōnam|ecq~īnam", derived;
+        ablative_feminine: "ecq~ānam|ecq~īnam", derived;
+        ablative_neuter: "ecq~ōnam|ecq~īnam", derived;
+        vocative_masculine: derived, derived;
+        vocative_feminine: derived, derived;
+        vocative_neuter: derived, derived;
     ),
 ];

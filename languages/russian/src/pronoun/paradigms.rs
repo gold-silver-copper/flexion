@@ -7,8 +7,10 @@
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, then a row of patterns per line (`referred`: the form
-/// is another cell's, as the word's feature says):
+/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
+/// they share them), the declension it is like (if any), then a row of patterns
+/// per line (`derived`: the form comes from another cell's, see
+/// `relations.rs`; `_`: the form is the declension's it is like):
 /// `nominative_masculine` (anim, inan)
 /// `nominative_feminine` (anim, inan)
 /// `nominative_neuter` (anim, inan)
@@ -34,7 +36,7 @@ use flexion::Paradigm;
 /// `prepositional_neuter` (anim, inan)
 /// `prepositional_plural` (anim, inan)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident)?;
      nominative_masculine: $c0:tt, $c1:tt;
      nominative_feminine: $c2:tt, $c3:tt;
      nominative_neuter: $c4:tt, $c5:tt;
@@ -64,57 +66,69 @@ macro_rules! declension {
             name: ::std::borrow::Cow::Borrowed($name),
             words: $words,
             lemma: ::std::borrow::Cow::Borrowed($lemma),
-            forms: ::std::borrow::Cow::Borrowed(&[
-                flexion::form!($c0),
-                flexion::form!($c1),
-                flexion::form!($c2),
-                flexion::form!($c3),
-                flexion::form!($c4),
-                flexion::form!($c5),
-                flexion::form!($c6),
-                flexion::form!($c7),
-                flexion::form!($c8),
-                flexion::form!($c9),
-                flexion::form!($c10),
-                flexion::form!($c11),
-                flexion::form!($c12),
-                flexion::form!($c13),
-                flexion::form!($c14),
-                flexion::form!($c15),
-                flexion::form!($c16),
-                flexion::form!($c17),
-                flexion::form!($c18),
-                flexion::form!($c19),
-                flexion::form!($c20),
-                flexion::form!($c21),
-                flexion::form!($c22),
-                flexion::form!($c23),
-                flexion::form!($c24),
-                flexion::form!($c25),
-                flexion::form!($c26),
-                flexion::form!($c27),
-                flexion::form!($c28),
-                flexion::form!($c29),
-                flexion::form!($c30),
-                flexion::form!($c31),
-                flexion::form!($c32),
-                flexion::form!($c33),
-                flexion::form!($c34),
-                flexion::form!($c35),
-                flexion::form!($c36),
-                flexion::form!($c37),
-                flexion::form!($c38),
-                flexion::form!($c39),
-                flexion::form!($c40),
-                flexion::form!($c41),
-                flexion::form!($c42),
-                flexion::form!($c43),
-                flexion::form!($c44),
-                flexion::form!($c45),
-                flexion::form!($c46),
-                flexion::form!($c47),
-            ]),
+            parent: like!($($parent)?),
+            inherent: ::std::borrow::Cow::Borrowed(&[]),
+            table: ::std::borrow::Cow::Borrowed(concat!(
+                flexion::cell!($c0), "\t",
+                flexion::cell!($c1), "\t",
+                flexion::cell!($c2), "\t",
+                flexion::cell!($c3), "\t",
+                flexion::cell!($c4), "\t",
+                flexion::cell!($c5), "\t",
+                flexion::cell!($c6), "\t",
+                flexion::cell!($c7), "\t",
+                flexion::cell!($c8), "\t",
+                flexion::cell!($c9), "\t",
+                flexion::cell!($c10), "\t",
+                flexion::cell!($c11), "\t",
+                flexion::cell!($c12), "\t",
+                flexion::cell!($c13), "\t",
+                flexion::cell!($c14), "\t",
+                flexion::cell!($c15), "\t",
+                flexion::cell!($c16), "\t",
+                flexion::cell!($c17), "\t",
+                flexion::cell!($c18), "\t",
+                flexion::cell!($c19), "\t",
+                flexion::cell!($c20), "\t",
+                flexion::cell!($c21), "\t",
+                flexion::cell!($c22), "\t",
+                flexion::cell!($c23), "\t",
+                flexion::cell!($c24), "\t",
+                flexion::cell!($c25), "\t",
+                flexion::cell!($c26), "\t",
+                flexion::cell!($c27), "\t",
+                flexion::cell!($c28), "\t",
+                flexion::cell!($c29), "\t",
+                flexion::cell!($c30), "\t",
+                flexion::cell!($c31), "\t",
+                flexion::cell!($c32), "\t",
+                flexion::cell!($c33), "\t",
+                flexion::cell!($c34), "\t",
+                flexion::cell!($c35), "\t",
+                flexion::cell!($c36), "\t",
+                flexion::cell!($c37), "\t",
+                flexion::cell!($c38), "\t",
+                flexion::cell!($c39), "\t",
+                flexion::cell!($c40), "\t",
+                flexion::cell!($c41), "\t",
+                flexion::cell!($c42), "\t",
+                flexion::cell!($c43), "\t",
+                flexion::cell!($c44), "\t",
+                flexion::cell!($c45), "\t",
+                flexion::cell!($c46), "\t",
+                flexion::cell!($c47), "\t",
+            )),
         }
+    };
+}
+
+/// The declension a declension is like, by its name.
+macro_rules! like {
+    () => {
+        None
+    };
+    ($parent:ident) => {
+        Some(Declension::$parent as u16)
     };
 }
 
@@ -258,193 +272,193 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 11] = [
         prepositional_neuter: "~ьём", "~ьём";
         prepositional_plural: "~ьих", "~ьих";
     ),
-    // Иной: 4 words (иной, любой, таковой, каковой).
-    declension!("иной", 4, "~ой";
+    // Иной: 4 words (иной, любой, таковой, каковой). Like Оный, except in 3 cells: nominative_masculine anim, nominative_masculine inan, accusative_masculine inan.
+    declension!("иной", 4, "~ой", like Оный;
         nominative_masculine: "~ой", "~ой";
-        nominative_feminine: "~ая", "~ая";
-        nominative_neuter: "~ое", "~ое";
-        nominative_plural: "~ые", "~ые";
-        genitive_masculine: "~ого", "~ого";
-        genitive_feminine: "~ой", "~ой";
-        genitive_neuter: "~ого", "~ого";
-        genitive_plural: "~ых", "~ых";
-        dative_masculine: "~ому", "~ому";
-        dative_feminine: "~ой", "~ой";
-        dative_neuter: "~ому", "~ому";
-        dative_plural: "~ым", "~ым";
-        accusative_masculine: "~ого", "~ой";
-        accusative_feminine: "~ую", "~ую";
-        accusative_neuter: "~ое", "~ое";
-        accusative_plural: "~ых", "~ые";
-        instrumental_masculine: "~ым", "~ым";
-        instrumental_feminine: "~ой|~ою", "~ой|~ою";
-        instrumental_neuter: "~ым", "~ым";
-        instrumental_plural: "~ыми", "~ыми";
-        prepositional_masculine: "~ом", "~ом";
-        prepositional_feminine: "~ой", "~ой";
-        prepositional_neuter: "~ом", "~ом";
-        prepositional_plural: "~ых", "~ых";
+        nominative_feminine: _, _;
+        nominative_neuter: _, _;
+        nominative_plural: _, _;
+        genitive_masculine: _, _;
+        genitive_feminine: _, _;
+        genitive_neuter: _, _;
+        genitive_plural: _, _;
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        dative_plural: _, _;
+        accusative_masculine: _, "~ой";
+        accusative_feminine: _, _;
+        accusative_neuter: _, _;
+        accusative_plural: _, _;
+        instrumental_masculine: _, _;
+        instrumental_feminine: _, _;
+        instrumental_neuter: _, _;
+        instrumental_plural: _, _;
+        prepositional_masculine: _, _;
+        prepositional_feminine: _, _;
+        prepositional_neuter: _, _;
+        prepositional_plural: _, _;
     ),
-    // Некий: 4 words (некий, всякий, этакий, эдакий).
-    declension!("некий", 4, "~ий";
+    // Некий: 4 words (некий, всякий, этакий, эдакий). Like Оный, except in 19 cells: nominative_masculine anim, nominative_masculine inan, nominative_plural anim, nominative_plural inan, genitive_plural anim, genitive_plural inan, ….
+    declension!("некий", 4, "~ий", like Оный;
         nominative_masculine: "~ий", "~ий";
-        nominative_feminine: "~ая", "~ая";
-        nominative_neuter: "~ое", "~ое";
+        nominative_feminine: _, _;
+        nominative_neuter: _, _;
         nominative_plural: "~ие", "~ие";
-        genitive_masculine: "~ого", "~ого";
-        genitive_feminine: "~ой", "~ой";
-        genitive_neuter: "~ого", "~ого";
+        genitive_masculine: _, _;
+        genitive_feminine: _, _;
+        genitive_neuter: _, _;
         genitive_plural: "~их", "~их";
-        dative_masculine: "~ому", "~ому";
-        dative_feminine: "~ой", "~ой";
-        dative_neuter: "~ому", "~ому";
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
         dative_plural: "~им", "~им";
-        accusative_masculine: "~ого", "~ий";
-        accusative_feminine: "~ую", "~ую";
-        accusative_neuter: "~ое", "~ое";
+        accusative_masculine: _, "~ий";
+        accusative_feminine: _, _;
+        accusative_neuter: _, _;
         accusative_plural: "~их", "~ие";
         instrumental_masculine: "~им", "~им";
-        instrumental_feminine: "~ой|~ою", "~ой|~ою";
+        instrumental_feminine: _, _;
         instrumental_neuter: "~им", "~им";
         instrumental_plural: "~ими", "~ими";
-        prepositional_masculine: "~ом", "~ом";
-        prepositional_feminine: "~ой", "~ой";
-        prepositional_neuter: "~ом", "~ом";
+        prepositional_masculine: _, _;
+        prepositional_feminine: _, _;
+        prepositional_neuter: _, _;
         prepositional_plural: "~их", "~их";
     ),
-    // Другой: 3 words (другой, кое-какой, никакой).
-    declension!("другой", 3, "~ой";
+    // Другой: 3 words (другой, кое-какой, никакой). Like Некий, except in 3 cells: nominative_masculine anim, nominative_masculine inan, accusative_masculine inan.
+    declension!("другой", 3, "~ой", like Некий;
         nominative_masculine: "~ой", "~ой";
-        nominative_feminine: "~ая", "~ая";
-        nominative_neuter: "~ое", "~ое";
-        nominative_plural: "~ие", "~ие";
-        genitive_masculine: "~ого", "~ого";
-        genitive_feminine: "~ой", "~ой";
-        genitive_neuter: "~ого", "~ого";
-        genitive_plural: "~их", "~их";
-        dative_masculine: "~ому", "~ому";
-        dative_feminine: "~ой", "~ой";
-        dative_neuter: "~ому", "~ому";
-        dative_plural: "~им", "~им";
-        accusative_masculine: "~ого", "~ой";
-        accusative_feminine: "~ую", "~ую";
-        accusative_neuter: "~ое", "~ое";
-        accusative_plural: "~их", "~ие";
-        instrumental_masculine: "~им", "~им";
-        instrumental_feminine: "~ой|~ою", "~ой|~ою";
-        instrumental_neuter: "~им", "~им";
-        instrumental_plural: "~ими", "~ими";
-        prepositional_masculine: "~ом", "~ом";
-        prepositional_feminine: "~ой", "~ой";
-        prepositional_neuter: "~ом", "~ом";
-        prepositional_plural: "~их", "~их";
+        nominative_feminine: _, _;
+        nominative_neuter: _, _;
+        nominative_plural: _, _;
+        genitive_masculine: _, _;
+        genitive_feminine: _, _;
+        genitive_neuter: _, _;
+        genitive_plural: _, _;
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        dative_plural: _, _;
+        accusative_masculine: _, "~ой";
+        accusative_feminine: _, _;
+        accusative_neuter: _, _;
+        accusative_plural: _, _;
+        instrumental_masculine: _, _;
+        instrumental_feminine: _, _;
+        instrumental_neuter: _, _;
+        instrumental_plural: _, _;
+        prepositional_masculine: _, _;
+        prepositional_feminine: _, _;
+        prepositional_neuter: _, _;
+        prepositional_plural: _, _;
     ),
-    // Наш: 2 words (ваш, наш).
-    declension!("наш", 2, "~";
+    // Наш: 2 words (ваш, наш). Like Свой, except in 15 cells: nominative_masculine anim, nominative_masculine inan, nominative_feminine anim, nominative_feminine inan, nominative_neuter anim, nominative_neuter inan, ….
+    declension!("наш", 2, "~", like Свой;
         nominative_masculine: "~", "~";
         nominative_feminine: "~а", "~а";
         nominative_neuter: "~е", "~е";
-        nominative_plural: "~и", "~и";
-        genitive_masculine: "~его", "~его";
-        genitive_feminine: "~ей", "~ей";
-        genitive_neuter: "~его", "~его";
-        genitive_plural: "~их", "~их";
-        dative_masculine: "~ему", "~ему";
-        dative_feminine: "~ей", "~ей";
-        dative_neuter: "~ему", "~ему";
-        dative_plural: "~им", "~им";
-        accusative_masculine: "~его", "~";
+        nominative_plural: _, _;
+        genitive_masculine: _, _;
+        genitive_feminine: _, _;
+        genitive_neuter: _, _;
+        genitive_plural: _, _;
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        dative_plural: _, _;
+        accusative_masculine: _, "~";
         accusative_feminine: "~у", "~у";
         accusative_neuter: "~е", "~е";
-        accusative_plural: "~их", "~и";
-        instrumental_masculine: "~им", "~им";
-        instrumental_feminine: "~ей|~ею", "~ей|~ею";
-        instrumental_neuter: "~им", "~им";
-        instrumental_plural: "~ими", "~ими";
+        accusative_plural: _, _;
+        instrumental_masculine: _, _;
+        instrumental_feminine: _, _;
+        instrumental_neuter: _, _;
+        instrumental_plural: _, _;
         prepositional_masculine: "~ем", "~ем";
-        prepositional_feminine: "~ей", "~ей";
+        prepositional_feminine: _, _;
         prepositional_neuter: "~ем", "~ем";
-        prepositional_plural: "~их", "~их";
+        prepositional_plural: _, _;
     ),
-    // Этот: 1 words (этот).
-    declension!("этот", 1, "~от";
+    // Этот: 1 words (этот). Like Некий, except in 14 cells: nominative_masculine anim, nominative_masculine inan, nominative_feminine anim, nominative_feminine inan, nominative_neuter anim, nominative_neuter inan, ….
+    declension!("этот", 1, "~от", like Некий;
         nominative_masculine: "~от", "~от";
         nominative_feminine: "~а", "~а";
         nominative_neuter: "~о", "~о";
         nominative_plural: "~и", "~и";
-        genitive_masculine: "~ого", "~ого";
-        genitive_feminine: "~ой", "~ой";
-        genitive_neuter: "~ого", "~ого";
-        genitive_plural: "~их", "~их";
-        dative_masculine: "~ому", "~ому";
-        dative_feminine: "~ой", "~ой";
-        dative_neuter: "~ому", "~ому";
-        dative_plural: "~им", "~им";
-        accusative_masculine: "~ого", "~от";
+        genitive_masculine: _, _;
+        genitive_feminine: _, _;
+        genitive_neuter: _, _;
+        genitive_plural: _, _;
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        dative_plural: _, _;
+        accusative_masculine: _, "~от";
         accusative_feminine: "~у", "~у";
         accusative_neuter: "~о", "~о";
-        accusative_plural: "~их", "~и";
-        instrumental_masculine: "~им", "~им";
-        instrumental_feminine: "~ой|~ою", "~ой|~ою";
-        instrumental_neuter: "~им", "~им";
-        instrumental_plural: "~ими", "~ими";
-        prepositional_masculine: "~ом", "~ом";
-        prepositional_feminine: "~ой", "~ой";
-        prepositional_neuter: "~ом", "~ом";
-        prepositional_plural: "~их", "~их";
+        accusative_plural: _, "~и";
+        instrumental_masculine: _, _;
+        instrumental_feminine: _, _;
+        instrumental_neuter: _, _;
+        instrumental_plural: _, _;
+        prepositional_masculine: _, _;
+        prepositional_feminine: _, _;
+        prepositional_neuter: _, _;
+        prepositional_plural: _, _;
     ),
-    // Сам: 1 words (сам).
-    declension!("сам", 1, "~";
+    // Сам: 1 words (сам). Like Этот, except in 5 cells: nominative_masculine anim, nominative_masculine inan, accusative_masculine inan, accusative_feminine anim, accusative_feminine inan.
+    declension!("сам", 1, "~", like Этот;
         nominative_masculine: "~", "~";
-        nominative_feminine: "~а", "~а";
-        nominative_neuter: "~о", "~о";
-        nominative_plural: "~и", "~и";
-        genitive_masculine: "~ого", "~ого";
-        genitive_feminine: "~ой", "~ой";
-        genitive_neuter: "~ого", "~ого";
-        genitive_plural: "~их", "~их";
-        dative_masculine: "~ому", "~ому";
-        dative_feminine: "~ой", "~ой";
-        dative_neuter: "~ому", "~ому";
-        dative_plural: "~им", "~им";
-        accusative_masculine: "~ого", "~";
+        nominative_feminine: _, _;
+        nominative_neuter: _, _;
+        nominative_plural: _, _;
+        genitive_masculine: _, _;
+        genitive_feminine: _, _;
+        genitive_neuter: _, _;
+        genitive_plural: _, _;
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
+        dative_plural: _, _;
+        accusative_masculine: _, "~";
         accusative_feminine: "~у|~оё", "~у|~оё";
-        accusative_neuter: "~о", "~о";
-        accusative_plural: "~их", "~и";
-        instrumental_masculine: "~им", "~им";
-        instrumental_feminine: "~ой|~ою", "~ой|~ою";
-        instrumental_neuter: "~им", "~им";
-        instrumental_plural: "~ими", "~ими";
-        prepositional_masculine: "~ом", "~ом";
-        prepositional_feminine: "~ой", "~ой";
-        prepositional_neuter: "~ом", "~ом";
-        prepositional_plural: "~их", "~их";
+        accusative_neuter: _, _;
+        accusative_plural: _, _;
+        instrumental_masculine: _, _;
+        instrumental_feminine: _, _;
+        instrumental_neuter: _, _;
+        instrumental_plural: _, _;
+        prepositional_masculine: _, _;
+        prepositional_feminine: _, _;
+        prepositional_neuter: _, _;
+        prepositional_plural: _, _;
     ),
-    // Тот: 1 words (тот).
-    declension!("тот", 1, "~от";
-        nominative_masculine: "~от", "~от";
-        nominative_feminine: "~а", "~а";
-        nominative_neuter: "~о", "~о";
+    // Тот: 1 words (тот). Like Этот, except in 16 cells: nominative_plural anim, nominative_plural inan, genitive_plural anim, genitive_plural inan, dative_plural anim, dative_plural inan, ….
+    declension!("тот", 1, "~от", like Этот;
+        nominative_masculine: _, _;
+        nominative_feminine: _, _;
+        nominative_neuter: _, _;
         nominative_plural: "~е", "~е";
-        genitive_masculine: "~ого", "~ого";
-        genitive_feminine: "~ой", "~ой";
-        genitive_neuter: "~ого", "~ого";
+        genitive_masculine: _, _;
+        genitive_feminine: _, _;
+        genitive_neuter: _, _;
         genitive_plural: "~ех", "~ех";
-        dative_masculine: "~ому", "~ому";
-        dative_feminine: "~ой", "~ой";
-        dative_neuter: "~ому", "~ому";
+        dative_masculine: _, _;
+        dative_feminine: _, _;
+        dative_neuter: _, _;
         dative_plural: "~ем", "~ем";
-        accusative_masculine: "~ого", "~от";
-        accusative_feminine: "~у", "~у";
-        accusative_neuter: "~о", "~о";
+        accusative_masculine: _, _;
+        accusative_feminine: _, _;
+        accusative_neuter: _, _;
         accusative_plural: "~ех", "~е";
         instrumental_masculine: "~ем", "~ем";
-        instrumental_feminine: "~ой|~ою", "~ой|~ою";
+        instrumental_feminine: _, _;
         instrumental_neuter: "~ем", "~ем";
         instrumental_plural: "~еми", "~еми";
-        prepositional_masculine: "~ом", "~ом";
-        prepositional_feminine: "~ой", "~ой";
-        prepositional_neuter: "~ом", "~ом";
+        prepositional_masculine: _, _;
+        prepositional_feminine: _, _;
+        prepositional_neuter: _, _;
         prepositional_plural: "~ех", "~ех";
     ),
     // Иже: 1 words (иже).

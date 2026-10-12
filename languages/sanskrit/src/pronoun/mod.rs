@@ -5,13 +5,13 @@
 
 mod irregular;
 mod paradigms;
+mod relations;
 mod rules;
 mod spellings;
 
 pub use paradigms::Declension;
 
-use flexion::Grammar;
-use flexion::{Candidate, Known, Reading};
+use flexion::{Candidate, Grammar, Known, Reading};
 use std::borrow::Cow;
 
 /// Each cell's place in a paradigm.
@@ -99,7 +99,7 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
     capitalized: false,
     paradigms: Cow::Borrowed(&paradigms::DECLENSIONS),
     paradigm: rules::DECLENSION,
-    referrals: Cow::Borrowed(&[]),
+    relations: Cow::Borrowed(&relations::RELATIONS),
     feature: None,
     compound: None,
     prefixes: None,
@@ -408,10 +408,10 @@ impl<'w> Pronoun<'w> {
         self
     }
 
-    fn known(&self) -> Known<'_, u8> {
+    fn known(&self) -> Known<'_> {
         Known {
             forms: &self.given,
-            feature: None,
+            inherent: &[],
             full: false,
         }
     }

@@ -6,7 +6,6 @@
 //! chooses acute or circumflex by the syllables' length.
 
 use super::cell::*;
-use flexion::Place::*;
 use flexion::{AccentPattern, Choice, StressClass};
 use std::borrow::Cow;
 
@@ -226,67 +225,1264 @@ macro_rules! pattern {
         AccentPattern {
             name: Cow::Borrowed($name),
             words: $words,
-            places: Cow::Borrowed(&[
-                $c0, $c1, $c2, $c3, $c4, $c5, $c6, $c7, $c8, $c9, $c10, $c11, $c12, $c13, $c14,
-                $c15, $c16, $c17, $c18, $c19, $c20, $c21, $c22, $c23, $c24, $c25, $c26, $c27, $c28,
-                $c29, $c30, $c31, $c32, $c33, $c34, $c35, $c36, $c37, $c38, $c39, $c40, $c41, $c42,
-                $c43, $c44, $c45, $c46, $c47, $c48, $c49, $c50, $c51, $c52, $c53, $c54, $c55, $c56,
-                $c57, $c58, $c59, $c60, $c61, $c62, $c63, $c64, $c65, $c66, $c67, $c68, $c69, $c70,
-                $c71, $c72, $c73, $c74, $c75, $c76, $c77, $c78, $c79, $c80, $c81, $c82, $c83, $c84,
-                $c85, $c86, $c87, $c88, $c89, $c90, $c91, $c92, $c93, $c94, $c95, $c96, $c97, $c98,
-                $c99, $c100, $c101, $c102, $c103, $c104, $c105, $c106, $c107, $c108, $c109, $c110,
-                $c111, $c112, $c113, $c114, $c115, $c116, $c117, $c118, $c119, $c120, $c121, $c122,
-                $c123, $c124, $c125, $c126, $c127, $c128, $c129, $c130, $c131, $c132, $c133, $c134,
-                $c135, $c136, $c137, $c138, $c139, $c140, $c141, $c142, $c143, $c144, $c145, $c146,
-                $c147, $c148, $c149, $c150, $c151, $c152, $c153, $c154, $c155, $c156, $c157, $c158,
-                $c159, $c160, $c161, $c162, $c163, $c164, $c165, $c166, $c167, $c168, $c169, $c170,
-                $c171, $c172, $c173, $c174, $c175, $c176, $c177, $c178, $c179, $c180, $c181, $c182,
-                $c183, $c184, $c185, $c186, $c187, $c188, $c189, $c190, $c191, $c192, $c193, $c194,
-                $c195, $c196, $c197, $c198, $c199, $c200, $c201, $c202, $c203, $c204, $c205, $c206,
-                $c207, $c208, $c209, $c210, $c211, $c212, $c213, $c214, $c215, $c216, $c217, $c218,
-                $c219, $c220, $c221, $c222, $c223, $c224, $c225, $c226, $c227, $c228, $c229, $c230,
-                $c231, $c232, $c233, $c234, $c235, $c236, $c237, $c238, $c239, $c240, $c241, $c242,
-                $c243, $c244, $c245, $c246, $c247, $c248, $c249, $c250, $c251, $c252, $c253, $c254,
-                $c255, $c256, $c257, $c258, $c259, $c260, $c261, $c262, $c263, $c264, $c265, $c266,
-                $c267, $c268, $c269, $c270, $c271, $c272, $c273, $c274, $c275, $c276, $c277, $c278,
-                $c279, $c280, $c281, $c282, $c283, $c284, $c285, $c286, $c287, $c288, $c289, $c290,
-                $c291, $c292, $c293, $c294, $c295, $c296, $c297, $c298, $c299, $c300, $c301, $c302,
-                $c303, $c304, $c305, $c306, $c307, $c308, $c309, $c310, $c311, $c312, $c313, $c314,
-                $c315, $c316, $c317, $c318, $c319, $c320, $c321, $c322, $c323, $c324, $c325, $c326,
-                $c327, $c328, $c329, $c330, $c331, $c332, $c333, $c334, $c335, $c336, $c337, $c338,
-                $c339, $c340, $c341, $c342, $c343, $c344, $c345, $c346, $c347, $c348, $c349, $c350,
-                $c351, $c352, $c353, $c354, $c355, $c356, $c357, $c358, $c359, $c360, $c361, $c362,
-                $c363, $c364, $c365, $c366, $c367, $c368, $c369, $c370, $c371, $c372, $c373, $c374,
-                $c375, $c376, $c377, $c378, $c379, $c380, $c381, $c382, $c383, $c384, $c385, $c386,
-                $c387, $c388, $c389, $c390, $c391, $c392, $c393, $c394, $c395, $c396, $c397, $c398,
-                $c399, $c400, $c401, $c402, $c403, $c404, $c405, $c406, $c407, $c408, $c409, $c410,
-                $c411, $c412, $c413, $c414, $c415, $c416, $c417, $c418, $c419, $c420, $c421, $c422,
-                $c423, $c424, $c425, $c426, $c427, $c428, $c429, $c430, $c431, $c432, $c433, $c434,
-                $c435, $c436, $c437, $c438, $c439, $c440, $c441, $c442, $c443, $c444, $c445, $c446,
-                $c447, $c448, $c449, $c450, $c451, $c452, $c453, $c454, $c455, $c456, $c457, $c458,
-                $c459, $c460, $c461, $c462, $c463, $c464, $c465, $c466, $c467, $c468, $c469, $c470,
-                $c471, $c472, $c473, $c474, $c475, $c476, $c477, $c478, $c479, $c480, $c481, $c482,
-                $c483, $c484, $c485, $c486, $c487, $c488, $c489, $c490, $c491, $c492, $c493, $c494,
-                $c495, $c496, $c497, $c498, $c499, $c500, $c501, $c502, $c503, $c504, $c505, $c506,
-                $c507, $c508, $c509, $c510, $c511, $c512, $c513, $c514, $c515, $c516, $c517, $c518,
-                $c519, $c520, $c521, $c522, $c523, $c524, $c525, $c526, $c527, $c528, $c529, $c530,
-                $c531, $c532, $c533, $c534, $c535, $c536, $c537, $c538, $c539, $c540, $c541, $c542,
-                $c543, $c544, $c545, $c546, $c547, $c548, $c549, $c550, $c551, $c552, $c553, $c554,
-                $c555, $c556, $c557, $c558, $c559, $c560, $c561, $c562, $c563, $c564, $c565, $c566,
-                $c567, $c568, $c569, $c570, $c571, $c572, $c573, $c574, $c575, $c576, $c577, $c578,
-                $c579, $c580, $c581, $c582, $c583, $c584, $c585, $c586, $c587, $c588, $c589, $c590,
-                $c591, $c592, $c593, $c594, $c595, $c596, $c597, $c598, $c599, $c600, $c601, $c602,
-                $c603, $c604, $c605, $c606, $c607, $c608, $c609, $c610, $c611, $c612, $c613, $c614,
-                $c615, $c616, $c617, $c618, $c619, $c620, $c621, $c622, $c623,
-            ]),
+            places: Cow::Borrowed(concat!(
+                stringify!($c0),
+                "\t",
+                stringify!($c1),
+                "\t",
+                stringify!($c2),
+                "\t",
+                stringify!($c3),
+                "\t",
+                stringify!($c4),
+                "\t",
+                stringify!($c5),
+                "\t",
+                stringify!($c6),
+                "\t",
+                stringify!($c7),
+                "\t",
+                stringify!($c8),
+                "\t",
+                stringify!($c9),
+                "\t",
+                stringify!($c10),
+                "\t",
+                stringify!($c11),
+                "\t",
+                stringify!($c12),
+                "\t",
+                stringify!($c13),
+                "\t",
+                stringify!($c14),
+                "\t",
+                stringify!($c15),
+                "\t",
+                stringify!($c16),
+                "\t",
+                stringify!($c17),
+                "\t",
+                stringify!($c18),
+                "\t",
+                stringify!($c19),
+                "\t",
+                stringify!($c20),
+                "\t",
+                stringify!($c21),
+                "\t",
+                stringify!($c22),
+                "\t",
+                stringify!($c23),
+                "\t",
+                stringify!($c24),
+                "\t",
+                stringify!($c25),
+                "\t",
+                stringify!($c26),
+                "\t",
+                stringify!($c27),
+                "\t",
+                stringify!($c28),
+                "\t",
+                stringify!($c29),
+                "\t",
+                stringify!($c30),
+                "\t",
+                stringify!($c31),
+                "\t",
+                stringify!($c32),
+                "\t",
+                stringify!($c33),
+                "\t",
+                stringify!($c34),
+                "\t",
+                stringify!($c35),
+                "\t",
+                stringify!($c36),
+                "\t",
+                stringify!($c37),
+                "\t",
+                stringify!($c38),
+                "\t",
+                stringify!($c39),
+                "\t",
+                stringify!($c40),
+                "\t",
+                stringify!($c41),
+                "\t",
+                stringify!($c42),
+                "\t",
+                stringify!($c43),
+                "\t",
+                stringify!($c44),
+                "\t",
+                stringify!($c45),
+                "\t",
+                stringify!($c46),
+                "\t",
+                stringify!($c47),
+                "\t",
+                stringify!($c48),
+                "\t",
+                stringify!($c49),
+                "\t",
+                stringify!($c50),
+                "\t",
+                stringify!($c51),
+                "\t",
+                stringify!($c52),
+                "\t",
+                stringify!($c53),
+                "\t",
+                stringify!($c54),
+                "\t",
+                stringify!($c55),
+                "\t",
+                stringify!($c56),
+                "\t",
+                stringify!($c57),
+                "\t",
+                stringify!($c58),
+                "\t",
+                stringify!($c59),
+                "\t",
+                stringify!($c60),
+                "\t",
+                stringify!($c61),
+                "\t",
+                stringify!($c62),
+                "\t",
+                stringify!($c63),
+                "\t",
+                stringify!($c64),
+                "\t",
+                stringify!($c65),
+                "\t",
+                stringify!($c66),
+                "\t",
+                stringify!($c67),
+                "\t",
+                stringify!($c68),
+                "\t",
+                stringify!($c69),
+                "\t",
+                stringify!($c70),
+                "\t",
+                stringify!($c71),
+                "\t",
+                stringify!($c72),
+                "\t",
+                stringify!($c73),
+                "\t",
+                stringify!($c74),
+                "\t",
+                stringify!($c75),
+                "\t",
+                stringify!($c76),
+                "\t",
+                stringify!($c77),
+                "\t",
+                stringify!($c78),
+                "\t",
+                stringify!($c79),
+                "\t",
+                stringify!($c80),
+                "\t",
+                stringify!($c81),
+                "\t",
+                stringify!($c82),
+                "\t",
+                stringify!($c83),
+                "\t",
+                stringify!($c84),
+                "\t",
+                stringify!($c85),
+                "\t",
+                stringify!($c86),
+                "\t",
+                stringify!($c87),
+                "\t",
+                stringify!($c88),
+                "\t",
+                stringify!($c89),
+                "\t",
+                stringify!($c90),
+                "\t",
+                stringify!($c91),
+                "\t",
+                stringify!($c92),
+                "\t",
+                stringify!($c93),
+                "\t",
+                stringify!($c94),
+                "\t",
+                stringify!($c95),
+                "\t",
+                stringify!($c96),
+                "\t",
+                stringify!($c97),
+                "\t",
+                stringify!($c98),
+                "\t",
+                stringify!($c99),
+                "\t",
+                stringify!($c100),
+                "\t",
+                stringify!($c101),
+                "\t",
+                stringify!($c102),
+                "\t",
+                stringify!($c103),
+                "\t",
+                stringify!($c104),
+                "\t",
+                stringify!($c105),
+                "\t",
+                stringify!($c106),
+                "\t",
+                stringify!($c107),
+                "\t",
+                stringify!($c108),
+                "\t",
+                stringify!($c109),
+                "\t",
+                stringify!($c110),
+                "\t",
+                stringify!($c111),
+                "\t",
+                stringify!($c112),
+                "\t",
+                stringify!($c113),
+                "\t",
+                stringify!($c114),
+                "\t",
+                stringify!($c115),
+                "\t",
+                stringify!($c116),
+                "\t",
+                stringify!($c117),
+                "\t",
+                stringify!($c118),
+                "\t",
+                stringify!($c119),
+                "\t",
+                stringify!($c120),
+                "\t",
+                stringify!($c121),
+                "\t",
+                stringify!($c122),
+                "\t",
+                stringify!($c123),
+                "\t",
+                stringify!($c124),
+                "\t",
+                stringify!($c125),
+                "\t",
+                stringify!($c126),
+                "\t",
+                stringify!($c127),
+                "\t",
+                stringify!($c128),
+                "\t",
+                stringify!($c129),
+                "\t",
+                stringify!($c130),
+                "\t",
+                stringify!($c131),
+                "\t",
+                stringify!($c132),
+                "\t",
+                stringify!($c133),
+                "\t",
+                stringify!($c134),
+                "\t",
+                stringify!($c135),
+                "\t",
+                stringify!($c136),
+                "\t",
+                stringify!($c137),
+                "\t",
+                stringify!($c138),
+                "\t",
+                stringify!($c139),
+                "\t",
+                stringify!($c140),
+                "\t",
+                stringify!($c141),
+                "\t",
+                stringify!($c142),
+                "\t",
+                stringify!($c143),
+                "\t",
+                stringify!($c144),
+                "\t",
+                stringify!($c145),
+                "\t",
+                stringify!($c146),
+                "\t",
+                stringify!($c147),
+                "\t",
+                stringify!($c148),
+                "\t",
+                stringify!($c149),
+                "\t",
+                stringify!($c150),
+                "\t",
+                stringify!($c151),
+                "\t",
+                stringify!($c152),
+                "\t",
+                stringify!($c153),
+                "\t",
+                stringify!($c154),
+                "\t",
+                stringify!($c155),
+                "\t",
+                stringify!($c156),
+                "\t",
+                stringify!($c157),
+                "\t",
+                stringify!($c158),
+                "\t",
+                stringify!($c159),
+                "\t",
+                stringify!($c160),
+                "\t",
+                stringify!($c161),
+                "\t",
+                stringify!($c162),
+                "\t",
+                stringify!($c163),
+                "\t",
+                stringify!($c164),
+                "\t",
+                stringify!($c165),
+                "\t",
+                stringify!($c166),
+                "\t",
+                stringify!($c167),
+                "\t",
+                stringify!($c168),
+                "\t",
+                stringify!($c169),
+                "\t",
+                stringify!($c170),
+                "\t",
+                stringify!($c171),
+                "\t",
+                stringify!($c172),
+                "\t",
+                stringify!($c173),
+                "\t",
+                stringify!($c174),
+                "\t",
+                stringify!($c175),
+                "\t",
+                stringify!($c176),
+                "\t",
+                stringify!($c177),
+                "\t",
+                stringify!($c178),
+                "\t",
+                stringify!($c179),
+                "\t",
+                stringify!($c180),
+                "\t",
+                stringify!($c181),
+                "\t",
+                stringify!($c182),
+                "\t",
+                stringify!($c183),
+                "\t",
+                stringify!($c184),
+                "\t",
+                stringify!($c185),
+                "\t",
+                stringify!($c186),
+                "\t",
+                stringify!($c187),
+                "\t",
+                stringify!($c188),
+                "\t",
+                stringify!($c189),
+                "\t",
+                stringify!($c190),
+                "\t",
+                stringify!($c191),
+                "\t",
+                stringify!($c192),
+                "\t",
+                stringify!($c193),
+                "\t",
+                stringify!($c194),
+                "\t",
+                stringify!($c195),
+                "\t",
+                stringify!($c196),
+                "\t",
+                stringify!($c197),
+                "\t",
+                stringify!($c198),
+                "\t",
+                stringify!($c199),
+                "\t",
+                stringify!($c200),
+                "\t",
+                stringify!($c201),
+                "\t",
+                stringify!($c202),
+                "\t",
+                stringify!($c203),
+                "\t",
+                stringify!($c204),
+                "\t",
+                stringify!($c205),
+                "\t",
+                stringify!($c206),
+                "\t",
+                stringify!($c207),
+                "\t",
+                stringify!($c208),
+                "\t",
+                stringify!($c209),
+                "\t",
+                stringify!($c210),
+                "\t",
+                stringify!($c211),
+                "\t",
+                stringify!($c212),
+                "\t",
+                stringify!($c213),
+                "\t",
+                stringify!($c214),
+                "\t",
+                stringify!($c215),
+                "\t",
+                stringify!($c216),
+                "\t",
+                stringify!($c217),
+                "\t",
+                stringify!($c218),
+                "\t",
+                stringify!($c219),
+                "\t",
+                stringify!($c220),
+                "\t",
+                stringify!($c221),
+                "\t",
+                stringify!($c222),
+                "\t",
+                stringify!($c223),
+                "\t",
+                stringify!($c224),
+                "\t",
+                stringify!($c225),
+                "\t",
+                stringify!($c226),
+                "\t",
+                stringify!($c227),
+                "\t",
+                stringify!($c228),
+                "\t",
+                stringify!($c229),
+                "\t",
+                stringify!($c230),
+                "\t",
+                stringify!($c231),
+                "\t",
+                stringify!($c232),
+                "\t",
+                stringify!($c233),
+                "\t",
+                stringify!($c234),
+                "\t",
+                stringify!($c235),
+                "\t",
+                stringify!($c236),
+                "\t",
+                stringify!($c237),
+                "\t",
+                stringify!($c238),
+                "\t",
+                stringify!($c239),
+                "\t",
+                stringify!($c240),
+                "\t",
+                stringify!($c241),
+                "\t",
+                stringify!($c242),
+                "\t",
+                stringify!($c243),
+                "\t",
+                stringify!($c244),
+                "\t",
+                stringify!($c245),
+                "\t",
+                stringify!($c246),
+                "\t",
+                stringify!($c247),
+                "\t",
+                stringify!($c248),
+                "\t",
+                stringify!($c249),
+                "\t",
+                stringify!($c250),
+                "\t",
+                stringify!($c251),
+                "\t",
+                stringify!($c252),
+                "\t",
+                stringify!($c253),
+                "\t",
+                stringify!($c254),
+                "\t",
+                stringify!($c255),
+                "\t",
+                stringify!($c256),
+                "\t",
+                stringify!($c257),
+                "\t",
+                stringify!($c258),
+                "\t",
+                stringify!($c259),
+                "\t",
+                stringify!($c260),
+                "\t",
+                stringify!($c261),
+                "\t",
+                stringify!($c262),
+                "\t",
+                stringify!($c263),
+                "\t",
+                stringify!($c264),
+                "\t",
+                stringify!($c265),
+                "\t",
+                stringify!($c266),
+                "\t",
+                stringify!($c267),
+                "\t",
+                stringify!($c268),
+                "\t",
+                stringify!($c269),
+                "\t",
+                stringify!($c270),
+                "\t",
+                stringify!($c271),
+                "\t",
+                stringify!($c272),
+                "\t",
+                stringify!($c273),
+                "\t",
+                stringify!($c274),
+                "\t",
+                stringify!($c275),
+                "\t",
+                stringify!($c276),
+                "\t",
+                stringify!($c277),
+                "\t",
+                stringify!($c278),
+                "\t",
+                stringify!($c279),
+                "\t",
+                stringify!($c280),
+                "\t",
+                stringify!($c281),
+                "\t",
+                stringify!($c282),
+                "\t",
+                stringify!($c283),
+                "\t",
+                stringify!($c284),
+                "\t",
+                stringify!($c285),
+                "\t",
+                stringify!($c286),
+                "\t",
+                stringify!($c287),
+                "\t",
+                stringify!($c288),
+                "\t",
+                stringify!($c289),
+                "\t",
+                stringify!($c290),
+                "\t",
+                stringify!($c291),
+                "\t",
+                stringify!($c292),
+                "\t",
+                stringify!($c293),
+                "\t",
+                stringify!($c294),
+                "\t",
+                stringify!($c295),
+                "\t",
+                stringify!($c296),
+                "\t",
+                stringify!($c297),
+                "\t",
+                stringify!($c298),
+                "\t",
+                stringify!($c299),
+                "\t",
+                stringify!($c300),
+                "\t",
+                stringify!($c301),
+                "\t",
+                stringify!($c302),
+                "\t",
+                stringify!($c303),
+                "\t",
+                stringify!($c304),
+                "\t",
+                stringify!($c305),
+                "\t",
+                stringify!($c306),
+                "\t",
+                stringify!($c307),
+                "\t",
+                stringify!($c308),
+                "\t",
+                stringify!($c309),
+                "\t",
+                stringify!($c310),
+                "\t",
+                stringify!($c311),
+                "\t",
+                stringify!($c312),
+                "\t",
+                stringify!($c313),
+                "\t",
+                stringify!($c314),
+                "\t",
+                stringify!($c315),
+                "\t",
+                stringify!($c316),
+                "\t",
+                stringify!($c317),
+                "\t",
+                stringify!($c318),
+                "\t",
+                stringify!($c319),
+                "\t",
+                stringify!($c320),
+                "\t",
+                stringify!($c321),
+                "\t",
+                stringify!($c322),
+                "\t",
+                stringify!($c323),
+                "\t",
+                stringify!($c324),
+                "\t",
+                stringify!($c325),
+                "\t",
+                stringify!($c326),
+                "\t",
+                stringify!($c327),
+                "\t",
+                stringify!($c328),
+                "\t",
+                stringify!($c329),
+                "\t",
+                stringify!($c330),
+                "\t",
+                stringify!($c331),
+                "\t",
+                stringify!($c332),
+                "\t",
+                stringify!($c333),
+                "\t",
+                stringify!($c334),
+                "\t",
+                stringify!($c335),
+                "\t",
+                stringify!($c336),
+                "\t",
+                stringify!($c337),
+                "\t",
+                stringify!($c338),
+                "\t",
+                stringify!($c339),
+                "\t",
+                stringify!($c340),
+                "\t",
+                stringify!($c341),
+                "\t",
+                stringify!($c342),
+                "\t",
+                stringify!($c343),
+                "\t",
+                stringify!($c344),
+                "\t",
+                stringify!($c345),
+                "\t",
+                stringify!($c346),
+                "\t",
+                stringify!($c347),
+                "\t",
+                stringify!($c348),
+                "\t",
+                stringify!($c349),
+                "\t",
+                stringify!($c350),
+                "\t",
+                stringify!($c351),
+                "\t",
+                stringify!($c352),
+                "\t",
+                stringify!($c353),
+                "\t",
+                stringify!($c354),
+                "\t",
+                stringify!($c355),
+                "\t",
+                stringify!($c356),
+                "\t",
+                stringify!($c357),
+                "\t",
+                stringify!($c358),
+                "\t",
+                stringify!($c359),
+                "\t",
+                stringify!($c360),
+                "\t",
+                stringify!($c361),
+                "\t",
+                stringify!($c362),
+                "\t",
+                stringify!($c363),
+                "\t",
+                stringify!($c364),
+                "\t",
+                stringify!($c365),
+                "\t",
+                stringify!($c366),
+                "\t",
+                stringify!($c367),
+                "\t",
+                stringify!($c368),
+                "\t",
+                stringify!($c369),
+                "\t",
+                stringify!($c370),
+                "\t",
+                stringify!($c371),
+                "\t",
+                stringify!($c372),
+                "\t",
+                stringify!($c373),
+                "\t",
+                stringify!($c374),
+                "\t",
+                stringify!($c375),
+                "\t",
+                stringify!($c376),
+                "\t",
+                stringify!($c377),
+                "\t",
+                stringify!($c378),
+                "\t",
+                stringify!($c379),
+                "\t",
+                stringify!($c380),
+                "\t",
+                stringify!($c381),
+                "\t",
+                stringify!($c382),
+                "\t",
+                stringify!($c383),
+                "\t",
+                stringify!($c384),
+                "\t",
+                stringify!($c385),
+                "\t",
+                stringify!($c386),
+                "\t",
+                stringify!($c387),
+                "\t",
+                stringify!($c388),
+                "\t",
+                stringify!($c389),
+                "\t",
+                stringify!($c390),
+                "\t",
+                stringify!($c391),
+                "\t",
+                stringify!($c392),
+                "\t",
+                stringify!($c393),
+                "\t",
+                stringify!($c394),
+                "\t",
+                stringify!($c395),
+                "\t",
+                stringify!($c396),
+                "\t",
+                stringify!($c397),
+                "\t",
+                stringify!($c398),
+                "\t",
+                stringify!($c399),
+                "\t",
+                stringify!($c400),
+                "\t",
+                stringify!($c401),
+                "\t",
+                stringify!($c402),
+                "\t",
+                stringify!($c403),
+                "\t",
+                stringify!($c404),
+                "\t",
+                stringify!($c405),
+                "\t",
+                stringify!($c406),
+                "\t",
+                stringify!($c407),
+                "\t",
+                stringify!($c408),
+                "\t",
+                stringify!($c409),
+                "\t",
+                stringify!($c410),
+                "\t",
+                stringify!($c411),
+                "\t",
+                stringify!($c412),
+                "\t",
+                stringify!($c413),
+                "\t",
+                stringify!($c414),
+                "\t",
+                stringify!($c415),
+                "\t",
+                stringify!($c416),
+                "\t",
+                stringify!($c417),
+                "\t",
+                stringify!($c418),
+                "\t",
+                stringify!($c419),
+                "\t",
+                stringify!($c420),
+                "\t",
+                stringify!($c421),
+                "\t",
+                stringify!($c422),
+                "\t",
+                stringify!($c423),
+                "\t",
+                stringify!($c424),
+                "\t",
+                stringify!($c425),
+                "\t",
+                stringify!($c426),
+                "\t",
+                stringify!($c427),
+                "\t",
+                stringify!($c428),
+                "\t",
+                stringify!($c429),
+                "\t",
+                stringify!($c430),
+                "\t",
+                stringify!($c431),
+                "\t",
+                stringify!($c432),
+                "\t",
+                stringify!($c433),
+                "\t",
+                stringify!($c434),
+                "\t",
+                stringify!($c435),
+                "\t",
+                stringify!($c436),
+                "\t",
+                stringify!($c437),
+                "\t",
+                stringify!($c438),
+                "\t",
+                stringify!($c439),
+                "\t",
+                stringify!($c440),
+                "\t",
+                stringify!($c441),
+                "\t",
+                stringify!($c442),
+                "\t",
+                stringify!($c443),
+                "\t",
+                stringify!($c444),
+                "\t",
+                stringify!($c445),
+                "\t",
+                stringify!($c446),
+                "\t",
+                stringify!($c447),
+                "\t",
+                stringify!($c448),
+                "\t",
+                stringify!($c449),
+                "\t",
+                stringify!($c450),
+                "\t",
+                stringify!($c451),
+                "\t",
+                stringify!($c452),
+                "\t",
+                stringify!($c453),
+                "\t",
+                stringify!($c454),
+                "\t",
+                stringify!($c455),
+                "\t",
+                stringify!($c456),
+                "\t",
+                stringify!($c457),
+                "\t",
+                stringify!($c458),
+                "\t",
+                stringify!($c459),
+                "\t",
+                stringify!($c460),
+                "\t",
+                stringify!($c461),
+                "\t",
+                stringify!($c462),
+                "\t",
+                stringify!($c463),
+                "\t",
+                stringify!($c464),
+                "\t",
+                stringify!($c465),
+                "\t",
+                stringify!($c466),
+                "\t",
+                stringify!($c467),
+                "\t",
+                stringify!($c468),
+                "\t",
+                stringify!($c469),
+                "\t",
+                stringify!($c470),
+                "\t",
+                stringify!($c471),
+                "\t",
+                stringify!($c472),
+                "\t",
+                stringify!($c473),
+                "\t",
+                stringify!($c474),
+                "\t",
+                stringify!($c475),
+                "\t",
+                stringify!($c476),
+                "\t",
+                stringify!($c477),
+                "\t",
+                stringify!($c478),
+                "\t",
+                stringify!($c479),
+                "\t",
+                stringify!($c480),
+                "\t",
+                stringify!($c481),
+                "\t",
+                stringify!($c482),
+                "\t",
+                stringify!($c483),
+                "\t",
+                stringify!($c484),
+                "\t",
+                stringify!($c485),
+                "\t",
+                stringify!($c486),
+                "\t",
+                stringify!($c487),
+                "\t",
+                stringify!($c488),
+                "\t",
+                stringify!($c489),
+                "\t",
+                stringify!($c490),
+                "\t",
+                stringify!($c491),
+                "\t",
+                stringify!($c492),
+                "\t",
+                stringify!($c493),
+                "\t",
+                stringify!($c494),
+                "\t",
+                stringify!($c495),
+                "\t",
+                stringify!($c496),
+                "\t",
+                stringify!($c497),
+                "\t",
+                stringify!($c498),
+                "\t",
+                stringify!($c499),
+                "\t",
+                stringify!($c500),
+                "\t",
+                stringify!($c501),
+                "\t",
+                stringify!($c502),
+                "\t",
+                stringify!($c503),
+                "\t",
+                stringify!($c504),
+                "\t",
+                stringify!($c505),
+                "\t",
+                stringify!($c506),
+                "\t",
+                stringify!($c507),
+                "\t",
+                stringify!($c508),
+                "\t",
+                stringify!($c509),
+                "\t",
+                stringify!($c510),
+                "\t",
+                stringify!($c511),
+                "\t",
+                stringify!($c512),
+                "\t",
+                stringify!($c513),
+                "\t",
+                stringify!($c514),
+                "\t",
+                stringify!($c515),
+                "\t",
+                stringify!($c516),
+                "\t",
+                stringify!($c517),
+                "\t",
+                stringify!($c518),
+                "\t",
+                stringify!($c519),
+                "\t",
+                stringify!($c520),
+                "\t",
+                stringify!($c521),
+                "\t",
+                stringify!($c522),
+                "\t",
+                stringify!($c523),
+                "\t",
+                stringify!($c524),
+                "\t",
+                stringify!($c525),
+                "\t",
+                stringify!($c526),
+                "\t",
+                stringify!($c527),
+                "\t",
+                stringify!($c528),
+                "\t",
+                stringify!($c529),
+                "\t",
+                stringify!($c530),
+                "\t",
+                stringify!($c531),
+                "\t",
+                stringify!($c532),
+                "\t",
+                stringify!($c533),
+                "\t",
+                stringify!($c534),
+                "\t",
+                stringify!($c535),
+                "\t",
+                stringify!($c536),
+                "\t",
+                stringify!($c537),
+                "\t",
+                stringify!($c538),
+                "\t",
+                stringify!($c539),
+                "\t",
+                stringify!($c540),
+                "\t",
+                stringify!($c541),
+                "\t",
+                stringify!($c542),
+                "\t",
+                stringify!($c543),
+                "\t",
+                stringify!($c544),
+                "\t",
+                stringify!($c545),
+                "\t",
+                stringify!($c546),
+                "\t",
+                stringify!($c547),
+                "\t",
+                stringify!($c548),
+                "\t",
+                stringify!($c549),
+                "\t",
+                stringify!($c550),
+                "\t",
+                stringify!($c551),
+                "\t",
+                stringify!($c552),
+                "\t",
+                stringify!($c553),
+                "\t",
+                stringify!($c554),
+                "\t",
+                stringify!($c555),
+                "\t",
+                stringify!($c556),
+                "\t",
+                stringify!($c557),
+                "\t",
+                stringify!($c558),
+                "\t",
+                stringify!($c559),
+                "\t",
+                stringify!($c560),
+                "\t",
+                stringify!($c561),
+                "\t",
+                stringify!($c562),
+                "\t",
+                stringify!($c563),
+                "\t",
+                stringify!($c564),
+                "\t",
+                stringify!($c565),
+                "\t",
+                stringify!($c566),
+                "\t",
+                stringify!($c567),
+                "\t",
+                stringify!($c568),
+                "\t",
+                stringify!($c569),
+                "\t",
+                stringify!($c570),
+                "\t",
+                stringify!($c571),
+                "\t",
+                stringify!($c572),
+                "\t",
+                stringify!($c573),
+                "\t",
+                stringify!($c574),
+                "\t",
+                stringify!($c575),
+                "\t",
+                stringify!($c576),
+                "\t",
+                stringify!($c577),
+                "\t",
+                stringify!($c578),
+                "\t",
+                stringify!($c579),
+                "\t",
+                stringify!($c580),
+                "\t",
+                stringify!($c581),
+                "\t",
+                stringify!($c582),
+                "\t",
+                stringify!($c583),
+                "\t",
+                stringify!($c584),
+                "\t",
+                stringify!($c585),
+                "\t",
+                stringify!($c586),
+                "\t",
+                stringify!($c587),
+                "\t",
+                stringify!($c588),
+                "\t",
+                stringify!($c589),
+                "\t",
+                stringify!($c590),
+                "\t",
+                stringify!($c591),
+                "\t",
+                stringify!($c592),
+                "\t",
+                stringify!($c593),
+                "\t",
+                stringify!($c594),
+                "\t",
+                stringify!($c595),
+                "\t",
+                stringify!($c596),
+                "\t",
+                stringify!($c597),
+                "\t",
+                stringify!($c598),
+                "\t",
+                stringify!($c599),
+                "\t",
+                stringify!($c600),
+                "\t",
+                stringify!($c601),
+                "\t",
+                stringify!($c602),
+                "\t",
+                stringify!($c603),
+                "\t",
+                stringify!($c604),
+                "\t",
+                stringify!($c605),
+                "\t",
+                stringify!($c606),
+                "\t",
+                stringify!($c607),
+                "\t",
+                stringify!($c608),
+                "\t",
+                stringify!($c609),
+                "\t",
+                stringify!($c610),
+                "\t",
+                stringify!($c611),
+                "\t",
+                stringify!($c612),
+                "\t",
+                stringify!($c613),
+                "\t",
+                stringify!($c614),
+                "\t",
+                stringify!($c615),
+                "\t",
+                stringify!($c616),
+                "\t",
+                stringify!($c617),
+                "\t",
+                stringify!($c618),
+                "\t",
+                stringify!($c619),
+                "\t",
+                stringify!($c620),
+                "\t",
+                stringify!($c621),
+                "\t",
+                stringify!($c622),
+                "\t",
+                stringify!($c623),
+                "\t"
+            )),
         }
     };
 }
 
 /// The accent patterns, commonest first.
 pub static PATTERNS: [AccentPattern<'static>; 100] = [
-    // Like `ἐχω`: 1,544 words.
-    pattern!("ἐχω", 1544;
+    // Like `ἐχω`: 1,553 words.
+    pattern!("ἐχω", 1553;
         indicative_active_first: Stem, Stem, Stem;
         indicative_active_second: Stem, Stem, Stem;
         indicative_active_third: Stem, Stem, Stem;
@@ -496,8 +1692,8 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_perfect: Ending, Ending, Ending;
         participle_future_perfect: Stem, Stem, Stem;
     ),
-    // Like `ποιεω`: 261 words.
-    pattern!("ποιεω", 261;
+    // Like `ποιεω`: 264 words.
+    pattern!("ποιεω", 264;
         indicative_active_first: Stem, Stem, Stem;
         indicative_active_second: Stem, Stem, Stem;
         indicative_active_third: Stem, Stem, Stem;
@@ -707,8 +1903,8 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_perfect: Stem, Stem, Stem;
         participle_future_perfect: Stem, Stem, Stem;
     ),
-    // Like `καθιζω`: 235 words.
-    pattern!("καθιζω", 235;
+    // Like `καθιζω`: 233 words.
+    pattern!("καθιζω", 233;
         indicative_active_first: Stem, Stem, Stem;
         indicative_active_second: Stem, Stem, Stem;
         indicative_active_third: Stem, Stem, Stem;
@@ -918,8 +2114,8 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_perfect: Ending, Ending, Ending;
         participle_future_perfect: Stem, Stem, Stem;
     ),
-    // Like `ἀναιρεω`: 191 words.
-    pattern!("ἀναιρεω", 191;
+    // Like `ἀναιρεω`: 192 words.
+    pattern!("ἀναιρεω", 192;
         indicative_active_first: Stem, Stem, Stem;
         indicative_active_second: Stem, Stem, Stem;
         indicative_active_third: Stem, Stem, Stem;
@@ -1129,8 +2325,8 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_perfect: Ending, Ending, Ending;
         participle_future_perfect: Stem, Stem, Stem;
     ),
-    // Like `προβαλλω`: 62 words.
-    pattern!("προβαλλω", 62;
+    // Like `προβαλλω`: 70 words.
+    pattern!("προβαλλω", 70;
         indicative_active_first: Stem, Stem, Stem;
         indicative_active_second: Stem, Stem, Stem;
         indicative_active_third: Stem, Stem, Stem;
@@ -1243,7 +2439,7 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         aorist_imperative_active_second: Recessive, Recessive, Recessive;
         aorist_imperative_active_third: Recessive, Recessive, Recessive;
         aorist_imperative_middle_first: Stem, Stem, Stem;
-        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_second: Ending, Recessive, Recessive;
         aorist_imperative_middle_third: Recessive, Recessive, Recessive;
         aorist_imperative_passive_first: Stem, Stem, Stem;
         aorist_imperative_passive_second: Recessive, Recessive, Recessive;
@@ -1331,8 +2527,8 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         future_perfect_imperative_passive_third: Stem, Stem, Stem;
         infinitive_present: Stem, Stem, Stem;
         infinitive_future: Recessive, Recessive, Recessive;
-        infinitive_aorist: Ending, Stem, Ending;
-        infinitive_perfect: Stem, Ending, Ending;
+        infinitive_aorist: Ending, Ending, Ending;
+        infinitive_perfect: Stem, Stem, Stem;
         infinitive_future_perfect: Stem, Stem, Stem;
         participle_present: Stem, Recessive, Recessive;
         participle_future: Recessive, Recessive, Recessive;
@@ -1551,8 +2747,8 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_perfect: Stem, Ending, Ending;
         participle_future_perfect: Stem, Stem, Stem;
     ),
-    // Like `προσερχομαι`: 30 words.
-    pattern!("προσερχομαι", 30;
+    // Like `προσερχομαι`: 31 words.
+    pattern!("προσερχομαι", 31;
         indicative_active_first: Stem, Stem, Stem;
         indicative_active_second: Stem, Stem, Stem;
         indicative_active_third: Stem, Stem, Stem;
@@ -1762,8 +2958,8 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_perfect: Ending, Stem, Stem;
         participle_future_perfect: Stem, Stem, Stem;
     ),
-    // Like `στειχω`: 28 words.
-    pattern!("στειχω", 28;
+    // Like `ὀφειλω`: 25 words.
+    pattern!("ὀφειλω", 25;
         indicative_active_first: Stem, Stem, Stem;
         indicative_active_second: Stem, Stem, Stem;
         indicative_active_third: Stem, Stem, Stem;
@@ -1876,7 +3072,7 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         aorist_imperative_active_second: Recessive, Recessive, Recessive;
         aorist_imperative_active_third: Recessive, Recessive, Recessive;
         aorist_imperative_middle_first: Stem, Stem, Stem;
-        aorist_imperative_middle_second: Ending, Recessive, Recessive;
+        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
         aorist_imperative_middle_third: Recessive, Recessive, Recessive;
         aorist_imperative_passive_first: Stem, Stem, Stem;
         aorist_imperative_passive_second: Recessive, Recessive, Recessive;
@@ -1964,17 +3160,17 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         future_perfect_imperative_passive_third: Stem, Stem, Stem;
         infinitive_present: Stem, Stem, Stem;
         infinitive_future: Recessive, Recessive, Recessive;
-        infinitive_aorist: Ending, Ending, Ending;
-        infinitive_perfect: Stem, Stem, Stem;
+        infinitive_aorist: Ending, Stem, Ending;
+        infinitive_perfect: Stem, Ending, Ending;
         infinitive_future_perfect: Stem, Stem, Stem;
         participle_present: Stem, Recessive, Recessive;
         participle_future: Recessive, Recessive, Recessive;
-        participle_aorist: Ending, Recessive, Ending;
+        participle_aorist: Stem, Recessive, Ending;
         participle_perfect: Ending, Ending, Ending;
         participle_future_perfect: Stem, Stem, Stem;
     ),
-    // Like `ἀφῑημῐ`: 28 words.
-    pattern!("ἀφῑημῐ", 28;
+    // Like `ἀποδιδωμι`: 25 words.
+    pattern!("ἀποδιδωμι", 25;
         indicative_active_first: Stem, Stem, Stem;
         indicative_active_second: Stem, Stem, Stem;
         indicative_active_third: Stem, Stem, Stem;
@@ -2395,8 +3591,8 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_perfect: Stem, Stem, Stem;
         participle_future_perfect: Stem, Stem, Stem;
     ),
-    // Like `ἐπῐλᾰμβᾰνω`: 22 words.
-    pattern!("ἐπῐλᾰμβᾰνω", 22;
+    // Like `ἐπῐλᾰμβᾰνω`: 21 words.
+    pattern!("ἐπῐλᾰμβᾰνω", 21;
         indicative_active_first: Stem, Stem, Stem;
         indicative_active_second: Stem, Stem, Stem;
         indicative_active_third: Stem, Stem, Stem;
@@ -3028,6 +4224,217 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_perfect: Ending, Ending, Ending;
         participle_future_perfect: Stem, Stem, Stem;
     ),
+    // Like `ἀφῑημῐ`: 17 words.
+    pattern!("ἀφῑημῐ", 17;
+        indicative_active_first: Stem, Stem, Stem;
+        indicative_active_second: Stem, Stem, Stem;
+        indicative_active_third: Stem, Stem, Stem;
+        indicative_middle_first: Stem, Stem, Recessive;
+        indicative_middle_second: Stem, Stem, Stem;
+        indicative_middle_third: Stem, Stem, Stem;
+        indicative_passive_first: Stem, Stem, Recessive;
+        indicative_passive_second: Stem, Stem, Stem;
+        indicative_passive_third: Stem, Stem, Stem;
+        subjunctive_active_first: Stem, Stem, Stem;
+        subjunctive_active_second: Stem, Stem, Stem;
+        subjunctive_active_third: Stem, Stem, Stem;
+        subjunctive_middle_first: Stem, Stem, Recessive;
+        subjunctive_middle_second: Stem, Stem, Stem;
+        subjunctive_middle_third: Stem, Stem, Stem;
+        subjunctive_passive_first: Stem, Stem, Recessive;
+        subjunctive_passive_second: Stem, Stem, Stem;
+        subjunctive_passive_third: Stem, Stem, Stem;
+        optative_active_first: Stem, Stem, Stem;
+        optative_active_second: Stem, Stem, Stem;
+        optative_active_third: Stem, Recessive, Stem;
+        optative_middle_first: Recessive, Stem, Recessive;
+        optative_middle_second: Stem, Stem, Stem;
+        optative_middle_third: Stem, Recessive, Stem;
+        optative_passive_first: Recessive, Stem, Recessive;
+        optative_passive_second: Stem, Stem, Stem;
+        optative_passive_third: Stem, Recessive, Stem;
+        imperative_active_first: Stem, Stem, Stem;
+        imperative_active_second: Recessive, Stem, Stem;
+        imperative_active_third: Recessive, Recessive, Recessive;
+        imperative_middle_first: Stem, Stem, Stem;
+        imperative_middle_second: Stem, Stem, Stem;
+        imperative_middle_third: Recessive, Recessive, Recessive;
+        imperative_passive_first: Stem, Stem, Stem;
+        imperative_passive_second: Stem, Stem, Stem;
+        imperative_passive_third: Recessive, Recessive, Recessive;
+        imperfect_active_first: Recessive, Stem, Stem;
+        imperfect_active_second: Recessive, Stem, Stem;
+        imperfect_active_third: Recessive, Recessive, Recessive;
+        imperfect_middle_first: Recessive, Stem, Recessive;
+        imperfect_middle_second: Stem, Stem, Stem;
+        imperfect_middle_third: Stem, Recessive, Stem;
+        imperfect_passive_first: Recessive, Stem, Recessive;
+        imperfect_passive_second: Stem, Stem, Stem;
+        imperfect_passive_third: Stem, Recessive, Stem;
+        future_indicative_active_first: Recessive, Stem, Stem;
+        future_indicative_active_second: Recessive, Stem, Stem;
+        future_indicative_active_third: Recessive, Stem, Stem;
+        future_indicative_middle_first: Recessive, Stem, Recessive;
+        future_indicative_middle_second: Recessive, Recessive, Recessive;
+        future_indicative_middle_third: Recessive, Recessive, Recessive;
+        future_indicative_passive_first: Recessive, Stem, Recessive;
+        future_indicative_passive_second: Recessive, Recessive, Recessive;
+        future_indicative_passive_third: Recessive, Recessive, Recessive;
+        future_subjunctive_active_first: Stem, Stem, Stem;
+        future_subjunctive_active_second: Stem, Stem, Stem;
+        future_subjunctive_active_third: Stem, Stem, Stem;
+        future_subjunctive_middle_first: Stem, Stem, Stem;
+        future_subjunctive_middle_second: Stem, Stem, Stem;
+        future_subjunctive_middle_third: Stem, Stem, Stem;
+        future_subjunctive_passive_first: Stem, Stem, Stem;
+        future_subjunctive_passive_second: Stem, Stem, Stem;
+        future_subjunctive_passive_third: Stem, Stem, Stem;
+        future_optative_active_first: Recessive, Stem, Stem;
+        future_optative_active_second: Recessive, Stem, Stem;
+        future_optative_active_third: Recessive, Recessive, Stem;
+        future_optative_middle_first: Recessive, Stem, Recessive;
+        future_optative_middle_second: Recessive, Recessive, Recessive;
+        future_optative_middle_third: Recessive, Recessive, Recessive;
+        future_optative_passive_first: Recessive, Stem, Recessive;
+        future_optative_passive_second: Recessive, Recessive, Recessive;
+        future_optative_passive_third: Recessive, Recessive, Recessive;
+        future_imperative_active_first: Stem, Stem, Stem;
+        future_imperative_active_second: Stem, Stem, Stem;
+        future_imperative_active_third: Stem, Stem, Stem;
+        future_imperative_middle_first: Stem, Stem, Stem;
+        future_imperative_middle_second: Stem, Stem, Stem;
+        future_imperative_middle_third: Stem, Stem, Stem;
+        future_imperative_passive_first: Stem, Stem, Stem;
+        future_imperative_passive_second: Stem, Stem, Stem;
+        future_imperative_passive_third: Stem, Stem, Stem;
+        aorist_indicative_active_first: Recessive, Stem, Recessive;
+        aorist_indicative_active_second: Recessive, Recessive, Recessive;
+        aorist_indicative_active_third: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_first: Recessive, Stem, Recessive;
+        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_first: Recessive, Stem, Recessive;
+        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_first: Stem, Stem, Stem;
+        aorist_subjunctive_active_second: Stem, Stem, Stem;
+        aorist_subjunctive_active_third: Stem, Stem, Stem;
+        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_passive_first: Ending, Stem, Ending;
+        aorist_subjunctive_passive_second: Ending, Ending, Ending;
+        aorist_subjunctive_passive_third: Ending, Ending, Ending;
+        aorist_optative_active_first: Recessive, Stem, Stem;
+        aorist_optative_active_second: Recessive, Stem, Stem;
+        aorist_optative_active_third: Recessive, Recessive, Stem;
+        aorist_optative_middle_first: Recessive, Stem, Recessive;
+        aorist_optative_middle_second: Recessive, Recessive, Recessive;
+        aorist_optative_middle_third: Recessive, Recessive, Recessive;
+        aorist_optative_passive_first: Recessive, Stem, Ending;
+        aorist_optative_passive_second: Recessive, Ending, Ending;
+        aorist_optative_passive_third: Recessive, Recessive, Ending;
+        aorist_imperative_active_first: Stem, Stem, Stem;
+        aorist_imperative_active_second: Recessive, Recessive, Recessive;
+        aorist_imperative_active_third: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_first: Stem, Stem, Stem;
+        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_first: Stem, Stem, Stem;
+        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
+        perfect_indicative_active_first: Recessive, Stem, Recessive;
+        perfect_indicative_active_second: Recessive, Recessive, Recessive;
+        perfect_indicative_active_third: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_first: Recessive, Stem, Recessive;
+        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_first: Recessive, Stem, Recessive;
+        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
+        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_middle_first: Ending, Stem, Ending;
+        perfect_subjunctive_middle_second: Ending, Ending, Ending;
+        perfect_subjunctive_middle_third: Ending, Ending, Ending;
+        perfect_subjunctive_passive_first: Ending, Stem, Ending;
+        perfect_subjunctive_passive_second: Ending, Ending, Ending;
+        perfect_subjunctive_passive_third: Ending, Ending, Ending;
+        perfect_optative_active_first: Recessive, Stem, Recessive;
+        perfect_optative_active_second: Recessive, Recessive, Recessive;
+        perfect_optative_active_third: Recessive, Stem, Recessive;
+        perfect_optative_middle_first: Ending, Stem, Ending;
+        perfect_optative_middle_second: Ending, Ending, Ending;
+        perfect_optative_middle_third: Ending, Ending, Ending;
+        perfect_optative_passive_first: Ending, Stem, Ending;
+        perfect_optative_passive_second: Ending, Ending, Ending;
+        perfect_optative_passive_third: Ending, Ending, Ending;
+        perfect_imperative_active_first: Stem, Stem, Stem;
+        perfect_imperative_active_second: Recessive, Recessive, Recessive;
+        perfect_imperative_active_third: Stem, Stem, Stem;
+        perfect_imperative_middle_first: Stem, Stem, Stem;
+        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
+        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_first: Stem, Stem, Stem;
+        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
+        pluperfect_active_first: Recessive, Stem, Recessive;
+        pluperfect_active_second: Recessive, Recessive, Recessive;
+        pluperfect_active_third: Recessive, Stem, Recessive;
+        pluperfect_middle_first: Recessive, Stem, Recessive;
+        pluperfect_middle_second: Recessive, Recessive, Recessive;
+        pluperfect_middle_third: Recessive, Recessive, Recessive;
+        pluperfect_passive_first: Recessive, Stem, Recessive;
+        pluperfect_passive_second: Recessive, Recessive, Recessive;
+        pluperfect_passive_third: Recessive, Recessive, Recessive;
+        future_perfect_indicative_active_first: Stem, Stem, Stem;
+        future_perfect_indicative_active_second: Stem, Stem, Stem;
+        future_perfect_indicative_active_third: Stem, Stem, Stem;
+        future_perfect_indicative_middle_first: Stem, Stem, Stem;
+        future_perfect_indicative_middle_second: Stem, Stem, Stem;
+        future_perfect_indicative_middle_third: Stem, Stem, Stem;
+        future_perfect_indicative_passive_first: Stem, Stem, Stem;
+        future_perfect_indicative_passive_second: Stem, Stem, Stem;
+        future_perfect_indicative_passive_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
+        future_perfect_optative_active_first: Stem, Stem, Stem;
+        future_perfect_optative_active_second: Stem, Stem, Stem;
+        future_perfect_optative_active_third: Stem, Stem, Stem;
+        future_perfect_optative_middle_first: Stem, Stem, Stem;
+        future_perfect_optative_middle_second: Stem, Stem, Stem;
+        future_perfect_optative_middle_third: Stem, Stem, Stem;
+        future_perfect_optative_passive_first: Stem, Stem, Stem;
+        future_perfect_optative_passive_second: Stem, Stem, Stem;
+        future_perfect_optative_passive_third: Stem, Stem, Stem;
+        future_perfect_imperative_active_first: Stem, Stem, Stem;
+        future_perfect_imperative_active_second: Stem, Stem, Stem;
+        future_perfect_imperative_active_third: Stem, Stem, Stem;
+        future_perfect_imperative_middle_first: Stem, Stem, Stem;
+        future_perfect_imperative_middle_second: Stem, Stem, Stem;
+        future_perfect_imperative_middle_third: Stem, Stem, Stem;
+        future_perfect_imperative_passive_first: Stem, Stem, Stem;
+        future_perfect_imperative_passive_second: Stem, Stem, Stem;
+        future_perfect_imperative_passive_third: Stem, Stem, Stem;
+        infinitive_present: Stem, Stem, Stem;
+        infinitive_future: Recessive, Recessive, Recessive;
+        infinitive_aorist: Stem, Stem, Ending;
+        infinitive_perfect: Stem, Stem, Stem;
+        infinitive_future_perfect: Stem, Stem, Stem;
+        participle_present: Stem, Recessive, Recessive;
+        participle_future: Recessive, Recessive, Recessive;
+        participle_aorist: Stem, Recessive, Ending;
+        participle_perfect: Stem, Stem, Stem;
+        participle_future_perfect: Stem, Stem, Stem;
+    ),
     // Like `πᾰρερχομαι`: 15 words.
     pattern!("πᾰρερχομαι", 15;
         indicative_active_first: Stem, Stem, Stem;
@@ -3239,8 +4646,8 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_perfect: Stem, Ending, Ending;
         participle_future_perfect: Stem, Stem, Stem;
     ),
-    // Like `ἀναβαινω`: 14 words.
-    pattern!("ἀναβαινω", 14;
+    // Like `λᾰμβᾰνω`: 12 words.
+    pattern!("λᾰμβᾰνω", 12;
         indicative_active_first: Stem, Stem, Stem;
         indicative_active_second: Stem, Stem, Stem;
         indicative_active_third: Stem, Stem, Stem;
@@ -3331,24 +4738,24 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         aorist_indicative_passive_first: Recessive, Stem, Recessive;
         aorist_indicative_passive_second: Recessive, Recessive, Recessive;
         aorist_indicative_passive_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_first: Stem, Stem, Stem;
-        aorist_subjunctive_active_second: Stem, Stem, Stem;
-        aorist_subjunctive_active_third: Stem, Stem, Stem;
+        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
         aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
         aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
         aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_passive_first: Ending, Stem, Ending;
-        aorist_subjunctive_passive_second: Ending, Ending, Ending;
-        aorist_subjunctive_passive_third: Ending, Ending, Ending;
-        aorist_optative_active_first: Recessive, Stem, Stem;
-        aorist_optative_active_second: Recessive, Stem, Stem;
-        aorist_optative_active_third: Recessive, Recessive, Stem;
+        aorist_subjunctive_passive_first: Stem, Stem, Stem;
+        aorist_subjunctive_passive_second: Stem, Stem, Stem;
+        aorist_subjunctive_passive_third: Stem, Stem, Stem;
+        aorist_optative_active_first: Recessive, Stem, Recessive;
+        aorist_optative_active_second: Recessive, Recessive, Recessive;
+        aorist_optative_active_third: Recessive, Recessive, Recessive;
         aorist_optative_middle_first: Recessive, Stem, Recessive;
         aorist_optative_middle_second: Recessive, Recessive, Recessive;
         aorist_optative_middle_third: Recessive, Recessive, Recessive;
-        aorist_optative_passive_first: Recessive, Stem, Ending;
-        aorist_optative_passive_second: Recessive, Ending, Ending;
-        aorist_optative_passive_third: Recessive, Recessive, Ending;
+        aorist_optative_passive_first: Recessive, Stem, Stem;
+        aorist_optative_passive_second: Recessive, Stem, Stem;
+        aorist_optative_passive_third: Recessive, Recessive, Stem;
         aorist_imperative_active_first: Stem, Stem, Stem;
         aorist_imperative_active_second: Recessive, Recessive, Recessive;
         aorist_imperative_active_third: Recessive, Recessive, Recessive;
@@ -3441,434 +4848,12 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         future_perfect_imperative_passive_third: Stem, Stem, Stem;
         infinitive_present: Stem, Stem, Stem;
         infinitive_future: Recessive, Recessive, Recessive;
-        infinitive_aorist: Stem, Stem, Ending;
-        infinitive_perfect: Stem, Ending, Ending;
-        infinitive_future_perfect: Stem, Stem, Stem;
-        participle_present: Stem, Recessive, Recessive;
-        participle_future: Recessive, Recessive, Recessive;
-        participle_aorist: Stem, Recessive, Ending;
-        participle_perfect: Ending, Ending, Ending;
-        participle_future_perfect: Stem, Stem, Stem;
-    ),
-    // Like `ὑποκειμαι`: 14 words.
-    pattern!("ὑποκειμαι", 14;
-        indicative_active_first: Stem, Stem, Stem;
-        indicative_active_second: Stem, Stem, Stem;
-        indicative_active_third: Stem, Stem, Stem;
-        indicative_middle_first: Recessive, Stem, Recessive;
-        indicative_middle_second: Recessive, Recessive, Recessive;
-        indicative_middle_third: Recessive, Recessive, Recessive;
-        indicative_passive_first: Recessive, Stem, Recessive;
-        indicative_passive_second: Recessive, Recessive, Recessive;
-        indicative_passive_third: Recessive, Recessive, Recessive;
-        subjunctive_active_first: Stem, Stem, Stem;
-        subjunctive_active_second: Stem, Stem, Stem;
-        subjunctive_active_third: Stem, Stem, Stem;
-        subjunctive_middle_first: Recessive, Stem, Recessive;
-        subjunctive_middle_second: Recessive, Recessive, Recessive;
-        subjunctive_middle_third: Recessive, Recessive, Recessive;
-        subjunctive_passive_first: Recessive, Stem, Recessive;
-        subjunctive_passive_second: Recessive, Recessive, Recessive;
-        subjunctive_passive_third: Recessive, Recessive, Recessive;
-        optative_active_first: Stem, Stem, Stem;
-        optative_active_second: Stem, Stem, Stem;
-        optative_active_third: Stem, Recessive, Stem;
-        optative_middle_first: Recessive, Stem, Recessive;
-        optative_middle_second: Recessive, Recessive, Recessive;
-        optative_middle_third: Recessive, Recessive, Recessive;
-        optative_passive_first: Recessive, Stem, Recessive;
-        optative_passive_second: Recessive, Recessive, Recessive;
-        optative_passive_third: Recessive, Recessive, Recessive;
-        imperative_active_first: Stem, Stem, Stem;
-        imperative_active_second: Recessive, Stem, Stem;
-        imperative_active_third: Recessive, Recessive, Recessive;
-        imperative_middle_first: Stem, Stem, Stem;
-        imperative_middle_second: Recessive, Recessive, Recessive;
-        imperative_middle_third: Recessive, Recessive, Recessive;
-        imperative_passive_first: Stem, Stem, Stem;
-        imperative_passive_second: Recessive, Recessive, Recessive;
-        imperative_passive_third: Recessive, Recessive, Recessive;
-        imperfect_active_first: Recessive, Stem, Stem;
-        imperfect_active_second: Recessive, Stem, Stem;
-        imperfect_active_third: Recessive, Recessive, Recessive;
-        imperfect_middle_first: Recessive, Stem, Recessive;
-        imperfect_middle_second: Stem, Stem, Stem;
-        imperfect_middle_third: Stem, Recessive, Stem;
-        imperfect_passive_first: Recessive, Stem, Recessive;
-        imperfect_passive_second: Stem, Stem, Stem;
-        imperfect_passive_third: Stem, Recessive, Stem;
-        future_indicative_active_first: Recessive, Stem, Stem;
-        future_indicative_active_second: Recessive, Stem, Stem;
-        future_indicative_active_third: Recessive, Stem, Stem;
-        future_indicative_middle_first: Recessive, Stem, Recessive;
-        future_indicative_middle_second: Recessive, Recessive, Recessive;
-        future_indicative_middle_third: Recessive, Recessive, Recessive;
-        future_indicative_passive_first: Recessive, Stem, Recessive;
-        future_indicative_passive_second: Recessive, Recessive, Recessive;
-        future_indicative_passive_third: Recessive, Recessive, Recessive;
-        future_subjunctive_active_first: Stem, Stem, Stem;
-        future_subjunctive_active_second: Stem, Stem, Stem;
-        future_subjunctive_active_third: Stem, Stem, Stem;
-        future_subjunctive_middle_first: Stem, Stem, Stem;
-        future_subjunctive_middle_second: Stem, Stem, Stem;
-        future_subjunctive_middle_third: Stem, Stem, Stem;
-        future_subjunctive_passive_first: Stem, Stem, Stem;
-        future_subjunctive_passive_second: Stem, Stem, Stem;
-        future_subjunctive_passive_third: Stem, Stem, Stem;
-        future_optative_active_first: Recessive, Stem, Stem;
-        future_optative_active_second: Recessive, Stem, Stem;
-        future_optative_active_third: Recessive, Recessive, Stem;
-        future_optative_middle_first: Recessive, Stem, Recessive;
-        future_optative_middle_second: Recessive, Recessive, Recessive;
-        future_optative_middle_third: Recessive, Recessive, Recessive;
-        future_optative_passive_first: Recessive, Stem, Recessive;
-        future_optative_passive_second: Recessive, Recessive, Recessive;
-        future_optative_passive_third: Recessive, Recessive, Recessive;
-        future_imperative_active_first: Stem, Stem, Stem;
-        future_imperative_active_second: Stem, Stem, Stem;
-        future_imperative_active_third: Stem, Stem, Stem;
-        future_imperative_middle_first: Stem, Stem, Stem;
-        future_imperative_middle_second: Stem, Stem, Stem;
-        future_imperative_middle_third: Stem, Stem, Stem;
-        future_imperative_passive_first: Stem, Stem, Stem;
-        future_imperative_passive_second: Stem, Stem, Stem;
-        future_imperative_passive_third: Stem, Stem, Stem;
-        aorist_indicative_active_first: Recessive, Stem, Recessive;
-        aorist_indicative_active_second: Recessive, Recessive, Recessive;
-        aorist_indicative_active_third: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_first: Recessive, Stem, Recessive;
-        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_first: Recessive, Stem, Recessive;
-        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_passive_first: Ending, Stem, Ending;
-        aorist_subjunctive_passive_second: Ending, Ending, Ending;
-        aorist_subjunctive_passive_third: Ending, Ending, Ending;
-        aorist_optative_active_first: Recessive, Stem, Recessive;
-        aorist_optative_active_second: Recessive, Recessive, Recessive;
-        aorist_optative_active_third: Recessive, Recessive, Recessive;
-        aorist_optative_middle_first: Recessive, Stem, Recessive;
-        aorist_optative_middle_second: Recessive, Recessive, Recessive;
-        aorist_optative_middle_third: Recessive, Recessive, Recessive;
-        aorist_optative_passive_first: Recessive, Stem, Ending;
-        aorist_optative_passive_second: Recessive, Ending, Ending;
-        aorist_optative_passive_third: Recessive, Recessive, Ending;
-        aorist_imperative_active_first: Stem, Stem, Stem;
-        aorist_imperative_active_second: Recessive, Recessive, Recessive;
-        aorist_imperative_active_third: Recessive, Recessive, Recessive;
-        aorist_imperative_middle_first: Stem, Stem, Stem;
-        aorist_imperative_middle_second: Stem, Recessive, Recessive;
-        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_first: Stem, Stem, Stem;
-        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
-        perfect_indicative_active_first: Recessive, Stem, Recessive;
-        perfect_indicative_active_second: Recessive, Recessive, Recessive;
-        perfect_indicative_active_third: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_first: Recessive, Stem, Recessive;
-        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_first: Recessive, Stem, Recessive;
-        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
-        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_middle_first: Ending, Stem, Ending;
-        perfect_subjunctive_middle_second: Ending, Ending, Ending;
-        perfect_subjunctive_middle_third: Ending, Ending, Ending;
-        perfect_subjunctive_passive_first: Ending, Stem, Ending;
-        perfect_subjunctive_passive_second: Ending, Ending, Ending;
-        perfect_subjunctive_passive_third: Ending, Ending, Ending;
-        perfect_optative_active_first: Recessive, Stem, Recessive;
-        perfect_optative_active_second: Recessive, Recessive, Recessive;
-        perfect_optative_active_third: Recessive, Stem, Recessive;
-        perfect_optative_middle_first: Ending, Stem, Ending;
-        perfect_optative_middle_second: Ending, Ending, Ending;
-        perfect_optative_middle_third: Ending, Ending, Ending;
-        perfect_optative_passive_first: Ending, Stem, Ending;
-        perfect_optative_passive_second: Ending, Ending, Ending;
-        perfect_optative_passive_third: Ending, Ending, Ending;
-        perfect_imperative_active_first: Stem, Stem, Stem;
-        perfect_imperative_active_second: Recessive, Recessive, Recessive;
-        perfect_imperative_active_third: Stem, Stem, Stem;
-        perfect_imperative_middle_first: Stem, Stem, Stem;
-        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
-        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_first: Stem, Stem, Stem;
-        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
-        pluperfect_active_first: Recessive, Stem, Recessive;
-        pluperfect_active_second: Recessive, Recessive, Recessive;
-        pluperfect_active_third: Recessive, Stem, Recessive;
-        pluperfect_middle_first: Recessive, Stem, Recessive;
-        pluperfect_middle_second: Recessive, Recessive, Recessive;
-        pluperfect_middle_third: Recessive, Recessive, Recessive;
-        pluperfect_passive_first: Recessive, Stem, Recessive;
-        pluperfect_passive_second: Recessive, Recessive, Recessive;
-        pluperfect_passive_third: Recessive, Recessive, Recessive;
-        future_perfect_indicative_active_first: Stem, Stem, Stem;
-        future_perfect_indicative_active_second: Stem, Stem, Stem;
-        future_perfect_indicative_active_third: Stem, Stem, Stem;
-        future_perfect_indicative_middle_first: Stem, Stem, Stem;
-        future_perfect_indicative_middle_second: Stem, Stem, Stem;
-        future_perfect_indicative_middle_third: Stem, Stem, Stem;
-        future_perfect_indicative_passive_first: Stem, Stem, Stem;
-        future_perfect_indicative_passive_second: Stem, Stem, Stem;
-        future_perfect_indicative_passive_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
-        future_perfect_optative_active_first: Stem, Stem, Stem;
-        future_perfect_optative_active_second: Stem, Stem, Stem;
-        future_perfect_optative_active_third: Stem, Stem, Stem;
-        future_perfect_optative_middle_first: Stem, Stem, Stem;
-        future_perfect_optative_middle_second: Stem, Stem, Stem;
-        future_perfect_optative_middle_third: Stem, Stem, Stem;
-        future_perfect_optative_passive_first: Stem, Stem, Stem;
-        future_perfect_optative_passive_second: Stem, Stem, Stem;
-        future_perfect_optative_passive_third: Stem, Stem, Stem;
-        future_perfect_imperative_active_first: Stem, Stem, Stem;
-        future_perfect_imperative_active_second: Stem, Stem, Stem;
-        future_perfect_imperative_active_third: Stem, Stem, Stem;
-        future_perfect_imperative_middle_first: Stem, Stem, Stem;
-        future_perfect_imperative_middle_second: Stem, Stem, Stem;
-        future_perfect_imperative_middle_third: Stem, Stem, Stem;
-        future_perfect_imperative_passive_first: Stem, Stem, Stem;
-        future_perfect_imperative_passive_second: Stem, Stem, Stem;
-        future_perfect_imperative_passive_third: Stem, Stem, Stem;
-        infinitive_present: Stem, Recessive, Recessive;
-        infinitive_future: Recessive, Recessive, Recessive;
-        infinitive_aorist: Stem, Stem, Ending;
+        infinitive_aorist: Stem, Stem, Stem;
         infinitive_perfect: Stem, Stem, Stem;
         infinitive_future_perfect: Stem, Stem, Stem;
         participle_present: Stem, Recessive, Recessive;
         participle_future: Recessive, Recessive, Recessive;
-        participle_aorist: Stem, Recessive, Ending;
-        participle_perfect: Ending, Ending, Ending;
-        participle_future_perfect: Stem, Stem, Stem;
-    ),
-    // Like `ἐφελκω`: 12 words.
-    pattern!("ἐφελκω", 12;
-        indicative_active_first: Stem, Stem, Stem;
-        indicative_active_second: Stem, Stem, Stem;
-        indicative_active_third: Stem, Stem, Stem;
-        indicative_middle_first: Stem, Stem, Recessive;
-        indicative_middle_second: Stem, Stem, Stem;
-        indicative_middle_third: Stem, Stem, Stem;
-        indicative_passive_first: Stem, Stem, Recessive;
-        indicative_passive_second: Stem, Stem, Stem;
-        indicative_passive_third: Stem, Stem, Stem;
-        subjunctive_active_first: Stem, Stem, Stem;
-        subjunctive_active_second: Stem, Stem, Stem;
-        subjunctive_active_third: Stem, Stem, Stem;
-        subjunctive_middle_first: Stem, Stem, Recessive;
-        subjunctive_middle_second: Stem, Stem, Stem;
-        subjunctive_middle_third: Stem, Stem, Stem;
-        subjunctive_passive_first: Stem, Stem, Recessive;
-        subjunctive_passive_second: Stem, Stem, Stem;
-        subjunctive_passive_third: Stem, Stem, Stem;
-        optative_active_first: Stem, Stem, Stem;
-        optative_active_second: Stem, Stem, Stem;
-        optative_active_third: Stem, Recessive, Stem;
-        optative_middle_first: Recessive, Stem, Recessive;
-        optative_middle_second: Stem, Stem, Stem;
-        optative_middle_third: Stem, Recessive, Stem;
-        optative_passive_first: Recessive, Stem, Recessive;
-        optative_passive_second: Stem, Stem, Stem;
-        optative_passive_third: Stem, Recessive, Stem;
-        imperative_active_first: Stem, Stem, Stem;
-        imperative_active_second: Recessive, Stem, Stem;
-        imperative_active_third: Recessive, Recessive, Recessive;
-        imperative_middle_first: Stem, Stem, Stem;
-        imperative_middle_second: Stem, Stem, Stem;
-        imperative_middle_third: Recessive, Recessive, Recessive;
-        imperative_passive_first: Stem, Stem, Stem;
-        imperative_passive_second: Stem, Stem, Stem;
-        imperative_passive_third: Recessive, Recessive, Recessive;
-        imperfect_active_first: Recessive, Stem, Stem;
-        imperfect_active_second: Recessive, Stem, Stem;
-        imperfect_active_third: Recessive, Recessive, Recessive;
-        imperfect_middle_first: Recessive, Stem, Recessive;
-        imperfect_middle_second: Stem, Stem, Stem;
-        imperfect_middle_third: Stem, Recessive, Stem;
-        imperfect_passive_first: Recessive, Stem, Recessive;
-        imperfect_passive_second: Stem, Stem, Stem;
-        imperfect_passive_third: Stem, Recessive, Stem;
-        future_indicative_active_first: Recessive, Stem, Stem;
-        future_indicative_active_second: Recessive, Stem, Stem;
-        future_indicative_active_third: Recessive, Stem, Stem;
-        future_indicative_middle_first: Recessive, Stem, Recessive;
-        future_indicative_middle_second: Recessive, Recessive, Recessive;
-        future_indicative_middle_third: Recessive, Recessive, Recessive;
-        future_indicative_passive_first: Recessive, Stem, Recessive;
-        future_indicative_passive_second: Recessive, Recessive, Recessive;
-        future_indicative_passive_third: Recessive, Recessive, Recessive;
-        future_subjunctive_active_first: Stem, Stem, Stem;
-        future_subjunctive_active_second: Stem, Stem, Stem;
-        future_subjunctive_active_third: Stem, Stem, Stem;
-        future_subjunctive_middle_first: Stem, Stem, Stem;
-        future_subjunctive_middle_second: Stem, Stem, Stem;
-        future_subjunctive_middle_third: Stem, Stem, Stem;
-        future_subjunctive_passive_first: Stem, Stem, Stem;
-        future_subjunctive_passive_second: Stem, Stem, Stem;
-        future_subjunctive_passive_third: Stem, Stem, Stem;
-        future_optative_active_first: Recessive, Stem, Stem;
-        future_optative_active_second: Recessive, Stem, Stem;
-        future_optative_active_third: Recessive, Recessive, Stem;
-        future_optative_middle_first: Recessive, Stem, Recessive;
-        future_optative_middle_second: Recessive, Recessive, Recessive;
-        future_optative_middle_third: Recessive, Recessive, Recessive;
-        future_optative_passive_first: Recessive, Stem, Recessive;
-        future_optative_passive_second: Recessive, Recessive, Recessive;
-        future_optative_passive_third: Recessive, Recessive, Recessive;
-        future_imperative_active_first: Stem, Stem, Stem;
-        future_imperative_active_second: Stem, Stem, Stem;
-        future_imperative_active_third: Stem, Stem, Stem;
-        future_imperative_middle_first: Stem, Stem, Stem;
-        future_imperative_middle_second: Stem, Stem, Stem;
-        future_imperative_middle_third: Stem, Stem, Stem;
-        future_imperative_passive_first: Stem, Stem, Stem;
-        future_imperative_passive_second: Stem, Stem, Stem;
-        future_imperative_passive_third: Stem, Stem, Stem;
-        aorist_indicative_active_first: Recessive, Stem, Recessive;
-        aorist_indicative_active_second: Recessive, Recessive, Recessive;
-        aorist_indicative_active_third: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_first: Recessive, Stem, Recessive;
-        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_first: Recessive, Stem, Recessive;
-        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_passive_first: Ending, Stem, Ending;
-        aorist_subjunctive_passive_second: Ending, Ending, Ending;
-        aorist_subjunctive_passive_third: Ending, Ending, Ending;
-        aorist_optative_active_first: Recessive, Stem, Recessive;
-        aorist_optative_active_second: Recessive, Recessive, Recessive;
-        aorist_optative_active_third: Recessive, Recessive, Recessive;
-        aorist_optative_middle_first: Recessive, Stem, Recessive;
-        aorist_optative_middle_second: Recessive, Recessive, Recessive;
-        aorist_optative_middle_third: Recessive, Recessive, Recessive;
-        aorist_optative_passive_first: Recessive, Stem, Ending;
-        aorist_optative_passive_second: Recessive, Ending, Ending;
-        aorist_optative_passive_third: Recessive, Recessive, Ending;
-        aorist_imperative_active_first: Stem, Stem, Stem;
-        aorist_imperative_active_second: Recessive, Recessive, Recessive;
-        aorist_imperative_active_third: Recessive, Recessive, Recessive;
-        aorist_imperative_middle_first: Stem, Stem, Stem;
-        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
-        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_first: Stem, Stem, Stem;
-        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
-        perfect_indicative_active_first: Recessive, Stem, Recessive;
-        perfect_indicative_active_second: Recessive, Recessive, Recessive;
-        perfect_indicative_active_third: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_first: Recessive, Stem, Recessive;
-        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_first: Recessive, Stem, Recessive;
-        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
-        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_middle_first: Ending, Stem, Ending;
-        perfect_subjunctive_middle_second: Ending, Ending, Ending;
-        perfect_subjunctive_middle_third: Ending, Ending, Ending;
-        perfect_subjunctive_passive_first: Ending, Stem, Ending;
-        perfect_subjunctive_passive_second: Ending, Ending, Ending;
-        perfect_subjunctive_passive_third: Ending, Ending, Ending;
-        perfect_optative_active_first: Recessive, Stem, Recessive;
-        perfect_optative_active_second: Recessive, Recessive, Recessive;
-        perfect_optative_active_third: Recessive, Stem, Recessive;
-        perfect_optative_middle_first: Ending, Stem, Ending;
-        perfect_optative_middle_second: Ending, Ending, Ending;
-        perfect_optative_middle_third: Ending, Ending, Ending;
-        perfect_optative_passive_first: Ending, Stem, Ending;
-        perfect_optative_passive_second: Ending, Ending, Ending;
-        perfect_optative_passive_third: Ending, Ending, Ending;
-        perfect_imperative_active_first: Stem, Stem, Stem;
-        perfect_imperative_active_second: Recessive, Recessive, Recessive;
-        perfect_imperative_active_third: Stem, Stem, Stem;
-        perfect_imperative_middle_first: Stem, Stem, Stem;
-        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
-        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_first: Stem, Stem, Stem;
-        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
-        pluperfect_active_first: Recessive, Stem, Recessive;
-        pluperfect_active_second: Recessive, Recessive, Recessive;
-        pluperfect_active_third: Recessive, Stem, Recessive;
-        pluperfect_middle_first: Recessive, Stem, Recessive;
-        pluperfect_middle_second: Recessive, Recessive, Recessive;
-        pluperfect_middle_third: Recessive, Recessive, Recessive;
-        pluperfect_passive_first: Recessive, Stem, Recessive;
-        pluperfect_passive_second: Recessive, Recessive, Recessive;
-        pluperfect_passive_third: Recessive, Recessive, Recessive;
-        future_perfect_indicative_active_first: Stem, Stem, Stem;
-        future_perfect_indicative_active_second: Stem, Stem, Stem;
-        future_perfect_indicative_active_third: Stem, Stem, Stem;
-        future_perfect_indicative_middle_first: Stem, Stem, Stem;
-        future_perfect_indicative_middle_second: Stem, Stem, Stem;
-        future_perfect_indicative_middle_third: Stem, Stem, Stem;
-        future_perfect_indicative_passive_first: Stem, Stem, Stem;
-        future_perfect_indicative_passive_second: Stem, Stem, Stem;
-        future_perfect_indicative_passive_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
-        future_perfect_optative_active_first: Stem, Stem, Stem;
-        future_perfect_optative_active_second: Stem, Stem, Stem;
-        future_perfect_optative_active_third: Stem, Stem, Stem;
-        future_perfect_optative_middle_first: Stem, Stem, Stem;
-        future_perfect_optative_middle_second: Stem, Stem, Stem;
-        future_perfect_optative_middle_third: Stem, Stem, Stem;
-        future_perfect_optative_passive_first: Stem, Stem, Stem;
-        future_perfect_optative_passive_second: Stem, Stem, Stem;
-        future_perfect_optative_passive_third: Stem, Stem, Stem;
-        future_perfect_imperative_active_first: Stem, Stem, Stem;
-        future_perfect_imperative_active_second: Stem, Stem, Stem;
-        future_perfect_imperative_active_third: Stem, Stem, Stem;
-        future_perfect_imperative_middle_first: Stem, Stem, Stem;
-        future_perfect_imperative_middle_second: Stem, Stem, Stem;
-        future_perfect_imperative_middle_third: Stem, Stem, Stem;
-        future_perfect_imperative_passive_first: Stem, Stem, Stem;
-        future_perfect_imperative_passive_second: Stem, Stem, Stem;
-        future_perfect_imperative_passive_third: Stem, Stem, Stem;
-        infinitive_present: Stem, Stem, Stem;
-        infinitive_future: Recessive, Recessive, Recessive;
-        infinitive_aorist: Ending, Stem, Ending;
-        infinitive_perfect: Stem, Ending, Ending;
-        infinitive_future_perfect: Stem, Stem, Stem;
-        participle_present: Stem, Recessive, Recessive;
-        participle_future: Recessive, Recessive, Recessive;
-        participle_aorist: Stem, Recessive, Ending;
+        participle_aorist: Stem, Recessive, Stem;
         participle_perfect: Ending, Ending, Ending;
         participle_future_perfect: Stem, Stem, Stem;
     ),
@@ -4083,217 +5068,6 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_perfect: Stem, Stem, Stem;
         participle_future_perfect: Stem, Stem, Stem;
     ),
-    // Like `λᾰμβᾰνω`: 11 words.
-    pattern!("λᾰμβᾰνω", 11;
-        indicative_active_first: Stem, Stem, Stem;
-        indicative_active_second: Stem, Stem, Stem;
-        indicative_active_third: Stem, Stem, Stem;
-        indicative_middle_first: Stem, Stem, Recessive;
-        indicative_middle_second: Stem, Stem, Stem;
-        indicative_middle_third: Stem, Stem, Stem;
-        indicative_passive_first: Stem, Stem, Recessive;
-        indicative_passive_second: Stem, Stem, Stem;
-        indicative_passive_third: Stem, Stem, Stem;
-        subjunctive_active_first: Stem, Stem, Stem;
-        subjunctive_active_second: Stem, Stem, Stem;
-        subjunctive_active_third: Stem, Stem, Stem;
-        subjunctive_middle_first: Stem, Stem, Recessive;
-        subjunctive_middle_second: Stem, Stem, Stem;
-        subjunctive_middle_third: Stem, Stem, Stem;
-        subjunctive_passive_first: Stem, Stem, Recessive;
-        subjunctive_passive_second: Stem, Stem, Stem;
-        subjunctive_passive_third: Stem, Stem, Stem;
-        optative_active_first: Stem, Stem, Stem;
-        optative_active_second: Stem, Stem, Stem;
-        optative_active_third: Stem, Recessive, Stem;
-        optative_middle_first: Recessive, Stem, Recessive;
-        optative_middle_second: Stem, Stem, Stem;
-        optative_middle_third: Stem, Recessive, Stem;
-        optative_passive_first: Recessive, Stem, Recessive;
-        optative_passive_second: Stem, Stem, Stem;
-        optative_passive_third: Stem, Recessive, Stem;
-        imperative_active_first: Stem, Stem, Stem;
-        imperative_active_second: Recessive, Stem, Stem;
-        imperative_active_third: Recessive, Recessive, Recessive;
-        imperative_middle_first: Stem, Stem, Stem;
-        imperative_middle_second: Stem, Stem, Stem;
-        imperative_middle_third: Recessive, Recessive, Recessive;
-        imperative_passive_first: Stem, Stem, Stem;
-        imperative_passive_second: Stem, Stem, Stem;
-        imperative_passive_third: Recessive, Recessive, Recessive;
-        imperfect_active_first: Recessive, Stem, Stem;
-        imperfect_active_second: Recessive, Stem, Stem;
-        imperfect_active_third: Recessive, Recessive, Recessive;
-        imperfect_middle_first: Recessive, Stem, Recessive;
-        imperfect_middle_second: Stem, Stem, Stem;
-        imperfect_middle_third: Stem, Recessive, Stem;
-        imperfect_passive_first: Recessive, Stem, Recessive;
-        imperfect_passive_second: Stem, Stem, Stem;
-        imperfect_passive_third: Stem, Recessive, Stem;
-        future_indicative_active_first: Recessive, Stem, Stem;
-        future_indicative_active_second: Recessive, Stem, Stem;
-        future_indicative_active_third: Recessive, Stem, Stem;
-        future_indicative_middle_first: Recessive, Stem, Recessive;
-        future_indicative_middle_second: Recessive, Recessive, Recessive;
-        future_indicative_middle_third: Recessive, Recessive, Recessive;
-        future_indicative_passive_first: Recessive, Stem, Recessive;
-        future_indicative_passive_second: Recessive, Recessive, Recessive;
-        future_indicative_passive_third: Recessive, Recessive, Recessive;
-        future_subjunctive_active_first: Stem, Stem, Stem;
-        future_subjunctive_active_second: Stem, Stem, Stem;
-        future_subjunctive_active_third: Stem, Stem, Stem;
-        future_subjunctive_middle_first: Stem, Stem, Stem;
-        future_subjunctive_middle_second: Stem, Stem, Stem;
-        future_subjunctive_middle_third: Stem, Stem, Stem;
-        future_subjunctive_passive_first: Stem, Stem, Stem;
-        future_subjunctive_passive_second: Stem, Stem, Stem;
-        future_subjunctive_passive_third: Stem, Stem, Stem;
-        future_optative_active_first: Recessive, Stem, Stem;
-        future_optative_active_second: Recessive, Stem, Stem;
-        future_optative_active_third: Recessive, Recessive, Stem;
-        future_optative_middle_first: Recessive, Stem, Recessive;
-        future_optative_middle_second: Recessive, Recessive, Recessive;
-        future_optative_middle_third: Recessive, Recessive, Recessive;
-        future_optative_passive_first: Recessive, Stem, Recessive;
-        future_optative_passive_second: Recessive, Recessive, Recessive;
-        future_optative_passive_third: Recessive, Recessive, Recessive;
-        future_imperative_active_first: Stem, Stem, Stem;
-        future_imperative_active_second: Stem, Stem, Stem;
-        future_imperative_active_third: Stem, Stem, Stem;
-        future_imperative_middle_first: Stem, Stem, Stem;
-        future_imperative_middle_second: Stem, Stem, Stem;
-        future_imperative_middle_third: Stem, Stem, Stem;
-        future_imperative_passive_first: Stem, Stem, Stem;
-        future_imperative_passive_second: Stem, Stem, Stem;
-        future_imperative_passive_third: Stem, Stem, Stem;
-        aorist_indicative_active_first: Recessive, Stem, Recessive;
-        aorist_indicative_active_second: Recessive, Recessive, Recessive;
-        aorist_indicative_active_third: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_first: Recessive, Stem, Recessive;
-        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_first: Recessive, Stem, Recessive;
-        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_passive_first: Stem, Stem, Stem;
-        aorist_subjunctive_passive_second: Stem, Stem, Stem;
-        aorist_subjunctive_passive_third: Stem, Stem, Stem;
-        aorist_optative_active_first: Recessive, Stem, Recessive;
-        aorist_optative_active_second: Recessive, Recessive, Recessive;
-        aorist_optative_active_third: Recessive, Recessive, Recessive;
-        aorist_optative_middle_first: Recessive, Stem, Recessive;
-        aorist_optative_middle_second: Recessive, Recessive, Recessive;
-        aorist_optative_middle_third: Recessive, Recessive, Recessive;
-        aorist_optative_passive_first: Recessive, Stem, Stem;
-        aorist_optative_passive_second: Recessive, Stem, Stem;
-        aorist_optative_passive_third: Recessive, Recessive, Stem;
-        aorist_imperative_active_first: Stem, Stem, Stem;
-        aorist_imperative_active_second: Recessive, Recessive, Recessive;
-        aorist_imperative_active_third: Recessive, Recessive, Recessive;
-        aorist_imperative_middle_first: Stem, Stem, Stem;
-        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
-        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_first: Stem, Stem, Stem;
-        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
-        perfect_indicative_active_first: Recessive, Stem, Recessive;
-        perfect_indicative_active_second: Recessive, Recessive, Recessive;
-        perfect_indicative_active_third: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_first: Recessive, Stem, Recessive;
-        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_first: Recessive, Stem, Recessive;
-        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
-        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_middle_first: Ending, Stem, Ending;
-        perfect_subjunctive_middle_second: Ending, Ending, Ending;
-        perfect_subjunctive_middle_third: Ending, Ending, Ending;
-        perfect_subjunctive_passive_first: Ending, Stem, Ending;
-        perfect_subjunctive_passive_second: Ending, Ending, Ending;
-        perfect_subjunctive_passive_third: Ending, Ending, Ending;
-        perfect_optative_active_first: Recessive, Stem, Recessive;
-        perfect_optative_active_second: Recessive, Recessive, Recessive;
-        perfect_optative_active_third: Recessive, Stem, Recessive;
-        perfect_optative_middle_first: Ending, Stem, Ending;
-        perfect_optative_middle_second: Ending, Ending, Ending;
-        perfect_optative_middle_third: Ending, Ending, Ending;
-        perfect_optative_passive_first: Ending, Stem, Ending;
-        perfect_optative_passive_second: Ending, Ending, Ending;
-        perfect_optative_passive_third: Ending, Ending, Ending;
-        perfect_imperative_active_first: Stem, Stem, Stem;
-        perfect_imperative_active_second: Recessive, Recessive, Recessive;
-        perfect_imperative_active_third: Stem, Stem, Stem;
-        perfect_imperative_middle_first: Stem, Stem, Stem;
-        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
-        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_first: Stem, Stem, Stem;
-        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
-        pluperfect_active_first: Recessive, Stem, Recessive;
-        pluperfect_active_second: Recessive, Recessive, Recessive;
-        pluperfect_active_third: Recessive, Stem, Recessive;
-        pluperfect_middle_first: Recessive, Stem, Recessive;
-        pluperfect_middle_second: Recessive, Recessive, Recessive;
-        pluperfect_middle_third: Recessive, Recessive, Recessive;
-        pluperfect_passive_first: Recessive, Stem, Recessive;
-        pluperfect_passive_second: Recessive, Recessive, Recessive;
-        pluperfect_passive_third: Recessive, Recessive, Recessive;
-        future_perfect_indicative_active_first: Stem, Stem, Stem;
-        future_perfect_indicative_active_second: Stem, Stem, Stem;
-        future_perfect_indicative_active_third: Stem, Stem, Stem;
-        future_perfect_indicative_middle_first: Stem, Stem, Stem;
-        future_perfect_indicative_middle_second: Stem, Stem, Stem;
-        future_perfect_indicative_middle_third: Stem, Stem, Stem;
-        future_perfect_indicative_passive_first: Stem, Stem, Stem;
-        future_perfect_indicative_passive_second: Stem, Stem, Stem;
-        future_perfect_indicative_passive_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
-        future_perfect_optative_active_first: Stem, Stem, Stem;
-        future_perfect_optative_active_second: Stem, Stem, Stem;
-        future_perfect_optative_active_third: Stem, Stem, Stem;
-        future_perfect_optative_middle_first: Stem, Stem, Stem;
-        future_perfect_optative_middle_second: Stem, Stem, Stem;
-        future_perfect_optative_middle_third: Stem, Stem, Stem;
-        future_perfect_optative_passive_first: Stem, Stem, Stem;
-        future_perfect_optative_passive_second: Stem, Stem, Stem;
-        future_perfect_optative_passive_third: Stem, Stem, Stem;
-        future_perfect_imperative_active_first: Stem, Stem, Stem;
-        future_perfect_imperative_active_second: Stem, Stem, Stem;
-        future_perfect_imperative_active_third: Stem, Stem, Stem;
-        future_perfect_imperative_middle_first: Stem, Stem, Stem;
-        future_perfect_imperative_middle_second: Stem, Stem, Stem;
-        future_perfect_imperative_middle_third: Stem, Stem, Stem;
-        future_perfect_imperative_passive_first: Stem, Stem, Stem;
-        future_perfect_imperative_passive_second: Stem, Stem, Stem;
-        future_perfect_imperative_passive_third: Stem, Stem, Stem;
-        infinitive_present: Stem, Stem, Stem;
-        infinitive_future: Recessive, Recessive, Recessive;
-        infinitive_aorist: Stem, Stem, Stem;
-        infinitive_perfect: Stem, Stem, Stem;
-        infinitive_future_perfect: Stem, Stem, Stem;
-        participle_present: Stem, Recessive, Recessive;
-        participle_future: Recessive, Recessive, Recessive;
-        participle_aorist: Stem, Recessive, Stem;
-        participle_perfect: Ending, Ending, Ending;
-        participle_future_perfect: Stem, Stem, Stem;
-    ),
     // Like `περῐσπᾰω`: 11 words.
     pattern!("περῐσπᾰω", 11;
         indicative_active_first: Stem, Stem, Stem;
@@ -4502,217 +5276,6 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_present: Stem, Recessive, Recessive;
         participle_future: Recessive, Recessive, Recessive;
         participle_aorist: Stem, Recessive, Ending;
-        participle_perfect: Ending, Ending, Ending;
-        participle_future_perfect: Stem, Stem, Stem;
-    ),
-    // Like `εἰδον`: 11 words.
-    pattern!("εἰδον", 11;
-        indicative_active_first: Stem, Stem, Stem;
-        indicative_active_second: Stem, Stem, Stem;
-        indicative_active_third: Stem, Stem, Stem;
-        indicative_middle_first: Stem, Stem, Recessive;
-        indicative_middle_second: Stem, Stem, Stem;
-        indicative_middle_third: Stem, Stem, Stem;
-        indicative_passive_first: Stem, Stem, Recessive;
-        indicative_passive_second: Stem, Stem, Stem;
-        indicative_passive_third: Stem, Stem, Stem;
-        subjunctive_active_first: Stem, Stem, Stem;
-        subjunctive_active_second: Stem, Stem, Stem;
-        subjunctive_active_third: Stem, Stem, Stem;
-        subjunctive_middle_first: Stem, Stem, Recessive;
-        subjunctive_middle_second: Stem, Stem, Stem;
-        subjunctive_middle_third: Stem, Stem, Stem;
-        subjunctive_passive_first: Stem, Stem, Recessive;
-        subjunctive_passive_second: Stem, Stem, Stem;
-        subjunctive_passive_third: Stem, Stem, Stem;
-        optative_active_first: Stem, Stem, Stem;
-        optative_active_second: Stem, Stem, Stem;
-        optative_active_third: Stem, Recessive, Stem;
-        optative_middle_first: Recessive, Stem, Recessive;
-        optative_middle_second: Stem, Stem, Stem;
-        optative_middle_third: Stem, Recessive, Stem;
-        optative_passive_first: Recessive, Stem, Recessive;
-        optative_passive_second: Stem, Stem, Stem;
-        optative_passive_third: Stem, Recessive, Stem;
-        imperative_active_first: Stem, Stem, Stem;
-        imperative_active_second: Recessive, Stem, Stem;
-        imperative_active_third: Recessive, Recessive, Recessive;
-        imperative_middle_first: Stem, Stem, Stem;
-        imperative_middle_second: Stem, Stem, Stem;
-        imperative_middle_third: Recessive, Recessive, Recessive;
-        imperative_passive_first: Stem, Stem, Stem;
-        imperative_passive_second: Stem, Stem, Stem;
-        imperative_passive_third: Recessive, Recessive, Recessive;
-        imperfect_active_first: Recessive, Stem, Stem;
-        imperfect_active_second: Recessive, Stem, Stem;
-        imperfect_active_third: Recessive, Recessive, Recessive;
-        imperfect_middle_first: Recessive, Stem, Recessive;
-        imperfect_middle_second: Stem, Stem, Stem;
-        imperfect_middle_third: Stem, Recessive, Stem;
-        imperfect_passive_first: Recessive, Stem, Recessive;
-        imperfect_passive_second: Stem, Stem, Stem;
-        imperfect_passive_third: Stem, Recessive, Stem;
-        future_indicative_active_first: Recessive, Stem, Stem;
-        future_indicative_active_second: Recessive, Stem, Stem;
-        future_indicative_active_third: Recessive, Stem, Stem;
-        future_indicative_middle_first: Recessive, Stem, Recessive;
-        future_indicative_middle_second: Recessive, Recessive, Recessive;
-        future_indicative_middle_third: Recessive, Recessive, Recessive;
-        future_indicative_passive_first: Recessive, Stem, Recessive;
-        future_indicative_passive_second: Recessive, Recessive, Recessive;
-        future_indicative_passive_third: Recessive, Recessive, Recessive;
-        future_subjunctive_active_first: Stem, Stem, Stem;
-        future_subjunctive_active_second: Stem, Stem, Stem;
-        future_subjunctive_active_third: Stem, Stem, Stem;
-        future_subjunctive_middle_first: Stem, Stem, Stem;
-        future_subjunctive_middle_second: Stem, Stem, Stem;
-        future_subjunctive_middle_third: Stem, Stem, Stem;
-        future_subjunctive_passive_first: Stem, Stem, Stem;
-        future_subjunctive_passive_second: Stem, Stem, Stem;
-        future_subjunctive_passive_third: Stem, Stem, Stem;
-        future_optative_active_first: Recessive, Stem, Stem;
-        future_optative_active_second: Recessive, Stem, Stem;
-        future_optative_active_third: Recessive, Recessive, Stem;
-        future_optative_middle_first: Recessive, Stem, Recessive;
-        future_optative_middle_second: Recessive, Recessive, Recessive;
-        future_optative_middle_third: Recessive, Recessive, Recessive;
-        future_optative_passive_first: Recessive, Stem, Recessive;
-        future_optative_passive_second: Recessive, Recessive, Recessive;
-        future_optative_passive_third: Recessive, Recessive, Recessive;
-        future_imperative_active_first: Stem, Stem, Stem;
-        future_imperative_active_second: Stem, Stem, Stem;
-        future_imperative_active_third: Stem, Stem, Stem;
-        future_imperative_middle_first: Stem, Stem, Stem;
-        future_imperative_middle_second: Stem, Stem, Stem;
-        future_imperative_middle_third: Stem, Stem, Stem;
-        future_imperative_passive_first: Stem, Stem, Stem;
-        future_imperative_passive_second: Stem, Stem, Stem;
-        future_imperative_passive_third: Stem, Stem, Stem;
-        aorist_indicative_active_first: Stem, Stem, Recessive;
-        aorist_indicative_active_second: Stem, Recessive, Recessive;
-        aorist_indicative_active_third: Stem, Recessive, Stem;
-        aorist_indicative_middle_first: Recessive, Stem, Recessive;
-        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_first: Recessive, Stem, Recessive;
-        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_passive_first: Ending, Stem, Ending;
-        aorist_subjunctive_passive_second: Ending, Ending, Ending;
-        aorist_subjunctive_passive_third: Ending, Ending, Ending;
-        aorist_optative_active_first: Recessive, Stem, Recessive;
-        aorist_optative_active_second: Recessive, Recessive, Recessive;
-        aorist_optative_active_third: Recessive, Recessive, Recessive;
-        aorist_optative_middle_first: Recessive, Stem, Recessive;
-        aorist_optative_middle_second: Recessive, Recessive, Recessive;
-        aorist_optative_middle_third: Recessive, Recessive, Recessive;
-        aorist_optative_passive_first: Recessive, Stem, Ending;
-        aorist_optative_passive_second: Recessive, Ending, Ending;
-        aorist_optative_passive_third: Recessive, Recessive, Ending;
-        aorist_imperative_active_first: Stem, Stem, Stem;
-        aorist_imperative_active_second: Ending, Recessive, Recessive;
-        aorist_imperative_active_third: Recessive, Recessive, Recessive;
-        aorist_imperative_middle_first: Stem, Stem, Stem;
-        aorist_imperative_middle_second: Ending, Recessive, Recessive;
-        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_first: Stem, Stem, Stem;
-        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
-        perfect_indicative_active_first: Recessive, Stem, Recessive;
-        perfect_indicative_active_second: Recessive, Recessive, Recessive;
-        perfect_indicative_active_third: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_first: Recessive, Stem, Recessive;
-        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_first: Recessive, Stem, Recessive;
-        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
-        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_middle_first: Ending, Stem, Ending;
-        perfect_subjunctive_middle_second: Ending, Ending, Ending;
-        perfect_subjunctive_middle_third: Ending, Ending, Ending;
-        perfect_subjunctive_passive_first: Ending, Stem, Ending;
-        perfect_subjunctive_passive_second: Ending, Ending, Ending;
-        perfect_subjunctive_passive_third: Ending, Ending, Ending;
-        perfect_optative_active_first: Recessive, Stem, Recessive;
-        perfect_optative_active_second: Recessive, Recessive, Recessive;
-        perfect_optative_active_third: Recessive, Stem, Recessive;
-        perfect_optative_middle_first: Ending, Stem, Ending;
-        perfect_optative_middle_second: Ending, Ending, Ending;
-        perfect_optative_middle_third: Ending, Ending, Ending;
-        perfect_optative_passive_first: Ending, Stem, Ending;
-        perfect_optative_passive_second: Ending, Ending, Ending;
-        perfect_optative_passive_third: Ending, Ending, Ending;
-        perfect_imperative_active_first: Stem, Stem, Stem;
-        perfect_imperative_active_second: Recessive, Recessive, Recessive;
-        perfect_imperative_active_third: Stem, Stem, Stem;
-        perfect_imperative_middle_first: Stem, Stem, Stem;
-        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
-        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_first: Stem, Stem, Stem;
-        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
-        pluperfect_active_first: Recessive, Stem, Recessive;
-        pluperfect_active_second: Recessive, Recessive, Recessive;
-        pluperfect_active_third: Recessive, Stem, Recessive;
-        pluperfect_middle_first: Recessive, Stem, Recessive;
-        pluperfect_middle_second: Recessive, Recessive, Recessive;
-        pluperfect_middle_third: Recessive, Recessive, Recessive;
-        pluperfect_passive_first: Recessive, Stem, Recessive;
-        pluperfect_passive_second: Recessive, Recessive, Recessive;
-        pluperfect_passive_third: Recessive, Recessive, Recessive;
-        future_perfect_indicative_active_first: Stem, Stem, Stem;
-        future_perfect_indicative_active_second: Stem, Stem, Stem;
-        future_perfect_indicative_active_third: Stem, Stem, Stem;
-        future_perfect_indicative_middle_first: Stem, Stem, Stem;
-        future_perfect_indicative_middle_second: Stem, Stem, Stem;
-        future_perfect_indicative_middle_third: Stem, Stem, Stem;
-        future_perfect_indicative_passive_first: Stem, Stem, Stem;
-        future_perfect_indicative_passive_second: Stem, Stem, Stem;
-        future_perfect_indicative_passive_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
-        future_perfect_optative_active_first: Stem, Stem, Stem;
-        future_perfect_optative_active_second: Stem, Stem, Stem;
-        future_perfect_optative_active_third: Stem, Stem, Stem;
-        future_perfect_optative_middle_first: Stem, Stem, Stem;
-        future_perfect_optative_middle_second: Stem, Stem, Stem;
-        future_perfect_optative_middle_third: Stem, Stem, Stem;
-        future_perfect_optative_passive_first: Stem, Stem, Stem;
-        future_perfect_optative_passive_second: Stem, Stem, Stem;
-        future_perfect_optative_passive_third: Stem, Stem, Stem;
-        future_perfect_imperative_active_first: Stem, Stem, Stem;
-        future_perfect_imperative_active_second: Stem, Stem, Stem;
-        future_perfect_imperative_active_third: Stem, Stem, Stem;
-        future_perfect_imperative_middle_first: Stem, Stem, Stem;
-        future_perfect_imperative_middle_second: Stem, Stem, Stem;
-        future_perfect_imperative_middle_third: Stem, Stem, Stem;
-        future_perfect_imperative_passive_first: Stem, Stem, Stem;
-        future_perfect_imperative_passive_second: Stem, Stem, Stem;
-        future_perfect_imperative_passive_third: Stem, Stem, Stem;
-        infinitive_present: Stem, Stem, Stem;
-        infinitive_future: Recessive, Recessive, Recessive;
-        infinitive_aorist: Ending, Ending, Ending;
-        infinitive_perfect: Stem, Ending, Ending;
-        infinitive_future_perfect: Stem, Stem, Stem;
-        participle_present: Stem, Recessive, Recessive;
-        participle_future: Recessive, Recessive, Recessive;
-        participle_aorist: Ending, Recessive, Ending;
         participle_perfect: Ending, Ending, Ending;
         participle_future_perfect: Stem, Stem, Stem;
     ),
@@ -5131,6 +5694,428 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         infinitive_future: Recessive, Recessive, Recessive;
         infinitive_aorist: Stem, Stem, Ending;
         infinitive_perfect: Stem, Ending, Ending;
+        infinitive_future_perfect: Stem, Stem, Stem;
+        participle_present: Stem, Recessive, Recessive;
+        participle_future: Recessive, Recessive, Recessive;
+        participle_aorist: Stem, Recessive, Ending;
+        participle_perfect: Ending, Ending, Ending;
+        participle_future_perfect: Stem, Stem, Stem;
+    ),
+    // Like `εἰδον`: 9 words.
+    pattern!("εἰδον", 9;
+        indicative_active_first: Stem, Stem, Stem;
+        indicative_active_second: Stem, Stem, Stem;
+        indicative_active_third: Stem, Stem, Stem;
+        indicative_middle_first: Stem, Stem, Recessive;
+        indicative_middle_second: Stem, Stem, Stem;
+        indicative_middle_third: Stem, Stem, Stem;
+        indicative_passive_first: Stem, Stem, Recessive;
+        indicative_passive_second: Stem, Stem, Stem;
+        indicative_passive_third: Stem, Stem, Stem;
+        subjunctive_active_first: Stem, Stem, Stem;
+        subjunctive_active_second: Stem, Stem, Stem;
+        subjunctive_active_third: Stem, Stem, Stem;
+        subjunctive_middle_first: Stem, Stem, Recessive;
+        subjunctive_middle_second: Stem, Stem, Stem;
+        subjunctive_middle_third: Stem, Stem, Stem;
+        subjunctive_passive_first: Stem, Stem, Recessive;
+        subjunctive_passive_second: Stem, Stem, Stem;
+        subjunctive_passive_third: Stem, Stem, Stem;
+        optative_active_first: Stem, Stem, Stem;
+        optative_active_second: Stem, Stem, Stem;
+        optative_active_third: Stem, Recessive, Stem;
+        optative_middle_first: Recessive, Stem, Recessive;
+        optative_middle_second: Stem, Stem, Stem;
+        optative_middle_third: Stem, Recessive, Stem;
+        optative_passive_first: Recessive, Stem, Recessive;
+        optative_passive_second: Stem, Stem, Stem;
+        optative_passive_third: Stem, Recessive, Stem;
+        imperative_active_first: Stem, Stem, Stem;
+        imperative_active_second: Recessive, Stem, Stem;
+        imperative_active_third: Recessive, Recessive, Recessive;
+        imperative_middle_first: Stem, Stem, Stem;
+        imperative_middle_second: Stem, Stem, Stem;
+        imperative_middle_third: Recessive, Recessive, Recessive;
+        imperative_passive_first: Stem, Stem, Stem;
+        imperative_passive_second: Stem, Stem, Stem;
+        imperative_passive_third: Recessive, Recessive, Recessive;
+        imperfect_active_first: Recessive, Stem, Stem;
+        imperfect_active_second: Recessive, Stem, Stem;
+        imperfect_active_third: Recessive, Recessive, Recessive;
+        imperfect_middle_first: Recessive, Stem, Recessive;
+        imperfect_middle_second: Stem, Stem, Stem;
+        imperfect_middle_third: Stem, Recessive, Stem;
+        imperfect_passive_first: Recessive, Stem, Recessive;
+        imperfect_passive_second: Stem, Stem, Stem;
+        imperfect_passive_third: Stem, Recessive, Stem;
+        future_indicative_active_first: Recessive, Stem, Stem;
+        future_indicative_active_second: Recessive, Stem, Stem;
+        future_indicative_active_third: Recessive, Stem, Stem;
+        future_indicative_middle_first: Recessive, Stem, Recessive;
+        future_indicative_middle_second: Recessive, Recessive, Recessive;
+        future_indicative_middle_third: Recessive, Recessive, Recessive;
+        future_indicative_passive_first: Recessive, Stem, Recessive;
+        future_indicative_passive_second: Recessive, Recessive, Recessive;
+        future_indicative_passive_third: Recessive, Recessive, Recessive;
+        future_subjunctive_active_first: Stem, Stem, Stem;
+        future_subjunctive_active_second: Stem, Stem, Stem;
+        future_subjunctive_active_third: Stem, Stem, Stem;
+        future_subjunctive_middle_first: Stem, Stem, Stem;
+        future_subjunctive_middle_second: Stem, Stem, Stem;
+        future_subjunctive_middle_third: Stem, Stem, Stem;
+        future_subjunctive_passive_first: Stem, Stem, Stem;
+        future_subjunctive_passive_second: Stem, Stem, Stem;
+        future_subjunctive_passive_third: Stem, Stem, Stem;
+        future_optative_active_first: Recessive, Stem, Stem;
+        future_optative_active_second: Recessive, Stem, Stem;
+        future_optative_active_third: Recessive, Recessive, Stem;
+        future_optative_middle_first: Recessive, Stem, Recessive;
+        future_optative_middle_second: Recessive, Recessive, Recessive;
+        future_optative_middle_third: Recessive, Recessive, Recessive;
+        future_optative_passive_first: Recessive, Stem, Recessive;
+        future_optative_passive_second: Recessive, Recessive, Recessive;
+        future_optative_passive_third: Recessive, Recessive, Recessive;
+        future_imperative_active_first: Stem, Stem, Stem;
+        future_imperative_active_second: Stem, Stem, Stem;
+        future_imperative_active_third: Stem, Stem, Stem;
+        future_imperative_middle_first: Stem, Stem, Stem;
+        future_imperative_middle_second: Stem, Stem, Stem;
+        future_imperative_middle_third: Stem, Stem, Stem;
+        future_imperative_passive_first: Stem, Stem, Stem;
+        future_imperative_passive_second: Stem, Stem, Stem;
+        future_imperative_passive_third: Stem, Stem, Stem;
+        aorist_indicative_active_first: Stem, Stem, Recessive;
+        aorist_indicative_active_second: Stem, Recessive, Recessive;
+        aorist_indicative_active_third: Stem, Recessive, Stem;
+        aorist_indicative_middle_first: Recessive, Stem, Recessive;
+        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_first: Recessive, Stem, Recessive;
+        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_passive_first: Ending, Stem, Ending;
+        aorist_subjunctive_passive_second: Ending, Ending, Ending;
+        aorist_subjunctive_passive_third: Ending, Ending, Ending;
+        aorist_optative_active_first: Recessive, Stem, Recessive;
+        aorist_optative_active_second: Recessive, Recessive, Recessive;
+        aorist_optative_active_third: Recessive, Recessive, Recessive;
+        aorist_optative_middle_first: Recessive, Stem, Recessive;
+        aorist_optative_middle_second: Recessive, Recessive, Recessive;
+        aorist_optative_middle_third: Recessive, Recessive, Recessive;
+        aorist_optative_passive_first: Recessive, Stem, Ending;
+        aorist_optative_passive_second: Recessive, Ending, Ending;
+        aorist_optative_passive_third: Recessive, Recessive, Ending;
+        aorist_imperative_active_first: Stem, Stem, Stem;
+        aorist_imperative_active_second: Ending, Recessive, Recessive;
+        aorist_imperative_active_third: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_first: Stem, Stem, Stem;
+        aorist_imperative_middle_second: Ending, Recessive, Recessive;
+        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_first: Stem, Stem, Stem;
+        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
+        perfect_indicative_active_first: Recessive, Stem, Recessive;
+        perfect_indicative_active_second: Recessive, Recessive, Recessive;
+        perfect_indicative_active_third: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_first: Recessive, Stem, Recessive;
+        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_first: Recessive, Stem, Recessive;
+        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
+        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_middle_first: Ending, Stem, Ending;
+        perfect_subjunctive_middle_second: Ending, Ending, Ending;
+        perfect_subjunctive_middle_third: Ending, Ending, Ending;
+        perfect_subjunctive_passive_first: Ending, Stem, Ending;
+        perfect_subjunctive_passive_second: Ending, Ending, Ending;
+        perfect_subjunctive_passive_third: Ending, Ending, Ending;
+        perfect_optative_active_first: Recessive, Stem, Recessive;
+        perfect_optative_active_second: Recessive, Recessive, Recessive;
+        perfect_optative_active_third: Recessive, Stem, Recessive;
+        perfect_optative_middle_first: Ending, Stem, Ending;
+        perfect_optative_middle_second: Ending, Ending, Ending;
+        perfect_optative_middle_third: Ending, Ending, Ending;
+        perfect_optative_passive_first: Ending, Stem, Ending;
+        perfect_optative_passive_second: Ending, Ending, Ending;
+        perfect_optative_passive_third: Ending, Ending, Ending;
+        perfect_imperative_active_first: Stem, Stem, Stem;
+        perfect_imperative_active_second: Recessive, Recessive, Recessive;
+        perfect_imperative_active_third: Stem, Stem, Stem;
+        perfect_imperative_middle_first: Stem, Stem, Stem;
+        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
+        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_first: Stem, Stem, Stem;
+        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
+        pluperfect_active_first: Recessive, Stem, Recessive;
+        pluperfect_active_second: Recessive, Recessive, Recessive;
+        pluperfect_active_third: Recessive, Stem, Recessive;
+        pluperfect_middle_first: Recessive, Stem, Recessive;
+        pluperfect_middle_second: Recessive, Recessive, Recessive;
+        pluperfect_middle_third: Recessive, Recessive, Recessive;
+        pluperfect_passive_first: Recessive, Stem, Recessive;
+        pluperfect_passive_second: Recessive, Recessive, Recessive;
+        pluperfect_passive_third: Recessive, Recessive, Recessive;
+        future_perfect_indicative_active_first: Stem, Stem, Stem;
+        future_perfect_indicative_active_second: Stem, Stem, Stem;
+        future_perfect_indicative_active_third: Stem, Stem, Stem;
+        future_perfect_indicative_middle_first: Stem, Stem, Stem;
+        future_perfect_indicative_middle_second: Stem, Stem, Stem;
+        future_perfect_indicative_middle_third: Stem, Stem, Stem;
+        future_perfect_indicative_passive_first: Stem, Stem, Stem;
+        future_perfect_indicative_passive_second: Stem, Stem, Stem;
+        future_perfect_indicative_passive_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
+        future_perfect_optative_active_first: Stem, Stem, Stem;
+        future_perfect_optative_active_second: Stem, Stem, Stem;
+        future_perfect_optative_active_third: Stem, Stem, Stem;
+        future_perfect_optative_middle_first: Stem, Stem, Stem;
+        future_perfect_optative_middle_second: Stem, Stem, Stem;
+        future_perfect_optative_middle_third: Stem, Stem, Stem;
+        future_perfect_optative_passive_first: Stem, Stem, Stem;
+        future_perfect_optative_passive_second: Stem, Stem, Stem;
+        future_perfect_optative_passive_third: Stem, Stem, Stem;
+        future_perfect_imperative_active_first: Stem, Stem, Stem;
+        future_perfect_imperative_active_second: Stem, Stem, Stem;
+        future_perfect_imperative_active_third: Stem, Stem, Stem;
+        future_perfect_imperative_middle_first: Stem, Stem, Stem;
+        future_perfect_imperative_middle_second: Stem, Stem, Stem;
+        future_perfect_imperative_middle_third: Stem, Stem, Stem;
+        future_perfect_imperative_passive_first: Stem, Stem, Stem;
+        future_perfect_imperative_passive_second: Stem, Stem, Stem;
+        future_perfect_imperative_passive_third: Stem, Stem, Stem;
+        infinitive_present: Stem, Stem, Stem;
+        infinitive_future: Recessive, Recessive, Recessive;
+        infinitive_aorist: Ending, Ending, Ending;
+        infinitive_perfect: Stem, Ending, Ending;
+        infinitive_future_perfect: Stem, Stem, Stem;
+        participle_present: Stem, Recessive, Recessive;
+        participle_future: Recessive, Recessive, Recessive;
+        participle_aorist: Ending, Recessive, Ending;
+        participle_perfect: Ending, Ending, Ending;
+        participle_future_perfect: Stem, Stem, Stem;
+    ),
+    // Like `ὑποκειμαι`: 9 words.
+    pattern!("ὑποκειμαι", 9;
+        indicative_active_first: Stem, Stem, Stem;
+        indicative_active_second: Stem, Stem, Stem;
+        indicative_active_third: Stem, Stem, Stem;
+        indicative_middle_first: Recessive, Stem, Recessive;
+        indicative_middle_second: Recessive, Recessive, Recessive;
+        indicative_middle_third: Recessive, Recessive, Recessive;
+        indicative_passive_first: Recessive, Stem, Recessive;
+        indicative_passive_second: Recessive, Recessive, Recessive;
+        indicative_passive_third: Recessive, Recessive, Recessive;
+        subjunctive_active_first: Stem, Stem, Stem;
+        subjunctive_active_second: Stem, Stem, Stem;
+        subjunctive_active_third: Stem, Stem, Stem;
+        subjunctive_middle_first: Recessive, Stem, Recessive;
+        subjunctive_middle_second: Recessive, Recessive, Recessive;
+        subjunctive_middle_third: Recessive, Recessive, Recessive;
+        subjunctive_passive_first: Recessive, Stem, Recessive;
+        subjunctive_passive_second: Recessive, Recessive, Recessive;
+        subjunctive_passive_third: Recessive, Recessive, Recessive;
+        optative_active_first: Stem, Stem, Stem;
+        optative_active_second: Stem, Stem, Stem;
+        optative_active_third: Stem, Recessive, Stem;
+        optative_middle_first: Recessive, Stem, Recessive;
+        optative_middle_second: Recessive, Recessive, Recessive;
+        optative_middle_third: Recessive, Recessive, Recessive;
+        optative_passive_first: Recessive, Stem, Recessive;
+        optative_passive_second: Recessive, Recessive, Recessive;
+        optative_passive_third: Recessive, Recessive, Recessive;
+        imperative_active_first: Stem, Stem, Stem;
+        imperative_active_second: Recessive, Stem, Stem;
+        imperative_active_third: Recessive, Recessive, Recessive;
+        imperative_middle_first: Stem, Stem, Stem;
+        imperative_middle_second: Recessive, Recessive, Recessive;
+        imperative_middle_third: Recessive, Recessive, Recessive;
+        imperative_passive_first: Stem, Stem, Stem;
+        imperative_passive_second: Recessive, Recessive, Recessive;
+        imperative_passive_third: Recessive, Recessive, Recessive;
+        imperfect_active_first: Recessive, Stem, Stem;
+        imperfect_active_second: Recessive, Stem, Stem;
+        imperfect_active_third: Recessive, Recessive, Recessive;
+        imperfect_middle_first: Recessive, Stem, Recessive;
+        imperfect_middle_second: Stem, Stem, Stem;
+        imperfect_middle_third: Stem, Recessive, Stem;
+        imperfect_passive_first: Recessive, Stem, Recessive;
+        imperfect_passive_second: Stem, Stem, Stem;
+        imperfect_passive_third: Stem, Recessive, Stem;
+        future_indicative_active_first: Recessive, Stem, Stem;
+        future_indicative_active_second: Recessive, Stem, Stem;
+        future_indicative_active_third: Recessive, Stem, Stem;
+        future_indicative_middle_first: Recessive, Stem, Recessive;
+        future_indicative_middle_second: Recessive, Recessive, Recessive;
+        future_indicative_middle_third: Recessive, Recessive, Recessive;
+        future_indicative_passive_first: Recessive, Stem, Recessive;
+        future_indicative_passive_second: Recessive, Recessive, Recessive;
+        future_indicative_passive_third: Recessive, Recessive, Recessive;
+        future_subjunctive_active_first: Stem, Stem, Stem;
+        future_subjunctive_active_second: Stem, Stem, Stem;
+        future_subjunctive_active_third: Stem, Stem, Stem;
+        future_subjunctive_middle_first: Stem, Stem, Stem;
+        future_subjunctive_middle_second: Stem, Stem, Stem;
+        future_subjunctive_middle_third: Stem, Stem, Stem;
+        future_subjunctive_passive_first: Stem, Stem, Stem;
+        future_subjunctive_passive_second: Stem, Stem, Stem;
+        future_subjunctive_passive_third: Stem, Stem, Stem;
+        future_optative_active_first: Recessive, Stem, Stem;
+        future_optative_active_second: Recessive, Stem, Stem;
+        future_optative_active_third: Recessive, Recessive, Stem;
+        future_optative_middle_first: Recessive, Stem, Recessive;
+        future_optative_middle_second: Recessive, Recessive, Recessive;
+        future_optative_middle_third: Recessive, Recessive, Recessive;
+        future_optative_passive_first: Recessive, Stem, Recessive;
+        future_optative_passive_second: Recessive, Recessive, Recessive;
+        future_optative_passive_third: Recessive, Recessive, Recessive;
+        future_imperative_active_first: Stem, Stem, Stem;
+        future_imperative_active_second: Stem, Stem, Stem;
+        future_imperative_active_third: Stem, Stem, Stem;
+        future_imperative_middle_first: Stem, Stem, Stem;
+        future_imperative_middle_second: Stem, Stem, Stem;
+        future_imperative_middle_third: Stem, Stem, Stem;
+        future_imperative_passive_first: Stem, Stem, Stem;
+        future_imperative_passive_second: Stem, Stem, Stem;
+        future_imperative_passive_third: Stem, Stem, Stem;
+        aorist_indicative_active_first: Recessive, Stem, Recessive;
+        aorist_indicative_active_second: Recessive, Recessive, Recessive;
+        aorist_indicative_active_third: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_first: Recessive, Stem, Recessive;
+        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_first: Recessive, Stem, Recessive;
+        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_passive_first: Ending, Stem, Ending;
+        aorist_subjunctive_passive_second: Ending, Ending, Ending;
+        aorist_subjunctive_passive_third: Ending, Ending, Ending;
+        aorist_optative_active_first: Recessive, Stem, Recessive;
+        aorist_optative_active_second: Recessive, Recessive, Recessive;
+        aorist_optative_active_third: Recessive, Recessive, Recessive;
+        aorist_optative_middle_first: Recessive, Stem, Recessive;
+        aorist_optative_middle_second: Recessive, Recessive, Recessive;
+        aorist_optative_middle_third: Recessive, Recessive, Recessive;
+        aorist_optative_passive_first: Recessive, Stem, Ending;
+        aorist_optative_passive_second: Recessive, Ending, Ending;
+        aorist_optative_passive_third: Recessive, Recessive, Ending;
+        aorist_imperative_active_first: Stem, Stem, Stem;
+        aorist_imperative_active_second: Recessive, Recessive, Recessive;
+        aorist_imperative_active_third: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_first: Stem, Stem, Stem;
+        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_first: Stem, Stem, Stem;
+        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
+        perfect_indicative_active_first: Recessive, Stem, Recessive;
+        perfect_indicative_active_second: Recessive, Recessive, Recessive;
+        perfect_indicative_active_third: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_first: Recessive, Stem, Recessive;
+        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_first: Recessive, Stem, Recessive;
+        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
+        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_middle_first: Ending, Stem, Ending;
+        perfect_subjunctive_middle_second: Ending, Ending, Ending;
+        perfect_subjunctive_middle_third: Ending, Ending, Ending;
+        perfect_subjunctive_passive_first: Ending, Stem, Ending;
+        perfect_subjunctive_passive_second: Ending, Ending, Ending;
+        perfect_subjunctive_passive_third: Ending, Ending, Ending;
+        perfect_optative_active_first: Recessive, Stem, Recessive;
+        perfect_optative_active_second: Recessive, Recessive, Recessive;
+        perfect_optative_active_third: Recessive, Stem, Recessive;
+        perfect_optative_middle_first: Ending, Stem, Ending;
+        perfect_optative_middle_second: Ending, Ending, Ending;
+        perfect_optative_middle_third: Ending, Ending, Ending;
+        perfect_optative_passive_first: Ending, Stem, Ending;
+        perfect_optative_passive_second: Ending, Ending, Ending;
+        perfect_optative_passive_third: Ending, Ending, Ending;
+        perfect_imperative_active_first: Stem, Stem, Stem;
+        perfect_imperative_active_second: Recessive, Recessive, Recessive;
+        perfect_imperative_active_third: Stem, Stem, Stem;
+        perfect_imperative_middle_first: Stem, Stem, Stem;
+        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
+        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_first: Stem, Stem, Stem;
+        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
+        pluperfect_active_first: Recessive, Stem, Recessive;
+        pluperfect_active_second: Recessive, Recessive, Recessive;
+        pluperfect_active_third: Recessive, Stem, Recessive;
+        pluperfect_middle_first: Recessive, Stem, Recessive;
+        pluperfect_middle_second: Recessive, Recessive, Recessive;
+        pluperfect_middle_third: Recessive, Recessive, Recessive;
+        pluperfect_passive_first: Recessive, Stem, Recessive;
+        pluperfect_passive_second: Recessive, Recessive, Recessive;
+        pluperfect_passive_third: Recessive, Recessive, Recessive;
+        future_perfect_indicative_active_first: Stem, Stem, Stem;
+        future_perfect_indicative_active_second: Stem, Stem, Stem;
+        future_perfect_indicative_active_third: Stem, Stem, Stem;
+        future_perfect_indicative_middle_first: Stem, Stem, Stem;
+        future_perfect_indicative_middle_second: Stem, Stem, Stem;
+        future_perfect_indicative_middle_third: Stem, Stem, Stem;
+        future_perfect_indicative_passive_first: Stem, Stem, Stem;
+        future_perfect_indicative_passive_second: Stem, Stem, Stem;
+        future_perfect_indicative_passive_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
+        future_perfect_optative_active_first: Stem, Stem, Stem;
+        future_perfect_optative_active_second: Stem, Stem, Stem;
+        future_perfect_optative_active_third: Stem, Stem, Stem;
+        future_perfect_optative_middle_first: Stem, Stem, Stem;
+        future_perfect_optative_middle_second: Stem, Stem, Stem;
+        future_perfect_optative_middle_third: Stem, Stem, Stem;
+        future_perfect_optative_passive_first: Stem, Stem, Stem;
+        future_perfect_optative_passive_second: Stem, Stem, Stem;
+        future_perfect_optative_passive_third: Stem, Stem, Stem;
+        future_perfect_imperative_active_first: Stem, Stem, Stem;
+        future_perfect_imperative_active_second: Stem, Stem, Stem;
+        future_perfect_imperative_active_third: Stem, Stem, Stem;
+        future_perfect_imperative_middle_first: Stem, Stem, Stem;
+        future_perfect_imperative_middle_second: Stem, Stem, Stem;
+        future_perfect_imperative_middle_third: Stem, Stem, Stem;
+        future_perfect_imperative_passive_first: Stem, Stem, Stem;
+        future_perfect_imperative_passive_second: Stem, Stem, Stem;
+        future_perfect_imperative_passive_third: Stem, Stem, Stem;
+        infinitive_present: Stem, Recessive, Recessive;
+        infinitive_future: Recessive, Recessive, Recessive;
+        infinitive_aorist: Stem, Stem, Ending;
+        infinitive_perfect: Stem, Stem, Stem;
         infinitive_future_perfect: Stem, Stem, Stem;
         participle_present: Stem, Recessive, Recessive;
         participle_future: Recessive, Recessive, Recessive;
@@ -6193,217 +7178,6 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_perfect: Ending, Ending, Ending;
         participle_future_perfect: Stem, Stem, Stem;
     ),
-    // Like `ἀπογιγνομαι`: 4 words.
-    pattern!("ἀπογιγνομαι", 4;
-        indicative_active_first: Stem, Stem, Stem;
-        indicative_active_second: Stem, Stem, Stem;
-        indicative_active_third: Stem, Stem, Stem;
-        indicative_middle_first: Stem, Stem, Recessive;
-        indicative_middle_second: Stem, Stem, Stem;
-        indicative_middle_third: Stem, Stem, Stem;
-        indicative_passive_first: Stem, Stem, Recessive;
-        indicative_passive_second: Stem, Stem, Stem;
-        indicative_passive_third: Stem, Stem, Stem;
-        subjunctive_active_first: Stem, Stem, Stem;
-        subjunctive_active_second: Stem, Stem, Stem;
-        subjunctive_active_third: Stem, Stem, Stem;
-        subjunctive_middle_first: Stem, Stem, Recessive;
-        subjunctive_middle_second: Stem, Stem, Stem;
-        subjunctive_middle_third: Stem, Stem, Stem;
-        subjunctive_passive_first: Stem, Stem, Recessive;
-        subjunctive_passive_second: Stem, Stem, Stem;
-        subjunctive_passive_third: Stem, Stem, Stem;
-        optative_active_first: Stem, Stem, Stem;
-        optative_active_second: Stem, Stem, Stem;
-        optative_active_third: Stem, Recessive, Stem;
-        optative_middle_first: Recessive, Stem, Recessive;
-        optative_middle_second: Stem, Stem, Stem;
-        optative_middle_third: Stem, Recessive, Stem;
-        optative_passive_first: Recessive, Stem, Recessive;
-        optative_passive_second: Stem, Stem, Stem;
-        optative_passive_third: Stem, Recessive, Stem;
-        imperative_active_first: Stem, Stem, Stem;
-        imperative_active_second: Recessive, Stem, Stem;
-        imperative_active_third: Recessive, Recessive, Recessive;
-        imperative_middle_first: Stem, Stem, Stem;
-        imperative_middle_second: Stem, Stem, Stem;
-        imperative_middle_third: Recessive, Recessive, Recessive;
-        imperative_passive_first: Stem, Stem, Stem;
-        imperative_passive_second: Stem, Stem, Stem;
-        imperative_passive_third: Recessive, Recessive, Recessive;
-        imperfect_active_first: Recessive, Stem, Stem;
-        imperfect_active_second: Recessive, Stem, Stem;
-        imperfect_active_third: Recessive, Recessive, Recessive;
-        imperfect_middle_first: Recessive, Stem, Recessive;
-        imperfect_middle_second: Stem, Stem, Stem;
-        imperfect_middle_third: Stem, Recessive, Stem;
-        imperfect_passive_first: Recessive, Stem, Recessive;
-        imperfect_passive_second: Stem, Stem, Stem;
-        imperfect_passive_third: Stem, Recessive, Stem;
-        future_indicative_active_first: Recessive, Stem, Stem;
-        future_indicative_active_second: Recessive, Stem, Stem;
-        future_indicative_active_third: Recessive, Stem, Stem;
-        future_indicative_middle_first: Recessive, Stem, Recessive;
-        future_indicative_middle_second: Recessive, Recessive, Recessive;
-        future_indicative_middle_third: Recessive, Recessive, Recessive;
-        future_indicative_passive_first: Recessive, Stem, Recessive;
-        future_indicative_passive_second: Recessive, Recessive, Recessive;
-        future_indicative_passive_third: Recessive, Recessive, Recessive;
-        future_subjunctive_active_first: Stem, Stem, Stem;
-        future_subjunctive_active_second: Stem, Stem, Stem;
-        future_subjunctive_active_third: Stem, Stem, Stem;
-        future_subjunctive_middle_first: Stem, Stem, Stem;
-        future_subjunctive_middle_second: Stem, Stem, Stem;
-        future_subjunctive_middle_third: Stem, Stem, Stem;
-        future_subjunctive_passive_first: Stem, Stem, Stem;
-        future_subjunctive_passive_second: Stem, Stem, Stem;
-        future_subjunctive_passive_third: Stem, Stem, Stem;
-        future_optative_active_first: Recessive, Stem, Stem;
-        future_optative_active_second: Recessive, Stem, Stem;
-        future_optative_active_third: Recessive, Recessive, Stem;
-        future_optative_middle_first: Recessive, Stem, Recessive;
-        future_optative_middle_second: Recessive, Recessive, Recessive;
-        future_optative_middle_third: Recessive, Recessive, Recessive;
-        future_optative_passive_first: Recessive, Stem, Recessive;
-        future_optative_passive_second: Recessive, Recessive, Recessive;
-        future_optative_passive_third: Recessive, Recessive, Recessive;
-        future_imperative_active_first: Stem, Stem, Stem;
-        future_imperative_active_second: Stem, Stem, Stem;
-        future_imperative_active_third: Stem, Stem, Stem;
-        future_imperative_middle_first: Stem, Stem, Stem;
-        future_imperative_middle_second: Stem, Stem, Stem;
-        future_imperative_middle_third: Stem, Stem, Stem;
-        future_imperative_passive_first: Stem, Stem, Stem;
-        future_imperative_passive_second: Stem, Stem, Stem;
-        future_imperative_passive_third: Stem, Stem, Stem;
-        aorist_indicative_active_first: Recessive, Stem, Recessive;
-        aorist_indicative_active_second: Recessive, Recessive, Recessive;
-        aorist_indicative_active_third: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_first: Recessive, Stem, Recessive;
-        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_first: Recessive, Stem, Recessive;
-        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_passive_first: Ending, Stem, Ending;
-        aorist_subjunctive_passive_second: Ending, Ending, Ending;
-        aorist_subjunctive_passive_third: Ending, Ending, Ending;
-        aorist_optative_active_first: Recessive, Stem, Recessive;
-        aorist_optative_active_second: Recessive, Recessive, Recessive;
-        aorist_optative_active_third: Recessive, Recessive, Recessive;
-        aorist_optative_middle_first: Recessive, Stem, Recessive;
-        aorist_optative_middle_second: Recessive, Recessive, Recessive;
-        aorist_optative_middle_third: Recessive, Recessive, Recessive;
-        aorist_optative_passive_first: Recessive, Stem, Ending;
-        aorist_optative_passive_second: Recessive, Ending, Ending;
-        aorist_optative_passive_third: Recessive, Recessive, Ending;
-        aorist_imperative_active_first: Stem, Stem, Stem;
-        aorist_imperative_active_second: Recessive, Recessive, Recessive;
-        aorist_imperative_active_third: Recessive, Recessive, Recessive;
-        aorist_imperative_middle_first: Stem, Stem, Stem;
-        aorist_imperative_middle_second: Ending, Recessive, Recessive;
-        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_first: Stem, Stem, Stem;
-        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
-        perfect_indicative_active_first: Recessive, Stem, Recessive;
-        perfect_indicative_active_second: Recessive, Recessive, Recessive;
-        perfect_indicative_active_third: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_first: Recessive, Stem, Recessive;
-        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_first: Recessive, Stem, Recessive;
-        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
-        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_middle_first: Ending, Stem, Ending;
-        perfect_subjunctive_middle_second: Ending, Ending, Ending;
-        perfect_subjunctive_middle_third: Ending, Ending, Ending;
-        perfect_subjunctive_passive_first: Ending, Stem, Ending;
-        perfect_subjunctive_passive_second: Ending, Ending, Ending;
-        perfect_subjunctive_passive_third: Ending, Ending, Ending;
-        perfect_optative_active_first: Recessive, Stem, Recessive;
-        perfect_optative_active_second: Recessive, Recessive, Recessive;
-        perfect_optative_active_third: Recessive, Stem, Recessive;
-        perfect_optative_middle_first: Ending, Stem, Ending;
-        perfect_optative_middle_second: Ending, Ending, Ending;
-        perfect_optative_middle_third: Ending, Ending, Ending;
-        perfect_optative_passive_first: Ending, Stem, Ending;
-        perfect_optative_passive_second: Ending, Ending, Ending;
-        perfect_optative_passive_third: Ending, Ending, Ending;
-        perfect_imperative_active_first: Stem, Stem, Stem;
-        perfect_imperative_active_second: Recessive, Recessive, Recessive;
-        perfect_imperative_active_third: Stem, Stem, Stem;
-        perfect_imperative_middle_first: Stem, Stem, Stem;
-        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
-        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_first: Stem, Stem, Stem;
-        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
-        pluperfect_active_first: Recessive, Stem, Recessive;
-        pluperfect_active_second: Recessive, Recessive, Recessive;
-        pluperfect_active_third: Recessive, Stem, Recessive;
-        pluperfect_middle_first: Recessive, Stem, Recessive;
-        pluperfect_middle_second: Recessive, Recessive, Recessive;
-        pluperfect_middle_third: Recessive, Recessive, Recessive;
-        pluperfect_passive_first: Recessive, Stem, Recessive;
-        pluperfect_passive_second: Recessive, Recessive, Recessive;
-        pluperfect_passive_third: Recessive, Recessive, Recessive;
-        future_perfect_indicative_active_first: Stem, Stem, Stem;
-        future_perfect_indicative_active_second: Stem, Stem, Stem;
-        future_perfect_indicative_active_third: Stem, Stem, Stem;
-        future_perfect_indicative_middle_first: Stem, Stem, Stem;
-        future_perfect_indicative_middle_second: Stem, Stem, Stem;
-        future_perfect_indicative_middle_third: Stem, Stem, Stem;
-        future_perfect_indicative_passive_first: Stem, Stem, Stem;
-        future_perfect_indicative_passive_second: Stem, Stem, Stem;
-        future_perfect_indicative_passive_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
-        future_perfect_optative_active_first: Stem, Stem, Stem;
-        future_perfect_optative_active_second: Stem, Stem, Stem;
-        future_perfect_optative_active_third: Stem, Stem, Stem;
-        future_perfect_optative_middle_first: Stem, Stem, Stem;
-        future_perfect_optative_middle_second: Stem, Stem, Stem;
-        future_perfect_optative_middle_third: Stem, Stem, Stem;
-        future_perfect_optative_passive_first: Stem, Stem, Stem;
-        future_perfect_optative_passive_second: Stem, Stem, Stem;
-        future_perfect_optative_passive_third: Stem, Stem, Stem;
-        future_perfect_imperative_active_first: Stem, Stem, Stem;
-        future_perfect_imperative_active_second: Stem, Stem, Stem;
-        future_perfect_imperative_active_third: Stem, Stem, Stem;
-        future_perfect_imperative_middle_first: Stem, Stem, Stem;
-        future_perfect_imperative_middle_second: Stem, Stem, Stem;
-        future_perfect_imperative_middle_third: Stem, Stem, Stem;
-        future_perfect_imperative_passive_first: Stem, Stem, Stem;
-        future_perfect_imperative_passive_second: Stem, Stem, Stem;
-        future_perfect_imperative_passive_third: Stem, Stem, Stem;
-        infinitive_present: Stem, Stem, Stem;
-        infinitive_future: Recessive, Recessive, Recessive;
-        infinitive_aorist: Stem, Ending, Ending;
-        infinitive_perfect: Stem, Ending, Ending;
-        infinitive_future_perfect: Stem, Stem, Stem;
-        participle_present: Stem, Recessive, Recessive;
-        participle_future: Recessive, Recessive, Recessive;
-        participle_aorist: Stem, Recessive, Ending;
-        participle_perfect: Ending, Ending, Ending;
-        participle_future_perfect: Stem, Stem, Stem;
-    ),
     // Like `τελεω`: 4 words.
     pattern!("τελεω", 4;
         indicative_active_first: Stem, Stem, Stem;
@@ -6613,6 +7387,217 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_future: Stem, Recessive, Recessive;
         participle_aorist: Stem, Recessive, Stem;
         participle_perfect: Stem, Stem, Stem;
+        participle_future_perfect: Stem, Stem, Stem;
+    ),
+    // Like `γανῠμαι`: 4 words.
+    pattern!("γανῠμαι", 4;
+        indicative_active_first: Stem, Stem, Stem;
+        indicative_active_second: Stem, Stem, Stem;
+        indicative_active_third: Stem, Stem, Stem;
+        indicative_middle_first: Recessive, Stem, Recessive;
+        indicative_middle_second: Recessive, Recessive, Recessive;
+        indicative_middle_third: Recessive, Recessive, Recessive;
+        indicative_passive_first: Stem, Stem, Recessive;
+        indicative_passive_second: Stem, Stem, Stem;
+        indicative_passive_third: Stem, Stem, Stem;
+        subjunctive_active_first: Stem, Stem, Stem;
+        subjunctive_active_second: Stem, Stem, Stem;
+        subjunctive_active_third: Stem, Stem, Stem;
+        subjunctive_middle_first: Recessive, Stem, Recessive;
+        subjunctive_middle_second: Recessive, Recessive, Recessive;
+        subjunctive_middle_third: Recessive, Recessive, Recessive;
+        subjunctive_passive_first: Stem, Stem, Recessive;
+        subjunctive_passive_second: Stem, Stem, Stem;
+        subjunctive_passive_third: Stem, Stem, Stem;
+        optative_active_first: Stem, Stem, Stem;
+        optative_active_second: Stem, Stem, Stem;
+        optative_active_third: Stem, Recessive, Stem;
+        optative_middle_first: Recessive, Stem, Recessive;
+        optative_middle_second: Recessive, Recessive, Recessive;
+        optative_middle_third: Recessive, Recessive, Recessive;
+        optative_passive_first: Recessive, Stem, Recessive;
+        optative_passive_second: Stem, Stem, Stem;
+        optative_passive_third: Stem, Recessive, Stem;
+        imperative_active_first: Stem, Stem, Stem;
+        imperative_active_second: Recessive, Stem, Stem;
+        imperative_active_third: Recessive, Recessive, Recessive;
+        imperative_middle_first: Stem, Stem, Stem;
+        imperative_middle_second: Recessive, Recessive, Recessive;
+        imperative_middle_third: Recessive, Recessive, Recessive;
+        imperative_passive_first: Stem, Stem, Stem;
+        imperative_passive_second: Stem, Stem, Stem;
+        imperative_passive_third: Recessive, Recessive, Recessive;
+        imperfect_active_first: Recessive, Stem, Stem;
+        imperfect_active_second: Recessive, Stem, Stem;
+        imperfect_active_third: Recessive, Recessive, Recessive;
+        imperfect_middle_first: Recessive, Stem, Recessive;
+        imperfect_middle_second: Stem, Stem, Stem;
+        imperfect_middle_third: Stem, Recessive, Stem;
+        imperfect_passive_first: Recessive, Stem, Recessive;
+        imperfect_passive_second: Stem, Stem, Stem;
+        imperfect_passive_third: Stem, Recessive, Stem;
+        future_indicative_active_first: Recessive, Stem, Stem;
+        future_indicative_active_second: Recessive, Stem, Stem;
+        future_indicative_active_third: Recessive, Stem, Stem;
+        future_indicative_middle_first: Recessive, Stem, Recessive;
+        future_indicative_middle_second: Recessive, Recessive, Recessive;
+        future_indicative_middle_third: Recessive, Recessive, Recessive;
+        future_indicative_passive_first: Recessive, Stem, Recessive;
+        future_indicative_passive_second: Recessive, Recessive, Recessive;
+        future_indicative_passive_third: Recessive, Recessive, Recessive;
+        future_subjunctive_active_first: Stem, Stem, Stem;
+        future_subjunctive_active_second: Stem, Stem, Stem;
+        future_subjunctive_active_third: Stem, Stem, Stem;
+        future_subjunctive_middle_first: Stem, Stem, Stem;
+        future_subjunctive_middle_second: Stem, Stem, Stem;
+        future_subjunctive_middle_third: Stem, Stem, Stem;
+        future_subjunctive_passive_first: Stem, Stem, Stem;
+        future_subjunctive_passive_second: Stem, Stem, Stem;
+        future_subjunctive_passive_third: Stem, Stem, Stem;
+        future_optative_active_first: Recessive, Stem, Stem;
+        future_optative_active_second: Recessive, Stem, Stem;
+        future_optative_active_third: Recessive, Recessive, Stem;
+        future_optative_middle_first: Recessive, Stem, Recessive;
+        future_optative_middle_second: Recessive, Recessive, Recessive;
+        future_optative_middle_third: Recessive, Recessive, Recessive;
+        future_optative_passive_first: Recessive, Stem, Recessive;
+        future_optative_passive_second: Recessive, Recessive, Recessive;
+        future_optative_passive_third: Recessive, Recessive, Recessive;
+        future_imperative_active_first: Stem, Stem, Stem;
+        future_imperative_active_second: Stem, Stem, Stem;
+        future_imperative_active_third: Stem, Stem, Stem;
+        future_imperative_middle_first: Stem, Stem, Stem;
+        future_imperative_middle_second: Stem, Stem, Stem;
+        future_imperative_middle_third: Stem, Stem, Stem;
+        future_imperative_passive_first: Stem, Stem, Stem;
+        future_imperative_passive_second: Stem, Stem, Stem;
+        future_imperative_passive_third: Stem, Stem, Stem;
+        aorist_indicative_active_first: Recessive, Stem, Recessive;
+        aorist_indicative_active_second: Recessive, Recessive, Recessive;
+        aorist_indicative_active_third: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_first: Recessive, Stem, Recessive;
+        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_first: Recessive, Stem, Recessive;
+        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_passive_first: Ending, Stem, Ending;
+        aorist_subjunctive_passive_second: Ending, Ending, Ending;
+        aorist_subjunctive_passive_third: Ending, Ending, Ending;
+        aorist_optative_active_first: Recessive, Stem, Recessive;
+        aorist_optative_active_second: Recessive, Recessive, Recessive;
+        aorist_optative_active_third: Recessive, Recessive, Recessive;
+        aorist_optative_middle_first: Recessive, Stem, Recessive;
+        aorist_optative_middle_second: Recessive, Recessive, Recessive;
+        aorist_optative_middle_third: Recessive, Recessive, Recessive;
+        aorist_optative_passive_first: Recessive, Stem, Ending;
+        aorist_optative_passive_second: Recessive, Ending, Ending;
+        aorist_optative_passive_third: Recessive, Recessive, Ending;
+        aorist_imperative_active_first: Stem, Stem, Stem;
+        aorist_imperative_active_second: Recessive, Recessive, Recessive;
+        aorist_imperative_active_third: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_first: Stem, Stem, Stem;
+        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_first: Stem, Stem, Stem;
+        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
+        perfect_indicative_active_first: Recessive, Stem, Recessive;
+        perfect_indicative_active_second: Recessive, Recessive, Recessive;
+        perfect_indicative_active_third: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_first: Recessive, Stem, Recessive;
+        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_first: Recessive, Stem, Recessive;
+        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
+        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_middle_first: Ending, Stem, Ending;
+        perfect_subjunctive_middle_second: Ending, Ending, Ending;
+        perfect_subjunctive_middle_third: Ending, Ending, Ending;
+        perfect_subjunctive_passive_first: Ending, Stem, Ending;
+        perfect_subjunctive_passive_second: Ending, Ending, Ending;
+        perfect_subjunctive_passive_third: Ending, Ending, Ending;
+        perfect_optative_active_first: Recessive, Stem, Recessive;
+        perfect_optative_active_second: Recessive, Recessive, Recessive;
+        perfect_optative_active_third: Recessive, Stem, Recessive;
+        perfect_optative_middle_first: Ending, Stem, Ending;
+        perfect_optative_middle_second: Ending, Ending, Ending;
+        perfect_optative_middle_third: Ending, Ending, Ending;
+        perfect_optative_passive_first: Ending, Stem, Ending;
+        perfect_optative_passive_second: Ending, Ending, Ending;
+        perfect_optative_passive_third: Ending, Ending, Ending;
+        perfect_imperative_active_first: Stem, Stem, Stem;
+        perfect_imperative_active_second: Recessive, Recessive, Recessive;
+        perfect_imperative_active_third: Stem, Stem, Stem;
+        perfect_imperative_middle_first: Stem, Stem, Stem;
+        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
+        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_first: Stem, Stem, Stem;
+        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
+        pluperfect_active_first: Recessive, Stem, Recessive;
+        pluperfect_active_second: Recessive, Recessive, Recessive;
+        pluperfect_active_third: Recessive, Stem, Recessive;
+        pluperfect_middle_first: Recessive, Stem, Recessive;
+        pluperfect_middle_second: Recessive, Recessive, Recessive;
+        pluperfect_middle_third: Recessive, Recessive, Recessive;
+        pluperfect_passive_first: Recessive, Stem, Recessive;
+        pluperfect_passive_second: Recessive, Recessive, Recessive;
+        pluperfect_passive_third: Recessive, Recessive, Recessive;
+        future_perfect_indicative_active_first: Stem, Stem, Stem;
+        future_perfect_indicative_active_second: Stem, Stem, Stem;
+        future_perfect_indicative_active_third: Stem, Stem, Stem;
+        future_perfect_indicative_middle_first: Stem, Stem, Stem;
+        future_perfect_indicative_middle_second: Stem, Stem, Stem;
+        future_perfect_indicative_middle_third: Stem, Stem, Stem;
+        future_perfect_indicative_passive_first: Stem, Stem, Stem;
+        future_perfect_indicative_passive_second: Stem, Stem, Stem;
+        future_perfect_indicative_passive_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
+        future_perfect_optative_active_first: Stem, Stem, Stem;
+        future_perfect_optative_active_second: Stem, Stem, Stem;
+        future_perfect_optative_active_third: Stem, Stem, Stem;
+        future_perfect_optative_middle_first: Stem, Stem, Stem;
+        future_perfect_optative_middle_second: Stem, Stem, Stem;
+        future_perfect_optative_middle_third: Stem, Stem, Stem;
+        future_perfect_optative_passive_first: Stem, Stem, Stem;
+        future_perfect_optative_passive_second: Stem, Stem, Stem;
+        future_perfect_optative_passive_third: Stem, Stem, Stem;
+        future_perfect_imperative_active_first: Stem, Stem, Stem;
+        future_perfect_imperative_active_second: Stem, Stem, Stem;
+        future_perfect_imperative_active_third: Stem, Stem, Stem;
+        future_perfect_imperative_middle_first: Stem, Stem, Stem;
+        future_perfect_imperative_middle_second: Stem, Stem, Stem;
+        future_perfect_imperative_middle_third: Stem, Stem, Stem;
+        future_perfect_imperative_passive_first: Stem, Stem, Stem;
+        future_perfect_imperative_passive_second: Stem, Stem, Stem;
+        future_perfect_imperative_passive_third: Stem, Stem, Stem;
+        infinitive_present: Stem, Stem, Stem;
+        infinitive_future: Recessive, Recessive, Recessive;
+        infinitive_aorist: Stem, Stem, Ending;
+        infinitive_perfect: Stem, Stem, Stem;
+        infinitive_future_perfect: Stem, Stem, Stem;
+        participle_present: Stem, Recessive, Recessive;
+        participle_future: Recessive, Recessive, Recessive;
+        participle_aorist: Stem, Recessive, Ending;
+        participle_perfect: Ending, Ending, Ending;
         participle_future_perfect: Stem, Stem, Stem;
     ),
     // Like `ὑποδεικνυμι`: 3 words.
@@ -8303,8 +9288,8 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_perfect: Ending, Ending, Ending;
         participle_future_perfect: Stem, Stem, Stem;
     ),
-    // Like `προσβαινω`: 2 words.
-    pattern!("προσβαινω", 2;
+    // Like `περθω`: 2 words.
+    pattern!("περθω", 2;
         indicative_active_first: Stem, Stem, Stem;
         indicative_active_second: Stem, Stem, Stem;
         indicative_active_third: Stem, Stem, Stem;
@@ -8395,18 +9380,229 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         aorist_indicative_passive_first: Recessive, Stem, Recessive;
         aorist_indicative_passive_second: Recessive, Recessive, Recessive;
         aorist_indicative_passive_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_first: Stem, Stem, Stem;
-        aorist_subjunctive_active_second: Stem, Stem, Stem;
-        aorist_subjunctive_active_third: Stem, Stem, Stem;
+        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
         aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
         aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
         aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
         aorist_subjunctive_passive_first: Ending, Stem, Ending;
         aorist_subjunctive_passive_second: Ending, Ending, Ending;
         aorist_subjunctive_passive_third: Ending, Ending, Ending;
-        aorist_optative_active_first: Recessive, Stem, Stem;
-        aorist_optative_active_second: Recessive, Stem, Stem;
-        aorist_optative_active_third: Recessive, Recessive, Stem;
+        aorist_optative_active_first: Recessive, Stem, Recessive;
+        aorist_optative_active_second: Recessive, Recessive, Recessive;
+        aorist_optative_active_third: Recessive, Recessive, Recessive;
+        aorist_optative_middle_first: Recessive, Stem, Recessive;
+        aorist_optative_middle_second: Recessive, Recessive, Recessive;
+        aorist_optative_middle_third: Recessive, Recessive, Recessive;
+        aorist_optative_passive_first: Recessive, Stem, Ending;
+        aorist_optative_passive_second: Recessive, Ending, Ending;
+        aorist_optative_passive_third: Recessive, Recessive, Ending;
+        aorist_imperative_active_first: Stem, Stem, Stem;
+        aorist_imperative_active_second: Recessive, Recessive, Recessive;
+        aorist_imperative_active_third: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_first: Stem, Stem, Stem;
+        aorist_imperative_middle_second: Ending, Recessive, Recessive;
+        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_first: Stem, Stem, Stem;
+        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
+        perfect_indicative_active_first: Recessive, Stem, Recessive;
+        perfect_indicative_active_second: Recessive, Recessive, Recessive;
+        perfect_indicative_active_third: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_first: Recessive, Stem, Recessive;
+        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_first: Recessive, Stem, Recessive;
+        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
+        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_middle_first: Ending, Stem, Ending;
+        perfect_subjunctive_middle_second: Ending, Ending, Ending;
+        perfect_subjunctive_middle_third: Ending, Ending, Ending;
+        perfect_subjunctive_passive_first: Ending, Stem, Ending;
+        perfect_subjunctive_passive_second: Ending, Ending, Ending;
+        perfect_subjunctive_passive_third: Ending, Ending, Ending;
+        perfect_optative_active_first: Recessive, Stem, Recessive;
+        perfect_optative_active_second: Recessive, Recessive, Recessive;
+        perfect_optative_active_third: Recessive, Stem, Recessive;
+        perfect_optative_middle_first: Ending, Stem, Ending;
+        perfect_optative_middle_second: Ending, Ending, Ending;
+        perfect_optative_middle_third: Ending, Ending, Ending;
+        perfect_optative_passive_first: Ending, Stem, Ending;
+        perfect_optative_passive_second: Ending, Ending, Ending;
+        perfect_optative_passive_third: Ending, Ending, Ending;
+        perfect_imperative_active_first: Stem, Stem, Stem;
+        perfect_imperative_active_second: Recessive, Recessive, Recessive;
+        perfect_imperative_active_third: Stem, Stem, Stem;
+        perfect_imperative_middle_first: Stem, Stem, Stem;
+        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
+        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_first: Stem, Stem, Stem;
+        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
+        pluperfect_active_first: Recessive, Stem, Recessive;
+        pluperfect_active_second: Recessive, Recessive, Recessive;
+        pluperfect_active_third: Recessive, Stem, Recessive;
+        pluperfect_middle_first: Recessive, Stem, Recessive;
+        pluperfect_middle_second: Recessive, Recessive, Recessive;
+        pluperfect_middle_third: Recessive, Recessive, Recessive;
+        pluperfect_passive_first: Recessive, Stem, Recessive;
+        pluperfect_passive_second: Recessive, Recessive, Recessive;
+        pluperfect_passive_third: Recessive, Recessive, Recessive;
+        future_perfect_indicative_active_first: Stem, Stem, Stem;
+        future_perfect_indicative_active_second: Stem, Stem, Stem;
+        future_perfect_indicative_active_third: Stem, Stem, Stem;
+        future_perfect_indicative_middle_first: Stem, Stem, Stem;
+        future_perfect_indicative_middle_second: Stem, Stem, Stem;
+        future_perfect_indicative_middle_third: Stem, Stem, Stem;
+        future_perfect_indicative_passive_first: Stem, Stem, Stem;
+        future_perfect_indicative_passive_second: Stem, Stem, Stem;
+        future_perfect_indicative_passive_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
+        future_perfect_optative_active_first: Stem, Stem, Stem;
+        future_perfect_optative_active_second: Stem, Stem, Stem;
+        future_perfect_optative_active_third: Stem, Stem, Stem;
+        future_perfect_optative_middle_first: Stem, Stem, Stem;
+        future_perfect_optative_middle_second: Stem, Stem, Stem;
+        future_perfect_optative_middle_third: Stem, Stem, Stem;
+        future_perfect_optative_passive_first: Stem, Stem, Stem;
+        future_perfect_optative_passive_second: Stem, Stem, Stem;
+        future_perfect_optative_passive_third: Stem, Stem, Stem;
+        future_perfect_imperative_active_first: Stem, Stem, Stem;
+        future_perfect_imperative_active_second: Stem, Stem, Stem;
+        future_perfect_imperative_active_third: Stem, Stem, Stem;
+        future_perfect_imperative_middle_first: Stem, Stem, Stem;
+        future_perfect_imperative_middle_second: Stem, Stem, Stem;
+        future_perfect_imperative_middle_third: Stem, Stem, Stem;
+        future_perfect_imperative_passive_first: Stem, Stem, Stem;
+        future_perfect_imperative_passive_second: Stem, Stem, Stem;
+        future_perfect_imperative_passive_third: Stem, Stem, Stem;
+        infinitive_present: Stem, Stem, Stem;
+        infinitive_future: Recessive, Recessive, Recessive;
+        infinitive_aorist: Stem, Ending, Ending;
+        infinitive_perfect: Stem, Ending, Ending;
+        infinitive_future_perfect: Stem, Stem, Stem;
+        participle_present: Stem, Recessive, Recessive;
+        participle_future: Recessive, Recessive, Recessive;
+        participle_aorist: Stem, Recessive, Ending;
+        participle_perfect: Ending, Ending, Ending;
+        participle_future_perfect: Stem, Stem, Stem;
+    ),
+    // Like `ἀνιημῐ`: 2 words.
+    pattern!("ἀνιημῐ", 2;
+        indicative_active_first: Stem, Stem, Stem;
+        indicative_active_second: Stem, Stem, Stem;
+        indicative_active_third: Stem, Stem, Stem;
+        indicative_middle_first: Stem, Stem, Recessive;
+        indicative_middle_second: Stem, Stem, Stem;
+        indicative_middle_third: Stem, Stem, Stem;
+        indicative_passive_first: Stem, Stem, Recessive;
+        indicative_passive_second: Stem, Stem, Stem;
+        indicative_passive_third: Stem, Stem, Stem;
+        subjunctive_active_first: Stem, Stem, Stem;
+        subjunctive_active_second: Stem, Stem, Stem;
+        subjunctive_active_third: Stem, Stem, Stem;
+        subjunctive_middle_first: Stem, Stem, Recessive;
+        subjunctive_middle_second: Stem, Stem, Stem;
+        subjunctive_middle_third: Stem, Stem, Stem;
+        subjunctive_passive_first: Stem, Stem, Recessive;
+        subjunctive_passive_second: Stem, Stem, Stem;
+        subjunctive_passive_third: Stem, Stem, Stem;
+        optative_active_first: Stem, Stem, Stem;
+        optative_active_second: Stem, Stem, Stem;
+        optative_active_third: Stem, Recessive, Stem;
+        optative_middle_first: Recessive, Stem, Recessive;
+        optative_middle_second: Stem, Stem, Stem;
+        optative_middle_third: Stem, Recessive, Stem;
+        optative_passive_first: Recessive, Stem, Recessive;
+        optative_passive_second: Stem, Stem, Stem;
+        optative_passive_third: Stem, Recessive, Stem;
+        imperative_active_first: Stem, Stem, Stem;
+        imperative_active_second: Recessive, Stem, Stem;
+        imperative_active_third: Recessive, Recessive, Recessive;
+        imperative_middle_first: Stem, Stem, Stem;
+        imperative_middle_second: Stem, Stem, Stem;
+        imperative_middle_third: Recessive, Recessive, Recessive;
+        imperative_passive_first: Stem, Stem, Stem;
+        imperative_passive_second: Stem, Stem, Stem;
+        imperative_passive_third: Recessive, Recessive, Recessive;
+        imperfect_active_first: Recessive, Stem, Stem;
+        imperfect_active_second: Recessive, Stem, Stem;
+        imperfect_active_third: Recessive, Recessive, Recessive;
+        imperfect_middle_first: Recessive, Stem, Recessive;
+        imperfect_middle_second: Stem, Stem, Stem;
+        imperfect_middle_third: Stem, Recessive, Stem;
+        imperfect_passive_first: Recessive, Stem, Recessive;
+        imperfect_passive_second: Stem, Stem, Stem;
+        imperfect_passive_third: Stem, Recessive, Stem;
+        future_indicative_active_first: Recessive, Stem, Stem;
+        future_indicative_active_second: Recessive, Stem, Stem;
+        future_indicative_active_third: Recessive, Stem, Stem;
+        future_indicative_middle_first: Recessive, Stem, Recessive;
+        future_indicative_middle_second: Recessive, Recessive, Recessive;
+        future_indicative_middle_third: Recessive, Recessive, Recessive;
+        future_indicative_passive_first: Recessive, Stem, Recessive;
+        future_indicative_passive_second: Recessive, Recessive, Recessive;
+        future_indicative_passive_third: Recessive, Recessive, Recessive;
+        future_subjunctive_active_first: Stem, Stem, Stem;
+        future_subjunctive_active_second: Stem, Stem, Stem;
+        future_subjunctive_active_third: Stem, Stem, Stem;
+        future_subjunctive_middle_first: Stem, Stem, Stem;
+        future_subjunctive_middle_second: Stem, Stem, Stem;
+        future_subjunctive_middle_third: Stem, Stem, Stem;
+        future_subjunctive_passive_first: Stem, Stem, Stem;
+        future_subjunctive_passive_second: Stem, Stem, Stem;
+        future_subjunctive_passive_third: Stem, Stem, Stem;
+        future_optative_active_first: Recessive, Stem, Stem;
+        future_optative_active_second: Recessive, Stem, Stem;
+        future_optative_active_third: Recessive, Recessive, Stem;
+        future_optative_middle_first: Recessive, Stem, Recessive;
+        future_optative_middle_second: Recessive, Recessive, Recessive;
+        future_optative_middle_third: Recessive, Recessive, Recessive;
+        future_optative_passive_first: Recessive, Stem, Recessive;
+        future_optative_passive_second: Recessive, Recessive, Recessive;
+        future_optative_passive_third: Recessive, Recessive, Recessive;
+        future_imperative_active_first: Stem, Stem, Stem;
+        future_imperative_active_second: Stem, Stem, Stem;
+        future_imperative_active_third: Stem, Stem, Stem;
+        future_imperative_middle_first: Stem, Stem, Stem;
+        future_imperative_middle_second: Stem, Stem, Stem;
+        future_imperative_middle_third: Stem, Stem, Stem;
+        future_imperative_passive_first: Stem, Stem, Stem;
+        future_imperative_passive_second: Stem, Stem, Stem;
+        future_imperative_passive_third: Stem, Stem, Stem;
+        aorist_indicative_active_first: Recessive, Stem, Recessive;
+        aorist_indicative_active_second: Recessive, Recessive, Recessive;
+        aorist_indicative_active_third: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_first: Recessive, Stem, Recessive;
+        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_first: Recessive, Stem, Recessive;
+        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_passive_first: Ending, Stem, Ending;
+        aorist_subjunctive_passive_second: Ending, Ending, Ending;
+        aorist_subjunctive_passive_third: Ending, Ending, Ending;
+        aorist_optative_active_first: Recessive, Stem, Recessive;
+        aorist_optative_active_second: Recessive, Recessive, Recessive;
+        aorist_optative_active_third: Recessive, Recessive, Recessive;
         aorist_optative_middle_first: Recessive, Stem, Recessive;
         aorist_optative_middle_second: Recessive, Recessive, Recessive;
         aorist_optative_middle_third: Recessive, Recessive, Recessive;
@@ -8505,13 +9701,13 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         future_perfect_imperative_passive_third: Stem, Stem, Stem;
         infinitive_present: Stem, Stem, Stem;
         infinitive_future: Recessive, Recessive, Recessive;
-        infinitive_aorist: Stem, Stem, Ending;
-        infinitive_perfect: Stem, Stem, Stem;
+        infinitive_aorist: Ending, Stem, Ending;
+        infinitive_perfect: Stem, Ending, Ending;
         infinitive_future_perfect: Stem, Stem, Stem;
         participle_present: Stem, Recessive, Recessive;
         participle_future: Recessive, Recessive, Recessive;
-        participle_aorist: Stem, Recessive, Ending;
-        participle_perfect: Stem, Stem, Stem;
+        participle_aorist: Ending, Recessive, Ending;
+        participle_perfect: Ending, Ending, Ending;
         participle_future_perfect: Stem, Stem, Stem;
     ),
     // Like `γῐγνωσκω`: 2 words.
@@ -9358,6 +10554,217 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_perfect: Ending, Ending, Ending;
         participle_future_perfect: Stem, Stem, Stem;
     ),
+    // Like `ἀναβαινω`: 1 words.
+    pattern!("ἀναβαινω", 1;
+        indicative_active_first: Stem, Stem, Stem;
+        indicative_active_second: Stem, Stem, Stem;
+        indicative_active_third: Stem, Stem, Stem;
+        indicative_middle_first: Stem, Stem, Recessive;
+        indicative_middle_second: Stem, Stem, Stem;
+        indicative_middle_third: Stem, Stem, Stem;
+        indicative_passive_first: Stem, Stem, Recessive;
+        indicative_passive_second: Stem, Stem, Stem;
+        indicative_passive_third: Stem, Stem, Stem;
+        subjunctive_active_first: Stem, Stem, Stem;
+        subjunctive_active_second: Stem, Stem, Stem;
+        subjunctive_active_third: Stem, Stem, Stem;
+        subjunctive_middle_first: Stem, Stem, Recessive;
+        subjunctive_middle_second: Stem, Stem, Stem;
+        subjunctive_middle_third: Stem, Stem, Stem;
+        subjunctive_passive_first: Stem, Stem, Recessive;
+        subjunctive_passive_second: Stem, Stem, Stem;
+        subjunctive_passive_third: Stem, Stem, Stem;
+        optative_active_first: Stem, Stem, Stem;
+        optative_active_second: Stem, Stem, Stem;
+        optative_active_third: Stem, Recessive, Stem;
+        optative_middle_first: Recessive, Stem, Recessive;
+        optative_middle_second: Stem, Stem, Stem;
+        optative_middle_third: Stem, Recessive, Stem;
+        optative_passive_first: Recessive, Stem, Recessive;
+        optative_passive_second: Stem, Stem, Stem;
+        optative_passive_third: Stem, Recessive, Stem;
+        imperative_active_first: Stem, Stem, Stem;
+        imperative_active_second: Recessive, Stem, Stem;
+        imperative_active_third: Recessive, Recessive, Recessive;
+        imperative_middle_first: Stem, Stem, Stem;
+        imperative_middle_second: Stem, Stem, Stem;
+        imperative_middle_third: Recessive, Recessive, Recessive;
+        imperative_passive_first: Stem, Stem, Stem;
+        imperative_passive_second: Stem, Stem, Stem;
+        imperative_passive_third: Recessive, Recessive, Recessive;
+        imperfect_active_first: Recessive, Stem, Stem;
+        imperfect_active_second: Recessive, Stem, Stem;
+        imperfect_active_third: Recessive, Recessive, Recessive;
+        imperfect_middle_first: Recessive, Stem, Recessive;
+        imperfect_middle_second: Stem, Stem, Stem;
+        imperfect_middle_third: Stem, Recessive, Stem;
+        imperfect_passive_first: Recessive, Stem, Recessive;
+        imperfect_passive_second: Stem, Stem, Stem;
+        imperfect_passive_third: Stem, Recessive, Stem;
+        future_indicative_active_first: Recessive, Stem, Stem;
+        future_indicative_active_second: Recessive, Stem, Stem;
+        future_indicative_active_third: Recessive, Stem, Stem;
+        future_indicative_middle_first: Recessive, Stem, Recessive;
+        future_indicative_middle_second: Recessive, Recessive, Recessive;
+        future_indicative_middle_third: Recessive, Recessive, Recessive;
+        future_indicative_passive_first: Recessive, Stem, Recessive;
+        future_indicative_passive_second: Recessive, Recessive, Recessive;
+        future_indicative_passive_third: Recessive, Recessive, Recessive;
+        future_subjunctive_active_first: Stem, Stem, Stem;
+        future_subjunctive_active_second: Stem, Stem, Stem;
+        future_subjunctive_active_third: Stem, Stem, Stem;
+        future_subjunctive_middle_first: Stem, Stem, Stem;
+        future_subjunctive_middle_second: Stem, Stem, Stem;
+        future_subjunctive_middle_third: Stem, Stem, Stem;
+        future_subjunctive_passive_first: Stem, Stem, Stem;
+        future_subjunctive_passive_second: Stem, Stem, Stem;
+        future_subjunctive_passive_third: Stem, Stem, Stem;
+        future_optative_active_first: Recessive, Stem, Stem;
+        future_optative_active_second: Recessive, Stem, Stem;
+        future_optative_active_third: Recessive, Recessive, Stem;
+        future_optative_middle_first: Recessive, Stem, Recessive;
+        future_optative_middle_second: Recessive, Recessive, Recessive;
+        future_optative_middle_third: Recessive, Recessive, Recessive;
+        future_optative_passive_first: Recessive, Stem, Recessive;
+        future_optative_passive_second: Recessive, Recessive, Recessive;
+        future_optative_passive_third: Recessive, Recessive, Recessive;
+        future_imperative_active_first: Stem, Stem, Stem;
+        future_imperative_active_second: Stem, Stem, Stem;
+        future_imperative_active_third: Stem, Stem, Stem;
+        future_imperative_middle_first: Stem, Stem, Stem;
+        future_imperative_middle_second: Stem, Stem, Stem;
+        future_imperative_middle_third: Stem, Stem, Stem;
+        future_imperative_passive_first: Stem, Stem, Stem;
+        future_imperative_passive_second: Stem, Stem, Stem;
+        future_imperative_passive_third: Stem, Stem, Stem;
+        aorist_indicative_active_first: Recessive, Stem, Recessive;
+        aorist_indicative_active_second: Recessive, Recessive, Recessive;
+        aorist_indicative_active_third: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_first: Recessive, Stem, Recessive;
+        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_first: Recessive, Stem, Recessive;
+        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_first: Stem, Stem, Stem;
+        aorist_subjunctive_active_second: Stem, Stem, Stem;
+        aorist_subjunctive_active_third: Stem, Stem, Stem;
+        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_passive_first: Ending, Stem, Ending;
+        aorist_subjunctive_passive_second: Ending, Ending, Ending;
+        aorist_subjunctive_passive_third: Ending, Ending, Ending;
+        aorist_optative_active_first: Recessive, Stem, Stem;
+        aorist_optative_active_second: Recessive, Stem, Stem;
+        aorist_optative_active_third: Recessive, Recessive, Stem;
+        aorist_optative_middle_first: Recessive, Stem, Recessive;
+        aorist_optative_middle_second: Recessive, Recessive, Recessive;
+        aorist_optative_middle_third: Recessive, Recessive, Recessive;
+        aorist_optative_passive_first: Recessive, Stem, Ending;
+        aorist_optative_passive_second: Recessive, Ending, Ending;
+        aorist_optative_passive_third: Recessive, Recessive, Ending;
+        aorist_imperative_active_first: Stem, Stem, Stem;
+        aorist_imperative_active_second: Recessive, Recessive, Recessive;
+        aorist_imperative_active_third: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_first: Stem, Stem, Stem;
+        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_first: Stem, Stem, Stem;
+        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
+        perfect_indicative_active_first: Recessive, Stem, Recessive;
+        perfect_indicative_active_second: Recessive, Recessive, Recessive;
+        perfect_indicative_active_third: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_first: Recessive, Stem, Recessive;
+        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_first: Recessive, Stem, Recessive;
+        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
+        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_middle_first: Ending, Stem, Ending;
+        perfect_subjunctive_middle_second: Ending, Ending, Ending;
+        perfect_subjunctive_middle_third: Ending, Ending, Ending;
+        perfect_subjunctive_passive_first: Ending, Stem, Ending;
+        perfect_subjunctive_passive_second: Ending, Ending, Ending;
+        perfect_subjunctive_passive_third: Ending, Ending, Ending;
+        perfect_optative_active_first: Recessive, Stem, Recessive;
+        perfect_optative_active_second: Recessive, Recessive, Recessive;
+        perfect_optative_active_third: Recessive, Stem, Recessive;
+        perfect_optative_middle_first: Ending, Stem, Ending;
+        perfect_optative_middle_second: Ending, Ending, Ending;
+        perfect_optative_middle_third: Ending, Ending, Ending;
+        perfect_optative_passive_first: Ending, Stem, Ending;
+        perfect_optative_passive_second: Ending, Ending, Ending;
+        perfect_optative_passive_third: Ending, Ending, Ending;
+        perfect_imperative_active_first: Stem, Stem, Stem;
+        perfect_imperative_active_second: Recessive, Recessive, Recessive;
+        perfect_imperative_active_third: Stem, Stem, Stem;
+        perfect_imperative_middle_first: Stem, Stem, Stem;
+        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
+        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_first: Stem, Stem, Stem;
+        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
+        pluperfect_active_first: Recessive, Stem, Recessive;
+        pluperfect_active_second: Recessive, Recessive, Recessive;
+        pluperfect_active_third: Recessive, Stem, Recessive;
+        pluperfect_middle_first: Recessive, Stem, Recessive;
+        pluperfect_middle_second: Recessive, Recessive, Recessive;
+        pluperfect_middle_third: Recessive, Recessive, Recessive;
+        pluperfect_passive_first: Recessive, Stem, Recessive;
+        pluperfect_passive_second: Recessive, Recessive, Recessive;
+        pluperfect_passive_third: Recessive, Recessive, Recessive;
+        future_perfect_indicative_active_first: Stem, Stem, Stem;
+        future_perfect_indicative_active_second: Stem, Stem, Stem;
+        future_perfect_indicative_active_third: Stem, Stem, Stem;
+        future_perfect_indicative_middle_first: Stem, Stem, Stem;
+        future_perfect_indicative_middle_second: Stem, Stem, Stem;
+        future_perfect_indicative_middle_third: Stem, Stem, Stem;
+        future_perfect_indicative_passive_first: Stem, Stem, Stem;
+        future_perfect_indicative_passive_second: Stem, Stem, Stem;
+        future_perfect_indicative_passive_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
+        future_perfect_optative_active_first: Stem, Stem, Stem;
+        future_perfect_optative_active_second: Stem, Stem, Stem;
+        future_perfect_optative_active_third: Stem, Stem, Stem;
+        future_perfect_optative_middle_first: Stem, Stem, Stem;
+        future_perfect_optative_middle_second: Stem, Stem, Stem;
+        future_perfect_optative_middle_third: Stem, Stem, Stem;
+        future_perfect_optative_passive_first: Stem, Stem, Stem;
+        future_perfect_optative_passive_second: Stem, Stem, Stem;
+        future_perfect_optative_passive_third: Stem, Stem, Stem;
+        future_perfect_imperative_active_first: Stem, Stem, Stem;
+        future_perfect_imperative_active_second: Stem, Stem, Stem;
+        future_perfect_imperative_active_third: Stem, Stem, Stem;
+        future_perfect_imperative_middle_first: Stem, Stem, Stem;
+        future_perfect_imperative_middle_second: Stem, Stem, Stem;
+        future_perfect_imperative_middle_third: Stem, Stem, Stem;
+        future_perfect_imperative_passive_first: Stem, Stem, Stem;
+        future_perfect_imperative_passive_second: Stem, Stem, Stem;
+        future_perfect_imperative_passive_third: Stem, Stem, Stem;
+        infinitive_present: Stem, Stem, Stem;
+        infinitive_future: Recessive, Recessive, Recessive;
+        infinitive_aorist: Stem, Stem, Ending;
+        infinitive_perfect: Stem, Ending, Ending;
+        infinitive_future_perfect: Stem, Stem, Stem;
+        participle_present: Stem, Recessive, Recessive;
+        participle_future: Recessive, Recessive, Recessive;
+        participle_aorist: Stem, Recessive, Ending;
+        participle_perfect: Ending, Ending, Ending;
+        participle_future_perfect: Stem, Stem, Stem;
+    ),
     // Like `δᾰτεομαι`: 1 words.
     pattern!("δᾰτεομαι", 1;
         indicative_active_first: Stem, Stem, Stem;
@@ -9991,217 +11398,6 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_perfect: Ending, Ending, Ending;
         participle_future_perfect: Stem, Stem, Stem;
     ),
-    // Like `ἐγκρᾰτευομαι`: 1 words.
-    pattern!("ἐγκρᾰτευομαι", 1;
-        indicative_active_first: Stem, Stem, Stem;
-        indicative_active_second: Stem, Stem, Stem;
-        indicative_active_third: Stem, Stem, Stem;
-        indicative_middle_first: Recessive, Stem, Recessive;
-        indicative_middle_second: Recessive, Recessive, Recessive;
-        indicative_middle_third: Recessive, Recessive, Recessive;
-        indicative_passive_first: Stem, Stem, Recessive;
-        indicative_passive_second: Stem, Stem, Stem;
-        indicative_passive_third: Stem, Stem, Stem;
-        subjunctive_active_first: Stem, Stem, Stem;
-        subjunctive_active_second: Stem, Stem, Stem;
-        subjunctive_active_third: Stem, Stem, Stem;
-        subjunctive_middle_first: Recessive, Stem, Recessive;
-        subjunctive_middle_second: Recessive, Recessive, Recessive;
-        subjunctive_middle_third: Recessive, Recessive, Recessive;
-        subjunctive_passive_first: Stem, Stem, Recessive;
-        subjunctive_passive_second: Stem, Stem, Stem;
-        subjunctive_passive_third: Stem, Stem, Stem;
-        optative_active_first: Stem, Stem, Stem;
-        optative_active_second: Stem, Stem, Stem;
-        optative_active_third: Stem, Recessive, Stem;
-        optative_middle_first: Recessive, Stem, Recessive;
-        optative_middle_second: Recessive, Recessive, Recessive;
-        optative_middle_third: Recessive, Recessive, Recessive;
-        optative_passive_first: Recessive, Stem, Recessive;
-        optative_passive_second: Stem, Stem, Stem;
-        optative_passive_third: Stem, Recessive, Stem;
-        imperative_active_first: Stem, Stem, Stem;
-        imperative_active_second: Recessive, Stem, Stem;
-        imperative_active_third: Recessive, Recessive, Recessive;
-        imperative_middle_first: Stem, Stem, Stem;
-        imperative_middle_second: Recessive, Recessive, Recessive;
-        imperative_middle_third: Recessive, Recessive, Recessive;
-        imperative_passive_first: Stem, Stem, Stem;
-        imperative_passive_second: Stem, Stem, Stem;
-        imperative_passive_third: Recessive, Recessive, Recessive;
-        imperfect_active_first: Recessive, Stem, Stem;
-        imperfect_active_second: Recessive, Stem, Stem;
-        imperfect_active_third: Recessive, Recessive, Recessive;
-        imperfect_middle_first: Recessive, Stem, Recessive;
-        imperfect_middle_second: Stem, Stem, Stem;
-        imperfect_middle_third: Stem, Recessive, Stem;
-        imperfect_passive_first: Recessive, Stem, Recessive;
-        imperfect_passive_second: Stem, Stem, Stem;
-        imperfect_passive_third: Stem, Recessive, Stem;
-        future_indicative_active_first: Recessive, Stem, Stem;
-        future_indicative_active_second: Recessive, Stem, Stem;
-        future_indicative_active_third: Recessive, Stem, Stem;
-        future_indicative_middle_first: Recessive, Stem, Recessive;
-        future_indicative_middle_second: Recessive, Recessive, Recessive;
-        future_indicative_middle_third: Recessive, Recessive, Recessive;
-        future_indicative_passive_first: Recessive, Stem, Recessive;
-        future_indicative_passive_second: Recessive, Recessive, Recessive;
-        future_indicative_passive_third: Recessive, Recessive, Recessive;
-        future_subjunctive_active_first: Stem, Stem, Stem;
-        future_subjunctive_active_second: Stem, Stem, Stem;
-        future_subjunctive_active_third: Stem, Stem, Stem;
-        future_subjunctive_middle_first: Stem, Stem, Stem;
-        future_subjunctive_middle_second: Stem, Stem, Stem;
-        future_subjunctive_middle_third: Stem, Stem, Stem;
-        future_subjunctive_passive_first: Stem, Stem, Stem;
-        future_subjunctive_passive_second: Stem, Stem, Stem;
-        future_subjunctive_passive_third: Stem, Stem, Stem;
-        future_optative_active_first: Recessive, Stem, Stem;
-        future_optative_active_second: Recessive, Stem, Stem;
-        future_optative_active_third: Recessive, Recessive, Stem;
-        future_optative_middle_first: Recessive, Stem, Recessive;
-        future_optative_middle_second: Recessive, Recessive, Recessive;
-        future_optative_middle_third: Recessive, Recessive, Recessive;
-        future_optative_passive_first: Recessive, Stem, Recessive;
-        future_optative_passive_second: Recessive, Recessive, Recessive;
-        future_optative_passive_third: Recessive, Recessive, Recessive;
-        future_imperative_active_first: Stem, Stem, Stem;
-        future_imperative_active_second: Stem, Stem, Stem;
-        future_imperative_active_third: Stem, Stem, Stem;
-        future_imperative_middle_first: Stem, Stem, Stem;
-        future_imperative_middle_second: Stem, Stem, Stem;
-        future_imperative_middle_third: Stem, Stem, Stem;
-        future_imperative_passive_first: Stem, Stem, Stem;
-        future_imperative_passive_second: Stem, Stem, Stem;
-        future_imperative_passive_third: Stem, Stem, Stem;
-        aorist_indicative_active_first: Recessive, Stem, Recessive;
-        aorist_indicative_active_second: Recessive, Recessive, Recessive;
-        aorist_indicative_active_third: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_first: Recessive, Stem, Recessive;
-        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_first: Recessive, Stem, Recessive;
-        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_passive_first: Ending, Stem, Ending;
-        aorist_subjunctive_passive_second: Ending, Ending, Ending;
-        aorist_subjunctive_passive_third: Ending, Ending, Ending;
-        aorist_optative_active_first: Recessive, Stem, Recessive;
-        aorist_optative_active_second: Recessive, Recessive, Recessive;
-        aorist_optative_active_third: Recessive, Recessive, Recessive;
-        aorist_optative_middle_first: Recessive, Stem, Recessive;
-        aorist_optative_middle_second: Recessive, Recessive, Recessive;
-        aorist_optative_middle_third: Recessive, Recessive, Recessive;
-        aorist_optative_passive_first: Recessive, Stem, Ending;
-        aorist_optative_passive_second: Recessive, Ending, Ending;
-        aorist_optative_passive_third: Recessive, Recessive, Ending;
-        aorist_imperative_active_first: Stem, Stem, Stem;
-        aorist_imperative_active_second: Recessive, Recessive, Recessive;
-        aorist_imperative_active_third: Recessive, Recessive, Recessive;
-        aorist_imperative_middle_first: Stem, Stem, Stem;
-        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
-        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_first: Stem, Stem, Stem;
-        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
-        perfect_indicative_active_first: Recessive, Stem, Recessive;
-        perfect_indicative_active_second: Recessive, Recessive, Recessive;
-        perfect_indicative_active_third: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_first: Recessive, Stem, Recessive;
-        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_first: Recessive, Stem, Recessive;
-        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
-        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_middle_first: Ending, Stem, Ending;
-        perfect_subjunctive_middle_second: Ending, Ending, Ending;
-        perfect_subjunctive_middle_third: Ending, Ending, Ending;
-        perfect_subjunctive_passive_first: Ending, Stem, Ending;
-        perfect_subjunctive_passive_second: Ending, Ending, Ending;
-        perfect_subjunctive_passive_third: Ending, Ending, Ending;
-        perfect_optative_active_first: Recessive, Stem, Recessive;
-        perfect_optative_active_second: Recessive, Recessive, Recessive;
-        perfect_optative_active_third: Recessive, Stem, Recessive;
-        perfect_optative_middle_first: Ending, Stem, Ending;
-        perfect_optative_middle_second: Ending, Ending, Ending;
-        perfect_optative_middle_third: Ending, Ending, Ending;
-        perfect_optative_passive_first: Ending, Stem, Ending;
-        perfect_optative_passive_second: Ending, Ending, Ending;
-        perfect_optative_passive_third: Ending, Ending, Ending;
-        perfect_imperative_active_first: Stem, Stem, Stem;
-        perfect_imperative_active_second: Recessive, Recessive, Recessive;
-        perfect_imperative_active_third: Stem, Stem, Stem;
-        perfect_imperative_middle_first: Stem, Stem, Stem;
-        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
-        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_first: Stem, Stem, Stem;
-        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
-        pluperfect_active_first: Recessive, Stem, Recessive;
-        pluperfect_active_second: Recessive, Recessive, Recessive;
-        pluperfect_active_third: Recessive, Stem, Recessive;
-        pluperfect_middle_first: Recessive, Stem, Recessive;
-        pluperfect_middle_second: Recessive, Recessive, Recessive;
-        pluperfect_middle_third: Recessive, Recessive, Recessive;
-        pluperfect_passive_first: Recessive, Stem, Recessive;
-        pluperfect_passive_second: Recessive, Recessive, Recessive;
-        pluperfect_passive_third: Recessive, Recessive, Recessive;
-        future_perfect_indicative_active_first: Stem, Stem, Stem;
-        future_perfect_indicative_active_second: Stem, Stem, Stem;
-        future_perfect_indicative_active_third: Stem, Stem, Stem;
-        future_perfect_indicative_middle_first: Stem, Stem, Stem;
-        future_perfect_indicative_middle_second: Stem, Stem, Stem;
-        future_perfect_indicative_middle_third: Stem, Stem, Stem;
-        future_perfect_indicative_passive_first: Stem, Stem, Stem;
-        future_perfect_indicative_passive_second: Stem, Stem, Stem;
-        future_perfect_indicative_passive_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
-        future_perfect_optative_active_first: Stem, Stem, Stem;
-        future_perfect_optative_active_second: Stem, Stem, Stem;
-        future_perfect_optative_active_third: Stem, Stem, Stem;
-        future_perfect_optative_middle_first: Stem, Stem, Stem;
-        future_perfect_optative_middle_second: Stem, Stem, Stem;
-        future_perfect_optative_middle_third: Stem, Stem, Stem;
-        future_perfect_optative_passive_first: Stem, Stem, Stem;
-        future_perfect_optative_passive_second: Stem, Stem, Stem;
-        future_perfect_optative_passive_third: Stem, Stem, Stem;
-        future_perfect_imperative_active_first: Stem, Stem, Stem;
-        future_perfect_imperative_active_second: Stem, Stem, Stem;
-        future_perfect_imperative_active_third: Stem, Stem, Stem;
-        future_perfect_imperative_middle_first: Stem, Stem, Stem;
-        future_perfect_imperative_middle_second: Stem, Stem, Stem;
-        future_perfect_imperative_middle_third: Stem, Stem, Stem;
-        future_perfect_imperative_passive_first: Stem, Stem, Stem;
-        future_perfect_imperative_passive_second: Stem, Stem, Stem;
-        future_perfect_imperative_passive_third: Stem, Stem, Stem;
-        infinitive_present: Stem, Stem, Stem;
-        infinitive_future: Recessive, Recessive, Recessive;
-        infinitive_aorist: Stem, Stem, Ending;
-        infinitive_perfect: Stem, Ending, Ending;
-        infinitive_future_perfect: Stem, Stem, Stem;
-        participle_present: Stem, Recessive, Recessive;
-        participle_future: Recessive, Recessive, Recessive;
-        participle_aorist: Stem, Recessive, Ending;
-        participle_perfect: Ending, Ending, Ending;
-        participle_future_perfect: Stem, Stem, Stem;
-    ),
     // Like ``: 0 words.
     pattern!("", 0;
         indicative_active_first: Stem, Stem, Stem;
@@ -10622,217 +11818,6 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_future: Recessive, Recessive, Recessive;
         participle_aorist: Stem, Recessive, Stem;
         participle_perfect: Ending, Ending, Ending;
-        participle_future_perfect: Stem, Stem, Stem;
-    ),
-    // Like ``: 0 words.
-    pattern!("", 0;
-        indicative_active_first: Stem, Stem, Stem;
-        indicative_active_second: Stem, Stem, Stem;
-        indicative_active_third: Stem, Stem, Stem;
-        indicative_middle_first: Stem, Stem, Recessive;
-        indicative_middle_second: Stem, Stem, Stem;
-        indicative_middle_third: Stem, Stem, Stem;
-        indicative_passive_first: Stem, Stem, Recessive;
-        indicative_passive_second: Stem, Stem, Stem;
-        indicative_passive_third: Stem, Stem, Stem;
-        subjunctive_active_first: Stem, Stem, Stem;
-        subjunctive_active_second: Stem, Stem, Stem;
-        subjunctive_active_third: Stem, Stem, Stem;
-        subjunctive_middle_first: Stem, Stem, Recessive;
-        subjunctive_middle_second: Stem, Stem, Stem;
-        subjunctive_middle_third: Stem, Stem, Stem;
-        subjunctive_passive_first: Stem, Stem, Recessive;
-        subjunctive_passive_second: Stem, Stem, Stem;
-        subjunctive_passive_third: Stem, Stem, Stem;
-        optative_active_first: Stem, Stem, Stem;
-        optative_active_second: Stem, Stem, Stem;
-        optative_active_third: Stem, Recessive, Stem;
-        optative_middle_first: Recessive, Stem, Recessive;
-        optative_middle_second: Stem, Stem, Stem;
-        optative_middle_third: Stem, Recessive, Stem;
-        optative_passive_first: Recessive, Stem, Recessive;
-        optative_passive_second: Stem, Stem, Stem;
-        optative_passive_third: Stem, Recessive, Stem;
-        imperative_active_first: Stem, Stem, Stem;
-        imperative_active_second: Recessive, Stem, Stem;
-        imperative_active_third: Recessive, Recessive, Recessive;
-        imperative_middle_first: Stem, Stem, Stem;
-        imperative_middle_second: Stem, Stem, Stem;
-        imperative_middle_third: Recessive, Recessive, Recessive;
-        imperative_passive_first: Stem, Stem, Stem;
-        imperative_passive_second: Stem, Stem, Stem;
-        imperative_passive_third: Recessive, Recessive, Recessive;
-        imperfect_active_first: Recessive, Stem, Stem;
-        imperfect_active_second: Recessive, Stem, Stem;
-        imperfect_active_third: Recessive, Recessive, Recessive;
-        imperfect_middle_first: Recessive, Stem, Recessive;
-        imperfect_middle_second: Stem, Stem, Stem;
-        imperfect_middle_third: Stem, Recessive, Stem;
-        imperfect_passive_first: Recessive, Stem, Recessive;
-        imperfect_passive_second: Stem, Stem, Stem;
-        imperfect_passive_third: Stem, Recessive, Stem;
-        future_indicative_active_first: Recessive, Stem, Stem;
-        future_indicative_active_second: Recessive, Stem, Stem;
-        future_indicative_active_third: Recessive, Stem, Stem;
-        future_indicative_middle_first: Recessive, Stem, Recessive;
-        future_indicative_middle_second: Recessive, Recessive, Recessive;
-        future_indicative_middle_third: Recessive, Recessive, Recessive;
-        future_indicative_passive_first: Recessive, Stem, Recessive;
-        future_indicative_passive_second: Recessive, Recessive, Recessive;
-        future_indicative_passive_third: Recessive, Recessive, Recessive;
-        future_subjunctive_active_first: Stem, Stem, Stem;
-        future_subjunctive_active_second: Stem, Stem, Stem;
-        future_subjunctive_active_third: Stem, Stem, Stem;
-        future_subjunctive_middle_first: Stem, Stem, Stem;
-        future_subjunctive_middle_second: Stem, Stem, Stem;
-        future_subjunctive_middle_third: Stem, Stem, Stem;
-        future_subjunctive_passive_first: Stem, Stem, Stem;
-        future_subjunctive_passive_second: Stem, Stem, Stem;
-        future_subjunctive_passive_third: Stem, Stem, Stem;
-        future_optative_active_first: Recessive, Stem, Stem;
-        future_optative_active_second: Recessive, Stem, Stem;
-        future_optative_active_third: Recessive, Recessive, Stem;
-        future_optative_middle_first: Recessive, Stem, Recessive;
-        future_optative_middle_second: Recessive, Recessive, Recessive;
-        future_optative_middle_third: Recessive, Recessive, Recessive;
-        future_optative_passive_first: Recessive, Stem, Recessive;
-        future_optative_passive_second: Recessive, Recessive, Recessive;
-        future_optative_passive_third: Recessive, Recessive, Recessive;
-        future_imperative_active_first: Stem, Stem, Stem;
-        future_imperative_active_second: Stem, Stem, Stem;
-        future_imperative_active_third: Stem, Stem, Stem;
-        future_imperative_middle_first: Stem, Stem, Stem;
-        future_imperative_middle_second: Stem, Stem, Stem;
-        future_imperative_middle_third: Stem, Stem, Stem;
-        future_imperative_passive_first: Stem, Stem, Stem;
-        future_imperative_passive_second: Stem, Stem, Stem;
-        future_imperative_passive_third: Stem, Stem, Stem;
-        aorist_indicative_active_first: Recessive, Stem, Recessive;
-        aorist_indicative_active_second: Recessive, Recessive, Recessive;
-        aorist_indicative_active_third: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_first: Recessive, Stem, Recessive;
-        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_first: Recessive, Stem, Recessive;
-        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_passive_first: Ending, Stem, Ending;
-        aorist_subjunctive_passive_second: Ending, Ending, Ending;
-        aorist_subjunctive_passive_third: Ending, Ending, Ending;
-        aorist_optative_active_first: Recessive, Stem, Recessive;
-        aorist_optative_active_second: Recessive, Recessive, Recessive;
-        aorist_optative_active_third: Recessive, Recessive, Recessive;
-        aorist_optative_middle_first: Recessive, Stem, Recessive;
-        aorist_optative_middle_second: Recessive, Recessive, Recessive;
-        aorist_optative_middle_third: Recessive, Recessive, Recessive;
-        aorist_optative_passive_first: Recessive, Stem, Ending;
-        aorist_optative_passive_second: Recessive, Ending, Ending;
-        aorist_optative_passive_third: Recessive, Recessive, Ending;
-        aorist_imperative_active_first: Stem, Stem, Stem;
-        aorist_imperative_active_second: Recessive, Recessive, Recessive;
-        aorist_imperative_active_third: Recessive, Recessive, Recessive;
-        aorist_imperative_middle_first: Stem, Stem, Stem;
-        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
-        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_first: Stem, Stem, Stem;
-        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
-        perfect_indicative_active_first: Recessive, Stem, Recessive;
-        perfect_indicative_active_second: Recessive, Recessive, Recessive;
-        perfect_indicative_active_third: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_first: Recessive, Stem, Recessive;
-        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_first: Recessive, Stem, Recessive;
-        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
-        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_middle_first: Ending, Stem, Ending;
-        perfect_subjunctive_middle_second: Ending, Ending, Ending;
-        perfect_subjunctive_middle_third: Ending, Ending, Ending;
-        perfect_subjunctive_passive_first: Ending, Stem, Ending;
-        perfect_subjunctive_passive_second: Ending, Ending, Ending;
-        perfect_subjunctive_passive_third: Ending, Ending, Ending;
-        perfect_optative_active_first: Recessive, Stem, Recessive;
-        perfect_optative_active_second: Recessive, Recessive, Recessive;
-        perfect_optative_active_third: Recessive, Stem, Recessive;
-        perfect_optative_middle_first: Ending, Stem, Ending;
-        perfect_optative_middle_second: Ending, Ending, Ending;
-        perfect_optative_middle_third: Ending, Ending, Ending;
-        perfect_optative_passive_first: Ending, Stem, Ending;
-        perfect_optative_passive_second: Ending, Ending, Ending;
-        perfect_optative_passive_third: Ending, Ending, Ending;
-        perfect_imperative_active_first: Stem, Stem, Stem;
-        perfect_imperative_active_second: Recessive, Recessive, Recessive;
-        perfect_imperative_active_third: Stem, Stem, Stem;
-        perfect_imperative_middle_first: Stem, Stem, Stem;
-        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
-        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_first: Stem, Stem, Stem;
-        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
-        pluperfect_active_first: Recessive, Stem, Recessive;
-        pluperfect_active_second: Recessive, Recessive, Recessive;
-        pluperfect_active_third: Recessive, Stem, Recessive;
-        pluperfect_middle_first: Recessive, Stem, Recessive;
-        pluperfect_middle_second: Recessive, Recessive, Recessive;
-        pluperfect_middle_third: Recessive, Recessive, Recessive;
-        pluperfect_passive_first: Recessive, Stem, Recessive;
-        pluperfect_passive_second: Recessive, Recessive, Recessive;
-        pluperfect_passive_third: Recessive, Recessive, Recessive;
-        future_perfect_indicative_active_first: Stem, Stem, Stem;
-        future_perfect_indicative_active_second: Stem, Stem, Stem;
-        future_perfect_indicative_active_third: Stem, Stem, Stem;
-        future_perfect_indicative_middle_first: Stem, Stem, Stem;
-        future_perfect_indicative_middle_second: Stem, Stem, Stem;
-        future_perfect_indicative_middle_third: Stem, Stem, Stem;
-        future_perfect_indicative_passive_first: Stem, Stem, Stem;
-        future_perfect_indicative_passive_second: Stem, Stem, Stem;
-        future_perfect_indicative_passive_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
-        future_perfect_optative_active_first: Stem, Stem, Stem;
-        future_perfect_optative_active_second: Stem, Stem, Stem;
-        future_perfect_optative_active_third: Stem, Stem, Stem;
-        future_perfect_optative_middle_first: Stem, Stem, Stem;
-        future_perfect_optative_middle_second: Stem, Stem, Stem;
-        future_perfect_optative_middle_third: Stem, Stem, Stem;
-        future_perfect_optative_passive_first: Stem, Stem, Stem;
-        future_perfect_optative_passive_second: Stem, Stem, Stem;
-        future_perfect_optative_passive_third: Stem, Stem, Stem;
-        future_perfect_imperative_active_first: Stem, Stem, Stem;
-        future_perfect_imperative_active_second: Stem, Stem, Stem;
-        future_perfect_imperative_active_third: Stem, Stem, Stem;
-        future_perfect_imperative_middle_first: Stem, Stem, Stem;
-        future_perfect_imperative_middle_second: Stem, Stem, Stem;
-        future_perfect_imperative_middle_third: Stem, Stem, Stem;
-        future_perfect_imperative_passive_first: Stem, Stem, Stem;
-        future_perfect_imperative_passive_second: Stem, Stem, Stem;
-        future_perfect_imperative_passive_third: Stem, Stem, Stem;
-        infinitive_present: Stem, Stem, Stem;
-        infinitive_future: Recessive, Recessive, Recessive;
-        infinitive_aorist: Stem, Stem, Ending;
-        infinitive_perfect: Stem, Ending, Ending;
-        infinitive_future_perfect: Stem, Stem, Stem;
-        participle_present: Stem, Recessive, Recessive;
-        participle_future: Recessive, Recessive, Recessive;
-        participle_aorist: Stem, Recessive, Ending;
-        participle_perfect: Stem, Stem, Stem;
         participle_future_perfect: Stem, Stem, Stem;
     ),
     // Like ``: 0 words.
@@ -11506,6 +12491,217 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         imperative_passive_first: Stem, Stem, Stem;
         imperative_passive_second: Stem, Stem, Stem;
         imperative_passive_third: Recessive, Recessive, Recessive;
+        imperfect_active_first: Recessive, Stem, Stem;
+        imperfect_active_second: Recessive, Stem, Stem;
+        imperfect_active_third: Recessive, Recessive, Recessive;
+        imperfect_middle_first: Recessive, Stem, Recessive;
+        imperfect_middle_second: Stem, Stem, Stem;
+        imperfect_middle_third: Stem, Recessive, Stem;
+        imperfect_passive_first: Recessive, Stem, Recessive;
+        imperfect_passive_second: Stem, Stem, Stem;
+        imperfect_passive_third: Stem, Recessive, Stem;
+        future_indicative_active_first: Recessive, Stem, Stem;
+        future_indicative_active_second: Recessive, Stem, Stem;
+        future_indicative_active_third: Recessive, Stem, Stem;
+        future_indicative_middle_first: Recessive, Stem, Recessive;
+        future_indicative_middle_second: Recessive, Recessive, Recessive;
+        future_indicative_middle_third: Recessive, Recessive, Recessive;
+        future_indicative_passive_first: Recessive, Stem, Recessive;
+        future_indicative_passive_second: Recessive, Recessive, Recessive;
+        future_indicative_passive_third: Recessive, Recessive, Recessive;
+        future_subjunctive_active_first: Stem, Stem, Stem;
+        future_subjunctive_active_second: Stem, Stem, Stem;
+        future_subjunctive_active_third: Stem, Stem, Stem;
+        future_subjunctive_middle_first: Stem, Stem, Stem;
+        future_subjunctive_middle_second: Stem, Stem, Stem;
+        future_subjunctive_middle_third: Stem, Stem, Stem;
+        future_subjunctive_passive_first: Stem, Stem, Stem;
+        future_subjunctive_passive_second: Stem, Stem, Stem;
+        future_subjunctive_passive_third: Stem, Stem, Stem;
+        future_optative_active_first: Recessive, Stem, Stem;
+        future_optative_active_second: Recessive, Stem, Stem;
+        future_optative_active_third: Recessive, Recessive, Stem;
+        future_optative_middle_first: Recessive, Stem, Recessive;
+        future_optative_middle_second: Recessive, Recessive, Recessive;
+        future_optative_middle_third: Recessive, Recessive, Recessive;
+        future_optative_passive_first: Recessive, Stem, Recessive;
+        future_optative_passive_second: Recessive, Recessive, Recessive;
+        future_optative_passive_third: Recessive, Recessive, Recessive;
+        future_imperative_active_first: Stem, Stem, Stem;
+        future_imperative_active_second: Stem, Stem, Stem;
+        future_imperative_active_third: Stem, Stem, Stem;
+        future_imperative_middle_first: Stem, Stem, Stem;
+        future_imperative_middle_second: Stem, Stem, Stem;
+        future_imperative_middle_third: Stem, Stem, Stem;
+        future_imperative_passive_first: Stem, Stem, Stem;
+        future_imperative_passive_second: Stem, Stem, Stem;
+        future_imperative_passive_third: Stem, Stem, Stem;
+        aorist_indicative_active_first: Recessive, Stem, Recessive;
+        aorist_indicative_active_second: Recessive, Recessive, Recessive;
+        aorist_indicative_active_third: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_first: Recessive, Stem, Recessive;
+        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_first: Recessive, Stem, Recessive;
+        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_passive_first: Ending, Stem, Ending;
+        aorist_subjunctive_passive_second: Ending, Ending, Ending;
+        aorist_subjunctive_passive_third: Ending, Ending, Ending;
+        aorist_optative_active_first: Recessive, Stem, Recessive;
+        aorist_optative_active_second: Recessive, Recessive, Recessive;
+        aorist_optative_active_third: Recessive, Recessive, Recessive;
+        aorist_optative_middle_first: Recessive, Stem, Recessive;
+        aorist_optative_middle_second: Recessive, Recessive, Recessive;
+        aorist_optative_middle_third: Recessive, Recessive, Recessive;
+        aorist_optative_passive_first: Recessive, Stem, Ending;
+        aorist_optative_passive_second: Recessive, Ending, Ending;
+        aorist_optative_passive_third: Recessive, Recessive, Ending;
+        aorist_imperative_active_first: Stem, Stem, Stem;
+        aorist_imperative_active_second: Recessive, Recessive, Recessive;
+        aorist_imperative_active_third: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_first: Stem, Stem, Stem;
+        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_first: Stem, Stem, Stem;
+        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
+        perfect_indicative_active_first: Recessive, Stem, Recessive;
+        perfect_indicative_active_second: Recessive, Recessive, Recessive;
+        perfect_indicative_active_third: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_first: Recessive, Stem, Recessive;
+        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_first: Recessive, Stem, Recessive;
+        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
+        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_middle_first: Ending, Stem, Ending;
+        perfect_subjunctive_middle_second: Ending, Ending, Ending;
+        perfect_subjunctive_middle_third: Ending, Ending, Ending;
+        perfect_subjunctive_passive_first: Ending, Stem, Ending;
+        perfect_subjunctive_passive_second: Ending, Ending, Ending;
+        perfect_subjunctive_passive_third: Ending, Ending, Ending;
+        perfect_optative_active_first: Recessive, Stem, Recessive;
+        perfect_optative_active_second: Recessive, Recessive, Recessive;
+        perfect_optative_active_third: Recessive, Stem, Recessive;
+        perfect_optative_middle_first: Ending, Stem, Ending;
+        perfect_optative_middle_second: Ending, Ending, Ending;
+        perfect_optative_middle_third: Ending, Ending, Ending;
+        perfect_optative_passive_first: Ending, Stem, Ending;
+        perfect_optative_passive_second: Ending, Ending, Ending;
+        perfect_optative_passive_third: Ending, Ending, Ending;
+        perfect_imperative_active_first: Stem, Stem, Stem;
+        perfect_imperative_active_second: Recessive, Recessive, Recessive;
+        perfect_imperative_active_third: Stem, Stem, Stem;
+        perfect_imperative_middle_first: Stem, Stem, Stem;
+        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
+        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_first: Stem, Stem, Stem;
+        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
+        pluperfect_active_first: Recessive, Stem, Recessive;
+        pluperfect_active_second: Recessive, Recessive, Recessive;
+        pluperfect_active_third: Recessive, Stem, Recessive;
+        pluperfect_middle_first: Recessive, Stem, Recessive;
+        pluperfect_middle_second: Recessive, Recessive, Recessive;
+        pluperfect_middle_third: Recessive, Recessive, Recessive;
+        pluperfect_passive_first: Recessive, Stem, Recessive;
+        pluperfect_passive_second: Recessive, Recessive, Recessive;
+        pluperfect_passive_third: Recessive, Recessive, Recessive;
+        future_perfect_indicative_active_first: Stem, Stem, Stem;
+        future_perfect_indicative_active_second: Stem, Stem, Stem;
+        future_perfect_indicative_active_third: Stem, Stem, Stem;
+        future_perfect_indicative_middle_first: Stem, Stem, Stem;
+        future_perfect_indicative_middle_second: Stem, Stem, Stem;
+        future_perfect_indicative_middle_third: Stem, Stem, Stem;
+        future_perfect_indicative_passive_first: Stem, Stem, Stem;
+        future_perfect_indicative_passive_second: Stem, Stem, Stem;
+        future_perfect_indicative_passive_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
+        future_perfect_optative_active_first: Stem, Stem, Stem;
+        future_perfect_optative_active_second: Stem, Stem, Stem;
+        future_perfect_optative_active_third: Stem, Stem, Stem;
+        future_perfect_optative_middle_first: Stem, Stem, Stem;
+        future_perfect_optative_middle_second: Stem, Stem, Stem;
+        future_perfect_optative_middle_third: Stem, Stem, Stem;
+        future_perfect_optative_passive_first: Stem, Stem, Stem;
+        future_perfect_optative_passive_second: Stem, Stem, Stem;
+        future_perfect_optative_passive_third: Stem, Stem, Stem;
+        future_perfect_imperative_active_first: Stem, Stem, Stem;
+        future_perfect_imperative_active_second: Stem, Stem, Stem;
+        future_perfect_imperative_active_third: Stem, Stem, Stem;
+        future_perfect_imperative_middle_first: Stem, Stem, Stem;
+        future_perfect_imperative_middle_second: Stem, Stem, Stem;
+        future_perfect_imperative_middle_third: Stem, Stem, Stem;
+        future_perfect_imperative_passive_first: Stem, Stem, Stem;
+        future_perfect_imperative_passive_second: Stem, Stem, Stem;
+        future_perfect_imperative_passive_third: Stem, Stem, Stem;
+        infinitive_present: Stem, Stem, Stem;
+        infinitive_future: Recessive, Recessive, Recessive;
+        infinitive_aorist: Stem, Stem, Ending;
+        infinitive_perfect: Stem, Ending, Ending;
+        infinitive_future_perfect: Stem, Stem, Stem;
+        participle_present: Stem, Recessive, Recessive;
+        participle_future: Recessive, Recessive, Recessive;
+        participle_aorist: Stem, Recessive, Ending;
+        participle_perfect: Stem, Stem, Stem;
+        participle_future_perfect: Stem, Stem, Stem;
+    ),
+    // Like ``: 0 words.
+    pattern!("", 0;
+        indicative_active_first: Stem, Stem, Stem;
+        indicative_active_second: Stem, Stem, Stem;
+        indicative_active_third: Stem, Stem, Stem;
+        indicative_middle_first: Stem, Stem, Recessive;
+        indicative_middle_second: Stem, Stem, Stem;
+        indicative_middle_third: Stem, Stem, Stem;
+        indicative_passive_first: Stem, Stem, Recessive;
+        indicative_passive_second: Stem, Stem, Stem;
+        indicative_passive_third: Stem, Stem, Stem;
+        subjunctive_active_first: Stem, Stem, Stem;
+        subjunctive_active_second: Stem, Stem, Stem;
+        subjunctive_active_third: Stem, Stem, Stem;
+        subjunctive_middle_first: Stem, Stem, Recessive;
+        subjunctive_middle_second: Stem, Stem, Stem;
+        subjunctive_middle_third: Stem, Stem, Stem;
+        subjunctive_passive_first: Stem, Stem, Recessive;
+        subjunctive_passive_second: Stem, Stem, Stem;
+        subjunctive_passive_third: Stem, Stem, Stem;
+        optative_active_first: Stem, Stem, Stem;
+        optative_active_second: Stem, Stem, Stem;
+        optative_active_third: Stem, Recessive, Stem;
+        optative_middle_first: Recessive, Stem, Recessive;
+        optative_middle_second: Stem, Stem, Stem;
+        optative_middle_third: Stem, Recessive, Stem;
+        optative_passive_first: Recessive, Stem, Recessive;
+        optative_passive_second: Stem, Stem, Stem;
+        optative_passive_third: Stem, Recessive, Stem;
+        imperative_active_first: Stem, Stem, Stem;
+        imperative_active_second: Recessive, Stem, Stem;
+        imperative_active_third: Recessive, Recessive, Recessive;
+        imperative_middle_first: Stem, Stem, Stem;
+        imperative_middle_second: Stem, Stem, Stem;
+        imperative_middle_third: Recessive, Recessive, Recessive;
+        imperative_passive_first: Stem, Stem, Stem;
+        imperative_passive_second: Stem, Stem, Stem;
+        imperative_passive_third: Recessive, Recessive, Recessive;
         imperfect_active_first: Recessive, Stem, Ending;
         imperfect_active_second: Recessive, Ending, Ending;
         imperfect_active_third: Recessive, Recessive, Recessive;
@@ -11888,6 +13084,217 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_future: Stem, Recessive, Recessive;
         participle_aorist: Stem, Recessive, Stem;
         participle_perfect: Stem, Stem, Stem;
+        participle_future_perfect: Stem, Stem, Stem;
+    ),
+    // Like ``: 0 words.
+    pattern!("", 0;
+        indicative_active_first: Stem, Stem, Stem;
+        indicative_active_second: Stem, Stem, Stem;
+        indicative_active_third: Stem, Stem, Stem;
+        indicative_middle_first: Stem, Stem, Recessive;
+        indicative_middle_second: Stem, Stem, Stem;
+        indicative_middle_third: Stem, Stem, Stem;
+        indicative_passive_first: Stem, Stem, Recessive;
+        indicative_passive_second: Stem, Stem, Stem;
+        indicative_passive_third: Stem, Stem, Stem;
+        subjunctive_active_first: Stem, Stem, Stem;
+        subjunctive_active_second: Stem, Stem, Stem;
+        subjunctive_active_third: Stem, Stem, Stem;
+        subjunctive_middle_first: Stem, Stem, Recessive;
+        subjunctive_middle_second: Stem, Stem, Stem;
+        subjunctive_middle_third: Stem, Stem, Stem;
+        subjunctive_passive_first: Stem, Stem, Recessive;
+        subjunctive_passive_second: Stem, Stem, Stem;
+        subjunctive_passive_third: Stem, Stem, Stem;
+        optative_active_first: Stem, Stem, Stem;
+        optative_active_second: Stem, Stem, Stem;
+        optative_active_third: Stem, Recessive, Stem;
+        optative_middle_first: Recessive, Stem, Recessive;
+        optative_middle_second: Stem, Stem, Stem;
+        optative_middle_third: Stem, Recessive, Stem;
+        optative_passive_first: Recessive, Stem, Recessive;
+        optative_passive_second: Stem, Stem, Stem;
+        optative_passive_third: Stem, Recessive, Stem;
+        imperative_active_first: Stem, Stem, Stem;
+        imperative_active_second: Recessive, Stem, Stem;
+        imperative_active_third: Recessive, Recessive, Recessive;
+        imperative_middle_first: Stem, Stem, Stem;
+        imperative_middle_second: Stem, Stem, Stem;
+        imperative_middle_third: Recessive, Recessive, Recessive;
+        imperative_passive_first: Stem, Stem, Stem;
+        imperative_passive_second: Stem, Stem, Stem;
+        imperative_passive_third: Recessive, Recessive, Recessive;
+        imperfect_active_first: Recessive, Stem, Stem;
+        imperfect_active_second: Recessive, Stem, Stem;
+        imperfect_active_third: Recessive, Recessive, Recessive;
+        imperfect_middle_first: Recessive, Stem, Recessive;
+        imperfect_middle_second: Stem, Stem, Stem;
+        imperfect_middle_third: Stem, Recessive, Stem;
+        imperfect_passive_first: Recessive, Stem, Recessive;
+        imperfect_passive_second: Stem, Stem, Stem;
+        imperfect_passive_third: Stem, Recessive, Stem;
+        future_indicative_active_first: Recessive, Stem, Stem;
+        future_indicative_active_second: Recessive, Stem, Stem;
+        future_indicative_active_third: Recessive, Stem, Stem;
+        future_indicative_middle_first: Recessive, Stem, Recessive;
+        future_indicative_middle_second: Recessive, Recessive, Recessive;
+        future_indicative_middle_third: Recessive, Recessive, Recessive;
+        future_indicative_passive_first: Recessive, Stem, Recessive;
+        future_indicative_passive_second: Recessive, Recessive, Recessive;
+        future_indicative_passive_third: Recessive, Recessive, Recessive;
+        future_subjunctive_active_first: Stem, Stem, Stem;
+        future_subjunctive_active_second: Stem, Stem, Stem;
+        future_subjunctive_active_third: Stem, Stem, Stem;
+        future_subjunctive_middle_first: Stem, Stem, Stem;
+        future_subjunctive_middle_second: Stem, Stem, Stem;
+        future_subjunctive_middle_third: Stem, Stem, Stem;
+        future_subjunctive_passive_first: Stem, Stem, Stem;
+        future_subjunctive_passive_second: Stem, Stem, Stem;
+        future_subjunctive_passive_third: Stem, Stem, Stem;
+        future_optative_active_first: Recessive, Stem, Stem;
+        future_optative_active_second: Recessive, Stem, Stem;
+        future_optative_active_third: Recessive, Recessive, Stem;
+        future_optative_middle_first: Recessive, Stem, Recessive;
+        future_optative_middle_second: Recessive, Recessive, Recessive;
+        future_optative_middle_third: Recessive, Recessive, Recessive;
+        future_optative_passive_first: Recessive, Stem, Recessive;
+        future_optative_passive_second: Recessive, Recessive, Recessive;
+        future_optative_passive_third: Recessive, Recessive, Recessive;
+        future_imperative_active_first: Stem, Stem, Stem;
+        future_imperative_active_second: Stem, Stem, Stem;
+        future_imperative_active_third: Stem, Stem, Stem;
+        future_imperative_middle_first: Stem, Stem, Stem;
+        future_imperative_middle_second: Stem, Stem, Stem;
+        future_imperative_middle_third: Stem, Stem, Stem;
+        future_imperative_passive_first: Stem, Stem, Stem;
+        future_imperative_passive_second: Stem, Stem, Stem;
+        future_imperative_passive_third: Stem, Stem, Stem;
+        aorist_indicative_active_first: Recessive, Stem, Recessive;
+        aorist_indicative_active_second: Recessive, Recessive, Recessive;
+        aorist_indicative_active_third: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_first: Recessive, Stem, Recessive;
+        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_first: Recessive, Stem, Recessive;
+        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_passive_first: Stem, Stem, Stem;
+        aorist_subjunctive_passive_second: Stem, Stem, Stem;
+        aorist_subjunctive_passive_third: Stem, Stem, Stem;
+        aorist_optative_active_first: Recessive, Stem, Recessive;
+        aorist_optative_active_second: Recessive, Recessive, Recessive;
+        aorist_optative_active_third: Recessive, Recessive, Recessive;
+        aorist_optative_middle_first: Recessive, Stem, Recessive;
+        aorist_optative_middle_second: Recessive, Recessive, Recessive;
+        aorist_optative_middle_third: Recessive, Recessive, Recessive;
+        aorist_optative_passive_first: Recessive, Stem, Stem;
+        aorist_optative_passive_second: Recessive, Stem, Stem;
+        aorist_optative_passive_third: Recessive, Recessive, Stem;
+        aorist_imperative_active_first: Stem, Stem, Stem;
+        aorist_imperative_active_second: Recessive, Recessive, Recessive;
+        aorist_imperative_active_third: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_first: Stem, Stem, Stem;
+        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_first: Stem, Stem, Stem;
+        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
+        perfect_indicative_active_first: Recessive, Stem, Recessive;
+        perfect_indicative_active_second: Recessive, Recessive, Recessive;
+        perfect_indicative_active_third: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_first: Recessive, Stem, Recessive;
+        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_first: Recessive, Stem, Recessive;
+        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
+        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_middle_first: Ending, Stem, Ending;
+        perfect_subjunctive_middle_second: Ending, Ending, Ending;
+        perfect_subjunctive_middle_third: Ending, Ending, Ending;
+        perfect_subjunctive_passive_first: Ending, Stem, Ending;
+        perfect_subjunctive_passive_second: Ending, Ending, Ending;
+        perfect_subjunctive_passive_third: Ending, Ending, Ending;
+        perfect_optative_active_first: Recessive, Stem, Recessive;
+        perfect_optative_active_second: Recessive, Recessive, Recessive;
+        perfect_optative_active_third: Recessive, Stem, Recessive;
+        perfect_optative_middle_first: Ending, Stem, Ending;
+        perfect_optative_middle_second: Ending, Ending, Ending;
+        perfect_optative_middle_third: Ending, Ending, Ending;
+        perfect_optative_passive_first: Ending, Stem, Ending;
+        perfect_optative_passive_second: Ending, Ending, Ending;
+        perfect_optative_passive_third: Ending, Ending, Ending;
+        perfect_imperative_active_first: Stem, Stem, Stem;
+        perfect_imperative_active_second: Recessive, Recessive, Recessive;
+        perfect_imperative_active_third: Stem, Stem, Stem;
+        perfect_imperative_middle_first: Stem, Stem, Stem;
+        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
+        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_first: Stem, Stem, Stem;
+        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
+        pluperfect_active_first: Recessive, Stem, Recessive;
+        pluperfect_active_second: Recessive, Recessive, Recessive;
+        pluperfect_active_third: Recessive, Stem, Recessive;
+        pluperfect_middle_first: Recessive, Stem, Recessive;
+        pluperfect_middle_second: Recessive, Recessive, Recessive;
+        pluperfect_middle_third: Recessive, Recessive, Recessive;
+        pluperfect_passive_first: Recessive, Stem, Recessive;
+        pluperfect_passive_second: Recessive, Recessive, Recessive;
+        pluperfect_passive_third: Recessive, Recessive, Recessive;
+        future_perfect_indicative_active_first: Stem, Stem, Stem;
+        future_perfect_indicative_active_second: Stem, Stem, Stem;
+        future_perfect_indicative_active_third: Stem, Stem, Stem;
+        future_perfect_indicative_middle_first: Stem, Stem, Stem;
+        future_perfect_indicative_middle_second: Stem, Stem, Stem;
+        future_perfect_indicative_middle_third: Stem, Stem, Stem;
+        future_perfect_indicative_passive_first: Stem, Stem, Stem;
+        future_perfect_indicative_passive_second: Stem, Stem, Stem;
+        future_perfect_indicative_passive_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
+        future_perfect_optative_active_first: Stem, Stem, Stem;
+        future_perfect_optative_active_second: Stem, Stem, Stem;
+        future_perfect_optative_active_third: Stem, Stem, Stem;
+        future_perfect_optative_middle_first: Stem, Stem, Stem;
+        future_perfect_optative_middle_second: Stem, Stem, Stem;
+        future_perfect_optative_middle_third: Stem, Stem, Stem;
+        future_perfect_optative_passive_first: Stem, Stem, Stem;
+        future_perfect_optative_passive_second: Stem, Stem, Stem;
+        future_perfect_optative_passive_third: Stem, Stem, Stem;
+        future_perfect_imperative_active_first: Stem, Stem, Stem;
+        future_perfect_imperative_active_second: Stem, Stem, Stem;
+        future_perfect_imperative_active_third: Stem, Stem, Stem;
+        future_perfect_imperative_middle_first: Stem, Stem, Stem;
+        future_perfect_imperative_middle_second: Stem, Stem, Stem;
+        future_perfect_imperative_middle_third: Stem, Stem, Stem;
+        future_perfect_imperative_passive_first: Stem, Stem, Stem;
+        future_perfect_imperative_passive_second: Stem, Stem, Stem;
+        future_perfect_imperative_passive_third: Stem, Stem, Stem;
+        infinitive_present: Stem, Stem, Stem;
+        infinitive_future: Recessive, Recessive, Recessive;
+        infinitive_aorist: Stem, Stem, Stem;
+        infinitive_perfect: Stem, Stem, Stem;
+        infinitive_future_perfect: Stem, Stem, Stem;
+        participle_present: Stem, Recessive, Recessive;
+        participle_future: Recessive, Recessive, Recessive;
+        participle_aorist: Stem, Recessive, Stem;
+        participle_perfect: Ending, Stem, Stem;
         participle_future_perfect: Stem, Stem, Stem;
     ),
     // Like ``: 0 words.
@@ -12362,217 +13769,6 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         future_indicative_active_first: Recessive, Stem, Stem;
         future_indicative_active_second: Recessive, Stem, Stem;
         future_indicative_active_third: Recessive, Stem, Stem;
-        future_indicative_middle_first: Recessive, Stem, Recessive;
-        future_indicative_middle_second: Recessive, Recessive, Recessive;
-        future_indicative_middle_third: Recessive, Recessive, Recessive;
-        future_indicative_passive_first: Recessive, Stem, Recessive;
-        future_indicative_passive_second: Recessive, Recessive, Recessive;
-        future_indicative_passive_third: Recessive, Recessive, Recessive;
-        future_subjunctive_active_first: Stem, Stem, Stem;
-        future_subjunctive_active_second: Stem, Stem, Stem;
-        future_subjunctive_active_third: Stem, Stem, Stem;
-        future_subjunctive_middle_first: Stem, Stem, Stem;
-        future_subjunctive_middle_second: Stem, Stem, Stem;
-        future_subjunctive_middle_third: Stem, Stem, Stem;
-        future_subjunctive_passive_first: Stem, Stem, Stem;
-        future_subjunctive_passive_second: Stem, Stem, Stem;
-        future_subjunctive_passive_third: Stem, Stem, Stem;
-        future_optative_active_first: Recessive, Stem, Stem;
-        future_optative_active_second: Recessive, Stem, Stem;
-        future_optative_active_third: Recessive, Recessive, Stem;
-        future_optative_middle_first: Recessive, Stem, Recessive;
-        future_optative_middle_second: Recessive, Recessive, Recessive;
-        future_optative_middle_third: Recessive, Recessive, Recessive;
-        future_optative_passive_first: Recessive, Stem, Recessive;
-        future_optative_passive_second: Recessive, Recessive, Recessive;
-        future_optative_passive_third: Recessive, Recessive, Recessive;
-        future_imperative_active_first: Stem, Stem, Stem;
-        future_imperative_active_second: Stem, Stem, Stem;
-        future_imperative_active_third: Stem, Stem, Stem;
-        future_imperative_middle_first: Stem, Stem, Stem;
-        future_imperative_middle_second: Stem, Stem, Stem;
-        future_imperative_middle_third: Stem, Stem, Stem;
-        future_imperative_passive_first: Stem, Stem, Stem;
-        future_imperative_passive_second: Stem, Stem, Stem;
-        future_imperative_passive_third: Stem, Stem, Stem;
-        aorist_indicative_active_first: Recessive, Stem, Recessive;
-        aorist_indicative_active_second: Recessive, Recessive, Recessive;
-        aorist_indicative_active_third: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_first: Recessive, Stem, Recessive;
-        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_first: Recessive, Stem, Recessive;
-        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_passive_first: Stem, Stem, Stem;
-        aorist_subjunctive_passive_second: Stem, Stem, Stem;
-        aorist_subjunctive_passive_third: Stem, Stem, Stem;
-        aorist_optative_active_first: Recessive, Stem, Recessive;
-        aorist_optative_active_second: Recessive, Recessive, Recessive;
-        aorist_optative_active_third: Recessive, Recessive, Recessive;
-        aorist_optative_middle_first: Recessive, Stem, Recessive;
-        aorist_optative_middle_second: Recessive, Recessive, Recessive;
-        aorist_optative_middle_third: Recessive, Recessive, Recessive;
-        aorist_optative_passive_first: Recessive, Stem, Stem;
-        aorist_optative_passive_second: Recessive, Stem, Stem;
-        aorist_optative_passive_third: Recessive, Recessive, Stem;
-        aorist_imperative_active_first: Stem, Stem, Stem;
-        aorist_imperative_active_second: Recessive, Recessive, Recessive;
-        aorist_imperative_active_third: Recessive, Recessive, Recessive;
-        aorist_imperative_middle_first: Stem, Stem, Stem;
-        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
-        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_first: Stem, Stem, Stem;
-        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
-        perfect_indicative_active_first: Recessive, Stem, Recessive;
-        perfect_indicative_active_second: Recessive, Recessive, Recessive;
-        perfect_indicative_active_third: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_first: Recessive, Stem, Recessive;
-        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_first: Recessive, Stem, Recessive;
-        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
-        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_middle_first: Ending, Stem, Ending;
-        perfect_subjunctive_middle_second: Ending, Ending, Ending;
-        perfect_subjunctive_middle_third: Ending, Ending, Ending;
-        perfect_subjunctive_passive_first: Ending, Stem, Ending;
-        perfect_subjunctive_passive_second: Ending, Ending, Ending;
-        perfect_subjunctive_passive_third: Ending, Ending, Ending;
-        perfect_optative_active_first: Recessive, Stem, Recessive;
-        perfect_optative_active_second: Recessive, Recessive, Recessive;
-        perfect_optative_active_third: Recessive, Stem, Recessive;
-        perfect_optative_middle_first: Ending, Stem, Ending;
-        perfect_optative_middle_second: Ending, Ending, Ending;
-        perfect_optative_middle_third: Ending, Ending, Ending;
-        perfect_optative_passive_first: Ending, Stem, Ending;
-        perfect_optative_passive_second: Ending, Ending, Ending;
-        perfect_optative_passive_third: Ending, Ending, Ending;
-        perfect_imperative_active_first: Stem, Stem, Stem;
-        perfect_imperative_active_second: Recessive, Recessive, Recessive;
-        perfect_imperative_active_third: Stem, Stem, Stem;
-        perfect_imperative_middle_first: Stem, Stem, Stem;
-        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
-        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_first: Stem, Stem, Stem;
-        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
-        pluperfect_active_first: Recessive, Stem, Recessive;
-        pluperfect_active_second: Recessive, Recessive, Recessive;
-        pluperfect_active_third: Recessive, Stem, Recessive;
-        pluperfect_middle_first: Recessive, Stem, Recessive;
-        pluperfect_middle_second: Recessive, Recessive, Recessive;
-        pluperfect_middle_third: Recessive, Recessive, Recessive;
-        pluperfect_passive_first: Recessive, Stem, Recessive;
-        pluperfect_passive_second: Recessive, Recessive, Recessive;
-        pluperfect_passive_third: Recessive, Recessive, Recessive;
-        future_perfect_indicative_active_first: Stem, Stem, Stem;
-        future_perfect_indicative_active_second: Stem, Stem, Stem;
-        future_perfect_indicative_active_third: Stem, Stem, Stem;
-        future_perfect_indicative_middle_first: Stem, Stem, Stem;
-        future_perfect_indicative_middle_second: Stem, Stem, Stem;
-        future_perfect_indicative_middle_third: Stem, Stem, Stem;
-        future_perfect_indicative_passive_first: Stem, Stem, Stem;
-        future_perfect_indicative_passive_second: Stem, Stem, Stem;
-        future_perfect_indicative_passive_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
-        future_perfect_optative_active_first: Stem, Stem, Stem;
-        future_perfect_optative_active_second: Stem, Stem, Stem;
-        future_perfect_optative_active_third: Stem, Stem, Stem;
-        future_perfect_optative_middle_first: Stem, Stem, Stem;
-        future_perfect_optative_middle_second: Stem, Stem, Stem;
-        future_perfect_optative_middle_third: Stem, Stem, Stem;
-        future_perfect_optative_passive_first: Stem, Stem, Stem;
-        future_perfect_optative_passive_second: Stem, Stem, Stem;
-        future_perfect_optative_passive_third: Stem, Stem, Stem;
-        future_perfect_imperative_active_first: Stem, Stem, Stem;
-        future_perfect_imperative_active_second: Stem, Stem, Stem;
-        future_perfect_imperative_active_third: Stem, Stem, Stem;
-        future_perfect_imperative_middle_first: Stem, Stem, Stem;
-        future_perfect_imperative_middle_second: Stem, Stem, Stem;
-        future_perfect_imperative_middle_third: Stem, Stem, Stem;
-        future_perfect_imperative_passive_first: Stem, Stem, Stem;
-        future_perfect_imperative_passive_second: Stem, Stem, Stem;
-        future_perfect_imperative_passive_third: Stem, Stem, Stem;
-        infinitive_present: Stem, Stem, Stem;
-        infinitive_future: Recessive, Recessive, Recessive;
-        infinitive_aorist: Stem, Stem, Stem;
-        infinitive_perfect: Stem, Stem, Stem;
-        infinitive_future_perfect: Stem, Stem, Stem;
-        participle_present: Stem, Recessive, Recessive;
-        participle_future: Recessive, Recessive, Recessive;
-        participle_aorist: Stem, Recessive, Stem;
-        participle_perfect: Ending, Stem, Stem;
-        participle_future_perfect: Stem, Stem, Stem;
-    ),
-    // Like ``: 0 words.
-    pattern!("", 0;
-        indicative_active_first: Stem, Stem, Stem;
-        indicative_active_second: Stem, Stem, Stem;
-        indicative_active_third: Stem, Stem, Stem;
-        indicative_middle_first: Stem, Stem, Recessive;
-        indicative_middle_second: Stem, Stem, Stem;
-        indicative_middle_third: Stem, Stem, Stem;
-        indicative_passive_first: Stem, Stem, Recessive;
-        indicative_passive_second: Stem, Stem, Stem;
-        indicative_passive_third: Stem, Stem, Stem;
-        subjunctive_active_first: Stem, Stem, Stem;
-        subjunctive_active_second: Stem, Stem, Stem;
-        subjunctive_active_third: Stem, Stem, Stem;
-        subjunctive_middle_first: Stem, Stem, Recessive;
-        subjunctive_middle_second: Stem, Stem, Stem;
-        subjunctive_middle_third: Stem, Stem, Stem;
-        subjunctive_passive_first: Stem, Stem, Recessive;
-        subjunctive_passive_second: Stem, Stem, Stem;
-        subjunctive_passive_third: Stem, Stem, Stem;
-        optative_active_first: Stem, Stem, Stem;
-        optative_active_second: Stem, Stem, Stem;
-        optative_active_third: Stem, Recessive, Stem;
-        optative_middle_first: Recessive, Stem, Recessive;
-        optative_middle_second: Stem, Stem, Stem;
-        optative_middle_third: Stem, Recessive, Stem;
-        optative_passive_first: Recessive, Stem, Recessive;
-        optative_passive_second: Stem, Stem, Stem;
-        optative_passive_third: Stem, Recessive, Stem;
-        imperative_active_first: Stem, Stem, Stem;
-        imperative_active_second: Recessive, Stem, Stem;
-        imperative_active_third: Recessive, Recessive, Recessive;
-        imperative_middle_first: Stem, Stem, Stem;
-        imperative_middle_second: Stem, Stem, Stem;
-        imperative_middle_third: Recessive, Recessive, Recessive;
-        imperative_passive_first: Stem, Stem, Stem;
-        imperative_passive_second: Stem, Stem, Stem;
-        imperative_passive_third: Recessive, Recessive, Recessive;
-        imperfect_active_first: Recessive, Stem, Stem;
-        imperfect_active_second: Recessive, Stem, Stem;
-        imperfect_active_third: Recessive, Recessive, Recessive;
-        imperfect_middle_first: Recessive, Stem, Recessive;
-        imperfect_middle_second: Stem, Stem, Stem;
-        imperfect_middle_third: Stem, Recessive, Stem;
-        imperfect_passive_first: Recessive, Stem, Recessive;
-        imperfect_passive_second: Stem, Stem, Stem;
-        imperfect_passive_third: Stem, Recessive, Stem;
-        future_indicative_active_first: Recessive, Stem, Stem;
-        future_indicative_active_second: Recessive, Stem, Stem;
-        future_indicative_active_third: Recessive, Stem, Stem;
         future_indicative_middle_first: Ending, Stem, Recessive;
         future_indicative_middle_second: Ending, Ending, Ending;
         future_indicative_middle_third: Ending, Ending, Ending;
@@ -12848,7 +14044,7 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         aorist_imperative_active_second: Recessive, Recessive, Recessive;
         aorist_imperative_active_third: Recessive, Recessive, Recessive;
         aorist_imperative_middle_first: Stem, Stem, Stem;
-        aorist_imperative_middle_second: Stem, Recessive, Recessive;
+        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
         aorist_imperative_middle_third: Recessive, Recessive, Recessive;
         aorist_imperative_passive_first: Stem, Stem, Stem;
         aorist_imperative_passive_second: Recessive, Recessive, Recessive;
@@ -12942,7 +14138,218 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_present: Stem, Recessive, Recessive;
         participle_future: Recessive, Recessive, Recessive;
         participle_aorist: Stem, Recessive, Ending;
-        participle_perfect: Ending, Stem, Stem;
+        participle_perfect: Stem, Stem, Stem;
+        participle_future_perfect: Stem, Stem, Stem;
+    ),
+    // Like ``: 0 words.
+    pattern!("", 0;
+        indicative_active_first: Stem, Stem, Stem;
+        indicative_active_second: Stem, Stem, Stem;
+        indicative_active_third: Stem, Stem, Stem;
+        indicative_middle_first: Stem, Stem, Recessive;
+        indicative_middle_second: Stem, Stem, Stem;
+        indicative_middle_third: Stem, Stem, Stem;
+        indicative_passive_first: Stem, Stem, Recessive;
+        indicative_passive_second: Stem, Stem, Stem;
+        indicative_passive_third: Stem, Stem, Stem;
+        subjunctive_active_first: Stem, Stem, Stem;
+        subjunctive_active_second: Stem, Stem, Stem;
+        subjunctive_active_third: Stem, Stem, Stem;
+        subjunctive_middle_first: Stem, Stem, Recessive;
+        subjunctive_middle_second: Stem, Stem, Stem;
+        subjunctive_middle_third: Stem, Stem, Stem;
+        subjunctive_passive_first: Stem, Stem, Recessive;
+        subjunctive_passive_second: Stem, Stem, Stem;
+        subjunctive_passive_third: Stem, Stem, Stem;
+        optative_active_first: Stem, Stem, Stem;
+        optative_active_second: Stem, Stem, Stem;
+        optative_active_third: Stem, Recessive, Stem;
+        optative_middle_first: Recessive, Stem, Recessive;
+        optative_middle_second: Stem, Stem, Stem;
+        optative_middle_third: Stem, Recessive, Stem;
+        optative_passive_first: Recessive, Stem, Recessive;
+        optative_passive_second: Stem, Stem, Stem;
+        optative_passive_third: Stem, Recessive, Stem;
+        imperative_active_first: Stem, Stem, Stem;
+        imperative_active_second: Recessive, Stem, Stem;
+        imperative_active_third: Recessive, Recessive, Recessive;
+        imperative_middle_first: Stem, Stem, Stem;
+        imperative_middle_second: Stem, Stem, Stem;
+        imperative_middle_third: Recessive, Recessive, Recessive;
+        imperative_passive_first: Stem, Stem, Stem;
+        imperative_passive_second: Stem, Stem, Stem;
+        imperative_passive_third: Recessive, Recessive, Recessive;
+        imperfect_active_first: Recessive, Stem, Stem;
+        imperfect_active_second: Recessive, Stem, Stem;
+        imperfect_active_third: Recessive, Recessive, Recessive;
+        imperfect_middle_first: Recessive, Stem, Recessive;
+        imperfect_middle_second: Stem, Stem, Stem;
+        imperfect_middle_third: Stem, Recessive, Stem;
+        imperfect_passive_first: Recessive, Stem, Recessive;
+        imperfect_passive_second: Stem, Stem, Stem;
+        imperfect_passive_third: Stem, Recessive, Stem;
+        future_indicative_active_first: Recessive, Stem, Stem;
+        future_indicative_active_second: Recessive, Stem, Stem;
+        future_indicative_active_third: Recessive, Stem, Stem;
+        future_indicative_middle_first: Stem, Stem, Recessive;
+        future_indicative_middle_second: Stem, Stem, Stem;
+        future_indicative_middle_third: Stem, Stem, Stem;
+        future_indicative_passive_first: Recessive, Stem, Recessive;
+        future_indicative_passive_second: Recessive, Recessive, Recessive;
+        future_indicative_passive_third: Recessive, Recessive, Recessive;
+        future_subjunctive_active_first: Stem, Stem, Stem;
+        future_subjunctive_active_second: Stem, Stem, Stem;
+        future_subjunctive_active_third: Stem, Stem, Stem;
+        future_subjunctive_middle_first: Stem, Stem, Stem;
+        future_subjunctive_middle_second: Stem, Stem, Stem;
+        future_subjunctive_middle_third: Stem, Stem, Stem;
+        future_subjunctive_passive_first: Stem, Stem, Stem;
+        future_subjunctive_passive_second: Stem, Stem, Stem;
+        future_subjunctive_passive_third: Stem, Stem, Stem;
+        future_optative_active_first: Recessive, Stem, Stem;
+        future_optative_active_second: Recessive, Stem, Stem;
+        future_optative_active_third: Recessive, Recessive, Stem;
+        future_optative_middle_first: Recessive, Stem, Recessive;
+        future_optative_middle_second: Stem, Stem, Stem;
+        future_optative_middle_third: Stem, Recessive, Stem;
+        future_optative_passive_first: Recessive, Stem, Recessive;
+        future_optative_passive_second: Recessive, Recessive, Recessive;
+        future_optative_passive_third: Recessive, Recessive, Recessive;
+        future_imperative_active_first: Stem, Stem, Stem;
+        future_imperative_active_second: Stem, Stem, Stem;
+        future_imperative_active_third: Stem, Stem, Stem;
+        future_imperative_middle_first: Stem, Stem, Stem;
+        future_imperative_middle_second: Stem, Stem, Stem;
+        future_imperative_middle_third: Stem, Stem, Stem;
+        future_imperative_passive_first: Stem, Stem, Stem;
+        future_imperative_passive_second: Stem, Stem, Stem;
+        future_imperative_passive_third: Stem, Stem, Stem;
+        aorist_indicative_active_first: Recessive, Stem, Recessive;
+        aorist_indicative_active_second: Recessive, Recessive, Recessive;
+        aorist_indicative_active_third: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_first: Recessive, Stem, Recessive;
+        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_first: Recessive, Stem, Recessive;
+        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_passive_first: Ending, Stem, Ending;
+        aorist_subjunctive_passive_second: Ending, Ending, Ending;
+        aorist_subjunctive_passive_third: Ending, Ending, Ending;
+        aorist_optative_active_first: Recessive, Stem, Recessive;
+        aorist_optative_active_second: Recessive, Recessive, Recessive;
+        aorist_optative_active_third: Recessive, Recessive, Recessive;
+        aorist_optative_middle_first: Recessive, Stem, Recessive;
+        aorist_optative_middle_second: Recessive, Recessive, Recessive;
+        aorist_optative_middle_third: Recessive, Recessive, Recessive;
+        aorist_optative_passive_first: Recessive, Stem, Ending;
+        aorist_optative_passive_second: Recessive, Ending, Ending;
+        aorist_optative_passive_third: Recessive, Recessive, Ending;
+        aorist_imperative_active_first: Stem, Stem, Stem;
+        aorist_imperative_active_second: Recessive, Recessive, Recessive;
+        aorist_imperative_active_third: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_first: Stem, Stem, Stem;
+        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_first: Stem, Stem, Stem;
+        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
+        perfect_indicative_active_first: Recessive, Stem, Recessive;
+        perfect_indicative_active_second: Recessive, Recessive, Recessive;
+        perfect_indicative_active_third: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_first: Recessive, Stem, Recessive;
+        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_first: Recessive, Stem, Recessive;
+        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
+        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_middle_first: Ending, Stem, Ending;
+        perfect_subjunctive_middle_second: Ending, Ending, Ending;
+        perfect_subjunctive_middle_third: Ending, Ending, Ending;
+        perfect_subjunctive_passive_first: Ending, Stem, Ending;
+        perfect_subjunctive_passive_second: Ending, Ending, Ending;
+        perfect_subjunctive_passive_third: Ending, Ending, Ending;
+        perfect_optative_active_first: Recessive, Stem, Recessive;
+        perfect_optative_active_second: Recessive, Recessive, Recessive;
+        perfect_optative_active_third: Recessive, Stem, Recessive;
+        perfect_optative_middle_first: Ending, Stem, Ending;
+        perfect_optative_middle_second: Ending, Ending, Ending;
+        perfect_optative_middle_third: Ending, Ending, Ending;
+        perfect_optative_passive_first: Ending, Stem, Ending;
+        perfect_optative_passive_second: Ending, Ending, Ending;
+        perfect_optative_passive_third: Ending, Ending, Ending;
+        perfect_imperative_active_first: Stem, Stem, Stem;
+        perfect_imperative_active_second: Recessive, Recessive, Recessive;
+        perfect_imperative_active_third: Stem, Stem, Stem;
+        perfect_imperative_middle_first: Stem, Stem, Stem;
+        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
+        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_first: Stem, Stem, Stem;
+        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
+        pluperfect_active_first: Recessive, Stem, Recessive;
+        pluperfect_active_second: Recessive, Recessive, Recessive;
+        pluperfect_active_third: Recessive, Stem, Recessive;
+        pluperfect_middle_first: Recessive, Stem, Recessive;
+        pluperfect_middle_second: Recessive, Recessive, Recessive;
+        pluperfect_middle_third: Recessive, Recessive, Recessive;
+        pluperfect_passive_first: Recessive, Stem, Recessive;
+        pluperfect_passive_second: Recessive, Recessive, Recessive;
+        pluperfect_passive_third: Recessive, Recessive, Recessive;
+        future_perfect_indicative_active_first: Stem, Stem, Stem;
+        future_perfect_indicative_active_second: Stem, Stem, Stem;
+        future_perfect_indicative_active_third: Stem, Stem, Stem;
+        future_perfect_indicative_middle_first: Stem, Stem, Stem;
+        future_perfect_indicative_middle_second: Stem, Stem, Stem;
+        future_perfect_indicative_middle_third: Stem, Stem, Stem;
+        future_perfect_indicative_passive_first: Stem, Stem, Stem;
+        future_perfect_indicative_passive_second: Stem, Stem, Stem;
+        future_perfect_indicative_passive_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
+        future_perfect_optative_active_first: Stem, Stem, Stem;
+        future_perfect_optative_active_second: Stem, Stem, Stem;
+        future_perfect_optative_active_third: Stem, Stem, Stem;
+        future_perfect_optative_middle_first: Stem, Stem, Stem;
+        future_perfect_optative_middle_second: Stem, Stem, Stem;
+        future_perfect_optative_middle_third: Stem, Stem, Stem;
+        future_perfect_optative_passive_first: Stem, Stem, Stem;
+        future_perfect_optative_passive_second: Stem, Stem, Stem;
+        future_perfect_optative_passive_third: Stem, Stem, Stem;
+        future_perfect_imperative_active_first: Stem, Stem, Stem;
+        future_perfect_imperative_active_second: Stem, Stem, Stem;
+        future_perfect_imperative_active_third: Stem, Stem, Stem;
+        future_perfect_imperative_middle_first: Stem, Stem, Stem;
+        future_perfect_imperative_middle_second: Stem, Stem, Stem;
+        future_perfect_imperative_middle_third: Stem, Stem, Stem;
+        future_perfect_imperative_passive_first: Stem, Stem, Stem;
+        future_perfect_imperative_passive_second: Stem, Stem, Stem;
+        future_perfect_imperative_passive_third: Stem, Stem, Stem;
+        infinitive_present: Stem, Stem, Stem;
+        infinitive_future: Recessive, Stem, Recessive;
+        infinitive_aorist: Stem, Stem, Ending;
+        infinitive_perfect: Stem, Ending, Ending;
+        infinitive_future_perfect: Stem, Stem, Stem;
+        participle_present: Stem, Recessive, Recessive;
+        participle_future: Recessive, Recessive, Recessive;
+        participle_aorist: Stem, Recessive, Ending;
+        participle_perfect: Ending, Ending, Ending;
         participle_future_perfect: Stem, Stem, Stem;
     ),
     // Like ``: 0 words.
@@ -13575,217 +14982,6 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_present: Stem, Recessive, Recessive;
         participle_future: Stem, Recessive, Recessive;
         participle_aorist: Stem, Recessive, Stem;
-        participle_perfect: Ending, Ending, Ending;
-        participle_future_perfect: Stem, Stem, Stem;
-    ),
-    // Like ``: 0 words.
-    pattern!("", 0;
-        indicative_active_first: Stem, Stem, Stem;
-        indicative_active_second: Stem, Stem, Stem;
-        indicative_active_third: Stem, Stem, Stem;
-        indicative_middle_first: Stem, Stem, Recessive;
-        indicative_middle_second: Stem, Stem, Stem;
-        indicative_middle_third: Stem, Stem, Stem;
-        indicative_passive_first: Stem, Stem, Recessive;
-        indicative_passive_second: Stem, Stem, Stem;
-        indicative_passive_third: Stem, Stem, Stem;
-        subjunctive_active_first: Stem, Stem, Stem;
-        subjunctive_active_second: Stem, Stem, Stem;
-        subjunctive_active_third: Stem, Stem, Stem;
-        subjunctive_middle_first: Stem, Stem, Recessive;
-        subjunctive_middle_second: Stem, Stem, Stem;
-        subjunctive_middle_third: Stem, Stem, Stem;
-        subjunctive_passive_first: Stem, Stem, Recessive;
-        subjunctive_passive_second: Stem, Stem, Stem;
-        subjunctive_passive_third: Stem, Stem, Stem;
-        optative_active_first: Stem, Stem, Stem;
-        optative_active_second: Stem, Stem, Stem;
-        optative_active_third: Stem, Recessive, Stem;
-        optative_middle_first: Recessive, Stem, Recessive;
-        optative_middle_second: Stem, Stem, Stem;
-        optative_middle_third: Stem, Recessive, Stem;
-        optative_passive_first: Recessive, Stem, Recessive;
-        optative_passive_second: Stem, Stem, Stem;
-        optative_passive_third: Stem, Recessive, Stem;
-        imperative_active_first: Stem, Stem, Stem;
-        imperative_active_second: Recessive, Stem, Stem;
-        imperative_active_third: Recessive, Recessive, Recessive;
-        imperative_middle_first: Stem, Stem, Stem;
-        imperative_middle_second: Stem, Stem, Stem;
-        imperative_middle_third: Recessive, Recessive, Recessive;
-        imperative_passive_first: Stem, Stem, Stem;
-        imperative_passive_second: Stem, Stem, Stem;
-        imperative_passive_third: Recessive, Recessive, Recessive;
-        imperfect_active_first: Recessive, Stem, Stem;
-        imperfect_active_second: Recessive, Stem, Stem;
-        imperfect_active_third: Recessive, Recessive, Recessive;
-        imperfect_middle_first: Recessive, Stem, Recessive;
-        imperfect_middle_second: Stem, Stem, Stem;
-        imperfect_middle_third: Stem, Recessive, Stem;
-        imperfect_passive_first: Recessive, Stem, Recessive;
-        imperfect_passive_second: Stem, Stem, Stem;
-        imperfect_passive_third: Stem, Recessive, Stem;
-        future_indicative_active_first: Recessive, Stem, Stem;
-        future_indicative_active_second: Recessive, Stem, Stem;
-        future_indicative_active_third: Recessive, Stem, Stem;
-        future_indicative_middle_first: Stem, Stem, Recessive;
-        future_indicative_middle_second: Stem, Stem, Stem;
-        future_indicative_middle_third: Stem, Stem, Stem;
-        future_indicative_passive_first: Recessive, Stem, Recessive;
-        future_indicative_passive_second: Recessive, Recessive, Recessive;
-        future_indicative_passive_third: Recessive, Recessive, Recessive;
-        future_subjunctive_active_first: Stem, Stem, Stem;
-        future_subjunctive_active_second: Stem, Stem, Stem;
-        future_subjunctive_active_third: Stem, Stem, Stem;
-        future_subjunctive_middle_first: Stem, Stem, Stem;
-        future_subjunctive_middle_second: Stem, Stem, Stem;
-        future_subjunctive_middle_third: Stem, Stem, Stem;
-        future_subjunctive_passive_first: Stem, Stem, Stem;
-        future_subjunctive_passive_second: Stem, Stem, Stem;
-        future_subjunctive_passive_third: Stem, Stem, Stem;
-        future_optative_active_first: Recessive, Stem, Stem;
-        future_optative_active_second: Recessive, Stem, Stem;
-        future_optative_active_third: Recessive, Recessive, Stem;
-        future_optative_middle_first: Recessive, Stem, Recessive;
-        future_optative_middle_second: Stem, Stem, Stem;
-        future_optative_middle_third: Stem, Recessive, Stem;
-        future_optative_passive_first: Recessive, Stem, Recessive;
-        future_optative_passive_second: Recessive, Recessive, Recessive;
-        future_optative_passive_third: Recessive, Recessive, Recessive;
-        future_imperative_active_first: Stem, Stem, Stem;
-        future_imperative_active_second: Stem, Stem, Stem;
-        future_imperative_active_third: Stem, Stem, Stem;
-        future_imperative_middle_first: Stem, Stem, Stem;
-        future_imperative_middle_second: Stem, Stem, Stem;
-        future_imperative_middle_third: Stem, Stem, Stem;
-        future_imperative_passive_first: Stem, Stem, Stem;
-        future_imperative_passive_second: Stem, Stem, Stem;
-        future_imperative_passive_third: Stem, Stem, Stem;
-        aorist_indicative_active_first: Recessive, Stem, Recessive;
-        aorist_indicative_active_second: Recessive, Recessive, Recessive;
-        aorist_indicative_active_third: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_first: Recessive, Stem, Recessive;
-        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_first: Recessive, Stem, Recessive;
-        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_passive_first: Ending, Stem, Ending;
-        aorist_subjunctive_passive_second: Ending, Ending, Ending;
-        aorist_subjunctive_passive_third: Ending, Ending, Ending;
-        aorist_optative_active_first: Recessive, Stem, Recessive;
-        aorist_optative_active_second: Recessive, Recessive, Recessive;
-        aorist_optative_active_third: Recessive, Recessive, Recessive;
-        aorist_optative_middle_first: Recessive, Stem, Recessive;
-        aorist_optative_middle_second: Recessive, Recessive, Recessive;
-        aorist_optative_middle_third: Recessive, Recessive, Recessive;
-        aorist_optative_passive_first: Recessive, Stem, Ending;
-        aorist_optative_passive_second: Recessive, Ending, Ending;
-        aorist_optative_passive_third: Recessive, Recessive, Ending;
-        aorist_imperative_active_first: Stem, Stem, Stem;
-        aorist_imperative_active_second: Recessive, Recessive, Recessive;
-        aorist_imperative_active_third: Recessive, Recessive, Recessive;
-        aorist_imperative_middle_first: Stem, Stem, Stem;
-        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
-        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_first: Stem, Stem, Stem;
-        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
-        perfect_indicative_active_first: Recessive, Stem, Recessive;
-        perfect_indicative_active_second: Recessive, Recessive, Recessive;
-        perfect_indicative_active_third: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_first: Recessive, Stem, Recessive;
-        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_first: Recessive, Stem, Recessive;
-        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
-        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_middle_first: Ending, Stem, Ending;
-        perfect_subjunctive_middle_second: Ending, Ending, Ending;
-        perfect_subjunctive_middle_third: Ending, Ending, Ending;
-        perfect_subjunctive_passive_first: Ending, Stem, Ending;
-        perfect_subjunctive_passive_second: Ending, Ending, Ending;
-        perfect_subjunctive_passive_third: Ending, Ending, Ending;
-        perfect_optative_active_first: Recessive, Stem, Recessive;
-        perfect_optative_active_second: Recessive, Recessive, Recessive;
-        perfect_optative_active_third: Recessive, Stem, Recessive;
-        perfect_optative_middle_first: Ending, Stem, Ending;
-        perfect_optative_middle_second: Ending, Ending, Ending;
-        perfect_optative_middle_third: Ending, Ending, Ending;
-        perfect_optative_passive_first: Ending, Stem, Ending;
-        perfect_optative_passive_second: Ending, Ending, Ending;
-        perfect_optative_passive_third: Ending, Ending, Ending;
-        perfect_imperative_active_first: Stem, Stem, Stem;
-        perfect_imperative_active_second: Recessive, Recessive, Recessive;
-        perfect_imperative_active_third: Stem, Stem, Stem;
-        perfect_imperative_middle_first: Stem, Stem, Stem;
-        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
-        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_first: Stem, Stem, Stem;
-        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
-        pluperfect_active_first: Recessive, Stem, Recessive;
-        pluperfect_active_second: Recessive, Recessive, Recessive;
-        pluperfect_active_third: Recessive, Stem, Recessive;
-        pluperfect_middle_first: Recessive, Stem, Recessive;
-        pluperfect_middle_second: Recessive, Recessive, Recessive;
-        pluperfect_middle_third: Recessive, Recessive, Recessive;
-        pluperfect_passive_first: Recessive, Stem, Recessive;
-        pluperfect_passive_second: Recessive, Recessive, Recessive;
-        pluperfect_passive_third: Recessive, Recessive, Recessive;
-        future_perfect_indicative_active_first: Stem, Stem, Stem;
-        future_perfect_indicative_active_second: Stem, Stem, Stem;
-        future_perfect_indicative_active_third: Stem, Stem, Stem;
-        future_perfect_indicative_middle_first: Stem, Stem, Stem;
-        future_perfect_indicative_middle_second: Stem, Stem, Stem;
-        future_perfect_indicative_middle_third: Stem, Stem, Stem;
-        future_perfect_indicative_passive_first: Stem, Stem, Stem;
-        future_perfect_indicative_passive_second: Stem, Stem, Stem;
-        future_perfect_indicative_passive_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
-        future_perfect_optative_active_first: Stem, Stem, Stem;
-        future_perfect_optative_active_second: Stem, Stem, Stem;
-        future_perfect_optative_active_third: Stem, Stem, Stem;
-        future_perfect_optative_middle_first: Stem, Stem, Stem;
-        future_perfect_optative_middle_second: Stem, Stem, Stem;
-        future_perfect_optative_middle_third: Stem, Stem, Stem;
-        future_perfect_optative_passive_first: Stem, Stem, Stem;
-        future_perfect_optative_passive_second: Stem, Stem, Stem;
-        future_perfect_optative_passive_third: Stem, Stem, Stem;
-        future_perfect_imperative_active_first: Stem, Stem, Stem;
-        future_perfect_imperative_active_second: Stem, Stem, Stem;
-        future_perfect_imperative_active_third: Stem, Stem, Stem;
-        future_perfect_imperative_middle_first: Stem, Stem, Stem;
-        future_perfect_imperative_middle_second: Stem, Stem, Stem;
-        future_perfect_imperative_middle_third: Stem, Stem, Stem;
-        future_perfect_imperative_passive_first: Stem, Stem, Stem;
-        future_perfect_imperative_passive_second: Stem, Stem, Stem;
-        future_perfect_imperative_passive_third: Stem, Stem, Stem;
-        infinitive_present: Stem, Stem, Stem;
-        infinitive_future: Recessive, Stem, Recessive;
-        infinitive_aorist: Stem, Stem, Ending;
-        infinitive_perfect: Stem, Ending, Ending;
-        infinitive_future_perfect: Stem, Stem, Stem;
-        participle_present: Stem, Recessive, Recessive;
-        participle_future: Recessive, Recessive, Recessive;
-        participle_aorist: Stem, Recessive, Ending;
         participle_perfect: Ending, Ending, Ending;
         participle_future_perfect: Stem, Stem, Stem;
     ),
@@ -14680,9 +15876,9 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         imperfect_passive_first: Recessive, Stem, Recessive;
         imperfect_passive_second: Stem, Stem, Stem;
         imperfect_passive_third: Stem, Recessive, Stem;
-        future_indicative_active_first: Recessive, Stem, Stem;
-        future_indicative_active_second: Recessive, Stem, Stem;
-        future_indicative_active_third: Recessive, Stem, Stem;
+        future_indicative_active_first: Ending, Stem, Ending;
+        future_indicative_active_second: Ending, Ending, Ending;
+        future_indicative_active_third: Ending, Ending, Ending;
         future_indicative_middle_first: Ending, Stem, Recessive;
         future_indicative_middle_second: Ending, Ending, Ending;
         future_indicative_middle_third: Ending, Ending, Ending;
@@ -14698,9 +15894,9 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         future_subjunctive_passive_first: Stem, Stem, Stem;
         future_subjunctive_passive_second: Stem, Stem, Stem;
         future_subjunctive_passive_third: Stem, Stem, Stem;
-        future_optative_active_first: Recessive, Stem, Stem;
-        future_optative_active_second: Recessive, Stem, Stem;
-        future_optative_active_third: Recessive, Recessive, Stem;
+        future_optative_active_first: Recessive, Stem, Ending;
+        future_optative_active_second: Recessive, Ending, Ending;
+        future_optative_active_third: Recessive, Recessive, Ending;
         future_optative_middle_first: Recessive, Stem, Recessive;
         future_optative_middle_second: Ending, Ending, Ending;
         future_optative_middle_third: Ending, Recessive, Ending;
@@ -14731,18 +15927,18 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
         aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
         aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_passive_first: Ending, Stem, Ending;
-        aorist_subjunctive_passive_second: Ending, Ending, Ending;
-        aorist_subjunctive_passive_third: Ending, Ending, Ending;
+        aorist_subjunctive_passive_first: Stem, Stem, Stem;
+        aorist_subjunctive_passive_second: Stem, Stem, Stem;
+        aorist_subjunctive_passive_third: Stem, Stem, Stem;
         aorist_optative_active_first: Recessive, Stem, Recessive;
         aorist_optative_active_second: Recessive, Recessive, Recessive;
         aorist_optative_active_third: Recessive, Recessive, Recessive;
         aorist_optative_middle_first: Recessive, Stem, Recessive;
         aorist_optative_middle_second: Recessive, Recessive, Recessive;
         aorist_optative_middle_third: Recessive, Recessive, Recessive;
-        aorist_optative_passive_first: Recessive, Stem, Ending;
-        aorist_optative_passive_second: Recessive, Ending, Ending;
-        aorist_optative_passive_third: Recessive, Recessive, Ending;
+        aorist_optative_passive_first: Recessive, Stem, Stem;
+        aorist_optative_passive_second: Recessive, Stem, Stem;
+        aorist_optative_passive_third: Recessive, Recessive, Stem;
         aorist_imperative_active_first: Stem, Stem, Stem;
         aorist_imperative_active_second: Recessive, Recessive, Recessive;
         aorist_imperative_active_third: Recessive, Recessive, Recessive;
@@ -14834,14 +16030,225 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         future_perfect_imperative_passive_second: Stem, Stem, Stem;
         future_perfect_imperative_passive_third: Stem, Stem, Stem;
         infinitive_present: Stem, Stem, Stem;
-        infinitive_future: Recessive, Ending, Recessive;
+        infinitive_future: Ending, Ending, Recessive;
+        infinitive_aorist: Stem, Stem, Stem;
+        infinitive_perfect: Stem, Stem, Stem;
+        infinitive_future_perfect: Stem, Stem, Stem;
+        participle_present: Stem, Recessive, Recessive;
+        participle_future: Ending, Recessive, Recessive;
+        participle_aorist: Stem, Recessive, Stem;
+        participle_perfect: Ending, Ending, Ending;
+        participle_future_perfect: Stem, Stem, Stem;
+    ),
+    // Like ``: 0 words.
+    pattern!("", 0;
+        indicative_active_first: Stem, Stem, Stem;
+        indicative_active_second: Stem, Stem, Stem;
+        indicative_active_third: Stem, Stem, Stem;
+        indicative_middle_first: Stem, Stem, Recessive;
+        indicative_middle_second: Stem, Stem, Stem;
+        indicative_middle_third: Stem, Stem, Stem;
+        indicative_passive_first: Stem, Stem, Recessive;
+        indicative_passive_second: Stem, Stem, Stem;
+        indicative_passive_third: Stem, Stem, Stem;
+        subjunctive_active_first: Stem, Stem, Stem;
+        subjunctive_active_second: Stem, Stem, Stem;
+        subjunctive_active_third: Stem, Stem, Stem;
+        subjunctive_middle_first: Stem, Stem, Recessive;
+        subjunctive_middle_second: Stem, Stem, Stem;
+        subjunctive_middle_third: Stem, Stem, Stem;
+        subjunctive_passive_first: Stem, Stem, Recessive;
+        subjunctive_passive_second: Stem, Stem, Stem;
+        subjunctive_passive_third: Stem, Stem, Stem;
+        optative_active_first: Stem, Stem, Stem;
+        optative_active_second: Stem, Stem, Stem;
+        optative_active_third: Stem, Recessive, Stem;
+        optative_middle_first: Recessive, Stem, Recessive;
+        optative_middle_second: Stem, Stem, Stem;
+        optative_middle_third: Stem, Recessive, Stem;
+        optative_passive_first: Recessive, Stem, Recessive;
+        optative_passive_second: Stem, Stem, Stem;
+        optative_passive_third: Stem, Recessive, Stem;
+        imperative_active_first: Stem, Stem, Stem;
+        imperative_active_second: Recessive, Stem, Stem;
+        imperative_active_third: Recessive, Recessive, Recessive;
+        imperative_middle_first: Stem, Stem, Stem;
+        imperative_middle_second: Stem, Stem, Stem;
+        imperative_middle_third: Recessive, Recessive, Recessive;
+        imperative_passive_first: Stem, Stem, Stem;
+        imperative_passive_second: Stem, Stem, Stem;
+        imperative_passive_third: Recessive, Recessive, Recessive;
+        imperfect_active_first: Recessive, Stem, Stem;
+        imperfect_active_second: Recessive, Stem, Stem;
+        imperfect_active_third: Recessive, Recessive, Recessive;
+        imperfect_middle_first: Recessive, Stem, Recessive;
+        imperfect_middle_second: Stem, Stem, Stem;
+        imperfect_middle_third: Stem, Recessive, Stem;
+        imperfect_passive_first: Recessive, Stem, Recessive;
+        imperfect_passive_second: Stem, Stem, Stem;
+        imperfect_passive_third: Stem, Recessive, Stem;
+        future_indicative_active_first: Recessive, Stem, Stem;
+        future_indicative_active_second: Recessive, Stem, Stem;
+        future_indicative_active_third: Recessive, Stem, Stem;
+        future_indicative_middle_first: Recessive, Stem, Recessive;
+        future_indicative_middle_second: Recessive, Recessive, Recessive;
+        future_indicative_middle_third: Recessive, Recessive, Recessive;
+        future_indicative_passive_first: Recessive, Stem, Recessive;
+        future_indicative_passive_second: Recessive, Recessive, Recessive;
+        future_indicative_passive_third: Recessive, Recessive, Recessive;
+        future_subjunctive_active_first: Stem, Stem, Stem;
+        future_subjunctive_active_second: Stem, Stem, Stem;
+        future_subjunctive_active_third: Stem, Stem, Stem;
+        future_subjunctive_middle_first: Stem, Stem, Stem;
+        future_subjunctive_middle_second: Stem, Stem, Stem;
+        future_subjunctive_middle_third: Stem, Stem, Stem;
+        future_subjunctive_passive_first: Stem, Stem, Stem;
+        future_subjunctive_passive_second: Stem, Stem, Stem;
+        future_subjunctive_passive_third: Stem, Stem, Stem;
+        future_optative_active_first: Recessive, Stem, Stem;
+        future_optative_active_second: Recessive, Stem, Stem;
+        future_optative_active_third: Recessive, Recessive, Stem;
+        future_optative_middle_first: Recessive, Stem, Recessive;
+        future_optative_middle_second: Recessive, Recessive, Recessive;
+        future_optative_middle_third: Recessive, Recessive, Recessive;
+        future_optative_passive_first: Recessive, Stem, Recessive;
+        future_optative_passive_second: Recessive, Recessive, Recessive;
+        future_optative_passive_third: Recessive, Recessive, Recessive;
+        future_imperative_active_first: Stem, Stem, Stem;
+        future_imperative_active_second: Stem, Stem, Stem;
+        future_imperative_active_third: Stem, Stem, Stem;
+        future_imperative_middle_first: Stem, Stem, Stem;
+        future_imperative_middle_second: Stem, Stem, Stem;
+        future_imperative_middle_third: Stem, Stem, Stem;
+        future_imperative_passive_first: Stem, Stem, Stem;
+        future_imperative_passive_second: Stem, Stem, Stem;
+        future_imperative_passive_third: Stem, Stem, Stem;
+        aorist_indicative_active_first: Recessive, Stem, Recessive;
+        aorist_indicative_active_second: Recessive, Recessive, Recessive;
+        aorist_indicative_active_third: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_first: Recessive, Stem, Recessive;
+        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_first: Recessive, Stem, Recessive;
+        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_passive_first: Ending, Stem, Ending;
+        aorist_subjunctive_passive_second: Ending, Ending, Ending;
+        aorist_subjunctive_passive_third: Ending, Ending, Ending;
+        aorist_optative_active_first: Recessive, Stem, Recessive;
+        aorist_optative_active_second: Recessive, Recessive, Recessive;
+        aorist_optative_active_third: Recessive, Recessive, Recessive;
+        aorist_optative_middle_first: Recessive, Stem, Recessive;
+        aorist_optative_middle_second: Recessive, Recessive, Recessive;
+        aorist_optative_middle_third: Recessive, Recessive, Recessive;
+        aorist_optative_passive_first: Recessive, Stem, Ending;
+        aorist_optative_passive_second: Recessive, Ending, Ending;
+        aorist_optative_passive_third: Recessive, Recessive, Ending;
+        aorist_imperative_active_first: Stem, Stem, Stem;
+        aorist_imperative_active_second: Recessive, Recessive, Recessive;
+        aorist_imperative_active_third: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_first: Stem, Stem, Stem;
+        aorist_imperative_middle_second: Stem, Recessive, Recessive;
+        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_first: Stem, Stem, Stem;
+        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
+        perfect_indicative_active_first: Recessive, Stem, Recessive;
+        perfect_indicative_active_second: Recessive, Recessive, Recessive;
+        perfect_indicative_active_third: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_first: Recessive, Stem, Recessive;
+        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_first: Recessive, Stem, Recessive;
+        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
+        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_middle_first: Ending, Stem, Ending;
+        perfect_subjunctive_middle_second: Ending, Ending, Ending;
+        perfect_subjunctive_middle_third: Ending, Ending, Ending;
+        perfect_subjunctive_passive_first: Ending, Stem, Ending;
+        perfect_subjunctive_passive_second: Ending, Ending, Ending;
+        perfect_subjunctive_passive_third: Ending, Ending, Ending;
+        perfect_optative_active_first: Recessive, Stem, Recessive;
+        perfect_optative_active_second: Recessive, Recessive, Recessive;
+        perfect_optative_active_third: Recessive, Stem, Recessive;
+        perfect_optative_middle_first: Ending, Stem, Ending;
+        perfect_optative_middle_second: Ending, Ending, Ending;
+        perfect_optative_middle_third: Ending, Ending, Ending;
+        perfect_optative_passive_first: Ending, Stem, Ending;
+        perfect_optative_passive_second: Ending, Ending, Ending;
+        perfect_optative_passive_third: Ending, Ending, Ending;
+        perfect_imperative_active_first: Stem, Stem, Stem;
+        perfect_imperative_active_second: Recessive, Recessive, Recessive;
+        perfect_imperative_active_third: Stem, Stem, Stem;
+        perfect_imperative_middle_first: Stem, Stem, Stem;
+        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
+        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_first: Stem, Stem, Stem;
+        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
+        pluperfect_active_first: Recessive, Stem, Recessive;
+        pluperfect_active_second: Recessive, Recessive, Recessive;
+        pluperfect_active_third: Recessive, Stem, Recessive;
+        pluperfect_middle_first: Recessive, Stem, Recessive;
+        pluperfect_middle_second: Recessive, Recessive, Recessive;
+        pluperfect_middle_third: Recessive, Recessive, Recessive;
+        pluperfect_passive_first: Recessive, Stem, Recessive;
+        pluperfect_passive_second: Recessive, Recessive, Recessive;
+        pluperfect_passive_third: Recessive, Recessive, Recessive;
+        future_perfect_indicative_active_first: Stem, Stem, Stem;
+        future_perfect_indicative_active_second: Stem, Stem, Stem;
+        future_perfect_indicative_active_third: Stem, Stem, Stem;
+        future_perfect_indicative_middle_first: Stem, Stem, Stem;
+        future_perfect_indicative_middle_second: Stem, Stem, Stem;
+        future_perfect_indicative_middle_third: Stem, Stem, Stem;
+        future_perfect_indicative_passive_first: Stem, Stem, Stem;
+        future_perfect_indicative_passive_second: Stem, Stem, Stem;
+        future_perfect_indicative_passive_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
+        future_perfect_optative_active_first: Stem, Stem, Stem;
+        future_perfect_optative_active_second: Stem, Stem, Stem;
+        future_perfect_optative_active_third: Stem, Stem, Stem;
+        future_perfect_optative_middle_first: Stem, Stem, Stem;
+        future_perfect_optative_middle_second: Stem, Stem, Stem;
+        future_perfect_optative_middle_third: Stem, Stem, Stem;
+        future_perfect_optative_passive_first: Stem, Stem, Stem;
+        future_perfect_optative_passive_second: Stem, Stem, Stem;
+        future_perfect_optative_passive_third: Stem, Stem, Stem;
+        future_perfect_imperative_active_first: Stem, Stem, Stem;
+        future_perfect_imperative_active_second: Stem, Stem, Stem;
+        future_perfect_imperative_active_third: Stem, Stem, Stem;
+        future_perfect_imperative_middle_first: Stem, Stem, Stem;
+        future_perfect_imperative_middle_second: Stem, Stem, Stem;
+        future_perfect_imperative_middle_third: Stem, Stem, Stem;
+        future_perfect_imperative_passive_first: Stem, Stem, Stem;
+        future_perfect_imperative_passive_second: Stem, Stem, Stem;
+        future_perfect_imperative_passive_third: Stem, Stem, Stem;
+        infinitive_present: Stem, Stem, Stem;
+        infinitive_future: Recessive, Recessive, Recessive;
         infinitive_aorist: Stem, Stem, Ending;
-        infinitive_perfect: Stem, Ending, Ending;
+        infinitive_perfect: Stem, Stem, Stem;
         infinitive_future_perfect: Stem, Stem, Stem;
         participle_present: Stem, Recessive, Recessive;
         participle_future: Recessive, Recessive, Recessive;
         participle_aorist: Stem, Recessive, Ending;
-        participle_perfect: Ending, Ending, Ending;
+        participle_perfect: Ending, Stem, Stem;
         participle_future_perfect: Stem, Stem, Stem;
     ),
     // Like ``: 0 words.
@@ -15102,12 +16509,12 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         imperfect_passive_first: Recessive, Stem, Recessive;
         imperfect_passive_second: Stem, Stem, Stem;
         imperfect_passive_third: Stem, Recessive, Stem;
-        future_indicative_active_first: Ending, Stem, Ending;
-        future_indicative_active_second: Ending, Ending, Ending;
-        future_indicative_active_third: Ending, Ending, Ending;
-        future_indicative_middle_first: Recessive, Stem, Recessive;
-        future_indicative_middle_second: Recessive, Recessive, Recessive;
-        future_indicative_middle_third: Recessive, Recessive, Recessive;
+        future_indicative_active_first: Recessive, Stem, Stem;
+        future_indicative_active_second: Recessive, Stem, Stem;
+        future_indicative_active_third: Recessive, Stem, Stem;
+        future_indicative_middle_first: Ending, Stem, Recessive;
+        future_indicative_middle_second: Ending, Ending, Ending;
+        future_indicative_middle_third: Ending, Ending, Ending;
         future_indicative_passive_first: Recessive, Stem, Recessive;
         future_indicative_passive_second: Recessive, Recessive, Recessive;
         future_indicative_passive_third: Recessive, Recessive, Recessive;
@@ -15120,12 +16527,12 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         future_subjunctive_passive_first: Stem, Stem, Stem;
         future_subjunctive_passive_second: Stem, Stem, Stem;
         future_subjunctive_passive_third: Stem, Stem, Stem;
-        future_optative_active_first: Recessive, Stem, Ending;
-        future_optative_active_second: Recessive, Ending, Ending;
-        future_optative_active_third: Recessive, Recessive, Ending;
+        future_optative_active_first: Recessive, Stem, Stem;
+        future_optative_active_second: Recessive, Stem, Stem;
+        future_optative_active_third: Recessive, Recessive, Stem;
         future_optative_middle_first: Recessive, Stem, Recessive;
-        future_optative_middle_second: Recessive, Recessive, Recessive;
-        future_optative_middle_third: Recessive, Recessive, Recessive;
+        future_optative_middle_second: Ending, Ending, Ending;
+        future_optative_middle_third: Ending, Recessive, Ending;
         future_optative_passive_first: Recessive, Stem, Recessive;
         future_optative_passive_second: Recessive, Recessive, Recessive;
         future_optative_passive_third: Recessive, Recessive, Recessive;
@@ -15256,12 +16663,12 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         future_perfect_imperative_passive_second: Stem, Stem, Stem;
         future_perfect_imperative_passive_third: Stem, Stem, Stem;
         infinitive_present: Stem, Stem, Stem;
-        infinitive_future: Ending, Recessive, Recessive;
+        infinitive_future: Recessive, Ending, Recessive;
         infinitive_aorist: Stem, Stem, Ending;
         infinitive_perfect: Stem, Ending, Ending;
         infinitive_future_perfect: Stem, Stem, Stem;
         participle_present: Stem, Recessive, Recessive;
-        participle_future: Ending, Recessive, Recessive;
+        participle_future: Recessive, Recessive, Recessive;
         participle_aorist: Stem, Recessive, Ending;
         participle_perfect: Ending, Ending, Ending;
         participle_future_perfect: Stem, Stem, Stem;
@@ -15296,7 +16703,7 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         optative_passive_second: Stem, Stem, Stem;
         optative_passive_third: Stem, Recessive, Stem;
         imperative_active_first: Stem, Stem, Stem;
-        imperative_active_second: Stem, Stem, Stem;
+        imperative_active_second: Recessive, Stem, Stem;
         imperative_active_third: Recessive, Recessive, Recessive;
         imperative_middle_first: Stem, Stem, Stem;
         imperative_middle_second: Stem, Stem, Stem;
@@ -15380,7 +16787,218 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         aorist_imperative_active_second: Recessive, Recessive, Recessive;
         aorist_imperative_active_third: Recessive, Recessive, Recessive;
         aorist_imperative_middle_first: Stem, Stem, Stem;
-        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_second: Stem, Recessive, Recessive;
+        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_first: Stem, Stem, Stem;
+        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
+        perfect_indicative_active_first: Recessive, Stem, Recessive;
+        perfect_indicative_active_second: Recessive, Recessive, Recessive;
+        perfect_indicative_active_third: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_first: Recessive, Stem, Recessive;
+        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_first: Recessive, Stem, Recessive;
+        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
+        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_middle_first: Ending, Stem, Ending;
+        perfect_subjunctive_middle_second: Ending, Ending, Ending;
+        perfect_subjunctive_middle_third: Ending, Ending, Ending;
+        perfect_subjunctive_passive_first: Ending, Stem, Ending;
+        perfect_subjunctive_passive_second: Ending, Ending, Ending;
+        perfect_subjunctive_passive_third: Ending, Ending, Ending;
+        perfect_optative_active_first: Recessive, Stem, Recessive;
+        perfect_optative_active_second: Recessive, Recessive, Recessive;
+        perfect_optative_active_third: Recessive, Stem, Recessive;
+        perfect_optative_middle_first: Ending, Stem, Ending;
+        perfect_optative_middle_second: Ending, Ending, Ending;
+        perfect_optative_middle_third: Ending, Ending, Ending;
+        perfect_optative_passive_first: Ending, Stem, Ending;
+        perfect_optative_passive_second: Ending, Ending, Ending;
+        perfect_optative_passive_third: Ending, Ending, Ending;
+        perfect_imperative_active_first: Stem, Stem, Stem;
+        perfect_imperative_active_second: Recessive, Recessive, Recessive;
+        perfect_imperative_active_third: Stem, Stem, Stem;
+        perfect_imperative_middle_first: Stem, Stem, Stem;
+        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
+        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_first: Stem, Stem, Stem;
+        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
+        pluperfect_active_first: Recessive, Stem, Recessive;
+        pluperfect_active_second: Recessive, Recessive, Recessive;
+        pluperfect_active_third: Recessive, Stem, Recessive;
+        pluperfect_middle_first: Recessive, Stem, Recessive;
+        pluperfect_middle_second: Recessive, Recessive, Recessive;
+        pluperfect_middle_third: Recessive, Recessive, Recessive;
+        pluperfect_passive_first: Recessive, Stem, Recessive;
+        pluperfect_passive_second: Recessive, Recessive, Recessive;
+        pluperfect_passive_third: Recessive, Recessive, Recessive;
+        future_perfect_indicative_active_first: Stem, Stem, Stem;
+        future_perfect_indicative_active_second: Stem, Stem, Stem;
+        future_perfect_indicative_active_third: Stem, Stem, Stem;
+        future_perfect_indicative_middle_first: Stem, Stem, Stem;
+        future_perfect_indicative_middle_second: Stem, Stem, Stem;
+        future_perfect_indicative_middle_third: Stem, Stem, Stem;
+        future_perfect_indicative_passive_first: Stem, Stem, Stem;
+        future_perfect_indicative_passive_second: Stem, Stem, Stem;
+        future_perfect_indicative_passive_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
+        future_perfect_optative_active_first: Stem, Stem, Stem;
+        future_perfect_optative_active_second: Stem, Stem, Stem;
+        future_perfect_optative_active_third: Stem, Stem, Stem;
+        future_perfect_optative_middle_first: Stem, Stem, Stem;
+        future_perfect_optative_middle_second: Stem, Stem, Stem;
+        future_perfect_optative_middle_third: Stem, Stem, Stem;
+        future_perfect_optative_passive_first: Stem, Stem, Stem;
+        future_perfect_optative_passive_second: Stem, Stem, Stem;
+        future_perfect_optative_passive_third: Stem, Stem, Stem;
+        future_perfect_imperative_active_first: Stem, Stem, Stem;
+        future_perfect_imperative_active_second: Stem, Stem, Stem;
+        future_perfect_imperative_active_third: Stem, Stem, Stem;
+        future_perfect_imperative_middle_first: Stem, Stem, Stem;
+        future_perfect_imperative_middle_second: Stem, Stem, Stem;
+        future_perfect_imperative_middle_third: Stem, Stem, Stem;
+        future_perfect_imperative_passive_first: Stem, Stem, Stem;
+        future_perfect_imperative_passive_second: Stem, Stem, Stem;
+        future_perfect_imperative_passive_third: Stem, Stem, Stem;
+        infinitive_present: Stem, Stem, Stem;
+        infinitive_future: Recessive, Recessive, Recessive;
+        infinitive_aorist: Stem, Stem, Ending;
+        infinitive_perfect: Stem, Stem, Stem;
+        infinitive_future_perfect: Stem, Stem, Stem;
+        participle_present: Stem, Recessive, Recessive;
+        participle_future: Recessive, Recessive, Recessive;
+        participle_aorist: Stem, Recessive, Ending;
+        participle_perfect: Ending, Ending, Ending;
+        participle_future_perfect: Stem, Stem, Stem;
+    ),
+    // Like ``: 0 words.
+    pattern!("", 0;
+        indicative_active_first: Stem, Stem, Stem;
+        indicative_active_second: Stem, Stem, Stem;
+        indicative_active_third: Stem, Stem, Stem;
+        indicative_middle_first: Stem, Stem, Recessive;
+        indicative_middle_second: Stem, Stem, Stem;
+        indicative_middle_third: Stem, Stem, Stem;
+        indicative_passive_first: Stem, Stem, Recessive;
+        indicative_passive_second: Stem, Stem, Stem;
+        indicative_passive_third: Stem, Stem, Stem;
+        subjunctive_active_first: Stem, Stem, Stem;
+        subjunctive_active_second: Stem, Stem, Stem;
+        subjunctive_active_third: Stem, Stem, Stem;
+        subjunctive_middle_first: Stem, Stem, Recessive;
+        subjunctive_middle_second: Stem, Stem, Stem;
+        subjunctive_middle_third: Stem, Stem, Stem;
+        subjunctive_passive_first: Stem, Stem, Recessive;
+        subjunctive_passive_second: Stem, Stem, Stem;
+        subjunctive_passive_third: Stem, Stem, Stem;
+        optative_active_first: Stem, Stem, Stem;
+        optative_active_second: Stem, Stem, Stem;
+        optative_active_third: Stem, Recessive, Stem;
+        optative_middle_first: Recessive, Stem, Recessive;
+        optative_middle_second: Stem, Stem, Stem;
+        optative_middle_third: Stem, Recessive, Stem;
+        optative_passive_first: Recessive, Stem, Recessive;
+        optative_passive_second: Stem, Stem, Stem;
+        optative_passive_third: Stem, Recessive, Stem;
+        imperative_active_first: Stem, Stem, Stem;
+        imperative_active_second: Recessive, Stem, Stem;
+        imperative_active_third: Recessive, Recessive, Recessive;
+        imperative_middle_first: Stem, Stem, Stem;
+        imperative_middle_second: Stem, Stem, Stem;
+        imperative_middle_third: Recessive, Recessive, Recessive;
+        imperative_passive_first: Stem, Stem, Stem;
+        imperative_passive_second: Stem, Stem, Stem;
+        imperative_passive_third: Recessive, Recessive, Recessive;
+        imperfect_active_first: Stem, Stem, Stem;
+        imperfect_active_second: Stem, Stem, Stem;
+        imperfect_active_third: Stem, Recessive, Stem;
+        imperfect_middle_first: Recessive, Stem, Recessive;
+        imperfect_middle_second: Stem, Stem, Stem;
+        imperfect_middle_third: Stem, Recessive, Stem;
+        imperfect_passive_first: Recessive, Stem, Recessive;
+        imperfect_passive_second: Stem, Stem, Stem;
+        imperfect_passive_third: Stem, Recessive, Stem;
+        future_indicative_active_first: Recessive, Stem, Stem;
+        future_indicative_active_second: Recessive, Stem, Stem;
+        future_indicative_active_third: Recessive, Stem, Stem;
+        future_indicative_middle_first: Recessive, Stem, Recessive;
+        future_indicative_middle_second: Recessive, Recessive, Recessive;
+        future_indicative_middle_third: Recessive, Recessive, Recessive;
+        future_indicative_passive_first: Recessive, Stem, Recessive;
+        future_indicative_passive_second: Recessive, Recessive, Recessive;
+        future_indicative_passive_third: Recessive, Recessive, Recessive;
+        future_subjunctive_active_first: Stem, Stem, Stem;
+        future_subjunctive_active_second: Stem, Stem, Stem;
+        future_subjunctive_active_third: Stem, Stem, Stem;
+        future_subjunctive_middle_first: Stem, Stem, Stem;
+        future_subjunctive_middle_second: Stem, Stem, Stem;
+        future_subjunctive_middle_third: Stem, Stem, Stem;
+        future_subjunctive_passive_first: Stem, Stem, Stem;
+        future_subjunctive_passive_second: Stem, Stem, Stem;
+        future_subjunctive_passive_third: Stem, Stem, Stem;
+        future_optative_active_first: Recessive, Stem, Stem;
+        future_optative_active_second: Recessive, Stem, Stem;
+        future_optative_active_third: Recessive, Recessive, Stem;
+        future_optative_middle_first: Recessive, Stem, Recessive;
+        future_optative_middle_second: Recessive, Recessive, Recessive;
+        future_optative_middle_third: Recessive, Recessive, Recessive;
+        future_optative_passive_first: Recessive, Stem, Recessive;
+        future_optative_passive_second: Recessive, Recessive, Recessive;
+        future_optative_passive_third: Recessive, Recessive, Recessive;
+        future_imperative_active_first: Stem, Stem, Stem;
+        future_imperative_active_second: Stem, Stem, Stem;
+        future_imperative_active_third: Stem, Stem, Stem;
+        future_imperative_middle_first: Stem, Stem, Stem;
+        future_imperative_middle_second: Stem, Stem, Stem;
+        future_imperative_middle_third: Stem, Stem, Stem;
+        future_imperative_passive_first: Stem, Stem, Stem;
+        future_imperative_passive_second: Stem, Stem, Stem;
+        future_imperative_passive_third: Stem, Stem, Stem;
+        aorist_indicative_active_first: Recessive, Stem, Recessive;
+        aorist_indicative_active_second: Recessive, Recessive, Recessive;
+        aorist_indicative_active_third: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_first: Recessive, Stem, Recessive;
+        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_first: Recessive, Stem, Recessive;
+        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_passive_first: Ending, Stem, Ending;
+        aorist_subjunctive_passive_second: Ending, Ending, Ending;
+        aorist_subjunctive_passive_third: Ending, Ending, Ending;
+        aorist_optative_active_first: Recessive, Stem, Recessive;
+        aorist_optative_active_second: Recessive, Recessive, Recessive;
+        aorist_optative_active_third: Recessive, Recessive, Recessive;
+        aorist_optative_middle_first: Recessive, Stem, Recessive;
+        aorist_optative_middle_second: Recessive, Recessive, Recessive;
+        aorist_optative_middle_third: Recessive, Recessive, Recessive;
+        aorist_optative_passive_first: Recessive, Stem, Ending;
+        aorist_optative_passive_second: Recessive, Ending, Ending;
+        aorist_optative_passive_third: Recessive, Recessive, Ending;
+        aorist_imperative_active_first: Stem, Stem, Stem;
+        aorist_imperative_active_second: Recessive, Recessive, Recessive;
+        aorist_imperative_active_third: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_first: Stem, Stem, Stem;
+        aorist_imperative_middle_second: Stem, Recessive, Recessive;
         aorist_imperative_middle_third: Recessive, Recessive, Recessive;
         aorist_imperative_passive_first: Stem, Stem, Stem;
         aorist_imperative_passive_second: Recessive, Recessive, Recessive;
@@ -15896,6 +17514,217 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_present: Stem, Recessive, Recessive;
         participle_future: Recessive, Recessive, Recessive;
         participle_aorist: Stem, Recessive, Ending;
+        participle_perfect: Ending, Stem, Stem;
+        participle_future_perfect: Stem, Stem, Stem;
+    ),
+    // Like ``: 0 words.
+    pattern!("", 0;
+        indicative_active_first: Stem, Stem, Stem;
+        indicative_active_second: Stem, Stem, Stem;
+        indicative_active_third: Stem, Stem, Stem;
+        indicative_middle_first: Stem, Stem, Recessive;
+        indicative_middle_second: Stem, Stem, Stem;
+        indicative_middle_third: Stem, Stem, Stem;
+        indicative_passive_first: Stem, Stem, Recessive;
+        indicative_passive_second: Stem, Stem, Stem;
+        indicative_passive_third: Stem, Stem, Stem;
+        subjunctive_active_first: Stem, Stem, Stem;
+        subjunctive_active_second: Stem, Stem, Stem;
+        subjunctive_active_third: Stem, Stem, Stem;
+        subjunctive_middle_first: Stem, Stem, Recessive;
+        subjunctive_middle_second: Stem, Stem, Stem;
+        subjunctive_middle_third: Stem, Stem, Stem;
+        subjunctive_passive_first: Stem, Stem, Recessive;
+        subjunctive_passive_second: Stem, Stem, Stem;
+        subjunctive_passive_third: Stem, Stem, Stem;
+        optative_active_first: Stem, Stem, Stem;
+        optative_active_second: Stem, Stem, Stem;
+        optative_active_third: Stem, Recessive, Stem;
+        optative_middle_first: Recessive, Stem, Recessive;
+        optative_middle_second: Stem, Stem, Stem;
+        optative_middle_third: Stem, Recessive, Stem;
+        optative_passive_first: Recessive, Stem, Recessive;
+        optative_passive_second: Stem, Stem, Stem;
+        optative_passive_third: Stem, Recessive, Stem;
+        imperative_active_first: Stem, Stem, Stem;
+        imperative_active_second: Recessive, Stem, Stem;
+        imperative_active_third: Recessive, Recessive, Recessive;
+        imperative_middle_first: Stem, Stem, Stem;
+        imperative_middle_second: Stem, Stem, Stem;
+        imperative_middle_third: Recessive, Recessive, Recessive;
+        imperative_passive_first: Stem, Stem, Stem;
+        imperative_passive_second: Stem, Stem, Stem;
+        imperative_passive_third: Recessive, Recessive, Recessive;
+        imperfect_active_first: Recessive, Stem, Stem;
+        imperfect_active_second: Recessive, Stem, Stem;
+        imperfect_active_third: Recessive, Recessive, Recessive;
+        imperfect_middle_first: Recessive, Stem, Recessive;
+        imperfect_middle_second: Stem, Stem, Stem;
+        imperfect_middle_third: Stem, Recessive, Stem;
+        imperfect_passive_first: Recessive, Stem, Recessive;
+        imperfect_passive_second: Stem, Stem, Stem;
+        imperfect_passive_third: Stem, Recessive, Stem;
+        future_indicative_active_first: Recessive, Stem, Stem;
+        future_indicative_active_second: Recessive, Stem, Stem;
+        future_indicative_active_third: Recessive, Stem, Stem;
+        future_indicative_middle_first: Recessive, Stem, Recessive;
+        future_indicative_middle_second: Recessive, Recessive, Recessive;
+        future_indicative_middle_third: Recessive, Recessive, Recessive;
+        future_indicative_passive_first: Recessive, Stem, Recessive;
+        future_indicative_passive_second: Recessive, Recessive, Recessive;
+        future_indicative_passive_third: Recessive, Recessive, Recessive;
+        future_subjunctive_active_first: Stem, Stem, Stem;
+        future_subjunctive_active_second: Stem, Stem, Stem;
+        future_subjunctive_active_third: Stem, Stem, Stem;
+        future_subjunctive_middle_first: Stem, Stem, Stem;
+        future_subjunctive_middle_second: Stem, Stem, Stem;
+        future_subjunctive_middle_third: Stem, Stem, Stem;
+        future_subjunctive_passive_first: Stem, Stem, Stem;
+        future_subjunctive_passive_second: Stem, Stem, Stem;
+        future_subjunctive_passive_third: Stem, Stem, Stem;
+        future_optative_active_first: Recessive, Stem, Stem;
+        future_optative_active_second: Recessive, Stem, Stem;
+        future_optative_active_third: Recessive, Recessive, Stem;
+        future_optative_middle_first: Recessive, Stem, Recessive;
+        future_optative_middle_second: Recessive, Recessive, Recessive;
+        future_optative_middle_third: Recessive, Recessive, Recessive;
+        future_optative_passive_first: Recessive, Stem, Recessive;
+        future_optative_passive_second: Recessive, Recessive, Recessive;
+        future_optative_passive_third: Recessive, Recessive, Recessive;
+        future_imperative_active_first: Stem, Stem, Stem;
+        future_imperative_active_second: Stem, Stem, Stem;
+        future_imperative_active_third: Stem, Stem, Stem;
+        future_imperative_middle_first: Stem, Stem, Stem;
+        future_imperative_middle_second: Stem, Stem, Stem;
+        future_imperative_middle_third: Stem, Stem, Stem;
+        future_imperative_passive_first: Stem, Stem, Stem;
+        future_imperative_passive_second: Stem, Stem, Stem;
+        future_imperative_passive_third: Stem, Stem, Stem;
+        aorist_indicative_active_first: Recessive, Stem, Recessive;
+        aorist_indicative_active_second: Recessive, Recessive, Recessive;
+        aorist_indicative_active_third: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_first: Recessive, Stem, Recessive;
+        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_first: Recessive, Stem, Recessive;
+        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_passive_first: Stem, Stem, Stem;
+        aorist_subjunctive_passive_second: Stem, Stem, Stem;
+        aorist_subjunctive_passive_third: Stem, Stem, Stem;
+        aorist_optative_active_first: Recessive, Stem, Recessive;
+        aorist_optative_active_second: Recessive, Recessive, Recessive;
+        aorist_optative_active_third: Recessive, Recessive, Recessive;
+        aorist_optative_middle_first: Recessive, Stem, Recessive;
+        aorist_optative_middle_second: Recessive, Recessive, Recessive;
+        aorist_optative_middle_third: Recessive, Recessive, Recessive;
+        aorist_optative_passive_first: Recessive, Stem, Stem;
+        aorist_optative_passive_second: Recessive, Stem, Stem;
+        aorist_optative_passive_third: Recessive, Recessive, Stem;
+        aorist_imperative_active_first: Stem, Stem, Stem;
+        aorist_imperative_active_second: Recessive, Recessive, Recessive;
+        aorist_imperative_active_third: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_first: Stem, Stem, Stem;
+        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_first: Stem, Stem, Stem;
+        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
+        perfect_indicative_active_first: Recessive, Stem, Recessive;
+        perfect_indicative_active_second: Recessive, Recessive, Recessive;
+        perfect_indicative_active_third: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_first: Recessive, Stem, Recessive;
+        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_first: Recessive, Stem, Recessive;
+        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
+        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_middle_first: Ending, Stem, Ending;
+        perfect_subjunctive_middle_second: Ending, Ending, Ending;
+        perfect_subjunctive_middle_third: Ending, Ending, Ending;
+        perfect_subjunctive_passive_first: Ending, Stem, Ending;
+        perfect_subjunctive_passive_second: Ending, Ending, Ending;
+        perfect_subjunctive_passive_third: Ending, Ending, Ending;
+        perfect_optative_active_first: Recessive, Stem, Recessive;
+        perfect_optative_active_second: Recessive, Recessive, Recessive;
+        perfect_optative_active_third: Recessive, Stem, Recessive;
+        perfect_optative_middle_first: Ending, Stem, Ending;
+        perfect_optative_middle_second: Ending, Ending, Ending;
+        perfect_optative_middle_third: Ending, Ending, Ending;
+        perfect_optative_passive_first: Ending, Stem, Ending;
+        perfect_optative_passive_second: Ending, Ending, Ending;
+        perfect_optative_passive_third: Ending, Ending, Ending;
+        perfect_imperative_active_first: Stem, Stem, Stem;
+        perfect_imperative_active_second: Recessive, Recessive, Recessive;
+        perfect_imperative_active_third: Stem, Stem, Stem;
+        perfect_imperative_middle_first: Stem, Stem, Stem;
+        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
+        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_first: Stem, Stem, Stem;
+        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
+        pluperfect_active_first: Recessive, Stem, Recessive;
+        pluperfect_active_second: Recessive, Recessive, Recessive;
+        pluperfect_active_third: Recessive, Stem, Recessive;
+        pluperfect_middle_first: Recessive, Stem, Recessive;
+        pluperfect_middle_second: Recessive, Recessive, Recessive;
+        pluperfect_middle_third: Recessive, Recessive, Recessive;
+        pluperfect_passive_first: Recessive, Stem, Recessive;
+        pluperfect_passive_second: Recessive, Recessive, Recessive;
+        pluperfect_passive_third: Recessive, Recessive, Recessive;
+        future_perfect_indicative_active_first: Stem, Stem, Stem;
+        future_perfect_indicative_active_second: Stem, Stem, Stem;
+        future_perfect_indicative_active_third: Stem, Stem, Stem;
+        future_perfect_indicative_middle_first: Stem, Stem, Stem;
+        future_perfect_indicative_middle_second: Stem, Stem, Stem;
+        future_perfect_indicative_middle_third: Stem, Stem, Stem;
+        future_perfect_indicative_passive_first: Stem, Stem, Stem;
+        future_perfect_indicative_passive_second: Stem, Stem, Stem;
+        future_perfect_indicative_passive_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
+        future_perfect_optative_active_first: Stem, Stem, Stem;
+        future_perfect_optative_active_second: Stem, Stem, Stem;
+        future_perfect_optative_active_third: Stem, Stem, Stem;
+        future_perfect_optative_middle_first: Stem, Stem, Stem;
+        future_perfect_optative_middle_second: Stem, Stem, Stem;
+        future_perfect_optative_middle_third: Stem, Stem, Stem;
+        future_perfect_optative_passive_first: Stem, Stem, Stem;
+        future_perfect_optative_passive_second: Stem, Stem, Stem;
+        future_perfect_optative_passive_third: Stem, Stem, Stem;
+        future_perfect_imperative_active_first: Stem, Stem, Stem;
+        future_perfect_imperative_active_second: Stem, Stem, Stem;
+        future_perfect_imperative_active_third: Stem, Stem, Stem;
+        future_perfect_imperative_middle_first: Stem, Stem, Stem;
+        future_perfect_imperative_middle_second: Stem, Stem, Stem;
+        future_perfect_imperative_middle_third: Stem, Stem, Stem;
+        future_perfect_imperative_passive_first: Stem, Stem, Stem;
+        future_perfect_imperative_passive_second: Stem, Stem, Stem;
+        future_perfect_imperative_passive_third: Stem, Stem, Stem;
+        infinitive_present: Stem, Stem, Stem;
+        infinitive_future: Recessive, Recessive, Recessive;
+        infinitive_aorist: Stem, Stem, Stem;
+        infinitive_perfect: Stem, Stem, Stem;
+        infinitive_future_perfect: Stem, Stem, Stem;
+        participle_present: Stem, Recessive, Recessive;
+        participle_future: Recessive, Recessive, Recessive;
+        participle_aorist: Stem, Recessive, Ending;
         participle_perfect: Ending, Ending, Ending;
         participle_future_perfect: Stem, Stem, Stem;
     ),
@@ -16107,6 +17936,217 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_present: Stem, Recessive, Recessive;
         participle_future: Recessive, Recessive, Recessive;
         participle_aorist: Stem, Recessive, Ending;
+        participle_perfect: Ending, Ending, Ending;
+        participle_future_perfect: Stem, Stem, Stem;
+    ),
+    // Like ``: 0 words.
+    pattern!("", 0;
+        indicative_active_first: Stem, Stem, Stem;
+        indicative_active_second: Stem, Stem, Stem;
+        indicative_active_third: Stem, Stem, Stem;
+        indicative_middle_first: Stem, Stem, Recessive;
+        indicative_middle_second: Stem, Stem, Stem;
+        indicative_middle_third: Stem, Stem, Stem;
+        indicative_passive_first: Stem, Stem, Recessive;
+        indicative_passive_second: Stem, Stem, Stem;
+        indicative_passive_third: Stem, Stem, Stem;
+        subjunctive_active_first: Stem, Stem, Stem;
+        subjunctive_active_second: Stem, Stem, Stem;
+        subjunctive_active_third: Stem, Stem, Stem;
+        subjunctive_middle_first: Stem, Stem, Recessive;
+        subjunctive_middle_second: Stem, Stem, Stem;
+        subjunctive_middle_third: Stem, Stem, Stem;
+        subjunctive_passive_first: Stem, Stem, Recessive;
+        subjunctive_passive_second: Stem, Stem, Stem;
+        subjunctive_passive_third: Stem, Stem, Stem;
+        optative_active_first: Stem, Stem, Stem;
+        optative_active_second: Stem, Stem, Stem;
+        optative_active_third: Stem, Recessive, Stem;
+        optative_middle_first: Recessive, Stem, Recessive;
+        optative_middle_second: Stem, Stem, Stem;
+        optative_middle_third: Stem, Recessive, Stem;
+        optative_passive_first: Recessive, Stem, Recessive;
+        optative_passive_second: Stem, Stem, Stem;
+        optative_passive_third: Stem, Recessive, Stem;
+        imperative_active_first: Stem, Stem, Stem;
+        imperative_active_second: Recessive, Stem, Stem;
+        imperative_active_third: Recessive, Recessive, Recessive;
+        imperative_middle_first: Stem, Stem, Stem;
+        imperative_middle_second: Stem, Stem, Stem;
+        imperative_middle_third: Recessive, Recessive, Recessive;
+        imperative_passive_first: Stem, Stem, Stem;
+        imperative_passive_second: Stem, Stem, Stem;
+        imperative_passive_third: Recessive, Recessive, Recessive;
+        imperfect_active_first: Recessive, Stem, Stem;
+        imperfect_active_second: Recessive, Stem, Stem;
+        imperfect_active_third: Recessive, Recessive, Recessive;
+        imperfect_middle_first: Recessive, Stem, Recessive;
+        imperfect_middle_second: Stem, Stem, Stem;
+        imperfect_middle_third: Stem, Recessive, Stem;
+        imperfect_passive_first: Recessive, Stem, Recessive;
+        imperfect_passive_second: Stem, Stem, Stem;
+        imperfect_passive_third: Stem, Recessive, Stem;
+        future_indicative_active_first: Recessive, Stem, Stem;
+        future_indicative_active_second: Recessive, Stem, Stem;
+        future_indicative_active_third: Recessive, Stem, Stem;
+        future_indicative_middle_first: Recessive, Stem, Recessive;
+        future_indicative_middle_second: Recessive, Recessive, Recessive;
+        future_indicative_middle_third: Recessive, Recessive, Recessive;
+        future_indicative_passive_first: Recessive, Stem, Recessive;
+        future_indicative_passive_second: Recessive, Recessive, Recessive;
+        future_indicative_passive_third: Recessive, Recessive, Recessive;
+        future_subjunctive_active_first: Stem, Stem, Stem;
+        future_subjunctive_active_second: Stem, Stem, Stem;
+        future_subjunctive_active_third: Stem, Stem, Stem;
+        future_subjunctive_middle_first: Stem, Stem, Stem;
+        future_subjunctive_middle_second: Stem, Stem, Stem;
+        future_subjunctive_middle_third: Stem, Stem, Stem;
+        future_subjunctive_passive_first: Stem, Stem, Stem;
+        future_subjunctive_passive_second: Stem, Stem, Stem;
+        future_subjunctive_passive_third: Stem, Stem, Stem;
+        future_optative_active_first: Recessive, Stem, Stem;
+        future_optative_active_second: Recessive, Stem, Stem;
+        future_optative_active_third: Recessive, Recessive, Stem;
+        future_optative_middle_first: Recessive, Stem, Recessive;
+        future_optative_middle_second: Recessive, Recessive, Recessive;
+        future_optative_middle_third: Recessive, Recessive, Recessive;
+        future_optative_passive_first: Recessive, Stem, Recessive;
+        future_optative_passive_second: Recessive, Recessive, Recessive;
+        future_optative_passive_third: Recessive, Recessive, Recessive;
+        future_imperative_active_first: Stem, Stem, Stem;
+        future_imperative_active_second: Stem, Stem, Stem;
+        future_imperative_active_third: Stem, Stem, Stem;
+        future_imperative_middle_first: Stem, Stem, Stem;
+        future_imperative_middle_second: Stem, Stem, Stem;
+        future_imperative_middle_third: Stem, Stem, Stem;
+        future_imperative_passive_first: Stem, Stem, Stem;
+        future_imperative_passive_second: Stem, Stem, Stem;
+        future_imperative_passive_third: Stem, Stem, Stem;
+        aorist_indicative_active_first: Recessive, Stem, Recessive;
+        aorist_indicative_active_second: Recessive, Recessive, Recessive;
+        aorist_indicative_active_third: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_first: Recessive, Stem, Recessive;
+        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_first: Recessive, Stem, Recessive;
+        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_passive_first: Ending, Stem, Ending;
+        aorist_subjunctive_passive_second: Ending, Ending, Ending;
+        aorist_subjunctive_passive_third: Ending, Ending, Ending;
+        aorist_optative_active_first: Recessive, Stem, Recessive;
+        aorist_optative_active_second: Recessive, Recessive, Recessive;
+        aorist_optative_active_third: Recessive, Recessive, Recessive;
+        aorist_optative_middle_first: Recessive, Stem, Recessive;
+        aorist_optative_middle_second: Recessive, Recessive, Recessive;
+        aorist_optative_middle_third: Recessive, Recessive, Recessive;
+        aorist_optative_passive_first: Recessive, Stem, Ending;
+        aorist_optative_passive_second: Recessive, Ending, Ending;
+        aorist_optative_passive_third: Recessive, Recessive, Ending;
+        aorist_imperative_active_first: Stem, Stem, Stem;
+        aorist_imperative_active_second: Recessive, Recessive, Recessive;
+        aorist_imperative_active_third: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_first: Stem, Stem, Stem;
+        aorist_imperative_middle_second: Ending, Recessive, Recessive;
+        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_first: Stem, Stem, Stem;
+        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
+        perfect_indicative_active_first: Recessive, Stem, Recessive;
+        perfect_indicative_active_second: Recessive, Recessive, Recessive;
+        perfect_indicative_active_third: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_first: Recessive, Stem, Recessive;
+        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_first: Recessive, Stem, Recessive;
+        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
+        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_middle_first: Ending, Stem, Ending;
+        perfect_subjunctive_middle_second: Ending, Ending, Ending;
+        perfect_subjunctive_middle_third: Ending, Ending, Ending;
+        perfect_subjunctive_passive_first: Ending, Stem, Ending;
+        perfect_subjunctive_passive_second: Ending, Ending, Ending;
+        perfect_subjunctive_passive_third: Ending, Ending, Ending;
+        perfect_optative_active_first: Recessive, Stem, Recessive;
+        perfect_optative_active_second: Recessive, Recessive, Recessive;
+        perfect_optative_active_third: Recessive, Stem, Recessive;
+        perfect_optative_middle_first: Ending, Stem, Ending;
+        perfect_optative_middle_second: Ending, Ending, Ending;
+        perfect_optative_middle_third: Ending, Ending, Ending;
+        perfect_optative_passive_first: Ending, Stem, Ending;
+        perfect_optative_passive_second: Ending, Ending, Ending;
+        perfect_optative_passive_third: Ending, Ending, Ending;
+        perfect_imperative_active_first: Stem, Stem, Stem;
+        perfect_imperative_active_second: Recessive, Recessive, Recessive;
+        perfect_imperative_active_third: Stem, Stem, Stem;
+        perfect_imperative_middle_first: Stem, Stem, Stem;
+        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
+        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_first: Stem, Stem, Stem;
+        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
+        pluperfect_active_first: Recessive, Stem, Recessive;
+        pluperfect_active_second: Recessive, Recessive, Recessive;
+        pluperfect_active_third: Recessive, Stem, Recessive;
+        pluperfect_middle_first: Recessive, Stem, Recessive;
+        pluperfect_middle_second: Recessive, Recessive, Recessive;
+        pluperfect_middle_third: Recessive, Recessive, Recessive;
+        pluperfect_passive_first: Recessive, Stem, Recessive;
+        pluperfect_passive_second: Recessive, Recessive, Recessive;
+        pluperfect_passive_third: Recessive, Recessive, Recessive;
+        future_perfect_indicative_active_first: Stem, Stem, Stem;
+        future_perfect_indicative_active_second: Stem, Stem, Stem;
+        future_perfect_indicative_active_third: Stem, Stem, Stem;
+        future_perfect_indicative_middle_first: Stem, Stem, Stem;
+        future_perfect_indicative_middle_second: Stem, Stem, Stem;
+        future_perfect_indicative_middle_third: Stem, Stem, Stem;
+        future_perfect_indicative_passive_first: Stem, Stem, Stem;
+        future_perfect_indicative_passive_second: Stem, Stem, Stem;
+        future_perfect_indicative_passive_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
+        future_perfect_optative_active_first: Stem, Stem, Stem;
+        future_perfect_optative_active_second: Stem, Stem, Stem;
+        future_perfect_optative_active_third: Stem, Stem, Stem;
+        future_perfect_optative_middle_first: Stem, Stem, Stem;
+        future_perfect_optative_middle_second: Stem, Stem, Stem;
+        future_perfect_optative_middle_third: Stem, Stem, Stem;
+        future_perfect_optative_passive_first: Stem, Stem, Stem;
+        future_perfect_optative_passive_second: Stem, Stem, Stem;
+        future_perfect_optative_passive_third: Stem, Stem, Stem;
+        future_perfect_imperative_active_first: Stem, Stem, Stem;
+        future_perfect_imperative_active_second: Stem, Stem, Stem;
+        future_perfect_imperative_active_third: Stem, Stem, Stem;
+        future_perfect_imperative_middle_first: Stem, Stem, Stem;
+        future_perfect_imperative_middle_second: Stem, Stem, Stem;
+        future_perfect_imperative_middle_third: Stem, Stem, Stem;
+        future_perfect_imperative_passive_first: Stem, Stem, Stem;
+        future_perfect_imperative_passive_second: Stem, Stem, Stem;
+        future_perfect_imperative_passive_third: Stem, Stem, Stem;
+        infinitive_present: Stem, Stem, Stem;
+        infinitive_future: Recessive, Recessive, Recessive;
+        infinitive_aorist: Ending, Ending, Ending;
+        infinitive_perfect: Stem, Ending, Ending;
+        infinitive_future_perfect: Stem, Stem, Stem;
+        participle_present: Stem, Recessive, Recessive;
+        participle_future: Recessive, Recessive, Recessive;
+        participle_aorist: Ending, Recessive, Ending;
         participle_perfect: Ending, Ending, Ending;
         participle_future_perfect: Stem, Stem, Stem;
     ),
@@ -16562,7 +18602,7 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         optative_passive_second: Stem, Stem, Stem;
         optative_passive_third: Stem, Recessive, Stem;
         imperative_active_first: Stem, Stem, Stem;
-        imperative_active_second: Recessive, Stem, Stem;
+        imperative_active_second: Stem, Stem, Stem;
         imperative_active_third: Recessive, Recessive, Recessive;
         imperative_middle_first: Stem, Stem, Stem;
         imperative_middle_second: Stem, Stem, Stem;
@@ -16570,9 +18610,9 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         imperative_passive_first: Stem, Stem, Stem;
         imperative_passive_second: Stem, Stem, Stem;
         imperative_passive_third: Recessive, Recessive, Recessive;
-        imperfect_active_first: Stem, Stem, Stem;
-        imperfect_active_second: Stem, Stem, Stem;
-        imperfect_active_third: Stem, Recessive, Stem;
+        imperfect_active_first: Recessive, Stem, Stem;
+        imperfect_active_second: Recessive, Stem, Stem;
+        imperfect_active_third: Recessive, Recessive, Recessive;
         imperfect_middle_first: Recessive, Stem, Recessive;
         imperfect_middle_second: Stem, Stem, Stem;
         imperfect_middle_third: Stem, Recessive, Stem;
@@ -16646,7 +18686,7 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         aorist_imperative_active_second: Recessive, Recessive, Recessive;
         aorist_imperative_active_third: Recessive, Recessive, Recessive;
         aorist_imperative_middle_first: Stem, Stem, Stem;
-        aorist_imperative_middle_second: Stem, Recessive, Recessive;
+        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
         aorist_imperative_middle_third: Recessive, Recessive, Recessive;
         aorist_imperative_passive_first: Stem, Stem, Stem;
         aorist_imperative_passive_second: Recessive, Recessive, Recessive;
@@ -17423,6 +19463,217 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         imperfect_passive_first: Recessive, Stem, Recessive;
         imperfect_passive_second: Stem, Stem, Stem;
         imperfect_passive_third: Stem, Recessive, Stem;
+        future_indicative_active_first: Ending, Stem, Ending;
+        future_indicative_active_second: Ending, Ending, Ending;
+        future_indicative_active_third: Ending, Ending, Ending;
+        future_indicative_middle_first: Recessive, Stem, Recessive;
+        future_indicative_middle_second: Recessive, Recessive, Recessive;
+        future_indicative_middle_third: Recessive, Recessive, Recessive;
+        future_indicative_passive_first: Recessive, Stem, Recessive;
+        future_indicative_passive_second: Recessive, Recessive, Recessive;
+        future_indicative_passive_third: Recessive, Recessive, Recessive;
+        future_subjunctive_active_first: Stem, Stem, Stem;
+        future_subjunctive_active_second: Stem, Stem, Stem;
+        future_subjunctive_active_third: Stem, Stem, Stem;
+        future_subjunctive_middle_first: Stem, Stem, Stem;
+        future_subjunctive_middle_second: Stem, Stem, Stem;
+        future_subjunctive_middle_third: Stem, Stem, Stem;
+        future_subjunctive_passive_first: Stem, Stem, Stem;
+        future_subjunctive_passive_second: Stem, Stem, Stem;
+        future_subjunctive_passive_third: Stem, Stem, Stem;
+        future_optative_active_first: Recessive, Stem, Ending;
+        future_optative_active_second: Recessive, Ending, Ending;
+        future_optative_active_third: Recessive, Recessive, Ending;
+        future_optative_middle_first: Recessive, Stem, Recessive;
+        future_optative_middle_second: Recessive, Recessive, Recessive;
+        future_optative_middle_third: Recessive, Recessive, Recessive;
+        future_optative_passive_first: Recessive, Stem, Recessive;
+        future_optative_passive_second: Recessive, Recessive, Recessive;
+        future_optative_passive_third: Recessive, Recessive, Recessive;
+        future_imperative_active_first: Stem, Stem, Stem;
+        future_imperative_active_second: Stem, Stem, Stem;
+        future_imperative_active_third: Stem, Stem, Stem;
+        future_imperative_middle_first: Stem, Stem, Stem;
+        future_imperative_middle_second: Stem, Stem, Stem;
+        future_imperative_middle_third: Stem, Stem, Stem;
+        future_imperative_passive_first: Stem, Stem, Stem;
+        future_imperative_passive_second: Stem, Stem, Stem;
+        future_imperative_passive_third: Stem, Stem, Stem;
+        aorist_indicative_active_first: Recessive, Stem, Recessive;
+        aorist_indicative_active_second: Recessive, Recessive, Recessive;
+        aorist_indicative_active_third: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_first: Recessive, Stem, Recessive;
+        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
+        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_first: Recessive, Stem, Recessive;
+        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
+        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
+        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
+        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
+        aorist_subjunctive_passive_first: Ending, Stem, Ending;
+        aorist_subjunctive_passive_second: Ending, Ending, Ending;
+        aorist_subjunctive_passive_third: Ending, Ending, Ending;
+        aorist_optative_active_first: Recessive, Stem, Recessive;
+        aorist_optative_active_second: Recessive, Recessive, Recessive;
+        aorist_optative_active_third: Recessive, Recessive, Recessive;
+        aorist_optative_middle_first: Recessive, Stem, Recessive;
+        aorist_optative_middle_second: Recessive, Recessive, Recessive;
+        aorist_optative_middle_third: Recessive, Recessive, Recessive;
+        aorist_optative_passive_first: Recessive, Stem, Ending;
+        aorist_optative_passive_second: Recessive, Ending, Ending;
+        aorist_optative_passive_third: Recessive, Recessive, Ending;
+        aorist_imperative_active_first: Stem, Stem, Stem;
+        aorist_imperative_active_second: Recessive, Recessive, Recessive;
+        aorist_imperative_active_third: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_first: Stem, Stem, Stem;
+        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
+        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_first: Stem, Stem, Stem;
+        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
+        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
+        perfect_indicative_active_first: Recessive, Stem, Recessive;
+        perfect_indicative_active_second: Recessive, Recessive, Recessive;
+        perfect_indicative_active_third: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_first: Recessive, Stem, Recessive;
+        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
+        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_first: Recessive, Stem, Recessive;
+        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
+        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
+        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
+        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
+        perfect_subjunctive_middle_first: Ending, Stem, Ending;
+        perfect_subjunctive_middle_second: Ending, Ending, Ending;
+        perfect_subjunctive_middle_third: Ending, Ending, Ending;
+        perfect_subjunctive_passive_first: Ending, Stem, Ending;
+        perfect_subjunctive_passive_second: Ending, Ending, Ending;
+        perfect_subjunctive_passive_third: Ending, Ending, Ending;
+        perfect_optative_active_first: Recessive, Stem, Recessive;
+        perfect_optative_active_second: Recessive, Recessive, Recessive;
+        perfect_optative_active_third: Recessive, Stem, Recessive;
+        perfect_optative_middle_first: Ending, Stem, Ending;
+        perfect_optative_middle_second: Ending, Ending, Ending;
+        perfect_optative_middle_third: Ending, Ending, Ending;
+        perfect_optative_passive_first: Ending, Stem, Ending;
+        perfect_optative_passive_second: Ending, Ending, Ending;
+        perfect_optative_passive_third: Ending, Ending, Ending;
+        perfect_imperative_active_first: Stem, Stem, Stem;
+        perfect_imperative_active_second: Recessive, Recessive, Recessive;
+        perfect_imperative_active_third: Stem, Stem, Stem;
+        perfect_imperative_middle_first: Stem, Stem, Stem;
+        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
+        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_first: Stem, Stem, Stem;
+        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
+        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
+        pluperfect_active_first: Recessive, Stem, Recessive;
+        pluperfect_active_second: Recessive, Recessive, Recessive;
+        pluperfect_active_third: Recessive, Stem, Recessive;
+        pluperfect_middle_first: Recessive, Stem, Recessive;
+        pluperfect_middle_second: Recessive, Recessive, Recessive;
+        pluperfect_middle_third: Recessive, Recessive, Recessive;
+        pluperfect_passive_first: Recessive, Stem, Recessive;
+        pluperfect_passive_second: Recessive, Recessive, Recessive;
+        pluperfect_passive_third: Recessive, Recessive, Recessive;
+        future_perfect_indicative_active_first: Stem, Stem, Stem;
+        future_perfect_indicative_active_second: Stem, Stem, Stem;
+        future_perfect_indicative_active_third: Stem, Stem, Stem;
+        future_perfect_indicative_middle_first: Stem, Stem, Stem;
+        future_perfect_indicative_middle_second: Stem, Stem, Stem;
+        future_perfect_indicative_middle_third: Stem, Stem, Stem;
+        future_perfect_indicative_passive_first: Stem, Stem, Stem;
+        future_perfect_indicative_passive_second: Stem, Stem, Stem;
+        future_perfect_indicative_passive_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
+        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
+        future_perfect_optative_active_first: Stem, Stem, Stem;
+        future_perfect_optative_active_second: Stem, Stem, Stem;
+        future_perfect_optative_active_third: Stem, Stem, Stem;
+        future_perfect_optative_middle_first: Stem, Stem, Stem;
+        future_perfect_optative_middle_second: Stem, Stem, Stem;
+        future_perfect_optative_middle_third: Stem, Stem, Stem;
+        future_perfect_optative_passive_first: Stem, Stem, Stem;
+        future_perfect_optative_passive_second: Stem, Stem, Stem;
+        future_perfect_optative_passive_third: Stem, Stem, Stem;
+        future_perfect_imperative_active_first: Stem, Stem, Stem;
+        future_perfect_imperative_active_second: Stem, Stem, Stem;
+        future_perfect_imperative_active_third: Stem, Stem, Stem;
+        future_perfect_imperative_middle_first: Stem, Stem, Stem;
+        future_perfect_imperative_middle_second: Stem, Stem, Stem;
+        future_perfect_imperative_middle_third: Stem, Stem, Stem;
+        future_perfect_imperative_passive_first: Stem, Stem, Stem;
+        future_perfect_imperative_passive_second: Stem, Stem, Stem;
+        future_perfect_imperative_passive_third: Stem, Stem, Stem;
+        infinitive_present: Stem, Stem, Stem;
+        infinitive_future: Ending, Recessive, Recessive;
+        infinitive_aorist: Stem, Stem, Ending;
+        infinitive_perfect: Stem, Ending, Ending;
+        infinitive_future_perfect: Stem, Stem, Stem;
+        participle_present: Stem, Recessive, Recessive;
+        participle_future: Ending, Recessive, Recessive;
+        participle_aorist: Stem, Recessive, Ending;
+        participle_perfect: Ending, Ending, Ending;
+        participle_future_perfect: Stem, Stem, Stem;
+    ),
+    // Like ``: 0 words.
+    pattern!("", 0;
+        indicative_active_first: Stem, Stem, Stem;
+        indicative_active_second: Stem, Stem, Stem;
+        indicative_active_third: Stem, Stem, Stem;
+        indicative_middle_first: Stem, Stem, Recessive;
+        indicative_middle_second: Stem, Stem, Stem;
+        indicative_middle_third: Stem, Stem, Stem;
+        indicative_passive_first: Stem, Stem, Recessive;
+        indicative_passive_second: Stem, Stem, Stem;
+        indicative_passive_third: Stem, Stem, Stem;
+        subjunctive_active_first: Stem, Stem, Stem;
+        subjunctive_active_second: Stem, Stem, Stem;
+        subjunctive_active_third: Stem, Stem, Stem;
+        subjunctive_middle_first: Stem, Stem, Recessive;
+        subjunctive_middle_second: Stem, Stem, Stem;
+        subjunctive_middle_third: Stem, Stem, Stem;
+        subjunctive_passive_first: Stem, Stem, Recessive;
+        subjunctive_passive_second: Stem, Stem, Stem;
+        subjunctive_passive_third: Stem, Stem, Stem;
+        optative_active_first: Stem, Stem, Stem;
+        optative_active_second: Stem, Stem, Stem;
+        optative_active_third: Stem, Recessive, Stem;
+        optative_middle_first: Recessive, Stem, Recessive;
+        optative_middle_second: Stem, Stem, Stem;
+        optative_middle_third: Stem, Recessive, Stem;
+        optative_passive_first: Recessive, Stem, Recessive;
+        optative_passive_second: Stem, Stem, Stem;
+        optative_passive_third: Stem, Recessive, Stem;
+        imperative_active_first: Stem, Stem, Stem;
+        imperative_active_second: Recessive, Stem, Stem;
+        imperative_active_third: Recessive, Recessive, Recessive;
+        imperative_middle_first: Stem, Stem, Stem;
+        imperative_middle_second: Stem, Stem, Stem;
+        imperative_middle_third: Recessive, Recessive, Recessive;
+        imperative_passive_first: Stem, Stem, Stem;
+        imperative_passive_second: Stem, Stem, Stem;
+        imperative_passive_third: Recessive, Recessive, Recessive;
+        imperfect_active_first: Recessive, Stem, Stem;
+        imperfect_active_second: Recessive, Stem, Stem;
+        imperfect_active_third: Recessive, Recessive, Recessive;
+        imperfect_middle_first: Recessive, Stem, Recessive;
+        imperfect_middle_second: Stem, Stem, Stem;
+        imperfect_middle_third: Stem, Recessive, Stem;
+        imperfect_passive_first: Recessive, Stem, Recessive;
+        imperfect_passive_second: Stem, Stem, Stem;
+        imperfect_passive_third: Stem, Recessive, Stem;
         future_indicative_active_first: Recessive, Stem, Stem;
         future_indicative_active_second: Recessive, Stem, Stem;
         future_indicative_active_third: Recessive, Stem, Stem;
@@ -17905,217 +20156,6 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         aorist_optative_middle_first: Recessive, Stem, Recessive;
         aorist_optative_middle_second: Stem, Stem, Stem;
         aorist_optative_middle_third: Stem, Recessive, Stem;
-        aorist_optative_passive_first: Recessive, Stem, Stem;
-        aorist_optative_passive_second: Recessive, Stem, Stem;
-        aorist_optative_passive_third: Recessive, Recessive, Stem;
-        aorist_imperative_active_first: Stem, Stem, Stem;
-        aorist_imperative_active_second: Recessive, Recessive, Recessive;
-        aorist_imperative_active_third: Recessive, Recessive, Recessive;
-        aorist_imperative_middle_first: Stem, Stem, Stem;
-        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
-        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_first: Stem, Stem, Stem;
-        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
-        perfect_indicative_active_first: Recessive, Stem, Recessive;
-        perfect_indicative_active_second: Recessive, Recessive, Recessive;
-        perfect_indicative_active_third: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_first: Recessive, Stem, Recessive;
-        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_first: Recessive, Stem, Recessive;
-        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
-        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_middle_first: Ending, Stem, Ending;
-        perfect_subjunctive_middle_second: Ending, Ending, Ending;
-        perfect_subjunctive_middle_third: Ending, Ending, Ending;
-        perfect_subjunctive_passive_first: Ending, Stem, Ending;
-        perfect_subjunctive_passive_second: Ending, Ending, Ending;
-        perfect_subjunctive_passive_third: Ending, Ending, Ending;
-        perfect_optative_active_first: Recessive, Stem, Recessive;
-        perfect_optative_active_second: Recessive, Recessive, Recessive;
-        perfect_optative_active_third: Recessive, Stem, Recessive;
-        perfect_optative_middle_first: Ending, Stem, Ending;
-        perfect_optative_middle_second: Ending, Ending, Ending;
-        perfect_optative_middle_third: Ending, Ending, Ending;
-        perfect_optative_passive_first: Ending, Stem, Ending;
-        perfect_optative_passive_second: Ending, Ending, Ending;
-        perfect_optative_passive_third: Ending, Ending, Ending;
-        perfect_imperative_active_first: Stem, Stem, Stem;
-        perfect_imperative_active_second: Recessive, Recessive, Recessive;
-        perfect_imperative_active_third: Stem, Stem, Stem;
-        perfect_imperative_middle_first: Stem, Stem, Stem;
-        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
-        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_first: Stem, Stem, Stem;
-        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
-        pluperfect_active_first: Recessive, Stem, Recessive;
-        pluperfect_active_second: Recessive, Recessive, Recessive;
-        pluperfect_active_third: Recessive, Stem, Recessive;
-        pluperfect_middle_first: Recessive, Stem, Recessive;
-        pluperfect_middle_second: Recessive, Recessive, Recessive;
-        pluperfect_middle_third: Recessive, Recessive, Recessive;
-        pluperfect_passive_first: Recessive, Stem, Recessive;
-        pluperfect_passive_second: Recessive, Recessive, Recessive;
-        pluperfect_passive_third: Recessive, Recessive, Recessive;
-        future_perfect_indicative_active_first: Stem, Stem, Stem;
-        future_perfect_indicative_active_second: Stem, Stem, Stem;
-        future_perfect_indicative_active_third: Stem, Stem, Stem;
-        future_perfect_indicative_middle_first: Stem, Stem, Stem;
-        future_perfect_indicative_middle_second: Stem, Stem, Stem;
-        future_perfect_indicative_middle_third: Stem, Stem, Stem;
-        future_perfect_indicative_passive_first: Stem, Stem, Stem;
-        future_perfect_indicative_passive_second: Stem, Stem, Stem;
-        future_perfect_indicative_passive_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
-        future_perfect_optative_active_first: Stem, Stem, Stem;
-        future_perfect_optative_active_second: Stem, Stem, Stem;
-        future_perfect_optative_active_third: Stem, Stem, Stem;
-        future_perfect_optative_middle_first: Stem, Stem, Stem;
-        future_perfect_optative_middle_second: Stem, Stem, Stem;
-        future_perfect_optative_middle_third: Stem, Stem, Stem;
-        future_perfect_optative_passive_first: Stem, Stem, Stem;
-        future_perfect_optative_passive_second: Stem, Stem, Stem;
-        future_perfect_optative_passive_third: Stem, Stem, Stem;
-        future_perfect_imperative_active_first: Stem, Stem, Stem;
-        future_perfect_imperative_active_second: Stem, Stem, Stem;
-        future_perfect_imperative_active_third: Stem, Stem, Stem;
-        future_perfect_imperative_middle_first: Stem, Stem, Stem;
-        future_perfect_imperative_middle_second: Stem, Stem, Stem;
-        future_perfect_imperative_middle_third: Stem, Stem, Stem;
-        future_perfect_imperative_passive_first: Stem, Stem, Stem;
-        future_perfect_imperative_passive_second: Stem, Stem, Stem;
-        future_perfect_imperative_passive_third: Stem, Stem, Stem;
-        infinitive_present: Stem, Stem, Stem;
-        infinitive_future: Recessive, Recessive, Recessive;
-        infinitive_aorist: Stem, Stem, Stem;
-        infinitive_perfect: Stem, Stem, Stem;
-        infinitive_future_perfect: Stem, Stem, Stem;
-        participle_present: Stem, Recessive, Recessive;
-        participle_future: Recessive, Recessive, Recessive;
-        participle_aorist: Stem, Recessive, Stem;
-        participle_perfect: Stem, Stem, Stem;
-        participle_future_perfect: Stem, Stem, Stem;
-    ),
-    // Like ``: 0 words.
-    pattern!("", 0;
-        indicative_active_first: Stem, Stem, Stem;
-        indicative_active_second: Stem, Stem, Stem;
-        indicative_active_third: Stem, Stem, Stem;
-        indicative_middle_first: Stem, Stem, Recessive;
-        indicative_middle_second: Stem, Stem, Stem;
-        indicative_middle_third: Stem, Stem, Stem;
-        indicative_passive_first: Stem, Stem, Recessive;
-        indicative_passive_second: Stem, Stem, Stem;
-        indicative_passive_third: Stem, Stem, Stem;
-        subjunctive_active_first: Stem, Stem, Stem;
-        subjunctive_active_second: Stem, Stem, Stem;
-        subjunctive_active_third: Stem, Stem, Stem;
-        subjunctive_middle_first: Stem, Stem, Recessive;
-        subjunctive_middle_second: Stem, Stem, Stem;
-        subjunctive_middle_third: Stem, Stem, Stem;
-        subjunctive_passive_first: Stem, Stem, Recessive;
-        subjunctive_passive_second: Stem, Stem, Stem;
-        subjunctive_passive_third: Stem, Stem, Stem;
-        optative_active_first: Stem, Stem, Stem;
-        optative_active_second: Stem, Stem, Stem;
-        optative_active_third: Stem, Recessive, Stem;
-        optative_middle_first: Recessive, Stem, Recessive;
-        optative_middle_second: Stem, Stem, Stem;
-        optative_middle_third: Stem, Recessive, Stem;
-        optative_passive_first: Recessive, Stem, Recessive;
-        optative_passive_second: Stem, Stem, Stem;
-        optative_passive_third: Stem, Recessive, Stem;
-        imperative_active_first: Stem, Stem, Stem;
-        imperative_active_second: Recessive, Stem, Stem;
-        imperative_active_third: Recessive, Recessive, Recessive;
-        imperative_middle_first: Stem, Stem, Stem;
-        imperative_middle_second: Stem, Stem, Stem;
-        imperative_middle_third: Recessive, Recessive, Recessive;
-        imperative_passive_first: Stem, Stem, Stem;
-        imperative_passive_second: Stem, Stem, Stem;
-        imperative_passive_third: Recessive, Recessive, Recessive;
-        imperfect_active_first: Recessive, Stem, Stem;
-        imperfect_active_second: Recessive, Stem, Stem;
-        imperfect_active_third: Recessive, Recessive, Recessive;
-        imperfect_middle_first: Recessive, Stem, Recessive;
-        imperfect_middle_second: Stem, Stem, Stem;
-        imperfect_middle_third: Stem, Recessive, Stem;
-        imperfect_passive_first: Recessive, Stem, Recessive;
-        imperfect_passive_second: Stem, Stem, Stem;
-        imperfect_passive_third: Stem, Recessive, Stem;
-        future_indicative_active_first: Recessive, Stem, Stem;
-        future_indicative_active_second: Recessive, Stem, Stem;
-        future_indicative_active_third: Recessive, Stem, Stem;
-        future_indicative_middle_first: Recessive, Stem, Recessive;
-        future_indicative_middle_second: Recessive, Recessive, Recessive;
-        future_indicative_middle_third: Recessive, Recessive, Recessive;
-        future_indicative_passive_first: Recessive, Stem, Recessive;
-        future_indicative_passive_second: Recessive, Recessive, Recessive;
-        future_indicative_passive_third: Recessive, Recessive, Recessive;
-        future_subjunctive_active_first: Stem, Stem, Stem;
-        future_subjunctive_active_second: Stem, Stem, Stem;
-        future_subjunctive_active_third: Stem, Stem, Stem;
-        future_subjunctive_middle_first: Stem, Stem, Stem;
-        future_subjunctive_middle_second: Stem, Stem, Stem;
-        future_subjunctive_middle_third: Stem, Stem, Stem;
-        future_subjunctive_passive_first: Stem, Stem, Stem;
-        future_subjunctive_passive_second: Stem, Stem, Stem;
-        future_subjunctive_passive_third: Stem, Stem, Stem;
-        future_optative_active_first: Recessive, Stem, Stem;
-        future_optative_active_second: Recessive, Stem, Stem;
-        future_optative_active_third: Recessive, Recessive, Stem;
-        future_optative_middle_first: Recessive, Stem, Recessive;
-        future_optative_middle_second: Recessive, Recessive, Recessive;
-        future_optative_middle_third: Recessive, Recessive, Recessive;
-        future_optative_passive_first: Recessive, Stem, Recessive;
-        future_optative_passive_second: Recessive, Recessive, Recessive;
-        future_optative_passive_third: Recessive, Recessive, Recessive;
-        future_imperative_active_first: Stem, Stem, Stem;
-        future_imperative_active_second: Stem, Stem, Stem;
-        future_imperative_active_third: Stem, Stem, Stem;
-        future_imperative_middle_first: Stem, Stem, Stem;
-        future_imperative_middle_second: Stem, Stem, Stem;
-        future_imperative_middle_third: Stem, Stem, Stem;
-        future_imperative_passive_first: Stem, Stem, Stem;
-        future_imperative_passive_second: Stem, Stem, Stem;
-        future_imperative_passive_third: Stem, Stem, Stem;
-        aorist_indicative_active_first: Recessive, Stem, Recessive;
-        aorist_indicative_active_second: Recessive, Recessive, Recessive;
-        aorist_indicative_active_third: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_first: Recessive, Stem, Recessive;
-        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_first: Recessive, Stem, Recessive;
-        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_first: Stem, Stem, Stem;
-        aorist_subjunctive_active_second: Stem, Stem, Stem;
-        aorist_subjunctive_active_third: Stem, Stem, Stem;
-        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_passive_first: Stem, Stem, Stem;
-        aorist_subjunctive_passive_second: Stem, Stem, Stem;
-        aorist_subjunctive_passive_third: Stem, Stem, Stem;
-        aorist_optative_active_first: Recessive, Stem, Stem;
-        aorist_optative_active_second: Recessive, Stem, Stem;
-        aorist_optative_active_third: Recessive, Recessive, Stem;
-        aorist_optative_middle_first: Recessive, Stem, Recessive;
-        aorist_optative_middle_second: Recessive, Recessive, Recessive;
-        aorist_optative_middle_third: Recessive, Recessive, Recessive;
         aorist_optative_passive_first: Recessive, Stem, Stem;
         aorist_optative_passive_second: Recessive, Stem, Stem;
         aorist_optative_passive_third: Recessive, Recessive, Stem;
@@ -19061,217 +21101,6 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_present: Stem, Recessive, Recessive;
         participle_future: Recessive, Recessive, Recessive;
         participle_aorist: Stem, Recessive, Stem;
-        participle_perfect: Ending, Stem, Stem;
-        participle_future_perfect: Stem, Stem, Stem;
-    ),
-    // Like ``: 0 words.
-    pattern!("", 0;
-        indicative_active_first: Stem, Stem, Stem;
-        indicative_active_second: Stem, Stem, Stem;
-        indicative_active_third: Stem, Stem, Stem;
-        indicative_middle_first: Stem, Stem, Recessive;
-        indicative_middle_second: Stem, Stem, Stem;
-        indicative_middle_third: Stem, Stem, Stem;
-        indicative_passive_first: Stem, Stem, Recessive;
-        indicative_passive_second: Stem, Stem, Stem;
-        indicative_passive_third: Stem, Stem, Stem;
-        subjunctive_active_first: Stem, Stem, Stem;
-        subjunctive_active_second: Stem, Stem, Stem;
-        subjunctive_active_third: Stem, Stem, Stem;
-        subjunctive_middle_first: Stem, Stem, Recessive;
-        subjunctive_middle_second: Stem, Stem, Stem;
-        subjunctive_middle_third: Stem, Stem, Stem;
-        subjunctive_passive_first: Stem, Stem, Recessive;
-        subjunctive_passive_second: Stem, Stem, Stem;
-        subjunctive_passive_third: Stem, Stem, Stem;
-        optative_active_first: Stem, Stem, Stem;
-        optative_active_second: Stem, Stem, Stem;
-        optative_active_third: Stem, Recessive, Stem;
-        optative_middle_first: Recessive, Stem, Recessive;
-        optative_middle_second: Stem, Stem, Stem;
-        optative_middle_third: Stem, Recessive, Stem;
-        optative_passive_first: Recessive, Stem, Recessive;
-        optative_passive_second: Stem, Stem, Stem;
-        optative_passive_third: Stem, Recessive, Stem;
-        imperative_active_first: Stem, Stem, Stem;
-        imperative_active_second: Recessive, Stem, Stem;
-        imperative_active_third: Recessive, Recessive, Recessive;
-        imperative_middle_first: Stem, Stem, Stem;
-        imperative_middle_second: Stem, Stem, Stem;
-        imperative_middle_third: Recessive, Recessive, Recessive;
-        imperative_passive_first: Stem, Stem, Stem;
-        imperative_passive_second: Stem, Stem, Stem;
-        imperative_passive_third: Recessive, Recessive, Recessive;
-        imperfect_active_first: Recessive, Stem, Stem;
-        imperfect_active_second: Recessive, Stem, Stem;
-        imperfect_active_third: Recessive, Recessive, Recessive;
-        imperfect_middle_first: Recessive, Stem, Recessive;
-        imperfect_middle_second: Stem, Stem, Stem;
-        imperfect_middle_third: Stem, Recessive, Stem;
-        imperfect_passive_first: Recessive, Stem, Recessive;
-        imperfect_passive_second: Stem, Stem, Stem;
-        imperfect_passive_third: Stem, Recessive, Stem;
-        future_indicative_active_first: Recessive, Stem, Stem;
-        future_indicative_active_second: Recessive, Stem, Stem;
-        future_indicative_active_third: Recessive, Stem, Stem;
-        future_indicative_middle_first: Recessive, Stem, Recessive;
-        future_indicative_middle_second: Recessive, Recessive, Recessive;
-        future_indicative_middle_third: Recessive, Recessive, Recessive;
-        future_indicative_passive_first: Recessive, Stem, Recessive;
-        future_indicative_passive_second: Recessive, Recessive, Recessive;
-        future_indicative_passive_third: Recessive, Recessive, Recessive;
-        future_subjunctive_active_first: Stem, Stem, Stem;
-        future_subjunctive_active_second: Stem, Stem, Stem;
-        future_subjunctive_active_third: Stem, Stem, Stem;
-        future_subjunctive_middle_first: Stem, Stem, Stem;
-        future_subjunctive_middle_second: Stem, Stem, Stem;
-        future_subjunctive_middle_third: Stem, Stem, Stem;
-        future_subjunctive_passive_first: Stem, Stem, Stem;
-        future_subjunctive_passive_second: Stem, Stem, Stem;
-        future_subjunctive_passive_third: Stem, Stem, Stem;
-        future_optative_active_first: Recessive, Stem, Stem;
-        future_optative_active_second: Recessive, Stem, Stem;
-        future_optative_active_third: Recessive, Recessive, Stem;
-        future_optative_middle_first: Recessive, Stem, Recessive;
-        future_optative_middle_second: Recessive, Recessive, Recessive;
-        future_optative_middle_third: Recessive, Recessive, Recessive;
-        future_optative_passive_first: Recessive, Stem, Recessive;
-        future_optative_passive_second: Recessive, Recessive, Recessive;
-        future_optative_passive_third: Recessive, Recessive, Recessive;
-        future_imperative_active_first: Stem, Stem, Stem;
-        future_imperative_active_second: Stem, Stem, Stem;
-        future_imperative_active_third: Stem, Stem, Stem;
-        future_imperative_middle_first: Stem, Stem, Stem;
-        future_imperative_middle_second: Stem, Stem, Stem;
-        future_imperative_middle_third: Stem, Stem, Stem;
-        future_imperative_passive_first: Stem, Stem, Stem;
-        future_imperative_passive_second: Stem, Stem, Stem;
-        future_imperative_passive_third: Stem, Stem, Stem;
-        aorist_indicative_active_first: Recessive, Stem, Recessive;
-        aorist_indicative_active_second: Recessive, Recessive, Recessive;
-        aorist_indicative_active_third: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_first: Recessive, Stem, Recessive;
-        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_first: Recessive, Stem, Recessive;
-        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_passive_first: Stem, Stem, Stem;
-        aorist_subjunctive_passive_second: Stem, Stem, Stem;
-        aorist_subjunctive_passive_third: Stem, Stem, Stem;
-        aorist_optative_active_first: Recessive, Stem, Recessive;
-        aorist_optative_active_second: Recessive, Recessive, Recessive;
-        aorist_optative_active_third: Recessive, Recessive, Recessive;
-        aorist_optative_middle_first: Recessive, Stem, Recessive;
-        aorist_optative_middle_second: Recessive, Recessive, Recessive;
-        aorist_optative_middle_third: Recessive, Recessive, Recessive;
-        aorist_optative_passive_first: Recessive, Stem, Stem;
-        aorist_optative_passive_second: Recessive, Stem, Stem;
-        aorist_optative_passive_third: Recessive, Recessive, Stem;
-        aorist_imperative_active_first: Stem, Stem, Stem;
-        aorist_imperative_active_second: Recessive, Recessive, Recessive;
-        aorist_imperative_active_third: Recessive, Recessive, Recessive;
-        aorist_imperative_middle_first: Stem, Stem, Stem;
-        aorist_imperative_middle_second: Ending, Recessive, Recessive;
-        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_first: Stem, Stem, Stem;
-        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
-        perfect_indicative_active_first: Recessive, Stem, Recessive;
-        perfect_indicative_active_second: Recessive, Recessive, Recessive;
-        perfect_indicative_active_third: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_first: Recessive, Stem, Recessive;
-        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_first: Recessive, Stem, Recessive;
-        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
-        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_middle_first: Ending, Stem, Ending;
-        perfect_subjunctive_middle_second: Ending, Ending, Ending;
-        perfect_subjunctive_middle_third: Ending, Ending, Ending;
-        perfect_subjunctive_passive_first: Ending, Stem, Ending;
-        perfect_subjunctive_passive_second: Ending, Ending, Ending;
-        perfect_subjunctive_passive_third: Ending, Ending, Ending;
-        perfect_optative_active_first: Recessive, Stem, Recessive;
-        perfect_optative_active_second: Recessive, Recessive, Recessive;
-        perfect_optative_active_third: Recessive, Stem, Recessive;
-        perfect_optative_middle_first: Ending, Stem, Ending;
-        perfect_optative_middle_second: Ending, Ending, Ending;
-        perfect_optative_middle_third: Ending, Ending, Ending;
-        perfect_optative_passive_first: Ending, Stem, Ending;
-        perfect_optative_passive_second: Ending, Ending, Ending;
-        perfect_optative_passive_third: Ending, Ending, Ending;
-        perfect_imperative_active_first: Stem, Stem, Stem;
-        perfect_imperative_active_second: Recessive, Recessive, Recessive;
-        perfect_imperative_active_third: Stem, Stem, Stem;
-        perfect_imperative_middle_first: Stem, Stem, Stem;
-        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
-        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_first: Stem, Stem, Stem;
-        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
-        pluperfect_active_first: Recessive, Stem, Recessive;
-        pluperfect_active_second: Recessive, Recessive, Recessive;
-        pluperfect_active_third: Recessive, Stem, Recessive;
-        pluperfect_middle_first: Recessive, Stem, Recessive;
-        pluperfect_middle_second: Recessive, Recessive, Recessive;
-        pluperfect_middle_third: Recessive, Recessive, Recessive;
-        pluperfect_passive_first: Recessive, Stem, Recessive;
-        pluperfect_passive_second: Recessive, Recessive, Recessive;
-        pluperfect_passive_third: Recessive, Recessive, Recessive;
-        future_perfect_indicative_active_first: Stem, Stem, Stem;
-        future_perfect_indicative_active_second: Stem, Stem, Stem;
-        future_perfect_indicative_active_third: Stem, Stem, Stem;
-        future_perfect_indicative_middle_first: Stem, Stem, Stem;
-        future_perfect_indicative_middle_second: Stem, Stem, Stem;
-        future_perfect_indicative_middle_third: Stem, Stem, Stem;
-        future_perfect_indicative_passive_first: Stem, Stem, Stem;
-        future_perfect_indicative_passive_second: Stem, Stem, Stem;
-        future_perfect_indicative_passive_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
-        future_perfect_optative_active_first: Stem, Stem, Stem;
-        future_perfect_optative_active_second: Stem, Stem, Stem;
-        future_perfect_optative_active_third: Stem, Stem, Stem;
-        future_perfect_optative_middle_first: Stem, Stem, Stem;
-        future_perfect_optative_middle_second: Stem, Stem, Stem;
-        future_perfect_optative_middle_third: Stem, Stem, Stem;
-        future_perfect_optative_passive_first: Stem, Stem, Stem;
-        future_perfect_optative_passive_second: Stem, Stem, Stem;
-        future_perfect_optative_passive_third: Stem, Stem, Stem;
-        future_perfect_imperative_active_first: Stem, Stem, Stem;
-        future_perfect_imperative_active_second: Stem, Stem, Stem;
-        future_perfect_imperative_active_third: Stem, Stem, Stem;
-        future_perfect_imperative_middle_first: Stem, Stem, Stem;
-        future_perfect_imperative_middle_second: Stem, Stem, Stem;
-        future_perfect_imperative_middle_third: Stem, Stem, Stem;
-        future_perfect_imperative_passive_first: Stem, Stem, Stem;
-        future_perfect_imperative_passive_second: Stem, Stem, Stem;
-        future_perfect_imperative_passive_third: Stem, Stem, Stem;
-        infinitive_present: Stem, Stem, Stem;
-        infinitive_future: Recessive, Recessive, Recessive;
-        infinitive_aorist: Stem, Ending, Stem;
-        infinitive_perfect: Stem, Ending, Ending;
-        infinitive_future_perfect: Stem, Stem, Stem;
-        participle_present: Stem, Recessive, Recessive;
-        participle_future: Recessive, Recessive, Recessive;
-        participle_aorist: Stem, Recessive, Stem;
         participle_perfect: Ending, Ending, Ending;
         participle_future_perfect: Stem, Stem, Stem;
     ),
@@ -19484,639 +21313,6 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         participle_future: Recessive, Recessive, Recessive;
         participle_aorist: Stem, Recessive, Stem;
         participle_perfect: Ending, Ending, Ending;
-        participle_future_perfect: Stem, Stem, Stem;
-    ),
-    // Like ``: 0 words.
-    pattern!("", 0;
-        indicative_active_first: Stem, Stem, Stem;
-        indicative_active_second: Stem, Stem, Stem;
-        indicative_active_third: Stem, Stem, Stem;
-        indicative_middle_first: Stem, Stem, Recessive;
-        indicative_middle_second: Stem, Stem, Stem;
-        indicative_middle_third: Stem, Stem, Stem;
-        indicative_passive_first: Stem, Stem, Recessive;
-        indicative_passive_second: Stem, Stem, Stem;
-        indicative_passive_third: Stem, Stem, Stem;
-        subjunctive_active_first: Stem, Stem, Stem;
-        subjunctive_active_second: Stem, Stem, Stem;
-        subjunctive_active_third: Stem, Stem, Stem;
-        subjunctive_middle_first: Stem, Stem, Recessive;
-        subjunctive_middle_second: Stem, Stem, Stem;
-        subjunctive_middle_third: Stem, Stem, Stem;
-        subjunctive_passive_first: Stem, Stem, Recessive;
-        subjunctive_passive_second: Stem, Stem, Stem;
-        subjunctive_passive_third: Stem, Stem, Stem;
-        optative_active_first: Stem, Stem, Stem;
-        optative_active_second: Stem, Stem, Stem;
-        optative_active_third: Stem, Recessive, Stem;
-        optative_middle_first: Recessive, Stem, Recessive;
-        optative_middle_second: Stem, Stem, Stem;
-        optative_middle_third: Stem, Recessive, Stem;
-        optative_passive_first: Recessive, Stem, Recessive;
-        optative_passive_second: Stem, Stem, Stem;
-        optative_passive_third: Stem, Recessive, Stem;
-        imperative_active_first: Stem, Stem, Stem;
-        imperative_active_second: Recessive, Stem, Stem;
-        imperative_active_third: Recessive, Recessive, Recessive;
-        imperative_middle_first: Stem, Stem, Stem;
-        imperative_middle_second: Stem, Stem, Stem;
-        imperative_middle_third: Recessive, Recessive, Recessive;
-        imperative_passive_first: Stem, Stem, Stem;
-        imperative_passive_second: Stem, Stem, Stem;
-        imperative_passive_third: Recessive, Recessive, Recessive;
-        imperfect_active_first: Recessive, Stem, Stem;
-        imperfect_active_second: Recessive, Stem, Stem;
-        imperfect_active_third: Recessive, Recessive, Recessive;
-        imperfect_middle_first: Recessive, Stem, Recessive;
-        imperfect_middle_second: Stem, Stem, Stem;
-        imperfect_middle_third: Stem, Recessive, Stem;
-        imperfect_passive_first: Recessive, Stem, Recessive;
-        imperfect_passive_second: Stem, Stem, Stem;
-        imperfect_passive_third: Stem, Recessive, Stem;
-        future_indicative_active_first: Recessive, Stem, Stem;
-        future_indicative_active_second: Recessive, Stem, Stem;
-        future_indicative_active_third: Recessive, Stem, Stem;
-        future_indicative_middle_first: Recessive, Stem, Recessive;
-        future_indicative_middle_second: Recessive, Recessive, Recessive;
-        future_indicative_middle_third: Recessive, Recessive, Recessive;
-        future_indicative_passive_first: Recessive, Stem, Recessive;
-        future_indicative_passive_second: Recessive, Recessive, Recessive;
-        future_indicative_passive_third: Recessive, Recessive, Recessive;
-        future_subjunctive_active_first: Stem, Stem, Stem;
-        future_subjunctive_active_second: Stem, Stem, Stem;
-        future_subjunctive_active_third: Stem, Stem, Stem;
-        future_subjunctive_middle_first: Stem, Stem, Stem;
-        future_subjunctive_middle_second: Stem, Stem, Stem;
-        future_subjunctive_middle_third: Stem, Stem, Stem;
-        future_subjunctive_passive_first: Stem, Stem, Stem;
-        future_subjunctive_passive_second: Stem, Stem, Stem;
-        future_subjunctive_passive_third: Stem, Stem, Stem;
-        future_optative_active_first: Recessive, Stem, Stem;
-        future_optative_active_second: Recessive, Stem, Stem;
-        future_optative_active_third: Recessive, Recessive, Stem;
-        future_optative_middle_first: Recessive, Stem, Recessive;
-        future_optative_middle_second: Recessive, Recessive, Recessive;
-        future_optative_middle_third: Recessive, Recessive, Recessive;
-        future_optative_passive_first: Recessive, Stem, Recessive;
-        future_optative_passive_second: Recessive, Recessive, Recessive;
-        future_optative_passive_third: Recessive, Recessive, Recessive;
-        future_imperative_active_first: Stem, Stem, Stem;
-        future_imperative_active_second: Stem, Stem, Stem;
-        future_imperative_active_third: Stem, Stem, Stem;
-        future_imperative_middle_first: Stem, Stem, Stem;
-        future_imperative_middle_second: Stem, Stem, Stem;
-        future_imperative_middle_third: Stem, Stem, Stem;
-        future_imperative_passive_first: Stem, Stem, Stem;
-        future_imperative_passive_second: Stem, Stem, Stem;
-        future_imperative_passive_third: Stem, Stem, Stem;
-        aorist_indicative_active_first: Recessive, Stem, Recessive;
-        aorist_indicative_active_second: Recessive, Recessive, Recessive;
-        aorist_indicative_active_third: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_first: Recessive, Stem, Recessive;
-        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_first: Recessive, Stem, Recessive;
-        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_passive_first: Ending, Stem, Ending;
-        aorist_subjunctive_passive_second: Ending, Ending, Ending;
-        aorist_subjunctive_passive_third: Ending, Ending, Ending;
-        aorist_optative_active_first: Recessive, Stem, Recessive;
-        aorist_optative_active_second: Recessive, Recessive, Recessive;
-        aorist_optative_active_third: Recessive, Recessive, Recessive;
-        aorist_optative_middle_first: Recessive, Stem, Recessive;
-        aorist_optative_middle_second: Recessive, Recessive, Recessive;
-        aorist_optative_middle_third: Recessive, Recessive, Recessive;
-        aorist_optative_passive_first: Recessive, Stem, Ending;
-        aorist_optative_passive_second: Recessive, Ending, Ending;
-        aorist_optative_passive_third: Recessive, Recessive, Ending;
-        aorist_imperative_active_first: Stem, Stem, Stem;
-        aorist_imperative_active_second: Recessive, Recessive, Recessive;
-        aorist_imperative_active_third: Recessive, Recessive, Recessive;
-        aorist_imperative_middle_first: Stem, Stem, Stem;
-        aorist_imperative_middle_second: Stem, Recessive, Recessive;
-        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_first: Stem, Stem, Stem;
-        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
-        perfect_indicative_active_first: Recessive, Stem, Recessive;
-        perfect_indicative_active_second: Recessive, Recessive, Recessive;
-        perfect_indicative_active_third: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_first: Recessive, Stem, Recessive;
-        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_first: Recessive, Stem, Recessive;
-        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
-        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_middle_first: Ending, Stem, Ending;
-        perfect_subjunctive_middle_second: Ending, Ending, Ending;
-        perfect_subjunctive_middle_third: Ending, Ending, Ending;
-        perfect_subjunctive_passive_first: Ending, Stem, Ending;
-        perfect_subjunctive_passive_second: Ending, Ending, Ending;
-        perfect_subjunctive_passive_third: Ending, Ending, Ending;
-        perfect_optative_active_first: Recessive, Stem, Recessive;
-        perfect_optative_active_second: Recessive, Recessive, Recessive;
-        perfect_optative_active_third: Recessive, Stem, Recessive;
-        perfect_optative_middle_first: Ending, Stem, Ending;
-        perfect_optative_middle_second: Ending, Ending, Ending;
-        perfect_optative_middle_third: Ending, Ending, Ending;
-        perfect_optative_passive_first: Ending, Stem, Ending;
-        perfect_optative_passive_second: Ending, Ending, Ending;
-        perfect_optative_passive_third: Ending, Ending, Ending;
-        perfect_imperative_active_first: Stem, Stem, Stem;
-        perfect_imperative_active_second: Recessive, Recessive, Recessive;
-        perfect_imperative_active_third: Stem, Stem, Stem;
-        perfect_imperative_middle_first: Stem, Stem, Stem;
-        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
-        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_first: Stem, Stem, Stem;
-        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
-        pluperfect_active_first: Recessive, Stem, Recessive;
-        pluperfect_active_second: Recessive, Recessive, Recessive;
-        pluperfect_active_third: Recessive, Stem, Recessive;
-        pluperfect_middle_first: Recessive, Stem, Recessive;
-        pluperfect_middle_second: Recessive, Recessive, Recessive;
-        pluperfect_middle_third: Recessive, Recessive, Recessive;
-        pluperfect_passive_first: Recessive, Stem, Recessive;
-        pluperfect_passive_second: Recessive, Recessive, Recessive;
-        pluperfect_passive_third: Recessive, Recessive, Recessive;
-        future_perfect_indicative_active_first: Stem, Stem, Stem;
-        future_perfect_indicative_active_second: Stem, Stem, Stem;
-        future_perfect_indicative_active_third: Stem, Stem, Stem;
-        future_perfect_indicative_middle_first: Stem, Stem, Stem;
-        future_perfect_indicative_middle_second: Stem, Stem, Stem;
-        future_perfect_indicative_middle_third: Stem, Stem, Stem;
-        future_perfect_indicative_passive_first: Stem, Stem, Stem;
-        future_perfect_indicative_passive_second: Stem, Stem, Stem;
-        future_perfect_indicative_passive_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
-        future_perfect_optative_active_first: Stem, Stem, Stem;
-        future_perfect_optative_active_second: Stem, Stem, Stem;
-        future_perfect_optative_active_third: Stem, Stem, Stem;
-        future_perfect_optative_middle_first: Stem, Stem, Stem;
-        future_perfect_optative_middle_second: Stem, Stem, Stem;
-        future_perfect_optative_middle_third: Stem, Stem, Stem;
-        future_perfect_optative_passive_first: Stem, Stem, Stem;
-        future_perfect_optative_passive_second: Stem, Stem, Stem;
-        future_perfect_optative_passive_third: Stem, Stem, Stem;
-        future_perfect_imperative_active_first: Stem, Stem, Stem;
-        future_perfect_imperative_active_second: Stem, Stem, Stem;
-        future_perfect_imperative_active_third: Stem, Stem, Stem;
-        future_perfect_imperative_middle_first: Stem, Stem, Stem;
-        future_perfect_imperative_middle_second: Stem, Stem, Stem;
-        future_perfect_imperative_middle_third: Stem, Stem, Stem;
-        future_perfect_imperative_passive_first: Stem, Stem, Stem;
-        future_perfect_imperative_passive_second: Stem, Stem, Stem;
-        future_perfect_imperative_passive_third: Stem, Stem, Stem;
-        infinitive_present: Stem, Stem, Stem;
-        infinitive_future: Recessive, Recessive, Recessive;
-        infinitive_aorist: Stem, Stem, Ending;
-        infinitive_perfect: Stem, Stem, Stem;
-        infinitive_future_perfect: Stem, Stem, Stem;
-        participle_present: Stem, Recessive, Recessive;
-        participle_future: Recessive, Recessive, Recessive;
-        participle_aorist: Stem, Recessive, Ending;
-        participle_perfect: Ending, Ending, Ending;
-        participle_future_perfect: Stem, Stem, Stem;
-    ),
-    // Like ``: 0 words.
-    pattern!("", 0;
-        indicative_active_first: Stem, Stem, Stem;
-        indicative_active_second: Stem, Stem, Stem;
-        indicative_active_third: Stem, Stem, Stem;
-        indicative_middle_first: Stem, Stem, Recessive;
-        indicative_middle_second: Stem, Stem, Stem;
-        indicative_middle_third: Stem, Stem, Stem;
-        indicative_passive_first: Stem, Stem, Recessive;
-        indicative_passive_second: Stem, Stem, Stem;
-        indicative_passive_third: Stem, Stem, Stem;
-        subjunctive_active_first: Stem, Stem, Stem;
-        subjunctive_active_second: Stem, Stem, Stem;
-        subjunctive_active_third: Stem, Stem, Stem;
-        subjunctive_middle_first: Stem, Stem, Recessive;
-        subjunctive_middle_second: Stem, Stem, Stem;
-        subjunctive_middle_third: Stem, Stem, Stem;
-        subjunctive_passive_first: Stem, Stem, Recessive;
-        subjunctive_passive_second: Stem, Stem, Stem;
-        subjunctive_passive_third: Stem, Stem, Stem;
-        optative_active_first: Stem, Stem, Stem;
-        optative_active_second: Stem, Stem, Stem;
-        optative_active_third: Stem, Recessive, Stem;
-        optative_middle_first: Recessive, Stem, Recessive;
-        optative_middle_second: Stem, Stem, Stem;
-        optative_middle_third: Stem, Recessive, Stem;
-        optative_passive_first: Recessive, Stem, Recessive;
-        optative_passive_second: Stem, Stem, Stem;
-        optative_passive_third: Stem, Recessive, Stem;
-        imperative_active_first: Stem, Stem, Stem;
-        imperative_active_second: Recessive, Stem, Stem;
-        imperative_active_third: Recessive, Recessive, Recessive;
-        imperative_middle_first: Stem, Stem, Stem;
-        imperative_middle_second: Stem, Stem, Stem;
-        imperative_middle_third: Recessive, Recessive, Recessive;
-        imperative_passive_first: Stem, Stem, Stem;
-        imperative_passive_second: Stem, Stem, Stem;
-        imperative_passive_third: Recessive, Recessive, Recessive;
-        imperfect_active_first: Recessive, Stem, Stem;
-        imperfect_active_second: Recessive, Stem, Stem;
-        imperfect_active_third: Recessive, Recessive, Recessive;
-        imperfect_middle_first: Recessive, Stem, Recessive;
-        imperfect_middle_second: Stem, Stem, Stem;
-        imperfect_middle_third: Stem, Recessive, Stem;
-        imperfect_passive_first: Recessive, Stem, Recessive;
-        imperfect_passive_second: Stem, Stem, Stem;
-        imperfect_passive_third: Stem, Recessive, Stem;
-        future_indicative_active_first: Recessive, Stem, Stem;
-        future_indicative_active_second: Recessive, Stem, Stem;
-        future_indicative_active_third: Recessive, Stem, Stem;
-        future_indicative_middle_first: Recessive, Stem, Recessive;
-        future_indicative_middle_second: Recessive, Recessive, Recessive;
-        future_indicative_middle_third: Recessive, Recessive, Recessive;
-        future_indicative_passive_first: Recessive, Stem, Recessive;
-        future_indicative_passive_second: Recessive, Recessive, Recessive;
-        future_indicative_passive_third: Recessive, Recessive, Recessive;
-        future_subjunctive_active_first: Stem, Stem, Stem;
-        future_subjunctive_active_second: Stem, Stem, Stem;
-        future_subjunctive_active_third: Stem, Stem, Stem;
-        future_subjunctive_middle_first: Stem, Stem, Stem;
-        future_subjunctive_middle_second: Stem, Stem, Stem;
-        future_subjunctive_middle_third: Stem, Stem, Stem;
-        future_subjunctive_passive_first: Stem, Stem, Stem;
-        future_subjunctive_passive_second: Stem, Stem, Stem;
-        future_subjunctive_passive_third: Stem, Stem, Stem;
-        future_optative_active_first: Recessive, Stem, Stem;
-        future_optative_active_second: Recessive, Stem, Stem;
-        future_optative_active_third: Recessive, Recessive, Stem;
-        future_optative_middle_first: Recessive, Stem, Recessive;
-        future_optative_middle_second: Recessive, Recessive, Recessive;
-        future_optative_middle_third: Recessive, Recessive, Recessive;
-        future_optative_passive_first: Recessive, Stem, Recessive;
-        future_optative_passive_second: Recessive, Recessive, Recessive;
-        future_optative_passive_third: Recessive, Recessive, Recessive;
-        future_imperative_active_first: Stem, Stem, Stem;
-        future_imperative_active_second: Stem, Stem, Stem;
-        future_imperative_active_third: Stem, Stem, Stem;
-        future_imperative_middle_first: Stem, Stem, Stem;
-        future_imperative_middle_second: Stem, Stem, Stem;
-        future_imperative_middle_third: Stem, Stem, Stem;
-        future_imperative_passive_first: Stem, Stem, Stem;
-        future_imperative_passive_second: Stem, Stem, Stem;
-        future_imperative_passive_third: Stem, Stem, Stem;
-        aorist_indicative_active_first: Recessive, Stem, Recessive;
-        aorist_indicative_active_second: Recessive, Recessive, Recessive;
-        aorist_indicative_active_third: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_first: Recessive, Stem, Recessive;
-        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_first: Recessive, Stem, Recessive;
-        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_passive_first: Ending, Stem, Ending;
-        aorist_subjunctive_passive_second: Ending, Ending, Ending;
-        aorist_subjunctive_passive_third: Ending, Ending, Ending;
-        aorist_optative_active_first: Recessive, Stem, Recessive;
-        aorist_optative_active_second: Recessive, Recessive, Recessive;
-        aorist_optative_active_third: Recessive, Recessive, Recessive;
-        aorist_optative_middle_first: Recessive, Stem, Recessive;
-        aorist_optative_middle_second: Recessive, Recessive, Recessive;
-        aorist_optative_middle_third: Recessive, Recessive, Recessive;
-        aorist_optative_passive_first: Recessive, Stem, Ending;
-        aorist_optative_passive_second: Recessive, Ending, Ending;
-        aorist_optative_passive_third: Recessive, Recessive, Ending;
-        aorist_imperative_active_first: Stem, Stem, Stem;
-        aorist_imperative_active_second: Recessive, Recessive, Recessive;
-        aorist_imperative_active_third: Recessive, Recessive, Recessive;
-        aorist_imperative_middle_first: Stem, Stem, Stem;
-        aorist_imperative_middle_second: Ending, Recessive, Recessive;
-        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_first: Stem, Stem, Stem;
-        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
-        perfect_indicative_active_first: Recessive, Stem, Recessive;
-        perfect_indicative_active_second: Recessive, Recessive, Recessive;
-        perfect_indicative_active_third: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_first: Recessive, Stem, Recessive;
-        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_first: Recessive, Stem, Recessive;
-        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
-        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_middle_first: Ending, Stem, Ending;
-        perfect_subjunctive_middle_second: Ending, Ending, Ending;
-        perfect_subjunctive_middle_third: Ending, Ending, Ending;
-        perfect_subjunctive_passive_first: Ending, Stem, Ending;
-        perfect_subjunctive_passive_second: Ending, Ending, Ending;
-        perfect_subjunctive_passive_third: Ending, Ending, Ending;
-        perfect_optative_active_first: Recessive, Stem, Recessive;
-        perfect_optative_active_second: Recessive, Recessive, Recessive;
-        perfect_optative_active_third: Recessive, Stem, Recessive;
-        perfect_optative_middle_first: Ending, Stem, Ending;
-        perfect_optative_middle_second: Ending, Ending, Ending;
-        perfect_optative_middle_third: Ending, Ending, Ending;
-        perfect_optative_passive_first: Ending, Stem, Ending;
-        perfect_optative_passive_second: Ending, Ending, Ending;
-        perfect_optative_passive_third: Ending, Ending, Ending;
-        perfect_imperative_active_first: Stem, Stem, Stem;
-        perfect_imperative_active_second: Recessive, Recessive, Recessive;
-        perfect_imperative_active_third: Stem, Stem, Stem;
-        perfect_imperative_middle_first: Stem, Stem, Stem;
-        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
-        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_first: Stem, Stem, Stem;
-        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
-        pluperfect_active_first: Recessive, Stem, Recessive;
-        pluperfect_active_second: Recessive, Recessive, Recessive;
-        pluperfect_active_third: Recessive, Stem, Recessive;
-        pluperfect_middle_first: Recessive, Stem, Recessive;
-        pluperfect_middle_second: Recessive, Recessive, Recessive;
-        pluperfect_middle_third: Recessive, Recessive, Recessive;
-        pluperfect_passive_first: Recessive, Stem, Recessive;
-        pluperfect_passive_second: Recessive, Recessive, Recessive;
-        pluperfect_passive_third: Recessive, Recessive, Recessive;
-        future_perfect_indicative_active_first: Stem, Stem, Stem;
-        future_perfect_indicative_active_second: Stem, Stem, Stem;
-        future_perfect_indicative_active_third: Stem, Stem, Stem;
-        future_perfect_indicative_middle_first: Stem, Stem, Stem;
-        future_perfect_indicative_middle_second: Stem, Stem, Stem;
-        future_perfect_indicative_middle_third: Stem, Stem, Stem;
-        future_perfect_indicative_passive_first: Stem, Stem, Stem;
-        future_perfect_indicative_passive_second: Stem, Stem, Stem;
-        future_perfect_indicative_passive_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
-        future_perfect_optative_active_first: Stem, Stem, Stem;
-        future_perfect_optative_active_second: Stem, Stem, Stem;
-        future_perfect_optative_active_third: Stem, Stem, Stem;
-        future_perfect_optative_middle_first: Stem, Stem, Stem;
-        future_perfect_optative_middle_second: Stem, Stem, Stem;
-        future_perfect_optative_middle_third: Stem, Stem, Stem;
-        future_perfect_optative_passive_first: Stem, Stem, Stem;
-        future_perfect_optative_passive_second: Stem, Stem, Stem;
-        future_perfect_optative_passive_third: Stem, Stem, Stem;
-        future_perfect_imperative_active_first: Stem, Stem, Stem;
-        future_perfect_imperative_active_second: Stem, Stem, Stem;
-        future_perfect_imperative_active_third: Stem, Stem, Stem;
-        future_perfect_imperative_middle_first: Stem, Stem, Stem;
-        future_perfect_imperative_middle_second: Stem, Stem, Stem;
-        future_perfect_imperative_middle_third: Stem, Stem, Stem;
-        future_perfect_imperative_passive_first: Stem, Stem, Stem;
-        future_perfect_imperative_passive_second: Stem, Stem, Stem;
-        future_perfect_imperative_passive_third: Stem, Stem, Stem;
-        infinitive_present: Stem, Stem, Stem;
-        infinitive_future: Recessive, Recessive, Recessive;
-        infinitive_aorist: Ending, Ending, Ending;
-        infinitive_perfect: Stem, Ending, Ending;
-        infinitive_future_perfect: Stem, Stem, Stem;
-        participle_present: Stem, Recessive, Recessive;
-        participle_future: Recessive, Recessive, Recessive;
-        participle_aorist: Ending, Recessive, Ending;
-        participle_perfect: Ending, Ending, Ending;
-        participle_future_perfect: Stem, Stem, Stem;
-    ),
-    // Like ``: 0 words.
-    pattern!("", 0;
-        indicative_active_first: Stem, Stem, Stem;
-        indicative_active_second: Stem, Stem, Stem;
-        indicative_active_third: Stem, Stem, Stem;
-        indicative_middle_first: Stem, Stem, Recessive;
-        indicative_middle_second: Stem, Stem, Stem;
-        indicative_middle_third: Stem, Stem, Stem;
-        indicative_passive_first: Stem, Stem, Recessive;
-        indicative_passive_second: Stem, Stem, Stem;
-        indicative_passive_third: Stem, Stem, Stem;
-        subjunctive_active_first: Stem, Stem, Stem;
-        subjunctive_active_second: Stem, Stem, Stem;
-        subjunctive_active_third: Stem, Stem, Stem;
-        subjunctive_middle_first: Stem, Stem, Recessive;
-        subjunctive_middle_second: Stem, Stem, Stem;
-        subjunctive_middle_third: Stem, Stem, Stem;
-        subjunctive_passive_first: Stem, Stem, Recessive;
-        subjunctive_passive_second: Stem, Stem, Stem;
-        subjunctive_passive_third: Stem, Stem, Stem;
-        optative_active_first: Stem, Stem, Stem;
-        optative_active_second: Stem, Stem, Stem;
-        optative_active_third: Stem, Recessive, Stem;
-        optative_middle_first: Recessive, Stem, Recessive;
-        optative_middle_second: Stem, Stem, Stem;
-        optative_middle_third: Stem, Recessive, Stem;
-        optative_passive_first: Recessive, Stem, Recessive;
-        optative_passive_second: Stem, Stem, Stem;
-        optative_passive_third: Stem, Recessive, Stem;
-        imperative_active_first: Stem, Stem, Stem;
-        imperative_active_second: Recessive, Stem, Stem;
-        imperative_active_third: Recessive, Recessive, Recessive;
-        imperative_middle_first: Stem, Stem, Stem;
-        imperative_middle_second: Stem, Stem, Stem;
-        imperative_middle_third: Recessive, Recessive, Recessive;
-        imperative_passive_first: Stem, Stem, Stem;
-        imperative_passive_second: Stem, Stem, Stem;
-        imperative_passive_third: Recessive, Recessive, Recessive;
-        imperfect_active_first: Recessive, Stem, Stem;
-        imperfect_active_second: Recessive, Stem, Stem;
-        imperfect_active_third: Recessive, Recessive, Recessive;
-        imperfect_middle_first: Recessive, Stem, Recessive;
-        imperfect_middle_second: Stem, Stem, Stem;
-        imperfect_middle_third: Stem, Recessive, Stem;
-        imperfect_passive_first: Recessive, Stem, Recessive;
-        imperfect_passive_second: Stem, Stem, Stem;
-        imperfect_passive_third: Stem, Recessive, Stem;
-        future_indicative_active_first: Recessive, Stem, Stem;
-        future_indicative_active_second: Recessive, Stem, Stem;
-        future_indicative_active_third: Recessive, Stem, Stem;
-        future_indicative_middle_first: Recessive, Stem, Recessive;
-        future_indicative_middle_second: Recessive, Recessive, Recessive;
-        future_indicative_middle_third: Recessive, Recessive, Recessive;
-        future_indicative_passive_first: Recessive, Stem, Recessive;
-        future_indicative_passive_second: Recessive, Recessive, Recessive;
-        future_indicative_passive_third: Recessive, Recessive, Recessive;
-        future_subjunctive_active_first: Stem, Stem, Stem;
-        future_subjunctive_active_second: Stem, Stem, Stem;
-        future_subjunctive_active_third: Stem, Stem, Stem;
-        future_subjunctive_middle_first: Stem, Stem, Stem;
-        future_subjunctive_middle_second: Stem, Stem, Stem;
-        future_subjunctive_middle_third: Stem, Stem, Stem;
-        future_subjunctive_passive_first: Stem, Stem, Stem;
-        future_subjunctive_passive_second: Stem, Stem, Stem;
-        future_subjunctive_passive_third: Stem, Stem, Stem;
-        future_optative_active_first: Recessive, Stem, Stem;
-        future_optative_active_second: Recessive, Stem, Stem;
-        future_optative_active_third: Recessive, Recessive, Stem;
-        future_optative_middle_first: Recessive, Stem, Recessive;
-        future_optative_middle_second: Recessive, Recessive, Recessive;
-        future_optative_middle_third: Recessive, Recessive, Recessive;
-        future_optative_passive_first: Recessive, Stem, Recessive;
-        future_optative_passive_second: Recessive, Recessive, Recessive;
-        future_optative_passive_third: Recessive, Recessive, Recessive;
-        future_imperative_active_first: Stem, Stem, Stem;
-        future_imperative_active_second: Stem, Stem, Stem;
-        future_imperative_active_third: Stem, Stem, Stem;
-        future_imperative_middle_first: Stem, Stem, Stem;
-        future_imperative_middle_second: Stem, Stem, Stem;
-        future_imperative_middle_third: Stem, Stem, Stem;
-        future_imperative_passive_first: Stem, Stem, Stem;
-        future_imperative_passive_second: Stem, Stem, Stem;
-        future_imperative_passive_third: Stem, Stem, Stem;
-        aorist_indicative_active_first: Recessive, Stem, Recessive;
-        aorist_indicative_active_second: Recessive, Recessive, Recessive;
-        aorist_indicative_active_third: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_first: Recessive, Stem, Recessive;
-        aorist_indicative_middle_second: Recessive, Recessive, Recessive;
-        aorist_indicative_middle_third: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_first: Recessive, Stem, Recessive;
-        aorist_indicative_passive_second: Recessive, Recessive, Recessive;
-        aorist_indicative_passive_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_active_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_active_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_first: Recessive, Stem, Recessive;
-        aorist_subjunctive_middle_second: Recessive, Recessive, Recessive;
-        aorist_subjunctive_middle_third: Recessive, Recessive, Recessive;
-        aorist_subjunctive_passive_first: Ending, Stem, Ending;
-        aorist_subjunctive_passive_second: Ending, Ending, Ending;
-        aorist_subjunctive_passive_third: Ending, Ending, Ending;
-        aorist_optative_active_first: Recessive, Stem, Recessive;
-        aorist_optative_active_second: Recessive, Recessive, Recessive;
-        aorist_optative_active_third: Recessive, Recessive, Recessive;
-        aorist_optative_middle_first: Recessive, Stem, Recessive;
-        aorist_optative_middle_second: Recessive, Recessive, Recessive;
-        aorist_optative_middle_third: Recessive, Recessive, Recessive;
-        aorist_optative_passive_first: Recessive, Stem, Ending;
-        aorist_optative_passive_second: Recessive, Ending, Ending;
-        aorist_optative_passive_third: Recessive, Recessive, Ending;
-        aorist_imperative_active_first: Stem, Stem, Stem;
-        aorist_imperative_active_second: Recessive, Recessive, Recessive;
-        aorist_imperative_active_third: Recessive, Recessive, Recessive;
-        aorist_imperative_middle_first: Stem, Stem, Stem;
-        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
-        aorist_imperative_middle_third: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_first: Stem, Stem, Stem;
-        aorist_imperative_passive_second: Recessive, Recessive, Recessive;
-        aorist_imperative_passive_third: Recessive, Recessive, Recessive;
-        perfect_indicative_active_first: Recessive, Stem, Recessive;
-        perfect_indicative_active_second: Recessive, Recessive, Recessive;
-        perfect_indicative_active_third: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_first: Recessive, Stem, Recessive;
-        perfect_indicative_middle_second: Recessive, Recessive, Recessive;
-        perfect_indicative_middle_third: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_first: Recessive, Stem, Recessive;
-        perfect_indicative_passive_second: Recessive, Recessive, Recessive;
-        perfect_indicative_passive_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_first: Recessive, Stem, Recessive;
-        perfect_subjunctive_active_second: Recessive, Recessive, Recessive;
-        perfect_subjunctive_active_third: Recessive, Recessive, Recessive;
-        perfect_subjunctive_middle_first: Ending, Stem, Ending;
-        perfect_subjunctive_middle_second: Ending, Ending, Ending;
-        perfect_subjunctive_middle_third: Ending, Ending, Ending;
-        perfect_subjunctive_passive_first: Ending, Stem, Ending;
-        perfect_subjunctive_passive_second: Ending, Ending, Ending;
-        perfect_subjunctive_passive_third: Ending, Ending, Ending;
-        perfect_optative_active_first: Recessive, Stem, Recessive;
-        perfect_optative_active_second: Recessive, Recessive, Recessive;
-        perfect_optative_active_third: Recessive, Stem, Recessive;
-        perfect_optative_middle_first: Ending, Stem, Ending;
-        perfect_optative_middle_second: Ending, Ending, Ending;
-        perfect_optative_middle_third: Ending, Ending, Ending;
-        perfect_optative_passive_first: Ending, Stem, Ending;
-        perfect_optative_passive_second: Ending, Ending, Ending;
-        perfect_optative_passive_third: Ending, Ending, Ending;
-        perfect_imperative_active_first: Stem, Stem, Stem;
-        perfect_imperative_active_second: Recessive, Recessive, Recessive;
-        perfect_imperative_active_third: Stem, Stem, Stem;
-        perfect_imperative_middle_first: Stem, Stem, Stem;
-        perfect_imperative_middle_second: Recessive, Recessive, Recessive;
-        perfect_imperative_middle_third: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_first: Stem, Stem, Stem;
-        perfect_imperative_passive_second: Recessive, Recessive, Recessive;
-        perfect_imperative_passive_third: Recessive, Recessive, Recessive;
-        pluperfect_active_first: Recessive, Stem, Recessive;
-        pluperfect_active_second: Recessive, Recessive, Recessive;
-        pluperfect_active_third: Recessive, Stem, Recessive;
-        pluperfect_middle_first: Recessive, Stem, Recessive;
-        pluperfect_middle_second: Recessive, Recessive, Recessive;
-        pluperfect_middle_third: Recessive, Recessive, Recessive;
-        pluperfect_passive_first: Recessive, Stem, Recessive;
-        pluperfect_passive_second: Recessive, Recessive, Recessive;
-        pluperfect_passive_third: Recessive, Recessive, Recessive;
-        future_perfect_indicative_active_first: Stem, Stem, Stem;
-        future_perfect_indicative_active_second: Stem, Stem, Stem;
-        future_perfect_indicative_active_third: Stem, Stem, Stem;
-        future_perfect_indicative_middle_first: Stem, Stem, Stem;
-        future_perfect_indicative_middle_second: Stem, Stem, Stem;
-        future_perfect_indicative_middle_third: Stem, Stem, Stem;
-        future_perfect_indicative_passive_first: Stem, Stem, Stem;
-        future_perfect_indicative_passive_second: Stem, Stem, Stem;
-        future_perfect_indicative_passive_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_active_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_middle_third: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_first: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_second: Stem, Stem, Stem;
-        future_perfect_subjunctive_passive_third: Stem, Stem, Stem;
-        future_perfect_optative_active_first: Stem, Stem, Stem;
-        future_perfect_optative_active_second: Stem, Stem, Stem;
-        future_perfect_optative_active_third: Stem, Stem, Stem;
-        future_perfect_optative_middle_first: Stem, Stem, Stem;
-        future_perfect_optative_middle_second: Stem, Stem, Stem;
-        future_perfect_optative_middle_third: Stem, Stem, Stem;
-        future_perfect_optative_passive_first: Stem, Stem, Stem;
-        future_perfect_optative_passive_second: Stem, Stem, Stem;
-        future_perfect_optative_passive_third: Stem, Stem, Stem;
-        future_perfect_imperative_active_first: Stem, Stem, Stem;
-        future_perfect_imperative_active_second: Stem, Stem, Stem;
-        future_perfect_imperative_active_third: Stem, Stem, Stem;
-        future_perfect_imperative_middle_first: Stem, Stem, Stem;
-        future_perfect_imperative_middle_second: Stem, Stem, Stem;
-        future_perfect_imperative_middle_third: Stem, Stem, Stem;
-        future_perfect_imperative_passive_first: Stem, Stem, Stem;
-        future_perfect_imperative_passive_second: Stem, Stem, Stem;
-        future_perfect_imperative_passive_third: Stem, Stem, Stem;
-        infinitive_present: Stem, Stem, Stem;
-        infinitive_future: Recessive, Recessive, Recessive;
-        infinitive_aorist: Stem, Stem, Ending;
-        infinitive_perfect: Stem, Stem, Stem;
-        infinitive_future_perfect: Stem, Stem, Stem;
-        participle_present: Stem, Recessive, Recessive;
-        participle_future: Recessive, Recessive, Recessive;
-        participle_aorist: Stem, Recessive, Ending;
-        participle_perfect: Stem, Stem, Stem;
         participle_future_perfect: Stem, Stem, Stem;
     ),
     // Like ``: 0 words.
@@ -21077,7 +22273,7 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         aorist_imperative_active_second: Recessive, Recessive, Recessive;
         aorist_imperative_active_third: Recessive, Recessive, Recessive;
         aorist_imperative_middle_first: Stem, Stem, Stem;
-        aorist_imperative_middle_second: Stem, Recessive, Recessive;
+        aorist_imperative_middle_second: Recessive, Recessive, Recessive;
         aorist_imperative_middle_third: Recessive, Recessive, Recessive;
         aorist_imperative_passive_first: Stem, Stem, Stem;
         aorist_imperative_passive_second: Recessive, Recessive, Recessive;
@@ -21166,7 +22362,7 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
         infinitive_present: Stem, Stem, Stem;
         infinitive_future: Recessive, Recessive, Recessive;
         infinitive_aorist: Stem, Stem, Ending;
-        infinitive_perfect: Stem, Stem, Stem;
+        infinitive_perfect: Stem, Ending, Ending;
         infinitive_future_perfect: Stem, Stem, Stem;
         participle_present: Stem, Recessive, Recessive;
         participle_future: Recessive, Recessive, Recessive;
@@ -21390,24 +22586,26 @@ pub static PATTERNS: [AccentPattern<'static>; 100] = [
 /// Every accent class: a pattern and the stem's accented syllable.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum AccentClass {
-    /// Pattern `ἐχω`, the stem accented on its next-to-last: 1,317 words.
+    /// Pattern `ἐχω`, the stem accented on its next-to-last: 1,314 words.
     Ἐχω,
-    /// Pattern `ποιεω`, the stem accented on its next-to-last: 249 words.
+    /// Pattern `ποιεω`, the stem accented on its next-to-last: 252 words.
     Ποιεω,
-    /// Pattern `ἐχω`, the stem accented on its syllable 3 from the end: 211 words.
+    /// Pattern `ἐχω`, the stem accented on its syllable 3 from the end: 224 words.
     Οἰομαι,
     /// Pattern `καθιζω`, the stem accented on its next-to-last: 208 words.
     Καθιζω,
-    /// Pattern `ἀναιρεω`, the stem accented on its next-to-last: 169 words.
+    /// Pattern `ἀναιρεω`, the stem accented on its next-to-last: 170 words.
     Ἀναιρεω,
-    /// Pattern `προβαλλω`, the stem accented on its next-to-last: 52 words.
+    /// Pattern `προβαλλω`, the stem accented on its next-to-last: 55 words.
     Προβαλλω,
     /// Pattern `ἀνιστημι`, the stem accented on its syllable 3 from the end: 36 words.
     Ἀνιστημι,
-    /// Pattern `καθιζω`, the stem accented on its syllable 3 from the end: 26 words.
+    /// Pattern `καθιζω`, the stem accented on its syllable 3 from the end: 24 words.
     Λογῐζομαι,
-    /// Pattern `ἀφῑημῐ`, the stem accented on its syllable 3 from the end: 26 words.
-    Ἀφῑημῐ,
+    /// Pattern `ὀφειλω`, the stem accented on its next-to-last: 23 words.
+    Ὀφειλω,
+    /// Pattern `ἀποδιδωμι`, the stem accented on its syllable 3 from the end: 23 words.
+    Ἀποδιδωμι,
     /// Pattern `ἀναιρεω`, the stem accented on its syllable 3 from the end: 21 words.
     Κᾰτεργαζομαι,
     /// Pattern `ἐπῐλᾰμβᾰνω`, the stem accented on its next-to-last: 19 words.
@@ -21418,36 +22616,30 @@ pub enum AccentClass {
     Σῠμμειγνῡμῐ,
     /// Pattern `προσερχομαι`, the stem accented on its syllable 4 from the end: 17 words.
     Ἡγεομαι,
-    /// Pattern `στειχω`, the stem accented on its next-to-last: 16 words.
-    Στειχω,
     /// Pattern `ἐκβᾰλλω`, the stem accented on its next-to-last: 16 words.
     Ἐκβᾰλλω,
-    /// Pattern `προσερχομαι`, never on the stem: 12 words.
-    Προσερχομαι,
-    /// Pattern `στειχω`, the stem accented on its syllable 3 from the end: 12 words.
+    /// Pattern `προβαλλω`, the stem accented on its syllable 3 from the end: 15 words.
     Πᾰρᾰγῐγνομαι,
-    /// Pattern `ἀναβαινω`, the stem accented on its next-to-last: 12 words.
-    Ἀναβαινω,
+    /// Pattern `προσερχομαι`, never on the stem: 13 words.
+    Προσερχομαι,
+    /// Pattern `ἀφῑημῐ`, the stem accented on its next-to-last: 13 words.
+    Κᾰτᾰβαινω,
+    /// Pattern `πᾰρερχομαι`, the stem accented on its syllable 4 from the end: 12 words.
+    Πᾰρερχομαι,
     /// Pattern `ἐχω`, the stem accented on the lemma's last syllable: 11 words.
     Δεῑ,
     /// Pattern `ποιεω`, the stem accented on its syllable 3 from the end: 11 words.
     Ἐπεξειμι,
-    /// Pattern `ὑποκειμαι`, the stem accented on its next-to-last: 11 words.
-    Ὑποκειμαι,
-    /// Pattern `τῐθημῐ`, the stem accented on its syllable 3 from the end: 11 words.
-    Τῐθημῐ,
     /// Pattern `λᾰμβᾰνω`, the stem accented on its next-to-last: 11 words.
     Λᾰμβᾰνω,
-    /// Pattern `πᾰρερχομαι`, the stem accented on its syllable 4 from the end: 10 words.
-    Εἰσερχομαι,
-    /// Pattern `ἐφελκω`, the stem accented on its next-to-last: 10 words.
-    Ἐφελκω,
+    /// Pattern `τῐθημῐ`, the stem accented on its syllable 3 from the end: 11 words.
+    Τῐθημῐ,
     /// Pattern `περῐσπᾰω`, the stem accented on its next-to-last: 10 words.
     Περῐσπᾰω,
-    /// Pattern `προβαλλω`, the stem accented on its syllable 3 from the end: 9 words.
-    Ἐπορον,
     /// Pattern `ἀναγω`, the stem accented on its next-to-last: 9 words.
     Ἀναγω,
+    /// Pattern `ὑποκειμαι`, the stem accented on its next-to-last: 9 words.
+    Ὑποκειμαι,
     /// Pattern `ὑπολαμβανω`, the stem accented on its next-to-last: 8 words.
     Ὑπολαμβανω,
     /// Pattern `πᾰροραω`, the stem accented on its next-to-last: 7 words.
@@ -21458,26 +22650,26 @@ pub enum AccentClass {
     Δᾰμαζω,
     /// Pattern `προσκειμαι`, the stem accented on its syllable 3 from the end: 6 words.
     Προσκειμαι,
-    /// Pattern `ἐχω`, the stem accented on its syllable 4 from the end: 5 words.
-    Ἀπολογεομαι,
     /// Pattern `ἐκβᾰλλω`, the stem accented on its syllable 3 from the end: 5 words.
     Ὀλλῡμῐ,
     /// Pattern `ἀειρω`, the stem accented on its next-to-last: 5 words.
     Ἀειρω,
-    /// Pattern `πᾰρερχομαι`, the stem accented on its syllable 3 from the end: 4 words.
-    Πᾰρερχομαι,
+    /// Pattern `ἐχω`, the stem accented on its syllable 4 from the end: 4 words.
+    Ἀπολογεομαι,
+    /// Pattern `ἀφῑημῐ`, the stem accented on its syllable 3 from the end: 4 words.
+    Ἀφῑημῐ,
     /// Pattern `τελεω`, the stem accented on its next-to-last: 4 words.
     Τελεω,
-    /// Pattern `ὑποκειμαι`, never on the stem: 3 words.
-    Ὀττευομαι,
-    /// Pattern `εἰδον`, never on the stem: 3 words.
-    Προεῑπον,
+    /// Pattern `πᾰρερχομαι`, the stem accented on its syllable 3 from the end: 3 words.
+    Ἐφῑημῐ,
     /// Pattern `πᾰροραω`, the stem accented on its syllable 3 from the end: 3 words.
     Συνεπομαι,
+    /// Pattern `εἰδον`, never on the stem: 3 words.
+    Προεῑπον,
     /// Pattern `ἐπῐτελεω`, the stem accented on its next-to-last: 3 words.
     Ἐπῐτελεω,
-    /// Pattern `ἀπογιγνομαι`, the stem accented on its syllable 3 from the end: 3 words.
-    Ἀπογιγνομαι,
+    /// Pattern `γανῠμαι`, never on the stem: 3 words.
+    Ὀττευομαι,
     /// Pattern `ὑποδεικνυμι`, the stem accented on its syllable 3 from the end: 3 words.
     Ὑποδεικνυμι,
     /// Pattern `κᾰθαιρεω`, the stem accented on its next-to-last: 3 words.
@@ -21486,18 +22678,12 @@ pub enum AccentClass {
     Δῐᾰγῐγνωσκω,
     /// Pattern `ὑποφερω`, the stem accented on its next-to-last: 3 words.
     Ὑποφερω,
-    /// Pattern `ἀφῑημῐ`, the stem accented on its next-to-last: 2 words.
+    /// Pattern `ὀφειλω`, the stem accented on its syllable 3 from the end: 2 words.
+    Ἐμπηγνῡμῐ,
+    /// Pattern `ἀποδιδωμι`, the stem accented on its next-to-last: 2 words.
     Ἐκβαινω,
-    /// Pattern `ἐπῐλᾰμβᾰνω`, the stem accented on its syllable 3 from the end: 2 words.
-    Ἀραρισκω,
     /// Pattern `ὑπαρχω`, the stem accented on its syllable 3 from the end: 2 words.
     Ἐπορνῡμῐ,
-    /// Pattern `ἀναβαινω`, the stem accented on its syllable 3 from the end: 2 words.
-    Ἐπᾰνῐημῐ,
-    /// Pattern `ἐφελκω`, the stem accented on its syllable 3 from the end: 2 words.
-    Κελομαι,
-    /// Pattern `εἰδον`, the stem accented on its syllable 3 from the end: 2 words.
-    Ἀπερχομαι,
     /// Pattern `ἐπῐτελεω`, the stem accented on its syllable 3 from the end: 2 words.
     Στορνῡμῐ,
     /// Pattern `ἀειδω`, the stem accented on its next-to-last: 2 words.
@@ -21508,8 +22694,6 @@ pub enum AccentClass {
     Κᾰτᾰδεω,
     /// Pattern `ἀντιλεγω`, the stem accented on its next-to-last: 2 words.
     Ἀντιλεγω,
-    /// Pattern `προσβαινω`, the stem accented on its next-to-last: 2 words.
-    Προσβαινω,
     /// Pattern `γῐγνωσκω`, the stem accented on its next-to-last: 2 words.
     Γῐγνωσκω,
     /// Pattern `δῐᾰφερω`, the stem accented on its next-to-last: 2 words.
@@ -21520,8 +22704,6 @@ pub enum AccentClass {
     Περνημῐ,
     /// Pattern `ἀναιρεω`, the stem accented on the lemma's last syllable: 1 words.
     Διπλοω,
-    /// Pattern `προβαλλω`, the stem accented on its syllable 4 from the end: 1 words.
-    Ἀνιημῐ,
     /// Pattern `ἀνιστημι`, never on the stem: 1 words.
     Χρη,
     /// Pattern `ἀνιστημι`, the stem accented on the lemma's last syllable: 1 words.
@@ -21532,33 +22714,43 @@ pub enum AccentClass {
     Ἐοικᾰ,
     /// Pattern `ἐπῐλᾰμβᾰνω`, the stem accented on the lemma's last syllable: 1 words.
     Δρᾱω,
-    /// Pattern `πᾰρερχομαι`, the stem accented on its next-to-last: 1 words.
-    Ἀπεῑπον,
+    /// Pattern `ἐπῐλᾰμβᾰνω`, the stem accented on its syllable 3 from the end: 1 words.
+    Ἀραρισκω,
+    /// Pattern `λᾰμβᾰνω`, the stem accented on its syllable 3 from the end: 1 words.
+    Ἐπιμιμνησκομαι,
     /// Pattern `τῐθημῐ`, the stem accented on its syllable 4 from the end: 1 words.
     Προϊημι,
     /// Pattern `περῐσπᾰω`, the stem accented on the lemma's last syllable: 1 words.
     Δῐᾰζω,
-    /// Pattern `ἀπογιγνομαι`, the stem accented on its next-to-last: 1 words.
+    /// Pattern `γανῠμαι`, the stem accented on its next-to-last: 1 words.
+    Γανῠμαι,
+    /// Pattern `περθω`, the stem accented on its next-to-last: 1 words.
     Περθω,
+    /// Pattern `περθω`, the stem accented on its syllable 3 from the end: 1 words.
+    Δῐᾰγῐγνομαι,
+    /// Pattern `ἀνιημῐ`, the stem accented on its syllable 3 from the end: 1 words.
+    Ἐπεφνον,
+    /// Pattern `ἀνιημῐ`, the stem accented on its syllable 4 from the end: 1 words.
+    Ἀνιημῐ,
     /// Pattern `ὠνεομαι`, the stem accented on its next-to-last: 1 words.
     Μεθῠσκω,
     /// Pattern `ὠνεομαι`, the stem accented on its syllable 3 from the end: 1 words.
     Ὠνεομαι,
     /// Pattern `ἐνεχω`, the stem accented on its next-to-last: 1 words.
     Ἐνεχω,
+    /// Pattern `ἀναβαινω`, the stem accented on its next-to-last: 1 words.
+    Ἀναβαινω,
     /// Pattern `δᾰτεομαι`, the stem accented on its syllable 4 from the end: 1 words.
     Δᾰτεομαι,
     /// Pattern `κᾰθιημῐ`, the stem accented on its syllable 3 from the end: 1 words.
     Κᾰθιημῐ,
     /// Pattern `πᾰρᾰκελευομαι`, the stem accented on its syllable 3 from the end: 1 words.
     Πᾰρᾰκελευομαι,
-    /// Pattern `ἐγκρᾰτευομαι`, the stem accented on its next-to-last: 1 words.
-    Ἐγκρᾰτευομαι,
 }
 
 impl AccentClass {
     /// Every class, in order.
-    pub const ALL: [AccentClass; 82] = [
+    pub const ALL: [AccentClass; 80] = [
         AccentClass::Ἐχω,
         AccentClass::Ποιεω,
         AccentClass::Οἰομαι,
@@ -21567,80 +22759,78 @@ impl AccentClass {
         AccentClass::Προβαλλω,
         AccentClass::Ἀνιστημι,
         AccentClass::Λογῐζομαι,
-        AccentClass::Ἀφῑημῐ,
+        AccentClass::Ὀφειλω,
+        AccentClass::Ἀποδιδωμι,
         AccentClass::Κᾰτεργαζομαι,
         AccentClass::Ἐπῐλᾰμβᾰνω,
         AccentClass::Ὑπαρχω,
         AccentClass::Σῠμμειγνῡμῐ,
         AccentClass::Ἡγεομαι,
-        AccentClass::Στειχω,
         AccentClass::Ἐκβᾰλλω,
-        AccentClass::Προσερχομαι,
         AccentClass::Πᾰρᾰγῐγνομαι,
-        AccentClass::Ἀναβαινω,
+        AccentClass::Προσερχομαι,
+        AccentClass::Κᾰτᾰβαινω,
+        AccentClass::Πᾰρερχομαι,
         AccentClass::Δεῑ,
         AccentClass::Ἐπεξειμι,
-        AccentClass::Ὑποκειμαι,
-        AccentClass::Τῐθημῐ,
         AccentClass::Λᾰμβᾰνω,
-        AccentClass::Εἰσερχομαι,
-        AccentClass::Ἐφελκω,
+        AccentClass::Τῐθημῐ,
         AccentClass::Περῐσπᾰω,
-        AccentClass::Ἐπορον,
         AccentClass::Ἀναγω,
+        AccentClass::Ὑποκειμαι,
         AccentClass::Ὑπολαμβανω,
         AccentClass::Πᾰροραω,
         AccentClass::Εἰδον,
         AccentClass::Δᾰμαζω,
         AccentClass::Προσκειμαι,
-        AccentClass::Ἀπολογεομαι,
         AccentClass::Ὀλλῡμῐ,
         AccentClass::Ἀειρω,
-        AccentClass::Πᾰρερχομαι,
+        AccentClass::Ἀπολογεομαι,
+        AccentClass::Ἀφῑημῐ,
         AccentClass::Τελεω,
-        AccentClass::Ὀττευομαι,
-        AccentClass::Προεῑπον,
+        AccentClass::Ἐφῑημῐ,
         AccentClass::Συνεπομαι,
+        AccentClass::Προεῑπον,
         AccentClass::Ἐπῐτελεω,
-        AccentClass::Ἀπογιγνομαι,
+        AccentClass::Ὀττευομαι,
         AccentClass::Ὑποδεικνυμι,
         AccentClass::Κᾰθαιρεω,
         AccentClass::Δῐᾰγῐγνωσκω,
         AccentClass::Ὑποφερω,
+        AccentClass::Ἐμπηγνῡμῐ,
         AccentClass::Ἐκβαινω,
-        AccentClass::Ἀραρισκω,
         AccentClass::Ἐπορνῡμῐ,
-        AccentClass::Ἐπᾰνῐημῐ,
-        AccentClass::Κελομαι,
-        AccentClass::Ἀπερχομαι,
         AccentClass::Στορνῡμῐ,
         AccentClass::Ἀειδω,
         AccentClass::Ἀποστελλω,
         AccentClass::Κᾰτᾰδεω,
         AccentClass::Ἀντιλεγω,
-        AccentClass::Προσβαινω,
         AccentClass::Γῐγνωσκω,
         AccentClass::Δῐᾰφερω,
         AccentClass::Ζω,
         AccentClass::Περνημῐ,
         AccentClass::Διπλοω,
-        AccentClass::Ἀνιημῐ,
         AccentClass::Χρη,
         AccentClass::Εἰμῐ,
         AccentClass::Φημῐ,
         AccentClass::Ἐοικᾰ,
         AccentClass::Δρᾱω,
-        AccentClass::Ἀπεῑπον,
+        AccentClass::Ἀραρισκω,
+        AccentClass::Ἐπιμιμνησκομαι,
         AccentClass::Προϊημι,
         AccentClass::Δῐᾰζω,
+        AccentClass::Γανῠμαι,
         AccentClass::Περθω,
+        AccentClass::Δῐᾰγῐγνομαι,
+        AccentClass::Ἐπεφνον,
+        AccentClass::Ἀνιημῐ,
         AccentClass::Μεθῠσκω,
         AccentClass::Ὠνεομαι,
         AccentClass::Ἐνεχω,
+        AccentClass::Ἀναβαινω,
         AccentClass::Δᾰτεομαι,
         AccentClass::Κᾰθιημῐ,
         AccentClass::Πᾰρᾰκελευομαι,
-        AccentClass::Ἐγκρᾰτευομαι,
     ];
 }
 
@@ -21654,24 +22844,24 @@ impl flexion::Label for AccentClass {
 }
 
 /// The classes' patterns and stem syllables.
-pub static CLASSES: [StressClass<'static>; 82] = [
+pub static CLASSES: [StressClass<'static>; 80] = [
     StressClass {
         name: Cow::Borrowed("ἐχω"),
         pattern: 0, // ἐχω
         vowel: Some(1),
-        words: 1317,
+        words: 1314,
     },
     StressClass {
         name: Cow::Borrowed("ποιεω"),
         pattern: 1, // ποιεω
         vowel: Some(1),
-        words: 249,
+        words: 252,
     },
     StressClass {
         name: Cow::Borrowed("οἰομαι"),
         pattern: 0, // ἐχω
         vowel: Some(2),
-        words: 211,
+        words: 224,
     },
     StressClass {
         name: Cow::Borrowed("καθιζω"),
@@ -21683,13 +22873,13 @@ pub static CLASSES: [StressClass<'static>; 82] = [
         name: Cow::Borrowed("ἀναιρεω"),
         pattern: 3, // ἀναιρεω
         vowel: Some(1),
-        words: 169,
+        words: 170,
     },
     StressClass {
         name: Cow::Borrowed("προβαλλω"),
         pattern: 4, // προβαλλω
         vowel: Some(1),
-        words: 52,
+        words: 55,
     },
     StressClass {
         name: Cow::Borrowed("ἀνιστημι"),
@@ -21701,13 +22891,19 @@ pub static CLASSES: [StressClass<'static>; 82] = [
         name: Cow::Borrowed("λογῐζομαι"),
         pattern: 2, // καθιζω
         vowel: Some(2),
-        words: 26,
+        words: 24,
     },
     StressClass {
-        name: Cow::Borrowed("ἀφῑημῐ"),
-        pattern: 8, // ἀφῑημῐ
+        name: Cow::Borrowed("ὀφειλω"),
+        pattern: 7, // ὀφειλω
+        vowel: Some(1),
+        words: 23,
+    },
+    StressClass {
+        name: Cow::Borrowed("ἀποδιδωμι"),
+        pattern: 8, // ἀποδιδωμι
         vowel: Some(2),
-        words: 26,
+        words: 23,
     },
     StressClass {
         name: Cow::Borrowed("κᾰτεργαζομαι"),
@@ -21740,33 +22936,33 @@ pub static CLASSES: [StressClass<'static>; 82] = [
         words: 17,
     },
     StressClass {
-        name: Cow::Borrowed("στειχω"),
-        pattern: 7, // στειχω
-        vowel: Some(1),
-        words: 16,
-    },
-    StressClass {
         name: Cow::Borrowed("ἐκβᾰλλω"),
         pattern: 9, // ἐκβᾰλλω
         vowel: Some(1),
         words: 16,
     },
     StressClass {
+        name: Cow::Borrowed("πᾰρᾰγῐγνομαι"),
+        pattern: 4, // προβαλλω
+        vowel: Some(2),
+        words: 15,
+    },
+    StressClass {
         name: Cow::Borrowed("προσερχομαι"),
         pattern: 6, // προσερχομαι
         vowel: None,
-        words: 12,
+        words: 13,
     },
     StressClass {
-        name: Cow::Borrowed("πᾰρᾰγῐγνομαι"),
-        pattern: 7, // στειχω
-        vowel: Some(2),
-        words: 12,
-    },
-    StressClass {
-        name: Cow::Borrowed("ἀναβαινω"),
-        pattern: 14, // ἀναβαινω
+        name: Cow::Borrowed("κᾰτᾰβαινω"),
+        pattern: 13, // ἀφῑημῐ
         vowel: Some(1),
+        words: 13,
+    },
+    StressClass {
+        name: Cow::Borrowed("πᾰρερχομαι"),
+        pattern: 14, // πᾰρερχομαι
+        vowel: Some(3),
         words: 12,
     },
     StressClass {
@@ -21782,62 +22978,44 @@ pub static CLASSES: [StressClass<'static>; 82] = [
         words: 11,
     },
     StressClass {
-        name: Cow::Borrowed("ὑποκειμαι"),
-        pattern: 15, // ὑποκειμαι
+        name: Cow::Borrowed("λᾰμβᾰνω"),
+        pattern: 15, // λᾰμβᾰνω
         vowel: Some(1),
         words: 11,
     },
     StressClass {
         name: Cow::Borrowed("τῐθημῐ"),
-        pattern: 17, // τῐθημῐ
+        pattern: 16, // τῐθημῐ
         vowel: Some(2),
         words: 11,
-    },
-    StressClass {
-        name: Cow::Borrowed("λᾰμβᾰνω"),
-        pattern: 18, // λᾰμβᾰνω
-        vowel: Some(1),
-        words: 11,
-    },
-    StressClass {
-        name: Cow::Borrowed("εἰσερχομαι"),
-        pattern: 13, // πᾰρερχομαι
-        vowel: Some(3),
-        words: 10,
-    },
-    StressClass {
-        name: Cow::Borrowed("ἐφελκω"),
-        pattern: 16, // ἐφελκω
-        vowel: Some(1),
-        words: 10,
     },
     StressClass {
         name: Cow::Borrowed("περῐσπᾰω"),
-        pattern: 19, // περῐσπᾰω
+        pattern: 17, // περῐσπᾰω
         vowel: Some(1),
         words: 10,
     },
     StressClass {
-        name: Cow::Borrowed("ἐπορον"),
-        pattern: 4, // προβαλλω
-        vowel: Some(2),
+        name: Cow::Borrowed("ἀναγω"),
+        pattern: 19, // ἀναγω
+        vowel: Some(1),
         words: 9,
     },
     StressClass {
-        name: Cow::Borrowed("ἀναγω"),
-        pattern: 22, // ἀναγω
+        name: Cow::Borrowed("ὑποκειμαι"),
+        pattern: 21, // ὑποκειμαι
         vowel: Some(1),
         words: 9,
     },
     StressClass {
         name: Cow::Borrowed("ὑπολαμβανω"),
-        pattern: 23, // ὑπολαμβανω
+        pattern: 22, // ὑπολαμβανω
         vowel: Some(1),
         words: 8,
     },
     StressClass {
         name: Cow::Borrowed("πᾰροραω"),
-        pattern: 21, // πᾰροραω
+        pattern: 18, // πᾰροραω
         vowel: Some(1),
         words: 7,
     },
@@ -21849,21 +23027,15 @@ pub static CLASSES: [StressClass<'static>; 82] = [
     },
     StressClass {
         name: Cow::Borrowed("δᾰμαζω"),
-        pattern: 24, // δᾰμαζω
+        pattern: 23, // δᾰμαζω
         vowel: Some(1),
         words: 6,
     },
     StressClass {
         name: Cow::Borrowed("προσκειμαι"),
-        pattern: 25, // προσκειμαι
+        pattern: 24, // προσκειμαι
         vowel: Some(2),
         words: 6,
-    },
-    StressClass {
-        name: Cow::Borrowed("ἀπολογεομαι"),
-        pattern: 0, // ἐχω
-        vowel: Some(3),
-        words: 5,
     },
     StressClass {
         name: Cow::Borrowed("ὀλλῡμῐ"),
@@ -21873,26 +23045,38 @@ pub static CLASSES: [StressClass<'static>; 82] = [
     },
     StressClass {
         name: Cow::Borrowed("ἀειρω"),
-        pattern: 27, // ἀειρω
+        pattern: 26, // ἀειρω
         vowel: Some(1),
         words: 5,
     },
     StressClass {
-        name: Cow::Borrowed("πᾰρερχομαι"),
-        pattern: 13, // πᾰρερχομαι
+        name: Cow::Borrowed("ἀπολογεομαι"),
+        pattern: 0, // ἐχω
+        vowel: Some(3),
+        words: 4,
+    },
+    StressClass {
+        name: Cow::Borrowed("ἀφῑημῐ"),
+        pattern: 13, // ἀφῑημῐ
         vowel: Some(2),
         words: 4,
     },
     StressClass {
         name: Cow::Borrowed("τελεω"),
-        pattern: 29, // τελεω
+        pattern: 27, // τελεω
         vowel: Some(1),
         words: 4,
     },
     StressClass {
-        name: Cow::Borrowed("ὀττευομαι"),
-        pattern: 15, // ὑποκειμαι
-        vowel: None,
+        name: Cow::Borrowed("ἐφῑημῐ"),
+        pattern: 14, // πᾰρερχομαι
+        vowel: Some(2),
+        words: 3,
+    },
+    StressClass {
+        name: Cow::Borrowed("συνεπομαι"),
+        pattern: 18, // πᾰροραω
+        vowel: Some(2),
         words: 3,
     },
     StressClass {
@@ -21902,57 +23086,51 @@ pub static CLASSES: [StressClass<'static>; 82] = [
         words: 3,
     },
     StressClass {
-        name: Cow::Borrowed("συνεπομαι"),
-        pattern: 21, // πᾰροραω
-        vowel: Some(2),
-        words: 3,
-    },
-    StressClass {
         name: Cow::Borrowed("ἐπῐτελεω"),
-        pattern: 26, // ἐπῐτελεω
+        pattern: 25, // ἐπῐτελεω
         vowel: Some(1),
         words: 3,
     },
     StressClass {
-        name: Cow::Borrowed("ἀπογιγνομαι"),
-        pattern: 28, // ἀπογιγνομαι
-        vowel: Some(2),
+        name: Cow::Borrowed("ὀττευομαι"),
+        pattern: 28, // γανῠμαι
+        vowel: None,
         words: 3,
     },
     StressClass {
         name: Cow::Borrowed("ὑποδεικνυμι"),
-        pattern: 30, // ὑποδεικνυμι
+        pattern: 29, // ὑποδεικνυμι
         vowel: Some(2),
         words: 3,
     },
     StressClass {
         name: Cow::Borrowed("κᾰθαιρεω"),
-        pattern: 31, // κᾰθαιρεω
+        pattern: 30, // κᾰθαιρεω
         vowel: Some(1),
         words: 3,
     },
     StressClass {
         name: Cow::Borrowed("δῐᾰγῐγνωσκω"),
-        pattern: 32, // δῐᾰγῐγνωσκω
+        pattern: 31, // δῐᾰγῐγνωσκω
         vowel: Some(1),
         words: 3,
     },
     StressClass {
         name: Cow::Borrowed("ὑποφερω"),
-        pattern: 33, // ὑποφερω
+        pattern: 32, // ὑποφερω
         vowel: Some(1),
         words: 3,
     },
     StressClass {
-        name: Cow::Borrowed("ἐκβαινω"),
-        pattern: 8, // ἀφῑημῐ
-        vowel: Some(1),
+        name: Cow::Borrowed("ἐμπηγνῡμῐ"),
+        pattern: 7, // ὀφειλω
+        vowel: Some(2),
         words: 2,
     },
     StressClass {
-        name: Cow::Borrowed("ἀραρισκω"),
-        pattern: 10, // ἐπῐλᾰμβᾰνω
-        vowel: Some(2),
+        name: Cow::Borrowed("ἐκβαινω"),
+        pattern: 8, // ἀποδιδωμι
+        vowel: Some(1),
         words: 2,
     },
     StressClass {
@@ -21962,56 +23140,32 @@ pub static CLASSES: [StressClass<'static>; 82] = [
         words: 2,
     },
     StressClass {
-        name: Cow::Borrowed("ἐπᾰνῐημῐ"),
-        pattern: 14, // ἀναβαινω
-        vowel: Some(2),
-        words: 2,
-    },
-    StressClass {
-        name: Cow::Borrowed("κελομαι"),
-        pattern: 16, // ἐφελκω
-        vowel: Some(2),
-        words: 2,
-    },
-    StressClass {
-        name: Cow::Borrowed("ἀπερχομαι"),
-        pattern: 20, // εἰδον
-        vowel: Some(2),
-        words: 2,
-    },
-    StressClass {
         name: Cow::Borrowed("στορνῡμῐ"),
-        pattern: 26, // ἐπῐτελεω
+        pattern: 25, // ἐπῐτελεω
         vowel: Some(2),
         words: 2,
     },
     StressClass {
         name: Cow::Borrowed("ἀειδω"),
-        pattern: 34, // ἀειδω
+        pattern: 33, // ἀειδω
         vowel: Some(1),
         words: 2,
     },
     StressClass {
         name: Cow::Borrowed("ἀποστελλω"),
-        pattern: 35, // ἀποστελλω
+        pattern: 34, // ἀποστελλω
         vowel: Some(1),
         words: 2,
     },
     StressClass {
         name: Cow::Borrowed("κᾰτᾰδεω"),
-        pattern: 36, // κᾰτᾰδεω
+        pattern: 35, // κᾰτᾰδεω
         vowel: Some(1),
         words: 2,
     },
     StressClass {
         name: Cow::Borrowed("ἀντιλεγω"),
-        pattern: 37, // ἀντιλεγω
-        vowel: Some(1),
-        words: 2,
-    },
-    StressClass {
-        name: Cow::Borrowed("προσβαινω"),
-        pattern: 38, // προσβαινω
+        pattern: 36, // ἀντιλεγω
         vowel: Some(1),
         words: 2,
     },
@@ -22046,12 +23200,6 @@ pub static CLASSES: [StressClass<'static>; 82] = [
         words: 1,
     },
     StressClass {
-        name: Cow::Borrowed("ἀνιημῐ"),
-        pattern: 4, // προβαλλω
-        vowel: Some(3),
-        words: 1,
-    },
-    StressClass {
         name: Cow::Borrowed("χρη"),
         pattern: 5, // ἀνιστημι
         vowel: None,
@@ -22082,27 +23230,57 @@ pub static CLASSES: [StressClass<'static>; 82] = [
         words: 1,
     },
     StressClass {
-        name: Cow::Borrowed("ἀπεῑπον"),
-        pattern: 13, // πᾰρερχομαι
-        vowel: Some(1),
+        name: Cow::Borrowed("ἀραρισκω"),
+        pattern: 10, // ἐπῐλᾰμβᾰνω
+        vowel: Some(2),
+        words: 1,
+    },
+    StressClass {
+        name: Cow::Borrowed("ἐπιμιμνησκομαι"),
+        pattern: 15, // λᾰμβᾰνω
+        vowel: Some(2),
         words: 1,
     },
     StressClass {
         name: Cow::Borrowed("προϊημι"),
-        pattern: 17, // τῐθημῐ
+        pattern: 16, // τῐθημῐ
         vowel: Some(3),
         words: 1,
     },
     StressClass {
         name: Cow::Borrowed("δῐᾰζω"),
-        pattern: 19, // περῐσπᾰω
+        pattern: 17, // περῐσπᾰω
         vowel: Some(0),
         words: 1,
     },
     StressClass {
-        name: Cow::Borrowed("περθω"),
-        pattern: 28, // ἀπογιγνομαι
+        name: Cow::Borrowed("γανῠμαι"),
+        pattern: 28, // γανῠμαι
         vowel: Some(1),
+        words: 1,
+    },
+    StressClass {
+        name: Cow::Borrowed("περθω"),
+        pattern: 37, // περθω
+        vowel: Some(1),
+        words: 1,
+    },
+    StressClass {
+        name: Cow::Borrowed("δῐᾰγῐγνομαι"),
+        pattern: 37, // περθω
+        vowel: Some(2),
+        words: 1,
+    },
+    StressClass {
+        name: Cow::Borrowed("ἐπεφνον"),
+        pattern: 38, // ἀνιημῐ
+        vowel: Some(2),
+        words: 1,
+    },
+    StressClass {
+        name: Cow::Borrowed("ἀνιημῐ"),
+        pattern: 38, // ἀνιημῐ
+        vowel: Some(3),
         words: 1,
     },
     StressClass {
@@ -22124,50 +23302,48 @@ pub static CLASSES: [StressClass<'static>; 82] = [
         words: 1,
     },
     StressClass {
+        name: Cow::Borrowed("ἀναβαινω"),
+        pattern: 43, // ἀναβαινω
+        vowel: Some(1),
+        words: 1,
+    },
+    StressClass {
         name: Cow::Borrowed("δᾰτεομαι"),
-        pattern: 43, // δᾰτεομαι
+        pattern: 44, // δᾰτεομαι
         vowel: Some(3),
         words: 1,
     },
     StressClass {
         name: Cow::Borrowed("κᾰθιημῐ"),
-        pattern: 44, // κᾰθιημῐ
+        pattern: 45, // κᾰθιημῐ
         vowel: Some(2),
         words: 1,
     },
     StressClass {
         name: Cow::Borrowed("πᾰρᾰκελευομαι"),
-        pattern: 45, // πᾰρᾰκελευομαι
+        pattern: 46, // πᾰρᾰκελευομαι
         vowel: Some(2),
-        words: 1,
-    },
-    StressClass {
-        name: Cow::Borrowed("ἐγκρᾰτευομαι"),
-        pattern: 46, // ἐγκρᾰτευομαι
-        vowel: Some(1),
         words: 1,
     },
 ];
 
 use AccentClass::*;
 
-/// Which class a word is of: 259 rules and 2,356 listed words.
+/// Which class a word is of: 251 rules and 2,359 listed words.
 pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
     rules {
-        "" => [Ἐχω 1317, Ποιεω 249, Οἰομαι 211, Καθιζω 208, Ἀναιρεω 169, Προβαλλω 52, Ἀνιστημι 36, Λογῐζομαι 26, Ἀφῑημῐ 26, Κᾰτεργαζομαι 21, Ἐπῐλᾰμβᾰνω 19, Ὑπαρχω 18, Σῠμμειγνῡμῐ 18, Ἡγεομαι 17, Στειχω 16, Ἐκβᾰλλω 16, Προσερχομαι 12, Πᾰρᾰγῐγνομαι 12, Ἀναβαινω 12, Δεῑ 11, Ἐπεξειμι 11, Ὑποκειμαι 11, Τῐθημῐ 11, Λᾰμβᾰνω 11, Εἰσερχομαι 10, Ἐφελκω 10, Περῐσπᾰω 10, Ἐπορον 9, Ἀναγω 9, Ὑπολαμβανω 8, Πᾰροραω 7, Εἰδον 6, Δᾰμαζω 6, Προσκειμαι 6, Ἀπολογεομαι 5, Ὀλλῡμῐ 5, Ἀειρω 5, Πᾰρερχομαι 4, Τελεω 4, Ὀττευομαι 3, Προεῑπον 3, Συνεπομαι 3, Ἐπῐτελεω 3, Ἀπογιγνομαι 3, Ὑποδεικνυμι 3, Κᾰθαιρεω 3, Δῐᾰγῐγνωσκω 3, Ὑποφερω 3, Ἐκβαινω 2, Ἀραρισκω 2, Ἐπορνῡμῐ 2, Ἐπᾰνῐημῐ 2, Κελομαι 2, Ἀπερχομαι 2, Στορνῡμῐ 2, Ἀειδω 2, Ἀποστελλω 2, Κᾰτᾰδεω 2, Ἀντιλεγω 2, Προσβαινω 2, Γῐγνωσκω 2, Δῐᾰφερω 2, Ζω 1, Περνημῐ 1, Διπλοω 1, Ἀνιημῐ 1, Χρη 1, Εἰμῐ 1, Φημῐ 1, Ἐοικᾰ 1, Δρᾱω 1, Ἀπεῑπον 1, Προϊημι 1, Δῐᾰζω 1, Περθω 1, Μεθῠσκω 1, Ὠνεομαι 1, Ἐνεχω 1, Δᾰτεομαι 1, Κᾰθιημῐ 1, Πᾰρᾰκελευομαι 1, Ἐγκρᾰτευομαι 1],
+        "" => [Ἐχω 1314, Ποιεω 252, Οἰομαι 224, Καθιζω 208, Ἀναιρεω 170, Προβαλλω 55, Ἀνιστημι 36, Λογῐζομαι 24, Ὀφειλω 23, Ἀποδιδωμι 23, Κᾰτεργαζομαι 21, Ἐπῐλᾰμβᾰνω 19, Ὑπαρχω 18, Σῠμμειγνῡμῐ 18, Ἡγεομαι 17, Ἐκβᾰλλω 16, Πᾰρᾰγῐγνομαι 15, Προσερχομαι 13, Κᾰτᾰβαινω 13, Πᾰρερχομαι 12, Δεῑ 11, Ἐπεξειμι 11, Λᾰμβᾰνω 11, Τῐθημῐ 11, Περῐσπᾰω 10, Ἀναγω 9, Ὑποκειμαι 9, Ὑπολαμβανω 8, Πᾰροραω 7, Εἰδον 6, Δᾰμαζω 6, Προσκειμαι 6, Ὀλλῡμῐ 5, Ἀειρω 5, Ἀπολογεομαι 4, Ἀφῑημῐ 4, Τελεω 4, Ἐφῑημῐ 3, Συνεπομαι 3, Προεῑπον 3, Ἐπῐτελεω 3, Ὀττευομαι 3, Ὑποδεικνυμι 3, Κᾰθαιρεω 3, Δῐᾰγῐγνωσκω 3, Ὑποφερω 3, Ἐμπηγνῡμῐ 2, Ἐκβαινω 2, Ἐπορνῡμῐ 2, Στορνῡμῐ 2, Ἀειδω 2, Ἀποστελλω 2, Κᾰτᾰδεω 2, Ἀντιλεγω 2, Γῐγνωσκω 2, Δῐᾰφερω 2, Ζω 1, Περνημῐ 1, Διπλοω 1, Χρη 1, Εἰμῐ 1, Φημῐ 1, Ἐοικᾰ 1, Δρᾱω 1, Ἀραρισκω 1, Ἐπιμιμνησκομαι 1, Προϊημι 1, Δῐᾰζω 1, Γανῠμαι 1, Περθω 1, Δῐᾰγῐγνομαι 1, Ἐπεφνον 1, Ἀνιημῐ 1, Μεθῠσκω 1, Ὠνεομαι 1, Ἐνεχω 1, Ἀναβαινω 1, Δᾰτεομαι 1, Κᾰθιημῐ 1, Πᾰρᾰκελευομαι 1],
         "α" => [Οἰομαι 4, Ἐχω 3, Ἀπολογεομαι 1, Ἐοικᾰ 1],
         "ε" => [Οἰομαι 8, Ἐχω 2],
         "η" => [Ἐχω 3, Οἰομαι 2, Χρη 1],
-        "ι" => [Οἰομαι 156, Ἀνιστημι 36, Ἀφῑημῐ 26, Λογῐζομαι 23, Κᾰτεργαζομαι 21, Σῠμμειγνῡμῐ 18, Ἡγεομαι 17, Προσερχομαι 11, Πᾰρᾰγῐγνομαι 11, Ὑποκειμαι 11, Τῐθημῐ 11, Ἐπεξειμι 10, Εἰσερχομαι 10, Ἐχω 7, Ἐπορον 6, Προσκειμαι 6, Πᾰρερχομαι 4, Ἀπολογεομαι 3, Ὀλλῡμῐ 3, Ὀττευομαι 3, Συνεπομαι 3, Ἀπογιγνομαι 3, Ὑποδεικνυμι 3, Δεῑ 2, Ἐπορνῡμῐ 2, Ἐπᾰνῐημῐ 2, Ἀπερχομαι 2, Στορνῡμῐ 2, Ποιεω 1, Ἀραρισκω 1, Κελομαι 1, Περνημῐ 1, Ἀνιημῐ 1, Εἰμῐ 1, Φημῐ 1, Προϊημι 1, Ὠνεομαι 1, Δᾰτεομαι 1, Κᾰθιημῐ 1, Πᾰρᾰκελευομαι 1, Ἐγκρᾰτευομαι 1],
-        "αι" => [Οἰομαι 129, Κᾰτεργαζομαι 21, Λογῐζομαι 19, Ἡγεομαι 17, Προσερχομαι 11, Πᾰρᾰγῐγνομαι 11, Ὑποκειμαι 11, Εἰσερχομαι 10, Ἀνιστημι 6, Ἐπεξειμι 6, Προσκειμαι 6, Ἐπορον 5, Ἐχω 4, Ἀπολογεομαι 3, Ὀττευομαι 3, Συνεπομαι 3, Ἀπογιγνομαι 3, Πᾰρερχομαι 2, Ἀπερχομαι 2, Ἀφῑημῐ 1, Ὀλλῡμῐ 1, Ἀραρισκω 1, Ἐπᾰνῐημῐ 1, Κελομαι 1, Ὠνεομαι 1, Δᾰτεομαι 1, Πᾰρᾰκελευομαι 1, Ἐγκρᾰτευομαι 1],
+        "ι" => [Οἰομαι 169, Ἀνιστημι 36, Ἀποδιδωμι 23, Λογῐζομαι 21, Κᾰτεργαζομαι 21, Σῠμμειγνῡμῐ 18, Ἡγεομαι 17, Πᾰρᾰγῐγνομαι 12, Προσερχομαι 12, Πᾰρερχομαι 12, Τῐθημῐ 11, Ἐπεξειμι 10, Ὑποκειμαι 9, Ἐχω 7, Προσκειμαι 6, Ἀφῑημῐ 4, Ὀλλῡμῐ 3, Συνεπομαι 3, Ὀττευομαι 3, Ὑποδεικνυμι 3, Δεῑ 2, Ἀπολογεομαι 2, Ἐφῑημῐ 2, Ἐπορνῡμῐ 2, Στορνῡμῐ 2, Ποιεω 1, Ἀναιρεω 1, Ἐμπηγνῡμῐ 1, Περνημῐ 1, Εἰμῐ 1, Φημῐ 1, Ἐπιμιμνησκομαι 1, Προϊημι 1, Γανῠμαι 1, Δῐᾰγῐγνομαι 1, Ἀνιημῐ 1, Ὠνεομαι 1, Δᾰτεομαι 1, Κᾰθιημῐ 1, Πᾰρᾰκελευομαι 1],
+        "αι" => [Οἰομαι 142, Κᾰτεργαζομαι 21, Λογῐζομαι 17, Ἡγεομαι 17, Πᾰρᾰγῐγνομαι 12, Προσερχομαι 12, Πᾰρερχομαι 12, Ὑποκειμαι 9, Ἀνιστημι 6, Ἐπεξειμι 6, Προσκειμαι 6, Ἐχω 4, Συνεπομαι 3, Ὀττευομαι 3, Ἀπολογεομαι 2, Ἀναιρεω 1, Ἀποδιδωμι 1, Ὀλλῡμῐ 1, Ἐπιμιμνησκομαι 1, Γανῠμαι 1, Δῐᾰγῐγνομαι 1, Ὠνεομαι 1, Δᾰτεομαι 1, Πᾰρᾰκελευομαι 1],
         "αμαι" => [Ἀνιστημι 6, Οἰομαι 1],
         "ιμαι" => [Προσκειμαι 6, Ὑποκειμαι 2, Ἐχω 1, Οἰομαι 1],
-        "ομαι" => [Οἰομαι 122, Κᾰτεργαζομαι 21, Λογῐζομαι 19, Ἡγεομαι 17, Προσερχομαι 10, Πᾰρᾰγῐγνομαι 10, Εἰσερχομαι 10, Ὑποκειμαι 8, Ἐπεξειμι 6, Ἐπορον 4, Ἀπολογεομαι 3, Ὀττευομαι 3, Συνεπομαι 3, Ἀπογιγνομαι 3, Πᾰρερχομαι 2, Ἀπερχομαι 2, Ὀλλῡμῐ 1, Ἀραρισκω 1, Ἐπᾰνῐημῐ 1, Κελομαι 1, Ὠνεομαι 1, Δᾰτεομαι 1, Πᾰρᾰκελευομαι 1, Ἐγκρᾰτευομαι 1],
+        "ομαι" => [Οἰομαι 135, Κᾰτεργαζομαι 21, Λογῐζομαι 17, Ἡγεομαι 17, Πᾰρερχομαι 12, Προσερχομαι 11, Πᾰρᾰγῐγνομαι 10, Ὑποκειμαι 7, Ἐπεξειμι 6, Συνεπομαι 3, Ὀττευομαι 3, Ἀπολογεομαι 2, Ἀναιρεω 1, Ὀλλῡμῐ 1, Ἐπιμιμνησκομαι 1, Δῐᾰγῐγνομαι 1, Ὠνεομαι 1, Δᾰτεομαι 1, Πᾰρᾰκελευομαι 1],
         "αομαι" => [Οἰομαι 10, Κᾰτεργαζομαι 6, Προσερχομαι 2, Ἐπεξειμι 2, Ἡγεομαι 1],
         "ναομαι" => [Προσερχομαι 2, Ἐπεξειμι 2],
-        "γομαι" => [Οἰομαι 3, Ἐπορον 1],
-        "δομαι" => [Οἰομαι 8, Ἐπορον 2],
-        "ρδομαι" => [Ἐπορον 2],
+        "δομαι" => [Οἰομαι 10],
         "εομαι" => [Ἡγεομαι 16, Οἰομαι 5, Προσερχομαι 5, Ἐπεξειμι 4, Κᾰτεργαζομαι 1, Ἀπολογεομαι 1, Ὠνεομαι 1, Δᾰτεομαι 1],
         "γεομαι" => [Ἡγεομαι 4, Προσερχομαι 1, Ἀπολογεομαι 1],
         "μεομαι" => [Ἐπεξειμι 2, Οἰομαι 1, Ἡγεομαι 1],
@@ -22178,46 +23354,42 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "γαζομαι" => [Κᾰτεργαζομαι 5],
         "εζομαι" => [Πᾰρᾰγῐγνομαι 3],
         "ιζομαι" => [Λογῐζομαι 11, Οἰομαι 6, Ὀλλῡμῐ 1],
-        "κομαι" => [Οἰομαι 2, Ἀραρισκω 1, Ἐπᾰνῐημῐ 1],
-        "λομαι" => [Οἰομαι 6, Λογῐζομαι 1, Κελομαι 1],
-        "νομαι" => [Οἰομαι 12, Ὑποκειμαι 8, Κᾰτεργαζομαι 4, Λογῐζομαι 3, Πᾰρᾰγῐγνομαι 3, Ἀπογιγνομαι 3],
+        "κομαι" => [Οἰομαι 3, Ἐπιμιμνησκομαι 1],
+        "λομαι" => [Οἰομαι 7, Λογῐζομαι 1],
+        "νομαι" => [Οἰομαι 16, Ὑποκειμαι 6, Κᾰτεργαζομαι 4, Λογῐζομαι 3, Πᾰρᾰγῐγνομαι 3, Δῐᾰγῐγνομαι 1],
         "ανομαι" => [Κᾰτεργαζομαι 4, Οἰομαι 1, Λογῐζομαι 1],
-        "γνομαι" => [Ὑποκειμαι 8, Πᾰρᾰγῐγνομαι 3, Ἀπογιγνομαι 3, Οἰομαι 2],
+        "γνομαι" => [Οἰομαι 6, Ὑποκειμαι 6, Πᾰρᾰγῐγνομαι 3, Δῐᾰγῐγνομαι 1],
         "ινομαι" => [Οἰομαι 7, Λογῐζομαι 2],
         "ρινομαι" => [Λογῐζομαι 2],
         "οομαι" => [Οἰομαι 10, Κᾰτεργαζομαι 1, Προσερχομαι 1],
         "πομαι" => [Συνεπομαι 2, Οἰομαι 1],
-        "ρομαι" => [Οἰομαι 4, Πᾰρᾰγῐγνομαι 4, Λογῐζομαι 2],
-        "σομαι" => [Οἰομαι 9],
+        "ρομαι" => [Οἰομαι 6, Πᾰρᾰγῐγνομαι 4],
+        "σομαι" => [Οἰομαι 8, Ἀναιρεω 1],
         "τομαι" => [Οἰομαι 3, Κᾰτεργαζομαι 2, Συνεπομαι 1],
-        "υομαι" => [Οἰομαι 8, Ὀττευομαι 3, Πᾰρᾰκελευομαι 1, Ἐγκρᾰτευομαι 1],
-        "χομαι" => [Οἰομαι 12, Εἰσερχομαι 10, Λογῐζομαι 2, Κᾰτεργαζομαι 2, Ἀπολογεομαι 2, Πᾰρερχομαι 2, Ἀπερχομαι 2, Προσερχομαι 1, Ἐπορον 1],
-        "αχομαι" => [Οἰομαι 2, Λογῐζομαι 1],
+        "υομαι" => [Οἰομαι 8, Ὀττευομαι 3, Ὑποκειμαι 1, Πᾰρᾰκελευομαι 1],
+        "χομαι" => [Οἰομαι 15, Πᾰρερχομαι 12, Λογῐζομαι 2, Κᾰτεργαζομαι 2, Προσερχομαι 2, Ἀπολογεομαι 1],
         "εχομαι" => [Οἰομαι 4, Λογῐζομαι 1],
-        "ιχομαι" => [Οἰομαι 3],
-        "ρχομαι" => [Εἰσερχομαι 10, Ἀπολογεομαι 2, Πᾰρερχομαι 2, Ἀπερχομαι 2, Οἰομαι 1, Προσερχομαι 1, Ἐπορον 1],
-        "ξερχομαι" => [Εἰσερχομαι 4],
+        "ρχομαι" => [Πᾰρερχομαι 12, Οἰομαι 4, Προσερχομαι 2, Ἀπολογεομαι 1],
         "υχομαι" => [Οἰομαι 2, Κᾰτεργαζομαι 2],
-        "υμαι" => [Ἐχω 1, Προσερχομαι 1, Πᾰρᾰγῐγνομαι 1, Ὑποκειμαι 1, Ἐπορον 1],
+        "υμαι" => [Πᾰρᾰγῐγνομαι 2, Ἐχω 1, Προσερχομαι 1, Γανῠμαι 1],
         "σαι" => [Ἐχω 1, Οἰομαι 1],
-        "μι" => [Ἀνιστημι 29, Ἀφῑημῐ 25, Οἰομαι 23, Σῠμμειγνῡμῐ 18, Τῐθημῐ 11, Λογῐζομαι 4, Ἐπεξειμι 4, Ὑποδεικνυμι 3, Ὀλλῡμῐ 2, Πᾰρερχομαι 2, Ἐπορνῡμῐ 2, Στορνῡμῐ 2, Ἐχω 1, Ποιεω 1, Δεῑ 1, Ἐπορον 1, Ἐπᾰνῐημῐ 1, Περνημῐ 1, Ἀνιημῐ 1, Εἰμῐ 1, Φημῐ 1, Προϊημι 1, Κᾰθιημῐ 1],
-        "ημι" => [Ἀνιστημι 29, Ἀφῑημῐ 16, Τῐθημῐ 5, Οἰομαι 3, Πᾰρερχομαι 2, Ἐχω 1, Ποιεω 1, Δεῑ 1, Ἐπᾰνῐημῐ 1, Περνημῐ 1, Ἀνιημῐ 1, Φημῐ 1, Προϊημι 1, Κᾰθιημῐ 1],
-        "θημι" => [Ἀφῑημῐ 12, Τῐθημῐ 5],
+        "μι" => [Ἀνιστημι 29, Οἰομαι 23, Ἀποδιδωμι 22, Σῠμμειγνῡμῐ 18, Τῐθημῐ 11, Λογῐζομαι 4, Ἐπεξειμι 4, Ἀφῑημῐ 4, Ὑποδεικνυμι 3, Ὀλλῡμῐ 2, Ἐφῑημῐ 2, Ἐπορνῡμῐ 2, Στορνῡμῐ 2, Ἐχω 1, Ποιεω 1, Δεῑ 1, Ἐμπηγνῡμῐ 1, Περνημῐ 1, Εἰμῐ 1, Φημῐ 1, Προϊημι 1, Ἀνιημῐ 1, Κᾰθιημῐ 1],
+        "ημι" => [Ἀνιστημι 29, Ἀποδιδωμι 13, Τῐθημῐ 5, Ἀφῑημῐ 4, Οἰομαι 3, Ἐφῑημῐ 2, Ἐχω 1, Ποιεω 1, Δεῑ 1, Περνημῐ 1, Φημῐ 1, Προϊημι 1, Ἀνιημῐ 1, Κᾰθιημῐ 1],
+        "θημι" => [Ἀποδιδωμι 12, Τῐθημῐ 5],
         "ιτιθημι" => [Τῐθημῐ 3],
-        "ιημι" => [Ἀφῑημῐ 3, Οἰομαι 2, Πᾰρερχομαι 2, Ἐπᾰνῐημῐ 1, Ἀνιημῐ 1, Προϊημι 1, Κᾰθιημῐ 1],
-        "ανιημι" => [Ἐπᾰνῐημῐ 1, Ἀνιημῐ 1],
-        "υνιημι" => [Ἀφῑημῐ 2],
+        "ιημι" => [Ἀφῑημῐ 4, Οἰομαι 2, Ἐφῑημῐ 2, Προϊημι 1, Ἀνιημῐ 1, Κᾰθιημῐ 1],
+        "νιημι" => [Ἀφῑημῐ 3, Οἰομαι 1, Ἀνιημῐ 1],
         "νημι" => [Ἀνιστημι 2, Οἰομαι 1, Περνημῐ 1],
         "ρημι" => [Ποιεω 1, Ἀνιστημι 1],
-        "τημι" => [Ἀνιστημι 23, Ἀφῑημῐ 1],
+        "τημι" => [Ἀνιστημι 23, Ἀποδιδωμι 1],
         "φημι" => [Ἐχω 1, Φημῐ 1],
         "ιμι" => [Τῐθημῐ 6, Οἰομαι 5, Ἐπεξειμι 3, Εἰμῐ 1],
         "ξειμι" => [Ἐπεξειμι 2],
-        "υμι" => [Σῠμμειγνῡμῐ 18, Οἰομαι 14, Λογῐζομαι 4, Ὑποδεικνυμι 3, Ὀλλῡμῐ 2, Ἐπορνῡμῐ 2, Στορνῡμῐ 2, Ἐπεξειμι 1, Ἐπορον 1],
+        "υμι" => [Σῠμμειγνῡμῐ 18, Οἰομαι 14, Λογῐζομαι 4, Ὑποδεικνυμι 3, Ὀλλῡμῐ 2, Ἐπορνῡμῐ 2, Στορνῡμῐ 2, Ἐπεξειμι 1, Ἐμπηγνῡμῐ 1],
         "λυμι" => [Ὀλλῡμῐ 2],
-        "νυμι" => [Σῠμμειγνῡμῐ 18, Οἰομαι 14, Λογῐζομαι 4, Ὑποδεικνυμι 3, Ἐπορνῡμῐ 2, Στορνῡμῐ 2, Ἐπεξειμι 1, Ἐπορον 1],
-        "γνυμι" => [Σῠμμειγνῡμῐ 8, Οἰομαι 7, Ἐπορον 1, Ὑποδεικνυμι 1],
-        "ηγνυμι" => [Οἰομαι 4, Ἐπορον 1],
+        "νυμι" => [Σῠμμειγνῡμῐ 18, Οἰομαι 14, Λογῐζομαι 4, Ὑποδεικνυμι 3, Ἐπορνῡμῐ 2, Στορνῡμῐ 2, Ἐπεξειμι 1, Ἐμπηγνῡμῐ 1],
+        "γνυμι" => [Σῠμμειγνῡμῐ 8, Οἰομαι 7, Ὑποδεικνυμι 1, Ἐμπηγνῡμῐ 1],
+        "ηγνυμι" => [Οἰομαι 4, Ἐμπηγνῡμῐ 1],
         "ιγνυμι" => [Σῠμμειγνῡμῐ 7, Οἰομαι 1, Ὑποδεικνυμι 1],
         "κνυμι" => [Σῠμμειγνῡμῐ 4, Ὑποδεικνυμι 2],
         "μνυμι" => [Λογῐζομαι 3],
@@ -22226,43 +23398,41 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "εννυμι" => [Οἰομαι 4],
         "ωννυμι" => [Σῠμμειγνῡμῐ 4, Ἐπορνῡμῐ 1],
         "ρνυμι" => [Σῠμμειγνῡμῐ 1, Ἐπορνῡμῐ 1, Στορνῡμῐ 1],
-        "ωμι" => [Ἀφῑημῐ 9, Οἰομαι 1],
+        "ωμι" => [Ἀποδιδωμι 9, Οἰομαι 1],
         "οι" => [Ἐχω 2],
         "σι" => [Οἰομαι 3],
-        "ν" => [Οἰομαι 29, Ἐχω 3, Ἐπορον 3, Εἰδον 3, Προεῑπον 3, Προβαλλω 2, Ὀλλῡμῐ 2, Στειχω 1, Πᾰρᾰγῐγνομαι 1, Ἀπεῑπον 1],
+        "ν" => [Οἰομαι 29, Ἐχω 3, Προβαλλω 3, Πᾰρᾰγῐγνομαι 3, Εἰδον 3, Προεῑπον 3, Ὀλλῡμῐ 2, Ἐφῑημῐ 1, Ἐπεφνον 1],
         "εν" => [Οἰομαι 7, Ἐχω 2],
-        "ον" => [Οἰομαι 10, Ἐπορον 3, Εἰδον 3, Προεῑπον 3, Ὀλλῡμῐ 2, Προβαλλω 1, Στειχω 1, Πᾰρᾰγῐγνομαι 1, Ἀπεῑπον 1],
-        "δον" => [Στειχω 1, Εἰδον 1],
-        "θον" => [Οἰομαι 1, Προβαλλω 1, Εἰδον 1],
-        "πον" => [Προεῑπον 3, Ὀλλῡμῐ 2, Πᾰρᾰγῐγνομαι 1, Εἰδον 1, Ἀπεῑπον 1],
+        "ον" => [Οἰομαι 10, Πᾰρᾰγῐγνομαι 3, Εἰδον 3, Προεῑπον 3, Προβαλλω 2, Ὀλλῡμῐ 2, Ἐφῑημῐ 1, Ἐπεφνον 1],
+        "δον" => [Προβαλλω 1, Εἰδον 1],
+        "πον" => [Προεῑπον 3, Ὀλλῡμῐ 2, Πᾰρᾰγῐγνομαι 1, Εἰδον 1, Ἐφῑημῐ 1],
         "τον" => [Οἰομαι 9],
         "ων" => [Οἰομαι 5],
         "σ" => [Ἐχω 5, Οἰομαι 3],
         "ιησ" => [Οἰομαι 3],
-        "ω" => [Ἐχω 1294, Ποιεω 248, Καθιζω 208, Ἀναιρεω 169, Προβαλλω 50, Ἐπῐλᾰμβᾰνω 19, Ὑπαρχω 18, Ἐκβᾰλλω 16, Στειχω 15, Ἀναβαινω 12, Λᾰμβᾰνω 11, Ἐφελκω 10, Περῐσπᾰω 10, Οἰομαι 9, Δεῑ 9, Ἀναγω 9, Ὑπολαμβανω 8, Πᾰροραω 7, Δᾰμαζω 6, Ἀειρω 5, Τελεω 4, Λογῐζομαι 3, Εἰδον 3, Ἐπῐτελεω 3, Κᾰθαιρεω 3, Δῐᾰγῐγνωσκω 3, Ὑποφερω 3, Ἐκβαινω 2, Ἀειδω 2, Ἀποστελλω 2, Κᾰτᾰδεω 2, Ἀντιλεγω 2, Προσβαινω 2, Γῐγνωσκω 2, Δῐᾰφερω 2, Προσερχομαι 1, Ἐπεξειμι 1, Ἀραρισκω 1, Κελομαι 1, Ζω 1, Διπλοω 1, Δρᾱω 1, Δῐᾰζω 1, Περθω 1, Μεθῠσκω 1, Ἐνεχω 1],
-        "αω" => [Ἐχω 75, Ποιεω 52, Ἀναιρεω 11, Πᾰροραω 5, Ἐπῐλᾰμβᾰνω 2, Περῐσπᾰω 2, Δεῑ 1, Λᾰμβᾰνω 1, Δρᾱω 1],
+        "ω" => [Ἐχω 1291, Ποιεω 251, Καθιζω 208, Ἀναιρεω 169, Προβαλλω 52, Ὀφειλω 23, Ἐπῐλᾰμβᾰνω 19, Ὑπαρχω 18, Ἐκβᾰλλω 16, Κᾰτᾰβαινω 13, Λᾰμβᾰνω 11, Περῐσπᾰω 10, Οἰομαι 9, Δεῑ 9, Ἀναγω 9, Ὑπολαμβανω 8, Πᾰροραω 7, Δᾰμαζω 6, Ἀειρω 5, Τελεω 4, Λογῐζομαι 3, Εἰδον 3, Ἐπῐτελεω 3, Κᾰθαιρεω 3, Δῐᾰγῐγνωσκω 3, Ὑποφερω 3, Ἐκβαινω 2, Ἀειδω 2, Ἀποστελλω 2, Κᾰτᾰδεω 2, Ἀντιλεγω 2, Γῐγνωσκω 2, Δῐᾰφερω 2, Προσερχομαι 1, Ἐπεξειμι 1, Ἐμπηγνῡμῐ 1, Ζω 1, Διπλοω 1, Δρᾱω 1, Ἀραρισκω 1, Δῐᾰζω 1, Περθω 1, Μεθῠσκω 1, Ἐνεχω 1, Ἀναβαινω 1],
+        "αω" => [Ἐχω 72, Ποιεω 53, Ἀναιρεω 11, Πᾰροραω 5, Περῐσπᾰω 4, Ἐπῐλᾰμβᾰνω 2, Δεῑ 1, Λᾰμβᾰνω 1, Δρᾱω 1],
         "ιδαω" => [Ἐχω 1, Ποιεω 1, Δεῑ 1],
-        "μαω" => [Ποιεω 7, Ἐχω 5, Ἀναιρεω 2, Περῐσπᾰω 1],
+        "λαω" => [Ἐχω 9, Ποιεω 5],
         "ρμαω" => [Ἀναιρεω 2],
         "ραω" => [Ἐχω 9, Πᾰροραω 5, Ποιεω 4, Ἐπῐλᾰμβᾰνω 2, Λᾰμβᾰνω 1, Δρᾱω 1],
         "εραω" => [Ἐχω 4, Ποιεω 1],
         "οραω" => [Πᾰροραω 5, Ἐχω 1, Ἐπῐλᾰμβᾰνω 1, Λᾰμβᾰνω 1],
         "ταω" => [Ἐχω 12, Ποιεω 4, Ἀναιρεω 3],
         "χαω" => [Ποιεω 3],
+        "ψαω" => [Περῐσπᾰω 2],
         "βω" => [Ἐχω 17],
-        "γω" => [Ἐχω 37, Ἀναιρεω 11, Ἀναγω 5, Προβαλλω 3, Ἐκβᾰλλω 2, Ὑπαρχω 1, Στειχω 1, Πᾰροραω 1, Ἀντιλεγω 1],
+        "γω" => [Ἐχω 37, Ἀναιρεω 11, Ἀναγω 5, Προβαλλω 4, Ἐκβᾰλλω 2, Ὑπαρχω 1, Πᾰροραω 1, Ἀντιλεγω 1],
         "αγω" => [Ἐχω 5, Ἀναιρεω 5, Ἀναγω 5, Ὑπαρχω 1],
         "εγω" => [Ἐχω 9, Ἀναιρεω 4, Πᾰροραω 1, Ἀντιλεγω 1],
         "ιγω" => [Ἐχω 5],
         "υγω" => [Προβαλλω 3, Ἐχω 2, Ἐκβᾰλλω 2],
-        "ωγω" => [Ἐχω 1, Στειχω 1],
-        "δω" => [Ἐχω 12, Ἀναιρεω 3, Ἐφελκω 3, Ἐπῐλᾰμβᾰνω 1, Δεῑ 1, Ἀειδω 1],
+        "δω" => [Ἐχω 12, Ἀναιρεω 3, Ὀφειλω 3, Ἐπῐλᾰμβᾰνω 1, Δεῑ 1, Ἀειδω 1],
         "ερδω" => [Ἀναιρεω 1, Ἐπῐλᾰμβᾰνω 1],
-        "εω" => [Ἐχω 262, Ποιεω 147, Ἀναιρεω 37, Καθιζω 9, Περῐσπᾰω 7, Τελεω 4, Ἐπῐλᾰμβᾰνω 3, Κᾰθαιρεω 3, Ἀειρω 2, Κᾰτᾰδεω 2, Λᾰμβᾰνω 1, Ἐπῐτελεω 1, Κελομαι 1, Ἀντιλεγω 1, Γῐγνωσκω 1],
+        "εω" => [Ἐχω 262, Ποιεω 148, Ἀναιρεω 37, Καθιζω 9, Περῐσπᾰω 6, Τελεω 4, Ἐπῐλᾰμβᾰνω 3, Κᾰθαιρεω 3, Ἀειρω 2, Κᾰτᾰδεω 2, Λᾰμβᾰνω 1, Ἐπῐτελεω 1, Ἐμπηγνῡμῐ 1, Ἀντιλεγω 1, Γῐγνωσκω 1],
         "γεω" => [Ποιεω 25, Ἐχω 15, Ἀναιρεω 3, Περῐσπᾰω 1],
         "αγεω" => [Ποιεω 5],
-        "δεω" => [Ἐχω 10, Ποιεω 3, Κᾰτᾰδεω 2, Κελομαι 1],
-        "ζεω" => [Ἐχω 1, Περῐσπᾰω 1],
+        "δεω" => [Ἐχω 10, Ποιεω 3, Κᾰτᾰδεω 2, Ἐμπηγνῡμῐ 1],
         "θεω" => [Ἐχω 14, Ποιεω 6, Ἀναιρεω 2, Ἐπῐλᾰμβᾰνω 1, Περῐσπᾰω 1],
         "ωθεω" => [Ἀναιρεω 2, Ἐπῐλᾰμβᾰνω 1],
         "κεω" => [Ἐχω 22, Ποιεω 5, Ἀναιρεω 3, Περῐσπᾰω 1],
@@ -22295,10 +23465,10 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ιτεω" => [Ἐχω 2, Ἀναιρεω 2],
         "φεω" => [Ἐχω 6, Ποιεω 6, Περῐσπᾰω 1],
         "χεω" => [Ἐχω 16, Ποιεω 7, Καθιζω 2, Ἀναιρεω 1],
-        "ζω" => [Ἐχω 159, Καθιζω 120, Ἀναιρεω 31, Δᾰμαζω 4, Λογῐζομαι 2, Δεῑ 2, Ἀειρω 2, Οἰομαι 1, Προβαλλω 1, Ἐφελκω 1, Ἐπῐτελεω 1, Ζω 1, Δῐᾰζω 1],
-        "αζω" => [Ἐχω 91, Ἀναιρεω 24, Δᾰμαζω 4, Ἀειρω 2, Προβαλλω 1, Δεῑ 1, Δῐᾰζω 1],
-        "βαζω" => [Ἐχω 7, Προβαλλω 1, Δᾰμαζω 1],
-        "ιαζω" => [Ἐχω 19, Ἀναιρεω 2, Δῐᾰζω 1],
+        "ζω" => [Ἐχω 158, Καθιζω 121, Ἀναιρεω 31, Δᾰμαζω 4, Λογῐζομαι 2, Ὀφειλω 2, Δεῑ 2, Ἀειρω 2, Οἰομαι 1, Ἐπῐτελεω 1, Ζω 1, Δῐᾰζω 1],
+        "αζω" => [Ἐχω 90, Ἀναιρεω 24, Δᾰμαζω 4, Ἀειρω 2, Καθιζω 1, Ὀφειλω 1, Δεῑ 1, Δῐᾰζω 1],
+        "βαζω" => [Ἐχω 7, Ὀφειλω 1, Δᾰμαζω 1],
+        "ιαζω" => [Ἐχω 18, Ἀναιρεω 2, Καθιζω 1, Δῐᾰζω 1],
         "γκαζω" => [Ἀναιρεω 2],
         "μαζω" => [Ἀναιρεω 5, Ἐχω 4, Δᾰμαζω 1, Ἀειρω 1],
         "ναζω" => [Ἐχω 7, Δεῑ 1],
@@ -22312,43 +23482,43 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "υπνιζω" => [Ἐχω 1, Ἀναιρεω 1],
         "τιζω" => [Ἐχω 13, Καθιζω 12, Ἀναιρεω 1],
         "σχιζω" => [Ἐχω 1, Ἀναιρεω 1],
-        "οζω" => [Ἀναιρεω 1, Δεῑ 1, Ἐφελκω 1],
+        "οζω" => [Ἀναιρεω 1, Ὀφειλω 1, Δεῑ 1],
         "υζω" => [Ἐχω 9],
         "ωζω" => [Ἐχω 6],
-        "θω" => [Ἐχω 24, Οἰομαι 1, Στειχω 1, Δεῑ 1, Περθω 1],
+        "θω" => [Ἐχω 24, Οἰομαι 1, Προβαλλω 1, Δεῑ 1, Περθω 1],
         "ιω" => [Ἐχω 37, Οἰομαι 1, Καθιζω 1, Δεῑ 1, Δᾰμαζω 1],
-        "κω" => [Ἐχω 42, Ἐπῐλᾰμβᾰνω 8, Προβαλλω 7, Ἀναιρεω 4, Ὑπαρχω 3, Δῐᾰγῐγνωσκω 3, Δεῑ 1, Ἐφελκω 1, Ἀναγω 1, Ἀραρισκω 1, Γῐγνωσκω 1, Μεθῠσκω 1],
+        "κω" => [Ἐχω 42, Ἐπῐλᾰμβᾰνω 8, Προβαλλω 5, Ἀναιρεω 4, Ὀφειλω 3, Ὑπαρχω 3, Δῐᾰγῐγνωσκω 3, Δεῑ 1, Ἀναγω 1, Γῐγνωσκω 1, Ἀραρισκω 1, Μεθῠσκω 1],
         "εκω" => [Ἐχω 6],
         "ηκω" => [Ἐχω 7, Ὑπαρχω 3],
-        "λκω" => [Ἐχω 1, Προβαλλω 1, Ἐφελκω 1, Ἀναγω 1],
-        "σκω" => [Ἐχω 20, Ἐπῐλᾰμβᾰνω 8, Προβαλλω 6, Ἀναιρεω 4, Δῐᾰγῐγνωσκω 3, Δεῑ 1, Ἀραρισκω 1, Γῐγνωσκω 1, Μεθῠσκω 1],
+        "λκω" => [Ὀφειλω 2, Ἐχω 1, Ἀναγω 1],
+        "σκω" => [Ἐχω 20, Ἐπῐλᾰμβᾰνω 8, Προβαλλω 5, Ἀναιρεω 4, Δῐᾰγῐγνωσκω 3, Ὀφειλω 1, Δεῑ 1, Γῐγνωσκω 1, Ἀραρισκω 1, Μεθῠσκω 1],
         "ασκω" => [Ἐχω 10, Προβαλλω 1, Ἐπῐλᾰμβᾰνω 1],
         "ησκω" => [Ἐπῐλᾰμβᾰνω 3, Προβαλλω 2, Ἐχω 1],
         "ισκω" => [Ἐχω 4, Ἀναιρεω 4, Ἀραρισκω 1],
         "ωσκω" => [Ἐπῐλᾰμβᾰνω 4, Ἐχω 3, Δῐᾰγῐγνωσκω 3, Προβαλλω 2, Δεῑ 1, Γῐγνωσκω 1],
         "ρωσκω" => [Προβαλλω 2, Ἐπῐλᾰμβᾰνω 2],
-        "λω" => [Ἐχω 22, Ἐκβᾰλλω 12, Προβαλλω 10, Καθιζω 8, Ἐφελκω 3, Ἀποστελλω 2, Ἀναιρεω 1, Λᾰμβᾰνω 1],
-        "ελω" => [Προβαλλω 2, Ἐχω 1, Ἐφελκω 1],
-        "ιλω" => [Προβαλλω 3, Ἐχω 1],
+        "λω" => [Ἐχω 22, Ἐκβᾰλλω 12, Καθιζω 8, Ὀφειλω 8, Προβαλλω 5, Ἀποστελλω 2, Ἀναιρεω 1, Λᾰμβᾰνω 1],
+        "ελω" => [Ὀφειλω 3, Ἐχω 1],
+        "ιλω" => [Ὀφειλω 3, Ἐχω 1],
+        "λλω" => [Ἐχω 20, Ἐκβᾰλλω 12, Καθιζω 8, Προβαλλω 5, Ὀφειλω 2, Ἀποστελλω 2, Ἀναιρεω 1, Λᾰμβᾰνω 1],
         "αλλω" => [Ἐκβᾰλλω 12, Ἐχω 9, Προβαλλω 5, Καθιζω 3],
         "βαλλω" => [Ἐκβᾰλλω 12, Προβαλλω 5],
-        "ελλω" => [Ἐχω 7, Καθιζω 5, Ἐφελκω 2, Ἀποστελλω 2, Ἀναιρεω 1, Λᾰμβᾰνω 1],
+        "ελλω" => [Ἐχω 7, Καθιζω 5, Ὀφειλω 2, Ἀποστελλω 2, Ἀναιρεω 1, Λᾰμβᾰνω 1],
         "γελλω" => [Καθιζω 4, Ἀναιρεω 1],
-        "μελλω" => [Ἐφελκω 2],
+        "μελλω" => [Ὀφειλω 2],
         "τελλω" => [Ἐχω 5, Ἀποστελλω 2, Καθιζω 1],
         "ιλλω" => [Ἐχω 3],
         "μω" => [Ἐχω 4, Ἐπῐτελεω 1],
-        "νω" => [Ἐχω 94, Καθιζω 53, Προβαλλω 14, Ἀναβαινω 12, Λᾰμβᾰνω 8, Ὑπολαμβανω 8, Ἀναιρεω 6, Ἐπῐλᾰμβᾰνω 2, Ἐκβαινω 2, Προσβαινω 2, Λογῐζομαι 1, Δεῑ 1, Δᾰμαζω 1, Δῐᾰφερω 1],
+        "νω" => [Ἐχω 95, Καθιζω 52, Προβαλλω 14, Κᾰτᾰβαινω 13, Λᾰμβᾰνω 8, Ὑπολαμβανω 8, Ἀναιρεω 6, Ἐπῐλᾰμβᾰνω 2, Ἐκβαινω 2, Λογῐζομαι 1, Δεῑ 1, Δᾰμαζω 1, Δῐᾰφερω 1, Ἀναβαινω 1],
         "ανω" => [Ἐχω 21, Λᾰμβᾰνω 8, Ὑπολαμβανω 8, Ἀναιρεω 4, Ἐπῐλᾰμβᾰνω 2, Δῐᾰφερω 1],
         "βανω" => [Λᾰμβᾰνω 6, Ὑπολαμβανω 6, Ἐχω 1, Ἐπῐλᾰμβᾰνω 1],
         "δανω" => [Ἐχω 3, Ἐπῐλᾰμβᾰνω 1],
         "θανω" => [Ἐχω 4, Δῐᾰφερω 1],
         "τανω" => [Ἐχω 4, Ἀναιρεω 1],
         "ενω" => [Καθιζω 7, Ἐχω 4],
-        "ινω" => [Ἐχω 49, Καθιζω 24, Ἀναβαινω 12, Προβαλλω 4, Ἀναιρεω 2, Ἐκβαινω 2, Προσβαινω 2, Δεῑ 1],
-        "αινω" => [Ἐχω 44, Ἀναβαινω 12, Καθιζω 6, Ἀναιρεω 2, Ἐκβαινω 2, Προσβαινω 2, Δεῑ 1],
-        "βαινω" => [Ἀναβαινω 12, Ἐχω 4, Ἐκβαινω 2, Προσβαινω 2],
-        "κβαινω" => [Ἐκβαινω 1, Προσβαινω 1],
+        "ινω" => [Ἐχω 49, Καθιζω 24, Κᾰτᾰβαινω 13, Προβαλλω 4, Ἀναιρεω 2, Ἐκβαινω 2, Δεῑ 1, Ἀναβαινω 1],
+        "αινω" => [Ἐχω 44, Κᾰτᾰβαινω 13, Καθιζω 6, Ἀναιρεω 2, Ἐκβαινω 2, Δεῑ 1, Ἀναβαινω 1],
+        "βαινω" => [Κᾰτᾰβαινω 13, Ἐχω 4, Ἐκβαινω 2, Ἀναβαινω 1],
         "μαινω" => [Ἐχω 10],
         "ραινω" => [Ἐχω 8, Ἀναιρεω 2, Καθιζω 1],
         "σαινω" => [Ἐχω 1, Δεῑ 1],
@@ -22358,31 +23528,30 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "πινω" => [Προβαλλω 4],
         "ρινω" => [Καθιζω 5],
         "μνω" => [Προβαλλω 9, Ἐχω 1],
-        "υνω" => [Καθιζω 22, Ἐχω 19, Λογῐζομαι 1, Δᾰμαζω 1],
+        "υνω" => [Καθιζω 21, Ἐχω 20, Λογῐζομαι 1, Δᾰμαζω 1],
         "αυνω" => [Ἐχω 1, Λογῐζομαι 1, Δᾰμαζω 1],
         "τρυνω" => [Ἐχω 4],
         "τυνω" => [Καθιζω 4],
-        "ξω" => [Προβαλλω 2, Ἐχω 1],
-        "οω" => [Ποιεω 49, Ἐχω 44, Ἀναιρεω 13, Οἰομαι 1, Προσερχομαι 1, Περῐσπᾰω 1, Διπλοω 1],
+        "ξω" => [Ὀφειλω 2, Ἐχω 1],
+        "οω" => [Ποιεω 50, Ἐχω 44, Ἀναιρεω 13, Οἰομαι 1, Προσερχομαι 1, Διπλοω 1],
         "ιβοω" => [Ἀναιρεω 2],
         "γοω" => [Ποιεω 1, Οἰομαι 1],
         "ιοω" => [Ποιεω 10, Ἀναιρεω 5, Ἐχω 4],
         "πλοω" => [Ἀναιρεω 1, Διπλοω 1],
         "μοω" => [Ποιεω 6, Ἐχω 1],
-        "ροω" => [Ἐχω 10, Ποιεω 5, Ἀναιρεω 3, Προσερχομαι 1, Περῐσπᾰω 1],
-        "πω" => [Ἐχω 45, Στειχω 8, Εἰδον 2, Ἀναγω 1],
+        "αροω" => [Ἐχω 2, Ποιεω 1, Προσερχομαι 1],
+        "πω" => [Ἐχω 45, Προβαλλω 8, Εἰδον 2, Ἀναγω 1],
         "επω" => [Ἐχω 24, Εἰδον 2, Ἀναγω 1],
-        "ιπω" => [Στειχω 8, Ἐχω 2],
-        "ρω" => [Ἐχω 25, Καθιζω 13, Ἀναιρεω 5, Ὑποφερω 3, Προβαλλω 1, Ἐπῐλᾰμβᾰνω 1, Ὑπαρχω 1, Στειχω 1, Ἐφελκω 1, Ἀειρω 1, Δῐᾰφερω 1],
-        "ερω" => [Ἐχω 8, Ὑποφερω 3, Καθιζω 1, Ἐπῐλᾰμβᾰνω 1, Στειχω 1, Δῐᾰφερω 1],
+        "ιπω" => [Προβαλλω 8, Ἐχω 2],
+        "ρω" => [Ἐχω 25, Καθιζω 13, Ἀναιρεω 5, Ὑποφερω 3, Ὀφειλω 2, Προβαλλω 1, Ἐπῐλᾰμβᾰνω 1, Ὑπαρχω 1, Ἀειρω 1, Δῐᾰφερω 1],
+        "ερω" => [Ἐχω 8, Ὑποφερω 3, Καθιζω 1, Προβαλλω 1, Ἐπῐλᾰμβᾰνω 1, Δῐᾰφερω 1],
         "αφερω" => [Ἐπῐλᾰμβᾰνω 1, Ὑποφερω 1, Δῐᾰφερω 1],
-        "ιρω" => [Ἐχω 11, Καθιζω 11, Ἀναιρεω 5, Προβαλλω 1, Ὑπαρχω 1, Ἀειρω 1],
-        "αιρω" => [Ἐχω 8, Ἀναιρεω 4, Καθιζω 1, Προβαλλω 1, Ὑπαρχω 1],
+        "ιρω" => [Ἐχω 11, Καθιζω 11, Ἀναιρεω 5, Ὀφειλω 1, Ὑπαρχω 1, Ἀειρω 1],
+        "αιρω" => [Ἐχω 8, Ἀναιρεω 4, Καθιζω 1, Ὀφειλω 1, Ὑπαρχω 1],
         "ταιρω" => [Ἀναιρεω 2],
         "ειρω" => [Καθιζω 10, Ἐχω 3, Ἀναιρεω 1, Ἀειρω 1],
-        "ρρω" => [Ἐχω 1, Ἐφελκω 1],
-        "σω" => [Ἐχω 66, Ἀναιρεω 7, Οἰομαι 2, Ἐπῐλᾰμβᾰνω 2, Στειχω 2, Ἐφελκω 1],
-        "ασσω" => [Ἐχω 36, Ἀναιρεω 6, Στειχω 1, Ἐφελκω 1],
+        "σω" => [Ἐχω 66, Ἀναιρεω 7, Οἰομαι 2, Προβαλλω 2, Ἐπῐλᾰμβᾰνω 2, Ὀφειλω 1],
+        "ασσω" => [Ἐχω 36, Ἀναιρεω 6, Προβαλλω 1, Ὀφειλω 1],
         "λασσω" => [Ἀναιρεω 6, Ἐχω 4],
         "λλασσω" => [Ἀναιρεω 6],
         "ισσω" => [Ἐχω 8, Οἰομαι 2],
@@ -22394,7 +23563,8 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ριπτω" => [Ἐχω 2, Ἀναιρεω 2],
         "υπτω" => [Ἐχω 22, Καθιζω 1],
         "ττω" => [Ἐχω 20, Ἀναιρεω 1],
-        "υω" => [Ἐχω 195, Ἀναιρεω 20, Προβαλλω 2, Ἐπεξειμι 1, Εἰδον 1, Ἀειδω 1],
+        "υω" => [Ἐχω 195, Ἀναιρεω 20, Προβαλλω 1, Ὀφειλω 1, Ἐπεξειμι 1, Εἰδον 1, Ἀειδω 1],
+        "ιδευω" => [Ἐχω 3, Ὀφειλω 1],
         "ρευω" => [Ἐχω 7, Ἀναιρεω 4, Εἰδον 1],
         "σευω" => [Ἐχω 3, Ἐπεξειμι 1, Ἀειδω 1],
         "λυω" => [Ἐχω 32, Προβαλλω 1],
@@ -22403,13 +23573,13 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "φω" => [Ἐχω 30, Ἀναιρεω 7],
         "αφω" => [Ἐχω 15],
         "εφω" => [Ἐχω 7, Ἀναιρεω 7],
-        "χω" => [Ἐχω 19, Ὑπαρχω 12, Ἀναιρεω 6, Προβαλλω 4, Καθιζω 3, Στειχω 2, Ἀναγω 2, Οἰομαι 1, Πᾰροραω 1, Ἐνεχω 1],
+        "χω" => [Ἐχω 19, Ὑπαρχω 12, Ἀναιρεω 6, Προβαλλω 6, Καθιζω 3, Ἀναγω 2, Οἰομαι 1, Πᾰροραω 1, Ἐνεχω 1],
         "γχω" => [Ἐχω 3],
         "εχω" => [Ὑπαρχω 10, Ἐχω 4, Καθιζω 3, Προβαλλω 1, Ἀναγω 1, Πᾰροραω 1, Ἐνεχω 1],
         "νεχω" => [Ἀναγω 1, Ἐνεχω 1],
         "ρεχω" => [Ἐχω 3, Καθιζω 3, Ὑπαρχω 2, Προβαλλω 1, Πᾰροραω 1],
         "αρεχω" => [Ὑπαρχω 2],
-        "ιχω" => [Ἐχω 2, Στειχω 2],
+        "ιχω" => [Ἐχω 2, Προβαλλω 2],
         "ρχω" => [Ἀναιρεω 5, Ὑπαρχω 2, Ἐχω 1],
         "σχω" => [Προβαλλω 2, Ἐχω 1, Οἰομαι 1, Ἀναγω 1],
         "υχω" => [Ἐχω 4, Ἀναιρεω 1, Προβαλλω 1],
@@ -22448,7 +23618,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "αδω" => Ἀναιρεω,
         "αειδω" => Ἀειδω,
         "αειρω" => Ἀειρω,
-        "αεξω" => Προβαλλω,
+        "αεξω" => Ὀφειλω,
         "αζομαι" => Οἰομαι,
         "αθανατιζω" => Ἐχω,
         "αθετεω" => Ἐχω,
@@ -22494,7 +23664,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "αλθησκω" => Ἐχω,
         "αλιευω" => Ἀναιρεω,
         "αλιζω" => Ἐχω,
-        "αλισκομαι" => Ἐπᾰνῐημῐ,
+        "αλισκομαι" => Οἰομαι,
         "αλλασσω" => Ἀναιρεω,
         "αλλαττω" => Ἐχω,
         "αλλοιοω" => Ἐχω,
@@ -22515,7 +23685,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "αμηχανοποιεομαι" => Προσερχομαι,
         "αμυνω" => Καθιζω,
         "αμυσσω" => Ἐπῐλᾰμβᾰνω,
-        "αμφιβαινω" => Ἀναβαινω,
+        "αμφιβαινω" => Κᾰτᾰβαινω,
         "αμφιβαλλω" => Ἐκβᾰλλω,
         "αμφικαλυπτω" => Ἐχω,
         "αμφικρυπτω" => Ἐχω,
@@ -22576,7 +23746,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ανατεινω" => Καθιζω,
         "ανατελλω" => Καθιζω,
         "ανατεμνω" => Προβαλλω,
-        "ανατιθημι" => Ἀφῑημῐ,
+        "ανατιθημι" => Ἀποδιδωμι,
         "ανατινασσω" => Ἐχω,
         "ανατρεπω" => Ἐχω,
         "ανατρεχω" => Καθιζω,
@@ -22606,7 +23776,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ανταλλασσω" => Ἀναιρεω,
         "ανταναγω" => Ἀναγω,
         "ανταναλυω" => Ἐχω,
-        "ανταποδιδωμι" => Ἀφῑημῐ,
+        "ανταποδιδωμι" => Ἀποδιδωμι,
         "ανταποκρινομαι" => Λογῐζομαι,
         "αντεγειρω" => Καθιζω,
         "αντελπιζω" => Καθιζω,
@@ -22617,12 +23787,11 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "αντιαζω" => Ἀναιρεω,
         "αντιαω" => Ἐχω,
         "αντιβολεω" => Ἐχω,
-        "αντιδιδωμι" => Ἀφῑημῐ,
+        "αντιδιδωμι" => Ἀποδιδωμι,
         "αντικαθιζομαι" => Ὀλλῡμῐ,
         "αντικαθιστημι" => Ἀνιστημι,
         "αντικειμαι" => Ὑποκειμαι,
         "αντιλεγω" => Ἀντιλεγω,
-        "αντιπαρασκευαζω" => Ἀναιρεω,
         "αντιπαρατασσομαι" => Οἰομαι,
         "αντιπασχω" => Προβαλλω,
         "αντιποιεω" => Ἐχω,
@@ -22654,24 +23823,24 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "απαυραω" => Ἐπῐλᾰμβᾰνω,
         "απειλεω" => Ἐχω,
         "απειμι" => Ἐπεξειμι,
-        "απειπον" => Ἀπεῑπον,
+        "απειπον" => Ἐφῑημῐ,
         "απελευθεροω" => Ἐχω,
         "απεραω" => Ἐχω,
-        "απερχομαι" => Ἀπερχομαι,
+        "απερχομαι" => Οἰομαι,
         "απευχομαι" => Κᾰτεργαζομαι,
         "απεχθανομαι" => Λογῐζομαι,
         "απεχω" => Ὑπαρχω,
         "απιστεω" => Ἐχω,
         "απιχθυοομαι" => Προσερχομαι,
         "απλοω" => Ἀναιρεω,
-        "αποβαινω" => Ἀναβαινω,
+        "αποβαινω" => Κᾰτᾰβαινω,
         "αποβαλλω" => Ἐκβᾰλλω,
-        "απογιγνομαι" => Ἀπογιγνομαι,
+        "απογιγνομαι" => Οἰομαι,
         "αποδεικνυμι" => Σῠμμειγνῡμῐ,
         "αποδεικνυω" => Ἐχω,
         "αποδιαλυω" => Ἐχω,
         "αποδιδρασκω" => Ἐχω,
-        "αποδιδωμι" => Ἀφῑημῐ,
+        "αποδιδωμι" => Ἀποδιδωμι,
         "αποδυω" => Ἐχω,
         "αποζω" => Δεῑ,
         "αποθεοω" => Ἐχω,
@@ -22692,7 +23861,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "απολαμβανω" => Ὑπολαμβανω,
         "απολαυω" => Ἐχω,
         "απολεγω" => Πᾰροραω,
-        "απολειπω" => Στειχω,
+        "απολειπω" => Προβαλλω,
         "αποληγω" => Ἐχω,
         "απολλυμι" => Ὀλλῡμῐ,
         "απολογεομαι" => Ἀπολογεομαι,
@@ -22702,7 +23871,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "απονευροομαι" => Οἰομαι,
         "απονοστεω" => Ἐχω,
         "αποπεμπω" => Ἐχω,
-        "αποπερδομαι" => Ἐπορον,
+        "αποπερδομαι" => Οἰομαι,
         "αποπλεω" => Ἐχω,
         "αποπλησσω" => Ἐχω,
         "αποπτυω" => Ἐχω,
@@ -22729,7 +23898,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "αποτελεω" => Ἐχω,
         "αποτεμνω" => Προβαλλω,
         "αποτηκω" => Ἐχω,
-        "αποτιθημι" => Ἀφῑημῐ,
+        "αποτιθημι" => Ἀποδιδωμι,
         "αποτινασσω" => Ἐχω,
         "αποτινω" => Ἐχω,
         "αποτρεπω" => Ἐχω,
@@ -22781,12 +23950,12 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "αυθεντεω" => Ἐχω,
         "αυλεω" => Ἐχω,
         "αυξανω" => Ἀναιρεω,
-        "αυξω" => Προβαλλω,
+        "αυξω" => Ὀφειλω,
         "αυω" => Ἐχω,
         "αφαιρεω" => Ἀναιρεω,
         "αφαμαρτανω" => Ἐχω,
         "αφανιζω" => Ἐχω,
-        "αφελκω" => Προβαλλω,
+        "αφελκω" => Ὀφειλω,
         "αφιημι" => Ἀφῑημῐ,
         "αφικνεομαι" => Ἡγεομαι,
         "αφιστημι" => Ἀνιστημι,
@@ -22795,7 +23964,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "αφυπνιζω" => Ἐχω,
         "αφυσσω" => Ἐπῐλᾰμβᾰνω,
         "αχθομαι" => Οἰομαι,
-        "βαδιζω" => Καθιζω,
         "βαθυνω" => Καθιζω,
         "βαινω" => Ἐχω,
         "βαλλιζω" => Καθιζω,
@@ -22828,7 +23996,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "βλωσκω" => Ἐχω,
         "βοαω" => Ποιεω,
         "βοηθεω" => Ποιεω,
-        "βοσκω" => Προβαλλω,
+        "βοσκω" => Ὀφειλω,
         "βουλευω" => Ἐχω,
         "βουλομαι" => Οἰομαι,
         "βραδυνω" => Καθιζω,
@@ -22841,7 +24009,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "γαμεω" => Τελεω,
         "γαμιζω" => Ἐχω,
         "γαναω" => Ἐχω,
-        "γανυμαι" => Ὑποκειμαι,
+        "γανυμαι" => Γανῠμαι,
         "γεγενημεθα" => Ἀπολογεομαι,
         "γεγενηνται" => Οἰομαι,
         "γεγενησαι" => Οἰομαι,
@@ -22931,7 +24099,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "διαβαινω" => Ἐχω,
         "διαβαλλω" => Προβαλλω,
         "διαβιβαζω" => Ἐχω,
-        "διαγιγνομαι" => Ἀπογιγνομαι,
+        "διαγιγνομαι" => Δῐᾰγῐγνομαι,
         "διαγιγνωσκω" => Δῐᾰγῐγνωσκω,
         "διαγω" => Ἀναγω,
         "διαγωνιζομαι" => Λογῐζομαι,
@@ -22954,10 +24122,10 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "διακυβευω" => Ἐχω,
         "διαλεγομαι" => Οἰομαι,
         "διαλεγω" => Ἀναιρεω,
-        "διαλειπω" => Στειχω,
+        "διαλειπω" => Προβαλλω,
         "διαλογιζομαι" => Λογῐζομαι,
         "διαλυω" => Ἐχω,
-        "διαμελλω" => Ἐφελκω,
+        "διαμελλω" => Ὀφειλω,
         "διαμενω" => Καθιζω,
         "διαμηνυω" => Ἐχω,
         "διαμνημονευω" => Ἀναιρεω,
@@ -23009,7 +24177,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "διπλοω" => Διπλοω,
         "δισταζω" => Ἐχω,
         "διυλιζω" => Ἐχω,
-        "διψαω" => Ἐχω,
+        "διψαω" => Περῐσπᾰω,
         "διωκω" => Ἐχω,
         "δογματιζω" => Καθιζω,
         "δογματογραφεω" => Ποιεω,
@@ -23048,14 +24216,14 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "εγκαταλεγω" => Ἀναιρεω,
         "εγκαταμιγνυμι" => Σῠμμειγνῡμῐ,
         "εγκατοικεω" => Ἐχω,
-        "εγκρατευομαι" => Ἐγκρᾰτευομαι,
+        "εγκρατευομαι" => Ὑποκειμαι,
         "εγκρυπτω" => Ἐχω,
         "εγχειρεω" => Ἐχω,
         "εγχεω" => Ἐχω,
         "εγχριω" => Ἐχω,
         "εδω" => Δεῑ,
         "εεργω" => Ἐχω,
-        "εθελω" => Ἐφελκω,
+        "εθελω" => Ὀφειλω,
         "εθιζω" => Καθιζω,
         "ειδομαι" => Οἰομαι,
         "ειδον" => Εἰδον,
@@ -23071,12 +24239,12 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ειρωνευομαι" => Ὀττευομαι,
         "εισαγω" => Ἐχω,
         "εισακουω" => Ἐχω,
-        "εισαναβαινω" => Ἀναβαινω,
-        "εισβαινω" => Ἀναβαινω,
+        "εισαναβαινω" => Κᾰτᾰβαινω,
+        "εισβαινω" => Κᾰτᾰβαινω,
         "εισβαλλω" => Προβαλλω,
         "εισβιβαζω" => Ἐχω,
         "εισγραφω" => Ἐχω,
-        "εισερχομαι" => Εἰσερχομαι,
+        "εισερχομαι" => Πᾰρερχομαι,
         "εισοραω" => Πᾰροραω,
         "εισπλεω" => Ἐχω,
         "εισπνεω" => Ἐχω,
@@ -23086,11 +24254,11 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "εκγαμιζω" => Ἐχω,
         "εκγελαω" => Ἐχω,
         "εκγιγνομαι" => Οἰομαι,
-        "εκδιδωμι" => Ἀφῑημῐ,
+        "εκδιδωμι" => Ἀποδιδωμι,
         "εκδικεω" => Ἐχω,
         "εκδιωκω" => Ἐχω,
         "εκδυω" => Ἐχω,
-        "εκζεω" => Περῐσπᾰω,
+        "εκζεω" => Ποιεω,
         "εκκαλεω" => Ἀναιρεω,
         "εκκινεω" => Ἐχω,
         "εκκλαω" => Ἐχω,
@@ -23098,12 +24266,12 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "εκκρυπτω" => Ἐχω,
         "εκλαμπω" => Ἐχω,
         "εκλεγω" => Ἐχω,
-        "εκλειπω" => Στειχω,
+        "εκλειπω" => Προβαλλω,
         "εκλεπτυνω" => Καθιζω,
         "εκλητουργεω" => Ἐχω,
         "εκλιστραω" => Ἐχω,
         "εκλογιζομαι" => Λογῐζομαι,
-        "εκλυτροω" => Περῐσπᾰω,
+        "εκλυτροω" => Ποιεω,
         "εκλυω" => Ἐχω,
         "εκμασσω" => Ἐχω,
         "εκνικαω" => Ἐχω,
@@ -23126,11 +24294,11 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "εκτειχιζω" => Καθιζω,
         "εκτελεω" => Καθιζω,
         "εκτεμνω" => Προβαλλω,
-        "εκτιθημι" => Ἀφῑημῐ,
+        "εκτιθημι" => Ἀποδιδωμι,
         "εκτομιζω" => Ἐχω,
         "εκτρεπω" => Ἐχω,
         "εκφαινω" => Ἐχω,
-        "εκφερω" => Στειχω,
+        "εκφερω" => Προβαλλω,
         "εκφευγω" => Ἐκβᾰλλω,
         "εκχεω" => Ἐχω,
         "εκχυμοω" => Ποιεω,
@@ -23144,17 +24312,17 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ελισσω" => Ἐχω,
         "ελκυω" => Ἀναιρεω,
         "ελκω" => Ἐχω,
-        "ελλειπω" => Στειχω,
+        "ελλειπω" => Προβαλλω,
         "ελληνιζω" => Καθιζω,
         "ελπιζω" => Καθιζω,
         "ελπω" => Ἐχω,
-        "εμβαινω" => Ἀναβαινω,
+        "εμβαινω" => Κᾰτᾰβαινω,
         "εμβαλλω" => Προβαλλω,
         "εμεω" => Ἐχω,
         "εμμενω" => Καθιζω,
         "εμπαζομαι" => Οἰομαι,
         "εμπαιζω" => Ἐχω,
-        "εμπηγνυμι" => Ἐπορον,
+        "εμπηγνυμι" => Ἐμπηγνῡμῐ,
         "εμπιμπλημι" => Ἀνιστημι,
         "εμπιμπρημι" => Ποιεω,
         "εμπιπτω" => Ἐχω,
@@ -23222,12 +24390,12 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "εξεραω" => Ἐχω,
         "εξεργαζομαι" => Κᾰτεργαζομαι,
         "εξερομαι" => Πᾰρᾰγῐγνομαι,
-        "εξερχομαι" => Εἰσερχομαι,
+        "εξερχομαι" => Πᾰρερχομαι,
         "εξεστι" => Ἀνιστημι,
         "εξεταζω" => Ἀναιρεω,
         "εξευρισκω" => Ἀναιρεω,
         "εξηγεομαι" => Ἡγεομαι,
-        "εξιημι" => Πᾰρερχομαι,
+        "εξιημι" => Ἐφῑημῐ,
         "εξικνεομαι" => Ἡγεομαι,
         "εξισοω" => Ἐχω,
         "εξιστημι" => Ἀνιστημι,
@@ -23249,24 +24417,24 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "επαναλαμβανω" => Ὑπολαμβανω,
         "επαναλυω" => Ἐχω,
         "επαναχωρεω" => Ἐχω,
-        "επανερχομαι" => Ἐπορον,
-        "επανιημι" => Ἐπᾰνῐημῐ,
+        "επανερχομαι" => Οἰομαι,
+        "επανιημι" => Ἀφῑημῐ,
         "επαπολυω" => Ἐχω,
         "επαρχω" => Ἀναιρεω,
         "επειγω" => Ἐχω,
         "επειμι" => Τῐθημῐ,
         "επειπον" => Πᾰρᾰγῐγνομαι,
-        "επεκβαινω" => Προσβαινω,
+        "επεκβαινω" => Κᾰτᾰβαινω,
         "επενδυνω" => Ἐχω,
-        "επεντιθημι" => Ἀφῑημῐ,
+        "επεντιθημι" => Ἀποδιδωμι,
         "επεξειμι" => Ἐπεξειμι,
-        "επεξερχομαι" => Εἰσερχομαι,
+        "επεξερχομαι" => Πᾰρερχομαι,
         "επεξηγεομαι" => Προσερχομαι,
         "επερομαι" => Πᾰρᾰγῐγνομαι,
-        "επερχομαι" => Εἰσερχομαι,
+        "επερχομαι" => Πᾰρερχομαι,
         "επευφημεω" => Ἀναιρεω,
         "επευχομαι" => Οἰομαι,
-        "επεφνον" => Ἐπορον,
+        "επεφνον" => Ἐπεφνον,
         "επεχω" => Ὑπαρχω,
         "επιαχω" => Ἐχω,
         "επιβαινω" => Ἐχω,
@@ -23280,7 +24448,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "επιγραφω" => Ἐχω,
         "επιδεικνυμι" => Σῠμμειγνῡμῐ,
         "επιδιαλυω" => Ἐχω,
-        "επιδιδωμι" => Ἀφῑημῐ,
+        "επιδιδωμι" => Ἀποδιδωμι,
         "επιδινεω" => Ἐχω,
         "επιδορπιζομαι" => Λογῐζομαι,
         "επιθρωσκω" => Προβαλλω,
@@ -23301,7 +24469,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "επιμειδαω" => Ἐχω,
         "επιμελεομαι" => Οἰομαι,
         "επιμενω" => Καθιζω,
-        "επιμιμνησκομαι" => Ἀραρισκω,
+        "επιμιμνησκομαι" => Ἐπιμιμνησκομαι,
         "επιμισγω" => Ἐχω,
         "επινοεω" => Ἐχω,
         "επιπαρειμι" => Τῐθημῐ,
@@ -23330,7 +24498,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "επιτηδευω" => Ἐχω,
         "επιτηρεω" => Ἐχω,
         "επιτιθημι" => Τῐθημῐ,
-        "επιτιμαω" => Ἐχω,
         "επιτραπω" => Ἐχω,
         "επιτρεπω" => Ἐχω,
         "επιτρεχω" => Ἐχω,
@@ -23349,7 +24516,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "επομαι" => Οἰομαι,
         "επονομαζω" => Ἀναιρεω,
         "επορνυμι" => Ἐπορνῡμῐ,
-        "επορον" => Ἐπορον,
+        "επορον" => Πᾰρᾰγῐγνομαι,
         "επουλοω" => Ἐχω,
         "επωμιζομαι" => Οἰομαι,
         "εραμαι" => Ἀνιστημι,
@@ -23362,7 +24529,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ερειδω" => Ἀναιρεω,
         "ερειπω" => Ἐχω,
         "ερεσσω" => Ἐχω,
-        "ερευγομαι" => Ἐπορον,
+        "ερευγομαι" => Οἰομαι,
         "ερευθω" => Ἐχω,
         "ερευναω" => Ἐχω,
         "ερεφω" => Ἀναιρεω,
@@ -23372,13 +24539,13 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ερομαι" => Πᾰρᾰγῐγνομαι,
         "ερπυζω" => Ἐχω,
         "ερπω" => Ἐχω,
-        "ερρω" => Ἐφελκω,
+        "ερρω" => Ὀφειλω,
         "ερυθραινω" => Ἀναιρεω,
         "ερυκω" => Ἐχω,
         "ερυω" => Ἐχω,
-        "ερχομαι" => Ἀπερχομαι,
+        "ερχομαι" => Οἰομαι,
         "ερωταω" => Ἐχω,
-        "εσβαινω" => Ἀναβαινω,
+        "εσβαινω" => Κᾰτᾰβαινω,
         "εσβιβαζω" => Ἐχω,
         "εσγραφω" => Ἐχω,
         "εσθιω" => Ἐχω,
@@ -23388,7 +24555,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ετοιμαζω" => Ἀειρω,
         "ευαγγελιζω" => Καθιζω,
         "ευαζω" => Ἐχω,
-        "ευδω" => Ἐφελκω,
+        "ευδω" => Ὀφειλω,
         "ευθενεω" => Ἐχω,
         "ευθηνεω" => Ἐχω,
         "ευθυνω" => Ἐχω,
@@ -23404,21 +24571,21 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ευφραινω" => Ἐχω,
         "ευχαριστεω" => Ἀναιρεω,
         "ευχομαι" => Κᾰτεργαζομαι,
-        "εφαγον" => Ἐπορον,
+        "εφαγον" => Πᾰρᾰγῐγνομαι,
         "εφαλλομαι" => Οἰομαι,
         "εφανδανω" => Ἐχω,
-        "εφελκω" => Ἐφελκω,
+        "εφελκω" => Ὀφειλω,
         "εφεπω" => Εἰδον,
         "εφευρισκω" => Ἀναιρεω,
         "εφηκω" => Ὑπαρχω,
-        "εφιημι" => Πᾰρερχομαι,
+        "εφιημι" => Ἐφῑημῐ,
         "εφιστημι" => Ἀνιστημι,
         "εφοραω" => Ἐπῐλᾰμβᾰνω,
         "εφορμαω" => Ἀναιρεω,
         "εφορμεω" => Ἀναιρεω,
         "εχθω" => Ἐχω,
         "εχω" => Ἐχω,
-        "εψω" => Προβαλλω,
+        "εψω" => Ὀφειλω,
         "ζευγνυμι" => Οἰομαι,
         "ζεω" => Ἐχω,
         "ζηλοω" => Ποιεω,
@@ -23454,7 +24621,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "θεαομαι" => Οἰομαι,
         "θειαζω" => Ἐχω,
         "θειοω" => Ποιεω,
-        "θελω" => Προβαλλω,
+        "θελω" => Ὀφειλω,
         "θεοπροπεω" => Ποιεω,
         "θεραπευω" => Ἐχω,
         "θεω" => Ἐχω,
@@ -23466,7 +24633,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "θναισκω" => Ἐχω,
         "θνησκω" => Προβαλλω,
         "θοαζω" => Ἐχω,
-        "θρασσω" => Ἐφελκω,
+        "θρασσω" => Ὀφειλω,
         "θραττω" => Ἐχω,
         "θραυω" => Ἐχω,
         "θρεομαι" => Οἰομαι,
@@ -23477,7 +24644,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "θωαζω" => Ἐχω,
         "θωεω" => Ἐχω,
         "θωρακιζω" => Καθιζω,
-        "θωρησσω" => Στειχω,
+        "θωρησσω" => Προβαλλω,
         "ιαινω" => Ἐχω,
         "ιαλλω" => Καθιζω,
         "ιαομαι" => Κᾰτεργαζομαι,
@@ -23514,7 +24681,8 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "καθαρευω" => Ἐχω,
         "καθαριζω" => Καθιζω,
         "καθελκω" => Ἀναγω,
-        "καθευδω" => Ἐφελκω,
+        "καθευδω" => Ὀφειλω,
+        "καθηκω" => Ἐχω,
         "καθημαι" => Ἐχω,
         "καθιδρυω" => Ἀναιρεω,
         "καθιζανω" => Ἐχω,
@@ -23543,7 +24711,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "καπτω" => Ἐχω,
         "καροω" => Ποιεω,
         "κασσυω" => Ἐχω,
-        "καταβαινω" => Ἀναβαινω,
+        "καταβαινω" => Κᾰτᾰβαινω,
         "καταβαλλω" => Ἐκβᾰλλω,
         "καταβιβαζω" => Δᾰμαζω,
         "καταβοαω" => Ἐχω,
@@ -23570,7 +24738,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "κατακτεινω" => Καθιζω,
         "καταλαμβανω" => Ὑπολαμβανω,
         "καταλεγω" => Ἀναιρεω,
-        "καταλειπω" => Στειχω,
+        "καταλειπω" => Προβαλλω,
         "καταλυω" => Ἐχω,
         "καταμυω" => Ἐχω,
         "καταναγκαζω" => Ἀναιρεω,
@@ -23583,7 +24751,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "καταπλησσω" => Ἐχω,
         "καταπλυνω" => Καθιζω,
         "καταπολεμεω" => Ἐχω,
-        "καταπροδιδωμι" => Ἀφῑημῐ,
+        "καταπροδιδωμι" => Ἀποδιδωμι,
         "καταπτησσω" => Ἐχω,
         "καταργεω" => Ἀναιρεω,
         "καταρρεζω" => Ἐχω,
@@ -23592,7 +24760,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "κατασπαω" => Ἐχω,
         "καταστρεφω" => Ἀναιρεω,
         "καταταρταροω" => Ἐχω,
-        "κατατιθημι" => Ἀφῑημῐ,
+        "κατατιθημι" => Ἀποδιδωμι,
         "κατατρεχω" => Καθιζω,
         "καταφευγω" => Προβαλλω,
         "καταφρονεω" => Ἐχω,
@@ -23605,7 +24773,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "κατεπειγω" => Ἐχω,
         "κατεργαζομαι" => Κᾰτεργαζομαι,
         "κατερυω" => Ἀναιρεω,
-        "κατερχομαι" => Ἀπολογεομαι,
+        "κατερχομαι" => Προσερχομαι,
         "κατευθυνω" => Καθιζω,
         "κατεχω" => Ὑπαρχω,
         "κατηγορεω" => Ἀναιρεω,
@@ -23621,11 +24789,11 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "κεαζω" => Ἐχω,
         "κειμαι" => Ἐχω,
         "κειρω" => Καθιζω,
-        "κεκαδον" => Στειχω,
+        "κεκαδον" => Προβαλλω,
         "κελαδεω" => Ποιεω,
         "κελευω" => Ἐχω,
         "κελλω" => Ἐχω,
-        "κελομαι" => Κελομαι,
+        "κελομαι" => Οἰομαι,
         "κεντεω" => Ποιεω,
         "κεραιζω" => Λογῐζομαι,
         "κεραννυμι" => Ἐπεξειμι,
@@ -23635,7 +24803,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "κευθω" => Ἐχω,
         "κεφαλοτομεω" => Ποιεω,
         "κηδευω" => Ἀναιρεω,
-        "κηδω" => Ἐφελκω,
+        "κηδω" => Ὀφειλω,
         "κηλεω" => Ποιεω,
         "κηρυσσω" => Ἐχω,
         "κινδυνευω" => Ἐχω,
@@ -23693,8 +24861,8 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "κρατεω" => Ποιεω,
         "κρατυνω" => Καθιζω,
         "κραυγαζω" => Ἐχω,
-        "κρεκω" => Ἐχω,
         "κρεμαννυμι" => Οἰομαι,
+        "κρεμαω" => Ποιεω,
         "κρετεω" => Ποιεω,
         "κρινω" => Καθιζω,
         "κροτεω" => Ποιεω,
@@ -23754,7 +24922,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "λαχνοομαι" => Οἰομαι,
         "λεγω" => Ἐχω,
         "λειβω" => Ἐχω,
-        "λειπω" => Στειχω,
+        "λειπω" => Προβαλλω,
         "λειτουργεω" => Ποιεω,
         "λειχω" => Ἐχω,
         "λεπτυνω" => Καθιζω,
@@ -23763,7 +24931,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "λευσσω" => Ἐχω,
         "λεχομαι" => Οἰομαι,
         "ληζομαι" => Οἰομαι,
-        "ληθω" => Στειχω,
+        "ληθω" => Προβαλλω,
         "ληιζομαι" => Οἰομαι,
         "ληκαω" => Ποιεω,
         "ληκεω" => Ποιεω,
@@ -23833,7 +25001,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "μελαινω" => Ἐχω,
         "μελεταω" => Ποιεω,
         "μελπω" => Ἐχω,
-        "μελω" => Προβαλλω,
+        "μελω" => Ὀφειλω,
         "μεμφομαι" => Οἰομαι,
         "μενω" => Ἐχω,
         "μεριζω" => Καθιζω,
@@ -23841,7 +25009,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "μεστοω" => Ποιεω,
         "μεταβαλλω" => Ἐκβᾰλλω,
         "μεταγιγνωσκω" => Δῐᾰγῐγνωσκω,
-        "μεταδιδωμι" => Ἀφῑημῐ,
+        "μεταδιδωμι" => Ἀποδιδωμι,
         "μετακαλεω" => Ἐχω,
         "μετακομιζω" => Καθιζω,
         "μεταλαγχανω" => Ἐχω,
@@ -23858,7 +25026,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "μεταχειριζω" => Καθιζω,
         "μετειμι" => Τῐθημῐ,
         "μετεκιαθον" => Προβαλλω,
-        "μετερχομαι" => Εἰσερχομαι,
+        "μετερχομαι" => Πᾰρερχομαι,
         "μετεχω" => Ὑπαρχω,
         "μετρεω" => Ποιεω,
         "μετριαζω" => Ἐχω,
@@ -23907,7 +25075,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ναυκληρεω" => Ποιεω,
         "ναυμαχεω" => Ποιεω,
         "ναυπηγεω" => Ποιεω,
-        "ναω" => Ἐχω,
+        "ναω" => Ποιεω,
         "νεαω" => Ποιεω,
         "νεικεω" => Ἐχω,
         "νεκραγωγεω" => Ἀναιρεω,
@@ -23928,6 +25096,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "νοστεω" => Ποιεω,
         "νουθετεω" => Ἐχω,
         "νυσσω" => Ἐχω,
+        "νωμαω" => Ποιεω,
         "ξαινω" => Ἐχω,
         "ξενιζω" => Καθιζω,
         "ξενοκτονεω" => Ἐχω,
@@ -23939,7 +25108,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ξυγκρουω" => Ἐχω,
         "ξυγχωρεω" => Ἐχω,
         "ξυλλαμβανω" => Λᾰμβᾰνω,
-        "ξυμβαινω" => Ἀναβαινω,
+        "ξυμβαινω" => Κᾰτᾰβαινω,
         "ξυμβουλευω" => Ἐχω,
         "ξυμμαχεω" => Ποιεω,
         "ξυμμειγνυμι" => Σῠμμειγνῡμῐ,
@@ -23956,19 +25125,19 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ξυναλλαττω" => Ἀναιρεω,
         "ξυναρχω" => Ἀναιρεω,
         "ξυναφιστημι" => Ἀνιστημι,
-        "ξυνεξερχομαι" => Εἰσερχομαι,
+        "ξυνεξερχομαι" => Πᾰρερχομαι,
         "ξυνεπιτιθημι" => Τῐθημῐ,
         "ξυνεπομαι" => Συνεπομαι,
         "ξυνεργαζομαι" => Κᾰτεργαζομαι,
-        "ξυνερχομαι" => Εἰσερχομαι,
+        "ξυνερχομαι" => Πᾰρερχομαι,
         "ξυνθαπτω" => Ἐχω,
         "ξυνιημι" => Ἀφῑημῐ,
-        "ξυνιστημι" => Ἀφῑημῐ,
+        "ξυνιστημι" => Ἀποδιδωμι,
         "ξυνναυμαχεω" => Ἐχω,
         "ξυνοιδα" => Οἰομαι,
         "ξυνοικοδομεω" => Ἐχω,
         "ξυνομνυμι" => Λογῐζομαι,
-        "ξυντιθημι" => Ἀφῑημῐ,
+        "ξυντιθημι" => Ἀποδιδωμι,
         "ξυρεω" => Ποιεω,
         "ξυρρηγνυμι" => Οἰομαι,
         "ξυσκοταζω" => Ἐχω,
@@ -23976,9 +25145,9 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ξυστρατευω" => Ἐχω,
         "ξυω" => Ἐχω,
         "οδηγεω" => Ἐχω,
-        "οδυρομαι" => Λογῐζομαι,
-        "οδυσσομαι" => Οἰομαι,
-        "οζω" => Ἐφελκω,
+        "οδυρομαι" => Οἰομαι,
+        "οδυσσομαι" => Ἀναιρεω,
+        "οζω" => Ὀφειλω,
         "οιγω" => Ἐχω,
         "οιδανω" => Ἐπῐλᾰμβᾰνω,
         "οιδεω" => Ἐχω,
@@ -23998,8 +25167,8 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ολισθανω" => Ἐχω,
         "ολλυμι" => Ὀλλῡμῐ,
         "ολολυζω" => Ἐχω,
-        "ολοφυρομαι" => Λογῐζομαι,
-        "ομαδεω" => Κελομαι,
+        "ολοφυρομαι" => Οἰομαι,
+        "ομαδεω" => Ἐμπηγνῡμῐ,
         "ομαρτεω" => Ἐχω,
         "ομειχω" => Ἐχω,
         "ομιλεω" => Ἐχω,
@@ -24011,7 +25180,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ονινημι" => Οἰομαι,
         "ονομαζω" => Ἀναιρεω,
         "ονομαινω" => Ἐχω,
-        "οξυνω" => Καθιζω,
+        "οξυνω" => Ἐχω,
         "οπαζω" => Ἀναιρεω,
         "οπιπευω" => Ἐχω,
         "οπλιζω" => Καθιζω,
@@ -24033,10 +25202,10 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "οττευομαι" => Ὀττευομαι,
         "ουρεω" => Ἐχω,
         "ουταω" => Ἐχω,
-        "οφειλω" => Προβαλλω,
+        "οφειλω" => Ὀφειλω,
         "οχεω" => Ἐχω,
         "οψωνεω" => Ἐχω,
-        "παγιδευω" => Προβαλλω,
+        "παγιδευω" => Ὀφειλω,
         "παιανιζω" => Καθιζω,
         "παιδεραστεω" => Ἐχω,
         "παιδευω" => Ἐχω,
@@ -24045,7 +25214,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "παλλω" => Ἐχω,
         "παλυνω" => Ἐχω,
         "πανηγυριαρχεω" => Ἐχω,
-        "παραβαινω" => Ἀναβαινω,
+        "παραβαινω" => Κᾰτᾰβαινω,
         "παραβαλλω" => Ἐκβᾰλλω,
         "παραβλεπω" => Ἐχω,
         "παραβοηθεω" => Ἐχω,
@@ -24053,7 +25222,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "παραγραφω" => Ἐχω,
         "παραγω" => Ἐχω,
         "παραδειγματιζω" => Ἐχω,
-        "παραδιδωμι" => Ἀφῑημῐ,
+        "παραδιδωμι" => Ἀποδιδωμι,
         "παραινεω" => Ἀναιρεω,
         "παραιτεομαι" => Ἡγεομαι,
         "παρακαλεω" => Καθιζω,
@@ -24080,6 +25249,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "παρερχομαι" => Πᾰρερχομαι,
         "παρεχω" => Ὑπαρχω,
         "παρηγορεω" => Ποιεω,
+        "παρηκω" => Ἐχω,
         "παριστημι" => Ἀνιστημι,
         "παροικεω" => Ἐχω,
         "παροξυνω" => Ἐχω,
@@ -24116,9 +25286,9 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "περαινω" => Ἐχω,
         "περαιοω" => Ποιεω,
         "περαω" => Ποιεω,
-        "περδομαι" => Ἐπορον,
+        "περδομαι" => Οἰομαι,
         "περθω" => Περθω,
-        "περιγιγνομαι" => Ὑποκειμαι,
+        "περιγιγνομαι" => Οἰομαι,
         "περιγραφω" => Ἐχω,
         "περιδειδια" => Οἰομαι,
         "περιειμι" => Οἰομαι,
@@ -24211,6 +25381,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "πραυνω" => Λογῐζομαι,
         "πρεσβευω" => Ἐχω,
         "πρηθω" => Ἐχω,
+        "πριω" => Ἐχω,
         "προαγορευω" => Ἀναιρεω,
         "προαγω" => Ὑπαρχω,
         "προαπανταω" => Ἐχω,
@@ -24221,12 +25392,12 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "προγραφω" => Ἐχω,
         "προδιαγιγνωσκω" => Δῐᾰγῐγνωσκω,
         "προδιαλυω" => Ἐχω,
-        "προδιδωμι" => Ἀφῑημῐ,
+        "προδιδωμι" => Ἀποδιδωμι,
         "προειμι" => Οἰομαι,
         "προειπον" => Προεῑπον,
         "προεπιβουλευω" => Ἐχω,
         "προεπιλυω" => Ἐχω,
-        "προερχομαι" => Εἰσερχομαι,
+        "προερχομαι" => Πᾰρερχομαι,
         "προετοιμαζω" => Ἀναιρεω,
         "προεχω" => Ὑπαρχω,
         "προθυμεομαι" => Οἰομαι,
@@ -24245,7 +25416,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "προκρουω" => Ἐχω,
         "προκρυπτω" => Ἐχω,
         "προλαμβανω" => Λᾰμβᾰνω,
-        "προλειπω" => Στειχω,
+        "προλειπω" => Προβαλλω,
         "προλυω" => Ἐχω,
         "προμηθεομαι" => Ἡγεομαι,
         "προμηθευομαι" => Ὀττευομαι,
@@ -24254,7 +25425,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "προοιδα" => Οἰομαι,
         "προοραω" => Πᾰροραω,
         "προοριζω" => Καθιζω,
-        "προοφειλω" => Προβαλλω,
+        "προοφειλω" => Ὀφειλω,
         "προπαιδευω" => Ἐχω,
         "προπεμπω" => Ἐχω,
         "προπινω" => Προβαλλω,
@@ -24263,7 +25434,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "προσαγορευω" => Εἰδον,
         "προσαγω" => Ἐχω,
         "προσαυδαω" => Ἐχω,
-        "προσβαινω" => Προσβαινω,
+        "προσβαινω" => Κᾰτᾰβαινω,
         "προσβαλλω" => Προβαλλω,
         "προσβοηθεω" => Ἐχω,
         "προσγιγνομαι" => Ὑποκειμαι,
@@ -24288,12 +25459,12 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "προσπαρακαλεω" => Ἀναιρεω,
         "προσπαρεχω" => Ὑπαρχω,
         "προσπεμπω" => Ἐχω,
-        "προσπεριγιγνομαι" => Ὑποκειμαι,
+        "προσπεριγιγνομαι" => Οἰομαι,
         "προσπιπτω" => Ἐκβᾰλλω,
         "προσπλεω" => Ἐχω,
         "προσποιεω" => Ἐχω,
         "προστασσω" => Ἐχω,
-        "προστιθημι" => Ἀφῑημῐ,
+        "προστιθημι" => Ἀποδιδωμι,
         "προστυγχανω" => Ὑπολαμβανω,
         "προσυγγιγνομαι" => Ὑποκειμαι,
         "προσφερω" => Ἐχω,
@@ -24301,18 +25472,18 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "προσχωρεω" => Ἐχω,
         "προτεινω" => Καθιζω,
         "προτερεω" => Ποιεω,
-        "προτιθημι" => Ἀφῑημῐ,
+        "προτιθημι" => Ἀποδιδωμι,
         "προτιμαω" => Ἐχω,
         "προτιμωρεω" => Ἐχω,
         "προτρεπω" => Ἐχω,
-        "προυφειλω" => Προβαλλω,
+        "προυφειλω" => Ὀφειλω,
         "προυχω" => Προβαλλω,
         "προφασιζομαι" => Λογῐζομαι,
         "προφερω" => Ἐχω,
         "προχωρεω" => Ἐχω,
         "προωθεω" => Ἀναιρεω,
         "πταιω" => Ἐχω,
-        "πταρνυμαι" => Ἐπορον,
+        "πταρνυμαι" => Πᾰρᾰγῐγνομαι,
         "πτεροω" => Ποιεω,
         "πτησσω" => Ἐχω,
         "πτισσω" => Ἐχω,
@@ -24347,7 +25518,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ρωμαιζω" => Ἐχω,
         "ρωννυμι" => Σῠμμειγνῡμῐ,
         "ρωομαι" => Οἰομαι,
-        "σαβαζω" => Προβαλλω,
+        "σαβαζω" => Ὀφειλω,
         "σαγηνευω" => Ἐχω,
         "σαινω" => Ἐχω,
         "σαιρω" => Ἐχω,
@@ -24381,7 +25552,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "σκευαζω" => Ἐχω,
         "σκηνοω" => Ποιεω,
         "σκηπτω" => Ἐχω,
-        "σκιαζω" => Ἐχω,
+        "σκιαζω" => Καθιζω,
         "σκιδνημι" => Ἀνιστημι,
         "σκιρταω" => Ποιεω,
         "σκοπεω" => Ποιεω,
@@ -24410,9 +25581,10 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "σταθμαω" => Ἐχω,
         "σταλασσω" => Ἐχω,
         "στασιαζω" => Ἐχω,
+        "σταυροω" => Ἐχω,
         "στειβω" => Ἐχω,
         "στεινω" => Ἐχω,
-        "στειχω" => Στειχω,
+        "στειχω" => Προβαλλω,
         "στελλω" => Ἐχω,
         "στεναζω" => Ἐχω,
         "στενοχωρεω" => Ποιεω,
@@ -24456,7 +25628,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "συλλεγω" => Ἐχω,
         "συλλογιζομαι" => Οἰομαι,
         "συλλυω" => Ἐχω,
-        "συμβαινω" => Ἀναβαινω,
+        "συμβαινω" => Κᾰτᾰβαινω,
         "συμβαλλω" => Ἐκβᾰλλω,
         "συμβουλευω" => Ἐχω,
         "συμμαχεω" => Ἐχω,
@@ -24491,11 +25663,11 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "συνδιαλυω" => Ἐχω,
         "συνειμι" => Τῐθημῐ,
         "συνεισκατοικεω" => Ἐχω,
-        "συνεξερχομαι" => Εἰσερχομαι,
+        "συνεξερχομαι" => Πᾰρερχομαι,
         "συνεπιτιθημι" => Τῐθημῐ,
         "συνεπομαι" => Συνεπομαι,
         "συνεργαζομαι" => Κᾰτεργαζομαι,
-        "συνερχομαι" => Εἰσερχομαι,
+        "συνερχομαι" => Πᾰρερχομαι,
         "συνηλοω" => Ἐχω,
         "συνθαπτω" => Ἐχω,
         "συνθλιβω" => Ἐχω,
@@ -24510,7 +25682,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "συντασσω" => Ἐχω,
         "συντειχιζω" => Ἐχω,
         "συντεμνω" => Προβαλλω,
-        "συντιθημι" => Ἀφῑημῐ,
+        "συντιθημι" => Ἀποδιδωμι,
         "συντριβω" => Ἐχω,
         "συντυγχανω" => Ἐχω,
         "συριζω" => Ἐχω,
@@ -24520,7 +25692,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "συρω" => Καθιζω,
         "συσκοταζω" => Ἐχω,
         "συσσωζω" => Ἐχω,
-        "συστειχω" => Στειχω,
+        "συστειχω" => Προβαλλω,
         "συστελλω" => Ἐχω,
         "συστρατευω" => Ἐχω,
         "σφαλλω" => Καθιζω,
@@ -24536,7 +25708,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "σωφρονεω" => Ποιεω,
         "ταλαιπωρεω" => Ποιεω,
         "ταμιευω" => Ἐχω,
-        "ταρασσω" => Στειχω,
+        "ταρασσω" => Προβαλλω,
         "ταρβεω" => Ἐχω,
         "ταριχευω" => Ἐχω,
         "ταρχυω" => Ἐχω,
@@ -24552,6 +25724,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "τειχιζω" => Καθιζω,
         "τειχοφυλακεω" => Ποιεω,
         "τεκμαιρομαι" => Οἰομαι,
+        "τεκμηριοω" => Ποιεω,
         "τεκταινομαι" => Οἰομαι,
         "τελεθω" => Δεῑ,
         "τελειοω" => Ἐχω,
@@ -24602,7 +25775,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "τρυχω" => Ἐχω,
         "τρυω" => Ἐχω,
         "τρωγλοδυτεω" => Ἐχω,
-        "τρωγω" => Στειχω,
+        "τρωγω" => Προβαλλω,
         "τυγχανω" => Λᾰμβᾰνω,
         "τυκιζω" => Καθιζω,
         "τυμβευω" => Ἀναιρεω,
@@ -24623,10 +25796,10 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "υπαναχωρεω" => Ἐχω,
         "υπαρχω" => Ὑπαρχω,
         "υπειπον" => Ὀλλῡμῐ,
-        "υπεκτιθεμαι" => Ἀφῑημῐ,
+        "υπεκτιθεμαι" => Ἀποδιδωμι,
         "υπεκφευγω" => Ἐκβᾰλλω,
         "υπεραττικιζω" => Ἐχω,
-        "υπερβαινω" => Ἀναβαινω,
+        "υπερβαινω" => Κᾰτᾰβαινω,
         "υπερβαλλω" => Ἐκβᾰλλω,
         "υπερεχω" => Πᾰροραω,
         "υπερνικαω" => Ἐχω,
@@ -24635,7 +25808,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "υπηρετεω" => Ἀναιρεω,
         "υπισχνεομαι" => Ἡγεομαι,
         "υπνοω" => Ἐχω,
-        "υπογιγνομαι" => Ἀπογιγνομαι,
+        "υπογιγνομαι" => Οἰομαι,
         "υπογραφω" => Ἐχω,
         "υποδειδω" => Ἐχω,
         "υποδεικνυμι" => Ὑποδεικνυμι,
@@ -24646,7 +25819,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "υποκρινομαι" => Λογῐζομαι,
         "υποκρυπτω" => Ἐχω,
         "υπολαμβανω" => Ὑπολαμβανω,
-        "υπολειπω" => Στειχω,
+        "υπολειπω" => Προβαλλω,
         "υπολογιζομαι" => Λογῐζομαι,
         "υπομενω" => Ἐχω,
         "υπονοεω" => Ἐχω,
@@ -24656,7 +25829,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "υποτασσω" => Ἐχω,
         "υποτεινω" => Καθιζω,
         "υποτελεω" => Ἐχω,
-        "υποτιθημι" => Ἀφῑημῐ,
+        "υποτιθημι" => Ἀποδιδωμι,
         "υποτοπεω" => Ἐχω,
         "υποτρεφω" => Ἐχω,
         "υποτριβω" => Ἐχω,
@@ -24671,6 +25844,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "υψοω" => Ἐχω,
         "υω" => Ἐχω,
         "φαινω" => Ἐχω,
+        "φανεροω" => Ἐχω,
         "φανταζω" => Ἐχω,
         "φαρω" => Ἐχω,
         "φενακιζω" => Καθιζω,
@@ -24720,7 +25894,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "φωνεω" => Ποιεω,
         "φωνομαχεω" => Ἐχω,
         "χαζομαι" => Οἰομαι,
-        "χαιρω" => Προβαλλω,
+        "χαιρω" => Ὀφειλω,
         "χαλαροω" => Προσερχομαι,
         "χαλαω" => Ἐχω,
         "χαλεπαινω" => Ἐχω,
@@ -24757,12 +25931,11 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "χωρεω" => Ποιεω,
         "χωριζω" => Καθιζω,
         "ψαλλω" => Καθιζω,
-        "ψαω" => Ἐχω,
+        "ψαω" => Περῐσπᾰω,
         "ψεγω" => Ἐχω,
         "ψευδω" => Ἐχω,
         "ψηλαφαω" => Ἐχω,
         "ψηφιζω" => Καθιζω,
-        "ψηχω" => Ἐχω,
         "ψιλοω" => Ποιεω,
         "ψυχω" => Ἐχω,
         "ωθεω" => Ἐπῐλᾰμβᾰνω,
@@ -24776,7 +25949,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
 
 /// Per conjugation, the cells whose ending takes the circumflex when accented on
 /// its last syllable (`θεοῦ`).
-pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
+pub static CIRCUMFLEX: [Cow<'static, [u16]>; 323] = [
     Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
@@ -24830,10 +26003,44 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         PARTICIPLE_PRES_ACT,
     ]), // Ποιεω
     Cow::Borrowed(&[
+        IND_ACT_1_SG,
+        IND_ACT_2_SG,
+        IND_ACT_3_SG,
+        IND_MID_2_SG,
+        IND_PASS_2_SG,
+        SUBJ_ACT_1_SG,
+        SUBJ_ACT_2_SG,
+        SUBJ_ACT_3_SG,
+        SUBJ_MID_2_SG,
+        SUBJ_PASS_2_SG,
+        IMP_MID_2_SG,
+        IMP_PASS_2_SG,
+        IMPERFECT_MID_2_SG,
+        IMPERFECT_PASS_2_SG,
+        FUTURE_IND_ACT_1_SG,
+        FUTURE_IND_ACT_2_SG,
+        FUTURE_IND_ACT_3_SG,
+        FUTURE_IND_MID_2_SG,
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+        AORIST_IMP_MID_2_SG,
+        INFINITIVE_PRES_ACT,
+        INFINITIVE_FUT_ACT,
+        INFINITIVE_AOR_ACT,
+        PARTICIPLE_PRES_ACT,
+        PARTICIPLE_FUT_ACT,
+    ]), // Λῡω
+    Cow::Borrowed(&[
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
     ]), // Ὁρῐζω
+    Cow::Borrowed(&[
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+    ]), // Ἐκστρᾰτευω
     Cow::Borrowed(&[
         IND_MID_2_SG,
         IND_PASS_2_SG,
@@ -24845,8 +26052,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
-        AORIST_IMP_MID_2_SG,
-        INFINITIVE_AOR_ACT,
     ]), // Οἰομαι
     Cow::Borrowed(&[
         FUTURE_IND_ACT_1_SG,
@@ -24879,11 +26084,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         PARTICIPLE_PRES_ACT,
     ]), // Σπᾰω
     Cow::Borrowed(&[
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-    ]), // Ἐκστρᾰτευω
-    Cow::Borrowed(&[
         IND_MID_2_SG,
         IND_PASS_2_SG,
         SUBJ_MID_2_SG,
@@ -24896,8 +26096,30 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
         AORIST_IMP_MID_2_SG,
-        INFINITIVE_AOR_ACT,
     ]), // Δῐᾰλεγομαι
+    Cow::Borrowed(&[
+        IND_ACT_1_SG,
+        IND_ACT_2_SG,
+        IND_ACT_3_SG,
+        SUBJ_ACT_1_SG,
+        SUBJ_ACT_2_SG,
+        SUBJ_ACT_3_SG,
+        IMP_ACT_2_SG,
+        IMP_MID_2_SG,
+        IMP_PASS_2_SG,
+        IMPERFECT_MID_2_SG,
+        IMPERFECT_PASS_2_SG,
+        FUTURE_IND_ACT_1_SG,
+        FUTURE_IND_ACT_2_SG,
+        FUTURE_IND_ACT_3_SG,
+        FUTURE_IND_MID_2_SG,
+        AORIST_IMP_MID_2_SG,
+        INFINITIVE_PRES_ACT,
+        INFINITIVE_FUT_ACT,
+        INFINITIVE_AOR_ACT,
+        PARTICIPLE_PRES_ACT,
+        PARTICIPLE_FUT_ACT,
+    ]), // Ἀπολῡω
     Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
@@ -24923,55 +26145,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         PARTICIPLE_PRES_ACT,
     ]), // Γῡροω
     Cow::Borrowed(&[
-        IND_ACT_1_SG,
-        IND_ACT_2_SG,
-        IND_ACT_3_SG,
-        IND_MID_2_SG,
-        IND_PASS_2_SG,
-        SUBJ_ACT_1_SG,
-        SUBJ_ACT_2_SG,
-        SUBJ_ACT_3_SG,
-        SUBJ_MID_2_SG,
-        SUBJ_PASS_2_SG,
-        IMP_MID_2_SG,
-        IMP_PASS_2_SG,
-        FUTURE_IND_ACT_1_SG,
-        FUTURE_IND_ACT_2_SG,
-        FUTURE_IND_ACT_3_SG,
-        FUTURE_IND_MID_2_SG,
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-        INFINITIVE_PRES_ACT,
-        INFINITIVE_FUT_ACT,
-        PARTICIPLE_PRES_ACT,
-        PARTICIPLE_FUT_ACT,
-    ]), // Λῡω
-    Cow::Borrowed(&[
-        IND_ACT_1_SG,
-        IND_ACT_2_SG,
-        IND_ACT_3_SG,
-        SUBJ_ACT_1_SG,
-        SUBJ_ACT_2_SG,
-        SUBJ_ACT_3_SG,
-        IMP_ACT_2_SG,
-        IMPERFECT_MID_2_SG,
-        IMPERFECT_PASS_2_SG,
-        FUTURE_IND_ACT_1_SG,
-        FUTURE_IND_ACT_2_SG,
-        FUTURE_IND_ACT_3_SG,
-        FUTURE_IND_MID_2_SG,
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-        AORIST_IMP_MID_2_SG,
-        INFINITIVE_PRES_ACT,
-        INFINITIVE_FUT_ACT,
-        INFINITIVE_AOR_ACT,
-        PARTICIPLE_PRES_ACT,
-        PARTICIPLE_FUT_ACT,
-    ]), // Ἀπολῡω
-    Cow::Borrowed(&[
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
@@ -24979,39 +26152,21 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         INFINITIVE_AOR_ACT,
     ]), // Πεμπω
     Cow::Borrowed(&[
-        FUTURE_IND_MID_2_SG,
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-        AORIST_IMP_MID_2_SG,
-        INFINITIVE_AOR_ACT,
-    ]), // Σῠνᾰγω
-    Cow::Borrowed(&[
-        FUTURE_IND_ACT_1_SG,
-        FUTURE_IND_ACT_2_SG,
-        FUTURE_IND_ACT_3_SG,
-        FUTURE_IND_MID_2_SG,
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-        AORIST_IMP_MID_2_SG,
-        INFINITIVE_FUT_ACT,
-        PARTICIPLE_FUT_ACT,
-    ]), // Κᾰτεργαζομαι
-    Cow::Borrowed(&[
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
     ]), // Τᾰσσω
     Cow::Borrowed(&[
+        FUTURE_IND_MID_2_SG,
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+        AORIST_IMP_MID_2_SG,
+    ]), // Κᾰτεργαζομαι
+    Cow::Borrowed(&[
         IND_ACT_1_SG,
-        IND_ACT_2_SG,
-        IND_ACT_3_SG,
         IND_MID_2_SG,
         IND_PASS_2_SG,
-        SUBJ_ACT_1_SG,
-        SUBJ_ACT_2_SG,
-        SUBJ_ACT_3_SG,
         SUBJ_MID_2_SG,
         SUBJ_PASS_2_SG,
         IMP_MID_2_SG,
@@ -25021,8 +26176,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
-        INFINITIVE_PRES_ACT,
-        PARTICIPLE_PRES_ACT,
     ]), // Ἡγεομαι
     Cow::Borrowed(&[
         FUTURE_IND_MID_2_SG,
@@ -25072,6 +26225,24 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         AORIST_SUBJ_ACT_3_SG,
     ]), // Φαινω
     Cow::Borrowed(&[
+        IND_ACT_1_SG,
+        IND_ACT_2_SG,
+        IND_ACT_3_SG,
+        IND_MID_2_SG,
+        IND_PASS_2_SG,
+        SUBJ_ACT_1_SG,
+        SUBJ_ACT_2_SG,
+        SUBJ_ACT_3_SG,
+        SUBJ_MID_2_SG,
+        SUBJ_PASS_2_SG,
+        IMP_MID_2_SG,
+        IMP_PASS_2_SG,
+        IMPERFECT_MID_2_SG,
+        IMPERFECT_PASS_2_SG,
+        INFINITIVE_PRES_ACT,
+        PARTICIPLE_PRES_ACT,
+    ]), // Πληροω
+    Cow::Borrowed(&[
         FUTURE_IND_ACT_1_SG,
         FUTURE_IND_ACT_2_SG,
         FUTURE_IND_ACT_3_SG,
@@ -25081,17 +26252,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         INFINITIVE_FUT_ACT,
         PARTICIPLE_FUT_ACT,
     ]), // Θρῠπτω
-    Cow::Borrowed(&[
-        FUTURE_IND_ACT_1_SG,
-        FUTURE_IND_ACT_2_SG,
-        FUTURE_IND_ACT_3_SG,
-        FUTURE_IND_MID_2_SG,
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-        INFINITIVE_FUT_ACT,
-        PARTICIPLE_FUT_ACT,
-    ]), // Σῠνᾰρπᾰζω
     Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
@@ -25117,11 +26277,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
-    ]), // Δῐωκω
-    Cow::Borrowed(&[
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
     ]), // Ἐπιστρεφω
     Cow::Borrowed(&[
         IMPERFECT_MID_2_SG,
@@ -25133,14 +26288,11 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
+        AORIST_IMP_MID_2_SG,
         INFINITIVE_FUT_ACT,
+        INFINITIVE_AOR_ACT,
         PARTICIPLE_FUT_ACT,
     ]), // Ἐπῐλᾰμβᾰνω
-    Cow::Borrowed(&[
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-    ]), // Ὑπᾰκουω
     Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
@@ -25165,6 +26317,24 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         AORIST_SUBJ_ACT_3_SG,
         AORIST_SUBJ_MID_2_SG,
     ]), // Κᾰτᾰβαινω
+    Cow::Borrowed(&[
+        IND_ACT_1_SG,
+        IND_ACT_2_SG,
+        IND_ACT_3_SG,
+        IND_MID_2_SG,
+        IND_PASS_2_SG,
+        SUBJ_ACT_1_SG,
+        SUBJ_ACT_2_SG,
+        SUBJ_ACT_3_SG,
+        SUBJ_MID_2_SG,
+        SUBJ_PASS_2_SG,
+        IMP_MID_2_SG,
+        IMP_PASS_2_SG,
+        IMPERFECT_MID_2_SG,
+        IMPERFECT_PASS_2_SG,
+        INFINITIVE_PRES_ACT,
+        PARTICIPLE_PRES_ACT,
+    ]), // Λᾰλεω
     Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
@@ -25268,6 +26438,22 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         PARTICIPLE_PRES_ACT,
     ]), // Κῑνεω
     Cow::Borrowed(&[
+        FUTURE_IND_ACT_1_SG,
+        FUTURE_IND_ACT_2_SG,
+        FUTURE_IND_ACT_3_SG,
+        FUTURE_IND_MID_2_SG,
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+        INFINITIVE_FUT_ACT,
+        PARTICIPLE_FUT_ACT,
+    ]), // Σῠνᾰρπᾰζω
+    Cow::Borrowed(&[
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+    ]), // Ὑπᾰκουω
+    Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
         IND_ACT_3_SG,
@@ -25286,35 +26472,11 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         PARTICIPLE_PRES_ACT,
     ]), // Σκοπεω
     Cow::Borrowed(&[
-        IND_ACT_1_SG,
-        IND_ACT_2_SG,
-        IND_ACT_3_SG,
-        IND_MID_2_SG,
-        IND_PASS_2_SG,
-        SUBJ_ACT_1_SG,
-        SUBJ_ACT_2_SG,
-        SUBJ_ACT_3_SG,
-        SUBJ_MID_2_SG,
-        SUBJ_PASS_2_SG,
-        IMP_MID_2_SG,
-        IMP_PASS_2_SG,
-        IMPERFECT_MID_2_SG,
-        IMPERFECT_PASS_2_SG,
-        INFINITIVE_PRES_ACT,
-        PARTICIPLE_PRES_ACT,
-    ]), // Λᾰλεω
-    Cow::Borrowed(&[
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
     ]), // Δῐᾰσῳζω
-    Cow::Borrowed(&[
-        FUTURE_IND_MID_2_SG,
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-        AORIST_IMP_MID_2_SG,
-    ]), // Ὀλοφῡρομαι
+    Cow::Borrowed(&[AORIST_IMP_MID_2_SG]), // Ὀλοφῡρομαι
     Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
@@ -25342,13 +26504,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         PARTICIPLE_PRES_ACT,
         PARTICIPLE_FUT_ACT,
     ]), // Τελεω
-    Cow::Borrowed(&[
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-        AORIST_IMP_MID_2_SG,
-        INFINITIVE_AOR_ACT,
-    ]), // Πλησσω
     Cow::Borrowed(&[
         SUBJ_ACT_1_SG,
         SUBJ_ACT_2_SG,
@@ -25447,24 +26602,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         PARTICIPLE_PRES_ACT,
     ]), // Κᾰκουργεω
     Cow::Borrowed(&[
-        IND_ACT_1_SG,
-        IND_ACT_2_SG,
-        IND_ACT_3_SG,
-        IND_MID_2_SG,
-        IND_PASS_2_SG,
-        SUBJ_ACT_1_SG,
-        SUBJ_ACT_2_SG,
-        SUBJ_ACT_3_SG,
-        SUBJ_MID_2_SG,
-        SUBJ_PASS_2_SG,
-        IMP_MID_2_SG,
-        IMP_PASS_2_SG,
-        IMPERFECT_MID_2_SG,
-        IMPERFECT_PASS_2_SG,
-        INFINITIVE_PRES_ACT,
-        PARTICIPLE_PRES_ACT,
-    ]), // Πληροω
-    Cow::Borrowed(&[
         FUTURE_IND_ACT_1_SG,
         FUTURE_IND_ACT_2_SG,
         FUTURE_IND_ACT_3_SG,
@@ -25478,24 +26615,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         PARTICIPLE_FUT_ACT,
     ]), // Σφᾰλλω
     Cow::Borrowed(&[]), // Αἱρεω
-    Cow::Borrowed(&[
-        IND_ACT_1_SG,
-        IND_ACT_2_SG,
-        IND_ACT_3_SG,
-        IND_MID_2_SG,
-        IND_PASS_2_SG,
-        SUBJ_ACT_1_SG,
-        SUBJ_ACT_2_SG,
-        SUBJ_ACT_3_SG,
-        SUBJ_MID_2_SG,
-        SUBJ_PASS_2_SG,
-        IMP_MID_2_SG,
-        IMP_PASS_2_SG,
-        IMPERFECT_MID_2_SG,
-        IMPERFECT_PASS_2_SG,
-        INFINITIVE_PRES_ACT,
-        PARTICIPLE_PRES_ACT,
-    ]), // Τελειοω
     Cow::Borrowed(&[
         FUTURE_IND_ACT_1_SG,
         FUTURE_IND_ACT_2_SG,
@@ -25517,9 +26636,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         FUTURE_IND_ACT_2_SG,
         FUTURE_IND_ACT_3_SG,
         FUTURE_IND_MID_2_SG,
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
         AORIST_IMP_MID_2_SG,
         INFINITIVE_FUT_ACT,
         INFINITIVE_AOR_ACT,
@@ -25609,29 +26725,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         AORIST_SUBJ_PASS_3_SG,
     ]), // Πρεσβευω
     Cow::Borrowed(&[
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-    ]), // Κρουω
-    Cow::Borrowed(&[
-        IND_ACT_1_SG,
-        IND_ACT_2_SG,
-        IND_ACT_3_SG,
-        IND_MID_2_SG,
-        IND_PASS_2_SG,
-        SUBJ_ACT_1_SG,
-        SUBJ_ACT_2_SG,
-        SUBJ_ACT_3_SG,
-        SUBJ_MID_2_SG,
-        SUBJ_PASS_2_SG,
-        IMP_MID_2_SG,
-        IMP_PASS_2_SG,
-        IMPERFECT_MID_2_SG,
-        IMPERFECT_PASS_2_SG,
-        INFINITIVE_PRES_ACT,
-        PARTICIPLE_PRES_ACT,
-    ]), // Νοεω
-    Cow::Borrowed(&[
         FUTURE_IND_ACT_1_SG,
         FUTURE_IND_ACT_2_SG,
         FUTURE_IND_ACT_3_SG,
@@ -25641,7 +26734,25 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         AORIST_SUBJ_PASS_3_SG,
         INFINITIVE_FUT_ACT,
         PARTICIPLE_FUT_ACT,
-    ]), // Ὀξῡνω
+    ]), // Κουφῐζω
+    Cow::Borrowed(&[
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+    ]), // Πλησῐᾰζω
+    Cow::Borrowed(&[
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+        AORIST_IMP_MID_2_SG,
+        INFINITIVE_AOR_ACT,
+    ]), // Πλησσω
+    Cow::Borrowed(&[
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+    ]), // Κρουω
+    Cow::Borrowed(&[]), // Ὀξῡνω
     Cow::Borrowed(&[
         FUTURE_IND_ACT_1_SG,
         FUTURE_IND_ACT_2_SG,
@@ -25663,16 +26774,7 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         INFINITIVE_FUT_ACT,
         PARTICIPLE_FUT_ACT,
     ]), // Κολᾰζω
-    Cow::Borrowed(&[
-        AORIST_SUBJ_ACT_1_SG,
-        AORIST_SUBJ_ACT_2_SG,
-        AORIST_SUBJ_ACT_3_SG,
-        AORIST_SUBJ_MID_2_SG,
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-        AORIST_IMP_MID_2_SG,
-    ]), // Ἀφῑημῐ
+    Cow::Borrowed(&[AORIST_SUBJ_ACT_1_SG, AORIST_SUBJ_ACT_2_SG]), // Ἀφῑημῐ
     Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
@@ -25712,11 +26814,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
     Cow::Borrowed(&[]), // Πορσῡνω
     Cow::Borrowed(&[]), // Φειδομαι
     Cow::Borrowed(&[
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-    ]), // Λουω
-    Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
         IND_ACT_3_SG,
@@ -25752,6 +26849,7 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         INFINITIVE_PRES_ACT,
         PARTICIPLE_PRES_ACT,
     ]), // Σημειοω
+    Cow::Borrowed(&[]), // Δῐωκω
     Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
@@ -25851,41 +26949,7 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         IMPERFECT_PASS_2_SG,
         INFINITIVE_PRES_ACT,
         PARTICIPLE_PRES_ACT,
-    ]), // Λυτροω
-    Cow::Borrowed(&[
-        IND_ACT_1_SG,
-        IND_ACT_2_SG,
-        IND_ACT_3_SG,
-        IND_MID_2_SG,
-        IND_PASS_2_SG,
-        SUBJ_ACT_1_SG,
-        SUBJ_ACT_2_SG,
-        SUBJ_ACT_3_SG,
-        SUBJ_MID_2_SG,
-        SUBJ_PASS_2_SG,
-        IMP_MID_2_SG,
-        IMP_PASS_2_SG,
-        IMPERFECT_MID_2_SG,
-        IMPERFECT_PASS_2_SG,
-        INFINITIVE_PRES_ACT,
-        PARTICIPLE_PRES_ACT,
     ]), // Βλασφημεω
-    Cow::Borrowed(&[
-        FUTURE_IND_ACT_1_SG,
-        FUTURE_IND_ACT_2_SG,
-        FUTURE_IND_ACT_3_SG,
-        FUTURE_IND_MID_2_SG,
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-        INFINITIVE_FUT_ACT,
-        PARTICIPLE_FUT_ACT,
-    ]), // Κουφῐζω
-    Cow::Borrowed(&[
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-    ]), // Πλησῐᾰζω
     Cow::Borrowed(&[
         FUTURE_IND_ACT_1_SG,
         FUTURE_IND_ACT_2_SG,
@@ -25916,22 +26980,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         PARTICIPLE_PRES_ACT,
     ]), // Ὁμολογεω
     Cow::Borrowed(&[]), // Ἐξᾰπτω
-    Cow::Borrowed(&[
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-    ]), // Κᾰτειργω
-    Cow::Borrowed(&[
-        FUTURE_IND_ACT_1_SG,
-        FUTURE_IND_ACT_2_SG,
-        FUTURE_IND_ACT_3_SG,
-        FUTURE_IND_MID_2_SG,
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-        INFINITIVE_FUT_ACT,
-        PARTICIPLE_FUT_ACT,
-    ]), // Λᾰκωνῐζω
     Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
@@ -26015,6 +27063,16 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         PARTICIPLE_PRES_ACT,
     ]), // Ἐρωτᾰω
     Cow::Borrowed(&[
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+    ]), // Σῠνᾰγω
+    Cow::Borrowed(&[
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+    ]), // Κᾰτειργω
+    Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
         IND_ACT_3_SG,
@@ -26067,11 +27125,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         PARTICIPLE_FUT_ACT,
     ]), // Πᾰτερῐζω
     Cow::Borrowed(&[
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-    ]), // Κλῠζω
-    Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
         IND_ACT_3_SG,
@@ -26115,7 +27168,13 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         IMPERFECT_PASS_2_SG,
         INFINITIVE_PRES_ACT,
         PARTICIPLE_PRES_ACT,
-    ]), // Κομβοω
+    ]), // Ἀντῐποιεω
+    Cow::Borrowed(&[]), // Ἐπῐλῡω
+    Cow::Borrowed(&[
+        AORIST_SUBJ_ACT_1_SG,
+        AORIST_SUBJ_ACT_2_SG,
+        AORIST_SUBJ_ACT_3_SG,
+    ]), // Δῐᾰγῐγνωσκω
     Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
@@ -26133,18 +27192,17 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 328] = [
         IMPERFECT_PASS_2_SG,
         INFINITIVE_PRES_ACT,
         PARTICIPLE_PRES_ACT,
-    ]), // Ἀντῐποιεω
-    Cow::Borrowed(&[]), // Ἐπῐλῡω
-    Cow::Borrowed(&[
-        AORIST_SUBJ_ACT_1_SG,
-        AORIST_SUBJ_ACT_2_SG,
-        AORIST_SUBJ_ACT_3_SG,
-    ]), // Δῐᾰγῐγνωσκω
+    ]), // Νοεω
     Cow::Borrowed(&[
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
-    ]), // Λῐμνᾰζω
+    ]), // Λουω
+    Cow::Borrowed(&[
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+    ]), // Κλῠζω
     Cow::Borrowed(&[
         SUBJ_ACT_1_SG,
         SUBJ_ACT_2_SG,

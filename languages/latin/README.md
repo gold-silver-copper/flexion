@@ -39,8 +39,12 @@ Latin entries. Each part of speech is a module under `src/`, and has what its
 grammar needs of:
 
 - `paradigms.rs`: how words inflect, one table per paradigm, named after a word that
-  follows it, with a pattern per form (`~а`: the stem, then `а`; `referred`: another
-  cell's form, as the word's feature says);
+  follows it, with a pattern per form (`~а`: the stem, then `а`; `derived`: another
+  cell's form, changed);
+- `relations.rs`: which cell each cell's form is told from, and the rules on that
+  form's ending that change it;
+- `laws.rs`: sound laws where a stem meets its ending (or along a tier), each with the
+  words whose forms it gives and the forms it gets wrong;
 - `rules.rs`: which paradigm a word takes, as rules on its ending, each with how many of
   the dictionary's words with that ending follow each paradigm, and the words no rule
   gets right, listed;
@@ -60,16 +64,16 @@ reason (the rule and its counts).
 
 ## The grammar
 
-| | words | systems | paradigms | rules | listed words | irregular forms |
+| | words | paradigms | sound laws | rules | listed words | irregular forms |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 15893 | 1 | 85 | 439 | 1251 | 1180 |
-| adjective | 27464 | 1 | 45 | 190 | 458 | 2282 |
-| verb | 6171 | 1 | 217 | 648 | 1166 | 5043 |
-| pronoun | 86 | 1 | 22 | 15 | 61 | 1286 |
-| numeral | 118 | 1 | 9 | 11 | 5 | 6 |
+| noun | 15893 | 81 | 8 | 439 | 1247 | 468 |
+| adjective | 27464 | 44 | 1 | 190 | 458 | 476 |
+| verb | 6171 | 207 | 43 | 641 | 1134 | 855 |
+| pronoun | 86 | 22 | 4 | 15 | 60 | 300 |
+| numeral | 118 | 9 | 0 | 11 | 4 | 2 |
 
-*Words*: the dictionary's words the grammar is learned from. *Systems*: the principal
-parts a part of speech is built on (1: its lemma alone). *Rules*: the endings that
+*Words*: the dictionary's words the grammar is learned from. *Sound laws*: changes
+where a stem meets its ending (or farther, along a tier). *Rules*: the endings that
 choose a paradigm. *Listed words*: words no rule gets right, listed with their paradigm.
 *Irregular forms*: forms no paradigm gives, listed.
 
@@ -83,24 +87,28 @@ its stated probabilities are, on average, from how often it is right (0 is perfe
 The margin after top-1 is a 95% interval, counting words. *Lemma in full*: top-1 typed
 with every mark the dictionary's table writes, and said to be so (`spelled_in_full`).
 *Principal parts given*: top-1 of the other forms, given the dictionary's principal
-parts. *Floor*: the longest-suffix rule (the SIGMORPHON shared tasks' non-neural
-baseline; letters only). *Attested*: top-1 of the shipped grammar on the dictionary's
-own words, typed in full.
+parts. *Features given*: top-1 from the headword, told the word's inherent features
+(its gender, as `.gender(…)` tells it). *Seen* and *unseen cells*: top-1 on the cells
+some training word of the word's paradigm has a form in, and on the others, derived
+from other cells (with the number of forms). *Floor*: the CoNLL–SIGMORPHON 2017
+shared task's non-neural baseline (letters only). *Attested*: top-1 of the shipped
+grammar on the dictionary's own words, typed in full.
 
-| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | floor | attested |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 1565 | 18407 | **65.24%** ± 2.4 | 68.78% | 0.048 | 93.67% | 98.33% | 54.53% | 100.00% |
-| adjective | 2841 | 102282 | **81.70%** ± 1.4 | 82.02% | 0.052 | 99.24% | 99.47% | 61.20% | 100.00% |
-| verb | 619 | 60971 | **70.33%** ± 3.6 | 80.43% | 0.030 | 85.37% | 97.49% | 60.65% | 100.00% |
-| pronoun | 9 | 270 | **22.59%** ± 27.3 | 30.37% | 0.437 | 34.81% |  | 25.56% | 100.00% |
-| numeral | 11 | 396 | **72.73%** ± 26.3 | 72.73% | 0.264 | 100.00% |  | 63.64% | 100.00% |
+| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | features given | seen cells | unseen cells | floor | attested |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 1565 | 18407 | **65.29%** ± 2.4 | 68.90% | 0.048 | 93.67% | 98.27% | 66.10% | 65.31% (18401) | 0.00% (6) | 59.70% | 100.00% |
+| adjective | 2841 | 102282 | **81.70%** ± 1.4 | 82.02% | 0.052 | 99.24% | 99.47% |  | 81.71% (102281) | 0.00% (1) | 71.95% | 100.00% |
+| verb | 619 | 60971 | **70.53%** ± 3.6 | 80.63% | 0.031 | 85.26% | 97.59% |  | 70.50% (60859) | 85.71% (112) | 65.34% | 100.00% |
+| pronoun | 9 | 270 | **22.59%** ± 27.3 | 25.93% | 0.482 | 34.81% |  |  | 22.59% (270) |  | 25.56% | 100.00% |
+| numeral | 11 | 396 | **72.73%** ± 26.3 | 72.73% | 0.264 | 100.00% |  |  | 72.73% (396) |  | 72.73% | 100.00% |
+
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 10043 | 313775 |
-| adjective | 10773 | 356661 |
-| verb | 30029 | 1614713 |
-| pronoun | 2337 | 69803 |
-| numeral | 696 | 27060 |
+| noun | 13021 | 412408 |
+| adjective | 11521 | 390651 |
+| verb | 31020 | 1581431 |
+| pronoun | 2091 | 71771 |
+| numeral | 1304 | 42366 |
 
 ## Data and license
 
