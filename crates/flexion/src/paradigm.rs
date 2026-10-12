@@ -26,7 +26,7 @@ pub struct Paradigm<'a> {
     pub inherent: Cow<'a, [(u8, u8)]>,
     /// What it has in each cell, in the part of speech's cell order, a tab
     /// after each: a pattern (`~а`, alternatives after `|`), [`DERIVED`],
-    /// or nothing, for the parent's.
+    /// or nothing, for the parent's (derived, in a paradigm like no other).
     pub table: Cow<'a, str>,
 }
 
@@ -73,6 +73,13 @@ pub struct Relation<'a> {
     /// It tells the form of a word whose form of the cell it comes from is
     /// listed (a principal part), rather than the word's paradigm.
     pub listed: bool,
+    /// Few or no words have the cell: the change is the one cell `.0`'s form
+    /// makes into cell `.1`'s, the two differing as `from` and `cell` do (a
+    /// future subjunctive is the future made as the present subjunctive is
+    /// made from the present indicative). Without changes of its own, it
+    /// makes those of the relation telling `.1` from `.0`; with `.0` and
+    /// `.1` the same, none.
+    pub analogy: Option<(u16, u16)>,
 }
 
 impl Relation<'_> {
@@ -134,7 +141,8 @@ impl<'a> Paradigm<'a> {
             .all(|(f, v)| self.inherent.iter().all(|(g, w)| g != f || w == v))
     }
 
-    /// What its own table has in `cell`; `None` where it is the parent's.
+    /// What its own table has in `cell`; `None` where it is the parent's
+    /// (at a paradigm like no other, derived).
     pub fn own(&self, cell: usize) -> Option<Form<'_>> {
         match self.table.split('\t').nth(cell)? {
             "" => None,
@@ -144,7 +152,7 @@ impl<'a> Paradigm<'a> {
     }
 
     /// What it has in `cell`, its own or its parent's (`family`: its part of
-    /// speech's paradigms).
+    /// speech's paradigms); a cell no paradigm up the line writes is derived.
     pub fn form<'s>(&'s self, family: &'s [Paradigm<'a>], cell: usize) -> Option<Form<'s>> {
         let mut paradigm = self;
         // Parents come before their children, so this ends.
@@ -152,7 +160,10 @@ impl<'a> Paradigm<'a> {
             if let Some(form) = paradigm.own(cell) {
                 return Some(form);
             }
-            paradigm = family.get(usize::from(paradigm.parent?))?;
+            match paradigm.parent {
+                Some(p) => paradigm = family.get(usize::from(p))?,
+                None => return Some(Form::Derived),
+            }
         }
         None
     }

@@ -49,7 +49,39 @@ pub fn shape(lang: &Language, part: &PartOfSpeech) -> Result<learn::Shape, Strin
         ),
         None => None,
     };
+    // Each cell's group and feature values, on dimensions shared by name.
+    let mut features: Vec<&str> = Vec::new();
+    for g in &cells.groups {
+        for f in &g.features {
+            if !features.contains(&f.name) {
+                features.push(f.name);
+            }
+        }
+    }
+    let mut coordinates = vec![Vec::new(); cells.total];
+    for (gi, g) in cells.groups.iter().enumerate() {
+        for cell in g.offset..g.offset + g.len() {
+            let values = g.values(cell);
+            let mut at = vec![u16::MAX; features.len() + 1];
+            if let Some(slot) = at.first_mut() {
+                *slot = u16::try_from(gi).unwrap_or(u16::MAX);
+            }
+            for (f, v) in g.features.iter().zip(values) {
+                if let Some(slot) = features
+                    .iter()
+                    .position(|&n| n == f.name)
+                    .and_then(|i| at.get_mut(i + 1))
+                {
+                    *slot = u16::try_from(v).unwrap_or(u16::MAX);
+                }
+            }
+            if let Some(slot) = coordinates.get_mut(cell) {
+                *slot = at;
+            }
+        }
+    }
     Ok(learn::Shape {
+        coordinates,
         cells: cells.total,
         lemma_cell,
         capitalized: part.capitalized,

@@ -51,6 +51,9 @@ pub enum Status {
     /// No rule here is productive: the words with this ending split too
     /// evenly, and speakers vary.
     Unsettled,
+    /// Few or no words of the dictionary have the cell: the form is made by
+    /// analogy with cells words do have.
+    Unattested,
 }
 
 impl std::fmt::Display for Status {
@@ -59,6 +62,7 @@ impl std::fmt::Display for Status {
             Status::Listed => "listed",
             Status::Regular => "regular",
             Status::Unsettled => "unsettled",
+            Status::Unattested => "unattested",
         })
     }
 }

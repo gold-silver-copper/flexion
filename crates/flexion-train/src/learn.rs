@@ -23,6 +23,10 @@ pub struct Shape {
     pub capitalized: bool,
     /// How many values each inherent feature has.
     pub inherent: Vec<usize>,
+    /// Per cell, its place on each dimension the part of speech's cells vary
+    /// on: its group (`present`, `future`), then each feature's value
+    /// (`u16::MAX` where its group hasn't the feature).
+    pub coordinates: Vec<Vec<u16>>,
 }
 
 /// A learned part of speech, ready to be printed.
@@ -77,6 +81,8 @@ struct Analyzed {
     lemma: String,
     /// Per cell, the pattern of its usual form (with variants after `|`).
     cells: Vec<Option<String>>,
+    /// The stem pieces.
+    stems: Vec<String>,
 }
 
 pub fn learn<'s>(
@@ -166,6 +172,7 @@ pub fn learn<'s>(
     }
     let found = referrals(&words, shape);
     let mut analyses: Vec<Analyzed> = words.iter().map(|w| analyze(w, shape)).collect();
+    reduplicate(&mut analyses, shape.cells);
     let mut feature_examples: Vec<(String, u8)> = Vec::new();
     if let Some((f, referrals)) = &found {
         for (w, a) in words.iter().zip(analyses.iter_mut()) {
@@ -197,8 +204,11 @@ pub fn learn<'s>(
         relations.retain(|r| !referrals.iter().any(|q| q.cell == r.cell));
         relations.extend(referrals.iter().cloned());
     }
+    // The cells no relation tells (too few words have them): by analogy.
+    let told = crate::relations::analogies(&usual, &shape.coordinates, &relations, root, settings);
+    relations.extend(told);
     relations.sort_by_key(|r| r.cell);
-    let (paradigms, assignment) = paradigms(&words, &analyses, shape, &relations);
+    let (paradigms, assignment) = paradigms(&words, &analyses, shape);
     // Paradigms that differ only by a change where stem meets ending are
     // one paradigm and a sound law.
     let law_words: Vec<crate::laws::Word<'_>> = words
@@ -374,6 +384,7 @@ pub fn learn<'s>(
     irregular.sort();
     grammar.irregular = flexion::Irregular::new(&irregular);
     if let Cow::Owned(paradigms) = &mut grammar.paradigms {
+        copies(paradigms, &grammar.relations);
         inherit(paradigms);
     }
     let stats = Stats {
@@ -444,6 +455,19 @@ fn inherit(paradigms: &mut [Paradigm<'_>]) {
             .max_by(|a, b| a.0.cmp(&b.0).then(b.1.cmp(&a.1)));
         let filled = mine.iter().filter(|c| !c.is_empty()).count();
         let Some((n, j)) = best.filter(|&(n, _)| n > 0 && 2 * n >= filled) else {
+            // Like no other: its derived cells needn't be written.
+            let table: String = mine
+                .iter()
+                .take(mine.len().saturating_sub(1))
+                .map(|m| {
+                    if m == DERIVED {
+                        "\t".to_string()
+                    } else {
+                        format!("{m}\t")
+                    }
+                })
+                .collect();
+            paradigm.table = Cow::Owned(table);
             continue;
         };
         let Some(theirs) = cells.get(j) else { continue };
@@ -462,6 +486,40 @@ fn inherit(paradigms: &mut [Paradigm<'_>]) {
             .collect();
         paradigm.parent = u16::try_from(j).ok();
         paradigm.table = Cow::Owned(table);
+    }
+}
+
+/// A cell a relation copies from another, unchanged, needn't be written
+/// where the paradigm writes the same in both: it is derived (the passive
+/// is the middle).
+fn copies(paradigms: &mut [Paradigm<'_>], relations: &[Relation<'_>]) {
+    let copied: Vec<(usize, usize)> = relations
+        .iter()
+        .filter(|r| r.analogy.is_none() && r.changes.iter().all(|(old, new)| old == new))
+        .filter_map(|r| Some((usize::from(r.cell), r.source()?)))
+        .collect();
+    for paradigm in paradigms.iter_mut() {
+        let written: Vec<String> = paradigm.table.split('\t').map(str::to_string).collect();
+        let mut cells = written.clone();
+        let mut changed = false;
+        for &(cell, from) in &copied {
+            let (Some(c), Some(f)) = (written.get(cell), written.get(from)) else {
+                continue;
+            };
+            // A derived cell takes the usual form only: not one with
+            // alternatives.
+            if c == f
+                && c != DERIVED
+                && !c.contains('|')
+                && let Some(slot) = cells.get_mut(cell)
+            {
+                *slot = DERIVED.to_string();
+                changed = true;
+            }
+        }
+        if changed {
+            paradigm.table = Cow::Owned(cells.join("\t"));
+        }
     }
 }
 
@@ -505,33 +563,41 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
             separable.insert(w.key.as_str(), p.to_string());
         }
     }
-    // What an inseparable prefix takes off each cell: from words made of a
-    // prefix and a word of the dictionary.
-    let split = |w: &Word, n: usize| -> Option<(String, String)> {
+    // Words made of a prefix and a word of the dictionary: the prefix's
+    // letters and key, and the word.
+    let split = |w: &Word, n: usize| -> Option<(String, String, String)> {
         let at = w.letters.char_indices().nth(n)?.0;
+        let key_at = w.key.char_indices().nth(n)?.0;
         let (p, rest) = w.letters.split_at(at);
-        (rest.chars().count() >= 3).then(|| (p.to_string(), rest.to_string()))
+        let (pk, rest_key) = w.key.split_at(key_at);
+        (rest.chars().count() >= 3 && w.key.chars().count() == w.letters.chars().count())
+            .then(|| (p.to_string(), pk.to_string(), rest_key.to_string()))
     };
-    let mut drops: Vec<BTreeMap<String, u32>> = vec![BTreeMap::new(); cells];
-    for w in words
+    let by_key = &by_key;
+    let split = &split;
+    let pairs: Vec<(&Word, String, String, &Word)> = words
         .iter()
         .filter(|w| !separable.contains_key(w.key.as_str()))
-    {
-        for n in PREFIX_LETTERS {
-            let Some((p, rest)) = split(w, n) else { break };
-            let Some(base) = by_key.get(rest.as_str()) else {
+        .flat_map(|w| {
+            PREFIX_LETTERS.filter_map(move |n| {
+                let (p, pk, rest) = split(w, n)?;
+                Some((w, p, pk, *by_key.get(rest.as_str())?))
+            })
+        })
+        .collect();
+    // What an inseparable prefix takes off each cell (the participle's
+    // `ge`).
+    let mut drops: Vec<BTreeMap<String, u32>> = vec![BTreeMap::new(); cells];
+    for (w, p, _, base) in &pairs {
+        for (c, votes) in drops.iter_mut().enumerate() {
+            let (Some(mine), Some(theirs)) = (form(w, c), form(base, c)) else {
                 continue;
             };
-            for (c, votes) in drops.iter_mut().enumerate() {
-                let (Some(mine), Some(theirs)) = (form(w, c), form(base, c)) else {
-                    continue;
-                };
-                let Some(tail) = mine.strip_prefix(p.as_str()) else {
-                    continue;
-                };
-                if let Some(dropped) = theirs.strip_suffix(tail) {
-                    *votes.entry(dropped.to_string()).or_default() += 1;
-                }
+            let Some(tail) = mine.strip_prefix(p.as_str()) else {
+                continue;
+            };
+            if let Some(dropped) = theirs.strip_suffix(tail) {
+                *votes.entry(dropped.to_string()).or_default() += 1;
             }
         }
     }
@@ -545,24 +611,72 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
         })
         .collect();
     let drop = |c: usize| drops.get(c).map_or("", String::as_str);
-    // Inseparable: every form begins with the prefix and, with what the cell
-    // takes off put back, its rest is the base's form where the dictionary
-    // has the base.
-    let keeps = |w: &Word, p: &str, rest: &str| {
+    // How a prefix meets the rest's form: by the form's first letter, what
+    // the two become (Greek `ἀπο` and the augment's `ἐ`: `ἀπε`), as most
+    // words have it; kept where that isn't just the prefix written before
+    // the form, and MIN_WORDS words have it.
+    let mut met: BTreeMap<(String, String), BTreeMap<String, crate::HashSet<&str>>> = BTreeMap::new();
+    for (w, p, pk, base) in &pairs {
+        for c in 0..cells {
+            let (Some(mine), Some(theirs)) = (form(w, c), form(base, c)) else {
+                continue;
+            };
+            let theirs = theirs.strip_prefix(drop(c)).unwrap_or(theirs);
+            let Some(head) = theirs.chars().next() else { continue };
+            let tail = theirs.get(head.len_utf8()..).unwrap_or("");
+            let Some(joined) = mine.strip_suffix(tail) else {
+                continue;
+            };
+            if joined != format!("{p}{head}") {
+                met.entry((pk.clone(), head.to_string()))
+                    .or_default()
+                    .entry(joined.to_string())
+                    .or_default()
+                    .insert(w.key.as_str());
+            }
+        }
+    }
+    let junctions: Vec<(Cow<'a, str>, Cow<'a, str>, Cow<'a, str>)> = met
+        .into_iter()
+        .filter_map(|((pk, head), joined)| {
+            let (joined, by) = joined.into_iter().max_by_key(|e| e.1.len())?;
+            (by.len() >= MIN_WORDS as usize)
+                .then_some((Cow::Owned(pk), Cow::Owned(head), Cow::Owned(joined)))
+        })
+        .collect();
+    let joining = flexion::Prefixes {
+        prefixes: Cow::Borrowed(&[]),
+        listed: Cow::Borrowed(&[]),
+        placement: Cow::Borrowed(&[]),
+        drops: Cow::Borrowed(&[]),
+        junctions: Cow::Borrowed(&junctions),
+    };
+    // A form of a word keeping prefix `p` (key `pk`) in front, without it:
+    // the rest's form, with what the cell takes off put back.
+    let unjoin = |pk: &str, p: &str, c: usize, mine: &str| -> Option<String> {
+        let rest = junctions
+            .iter()
+            .filter(|(k, _, joined)| k == pk && mine.starts_with(joined.as_ref()))
+            .max_by_key(|(_, _, joined)| joined.len())
+            .and_then(|(_, head, joined)| Some(format!("{head}{}", mine.get(joined.len()..)?)))
+            .or_else(|| mine.strip_prefix(p).map(str::to_string))?;
+        (drop(c).is_empty() || !rest.starts_with(drop(c))).then(|| format!("{}{rest}", drop(c)))
+    };
+    // Inseparable: every form, without the prefix, is the rest's form where
+    // the dictionary has the rest.
+    let keeps = |w: &Word, p: &str, pk: &str, rest: &str| {
         let base = by_key.get(rest);
         let mut seen = 0;
         for c in 0..cells {
             let Some(mine) = form(w, c) else { continue };
-            let Some(tail) = mine.strip_prefix(p) else {
+            let Some(unjoined) = unjoin(pk, p, c, mine) else {
                 return false;
             };
-            if !drop(c).is_empty() && tail.starts_with(drop(c)) {
-                return false;
-            }
-            if let Some(theirs) = base.and_then(|b| form(b, c))
-                && theirs != format!("{}{tail}", drop(c))
-            {
-                return false;
+            if let Some(theirs) = base.and_then(|b| form(b, c)) {
+                let t = theirs.strip_prefix(drop(c)).unwrap_or(theirs);
+                if joining.join(pk, t).0 != mine && theirs != unjoined {
+                    return false;
+                }
             }
             seen += 1;
         }
@@ -575,15 +689,18 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
         .filter(|w| !separable.contains_key(w.key.as_str()))
     {
         for n in PREFIX_LETTERS {
-            let Some((p, rest)) = split(w, n) else { break };
-            if by_key.contains_key(rest.as_str()) && keeps(w, &p, &rest) {
-                *proven.entry(p).or_default() += 1;
+            let Some((p, pk, rest)) = split(w, n) else { break };
+            if by_key.contains_key(rest.as_str()) && keeps(w, &p, &pk, &rest) {
+                *proven.entry(pk).or_default() += 1;
                 break;
             }
         }
     }
     // A prefix needs MIN_WORDS words that separate it or that keep it, with a
-    // base the dictionary has.
+    // base the dictionary has; there are prefixes to learn where words
+    // separate them, or where words keep them in front otherwise than
+    // written before their rest's forms (the augment after a Greek
+    // preverb).
     let mut counted: BTreeMap<String, (u32, u32)> = BTreeMap::new();
     for p in separable.values() {
         counted.entry(p.clone()).or_default().0 += 1;
@@ -594,7 +711,8 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
         }
     }
     counted.retain(|p, (s, _)| *s >= MIN_WORDS || proven.get(p).is_some_and(|&n| n >= MIN_WORDS));
-    if !counted.values().any(|(s, _)| *s >= MIN_WORDS) {
+    let separates = counted.values().any(|(s, _)| *s >= MIN_WORDS);
+    if !separates && junctions.is_empty() {
         return (None, Vec::new());
     }
     // Every word that begins with a prefix: what it does with it.
@@ -608,13 +726,14 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
     let mut bases: Vec<(String, Word)> = Vec::new();
     let mut what: Vec<(String, String, Separation)> = Vec::new();
     for w in words {
-        let Some(p) = longest(&w.key) else { continue };
-        let n = p.chars().count();
+        let Some(pk) = longest(&w.key) else { continue };
+        let n = pk.chars().count();
         let rest: String = w.letters.chars().skip(n).collect();
+        let rest_key: String = w.key.chars().skip(n).collect();
         let prefix: String = w.letters.chars().take(n).collect();
         let separation = if separable.get(w.key.as_str()).is_some_and(|s| *s == prefix) {
             Separation::Separable
-        } else if keeps(w, &prefix, &rest) {
+        } else if keeps(w, &prefix, &pk, &rest_key) {
             inseparable.insert(w.key.as_str(), prefix.clone());
             Separation::Inseparable
         } else {
@@ -623,7 +742,7 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
         if separation != Separation::Neither {
             let mut base = w.clone();
             base.letters = rest;
-            base.key = w.key.chars().skip(n).collect();
+            base.key = rest_key;
             for (c, forms) in base.cells.iter_mut().enumerate() {
                 for f in forms.iter_mut() {
                     let rest = match separation {
@@ -633,10 +752,7 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
                             .and_then(|s| s.strip_suffix(' '))
                             .or_else(|| f.letters.strip_prefix(prefix.as_str()))
                             .map(str::to_string),
-                        _ => f
-                            .letters
-                            .strip_prefix(prefix.as_str())
-                            .map(|t| format!("{}{t}", drop(c))),
+                        _ => unjoin(&pk, &prefix, c, &f.letters),
                     };
                     if let Some(rest) = rest {
                         f.letters = rest;
@@ -646,7 +762,7 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
             }
             bases.push((w.key.clone(), base));
         }
-        what.push((p, w.key.clone(), separation));
+        what.push((pk, w.key.clone(), separation));
     }
     // Where a separable prefix goes, cell by cell.
     let mut votes: Vec<[u32; 2]> = vec![[0; 2]; cells];
@@ -712,6 +828,7 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
         listed: Cow::Owned(listed),
         placement: Cow::Owned(placement),
         drops: Cow::Owned(drops.into_iter().map(Cow::Owned).collect()),
+        junctions: Cow::Owned(junctions),
     };
     (Some(prefixes), bases)
 }
@@ -811,6 +928,7 @@ fn referrals<'s>(words: &[Word], shape: &Shape) -> Option<(usize, Vec<Relation<'
                     changes: Cow::Borrowed(&[]),
                     change: None,
                     listed: false,
+                    analogy: None,
                 });
             }
         }
@@ -893,6 +1011,69 @@ fn analyze(w: &Word, shape: &Shape) -> Analyzed {
     Analyzed {
         lemma: a.lemma,
         cells,
+        stems: a.stems,
+    }
+}
+
+/// The letters before each stem piece of `pattern` copying its first letter,
+/// with a vowel after (`λε~` of `λυ`): reduplication. Per piece, the place
+/// (in chars) of the copying letter in the pattern.
+fn copies_of(pattern: &str, stems: &[String]) -> Vec<usize> {
+    let chars: Vec<char> = pattern.chars().collect();
+    let mut out = Vec::new();
+    let mut piece = 0;
+    for (i, &c) in chars.iter().enumerate() {
+        if c != '~' {
+            continue;
+        }
+        let first = stems.get(piece).and_then(|s| s.chars().next());
+        piece += 1;
+        let Some(at) = i.checked_sub(2) else { continue };
+        if chars.get(at).copied() == first && chars.get(at + 1).is_some_and(|&v| v != '~') {
+            out.push(at);
+        }
+    }
+    out
+}
+
+/// Reduplication in the cells that have it: a letter before a stem piece
+/// that is its first letter (and a vowel after it) is written as a copy
+/// ([`pattern::COPY`]), in a cell where words beginning with at least three
+/// different letters copy them.
+fn reduplicate(analyses: &mut [Analyzed], cells: usize) {
+    let mut letters: Vec<crate::HashSet<char>> = vec![crate::HashSet::default(); cells];
+    for a in analyses.iter() {
+        for (cell, p) in a.cells.iter().enumerate() {
+            let Some(p) = p else { continue };
+            if !copies_of(usual(p), &a.stems).is_empty()
+                && let (Some(set), Some(first)) = (
+                    letters.get_mut(cell),
+                    a.stems.first().and_then(|s| s.chars().next()),
+                )
+            {
+                set.insert(first);
+            }
+        }
+    }
+    for a in analyses.iter_mut() {
+        for (cell, p) in a.cells.iter_mut().enumerate() {
+            let (Some(p), Some(set)) = (p.as_mut(), letters.get(cell)) else {
+                continue;
+            };
+            if set.len() < 3 || p.contains(DERIVED) {
+                continue;
+            }
+            let rewritten: Vec<String> = pattern::variants(p)
+                .map(|v| {
+                    let at = copies_of(v, &a.stems);
+                    v.chars()
+                        .enumerate()
+                        .map(|(i, c)| if at.contains(&i) { pattern::COPY } else { c })
+                        .collect()
+                })
+                .collect();
+            *p = rewritten.join("|");
+        }
     }
 }
 
@@ -908,12 +1089,11 @@ fn usual(p: &str) -> &str {
 /// that builds every form it has; of equally full ones, to the one most
 /// common among words that end like it (its last three letters, then two,
 /// then one), then the most common. A cell no word of a paradigm has is
-/// derived from another (see [`crate::relations`]), where one tells it.
+/// derived from another (see [`crate::relations`]).
 fn paradigms<'s>(
     words: &[Word],
     analyses: &[Analyzed],
     shape: &Shape,
-    relations: &[Relation<'_>],
 ) -> (Vec<Paradigm<'s>>, Vec<u16>) {
     // Distinct signatures, and their words.
     let mut index: HashMap<(String, Vec<Option<String>>), usize> = HashMap::default();
@@ -1131,12 +1311,12 @@ fn paradigms<'s>(
             .iter()
             .enumerate()
             .map(|(cell, p)| {
+                // A cell none of its words has comes from another; the
+                // lemma's own cell is the lemma.
                 let usual_p = match p {
                     Some(p) => p.clone(),
-                    None if relations.iter().any(|r| usize::from(r.cell) == cell) => {
-                        DERIVED.to_string()
-                    }
-                    None => lemma.clone(),
+                    None if shape.lemma_cell == Some(cell) => lemma.clone(),
+                    None => DERIVED.to_string(),
                 };
                 // The usual pattern, with the alternatives most words list.
                 let full = variants
@@ -1533,8 +1713,10 @@ fn accent<'s>(
             }
         }
     }
-    // Most common first.
-    let mut order: Vec<usize> = (0..patterns.len()).collect();
+    // Most common first; patterns no word follows aren't kept.
+    let mut order: Vec<usize> = (0..patterns.len())
+        .filter(|&k| patterns.get(k).is_some_and(|p| p.1 > 0))
+        .collect();
     order.sort_by(|&a, &b| {
         let na = patterns.get(a).map_or(0, |p| p.1);
         let nb = patterns.get(b).map_or(0, |p| p.1);
@@ -1552,14 +1734,39 @@ fn accent<'s>(
                 .map_or(usize::MAX, |&k| usize::from(k))
         })
         .collect();
-    let accent_patterns: Vec<AccentPattern<'s>> = order
+    let kept: Vec<&(Vec<Place>, u32)> = order.iter().filter_map(|&k| patterns.get(k)).collect();
+    // Each pattern is like the commoner one it shares the most cells with,
+    // if that is at least half of them, and writes only the cells that
+    // differ.
+    let accent_patterns: Vec<AccentPattern<'s>> = kept
         .iter()
-        .filter_map(|&k| patterns.get(k))
         .enumerate()
-        .map(|(i, (pat, n))| AccentPattern {
-            name: Cow::Owned(name(words, &chosen, i)),
-            words: *n,
-            places: Cow::Owned(AccentPattern::table(pat)),
+        .map(|(i, (pat, n))| {
+            let shared = |j: usize| {
+                kept.get(j).map_or(0, |(q, _)| {
+                    q.iter().zip(pat).filter(|(a, b)| a == b).count()
+                })
+            };
+            let parent = (0..i)
+                .map(|j| (shared(j), std::cmp::Reverse(j)))
+                .max()
+                .filter(|&(n, _)| 2 * n >= pat.len())
+                .map(|(_, std::cmp::Reverse(j))| j);
+            let theirs = parent.and_then(|j| kept.get(j)).map(|(q, _)| q);
+            let places: String = pat
+                .iter()
+                .enumerate()
+                .map(|(c, p)| match theirs.and_then(|q| q.get(c)) {
+                    Some(q) if q == p => "\t".to_string(),
+                    _ => format!("{p:?}\t"),
+                })
+                .collect();
+            AccentPattern {
+                name: Cow::Owned(name(words, &chosen, i)),
+                words: *n,
+                parent: parent.and_then(|j| u16::try_from(j).ok()),
+                places: Cow::Owned(places),
+            }
         })
         .collect();
     // Classes: a pattern and the stem's stressed vowel, from the lemma's end.

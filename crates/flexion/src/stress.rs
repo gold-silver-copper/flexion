@@ -39,26 +39,26 @@ pub struct Finals {
     pub long: bool,
 }
 
-/// An accent pattern: per cell, the rule that places the accent.
+/// An accent pattern: per cell, the rule that places the accent. A pattern
+/// can be *like* another (its parent): the cells it leaves empty are the
+/// parent's.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AccentPattern<'a> {
     pub name: Cow<'a, str>,
     /// How many of the dictionary's words follow it.
     pub words: u32,
-    /// One place per cell (its name: `Stem`), in the part of speech's cell
-    /// order, a tab after each.
+    /// The pattern (its place among the part of speech's) this one is like.
+    pub parent: Option<u16>,
+    /// One place per cell (its name: `Stem`; nothing for the parent's), in
+    /// the part of speech's cell order, a tab after each.
     pub places: Cow<'a, str>,
 }
 
 impl AccentPattern<'_> {
-    /// The place of `cell`'s accent.
-    pub fn place(&self, cell: usize) -> Option<Place> {
+    /// The place of `cell`'s accent its own table gives; `None` where it is
+    /// the parent's.
+    pub fn own(&self, cell: usize) -> Option<Place> {
         self.places.split('\t').nth(cell)?.parse().ok()
-    }
-
-    /// The table of `places`.
-    pub fn table(places: &[Place]) -> String {
-        places.iter().map(|p| format!("{p:?}\t")).collect()
     }
 }
 
@@ -124,6 +124,20 @@ impl<'a, A: Label> Accent<'a, A> {
 
     pub fn pattern_of(&self, class: &StressClass<'_>) -> Option<&AccentPattern<'a>> {
         self.patterns.get(usize::from(class.pattern))
+    }
+
+    /// The place of `cell`'s accent in pattern `pattern`, its own or its
+    /// parent's.
+    pub fn place(&self, pattern: u16, cell: usize) -> Option<Place> {
+        let mut p = self.patterns.get(usize::from(pattern))?;
+        // Parents come before their children, so this ends.
+        for _ in 0..=self.patterns.len() {
+            if let Some(place) = p.own(cell) {
+                return Some(place);
+            }
+            p = self.patterns.get(usize::from(p.parent?))?;
+        }
+        None
     }
 }
 

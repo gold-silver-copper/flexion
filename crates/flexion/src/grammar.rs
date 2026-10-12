@@ -59,6 +59,12 @@ pub struct Prefixes<'a> {
     /// Per cell, what an inseparable prefix takes off the front of the rest's
     /// form (the participle's `ge`).
     pub drops: Cow<'a, [Cow<'a, str>]>,
+    /// How a prefix kept in front meets the rest's form: `(prefix, head,
+    /// joined)`, the prefix (as it is looked up) and the form's first letter
+    /// becoming `joined`
+    /// (Greek `ἀπο` and the augment's `ἐ`: `ἀπε`, `ἀπέλυον`), sorted. Where
+    /// none is listed, the prefix is written before the form.
+    pub junctions: Cow<'a, [(Cow<'a, str>, Cow<'a, str>, Cow<'a, str>)]>,
 }
 
 /// A prefix, and of the dictionary's words that begin with it, how many
@@ -92,6 +98,23 @@ pub enum Placement {
 }
 
 impl Prefixes<'_> {
+    /// The letters of a prefix (looked up as `prefix`) kept in front of
+    /// `rest` (letters), as they meet (see [`Prefixes::junctions`]), and
+    /// where `rest`'s letters after its first start in them.
+    pub fn join(&self, prefix: &str, rest: &str) -> (String, usize) {
+        let head_len = rest.chars().next().map_or(0, char::len_utf8);
+        let (head, tail) = rest.split_at(head_len);
+        let at = self
+            .junctions
+            .binary_search_by(|(p, h, _)| (p.as_ref(), h.as_ref()).cmp(&(prefix, head)))
+            .ok()
+            .and_then(|i| self.junctions.get(i));
+        match at {
+            Some((_, _, joined)) => (format!("{joined}{tail}"), joined.len()),
+            None => (format!("{prefix}{rest}"), prefix.len() + head_len),
+        }
+    }
+
     /// The prefix the word looked up as `key` begins with (the longest, with
     /// at least three letters after it), its length in letters, and how
     /// likely the word is to separate it and to keep it in front.
@@ -392,7 +415,12 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                         Placement::Before => format!("{prefix}{}", c.form),
                         Placement::After => format!("{} {prefix}", c.form),
                     };
-                    let kept = format!("{prefix}{}", c.form.strip_prefix(drop).unwrap_or(&c.form));
+                    let kept = self.kept(
+                        prefixes,
+                        prefix,
+                        rest,
+                        c.form.strip_prefix(drop).unwrap_or(&c.form),
+                    );
                     for (form, p) in [(separated, separable), (kept, inseparable)] {
                         if p <= 0.0 {
                             continue;
@@ -426,6 +454,8 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 }
             }
         }
+        // A cell few or no words of the dictionary have is told by analogy.
+        let unattested = self.relation(cell).is_some_and(|r| r.analogy.is_some());
         for (inf, (forms, p_cell)) in inflections.iter().take(KEEP).flat_map(|inf| {
             self.build(inf.paradigm, &inf.stems, &key, known.inherent, cell, 0)
                 .into_iter()
@@ -446,7 +476,11 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                     form: write(first),
                     also: also.iter().map(|f| write(f)).collect(),
                     probability: spelled * whole * p_cell * inf.reading.probability * p_stress,
-                    status: inf.reading.status,
+                    status: if unattested {
+                        Status::Unattested
+                    } else {
+                        inf.reading.status
+                    },
                     paradigm: inf.paradigm.name.as_ref(),
                     evidence,
                 };
@@ -455,6 +489,48 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         }
         out.retain(|c| c.probability > 0.0);
         out
+    }
+
+    /// The form `form` (written) of the word `rest` with `prefix` kept in
+    /// front, as they meet. Its accent stays on the syllable it is on, counted
+    /// from the end; one as far back as the law allows on the rest goes as
+    /// far back as it allows on the whole word, but not before the prefix's
+    /// last syllable, nor before an augment (`ἀπόλυε`, `ἀπῆλθον`).
+    fn kept(&self, prefixes: &Prefixes<'_>, prefix: &str, rest: &str, form: &str) -> String {
+        let o = &self.orthography;
+        let written = o.read(form);
+        let (letters, rest_at) = prefixes.join(&o.key(prefix), &written.letters);
+        let from_end = written
+            .stress
+            .map(|s| o.vowel_count(&written.letters).saturating_sub(usize::from(s.vowel)));
+        let mut stress = from_end.and_then(|n| {
+            let vowel = o.vowel_count(&letters).checked_sub(n)?;
+            Some(crate::Stress {
+                vowel: u8::try_from(vowel).ok()?,
+                ..written.stress?
+            })
+        });
+        if let (Some(p), Some(s)) = (&o.prosody, written.stress) {
+            let recessive = |letters: &str, long: bool, wall: usize| {
+                let syllables = p.syllables(o, letters, long);
+                p.accent(&syllables, wall, p.acute)
+            };
+            let long = [false, true]
+                .into_iter()
+                .find(|&long| recessive(&written.letters, long, 0) == Some(s));
+            if let Some(long) = long {
+                // The augment: the form begins otherwise than the word.
+                let augmented = written.letters.chars().next() != rest.chars().next();
+                let syllables = p.syllables(o, &letters, long);
+                let boundary = if augmented { rest_at } else { prefix.len().min(rest_at) };
+                let wall = syllables
+                    .iter()
+                    .rposition(|syl| syl.at < boundary)
+                    .unwrap_or(0);
+                stress = p.accent(&syllables, wall, p.acute);
+            }
+        }
+        o.write(&letters, stress, written.casing)
     }
 
     /// The letters of `cell` for the word looked up as `key`, told from the
@@ -472,7 +548,20 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             Some(listed) => self.orthography.read(listed).letters,
             None => self.from_listed(key, from, depth + 1)?.0,
         };
-        relation.told(&source, self.smoothing)
+        self.changing(relation).told(&source, self.smoothing)
+    }
+
+    /// The relation whose changes `relation` makes: its own, or, for one by
+    /// analogy with no changes of its own, those of the relation it is by
+    /// analogy with.
+    fn changing<'r>(&'r self, relation: &'r Relation<'a>) -> &'r Relation<'a> {
+        match relation.analogy {
+            Some((a, b)) if a != b && relation.change.is_none() => self
+                .relation(usize::from(b))
+                .filter(|r| r.from.as_ref() == [a])
+                .unwrap_or(relation),
+            _ => relation,
+        }
     }
 
     /// The relation that gives `cell`.
@@ -524,6 +613,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 }
             }
         };
+        let relation = self.changing(relation);
         let mut out = Vec::new();
         for (from, p) in sources {
             for (forms, q) in
@@ -714,7 +804,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         let finals = accent.finals(paradigm, cell);
         let class_place = |class: &crate::StressClass<'_>| {
             let c = self.lemma_cell?;
-            accent.pattern_of(class)?.place(c)
+            accent.place(class.pattern, c)
         };
         let given = word.stress;
         let given_at = given.map(|g| stress::position(o, letters, g));
@@ -738,7 +828,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             let Some(class) = accent.class_of(reading.value) else {
                 continue;
             };
-            let Some(place) = accent.pattern_of(class).and_then(|p| p.place(cell)) else {
+            let Some(place) = accent.place(class.pattern, cell) else {
                 continue;
             };
             // The stem's accented syllable: the one written, when the

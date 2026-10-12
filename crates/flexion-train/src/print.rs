@@ -130,19 +130,25 @@ impl Layout {
             .unwrap_or_default()
     }
 
-    /// A table's rows, each cell written by `cell`, and its closing.
+    /// A table's rows, each cell written by `cell` (`_`: written elsewhere),
+    /// and its closing. A row of `_` only isn't written.
     fn table(&self, cell: impl Fn(usize) -> String) -> String {
         let mut s = String::new();
         for row in &self.rows {
             let cells: Vec<String> = row.cells.iter().map(|&c| cell(c)).collect();
+            if cells.iter().all(|c| c == "_") {
+                continue;
+            }
             let _ = writeln!(s, "        {}: {};", row.label, cells.join(", "));
         }
         s + "    ),\n"
     }
 
-    /// A table macro's rows of arguments (`$c0:tt, $c1:tt`, of `kind`), a
-    /// line each, and per cell, the number of its argument.
-    fn macro_rows(&self, kind: &str) -> (String, Vec<usize>) {
+    /// A table macro's rows of arguments (`$c0:tt, $c1:tt`), a line each,
+    /// each row optional; and its table: per cell, its argument (as
+    /// `flexion::cell!` reads it), a tab after each, nothing for a row left
+    /// out.
+    fn macro_rows(&self) -> (String, String) {
         let mut rows = String::new();
         let mut by_cell = vec![0; self.names.len()];
         let mut k = 0;
@@ -155,12 +161,16 @@ impl Layout {
                         *slot = k;
                     }
                     k += 1;
-                    format!("$c{}:{kind}", k - 1)
+                    format!("$c{}:tt", k - 1)
                 })
                 .collect();
-            let _ = writeln!(rows, "     {}: {};", row.label, args.join(", "));
+            let _ = writeln!(rows, "     $({}: {};)?", row.label, args.join(", "));
         }
-        (rows, by_cell)
+        let table = by_cell
+            .iter()
+            .map(|arg| format!("                $(flexion::cell!($c{arg}),)? \"\\t\",\n"))
+            .collect();
+        (rows, table)
     }
 }
 
@@ -342,12 +352,12 @@ fn grammar_files(
 
     // paradigms.rs
     let mut p = format!(
-        "//! The {many}, commonest first, each named after a word that follows it.\n//!\n//! A pattern is the form with `~` where the stem goes: `~а` is the stem and\n//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other\n//! forms drop. Alternatives are separated by `|`, the usual one first.\n\nuse flexion::Paradigm;\n\n"
+        "//! The {many}, commonest first, each named after a word that follows it.\n//!\n//! A pattern is the form with `~` where the stem goes: `~а` is the stem and\n//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other\n//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`\n//! is the first letter of the stem piece after it (reduplication: `%ε~κα`).\n\nuse flexion::Paradigm;\n\n"
     );
     // The table macro.
     let _ = writeln!(
         p,
-        "/// Writes one {one}: the word it is named after, how many words follow it,\n/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if\n/// they share them), the {one} it is like (if any), then a row of patterns\n/// per line (`derived`: the form comes from another cell's, see\n/// `relations.rs`; `_`: the form is the {one}'s it is like):"
+        "/// Writes one {one}: the word it is named after, how many words follow it,\n/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if\n/// they share them), the {one} it is like (if any), then a row of patterns\n/// per line (`derived`: the form comes from another cell's, see\n/// `relations.rs`; `_`, or a row left out: the form is the {one}'s it is like,\n/// or, in a {one} like no other, derived):"
     );
     for row in &layout.rows {
         let cols = if row.columns.is_empty() {
@@ -365,11 +375,7 @@ fn grammar_files(
             "$($(feature!($f: $v)),*)?",
         )
     };
-    let (rows, by_cell) = layout.macro_rows("tt");
-    let table: String = by_cell
-        .iter()
-        .map(|arg| format!("                flexion::cell!($c{arg}), \"\\t\",\n"))
-        .collect();
+    let (rows, table) = layout.macro_rows();
     let _ = writeln!(
         p,
         "macro_rules! {one} {{\n    ($name:literal, $words:literal, $lemma:literal{features} $(, like $parent:ident)?;\n{rows}    ) => {{\n        Paradigm {{\n            name: ::std::borrow::Cow::Borrowed($name),\n            words: $words,\n            lemma: ::std::borrow::Cow::Borrowed($lemma),\n            parent: like!($($parent)?),\n            inherent: ::std::borrow::Cow::Borrowed(&[{values}]),\n            table: ::std::borrow::Cow::Borrowed(concat!(\n{table}            )),\n        }}\n    }};\n}}\n\n/// The {one} a {one} is like, by its name.\nmacro_rules! like {{\n    () => {{\n        None\n    }};\n    ($parent:ident) => {{\n        Some({ty}::$parent as u16)\n    }};\n}}\n"
@@ -543,9 +549,24 @@ fn grammar_files(
                     choice_macro("rules", choice, |l| l.to_string())
                 )
             });
+            let (analogy, why) = match rel.analogy {
+                Some((a, b)) => (
+                    format!("Some(({}, {}))", layout.name(a), layout.name(b)),
+                    if a == b {
+                        " Few or no words have it: as it is.".to_string()
+                    } else {
+                        format!(
+                            " Few or no words have it: changed as {} is into {}.",
+                            layout.name(a),
+                            layout.name(b)
+                        )
+                    },
+                ),
+                None => ("None".to_string(), String::new()),
+            };
             let _ = writeln!(
                 r,
-                "    // {cell}, from {}{feature}.\n    Relation {{\n        cell: {cell},\n        from: Cow::Borrowed(&[{}]),\n        changes: flexion::changes![{}],\n        change: {change},\n        listed: {},\n    }},",
+                "    // {cell}, from {}{feature}.{why}\n    Relation {{\n        cell: {cell},\n        from: Cow::Borrowed(&[{}]),\n        changes: flexion::changes![{}],\n        change: {change},\n        listed: {},\n        analogy: {analogy},\n    }},",
                 from.join(" or "),
                 from.join(", "),
                 changes.join(", "),
@@ -767,27 +788,36 @@ fn accent_file(
     }
     s.push('\n');
     // The pattern table macro.
-    let (rows, by_cell) = layout.macro_rows("ident");
-    let places: Vec<String> = by_cell
-        .iter()
-        .map(|a| format!("stringify!($c{a}), \"\\t\""))
-        .collect();
+    let (rows, table) = layout.macro_rows();
     let _ = writeln!(
         s,
-        "/// Writes one accent pattern: the word it is named after, how many words\n/// follow it, then a row of places per line, as the paradigm tables are laid out.\nmacro_rules! pattern {{\n    ($name:literal, $words:literal;\n{rows}    ) => {{\n        AccentPattern {{\n            name: Cow::Borrowed($name),\n            words: $words,\n            places: Cow::Borrowed(concat!({})),\n        }}\n    }};\n}}\n\n/// The accent patterns, commonest first.\npub static PATTERNS: [AccentPattern<'static>; {}] = [",
-        places.join(", "),
+        "/// Writes one accent pattern: the word it is named after, how many words\n/// follow it, the pattern it is like (by its place, if any), then a row of\n/// places per line, as the paradigm tables are laid out (`_`, or a row left\n/// out: the place of the pattern it is like).\nmacro_rules! pattern {{\n    ($name:literal, $words:literal $(, like $parent:literal)?;\n{rows}    ) => {{\n        AccentPattern {{\n            name: Cow::Borrowed($name),\n            words: $words,\n            parent: like!($($parent)?),\n            places: Cow::Borrowed(concat!(\n{table}            )),\n        }}\n    }};\n}}\n\n/// The pattern an accent pattern is like, by its place.\nmacro_rules! like {{\n    () => {{\n        None\n    }};\n    ($parent:literal) => {{\n        Some($parent)\n    }};\n}}\n\n/// The accent patterns, commonest first.\npub static PATTERNS: [AccentPattern<'static>; {}] = [",
         a.patterns.len()
     );
-    for p in a.patterns.iter() {
+    for (i, p) in a.patterns.iter().enumerate() {
+        let parent = p
+            .parent
+            .and_then(|q| a.patterns.get(usize::from(q)).map(|x| (q, x)));
+        let like = parent.map_or(String::new(), |(q, x)| {
+            let differ = (0..layout.names.len())
+                .filter(|&c| p.own(c).is_some())
+                .count();
+            format!(
+                " Like {q} (`{}`), except in {differ} {}.",
+                x.name,
+                if differ == 1 { "cell" } else { "cells" }
+            )
+        });
         let _ = writeln!(
             s,
-            "    // Like `{}`: {} words.\n    pattern!({}, {};",
+            "    // {i}, `{}`: {} words.{like}\n    pattern!({}, {}{};",
             p.name,
             thousands(p.words),
             Lit(&p.name),
-            p.words
+            p.words,
+            parent.map_or(String::new(), |(q, _)| format!(", like {q}"))
         );
-        s.push_str(&layout.table(|c| format!("{:?}", p.place(c).unwrap_or(flexion::Place::Stem))));
+        s.push_str(&layout.table(|c| p.own(c).map_or("_".to_string(), |pl| format!("{pl:?}"))));
     }
     // Classes.
     let names = unique(a.classes.iter().map(|c| variant(&c.name)));
@@ -961,8 +991,8 @@ fn prefixes_file(p: &flexion::Prefixes<'_>, layout: &Layout) -> String {
         "//! Prefixes words inflect behind. A word that begins with one inflects as the\n\
          //! rest of it does: a separable prefix goes where the cell puts it (`Before`\n\
          //! the rest, written together, or `After` it, as a word of its own); an\n\
-         //! inseparable one stays in front and takes off the front of the rest's form\n\
-         //! what the cell says. How likely a word is to do either is how many of the\n\
+         //! inseparable one stays in front, takes off the front of the rest's form\n\
+         //! what the cell says, and meets it as `junctions` says. How likely a word is to do either is how many of the\n\
          //! dictionary's words with its prefix do.\n\n\
          use flexion::Placement::*;\n\
          use flexion::{Prefix, Prefixes, Separation};\n\
@@ -1001,6 +1031,18 @@ fn prefixes_file(p: &flexion::Prefixes<'_>, layout: &Layout) -> String {
     for (c, d) in p.drops.iter().enumerate() {
         let name = layout.names.get(c).map_or("", String::as_str);
         let _ = writeln!(s, "        Cow::Borrowed({}), // {name}", Lit(d));
+    }
+    s.push_str(
+        "    ]),\n    // How an inseparable prefix meets the rest's form, by the form's first\n    // letter: what the two become.\n    junctions: Cow::Borrowed(&[\n",
+    );
+    for (prefix, head, joined) in p.junctions.iter() {
+        let _ = writeln!(
+            s,
+            "        (Cow::Borrowed({}), Cow::Borrowed({}), Cow::Borrowed({})), // {prefix} + {head} → {joined}",
+            Lit(prefix),
+            Lit(head),
+            Lit(joined)
+        );
     }
     s.push_str("    ]),\n};\n");
     s

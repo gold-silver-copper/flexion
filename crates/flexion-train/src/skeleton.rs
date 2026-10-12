@@ -54,6 +54,54 @@ fn lcs(a: &[char], b: &[char]) -> (Vec<usize>, Vec<usize>) {
     (keep, pos)
 }
 
+/// Where in `w` each letter of `sub` is, in order, breaking them into the
+/// fewest runs of adjacent letters; of equally few, the earliest. `None` when
+/// `w` hasn't them all.
+fn embed(sub: &[char], w: &[char]) -> Option<Vec<usize>> {
+    let (n, m) = (sub.len(), w.len());
+    if n == 0 {
+        return Some(Vec::new());
+    }
+    // breaks[i][j]: the fewest breaks placing `sub[..=i]` with `sub[i]` at
+    // `w[j]`, and where `sub[i - 1]` is then.
+    let mut breaks: Vec<Vec<Option<(usize, usize)>>> = vec![vec![None; m]; n];
+    for (i, &c) in sub.iter().enumerate() {
+        for j in 0..m {
+            if w.get(j) != Some(&c) {
+                continue;
+            }
+            let best = if i == 0 {
+                Some((0, 0))
+            } else {
+                let before = breaks.get(i - 1)?;
+                (0..j)
+                    .filter_map(|k| {
+                        let (b, _) = (*before.get(k)?)?;
+                        Some((b + usize::from(k + 1 != j), k))
+                    })
+                    .min()
+            };
+            if let Some(slot) = breaks.get_mut(i).and_then(|r| r.get_mut(j)) {
+                *slot = best;
+            }
+        }
+    }
+    let last = breaks.get(n - 1)?;
+    let (mut j, _) = (0..m)
+        .filter_map(|j| Some((j, (*last.get(j)?)?.0)))
+        .min_by_key(|&(j, b)| (b, j))?;
+    let mut out = vec![0; n];
+    for i in (0..n).rev() {
+        if let Some(slot) = out.get_mut(i) {
+            *slot = j;
+        }
+        if i > 0 {
+            j = breaks.get(i)?.get(j).copied().flatten()?.1;
+        }
+    }
+    Some(out)
+}
+
 /// The skeleton of `lemma` and `forms`, and every form as a pattern over it.
 pub fn analyze(lemma: &str, forms: &[&str]) -> Analysis {
     let lemma_chars: Vec<char> = lemma.chars().collect();
@@ -72,14 +120,10 @@ pub fn analyze(lemma: &str, forms: &[&str]) -> Analysis {
         kept = keep.iter().filter_map(|&k| kept.get(k).copied()).collect();
     }
     let sub = letters(&kept);
-    // Where each kept letter is in each word.
-    let places: Vec<Option<Vec<usize>>> = all
-        .iter()
-        .map(|w| {
-            let (keep, pos) = lcs(&sub, w);
-            (keep.len() == sub.len()).then_some(pos)
-        })
-        .collect();
+    // Where each kept letter is in each word: of the ways to place them,
+    // the one breaking them into the fewest runs (`λυ` in `λέλυκα` is one
+    // run after `λε`, not `λ` … `υ`).
+    let places: Vec<Option<Vec<usize>>> = all.iter().map(|w| embed(&sub, w)).collect();
     // Kept letters stay one stem piece while they are adjacent in every word.
     let mut runs: Vec<Vec<usize>> = Vec::new();
     for k in 0..sub.len() {
@@ -147,6 +191,10 @@ mod tests {
         assert_eq!(a.stems, vec!["лес", "к"]);
         assert_eq!(a.lemma, "~о~");
         assert_eq!(a.forms.first(), Some(&Some("~~а".to_string())));
+        // Reduplication: the stem stays one piece.
+        let a = analyze("λυω", &["λελυκα", "ελυον"]);
+        assert_eq!(a.stems, vec!["λυ"]);
+        assert_eq!(a.forms.first(), Some(&Some("λε~κα".to_string())));
         // A prefix.
         let a = analyze("sagen", &["gesagt", "sagt"]);
         assert_eq!(a.lemma, "~en");

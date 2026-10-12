@@ -18,12 +18,15 @@ pub enum Change {
     /// Where stem meets ending: after one of `stem` (the stem's last
     /// letters), the ending's first letters `ending` and those of the stem
     /// become `to` (with the boundary): `ε+ο → +ου`. With `keep`, the stem's
-    /// letter stays before `to`: `[к|г|х]+ы → +и`.
+    /// letter stays before `to`: `[к|г|х]+ы → +и`. With `earlier`, only
+    /// where one of those letters (the vowels) comes earlier in the stem
+    /// (`φιλε+ο` contracts, `πλε+ο` doesn't).
     Edge {
         stem: Vec<String>,
         ending: String,
         to: String,
         keep: bool,
+        earlier: Vec<char>,
     },
     /// Along a tier: `letter` in the ending becomes `to` where the nearest
     /// of `on` and `off` before it is one of `on`, and none of `stop`
@@ -56,11 +59,21 @@ impl std::fmt::Display for Law {
         let list = |l: &[char]| l.iter().map(char::to_string).collect::<Vec<_>>().join(", ");
         match &self.change {
             Change::Edge {
-                stem, ending, to, ..
-            } => match stem.as_slice() {
-                [one] => write!(f, "{one}{BOUNDARY}{ending} → {to}"),
-                many => write!(f, "[{}]{BOUNDARY}{ending} → {to}", many.join("|")),
-            },
+                stem,
+                ending,
+                to,
+                earlier,
+                ..
+            } => {
+                match stem.as_slice() {
+                    [one] => write!(f, "{one}{BOUNDARY}{ending} → {to}")?,
+                    many => write!(f, "[{}]{BOUNDARY}{ending} → {to}", many.join("|"))?,
+                }
+                if !earlier.is_empty() {
+                    write!(f, " after a vowel earlier in the stem")?;
+                }
+                Ok(())
+            }
             Change::Tier {
                 letter,
                 to,
@@ -82,6 +95,27 @@ impl std::fmt::Display for Law {
 }
 
 impl Change {
+    /// A change at the stem's edge made only where one of `vowels` comes
+    /// earlier in the stem; `None` for any other.
+    fn after(&self, vowels: &[char]) -> Option<Change> {
+        match self {
+            Change::Edge {
+                stem,
+                ending,
+                to,
+                keep,
+                earlier,
+            } if earlier.is_empty() && !vowels.is_empty() => Some(Change::Edge {
+                stem: stem.clone(),
+                ending: ending.clone(),
+                to: to.clone(),
+                keep: *keep,
+                earlier: vowels.to_vec(),
+            }),
+            _ => None,
+        }
+    }
+
     /// What it makes of a form built marked at the stem's edge; `None` where
     /// it doesn't apply. A law on a tier runs as its compiled rule.
     fn rewrite(&self, built: &str) -> Option<String> {
@@ -91,11 +125,15 @@ impl Change {
                 ending: first,
                 to,
                 keep,
+                earlier,
             } => {
                 let (stem, ending) = built.split_once(BOUNDARY)?;
                 let rest = ending.strip_prefix(first.as_str())?;
                 let letter = letters.iter().find(|l| stem.ends_with(l.as_str()))?;
                 let head = stem.strip_suffix(letter.as_str())?;
+                if !earlier.is_empty() && !head.chars().any(|c| earlier.contains(&c)) {
+                    return None;
+                }
                 let kept = if *keep { letter.as_str() } else { "" };
                 Some(format!("{head}{kept}{to}{rest}"))
             }
@@ -125,6 +163,7 @@ impl Change {
                 ending,
                 to,
                 keep,
+                earlier,
             } => {
                 let stem = stem.join("|");
                 let (target, to) = if *keep {
@@ -132,12 +171,14 @@ impl Change {
                 } else {
                     (stem, to.clone())
                 };
-                [
-                    format!("{target}{BOUNDARY}{ending}"),
-                    to,
-                    String::new(),
-                    String::new(),
-                ]
+                // A vowel, then none until the target.
+                let before = if earlier.is_empty() {
+                    String::new()
+                } else {
+                    let v = list(earlier);
+                    format!("{{[{v}]}}{{![{v}]*}}")
+                };
+                [format!("{target}{BOUNDARY}{ending}"), to, before, String::new()]
             }
             // The letter is the ending's: the stem's are as the dictionary
             // writes them.
@@ -301,6 +342,22 @@ pub fn learn<'s>(
     candidates.extend(tiers(&readings, &forms));
     candidates.retain(|&(_, n)| n as usize >= MIN_WORDS);
     candidates.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(&b.0)));
+    // Each change at the stem's edge also where a vowel comes earlier in the
+    // stem, right after it: kept where the change alone breaks too much.
+    let mut vowels: Vec<char> = words
+        .iter()
+        .flat_map(|w| w.letters.chars())
+        .filter(|&c| orthography.is_vowel(c))
+        .collect();
+    vowels.sort_unstable();
+    vowels.dedup();
+    let candidates: Vec<(Change, u32)> = candidates
+        .into_iter()
+        .flat_map(|(change, n)| {
+            let twin = change.after(&vowels).map(|c| (c, n));
+            std::iter::once((change, n)).chain(twin)
+        })
+        .collect();
     let (laws, moved) = greedy(
         &candidates,
         readings,
@@ -711,6 +768,7 @@ fn edits(built: &str, want: &str) -> Vec<Change> {
                 ending: b.iter().collect(),
                 to: kept_part.iter().chain(&[BOUNDARY]).chain(rest).collect(),
                 keep: false,
+                earlier: Vec::new(),
             });
         }
     }
@@ -728,6 +786,7 @@ fn classes(support: &HashMap<Change, u32>) -> Vec<(Change, u32)> {
             ending,
             to,
             keep: false,
+            ..
         } = change
             && let [a] = stem.as_slice()
             && a.chars().count() == 1
@@ -746,6 +805,7 @@ fn classes(support: &HashMap<Change, u32>) -> Vec<(Change, u32)> {
                 ending: ending.to_string(),
                 to: rest.to_string(),
                 keep: true,
+                earlier: Vec::new(),
             };
             (change, letters.iter().map(|l| l.0).sum())
         })
@@ -962,6 +1022,7 @@ mod tests {
             ending: ending.to_string(),
             to: to.to_string(),
             keep: false,
+            earlier: Vec::new(),
         };
         // Greek contraction: ποιε + ομεν → ποιουμεν.
         assert!(edits("ποιε+ομεν", "ποιουμεν").contains(&edge("ε", "ο", "+ου")));
@@ -977,16 +1038,27 @@ mod tests {
             ending: "ы".into(),
             to: "+и".into(),
             keep: true,
+            earlier: Vec::new(),
         };
         assert_eq!(class, [(velar.clone(), 5)]);
         // The learner's rewrite agrees with the compiled rules.
+        // Contraction where a vowel comes earlier in the stem: not in `πλε`.
+        let vowels: Vec<char> = "αεηιουω".chars().collect();
+        let contract = edge("ε", "ο", "+ου").after(&vowels).expect("an edge law");
+        assert_eq!(contract.rewrite("πλε+ομεν"), None);
         for (change, built) in [
             (velar, "книг+ы"),
             (edge("ε", "ο", "+ου"), "ποιε+ομεν"),
             (edge("γ", "σ", "+ξ"), "λεγ+σω"),
+            (contract.clone(), "φιλε+ομεν"),
+            (contract.clone(), "ποιε+ομεν"),
+            (contract, "πλε+ομεν"),
         ] {
             let program = compile(std::slice::from_ref(&change)).expect("compiles");
-            assert_eq!(change.rewrite(built), Some(program.apply(built)));
+            assert_eq!(
+                change.rewrite(built).unwrap_or_else(|| built.to_string()),
+                program.apply(built)
+            );
         }
     }
 }

@@ -27,13 +27,16 @@ pub fn learn<'s>(
     sample.sort_by_key(|f| std::cmp::Reverse(f.iter().flatten().count()));
     sample.truncate(SAMPLE);
     // How well cell `s`'s form tells cell `c`'s: the share of words whose
-    // change is the commonest after the source's last two letters.
-    let score = |s: usize, c: usize| -> usize {
+    // change is the commonest after the source's last two letters; of equal
+    // shares, the one telling more words' forms as they are.
+    let score = |s: usize, c: usize| -> (usize, usize) {
         let mut counts: HashMap<(String, (&str, &str)), usize> = HashMap::default();
+        let mut same = 0;
         for f in &sample {
             if let (Some(Some(a)), Some(Some(b))) = (f.get(s), f.get(c)) {
                 let end: String = a.chars().rev().take(2).collect();
                 *counts.entry((end, change(a, b))).or_default() += 1;
+                same += usize::from(a == b);
             }
         }
         let mut best: HashMap<&str, usize> = HashMap::default();
@@ -41,19 +44,20 @@ pub fn learn<'s>(
             let b = best.entry(end.as_str()).or_default();
             *b = (*b).max(*n);
         }
-        best.values().sum()
+        (best.values().sum(), same)
     };
     // The tree, grown from the root: each time the cell told best from one
     // already in it.
     let mut parent: Vec<Option<usize>> = vec![None; cells];
-    let mut best: Vec<(usize, usize)> = (0..cells).map(|c| (score(root, c), root)).collect();
+    let mut best: Vec<((usize, usize), usize)> =
+        (0..cells).map(|c| (score(root, c), root)).collect();
     let mut placed = vec![false; cells];
     if let Some(p) = placed.get_mut(root) {
         *p = true;
     }
     while let Some(c) = (0..cells)
         .filter(|&c| !placed.get(c).copied().unwrap_or(true))
-        .max_by_key(|&c| (best.get(c).map_or(0, |b| b.0), std::cmp::Reverse(c)))
+        .max_by_key(|&c| (best.get(c).map_or((0, 0), |b| b.0), std::cmp::Reverse(c)))
     {
         if let (Some(p), Some(slot), Some(&(_, s))) =
             (placed.get_mut(c), parent.get_mut(c), best.get(c))
@@ -76,60 +80,243 @@ pub fn learn<'s>(
     parent
         .iter()
         .enumerate()
-        .filter_map(|(c, &s)| {
-            let s = s?;
-            let pairs: Vec<(&str, (&str, &str))> = forms
-                .iter()
-                .filter_map(|f| {
-                    let (a, b) = (f.get(s).copied().flatten()?, f.get(c).copied().flatten()?);
-                    Some((a, change(a, b)))
-                })
-                .collect();
-            let mut seen: HashMap<(&str, &str), usize> = HashMap::default();
-            for (_, ch) in &pairs {
-                *seen.entry(*ch).or_default() += 1;
-            }
-            let mut changes: Vec<(&str, &str)> = seen
-                .into_iter()
-                .filter(|&(_, n)| n >= MIN_WORDS)
-                .map(|(ch, _)| ch)
-                .collect();
-            changes.sort_unstable();
-            let index = |ch: &(&str, &str)| {
-                changes
-                    .binary_search(ch)
-                    .ok()
-                    .and_then(|i| u16::try_from(i).ok())
-            };
-            let examples: Vec<(String, u16)> = pairs
-                .iter()
-                .filter_map(|(a, ch)| Some((a.to_string(), index(ch)?)))
-                .collect();
-            if examples.is_empty() {
-                return None;
-            }
-            let fits = |word: &str, i: u16| {
-                changes
-                    .get(usize::from(i))
-                    .is_some_and(|(old, _)| word.ends_with(old))
-            };
-            let choice = choose::learn(&examples, settings, fits);
-            Some(Relation {
-                cell: u16::try_from(c).ok()?,
-                from: Cow::Owned(vec![u16::try_from(s).ok()?]),
-                changes: Cow::Owned(
-                    changes
-                        .iter()
-                        .map(|(old, new)| {
-                            (Cow::Owned(old.to_string()), Cow::Owned(new.to_string()))
-                        })
-                        .collect(),
-                ),
-                change: Some(choice),
-                listed: false,
-            })
-        })
+        .filter_map(|(c, &s)| edge(forms, s?, c, settings))
         .collect()
+}
+
+/// The relation telling cell `c` from cell `s`: the changes of the end of
+/// `s`'s form into `c`'s the words having both show, and rules on that
+/// form's ending choosing one. `None` when no word has both.
+fn edge<'s>(
+    forms: &[Vec<Option<&str>>],
+    s: usize,
+    c: usize,
+    settings: Settings,
+) -> Option<Relation<'s>> {
+    let pairs: Vec<(&str, (&str, &str))> = forms
+        .iter()
+        .filter_map(|f| {
+            let (a, b) = (f.get(s).copied().flatten()?, f.get(c).copied().flatten()?);
+            Some((a, change(a, b)))
+        })
+        .collect();
+    let mut seen: HashMap<(&str, &str), usize> = HashMap::default();
+    for (_, ch) in &pairs {
+        *seen.entry(*ch).or_default() += 1;
+    }
+    let mut changes: Vec<(&str, &str)> = seen
+        .into_iter()
+        .filter(|&(_, n)| n >= MIN_WORDS)
+        .map(|(ch, _)| ch)
+        .collect();
+    changes.sort_unstable();
+    let index = |ch: &(&str, &str)| {
+        changes
+            .binary_search(ch)
+            .ok()
+            .and_then(|i| u16::try_from(i).ok())
+    };
+    let examples: Vec<(String, u16)> = pairs
+        .iter()
+        .filter_map(|(a, ch)| Some((a.to_string(), index(ch)?)))
+        .collect();
+    if examples.is_empty() {
+        return None;
+    }
+    let fits = |word: &str, i: u16| {
+        changes
+            .get(usize::from(i))
+            .is_some_and(|(old, _)| word.ends_with(old))
+    };
+    let choice = choose::learn(&examples, settings, fits);
+    Some(Relation {
+        cell: u16::try_from(c).ok()?,
+        from: Cow::Owned(vec![u16::try_from(s).ok()?]),
+        changes: Cow::Owned(
+            changes
+                .iter()
+                .map(|(old, new)| (Cow::Owned(old.to_string()), Cow::Owned(new.to_string())))
+                .collect(),
+        ),
+        change: Some(choice),
+        listed: false,
+        analogy: None,
+    })
+}
+
+/// Relations for the cells no relation tells, those too few words have
+/// (`forms` as in [`learn`]; `coordinates`: each cell's place on the
+/// dimensions cells vary on, see [`crate::learn::Shape`]; `relations`: those
+/// learned already; `root`: the cell the others are told from). Such a cell is told from a cell differing from
+/// it on one dimension, changed as words change a cell into one differing
+/// from it the same way: the future subjunctive from the future indicative,
+/// as the present subjunctive from the present indicative. The pair nearest
+/// the cell (fewest other dimensions apart), then the one most words have,
+/// is chosen, preferring a pair a relation already tells one from the other
+/// (whose changes it then makes, see [`flexion::Relation::analogy`]); a cell
+/// told so can be told from in turn. A cell no such pair tells is the
+/// nearest cell's form, as it is.
+pub fn analogies<'s>(
+    forms: &[Vec<Option<&str>>],
+    coordinates: &[Vec<u16>],
+    relations: &[Relation<'_>],
+    root: usize,
+    settings: Settings,
+) -> Vec<Relation<'s>> {
+    // The pairs of cells a relation already tells one from the other: an
+    // analogy with one of them makes its changes.
+    let edges: crate::HashSet<(usize, usize)> = relations
+        .iter()
+        .filter(|r| r.analogy.is_none())
+        .filter_map(|r| Some((r.source()?, usize::from(r.cell))))
+        .collect();
+    let cells = coordinates.len();
+    let mut attested = vec![0usize; cells];
+    for f in forms {
+        for (c, form) in f.iter().enumerate() {
+            if let (Some(_), Some(n)) = (form, attested.get_mut(c)) {
+                *n += 1;
+            }
+        }
+    }
+    let has = |c: usize| attested.get(c).is_some_and(|&n| n > 0);
+    let at = |c: usize| coordinates.get(c).map_or(&[][..], Vec::as_slice);
+    let cell_at: HashMap<&[u16], usize> = (0..cells).map(|c| (at(c), c)).collect();
+    // How many dimensions two cells differ on, and the last one.
+    let apart = |x: usize, y: usize| {
+        let (a, b) = (at(x), at(y));
+        let mut n = 0;
+        let mut last = 0;
+        for k in 0..a.len().max(b.len()) {
+            if a.get(k) != b.get(k) {
+                n += 1;
+                last = k;
+            }
+        }
+        (n, last)
+    };
+    // How many words have both cells.
+    let mut both: HashMap<(usize, usize), usize> = HashMap::default();
+    let mut both = |x: usize, y: usize| {
+        *both.entry((x, y)).or_insert_with(|| {
+            forms
+                .iter()
+                .filter(|f| {
+                    f.get(x).copied().flatten().is_some() && f.get(y).copied().flatten().is_some()
+                })
+                .count()
+        })
+    };
+    let mut told = vec![false; cells];
+    for c in relations.iter().map(|r| usize::from(r.cell)).chain([root]) {
+        if let Some(t) = told.get_mut(c) {
+            *t = true;
+        }
+    }
+    let mut out: Vec<Relation<'s>> = Vec::new();
+    loop {
+        let before = out.len();
+        for c in 0..cells {
+            if told.get(c).copied().unwrap_or(true) {
+                continue;
+            }
+            // (other dimensions apart, fewer words, source, from, to)
+            // (other dimensions apart, not a relation's pair, fewer words,
+            // source, from, to)
+            let mut best: Option<(usize, bool, std::cmp::Reverse<usize>, usize, usize, usize)> =
+                None;
+            for s in 0..cells {
+                if !told.get(s).copied().unwrap_or(false) {
+                    continue;
+                }
+                let (1, k) = apart(s, c) else { continue };
+                let (Some(&from), Some(&to)) = (at(s).get(k), at(c).get(k)) else {
+                    continue;
+                };
+                for a in (0..cells).filter(|&a| a != s && has(a)) {
+                    if at(a).get(k) != Some(&from) {
+                        continue;
+                    }
+                    let mut target = at(a).to_vec();
+                    if let Some(slot) = target.get_mut(k) {
+                        *slot = to;
+                    }
+                    let Some(&b) = cell_at.get(target.as_slice()).filter(|&&b| has(b)) else {
+                        continue;
+                    };
+                    let n = both(a, b);
+                    if n == 0 {
+                        continue;
+                    }
+                    let key = (
+                        apart(a, s).0,
+                        !edges.contains(&(a, b)),
+                        std::cmp::Reverse(n),
+                        s,
+                        a,
+                        b,
+                    );
+                    if best.is_none_or(|b| key < b) {
+                        best = Some(key);
+                    }
+                }
+            }
+            let Some((_, fresh, _, s, a, b)) = best else {
+                continue;
+            };
+            // A relation's pair: its changes; else the pair's own.
+            let relation = if fresh {
+                edge(forms, a, b, settings)
+            } else {
+                Some(Relation {
+                    cell: 0,
+                    from: Cow::Borrowed(&[]),
+                    changes: Cow::Borrowed(&[]),
+                    change: None,
+                    listed: false,
+                    analogy: None,
+                })
+            };
+            let Some(mut relation) = relation else {
+                continue;
+            };
+            relation.cell = u16::try_from(c).unwrap_or(u16::MAX);
+            relation.from = Cow::Owned(vec![u16::try_from(s).unwrap_or(u16::MAX)]);
+            relation.analogy = u16::try_from(a).ok().zip(u16::try_from(b).ok());
+            if let Some(t) = told.get_mut(c) {
+                *t = true;
+            }
+            out.push(relation);
+        }
+        if out.len() == before {
+            break;
+        }
+    }
+    // A cell no pair of cells tells: the form of the nearest one, as it is.
+    for c in (0..cells).filter(|&c| !told.get(c).copied().unwrap_or(true)) {
+        let nearest = (0..cells)
+            .filter(|&s| told.get(s).copied().unwrap_or(false))
+            .min_by_key(|&s| {
+                (
+                    apart(s, c).0,
+                    std::cmp::Reverse(attested.get(s).copied()),
+                    s,
+                )
+            });
+        let (Some(s), Ok(cell)) = (nearest, u16::try_from(c)) else {
+            continue;
+        };
+        let Ok(s) = u16::try_from(s) else { continue };
+        out.push(Relation {
+            cell,
+            from: Cow::Owned(vec![s]),
+            changes: Cow::Borrowed(&[]),
+            change: None,
+            listed: false,
+            analogy: Some((s, s)),
+        });
+    }
+    out
 }
 
 /// How `a`'s end changes into `b`'s: what follows the letters they share

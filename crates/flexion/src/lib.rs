@@ -204,7 +204,7 @@ macro_rules! spellings {
 }
 
 /// A cell of a paradigm table, as text: a pattern (`"~а"`), `derived` (see
-/// [`Relation`]), or `_` for the parent's.
+/// [`Relation`]), an accent's place (`Stem`), or `_` for the parent's.
 #[macro_export]
 macro_rules! cell {
     // `concat!` takes literals only: this is `DERIVED`.
@@ -216,5 +216,8 @@ macro_rules! cell {
     };
     ($pattern:literal) => {
         $pattern
+    };
+    ($place:ident) => {
+        stringify!($place)
     };
 }

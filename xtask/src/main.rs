@@ -4,7 +4,8 @@
 //! - `build`: learn the language's grammar, measure it, and write its crate;
 //! - `readme`: rewrite a built crate's README, keeping its report;
 //! - `try`: learn on nine tenths of the words and score the held-out tenth
-//!   (`--systems`: as principal parts' systems);
+//!   (`--quick`: without fitting the sharpness, from the headword and the
+//!   principal parts only);
 //! - `inspect`: a word's readings and forms, and a sample of irregular forms.
 
 use flexion_train::extract::{self, Lexeme, PosData};
@@ -13,7 +14,7 @@ use flexion_train::{choose, eval, learn, script};
 use std::path::PathBuf;
 use std::time::Instant;
 
-const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|inspect> <language> [--pos <part of speech>] [--errors N]";
+const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|inspect> <language> [--pos <part of speech>] [--errors N] [--quick]";
 
 fn main() {
     if let Err(e) = run() {
@@ -51,7 +52,8 @@ fn run() -> Result<(), String> {
             }
             let errors = flag("--errors")
                 .map_or(Ok(0), |e| e.parse::<usize>().map_err(|_| "bad --errors"))?;
-            try_language(&lang, flag("--pos").as_deref(), settings, errors)
+            let quick = args.iter().any(|a| a == "--quick");
+            try_language(&lang, flag("--pos").as_deref(), settings, errors, quick)
         }
         "inspect" => inspect(
             &lang,
@@ -132,6 +134,7 @@ fn try_language(
     only: Option<&str>,
     settings: choose::Settings,
     errors: usize,
+    quick: bool,
 ) -> Result<(), String> {
     let data = load(lang)?;
     let script = script::Script::new(&lang.spelling);
@@ -148,7 +151,9 @@ fn try_language(
             .collect();
         // The sharpness, fitted on the dev tenth with a grammar that hasn't
         // seen it.
-        let sharpness = {
+        let sharpness = if quick {
+            1.0
+        } else {
             let fit: Vec<Lexeme> = train
                 .iter()
                 .filter(|l| eval::bucket(&l.key) != eval::DEV)
@@ -269,8 +274,11 @@ fn try_language(
             );
         }
         let parts = flexion_train::parts(lang, part)?;
-        let mut inputs = vec![eval::Input::Headword, eval::Input::Full];
-        if !part.inherent.is_empty() {
+        let mut inputs = vec![eval::Input::Headword];
+        if !quick {
+            inputs.push(eval::Input::Full);
+        }
+        if !quick && !part.inherent.is_empty() {
             inputs.push(eval::Input::Features);
         }
         if !parts.is_empty() {
