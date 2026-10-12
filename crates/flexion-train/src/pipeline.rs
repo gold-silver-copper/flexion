@@ -29,7 +29,15 @@ pub struct Measured {
     pub attested: Score,
     /// Learned as its principal parts' systems.
     pub systems: bool,
+    /// Top-1 from the headword on the cells most training words have, and on
+    /// the rare ones (see [`RARE`]): `(forms, right)` each.
+    pub common: (usize, usize),
+    pub rare: (usize, usize),
 }
+
+/// A cell fewer than this share of the training words have is rare: its
+/// patterns rest on few words, or were filled in from other cells.
+const RARE: f64 = 0.1;
 
 /// The dictionary's words a grammar is checked on for attested accuracy, at
 /// most.
@@ -162,6 +170,18 @@ pub fn build<'s>(
             .then(|| scored.with(|g| eval::score(g, &orthography, &test, Input::Citation(&parts))));
         let main: Vec<&Lexeme> = train.iter().filter(|l| l.source == 0).collect();
         let floor = eval::floor(&orthography, &main, &test);
+        let (mut common, mut rare) = ((0, 0), (0, 0));
+        for (cell, &(forms, right)) in headword.cells.iter().enumerate() {
+            let have = main
+                .iter()
+                .filter(|l| l.cells.get(cell).is_some_and(|f| !f.is_empty()))
+                .count();
+            #[allow(clippy::cast_precision_loss)]
+            let share = have as f64 / main.len().max(1) as f64;
+            let slot = if share < RARE { &mut rare } else { &mut common };
+            slot.0 += forms;
+            slot.1 += right;
+        }
         let mut shipped = Inflection::learn(script, &shape, kind, &d.lexemes, settings);
         shipped.set_sharpness(sharpness);
         // Attested: an even sample of the dictionary's own words (of
@@ -198,6 +218,8 @@ pub fn build<'s>(
             floor,
             attested,
             systems: kind.is_some(),
+            common,
+            rare,
         });
         grammars.push(shipped);
     }
@@ -239,20 +261,31 @@ pub fn report(lang: &Language, inflections: &[Inflection<'_>], measured: &[Measu
          The margin after top-1 is a 95% interval, counting words. *Lemma in full*: top-1 typed\n\
          with every mark the dictionary's table writes, and said to be so (`spelled_in_full`).\n\
          *Principal parts given*: top-1 of the other forms, given the dictionary's principal\n\
-         parts. *Floor*: the longest-suffix rule (the SIGMORPHON shared tasks' non-neural\n\
-         baseline; letters only). *Attested*: top-1 of the shipped grammar on the dictionary's\n\
+         parts. *Common* and *rare cells*: top-1 on the cells at least a tenth of the training\n\
+         words have, and on the others (with the number of forms). *Floor*: the CoNLL–SIGMORPHON\n\
+         2017 shared task's non-neural baseline (letters only). *Attested*: top-1 of the shipped grammar on the dictionary's\n\
          own words, typed in full.\n\n",
     );
     s.push_str(
-        "| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | floor | attested |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n",
+        "| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | common cells | rare cells | floor | attested |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n",
     );
+    // `right` of `forms`, as a percentage with the count of forms.
+    let share = |(forms, right): (usize, usize)| {
+        if forms == 0 {
+            String::new()
+        } else {
+            #[allow(clippy::cast_precision_loss)]
+            let p = 100.0 * right as f64 / forms as f64;
+            format!("{p:.2}% ({forms})")
+        }
+    };
     for m in measured {
         let p = m.headword.accuracy();
         #[allow(clippy::cast_precision_loss)]
         let noise = 1.96 * (p * (1.0 - p) / m.test_words.max(1) as f64).sqrt();
         let _ = writeln!(
             s,
-            "| {} | {} | {} | **{:.2}%** ± {:.1} | {:.2}% | {:.3} | {:.2}% | {} | {:.2}% | {:.2}% |",
+            "| {} | {} | {} | **{:.2}%** ± {:.1} | {:.2}% | {:.3} | {:.2}% | {} | {} | {} | {:.2}% | {:.2}% |",
             m.name,
             m.test_words,
             m.headword.forms,
@@ -264,6 +297,8 @@ pub fn report(lang: &Language, inflections: &[Inflection<'_>], measured: &[Measu
             m.citation
                 .as_ref()
                 .map_or(String::new(), |c| format!("{:.2}%", 100.0 * c.accuracy())),
+            share(m.common),
+            share(m.rare),
             100.0 * m.floor,
             100.0 * m.attested.accuracy(),
         );

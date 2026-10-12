@@ -2,7 +2,6 @@
 //! one tenth is never trained on and scored, and how well the stated
 //! probabilities match how often the answers are right is measured.
 
-use crate::HashMap;
 use crate::extract::Lexeme;
 use flexion::{Inflect, Label};
 
@@ -49,6 +48,8 @@ pub struct Score {
     /// Per probability tenth of the top candidate: `(forms, right, sum of
     /// probabilities)`.
     pub bins: [(usize, usize, f64); 10],
+    /// Per cell: `(forms, right)`.
+    pub cells: Vec<(usize, usize)>,
 }
 
 impl Score {
@@ -132,6 +133,13 @@ pub fn score<F: Label, G: Inflect<F> + ?Sized>(
             if right {
                 s.right += 1;
             }
+            if s.cells.len() <= cell {
+                s.cells.resize(cell + 1, (0, 0));
+            }
+            if let Some(c) = s.cells.get_mut(cell) {
+                c.0 += 1;
+                c.1 += usize::from(right);
+            }
             if candidates.first().is_some_and(|c| {
                 orthography.read(&c.form).letters == orthography.read(want).letters
             }) {
@@ -153,73 +161,33 @@ pub fn score<F: Label, G: Inflect<F> + ?Sized>(
     s
 }
 
-/// The share of `test`'s forms (typed as their headwords) the longest-suffix
-/// rule gets right: the non-neural floor of the SIGMORPHON shared tasks. Each
-/// training pair of headword and form gives a rule rewriting the headword's
-/// end (what follows their common beginning), keyed by that end and up to
-/// three letters before it; a test headword takes, cell by cell, the
-/// commonest rule of the longest key it ends in. Letters only: stress and
-/// accents aside.
+/// The share of `test`'s forms (typed as their headwords) the shared task's
+/// non-neural baseline gets right (see [`crate::baseline`]), learned from
+/// `train`'s headwords and forms. Letters only: stress and accents aside.
 pub fn floor(orthography: &flexion::Orthography<'_>, train: &[&Lexeme], test: &[&Lexeme]) -> f64 {
-    let letters = |s: &str| -> Vec<char> { orthography.read(s).letters.chars().collect() };
-    type Rules = HashMap<Vec<char>, HashMap<(usize, Vec<char>), u32>>;
-    let mut rules: Vec<Rules> = Vec::new();
-    for l in train {
-        let lemma = letters(&l.lemma);
-        for (cell, forms) in l.cells.iter().enumerate() {
-            let Some(form) = forms.first().map(|f| letters(f)) else {
-                continue;
-            };
-            if rules.len() <= cell {
-                rules.resize_with(cell + 1, HashMap::default);
-            }
-            let common = lemma.iter().zip(&form).take_while(|(a, b)| a == b).count();
-            let cut = lemma.len() - common;
-            let new: Vec<char> = form.get(common..).unwrap_or_default().to_vec();
-            for context in 0..=3 {
-                let Some(key) = lemma
-                    .len()
-                    .checked_sub(cut + context)
-                    .and_then(|i| lemma.get(i..))
-                else {
-                    break;
-                };
-                if let Some(r) = rules.get_mut(cell) {
-                    *r.entry(key.to_vec())
-                        .or_default()
-                        .entry((cut, new.clone()))
-                        .or_default() += 1;
-                }
-            }
-        }
-    }
+    let letters = |s: &str| orthography.read(s).letters;
+    let pairs: Vec<(String, usize, String)> = train
+        .iter()
+        .flat_map(|l| {
+            let lemma = letters(&l.lemma);
+            l.cells
+                .iter()
+                .enumerate()
+                .filter_map(move |(c, fs)| Some((lemma.clone(), c, letters(fs.first()?))))
+        })
+        .collect();
+    let baseline = crate::baseline::Baseline::learn(
+        pairs.iter().map(|(l, c, f)| (l.as_str(), *c, f.as_str())),
+    );
     let (mut right, mut all) = (0usize, 0usize);
     for l in test {
         let lemma = letters(&l.lemma);
         for (cell, forms) in l.cells.iter().enumerate() {
-            let Some(want) = forms.first().map(|f| letters(f)) else {
+            let Some(want) = forms.first() else {
                 continue;
             };
             all += 1;
-            let guess = rules.get(cell).and_then(|r| {
-                (0..=lemma.len())
-                    .filter_map(|i| r.get(lemma.get(i..)?))
-                    .next()
-                    .and_then(|options| {
-                        options
-                            .iter()
-                            .max_by(|a, b| a.1.cmp(b.1).then_with(|| b.0.cmp(a.0)))
-                    })
-                    .map(|((cut, new), _)| {
-                        let mut out: Vec<char> = lemma
-                            .get(..lemma.len().saturating_sub(*cut))
-                            .unwrap_or_default()
-                            .to_vec();
-                        out.extend(new);
-                        out
-                    })
-            });
-            right += usize::from(guess.as_ref() == Some(&want));
+            right += usize::from(baseline.inflect(&lemma, cell) == letters(want));
         }
     }
     ratio(right, all)

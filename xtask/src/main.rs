@@ -359,6 +359,33 @@ fn try_language(
                 a.class.exceptions.len(),
             );
         }
+        {
+            let main: Vec<&Lexeme> = train.iter().filter(|l| l.source == 0).collect();
+            let s = eval::score::<u8, _>(g, &g.orthography, &test, eval::Input::Headword);
+            let (mut common, mut rare) = ((0usize, 0usize), (0usize, 0usize));
+            for (cell, &(forms, right)) in s.cells.iter().enumerate() {
+                let have = main
+                    .iter()
+                    .filter(|l| l.cells.get(cell).is_some_and(|f| !f.is_empty()))
+                    .count();
+                let slot = if have * 10 < main.len() {
+                    &mut rare
+                } else {
+                    &mut common
+                };
+                slot.0 += forms;
+                slot.1 += right;
+            }
+            let pct = |(f, r): (usize, usize)| 100.0 * r as f64 / f.max(1) as f64;
+            println!(
+                "  floor {:.2}%; common cells {:.2}% ({}), rare cells {:.2}% ({})",
+                100.0 * eval::floor(&g.orthography, &main, &test),
+                pct(common),
+                common.0,
+                pct(rare),
+                rare.0
+            );
+        }
         for input in [eval::Input::Headword, eval::Input::Full] {
             let s = eval::score::<u8, _>(g, &g.orthography, &test, input);
             println!(

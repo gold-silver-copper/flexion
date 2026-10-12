@@ -8,6 +8,7 @@ pub type HashSet<K> = std::collections::HashSet<K, Fixed>;
 /// See [`HashMap`].
 pub type Fixed = std::hash::BuildHasherDefault<std::collections::hash_map::DefaultHasher>;
 
+pub mod baseline;
 pub mod cells;
 pub mod choose;
 pub mod eval;
