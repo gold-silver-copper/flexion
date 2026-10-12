@@ -17,7 +17,12 @@ pub struct Part<'a, 's> {
 }
 
 /// The files of the crate, `(path under the crate, text)`.
-pub fn files(lang: &Language, script: &Script, parts: &[Part<'_, '_>], report: &str) -> Result<Vec<(String, String)>, String> {
+pub fn files(
+    lang: &Language,
+    script: &Script,
+    parts: &[Part<'_, '_>],
+    report: &str,
+) -> Result<Vec<(String, String)>, String> {
     let mut out = vec![
         ("Cargo.toml".to_string(), manifest(lang)),
         ("README.md".to_string(), readme(lang, report)),
@@ -31,7 +36,7 @@ pub fn files(lang: &Language, script: &Script, parts: &[Part<'_, '_>], report: &
     for part in parts {
         let cells = Cells::new(lang, part.spec)?;
         let layout = Layout::new(&cells);
-        out.extend(part_files(lang, part, &layout));
+        out.extend(part_files(lang, part, &cells, &layout));
     }
     Ok(out)
 }
@@ -82,7 +87,11 @@ impl Layout {
                 continue;
             };
             let columns: Vec<String> = last.values.iter().map(|v| ident(v.short)).collect();
-            let short: Vec<String> = last.values.iter().map(|v| v.short.replace(['.', '-', ' '], "_")).collect();
+            let short: Vec<String> = last
+                .values
+                .iter()
+                .map(|v| v.short.replace(['.', '-', ' '], "_"))
+                .collect();
             // The rows: every combination of the other features' values.
             let mut combos: Vec<Vec<usize>> = vec![Vec::new()];
             for f in rest {
@@ -104,7 +113,11 @@ impl Layout {
                 if n == 1 || gi > 0 {
                     parts.push(ident(g.name));
                 }
-                let mut const_parts: Vec<String> = if n == 1 || gi > 0 { vec![g.name.to_string()] } else { Vec::new() };
+                let mut const_parts: Vec<String> = if n == 1 || gi > 0 {
+                    vec![g.name.to_string()]
+                } else {
+                    Vec::new()
+                };
                 for (f, &v) in rest.iter().zip(&combo) {
                     if let Some(val) = f.values.get(v) {
                         parts.push(snake(val.name));
@@ -148,7 +161,13 @@ impl Layout {
 fn const_name(s: &str) -> String {
     let mut out: String = s
         .chars()
-        .map(|c| if c.is_alphanumeric() { c.to_ascii_uppercase() } else { '_' })
+        .map(|c| {
+            if c.is_alphanumeric() {
+                c.to_ascii_uppercase()
+            } else {
+                '_'
+            }
+        })
         .collect();
     out = out.trim_start_matches('_').to_string();
     if out.chars().next().is_none_or(|c| c.is_ascii_digit()) {
@@ -173,11 +192,11 @@ fn ident(s: &str) -> String {
 }
 
 const KEYWORDS: &[&str] = &[
-    "as", "break", "const", "continue", "crate", "else", "enum", "extern", "false", "fn", "for", "if", "impl",
-    "in", "let", "loop", "match", "mod", "move", "mut", "pub", "ref", "return", "self", "Self", "static",
-    "struct", "super", "trait", "true", "type", "unsafe", "use", "where", "while", "async", "await", "dyn",
-    "abstract", "become", "box", "do", "final", "macro", "override", "priv", "typeof", "unsized", "virtual",
-    "yield", "try", "gen",
+    "as", "break", "const", "continue", "crate", "else", "enum", "extern", "false", "fn", "for",
+    "if", "impl", "in", "let", "loop", "match", "mod", "move", "mut", "pub", "ref", "return",
+    "self", "Self", "static", "struct", "super", "trait", "true", "type", "unsafe", "use", "where",
+    "while", "async", "await", "dyn", "abstract", "become", "box", "do", "final", "macro",
+    "override", "priv", "typeof", "unsized", "virtual", "yield", "try", "gen",
 ];
 
 /// A paradigm's enum variant: its name with a capital (`книга` → `Книга`),
@@ -187,7 +206,10 @@ fn variant(name: &str) -> String {
     let mut chars = cleaned.chars();
     let mut out: String = match chars.next() {
         Some(first) if first.is_alphabetic() => first.to_uppercase().chain(chars).collect(),
-        Some(first) => std::iter::once('P').chain(std::iter::once(first)).chain(chars).collect(),
+        Some(first) => std::iter::once('P')
+            .chain(std::iter::once(first))
+            .chain(chars)
+            .collect(),
         None => "Paradigm".to_string(),
     };
     if KEYWORDS.contains(&out.as_str()) {
@@ -206,7 +228,12 @@ fn kind(part: &PartOfSpeech) -> (&'static str, &'static str, &'static str) {
     }
 }
 
-fn part_files(lang: &Language, part: &Part<'_, '_>, layout: &Layout) -> Vec<(String, String)> {
+fn part_files(
+    lang: &Language,
+    part: &Part<'_, '_>,
+    cells: &Cells<'_>,
+    layout: &Layout,
+) -> Vec<(String, String)> {
     let dir = format!("src/{}", part.spec.name);
     let g = &part.learned.grammar;
     let (ty, one, many) = kind(part.spec);
@@ -224,7 +251,10 @@ fn part_files(lang: &Language, part: &Part<'_, '_>, layout: &Layout) -> Vec<(Str
     }
     let name_of = |p: u16| variants.get(usize::from(p)).cloned().unwrap_or_default();
     // The feature referrals depend on, as the crate's enum names it.
-    let feature_name: Option<&str> = part.learned.feature.and_then(|f| part.spec.inherent.get(f).copied());
+    let feature_name: Option<&str> = part
+        .learned
+        .feature
+        .and_then(|f| part.spec.inherent.get(f).copied());
     let mut files = Vec::new();
 
     // mod.rs
@@ -246,7 +276,7 @@ fn part_files(lang: &Language, part: &Part<'_, '_>, layout: &Layout) -> Vec<(Str
     }
     m.push_str("mod irregular;\nmod paradigms;\nmod rules;\n\n");
     let _ = writeln!(m, "pub use paradigms::{ty};\n");
-    m.push_str("use flexion::Grammar;\nuse std::borrow::Cow;\n\n");
+    m.push_str("use crate::*;\nuse flexion::{{Candidate, Grammar, Known, Reading}};\nuse std::borrow::Cow;\n\n");
     m.push_str("/// Each cell's place in a paradigm.\n#[allow(dead_code)]\npub mod cell {\n");
     for (i, name) in layout.names.iter().enumerate() {
         let _ = writeln!(m, "    pub const {name}: u16 = {i};");
@@ -260,13 +290,26 @@ fn part_files(lang: &Language, part: &Part<'_, '_>, layout: &Layout) -> Vec<(Str
         g.capitalized,
         many.to_uppercase(),
         one.to_uppercase(),
-        if g.compound.is_some() { "Some(compounds::COMPOUND)" } else { "None" },
+        if g.compound.is_some() {
+            "Some(compounds::COMPOUND)"
+        } else {
+            "None"
+        },
         g.smoothing,
         g.sharpness,
         generics = feature_name.map_or(String::new(), |f| format!(", u8, crate::{f}")),
-        referrals = feature_name.map_or("Cow::Borrowed(&[])".to_string(), |f| format!("Cow::Borrowed(&{}::REFERRALS)", snake(f))),
-        feature = feature_name.map_or("None".to_string(), |f| format!("Some({}::{})", snake(f), f.to_uppercase())),
+        referrals = feature_name.map_or("Cow::Borrowed(&[])".to_string(), |f| format!(
+            "Cow::Borrowed(&{}::REFERRALS)",
+            snake(f)
+        )),
+        feature = feature_name.map_or("None".to_string(), |f| format!(
+            "Some({}::{})",
+            snake(f),
+            f.to_uppercase()
+        )),
     );
+    m.push('\n');
+    m.push_str(&api(part, cells, layout, ty, feature_name));
     files.push((format!("{dir}/mod.rs"), m));
 
     // paradigms.rs
@@ -277,9 +320,17 @@ fn part_files(lang: &Language, part: &Part<'_, '_>, layout: &Layout) -> Vec<(Str
     );
     p.push_str("use flexion::Paradigm;\n\n");
     // The table macro.
-    let _ = writeln!(p, "/// Writes one {one}: the word it is named after, how many words follow it,\n/// the lemma's pattern, then a row of patterns per line (`referred`: the form\n/// is another cell's, as the word's {feature} says):", feature = feature_name.map_or_else(|| "feature".to_string(), str::to_lowercase));
+    let _ = writeln!(
+        p,
+        "/// Writes one {one}: the word it is named after, how many words follow it,\n/// the lemma's pattern, then a row of patterns per line (`referred`: the form\n/// is another cell's, as the word's {feature} says):",
+        feature = feature_name.map_or_else(|| "feature".to_string(), str::to_lowercase)
+    );
     for row in &layout.rows {
-        let cols = if row.columns.is_empty() { String::new() } else { format!(" ({})", row.columns.join(", ")) };
+        let cols = if row.columns.is_empty() {
+            String::new()
+        } else {
+            format!(" ({})", row.columns.join(", "))
+        };
         let _ = writeln!(p, "/// `{}`{cols}", row.label);
     }
     let _ = writeln!(p, "macro_rules! {one} {{");
@@ -316,7 +367,12 @@ fn part_files(lang: &Language, part: &Part<'_, '_>, layout: &Layout) -> Vec<(Str
         "/// Every {one} learned.\n#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]\npub enum {ty} {{"
     );
     for (v, par) in variants.iter().zip(g.paradigms.iter()) {
-        let _ = writeln!(p, "    /// Like `{}`: {} words.", par.name, thousands(u64::from(par.words)));
+        let _ = writeln!(
+            p,
+            "    /// Like `{}`: {} words.",
+            par.name,
+            thousands(u64::from(par.words))
+        );
         let _ = writeln!(p, "    {v},");
     }
     p.push_str("}\n\n");
@@ -357,7 +413,13 @@ fn part_files(lang: &Language, part: &Part<'_, '_>, layout: &Layout) -> Vec<(Str
             thousands(u64::from(par.words)),
             examples.join(", ")
         );
-        let _ = writeln!(p, "    {one}!({:?}, {}, {:?};", par.name.as_ref(), par.words, par.lemma.as_ref());
+        let _ = writeln!(
+            p,
+            "    {one}!({:?}, {}, {:?};",
+            par.name.as_ref(),
+            par.words,
+            par.lemma.as_ref()
+        );
         for row in &layout.rows {
             let pats: Vec<String> = row
                 .cells
@@ -381,7 +443,10 @@ fn part_files(lang: &Language, part: &Part<'_, '_>, layout: &Layout) -> Vec<(Str
         r,
         "//! Which {one} a word takes. The rule with the longest ending the word has\n//! decides, giving each {one} with how many of the dictionary's words with\n//! that ending follow it; the words no rule gets right are listed. A rule is\n//! kept only when it pays for itself: it must describe the words it covers\n//! in fewer bits than the broader rule does, by more than the rule costs.\n"
     );
-    let _ = writeln!(r, "use super::paradigms::{ty}::{{self, *}};\nuse flexion::Choice;\n");
+    let _ = writeln!(
+        r,
+        "use super::paradigms::{ty}::{{self, *}};\nuse flexion::Choice;\n"
+    );
     let _ = writeln!(
         r,
         "/// {} rules and {} listed words.\npub(super) const {}: Choice<'static, {ty}> = flexion::choice! {{\n    rules {{",
@@ -395,7 +460,12 @@ fn part_files(lang: &Language, part: &Part<'_, '_>, layout: &Layout) -> Vec<(Str
             .iter()
             .map(|&(l, n)| format!("{} {n}", name_of(l)))
             .collect();
-        let _ = writeln!(r, "        {:?} => [{}],", rule.ending.as_ref(), counts.join(", "));
+        let _ = writeln!(
+            r,
+            "        {:?} => [{}],",
+            rule.ending.as_ref(),
+            counts.join(", ")
+        );
     }
     r.push_str("    }\n    listed {\n");
     for (w, l) in g.paradigm.exceptions.iter() {
@@ -406,17 +476,34 @@ fn part_files(lang: &Language, part: &Part<'_, '_>, layout: &Layout) -> Vec<(Str
 
     // The feature referrals depend on.
     if let (Some(f), Some(choice)) = (feature_name, &g.feature) {
-        let values = lang.feature(f).map(|x| x.values.as_slice()).unwrap_or_default();
+        let values = lang
+            .feature(f)
+            .map(|x| x.values.as_slice())
+            .unwrap_or_default();
         let value = |v: u8| values.get(usize::from(v)).map_or("", |x| x.name);
-        let cell_name = |c: u16| layout.names.get(usize::from(c)).cloned().unwrap_or_default();
+        let cell_name = |c: u16| {
+            layout
+                .names
+                .get(usize::from(c))
+                .cloned()
+                .unwrap_or_default()
+        };
         let lower = f.to_lowercase();
         let mut r = String::new();
         let _ = writeln!(
             r,
             "//! {f}, which decides the cells some {many} refer to others, and which\n//! words have which. The rule with the longest ending the word has decides;\n//! the words no rule gets right are listed.\n\nuse super::cell::*;\nuse crate::{f}::{{self, *}};\nuse flexion::{{Choice, Referral}};\nuse std::borrow::Cow;\n"
         );
-        let _ = writeln!(r, "/// The cells whose form, in the {many} that say `referred`, is another\n/// cell's: per {lower}, in order ({}), the cell.", values.iter().map(|x| x.name).collect::<Vec<_>>().join(", "));
-        let _ = writeln!(r, "pub(super) static REFERRALS: [Referral<'static>; {}] = [", g.referrals.len());
+        let _ = writeln!(
+            r,
+            "/// The cells whose form, in the {many} that say `referred`, is another\n/// cell's: per {lower}, in order ({}), the cell.",
+            values.iter().map(|x| x.name).collect::<Vec<_>>().join(", ")
+        );
+        let _ = writeln!(
+            r,
+            "pub(super) static REFERRALS: [Referral<'static>; {}] = [",
+            g.referrals.len()
+        );
         for referral in g.referrals.iter() {
             let to: Vec<String> = referral.to.iter().map(|&t| cell_name(t)).collect();
             let _ = writeln!(
@@ -435,8 +522,17 @@ fn part_files(lang: &Language, part: &Part<'_, '_>, layout: &Layout) -> Vec<(Str
             f.to_uppercase()
         );
         for rule in choice.rules.iter() {
-            let counts: Vec<String> = rule.counts.iter().map(|&(l, n)| format!("{} {n}", value(l))).collect();
-            let _ = writeln!(r, "        {:?} => [{}],", rule.ending.as_ref(), counts.join(", "));
+            let counts: Vec<String> = rule
+                .counts
+                .iter()
+                .map(|&(l, n)| format!("{} {n}", value(l)))
+                .collect();
+            let _ = writeln!(
+                r,
+                "        {:?} => [{}],",
+                rule.ending.as_ref(),
+                counts.join(", ")
+            );
         }
         r.push_str("    }\n    listed {\n");
         for (w, l) in choice.exceptions.iter() {
@@ -460,8 +556,17 @@ fn part_files(lang: &Language, part: &Part<'_, '_>, layout: &Layout) -> Vec<(Str
             thousands(c.exceptions.len() as u64),
         );
         for rule in c.rules.iter() {
-            let counts: Vec<String> = rule.counts.iter().map(|&(l, n)| format!("{l:?} {n}")).collect();
-            let _ = writeln!(r, "        {:?} => [{}],", rule.ending.as_ref(), counts.join(", "));
+            let counts: Vec<String> = rule
+                .counts
+                .iter()
+                .map(|&(l, n)| format!("{l:?} {n}"))
+                .collect();
+            let _ = writeln!(
+                r,
+                "        {:?} => [{}],",
+                rule.ending.as_ref(),
+                counts.join(", ")
+            );
         }
         r.push_str("    }\n    listed {\n");
         for (w, l) in c.exceptions.iter() {
@@ -528,13 +633,21 @@ fn library(lang: &Language, parts: &[Part<'_, '_>]) -> Result<String, String> {
         "// Generated by flexion-train from the {} config; don't edit by hand.\n\n#![doc = include_str!(\"../README.md\")]\n#![forbid(unsafe_code)]\n",
         lang.display
     );
-    s.push_str("pub use flexion::{Candidate, Status};\nuse flexion::Known;\n\n");
+    s.push_str("pub use flexion::{Candidate, Reading, Status, UnknownValue};\n\n");
     if lang.extra.is_some() {
         s.push_str("mod extra;\npub use extra::*;\n");
     }
     s.push_str("mod orthography;\n");
     for part in parts {
         let _ = writeln!(s, "pub mod {};", part.spec.name);
+    }
+    for part in parts {
+        let _ = writeln!(
+            s,
+            "pub use {}::{};",
+            part.spec.name,
+            variant(part.spec.name)
+        );
     }
     s.push('\n');
     // The features the parts of speech use.
@@ -552,40 +665,189 @@ fn library(lang: &Language, parts: &[Part<'_, '_>]) -> Result<String, String> {
     }
     for part in parts {
         let cells = Cells::new(lang, part.spec)?;
+        let word = variant(part.spec.name);
         for g in &cells.groups {
             let args: Vec<String> = g
                 .features
                 .iter()
                 .map(|f| format!("{}: {}", snake(f.name), f.name))
                 .collect();
-            let mut index = format!("{}", g.offset);
-            let mut stride = 1usize;
-            let mut terms: Vec<String> = Vec::new();
-            for f in g.features.iter().rev() {
-                terms.push(if stride == 1 {
-                    format!("{} as usize", snake(f.name))
-                } else {
-                    format!("{} as usize * {stride}", snake(f.name))
-                });
-                stride *= f.values.len();
-            }
-            for t in terms.iter().rev() {
-                index = format!("{index} + {t}");
-            }
-            let params = if args.is_empty() { String::new() } else { format!(", {}", args.join(", ")) };
+            let values: Vec<String> = g.features.iter().map(|f| snake(f.name)).collect();
+            let params = if args.is_empty() {
+                String::new()
+            } else {
+                format!(", {}", args.join(", "))
+            };
+            let cell = if values.is_empty() {
+                format!(
+                    "{}::Cell::{}",
+                    part.spec.name,
+                    cell_variant(part.spec.name, g.name)
+                )
+            } else {
+                format!(
+                    "{}::Cell::{}({})",
+                    part.spec.name,
+                    cell_variant(part.spec.name, g.name),
+                    values.join(", ")
+                )
+            };
             let _ = writeln!(
                 s,
-                "/// {}\npub fn {}(lemma: &str{params}) -> String {{\n    {}::GRAMMAR.best(lemma, {index}, &Known::default())\n}}\n",
-                g.group.doc, g.name, part.spec.name
-            );
-            let _ = writeln!(
-                s,
-                "/// Every possible form of [`{}`], likeliest first, each with its\n/// probability and why.\npub fn {}_candidates(lemma: &str{params}) -> Vec<Candidate<'static>> {{\n    {}::GRAMMAR.candidates(lemma, {index}, &Known::default())\n}}\n",
-                g.name, g.name, part.spec.name
+                "/// {}\n#[must_use]\npub fn {}(lemma: &str{params}) -> String {{\n    {word}::new(lemma).form({cell})\n}}\n",
+                g.group.doc, g.name
             );
         }
     }
     Ok(s)
+}
+
+/// A cell group's variant of a part of speech's `Cell`: `noun_second_case`
+/// → `SecondCase`; the part's own group is `Form`.
+fn cell_variant(part: &str, group: &str) -> String {
+    let name = group
+        .strip_prefix(part)
+        .map_or(group, |g| g.trim_start_matches('_'));
+    if name.is_empty() {
+        return "Form".to_string();
+    }
+    name.split('_').map(variant).collect()
+}
+
+/// A part of speech's typed API: its `Cell` (a typed combination of
+/// feature values, one variant per group), and the word type that inflects.
+fn api(
+    part: &Part<'_, '_>,
+    cells: &Cells<'_>,
+    layout: &Layout,
+    ty: &str,
+    feature: Option<&str>,
+) -> String {
+    let name = part.spec.name;
+    let word = variant(name);
+    let mut s = String::new();
+    // The cell type.
+    let _ = writeln!(
+        s,
+        "/// A {name} form: which cell of its {}.\n#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]\npub enum Cell {{",
+        ty.to_lowercase()
+    );
+    for g in &cells.groups {
+        let fields: Vec<&str> = g.features.iter().map(|f| f.name).collect();
+        let v = cell_variant(name, g.name);
+        let _ = writeln!(s, "    /// {}", g.group.doc);
+        if fields.is_empty() {
+            let _ = writeln!(s, "    {v},");
+        } else {
+            let _ = writeln!(s, "    {v}({}),", fields.join(", "));
+        }
+    }
+    s.push_str("}\n\nimpl Cell {\n    /// Its place in a paradigm.\n    pub const fn index(self) -> usize {\n        let cell = match self {\n");
+    for g in &cells.groups {
+        let v = cell_variant(name, g.name);
+        for i in 0..g.len() {
+            let values = g.values(g.offset + i);
+            let args: Vec<String> = g
+                .features
+                .iter()
+                .zip(&values)
+                .map(|(f, &x)| format!("{}::{}", f.name, f.values.get(x).map_or("", |v| v.name)))
+                .collect();
+            let constant = layout.names.get(g.offset + i).map_or("", String::as_str);
+            if args.is_empty() {
+                let _ = writeln!(s, "            Cell::{v} => cell::{constant},");
+            } else {
+                let _ = writeln!(
+                    s,
+                    "            Cell::{v}({}) => cell::{constant},",
+                    args.join(", ")
+                );
+            }
+        }
+    }
+    s.push_str("        };\n        cell as usize\n    }\n}\n\n");
+    // Conversions from a group's values, where no other group has the same
+    // features.
+    for g in &cells.groups {
+        let fields: Vec<&str> = g.features.iter().map(|f| f.name).collect();
+        let shared = cells
+            .groups
+            .iter()
+            .filter(|o| o.features.iter().map(|f| f.name).eq(fields.iter().copied()))
+            .count();
+        if fields.is_empty() || shared > 1 {
+            continue;
+        }
+        let v = cell_variant(name, g.name);
+        let vars: Vec<String> = g.features.iter().map(|f| snake(f.name)).collect();
+        let (ty_, pat) = if fields.len() == 1 {
+            (fields.join(""), vars.join(""))
+        } else {
+            (
+                format!("({})", fields.join(", ")),
+                format!("({})", vars.join(", ")),
+            )
+        };
+        let _ = writeln!(
+            s,
+            "impl From<{ty_}> for Cell {{\n    fn from({pat}: {ty_}) -> Self {{\n        Cell::{v}({})\n    }}\n}}\n",
+            vars.join(", ")
+        );
+    }
+    // The word.
+    let (feature_field, feature_type) = match feature {
+        Some(f) => (snake(f), format!("crate::{f}")),
+        None => (String::new(), "u8".to_string()),
+    };
+    let _ = writeln!(
+        s,
+        "/// A {name} to inflect: its lemma, and what you know of it. The more you\n/// tell, the surer its forms.\n#[derive(Debug, Clone, PartialEq, Eq)]\npub struct {word}<'w> {{\n    lemma: &'w str,\n    given: Vec<(usize, &'w str)>,"
+    );
+    if feature.is_some() {
+        let _ = writeln!(s, "    {feature_field}: Option<{feature_type}>,");
+    }
+    s.push_str("}\n\n");
+    let _ = writeln!(
+        s,
+        "impl<'w> {word}<'w> {{\n    /// The {name} `lemma`, as the dictionary writes it.\n    #[must_use]\n    pub fn new(lemma: &'w str) -> Self {{\n        {word} {{\n            lemma,\n            given: Vec::new(),"
+    );
+    if feature.is_some() {
+        let _ = writeln!(s, "            {feature_field}: None,");
+    }
+    s.push_str(
+        "        }
+    }
+
+",
+    );
+    let _ = writeln!(
+        s,
+        "    /// One of its forms you know (a principal part): readings that disagree\n    /// with it are dropped.\n    #[must_use]\n    pub fn given(mut self, cell: impl Into<Cell>, form: &'w str) -> Self {{\n        self.given.push((cell.into().index(), form));\n        self\n    }}\n"
+    );
+    if let Some(f) = feature {
+        let _ = writeln!(
+            s,
+            "    /// Its {lower}, which says which cell its `referred` forms (see its\n    /// {many}) are taken from.\n    #[must_use]\n    pub fn {feature_field}(mut self, {feature_field}: {f}) -> Self {{\n        self.{feature_field} = Some({feature_field});\n        self\n    }}\n",
+            lower = f.to_lowercase(),
+            many = ty.to_lowercase(),
+        );
+    }
+    let feature_value = if feature.is_some() {
+        format!("self.{feature_field}")
+    } else {
+        "None".to_string()
+    };
+    let _ = writeln!(
+        s,
+        "    fn known(&self) -> Known<'_, {feature_type}> {{\n        Known {{\n            forms: &self.given,\n            feature: {feature_value},\n        }}\n    }}\n"
+    );
+    let _ = writeln!(
+        s,
+        "    /// Its likeliest form in `cell`.\n    #[must_use]\n    pub fn form(&self, cell: impl Into<Cell>) -> String {{\n        GRAMMAR.best(self.lemma, cell.into().index(), &self.known())\n    }}\n\n    /// Every form it may have in `cell`, likeliest first, each with its\n    /// probability and why.\n    #[must_use]\n    pub fn candidates(&self, cell: impl Into<Cell>) -> Vec<Candidate<'static>> {{\n        GRAMMAR.candidates(self.lemma, cell.into().index(), &self.known())\n    }}\n\n    /// The {many} it may follow, likeliest first, each with its probability\n    /// and why.\n    #[must_use]\n    pub fn {one}(&self) -> Vec<Reading<'static, 'static, {ty}>> {{\n        GRAMMAR.readings(self.lemma, &self.known())\n    }}\n}}",
+        many = format!("{}s", ty.to_lowercase()),
+        one = ty.to_lowercase(),
+    );
+    s
 }
 
 fn snake(name: &str) -> String {
@@ -631,6 +893,26 @@ fn feature_enum(s: &mut String, f: &Feature) {
         let _ = writeln!(s, "            {}::{} => \"{}\",", f.name, v.name, v.short);
     }
     s.push_str("        }\n    }\n}\n\n");
+    let _ = writeln!(
+        s,
+        "impl std::fmt::Display for {} {{\n    /// Its name in lowercase: `genitive`.\n    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {{\n        f.write_str(match self {{",
+        f.name
+    );
+    for v in &f.values {
+        let _ = writeln!(
+            s,
+            "            {}::{} => {:?},",
+            f.name,
+            v.name,
+            v.name.to_lowercase()
+        );
+    }
+    s.push_str("        })\n    }\n}\n\n");
+    let _ = writeln!(
+        s,
+        "impl std::str::FromStr for {0} {{\n    type Err = flexion::UnknownValue;\n\n    /// By its name (`genitive`) or its short name (`gen`).\n    fn from_str(name: &str) -> Result<Self, Self::Err> {{\n        Self::ALL\n            .into_iter()\n            .find(|v| v.short() == name || v.to_string() == name)\n            .ok_or_else(|| flexion::UnknownValue {{\n                feature: {0:?},\n                name: name.to_string(),\n            }})\n    }}\n}}\n",
+        f.name
+    );
     let _ = writeln!(
         s,
         "impl flexion::Label for {0} {{\n    fn index(self) -> usize {{\n        self as usize\n    }}\n    fn from_index(index: usize) -> Option<Self> {{\n        Self::ALL.get(index).copied()\n    }}\n}}\n",

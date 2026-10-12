@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      # Unit tests, the fixture-based end-to-end training test, and the
+      # generated crates' doctests (their README examples).
+      - run: cargo test --workspace
+
+  lint:
+    name: fmt + clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all --check
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+
+  compile-cost:
+    name: compile cost
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      # A clean debug build of each generated crate, one at a time: wall time, peak
+      # memory (the largest rustc) and .rlib size, in the log and the job summary. Code
+      # generation keeps these inside CI's 4 cores and 16 GB.
+      - run: |
+          command -v /usr/bin/time || sudo apt-get install -y time
+          cargo build -q -p flexion
+          {
+            echo "| crate | seconds | peak MB | rlib MB |"
+            echo "|---|---:|---:|---:|"
+          } >> "$GITHUB_STEP_SUMMARY"
+          for l in $(ls languages); do
+            /usr/bin/time -f "%e %M" -o time.txt cargo build -q -p "$l"
+            read -r s kb < time.txt
+            rlib=$(find target/debug/deps -name "lib${l//-/_}-*.rlib" -printf "%s\n" | head -1)
+            echo "| $l | $s | $((kb / 1024)) | $((rlib / 1048576)) |" | tee -a "$GITHUB_STEP_SUMMARY"
+          done

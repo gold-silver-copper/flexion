@@ -10,8 +10,8 @@ pub mod learn;
 pub mod pipeline;
 pub mod print;
 pub mod script;
-pub mod spec;
 pub mod skeleton;
+pub mod spec;
 
 use spec::{Language, PartOfSpeech};
 

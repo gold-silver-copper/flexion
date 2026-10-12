@@ -26,7 +26,11 @@ fn lcs(a: &[char], b: &[char]) -> (Vec<usize>, Vec<usize>) {
     for i in (0..n).rev() {
         for j in (0..m).rev() {
             let v = if a.get(i) == b.get(j) {
-                table.get(at(i + 1, j + 1)).copied().unwrap_or(0).saturating_add(1)
+                table
+                    .get(at(i + 1, j + 1))
+                    .copied()
+                    .unwrap_or(0)
+                    .saturating_add(1)
             } else {
                 let down = table.get(at(i + 1, j)).copied().unwrap_or(0);
                 let right = table.get(at(i, j + 1)).copied().unwrap_or(0);
@@ -64,11 +68,17 @@ pub fn analyze(lemma: &str, forms: &[&str]) -> Analysis {
     // The lemma letters every form keeps.
     let mut kept: Vec<usize> = (0..lemma_chars.len()).collect();
     for form in all.iter().skip(1) {
-        let sub: Vec<char> = kept.iter().filter_map(|&i| lemma_chars.get(i).copied()).collect();
+        let sub: Vec<char> = kept
+            .iter()
+            .filter_map(|&i| lemma_chars.get(i).copied())
+            .collect();
         let (keep, _) = lcs(&sub, form);
         kept = keep.iter().filter_map(|&k| kept.get(k).copied()).collect();
     }
-    let sub: Vec<char> = kept.iter().filter_map(|&i| lemma_chars.get(i).copied()).collect();
+    let sub: Vec<char> = kept
+        .iter()
+        .filter_map(|&i| lemma_chars.get(i).copied())
+        .collect();
     // Where each kept letter is in each word.
     let places: Vec<Option<Vec<usize>>> = all
         .iter()
@@ -81,9 +91,10 @@ pub fn analyze(lemma: &str, forms: &[&str]) -> Analysis {
     let mut runs: Vec<Vec<usize>> = Vec::new();
     for k in 0..sub.len() {
         let together = k > 0
-            && places.iter().flatten().all(|p| {
-                matches!((p.get(k - 1), p.get(k)), (Some(&x), Some(&y)) if y == x + 1)
-            });
+            && places
+                .iter()
+                .flatten()
+                .all(|p| matches!((p.get(k - 1), p.get(k)), (Some(&x), Some(&y)) if y == x + 1));
         match runs.last_mut() {
             Some(run) if together => run.push(k),
             _ => runs.push(vec![k]),
@@ -110,8 +121,14 @@ pub fn analyze(lemma: &str, forms: &[&str]) -> Analysis {
         out.extend(w.get(last..).unwrap_or_default());
         out
     };
-    let mut patterns = all.iter().zip(&places).map(|(w, p)| p.as_ref().map(|p| pattern(w, p)));
-    let lemma_pattern = patterns.next().flatten().unwrap_or_else(|| lemma.to_string());
+    let mut patterns = all
+        .iter()
+        .zip(&places)
+        .map(|(w, p)| p.as_ref().map(|p| pattern(w, p)));
+    let lemma_pattern = patterns
+        .next()
+        .flatten()
+        .unwrap_or_else(|| lemma.to_string());
     Analysis {
         stems,
         lemma: lemma_pattern,
@@ -128,7 +145,10 @@ mod tests {
         let a = analyze("книга", &["книги", "книг", "книгой"]);
         assert_eq!(a.stems, vec!["книг"]);
         assert_eq!(a.lemma, "~а");
-        assert_eq!(a.forms, vec![Some("~и".into()), Some("~".into()), Some("~ой".into())]);
+        assert_eq!(
+            a.forms,
+            vec![Some("~и".into()), Some("~".into()), Some("~ой".into())]
+        );
         // A fleeting vowel splits the stem.
         let a = analyze("лесок", &["леска", "лесок"]);
         assert_eq!(a.stems, vec!["лес", "к"]);

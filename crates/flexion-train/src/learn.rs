@@ -6,7 +6,10 @@ use crate::choose::{self, Settings};
 use crate::extract::Lexeme;
 use crate::skeleton;
 use flexion::pattern;
-use flexion::{Accent, AccentPattern, Compound, Form, Grammar, Referral, Orthography, Paradigm, Place, StressClass, Written};
+use flexion::{
+    Accent, AccentPattern, Compound, Form, Grammar, Orthography, Paradigm, Place, Referral,
+    StressClass, Written,
+};
 use std::borrow::Cow;
 use std::collections::{BTreeMap, HashMap};
 
@@ -77,7 +80,10 @@ pub fn learn<'s>(
     // dictionary's, in its order).
     let mut dictionaries: HashMap<String, std::collections::BTreeSet<u8>> = HashMap::new();
     for l in lexemes {
-        dictionaries.entry(orthography.read(&l.full).letters).or_default().insert(l.source);
+        dictionaries
+            .entry(orthography.read(&l.full).letters)
+            .or_default()
+            .insert(l.source);
     }
     let mut by_order: Vec<&Lexeme> = lexemes.iter().collect();
     by_order.sort_by_key(|l| (l.source, l.order));
@@ -110,7 +116,8 @@ pub fn learn<'s>(
     // Words written in parts that inflect each part are the grammar of
     // their parts, not paradigms of their own.
     let compounds: Vec<(String, Compound)> = words.iter().filter_map(compound).collect();
-    let compound_choice = (!compounds.is_empty()).then(|| choose::learn(&compounds, settings, |_, _| true));
+    let compound_choice =
+        (!compounds.is_empty()).then(|| choose::learn(&compounds, settings, |_, _| true));
     let parted: std::collections::HashSet<&str> = words
         .iter()
         .filter(|w| compound(w).is_some_and(|c| c.1 == Compound::Each))
@@ -153,7 +160,14 @@ pub fn learn<'s>(
     let (accent, stress_labels) = if orthography.stress_marks.is_empty() {
         (None, HashMap::new())
     } else {
-        let (a, labels) = accent(&orthography, &words, &assignment, &paradigms, shape, settings);
+        let (a, labels) = accent(
+            &orthography,
+            &words,
+            &assignment,
+            &paradigms,
+            shape,
+            settings,
+        );
         (Some(a), labels)
     };
     let mut members: Vec<Vec<String>> = vec![Vec::new(); paradigms.len()];
@@ -240,7 +254,14 @@ fn compound(w: &Word) -> Option<(String, Compound)> {
         .filter_map(|forms| forms.first())
         .filter_map(|f| f.letters.split_once('-'))
         .any(|(f, _)| f != first);
-    Some((first.to_string(), if changes { Compound::Each } else { Compound::Last }))
+    Some((
+        first.to_string(),
+        if changes {
+            Compound::Each
+        } else {
+            Compound::Last
+        },
+    ))
 }
 
 /// What the trainer writes for a referred cell while it learns paradigms.
@@ -256,7 +277,10 @@ const REFERRAL_SHARE: f64 = 0.5;
 /// animate nouns and the nominative of inanimate ones).
 fn referrals(words: &[Word], shape: &Shape) -> Option<(usize, Vec<Referral<'static>>)> {
     fn form(w: &Word, c: usize) -> Option<&str> {
-        w.cells.get(c).and_then(|fs| fs.first()).map(|f| f.letters.as_str())
+        w.cells
+            .get(c)
+            .and_then(|fs| fs.first())
+            .map(|f| f.letters.as_str())
     }
     let mut best: Option<(usize, Vec<Referral<'static>>)> = None;
     for (f, &values) in shape.inherent.iter().enumerate() {
@@ -266,12 +290,26 @@ fn referrals(words: &[Word], shape: &Shape) -> Option<(usize, Vec<Referral<'stat
             for v in 0..values {
                 let with: Vec<&Word> = words
                     .iter()
-                    .filter(|w| w.inherent.get(f).is_some_and(|&x| usize::from(x) == v) && form(w, cell).is_some())
+                    .filter(|w| {
+                        w.inherent.get(f).is_some_and(|&x| usize::from(x) == v)
+                            && form(w, cell).is_some()
+                    })
                     .collect();
                 // An earlier cell, itself formed by the paradigm.
                 let target = (0..cell)
-                    .filter(|&t| !found.iter().any(|r: &Referral<'_>| usize::from(r.cell) == t))
-                    .map(|t| (with.iter().filter(|w| form(w, t).is_some() && form(w, t) == form(w, cell)).count(), t))
+                    .filter(|&t| {
+                        !found
+                            .iter()
+                            .any(|r: &Referral<'_>| usize::from(r.cell) == t)
+                    })
+                    .map(|t| {
+                        (
+                            with.iter()
+                                .filter(|w| form(w, t).is_some() && form(w, t) == form(w, cell))
+                                .count(),
+                            t,
+                        )
+                    })
                     .max_by_key(|&(n, t)| (n, std::cmp::Reverse(t)));
                 #[allow(clippy::cast_precision_loss)]
                 let share = |n: usize| n as f64 / with.len().max(1) as f64;
@@ -300,7 +338,12 @@ fn referrals(words: &[Word], shape: &Shape) -> Option<(usize, Vec<Referral<'stat
 /// The value of a word the dictionary gives none for, from its forms: the
 /// one whose referrals its forms follow, if just one.
 fn infer(w: &Word, referrals: &[Referral<'_>]) -> Option<u8> {
-    let form = |c: u16| w.cells.get(usize::from(c)).and_then(|fs| fs.first()).map(|f| &f.letters);
+    let form = |c: u16| {
+        w.cells
+            .get(usize::from(c))
+            .and_then(|fs| fs.first())
+            .map(|f| &f.letters)
+    };
     let values = referrals.first()?.to.len();
     let fitting: Vec<usize> = (0..values)
         .filter(|&v| {
@@ -318,7 +361,12 @@ fn infer(w: &Word, referrals: &[Referral<'_>]) -> Option<u8> {
 
 /// Mark the cells of `a` the word, of value `v`, forms by referral.
 fn refer(w: &Word, a: &mut Analyzed, referrals: &[Referral<'_>], v: u8) {
-    let form = |c: u16| w.cells.get(usize::from(c)).and_then(|fs| fs.first()).map(|f| &f.letters);
+    let form = |c: u16| {
+        w.cells
+            .get(usize::from(c))
+            .and_then(|fs| fs.first())
+            .map(|f| &f.letters)
+    };
     for r in referrals {
         let Some(&t) = r.to.get(usize::from(v)) else {
             continue;
@@ -384,7 +432,11 @@ fn usual(p: &str) -> &str {
 /// common among words that end like it (its last three letters, then two,
 /// then one), then the most common. Cells no word of a paradigm has take the
 /// pattern of the most similar paradigm that has them.
-fn paradigms<'s>(words: &[Word], analyses: &[Analyzed], shape: &Shape) -> (Vec<Paradigm<'s>>, Vec<u16>) {
+fn paradigms<'s>(
+    words: &[Word],
+    analyses: &[Analyzed],
+    shape: &Shape,
+) -> (Vec<Paradigm<'s>>, Vec<u16>) {
     // Distinct signatures, and their words.
     let mut index: HashMap<(String, Vec<Option<String>>), usize> = HashMap::new();
     let mut signatures: Vec<(String, Vec<Option<String>>)> = Vec::new();
@@ -392,7 +444,10 @@ fn paradigms<'s>(words: &[Word], analyses: &[Analyzed], shape: &Shape) -> (Vec<P
     for a in analyses {
         let sig = (
             a.lemma.clone(),
-            a.cells.iter().map(|c| c.as_deref().map(|p| usual(p).to_string())).collect(),
+            a.cells
+                .iter()
+                .map(|c| c.as_deref().map(|p| usual(p).to_string()))
+                .collect(),
         );
         let id = *index.entry(sig.clone()).or_insert_with(|| {
             signatures.push(sig);
@@ -400,7 +455,11 @@ fn paradigms<'s>(words: &[Word], analyses: &[Analyzed], shape: &Shape) -> (Vec<P
         });
         own.push(id);
     }
-    let fullness = |s: usize| signatures.get(s).map_or(0, |(_, c)| c.iter().flatten().count());
+    let fullness = |s: usize| {
+        signatures
+            .get(s)
+            .map_or(0, |(_, c)| c.iter().flatten().count())
+    };
     // Words per signature by ending.
     let mut by_ending: HashMap<(usize, String), u32> = HashMap::new();
     let mut size: Vec<u32> = vec![0; signatures.len()];
@@ -454,22 +513,35 @@ fn paradigms<'s>(words: &[Word], analyses: &[Analyzed], shape: &Shape) -> (Vec<P
                 };
                 // It must build every form the word has.
                 let builds = mine.is_some_and(|(_, mc)| {
-                    mc.iter().zip(cells).enumerate().all(|(c, (m, p))| match (m, p) {
-                        (None, _) => true,
-                        (Some(_), None) => false,
-                        (Some(m), Some(p)) if p == REFERRED => m == REFERRED,
-                        (Some(_), Some(p)) => w
-                            .cells
-                            .get(c)
-                            .and_then(|fs| fs.first())
-                            .is_none_or(|f| pattern::fill(p, &stems) == f.letters),
-                    })
+                    mc.iter()
+                        .zip(cells)
+                        .enumerate()
+                        .all(|(c, (m, p))| match (m, p) {
+                            (None, _) => true,
+                            (Some(_), None) => false,
+                            (Some(m), Some(p)) if p == REFERRED => m == REFERRED,
+                            (Some(_), Some(p)) => w
+                                .cells
+                                .get(c)
+                                .and_then(|fs| fs.first())
+                                .is_none_or(|f| pattern::fill(p, &stems) == f.letters),
+                        })
                 });
                 if !builds {
                     continue;
                 }
-                let ends = [3, 2, 1].map(|n| by_ending.get(&(cand, last(&w.key, n))).copied().unwrap_or(0));
-                let key = (fullness(cand), ends, size.get(cand).copied().unwrap_or(0), cand);
+                let ends = [3, 2, 1].map(|n| {
+                    by_ending
+                        .get(&(cand, last(&w.key, n)))
+                        .copied()
+                        .unwrap_or(0)
+                });
+                let key = (
+                    fullness(cand),
+                    ends,
+                    size.get(cand).copied().unwrap_or(0),
+                    cand,
+                );
                 if (key.0, key.1, key.2) > (best.0, best.1, best.2) {
                     best = key;
                 }
@@ -488,7 +560,10 @@ fn paradigms<'s>(words: &[Word], analyses: &[Analyzed], shape: &Shape) -> (Vec<P
     let mut supported_by_lemma: HashMap<&str, Vec<usize>> = HashMap::new();
     for (i, (lemma, _)) in signatures.iter().enumerate() {
         if supported(i) {
-            supported_by_lemma.entry(lemma.as_str()).or_default().push(i);
+            supported_by_lemma
+                .entry(lemma.as_str())
+                .or_default()
+                .push(i);
         }
     }
     let mut supported_last: HashMap<&str, Vec<&str>> = HashMap::new();
@@ -560,7 +635,11 @@ fn paradigms<'s>(words: &[Word], analyses: &[Analyzed], shape: &Shape) -> (Vec<P
     for (a, &c) in analyses.iter().zip(&chosen) {
         for (cell, p) in a.cells.iter().enumerate() {
             if let Some(p) = p {
-                *variants.entry((c, cell)).or_default().entry(p.clone()).or_default() += 1;
+                *variants
+                    .entry((c, cell))
+                    .or_default()
+                    .entry(p.clone())
+                    .or_default() += 1;
             }
         }
     }
@@ -576,7 +655,8 @@ fn paradigms<'s>(words: &[Word], analyses: &[Analyzed], shape: &Shape) -> (Vec<P
             .map(|(cell, p)| {
                 let usual_p = match p {
                     Some(p) => p.clone(),
-                    None => borrow_cell(&signatures, &order, s, cell, shape).unwrap_or_else(|| lemma.clone()),
+                    None => borrow_cell(&signatures, &order, s, cell, shape)
+                        .unwrap_or_else(|| lemma.clone()),
                 };
                 // The usual pattern, with the alternatives most words list.
                 let full = variants
@@ -647,10 +727,18 @@ const MIN_WORDS: u32 = 3;
 /// first alphabetically), of its plain words (letters only) of at least
 /// three letters if it has any.
 fn name(words: &[Word], chosen: &[usize], s: usize) -> String {
-    let mine = || words.iter().zip(chosen).filter(|&(_, &c)| c == s).map(|(w, _)| w);
+    let mine = || {
+        words
+            .iter()
+            .zip(chosen)
+            .filter(|&(_, &c)| c == s)
+            .map(|(w, _)| w)
+    };
     let pick = |plain: bool| {
         mine()
-            .filter(|w| !plain || (w.key.chars().count() >= 3 && w.key.chars().all(char::is_alphabetic)))
+            .filter(|w| {
+                !plain || (w.key.chars().count() >= 3 && w.key.chars().all(char::is_alphabetic))
+            })
             .max_by(|a, b| {
                 (a.dictionaries, a.senses)
                     .cmp(&(b.dictionaries, b.senses))
@@ -687,7 +775,11 @@ fn accent<'s>(
     let mut seen: Vec<Seen> = Vec::with_capacity(words.len());
     for (w, &p) in words.iter().zip(assignment) {
         let Some(par) = paradigms.get(usize::from(p)) else {
-            seen.push(Seen { places: vec![None; shape.cells], stem_vowel: None, complete: false });
+            seen.push(Seen {
+                places: vec![None; shape.cells],
+                stem_vowel: None,
+                complete: false,
+            });
             continue;
         };
         let stems = par.stems(&w.key).unwrap_or_default();
@@ -714,9 +806,13 @@ fn accent<'s>(
             .iter()
             .map(|fact| {
                 fact.as_ref().map(|(s, letters, ending)| {
-                    let e = flexion::stress_place(orthography, letters, *ending, Place::Ending, 0) == Some(*s);
+                    let e = flexion::stress_place(orthography, letters, *ending, Place::Ending, 0)
+                        == Some(*s);
                     let st = match stem_vowel {
-                        Some(k) => flexion::stress_place(orthography, letters, *ending, Place::Stem, k) == Some(*s),
+                        Some(k) => {
+                            flexion::stress_place(orthography, letters, *ending, Place::Stem, k)
+                                == Some(*s)
+                        }
                         None => vowel_at(orthography, letters, s.vowel) < *ending,
                     };
                     (st, e)
@@ -727,7 +823,11 @@ fn accent<'s>(
             .iter()
             .enumerate()
             .all(|(c, p)| p.is_some() || shape.fallback.get(c).is_some_and(Option::is_some));
-        seen.push(Seen { places, stem_vowel, complete });
+        seen.push(Seen {
+            places,
+            stem_vowel,
+            complete,
+        });
     }
     // Patterns: the stress of complete words, each cell on the ending where
     // the ending gives its stress; kept if MIN_WORDS words have it.
@@ -767,7 +867,8 @@ fn accent<'s>(
     candidates.sort_by(|a, b| b.1.cmp(&a.1).then_with(|| a.0.cmp(&b.0)));
     // Each word: the commonest pattern that fits it, else the one agreeing
     // with it on the most cells (its other cells' forms are then listed).
-    let mut patterns: Vec<(Vec<Place>, u32)> = candidates.iter().map(|(p, _)| (p.clone(), 0)).collect();
+    let mut patterns: Vec<(Vec<Place>, u32)> =
+        candidates.iter().map(|(p, _)| (p.clone(), 0)).collect();
     let mut of_word: Vec<Option<usize>> = vec![None; words.len()];
     for (i, s) in seen.iter().enumerate() {
         if s.places.iter().all(Option::is_none) {
@@ -837,9 +938,17 @@ fn accent<'s>(
     }
     let mut classes: Vec<StressClass> = counts
         .into_iter()
-        .map(|((pattern, vowel), words)| StressClass { pattern, vowel, words })
+        .map(|((pattern, vowel), words)| StressClass {
+            pattern,
+            vowel,
+            words,
+        })
         .collect();
-    classes.sort_by(|a, b| b.words.cmp(&a.words).then_with(|| (a.pattern, a.vowel).cmp(&(b.pattern, b.vowel))));
+    classes.sort_by(|a, b| {
+        b.words
+            .cmp(&a.words)
+            .then_with(|| (a.pattern, a.vowel).cmp(&(b.pattern, b.vowel)))
+    });
     let id: HashMap<(u16, Option<u8>), u16> = classes
         .iter()
         .enumerate()
@@ -859,9 +968,10 @@ fn accent<'s>(
     }
     // A class whose stem vowel the word hasn't got can't be its.
     let class = choose::learn(&examples, settings, |word, c| {
-        classes
-            .get(usize::from(c))
-            .is_some_and(|c| c.vowel.is_none_or(|v| usize::from(v) < orthography.vowel_count(word)))
+        classes.get(usize::from(c)).is_some_and(|c| {
+            c.vowel
+                .is_none_or(|v| usize::from(v) < orthography.vowel_count(word))
+        })
     });
     let accent = Accent {
         patterns: Cow::Owned(accent_patterns),
@@ -873,7 +983,10 @@ fn accent<'s>(
 
 /// List `word` in `choice` as taking `value` (call [`tidy`] after).
 fn list<L: flexion::Label + Ord>(choice: &mut flexion::Choice<'_, L>, word: &str, value: L) {
-    choice.exceptions.to_mut().push((Cow::Owned(word.to_string()), value));
+    choice
+        .exceptions
+        .to_mut()
+        .push((Cow::Owned(word.to_string()), value));
 }
 
 /// Sort a choice's listed words and drop repeats.
@@ -895,7 +1008,11 @@ fn vowel_at(orthography: &Orthography<'_>, letters: &str, vowel: u8) -> usize {
 /// The dictionary's forms the grammar doesn't give, for the word typed as
 /// the dictionary writes it and typed plain: `(key, cell, form)`, sorted.
 /// Of homographs, the first word's forms.
-fn irregular(grammar: &Grammar<'_, u16, u16, u8>, lexemes: &[Lexeme], words: &[Word]) -> Vec<(String, usize, String)> {
+fn irregular(
+    grammar: &Grammar<'_, u16, u16, u8>,
+    lexemes: &[Lexeme],
+    words: &[Word],
+) -> Vec<(String, usize, String)> {
     let mut first: BTreeMap<&str, usize> = BTreeMap::new();
     for (i, w) in words.iter().enumerate() {
         first.entry(w.key.as_str()).or_insert(i);
@@ -912,17 +1029,27 @@ fn irregular(grammar: &Grammar<'_, u16, u16, u8>, lexemes: &[Lexeme], words: &[W
                         let (Some(l), Some(w)) = (lexemes.get(i), words.get(i)) else {
                             continue;
                         };
-                        let plain = grammar.orthography.write(&w.key, None, flexion::Casing::Lower);
+                        let plain = grammar
+                            .orthography
+                            .write(&w.key, None, flexion::Casing::Lower);
                         for (cell, forms) in l.cells.iter().enumerate() {
                             let Some(want) = forms.first() else {
                                 continue;
                             };
                             let right = [l.full.as_str(), plain.as_str()].iter().all(|input| {
-                                crate::eval::same_form(&grammar.orthography, &grammar.best(input, cell, &flexion::Known::default()), want)
+                                crate::eval::same_form(
+                                    &grammar.orthography,
+                                    &grammar.best(input, cell, &flexion::Known::default()),
+                                    want,
+                                )
                             });
                             if !right {
                                 let read = grammar.orthography.read(want);
-                                let written = grammar.orthography.write(&read.letters, read.stress, flexion::Casing::Lower);
+                                let written = grammar.orthography.write(
+                                    &read.letters,
+                                    read.stress,
+                                    flexion::Casing::Lower,
+                                );
                                 out.push((w.key.clone(), cell, written));
                             }
                         }

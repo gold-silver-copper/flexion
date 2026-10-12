@@ -87,12 +87,18 @@ pub fn same_form(orthography: &flexion::Orthography<'_>, a: &str, b: &str) -> bo
 
 /// Score `grammar` on `lexemes` (held out), every cell the dictionary lists,
 /// against its first form, typed as `input`.
-pub fn score<P: Label, A: Label, F: Label>(grammar: &Grammar<'_, P, A, F>, lexemes: &[&Lexeme], input: Input) -> Score {
+pub fn score<P: Label, A: Label, F: Label>(
+    grammar: &Grammar<'_, P, A, F>,
+    lexemes: &[&Lexeme],
+    input: Input,
+) -> Score {
     let mut s = Score::default();
     for l in lexemes {
         let typed = match input {
             Input::Full => l.full.clone(),
-            Input::Plain => grammar.orthography.write(&l.key, None, flexion::Casing::Lower),
+            Input::Plain => grammar
+                .orthography
+                .write(&l.key, None, flexion::Casing::Lower),
         };
         for (cell, forms) in l.cells.iter().enumerate() {
             let Some(want) = forms.first() else {
@@ -130,11 +136,16 @@ pub fn score<P: Label, A: Label, F: Label>(grammar: &Grammar<'_, P, A, F>, lexem
 /// stated probabilities match how often its answers are right on `words`
 /// (held out, typed plain and in full): the one, of a grid from 0.5 to 4,
 /// with the smallest calibration error.
-pub fn fit_sharpness<P: Label, A: Label, F: Label>(grammar: &Grammar<'_, P, A, F>, words: &[&Lexeme]) -> f32 {
+pub fn fit_sharpness<P: Label, A: Label, F: Label>(
+    grammar: &Grammar<'_, P, A, F>,
+    words: &[&Lexeme],
+) -> f32 {
     // Every scored form's candidates: (probability, right) each.
     let mut forms: Vec<Vec<(f32, bool)>> = Vec::new();
     for l in words {
-        let plain = grammar.orthography.write(&l.key, None, flexion::Casing::Lower);
+        let plain = grammar
+            .orthography
+            .write(&l.key, None, flexion::Casing::Lower);
         for typed in [l.full.as_str(), plain.as_str()] {
             for (cell, fs) in l.cells.iter().enumerate() {
                 let Some(want) = fs.first() else {
@@ -143,7 +154,12 @@ pub fn fit_sharpness<P: Label, A: Label, F: Label>(grammar: &Grammar<'_, P, A, F
                 let c = grammar.candidates(typed, cell, &flexion::Known::default());
                 forms.push(
                     c.iter()
-                        .map(|c| (c.probability, same_form(&grammar.orthography, &c.form, want)))
+                        .map(|c| {
+                            (
+                                c.probability,
+                                same_form(&grammar.orthography, &c.form, want),
+                            )
+                        })
                         .collect(),
                 );
             }
@@ -157,7 +173,11 @@ pub fn fit_sharpness<P: Label, A: Label, F: Label>(grammar: &Grammar<'_, P, A, F
             let Some(&(p, right)) = f.first() else {
                 continue;
             };
-            let p = if sharp > 0.0 { f64::from(p.powf(power) * total / sharp) } else { 0.0 };
+            let p = if sharp > 0.0 {
+                f64::from(p.powf(power) * total / sharp)
+            } else {
+                0.0
+            };
             #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
             let bin = ((p * 10.0) as usize).min(9);
             if let Some(b) = bins.get_mut(bin) {
@@ -166,7 +186,11 @@ pub fn fit_sharpness<P: Label, A: Label, F: Label>(grammar: &Grammar<'_, P, A, F
                 b.2 += p;
             }
         }
-        let s = Score { forms: forms.len(), bins, ..Score::default() };
+        let s = Score {
+            forms: forms.len(),
+            bins,
+            ..Score::default()
+        };
         s.calibration_error()
     };
     let grid = [0.5f32, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.5, 3.0, 3.5, 4.0];

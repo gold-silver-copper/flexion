@@ -10,7 +10,8 @@ use flexion_train::{choose, eval, learn, script};
 use std::path::PathBuf;
 use std::time::Instant;
 
-const USAGE: &str = "usage: cargo xtask <extract|build|try|inspect> <language> [--pos <part of speech>]";
+const USAGE: &str =
+    "usage: cargo xtask <extract|build|try|inspect> <language> [--pos <part of speech>]";
 
 fn main() {
     if let Err(e) = run() {
@@ -45,7 +46,8 @@ fn run() -> Result<(), String> {
             if let Some(s) = flag("--smoothing") {
                 settings.smoothing = s.parse().map_err(|_| "bad --smoothing")?;
             }
-            let errors = flag("--errors").map_or(Ok(0), |e| e.parse::<usize>().map_err(|_| "bad --errors"))?;
+            let errors = flag("--errors")
+                .map_or(Ok(0), |e| e.parse::<usize>().map_err(|_| "bad --errors"))?;
             try_language(&lang, flag("--pos").as_deref(), settings, errors)
         }
         "inspect" => inspect(
@@ -71,7 +73,10 @@ fn dump(lang: &Language) -> PathBuf {
 
 /// Another edition's dump: `~/.cache/kaikki/<code>/<name>.jsonl`.
 fn edition_dump(code: &str, name: &str) -> PathBuf {
-    home().join(".cache/kaikki").join(code).join(format!("{name}.jsonl"))
+    home()
+        .join(".cache/kaikki")
+        .join(code)
+        .join(format!("{name}.jsonl"))
 }
 
 fn cache(lang: &Language) -> PathBuf {
@@ -99,18 +104,32 @@ fn extract_dumps(lang: &Language) -> Result<(), String> {
     }
     let json = serde_json::to_vec(&data).map_err(|e| e.to_string())?;
     std::fs::write(&path, json).map_err(|e| format!("{}: {e}", path.display()))?;
-    eprintln!("wrote {} in {:.0}s", path.display(), t.elapsed().as_secs_f64());
+    eprintln!(
+        "wrote {} in {:.0}s",
+        path.display(),
+        t.elapsed().as_secs_f64()
+    );
     Ok(())
 }
 
 fn load(lang: &Language) -> Result<Vec<PosData>, String> {
     let path = cache(lang);
-    let bytes = std::fs::read(&path)
-        .map_err(|e| format!("{}: {e} (run `cargo xtask extract {}` first)", path.display(), lang.name))?;
+    let bytes = std::fs::read(&path).map_err(|e| {
+        format!(
+            "{}: {e} (run `cargo xtask extract {}` first)",
+            path.display(),
+            lang.name
+        )
+    })?;
     serde_json::from_slice(&bytes).map_err(|e| e.to_string())
 }
 
-fn try_language(lang: &Language, only: Option<&str>, settings: choose::Settings, errors: usize) -> Result<(), String> {
+fn try_language(
+    lang: &Language,
+    only: Option<&str>,
+    settings: choose::Settings,
+    errors: usize,
+) -> Result<(), String> {
     let data = load(lang)?;
     let script = script::Script::new(&lang.spelling);
     for (part, d) in lang.parts.iter().zip(&data) {
@@ -127,8 +146,15 @@ fn try_language(lang: &Language, only: Option<&str>, settings: choose::Settings,
         // The sharpness, fitted on the dev tenth with a grammar that hasn't
         // seen it.
         let sharpness = {
-            let fit: Vec<Lexeme> = train.iter().filter(|l| eval::bucket(&l.key) != eval::DEV).cloned().collect();
-            let dev: Vec<&Lexeme> = train.iter().filter(|l| eval::bucket(&l.key) == eval::DEV && l.source == 0).collect();
+            let fit: Vec<Lexeme> = train
+                .iter()
+                .filter(|l| eval::bucket(&l.key) != eval::DEV)
+                .cloned()
+                .collect();
+            let dev: Vec<&Lexeme> = train
+                .iter()
+                .filter(|l| eval::bucket(&l.key) == eval::DEV && l.source == 0)
+                .collect();
             let g = learn::learn(script.orthography(), &shape, &fit, settings).grammar;
             eval::fit_sharpness(&g, &dev)
         };
@@ -156,7 +182,11 @@ fn try_language(lang: &Language, only: Option<&str>, settings: choose::Settings,
             st.irregular_forms,
         );
         if let (Some(f), Some(choice)) = (learned.feature, &g.feature) {
-            let to: Vec<String> = g.referrals.iter().map(|r| format!("{}→{:?}", r.cell, r.to)).collect();
+            let to: Vec<String> = g
+                .referrals
+                .iter()
+                .map(|r| format!("{}→{:?}", r.cell, r.to))
+                .collect();
             println!(
                 "  referrals by {}: {}; {} rules, {} listed",
                 part.inherent.get(f).copied().unwrap_or("?"),
@@ -199,9 +229,14 @@ fn try_language(lang: &Language, only: Option<&str>, settings: choose::Settings,
                 for (cell, fs) in l.cells.iter().enumerate() {
                     let Some(want) = fs.first() else { continue };
                     let c = g.candidates(&plain, cell, &flexion::Known::default());
-                    if c.first().is_some_and(|c| !eval::same_form(&g.orthography, &c.form, want)) {
+                    if c.first()
+                        .is_some_and(|c| !eval::same_form(&g.orthography, &c.form, want))
+                    {
                         let top: Vec<String> = c.iter().take(2).map(ToString::to_string).collect();
-                        println!("    {plain} cell {cell}: want {want}; got {}", top.join(" | "));
+                        println!(
+                            "    {plain} cell {cell}: want {want}; got {}",
+                            top.join(" | ")
+                        );
                         shown += 1;
                         if shown >= errors {
                             break 'words;
@@ -218,7 +253,11 @@ fn try_language(lang: &Language, only: Option<&str>, settings: choose::Settings,
             .take(3000)
             .collect();
         let s = eval::score(g, &train_refs, eval::Input::Plain);
-        println!("  attested (sample of {}): top-1 {:.2}%", train_refs.len(), 100.0 * s.accuracy());
+        println!(
+            "  attested (sample of {}): top-1 {:.2}%",
+            train_refs.len(),
+            100.0 * s.accuracy()
+        );
     }
     Ok(())
 }
@@ -228,8 +267,15 @@ fn try_language(lang: &Language, only: Option<&str>, settings: choose::Settings,
 fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Result<(), String> {
     let data = load(lang)?;
     let script = script::Script::new(&lang.spelling);
-    let pi = lang.parts.iter().position(|p| p.name == pos).ok_or("no such part of speech")?;
-    let (part, d) = (lang.parts.get(pi).ok_or("part")?, data.get(pi).ok_or("data")?);
+    let pi = lang
+        .parts
+        .iter()
+        .position(|p| p.name == pos)
+        .ok_or("no such part of speech")?;
+    let (part, d) = (
+        lang.parts.get(pi).ok_or("part")?,
+        data.get(pi).ok_or("data")?,
+    );
     let shape = flexion_train::shape(lang, part)?;
     let lexemes: Vec<Lexeme> = d
         .lexemes
@@ -237,25 +283,54 @@ fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Res
         .filter(|l| !holdout || eval::bucket(&l.key) != eval::TEST)
         .cloned()
         .collect();
-    let learned = learn::learn(script.orthography(), &shape, &lexemes, choose::Settings::default());
+    let learned = learn::learn(
+        script.orthography(),
+        &shape,
+        &lexemes,
+        choose::Settings::default(),
+    );
     let g = &learned.grammar;
     if let Some(word) = word {
-        let bare = flexion::Grammar { irregular: std::borrow::Cow::Owned(Vec::new()), ..g.clone() };
+        let bare = flexion::Grammar {
+            irregular: std::borrow::Cow::Owned(Vec::new()),
+            ..g.clone()
+        };
         let listed: Vec<String> = d
             .lexemes
             .iter()
-            .filter(|l| script.orthography().read(&l.full).letters == script.orthography().read(word).letters)
+            .filter(|l| {
+                script.orthography().read(&l.full).letters
+                    == script.orthography().read(word).letters
+            })
             .map(|l| format!("{:?}", l.cells))
             .collect();
         println!("dictionary: {listed:?}");
-        println!("paradigm readings: {:?}", g.paradigm.read(&script.orthography().read(word).letters, 2.0, |_| true).iter().take(3).map(|r| (g.paradigms.get(usize::from(r.value)).map(|p| p.name.to_string()), r.probability)).collect::<Vec<_>>());
+        println!(
+            "paradigm readings: {:?}",
+            g.paradigm
+                .read(&script.orthography().read(word).letters, 2.0, |_| true)
+                .iter()
+                .take(3)
+                .map(|r| (
+                    g.paradigms
+                        .get(usize::from(r.value))
+                        .map(|p| p.name.to_string()),
+                    r.probability
+                ))
+                .collect::<Vec<_>>()
+        );
         if let Some(a) = &g.accent {
             let key = script.orthography().read(word).letters;
             for r in a.class.read(&key, 2.0, |_| true).iter().take(4) {
                 let class = a.class_of(r.value);
                 let places: String = class
                     .and_then(|c| a.pattern_of(c))
-                    .map(|p| p.places.iter().map(|x| if *x == flexion::Place::Stem { 's' } else { 'E' }).collect())
+                    .map(|p| {
+                        p.places
+                            .iter()
+                            .map(|x| if *x == flexion::Place::Stem { 's' } else { 'E' })
+                            .collect()
+                    })
                     .unwrap_or_default();
                 println!(
                     "stress class {:?} vowel {:?} {places}: {:.2} (rule -{} {:?})",
@@ -263,12 +338,18 @@ fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Res
                     class.map(|c| c.vowel),
                     r.probability,
                     r.rule.map_or("", |x| x.ending.as_ref()),
-                    r.rule.map(|x| x.counts.iter().take(4).cloned().collect::<Vec<_>>())
+                    r.rule
+                        .map(|x| x.counts.iter().take(4).cloned().collect::<Vec<_>>())
                 );
             }
         }
         for cell in 0..g.cells {
-            let c: Vec<String> = bare.candidates(word, cell, &flexion::Known::default()).iter().take(3).map(ToString::to_string).collect();
+            let c: Vec<String> = bare
+                .candidates(word, cell, &flexion::Known::default())
+                .iter()
+                .take(3)
+                .map(ToString::to_string)
+                .collect();
             println!("cell {cell}: {}", c.join(" | "));
         }
         return Ok(());
@@ -284,7 +365,11 @@ fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Res
             100.0 * f64::from(cum) / f64::from(total.max(1)),
             p.name,
             p.lemma,
-            p.forms.iter().map(ToString::to_string).collect::<Vec<_>>().join(" ")
+            p.forms
+                .iter()
+                .map(ToString::to_string)
+                .collect::<Vec<_>>()
+                .join(" ")
         );
     }
     let singles = g.paradigms.iter().filter(|p| p.words == 1).count();
@@ -303,7 +388,10 @@ fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Res
         }
     }
     // Irregular forms: how many differ only in stress.
-    let bare = flexion::Grammar { irregular: std::borrow::Cow::Owned(Vec::new()), ..g.clone() };
+    let bare = flexion::Grammar {
+        irregular: std::borrow::Cow::Owned(Vec::new()),
+        ..g.clone()
+    };
     let only_stress = learned
         .irregular
         .iter()
@@ -314,8 +402,16 @@ fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Res
             })
         })
         .count();
-    println!("irregular forms {}, of them only stress differs {only_stress}", learned.irregular.len());
-    for (w, c, f) in learned.irregular.iter().step_by(learned.irregular.len().max(1) / 40 + 1).take(40) {
+    println!(
+        "irregular forms {}, of them only stress differs {only_stress}",
+        learned.irregular.len()
+    );
+    for (w, c, f) in learned
+        .irregular
+        .iter()
+        .step_by(learned.irregular.len().max(1) / 40 + 1)
+        .take(40)
+    {
         let built = bare.best(w, *c, &flexion::Known::default());
         println!("  {w} cell {c}: listed {f}, grammar {built}");
     }
@@ -350,6 +446,10 @@ fn build(lang: &Language) -> Result<(), String> {
     if !status.success() {
         return Err("rustfmt failed on the written crate".into());
     }
-    eprintln!("wrote {} in {:.0}s", dir.display(), t.elapsed().as_secs_f64());
+    eprintln!(
+        "wrote {} in {:.0}s",
+        dir.display(),
+        t.elapsed().as_secs_f64()
+    );
     Ok(())
 }

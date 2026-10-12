@@ -33,15 +33,26 @@ pub fn build<'s>(
     for (part, d) in lang.parts.iter().zip(data) {
         let shape = crate::shape(lang, part)?;
         let not = |b: u64| -> Vec<Lexeme> {
-            d.lexemes.iter().filter(|l| eval::bucket(&l.key) != b).cloned().collect()
+            d.lexemes
+                .iter()
+                .filter(|l| eval::bucket(&l.key) != b)
+                .cloned()
+                .collect()
         };
         let train = not(eval::TEST);
-        let fit: Vec<Lexeme> = train.iter().filter(|l| eval::bucket(&l.key) != eval::DEV).cloned().collect();
+        let fit: Vec<Lexeme> = train
+            .iter()
+            .filter(|l| eval::bucket(&l.key) != eval::DEV)
+            .cloned()
+            .collect();
         let dev: Vec<&Lexeme> = train
             .iter()
             .filter(|l| eval::bucket(&l.key) == eval::DEV && l.source == 0)
             .collect();
-        let sharpness = eval::fit_sharpness(&learn::learn(script.orthography(), &shape, &fit, settings).grammar, &dev);
+        let sharpness = eval::fit_sharpness(
+            &learn::learn(script.orthography(), &shape, &fit, settings).grammar,
+            &dev,
+        );
         let mut scored = learn::learn(script.orthography(), &shape, &train, settings).grammar;
         scored.sharpness = sharpness;
         let test: Vec<&Lexeme> = d

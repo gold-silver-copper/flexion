@@ -120,7 +120,11 @@ pub fn learn<'a, L: Label + Hash + Ord>(
         let read = choice.read(word, settings.smoothing, |l| fits(word, l));
         let right = values.len() == 1 && read.first().map(|r| r.value) == values.first().copied();
         if !right {
-            exceptions.extend(values.into_iter().map(|v| (Cow::Owned(word.to_string()), v)));
+            exceptions.extend(
+                values
+                    .into_iter()
+                    .map(|v| (Cow::Owned(word.to_string()), v)),
+            );
         }
     }
     exceptions.sort_by(|a, b| a.0.cmp(&b.0).then_with(|| a.1.cmp(&b.1)));
@@ -185,6 +189,9 @@ mod tests {
         for (w, v) in &examples {
             assert_eq!(top(w), Some(*v), "{w}");
         }
-        assert_eq!(endings("книга").collect::<Vec<_>>(), vec!["книга", "нига", "ига", "га", "а", ""]);
+        assert_eq!(
+            endings("книга").collect::<Vec<_>>(),
+            vec!["книга", "нига", "ига", "га", "а", ""]
+        );
     }
 }

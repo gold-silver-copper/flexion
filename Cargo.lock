@@ -45,6 +45,7 @@ dependencies = [
 name = "flexion-configs"
 version = "0.2.0"
 dependencies = [
+ "flexion",
  "flexion-train",
 ]
 

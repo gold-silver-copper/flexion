@@ -2,9 +2,9 @@
 //! cell, whether the stem or the ending is stressed, and a stressed vowel
 //! for when the stem is.
 
+use crate::Label;
 use crate::choice::Choice;
 use crate::orthography::{Orthography, Stress};
-use crate::Label;
 use std::borrow::Cow;
 
 /// Where a form is stressed.

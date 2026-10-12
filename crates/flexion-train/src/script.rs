@@ -53,7 +53,9 @@ impl Script {
                     || marks.contains(m)
                     || s.stress_aliases.iter().any(|(f, _)| f == m)
             };
-            if !s.vowels.contains(c) && !(base_vowels.contains(&base) && rest.iter().all(vowel_marks)) {
+            if !s.vowels.contains(c)
+                && !(base_vowels.contains(&base) && rest.iter().all(vowel_marks))
+            {
                 continue;
             }
             // The stress mark it carries, if any (or one read as one).

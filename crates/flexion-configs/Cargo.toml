@@ -12,5 +12,8 @@ rust-version.workspace = true
 [dependencies]
 flexion-train = { workspace = true }
 
+[dev-dependencies]
+flexion = { workspace = true }
+
 [lints]
 workspace = true

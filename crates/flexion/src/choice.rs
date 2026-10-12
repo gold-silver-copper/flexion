@@ -39,6 +39,16 @@ pub enum Status {
     Unsettled,
 }
 
+impl std::fmt::Display for Status {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Status::Listed => "listed",
+            Status::Regular => "regular",
+            Status::Unsettled => "unsettled",
+        })
+    }
+}
+
 /// One value a choice gives a word, with its probability and why.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Reading<'g, 'a, L: Label> {
@@ -47,6 +57,28 @@ pub struct Reading<'g, 'a, L: Label> {
     pub status: Status,
     /// The rule that decided, or `None` for a listed word.
     pub rule: Option<&'g Rule<'a, L>>,
+}
+
+impl<L: Label> std::fmt::Display for Reading<'_, '_, L> {
+    /// `Книга (97%, regular): 1203 of 1210 words in -га`
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{:?} ({:.0}%, {})",
+            self.value,
+            self.probability * 100.0,
+            self.status
+        )?;
+        if let Some(r) = self.rule {
+            let evidence = crate::Evidence {
+                ending: &r.ending,
+                count: r.count(self.value),
+                total: r.total(),
+            };
+            write!(f, ": {evidence}")?;
+        }
+        Ok(())
+    }
 }
 
 impl<'a, L: Label> Rule<'a, L> {
@@ -156,10 +188,8 @@ impl<'a, L: Label> Choice<'a, L> {
             if denom <= 0.0 {
                 continue;
             }
-            let mut next: Vec<(L, f64)> = dist
-                .iter()
-                .map(|&(l, q)| (l, prior * q / denom))
-                .collect();
+            let mut next: Vec<(L, f64)> =
+                dist.iter().map(|&(l, q)| (l, prior * q / denom)).collect();
             for &(l, n) in rule.counts.iter() {
                 let own = f64::from(n) / denom;
                 match next.iter_mut().find(|e| e.0 == l) {
@@ -228,11 +258,20 @@ mod tests {
         let r = c.read("радость", 2.0, |_| true);
         assert_eq!(r.first().map(|x| x.value), Some(2));
         assert_eq!(r.first().map(|x| x.status), Some(Status::Regular));
-        assert_eq!(c.read("книга", 2.0, |_| true).first().map(|x| x.value), Some(1));
+        assert_eq!(
+            c.read("книга", 2.0, |_| true).first().map(|x| x.value),
+            Some(1)
+        );
         // A value the word can't take is never given.
-        assert_eq!(c.read("книга", 2.0, |l| l != 1).first().map(|x| x.value), Some(0));
+        assert_eq!(
+            c.read("книга", 2.0, |l| l != 1).first().map(|x| x.value),
+            Some(0)
+        );
         let listed = c.read("путь", 2.0, |_| true);
-        assert_eq!(listed.first().map(|x| (x.value, x.status)), Some((3, Status::Listed)));
+        assert_eq!(
+            listed.first().map(|x| (x.value, x.status)),
+            Some((3, Status::Listed))
+        );
     }
 
     #[test]

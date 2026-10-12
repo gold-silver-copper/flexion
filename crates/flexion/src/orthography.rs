@@ -154,11 +154,7 @@ impl Orthography<'_> {
             let is_vowel = self.is_vowel(c);
             match marked {
                 Some(s) if is_vowel && s.vowel == vowel && !self.implicit.contains(c) => {
-                    match self
-                        .stressed
-                        .iter()
-                        .find(|e| e.1 == c && e.2 == s.kind)
-                    {
+                    match self.stressed.iter().find(|e| e.1 == c && e.2 == s.kind) {
                         Some(&(composed, _, _)) => out.push(composed),
                         None => {
                             out.push(c);
@@ -249,6 +245,9 @@ mod tests {
         assert_eq!(w.stress, Some(Stress { vowel: 0, kind: 0 }));
         assert_eq!(RUSSIAN.write("ёжик", w.stress, Casing::Lower), "ёжик");
         // One syllable: no mark.
-        assert_eq!(RUSSIAN.write("кот", Some(Stress { vowel: 0, kind: 0 }), Casing::Lower), "кот");
+        assert_eq!(
+            RUSSIAN.write("кот", Some(Stress { vowel: 0, kind: 0 }), Casing::Lower),
+            "кот"
+        );
     }
 }

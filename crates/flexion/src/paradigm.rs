@@ -70,7 +70,11 @@ impl<'a> Paradigm<'a> {
     /// The forms of `cell` for these stems, the usual one first.
     pub fn forms(&self, cell: usize, stems: &[&str]) -> Vec<String> {
         self.pattern(cell)
-            .map(|p| pattern::variants(p).map(|v| pattern::fill(v, stems)).collect())
+            .map(|p| {
+                pattern::variants(p)
+                    .map(|v| pattern::fill(v, stems))
+                    .collect()
+            })
             .unwrap_or_default()
     }
 }

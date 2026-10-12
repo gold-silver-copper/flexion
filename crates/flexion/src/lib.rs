@@ -87,31 +87,52 @@ pub struct Evidence<'g> {
     pub total: u32,
 }
 
-impl fmt::Display for Candidate<'_> {
-    /// `книги (97%, regular): like книга; 1203 of 1210 words in -га`
+impl fmt::Display for Evidence<'_> {
+    /// `1203 of 1210 words in -га`
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let status = match self.status {
-            Status::Listed => "listed",
-            Status::Regular => "regular",
-            Status::Unsettled => "unsettled",
-        };
-        write!(
-            f,
-            "{} ({:.0}%, {status}): like {}",
-            self.form,
-            self.probability * 100.0,
-            self.paradigm
-        )?;
-        if let Some(e) = self.evidence {
-            if e.ending.is_empty() {
-                write!(f, "; {} of {} words", e.count, e.total)?;
-            } else {
-                write!(f, "; {} of {} words in -{}", e.count, e.total, e.ending)?;
-            }
+        write!(f, "{} of {} words", self.count, self.total)?;
+        if !self.ending.is_empty() {
+            write!(f, " in -{}", self.ending)?;
         }
         Ok(())
     }
 }
+
+impl fmt::Display for Candidate<'_> {
+    /// `книги (97%, regular): like книга; 1203 of 1210 words in -га`
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{} ({:.0}%, {}): like {}",
+            self.form,
+            self.probability * 100.0,
+            self.status,
+            self.paradigm
+        )?;
+        if let Some(e) = self.evidence {
+            write!(f, "; {e}")?;
+        }
+        Ok(())
+    }
+}
+
+/// A name that names no value of a feature: `"ablative".parse::<Case>()`
+/// in a language without an ablative.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct UnknownValue {
+    /// The feature, `Case`.
+    pub feature: &'static str,
+    /// The name given.
+    pub name: String,
+}
+
+impl fmt::Display for UnknownValue {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "no {} is called {:?}", self.feature, self.name)
+    }
+}
+
+impl std::error::Error for UnknownValue {}
 
 /// A [`Choice`] written as data: its rules (`ending => [value count, …]`,
 /// sorted by ending read backwards) and its listed words (`word => value`,

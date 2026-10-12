@@ -50,7 +50,10 @@ pub struct Known<'q, F> {
 
 impl<F> Default for Known<'_, F> {
     fn default() -> Self {
-        Known { forms: &[], feature: None }
+        Known {
+            forms: &[],
+            feature: None,
+        }
     }
 }
 
@@ -109,7 +112,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     /// do).
     pub fn candidates(&self, lemma: &str, cell: usize, known: &Known<'_, F>) -> Vec<Candidate<'_>> {
         let mut out = self.unsharpened(lemma, cell, known);
-        sharpen(&mut out, self.sharpness);
+        sharpen(out.iter_mut().map(|c| &mut c.probability), self.sharpness);
         out.sort_by(|a, b| b.probability.total_cmp(&a.probability));
         out
     }
@@ -146,7 +149,12 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             (Some(compound), Some((first, rest))) => {
                 let first_letters = self.orthography.read(first).letters;
                 let readings = compound.read(&first_letters, self.smoothing, |_| true);
-                let p = |c: Compound| readings.iter().find(|r| r.value == c).map_or(0.0, |r| r.probability);
+                let p = |c: Compound| {
+                    readings
+                        .iter()
+                        .find(|r| r.value == c)
+                        .map_or(0.0, |r| r.probability)
+                };
                 (p(Compound::Last), Some((first, rest, p(Compound::Each))))
             }
             _ => (1.0, None),
@@ -242,6 +250,27 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             .collect()
     }
 
+    /// The paradigms `lemma` can follow, likeliest first, each with how
+    /// sure and why, given what the caller knows.
+    pub fn readings(&self, lemma: &str, known: &Known<'_, F>) -> Vec<Reading<'_, 'a, P>> {
+        let letters = self.orthography.read(lemma).letters;
+        let given: Vec<(usize, Written)> = known
+            .forms
+            .iter()
+            .map(|&(c, f)| (c, self.orthography.read(f)))
+            .collect();
+        let mut readings: Vec<Reading<'_, 'a, P>> = self
+            .inflections(&letters, &given)
+            .into_iter()
+            .map(|i| i.reading)
+            .collect();
+        sharpen(
+            readings.iter_mut().map(|r| &mut r.probability),
+            self.sharpness,
+        );
+        readings
+    }
+
     /// The listed form of `cell` for the word `letters`, if any.
     pub fn irregular_form(&self, letters: &str, cell: usize) -> Option<&str> {
         let cell = u16::try_from(cell).ok()?;
@@ -275,15 +304,15 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             given.iter().all(|(cell, form)| {
                 p.refers(*cell)
                     || p.pattern(*cell).is_some_and(|pat| {
-                    pattern::variants(pat).any(|v| {
-                        let built = pattern::fill(v, &stems);
-                        let built = match &self.laws {
-                            Some(laws) => laws.apply(&built),
-                            None => built,
-                        };
-                        built == form.letters
+                        pattern::variants(pat).any(|v| {
+                            let built = pattern::fill(v, &stems);
+                            let built = match &self.laws {
+                                Some(laws) => laws.apply(&built),
+                                None => built,
+                            };
+                            built == form.letters
+                        })
                     })
-                })
             })
         };
         let fits = |p: P| self.paradigm_of(p).is_some_and(agrees);
@@ -370,7 +399,8 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             };
             match (given, class_place(class)) {
                 (Some(g), Some(Place::Ending)) => {
-                    stress::place(&self.orthography, letters, lemma_ending, Place::Ending, 0) == Some(g)
+                    stress::place(&self.orthography, letters, lemma_ending, Place::Ending, 0)
+                        == Some(g)
                 }
                 (Some(_), Some(Place::Stem)) => on_stem,
                 _ => true,
@@ -389,7 +419,10 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             let Some(class) = accent.class_of(reading.value) else {
                 continue;
             };
-            let Some(place) = accent.pattern_of(class).and_then(|p| p.places.get(cell).copied()) else {
+            let Some(place) = accent
+                .pattern_of(class)
+                .and_then(|p| p.places.get(cell).copied())
+            else {
                 continue;
             };
             // The stem's vowel: the one written, when the lemma is stressed
@@ -421,20 +454,21 @@ fn top(mut candidates: Vec<Candidate<'_>>) -> Vec<Candidate<'_>> {
     candidates
 }
 
-/// Raise candidates' probabilities to `power` and make them sum to what they
-/// summed to before.
-pub fn sharpen(candidates: &mut [Candidate<'_>], power: f32) {
+/// Raise probabilities to `power` and make them sum to what they summed to
+/// before.
+pub fn sharpen<'p>(probabilities: impl Iterator<Item = &'p mut f32>, power: f32) {
     if (power - 1.0).abs() < f32::EPSILON {
         return;
     }
-    let before: f32 = candidates.iter().map(|c| c.probability).sum();
-    for c in candidates.iter_mut() {
-        c.probability = c.probability.powf(power);
+    let mut all: Vec<&mut f32> = probabilities.collect();
+    let before: f32 = all.iter().map(|p| **p).sum();
+    for p in &mut all {
+        **p = p.powf(power);
     }
-    let after: f32 = candidates.iter().map(|c| c.probability).sum();
+    let after: f32 = all.iter().map(|p| **p).sum();
     if after > 0.0 {
-        for c in candidates.iter_mut() {
-            c.probability *= before / after;
+        for p in &mut all {
+            **p *= before / after;
         }
     }
 }
