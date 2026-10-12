@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 use std::fmt;
 use std::ops::Range;
@@ -6,14 +7,65 @@ use crate::compile::{Atom, CompiledRule, Matcher, Pattern, Quantifier, Replaceme
 use crate::{Application, Direction};
 
 /// A validated, executable sequence of sound laws.
-#[derive(Debug, Clone)]
-pub struct Program {
-    rules: Vec<CompiledRule>,
+///
+/// [`RuleSet::compile`](crate::RuleSet::compile) makes one at run time;
+/// [`Program::from_rules`] makes one as static data, from rules
+/// [`Program::to_rust`] wrote, with no compile step.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Program<'a> {
+    rules: Cow<'a, [CompiledRule<'a>]>,
 }
 
-impl Program {
-    pub(crate) fn new(rules: Vec<CompiledRule>) -> Self {
-        Self { rules }
+impl<'a> Program<'a> {
+    /// A program of already compiled rules, usable in a `static`: the rules
+    /// as [`Program::to_rust`] writes them.
+    ///
+    /// ```
+    /// use sound_law::compiled::*;
+    ///
+    /// const RULES: &[CompiledRule<'static>] = &[
+    ///     // drop_final[once]: "a" => "" / "" _ "$"
+    ///     CompiledRule {
+    ///         name: B("drop_final"),
+    ///         left: Pattern { atoms: B(&[]), anchored_at_start: false, anchored_at_end: false },
+    ///         target: Pattern {
+    ///             atoms: B(&[Atom {
+    ///                 matcher: Matcher::Literal(B("a")),
+    ///                 quantifier: Quantifier::One,
+    ///                 capture: None,
+    ///             }]),
+    ///             anchored_at_start: false,
+    ///             anchored_at_end: false,
+    ///         },
+    ///         right: Pattern { atoms: B(&[]), anchored_at_start: false, anchored_at_end: true },
+    ///         excluded_left: None,
+    ///         excluded_right: None,
+    ///         replacement: B(&[]),
+    ///         capture_count: 0,
+    ///         direction: Direction::LeftToRight,
+    ///         application: Application::Once,
+    ///         required: B(&[B("a")]),
+    ///     },
+    /// ];
+    /// static PROGRAM: Program<'static> = Program::from_rules(RULES);
+    ///
+    /// assert_eq!(PROGRAM.apply("papa"), "pap");
+    /// ```
+    pub const fn from_rules(rules: &'a [CompiledRule<'a>]) -> Self {
+        Self {
+            rules: Cow::Borrowed(rules),
+        }
+    }
+
+    pub(crate) fn new(rules: Vec<CompiledRule<'a>>) -> Self {
+        Self {
+            rules: Cow::Owned(rules),
+        }
+    }
+
+    /// The compiled rules, in order.
+    pub fn rules(&self) -> &[CompiledRule<'a>] {
+        &self.rules
     }
 
     /// The number of ordered rules in this program.
@@ -23,14 +75,14 @@ impl Program {
 
     /// Iterate over stable rule names in declaration order.
     pub fn rule_names(&self) -> impl ExactSizeIterator<Item = &str> {
-        self.rules.iter().map(|rule| rule.name.as_str())
+        self.rules.iter().map(|rule| rule.name.as_ref())
     }
 
     /// Compose two compiled programs, applying `self` before `next`.
     ///
     /// Stable rule names must remain unique so traces and named ranges are
     /// unambiguous.
-    pub fn then(&self, next: &Program) -> Result<Program, ProgramCompositionError> {
+    pub fn then(&self, next: &Program<'a>) -> Result<Program<'a>, ProgramCompositionError> {
         let mut names: HashSet<&str> = self.rule_names().collect();
         if let Some(duplicate) = next.rule_names().find(|name| !names.insert(name)) {
             return Err(ProgramCompositionError {
@@ -122,11 +174,12 @@ impl Program {
         let mut trace = Vec::new();
         let mut budget = WorkBudget::unlimited();
 
-        for rule in &self.rules {
-            let next = apply_rule(rule, &word, &mut budget);
-            if next != word {
+        for rule in self.rules.iter() {
+            if let Some(next) = apply_rule(rule, &word, &mut budget)
+                && next != word
+            {
                 trace.push(TraceStep {
-                    rule: rule.name.clone(),
+                    rule: rule.name.to_string(),
                     before: word,
                     after: next.clone(),
                 });
@@ -192,11 +245,13 @@ fn apply_rules_with_budget(
 ) -> Result<String, MatchLimitError> {
     let mut word = input.to_owned();
     for rule in rules {
-        word = apply_rule(rule, &word, budget);
+        if let Some(next) = apply_rule(rule, &word, budget) {
+            word = next;
+        }
         if budget.exhausted {
             return Err(MatchLimitError {
                 max_steps: budget.max_steps,
-                rule: rule.name.clone(),
+                rule: rule.name.to_string(),
             });
         }
     }
@@ -418,9 +473,12 @@ struct FoundMatch {
     captures: Vec<Option<Span>>,
 }
 
-fn apply_rule(rule: &CompiledRule, input: &str, budget: &mut WorkBudget) -> String {
-    if !rule.required.iter().all(|s| input.contains(s.as_str())) {
-        return input.to_owned();
+/// The word after one rule, or `None` where the rule doesn't match: a rule
+/// costs nothing on a word without its required literals (in flexion, a
+/// word without its trigger).
+fn apply_rule(rule: &CompiledRule, input: &str, budget: &mut WorkBudget) -> Option<String> {
+    if !rule.required.iter().all(|s| input.contains(s.as_ref())) {
+        return None;
     }
     if rule.target.atoms.is_empty() {
         return apply_insertion_rule(rule, input, budget);
@@ -428,7 +486,7 @@ fn apply_rule(rule: &CompiledRule, input: &str, budget: &mut WorkBudget) -> Stri
 
     let matches = select_matches(rule, input, budget);
     if matches.is_empty() {
-        return input.to_owned();
+        return None;
     }
 
     let mut output = String::with_capacity(input.len());
@@ -439,10 +497,14 @@ fn apply_rule(rule: &CompiledRule, input: &str, budget: &mut WorkBudget) -> Stri
         cursor = found.end;
     }
     output.push_str(&input[cursor..]);
-    output
+    Some(output)
 }
 
-fn apply_insertion_rule(rule: &CompiledRule, input: &str, budget: &mut WorkBudget) -> String {
+fn apply_insertion_rule(
+    rule: &CompiledRule,
+    input: &str,
+    budget: &mut WorkBudget,
+) -> Option<String> {
     let mut insertions = Vec::new();
     let mut boundaries = boundaries_from(input, 0);
     if rule.direction == Direction::RightToLeft {
@@ -460,7 +522,7 @@ fn apply_insertion_rule(rule: &CompiledRule, input: &str, budget: &mut WorkBudge
         }
     }
     if insertions.is_empty() {
-        return input.to_owned();
+        return None;
     }
     insertions.sort_by_key(|(boundary, _)| *boundary);
 
@@ -480,10 +542,10 @@ fn apply_insertion_rule(rule: &CompiledRule, input: &str, budget: &mut WorkBudge
     }
 
     if !changed {
-        return input.to_owned();
+        return None;
     }
     output.push_str(&input[cursor..]);
-    output
+    Some(output)
 }
 
 fn insertion_captures(
@@ -809,18 +871,18 @@ fn unit_ends(
     let rest = &input[position..];
     match matcher {
         Matcher::Literal(literal) => rest
-            .starts_with(literal)
+            .starts_with(literal.as_ref())
             .then_some(vec![position + literal.len()])
             .unwrap_or_default(),
         Matcher::Class(members) => members
             .iter()
-            .filter(|member| rest.starts_with(member.as_str()))
+            .filter(|member| rest.starts_with(member.as_ref()))
             .map(|member| position + member.len())
             .collect(),
         Matcher::NotClass(members) => {
             if members
                 .iter()
-                .any(|member| rest.starts_with(member.as_str()))
+                .any(|member| rest.starts_with(member.as_ref()))
             {
                 Vec::new()
             } else {
@@ -869,7 +931,7 @@ fn render_replacement(
     captures: &[Option<Span>],
     output: &mut String,
 ) {
-    for part in &rule.replacement {
+    for part in rule.replacement.iter() {
         match part {
             ReplacementPart::Literal(literal) => output.push_str(literal),
             // Every successful match sets the captures a compiled

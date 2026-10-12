@@ -42,8 +42,52 @@ searching it.
 tables and runs them with this crate: an edit carries a trigger character (U+E000…), and a
 rule rewrites the stem's edge next to it, `"{x:S0}" => "{x|M0}" / "" _ "⟨T⟩"`, or copies the
 stem's first consonant after it (Greek reduplication). The trainer builds rule sets at
-runtime from `Class`, `Map` and `Rule` values; a generated crate holds them as a
-`sound_laws!` block and compiles it once on first use.
+runtime from `Class`, `Map` and `Rule` values and compiles them; a generated crate holds the
+compiled program as static data (see below), so it never compiles anything.
+
+## Programs as static data
+
+A compiled program is plain data: `CompiledRule`, `Pattern`, `Atom`, `Matcher`,
+`ReplacementPart`, holding their strings and lists as `Cow`s. `Program::to_rust` writes a
+program's rules as a Rust expression, and `Program::from_rules` runs them from a `static`,
+with no compile step and no `OnceLock`:
+
+```rust
+use sound_law::compiled::*; // the compiled types, and `B` for `Cow::Borrowed`
+
+const RULES: &[CompiledRule<'static>] = &[
+    // drop_final[once]: "a" => "" / "" _ "$"
+    CompiledRule {
+        name: B("drop_final"),
+        left: Pattern { atoms: B(&[]), anchored_at_start: false, anchored_at_end: false },
+        target: Pattern {
+            atoms: B(&[Atom { matcher: Matcher::Literal(B("a")), quantifier: Quantifier::One, capture: None }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern { atoms: B(&[]), anchored_at_start: false, anchored_at_end: true },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::Once,
+        required: B(&[B("a")]),
+    },
+];
+static PROGRAM: Program<'static> = Program::from_rules(RULES);
+
+assert_eq!(PROGRAM.apply("papa"), "pap");
+```
+
+The output is meant to be written by `to_rust`, from a program `compile` checked. A
+program written by hand that breaks the compiler's invariants never makes the engine
+panic, but may not match what its notation would. `tests/static_program.rs` checks that a
+written program equals the compiled one and runs the same.
+
+A rule needs the literals its match can't do without (`required`): a word without one of
+them costs the rule one substring search and no copy. In flexion every rule needs its
+trigger character, so a form runs only the rules its trigger sets off.
 
 ## Correspondence maps
 
@@ -145,6 +189,8 @@ boundaries.
 
 - `RuleSet::compile` validates names, classes, patterns, captures, and
   replacements once and returns a reusable `Program`.
+- `Program::to_rust` and `Program::from_rules` write a compiled program as Rust
+  and run it from a `static`; `Program::rules` lists its compiled rules.
 - `Program::apply` runs the ordered program once.
 - `Program::then` composes validated programs while rejecting duplicate rule
   identities.

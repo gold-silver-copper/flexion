@@ -1,6 +1,7 @@
 [package]
 name = "xtask"
 version = "0.0.0"
+description = "Learn, write and check the language crates: cargo xtask <command>"
 publish = false
 edition.workspace = true
 rust-version.workspace = true
@@ -8,9 +9,8 @@ rust-version.workspace = true
 [dependencies]
 flexion = { workspace = true }
 flexion-train = { workspace = true }
-flexion-configs = { workspace = true }
+flexion-configs = { path = "../crates/flexion-configs" }
 serde_json = { workspace = true }
-english-baseline = { path = "../tools/english-baseline" }
 
 [lints]
 workspace = true

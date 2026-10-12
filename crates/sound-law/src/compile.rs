@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::cmp::Reverse;
 use std::collections::{HashMap, HashSet};
 
@@ -6,62 +7,74 @@ use crate::{Application, CompileError, Direction, RuleSet};
 
 const MAX_PATTERN_ATOMS: usize = 256;
 
-#[derive(Debug, Clone)]
-pub(crate) struct CompiledRule {
-    pub(crate) name: String,
-    pub(crate) left: Pattern,
-    pub(crate) target: Pattern,
-    pub(crate) right: Pattern,
-    pub(crate) excluded_left: Option<Pattern>,
-    pub(crate) excluded_right: Option<Pattern>,
-    pub(crate) replacement: Vec<ReplacementPart>,
-    pub(crate) capture_count: usize,
-    pub(crate) direction: Direction,
-    pub(crate) application: Application,
+/// One compiled rule: its patterns parsed, its classes and maps resolved.
+///
+/// [`RuleSet::compile`] makes these; [`CompiledRule::to_rust`] writes one as
+/// a constant expression, so a build step can emit a ready-to-run program as
+/// static data. Rules written by hand need not keep the compiler's
+/// invariants; the engine never panics on them, but may not match.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CompiledRule<'a> {
+    pub name: Cow<'a, str>,
+    pub left: Pattern<'a>,
+    pub target: Pattern<'a>,
+    pub right: Pattern<'a>,
+    pub excluded_left: Option<Pattern<'a>>,
+    pub excluded_right: Option<Pattern<'a>>,
+    pub replacement: Cow<'a, [ReplacementPart<'a>]>,
+    pub capture_count: usize,
+    pub direction: Direction,
+    pub application: Application,
     /// Literals every match needs, in its environment or target: a word
     /// without one of them is left as it is, unscanned.
-    pub(crate) required: Vec<String>,
+    pub required: Cow<'a, [Cow<'a, str>]>,
 }
 
-#[derive(Debug, Clone)]
-pub(crate) struct Pattern {
-    pub(crate) atoms: Vec<Atom>,
-    pub(crate) anchored_at_start: bool,
-    pub(crate) anchored_at_end: bool,
+/// A compiled pattern: atoms matched in order.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Pattern<'a> {
+    pub atoms: Cow<'a, [Atom<'a>]>,
+    pub anchored_at_start: bool,
+    pub anchored_at_end: bool,
 }
 
-#[derive(Debug, Clone)]
-pub(crate) struct Atom {
-    pub(crate) matcher: Matcher,
-    pub(crate) quantifier: Quantifier,
-    pub(crate) capture: Option<usize>,
+/// One matcher, how often it repeats, and the capture it fills.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Atom<'a> {
+    pub matcher: Matcher<'a>,
+    pub quantifier: Quantifier,
+    pub capture: Option<usize>,
 }
 
-#[derive(Debug, Clone)]
-pub(crate) enum Matcher {
-    Literal(String),
-    Class(Vec<String>),
-    NotClass(Vec<String>),
+/// What one atom matches. Class members are tried longest first.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Matcher<'a> {
+    Literal(Cow<'a, str>),
+    Class(Cow<'a, [Cow<'a, str>]>),
+    NotClass(Cow<'a, [Cow<'a, str>]>),
     Any,
     WordBoundary,
     Backreference(usize),
 }
 
+/// How many times an atom matches: once, `?`, `*` or `+`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(crate) enum Quantifier {
+pub enum Quantifier {
     One,
     Optional,
     ZeroOrMore,
     OneOrMore,
 }
 
-#[derive(Debug, Clone)]
-pub(crate) enum ReplacementPart {
-    Literal(String),
+/// One piece of a replacement: literal text, a capture, or a capture put
+/// through a map.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ReplacementPart<'a> {
+    Literal(Cow<'a, str>),
     Capture(usize),
     MappedCapture {
         capture: usize,
-        entries: Vec<(String, String)>,
+        entries: Cow<'a, [(Cow<'a, str>, Cow<'a, str>)]>,
     },
 }
 
@@ -82,7 +95,7 @@ struct CaptureDef {
     values: Option<Vec<String>>,
 }
 
-pub(crate) fn compile(spec: &RuleSet<'_>) -> Result<Program, CompileError> {
+pub(crate) fn compile(spec: &RuleSet<'_>) -> Result<Program<'static>, CompileError> {
     let classes = resolve_classes(spec)?;
     let maps = resolve_maps(spec)?;
     let mut seen_rules = HashSet::new();
@@ -160,22 +173,23 @@ pub(crate) fn compile(spec: &RuleSet<'_>) -> Result<Program, CompileError> {
 
         let required = [&left, &target, &right]
             .into_iter()
-            .flat_map(|p| &p.atoms)
+            .flat_map(|p| p.atoms.iter())
             .filter(|a| matches!(a.quantifier, Quantifier::One | Quantifier::OneOrMore))
             .filter_map(|a| match &a.matcher {
                 Matcher::Literal(s) if !s.is_empty() => Some(s.clone()),
                 _ => None,
             })
-            .collect();
+            .collect::<Vec<_>>()
+            .into();
         compiled.push(CompiledRule {
-            name: rule.name().to_owned(),
+            name: Cow::Owned(rule.name().to_owned()),
             required,
             left,
             target,
             right,
             excluded_left,
             excluded_right,
-            replacement,
+            replacement: replacement.into(),
             capture_count: captures.len(),
             direction: rule.direction(),
             application: rule.application(),
@@ -287,7 +301,7 @@ fn parse_pattern(
     captures: &mut HashMap<String, CaptureDef>,
     rule: &str,
     location: &str,
-) -> Result<Pattern, CompileError> {
+) -> Result<Pattern<'static>, CompileError> {
     let (body, anchored_at_start, anchored_at_end) = strip_anchors(source);
     let mut atoms = Vec::new();
     let mut literal = String::new();
@@ -373,7 +387,7 @@ fn parse_pattern(
     }
 
     Ok(Pattern {
-        atoms,
+        atoms: atoms.into(),
         anchored_at_start,
         anchored_at_end,
     })
@@ -385,7 +399,7 @@ fn parse_placeholder(
     captures: &mut HashMap<String, CaptureDef>,
     rule: &str,
     location: &str,
-) -> Result<Atom, CompileError> {
+) -> Result<Atom<'static>, CompileError> {
     if placeholder.is_empty() {
         return Err(pattern_error(rule, location, "empty `{}` placeholder"));
     }
@@ -463,16 +477,16 @@ fn parse_placeholder(
     let matcher = if matcher_name == "." {
         Matcher::Any
     } else if let Some(expression) = matcher_name.strip_prefix('!') {
-        Matcher::NotClass(resolve_class_expression(
+        Matcher::NotClass(owned(resolve_class_expression(
             classes, expression, rule, location,
-        )?)
+        )?))
     } else {
-        Matcher::Class(resolve_class_expression(
+        Matcher::Class(owned(resolve_class_expression(
             classes,
             matcher_name,
             rule,
             location,
-        )?)
+        )?))
     };
 
     let capture = match capture_name {
@@ -486,7 +500,9 @@ fn parse_placeholder(
             }
             let index = captures.len();
             let values = match (&matcher, quantifier) {
-                (Matcher::Class(members), Quantifier::One) => Some(members.clone()),
+                (Matcher::Class(members), Quantifier::One) => {
+                    Some(members.iter().map(|m| m.to_string()).collect())
+                }
                 _ => None,
             };
             captures.insert(name.to_owned(), CaptureDef { index, values });
@@ -729,7 +745,7 @@ fn parse_replacement(
     captures: &HashMap<String, CaptureDef>,
     maps: &HashMap<String, ResolvedMap>,
     rule: &str,
-) -> Result<Vec<ReplacementPart>, CompileError> {
+) -> Result<Vec<ReplacementPart<'static>>, CompileError> {
     let mut parts = Vec::new();
     let mut literal = String::new();
     let mut chars = source.chars().peekable();
@@ -827,7 +843,11 @@ fn parse_replacement(
                     }
                     parts.push(ReplacementPart::MappedCapture {
                         capture: capture.index,
-                        entries: map.entries.clone(),
+                        entries: map
+                            .entries
+                            .iter()
+                            .map(|(a, b)| (Cow::Owned(a.clone()), Cow::Owned(b.clone())))
+                            .collect(),
                     });
                 } else {
                     parts.push(ReplacementPart::Capture(capture.index));
@@ -844,6 +864,11 @@ fn parse_replacement(
     }
     push_replacement_literal(&mut parts, &mut literal);
     Ok(parts)
+}
+
+/// Members as a compiled class.
+fn owned(members: Vec<String>) -> Cow<'static, [Cow<'static, str>]> {
+    members.into_iter().map(Cow::Owned).collect()
 }
 
 fn strip_anchors(source: &str) -> (&str, bool, bool) {
@@ -863,19 +888,21 @@ fn is_escaped(source: &str, byte_index: usize) -> bool {
     slash_count % 2 == 1
 }
 
-fn push_literal(atoms: &mut Vec<Atom>, literal: &mut String) {
+fn push_literal(atoms: &mut Vec<Atom<'static>>, literal: &mut String) {
     if !literal.is_empty() {
         atoms.push(Atom {
-            matcher: Matcher::Literal(std::mem::take(literal)),
+            matcher: Matcher::Literal(Cow::Owned(std::mem::take(literal))),
             quantifier: Quantifier::One,
             capture: None,
         });
     }
 }
 
-fn push_replacement_literal(parts: &mut Vec<ReplacementPart>, literal: &mut String) {
+fn push_replacement_literal(parts: &mut Vec<ReplacementPart<'static>>, literal: &mut String) {
     if !literal.is_empty() {
-        parts.push(ReplacementPart::Literal(std::mem::take(literal)));
+        parts.push(ReplacementPart::Literal(Cow::Owned(std::mem::take(
+            literal,
+        ))));
     }
 }
 

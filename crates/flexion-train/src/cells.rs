@@ -77,6 +77,23 @@ impl<'a> Cells<'a> {
             .find(|g| cell >= g.offset && cell < g.offset + g.len())
     }
 
+    /// The cell `cell` uses where a word has no form of its own there (see
+    /// [`crate::spec::Group::fallbacks`]).
+    pub fn fallback(&self, cell: usize) -> Option<usize> {
+        let g = self.group_of(cell)?;
+        let names: Vec<&str> = g
+            .features
+            .iter()
+            .zip(g.values(cell))
+            .filter_map(|(f, v)| f.values.get(v).map(|x| x.name))
+            .collect();
+        g.group
+            .fallbacks
+            .iter()
+            .find(|(values, _, _)| values.iter().all(|v| names.contains(v)))
+            .and_then(|(_, group, to)| self.find(group, to))
+    }
+
     /// `noun.gen.pl`
     pub fn name(&self, cell: usize) -> String {
         let Some(g) = self.group_of(cell) else {

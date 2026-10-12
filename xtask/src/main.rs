@@ -1,38 +1,19 @@
-//! `cargo xtask <command> <language> [flags]`:
+//! `cargo xtask <command> <language>`:
 //!
-//! - `build <lang> --dump <path> [--edition <code>=<path>]… [--date YYYY-MM-DD]
-//!   [--size-price p]`:
-//!   the full pipeline (extract, tune on the dev tenth, measure on the
-//!   held-out tenth, train on everything) and write `languages/<lang>`. Each
-//!   `--edition` reads one of the language's other Wiktionary editions;
-//! - `extract <lang> --dump <path> [--edition <code>=<path>]…`: read the dumps
-//!   into the lexeme cache (`$FLEXION_CACHE`, else `~/.cache/flexion`), for
-//!   `probe`;
-//! - `probe <lang> [--pos <name>] [--alpha a] [--tau t] [--epsilon e]
-//!   [--syllables depth] [--variant decay] [--misses 1] [--attested 1]
-//!   [--union 1] [--front 1]`: train
-//!   without the held-out tenth with fixed parameters and score it (or, with
-//!   `--attested`, train on everything and score that), for experiments. The
-//!   score counts the main dump's words, or with `--union` every word.
-//!   `--fraction f` trains on that share of the training words;
-//! - `tune <lang> [--pos <name>] [--size-price p]`: score the build's whole
-//!   tuning grid on the
-//!   dev tenth and show which setting the build would choose;
-//! - `export <lang>`: write the cached lexemes as the evaluation splits them,
-//!   one TSV per part of speech under `<cache>/export/<lang>/`
-//!   (`split, lemma, lemma in full, cell, primary form, attested forms,
-//!   source`), for models outside this repository (the neural baseline).
+//! - `extract`: read the language's Kaikki dumps into a lexeme cache;
+//! - `build`: learn the language's grammar, measure it, and write its crate;
+//! - `readme`: rewrite a built crate's README, keeping its report;
+//! - `try`: learn on nine tenths of the words and score the held-out tenth
+//!   (`--systems`: as principal parts' systems);
+//! - `inspect`: a word's readings and forms, and a sample of irregular forms.
 
-use flexion_train::extract::{self, PosData, Word};
-use flexion_train::pipeline::{Baseline, fastest_ns};
-use flexion_train::{DEV_BUCKET, TEST_BUCKET, bucket, eval, spec::Language};
-use std::path::{Path, PathBuf};
+use flexion_train::extract::{self, Lexeme, PosData};
+use flexion_train::spec::Language;
+use flexion_train::{choose, eval, learn, script};
+use std::path::PathBuf;
 use std::time::Instant;
 
-const USAGE: &str = "usage: cargo xtask <build|extract|probe|export|tune|emit> <language> [flags]";
-
-/// Threads for tuning: the machine is shared, so never all of it.
-const THREADS: usize = 8;
+const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|inspect> <language> [--pos <part of speech>] [--systems] [--errors N]";
 
 fn main() {
     if let Err(e) = run() {
@@ -43,149 +24,610 @@ fn main() {
 
 fn run() -> Result<(), String> {
     let args: Vec<String> = std::env::args().skip(1).collect();
-    let (cmd, rest) = args.split_first().ok_or(USAGE)?;
-    let lang_name = rest.first().ok_or(USAGE)?;
-    let lang = flexion_configs::by_name(lang_name).ok_or(format!("no config named {lang_name}"))?;
-    lang.validate()?;
-    let flag = |name: &str| {
-        rest.windows(2)
-            .find(|w| w.first().is_some_and(|f| f == name))
+    let (Some(command), Some(name)) = (args.first(), args.get(1)) else {
+        return Err(USAGE.into());
+    };
+    let lang = flexion_configs::by_name(name).ok_or(format!("no language {name}"))?;
+    let flag = |f: &str| {
+        args.windows(2)
+            .find(|w| w.first().is_some_and(|x| x == f))
             .and_then(|w| w.get(1))
             .cloned()
     };
-    // `--size-price p`: what doubling a model must buy (see `choose`).
-    let size_price = || -> Result<f64, String> {
-        flag("--size-price").map_or(Ok(flexion_train::pipeline::SIZE_PRICE), |v| {
-            v.parse().map_err(|_| "bad --size-price".to_string())
-        })
-    };
-    // `--edition <code>=<path>`, any number of times.
-    let editions: Vec<(String, PathBuf)> = rest
-        .windows(2)
-        .filter(|w| w.first().is_some_and(|f| f == "--edition"))
-        .filter_map(|w| w.get(1))
-        .map(|v| {
-            v.split_once('=')
-                .map(|(c, p)| (c.to_string(), PathBuf::from(p)))
-                .ok_or(format!("--edition {v}: expected <code>=<path>"))
-        })
-        .collect::<Result<_, _>>()?;
-    match cmd.as_str() {
-        "build" => {
-            let dump = flag("--dump").ok_or("--dump <path> is required")?;
-            build(
+    match command.as_str() {
+        "extract" => extract_dumps(&lang),
+        "build" => build(&lang),
+        "readme" => readme(&lang),
+        "try" => {
+            let mut settings = choose::Settings::default();
+            if let Some(g) = flag("--min-gain") {
+                settings.min_gain = g.parse().map_err(|_| "bad --min-gain")?;
+            }
+            if let Some(b) = flag("--rule-bits") {
+                settings.rule_bits = b.parse().map_err(|_| "bad --rule-bits")?;
+            }
+            if let Some(s) = flag("--smoothing") {
+                settings.smoothing = s.parse().map_err(|_| "bad --smoothing")?;
+            }
+            let errors = flag("--errors")
+                .map_or(Ok(0), |e| e.parse::<usize>().map_err(|_| "bad --errors"))?;
+            try_language(
                 &lang,
-                Path::new(&dump),
-                &editions,
-                flag("--date"),
-                size_price()?,
+                flag("--pos").as_deref(),
+                settings,
+                errors,
+                args.iter().any(|a| a == "--systems"),
             )
         }
-        "export" => export(&lang, &load_cache(&lang)?),
-        "emit" => emit_code(&lang),
-        "tune" => tune(
+        "inspect" => inspect(
             &lang,
-            &load_cache(&lang)?,
-            flag("--pos").as_deref(),
-            size_price()?,
+            flag("--pos").as_deref().unwrap_or("noun"),
+            flag("--word").as_deref(),
+            args.iter().any(|a| a == "--holdout"),
         ),
-        "extract" => {
-            let dump = flag("--dump").ok_or("--dump <path> is required")?;
-            let data = extract_dump(&lang, Path::new(&dump), &editions)?;
-            save_cache(&lang, &data)
-        }
-        "probe" => probe(
-            &lang,
-            &load_cache(&lang)?,
-            &flexion_train::probe::Probe::from_args(rest)?,
-            flag("--misses").is_some(),
-            flag("--union").is_some(),
-        ),
-        _ => Err(USAGE.to_string()),
+        _ => Err(USAGE.into()),
     }
 }
 
-/// The full pipeline: extract, tune, evaluate, train, write the crate.
-fn build(
-    lang: &Language,
-    dump: &Path,
-    editions: &[(String, PathBuf)],
-    date: Option<String>,
-    size_price: f64,
-) -> Result<(), String> {
+fn home() -> PathBuf {
+    PathBuf::from(std::env::var("HOME").unwrap_or_else(|_| ".".into()))
+}
+
+/// The English Wiktionary's dump of a language: `~/.cache/flexion/dumps/<Name>.jsonl`.
+fn dump(lang: &Language) -> PathBuf {
+    home()
+        .join(".cache/flexion/dumps")
+        .join(format!("{}.jsonl", lang.display.replace(' ', "")))
+}
+
+/// Another edition's dump: `~/.cache/kaikki/<code>/<name>.jsonl`.
+fn edition_dump(code: &str, name: &str) -> PathBuf {
+    home()
+        .join(".cache/kaikki")
+        .join(code)
+        .join(format!("{name}.jsonl"))
+}
+
+fn cache(lang: &Language) -> PathBuf {
+    home()
+        .join(".cache/flexion/grammar")
+        .join(format!("{}.json", lang.name))
+}
+
+fn extract_dumps(lang: &Language) -> Result<(), String> {
     let t = Instant::now();
-    let data = extract_dump(lang, dump, editions)?;
-    // The audit reads the words the build trained on.
-    save_cache(lang, &data)?;
-    let rules = |cell: &str, lemma: &str| {
-        english_baseline::inflect(english_baseline::Old::Rules, cell, lemma)
-    };
-    let library = |cell: &str, lemma: &str| {
-        english_baseline::inflect(english_baseline::Old::Library, cell, lemma)
-    };
-    let baselines: Vec<Baseline> = match lang.name {
-        "english" => vec![
-            Baseline {
-                name: "english 0.4 rules",
-                note: "the hand-written regular rules of the published `english` 0.4 (`english-core`), no tables.",
-                inflect: &rules,
-            },
-            Baseline {
-                name: "english 0.4 rules + tables",
-                note: "the whole published `english` 0.4. Its exception tables were built from all of Wiktionary, so it has already seen these \"held-out\" words: this column is not a measure of generalization.",
-                inflect: &library,
-            },
-        ],
-        _ => vec![],
-    };
-    let name = dump
-        .file_name()
-        .map(|n| n.to_string_lossy().to_string())
-        .unwrap_or_default();
-    let mut note = match date {
-        Some(d) => format!("the Kaikki dump `{name}` of {d}"),
-        None => format!("the Kaikki dump `{name}`"),
-    };
-    for (code, path) in editions {
-        let file = path
-            .file_name()
-            .map(|n| n.to_string_lossy().to_string())
-            .unwrap_or_default();
-        let edition = lang.editions.iter().find(|e| e.code == code);
-        // Kaikki's dumps come with their extraction date beside them.
-        let dated = std::fs::read_to_string(path.with_extension("date"))
-            .map(|d| format!(" of {}", d.trim()))
-            .unwrap_or_default();
-        note.push_str(&format!(
-            " and `{file}`{dated} from {}",
-            edition.map_or(code.as_str(), |e| e.name)
-        ));
+    let script = script::Script::new(&lang.spelling);
+    let orthography = script.orthography();
+    let mut data = extract::extract(lang, &orthography, &dump(lang))?;
+    for (i, e) in lang.editions.iter().enumerate() {
+        let path = edition_dump(e.code, e.dump);
+        if path.exists() {
+            extract::add_edition(lang, &orthography, &mut data, i, &path)?;
+        } else {
+            eprintln!("{}: no {} dump, skipped", path.display(), e.code);
+        }
     }
-    let built =
-        flexion_train::pipeline::build(lang, &data, &baselines, THREADS, size_price, &note)?;
-    let mut report = built.report;
-    if lang.name == "english" {
-        report.push_str(&english_comparison(lang, &data, &built.model)?);
+    let path = cache(lang);
+    if let Some(dir) = path.parent() {
+        std::fs::create_dir_all(dir).map_err(|e| format!("{}: {e}", dir.display()))?;
     }
-    let dir = workspace_root().join("languages").join(lang.name);
-    flexion_train::emit::emit(lang, &built.model, &report, &dir)?;
-    // What the audit retrains the shipped model with.
-    let plans = cache_dir().join(format!("{}-plans.json", lang.name));
-    std::fs::write(&plans, flexion_train::plans_json(&built.plans)?)
-        .map_err(|e| format!("{}: {e}", plans.display()))?;
-    for license in ["LICENSE-MIT", "LICENSE-APACHE"] {
-        std::fs::copy(workspace_root().join(license), dir.join(license))
-            .map_err(|e| format!("{license}: {e}"))?;
+    let json = serde_json::to_vec(&data).map_err(|e| e.to_string())?;
+    std::fs::write(&path, json).map_err(|e| format!("{}: {e}", path.display()))?;
+    eprintln!(
+        "wrote {} in {:.0}s",
+        path.display(),
+        t.elapsed().as_secs_f64()
+    );
+    Ok(())
+}
+
+fn load(lang: &Language) -> Result<Vec<PosData>, String> {
+    let path = cache(lang);
+    let bytes = std::fs::read(&path).map_err(|e| {
+        format!(
+            "{}: {e} (run `cargo xtask extract {}` first)",
+            path.display(),
+            lang.name
+        )
+    })?;
+    serde_json::from_slice(&bytes).map_err(|e| e.to_string())
+}
+
+/// `try` for a part of speech learned as its principal parts' systems.
+fn try_systems(
+    lang: &Language,
+    part: &flexion_train::spec::PartOfSpeech,
+    script: &script::Script,
+    lexemes: &[Lexeme],
+    settings: choose::Settings,
+    errors: usize,
+) -> Result<(), String> {
+    use flexion_train::pipeline::Inflection;
+    let shape = flexion_train::shape(lang, part)?;
+    let parts = flexion_train::parts(lang, part)?;
+    let orthography = script.orthography();
+    let not = |b: u64| -> Vec<Lexeme> {
+        lexemes
+            .iter()
+            .filter(|l| eval::bucket(&l.key) != b)
+            .cloned()
+            .collect()
+    };
+    let train = not(eval::TEST);
+    let fit: Vec<Lexeme> = train
+        .iter()
+        .filter(|l| eval::bucket(&l.key) != eval::DEV)
+        .cloned()
+        .collect();
+    let dev: Vec<&Lexeme> = train
+        .iter()
+        .filter(|l| eval::bucket(&l.key) == eval::DEV && l.source == 0)
+        .collect();
+    let test: Vec<&Lexeme> = lexemes
+        .iter()
+        .filter(|l| eval::bucket(&l.key) == eval::TEST && l.source == 0)
+        .collect();
+    let t = Instant::now();
+    let sharpness = Inflection::learn(script, &shape, Some(&parts), &fit, settings)
+        .with(|g| eval::fit_sharpness(g, &orthography, &dev));
+    let mut learned = Inflection::learn(script, &shape, Some(&parts), &train, settings);
+    learned.set_sharpness(sharpness);
+    println!(
+        "{} {} as principal parts ({:.0}s), sharpness {sharpness}:",
+        lang.name,
+        part.name,
+        t.elapsed().as_secs_f64()
+    );
+    if let Inflection::Systems(s) = &learned {
+        for sys in &s.systems {
+            let g = &sys.grammar;
+            println!(
+                "  system on {:?}: {} cells, {} paradigms, {} rules, {} listed, {} irregular{}",
+                sys.part,
+                sys.cells.len(),
+                g.stats.paradigms,
+                g.grammar.paradigm.rules.len(),
+                g.grammar.paradigm.exceptions.len(),
+                g.stats.irregular_forms,
+                sys.from_lemma.as_ref().map_or(String::new(), |f| format!(
+                    "; the part from the lemma: {} paradigms, {} irregular",
+                    f.stats.paradigms, f.stats.irregular_forms
+                ))
+            );
+        }
     }
-    // Generated code is committed, so keep it formatted like the rest
-    // (rustfmt on lib.rs formats its modules too).
+    for input in [eval::Input::Headword, eval::Input::Full] {
+        let s = learned.with(|g| eval::score(g, &orthography, &test, input));
+        println!(
+            "  held-out {input:?}: {} words, {} forms, top-1 {:.2}% (letters {:.2}%), top-3 {:.2}%, calibration error {:.3}",
+            test.len(),
+            s.forms,
+            100.0 * s.accuracy(),
+            100.0 * s.letters as f64 / s.forms.max(1) as f64,
+            100.0 * s.top3_accuracy(),
+            s.calibration_error()
+        );
+    }
+    if errors > 0 {
+        learned.with(|g| {
+            let full = flexion::Known {
+                full: true,
+                ..flexion::Known::default()
+            };
+            let mut shown = 0;
+            'words: for l in test.iter().step_by(7) {
+                let headword = std::env::var_os("HEADWORD").is_some();
+                let typed = if headword { &l.lemma } else { &l.full };
+                let known = if headword {
+                    flexion::Known::default()
+                } else {
+                    full
+                };
+                for (cell, fs) in l.cells.iter().enumerate() {
+                    let Some(want) = fs.first() else { continue };
+                    let c = g.candidates(typed, cell, &known);
+                    if c.first()
+                        .is_some_and(|c| !eval::same_form(&orthography, &c.form, want))
+                    {
+                        let top: Vec<String> = c.iter().take(2).map(ToString::to_string).collect();
+                        println!(
+                            "    {} cell {cell}: want {want}; got {}",
+                            l.full,
+                            top.join(" | ")
+                        );
+                        shown += 1;
+                        if shown >= errors {
+                            break 'words;
+                        }
+                        continue 'words;
+                    }
+                }
+            }
+        });
+    }
+    Ok(())
+}
+
+fn try_language(
+    lang: &Language,
+    only: Option<&str>,
+    settings: choose::Settings,
+    errors: usize,
+    systems: bool,
+) -> Result<(), String> {
+    let data = load(lang)?;
+    let script = script::Script::new(&lang.spelling);
+    for (part, d) in lang.parts.iter().zip(&data) {
+        if only.is_some_and(|o| o != part.name) {
+            continue;
+        }
+        let shape = flexion_train::shape(lang, part)?;
+        if systems {
+            try_systems(lang, part, &script, &d.lexemes, settings, errors)?;
+            continue;
+        }
+        let train: Vec<Lexeme> = d
+            .lexemes
+            .iter()
+            .filter(|l| eval::bucket(&l.key) != eval::TEST)
+            .cloned()
+            .collect();
+        // The sharpness, fitted on the dev tenth with a grammar that hasn't
+        // seen it.
+        let sharpness = {
+            let fit: Vec<Lexeme> = train
+                .iter()
+                .filter(|l| eval::bucket(&l.key) != eval::DEV)
+                .cloned()
+                .collect();
+            let dev: Vec<&Lexeme> = train
+                .iter()
+                .filter(|l| eval::bucket(&l.key) == eval::DEV && l.source == 0)
+                .collect();
+            let g = learn::learn(script.orthography(), &shape, &fit, settings).grammar;
+            eval::fit_sharpness::<u8, _>(&g, &g.orthography, &dev)
+        };
+        let test: Vec<&Lexeme> = d
+            .lexemes
+            .iter()
+            .filter(|l| eval::bucket(&l.key) == eval::TEST && l.source == 0)
+            .collect();
+        let t = Instant::now();
+        let mut learned = learn::learn(script.orthography(), &shape, &train, settings);
+        learned.grammar.sharpness = sharpness;
+        let secs = t.elapsed().as_secs_f64();
+        println!("  sharpness fitted on the dev tenth: {sharpness}");
+        let g = &learned.grammar;
+        let st = &learned.stats;
+        println!(
+            "{} {}: {} words → {} paradigms, {} paradigm rules, {} listed words, {} accent patterns, {} irregular forms ({secs:.0}s)",
+            lang.name,
+            part.name,
+            st.words,
+            st.paradigms,
+            g.paradigm.rules.len(),
+            g.paradigm.exceptions.len(),
+            st.accent_patterns,
+            st.irregular_forms,
+        );
+        if let Some(p) = &g.prefixes {
+            let list: Vec<String> = p
+                .prefixes
+                .iter()
+                .map(|p| {
+                    format!(
+                        "{} {}+{}/{}",
+                        p.letters, p.separable, p.inseparable, p.words
+                    )
+                })
+                .collect();
+            println!(
+                "  prefixes (separable+inseparable/words): {}",
+                list.join(", ")
+            );
+            println!(
+                "  drops: {:?}",
+                p.drops
+                    .iter()
+                    .enumerate()
+                    .filter(|(_, d)| !d.is_empty())
+                    .collect::<Vec<_>>()
+            );
+        }
+        if !g.spellings.is_empty() {
+            println!("  {} spellings listed", g.spellings.len());
+        }
+        if let (Some(f), Some(choice)) = (learned.feature, &g.feature) {
+            let to: Vec<String> = g
+                .referrals
+                .iter()
+                .map(|r| format!("{}→{:?}", r.cell, r.to))
+                .collect();
+            println!(
+                "  referrals by {}: {}; {} rules, {} listed",
+                part.inherent.get(f).copied().unwrap_or("?"),
+                to.join(" "),
+                choice.rules.len(),
+                choice.exceptions.len()
+            );
+        }
+        if let Some(a) = &g.accent {
+            println!(
+                "  stress: {} classes, {} rules, {} listed",
+                a.classes.len(),
+                a.class.rules.len(),
+                a.class.exceptions.len(),
+            );
+        }
+        for input in [eval::Input::Headword, eval::Input::Full] {
+            let s = eval::score::<u8, _>(g, &g.orthography, &test, input);
+            println!(
+                "  held-out {input:?}: {} words, {} forms, top-1 {:.2}% (letters {:.2}%), top-3 {:.2}%, calibration error {:.3}",
+                test.len(),
+                s.forms,
+                100.0 * s.accuracy(),
+                100.0 * s.letters as f64 / s.forms.max(1) as f64,
+                100.0 * s.top3_accuracy(),
+                s.calibration_error()
+            );
+            let bins: Vec<String> = s
+                .bins
+                .iter()
+                .filter(|b| b.0 > 0)
+                .map(|&(n, r, p)| format!("{:.2}→{:.2} ({n})", p / n as f64, r as f64 / n as f64))
+                .collect();
+            println!("    stated → right: {}", bins.join(", "));
+        }
+        if errors > 0 {
+            let mut shown = 0;
+            'words: for l in test.iter().step_by(7) {
+                let full = flexion::Known {
+                    full: true,
+                    ..flexion::Known::default()
+                };
+                let headword = std::env::var_os("HEADWORD").is_some();
+                let typed = if headword { &l.lemma } else { &l.full };
+                let known = if headword {
+                    flexion::Known::default()
+                } else {
+                    full
+                };
+                for (cell, fs) in l.cells.iter().enumerate() {
+                    let Some(want) = fs.first() else { continue };
+                    let c = g.candidates(typed, cell, &known);
+                    if c.first()
+                        .is_some_and(|c| !eval::same_form(&g.orthography, &c.form, want))
+                    {
+                        let top: Vec<String> = c.iter().take(2).map(ToString::to_string).collect();
+                        println!(
+                            "    {} cell {cell}: want {want}; got {}",
+                            l.full,
+                            top.join(" | ")
+                        );
+                        shown += 1;
+                        if shown >= errors {
+                            break 'words;
+                        }
+                        continue 'words;
+                    }
+                }
+            }
+        }
+        let mut seen = std::collections::HashSet::new();
+        let train_refs: Vec<&Lexeme> = train
+            .iter()
+            .filter(|l| l.source == 0 && seen.insert(l.key.clone()))
+            .take(3000)
+            .collect();
+        let s = eval::score::<u8, _>(g, &g.orthography, &train_refs, eval::Input::Headword);
+        println!(
+            "  attested (sample of {}): top-1 {:.2}%",
+            train_refs.len(),
+            100.0 * s.accuracy()
+        );
+    }
+    Ok(())
+}
+
+/// Show what was learned for one part of speech: the commonest paradigms and
+/// stress patterns, and a sample of the irregular forms.
+fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Result<(), String> {
+    let data = load(lang)?;
+    let script = script::Script::new(&lang.spelling);
+    let pi = lang
+        .parts
+        .iter()
+        .position(|p| p.name == pos)
+        .ok_or("no such part of speech")?;
+    let (part, d) = (
+        lang.parts.get(pi).ok_or("part")?,
+        data.get(pi).ok_or("data")?,
+    );
+    let shape = flexion_train::shape(lang, part)?;
+    let lexemes: Vec<Lexeme> = d
+        .lexemes
+        .iter()
+        .filter(|l| !holdout || eval::bucket(&l.key) != eval::TEST)
+        .cloned()
+        .collect();
+    let learned = learn::learn(
+        script.orthography(),
+        &shape,
+        &lexemes,
+        choose::Settings::default(),
+    );
+    let g = &learned.grammar;
+    if let Some(word) = word {
+        let bare = flexion::Grammar {
+            irregular: flexion::Irregular::default(),
+            ..g.clone()
+        };
+        let key = script
+            .orthography()
+            .key(&script.orthography().read(word).letters);
+        let listed: Vec<String> = d
+            .lexemes
+            .iter()
+            .filter(|l| l.key == key)
+            .map(|l| format!("{:?}", l.cells))
+            .collect();
+        println!("dictionary: {listed:?}");
+        println!(
+            "paradigm readings: {:?}",
+            g.paradigm
+                .read(&key, 2.0, |_| true)
+                .iter()
+                .take(3)
+                .map(|r| (
+                    g.paradigms
+                        .get(usize::from(r.value))
+                        .map(|p| p.name.to_string()),
+                    r.probability
+                ))
+                .collect::<Vec<_>>()
+        );
+        if let Some(a) = &g.accent {
+            for r in a.class.read(&key, 2.0, |_| true).iter().take(4) {
+                let class = a.class_of(r.value);
+                let places: String = class
+                    .and_then(|c| a.pattern_of(c))
+                    .map(|p| p.places.iter().map(|&x| place_letter(x)).collect())
+                    .unwrap_or_default();
+                println!(
+                    "stress class {:?} vowel {:?} {places}: {:.2} (rule -{} {:?})",
+                    r.value,
+                    class.map(|c| c.vowel),
+                    r.probability,
+                    r.rule.map_or("", |x| x.ending.as_ref()),
+                    r.rule
+                        .map(|x| x.counts.iter().take(4).cloned().collect::<Vec<_>>())
+                );
+            }
+        }
+        for cell in 0..g.cells {
+            let c: Vec<String> = bare
+                .candidates(word, cell, &flexion::Known::default())
+                .iter()
+                .take(3)
+                .map(ToString::to_string)
+                .collect();
+            println!("cell {cell}: {}", c.join(" | "));
+        }
+        return Ok(());
+    }
+    let total: u32 = g.paradigms.iter().map(|p| p.words).sum();
+    let mut cum = 0u32;
+    for (i, p) in g.paradigms.iter().enumerate().take(40) {
+        cum += p.words;
+        println!(
+            "{:4} {:6} {:5.1}% {:16} {} | {}",
+            i,
+            p.words,
+            100.0 * f64::from(cum) / f64::from(total.max(1)),
+            p.name,
+            p.lemma,
+            p.forms
+                .iter()
+                .map(ToString::to_string)
+                .collect::<Vec<_>>()
+                .join(" ")
+        );
+    }
+    let singles = g.paradigms.iter().filter(|p| p.words == 1).count();
+    println!("paradigms {}, with one word {singles}", g.paradigms.len());
+    if let Some(a) = &g.accent {
+        for p in a.patterns.iter().take(30) {
+            let places: String = p.places.iter().map(|&x| place_letter(x)).collect();
+            println!("accent {:4} {:6} {places}", p.name, p.words);
+        }
+    }
+    // Irregular forms: how many differ only in stress.
+    let bare = flexion::Grammar {
+        irregular: flexion::Irregular::default(),
+        ..g.clone()
+    };
+    let only_stress = learned
+        .irregular
+        .iter()
+        .filter(|(w, c, f)| {
+            let built = bare.candidates(w, *c, &flexion::Known::default());
+            built.first().is_some_and(|b| {
+                g.orthography.read(&b.form).letters == g.orthography.read(f).letters
+            })
+        })
+        .count();
+    println!(
+        "irregular forms {}, of them only stress differs {only_stress}",
+        learned.irregular.len()
+    );
+    for (w, c, f) in learned
+        .irregular
+        .iter()
+        .step_by(learned.irregular.len().max(1) / 40 + 1)
+        .take(40)
+    {
+        let built = bare.best(w, *c, &flexion::Known::default());
+        println!("  {w} cell {c}: listed {f}, grammar {built}");
+    }
+    Ok(())
+}
+
+fn workspace() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("..")
+}
+
+/// Rewrite a built crate's README with the current intro and text, keeping
+/// its report.
+fn readme(lang: &Language) -> Result<(), String> {
+    let path = workspace()
+        .join("languages")
+        .join(lang.name)
+        .join("README.md");
+    let old = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
+    let (Some(a), Some(b)) = (old.find("## The grammar"), old.find("## Data and license")) else {
+        return Err(format!("{}: no report", path.display()));
+    };
+    let report = old.get(a..b).unwrap_or("").trim_end();
+    let text = flexion_train::print::readme(lang, &format!("{report}\n"));
+    std::fs::write(&path, text).map_err(|e| format!("{}: {e}", path.display()))
+}
+
+fn build(lang: &Language) -> Result<(), String> {
+    let t = Instant::now();
+    let data = load(lang)?;
+    let script = script::Script::new(&lang.spelling);
+    let (grammars, measured) =
+        flexion_train::pipeline::build(lang, &script, &data, choose::Settings::default())?;
+    let report = flexion_train::pipeline::report(lang, &grammars, &measured);
+    let parts: Vec<flexion_train::print::Part<'_, '_>> = lang
+        .parts
+        .iter()
+        .zip(&grammars)
+        .map(|(spec, inflection)| flexion_train::print::Part { spec, inflection })
+        .collect();
+    // The code's size, per part of speech, goes into the report too.
+    let files = flexion_train::print::files(lang, &script, &parts, &report)?;
+    let mut sizes = String::from("\n| | lines of grammar | bytes |\n|---|---:|---:|\n");
+    for part in &lang.parts {
+        let dir = format!("src/{}/", part.name);
+        let mine = files.iter().filter(|(p, _)| p.starts_with(&dir));
+        let (lines, bytes) = mine.fold((0, 0), |(l, b), (_, t)| {
+            (l + t.lines().count(), b + t.len())
+        });
+        sizes.push_str(&format!("| {} | {lines} | {bytes} |\n", part.name));
+    }
+    let report = format!("{}{sizes}", report.trim_end());
+    let files =
+        flexion_train::print::files(lang, &script, &parts, &format!("{}\n", report.trim_end()))?;
+    let dir = workspace().join("languages").join(lang.name);
+    flexion_train::print::write(&dir, &files)?;
     let status = std::process::Command::new("rustfmt")
         .args(["--edition", "2024"])
         .arg(dir.join("src/lib.rs"))
         .status()
         .map_err(|e| format!("rustfmt: {e}"))?;
     if !status.success() {
-        return Err("rustfmt failed on the generated crate".into());
+        return Err("rustfmt failed on the written crate".into());
     }
     eprintln!(
         "wrote {} in {:.0}s",
@@ -195,610 +637,11 @@ fn build(
     Ok(())
 }
 
-/// Rewrite a crate's model code from the shipped model, retrained from the
-/// lexeme cache and the plans its last build saved (no tuning, the report
-/// unchanged).
-fn emit_code(lang: &Language) -> Result<(), String> {
-    let data = load_cache(lang)?;
-    let path = cache_dir().join(format!("{}-plans.json", lang.name));
-    let json = std::fs::read_to_string(&path)
-        .map_err(|e| format!("{}: {e} (run `cargo xtask build` first)", path.display()))?;
-    let plans = flexion_train::plans_from_json(lang, &json)?;
-    let t = Instant::now();
-    let (built, _) = flexion_train::train(lang, &data, &plans, &|_| true);
-    let built = built.ok_or("the tables make no model")?;
-    let dir = workspace_root().join("languages").join(lang.name);
-    flexion_train::emit::emit_model(lang, &built, &dir)?;
-    eprintln!(
-        "wrote {}/src/model in {:.0}s",
-        dir.display(),
-        t.elapsed().as_secs_f64()
-    );
-    Ok(())
-}
-
-fn workspace_root() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("..")
-}
-
-/// The lexeme cache: under `$FLEXION_CACHE`, else `~/.cache/flexion`.
-fn cache_dir() -> PathBuf {
-    match std::env::var("FLEXION_CACHE") {
-        Ok(dir) => PathBuf::from(dir),
-        Err(_) => {
-            let home = std::env::var("HOME").unwrap_or_else(|_| ".".into());
-            PathBuf::from(home).join(".cache/flexion")
-        }
-    }
-}
-
-fn cache_path(lang: &Language) -> PathBuf {
-    cache_dir().join(format!("{}-lexemes.json", lang.name))
-}
-
-fn extract_dump(
-    lang: &Language,
-    dump: &Path,
-    editions: &[(String, PathBuf)],
-) -> Result<Vec<PosData>, String> {
-    let spec = flexion_train::spelling_spec(lang);
-    let sp = flexion_train::view(&spec);
-    let t = Instant::now();
-    let mut data = extract::extract(lang, &sp, dump)?;
-    for (code, path) in editions {
-        let index = lang
-            .editions
-            .iter()
-            .position(|e| e.code == code)
-            .ok_or(format!("{} has no edition {code}", lang.name))?;
-        extract::add_edition(lang, &sp, &mut data, index, path)?;
-    }
-    eprintln!("extracted in {:.1}s", t.elapsed().as_secs_f64());
-    Ok(data)
-}
-
-fn save_cache(lang: &Language, data: &[PosData]) -> Result<(), String> {
-    let path = cache_path(lang);
-    if let Some(dir) = path.parent() {
-        std::fs::create_dir_all(dir).map_err(|e| format!("{}: {e}", dir.display()))?;
-    }
-    let json = serde_json::to_vec(data).map_err(|e| e.to_string())?;
-    std::fs::write(&path, json).map_err(|e| format!("{}: {e}", path.display()))?;
-    eprintln!("wrote {}", path.display());
-    Ok(())
-}
-
-fn load_cache(lang: &Language) -> Result<Vec<PosData>, String> {
-    let path = cache_path(lang);
-    let bytes = std::fs::read(&path)
-        .map_err(|e| format!("{}: {e} (run `cargo xtask extract` first)", path.display()))?;
-    serde_json::from_slice(&bytes).map_err(|e| e.to_string())
-}
-
-fn probe(
-    lang: &Language,
-    data: &[PosData],
-    p: &flexion_train::probe::Probe,
-    misses: bool,
-    union: bool,
-) -> Result<(), String> {
-    let shapes = flexion_train::shapes(lang)?;
-    let spec = flexion_train::spelling_spec(lang);
-    let sp = flexion_train::view(&spec);
-    let only = p.only.as_deref();
-    let attested = p.attested;
-    let t = Instant::now();
-    let (built, stats) = flexion_train::probe::train(lang, data, p)?;
-    let (sizes, _, bytes) = built.measure();
-    eprintln!(
-        "trained in {:.1}s, tables measure {bytes} bytes",
-        t.elapsed().as_secs_f64(),
-    );
-    for (part, s) in lang.parts.iter().zip(&sizes) {
-        eprintln!(
-            "  {}: {} bytes (tree {}, counts {}, edits {}, classes {}, lexicon {})",
-            part.name,
-            s.total(),
-            s.nodes,
-            s.dist,
-            s.edits,
-            s.classes,
-            s.lexicon
-        );
-    }
-    let model = built.model();
-    for (pi, (part, d)) in lang.parts.iter().zip(data).enumerate() {
-        if only.is_some_and(|o| o != part.name) {
-            continue;
-        }
-        let Some(shape) = shapes.get(pi) else {
-            continue;
-        };
-        let cells = flexion_train::cells::Cells::new(lang, part)?;
-        let citation: Vec<usize> = part
-            .citation
-            .iter()
-            .filter_map(|(g, v)| cells.find(g, v))
-            .collect();
-        let marker_names = lang.markers(part);
-        let markers: Vec<&[&str]> = marker_names.iter().map(Vec::as_slice).collect();
-        // Scored on the main dump's words alone (comparable with a build
-        // that reads no edition), or with `--union 1` on every word.
-        let main = d.main_only();
-        let scored = if union { d } else { &main };
-        let words: Vec<Word> = extract::words(scored)
-            .into_iter()
-            .filter(|w| attested || bucket(w.key) == TEST_BUCKET)
-            .collect();
-        let s = stats.get(pi).copied().unwrap_or_default();
-        if let Some(laws) = built.parts().get(pi).and_then(|t| t.phonology.as_ref()) {
-            for ((name, entries), rule) in laws.maps.iter().zip(&laws.rules) {
-                let shown: Vec<String> = entries.iter().map(|(a, b)| format!("{a}→{b}")).collect();
-                println!(
-                    "  sound law {name} ({} => {} / _ {}): {}",
-                    rule.target,
-                    rule.replacement,
-                    rule.right.escape_unicode(),
-                    shown.join(", ")
-                );
-            }
-        }
-        println!(
-            "== {}: {} test words; edits {} classes {} trie {} kept {} (words {}) stored {} dist {} (own {}) joins {} ({} pairs)",
-            part.name,
-            words.len(),
-            s.edits,
-            s.classes,
-            s.trie_nodes,
-            s.kept_nodes,
-            s.kept_words,
-            s.stored_nodes,
-            s.dist_entries,
-            s.own_entries,
-            s.join_prefixes,
-            s.join_pairs
-        );
-        for given in [
-            eval::Given::Lemma,
-            eval::Given::StressedLemma,
-            eval::Given::Citation,
-            eval::Given::Dictionary,
-        ] {
-            if (given == eval::Given::Dictionary && markers.is_empty())
-                || (given == eval::Given::Citation && citation.is_empty())
-                || (given == eval::Given::StressedLemma
-                    && lang.spelling.stress_marks.is_empty()
-                    && lang.spelling.fold.is_empty()
-                    && lang.spelling.fold_marks.is_empty()
-                    && lang.spelling.unmark_marks.is_empty())
-            {
-                continue;
-            }
-            let score = eval::score(
-                &sp,
-                &model,
-                pi,
-                &words,
-                &citation,
-                &markers,
-                &shape.unscored,
-                given,
-                misses,
-            );
-            let total = score.total(&[]);
-            let (ece, _) = eval::calibration(&score.calibration);
-            println!(
-                "  {:?}: n {} top1 {:.2}% letters {:.2}% any {:.2}% top3 {:.2}% ece {:.4} loss {:.4}",
-                given,
-                total.n,
-                pct(total.top1, total.n),
-                pct(total.top1_letters, total.n),
-                pct(total.top1_any, total.n),
-                pct(total.top3_any, total.n),
-                ece,
-                score.log_loss(),
-            );
-            if misses {
-                let (_, bins) = eval::calibration(&score.calibration);
-                let shown: Vec<String> = bins
-                    .iter()
-                    .map(|(conf, acc, n)| format!("{conf:.2}→{acc:.2} ({n})"))
-                    .collect();
-                println!("    calibration: {}", shown.join("; "));
-                let mut by_group: Vec<(&str, eval::CellScore)> = Vec::new();
-                for (cell, c) in score.cells.iter().enumerate() {
-                    let Some(g) = cells.group_of(cell) else {
-                        continue;
-                    };
-                    match by_group.iter_mut().find(|(n, _)| *n == g.name) {
-                        Some((_, t)) => t.add(c),
-                        None => by_group.push((g.name, *c)),
-                    }
-                }
-                let groups: Vec<String> = by_group
-                    .iter()
-                    .filter(|(_, t)| t.n > 0)
-                    .map(|(n, t)| {
-                        format!(
-                            "{n} {:.1}% (letters {:.1}%, n {})",
-                            pct(t.top1, t.n),
-                            pct(t.top1_letters, t.n),
-                            t.n
-                        )
-                    })
-                    .collect();
-                println!("    groups: {}", groups.join("; "));
-            }
-            if misses && given != eval::Given::StressedLemma {
-                println!("    -- misses for {given:?}");
-                for (label, n, ex) in eval::error_groups(&sp, &score.misses, 4)
-                    .into_iter()
-                    .take(25)
-                {
-                    println!("    {n:>5}  {label}: {}", ex.join("; "));
-                }
-            }
-        }
-        for (name, which) in baselines(lang) {
-            let lemma_cell = part.lemma.as_ref().and_then(|(g, v)| cells.find(g, v));
-            let f = |cell: usize, lemma: &str| {
-                english_baseline::inflect(which, &cells.name(cell), lemma)
-            };
-            let scores = eval::score_baseline(
-                &sp,
-                &words,
-                cells.total,
-                &lemma_cell.into_iter().collect::<Vec<_>>(),
-                &f,
-            );
-            let mut t = eval::CellScore::default();
-            for c in &scores {
-                t.add(c);
-            }
-            println!(
-                "  baseline {name}: n {} top1 {:.2}% any {:.2}%",
-                t.n,
-                pct(t.top1, t.n),
-                pct(t.top1_any, t.n)
-            );
-        }
-        bench(&model, pi, &words, &cells, &shape.unscored);
-        let inh = eval::score_inherent(&model, pi, &words, part.inherent.len());
-        for (name, (ok, n)) in part.inherent.iter().zip(inh) {
-            println!("  inherent {name}: {:.2}% of {n}", pct(ok, n));
-        }
-    }
-    Ok(())
-}
-
-fn tune(
-    lang: &Language,
-    data: &[PosData],
-    only: Option<&str>,
-    size_price: f64,
-) -> Result<(), String> {
-    let spec = flexion_train::spelling_spec(lang);
-    let sp = flexion_train::view(&spec);
-    let shapes = flexion_train::shapes(lang)?;
-    for ((part, d), shape) in lang.parts.iter().zip(data).zip(&shapes) {
-        if only.is_some_and(|o| o != part.name) {
-            continue;
-        }
-        let cells = flexion_train::cells::Cells::new(lang, part)?;
-        let citation: Vec<usize> = part
-            .citation
-            .iter()
-            .filter_map(|(g, v)| cells.find(g, v))
-            .collect();
-        let marker_names = lang.markers(part);
-        let markers: Vec<&[&str]> = marker_names.iter().map(Vec::as_slice).collect();
-        let split = |keep: &dyn Fn(u64) -> bool| -> Vec<Word> {
-            extract::words(d)
-                .into_iter()
-                .filter(|w| keep(bucket(w.key)))
-                .collect()
-        };
-        let train = split(&|b| b != TEST_BUCKET && b != DEV_BUCKET);
-        let dev = split(&|b| b == DEV_BUCKET);
-        let not_test = split(&|b| b != TEST_BUCKET);
-        let chooser = flexion_train::edit::Chooser::new(&sp, &not_test, shape.lemma_cell);
-        let scores = flexion_train::pipeline::grid_scores(
-            &spec, shape, &train, &dev, &chooser, &citation, &markers, THREADS,
-        );
-        let chosen = flexion_train::pipeline::choose(&scores, size_price).map(|c| c.params);
-        println!("== {}", part.name);
-        for price in [0.0, 0.02, 0.05, 0.1, 0.2] {
-            if let Some(g) = flexion_train::pipeline::choose(&scores, price) {
-                println!(
-                    "  price {price}: alpha {} tau {} support {}: {} KB, top1 {:.2}%, loss {:.4}",
-                    g.params.alpha,
-                    g.params.tau,
-                    g.params.min_support,
-                    g.bytes / 1024,
-                    100.0 * g.top1,
-                    g.loss
-                );
-            }
-        }
-        for g in &scores {
-            let p = g.params;
-            println!(
-                "  alpha {} tau {} support {} syllables {:?} initial {:?}: {} KB, top1 {:.2}% ± {:.2}, loss {:.4} ± {:.4}{}",
-                p.alpha,
-                p.tau,
-                p.min_support,
-                p.walk.syllable_depth,
-                p.walk.initial_depth,
-                g.bytes / 1024,
-                100.0 * g.top1,
-                100.0 * g.top1_se,
-                g.loss,
-                g.loss_se,
-                if Some(p) == chosen { "  <- chosen" } else { "" }
-            );
-        }
-    }
-    Ok(())
-}
-
-fn export(lang: &Language, data: &[PosData]) -> Result<(), String> {
-    let dir = cache_dir().join("export").join(lang.name);
-    std::fs::create_dir_all(&dir).map_err(|e| format!("{}: {e}", dir.display()))?;
-    let shapes = flexion_train::shapes(lang)?;
-    for ((part, d), shape) in lang.parts.iter().zip(data).zip(&shapes) {
-        let cells = flexion_train::cells::Cells::new(lang, part)?;
-        let mut out = String::new();
-        // Held-out words count on the main dump's entries, as the reports do.
-        let main = d.main_only();
-        for (split, words) in [
-            ("test", extract::words(&main)),
-            ("train", extract::words(d)),
-        ] {
-            for w in words {
-                let b = bucket(w.key);
-                let name = match (split, b) {
-                    ("test", TEST_BUCKET) => "test",
-                    ("train", DEV_BUCKET) => "dev",
-                    ("train", b) if b != TEST_BUCKET => "train",
-                    _ => continue,
-                };
-                let full = w.lexemes.first().map_or("", |l| l.full.as_str());
-                let source = w.lexemes.first().map_or(0, |l| l.source);
-                for cell in (0..cells.total).filter(|c| !shape.unscored.contains(c)) {
-                    let Some(primary) = w.primary(cell) else {
-                        continue;
-                    };
-                    out.push_str(&format!(
-                        "{name}\t{}\t{full}\t{}\t{primary}\t{}\t{source}\n",
-                        w.lemma(),
-                        cells.name(cell),
-                        w.attested(cell).join("|")
-                    ));
-                }
-            }
-        }
-        let path = dir.join(format!("{}.tsv", part.name));
-        std::fs::write(&path, out).map_err(|e| format!("{}: {e}", path.display()))?;
-        eprintln!("wrote {}", path.display());
-    }
-    Ok(())
-}
-
-/// Time the quick path (parse the word, walk, build the top form), and check
-/// it agrees with the first scored candidate.
-fn bench(
-    model: &flexion::Model,
-    pi: usize,
-    words: &[Word],
-    cells: &flexion_train::cells::Cells,
-    unscored: &[usize],
-) {
-    let Some(p) = model.pos(pi) else {
-        return;
-    };
-    let Some(cell) = eval::common_cell(words, p.cells(), unscored) else {
-        return;
-    };
-    let lemmas: Vec<&str> = words.iter().map(|w| w.lemma()).take(20_000).collect();
-    let mut disagree = 0usize;
-    for l in &lemmas {
-        let c = p.citation(l, &[]);
-        let quick = p.best(&c, cell, flexion::Options::default());
-        let full = p.candidates(&c, cell, flexion::Options::default());
-        if full.first().map(|f| f.form.as_str()) != Some(quick.as_str()) {
-            disagree += 1;
-        }
-    }
-    let per = fastest_ns(lemmas.len(), &mut || {
-        let mut sink = 0usize;
-        for l in &lemmas {
-            sink = sink.wrapping_add(
-                p.best(&p.citation(l, &[]), cell, flexion::Options::default())
-                    .len(),
-            );
-        }
-        std::hint::black_box(sink);
-    });
-    let parse = fastest_ns(lemmas.len(), &mut || {
-        let mut sink = 0usize;
-        for l in &lemmas {
-            sink = sink.wrapping_add(p.citation(l, &[]).lemma.base.len());
-        }
-        std::hint::black_box(sink);
-    });
-    let cits: Vec<_> = lemmas.iter().map(|l| p.citation(l, &[])).collect();
-    let path = fastest_ns(lemmas.len(), &mut || {
-        let mut sink = 0usize;
-        for c in &cits {
-            sink = sink.wrapping_add(p.path_len(&c.lemma));
-        }
-        std::hint::black_box(sink);
-    });
-    println!(
-        "  speed {}: {per:.0} ns/call (parse {parse:.0}, walk {path:.0}); quick ≠ scored: {disagree}",
-        cells.name(cell)
-    );
-}
-
-/// Size and speed of the published `english` 0.4, next to the new model,
-/// measured the same way in the same process.
-fn english_comparison(
-    lang: &Language,
-    data: &[PosData],
-    built: &flexion::Built,
-) -> Result<String, String> {
-    let mut s = String::from("### Compared with `english` 0.4\n\n");
-    let home = std::env::var("HOME").unwrap_or_default();
-    let registry = PathBuf::from(home).join(".cargo/registry/src");
-    let mut table_bytes = 0u64;
-    if let Ok(dirs) = std::fs::read_dir(&registry) {
-        for d in dirs.flatten() {
-            let gen_dir = d.path().join("english-0.4.0/generated");
-            if let Ok(files) = std::fs::read_dir(&gen_dir) {
-                for f in files.flatten() {
-                    table_bytes += f.metadata().map(|m| m.len()).unwrap_or(0);
-                }
-                break;
-            }
-        }
-    }
-    if table_bytes > 0 {
-        s.push_str(&format!(
-            "`english` 0.4's generated exception tables are {} KB of Rust source (compiled into\nperfect-hash maps); this crate's model is {} KB of generated Rust source.\n\n",
-            table_bytes / 1024,
-            flexion_train::codegen::generate(lang, built)
-                .iter()
-                .map(|(_, code)| code.len())
-                .sum::<usize>()
-                / 1024
-        ));
-    }
-    let model = built.model();
-    // Attested words, the same question asked of both.
-    let spec = flexion_train::spelling_spec(lang);
-    let sp = flexion_train::view(&spec);
-    s.push_str("Attested words (every word both were built from), primary form from the plain call:\n\n| | `english` 0.4 | this crate |\n|---|---:|---:|\n");
-    let shapes = flexion_train::shapes(lang)?;
-    for (pi, (part, d)) in lang.parts.iter().zip(data).enumerate() {
-        let words = extract::words(d);
-        let Some(shape) = shapes.get(pi) else {
-            continue;
-        };
-        let cells = flexion_train::cells::Cells::new(lang, part)?;
-        let citation: Vec<usize> = part
-            .citation
-            .iter()
-            .filter_map(|(g, v)| cells.find(g, v))
-            .collect();
-        let lemma_cell = part
-            .lemma
-            .as_ref()
-            .and_then(|(g, v)| cells.find(g, v))
-            .into_iter()
-            .collect::<Vec<_>>();
-        let f = |cell: usize, lemma: &str| {
-            english_baseline::inflect(english_baseline::Old::Library, &cells.name(cell), lemma)
-        };
-        let mut old = eval::CellScore::default();
-        for c in eval::score_baseline(&sp, &words, cells.total, &lemma_cell, &f) {
-            old.add(&c);
-        }
-        let new = eval::score(
-            &sp,
-            &model,
-            pi,
-            &words,
-            &citation,
-            &[],
-            &shape.unscored,
-            eval::Given::Lemma,
-            false,
-        )
-        .total(&[]);
-        s.push_str(&format!(
-            "| {} | {:.2}% | {:.2}% |\n",
-            part.name,
-            pct(old.top1, old.n),
-            pct(new.top1, new.n)
-        ));
-    }
-    s.push('\n');
-    s.push_str(
-        "Plain calls with each shipped model for the held-out tenth's lemmas, single thread, release\nbuild, fastest of seven runs, the two libraries measured alternately in the same process:\n\n",
-    );
-    s.push_str(
-        "| | `english` 0.4 ns per call | this crate ns per call | ratio |\n|---|---:|---:|---:|\n",
-    );
-    for (pi, (part, d)) in lang.parts.iter().zip(data).enumerate() {
-        let words: Vec<Word> = extract::words(d)
-            .into_iter()
-            .filter(|w| bucket(w.key) == TEST_BUCKET)
-            .collect();
-        let lemmas: Vec<&str> = words.iter().map(|w| w.lemma()).take(20_000).collect();
-        let cells = flexion_train::cells::Cells::new(lang, part)?;
-        let name = match part.name {
-            "noun" => "noun.pl",
-            "verb" => "verb.3sg",
-            "adjective" => "adjective.comp",
-            _ => "adverb.comp",
-        };
-        let (Some(cell), Some(p)) = (
-            (0..cells.total).find(|&c| cells.name(c) == name),
-            model.pos(pi),
-        ) else {
-            continue;
-        };
-        let mut run_old = || {
-            let mut sink = 0usize;
-            for l in &lemmas {
-                sink = sink.wrapping_add(
-                    english_baseline::inflect(english_baseline::Old::Library, name, l)
-                        .map_or(0, |s| s.len()),
-                );
-            }
-            std::hint::black_box(sink);
-        };
-        let mut run_new = || {
-            let mut sink = 0usize;
-            for l in &lemmas {
-                sink = sink.wrapping_add(
-                    p.best(&p.citation(l, &[]), cell, flexion::Options::default())
-                        .len(),
-                );
-            }
-            std::hint::black_box(sink);
-        };
-        // Alternate, so both see the same machine conditions.
-        let (mut old, mut new) = (f64::INFINITY, f64::INFINITY);
-        for _ in 0..3 {
-            old = old.min(fastest_ns(lemmas.len(), &mut run_old));
-            new = new.min(fastest_ns(lemmas.len(), &mut run_new));
-        }
-        s.push_str(&format!(
-            "| {} (`{name}`) | {old:.0} | {new:.0} | {:.1}× |\n",
-            part.name,
-            new / old.max(1e-9)
-        ));
-    }
-    s.push('\n');
-    Ok(s)
-}
-
-/// Other inflectors to compare with, per language.
-fn baselines(lang: &Language) -> Vec<(&'static str, english_baseline::Old)> {
-    match lang.name {
-        "english" => vec![
-            ("english 0.4 rules", english_baseline::Old::Rules),
-            ("english 0.4 rules + tables", english_baseline::Old::Library),
-        ],
-        _ => vec![],
-    }
-}
-
-fn pct(a: usize, b: usize) -> f64 {
-    if b == 0 {
-        0.0
-    } else {
-        100.0 * a as f64 / b as f64
+/// One letter per accent place, for patterns printed in a row.
+fn place_letter(p: flexion::Place) -> char {
+    match p {
+        flexion::Place::Stem => 's',
+        flexion::Place::Ending => 'E',
+        flexion::Place::Recessive => 'r',
     }
 }

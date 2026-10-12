@@ -1,1077 +1,1550 @@
-//! The learner: lexemes → edits → inflection classes → a pruned, smoothed
-//! suffix tree over lemmas, written as [`PosTables`].
-//!
-//! - Every lexeme becomes one or more weighted **class observations**. A class
-//!   is the vector of edits a lexeme makes across all cells of its part of
-//!   speech, plus its inherent features. Wiktionary's later-listed variants
-//!   become extra observations with geometrically decaying weight.
-//! - Observations are counted at every node of a tree over the lexeme's key
-//!   read from its end (`man` walks `n`, `a`, `m`, start-of-word).
-//! - Top-down, each node's counts are smoothed toward the nearest kept
-//!   ancestor's distribution, and the node is **kept** only if it differs from
-//!   that ancestor by a likelihood-ratio (G) test, or, for a whole-word node,
-//!   if dropping it would change some attested primary form. So general
-//!   patterns live near the root, exceptions deep down, and everything else is
-//!   pruned.
+//! Learning one part of speech's grammar from its dictionary words: its
+//! paradigms, the choice of paradigm, its stress, and the forms no rule
+//! gives.
 
-use crate::extract::Word;
-use flexion::Spelling;
-use flexion::tables::{ClassSpec, EditSpec, JoinSpec, NodeKind, NodeSpec, PosTables};
-use flexion::{BOUNDARY, NONE, Stress};
-use std::collections::{BTreeMap, HashMap, HashSet};
+use crate::HashMap;
+use crate::choose::{self, Settings};
+use crate::extract::Lexeme;
+use crate::skeleton;
+use flexion::Finals;
+use flexion::pattern;
+use flexion::{
+    Accent, AccentPattern, Compound, Form, Grammar, Orthography, Paradigm, Place, Referral,
+    StressClass, Written,
+};
+use std::borrow::Cow;
+use std::collections::BTreeMap;
 
-/// Learner hyperparameters.
-#[derive(Debug, Clone, Copy, PartialEq)]
-pub struct Params {
-    /// Smoothing strength: pseudo-counts drawn from the parent distribution.
-    pub alpha: f64,
-    /// G-test threshold for keeping a non-word node: the one knob trading
-    /// size for fit. (Pricing a node by the bytes it takes instead, minimum
-    /// description length, did no better: see the README.)
-    pub tau: f64,
-    /// Lexemes a non-word (suffix) node needs before it can speak for
-    /// unseen words. One lexeme's quirks belong at its whole-word node, not
-    /// on every word that happens to end the same way.
-    pub min_support: usize,
-    /// Probabilities below this are dropped from stored distributions.
-    pub epsilon: f64,
-    /// Weight ratio between consecutive listed variants.
-    pub variant_decay: f64,
-    /// Weight ratio between consecutive homograph entries of one word, so
-    /// the entry Wiktionary lists first wins a tie.
-    pub homograph_decay: f64,
-    /// Where (if anywhere) the walk asks for the syllable count.
-    pub walk: flexion::Walk,
-    /// Learn a join model: unseen words made of a known prefix and an
-    /// attested word inflect through that word (`an` + `fangen`).
-    pub joins: bool,
-    /// Also restore the start of typed lemmas, with a restoration model
-    /// trained on them written backwards (Latin `consul` is `cōnsul`).
-    pub front_restore: bool,
-    /// Learn sound laws: edits that differ only by a regular change of the
-    /// stem's edge become one edit and a rule (see [`crate::phonology`]).
-    pub phonology: bool,
-    /// Read lemmas another part of speech's forms spell from that part of
-    /// speech's model instead of a stored lexicon.
-    pub derive_lexicon: bool,
-}
-
-impl Default for Params {
-    fn default() -> Self {
-        Params {
-            alpha: 2.0,
-            tau: 8.0,
-            min_support: 2,
-            epsilon: 0.002,
-            variant_decay: 0.5,
-            homograph_decay: 0.9,
-            walk: flexion::Walk {
-                syllable_depth: None,
-                syllable_max: 3,
-                initial_depth: None,
-            },
-            joins: false,
-            front_restore: false,
-            phonology: false,
-            derive_lexicon: false,
-        }
-    }
-}
-
-/// Counts and sizes, for reports.
-#[derive(Debug, Clone, Copy, Default, PartialEq)]
-pub struct Stats {
-    pub lexemes: usize,
-    pub edits: usize,
-    pub classes: usize,
-    pub trie_nodes: usize,
-    pub kept_nodes: usize,
-    pub kept_words: usize,
-    pub stored_nodes: usize,
-    pub dist_entries: usize,
-    pub stress_unexplained: usize,
-    /// Prefixes of the join model, and the attested words they join.
-    pub join_prefixes: usize,
-    pub join_pairs: usize,
-    /// Raw edits the sound laws rewrote.
-    pub factored_edits: usize,
-    /// Classes the stored nodes saw themselves (the rest of their
-    /// distributions comes from smoothing toward the ancestor).
-    pub own_entries: usize,
-}
-
-/// One part of speech's shape.
+/// What the learner needs to know about a part of speech.
 #[derive(Debug, Clone)]
 pub struct Shape {
-    /// Every cell, the hidden citation cell included (it is the last).
     pub cells: usize,
-    pub inherent: usize,
-    /// The hidden citation cell: the lemma written in full.
-    pub lemma_cell: usize,
-    /// Cells per group, the citation cell's own group last; they sum to
-    /// `cells`. Classes are stored as one shared sub-vector per group.
-    pub groups: Vec<usize>,
-    /// Cells not scored: the citation cell and the config's lemma cell (the
-    /// word the caller already gave).
-    pub unscored: Vec<usize>,
-    /// Per cell: whether it belongs to an optional group (many words have no
-    /// form there, and the runtime decides whether this word does).
-    pub optional: Vec<bool>,
-    /// Every word is written with a capital.
+    pub lemma_cell: Option<usize>,
+    /// Per cell, the cell a word without a form of its own there uses.
+    pub fallback: Vec<Option<usize>>,
     pub capitalized: bool,
+    /// How many values each inherent feature has.
+    pub inherent: Vec<usize>,
 }
 
-/// The longest prefix the join model splits off, in characters, and the
-/// shortest word it joins to.
-const MAX_JOIN_PREFIX: usize = 12;
-const MIN_JOIN_BASE: usize = 3;
-/// How much the attested form must outweigh the runner-up before a word's
-/// own node is dropped.
-const PRUNE_MARGIN: f64 = 0.05;
-/// Pairs a prefix needs before the join model uses it.
-const MIN_JOIN_PAIRS: usize = 3;
-
-#[derive(Default)]
-struct Joins {
-    prefixes: Vec<JoinSpec>,
-    classes: Vec<Vec<u32>>,
-    /// Words that are a prefix + another word, and the words joins are built
-    /// on: both are marked as attested in the tree.
-    joined: std::collections::HashSet<usize>,
-    bases: std::collections::HashSet<usize>,
-    pairs: usize,
-}
-
-struct TNode {
-    children: Vec<(char, usize)>,
-    counts: Vec<(u32, f64)>,
-    total: f64,
-    /// Words passing through this node.
-    words: usize,
-}
-
-type Dist = Vec<(u32, f64)>;
-
-pub struct Learner<'s> {
-    pub sp: &'s Spelling<'s>,
-    pub shape: Shape,
-    pub params: Params,
-    /// How each (lemma, form) pair is read as an edit; the default reading
-    /// when there is none.
-    chooser: Option<&'s crate::edit::Chooser<'s>>,
-    /// The sound laws edits are rewritten with, if any.
-    phonology: Option<&'s crate::phonology::Phonology>,
-    /// Words kept findable as attested: another part of speech derives
-    /// its lemmas from their forms.
-    marked: Option<&'s HashSet<String>>,
-    edits: Vec<EditSpec>,
-    edit_ids: HashMap<EditSpec, u32>,
-    classes: Vec<ClassSpec>,
-    class_ids: HashMap<(Vec<u32>, Vec<u8>), u32>,
+/// A learned part of speech, ready to be printed.
+#[derive(Debug, Clone)]
+pub struct Learned<'s> {
+    pub grammar: Grammar<'s, u16, u16, u8>,
+    /// The inherent feature (its place among the part of speech's) the
+    /// referrals depend on.
+    pub feature: Option<usize>,
+    /// Per paradigm, some of its words (its name first).
+    pub members: Vec<Vec<String>>,
+    /// Forms the grammar doesn't give, listed: `(word, cell, form)`.
+    pub irregular: Vec<(String, usize, String)>,
     pub stats: Stats,
 }
 
-impl<'s> Learner<'s> {
-    pub fn new(sp: &'s Spelling<'s>, shape: Shape, params: Params) -> Self {
-        Learner {
-            sp,
-            shape,
-            params,
-            chooser: None,
-            phonology: None,
-            marked: None,
-            edits: Vec::new(),
-            edit_ids: HashMap::new(),
-            classes: Vec::new(),
-            class_ids: HashMap::new(),
-            stats: Stats::default(),
-        }
-    }
-
-    /// Read pairs as the chooser says (see [`crate::edit::Chooser`]).
-    pub fn with_chooser(mut self, chooser: &'s crate::edit::Chooser<'s>) -> Self {
-        self.chooser = Some(chooser);
-        self
-    }
-
-    /// Keep the words `marked` names findable as attested.
-    pub fn with_marked(mut self, marked: Option<&'s HashSet<String>>) -> Self {
-        self.marked = marked;
-        self
-    }
-
-    /// Rewrite edits with `phonology`'s sound laws.
-    pub fn with_phonology(mut self, phonology: Option<&'s crate::phonology::Phonology>) -> Self {
-        self.phonology = phonology;
-        self
-    }
-
-    fn intern_edit(&mut self, e: EditSpec) -> u32 {
-        if let Some(&id) = self.edit_ids.get(&e) {
-            return id;
-        }
-        let id = u32::try_from(self.edits.len()).unwrap_or(NONE);
-        self.edits.push(e.clone());
-        self.edit_ids.insert(e, id);
-        id
-    }
-
-    /// The class of `edits` and `inherent`; `example` is the lemma it was
-    /// first seen with.
-    fn intern_class(&mut self, edits: Vec<u32>, inherent: Vec<u8>, example: &str) -> u32 {
-        let key = (edits, inherent);
-        if let Some(&id) = self.class_ids.get(&key) {
-            // The shortest word of a class is the likeliest to be a plain
-            // example of it.
-            if let Some(c) = self.classes.get_mut(id as usize)
-                && example.chars().count() < c.example.chars().count()
-            {
-                c.example = example.to_string();
-            }
-            return id;
-        }
-        let longest = |part: fn(&EditSpec) -> &String| {
-            key.0
-                .iter()
-                .filter_map(|&e| self.edits.get(e as usize))
-                .map(|e| part(e).clone())
-                .max_by_key(|s| s.chars().count())
-                .unwrap_or_default()
-        };
-        let strip = longest(|e| &e.strip);
-        let front = longest(|e| &e.front);
-        let id = u32::try_from(self.classes.len()).unwrap_or(NONE);
-        self.classes.push(ClassSpec {
-            edits: key.0.clone(),
-            strip,
-            front,
-            inherent: key.1.clone(),
-            example: example.to_string(),
-        });
-        self.class_ids.insert(key, id);
-        id
-    }
-
-    /// The weighted class observations of one word (all its homograph
-    /// entries). Each later entry weighs `homograph_decay` times the one
-    /// before, so ties go to the entry Wiktionary lists first.
-    fn observations(&mut self, word: &Word) -> Vec<(u32, f64)> {
-        let mut out: Vec<(u32, f64)> = Vec::new();
-        for (rank, lex) in word.lexemes.iter().enumerate() {
-            let mut per_cell: Vec<Vec<u32>> = Vec::with_capacity(self.shape.cells);
-            for (cell, forms) in lex.cells.iter().enumerate() {
-                let mut ids: Vec<u32> = Vec::new();
-                // Every cell edits the full lemma (restored from what a caller
-                // types by a separate model); the citation cell itself only
-                // places the lemma's stress.
-                let citation = cell == self.shape.lemma_cell;
-                let stem = crate::edit::Stem {
-                    letters: &lex.full,
-                    stress: if citation { None } else { lex.lemma_stress },
-                    kind: lex.lemma_kind,
-                };
-                for f in forms {
-                    let e = match self.chooser {
-                        Some(c) => c.edit(self.sp, stem, f, citation),
-                        None => crate::edit::edit(self.sp, stem, f, citation),
-                    };
-                    let e = match self.phonology.and_then(|p| p.factor(cell, &lex.full, &e)) {
-                        Some(factored) => {
-                            self.stats.factored_edits += 1;
-                            factored
-                        }
-                        None => e,
-                    };
-                    if e.stress == Stress::Unmarked
-                        && self.sp.has_stress()
-                        && self.sp.read(f).stress.is_some()
-                    {
-                        self.stats.stress_unexplained += 1;
-                    }
-                    let id = self.intern_edit(e);
-                    if !ids.contains(&id) {
-                        ids.push(id);
-                    }
-                }
-                per_cell.push(ids);
-            }
-            let depth = per_cell.iter().map(Vec::len).max().unwrap_or(0).max(1);
-            let mut vectors: Vec<(Vec<u32>, f64)> = Vec::new();
-            let mut w = 1.0;
-            for k in 0..depth {
-                let v: Vec<u32> = per_cell
-                    .iter()
-                    .map(|ids| ids.get(k).or(ids.first()).copied().unwrap_or(NONE))
-                    .collect();
-                match vectors.iter_mut().find(|(x, _)| *x == v) {
-                    Some((_, ww)) => *ww += w,
-                    None => vectors.push((v, w)),
-                }
-                w *= self.params.variant_decay;
-            }
-            let sum: f64 = vectors.iter().map(|(_, w)| w).sum();
-            let entry_weight = lex.weight
-                * self
-                    .params
-                    .homograph_decay
-                    .powi(i32::try_from(rank).unwrap_or(i32::MAX));
-            for (v, w) in vectors {
-                let class = self.intern_class(v, lex.inherent.clone(), &lex.full);
-                let w = entry_weight * w / sum;
-                match out.iter_mut().find(|(c, _)| *c == class) {
-                    Some((_, x)) => *x += w,
-                    None => out.push((class, w)),
-                }
-            }
-        }
-        out
-    }
-
-    /// The join model (see [`Params::joins`]): prefixes that, put before an
-    /// attested word, make another attested word; per prefix, the classes of
-    /// per-cell edits from the word's forms to the joined word's, and how
-    /// often joining is right. Also returns the words that are joins and the
-    /// words they join, by index.
-    fn joins(&mut self, words: &[Word]) -> Joins {
-        let mut out = Joins::default();
-        let index: HashMap<&str, usize> =
-            words.iter().enumerate().map(|(i, w)| (w.key, i)).collect();
-        // Every way to read a key as prefix + attested word.
-        let splits = |key: &str| -> Vec<(usize, usize)> {
-            let chars: Vec<(usize, char)> = key.char_indices().collect();
-            let mut v = Vec::new();
-            for n in 1..=MAX_JOIN_PREFIX.min(chars.len().saturating_sub(MIN_JOIN_BASE)) {
-                let Some(&(at, _)) = chars.get(n) else {
-                    continue;
-                };
-                if let Some(&b) = key.get(at..).and_then(|rest| index.get(rest)) {
-                    v.push((at, b));
-                }
-            }
-            v
-        };
-        let mut prefix_count: HashMap<&str, usize> = HashMap::new();
-        for w in words {
-            for (at, _) in splits(w.key) {
-                if let Some(p) = w.key.get(..at) {
-                    *prefix_count.entry(p).or_default() += 1;
-                }
-            }
-        }
-        // Each word joins at its longest known prefix, as the runtime reads it.
-        let mut pairs: Vec<(usize, usize, &str)> = Vec::new();
-        for (wi, w) in words.iter().enumerate() {
-            let best = splits(w.key)
-                .into_iter()
-                .filter_map(|(at, b)| Some((w.key.get(..at)?, b)))
-                .filter(|(p, _)| prefix_count.get(p).copied().unwrap_or(0) >= MIN_JOIN_PAIRS)
-                .max_by_key(|(p, _)| p.len());
-            if let Some((p, b)) = best {
-                pairs.push((wi, b, p));
-            }
-        }
-        // Per pair and cell, the readings of base form → joined form; each
-        // pair takes the reading the most pairs share.
-        let cells = self.shape.cells;
-        let mut readings: Vec<Vec<Option<Vec<EditSpec>>>> = Vec::with_capacity(pairs.len());
-        let mut counts: HashMap<EditSpec, u32> = HashMap::new();
-        for &(wi, bi, _) in &pairs {
-            let (Some(w), Some(b)) = (words.get(wi), words.get(bi)) else {
-                readings.push(Vec::new());
-                continue;
-            };
-            let mut per_cell = Vec::with_capacity(cells);
-            for cell in 0..cells {
-                let r = (cell != self.shape.lemma_cell)
-                    .then(|| Some((b.primary(cell)?, w.primary(cell)?)))
-                    .flatten()
-                    .map(|(fb, fw)| {
-                        let read = self.sp.read(fb);
-                        let stem = crate::edit::Stem {
-                            letters: &read.base,
-                            stress: read.stress,
-                            kind: read.kind,
-                        };
-                        crate::edit::candidates(self.sp, stem, fw, false)
-                    });
-                if let Some(c) = &r {
-                    for e in c {
-                        *counts.entry(e.clone()).or_default() += 1;
-                    }
-                }
-                per_cell.push(r);
-            }
-            readings.push(per_cell);
-        }
-        let mut class_ids: HashMap<Vec<u32>, u32> = HashMap::new();
-        let mut by_prefix: BTreeMap<&str, BTreeMap<u32, usize>> = BTreeMap::new();
-        // Per prefix: (feature, attested value, joined value) → pairs.
-        let mut features: BTreeMap<&str, BTreeMap<(u8, u8, u8), usize>> = BTreeMap::new();
-        for &(wi, bi, p) in &pairs {
-            let (Some(w), Some(b)) = (
-                words.get(wi).and_then(|w| w.lexemes.first()),
-                words.get(bi).and_then(|b| b.lexemes.first()),
-            ) else {
-                continue;
-            };
-            for (f, (&from, &to)) in b.inherent.iter().zip(&w.inherent).enumerate() {
-                if from != u8::MAX && to != u8::MAX {
-                    let f = u8::try_from(f).unwrap_or(u8::MAX);
-                    *features
-                        .entry(p)
-                        .or_default()
-                        .entry((f, from, to))
-                        .or_default() += 1;
-                }
-            }
-        }
-        for (&(_, bi, p), per_cell) in pairs.iter().zip(readings) {
-            // Cells the base lacks get no join edit: the joined reading has
-            // nothing to say there.
-            let mut v = vec![NONE; cells];
-            for (cell, r) in per_cell.into_iter().enumerate() {
-                let Some(c) = r else {
-                    continue;
-                };
-                let best = c
-                    .into_iter()
-                    .enumerate()
-                    .max_by_key(|(i, e)| {
-                        (counts.get(e).copied().unwrap_or(0), std::cmp::Reverse(*i))
-                    })
-                    .map(|(_, e)| e);
-                if let (Some(e), Some(slot)) = (best, v.get_mut(cell)) {
-                    *slot = self.intern_edit(e);
-                }
-            }
-            let n = u32::try_from(out.classes.len()).unwrap_or(NONE);
-            let id = *class_ids.entry(v.clone()).or_insert_with(|| {
-                out.classes.push(v);
-                n
-            });
-            *by_prefix.entry(p).or_default().entry(id).or_default() += 1;
-            out.bases.insert(bi);
-        }
-        for (p, classes) in by_prefix {
-            let total: usize = classes.values().sum();
-            if total < MIN_JOIN_PAIRS {
-                continue;
-            }
-            // How often a word with this prefix joins the way the others do:
-            // the chance that its class is drawn from the others' classes.
-            let shared: usize = classes.values().map(|&n| n * n.saturating_sub(1)).sum();
-            let split = shared as f64 / (total * (total - 1)) as f64;
-            let kept: Vec<(u32, usize)> = classes.into_iter().filter(|&(_, n)| n >= 2).collect();
-            let kept_total: usize = kept.iter().map(|&(_, n)| n).sum();
-            if kept_total == 0 || split <= 0.0 {
-                continue;
-            }
-            let mut dist: Vec<(u32, f32)> = kept
-                .into_iter()
-                .map(|(c, n)| (c, n as f32 / kept_total as f32))
-                .collect();
-            dist.sort_by(|a, b| b.1.total_cmp(&a.1).then(a.0.cmp(&b.0)));
-            // Each attested value's joined values, where they differ from it.
-            let counts = features.get(p).cloned().unwrap_or_default();
-            let mut inherent = Vec::new();
-            for (&(f, from, to), &n) in &counts {
-                let all: usize = counts
-                    .iter()
-                    .filter(|((g, x, _), _)| *g == f && *x == from)
-                    .map(|(_, &m)| m)
-                    .sum();
-                let kept = counts.get(&(f, from, from)).copied().unwrap_or(0);
-                if all >= MIN_JOIN_PAIRS && kept < all {
-                    inherent.push((f, from, to, n as f32 / all as f32));
-                }
-            }
-            out.prefixes.push(JoinSpec {
-                prefix: p.to_string(),
-                split: split as f32,
-                classes: dist,
-                inherent,
-            });
-            out.pairs += total;
-        }
-        // Every word the runtime would read as a known prefix + an attested
-        // word is marked as attested: the runtime joins only unseen words.
-        let kept: std::collections::HashSet<&str> =
-            out.prefixes.iter().map(|j| j.prefix.as_str()).collect();
-        for (wi, w) in words.iter().enumerate() {
-            let splits_here = splits(w.key)
-                .into_iter()
-                .any(|(at, _)| w.key.get(..at).is_some_and(|p| kept.contains(p)));
-            if splits_here {
-                out.joined.insert(wi);
-            }
-        }
-        out
-    }
-
-    /// Learn tables from words (each word = all entries sharing a key).
-    pub fn learn(mut self, words: &[Word]) -> (PosTables, Stats) {
-        let joins = if self.params.joins {
-            self.joins(words)
-        } else {
-            Joins::default()
-        };
-        self.stats.join_prefixes = joins.prefixes.len();
-        self.stats.join_pairs = joins.pairs;
-        let mut trie = vec![TNode {
-            children: Vec::new(),
-            counts: Vec::new(),
-            total: 0.0,
-            words: 0,
-        }];
-        let mut word_nodes: Vec<(usize, usize)> = Vec::new(); // (node, word index)
-        for (wi, word) in words.iter().enumerate() {
-            let obs = self.observations(word);
-            self.stats.lexemes += word.lexemes.len();
-            let mut node = 0usize;
-            add_counts(&mut trie, node, &obs);
-            for c in self.params.walk.symbols(self.sp, word.key) {
-                node = child_or_insert(&mut trie, node, c);
-                add_counts(&mut trie, node, &obs);
-            }
-            word_nodes.push((node, wi));
-        }
-        self.stats.edits = self.edits.len();
-        self.stats.classes = self.classes.len();
-        self.stats.trie_nodes = trie.len();
-        let word_of: HashMap<usize, usize> = word_nodes.into_iter().collect();
-
-        // Top-down: decide kept nodes and their distributions. `owner[n]`
-        // indexes `arena` when node `n` keeps a distribution.
-        let mut arena: Vec<Dist> = Vec::new();
-        let mut owner: Vec<Option<usize>> = vec![None; trie.len()];
-        let root = smooth(
-            trie.first().map_or(&[][..], |n| &n.counts),
-            &[],
-            0.0,
-            self.params.epsilon * 0.01,
-        );
-        arena.push(root);
-        if let Some(o) = owner.first_mut() {
-            *o = Some(0);
-        }
-        // (node, arena indices of the kept nodes on its path, root first)
-        let mut stack: Vec<(usize, Vec<usize>)> = vec![(0, vec![0])];
-        while let Some((node, kept_path)) = stack.pop() {
-            let children: Vec<(char, usize)> = trie
-                .get(node)
-                .map(|n| n.children.clone())
-                .unwrap_or_default();
-            for (c, child) in children {
-                let Some(n) = trie.get(child) else {
-                    continue;
-                };
-                let q_index = kept_path.last().copied().unwrap_or(0);
-                let new = {
-                    let Some(q) = arena.get(q_index) else {
-                        continue;
-                    };
-                    // A memorized word stores only its own classes: it is
-                    // asked only for itself, and a citation none of them
-                    // fits falls back to the ancestors anyway.
-                    if c == BOUNDARY {
-                        let word = word_of.get(&child).and_then(|&wi| words.get(wi));
-                        word.is_some_and(|w| !self.reproduces(w, &kept_path, &arena))
-                            .then(|| smooth(&n.counts, &[], 0.0, self.params.epsilon))
-                    } else if n.words < self.params.min_support {
-                        None
-                    } else {
-                        (g_stat(&n.counts, n.total, q) > self.params.tau)
-                            .then(|| smooth(&n.counts, q, self.params.alpha, self.params.epsilon))
-                    }
-                };
-                let mut path = kept_path.clone();
-                if let Some(d) = new {
-                    self.stats.kept_nodes += 1;
-                    self.stats.own_entries += n.counts.iter().filter(|(_, w)| *w > 0.0).count();
-                    if c == BOUNDARY {
-                        self.stats.kept_words += 1;
-                    }
-                    if let Some(o) = owner.get_mut(child) {
-                        *o = Some(arena.len());
-                    }
-                    path.push(arena.len());
-                    arena.push(d);
-                }
-                if c != BOUNDARY {
-                    stack.push((child, path));
-                }
-            }
-        }
-
-        let mut stats = self.stats;
-        // The words joins are built on, and the joined words themselves, must
-        // be found as attested words (the runtime joins only unseen ones),
-        // with or without a distribution of their own.
-        let marked: std::collections::HashSet<usize> = word_of
-            .iter()
-            .filter(|(_, wi)| {
-                joins.bases.contains(wi)
-                    || joins.joined.contains(wi)
-                    || self
-                        .marked
-                        .is_some_and(|m| words.get(**wi).is_some_and(|w| m.contains(w.key)))
-            })
-            .map(|(&node, _)| node)
-            .collect();
-        let (mut tables, stored, entries) = self.emit_tables(&trie, &owner, &arena, &marked);
-        tables.joins = joins.prefixes;
-        tables.join_classes = joins.classes;
-        stats.stored_nodes = stored;
-        stats.dist_entries = entries;
-        (tables, stats)
-    }
-
-    /// Whether the kept ancestors alone already give every attested primary
-    /// form of `word` (so its whole-word node can be pruned).
-    fn reproduces(&self, word: &Word, kept_path: &[usize], arena: &[Dist]) -> bool {
-        let mut read = self.sp.read(word.lemma());
-        // The runtime restores the full lemma first; for attested words that
-        // is the first entry's.
-        if let Some(full) = word.lexemes.first().map(|l| l.full.clone()) {
-            read.base = std::borrow::Cow::Owned(full);
-        }
-        for cell in 0..self.shape.cells {
-            let Some(primary) = word.primary(cell) else {
-                continue;
-            };
-            let predicted = self.predict(&read, cell, kept_path, arena);
-            if !predicted
-                .as_deref()
-                .is_some_and(|p| same_form(self.sp, p, primary))
-            {
-                return false;
-            }
-        }
-        // Optional cells: whether the word has a form at all must come out
-        // right too, in both directions.
-        for (cell, _) in self.shape.optional.iter().enumerate().filter(|(_, o)| **o) {
-            let attested = word.primary(cell).is_some();
-            if self.has_cell(&read, cell, kept_path, arena) != attested {
-                return false;
-            }
-        }
-        true
-    }
-
-    /// The runtime's answer to "does this word have a form in `cell`": the
-    /// deepest node with a fitting class decides, by majority of its mass.
-    fn has_cell(&self, word: &flexion::Word, cell: usize, path: &[usize], arena: &[Dist]) -> bool {
-        for &strict in self.passes(word) {
-            // Like the runtime, the strict pass leaves out the root.
-            for &node in path.iter().skip(usize::from(strict)).rev() {
-                let Some(d) = arena.get(node) else {
-                    continue;
-                };
-                let (mut with, mut all) = (0.0, 0.0);
-                for &(class, p) in d {
-                    let Some(spec) = self.classes.get(class as usize) else {
-                        continue;
-                    };
-                    if !fits(self.sp, &word.base, spec) || (strict && !self.stress_fits(word, spec))
-                    {
-                        continue;
-                    }
-                    all += p;
-                    if spec.edits.get(cell).is_some_and(|&e| e != NONE) {
-                        with += p;
-                    }
-                }
-                if all > 0.0 {
-                    return with / all >= 0.5;
-                }
-            }
-        }
-        false
-    }
-
-    /// The runtime's top form for `cell`, from distributions on `path`
-    /// (root first): the deepest node with a fitting class wins.
-    fn predict(
-        &self,
-        word: &flexion::Word,
-        cell: usize,
-        path: &[usize],
-        arena: &[Dist],
-    ) -> Option<String> {
-        for &strict in self.passes(word) {
-            // Like the runtime, the strict pass leaves out the root.
-            for &node in path.iter().skip(usize::from(strict)).rev() {
-                let Some(d) = arena.get(node) else {
-                    continue;
-                };
-                let mut forms: Vec<(String, f64)> = Vec::new();
-                // In the runtime's order, and only as far as it reads.
-                let mut sorted: Vec<(u32, f64)> = d.clone();
-                sorted.sort_by(|a, b| b.1.total_cmp(&a.1).then(a.0.cmp(&b.0)));
-                for (i, &(class, p)) in sorted.iter().enumerate() {
-                    if !forms.is_empty() && i >= flexion::MAX_SCAN {
-                        break;
-                    }
-                    let Some(spec) = self.classes.get(class as usize) else {
-                        continue;
-                    };
-                    if !fits(self.sp, &word.base, spec) || (strict && !self.stress_fits(word, spec))
-                    {
-                        continue;
-                    }
-                    let Some(&e) = spec.edits.get(cell) else {
-                        continue;
-                    };
-                    let Some(edit) = self.edits.get(e as usize) else {
-                        continue;
-                    };
-                    let Some((full, lemma_stress, lemma_kind)) = self.restore(word, spec) else {
-                        continue;
-                    };
-                    let Some((letters, stress, kind)) =
-                        apply(self.sp, &full, edit, lemma_stress, lemma_kind)
-                    else {
-                        continue;
-                    };
-                    let letters = flexion::realize(self.phonology.map(|p| p.program()), &letters)
-                        .into_owned();
-                    // As in the runtime: a stress rule that finds no vowel
-                    // in this word means the class doesn't fit it.
-                    if self.sp.has_stress() && stress.is_none() && edit.stress != Stress::Unmarked {
-                        continue;
-                    }
-                    let form = self
-                        .sp
-                        .render(&letters, stress, kind, true, flexion::Casing::Lower);
-                    match forms.iter_mut().find(|(f, _)| *f == form) {
-                        Some((_, x)) => *x += p,
-                        None => forms.push((form, p)),
-                    }
-                }
-                if forms.is_empty() {
-                    continue;
-                }
-                // Only a clear winner counts: a near tie can go either way at
-                // runtime (variants pool differently there), so the word keeps
-                // its own node.
-                forms.sort_by(|a, b| b.1.total_cmp(&a.1));
-                let mut it = forms.into_iter();
-                let (best, p) = it.next()?;
-                let second = it.next().map_or(0.0, |(_, q)| q);
-                return (p > second * (1.0 + PRUNE_MARGIN)).then_some(best);
-            }
-        }
-        None
-    }
-
-    /// Whether a class stresses its lemma where the caller did (see
-    /// `Pos::stress_fits` in the runtime).
-    fn stress_fits(&self, word: &flexion::Word, spec: &ClassSpec) -> bool {
-        let Some(given) = word.stress else {
-            return true;
-        };
-        let Some(rule) = spec
-            .edits
-            .get(self.shape.lemma_cell)
-            .and_then(|&e| self.edits.get(e as usize))
-        else {
-            return true;
-        };
-        if rule.stress == Stress::Unmarked {
-            return true;
-        }
-        let Some((_, own, kind)) = apply(self.sp, &word.base, rule, None, 0) else {
-            return false;
-        };
-        own == Some(given) && (self.sp.stress_kinds() <= 1 || kind == word.kind)
-    }
-
-    /// The runtime's passes: stress-consistent classes first, then any.
-    fn passes(&self, word: &flexion::Word) -> &'static [bool] {
-        if word.stress.is_some() && self.sp.has_stress() {
-            &[true, false]
-        } else {
-            &[false]
-        }
-    }
-
-    /// The (already restored) lemma, its stress and mark kind under a
-    /// class: the caller's mark if given, else the class's citation-cell rule.
-    fn restore(
-        &self,
-        word: &flexion::Word,
-        spec: &ClassSpec,
-    ) -> Option<(String, Option<usize>, u8)> {
-        let rule = spec
-            .edits
-            .get(self.shape.lemma_cell)
-            .and_then(|&e| self.edits.get(e as usize));
-        let (stress, kind) = match rule {
-            Some(e) if word.stress.is_none() => {
-                let (_, s, k) = apply(self.sp, &word.base, e, None, 0)?;
-                (s, k)
-            }
-            _ => (word.stress, word.kind),
-        };
-        Some((word.base.to_string(), stress, kind))
-    }
-
-    fn emit_tables(
-        self,
-        trie: &[TNode],
-        owner: &[Option<usize>],
-        arena: &[Dist],
-        marked: &std::collections::HashSet<usize>,
-    ) -> (PosTables, usize, usize) {
-        let dist_of = |n: usize| owner.get(n).copied().flatten().and_then(|i| arena.get(i));
-        // A node is needed if it or a descendant has a distribution.
-        let mut needed = vec![false; trie.len()];
-        let order = preorder(trie);
-        for &n in order.iter().rev() {
-            let own = dist_of(n).is_some();
-            let kids = trie.get(n).is_some_and(|t| {
-                t.children
-                    .iter()
-                    .any(|&(_, c)| needed.get(c).copied().unwrap_or(false))
-            });
-            if let Some(slot) = needed.get_mut(n) {
-                *slot = own || kids || n == 0 || marked.contains(&n);
-            }
-        }
-        let has_dist = |n: usize| dist_of(n).is_some();
-        // Children of a stored node: follow single-child chains of nodes
-        // without a distribution, concatenating labels.
-        let stored_children = |n: usize| -> Vec<(String, usize)> {
-            let mut out = Vec::new();
-            for &(c, child) in trie.get(n).map(|t| t.children.as_slice()).unwrap_or(&[]) {
-                if !needed.get(child).copied().unwrap_or(false) {
-                    continue;
-                }
-                let mut label = String::from(c);
-                let mut cur = child;
-                loop {
-                    if has_dist(cur) {
-                        break;
-                    }
-                    let kids: Vec<(char, usize)> = trie
-                        .get(cur)
-                        .map(|t| {
-                            t.children
-                                .iter()
-                                .copied()
-                                .filter(|&(_, k)| needed.get(k).copied().unwrap_or(false))
-                                .collect()
-                        })
-                        .unwrap_or_default();
-                    match kids.as_slice() {
-                        [(k, next)] => {
-                            label.push(*k);
-                            cur = *next;
-                        }
-                        _ => break,
-                    }
-                }
-                out.push((label, cur));
-            }
-            out.sort_by(|a, b| a.0.cmp(&b.0));
-            out
-        };
-
-        // Breadth-first: a node's children are contiguous (for the child
-        // search) and the shallow levels every walk passes through stay
-        // together, small and cached.
-        let mut nodes: Vec<NodeSpec> = Vec::new();
-        let mut n_counts = 0usize;
-        let mut queue: std::collections::VecDeque<(usize, String)> =
-            std::collections::VecDeque::new();
-        queue.push_back((0, String::new()));
-        while let Some((n, label)) = queue.pop_front() {
-            let kids = stored_children(n);
-            // A node stores its own counts; its distribution (as the arena
-            // holds it) is computed from them, smoothed toward its kept
-            // ancestor's (see `flexion::tables::smooth_node`).
-            let (kind, counts) = match dist_of(n) {
-                Some(_) => {
-                    let kind = if n == 0 {
-                        NodeKind::Root
-                    } else if label.ends_with(BOUNDARY) {
-                        NodeKind::Word
-                    } else {
-                        NodeKind::Inner
-                    };
-                    // Weights to the hundredth (pruning already decided on
-                    // the exact ones): what the model stores and computes from.
-                    #[allow(clippy::cast_possible_truncation)]
-                    let counts: Vec<(u32, f32)> = trie
-                        .get(n)
-                        .map(|t| {
-                            t.counts
-                                .iter()
-                                .filter(|(_, w)| *w > 0.0)
-                                .map(|&(c, w)| (c, ((w * 100.0).round() / 100.0).max(0.01) as f32))
-                                .collect()
-                        })
-                        .unwrap_or_default();
-                    (kind, counts)
-                }
-                None => (NodeKind::Bare, Vec::new()),
-            };
-            n_counts += counts.len();
-            nodes.push(NodeSpec {
-                label,
-                children: u32::try_from(kids.len()).unwrap_or(0),
-                kind,
-                counts,
-            });
-            for (l, k) in kids {
-                queue.push_back((k, l));
-            }
-        }
-        let (stored, n_entries) = (nodes.len(), n_counts);
-        let tables = PosTables {
-            cells: self.shape.cells,
-            inherent: self.shape.inherent,
-            lemma_cell: Some(self.shape.lemma_cell),
-            groups: self.shape.groups.clone(),
-            restore: None,
-            restore_front: None,
-            capitalized: self.shape.capitalized,
-            joins: Vec::new(),
-            join_classes: Vec::new(),
-            part_models: Vec::new(),
-            sources: Vec::new(),
-            lexicon: Vec::new(),
-            lexicon_from: Vec::new(),
-            walk: self.params.walk,
-            edits: self.edits,
-            classes: self.classes,
-            nodes,
-            alpha: self.params.alpha,
-            epsilon: self.params.epsilon,
-            phonology: self.phonology.map(|p| p.spec.clone()),
-        };
-        (tables, stored, n_entries)
-    }
+/// Counts for the report.
+#[derive(Debug, Clone, Default)]
+pub struct Stats {
+    pub words: usize,
+    pub paradigms: usize,
+    pub accent_patterns: usize,
+    pub irregular_forms: usize,
 }
 
-/// Whether a class fits a lemma: it ends and starts the way the class's
-/// edits need.
-fn fits(sp: &Spelling<'_>, base: &str, spec: &ClassSpec) -> bool {
-    sp.ends_with_folded(base, &spec.strip) && sp.starts_with_folded(base, &spec.front)
+/// One dictionary word, read.
+#[derive(Clone)]
+struct Word {
+    /// What it is looked up by: its letters, folded (`fox`).
+    key: String,
+    /// Its letters as the dictionary writes them (`fōx`).
+    letters: String,
+    /// Senses of its dictionary entry.
+    senses: u16,
+    /// How many of the dictionaries have the word.
+    dictionaries: u8,
+    /// Per inherent feature, its value (`u8::MAX` if the dictionary doesn't
+    /// say).
+    inherent: Vec<u8>,
+    /// Per cell, its forms (letters and stress), the usual one first.
+    cells: Vec<Vec<Written>>,
 }
 
-/// Apply an edit the way the runtime does: `(letters, stressed vowel, mark
-/// kind)`.
-pub fn apply(
-    sp: &Spelling<'_>,
-    base: &str,
-    e: &EditSpec,
-    lemma_stress: Option<usize>,
-    lemma_kind: u8,
-) -> Option<(String, Option<usize>, u8)> {
-    // Cut where the folded strings line up, as the runtime does.
-    let end = sp.folded_suffix_start(base, &e.strip)?;
-    let start = if e.front.is_empty() {
-        0
+/// A word's analysis: its paradigm signature.
+struct Analyzed {
+    lemma: String,
+    /// Per cell, the pattern of its usual form (with variants after `|`).
+    cells: Vec<Option<String>>,
+}
+
+pub fn learn<'s>(
+    orthography: Orthography<'s>,
+    shape: &Shape,
+    lexemes: &[Lexeme],
+    settings: Settings,
+) -> Learned<'s> {
+    // One entry per word: the first the dictionaries give (the main
+    // dictionary's, in its order).
+    let key = |l: &Lexeme| orthography.key(&orthography.read(&l.full).letters);
+    let mut dictionaries: HashMap<String, std::collections::BTreeSet<u8>> = HashMap::default();
+    for l in lexemes {
+        dictionaries.entry(key(l)).or_default().insert(l.source);
+    }
+    let mut by_order: Vec<&Lexeme> = lexemes.iter().collect();
+    by_order.sort_by_key(|l| (l.source, l.order));
+    let mut seen = crate::HashSet::default();
+    let lexemes: Vec<Lexeme> = by_order
+        .into_iter()
+        .filter(|l| seen.insert(key(l)))
+        .cloned()
+        .collect();
+    let lexemes = lexemes.as_slice();
+    let words: Vec<Word> = lexemes
+        .iter()
+        .map(|l| Word {
+            key: key(l),
+            letters: orthography.read(&l.full).letters,
+            senses: l.senses,
+            dictionaries: dictionaries
+                .get(&key(l))
+                .map_or(1, |s| u8::try_from(s.len()).unwrap_or(1)),
+            inherent: l.inherent.clone(),
+            cells: (0..shape.cells)
+                .map(|c| {
+                    l.cells
+                        .get(c)
+                        .map(|fs| fs.iter().map(|f| orthography.read(f)).collect())
+                        .unwrap_or_default()
+                })
+                .collect(),
+        })
+        .collect();
+    // Words written in parts that inflect each part are the grammar of
+    // their parts, not paradigms of their own.
+    let compounds: Vec<(String, Compound)> = words.iter().filter_map(compound).collect();
+    let compound_choice =
+        (!compounds.is_empty()).then(|| choose::learn(&compounds, settings, |_, _| true));
+    let parted: crate::HashSet<&str> = words
+        .iter()
+        .filter(|w| compound(w).is_some_and(|c| c.1 == Compound::Each))
+        .map(|w| w.key.as_str())
+        .collect();
+    let (all_words, all_lexemes) = (words.as_slice(), lexemes);
+    // Words that separate a particle are the grammar of the rest of them:
+    // their bases are learned with the other words.
+    let (prefixes, bases) = prefixes(all_words);
+    let separated: crate::HashSet<&str> = bases.iter().map(|(k, _)| k.as_str()).collect();
+    let mut words: Vec<Word> = all_words
+        .iter()
+        .filter(|w| !parted.contains(w.key.as_str()) && !separated.contains(w.key.as_str()))
+        .cloned()
+        .collect();
+    // A base the dictionary has takes the forms its particle verbs show in
+    // the cells it lacks (`aufzunehmen` shows `nehmen`'s `zunehmen`).
+    let mut at: HashMap<String, usize> = words
+        .iter()
+        .enumerate()
+        .map(|(i, w)| (w.key.clone(), i))
+        .collect();
+    for (_, base) in bases {
+        match at.get(&base.key).and_then(|&i| words.get_mut(i)) {
+            Some(known) => {
+                for (mine, theirs) in known.cells.iter_mut().zip(base.cells) {
+                    if mine.is_empty() {
+                        *mine = theirs;
+                    }
+                }
+            }
+            None => {
+                at.insert(base.key.clone(), words.len());
+                words.push(base);
+            }
+        }
+    }
+    let found = referrals(&words, shape);
+    let mut analyses: Vec<Analyzed> = words.iter().map(|w| analyze(w, shape)).collect();
+    let mut feature_examples: Vec<(String, u8)> = Vec::new();
+    if let Some((f, referrals)) = &found {
+        for (w, a) in words.iter().zip(analyses.iter_mut()) {
+            let value = w.inherent.get(*f).copied().filter(|&v| v != u8::MAX);
+            let value = value.or_else(|| infer(w, referrals));
+            if let Some(v) = value {
+                feature_examples.push((w.key.clone(), v));
+                refer(w, a, referrals, v);
+            }
+        }
+    }
+    let feature_choice = found
+        .as_ref()
+        .map(|_| choose::learn(&feature_examples, settings, |_, _| true));
+    let (paradigms, assignment) = paradigms(&words, &analyses, shape);
+    let paradigm_examples: Vec<(String, u16)> = words
+        .iter()
+        .zip(&assignment)
+        .map(|(w, &p)| (w.key.clone(), p))
+        .collect();
+    let fits = |word: &str, p: u16| {
+        paradigms
+            .get(usize::from(p))
+            .is_some_and(|x| x.stems(&orthography, word).is_some())
+    };
+    let paradigm_choice = choose::learn(&paradigm_examples, settings, fits);
+    let (accent, stress_labels) = if orthography.stress_marks.is_empty() {
+        (None, HashMap::default())
     } else {
-        sp.folded_prefix_end(base, &e.front)?
+        let (a, labels) = accent(
+            &orthography,
+            &words,
+            &assignment,
+            &paradigms,
+            shape,
+            settings,
+        );
+        (Some(a), labels)
     };
-    let kept = base.get(start..end)?;
-    let lemma_stress = lemma_stress.and_then(|s| s.checked_sub(sp.vowel_count(&e.front)));
-    let stress = sp.place(e.stress, lemma_stress, &e.prefix, kept, &e.add);
-    let kind = e.mark.checked_sub(1).unwrap_or(lemma_kind);
-    Some((format!("{}{}{}", e.prefix, kept, e.add), stress, kind))
-}
-
-/// Same letters and same stress (when both are marked).
-pub fn same_form(sp: &Spelling<'_>, a: &str, b: &str) -> bool {
-    let (x, y) = (sp.read(a), sp.read(b));
-    x.base == y.base && x.stress == y.stress && x.kind == y.kind
-}
-
-fn child_or_insert(trie: &mut Vec<TNode>, node: usize, c: char) -> usize {
-    let new_index = trie.len();
-    let Some(n) = trie.get_mut(node) else {
-        return 0;
-    };
-    match n.children.binary_search_by(|(k, _)| k.cmp(&c)) {
-        Ok(i) => n.children.get(i).map_or(0, |&(_, idx)| idx),
-        Err(i) => {
-            n.children.insert(i, (c, new_index));
-            trie.push(TNode {
-                children: Vec::new(),
-                counts: Vec::new(),
-                total: 0.0,
-                words: 0,
-            });
-            new_index
-        }
-    }
-}
-
-fn add_counts(trie: &mut [TNode], node: usize, obs: &[(u32, f64)]) {
-    let Some(n) = trie.get_mut(node) else {
-        return;
-    };
-    n.words += 1;
-    for &(class, w) in obs {
-        n.total += w;
-        match n.counts.iter_mut().find(|(c, _)| *c == class) {
-            Some((_, x)) => *x += w,
-            None => n.counts.push((class, w)),
-        }
-    }
-}
-
-/// `(n_c + a·q_c) / (N + a)`, dropping entries below `epsilon`.
-fn smooth(counts: &[(u32, f64)], q: &[(u32, f64)], a: f64, epsilon: f64) -> Dist {
-    let total: f64 = counts.iter().map(|(_, w)| w).sum();
-    let mut m: BTreeMap<u32, f64> = BTreeMap::new();
-    for &(c, w) in counts {
-        *m.entry(c).or_default() += w;
-    }
-    for &(c, p) in q {
-        *m.entry(c).or_default() += a * p;
-    }
-    let denom = total + a;
-    if denom <= 0.0 {
-        return Vec::new();
-    }
-    m.into_iter()
-        .map(|(c, x)| (c, x / denom))
-        .filter(|&(_, p)| p >= epsilon)
-        .collect()
-}
-
-/// The likelihood-ratio statistic of a node's counts against `q`.
-fn g_stat(counts: &[(u32, f64)], total: f64, q: &[(u32, f64)]) -> f64 {
-    if total <= 0.0 {
-        return 0.0;
-    }
-    let floor = 1e-6;
-    let mut g = 0.0;
-    for &(c, w) in counts {
-        if w <= 0.0 {
+    // Spellings a key doesn't show and the word's paradigm doesn't write.
+    let mut spellings: Vec<(Cow<'s, str>, Cow<'s, str>)> = Vec::new();
+    for (w, &p) in words.iter().zip(&assignment) {
+        if w.letters == w.key || spellings.last().is_some_and(|l| l.0 == w.key) {
             continue;
         }
-        let qc = q
-            .binary_search_by_key(&c, |&(k, _)| k)
-            .ok()
-            .and_then(|i| q.get(i))
-            .map_or(floor, |&(_, p)| p.max(floor));
-        g += w * ((w / total) / qc).ln();
-    }
-    2.0 * g
-}
-
-fn preorder(trie: &[TNode]) -> Vec<usize> {
-    let mut out = Vec::with_capacity(trie.len());
-    let mut stack = vec![0usize];
-    while let Some(n) = stack.pop() {
-        out.push(n);
-        if let Some(t) = trie.get(n) {
-            stack.extend(t.children.iter().map(|&(_, c)| c));
+        let written = paradigms.get(usize::from(p)).and_then(|par| {
+            let stems = par.stems(&orthography, &w.key)?;
+            Some(pattern::fill(&par.lemma, &stems))
+        });
+        if written.as_deref() != Some(w.letters.as_str()) {
+            spellings.push((Cow::Owned(w.key.clone()), Cow::Owned(w.letters.clone())));
         }
     }
+    spellings.sort();
+    spellings.dedup_by(|a, b| a.0 == b.0);
+    // How a letter typed without its mark is written, by what follows it;
+    // the words it doesn't spell are listed.
+    let marks = marks(&orthography, &words, settings);
+    if let Some(marks) = &marks {
+        spellings = words
+            .iter()
+            .filter(|w| {
+                flexion::restore(&orthography, marks, settings.smoothing, &w.key, &w.key).0
+                    != w.letters
+            })
+            .map(|w| (Cow::Owned(w.key.clone()), Cow::Owned(w.letters.clone())))
+            .collect();
+        spellings.sort();
+        spellings.dedup_by(|a, b| a.0 == b.0);
+    }
+    let mut members: Vec<Vec<String>> = vec![Vec::new(); paradigms.len()];
+    for (w, &p) in words.iter().zip(&assignment) {
+        if let Some(m) = members.get_mut(usize::from(p))
+            && m.len() < 8
+        {
+            m.push(w.letters.clone());
+        }
+    }
+    let mut grammar = Grammar {
+        orthography,
+        cells: shape.cells,
+        lemma_cell: shape.lemma_cell,
+        capitalized: shape.capitalized,
+        paradigms: Cow::Owned(paradigms),
+        paradigm: paradigm_choice,
+        referrals: Cow::Owned(found.as_ref().map(|f| f.1.clone()).unwrap_or_default()),
+        feature: feature_choice,
+        compound: compound_choice,
+        prefixes,
+        accent,
+        laws: None,
+        spellings: Cow::Owned(spellings),
+        marks,
+        irregular: flexion::Irregular::default(),
+        smoothing: settings.smoothing,
+        sharpness: 1.0,
+    };
+    // A word the grammar gets wrong is listed in its choices: its paradigm,
+    // its stress pattern and stem vowel. Forms still wrong are irregular.
+    let wrong: std::collections::BTreeSet<String> =
+        irregular(&grammar, all_lexemes, all_words, |_| true)
+            .into_iter()
+            .map(|(k, _, _)| k)
+            .collect();
+    let mut paradigm_of: HashMap<&str, u16> = HashMap::default();
+    for (w, &p) in words.iter().zip(&assignment) {
+        paradigm_of.entry(w.key.as_str()).or_insert(p);
+    }
+    for key in &wrong {
+        if let Some(&p) = paradigm_of.get(key.as_str()) {
+            list(&mut grammar.paradigm, key, p);
+        }
+        if let (Some(a), Some(&class)) = (grammar.accent.as_mut(), stress_labels.get(key)) {
+            list(&mut a.class, key, class);
+        }
+    }
+    tidy(&mut grammar.paradigm);
+    if let Some(a) = grammar.accent.as_mut() {
+        tidy(&mut a.class);
+    }
+    // Words made of others (`hineinlassen`, `диван-кровать`) are checked
+    // once the words they are made of have their irregular forms.
+    let made = |w: &Word| {
+        w.key.contains('-')
+            || grammar
+                .prefixes
+                .as_ref()
+                .and_then(|p| p.split(&w.key))
+                .is_some_and(|(_, separable, inseparable)| separable + inseparable > 0.0)
+    };
+    let mut irregular = irregular(&grammar, all_lexemes, all_words, |w| !made(w));
+    grammar.irregular = flexion::Irregular::new(&irregular);
+    irregular.extend(self::irregular(&grammar, all_lexemes, all_words, made));
+    irregular.sort();
+    grammar.irregular = flexion::Irregular::new(&irregular);
+    let stats = Stats {
+        words: all_words.len(),
+        paradigms: grammar.paradigms.len(),
+        accent_patterns: grammar.accent.as_ref().map_or(0, |a| a.patterns.len()),
+        irregular_forms: irregular.len(),
+    };
+    Learned {
+        grammar,
+        feature: found.map(|f| f.0),
+        members,
+        irregular,
+        stats,
+    }
+}
+
+/// How a word written in parts inflects, keyed by its first part: each
+/// part when a form changes its first part. `None` for a word of one part.
+fn compound(w: &Word) -> Option<(String, Compound)> {
+    let (first, _) = w.letters.split_once('-')?;
+    let (first_key, _) = w.key.split_once('-')?;
+    let changes = w
+        .cells
+        .iter()
+        .filter_map(|forms| forms.first())
+        .filter_map(|f| f.letters.split_once('-'))
+        .any(|(f, _)| f != first);
+    Some((
+        first_key.to_string(),
+        if changes {
+            Compound::Each
+        } else {
+            Compound::Last
+        },
+    ))
+}
+
+/// The letters of a word's usual form in cell `c`.
+fn first_form(w: &Word, c: usize) -> Option<&str> {
+    w.cells
+        .get(c)
+        .and_then(|fs| fs.first())
+        .map(|f| f.letters.as_str())
+}
+
+/// The shortest and longest prefix, in letters.
+const PREFIX_LETTERS: std::ops::RangeInclusive<usize> = 2..=12;
+
+/// Prefixes words inflect behind, and the words made of one with their
+/// bases: `(word's key, base)`. Only where words separate prefixes: a
+/// dictionary that never writes one apart has none to learn (a prefix it
+/// keeps in front is no more than the start of a word).
+///
+/// A word separates a prefix when a form of it puts the prefix after the
+/// rest, as a word of its own (`räuchre aus`). It keeps one in front when
+/// every form begins with it and the rest is a word whose forms, with what
+/// the cell's inseparable prefixes take off (the participle's `ge`), are the
+/// rest of its forms (`verhindern`, `hindern`); the cells' drops are learned
+/// from such pairs. A word's base has its forms without the prefix (and with
+/// what was taken off put back).
+fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, Word)>) {
+    use flexion::Separation;
+    let cells = words.first().map_or(0, |w| w.cells.len());
+    let form = first_form;
+    let by_key: HashMap<&str, &Word> = words.iter().map(|w| (w.key.as_str(), w)).collect();
+    // Separable: a form with the prefix after the rest.
+    let mut separable: HashMap<&str, String> = HashMap::default();
+    for w in words {
+        let prefix = w.cells.iter().filter_map(|fs| fs.first()).find_map(|f| {
+            let (_, tail) = f.letters.rsplit_once(' ')?;
+            (!tail.is_empty() && w.letters.starts_with(tail) && w.letters.len() > tail.len())
+                .then_some(tail)
+        });
+        if let Some(p) = prefix {
+            separable.insert(w.key.as_str(), p.to_string());
+        }
+    }
+    // What an inseparable prefix takes off each cell: from words made of a
+    // prefix and a word of the dictionary.
+    let split = |w: &Word, n: usize| -> Option<(String, String)> {
+        let at = w.letters.char_indices().nth(n)?.0;
+        let (p, rest) = w.letters.split_at(at);
+        (rest.chars().count() >= 3).then(|| (p.to_string(), rest.to_string()))
+    };
+    let mut drops: Vec<BTreeMap<String, u32>> = vec![BTreeMap::new(); cells];
+    for w in words
+        .iter()
+        .filter(|w| !separable.contains_key(w.key.as_str()))
+    {
+        for n in PREFIX_LETTERS {
+            let Some((p, rest)) = split(w, n) else { break };
+            let Some(base) = by_key.get(rest.as_str()) else {
+                continue;
+            };
+            for (c, votes) in drops.iter_mut().enumerate() {
+                let (Some(mine), Some(theirs)) = (form(w, c), form(base, c)) else {
+                    continue;
+                };
+                let Some(tail) = mine.strip_prefix(p.as_str()) else {
+                    continue;
+                };
+                if let Some(dropped) = theirs.strip_suffix(tail) {
+                    *votes.entry(dropped.to_string()).or_default() += 1;
+                }
+            }
+        }
+    }
+    let drops: Vec<String> = drops
+        .iter()
+        .map(|v| {
+            v.iter()
+                .max_by_key(|e| *e.1)
+                .map(|e| e.0.clone())
+                .unwrap_or_default()
+        })
+        .collect();
+    let drop = |c: usize| drops.get(c).map_or("", String::as_str);
+    // Inseparable: every form begins with the prefix and, with what the cell
+    // takes off put back, its rest is the base's form where the dictionary
+    // has the base.
+    let keeps = |w: &Word, p: &str, rest: &str| {
+        let base = by_key.get(rest);
+        let mut seen = 0;
+        for c in 0..cells {
+            let Some(mine) = form(w, c) else { continue };
+            let Some(tail) = mine.strip_prefix(p) else {
+                return false;
+            };
+            if !drop(c).is_empty() && tail.starts_with(drop(c)) {
+                return false;
+            }
+            if let Some(theirs) = base.and_then(|b| form(b, c))
+                && theirs != format!("{}{tail}", drop(c))
+            {
+                return false;
+            }
+            seen += 1;
+        }
+        seen > 0
+    };
+    let mut inseparable: HashMap<&str, String> = HashMap::default();
+    let mut proven: BTreeMap<String, u32> = BTreeMap::new();
+    for w in words
+        .iter()
+        .filter(|w| !separable.contains_key(w.key.as_str()))
+    {
+        for n in PREFIX_LETTERS {
+            let Some((p, rest)) = split(w, n) else { break };
+            if by_key.contains_key(rest.as_str()) && keeps(w, &p, &rest) {
+                *proven.entry(p).or_default() += 1;
+                break;
+            }
+        }
+    }
+    // A prefix needs MIN_WORDS words that separate it or that keep it, with a
+    // base the dictionary has.
+    let mut counted: BTreeMap<String, (u32, u32)> = BTreeMap::new();
+    for p in separable.values() {
+        counted.entry(p.clone()).or_default().0 += 1;
+    }
+    for (p, n) in &proven {
+        if *n >= MIN_WORDS {
+            counted.entry(p.clone()).or_default();
+        }
+    }
+    counted.retain(|p, (s, _)| *s >= MIN_WORDS || proven.get(p).is_some_and(|&n| n >= MIN_WORDS));
+    if !counted.values().any(|(s, _)| *s >= MIN_WORDS) {
+        return (None, Vec::new());
+    }
+    // Every word that begins with a prefix: what it does with it.
+    let longest = |key: &str| {
+        counted
+            .keys()
+            .filter(|p| key.starts_with(p.as_str()) && key.chars().count() >= p.chars().count() + 3)
+            .max_by_key(|p| p.len())
+            .cloned()
+    };
+    let mut bases: Vec<(String, Word)> = Vec::new();
+    let mut what: Vec<(String, String, Separation)> = Vec::new();
+    for w in words {
+        let Some(p) = longest(&w.key) else { continue };
+        let n = p.chars().count();
+        let rest: String = w.letters.chars().skip(n).collect();
+        let prefix: String = w.letters.chars().take(n).collect();
+        let separation = if separable.get(w.key.as_str()).is_some_and(|s| *s == prefix) {
+            Separation::Separable
+        } else if keeps(w, &prefix, &rest) {
+            inseparable.insert(w.key.as_str(), prefix.clone());
+            Separation::Inseparable
+        } else {
+            Separation::Neither
+        };
+        if separation != Separation::Neither {
+            let mut base = w.clone();
+            base.letters = rest;
+            base.key = w.key.chars().skip(n).collect();
+            for (c, forms) in base.cells.iter_mut().enumerate() {
+                for f in forms.iter_mut() {
+                    let rest = match separation {
+                        Separation::Separable => f
+                            .letters
+                            .strip_suffix(prefix.as_str())
+                            .and_then(|s| s.strip_suffix(' '))
+                            .or_else(|| f.letters.strip_prefix(prefix.as_str()))
+                            .map(str::to_string),
+                        _ => f
+                            .letters
+                            .strip_prefix(prefix.as_str())
+                            .map(|t| format!("{}{t}", drop(c))),
+                    };
+                    if let Some(rest) = rest {
+                        f.letters = rest;
+                        f.stress = None;
+                    }
+                }
+            }
+            bases.push((w.key.clone(), base));
+        }
+        what.push((p, w.key.clone(), separation));
+    }
+    // Where a separable prefix goes, cell by cell.
+    let mut votes: Vec<[u32; 2]> = vec![[0; 2]; cells];
+    for w in words {
+        let Some(p) = separable.get(w.key.as_str()) else {
+            continue;
+        };
+        for (c, v) in votes.iter_mut().enumerate() {
+            match form(w, c) {
+                Some(f) if f.ends_with(&format!(" {p}")) => v[1] += 1,
+                Some(f) if f.starts_with(p.as_str()) => v[0] += 1,
+                _ => {}
+            }
+        }
+    }
+    // Each prefix's counts; words that go against most are listed.
+    let mut prefixes: Vec<flexion::Prefix<'a>> = Vec::new();
+    let mut listed: Vec<(Cow<'a, str>, Separation)> = Vec::new();
+    for p in counted.keys() {
+        let mine: Vec<&(String, String, Separation)> = what.iter().filter(|e| e.0 == *p).collect();
+        let count = |s: Separation| {
+            u32::try_from(mine.iter().filter(|e| e.2 == s).count()).unwrap_or(u32::MAX)
+        };
+        let (sep, insep, neither) = (
+            count(Separation::Separable),
+            count(Separation::Inseparable),
+            count(Separation::Neither),
+        );
+        let most = [
+            (sep, Separation::Separable),
+            (insep, Separation::Inseparable),
+            (neither, Separation::Neither),
+        ]
+        .into_iter()
+        .max_by_key(|e| e.0)
+        .map_or(Separation::Neither, |e| e.1);
+        for (_, key, s) in &mine {
+            if *s != most {
+                listed.push((Cow::Owned(key.clone()), *s));
+            }
+        }
+        prefixes.push(flexion::Prefix {
+            letters: Cow::Owned(p.clone()),
+            separable: sep,
+            inseparable: insep,
+            words: sep + insep + neither,
+        });
+    }
+    listed.sort();
+    listed.dedup_by(|a, b| a.0 == b.0);
+    let placement = votes
+        .iter()
+        .map(|v| {
+            if v[1] > v[0] {
+                flexion::Placement::After
+            } else {
+                flexion::Placement::Before
+            }
+        })
+        .collect();
+    let prefixes = flexion::Prefixes {
+        prefixes: Cow::Owned(prefixes),
+        listed: Cow::Owned(listed),
+        placement: Cow::Owned(placement),
+        drops: Cow::Owned(drops.into_iter().map(Cow::Owned).collect()),
+    };
+    (Some(prefixes), bases)
+}
+
+/// How a letter typed without its mark is written (see
+/// [`flexion::Grammar::marks`]): learned from every letter of the words that
+/// a mark could stand on, by the letter before it and the letters from it
+/// on. `None`
+/// where no word writes such a mark.
+fn marks<'a>(
+    orthography: &Orthography<'_>,
+    words: &[Word],
+    settings: Settings,
+) -> Option<flexion::Choice<'a, char>> {
+    let markable = |c: char| orthography.folded.iter().any(|e| e.1 == c);
+    let mut examples: Vec<(String, char)> = Vec::new();
+    let mut marked = false;
+    for w in words {
+        let mut before = flexion::WORD_END;
+        for ((i, k), l) in w.key.char_indices().zip(w.letters.chars()) {
+            if markable(k)
+                && let Some(rest) = w.key.get(i..)
+            {
+                marked |= l != k;
+                examples.push((format!("{before}{rest}{}", flexion::WORD_END), l));
+            }
+            before = k;
+        }
+    }
+    if !marked {
+        return None;
+    }
+    let mut choice = choose::learn_starts(&examples, settings, |around, m| {
+        around
+            .chars()
+            .nth(1)
+            .is_some_and(|c| orthography.fold(m) == c)
+    });
+    // What the rules get wrong is a word's own spelling, listed with it.
+    choice.exceptions = Cow::Owned(Vec::new());
+    Some(choice)
+}
+
+/// What the trainer writes for a referred cell while it learns paradigms.
+const REFERRED: &str = "=";
+
+/// Of the words with each value of a feature, the share whose form of a
+/// cell must be one other cell's form for the cell to be a referral.
+const REFERRAL_SHARE: f64 = 0.5;
+
+/// Referrals, and the inherent feature they depend on: cells whose form is,
+/// for most words with each value of the feature, the form of one earlier
+/// cell, a different cell for different values (the accusative is the genitive of
+/// animate nouns and the nominative of inanimate ones).
+fn referrals(words: &[Word], shape: &Shape) -> Option<(usize, Vec<Referral<'static>>)> {
+    let form = first_form;
+    let mut best: Option<(usize, Vec<Referral<'static>>)> = None;
+    for (f, &values) in shape.inherent.iter().enumerate() {
+        let mut found = Vec::new();
+        for cell in 0..shape.cells {
+            let mut to = Vec::with_capacity(values);
+            for v in 0..values {
+                let with: Vec<&Word> = words
+                    .iter()
+                    .filter(|w| {
+                        w.inherent.get(f).is_some_and(|&x| usize::from(x) == v)
+                            && form(w, cell).is_some()
+                    })
+                    .collect();
+                // An earlier cell, itself formed by the paradigm.
+                let target = (0..cell)
+                    .filter(|&t| {
+                        !found
+                            .iter()
+                            .any(|r: &Referral<'_>| usize::from(r.cell) == t)
+                    })
+                    .map(|t| {
+                        (
+                            with.iter()
+                                .filter(|w| form(w, t).is_some() && form(w, t) == form(w, cell))
+                                .count(),
+                            t,
+                        )
+                    })
+                    .max_by_key(|&(n, t)| (n, std::cmp::Reverse(t)));
+                #[allow(clippy::cast_precision_loss)]
+                let share = |n: usize| n as f64 / with.len().max(1) as f64;
+                match target {
+                    Some((n, t)) if with.len() >= 50 && share(n) >= REFERRAL_SHARE => {
+                        to.push(u16::try_from(t).unwrap_or(u16::MAX));
+                    }
+                    _ => break,
+                }
+            }
+            let differ = to.iter().any(|t| Some(t) != to.first());
+            if to.len() == values && differ {
+                found.push(Referral {
+                    cell: u16::try_from(cell).unwrap_or(u16::MAX),
+                    to: Cow::Owned(to),
+                });
+            }
+        }
+        if best.as_ref().is_none_or(|b| found.len() > b.1.len()) && !found.is_empty() {
+            best = Some((f, found));
+        }
+    }
+    best
+}
+
+/// The value of a word the dictionary gives none for, from its forms: the
+/// one whose referrals its forms follow, if just one.
+fn infer(w: &Word, referrals: &[Referral<'_>]) -> Option<u8> {
+    let form = |c: u16| {
+        w.cells
+            .get(usize::from(c))
+            .and_then(|fs| fs.first())
+            .map(|f| &f.letters)
+    };
+    let values = referrals.first()?.to.len();
+    let fitting: Vec<usize> = (0..values)
+        .filter(|&v| {
+            referrals.iter().all(|r| {
+                r.to.get(v)
+                    .is_some_and(|&t| form(r.cell).is_none() || form(r.cell) == form(t))
+            })
+        })
+        .collect();
+    match fitting.as_slice() {
+        [v] => u8::try_from(*v).ok(),
+        _ => None,
+    }
+}
+
+/// Mark the cells of `a` the word, of value `v`, forms by referral.
+fn refer(w: &Word, a: &mut Analyzed, referrals: &[Referral<'_>], v: u8) {
+    let form = |c: u16| {
+        w.cells
+            .get(usize::from(c))
+            .and_then(|fs| fs.first())
+            .map(|f| &f.letters)
+    };
+    for r in referrals {
+        let Some(&t) = r.to.get(usize::from(v)) else {
+            continue;
+        };
+        if form(r.cell).is_some()
+            && form(r.cell) == form(t)
+            && let Some(slot) = a.cells.get_mut(usize::from(r.cell))
+        {
+            *slot = Some(REFERRED.to_string());
+        }
+    }
+}
+
+/// A word's patterns over its own skeleton. Cells it has no form in that
+/// fall back to another cell take that cell's pattern.
+fn analyze(w: &Word, shape: &Shape) -> Analyzed {
+    let mut forms: Vec<&str> = Vec::new();
+    let mut slots: Vec<Vec<usize>> = vec![Vec::new(); shape.cells];
+    for (c, fs) in w.cells.iter().enumerate() {
+        for f in fs {
+            if let Some(slot) = slots.get_mut(c) {
+                slot.push(forms.len());
+            }
+            forms.push(&f.letters);
+        }
+    }
+    let a = skeleton::analyze(&w.letters, &forms);
+    let mut cells: Vec<Option<String>> = slots
+        .iter()
+        .map(|idx| {
+            let patterns: Vec<&str> = idx
+                .iter()
+                .filter_map(|&i| a.forms.get(i).and_then(|p| p.as_deref()))
+                .collect();
+            (!patterns.is_empty()).then(|| patterns.join("|"))
+        })
+        .collect();
+    for c in 0..shape.cells {
+        if cells.get(c).is_some_and(Option::is_none)
+            && let Some(Some(f)) = shape.fallback.get(c)
+            && let Some(p) = cells.get(*f).cloned().flatten()
+            && let Some(slot) = cells.get_mut(c)
+        {
+            *slot = Some(p);
+        }
+    }
+    Analyzed {
+        lemma: a.lemma,
+        cells,
+    }
+}
+
+/// The usual form's pattern of a cell pattern (`~ой|~ою` → `~ой`).
+fn usual(p: &str) -> &str {
+    pattern::variants(p).next().unwrap_or(p)
+}
+
+/// Paradigms, most words first, and each word's paradigm.
+///
+/// Every distinct signature (lemma pattern and the usual pattern of each
+/// cell a word has) is a candidate. A word goes to the fullest candidate
+/// that builds every form it has; of equally full ones, to the one most
+/// common among words that end like it (its last three letters, then two,
+/// then one), then the most common. Cells no word of a paradigm has take the
+/// pattern of the most similar paradigm that has them.
+fn paradigms<'s>(
+    words: &[Word],
+    analyses: &[Analyzed],
+    shape: &Shape,
+) -> (Vec<Paradigm<'s>>, Vec<u16>) {
+    // Distinct signatures, and their words.
+    let mut index: HashMap<(String, Vec<Option<String>>), usize> = HashMap::default();
+    let mut signatures: Vec<(String, Vec<Option<String>>)> = Vec::new();
+    let mut own: Vec<usize> = Vec::with_capacity(words.len());
+    for a in analyses {
+        let sig = (
+            a.lemma.clone(),
+            a.cells
+                .iter()
+                .map(|c| c.as_deref().map(|p| usual(p).to_string()))
+                .collect(),
+        );
+        let id = *index.entry(sig.clone()).or_insert_with(|| {
+            signatures.push(sig);
+            signatures.len() - 1
+        });
+        own.push(id);
+    }
+    let fullness = |s: usize| {
+        signatures
+            .get(s)
+            .map_or(0, |(_, c)| c.iter().flatten().count())
+    };
+    // Words per signature by ending.
+    let mut by_ending: HashMap<(usize, String), u32> = HashMap::default();
+    let mut size: Vec<u32> = vec![0; signatures.len()];
+    for (w, &s) in words.iter().zip(&own) {
+        if let Some(n) = size.get_mut(s) {
+            *n += 1;
+        }
+        for n in 1..=3 {
+            *by_ending.entry((s, last(&w.letters, n))).or_default() += 1;
+        }
+    }
+    // Signatures by lemma pattern, fullest first; lemma patterns by their
+    // last literal (what a word must end in to fit them).
+    let mut by_lemma: HashMap<&str, Vec<usize>> = HashMap::default();
+    for (i, (lemma, _)) in signatures.iter().enumerate() {
+        by_lemma.entry(lemma.as_str()).or_default().push(i);
+    }
+    for list in by_lemma.values_mut() {
+        list.sort_by_key(|&s| std::cmp::Reverse(fullness(s)));
+    }
+    let mut by_last: HashMap<&str, Vec<&str>> = HashMap::default();
+    for &lp in by_lemma.keys() {
+        let last_literal = lp.rsplit('~').next().unwrap_or("");
+        by_last.entry(last_literal).or_default().push(lp);
+    }
+    let complete = |s: usize| fullness(s) == shape.cells;
+    let mut chosen: Vec<usize> = Vec::with_capacity(words.len());
+    for (w, &s) in words.iter().zip(&own) {
+        // A word with every form keeps its own paradigm.
+        if complete(s) {
+            chosen.push(s);
+            continue;
+        }
+        let mine = signatures.get(s);
+        let mut best = (fullness(s), [0u32; 3], size.get(s).copied().unwrap_or(0), s);
+        let fitting = choose::endings(&w.letters)
+            .chain(std::iter::once(""))
+            .filter_map(|e| by_last.get(e))
+            .flatten();
+        for &lp in fitting {
+            let Some(stems) = pattern::bind(lp, &w.letters) else {
+                continue;
+            };
+            for &cand in by_lemma.get(lp).into_iter().flatten() {
+                // Only fuller paradigms complete it.
+                if fullness(cand) <= fullness(s) || fullness(cand) < best.0 {
+                    break;
+                }
+                let Some((_, cells)) = signatures.get(cand) else {
+                    continue;
+                };
+                // It must build every form the word has.
+                let builds = mine.is_some_and(|(_, mc)| {
+                    mc.iter()
+                        .zip(cells)
+                        .enumerate()
+                        .all(|(c, (m, p))| match (m, p) {
+                            (None, _) => true,
+                            (Some(_), None) => false,
+                            (Some(m), Some(p)) if p == REFERRED => m == REFERRED,
+                            (Some(_), Some(p)) => w
+                                .cells
+                                .get(c)
+                                .and_then(|fs| fs.first())
+                                .is_none_or(|f| pattern::fill(p, &stems) == f.letters),
+                        })
+                });
+                if !builds {
+                    continue;
+                }
+                let ends = [3, 2, 1].map(|n| {
+                    by_ending
+                        .get(&(cand, last(&w.letters, n)))
+                        .copied()
+                        .unwrap_or(0)
+                });
+                let key = (
+                    fullness(cand),
+                    ends,
+                    size.get(cand).copied().unwrap_or(0),
+                    cand,
+                );
+                if (key.0, key.1, key.2) > (best.0, best.1, best.2) {
+                    best = key;
+                }
+            }
+        }
+        chosen.push(best.3);
+    }
+    // A paradigm needs MIN_WORDS words; a word of a rarer one inflects like
+    // the paradigm that builds the most of its forms (its other forms are
+    // then listed as irregular).
+    let mut members: HashMap<usize, u32> = HashMap::default();
+    for &c in &chosen {
+        *members.entry(c).or_default() += 1;
+    }
+    let supported = |s: usize| members.get(&s).copied().unwrap_or(0) >= MIN_WORDS;
+    let mut supported_by_lemma: HashMap<&str, Vec<usize>> = HashMap::default();
+    for (i, (lemma, _)) in signatures.iter().enumerate() {
+        if supported(i) {
+            supported_by_lemma
+                .entry(lemma.as_str())
+                .or_default()
+                .push(i);
+        }
+    }
+    let mut supported_last: HashMap<&str, Vec<&str>> = HashMap::default();
+    for &lp in supported_by_lemma.keys() {
+        supported_last
+            .entry(lp.rsplit('~').next().unwrap_or(""))
+            .or_default()
+            .push(lp);
+    }
+    for (i, w) in words.iter().enumerate() {
+        let Some(&c) = chosen.get(i) else {
+            continue;
+        };
+        if supported(c) {
+            continue;
+        }
+        let mine = analyses.get(i);
+        let mut best: Option<((usize, u32), usize)> = None;
+        let fitting = choose::endings(&w.letters)
+            .chain(std::iter::once(""))
+            .filter_map(|e| supported_last.get(e))
+            .flatten();
+        for &lp in fitting {
+            let Some(stems) = pattern::bind(lp, &w.letters) else {
+                continue;
+            };
+            for &cand in supported_by_lemma.get(lp).into_iter().flatten() {
+                let Some((_, cells)) = signatures.get(cand) else {
+                    continue;
+                };
+                let built = cells
+                    .iter()
+                    .enumerate()
+                    .filter(|(cell, p)| {
+                        let want = w.cells.get(*cell).and_then(|fs| fs.first());
+                        match (p, want) {
+                            (Some(p), Some(_)) if p == REFERRED => mine
+                                .and_then(|a| a.cells.get(*cell))
+                                .is_some_and(|m| m.as_deref() == Some(REFERRED)),
+                            (Some(p), Some(f)) => pattern::fill(usual(p), &stems) == f.letters,
+                            _ => false,
+                        }
+                    })
+                    .count();
+                let key = (built, members.get(&cand).copied().unwrap_or(0));
+                if best.is_none_or(|(b, _)| key > b) {
+                    best = Some((key, cand));
+                }
+            }
+        }
+        if let (Some((_, cand)), Some(slot)) = (best, chosen.get_mut(i)) {
+            *slot = cand;
+        }
+    }
+    // Paradigms: the chosen signatures, most words first.
+    let mut count: BTreeMap<usize, u32> = BTreeMap::new();
+    for &c in &chosen {
+        *count.entry(c).or_default() += 1;
+    }
+    let mut order: Vec<(usize, u32)> = count.into_iter().collect();
+    order.sort_by(|a, b| b.1.cmp(&a.1).then_with(|| a.0.cmp(&b.0)));
+    let id_of: HashMap<usize, u16> = order
+        .iter()
+        .enumerate()
+        .map(|(i, &(s, _))| (s, u16::try_from(i).unwrap_or(u16::MAX)))
+        .collect();
+    // Variants: the alternatives most of a paradigm's words list in a cell.
+    let mut variants: HashMap<(usize, usize), BTreeMap<String, u32>> = HashMap::default();
+    for (a, &c) in analyses.iter().zip(&chosen) {
+        for (cell, p) in a.cells.iter().enumerate() {
+            if let Some(p) = p {
+                *variants
+                    .entry((c, cell))
+                    .or_default()
+                    .entry(p.clone())
+                    .or_default() += 1;
+            }
+        }
+    }
+    let mut out: Vec<Paradigm<'s>> = Vec::with_capacity(order.len());
+    for &(s, n) in &order {
+        let Some((lemma, cells)) = signatures.get(s) else {
+            continue;
+        };
+        let name = name(words, &chosen, s);
+        let forms: Vec<Form<'s>> = cells
+            .iter()
+            .enumerate()
+            .map(|(cell, p)| {
+                let usual_p = match p {
+                    Some(p) => p.clone(),
+                    None => borrow_cell(&signatures, &order, s, cell, shape)
+                        .unwrap_or_else(|| lemma.clone()),
+                };
+                // The usual pattern, with the alternatives most words list.
+                let full = variants
+                    .get(&(s, cell))
+                    .and_then(|v| v.iter().max_by_key(|e| *e.1))
+                    .filter(|e| usual(e.0) == usual_p && 2 * *e.1 > n)
+                    .map_or(usual_p, |(p, _)| p.clone());
+                if full == REFERRED {
+                    Form::Referred
+                } else {
+                    Form::Pattern(Cow::Owned(full))
+                }
+            })
+            .collect();
+        out.push(Paradigm {
+            name: Cow::Owned(name),
+            words: n,
+            lemma: Cow::Owned(lemma.clone()),
+            forms: Cow::Owned(forms),
+        });
+    }
+    let assignment = chosen
+        .iter()
+        .map(|c| id_of.get(c).copied().unwrap_or(0))
+        .collect();
+    (out, assignment)
+}
+
+/// A pattern for `cell`, which no word of signature `s` has: from the chosen
+/// paradigm with the same lemma pattern and number of stem pieces that agrees
+/// with `s` on the most cells and has the cell (the cell's fallback first).
+fn borrow_cell(
+    signatures: &[(String, Vec<Option<String>>)],
+    order: &[(usize, u32)],
+    s: usize,
+    cell: usize,
+    shape: &Shape,
+) -> Option<String> {
+    let (lemma, cells) = signatures.get(s)?;
+    if let Some(Some(f)) = shape.fallback.get(cell)
+        && let Some(Some(p)) = cells.get(*f)
+    {
+        return Some(p.clone());
+    }
+    let pieces = pattern::pieces(lemma);
+    order
+        .iter()
+        .filter_map(|&(o, n)| {
+            let (l, c) = signatures.get(o)?;
+            let p = c.get(cell)?.as_ref()?;
+            (pattern::pieces(l) == pieces).then_some(())?;
+            let agree = cells
+                .iter()
+                .zip(c)
+                .filter(|(a, b)| a.is_some() && a == b)
+                .count();
+            Some(((l == lemma, agree, n), p.clone()))
+        })
+        .max_by(|a, b| a.0.cmp(&b.0))
+        .map(|(_, p)| p)
+}
+
+/// The fewest words a paradigm or a stress pattern is learned from.
+const MIN_WORDS: u32 = 3;
+
+/// A paradigm's name: its commonest word, judged by how many dictionaries
+/// have it and how many senses its entry has (then the shortest, then the
+/// first alphabetically), of its plain words (letters only) of at least
+/// three letters if it has any.
+fn name(words: &[Word], chosen: &[usize], s: usize) -> String {
+    let mine = || {
+        words
+            .iter()
+            .zip(chosen)
+            .filter(|&(_, &c)| c == s)
+            .map(|(w, _)| w)
+    };
+    let pick = |plain: bool| {
+        mine()
+            .filter(|w| {
+                !plain
+                    || (w.letters.chars().count() >= 3
+                        && w.letters.chars().all(char::is_alphabetic))
+            })
+            .max_by(|a, b| {
+                (a.dictionaries, a.senses)
+                    .cmp(&(b.dictionaries, b.senses))
+                    .then_with(|| b.letters.chars().count().cmp(&a.letters.chars().count()))
+                    .then_with(|| b.letters.cmp(&a.letters))
+            })
+            .map(|w| w.letters.clone())
+    };
+    pick(true).or_else(|| pick(false)).unwrap_or_default()
+}
+
+/// The last `n` letters of `word`.
+fn last(word: &str, n: usize) -> String {
+    let len = word.chars().count();
+    word.chars().skip(len.saturating_sub(n)).collect()
+}
+
+/// The words' stress: a pattern per word (per cell, stem or ending), and the
+/// stem's stressed vowel.
+fn accent<'s>(
+    orthography: &Orthography<'_>,
+    words: &[Word],
+    assignment: &[u16],
+    paradigms: &[Paradigm<'s>],
+    shape: &Shape,
+    settings: Settings,
+) -> (Accent<'s, u16>, HashMap<String, u16>) {
+    // Per word: per cell, its accent, letters and where the ending starts;
+    // and where its lemma accents its stem.
+    type Fact = (flexion::Stress, String, usize);
+    let mut facts: Vec<(u16, Vec<Option<Fact>>, Option<usize>)> = Vec::with_capacity(words.len());
+    for (w, &p) in words.iter().zip(assignment) {
+        let Some(par) = paradigms.get(usize::from(p)) else {
+            facts.push((p, vec![None; shape.cells], None));
+            continue;
+        };
+        let stems = par.stems(orthography, &w.letters).unwrap_or_default();
+        let form = |c: usize| w.cells.get(c).and_then(|fs| fs.first());
+        let cells: Vec<Option<Fact>> = (0..shape.cells)
+            .map(|c| {
+                let f = form(c)?;
+                let pat = par.pattern(c).map(usual)?;
+                Some((
+                    f.stress?,
+                    f.letters.clone(),
+                    pattern::ending_start(pat, &stems),
+                ))
+            })
+            .collect();
+        // The lemma's accent; else where the cells accented before their
+        // ending have it most often.
+        let lemma = shape
+            .lemma_cell
+            .and_then(form)
+            .filter(|f| f.stress.is_some());
+        let stem = match lemma {
+            Some(f) => f
+                .stress
+                .map(|s| flexion::stress_position(orthography, &f.letters, s)),
+            None => {
+                let mut votes: BTreeMap<usize, u32> = BTreeMap::new();
+                for (s, letters, ending) in cells.iter().flatten() {
+                    if vowel_at(orthography, letters, s.vowel) < *ending {
+                        *votes
+                            .entry(flexion::stress_position(orthography, letters, *s))
+                            .or_default() += 1;
+                    }
+                }
+                votes.iter().max_by_key(|e| *e.1).map(|e| *e.0)
+            }
+        };
+        facts.push((p, cells, stem));
+    }
+    let explains = |fact: &Fact, finals: Finals, place: Place, stem: Option<usize>| {
+        (place != Place::Stem || stem.is_some())
+            && flexion::stress_place(
+                orthography,
+                &fact.1,
+                fact.2,
+                finals,
+                place,
+                stem.unwrap_or(0),
+            ) == Some(fact.0)
+    };
+    let explained = |fact: &Fact, long: bool, stem: Option<usize>| {
+        [false, true].iter().any(|&circumflex| {
+            Place::ALL
+                .iter()
+                .any(|&place| explains(fact, Finals { circumflex, long }, place, stem))
+        })
+    };
+    // Cells whose final -αι, -οι is long: where reading it long explains
+    // more words' accents.
+    let long_finals: Vec<u16> = (0..shape.cells)
+        .filter(|&c| {
+            let (mut short, mut long) = (0u32, 0u32);
+            for (_, cells, stem) in &facts {
+                if let Some(Some(fact)) = cells.get(c) {
+                    short += u32::from(explained(fact, false, *stem));
+                    long += u32::from(explained(fact, true, *stem));
+                }
+            }
+            long > short
+        })
+        .filter_map(|c| u16::try_from(c).ok())
+        .collect();
+    let is_long = |c: usize| u16::try_from(c).is_ok_and(|c| long_finals.binary_search(&c).is_ok());
+    // Per paradigm, the cells whose ending's last syllable, accented, most
+    // often takes the circumflex.
+    let mut votes: HashMap<(u16, usize), (u32, u32)> = HashMap::default();
+    for (p, cells, stem) in &facts {
+        for (c, fact) in cells.iter().enumerate() {
+            let Some(fact) = fact else { continue };
+            let long = is_long(c);
+            let vote = votes.entry((*p, c)).or_default();
+            let any = |circumflex: bool| {
+                Place::ALL
+                    .iter()
+                    .any(|&place| explains(fact, Finals { circumflex, long }, place, *stem))
+            };
+            let (acute, circ) = (any(false), any(true));
+            // Only an accent the choice of kind decides counts.
+            if acute != circ {
+                vote.0 += u32::from(acute);
+                vote.1 += u32::from(circ);
+            }
+        }
+    }
+    let mut circumflex: Vec<Vec<u16>> = vec![Vec::new(); paradigms.len()];
+    for (&(p, c), &(acute, circ)) in &votes {
+        if circ > acute
+            && let (Some(cells), Ok(c)) = (circumflex.get_mut(usize::from(p)), u16::try_from(c))
+        {
+            cells.push(c);
+        }
+    }
+    for cells in &mut circumflex {
+        cells.sort_unstable();
+    }
+    let finals = |p: u16, c: usize| Finals {
+        circumflex: circumflex
+            .get(usize::from(p))
+            .is_some_and(|cells| u16::try_from(c).is_ok_and(|c| cells.binary_search(&c).is_ok())),
+        long: is_long(c),
+    };
+    // Per word: per cell, the places that give its accent (a bit per place
+    // of `Place::ALL`).
+    struct Seen {
+        places: Vec<Option<u8>>,
+        stem: Option<usize>,
+    }
+    let bit = |p: Place| 1u8 << Place::ALL.iter().position(|&x| x == p).unwrap_or(0);
+    let seen: Vec<Seen> = facts
+        .iter()
+        .map(|(p, cells, stem)| Seen {
+            places: cells
+                .iter()
+                .enumerate()
+                .map(|(c, fact)| {
+                    let fact = fact.as_ref()?;
+                    Some(
+                        Place::ALL
+                            .iter()
+                            .filter(|&&place| explains(fact, finals(*p, c), place, *stem))
+                            .fold(0u8, |m, &place| m | bit(place)),
+                    )
+                })
+                .collect(),
+            stem: *stem,
+        })
+        .collect();
+    // Per cell, how many words each place fits: of the places that fit a
+    // word, it is read as the one most words share.
+    let mut usual_place: Vec<[u32; 3]> = vec![[0; 3]; shape.cells];
+    for s in &seen {
+        for (c, p) in s.places.iter().enumerate() {
+            if let (Some(m), Some(counts)) = (p, usual_place.get_mut(c)) {
+                for (i, n) in counts.iter_mut().enumerate() {
+                    if m & (1 << i) != 0 {
+                        *n += 1;
+                    }
+                }
+            }
+        }
+    }
+    let read = |c: usize, mask: Option<u8>| -> Place {
+        let counts = usual_place.get(c).copied().unwrap_or([0; 3]);
+        Place::ALL
+            .iter()
+            .enumerate()
+            .filter(|(i, _)| mask.is_none_or(|m| m & (1 << i) != 0))
+            .max_by_key(|(i, _)| (counts.get(*i).copied().unwrap_or(0), std::cmp::Reverse(*i)))
+            .map_or(Place::Stem, |(_, &p)| p)
+    };
+    let fits = |pat: &[Place], places: &[Option<u8>]| {
+        pat.iter()
+            .zip(places)
+            .all(|(&pl, p)| p.is_none_or(|m| m & bit(pl) != 0))
+    };
+    let agreement = |pat: &[Place], places: &[Option<u8>]| {
+        pat.iter()
+            .zip(places)
+            .filter(|(pl, p)| p.is_some_and(|m| m & bit(**pl) != 0))
+            .count()
+    };
+    // Patterns: each word's places, its cells without a form read as most
+    // words have them; kept if MIN_WORDS words have it.
+    let mut vectors: BTreeMap<Vec<Place>, u32> = BTreeMap::new();
+    for s in seen.iter().filter(|s| s.places.iter().any(Option::is_some)) {
+        let pat: Vec<Place> = s
+            .places
+            .iter()
+            .enumerate()
+            .map(|(c, &m)| read(c, m))
+            .collect();
+        *vectors.entry(pat).or_default() += 1;
+    }
+    let mut candidates: Vec<(Vec<Place>, u32)> = vectors
+        .into_iter()
+        .filter(|&(_, n)| n >= MIN_WORDS)
+        .collect();
+    candidates.sort_by(|a, b| b.1.cmp(&a.1).then_with(|| a.0.cmp(&b.0)));
+    // Each word: the commonest pattern that fits it, else the one agreeing
+    // with it on the most cells (its other cells' forms are then listed).
+    let mut patterns: Vec<(Vec<Place>, u32)> =
+        candidates.iter().map(|(p, _)| (p.clone(), 0)).collect();
+    let mut of_word: Vec<Option<usize>> = vec![None; words.len()];
+    for (i, s) in seen.iter().enumerate() {
+        if s.places.iter().all(Option::is_none) {
+            continue;
+        }
+        let k = candidates
+            .iter()
+            .position(|(pat, _)| fits(pat, &s.places))
+            .or_else(|| {
+                candidates
+                    .iter()
+                    .enumerate()
+                    .max_by_key(|(_, (pat, n))| (agreement(pat, &s.places), *n))
+                    .map(|(k, _)| k)
+            });
+        if let Some(k) = k {
+            if let Some((_, n)) = patterns.get_mut(k) {
+                *n += 1;
+            }
+            if let Some(slot) = of_word.get_mut(i) {
+                *slot = Some(k);
+            }
+        }
+    }
+    // Most common first.
+    let mut order: Vec<usize> = (0..patterns.len()).collect();
+    order.sort_by(|&a, &b| {
+        let na = patterns.get(a).map_or(0, |p| p.1);
+        let nb = patterns.get(b).map_or(0, |p| p.1);
+        nb.cmp(&na).then_with(|| a.cmp(&b))
+    });
+    let renumber: HashMap<usize, u16> = order
+        .iter()
+        .enumerate()
+        .map(|(new, &old)| (old, u16::try_from(new).unwrap_or(u16::MAX)))
+        .collect();
+    let chosen: Vec<usize> = of_word
+        .iter()
+        .map(|k| {
+            k.and_then(|k| renumber.get(&k))
+                .map_or(usize::MAX, |&k| usize::from(k))
+        })
+        .collect();
+    let accent_patterns: Vec<AccentPattern<'s>> = order
+        .iter()
+        .filter_map(|&k| patterns.get(k))
+        .enumerate()
+        .map(|(i, (pat, n))| AccentPattern {
+            name: Cow::Owned(name(words, &chosen, i)),
+            words: *n,
+            places: Cow::Owned(pat.clone()),
+        })
+        .collect();
+    // Classes: a pattern and the stem's stressed vowel, from the lemma's end.
+    let mut class_of: Vec<Option<StressClass<'s>>> = Vec::with_capacity(words.len());
+    for ((w, k), s) in words.iter().zip(&of_word).zip(&seen) {
+        let class = k.and_then(|k| renumber.get(&k)).map(|&pattern| {
+            let n = flexion::stress_positions(orthography, &w.letters);
+            let vowel = s
+                .stem
+                .and_then(|k| n.checked_sub(1)?.checked_sub(k))
+                .and_then(|v| u8::try_from(v).ok());
+            StressClass {
+                name: Cow::Borrowed(""),
+                pattern,
+                vowel,
+                words: 0,
+            }
+        });
+        class_of.push(class);
+    }
+    let mut counts: BTreeMap<(u16, Option<u8>), u32> = BTreeMap::new();
+    for c in class_of.iter().flatten() {
+        *counts.entry((c.pattern, c.vowel)).or_default() += 1;
+    }
+    let mut classes: Vec<StressClass<'s>> = counts
+        .into_iter()
+        .map(|((pattern, vowel), words)| StressClass {
+            name: Cow::Borrowed(""),
+            pattern,
+            vowel,
+            words,
+        })
+        .collect();
+    classes.sort_by(|a, b| {
+        b.words
+            .cmp(&a.words)
+            .then_with(|| (a.pattern, a.vowel).cmp(&(b.pattern, b.vowel)))
+    });
+    let id: HashMap<(u16, Option<u8>), u16> = classes
+        .iter()
+        .enumerate()
+        .map(|(i, c)| ((c.pattern, c.vowel), u16::try_from(i).unwrap_or(u16::MAX)))
+        .collect();
+    let chosen: Vec<usize> = class_of
+        .iter()
+        .map(|c| {
+            c.as_ref()
+                .and_then(|c| id.get(&(c.pattern, c.vowel)))
+                .map_or(usize::MAX, |&i| usize::from(i))
+        })
+        .collect();
+    for (i, class) in classes.iter_mut().enumerate() {
+        class.name = Cow::Owned(name(words, &chosen, i));
+    }
+    let mut labels: HashMap<String, u16> = HashMap::default();
+    let examples: Vec<(String, u16)> = words
+        .iter()
+        .zip(&class_of)
+        .filter_map(|(w, c)| {
+            let c = c.as_ref()?;
+            Some((w.key.clone(), *id.get(&(c.pattern, c.vowel))?))
+        })
+        .collect();
+    for (w, c) in &examples {
+        labels.entry(w.clone()).or_insert(*c);
+    }
+    // A class whose stem syllable the word hasn't got can't be its.
+    let class = choose::learn(&examples, settings, |word, c| {
+        classes.get(usize::from(c)).is_some_and(|c| {
+            c.vowel
+                .is_none_or(|v| usize::from(v) < flexion::stress_positions(orthography, word))
+        })
+    });
+    let accent = Accent {
+        patterns: Cow::Owned(accent_patterns),
+        classes: Cow::Owned(classes),
+        class,
+        circumflex: Cow::Owned(circumflex.into_iter().map(Cow::Owned).collect()),
+        long_finals: Cow::Owned(long_finals),
+    };
+    (accent, labels)
+}
+
+/// List `word` in `choice` as taking `value` (call [`tidy`] after).
+fn list<L: flexion::Label + Ord>(choice: &mut flexion::Choice<'_, L>, word: &str, value: L) {
+    choice
+        .exceptions
+        .to_mut()
+        .push((Cow::Owned(word.to_string()), value));
+}
+
+/// Sort a choice's listed words and drop repeats.
+fn tidy<L: flexion::Label + Ord>(choice: &mut flexion::Choice<'_, L>) {
+    let list = choice.exceptions.to_mut();
+    list.sort_by(|a, b| a.0.cmp(&b.0).then_with(|| a.1.cmp(&b.1)));
+    list.dedup();
+}
+
+/// The byte where the `vowel`-th vowel of `letters` is.
+fn vowel_at(orthography: &Orthography<'_>, letters: &str, vowel: u8) -> usize {
+    letters
+        .char_indices()
+        .filter(|&(_, c)| orthography.is_vowel(c))
+        .nth(usize::from(vowel))
+        .map_or(letters.len(), |(i, _)| i)
+}
+
+/// The dictionary's forms the grammar doesn't give, for the word typed as
+/// the dictionary writes it and typed plain: `(key, cell, form)`, sorted;
+/// of the words `only` accepts. Of homographs, the first word's forms.
+fn irregular(
+    grammar: &Grammar<'_, u16, u16, u8>,
+    lexemes: &[Lexeme],
+    words: &[Word],
+    only: impl Fn(&Word) -> bool,
+) -> Vec<(String, usize, String)> {
+    let mut first: BTreeMap<&str, usize> = BTreeMap::new();
+    for (i, w) in words.iter().enumerate() {
+        first.entry(w.key.as_str()).or_insert(i);
+    }
+    first.retain(|_, &mut i| words.get(i).is_some_and(&only));
+    let firsts: Vec<usize> = first.into_values().collect();
+    let chunk = firsts.len().div_ceil(THREADS).max(1);
+    let found: Vec<Vec<(String, usize, String)>> = std::thread::scope(|scope| {
+        let handles: Vec<_> = firsts
+            .chunks(chunk)
+            .map(|part| {
+                scope.spawn(move || {
+                    let mut out = Vec::new();
+                    for &i in part {
+                        let (Some(l), Some(w)) = (lexemes.get(i), words.get(i)) else {
+                            continue;
+                        };
+                        let plain = grammar
+                            .orthography
+                            .write(&w.key, None, flexion::Casing::Lower);
+                        for (cell, forms) in l.cells.iter().enumerate() {
+                            let Some(want) = forms.first() else {
+                                continue;
+                            };
+                            let right = [(l.full.as_str(), true), (plain.as_str(), false)]
+                                .iter()
+                                .all(|&(input, full)| {
+                                    let known = flexion::Known {
+                                        full,
+                                        ..flexion::Known::default()
+                                    };
+                                    crate::eval::same_form(
+                                        &grammar.orthography,
+                                        &grammar.best(input, cell, &known),
+                                        want,
+                                    )
+                                });
+                            if !right {
+                                let read = grammar.orthography.read(want);
+                                let written = grammar.orthography.write(
+                                    &read.letters,
+                                    read.stress,
+                                    flexion::Casing::Lower,
+                                );
+                                out.push((w.key.clone(), cell, written));
+                            }
+                        }
+                    }
+                    out
+                })
+            })
+            .collect();
+        handles.into_iter().filter_map(|h| h.join().ok()).collect()
+    });
+    let mut out: Vec<(String, usize, String)> = found.into_iter().flatten().collect();
+    out.sort();
     out
 }
+
+/// Threads the learner uses at most.
+const THREADS: usize = 8;

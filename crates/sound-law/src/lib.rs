@@ -67,12 +67,24 @@
 
 mod compile;
 mod engine;
+mod rust;
 
 use std::fmt;
 
+pub use compile::{Atom, CompiledRule, Matcher, Pattern, Quantifier, ReplacementPart};
 pub use engine::{
     IterationError, MatchLimitError, Program, ProgramCompositionError, RuleRangeError, TraceStep,
 };
+
+/// What a program written by [`Program::to_rust`] names: `use
+/// sound_law::compiled::*;` before it. `B` is [`Cow::Borrowed`](std::borrow::Cow).
+pub mod compiled {
+    pub use crate::{
+        Application, Atom, CompiledRule, Direction, Matcher, Pattern, Program, Quantifier,
+        ReplacementPart,
+    };
+    pub use std::borrow::Cow::Borrowed as B;
+}
 
 /// The direction in which a rule selects non-overlapping matches.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
@@ -306,7 +318,7 @@ impl<'a> RuleSet<'a> {
     }
 
     /// Validate and compile the string notation into an executable program.
-    pub fn compile(&self) -> Result<Program, CompileError> {
+    pub fn compile(&self) -> Result<Program<'static>, CompileError> {
         compile::compile(self)
     }
 

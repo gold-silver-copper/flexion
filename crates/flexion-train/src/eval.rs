@@ -1,489 +1,290 @@
-//! Measuring a model through the real runtime: held-out accuracy, attested
-//! accuracy, calibration, inherent features, and the largest groups of misses.
+//! Held-out evaluation: words are split into tenths by a hash of their key;
+//! one tenth is never trained on and scored, and how well the stated
+//! probabilities match how often the answers are right is measured.
 
-use crate::extract::Word;
-use crate::learn::same_form;
-use flexion::{Model, Options, Spelling};
-use std::collections::BTreeMap;
+use crate::HashMap;
+use crate::extract::Lexeme;
+use flexion::{Inflect, Label};
 
-/// Scores for one cell.
-#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
-pub struct CellScore {
-    /// Cells scored (words attesting the cell).
-    pub n: usize,
-    /// Top answer equals the primary attested form (with stress, if marked).
-    pub top1: usize,
-    /// Top answer has the primary form's letters (stress ignored).
-    pub top1_letters: usize,
-    /// Top answer is one of the attested forms.
-    pub top1_any: usize,
-    /// One of the top three answers is attested.
-    pub top3_any: usize,
-    /// Every attested form appears among the returned answers.
-    pub all_reachable: usize,
+/// The tenth scored and never trained on.
+pub const TEST: u64 = 0;
+/// The tenth settings are chosen on.
+pub const DEV: u64 = 1;
+
+/// A stable tenth for a word: FNV-1a of its key, mod 10.
+pub fn bucket(key: &str) -> u64 {
+    let mut h: u64 = 0xcbf2_9ce4_8422_2325;
+    for b in key.bytes() {
+        h ^= u64::from(b);
+        h = h.wrapping_mul(0x0100_0000_01b3);
+    }
+    h % 10
 }
 
-impl CellScore {
-    pub fn add(&mut self, o: &CellScore) {
-        self.n += o.n;
-        self.top1 += o.top1;
-        self.top1_letters += o.top1_letters;
-        self.top1_any += o.top1_any;
-        self.top3_any += o.top3_any;
-        self.all_reachable += o.all_reachable;
-    }
-}
-
-/// A held-out miss, for error grouping.
-#[derive(Debug, Clone)]
-pub struct Miss {
-    pub cell: usize,
-    pub lemma: String,
-    pub predicted: String,
-    pub primary: String,
-}
-
-/// One part of speech's evaluation.
-#[derive(Debug, Clone, Default)]
-pub struct PosScore {
-    pub cells: Vec<CellScore>,
-    /// `(confidence of the top answer, whether it was the primary form)`.
-    pub calibration: Vec<(f32, bool)>,
-    pub misses: Vec<Miss>,
-    /// Inherent features: `(correct, scored)` per feature.
-    pub inherent: Vec<(usize, usize)>,
-    /// Summed log-loss: per scored cell, minus the natural log of the
-    /// probability the model gives the primary form (at least
-    /// [`MIN_PROBABILITY`], so a form the model never offers costs a finite
-    /// amount).
-    pub nats: f64,
-    /// Per scored word: `(cells, top-1 right, log-loss)`. A word's cells
-    /// succeed and fail together, so the noise is a word's, not a cell's.
-    pub words: Vec<(u32, u32, f64)>,
-    /// Summed log-loss per cell.
-    pub cell_nats: Vec<f64>,
-}
-
-/// The least probability log-loss charges a cell with.
-pub const MIN_PROBABILITY: f64 = 1e-4;
-
-impl PosScore {
-    /// Mean log-loss per scored cell, in nats.
-    pub fn log_loss(&self) -> f64 {
-        let n: usize = self.cells.iter().map(|c| c.n).sum();
-        self.nats / n.max(1) as f64
-    }
-
-    /// The standard error of [`PosScore::log_loss`], over words.
-    pub fn log_loss_se(&self) -> f64 {
-        self.word_se(|&(_, _, nats)| nats)
-    }
-
-    /// The standard error of the top-1 share, over words.
-    pub fn top1_se(&self) -> f64 {
-        self.word_se(|&(_, top1, _)| f64::from(top1))
-    }
-
-    /// The standard error of a per-cell mean whose per-word sums `x` gives:
-    /// the words are the independent units (a ratio estimator).
-    fn word_se(&self, x: impl Fn(&(u32, u32, f64)) -> f64) -> f64 {
-        let n: f64 = self.words.iter().map(|w| f64::from(w.0)).sum();
-        let k = self.words.len() as f64;
-        if n <= 0.0 || k < 2.0 {
-            return 0.0;
-        }
-        let mean = self.words.iter().map(&x).sum::<f64>() / n;
-        let ss: f64 = self
-            .words
-            .iter()
-            .map(|w| (x(w) - mean * f64::from(w.0)).powi(2))
-            .sum();
-        (ss * k / (k - 1.0)).sqrt() / n
-    }
-
-    /// How much more top-1 `self` gets than `other` on the same words, and
-    /// the word-level standard error of that difference: each word's
-    /// difference is the unit, so the many answers two close models share
-    /// add no noise (a paired test).
-    pub fn top1_gain(&self, other: &PosScore) -> (f64, f64) {
-        if self.words.len() != other.words.len() || self.words.len() < 2 {
-            return (0.0, f64::INFINITY);
-        }
-        let n: f64 = self.words.iter().map(|w| f64::from(w.0)).sum();
-        if n <= 0.0 {
-            return (0.0, f64::INFINITY);
-        }
-        let k = self.words.len() as f64;
-        let diffs: Vec<(f64, f64)> = self
-            .words
-            .iter()
-            .zip(&other.words)
-            .map(|(a, b)| (f64::from(a.0), f64::from(a.1) - f64::from(b.1)))
-            .collect();
-        let mean = diffs.iter().map(|d| d.1).sum::<f64>() / n;
-        let ss: f64 = diffs.iter().map(|(c, d)| (d - mean * c).powi(2)).sum();
-        (mean, (ss * k / (k - 1.0)).sqrt() / n)
-    }
-
-    pub fn total(&self, skip: &[usize]) -> CellScore {
-        let mut t = CellScore::default();
-        for (i, c) in self.cells.iter().enumerate() {
-            if !skip.contains(&i) {
-                t.add(c);
-            }
-        }
-        t
-    }
-}
-
-/// What a query gives the model besides the lemma.
+/// How a held-out word is typed.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Given {
-    /// The bare lemma.
-    Lemma,
-    /// The lemma written in full (its citation form: stress, macrons).
-    StressedLemma,
-    /// The lemma plus every citation part the word attests.
-    Citation,
-    /// [`Given::Citation`] plus the word's inherent features as a
-    /// dictionary marks them (`кот, кота m anim`).
-    Dictionary,
+pub enum Input<'p> {
+    /// In full, as the dictionary's table writes it (with every mark:
+    /// accents, vowel length), and said to be so ([`flexion::Known::full`]).
+    Full,
+    /// As the dictionary's headword writes it (Latin `rosa`, Greek `λύω`:
+    /// no vowel length), as people type it.
+    Headword,
+    /// In full, with the dictionary's forms of these cells (its principal
+    /// parts) given; those cells aren't scored.
+    Citation(&'p [usize]),
 }
 
-/// What a caller types for `word` in mode `given`, and the cells the
-/// citation in it gives.
-pub fn query(
-    sp: &Spelling<'_>,
-    p: &flexion::Pos<'_, '_>,
-    word: &Word,
-    citation_cells: &[usize],
-    markers: &[&[&str]],
-    given: Given,
-) -> (String, Vec<usize>) {
-    let mut input = word.lemma().to_string();
-    if given == Given::StressedLemma
-        && let Some(f) = p.lemma_cell().and_then(|c| word.primary(c))
-        && sp.read(f).key == sp.read(&input).key
-    {
-        input = f.to_string();
+/// Scores for one input mode.
+#[derive(Debug, Clone, Default)]
+pub struct Score {
+    /// Forms scored.
+    pub forms: usize,
+    /// Top candidate right.
+    pub right: usize,
+    /// Right among the top three.
+    pub top3: usize,
+    /// Top candidate's letters right (its stress aside).
+    pub letters: usize,
+    /// Per probability tenth of the top candidate: `(forms, right, sum of
+    /// probabilities)`.
+    pub bins: [(usize, usize, f64); 10],
+}
+
+impl Score {
+    pub fn accuracy(&self) -> f64 {
+        ratio(self.right, self.forms)
     }
-    let mut given_cells = Vec::new();
-    if matches!(given, Given::Citation | Given::Dictionary) {
-        // A part the word lacks is written `—`, as dictionaries do.
-        let last = citation_cells
+
+    pub fn top3_accuracy(&self) -> f64 {
+        ratio(self.top3, self.forms)
+    }
+
+    /// Expected calibration error: how far, on average over forms, the stated
+    /// probability of the top candidate is from how often it is right.
+    pub fn calibration_error(&self) -> f64 {
+        let mut e = 0.0;
+        for &(n, right, p) in &self.bins {
+            if n > 0 {
+                #[allow(clippy::cast_precision_loss)]
+                let (n_f, right_f) = (n as f64, right as f64);
+                e += (right_f / n_f - p / n_f).abs() * n_f;
+            }
+        }
+        #[allow(clippy::cast_precision_loss)]
+        let total = self.forms.max(1) as f64;
+        e / total
+    }
+}
+
+fn ratio(a: usize, b: usize) -> f64 {
+    #[allow(clippy::cast_precision_loss)]
+    let r = a as f64 / b.max(1) as f64;
+    r
+}
+
+/// Whether two written forms are the same word form: the same letters and
+/// the same (main) stress. Marks the language's reading drops, and stress
+/// marks before the main one (a compound's first part), don't count.
+pub fn same_form(orthography: &flexion::Orthography<'_>, a: &str, b: &str) -> bool {
+    let (x, y) = (orthography.read(a), orthography.read(b));
+    x.letters == y.letters && x.stress == y.stress
+}
+
+/// Score `grammar` on `lexemes` (held out), every cell the dictionary lists,
+/// against its first form, typed as `input`.
+pub fn score<F: Label, G: Inflect<F> + ?Sized>(
+    grammar: &G,
+    orthography: &flexion::Orthography<'_>,
+    lexemes: &[&Lexeme],
+    input: Input<'_>,
+) -> Score {
+    let mut s = Score::default();
+    for l in lexemes {
+        let typed = match input {
+            Input::Full | Input::Citation(_) => l.full.clone(),
+            Input::Headword => l.lemma.clone(),
+        };
+        let parts = match input {
+            Input::Citation(parts) => parts,
+            _ => &[],
+        };
+        let given: Vec<(usize, &str)> = parts
             .iter()
-            .rposition(|&c| word.primary(c).is_some())
-            .map_or(0, |i| i.saturating_add(1));
-        for &c in citation_cells.iter().take(last) {
-            input.push_str(", ");
-            match word.primary(c) {
-                Some(f) => {
-                    input.push_str(f);
-                    given_cells.push(c);
-                }
-                None => input.push('—'),
-            }
-        }
-    }
-    if given == Given::Dictionary
-        && let Some(lex) = word.lexemes.first()
-    {
-        for (f, &v) in lex.inherent.iter().enumerate() {
-            if let Some(m) = markers.get(f).and_then(|names| names.get(usize::from(v))) {
-                input.push(' ');
-                input.push_str(m);
-            }
-        }
-    }
-    (input, given_cells)
-}
-
-/// Score `words` against `model`'s part of speech `pos`.
-#[allow(clippy::too_many_arguments)]
-pub fn score(
-    sp: &Spelling<'_>,
-    model: &Model<'_>,
-    pos: usize,
-    words: &[Word],
-    citation_cells: &[usize],
-    markers: &[&[&str]],
-    unscored: &[usize],
-    given: Given,
-    keep_misses: bool,
-) -> PosScore {
-    let Some(p) = model.pos(pos) else {
-        return PosScore::default();
-    };
-    let mut out = PosScore {
-        cells: vec![CellScore::default(); p.cells()],
-        cell_nats: vec![0.0; p.cells()],
-        inherent: Vec::new(),
-        ..PosScore::default()
-    };
-    for word in words {
-        let (input, given_cells) = query(sp, &p, word, citation_cells, markers, given);
-        let citation = p.citation_marked(&input, citation_cells, markers);
-        let mut word_score = (0u32, 0u32, 0f64);
-        for (cell, score) in out.cells.iter_mut().enumerate() {
-            if unscored.contains(&cell) || given_cells.contains(&cell) {
-                continue;
-            }
-            let Some(primary) = word.primary(cell) else {
+            .filter_map(|&c| Some((c, l.cells.get(c)?.first()?.as_str())))
+            .collect();
+        for (cell, forms) in l.cells.iter().enumerate() {
+            let Some(want) = forms.first() else {
                 continue;
             };
-            let attested = word.attested(cell);
-            let cands = p.candidates(&citation, cell, Options::default());
-            let top = cands.first();
-            let is = |f: &str, g: &str| same_form(sp, f, g);
-            score.n += 1;
-            let p: f64 = cands
-                .iter()
-                .filter(|c| is(&c.form, primary))
-                .map(|c| f64::from(c.confidence))
-                .sum();
-            let loss = -p.max(MIN_PROBABILITY).ln();
-            out.nats += loss;
-            if let Some(x) = out.cell_nats.get_mut(cell) {
-                *x += loss;
+            if parts.contains(&cell) {
+                continue;
             }
-            let top_primary = top.is_some_and(|t| is(&t.form, primary));
-            if top_primary {
-                score.top1 += 1;
+            let known = flexion::Known {
+                forms: &given,
+                full: input != Input::Headword,
+                ..flexion::Known::default()
+            };
+            let candidates = grammar.candidates(&typed, cell, &known);
+            s.forms += 1;
+            let same = |form: &str| same_form(orthography, form, want);
+            let right = candidates.first().is_some_and(|c| same(&c.form));
+            if right {
+                s.right += 1;
             }
-            word_score.0 = word_score.0.saturating_add(1);
-            word_score.1 = word_score.1.saturating_add(u32::from(top_primary));
-            word_score.2 += loss;
-            // Letters right, marks ignored (stress, macrons, ё).
-            if top.is_some_and(|t| sp.read(&t.form).key == sp.read(primary).key) {
-                score.top1_letters += 1;
+            if candidates.first().is_some_and(|c| {
+                orthography.read(&c.form).letters == orthography.read(want).letters
+            }) {
+                s.letters += 1;
             }
-            if top.is_some_and(|t| attested.iter().any(|a| is(&t.form, a))) {
-                score.top1_any += 1;
+            if candidates.iter().take(3).any(|c| same(&c.form)) {
+                s.top3 += 1;
             }
-            if cands
-                .iter()
-                .take(3)
-                .any(|c| attested.iter().any(|a| is(&c.form, a)))
-            {
-                score.top3_any += 1;
+            let p = candidates.first().map_or(0.0, |c| f64::from(c.probability));
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let bin = ((p * 10.0) as usize).min(9);
+            if let Some(b) = s.bins.get_mut(bin) {
+                b.0 += 1;
+                b.1 += usize::from(right);
+                b.2 += p;
             }
-            if attested
-                .iter()
-                .all(|a| cands.iter().any(|c| is(&c.form, a)))
-            {
-                score.all_reachable += 1;
+        }
+    }
+    s
+}
+
+/// The share of `test`'s forms (typed as their headwords) the longest-suffix
+/// rule gets right: the non-neural floor of the SIGMORPHON shared tasks. Each
+/// training pair of headword and form gives a rule rewriting the headword's
+/// end (what follows their common beginning), keyed by that end and up to
+/// three letters before it; a test headword takes, cell by cell, the
+/// commonest rule of the longest key it ends in. Letters only: stress and
+/// accents aside.
+pub fn floor(orthography: &flexion::Orthography<'_>, train: &[&Lexeme], test: &[&Lexeme]) -> f64 {
+    let letters = |s: &str| -> Vec<char> { orthography.read(s).letters.chars().collect() };
+    type Rules = HashMap<Vec<char>, HashMap<(usize, Vec<char>), u32>>;
+    let mut rules: Vec<Rules> = Vec::new();
+    for l in train {
+        let lemma = letters(&l.lemma);
+        for (cell, forms) in l.cells.iter().enumerate() {
+            let Some(form) = forms.first().map(|f| letters(f)) else {
+                continue;
+            };
+            if rules.len() <= cell {
+                rules.resize_with(cell + 1, HashMap::default);
             }
-            if let Some(t) = top {
-                out.calibration.push((t.confidence, top_primary));
-                if keep_misses && !top_primary {
-                    out.misses.push(Miss {
-                        cell,
-                        lemma: word.lemma().to_string(),
-                        predicted: t.form.clone(),
-                        primary: primary.to_string(),
-                    });
+            let common = lemma.iter().zip(&form).take_while(|(a, b)| a == b).count();
+            let cut = lemma.len() - common;
+            let new: Vec<char> = form.get(common..).unwrap_or_default().to_vec();
+            for context in 0..=3 {
+                let Some(key) = lemma
+                    .len()
+                    .checked_sub(cut + context)
+                    .and_then(|i| lemma.get(i..))
+                else {
+                    break;
+                };
+                if let Some(r) = rules.get_mut(cell) {
+                    *r.entry(key.to_vec())
+                        .or_default()
+                        .entry((cut, new.clone()))
+                        .or_default() += 1;
                 }
             }
         }
-        if word_score.0 > 0 {
-            out.words.push(word_score);
-        }
     }
-    out
-}
-
-/// Inherent-feature accuracy: `(correct, scored)` per feature, from the bare lemma.
-pub fn score_inherent(
-    model: &Model<'_>,
-    pos: usize,
-    words: &[Word],
-    features: usize,
-) -> Vec<(usize, usize)> {
-    let Some(p) = model.pos(pos) else {
-        return Vec::new();
-    };
-    let mut out = vec![(0usize, 0usize); features];
-    for word in words {
-        let Some(lex) = word.lexemes.first() else {
-            continue;
-        };
-        let citation = p.citation(word.lemma(), &[]);
-        for (f, slot) in out.iter_mut().enumerate() {
-            let Some(&truth) = lex.inherent.get(f) else {
+    let (mut right, mut all) = (0usize, 0usize);
+    for l in test {
+        let lemma = letters(&l.lemma);
+        for (cell, forms) in l.cells.iter().enumerate() {
+            let Some(want) = forms.first().map(|f| letters(f)) else {
                 continue;
             };
-            if truth == u8::MAX {
-                continue;
-            }
-            slot.1 += 1;
-            if p.inherent(&citation, f)
-                .first()
-                .is_some_and(|&(v, _)| v == truth)
-            {
-                slot.0 += 1;
+            all += 1;
+            let guess = rules.get(cell).and_then(|r| {
+                (0..=lemma.len())
+                    .filter_map(|i| r.get(lemma.get(i..)?))
+                    .next()
+                    .and_then(|options| {
+                        options
+                            .iter()
+                            .max_by(|a, b| a.1.cmp(b.1).then_with(|| b.0.cmp(a.0)))
+                    })
+                    .map(|((cut, new), _)| {
+                        let mut out: Vec<char> = lemma
+                            .get(..lemma.len().saturating_sub(*cut))
+                            .unwrap_or_default()
+                            .to_vec();
+                        out.extend(new);
+                        out
+                    })
+            });
+            right += usize::from(guess.as_ref() == Some(&want));
+        }
+    }
+    ratio(right, all)
+}
+
+/// The sharpness (see [`flexion::Grammar::sharpness`]) that makes `grammar`'s
+/// stated probabilities match how often its answers are right on `words`
+/// (held out, typed as their headwords and in full): the one, of a grid from 0.5 to 4,
+/// with the smallest calibration error.
+pub fn fit_sharpness<F: Label, G: Inflect<F> + ?Sized>(
+    grammar: &G,
+    orthography: &flexion::Orthography<'_>,
+    words: &[&Lexeme],
+) -> f32 {
+    // Every scored form's candidates: (probability, right) each.
+    let mut forms: Vec<Vec<(f32, bool)>> = Vec::new();
+    for l in words {
+        for (typed, full) in [(l.full.as_str(), true), (l.lemma.as_str(), false)] {
+            let known = flexion::Known {
+                full,
+                ..flexion::Known::default()
+            };
+            for (cell, fs) in l.cells.iter().enumerate() {
+                let Some(want) = fs.first() else {
+                    continue;
+                };
+                let c = grammar.candidates(typed, cell, &known);
+                forms.push(
+                    c.iter()
+                        .map(|c| (c.probability, same_form(orthography, &c.form, want)))
+                        .collect(),
+                );
             }
         }
     }
-    out
-}
-
-/// For cells many words lack: how often the runtime is right about whether
-/// the word has a form there at all, `(correct, scored)`.
-pub fn score_existence(
-    model: &Model<'_>,
-    pos: usize,
-    words: &[Word],
-    optional: &[bool],
-) -> (usize, usize) {
-    let Some(p) = model.pos(pos) else {
-        return (0, 0);
-    };
-    let (mut ok, mut n) = (0, 0);
-    for word in words {
-        let citation = p.citation(word.lemma(), &[]);
-        for (cell, _) in optional.iter().enumerate().filter(|(_, o)| **o) {
-            n += 1;
-            if (p.has_cell(&citation, cell) >= 0.5) == word.primary(cell).is_some() {
-                ok += 1;
-            }
-        }
-    }
-    (ok, n)
-}
-
-/// A baseline: some other inflector's answer for `(cell, lemma)`.
-pub type Baseline<'a> = &'a dyn Fn(usize, &str) -> Option<String>;
-
-/// Score a baseline on the same words: top-1 against the primary form, and
-/// against any attested form.
-pub fn score_baseline(
-    sp: &Spelling<'_>,
-    words: &[Word],
-    cells: usize,
-    skip: &[usize],
-    f: Baseline,
-) -> Vec<CellScore> {
-    let mut out = vec![CellScore::default(); cells];
-    for word in words {
-        for (cell, score) in out.iter_mut().enumerate() {
-            if skip.contains(&cell) {
-                continue;
-            }
-            let Some(primary) = word.primary(cell) else {
+    let error = |power: f32| {
+        let mut bins = [(0usize, 0usize, 0f64); 10];
+        for f in &forms {
+            let total: f32 = f.iter().map(|x| x.0).sum();
+            let sharp: f32 = f.iter().map(|x| x.0.powf(power)).sum();
+            let Some(&(p, right)) = f.first() else {
                 continue;
             };
-            let Some(said) = f(cell, word.lemma()) else {
-                continue;
-            };
-            score.n += 1;
-            if same_form(sp, &said, primary) {
-                score.top1 += 1;
-            }
-            if sp.read(&said).key == sp.read(primary).key {
-                score.top1_letters += 1;
-            }
-            if word.attested(cell).iter().any(|a| same_form(sp, &said, a)) {
-                score.top1_any += 1;
-                score.top3_any += 1;
-            }
-        }
-    }
-    out
-}
-
-/// Expected calibration error over ten equal-width confidence bins, plus the
-/// bins themselves as `(mean confidence, accuracy, count)`.
-pub fn calibration(points: &[(f32, bool)]) -> (f64, Vec<(f64, f64, usize)>) {
-    let mut bins = vec![(0.0f64, 0usize, 0usize); 10];
-    for &(c, ok) in points {
-        let i = ((c.clamp(0.0, 1.0) * 10.0) as usize).min(9);
-        if let Some(b) = bins.get_mut(i) {
-            b.0 += f64::from(c);
-            b.1 += usize::from(ok);
-            b.2 += 1;
-        }
-    }
-    let n = points.len().max(1) as f64;
-    let mut ece = 0.0;
-    let mut table = Vec::new();
-    for (sum, hits, count) in bins {
-        if count == 0 {
-            continue;
-        }
-        let conf = sum / count as f64;
-        let acc = hits as f64 / count as f64;
-        ece += (count as f64 / n) * (conf - acc).abs();
-        table.push((conf, acc, count));
-    }
-    (ece, table)
-}
-
-/// Group misses by the change predicted vs. the change attested: the
-/// largest groups first, each with up to `examples` lemmas.
-pub fn error_groups(
-    sp: &Spelling<'_>,
-    misses: &[Miss],
-    examples: usize,
-) -> Vec<(String, usize, Vec<String>)> {
-    let mut groups: BTreeMap<(usize, String, String), (usize, Vec<String>)> = BTreeMap::new();
-    for m in misses {
-        let base = sp.read(&m.lemma).base;
-        let shape = |f: &str| {
-            let stem = crate::edit::Stem {
-                letters: &base,
-                stress: None,
-                kind: 0,
-            };
-            let e = crate::edit::edit(sp, stem, f, false);
-            let core = if e.front.is_empty() {
-                format!("{}-{}+{}", e.prefix, e.strip, e.add)
+            let p = if sharp > 0.0 {
+                f64::from(p.powf(power) * total / sharp)
             } else {
-                format!("{}→{}…-{}+{}", e.front, e.prefix, e.strip, e.add)
+                0.0
             };
-            let letters_same = sp.read(f).base == sp.read(&m.primary).base;
-            (core, letters_same)
-        };
-        let (pred, _) = shape(&m.predicted);
-        let (gold, _) = shape(&m.primary);
-        let stress_only = sp.read(&m.predicted).base == sp.read(&m.primary).base;
-        let key = if stress_only {
-            (m.cell, "stress".to_string(), String::new())
-        } else {
-            (m.cell, pred, gold)
-        };
-        let g = groups.entry(key).or_default();
-        g.0 += 1;
-        if g.1.len() < examples {
-            g.1.push(format!(
-                "{} → {} (attested {})",
-                m.lemma, m.predicted, m.primary
-            ));
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let bin = ((p * 10.0) as usize).min(9);
+            if let Some(b) = bins.get_mut(bin) {
+                b.0 += 1;
+                b.1 += usize::from(right);
+                b.2 += p;
+            }
         }
-    }
-    let mut out: Vec<_> = groups
-        .into_iter()
-        .map(|((cell, pred, gold), (n, ex))| {
-            let label = if pred == "stress" {
-                format!("cell {cell}: right letters, wrong stress")
-            } else {
-                format!("cell {cell}: predicted `{pred}`, attested `{gold}`")
-            };
-            (label, n, ex)
-        })
-        .collect();
-    out.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(&b.0)));
-    out
-}
-
-/// The scored cell most of `words` attest (the first on a tie): the cell a
-/// benchmark asks for.
-pub fn common_cell(words: &[Word], cells: usize, unscored: &[usize]) -> Option<usize> {
-    (0..cells)
-        .filter(|c| !unscored.contains(c))
-        .map(|c| (c, words.iter().filter(|w| w.primary(c).is_some()).count()))
-        .fold(None::<(usize, usize)>, |best, (c, n)| match best {
-            Some((_, bn)) if bn >= n => best,
-            _ => Some((c, n)),
-        })
-        .map(|(c, _)| c)
+        let s = Score {
+            forms: forms.len(),
+            bins,
+            ..Score::default()
+        };
+        s.calibration_error()
+    };
+    let grid = [0.5f32, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.5, 3.0, 3.5, 4.0];
+    grid.into_iter()
+        .min_by(|&a, &b| error(a).total_cmp(&error(b)))
+        .unwrap_or(1.0)
 }

@@ -146,19 +146,26 @@ pub struct Group {
     pub any: Vec<&'static str>,
     /// None of these.
     pub none: Vec<&'static str>,
-    /// Many words have no form here (Russian short adjectives, second
-    /// locatives): the generated function returns `Option`, `None` when the
-    /// word most likely has no such form.
-    pub optional: bool,
     /// The group's forms are on the entry's head line rather than in its
     /// inflection table (Latin comparatives).
     pub from_head: bool,
+    /// Where a word has no form of its own in a cell of this group, it uses
+    /// another cell's form: `(this group's values, group, its values)`. A
+    /// Russian noun without a second locative uses its prepositional
+    /// (`столе́`, where `лес` has `лесу́`).
+    pub fallbacks: Vec<(Vec<&'static str>, &'static str, Vec<&'static str>)>,
 }
 
 impl Group {
-    /// Mark the group optional (see [`Group::optional`]).
-    pub fn optional(mut self) -> Self {
-        self.optional = true;
+    /// Add a fallback (see [`Group::fallbacks`]): this group's cells with
+    /// `values` use `group`'s cell with `to` where a word has none of its own.
+    pub fn fallback(
+        mut self,
+        values: &[&'static str],
+        group: &'static str,
+        to: &[&'static str],
+    ) -> Self {
+        self.fallbacks.push((values.to_vec(), group, to.to_vec()));
         self
     }
 
@@ -205,6 +212,16 @@ pub struct Spelling {
     /// The mark that keeps two vowels apart (the diaeresis): letters with it
     /// never close a diphthong.
     pub hiatus_mark: Option<char>,
+    /// Vowels that are always long (Greek `η`, `ω`); set for a language with
+    /// a law of limitation (see [`flexion::Prosody`]).
+    pub long_vowels: &'static str,
+    /// Marks that make a vowel long (the macron, the iota subscript).
+    pub long_marks: &'static str,
+    /// Diphthongs short at a word's end (`αι`, `οι`).
+    pub short_finals: Vec<&'static str>,
+    /// The stress mark that can only stand on a long vowel (the circumflex):
+    /// a vowel read with it is read long (`ᾶ` as `ᾱ`).
+    pub circumflex: Option<char>,
     /// Name of the generated setting that turns stress marks off (`stress`,
     /// `accents`); empty for no setting.
     pub stress_setting: &'static str,

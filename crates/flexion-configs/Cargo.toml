@@ -1,0 +1,19 @@
+[package]
+name = "flexion-configs"
+version = "0.2.0"
+description = "What flexion-train knows about each language: its features, cells and Wiktionary's tags"
+publish = false
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+flexion-train = { workspace = true }
+
+[dev-dependencies]
+flexion = { workspace = true }
+
+[lints]
+workspace = true

@@ -1,7 +1,7 @@
 [package]
 name = "flexion-train"
-version = "0.1.0"
-description = "Learn an inflection crate from a language description and a Kaikki Wiktionary dump"
+version = "0.2.0"
+description = "Learn a language's inflection grammar from Wiktionary and write it as a Rust crate"
 publish = false
 authors.workspace = true
 edition.workspace = true

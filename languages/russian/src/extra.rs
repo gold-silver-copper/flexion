@@ -13,12 +13,12 @@ pub enum PronounGender {
     Neuter,
 }
 
-/// A personal pronoun, stressed. Third person forms after a preposition take
-/// `н-` (`у него́`): pass `after_preposition: true` for those.
+/// A personal pronoun. Third person forms after a preposition take
+/// `н-` (`у него`): pass `after_preposition: true` for those.
 ///
 /// ```
 /// use russian::*;
-/// assert_eq!(personal_pronoun(Person::First, Number::Singular, PronounGender::Masculine, Case::Genitive, false), "меня́");
+/// assert_eq!(personal_pronoun(Person::First, Number::Singular, PronounGender::Masculine, Case::Genitive, false), "меня");
 /// assert_eq!(personal_pronoun(Person::Third, Number::Plural, PronounGender::Masculine, Case::Genitive, true), "них");
 /// ```
 pub fn personal_pronoun(
@@ -31,36 +31,36 @@ pub fn personal_pronoun(
     // nominative, genitive, dative, accusative, instrumental, prepositional
     let (plain, prep): ([&'static str; 6], [&'static str; 6]) = match (person, number, gender) {
         (Person::First, Number::Singular, _) => (
-            ["я", "меня́", "мне", "меня́", "мной", "мне"],
-            ["я", "меня́", "мне", "меня́", "мной", "мне"],
+            ["я", "меня", "мне", "меня", "мной", "мне"],
+            ["я", "меня", "мне", "меня", "мной", "мне"],
         ),
         (Person::Second, Number::Singular, _) => (
-            ["ты", "тебя́", "тебе́", "тебя́", "тобо́й", "тебе́"],
-            ["ты", "тебя́", "тебе́", "тебя́", "тобо́й", "тебе́"],
+            ["ты", "тебя", "тебе", "тебя", "тобой", "тебе"],
+            ["ты", "тебя", "тебе", "тебя", "тобой", "тебе"],
         ),
         (Person::Third, Number::Singular, PronounGender::Masculine) => (
-            ["он", "его́", "ему́", "его́", "им", "нём"],
-            ["он", "него́", "нему́", "него́", "ним", "нём"],
+            ["он", "его", "ему", "его", "им", "нём"],
+            ["он", "него", "нему", "него", "ним", "нём"],
         ),
         (Person::Third, Number::Singular, PronounGender::Neuter) => (
-            ["оно́", "его́", "ему́", "его́", "им", "нём"],
-            ["оно́", "него́", "нему́", "него́", "ним", "нём"],
+            ["оно", "его", "ему", "его", "им", "нём"],
+            ["оно", "него", "нему", "него", "ним", "нём"],
         ),
         (Person::Third, Number::Singular, PronounGender::Feminine) => (
-            ["она́", "её", "ей", "её", "ей", "ней"],
-            ["она́", "неё", "ней", "неё", "ней", "ней"],
+            ["она", "её", "ей", "её", "ей", "ней"],
+            ["она", "неё", "ней", "неё", "ней", "ней"],
         ),
         (Person::First, Number::Plural, _) => (
-            ["мы", "нас", "нам", "нас", "на́ми", "нас"],
-            ["мы", "нас", "нам", "нас", "на́ми", "нас"],
+            ["мы", "нас", "нам", "нас", "нами", "нас"],
+            ["мы", "нас", "нам", "нас", "нами", "нас"],
         ),
         (Person::Second, Number::Plural, _) => (
-            ["вы", "вас", "вам", "вас", "ва́ми", "вас"],
-            ["вы", "вас", "вам", "вас", "ва́ми", "вас"],
+            ["вы", "вас", "вам", "вас", "вами", "вас"],
+            ["вы", "вас", "вам", "вас", "вами", "вас"],
         ),
         (Person::Third, Number::Plural, _) => (
-            ["они́", "их", "им", "их", "и́ми", "них"],
-            ["они́", "них", "ним", "них", "ни́ми", "них"],
+            ["они", "их", "им", "их", "ими", "них"],
+            ["они", "них", "ним", "них", "ними", "них"],
         ),
     };
     let row = if after_preposition { prep } else { plain };
@@ -75,12 +75,12 @@ pub fn personal_pronoun(
     }
 }
 
-/// The reflexive pronoun `себя́`. It has no nominative; asking for one
-/// returns `себя́`, the form it is cited by.
+/// The reflexive pronoun `себя`. It has no nominative; asking for one
+/// returns `себя`, the form it is cited by.
 pub fn reflexive_pronoun(case: Case) -> &'static str {
     match case {
-        Case::Nominative | Case::Genitive | Case::Accusative => "себя́",
-        Case::Dative | Case::Prepositional => "себе́",
-        Case::Instrumental => "собо́й",
+        Case::Nominative | Case::Genitive | Case::Accusative => "себя",
+        Case::Dative | Case::Prepositional => "себе",
+        Case::Instrumental => "собой",
     }
 }

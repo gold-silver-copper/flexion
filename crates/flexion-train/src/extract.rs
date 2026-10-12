@@ -5,7 +5,7 @@
 use crate::cells::Cells;
 use crate::kaikki::{self, Entry};
 use crate::spec::{FormSource, Language};
-use flexion::Spelling;
+use flexion::Orthography;
 use std::collections::BTreeMap;
 use std::path::Path;
 
@@ -17,21 +17,12 @@ const MAX_WORD: usize = 255;
 pub struct Lexeme {
     /// The headword, case-folded when the language folds case.
     pub lemma: String,
-    /// The headword's letters as the runtime reads them (no stress marks).
-    pub base: String,
-    /// The citation form's letters: the headword written in full (Latin
-    /// macrons, Russian ё). Every cell but the citation cell is an edit of
-    /// these; the citation cell is the edit that restores them from `base`.
+    /// The headword written in full, as the dictionary writes it (with stress,
+    /// macrons, ё): the table's lemma cell, else the headword.
     pub full: String,
-    /// The lookup key (`base` folded).
+    /// The lookup key: `full`'s letters, without stress marks.
     pub key: String,
-    /// The lemma's stressed vowel, from its stressed citation form.
-    pub lemma_stress: Option<usize>,
-    /// The kind of the lemma's stress mark.
-    #[serde(default)]
-    pub lemma_kind: u8,
-    /// Plain attested forms per cell, in listing order, then the citation
-    /// form as one extra, last cell.
+    /// Attested forms per cell, as written, in listing order.
     pub cells: Vec<Vec<String>>,
     /// One value index per inherent feature (`u8::MAX` if unknown).
     pub inherent: Vec<u8>,
@@ -40,6 +31,9 @@ pub struct Lexeme {
     pub weight: f64,
     /// Position in the dump, which orders homographs the way Wiktionary does.
     pub order: usize,
+    /// How many senses the entry has: common words have many.
+    #[serde(default)]
+    pub senses: u16,
     /// Where the entry comes from: 0 for the main dump, `i + 1` for the
     /// language's edition `i`.
     #[serde(default)]
@@ -143,7 +137,7 @@ pub fn words(data: &PosData) -> Vec<Word<'_>> {
 /// Read every configured part of speech from a dump in one pass.
 pub fn extract(
     lang: &Language,
-    spelling: &Spelling<'_>,
+    spelling: &Orthography<'_>,
     dump: &Path,
 ) -> Result<Vec<PosData>, String> {
     let cells = all_cells(lang)?;
@@ -174,7 +168,7 @@ pub fn extract(
 /// edition says.
 pub fn add_edition(
     lang: &Language,
-    spelling: &Spelling<'_>,
+    spelling: &Orthography<'_>,
     data: &mut [PosData],
     index: usize,
     dump: &Path,
@@ -232,7 +226,7 @@ pub fn add_edition(
                 continue;
             };
             shared_keys.insert(&l.key);
-            let letters = |f: &str| spelling.unmarked(&spelling.read(f).base);
+            let letters = |f: &str| spelling.read(f).letters;
             for (cell, forms) in l.cells.iter().enumerate().take(c.total) {
                 let Some(first) = forms.first() else {
                     continue;
@@ -305,7 +299,7 @@ fn summary(lang: &Language, data: &[PosData]) -> String {
 /// `(source, code)` for an entry of another edition.
 fn read_entry(
     lang: &Language,
-    spelling: &Spelling<'_>,
+    spelling: &Orthography<'_>,
     cells: &[Cells],
     out: &mut [PosData],
     entry: &Entry,
@@ -358,7 +352,7 @@ fn read_entry(
 
 fn lexeme(
     lang: &Language,
-    spelling: &Spelling<'_>,
+    spelling: &Orthography<'_>,
     pi: usize,
     cells: &Cells,
     entry: &Entry,
@@ -380,10 +374,7 @@ fn lexeme(
     }
     let policy = &lang.tags;
     let tables = part.forms == FormSource::Tables && entry.forms.iter().any(|f| f.source.is_some());
-    // One slot per cell, plus the citation form (the lemma written in full)
-    // as a last, hidden cell.
-    let citation_cell = cells.total;
-    let mut forms: Vec<Vec<String>> = vec![Vec::new(); cells.total + 1];
+    let mut forms: Vec<Vec<String>> = vec![Vec::new(); cells.total];
     let mut inherent_tags: Vec<String> = lang.hooks.inherent_tags(entry);
     for f in &entry.forms {
         let has = |t: &str| f.tags.iter().any(|x| x == t);
@@ -420,15 +411,16 @@ fn lexeme(
     if !forms
         .iter()
         .enumerate()
-        .any(|(i, f)| Some(i) != lemma_cell && i != citation_cell && !f.is_empty())
+        .any(|(i, f)| Some(i) != lemma_cell && !f.is_empty())
     {
         return None;
     }
     // The citation form: the lemma as the dictionary writes it in full (with
     // stress, macrons, ё): the table's lemma cell, else the canonical
     // headword form, else the headword.
-    let read = spelling.read(&lemma);
-    let same_word = |f: &String| spelling.read(f).key == read.key;
+    let key_of = |f: &str| spelling.key(&spelling.read(f).letters);
+    let lemma_key = key_of(&lemma);
+    let same_word = |f: &String| key_of(f) == lemma_key;
     let canonical = entry
         .forms
         .iter()
@@ -441,10 +433,7 @@ fn lexeme(
         .filter(same_word)
         .or(canonical)
         .unwrap_or_else(|| lemma.clone());
-    let full = spelling.read(&written);
-    let lemma_stress = full.stress;
-    let lemma_kind = full.kind;
-    let full_base = full.base.to_string();
+    let key = key_of(&written);
     // Without a table, the lemma cell is the headword itself (English nouns
     // list only their plural).
     if !tables
@@ -452,9 +441,6 @@ fn lexeme(
         && slot.is_empty()
     {
         slot.push(written.clone());
-    }
-    if let Some(slot) = forms.get_mut(citation_cell) {
-        slot.push(written);
     }
 
     for f in &entry.forms {
@@ -488,12 +474,9 @@ fn lexeme(
             })
         });
     Some(Lexeme {
-        key: read.key.to_string(),
-        base: read.base.to_string(),
-        full: full_base,
+        key,
+        full: written,
         lemma,
-        lemma_stress,
-        lemma_kind,
         cells: forms,
         inherent,
         weight: if soft_entry {
@@ -502,6 +485,7 @@ fn lexeme(
             1.0
         },
         order,
+        senses: u16::try_from(entry.senses.len()).unwrap_or(u16::MAX),
         source: 0,
     })
 }
