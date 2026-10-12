@@ -4,6 +4,7 @@
 
 use crate::extract::Lexeme;
 use flexion::{Inflect, Label};
+use std::collections::HashMap;
 
 /// The tenth scored and never trained on.
 pub const TEST: u64 = 0;
@@ -22,13 +23,16 @@ pub fn bucket(key: &str) -> u64 {
 
 /// How a held-out word is typed.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Input {
+pub enum Input<'p> {
     /// In full, as the dictionary's table writes it (with every mark:
     /// accents, vowel length), and said to be so ([`flexion::Known::full`]).
     Full,
     /// As the dictionary's headword writes it (Latin `rosa`, Greek `λύω`:
     /// no vowel length), as people type it.
     Headword,
+    /// In full, with the dictionary's forms of these cells (its principal
+    /// parts) given; those cells aren't scored.
+    Citation(&'p [usize]),
 }
 
 /// Scores for one input mode.
@@ -93,20 +97,32 @@ pub fn score<F: Label, G: Inflect<F> + ?Sized>(
     grammar: &G,
     orthography: &flexion::Orthography<'_>,
     lexemes: &[&Lexeme],
-    input: Input,
+    input: Input<'_>,
 ) -> Score {
     let mut s = Score::default();
     for l in lexemes {
         let typed = match input {
-            Input::Full => l.full.clone(),
+            Input::Full | Input::Citation(_) => l.full.clone(),
             Input::Headword => l.lemma.clone(),
         };
+        let parts = match input {
+            Input::Citation(parts) => parts,
+            _ => &[],
+        };
+        let given: Vec<(usize, &str)> = parts
+            .iter()
+            .filter_map(|&c| Some((c, l.cells.get(c)?.first()?.as_str())))
+            .collect();
         for (cell, forms) in l.cells.iter().enumerate() {
             let Some(want) = forms.first() else {
                 continue;
             };
+            if parts.contains(&cell) {
+                continue;
+            }
             let known = flexion::Known {
-                full: input == Input::Full,
+                forms: &given,
+                full: input != Input::Headword,
                 ..flexion::Known::default()
             };
             let candidates = grammar.candidates(&typed, cell, &known);
@@ -135,6 +151,78 @@ pub fn score<F: Label, G: Inflect<F> + ?Sized>(
         }
     }
     s
+}
+
+/// The share of `test`'s forms (typed as their headwords) the longest-suffix
+/// rule gets right: the non-neural floor of the SIGMORPHON shared tasks. Each
+/// training pair of headword and form gives a rule rewriting the headword's
+/// end (what follows their common beginning), keyed by that end and up to
+/// three letters before it; a test headword takes, cell by cell, the
+/// commonest rule of the longest key it ends in. Letters only: stress and
+/// accents aside.
+pub fn floor(orthography: &flexion::Orthography<'_>, train: &[&Lexeme], test: &[&Lexeme]) -> f64 {
+    let letters = |s: &str| -> Vec<char> { orthography.read(s).letters.chars().collect() };
+    type Rules = HashMap<Vec<char>, HashMap<(usize, Vec<char>), u32>>;
+    let mut rules: Vec<Rules> = Vec::new();
+    for l in train {
+        let lemma = letters(&l.lemma);
+        for (cell, forms) in l.cells.iter().enumerate() {
+            let Some(form) = forms.first().map(|f| letters(f)) else {
+                continue;
+            };
+            if rules.len() <= cell {
+                rules.resize_with(cell + 1, HashMap::new);
+            }
+            let common = lemma.iter().zip(&form).take_while(|(a, b)| a == b).count();
+            let cut = lemma.len() - common;
+            let new: Vec<char> = form.get(common..).unwrap_or_default().to_vec();
+            for context in 0..=3 {
+                let Some(key) = lemma
+                    .len()
+                    .checked_sub(cut + context)
+                    .and_then(|i| lemma.get(i..))
+                else {
+                    break;
+                };
+                if let Some(r) = rules.get_mut(cell) {
+                    *r.entry(key.to_vec())
+                        .or_default()
+                        .entry((cut, new.clone()))
+                        .or_default() += 1;
+                }
+            }
+        }
+    }
+    let (mut right, mut all) = (0usize, 0usize);
+    for l in test {
+        let lemma = letters(&l.lemma);
+        for (cell, forms) in l.cells.iter().enumerate() {
+            let Some(want) = forms.first().map(|f| letters(f)) else {
+                continue;
+            };
+            all += 1;
+            let guess = rules.get(cell).and_then(|r| {
+                (0..=lemma.len())
+                    .filter_map(|i| r.get(lemma.get(i..)?))
+                    .next()
+                    .and_then(|options| {
+                        options
+                            .iter()
+                            .max_by(|a, b| a.1.cmp(b.1).then_with(|| b.0.cmp(a.0)))
+                    })
+                    .map(|((cut, new), _)| {
+                        let mut out: Vec<char> = lemma
+                            .get(..lemma.len().saturating_sub(*cut))
+                            .unwrap_or_default()
+                            .to_vec();
+                        out.extend(new);
+                        out
+                    })
+            });
+            right += usize::from(guess.as_ref() == Some(&want));
+        }
+    }
+    ratio(right, all)
 }
 
 /// The sharpness (see [`flexion::Grammar::sharpness`]) that makes `grammar`'s

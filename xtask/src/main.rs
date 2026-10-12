@@ -605,7 +605,19 @@ fn build(lang: &Language) -> Result<(), String> {
         .zip(&grammars)
         .map(|(spec, inflection)| flexion_train::print::Part { spec, inflection })
         .collect();
+    // The code's size, per part of speech, goes into the report too.
     let files = flexion_train::print::files(lang, &script, &parts, &report)?;
+    let mut sizes = String::from("\n| | lines of grammar | bytes |\n|---|---:|---:|\n");
+    for part in &lang.parts {
+        let dir = format!("src/{}/", part.name);
+        let mine = files.iter().filter(|(p, _)| p.starts_with(&dir));
+        let (lines, bytes) = mine.fold((0, 0), |(l, b), (_, t)| {
+            (l + t.lines().count(), b + t.len())
+        });
+        sizes.push_str(&format!("| {} | {lines} | {bytes} |\n", part.name));
+    }
+    let report = format!("{}{sizes}", report.trim_end());
+    let files = flexion_train::print::files(lang, &script, &parts, &format!("{report}\n"))?;
     let dir = workspace().join("languages").join(lang.name);
     flexion_train::print::write(&dir, &files)?;
     let status = std::process::Command::new("rustfmt")

@@ -150,7 +150,7 @@ fn a_word_the_dictionary_lacks_takes_its_paradigm_with_evidence() {
     let noun = &grammars[0].grammar;
     // An invented noun in -а: its readings say how sure and why, and say it
     // by a rule's evidence, not a listing.
-    let readings = noun.readings("бокра", &Known::default());
+    let readings = noun.readings("бокра", &Known::<u8>::default());
     let first = readings.first().expect("a reading");
     assert_ne!(first.status, Status::Listed);
     assert!(first.rule.is_some(), "{first}");

@@ -20,7 +20,20 @@ pub struct Measured {
     pub test_words: usize,
     pub full: Score,
     pub headword: Score,
+    /// Given the dictionary's principal parts, where the part of speech has
+    /// them.
+    pub citation: Option<Score>,
+    /// The longest-suffix rule's share right (see [`eval::floor`]).
+    pub floor: f64,
+    /// The shipped grammar on the dictionary's own words, typed in full.
+    pub attested: Score,
+    /// Learned as its principal parts' systems.
+    pub systems: bool,
 }
+
+/// The dictionary's words a grammar is checked on for attested accuracy, at
+/// most.
+const ATTESTED: usize = 5000;
 
 /// A learned part of speech: one grammar, or the systems of its principal
 /// parts.
@@ -145,8 +158,17 @@ pub fn build<'s>(
             .collect();
         let full = scored.with(|g| eval::score(g, &orthography, &test, Input::Full));
         let headword = scored.with(|g| eval::score(g, &orthography, &test, Input::Headword));
+        let citation = (!parts.is_empty())
+            .then(|| scored.with(|g| eval::score(g, &orthography, &test, Input::Citation(&parts))));
+        let main: Vec<&Lexeme> = train.iter().filter(|l| l.source == 0).collect();
+        let floor = eval::floor(&orthography, &main, &test);
         let mut shipped = Inflection::learn(script, &shape, kind, &d.lexemes, settings);
         shipped.set_sharpness(sharpness);
+        // Attested: an even sample of the dictionary's own words.
+        let own: Vec<&Lexeme> = d.lexemes.iter().filter(|l| l.source == 0).collect();
+        let step = own.len().div_ceil(ATTESTED).max(1);
+        let sample: Vec<&Lexeme> = own.into_iter().step_by(step).collect();
+        let attested = shipped.with(|g| eval::score(g, &orthography, &sample, Input::Full));
         eprintln!(
             "{} {}{}: held-out top-1 {:.2}% from the headword ({:.2}% in full)",
             lang.name,
@@ -165,6 +187,10 @@ pub fn build<'s>(
             test_words: test.len(),
             full,
             headword,
+            citation,
+            floor,
+            attested,
+            systems: kind.is_some(),
         });
         grammars.push(shipped);
     }
@@ -203,23 +229,36 @@ pub fn report(lang: &Language, inflections: &[Inflection<'_>], measured: &[Measu
          each held-out word, typed as the dictionary's headword. *Top-1*: its first answer is\n\
          right; *top-3*: the right answer is among its first three. *Calibration error*: how far\n\
          its stated probabilities are, on average, from how often it is right (0 is perfect).\n\
-         *Top-1, lemma in full*: typed with every mark the dictionary's table writes, and said\n\
-         to be so (`spelled_in_full`).\n\n",
+         The margin after top-1 is a 95% interval, counting words. *Lemma in full*: top-1 typed\n\
+         with every mark the dictionary's table writes, and said to be so (`spelled_in_full`).\n\
+         *Principal parts given*: top-1 of the other forms, given the dictionary's principal\n\
+         parts. *Floor*: the longest-suffix rule (the SIGMORPHON shared tasks' non-neural\n\
+         baseline; letters only). *Attested*: top-1 of the shipped grammar on the dictionary's\n\
+         own words, typed in full.\n\n",
     );
     s.push_str(
-        "| | held-out words | forms | top-1 | top-3 | calibration error | top-1, lemma in full |\n|---|---:|---:|---:|---:|---:|---:|\n",
+        "| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | floor | attested |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n",
     );
     for m in measured {
+        let p = m.headword.accuracy();
+        #[allow(clippy::cast_precision_loss)]
+        let noise = 1.96 * (p * (1.0 - p) / m.test_words.max(1) as f64).sqrt();
         let _ = writeln!(
             s,
-            "| {} | {} | {} | **{:.2}%** | {:.2}% | {:.3} | {:.2}% |",
+            "| {} | {} | {} | **{:.2}%** ± {:.1} | {:.2}% | {:.3} | {:.2}% | {} | {:.2}% | {:.2}% |",
             m.name,
             m.test_words,
             m.headword.forms,
-            100.0 * m.headword.accuracy(),
+            100.0 * p,
+            100.0 * noise,
             100.0 * m.headword.top3_accuracy(),
             m.headword.calibration_error(),
             100.0 * m.full.accuracy(),
+            m.citation
+                .as_ref()
+                .map_or(String::new(), |c| format!("{:.2}%", 100.0 * c.accuracy())),
+            100.0 * m.floor,
+            100.0 * m.attested.accuracy(),
         );
     }
     s.push('\n');
