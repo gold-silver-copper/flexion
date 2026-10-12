@@ -81,9 +81,14 @@ impl<'s> Inflection<'s> {
     }
 }
 
+/// How much worse on the dev tenth (a share of forms) a grammar that lists
+/// fewer forms may be and still be chosen.
+const CLOSE: f64 = 0.01;
+
 /// Learn every part of speech of `lang` (the shipped grammars) and measure
 /// each on its held-out tenth. A part of speech with principal parts is
-/// learned as their systems when that does better on the dev tenth.
+/// learned as their systems when that does better on the dev tenth, or
+/// nearly as well (see [`CLOSE`]) with fewer forms listed.
 pub fn build<'s>(
     lang: &Language,
     script: &'s Script,
@@ -113,12 +118,13 @@ pub fn build<'s>(
             .iter()
             .filter(|l| eval::bucket(&l.key) == eval::DEV && l.source == 0)
             .collect();
-        // One grammar, or principal parts' systems: whichever does better.
+        // One grammar, or principal parts' systems: whichever does better
+        // on the dev tenth; within a point, whichever lists fewer forms.
         let mut kinds: Vec<Option<&[usize]>> = vec![None];
         if !parts.is_empty() {
             kinds.push(Some(&parts));
         }
-        let (kind, sharpness, _) = kinds
+        let tried: Vec<(Option<&[usize]>, f32, f64, usize)> = kinds
             .into_iter()
             .map(|kind| {
                 let mut fitted = Inflection::learn(script, &shape, kind, &fit, settings);
@@ -126,12 +132,20 @@ pub fn build<'s>(
                 fitted.set_sharpness(sharpness);
                 let right =
                     fitted.with(|g| eval::score(g, &orthography, &dev, Input::Headword).accuracy());
-                (kind, sharpness, right)
+                let listed = fitted
+                    .grammars()
+                    .iter()
+                    .map(|g| g.stats.irregular_forms)
+                    .sum();
+                (kind, sharpness, right, listed)
             })
-            .fold(
-                (None, 1.0, -1.0),
-                |best, x| if x.2 > best.2 { x } else { best },
-            );
+            .collect();
+        let best = tried.iter().map(|t| t.2).fold(f64::MIN, f64::max);
+        let (kind, sharpness) = tried
+            .iter()
+            .filter(|t| t.2 >= best - CLOSE)
+            .min_by_key(|t| t.3)
+            .map_or((None, 1.0), |t| (t.0, t.1));
         let mut scored = Inflection::learn(script, &shape, kind, &train, settings);
         scored.set_sharpness(sharpness);
         let test: Vec<&Lexeme> = d
