@@ -212,7 +212,7 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 24] = [
-    // Ὁσος: 15 words (αὐτος, οὑτος, ἑος, ἐκεῑνος, ἑκᾰστος, ταὐτος).
+    // Ὁσος: 15 words (αὐτος, οὑτος, ἑος, ἐκεῑνος, ἑκᾰστος, ταυτος).
     declension!("ὁσος", 15, "~ος";
     nom_m: "~ος", _, "~οι";
     nom_f: "~η", _, "~αι";

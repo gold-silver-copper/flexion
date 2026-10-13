@@ -871,8 +871,8 @@ macro_rules! like {
 
 /// The accent patterns, commonest first.
 pub static PATTERNS: [AccentPattern<'static>; 32] = [
-    // 0, `ἐχω`: 1,213 words.
-    pattern!("ἐχω", 1213;
+    // 0, `ἐχω`: 1,216 words.
+    pattern!("ἐχω", 1216;
     ind_act_1: Stem, Stem, Stem;
     ind_act_2: Stem, Stem, Stem;
     ind_act_3: Stem, Stem, Stem;
@@ -1091,8 +1091,8 @@ pub static PATTERNS: [AccentPattern<'static>; 32] = [
     imperfect_pass_2: Ending, NextToLast, NextToLast;
     imperfect_pass_3: NextToLast, _, NextToLast;
     ),
-    // 2, `καθιζω`: 169 words. Like 0 (`ἐχω`), except in 27 cells.
-    pattern!("καθιζω", 169, like 0;
+    // 2, `καθιζω`: 166 words. Like 0 (`ἐχω`), except in 27 cells.
+    pattern!("καθιζω", 166, like 0;
     future_ind_act_1: Ending, _, Ending;
     future_ind_act_2: Ending, Ending, Ending;
     future_ind_act_3: Ending, Ending, Ending;
@@ -1107,8 +1107,8 @@ pub static PATTERNS: [AccentPattern<'static>; 32] = [
     infinitive_fut: Ending, Ending, _;
     participle_fut: Ending, _, _;
     ),
-    // 3, `ὁρῐζω`: 73 words. Like 0 (`ἐχω`), except in 27 cells.
-    pattern!("ὁρῐζω", 73, like 0;
+    // 3, `ὁρῐζω`: 71 words. Like 0 (`ἐχω`), except in 27 cells.
+    pattern!("ὁρῐζω", 71, like 0;
     future_ind_act_1: Stem, _, NextToLast;
     future_ind_act_2: Stem, NextToLast, NextToLast;
     future_ind_act_3: Stem, NextToLast, NextToLast;
@@ -1141,8 +1141,8 @@ pub static PATTERNS: [AccentPattern<'static>; 32] = [
     infinitive_pres: NextToLast, _, _;
     participle_pres: Ending, _, _;
     ),
-    // 5, `ἡγεομαι`: 32 words. Like 1 (`ποιεω`), except in 49 cells.
-    pattern!("ἡγεομαι", 32, like 1;
+    // 5, `ἡγεομαι`: 29 words. Like 1 (`ποιεω`), except in 49 cells.
+    pattern!("ἡγεομαι", 29, like 1;
     ind_mid_1: Ending, _, _;
     ind_mid_2: Ending, Ending, Ending;
     ind_mid_3: Ending, Ending, Ending;
@@ -1165,8 +1165,8 @@ pub static PATTERNS: [AccentPattern<'static>; 32] = [
     imperfect_act_2: _, Stem, Stem;
     infinitive_pres: _, Ending, Ending;
     ),
-    // 6, `στειχω`: 25 words. Like 0 (`ἐχω`), except in 4 cells.
-    pattern!("στειχω", 25, like 0;
+    // 6, `στειχω`: 26 words. Like 0 (`ἐχω`), except in 4 cells.
+    pattern!("στειχω", 26, like 0;
     aorist_imp_mid_2: Ending, _, _;
     infinitive_aor: Ending, Ending, _;
     participle_aor: Ending, _, _;
@@ -1184,7 +1184,13 @@ pub static PATTERNS: [AccentPattern<'static>; 32] = [
     infinitive_aor: Last, _, _;
     participle_aor: Last, _, _;
     ),
-    // 9, `πορσῡνω`: 18 words. Like 3 (`ὁρῐζω`), except in 6 cells.
+    // 9, `ἀνᾰγω`: 19 words. Like 0 (`ἐχω`), except in 4 cells.
+    pattern!("ἀνᾰγω", 19, like 0;
+    aorist_imp_mid_2: Last, _, _;
+    infinitive_aor: Last, NextToLast, _;
+    participle_aor: Last, _, _;
+    ),
+    // 10, `πορσῡνω`: 18 words. Like 3 (`ὁρῐζω`), except in 6 cells.
     pattern!("πορσῡνω", 18, like 3;
     future_ind_act_1: Last, _, _;
     future_ind_act_2: Last, _, _;
@@ -1193,14 +1199,16 @@ pub static PATTERNS: [AccentPattern<'static>; 32] = [
     infinitive_fut: Last, _, _;
     participle_fut: Last, _, _;
     ),
-    // 10, `ἀνᾰγω`: 18 words. Like 0 (`ἐχω`), except in 4 cells.
-    pattern!("ἀνᾰγω", 18, like 0;
-    aorist_imp_mid_2: Last, _, _;
-    infinitive_aor: Last, NextToLast, _;
-    participle_aor: Last, _, _;
+    // 11, `τῐθημῐ`: 15 words. Like 4 (`ἀνῐστημῐ`), except in 11 cells.
+    pattern!("τῐθημῐ", 15, like 4;
+    ind_act_3: _, _, Stem;
+    opt_mid_2: Ending, Ending, Ending;
+    opt_mid_3: Ending, _, Ending;
+    opt_pass_2: Ending, Ending, Ending;
+    opt_pass_3: Ending, _, Ending;
     ),
-    // 11, `ἐπῐλᾰμβᾰνω`: 16 words. Like 0 (`ἐχω`), except in 11 cells.
-    pattern!("ἐπῐλᾰμβᾰνω", 16, like 0;
+    // 12, `ἐπῐλᾰμβᾰνω`: 15 words. Like 0 (`ἐχω`), except in 11 cells.
+    pattern!("ἐπῐλᾰμβᾰνω", 15, like 0;
     future_ind_act_1: _, _, Recessive;
     future_ind_act_2: _, Recessive, Recessive;
     future_ind_act_3: _, Recessive, Recessive;
@@ -1209,14 +1217,6 @@ pub static PATTERNS: [AccentPattern<'static>; 32] = [
     future_opt_act_3: _, _, Recessive;
     infinitive_aor: _, Recessive, _;
     participle_aor: Recessive, _, _;
-    ),
-    // 12, `τῐθημῐ`: 15 words. Like 4 (`ἀνῐστημῐ`), except in 11 cells.
-    pattern!("τῐθημῐ", 15, like 4;
-    ind_act_3: _, _, Stem;
-    opt_mid_2: Ending, Ending, Ending;
-    opt_mid_3: Ending, _, Ending;
-    opt_pass_2: Ending, Ending, Ending;
-    opt_pass_3: Ending, _, Ending;
     ),
     // 13, `ἀφῑημῐ`: 12 words. Like 8 (`ἀναιρεω`), except in 3 cells.
     pattern!("ἀφῑημῐ", 12, like 8;
@@ -1239,14 +1239,8 @@ pub static PATTERNS: [AccentPattern<'static>; 32] = [
     aorist_ind_act_2: Stem, _, _;
     aorist_ind_act_3: Stem, _, Stem;
     ),
-    // 16, `ὁρᾰω`: 9 words. Like 8 (`ἀναιρεω`), except in 3 cells.
-    pattern!("ὁρᾰω", 9, like 8;
-    aorist_imp_act_2: Last, _, _;
-    aorist_imp_mid_2: Last, _, _;
-    infinitive_aor: _, NextToLast, _;
-    ),
-    // 17, `ἀπεῑπον`: 8 words. Like 9 (`πορσῡνω`), except in 8 cells.
-    pattern!("ἀπεῑπον", 8, like 9;
+    // 16, `ἀπεῑπον`: 8 words. Like 10 (`πορσῡνω`), except in 8 cells.
+    pattern!("ἀπεῑπον", 8, like 10;
     aorist_ind_act_1: NextToLast, _, _;
     aorist_ind_act_2: NextToLast, _, _;
     aorist_ind_act_3: NextToLast, _, NextToLast;
@@ -1254,14 +1248,20 @@ pub static PATTERNS: [AccentPattern<'static>; 32] = [
     infinitive_aor: Last, NextToLast, _;
     participle_aor: Last, _, _;
     ),
-    // 18, `πᾰρεχω`: 7 words. Like 15 (`ὑπᾰρχω`), except in 4 cells.
+    // 17, `πᾰρεχω`: 7 words. Like 15 (`ὑπᾰρχω`), except in 4 cells.
     pattern!("πᾰρεχω", 7, like 15;
     aorist_imp_mid_2: Ending, _, _;
     infinitive_aor: Ending, Ending, _;
     participle_aor: Ending, _, _;
     ),
-    // 19, `δῐᾰφερω`: 6 words. Like 11 (`ἐπῐλᾰμβᾰνω`), except in 2 cells.
-    pattern!("δῐᾰφερω", 6, like 11;
+    // 18, `εἰδον`: 7 words. Like 8 (`ἀναιρεω`), except in 3 cells.
+    pattern!("εἰδον", 7, like 8;
+    aorist_imp_act_2: Last, _, _;
+    aorist_imp_mid_2: Last, _, _;
+    infinitive_aor: _, NextToLast, _;
+    ),
+    // 19, `δῐᾰφερω`: 6 words. Like 12 (`ἐπῐλᾰμβᾰνω`), except in 2 cells.
+    pattern!("δῐᾰφερω", 6, like 12;
     infinitive_aor: _, Stem, _;
     participle_aor: Stem, _, _;
     ),
@@ -1276,38 +1276,25 @@ pub static PATTERNS: [AccentPattern<'static>; 32] = [
     infinitive_pres: NextToLast, _, _;
     participle_pres: Ending, _, _;
     ),
-    // 22, `γῐγνομαι`: 5 words. Like 0 (`ἐχω`), except in 46 cells.
-    pattern!("γῐγνομαι", 5, like 0;
-    ind_mid_1: Recessive, _, _;
-    ind_mid_2: Recessive, Recessive, Recessive;
-    ind_mid_3: Recessive, Recessive, Recessive;
-    ind_pass_1: Recessive, _, _;
-    ind_pass_2: Recessive, Recessive, Recessive;
-    ind_pass_3: Recessive, Recessive, Recessive;
-    subj_mid_1: Recessive, _, _;
-    subj_mid_2: Recessive, Recessive, Recessive;
-    subj_mid_3: Recessive, Recessive, Recessive;
-    subj_pass_1: Recessive, _, _;
-    subj_pass_2: Recessive, Recessive, Recessive;
-    subj_pass_3: Recessive, Recessive, Recessive;
-    opt_mid_2: Recessive, Recessive, Recessive;
-    opt_mid_3: Recessive, _, Recessive;
-    opt_pass_2: Recessive, Recessive, Recessive;
-    opt_pass_3: Recessive, _, Recessive;
-    imp_mid_2: Recessive, Recessive, Recessive;
-    imp_pass_2: Recessive, Recessive, Recessive;
-    infinitive_pres: _, Recessive, Recessive;
-    ),
-    // 23, `χεω`: 4 words. Like 1 (`ποιεω`), except in 2 cells.
+    // 22, `χεω`: 4 words. Like 1 (`ποιεω`), except in 2 cells.
     pattern!("χεω", 4, like 1;
     imperfect_mid_2: Stem, _, _;
     imperfect_pass_2: Stem, _, _;
     ),
-    // 24, `ἀνεχω`: 4 words. Like 0 (`ἐχω`), except in 4 cells.
+    // 23, `ἀνεχω`: 4 words. Like 0 (`ἐχω`), except in 4 cells.
     pattern!("ἀνεχω", 4, like 0;
     imperfect_act_1: Stem, _, _;
     imperfect_act_2: Stem, _, _;
     imperfect_act_3: Stem, _, Stem;
+    ),
+    // 24, `λᾰμβᾰνω`: 4 words. Like 0 (`ἐχω`), except in 6 cells.
+    pattern!("λᾰμβᾰνω", 4, like 0;
+    aorist_subj_pass_1: Stem, _, _;
+    aorist_subj_pass_2: Stem, _, _;
+    aorist_subj_pass_3: Stem, _, _;
+    aorist_imp_act_2: Stem, _, _;
+    aorist_imp_mid_2: Stem, _, _;
+    infinitive_aor: Stem, _, _;
     ),
     // 25, `κᾰθῐστημῐ`: 4 words. Like 4 (`ἀνῐστημῐ`), except in 12 cells.
     pattern!("κᾰθῐστημῐ", 4, like 4;
@@ -1317,22 +1304,18 @@ pub static PATTERNS: [AccentPattern<'static>; 32] = [
     future_ind_mid_3: NextToLast, NextToLast, _;
     infinitive_fut: Last, NextToLast, _;
     ),
-    // 26, `προοραω`: 3 words. Like 0 (`ἐχω`), except in 5 cells.
-    pattern!("προοραω", 3, like 0;
-    aorist_subj_pass_1: Stem, _, _;
-    aorist_subj_pass_2: Stem, _, _;
-    aorist_subj_pass_3: Stem, _, _;
-    aorist_imp_mid_2: Stem, _, _;
-    infinitive_aor: Stem, _, _;
+    // 26, `προοραω`: 3 words. Like 24 (`λᾰμβᾰνω`), except in 1 cell.
+    pattern!("προοραω", 3, like 24;
+    aorist_imp_act_2: Recessive, _, _;
     ),
     // 27, `πᾰσχω`: 2 words. Like 0 (`ἐχω`), except in 2 cells.
     pattern!("πᾰσχω", 2, like 0;
     infinitive_aor: Ending, _, _;
     participle_aor: Ending, _, _;
     ),
-    // 28, `λᾰμβᾰνω`: 2 words. Like 26 (`προοραω`), except in 1 cell.
-    pattern!("λᾰμβᾰνω", 2, like 26;
-    aorist_imp_act_2: Stem, _, _;
+    // 28, `ὠνεομαι`: 2 words. Like 0 (`ἐχω`), except in 1 cell.
+    pattern!("ὠνεομαι", 2, like 0;
+    infinitive_aor: _, Recessive, _;
     ),
     // 29, `δᾰμαζω`: 1 words. Like 0 (`ἐχω`), except in 18 cells.
     pattern!("δᾰμαζω", 1, like 0;
@@ -1362,13 +1345,13 @@ pub static PATTERNS: [AccentPattern<'static>; 32] = [
 /// Every accent class: a pattern and the stem's accented syllable.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum AccentClass {
-    /// Pattern `ἐχω`, the stem accented on its next-to-last: 1,056 words.
+    /// Pattern `ἐχω`, the stem accented on its next-to-last: 1,052 words.
     Ἐχω,
     /// Pattern `ποιεω`, the stem accented on its next-to-last: 295 words.
     Ποιεω,
     /// Pattern `καθιζω`, the stem accented on its next-to-last: 157 words.
     Καθιζω,
-    /// Pattern `ἐχω`, the stem accented on its syllable 3 from the end: 143 words.
+    /// Pattern `ἐχω`, the stem accented on its syllable 3 from the end: 148 words.
     Οἰομαι,
     /// Pattern `ὁρῐζω`, the stem accented on its next-to-last: 66 words.
     Ὁρῐζω,
@@ -1378,10 +1361,10 @@ pub enum AccentClass {
     Ἐνῑημῐ,
     /// Pattern `ποιεω`, the stem accented on its syllable 3 from the end: 19 words.
     Χρᾰομαι,
-    /// Pattern `ἡγεομαι`, the stem accented on its syllable 4 from the end: 18 words.
-    Ἡγεομαι,
     /// Pattern `πορσῡνω`, the stem accented on its next-to-last: 18 words.
     Πορσῡνω,
+    /// Pattern `ἡγεομαι`, the stem accented on its syllable 4 from the end: 15 words.
+    Ἡγεομαι,
     /// Pattern `στειχω`, the stem accented on its next-to-last: 15 words.
     Στειχω,
     /// Pattern `ἀνᾰγω`, the stem accented on its next-to-last: 15 words.
@@ -1394,26 +1377,22 @@ pub enum AccentClass {
     Ἐπῐλᾰμβᾰνω,
     /// Pattern `προβαλλω`, the stem accented on its next-to-last: 12 words.
     Προβαλλω,
-    /// Pattern `καθιζω`, the stem accented on its syllable 3 from the end: 11 words.
-    Λογῐζομαι,
+    /// Pattern `στειχω`, the stem accented on its syllable 3 from the end: 11 words.
+    Ἐπορον,
     /// Pattern `ἀναιρεω`, the stem accented on its syllable 4 from the end: 11 words.
     Πᾰρερχομαι,
-    /// Pattern `στειχω`, the stem accented on its syllable 3 from the end: 10 words.
-    Ἐπορον,
     /// Pattern `ἐχω`, the stem accented on the lemma's last syllable: 9 words.
     Δεῑ,
+    /// Pattern `καθιζω`, the stem accented on its syllable 3 from the end: 8 words.
+    Λογῐζομαι,
     /// Pattern `ὑπᾰρχω`, the stem accented on its next-to-last: 8 words.
     Ὑπᾰρχω,
-    /// Pattern `ὁρῐζω`, the stem accented on its syllable 3 from the end: 7 words.
-    Μαινομαι,
     /// Pattern `ἀναιρεω`, the stem accented on its next-to-last: 7 words.
     Ἀναιρεω,
     /// Pattern `ἀφῑημῐ`, the stem accented on its syllable 3 from the end: 7 words.
     Ἀφῑημῐ,
     /// Pattern `πᾰρεχω`, the stem accented on its next-to-last: 7 words.
     Πᾰρεχω,
-    /// Pattern `ὁρᾰω`, the stem accented on its next-to-last: 6 words.
-    Ὁρᾰω,
     /// Pattern `δῐᾰφερω`, the stem accented on its next-to-last: 6 words.
     Δῐᾰφερω,
     /// Pattern `προσκειμαι`, the stem accented on its syllable 3 from the end: 6 words.
@@ -1422,36 +1401,38 @@ pub enum AccentClass {
     Ὀμνῡμῐ,
     /// Pattern `ἐχω`, the stem accented on its syllable 4 from the end: 5 words.
     Ἐπευχομαι,
+    /// Pattern `ὁρῐζω`, the stem accented on its syllable 3 from the end: 5 words.
+    Μαινομαι,
     /// Pattern `ἀφῑημῐ`, the stem accented on its next-to-last: 5 words.
     Προσᾰγω,
     /// Pattern `ἀπεῑπον`, the stem accented on its next-to-last: 4 words.
     Ἀντιλεγω,
     /// Pattern `ἀπεῑπον`, the stem accented on its syllable 3 from the end: 4 words.
     Ἀπεῑπον,
+    /// Pattern `εἰδον`, the stem accented on its next-to-last: 4 words.
+    Εἰδον,
     /// Pattern `χεω`, the stem accented on its next-to-last: 4 words.
     Χεω,
     /// Pattern `ἀνεχω`, the stem accented on its next-to-last: 4 words.
     Ἀνεχω,
+    /// Pattern `λᾰμβᾰνω`, the stem accented on its next-to-last: 4 words.
+    Λᾰμβᾰνω,
     /// Pattern `κᾰθῐστημῐ`, the stem accented on its syllable 3 from the end: 4 words.
     Κᾰθῐστημῐ,
     /// Pattern `ποιεω`, the stem accented on the lemma's last syllable: 3 words.
     Ὠχρῐω,
-    /// Pattern `ὁρᾰω`, never on the stem: 3 words.
-    Προεῑπον,
-    /// Pattern `γῐγνομαι`, the stem accented on its next-to-last: 3 words.
-    Γῐγνομαι,
-    /// Pattern `ἀνᾰγω`, the stem accented on its syllable 3 from the end: 2 words.
+    /// Pattern `ἀνᾰγω`, the stem accented on its syllable 3 from the end: 3 words.
     Προσερχομαι,
-    /// Pattern `ἐπῐλᾰμβᾰνω`, the stem accented on its syllable 3 from the end: 2 words.
-    Ἀραρισκω,
+    /// Pattern `εἰδον`, never on the stem: 3 words.
+    Προεῑπον,
+    /// Pattern `ἐχω`, never on the stem: 2 words.
+    Ὀττευομαι,
     /// Pattern `ὑπᾰρχω`, the stem accented on its syllable 3 from the end: 2 words.
     Ἐπορνῡμῐ,
-    /// Pattern `γῐγνομαι`, never on the stem: 2 words.
-    Ὀττευομαι,
     /// Pattern `προοραω`, the stem accented on its syllable 3 from the end: 2 words.
     Συνεπομαι,
-    /// Pattern `λᾰμβᾰνω`, the stem accented on its next-to-last: 2 words.
-    Λᾰμβᾰνω,
+    /// Pattern `ὠνεομαι`, the stem accented on its syllable 3 from the end: 2 words.
+    Ὠνεομαι,
     /// Pattern `ποιεω`, never on the stem: 1 words.
     Ἀλαομαι,
     /// Pattern `καθιζω`, never on the stem: 1 words.
@@ -1470,6 +1451,8 @@ pub enum AccentClass {
     Ἐοικᾰ,
     /// Pattern `ἐπῐλᾰμβᾰνω`, the stem accented on the lemma's last syllable: 1 words.
     Δρᾱω,
+    /// Pattern `ἐπῐλᾰμβᾰνω`, the stem accented on its syllable 3 from the end: 1 words.
+    Ἀρᾰρῐσκω,
     /// Pattern `προοραω`, the stem accented on its next-to-last: 1 words.
     Προοραω,
     /// Pattern `πᾰσχω`, the stem accented on its next-to-last: 1 words.
@@ -1495,43 +1478,42 @@ impl AccentClass {
         AccentClass::Ἀνῐστημῐ,
         AccentClass::Ἐνῑημῐ,
         AccentClass::Χρᾰομαι,
-        AccentClass::Ἡγεομαι,
         AccentClass::Πορσῡνω,
+        AccentClass::Ἡγεομαι,
         AccentClass::Στειχω,
         AccentClass::Ἀνᾰγω,
         AccentClass::Τῐθημῐ,
         AccentClass::Εὐλαβεομαι,
         AccentClass::Ἐπῐλᾰμβᾰνω,
         AccentClass::Προβαλλω,
-        AccentClass::Λογῐζομαι,
-        AccentClass::Πᾰρερχομαι,
         AccentClass::Ἐπορον,
+        AccentClass::Πᾰρερχομαι,
         AccentClass::Δεῑ,
+        AccentClass::Λογῐζομαι,
         AccentClass::Ὑπᾰρχω,
-        AccentClass::Μαινομαι,
         AccentClass::Ἀναιρεω,
         AccentClass::Ἀφῑημῐ,
         AccentClass::Πᾰρεχω,
-        AccentClass::Ὁρᾰω,
         AccentClass::Δῐᾰφερω,
         AccentClass::Προσκειμαι,
         AccentClass::Ὀμνῡμῐ,
         AccentClass::Ἐπευχομαι,
+        AccentClass::Μαινομαι,
         AccentClass::Προσᾰγω,
         AccentClass::Ἀντιλεγω,
         AccentClass::Ἀπεῑπον,
+        AccentClass::Εἰδον,
         AccentClass::Χεω,
         AccentClass::Ἀνεχω,
+        AccentClass::Λᾰμβᾰνω,
         AccentClass::Κᾰθῐστημῐ,
         AccentClass::Ὠχρῐω,
-        AccentClass::Προεῑπον,
-        AccentClass::Γῐγνομαι,
         AccentClass::Προσερχομαι,
-        AccentClass::Ἀραρισκω,
-        AccentClass::Ἐπορνῡμῐ,
+        AccentClass::Προεῑπον,
         AccentClass::Ὀττευομαι,
+        AccentClass::Ἐπορνῡμῐ,
         AccentClass::Συνεπομαι,
-        AccentClass::Λᾰμβᾰνω,
+        AccentClass::Ὠνεομαι,
         AccentClass::Ἀλαομαι,
         AccentClass::Περνημῐ,
         AccentClass::Χρη,
@@ -1541,6 +1523,7 @@ impl AccentClass {
         AccentClass::Ἀνερχομαι,
         AccentClass::Ἐοικᾰ,
         AccentClass::Δρᾱω,
+        AccentClass::Ἀρᾰρῐσκω,
         AccentClass::Προοραω,
         AccentClass::Πᾰσχω,
         AccentClass::Ἀνιημῐ,
@@ -1565,7 +1548,7 @@ pub static CLASSES: [StressClass<'static>; 60] = [
         name: Cow::Borrowed("ἐχω"),
         pattern: 0, // ἐχω
         vowel: Some(1),
-        words: 1056,
+        words: 1052,
     },
     StressClass {
         name: Cow::Borrowed("ποιεω"),
@@ -1583,7 +1566,7 @@ pub static CLASSES: [StressClass<'static>; 60] = [
         name: Cow::Borrowed("οἰομαι"),
         pattern: 0, // ἐχω
         vowel: Some(2),
-        words: 143,
+        words: 148,
     },
     StressClass {
         name: Cow::Borrowed("ὁρῐζω"),
@@ -1610,16 +1593,16 @@ pub static CLASSES: [StressClass<'static>; 60] = [
         words: 19,
     },
     StressClass {
-        name: Cow::Borrowed("ἡγεομαι"),
-        pattern: 5, // ἡγεομαι
-        vowel: Some(3),
+        name: Cow::Borrowed("πορσῡνω"),
+        pattern: 10, // πορσῡνω
+        vowel: Some(1),
         words: 18,
     },
     StressClass {
-        name: Cow::Borrowed("πορσῡνω"),
-        pattern: 9, // πορσῡνω
-        vowel: Some(1),
-        words: 18,
+        name: Cow::Borrowed("ἡγεομαι"),
+        pattern: 5, // ἡγεομαι
+        vowel: Some(3),
+        words: 15,
     },
     StressClass {
         name: Cow::Borrowed("στειχω"),
@@ -1629,13 +1612,13 @@ pub static CLASSES: [StressClass<'static>; 60] = [
     },
     StressClass {
         name: Cow::Borrowed("ἀνᾰγω"),
-        pattern: 10, // ἀνᾰγω
+        pattern: 9, // ἀνᾰγω
         vowel: Some(1),
         words: 15,
     },
     StressClass {
         name: Cow::Borrowed("τῐθημῐ"),
-        pattern: 12, // τῐθημῐ
+        pattern: 11, // τῐθημῐ
         vowel: Some(2),
         words: 15,
     },
@@ -1647,7 +1630,7 @@ pub static CLASSES: [StressClass<'static>; 60] = [
     },
     StressClass {
         name: Cow::Borrowed("ἐπῐλᾰμβᾰνω"),
-        pattern: 11, // ἐπῐλᾰμβᾰνω
+        pattern: 12, // ἐπῐλᾰμβᾰνω
         vowel: Some(1),
         words: 12,
     },
@@ -1658,8 +1641,8 @@ pub static CLASSES: [StressClass<'static>; 60] = [
         words: 12,
     },
     StressClass {
-        name: Cow::Borrowed("λογῐζομαι"),
-        pattern: 2, // καθιζω
+        name: Cow::Borrowed("ἐπορον"),
+        pattern: 6, // στειχω
         vowel: Some(2),
         words: 11,
     },
@@ -1670,28 +1653,22 @@ pub static CLASSES: [StressClass<'static>; 60] = [
         words: 11,
     },
     StressClass {
-        name: Cow::Borrowed("ἐπορον"),
-        pattern: 6, // στειχω
-        vowel: Some(2),
-        words: 10,
-    },
-    StressClass {
         name: Cow::Borrowed("δεῑ"),
         pattern: 0, // ἐχω
         vowel: Some(0),
         words: 9,
     },
     StressClass {
+        name: Cow::Borrowed("λογῐζομαι"),
+        pattern: 2, // καθιζω
+        vowel: Some(2),
+        words: 8,
+    },
+    StressClass {
         name: Cow::Borrowed("ὑπᾰρχω"),
         pattern: 15, // ὑπᾰρχω
         vowel: Some(1),
         words: 8,
-    },
-    StressClass {
-        name: Cow::Borrowed("μαινομαι"),
-        pattern: 3, // ὁρῐζω
-        vowel: Some(2),
-        words: 7,
     },
     StressClass {
         name: Cow::Borrowed("ἀναιρεω"),
@@ -1707,15 +1684,9 @@ pub static CLASSES: [StressClass<'static>; 60] = [
     },
     StressClass {
         name: Cow::Borrowed("πᾰρεχω"),
-        pattern: 18, // πᾰρεχω
+        pattern: 17, // πᾰρεχω
         vowel: Some(1),
         words: 7,
-    },
-    StressClass {
-        name: Cow::Borrowed("ὁρᾰω"),
-        pattern: 16, // ὁρᾰω
-        vowel: Some(1),
-        words: 6,
     },
     StressClass {
         name: Cow::Borrowed("δῐᾰφερω"),
@@ -1742,6 +1713,12 @@ pub static CLASSES: [StressClass<'static>; 60] = [
         words: 5,
     },
     StressClass {
+        name: Cow::Borrowed("μαινομαι"),
+        pattern: 3, // ὁρῐζω
+        vowel: Some(2),
+        words: 5,
+    },
+    StressClass {
         name: Cow::Borrowed("προσᾰγω"),
         pattern: 13, // ἀφῑημῐ
         vowel: Some(1),
@@ -1749,25 +1726,37 @@ pub static CLASSES: [StressClass<'static>; 60] = [
     },
     StressClass {
         name: Cow::Borrowed("ἀντιλεγω"),
-        pattern: 17, // ἀπεῑπον
+        pattern: 16, // ἀπεῑπον
         vowel: Some(1),
         words: 4,
     },
     StressClass {
         name: Cow::Borrowed("ἀπεῑπον"),
-        pattern: 17, // ἀπεῑπον
+        pattern: 16, // ἀπεῑπον
         vowel: Some(2),
         words: 4,
     },
     StressClass {
+        name: Cow::Borrowed("εἰδον"),
+        pattern: 18, // εἰδον
+        vowel: Some(1),
+        words: 4,
+    },
+    StressClass {
         name: Cow::Borrowed("χεω"),
-        pattern: 23, // χεω
+        pattern: 22, // χεω
         vowel: Some(1),
         words: 4,
     },
     StressClass {
         name: Cow::Borrowed("ἀνεχω"),
-        pattern: 24, // ἀνεχω
+        pattern: 23, // ἀνεχω
+        vowel: Some(1),
+        words: 4,
+    },
+    StressClass {
+        name: Cow::Borrowed("λᾰμβᾰνω"),
+        pattern: 24, // λᾰμβᾰνω
         vowel: Some(1),
         words: 4,
     },
@@ -1784,27 +1773,21 @@ pub static CLASSES: [StressClass<'static>; 60] = [
         words: 3,
     },
     StressClass {
+        name: Cow::Borrowed("προσερχομαι"),
+        pattern: 9, // ἀνᾰγω
+        vowel: Some(2),
+        words: 3,
+    },
+    StressClass {
         name: Cow::Borrowed("προεῑπον"),
-        pattern: 16, // ὁρᾰω
+        pattern: 18, // εἰδον
         vowel: None,
         words: 3,
     },
     StressClass {
-        name: Cow::Borrowed("γῐγνομαι"),
-        pattern: 22, // γῐγνομαι
-        vowel: Some(1),
-        words: 3,
-    },
-    StressClass {
-        name: Cow::Borrowed("προσερχομαι"),
-        pattern: 10, // ἀνᾰγω
-        vowel: Some(2),
-        words: 2,
-    },
-    StressClass {
-        name: Cow::Borrowed("ἀραρισκω"),
-        pattern: 11, // ἐπῐλᾰμβᾰνω
-        vowel: Some(2),
+        name: Cow::Borrowed("ὀττευομαι"),
+        pattern: 0, // ἐχω
+        vowel: None,
         words: 2,
     },
     StressClass {
@@ -1814,21 +1797,15 @@ pub static CLASSES: [StressClass<'static>; 60] = [
         words: 2,
     },
     StressClass {
-        name: Cow::Borrowed("ὀττευομαι"),
-        pattern: 22, // γῐγνομαι
-        vowel: None,
-        words: 2,
-    },
-    StressClass {
         name: Cow::Borrowed("συνεπομαι"),
         pattern: 26, // προοραω
         vowel: Some(2),
         words: 2,
     },
     StressClass {
-        name: Cow::Borrowed("λᾰμβᾰνω"),
-        pattern: 28, // λᾰμβᾰνω
-        vowel: Some(1),
+        name: Cow::Borrowed("ὠνεομαι"),
+        pattern: 28, // ὠνεομαι
+        vowel: Some(2),
         words: 2,
     },
     StressClass {
@@ -1869,20 +1846,26 @@ pub static CLASSES: [StressClass<'static>; 60] = [
     },
     StressClass {
         name: Cow::Borrowed("ἀνερχομαι"),
-        pattern: 10, // ἀνᾰγω
+        pattern: 9, // ἀνᾰγω
         vowel: Some(3),
         words: 1,
     },
     StressClass {
         name: Cow::Borrowed("ἐοικᾰ"),
-        pattern: 11, // ἐπῐλᾰμβᾰνω
+        pattern: 12, // ἐπῐλᾰμβᾰνω
         vowel: None,
         words: 1,
     },
     StressClass {
         name: Cow::Borrowed("δρᾱω"),
-        pattern: 11, // ἐπῐλᾰμβᾰνω
+        pattern: 12, // ἐπῐλᾰμβᾰνω
         vowel: Some(0),
+        words: 1,
+    },
+    StressClass {
+        name: Cow::Borrowed("ἀρᾰρῐσκω"),
+        pattern: 12, // ἐπῐλᾰμβᾰνω
+        vowel: Some(2),
         words: 1,
     },
     StressClass {
@@ -1925,23 +1908,25 @@ pub static CLASSES: [StressClass<'static>; 60] = [
 
 use AccentClass::*;
 
-/// Which class a word is of: 58 rules and 1,399 listed words.
+/// Which class a word is of: 61 rules and 1,388 listed words.
 pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
     rules {
-        "" => [Ἐχω 1056, Ποιεω 295, Καθιζω 157, Οἰομαι 143, Ὁρῐζω 66, Ἀνῐστημῐ 38, Ἐνῑημῐ 22, Χρᾰομαι 19, Ἡγεομαι 18, Πορσῡνω 18, Στειχω 15, Ἀνᾰγω 15, Τῐθημῐ 15, Εὐλαβεομαι 13, Ἐπῐλᾰμβᾰνω 12, Προβαλλω 12, Λογῐζομαι 11, Πᾰρερχομαι 11, Ἐπορον 10, Δεῑ 9, Ὑπᾰρχω 8, Μαινομαι 7, Ἀναιρεω 7, Ἀφῑημῐ 7, Πᾰρεχω 7, Ὁρᾰω 6, Δῐᾰφερω 6, Προσκειμαι 6, Ὀμνῡμῐ 6, Ἐπευχομαι 5, Προσᾰγω 5, Ἀντιλεγω 4, Ἀπεῑπον 4, Χεω 4, Ἀνεχω 4, Κᾰθῐστημῐ 4, Ὠχρῐω 3, Προεῑπον 3, Γῐγνομαι 3, Προσερχομαι 2, Ἀραρισκω 2, Ἐπορνῡμῐ 2, Ὀττευομαι 2, Συνεπομαι 2, Λᾰμβᾰνω 2, Ἀλαομαι 1, Περνημῐ 1, Χρη 1, Εἰμῐ 1, Φημῐ 1, Ἐξῑημῐ 1, Ἀνερχομαι 1, Ἐοικᾰ 1, Δρᾱω 1, Προοραω 1, Πᾰσχω 1, Ἀνιημῐ 1, Δᾰμαζω 1, Ὑπερεχω 1, Περθω 1],
+        "" => [Ἐχω 1052, Ποιεω 295, Καθιζω 157, Οἰομαι 148, Ὁρῐζω 66, Ἀνῐστημῐ 38, Ἐνῑημῐ 22, Χρᾰομαι 19, Πορσῡνω 18, Ἡγεομαι 15, Στειχω 15, Ἀνᾰγω 15, Τῐθημῐ 15, Εὐλαβεομαι 13, Ἐπῐλᾰμβᾰνω 12, Προβαλλω 12, Ἐπορον 11, Πᾰρερχομαι 11, Δεῑ 9, Λογῐζομαι 8, Ὑπᾰρχω 8, Ἀναιρεω 7, Ἀφῑημῐ 7, Πᾰρεχω 7, Δῐᾰφερω 6, Προσκειμαι 6, Ὀμνῡμῐ 6, Ἐπευχομαι 5, Μαινομαι 5, Προσᾰγω 5, Ἀντιλεγω 4, Ἀπεῑπον 4, Εἰδον 4, Χεω 4, Ἀνεχω 4, Λᾰμβᾰνω 4, Κᾰθῐστημῐ 4, Ὠχρῐω 3, Προσερχομαι 3, Προεῑπον 3, Ὀττευομαι 2, Ἐπορνῡμῐ 2, Συνεπομαι 2, Ὠνεομαι 2, Ἀλαομαι 1, Περνημῐ 1, Χρη 1, Εἰμῐ 1, Φημῐ 1, Ἐξῑημῐ 1, Ἀνερχομαι 1, Ἐοικᾰ 1, Δρᾱω 1, Ἀρᾰρῐσκω 1, Προοραω 1, Πᾰσχω 1, Ἀνιημῐ 1, Δᾰμαζω 1, Ὑπερεχω 1, Περθω 1],
         "δα" => [Ἐχω 2, Ἐνῑημῐ 2],
         "ε" => [Οἰομαι 5],
-        "ι" => [Οἰομαι 114, Ἀνῐστημῐ 38, Ἐνῑημῐ 20, Χρᾰομαι 19, Ἡγεομαι 18, Τῐθημῐ 15, Εὐλαβεομαι 12, Λογῐζομαι 11, Πᾰρερχομαι 11, Ἐπορον 7, Μαινομαι 7, Ἀφῑημῐ 7, Ἐχω 6, Προσκειμαι 6, Ὀμνῡμῐ 6, Κᾰθῐστημῐ 4, Ἐπευχομαι 3, Γῐγνομαι 3, Δεῑ 2, Ἐπορνῡμῐ 2, Ὀττευομαι 2, Συνεπομαι 2, Ποιεω 1, Προσερχομαι 1, Ἀραρισκω 1, Ἀλαομαι 1, Περνημῐ 1, Εἰμῐ 1, Φημῐ 1, Ἐξῑημῐ 1, Ἀνερχομαι 1, Ἀνιημῐ 1],
-        "αι" => [Οἰομαι 111, Ἡγεομαι 18, Χρᾰομαι 14, Εὐλαβεομαι 12, Λογῐζομαι 11, Πᾰρερχομαι 11, Ἐπορον 7, Μαινομαι 7, Ἀνῐστημῐ 6, Προσκειμαι 6, Ἐχω 4, Ἐπευχομαι 3, Γῐγνομαι 3, Ὀττευομαι 2, Συνεπομαι 2, Τῐθημῐ 1, Προσερχομαι 1, Ἀραρισκω 1, Ἀλαομαι 1, Ἀνερχομαι 1],
+        "ι" => [Οἰομαι 119, Ἀνῐστημῐ 38, Ἐνῑημῐ 20, Χρᾰομαι 19, Ἡγεομαι 15, Τῐθημῐ 15, Εὐλαβεομαι 12, Πᾰρερχομαι 11, Ἐπορον 8, Λογῐζομαι 8, Ἐχω 7, Ἀφῑημῐ 7, Προσκειμαι 6, Ὀμνῡμῐ 6, Μαινομαι 5, Κᾰθῐστημῐ 4, Ἐπευχομαι 3, Δεῑ 2, Προσερχομαι 2, Ὀττευομαι 2, Ἐπορνῡμῐ 2, Συνεπομαι 2, Ὠνεομαι 2, Ποιεω 1, Ἀλαομαι 1, Περνημῐ 1, Εἰμῐ 1, Φημῐ 1, Ἐξῑημῐ 1, Ἀνερχομαι 1, Ἀνιημῐ 1],
+        "αι" => [Οἰομαι 116, Ἡγεομαι 15, Χρᾰομαι 14, Εὐλαβεομαι 12, Πᾰρερχομαι 11, Ἐπορον 8, Λογῐζομαι 8, Ἀνῐστημῐ 6, Προσκειμαι 6, Ἐχω 5, Μαινομαι 5, Ἐπευχομαι 3, Προσερχομαι 2, Ὀττευομαι 2, Συνεπομαι 2, Ὠνεομαι 2, Τῐθημῐ 1, Ἀλαομαι 1, Ἀνερχομαι 1],
         "αμαι" => [Ἀνῐστημῐ 6, Οἰομαι 1],
         "ιμαι" => [Προσκειμαι 6, Ἐχω 1, Οἰομαι 1],
         "δομαι" => [Οἰομαι 10],
-        "εομαι" => [Ἡγεομαι 14, Χρᾰομαι 5, Εὐλαβεομαι 5, Οἰομαι 3, Ἀραρισκω 1],
-        "ζομαι" => [Οἰομαι 21, Λογῐζομαι 6, Ἐπορον 2],
-        "λομαι" => [Οἰομαι 4, Μαινομαι 3],
-        "οομαι" => [Οἰομαι 5, Χρᾰομαι 4, Εὐλαβεομαι 3],
+        "εομαι" => [Ἡγεομαι 13, Χρᾰομαι 5, Εὐλαβεομαι 5, Οἰομαι 4, Ὠνεομαι 1],
+        "ζομαι" => [Οἰομαι 20, Λογῐζομαι 6, Ἐπορον 2, Μαινομαι 1],
+        "οομαι" => [Οἰομαι 4, Χρᾰομαι 4, Εὐλαβεομαι 3],
         "πομαι" => [Συνεπομαι 2, Οἰομαι 1],
-        "χομαι" => [Πᾰρερχομαι 11, Οἰομαι 7, Εὐλαβεομαι 2, Ἐπευχομαι 2, Λογῐζομαι 1, Μαινομαι 1, Προσερχομαι 1, Ἀνερχομαι 1],
+        "ρομαι" => [Οἰομαι 5, Ἐπορον 4, Μαινομαι 1],
+        "σομαι" => [Οἰομαι 9],
+        "χομαι" => [Πᾰρερχομαι 11, Οἰομαι 8, Εὐλαβεομαι 2, Ἐπευχομαι 2, Λογῐζομαι 1, Προσερχομαι 1, Ἀνερχομαι 1],
+        "υμαι" => [Ἐχω 2, Ἐπορον 2, Εὐλαβεομαι 1],
         "μι" => [Ἀνῐστημῐ 31, Ἐνῑημῐ 20, Τῐθημῐ 14, Ἀφῑημῐ 7, Ὀμνῡμῐ 6, Χρᾰομαι 5, Κᾰθῐστημῐ 4, Ἐπορνῡμῐ 2, Ποιεω 1, Οἰομαι 1, Δεῑ 1, Περνημῐ 1, Εἰμῐ 1, Φημῐ 1, Ἐξῑημῐ 1, Ἀνιημῐ 1],
         "θημι" => [Τῐθημῐ 9],
         "ιημι" => [Ἀφῑημῐ 7, Ἐνῑημῐ 2, Ἐξῑημῐ 1, Ἀνιημῐ 1],
@@ -1949,24 +1934,25 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ιμι" => [Τῐθημῐ 5, Χρᾰομαι 4, Ἐνῑημῐ 3, Οἰομαι 1, Εἰμῐ 1],
         "υμι" => [Ἐνῑημῐ 12, Ἀνῐστημῐ 11, Ὀμνῡμῐ 6, Ἐπορνῡμῐ 2],
         "οι" => [Ἐχω 2],
-        "ν" => [Οἰομαι 16, Ἀπεῑπον 4, Στειχω 3, Ἐπορον 3, Ὁρᾰω 3, Προεῑπον 3, Ἐχω 1],
-        "πον" => [Ἀπεῑπον 4, Προεῑπον 3, Ὁρᾰω 1],
-        "ω" => [Ἐχω 1042, Ποιεω 294, Καθιζω 157, Ὁρῐζω 66, Πορσῡνω 18, Ἀνᾰγω 15, Στειχω 12, Ἐπῐλᾰμβᾰνω 12, Προβαλλω 12, Ὑπᾰρχω 8, Δεῑ 7, Ἀναιρεω 7, Πᾰρεχω 7, Οἰομαι 6, Δῐᾰφερω 6, Προσᾰγω 5, Ἀντιλεγω 4, Χεω 4, Ἀνεχω 4, Ὁρᾰω 3, Ὠχρῐω 3, Λᾰμβᾰνω 2, Εὐλαβεομαι 1, Ἀραρισκω 1, Δρᾱω 1, Προοραω 1, Πᾰσχω 1, Δᾰμαζω 1, Ὑπερεχω 1, Περθω 1],
-        "αω" => [Ποιεω 60, Ἐχω 58, Ἐπῐλᾰμβᾰνω 2, Προσᾰγω 2, Οἰομαι 1, Ἀναιρεω 1, Ὁρᾰω 1, Ὠχρῐω 1, Λᾰμβᾰνω 1, Δρᾱω 1, Προοραω 1],
+        "ν" => [Οἰομαι 16, Ἀπεῑπον 4, Στειχω 3, Ἐπορον 3, Εἰδον 3, Προεῑπον 3, Ἐχω 1],
+        "πον" => [Ἀπεῑπον 4, Προεῑπον 3, Εἰδον 1],
+        "ω" => [Ἐχω 1037, Ποιεω 294, Καθιζω 157, Ὁρῐζω 66, Πορσῡνω 18, Ἀνᾰγω 15, Στειχω 12, Ἐπῐλᾰμβᾰνω 12, Προβαλλω 12, Ὑπᾰρχω 8, Δεῑ 7, Ἀναιρεω 7, Πᾰρεχω 7, Οἰομαι 6, Δῐᾰφερω 6, Προσᾰγω 5, Ἀντιλεγω 4, Χεω 4, Ἀνεχω 4, Λᾰμβᾰνω 4, Ὠχρῐω 3, Εὐλαβεομαι 1, Εἰδον 1, Δρᾱω 1, Ἀρᾰρῐσκω 1, Προοραω 1, Πᾰσχω 1, Δᾰμαζω 1, Ὑπερεχω 1, Περθω 1],
+        "αω" => [Ποιεω 60, Ἐχω 58, Ἐπῐλᾰμβᾰνω 2, Προσᾰγω 2, Λᾰμβᾰνω 2, Οἰομαι 1, Ἀναιρεω 1, Ὠχρῐω 1, Δρᾱω 1, Προοραω 1],
+        "οραω" => [Προσᾰγω 2, Λᾰμβᾰνω 2, Ποιεω 1, Ἐπῐλᾰμβᾰνω 1, Ἀναιρεω 1, Προοραω 1],
         "βω" => [Ἐχω 11],
         "γω" => [Ἐχω 31, Ἀνᾰγω 11, Στειχω 2, Προσᾰγω 2, Προβαλλω 1, Ὑπᾰρχω 1, Ἀντιλεγω 1],
         "αγω" => [Ἀνᾰγω 10, Ἐχω 2, Ὑπᾰρχω 1, Προσᾰγω 1],
         "δω" => [Ἐχω 19, Ἐπῐλᾰμβᾰνω 1],
-        "εω" => [Ἐχω 183, Ποιεω 179, Καθιζω 10, Ὁρῐζω 4, Χεω 4, Ἀναιρεω 3, Ἀντιλεγω 2, Οἰομαι 1, Ἐπῐλᾰμβᾰνω 1],
+        "εω" => [Ἐχω 182, Ποιεω 179, Καθιζω 10, Ὁρῐζω 4, Χεω 4, Ἀναιρεω 3, Ἀντιλεγω 2, Οἰομαι 1, Ἐπῐλᾰμβᾰνω 1],
         "γεω" => [Ποιεω 27, Ἐχω 13],
         "ικεω" => [Ἐχω 11, Ποιεω 1],
         "ιρεω" => [Ἐχω 5, Ἀναιρεω 3, Ὁρῐζω 2, Ἀντιλεγω 1],
-        "ζω" => [Ἐχω 151, Καθιζω 116, Ὁρῐζω 9, Δεῑ 2, Ὠχρῐω 1, Δᾰμαζω 1],
+        "ζω" => [Ἐχω 150, Καθιζω 116, Ὁρῐζω 9, Δεῑ 2, Ὠχρῐω 1, Δᾰμαζω 1],
         "αζω" => [Ἐχω 94, Ὁρῐζω 5, Δεῑ 1, Δᾰμαζω 1],
         "ιζω" => [Καθιζω 115, Ἐχω 39, Ὁρῐζω 3],
-        "υζω" => [Ἐχω 9],
+        "υζω" => [Ἐχω 8],
         "ιω" => [Ἐχω 29, Καθιζω 1, Ὁρῐζω 1, Ὠχρῐω 1],
-        "κω" => [Ἐχω 38, Ἐπῐλᾰμβᾰνω 5, Ὁρῐζω 3, Προβαλλω 3, Ὑπᾰρχω 3, Ἀναιρεω 2, Δεῑ 1, Ὁρᾰω 1, Ἀνεχω 1, Ἀραρισκω 1],
+        "κω" => [Ἐχω 38, Ἐπῐλᾰμβᾰνω 5, Ὁρῐζω 3, Προβαλλω 3, Ὑπᾰρχω 3, Ἀναιρεω 2, Δεῑ 1, Ἀνεχω 1, Λᾰμβᾰνω 1, Ἀρᾰρῐσκω 1],
         "ηκω" => [Ἐχω 6, Ὑπᾰρχω 3],
         "λω" => [Ἐχω 22, Καθιζω 8, Ὁρῐζω 5, Προβαλλω 3],
         "βαλλω" => [Προβαλλω 3, Καθιζω 1],
@@ -1976,20 +1962,19 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "μνω" => [Προβαλλω 2, Ἐχω 1],
         "υνω" => [Πορσῡνω 15, Ἐχω 13, Καθιζω 11, Ὁρῐζω 2],
         "οω" => [Ποιεω 55, Ἐχω 43, Οἰομαι 1, Εὐλαβεομαι 1, Δεῑ 1],
-        "πω" => [Ἐχω 21, Στειχω 3, Ὁρᾰω 1, Ἀνεχω 1],
+        "πω" => [Ἐχω 21, Στειχω 3, Εἰδον 1, Ἀνεχω 1],
         "ιπω" => [Στειχω 3, Ἐχω 1],
         "ρω" => [Ἐχω 26, Ὁρῐζω 15, Δῐᾰφερω 5, Καθιζω 2, Στειχω 1],
         "φερω" => [Ἐχω 7, Δῐᾰφερω 5, Στειχω 1],
         "ιρω" => [Ὁρῐζω 15, Ἐχω 11],
         "σω" => [Ἐχω 55, Στειχω 2, Ἐπῐλᾰμβᾰνω 2],
-        "τω" => [Ἐχω 59, Καθιζω 1, Οἰομαι 1, Ἀνᾰγω 1, Προβαλλω 1, Ὑπᾰρχω 1],
-        "υω" => [Ἐχω 160, Οἰομαι 1, Στειχω 1, Ἀντιλεγω 1],
+        "τω" => [Ἐχω 57, Καθιζω 1, Οἰομαι 1, Ἀνᾰγω 1, Προβαλλω 1, Ὑπᾰρχω 1],
+        "υω" => [Ἐχω 159, Οἰομαι 1, Στειχω 1, Ἀντιλεγω 1],
         "φω" => [Ἐχω 17],
         "χω" => [Ἐχω 20, Πᾰρεχω 7, Καθιζω 3, Ὑπᾰρχω 3, Στειχω 2, Ἀνεχω 2, Προσᾰγω 1, Πᾰσχω 1, Ὑπερεχω 1],
     }
     listed {
         "ααω" => Οἰομαι,
-        "αγαθοποιεω" => Ἐχω,
         "αγαλλιαω" => Ἐχω,
         "αγαλλομαι" => Οἰομαι,
         "αγαπαω" => Ἐχω,
@@ -2011,7 +1996,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "αεξω" => Ἐχω,
         "αθανατιζω" => Ἐχω,
         "αθροιζω" => Καθιζω,
-        "αθυρω" => Ἐχω,
         "αιδεομαι" => Ἡγεομαι,
         "αιδομαι" => Οἰομαι,
         "αικιζω" => Καθιζω,
@@ -2032,7 +2016,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ακοντιζω" => Ἐχω,
         "ακουω" => Ἐχω,
         "ακριβοω" => Ἐχω,
-        "ακροαομαι" => Ἡγεομαι,
+        "ακροαομαι" => Οἰομαι,
         "αλαομαι" => Ἀλαομαι,
         "αλγεω" => Ἐχω,
         "αλειφω" => Ἐχω,
@@ -2045,7 +2029,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "αλισκομαι" => Οἰομαι,
         "αλλασσω" => Ἐχω,
         "αλλοιοω" => Ἐχω,
-        "αλλομαι" => Μαινομαι,
+        "αλλομαι" => Οἰομαι,
         "αλλοτριοω" => Ἐχω,
         "αλφανω" => Ἐχω,
         "αμαλδυνω" => Ὁρῐζω,
@@ -2058,7 +2042,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "αμυνω" => Πορσῡνω,
         "αμυσσω" => Ἐπῐλᾰμβᾰνω,
         "αμφικαλυπτω" => Ἐχω,
-        "αμφικρυπτω" => Ἐχω,
         "αμφιστημι" => Ἀνῐστημῐ,
         "αναβλαστανω" => Ἐχω,
         "αναβοαω" => Ἐχω,
@@ -2071,14 +2054,12 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "αναιρεω" => Ἀναιρεω,
         "αναισσω" => Ἐχω,
         "ανακαλεω" => Ἐχω,
-        "ανακρυπτω" => Ἐχω,
-        "αναλαζομαι" => Οἰομαι,
         "αναλαμβανω" => Ἐχω,
         "αναλισκω" => Ἐχω,
         "αναποδιζω" => Καθιζω,
         "ανατρεχω" => Καθιζω,
         "αναφερω" => Δῐᾰφερω,
-        "αναχωρεω" => Ἐχω,
+        "αναχρονιζομαι" => Μαινομαι,
         "αναψυχω" => Ἐχω,
         "ανδανω" => Ἐχω,
         "ανεγειρω" => Ὁρῐζω,
@@ -2093,8 +2074,9 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ανταγωνιζομαι" => Λογῐζομαι,
         "ανταιρω" => Ὁρῐζω,
         "ανταναγω" => Ἀνᾰγω,
+        "ανταναλυω" => Ἐχω,
         "ανταποδιδωμι" => Ἐνῑημῐ,
-        "ανταποκρινομαι" => Λογῐζομαι,
+        "ανταποκρινομαι" => Οἰομαι,
         "αντεγειρω" => Ὁρῐζω,
         "αντελπιζω" => Καθιζω,
         "αντεπιβουλευω" => Ἐχω,
@@ -2137,23 +2119,22 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "αποζω" => Δεῑ,
         "αποθραυω" => Ἐχω,
         "αποκαλυπτω" => Ἐχω,
-        "αποκρυπτω" => Ἐχω,
         "αποκωλυω" => Ἐχω,
         "απολαμβανω" => Ἀναιρεω,
         "απολεγω" => Προσᾰγω,
         "απολειπω" => Στειχω,
         "απολυτροω" => Ἐχω,
-        "απονευροομαι" => Οἰομαι,
         "αποπερδομαι" => Οἰομαι,
         "απορεω" => Ἐχω,
         "αποστατεω" => Ἐχω,
         "απτω" => Ἐχω,
         "απωθεω" => Ποιεω,
         "αραομαι" => Ἡγεομαι,
-        "αραρισκω" => Ἀραρισκω,
+        "αραρισκω" => Ἀρᾰρῐσκω,
         "αργεω" => Ἐχω,
         "αρδω" => Ἐχω,
         "αρεσκω" => Ἐχω,
+        "αριθμεω" => Ἐχω,
         "αρκεω" => Ἐχω,
         "αρμοζω" => Ἐχω,
         "αρνυμαι" => Ἐπορον,
@@ -2214,9 +2195,10 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "βρυαζω" => Ἐχω,
         "βρυκω" => Ἐχω,
         "βρυχω" => Ἐχω,
+        "βρυω" => Ἐχω,
         "γαμεω" => Καθιζω,
         "γαμιζω" => Ἐχω,
-        "γανυμαι" => Γῐγνομαι,
+        "γανυμαι" => Ἐχω,
         "γεγενημεθα" => Ἐπευχομαι,
         "γεγενησθω" => Οἰομαι,
         "γεγενησο" => Ἐπευχομαι,
@@ -2226,7 +2208,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "γενναω" => Ποιεω,
         "γηθεω" => Ποιεω,
         "γηρασκω" => Ἐχω,
-        "γιγνομαι" => Γῐγνομαι,
+        "γιγνομαι" => Ἐχω,
         "γιγνωσκω" => Ὁρῐζω,
         "γινωσκω" => Δεῑ,
         "γλυφω" => Ἐχω,
@@ -2330,13 +2312,13 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "εθελω" => Ἐχω,
         "εθιζω" => Καθιζω,
         "ειδομαι" => Οἰομαι,
-        "ειδον" => Ὁρᾰω,
+        "ειδον" => Εἰδον,
         "εικαζω" => Ἐχω,
         "εικω" => Ἐχω,
         "ειλυω" => Ἐχω,
         "ειλω" => Ἐχω,
         "ειμι" => Εἰμῐ,
-        "ειπον" => Ὁρᾰω,
+        "ειπον" => Εἰδον,
         "ειρω" => Ἐχω,
         "ειρωνευομαι" => Ὀττευομαι,
         "εισαγω" => Ἀνᾰγω,
@@ -2348,6 +2330,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "εκδιωκω" => Ἐχω,
         "εκδυω" => Ἐχω,
         "εκκαλεω" => Ποιεω,
+        "εκκρυπτω" => Ἐχω,
         "εκλεγω" => Ἐχω,
         "εκλυτροω" => Ποιεω,
         "εκρεω" => Καθιζω,
@@ -2452,7 +2435,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "επιληθω" => Ἐχω,
         "επιμειδαω" => Ἐχω,
         "επιμελεομαι" => Οἰομαι,
-        "επιμιμνησκομαι" => Οἰομαι,
+        "επιμιμνησκομαι" => Ὠνεομαι,
         "επιπειθομαι" => Οἰομαι,
         "επισευω" => Οἰομαι,
         "επισκεπτομαι" => Οἰομαι,
@@ -2481,7 +2464,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ερεφω" => Ἐχω,
         "ερημοω" => Ἐχω,
         "εριδαινω" => Ὁρῐζω,
-        "ερομαι" => Οἰομαι,
+        "ερομαι" => Ἐπορον,
         "ερπυζω" => Ἐχω,
         "ερπω" => Ἐχω,
         "ερυθραινω" => Ἐχω,
@@ -2498,7 +2481,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ευλογεω" => Ἐχω,
         "ευναω" => Ἐχω,
         "ευνομεομαι" => Ἡγεομαι,
-        "ευρισκω" => Ὁρᾰω,
+        "ευρισκω" => Λᾰμβᾰνω,
         "ευρυνω" => Καθιζω,
         "ευτρεπιζω" => Καθιζω,
         "ευτυχεω" => Ἐχω,
@@ -2507,10 +2490,10 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ευχαριστεω" => Ἐχω,
         "ευχομαι" => Οἰομαι,
         "εφαγον" => Ἐπορον,
-        "εφαλλομαι" => Μαινομαι,
+        "εφαλλομαι" => Οἰομαι,
         "εφανδανω" => Ἐχω,
         "εφελκω" => Ἐχω,
-        "εφεπω" => Ὁρᾰω,
+        "εφεπω" => Εἰδον,
         "εφευρισκω" => Ἀναιρεω,
         "εφηκω" => Ὑπᾰρχω,
         "εφιημι" => Ἀφῑημῐ,
@@ -2533,7 +2516,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ηδομαι" => Οἰομαι,
         "ηδυνω" => Ἐχω,
         "ηθολογεω" => Ἐχω,
-        "ηλθον" => Ὁρᾰω,
+        "ηλθον" => Εἰδον,
         "ηλοω" => Ἐχω,
         "ημι" => Δεῑ,
         "ησσαομαι" => Οἰομαι,
@@ -2561,11 +2544,10 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "θυμιαω" => Ποιεω,
         "θυω" => Ἐχω,
         "θωεω" => Ἐχω,
-        "θωρακιζω" => Καθιζω,
         "θωρησσω" => Στειχω,
         "ιαινω" => Ἐχω,
         "ιαλλω" => Καθιζω,
-        "ιαομαι" => Ἡγεομαι,
+        "ιαομαι" => Οἰομαι,
         "ιδροω" => Ἐχω,
         "ιζω" => Ἐχω,
         "ιημι" => Ἐνῑημῐ,
@@ -2579,7 +2561,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ινεω" => Ἐχω,
         "ιουδαιζω" => Ἐχω,
         "ισοθεοω" => Ἐχω,
-        "ιχθυαζομαι" => Οἰομαι,
+        "ιχαναω" => Ἐχω,
         "ιχθυολογεω" => Ἐχω,
         "καθαιρεω" => Ἀντιλεγω,
         "καθαιρω" => Ὁρῐζω,
@@ -2587,7 +2569,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "καθελκω" => Ἀνεχω,
         "καθευδω" => Ἐχω,
         "καθημαι" => Ἐχω,
-        "καθιδρυω" => Ἐχω,
         "καθιζανω" => Ἐχω,
         "καθιζω" => Καθιζω,
         "καθιημι" => Ἀφῑημῐ,
@@ -2619,7 +2600,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "καταιρω" => Ὁρῐζω,
         "κατακαλεω" => Καθιζω,
         "κατακλαω" => Ἐχω,
-        "κατακλυζω" => Ἐχω,
         "καταλαμβανω" => Ἐχω,
         "καταλεγω" => Ἐχω,
         "καταναγκαζω" => Ἐχω,
@@ -2702,7 +2682,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "κρατευω" => Ἐχω,
         "κρατεω" => Ποιεω,
         "κρατυνω" => Καθιζω,
-        "κρεκω" => Ἐχω,
         "κρεμαννυμι" => Ἐνῑημῐ,
         "κρεμαω" => Ποιεω,
         "κρετεω" => Ποιεω,
@@ -2905,8 +2884,8 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ξυσσωζω" => Ἐχω,
         "ξυστρατευω" => Ἐχω,
         "οδηγεω" => Ἐχω,
-        "οδυρομαι" => Λογῐζομαι,
-        "οδυσσομαι" => Ἐχω,
+        "οδυρομαι" => Οἰομαι,
+        "οδυσσομαι" => Οἰομαι,
         "οζω" => Ἐχω,
         "οιγνυμι" => Ἀνῐστημῐ,
         "οιδανω" => Ἀνᾰγω,
@@ -2917,7 +2896,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "οιχομαι" => Οἰομαι,
         "ολισθανω" => Ἐχω,
         "ολλυμι" => Ὀμνῡμῐ,
-        "ολοφυρομαι" => Λογῐζομαι,
+        "ολοφυρομαι" => Οἰομαι,
         "ομαδεω" => Οἰομαι,
         "ομνυμι" => Ὀμνῡμῐ,
         "ομοιοω" => Ἐχω,
@@ -2929,7 +2908,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ονομαινω" => Ὁρῐζω,
         "οξυνω" => Πορσῡνω,
         "οπλιζω" => Καθιζω,
-        "οραω" => Ὁρᾰω,
+        "οραω" => Λᾰμβᾰνω,
         "ορεγω" => Ἐχω,
         "ορθοω" => Ἐχω,
         "οριζω" => Ὁρῐζω,
@@ -3050,7 +3029,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "πραυνω" => Καθιζω,
         "πρηθω" => Ἐχω,
         "προαγω" => Ὑπᾰρχω,
-        "προαπολυω" => Ἐχω,
         "προβαλλω" => Προβαλλω,
         "προειμι" => Ἐνῑημῐ,
         "προειπον" => Προεῑπον,
@@ -3170,7 +3148,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "σπιζω" => Ἐχω,
         "σταζω" => Ἐχω,
         "σταθμαω" => Ἐχω,
-        "σταλασσω" => Ἐχω,
         "σταυροω" => Ἐχω,
         "στειβω" => Ἐχω,
         "στειχω" => Στειχω,
@@ -3190,7 +3167,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "στραγγαλοομαι" => Εὐλαβεομαι,
         "στρεφω" => Ἐχω,
         "στρωννυμι" => Ἀνῐστημῐ,
-        "συγγιγνομαι" => Γῐγνομαι,
         "συγκακουργεω" => Ποιεω,
         "συγκαλεω" => Καθιζω,
         "συγκινδυνευω" => Ἐχω,
@@ -3198,7 +3174,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "συγχρονιζω" => Καθιζω,
         "συμβουλευω" => Ἐχω,
         "συμμαχεω" => Ποιεω,
-        "συμμαχομαι" => Μαινομαι,
+        "συμμαχομαι" => Οἰομαι,
         "συμπολεμεω" => Ποιεω,
         "συμφερω" => Ἐχω,
         "συμφωνεω" => Ποιεω,
@@ -3211,7 +3187,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "συναρπαζω" => Ἐχω,
         "συνδεω" => Ποιεω,
         "συνειμι" => Τῐθημῐ,
-        "συνεπιτιθημι" => Τῐθημῐ,
         "συνεπομαι" => Συνεπομαι,
         "συνεργαζομαι" => Οἰομαι,
         "συνερχομαι" => Πᾰρερχομαι,
@@ -3303,9 +3278,9 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "υπερεχω" => Ὑπερεχω,
         "υπερνικαω" => Ἐχω,
         "υπερφερω" => Ἐχω,
-        "υπισχνεομαι" => Ἡγεομαι,
+        "υπισχνεομαι" => Οἰομαι,
         "υπνοω" => Ἐχω,
-        "υπογιγνομαι" => Οἰομαι,
+        "υπογιγνομαι" => Προσερχομαι,
         "υποκοριζομαι" => Λογῐζομαι,
         "υπολαμβανω" => Ἐχω,
         "υπονοεω" => Ἐχω,
@@ -3384,7 +3359,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ψευδω" => Ἐχω,
         "ψυχω" => Ἐχω,
         "ωθεω" => Ποιεω,
-        "ωνεομαι" => Ἀραρισκω,
+        "ωνεομαι" => Ὠνεομαι,
         "ωρυομαι" => Οἰομαι,
         "ωχριω" => Ὠχρῐω,
     }
@@ -3392,7 +3367,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
 
 /// Per conjugation, the cells whose ending takes the circumflex when accented on
 /// its last syllable (`θεοῦ`).
-pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
+pub static CIRCUMFLEX: [Cow<'static, [u16]>; 226] = [
     Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
@@ -3502,11 +3477,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         PARTICIPLE_FUT_ACT,
     ]), // Ἀφορῐζω
     Cow::Borrowed(&[
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-    ]), // Βουλευω
-    Cow::Borrowed(&[
         FUTURE_IND_ACT_1_SG,
         FUTURE_IND_ACT_2_SG,
         FUTURE_IND_ACT_3_SG,
@@ -3518,11 +3488,10 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         PARTICIPLE_FUT_ACT,
     ]), // Σπᾰω
     Cow::Borrowed(&[
-        FUTURE_IND_MID_2_SG,
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
-    ]), // Οἰομαι
+    ]), // Βουλευω
     Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
@@ -3545,6 +3514,7 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         INFINITIVE_PRES_ACT,
         PARTICIPLE_PRES_ACT,
     ]), // Δοκᾰω
+    Cow::Borrowed(&[IMPERFECT_MID_2_SG, IMPERFECT_PASS_2_SG, AORIST_IMP_MID_2_SG]), // Ἑπομαι
     Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
@@ -3575,21 +3545,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         AORIST_IMP_MID_2_SG,
     ]), // Προσερχομαι
     Cow::Borrowed(&[
-        IMPERFECT_MID_2_SG,
-        IMPERFECT_PASS_2_SG,
-        FUTURE_IND_ACT_1_SG,
-        FUTURE_IND_ACT_2_SG,
-        FUTURE_IND_ACT_3_SG,
-        FUTURE_IND_MID_2_SG,
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-        AORIST_IMP_MID_2_SG,
-        INFINITIVE_FUT_ACT,
-        INFINITIVE_AOR_ACT,
-        PARTICIPLE_FUT_ACT,
-    ]), // Ἐλπω
-    Cow::Borrowed(&[
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
@@ -3599,7 +3554,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
-        AORIST_IMP_MID_2_SG,
     ]), // Κᾰτεργαζομαι
     Cow::Borrowed(&[
         FUTURE_IND_MID_2_SG,
@@ -3664,6 +3618,21 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         PARTICIPLE_PRES_ACT,
     ]), // Πρεσβευω
     Cow::Borrowed(&[
+        IMPERFECT_MID_2_SG,
+        IMPERFECT_PASS_2_SG,
+        FUTURE_IND_ACT_1_SG,
+        FUTURE_IND_ACT_2_SG,
+        FUTURE_IND_ACT_3_SG,
+        FUTURE_IND_MID_2_SG,
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+        AORIST_IMP_MID_2_SG,
+        INFINITIVE_FUT_ACT,
+        INFINITIVE_AOR_ACT,
+        PARTICIPLE_FUT_ACT,
+    ]), // Ἐλπω
+    Cow::Borrowed(&[
         FUTURE_IND_ACT_1_SG,
         FUTURE_IND_ACT_2_SG,
         FUTURE_IND_ACT_3_SG,
@@ -3727,7 +3696,7 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         INFINITIVE_FUT_ACT,
         PARTICIPLE_FUT_ACT,
     ]), // Ψηφῐζω
-    Cow::Borrowed(&[]), // Θωᾰω
+    Cow::Borrowed(&[]),                                                             // Θωᾰω
     Cow::Borrowed(&[
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
@@ -3745,7 +3714,12 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         AORIST_IMP_MID_2_SG,
         INFINITIVE_AOR_ACT,
     ]), // Πεμπω
-    Cow::Borrowed(&[INFINITIVE_AOR_ACT]), // Πᾰρερχομαι
+    Cow::Borrowed(&[
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+    ]), // Οἰομαι
+    Cow::Borrowed(&[INFINITIVE_AOR_ACT]),                                           // Πᾰρερχομαι
     Cow::Borrowed(&[
         FUTURE_IND_ACT_1_SG,
         FUTURE_IND_ACT_2_SG,
@@ -3821,16 +3795,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         IMPERFECT_ACT_3_SG,
     ]), // Πᾰρειμι
     Cow::Borrowed(&[
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-    ]), // Λῡω
-    Cow::Borrowed(&[
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-    ]), // Παυω
-    Cow::Borrowed(&[
         IND_MID_2_SG,
         IND_PASS_2_SG,
         SUBJ_MID_2_SG,
@@ -3847,29 +3811,17 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
-    ]), // Θρῠπτω
+    ]), // Λῡω
     Cow::Borrowed(&[
-        IND_ACT_1_SG,
-        IND_ACT_2_SG,
-        IND_ACT_3_SG,
-        IND_MID_2_SG,
-        IND_PASS_2_SG,
-        SUBJ_ACT_1_SG,
-        SUBJ_ACT_2_SG,
-        SUBJ_ACT_3_SG,
-        SUBJ_MID_2_SG,
-        SUBJ_PASS_2_SG,
-        IMP_ACT_2_SG,
-        IMP_MID_2_SG,
-        IMP_PASS_2_SG,
-        IMPERFECT_MID_2_SG,
-        IMPERFECT_PASS_2_SG,
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
-        INFINITIVE_PRES_ACT,
-        PARTICIPLE_PRES_ACT,
-    ]), // Ἐαω
+    ]), // Παυω
+    Cow::Borrowed(&[
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+    ]), // Θρῠπτω
     Cow::Borrowed(&[
         AORIST_SUBJ_MID_2_SG,
         AORIST_SUBJ_PASS_1_SG,
@@ -3884,6 +3836,9 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         SUBJ_PASS_2_SG,
         AORIST_SUBJ_ACT_1_SG,
         AORIST_SUBJ_ACT_2_SG,
+        AORIST_SUBJ_ACT_3_SG,
+        AORIST_SUBJ_MID_2_SG,
+        AORIST_IMP_MID_2_SG,
     ]), // Ἀφῑημῐ
     Cow::Borrowed(&[
         IND_ACT_1_SG,
@@ -3922,6 +3877,28 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         INFINITIVE_FUT_ACT,
         PARTICIPLE_FUT_ACT,
     ]), // Καθιζω
+    Cow::Borrowed(&[
+        IND_ACT_1_SG,
+        IND_ACT_2_SG,
+        IND_ACT_3_SG,
+        IND_MID_2_SG,
+        IND_PASS_2_SG,
+        SUBJ_ACT_1_SG,
+        SUBJ_ACT_2_SG,
+        SUBJ_ACT_3_SG,
+        SUBJ_MID_2_SG,
+        SUBJ_PASS_2_SG,
+        IMP_ACT_2_SG,
+        IMP_MID_2_SG,
+        IMP_PASS_2_SG,
+        IMPERFECT_MID_2_SG,
+        IMPERFECT_PASS_2_SG,
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+        INFINITIVE_PRES_ACT,
+        PARTICIPLE_PRES_ACT,
+    ]), // Ἐαω
     Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
@@ -3998,16 +3975,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         INFINITIVE_AOR_ACT,
     ]), // Φᾰρμᾰσσω
     Cow::Borrowed(&[
-        IND_MID_2_SG,
-        IND_PASS_2_SG,
-        SUBJ_MID_2_SG,
-        SUBJ_PASS_2_SG,
-        IMP_MID_2_SG,
-        IMP_PASS_2_SG,
-        IMPERFECT_MID_2_SG,
-        IMPERFECT_PASS_2_SG,
-    ]), // Ἀραομαι
-    Cow::Borrowed(&[
         FUTURE_IND_ACT_1_SG,
         FUTURE_IND_ACT_2_SG,
         FUTURE_IND_ACT_3_SG,
@@ -4031,6 +3998,18 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         INFINITIVE_AOR_ACT,
         PARTICIPLE_FUT_ACT,
     ]), // Ἀπεῑπον
+    Cow::Borrowed(&[]),                                                             // Φειδομαι
+    Cow::Borrowed(&[
+        IND_MID_2_SG,
+        IND_PASS_2_SG,
+        SUBJ_MID_2_SG,
+        SUBJ_PASS_2_SG,
+        IMP_MID_2_SG,
+        IMP_PASS_2_SG,
+        IMPERFECT_MID_2_SG,
+        IMPERFECT_PASS_2_SG,
+    ]), // Ἀραομαι
+    Cow::Borrowed(&[]),                                                             // Δῐωκω
     Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
@@ -4052,8 +4031,15 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         INFINITIVE_PRES_ACT,
         PARTICIPLE_PRES_ACT,
     ]), // Χραω
-    Cow::Borrowed(&[]), // Φειδομαι
-    Cow::Borrowed(&[]), // Δῐωκω
+    Cow::Borrowed(&[
+        IND_ACT_1_SG,
+        SUBJ_ACT_1_SG,
+        IMP_MID_2_SG,
+        IMP_PASS_2_SG,
+        IMPERFECT_MID_2_SG,
+        IMPERFECT_PASS_2_SG,
+        PARTICIPLE_PRES_ACT,
+    ]), // Κᾰθιδρῡω
     Cow::Borrowed(&[
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
@@ -4080,6 +4066,27 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         INFINITIVE_PRES_ACT,
         PARTICIPLE_PRES_ACT,
     ]), // Μᾰρτῠρεω
+    Cow::Borrowed(&[
+        IND_ACT_1_SG,
+        IND_ACT_2_SG,
+        IND_ACT_3_SG,
+        IND_MID_2_SG,
+        IND_PASS_2_SG,
+        SUBJ_ACT_1_SG,
+        SUBJ_ACT_2_SG,
+        SUBJ_ACT_3_SG,
+        SUBJ_MID_2_SG,
+        SUBJ_PASS_2_SG,
+        IMP_MID_2_SG,
+        IMP_PASS_2_SG,
+        IMPERFECT_MID_2_SG,
+        IMPERFECT_PASS_2_SG,
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+        INFINITIVE_PRES_ACT,
+        PARTICIPLE_PRES_ACT,
+    ]), // Πειρᾰω
     Cow::Borrowed(&[
         FUTURE_IND_ACT_1_SG,
         FUTURE_IND_ACT_2_SG,
@@ -4112,27 +4119,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         INFINITIVE_PRES_ACT,
         PARTICIPLE_PRES_ACT,
     ]), // Ἐξᾰκολουθεω
-    Cow::Borrowed(&[
-        IND_ACT_1_SG,
-        IND_ACT_2_SG,
-        IND_ACT_3_SG,
-        IND_MID_2_SG,
-        IND_PASS_2_SG,
-        SUBJ_ACT_1_SG,
-        SUBJ_ACT_2_SG,
-        SUBJ_ACT_3_SG,
-        SUBJ_MID_2_SG,
-        SUBJ_PASS_2_SG,
-        IMP_MID_2_SG,
-        IMP_PASS_2_SG,
-        IMPERFECT_MID_2_SG,
-        IMPERFECT_PASS_2_SG,
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-        INFINITIVE_PRES_ACT,
-        PARTICIPLE_PRES_ACT,
-    ]), // Πειρᾰω
     Cow::Borrowed(&[
         FUTURE_IND_ACT_1_SG,
         FUTURE_IND_ACT_2_SG,
@@ -4195,11 +4181,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         AORIST_SUBJ_PASS_3_SG,
     ]), // Κᾰτειργω
     Cow::Borrowed(&[
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-    ]), // Δῐᾰλῡω
-    Cow::Borrowed(&[
         FUTURE_IND_ACT_1_SG,
         FUTURE_IND_ACT_2_SG,
         FUTURE_IND_ACT_3_SG,
@@ -4228,28 +4209,7 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
     ]), // Ἀκουω
-    Cow::Borrowed(&[]), // Ἰᾱτρευω
-    Cow::Borrowed(&[
-        IND_ACT_1_SG,
-        IND_ACT_2_SG,
-        IND_ACT_3_SG,
-        IND_MID_2_SG,
-        IND_PASS_2_SG,
-        SUBJ_ACT_1_SG,
-        SUBJ_ACT_2_SG,
-        SUBJ_ACT_3_SG,
-        SUBJ_MID_2_SG,
-        SUBJ_PASS_2_SG,
-        IMP_MID_2_SG,
-        IMP_PASS_2_SG,
-        IMPERFECT_MID_2_SG,
-        IMPERFECT_PASS_2_SG,
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-        INFINITIVE_PRES_ACT,
-        PARTICIPLE_PRES_ACT,
-    ]), // Πλᾰναω
+    Cow::Borrowed(&[]),                                                             // Ἰᾱτρευω
     Cow::Borrowed(&[
         SUBJ_ACT_1_SG,
         SUBJ_ACT_2_SG,
@@ -4280,8 +4240,13 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         INFINITIVE_PRES_ACT,
         PARTICIPLE_PRES_ACT,
     ]), // Λιστραω
-    Cow::Borrowed(&[]), // Ἐπευχομαι
-    Cow::Borrowed(&[]), // Ἐγκειμαι
+    Cow::Borrowed(&[]),                                                             // Ἐπευχομαι
+    Cow::Borrowed(&[]),                                                             // Ἐγκειμαι
+    Cow::Borrowed(&[
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+    ]), // Δῐᾰλῡω
     Cow::Borrowed(&[
         SUBJ_ACT_1_SG,
         SUBJ_ACT_2_SG,
@@ -4309,7 +4274,7 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
     ]), // Πᾰρῐστημῐ
-    Cow::Borrowed(&[SUBJ_MID_2_SG, SUBJ_PASS_2_SG]), // Μᾰρνᾰμαι
+    Cow::Borrowed(&[SUBJ_MID_2_SG, SUBJ_PASS_2_SG]),                                // Μᾰρνᾰμαι
     Cow::Borrowed(&[
         FUTURE_IND_ACT_1_SG,
         FUTURE_IND_ACT_2_SG,
@@ -4321,7 +4286,7 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         INFINITIVE_FUT_ACT,
         PARTICIPLE_FUT_ACT,
     ]), // Σῠνομνῡμῐ
-    Cow::Borrowed(&[]), // Προσκειμαι
+    Cow::Borrowed(&[]),                                                             // Προσκειμαι
     Cow::Borrowed(&[
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
@@ -4427,15 +4392,15 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         AORIST_SUBJ_PASS_3_SG,
         AORIST_IMP_MID_2_SG,
     ]), // Δῐδωμῐ
-    Cow::Borrowed(&[AORIST_IMP_MID_2_SG, INFINITIVE_AOR_ACT]), // Εἰπον
+    Cow::Borrowed(&[AORIST_IMP_MID_2_SG, INFINITIVE_AOR_ACT]),                      // Εἰπον
     Cow::Borrowed(&[
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
     ]), // Δεικνῡμῐ
-    Cow::Borrowed(&[INFINITIVE_AOR_ACT]), // Ἐφᾰγον
-    Cow::Borrowed(&[]), // Ἑννῡμῐ
-    Cow::Borrowed(&[]), // Ὀρνῡμῐ
+    Cow::Borrowed(&[INFINITIVE_AOR_ACT]),                                           // Ἐφᾰγον
+    Cow::Borrowed(&[]),                                                             // Ἑννῡμῐ
+    Cow::Borrowed(&[]),                                                             // Ὀρνῡμῐ
     Cow::Borrowed(&[
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
@@ -4479,8 +4444,8 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         SUBJ_MID_2_SG,
         SUBJ_PASS_2_SG,
     ]), // Φημῐ
-    Cow::Borrowed(&[]), // Ἐοικᾰ
-    Cow::Borrowed(&[]), // Κεῑμαι
+    Cow::Borrowed(&[]),                                                             // Ἐοικᾰ
+    Cow::Borrowed(&[]),                                                             // Κεῑμαι
     Cow::Borrowed(&[
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
@@ -4503,7 +4468,7 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
     ]), // Δυναμαι
-    Cow::Borrowed(&[]), // Οἰδᾰ
+    Cow::Borrowed(&[]),                                                             // Οἰδᾰ
     Cow::Borrowed(&[
         SUBJ_ACT_1_SG,
         SUBJ_ACT_2_SG,
@@ -4528,13 +4493,13 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
     ]), // Ἀνῐστημῐ
-    Cow::Borrowed(&[]), // Δεῑ
+    Cow::Borrowed(&[]),                                                             // Δεῑ
     Cow::Borrowed(&[
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
     ]), // Ζωννῡμῐ
-    Cow::Borrowed(&[]), // Κᾰθημαι
+    Cow::Borrowed(&[]),                                                             // Κᾰθημαι
     Cow::Borrowed(&[
         FUTURE_IND_ACT_1_SG,
         FUTURE_IND_ACT_2_SG,
@@ -4574,23 +4539,23 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         AORIST_SUBJ_PASS_3_SG,
         INFINITIVE_FUT_ACT,
     ]), // Κᾰθῐστημῐ
-    Cow::Borrowed(&[]), // Ἠμῐ
+    Cow::Borrowed(&[]),                                                             // Ἠμῐ
     Cow::Borrowed(&[
         AORIST_SUBJ_ACT_1_SG,
         AORIST_SUBJ_ACT_2_SG,
         AORIST_SUBJ_ACT_3_SG,
     ]), // Ἐτλην
-    Cow::Borrowed(&[SUBJ_ACT_3_SG]), // Χρη
-    Cow::Borrowed(&[INFINITIVE_AOR_ACT]), // Ἠλθον
+    Cow::Borrowed(&[SUBJ_ACT_3_SG]),                                                // Χρη
+    Cow::Borrowed(&[INFINITIVE_AOR_ACT]),                                           // Ἠλθον
     Cow::Borrowed(&[
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
     ]), // Ζευγνῡμῐ
-    Cow::Borrowed(&[AORIST_IMP_MID_2_SG]), // Ἀρνυμαι
-    Cow::Borrowed(&[AORIST_IMP_MID_2_SG, INFINITIVE_AOR_ACT]), // Εἰδον
-    Cow::Borrowed(&[INFINITIVE_AOR_ACT]), // Ἐπεφνον
-    Cow::Borrowed(&[INFINITIVE_AOR_ACT]), // Μετεκῑᾰθον
+    Cow::Borrowed(&[AORIST_IMP_MID_2_SG]),                                          // Ἀρνυμαι
+    Cow::Borrowed(&[AORIST_IMP_MID_2_SG, INFINITIVE_AOR_ACT]),                      // Εἰδον
+    Cow::Borrowed(&[INFINITIVE_AOR_ACT]),                                           // Ἐπεφνον
+    Cow::Borrowed(&[INFINITIVE_AOR_ACT]),                                           // Μετεκῑᾰθον
     Cow::Borrowed(&[
         FUTURE_IND_ACT_1_SG,
         FUTURE_IND_ACT_2_SG,
@@ -4600,14 +4565,14 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         INFINITIVE_FUT_ACT,
         PARTICIPLE_FUT_ACT,
     ]), // Ὀλλῡμῐ
-    Cow::Borrowed(&[]), // Ἀνοιγνῡμῐ
-    Cow::Borrowed(&[]), // Οἰγνῡμῐ
+    Cow::Borrowed(&[]),                                                             // Ἀνοιγνῡμῐ
+    Cow::Borrowed(&[]),                                                             // Οἰγνῡμῐ
     Cow::Borrowed(&[
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
     ]), // Πεπνῡμαι
-    Cow::Borrowed(&[]), // Περνημῐ
+    Cow::Borrowed(&[]),                                                             // Περνημῐ
     Cow::Borrowed(&[
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
@@ -4619,9 +4584,9 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
     ]), // Ἐπῐστᾰμαι
-    Cow::Borrowed(&[INFINITIVE_AOR_ACT]), // Πτᾰρνῠμαι
-    Cow::Borrowed(&[INFINITIVE_AOR_ACT]), // Ἐπορον
-    Cow::Borrowed(&[]), // Δαινῡμῐ
+    Cow::Borrowed(&[INFINITIVE_AOR_ACT]),                                           // Πτᾰρνῠμαι
+    Cow::Borrowed(&[INFINITIVE_AOR_ACT]),                                           // Ἐπορον
+    Cow::Borrowed(&[]),                                                             // Δαινῡμῐ
     Cow::Borrowed(&[
         SUBJ_ACT_1_SG,
         SUBJ_ACT_2_SG,
@@ -4650,13 +4615,13 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         SUBJ_MID_2_SG,
         SUBJ_PASS_2_SG,
     ]), // Κατατῐθημῐ
-    Cow::Borrowed(&[AORIST_IMP_MID_2_SG, INFINITIVE_AOR_ACT]), // Κεκᾰδον
+    Cow::Borrowed(&[AORIST_IMP_MID_2_SG, INFINITIVE_AOR_ACT]),                      // Κεκᾰδον
     Cow::Borrowed(&[
         SUBJ_MID_2_SG,
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
-    ]), // Ἀγαμαι
+    ]), // Ἀγᾰμαι
     Cow::Borrowed(&[
         SUBJ_ACT_1_SG,
         SUBJ_ACT_2_SG,
@@ -4692,7 +4657,7 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         AORIST_SUBJ_ACT_3_SG,
         AORIST_SUBJ_MID_2_SG,
     ]), // Ἀπᾰνῐστημῐ
-    Cow::Borrowed(&[]), // Καινῠμαι
+    Cow::Borrowed(&[]),                                                             // Καινῠμαι
     Cow::Borrowed(&[
         SUBJ_ACT_1_SG,
         SUBJ_ACT_2_SG,
@@ -4732,7 +4697,7 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         INFINITIVE_FUT_ACT,
         PARTICIPLE_FUT_ACT,
     ]), // Σκεδᾰννῡμῐ
-    Cow::Borrowed(&[]), // Κορεννῡμῐ
+    Cow::Borrowed(&[]),                                                             // Κορεννῡμῐ
     Cow::Borrowed(&[
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
@@ -4768,10 +4733,10 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
     ]), // Ἀφῐστημῐ
-    Cow::Borrowed(&[]), // Κᾰτακειμαι
-    Cow::Borrowed(&[]), // Συνοιδᾰ
-    Cow::Borrowed(&[SUBJ_ACT_1_SG, SUBJ_ACT_2_SG, SUBJ_ACT_3_SG]), // Ξῠνοιδᾰ
-    Cow::Borrowed(&[SUBJ_ACT_1_SG, SUBJ_ACT_2_SG, SUBJ_ACT_3_SG]), // Προοιδᾰ
+    Cow::Borrowed(&[]),                                                             // Κᾰτακειμαι
+    Cow::Borrowed(&[]),                                                             // Συνοιδᾰ
+    Cow::Borrowed(&[SUBJ_ACT_1_SG, SUBJ_ACT_2_SG, SUBJ_ACT_3_SG]),                  // Ξῠνοιδᾰ
+    Cow::Borrowed(&[SUBJ_ACT_1_SG, SUBJ_ACT_2_SG, SUBJ_ACT_3_SG]),                  // Προοιδᾰ
     Cow::Borrowed(&[
         SUBJ_ACT_1_SG,
         SUBJ_ACT_2_SG,
@@ -4823,8 +4788,8 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
     ]), // Περῐῐστημῐ
-    Cow::Borrowed(&[]), // Ἐπορνῡμῐ
-    Cow::Borrowed(&[SUBJ_ACT_3_SG]), // Ἐξεστῐ
+    Cow::Borrowed(&[]),                                                             // Ἐπορνῡμῐ
+    Cow::Borrowed(&[SUBJ_ACT_3_SG]),                                                // Ἐξεστῐ
     Cow::Borrowed(&[
         SUBJ_ACT_1_SG,
         SUBJ_ACT_2_SG,
@@ -4835,46 +4800,46 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
     ]), // Ὑφῐστημῐ
-    Cow::Borrowed(&[]), // Γεγονοι
-    Cow::Borrowed(&[]), // Γεγενησαι
-    Cow::Borrowed(&[]), // Γεγενηται
-    Cow::Borrowed(&[]), // Γεγενησο
-    Cow::Borrowed(&[]), // Γεγενησθον
-    Cow::Borrowed(&[]), // Γεγενησθων
-    Cow::Borrowed(&[]), // Γεγενηνται
-    Cow::Borrowed(&[]), // Γεγενησθε
-    Cow::Borrowed(&[]), // Γεγενημεθα
-    Cow::Borrowed(&[]), // Τεθνηκας
-    Cow::Borrowed(&[]), // Τεθνηκῃ
-    Cow::Borrowed(&[]), // Τεθνηκοι
-    Cow::Borrowed(&[]), // Τεθνηκοιη
-    Cow::Borrowed(&[]), // Τεθνηκοιμι
-    Cow::Borrowed(&[]), // Τεθνηκοιην
-    Cow::Borrowed(&[]), // Τεθνηκοις
-    Cow::Borrowed(&[]), // Τεθνηκοιης
-    Cow::Borrowed(&[]), // Τεθνηκῃς
-    Cow::Borrowed(&[]), // Τεθνηκαμεν
-    Cow::Borrowed(&[]), // Τεθνηκωμεν
-    Cow::Borrowed(&[]), // Τεθνηκοιμεν
-    Cow::Borrowed(&[]), // Τεθνηκατε
-    Cow::Borrowed(&[]), // Τεθνηκητε
-    Cow::Borrowed(&[]), // Τεθνηκοιτε
-    Cow::Borrowed(&[]), // Τεθνηκετε
-    Cow::Borrowed(&[]), // Τεθνηκασι
-    Cow::Borrowed(&[]), // Τεθνηκασιν
-    Cow::Borrowed(&[]), // Τεθνηκωσι
-    Cow::Borrowed(&[]), // Τεθνηκωσιν
-    Cow::Borrowed(&[]), // Τεθνηκοιεν
-    Cow::Borrowed(&[]), // Τεθνηκοντων
-    Cow::Borrowed(&[]), // Τεθνηκατον
-    Cow::Borrowed(&[]), // Τεθνηκητον
-    Cow::Borrowed(&[]), // Τεθνηκοιτον
-    Cow::Borrowed(&[]), // Τεθνηκοιτην
-    Cow::Borrowed(&[]), // Τεθνηκετον
-    Cow::Borrowed(&[]), // Τεθνηκετων
-    Cow::Borrowed(&[]), // Προσμειγνῡμῐ
-    Cow::Borrowed(&[SUBJ_MID_2_SG, SUBJ_PASS_2_SG]), // Κιδνᾰμαι
-    Cow::Borrowed(&[INFINITIVE_AOR_ACT]), // Τεθηπᾰ
+    Cow::Borrowed(&[]),                                                             // Γεγονοι
+    Cow::Borrowed(&[]),                                                             // Γεγενησαι
+    Cow::Borrowed(&[]),                                                             // Γεγενηται
+    Cow::Borrowed(&[]),                                                             // Γεγενησο
+    Cow::Borrowed(&[]),                                                             // Γεγενησθον
+    Cow::Borrowed(&[]),                                                             // Γεγενησθων
+    Cow::Borrowed(&[]),                                                             // Γεγενηνται
+    Cow::Borrowed(&[]),                                                             // Γεγενησθε
+    Cow::Borrowed(&[]),                                                             // Γεγενημεθα
+    Cow::Borrowed(&[]),                                                             // Τεθνηκας
+    Cow::Borrowed(&[]),                                                             // Τεθνηκῃ
+    Cow::Borrowed(&[]),                                                             // Τεθνηκοι
+    Cow::Borrowed(&[]),                                                             // Τεθνηκοιη
+    Cow::Borrowed(&[]),                                                             // Τεθνηκοιμι
+    Cow::Borrowed(&[]),                                                             // Τεθνηκοιην
+    Cow::Borrowed(&[]),                                                             // Τεθνηκοις
+    Cow::Borrowed(&[]),                                                             // Τεθνηκοιης
+    Cow::Borrowed(&[]),                                                             // Τεθνηκῃς
+    Cow::Borrowed(&[]),                                                             // Τεθνηκαμεν
+    Cow::Borrowed(&[]),                                                             // Τεθνηκωμεν
+    Cow::Borrowed(&[]),                                                             // Τεθνηκοιμεν
+    Cow::Borrowed(&[]),                                                             // Τεθνηκατε
+    Cow::Borrowed(&[]),                                                             // Τεθνηκητε
+    Cow::Borrowed(&[]),                                                             // Τεθνηκοιτε
+    Cow::Borrowed(&[]),                                                             // Τεθνηκετε
+    Cow::Borrowed(&[]),                                                             // Τεθνηκασι
+    Cow::Borrowed(&[]),                                                             // Τεθνηκασιν
+    Cow::Borrowed(&[]),                                                             // Τεθνηκωσι
+    Cow::Borrowed(&[]),                                                             // Τεθνηκωσιν
+    Cow::Borrowed(&[]),                                                             // Τεθνηκοιεν
+    Cow::Borrowed(&[]),                                                             // Τεθνηκοντων
+    Cow::Borrowed(&[]),                                                             // Τεθνηκατον
+    Cow::Borrowed(&[]),                                                             // Τεθνηκητον
+    Cow::Borrowed(&[]),                                                             // Τεθνηκοιτον
+    Cow::Borrowed(&[]),                                                             // Τεθνηκοιτην
+    Cow::Borrowed(&[]),                                                             // Τεθνηκετον
+    Cow::Borrowed(&[]),                                                             // Τεθνηκετων
+    Cow::Borrowed(&[]),                                                             // Προσμειγνῡμῐ
+    Cow::Borrowed(&[SUBJ_MID_2_SG, SUBJ_PASS_2_SG]),                                // Κιδνᾰμαι
+    Cow::Borrowed(&[INFINITIVE_AOR_ACT]),                                           // Τεθηπᾰ
     Cow::Borrowed(&[
         SUBJ_ACT_1_SG,
         SUBJ_ACT_2_SG,
@@ -4890,7 +4855,7 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
     ]), // Στρωννῡμῐ
-    Cow::Borrowed(&[INFINITIVE_AOR_ACT]), // Δῐκεῑν
+    Cow::Borrowed(&[INFINITIVE_AOR_ACT]),                                           // Δῐκεῑν
     Cow::Borrowed(&[
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
@@ -4913,9 +4878,9 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         PERFECT_SUBJ_ACT_2_SG,
         PERFECT_SUBJ_ACT_3_SG,
     ]), // Ἀμφῑστημῐ
-    Cow::Borrowed(&[]), // Γανῠμαι
-    Cow::Borrowed(&[]), // Δῐακειμαι
-    Cow::Borrowed(&[]), // Ἀδησα
+    Cow::Borrowed(&[]),                                                             // Γανῠμαι
+    Cow::Borrowed(&[]),                                                             // Δῐακειμαι
+    Cow::Borrowed(&[]),                                                             // Ἀδησᾰ
     Cow::Borrowed(&[
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
@@ -4958,12 +4923,12 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 225] = [
         AORIST_SUBJ_PASS_2_SG,
         AORIST_SUBJ_PASS_3_SG,
     ]), // Προϊστημῐ
-    Cow::Borrowed(&[]), // Λλῡμῐ
-    Cow::Borrowed(&[]), // Γνῡμῐ
-    Cow::Borrowed(&[]), // Ρρηγνῡμῐ
-    Cow::Borrowed(&[]), // Δειδῐᾰ
-    Cow::Borrowed(&[]), // Κᾰτᾰμῑγνῡμῐ
-    Cow::Borrowed(&[]), // Προδῐδωμῐ
+    Cow::Borrowed(&[]),                                                             // Λλῡμῐ
+    Cow::Borrowed(&[]),                                                             // Γνῡμῐ
+    Cow::Borrowed(&[]),                                                             // Ρρηγνῡμῐ
+    Cow::Borrowed(&[]),                                                             // Δειδῐᾰ
+    Cow::Borrowed(&[]),                                                             // Κᾰτᾰμῑγνῡμῐ
+    Cow::Borrowed(&[]),                                                             // Προδῐδωμῐ
 ];
 
 /// The cells whose final `-αι`, `-οι` counts as long.

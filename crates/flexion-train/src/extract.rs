@@ -243,11 +243,12 @@ fn lexeme(
     order: usize,
 ) -> Option<Lexeme> {
     let fold = |s: &str| {
-        if lang.spelling.fold_case {
+        let s = if lang.spelling.fold_case {
             s.to_lowercase()
         } else {
             s.to_string()
-        }
+        };
+        initial_marks_only(&s, lang.spelling.initial_marks, lang.spelling.vowels)
     };
     let lemma = fold(&entry.word);
     // The model writes an edit's strings' lengths in a byte, and no word
@@ -405,6 +406,32 @@ fn lexeme(
 
 /// The cells in which, by its senses, an entry is a form of another word:
 /// none unless every sense says it is one.
+/// `word` with the marks of `marks` that stand after a consonant of their
+/// word (not on its first letter nor its first vowels) dropped.
+fn initial_marks_only(word: &str, marks: &str, vowels: &str) -> String {
+    if marks.is_empty() || !word.nfd().any(|c| marks.contains(c)) {
+        return word.to_string();
+    }
+    let (mut letters, mut consonant) = (0, false);
+    let mut out = String::with_capacity(word.len());
+    for c in word.nfd() {
+        if unicode_normalization::char::is_combining_mark(c) {
+            if !(marks.contains(c) && consonant && letters > 1) {
+                out.push(c);
+            }
+            continue;
+        }
+        if c.is_alphabetic() {
+            letters += 1;
+            consonant |= !vowels.contains(c);
+        } else {
+            (letters, consonant) = (0, false);
+        }
+        out.push(c);
+    }
+    out.nfc().collect()
+}
+
 fn form_of_cells(entry: &Entry, cells: &Cells) -> Vec<usize> {
     let form_of = |s: &kaikki::Sense| s.tags.iter().any(|t| t == "form-of");
     if entry.senses.is_empty() || !entry.senses.iter().all(form_of) {
@@ -415,4 +442,19 @@ fn form_of_cells(entry: &Entry, cells: &Cells) -> Vec<usize> {
         .iter()
         .flat_map(|s| cells.match_tags(&s.tags, &|_| true))
         .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::initial_marks_only;
+
+    #[test]
+    fn a_breathing_after_a_consonant_of_the_word_is_dropped() {
+        let breathings = "\u{313}\u{314}";
+        let keep = |w: &str| initial_marks_only(w, breathings, "αεηιουω");
+        assert_eq!(keep("ὑπἔκρυπτον"), "ὑπέκρυπτον");
+        assert_eq!(keep("αἰτέω"), "αἰτέω");
+        assert_eq!(keep("ῥήτωρ"), "ῥήτωρ");
+        assert_eq!(keep("ὁ ἀνήρ"), "ὁ ἀνήρ");
+    }
 }

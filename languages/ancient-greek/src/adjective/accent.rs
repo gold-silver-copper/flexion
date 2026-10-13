@@ -264,7 +264,7 @@ pub static CLASSES: [StressClass<'static>; 10] = [
 
 use AccentClass::*;
 
-/// Which class a word is of: 108 rules and 1,150 listed words.
+/// Which class a word is of: 108 rules and 1,151 listed words.
 pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
     rules {
         "" => [Τελειος 2050, Ψῑλος 1293, Ἰσος 502, Θηλῠς 434, Τρᾱχῠς 360, Κᾰκοηθης 34, Ἡδῑων 13, Ἡμῐσῠς 2, Τῑμῐωτερος 2, Σημερῐνος 1],
@@ -534,6 +534,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "αποβαλων" => Τρᾱχῠς,
         "απογειοσ" => Τελειος,
         "αποθανων" => Τρᾱχῠς,
+        "αποκρινασ" => Θηλῠς,
         "αποροσ" => Τελειος,
         "αποστερων" => Τρᾱχῠς,
         "αποτροπαιοσ" => Τελειος,
@@ -1600,13 +1601,13 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 59] = [
     Cow::Borrowed(&[GEN_F_PL]), // Ἀγνως
     Cow::Borrowed(&[]), // Γαῡρος
     Cow::Borrowed(&[GEN_F_PL]), // Ζευξᾱς
+    Cow::Borrowed(&[GEN_F_PL]), // Παυσων
     Cow::Borrowed(&[]), // Ἐρημος
     Cow::Borrowed(&[GEN_F_PL]), // Θειων
     Cow::Borrowed(&[
         GEN_M_DU, GEN_M_PL, GEN_F_DU, GEN_F_PL, GEN_N_DU, GEN_N_PL, DAT_M_DU, DAT_F_DU, DAT_N_DU,
         ADVERB,
     ]), // Κᾰλλῐθρῐξ
-    Cow::Borrowed(&[GEN_F_PL]), // Παυσων
     Cow::Borrowed(&[
         GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
         DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,

@@ -169,6 +169,10 @@ pub struct Spelling {
     /// to the letter without it (Greek breathings, iota subscript).
     pub fold_marks: &'static str,
     pub strip_marks: &'static str,
+    /// Combining marks written only on a word's first letter or first vowels
+    /// (Greek breathings): written after a consonant of the word (a
+    /// dictionary's compound, `ὑπἔκρυπτον`), they are dropped.
+    pub initial_marks: &'static str,
     /// Letters written plain when the caller turns marks off (Latin
     /// `ā` → `a`). Lookup ignores them too.
     pub unmark: Vec<(char, char)>,

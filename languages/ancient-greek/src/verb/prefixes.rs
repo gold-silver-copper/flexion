@@ -9,19 +9,19 @@ use flexion::Placement::*;
 use flexion::{Prefix, Prefixes, Separation};
 use std::borrow::Cow;
 
-/// 28 prefixes and 278 words that go against most with theirs.
+/// 28 prefixes and 271 words that go against most with theirs.
 pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
     prefixes: Cow::Borrowed(&[
         Prefix {
             letters: Cow::Borrowed("αμφι"),
             separable: 0,
-            inseparable: 6,
+            inseparable: 7,
             words: 10,
         },
         Prefix {
             letters: Cow::Borrowed("ανα"),
             separable: 0,
-            inseparable: 46,
+            inseparable: 48,
             words: 65,
         },
         Prefix {
@@ -33,7 +33,7 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         Prefix {
             letters: Cow::Borrowed("απο"),
             separable: 0,
-            inseparable: 53,
+            inseparable: 55,
             words: 67,
         },
         Prefix {
@@ -63,7 +63,7 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         Prefix {
             letters: Cow::Borrowed("εκ"),
             separable: 0,
-            inseparable: 44,
+            inseparable: 43,
             words: 54,
         },
         Prefix {
@@ -93,7 +93,7 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         Prefix {
             letters: Cow::Borrowed("κατα"),
             separable: 0,
-            inseparable: 35,
+            inseparable: 36,
             words: 59,
         },
         Prefix {
@@ -135,7 +135,7 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         Prefix {
             letters: Cow::Borrowed("προ"),
             separable: 0,
-            inseparable: 38,
+            inseparable: 39,
             words: 65,
         },
         Prefix {
@@ -153,7 +153,7 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         Prefix {
             letters: Cow::Borrowed("συγ"),
             separable: 0,
-            inseparable: 9,
+            inseparable: 10,
             words: 16,
         },
         Prefix {
@@ -184,7 +184,6 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
     listed: Cow::Borrowed(&[
         (Cow::Borrowed("αμφιεπω"), Separation::Neither),
         (Cow::Borrowed("αμφικαλυπτω"), Separation::Neither),
-        (Cow::Borrowed("αμφικρυπτω"), Separation::Neither),
         (Cow::Borrowed("αμφιστημι"), Separation::Neither),
         (Cow::Borrowed("αναβλαστανω"), Separation::Neither),
         (Cow::Borrowed("αναβοαω"), Separation::Neither),
@@ -195,15 +194,13 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         (Cow::Borrowed("αναιρεω"), Separation::Neither),
         (Cow::Borrowed("αναισσω"), Separation::Neither),
         (Cow::Borrowed("ανακαλεω"), Separation::Neither),
-        (Cow::Borrowed("ανακρυπτω"), Separation::Neither),
-        (Cow::Borrowed("αναλαζομαι"), Separation::Neither),
         (Cow::Borrowed("αναλαμβανω"), Separation::Neither),
         (Cow::Borrowed("αναλισκω"), Separation::Neither),
         (Cow::Borrowed("αναποδιζω"), Separation::Neither),
         (Cow::Borrowed("αναπτω"), Separation::Neither),
         (Cow::Borrowed("ανατρεχω"), Separation::Neither),
         (Cow::Borrowed("αναφερω"), Separation::Neither),
-        (Cow::Borrowed("αναχωρεω"), Separation::Neither),
+        (Cow::Borrowed("αναχρονιζομαι"), Separation::Neither),
         (Cow::Borrowed("αναψυχω"), Separation::Neither),
         (Cow::Borrowed("αντιαζω"), Separation::Neither),
         (Cow::Borrowed("αντικαθιστημι"), Separation::Neither),
@@ -213,13 +210,11 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         (Cow::Borrowed("αποθραυω"), Separation::Neither),
         (Cow::Borrowed("αποικιζω"), Separation::Neither),
         (Cow::Borrowed("αποκαλυπτω"), Separation::Neither),
-        (Cow::Borrowed("αποκρυπτω"), Separation::Neither),
         (Cow::Borrowed("αποκωλυω"), Separation::Neither),
         (Cow::Borrowed("απολαμβανω"), Separation::Neither),
         (Cow::Borrowed("απολεγω"), Separation::Neither),
         (Cow::Borrowed("απολειπω"), Separation::Neither),
         (Cow::Borrowed("απολυτροω"), Separation::Neither),
-        (Cow::Borrowed("απονευροομαι"), Separation::Neither),
         (Cow::Borrowed("αποπερδομαι"), Separation::Neither),
         (Cow::Borrowed("απορεω"), Separation::Neither),
         (Cow::Borrowed("αποστατεω"), Separation::Neither),
@@ -268,6 +263,7 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         (Cow::Borrowed("εκδιωκω"), Separation::Neither),
         (Cow::Borrowed("εκδυω"), Separation::Neither),
         (Cow::Borrowed("εκκαλεω"), Separation::Neither),
+        (Cow::Borrowed("εκκρυπτω"), Separation::Neither),
         (Cow::Borrowed("εκλεγω"), Separation::Neither),
         (Cow::Borrowed("εκλυτροω"), Separation::Neither),
         (Cow::Borrowed("εκρεω"), Separation::Neither),
@@ -324,7 +320,6 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         (Cow::Borrowed("κατακαλεω"), Separation::Neither),
         (Cow::Borrowed("κατακειμαι"), Separation::Neither),
         (Cow::Borrowed("κατακλαω"), Separation::Neither),
-        (Cow::Borrowed("κατακλυζω"), Separation::Neither),
         (Cow::Borrowed("καταλαμβανω"), Separation::Neither),
         (Cow::Borrowed("καταλεγω"), Separation::Neither),
         (Cow::Borrowed("καταμυω"), Separation::Neither),
@@ -379,7 +374,6 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         (Cow::Borrowed("περιφερω"), Separation::Neither),
         (Cow::Borrowed("περιφρονεω"), Separation::Neither),
         (Cow::Borrowed("προαγω"), Separation::Neither),
-        (Cow::Borrowed("προαπολυω"), Separation::Neither),
         (Cow::Borrowed("προβαλλω"), Separation::Neither),
         (Cow::Borrowed("προειμι"), Separation::Neither),
         (Cow::Borrowed("προειπον"), Separation::Neither),
@@ -422,7 +416,6 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         (Cow::Borrowed("προυφειλω"), Separation::Neither),
         (Cow::Borrowed("προφερω"), Separation::Neither),
         (Cow::Borrowed("προωθεω"), Separation::Neither),
-        (Cow::Borrowed("συγγιγνομαι"), Separation::Neither),
         (Cow::Borrowed("συγκακουργεω"), Separation::Neither),
         (Cow::Borrowed("συγκαλεω"), Separation::Neither),
         (Cow::Borrowed("συγκειμαι"), Separation::Neither),
@@ -1721,11 +1714,6 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
             Cow::Borrowed("ἐ"),
             Cow::Borrowed("ἀμφε"),
         ), // αμφι + ἐ → ἀμφε
-        (
-            Cow::Borrowed("ανα"),
-            Cow::Borrowed("κ"),
-            Cow::Borrowed("ἀνᾰκ"),
-        ), // ανα + κ → ἀνᾰκ
         (
             Cow::Borrowed("ανα"),
             Cow::Borrowed("ἐ"),

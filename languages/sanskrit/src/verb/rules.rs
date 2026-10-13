@@ -7,7 +7,7 @@
 use super::paradigms::Conjugation::{self, *};
 use flexion::Choice;
 
-/// 146 rules and 408 listed words.
+/// 146 rules and 407 listed words.
 pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
     rules {
         "" => [वहति 265, लभते 110, अमत 99, धरति 95, साधयति 86, आपत 46, रमते 42, एषयति 36, ईरयति 27, खादति 26, ददाति 19, तनोति 16, ईळे 10, आजीत 10, आपनोति 8, ररंह 8, भाति 7, पिपरति 7, बधनाति 6, ददौ 6, भनकति 5, अगात 5, जुहाव 5, इयाय 5, चचार 5, वमति 4, वृणीते 4, रवति 4, आनयति 4, चकार 3, आचरति 3, अकारषीत 3, अधुकषत 3, अचैषीत 3],
@@ -534,7 +534,6 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "#शयति" => वहति,
         "#शशाक" => अमत,
         "#शास्ति" => वहति,
-        "#शिनष्टि" => अमत,
         "#शुच्यति" => वहति,
         "#शुशोच" => अमत,
         "#शृणोति" => तनोति,

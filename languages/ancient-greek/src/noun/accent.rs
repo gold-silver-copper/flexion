@@ -341,7 +341,7 @@ pub static CLASSES: [StressClass<'static>; 21] = [
 
 use AccentClass::*;
 
-/// Which class a word is of: 186 rules and 2,703 listed words.
+/// Which class a word is of: 186 rules and 2,702 listed words.
 pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
     rules {
         "" => [Δῐαιρεσῐς 2304, Σημεῑον 1960, Νῠμφη 1686, Ἀρῐθμος 1679, Τρᾰπεζᾰ 177, Τεῡχος 99, Κλεις 90, Δᾰνᾰοι 34, Ὀλῐνοι 33, Κελῡφος 13, Ἀσαῑοι 12, Ὁμολογιᾱ 12, Πᾰτηρ 6, Εὐδαιμων 6, Φρην 6, Οὐς 4, Μητηρ 4, Δμως 3, Αἰγες 2, Ἀνηρ 2, Λᾱθῠρῐς 1],
@@ -1554,7 +1554,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ιβισ" => Σημεῑον,
         "ιγδισ" => Σημεῑον,
         "ιδη" => Νῠμφη,
-        "ιδιοι" => Ὀλῐνοι,
         "ιδρυσισ" => Δῐαιρεσῐς,
         "ιδρωσ" => Ἀρῐθμος,
         "ιδυξ" => Σημεῑον,
@@ -1594,6 +1593,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ιπποτοξοτησ" => Νῠμφη,
         "ιππουρισ" => Δῐαιρεσῐς,
         "ιπποφλομοσ" => Δῐαιρεσῐς,
+        "ιπποφοβασ" => Ἀρῐθμος,
         "ιπποφορβοσ" => Ἀρῐθμος,
         "ιρισ" => Σημεῑον,
         "ιρων" => Ἀρῐθμος,
@@ -1704,7 +1704,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "κατηλιψ" => Σημεῑον,
         "κατηχησισ" => Δῐαιρεσῐς,
         "κατοικεσια" => Δῐαιρεσῐς,
-        "κατοικημα" => Δῐαιρεσῐς,
         "κατοικησισ" => Δῐαιρεσῐς,
         "κατοικισισ" => Δῐαιρεσῐς,
         "κατουλασ" => Ἀρῐθμος,
@@ -3270,11 +3269,11 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 113] = [
     Cow::Borrowed(&[]),                                       // Σημεῑον
     Cow::Borrowed(&[GEN_SG, GEN_DU, GEN_PL, DAT_SG, DAT_DU, DAT_PL]), // Φορᾱ
     Cow::Borrowed(&[GEN_PL]),                                 // Δᾰμᾰλης
-    Cow::Borrowed(&[GEN_PL]),                                 // Κοχλῐᾱς
     Cow::Borrowed(&[]),                                       // Ὀργῐᾰ
+    Cow::Borrowed(&[GEN_PL]),                                 // Κοχλῐᾱς
     Cow::Borrowed(&[GEN_SG, GEN_DU, GEN_PL, DAT_SG, DAT_DU, DAT_PL]), // Ζῠγον
-    Cow::Borrowed(&[]),                                       // Φᾰος
     Cow::Borrowed(&[]),                                       // Ὀλῐνοι
+    Cow::Borrowed(&[]),                                       // Φᾰος
     Cow::Borrowed(&[GEN_DU, GEN_PL, DAT_DU]),                 // Κᾰνων
     Cow::Borrowed(&[GEN_PL]),                                 // Κροσσαι
     Cow::Borrowed(&[]),                                       // Ῥητωρ
@@ -3292,10 +3291,10 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 113] = [
     Cow::Borrowed(&[GEN_DU, GEN_PL, DAT_DU]),                 // Περᾰς
     Cow::Borrowed(&[]),                                       // Πτερῠξ
     Cow::Borrowed(&[]),                                       // Πνεῡμᾰ
-    Cow::Borrowed(&[]),                                       // Ἰκρῐα
     Cow::Borrowed(&[GEN_DU, GEN_PL, DAT_DU]),                 // Σηψ
     Cow::Borrowed(&[]),                                       // Ῥως
     Cow::Borrowed(&[]),                                       // Ἀσαῑοι
+    Cow::Borrowed(&[]),                                       // Ἰκρῐα
     Cow::Borrowed(&[]),                                       // Ἁλως
     Cow::Borrowed(&[]),                                       // Κηρ
     Cow::Borrowed(&[]),                                       // Στοῑχος

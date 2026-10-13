@@ -74,7 +74,7 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
     marks: Some(marks::MARKS),
     irregular: irregular::IRREGULAR,
     smoothing: 2.0,
-    sharpness: 1.0,
+    sharpness: 0.5,
 };
 
 /// A numeral form: which cell of its declension.

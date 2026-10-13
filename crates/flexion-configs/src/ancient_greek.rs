@@ -246,6 +246,7 @@ pub fn language() -> Language {
             // Breathings, iota subscript and diaeresis are part of the word but
             // need not be typed to find it; the final sigma is a sigma.
             fold_marks: "\u{313}\u{314}\u{345}\u{308}",
+            initial_marks: "\u{313}\u{314}",
             fold: vec![('ς', 'σ')],
             // Vowel length (macron, breve on α, ι, υ) can be written or not.
             unmark_marks: "\u{304}\u{306}",
