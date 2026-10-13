@@ -2053,7 +2053,7 @@ fn accent<'s>(
         labels.entry(w.clone()).or_insert(*c);
     }
     // A class whose stem syllable the word hasn't got can't be its.
-    let class = choose::learn(&examples, settings, |word, c| {
+    let class = choose::learn(&examples, settings.detail(), |word, c| {
         classes.get(usize::from(c)).is_some_and(|c| {
             c.vowel
                 .is_none_or(|v| usize::from(v) < flexion::stress_positions(orthography, word))

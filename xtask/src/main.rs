@@ -47,6 +47,9 @@ fn run() -> Result<(), String> {
             if let Some(b) = flag("--rule-bits") {
                 settings.rule_bits = b.parse().map_err(|_| "bad --rule-bits")?;
             }
+            if let Some(b) = flag("--letter-bits") {
+                settings.letter_bits = b.parse().map_err(|_| "bad --letter-bits")?;
+            }
             if let Some(s) = flag("--smoothing") {
                 settings.smoothing = s.parse().map_err(|_| "bad --smoothing")?;
             }

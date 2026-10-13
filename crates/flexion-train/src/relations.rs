@@ -147,7 +147,7 @@ fn edge<'s>(
             .get(usize::from(i))
             .is_some_and(|(old, _)| flexion::pattern::bind(old, word).is_some())
     };
-    let choice = choose::learn(&examples, settings, fits);
+    let choice = choose::learn(&examples, settings.detail(), fits);
     Some(Relation {
         cell: u16::try_from(c).ok()?,
         from: Cow::Owned(vec![u16::try_from(s).ok()?]),

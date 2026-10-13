@@ -21,16 +21,39 @@ pub const MAX_ENDING: usize = 8;
 pub struct Settings {
     /// Bits a rule costs: what it must save to be kept.
     pub rule_bits: f64,
+    /// Bits a rule costs for each letter of its ending, on top.
+    pub letter_bits: f64,
     /// Words a rule must cover.
     pub min_gain: u32,
     /// See [`flexion::Choice::read`].
     pub smoothing: f32,
 }
 
+impl Settings {
+    /// For a choice of detail (how an ending changes, where an accent
+    /// goes), whose rules pay for each letter they read
+    /// ([`DETAIL_LETTER_BITS`]) when this doesn't say otherwise.
+    #[must_use]
+    pub fn detail(self) -> Settings {
+        Settings {
+            letter_bits: if self.letter_bits > 0.0 {
+                self.letter_bits
+            } else {
+                DETAIL_LETTER_BITS
+            },
+            ..self
+        }
+    }
+}
+
+/// See [`Settings::detail`].
+pub const DETAIL_LETTER_BITS: f64 = 1.0;
+
 impl Default for Settings {
     fn default() -> Self {
         Settings {
             rule_bits: 1.0,
+            letter_bits: 0.0,
             min_gain: 2,
             smoothing: 2.0,
         }
@@ -92,7 +115,10 @@ pub fn learn<'a, L: Label + Hash + Ord>(
         let Some(current) = endings(ending).skip(1).find_map(|e| kept.get(e)) else {
             continue;
         };
-        if saved_bits(&list, current, settings.smoothing) >= settings.rule_bits {
+        // A rule costs its bits, and more for each letter it reads.
+        #[allow(clippy::cast_precision_loss)]
+        let cost = settings.rule_bits + settings.letter_bits * ending.chars().count() as f64;
+        if saved_bits(&list, current, settings.smoothing) >= cost {
             let dist = flexion::blend(&list, current, settings.smoothing);
             kept.insert(ending.as_str(), dist);
         }
