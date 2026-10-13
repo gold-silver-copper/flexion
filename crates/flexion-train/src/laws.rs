@@ -1,13 +1,14 @@
 //! Sound laws: changes where a stem meets its ending (Greek `γ+σ → +ξ`,
-//! Russian `[к|г|х]+ы → +и`), or of a letter of the ending by the nearest
-//! of some letters before it (Sanskrit `न → ण` after `र`). They are found
+//! Russian `[к|г|х]+ы → +и`), of a letter of the ending by the nearest of
+//! some letters before it (Sanskrit `न → ण` after `र`), or of a copied
+//! letter (Greek `φ` copied as `π`: `πεφίληκα`). They are found
 //! where a word's paradigm, or a more general one, would build its forms but
 //! for such a change, and kept when they fix many forms and break few. The
 //! words they explain join the more general paradigm, and paradigms left
 //! without words go.
 
 use crate::HashMap;
-use flexion::pattern::{self, BOUNDARY};
+use flexion::pattern::{self, BOUNDARY, COPIED};
 use flexion::{Orthography, Paradigm};
 use sound_law::{Program, Rule, RuleSet};
 use std::borrow::Cow;
@@ -38,6 +39,8 @@ pub enum Change {
         off: Vec<char>,
         stop: Vec<char>,
     },
+    /// A copy of `letter` (see [`pattern::COPY`]) is `to`.
+    Copy { letter: char, to: char },
 }
 
 /// One learned law.
@@ -90,6 +93,7 @@ impl std::fmt::Display for Law {
                 }
                 Ok(())
             }
+            Change::Copy { letter, to } => write!(f, "copy of {letter} → {to}"),
         }
     }
 }
@@ -138,11 +142,18 @@ impl Change {
                 Some(format!("{head}{kept}{to}{rest}"))
             }
             Change::Tier { .. } => compile(std::slice::from_ref(self)).map(|p| p.apply(built)),
+            Change::Copy { letter, to } => {
+                let copy = format!("{COPIED}{letter}");
+                built
+                    .contains(&copy)
+                    .then(|| built.replace(&copy, &to.to_string()))
+            }
         }
     }
 
     /// Whether it may apply where a build has `window` around its boundary:
-    /// a law on a tier, wherever its letter is.
+    /// a law on a tier, wherever its letter is; on a copy, wherever it is
+    /// copied.
     fn applies(&self, (before, after): &(String, String), built: &str) -> bool {
         match self {
             Change::Edge { stem, ending, .. } => {
@@ -150,6 +161,7 @@ impl Change {
                     && stem.iter().any(|l| before.ends_with(l.as_str()))
             }
             Change::Tier { letter, .. } => built.contains(*letter),
+            Change::Copy { letter, .. } => built.contains(&format!("{COPIED}{letter}")),
         }
     }
 
@@ -209,6 +221,12 @@ impl Change {
                     },
                 ]
             }
+            Change::Copy { letter, to } => [
+                format!("{COPIED}{letter}"),
+                to.to_string(),
+                String::new(),
+                String::new(),
+            ],
         }
     }
 }
@@ -242,7 +260,7 @@ pub struct Word<'w> {
 }
 
 /// The fewest words a law must give forms of.
-const MIN_WORDS: usize = 5;
+pub(crate) const MIN_WORDS: usize = 5;
 /// The fewest cells a law must give forms in.
 const MIN_CELLS: usize = 2;
 /// The most forms a law may break, as a share of the forms it fixes.
@@ -328,7 +346,7 @@ pub fn learn<'s>(
             .iter()
             .zip(fs)
             .filter(|(b, f)| !same(b, f))
-            .flat_map(|(b, f)| edits(b, f))
+            .flat_map(|(b, f)| edits(b, f).into_iter().chain(copies(b, f)))
             .collect();
         mine.extend(
             rs.iter()
@@ -487,11 +505,11 @@ fn greedy(
                 Some(p) => Some(p),
                 None => continue,
             },
-            Change::Edge { .. } => None,
+            Change::Edge { .. } | Change::Copy { .. } => None,
         };
         let mut at: Vec<At> = index
             .iter()
-            .filter(|(k, _)| matches!(change, Change::Tier { .. }) || change.applies(k, ""))
+            .filter(|(k, _)| !matches!(change, Change::Edge { .. }) || change.applies(k, ""))
             .flat_map(|(_, v)| v.iter().copied())
             .collect();
         at.sort_unstable();
@@ -726,7 +744,10 @@ fn options(own: &Reading, r: &Reading, forms: &[&str]) -> Option<Vec<Change>> {
         if same(built, want) || !same(mine, want) {
             continue;
         }
-        let ways = edits(built, want);
+        let ways: Vec<Change> = edits(built, want)
+            .into_iter()
+            .chain(copies(built, want))
+            .collect();
         if ways.is_empty() {
             return None;
         }
@@ -739,6 +760,7 @@ fn options(own: &Reading, r: &Reading, forms: &[&str]) -> Option<Vec<Change>> {
 /// first (none to two) that turn `built` into `want`: `ε+ο → +ου`. What
 /// stays of the stem keeps the boundary after it.
 fn edits(built: &str, want: &str) -> Vec<Change> {
+    let built: String = built.chars().filter(|&c| c != COPIED).collect();
     let Some((stem, ending)) = built.split_once(BOUNDARY) else {
         return Vec::new();
     };
@@ -779,6 +801,27 @@ fn edits(built: &str, want: &str) -> Vec<Change> {
                 earlier: Vec::new(),
             });
         }
+    }
+    out
+}
+
+/// The changes of copied letters that `want` has where `built` copies
+/// another (`°φεφιλ+ηκα`, `πεφιληκα`: a copy of `φ` is `π`).
+fn copies(built: &str, want: &str) -> Vec<Change> {
+    let mut want = want.chars();
+    let mut out = Vec::new();
+    let mut copied = false;
+    for c in built.chars().filter(|&c| c != BOUNDARY) {
+        if c == COPIED {
+            copied = true;
+            continue;
+        }
+        match want.next() {
+            Some(to) if copied && to != c => out.push(Change::Copy { letter: c, to }),
+            Some(_) => {}
+            None => break,
+        }
+        copied = false;
     }
     out
 }
@@ -838,8 +881,11 @@ fn tiers(readings: &[Vec<Reading>], forms: &[Vec<&str>]) -> Vec<(Change, u32)> {
         .flat_map(|(w, (rs, fs))| {
             rs.iter().flat_map(move |r| {
                 r.builds.iter().zip(fs).filter_map(move |(b, f)| {
-                    let edge = b.chars().position(|c| c == BOUNDARY)?;
-                    let built: Vec<char> = b.chars().filter(|&c| c != BOUNDARY).collect();
+                    let edge = b
+                        .chars()
+                        .filter(|&c| c != COPIED)
+                        .position(|c| c == BOUNDARY)?;
+                    let built: Vec<char> = b.chars().filter(|&c| !marks(c)).collect();
                     let form: Vec<char> = f.chars().collect();
                     (built.len() == form.len()).then_some((w, built, form, edge))
                 })
@@ -975,9 +1021,15 @@ fn tier(examples: &HashMap<Example, u32>) -> Option<[Vec<char>; 3]> {
     (!on.is_empty()).then_some(sets)
 }
 
-/// Whether a form built marked at the stem's edge is `form`.
+/// Whether a form built marked (at the stem's edge, and its copies) is
+/// `form`.
 fn same(built: &str, form: &str) -> bool {
-    built.chars().filter(|&c| c != BOUNDARY).eq(form.chars())
+    built.chars().filter(|&c| !marks(c)).eq(form.chars())
+}
+
+/// Whether `c` is a mark of a built form, not a letter.
+fn marks(c: char) -> bool {
+    c == BOUNDARY || c == COPIED
 }
 
 /// The paradigms that still have words, and the assignment renumbered.
@@ -1036,6 +1088,17 @@ mod tests {
         assert!(edits("ποιε+ομεν", "ποιουμεν").contains(&edge("ε", "ο", "+ου")));
         // The Russian spelling rule: стрелк + ы → стрелки.
         assert!(edits("стрелк+ы", "стрелки").contains(&edge("к", "ы", "к+и")));
+        // A copied letter changed: φιλη, its perfect built φεφιληκα, is
+        // πεφιληκα.
+        let plain = Change::Copy {
+            letter: 'φ',
+            to: 'π',
+        };
+        assert_eq!(
+            copies("°φεφιλ+ηκα", "πεφιληκα"),
+            std::slice::from_ref(&plain)
+        );
+        assert!(copies("°λελυ+κα", "λελυκα").is_empty());
         // The same change after several letters is one law on all of them.
         let mut support = HashMap::default();
         support.insert(edge("к", "ы", "к+и"), 3);
@@ -1061,6 +1124,8 @@ mod tests {
             (contract.clone(), "φιλε+ομεν"),
             (contract.clone(), "ποιε+ομεν"),
             (contract, "πλε+ομεν"),
+            (plain.clone(), "ἐ°φεφιλη+κη"),
+            (plain, "°λελυ+κα"),
         ] {
             let program = compile(std::slice::from_ref(&change)).expect("compiles");
             assert_eq!(
