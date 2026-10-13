@@ -376,6 +376,7 @@ pub fn learn<'s>(
         irregular: flexion::Irregular::default(),
         smoothing: settings.smoothing,
         sharpness: 1.0,
+        trust: flexion::Trust::FULL,
     };
     // A word the grammar gets wrong is listed in its choices: its paradigm,
     // its stress pattern and stem vowel. Forms still wrong are irregular.

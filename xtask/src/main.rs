@@ -430,8 +430,8 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
         let is_held = |c: usize| held.contains(&c);
         // The sharpness, fitted on the dev tenth with a grammar that hasn't
         // seen it.
-        let sharpness = if o.quick {
-            1.0
+        let (sharpness, trust) = if o.quick {
+            (1.0, flexion::Trust::FULL)
         } else {
             let fit: Vec<Lexeme> = train
                 .iter()
@@ -453,8 +453,12 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
         let t = Instant::now();
         let mut learned = learn::learn(script.orthography(), &shape, &train, settings);
         learned.grammar.sharpness = sharpness;
+        learned.grammar.trust = trust;
         let secs = t.elapsed().as_secs_f64();
-        println!("  sharpness fitted on the dev tenth: {sharpness}");
+        println!(
+            "  sharpness fitted on the dev tenth: {sharpness}; trust: regular {}, unsettled {}, unattested {}",
+            trust.regular, trust.unsettled, trust.unattested
+        );
         let g = &learned.grammar;
         let st = &learned.stats;
         println!(

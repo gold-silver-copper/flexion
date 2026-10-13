@@ -324,6 +324,9 @@ pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
     /// to one again), fitted on held-out words so that what is said to be
     /// 80% likely is right about 80% of the time.
     pub sharpness: f32,
+    /// How much of its probability an answer keeps, by its status (see
+    /// [`Trust`]).
+    pub trust: Trust,
 }
 
 /// A reading's forms of the cells built so far: per cell, its forms with
@@ -362,6 +365,9 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     fn sharpened<'g>(&self, mut lists: Vec<Vec<Candidate<'g>>>) -> Vec<Vec<Candidate<'g>>> {
         for out in &mut lists {
             sharpen(out.iter_mut().map(|c| &mut c.probability), self.sharpness);
+            for c in out.iter_mut() {
+                c.probability *= self.trust.of(c.status);
+            }
             out.sort_by(|a, b| b.probability.total_cmp(&a.probability));
         }
         lists
@@ -1011,9 +1017,13 @@ pub fn restore(
     restorations(orthography, marks, smoothing, letters, key).0
 }
 
+/// How likely the next likeliest spelling must be, against the likeliest,
+/// to be read too (lower than a tenth: Latin top-3 +1 to +1.2 points).
+const SECOND_SPELLING: f32 = 0.03;
+
 /// The likeliest spelling (see [`restore`]), and the next likeliest, the
-/// letter it is least sure of written otherwise, if that is at least a
-/// tenth as likely.
+/// letter it is least sure of written otherwise, if that is at least
+/// [`SECOND_SPELLING`] as likely.
 fn restorations(
     o: &Orthography<'_>,
     marks: &Choice<'_, char>,
@@ -1049,11 +1059,13 @@ fn restorations(
         out.push(first.value);
         p *= first.probability;
     }
-    let other = doubt.filter(|d| d.2 >= 0.1).map(|(at, other, ratio)| {
-        let alt = out.iter().enumerate();
-        let alt = alt.map(|(i, &c)| if i == at { other } else { c });
-        (alt.collect(), p * ratio)
-    });
+    let other = doubt
+        .filter(|d| d.2 >= SECOND_SPELLING)
+        .map(|(at, other, ratio)| {
+            let alt = out.iter().enumerate();
+            let alt = alt.map(|(i, &c)| if i == at { other } else { c });
+            (alt.collect(), p * ratio)
+        });
     ((out.into_iter().collect(), p), other)
 }
 
@@ -1088,6 +1100,36 @@ fn top(mut lists: Vec<Vec<Candidate<'_>>>) -> Vec<Vec<Candidate<'_>>> {
 
 /// Raise probabilities to `power` and make them sum to what they summed to
 /// before.
+/// How much of its probability an answer of each status keeps, fitted on
+/// held-out words: the rest is "none of these" (a cell's answers may sum to
+/// less than one, where answers of that kind are often wrong). A listed form
+/// keeps all of it.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Trust {
+    pub regular: f32,
+    pub unsettled: f32,
+    pub unattested: f32,
+}
+
+impl Trust {
+    /// Every answer keeps all its probability.
+    pub const FULL: Trust = Trust {
+        regular: 1.0,
+        unsettled: 1.0,
+        unattested: 1.0,
+    };
+
+    /// What an answer of `status` keeps.
+    pub fn of(&self, status: Status) -> f32 {
+        match status {
+            Status::Listed => 1.0,
+            Status::Regular => self.regular,
+            Status::Unsettled => self.unsettled,
+            Status::Unattested => self.unattested,
+        }
+    }
+}
+
 pub fn sharpen<'p>(probabilities: impl Iterator<Item = &'p mut f32>, power: f32) {
     if (power - 1.0).abs() < f32::EPSILON {
         return;

@@ -71,9 +71,10 @@ pub fn build<'s>(
         let learned = |lexemes: &[Lexeme]| learn::learn(orthography, &shape, lexemes, settings);
         // The sharpness, fitted on the dev tenth with a grammar that hasn't
         // seen it.
-        let sharpness = eval::fit_sharpness(&learned(&fit).grammar, &orthography, &dev);
+        let (sharpness, trust) = eval::fit_sharpness(&learned(&fit).grammar, &orthography, &dev);
         let mut scored = learned(&train);
         scored.grammar.sharpness = sharpness;
+        scored.grammar.trust = trust;
         let g = &scored.grammar;
         let test: Vec<&Lexeme> = d
             .lexemes
@@ -92,6 +93,7 @@ pub fn build<'s>(
         });
         let mut shipped = learned(&d.lexemes);
         shipped.grammar.sharpness = sharpness;
+        shipped.grammar.trust = trust;
         // Attested: an even sample of the dictionary's own words (of
         // homographs, the first, which is the one the grammar answers for).
         let mut by_order: Vec<&Lexeme> = d.lexemes.iter().collect();

@@ -435,17 +435,19 @@ pub fn unseen<P: Label, A: Label, F: Label>(
         .is_some_and(|h| !h.get(cell).copied().unwrap_or(false))
 }
 
-/// The sharpness (see [`flexion::Grammar::sharpness`]) that makes `grammar`'s
-/// stated probabilities match how often its answers are right on `words`
-/// (held out, typed as their headwords): the one, of a grid from 0.5 to 4,
-/// with the smallest calibration error.
+/// The sharpness and the trust (see [`flexion::Grammar::sharpness`],
+/// [`flexion::Trust`]) that make `grammar`'s stated probabilities fit how
+/// often its answers are right on `words` (held out, typed as their
+/// headwords): the power, of a grid from 0.5 to 4, by calibration error;
+/// then each status's trust, where at least [`TRUSTED`] of the forms have
+/// an answer of that status first (else all of it).
 pub fn fit_sharpness<P: Label, A: Label, F: Label>(
     grammar: &flexion::Grammar<'_, P, A, F>,
     orthography: &flexion::Orthography<'_>,
     words: &[&Lexeme],
-) -> f32 {
-    // Every scored form's candidates: (probability, right) each.
-    let mut forms: Vec<Vec<(f32, bool)>> = Vec::new();
+) -> (f32, flexion::Trust) {
+    // Every scored form's answers: (probability, right, status) each.
+    let mut forms: Vec<Vec<(f32, bool, flexion::Status)>> = Vec::new();
     // From the headword, as the grammar is most often asked (and scored).
     for l in words {
         let table = grammar.table(&l.lemma, &flexion::Known::default());
@@ -454,34 +456,80 @@ pub fn fit_sharpness<P: Label, A: Label, F: Label>(
                 continue;
             };
             let c = table.get(cell).map_or(&[][..], Vec::as_slice);
-            let scored = c
-                .iter()
-                .map(|c| (c.probability, same_form(orthography, &c.form, want)));
+            let scored = c.iter().map(|c| {
+                // Undo the grammar's own trust: fit on what it was given.
+                let kept = grammar.trust.of(c.status);
+                let p = if kept > 0.0 {
+                    c.probability / kept
+                } else {
+                    c.probability
+                };
+                (p, same_form(orthography, &c.form, want), c.status)
+            });
             forms.push(scored.collect());
         }
     }
+    // The power: of a grid, the one whose answers' stated probabilities are
+    // nearest how often they are right (calibration error).
+    let sharpened = |f: &[(f32, bool, flexion::Status)], power: f32| -> Vec<f32> {
+        let total: f32 = f.iter().map(|x| x.0).sum();
+        let sharp: f32 = f.iter().map(|x| x.0.powf(power)).sum();
+        let scale = if sharp > 0.0 { total / sharp } else { 0.0 };
+        f.iter().map(|x| x.0.powf(power) * scale).collect()
+    };
     let error = |power: f32| {
         let mut s = Score {
             forms: forms.len(),
             ..Score::default()
         };
         for f in &forms {
-            let total: f32 = f.iter().map(|x| x.0).sum();
-            let sharp: f32 = f.iter().map(|x| x.0.powf(power)).sum();
-            let Some(&(p, right)) = f.first() else {
+            let (Some(&(_, right, _)), Some(&p)) = (f.first(), sharpened(f, power).first()) else {
                 continue;
             };
-            let p = if sharp > 0.0 {
-                f64::from(p.powf(power) * total / sharp)
-            } else {
-                0.0
-            };
-            s.calibrate(p, right);
+            s.calibrate(f64::from(p), right);
         }
         s.calibration_error()
     };
     let grid = [0.5f32, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.5, 3.0, 3.5, 4.0];
-    grid.into_iter()
+    let power = grid
+        .into_iter()
         .min_by(|&a, &b| error(a).total_cmp(&error(b)))
-        .unwrap_or(1.0)
+        .unwrap_or(1.0);
+    // Each status's trust: where its first answers are right less often
+    // than they say, as often as they are (at least 0.3); never more.
+    let mut trust = flexion::Trust::FULL;
+    for status in [
+        flexion::Status::Regular,
+        flexion::Status::Unsettled,
+        flexion::Status::Unattested,
+    ] {
+        let (mut n, mut said, mut right) = (0usize, 0.0f64, 0.0f64);
+        for f in forms
+            .iter()
+            .filter(|f| f.first().is_some_and(|x| x.2 == status))
+        {
+            let (Some(&(_, ok, _)), Some(&p)) = (f.first(), sharpened(f, power).first()) else {
+                continue;
+            };
+            n += 1;
+            said += f64::from(p);
+            right += f64::from(u8::from(ok));
+        }
+        if n < TRUSTED || said <= 0.0 {
+            continue;
+        }
+        // A share; f32 is plenty.
+        #[allow(clippy::cast_possible_truncation)]
+        let w = (right / said).clamp(0.3, 1.0) as f32;
+        match status {
+            flexion::Status::Regular => trust.regular = w,
+            flexion::Status::Unsettled => trust.unsettled = w,
+            _ => trust.unattested = w,
+        }
+    }
+    (power, trust)
 }
+
+/// The fewest held-out forms whose first answer has a status for that
+/// status's trust to be fitted.
+pub const TRUSTED: usize = 100;

@@ -306,7 +306,7 @@ fn grammar_files(
     };
     let _ = writeln!(
         m,
-        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    relations: Cow::Borrowed(&{relations}),\n    feature: {feature},\n    compound: {compound},\n    prefixes: {prefixes},\n    accent: {accent},\n    laws: {laws},\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    marks: {marks},\n    irregular: irregular::IRREGULAR,\n    smoothing: {:?},\n    sharpness: {:?},\n}};\n",
+        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    relations: Cow::Borrowed(&{relations}),\n    feature: {feature},\n    compound: {compound},\n    prefixes: {prefixes},\n    accent: {accent},\n    laws: {laws},\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    marks: {marks},\n    irregular: irregular::IRREGULAR,\n    smoothing: {:?},\n    sharpness: {:?},\n    trust: flexion::Trust {{ regular: {:?}, unsettled: {:?}, unattested: {:?} }},\n}};\n",
         g.cells,
         g.lemma_cell,
         g.capitalized,
@@ -314,6 +314,9 @@ fn grammar_files(
         one.to_uppercase(),
         g.smoothing,
         g.sharpness,
+        g.trust.regular,
+        g.trust.unsettled,
+        g.trust.unattested,
         generics = match (g.accent.is_some(), feature_name) {
             (false, None) => String::new(),
             (true, None) => ", accent::AccentClass".to_string(),
