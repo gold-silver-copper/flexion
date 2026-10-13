@@ -1,8 +1,9 @@
-//! Sound laws where a stem meets its ending (`+`): every form a declension
-//! builds goes through them, in order, so one declension serves words whose
-//! stems change its endings. Each with the words whose forms it gives, and
-//! how many of the dictionary's forms it gets wrong (those are listed in
-//! `irregular.rs`).
+//! Sound laws where a stem meets its ending (`+`), where a form's first
+//! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), or on a letter a
+//! `%` copies (`°`): every form a declension builds goes through them, in order, so
+//! one declension serves words whose stems change its endings. Each with the
+//! words whose forms it gives, and how many of the dictionary's forms it
+//! gets wrong (those are listed in `irregular.rs`).
 
 use flexion::sound_law::compiled::*;
 
@@ -108,9 +109,74 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("+"), B("न")]),
     },
-    // ्+य → +: 22 words (स्निह्, द्वार्, मधुलिह्, पुर्), 0 forms wrong.
+    // ्म+् → ्म+ after a vowel earlier in the stem: 7 words (अश्मन्, अकर्मन्, आत्मन्, ऊष्मन्), 2 forms wrong.
     CompiledRule {
         name: B("law1"),
+        left: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Class(B(&[
+                        B("अ"),
+                        B("आ"),
+                        B("इ"),
+                        B("ई"),
+                        B("उ"),
+                        B("ऊ"),
+                        B("ऋ"),
+                        B("ए"),
+                        B("ऐ"),
+                        B("ओ"),
+                        B("औ"),
+                    ])),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::NotClass(B(&[
+                        B("अ"),
+                        B("आ"),
+                        B("इ"),
+                        B("ई"),
+                        B("उ"),
+                        B("ऊ"),
+                        B("ऋ"),
+                        B("ए"),
+                        B("ऐ"),
+                        B("ओ"),
+                        B("औ"),
+                    ])),
+                    quantifier: Quantifier::ZeroOrMore,
+                    capture: None,
+                },
+            ]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("\u{94d}म+\u{94d}")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("\u{94d}म+"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("\u{94d}म+\u{94d}")]),
+    },
+    // ्+य → +: 22 words (स्निह्, द्वार्, मधुलिह्, पुर्), 0 forms wrong.
+    CompiledRule {
+        name: B("law2"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -140,7 +206,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ्+ा → +: 19 words (स्निह्, द्वार्, मधुलिह्, पुर्), 0 forms wrong.
     CompiledRule {
-        name: B("law2"),
+        name: B("law3"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -170,7 +236,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ्+ौ → +ौ: 19 words (स्निह्, द्वार्, मधुलिह्, पुर्), 0 forms wrong.
     CompiledRule {
-        name: B("law3"),
+        name: B("law4"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -198,9 +264,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("\u{94d}+ौ")]),
     },
-    // ्म+्न → ्म+न: 17 words (अश्मन्, तक्मन्, आत्मन्, महात्मन्), 0 forms wrong.
+    // ्म+्न → ्म+न: 13 words (तक्मन्, महात्मन्, वस्मन्, वर्त्मन्), 0 forms wrong.
     CompiledRule {
-        name: B("law4"),
+        name: B("law5"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -228,9 +294,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("\u{94d}म+\u{94d}न")]),
     },
-    // ्म+्ण → ्म+ण: 20 words (चर्मन्, अकर्मन्, ब्रह्मन्, कर्मन्), 0 forms wrong.
+    // ्म+्ण → ्म+ण: 17 words (चर्मन्, ब्रह्मन्, कर्मन्, मर्मन्), 0 forms wrong.
     CompiledRule {
-        name: B("law5"),
+        name: B("law6"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -260,7 +326,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // [्|ो|उ]+े → +: 5 words (गो, द्वार्, वार्, ईड्), 0 forms wrong.
     CompiledRule {
-        name: B("law6"),
+        name: B("law7"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,

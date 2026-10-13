@@ -149,8 +149,8 @@ pub enum Declension {
     Πᾱς,
     /// Like `οὑ`: 1 words.
     Οὑ,
-    /// Like `ἁπας`: 1 words.
-    Ἁπας,
+    /// Like `ἁπᾱς`: 1 words.
+    Ἁπᾱς,
     /// Like `ὁδε`: 1 words.
     Ὁδε,
     /// Like `μηδεις`: 1 words.
@@ -186,7 +186,7 @@ impl Declension {
         Declension::Ἱ,
         Declension::Πᾱς,
         Declension::Οὑ,
-        Declension::Ἁπας,
+        Declension::Ἁπᾱς,
         Declension::Ὁδε,
         Declension::Μηδεις,
         Declension::Ἀλληλων,
@@ -428,8 +428,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 24] = [
     acc_f: "ἑ|ἑ", _, "σφᾱς";
     acc_n: "ἑ|ἑ", _, "σφᾱς";
     ),
-    // Ἁπας: 1 words (ἁπας). Like Πᾱς, except in 5 cells: gen_m du, gen_f du, acc_m du, acc_f du, acc_n sg.
-    declension!("ἁπας", 1, "~ας", like Πᾱς;
+    // Ἁπᾱς: 1 words (ἁπᾱς). Like Πᾱς, except in 5 cells: gen_m du, gen_f du, acc_m du, acc_f du, acc_n sg.
+    declension!("ἁπᾱς", 1, "~ᾱς", like Πᾱς;
     gen_m: _, derived, _;
     gen_f: _, derived, _;
     acc_m: _, derived, _;

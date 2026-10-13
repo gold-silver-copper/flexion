@@ -9,7 +9,7 @@ use flexion::Compound::{self, *};
 pub(super) const COMPOUND: Choice<'static, Compound> = flexion::choice! {
     rules {
         "" => [Last 976, Each 1],
-        "й" => [Last 1, Each 1],
+        "о" => [Last 851],
     }
     listed {
         "какой" => Each,

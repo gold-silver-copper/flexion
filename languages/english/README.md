@@ -48,8 +48,8 @@ grammar needs of:
   cell's form, changed);
 - `relations.rs`: which cell each cell's form is told from, and the rules on that
   form's ending that change it;
-- `laws.rs`: sound laws where a stem meets its ending (or along a tier), each with the
-  words whose forms it gives and the forms it gets wrong;
+- `laws.rs`: sound laws where a stem meets its ending or a literal before it (along a
+  tier, or on a copied letter), each with the words whose forms it gives and the forms it gets wrong;
 - `rules.rs`: which paradigm a word takes, as rules on its ending, each with how many of
   the dictionary's words with that ending follow each paradigm, and the words no rule
   gets right, listed;
@@ -71,10 +71,10 @@ reason (the rule and its counts).
 
 | | words | paradigms | sound laws | rules | listed words | irregular forms |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 228072 | 130 | 0 | 2373 | 6934 | 253 |
-| verb | 38230 | 96 | 17 | 855 | 1403 | 196 |
-| adjective | 61454 | 59 | 7 | 5011 | 20155 | 22737 |
-| adverb | 12620 | 27 | 1 | 838 | 3869 | 4613 |
+| noun | 228072 | 130 | 0 | 2569 | 7158 | 253 |
+| verb | 38230 | 95 | 17 | 1118 | 1417 | 199 |
+| adjective | 61454 | 14 | 7 | 461 | 2556 | 28 |
+| adverb | 12620 | 5 | 1 | 78 | 174 | 12 |
 
 *Words*: the dictionary's words the grammar is learned from. *Sound laws*: changes
 where a stem meets its ending (or farther, along a tier). *Rules*: the endings that
@@ -95,22 +95,22 @@ parts. *Features given*: top-1 from the headword, told the word's inherent featu
 (its gender, as `.gender(…)` tells it). *Seen* and *unseen cells*: top-1 on the cells
 some training word of the word's paradigm has a form in, and on the others, derived
 from other cells (with the number of forms). *Floor*: the CoNLL–SIGMORPHON 2017
-shared task's non-neural baseline (letters only). *Attested*: top-1 of the shipped
+shared task's non-neural baseline (letters only), and on the unseen cells. *Attested*: top-1 of the shipped
 grammar on the dictionary's own words, typed in full.
 
-| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | features given | seen cells | unseen cells | floor | attested |
+| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | features given | seen cells | unseen cells | floor (unseen) | attested |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 23733 | 47466 | **98.60%** ± 0.1 | 99.84% | 0.001 | 98.60% | 100.00% |  | 98.60% (47466) |  | 98.39% | 100.00% |
-| verb | 4151 | 20745 | **97.87%** ± 0.4 | 99.79% | 0.006 | 97.87% | 99.73% |  | 97.87% (20745) |  | 98.24% | 100.00% |
-| adjective | 6239 | 18715 | **96.53%** ± 0.5 | 99.55% | 0.050 | 96.53% | 100.00% |  | 96.53% (18715) |  | 95.02% | 100.00% |
-| adverb | 1207 | 3621 | **99.17%** ± 0.5 | 99.70% | 0.070 | 99.17% | 100.00% |  | 99.17% (3621) |  | 98.90% | 100.00% |
+| noun | 23733 | 47466 | **98.59%** ± 0.2 | 99.83% | 0.001 | 98.59% | 100.00% |  | 98.59% (47466) |  | 98.39% (0.00%) | 100.00% |
+| verb | 4151 | 20745 | **97.83%** ± 0.4 | 99.79% | 0.004 | 97.83% | 99.71% |  | 97.83% (20745) |  | 98.24% (0.00%) | 100.00% |
+| adjective | 6239 | 18715 | **96.91%** ± 0.4 | 99.98% | 0.003 | 96.91% | 100.00% |  | 96.91% (18715) |  | 95.02% (0.00%) | 100.00% |
+| adverb | 1207 | 3621 | **99.34%** ± 0.5 | 99.94% | 0.006 | 99.34% | 100.00% |  | 99.34% (3621) |  | 98.90% (0.00%) | 100.00% |
 
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 17993 | 559594 |
-| verb | 5992 | 190163 |
-| adjective | 48714 | 1637650 |
-| adverb | 9813 | 356406 |
+| noun | 18126 | 554188 |
+| verb | 6223 | 197658 |
+| adjective | 3553 | 107696 |
+| adverb | 610 | 20454 |
 
 ## Data and license
 

@@ -1,868 +1,268 @@
-//! The dictionary's forms no conjugation gives, as it writes them: a line per form,
-//! the word, its cell's number (see `super::cell`) and the form, sorted by word
-//! and cell. They are the answer for that word and cell.
+//! The dictionary's forms no conjugation gives, as it writes them: a line per word,
+//! sorted, the word then each listed cell's number (see `super::cell`) and its
+//! form, tab-separated. They are the answer for that word and cell.
 
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 855 forms.
+/// 608 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
-        r#"abludo	175	ablūsum
-abludo	177	ablūdendum
+        r#"abludo	175	ablūsum	177	ablūdendum
 aboleo	175	abolitus
 absilio	177	absiliendum
-absum	0	absum
-absum	5	absunt
-absum	18	āfuī
-absum	72	absim
-absum	170	āfore
-absum	174	absēns
-absum	176	āfutūrus
+absum	0	absum	1	absumus	5	absunt	18	āfuī	72	absim	170	āfore	176	āfutūrus
 accano	18	accecinī
 adblatero	175	adblateratus
 adiuvo	18	adiūvī
-adiuvo	175	adiūtus
 adlavo	18	adlāvī
 adluceo	18	adluxī
-admordeo	18	admomordī
-adolesco	176	adultūrus
-adolesco	187	adultum
-adolesco	188	adultū
+admordeo	18	admomordī	175	admorsus	176	admorsūrus	187	admorsum	188	admorsū
+adolesco	176	adultūrus	187	adultum	188	adultū
 adpetisso	175	adpetessītus
-adsentior	176	adsēnsūrus
-adsentior	187	adsēnsum
-adsentior	188	adsēnsū
-adsum	0	adsum
-adsum	5	adsunt
-adsum	72	adsim
-adsum	176	adfutūrus
-affero	18	attulī
-affero	175	allātus
-ago	18	ēgī
-ago	175	āctus
-aiio	20	aiistī
-aiio	22	aiit
-aiio	23	aiiērunt
-aiio	82	aiieret
-aiio	146	aii
-aiio	168	aiiere
-aio	4	ait
-aio	20	aistī
-aio	22	ait
-aio	23	ajērunt
-aio	82	ajeret
-aio	168	ajere
+adsentior	176	adsēnsūrus	187	adsēnsum	188	adsēnsū
+adsum	0	adsum	1	adsumus	5	adsunt	72	adsim
+affero	18	attulī	175	allātus
+ago	18	ēgī	175	āctus
+aiio	20	aiistī	22	aiit	23	aiiērunt	82	aiieret	146	aii	168	aiiere
+aio	2	ais	20	aistī	22	ait	82	ajeret	168	ajere
 algesco	18	alsī
 ango	18	ānxī
-ango	175	ānctus
 apio	175	aptus
 appetisso	18	apetissīvī
-appetisso	175	apetessītus
 ardesco	18	arsī
 assalio	175	assaltus
-assentior	176	assēnsūrus
-assentior	187	assēnsum
-assentior	188	assēnsū
+assentior	176	assēnsūrus	187	assēnsum	188	assēnsū
 assisto	18	astitī
-assum	1	assumus
-assum	4	adest
-assum	6	aderam
-assum	18	affuī
-assum	170	affore
-assum	176	affutūrus
+assum	1	assumus	2	ades	6	aderam	13	aderimus	18	affuī	170	affore	176	affutūrus
 attigo	175	attāctus
-aufero	18	abstulī
-aufero	175	ablātus
+aufero	18	abstulī	175	ablātus
 avello	18	āvulsī
-cado	18	cecidī
-cado	175	cāsum
-caedo	18	cecīdī
-cano	18	cecinī
+cado	18	cecidī	175	cāsum
+caedo	18	cecīdī	175	caesus	176	caesūrus	187	caesum	188	caesū
+cano	18	cecinī	175	cantus	176	cantūrus	187	cantum	188	cantū
 cio	175	citus
-circumlino	18	circumlevī
+circumlino	18	circumlevī	175	circumlitus	176	circumlitūrus	187	circumlitum	188	circumlitū
 circumsisto	18	circumstetī
+coepio	0	coëpiō	5	coëpiunt	72	coëpiam	175	coëptus
 cogo	18	coēgī
-cogo	175	coāctus
 cohorresco	18	cohorruīī
 colliquesco	18	colliquī
 commingo	175	commīnctus
 comparco	18	comparsī
-compatesco	176	compassūrus
-compatesco	187	compassum
-compatesco	188	compassū
+compatesco	176	compassūrus	187	compassum	188	compassū
 comperco	18	compersī
-concubo	175	concubitum
-concubo	177	concubandum
-concumbo	175	concubitum
-concumbo	177	concumbendum
+concubo	175	concubitum	177	concubandum
+concumbo	175	concubitum	177	concumbendum
 confero	18	contulī
-confero	175	collātus
-confido	176	cōnfīsūrus
-confido	187	cōnfīsum
-confido	188	cōnfīsū
-confiteor	176	cōnfessūrus
-confiteor	187	cōnfessum
-confiteor	188	cōnfessū
+confido	176	cōnfīsūrus	187	cōnfīsum	188	cōnfīsū
+confiteor	176	cōnfessūrus	187	cōnfessum	188	cōnfessū
 coniveo	18	cōnīxī
-conpartior	176	conpartūrus
-conpartior	187	conpartum
-conpartior	188	conpartū
-conqueror	176	conquestūrus
-conqueror	187	conquestum
-conqueror	188	conquestū
+conpartior	176	conpartūrus	187	conpartum	188	conpartū
+conqueror	176	conquestūrus	187	conquestum	188	conquestū
 conquinisco	18	conquēxī
 consepelio	175	cōnsepultus
 consero	175	cōnsatus
 cunctor	177	cūnctandum
 decumbo	177	dēcumbendum
-defetiscor	176	dēfessūrus
-defetiscor	187	dēfessum
-defetiscor	188	dēfessū
+defetiscor	176	dēfessūrus	187	dēfessum	188	dēfessū
 delino	18	dēlīvī
 deliquesco	18	dēlicuī
 demeto	18	dēmessuī
-demeto	175	dēmessus
+demulceo	175	dēmulctus
 depango	175	dēpāctus
 deplango	175	deplānctus
 deposco	18	dēpoposcī
 desino	18	dēsiī
-differo	18	distulī
-differo	175	dīlātus
-diffido	176	diffīsūrus
-diffido	187	diffīsum
-diffido	188	diffīsū
+differo	18	distulī	175	dīlātus
+diffido	176	diffīsūrus	187	diffīsum	188	diffīsū
 diffugio	175	diffūgitum
+disco	176	discitūrus
 dispesco	175	dispestus
 dissideo	177	dissidendum
 divido	18	dīvīsī
-divido	175	dīvīsus
 ecfero	18	extulī
-ecfero	175	ēlātus
 edo	18	ēdī
-edo	175	ēsus
 effero	18	extulī
-effero	175	ēlātus
 effrico	18	effrixī
 elanguesco	18	ēlangŭī
 elicio	175	ēlicitus
 emo	18	ēmī
-emo	175	ēmptus
-emorior	4	ēmorītur
-emorior	176	ēmoritūrus
-emorior	187	ēmortuum
-emorior	188	ēmortuū
-eo	4	it
-eo	46	ībātur
-eo	52	ībitur
-eo	112	eātur
-eo	174	iēns
+emorior	1	ēmorĭmur
+eo	4	it	6	ībam	13	ībimus	18	iī	20	īstī	21	īstis	96	īssem	97	īssēmus	98	īssēs	99	īssētis	100	īsset	101	īssent	112	eātur	169	īsse	174	iēns	177	eundum
 exardesco	18	exārsī
-exardesco	176	exārsūrus
-exardesco	187	exārsum
-exardesco	188	exārsū
 excio	175	excitus
 exfrico	18	exfrixī
-exordior	176	exōrsūrus
-exordior	187	exōrsum
-exordior	188	exōrsū
-exorior	78	exorīrer
-exorior	187	exortum
-exorior	188	exortū
+exordior	176	exōrsūrus	187	exōrsum	188	exōrsū
+exorior	78	exorīrer	79	exorīrēmur	80	exorīrēris	81	exorīrēminī	82	exorīrētur	83	exorīrentur	168	exorīrī	187	exortum	188	exortū
 expavesco	18	expāvī
-expergiscor	176	experrēctūrus
-expergiscor	187	experrēctum
-expergiscor	188	experrēctū
+expergiscor	176	experrēctūrus	187	experrēctum	188	experrēctū
 expingo	175	expictus
 exposco	18	expoposcī
 extruo	18	extruxī
-extruo	175	extructus
-exveho	18	ēvēxīī
-exveho	175	ēvectus
+exveho	18	ēvĕxīī	175	ēvectus
 facesso	175	facessītus
-facio	12	faciam
-facio	13	faciēmus
-facio	14	faciēs
-facio	15	faciētis
-facio	16	faciet
-facio	17	facient
-facio	18	fēcī
-facio	19	fēcimus
-facio	20	fēcistī
-facio	21	fēcistis
-facio	22	fēcit
-facio	23	fēcērunt
-facio	24	fēceram
-facio	25	fēcerāmus
-facio	26	fēcerās
-facio	27	fēcerātis
-facio	28	fēcerat
-facio	29	fēcerant
-facio	30	fēcerō
-facio	31	fēcerimus
-facio	32	fēceris
-facio	33	fēceritis
-facio	34	fēcerit
-facio	35	fēcerint
-facio	37	fīmus
-facio	38	fīs
-facio	39	fītis
-facio	40	fit
-facio	48	fīam
-facio	49	fīēmus
-facio	50	fīēs
-facio	51	fīētis
-facio	52	fīet
-facio	53	fīent
-facio	90	fēcerim
-facio	91	fēcerīmus
-facio	92	fēcerīs
-facio	93	fēcerītis
-facio	94	fēcerit
-facio	95	fēcerint
-facio	96	fēcissem
-facio	97	fēcissēmus
-facio	98	fēcissēs
-facio	99	fēcissētis
-facio	100	fēcisset
-facio	101	fēcissent
-facio	108	fīam
-facio	109	fīāmus
-facio	110	fīās
-facio	111	fīātis
-facio	112	fīat
-facio	113	fīant
-facio	114	fierem
-facio	115	fierēmus
-facio	116	fierēs
-facio	117	fierētis
-facio	118	fieret
-facio	119	fierent
 facio	146	fac
-facio	158	fī
-facio	159	fīte
-facio	164	fītō
-facio	166	fītō
-facio	169	fēcisse
-facio	171	fierī
-facio	177	faciendus
-facio	179	faciendī
-facio	180	faciendō
-facio	181	faciendum
-facio	182	faciendō
-fallo	18	fefellī
-fateor	176	fassūrus
-fateor	187	fassum
-fateor	188	fassū
-faveo	175	fautum
-faveo	177	favendum
-fero	4	fert
-fervo	175	fervitum
-fervo	177	fervendum
-fido	176	fīsūrus
-fido	187	fīsum
-fido	188	fīsū
-fivo	175	fīctus
-fivo	177	fīvendus
+fallo	18	fefellī	175	falsus	176	falsūrus	187	falsum	188	falsū
+fastidio	4	fastīdit
+fateor	176	fassūrus	187	fassum	188	fassū
+faveo	175	fautum	177	favendum
+fero	2	fers	18	tulī	38	ferris	40	fertur	171	ferrī	175	lātus
+fervo	175	fervitum	177	fervendum
+fido	176	fīsūrus	187	fīsum	188	fīsū
+fivo	175	fīctus	177	fīvendus
+fluo	18	flŭxī	176	flŭxūrus	187	flŭxum	188	flŭxū
 frango	18	frēgī
-frango	175	frāctus
-fraudor	176	frausūrus
-fraudor	187	frausum
-fraudor	188	frausū
+fraudor	176	frausūrus	187	frausum	188	frausū
 frendeo	175	frēsus
 frendo	175	frēsus
 frigesco	18	frīxī
-fruor	176	frūctūrus
-fruor	187	frūctum
-fruor	188	frūctū
-galaticor	176	galaticatūrus
-galaticor	187	galaticatum
-galaticor	188	galaticatū
-gradior	176	gressūrus
-gradior	187	gressum
-gradior	188	gressū
-haereo	175	haesum
-haereo	177	haerendum
-icio	2	īcis
-ico	175	ictus
+fruor	176	frūctūrus	187	frūctum	188	frūctū
+galaticor	176	galaticatūrus	187	galaticatum	188	galaticatū
+gigno	18	genuī
+gradior	176	gressūrus	187	gressum	188	gressū
+haereo	175	haesum	177	haerendum
+icio	1	īcimus	37	īcimur	38	īceris	171	īcī	175	ictus
 inardesco	18	inārsī
 incesso	175	incessus
-inclamito	0	clāmitō
-inclamito	5	clāmitant
-inclamito	41	clāmitantur
-inclamito	42	clāmitābar
-inclamito	72	clāmitem
-inclamito	174	clāmitāns
+inclamito	0	clāmitō	5	clāmitant	18	clāmitāvī	72	clāmitem
 indulgeo	175	indultus
 infero	18	intulī
-infero	175	illātus
+ingigno	18	ingenuī
 inlino	18	illēvī
-inlino	175	illitus
 inolesco	175	inolitus
-instinguo	18	īnstinxī
-instruo	175	īnstrūctum
-instruo	177	īnstruendum
-insum	1	īnsumus
-insum	4	inest
-insum	6	ineram
-insum	18	īnfuī
-insum	19	īnfuimus
-insum	20	īnfuistī
-insum	21	īnfuistis
-insum	22	īnfuit
-insum	23	īnfuērunt
-insum	24	īnfueram
-insum	25	īnfuerāmus
-insum	26	īnfuerās
-insum	27	īnfuerātis
-insum	28	īnfuerat
-insum	29	īnfuerant
-insum	30	īnfuerō
-insum	31	īnfuerimus
-insum	32	īnfueris
-insum	33	īnfueritis
-insum	34	īnfuerit
-insum	35	īnfuerint
-insum	90	īnfuerim
-insum	91	īnfuerīmus
-insum	92	īnfuerīs
-insum	93	īnfuerītis
-insum	94	īnfuerit
-insum	95	īnfuerint
-insum	96	īnfuissem
-insum	97	īnfuissēmus
-insum	98	īnfuissēs
-insum	99	īnfuissētis
-insum	100	īnfuisset
-insum	101	īnfuissent
-insum	169	īnfuisse
-insum	176	īnfutūrus
+instinguo	18	īnstinxī	175	īnstīnctus	176	īnstīnctūrus	187	īnstīnctum	188	īnstīnctū
+instruo	175	īnstrūctum	177	īnstruendum
+insum	1	īnsumus	2	ines	6	ineram	13	inerimus
 interemo	18	interēmī
-interemo	175	interēmptus
 inunguo	18	inūnxī
-inunguo	175	inūnctus
 iuvo	18	iūvī
-iuvo	175	iūtus
-lacio	18	licuī
+lacio	18	licuī	175	lactus	176	lactūrus	187	lactum	188	lactū
 languesco	18	langüī
 lavo	18	lāvī
 liqueo	18	līquī
 liquesco	18	licuī
-locor	176	locūtūrus
-locor	187	locūtum
-locor	188	locūtū
+locor	176	locūtūrus	187	locūtum	188	locūtū
 maereo	175	maestus
-malo	1	mālumus
-malo	4	māvult
-malo	12	mālam
-malo	13	mālēmus
-malo	14	mālēs
-malo	15	mālētis
-malo	16	mālet
-malo	17	mālent
-malo	18	māluī
-malo	19	māluimus
-malo	20	māluistī
-malo	21	māluistis
-malo	22	māluit
-malo	23	māluērunt
-malo	24	mālueram
-malo	25	māluerāmus
-malo	26	māluerās
-malo	27	māluerātis
-malo	28	māluerat
-malo	29	māluerant
-malo	30	māluerō
-malo	31	māluerimus
-malo	32	mālueris
-malo	33	mālueritis
-malo	34	māluerit
-malo	35	māluerint
-malo	72	mālim
-malo	78	māllem
-malo	90	māluerim
-malo	91	māluerīmus
-malo	92	māluerīs
-malo	93	māluerītis
-malo	94	māluerit
-malo	95	māluerint
-malo	96	māluissem
-malo	97	māluissēmus
-malo	98	māluissēs
-malo	99	māluissētis
-malo	100	māluisset
-malo	101	māluissent
-malo	169	māluisse
+malo	1	mālumus	2	māvīs	72	mālim	78	māllem	79	māllēmus	80	māllēs	81	māllētis	82	māllet	83	māllent	168	mālle
 meio	18	mīxī
-meio	175	mīctus
 meto	18	messuī
-meto	175	messus
-mordeo	18	momordī
-morio	176	mortūrus
-morio	187	mortuum
-morio	188	mortuū
-morior	4	morītur
-morior	176	moritūrus
-morior	187	mortuum
-morior	188	mortuū
-nanciscor	176	nactūrus
-nanciscor	187	nactum
-nanciscor	188	nactū
+mordeo	18	momordī	175	morsus	176	morsūrus	187	morsum	188	morsū
+morio	176	mortūrus	187	mortuum	188	mortuū
+morior	1	morĭmur
+nanciscor	176	nactūrus	187	nactum	188	nactū
 nascor	176	nāscitūrus
 ningo	177	ningendum
 ninguo	18	ninxī
-nolo	1	nōlumus
-nolo	2	nevīs
-nolo	3	nōltis
-nolo	4	nevolt
-nolo	12	nōlam
-nolo	13	nōlēmus
-nolo	14	nōlēs
-nolo	15	nōlētis
-nolo	16	nōlet
-nolo	17	nōlent
-nolo	72	nōlim
-nolo	78	nōllem
-nolo	146	nōlī
-nolo	147	nōlīte
-nolo	152	nōlitō
-nolo	153	nōlitōte
-nolo	154	nōlitō
-obhaereo	175	obhaesum
-obhaereo	177	obhaerendum
+nolo	1	nōlumus	2	nevīs	3	nōltis	4	nevolt	72	nōlim	78	nōllem	79	nōllēmus	80	nōllēs	81	nōllētis	82	nōllet	83	nōllent	146	nōlī	147	nōlīte	152	nōlitō	153	nōlitōte	154	nōlitō	168	nōlle
+obhaereo	175	obhaesum	177	obhaerendum
 oblanguesco	18	oblanguī
-obliviscor	176	oblītūrus
-obliviscor	187	oblītum
-obliviscor	188	oblītū
+obliviscor	176	oblītūrus	187	oblītum	188	oblītū
 obsisto	175	obstitus
-obsum	0	obsum
-obsum	5	obsunt
-obsum	72	obsim
-obsum	176	obfutūrus
+obsum	0	obsum	1	obsumus	5	obsunt	72	obsim
 occano	175	occentus
 offero	18	obtulī
-offero	175	oblātus
-ordior	176	ōrsūrus
-ordior	187	ōrsum
-ordior	188	ōrsū
-orior	4	orītur
-orior	176	oritūrus
-orior	177	oriundus
-orior	187	ortum
-orior	188	ortū
+ordior	176	ōrsūrus	187	ōrsum	188	ōrsū
+orior	1	orĭmur	177	oriundus	187	ortum	188	ortū
 pando	175	passus
 pango	18	pānxī
-pango	175	pānctus
-parco	18	pepercī
-parco	175	parsus
-pario	2	parīs
-pario	18	peperī
-pario	37	parīmur
-pario	38	pareris
-pario	39	parīminī
-pario	40	parītur
-pario	78	parerem
-pario	79	parerēmus
-pario	80	parerēs
-pario	81	parerētis
-pario	82	pareret
-pario	83	parerent
-pario	114	parerer
-pario	115	parerēmur
-pario	116	parerēris
-pario	117	parerēminī
-pario	118	parerētur
-pario	119	parerentur
-pario	146	pare
-pario	158	parere
-pario	159	parīminī
-pario	164	parītor
-pario	166	parītor
-pario	168	parere
-pario	171	parī
-pario	175	paritus
-pascor	176	pāstūrus
-pascor	187	pāstum
-pascor	188	pāstū
-pello	18	pepulī
+parco	18	pepercī	175	parsus
+pario	1	parĭmus	4	parit	18	peperī	37	parĭmur	78	parerem	79	parerēmus	80	parerēs	81	parerētis	82	pareret	83	parerent	146	pare	168	parere	175	paritus
+pascor	176	pāstūrus	187	pāstum	188	pāstū
+pello	18	pepulī	175	pulsus	176	pulsūrus	187	pulsum	188	pulsū
 pendeo	18	pependī
 pendo	18	pependī
-perfruor	176	perfructūrus
-perfruor	187	perfructum
-perfruor	188	perfructū
+perfruor	176	perfructūrus	187	perfructum	188	perfructū
 perlavo	18	perlāvī
-pertaedet	176	pertaesūrus
-pertaedet	187	pertaesum
-pertaedet	188	pertaesū
+pertaedet	176	pertaesūrus	187	pertaesum	188	pertaesū
 perurgueo	18	perursī
-pingo	175	pīctus
+pingo	175	pĭctus
 pinso	175	pīnsus
 plango	18	plānxī
-plango	175	plānctus
 posco	18	poposcī
-posso	4	potet
-posso	5	potent
-posso	6	potēbam
-posso	72	poteam
-posso	174	potēns
-possum	1	possumus
-possum	4	potest
-possum	18	potuī
-possum	46	poterātur
-possum	52	poteritur
-possum	78	possem
-possum	112	possītur
-possum	118	possētur
-possum	174	potēns
-potevolo	4	potevult
-potevolo	12	potevolam
-potevolo	13	potevolēmus
-potevolo	14	potevolēs
-potevolo	15	potevolētis
-potevolo	16	potevolet
-potevolo	17	potevolent
-potevolo	18	potevoluī
-potevolo	19	potevoluimus
-potevolo	20	potevoluistī
-potevolo	21	potevoluistis
-potevolo	22	potevoluit
-potevolo	23	potevoluērunt
-potevolo	24	potevolueram
-potevolo	25	potevoluerāmus
-potevolo	26	potevoluerās
-potevolo	27	potevoluerātis
-potevolo	28	potevoluerat
-potevolo	29	potevoluerant
-potevolo	30	potevoluerō
-potevolo	31	potevoluerimus
-potevolo	32	potevolueris
-potevolo	33	potevolueritis
-potevolo	34	potevoluerit
-potevolo	35	potevoluerint
-potevolo	72	potevelim
-potevolo	90	potevoluerim
-potevolo	91	potevoluerīmus
-potevolo	92	potevoluerīs
-potevolo	93	potevoluerītis
-potevolo	94	potevoluerit
-potevolo	95	potevoluerint
-potevolo	96	potevoluissem
-potevolo	97	potevoluissēmus
-potevolo	98	potevoluissēs
-potevolo	99	potevoluissētis
-potevolo	100	potevoluisset
-potevolo	101	potevoluissent
-potevolo	169	potevoluisse
-potevolo	176	potevolitūrus
+posso	5	potent	6	potēbam	13	potēbimus	18	potuī	72	poteam
+possum	1	possumus	2	potes	6	poteram	13	poterimus	18	potuī	40	potestur	78	possem	79	possēmus	80	possēs	81	possētis	82	posset	83	possent	112	possītur	118	possētur	168	posse
+potevolo	1	potevolumus	72	potevelim
 praecello	175	praecelsus
-praetendo	18	praetetendī
-praeterferor	1	praeterferimur
-praeterferor	3	praeterferiminī
-praeterferor	4	praeterfertur
-praeterferor	12	praeterferar
-praeterferor	13	praeterferēmur
-praeterferor	14	praeterferēris
-praeterferor	15	praeterferēminī
-praeterferor	16	praeterferētur
-praeterferor	17	praeterferentur
-praeterferor	147	praeterferiminī
-praeterferor	152	praeterfertor
-praeterferor	154	praeterfertor
-praeterferor	176	praeterlātūrus
-praeterferor	177	praeterferendus
-praeterferor	179	praeterferendī
-praeterferor	180	praeterferendō
-praeterferor	181	praeterferendum
-praeterferor	182	praeterferendō
-praeterferor	187	praeterlātum
-praeterferor	188	praeterlātū
+praetendo	18	praetetendī	175	praetentus	176	praetentūrus	187	praetentum	188	praetentū
+praeterferor	2	praeterferris	3	praeterferiminī	147	praeterferiminī	176	praeterlātūrus	187	praeterlātum	188	praeterlātū
 praetondeo	18	praetotondī
 prandeo	175	prānsus
 premo	18	pressī
-premo	175	pressus
-profiteor	176	professūrus
-profiteor	187	professum
-profiteor	188	professū
-progredio	176	progressūrus
-progredio	187	progressum
-progredio	188	progressū
-propendeo	176	prōpēnsūrus
-propendeo	187	prōpēnsum
-propendeo	188	prōpēnsū
-prosum	1	prōsumus
-prosum	4	prōdest
-prosum	6	prōderam
-prosum	18	prōfuī
-prosum	19	prōfuimus
-prosum	20	prōfuistī
-prosum	21	prōfuistis
-prosum	22	prōfuit
-prosum	23	prōfuērunt
-prosum	24	prōfueram
-prosum	25	prōfuerāmus
-prosum	26	prōfuerās
-prosum	27	prōfuerātis
-prosum	28	prōfuerat
-prosum	29	prōfuerant
-prosum	30	prōfuerō
-prosum	31	prōfuerimus
-prosum	32	prōfueris
-prosum	33	prōfueritis
-prosum	34	prōfuerit
-prosum	35	prōfuerint
-prosum	90	prōfuerim
-prosum	91	prōfuerīmus
-prosum	92	prōfuerīs
-prosum	93	prōfuerītis
-prosum	94	prōfuerit
-prosum	95	prōfuerint
-prosum	96	prōfuissem
-prosum	97	prōfuissēmus
-prosum	98	prōfuissēs
-prosum	99	prōfuissētis
-prosum	100	prōfuisset
-prosum	101	prōfuissent
-prosum	169	prōfuisse
-prosum	176	prōfutūrus
+proficio	18	prŏfēcī
+profiteor	176	professūrus	187	professum	188	professū
+progigno	18	prōgenuī
+progredio	176	progressūrus	187	progressum	188	progressū
+propendeo	176	prōpēnsūrus	187	prōpēnsum	188	prōpēnsū
+prosum	1	prōsumus	2	prōdes	6	prōderam	13	prōderimus
 psallo	177	psallendum
-pungo	18	pupugī
-quaeso	1	quaesumus
-queror	176	questūrus
-queror	187	questum
-queror	188	questū
-rapio	2	rapis
-recido	18	reccidī
+pungo	18	pupugī	175	pūnctus	176	pūnctūrus	187	pūnctum	188	pūnctū
+quaeso	1	quaesumus	2	quaesis	3	quaesitis	4	quaesit	78	quaeserem	79	quaeserēmus	80	quaeserēs	81	quaeserētis	82	quaeseret	83	quaeserent	146	quaese	147	quaesite	152	quaesitō	153	quaesitōte	154	quaesitō	168	quaesere
+queror	176	questūrus	187	questum	188	questū
+rapio	1	rapimus	37	rapimur	38	raperis	171	rapī
+recido	18	reccidī	176	recāsūrus	187	recāsum	188	recāsū
 recredo	175	recrēdūtus
 recrudesco	18	recrūdūī
-refero	18	rettulī
+refero	18	rettulī	175	relātus	176	relātūrus	187	relātum	188	relātū
 refrigesco	18	refrīxī
 relanguesco	18	relangŭī
-reor	176	ratūrus
-reor	187	ratum
-reor	188	ratū
-repello	18	reppulī
+reor	176	ratūrus	187	ratum	188	ratū
+repello	18	reppulī	175	repulsus	176	repulsūrus	187	repulsum	188	repulsū
 rependo	18	repependī
-reperio	18	repperī
-respondeo	175	respōnsum
-respondeo	177	respondendum
-retrogradior	176	retrōgressūrus
-retrogradior	187	retrōgressum
-retrogradior	188	retrōgressū
-retundo	18	rettudī
+reperio	18	repperī	175	repertus	176	repertūrus	187	repertum	188	repertū
+respondeo	175	respōnsum	177	respondendum
+retrogradior	176	retrōgressūrus	187	retrōgressum	188	retrōgressū
+retundo	18	rettudī	175	retūsus	176	retūsūrus	187	retūsum	188	retūsū
 revello	175	revolsus
 revivesco	18	revīxī
 revivisco	18	revīxī
-ringor	176	rictūrus
-ringor	187	rictum
-ringor	188	rictū
+ringor	176	rictūrus	187	rictum	188	rictū
 ruo	176	ruitūrus
-saevio	18	saeviī
-saevio	19	saevīmus
-saevio	22	saevīt
-saevio	23	saevērunt
-saevio	24	saevīram
-saevio	25	saevīrāmus
-saevio	26	saevīrās
-saevio	27	saevīrātis
-saevio	28	saevīrat
-saevio	29	saevīrant
-saevio	30	saevīrō
-saevio	31	saevīrimus
-saevio	32	saevīris
-saevio	33	saevīritis
-saevio	34	saevīrit
-saevio	35	saevīrint
-saevio	90	saevīrim
-saevio	91	saevīrīmus
-saevio	92	saevīrīs
-saevio	93	saevīrītis
-saevio	94	saevīrit
-saevio	95	saevīrint
+saevio	18	saeviī	19	saevīmus	22	saevīt	23	saevērunt	24	saevīram	25	saevīrāmus	26	saevīrās	27	saevīrātis	28	saevīrat	29	saevīrant	30	saevīrō	31	saevīrimus	32	saevīris	33	saevīritis	34	saevīrit	35	saevīrint	90	saevīrim	91	saevīrīmus	92	saevīrīs	93	saevīrītis	175	saevītum	176	saevītūrus	187	saevītum	188	saevītū
 sancio	18	sānxī
-sancio	175	sānctus
 sario	175	sarītus
 sarrio	175	sarrītus
 scabo	18	scābī
-scio	12	sciam
-scio	13	sciēmus
-scio	14	sciēs
-scio	15	sciētis
-scio	16	sciet
-scio	17	scient
-scio	18	scīvī
-scio	19	scīvimus
-scio	20	scīvistī
-scio	21	scīvistis
-scio	22	scīvit
-scio	23	scīvērunt
-scio	24	scīveram
-scio	25	scīverāmus
-scio	26	scīverās
-scio	27	scīverātis
-scio	28	scīverat
-scio	29	scīverant
-scio	30	scīverō
-scio	31	scīverimus
-scio	32	scīveris
-scio	33	scīveritis
-scio	34	scīverit
-scio	35	scīverint
-scio	37	scīmur
-scio	38	scīris
-scio	39	scīminī
-scio	40	scītur
-scio	48	sciar
-scio	49	sciēmur
-scio	50	sciēris
-scio	51	sciēminī
-scio	52	sciētur
-scio	53	scientur
-scio	90	scīverim
-scio	91	scīverīmus
-scio	92	scīverīs
-scio	93	scīverītis
-scio	94	scīverit
-scio	95	scīverint
-scio	96	scīvissem
-scio	97	scīvissēmus
-scio	98	scīvissēs
-scio	99	scīvissētis
-scio	100	scīvisset
-scio	101	scīvissent
-scio	108	sciar
-scio	109	sciāmur
-scio	110	sciāris
-scio	111	sciāminī
-scio	112	sciātur
-scio	113	sciantur
-scio	114	scīrer
-scio	115	scīrēmur
-scio	116	scīrēris
-scio	117	scīrēminī
-scio	118	scīrētur
-scio	119	scīrentur
-scio	146	scītō
-scio	147	scītōte
-scio	158	scīre
-scio	159	scīminī
-scio	164	scītor
-scio	166	scītor
-scio	169	scīvisse
-scio	171	scīrī
-scio	175	scītus
-scio	176	scītūrus
-scio	177	sciendus
-scio	179	sciendī
-scio	180	sciendō
-scio	181	sciendum
-scio	182	sciendō
-scio	187	scītum
-scio	188	scītū
-sculpo	175	sculptum
-sculpo	177	sculpendum
-sedeo	175	sessum
-sedeo	177	sedendum
+scio	146	scītō	147	scītōte
+sculpo	175	sculptum	177	sculpendum
+sedeo	175	sessum	177	sedendum
 sepelio	175	sepultus
-sepulto	0	septultō
-sepulto	5	septultant
-sepulto	41	septultantur
-sepulto	42	septultābar
-sepulto	72	septultem
-sepulto	174	septultāns
+sepulto	0	septultō	5	septultant	18	septultāvī	72	septultem
 sero	175	satus
 sino	18	sīvī
+sisto	175	status	176	stātūrus
 specio	18	spexī
-specio	175	spectus
-spondeo	18	spopondī
+spondeo	18	spopondī	175	spōnsus	176	spōnsūrus	187	spōnsum	188	spōnsū
 subdivido	18	subdīvīsī
-subdivido	175	subdīvīsus
 subinfero	18	subintulī
-subinfero	175	subillātus
-subsum	0	subsum
-subsum	5	subsunt
-subsum	72	subsim
-subsum	176	subfutūrus
+subsum	0	subsum	1	subsumus	5	subsunt	72	subsim
 suffero	18	sustulī
-suffero	175	sublātus
 superextruo	18	superextruxī
-superextruo	175	superextructus
-surrigo	18	surrexī
-surrigo	175	surrēctumus
+surrigo	18	surrexī	175	surrēctumus
 taedeo	175	taesus
-taedet	176	taesūrus
-taedet	187	taesum
-taedet	188	taesū
+taedet	176	taesūrus	187	taesum	188	taesū
 tago	18	tetigī
 tango	18	tetigī
-tango	175	tāctus
-tendo	18	tetendī
+tendo	18	tetendī	175	tentus	176	tentūrus	187	tentum	188	tentū
 tollo	18	sustulī
-tollo	175	sublātus
 tondeo	18	totondī
 torreo	175	tostus
 trago	18	trāxī
 tueo	175	tūtus
-tulo	18	tētūliī
-tulo	175	tūlius
-tundo	18	tutudī
-tundo	175	tūnsus
-ulcisco	176	ultūrus
-ulcisco	187	ultum
-ulcisco	188	ultū
-ulciscor	176	ultūrus
-ulciscor	187	ultum
-ulciscor	188	ultū
+tulo	18	tētūliī	175	tūlius
+tundo	18	tutudī	175	tūnsus
+ulcisco	176	ultūrus	187	ultum	188	ultū
+ulciscor	176	ultūrus	187	ultum	188	ultū
 ungo	18	ūnxī
-ungo	175	ūnctus
 unguo	18	ūnxī
-unguo	175	ūnctus
 uo	175	ūtus
 urgueo	18	ursī
 vello	18	vulsī
 vilipendo	18	pependī
-vilipendo	175	pēnsus
 vivesco	18	vīxī
 voleo	175	volūtus
-volo	4	vult
-volo	12	volam
-volo	13	volēmus
-volo	14	volēs
-volo	15	volētis
-volo	16	volet
-volo	17	volent
-volo	18	voluī
-volo	19	voluimus
-volo	20	voluistī
-volo	21	voluistis
-volo	22	voluit
-volo	23	voluērunt
-volo	24	volueram
-volo	25	voluerāmus
-volo	26	voluerās
-volo	27	voluerātis
-volo	28	voluerat
-volo	29	voluerant
-volo	30	voluerō
-volo	31	voluerimus
-volo	32	volueris
-volo	33	volueritis
-volo	34	voluerit
-volo	35	voluerint
-volo	72	velim
-volo	90	voluerim
-volo	91	voluerīmus
-volo	92	voluerīs
-volo	93	voluerītis
-volo	94	voluerit
-volo	95	voluerint
-volo	96	voluissem
-volo	97	voluissēmus
-volo	98	voluissēs
-volo	99	voluissētis
-volo	100	voluisset
-volo	101	voluissent
-volo	169	voluisse
-volo	176	volitūrus
+volo	1	volumus	72	velim
+ĭco	18	īcī
 "#,
     ),
 };

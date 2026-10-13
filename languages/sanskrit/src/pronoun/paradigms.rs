@@ -2,7 +2,9 @@
 //!
 //! A pattern is the form with `~` where the stem goes: `~а` is the stem and
 //! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first.
+//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
+//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
+//! as the copy laws in `laws.rs` change it.
 
 use flexion::Paradigm;
 
@@ -10,57 +12,58 @@ use flexion::Paradigm;
 /// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
 /// they share them), the declension it is like (if any), then a row of patterns
 /// per line (`derived`: the form comes from another cell's, see
-/// `relations.rs`; `_`: the form is the declension's it is like):
-/// `nominative_masculine` (sg, du, pl)
-/// `nominative_feminine` (sg, du, pl)
-/// `nominative_neuter` (sg, du, pl)
-/// `accusative_masculine` (sg, du, pl)
-/// `accusative_feminine` (sg, du, pl)
-/// `accusative_neuter` (sg, du, pl)
-/// `instrumental_masculine` (sg, du, pl)
-/// `instrumental_feminine` (sg, du, pl)
-/// `instrumental_neuter` (sg, du, pl)
-/// `dative_masculine` (sg, du, pl)
-/// `dative_feminine` (sg, du, pl)
-/// `dative_neuter` (sg, du, pl)
-/// `ablative_masculine` (sg, du, pl)
-/// `ablative_feminine` (sg, du, pl)
-/// `ablative_neuter` (sg, du, pl)
-/// `genitive_masculine` (sg, du, pl)
-/// `genitive_feminine` (sg, du, pl)
-/// `genitive_neuter` (sg, du, pl)
-/// `locative_masculine` (sg, du, pl)
-/// `locative_feminine` (sg, du, pl)
-/// `locative_neuter` (sg, du, pl)
-/// `vocative_masculine` (sg, du, pl)
-/// `vocative_feminine` (sg, du, pl)
-/// `vocative_neuter` (sg, du, pl)
+/// `relations.rs`; `_`, or a row left out: the form is the declension's it is like,
+/// or, in a declension like no other, derived):
+/// `nom_m` (sg, du, pl)
+/// `nom_f` (sg, du, pl)
+/// `nom_n` (sg, du, pl)
+/// `acc_m` (sg, du, pl)
+/// `acc_f` (sg, du, pl)
+/// `acc_n` (sg, du, pl)
+/// `ins_m` (sg, du, pl)
+/// `ins_f` (sg, du, pl)
+/// `ins_n` (sg, du, pl)
+/// `dat_m` (sg, du, pl)
+/// `dat_f` (sg, du, pl)
+/// `dat_n` (sg, du, pl)
+/// `abl_m` (sg, du, pl)
+/// `abl_f` (sg, du, pl)
+/// `abl_n` (sg, du, pl)
+/// `gen_m` (sg, du, pl)
+/// `gen_f` (sg, du, pl)
+/// `gen_n` (sg, du, pl)
+/// `loc_m` (sg, du, pl)
+/// `loc_f` (sg, du, pl)
+/// `loc_n` (sg, du, pl)
+/// `voc_m` (sg, du, pl)
+/// `voc_f` (sg, du, pl)
+/// `voc_n` (sg, du, pl)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident)?;
-     nominative_masculine: $c0:tt, $c1:tt, $c2:tt;
-     nominative_feminine: $c3:tt, $c4:tt, $c5:tt;
-     nominative_neuter: $c6:tt, $c7:tt, $c8:tt;
-     accusative_masculine: $c9:tt, $c10:tt, $c11:tt;
-     accusative_feminine: $c12:tt, $c13:tt, $c14:tt;
-     accusative_neuter: $c15:tt, $c16:tt, $c17:tt;
-     instrumental_masculine: $c18:tt, $c19:tt, $c20:tt;
-     instrumental_feminine: $c21:tt, $c22:tt, $c23:tt;
-     instrumental_neuter: $c24:tt, $c25:tt, $c26:tt;
-     dative_masculine: $c27:tt, $c28:tt, $c29:tt;
-     dative_feminine: $c30:tt, $c31:tt, $c32:tt;
-     dative_neuter: $c33:tt, $c34:tt, $c35:tt;
-     ablative_masculine: $c36:tt, $c37:tt, $c38:tt;
-     ablative_feminine: $c39:tt, $c40:tt, $c41:tt;
-     ablative_neuter: $c42:tt, $c43:tt, $c44:tt;
-     genitive_masculine: $c45:tt, $c46:tt, $c47:tt;
-     genitive_feminine: $c48:tt, $c49:tt, $c50:tt;
-     genitive_neuter: $c51:tt, $c52:tt, $c53:tt;
-     locative_masculine: $c54:tt, $c55:tt, $c56:tt;
-     locative_feminine: $c57:tt, $c58:tt, $c59:tt;
-     locative_neuter: $c60:tt, $c61:tt, $c62:tt;
-     vocative_masculine: $c63:tt, $c64:tt, $c65:tt;
-     vocative_feminine: $c66:tt, $c67:tt, $c68:tt;
-     vocative_neuter: $c69:tt, $c70:tt, $c71:tt;
+     $(nom_m: $c0:tt, $c1:tt, $c2:tt;)?
+     $(nom_f: $c3:tt, $c4:tt, $c5:tt;)?
+     $(nom_n: $c6:tt, $c7:tt, $c8:tt;)?
+     $(acc_m: $c9:tt, $c10:tt, $c11:tt;)?
+     $(acc_f: $c12:tt, $c13:tt, $c14:tt;)?
+     $(acc_n: $c15:tt, $c16:tt, $c17:tt;)?
+     $(ins_m: $c18:tt, $c19:tt, $c20:tt;)?
+     $(ins_f: $c21:tt, $c22:tt, $c23:tt;)?
+     $(ins_n: $c24:tt, $c25:tt, $c26:tt;)?
+     $(dat_m: $c27:tt, $c28:tt, $c29:tt;)?
+     $(dat_f: $c30:tt, $c31:tt, $c32:tt;)?
+     $(dat_n: $c33:tt, $c34:tt, $c35:tt;)?
+     $(abl_m: $c36:tt, $c37:tt, $c38:tt;)?
+     $(abl_f: $c39:tt, $c40:tt, $c41:tt;)?
+     $(abl_n: $c42:tt, $c43:tt, $c44:tt;)?
+     $(gen_m: $c45:tt, $c46:tt, $c47:tt;)?
+     $(gen_f: $c48:tt, $c49:tt, $c50:tt;)?
+     $(gen_n: $c51:tt, $c52:tt, $c53:tt;)?
+     $(loc_m: $c54:tt, $c55:tt, $c56:tt;)?
+     $(loc_f: $c57:tt, $c58:tt, $c59:tt;)?
+     $(loc_n: $c60:tt, $c61:tt, $c62:tt;)?
+     $(voc_m: $c63:tt, $c64:tt, $c65:tt;)?
+     $(voc_f: $c66:tt, $c67:tt, $c68:tt;)?
+     $(voc_n: $c69:tt, $c70:tt, $c71:tt;)?
     ) => {
         Paradigm {
             name: ::std::borrow::Cow::Borrowed($name),
@@ -69,78 +72,78 @@ macro_rules! declension {
             parent: like!($($parent)?),
             inherent: ::std::borrow::Cow::Borrowed(&[]),
             table: ::std::borrow::Cow::Borrowed(concat!(
-                flexion::cell!($c0), "\t",
-                flexion::cell!($c1), "\t",
-                flexion::cell!($c2), "\t",
-                flexion::cell!($c3), "\t",
-                flexion::cell!($c4), "\t",
-                flexion::cell!($c5), "\t",
-                flexion::cell!($c6), "\t",
-                flexion::cell!($c7), "\t",
-                flexion::cell!($c8), "\t",
-                flexion::cell!($c9), "\t",
-                flexion::cell!($c10), "\t",
-                flexion::cell!($c11), "\t",
-                flexion::cell!($c12), "\t",
-                flexion::cell!($c13), "\t",
-                flexion::cell!($c14), "\t",
-                flexion::cell!($c15), "\t",
-                flexion::cell!($c16), "\t",
-                flexion::cell!($c17), "\t",
-                flexion::cell!($c18), "\t",
-                flexion::cell!($c19), "\t",
-                flexion::cell!($c20), "\t",
-                flexion::cell!($c21), "\t",
-                flexion::cell!($c22), "\t",
-                flexion::cell!($c23), "\t",
-                flexion::cell!($c24), "\t",
-                flexion::cell!($c25), "\t",
-                flexion::cell!($c26), "\t",
-                flexion::cell!($c27), "\t",
-                flexion::cell!($c28), "\t",
-                flexion::cell!($c29), "\t",
-                flexion::cell!($c30), "\t",
-                flexion::cell!($c31), "\t",
-                flexion::cell!($c32), "\t",
-                flexion::cell!($c33), "\t",
-                flexion::cell!($c34), "\t",
-                flexion::cell!($c35), "\t",
-                flexion::cell!($c36), "\t",
-                flexion::cell!($c37), "\t",
-                flexion::cell!($c38), "\t",
-                flexion::cell!($c39), "\t",
-                flexion::cell!($c40), "\t",
-                flexion::cell!($c41), "\t",
-                flexion::cell!($c42), "\t",
-                flexion::cell!($c43), "\t",
-                flexion::cell!($c44), "\t",
-                flexion::cell!($c45), "\t",
-                flexion::cell!($c46), "\t",
-                flexion::cell!($c47), "\t",
-                flexion::cell!($c48), "\t",
-                flexion::cell!($c49), "\t",
-                flexion::cell!($c50), "\t",
-                flexion::cell!($c51), "\t",
-                flexion::cell!($c52), "\t",
-                flexion::cell!($c53), "\t",
-                flexion::cell!($c54), "\t",
-                flexion::cell!($c55), "\t",
-                flexion::cell!($c56), "\t",
-                flexion::cell!($c57), "\t",
-                flexion::cell!($c58), "\t",
-                flexion::cell!($c59), "\t",
-                flexion::cell!($c60), "\t",
-                flexion::cell!($c61), "\t",
-                flexion::cell!($c62), "\t",
-                flexion::cell!($c63), "\t",
-                flexion::cell!($c64), "\t",
-                flexion::cell!($c65), "\t",
-                flexion::cell!($c66), "\t",
-                flexion::cell!($c67), "\t",
-                flexion::cell!($c68), "\t",
-                flexion::cell!($c69), "\t",
-                flexion::cell!($c70), "\t",
-                flexion::cell!($c71), "\t",
+                $(flexion::cell!($c0),)? "\t",
+                $(flexion::cell!($c1),)? "\t",
+                $(flexion::cell!($c2),)? "\t",
+                $(flexion::cell!($c3),)? "\t",
+                $(flexion::cell!($c4),)? "\t",
+                $(flexion::cell!($c5),)? "\t",
+                $(flexion::cell!($c6),)? "\t",
+                $(flexion::cell!($c7),)? "\t",
+                $(flexion::cell!($c8),)? "\t",
+                $(flexion::cell!($c9),)? "\t",
+                $(flexion::cell!($c10),)? "\t",
+                $(flexion::cell!($c11),)? "\t",
+                $(flexion::cell!($c12),)? "\t",
+                $(flexion::cell!($c13),)? "\t",
+                $(flexion::cell!($c14),)? "\t",
+                $(flexion::cell!($c15),)? "\t",
+                $(flexion::cell!($c16),)? "\t",
+                $(flexion::cell!($c17),)? "\t",
+                $(flexion::cell!($c18),)? "\t",
+                $(flexion::cell!($c19),)? "\t",
+                $(flexion::cell!($c20),)? "\t",
+                $(flexion::cell!($c21),)? "\t",
+                $(flexion::cell!($c22),)? "\t",
+                $(flexion::cell!($c23),)? "\t",
+                $(flexion::cell!($c24),)? "\t",
+                $(flexion::cell!($c25),)? "\t",
+                $(flexion::cell!($c26),)? "\t",
+                $(flexion::cell!($c27),)? "\t",
+                $(flexion::cell!($c28),)? "\t",
+                $(flexion::cell!($c29),)? "\t",
+                $(flexion::cell!($c30),)? "\t",
+                $(flexion::cell!($c31),)? "\t",
+                $(flexion::cell!($c32),)? "\t",
+                $(flexion::cell!($c33),)? "\t",
+                $(flexion::cell!($c34),)? "\t",
+                $(flexion::cell!($c35),)? "\t",
+                $(flexion::cell!($c36),)? "\t",
+                $(flexion::cell!($c37),)? "\t",
+                $(flexion::cell!($c38),)? "\t",
+                $(flexion::cell!($c39),)? "\t",
+                $(flexion::cell!($c40),)? "\t",
+                $(flexion::cell!($c41),)? "\t",
+                $(flexion::cell!($c42),)? "\t",
+                $(flexion::cell!($c43),)? "\t",
+                $(flexion::cell!($c44),)? "\t",
+                $(flexion::cell!($c45),)? "\t",
+                $(flexion::cell!($c46),)? "\t",
+                $(flexion::cell!($c47),)? "\t",
+                $(flexion::cell!($c48),)? "\t",
+                $(flexion::cell!($c49),)? "\t",
+                $(flexion::cell!($c50),)? "\t",
+                $(flexion::cell!($c51),)? "\t",
+                $(flexion::cell!($c52),)? "\t",
+                $(flexion::cell!($c53),)? "\t",
+                $(flexion::cell!($c54),)? "\t",
+                $(flexion::cell!($c55),)? "\t",
+                $(flexion::cell!($c56),)? "\t",
+                $(flexion::cell!($c57),)? "\t",
+                $(flexion::cell!($c58),)? "\t",
+                $(flexion::cell!($c59),)? "\t",
+                $(flexion::cell!($c60),)? "\t",
+                $(flexion::cell!($c61),)? "\t",
+                $(flexion::cell!($c62),)? "\t",
+                $(flexion::cell!($c63),)? "\t",
+                $(flexion::cell!($c64),)? "\t",
+                $(flexion::cell!($c65),)? "\t",
+                $(flexion::cell!($c66),)? "\t",
+                $(flexion::cell!($c67),)? "\t",
+                $(flexion::cell!($c68),)? "\t",
+                $(flexion::cell!($c69),)? "\t",
+                $(flexion::cell!($c70),)? "\t",
+                $(flexion::cell!($c71),)? "\t",
             )),
         }
     };
@@ -185,29 +188,22 @@ impl flexion::Label for Declension {
 pub(super) static DECLENSIONS: [Paradigm<'static>; 1] = [
     // कतम: 15 words (सर्व, तद्, तक, अन्य, कतर, यद्).
     declension!("कतम", 15, "~";
-        nominative_masculine: "~ः", "~ौ", "~े";
-        nominative_feminine: "~ा", "~े", "~ाः";
-        nominative_neuter: "~त्", "~े", "~ानि";
-        accusative_masculine: "~म्", "~ौ", "~ान्";
-        accusative_feminine: "~ाम्", "~े", "~ाः";
-        accusative_neuter: "~त्", "~े", "~ानि";
-        instrumental_masculine: "~ेन", "~ाभ्याम्", "~ैः";
-        instrumental_feminine: "~या", "~ाभ्याम्", "~ाभिः";
-        instrumental_neuter: "~ेन", "~ाभ्याम्", "~ैः";
-        dative_masculine: "~स्मै", "~ाभ्याम्", "~ेभ्यः";
-        dative_feminine: "~स्यै", "~ाभ्याम्", "~ाभ्यः";
-        dative_neuter: "~स्मै", "~ाभ्याम्", "~ेभ्यः";
-        ablative_masculine: "~स्मात्", "~ाभ्याम्", "~ेभ्यः";
-        ablative_feminine: "~स्याः", "~ाभ्याम्", "~ाभ्यः";
-        ablative_neuter: "~स्मात्", "~ाभ्याम्", "~ेभ्यः";
-        genitive_masculine: "~स्य", "~योः", "~ेषाम्";
-        genitive_feminine: "~स्याः", "~योः", "~ासाम्";
-        genitive_neuter: "~स्य", "~योः", "~ेषाम्";
-        locative_masculine: "~स्मिन्", "~योः", "~ेषु";
-        locative_feminine: "~स्याम्", "~योः", "~ासु";
-        locative_neuter: "~स्मिन्", "~योः", "~ेषु";
-        vocative_masculine: "~", "~ौ", "~े";
-        vocative_feminine: "~े", "~े", "~ाः";
-        vocative_neuter: "~", "~े", "~ानि";
+    nom_m: "~ः", "~ौ", "~े";
+    nom_f: "~ा", "~े", "~ाः";
+    nom_n: _, _, "~ानि";
+    acc_m: "~म्", _, "~ान्";
+    acc_f: "~ाम्", _, _;
+    acc_n: "~त्", _, _;
+    ins_m: "~ेन", "~ाभ्याम्", "~ैः";
+    ins_f: "~या", _, "~ाभिः";
+    dat_m: "~स्मै", _, "~ेभ्यः";
+    dat_f: "~स्यै", _, "~ाभ्यः";
+    abl_m: "~स्मात्", _, _;
+    abl_f: "~स्याः", _, _;
+    gen_m: "~स्य", "~योः", "~ेषाम्";
+    gen_f: _, _, "~ासाम्";
+    loc_m: "~स्मिन्", _, "~ेषु";
+    loc_f: "~स्याम्", _, "~ासु";
+    voc_m: "~", _, _;
     ),
 ];

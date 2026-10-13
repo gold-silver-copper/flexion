@@ -1,6 +1,6 @@
-//! The dictionary's forms no declension gives, as it writes them: a line per form,
-//! the word, its cell's number (see `super::cell`) and the form, sorted by word
-//! and cell. They are the answer for that word and cell.
+//! The dictionary's forms no declension gives, as it writes them: a line per word,
+//! sorted, the word then each listed cell's number (see `super::cell`) and its
+//! form, tab-separated. They are the answer for that word and cell.
 
 use flexion::Irregular;
 use std::borrow::Cow;

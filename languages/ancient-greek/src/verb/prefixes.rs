@@ -9,7 +9,7 @@ use flexion::Placement::*;
 use flexion::{Prefix, Prefixes, Separation};
 use std::borrow::Cow;
 
-/// 28 prefixes and 286 words that go against most with theirs.
+/// 28 prefixes and 278 words that go against most with theirs.
 pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
     prefixes: Cow::Borrowed(&[
         Prefix {
@@ -21,7 +21,7 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         Prefix {
             letters: Cow::Borrowed("ανα"),
             separable: 0,
-            inseparable: 38,
+            inseparable: 46,
             words: 65,
         },
         Prefix {
@@ -189,26 +189,18 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         (Cow::Borrowed("αναβλαστανω"), Separation::Neither),
         (Cow::Borrowed("αναβοαω"), Separation::Neither),
         (Cow::Borrowed("αναγγελλω"), Separation::Neither),
-        (Cow::Borrowed("αναγιγνωσκω"), Separation::Neither),
         (Cow::Borrowed("αναγκαζω"), Separation::Neither),
-        (Cow::Borrowed("αναγνωριζω"), Separation::Neither),
-        (Cow::Borrowed("αναδιδασκω"), Separation::Neither),
         (Cow::Borrowed("αναειρω"), Separation::Neither),
         (Cow::Borrowed("αναινομαι"), Separation::Neither),
         (Cow::Borrowed("αναιρεω"), Separation::Neither),
         (Cow::Borrowed("αναισσω"), Separation::Neither),
         (Cow::Borrowed("ανακαλεω"), Separation::Neither),
         (Cow::Borrowed("ανακρυπτω"), Separation::Neither),
+        (Cow::Borrowed("αναλαζομαι"), Separation::Neither),
         (Cow::Borrowed("αναλαμβανω"), Separation::Neither),
         (Cow::Borrowed("αναλισκω"), Separation::Neither),
-        (Cow::Borrowed("αναμενω"), Separation::Neither),
-        (Cow::Borrowed("αναμιμνησκω"), Separation::Neither),
         (Cow::Borrowed("αναποδιζω"), Separation::Neither),
-        (Cow::Borrowed("αναπτυσσω"), Separation::Neither),
         (Cow::Borrowed("αναπτω"), Separation::Neither),
-        (Cow::Borrowed("αναρρωννυμι"), Separation::Neither),
-        (Cow::Borrowed("ανασκαπτω"), Separation::Neither),
-        (Cow::Borrowed("ανατασσω"), Separation::Neither),
         (Cow::Borrowed("ανατρεχω"), Separation::Neither),
         (Cow::Borrowed("αναφερω"), Separation::Neither),
         (Cow::Borrowed("αναχωρεω"), Separation::Neither),
@@ -1731,19 +1723,9 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         ), // αμφι + ἐ → ἀμφε
         (
             Cow::Borrowed("ανα"),
-            Cow::Borrowed("β"),
-            Cow::Borrowed("ἀνᾰβ"),
-        ), // ανα + β → ἀνᾰβ
-        (
-            Cow::Borrowed("ανα"),
             Cow::Borrowed("κ"),
             Cow::Borrowed("ἀνᾰκ"),
         ), // ανα + κ → ἀνᾰκ
-        (
-            Cow::Borrowed("ανα"),
-            Cow::Borrowed("λ"),
-            Cow::Borrowed("ἀνᾰλ"),
-        ), // ανα + λ → ἀνᾰλ
         (
             Cow::Borrowed("ανα"),
             Cow::Borrowed("ἐ"),

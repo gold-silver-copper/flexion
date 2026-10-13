@@ -2,7 +2,8 @@
 //! which rule places the accent, and the syllable its stem is accented on,
 //! counted from the lemma's end. `Stem`: where the lemma has it (persistent);
 //! `Ending`: on the ending's first syllable; `Recessive`: as far from the end
-//! as the law of limitation allows. The law then moves it where it must, and
+//! as the law of limitation allows; `Last`, `NextToLast`: on that syllable of
+//! the word. The law then moves it where it must, and
 //! chooses acute or circumflex by the syllables' length.
 
 use super::cell::*;
@@ -180,13 +181,12 @@ pub static CLASSES: [StressClass<'static>; 4] = [
 
 use AccentClass::*;
 
-/// Which class a word is of: 4 rules and 3 listed words.
+/// Which class a word is of: 3 rules and 3 listed words.
 pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
     rules {
         "" => [Δῠο 12, Δευτερος 5, Τρεῑς 1, Εἱς 1],
         "ι" => [Δῠο 11],
         "σ" => [Δευτερος 5, Τρεῑς 1, Εἱς 1],
-        "εσ" => [Δευτερος 4],
     }
     listed {
         "δυο" => Δῠο,
@@ -201,9 +201,11 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 8] = [
     Cow::Borrowed(&[]), // Χῑλῐοι
     Cow::Borrowed(&[]), // Τεσσᾰρες
     Cow::Borrowed(&[GEN_M_DU, GEN_F_DU, GEN_N_DU, DAT_M_DU, DAT_F_DU, DAT_N_DU]), // Δῠο
-    Cow::Borrowed(&[NOM_M_PL, NOM_F_PL, ACC_M_PL, ACC_F_PL]), // Τρεῑς
+    Cow::Borrowed(&[
+        NOM_M_PL, NOM_F_PL, GEN_M_PL, GEN_F_PL, GEN_N_PL, ACC_M_PL, ACC_F_PL,
+    ]), // Τρεῑς
     Cow::Borrowed(&[]), // Δεκᾰτεσσᾰρες
-    Cow::Borrowed(&[NOM_M_SG, VOC_M_SG]), // Εἱς
+    Cow::Borrowed(&[NOM_M_SG, GEN_F_SG, DAT_F_SG, VOC_M_SG]), // Εἱς
     Cow::Borrowed(&[]), // Δευτερος
     Cow::Borrowed(&[]), // Πισῠρες
 ];

@@ -1082,84 +1082,88 @@ macro_rules! like {
 /// Every conjugation learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Conjugation {
-    /// Like `ἐχω`: 503 words.
+    /// Like `ἐχω`: 461 words.
     Ἐχω,
-    /// Like `ποιεω`: 245 words.
+    /// Like `ποιεω`: 253 words.
     Ποιεω,
-    /// Like `ὁρῐζω`: 92 words.
+    /// Like `ὁρῐζω`: 94 words.
     Ὁρῐζω,
-    /// Like `γῡροω`: 70 words.
+    /// Like `γῡροω`: 85 words.
     Γῡροω,
-    /// Like `ὑπᾰκουω`: 70 words.
-    Ὑπᾰκουω,
-    /// Like `χρημᾰτῐζω`: 68 words.
-    Χρημᾰτῐζω,
-    /// Like `βουλευω`: 65 words.
+    /// Like `ἀφορῐζω`: 78 words.
+    Ἀφορῐζω,
+    /// Like `βουλευω`: 70 words.
     Βουλευω,
+    /// Like `σπᾰω`: 63 words.
+    Σπᾰω,
     /// Like `οἰομαι`: 60 words.
     Οἰομαι,
-    /// Like `δοκᾰω`: 48 words.
+    /// Like `δοκᾰω`: 54 words.
     Δοκᾰω,
+    /// Like `δῐκεω`: 48 words.
+    Δῐκεω,
     /// Like `προσερχομαι`: 46 words.
     Προσερχομαι,
-    /// Like `σπᾰω`: 44 words.
-    Σπᾰω,
-    /// Like `σῠνᾰγω`: 39 words.
-    Σῠνᾰγω,
-    /// Like `κᾰτεργαζομαι`: 34 words.
-    Κᾰτεργαζομαι,
-    /// Like `τᾰσσω`: 30 words.
+    /// Like `ἐλπω`: 43 words.
+    Ἐλπω,
+    /// Like `τᾰσσω`: 36 words.
     Τᾰσσω,
-    /// Like `ἁπτω`: 29 words.
+    /// Like `κᾰτεργαζομαι`: 35 words.
+    Κᾰτεργαζομαι,
+    /// Like `ληγω`: 31 words.
+    Ληγω,
+    /// Like `ἁπτω`: 30 words.
     Ἁπτω,
-    /// Like `εὐλογεω`: 25 words.
-    Εὐλογεω,
-    /// Like `σῠνᾰρπᾰζω`: 24 words.
-    Σῠνᾰρπᾰζω,
-    /// Like `ἀσκεω`: 24 words.
-    Ἀσκεω,
-    /// Like `νῑκαω`: 24 words.
+    /// Like `νῑκαω`: 27 words.
     Νῑκαω,
-    /// Like `ὠνεομαι`: 22 words.
-    Ὠνεομαι,
-    /// Like `πρεσβευω`: 20 words.
+    /// Like `πρεσβευω`: 27 words.
     Πρεσβευω,
+    /// Like `σῠνᾰρπᾰζω`: 25 words.
+    Σῠνᾰρπᾰζω,
+    /// Like `ὠνεομαι`: 24 words.
+    Ὠνεομαι,
+    /// Like `εὐλογεω`: 22 words.
+    Εὐλογεω,
+    /// Like `ψηφῐζω`: 20 words.
+    Ψηφῐζω,
     /// Like `θωᾰω`: 16 words.
     Θωᾰω,
-    /// Like `κτῐζω`: 15 words.
-    Κτῐζω,
     /// Like `πειρᾰζω`: 15 words.
     Πειρᾰζω,
-    /// Like `δῐκεω`: 14 words.
-    Δῐκεω,
+    /// Like `κτῐζω`: 14 words.
+    Κτῐζω,
     /// Like `πεμπω`: 14 words.
     Πεμπω,
     /// Like `πᾰρερχομαι`: 13 words.
     Πᾰρερχομαι,
+    /// Like `εὐθῡνω`: 12 words.
+    Εὐθῡνω,
     /// Like `ἀναιρεω`: 12 words.
     Ἀναιρεω,
-    /// Like `παυω`: 12 words.
-    Παυω,
+    /// Like `σῠνᾰγω`: 12 words.
+    Σῠνᾰγω,
+    /// Like `ὑπᾰρχω`: 12 words.
+    Ὑπᾰρχω,
     /// Like `δῐοικεω`: 12 words.
     Δῐοικεω,
     /// Like `πᾰρειμι`: 12 words.
     Πᾰρειμι,
-    /// Like `εὐθῡνω`: 11 words.
-    Εὐθῡνω,
-    /// Like `ψηφῐζω`: 11 words.
-    Ψηφῐζω,
     /// Like `λῡω`: 11 words.
     Λῡω,
-    /// Like `ψῑλοω`: 11 words.
-    Ψῑλοω,
+    /// Like `παυω`: 10 words.
+    Παυω,
     /// Like `ἐνᾰντῐοομαι`: 10 words.
     Ἐνᾰντῐοομαι,
     /// Like `θρῠπτω`: 10 words.
     Θρῠπτω,
     /// Like `ἐαω`: 10 words.
     Ἐαω,
+    /// Like `αἱρεω`: 10 words.
+    Αἱρεω,
     /// Like `ἀφῑημῐ`: 10 words.
     Ἀφῑημῐ,
+    /// Like `ψῑλοω`: 9 words.
+    Ψῑλοω,
     /// Like `μᾰντευομαι`: 9 words.
     Μᾰντευομαι,
     /// Like `καθιζω`: 9 words.
@@ -1174,52 +1178,38 @@ pub enum Conjugation {
     Πᾰρᾰκᾰλεω,
     /// Like `φᾰρμᾰσσω`: 8 words.
     Φᾰρμᾰσσω,
-    /// Like `αἱρεω`: 8 words.
-    Αἱρεω,
-    /// Like `ἀφᾰνῐζω`: 8 words.
-    Ἀφᾰνῐζω,
     /// Like `ἀραομαι`: 8 words.
     Ἀραομαι,
     /// Like `σῳζω`: 7 words.
     Σῳζω,
-    /// Like `ἀκουω`: 7 words.
-    Ἀκουω,
     /// Like `ἀπεῑπον`: 7 words.
     Ἀπεῑπον,
-    /// Like `ὀνομαινω`: 6 words.
-    Ὀνομαινω,
-    /// Like `ἡγεομαι`: 6 words.
-    Ἡγεομαι,
-    /// Like `ἀγαπαω`: 6 words.
-    Ἀγαπαω,
+    /// Like `χραω`: 6 words.
+    Χραω,
     /// Like `φειδομαι`: 6 words.
     Φειδομαι,
     /// Like `δῐωκω`: 5 words.
     Δῐωκω,
-    /// Like `χραω`: 5 words.
-    Χραω,
+    /// Like `φρᾰζω`: 5 words.
+    Φρᾰζω,
     /// Like `μᾰρτῠρεω`: 5 words.
     Μᾰρτῠρεω,
-    /// Like `οἰκεω`: 5 words.
-    Οἰκεω,
-    /// Like `ὀχεω`: 5 words.
-    Ὀχεω,
-    /// Like `ὀνομᾰζω`: 5 words.
-    Ὀνομᾰζω,
     /// Like `σῠνοικῐζω`: 5 words.
     Σῠνοικῐζω,
     /// Like `ἐξᾰκολουθεω`: 5 words.
     Ἐξᾰκολουθεω,
-    /// Like `ἀροω`: 5 words.
-    Ἀροω,
-    /// Like `κᾰκοω`: 5 words.
-    Κᾰκοω,
+    /// Like `πειρᾰω`: 5 words.
+    Πειρᾰω,
+    /// Like `ἱζω`: 4 words.
+    Ἱζω,
+    /// Like `ἡγεομαι`: 4 words.
+    Ἡγεομαι,
+    /// Like `ἐπᾰγγελλω`: 4 words.
+    Ἐπᾰγγελλω,
     /// Like `στεινω`: 4 words.
     Στεινω,
-    /// Like `ὁμολογεω`: 4 words.
-    Ὁμολογεω,
-    /// Like `πειρᾰω`: 4 words.
-    Πειρᾰω,
+    /// Like `ἀνᾰπτω`: 4 words.
+    Ἀνᾰπτω,
     /// Like `πᾰρᾰλλᾰσσω`: 4 words.
     Πᾰρᾰλλᾰσσω,
     /// Like `κᾰτειργω`: 4 words.
@@ -1228,30 +1218,22 @@ pub enum Conjugation {
     Δῐᾰλῡω,
     /// Like `πᾰροξῡνω`: 4 words.
     Πᾰροξῡνω,
-    /// Like `ἐλᾰσσοω`: 4 words.
-    Ἐλᾰσσοω,
     /// Like `λογεομαι`: 4 words.
     Λογεομαι,
-    /// Like `ἰαυω`: 4 words.
-    Ἰαυω,
-    /// Like `ἐρωτᾰω`: 4 words.
-    Ἐρωτᾰω,
+    /// Like `ἀκουω`: 3 words.
+    Ἀκουω,
+    /// Like `ἰᾱτρευω`: 3 words.
+    Ἰᾱτρευω,
     /// Like `πλᾰναω`: 3 words.
     Πλᾰναω,
-    /// Like `ἐπᾰγγελλω`: 3 words.
-    Ἐπᾰγγελλω,
     /// Like `ἐπῐτῐθημῐ`: 3 words.
     Ἐπῐτῐθημῐ,
     /// Like `μνημονευω`: 3 words.
     Μνημονευω,
-    /// Like `ἐξᾰπτω`: 3 words.
-    Ἐξᾰπτω,
     /// Like `λιστραω`: 3 words.
     Λιστραω,
     /// Like `ἐπευχομαι`: 3 words.
     Ἐπευχομαι,
-    /// Like `ὑστερεω`: 3 words.
-    Ὑστερεω,
     /// Like `ἐγκειμαι`: 3 words.
     Ἐγκειμαι,
     /// Like `δαμνημῐ`: 2 words.
@@ -1266,18 +1248,18 @@ pub enum Conjugation {
     Σῠνομνῡμῐ,
     /// Like `προσκειμαι`: 2 words.
     Προσκειμαι,
+    /// Like `ρρωννῡμῐ`: 2 words.
+    Ρρωννῡμῐ,
     /// Like `ῥηγνῡμῐ`: 1 words.
     Ῥηγνῡμῐ,
     /// Like `ἐξῐστημῐ`: 1 words.
     Ἐξῐστημῐ,
-    /// Like `ἱστημι`: 1 words.
-    Ἱστημι,
-    /// Like `ῥωννῡμῐ`: 1 words.
-    Ῥωννῡμῐ,
+    /// Like `ἱστημῐ`: 1 words.
+    Ἱστημῐ,
     /// Like `εἰμῐ`: 1 words.
     Εἰμῐ,
-    /// Like `ἱημι`: 1 words.
-    Ἱημι,
+    /// Like `ἱημῐ`: 1 words.
+    Ἱημῐ,
     /// Like `ἐπεντῐθημῐ`: 1 words.
     Ἐπεντῐθημῐ,
     /// Like `τῐθημῐ`: 1 words.
@@ -1322,8 +1304,8 @@ pub enum Conjugation {
     Οἰδᾰ,
     /// Like `πᾰρᾰδιδωμῐ`: 1 words.
     Πᾰρᾰδιδωμῐ,
-    /// Like `ἀνιστημι`: 1 words.
-    Ἀνιστημι,
+    /// Like `ἀνῐστημῐ`: 1 words.
+    Ἀνῐστημῐ,
     /// Like `δεῑ`: 1 words.
     Δεῑ,
     /// Like `ζωννῡμῐ`: 1 words.
@@ -1356,8 +1338,8 @@ pub enum Conjugation {
     Μετεκῑᾰθον,
     /// Like `ὀλλῡμῐ`: 1 words.
     Ὀλλῡμῐ,
-    /// Like `ἀνοιγνυμι`: 1 words.
-    Ἀνοιγνυμι,
+    /// Like `ἀνοιγνῡμῐ`: 1 words.
+    Ἀνοιγνῡμῐ,
     /// Like `οἰγνῡμῐ`: 1 words.
     Οἰγνῡμῐ,
     /// Like `πεπνῡμαι`: 1 words.
@@ -1404,8 +1386,8 @@ pub enum Conjugation {
     Κορεννῡμῐ,
     /// Like `ὀμοργνῡμῐ`: 1 words.
     Ὀμοργνῡμῐ,
-    /// Like `διϊστημι`: 1 words.
-    Διϊστημι,
+    /// Like `δῐϊστημῐ`: 1 words.
+    Δῐϊστημῐ,
     /// Like `στορνῡμῐ`: 1 words.
     Στορνῡμῐ,
     /// Like `ἀφῐστημῐ`: 1 words.
@@ -1422,16 +1404,16 @@ pub enum Conjugation {
     Ὀνινημῐ,
     /// Like `ἐμπιμπρημι`: 1 words.
     Ἐμπιμπρημι,
-    /// Like `ἀνθιστημι`: 1 words.
-    Ἀνθιστημι,
+    /// Like `ἀνθῐστημῐ`: 1 words.
+    Ἀνθῐστημῐ,
     /// Like `περῐῐστημῐ`: 1 words.
     Περῐῐστημῐ,
     /// Like `ἐπορνῡμῐ`: 1 words.
     Ἐπορνῡμῐ,
     /// Like `ἐξεστῐ`: 1 words.
     Ἐξεστῐ,
-    /// Like `ὑφιστημι`: 1 words.
-    Ὑφιστημι,
+    /// Like `ὑφῐστημῐ`: 1 words.
+    Ὑφῐστημῐ,
     /// Like `γεγονοι`: 1 words.
     Γεγονοι,
     /// Like `γεγενησαι`: 1 words.
@@ -1520,8 +1502,8 @@ pub enum Conjugation {
     Δῐκεῑν,
     /// Like `ξῠρρηγνῡμῐ`: 1 words.
     Ξῠρρηγνῡμῐ,
-    /// Like `ἀμφιστημι`: 1 words.
-    Ἀμφιστημι,
+    /// Like `ἀμφῑστημῐ`: 1 words.
+    Ἀμφῑστημῐ,
     /// Like `γανῠμαι`: 1 words.
     Γανῠμαι,
     /// Like `δῐακειμαι`: 1 words.
@@ -1534,14 +1516,12 @@ pub enum Conjugation {
     Ἐμπηγνῡμῐ,
     /// Like `ὑπεκτιθεμαι`: 1 words.
     Ὑπεκτιθεμαι,
-    /// Like `ἀναρρωννυμι`: 1 words.
-    Ἀναρρωννυμι,
     /// Like `ἐκτιθημῐ`: 1 words.
     Ἐκτιθημῐ,
     /// Like `προϊστημῐ`: 1 words.
     Προϊστημῐ,
-    /// Like `λλυμι`: 1 words.
-    Λλυμι,
+    /// Like `λλῡμῐ`: 1 words.
+    Λλῡμῐ,
     /// Like `γνῡμῐ`: 1 words.
     Γνῡμῐ,
     /// Like `ρρηγνῡμῐ`: 1 words.
@@ -1556,46 +1536,48 @@ pub enum Conjugation {
 
 impl Conjugation {
     /// Every conjugation, in order.
-    pub const ALL: [Conjugation; 235] = [
+    pub const ALL: [Conjugation; 225] = [
         Conjugation::Ἐχω,
         Conjugation::Ποιεω,
         Conjugation::Ὁρῐζω,
         Conjugation::Γῡροω,
-        Conjugation::Ὑπᾰκουω,
-        Conjugation::Χρημᾰτῐζω,
+        Conjugation::Ἀφορῐζω,
         Conjugation::Βουλευω,
+        Conjugation::Σπᾰω,
         Conjugation::Οἰομαι,
         Conjugation::Δοκᾰω,
-        Conjugation::Προσερχομαι,
-        Conjugation::Σπᾰω,
-        Conjugation::Σῠνᾰγω,
-        Conjugation::Κᾰτεργαζομαι,
-        Conjugation::Τᾰσσω,
-        Conjugation::Ἁπτω,
-        Conjugation::Εὐλογεω,
-        Conjugation::Σῠνᾰρπᾰζω,
-        Conjugation::Ἀσκεω,
-        Conjugation::Νῑκαω,
-        Conjugation::Ὠνεομαι,
-        Conjugation::Πρεσβευω,
-        Conjugation::Θωᾰω,
-        Conjugation::Κτῐζω,
-        Conjugation::Πειρᾰζω,
         Conjugation::Δῐκεω,
+        Conjugation::Προσερχομαι,
+        Conjugation::Ἐλπω,
+        Conjugation::Τᾰσσω,
+        Conjugation::Κᾰτεργαζομαι,
+        Conjugation::Ληγω,
+        Conjugation::Ἁπτω,
+        Conjugation::Νῑκαω,
+        Conjugation::Πρεσβευω,
+        Conjugation::Σῠνᾰρπᾰζω,
+        Conjugation::Ὠνεομαι,
+        Conjugation::Εὐλογεω,
+        Conjugation::Ψηφῐζω,
+        Conjugation::Θωᾰω,
+        Conjugation::Πειρᾰζω,
+        Conjugation::Κτῐζω,
         Conjugation::Πεμπω,
         Conjugation::Πᾰρερχομαι,
+        Conjugation::Εὐθῡνω,
         Conjugation::Ἀναιρεω,
-        Conjugation::Παυω,
+        Conjugation::Σῠνᾰγω,
+        Conjugation::Ὑπᾰρχω,
         Conjugation::Δῐοικεω,
         Conjugation::Πᾰρειμι,
-        Conjugation::Εὐθῡνω,
-        Conjugation::Ψηφῐζω,
         Conjugation::Λῡω,
-        Conjugation::Ψῑλοω,
+        Conjugation::Παυω,
         Conjugation::Ἐνᾰντῐοομαι,
         Conjugation::Θρῠπτω,
         Conjugation::Ἐαω,
+        Conjugation::Αἱρεω,
         Conjugation::Ἀφῑημῐ,
+        Conjugation::Ψῑλοω,
         Conjugation::Μᾰντευομαι,
         Conjugation::Καθιζω,
         Conjugation::Κᾰτηγορεω,
@@ -1603,45 +1585,34 @@ impl Conjugation {
         Conjugation::Σφᾰλλω,
         Conjugation::Πᾰρᾰκᾰλεω,
         Conjugation::Φᾰρμᾰσσω,
-        Conjugation::Αἱρεω,
-        Conjugation::Ἀφᾰνῐζω,
         Conjugation::Ἀραομαι,
         Conjugation::Σῳζω,
-        Conjugation::Ἀκουω,
         Conjugation::Ἀπεῑπον,
-        Conjugation::Ὀνομαινω,
-        Conjugation::Ἡγεομαι,
-        Conjugation::Ἀγαπαω,
+        Conjugation::Χραω,
         Conjugation::Φειδομαι,
         Conjugation::Δῐωκω,
-        Conjugation::Χραω,
+        Conjugation::Φρᾰζω,
         Conjugation::Μᾰρτῠρεω,
-        Conjugation::Οἰκεω,
-        Conjugation::Ὀχεω,
-        Conjugation::Ὀνομᾰζω,
         Conjugation::Σῠνοικῐζω,
         Conjugation::Ἐξᾰκολουθεω,
-        Conjugation::Ἀροω,
-        Conjugation::Κᾰκοω,
-        Conjugation::Στεινω,
-        Conjugation::Ὁμολογεω,
         Conjugation::Πειρᾰω,
+        Conjugation::Ἱζω,
+        Conjugation::Ἡγεομαι,
+        Conjugation::Ἐπᾰγγελλω,
+        Conjugation::Στεινω,
+        Conjugation::Ἀνᾰπτω,
         Conjugation::Πᾰρᾰλλᾰσσω,
         Conjugation::Κᾰτειργω,
         Conjugation::Δῐᾰλῡω,
         Conjugation::Πᾰροξῡνω,
-        Conjugation::Ἐλᾰσσοω,
         Conjugation::Λογεομαι,
-        Conjugation::Ἰαυω,
-        Conjugation::Ἐρωτᾰω,
+        Conjugation::Ἀκουω,
+        Conjugation::Ἰᾱτρευω,
         Conjugation::Πλᾰναω,
-        Conjugation::Ἐπᾰγγελλω,
         Conjugation::Ἐπῐτῐθημῐ,
         Conjugation::Μνημονευω,
-        Conjugation::Ἐξᾰπτω,
         Conjugation::Λιστραω,
         Conjugation::Ἐπευχομαι,
-        Conjugation::Ὑστερεω,
         Conjugation::Ἐγκειμαι,
         Conjugation::Δαμνημῐ,
         Conjugation::Πῐμπλημῐ,
@@ -1649,12 +1620,12 @@ impl Conjugation {
         Conjugation::Μᾰρνᾰμαι,
         Conjugation::Σῠνομνῡμῐ,
         Conjugation::Προσκειμαι,
+        Conjugation::Ρρωννῡμῐ,
         Conjugation::Ῥηγνῡμῐ,
         Conjugation::Ἐξῐστημῐ,
-        Conjugation::Ἱστημι,
-        Conjugation::Ῥωννῡμῐ,
+        Conjugation::Ἱστημῐ,
         Conjugation::Εἰμῐ,
-        Conjugation::Ἱημι,
+        Conjugation::Ἱημῐ,
         Conjugation::Ἐπεντῐθημῐ,
         Conjugation::Τῐθημῐ,
         Conjugation::Δῐδωμῐ,
@@ -1677,7 +1648,7 @@ impl Conjugation {
         Conjugation::Δυναμαι,
         Conjugation::Οἰδᾰ,
         Conjugation::Πᾰρᾰδιδωμῐ,
-        Conjugation::Ἀνιστημι,
+        Conjugation::Ἀνῐστημῐ,
         Conjugation::Δεῑ,
         Conjugation::Ζωννῡμῐ,
         Conjugation::Κᾰθημαι,
@@ -1694,7 +1665,7 @@ impl Conjugation {
         Conjugation::Ἐπεφνον,
         Conjugation::Μετεκῑᾰθον,
         Conjugation::Ὀλλῡμῐ,
-        Conjugation::Ἀνοιγνυμι,
+        Conjugation::Ἀνοιγνῡμῐ,
         Conjugation::Οἰγνῡμῐ,
         Conjugation::Πεπνῡμαι,
         Conjugation::Περνημῐ,
@@ -1718,7 +1689,7 @@ impl Conjugation {
         Conjugation::Σκεδᾰννῡμῐ,
         Conjugation::Κορεννῡμῐ,
         Conjugation::Ὀμοργνῡμῐ,
-        Conjugation::Διϊστημι,
+        Conjugation::Δῐϊστημῐ,
         Conjugation::Στορνῡμῐ,
         Conjugation::Ἀφῐστημῐ,
         Conjugation::Κᾰτακειμαι,
@@ -1727,11 +1698,11 @@ impl Conjugation {
         Conjugation::Προοιδᾰ,
         Conjugation::Ὀνινημῐ,
         Conjugation::Ἐμπιμπρημι,
-        Conjugation::Ἀνθιστημι,
+        Conjugation::Ἀνθῐστημῐ,
         Conjugation::Περῐῐστημῐ,
         Conjugation::Ἐπορνῡμῐ,
         Conjugation::Ἐξεστῐ,
-        Conjugation::Ὑφιστημι,
+        Conjugation::Ὑφῐστημῐ,
         Conjugation::Γεγονοι,
         Conjugation::Γεγενησαι,
         Conjugation::Γεγενηται,
@@ -1776,17 +1747,16 @@ impl Conjugation {
         Conjugation::Στρωννῡμῐ,
         Conjugation::Δῐκεῑν,
         Conjugation::Ξῠρρηγνῡμῐ,
-        Conjugation::Ἀμφιστημι,
+        Conjugation::Ἀμφῑστημῐ,
         Conjugation::Γανῠμαι,
         Conjugation::Δῐακειμαι,
         Conjugation::Ἀδησα,
         Conjugation::Μειγνῡμῐ,
         Conjugation::Ἐμπηγνῡμῐ,
         Conjugation::Ὑπεκτιθεμαι,
-        Conjugation::Ἀναρρωννυμι,
         Conjugation::Ἐκτιθημῐ,
         Conjugation::Προϊστημῐ,
-        Conjugation::Λλυμι,
+        Conjugation::Λλῡμῐ,
         Conjugation::Γνῡμῐ,
         Conjugation::Ρρηγνῡμῐ,
         Conjugation::Δειδῐᾰ,
@@ -1809,9 +1779,9 @@ impl flexion::Label for Conjugation {
     }
 }
 
-pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
-    // Ἐχω: 503 words (θελω, τῠγχᾰνω, δῐψᾱω, δῐδᾰσκω, πῑνω, εὑρῐσκω).
-    conjugation!("ἐχω", 503, "~ω";
+pub(super) static CONJUGATIONS: [Paradigm<'static>; 225] = [
+    // Ἐχω: 461 words (θελω, τῠγχᾰνω, δῐψᾱω, δῐδᾰσκω, πῑνω, εὑρῐσκω).
+    conjugation!("ἐχω", 461, "~ω";
     ind_act_1: "~ω", _, "~ομεν";
     ind_act_2: "~εις", "~ετον", "~ετε";
     ind_act_3: "~ει", _, "~ουσῐ";
@@ -1931,8 +1901,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_perf: "%ε~ηκως", "%ε~ημενος", _;
     participle_futp: _, "%ε~ησομενος", _;
     ),
-    // Ποιεω: 245 words (φοβεω, βλασφημεω, γᾰμεω, μῑσεω, διακονεω, ἀγαθοποιεω). Like Ἐχω, except in 56 cells: ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ind_act_3 pl, ….
-    conjugation!("ποιεω", 245, "~εω", like Ἐχω;
+    // Ποιεω: 253 words (φοβεω, βλασφημεω, γᾰμεω, μῑσεω, διακονεω, ἀγαθοποιεω). Like Ἐχω, except in 56 cells: ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ind_act_3 pl, ….
+    conjugation!("ποιεω", 253, "~εω", like Ἐχω;
     ind_act_1: _, _, "~οῡμεν";
     ind_act_2: "~εῑς", "~εῑτον", "~εῑτε";
     ind_act_3: "~εῑ", _, "~οῡσῐ|~οῡσῐν";
@@ -1959,8 +1929,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     infinitive_pres: "~εῑν", "~εῑσθαι", _;
     participle_pres: _, "~ουμενος", _;
     ),
-    // Ὁρῐζω: 92 words (πυρρᾰζω, σκᾰνδᾰλῐζω, βᾰπτῐζω, δειγμᾰτῐζω, δᾰμαζω, ἁρμοζω). Like Ἐχω, except in 289 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("ὁρῐζω", 92, "~ζω", like Ἐχω;
+    // Ὁρῐζω: 94 words (πυρρᾰζω, σκᾰνδᾰλῐζω, βᾰπτῐζω, δειγμᾰτῐζω, δᾰμαζω, ἁρμοζω). Like Ἐχω, except in 289 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("ὁρῐζω", 94, "~ζω", like Ἐχω;
     ind_act_1: "~ζω", _, "~ζομεν";
     ind_act_2: "~ζεις", "~ζετον", "~ζετε";
     ind_act_3: "~ζει", _, "~ζουσῐ";
@@ -2080,8 +2050,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_perf: "%ε~κως", "%ε~σμενος", _;
     participle_futp: _, "%ε~σομενος", _;
     ),
-    // Γῡροω: 70 words (ὁμοιοω, μορφοω, ναρκοω, κοινοω, ἀλλοιοω, θειοω). Like Ποιεω, except in 251 cells: ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ind_mid_2 sg, ind_mid_2 du, ….
-    conjugation!("γῡροω", 70, "~οω", like Ποιεω;
+    // Γῡροω: 85 words (ὁμοιοω, μορφοω, ζηλοω, ναρκοω, κοινοω, ἀλλοιοω). Like Ποιεω, except in 251 cells: ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ind_mid_2 sg, ind_mid_2 du, ….
+    conjugation!("γῡροω", 85, "~οω", like Ποιεω;
     ind_act_2: "~οῑς", "~οῡτον", "~οῡτε";
     ind_act_3: "~οῑ", _, _;
     ind_mid_2: "~οῑ", "~οῡσθον", "~οῡσθε";
@@ -2189,83 +2159,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_perf: "%ε~ωκως", "%ε~ωμενος", _;
     participle_futp: _, derived, _;
     ),
-    // Ὑπᾰκουω: 70 words (ὑω, οἰφω, πεκω, πλεκω, τηκω, εὑω). Like Ὁρῐζω, except in 172 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("ὑπᾰκουω", 70, "~ω", like Ὁρῐζω;
-    ind_act_1: "~ω", _, "~ομεν";
-    ind_act_2: "~εις", "~ετον", "~ετε";
-    ind_act_3: "~ει", _, "~ουσῐ";
-    ind_mid_1: "~ομαι", _, "~ομεθᾰ";
-    ind_mid_2: "~ῃ", "~εσθον", "~εσθε";
-    ind_mid_3: "~εται", _, "~ονται";
-    subj_act_1: "~ω", _, "~ωμεν";
-    subj_act_2: "~ῃς", "~ητον", "~ητε";
-    subj_act_3: "~ῃ", _, "~ωσῐ";
-    subj_mid_1: "~ωμαι", _, "~ωμεθᾰ";
-    subj_mid_2: "~ῃ", "~ησθον", "~ησθε";
-    subj_mid_3: "~ηται", _, "~ωνται";
-    subj_pass_2: "~ῃ", _, _;
-    opt_act_1: "~οιμῐ", _, "~οιμεν";
-    opt_act_2: "~οις", "~οιτον", "~οιτε";
-    opt_act_3: "~οι", "~οιτην", "~οιεν";
-    opt_mid_1: "~οιμην", _, "~οιμεθᾰ";
-    opt_mid_2: "~οιο", "~οισθον", "~οισθε";
-    opt_mid_3: "~οιτο", "~οισθην", "~οιντο";
-    imp_act_2: "~ε", _, _;
-    imp_act_3: "~ετω", "~ετων", "~οντων";
-    imp_mid_2: "~ου", _, "~εσθε";
-    imp_mid_3: "~εσθω", "~εσθων", "~εσθων";
-    imperfect_act_1: "~ον", _, "~ομεν";
-    imperfect_act_2: "~ες", "~ετον", "~ετε";
-    imperfect_act_3: "~ε", "~ετην", "~ον";
-    imperfect_mid_1: "~ομην", _, "~ομεθᾰ";
-    imperfect_mid_2: "~ου", "~εσθον", "~εσθε";
-    imperfect_mid_3: "~ετο", "~εσθην", "~οντο";
-    aorist_ind_act_1: "~σᾰ", _, "~σᾰμεν";
-    aorist_ind_act_2: "~σᾰς", "~σᾰτον", "~σᾰτε";
-    aorist_ind_act_3: "~σε", "~σᾰτην", "~σᾰν";
-    aorist_ind_mid_1: "~σᾰμην", _, "~σᾰμεθᾰ";
-    aorist_ind_mid_2: "~σω", "~σᾰσθον", "~σᾰσθε";
-    aorist_ind_mid_3: "~σᾰτο", "~σᾰσθην", "~σᾰντο";
-    aorist_ind_pass_1: "~σθην", _, "~σθημεν";
-    aorist_ind_pass_2: "~σθης", "~σθητον", "~σθητε";
-    aorist_ind_pass_3: "~σθη", "~σθητην", "~σθησᾰν";
-    perfect_ind_act_1: derived, _, derived;
-    perfect_ind_act_2: derived, derived, derived;
-    perfect_ind_act_3: derived, _, derived;
-    perfect_ind_mid_1: "~σμαι", _, "~σμεθᾰ";
-    perfect_ind_mid_2: "~σαι", "~σθον", "~σθε";
-    perfect_ind_mid_3: "~σται", _, "~σᾰται";
-    perfect_subj_act_1: derived, _, derived;
-    perfect_subj_act_2: derived, derived, derived;
-    perfect_subj_act_3: derived, _, derived;
-    perfect_opt_act_1: derived, _, derived;
-    perfect_opt_act_2: derived, derived, derived;
-    perfect_opt_act_3: derived, derived, derived;
-    perfect_imp_act_2: _, derived, derived;
-    perfect_imp_act_3: derived, derived, derived;
-    perfect_imp_mid_2: "~σο", _, _;
-    perfect_imp_mid_3: "~σθω", "~σθων", _;
-    pluperfect_act_1: derived, _, derived;
-    pluperfect_act_2: derived, derived, derived;
-    pluperfect_act_3: derived, derived, derived;
-    pluperfect_mid_1: derived, _, derived;
-    pluperfect_mid_2: derived, derived, derived;
-    pluperfect_mid_3: derived, derived, derived;
-    future_perfect_ind_mid_1: derived, _, derived;
-    future_perfect_ind_mid_2: derived, derived, derived;
-    future_perfect_ind_mid_3: derived, _, derived;
-    future_perfect_opt_mid_1: derived, _, derived;
-    future_perfect_opt_mid_2: derived, derived, derived;
-    future_perfect_opt_mid_3: derived, derived, derived;
-    infinitive_pres: "~ειν", "~εσθαι", _;
-    infinitive_perf: derived, "~σθαι", _;
-    infinitive_futp: _, derived, _;
-    participle_pres: "~ων", "~ομενος", _;
-    participle_perf: derived, "~σμενος", _;
-    participle_futp: _, derived, _;
-    ),
-    // Χρημᾰτῐζω: 68 words (κᾰθᾰρῐζω, ἑλληνῐζω, βᾰσᾰνῐζω, κᾰπνῐζω, φενᾱκῐζω, γεμῐζω). Like Ὁρῐζω, except in 66 cells: ind_act_3 pl, ind_mid_2 sg, ind_pass_2 sg, subj_act_3 pl, future_ind_act_1 sg, future_ind_act_1 pl, ….
-    conjugation!("χρημᾰτῐζω", 68, "~ζω", like Ὁρῐζω;
+    // Ἀφορῐζω: 78 words (κᾰθᾰρῐζω, βᾰσᾰνῐζω, κᾰπνῐζω, φενᾱκῐζω, γεμῐζω, ἱζω). Like Ὁρῐζω, except in 66 cells: ind_act_3 pl, ind_mid_2 sg, ind_pass_2 sg, subj_act_3 pl, future_ind_act_1 sg, future_ind_act_1 pl, ….
+    conjugation!("ἀφορῐζω", 78, "~ζω", like Ὁρῐζω;
     ind_act_3: _, _, "~ζουσῐ|~ζουσῐν";
     ind_mid_2: "~ζῃ|~ζει", _, _;
     ind_pass_2: "~ζῃ|~ζει", _, _;
@@ -2301,8 +2196,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_fut: "~ων", "~ουμενος", _;
     participle_futp: _, derived, _;
     ),
-    // Βουλευω: 65 words (θερᾰπευω, πῐστευω, νηστευω, χορευω, παιδευω, λουω). Like Γῡροω, except in 273 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("βουλευω", 65, "~υω", like Γῡροω;
+    // Βουλευω: 70 words (ἀκουω, θερᾰπευω, πῐστευω, νηστευω, χορευω, παιδευω). Like Γῡροω, except in 273 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("βουλευω", 70, "~υω", like Γῡροω;
     ind_act_1: "~υω", _, "~υομεν";
     ind_act_2: "~υεις", "~υετον", "~υετε";
     ind_act_3: "~υει", _, "~υουσῐ|~υουσῐν";
@@ -2415,6 +2310,93 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: "~υσᾱς", "~υσᾰμενος", "~υθεις";
     participle_perf: "%ε~υκως", "%ε~υμενος", _;
     ),
+    // Σπᾰω: 63 words (ἀρχω, στεφω, βρεχω, ἐκδῠω, οἰφω, ἀγχω). Like Ὁρῐζω, except in 194 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("σπᾰω", 63, "~ω", like Ὁρῐζω;
+    ind_act_1: "~ω", _, "~ομεν";
+    ind_act_2: "~εις", "~ετον", "~ετε";
+    ind_act_3: "~ει", _, "~ουσῐ";
+    ind_mid_1: "~ομαι", _, "~ομεθᾰ";
+    ind_mid_2: "~ῃ", "~εσθον", "~εσθε";
+    ind_mid_3: "~εται", _, "~ονται";
+    subj_act_1: "~ω", _, "~ωμεν";
+    subj_act_2: "~ῃς", "~ητον", "~ητε";
+    subj_act_3: "~ῃ", _, "~ωσῐ";
+    subj_mid_1: "~ωμαι", _, "~ωμεθᾰ";
+    subj_mid_2: "~ῃ", "~ησθον", "~ησθε";
+    subj_mid_3: "~ηται", _, "~ωνται";
+    subj_pass_2: "~ῃ", _, _;
+    opt_act_1: "~οιμῐ", _, "~οιμεν";
+    opt_act_2: "~οις", "~οιτον", "~οιτε";
+    opt_act_3: "~οι", "~οιτην", "~οιεν";
+    opt_mid_1: "~οιμην", _, "~οιμεθᾰ";
+    opt_mid_2: "~οιο", "~οισθον", "~οισθε";
+    opt_mid_3: "~οιτο", "~οισθην", "~οιντο";
+    imp_act_2: "~ε", _, _;
+    imp_act_3: "~ετω", "~ετων", "~οντων";
+    imp_mid_2: "~ου", _, "~εσθε";
+    imp_mid_3: "~εσθω", "~εσθων", "~εσθων";
+    imperfect_act_1: "ἐ~ον", _, "ἐ~ομεν";
+    imperfect_act_2: "ἐ~ες", "ἐ~ετον", "ἐ~ετε";
+    imperfect_act_3: "ἐ~ε", "ἐ~ετην", "ἐ~ον";
+    imperfect_mid_1: "ἐ~ομην", _, "ἐ~ομεθᾰ";
+    imperfect_mid_2: "ἐ~ου", "ἐ~εσθον", "ἐ~εσθε";
+    imperfect_mid_3: "ἐ~ετο", "ἐ~εσθην", "ἐ~οντο";
+    future_ind_pass_1: "~θησομαι", _, "~θησομεθᾰ";
+    future_ind_pass_2: "~θησῃ", "~θησεσθον", "~θησεσθε";
+    future_ind_pass_3: "~θησεται", _, "~θησονται";
+    future_opt_pass_1: "~θησοιμην", _, "~θησοιμεθᾰ";
+    future_opt_pass_2: "~θησοιο", "~θησοισθον", "~θησοισθε";
+    future_opt_pass_3: "~θησοιτο", "~θησοισθην", "~θησοιντο";
+    aorist_ind_pass_1: "ἐ~θην", _, "ἐ~θημεν";
+    aorist_ind_pass_2: "ἐ~θης", "ἐ~θητον", "ἐ~θητε";
+    aorist_ind_pass_3: "ἐ~θη", "ἐ~θητην", "ἐ~θησᾰν";
+    aorist_subj_pass_1: "~θω", _, "~θωμεν";
+    aorist_subj_pass_2: "~θῃς", "~θητον", "~θητε";
+    aorist_subj_pass_3: "~θῃ", _, "~θωσῐ";
+    aorist_opt_pass_1: "~θειην", _, "~θεῑμεν";
+    aorist_opt_pass_2: "~θειης", "~θεῑτον", "~θεῑτε";
+    aorist_opt_pass_3: "~θειη", "~θειτην", "~θεῑεν";
+    aorist_imp_pass_2: "~θητῐ", _, _;
+    aorist_imp_pass_3: "~θητω", "~θητων", "~θεντων";
+    perfect_ind_act_1: "ἐ~κᾰ", _, "ἐ~κᾰμεν";
+    perfect_ind_act_2: "ἐ~κᾰς", "ἐ~κᾰτον", "ἐ~κᾰτε";
+    perfect_ind_act_3: "ἐ~κε", _, "ἐ~κᾱσῐ";
+    perfect_ind_mid_1: "ἐ~μαι", _, "ἐ~μεθᾰ";
+    perfect_ind_mid_2: "ἐ~σαι", "ἐ~σθον", "ἐ~σθε";
+    perfect_ind_mid_3: "ἐ~ται", _, "ἐ~νται";
+    perfect_subj_act_1: "ἐ~κω", _, "ἐ~κωμεν";
+    perfect_subj_act_2: "ἐ~κῃς", "ἐ~κητον", "ἐ~κητε";
+    perfect_subj_act_3: "ἐ~κῃ", _, "ἐ~κωσῐ";
+    perfect_opt_act_1: "ἐ~κοιμῐ", _, "ἐ~κοιμεν";
+    perfect_opt_act_2: "ἐ~κοις", "ἐ~κοιτον", "ἐ~κοιτε";
+    perfect_opt_act_3: "ἐ~κοι", "ἐ~κοιτην", "ἐ~κοιεν";
+    perfect_imp_act_2: _, "ἐ~κετον", "ἐ~κετε";
+    perfect_imp_act_3: "ἐ~κετω", "ἐ~κετων", "ἐ~κοντων";
+    perfect_imp_mid_2: "ἐ~σο", _, _;
+    perfect_imp_mid_3: "ἐ~σθω", "ἐ~σθων", _;
+    pluperfect_act_1: "ἐ~κειν", _, "ἐ~κεμεν";
+    pluperfect_act_2: "ἐ~κεις", "ἐ~κετον", "ἐ~κετε";
+    pluperfect_act_3: "ἐ~κει", "ἐ~κετην", "ἐ~κεσᾰν";
+    pluperfect_mid_1: "ἐ~μην", _, "ἐ~μεθᾰ";
+    pluperfect_mid_2: "ἐ~σο", "ἐ~σθον", "ἐ~σθε";
+    pluperfect_mid_3: "ἐ~το", "ἐ~σθην", "ἐ~ντο";
+    future_perfect_ind_mid_1: derived, _, derived;
+    future_perfect_ind_mid_2: derived, derived, derived;
+    future_perfect_ind_mid_3: derived, _, derived;
+    future_perfect_opt_mid_1: derived, _, derived;
+    future_perfect_opt_mid_2: derived, derived, derived;
+    future_perfect_opt_mid_3: derived, derived, derived;
+    infinitive_pres: "~ειν", "~εσθαι", _;
+    infinitive_fut: _, _, "~θησεσθαι";
+    infinitive_aor: _, _, "~θηναι";
+    infinitive_perf: "ἐ~κεναι", "ἐ~σθαι", _;
+    infinitive_futp: _, derived, _;
+    participle_pres: "~ων", "~ομενος", _;
+    participle_fut: _, _, "~θησομενος";
+    participle_aor: _, _, "~θεις";
+    participle_perf: "ἐ~κως", "ἐ~μενος", _;
+    participle_futp: _, derived, _;
+    ),
     // Οἰομαι: 60 words (μαχομαι, ἐρχομαι, γῐγνομαι, πῠνθανομαι, μαινομαι, ἑπομαι). Like Ἐχω, except in 193 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
     conjugation!("οἰομαι", 60, "~ομαι", like Ἐχω;
     ind_act_1: "~ομαι", _, derived;
@@ -2499,8 +2481,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_perf: derived, _, _;
     participle_futp: _, derived, _;
     ),
-    // Δοκᾰω: 48 words (γεννᾰω, κῠβερνᾰω, γλᾰγᾰω, σῑγᾰω, κᾰκκᾰω, μᾰδᾰω). Like Ἐχω, except in 74 cells: ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ind_act_3 pl, ….
-    conjugation!("δοκᾰω", 48, "~ᾰω", like Ἐχω;
+    // Δοκᾰω: 54 words (γεννᾰω, κῠβερνᾰω, γλᾰγᾰω, σῑγᾰω, κᾰκκᾰω, μᾰδᾰω). Like Ἐχω, except in 74 cells: ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ind_act_3 pl, ….
+    conjugation!("δοκᾰω", 54, "~ᾰω", like Ἐχω;
     ind_act_1: _, _, "~ωμεν";
     ind_act_2: "~ᾳς", "~ᾱτον", "~ᾱτε";
     ind_act_3: "~ᾳ", _, "~ωσῐ|~ωσῐν";
@@ -2536,6 +2518,52 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     aorist_opt_act_3: "~ησειε|~ησειεν|~ησαι", _, "~ησειᾰν|~ησαιεν";
     infinitive_pres: "~ᾱν", "~ᾱσθαι", _;
     participle_pres: _, "~ωμενος", _;
+    ),
+    // Δῐκεω: 48 words (ἀγνοεω, ἀντλεω, ἀσκεω, οἰκεω, ἀλεω, οἰδεω). Like Ποιεω, except in 89 cells: future_ind_act_3 pl, future_ind_mid_2 sg, future_ind_pass_2 sg, aorist_ind_act_3 sg, aorist_subj_act_3 pl, aorist_subj_pass_3 pl, ….
+    conjugation!("δῐκεω", 48, "~εω", like Ποιεω;
+    future_ind_act_3: _, _, "~ησουσῐ|~ησουσῐν";
+    future_ind_mid_2: "~ησῃ|~ησει", _, _;
+    future_ind_pass_2: "~ηθησῃ|~ηθησει", _, _;
+    aorist_ind_act_3: "ἐ~ησε|ἐ~ησεν", _, _;
+    aorist_subj_act_3: _, _, "~ησωσῐ|~ησωσῐν";
+    aorist_subj_pass_3: _, _, "~ηθωσῐ|~ηθωσῐν";
+    aorist_opt_act_2: "~ησειᾰς|~ησαις", _, _;
+    aorist_opt_act_3: "~ησειε|~ησειεν|~ησαι", _, "~ησειᾰν|~ησαιεν";
+    aorist_opt_pass_1: _, _, "~ηθεῑμεν|~ηθειημεν";
+    aorist_opt_pass_2: _, "~ηθεῑτον|~ηθειητον", "~ηθεῑτε|~ηθειητε";
+    aorist_opt_pass_3: _, "~ηθειτην|~ηθειητην", "~ηθεῑεν|~ηθειησᾰν";
+    perfect_ind_act_1: "ἐ~ηκᾰ", _, "ἐ~ηκᾰμεν";
+    perfect_ind_act_2: "ἐ~ηκᾰς", "ἐ~ηκᾰτον", "ἐ~ηκᾰτε";
+    perfect_ind_act_3: "ἐ~ηκε|ἐ~ηκεν", _, "ἐ~ηκᾱσῐ|ἐ~ηκᾱσῐν";
+    perfect_ind_mid_1: "ἐ~ημαι", _, "ἐ~ημεθᾰ";
+    perfect_ind_mid_2: "ἐ~ησαι", "ἐ~ησθον", "ἐ~ησθε";
+    perfect_ind_mid_3: "ἐ~ηται", _, "ἐ~ηνται";
+    perfect_subj_act_1: "ἐ~ηκω", _, "ἐ~ηκωμεν";
+    perfect_subj_act_2: "ἐ~ηκῃς", "ἐ~ηκητον", "ἐ~ηκητε";
+    perfect_subj_act_3: "ἐ~ηκῃ", _, "ἐ~ηκωσῐ|ἐ~ηκωσῐν";
+    perfect_opt_act_1: "ἐ~ηκοιμῐ|ἐ~ηκοιην", _, "ἐ~ηκοιμεν";
+    perfect_opt_act_2: "ἐ~ηκοις|ἐ~ηκοιης", "ἐ~ηκοιτον", "ἐ~ηκοιτε";
+    perfect_opt_act_3: "ἐ~ηκοι|ἐ~ηκοιη", "ἐ~ηκοιτην", "ἐ~ηκοιεν";
+    perfect_imp_act_2: "ἐ~ηκε", "ἐ~ηκετον", "ἐ~ηκετε";
+    perfect_imp_act_3: "ἐ~ηκετω", "ἐ~ηκετων", "ἐ~ηκοντων";
+    perfect_imp_mid_2: "ἐ~ησο", _, _;
+    perfect_imp_mid_3: "ἐ~ησθω", "ἐ~ησθων", _;
+    pluperfect_act_1: "ἐ~ηκειν|ἐ~ηκη", _, "ἐ~ηκεμεν";
+    pluperfect_act_2: "ἐ~ηκεις|ἐ~ηκης", "ἐ~ηκετον", "ἐ~ηκετε";
+    pluperfect_act_3: "ἐ~ηκει|ἐ~ηκειν", "ἐ~ηκετην", "ἐ~ηκεσᾰν";
+    pluperfect_mid_1: "ἐ~ημην", _, "ἐ~ημεθᾰ";
+    pluperfect_mid_2: "ἐ~ησο", "ἐ~ησθον", "ἐ~ησθε";
+    pluperfect_mid_3: "ἐ~ητο", "ἐ~ησθην", "ἐ~ηντο";
+    future_perfect_ind_mid_1: derived, _, derived;
+    future_perfect_ind_mid_2: derived, derived, derived;
+    future_perfect_ind_mid_3: derived, _, derived;
+    future_perfect_opt_mid_1: derived, _, derived;
+    future_perfect_opt_mid_2: derived, derived, derived;
+    future_perfect_opt_mid_3: derived, derived, derived;
+    infinitive_perf: "ἐ~ηκεναι", "ἐ~ησθαι", _;
+    infinitive_futp: _, derived, _;
+    participle_perf: "ἐ~ηκως", "ἐ~ημενος", _;
+    participle_futp: _, derived, _;
     ),
     // Προσερχομαι: 46 words (γεινομαι, δεχομαι, δερκομαι, μεμφομαι, σεβομαι, φθεγγομαι).
     conjugation!("προσερχομαι", 46, "~ε~ομαι";
@@ -2603,184 +2631,68 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: _, "~~ομενος", "~ε~ασθεις";
     participle_perf: _, "~επο~ημενος", _;
     ),
-    // Σπᾰω: 44 words (ἀρχω, στεφω, βρεχω, ἐκδῠω, λειχω, θῡω). Like Ὑπᾰκουω, except in 135 cells: imperfect_act_1 sg, imperfect_act_1 pl, imperfect_act_2 sg, imperfect_act_2 du, imperfect_act_2 pl, imperfect_act_3 sg, ….
-    conjugation!("σπᾰω", 44, "~ω", like Ὑπᾰκουω;
-    imperfect_act_1: "ἐ~ον", _, "ἐ~ομεν";
-    imperfect_act_2: "ἐ~ες", "ἐ~ετον", "ἐ~ετε";
-    imperfect_act_3: "ἐ~ε", "ἐ~ετην", "ἐ~ον";
-    imperfect_mid_1: "ἐ~ομην", _, "ἐ~ομεθᾰ";
-    imperfect_mid_2: "ἐ~ου", "ἐ~εσθον", "ἐ~εσθε";
-    imperfect_mid_3: "ἐ~ετο", "ἐ~εσθην", "ἐ~οντο";
-    future_ind_pass_1: "~θησομαι", _, "~θησομεθᾰ";
-    future_ind_pass_2: "~θησῃ", "~θησεσθον", "~θησεσθε";
-    future_ind_pass_3: "~θησεται", _, "~θησονται";
-    future_opt_pass_1: "~θησοιμην", _, "~θησοιμεθᾰ";
-    future_opt_pass_2: "~θησοιο", "~θησοισθον", "~θησοισθε";
-    future_opt_pass_3: "~θησοιτο", "~θησοισθην", "~θησοιντο";
-    aorist_ind_act_1: "ἐ~σᾰ", _, "ἐ~σᾰμεν";
-    aorist_ind_act_2: "ἐ~σᾰς", "ἐ~σᾰτον", "ἐ~σᾰτε";
-    aorist_ind_act_3: "ἐ~σε", "ἐ~σᾰτην", "ἐ~σᾰν";
-    aorist_ind_mid_1: "ἐ~σᾰμην", _, "ἐ~σᾰμεθᾰ";
-    aorist_ind_mid_2: "ἐ~σω", "ἐ~σᾰσθον", "ἐ~σᾰσθε";
-    aorist_ind_mid_3: "ἐ~σᾰτο", "ἐ~σᾰσθην", "ἐ~σᾰντο";
-    aorist_ind_pass_1: "ἐ~θην", _, "ἐ~θημεν";
-    aorist_ind_pass_2: "ἐ~θης", "ἐ~θητον", "ἐ~θητε";
-    aorist_ind_pass_3: "ἐ~θη", "ἐ~θητην", "ἐ~θησᾰν";
-    aorist_subj_pass_1: "~θω", _, "~θωμεν";
-    aorist_subj_pass_2: "~θῃς", "~θητον", "~θητε";
-    aorist_subj_pass_3: "~θῃ", _, "~θωσῐ";
-    aorist_opt_pass_1: "~θειην", _, "~θεῑμεν";
-    aorist_opt_pass_2: "~θειης", "~θεῑτον", "~θεῑτε";
-    aorist_opt_pass_3: "~θειη", "~θειτην", "~θεῑεν";
-    aorist_imp_pass_2: "~θητῐ", _, _;
-    aorist_imp_pass_3: "~θητω", "~θητων", "~θεντων";
-    perfect_ind_act_1: "ἐ~κᾰ", _, "ἐ~κᾰμεν";
-    perfect_ind_act_2: "ἐ~κᾰς", "ἐ~κᾰτον", "ἐ~κᾰτε";
-    perfect_ind_act_3: "ἐ~κε", _, "ἐ~κᾱσῐ";
-    perfect_ind_mid_1: "ἐ~μαι", _, "ἐ~μεθᾰ";
-    perfect_ind_mid_2: "ἐ~σαι", "ἐ~σθον", "ἐ~σθε";
-    perfect_ind_mid_3: "ἐ~ται", _, "ἐ~νται";
-    perfect_subj_act_1: "ἐ~κω", _, "ἐ~κωμεν";
-    perfect_subj_act_2: "ἐ~κῃς", "ἐ~κητον", "ἐ~κητε";
-    perfect_subj_act_3: "ἐ~κῃ", _, "ἐ~κωσῐ";
-    perfect_opt_act_1: "ἐ~κοιμῐ", _, "ἐ~κοιμεν";
-    perfect_opt_act_2: "ἐ~κοις", "ἐ~κοιτον", "ἐ~κοιτε";
-    perfect_opt_act_3: "ἐ~κοι", "ἐ~κοιτην", "ἐ~κοιεν";
-    perfect_imp_act_2: _, "ἐ~κετον", "ἐ~κετε";
-    perfect_imp_act_3: "ἐ~κετω", "ἐ~κετων", "ἐ~κοντων";
-    perfect_imp_mid_2: "ἐ~σο", _, _;
-    perfect_imp_mid_3: "ἐ~σθω", "ἐ~σθων", _;
-    pluperfect_act_1: "ἐ~κειν", _, "ἐ~κεμεν";
-    pluperfect_act_2: "ἐ~κεις", "ἐ~κετον", "ἐ~κετε";
-    pluperfect_act_3: "ἐ~κει", "ἐ~κετην", "ἐ~κεσᾰν";
-    pluperfect_mid_1: "ἐ~μην", _, "ἐ~μεθᾰ";
-    pluperfect_mid_2: "ἐ~σο", "ἐ~σθον", "ἐ~σθε";
-    pluperfect_mid_3: "ἐ~το", "ἐ~σθην", "ἐ~ντο";
-    infinitive_fut: _, _, "~θησεσθαι";
-    infinitive_aor: _, _, "~θηναι";
-    infinitive_perf: "ἐ~κεναι", "ἐ~σθαι", _;
-    participle_fut: _, _, "~θησομενος";
-    participle_aor: _, _, "~θεις";
-    participle_perf: "ἐ~κως", "ἐ~μενος", _;
+    // Ἐλπω: 43 words (ὑω, πεκω, πλεκω, τηκω, εὑω, ἐλπω). Like Σπᾰω, except in 135 cells: imperfect_act_1 sg, imperfect_act_1 pl, imperfect_act_2 sg, imperfect_act_2 du, imperfect_act_2 pl, imperfect_act_3 sg, ….
+    conjugation!("ἐλπω", 43, "~ω", like Σπᾰω;
+    imperfect_act_1: "~ον", _, "~ομεν";
+    imperfect_act_2: "~ες", "~ετον", "~ετε";
+    imperfect_act_3: "~ε", "~ετην", "~ον";
+    imperfect_mid_1: "~ομην", _, "~ομεθᾰ";
+    imperfect_mid_2: "~ου", "~εσθον", "~εσθε";
+    imperfect_mid_3: "~ετο", "~εσθην", "~οντο";
+    future_ind_pass_1: "~σθησομαι", _, "~σθησομεθᾰ";
+    future_ind_pass_2: "~σθησῃ", "~σθησεσθον", "~σθησεσθε";
+    future_ind_pass_3: "~σθησεται", _, "~σθησονται";
+    future_opt_pass_1: "~σθησοιμην", _, "~σθησοιμεθᾰ";
+    future_opt_pass_2: "~σθησοιο", "~σθησοισθον", "~σθησοισθε";
+    future_opt_pass_3: "~σθησοιτο", "~σθησοισθην", "~σθησοιντο";
+    aorist_ind_act_1: "~σᾰ", _, "~σᾰμεν";
+    aorist_ind_act_2: "~σᾰς", "~σᾰτον", "~σᾰτε";
+    aorist_ind_act_3: "~σε", "~σᾰτην", "~σᾰν";
+    aorist_ind_mid_1: "~σᾰμην", _, "~σᾰμεθᾰ";
+    aorist_ind_mid_2: "~σω", "~σᾰσθον", "~σᾰσθε";
+    aorist_ind_mid_3: "~σᾰτο", "~σᾰσθην", "~σᾰντο";
+    aorist_ind_pass_1: "~σθην", _, "~σθημεν";
+    aorist_ind_pass_2: "~σθης", "~σθητον", "~σθητε";
+    aorist_ind_pass_3: "~σθη", "~σθητην", "~σθησᾰν";
+    aorist_subj_pass_1: "~σθω", _, "~σθωμεν";
+    aorist_subj_pass_2: "~σθῃς", "~σθητον", "~σθητε";
+    aorist_subj_pass_3: "~σθῃ", _, "~σθωσῐ";
+    aorist_opt_pass_1: "~σθειην", _, "~σθεῑμεν";
+    aorist_opt_pass_2: "~σθειης", "~σθεῑτον", "~σθεῑτε";
+    aorist_opt_pass_3: "~σθειη", "~σθειτην", "~σθεῑεν";
+    aorist_imp_pass_2: "~σθητῐ", _, _;
+    aorist_imp_pass_3: "~σθητω", "~σθητων", "~σθεντων";
+    perfect_ind_act_1: derived, _, derived;
+    perfect_ind_act_2: derived, derived, derived;
+    perfect_ind_act_3: derived, _, derived;
+    perfect_ind_mid_1: "~σμαι", _, "~σμεθᾰ";
+    perfect_ind_mid_2: "~σαι", "~σθον", "~σθε";
+    perfect_ind_mid_3: "~σται", _, "~σᾰται";
+    perfect_subj_act_1: derived, _, derived;
+    perfect_subj_act_2: derived, derived, derived;
+    perfect_subj_act_3: derived, _, derived;
+    perfect_opt_act_1: derived, _, derived;
+    perfect_opt_act_2: derived, derived, derived;
+    perfect_opt_act_3: derived, derived, derived;
+    perfect_imp_act_2: _, derived, derived;
+    perfect_imp_act_3: derived, derived, derived;
+    perfect_imp_mid_2: "~σο", _, _;
+    perfect_imp_mid_3: "~σθω", "~σθων", _;
+    pluperfect_act_1: derived, _, derived;
+    pluperfect_act_2: derived, derived, derived;
+    pluperfect_act_3: derived, derived, derived;
+    pluperfect_mid_1: derived, _, derived;
+    pluperfect_mid_2: derived, derived, derived;
+    pluperfect_mid_3: derived, derived, derived;
+    infinitive_fut: _, _, "~σθησεσθαι";
+    infinitive_aor: _, _, "~σθηναι";
+    infinitive_perf: derived, "~σθαι", _;
+    participle_fut: _, _, "~σθησομενος";
+    participle_aor: _, _, "~σθεις";
+    participle_perf: derived, "~σμενος", _;
     ),
-    // Σῠνᾰγω: 39 words (ἀγω, σῠνᾰγω, λεγω, φευγω, τρωγω, δῐᾰλεγω). Like Ὑπᾰκουω, except in 227 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("σῠνᾰγω", 39, "~γω", like Ὑπᾰκουω;
-    ind_act_1: "~γω", _, "~γομεν";
-    ind_act_2: "~γεις", "~γετον", "~γετε";
-    ind_act_3: "~γει", _, "~γουσῐ";
-    ind_mid_1: "~γομαι", _, "~γομεθᾰ";
-    ind_mid_2: "~γῃ", "~γεσθον", "~γεσθε";
-    ind_mid_3: "~γεται", _, "~γονται";
-    subj_act_1: "~γω", _, "~γωμεν";
-    subj_act_2: "~γῃς", "~γητον", "~γητε";
-    subj_act_3: "~γῃ", _, "~γωσῐ";
-    subj_mid_1: "~γωμαι", _, "~γωμεθᾰ";
-    subj_mid_2: "~γῃ", "~γησθον", "~γησθε";
-    subj_mid_3: "~γηται", _, "~γωνται";
-    subj_pass_2: "~γῃ", _, _;
-    opt_act_1: "~γοιμῐ", _, "~γοιμεν";
-    opt_act_2: "~γοις", "~γοιτον", "~γοιτε";
-    opt_act_3: "~γοι", "~γοιτην", "~γοιεν";
-    opt_mid_1: "~γοιμην", _, "~γοιμεθᾰ";
-    opt_mid_2: "~γοιο", "~γοισθον", "~γοισθε";
-    opt_mid_3: "~γοιτο", "~γοισθην", "~γοιντο";
-    imp_act_2: "~γε", _, _;
-    imp_act_3: "~γετω", "~γετων", "~γοντων";
-    imp_mid_2: "~γου", _, "~γεσθε";
-    imp_mid_3: "~γεσθω", "~γεσθων", "~γεσθων";
-    imperfect_act_1: "ἐ~γον", _, "ἐ~γομεν";
-    imperfect_act_2: "ἐ~γες", "ἐ~γετον", "ἐ~γετε";
-    imperfect_act_3: "ἐ~γε", "ἐ~γετην", "ἐ~γον";
-    imperfect_mid_1: "ἐ~γομην", _, "ἐ~γομεθᾰ";
-    imperfect_mid_2: "ἐ~γου", "ἐ~γεσθον", "ἐ~γεσθε";
-    imperfect_mid_3: "ἐ~γετο", "ἐ~γεσθην", "ἐ~γοντο";
-    future_ind_act_1: "~ξω", _, "~ξομεν";
-    future_ind_act_2: "~ξεις", "~ξετον", "~ξετε";
-    future_ind_act_3: "~ξει", _, "~ξουσῐ";
-    future_ind_mid_1: "~ξομαι", _, "~ξομεθᾰ";
-    future_ind_mid_2: "~ξῃ", "~ξεσθον", "~ξεσθε";
-    future_ind_mid_3: "~ξεται", _, "~ξονται";
-    future_ind_pass_1: "~χθησομαι", _, "~χθησομεθᾰ";
-    future_ind_pass_2: "~χθησῃ", "~χθησεσθον", "~χθησεσθε";
-    future_ind_pass_3: "~χθησεται", _, "~χθησονται";
-    future_opt_act_1: "~ξοιμῐ", _, "~ξοιμεν";
-    future_opt_act_2: "~ξοις", "~ξοιτον", "~ξοιτε";
-    future_opt_act_3: "~ξοι", "~ξοιτην", "~ξοιεν";
-    future_opt_mid_1: "~ξοιμην", _, "~ξοιμεθᾰ";
-    future_opt_mid_2: "~ξοιο", "~ξοισθον", "~ξοισθε";
-    future_opt_mid_3: "~ξοιτο", "~ξοισθην", "~ξοιντο";
-    future_opt_pass_1: "~χθησοιμην", _, "~χθησοιμεθᾰ";
-    future_opt_pass_2: "~χθησοιο", "~χθησοισθον", "~χθησοισθε";
-    future_opt_pass_3: "~χθησοιτο", "~χθησοισθην", "~χθησοιντο";
-    aorist_ind_act_1: "ἐ~ξᾰ", _, "ἐ~ξᾰμεν";
-    aorist_ind_act_2: "ἐ~ξᾰς", "ἐ~ξᾰτον", "ἐ~ξᾰτε";
-    aorist_ind_act_3: "ἐ~ξε", "ἐ~ξᾰτην", "ἐ~ξᾰν";
-    aorist_ind_mid_1: "ἐ~ξᾰμην", _, "ἐ~ξᾰμεθᾰ";
-    aorist_ind_mid_2: "ἐ~ξω", "ἐ~ξᾰσθον", "ἐ~ξᾰσθε";
-    aorist_ind_mid_3: "ἐ~ξᾰτο", "ἐ~ξᾰσθην", "ἐ~ξᾰντο";
-    aorist_ind_pass_1: "ἐ~χθην", _, "ἐ~χθημεν";
-    aorist_ind_pass_2: "ἐ~χθης", "ἐ~χθητον", "ἐ~χθητε";
-    aorist_ind_pass_3: "ἐ~χθη", "ἐ~χθητην", "ἐ~χθησᾰν";
-    aorist_subj_act_1: "~ξω", _, "~ξωμεν";
-    aorist_subj_act_2: "~ξῃς", "~ξητον", "~ξητε";
-    aorist_subj_act_3: "~ξῃ", _, "~ξωσῐ";
-    aorist_subj_mid_1: "~ξωμαι", _, "~ξωμεθᾰ";
-    aorist_subj_mid_2: "~ξῃ", "~ξησθον", "~ξησθε";
-    aorist_subj_mid_3: "~ξηται", _, "~ξωνται";
-    aorist_subj_pass_1: "~χθω", _, "~χθωμεν";
-    aorist_subj_pass_2: "~χθῃς", "~χθητον", "~χθητε";
-    aorist_subj_pass_3: "~χθῃ", _, "~χθωσῐ";
-    aorist_opt_act_1: "~ξαιμῐ", _, "~ξαιμεν";
-    aorist_opt_act_2: "~ξειᾰς", "~ξαιτον", "~ξαιτε";
-    aorist_opt_act_3: "~ξειε", "~ξαιτην", "~ξειᾰν";
-    aorist_opt_mid_1: "~ξαιμην", _, "~ξαιμεθᾰ";
-    aorist_opt_mid_2: "~ξαιο", "~ξαισθον", "~ξαισθε";
-    aorist_opt_mid_3: "~ξαιτο", "~ξαισθην", "~ξαιντο";
-    aorist_opt_pass_1: "~χθειην", _, "~χθεῑμεν";
-    aorist_opt_pass_2: "~χθειης", "~χθεῑτον", "~χθεῑτε";
-    aorist_opt_pass_3: "~χθειη", "~χθειτην", "~χθεῑεν";
-    aorist_imp_act_2: "~ξον", "~ξᾰτον", "~ξᾰτε";
-    aorist_imp_act_3: "~ξᾰτω", "~ξᾰτων", "~ξᾰντων";
-    aorist_imp_mid_2: "~ξαι", "~ξᾰσθον", "~ξᾰσθε";
-    aorist_imp_mid_3: "~ξᾰσθω", "~ξᾰσθων", _;
-    aorist_imp_pass_2: "~χθητῐ", _, _;
-    aorist_imp_pass_3: "~χθητω", "~χθητων", "~χθεντων";
-    perfect_ind_mid_1: "%ε~γμαι", _, "%ε~γμεθᾰ";
-    perfect_ind_mid_2: "%ε~ξαι", "%ε~χθον", "%ε~χθε";
-    perfect_ind_mid_3: "%ε~κται", _, "%ε~γᾰται";
-    perfect_imp_mid_2: "%ε~ξο", _, _;
-    perfect_imp_mid_3: "%ε~χθω", "%ε~χθων", _;
-    infinitive_pres: "~γειν", "~γεσθαι", _;
-    infinitive_fut: "~ξειν", "~ξεσθαι", "~χθησεσθαι";
-    infinitive_aor: "~ξαι", "~ξᾰσθαι", "~χθηναι";
-    infinitive_perf: _, "%ε~χθαι", _;
-    participle_pres: "~γων", "~γομενος", _;
-    participle_fut: "~ξων", "~ξομενος", "~χθησομενος";
-    participle_aor: "~ξᾱς", "~ξᾰμενος", "~χθεις";
-    participle_perf: _, "%ε~γμενος", _;
-    ),
-    // Κᾰτεργαζομαι: 34 words (λογῐζομαι, χᾰρῐζομαι, στοχᾰζομαι, ἑζομαι, σῠνεργαζομαι, ἐργᾰζομαι). Like Χρημᾰτῐζω, except in 25 cells: ind_act_3 pl, ind_mid_2 sg, ind_pass_2 sg, subj_act_3 pl, future_ind_act_3 pl, future_ind_mid_2 sg, ….
-    conjugation!("κᾰτεργαζομαι", 34, "~ζομαι", like Χρημᾰτῐζω;
-    ind_act_3: _, _, "~ζουσῐ";
-    ind_mid_2: "~ζῃ", _, _;
-    ind_pass_2: derived, _, _;
-    subj_act_3: _, _, "~ζωσῐ";
-    future_ind_act_3: _, _, "~οῡσῐ";
-    future_ind_mid_2: "~εῑ", _, _;
-    future_ind_pass_2: "~σθησῃ", _, _;
-    future_opt_act_1: "~οιην", _, "~οῑμεν";
-    future_opt_act_2: "~οιης", "~οῑτον", "~οῑτε";
-    future_opt_act_3: "~οιη", "~οιτην", "~οῑεν";
-    aorist_subj_act_3: _, _, "~σωσῐ";
-    aorist_subj_pass_3: _, _, "~σθωσῐ";
-    aorist_opt_act_2: "~σειᾰς", _, _;
-    aorist_opt_act_3: "~σειε", _, "~σειᾰν";
-    aorist_opt_pass_1: _, _, "~σθεῑμεν";
-    aorist_opt_pass_2: _, "~σθεῑτον", "~σθεῑτε";
-    aorist_opt_pass_3: _, "~σθειτην", "~σθεῑεν";
-    ),
-    // Τᾰσσω: 30 words (πῠρεσσω, ἀϊσσω, πλησσω, τᾰσσω, μᾰσσω, φῠλᾰσσω). Like Σῠνᾰγω, except in 127 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("τᾰσσω", 30, "~σσω", like Σῠνᾰγω;
+    // Τᾰσσω: 36 words (πῠρεσσω, ἀϊσσω, πλησσω, τᾰσσω, μᾰσσω, φῠλᾰσσω). Like Γῡροω, except in 273 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("τᾰσσω", 36, "~σσω", like Γῡροω;
     ind_act_1: "~σσω", _, "~σσομεν";
     ind_act_2: "~σσεις", "~σσετον", "~σσετε";
     ind_act_3: "~σσει", _, "~σσουσῐ|~σσουσῐν";
@@ -2811,15 +2723,63 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     imperfect_mid_1: "ἐ~σσομην", _, "ἐ~σσομεθᾰ";
     imperfect_mid_2: "ἐ~σσου", "ἐ~σσεσθον", "ἐ~σσεσθε";
     imperfect_mid_3: "ἐ~σσετο", "ἐ~σσεσθην", "ἐ~σσοντο";
-    future_ind_act_3: _, _, "~ξουσῐ|~ξουσῐν";
-    future_ind_mid_2: "~ξῃ|~ξει", _, _;
-    aorist_ind_act_3: "ἐ~ξε|ἐ~ξεν", _, _;
-    aorist_subj_act_3: _, _, "~ξωσῐ|~ξωσῐν";
-    aorist_opt_act_2: "~ξειᾰς|~ξαις", _, _;
-    aorist_opt_act_3: "~ξειε|~ξειεν|~ξαι", _, "~ξειᾰν|~ξαιεν";
+    future_ind_act_1: "~ξω", _, "~ξομεν";
+    future_ind_act_2: "~ξεις", "~ξετον", "~ξετε";
+    future_ind_act_3: "~ξει", _, "~ξουσῐ|~ξουσῐν";
+    future_ind_mid_1: "~ξομαι", _, "~ξομεθᾰ";
+    future_ind_mid_2: "~ξῃ|~ξει", "~ξεσθον", "~ξεσθε";
+    future_ind_mid_3: "~ξεται", _, "~ξονται";
+    future_ind_pass_1: "~χθησομαι", _, "~χθησομεθᾰ";
+    future_ind_pass_2: "~χθησῃ", "~χθησεσθον", "~χθησεσθε";
+    future_ind_pass_3: "~χθησεται", _, "~χθησονται";
+    future_opt_act_1: "~ξοιμῐ", _, "~ξοιμεν";
+    future_opt_act_2: "~ξοις", "~ξοιτον", "~ξοιτε";
+    future_opt_act_3: "~ξοι", "~ξοιτην", "~ξοιεν";
+    future_opt_mid_1: "~ξοιμην", _, "~ξοιμεθᾰ";
+    future_opt_mid_2: "~ξοιο", "~ξοισθον", "~ξοισθε";
+    future_opt_mid_3: "~ξοιτο", "~ξοισθην", "~ξοιντο";
+    future_opt_pass_1: "~χθησοιμην", _, "~χθησοιμεθᾰ";
+    future_opt_pass_2: "~χθησοιο", "~χθησοισθον", "~χθησοισθε";
+    future_opt_pass_3: "~χθησοιτο", "~χθησοισθην", "~χθησοιντο";
+    aorist_ind_act_1: "ἐ~ξᾰ", _, "ἐ~ξᾰμεν";
+    aorist_ind_act_2: "ἐ~ξᾰς", "ἐ~ξᾰτον", "ἐ~ξᾰτε";
+    aorist_ind_act_3: "ἐ~ξε|ἐ~ξεν", "ἐ~ξᾰτην", "ἐ~ξᾰν";
+    aorist_ind_mid_1: "ἐ~ξᾰμην", _, "ἐ~ξᾰμεθᾰ";
+    aorist_ind_mid_2: "ἐ~ξω", "ἐ~ξᾰσθον", "ἐ~ξᾰσθε";
+    aorist_ind_mid_3: "ἐ~ξᾰτο", "ἐ~ξᾰσθην", "ἐ~ξᾰντο";
+    aorist_ind_pass_1: "ἐ~χθην", _, "ἐ~χθημεν";
+    aorist_ind_pass_2: "ἐ~χθης", "ἐ~χθητον", "ἐ~χθητε";
+    aorist_ind_pass_3: "ἐ~χθη", "ἐ~χθητην", "ἐ~χθησᾰν";
+    aorist_subj_act_1: "~ξω", _, "~ξωμεν";
+    aorist_subj_act_2: "~ξῃς", "~ξητον", "~ξητε";
+    aorist_subj_act_3: "~ξῃ", _, "~ξωσῐ|~ξωσῐν";
+    aorist_subj_mid_1: "~ξωμαι", _, "~ξωμεθᾰ";
+    aorist_subj_mid_2: "~ξῃ", "~ξησθον", "~ξησθε";
+    aorist_subj_mid_3: "~ξηται", _, "~ξωνται";
+    aorist_subj_pass_1: "~χθω", _, "~χθωμεν";
+    aorist_subj_pass_2: "~χθῃς", "~χθητον", "~χθητε";
+    aorist_subj_pass_3: "~χθῃ", _, "~χθωσῐ";
+    aorist_opt_act_1: "~ξαιμῐ", _, "~ξαιμεν";
+    aorist_opt_act_2: "~ξειᾰς|~ξαις", "~ξαιτον", "~ξαιτε";
+    aorist_opt_act_3: "~ξειε|~ξειεν|~ξαι", "~ξαιτην", "~ξειᾰν|~ξαιεν";
+    aorist_opt_mid_1: "~ξαιμην", _, "~ξαιμεθᾰ";
+    aorist_opt_mid_2: "~ξαιο", "~ξαισθον", "~ξαισθε";
+    aorist_opt_mid_3: "~ξαιτο", "~ξαισθην", "~ξαιντο";
+    aorist_opt_pass_1: "~χθειην", _, "~χθεῑμεν";
+    aorist_opt_pass_2: "~χθειης", "~χθεῑτον", "~χθεῑτε";
+    aorist_opt_pass_3: "~χθειη", "~χθειτην", "~χθεῑεν";
+    aorist_imp_act_2: "~ξον", "~ξᾰτον", "~ξᾰτε";
+    aorist_imp_act_3: "~ξᾰτω", "~ξᾰτων", "~ξᾰντων";
+    aorist_imp_mid_2: "~ξαι", "~ξᾰσθον", "~ξᾰσθε";
+    aorist_imp_mid_3: "~ξᾰσθω", "~ξᾰσθων", _;
+    aorist_imp_pass_2: "~χθητῐ", _, _;
+    aorist_imp_pass_3: "~χθητω", "~χθητων", "~χθεντων";
     perfect_ind_act_1: "%ε~χᾰ", _, "%ε~χᾰμεν";
     perfect_ind_act_2: "%ε~χᾰς", "%ε~χᾰτον", "%ε~χᾰτε";
     perfect_ind_act_3: "%ε~χε", _, "%ε~χᾱσῐ";
+    perfect_ind_mid_1: "%ε~γμαι", _, "%ε~γμεθᾰ";
+    perfect_ind_mid_2: "%ε~ξαι", "%ε~χθον", "%ε~χθε";
+    perfect_ind_mid_3: "%ε~κται", _, "%ε~γᾰται";
     perfect_subj_act_1: "%ε~χω", _, "%ε~χωμεν";
     perfect_subj_act_2: "%ε~χῃς", "%ε~χητον", "%ε~χητε";
     perfect_subj_act_3: "%ε~χῃ", _, "%ε~χωσῐ";
@@ -2828,6 +2788,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     perfect_opt_act_3: "%ε~χοι", "%ε~χοιτην", "%ε~χοιεν";
     perfect_imp_act_2: _, "%ε~χετον", "%ε~χετε";
     perfect_imp_act_3: "%ε~χετω", "%ε~χετων", "%ε~χοντων";
+    perfect_imp_mid_2: "%ε~ξο", _, _;
+    perfect_imp_mid_3: "%ε~χθω", "%ε~χθων", _;
     pluperfect_act_1: "ἐ%ε~χειν", _, "ἐ%ε~χεμεν";
     pluperfect_act_2: "ἐ%ε~χεις", "ἐ%ε~χετον", "ἐ%ε~χετε";
     pluperfect_act_3: "ἐ%ε~χει", "ἐ%ε~χετην", "ἐ%ε~χεσᾰν";
@@ -2835,12 +2797,96 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     pluperfect_mid_2: "ἐ%ε~ξο", "ἐ%ε~χθον", "ἐ%ε~χθε";
     pluperfect_mid_3: "ἐ%ε~κτο", "ἐ%ε~χθην", "ἐ%ε~γᾰτο";
     infinitive_pres: "~σσειν", "~σσεσθαι", _;
-    infinitive_perf: "%ε~χεναι", _, _;
+    infinitive_fut: "~ξειν", "~ξεσθαι", "~χθησεσθαι";
+    infinitive_aor: "~ξαι", "~ξᾰσθαι", "~χθηναι";
+    infinitive_perf: "%ε~χεναι", "%ε~χθαι", _;
     participle_pres: "~σσων", "~σσομενος", _;
-    participle_perf: "%ε~χως", _, _;
+    participle_fut: "~ξων", "~ξομενος", "~χθησομενος";
+    participle_aor: "~ξᾱς", "~ξᾰμενος", "~χθεις";
+    participle_perf: "%ε~χως", "%ε~γμενος", _;
     ),
-    // Ἁπτω: 29 words (κρῠπτω, κᾰμπτω, κοπτω, τῠπτω, ἁπτω, κῠπτω). Like Ὁρῐζω, except in 282 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("ἁπτω", 29, "~πτω", like Ὁρῐζω;
+    // Κᾰτεργαζομαι: 35 words (λογῐζομαι, χᾰρῐζομαι, στοχᾰζομαι, ἑζομαι, σῠνεργαζομαι, ἐργᾰζομαι). Like Ἀφορῐζω, except in 25 cells: ind_act_3 pl, ind_mid_2 sg, ind_pass_2 sg, subj_act_3 pl, future_ind_act_3 pl, future_ind_mid_2 sg, ….
+    conjugation!("κᾰτεργαζομαι", 35, "~ζομαι", like Ἀφορῐζω;
+    ind_act_3: _, _, "~ζουσῐ";
+    ind_mid_2: "~ζῃ", _, _;
+    ind_pass_2: derived, _, _;
+    subj_act_3: _, _, "~ζωσῐ";
+    future_ind_act_3: _, _, "~οῡσῐ";
+    future_ind_mid_2: "~εῑ", _, _;
+    future_ind_pass_2: "~σθησῃ", _, _;
+    future_opt_act_1: "~οιην", _, "~οῑμεν";
+    future_opt_act_2: "~οιης", "~οῑτον", "~οῑτε";
+    future_opt_act_3: "~οιη", "~οιτην", "~οῑεν";
+    aorist_subj_act_3: _, _, "~σωσῐ";
+    aorist_subj_pass_3: _, _, "~σθωσῐ";
+    aorist_opt_act_2: "~σειᾰς", _, _;
+    aorist_opt_act_3: "~σειε", _, "~σειᾰν";
+    aorist_opt_pass_1: _, _, "~σθεῑμεν";
+    aorist_opt_pass_2: _, "~σθεῑτον", "~σθεῑτε";
+    aorist_opt_pass_3: _, "~σθειτην", "~σθεῑεν";
+    ),
+    // Ληγω: 31 words (ἀγω, λεγω, φευγω, τρωγω, δῐᾰλεγω, φλεγω). Like Τᾰσσω, except in 127 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("ληγω", 31, "~γω", like Τᾰσσω;
+    ind_act_1: "~γω", _, "~γομεν";
+    ind_act_2: "~γεις", "~γετον", "~γετε";
+    ind_act_3: "~γει", _, "~γουσῐ";
+    ind_mid_1: "~γομαι", _, "~γομεθᾰ";
+    ind_mid_2: "~γῃ", "~γεσθον", "~γεσθε";
+    ind_mid_3: "~γεται", _, "~γονται";
+    ind_pass_2: derived, _, _;
+    subj_act_1: "~γω", _, "~γωμεν";
+    subj_act_2: "~γῃς", "~γητον", "~γητε";
+    subj_act_3: "~γῃ", _, "~γωσῐ";
+    subj_mid_1: "~γωμαι", _, "~γωμεθᾰ";
+    subj_mid_2: "~γῃ", "~γησθον", "~γησθε";
+    subj_mid_3: "~γηται", _, "~γωνται";
+    subj_pass_2: "~γῃ", _, _;
+    opt_act_1: "~γοιμῐ", _, "~γοιμεν";
+    opt_act_2: "~γοις", "~γοιτον", "~γοιτε";
+    opt_act_3: "~γοι", "~γοιτην", "~γοιεν";
+    opt_mid_1: "~γοιμην", _, "~γοιμεθᾰ";
+    opt_mid_2: "~γοιο", "~γοισθον", "~γοισθε";
+    opt_mid_3: "~γοιτο", "~γοισθην", "~γοιντο";
+    imp_act_2: "~γε", _, _;
+    imp_act_3: "~γετω", "~γετων", "~γοντων";
+    imp_mid_2: "~γου", _, "~γεσθε";
+    imp_mid_3: "~γεσθω", "~γεσθων", "~γεσθων";
+    imperfect_act_1: "ἐ~γον", _, "ἐ~γομεν";
+    imperfect_act_2: "ἐ~γες", "ἐ~γετον", "ἐ~γετε";
+    imperfect_act_3: "ἐ~γε", "ἐ~γετην", "ἐ~γον";
+    imperfect_mid_1: "ἐ~γομην", _, "ἐ~γομεθᾰ";
+    imperfect_mid_2: "ἐ~γου", "ἐ~γεσθον", "ἐ~γεσθε";
+    imperfect_mid_3: "ἐ~γετο", "ἐ~γεσθην", "ἐ~γοντο";
+    future_ind_act_3: _, _, "~ξουσῐ";
+    future_ind_mid_2: "~ξῃ", _, _;
+    aorist_ind_act_3: "ἐ~ξε", _, _;
+    aorist_subj_act_3: _, _, "~ξωσῐ";
+    aorist_opt_act_2: "~ξειᾰς", _, _;
+    aorist_opt_act_3: "~ξειε", _, "~ξειᾰν";
+    perfect_ind_act_1: derived, _, derived;
+    perfect_ind_act_2: derived, derived, derived;
+    perfect_ind_act_3: derived, _, derived;
+    perfect_subj_act_1: derived, _, derived;
+    perfect_subj_act_2: derived, derived, derived;
+    perfect_subj_act_3: derived, _, derived;
+    perfect_opt_act_1: derived, _, derived;
+    perfect_opt_act_2: derived, derived, derived;
+    perfect_opt_act_3: derived, derived, derived;
+    perfect_imp_act_2: _, derived, derived;
+    perfect_imp_act_3: derived, derived, derived;
+    pluperfect_act_1: derived, _, derived;
+    pluperfect_act_2: derived, derived, derived;
+    pluperfect_act_3: derived, derived, derived;
+    pluperfect_mid_1: derived, _, derived;
+    pluperfect_mid_2: derived, derived, derived;
+    pluperfect_mid_3: derived, derived, derived;
+    infinitive_pres: "~γειν", "~γεσθαι", _;
+    infinitive_perf: derived, _, _;
+    participle_pres: "~γων", "~γομενος", _;
+    participle_perf: derived, _, _;
+    ),
+    // Ἁπτω: 30 words (κρῠπτω, κᾰμπτω, κοπτω, τῠπτω, ἁπτω, κῠπτω). Like Ὁρῐζω, except in 282 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("ἁπτω", 30, "~πτω", like Ὁρῐζω;
     ind_act_1: "~πτω", _, "~πτομεν";
     ind_act_2: "~πτεις", "~πτετον", "~πτετε";
     ind_act_3: "~πτει", _, "~πτουσῐ";
@@ -2957,68 +3003,76 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_perf: "%ε~φως", "%ε~μενος", _;
     participle_futp: _, "%ε~φομενος", _;
     ),
-    // Εὐλογεω: 25 words (εὐλογεω, ἠθεω, ὑλακτεω, κᾰτηχεω, ἠχεω, εὐδοκεω). Like Ποιεω, except in 128 cells: imperfect_act_1 sg, imperfect_act_1 pl, imperfect_act_2 sg, imperfect_act_2 du, imperfect_act_2 pl, imperfect_act_3 sg, ….
-    conjugation!("εὐλογεω", 25, "~εω", like Ποιεω;
-    imperfect_act_1: "~ουν", _, "~οῡμεν";
-    imperfect_act_2: "~εις", "~εῑτον", "~εῑτε";
-    imperfect_act_3: "~ει", "~ειτην", "~ουν";
-    imperfect_mid_1: "~ουμην", _, "~ουμεθᾰ";
-    imperfect_mid_2: "~οῡ", "~εῑσθον", "~εῑσθε";
-    imperfect_mid_3: "~εῑτο", "~εισθην", "~οῡντο";
-    future_ind_act_3: _, _, "~ησουσῐ|~ησουσῐν";
-    future_ind_mid_2: "~ησῃ|~ησει", _, _;
-    future_ind_pass_2: "~ηθησῃ|~ηθησει", _, _;
-    aorist_ind_act_1: "~ησᾰ", _, "~ησᾰμεν";
-    aorist_ind_act_2: "~ησᾰς", "~ησᾰτον", "~ησᾰτε";
-    aorist_ind_act_3: "~ησε|~ησεν", "~ησᾰτην", "~ησᾰν";
-    aorist_ind_mid_1: "~ησᾰμην", _, "~ησᾰμεθᾰ";
-    aorist_ind_mid_2: "~ησω", "~ησᾰσθον", "~ησᾰσθε";
-    aorist_ind_mid_3: "~ησᾰτο", "~ησᾰσθην", "~ησᾰντο";
-    aorist_ind_pass_1: "~ηθην", _, "~ηθημεν";
-    aorist_ind_pass_2: "~ηθης", "~ηθητον", "~ηθητε";
-    aorist_ind_pass_3: "~ηθη", "~ηθητην", "~ηθησᾰν";
-    aorist_subj_act_3: _, _, "~ησωσῐ|~ησωσῐν";
-    aorist_subj_pass_3: _, _, "~ηθωσῐ|~ηθωσῐν";
-    aorist_opt_act_2: "~ησειᾰς|~ησαις", _, _;
-    aorist_opt_act_3: "~ησειε|~ησειεν|~ησαι", _, "~ησειᾰν|~ησαιεν";
-    aorist_opt_pass_1: _, _, "~ηθεῑμεν|~ηθειημεν";
-    aorist_opt_pass_2: _, "~ηθεῑτον|~ηθειητον", "~ηθεῑτε|~ηθειητε";
-    aorist_opt_pass_3: _, "~ηθειτην|~ηθειητην", "~ηθεῑεν|~ηθειησᾰν";
-    perfect_ind_act_1: "~ηκᾰ", _, "~ηκᾰμεν";
-    perfect_ind_act_2: "~ηκᾰς", "~ηκᾰτον", "~ηκᾰτε";
-    perfect_ind_act_3: "~ηκε|~ηκεν", _, "~ηκᾱσῐ|~ηκᾱσῐν";
-    perfect_ind_mid_1: "~ημαι", _, "~ημεθᾰ";
-    perfect_ind_mid_2: "~ησαι", "~ησθον", "~ησθε";
-    perfect_ind_mid_3: "~ηται", _, "~ηνται";
-    perfect_subj_act_1: "~ηκω", _, "~ηκωμεν";
-    perfect_subj_act_2: "~ηκῃς", "~ηκητον", "~ηκητε";
-    perfect_subj_act_3: "~ηκῃ", _, "~ηκωσῐ|~ηκωσῐν";
-    perfect_opt_act_1: "~ηκοιμῐ|~ηκοιην", _, "~ηκοιμεν";
-    perfect_opt_act_2: "~ηκοις|~ηκοιης", "~ηκοιτον", "~ηκοιτε";
-    perfect_opt_act_3: "~ηκοι|~ηκοιη", "~ηκοιτην", "~ηκοιεν";
-    perfect_imp_act_2: "~ηκε", "~ηκετον", "~ηκετε";
-    perfect_imp_act_3: "~ηκετω", "~ηκετων", "~ηκοντων";
-    perfect_imp_mid_2: "~ησο", _, _;
-    perfect_imp_mid_3: "~ησθω", "~ησθων", _;
-    pluperfect_act_1: "~ηκειν|~ηκη", _, "~ηκεμεν";
-    pluperfect_act_2: "~ηκεις|~ηκης", "~ηκετον", "~ηκετε";
-    pluperfect_act_3: "~ηκει|~ηκειν", "~ηκετην", "~ηκεσᾰν";
-    pluperfect_mid_1: "~ημην", _, "~ημεθᾰ";
-    pluperfect_mid_2: "~ησο", "~ησθον", "~ησθε";
-    pluperfect_mid_3: "~ητο", "~ησθην", "~ηντο";
+    // Νῑκαω: 27 words (νῑκαω, λικμαω, ὀργαω, μελεταω, προσαυδαω, κομαω). Like Δοκᾰω, except in 50 cells: ind_act_3 pl, subj_act_3 pl, opt_act_1 sg, opt_act_1 pl, opt_act_2 sg, opt_act_2 du, ….
+    conjugation!("νῑκαω", 27, "~αω", like Δοκᾰω;
+    ind_act_3: _, _, "~ωσῐ";
+    subj_act_3: _, _, "~ωσῐ";
+    opt_act_1: "~ῳην", _, "~ῳμεν";
+    opt_act_2: "~ῳης", "~ῳτον", "~ῳτε";
+    opt_act_3: "~ῳη", "~ῳτην", "~ῳεν";
+    future_ind_act_3: _, _, "~ησουσῐ";
+    future_ind_mid_2: "~ησῃ", _, _;
+    aorist_ind_act_3: "ἐ~ησε", _, _;
+    aorist_subj_act_3: _, _, "~ησωσῐ";
+    aorist_opt_act_2: "~ησειᾰς", _, _;
+    aorist_opt_act_3: "~ησειε", _, "~ησειᾰν";
+    pluperfect_act_1: derived, _, derived;
+    pluperfect_act_2: derived, derived, derived;
+    pluperfect_act_3: derived, derived, derived;
+    pluperfect_mid_1: derived, _, derived;
+    pluperfect_mid_2: derived, derived, derived;
+    pluperfect_mid_3: derived, derived, derived;
     future_perfect_ind_mid_1: derived, _, derived;
     future_perfect_ind_mid_2: derived, derived, derived;
     future_perfect_ind_mid_3: derived, _, derived;
     future_perfect_opt_mid_1: derived, _, derived;
     future_perfect_opt_mid_2: derived, derived, derived;
     future_perfect_opt_mid_3: derived, derived, derived;
-    infinitive_perf: "~ηκεναι", "~ησθαι", _;
     infinitive_futp: _, derived, _;
-    participle_perf: "~ηκως", "~ημενος", _;
     participle_futp: _, derived, _;
     ),
-    // Σῠνᾰρπᾰζω: 24 words (βᾰζω, ἁρπᾰζω, ἐλελῐζω, κρᾱζω, στῐζω, σφυζω). Like Σῠνᾰγω, except in 115 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("σῠνᾰρπᾰζω", 24, "~ζω", like Σῠνᾰγω;
+    // Πρεσβευω: 27 words (γρᾰφω, ζεω, σειω, ὀμειχω, τελεω, παιω). Like Ἐλπω, except in 90 cells: subj_act_3 pl, imperfect_act_1 sg, imperfect_act_1 pl, imperfect_act_2 sg, imperfect_act_2 du, imperfect_act_2 pl, ….
+    conjugation!("πρεσβευω", 27, "~ω", like Ἐλπω;
+    subj_act_3: _, _, "~ωσῐ|~ωσῐν";
+    imperfect_act_1: "ἐ~ον", _, "ἐ~ομεν";
+    imperfect_act_2: "ἐ~ες", "ἐ~ετον", "ἐ~ετε";
+    imperfect_act_3: "ἐ~ε", "ἐ~ετην", "ἐ~ον";
+    imperfect_mid_1: "ἐ~ομην", _, "ἐ~ομεθᾰ";
+    imperfect_mid_2: "ἐ~ου", "ἐ~εσθον", "ἐ~εσθε";
+    imperfect_mid_3: "ἐ~ετο", "ἐ~εσθην", "ἐ~οντο";
+    aorist_ind_act_1: "ἐ~σᾰ", _, "ἐ~σᾰμεν";
+    aorist_ind_act_2: "ἐ~σᾰς", "ἐ~σᾰτον", "ἐ~σᾰτε";
+    aorist_ind_act_3: "ἐ~σε", "ἐ~σᾰτην", "ἐ~σᾰν";
+    aorist_ind_mid_1: "ἐ~σᾰμην", _, "ἐ~σᾰμεθᾰ";
+    aorist_ind_mid_2: "ἐ~σω", "ἐ~σᾰσθον", "ἐ~σᾰσθε";
+    aorist_ind_mid_3: "ἐ~σᾰτο", "ἐ~σᾰσθην", "ἐ~σᾰντο";
+    aorist_ind_pass_1: "ἐ~σθην", _, "ἐ~σθημεν";
+    aorist_ind_pass_2: "ἐ~σθης", "ἐ~σθητον", "ἐ~σθητε";
+    aorist_ind_pass_3: "ἐ~σθη", "ἐ~σθητην", "ἐ~σθησᾰν";
+    perfect_ind_act_1: "%ε~κᾰ", _, "%ε~κᾰμεν";
+    perfect_ind_act_2: "%ε~κᾰς", "%ε~κᾰτον", "%ε~κᾰτε";
+    perfect_ind_act_3: "%ε~κε", _, "%ε~κᾱσῐ";
+    perfect_ind_mid_1: "%ε~μαι", _, "%ε~μεθᾰ";
+    perfect_ind_mid_2: "%ε~σαι", "%ε~σθον", "%ε~σθε";
+    perfect_ind_mid_3: "%ε~ται", _, "%ε~νται";
+    perfect_subj_act_1: "%ε~κω", _, "%ε~κωμεν";
+    perfect_subj_act_2: "%ε~κῃς", "%ε~κητον", "%ε~κητε";
+    perfect_subj_act_3: "%ε~κῃ", _, "%ε~κωσῐ";
+    perfect_opt_act_1: "%ε~κοιμῐ", _, "%ε~κοιμεν";
+    perfect_opt_act_2: "%ε~κοις", "%ε~κοιτον", "%ε~κοιτε";
+    perfect_opt_act_3: "%ε~κοι", "%ε~κοιτην", "%ε~κοιεν";
+    perfect_imp_act_2: _, "%ε~κετον", "%ε~κετε";
+    perfect_imp_act_3: "%ε~κετω", "%ε~κετων", "%ε~κοντων";
+    perfect_imp_mid_2: "%ε~σο", _, _;
+    perfect_imp_mid_3: "%ε~σθω", "%ε~σθων", _;
+    pluperfect_mid_1: "ἐ%ε~μην", _, "ἐ%ε~μεθᾰ";
+    pluperfect_mid_2: "ἐ%ε~σο", "ἐ%ε~σθον", "ἐ%ε~σθε";
+    pluperfect_mid_3: "ἐ%ε~το", "ἐ%ε~σθην", "ἐ%ε~ντο";
+    infinitive_perf: "%ε~κεναι", "%ε~σθαι", _;
+    participle_perf: "%ε~κως", "%ε~μενος", _;
+    ),
+    // Σῠνᾰρπᾰζω: 25 words (βᾰζω, ἁρπᾰζω, ἐλελῐζω, κρᾱζω, στῐζω, σφυζω). Like Ληγω, except in 115 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("σῠνᾰρπᾰζω", 25, "~ζω", like Ληγω;
     ind_act_1: "~ζω", _, "~ζομεν";
     ind_act_2: "~ζεις", "~ζετον", "~ζετε";
     ind_act_3: "~ζει", _, "~ζουσῐ";
@@ -3069,150 +3123,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_pres: "~ζων", "~ζομενος", _;
     participle_perf: "ἐ~χως", "ἐ~γμενος", _;
     ),
-    // Ἀσκεω: 24 words (ἀγνοεω, ἀντλεω, ἀσκεω, ἀλεω, ἀθλεω, ἀκολουθεω). Like Γῡροω, except in 274 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("ἀσκεω", 24, "ἀ~εω", like Γῡροω;
-    ind_act_1: "ἀ~ω", _, "ἀ~οῡμεν";
-    ind_act_2: "ἀ~εῑς", "ἀ~εῑτον", "ἀ~εῑτε";
-    ind_act_3: "ἀ~εῑ", _, "ἀ~οῡσῐ|ἀ~οῡσῐν";
-    ind_mid_1: "ἀ~οῡμαι", _, "ἀ~ουμεθᾰ";
-    ind_mid_2: "ἀ~εῑ|ἀ~ῃ", "ἀ~εῑσθον", "ἀ~εῑσθε";
-    ind_mid_3: "ἀ~εῑται", _, "ἀ~οῡνται";
-    ind_pass_2: "ἀ~εῑ|ἀ~ῃ", _, _;
-    subj_act_1: "ἀ~ω", _, "ἀ~ωμεν";
-    subj_act_2: "ἀ~ῃς", "ἀ~ητον", "ἀ~ητε";
-    subj_act_3: "ἀ~ῃ", _, "ἀ~ωσῐ|ἀ~ωσῐν";
-    subj_mid_1: "ἀ~ωμαι", _, "ἀ~ωμεθᾰ";
-    subj_mid_2: "ἀ~ῃ", "ἀ~ησθον", "ἀ~ησθε";
-    subj_mid_3: "ἀ~ηται", _, "ἀ~ωνται";
-    subj_pass_2: "ἀ~ῃ", _, _;
-    opt_act_1: "ἀ~οιην|ἀ~οῑμῐ", _, "ἀ~οῑμεν|ἀ~οιημεν";
-    opt_act_2: "ἀ~οιης|ἀ~οῑς", "ἀ~οῑτον|ἀ~οιητον", "ἀ~οῑτε|ἀ~οιητε";
-    opt_act_3: "ἀ~οιη|ἀ~οῑ", "ἀ~οιτην|ἀ~οιητην", "ἀ~οῑεν|ἀ~οιησᾰν";
-    opt_mid_1: "ἀ~οιμην", _, "ἀ~οιμεθᾰ";
-    opt_mid_2: "ἀ~οῑο", "ἀ~οῑσθον", "ἀ~οῑσθε";
-    opt_mid_3: "ἀ~οῑτο", "ἀ~οισθην", "ἀ~οῑντο";
-    imp_act_2: "ἀ~ει", _, _;
-    imp_act_3: "ἀ~ειτω", "ἀ~ειτων", "ἀ~ουντων";
-    imp_mid_2: "ἀ~οῡ", _, "ἀ~εῑσθε";
-    imp_mid_3: "ἀ~εισθω", "ἀ~εισθων", "ἀ~εισθων";
-    imperfect_act_1: "ἠ~ουν", _, "ἠ~οῡμεν";
-    imperfect_act_2: "ἠ~εις", "ἠ~εῑτον", "ἠ~εῑτε";
-    imperfect_act_3: "ἠ~ει", "ἠ~ειτην", "ἠ~ουν";
-    imperfect_mid_1: "ἠ~ουμην", _, "ἠ~ουμεθᾰ";
-    imperfect_mid_2: "ἠ~οῡ", "ἠ~εῑσθον", "ἠ~εῑσθε";
-    imperfect_mid_3: "ἠ~εῑτο", "ἠ~εισθην", "ἠ~οῡντο";
-    future_ind_act_1: "ἀ~ησω", _, "ἀ~ησομεν";
-    future_ind_act_2: "ἀ~ησεις", "ἀ~ησετον", "ἀ~ησετε";
-    future_ind_act_3: "ἀ~ησει", _, "ἀ~ησουσῐ|ἀ~ησουσῐν";
-    future_ind_mid_1: "ἀ~ησομαι", _, "ἀ~ησομεθᾰ";
-    future_ind_mid_2: "ἀ~ησῃ|ἀ~ησει", "ἀ~ησεσθον", "ἀ~ησεσθε";
-    future_ind_mid_3: "ἀ~ησεται", _, "ἀ~ησονται";
-    future_ind_pass_1: "ἀ~ηθησομαι", _, "ἀ~ηθησομεθᾰ";
-    future_ind_pass_2: "ἀ~ηθησῃ|ἀ~ηθησει", "ἀ~ηθησεσθον", "ἀ~ηθησεσθε";
-    future_ind_pass_3: "ἀ~ηθησεται", _, "ἀ~ηθησονται";
-    future_opt_act_1: "ἀ~ησοιμῐ", _, "ἀ~ησοιμεν";
-    future_opt_act_2: "ἀ~ησοις", "ἀ~ησοιτον", "ἀ~ησοιτε";
-    future_opt_act_3: "ἀ~ησοι", "ἀ~ησοιτην", "ἀ~ησοιεν";
-    future_opt_mid_1: "ἀ~ησοιμην", _, "ἀ~ησοιμεθᾰ";
-    future_opt_mid_2: "ἀ~ησοιο", "ἀ~ησοισθον", "ἀ~ησοισθε";
-    future_opt_mid_3: "ἀ~ησοιτο", "ἀ~ησοισθην", "ἀ~ησοιντο";
-    future_opt_pass_1: "ἀ~ηθησοιμην", _, "ἀ~ηθησοιμεθᾰ";
-    future_opt_pass_2: "ἀ~ηθησοιο", "ἀ~ηθησοισθον", "ἀ~ηθησοισθε";
-    future_opt_pass_3: "ἀ~ηθησοιτο", "ἀ~ηθησοισθην", "ἀ~ηθησοιντο";
-    aorist_ind_act_1: "ἠ~ησᾰ", _, "ἠ~ησᾰμεν";
-    aorist_ind_act_2: "ἠ~ησᾰς", "ἠ~ησᾰτον", "ἠ~ησᾰτε";
-    aorist_ind_act_3: "ἠ~ησε|ἠ~ησεν", "ἠ~ησᾰτην", "ἠ~ησᾰν";
-    aorist_ind_mid_1: "ἠ~ησᾰμην", _, "ἠ~ησᾰμεθᾰ";
-    aorist_ind_mid_2: "ἠ~ησω", "ἠ~ησᾰσθον", "ἠ~ησᾰσθε";
-    aorist_ind_mid_3: "ἠ~ησᾰτο", "ἠ~ησᾰσθην", "ἠ~ησᾰντο";
-    aorist_ind_pass_1: "ἠ~ηθην", _, "ἠ~ηθημεν";
-    aorist_ind_pass_2: "ἠ~ηθης", "ἠ~ηθητον", "ἠ~ηθητε";
-    aorist_ind_pass_3: "ἠ~ηθη", "ἠ~ηθητην", "ἠ~ηθησᾰν";
-    aorist_subj_act_1: "ἀ~ησω", _, "ἀ~ησωμεν";
-    aorist_subj_act_2: "ἀ~ησῃς", "ἀ~ησητον", "ἀ~ησητε";
-    aorist_subj_act_3: "ἀ~ησῃ", _, "ἀ~ησωσῐ|ἀ~ησωσῐν";
-    aorist_subj_mid_1: "ἀ~ησωμαι", _, "ἀ~ησωμεθᾰ";
-    aorist_subj_mid_2: "ἀ~ησῃ", "ἀ~ησησθον", "ἀ~ησησθε";
-    aorist_subj_mid_3: "ἀ~ησηται", _, "ἀ~ησωνται";
-    aorist_subj_pass_1: "ἀ~ηθω", _, "ἀ~ηθωμεν";
-    aorist_subj_pass_2: "ἀ~ηθῃς", "ἀ~ηθητον", "ἀ~ηθητε";
-    aorist_subj_pass_3: "ἀ~ηθῃ", _, "ἀ~ηθωσῐ|ἀ~ηθωσῐν";
-    aorist_opt_act_1: "ἀ~ησαιμῐ", _, "ἀ~ησαιμεν";
-    aorist_opt_act_2: "ἀ~ησειᾰς|ἀ~ησαις", "ἀ~ησαιτον", "ἀ~ησαιτε";
-    aorist_opt_act_3: "ἀ~ησειε|ἀ~ησειεν|ἀ~ησαι", "ἀ~ησαιτην", "ἀ~ησειᾰν|ἀ~ησαιεν";
-    aorist_opt_mid_1: "ἀ~ησαιμην", _, "ἀ~ησαιμεθᾰ";
-    aorist_opt_mid_2: "ἀ~ησαιο", "ἀ~ησαισθον", "ἀ~ησαισθε";
-    aorist_opt_mid_3: "ἀ~ησαιτο", "ἀ~ησαισθην", "ἀ~ησαιντο";
-    aorist_opt_pass_1: "ἀ~ηθειην", _, "ἀ~ηθεῑμεν|ἀ~ηθειημεν";
-    aorist_opt_pass_2: "ἀ~ηθειης", "ἀ~ηθεῑτον|ἀ~ηθειητον", "ἀ~ηθεῑτε|ἀ~ηθειητε";
-    aorist_opt_pass_3: "ἀ~ηθειη", "ἀ~ηθειτην|ἀ~ηθειητην", "ἀ~ηθεῑεν|ἀ~ηθειησᾰν";
-    aorist_imp_act_2: "ἀ~ησον", "ἀ~ησᾰτον", "ἀ~ησᾰτε";
-    aorist_imp_act_3: "ἀ~ησᾰτω", "ἀ~ησᾰτων", "ἀ~ησᾰντων";
-    aorist_imp_mid_2: "ἀ~ησαι", "ἀ~ησᾰσθον", "ἀ~ησᾰσθε";
-    aorist_imp_mid_3: "ἀ~ησᾰσθω", "ἀ~ησᾰσθων", _;
-    aorist_imp_pass_2: "ἀ~ηθητῐ", _, _;
-    aorist_imp_pass_3: "ἀ~ηθητω", "ἀ~ηθητων", "ἀ~ηθεντων";
-    perfect_ind_act_1: "ἠ~ηκᾰ", _, "ἠ~ηκᾰμεν";
-    perfect_ind_act_2: "ἠ~ηκᾰς", "ἠ~ηκᾰτον", "ἠ~ηκᾰτε";
-    perfect_ind_act_3: "ἠ~ηκε|ἠ~ηκεν", _, "ἠ~ηκᾱσῐ|ἠ~ηκᾱσῐν";
-    perfect_ind_mid_1: "ἠ~ημαι", _, "ἠ~ημεθᾰ";
-    perfect_ind_mid_2: "ἠ~ησαι", "ἠ~ησθον", "ἠ~ησθε";
-    perfect_ind_mid_3: "ἠ~ηται", _, "ἠ~ηνται";
-    perfect_subj_act_1: "ἠ~ηκω", _, "ἠ~ηκωμεν";
-    perfect_subj_act_2: "ἠ~ηκῃς", "ἠ~ηκητον", "ἠ~ηκητε";
-    perfect_subj_act_3: "ἠ~ηκῃ", _, "ἠ~ηκωσῐ|ἠ~ηκωσῐν";
-    perfect_opt_act_1: "ἠ~ηκοιμῐ|ἠ~ηκοιην", _, "ἠ~ηκοιμεν";
-    perfect_opt_act_2: "ἠ~ηκοις|ἠ~ηκοιης", "ἠ~ηκοιτον", "ἠ~ηκοιτε";
-    perfect_opt_act_3: "ἠ~ηκοι|ἠ~ηκοιη", "ἠ~ηκοιτην", "ἠ~ηκοιεν";
-    perfect_imp_act_2: "ἠ~ηκε", "ἠ~ηκετον", "ἠ~ηκετε";
-    perfect_imp_act_3: "ἠ~ηκετω", "ἠ~ηκετων", "ἠ~ηκοντων";
-    perfect_imp_mid_2: "ἠ~ησο", _, _;
-    perfect_imp_mid_3: "ἠ~ησθω", "ἠ~ησθων", _;
-    pluperfect_act_1: "ἠ~ηκειν|ἠ~ηκη", _, "ἠ~ηκεμεν";
-    pluperfect_act_2: "ἠ~ηκεις|ἠ~ηκης", "ἠ~ηκετον", "ἠ~ηκετε";
-    pluperfect_act_3: "ἠ~ηκει|ἠ~ηκειν", "ἠ~ηκετην", "ἠ~ηκεσᾰν";
-    pluperfect_mid_1: "ἠ~ημην", _, "ἠ~ημεθᾰ";
-    pluperfect_mid_2: "ἠ~ησο", "ἠ~ησθον", "ἠ~ησθε";
-    pluperfect_mid_3: "ἠ~ητο", "ἠ~ησθην", "ἠ~ηντο";
-    infinitive_pres: "ἀ~εῑν", "ἀ~εῑσθαι", _;
-    infinitive_fut: "ἀ~ησειν", "ἀ~ησεσθαι", "ἀ~ηθησεσθαι";
-    infinitive_aor: "ἀ~ησαι", "ἀ~ησᾰσθαι", "ἀ~ηθηναι";
-    infinitive_perf: "ἠ~ηκεναι", "ἠ~ησθαι", _;
-    participle_pres: "ἀ~ων", "ἀ~ουμενος", _;
-    participle_fut: "ἀ~ησων", "ἀ~ησομενος", "ἀ~ηθησομενος";
-    participle_aor: "ἀ~ησᾱς", "ἀ~ησᾰμενος", "ἀ~ηθεις";
-    participle_perf: "ἠ~ηκως", "ἠ~ημενος", _;
-    ),
-    // Νῑκαω: 24 words (νῑκαω, λικμαω, ὀργαω, μελεταω, προσαυδαω, κομαω). Like Δοκᾰω, except in 50 cells: ind_act_3 pl, subj_act_3 pl, opt_act_1 sg, opt_act_1 pl, opt_act_2 sg, opt_act_2 du, ….
-    conjugation!("νῑκαω", 24, "~αω", like Δοκᾰω;
-    ind_act_3: _, _, "~ωσῐ";
-    subj_act_3: _, _, "~ωσῐ";
-    opt_act_1: "~ῳην", _, "~ῳμεν";
-    opt_act_2: "~ῳης", "~ῳτον", "~ῳτε";
-    opt_act_3: "~ῳη", "~ῳτην", "~ῳεν";
-    future_ind_act_3: _, _, "~ησουσῐ";
-    future_ind_mid_2: "~ησῃ", _, _;
-    aorist_ind_act_3: "ἐ~ησε", _, _;
-    aorist_subj_act_3: _, _, "~ησωσῐ";
-    aorist_opt_act_2: "~ησειᾰς", _, _;
-    aorist_opt_act_3: "~ησειε", _, "~ησειᾰν";
-    pluperfect_act_1: derived, _, derived;
-    pluperfect_act_2: derived, derived, derived;
-    pluperfect_act_3: derived, derived, derived;
-    pluperfect_mid_1: derived, _, derived;
-    pluperfect_mid_2: derived, derived, derived;
-    pluperfect_mid_3: derived, derived, derived;
-    future_perfect_ind_mid_1: derived, _, derived;
-    future_perfect_ind_mid_2: derived, derived, derived;
-    future_perfect_ind_mid_3: derived, _, derived;
-    future_perfect_opt_mid_1: derived, _, derived;
-    future_perfect_opt_mid_2: derived, derived, derived;
-    future_perfect_opt_mid_3: derived, derived, derived;
-    infinitive_futp: _, derived, _;
-    participle_futp: _, derived, _;
-    ),
-    // Ὠνεομαι: 22 words (ὀρχεομαι, πλουτοκρᾰτεομαι, ὠνεομαι, ἀρνεομαι, δημοκρᾰτεομαι, ἐπεξηγεομαι). Like Ποιεω, except in 93 cells: ind_act_3 pl, ind_mid_2 sg, ind_pass_2 sg, subj_act_3 pl, opt_act_1 sg, opt_act_1 pl, ….
-    conjugation!("ὠνεομαι", 22, "~εομαι", like Ποιεω;
+    // Ὠνεομαι: 24 words (ὀρχεομαι, πλουτοκρᾰτεομαι, ὠνεομαι, ἀρνεομαι, δημοκρᾰτεομαι, ἱκνεομαι). Like Ποιεω, except in 93 cells: ind_act_3 pl, ind_mid_2 sg, ind_pass_2 sg, subj_act_3 pl, opt_act_1 sg, opt_act_1 pl, ….
+    conjugation!("ὠνεομαι", 24, "~εομαι", like Ποιεω;
     ind_act_3: _, _, "~οῡσῐ";
     ind_mid_2: "~εῑ", _, _;
     ind_pass_2: derived, _, _;
@@ -3256,45 +3168,76 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: derived, _, _;
     participle_futp: _, derived, _;
     ),
-    // Πρεσβευω: 20 words (γρᾰφω, ζεω, σειω, τελεω, παιω, κλᾰω). Like Ὑπᾰκουω, except in 90 cells: subj_act_3 pl, imperfect_act_1 sg, imperfect_act_1 pl, imperfect_act_2 sg, imperfect_act_2 du, imperfect_act_2 pl, ….
-    conjugation!("πρεσβευω", 20, "~ω", like Ὑπᾰκουω;
-    subj_act_3: _, _, "~ωσῐ|~ωσῐν";
-    imperfect_act_1: "ἐ~ον", _, "ἐ~ομεν";
-    imperfect_act_2: "ἐ~ες", "ἐ~ετον", "ἐ~ετε";
-    imperfect_act_3: "ἐ~ε", "ἐ~ετην", "ἐ~ον";
-    imperfect_mid_1: "ἐ~ομην", _, "ἐ~ομεθᾰ";
-    imperfect_mid_2: "ἐ~ου", "ἐ~εσθον", "ἐ~εσθε";
-    imperfect_mid_3: "ἐ~ετο", "ἐ~εσθην", "ἐ~οντο";
-    aorist_ind_act_1: "ἐ~σᾰ", _, "ἐ~σᾰμεν";
-    aorist_ind_act_2: "ἐ~σᾰς", "ἐ~σᾰτον", "ἐ~σᾰτε";
-    aorist_ind_act_3: "ἐ~σε", "ἐ~σᾰτην", "ἐ~σᾰν";
-    aorist_ind_mid_1: "ἐ~σᾰμην", _, "ἐ~σᾰμεθᾰ";
-    aorist_ind_mid_2: "ἐ~σω", "ἐ~σᾰσθον", "ἐ~σᾰσθε";
-    aorist_ind_mid_3: "ἐ~σᾰτο", "ἐ~σᾰσθην", "ἐ~σᾰντο";
-    aorist_ind_pass_1: "ἐ~σθην", _, "ἐ~σθημεν";
-    aorist_ind_pass_2: "ἐ~σθης", "ἐ~σθητον", "ἐ~σθητε";
-    aorist_ind_pass_3: "ἐ~σθη", "ἐ~σθητην", "ἐ~σθησᾰν";
-    perfect_ind_act_1: "%ε~κᾰ", _, "%ε~κᾰμεν";
-    perfect_ind_act_2: "%ε~κᾰς", "%ε~κᾰτον", "%ε~κᾰτε";
-    perfect_ind_act_3: "%ε~κε", _, "%ε~κᾱσῐ";
-    perfect_ind_mid_1: "%ε~μαι", _, "%ε~μεθᾰ";
-    perfect_ind_mid_2: "%ε~σαι", "%ε~σθον", "%ε~σθε";
-    perfect_ind_mid_3: "%ε~ται", _, "%ε~νται";
-    perfect_subj_act_1: "%ε~κω", _, "%ε~κωμεν";
-    perfect_subj_act_2: "%ε~κῃς", "%ε~κητον", "%ε~κητε";
-    perfect_subj_act_3: "%ε~κῃ", _, "%ε~κωσῐ";
-    perfect_opt_act_1: "%ε~κοιμῐ", _, "%ε~κοιμεν";
-    perfect_opt_act_2: "%ε~κοις", "%ε~κοιτον", "%ε~κοιτε";
-    perfect_opt_act_3: "%ε~κοι", "%ε~κοιτην", "%ε~κοιεν";
-    perfect_imp_act_2: _, "%ε~κετον", "%ε~κετε";
-    perfect_imp_act_3: "%ε~κετω", "%ε~κετων", "%ε~κοντων";
-    perfect_imp_mid_2: "%ε~σο", _, _;
-    perfect_imp_mid_3: "%ε~σθω", "%ε~σθων", _;
-    pluperfect_mid_1: "ἐ%ε~μην", _, "ἐ%ε~μεθᾰ";
-    pluperfect_mid_2: "ἐ%ε~σο", "ἐ%ε~σθον", "ἐ%ε~σθε";
-    pluperfect_mid_3: "ἐ%ε~το", "ἐ%ε~σθην", "ἐ%ε~ντο";
-    infinitive_perf: "%ε~κεναι", "%ε~σθαι", _;
-    participle_perf: "%ε~κως", "%ε~μενος", _;
+    // Εὐλογεω: 22 words (εὐλογεω, ἠθεω, κᾰτηχεω, ἠχεω, ὀλιγαρχεω, μοναρχεω). Like Δῐκεω, except in 98 cells: imperfect_act_1 sg, imperfect_act_1 pl, imperfect_act_2 sg, imperfect_act_2 du, imperfect_act_2 pl, imperfect_act_3 sg, ….
+    conjugation!("εὐλογεω", 22, "~εω", like Δῐκεω;
+    imperfect_act_1: "~ουν", _, "~οῡμεν";
+    imperfect_act_2: "~εις", "~εῑτον", "~εῑτε";
+    imperfect_act_3: "~ει", "~ειτην", "~ουν";
+    imperfect_mid_1: "~ουμην", _, "~ουμεθᾰ";
+    imperfect_mid_2: "~οῡ", "~εῑσθον", "~εῑσθε";
+    imperfect_mid_3: "~εῑτο", "~εισθην", "~οῡντο";
+    aorist_ind_act_1: "~ησᾰ", _, "~ησᾰμεν";
+    aorist_ind_act_2: "~ησᾰς", "~ησᾰτον", "~ησᾰτε";
+    aorist_ind_act_3: "~ησε|~ησεν", "~ησᾰτην", "~ησᾰν";
+    aorist_ind_mid_1: "~ησᾰμην", _, "~ησᾰμεθᾰ";
+    aorist_ind_mid_2: "~ησω", "~ησᾰσθον", "~ησᾰσθε";
+    aorist_ind_mid_3: "~ησᾰτο", "~ησᾰσθην", "~ησᾰντο";
+    aorist_ind_pass_1: "~ηθην", _, "~ηθημεν";
+    aorist_ind_pass_2: "~ηθης", "~ηθητον", "~ηθητε";
+    aorist_ind_pass_3: "~ηθη", "~ηθητην", "~ηθησᾰν";
+    perfect_ind_act_1: "~ηκᾰ", _, "~ηκᾰμεν";
+    perfect_ind_act_2: "~ηκᾰς", "~ηκᾰτον", "~ηκᾰτε";
+    perfect_ind_act_3: "~ηκε|~ηκεν", _, "~ηκᾱσῐ|~ηκᾱσῐν";
+    perfect_ind_mid_1: "~ημαι", _, "~ημεθᾰ";
+    perfect_ind_mid_2: "~ησαι", "~ησθον", "~ησθε";
+    perfect_ind_mid_3: "~ηται", _, "~ηνται";
+    perfect_subj_act_1: "~ηκω", _, "~ηκωμεν";
+    perfect_subj_act_2: "~ηκῃς", "~ηκητον", "~ηκητε";
+    perfect_subj_act_3: "~ηκῃ", _, "~ηκωσῐ|~ηκωσῐν";
+    perfect_opt_act_1: "~ηκοιμῐ|~ηκοιην", _, "~ηκοιμεν";
+    perfect_opt_act_2: "~ηκοις|~ηκοιης", "~ηκοιτον", "~ηκοιτε";
+    perfect_opt_act_3: "~ηκοι|~ηκοιη", "~ηκοιτην", "~ηκοιεν";
+    perfect_imp_act_2: "~ηκε", "~ηκετον", "~ηκετε";
+    perfect_imp_act_3: "~ηκετω", "~ηκετων", "~ηκοντων";
+    perfect_imp_mid_2: "~ησο", _, _;
+    perfect_imp_mid_3: "~ησθω", "~ησθων", _;
+    pluperfect_act_1: "~ηκειν|~ηκη", _, "~ηκεμεν";
+    pluperfect_act_2: "~ηκεις|~ηκης", "~ηκετον", "~ηκετε";
+    pluperfect_act_3: "~ηκει|~ηκειν", "~ηκετην", "~ηκεσᾰν";
+    pluperfect_mid_1: "~ημην", _, "~ημεθᾰ";
+    pluperfect_mid_2: "~ησο", "~ησθον", "~ησθε";
+    pluperfect_mid_3: "~ητο", "~ησθην", "~ηντο";
+    infinitive_perf: "~ηκεναι", "~ησθαι", _;
+    participle_perf: "~ηκως", "~ημενος", _;
+    ),
+    // Ψηφῐζω: 20 words (γνωρῐζω, ψηφῐζω, σχηματῐζω, ἀτενῐζω, κτενῐζω, ὀνειδῐζω). Like Ἀφορῐζω, except in 60 cells: imperfect_act_3 sg, aorist_ind_act_3 sg, perfect_ind_act_1 sg, perfect_ind_act_1 pl, perfect_ind_act_2 sg, perfect_ind_act_2 du, ….
+    conjugation!("ψηφῐζω", 20, "~ζω", like Ἀφορῐζω;
+    imperfect_act_3: "ἐ~ζε|ἐ~ζεν", _, _;
+    aorist_ind_act_3: "ἐ~σε|ἐ~σεν", _, _;
+    perfect_ind_act_1: "ἐ~κᾰ", _, "ἐ~κᾰμεν";
+    perfect_ind_act_2: "ἐ~κᾰς", "ἐ~κᾰτον", "ἐ~κᾰτε";
+    perfect_ind_act_3: "ἐ~κε|ἐ~κεν", _, "ἐ~κᾱσῐ|ἐ~κᾱσῐν";
+    perfect_ind_mid_1: "ἐ~σμαι", _, "ἐ~σμεθᾰ";
+    perfect_ind_mid_2: "ἐ~σαι", "ἐ~σθον", "ἐ~σθε";
+    perfect_ind_mid_3: "ἐ~σται", _, "ἐ~δᾰται";
+    perfect_subj_act_1: "ἐ~κω", _, "ἐ~κωμεν";
+    perfect_subj_act_2: "ἐ~κῃς", "ἐ~κητον", "ἐ~κητε";
+    perfect_subj_act_3: "ἐ~κῃ", _, "ἐ~κωσῐ|ἐ~κωσῐν";
+    perfect_opt_act_1: "ἐ~κοιμῐ|ἐ~κοιην", _, "ἐ~κοιμεν";
+    perfect_opt_act_2: "ἐ~κοις|ἐ~κοιης", "ἐ~κοιτον", "ἐ~κοιτε";
+    perfect_opt_act_3: "ἐ~κοι|ἐ~κοιη", "ἐ~κοιτην", "ἐ~κοιεν";
+    perfect_imp_act_2: "ἐ~κε", "ἐ~κετον", "ἐ~κετε";
+    perfect_imp_act_3: "ἐ~κετω", "ἐ~κετων", "ἐ~κοντων";
+    perfect_imp_mid_2: "ἐ~σο", _, _;
+    perfect_imp_mid_3: "ἐ~σθω", "ἐ~σθων", _;
+    pluperfect_act_1: "ἐ~κειν|ἐ~κη", _, "ἐ~κεμεν";
+    pluperfect_act_2: "ἐ~κεις|ἐ~κης", "ἐ~κετον", "ἐ~κετε";
+    pluperfect_act_3: "ἐ~κει|ἐ~κειν", "ἐ~κετην", "ἐ~κεσᾰν";
+    pluperfect_mid_1: "ἐ~σμην", _, "ἐ~σμεθᾰ";
+    pluperfect_mid_2: "ἐ~σο", "ἐ~σθον", "ἐ~σθε";
+    pluperfect_mid_3: "ἐ~στο", "ἐ~σθην", "ἐ~δᾰτο";
+    infinitive_perf: "ἐ~κεναι", "ἐ~σθαι", _;
+    participle_perf: "ἐ~κως", "ἐ~σμενος", _;
     ),
     // Θωᾰω: 16 words (πεπτω, τᾰττω, ἀλεγω, ϝερρω, φᾱρω, θωαδδω). Like Οἰομαι, except in 98 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
     conjugation!("θωᾰω", 16, "~ω", like Οἰομαι;
@@ -3347,8 +3290,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: _, _, derived;
     participle_perf: _, derived, _;
     ),
-    // Κτῐζω: 15 words (σχῐζω, σχεδῐᾰζω, κτῐζω, σπιζω, φᾰντᾰζω, διστᾰζω). Like Ὁρῐζω, except in 94 cells: ind_act_3 pl, ind_mid_2 sg, ind_pass_2 sg, subj_act_3 pl, imperfect_act_3 sg, future_ind_act_3 pl, ….
-    conjugation!("κτῐζω", 15, "~ζω", like Ὁρῐζω;
+    // Πειρᾰζω: 15 words (πᾰρουσῐᾰζω, πλεονᾰζω, θειᾰζω, γυμνᾰζω, πειρᾰζω, πλησῐᾰζω). Like Ὁρῐζω, except in 59 cells: ind_act_3 pl, ind_mid_2 sg, ind_pass_2 sg, subj_act_3 pl, imperfect_act_3 sg, future_ind_act_3 pl, ….
+    conjugation!("πειρᾰζω", 15, "~ζω", like Ὁρῐζω;
     ind_act_3: _, _, "~ζουσῐ|~ζουσῐν";
     ind_mid_2: "~ζῃ|~ζει", _, _;
     ind_pass_2: "~ζῃ|~ζει", _, _;
@@ -3365,22 +3308,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     aorist_opt_pass_1: _, _, "~σθεῑμεν|~σθειημεν";
     aorist_opt_pass_2: _, "~σθεῑτον|~σθειητον", "~σθεῑτε|~σθειητε";
     aorist_opt_pass_3: _, "~σθειτην|~σθειητην", "~σθεῑεν|~σθειησᾰν";
-    perfect_ind_act_1: "ἐ~κᾰ", _, "ἐ~κᾰμεν";
-    perfect_ind_act_2: "ἐ~κᾰς", "ἐ~κᾰτον", "ἐ~κᾰτε";
-    perfect_ind_act_3: "ἐ~κε|ἐ~κεν", _, "ἐ~κᾱσῐ|ἐ~κᾱσῐν";
-    perfect_ind_mid_1: "ἐ~σμαι", _, "ἐ~σμεθᾰ";
-    perfect_ind_mid_2: "ἐ~σαι", "ἐ~σθον", "ἐ~σθε";
-    perfect_ind_mid_3: "ἐ~σται", _, "ἐ~δᾰται";
-    perfect_subj_act_1: "ἐ~κω", _, "ἐ~κωμεν";
-    perfect_subj_act_2: "ἐ~κῃς", "ἐ~κητον", "ἐ~κητε";
-    perfect_subj_act_3: "ἐ~κῃ", _, "ἐ~κωσῐ|ἐ~κωσῐν";
-    perfect_opt_act_1: "ἐ~κοιμῐ|ἐ~κοιην", _, "ἐ~κοιμεν";
-    perfect_opt_act_2: "ἐ~κοις|ἐ~κοιης", "ἐ~κοιτον", "ἐ~κοιτε";
-    perfect_opt_act_3: "ἐ~κοι|ἐ~κοιη", "ἐ~κοιτην", "ἐ~κοιεν";
-    perfect_imp_act_2: "ἐ~κε", "ἐ~κετον", "ἐ~κετε";
-    perfect_imp_act_3: "ἐ~κετω", "ἐ~κετων", "ἐ~κοντων";
-    perfect_imp_mid_2: "ἐ~σο", _, _;
-    perfect_imp_mid_3: "ἐ~σθω", "ἐ~σθων", _;
+    perfect_ind_act_3: "%ε~κε|%ε~κεν", _, "%ε~κᾱσῐ|%ε~κᾱσῐν";
+    perfect_subj_act_3: _, _, "%ε~κωσῐ|%ε~κωσῐν";
+    perfect_opt_act_1: "%ε~κοιμῐ|%ε~κοιην", _, _;
+    perfect_opt_act_2: "%ε~κοις|%ε~κοιης", _, _;
+    perfect_opt_act_3: "%ε~κοι|%ε~κοιη", _, _;
+    perfect_imp_act_2: "%ε~κε", _, _;
     pluperfect_act_1: "ἐ~κειν|ἐ~κη", _, "ἐ~κεμεν";
     pluperfect_act_2: "ἐ~κεις|ἐ~κης", "ἐ~κετον", "ἐ~κετε";
     pluperfect_act_3: "ἐ~κει|ἐ~κειν", "ἐ~κετην", "ἐ~κεσᾰν";
@@ -3393,77 +3326,25 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     future_perfect_opt_mid_1: derived, _, derived;
     future_perfect_opt_mid_2: derived, derived, derived;
     future_perfect_opt_mid_3: derived, derived, derived;
-    infinitive_perf: "ἐ~κεναι", "ἐ~σθαι", _;
     infinitive_futp: _, derived, _;
-    participle_perf: "ἐ~κως", "ἐ~σμενος", _;
     participle_futp: _, derived, _;
     ),
-    // Πειρᾰζω: 15 words (πᾰρουσῐᾰζω, πλεονᾰζω, θειᾰζω, γυμνᾰζω, πειρᾰζω, πλησῐᾰζω). Like Κτῐζω, except in 42 cells: perfect_ind_act_1 sg, perfect_ind_act_1 pl, perfect_ind_act_2 sg, perfect_ind_act_2 du, perfect_ind_act_2 pl, perfect_ind_act_3 sg, ….
-    conjugation!("πειρᾰζω", 15, "~ζω", like Κτῐζω;
-    perfect_ind_act_1: "%ε~κᾰ", _, "%ε~κᾰμεν";
-    perfect_ind_act_2: "%ε~κᾰς", "%ε~κᾰτον", "%ε~κᾰτε";
-    perfect_ind_act_3: "%ε~κε|%ε~κεν", _, "%ε~κᾱσῐ|%ε~κᾱσῐν";
-    perfect_ind_mid_1: "%ε~σμαι", _, "%ε~σμεθᾰ";
-    perfect_ind_mid_2: "%ε~σαι", "%ε~σθον", "%ε~σθε";
-    perfect_ind_mid_3: "%ε~σται", _, "%ε~δᾰται";
-    perfect_subj_act_1: "%ε~κω", _, "%ε~κωμεν";
-    perfect_subj_act_2: "%ε~κῃς", "%ε~κητον", "%ε~κητε";
-    perfect_subj_act_3: "%ε~κῃ", _, "%ε~κωσῐ|%ε~κωσῐν";
-    perfect_opt_act_1: "%ε~κοιμῐ|%ε~κοιην", _, "%ε~κοιμεν";
-    perfect_opt_act_2: "%ε~κοις|%ε~κοιης", "%ε~κοιτον", "%ε~κοιτε";
-    perfect_opt_act_3: "%ε~κοι|%ε~κοιη", "%ε~κοιτην", "%ε~κοιεν";
-    perfect_imp_act_2: "%ε~κε", "%ε~κετον", "%ε~κετε";
-    perfect_imp_act_3: "%ε~κετω", "%ε~κετων", "%ε~κοντων";
-    perfect_imp_mid_2: "%ε~σο", _, _;
-    perfect_imp_mid_3: "%ε~σθω", "%ε~σθων", _;
-    infinitive_perf: "%ε~κεναι", "%ε~σθαι", _;
-    participle_perf: "%ε~κως", "%ε~σμενος", _;
-    ),
-    // Δῐκεω: 14 words (ζητεω, σκοπεω, προσκῠνεω, στενοχωρεω, στρᾰτηγεω, ξῠρεω). Like Ποιεω, except in 89 cells: future_ind_act_3 pl, future_ind_mid_2 sg, future_ind_pass_2 sg, aorist_ind_act_3 sg, aorist_subj_act_3 pl, aorist_subj_pass_3 pl, ….
-    conjugation!("δῐκεω", 14, "~εω", like Ποιεω;
-    future_ind_act_3: _, _, "~ησουσῐ|~ησουσῐν";
-    future_ind_mid_2: "~ησῃ|~ησει", _, _;
-    future_ind_pass_2: "~ηθησῃ|~ηθησει", _, _;
-    aorist_ind_act_3: "ἐ~ησε|ἐ~ησεν", _, _;
-    aorist_subj_act_3: _, _, "~ησωσῐ|~ησωσῐν";
-    aorist_subj_pass_3: _, _, "~ηθωσῐ|~ηθωσῐν";
-    aorist_opt_act_2: "~ησειᾰς|~ησαις", _, _;
-    aorist_opt_act_3: "~ησειε|~ησειεν|~ησαι", _, "~ησειᾰν|~ησαιεν";
-    aorist_opt_pass_1: _, _, "~ηθεῑμεν|~ηθειημεν";
-    aorist_opt_pass_2: _, "~ηθεῑτον|~ηθειητον", "~ηθεῑτε|~ηθειητε";
-    aorist_opt_pass_3: _, "~ηθειτην|~ηθειητην", "~ηθεῑεν|~ηθειησᾰν";
-    perfect_ind_act_1: "ἐ~ηκᾰ", _, "ἐ~ηκᾰμεν";
-    perfect_ind_act_2: "ἐ~ηκᾰς", "ἐ~ηκᾰτον", "ἐ~ηκᾰτε";
-    perfect_ind_act_3: "ἐ~ηκε|ἐ~ηκεν", _, "ἐ~ηκᾱσῐ|ἐ~ηκᾱσῐν";
-    perfect_ind_mid_1: "ἐ~ημαι", _, "ἐ~ημεθᾰ";
-    perfect_ind_mid_2: "ἐ~ησαι", "ἐ~ησθον", "ἐ~ησθε";
-    perfect_ind_mid_3: "ἐ~ηται", _, "ἐ~ηνται";
-    perfect_subj_act_1: "ἐ~ηκω", _, "ἐ~ηκωμεν";
-    perfect_subj_act_2: "ἐ~ηκῃς", "ἐ~ηκητον", "ἐ~ηκητε";
-    perfect_subj_act_3: "ἐ~ηκῃ", _, "ἐ~ηκωσῐ|ἐ~ηκωσῐν";
-    perfect_opt_act_1: "ἐ~ηκοιμῐ|ἐ~ηκοιην", _, "ἐ~ηκοιμεν";
-    perfect_opt_act_2: "ἐ~ηκοις|ἐ~ηκοιης", "ἐ~ηκοιτον", "ἐ~ηκοιτε";
-    perfect_opt_act_3: "ἐ~ηκοι|ἐ~ηκοιη", "ἐ~ηκοιτην", "ἐ~ηκοιεν";
-    perfect_imp_act_2: "ἐ~ηκε", "ἐ~ηκετον", "ἐ~ηκετε";
-    perfect_imp_act_3: "ἐ~ηκετω", "ἐ~ηκετων", "ἐ~ηκοντων";
-    perfect_imp_mid_2: "ἐ~ησο", _, _;
-    perfect_imp_mid_3: "ἐ~ησθω", "ἐ~ησθων", _;
-    pluperfect_act_1: "ἐ~ηκειν|ἐ~ηκη", _, "ἐ~ηκεμεν";
-    pluperfect_act_2: "ἐ~ηκεις|ἐ~ηκης", "ἐ~ηκετον", "ἐ~ηκετε";
-    pluperfect_act_3: "ἐ~ηκει|ἐ~ηκειν", "ἐ~ηκετην", "ἐ~ηκεσᾰν";
-    pluperfect_mid_1: "ἐ~ημην", _, "ἐ~ημεθᾰ";
-    pluperfect_mid_2: "ἐ~ησο", "ἐ~ησθον", "ἐ~ησθε";
-    pluperfect_mid_3: "ἐ~ητο", "ἐ~ησθην", "ἐ~ηντο";
-    future_perfect_ind_mid_1: derived, _, derived;
-    future_perfect_ind_mid_2: derived, derived, derived;
-    future_perfect_ind_mid_3: derived, _, derived;
-    future_perfect_opt_mid_1: derived, _, derived;
-    future_perfect_opt_mid_2: derived, derived, derived;
-    future_perfect_opt_mid_3: derived, derived, derived;
-    infinitive_perf: "ἐ~ηκεναι", "ἐ~ησθαι", _;
-    infinitive_futp: _, derived, _;
-    participle_perf: "ἐ~ηκως", "ἐ~ημενος", _;
-    participle_futp: _, derived, _;
+    // Κτῐζω: 14 words (σχῐζω, ὀνομᾰζω, σχεδῐᾰζω, κτῐζω, σπιζω, φᾰντᾰζω). Like Ψηφῐζω, except in 34 cells: future_ind_act_1 sg, future_ind_act_1 pl, future_ind_act_2 sg, future_ind_act_2 du, future_ind_act_2 pl, future_ind_act_3 sg, ….
+    conjugation!("κτῐζω", 14, "~ζω", like Ψηφῐζω;
+    future_ind_act_1: "~σω", _, "~σομεν";
+    future_ind_act_2: "~σεις", "~σετον", "~σετε";
+    future_ind_act_3: "~σει", _, "~σουσῐ|~σουσῐν";
+    future_ind_mid_1: "~σομαι", _, "~σομεθᾰ";
+    future_ind_mid_2: "~σῃ|~σει", "~σεσθον", "~σεσθε";
+    future_ind_mid_3: "~σεται", _, "~σονται";
+    future_opt_act_1: "~σοιμῐ", _, "~σοιμεν";
+    future_opt_act_2: "~σοις", "~σοιτον", "~σοιτε";
+    future_opt_act_3: "~σοι", "~σοιτην", "~σοιεν";
+    future_opt_mid_1: "~σοιμην", _, "~σοιμεθᾰ";
+    future_opt_mid_2: "~σοιο", "~σοισθον", "~σοισθε";
+    future_opt_mid_3: "~σοιτο", "~σοισθην", "~σοιντο";
+    infinitive_fut: "~σειν", "~σεσθαι", _;
+    participle_fut: "~σων", "~σομενος", _;
     ),
     // Πεμπω: 14 words (λᾰμπω, βλεπω, ἐρειπω, λειπω, ἑρπω, πεμπω). Like Προσερχομαι, except in 272 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
     conjugation!("πεμπω", 14, "~~πω", like Προσερχομαι;
@@ -3649,6 +3530,119 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: "~ελθων", _, _;
     participle_perf: "~εληλῠθως", _, _;
     ),
+    // Εὐθῡνω: 12 words (πληθῡνω, ἀμῡνω, αἰσχῡνω, πλῡνω, μολῡνω, ὀξῡνω). Like Γῡροω, except in 272 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("εὐθῡνω", 12, "~ῡνω", like Γῡροω;
+    ind_act_1: "~ῡνω", _, "~ῡνομεν";
+    ind_act_2: "~ῡνεις", "~ῡνετον", "~ῡνετε";
+    ind_act_3: "~ῡνει", _, "~ῡνουσῐ";
+    ind_mid_1: "~ῡνομαι", _, "~ῡνομεθᾰ";
+    ind_mid_2: "~ῡνῃ", "~ῡνεσθον", "~ῡνεσθε";
+    ind_mid_3: "~ῡνεται", _, "~ῡνονται";
+    subj_act_1: "~ῡνω", _, "~ῡνωμεν";
+    subj_act_2: "~ῡνῃς", "~ῡνητον", "~ῡνητε";
+    subj_act_3: "~ῡνῃ", _, "~ῡνωσῐ";
+    subj_mid_1: "~ῡνωμαι", _, "~ῡνωμεθᾰ";
+    subj_mid_2: "~ῡνῃ", "~ῡνησθον", "~ῡνησθε";
+    subj_mid_3: "~ῡνηται", _, "~ῡνωνται";
+    subj_pass_2: "~ῡνῃ", _, _;
+    opt_act_1: "~ῡνοιμῐ", _, "~ῡνοιμεν";
+    opt_act_2: "~ῡνοις", "~ῡνοιτον", "~ῡνοιτε";
+    opt_act_3: "~ῡνοι", "~ῡνοιτην", "~ῡνοιεν";
+    opt_mid_1: "~ῡνοιμην", _, "~ῡνοιμεθᾰ";
+    opt_mid_2: "~ῡνοιο", "~ῡνοισθον", "~ῡνοισθε";
+    opt_mid_3: "~ῡνοιτο", "~ῡνοισθην", "~ῡνοιντο";
+    imp_act_2: "~ῡνε", _, _;
+    imp_act_3: "~ῡνετω", "~ῡνετων", "~ῡνοντων";
+    imp_mid_2: "~ῡνου", _, "~ῡνεσθε";
+    imp_mid_3: "~ῡνεσθω", "~ῡνεσθων", "~ῡνεσθων";
+    imperfect_act_1: "ἐ~ῡνον", _, "ἐ~ῡνομεν";
+    imperfect_act_2: "ἐ~ῡνες", "ἐ~ῡνετον", "ἐ~ῡνετε";
+    imperfect_act_3: "ἐ~ῡνε", "ἐ~ῡνετην", "ἐ~ῡνον";
+    imperfect_mid_1: "ἐ~ῡνομην", _, "ἐ~ῡνομεθᾰ";
+    imperfect_mid_2: "ἐ~ῡνου", "ἐ~ῡνεσθον", "ἐ~ῡνεσθε";
+    imperfect_mid_3: "ἐ~ῡνετο", "ἐ~ῡνεσθην", "ἐ~ῡνοντο";
+    future_ind_act_1: "~ῠνω", _, "~ῠνοῡμεν";
+    future_ind_act_2: "~ῠνεῑς", "~ῠνεῑτον", "~ῠνεῑτε";
+    future_ind_act_3: "~ῠνεῑ", _, "~ῠνοῡσῐ";
+    future_ind_mid_1: "~ῠνοῡμαι", _, "~ῠνουμεθᾰ";
+    future_ind_mid_2: "~ῠνεῑ", "~ῠνεῑσθον", "~ῠνεῑσθε";
+    future_ind_mid_3: "~ῠνεῑται", _, "~ῠνοῡνται";
+    future_ind_pass_1: "~ῠνθησομαι", _, "~ῠνθησομεθᾰ";
+    future_ind_pass_2: "~ῠνθησῃ", "~ῠνθησεσθον", "~ῠνθησεσθε";
+    future_ind_pass_3: "~ῠνθησεται", _, "~ῠνθησονται";
+    future_opt_act_1: "~ῠνοιην", _, "~ῠνοῑμεν";
+    future_opt_act_2: "~ῠνοιης", "~ῠνοῑτον", "~ῠνοῑτε";
+    future_opt_act_3: "~ῠνοιη", "~ῠνοιτην", "~ῠνοῑεν";
+    future_opt_mid_1: "~ῠνοιμην", _, "~ῠνοιμεθᾰ";
+    future_opt_mid_2: "~ῠνοῑο", "~ῠνοῑσθον", "~ῠνοῑσθε";
+    future_opt_mid_3: "~ῠνοῑτο", "~ῠνοισθην", "~ῠνοῑντο";
+    future_opt_pass_1: "~ῠνθησοιμην", _, "~ῠνθησοιμεθᾰ";
+    future_opt_pass_2: "~ῠνθησοιο", "~ῠνθησοισθον", "~ῠνθησοισθε";
+    future_opt_pass_3: "~ῠνθησοιτο", "~ῠνθησοισθην", "~ῠνθησοιντο";
+    aorist_ind_act_1: "ἐ~ῡνᾰ", _, "ἐ~ῡνᾰμεν";
+    aorist_ind_act_2: "ἐ~ῡνᾰς", "ἐ~ῡνᾰτον", "ἐ~ῡνᾰτε";
+    aorist_ind_act_3: "ἐ~ῡνε", "ἐ~ῡνᾰτην", "ἐ~ῡνᾰν";
+    aorist_ind_mid_1: "ἐ~ῡνᾰμην", _, "ἐ~ῡνᾰμεθᾰ";
+    aorist_ind_mid_2: "ἐ~ῡνω", "ἐ~ῡνᾰσθον", "ἐ~ῡνᾰσθε";
+    aorist_ind_mid_3: "ἐ~ῡνᾰτο", "ἐ~ῡνᾰσθην", "ἐ~ῡνᾰντο";
+    aorist_ind_pass_1: "ἐ~ῡνθην", _, "ἐ~ῡνθημεν";
+    aorist_ind_pass_2: "ἐ~ῡνθης", "ἐ~ῡνθητον", "ἐ~ῡνθητε";
+    aorist_ind_pass_3: "ἐ~ῡνθη", "ἐ~ῡνθητην", "ἐ~ῡνθησᾰν";
+    aorist_subj_act_1: "~ῡνω", _, "~ῡνωμεν";
+    aorist_subj_act_2: "~ῡνῃς", "~ῡνητον", "~ῡνητε";
+    aorist_subj_act_3: "~ῡνῃ", _, "~ῡνωσῐ";
+    aorist_subj_mid_1: "~ῡνωμαι", _, "~ῡνωμεθᾰ";
+    aorist_subj_mid_2: "~ῡνῃ", "~ῡνησθον", "~ῡνησθε";
+    aorist_subj_mid_3: "~ῡνηται", _, "~ῡνωνται";
+    aorist_subj_pass_1: "~ῡνθω", _, "~ῡνθωμεν";
+    aorist_subj_pass_2: "~ῡνθῃς", "~ῡνθητον", "~ῡνθητε";
+    aorist_subj_pass_3: "~ῡνθῃ", _, "~ῡνθωσῐ";
+    aorist_opt_act_1: "~ῡναιμῐ", _, "~ῡναιμεν";
+    aorist_opt_act_2: "~ῡνειᾰς", "~ῡναιτον", "~ῡναιτε";
+    aorist_opt_act_3: "~ῡνειε", "~ῡναιτην", "~ῡνειᾰν";
+    aorist_opt_mid_1: "~ῡναιμην", _, "~ῡναιμεθᾰ";
+    aorist_opt_mid_2: "~ῡναιο", "~ῡναισθον", "~ῡναισθε";
+    aorist_opt_mid_3: "~ῡναιτο", "~ῡναισθην", "~ῡναιντο";
+    aorist_opt_pass_1: "~ῡνθειην", _, "~ῡνθεῑμεν";
+    aorist_opt_pass_2: "~ῡνθειης", "~ῡνθεῑτον", "~ῡνθεῑτε";
+    aorist_opt_pass_3: "~ῡνθειη", "~ῡνθειτην", "~ῡνθεῑεν";
+    aorist_imp_act_2: "~ῡνον", "~ῡνᾰτον", "~ῡνᾰτε";
+    aorist_imp_act_3: "~ῡνᾰτω", "~ῡνᾰτων", "~ῡνᾰντων";
+    aorist_imp_mid_2: "~ῡναι", "~ῡνᾰσθον", "~ῡνᾰσθε";
+    aorist_imp_mid_3: "~ῡνᾰσθω", "~ῡνᾰσθων", _;
+    aorist_imp_pass_2: "~ῡνθητῐ", _, _;
+    aorist_imp_pass_3: "~ῡνθητω", "~ῡνθητων", "~ῡνθεντων";
+    perfect_ind_act_1: "%ε~ῠγκᾰ", _, "%ε~ῠγκᾰμεν";
+    perfect_ind_act_2: "%ε~ῠγκᾰς", "%ε~ῠγκᾰτον", "%ε~ῠγκᾰτε";
+    perfect_ind_act_3: "%ε~ῠγκε", _, "%ε~ῠγκᾱσῐ";
+    perfect_ind_mid_1: "%ε~ῠσμαι", _, "%ε~ῠσμεθᾰ";
+    perfect_ind_mid_2: "%ε~ῠνσαι", "%ε~ῠνθον", "%ε~ῠνθε";
+    perfect_ind_mid_3: "%ε~ῠνται", _, "%ε~ῠνᾰται";
+    perfect_subj_act_1: "%ε~ῠγκω", _, "%ε~ῠγκωμεν";
+    perfect_subj_act_2: "%ε~ῠγκῃς", "%ε~ῠγκητον", "%ε~ῠγκητε";
+    perfect_subj_act_3: "%ε~ῠγκῃ", _, "%ε~ῠγκωσῐ";
+    perfect_opt_act_1: "%ε~ῠγκοιμῐ", _, "%ε~ῠγκοιμεν";
+    perfect_opt_act_2: "%ε~ῠγκοις", "%ε~ῠγκοιτον", "%ε~ῠγκοιτε";
+    perfect_opt_act_3: "%ε~ῠγκοι", "%ε~ῠγκοιτην", "%ε~ῠγκοιεν";
+    perfect_imp_act_2: _, "%ε~ῠγκετον", "%ε~ῠγκετε";
+    perfect_imp_act_3: "%ε~ῠγκετω", "%ε~ῠγκετων", "%ε~ῠγκοντων";
+    perfect_imp_mid_2: "%ε~ῠνσο", _, _;
+    perfect_imp_mid_3: "%ε~ῠνθω", "%ε~ῠνθων", _;
+    pluperfect_act_1: "ἐ%ε~ῠγκειν", _, "ἐ%ε~ῠγκεμεν";
+    pluperfect_act_2: "ἐ%ε~ῠγκεις", "ἐ%ε~ῠγκετον", "ἐ%ε~ῠγκετε";
+    pluperfect_act_3: "ἐ%ε~ῠγκει", "ἐ%ε~ῠγκετην", "ἐ%ε~ῠγκεσᾰν";
+    pluperfect_mid_1: "ἐ%ε~ῠσμην", _, "ἐ%ε~ῠσμεθᾰ";
+    pluperfect_mid_2: "ἐ%ε~ῠνσο", "ἐ%ε~ῠνθον", "ἐ%ε~ῠνθε";
+    pluperfect_mid_3: "ἐ%ε~ῠντο", "ἐ%ε~ῠνθην", "ἐ%ε~ῠνᾰτο";
+    infinitive_pres: "~ῡνειν", "~ῡνεσθαι", _;
+    infinitive_fut: "~ῠνεῑν", "~ῠνεῑσθαι", "~ῠνθησεσθαι";
+    infinitive_aor: "~ῡναι", "~ῡνᾰσθαι", "~ῡνθηναι";
+    infinitive_perf: "%ε~ῠγκεναι", "%ε~ῠνθαι", _;
+    participle_pres: "~ῡνων", "~ῡνομενος", _;
+    participle_fut: "~ῠνων", "~ῠνουμενος", "~ῠνθησομενος";
+    participle_aor: "~ῡνᾱς", "~ῡνᾰμενος", "~ῡνθεις";
+    participle_perf: "%ε~ῠγκως", "%ε~ῠσμενος", _;
+    ),
     // Ἀναιρεω: 12 words (δεω, φλεω, ἐμεω, ἐπαινεω, κλεω, ἀναιρεω). Like Δῐκεω, except in 124 cells: ind_act_3 pl, ind_mid_2 sg, ind_pass_2 sg, subj_act_3 pl, opt_act_1 sg, opt_act_1 pl, ….
     conjugation!("ἀναιρεω", 12, "~εω", like Δῐκεω;
     ind_act_3: _, _, "~οῡσῐ";
@@ -3711,35 +3705,226 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: _, _, "~εθεις";
     participle_perf: "~εδεκως", "~εδεμενος", _;
     ),
-    // Παυω: 12 words (γευω, παυω, κελευω, ἀρτυω, ἰσχυω, κρουω). Like Βουλευω, except in 52 cells: imp_act_2 sg, imperfect_act_3 sg, future_ind_act_3 pl, future_ind_mid_2 sg, future_ind_pass_1 sg, future_ind_pass_1 pl, ….
-    conjugation!("παυω", 12, "~υω", like Βουλευω;
-    imp_act_2: "~ῡε", _, _;
-    imperfect_act_3: "ἐ~υε", _, _;
-    future_ind_act_3: _, _, "~υσουσῐ";
-    future_ind_mid_2: "~υσῃ", _, _;
-    future_ind_pass_1: "~υσθησομαι", _, "~υσθησομεθᾰ";
-    future_ind_pass_2: "~υσθησῃ", "~υσθησεσθον", "~υσθησεσθε";
-    future_ind_pass_3: "~υσθησεται", _, "~υσθησονται";
-    future_opt_pass_1: "~υσθησοιμην", _, "~υσθησοιμεθᾰ";
-    future_opt_pass_2: "~υσθησοιο", "~υσθησοισθον", "~υσθησοισθε";
-    future_opt_pass_3: "~υσθησοιτο", "~υσθησοισθην", "~υσθησοιντο";
-    aorist_ind_pass_1: "ἐ~υσθην", _, "ἐ~υσθημεν";
-    aorist_ind_pass_2: "ἐ~υσθης", "ἐ~υσθητον", "ἐ~υσθητε";
-    aorist_ind_pass_3: "ἐ~υσθη", "ἐ~υσθητην", "ἐ~υσθησᾰν";
-    aorist_subj_pass_1: "~υσθω", _, "~υσθωμεν";
-    aorist_subj_pass_2: "~υσθῃς", "~υσθητον", "~υσθητε";
-    aorist_subj_pass_3: "~υσθῃ", _, "~υσθωσῐ";
-    aorist_opt_pass_1: "~υσθειην", _, "~υσθεῑμεν";
-    aorist_opt_pass_2: "~υσθειης", "~υσθεῑτον", "~υσθεῑτε";
-    aorist_opt_pass_3: "~υσθειη", "~υσθειτην", "~υσθεῑεν";
-    aorist_imp_act_2: "~ῡσον", _, _;
-    aorist_imp_mid_2: "~ῡσαι", _, _;
-    aorist_imp_pass_2: "~υσθητῐ", _, _;
-    aorist_imp_pass_3: "~υσθητω", "~υσθητων", "~υσθεντων";
-    infinitive_fut: _, _, "~υσθησεσθαι";
-    infinitive_aor: _, _, "~υσθηναι";
-    participle_fut: _, _, "~υσθησομενος";
-    participle_aor: _, _, "~υσθεις";
+    // Σῠνᾰγω: 12 words (σῠνᾰγω, ἐξᾰγω, ὑπᾰγω, ἀνᾰγω, προᾰγω, πᾰρᾰγω). Like Οἰομαι, except in 257 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("σῠνᾰγω", 12, "~ᾰγω", like Οἰομαι;
+    ind_act_1: "~ᾰγω", _, "~ᾰγομεν";
+    ind_act_2: "~ᾰγεις", "~ᾰγετον", "~ᾰγετε";
+    ind_act_3: "~ᾰγει", _, "~ᾰγουσῐ|~ᾰγουσῐν";
+    ind_mid_1: "~ᾰγομαι", _, "~ᾰγομεθᾰ";
+    ind_mid_2: "~ᾰγῃ|~ᾰγει", "~ᾰγεσθον", "~ᾰγεσθε";
+    ind_mid_3: "~ᾰγεται", _, "~ᾰγονται";
+    ind_pass_2: "~ᾰγῃ|~ᾰγει", _, _;
+    subj_act_1: "~ᾰγω", _, "~ᾰγωμεν";
+    subj_act_2: "~ᾰγῃς", "~ᾰγητον", "~ᾰγητε";
+    subj_act_3: "~ᾰγῃ", _, "~ᾰγωσῐ|~ᾰγωσῐν";
+    subj_mid_1: "~ᾰγωμαι", _, "~ᾰγωμεθᾰ";
+    subj_mid_2: "~ᾰγῃ", "~ᾰγησθον", "~ᾰγησθε";
+    subj_mid_3: "~ᾰγηται", _, "~ᾰγωνται";
+    subj_pass_2: "~ᾰγῃ", _, _;
+    opt_act_1: "~ᾰγοιμῐ", _, "~ᾰγοιμεν";
+    opt_act_2: "~ᾰγοις", "~ᾰγοιτον", "~ᾰγοιτε";
+    opt_act_3: "~ᾰγοι", "~ᾰγοιτην", "~ᾰγοιεν";
+    opt_mid_1: "~ᾰγοιμην", _, "~ᾰγοιμεθᾰ";
+    opt_mid_2: "~ᾰγοιο", "~ᾰγοισθον", "~ᾰγοισθε";
+    opt_mid_3: "~ᾰγοιτο", "~ᾰγοισθην", "~ᾰγοιντο";
+    imp_act_2: "~ᾰγε", _, _;
+    imp_act_3: "~ᾰγετω", "~ᾰγετων", "~ᾰγοντων";
+    imp_mid_2: "~ᾰγου", _, "~ᾰγεσθε";
+    imp_mid_3: "~ᾰγεσθω", "~ᾰγεσθων", "~ᾰγεσθων";
+    imperfect_act_1: "~ηγον", _, "~ηγομεν";
+    imperfect_act_2: "~ηγες", "~ηγετον", "~ηγετε";
+    imperfect_act_3: "~ηγε|~ηγεν", "~ηγετην", "~ηγον";
+    imperfect_mid_1: "~ηγομην", _, "~ηγομεθᾰ";
+    imperfect_mid_2: "~ηγου", "~ηγεσθον", "~ηγεσθε";
+    imperfect_mid_3: "~ηγετο", "~ηγεσθην", "~ηγοντο";
+    future_ind_act_1: "~ᾰξω", _, "~ᾰξομεν";
+    future_ind_act_2: "~ᾰξεις", "~ᾰξετον", "~ᾰξετε";
+    future_ind_act_3: "~ᾰξει", _, "~ᾰξουσῐ|~ᾰξουσῐν";
+    future_ind_mid_1: "~ᾰξομαι", _, "~ᾰξομεθᾰ";
+    future_ind_mid_2: "~ᾰξῃ|~ᾰξει", "~ᾰξεσθον", "~ᾰξεσθε";
+    future_ind_mid_3: "~ᾰξεται", _, "~ᾰξονται";
+    future_ind_pass_1: "~ᾰχθησομαι", _, "~ᾰχθησομεθᾰ";
+    future_ind_pass_2: "~ᾰχθησῃ|~ᾰχθησει", "~ᾰχθησεσθον", "~ᾰχθησεσθε";
+    future_ind_pass_3: "~ᾰχθησεται", _, "~ᾰχθησονται";
+    future_opt_act_1: "~ᾰξοιμῐ", _, "~ᾰξοιμεν";
+    future_opt_act_2: "~ᾰξοις", "~ᾰξοιτον", "~ᾰξοιτε";
+    future_opt_act_3: "~ᾰξοι", "~ᾰξοιτην", "~ᾰξοιεν";
+    future_opt_mid_1: "~ᾰξοιμην", _, "~ᾰξοιμεθᾰ";
+    future_opt_mid_2: "~ᾰξοιο", "~ᾰξοισθον", "~ᾰξοισθε";
+    future_opt_mid_3: "~ᾰξοιτο", "~ᾰξοισθην", "~ᾰξοιντο";
+    future_opt_pass_1: "~ᾰχθησοιμην", _, "~ᾰχθησοιμεθᾰ";
+    future_opt_pass_2: "~ᾰχθησοιο", "~ᾰχθησοισθον", "~ᾰχθησοισθε";
+    future_opt_pass_3: "~ᾰχθησοιτο", "~ᾰχθησοισθην", "~ᾰχθησοιντο";
+    aorist_ind_act_1: "~ηγᾰγον", _, "~ηγᾰγομεν";
+    aorist_ind_act_2: "~ηγᾰγες", "~ηγᾰγετον", "~ηγᾰγετε";
+    aorist_ind_act_3: "~ηγᾰγε", "~ηγᾰγετην", "~ηγᾰγον";
+    aorist_ind_mid_1: "~ηγᾰγομην", _, "~ηγᾰγομεθᾰ";
+    aorist_ind_mid_2: "~ηγᾰγου", "~ηγᾰγεσθον", "~ηγᾰγεσθε";
+    aorist_ind_mid_3: "~ηγᾰγετο", "~ηγᾰγεσθην", "~ηγᾰγοντο";
+    aorist_ind_pass_1: "~ηχθην", _, "~ηχθημεν";
+    aorist_ind_pass_2: "~ηχθης", "~ηχθητον", "~ηχθητε";
+    aorist_ind_pass_3: "~ηχθη", "~ηχθητην", "~ηχθησᾰν";
+    aorist_subj_act_1: "~ᾰγᾰγω", _, "~ᾰγᾰγωμεν";
+    aorist_subj_act_2: "~ᾰγᾰγῃς", "~ᾰγᾰγητον", "~ᾰγᾰγητε";
+    aorist_subj_act_3: "~ᾰγᾰγῃ", _, "~ᾰγᾰγωσῐ";
+    aorist_subj_mid_1: "~ᾰγᾰγωμαι", _, "~ᾰγᾰγωμεθᾰ";
+    aorist_subj_mid_2: "~ᾰγᾰγῃ", "~ᾰγᾰγησθον", "~ᾰγᾰγησθε";
+    aorist_subj_mid_3: "~ᾰγᾰγηται", _, "~ᾰγᾰγωνται";
+    aorist_subj_pass_1: "~ᾰχθω", _, "~ᾰχθωμεν";
+    aorist_subj_pass_2: "~ᾰχθῃς", "~ᾰχθητον", "~ᾰχθητε";
+    aorist_subj_pass_3: "~ᾰχθῃ", _, "~ᾰχθωσῐ|~ᾰχθωσῐν";
+    aorist_opt_act_1: "~ᾰγᾰγοιμῐ", _, "~ᾰγᾰγοιμεν";
+    aorist_opt_act_2: "~ᾰγᾰγοις", "~ᾰγᾰγοιτον", "~ᾰγᾰγοιτε";
+    aorist_opt_act_3: "~ᾰγᾰγοι", "~ᾰγᾰγοιτην", "~ᾰγᾰγοιεν";
+    aorist_opt_mid_1: "~ᾰγᾰγοιμην", _, "~ᾰγᾰγοιμεθᾰ";
+    aorist_opt_mid_2: "~ᾰγᾰγοιο", "~ᾰγᾰγοισθον", "~ᾰγᾰγοισθε";
+    aorist_opt_mid_3: "~ᾰγᾰγοιτο", "~ᾰγᾰγοισθην", "~ᾰγᾰγοιντο";
+    aorist_opt_pass_1: "~ᾰχθειην", _, "~ᾰχθεῑμεν|~ᾰχθειημεν";
+    aorist_opt_pass_2: "~ᾰχθειης", "~ᾰχθεῑτον|~ᾰχθειητον", "~ᾰχθεῑτε|~ᾰχθειητε";
+    aorist_opt_pass_3: "~ᾰχθειη", "~ᾰχθειτην|~ᾰχθειητην", "~ᾰχθεῑεν|~ᾰχθειησᾰν";
+    aorist_imp_act_2: "~ᾰγᾰγε", "~ᾰγᾰγετον", "~ᾰγᾰγετε";
+    aorist_imp_act_3: "~ᾰγᾰγετω", "~ᾰγᾰγετων", "~ᾰγᾰγοντων";
+    aorist_imp_mid_2: "~ᾰγᾰγοῡ", "~ᾰγᾰγεσθον", "~ᾰγᾰγεσθε";
+    aorist_imp_mid_3: "~ᾰγᾰγεσθω", "~ᾰγᾰγεσθων", _;
+    aorist_imp_pass_2: "~ᾰχθητῐ", _, _;
+    aorist_imp_pass_3: "~ᾰχθητω", "~ᾰχθητων", "~ᾰχθεντων";
+    perfect_ind_act_1: "~ηχᾰ", _, "~ηχᾰμεν";
+    perfect_ind_act_2: "~ηχᾰς", "~ηχᾰτον", "~ηχᾰτε";
+    perfect_ind_act_3: "~ηχε", _, "~ηχᾱσῐ";
+    perfect_ind_mid_1: "~ηγμαι", _, "~ηγμεθᾰ";
+    perfect_ind_mid_2: "~ηξαι", "~ηχθον", "~ηχθε";
+    perfect_ind_mid_3: "~ηκται", _, "~ηγᾰται";
+    perfect_subj_act_1: "~ηχω", _, "~ηχωμεν";
+    perfect_subj_act_2: "~ηχῃς", "~ηχητον", "~ηχητε";
+    perfect_subj_act_3: "~ηχῃ", _, "~ηχωσῐ";
+    perfect_opt_act_1: "~ηχοιμῐ", _, "~ηχοιμεν";
+    perfect_opt_act_2: "~ηχοις", "~ηχοιτον", "~ηχοιτε";
+    perfect_opt_act_3: "~ηχοι", "~ηχοιτην", "~ηχοιεν";
+    perfect_imp_act_2: _, "~ηχετον", "~ηχετε";
+    perfect_imp_act_3: "~ηχετω", "~ηχετων", "~ηχοντων";
+    perfect_imp_mid_2: "~ηξο", _, _;
+    perfect_imp_mid_3: "~ηχθω", "~ηχθων", _;
+    infinitive_pres: "~ᾰγειν", "~ᾰγεσθαι", _;
+    infinitive_fut: "~ᾰξειν", "~ᾰξεσθαι", "~ᾰχθησεσθαι";
+    infinitive_aor: "~ᾰγᾰγεῑν", "~ᾰγᾰγεσθαι", "~ᾰχθηναι";
+    infinitive_perf: "~ηχεναι", "~ηχθαι", _;
+    participle_pres: "~ᾰγων", "~ᾰγομενος", _;
+    participle_fut: "~ᾰξων", "~ᾰξομενος", "~ᾰχθησομενος";
+    participle_aor: "~ᾰγᾰγων", "~ᾰγᾰγομενος", "~ᾰχθεις";
+    participle_perf: "~ηχως", "~ηγμενος", _;
+    ),
+    // Ὑπᾰρχω: 12 words (ὑπᾰρχω, ὑπᾰκουω, δῐᾰνῠω, ἐξᾰρχω, ἐξᾰρτῡω, ἀπᾰρεσκω). Like Προσερχομαι, except in 272 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("ὑπᾰρχω", 12, "~ᾰ~ω", like Προσερχομαι;
+    ind_act_1: "~ᾰ~ω", _, "~ᾰ~ομεν";
+    ind_act_2: "~ᾰ~εις", "~ᾰ~ετον", "~ᾰ~ετε";
+    ind_act_3: "~ᾰ~ει", _, "~ᾰ~ουσῐ";
+    ind_mid_1: "~ᾰ~ομαι", _, "~ᾰ~ομεθᾰ";
+    ind_mid_2: "~ᾰ~ῃ", "~ᾰ~εσθον", "~ᾰ~εσθε";
+    ind_mid_3: "~ᾰ~εται", _, "~ᾰ~ονται";
+    subj_act_1: "~ᾰ~ω", _, "~ᾰ~ωμεν";
+    subj_act_2: "~ᾰ~ῃς", "~ᾰ~ητον", "~ᾰ~ητε";
+    subj_act_3: "~ᾰ~ῃ", _, "~ᾰ~ωσῐ";
+    subj_mid_1: "~ᾰ~ωμαι", _, "~ᾰ~ωμεθᾰ";
+    subj_mid_2: "~ᾰ~ῃ", "~ᾰ~ησθον", "~ᾰ~ησθε";
+    subj_mid_3: "~ᾰ~ηται", _, "~ᾰ~ωνται";
+    subj_pass_2: "~ᾰ~ῃ", _, _;
+    opt_act_1: "~ᾰ~οιμῐ", _, "~ᾰ~οιμεν";
+    opt_act_2: "~ᾰ~οις", "~ᾰ~οιτον", "~ᾰ~οιτε";
+    opt_act_3: "~ᾰ~οι", "~ᾰ~οιτην", "~ᾰ~οιεν";
+    opt_mid_1: "~ᾰ~οιμην", _, "~ᾰ~οιμεθᾰ";
+    opt_mid_2: "~ᾰ~οιο", "~ᾰ~οισθον", "~ᾰ~οισθε";
+    opt_mid_3: "~ᾰ~οιτο", "~ᾰ~οισθην", "~ᾰ~οιντο";
+    imp_act_2: "~ᾰ~ε", _, _;
+    imp_act_3: "~ᾰ~ετω", "~ᾰ~ετων", "~ᾰ~οντων";
+    imp_mid_2: "~ᾰ~ου", _, "~ᾰ~εσθε";
+    imp_mid_3: "~ᾰ~εσθω", "~ᾰ~εσθων", "~ᾰ~εσθων";
+    imperfect_act_1: "~η~ον", _, "~η~ομεν";
+    imperfect_act_2: "~η~ες", "~η~ετον", "~η~ετε";
+    imperfect_act_3: "~η~ε", "~η~ετην", "~η~ον";
+    imperfect_mid_1: "~η~ομην", _, "~η~ομεθᾰ";
+    imperfect_mid_2: "~η~ου", "~η~εσθον", "~η~εσθε";
+    imperfect_mid_3: "~η~ετο", "~η~εσθην", "~η~οντο";
+    future_ind_act_1: "~ᾰ~σω", _, "~ᾰ~σομεν";
+    future_ind_act_2: "~ᾰ~σεις", "~ᾰ~σετον", "~ᾰ~σετε";
+    future_ind_act_3: "~ᾰ~σει", _, "~ᾰ~σουσῐ";
+    future_ind_mid_1: "~ᾰ~σομαι", _, "~ᾰ~σομεθᾰ";
+    future_ind_mid_2: "~ᾰ~σῃ", "~ᾰ~σεσθον", "~ᾰ~σεσθε";
+    future_ind_mid_3: "~ᾰ~σεται", _, "~ᾰ~σονται";
+    future_ind_pass_1: "~ᾰ~σθησομαι", _, "~ᾰ~σθησομεθᾰ";
+    future_ind_pass_2: "~ᾰ~σθησῃ", "~ᾰ~σθησεσθον", "~ᾰ~σθησεσθε";
+    future_ind_pass_3: "~ᾰ~σθησεται", _, "~ᾰ~σθησονται";
+    future_opt_act_1: "~ᾰ~σοιμῐ", _, "~ᾰ~σοιμεν";
+    future_opt_act_2: "~ᾰ~σοις", "~ᾰ~σοιτον", "~ᾰ~σοιτε";
+    future_opt_act_3: "~ᾰ~σοι", "~ᾰ~σοιτην", "~ᾰ~σοιεν";
+    future_opt_mid_1: "~ᾰ~σοιμην", _, "~ᾰ~σοιμεθᾰ";
+    future_opt_mid_2: "~ᾰ~σοιο", "~ᾰ~σοισθον", "~ᾰ~σοισθε";
+    future_opt_mid_3: "~ᾰ~σοιτο", "~ᾰ~σοισθην", "~ᾰ~σοιντο";
+    future_opt_pass_1: "~ᾰ~σθησοιμην", _, "~ᾰ~σθησοιμεθᾰ";
+    future_opt_pass_2: "~ᾰ~σθησοιο", "~ᾰ~σθησοισθον", "~ᾰ~σθησοισθε";
+    future_opt_pass_3: "~ᾰ~σθησοιτο", "~ᾰ~σθησοισθην", "~ᾰ~σθησοιντο";
+    aorist_ind_act_1: "~η~σᾰ", _, "~η~σᾰμεν";
+    aorist_ind_act_2: "~η~σᾰς", "~η~σᾰτον", "~η~σᾰτε";
+    aorist_ind_act_3: "~η~σε", "~η~σᾰτην", "~η~σᾰν";
+    aorist_ind_mid_1: "~η~σᾰμην", _, "~η~σᾰμεθᾰ";
+    aorist_ind_mid_2: "~η~σω", "~η~σᾰσθον", "~η~σᾰσθε";
+    aorist_ind_mid_3: "~η~σᾰτο", "~η~σᾰσθην", "~η~σᾰντο";
+    aorist_ind_pass_1: "~η~σθην", _, "~η~σθημεν";
+    aorist_ind_pass_2: "~η~σθης", "~η~σθητον", "~η~σθητε";
+    aorist_ind_pass_3: "~η~σθη", "~η~σθητην", "~η~σθησᾰν";
+    aorist_subj_act_1: "~ᾰ~σω", _, "~ᾰ~σωμεν";
+    aorist_subj_act_2: "~ᾰ~σῃς", "~ᾰ~σητον", "~ᾰ~σητε";
+    aorist_subj_act_3: "~ᾰ~σῃ", _, "~ᾰ~σωσῐ";
+    aorist_subj_mid_1: "~ᾰ~σωμαι", _, "~ᾰ~σωμεθᾰ";
+    aorist_subj_mid_2: "~ᾰ~σῃ", "~ᾰ~σησθον", "~ᾰ~σησθε";
+    aorist_subj_mid_3: "~ᾰ~σηται", _, "~ᾰ~σωνται";
+    aorist_subj_pass_1: "~ᾰ~σθω", _, "~ᾰ~σθωμεν";
+    aorist_subj_pass_2: "~ᾰ~σθῃς", "~ᾰ~σθητον", "~ᾰ~σθητε";
+    aorist_subj_pass_3: "~ᾰ~σθῃ", _, "~ᾰ~σθωσῐ";
+    aorist_opt_act_1: "~ᾰ~σαιμῐ", _, "~ᾰ~σαιμεν";
+    aorist_opt_act_2: "~ᾰ~σειᾰς", "~ᾰ~σαιτον", "~ᾰ~σαιτε";
+    aorist_opt_act_3: "~ᾰ~σειε", "~ᾰ~σαιτην", "~ᾰ~σειᾰν";
+    aorist_opt_mid_1: "~ᾰ~σαιμην", _, "~ᾰ~σαιμεθᾰ";
+    aorist_opt_mid_2: "~ᾰ~σαιο", "~ᾰ~σαισθον", "~ᾰ~σαισθε";
+    aorist_opt_mid_3: "~ᾰ~σαιτο", "~ᾰ~σαισθην", "~ᾰ~σαιντο";
+    aorist_opt_pass_1: "~ᾰ~σθειην", _, "~ᾰ~σθεῑμεν";
+    aorist_opt_pass_2: "~ᾰ~σθειης", "~ᾰ~σθεῑτον", "~ᾰ~σθεῑτε";
+    aorist_opt_pass_3: "~ᾰ~σθειη", "~ᾰ~σθειτην", "~ᾰ~σθεῑεν";
+    aorist_imp_act_2: "~ᾰ~σον", "~ᾰ~σᾰτον", "~ᾰ~σᾰτε";
+    aorist_imp_act_3: "~ᾰ~σᾰτω", "~ᾰ~σᾰτων", "~ᾰ~σᾰντων";
+    aorist_imp_mid_2: "~ᾰ~σαι", "~ᾰ~σᾰσθον", "~ᾰ~σᾰσθε";
+    aorist_imp_mid_3: "~ᾰ~σᾰσθω", "~ᾰ~σᾰσθων", _;
+    aorist_imp_pass_2: "~ᾰ~σθητῐ", _, _;
+    aorist_imp_pass_3: "~ᾰ~σθητω", "~ᾰ~σθητων", "~ᾰ~σθεντων";
+    perfect_ind_act_1: "~η~κᾰ", _, "~η~κᾰμεν";
+    perfect_ind_act_2: "~η~κᾰς", "~η~κᾰτον", "~η~κᾰτε";
+    perfect_ind_act_3: "~η~κε", _, "~η~κᾱσῐ";
+    perfect_ind_mid_1: "~η~σμαι", _, "~η~σμεθᾰ";
+    perfect_ind_mid_2: "~η~σαι", "~η~σθον", "~η~σθε";
+    perfect_ind_mid_3: "~η~σται", _, "~η~τᾰται";
+    perfect_subj_act_1: "~η~κω", _, "~η~κωμεν";
+    perfect_subj_act_2: "~η~κῃς", "~η~κητον", "~η~κητε";
+    perfect_subj_act_3: "~η~κῃ", _, "~η~κωσῐ";
+    perfect_opt_act_1: "~η~κοιμῐ", _, "~η~κοιμεν";
+    perfect_opt_act_2: "~η~κοις", "~η~κοιτον", "~η~κοιτε";
+    perfect_opt_act_3: "~η~κοι", "~η~κοιτην", "~η~κοιεν";
+    perfect_imp_act_2: _, "~η~κετον", "~η~κετε";
+    perfect_imp_act_3: "~η~κετω", "~η~κετων", "~η~κοντων";
+    perfect_imp_mid_2: "~η~σο", _, _;
+    perfect_imp_mid_3: "~η~σθω", "~η~σθων", _;
+    pluperfect_act_1: "~η~κειν", _, "~η~κεμεν";
+    pluperfect_act_2: "~η~κεις", "~η~κετον", "~η~κετε";
+    pluperfect_act_3: "~η~κει", "~η~κετην", "~η~κεσᾰν";
+    pluperfect_mid_1: "~η~σμην", _, "~η~σμεθᾰ";
+    pluperfect_mid_2: "~η~σο", "~η~σθον", "~η~σθε";
+    pluperfect_mid_3: "~η~στο", "~η~σθην", "~η~τᾰτο";
+    infinitive_pres: "~ᾰ~ειν", "~ᾰ~εσθαι", _;
+    infinitive_fut: "~ᾰ~σειν", "~ᾰ~σεσθαι", "~ᾰ~σθησεσθαι";
+    infinitive_aor: "~ᾰ~σαι", "~ᾰ~σᾰσθαι", "~ᾰ~σθηναι";
+    infinitive_perf: "~η~κεναι", "~η~σθαι", _;
+    participle_pres: "~ᾰ~ων", "~ᾰ~ομενος", _;
+    participle_fut: "~ᾰ~σων", "~ᾰ~σομενος", "~ᾰ~σθησομενος";
+    participle_aor: "~ᾰ~σᾱς", "~ᾰ~σᾰμενος", "~ᾰ~σθεις";
+    participle_perf: "~η~κως", "~η~σμενος", _;
     ),
     // Δῐοικεω: 12 words (δῐοικοδομεω, ἐνοικεω, προσοικεω, κᾰτοικοφθορεω, κατοικονομεω, κᾰτοικοδομεω). Like Προσερχομαι, except in 274 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
     conjugation!("δῐοικεω", 12, "~οι~εω", like Προσερχομαι;
@@ -3889,138 +4074,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     infinitive_pres: "~ῐεναι", derived, _;
     participle_pres: "~ῐων", derived, _;
     ),
-    // Εὐθῡνω: 11 words (πληθῡνω, αἰσχῡνω, πλῡνω, μολῡνω, ὀξῡνω, ἐπᾰμῡνω). Like Γῡροω, except in 272 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("εὐθῡνω", 11, "~ῡνω", like Γῡροω;
-    ind_act_1: "~ῡνω", _, "~ῡνομεν";
-    ind_act_2: "~ῡνεις", "~ῡνετον", "~ῡνετε";
-    ind_act_3: "~ῡνει", _, "~ῡνουσῐ";
-    ind_mid_1: "~ῡνομαι", _, "~ῡνομεθᾰ";
-    ind_mid_2: "~ῡνῃ", "~ῡνεσθον", "~ῡνεσθε";
-    ind_mid_3: "~ῡνεται", _, "~ῡνονται";
-    subj_act_1: "~ῡνω", _, "~ῡνωμεν";
-    subj_act_2: "~ῡνῃς", "~ῡνητον", "~ῡνητε";
-    subj_act_3: "~ῡνῃ", _, "~ῡνωσῐ";
-    subj_mid_1: "~ῡνωμαι", _, "~ῡνωμεθᾰ";
-    subj_mid_2: "~ῡνῃ", "~ῡνησθον", "~ῡνησθε";
-    subj_mid_3: "~ῡνηται", _, "~ῡνωνται";
-    subj_pass_2: "~ῡνῃ", _, _;
-    opt_act_1: "~ῡνοιμῐ", _, "~ῡνοιμεν";
-    opt_act_2: "~ῡνοις", "~ῡνοιτον", "~ῡνοιτε";
-    opt_act_3: "~ῡνοι", "~ῡνοιτην", "~ῡνοιεν";
-    opt_mid_1: "~ῡνοιμην", _, "~ῡνοιμεθᾰ";
-    opt_mid_2: "~ῡνοιο", "~ῡνοισθον", "~ῡνοισθε";
-    opt_mid_3: "~ῡνοιτο", "~ῡνοισθην", "~ῡνοιντο";
-    imp_act_2: "~ῡνε", _, _;
-    imp_act_3: "~ῡνετω", "~ῡνετων", "~ῡνοντων";
-    imp_mid_2: "~ῡνου", _, "~ῡνεσθε";
-    imp_mid_3: "~ῡνεσθω", "~ῡνεσθων", "~ῡνεσθων";
-    imperfect_act_1: "ἐ~ῡνον", _, "ἐ~ῡνομεν";
-    imperfect_act_2: "ἐ~ῡνες", "ἐ~ῡνετον", "ἐ~ῡνετε";
-    imperfect_act_3: "ἐ~ῡνε", "ἐ~ῡνετην", "ἐ~ῡνον";
-    imperfect_mid_1: "ἐ~ῡνομην", _, "ἐ~ῡνομεθᾰ";
-    imperfect_mid_2: "ἐ~ῡνου", "ἐ~ῡνεσθον", "ἐ~ῡνεσθε";
-    imperfect_mid_3: "ἐ~ῡνετο", "ἐ~ῡνεσθην", "ἐ~ῡνοντο";
-    future_ind_act_1: "~ῠνω", _, "~ῠνοῡμεν";
-    future_ind_act_2: "~ῠνεῑς", "~ῠνεῑτον", "~ῠνεῑτε";
-    future_ind_act_3: "~ῠνεῑ", _, "~ῠνοῡσῐ";
-    future_ind_mid_1: "~ῠνοῡμαι", _, "~ῠνουμεθᾰ";
-    future_ind_mid_2: "~ῠνεῑ", "~ῠνεῑσθον", "~ῠνεῑσθε";
-    future_ind_mid_3: "~ῠνεῑται", _, "~ῠνοῡνται";
-    future_ind_pass_1: "~ῠνθησομαι", _, "~ῠνθησομεθᾰ";
-    future_ind_pass_2: "~ῠνθησῃ", "~ῠνθησεσθον", "~ῠνθησεσθε";
-    future_ind_pass_3: "~ῠνθησεται", _, "~ῠνθησονται";
-    future_opt_act_1: "~ῠνοιην", _, "~ῠνοῑμεν";
-    future_opt_act_2: "~ῠνοιης", "~ῠνοῑτον", "~ῠνοῑτε";
-    future_opt_act_3: "~ῠνοιη", "~ῠνοιτην", "~ῠνοῑεν";
-    future_opt_mid_1: "~ῠνοιμην", _, "~ῠνοιμεθᾰ";
-    future_opt_mid_2: "~ῠνοῑο", "~ῠνοῑσθον", "~ῠνοῑσθε";
-    future_opt_mid_3: "~ῠνοῑτο", "~ῠνοισθην", "~ῠνοῑντο";
-    future_opt_pass_1: "~ῠνθησοιμην", _, "~ῠνθησοιμεθᾰ";
-    future_opt_pass_2: "~ῠνθησοιο", "~ῠνθησοισθον", "~ῠνθησοισθε";
-    future_opt_pass_3: "~ῠνθησοιτο", "~ῠνθησοισθην", "~ῠνθησοιντο";
-    aorist_ind_act_1: "ἐ~ῡνᾰ", _, "ἐ~ῡνᾰμεν";
-    aorist_ind_act_2: "ἐ~ῡνᾰς", "ἐ~ῡνᾰτον", "ἐ~ῡνᾰτε";
-    aorist_ind_act_3: "ἐ~ῡνε", "ἐ~ῡνᾰτην", "ἐ~ῡνᾰν";
-    aorist_ind_mid_1: "ἐ~ῡνᾰμην", _, "ἐ~ῡνᾰμεθᾰ";
-    aorist_ind_mid_2: "ἐ~ῡνω", "ἐ~ῡνᾰσθον", "ἐ~ῡνᾰσθε";
-    aorist_ind_mid_3: "ἐ~ῡνᾰτο", "ἐ~ῡνᾰσθην", "ἐ~ῡνᾰντο";
-    aorist_ind_pass_1: "ἐ~ῡνθην", _, "ἐ~ῡνθημεν";
-    aorist_ind_pass_2: "ἐ~ῡνθης", "ἐ~ῡνθητον", "ἐ~ῡνθητε";
-    aorist_ind_pass_3: "ἐ~ῡνθη", "ἐ~ῡνθητην", "ἐ~ῡνθησᾰν";
-    aorist_subj_act_1: "~ῡνω", _, "~ῡνωμεν";
-    aorist_subj_act_2: "~ῡνῃς", "~ῡνητον", "~ῡνητε";
-    aorist_subj_act_3: "~ῡνῃ", _, "~ῡνωσῐ";
-    aorist_subj_mid_1: "~ῡνωμαι", _, "~ῡνωμεθᾰ";
-    aorist_subj_mid_2: "~ῡνῃ", "~ῡνησθον", "~ῡνησθε";
-    aorist_subj_mid_3: "~ῡνηται", _, "~ῡνωνται";
-    aorist_subj_pass_1: "~ῡνθω", _, "~ῡνθωμεν";
-    aorist_subj_pass_2: "~ῡνθῃς", "~ῡνθητον", "~ῡνθητε";
-    aorist_subj_pass_3: "~ῡνθῃ", _, "~ῡνθωσῐ";
-    aorist_opt_act_1: "~ῡναιμῐ", _, "~ῡναιμεν";
-    aorist_opt_act_2: "~ῡνειᾰς", "~ῡναιτον", "~ῡναιτε";
-    aorist_opt_act_3: "~ῡνειε", "~ῡναιτην", "~ῡνειᾰν";
-    aorist_opt_mid_1: "~ῡναιμην", _, "~ῡναιμεθᾰ";
-    aorist_opt_mid_2: "~ῡναιο", "~ῡναισθον", "~ῡναισθε";
-    aorist_opt_mid_3: "~ῡναιτο", "~ῡναισθην", "~ῡναιντο";
-    aorist_opt_pass_1: "~ῡνθειην", _, "~ῡνθεῑμεν";
-    aorist_opt_pass_2: "~ῡνθειης", "~ῡνθεῑτον", "~ῡνθεῑτε";
-    aorist_opt_pass_3: "~ῡνθειη", "~ῡνθειτην", "~ῡνθεῑεν";
-    aorist_imp_act_2: "~ῡνον", "~ῡνᾰτον", "~ῡνᾰτε";
-    aorist_imp_act_3: "~ῡνᾰτω", "~ῡνᾰτων", "~ῡνᾰντων";
-    aorist_imp_mid_2: "~ῡναι", "~ῡνᾰσθον", "~ῡνᾰσθε";
-    aorist_imp_mid_3: "~ῡνᾰσθω", "~ῡνᾰσθων", _;
-    aorist_imp_pass_2: "~ῡνθητῐ", _, _;
-    aorist_imp_pass_3: "~ῡνθητω", "~ῡνθητων", "~ῡνθεντων";
-    perfect_ind_act_1: "%ε~ῠγκᾰ", _, "%ε~ῠγκᾰμεν";
-    perfect_ind_act_2: "%ε~ῠγκᾰς", "%ε~ῠγκᾰτον", "%ε~ῠγκᾰτε";
-    perfect_ind_act_3: "%ε~ῠγκε", _, "%ε~ῠγκᾱσῐ";
-    perfect_ind_mid_1: "%ε~ῠσμαι", _, "%ε~ῠσμεθᾰ";
-    perfect_ind_mid_2: "%ε~ῠνσαι", "%ε~ῠνθον", "%ε~ῠνθε";
-    perfect_ind_mid_3: "%ε~ῠνται", _, "%ε~ῠνᾰται";
-    perfect_subj_act_1: "%ε~ῠγκω", _, "%ε~ῠγκωμεν";
-    perfect_subj_act_2: "%ε~ῠγκῃς", "%ε~ῠγκητον", "%ε~ῠγκητε";
-    perfect_subj_act_3: "%ε~ῠγκῃ", _, "%ε~ῠγκωσῐ";
-    perfect_opt_act_1: "%ε~ῠγκοιμῐ", _, "%ε~ῠγκοιμεν";
-    perfect_opt_act_2: "%ε~ῠγκοις", "%ε~ῠγκοιτον", "%ε~ῠγκοιτε";
-    perfect_opt_act_3: "%ε~ῠγκοι", "%ε~ῠγκοιτην", "%ε~ῠγκοιεν";
-    perfect_imp_act_2: _, "%ε~ῠγκετον", "%ε~ῠγκετε";
-    perfect_imp_act_3: "%ε~ῠγκετω", "%ε~ῠγκετων", "%ε~ῠγκοντων";
-    perfect_imp_mid_2: "%ε~ῠνσο", _, _;
-    perfect_imp_mid_3: "%ε~ῠνθω", "%ε~ῠνθων", _;
-    pluperfect_act_1: "ἐ%ε~ῠγκειν", _, "ἐ%ε~ῠγκεμεν";
-    pluperfect_act_2: "ἐ%ε~ῠγκεις", "ἐ%ε~ῠγκετον", "ἐ%ε~ῠγκετε";
-    pluperfect_act_3: "ἐ%ε~ῠγκει", "ἐ%ε~ῠγκετην", "ἐ%ε~ῠγκεσᾰν";
-    pluperfect_mid_1: "ἐ%ε~ῠσμην", _, "ἐ%ε~ῠσμεθᾰ";
-    pluperfect_mid_2: "ἐ%ε~ῠνσο", "ἐ%ε~ῠνθον", "ἐ%ε~ῠνθε";
-    pluperfect_mid_3: "ἐ%ε~ῠντο", "ἐ%ε~ῠνθην", "ἐ%ε~ῠνᾰτο";
-    infinitive_pres: "~ῡνειν", "~ῡνεσθαι", _;
-    infinitive_fut: "~ῠνεῑν", "~ῠνεῑσθαι", "~ῠνθησεσθαι";
-    infinitive_aor: "~ῡναι", "~ῡνᾰσθαι", "~ῡνθηναι";
-    infinitive_perf: "%ε~ῠγκεναι", "%ε~ῠνθαι", _;
-    participle_pres: "~ῡνων", "~ῡνομενος", _;
-    participle_fut: "~ῠνων", "~ῠνουμενος", "~ῠνθησομενος";
-    participle_aor: "~ῡνᾱς", "~ῡνᾰμενος", "~ῡνθεις";
-    participle_perf: "%ε~ῠγκως", "%ε~ῠσμενος", _;
-    ),
-    // Ψηφῐζω: 11 words (γνωρῐζω, ψηφῐζω, σχηματῐζω, κτενῐζω, σπᾰδονῐζω, σπᾰνῐζω). Like Κτῐζω, except in 34 cells: future_ind_act_1 sg, future_ind_act_1 pl, future_ind_act_2 sg, future_ind_act_2 du, future_ind_act_2 pl, future_ind_act_3 sg, ….
-    conjugation!("ψηφῐζω", 11, "~ζω", like Κτῐζω;
-    future_ind_act_1: "~ω", _, "~οῡμεν";
-    future_ind_act_2: "~εῑς", "~εῑτον", "~εῑτε";
-    future_ind_act_3: "~εῑ", _, "~οῡσῐ|~οῡσῐν";
-    future_ind_mid_1: "~οῡμαι", _, "~ουμεθᾰ";
-    future_ind_mid_2: "~εῑ|~ῃ", "~εῑσθον", "~εῑσθε";
-    future_ind_mid_3: "~εῑται", _, "~οῡνται";
-    future_opt_act_1: "~οιην|~οῑμῐ", _, "~οῑμεν|~οιημεν";
-    future_opt_act_2: "~οιης|~οῑς", "~οῑτον|~οιητον", "~οῑτε|~οιητε";
-    future_opt_act_3: "~οιη|~οῑ", "~οιτην|~οιητην", "~οῑεν|~οιησᾰν";
-    future_opt_mid_1: "~οιμην", _, "~οιμεθᾰ";
-    future_opt_mid_2: "~οῑο", "~οῑσθον", "~οῑσθε";
-    future_opt_mid_3: "~οῑτο", "~οισθην", "~οῑντο";
-    infinitive_fut: "~εῑν", "~εῑσθαι", _;
-    participle_fut: "~ων", "~ουμενος", _;
-    ),
-    // Λῡω: 11 words (λῡω, δῡω, καμμῡω, καταμῡω, μῡω, κᾰσσῡω). Like Παυω, except in 286 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("λῡω", 11, "~ῡω", like Παυω;
+    // Λῡω: 11 words (λῡω, δῡω, καμμῡω, καταμῡω, μῡω, κᾰσσῡω). Like Βουλευω, except in 289 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("λῡω", 11, "~ῡω", like Βουλευω;
     ind_act_1: "~ῡω", _, "~ῡομεν";
     ind_act_2: "~ῡεις", "~ῡετον", "~ῡετε";
     ind_act_3: "~ῡει", _, "~ῡουσῐ|~ῡουσῐν";
@@ -4041,6 +4096,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     opt_mid_1: "~ῡοιμην", _, "~ῡοιμεθᾰ";
     opt_mid_2: "~ῡοιο", "~ῡοισθον", "~ῡοισθε";
     opt_mid_3: "~ῡοιτο", "~ῡοισθην", "~ῡοιντο";
+    imp_act_2: "~ῡε", _, _;
     imp_act_3: "~ῡετω", "~ῡετων", "~ῡοντων";
     imp_mid_2: "~ῡου", _, "~ῡεσθε";
     imp_mid_3: "~ῡεσθω", "~ῡεσθων", "~ῡεσθων";
@@ -4095,9 +4151,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     aorist_opt_pass_1: "~ῠθειην", _, "~ῠθεῑμεν|~ῠθειημεν";
     aorist_opt_pass_2: "~ῠθειης", "~ῠθεῑτον|~ῠθειητον", "~ῠθεῑτε|~ῠθειητε";
     aorist_opt_pass_3: "~ῠθειη", "~ῠθειτην|~ῠθειητην", "~ῠθεῑεν|~ῠθειησᾰν";
-    aorist_imp_act_2: _, "~ῡσᾰτον", "~ῡσᾰτε";
+    aorist_imp_act_2: "~ῡσον", "~ῡσᾰτον", "~ῡσᾰτε";
     aorist_imp_act_3: "~ῡσᾰτω", "~ῡσᾰτων", "~ῡσᾰντων";
-    aorist_imp_mid_2: _, "~ῡσᾰσθον", "~ῡσᾰσθε";
+    aorist_imp_mid_2: "~ῡσαι", "~ῡσᾰσθον", "~ῡσᾰσθε";
     aorist_imp_mid_3: "~ῡσᾰσθω", "~ῡσᾰσθων", _;
     aorist_imp_pass_2: "~ῠθητῐ", _, _;
     aorist_imp_pass_3: "~ῠθητω", "~ῠθητων", "~ῠθεντων";
@@ -4140,38 +4196,32 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_perf: "%ε~ῠκως", "%ε~ῠμενος", _;
     participle_futp: _, "%ε~ῡσομενος", _;
     ),
-    // Ψῑλοω: 11 words (ζηλοω, στενοω, ζῠγοω, σκοτοω, πτεροω, ψῑλοω). Like Γῡροω, except in 66 cells: future_ind_act_3 pl, future_ind_pass_2 sg, aorist_subj_pass_3 pl, aorist_opt_pass_1 pl, aorist_opt_pass_2 du, aorist_opt_pass_2 pl, ….
-    conjugation!("ψῑλοω", 11, "~οω", like Γῡροω;
-    future_ind_act_3: _, _, "~ωσουσῐ|~ωσουσῐν";
-    future_ind_pass_2: "~ωθησῃ|~ωθησει", _, _;
-    aorist_subj_pass_3: _, _, "~ωθωσῐ|~ωθωσῐν";
-    aorist_opt_pass_1: _, _, "~ωθεῑμεν|~ωθειημεν";
-    aorist_opt_pass_2: _, "~ωθεῑτον|~ωθειητον", "~ωθεῑτε|~ωθειητε";
-    aorist_opt_pass_3: _, "~ωθειτην|~ωθειητην", "~ωθεῑεν|~ωθειησᾰν";
-    perfect_ind_act_1: "ἐ~ωκᾰ", _, "ἐ~ωκᾰμεν";
-    perfect_ind_act_2: "ἐ~ωκᾰς", "ἐ~ωκᾰτον", "ἐ~ωκᾰτε";
-    perfect_ind_act_3: "ἐ~ωκε|ἐ~ωκεν", _, "ἐ~ωκᾱσῐ|ἐ~ωκᾱσῐν";
-    perfect_ind_mid_1: "ἐ~ωμαι", _, "ἐ~ωμεθᾰ";
-    perfect_ind_mid_2: "ἐ~ωσαι", "ἐ~ωσθον", "ἐ~ωσθε";
-    perfect_ind_mid_3: "ἐ~ωται", _, "ἐ~ωνται";
-    perfect_subj_act_1: "ἐ~ωκω", _, "ἐ~ωκωμεν";
-    perfect_subj_act_2: "ἐ~ωκῃς", "ἐ~ωκητον", "ἐ~ωκητε";
-    perfect_subj_act_3: "ἐ~ωκῃ", _, "ἐ~ωκωσῐ|ἐ~ωκωσῐν";
-    perfect_opt_act_1: "ἐ~ωκοιμῐ|ἐ~ωκοιην", _, "ἐ~ωκοιμεν";
-    perfect_opt_act_2: "ἐ~ωκοις|ἐ~ωκοιης", "ἐ~ωκοιτον", "ἐ~ωκοιτε";
-    perfect_opt_act_3: "ἐ~ωκοι|ἐ~ωκοιη", "ἐ~ωκοιτην", "ἐ~ωκοιεν";
-    perfect_imp_act_2: "ἐ~ωκε", "ἐ~ωκετον", "ἐ~ωκετε";
-    perfect_imp_act_3: "ἐ~ωκετω", "ἐ~ωκετων", "ἐ~ωκοντων";
-    perfect_imp_mid_2: "ἐ~ωσο", _, _;
-    perfect_imp_mid_3: "ἐ~ωσθω", "ἐ~ωσθων", _;
-    pluperfect_act_1: "ἐ~ωκειν|ἐ~ωκη", _, "ἐ~ωκεμεν";
-    pluperfect_act_2: "ἐ~ωκεις|ἐ~ωκης", "ἐ~ωκετον", "ἐ~ωκετε";
-    pluperfect_act_3: "ἐ~ωκει|ἐ~ωκειν", "ἐ~ωκετην", "ἐ~ωκεσᾰν";
-    pluperfect_mid_1: "ἐ~ωμην", _, "ἐ~ωμεθᾰ";
-    pluperfect_mid_2: "ἐ~ωσο", "ἐ~ωσθον", "ἐ~ωσθε";
-    pluperfect_mid_3: "ἐ~ωτο", "ἐ~ωσθην", "ἐ~ωντο";
-    infinitive_perf: "ἐ~ωκεναι", "ἐ~ωσθαι", _;
-    participle_perf: "ἐ~ωκως", "ἐ~ωμενος", _;
+    // Παυω: 10 words (γευω, παυω, κελευω, κρουω, κᾰτᾰδυω, χναυω). Like Βουλευω, except in 49 cells: imp_act_2 sg, future_ind_pass_1 sg, future_ind_pass_1 pl, future_ind_pass_2 sg, future_ind_pass_2 du, future_ind_pass_2 pl, ….
+    conjugation!("παυω", 10, "~υω", like Βουλευω;
+    imp_act_2: "~ῡε", _, _;
+    future_ind_pass_1: "~υσθησομαι", _, "~υσθησομεθᾰ";
+    future_ind_pass_2: "~υσθησῃ", "~υσθησεσθον", "~υσθησεσθε";
+    future_ind_pass_3: "~υσθησεται", _, "~υσθησονται";
+    future_opt_pass_1: "~υσθησοιμην", _, "~υσθησοιμεθᾰ";
+    future_opt_pass_2: "~υσθησοιο", "~υσθησοισθον", "~υσθησοισθε";
+    future_opt_pass_3: "~υσθησοιτο", "~υσθησοισθην", "~υσθησοιντο";
+    aorist_ind_pass_1: "ἐ~υσθην", _, "ἐ~υσθημεν";
+    aorist_ind_pass_2: "ἐ~υσθης", "ἐ~υσθητον", "ἐ~υσθητε";
+    aorist_ind_pass_3: "ἐ~υσθη", "ἐ~υσθητην", "ἐ~υσθησᾰν";
+    aorist_subj_pass_1: "~υσθω", _, "~υσθωμεν";
+    aorist_subj_pass_2: "~υσθῃς", "~υσθητον", "~υσθητε";
+    aorist_subj_pass_3: "~υσθῃ", _, "~υσθωσῐ";
+    aorist_opt_pass_1: "~υσθειην", _, "~υσθεῑμεν";
+    aorist_opt_pass_2: "~υσθειης", "~υσθεῑτον", "~υσθεῑτε";
+    aorist_opt_pass_3: "~υσθειη", "~υσθειτην", "~υσθεῑεν";
+    aorist_imp_act_2: "~ῡσον", _, _;
+    aorist_imp_mid_2: "~ῡσαι", _, _;
+    aorist_imp_pass_2: "~υσθητῐ", _, _;
+    aorist_imp_pass_3: "~υσθητω", "~υσθητων", "~υσθεντων";
+    infinitive_fut: _, _, "~υσθησεσθαι";
+    infinitive_aor: _, _, "~υσθηναι";
+    participle_fut: _, _, "~υσθησομενος";
+    participle_aor: _, _, "~υσθεις";
     ),
     // Ἐνᾰντῐοομαι: 10 words (στραγγᾰλοομαι, χειροομαι, ἀπιχθυοομαι, κᾰτοικειοομαι, ἐνᾰντῐοομαι, διπλᾰσῐοομαι). Like Γῡροω, except in 122 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
     conjugation!("ἐνᾰντῐοομαι", 10, "~οομαι", like Γῡροω;
@@ -4371,7 +4421,41 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: "~ασᾱς", "~ασᾰμενος", "~ασθεις";
     participle_perf: "%ε~ακως", "%ε~αμενος", _;
     ),
-    // Ἀφῑημῐ: 10 words (ἀφῑημῐ, σῠνῑημῐ, ἐπᾰνῐημῐ, προϊημι, ἀνιημῐ, ξῠνῑημῐ). Like Θωᾰω, except in 185 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    // Αἱρεω: 10 words (πωλεω, αἱρεω, ἀγραυλεω, αἰνεω, βῑνεω, ὑμνεω). Like Ἐχω, except in 74 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("αἱρεω", 10, "~εω", like Ἐχω;
+    ind_act_1: "~εω", _, "~εομεν";
+    ind_act_2: "~εεις", "~εετον", "~εετε";
+    ind_act_3: "~εει", _, "~εουσῐ";
+    ind_mid_1: "~εομαι", _, "~εομεθᾰ";
+    ind_mid_2: "~εῃ", "~εεσθον", "~εεσθε";
+    ind_mid_3: "~εεται", _, "~εονται";
+    subj_act_1: "~εω", _, "~εωμεν";
+    subj_act_2: "~εῃς", "~εητον", "~εητε";
+    subj_act_3: "~εῃ", _, "~εωσῐ";
+    subj_mid_1: "~εωμαι", _, "~εωμεθᾰ";
+    subj_mid_2: "~εῃ", "~εησθον", "~εησθε";
+    subj_mid_3: "~εηται", _, "~εωνται";
+    subj_pass_2: "~εῃ", _, _;
+    opt_act_1: "~εοιμῐ", _, "~εοιμεν";
+    opt_act_2: "~εοις", "~εοιτον", "~εοιτε";
+    opt_act_3: "~εοι", "~εοιτην", "~εοιεν";
+    opt_mid_1: "~εοιμην", _, "~εοιμεθᾰ";
+    opt_mid_2: "~εοιο", "~εοισθον", "~εοισθε";
+    opt_mid_3: "~εοιτο", "~εοισθην", "~εοιντο";
+    imp_act_2: "~εε", _, _;
+    imp_act_3: "~εετω", "~εετων", "~εοντων";
+    imp_mid_2: "~εου", _, "~εεσθε";
+    imp_mid_3: "~εεσθω", "~εεσθων", "~εεσθων";
+    imperfect_act_1: "ἐ~εον", _, "ἐ~εομεν";
+    imperfect_act_2: "ἐ~εες", "ἐ~εετον", "ἐ~εετε";
+    imperfect_act_3: "ἐ~εε", "ἐ~εετην", "ἐ~εον";
+    imperfect_mid_1: "ἐ~εομην", _, "ἐ~εομεθᾰ";
+    imperfect_mid_2: "ἐ~εου", "ἐ~εεσθον", "ἐ~εεσθε";
+    imperfect_mid_3: "ἐ~εετο", "ἐ~εεσθην", "ἐ~εοντο";
+    infinitive_pres: "~εειν", "~εεσθαι", _;
+    participle_pres: "~εων", "~εομενος", _;
+    ),
+    // Ἀφῑημῐ: 10 words (ἀφῑημῐ, σῠνῑημῐ, ἐπᾰνῐημῐ, προϊημῐ, ἀνιημῐ, ξῠνῑημῐ). Like Θωᾰω, except in 185 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
     conjugation!("ἀφῑημῐ", 10, "~ῑημῐ", like Θωᾰω;
     ind_act_1: "~ῑημῐ", _, "~ῑεμεν";
     ind_act_2: "~ῑης", "~ῑετον", "~ῑετε";
@@ -4454,6 +4538,39 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_fut: "~ησων", "~ησομενος", _;
     participle_aor: "~εις", _, _;
     participle_perf: "~εικως", "~ειμενος", _;
+    ),
+    // Ψῑλοω: 9 words (ἱδροω, στενοω, πτεροω, ψῑλοω, κεραυνοω, φορτοω). Like Γῡροω, except in 66 cells: future_ind_act_3 pl, future_ind_pass_2 sg, aorist_subj_pass_3 pl, aorist_opt_pass_1 pl, aorist_opt_pass_2 du, aorist_opt_pass_2 pl, ….
+    conjugation!("ψῑλοω", 9, "~οω", like Γῡροω;
+    future_ind_act_3: _, _, "~ωσουσῐ|~ωσουσῐν";
+    future_ind_pass_2: "~ωθησῃ|~ωθησει", _, _;
+    aorist_subj_pass_3: _, _, "~ωθωσῐ|~ωθωσῐν";
+    aorist_opt_pass_1: _, _, "~ωθεῑμεν|~ωθειημεν";
+    aorist_opt_pass_2: _, "~ωθεῑτον|~ωθειητον", "~ωθεῑτε|~ωθειητε";
+    aorist_opt_pass_3: _, "~ωθειτην|~ωθειητην", "~ωθεῑεν|~ωθειησᾰν";
+    perfect_ind_act_1: "ἐ~ωκᾰ", _, "ἐ~ωκᾰμεν";
+    perfect_ind_act_2: "ἐ~ωκᾰς", "ἐ~ωκᾰτον", "ἐ~ωκᾰτε";
+    perfect_ind_act_3: "ἐ~ωκε|ἐ~ωκεν", _, "ἐ~ωκᾱσῐ|ἐ~ωκᾱσῐν";
+    perfect_ind_mid_1: "ἐ~ωμαι", _, "ἐ~ωμεθᾰ";
+    perfect_ind_mid_2: "ἐ~ωσαι", "ἐ~ωσθον", "ἐ~ωσθε";
+    perfect_ind_mid_3: "ἐ~ωται", _, "ἐ~ωνται";
+    perfect_subj_act_1: "ἐ~ωκω", _, "ἐ~ωκωμεν";
+    perfect_subj_act_2: "ἐ~ωκῃς", "ἐ~ωκητον", "ἐ~ωκητε";
+    perfect_subj_act_3: "ἐ~ωκῃ", _, "ἐ~ωκωσῐ|ἐ~ωκωσῐν";
+    perfect_opt_act_1: "ἐ~ωκοιμῐ|ἐ~ωκοιην", _, "ἐ~ωκοιμεν";
+    perfect_opt_act_2: "ἐ~ωκοις|ἐ~ωκοιης", "ἐ~ωκοιτον", "ἐ~ωκοιτε";
+    perfect_opt_act_3: "ἐ~ωκοι|ἐ~ωκοιη", "ἐ~ωκοιτην", "ἐ~ωκοιεν";
+    perfect_imp_act_2: "ἐ~ωκε", "ἐ~ωκετον", "ἐ~ωκετε";
+    perfect_imp_act_3: "ἐ~ωκετω", "ἐ~ωκετων", "ἐ~ωκοντων";
+    perfect_imp_mid_2: "ἐ~ωσο", _, _;
+    perfect_imp_mid_3: "ἐ~ωσθω", "ἐ~ωσθων", _;
+    pluperfect_act_1: "ἐ~ωκειν|ἐ~ωκη", _, "ἐ~ωκεμεν";
+    pluperfect_act_2: "ἐ~ωκεις|ἐ~ωκης", "ἐ~ωκετον", "ἐ~ωκετε";
+    pluperfect_act_3: "ἐ~ωκει|ἐ~ωκειν", "ἐ~ωκετην", "ἐ~ωκεσᾰν";
+    pluperfect_mid_1: "ἐ~ωμην", _, "ἐ~ωμεθᾰ";
+    pluperfect_mid_2: "ἐ~ωσο", "ἐ~ωσθον", "ἐ~ωσθε";
+    pluperfect_mid_3: "ἐ~ωτο", "ἐ~ωσθην", "ἐ~ωντο";
+    infinitive_perf: "ἐ~ωκεναι", "ἐ~ωσθαι", _;
+    participle_perf: "ἐ~ωκως", "ἐ~ωμενος", _;
     ),
     // Μᾰντευομαι: 9 words (μᾰντευομαι, κουρευομαι, ὀττευομαι, λοιμευομαι, ἀστειευομαι, εἰρωνευομαι). Like Βουλευω, except in 131 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
     conjugation!("μᾰντευομαι", 9, "~υομαι", like Βουλευω;
@@ -5062,161 +5179,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: "~ξων", "~ξομενος", _;
     participle_futp: _, "%ε~ξομενος", _;
     ),
-    // Αἱρεω: 8 words (πωλεω, αἱρεω, ἀγραυλεω, αἰνεω, βῑνεω, ὁμᾰρτεω). Like Ἐχω, except in 74 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("αἱρεω", 8, "~εω", like Ἐχω;
-    ind_act_1: "~εω", _, "~εομεν";
-    ind_act_2: "~εεις", "~εετον", "~εετε";
-    ind_act_3: "~εει", _, "~εουσῐ";
-    ind_mid_1: "~εομαι", _, "~εομεθᾰ";
-    ind_mid_2: "~εῃ", "~εεσθον", "~εεσθε";
-    ind_mid_3: "~εεται", _, "~εονται";
-    subj_act_1: "~εω", _, "~εωμεν";
-    subj_act_2: "~εῃς", "~εητον", "~εητε";
-    subj_act_3: "~εῃ", _, "~εωσῐ";
-    subj_mid_1: "~εωμαι", _, "~εωμεθᾰ";
-    subj_mid_2: "~εῃ", "~εησθον", "~εησθε";
-    subj_mid_3: "~εηται", _, "~εωνται";
-    subj_pass_2: "~εῃ", _, _;
-    opt_act_1: "~εοιμῐ", _, "~εοιμεν";
-    opt_act_2: "~εοις", "~εοιτον", "~εοιτε";
-    opt_act_3: "~εοι", "~εοιτην", "~εοιεν";
-    opt_mid_1: "~εοιμην", _, "~εοιμεθᾰ";
-    opt_mid_2: "~εοιο", "~εοισθον", "~εοισθε";
-    opt_mid_3: "~εοιτο", "~εοισθην", "~εοιντο";
-    imp_act_2: "~εε", _, _;
-    imp_act_3: "~εετω", "~εετων", "~εοντων";
-    imp_mid_2: "~εου", _, "~εεσθε";
-    imp_mid_3: "~εεσθω", "~εεσθων", "~εεσθων";
-    imperfect_act_1: "ἐ~εον", _, "ἐ~εομεν";
-    imperfect_act_2: "ἐ~εες", "ἐ~εετον", "ἐ~εετε";
-    imperfect_act_3: "ἐ~εε", "ἐ~εετην", "ἐ~εον";
-    imperfect_mid_1: "ἐ~εομην", _, "ἐ~εομεθᾰ";
-    imperfect_mid_2: "ἐ~εου", "ἐ~εεσθον", "ἐ~εεσθε";
-    imperfect_mid_3: "ἐ~εετο", "ἐ~εεσθην", "ἐ~εοντο";
-    infinitive_pres: "~εειν", "~εεσθαι", _;
-    participle_pres: "~εων", "~εομενος", _;
-    ),
-    // Ἀφᾰνῐζω: 8 words (ἀτενῐζω, ἀθροῐζω, ἀνδρᾰποδῐζω, ἀφᾰνῐζω, ἀγχονῐζω, ἀνθῐζω). Like Ἐχω, except in 289 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("ἀφᾰνῐζω", 8, "ἀ~ῐζω", like Ἐχω;
-    ind_act_1: "ἀ~ῐζω", _, "ἀ~ῐζομεν";
-    ind_act_2: "ἀ~ῐζεις", "ἀ~ῐζετον", "ἀ~ῐζετε";
-    ind_act_3: "ἀ~ῐζει", _, "ἀ~ῐζουσῐ";
-    ind_mid_1: "ἀ~ῐζομαι", _, "ἀ~ῐζομεθᾰ";
-    ind_mid_2: "ἀ~ῐζῃ", "ἀ~ῐζεσθον", "ἀ~ῐζεσθε";
-    ind_mid_3: "ἀ~ῐζεται", _, "ἀ~ῐζονται";
-    subj_act_1: "ἀ~ῐζω", _, "ἀ~ῐζωμεν";
-    subj_act_2: "ἀ~ῐζῃς", "ἀ~ῐζητον", "ἀ~ῐζητε";
-    subj_act_3: "ἀ~ῐζῃ", _, "ἀ~ῐζωσῐ";
-    subj_mid_1: "ἀ~ῐζωμαι", _, "ἀ~ῐζωμεθᾰ";
-    subj_mid_2: "ἀ~ῐζῃ", "ἀ~ῐζησθον", "ἀ~ῐζησθε";
-    subj_mid_3: "ἀ~ῐζηται", _, "ἀ~ῐζωνται";
-    subj_pass_2: "ἀ~ῐζῃ", _, _;
-    opt_act_1: "ἀ~ῐζοιμῐ", _, "ἀ~ῐζοιμεν";
-    opt_act_2: "ἀ~ῐζοις", "ἀ~ῐζοιτον", "ἀ~ῐζοιτε";
-    opt_act_3: "ἀ~ῐζοι", "ἀ~ῐζοιτην", "ἀ~ῐζοιεν";
-    opt_mid_1: "ἀ~ῐζοιμην", _, "ἀ~ῐζοιμεθᾰ";
-    opt_mid_2: "ἀ~ῐζοιο", "ἀ~ῐζοισθον", "ἀ~ῐζοισθε";
-    opt_mid_3: "ἀ~ῐζοιτο", "ἀ~ῐζοισθην", "ἀ~ῐζοιντο";
-    imp_act_2: "ἀ~ῐζε", _, _;
-    imp_act_3: "ἀ~ῐζετω", "ἀ~ῐζετων", "ἀ~ῐζοντων";
-    imp_mid_2: "ἀ~ῐζου", _, "ἀ~ῐζεσθε";
-    imp_mid_3: "ἀ~ῐζεσθω", "ἀ~ῐζεσθων", "ἀ~ῐζεσθων";
-    imperfect_act_1: "ἠ~ῐζον", _, "ἠ~ῐζομεν";
-    imperfect_act_2: "ἠ~ῐζες", "ἠ~ῐζετον", "ἠ~ῐζετε";
-    imperfect_act_3: "ἠ~ῐζε", "ἠ~ῐζετην", "ἠ~ῐζον";
-    imperfect_mid_1: "ἠ~ῐζομην", _, "ἠ~ῐζομεθᾰ";
-    imperfect_mid_2: "ἠ~ῐζου", "ἠ~ῐζεσθον", "ἠ~ῐζεσθε";
-    imperfect_mid_3: "ἠ~ῐζετο", "ἠ~ῐζεσθην", "ἠ~ῐζοντο";
-    future_ind_act_1: "ἀ~ῐω", _, "ἀ~ῐοῡμεν";
-    future_ind_act_2: "ἀ~ῐεῑς", "ἀ~ῐεῑτον", "ἀ~ῐεῑτε";
-    future_ind_act_3: "ἀ~ῐεῑ", _, "ἀ~ῐοῡσῐ";
-    future_ind_mid_1: "ἀ~ῐοῡμαι", _, "ἀ~ῐουμεθᾰ";
-    future_ind_mid_2: "ἀ~ῐεῑ", "ἀ~ῐεῑσθον", "ἀ~ῐεῑσθε";
-    future_ind_mid_3: "ἀ~ῐεῑται", _, "ἀ~ῐοῡνται";
-    future_ind_pass_1: "ἀ~ῐσθησομαι", _, "ἀ~ῐσθησομεθᾰ";
-    future_ind_pass_2: "ἀ~ῐσθησῃ", "ἀ~ῐσθησεσθον", "ἀ~ῐσθησεσθε";
-    future_ind_pass_3: "ἀ~ῐσθησεται", _, "ἀ~ῐσθησονται";
-    future_opt_act_1: "ἀ~ῐοιην", _, "ἀ~ῐοῑμεν";
-    future_opt_act_2: "ἀ~ῐοιης", "ἀ~ῐοῑτον", "ἀ~ῐοῑτε";
-    future_opt_act_3: "ἀ~ῐοιη", "ἀ~ῐοιτην", "ἀ~ῐοῑεν";
-    future_opt_mid_1: "ἀ~ῐοιμην", _, "ἀ~ῐοιμεθᾰ";
-    future_opt_mid_2: "ἀ~ῐοῑο", "ἀ~ῐοῑσθον", "ἀ~ῐοῑσθε";
-    future_opt_mid_3: "ἀ~ῐοῑτο", "ἀ~ῐοισθην", "ἀ~ῐοῑντο";
-    future_opt_pass_1: "ἀ~ῐσθησοιμην", _, "ἀ~ῐσθησοιμεθᾰ";
-    future_opt_pass_2: "ἀ~ῐσθησοιο", "ἀ~ῐσθησοισθον", "ἀ~ῐσθησοισθε";
-    future_opt_pass_3: "ἀ~ῐσθησοιτο", "ἀ~ῐσθησοισθην", "ἀ~ῐσθησοιντο";
-    aorist_ind_act_1: "ἠ~ῐσᾰ", _, "ἠ~ῐσᾰμεν";
-    aorist_ind_act_2: "ἠ~ῐσᾰς", "ἠ~ῐσᾰτον", "ἠ~ῐσᾰτε";
-    aorist_ind_act_3: "ἠ~ῐσε", "ἠ~ῐσᾰτην", "ἠ~ῐσᾰν";
-    aorist_ind_mid_1: "ἠ~ῐσᾰμην", _, "ἠ~ῐσᾰμεθᾰ";
-    aorist_ind_mid_2: "ἠ~ῐσω", "ἠ~ῐσᾰσθον", "ἠ~ῐσᾰσθε";
-    aorist_ind_mid_3: "ἠ~ῐσᾰτο", "ἠ~ῐσᾰσθην", "ἠ~ῐσᾰντο";
-    aorist_ind_pass_1: "ἠ~ῐσθην", _, "ἠ~ῐσθημεν";
-    aorist_ind_pass_2: "ἠ~ῐσθης", "ἠ~ῐσθητον", "ἠ~ῐσθητε";
-    aorist_ind_pass_3: "ἠ~ῐσθη", "ἠ~ῐσθητην", "ἠ~ῐσθησᾰν";
-    aorist_subj_act_1: "ἀ~ῐσω", _, "ἀ~ῐσωμεν";
-    aorist_subj_act_2: "ἀ~ῐσῃς", "ἀ~ῐσητον", "ἀ~ῐσητε";
-    aorist_subj_act_3: "ἀ~ῐσῃ", _, "ἀ~ῐσωσῐ";
-    aorist_subj_mid_1: "ἀ~ῐσωμαι", _, "ἀ~ῐσωμεθᾰ";
-    aorist_subj_mid_2: "ἀ~ῐσῃ", "ἀ~ῐσησθον", "ἀ~ῐσησθε";
-    aorist_subj_mid_3: "ἀ~ῐσηται", _, "ἀ~ῐσωνται";
-    aorist_subj_pass_1: "ἀ~ῐσθω", _, "ἀ~ῐσθωμεν";
-    aorist_subj_pass_2: "ἀ~ῐσθῃς", "ἀ~ῐσθητον", "ἀ~ῐσθητε";
-    aorist_subj_pass_3: "ἀ~ῐσθῃ", _, "ἀ~ῐσθωσῐ";
-    aorist_opt_act_1: "ἀ~ῐσαιμῐ", _, "ἀ~ῐσαιμεν";
-    aorist_opt_act_2: "ἀ~ῐσειᾰς", "ἀ~ῐσαιτον", "ἀ~ῐσαιτε";
-    aorist_opt_act_3: "ἀ~ῐσειε", "ἀ~ῐσαιτην", "ἀ~ῐσειᾰν";
-    aorist_opt_mid_1: "ἀ~ῐσαιμην", _, "ἀ~ῐσαιμεθᾰ";
-    aorist_opt_mid_2: "ἀ~ῐσαιο", "ἀ~ῐσαισθον", "ἀ~ῐσαισθε";
-    aorist_opt_mid_3: "ἀ~ῐσαιτο", "ἀ~ῐσαισθην", "ἀ~ῐσαιντο";
-    aorist_opt_pass_1: "ἀ~ῐσθειην", _, "ἀ~ῐσθεῑμεν";
-    aorist_opt_pass_2: "ἀ~ῐσθειης", "ἀ~ῐσθεῑτον", "ἀ~ῐσθεῑτε";
-    aorist_opt_pass_3: "ἀ~ῐσθειη", "ἀ~ῐσθειτην", "ἀ~ῐσθεῑεν";
-    aorist_imp_act_2: "ἀ~ῐσον", "ἀ~ῐσᾰτον", "ἀ~ῐσᾰτε";
-    aorist_imp_act_3: "ἀ~ῐσᾰτω", "ἀ~ῐσᾰτων", "ἀ~ῐσᾰντων";
-    aorist_imp_mid_2: "ἀ~ῐσαι", "ἀ~ῐσᾰσθον", "ἀ~ῐσᾰσθε";
-    aorist_imp_mid_3: "ἀ~ῐσᾰσθω", "ἀ~ῐσᾰσθων", _;
-    aorist_imp_pass_2: "ἀ~ῐσθητῐ", _, _;
-    aorist_imp_pass_3: "ἀ~ῐσθητω", "ἀ~ῐσθητων", "ἀ~ῐσθεντων";
-    perfect_ind_act_1: "ἠ~ῐκᾰ", _, "ἠ~ῐκᾰμεν";
-    perfect_ind_act_2: "ἠ~ῐκᾰς", "ἠ~ῐκᾰτον", "ἠ~ῐκᾰτε";
-    perfect_ind_act_3: "ἠ~ῐκε", _, "ἠ~ῐκᾱσῐ";
-    perfect_ind_mid_1: "ἠ~ῐσμαι", _, "ἠ~ῐσμεθᾰ";
-    perfect_ind_mid_2: "ἠ~ῐσαι", "ἠ~ῐσθον", "ἠ~ῐσθε";
-    perfect_ind_mid_3: "ἠ~ῐσται", _, "ἠ~ῐδᾰται";
-    perfect_subj_act_1: "ἠ~ῐκω", _, "ἠ~ῐκωμεν";
-    perfect_subj_act_2: "ἠ~ῐκῃς", "ἠ~ῐκητον", "ἠ~ῐκητε";
-    perfect_subj_act_3: "ἠ~ῐκῃ", _, "ἠ~ῐκωσῐ";
-    perfect_opt_act_1: "ἠ~ῐκοιμῐ", _, "ἠ~ῐκοιμεν";
-    perfect_opt_act_2: "ἠ~ῐκοις", "ἠ~ῐκοιτον", "ἠ~ῐκοιτε";
-    perfect_opt_act_3: "ἠ~ῐκοι", "ἠ~ῐκοιτην", "ἠ~ῐκοιεν";
-    perfect_imp_act_2: _, "ἠ~ῐκετον", "ἠ~ῐκετε";
-    perfect_imp_act_3: "ἠ~ῐκετω", "ἠ~ῐκετων", "ἠ~ῐκοντων";
-    perfect_imp_mid_2: "ἠ~ῐσο", _, _;
-    perfect_imp_mid_3: "ἠ~ῐσθω", "ἠ~ῐσθων", _;
-    pluperfect_act_1: "ἠ~ῐκειν", _, "ἠ~ῐκεμεν";
-    pluperfect_act_2: "ἠ~ῐκεις", "ἠ~ῐκετον", "ἠ~ῐκετε";
-    pluperfect_act_3: "ἠ~ῐκει", "ἠ~ῐκετην", "ἠ~ῐκεσᾰν";
-    pluperfect_mid_1: "ἠ~ῐσμην", _, "ἠ~ῐσμεθᾰ";
-    pluperfect_mid_2: "ἠ~ῐσο", "ἠ~ῐσθον", "ἠ~ῐσθε";
-    pluperfect_mid_3: "ἠ~ῐστο", "ἠ~ῐσθην", "ἠ~ῐδᾰτο";
-    future_perfect_ind_mid_1: "ἠ~ισομαι", _, "ἠ~ισομεθᾰ";
-    future_perfect_ind_mid_2: "ἠ~ισῃ", "ἠ~ισεσθον", "ἠ~ισεσθε";
-    future_perfect_ind_mid_3: "ἠ~ισεται", _, "ἠ~ισονται";
-    future_perfect_opt_mid_1: "ἠ~ισοιμην", _, "ἠ~ισοιμεθᾰ";
-    future_perfect_opt_mid_2: "ἠ~ισοιο", "ἠ~ισοισθον", "ἠ~ισοισθε";
-    future_perfect_opt_mid_3: "ἠ~ισοιτο", "ἠ~ισοισθην", "ἠ~ισοιντο";
-    infinitive_pres: "ἀ~ῐζειν", "ἀ~ῐζεσθαι", _;
-    infinitive_fut: "ἀ~ῐεῑν", "ἀ~ῐεῑσθαι", "ἀ~ῐσθησεσθαι";
-    infinitive_aor: "ἀ~ῐσαι", "ἀ~ῐσᾰσθαι", "ἀ~ῐσθηναι";
-    infinitive_perf: "ἠ~ῐκεναι", "ἠ~ῐσθαι", _;
-    infinitive_futp: _, "ἠ~ισεσθαι", _;
-    participle_pres: "ἀ~ῐζων", "ἀ~ῐζομενος", _;
-    participle_fut: "ἀ~ῐων", "ἀ~ῐουμενος", "ἀ~ῐσθησομενος";
-    participle_aor: "ἀ~ῐσᾱς", "ἀ~ῐσᾰμενος", "ἀ~ῐσθεις";
-    participle_perf: "ἠ~ῐκως", "ἠ~ῐσμενος", _;
-    participle_futp: _, "ἠ~ισομενος", _;
-    ),
     // Ἀραομαι: 8 words (μναομαι, ἰαομαι, ἀκροαομαι, ἀραομαι, μᾰσαομαι, ἀλαομαι). Like Οἰομαι, except in 112 cells: ind_act_1 sg, ind_mid_1 sg, ind_mid_1 pl, ind_mid_2 sg, ind_mid_2 du, ind_mid_2 pl, ….
     conjugation!("ἀραομαι", 8, "~αομαι", like Οἰομαι;
     ind_act_1: "~αομαι", _, _;
@@ -5269,8 +5231,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_fut: _, _, "~ησομενος";
     participle_aor: _, "~ησᾰμενος", derived;
     ),
-    // Σῳζω: 7 words (σοφῐζω, σῳζω, κεᾰζω, στρουθῐζω, τῠκῐζω, μερῐζω). Like Χρημᾰτῐζω, except in 14 cells: imperfect_act_3 sg, aorist_ind_act_3 sg, perfect_ind_act_3 sg, perfect_ind_act_3 pl, perfect_ind_mid_3 pl, perfect_subj_act_3 pl, ….
-    conjugation!("σῳζω", 7, "~ζω", like Χρημᾰτῐζω;
+    // Σῳζω: 7 words (σοφῐζω, σῳζω, κεᾰζω, στρουθῐζω, τῠκῐζω, μερῐζω). Like Ἀφορῐζω, except in 14 cells: imperfect_act_3 sg, aorist_ind_act_3 sg, perfect_ind_act_3 sg, perfect_ind_act_3 pl, perfect_ind_mid_3 pl, perfect_subj_act_3 pl, ….
+    conjugation!("σῳζω", 7, "~ζω", like Ἀφορῐζω;
     imperfect_act_3: "ἐ~ζε|ἐ~ζεν", _, _;
     aorist_ind_act_3: "ἐ~σε|ἐ~σεν", _, _;
     perfect_ind_act_3: "%ε~κε|%ε~κεν", _, "%ε~κᾱσῐ|%ε~κᾱσῐν";
@@ -5284,128 +5246,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     pluperfect_act_2: "ἐ%ε~κεις|ἐ%ε~κης", _, _;
     pluperfect_act_3: "ἐ%ε~κει|ἐ%ε~κειν", _, _;
     pluperfect_mid_3: _, _, "ἐ%ε~σᾰτο";
-    ),
-    // Ἀκουω: 7 words (ἀκουω, ἀγρευω, ἀγορευω, ἀμορβευω, ἀριστευω, ἀπῐστευω). Like Ἐχω, except in 291 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("ἀκουω", 7, "ἀ~υω", like Ἐχω;
-    ind_act_1: "ἀ~υω", _, "ἀ~υομεν";
-    ind_act_2: "ἀ~υεις", "ἀ~υετον", "ἀ~υετε";
-    ind_act_3: "ἀ~υει", _, "ἀ~υουσῐ|ἀ~υουσῐν";
-    ind_mid_1: "ἀ~υομαι", _, "ἀ~υομεθᾰ";
-    ind_mid_2: "ἀ~υῃ|ἀ~υει", "ἀ~υεσθον", "ἀ~υεσθε";
-    ind_mid_3: "ἀ~υεται", _, "ἀ~υονται";
-    ind_pass_2: "ἀ~υῃ|ἀ~υει", _, _;
-    subj_act_1: "ἀ~υω", _, "ἀ~υωμεν";
-    subj_act_2: "ἀ~υῃς", "ἀ~υητον", "ἀ~υητε";
-    subj_act_3: "ἀ~υῃ", _, "ἀ~υωσῐ|ἀ~υωσῐν";
-    subj_mid_1: "ἀ~υωμαι", _, "ἀ~υωμεθᾰ";
-    subj_mid_2: "ἀ~υῃ", "ἀ~υησθον", "ἀ~υησθε";
-    subj_mid_3: "ἀ~υηται", _, "ἀ~υωνται";
-    subj_pass_2: "ἀ~υῃ", _, _;
-    opt_act_1: "ἀ~υοιμῐ", _, "ἀ~υοιμεν";
-    opt_act_2: "ἀ~υοις", "ἀ~υοιτον", "ἀ~υοιτε";
-    opt_act_3: "ἀ~υοι", "ἀ~υοιτην", "ἀ~υοιεν";
-    opt_mid_1: "ἀ~υοιμην", _, "ἀ~υοιμεθᾰ";
-    opt_mid_2: "ἀ~υοιο", "ἀ~υοισθον", "ἀ~υοισθε";
-    opt_mid_3: "ἀ~υοιτο", "ἀ~υοισθην", "ἀ~υοιντο";
-    imp_act_2: "ἀ~υε", _, _;
-    imp_act_3: "ἀ~υετω", "ἀ~υετων", "ἀ~υοντων";
-    imp_mid_2: "ἀ~υου", _, "ἀ~υεσθε";
-    imp_mid_3: "ἀ~υεσθω", "ἀ~υεσθων", "ἀ~υεσθων";
-    imperfect_act_1: "ἠ~υον", _, "ἠ~υομεν";
-    imperfect_act_2: "ἠ~υες", "ἠ~υετον", "ἠ~υετε";
-    imperfect_act_3: "ἠ~υε|ἠ~υεν", "ἠ~υετην", "ἠ~υον";
-    imperfect_mid_1: "ἠ~υομην", _, "ἠ~υομεθᾰ";
-    imperfect_mid_2: "ἠ~υου", "ἠ~υεσθον", "ἠ~υεσθε";
-    imperfect_mid_3: "ἠ~υετο", "ἠ~υεσθην", "ἠ~υοντο";
-    future_ind_act_1: "ἀ~υσω", _, "ἀ~υσομεν";
-    future_ind_act_2: "ἀ~υσεις", "ἀ~υσετον", "ἀ~υσετε";
-    future_ind_act_3: "ἀ~υσει", _, "ἀ~υσουσῐ|ἀ~υσουσῐν";
-    future_ind_mid_1: "ἀ~υσομαι", _, "ἀ~υσομεθᾰ";
-    future_ind_mid_2: "ἀ~υσῃ", "ἀ~υσεσθον", "ἀ~υσεσθε";
-    future_ind_mid_3: "ἀ~υσεται", _, "ἀ~υσονται";
-    future_ind_pass_1: "ἀ~υθησομαι", _, "ἀ~υθησομεθᾰ";
-    future_ind_pass_2: "ἀ~υθησῃ", "ἀ~υθησεσθον", "ἀ~υθησεσθε";
-    future_ind_pass_3: "ἀ~υθησεται", _, "ἀ~υθησονται";
-    future_opt_act_1: "ἀ~υσοιμῐ", _, "ἀ~υσοιμεν";
-    future_opt_act_2: "ἀ~υσοις", "ἀ~υσοιτον", "ἀ~υσοιτε";
-    future_opt_act_3: "ἀ~υσοι", "ἀ~υσοιτην", "ἀ~υσοιεν";
-    future_opt_mid_1: "ἀ~υσοιμην", _, "ἀ~υσοιμεθᾰ";
-    future_opt_mid_2: "ἀ~υσοιο", "ἀ~υσοισθον", "ἀ~υσοισθε";
-    future_opt_mid_3: "ἀ~υσοιτο", "ἀ~υσοισθην", "ἀ~υσοιντο";
-    future_opt_pass_1: "ἀ~υθησοιμην", _, "ἀ~υθησοιμεθᾰ";
-    future_opt_pass_2: "ἀ~υθησοιο", "ἀ~υθησοισθον", "ἀ~υθησοισθε";
-    future_opt_pass_3: "ἀ~υθησοιτο", "ἀ~υθησοισθην", "ἀ~υθησοιντο";
-    aorist_ind_act_1: "ἠ~υσᾰ", _, "ἠ~υσᾰμεν";
-    aorist_ind_act_2: "ἠ~υσᾰς", "ἠ~υσᾰτον", "ἠ~υσᾰτε";
-    aorist_ind_act_3: "ἠ~υσε|ἠ~υσεν", "ἠ~υσᾰτην", "ἠ~υσᾰν";
-    aorist_ind_mid_1: "ἠ~υσᾰμην", _, "ἠ~υσᾰμεθᾰ";
-    aorist_ind_mid_2: "ἠ~υσω", "ἠ~υσᾰσθον", "ἠ~υσᾰσθε";
-    aorist_ind_mid_3: "ἠ~υσᾰτο", "ἠ~υσᾰσθην", "ἠ~υσᾰντο";
-    aorist_ind_pass_1: "ἠ~υθην", _, "ἠ~υθημεν";
-    aorist_ind_pass_2: "ἠ~υθης", "ἠ~υθητον", "ἠ~υθητε";
-    aorist_ind_pass_3: "ἠ~υθη", "ἠ~υθητην", "ἠ~υθησᾰν";
-    aorist_subj_act_1: "ἀ~υσω", _, "ἀ~υσωμεν";
-    aorist_subj_act_2: "ἀ~υσῃς", "ἀ~υσητον", "ἀ~υσητε";
-    aorist_subj_act_3: "ἀ~υσῃ", _, "ἀ~υσωσῐ|ἀ~υσωσῐν";
-    aorist_subj_mid_1: "ἀ~υσωμαι", _, "ἀ~υσωμεθᾰ";
-    aorist_subj_mid_2: "ἀ~υσῃ", "ἀ~υσησθον", "ἀ~υσησθε";
-    aorist_subj_mid_3: "ἀ~υσηται", _, "ἀ~υσωνται";
-    aorist_subj_pass_1: "ἀ~υθω", _, "ἀ~υθωμεν";
-    aorist_subj_pass_2: "ἀ~υθῃς", "ἀ~υθητον", "ἀ~υθητε";
-    aorist_subj_pass_3: "ἀ~υθῃ", _, "ἀ~υθωσῐ";
-    aorist_opt_act_1: "ἀ~υσαιμῐ", _, "ἀ~υσαιμεν";
-    aorist_opt_act_2: "ἀ~υσειᾰς|ἀ~υσαις", "ἀ~υσαιτον", "ἀ~υσαιτε";
-    aorist_opt_act_3: "ἀ~υσειε|ἀ~υσειεν|ἀ~υσαι", "ἀ~υσαιτην", "ἀ~υσειᾰν|ἀ~υσαιεν";
-    aorist_opt_mid_1: "ἀ~υσαιμην", _, "ἀ~υσαιμεθᾰ";
-    aorist_opt_mid_2: "ἀ~υσαιο", "ἀ~υσαισθον", "ἀ~υσαισθε";
-    aorist_opt_mid_3: "ἀ~υσαιτο", "ἀ~υσαισθην", "ἀ~υσαιντο";
-    aorist_opt_pass_1: "ἀ~υθειην", _, "ἀ~υθεῑμεν";
-    aorist_opt_pass_2: "ἀ~υθειης", "ἀ~υθεῑτον", "ἀ~υθεῑτε";
-    aorist_opt_pass_3: "ἀ~υθειη", "ἀ~υθειτην", "ἀ~υθεῑεν";
-    aorist_imp_act_2: "ἀ~υσον", "ἀ~υσᾰτον", "ἀ~υσᾰτε";
-    aorist_imp_act_3: "ἀ~υσᾰτω", "ἀ~υσᾰτων", "ἀ~υσᾰντων";
-    aorist_imp_mid_2: "ἀ~υσαι", "ἀ~υσᾰσθον", "ἀ~υσᾰσθε";
-    aorist_imp_mid_3: "ἀ~υσᾰσθω", "ἀ~υσᾰσθων", _;
-    aorist_imp_pass_2: "ἀ~υθητῐ", _, _;
-    aorist_imp_pass_3: "ἀ~υθητω", "ἀ~υθητων", "ἀ~υθεντων";
-    perfect_ind_act_1: "ἠ~υκᾰ", _, "ἠ~υκᾰμεν";
-    perfect_ind_act_2: "ἠ~υκᾰς", "ἠ~υκᾰτον", "ἠ~υκᾰτε";
-    perfect_ind_act_3: "ἠ~υκε|ἠ~υκεν", _, "ἠ~υκᾱσῐ|ἠ~υκᾱσῐν";
-    perfect_ind_mid_1: "ἠ~υμαι", _, "ἠ~υμεθᾰ";
-    perfect_ind_mid_2: "ἠ~υσαι", "ἠ~υσθον", "ἠ~υσθε";
-    perfect_ind_mid_3: "ἠ~υται", _, "ἠ~υνται";
-    perfect_subj_act_1: "ἠ~υκω", _, "ἠ~υκωμεν";
-    perfect_subj_act_2: "ἠ~υκῃς", "ἠ~υκητον", "ἠ~υκητε";
-    perfect_subj_act_3: "ἠ~υκῃ", _, "ἠ~υκωσῐ|ἠ~υκωσῐν";
-    perfect_opt_act_1: "ἠ~υκοιμῐ|ἠ~υκοιην", _, "ἠ~υκοιμεν";
-    perfect_opt_act_2: "ἠ~υκοις|ἠ~υκοιης", "ἠ~υκοιτον", "ἠ~υκοιτε";
-    perfect_opt_act_3: "ἠ~υκοι|ἠ~υκοιη", "ἠ~υκοιτην", "ἠ~υκοιεν";
-    perfect_imp_act_2: "ἠ~υκε", "ἠ~υκετον", "ἠ~υκετε";
-    perfect_imp_act_3: "ἠ~υκετω", "ἠ~υκετων", "ἠ~υκοντων";
-    perfect_imp_mid_2: "ἠ~υσο", _, _;
-    perfect_imp_mid_3: "ἠ~υσθω", "ἠ~υσθων", _;
-    pluperfect_act_1: "ἠ~υκειν", _, "ἠ~υκεμεν";
-    pluperfect_act_2: "ἠ~υκεις", "ἠ~υκετον", "ἠ~υκετε";
-    pluperfect_act_3: "ἠ~υκει", "ἠ~υκετην", "ἠ~υκεσᾰν";
-    pluperfect_mid_1: "ἠ~υμην", _, "ἠ~υμεθᾰ";
-    pluperfect_mid_2: "ἠ~υσο", "ἠ~υσθον", "ἠ~υσθε";
-    pluperfect_mid_3: "ἠ~υτο", "ἠ~υσθην", "ἠ~υντο";
-    future_perfect_ind_mid_1: "ἠ~υσομαι", _, "ἠ~υσομεθᾰ";
-    future_perfect_ind_mid_2: "ἠ~υσῃ", "ἠ~υσεσθον", "ἠ~υσεσθε";
-    future_perfect_ind_mid_3: "ἠ~υσεται", _, "ἠ~υσονται";
-    future_perfect_opt_mid_1: "ἠ~υσοιμην", _, "ἠ~υσοιμεθᾰ";
-    future_perfect_opt_mid_2: "ἠ~υσοιο", "ἠ~υσοισθον", "ἠ~υσοισθε";
-    future_perfect_opt_mid_3: "ἠ~υσοιτο", "ἠ~υσοισθην", "ἠ~υσοιντο";
-    infinitive_pres: "ἀ~υειν", "ἀ~υεσθαι", _;
-    infinitive_fut: "ἀ~υσειν", "ἀ~υσεσθαι", "ἀ~υθησεσθαι";
-    infinitive_aor: "ἀ~ῡσαι", "ἀ~υσᾰσθαι", "ἀ~υθηναι";
-    infinitive_perf: "ἠ~υκεναι", "ἠ~ῡσθαι", _;
-    infinitive_futp: _, "ἠ~υσεσθαι", _;
-    participle_pres: "ἀ~υων", "ἀ~υομενος", _;
-    participle_fut: "ἀ~υσων", "ἀ~υσομενος", "ἀ~υθησομενος";
-    participle_aor: "ἀ~υσᾱς", "ἀ~υσᾰμενος", "ἀ~υθεις";
-    participle_perf: "ἠ~υκως", "ἠ~υμενος", _;
-    participle_futp: _, "ἠ~υσομενος", _;
     ),
     // Ἀπεῑπον: 7 words (προσεῑπον, ἐξεῑπον, προεῑπον, ἀπεῑπον, ὑπεῑπον, ἐπεῑπον). Like Πᾰρειμι, except in 218 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
     conjugation!("ἀπεῑπον", 7, "~εῑπον", like Πᾰρειμι;
@@ -5499,131 +5339,39 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: "~ειπων", "~ειπομενος", "~ορρηθεις";
     participle_perf: "~ειρηκως", "~ειρημενος", _;
     ),
-    // Ὀνομαινω: 6 words (ὀφελλω, ὀμνῠω, ὀτρῡνω, ὀλισθᾰνω, ὀνομαινω, ὀρῠττω). Like Θωᾰω, except in 75 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("ὀνομαινω", 6, "ὀ~ω", like Θωᾰω;
-    ind_act_1: "ὀ~ω", _, "ὀ~ομεν";
-    ind_act_2: "ὀ~εις", "ὀ~ετον", "ὀ~ετε";
-    ind_act_3: "ὀ~ει", _, "ὀ~ουσῐ|ὀ~ουσῐν";
-    ind_mid_1: "ὀ~ομαι", _, "ὀ~ομεθᾰ";
-    ind_mid_2: "ὀ~ῃ|ὀ~ει", "ὀ~εσθον", "ὀ~εσθε";
-    ind_mid_3: "ὀ~εται", _, "ὀ~ονται";
-    ind_pass_2: "ὀ~ῃ|ὀ~ει", _, _;
-    subj_act_1: "ὀ~ω", _, "ὀ~ωμεν";
-    subj_act_2: "ὀ~ῃς", "ὀ~ητον", "ὀ~ητε";
-    subj_act_3: "ὀ~ῃ", _, "ὀ~ωσῐ|ὀ~ωσῐν";
-    subj_mid_1: "ὀ~ωμαι", _, "ὀ~ωμεθᾰ";
-    subj_mid_2: "ὀ~ῃ", "ὀ~ησθον", "ὀ~ησθε";
-    subj_mid_3: "ὀ~ηται", _, "ὀ~ωνται";
-    subj_pass_2: "ὀ~ῃ", _, _;
-    opt_act_1: "ὀ~οιμῐ", _, "ὀ~οιμεν";
-    opt_act_2: "ὀ~οις", "ὀ~οιτον", "ὀ~οιτε";
-    opt_act_3: "ὀ~οι", "ὀ~οιτην", "ὀ~οιεν";
-    opt_mid_1: "ὀ~οιμην", _, "ὀ~οιμεθᾰ";
-    opt_mid_2: "ὀ~οιο", "ὀ~οισθον", "ὀ~οισθε";
-    opt_mid_3: "ὀ~οιτο", "ὀ~οισθην", "ὀ~οιντο";
-    imp_act_2: "ὀ~ε", _, _;
-    imp_act_3: "ὀ~ετω", "ὀ~ετων", "ὀ~οντων";
-    imp_mid_2: "ὀ~ου", _, "ὀ~εσθε";
-    imp_mid_3: "ὀ~εσθω", "ὀ~εσθων", "ὀ~εσθων";
-    imperfect_act_1: "ὠ~ον", _, "ὠ~ομεν";
-    imperfect_act_2: "ὠ~ες", "ὠ~ετον", "ὠ~ετε";
-    imperfect_act_3: "ὠ~ε|ὠ~εν", "ὠ~ετην", "ὠ~ον";
-    imperfect_mid_1: "ὠ~ομην", _, "ὠ~ομεθᾰ";
-    imperfect_mid_2: "ὠ~ου", "ὠ~εσθον", "ὠ~εσθε";
-    imperfect_mid_3: "ὠ~ετο", "ὠ~εσθην", "ὠ~οντο";
-    infinitive_pres: "ὀ~ειν", "ὀ~εσθαι", _;
-    participle_pres: "ὀ~ων", "ὀ~ομενος", _;
-    ),
-    // Ἡγεομαι: 6 words (ἡγεομαι, ἱκνεομαι, νεομαι, ἐξηγεομαι, εὐνομεομαι, ὑφηγεομαι). Like Οἰομαι, except in 95 cells: ind_act_1 sg, ind_mid_1 sg, ind_mid_1 pl, ind_mid_2 sg, ind_mid_2 du, ind_mid_2 pl, ….
-    conjugation!("ἡγεομαι", 6, "~εομαι", like Οἰομαι;
-    ind_act_1: "~εομαι", _, _;
-    ind_mid_1: "~οῡμαι", _, "~ουμεθᾰ";
-    ind_mid_2: "~εῑ", "~εῑσθον", "~εῑσθε";
-    ind_mid_3: "~εῑται", _, "~οῡνται";
-    opt_mid_2: "~οῑο", "~οῑσθον", "~οῑσθε";
-    opt_mid_3: "~οῑτο", _, "~οῑντο";
-    imp_mid_2: "~οῡ", _, "~εῑσθε";
-    imp_mid_3: "~εισθω", "~εισθων", "~εισθων";
-    imperfect_mid_1: "~ουμην", _, "~ουμεθᾰ";
-    imperfect_mid_2: "~οῡ", "~εῑσθον", "~εῑσθε";
-    imperfect_mid_3: "~εῑτο", "~εισθην", "~οῡντο";
-    future_ind_pass_1: "~ηθησομαι", _, "~ηθησομεθᾰ";
-    future_ind_pass_2: "~ηθησῃ", "~ηθησεσθον", "~ηθησεσθε";
-    future_ind_pass_3: "~ηθησεται", _, "~ηθησονται";
-    future_opt_pass_1: "~ηθησοιμην", _, "~ηθησοιμεθᾰ";
-    future_opt_pass_2: "~ηθησοιο", "~ηθησοισθον", "~ηθησοισθε";
-    future_opt_pass_3: "~ηθησοιτο", "~ηθησοισθην", "~ηθησοιντο";
-    aorist_ind_mid_1: "~ησᾰμην", _, "~ησᾰμεθᾰ";
-    aorist_ind_mid_2: "~ησω", "~ησᾰσθον", "~ησᾰσθε";
-    aorist_ind_mid_3: "~ησᾰτο", "~ησᾰσθην", "~ησᾰντο";
-    aorist_ind_pass_1: "~ηθην", _, "~ηθημεν";
-    aorist_ind_pass_2: "~ηθης", "~ηθητον", "~ηθητε";
-    aorist_ind_pass_3: "~ηθη", "~ηθητην", "~ηθησᾰν";
-    aorist_subj_mid_1: "~ησωμαι", _, "~ησωμεθᾰ";
-    aorist_subj_mid_2: "~ησῃ", "~ησησθον", "~ησησθε";
-    aorist_subj_mid_3: "~ησηται", _, "~ησωνται";
-    aorist_opt_mid_1: "~ησαιμην", _, "~ησαιμεθᾰ";
-    aorist_opt_mid_2: "~ησαιο", "~ησαισθον", "~ησαισθε";
-    aorist_opt_mid_3: "~ησαιτο", "~ησαισθην", "~ησαιντο";
-    aorist_imp_mid_2: "~ησαι", "~ησᾰσθον", "~ησᾰσθε";
-    aorist_imp_mid_3: "~ησᾰσθω", "~ησᾰσθων", _;
-    perfect_ind_mid_1: "~ημαι", _, "~ημεθᾰ";
-    perfect_ind_mid_2: "~ησαι", "~ησθον", "~ησθε";
-    perfect_ind_mid_3: "~ηται", _, "~ηνται";
-    perfect_imp_mid_2: "~ησο", _, _;
-    perfect_imp_mid_3: "~ησθω", "~ησθων", _;
-    infinitive_pres: _, "~εῑσθαι", _;
-    infinitive_fut: _, _, "~ηθησεσθαι";
-    infinitive_aor: _, "~ησᾰσθαι", _;
-    infinitive_perf: _, "~ησθαι", _;
-    participle_pres: _, "~ουμενος", _;
-    participle_fut: _, _, "~ηθησομενος";
-    participle_aor: _, "~ησᾰμενος", _;
-    participle_perf: _, "~ημενος", _;
-    ),
-    // Ἀγαπαω: 6 words (ἀγαπαω, ἀνταω, ἀρταω, ἀμαω, ἀπᾰταω, ἀκοναω). Like Ἀσκεω, except in 87 cells: ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ind_act_3 pl, ….
-    conjugation!("ἀγαπαω", 6, "ἀ~αω", like Ἀσκεω;
-    ind_act_1: _, _, "ἀ~ωμεν";
-    ind_act_2: "ἀ~ᾳς", "ἀ~ᾱτον", "ἀ~ᾱτε";
-    ind_act_3: "ἀ~ᾳ", _, "ἀ~ωσῐ|ἀ~ωσῐν";
-    ind_mid_1: "ἀ~ωμαι", _, "ἀ~ωμεθᾰ";
-    ind_mid_2: "ἀ~ᾳ", "ἀ~ᾱσθον", "ἀ~ᾱσθε";
-    ind_mid_3: "ἀ~ᾱται", _, "ἀ~ωνται";
-    ind_pass_2: derived, _, _;
-    subj_act_2: "ἀ~ᾳς", "ἀ~ᾱτον", "ἀ~ᾱτε";
-    subj_act_3: "ἀ~ᾳ", _, _;
-    subj_mid_2: "ἀ~ᾳ", "ἀ~ᾱσθον", "ἀ~ᾱσθε";
-    subj_mid_3: "ἀ~ᾱται", _, _;
-    subj_pass_2: "ἀ~ᾳ", _, _;
-    opt_act_1: "ἀ~ῳην|ἀ~ῳμῐ", _, "ἀ~ῳμεν|ἀ~ῳημεν";
-    opt_act_2: "ἀ~ῳης|ἀ~ῳς", "ἀ~ῳτον|ἀ~ῳητον", "ἀ~ῳτε|ἀ~ῳητε";
-    opt_act_3: "ἀ~ῳη|ἀ~ῳ", "ἀ~ῳτην|ἀ~ῳητην", "ἀ~ῳεν|ἀ~ῳησᾰν";
-    opt_mid_1: "ἀ~ῳμην", _, "ἀ~ῳμεθᾰ";
-    opt_mid_2: "ἀ~ῳο", "ἀ~ῳσθον", "ἀ~ῳσθε";
-    opt_mid_3: "ἀ~ῳτο", "ἀ~ῳσθην", "ἀ~ῳντο";
-    imp_act_2: "ἀ~ᾱ", _, _;
-    imp_act_3: "ἀ~ᾱτω", "ἀ~ᾱτων", "ἀ~ωντων";
-    imp_mid_2: "ἀ~ω", _, "ἀ~ᾱσθε";
-    imp_mid_3: "ἀ~ᾱσθω", "ἀ~ᾱσθων", "ἀ~ᾱσθων";
-    imperfect_act_1: "ἠ~ων", _, "ἠ~ωμεν";
-    imperfect_act_2: "ἠ~ᾱς", "ἠ~ᾱτον", "ἠ~ᾱτε";
-    imperfect_act_3: "ἠ~ᾱ", "ἠ~ᾱτην", "ἠ~ων";
-    imperfect_mid_1: "ἠ~ωμην", _, "ἠ~ωμεθᾰ";
-    imperfect_mid_2: "ἠ~ω", "ἠ~ᾱσθον", "ἠ~ᾱσθε";
-    imperfect_mid_3: "ἠ~ᾱτο", "ἠ~ᾱσθην", "ἠ~ωντο";
-    pluperfect_act_1: "ἠ~ηκειν", _, _;
-    pluperfect_act_2: "ἠ~ηκεις", _, _;
-    pluperfect_act_3: "ἠ~ηκει", _, _;
-    future_perfect_ind_mid_1: "ἠ~ησομαι", _, "ἠ~ησομεθᾰ";
-    future_perfect_ind_mid_2: "ἠ~ησῃ", "ἠ~ησεσθον", "ἠ~ησεσθε";
-    future_perfect_ind_mid_3: "ἠ~ησεται", _, "ἠ~ησονται";
-    future_perfect_opt_mid_1: "ἠ~ησοιμην", _, "ἠ~ησοιμεθᾰ";
-    future_perfect_opt_mid_2: "ἠ~ησοιο", "ἠ~ησοισθον", "ἠ~ησοισθε";
-    future_perfect_opt_mid_3: "ἠ~ησοιτο", "ἠ~ησοισθην", "ἠ~ησοιντο";
-    infinitive_pres: "ἀ~ᾱν", "ἀ~ᾱσθαι", _;
-    infinitive_futp: _, "ἠ~ησεσθαι", _;
-    participle_pres: _, "ἀ~ωμενος", _;
-    participle_futp: _, "ἠ~ησομενος", _;
+    // Χραω: 6 words (ἀγαπαω, χραω, σκῐαω, ἀπαγχοναω, πασχητῐαω, λουτῐαω). Like Δοκᾰω, except in 65 cells: future_ind_act_3 pl, future_ind_mid_2 sg, future_ind_pass_1 sg, future_ind_pass_1 pl, future_ind_pass_2 sg, future_ind_pass_2 du, ….
+    conjugation!("χραω", 6, "~αω", like Δοκᾰω;
+    future_ind_act_3: _, _, "~ησουσῐ";
+    future_ind_mid_2: "~ησῃ", _, _;
+    future_ind_pass_1: "~ησθησομαι", _, "~ησθησομεθᾰ";
+    future_ind_pass_2: "~ησθησῃ", "~ησθησεσθον", "~ησθησεσθε";
+    future_ind_pass_3: "~ησθησεται", _, "~ησθησονται";
+    future_opt_pass_1: "~ησθησοιμην", _, "~ησθησοιμεθᾰ";
+    future_opt_pass_2: "~ησθησοιο", "~ησθησοισθον", "~ησθησοισθε";
+    future_opt_pass_3: "~ησθησοιτο", "~ησθησοισθην", "~ησθησοιντο";
+    aorist_ind_pass_1: "ἐ~ησθην", _, "ἐ~ησθημεν";
+    aorist_ind_pass_2: "ἐ~ησθης", "ἐ~ησθητον", "ἐ~ησθητε";
+    aorist_ind_pass_3: "ἐ~ησθη", "ἐ~ησθητην", "ἐ~ησθησᾰν";
+    aorist_subj_pass_1: "~ησθω", _, "~ησθωμεν";
+    aorist_subj_pass_2: "~ησθῃς", "~ησθητον", "~ησθητε";
+    aorist_subj_pass_3: "~ησθῃ", _, "~ησθωσῐ";
+    aorist_opt_pass_1: "~ησθειην", _, "~ησθεῑμεν";
+    aorist_opt_pass_2: "~ησθειης", "~ησθεῑτον", "~ησθεῑτε";
+    aorist_opt_pass_3: "~ησθειη", "~ησθειτην", "~ησθεῑεν";
+    aorist_imp_pass_2: "~ησθητῐ", _, _;
+    aorist_imp_pass_3: "~ησθητω", "~ησθητων", "~ησθεντων";
+    future_perfect_ind_mid_1: derived, _, derived;
+    future_perfect_ind_mid_2: derived, derived, derived;
+    future_perfect_ind_mid_3: derived, _, derived;
+    future_perfect_opt_mid_1: derived, _, derived;
+    future_perfect_opt_mid_2: derived, derived, derived;
+    future_perfect_opt_mid_3: derived, derived, derived;
+    infinitive_fut: _, _, "~ησθησεσθαι";
+    infinitive_aor: _, _, "~ησθηναι";
+    infinitive_futp: _, derived, _;
+    participle_fut: _, _, "~ησθησομενος";
+    participle_aor: _, _, "~ησθεις";
+    participle_futp: _, derived, _;
     ),
     // Φειδομαι: 6 words (εἰδομαι, ἐλδομαι, μηδομαι, λῐνδομαι, φειδομαι, αἰδομαι). Like Προσερχομαι, except in 144 cells: ind_act_1 sg, ind_mid_1 sg, ind_mid_1 pl, ind_mid_2 sg, ind_mid_2 du, ind_mid_2 pl, ….
     conjugation!("φειδομαι", 6, "~~δομαι", like Προσερχομαι;
@@ -5691,8 +5439,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: _, "~~σᾰμενος", derived;
     participle_perf: _, derived, _;
     ),
-    // Δῐωκω: 5 words (ἡκω, πᾰρηκω, προσηκω, τεθνηκω, κᾰθηκω). Like Σῠνᾰγω, except in 185 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("δῐωκω", 5, "~κω", like Σῠνᾰγω;
+    // Δῐωκω: 5 words (ἡκω, πᾰρηκω, προσηκω, τεθνηκω, κᾰθηκω). Like Ληγω, except in 185 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("δῐωκω", 5, "~κω", like Ληγω;
     ind_act_1: "~κω", _, "~κομεν";
     ind_act_2: "~κεις", "~κετον", "~κετε";
     ind_act_3: "~κει", _, "~κουσῐ";
@@ -5773,39 +5521,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: _, _, derived;
     participle_perf: "~κως", derived, _;
     ),
-    // Χραω: 5 words (χραω, σκῐαω, ἀπαγχοναω, πασχητῐαω, λουτῐαω). Like Δοκᾰω, except in 65 cells: future_ind_act_3 pl, future_ind_mid_2 sg, future_ind_pass_1 sg, future_ind_pass_1 pl, future_ind_pass_2 sg, future_ind_pass_2 du, ….
-    conjugation!("χραω", 5, "~αω", like Δοκᾰω;
-    future_ind_act_3: _, _, "~ησουσῐ";
-    future_ind_mid_2: "~ησῃ", _, _;
-    future_ind_pass_1: "~ησθησομαι", _, "~ησθησομεθᾰ";
-    future_ind_pass_2: "~ησθησῃ", "~ησθησεσθον", "~ησθησεσθε";
-    future_ind_pass_3: "~ησθησεται", _, "~ησθησονται";
-    future_opt_pass_1: "~ησθησοιμην", _, "~ησθησοιμεθᾰ";
-    future_opt_pass_2: "~ησθησοιο", "~ησθησοισθον", "~ησθησοισθε";
-    future_opt_pass_3: "~ησθησοιτο", "~ησθησοισθην", "~ησθησοιντο";
-    aorist_ind_pass_1: "ἐ~ησθην", _, "ἐ~ησθημεν";
-    aorist_ind_pass_2: "ἐ~ησθης", "ἐ~ησθητον", "ἐ~ησθητε";
-    aorist_ind_pass_3: "ἐ~ησθη", "ἐ~ησθητην", "ἐ~ησθησᾰν";
-    aorist_subj_pass_1: "~ησθω", _, "~ησθωμεν";
-    aorist_subj_pass_2: "~ησθῃς", "~ησθητον", "~ησθητε";
-    aorist_subj_pass_3: "~ησθῃ", _, "~ησθωσῐ";
-    aorist_opt_pass_1: "~ησθειην", _, "~ησθεῑμεν";
-    aorist_opt_pass_2: "~ησθειης", "~ησθεῑτον", "~ησθεῑτε";
-    aorist_opt_pass_3: "~ησθειη", "~ησθειτην", "~ησθεῑεν";
-    aorist_imp_pass_2: "~ησθητῐ", _, _;
-    aorist_imp_pass_3: "~ησθητω", "~ησθητων", "~ησθεντων";
-    future_perfect_ind_mid_1: derived, _, derived;
-    future_perfect_ind_mid_2: derived, derived, derived;
-    future_perfect_ind_mid_3: derived, _, derived;
-    future_perfect_opt_mid_1: derived, _, derived;
-    future_perfect_opt_mid_2: derived, derived, derived;
-    future_perfect_opt_mid_3: derived, derived, derived;
-    infinitive_fut: _, _, "~ησθησεσθαι";
-    infinitive_aor: _, _, "~ησθηναι";
-    infinitive_futp: _, derived, _;
-    participle_fut: _, _, "~ησθησομενος";
-    participle_aor: _, _, "~ησθεις";
-    participle_futp: _, derived, _;
+    // Φρᾰζω: 5 words (φρᾰζω, θαυμᾰζω, θοᾰζω, θωᾰζω, χειμᾰζω). Like Πειρᾰζω, except in 16 cells: pluperfect_act_1 sg, pluperfect_act_1 pl, pluperfect_act_2 sg, pluperfect_act_2 du, pluperfect_act_2 pl, pluperfect_act_3 sg, ….
+    conjugation!("φρᾰζω", 5, "~ζω", like Πειρᾰζω;
+    pluperfect_act_1: "ἐ%ε~κειν|ἐ%ε~κη", _, "ἐ%ε~κεμεν";
+    pluperfect_act_2: "ἐ%ε~κεις|ἐ%ε~κης", "ἐ%ε~κετον", "ἐ%ε~κετε";
+    pluperfect_act_3: "ἐ%ε~κει|ἐ%ε~κειν", "ἐ%ε~κετην", "ἐ%ε~κεσᾰν";
+    pluperfect_mid_1: "ἐ%ε~σμην", _, "ἐ%ε~σμεθᾰ";
+    pluperfect_mid_2: "ἐ%ε~σο", "ἐ%ε~σθον", "ἐ%ε~σθε";
+    pluperfect_mid_3: "ἐ%ε~στο", "ἐ%ε~σθην", "ἐ%ε~δᾰτο";
     ),
     // Μᾰρτῠρεω: 5 words (μᾰρτῠρεω, λοιδορεω, μᾰραυγεω, δονεω, κερτομεω). Like Ποιεω, except in 61 cells: future_ind_act_3 pl, future_ind_mid_2 sg, future_ind_pass_2 sg, aorist_ind_act_3 sg, aorist_ind_pass_1 sg, aorist_ind_pass_1 pl, ….
     conjugation!("μᾰρτῠρεω", 5, "~εω", like Ποιεω;
@@ -5843,340 +5566,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     infinitive_futp: _, derived, _;
     participle_aor: _, _, "ἐ~ηθεις";
     participle_futp: _, derived, _;
-    ),
-    // Οἰκεω: 5 words (οἰκεω, οἰδεω, οἰκοδομεω, οἰκονομεω, οἰκοδεσποτεω). Like Γῡροω, except in 274 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("οἰκεω", 5, "οἰ~εω", like Γῡροω;
-    ind_act_1: "οἰ~ω", _, "οἰ~οῡμεν";
-    ind_act_2: "οἰ~εῑς", "οἰ~εῑτον", "οἰ~εῑτε";
-    ind_act_3: "οἰ~εῑ", _, "οἰ~οῡσῐ|οἰ~οῡσῐν";
-    ind_mid_1: "οἰ~οῡμαι", _, "οἰ~ουμεθᾰ";
-    ind_mid_2: "οἰ~εῑ|οἰ~ῃ", "οἰ~εῑσθον", "οἰ~εῑσθε";
-    ind_mid_3: "οἰ~εῑται", _, "οἰ~οῡνται";
-    ind_pass_2: "οἰ~εῑ|οἰ~ῃ", _, _;
-    subj_act_1: "οἰ~ω", _, "οἰ~ωμεν";
-    subj_act_2: "οἰ~ῃς", "οἰ~ητον", "οἰ~ητε";
-    subj_act_3: "οἰ~ῃ", _, "οἰ~ωσῐ|οἰ~ωσῐν";
-    subj_mid_1: "οἰ~ωμαι", _, "οἰ~ωμεθᾰ";
-    subj_mid_2: "οἰ~ῃ", "οἰ~ησθον", "οἰ~ησθε";
-    subj_mid_3: "οἰ~ηται", _, "οἰ~ωνται";
-    subj_pass_2: "οἰ~ῃ", _, _;
-    opt_act_1: "οἰ~οιην|οἰ~οῑμῐ", _, "οἰ~οῑμεν|οἰ~οιημεν";
-    opt_act_2: "οἰ~οιης|οἰ~οῑς", "οἰ~οῑτον|οἰ~οιητον", "οἰ~οῑτε|οἰ~οιητε";
-    opt_act_3: "οἰ~οιη|οἰ~οῑ", "οἰ~οιτην|οἰ~οιητην", "οἰ~οῑεν|οἰ~οιησᾰν";
-    opt_mid_1: "οἰ~οιμην", _, "οἰ~οιμεθᾰ";
-    opt_mid_2: "οἰ~οῑο", "οἰ~οῑσθον", "οἰ~οῑσθε";
-    opt_mid_3: "οἰ~οῑτο", "οἰ~οισθην", "οἰ~οῑντο";
-    imp_act_2: "οἰ~ει", _, _;
-    imp_act_3: "οἰ~ειτω", "οἰ~ειτων", "οἰ~ουντων";
-    imp_mid_2: "οἰ~οῡ", _, "οἰ~εῑσθε";
-    imp_mid_3: "οἰ~εισθω", "οἰ~εισθων", "οἰ~εισθων";
-    imperfect_act_1: "ᾠ~ουν", _, "ᾠ~οῡμεν";
-    imperfect_act_2: "ᾠ~εις", "ᾠ~εῑτον", "ᾠ~εῑτε";
-    imperfect_act_3: "ᾠ~ει", "ᾠ~ειτην", "ᾠ~ουν";
-    imperfect_mid_1: "ᾠ~ουμην", _, "ᾠ~ουμεθᾰ";
-    imperfect_mid_2: "ᾠ~οῡ", "ᾠ~εῑσθον", "ᾠ~εῑσθε";
-    imperfect_mid_3: "ᾠ~εῑτο", "ᾠ~εισθην", "ᾠ~οῡντο";
-    future_ind_act_1: "οἰ~ησω", _, "οἰ~ησομεν";
-    future_ind_act_2: "οἰ~ησεις", "οἰ~ησετον", "οἰ~ησετε";
-    future_ind_act_3: "οἰ~ησει", _, "οἰ~ησουσῐ|οἰ~ησουσῐν";
-    future_ind_mid_1: "οἰ~ησομαι", _, "οἰ~ησομεθᾰ";
-    future_ind_mid_2: "οἰ~ησῃ|οἰ~ησει", "οἰ~ησεσθον", "οἰ~ησεσθε";
-    future_ind_mid_3: "οἰ~ησεται", _, "οἰ~ησονται";
-    future_ind_pass_1: "οἰ~ηθησομαι", _, "οἰ~ηθησομεθᾰ";
-    future_ind_pass_2: "οἰ~ηθησῃ|οἰ~ηθησει", "οἰ~ηθησεσθον", "οἰ~ηθησεσθε";
-    future_ind_pass_3: "οἰ~ηθησεται", _, "οἰ~ηθησονται";
-    future_opt_act_1: "οἰ~ησοιμῐ", _, "οἰ~ησοιμεν";
-    future_opt_act_2: "οἰ~ησοις", "οἰ~ησοιτον", "οἰ~ησοιτε";
-    future_opt_act_3: "οἰ~ησοι", "οἰ~ησοιτην", "οἰ~ησοιεν";
-    future_opt_mid_1: "οἰ~ησοιμην", _, "οἰ~ησοιμεθᾰ";
-    future_opt_mid_2: "οἰ~ησοιο", "οἰ~ησοισθον", "οἰ~ησοισθε";
-    future_opt_mid_3: "οἰ~ησοιτο", "οἰ~ησοισθην", "οἰ~ησοιντο";
-    future_opt_pass_1: "οἰ~ηθησοιμην", _, "οἰ~ηθησοιμεθᾰ";
-    future_opt_pass_2: "οἰ~ηθησοιο", "οἰ~ηθησοισθον", "οἰ~ηθησοισθε";
-    future_opt_pass_3: "οἰ~ηθησοιτο", "οἰ~ηθησοισθην", "οἰ~ηθησοιντο";
-    aorist_ind_act_1: "ᾠ~ησᾰ", _, "ᾠ~ησᾰμεν";
-    aorist_ind_act_2: "ᾠ~ησᾰς", "ᾠ~ησᾰτον", "ᾠ~ησᾰτε";
-    aorist_ind_act_3: "ᾠ~ησε|ᾠ~ησεν", "ᾠ~ησᾰτην", "ᾠ~ησᾰν";
-    aorist_ind_mid_1: "ᾠ~ησᾰμην", _, "ᾠ~ησᾰμεθᾰ";
-    aorist_ind_mid_2: "ᾠ~ησω", "ᾠ~ησᾰσθον", "ᾠ~ησᾰσθε";
-    aorist_ind_mid_3: "ᾠ~ησᾰτο", "ᾠ~ησᾰσθην", "ᾠ~ησᾰντο";
-    aorist_ind_pass_1: "ᾠ~ηθην", _, "ᾠ~ηθημεν";
-    aorist_ind_pass_2: "ᾠ~ηθης", "ᾠ~ηθητον", "ᾠ~ηθητε";
-    aorist_ind_pass_3: "ᾠ~ηθη", "ᾠ~ηθητην", "ᾠ~ηθησᾰν";
-    aorist_subj_act_1: "οἰ~ησω", _, "οἰ~ησωμεν";
-    aorist_subj_act_2: "οἰ~ησῃς", "οἰ~ησητον", "οἰ~ησητε";
-    aorist_subj_act_3: "οἰ~ησῃ", _, "οἰ~ησωσῐ|οἰ~ησωσῐν";
-    aorist_subj_mid_1: "οἰ~ησωμαι", _, "οἰ~ησωμεθᾰ";
-    aorist_subj_mid_2: "οἰ~ησῃ", "οἰ~ησησθον", "οἰ~ησησθε";
-    aorist_subj_mid_3: "οἰ~ησηται", _, "οἰ~ησωνται";
-    aorist_subj_pass_1: "οἰ~ηθω", _, "οἰ~ηθωμεν";
-    aorist_subj_pass_2: "οἰ~ηθῃς", "οἰ~ηθητον", "οἰ~ηθητε";
-    aorist_subj_pass_3: "οἰ~ηθῃ", _, "οἰ~ηθωσῐ|οἰ~ηθωσῐν";
-    aorist_opt_act_1: "οἰ~ησαιμῐ", _, "οἰ~ησαιμεν";
-    aorist_opt_act_2: "οἰ~ησειᾰς|οἰ~ησαις", "οἰ~ησαιτον", "οἰ~ησαιτε";
-    aorist_opt_act_3: "οἰ~ησειε|οἰ~ησειεν|οἰ~ησαι", "οἰ~ησαιτην", "οἰ~ησειᾰν|οἰ~ησαιεν";
-    aorist_opt_mid_1: "οἰ~ησαιμην", _, "οἰ~ησαιμεθᾰ";
-    aorist_opt_mid_2: "οἰ~ησαιο", "οἰ~ησαισθον", "οἰ~ησαισθε";
-    aorist_opt_mid_3: "οἰ~ησαιτο", "οἰ~ησαισθην", "οἰ~ησαιντο";
-    aorist_opt_pass_1: "οἰ~ηθειην", _, "οἰ~ηθεῑμεν|οἰ~ηθειημεν";
-    aorist_opt_pass_2: "οἰ~ηθειης", "οἰ~ηθεῑτον|οἰ~ηθειητον", "οἰ~ηθεῑτε|οἰ~ηθειητε";
-    aorist_opt_pass_3: "οἰ~ηθειη", "οἰ~ηθειτην|οἰ~ηθειητην", "οἰ~ηθεῑεν|οἰ~ηθειησᾰν";
-    aorist_imp_act_2: "οἰ~ησον", "οἰ~ησᾰτον", "οἰ~ησᾰτε";
-    aorist_imp_act_3: "οἰ~ησᾰτω", "οἰ~ησᾰτων", "οἰ~ησᾰντων";
-    aorist_imp_mid_2: "οἰ~ησαι", "οἰ~ησᾰσθον", "οἰ~ησᾰσθε";
-    aorist_imp_mid_3: "οἰ~ησᾰσθω", "οἰ~ησᾰσθων", _;
-    aorist_imp_pass_2: "οἰ~ηθητῐ", _, _;
-    aorist_imp_pass_3: "οἰ~ηθητω", "οἰ~ηθητων", "οἰ~ηθεντων";
-    perfect_ind_act_1: "ᾠ~ηκᾰ", _, "ᾠ~ηκᾰμεν";
-    perfect_ind_act_2: "ᾠ~ηκᾰς", "ᾠ~ηκᾰτον", "ᾠ~ηκᾰτε";
-    perfect_ind_act_3: "ᾠ~ηκε|ᾠ~ηκεν", _, "ᾠ~ηκᾱσῐ|ᾠ~ηκᾱσῐν";
-    perfect_ind_mid_1: "ᾠ~ημαι", _, "ᾠ~ημεθᾰ";
-    perfect_ind_mid_2: "ᾠ~ησαι", "ᾠ~ησθον", "ᾠ~ησθε";
-    perfect_ind_mid_3: "ᾠ~ηται", _, "ᾠ~ηνται";
-    perfect_subj_act_1: "ᾠ~ηκω", _, "ᾠ~ηκωμεν";
-    perfect_subj_act_2: "ᾠ~ηκῃς", "ᾠ~ηκητον", "ᾠ~ηκητε";
-    perfect_subj_act_3: "ᾠ~ηκῃ", _, "ᾠ~ηκωσῐ|ᾠ~ηκωσῐν";
-    perfect_opt_act_1: "ᾠ~ηκοιμῐ|ᾠ~ηκοιην", _, "ᾠ~ηκοιμεν";
-    perfect_opt_act_2: "ᾠ~ηκοις|ᾠ~ηκοιης", "ᾠ~ηκοιτον", "ᾠ~ηκοιτε";
-    perfect_opt_act_3: "ᾠ~ηκοι|ᾠ~ηκοιη", "ᾠ~ηκοιτην", "ᾠ~ηκοιεν";
-    perfect_imp_act_2: "ᾠ~ηκε", "ᾠ~ηκετον", "ᾠ~ηκετε";
-    perfect_imp_act_3: "ᾠ~ηκετω", "ᾠ~ηκετων", "ᾠ~ηκοντων";
-    perfect_imp_mid_2: "ᾠ~ησο", _, _;
-    perfect_imp_mid_3: "ᾠ~ησθω", "ᾠ~ησθων", _;
-    pluperfect_act_1: "ᾠ~ηκειν|ᾠ~ηκη", _, "ᾠ~ηκεμεν";
-    pluperfect_act_2: "ᾠ~ηκεις|ᾠ~ηκης", "ᾠ~ηκετον", "ᾠ~ηκετε";
-    pluperfect_act_3: "ᾠ~ηκει|ᾠ~ηκειν", "ᾠ~ηκετην", "ᾠ~ηκεσᾰν";
-    pluperfect_mid_1: "ᾠ~ημην", _, "ᾠ~ημεθᾰ";
-    pluperfect_mid_2: "ᾠ~ησο", "ᾠ~ησθον", "ᾠ~ησθε";
-    pluperfect_mid_3: "ᾠ~ητο", "ᾠ~ησθην", "ᾠ~ηντο";
-    infinitive_pres: "οἰ~εῑν", "οἰ~εῑσθαι", _;
-    infinitive_fut: "οἰ~ησειν", "οἰ~ησεσθαι", "οἰ~ηθησεσθαι";
-    infinitive_aor: "οἰ~ησαι", "οἰ~ησᾰσθαι", "οἰ~ηθηναι";
-    infinitive_perf: "ᾠ~ηκεναι", "ᾠ~ησθαι", _;
-    participle_pres: "οἰ~ων", "οἰ~ουμενος", _;
-    participle_fut: "οἰ~ησων", "οἰ~ησομενος", "οἰ~ηθησομενος";
-    participle_aor: "οἰ~ησᾱς", "οἰ~ησᾰμενος", "οἰ~ηθεις";
-    participle_perf: "ᾠ~ηκως", "ᾠ~ημενος", _;
-    ),
-    // Ὀχεω: 5 words (ὀλῐγοψῡχεω, ὀκνεω, ὀψωνεω, ὀχεω, ὀρρωδεω). Like Ὀνομαινω, except in 253 cells: ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ind_act_3 pl, ….
-    conjugation!("ὀχεω", 5, "ὀ~εω", like Ὀνομαινω;
-    ind_act_1: _, _, "ὀ~οῡμεν";
-    ind_act_2: "ὀ~εῑς", "ὀ~εῑτον", "ὀ~εῑτε";
-    ind_act_3: "ὀ~εῑ", _, "ὀ~οῡσῐ|ὀ~οῡσῐν";
-    ind_mid_1: "ὀ~οῡμαι", _, "ὀ~ουμεθᾰ";
-    ind_mid_2: "ὀ~εῑ|ὀ~ῃ", "ὀ~εῑσθον", "ὀ~εῑσθε";
-    ind_mid_3: "ὀ~εῑται", _, "ὀ~οῡνται";
-    ind_pass_2: "ὀ~εῑ|ὀ~ῃ", _, _;
-    opt_act_1: "ὀ~οιην|ὀ~οῑμῐ", _, "ὀ~οῑμεν|ὀ~οιημεν";
-    opt_act_2: "ὀ~οιης|ὀ~οῑς", "ὀ~οῑτον|ὀ~οιητον", "ὀ~οῑτε|ὀ~οιητε";
-    opt_act_3: "ὀ~οιη|ὀ~οῑ", "ὀ~οιτην|ὀ~οιητην", "ὀ~οῑεν|ὀ~οιησᾰν";
-    opt_mid_2: "ὀ~οῑο", "ὀ~οῑσθον", "ὀ~οῑσθε";
-    opt_mid_3: "ὀ~οῑτο", _, "ὀ~οῑντο";
-    imp_act_2: "ὀ~ει", _, _;
-    imp_act_3: "ὀ~ειτω", "ὀ~ειτων", "ὀ~ουντων";
-    imp_mid_2: "ὀ~οῡ", _, "ὀ~εῑσθε";
-    imp_mid_3: "ὀ~εισθω", "ὀ~εισθων", "ὀ~εισθων";
-    imperfect_act_1: "ὠ~ουν", _, "ὠ~οῡμεν";
-    imperfect_act_2: "ὠ~εις", "ὠ~εῑτον", "ὠ~εῑτε";
-    imperfect_act_3: "ὠ~ει", "ὠ~ειτην", "ὠ~ουν";
-    imperfect_mid_1: "ὠ~ουμην", _, "ὠ~ουμεθᾰ";
-    imperfect_mid_2: "ὠ~οῡ", "ὠ~εῑσθον", "ὠ~εῑσθε";
-    imperfect_mid_3: "ὠ~εῑτο", "ὠ~εισθην", "ὠ~οῡντο";
-    future_ind_act_1: "ὀ~ησω", _, "ὀ~ησομεν";
-    future_ind_act_2: "ὀ~ησεις", "ὀ~ησετον", "ὀ~ησετε";
-    future_ind_act_3: "ὀ~ησει", _, "ὀ~ησουσῐ|ὀ~ησουσῐν";
-    future_ind_mid_1: "ὀ~ησομαι", _, "ὀ~ησομεθᾰ";
-    future_ind_mid_2: "ὀ~ησῃ", "ὀ~ησεσθον", "ὀ~ησεσθε";
-    future_ind_mid_3: "ὀ~ησεται", _, "ὀ~ησονται";
-    future_ind_pass_1: "ὀ~ηθησομαι", _, "ὀ~ηθησομεθᾰ";
-    future_ind_pass_2: "ὀ~ηθησῃ", "ὀ~ηθησεσθον", "ὀ~ηθησεσθε";
-    future_ind_pass_3: "ὀ~ηθησεται", _, "ὀ~ηθησονται";
-    future_opt_act_1: "ὀ~ησοιμῐ", _, "ὀ~ησοιμεν";
-    future_opt_act_2: "ὀ~ησοις", "ὀ~ησοιτον", "ὀ~ησοιτε";
-    future_opt_act_3: "ὀ~ησοι", "ὀ~ησοιτην", "ὀ~ησοιεν";
-    future_opt_mid_1: "ὀ~ησοιμην", _, "ὀ~ησοιμεθᾰ";
-    future_opt_mid_2: "ὀ~ησοιο", "ὀ~ησοισθον", "ὀ~ησοισθε";
-    future_opt_mid_3: "ὀ~ησοιτο", "ὀ~ησοισθην", "ὀ~ησοιντο";
-    future_opt_pass_1: "ὀ~ηθησοιμην", _, "ὀ~ηθησοιμεθᾰ";
-    future_opt_pass_2: "ὀ~ηθησοιο", "ὀ~ηθησοισθον", "ὀ~ηθησοισθε";
-    future_opt_pass_3: "ὀ~ηθησοιτο", "ὀ~ηθησοισθην", "ὀ~ηθησοιντο";
-    aorist_ind_act_1: "ὠ~ησᾰ", _, "ὠ~ησᾰμεν";
-    aorist_ind_act_2: "ὠ~ησᾰς", "ὠ~ησᾰτον", "ὠ~ησᾰτε";
-    aorist_ind_act_3: "ὠ~ησε|ὠ~ησεν", "ὠ~ησᾰτην", "ὠ~ησᾰν";
-    aorist_ind_mid_1: "ὠ~ησᾰμην", _, "ὠ~ησᾰμεθᾰ";
-    aorist_ind_mid_2: "ὠ~ησω", "ὠ~ησᾰσθον", "ὠ~ησᾰσθε";
-    aorist_ind_mid_3: "ὠ~ησᾰτο", "ὠ~ησᾰσθην", "ὠ~ησᾰντο";
-    aorist_ind_pass_1: "ὠ~ηθην", _, "ὠ~ηθημεν";
-    aorist_ind_pass_2: "ὠ~ηθης", "ὠ~ηθητον", "ὠ~ηθητε";
-    aorist_ind_pass_3: "ὠ~ηθη", "ὠ~ηθητην", "ὠ~ηθησᾰν";
-    aorist_subj_act_1: "ὀ~ησω", _, "ὀ~ησωμεν";
-    aorist_subj_act_2: "ὀ~ησῃς", "ὀ~ησητον", "ὀ~ησητε";
-    aorist_subj_act_3: "ὀ~ησῃ", _, "ὀ~ησωσῐ|ὀ~ησωσῐν";
-    aorist_subj_mid_1: "ὀ~ησωμαι", _, "ὀ~ησωμεθᾰ";
-    aorist_subj_mid_2: "ὀ~ησῃ", "ὀ~ησησθον", "ὀ~ησησθε";
-    aorist_subj_mid_3: "ὀ~ησηται", _, "ὀ~ησωνται";
-    aorist_subj_pass_1: "ὀ~ηθω", _, "ὀ~ηθωμεν";
-    aorist_subj_pass_2: "ὀ~ηθῃς", "ὀ~ηθητον", "ὀ~ηθητε";
-    aorist_subj_pass_3: "ὀ~ηθῃ", _, "ὀ~ηθωσῐ";
-    aorist_opt_act_1: "ὀ~ησαιμῐ", _, "ὀ~ησαιμεν";
-    aorist_opt_act_2: "ὀ~ησειᾰς|ὀ~ησαις", "ὀ~ησαιτον", "ὀ~ησαιτε";
-    aorist_opt_act_3: "ὀ~ησειε|ὀ~ησειεν|ὀ~ησαι", "ὀ~ησαιτην", "ὀ~ησειᾰν|ὀ~ησαιεν";
-    aorist_opt_mid_1: "ὀ~ησαιμην", _, "ὀ~ησαιμεθᾰ";
-    aorist_opt_mid_2: "ὀ~ησαιο", "ὀ~ησαισθον", "ὀ~ησαισθε";
-    aorist_opt_mid_3: "ὀ~ησαιτο", "ὀ~ησαισθην", "ὀ~ησαιντο";
-    aorist_opt_pass_1: "ὀ~ηθειην", _, "ὀ~ηθεῑμεν";
-    aorist_opt_pass_2: "ὀ~ηθειης", "ὀ~ηθεῑτον", "ὀ~ηθεῑτε";
-    aorist_opt_pass_3: "ὀ~ηθειη", "ὀ~ηθειτην", "ὀ~ηθεῑεν";
-    aorist_imp_act_2: "ὀ~ησον", "ὀ~ησᾰτον", "ὀ~ησᾰτε";
-    aorist_imp_act_3: "ὀ~ησᾰτω", "ὀ~ησᾰτων", "ὀ~ησᾰντων";
-    aorist_imp_mid_2: "ὀ~ησαι", "ὀ~ησᾰσθον", "ὀ~ησᾰσθε";
-    aorist_imp_mid_3: "ὀ~ησᾰσθω", "ὀ~ησᾰσθων", _;
-    aorist_imp_pass_2: "ὀ~ηθητῐ", _, _;
-    aorist_imp_pass_3: "ὀ~ηθητω", "ὀ~ηθητων", "ὀ~ηθεντων";
-    perfect_ind_act_1: "ὠ~ηκᾰ", _, "ὠ~ηκᾰμεν";
-    perfect_ind_act_2: "ὠ~ηκᾰς", "ὠ~ηκᾰτον", "ὠ~ηκᾰτε";
-    perfect_ind_act_3: "ὠ~ηκε", _, "ὠ~ηκᾱσῐ";
-    perfect_ind_mid_1: "ὠ~ημαι", _, "ὠ~ημεθᾰ";
-    perfect_ind_mid_2: "ὠ~ησαι", "ὠ~ησθον", "ὠ~ησθε";
-    perfect_ind_mid_3: "ὠ~ηται", _, "ὠ~ηνται";
-    perfect_subj_act_1: "ὠ~ηκω", _, "ὠ~ηκωμεν";
-    perfect_subj_act_2: "ὠ~ηκῃς", "ὠ~ηκητον", "ὠ~ηκητε";
-    perfect_subj_act_3: "ὠ~ηκῃ", _, "ὠ~ηκωσῐ";
-    perfect_opt_act_1: "ὠ~ηκοιμῐ", _, "ὠ~ηκοιμεν";
-    perfect_opt_act_2: "ὠ~ηκοις", "ὠ~ηκοιτον", "ὠ~ηκοιτε";
-    perfect_opt_act_3: "ὠ~ηκοι", "ὠ~ηκοιτην", "ὠ~ηκοιεν";
-    perfect_imp_act_2: _, "ὠ~ηκετον", "ὠ~ηκετε";
-    perfect_imp_act_3: "ὠ~ηκετω", "ὠ~ηκετων", "ὠ~ηκοντων";
-    perfect_imp_mid_2: "ὠ~ησο", _, _;
-    perfect_imp_mid_3: "ὠ~ησθω", "ὠ~ησθων", _;
-    pluperfect_act_1: "ὠ~ηκειν", _, "ὠ~ηκεμεν";
-    pluperfect_act_2: "ὠ~ηκεις", "ὠ~ηκετον", "ὠ~ηκετε";
-    pluperfect_act_3: "ὠ~ηκει", "ὠ~ηκετην", "ὠ~ηκεσᾰν";
-    pluperfect_mid_1: "ὠ~ημην", _, "ὠ~ημεθᾰ";
-    pluperfect_mid_2: "ὠ~ησο", "ὠ~ησθον", "ὠ~ησθε";
-    pluperfect_mid_3: "ὠ~ητο", "ὠ~ησθην", "ὠ~ηντο";
-    infinitive_pres: "ὀ~εῑν", "ὀ~εῑσθαι", _;
-    infinitive_fut: "ὀ~ησειν", "ὀ~ησεσθαι", "ὀ~ηθησεσθαι";
-    infinitive_aor: "ὀ~ησαι", "ὀ~ησᾰσθαι", "ὀ~ηθηναι";
-    infinitive_perf: "ὠ~ηκεναι", "ὠ~ησθαι", _;
-    participle_pres: _, "ὀ~ουμενος", _;
-    participle_fut: "ὀ~ησων", "ὀ~ησομενος", "ὀ~ηθησομενος";
-    participle_aor: "ὀ~ησᾱς", "ὀ~ησᾰμενος", "ὀ~ηθεις";
-    participle_perf: "ὠ~ηκως", "ὠ~ημενος", _;
-    ),
-    // Ὀνομᾰζω: 5 words (ὀνομᾰζω, ὀνειδῐζω, ὀπᾰζω, ὀργῐζω, ὀστρᾰκῐζω). Like Γῡροω, except in 274 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("ὀνομᾰζω", 5, "ὀ~ζω", like Γῡροω;
-    ind_act_1: "ὀ~ζω", _, "ὀ~ζομεν";
-    ind_act_2: "ὀ~ζεις", "ὀ~ζετον", "ὀ~ζετε";
-    ind_act_3: "ὀ~ζει", _, "ὀ~ζουσῐ|ὀ~ζουσῐν";
-    ind_mid_1: "ὀ~ζομαι", _, "ὀ~ζομεθᾰ";
-    ind_mid_2: "ὀ~ζῃ|ὀ~ζει", "ὀ~ζεσθον", "ὀ~ζεσθε";
-    ind_mid_3: "ὀ~ζεται", _, "ὀ~ζονται";
-    ind_pass_2: "ὀ~ζῃ|ὀ~ζει", _, _;
-    subj_act_1: "ὀ~ζω", _, "ὀ~ζωμεν";
-    subj_act_2: "ὀ~ζῃς", "ὀ~ζητον", "ὀ~ζητε";
-    subj_act_3: "ὀ~ζῃ", _, "ὀ~ζωσῐ|ὀ~ζωσῐν";
-    subj_mid_1: "ὀ~ζωμαι", _, "ὀ~ζωμεθᾰ";
-    subj_mid_2: "ὀ~ζῃ", "ὀ~ζησθον", "ὀ~ζησθε";
-    subj_mid_3: "ὀ~ζηται", _, "ὀ~ζωνται";
-    subj_pass_2: "ὀ~ζῃ", _, _;
-    opt_act_1: "ὀ~ζοιμῐ", _, "ὀ~ζοιμεν";
-    opt_act_2: "ὀ~ζοις", "ὀ~ζοιτον", "ὀ~ζοιτε";
-    opt_act_3: "ὀ~ζοι", "ὀ~ζοιτην", "ὀ~ζοιεν";
-    opt_mid_1: "ὀ~ζοιμην", _, "ὀ~ζοιμεθᾰ";
-    opt_mid_2: "ὀ~ζοιο", "ὀ~ζοισθον", "ὀ~ζοισθε";
-    opt_mid_3: "ὀ~ζοιτο", "ὀ~ζοισθην", "ὀ~ζοιντο";
-    imp_act_2: "ὀ~ζε", _, _;
-    imp_act_3: "ὀ~ζετω", "ὀ~ζετων", "ὀ~ζοντων";
-    imp_mid_2: "ὀ~ζου", _, "ὀ~ζεσθε";
-    imp_mid_3: "ὀ~ζεσθω", "ὀ~ζεσθων", "ὀ~ζεσθων";
-    imperfect_act_1: "ὠ~ζον", _, "ὠ~ζομεν";
-    imperfect_act_2: "ὠ~ζες", "ὠ~ζετον", "ὠ~ζετε";
-    imperfect_act_3: "ὠ~ζε|ὠ~ζεν", "ὠ~ζετην", "ὠ~ζον";
-    imperfect_mid_1: "ὠ~ζομην", _, "ὠ~ζομεθᾰ";
-    imperfect_mid_2: "ὠ~ζου", "ὠ~ζεσθον", "ὠ~ζεσθε";
-    imperfect_mid_3: "ὠ~ζετο", "ὠ~ζεσθην", "ὠ~ζοντο";
-    future_ind_act_1: "ὀ~ω", _, "ὀ~οῡμεν";
-    future_ind_act_2: "ὀ~εῑς", "ὀ~εῑτον", "ὀ~εῑτε";
-    future_ind_act_3: "ὀ~εῑ", _, "ὀ~οῡσῐ|ὀ~οῡσῐν";
-    future_ind_mid_1: "ὀ~οῡμαι", _, "ὀ~ουμεθᾰ";
-    future_ind_mid_2: "ὀ~εῑ|ὀ~ῃ", "ὀ~εῑσθον", "ὀ~εῑσθε";
-    future_ind_mid_3: "ὀ~εῑται", _, "ὀ~οῡνται";
-    future_ind_pass_1: "ὀ~σθησομαι", _, "ὀ~σθησομεθᾰ";
-    future_ind_pass_2: "ὀ~σθησῃ|ὀ~σθησει", "ὀ~σθησεσθον", "ὀ~σθησεσθε";
-    future_ind_pass_3: "ὀ~σθησεται", _, "ὀ~σθησονται";
-    future_opt_act_1: "ὀ~οιην|ὀ~οῑμῐ", _, "ὀ~οῑμεν|ὀ~οιημεν";
-    future_opt_act_2: "ὀ~οιης|ὀ~οῑς", "ὀ~οῑτον|ὀ~οιητον", "ὀ~οῑτε|ὀ~οιητε";
-    future_opt_act_3: "ὀ~οιη|ὀ~οῑ", "ὀ~οιτην|ὀ~οιητην", "ὀ~οῑεν|ὀ~οιησᾰν";
-    future_opt_mid_1: "ὀ~οιμην", _, "ὀ~οιμεθᾰ";
-    future_opt_mid_2: "ὀ~οῑο", "ὀ~οῑσθον", "ὀ~οῑσθε";
-    future_opt_mid_3: "ὀ~οῑτο", "ὀ~οισθην", "ὀ~οῑντο";
-    future_opt_pass_1: "ὀ~σθησοιμην", _, "ὀ~σθησοιμεθᾰ";
-    future_opt_pass_2: "ὀ~σθησοιο", "ὀ~σθησοισθον", "ὀ~σθησοισθε";
-    future_opt_pass_3: "ὀ~σθησοιτο", "ὀ~σθησοισθην", "ὀ~σθησοιντο";
-    aorist_ind_act_1: "ὠ~σᾰ", _, "ὠ~σᾰμεν";
-    aorist_ind_act_2: "ὠ~σᾰς", "ὠ~σᾰτον", "ὠ~σᾰτε";
-    aorist_ind_act_3: "ὠ~σε|ὠ~σεν", "ὠ~σᾰτην", "ὠ~σᾰν";
-    aorist_ind_mid_1: "ὠ~σᾰμην", _, "ὠ~σᾰμεθᾰ";
-    aorist_ind_mid_2: "ὠ~σω", "ὠ~σᾰσθον", "ὠ~σᾰσθε";
-    aorist_ind_mid_3: "ὠ~σᾰτο", "ὠ~σᾰσθην", "ὠ~σᾰντο";
-    aorist_ind_pass_1: "ὠ~σθην", _, "ὠ~σθημεν";
-    aorist_ind_pass_2: "ὠ~σθης", "ὠ~σθητον", "ὠ~σθητε";
-    aorist_ind_pass_3: "ὠ~σθη", "ὠ~σθητην", "ὠ~σθησᾰν";
-    aorist_subj_act_1: "ὀ~σω", _, "ὀ~σωμεν";
-    aorist_subj_act_2: "ὀ~σῃς", "ὀ~σητον", "ὀ~σητε";
-    aorist_subj_act_3: "ὀ~σῃ", _, "ὀ~σωσῐ|ὀ~σωσῐν";
-    aorist_subj_mid_1: "ὀ~σωμαι", _, "ὀ~σωμεθᾰ";
-    aorist_subj_mid_2: "ὀ~σῃ", "ὀ~σησθον", "ὀ~σησθε";
-    aorist_subj_mid_3: "ὀ~σηται", _, "ὀ~σωνται";
-    aorist_subj_pass_1: "ὀ~σθω", _, "ὀ~σθωμεν";
-    aorist_subj_pass_2: "ὀ~σθῃς", "ὀ~σθητον", "ὀ~σθητε";
-    aorist_subj_pass_3: "ὀ~σθῃ", _, "ὀ~σθωσῐ|ὀ~σθωσῐν";
-    aorist_opt_act_1: "ὀ~σαιμῐ", _, "ὀ~σαιμεν";
-    aorist_opt_act_2: "ὀ~σειᾰς|ὀ~σαις", "ὀ~σαιτον", "ὀ~σαιτε";
-    aorist_opt_act_3: "ὀ~σειε|ὀ~σειεν|ὀ~σαι", "ὀ~σαιτην", "ὀ~σειᾰν|ὀ~σαιεν";
-    aorist_opt_mid_1: "ὀ~σαιμην", _, "ὀ~σαιμεθᾰ";
-    aorist_opt_mid_2: "ὀ~σαιο", "ὀ~σαισθον", "ὀ~σαισθε";
-    aorist_opt_mid_3: "ὀ~σαιτο", "ὀ~σαισθην", "ὀ~σαιντο";
-    aorist_opt_pass_1: "ὀ~σθειην", _, "ὀ~σθεῑμεν|ὀ~σθειημεν";
-    aorist_opt_pass_2: "ὀ~σθειης", "ὀ~σθεῑτον|ὀ~σθειητον", "ὀ~σθεῑτε|ὀ~σθειητε";
-    aorist_opt_pass_3: "ὀ~σθειη", "ὀ~σθειτην|ὀ~σθειητην", "ὀ~σθεῑεν|ὀ~σθειησᾰν";
-    aorist_imp_act_2: "ὀ~σον", "ὀ~σᾰτον", "ὀ~σᾰτε";
-    aorist_imp_act_3: "ὀ~σᾰτω", "ὀ~σᾰτων", "ὀ~σᾰντων";
-    aorist_imp_mid_2: "ὀ~σαι", "ὀ~σᾰσθον", "ὀ~σᾰσθε";
-    aorist_imp_mid_3: "ὀ~σᾰσθω", "ὀ~σᾰσθων", _;
-    aorist_imp_pass_2: "ὀ~σθητῐ", _, _;
-    aorist_imp_pass_3: "ὀ~σθητω", "ὀ~σθητων", "ὀ~σθεντων";
-    perfect_ind_act_1: "ὠ~κᾰ", _, "ὠ~κᾰμεν";
-    perfect_ind_act_2: "ὠ~κᾰς", "ὠ~κᾰτον", "ὠ~κᾰτε";
-    perfect_ind_act_3: "ὠ~κε|ὠ~κεν", _, "ὠ~κᾱσῐ|ὠ~κᾱσῐν";
-    perfect_ind_mid_1: "ὠ~σμαι", _, "ὠ~σμεθᾰ";
-    perfect_ind_mid_2: "ὠ~σαι", "ὠ~σθον", "ὠ~σθε";
-    perfect_ind_mid_3: "ὠ~σται", _, "ὠ~δᾰται";
-    perfect_subj_act_1: "ὠ~κω", _, "ὠ~κωμεν";
-    perfect_subj_act_2: "ὠ~κῃς", "ὠ~κητον", "ὠ~κητε";
-    perfect_subj_act_3: "ὠ~κῃ", _, "ὠ~κωσῐ|ὠ~κωσῐν";
-    perfect_opt_act_1: "ὠ~κοιμῐ|ὠ~κοιην", _, "ὠ~κοιμεν";
-    perfect_opt_act_2: "ὠ~κοις|ὠ~κοιης", "ὠ~κοιτον", "ὠ~κοιτε";
-    perfect_opt_act_3: "ὠ~κοι|ὠ~κοιη", "ὠ~κοιτην", "ὠ~κοιεν";
-    perfect_imp_act_2: "ὠ~κε", "ὠ~κετον", "ὠ~κετε";
-    perfect_imp_act_3: "ὠ~κετω", "ὠ~κετων", "ὠ~κοντων";
-    perfect_imp_mid_2: "ὠ~σο", _, _;
-    perfect_imp_mid_3: "ὠ~σθω", "ὠ~σθων", _;
-    pluperfect_act_1: "ὠ~κειν|ὠ~κη", _, "ὠ~κεμεν";
-    pluperfect_act_2: "ὠ~κεις|ὠ~κης", "ὠ~κετον", "ὠ~κετε";
-    pluperfect_act_3: "ὠ~κει|ὠ~κειν", "ὠ~κετην", "ὠ~κεσᾰν";
-    pluperfect_mid_1: "ὠ~σμην", _, "ὠ~σμεθᾰ";
-    pluperfect_mid_2: "ὠ~σο", "ὠ~σθον", "ὠ~σθε";
-    pluperfect_mid_3: "ὠ~στο", "ὠ~σθην", "ὠ~δᾰτο";
-    infinitive_pres: "ὀ~ζειν", "ὀ~ζεσθαι", _;
-    infinitive_fut: "ὀ~εῑν", "ὀ~εῑσθαι", "ὀ~σθησεσθαι";
-    infinitive_aor: "ὀ~σαι", "ὀ~σᾰσθαι", "ὀ~σθηναι";
-    infinitive_perf: "ὠ~κεναι", "ὠ~σθαι", _;
-    participle_pres: "ὀ~ζων", "ὀ~ζομενος", _;
-    participle_fut: "ὀ~ων", "ὀ~ουμενος", "ὀ~σθησομενος";
-    participle_aor: "ὀ~σᾱς", "ὀ~σᾰμενος", "ὀ~σθεις";
-    participle_perf: "ὠ~κως", "ὠ~σμενος", _;
     ),
     // Σῠνοικῐζω: 5 words (ἀνοικῐζω, κᾰτοικῐζω, σῠνοικῐζω, ξῠνοικῐζω, ἀποικῐζω). Like Προσερχομαι, except in 274 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
     conjugation!("σῠνοικῐζω", 5, "~οι~ζω", like Προσερχομαι;
@@ -6292,28 +5681,21 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: "~οι~σᾱς", "~οι~σᾰμενος", "~οι~σθεις";
     participle_perf: "~ῳ~κως", "~ῳ~σμενος", _;
     ),
-    // Ἐξᾰκολουθεω: 5 words (πᾰρᾰμελεω, σῠνᾰδῐκεω, ξῠνᾰδῐκεω, ἀπᾰσχολεω, ἐξᾰκολουθεω). Like Προσερχομαι, except in 274 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("ἐξᾰκολουθεω", 5, "~ᾰ~εω", like Προσερχομαι;
-    ind_act_1: "~ᾰ~ω", _, "~ᾰ~οῡμεν";
+    // Ἐξᾰκολουθεω: 5 words (πᾰρᾰμελεω, σῠνᾰδῐκεω, ξῠνᾰδῐκεω, ἀπᾰσχολεω, ἐξᾰκολουθεω). Like Ὑπᾰρχω, except in 255 cells: ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ind_act_3 pl, ….
+    conjugation!("ἐξᾰκολουθεω", 5, "~ᾰ~εω", like Ὑπᾰρχω;
+    ind_act_1: _, _, "~ᾰ~οῡμεν";
     ind_act_2: "~ᾰ~εῑς", "~ᾰ~εῑτον", "~ᾰ~εῑτε";
     ind_act_3: "~ᾰ~εῑ", _, "~ᾰ~οῡσῐ|~ᾰ~οῡσῐν";
     ind_mid_1: "~ᾰ~οῡμαι", _, "~ᾰ~ουμεθᾰ";
     ind_mid_2: "~ᾰ~εῑ|~ᾰ~ῃ", "~ᾰ~εῑσθον", "~ᾰ~εῑσθε";
     ind_mid_3: "~ᾰ~εῑται", _, "~ᾰ~οῡνται";
     ind_pass_2: "~ᾰ~εῑ|~ᾰ~ῃ", _, _;
-    subj_act_1: "~ᾰ~ω", _, "~ᾰ~ωμεν";
-    subj_act_2: "~ᾰ~ῃς", "~ᾰ~ητον", "~ᾰ~ητε";
-    subj_act_3: "~ᾰ~ῃ", _, "~ᾰ~ωσῐ|~ᾰ~ωσῐν";
-    subj_mid_1: "~ᾰ~ωμαι", _, "~ᾰ~ωμεθᾰ";
-    subj_mid_2: "~ᾰ~ῃ", "~ᾰ~ησθον", "~ᾰ~ησθε";
-    subj_mid_3: "~ᾰ~ηται", _, "~ᾰ~ωνται";
-    subj_pass_2: "~ᾰ~ῃ", _, _;
+    subj_act_3: _, _, "~ᾰ~ωσῐ|~ᾰ~ωσῐν";
     opt_act_1: "~ᾰ~οιην|~ᾰ~οῑμῐ", _, "~ᾰ~οῑμεν|~ᾰ~οιημεν";
     opt_act_2: "~ᾰ~οιης|~ᾰ~οῑς", "~ᾰ~οῑτον|~ᾰ~οιητον", "~ᾰ~οῑτε|~ᾰ~οιητε";
     opt_act_3: "~ᾰ~οιη|~ᾰ~οῑ", "~ᾰ~οιτην|~ᾰ~οιητην", "~ᾰ~οῑεν|~ᾰ~οιησᾰν";
-    opt_mid_1: "~ᾰ~οιμην", _, "~ᾰ~οιμεθᾰ";
     opt_mid_2: "~ᾰ~οῑο", "~ᾰ~οῑσθον", "~ᾰ~οῑσθε";
-    opt_mid_3: "~ᾰ~οῑτο", "~ᾰ~οισθην", "~ᾰ~οῑντο";
+    opt_mid_3: "~ᾰ~οῑτο", _, "~ᾰ~οῑντο";
     imp_act_2: "~ᾰ~ει", _, _;
     imp_act_3: "~ᾰ~ειτω", "~ᾰ~ειτων", "~ᾰ~ουντων";
     imp_mid_2: "~ᾰ~οῡ", _, "~ᾰ~εῑσθε";
@@ -6401,154 +5783,296 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     infinitive_fut: "~ᾰ~ησειν", "~ᾰ~ησεσθαι", "~ᾰ~ηθησεσθαι";
     infinitive_aor: "~ᾰ~ησαι", "~ᾰ~ησᾰσθαι", "~ᾰ~ηθηναι";
     infinitive_perf: "~η~ηκεναι", "~η~ησθαι", _;
-    participle_pres: "~ᾰ~ων", "~ᾰ~ουμενος", _;
+    participle_pres: _, "~ᾰ~ουμενος", _;
     participle_fut: "~ᾰ~ησων", "~ᾰ~ησομενος", "~ᾰ~ηθησομενος";
     participle_aor: "~ᾰ~ησᾱς", "~ᾰ~ησᾰμενος", "~ᾰ~ηθεις";
     participle_perf: "~η~ηκως", "~η~ημενος", _;
     ),
-    // Ἀροω: 5 words (ἀροω, ἀμαυροω, ἀλλοτρῐοω, ἀκρῑβοω, ἀγκῠλοω). Like Ἀσκεω, except in 235 cells: ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ind_mid_2 sg, ind_mid_2 du, ….
-    conjugation!("ἀροω", 5, "ἀ~οω", like Ἀσκεω;
-    ind_act_2: "ἀ~οῑς", "ἀ~οῡτον", "ἀ~οῡτε";
-    ind_act_3: "ἀ~οῑ", _, _;
-    ind_mid_2: "ἀ~οῑ", "ἀ~οῡσθον", "ἀ~οῡσθε";
-    ind_mid_3: "ἀ~οῡται", _, _;
-    ind_pass_2: derived, _, _;
-    subj_act_2: "ἀ~οῑς", "ἀ~ωτον", "ἀ~ωτε";
-    subj_act_3: "ἀ~οῑ", _, _;
-    subj_mid_2: "ἀ~οῑ", "ἀ~ωσθον", "ἀ~ωσθε";
-    subj_mid_3: "ἀ~ωται", _, _;
-    subj_pass_2: "ἀ~οῑ", _, _;
-    imp_act_2: "ἀ~ου", _, _;
-    imp_act_3: "ἀ~ουτω", "ἀ~ουτων", _;
-    imp_mid_2: _, _, "ἀ~οῡσθε";
-    imp_mid_3: "ἀ~ουσθω", "ἀ~ουσθων", "ἀ~ουσθων";
-    imperfect_act_2: "ἠ~ους", "ἠ~οῡτον", "ἠ~οῡτε";
-    imperfect_act_3: "ἠ~ου", "ἠ~ουτην", _;
-    imperfect_mid_2: _, "ἠ~οῡσθον", "ἠ~οῡσθε";
-    imperfect_mid_3: "ἠ~οῡτο", "ἠ~ουσθην", _;
-    future_ind_act_1: "ἀ~ωσω", _, "ἀ~ωσομεν";
-    future_ind_act_2: "ἀ~ωσεις", "ἀ~ωσετον", "ἀ~ωσετε";
-    future_ind_act_3: "ἀ~ωσει", _, "ἀ~ωσουσῐ|ἀ~ωσουσῐν";
-    future_ind_mid_1: "ἀ~ωσομαι", _, "ἀ~ωσομεθᾰ";
-    future_ind_mid_2: "ἀ~ωσῃ|ἀ~ωσει", "ἀ~ωσεσθον", "ἀ~ωσεσθε";
-    future_ind_mid_3: "ἀ~ωσεται", _, "ἀ~ωσονται";
-    future_ind_pass_1: "ἀ~ωθησομαι", _, "ἀ~ωθησομεθᾰ";
-    future_ind_pass_2: "ἀ~ωθησῃ|ἀ~ωθησει", "ἀ~ωθησεσθον", "ἀ~ωθησεσθε";
-    future_ind_pass_3: "ἀ~ωθησεται", _, "ἀ~ωθησονται";
-    future_opt_act_1: "ἀ~ωσοιμῐ", _, "ἀ~ωσοιμεν";
-    future_opt_act_2: "ἀ~ωσοις", "ἀ~ωσοιτον", "ἀ~ωσοιτε";
-    future_opt_act_3: "ἀ~ωσοι", "ἀ~ωσοιτην", "ἀ~ωσοιεν";
-    future_opt_mid_1: "ἀ~ωσοιμην", _, "ἀ~ωσοιμεθᾰ";
-    future_opt_mid_2: "ἀ~ωσοιο", "ἀ~ωσοισθον", "ἀ~ωσοισθε";
-    future_opt_mid_3: "ἀ~ωσοιτο", "ἀ~ωσοισθην", "ἀ~ωσοιντο";
-    future_opt_pass_1: "ἀ~ωθησοιμην", _, "ἀ~ωθησοιμεθᾰ";
-    future_opt_pass_2: "ἀ~ωθησοιο", "ἀ~ωθησοισθον", "ἀ~ωθησοισθε";
-    future_opt_pass_3: "ἀ~ωθησοιτο", "ἀ~ωθησοισθην", "ἀ~ωθησοιντο";
-    aorist_ind_act_1: "ἠ~ωσᾰ", _, "ἠ~ωσᾰμεν";
-    aorist_ind_act_2: "ἠ~ωσᾰς", "ἠ~ωσᾰτον", "ἠ~ωσᾰτε";
-    aorist_ind_act_3: "ἠ~ωσε|ἠ~ωσεν", "ἠ~ωσᾰτην", "ἠ~ωσᾰν";
-    aorist_ind_mid_1: "ἠ~ωσᾰμην", _, "ἠ~ωσᾰμεθᾰ";
-    aorist_ind_mid_2: "ἠ~ωσω", "ἠ~ωσᾰσθον", "ἠ~ωσᾰσθε";
-    aorist_ind_mid_3: "ἠ~ωσᾰτο", "ἠ~ωσᾰσθην", "ἠ~ωσᾰντο";
-    aorist_ind_pass_1: "ἠ~ωθην", _, "ἠ~ωθημεν";
-    aorist_ind_pass_2: "ἠ~ωθης", "ἠ~ωθητον", "ἠ~ωθητε";
-    aorist_ind_pass_3: "ἠ~ωθη", "ἠ~ωθητην", "ἠ~ωθησᾰν";
-    aorist_subj_act_1: "ἀ~ωσω", _, "ἀ~ωσωμεν";
-    aorist_subj_act_2: "ἀ~ωσῃς", "ἀ~ωσητον", "ἀ~ωσητε";
-    aorist_subj_act_3: "ἀ~ωσῃ", _, "ἀ~ωσωσῐ|ἀ~ωσωσῐν";
-    aorist_subj_mid_1: "ἀ~ωσωμαι", _, "ἀ~ωσωμεθᾰ";
-    aorist_subj_mid_2: "ἀ~ωσῃ", "ἀ~ωσησθον", "ἀ~ωσησθε";
-    aorist_subj_mid_3: "ἀ~ωσηται", _, "ἀ~ωσωνται";
-    aorist_subj_pass_1: "ἀ~ωθω", _, "ἀ~ωθωμεν";
-    aorist_subj_pass_2: "ἀ~ωθῃς", "ἀ~ωθητον", "ἀ~ωθητε";
-    aorist_subj_pass_3: "ἀ~ωθῃ", _, "ἀ~ωθωσῐ|ἀ~ωθωσῐν";
-    aorist_opt_act_1: "ἀ~ωσαιμῐ", _, "ἀ~ωσαιμεν";
-    aorist_opt_act_2: "ἀ~ωσειᾰς|ἀ~ωσαις", "ἀ~ωσαιτον", "ἀ~ωσαιτε";
-    aorist_opt_act_3: "ἀ~ωσειε|ἀ~ωσειεν|ἀ~ωσαι", "ἀ~ωσαιτην", "ἀ~ωσειᾰν|ἀ~ωσαιεν";
-    aorist_opt_mid_1: "ἀ~ωσαιμην", _, "ἀ~ωσαιμεθᾰ";
-    aorist_opt_mid_2: "ἀ~ωσαιο", "ἀ~ωσαισθον", "ἀ~ωσαισθε";
-    aorist_opt_mid_3: "ἀ~ωσαιτο", "ἀ~ωσαισθην", "ἀ~ωσαιντο";
-    aorist_opt_pass_1: "ἀ~ωθειην", _, "ἀ~ωθεῑμεν|ἀ~ωθειημεν";
-    aorist_opt_pass_2: "ἀ~ωθειης", "ἀ~ωθεῑτον|ἀ~ωθειητον", "ἀ~ωθεῑτε|ἀ~ωθειητε";
-    aorist_opt_pass_3: "ἀ~ωθειη", "ἀ~ωθειτην|ἀ~ωθειητην", "ἀ~ωθεῑεν|ἀ~ωθειησᾰν";
-    aorist_imp_act_2: "ἀ~ωσον", "ἀ~ωσᾰτον", "ἀ~ωσᾰτε";
-    aorist_imp_act_3: "ἀ~ωσᾰτω", "ἀ~ωσᾰτων", "ἀ~ωσᾰντων";
-    aorist_imp_mid_2: "ἀ~ωσαι", "ἀ~ωσᾰσθον", "ἀ~ωσᾰσθε";
-    aorist_imp_mid_3: "ἀ~ωσᾰσθω", "ἀ~ωσᾰσθων", _;
-    aorist_imp_pass_2: "ἀ~ωθητῐ", _, _;
-    aorist_imp_pass_3: "ἀ~ωθητω", "ἀ~ωθητων", "ἀ~ωθεντων";
-    perfect_ind_act_1: "ἠ~ωκᾰ", _, "ἠ~ωκᾰμεν";
-    perfect_ind_act_2: "ἠ~ωκᾰς", "ἠ~ωκᾰτον", "ἠ~ωκᾰτε";
-    perfect_ind_act_3: "ἠ~ωκε|ἠ~ωκεν", _, "ἠ~ωκᾱσῐ|ἠ~ωκᾱσῐν";
-    perfect_ind_mid_1: "ἠ~ωμαι", _, "ἠ~ωμεθᾰ";
-    perfect_ind_mid_2: "ἠ~ωσαι", "ἠ~ωσθον", "ἠ~ωσθε";
-    perfect_ind_mid_3: "ἠ~ωται", _, "ἠ~ωνται";
-    perfect_subj_act_1: "ἠ~ωκω", _, "ἠ~ωκωμεν";
-    perfect_subj_act_2: "ἠ~ωκῃς", "ἠ~ωκητον", "ἠ~ωκητε";
-    perfect_subj_act_3: "ἠ~ωκῃ", _, "ἠ~ωκωσῐ|ἠ~ωκωσῐν";
-    perfect_opt_act_1: "ἠ~ωκοιμῐ|ἠ~ωκοιην", _, "ἠ~ωκοιμεν";
-    perfect_opt_act_2: "ἠ~ωκοις|ἠ~ωκοιης", "ἠ~ωκοιτον", "ἠ~ωκοιτε";
-    perfect_opt_act_3: "ἠ~ωκοι|ἠ~ωκοιη", "ἠ~ωκοιτην", "ἠ~ωκοιεν";
-    perfect_imp_act_2: "ἠ~ωκε", "ἠ~ωκετον", "ἠ~ωκετε";
-    perfect_imp_act_3: "ἠ~ωκετω", "ἠ~ωκετων", "ἠ~ωκοντων";
-    perfect_imp_mid_2: "ἠ~ωσο", _, _;
-    perfect_imp_mid_3: "ἠ~ωσθω", "ἠ~ωσθων", _;
-    pluperfect_act_1: "ἠ~ωκειν|ἠ~ωκη", _, "ἠ~ωκεμεν";
-    pluperfect_act_2: "ἠ~ωκεις|ἠ~ωκης", "ἠ~ωκετον", "ἠ~ωκετε";
-    pluperfect_act_3: "ἠ~ωκει|ἠ~ωκειν", "ἠ~ωκετην", "ἠ~ωκεσᾰν";
-    pluperfect_mid_1: "ἠ~ωμην", _, "ἠ~ωμεθᾰ";
-    pluperfect_mid_2: "ἠ~ωσο", "ἠ~ωσθον", "ἠ~ωσθε";
-    pluperfect_mid_3: "ἠ~ωτο", "ἠ~ωσθην", "ἠ~ωντο";
-    infinitive_pres: "ἀ~οῡν", "ἀ~οῡσθαι", _;
-    infinitive_fut: "ἀ~ωσειν", "ἀ~ωσεσθαι", "ἀ~ωθησεσθαι";
-    infinitive_aor: "ἀ~ωσαι", "ἀ~ωσᾰσθαι", "ἀ~ωθηναι";
-    infinitive_perf: "ἠ~ωκεναι", "ἠ~ωσθαι", _;
-    participle_fut: "ἀ~ωσων", "ἀ~ωσομενος", "ἀ~ωθησομενος";
-    participle_aor: "ἀ~ωσᾱς", "ἀ~ωσᾰμενος", "ἀ~ωθεις";
-    participle_perf: "ἠ~ωκως", "ἠ~ωμενος", _;
+    // Πειρᾰω: 5 words (κοπῐᾰω, πειρᾰω, ἐξερᾱω, μειδῐᾰω, νεᾰω). Like Ἐαω, except in 194 cells: future_ind_act_1 sg, future_ind_act_1 pl, future_ind_act_2 sg, future_ind_act_2 du, future_ind_act_2 pl, future_ind_act_3 sg, ….
+    conjugation!("πειρᾰω", 5, "~ᾰω", like Ἐαω;
+    future_ind_act_1: "~ᾱσω", _, "~ᾱσομεν";
+    future_ind_act_2: "~ᾱσεις", "~ᾱσετον", "~ᾱσετε";
+    future_ind_act_3: "~ᾱσει", _, "~ᾱσουσῐ";
+    future_ind_mid_1: "~ᾱσομαι", _, "~ᾱσομεθᾰ";
+    future_ind_mid_2: "~ᾱσῃ", "~ᾱσεσθον", "~ᾱσεσθε";
+    future_ind_mid_3: "~ᾱσεται", _, "~ᾱσονται";
+    future_ind_pass_1: derived, _, derived;
+    future_ind_pass_2: derived, derived, derived;
+    future_ind_pass_3: derived, _, derived;
+    future_opt_act_1: "~ᾱσοιμῐ", _, "~ᾱσοιμεν";
+    future_opt_act_2: "~ᾱσοις", "~ᾱσοιτον", "~ᾱσοιτε";
+    future_opt_act_3: "~ᾱσοι", "~ᾱσοιτην", "~ᾱσοιεν";
+    future_opt_mid_1: "~ᾱσοιμην", _, "~ᾱσοιμεθᾰ";
+    future_opt_mid_2: "~ᾱσοιο", "~ᾱσοισθον", "~ᾱσοισθε";
+    future_opt_mid_3: "~ᾱσοιτο", "~ᾱσοισθην", "~ᾱσοιντο";
+    future_opt_pass_1: derived, _, derived;
+    future_opt_pass_2: derived, derived, derived;
+    future_opt_pass_3: derived, derived, derived;
+    aorist_ind_act_1: "ἐ~ᾱσᾰ", _, "ἐ~ᾱσᾰμεν";
+    aorist_ind_act_2: "ἐ~ᾱσᾰς", "ἐ~ᾱσᾰτον", "ἐ~ᾱσᾰτε";
+    aorist_ind_act_3: "ἐ~ᾱσε|ἐ~ᾱσεν", "ἐ~ᾱσᾰτην", "ἐ~ᾱσᾰν";
+    aorist_ind_mid_1: "ἐ~ᾱσᾰμην", _, "ἐ~ᾱσᾰμεθᾰ";
+    aorist_ind_mid_2: "ἐ~ᾱσω", "ἐ~ᾱσᾰσθον", "ἐ~ᾱσᾰσθε";
+    aorist_ind_mid_3: "ἐ~ᾱσᾰτο", "ἐ~ᾱσᾰσθην", "ἐ~ᾱσᾰντο";
+    aorist_ind_pass_1: "ἐ~ᾱθην", _, "ἐ~ᾱθημεν";
+    aorist_ind_pass_2: "ἐ~ᾱθης", "ἐ~ᾱθητον", "ἐ~ᾱθητε";
+    aorist_ind_pass_3: "ἐ~ᾱθη", "ἐ~ᾱθητην", "ἐ~ᾱθησᾰν";
+    aorist_subj_act_1: "~ᾱσω", _, "~ᾱσωμεν";
+    aorist_subj_act_2: "~ᾱσῃς", "~ᾱσητον", "~ᾱσητε";
+    aorist_subj_act_3: "~ᾱσῃ", _, "~ᾱσωσῐ|~ᾱσωσῐν";
+    aorist_subj_mid_1: "~ᾱσωμαι", _, "~ᾱσωμεθᾰ";
+    aorist_subj_mid_2: "~ᾱσῃ", "~ᾱσησθον", "~ᾱσησθε";
+    aorist_subj_mid_3: "~ᾱσηται", _, "~ᾱσωνται";
+    aorist_subj_pass_1: "~ᾱθω", _, "~ᾱθωμεν";
+    aorist_subj_pass_2: "~ᾱθῃς", "~ᾱθητον", "~ᾱθητε";
+    aorist_subj_pass_3: "~ᾱθῃ", _, "~ᾱθωσῐ";
+    aorist_opt_act_1: "~ᾱσαιμῐ", _, "~ᾱσαιμεν";
+    aorist_opt_act_2: "~ᾱσειᾰς|~ᾱσαις", "~ᾱσαιτον", "~ᾱσαιτε";
+    aorist_opt_act_3: "~ᾱσειε|~ᾱσειεν|~ᾱσαι", "~ᾱσαιτην", "~ᾱσειᾰν|~ᾱσαιεν";
+    aorist_opt_mid_1: "~ᾱσαιμην", _, "~ᾱσαιμεθᾰ";
+    aorist_opt_mid_2: "~ᾱσαιο", "~ᾱσαισθον", "~ᾱσαισθε";
+    aorist_opt_mid_3: "~ᾱσαιτο", "~ᾱσαισθην", "~ᾱσαιντο";
+    aorist_opt_pass_1: "~ᾱθειην", _, "~ᾱθεῑμεν";
+    aorist_opt_pass_2: "~ᾱθειης", "~ᾱθεῑτον", "~ᾱθεῑτε";
+    aorist_opt_pass_3: "~ᾱθειη", "~ᾱθειτην", "~ᾱθεῑεν";
+    aorist_imp_act_2: _, "~ᾱσᾰτον", "~ᾱσᾰτε";
+    aorist_imp_act_3: "~ᾱσᾰτω", "~ᾱσᾰτων", "~ᾱσᾰντων";
+    aorist_imp_mid_2: _, "~ᾱσᾰσθον", "~ᾱσᾰσθε";
+    aorist_imp_mid_3: "~ᾱσᾰσθω", "~ᾱσᾰσθων", _;
+    aorist_imp_pass_2: "~ᾱθητῐ", _, _;
+    aorist_imp_pass_3: "~ᾱθητω", "~ᾱθητων", "~ᾱθεντων";
+    perfect_ind_act_1: "%ε~ᾱκᾰ", _, "%ε~ᾱκᾰμεν";
+    perfect_ind_act_2: "%ε~ᾱκᾰς", "%ε~ᾱκᾰτον", "%ε~ᾱκᾰτε";
+    perfect_ind_act_3: "%ε~ᾱκε", _, "%ε~ᾱκᾱσῐ";
+    perfect_ind_mid_1: "%ε~ᾱμαι", _, "%ε~ᾱμεθᾰ";
+    perfect_ind_mid_2: "%ε~ᾱσαι", "%ε~ᾱσθον", "%ε~ᾱσθε";
+    perfect_ind_mid_3: "%ε~ᾱται", _, "%ε~ᾱνται";
+    perfect_subj_act_1: "%ε~ᾱκω", _, "%ε~ᾱκωμεν";
+    perfect_subj_act_2: "%ε~ᾱκῃς", "%ε~ᾱκητον", "%ε~ᾱκητε";
+    perfect_subj_act_3: "%ε~ᾱκῃ", _, "%ε~ᾱκωσῐ";
+    perfect_opt_act_1: "%ε~ᾱκοιμῐ", _, "%ε~ᾱκοιμεν";
+    perfect_opt_act_2: "%ε~ᾱκοις", "%ε~ᾱκοιτον", "%ε~ᾱκοιτε";
+    perfect_opt_act_3: "%ε~ᾱκοι", "%ε~ᾱκοιτην", "%ε~ᾱκοιεν";
+    perfect_imp_act_2: _, "%ε~ᾱκετον", "%ε~ᾱκετε";
+    perfect_imp_act_3: "%ε~ᾱκετω", "%ε~ᾱκετων", "%ε~ᾱκοντων";
+    perfect_imp_mid_2: "%ε~ᾱσο", _, _;
+    perfect_imp_mid_3: "%ε~ᾱσθω", "%ε~ᾱσθων", _;
+    pluperfect_act_1: derived, _, derived;
+    pluperfect_act_2: derived, derived, derived;
+    pluperfect_act_3: derived, derived, derived;
+    pluperfect_mid_1: "ἐ%ε~ᾱμην", _, "ἐ%ε~ᾱμεθᾰ";
+    pluperfect_mid_2: "ἐ%ε~ᾱσο", "ἐ%ε~ᾱσθον", "ἐ%ε~ᾱσθε";
+    pluperfect_mid_3: "ἐ%ε~ᾱτο", "ἐ%ε~ᾱσθην", "ἐ%ε~ᾱντο";
+    infinitive_fut: "~ᾱσειν", "~ᾱσεσθαι", derived;
+    infinitive_aor: _, "~ᾱσᾰσθαι", "~ᾱθηναι";
+    infinitive_perf: "%ε~ᾱκεναι", _, _;
+    participle_fut: "~ᾱσων", "~ᾱσομενος", derived;
+    participle_aor: "~ᾱσᾱς", "~ᾱσᾰμενος", "~ᾱθεις";
+    participle_perf: "%ε~ᾱκως", "%ε~ᾱμενος", _;
     ),
-    // Κᾰκοω: 5 words (ἱδροω, κᾰκοω, ὑπνοω, ἐξῐσοω, ἡλοω). Like Γῡροω, except in 99 cells: imperfect_act_1 sg, imperfect_act_1 pl, imperfect_act_2 sg, imperfect_act_2 du, imperfect_act_2 pl, imperfect_act_3 sg, ….
-    conjugation!("κᾰκοω", 5, "~οω", like Γῡροω;
-    imperfect_act_1: "~ουν", _, "~οῡμεν";
-    imperfect_act_2: "~ους", "~οῡτον", "~οῡτε";
-    imperfect_act_3: "~ου", "~ουτην", "~ουν";
+    // Ἱζω: 4 words (ἑλληνῐζω, ἀφῠπνῐζω, ῥωμᾱϊζω, ἐξῠβρῐζω). Like Κᾰτεργαζομαι, except in 105 cells: ind_act_3 pl, ind_mid_2 sg, ind_pass_2 sg, subj_act_3 pl, imperfect_act_1 sg, imperfect_act_1 pl, ….
+    conjugation!("ἱζω", 4, "~ζω", like Κᾰτεργαζομαι;
+    ind_act_3: _, _, "~ζουσῐ|~ζουσῐν";
+    ind_mid_2: "~ζῃ|~ζει", _, _;
+    ind_pass_2: "~ζῃ|~ζει", _, _;
+    subj_act_3: _, _, "~ζωσῐ|~ζωσῐν";
+    imperfect_act_1: "~ζον", _, "~ζομεν";
+    imperfect_act_2: "~ζες", "~ζετον", "~ζετε";
+    imperfect_act_3: "~ζε|~ζεν", "~ζετην", "~ζον";
+    imperfect_mid_1: "~ζομην", _, "~ζομεθᾰ";
+    imperfect_mid_2: "~ζου", "~ζεσθον", "~ζεσθε";
+    imperfect_mid_3: "~ζετο", "~ζεσθην", "~ζοντο";
+    aorist_ind_act_1: "~σᾰ", _, "~σᾰμεν";
+    aorist_ind_act_2: "~σᾰς", "~σᾰτον", "~σᾰτε";
+    aorist_ind_act_3: "~σε", "~σᾰτην", "~σᾰν";
+    aorist_ind_mid_1: "~σᾰμην", _, "~σᾰμεθᾰ";
+    aorist_ind_mid_2: "~σω", "~σᾰσθον", "~σᾰσθε";
+    aorist_ind_mid_3: "~σᾰτο", "~σᾰσθην", "~σᾰντο";
+    aorist_ind_pass_1: "~σθην", _, "~σθημεν";
+    aorist_ind_pass_2: "~σθης", "~σθητον", "~σθητε";
+    aorist_ind_pass_3: "~σθη", "~σθητην", "~σθησᾰν";
+    aorist_subj_act_3: _, _, "~σωσῐ|~σωσῐν";
+    aorist_opt_act_2: "~σειᾰς|~σαις", _, _;
+    aorist_opt_act_3: "~σειε|~σειεν|~σαι", _, "~σειᾰν|~σαιεν";
+    perfect_ind_act_1: "~κᾰ", _, "~κᾰμεν";
+    perfect_ind_act_2: "~κᾰς", "~κᾰτον", "~κᾰτε";
+    perfect_ind_act_3: "~κε", _, "~κᾱσῐ";
+    perfect_ind_mid_1: "~σμαι", _, "~σμεθᾰ";
+    perfect_ind_mid_2: "~σαι", "~σθον", "~σθε";
+    perfect_ind_mid_3: "~σται", _, "~δᾰται";
+    perfect_subj_act_1: "~κω", _, "~κωμεν";
+    perfect_subj_act_2: "~κῃς", "~κητον", "~κητε";
+    perfect_subj_act_3: "~κῃ", _, "~κωσῐ";
+    perfect_opt_act_1: "~κοιμῐ", _, "~κοιμεν";
+    perfect_opt_act_2: "~κοις", "~κοιτον", "~κοιτε";
+    perfect_opt_act_3: "~κοι", "~κοιτην", "~κοιεν";
+    perfect_imp_act_2: _, "~κετον", "~κετε";
+    perfect_imp_act_3: "~κετω", "~κετων", "~κοντων";
+    perfect_imp_mid_2: "~σο", _, _;
+    perfect_imp_mid_3: "~σθω", "~σθων", _;
+    pluperfect_act_1: "~κειν", _, "~κεμεν";
+    pluperfect_act_2: "~κεις", "~κετον", "~κετε";
+    pluperfect_act_3: "~κει", "~κετην", "~κεσᾰν";
+    pluperfect_mid_1: "~σμην", _, "~σμεθᾰ";
+    pluperfect_mid_2: "~σο", "~σθον", "~σθε";
+    pluperfect_mid_3: "~στο", "~σθην", "~δᾰτο";
+    infinitive_perf: "~κεναι", "~σθαι", _;
+    participle_perf: "~κως", "~σμενος", _;
+    ),
+    // Ἡγεομαι: 4 words (ἡγεομαι, νεομαι, ἐξηγεομαι, εὐνομεομαι). Like Οἰομαι, except in 95 cells: ind_act_1 sg, ind_mid_1 sg, ind_mid_1 pl, ind_mid_2 sg, ind_mid_2 du, ind_mid_2 pl, ….
+    conjugation!("ἡγεομαι", 4, "~εομαι", like Οἰομαι;
+    ind_act_1: "~εομαι", _, _;
+    ind_mid_1: "~οῡμαι", _, "~ουμεθᾰ";
+    ind_mid_2: "~εῑ", "~εῑσθον", "~εῑσθε";
+    ind_mid_3: "~εῑται", _, "~οῡνται";
+    opt_mid_2: "~οῑο", "~οῑσθον", "~οῑσθε";
+    opt_mid_3: "~οῑτο", _, "~οῑντο";
+    imp_mid_2: "~οῡ", _, "~εῑσθε";
+    imp_mid_3: "~εισθω", "~εισθων", "~εισθων";
     imperfect_mid_1: "~ουμην", _, "~ουμεθᾰ";
-    imperfect_mid_2: "~οῡ", "~οῡσθον", "~οῡσθε";
-    imperfect_mid_3: "~οῡτο", "~ουσθην", "~οῡντο";
-    future_ind_act_3: _, _, "~ωσουσῐ|~ωσουσῐν";
-    aorist_ind_act_1: "~ωσᾰ", _, "~ωσᾰμεν";
-    aorist_ind_act_2: "~ωσᾰς", "~ωσᾰτον", "~ωσᾰτε";
-    aorist_ind_act_3: "~ωσε|~ωσεν", "~ωσᾰτην", "~ωσᾰν";
-    aorist_ind_mid_1: "~ωσᾰμην", _, "~ωσᾰμεθᾰ";
-    aorist_ind_mid_2: "~ωσω", "~ωσᾰσθον", "~ωσᾰσθε";
-    aorist_ind_mid_3: "~ωσᾰτο", "~ωσᾰσθην", "~ωσᾰντο";
-    aorist_ind_pass_1: "~ωθην", _, "~ωθημεν";
-    aorist_ind_pass_2: "~ωθης", "~ωθητον", "~ωθητε";
-    aorist_ind_pass_3: "~ωθη", "~ωθητην", "~ωθησᾰν";
-    perfect_ind_act_1: "~ωκᾰ", _, "~ωκᾰμεν";
-    perfect_ind_act_2: "~ωκᾰς", "~ωκᾰτον", "~ωκᾰτε";
-    perfect_ind_act_3: "~ωκε|~ωκεν", _, "~ωκᾱσῐ|~ωκᾱσῐν";
-    perfect_ind_mid_1: "~ωμαι", _, "~ωμεθᾰ";
-    perfect_ind_mid_2: "~ωσαι", "~ωσθον", "~ωσθε";
-    perfect_ind_mid_3: "~ωται", _, "~ωνται";
-    perfect_subj_act_1: "~ωκω", _, "~ωκωμεν";
-    perfect_subj_act_2: "~ωκῃς", "~ωκητον", "~ωκητε";
-    perfect_subj_act_3: "~ωκῃ", _, "~ωκωσῐ|~ωκωσῐν";
-    perfect_opt_act_1: "~ωκοιμῐ|~ωκοιην", _, "~ωκοιμεν";
-    perfect_opt_act_2: "~ωκοις|~ωκοιης", "~ωκοιτον", "~ωκοιτε";
-    perfect_opt_act_3: "~ωκοι|~ωκοιη", "~ωκοιτην", "~ωκοιεν";
-    perfect_imp_act_2: "~ωκε", "~ωκετον", "~ωκετε";
-    perfect_imp_act_3: "~ωκετω", "~ωκετων", "~ωκοντων";
-    perfect_imp_mid_2: "~ωσο", _, _;
-    perfect_imp_mid_3: "~ωσθω", "~ωσθων", _;
-    pluperfect_act_1: "~ωκειν", _, "~ωκεμεν";
-    pluperfect_act_2: "~ωκεις", "~ωκετον", "~ωκετε";
-    pluperfect_act_3: "~ωκει", "~ωκετην", "~ωκεσᾰν";
-    pluperfect_mid_1: "~ωμην", _, "~ωμεθᾰ";
-    pluperfect_mid_2: "~ωσο", "~ωσθον", "~ωσθε";
-    pluperfect_mid_3: "~ωτο", "~ωσθην", "~ωντο";
-    infinitive_perf: "~ωκεναι", "~ωσθαι", _;
-    participle_perf: "~ωκως", "~ωμενος", _;
+    imperfect_mid_2: "~οῡ", "~εῑσθον", "~εῑσθε";
+    imperfect_mid_3: "~εῑτο", "~εισθην", "~οῡντο";
+    future_ind_pass_1: "~ηθησομαι", _, "~ηθησομεθᾰ";
+    future_ind_pass_2: "~ηθησῃ", "~ηθησεσθον", "~ηθησεσθε";
+    future_ind_pass_3: "~ηθησεται", _, "~ηθησονται";
+    future_opt_pass_1: "~ηθησοιμην", _, "~ηθησοιμεθᾰ";
+    future_opt_pass_2: "~ηθησοιο", "~ηθησοισθον", "~ηθησοισθε";
+    future_opt_pass_3: "~ηθησοιτο", "~ηθησοισθην", "~ηθησοιντο";
+    aorist_ind_mid_1: "~ησᾰμην", _, "~ησᾰμεθᾰ";
+    aorist_ind_mid_2: "~ησω", "~ησᾰσθον", "~ησᾰσθε";
+    aorist_ind_mid_3: "~ησᾰτο", "~ησᾰσθην", "~ησᾰντο";
+    aorist_ind_pass_1: "~ηθην", _, "~ηθημεν";
+    aorist_ind_pass_2: "~ηθης", "~ηθητον", "~ηθητε";
+    aorist_ind_pass_3: "~ηθη", "~ηθητην", "~ηθησᾰν";
+    aorist_subj_mid_1: "~ησωμαι", _, "~ησωμεθᾰ";
+    aorist_subj_mid_2: "~ησῃ", "~ησησθον", "~ησησθε";
+    aorist_subj_mid_3: "~ησηται", _, "~ησωνται";
+    aorist_opt_mid_1: "~ησαιμην", _, "~ησαιμεθᾰ";
+    aorist_opt_mid_2: "~ησαιο", "~ησαισθον", "~ησαισθε";
+    aorist_opt_mid_3: "~ησαιτο", "~ησαισθην", "~ησαιντο";
+    aorist_imp_mid_2: "~ησαι", "~ησᾰσθον", "~ησᾰσθε";
+    aorist_imp_mid_3: "~ησᾰσθω", "~ησᾰσθων", _;
+    perfect_ind_mid_1: "~ημαι", _, "~ημεθᾰ";
+    perfect_ind_mid_2: "~ησαι", "~ησθον", "~ησθε";
+    perfect_ind_mid_3: "~ηται", _, "~ηνται";
+    perfect_imp_mid_2: "~ησο", _, _;
+    perfect_imp_mid_3: "~ησθω", "~ησθων", _;
+    infinitive_pres: _, "~εῑσθαι", _;
+    infinitive_fut: _, _, "~ηθησεσθαι";
+    infinitive_aor: _, "~ησᾰσθαι", _;
+    infinitive_perf: _, "~ησθαι", _;
+    participle_pres: _, "~ουμενος", _;
+    participle_fut: _, _, "~ηθησομενος";
+    participle_aor: _, "~ησᾰμενος", _;
+    participle_perf: _, "~ημενος", _;
+    ),
+    // Ἐπᾰγγελλω: 4 words (πᾰρᾰγγελλω, ἀπᾰγγελλω, ἐπᾰγγελλω, ἀνᾰγγελλω).
+    conjugation!("ἐπᾰγγελλω", 4, "~ᾰ~~λω";
+    ind_act_1: "~ᾰ~~λω", _, "~ᾰ~~λομεν";
+    ind_act_2: "~ᾰ~~λεις", "~ᾰ~~λετον", "~ᾰ~~λετε";
+    ind_act_3: "~ᾰ~~λει", _, "~ᾰ~~λουσῐ|~ᾰ~~λουσῐν";
+    ind_mid_1: "~ᾰ~~λομαι", _, "~ᾰ~~λομεθᾰ";
+    ind_mid_2: "~ᾰ~~λῃ|~ᾰ~~λει", "~ᾰ~~λεσθον", "~ᾰ~~λεσθε";
+    ind_mid_3: "~ᾰ~~λεται", _, "~ᾰ~~λονται";
+    ind_pass_2: "~ᾰ~~λῃ|~ᾰ~~λει", _, _;
+    subj_act_1: "~ᾰ~~λω", _, "~ᾰ~~λωμεν";
+    subj_act_2: "~ᾰ~~λῃς", "~ᾰ~~λητον", "~ᾰ~~λητε";
+    subj_act_3: "~ᾰ~~λῃ", _, "~ᾰ~~λωσῐ|~ᾰ~~λωσῐν";
+    subj_mid_1: "~ᾰ~~λωμαι", _, "~ᾰ~~λωμεθᾰ";
+    subj_mid_2: "~ᾰ~~λῃ", "~ᾰ~~λησθον", "~ᾰ~~λησθε";
+    subj_mid_3: "~ᾰ~~ληται", _, "~ᾰ~~λωνται";
+    subj_pass_2: "~ᾰ~~λῃ", _, _;
+    opt_act_1: "~ᾰ~~λοιμῐ", _, "~ᾰ~~λοιμεν";
+    opt_act_2: "~ᾰ~~λοις", "~ᾰ~~λοιτον", "~ᾰ~~λοιτε";
+    opt_act_3: "~ᾰ~~λοι", "~ᾰ~~λοιτην", "~ᾰ~~λοιεν";
+    opt_mid_1: "~ᾰ~~λοιμην", _, "~ᾰ~~λοιμεθᾰ";
+    opt_mid_2: "~ᾰ~~λοιο", "~ᾰ~~λοισθον", "~ᾰ~~λοισθε";
+    opt_mid_3: "~ᾰ~~λοιτο", "~ᾰ~~λοισθην", "~ᾰ~~λοιντο";
+    imp_act_2: "~ᾰ~~λε", _, _;
+    imp_act_3: "~ᾰ~~λετω", "~ᾰ~~λετων", "~ᾰ~~λοντων";
+    imp_mid_2: "~ᾰ~~λου", _, "~ᾰ~~λεσθε";
+    imp_mid_3: "~ᾰ~~λεσθω", "~ᾰ~~λεσθων", "~ᾰ~~λεσθων";
+    imperfect_act_1: "~η~~λον", _, "~η~~λομεν";
+    imperfect_act_2: "~η~~λες", "~η~~λετον", "~η~~λετε";
+    imperfect_act_3: "~η~~λε|~η~~λεν", "~η~~λετην", "~η~~λον";
+    imperfect_mid_1: "~η~~λομην", _, "~η~~λομεθᾰ";
+    imperfect_mid_2: "~η~~λου", "~η~~λεσθον", "~η~~λεσθε";
+    imperfect_mid_3: "~η~~λετο", "~η~~λεσθην", "~η~~λοντο";
+    future_ind_act_1: "~ᾰ~~ω", _, "~ᾰ~~οῡμεν";
+    future_ind_act_2: "~ᾰ~~εῑς", "~ᾰ~~εῑτον", "~ᾰ~~εῑτε";
+    future_ind_act_3: "~ᾰ~~εῑ", _, "~ᾰ~~οῡσῐ|~ᾰ~~οῡσῐν";
+    future_ind_mid_1: "~ᾰ~~οῡμαι", _, "~ᾰ~~ουμεθᾰ";
+    future_ind_mid_2: "~ᾰ~~εῑ|~ᾰ~~ῃ", "~ᾰ~~εῑσθον", "~ᾰ~~εῑσθε";
+    future_ind_mid_3: "~ᾰ~~εῑται", _, "~ᾰ~~οῡνται";
+    future_ind_pass_1: "~ᾰ~~θησομαι", _, "~ᾰ~~θησομεθᾰ";
+    future_ind_pass_2: "~ᾰ~~θησῃ|~ᾰ~~θησει", "~ᾰ~~θησεσθον", "~ᾰ~~θησεσθε";
+    future_ind_pass_3: "~ᾰ~~θησεται", _, "~ᾰ~~θησονται";
+    future_opt_act_1: "~ᾰ~~οιην|~ᾰ~~οῑμῐ", _, "~ᾰ~~οῑμεν|~ᾰ~~οιημεν";
+    future_opt_act_2: "~ᾰ~~οιης|~ᾰ~~οῑς", "~ᾰ~~οῑτον|~ᾰ~~οιητον", "~ᾰ~~οῑτε|~ᾰ~~οιητε";
+    future_opt_act_3: "~ᾰ~~οιη|~ᾰ~~οῑ", "~ᾰ~~οιτην|~ᾰ~~οιητην", "~ᾰ~~οῑεν|~ᾰ~~οιησᾰν";
+    future_opt_mid_1: "~ᾰ~~οιμην", _, "~ᾰ~~οιμεθᾰ";
+    future_opt_mid_2: "~ᾰ~~οῑο", "~ᾰ~~οῑσθον", "~ᾰ~~οῑσθε";
+    future_opt_mid_3: "~ᾰ~~οῑτο", "~ᾰ~~οισθην", "~ᾰ~~οῑντο";
+    future_opt_pass_1: "~ᾰ~~θησοιμην", _, "~ᾰ~~θησοιμεθᾰ";
+    future_opt_pass_2: "~ᾰ~~θησοιο", "~ᾰ~~θησοισθον", "~ᾰ~~θησοισθε";
+    future_opt_pass_3: "~ᾰ~~θησοιτο", "~ᾰ~~θησοισθην", "~ᾰ~~θησοιντο";
+    aorist_ind_act_1: "~η~ι~ᾰ", _, "~η~ι~ᾰμεν";
+    aorist_ind_act_2: "~η~ι~ᾰς", "~η~ι~ᾰτον", "~η~ι~ᾰτε";
+    aorist_ind_act_3: "~η~ι~ε|~η~ι~εν", "~η~ι~ᾰτην", "~η~ι~ᾰν";
+    aorist_ind_mid_1: "~η~ι~ᾰμην", _, "~η~ι~ᾰμεθᾰ";
+    aorist_ind_mid_2: "~η~ι~ω", "~η~ι~ᾰσθον", "~η~ι~ᾰσθε";
+    aorist_ind_mid_3: "~η~ι~ᾰτο", "~η~ι~ᾰσθην", "~η~ι~ᾰντο";
+    aorist_ind_pass_1: "~η~~θην", _, "~η~~θημεν";
+    aorist_ind_pass_2: "~η~~θης", "~η~~θητον", "~η~~θητε";
+    aorist_ind_pass_3: "~η~~θη", "~η~~θητην", "~η~~θησᾰν";
+    aorist_subj_act_1: "~ᾰ~ι~ω", _, "~ᾰ~ι~ωμεν";
+    aorist_subj_act_2: "~ᾰ~ι~ῃς", "~ᾰ~ι~ητον", "~ᾰ~ι~ητε";
+    aorist_subj_act_3: "~ᾰ~ι~ῃ", _, "~ᾰ~ι~ωσῐ|~ᾰ~ι~ωσῐν";
+    aorist_subj_mid_1: "~ᾰ~ι~ωμαι", _, "~ᾰ~ι~ωμεθᾰ";
+    aorist_subj_mid_2: "~ᾰ~ι~ῃ", "~ᾰ~ι~ησθον", "~ᾰ~ι~ησθε";
+    aorist_subj_mid_3: "~ᾰ~ι~ηται", _, "~ᾰ~ι~ωνται";
+    aorist_subj_pass_1: "~ᾰ~~θω", _, "~ᾰ~~θωμεν";
+    aorist_subj_pass_2: "~ᾰ~~θῃς", "~ᾰ~~θητον", "~ᾰ~~θητε";
+    aorist_subj_pass_3: "~ᾰ~~θῃ", _, "~ᾰ~~θωσῐ|~ᾰ~~θωσῐν";
+    aorist_opt_act_1: "~ᾰ~ι~αιμῐ", _, "~ᾰ~ι~αιμεν";
+    aorist_opt_act_2: "~ᾰ~ι~ειᾰς|~ᾰ~ι~αις", "~ᾰ~ι~αιτον", "~ᾰ~ι~αιτε";
+    aorist_opt_act_3: "~ᾰ~ι~ειε|~ᾰ~ι~ειεν|~ᾰ~ι~αι", "~ᾰ~ι~αιτην", "~ᾰ~ι~ειᾰν|~ᾰ~ι~αιεν";
+    aorist_opt_mid_1: "~ᾰ~ι~αιμην", _, "~ᾰ~ι~αιμεθᾰ";
+    aorist_opt_mid_2: "~ᾰ~ι~αιο", "~ᾰ~ι~αισθον", "~ᾰ~ι~αισθε";
+    aorist_opt_mid_3: "~ᾰ~ι~αιτο", "~ᾰ~ι~αισθην", "~ᾰ~ι~αιντο";
+    aorist_opt_pass_1: "~ᾰ~~θειην", _, "~ᾰ~~θεῑμεν|~ᾰ~~θειημεν";
+    aorist_opt_pass_2: "~ᾰ~~θειης", "~ᾰ~~θεῑτον|~ᾰ~~θειητον", "~ᾰ~~θεῑτε|~ᾰ~~θειητε";
+    aorist_opt_pass_3: "~ᾰ~~θειη", "~ᾰ~~θειτην|~ᾰ~~θειητην", "~ᾰ~~θεῑεν|~ᾰ~~θειησᾰν";
+    aorist_imp_act_2: "~ᾰ~ι~ον", "~ᾰ~ι~ᾰτον", "~ᾰ~ι~ᾰτε";
+    aorist_imp_act_3: "~ᾰ~ι~ᾰτω", "~ᾰ~ι~ᾰτων", "~ᾰ~ι~ᾰντων";
+    aorist_imp_mid_2: "~ᾰ~ι~αι", "~ᾰ~ι~ᾰσθον", "~ᾰ~ι~ᾰσθε";
+    aorist_imp_mid_3: "~ᾰ~ι~ᾰσθω", "~ᾰ~ι~ᾰσθων", _;
+    aorist_imp_pass_2: "~ᾰ~~θητῐ", _, _;
+    aorist_imp_pass_3: "~ᾰ~~θητω", "~ᾰ~~θητων", "~ᾰ~~θεντων";
+    perfect_ind_act_1: "~η~~κᾰ", _, "~η~~κᾰμεν";
+    perfect_ind_act_2: "~η~~κᾰς", "~η~~κᾰτον", "~η~~κᾰτε";
+    perfect_ind_act_3: "~η~~κε|~η~~κεν", _, "~η~~κᾱσῐ|~η~~κᾱσῐν";
+    perfect_ind_mid_1: "~η~~μαι", _, "~η~~μεθᾰ";
+    perfect_ind_mid_2: "~η~~σαι", "~η~~θον", "~η~~θε";
+    perfect_ind_mid_3: "~η~~ται", _, "~η~~ᾰται";
+    perfect_subj_act_1: "~η~~κω", _, "~η~~κωμεν";
+    perfect_subj_act_2: "~η~~κῃς", "~η~~κητον", "~η~~κητε";
+    perfect_subj_act_3: "~η~~κῃ", _, "~η~~κωσῐ|~η~~κωσῐν";
+    perfect_opt_act_1: "~η~~κοιμῐ|~η~~κοιην", _, "~η~~κοιμεν";
+    perfect_opt_act_2: "~η~~κοις|~η~~κοιης", "~η~~κοιτον", "~η~~κοιτε";
+    perfect_opt_act_3: "~η~~κοι|~η~~κοιη", "~η~~κοιτην", "~η~~κοιεν";
+    perfect_imp_act_2: "~η~~κε", "~η~~κετον", "~η~~κετε";
+    perfect_imp_act_3: "~η~~κετω", "~η~~κετων", "~η~~κοντων";
+    perfect_imp_mid_2: "~η~~σο", _, _;
+    perfect_imp_mid_3: "~η~~θω", "~η~~θων", _;
+    infinitive_pres: "~ᾰ~~λειν", "~ᾰ~~λεσθαι", _;
+    infinitive_fut: "~ᾰ~~εῑν", "~ᾰ~~εῑσθαι", "~ᾰ~~θησεσθαι";
+    infinitive_aor: "~ᾰ~ῑ~αι", "~ᾰ~ι~ᾰσθαι", "~ᾰ~~θηναι";
+    infinitive_perf: "~η~~κεναι", "~η~~θαι", _;
+    participle_pres: "~ᾰ~~λων", "~ᾰ~~λομενος", _;
+    participle_fut: "~ᾰ~~ων", "~ᾰ~~ουμενος", "~ᾰ~~θησομενος";
+    participle_aor: "~ᾰ~ι~ᾱς", "~ᾰ~ι~ᾰμενος", "~ᾰ~~θεις";
+    participle_perf: "~η~~κως", "~η~~μενος", _;
     ),
     // Στεινω: 4 words (τεινω, θεινω, κτεινω, στεινω). Like Γῡροω, except in 272 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
     conjugation!("στεινω", 4, "~εινω", like Γῡροω;
@@ -6663,201 +6187,105 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: "~εινᾱς", "~εινᾰμενος", "~ᾰθεις";
     participle_perf: "~ετᾰκως", "~ετᾰμενος", _;
     ),
-    // Ὁμολογεω: 4 words (ὁμολογεω, ὁμῑλεω, ὁρμεω, ὁδηγεω). Like Γῡροω, except in 274 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("ὁμολογεω", 4, "ὁ~εω", like Γῡροω;
-    ind_act_1: "ὁ~ω", _, "ὁ~οῡμεν";
-    ind_act_2: "ὁ~εῑς", "ὁ~εῑτον", "ὁ~εῑτε";
-    ind_act_3: "ὁ~εῑ", _, "ὁ~οῡσῐ|ὁ~οῡσῐν";
-    ind_mid_1: "ὁ~οῡμαι", _, "ὁ~ουμεθᾰ";
-    ind_mid_2: "ὁ~εῑ|ὁ~ῃ", "ὁ~εῑσθον", "ὁ~εῑσθε";
-    ind_mid_3: "ὁ~εῑται", _, "ὁ~οῡνται";
-    ind_pass_2: "ὁ~εῑ|ὁ~ῃ", _, _;
-    subj_act_1: "ὁ~ω", _, "ὁ~ωμεν";
-    subj_act_2: "ὁ~ῃς", "ὁ~ητον", "ὁ~ητε";
-    subj_act_3: "ὁ~ῃ", _, "ὁ~ωσῐ|ὁ~ωσῐν";
-    subj_mid_1: "ὁ~ωμαι", _, "ὁ~ωμεθᾰ";
-    subj_mid_2: "ὁ~ῃ", "ὁ~ησθον", "ὁ~ησθε";
-    subj_mid_3: "ὁ~ηται", _, "ὁ~ωνται";
-    subj_pass_2: "ὁ~ῃ", _, _;
-    opt_act_1: "ὁ~οιην|ὁ~οῑμῐ", _, "ὁ~οῑμεν|ὁ~οιημεν";
-    opt_act_2: "ὁ~οιης|ὁ~οῑς", "ὁ~οῑτον|ὁ~οιητον", "ὁ~οῑτε|ὁ~οιητε";
-    opt_act_3: "ὁ~οιη|ὁ~οῑ", "ὁ~οιτην|ὁ~οιητην", "ὁ~οῑεν|ὁ~οιησᾰν";
-    opt_mid_1: "ὁ~οιμην", _, "ὁ~οιμεθᾰ";
-    opt_mid_2: "ὁ~οῑο", "ὁ~οῑσθον", "ὁ~οῑσθε";
-    opt_mid_3: "ὁ~οῑτο", "ὁ~οισθην", "ὁ~οῑντο";
-    imp_act_2: "ὁ~ει", _, _;
-    imp_act_3: "ὁ~ειτω", "ὁ~ειτων", "ὁ~ουντων";
-    imp_mid_2: "ὁ~οῡ", _, "ὁ~εῑσθε";
-    imp_mid_3: "ὁ~εισθω", "ὁ~εισθων", "ὁ~εισθων";
-    imperfect_act_1: "ὡ~ουν", _, "ὡ~οῡμεν";
-    imperfect_act_2: "ὡ~εις", "ὡ~εῑτον", "ὡ~εῑτε";
-    imperfect_act_3: "ὡ~ει", "ὡ~ειτην", "ὡ~ουν";
-    imperfect_mid_1: "ὡ~ουμην", _, "ὡ~ουμεθᾰ";
-    imperfect_mid_2: "ὡ~οῡ", "ὡ~εῑσθον", "ὡ~εῑσθε";
-    imperfect_mid_3: "ὡ~εῑτο", "ὡ~εισθην", "ὡ~οῡντο";
-    future_ind_act_1: "ὁ~ησω", _, "ὁ~ησομεν";
-    future_ind_act_2: "ὁ~ησεις", "ὁ~ησετον", "ὁ~ησετε";
-    future_ind_act_3: "ὁ~ησει", _, "ὁ~ησουσῐ|ὁ~ησουσῐν";
-    future_ind_mid_1: "ὁ~ησομαι", _, "ὁ~ησομεθᾰ";
-    future_ind_mid_2: "ὁ~ησῃ|ὁ~ησει", "ὁ~ησεσθον", "ὁ~ησεσθε";
-    future_ind_mid_3: "ὁ~ησεται", _, "ὁ~ησονται";
-    future_ind_pass_1: "ὁ~ηθησομαι", _, "ὁ~ηθησομεθᾰ";
-    future_ind_pass_2: "ὁ~ηθησῃ|ὁ~ηθησει", "ὁ~ηθησεσθον", "ὁ~ηθησεσθε";
-    future_ind_pass_3: "ὁ~ηθησεται", _, "ὁ~ηθησονται";
-    future_opt_act_1: "ὁ~ησοιμῐ", _, "ὁ~ησοιμεν";
-    future_opt_act_2: "ὁ~ησοις", "ὁ~ησοιτον", "ὁ~ησοιτε";
-    future_opt_act_3: "ὁ~ησοι", "ὁ~ησοιτην", "ὁ~ησοιεν";
-    future_opt_mid_1: "ὁ~ησοιμην", _, "ὁ~ησοιμεθᾰ";
-    future_opt_mid_2: "ὁ~ησοιο", "ὁ~ησοισθον", "ὁ~ησοισθε";
-    future_opt_mid_3: "ὁ~ησοιτο", "ὁ~ησοισθην", "ὁ~ησοιντο";
-    future_opt_pass_1: "ὁ~ηθησοιμην", _, "ὁ~ηθησοιμεθᾰ";
-    future_opt_pass_2: "ὁ~ηθησοιο", "ὁ~ηθησοισθον", "ὁ~ηθησοισθε";
-    future_opt_pass_3: "ὁ~ηθησοιτο", "ὁ~ηθησοισθην", "ὁ~ηθησοιντο";
-    aorist_ind_act_1: "ὡ~ησᾰ", _, "ὡ~ησᾰμεν";
-    aorist_ind_act_2: "ὡ~ησᾰς", "ὡ~ησᾰτον", "ὡ~ησᾰτε";
-    aorist_ind_act_3: "ὡ~ησε|ὡ~ησεν", "ὡ~ησᾰτην", "ὡ~ησᾰν";
-    aorist_ind_mid_1: "ὡ~ησᾰμην", _, "ὡ~ησᾰμεθᾰ";
-    aorist_ind_mid_2: "ὡ~ησω", "ὡ~ησᾰσθον", "ὡ~ησᾰσθε";
-    aorist_ind_mid_3: "ὡ~ησᾰτο", "ὡ~ησᾰσθην", "ὡ~ησᾰντο";
-    aorist_ind_pass_1: "ὡ~ηθην", _, "ὡ~ηθημεν";
-    aorist_ind_pass_2: "ὡ~ηθης", "ὡ~ηθητον", "ὡ~ηθητε";
-    aorist_ind_pass_3: "ὡ~ηθη", "ὡ~ηθητην", "ὡ~ηθησᾰν";
-    aorist_subj_act_1: "ὁ~ησω", _, "ὁ~ησωμεν";
-    aorist_subj_act_2: "ὁ~ησῃς", "ὁ~ησητον", "ὁ~ησητε";
-    aorist_subj_act_3: "ὁ~ησῃ", _, "ὁ~ησωσῐ|ὁ~ησωσῐν";
-    aorist_subj_mid_1: "ὁ~ησωμαι", _, "ὁ~ησωμεθᾰ";
-    aorist_subj_mid_2: "ὁ~ησῃ", "ὁ~ησησθον", "ὁ~ησησθε";
-    aorist_subj_mid_3: "ὁ~ησηται", _, "ὁ~ησωνται";
-    aorist_subj_pass_1: "ὁ~ηθω", _, "ὁ~ηθωμεν";
-    aorist_subj_pass_2: "ὁ~ηθῃς", "ὁ~ηθητον", "ὁ~ηθητε";
-    aorist_subj_pass_3: "ὁ~ηθῃ", _, "ὁ~ηθωσῐ|ὁ~ηθωσῐν";
-    aorist_opt_act_1: "ὁ~ησαιμῐ", _, "ὁ~ησαιμεν";
-    aorist_opt_act_2: "ὁ~ησειᾰς|ὁ~ησαις", "ὁ~ησαιτον", "ὁ~ησαιτε";
-    aorist_opt_act_3: "ὁ~ησειε|ὁ~ησειεν|ὁ~ησαι", "ὁ~ησαιτην", "ὁ~ησειᾰν|ὁ~ησαιεν";
-    aorist_opt_mid_1: "ὁ~ησαιμην", _, "ὁ~ησαιμεθᾰ";
-    aorist_opt_mid_2: "ὁ~ησαιο", "ὁ~ησαισθον", "ὁ~ησαισθε";
-    aorist_opt_mid_3: "ὁ~ησαιτο", "ὁ~ησαισθην", "ὁ~ησαιντο";
-    aorist_opt_pass_1: "ὁ~ηθειην", _, "ὁ~ηθεῑμεν|ὁ~ηθειημεν";
-    aorist_opt_pass_2: "ὁ~ηθειης", "ὁ~ηθεῑτον|ὁ~ηθειητον", "ὁ~ηθεῑτε|ὁ~ηθειητε";
-    aorist_opt_pass_3: "ὁ~ηθειη", "ὁ~ηθειτην|ὁ~ηθειητην", "ὁ~ηθεῑεν|ὁ~ηθειησᾰν";
-    aorist_imp_act_2: "ὁ~ησον", "ὁ~ησᾰτον", "ὁ~ησᾰτε";
-    aorist_imp_act_3: "ὁ~ησᾰτω", "ὁ~ησᾰτων", "ὁ~ησᾰντων";
-    aorist_imp_mid_2: "ὁ~ησαι", "ὁ~ησᾰσθον", "ὁ~ησᾰσθε";
-    aorist_imp_mid_3: "ὁ~ησᾰσθω", "ὁ~ησᾰσθων", _;
-    aorist_imp_pass_2: "ὁ~ηθητῐ", _, _;
-    aorist_imp_pass_3: "ὁ~ηθητω", "ὁ~ηθητων", "ὁ~ηθεντων";
-    perfect_ind_act_1: "ὡ~ηκᾰ", _, "ὡ~ηκᾰμεν";
-    perfect_ind_act_2: "ὡ~ηκᾰς", "ὡ~ηκᾰτον", "ὡ~ηκᾰτε";
-    perfect_ind_act_3: "ὡ~ηκε|ὡ~ηκεν", _, "ὡ~ηκᾱσῐ|ὡ~ηκᾱσῐν";
-    perfect_ind_mid_1: "ὡ~ημαι", _, "ὡ~ημεθᾰ";
-    perfect_ind_mid_2: "ὡ~ησαι", "ὡ~ησθον", "ὡ~ησθε";
-    perfect_ind_mid_3: "ὡ~ηται", _, "ὡ~ηνται";
-    perfect_subj_act_1: "ὡ~ηκω", _, "ὡ~ηκωμεν";
-    perfect_subj_act_2: "ὡ~ηκῃς", "ὡ~ηκητον", "ὡ~ηκητε";
-    perfect_subj_act_3: "ὡ~ηκῃ", _, "ὡ~ηκωσῐ|ὡ~ηκωσῐν";
-    perfect_opt_act_1: "ὡ~ηκοιμῐ|ὡ~ηκοιην", _, "ὡ~ηκοιμεν";
-    perfect_opt_act_2: "ὡ~ηκοις|ὡ~ηκοιης", "ὡ~ηκοιτον", "ὡ~ηκοιτε";
-    perfect_opt_act_3: "ὡ~ηκοι|ὡ~ηκοιη", "ὡ~ηκοιτην", "ὡ~ηκοιεν";
-    perfect_imp_act_2: "ὡ~ηκε", "ὡ~ηκετον", "ὡ~ηκετε";
-    perfect_imp_act_3: "ὡ~ηκετω", "ὡ~ηκετων", "ὡ~ηκοντων";
-    perfect_imp_mid_2: "ὡ~ησο", _, _;
-    perfect_imp_mid_3: "ὡ~ησθω", "ὡ~ησθων", _;
-    pluperfect_act_1: "ὡ~ηκειν|ὡ~ηκη", _, "ὡ~ηκεμεν";
-    pluperfect_act_2: "ὡ~ηκεις|ὡ~ηκης", "ὡ~ηκετον", "ὡ~ηκετε";
-    pluperfect_act_3: "ὡ~ηκει|ὡ~ηκειν", "ὡ~ηκετην", "ὡ~ηκεσᾰν";
-    pluperfect_mid_1: "ὡ~ημην", _, "ὡ~ημεθᾰ";
-    pluperfect_mid_2: "ὡ~ησο", "ὡ~ησθον", "ὡ~ησθε";
-    pluperfect_mid_3: "ὡ~ητο", "ὡ~ησθην", "ὡ~ηντο";
-    infinitive_pres: "ὁ~εῑν", "ὁ~εῑσθαι", _;
-    infinitive_fut: "ὁ~ησειν", "ὁ~ησεσθαι", "ὁ~ηθησεσθαι";
-    infinitive_aor: "ὁ~ησαι", "ὁ~ησᾰσθαι", "ὁ~ηθηναι";
-    infinitive_perf: "ὡ~ηκεναι", "ὡ~ησθαι", _;
-    participle_pres: "ὁ~ων", "ὁ~ουμενος", _;
-    participle_fut: "ὁ~ησων", "ὁ~ησομενος", "ὁ~ηθησομενος";
-    participle_aor: "ὁ~ησᾱς", "ὁ~ησᾰμενος", "ὁ~ηθεις";
-    participle_perf: "ὡ~ηκως", "ὡ~ημενος", _;
-    ),
-    // Πειρᾰω: 4 words (κοπῐᾰω, πειρᾰω, μειδῐᾰω, νεᾰω). Like Ἐαω, except in 194 cells: future_ind_act_1 sg, future_ind_act_1 pl, future_ind_act_2 sg, future_ind_act_2 du, future_ind_act_2 pl, future_ind_act_3 sg, ….
-    conjugation!("πειρᾰω", 4, "~ᾰω", like Ἐαω;
-    future_ind_act_1: "~ᾱσω", _, "~ᾱσομεν";
-    future_ind_act_2: "~ᾱσεις", "~ᾱσετον", "~ᾱσετε";
-    future_ind_act_3: "~ᾱσει", _, "~ᾱσουσῐ";
-    future_ind_mid_1: "~ᾱσομαι", _, "~ᾱσομεθᾰ";
-    future_ind_mid_2: "~ᾱσῃ", "~ᾱσεσθον", "~ᾱσεσθε";
-    future_ind_mid_3: "~ᾱσεται", _, "~ᾱσονται";
-    future_ind_pass_1: derived, _, derived;
-    future_ind_pass_2: derived, derived, derived;
-    future_ind_pass_3: derived, _, derived;
-    future_opt_act_1: "~ᾱσοιμῐ", _, "~ᾱσοιμεν";
-    future_opt_act_2: "~ᾱσοις", "~ᾱσοιτον", "~ᾱσοιτε";
-    future_opt_act_3: "~ᾱσοι", "~ᾱσοιτην", "~ᾱσοιεν";
-    future_opt_mid_1: "~ᾱσοιμην", _, "~ᾱσοιμεθᾰ";
-    future_opt_mid_2: "~ᾱσοιο", "~ᾱσοισθον", "~ᾱσοισθε";
-    future_opt_mid_3: "~ᾱσοιτο", "~ᾱσοισθην", "~ᾱσοιντο";
-    future_opt_pass_1: derived, _, derived;
-    future_opt_pass_2: derived, derived, derived;
-    future_opt_pass_3: derived, derived, derived;
-    aorist_ind_act_1: "ἐ~ᾱσᾰ", _, "ἐ~ᾱσᾰμεν";
-    aorist_ind_act_2: "ἐ~ᾱσᾰς", "ἐ~ᾱσᾰτον", "ἐ~ᾱσᾰτε";
-    aorist_ind_act_3: "ἐ~ᾱσε|ἐ~ᾱσεν", "ἐ~ᾱσᾰτην", "ἐ~ᾱσᾰν";
-    aorist_ind_mid_1: "ἐ~ᾱσᾰμην", _, "ἐ~ᾱσᾰμεθᾰ";
-    aorist_ind_mid_2: "ἐ~ᾱσω", "ἐ~ᾱσᾰσθον", "ἐ~ᾱσᾰσθε";
-    aorist_ind_mid_3: "ἐ~ᾱσᾰτο", "ἐ~ᾱσᾰσθην", "ἐ~ᾱσᾰντο";
-    aorist_ind_pass_1: "ἐ~ᾱθην", _, "ἐ~ᾱθημεν";
-    aorist_ind_pass_2: "ἐ~ᾱθης", "ἐ~ᾱθητον", "ἐ~ᾱθητε";
-    aorist_ind_pass_3: "ἐ~ᾱθη", "ἐ~ᾱθητην", "ἐ~ᾱθησᾰν";
-    aorist_subj_act_1: "~ᾱσω", _, "~ᾱσωμεν";
-    aorist_subj_act_2: "~ᾱσῃς", "~ᾱσητον", "~ᾱσητε";
-    aorist_subj_act_3: "~ᾱσῃ", _, "~ᾱσωσῐ|~ᾱσωσῐν";
-    aorist_subj_mid_1: "~ᾱσωμαι", _, "~ᾱσωμεθᾰ";
-    aorist_subj_mid_2: "~ᾱσῃ", "~ᾱσησθον", "~ᾱσησθε";
-    aorist_subj_mid_3: "~ᾱσηται", _, "~ᾱσωνται";
-    aorist_subj_pass_1: "~ᾱθω", _, "~ᾱθωμεν";
-    aorist_subj_pass_2: "~ᾱθῃς", "~ᾱθητον", "~ᾱθητε";
-    aorist_subj_pass_3: "~ᾱθῃ", _, "~ᾱθωσῐ";
-    aorist_opt_act_1: "~ᾱσαιμῐ", _, "~ᾱσαιμεν";
-    aorist_opt_act_2: "~ᾱσειᾰς|~ᾱσαις", "~ᾱσαιτον", "~ᾱσαιτε";
-    aorist_opt_act_3: "~ᾱσειε|~ᾱσειεν|~ᾱσαι", "~ᾱσαιτην", "~ᾱσειᾰν|~ᾱσαιεν";
-    aorist_opt_mid_1: "~ᾱσαιμην", _, "~ᾱσαιμεθᾰ";
-    aorist_opt_mid_2: "~ᾱσαιο", "~ᾱσαισθον", "~ᾱσαισθε";
-    aorist_opt_mid_3: "~ᾱσαιτο", "~ᾱσαισθην", "~ᾱσαιντο";
-    aorist_opt_pass_1: "~ᾱθειην", _, "~ᾱθεῑμεν";
-    aorist_opt_pass_2: "~ᾱθειης", "~ᾱθεῑτον", "~ᾱθεῑτε";
-    aorist_opt_pass_3: "~ᾱθειη", "~ᾱθειτην", "~ᾱθεῑεν";
-    aorist_imp_act_2: _, "~ᾱσᾰτον", "~ᾱσᾰτε";
-    aorist_imp_act_3: "~ᾱσᾰτω", "~ᾱσᾰτων", "~ᾱσᾰντων";
-    aorist_imp_mid_2: _, "~ᾱσᾰσθον", "~ᾱσᾰσθε";
-    aorist_imp_mid_3: "~ᾱσᾰσθω", "~ᾱσᾰσθων", _;
-    aorist_imp_pass_2: "~ᾱθητῐ", _, _;
-    aorist_imp_pass_3: "~ᾱθητω", "~ᾱθητων", "~ᾱθεντων";
-    perfect_ind_act_1: "%ε~ᾱκᾰ", _, "%ε~ᾱκᾰμεν";
-    perfect_ind_act_2: "%ε~ᾱκᾰς", "%ε~ᾱκᾰτον", "%ε~ᾱκᾰτε";
-    perfect_ind_act_3: "%ε~ᾱκε", _, "%ε~ᾱκᾱσῐ";
-    perfect_ind_mid_1: "%ε~ᾱμαι", _, "%ε~ᾱμεθᾰ";
-    perfect_ind_mid_2: "%ε~ᾱσαι", "%ε~ᾱσθον", "%ε~ᾱσθε";
-    perfect_ind_mid_3: "%ε~ᾱται", _, "%ε~ᾱνται";
-    perfect_subj_act_1: "%ε~ᾱκω", _, "%ε~ᾱκωμεν";
-    perfect_subj_act_2: "%ε~ᾱκῃς", "%ε~ᾱκητον", "%ε~ᾱκητε";
-    perfect_subj_act_3: "%ε~ᾱκῃ", _, "%ε~ᾱκωσῐ";
-    perfect_opt_act_1: "%ε~ᾱκοιμῐ", _, "%ε~ᾱκοιμεν";
-    perfect_opt_act_2: "%ε~ᾱκοις", "%ε~ᾱκοιτον", "%ε~ᾱκοιτε";
-    perfect_opt_act_3: "%ε~ᾱκοι", "%ε~ᾱκοιτην", "%ε~ᾱκοιεν";
-    perfect_imp_act_2: _, "%ε~ᾱκετον", "%ε~ᾱκετε";
-    perfect_imp_act_3: "%ε~ᾱκετω", "%ε~ᾱκετων", "%ε~ᾱκοντων";
-    perfect_imp_mid_2: "%ε~ᾱσο", _, _;
-    perfect_imp_mid_3: "%ε~ᾱσθω", "%ε~ᾱσθων", _;
-    pluperfect_act_1: derived, _, derived;
-    pluperfect_act_2: derived, derived, derived;
-    pluperfect_act_3: derived, derived, derived;
-    pluperfect_mid_1: "ἐ%ε~ᾱμην", _, "ἐ%ε~ᾱμεθᾰ";
-    pluperfect_mid_2: "ἐ%ε~ᾱσο", "ἐ%ε~ᾱσθον", "ἐ%ε~ᾱσθε";
-    pluperfect_mid_3: "ἐ%ε~ᾱτο", "ἐ%ε~ᾱσθην", "ἐ%ε~ᾱντο";
-    infinitive_fut: "~ᾱσειν", "~ᾱσεσθαι", derived;
-    infinitive_aor: _, "~ᾱσᾰσθαι", "~ᾱθηναι";
-    infinitive_perf: "%ε~ᾱκεναι", _, _;
-    participle_fut: "~ᾱσων", "~ᾱσομενος", derived;
-    participle_aor: "~ᾱσᾱς", "~ᾱσᾰμενος", "~ᾱθεις";
-    participle_perf: "%ε~ᾱκως", "%ε~ᾱμενος", _;
+    // Ἀνᾰπτω: 4 words (ἀνᾰπτω, ἐξᾰπτω, καθᾰπτω, ἐπῐσῠνᾰπτω). Like Οἰομαι, except in 236 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("ἀνᾰπτω", 4, "~ᾰπτω", like Οἰομαι;
+    ind_act_1: "~ᾰπτω", _, "~ᾰπτομεν";
+    ind_act_2: "~ᾰπτεις", "~ᾰπτετον", "~ᾰπτετε";
+    ind_act_3: "~ᾰπτει", _, "~ᾰπτουσῐ|~ᾰπτουσῐν";
+    ind_mid_1: "~ᾰπτομαι", _, "~ᾰπτομεθᾰ";
+    ind_mid_2: "~ᾰπτῃ|~ᾰπτει", "~ᾰπτεσθον", "~ᾰπτεσθε";
+    ind_mid_3: "~ᾰπτεται", _, "~ᾰπτονται";
+    ind_pass_2: "~ᾰπτῃ|~ᾰπτει", _, _;
+    subj_act_1: "~ᾰπτω", _, "~ᾰπτωμεν";
+    subj_act_2: "~ᾰπτῃς", "~ᾰπτητον", "~ᾰπτητε";
+    subj_act_3: "~ᾰπτῃ", _, "~ᾰπτωσῐ|~ᾰπτωσῐν";
+    subj_mid_1: "~ᾰπτωμαι", _, "~ᾰπτωμεθᾰ";
+    subj_mid_2: "~ᾰπτῃ", "~ᾰπτησθον", "~ᾰπτησθε";
+    subj_mid_3: "~ᾰπτηται", _, "~ᾰπτωνται";
+    subj_pass_2: "~ᾰπτῃ", _, _;
+    opt_act_1: "~ᾰπτοιμῐ", _, "~ᾰπτοιμεν";
+    opt_act_2: "~ᾰπτοις", "~ᾰπτοιτον", "~ᾰπτοιτε";
+    opt_act_3: "~ᾰπτοι", "~ᾰπτοιτην", "~ᾰπτοιεν";
+    opt_mid_1: "~ᾰπτοιμην", _, "~ᾰπτοιμεθᾰ";
+    opt_mid_2: "~ᾰπτοιο", "~ᾰπτοισθον", "~ᾰπτοισθε";
+    opt_mid_3: "~ᾰπτοιτο", "~ᾰπτοισθην", "~ᾰπτοιντο";
+    imp_act_2: "~ᾰπτε", _, _;
+    imp_act_3: "~ᾰπτετω", "~ᾰπτετων", "~ᾰπτοντων";
+    imp_mid_2: "~ᾰπτου", _, "~ᾰπτεσθε";
+    imp_mid_3: "~ᾰπτεσθω", "~ᾰπτεσθων", "~ᾰπτεσθων";
+    imperfect_act_1: "~ηπτον", _, "~ηπτομεν";
+    imperfect_act_2: "~ηπτες", "~ηπτετον", "~ηπτετε";
+    imperfect_act_3: "~ηπτε|~ηπτεν", "~ηπτετην", "~ηπτον";
+    imperfect_mid_1: "~ηπτομην", _, "~ηπτομεθᾰ";
+    imperfect_mid_2: "~ηπτου", "~ηπτεσθον", "~ηπτεσθε";
+    imperfect_mid_3: "~ηπτετο", "~ηπτεσθην", "~ηπτοντο";
+    future_ind_act_1: "~ᾰψω", _, "~ᾰψομεν";
+    future_ind_act_2: "~ᾰψεις", "~ᾰψετον", "~ᾰψετε";
+    future_ind_act_3: "~ᾰψει", _, "~ᾰψουσῐ|~ᾰψουσῐν";
+    future_ind_mid_1: "~ᾰψομαι", _, "~ᾰψομεθᾰ";
+    future_ind_mid_2: "~ᾰψῃ|~ᾰψει", "~ᾰψεσθον", "~ᾰψεσθε";
+    future_ind_mid_3: "~ᾰψεται", _, "~ᾰψονται";
+    future_ind_pass_1: "~ᾰφθησομαι", _, "~ᾰφθησομεθᾰ";
+    future_ind_pass_2: "~ᾰφθησῃ", "~ᾰφθησεσθον", "~ᾰφθησεσθε";
+    future_ind_pass_3: "~ᾰφθησεται", _, "~ᾰφθησονται";
+    future_opt_act_1: "~ᾰψοιμῐ", _, "~ᾰψοιμεν";
+    future_opt_act_2: "~ᾰψοις", "~ᾰψοιτον", "~ᾰψοιτε";
+    future_opt_act_3: "~ᾰψοι", "~ᾰψοιτην", "~ᾰψοιεν";
+    future_opt_mid_1: "~ᾰψοιμην", _, "~ᾰψοιμεθᾰ";
+    future_opt_mid_2: "~ᾰψοιο", "~ᾰψοισθον", "~ᾰψοισθε";
+    future_opt_mid_3: "~ᾰψοιτο", "~ᾰψοισθην", "~ᾰψοιντο";
+    future_opt_pass_1: "~ᾰφθησοιμην", _, "~ᾰφθησοιμεθᾰ";
+    future_opt_pass_2: "~ᾰφθησοιο", "~ᾰφθησοισθον", "~ᾰφθησοισθε";
+    future_opt_pass_3: "~ᾰφθησοιτο", "~ᾰφθησοισθην", "~ᾰφθησοιντο";
+    aorist_ind_act_1: "~ηψᾰ", _, "~ηψᾰμεν";
+    aorist_ind_act_2: "~ηψᾰς", "~ηψᾰτον", "~ηψᾰτε";
+    aorist_ind_act_3: "~ηψε|~ηψεν", "~ηψᾰτην", "~ηψᾰν";
+    aorist_ind_mid_1: "~ηψᾰμην", _, "~ηψᾰμεθᾰ";
+    aorist_ind_mid_2: "~ηψω", "~ηψᾰσθον", "~ηψᾰσθε";
+    aorist_ind_mid_3: "~ηψᾰτο", "~ηψᾰσθην", "~ηψᾰντο";
+    aorist_ind_pass_1: "~ηφθην", _, "~ηφθημεν";
+    aorist_ind_pass_2: "~ηφθης", "~ηφθητον", "~ηφθητε";
+    aorist_ind_pass_3: "~ηφθη", "~ηφθητην", "~ηφθησᾰν";
+    aorist_subj_act_1: "~ᾰψω", _, "~ᾰψωμεν";
+    aorist_subj_act_2: "~ᾰψῃς", "~ᾰψητον", "~ᾰψητε";
+    aorist_subj_act_3: "~ᾰψῃ", _, "~ᾰψωσῐ|~ᾰψωσῐν";
+    aorist_subj_mid_1: "~ᾰψωμαι", _, "~ᾰψωμεθᾰ";
+    aorist_subj_mid_2: "~ᾰψῃ", "~ᾰψησθον", "~ᾰψησθε";
+    aorist_subj_mid_3: "~ᾰψηται", _, "~ᾰψωνται";
+    aorist_subj_pass_1: "~ᾰφθω", _, "~ᾰφθωμεν";
+    aorist_subj_pass_2: "~ᾰφθῃς", "~ᾰφθητον", "~ᾰφθητε";
+    aorist_subj_pass_3: "~ᾰφθῃ", _, "~ᾰφθωσῐ|~ᾰφθωσῐν";
+    aorist_opt_act_1: "~ᾰψαιμῐ", _, "~ᾰψαιμεν";
+    aorist_opt_act_2: "~ᾰψειᾰς|~ᾰψαις", "~ᾰψαιτον", "~ᾰψαιτε";
+    aorist_opt_act_3: "~ᾰψειε|~ᾰψειεν|~ᾰψαι", "~ᾰψαιτην", "~ᾰψειᾰν|~ᾰψαιεν";
+    aorist_opt_mid_1: "~ᾰψαιμην", _, "~ᾰψαιμεθᾰ";
+    aorist_opt_mid_2: "~ᾰψαιο", "~ᾰψαισθον", "~ᾰψαισθε";
+    aorist_opt_mid_3: "~ᾰψαιτο", "~ᾰψαισθην", "~ᾰψαιντο";
+    aorist_opt_pass_1: "~ᾰφθειην", _, "~ᾰφθεῑμεν|~ᾰφθειημεν";
+    aorist_opt_pass_2: "~ᾰφθειης", "~ᾰφθεῑτον|~ᾰφθειητον", "~ᾰφθεῑτε|~ᾰφθειητε";
+    aorist_opt_pass_3: "~ᾰφθειη", "~ᾰφθειτην|~ᾰφθειητην", "~ᾰφθεῑεν|~ᾰφθειησᾰν";
+    aorist_imp_act_2: "~ᾰψον", "~ᾰψᾰτον", "~ᾰψᾰτε";
+    aorist_imp_act_3: "~ᾰψᾰτω", "~ᾰψᾰτων", "~ᾰψᾰντων";
+    aorist_imp_mid_2: "~ᾰψαι", "~ᾰψᾰσθον", "~ᾰψᾰσθε";
+    aorist_imp_mid_3: "~ᾰψᾰσθω", "~ᾰψᾰσθων", _;
+    aorist_imp_pass_2: "~ᾰφθητῐ", _, _;
+    aorist_imp_pass_3: "~ᾰφθητω", "~ᾰφθητων", "~ᾰφθεντων";
+    perfect_ind_mid_1: "~ημμαι", _, "~ημμεθᾰ";
+    perfect_ind_mid_2: "~ηψαι", "~ηφθον", "~ηφθε";
+    perfect_ind_mid_3: "~ηπται", _, "~ηπᾰται";
+    perfect_imp_mid_2: "~ηψο", _, _;
+    perfect_imp_mid_3: "~ηφθω", "~ηφθων", _;
+    pluperfect_mid_1: "~ημμην", _, "~ημμεθᾰ";
+    pluperfect_mid_2: "~ηψο", "~ηφθον", "~ηφθε";
+    pluperfect_mid_3: "~ηπτο", "~ηφθην", "~ηπᾰτο";
+    infinitive_pres: "~ᾰπτειν", "~ᾰπτεσθαι", _;
+    infinitive_fut: "~ᾰψειν", "~ᾰψεσθαι", "~ᾰφθησεσθαι";
+    infinitive_aor: "~ᾰψαι", "~ᾰψᾰσθαι", "~ᾰφθηναι";
+    infinitive_perf: _, "~ηφθαι", _;
+    participle_pres: "~ᾰπτων", "~ᾰπτομενος", _;
+    participle_fut: "~ᾰψων", "~ᾰψομενος", "~ᾰφθησομενος";
+    participle_aor: "~ᾰψᾱς", "~ᾰψᾰμενος", "~ᾰφθεις";
+    participle_perf: _, "~ημμενος", _;
     ),
     // Πᾰρᾰλλᾰσσω: 4 words (ἀπᾰλλᾰσσω, ὑπᾰλλᾰσσω, ἀντᾰλλᾰσσω, πᾰρᾰλλᾰσσω). Like Προσερχομαι, except in 261 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
     conjugation!("πᾰρᾰλλᾰσσω", 4, "~ᾰ~σσω", like Προσερχομαι;
@@ -6967,8 +6395,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: "~ᾰ~ξᾱς", "~ᾰ~ξᾰμενος", "~ᾰ~χθεις|~ᾰ~γεις";
     participle_perf: "~η~χως", "~η~γμενος", _;
     ),
-    // Κᾰτειργω: 4 words (ἐργω, εἰργω, ἀμεργω, κᾰτειργω). Like Σῠνᾰγω, except in 66 cells: ind_act_3 pl, ind_mid_2 sg, ind_pass_2 sg, subj_act_3 pl, imperfect_act_1 sg, imperfect_act_1 pl, ….
-    conjugation!("κᾰτειργω", 4, "~γω", like Σῠνᾰγω;
+    // Κᾰτειργω: 4 words (ἐργω, εἰργω, ἀμεργω, κᾰτειργω). Like Ληγω, except in 66 cells: ind_act_3 pl, ind_mid_2 sg, ind_pass_2 sg, subj_act_3 pl, imperfect_act_1 sg, imperfect_act_1 pl, ….
+    conjugation!("κᾰτειργω", 4, "~γω", like Ληγω;
     ind_act_3: _, _, "~γουσῐ|~γουσῐν";
     ind_mid_2: "~γῃ|~γει", _, _;
     ind_pass_2: "~γῃ|~γει", _, _;
@@ -7230,89 +6658,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: "~ο~ῡνᾱς", "~ο~ῡνᾰμενος", "~ο~ῠνθεις";
     participle_perf: "~ω~ῠγκως", "~ω~ῠμμενος", _;
     ),
-    // Ἐλᾰσσοω: 4 words (ἐρημοω, ἐλᾰσσοω, ἐλευθεροω, ἐπουλοω). Like Ἀροω, except in 185 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("ἐλᾰσσοω", 4, "ἐ~οω", like Ἀροω;
-    ind_act_1: "ἐ~ω", _, "ἐ~οῡμεν";
-    ind_act_2: "ἐ~οῑς", "ἐ~οῡτον", "ἐ~οῡτε";
-    ind_act_3: "ἐ~οῑ", _, "ἐ~οῡσῐ|ἐ~οῡσῐν";
-    ind_mid_1: "ἐ~οῡμαι", _, "ἐ~ουμεθᾰ";
-    ind_mid_2: "ἐ~οῑ", "ἐ~οῡσθον", "ἐ~οῡσθε";
-    ind_mid_3: "ἐ~οῡται", _, "ἐ~οῡνται";
-    subj_act_1: "ἐ~ω", _, "ἐ~ωμεν";
-    subj_act_2: "ἐ~οῑς", "ἐ~ωτον", "ἐ~ωτε";
-    subj_act_3: "ἐ~οῑ", _, "ἐ~ωσῐ|ἐ~ωσῐν";
-    subj_mid_1: "ἐ~ωμαι", _, "ἐ~ωμεθᾰ";
-    subj_mid_2: "ἐ~οῑ", "ἐ~ωσθον", "ἐ~ωσθε";
-    subj_mid_3: "ἐ~ωται", _, "ἐ~ωνται";
-    subj_pass_2: "ἐ~οῑ", _, _;
-    opt_act_1: "ἐ~οιην|ἐ~οῑμῐ", _, "ἐ~οῑμεν|ἐ~οιημεν";
-    opt_act_2: "ἐ~οιης|ἐ~οῑς", "ἐ~οῑτον|ἐ~οιητον", "ἐ~οῑτε|ἐ~οιητε";
-    opt_act_3: "ἐ~οιη|ἐ~οῑ", "ἐ~οιτην|ἐ~οιητην", "ἐ~οῑεν|ἐ~οιησᾰν";
-    opt_mid_1: "ἐ~οιμην", _, "ἐ~οιμεθᾰ";
-    opt_mid_2: "ἐ~οῑο", "ἐ~οῑσθον", "ἐ~οῑσθε";
-    opt_mid_3: "ἐ~οῑτο", "ἐ~οισθην", "ἐ~οῑντο";
-    imp_act_2: "ἐ~ου", _, _;
-    imp_act_3: "ἐ~ουτω", "ἐ~ουτων", "ἐ~ουντων";
-    imp_mid_2: "ἐ~οῡ", _, "ἐ~οῡσθε";
-    imp_mid_3: "ἐ~ουσθω", "ἐ~ουσθων", "ἐ~ουσθων";
-    future_ind_act_1: "ἐ~ωσω", _, "ἐ~ωσομεν";
-    future_ind_act_2: "ἐ~ωσεις", "ἐ~ωσετον", "ἐ~ωσετε";
-    future_ind_act_3: "ἐ~ωσει", _, "ἐ~ωσουσῐ|ἐ~ωσουσῐν";
-    future_ind_mid_1: "ἐ~ωσομαι", _, "ἐ~ωσομεθᾰ";
-    future_ind_mid_2: "ἐ~ωσῃ|ἐ~ωσει", "ἐ~ωσεσθον", "ἐ~ωσεσθε";
-    future_ind_mid_3: "ἐ~ωσεται", _, "ἐ~ωσονται";
-    future_ind_pass_1: "ἐ~ωθησομαι", _, "ἐ~ωθησομεθᾰ";
-    future_ind_pass_2: "ἐ~ωθησῃ|ἐ~ωθησει", "ἐ~ωθησεσθον", "ἐ~ωθησεσθε";
-    future_ind_pass_3: "ἐ~ωθησεται", _, "ἐ~ωθησονται";
-    future_opt_act_1: "ἐ~ωσοιμῐ", _, "ἐ~ωσοιμεν";
-    future_opt_act_2: "ἐ~ωσοις", "ἐ~ωσοιτον", "ἐ~ωσοιτε";
-    future_opt_act_3: "ἐ~ωσοι", "ἐ~ωσοιτην", "ἐ~ωσοιεν";
-    future_opt_mid_1: "ἐ~ωσοιμην", _, "ἐ~ωσοιμεθᾰ";
-    future_opt_mid_2: "ἐ~ωσοιο", "ἐ~ωσοισθον", "ἐ~ωσοισθε";
-    future_opt_mid_3: "ἐ~ωσοιτο", "ἐ~ωσοισθην", "ἐ~ωσοιντο";
-    future_opt_pass_1: "ἐ~ωθησοιμην", _, "ἐ~ωθησοιμεθᾰ";
-    future_opt_pass_2: "ἐ~ωθησοιο", "ἐ~ωθησοισθον", "ἐ~ωθησοισθε";
-    future_opt_pass_3: "ἐ~ωθησοιτο", "ἐ~ωθησοισθην", "ἐ~ωθησοιντο";
-    aorist_subj_act_1: "ἐ~ωσω", _, "ἐ~ωσωμεν";
-    aorist_subj_act_2: "ἐ~ωσῃς", "ἐ~ωσητον", "ἐ~ωσητε";
-    aorist_subj_act_3: "ἐ~ωσῃ", _, "ἐ~ωσωσῐ|ἐ~ωσωσῐν";
-    aorist_subj_mid_1: "ἐ~ωσωμαι", _, "ἐ~ωσωμεθᾰ";
-    aorist_subj_mid_2: "ἐ~ωσῃ", "ἐ~ωσησθον", "ἐ~ωσησθε";
-    aorist_subj_mid_3: "ἐ~ωσηται", _, "ἐ~ωσωνται";
-    aorist_subj_pass_1: "ἐ~ωθω", _, "ἐ~ωθωμεν";
-    aorist_subj_pass_2: "ἐ~ωθῃς", "ἐ~ωθητον", "ἐ~ωθητε";
-    aorist_subj_pass_3: "ἐ~ωθῃ", _, "ἐ~ωθωσῐ|ἐ~ωθωσῐν";
-    aorist_opt_act_1: "ἐ~ωσαιμῐ", _, "ἐ~ωσαιμεν";
-    aorist_opt_act_2: "ἐ~ωσειᾰς|ἐ~ωσαις", "ἐ~ωσαιτον", "ἐ~ωσαιτε";
-    aorist_opt_act_3: "ἐ~ωσειε|ἐ~ωσειεν|ἐ~ωσαι", "ἐ~ωσαιτην", "ἐ~ωσειᾰν|ἐ~ωσαιεν";
-    aorist_opt_mid_1: "ἐ~ωσαιμην", _, "ἐ~ωσαιμεθᾰ";
-    aorist_opt_mid_2: "ἐ~ωσαιο", "ἐ~ωσαισθον", "ἐ~ωσαισθε";
-    aorist_opt_mid_3: "ἐ~ωσαιτο", "ἐ~ωσαισθην", "ἐ~ωσαιντο";
-    aorist_opt_pass_1: "ἐ~ωθειην", _, "ἐ~ωθεῑμεν|ἐ~ωθειημεν";
-    aorist_opt_pass_2: "ἐ~ωθειης", "ἐ~ωθεῑτον|ἐ~ωθειητον", "ἐ~ωθεῑτε|ἐ~ωθειητε";
-    aorist_opt_pass_3: "ἐ~ωθειη", "ἐ~ωθειτην|ἐ~ωθειητην", "ἐ~ωθεῑεν|ἐ~ωθειησᾰν";
-    aorist_imp_act_2: "ἐ~ωσον", "ἐ~ωσᾰτον", "ἐ~ωσᾰτε";
-    aorist_imp_act_3: "ἐ~ωσᾰτω", "ἐ~ωσᾰτων", "ἐ~ωσᾰντων";
-    aorist_imp_mid_2: "ἐ~ωσαι", "ἐ~ωσᾰσθον", "ἐ~ωσᾰσθε";
-    aorist_imp_mid_3: "ἐ~ωσᾰσθω", "ἐ~ωσᾰσθων", _;
-    aorist_imp_pass_2: "ἐ~ωθητῐ", _, _;
-    aorist_imp_pass_3: "ἐ~ωθητω", "ἐ~ωθητων", "ἐ~ωθεντων";
-    perfect_ind_act_3: "ἠ~ωκε", _, "ἠ~ωκᾱσῐ";
-    perfect_subj_act_3: _, _, "ἠ~ωκωσῐ";
-    perfect_opt_act_1: "ἠ~ωκοιμῐ", _, _;
-    perfect_opt_act_2: "ἠ~ωκοις", _, _;
-    perfect_opt_act_3: "ἠ~ωκοι", _, _;
-    perfect_imp_act_2: derived, _, _;
-    pluperfect_act_1: "ἠ~ωκειν", _, _;
-    pluperfect_act_2: "ἠ~ωκεις", _, _;
-    pluperfect_act_3: "ἠ~ωκει", _, _;
-    infinitive_pres: "ἐ~οῡν", "ἐ~οῡσθαι", _;
-    infinitive_fut: "ἐ~ωσειν", "ἐ~ωσεσθαι", "ἐ~ωθησεσθαι";
-    infinitive_aor: "ἐ~ωσαι", "ἐ~ωσᾰσθαι", "ἐ~ωθηναι";
-    participle_pres: "ἐ~ων", "ἐ~ουμενος", _;
-    participle_fut: "ἐ~ωσων", "ἐ~ωσομενος", "ἐ~ωθησομενος";
-    participle_aor: "ἐ~ωσᾱς", "ἐ~ωσᾰμενος", "ἐ~ωθεις";
-    ),
     // Λογεομαι: 4 words (δηλεομαι, μῑμεομαι, δῐηγεομαι, λογεομαι). Like Ἡγεομαι, except in 47 cells: ind_mid_2 sg, ind_pass_2 sg, imperfect_mid_1 sg, imperfect_mid_1 pl, imperfect_mid_2 sg, imperfect_mid_2 du, ….
     conjugation!("λογεομαι", 4, "~εομαι", like Ἡγεομαι;
     ind_mid_2: "~εῑ|~ῃ", _, _;
@@ -7338,8 +6683,130 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     infinitive_perf: _, "%ε~ησθαι", _;
     participle_perf: _, "%ε~ημενος", _;
     ),
-    // Ἰαυω: 4 words (ἰαυω, ἡγεμονευω, ἱκετευω, ἱππευω). Like Βουλευω, except in 135 cells: imperfect_act_1 sg, imperfect_act_1 pl, imperfect_act_2 sg, imperfect_act_2 du, imperfect_act_2 pl, imperfect_act_3 sg, ….
-    conjugation!("ἰαυω", 4, "~υω", like Βουλευω;
+    // Ἀκουω: 3 words (ἀγρευω, ἀμορβευω, ἀπῐστευω). Like Ἐχω, except in 291 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("ἀκουω", 3, "ἀ~υω", like Ἐχω;
+    ind_act_1: "ἀ~υω", _, "ἀ~υομεν";
+    ind_act_2: "ἀ~υεις", "ἀ~υετον", "ἀ~υετε";
+    ind_act_3: "ἀ~υει", _, "ἀ~υουσῐ|ἀ~υουσῐν";
+    ind_mid_1: "ἀ~υομαι", _, "ἀ~υομεθᾰ";
+    ind_mid_2: "ἀ~υῃ|ἀ~υει", "ἀ~υεσθον", "ἀ~υεσθε";
+    ind_mid_3: "ἀ~υεται", _, "ἀ~υονται";
+    ind_pass_2: "ἀ~υῃ|ἀ~υει", _, _;
+    subj_act_1: "ἀ~υω", _, "ἀ~υωμεν";
+    subj_act_2: "ἀ~υῃς", "ἀ~υητον", "ἀ~υητε";
+    subj_act_3: "ἀ~υῃ", _, "ἀ~υωσῐ|ἀ~υωσῐν";
+    subj_mid_1: "ἀ~υωμαι", _, "ἀ~υωμεθᾰ";
+    subj_mid_2: "ἀ~υῃ", "ἀ~υησθον", "ἀ~υησθε";
+    subj_mid_3: "ἀ~υηται", _, "ἀ~υωνται";
+    subj_pass_2: "ἀ~υῃ", _, _;
+    opt_act_1: "ἀ~υοιμῐ", _, "ἀ~υοιμεν";
+    opt_act_2: "ἀ~υοις", "ἀ~υοιτον", "ἀ~υοιτε";
+    opt_act_3: "ἀ~υοι", "ἀ~υοιτην", "ἀ~υοιεν";
+    opt_mid_1: "ἀ~υοιμην", _, "ἀ~υοιμεθᾰ";
+    opt_mid_2: "ἀ~υοιο", "ἀ~υοισθον", "ἀ~υοισθε";
+    opt_mid_3: "ἀ~υοιτο", "ἀ~υοισθην", "ἀ~υοιντο";
+    imp_act_2: "ἀ~υε", _, _;
+    imp_act_3: "ἀ~υετω", "ἀ~υετων", "ἀ~υοντων";
+    imp_mid_2: "ἀ~υου", _, "ἀ~υεσθε";
+    imp_mid_3: "ἀ~υεσθω", "ἀ~υεσθων", "ἀ~υεσθων";
+    imperfect_act_1: "ἠ~υον", _, "ἠ~υομεν";
+    imperfect_act_2: "ἠ~υες", "ἠ~υετον", "ἠ~υετε";
+    imperfect_act_3: "ἠ~υε|ἠ~υεν", "ἠ~υετην", "ἠ~υον";
+    imperfect_mid_1: "ἠ~υομην", _, "ἠ~υομεθᾰ";
+    imperfect_mid_2: "ἠ~υου", "ἠ~υεσθον", "ἠ~υεσθε";
+    imperfect_mid_3: "ἠ~υετο", "ἠ~υεσθην", "ἠ~υοντο";
+    future_ind_act_1: "ἀ~υσω", _, "ἀ~υσομεν";
+    future_ind_act_2: "ἀ~υσεις", "ἀ~υσετον", "ἀ~υσετε";
+    future_ind_act_3: "ἀ~υσει", _, "ἀ~υσουσῐ|ἀ~υσουσῐν";
+    future_ind_mid_1: "ἀ~υσομαι", _, "ἀ~υσομεθᾰ";
+    future_ind_mid_2: "ἀ~υσῃ", "ἀ~υσεσθον", "ἀ~υσεσθε";
+    future_ind_mid_3: "ἀ~υσεται", _, "ἀ~υσονται";
+    future_ind_pass_1: "ἀ~υθησομαι", _, "ἀ~υθησομεθᾰ";
+    future_ind_pass_2: "ἀ~υθησῃ", "ἀ~υθησεσθον", "ἀ~υθησεσθε";
+    future_ind_pass_3: "ἀ~υθησεται", _, "ἀ~υθησονται";
+    future_opt_act_1: "ἀ~υσοιμῐ", _, "ἀ~υσοιμεν";
+    future_opt_act_2: "ἀ~υσοις", "ἀ~υσοιτον", "ἀ~υσοιτε";
+    future_opt_act_3: "ἀ~υσοι", "ἀ~υσοιτην", "ἀ~υσοιεν";
+    future_opt_mid_1: "ἀ~υσοιμην", _, "ἀ~υσοιμεθᾰ";
+    future_opt_mid_2: "ἀ~υσοιο", "ἀ~υσοισθον", "ἀ~υσοισθε";
+    future_opt_mid_3: "ἀ~υσοιτο", "ἀ~υσοισθην", "ἀ~υσοιντο";
+    future_opt_pass_1: "ἀ~υθησοιμην", _, "ἀ~υθησοιμεθᾰ";
+    future_opt_pass_2: "ἀ~υθησοιο", "ἀ~υθησοισθον", "ἀ~υθησοισθε";
+    future_opt_pass_3: "ἀ~υθησοιτο", "ἀ~υθησοισθην", "ἀ~υθησοιντο";
+    aorist_ind_act_1: "ἠ~υσᾰ", _, "ἠ~υσᾰμεν";
+    aorist_ind_act_2: "ἠ~υσᾰς", "ἠ~υσᾰτον", "ἠ~υσᾰτε";
+    aorist_ind_act_3: "ἠ~υσε|ἠ~υσεν", "ἠ~υσᾰτην", "ἠ~υσᾰν";
+    aorist_ind_mid_1: "ἠ~υσᾰμην", _, "ἠ~υσᾰμεθᾰ";
+    aorist_ind_mid_2: "ἠ~υσω", "ἠ~υσᾰσθον", "ἠ~υσᾰσθε";
+    aorist_ind_mid_3: "ἠ~υσᾰτο", "ἠ~υσᾰσθην", "ἠ~υσᾰντο";
+    aorist_ind_pass_1: "ἠ~υθην", _, "ἠ~υθημεν";
+    aorist_ind_pass_2: "ἠ~υθης", "ἠ~υθητον", "ἠ~υθητε";
+    aorist_ind_pass_3: "ἠ~υθη", "ἠ~υθητην", "ἠ~υθησᾰν";
+    aorist_subj_act_1: "ἀ~υσω", _, "ἀ~υσωμεν";
+    aorist_subj_act_2: "ἀ~υσῃς", "ἀ~υσητον", "ἀ~υσητε";
+    aorist_subj_act_3: "ἀ~υσῃ", _, "ἀ~υσωσῐ|ἀ~υσωσῐν";
+    aorist_subj_mid_1: "ἀ~υσωμαι", _, "ἀ~υσωμεθᾰ";
+    aorist_subj_mid_2: "ἀ~υσῃ", "ἀ~υσησθον", "ἀ~υσησθε";
+    aorist_subj_mid_3: "ἀ~υσηται", _, "ἀ~υσωνται";
+    aorist_subj_pass_1: "ἀ~υθω", _, "ἀ~υθωμεν";
+    aorist_subj_pass_2: "ἀ~υθῃς", "ἀ~υθητον", "ἀ~υθητε";
+    aorist_subj_pass_3: "ἀ~υθῃ", _, "ἀ~υθωσῐ";
+    aorist_opt_act_1: "ἀ~υσαιμῐ", _, "ἀ~υσαιμεν";
+    aorist_opt_act_2: "ἀ~υσειᾰς|ἀ~υσαις", "ἀ~υσαιτον", "ἀ~υσαιτε";
+    aorist_opt_act_3: "ἀ~υσειε|ἀ~υσειεν|ἀ~υσαι", "ἀ~υσαιτην", "ἀ~υσειᾰν|ἀ~υσαιεν";
+    aorist_opt_mid_1: "ἀ~υσαιμην", _, "ἀ~υσαιμεθᾰ";
+    aorist_opt_mid_2: "ἀ~υσαιο", "ἀ~υσαισθον", "ἀ~υσαισθε";
+    aorist_opt_mid_3: "ἀ~υσαιτο", "ἀ~υσαισθην", "ἀ~υσαιντο";
+    aorist_opt_pass_1: "ἀ~υθειην", _, "ἀ~υθεῑμεν";
+    aorist_opt_pass_2: "ἀ~υθειης", "ἀ~υθεῑτον", "ἀ~υθεῑτε";
+    aorist_opt_pass_3: "ἀ~υθειη", "ἀ~υθειτην", "ἀ~υθεῑεν";
+    aorist_imp_act_2: "ἀ~υσον", "ἀ~υσᾰτον", "ἀ~υσᾰτε";
+    aorist_imp_act_3: "ἀ~υσᾰτω", "ἀ~υσᾰτων", "ἀ~υσᾰντων";
+    aorist_imp_mid_2: "ἀ~υσαι", "ἀ~υσᾰσθον", "ἀ~υσᾰσθε";
+    aorist_imp_mid_3: "ἀ~υσᾰσθω", "ἀ~υσᾰσθων", _;
+    aorist_imp_pass_2: "ἀ~υθητῐ", _, _;
+    aorist_imp_pass_3: "ἀ~υθητω", "ἀ~υθητων", "ἀ~υθεντων";
+    perfect_ind_act_1: "ἠ~υκᾰ", _, "ἠ~υκᾰμεν";
+    perfect_ind_act_2: "ἠ~υκᾰς", "ἠ~υκᾰτον", "ἠ~υκᾰτε";
+    perfect_ind_act_3: "ἠ~υκε|ἠ~υκεν", _, "ἠ~υκᾱσῐ|ἠ~υκᾱσῐν";
+    perfect_ind_mid_1: "ἠ~υμαι", _, "ἠ~υμεθᾰ";
+    perfect_ind_mid_2: "ἠ~υσαι", "ἠ~υσθον", "ἠ~υσθε";
+    perfect_ind_mid_3: "ἠ~υται", _, "ἠ~υνται";
+    perfect_subj_act_1: "ἠ~υκω", _, "ἠ~υκωμεν";
+    perfect_subj_act_2: "ἠ~υκῃς", "ἠ~υκητον", "ἠ~υκητε";
+    perfect_subj_act_3: "ἠ~υκῃ", _, "ἠ~υκωσῐ|ἠ~υκωσῐν";
+    perfect_opt_act_1: "ἠ~υκοιμῐ|ἠ~υκοιην", _, "ἠ~υκοιμεν";
+    perfect_opt_act_2: "ἠ~υκοις|ἠ~υκοιης", "ἠ~υκοιτον", "ἠ~υκοιτε";
+    perfect_opt_act_3: "ἠ~υκοι|ἠ~υκοιη", "ἠ~υκοιτην", "ἠ~υκοιεν";
+    perfect_imp_act_2: "ἠ~υκε", "ἠ~υκετον", "ἠ~υκετε";
+    perfect_imp_act_3: "ἠ~υκετω", "ἠ~υκετων", "ἠ~υκοντων";
+    perfect_imp_mid_2: "ἠ~υσο", _, _;
+    perfect_imp_mid_3: "ἠ~υσθω", "ἠ~υσθων", _;
+    pluperfect_act_1: "ἠ~υκειν", _, "ἠ~υκεμεν";
+    pluperfect_act_2: "ἠ~υκεις", "ἠ~υκετον", "ἠ~υκετε";
+    pluperfect_act_3: "ἠ~υκει", "ἠ~υκετην", "ἠ~υκεσᾰν";
+    pluperfect_mid_1: "ἠ~υμην", _, "ἠ~υμεθᾰ";
+    pluperfect_mid_2: "ἠ~υσο", "ἠ~υσθον", "ἠ~υσθε";
+    pluperfect_mid_3: "ἠ~υτο", "ἠ~υσθην", "ἠ~υντο";
+    future_perfect_ind_mid_1: "ἠ~υσομαι", _, "ἠ~υσομεθᾰ";
+    future_perfect_ind_mid_2: "ἠ~υσῃ", "ἠ~υσεσθον", "ἠ~υσεσθε";
+    future_perfect_ind_mid_3: "ἠ~υσεται", _, "ἠ~υσονται";
+    future_perfect_opt_mid_1: "ἠ~υσοιμην", _, "ἠ~υσοιμεθᾰ";
+    future_perfect_opt_mid_2: "ἠ~υσοιο", "ἠ~υσοισθον", "ἠ~υσοισθε";
+    future_perfect_opt_mid_3: "ἠ~υσοιτο", "ἠ~υσοισθην", "ἠ~υσοιντο";
+    infinitive_pres: "ἀ~υειν", "ἀ~υεσθαι", _;
+    infinitive_fut: "ἀ~υσειν", "ἀ~υσεσθαι", "ἀ~υθησεσθαι";
+    infinitive_aor: "ἀ~ῡσαι", "ἀ~υσᾰσθαι", "ἀ~υθηναι";
+    infinitive_perf: "ἠ~υκεναι", "ἠ~ῡσθαι", _;
+    infinitive_futp: _, "ἠ~υσεσθαι", _;
+    participle_pres: "ἀ~υων", "ἀ~υομενος", _;
+    participle_fut: "ἀ~υσων", "ἀ~υσομενος", "ἀ~υθησομενος";
+    participle_aor: "ἀ~υσᾱς", "ἀ~υσᾰμενος", "ἀ~υθεις";
+    participle_perf: "ἠ~υκως", "ἠ~υμενος", _;
+    participle_futp: _, "ἠ~υσομενος", _;
+    ),
+    // Ἰᾱτρευω: 3 words (ἰᾱτρευω, ἱκετευω, ἱππευω). Like Βουλευω, except in 135 cells: imperfect_act_1 sg, imperfect_act_1 pl, imperfect_act_2 sg, imperfect_act_2 du, imperfect_act_2 pl, imperfect_act_3 sg, ….
+    conjugation!("ἰᾱτρευω", 3, "~υω", like Βουλευω;
     imperfect_act_1: "~υον", _, "~υομεν";
     imperfect_act_2: "~υες", "~υετον", "~υετε";
     imperfect_act_3: "~υε|~υεν", "~υετην", "~υον";
@@ -7397,95 +6864,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_fut: _, _, derived;
     participle_aor: _, _, derived;
     participle_perf: "~υκως", "~υμενος", _;
-    ),
-    // Ἐρωτᾰω: 4 words (ἐρωτᾰω, ἐρᾰω, ἐρευνᾰω, ἐμπολᾰω). Like Ἀγαπαω, except in 200 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("ἐρωτᾰω", 4, "ἐ~ᾰω", like Ἀγαπαω;
-    ind_act_1: "ἐ~ω", _, "ἐ~ωμεν";
-    ind_act_2: "ἐ~ᾳς", "ἐ~ᾱτον", "ἐ~ᾱτε";
-    ind_act_3: "ἐ~ᾳ", _, "ἐ~ωσῐ|ἐ~ωσῐν";
-    ind_mid_1: "ἐ~ωμαι", _, "ἐ~ωμεθᾰ";
-    ind_mid_2: "ἐ~ᾳ", "ἐ~ᾱσθον", "ἐ~ᾱσθε";
-    ind_mid_3: "ἐ~ᾱται", _, "ἐ~ωνται";
-    subj_act_1: "ἐ~ω", _, "ἐ~ωμεν";
-    subj_act_2: "ἐ~ᾳς", "ἐ~ᾱτον", "ἐ~ᾱτε";
-    subj_act_3: "ἐ~ᾳ", _, "ἐ~ωσῐ|ἐ~ωσῐν";
-    subj_mid_1: "ἐ~ωμαι", _, "ἐ~ωμεθᾰ";
-    subj_mid_2: "ἐ~ᾳ", "ἐ~ᾱσθον", "ἐ~ᾱσθε";
-    subj_mid_3: "ἐ~ᾱται", _, "ἐ~ωνται";
-    subj_pass_2: "ἐ~ᾳ", _, _;
-    opt_act_1: "ἐ~ῳην|ἐ~ῳμῐ", _, "ἐ~ῳμεν|ἐ~ῳημεν";
-    opt_act_2: "ἐ~ῳης|ἐ~ῳς", "ἐ~ῳτον|ἐ~ῳητον", "ἐ~ῳτε|ἐ~ῳητε";
-    opt_act_3: "ἐ~ῳη|ἐ~ῳ", "ἐ~ῳτην|ἐ~ῳητην", "ἐ~ῳεν|ἐ~ῳησᾰν";
-    opt_mid_1: "ἐ~ῳμην", _, "ἐ~ῳμεθᾰ";
-    opt_mid_2: "ἐ~ῳο", "ἐ~ῳσθον", "ἐ~ῳσθε";
-    opt_mid_3: "ἐ~ῳτο", "ἐ~ῳσθην", "ἐ~ῳντο";
-    imp_act_2: "ἐ~ᾱ", _, _;
-    imp_act_3: "ἐ~ᾱτω", "ἐ~ᾱτων", "ἐ~ωντων";
-    imp_mid_2: "ἐ~ω", _, "ἐ~ᾱσθε";
-    imp_mid_3: "ἐ~ᾱσθω", "ἐ~ᾱσθων", "ἐ~ᾱσθων";
-    future_ind_act_1: "ἐ~ησω", _, "ἐ~ησομεν";
-    future_ind_act_2: "ἐ~ησεις", "ἐ~ησετον", "ἐ~ησετε";
-    future_ind_act_3: "ἐ~ησει", _, "ἐ~ησουσῐ";
-    future_ind_mid_1: "ἐ~ησομαι", _, "ἐ~ησομεθᾰ";
-    future_ind_mid_2: "ἐ~ησῃ", "ἐ~ησεσθον", "ἐ~ησεσθε";
-    future_ind_mid_3: "ἐ~ησεται", _, "ἐ~ησονται";
-    future_ind_pass_1: "ἐ~ηθησομαι", _, "ἐ~ηθησομεθᾰ";
-    future_ind_pass_2: "ἐ~ηθησῃ", "ἐ~ηθησεσθον", "ἐ~ηθησεσθε";
-    future_ind_pass_3: "ἐ~ηθησεται", _, "ἐ~ηθησονται";
-    future_opt_act_1: "ἐ~ησοιμῐ", _, "ἐ~ησοιμεν";
-    future_opt_act_2: "ἐ~ησοις", "ἐ~ησοιτον", "ἐ~ησοιτε";
-    future_opt_act_3: "ἐ~ησοι", "ἐ~ησοιτην", "ἐ~ησοιεν";
-    future_opt_mid_1: "ἐ~ησοιμην", _, "ἐ~ησοιμεθᾰ";
-    future_opt_mid_2: "ἐ~ησοιο", "ἐ~ησοισθον", "ἐ~ησοισθε";
-    future_opt_mid_3: "ἐ~ησοιτο", "ἐ~ησοισθην", "ἐ~ησοιντο";
-    future_opt_pass_1: "ἐ~ηθησοιμην", _, "ἐ~ηθησοιμεθᾰ";
-    future_opt_pass_2: "ἐ~ηθησοιο", "ἐ~ηθησοισθον", "ἐ~ηθησοισθε";
-    future_opt_pass_3: "ἐ~ηθησοιτο", "ἐ~ηθησοισθην", "ἐ~ηθησοιντο";
-    aorist_ind_act_3: "ἠ~ησε", _, _;
-    aorist_subj_act_1: "ἐ~ησω", _, "ἐ~ησωμεν";
-    aorist_subj_act_2: "ἐ~ησῃς", "ἐ~ησητον", "ἐ~ησητε";
-    aorist_subj_act_3: "ἐ~ησῃ", _, "ἐ~ησωσῐ";
-    aorist_subj_mid_1: "ἐ~ησωμαι", _, "ἐ~ησωμεθᾰ";
-    aorist_subj_mid_2: "ἐ~ησῃ", "ἐ~ησησθον", "ἐ~ησησθε";
-    aorist_subj_mid_3: "ἐ~ησηται", _, "ἐ~ησωνται";
-    aorist_subj_pass_1: "ἐ~ηθω", _, "ἐ~ηθωμεν";
-    aorist_subj_pass_2: "ἐ~ηθῃς", "ἐ~ηθητον", "ἐ~ηθητε";
-    aorist_subj_pass_3: "ἐ~ηθῃ", _, "ἐ~ηθωσῐ";
-    aorist_opt_act_1: "ἐ~ησαιμῐ", _, "ἐ~ησαιμεν";
-    aorist_opt_act_2: "ἐ~ησειᾰς", "ἐ~ησαιτον", "ἐ~ησαιτε";
-    aorist_opt_act_3: "ἐ~ησειε", "ἐ~ησαιτην", "ἐ~ησειᾰν";
-    aorist_opt_mid_1: "ἐ~ησαιμην", _, "ἐ~ησαιμεθᾰ";
-    aorist_opt_mid_2: "ἐ~ησαιο", "ἐ~ησαισθον", "ἐ~ησαισθε";
-    aorist_opt_mid_3: "ἐ~ησαιτο", "ἐ~ησαισθην", "ἐ~ησαιντο";
-    aorist_opt_pass_1: "ἐ~ηθειην", _, "ἐ~ηθεῑμεν";
-    aorist_opt_pass_2: "ἐ~ηθειης", "ἐ~ηθεῑτον", "ἐ~ηθεῑτε";
-    aorist_opt_pass_3: "ἐ~ηθειη", "ἐ~ηθειτην", "ἐ~ηθεῑεν";
-    aorist_imp_act_2: "ἐ~ησον", "ἐ~ησᾰτον", "ἐ~ησᾰτε";
-    aorist_imp_act_3: "ἐ~ησᾰτω", "ἐ~ησᾰτων", "ἐ~ησᾰντων";
-    aorist_imp_mid_2: "ἐ~ησαι", "ἐ~ησᾰσθον", "ἐ~ησᾰσθε";
-    aorist_imp_mid_3: "ἐ~ησᾰσθω", "ἐ~ησᾰσθων", _;
-    aorist_imp_pass_2: "ἐ~ηθητῐ", _, _;
-    aorist_imp_pass_3: "ἐ~ηθητω", "ἐ~ηθητων", "ἐ~ηθεντων";
-    perfect_ind_act_3: "ἠ~ηκε", _, "ἠ~ηκᾱσῐ";
-    perfect_subj_act_3: _, _, "ἠ~ηκωσῐ";
-    perfect_opt_act_1: "ἠ~ηκοιμῐ", _, _;
-    perfect_opt_act_2: "ἠ~ηκοις", _, _;
-    perfect_opt_act_3: "ἠ~ηκοι", _, _;
-    perfect_imp_act_2: derived, _, _;
-    future_perfect_ind_mid_1: derived, _, derived;
-    future_perfect_ind_mid_2: derived, derived, derived;
-    future_perfect_ind_mid_3: derived, _, derived;
-    future_perfect_opt_mid_1: derived, _, derived;
-    future_perfect_opt_mid_2: derived, derived, derived;
-    future_perfect_opt_mid_3: derived, derived, derived;
-    infinitive_pres: "ἐ~ᾱν", "ἐ~ᾱσθαι", _;
-    infinitive_fut: "ἐ~ησειν", "ἐ~ησεσθαι", "ἐ~ηθησεσθαι";
-    infinitive_aor: "ἐ~ησαι", "ἐ~ησᾰσθαι", "ἐ~ηθηναι";
-    infinitive_futp: _, derived, _;
-    participle_pres: "ἐ~ων", "ἐ~ωμενος", _;
-    participle_fut: "ἐ~ησων", "ἐ~ησομενος", "ἐ~ηθησομενος";
-    participle_aor: "ἐ~ησᾱς", "ἐ~ησᾰμενος", "ἐ~ηθεις";
-    participle_futp: _, derived, _;
     ),
     // Πλᾰναω: 3 words (δαμναω, πλᾰναω, ἰχαναω). Like Οἰομαι, except in 255 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
     conjugation!("πλᾰναω", 3, "~ναω", like Οἰομαι;
@@ -7595,114 +6973,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: "~νησᾱς", "~νησᾰμενος", "~νηθεις";
     participle_perf: "%ε~νηκως", "%ε~νημενος", _;
     participle_futp: _, "%ε~νησομενος", _;
-    ),
-    // Ἐπᾰγγελλω: 3 words (πᾰρᾰγγελλω, ἐπᾰγγελλω, ἀνᾰγγελλω).
-    conjugation!("ἐπᾰγγελλω", 3, "~ᾰ~~λω";
-    ind_act_1: "~ᾰ~~λω", _, "~ᾰ~~λομεν";
-    ind_act_2: "~ᾰ~~λεις", "~ᾰ~~λετον", "~ᾰ~~λετε";
-    ind_act_3: "~ᾰ~~λει", _, "~ᾰ~~λουσῐ|~ᾰ~~λουσῐν";
-    ind_mid_1: "~ᾰ~~λομαι", _, "~ᾰ~~λομεθᾰ";
-    ind_mid_2: "~ᾰ~~λῃ|~ᾰ~~λει", "~ᾰ~~λεσθον", "~ᾰ~~λεσθε";
-    ind_mid_3: "~ᾰ~~λεται", _, "~ᾰ~~λονται";
-    ind_pass_2: "~ᾰ~~λῃ|~ᾰ~~λει", _, _;
-    subj_act_1: "~ᾰ~~λω", _, "~ᾰ~~λωμεν";
-    subj_act_2: "~ᾰ~~λῃς", "~ᾰ~~λητον", "~ᾰ~~λητε";
-    subj_act_3: "~ᾰ~~λῃ", _, "~ᾰ~~λωσῐ|~ᾰ~~λωσῐν";
-    subj_mid_1: "~ᾰ~~λωμαι", _, "~ᾰ~~λωμεθᾰ";
-    subj_mid_2: "~ᾰ~~λῃ", "~ᾰ~~λησθον", "~ᾰ~~λησθε";
-    subj_mid_3: "~ᾰ~~ληται", _, "~ᾰ~~λωνται";
-    subj_pass_2: "~ᾰ~~λῃ", _, _;
-    opt_act_1: "~ᾰ~~λοιμῐ", _, "~ᾰ~~λοιμεν";
-    opt_act_2: "~ᾰ~~λοις", "~ᾰ~~λοιτον", "~ᾰ~~λοιτε";
-    opt_act_3: "~ᾰ~~λοι", "~ᾰ~~λοιτην", "~ᾰ~~λοιεν";
-    opt_mid_1: "~ᾰ~~λοιμην", _, "~ᾰ~~λοιμεθᾰ";
-    opt_mid_2: "~ᾰ~~λοιο", "~ᾰ~~λοισθον", "~ᾰ~~λοισθε";
-    opt_mid_3: "~ᾰ~~λοιτο", "~ᾰ~~λοισθην", "~ᾰ~~λοιντο";
-    imp_act_2: "~ᾰ~~λε", _, _;
-    imp_act_3: "~ᾰ~~λετω", "~ᾰ~~λετων", "~ᾰ~~λοντων";
-    imp_mid_2: "~ᾰ~~λου", _, "~ᾰ~~λεσθε";
-    imp_mid_3: "~ᾰ~~λεσθω", "~ᾰ~~λεσθων", "~ᾰ~~λεσθων";
-    imperfect_act_1: "~η~~λον", _, "~η~~λομεν";
-    imperfect_act_2: "~η~~λες", "~η~~λετον", "~η~~λετε";
-    imperfect_act_3: "~η~~λε|~η~~λεν", "~η~~λετην", "~η~~λον";
-    imperfect_mid_1: "~η~~λομην", _, "~η~~λομεθᾰ";
-    imperfect_mid_2: "~η~~λου", "~η~~λεσθον", "~η~~λεσθε";
-    imperfect_mid_3: "~η~~λετο", "~η~~λεσθην", "~η~~λοντο";
-    future_ind_act_1: "~ᾰ~~ω", _, "~ᾰ~~οῡμεν";
-    future_ind_act_2: "~ᾰ~~εῑς", "~ᾰ~~εῑτον", "~ᾰ~~εῑτε";
-    future_ind_act_3: "~ᾰ~~εῑ", _, "~ᾰ~~οῡσῐ|~ᾰ~~οῡσῐν";
-    future_ind_mid_1: "~ᾰ~~οῡμαι", _, "~ᾰ~~ουμεθᾰ";
-    future_ind_mid_2: "~ᾰ~~εῑ|~ᾰ~~ῃ", "~ᾰ~~εῑσθον", "~ᾰ~~εῑσθε";
-    future_ind_mid_3: "~ᾰ~~εῑται", _, "~ᾰ~~οῡνται";
-    future_ind_pass_1: "~ᾰ~~θησομαι", _, "~ᾰ~~θησομεθᾰ";
-    future_ind_pass_2: "~ᾰ~~θησῃ|~ᾰ~~θησει", "~ᾰ~~θησεσθον", "~ᾰ~~θησεσθε";
-    future_ind_pass_3: "~ᾰ~~θησεται", _, "~ᾰ~~θησονται";
-    future_opt_act_1: "~ᾰ~~οιην|~ᾰ~~οῑμῐ", _, "~ᾰ~~οῑμεν|~ᾰ~~οιημεν";
-    future_opt_act_2: "~ᾰ~~οιης|~ᾰ~~οῑς", "~ᾰ~~οῑτον|~ᾰ~~οιητον", "~ᾰ~~οῑτε|~ᾰ~~οιητε";
-    future_opt_act_3: "~ᾰ~~οιη|~ᾰ~~οῑ", "~ᾰ~~οιτην|~ᾰ~~οιητην", "~ᾰ~~οῑεν|~ᾰ~~οιησᾰν";
-    future_opt_mid_1: "~ᾰ~~οιμην", _, "~ᾰ~~οιμεθᾰ";
-    future_opt_mid_2: "~ᾰ~~οῑο", "~ᾰ~~οῑσθον", "~ᾰ~~οῑσθε";
-    future_opt_mid_3: "~ᾰ~~οῑτο", "~ᾰ~~οισθην", "~ᾰ~~οῑντο";
-    future_opt_pass_1: "~ᾰ~~θησοιμην", _, "~ᾰ~~θησοιμεθᾰ";
-    future_opt_pass_2: "~ᾰ~~θησοιο", "~ᾰ~~θησοισθον", "~ᾰ~~θησοισθε";
-    future_opt_pass_3: "~ᾰ~~θησοιτο", "~ᾰ~~θησοισθην", "~ᾰ~~θησοιντο";
-    aorist_ind_act_1: "~η~ι~ᾰ", _, "~η~ι~ᾰμεν";
-    aorist_ind_act_2: "~η~ι~ᾰς", "~η~ι~ᾰτον", "~η~ι~ᾰτε";
-    aorist_ind_act_3: "~η~ι~ε|~η~ι~εν", "~η~ι~ᾰτην", "~η~ι~ᾰν";
-    aorist_ind_mid_1: "~η~ι~ᾰμην", _, "~η~ι~ᾰμεθᾰ";
-    aorist_ind_mid_2: "~η~ι~ω", "~η~ι~ᾰσθον", "~η~ι~ᾰσθε";
-    aorist_ind_mid_3: "~η~ι~ᾰτο", "~η~ι~ᾰσθην", "~η~ι~ᾰντο";
-    aorist_ind_pass_1: "~η~~θην", _, "~η~~θημεν";
-    aorist_ind_pass_2: "~η~~θης", "~η~~θητον", "~η~~θητε";
-    aorist_ind_pass_3: "~η~~θη", "~η~~θητην", "~η~~θησᾰν";
-    aorist_subj_act_1: "~ᾰ~ι~ω", _, "~ᾰ~ι~ωμεν";
-    aorist_subj_act_2: "~ᾰ~ι~ῃς", "~ᾰ~ι~ητον", "~ᾰ~ι~ητε";
-    aorist_subj_act_3: "~ᾰ~ι~ῃ", _, "~ᾰ~ι~ωσῐ|~ᾰ~ι~ωσῐν";
-    aorist_subj_mid_1: "~ᾰ~ι~ωμαι", _, "~ᾰ~ι~ωμεθᾰ";
-    aorist_subj_mid_2: "~ᾰ~ι~ῃ", "~ᾰ~ι~ησθον", "~ᾰ~ι~ησθε";
-    aorist_subj_mid_3: "~ᾰ~ι~ηται", _, "~ᾰ~ι~ωνται";
-    aorist_subj_pass_1: "~ᾰ~~θω", _, "~ᾰ~~θωμεν";
-    aorist_subj_pass_2: "~ᾰ~~θῃς", "~ᾰ~~θητον", "~ᾰ~~θητε";
-    aorist_subj_pass_3: "~ᾰ~~θῃ", _, "~ᾰ~~θωσῐ|~ᾰ~~θωσῐν";
-    aorist_opt_act_1: "~ᾰ~ι~αιμῐ", _, "~ᾰ~ι~αιμεν";
-    aorist_opt_act_2: "~ᾰ~ι~ειᾰς|~ᾰ~ι~αις", "~ᾰ~ι~αιτον", "~ᾰ~ι~αιτε";
-    aorist_opt_act_3: "~ᾰ~ι~ειε|~ᾰ~ι~ειεν|~ᾰ~ι~αι", "~ᾰ~ι~αιτην", "~ᾰ~ι~ειᾰν|~ᾰ~ι~αιεν";
-    aorist_opt_mid_1: "~ᾰ~ι~αιμην", _, "~ᾰ~ι~αιμεθᾰ";
-    aorist_opt_mid_2: "~ᾰ~ι~αιο", "~ᾰ~ι~αισθον", "~ᾰ~ι~αισθε";
-    aorist_opt_mid_3: "~ᾰ~ι~αιτο", "~ᾰ~ι~αισθην", "~ᾰ~ι~αιντο";
-    aorist_opt_pass_1: "~ᾰ~~θειην", _, "~ᾰ~~θεῑμεν|~ᾰ~~θειημεν";
-    aorist_opt_pass_2: "~ᾰ~~θειης", "~ᾰ~~θεῑτον|~ᾰ~~θειητον", "~ᾰ~~θεῑτε|~ᾰ~~θειητε";
-    aorist_opt_pass_3: "~ᾰ~~θειη", "~ᾰ~~θειτην|~ᾰ~~θειητην", "~ᾰ~~θεῑεν|~ᾰ~~θειησᾰν";
-    aorist_imp_act_2: "~ᾰ~ι~ον", "~ᾰ~ι~ᾰτον", "~ᾰ~ι~ᾰτε";
-    aorist_imp_act_3: "~ᾰ~ι~ᾰτω", "~ᾰ~ι~ᾰτων", "~ᾰ~ι~ᾰντων";
-    aorist_imp_mid_2: "~ᾰ~ι~αι", "~ᾰ~ι~ᾰσθον", "~ᾰ~ι~ᾰσθε";
-    aorist_imp_mid_3: "~ᾰ~ι~ᾰσθω", "~ᾰ~ι~ᾰσθων", _;
-    aorist_imp_pass_2: "~ᾰ~~θητῐ", _, _;
-    aorist_imp_pass_3: "~ᾰ~~θητω", "~ᾰ~~θητων", "~ᾰ~~θεντων";
-    perfect_ind_act_1: "~η~~κᾰ", _, "~η~~κᾰμεν";
-    perfect_ind_act_2: "~η~~κᾰς", "~η~~κᾰτον", "~η~~κᾰτε";
-    perfect_ind_act_3: "~η~~κε|~η~~κεν", _, "~η~~κᾱσῐ|~η~~κᾱσῐν";
-    perfect_ind_mid_1: "~η~~μαι", _, "~η~~μεθᾰ";
-    perfect_ind_mid_2: "~η~~σαι", "~η~~θον", "~η~~θε";
-    perfect_ind_mid_3: "~η~~ται", _, "~η~~ᾰται";
-    perfect_subj_act_1: "~η~~κω", _, "~η~~κωμεν";
-    perfect_subj_act_2: "~η~~κῃς", "~η~~κητον", "~η~~κητε";
-    perfect_subj_act_3: "~η~~κῃ", _, "~η~~κωσῐ|~η~~κωσῐν";
-    perfect_opt_act_1: "~η~~κοιμῐ|~η~~κοιην", _, "~η~~κοιμεν";
-    perfect_opt_act_2: "~η~~κοις|~η~~κοιης", "~η~~κοιτον", "~η~~κοιτε";
-    perfect_opt_act_3: "~η~~κοι|~η~~κοιη", "~η~~κοιτην", "~η~~κοιεν";
-    perfect_imp_act_2: "~η~~κε", "~η~~κετον", "~η~~κετε";
-    perfect_imp_act_3: "~η~~κετω", "~η~~κετων", "~η~~κοντων";
-    perfect_imp_mid_2: "~η~~σο", _, _;
-    perfect_imp_mid_3: "~η~~θω", "~η~~θων", _;
-    infinitive_pres: "~ᾰ~~λειν", "~ᾰ~~λεσθαι", _;
-    infinitive_fut: "~ᾰ~~εῑν", "~ᾰ~~εῑσθαι", "~ᾰ~~θησεσθαι";
-    infinitive_aor: "~ᾰ~ῑ~αι", "~ᾰ~ι~ᾰσθαι", "~ᾰ~~θηναι";
-    infinitive_perf: "~η~~κεναι", "~η~~θαι", _;
-    participle_pres: "~ᾰ~~λων", "~ᾰ~~λομενος", _;
-    participle_fut: "~ᾰ~~ων", "~ᾰ~~ουμενος", "~ᾰ~~θησομενος";
-    participle_aor: "~ᾰ~ι~ᾱς", "~ᾰ~ι~ᾰμενος", "~ᾰ~~θεις";
-    participle_perf: "~η~~κως", "~η~~μενος", _;
     ),
     // Ἐπῐτῐθημῐ: 3 words (ἐπῐτῐθημῐ, συνεπῐτῐθημῐ, ξυνεπῐτῐθημῐ). Like Φειδομαι, except in 238 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
     conjugation!("ἐπῐτῐθημῐ", 3, "~ῐτῐ~ημῐ", like Φειδομαι;
@@ -7835,106 +7105,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     pluperfect_mid_3: derived, derived, derived;
     infinitive_perf: "ἐ~υκεναι", "ἐ~ῡσθαι", _;
     participle_perf: "ἐ~υκως", "ἐ~υμενος", _;
-    ),
-    // Ἐξᾰπτω: 3 words (ἐξᾰπτω, καθᾰπτω, ἐπῐσῠνᾰπτω). Like Ὑπᾰκουω, except in 236 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("ἐξᾰπτω", 3, "~ᾰπτω", like Ὑπᾰκουω;
-    ind_act_1: "~ᾰπτω", _, "~ᾰπτομεν";
-    ind_act_2: "~ᾰπτεις", "~ᾰπτετον", "~ᾰπτετε";
-    ind_act_3: "~ᾰπτει", _, "~ᾰπτουσῐ|~ᾰπτουσῐν";
-    ind_mid_1: "~ᾰπτομαι", _, "~ᾰπτομεθᾰ";
-    ind_mid_2: "~ᾰπτῃ|~ᾰπτει", "~ᾰπτεσθον", "~ᾰπτεσθε";
-    ind_mid_3: "~ᾰπτεται", _, "~ᾰπτονται";
-    ind_pass_2: "~ᾰπτῃ|~ᾰπτει", _, _;
-    subj_act_1: "~ᾰπτω", _, "~ᾰπτωμεν";
-    subj_act_2: "~ᾰπτῃς", "~ᾰπτητον", "~ᾰπτητε";
-    subj_act_3: "~ᾰπτῃ", _, "~ᾰπτωσῐ|~ᾰπτωσῐν";
-    subj_mid_1: "~ᾰπτωμαι", _, "~ᾰπτωμεθᾰ";
-    subj_mid_2: "~ᾰπτῃ", "~ᾰπτησθον", "~ᾰπτησθε";
-    subj_mid_3: "~ᾰπτηται", _, "~ᾰπτωνται";
-    subj_pass_2: "~ᾰπτῃ", _, _;
-    opt_act_1: "~ᾰπτοιμῐ", _, "~ᾰπτοιμεν";
-    opt_act_2: "~ᾰπτοις", "~ᾰπτοιτον", "~ᾰπτοιτε";
-    opt_act_3: "~ᾰπτοι", "~ᾰπτοιτην", "~ᾰπτοιεν";
-    opt_mid_1: "~ᾰπτοιμην", _, "~ᾰπτοιμεθᾰ";
-    opt_mid_2: "~ᾰπτοιο", "~ᾰπτοισθον", "~ᾰπτοισθε";
-    opt_mid_3: "~ᾰπτοιτο", "~ᾰπτοισθην", "~ᾰπτοιντο";
-    imp_act_2: "~ᾰπτε", _, _;
-    imp_act_3: "~ᾰπτετω", "~ᾰπτετων", "~ᾰπτοντων";
-    imp_mid_2: "~ᾰπτου", _, "~ᾰπτεσθε";
-    imp_mid_3: "~ᾰπτεσθω", "~ᾰπτεσθων", "~ᾰπτεσθων";
-    imperfect_act_1: "~ηπτον", _, "~ηπτομεν";
-    imperfect_act_2: "~ηπτες", "~ηπτετον", "~ηπτετε";
-    imperfect_act_3: "~ηπτε|~ηπτεν", "~ηπτετην", "~ηπτον";
-    imperfect_mid_1: "~ηπτομην", _, "~ηπτομεθᾰ";
-    imperfect_mid_2: "~ηπτου", "~ηπτεσθον", "~ηπτεσθε";
-    imperfect_mid_3: "~ηπτετο", "~ηπτεσθην", "~ηπτοντο";
-    future_ind_act_1: "~ᾰψω", _, "~ᾰψομεν";
-    future_ind_act_2: "~ᾰψεις", "~ᾰψετον", "~ᾰψετε";
-    future_ind_act_3: "~ᾰψει", _, "~ᾰψουσῐ|~ᾰψουσῐν";
-    future_ind_mid_1: "~ᾰψομαι", _, "~ᾰψομεθᾰ";
-    future_ind_mid_2: "~ᾰψῃ|~ᾰψει", "~ᾰψεσθον", "~ᾰψεσθε";
-    future_ind_mid_3: "~ᾰψεται", _, "~ᾰψονται";
-    future_ind_pass_1: "~ᾰφθησομαι", _, "~ᾰφθησομεθᾰ";
-    future_ind_pass_2: "~ᾰφθησῃ|~ᾰφθησει", "~ᾰφθησεσθον", "~ᾰφθησεσθε";
-    future_ind_pass_3: "~ᾰφθησεται", _, "~ᾰφθησονται";
-    future_opt_act_1: "~ᾰψοιμῐ", _, "~ᾰψοιμεν";
-    future_opt_act_2: "~ᾰψοις", "~ᾰψοιτον", "~ᾰψοιτε";
-    future_opt_act_3: "~ᾰψοι", "~ᾰψοιτην", "~ᾰψοιεν";
-    future_opt_mid_1: "~ᾰψοιμην", _, "~ᾰψοιμεθᾰ";
-    future_opt_mid_2: "~ᾰψοιο", "~ᾰψοισθον", "~ᾰψοισθε";
-    future_opt_mid_3: "~ᾰψοιτο", "~ᾰψοισθην", "~ᾰψοιντο";
-    future_opt_pass_1: "~ᾰφθησοιμην", _, "~ᾰφθησοιμεθᾰ";
-    future_opt_pass_2: "~ᾰφθησοιο", "~ᾰφθησοισθον", "~ᾰφθησοισθε";
-    future_opt_pass_3: "~ᾰφθησοιτο", "~ᾰφθησοισθην", "~ᾰφθησοιντο";
-    aorist_ind_act_1: "~ηψᾰ", _, "~ηψᾰμεν";
-    aorist_ind_act_2: "~ηψᾰς", "~ηψᾰτον", "~ηψᾰτε";
-    aorist_ind_act_3: "~ηψε|~ηψεν", "~ηψᾰτην", "~ηψᾰν";
-    aorist_ind_mid_1: "~ηψᾰμην", _, "~ηψᾰμεθᾰ";
-    aorist_ind_mid_2: "~ηψω", "~ηψᾰσθον", "~ηψᾰσθε";
-    aorist_ind_mid_3: "~ηψᾰτο", "~ηψᾰσθην", "~ηψᾰντο";
-    aorist_ind_pass_1: "~ηφθην", _, "~ηφθημεν";
-    aorist_ind_pass_2: "~ηφθης", "~ηφθητον", "~ηφθητε";
-    aorist_ind_pass_3: "~ηφθη", "~ηφθητην", "~ηφθησᾰν";
-    aorist_subj_act_1: "~ᾰψω", _, "~ᾰψωμεν";
-    aorist_subj_act_2: "~ᾰψῃς", "~ᾰψητον", "~ᾰψητε";
-    aorist_subj_act_3: "~ᾰψῃ", _, "~ᾰψωσῐ|~ᾰψωσῐν";
-    aorist_subj_mid_1: "~ᾰψωμαι", _, "~ᾰψωμεθᾰ";
-    aorist_subj_mid_2: "~ᾰψῃ", "~ᾰψησθον", "~ᾰψησθε";
-    aorist_subj_mid_3: "~ᾰψηται", _, "~ᾰψωνται";
-    aorist_subj_pass_1: "~ᾰφθω", _, "~ᾰφθωμεν";
-    aorist_subj_pass_2: "~ᾰφθῃς", "~ᾰφθητον", "~ᾰφθητε";
-    aorist_subj_pass_3: "~ᾰφθῃ", _, "~ᾰφθωσῐ|~ᾰφθωσῐν";
-    aorist_opt_act_1: "~ᾰψαιμῐ", _, "~ᾰψαιμεν";
-    aorist_opt_act_2: "~ᾰψειᾰς|~ᾰψαις", "~ᾰψαιτον", "~ᾰψαιτε";
-    aorist_opt_act_3: "~ᾰψειε|~ᾰψειεν|~ᾰψαι", "~ᾰψαιτην", "~ᾰψειᾰν|~ᾰψαιεν";
-    aorist_opt_mid_1: "~ᾰψαιμην", _, "~ᾰψαιμεθᾰ";
-    aorist_opt_mid_2: "~ᾰψαιο", "~ᾰψαισθον", "~ᾰψαισθε";
-    aorist_opt_mid_3: "~ᾰψαιτο", "~ᾰψαισθην", "~ᾰψαιντο";
-    aorist_opt_pass_1: "~ᾰφθειην", _, "~ᾰφθεῑμεν|~ᾰφθειημεν";
-    aorist_opt_pass_2: "~ᾰφθειης", "~ᾰφθεῑτον|~ᾰφθειητον", "~ᾰφθεῑτε|~ᾰφθειητε";
-    aorist_opt_pass_3: "~ᾰφθειη", "~ᾰφθειτην|~ᾰφθειητην", "~ᾰφθεῑεν|~ᾰφθειησᾰν";
-    aorist_imp_act_2: "~ᾰψον", "~ᾰψᾰτον", "~ᾰψᾰτε";
-    aorist_imp_act_3: "~ᾰψᾰτω", "~ᾰψᾰτων", "~ᾰψᾰντων";
-    aorist_imp_mid_2: "~ᾰψαι", "~ᾰψᾰσθον", "~ᾰψᾰσθε";
-    aorist_imp_mid_3: "~ᾰψᾰσθω", "~ᾰψᾰσθων", _;
-    aorist_imp_pass_2: "~ᾰφθητῐ", _, _;
-    aorist_imp_pass_3: "~ᾰφθητω", "~ᾰφθητων", "~ᾰφθεντων";
-    perfect_ind_mid_1: "~ημμαι", _, "~ημμεθᾰ";
-    perfect_ind_mid_2: "~ηψαι", "~ηφθον", "~ηφθε";
-    perfect_ind_mid_3: "~ηπται", _, "~ηπᾰται";
-    perfect_imp_mid_2: "~ηψο", _, _;
-    perfect_imp_mid_3: "~ηφθω", "~ηφθων", _;
-    pluperfect_mid_1: "~ημμην", _, "~ημμεθᾰ";
-    pluperfect_mid_2: "~ηψο", "~ηφθον", "~ηφθε";
-    pluperfect_mid_3: "~ηπτο", "~ηφθην", "~ηπᾰτο";
-    infinitive_pres: "~ᾰπτειν", "~ᾰπτεσθαι", _;
-    infinitive_fut: "~ᾰψειν", "~ᾰψεσθαι", "~ᾰφθησεσθαι";
-    infinitive_aor: "~ᾰψαι", "~ᾰψᾰσθαι", "~ᾰφθηναι";
-    infinitive_perf: _, "~ηφθαι", _;
-    participle_pres: "~ᾰπτων", "~ᾰπτομενος", _;
-    participle_fut: "~ᾰψων", "~ᾰψομενος", "~ᾰφθησομενος";
-    participle_aor: "~ᾰψᾱς", "~ᾰψᾰμενος", "~ᾰφθεις";
-    participle_perf: _, "~ημμενος", _;
     ),
     // Λιστραω: 3 words (μεριμναω, κῠβισταω, λιστραω). Like Ἐπῐτῐθημῐ, except in 206 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
     conjugation!("λιστραω", 3, "~ι~αω", like Ἐπῐτῐθημῐ;
@@ -8083,61 +7253,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_fut: _, "~ευξομενος", derived;
     participle_aor: _, "~ευξᾰμενος", _;
     participle_perf: _, "~ηυγμενος", _;
-    ),
-    // Ὑστερεω: 3 words (ὑμνεω, ὑστερεω, ὁμᾰδεω). Like Εὐλογεω, except in 137 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("ὑστερεω", 3, "~εω", like Εὐλογεω;
-    ind_act_1: "~εω|~ω", _, "~εομεν|~οῡμεν";
-    ind_act_2: "~εεις|~εῑς", "~εετον|~εῑτον", "~εετε|~εῑτε";
-    ind_act_3: "~εει|~εῑ", "~εετον|~εῑτον", "~εουσῐ|~εουσῐν|~οῡσῐ|~οῡσῐν";
-    ind_mid_1: "~εομαι|~οῡμαι", _, "~εομεθᾰ|~ουμεθᾰ";
-    ind_mid_2: "~εῃ|~εει|~εῑ|~ῃ", "~εεσθον|~εῑσθον", "~εεσθε|~εῑσθε";
-    ind_mid_3: "~εεται|~εῑται", "~εεσθον|~εῑσθον", "~εονται|~οῡνται";
-    ind_pass_1: "~εομαι|~οῡμαι", _, "~εομεθᾰ|~ουμεθᾰ";
-    ind_pass_2: "~εῃ|~εει|~εῑ|~ῃ", "~εεσθον|~εῑσθον", "~εεσθε|~εῑσθε";
-    ind_pass_3: "~εεται|~εῑται", "~εεσθον|~εῑσθον", "~εονται|~οῡνται";
-    subj_act_1: "~εω|~ω", _, "~εωμεν|~ωμεν";
-    subj_act_2: "~εῃς|~ῃς", "~εητον|~ητον", "~εητε|~ητε";
-    subj_act_3: "~εῃ|~ῃ", "~εητον|~ητον", "~εωσῐ|~εωσῐν|~ωσῐ|~ωσῐν";
-    subj_mid_1: "~εωμαι|~ωμαι", _, "~εωμεθᾰ|~ωμεθᾰ";
-    subj_mid_2: "~εῃ|~ῃ", "~εησθον|~ησθον", "~εησθε|~ησθε";
-    subj_mid_3: "~εηται|~ηται", "~εησθον|~ησθον", "~εωνται|~ωνται";
-    subj_pass_1: "~εωμαι|~ωμαι", _, "~εωμεθᾰ|~ωμεθᾰ";
-    subj_pass_2: "~εῃ|~ῃ", "~εησθον|~ησθον", "~εησθε|~ησθε";
-    subj_pass_3: "~εηται|~ηται", "~εησθον|~ησθον", "~εωνται|~ωνται";
-    opt_act_1: "~εοιμῐ|~οιην|~οῑμῐ", _, "~εοιμεν|~οῑμεν|~οιημεν";
-    opt_act_2: "~εοις|~οιης|~οῑς", "~εοιτον|~οῑτον|~οιητον", "~εοιτε|~οῑτε|~οιητε";
-    opt_act_3: "~εοι|~οιη|~οῑ", "~εοιτην|~οιτην|~οιητην", "~εοιεν|~οῑεν|~οιησᾰν";
-    opt_mid_1: "~εοιμην|~οιμην", _, "~εοιμεθᾰ|~οιμεθᾰ";
-    opt_mid_2: "~εοιο|~οῑο", "~εοισθον|~οῑσθον", "~εοισθε|~οῑσθε";
-    opt_mid_3: "~εοιτο|~οῑτο", "~εοισθην|~οισθην", "~εοιντο|~οῑντο";
-    opt_pass_1: "~εοιμην|~οιμην", _, "~εοιμεθᾰ|~οιμεθᾰ";
-    opt_pass_2: "~εοιο|~οῑο", "~εοισθον|~οῑσθον", "~εοισθε|~οῑσθε";
-    opt_pass_3: "~εοιτο|~οῑτο", "~εοισθην|~οισθην", "~εοιντο|~οῑντο";
-    imp_act_2: "~εε|~ει", "~εετον|~εῑτον", "~εετε|~εῑτε";
-    imp_act_3: "~εετω|~ειτω", "~εετων|~ειτων", "~εοντων|~ουντων";
-    imp_mid_2: "~εου|~οῡ", "~εεσθον|~εῑσθον", "~εεσθε|~εῑσθε";
-    imp_mid_3: "~εεσθω|~εισθω", "~εεσθων|~εισθων", "~εεσθων|~εισθων";
-    imp_pass_2: "~εου|~οῡ", "~εεσθον|~εῑσθον", "~εεσθε|~εῑσθε";
-    imp_pass_3: "~εεσθω|~εισθω", "~εεσθων|~εισθων", "~εεσθων|~εισθων";
-    imperfect_act_1: "~εον|~ουν", _, "~εομεν|~οῡμεν";
-    imperfect_act_2: "~εες|~εις", "~εετον|~εῑτον", "~εετε|~εῑτε";
-    imperfect_act_3: "~εε|~εεν|~ει", "~εετην|~ειτην", "~εον|~ουν";
-    imperfect_mid_1: "~εομην|~ουμην", _, "~εομεθᾰ|~ουμεθᾰ";
-    imperfect_mid_2: "~εου|~οῡ", "~εεσθον|~εῑσθον", "~εεσθε|~εῑσθε";
-    imperfect_mid_3: "~εετο|~εῑτο", "~εεσθην|~εισθην", "~εοντο|~οῡντο";
-    imperfect_pass_1: "~εομην|~ουμην", _, "~εομεθᾰ|~ουμεθᾰ";
-    imperfect_pass_2: "~εου|~οῡ", "~εεσθον|~εῑσθον", "~εεσθε|~εῑσθε";
-    imperfect_pass_3: "~εετο|~εῑτο", "~εεσθην|~εισθην", "~εοντο|~οῡντο";
-    future_perfect_ind_mid_1: "~ησομαι", _, "~ησομεθᾰ";
-    future_perfect_ind_mid_2: "~ησῃ", "~ησεσθον", "~ησεσθε";
-    future_perfect_ind_mid_3: "~ησεται", _, "~ησονται";
-    future_perfect_opt_mid_1: "~ησοιμην", _, "~ησοιμεθᾰ";
-    future_perfect_opt_mid_2: "~ησοιο", "~ησοισθον", "~ησοισθε";
-    future_perfect_opt_mid_3: "~ησοιτο", "~ησοισθην", "~ησοιντο";
-    infinitive_pres: "~εειν|~εῑν", "~εεσθαι|~εῑσθαι", "~εεσθαι|~εῑσθαι";
-    infinitive_futp: _, "~ησεσθαι", _;
-    participle_pres: "~εων|~ων", "~εομενος|~ουμενος", "~εομενος|~ουμενος";
-    participle_futp: _, "~ησομενος", _;
     ),
     // Ἐγκειμαι: 3 words (συγκειμαι, ξυγκειμαι, ἐγκειμαι). Like Φειδομαι, except in 113 cells: ind_act_1 sg, ind_mid_1 sg, ind_mid_1 pl, ind_mid_2 sg, ind_mid_2 du, ind_mid_2 pl, ….
     conjugation!("ἐγκειμαι", 3, "~γ~ειμαι", like Φειδομαι;
@@ -8550,6 +7665,61 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     infinitive_fut: _, "~~εισεσθαι", _;
     participle_fut: _, "~~εισομενος", _;
     ),
+    // Ρρωννῡμῐ: 2 words (ῥωννῡμῐ, ρρωννῡμῐ). Like Κτῐζω, except in 122 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("ρρωννῡμῐ", 2, "~ννῡμῐ", like Κτῐζω;
+    ind_act_1: "~ννῡμῐ", _, "~ννῠμεν";
+    ind_act_2: "~ννῡς", "~ννῠτον", "~ννῠτε";
+    ind_act_3: "~ννῡσῐ|~ννῡσῐν", _, "~ννῠᾱσῐ|~ννῠᾱσῐν";
+    ind_mid_1: "~ννῠμαι", _, "~ννῠμεθᾰ";
+    ind_mid_2: "~ννῠσαι", "~ννῠσθον", "~ννῠσθε";
+    ind_mid_3: "~ννῠται", _, "~ννῠνται";
+    ind_pass_2: derived, _, _;
+    subj_act_1: "~ννῠω", _, "~ννῠωμεν";
+    subj_act_2: "~ννῠῃς", "~ννῠητον", "~ννῠητε";
+    subj_act_3: "~ννῠῃ", _, "~ννῠωσῐ|~ννῠωσῐν";
+    subj_mid_1: "~ννῠωμαι", _, "~ννῠωμεθᾰ";
+    subj_mid_2: "~ννῠῃ", "~ννῠησθον", "~ννῠησθε";
+    subj_mid_3: "~ννῠηται", _, "~ννῠωνται";
+    subj_pass_2: "~ννῠῃ", _, _;
+    opt_act_1: "~ννῠοιμῐ", _, "~ννῠοιμεν";
+    opt_act_2: "~ννῠοις", "~ννῠοιτον", "~ννῠοιτε";
+    opt_act_3: "~ννῠοι", "~ννῠοιτην", "~ννῠοιεν";
+    opt_mid_1: "~ννῠοιμην", _, "~ννῠοιμεθᾰ";
+    opt_mid_2: "~ννῠοιο", "~ννῠοισθον", "~ννῠοισθε";
+    opt_mid_3: "~ννῠοιτο", "~ννῠοισθην", "~ννῠοιντο";
+    imp_act_2: "~ννῡ", _, _;
+    imp_act_3: "~ννῠτω", "~ννῠτων", "~ννῠντων";
+    imp_mid_2: "~ννῠσο", _, "~ννῠσθε";
+    imp_mid_3: "~ννῠσθω", "~ννῠσθων", "~ννῠσθων";
+    imperfect_act_1: "ἐ~ννῡν", _, "ἐ~ννῠμεν";
+    imperfect_act_2: "ἐ~ννῡς", "ἐ~ννῠτον", "ἐ~ννῠτε";
+    imperfect_act_3: "ἐ~ννῡ", "ἐ~ννῠτην", "ἐ~ννῠσᾰν";
+    imperfect_mid_1: "ἐ~ννῠμην", _, "ἐ~ννῠμεθᾰ";
+    imperfect_mid_2: "ἐ~ννῠσο", "ἐ~ννῠσθον", "ἐ~ννῠσθε";
+    imperfect_mid_3: "ἐ~ννῠτο", "ἐ~ννῠσθην", "ἐ~ννῠντο";
+    perfect_ind_act_1: derived, _, derived;
+    perfect_ind_act_2: derived, derived, derived;
+    perfect_ind_act_3: derived, _, derived;
+    perfect_ind_mid_1: "ἐ~μαι", _, "ἐ~μεθᾰ";
+    perfect_ind_mid_3: "ἐ~ται", _, "ἐ~νται";
+    perfect_subj_act_1: derived, _, derived;
+    perfect_subj_act_2: derived, derived, derived;
+    perfect_subj_act_3: derived, _, derived;
+    perfect_opt_act_1: derived, _, derived;
+    perfect_opt_act_2: derived, derived, derived;
+    perfect_opt_act_3: derived, derived, derived;
+    perfect_imp_act_2: derived, derived, derived;
+    perfect_imp_act_3: derived, derived, derived;
+    pluperfect_act_1: derived, _, derived;
+    pluperfect_act_2: derived, derived, derived;
+    pluperfect_act_3: derived, derived, derived;
+    pluperfect_mid_1: "ἐ~μην", _, "ἐ~μεθᾰ";
+    pluperfect_mid_3: "ἐ~το", _, "ἐ~ντο";
+    infinitive_pres: "~ννῠναι", "~ννῠσθαι", _;
+    infinitive_perf: derived, _, _;
+    participle_pres: "~ννῡς", "~ννῠμενος", _;
+    participle_perf: derived, "ἐ~μενος", _;
+    ),
     // Ῥηγνῡμῐ: 1 words (ῥηγνῡμῐ).
     conjugation!("ῥηγνῡμῐ", 1, "ῥηγνῡμῐ";
     ind_act_1: "ῥηγνῡμῐ|ῥηγνυω|ῥησσω|ῥηττω", _, "ῥηγνῠμεν|ῥηγνυομεν|ῥησσομεν|ῥηττομεν";
@@ -8787,8 +7957,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: "~κ~ησᾱς|~κ~ᾱς|~κ~ᾰσκων", "~κ~ησᾰμενος|~κ~ᾰμενος|~κ~ᾰσκομενος", "~κ~ᾰθεις|~κ~εις";
     participle_perf: "~ξε~ᾰκως|~ξε~ηκως|~ξε~ως", "~ξε~ᾰμενος", _;
     ),
-    // Ἱστημι: 1 words (ἱστημι). Like Νῑκαω, except in 273 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("ἱστημι", 1, "ἱ~ημι", like Νῑκαω;
+    // Ἱστημῐ: 1 words (ἱστημῐ). Like Νῑκαω, except in 273 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("ἱστημῐ", 1, "ἱ~ημῐ", like Νῑκαω;
     ind_act_1: "ἱ~ημῐ", _, "ἱ~ᾰμεν";
     ind_act_2: "ἱ~ης", "ἱ~ᾰτον", "ἱ~ᾰτε";
     ind_act_3: "ἱ~ησῐ|ἱ~ησῐν", _, "ἱ~ᾱσῐ|ἱ~ᾱσῐν";
@@ -8902,105 +8072,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: "~ησᾱς|~ᾱς", "~ησᾰμενος|~ᾰμενος", "~ᾰθεις";
     participle_perf: "ἑ~ᾰκως|ἑ~ηκως|ἑ~ως", "ἑ~ᾰμενος", _;
     participle_futp: "ἑ~ηξων", "ἑ~ηξομενος", _;
-    ),
-    // Ῥωννῡμῐ: 1 words (ῥωννῡμῐ). Like Ὑπᾰκουω, except in 235 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("ῥωννῡμῐ", 1, "ῥ~ννῡμῐ", like Ὑπᾰκουω;
-    ind_act_1: "ῥ~ννῡμῐ", _, "ῥ~ννῠμεν";
-    ind_act_2: "ῥ~ννῡς", "ῥ~ννῠτον", "ῥ~ννῠτε";
-    ind_act_3: "ῥ~ννῡσῐ|ῥ~ννῡσῐν", _, "ῥ~ννῠᾱσῐ|ῥ~ννῠᾱσῐν";
-    ind_mid_1: "ῥ~ννῠμαι", _, "ῥ~ννῠμεθᾰ";
-    ind_mid_2: "ῥ~ννῠσαι", "ῥ~ννῠσθον", "ῥ~ννῠσθε";
-    ind_mid_3: "ῥ~ννῠται", _, "ῥ~ννῠνται";
-    subj_act_1: "ῥ~ννῠω", _, "ῥ~ννῠωμεν";
-    subj_act_2: "ῥ~ννῠῃς", "ῥ~ννῠητον", "ῥ~ννῠητε";
-    subj_act_3: "ῥ~ννῠῃ", _, "ῥ~ννῠωσῐ|ῥ~ννῠωσῐν";
-    subj_mid_1: "ῥ~ννῠωμαι", _, "ῥ~ννῠωμεθᾰ";
-    subj_mid_2: "ῥ~ννῠῃ", "ῥ~ννῠησθον", "ῥ~ννῠησθε";
-    subj_mid_3: "ῥ~ννῠηται", _, "ῥ~ννῠωνται";
-    subj_pass_2: "ῥ~ννῠῃ", _, _;
-    opt_act_1: "ῥ~ννῠοιμῐ", _, "ῥ~ννῠοιμεν";
-    opt_act_2: "ῥ~ννῠοις", "ῥ~ννῠοιτον", "ῥ~ννῠοιτε";
-    opt_act_3: "ῥ~ννῠοι", "ῥ~ννῠοιτην", "ῥ~ννῠοιεν";
-    opt_mid_1: "ῥ~ννῠοιμην", _, "ῥ~ννῠοιμεθᾰ";
-    opt_mid_2: "ῥ~ννῠοιο", "ῥ~ννῠοισθον", "ῥ~ννῠοισθε";
-    opt_mid_3: "ῥ~ννῠοιτο", "ῥ~ννῠοισθην", "ῥ~ννῠοιντο";
-    imp_act_2: "ῥ~ννῡ", _, _;
-    imp_act_3: "ῥ~ννῠτω", "ῥ~ννῠτων", "ῥ~ννῠντων";
-    imp_mid_2: "ῥ~ννῠσο", _, "ῥ~ννῠσθε";
-    imp_mid_3: "ῥ~ννῠσθω", "ῥ~ννῠσθων", "ῥ~ννῠσθων";
-    imperfect_act_1: "ἐρρ~ννῡν", _, "ἐρρ~ννῠμεν";
-    imperfect_act_2: "ἐρρ~ννῡς", "ἐρρ~ννῠτον", "ἐρρ~ννῠτε";
-    imperfect_act_3: "ἐρρ~ννῡ", "ἐρρ~ννῠτην", "ἐρρ~ννῠσᾰν";
-    imperfect_mid_1: "ἐρρ~ννῠμην", _, "ἐρρ~ννῠμεθᾰ";
-    imperfect_mid_2: "ἐρρ~ννῠσο", "ἐρρ~ννῠσθον", "ἐρρ~ννῠσθε";
-    imperfect_mid_3: "ἐρρ~ννῠτο", "ἐρρ~ννῠσθην", "ἐρρ~ννῠντο";
-    future_ind_act_1: "ῥ~σω", _, "ῥ~σομεν";
-    future_ind_act_2: "ῥ~σεις", "ῥ~σετον", "ῥ~σετε";
-    future_ind_act_3: "ῥ~σει", _, "ῥ~σουσῐ|ῥ~σουσῐν";
-    future_ind_mid_1: "ῥ~σομαι", _, "ῥ~σομεθᾰ";
-    future_ind_mid_2: "ῥ~σῃ|ῥ~σει", "ῥ~σεσθον", "ῥ~σεσθε";
-    future_ind_mid_3: "ῥ~σεται", _, "ῥ~σονται";
-    future_ind_pass_1: "ῥ~σθησομαι", _, "ῥ~σθησομεθᾰ";
-    future_ind_pass_2: "ῥ~σθησῃ|ῥ~σθησει", "ῥ~σθησεσθον", "ῥ~σθησεσθε";
-    future_ind_pass_3: "ῥ~σθησεται", _, "ῥ~σθησονται";
-    future_opt_act_1: "ῥ~σοιμῐ", _, "ῥ~σοιμεν";
-    future_opt_act_2: "ῥ~σοις", "ῥ~σοιτον", "ῥ~σοιτε";
-    future_opt_act_3: "ῥ~σοι", "ῥ~σοιτην", "ῥ~σοιεν";
-    future_opt_mid_1: "ῥ~σοιμην", _, "ῥ~σοιμεθᾰ";
-    future_opt_mid_2: "ῥ~σοιο", "ῥ~σοισθον", "ῥ~σοισθε";
-    future_opt_mid_3: "ῥ~σοιτο", "ῥ~σοισθην", "ῥ~σοιντο";
-    future_opt_pass_1: "ῥ~σθησοιμην", _, "ῥ~σθησοιμεθᾰ";
-    future_opt_pass_2: "ῥ~σθησοιο", "ῥ~σθησοισθον", "ῥ~σθησοισθε";
-    future_opt_pass_3: "ῥ~σθησοιτο", "ῥ~σθησοισθην", "ῥ~σθησοιντο";
-    aorist_ind_act_1: "ἐρρ~σᾰ", _, "ἐρρ~σᾰμεν";
-    aorist_ind_act_2: "ἐρρ~σᾰς", "ἐρρ~σᾰτον", "ἐρρ~σᾰτε";
-    aorist_ind_act_3: "ἐρρ~σε|ἐρρ~σεν", "ἐρρ~σᾰτην", "ἐρρ~σᾰν";
-    aorist_ind_mid_1: "ἐρρ~σᾰμην", _, "ἐρρ~σᾰμεθᾰ";
-    aorist_ind_mid_2: "ἐρρ~σω", "ἐρρ~σᾰσθον", "ἐρρ~σᾰσθε";
-    aorist_ind_mid_3: "ἐρρ~σᾰτο", "ἐρρ~σᾰσθην", "ἐρρ~σᾰντο";
-    aorist_ind_pass_1: "ἐρρ~σθην", _, "ἐρρ~σθημεν";
-    aorist_ind_pass_2: "ἐρρ~σθης", "ἐρρ~σθητον", "ἐρρ~σθητε";
-    aorist_ind_pass_3: "ἐρρ~σθη", "ἐρρ~σθητην", "ἐρρ~σθησᾰν";
-    aorist_subj_act_1: "ῥ~σω", _, "ῥ~σωμεν";
-    aorist_subj_act_2: "ῥ~σῃς", "ῥ~σητον", "ῥ~σητε";
-    aorist_subj_act_3: "ῥ~σῃ", _, "ῥ~σωσῐ|ῥ~σωσῐν";
-    aorist_subj_mid_1: "ῥ~σωμαι", _, "ῥ~σωμεθᾰ";
-    aorist_subj_mid_2: "ῥ~σῃ", "ῥ~σησθον", "ῥ~σησθε";
-    aorist_subj_mid_3: "ῥ~σηται", _, "ῥ~σωνται";
-    aorist_subj_pass_1: "ῥ~σθω", _, "ῥ~σθωμεν";
-    aorist_subj_pass_2: "ῥ~σθῃς", "ῥ~σθητον", "ῥ~σθητε";
-    aorist_subj_pass_3: "ῥ~σθῃ", _, "ῥ~σθωσῐ|ῥ~σθωσῐν";
-    aorist_opt_act_1: "ῥ~σαιμῐ", _, "ῥ~σαιμεν";
-    aorist_opt_act_2: "ῥ~σειᾰς|ῥ~σαις", "ῥ~σαιτον", "ῥ~σαιτε";
-    aorist_opt_act_3: "ῥ~σειε|ῥ~σειεν|ῥ~σαι", "ῥ~σαιτην", "ῥ~σειᾰν|ῥ~σαιεν";
-    aorist_opt_mid_1: "ῥ~σαιμην", _, "ῥ~σαιμεθᾰ";
-    aorist_opt_mid_2: "ῥ~σαιο", "ῥ~σαισθον", "ῥ~σαισθε";
-    aorist_opt_mid_3: "ῥ~σαιτο", "ῥ~σαισθην", "ῥ~σαιντο";
-    aorist_opt_pass_1: "ῥ~σθειην", _, "ῥ~σθεῑμεν|ῥ~σθειημεν";
-    aorist_opt_pass_2: "ῥ~σθειης", "ῥ~σθεῑτον|ῥ~σθειητον", "ῥ~σθεῑτε|ῥ~σθειητε";
-    aorist_opt_pass_3: "ῥ~σθειη", "ῥ~σθειτην|ῥ~σθειητην", "ῥ~σθεῑεν|ῥ~σθειησᾰν";
-    aorist_imp_act_2: "ῥ~σον", "ῥ~σᾰτον", "ῥ~σᾰτε";
-    aorist_imp_act_3: "ῥ~σᾰτω", "ῥ~σᾰτων", "ῥ~σᾰντων";
-    aorist_imp_mid_2: "ῥ~σαι", "ῥ~σᾰσθον", "ῥ~σᾰσθε";
-    aorist_imp_mid_3: "ῥ~σᾰσθω", "ῥ~σᾰσθων", _;
-    aorist_imp_pass_2: "ῥ~σθητῐ", _, _;
-    aorist_imp_pass_3: "ῥ~σθητω", "ῥ~σθητων", "ῥ~σθεντων";
-    perfect_ind_mid_1: "ἐρρ~μαι", _, "ἐρρ~μεθᾰ";
-    perfect_ind_mid_2: "ἐρρ~σαι", "ἐρρ~σθον", "ἐρρ~σθε";
-    perfect_ind_mid_3: "ἐρρ~ται", _, "ἐρρ~νται";
-    perfect_imp_mid_2: "ἐρρ~σο", _, _;
-    perfect_imp_mid_3: "ἐρρ~σθω", "ἐρρ~σθων", _;
-    pluperfect_mid_1: "ἐρρ~μην", _, "ἐρρ~μεθᾰ";
-    pluperfect_mid_2: "ἐρρ~σο", "ἐρρ~σθον", "ἐρρ~σθε";
-    pluperfect_mid_3: "ἐρρ~το", "ἐρρ~σθην", "ἐρρ~ντο";
-    infinitive_pres: "ῥ~ννῠναι", "ῥ~ννῠσθαι", _;
-    infinitive_fut: "ῥ~σειν", "ῥ~σεσθαι", "ῥ~σθησεσθαι";
-    infinitive_aor: "ῥ~σαι", "ῥ~σᾰσθαι", "ῥ~σθηναι";
-    infinitive_perf: _, "ἐρρ~σθαι", _;
-    participle_pres: "ῥ~ννῡς", "ῥ~ννῠμενος", _;
-    participle_fut: "ῥ~σων", "ῥ~σομενος", "ῥ~σθησομενος";
-    participle_aor: "ῥ~σᾱς", "ῥ~σᾰμενος", "ῥ~σθεις";
-    participle_perf: _, "ἐρρ~μενος", _;
     ),
     // Εἰμῐ: 1 words (εἰμῐ). Like Ῥηγνῡμῐ, except in 308 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
     conjugation!("εἰμῐ", 1, "εἰμῐ", like Ῥηγνῡμῐ;
@@ -9122,8 +8193,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: derived, derived, derived;
     participle_perf: derived, derived, _;
     ),
-    // Ἱημι: 1 words (ἱημι). Like Εἰμῐ, except in 294 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("ἱημι", 1, "ἱημι", like Εἰμῐ;
+    // Ἱημῐ: 1 words (ἱημῐ). Like Εἰμῐ, except in 294 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("ἱημῐ", 1, "ἱημῐ", like Εἰμῐ;
     ind_act_1: "ἱημῐ", _, "ἱεμεν";
     ind_act_2: "ἱης", "ἱετον", "ἱετε";
     ind_act_3: "ἱησῐ|ἱησῐν", _, "ἱᾱσι|ἱᾱσιν";
@@ -9868,15 +8939,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: "ἑσσᾱς", "ἑσσᾰμενος", _;
     participle_perf: _, "εἱμενος", _;
     ),
-    // Ὀρνῡμῐ: 1 words (ὀρνῡμῐ). Like Ὀνομᾰζω, except in 214 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("ὀρνῡμῐ", 1, "ὀ~νῡμῐ", like Ὀνομᾰζω;
+    // Ὀρνῡμῐ: 1 words (ὀρνῡμῐ). Like Θωᾰω, except in 228 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("ὀρνῡμῐ", 1, "ὀ~νῡμῐ", like Θωᾰω;
     ind_act_1: "ὀ~νῡμῐ", _, "ὀ~νῠμεν";
     ind_act_2: "ὀ~νῡς", "ὀ~νῠτον", "ὀ~νῠτε";
     ind_act_3: "ὀ~νῡσῐ|ὀ~νῡσῐν", _, "ὀ~νῠᾱσῐ|ὀ~νῠᾱσῐν";
     ind_mid_1: "ὀ~νῠμαι", _, "ὀ~νῠμεθᾰ";
     ind_mid_2: "ὀ~νῠσαι", "ὀ~νῠσθον", "ὀ~νῠσθε";
     ind_mid_3: "ὀ~νῠται", _, "ὀ~νῠνται";
-    ind_pass_2: derived, _, _;
     subj_act_1: "ὀ~νῠω", _, "ὀ~νῠωμεν";
     subj_act_2: "ὀ~νῠῃς", "ὀ~νῠητον", "ὀ~νῠητε";
     subj_act_3: "ὀ~νῠῃ", _, "ὀ~νῠωσῐ|ὀ~νῠωσῐν";
@@ -9907,29 +8977,34 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     future_ind_mid_1: "ὀ~σομαι", _, "ὀ~σομεθᾰ";
     future_ind_mid_2: "ὀ~σῃ|ὀ~σει", "ὀ~σεσθον", "ὀ~σεσθε";
     future_ind_mid_3: "ὀ~σεται", _, "ὀ~σονται";
-    future_ind_pass_1: derived, _, derived;
-    future_ind_pass_2: derived, derived, derived;
-    future_ind_pass_3: derived, _, derived;
     future_opt_act_1: "ὀ~σοιμῐ", _, "ὀ~σοιμεν";
     future_opt_act_2: "ὀ~σοις", "ὀ~σοιτον", "ὀ~σοιτε";
     future_opt_act_3: "ὀ~σοι", "ὀ~σοιτην", "ὀ~σοιεν";
     future_opt_mid_1: "ὀ~σοιμην", _, "ὀ~σοιμεθᾰ";
     future_opt_mid_2: "ὀ~σοιο", "ὀ~σοισθον", "ὀ~σοισθε";
     future_opt_mid_3: "ὀ~σοιτο", "ὀ~σοισθην", "ὀ~σοιντο";
-    future_opt_pass_1: derived, _, derived;
-    future_opt_pass_2: derived, derived, derived;
-    future_opt_pass_3: derived, derived, derived;
-    aorist_ind_pass_1: derived, _, derived;
-    aorist_ind_pass_2: derived, derived, derived;
-    aorist_ind_pass_3: derived, derived, derived;
-    aorist_subj_pass_1: derived, _, derived;
-    aorist_subj_pass_2: derived, derived, derived;
-    aorist_subj_pass_3: derived, _, derived;
-    aorist_opt_pass_1: derived, _, derived;
-    aorist_opt_pass_2: derived, derived, derived;
-    aorist_opt_pass_3: derived, derived, derived;
-    aorist_imp_pass_2: derived, _, _;
-    aorist_imp_pass_3: derived, derived, derived;
+    aorist_ind_act_1: "ὠ~σᾰ", _, "ὠ~σᾰμεν";
+    aorist_ind_act_2: "ὠ~σᾰς", "ὠ~σᾰτον", "ὠ~σᾰτε";
+    aorist_ind_act_3: "ὠ~σε|ὠ~σεν", "ὠ~σᾰτην", "ὠ~σᾰν";
+    aorist_ind_mid_1: "ὠ~σᾰμην", _, "ὠ~σᾰμεθᾰ";
+    aorist_ind_mid_2: "ὠ~σω", "ὠ~σᾰσθον", "ὠ~σᾰσθε";
+    aorist_ind_mid_3: "ὠ~σᾰτο", "ὠ~σᾰσθην", "ὠ~σᾰντο";
+    aorist_subj_act_1: "ὀ~σω", _, "ὀ~σωμεν";
+    aorist_subj_act_2: "ὀ~σῃς", "ὀ~σητον", "ὀ~σητε";
+    aorist_subj_act_3: "ὀ~σῃ", _, "ὀ~σωσῐ|ὀ~σωσῐν";
+    aorist_subj_mid_1: "ὀ~σωμαι", _, "ὀ~σωμεθᾰ";
+    aorist_subj_mid_2: "ὀ~σῃ", "ὀ~σησθον", "ὀ~σησθε";
+    aorist_subj_mid_3: "ὀ~σηται", _, "ὀ~σωνται";
+    aorist_opt_act_1: "ὀ~σαιμῐ", _, "ὀ~σαιμεν";
+    aorist_opt_act_2: "ὀ~σειᾰς|ὀ~σαις", "ὀ~σαιτον", "ὀ~σαιτε";
+    aorist_opt_act_3: "ὀ~σειε|ὀ~σειεν|ὀ~σαι", "ὀ~σαιτην", "ὀ~σειᾰν|ὀ~σαιεν";
+    aorist_opt_mid_1: "ὀ~σαιμην", _, "ὀ~σαιμεθᾰ";
+    aorist_opt_mid_2: "ὀ~σαιο", "ὀ~σαισθον", "ὀ~σαισθε";
+    aorist_opt_mid_3: "ὀ~σαιτο", "ὀ~σαισθην", "ὀ~σαιντο";
+    aorist_imp_act_2: "ὀ~σον", "ὀ~σᾰτον", "ὀ~σᾰτε";
+    aorist_imp_act_3: "ὀ~σᾰτω", "ὀ~σᾰτων", "ὀ~σᾰντων";
+    aorist_imp_mid_2: "ὀ~σαι", "ὀ~σᾰσθον", "ὀ~σᾰσθε";
+    aorist_imp_mid_3: "ὀ~σᾰσθω", "ὀ~σᾰσθων", _;
     perfect_ind_act_1: "ὀ~ωρᾰ", _, "ὀ~ωρᾰμεν";
     perfect_ind_act_2: "ὀ~ωρᾰς", "ὀ~ωρᾰτον", "ὀ~ωρᾰτε";
     perfect_ind_act_3: "ὀ~ωρε|ὀ~ωρεν", _, "ὀ~ωρᾱσῐ|ὀ~ωρᾱσῐν";
@@ -9953,12 +9028,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     pluperfect_mid_2: "ὀ~ωρεσο", "ὀ~ωρεσθον", "ὀ~ωρεσθε";
     pluperfect_mid_3: "ὀ~ωρετο", "ὀ~ωρεσθην", "ὀ~ωρεντο";
     infinitive_pres: "ὀ~νῠναι", "ὀ~νῠσθαι", _;
-    infinitive_fut: "ὀ~σειν", "ὀ~σεσθαι", derived;
-    infinitive_aor: _, _, derived;
+    infinitive_fut: "ὀ~σειν", "ὀ~σεσθαι", _;
+    infinitive_aor: "ὀ~σαι", "ὀ~σᾰσθαι", _;
     infinitive_perf: "ὀ~ωρεναι", "ὀ~ωρεσθαι", _;
     participle_pres: "ὀ~νῡς", "ὀ~νῠμενος", _;
-    participle_fut: "ὀ~σων", "ὀ~σομενος", derived;
-    participle_aor: _, _, derived;
+    participle_fut: "ὀ~σων", "ὀ~σομενος", _;
+    participle_aor: "ὀ~σᾱς", "ὀ~σᾰμενος", _;
     participle_perf: "ὀ~ωρως", "ὀ~ωρεμενος", _;
     ),
     // Πηγνῡμῐ: 1 words (πηγνῡμῐ). Like Γῡροω, except in 278 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
@@ -11056,8 +10131,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_fut: "~ᾰ~ωσων", "~ᾰ~ωσομενος", "~ᾰ~οθησομενος";
     participle_aor: "~ᾰ~ους", "~ᾰ~ομενος", "~ᾰ~οθεις";
     ),
-    // Ἀνιστημι: 1 words (ἀνιστημι). Like Πᾰρῐστημῐ, except in 119 cells: future_ind_act_3 pl, future_ind_mid_2 sg, future_ind_pass_1 sg, future_ind_pass_1 pl, future_ind_pass_2 sg, future_ind_pass_2 du, ….
-    conjugation!("ἀνιστημι", 1, "~ι~ημι", like Πᾰρῐστημῐ;
+    // Ἀνῐστημῐ: 1 words (ἀνῐστημῐ). Like Πᾰρῐστημῐ, except in 119 cells: future_ind_act_3 pl, future_ind_mid_2 sg, future_ind_pass_1 sg, future_ind_pass_1 pl, future_ind_pass_2 sg, future_ind_pass_2 du, ….
+    conjugation!("ἀνῐστημῐ", 1, "~ῐ~ημῐ", like Πᾰρῐστημῐ;
     future_ind_act_3: _, _, "~ᾰ~ησουσῐ|~ᾰ~ησουσῐν";
     future_ind_mid_2: "~ᾰ~ησῃ|~ᾰ~ησει", _, _;
     future_ind_pass_1: "~ᾰ~ᾰθησομαι", _, "~ᾰ~ᾰθησομεθᾰ";
@@ -11135,32 +10210,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     infinitive_aor: "~εησαι", _, _;
     participle_fut: _, derived, _;
     ),
-    // Ζωννῡμῐ: 1 words (ζωννῡμῐ). Like Κτῐζω, except in 109 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("ζωννῡμῐ", 1, "~ννῡμῐ", like Κτῐζω;
-    ind_act_1: "~ννῡμῐ", _, "~ννῠμεν";
-    ind_act_2: "~ννῡς", "~ννῠτον", "~ννῠτε";
-    ind_act_3: "~ννῡσῐ|~ννῡσῐν", _, "~ννῠᾱσῐ|~ννῠᾱσῐν";
-    ind_mid_1: "~ννῠμαι", _, "~ννῠμεθᾰ";
-    ind_mid_2: "~ννῠσαι", "~ννῠσθον", "~ννῠσθε";
-    ind_mid_3: "~ννῠται", _, "~ννῠνται";
-    ind_pass_2: derived, _, _;
-    subj_act_1: "~ννῠω", _, "~ννῠωμεν";
-    subj_act_2: "~ννῠῃς", "~ννῠητον", "~ννῠητε";
-    subj_act_3: "~ννῠῃ", _, "~ννῠωσῐ|~ννῠωσῐν";
-    subj_mid_1: "~ννῠωμαι", _, "~ννῠωμεθᾰ";
-    subj_mid_2: "~ννῠῃ", "~ννῠησθον", "~ννῠησθε";
-    subj_mid_3: "~ννῠηται", _, "~ννῠωνται";
-    subj_pass_2: "~ννῠῃ", _, _;
-    opt_act_1: "~ννῠοιμῐ", _, "~ννῠοιμεν";
-    opt_act_2: "~ννῠοις", "~ννῠοιτον", "~ννῠοιτε";
-    opt_act_3: "~ννῠοι", "~ννῠοιτην", "~ννῠοιεν";
-    opt_mid_1: "~ννῠοιμην", _, "~ννῠοιμεθᾰ";
-    opt_mid_2: "~ννῠοιο", "~ννῠοισθον", "~ννῠοισθε";
-    opt_mid_3: "~ννῠοιτο", "~ννῠοισθην", "~ννῠοιντο";
-    imp_act_2: "~ννῡ", _, _;
-    imp_act_3: "~ννῠτω", "~ννῠτων", "~ννῠντων";
-    imp_mid_2: "~ννῠσο", _, "~ννῠσθε";
-    imp_mid_3: "~ννῠσθω", "~ννῠσθων", "~ννῠσθων";
+    // Ζωννῡμῐ: 1 words (ζωννῡμῐ). Like Ρρωννῡμῐ, except in 79 cells: imperfect_act_1 sg, imperfect_act_1 pl, imperfect_act_2 sg, imperfect_act_2 du, imperfect_act_2 pl, imperfect_act_3 sg, ….
+    conjugation!("ζωννῡμῐ", 1, "~ννῡμῐ", like Ρρωννῡμῐ;
     imperfect_act_1: "ἐ~ννῡν|ἐ~ννυον", _, "ἐ~ννῠμεν|ἐ~ννυομεν";
     imperfect_act_2: "ἐ~ννῡς|ἐ~ννυες", "ἐ~ννῠτον|ἐ~ννυετον", "ἐ~ννῠτε|ἐ~ννυετε";
     imperfect_act_3: "ἐ~ννῡ|ἐ~ννυε|ἐ~ννυεν", "ἐ~ννῠτην|ἐ~ννυετην", "ἐ~ννῠσᾰν|ἐ~ννυον";
@@ -11176,15 +10227,24 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     future_opt_pass_1: derived, _, derived;
     future_opt_pass_2: derived, derived, derived;
     future_opt_pass_3: derived, derived, derived;
-    perfect_ind_mid_1: "ἐ~μαι", _, "ἐ~μεθᾰ";
-    perfect_ind_mid_3: "ἐ~ται", _, "ἐ~νται";
-    pluperfect_mid_1: "ἐ~μην", _, "ἐ~μεθᾰ";
-    pluperfect_mid_3: "ἐ~το", _, "ἐ~ντο";
-    infinitive_pres: "~ννῠναι", "~ννῠσθαι", _;
+    perfect_ind_act_1: "ἐ~κᾰ", _, "ἐ~κᾰμεν";
+    perfect_ind_act_2: "ἐ~κᾰς", "ἐ~κᾰτον", "ἐ~κᾰτε";
+    perfect_ind_act_3: "ἐ~κε|ἐ~κεν", _, "ἐ~κᾱσῐ|ἐ~κᾱσῐν";
+    perfect_subj_act_1: "ἐ~κω", _, "ἐ~κωμεν";
+    perfect_subj_act_2: "ἐ~κῃς", "ἐ~κητον", "ἐ~κητε";
+    perfect_subj_act_3: "ἐ~κῃ", _, "ἐ~κωσῐ|ἐ~κωσῐν";
+    perfect_opt_act_1: "ἐ~κοιμῐ|ἐ~κοιην", _, "ἐ~κοιμεν";
+    perfect_opt_act_2: "ἐ~κοις|ἐ~κοιης", "ἐ~κοιτον", "ἐ~κοιτε";
+    perfect_opt_act_3: "ἐ~κοι|ἐ~κοιη", "ἐ~κοιτην", "ἐ~κοιεν";
+    perfect_imp_act_2: "ἐ~κε", "ἐ~κετον", "ἐ~κετε";
+    perfect_imp_act_3: "ἐ~κετω", "ἐ~κετων", "ἐ~κοντων";
+    pluperfect_act_1: "ἐ~κειν|ἐ~κη", _, "ἐ~κεμεν";
+    pluperfect_act_2: "ἐ~κεις|ἐ~κης", "ἐ~κετον", "ἐ~κετε";
+    pluperfect_act_3: "ἐ~κει|ἐ~κειν", "ἐ~κετην", "ἐ~κεσᾰν";
     infinitive_fut: _, _, derived;
-    participle_pres: "~ννῡς", "~ννῠμενος", _;
+    infinitive_perf: "ἐ~κεναι", _, _;
     participle_fut: _, _, derived;
-    participle_perf: _, "ἐ~μενος", _;
+    participle_perf: "ἐ~κως", _, _;
     ),
     // Κᾰθημαι: 1 words (κᾰθημαι). Like Ἐγκειμαι, except in 69 cells: ind_act_1 sg, ind_mid_1 sg, ind_mid_1 pl, ind_mid_2 sg, ind_mid_2 du, ind_mid_2 pl, ….
     conjugation!("κᾰθημαι", 1, "~ᾰ~μαι", like Ἐγκειμαι;
@@ -11982,8 +11042,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: "ὀ~εσᾱς", "ὀ~ομενος", _;
     participle_perf: "ὀ~ωλεκως", _, _;
     ),
-    // Ἀνοιγνυμι: 1 words (ἀνοιγνυμι). Like Κᾰθημαι, except in 90 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("ἀνοιγνυμι", 1, "~οι~υμι", like Κᾰθημαι;
+    // Ἀνοιγνῡμῐ: 1 words (ἀνοιγνῡμῐ). Like Κᾰθημαι, except in 90 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("ἀνοιγνῡμῐ", 1, "~οι~ῡμῐ", like Κᾰθημαι;
     ind_act_1: "~οι~ῡμῐ", _, "~οι~ῠμεν";
     ind_act_2: "~οι~ῡς", "~οι~ῠτον", "~οι~ῠτε";
     ind_act_3: "~οι~ῡσῐ|~οι~ῡσῐν", _, "~οι~ῠᾱσῐ|~οι~ῠᾱσῐν";
@@ -12893,8 +11953,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: "~~ᾱς", "~~ᾰμενος", "~~ᾰθεις";
     participle_perf: "~νε~ηκως|~νε~ως", _, _;
     ),
-    // Ἀπᾰνῐστημῐ: 1 words (ἀπᾰνῐστημῐ). Like Ἀνιστημι, except in 132 cells: aorist_ind_act_1 sg, aorist_ind_act_1 pl, aorist_ind_act_2 sg, aorist_ind_act_2 du, aorist_ind_act_2 pl, aorist_ind_act_3 sg, ….
-    conjugation!("ἀπᾰνῐστημῐ", 1, "~ῐ~ημῐ", like Ἀνιστημι;
+    // Ἀπᾰνῐστημῐ: 1 words (ἀπᾰνῐστημῐ). Like Ἀνῐστημῐ, except in 132 cells: aorist_ind_act_1 sg, aorist_ind_act_1 pl, aorist_ind_act_2 sg, aorist_ind_act_2 du, aorist_ind_act_2 pl, aorist_ind_act_3 sg, ….
+    conjugation!("ἀπᾰνῐστημῐ", 1, "~ῐ~ημῐ", like Ἀνῐστημῐ;
     aorist_ind_act_1: "~ε~ην", _, "~ε~ημεν";
     aorist_ind_act_2: "~ε~ης", "~ε~ητον", "~ε~ητε";
     aorist_ind_act_3: "~ε~η", "~ε~ητην", _;
@@ -13525,111 +12585,54 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: "ὀ~ξᾱς", "ὀ~ξᾰμενος", "ὀ~χθεις";
     participle_perf: "ὠ~χως", "ὠ~γμενος", _;
     ),
-    // Διϊστημι: 1 words (διϊστημι). Like Ἐγκειμαι, except in 257 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("διϊστημι", 1, "~ιϊ~ημι", like Ἐγκειμαι;
-    ind_act_1: "~ῐϊ~ημῐ", _, "~ῐϊ~ᾰμεν";
-    ind_act_2: "~ῐϊ~ης", "~ῐϊ~ᾰτον", "~ῐϊ~ᾰτε";
-    ind_act_3: "~ῐϊ~ησῐ|~ῐϊ~ησῐν", _, "~ῐϊ~ᾱσῐ|~ῐϊ~ᾱσῐν";
-    ind_mid_1: "~ῐϊ~ᾰμαι", _, "~ῐϊ~ᾰμεθᾰ";
-    ind_mid_2: "~ῐϊ~ᾰσαι", "~ῐϊ~ᾰσθον", "~ῐϊ~ᾰσθε";
-    ind_mid_3: "~ῐϊ~ᾰται", _, "~ῐϊ~ᾰνται";
-    subj_act_1: "~ῐϊ~ω", _, "~ῐϊ~ωμεν";
-    subj_act_2: "~ῐϊ~ῃς", "~ῐϊ~ητον", "~ῐϊ~ητε";
-    subj_act_3: "~ῐϊ~ῃ", _, "~ῐϊ~ωσῐ|~ῐϊ~ωσῐν";
-    subj_mid_1: "~ῐϊ~ωμαι", _, "~ῐϊ~ωμεθᾰ";
-    subj_mid_2: "~ῐϊ~ῃ", "~ῐϊ~ησθον", "~ῐϊ~ησθε";
-    subj_mid_3: "~ῐϊ~ηται", _, "~ῐϊ~ωνται";
-    subj_pass_2: "~ῐϊ~ῃ", _, _;
-    opt_act_1: "~ῐϊ~αιην", _, "~ῐϊ~αῑμεν|~ῐϊ~αιημεν";
-    opt_act_2: "~ῐϊ~αιης", "~ῐϊ~αῑτον|~ῐϊ~αιητον", "~ῐϊ~αῑτε|~ῐϊ~αιητε";
-    opt_act_3: "~ῐϊ~αιη", "~ῐϊ~αιτην|~ῐϊ~αιητην", "~ῐϊ~αῑεν|~ῐϊ~αιησᾰν";
-    opt_mid_1: "~ῐϊ~αιμην", _, "~ῐϊ~αιμεθᾰ";
-    opt_mid_2: "~ῐϊ~αιο", "~ῐϊ~αισθον", "~ῐϊ~αισθε";
-    opt_mid_3: "~ῐϊ~αιτο", "~ῐϊ~αισθην", "~ῐϊ~αιντο";
-    imp_act_2: "~ῐϊ~η", _, _;
-    imp_act_3: "~ῐϊ~ᾰτω", "~ῐϊ~ᾰτων", "~ῐϊ~ᾰντων";
-    imp_mid_2: "~ῐϊ~ᾰσο|~ῐϊ~ω", _, "~ῐϊ~ᾰσθε";
-    imp_mid_3: "~ῐϊ~ᾰσθω", "~ῐϊ~ᾰσθων", "~ῐϊ~ᾰσθων";
-    imp_pass_2: "~ῐϊ~ᾰσο|~ῐϊ~ω", _, _;
-    imperfect_act_1: "~ῐϊ~ην", _, "~ῐϊ~ᾰμεν";
-    imperfect_act_2: "~ῐϊ~ης", "~ῐϊ~ᾰτον", "~ῐϊ~ᾰτε";
-    imperfect_act_3: "~ῐϊ~η", "~ῐϊ~ᾰτην", "~ῐϊ~ᾰσᾰν";
-    imperfect_mid_1: "~ῐϊ~ᾰμην", _, "~ῐϊ~ᾰμεθᾰ";
-    imperfect_mid_2: "~ῐϊ~ᾰσο", "~ῐϊ~ᾰσθον", "~ῐϊ~ᾰσθε";
-    imperfect_mid_3: "~ῐϊ~ᾰτο", "~ῐϊ~ᾰσθην", "~ῐϊ~ᾰντο";
-    future_ind_act_1: "~ῐᾰ~ησω", _, "~ῐᾰ~ησομεν";
-    future_ind_act_2: "~ῐᾰ~ησεις", "~ῐᾰ~ησετον", "~ῐᾰ~ησετε";
-    future_ind_act_3: "~ῐᾰ~ησει", _, "~ῐᾰ~ησουσῐ|~ῐᾰ~ησουσῐν";
-    future_ind_mid_1: "~ῐᾰ~ησομαι", _, "~ῐᾰ~ησομεθᾰ";
-    future_ind_mid_2: "~ῐᾰ~ησῃ|~ῐᾰ~ησει", "~ῐᾰ~ησεσθον", "~ῐᾰ~ησεσθε";
-    future_ind_mid_3: "~ῐᾰ~ησεται", _, "~ῐᾰ~ησονται";
-    future_ind_pass_1: "~ῐᾰ~ᾰθησομαι", _, "~ῐᾰ~ᾰθησομεθᾰ";
-    future_ind_pass_2: "~ῐᾰ~ᾰθησῃ|~ῐᾰ~ᾰθησει", "~ῐᾰ~ᾰθησεσθον", "~ῐᾰ~ᾰθησεσθε";
-    future_ind_pass_3: "~ῐᾰ~ᾰθησεται", _, "~ῐᾰ~ᾰθησονται";
-    future_opt_act_1: "~ῐᾰ~ησοιμῐ", _, "~ῐᾰ~ησοιμεν";
-    future_opt_act_2: "~ῐᾰ~ησοις", "~ῐᾰ~ησοιτον", "~ῐᾰ~ησοιτε";
-    future_opt_act_3: "~ῐᾰ~ησοι", "~ῐᾰ~ησοιτην", "~ῐᾰ~ησοιεν";
-    future_opt_mid_1: "~ῐᾰ~ησοιμην", _, "~ῐᾰ~ησοιμεθᾰ";
-    future_opt_mid_2: "~ῐᾰ~ησοιο", "~ῐᾰ~ησοισθον", "~ῐᾰ~ησοισθε";
-    future_opt_mid_3: "~ῐᾰ~ησοιτο", "~ῐᾰ~ησοισθην", "~ῐᾰ~ησοιντο";
-    future_opt_pass_1: "~ῐᾰ~ᾰθησοιμην", _, "~ῐᾰ~ᾰθησοιμεθᾰ";
-    future_opt_pass_2: "~ῐᾰ~ᾰθησοιο", "~ῐᾰ~ᾰθησοισθον", "~ῐᾰ~ᾰθησοισθε";
-    future_opt_pass_3: "~ῐᾰ~ᾰθησοιτο", "~ῐᾰ~ᾰθησοισθην", "~ῐᾰ~ᾰθησοιντο";
-    aorist_ind_act_1: "~ῐε~ησᾰ|~ῐε~ην", _, "~ῐε~ησᾰμεν|~ῐε~ημεν";
-    aorist_ind_act_2: "~ῐε~ησᾰς|~ῐε~ης", "~ῐε~ησᾰτον|~ῐε~ητον", "~ῐε~ησᾰτε|~ῐε~ητε";
-    aorist_ind_act_3: "~ῐε~ησε|~ῐε~ησεν|~ῐε~η", "~ῐε~ησᾰτην|~ῐε~ητην", "~ῐε~ησᾰν|~ῐε~ᾰν";
-    aorist_ind_mid_1: "~ῐε~ησᾰμην|~ῐε~ᾰμην", _, "~ῐε~ησᾰμεθᾰ|~ῐε~ᾰμεθᾰ";
-    aorist_ind_mid_2: "~ῐε~ησω|~ῐε~ω", "~ῐε~ησᾰσθον|~ῐε~ᾰσθον", "~ῐε~ησᾰσθε|~ῐε~ᾰσθε";
-    aorist_ind_mid_3: "~ῐε~ησᾰτο|~ῐε~ᾰτο", "~ῐε~ησᾰσθην|~ῐε~ᾰσθην", "~ῐε~ησᾰντο|~ῐε~ᾰντο";
-    aorist_ind_pass_1: "~ῐε~ᾰθην", _, "~ῐε~ᾰθημεν";
-    aorist_ind_pass_2: "~ῐε~ᾰθης", "~ῐε~ᾰθητον", "~ῐε~ᾰθητε";
-    aorist_ind_pass_3: "~ῐε~ᾰθη", "~ῐε~ᾰθητην", "~ῐε~ᾰθησᾰν";
-    aorist_subj_act_1: "~ῐᾰ~ησω|~ῐᾰ~ω", _, "~ῐᾰ~ησωμεν|~ῐᾰ~ωμεν";
-    aorist_subj_act_2: "~ῐᾰ~ησῃς|~ῐᾰ~ῃς", "~ῐᾰ~ησητον|~ῐᾰ~ητον", "~ῐᾰ~ησητε|~ῐᾰ~ητε";
-    aorist_subj_act_3: "~ῐᾰ~ησῃ|~ῐᾰ~ῃ", "~ῐᾰ~ησητον|~ῐᾰ~ητον", "~ῐᾰ~ησωσῐ|~ῐᾰ~ησωσῐν|~ῐᾰ~ωσῐ|~ῐᾰ~ωσῐν";
-    aorist_subj_mid_1: "~ῐᾰ~ησωμαι|~ῐᾰ~ωμαι", _, "~ῐᾰ~ησωμεθᾰ|~ῐᾰ~ωμεθᾰ";
-    aorist_subj_mid_2: "~ῐᾰ~ησῃ|~ῐᾰ~ῃ", "~ῐᾰ~ησησθον|~ῐᾰ~ησθον", "~ῐᾰ~ησησθε|~ῐᾰ~ησθε";
-    aorist_subj_mid_3: "~ῐᾰ~ησηται|~ῐᾰ~ηται", "~ῐᾰ~ησησθον|~ῐᾰ~ησθον", "~ῐᾰ~ησωνται|~ῐᾰ~ωνται";
-    aorist_subj_pass_1: "~ῐᾰ~ᾰθω", _, "~ῐᾰ~ᾰθωμεν";
-    aorist_subj_pass_2: "~ῐᾰ~ᾰθῃς", "~ῐᾰ~ᾰθητον", "~ῐᾰ~ᾰθητε";
-    aorist_subj_pass_3: "~ῐᾰ~ᾰθῃ", _, "~ῐᾰ~ᾰθωσῐ|~ῐᾰ~ᾰθωσῐν";
-    aorist_opt_act_1: "~ῐᾰ~ησαιμῐ|~ῐᾰ~αιην", _, "~ῐᾰ~ησαιμεν|~ῐᾰ~αῑμεν|~ῐᾰ~αιημεν";
-    aorist_opt_act_2: "~ῐᾰ~ησειᾰς|~ῐᾰ~ησαις|~ῐᾰ~αιης", "~ῐᾰ~ησαιτον|~ῐᾰ~αῑτον|~ῐᾰ~αιητον", "~ῐᾰ~ησαιτε|~ῐᾰ~αῑτε|~ῐᾰ~αιητε";
-    aorist_opt_act_3: "~ῐᾰ~ησειε|~ῐᾰ~ησειεν|~ῐᾰ~ησαι|~ῐᾰ~αιη", "~ῐᾰ~ησαιτην|~ῐᾰ~αιτην|~ῐᾰ~αιητην", "~ῐᾰ~ησειᾰν|~ῐᾰ~ησαιεν|~ῐᾰ~αῑεν|~ῐᾰ~αιησᾰν";
-    aorist_opt_mid_1: "~ῐᾰ~ησαιμην|~ῐᾰ~αιμην", _, "~ῐᾰ~ησαιμεθᾰ|~ῐᾰ~αιμεθᾰ";
-    aorist_opt_mid_2: "~ῐᾰ~ησαιο|~ῐᾰ~αῑο", "~ῐᾰ~ησαισθον|~ῐᾰ~αῑσθον", "~ῐᾰ~ησαισθε|~ῐᾰ~αῑσθε";
-    aorist_opt_mid_3: "~ῐᾰ~ησαιτο|~ῐᾰ~αῑτο", "~ῐᾰ~ησαισθην|~ῐᾰ~αισθην", "~ῐᾰ~ησαιντο|~ῐᾰ~αῑντο";
-    aorist_opt_pass_1: "~ῐᾰ~ᾰθειην", _, "~ῐᾰ~ᾰθεῑμεν|~ῐᾰ~ᾰθειημεν";
-    aorist_opt_pass_2: "~ῐᾰ~ᾰθειης", "~ῐᾰ~ᾰθεῑτον|~ῐᾰ~ᾰθειητον", "~ῐᾰ~ᾰθεῑτε|~ῐᾰ~ᾰθειητε";
-    aorist_opt_pass_3: "~ῐᾰ~ᾰθειη", "~ῐᾰ~ᾰθειτην|~ῐᾰ~ᾰθειητην", "~ῐᾰ~ᾰθεῑεν|~ῐᾰ~ᾰθειησᾰν";
-    aorist_imp_act_2: "~ῐᾰ~ησον|~ῐᾰ~ηθῐ", "~ῐᾰ~ησᾰτον|~ῐᾰ~ητον", "~ῐᾰ~ησᾰτε|~ῐᾰ~ητε";
-    aorist_imp_act_3: "~ῐᾰ~ησᾰτω|~ῐᾰ~ητω", "~ῐᾰ~ησᾰτων|~ῐᾰ~ητων", "~ῐᾰ~ησᾰντων|~ῐᾰ~ᾰντων";
-    aorist_imp_mid_2: "~ῐᾰ~ησαι|~ῐᾰ~ω", "~ῐᾰ~ησᾰσθον|~ῐᾰ~ᾰσθον", "~ῐᾰ~ησᾰσθε|~ῐᾰ~ᾰσθε";
-    aorist_imp_mid_3: "~ῐᾰ~ησᾰσθω|~ῐᾰ~ᾰσθω", "~ῐᾰ~ησᾰσθων|~ῐᾰ~ᾰσθων", "~ῐᾰ~ησᾰσθων|~ῐᾰ~ᾰσθων";
-    aorist_imp_pass_2: "~ῐᾰ~ᾰθητῐ", _, _;
-    aorist_imp_pass_3: "~ῐᾰ~ᾰθητω", "~ῐᾰ~ᾰθητων", "~ῐᾰ~ᾰθεντων";
-    perfect_ind_act_1: "~ῐε~ηκᾰ", _, "~ῐε~ηκᾰμεν";
-    perfect_ind_act_2: "~ῐε~ηκᾰς", "~ῐε~ηκᾰτον", "~ῐε~ηκᾰτε";
-    perfect_ind_act_3: "~ῐε~ηκε|~ῐε~ηκεν", _, "~ῐε~ηκᾱσῐ|~ῐε~ηκᾱσῐν";
-    perfect_subj_act_1: "~ῐε~ηκω", _, "~ῐε~ηκωμεν";
-    perfect_subj_act_2: "~ῐε~ηκῃς", "~ῐε~ηκητον", "~ῐε~ηκητε";
-    perfect_subj_act_3: "~ῐε~ηκῃ", _, "~ῐε~ηκωσῐ|~ῐε~ηκωσῐν";
-    perfect_opt_act_1: "~ῐε~ηκοιμῐ|~ῐε~ηκοιην", _, "~ῐε~ηκοιμεν";
-    perfect_opt_act_2: "~ῐε~ηκοις|~ῐε~ηκοιης", "~ῐε~ηκοιτον", "~ῐε~ηκοιτε";
-    perfect_opt_act_3: "~ῐε~ηκοι|~ῐε~ηκοιη", "~ῐε~ηκοιτην", "~ῐε~ηκοιεν";
-    perfect_imp_act_2: "~ῐε~ηκε", "~ῐε~ηκετον", "~ῐε~ηκετε";
-    perfect_imp_act_3: "~ῐε~ηκετω", "~ῐε~ηκετων", "~ῐε~ηκοντων";
-    pluperfect_act_1: "~ῐε~ηκειν|~ῐε~ηκη", _, "~ῐε~ηκεμεν";
-    pluperfect_act_2: "~ῐε~ηκεις|~ῐε~ηκης", "~ῐε~ηκετον", "~ῐε~ηκετε";
-    pluperfect_act_3: "~ῐε~ηκει|~ῐε~ηκειν", "~ῐε~ηκετην", "~ῐε~ηκεσᾰν";
-    infinitive_pres: "~ῐϊ~ᾰναι", "~ῐϊ~ᾰσθαι", _;
-    infinitive_fut: "~ῐᾰ~ησειν", "~ῐᾰ~ησεσθαι", "~ῐᾰ~ᾰθησεσθαι";
-    infinitive_aor: "~ῐᾰ~ησαι|~ῐᾰ~ηναι", "~ῐᾰ~ησᾰσθαι|~ῐᾰ~ᾰσθαι", "~ῐᾰ~ᾰθηναι";
-    infinitive_perf: "~ῐε~ηκεναι", _, _;
-    participle_pres: "~ῐϊ~ᾱς", "~ῐϊ~ᾰμενος", _;
-    participle_fut: "~ῐᾰ~ησων", "~ῐᾰ~ησομενος", "~ῐᾰ~ᾰθησομενος";
-    participle_aor: "~ῐᾰ~ησᾱς|~ῐᾰ~ᾱς", "~ῐᾰ~ησᾰμενος|~ῐᾰ~ᾰμενος", "~ῐᾰ~ᾰθεις";
-    participle_perf: "~ῐε~ηκως", _, _;
+    // Δῐϊστημῐ: 1 words (δῐϊστημῐ). Like Ἀνῐστημῐ, except in 108 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("δῐϊστημῐ", 1, "~ϊ~ημῐ", like Ἀνῐστημῐ;
+    ind_act_1: "~ϊ~ημῐ", _, "~ϊ~ᾰμεν";
+    ind_act_2: "~ϊ~ης", "~ϊ~ᾰτον", "~ϊ~ᾰτε";
+    ind_act_3: "~ϊ~ησῐ|~ϊ~ησῐν", _, "~ϊ~ᾱσῐ|~ϊ~ᾱσῐν";
+    ind_mid_1: "~ϊ~ᾰμαι", _, "~ϊ~ᾰμεθᾰ";
+    ind_mid_2: "~ϊ~ᾰσαι", "~ϊ~ᾰσθον", "~ϊ~ᾰσθε";
+    ind_mid_3: "~ϊ~ᾰται", _, "~ϊ~ᾰνται";
+    subj_act_1: "~ϊ~ω", _, "~ϊ~ωμεν";
+    subj_act_2: "~ϊ~ῃς", "~ϊ~ητον", "~ϊ~ητε";
+    subj_act_3: "~ϊ~ῃ", _, "~ϊ~ωσῐ|~ϊ~ωσῐν";
+    subj_mid_1: "~ϊ~ωμαι", _, "~ϊ~ωμεθᾰ";
+    subj_mid_2: "~ϊ~ῃ", "~ϊ~ησθον", "~ϊ~ησθε";
+    subj_mid_3: "~ϊ~ηται", _, "~ϊ~ωνται";
+    subj_pass_2: "~ϊ~ῃ", _, _;
+    opt_act_1: "~ϊ~αιην", _, "~ϊ~αῑμεν|~ϊ~αιημεν";
+    opt_act_2: "~ϊ~αιης", "~ϊ~αῑτον|~ϊ~αιητον", "~ϊ~αῑτε|~ϊ~αιητε";
+    opt_act_3: "~ϊ~αιη", "~ϊ~αιτην|~ϊ~αιητην", "~ϊ~αῑεν|~ϊ~αιησᾰν";
+    opt_mid_1: "~ϊ~αιμην", _, "~ϊ~αιμεθᾰ";
+    opt_mid_2: "~ϊ~αιο", "~ϊ~αισθον", "~ϊ~αισθε";
+    opt_mid_3: "~ϊ~αιτο", "~ϊ~αισθην", "~ϊ~αιντο";
+    imp_act_2: "~ϊ~η", _, _;
+    imp_act_3: "~ϊ~ᾰτω", "~ϊ~ᾰτων", "~ϊ~ᾰντων";
+    imp_mid_2: "~ϊ~ᾰσο|~ϊ~ω", _, "~ϊ~ᾰσθε";
+    imp_mid_3: "~ϊ~ᾰσθω", "~ϊ~ᾰσθων", "~ϊ~ᾰσθων";
+    imp_pass_2: "~ϊ~ᾰσο|~ϊ~ω", _, _;
+    imperfect_act_1: "~ϊ~ην", _, "~ϊ~ᾰμεν";
+    imperfect_act_2: "~ϊ~ης", "~ϊ~ᾰτον", "~ϊ~ᾰτε";
+    imperfect_act_3: "~ϊ~η", "~ϊ~ᾰτην", "~ϊ~ᾰσᾰν";
+    imperfect_mid_1: "~ϊ~ᾰμην", _, "~ϊ~ᾰμεθᾰ";
+    imperfect_mid_2: "~ϊ~ᾰσο", "~ϊ~ᾰσθον", "~ϊ~ᾰσθε";
+    imperfect_mid_3: "~ϊ~ᾰτο", "~ϊ~ᾰσθην", "~ϊ~ᾰντο";
+    aorist_ind_act_3: _, _, "~ε~ησᾰν|~ε~ᾰν";
+    perfect_ind_act_1: "~ε~ηκᾰ", _, "~ε~ηκᾰμεν";
+    perfect_ind_act_2: "~ε~ηκᾰς", "~ε~ηκᾰτον", "~ε~ηκᾰτε";
+    perfect_ind_act_3: "~ε~ηκε|~ε~ηκεν", derived, "~ε~ηκᾱσῐ|~ε~ηκᾱσῐν";
+    perfect_subj_act_1: "~ε~ηκω", _, "~ε~ηκωμεν";
+    perfect_subj_act_2: "~ε~ηκῃς", "~ε~ηκητον", "~ε~ηκητε";
+    perfect_subj_act_3: "~ε~ηκῃ", derived, "~ε~ηκωσῐ|~ε~ηκωσῐν";
+    perfect_opt_act_1: "~ε~ηκοιμῐ|~ε~ηκοιην", _, "~ε~ηκοιμεν";
+    perfect_opt_act_2: "~ε~ηκοις|~ε~ηκοιης", "~ε~ηκοιτον", "~ε~ηκοιτε";
+    perfect_opt_act_3: "~ε~ηκοι|~ε~ηκοιη", "~ε~ηκοιτην", "~ε~ηκοιεν";
+    perfect_imp_act_2: "~ε~ηκε", "~ε~ηκετον", "~ε~ηκετε";
+    perfect_imp_act_3: "~ε~ηκετω", "~ε~ηκετων", "~ε~ηκοντων";
+    infinitive_pres: "~ϊ~ᾰναι", "~ϊ~ᾰσθαι", _;
+    infinitive_perf: "~ε~ηκεναι", _, _;
+    participle_pres: "~ϊ~ᾱς", "~ϊ~ᾰμενος", _;
+    participle_perf: "~ε~ηκως", _, _;
     ),
     // Στορνῡμῐ: 1 words (στορνῡμῐ). Like Σῠνομνῡμῐ, except in 226 cells: imperfect_act_1 sg, imperfect_act_1 pl, imperfect_act_2 sg, imperfect_act_2 du, imperfect_act_2 pl, imperfect_act_3 sg, ….
     conjugation!("στορνῡμῐ", 1, "~ο~νῡμῐ", like Σῠνομνῡμῐ;
@@ -14184,8 +13187,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: "~μ~ησᾱς|~νῐ~ησᾱς", "~μ~ησᾰμενος|~νῐ~ησᾰμενος", "~μ~ησθεις|~νῐ~ησθεις";
     participle_perf: _, "~μ%ε~ησμενος", _;
     ),
-    // Ἀνθιστημι: 1 words (ἀνθιστημι). Like Μεθῐστημῐ, except in 158 cells: future_ind_act_1 sg, future_ind_act_1 pl, future_ind_act_2 sg, future_ind_act_2 du, future_ind_act_2 pl, future_ind_act_3 sg, ….
-    conjugation!("ἀνθιστημι", 1, "~θι~ημι", like Μεθῐστημῐ;
+    // Ἀνθῐστημῐ: 1 words (ἀνθῐστημῐ). Like Μεθῐστημῐ, except in 158 cells: future_ind_act_1 sg, future_ind_act_1 pl, future_ind_act_2 sg, future_ind_act_2 du, future_ind_act_2 pl, future_ind_act_3 sg, ….
+    conjugation!("ἀνθῐστημῐ", 1, "~θῐ~ημῐ", like Μεθῐστημῐ;
     future_ind_act_1: "~τῐ~ησω", _, "~τῐ~ησομεν";
     future_ind_act_2: "~τῐ~ησεις", "~τῐ~ησετον", "~τῐ~ησετε";
     future_ind_act_3: "~τῐ~ησει", _, "~τῐ~ησουσῐ|~τῐ~ησουσῐν";
@@ -14249,8 +13252,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: "~τῐ~ησᾱς|~τῐ~ᾱς", "~τῐ~ησᾰμενος|~τῐ~ᾰμενος", "~τῐ~ᾰθεις";
     participle_perf: "~θε~ᾰκως", _, _;
     ),
-    // Περῐῐστημῐ: 1 words (περῐῐστημῐ). Like Ἀνιστημι, except in 192 cells: future_ind_act_1 sg, future_ind_act_1 pl, future_ind_act_2 sg, future_ind_act_2 du, future_ind_act_2 pl, future_ind_act_3 sg, ….
-    conjugation!("περῐῐστημῐ", 1, "~ῐ~ημῐ", like Ἀνιστημι;
+    // Περῐῐστημῐ: 1 words (περῐῐστημῐ). Like Ἀνῐστημῐ, except in 192 cells: future_ind_act_1 sg, future_ind_act_1 pl, future_ind_act_2 sg, future_ind_act_2 du, future_ind_act_2 pl, future_ind_act_3 sg, ….
+    conjugation!("περῐῐστημῐ", 1, "~ῐ~ημῐ", like Ἀνῐστημῐ;
     future_ind_act_1: "~~ησω", _, "~~ησομεν";
     future_ind_act_2: "~~ησεις", "~~ησετον", "~~ησετε";
     future_ind_act_3: "~~ησει", _, "~~ησουσῐ|~~ησουσῐν";
@@ -14406,8 +13409,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     imperfect_act_3: derived, _, _;
     infinitive_pres: "~εῑναι", _, _;
     ),
-    // Ὑφιστημι: 1 words (ὑφιστημι). Like Ἀφῐστημῐ, except in 105 cells: future_ind_pass_1 sg, future_ind_pass_1 pl, future_ind_pass_2 sg, future_ind_pass_2 du, future_ind_pass_2 pl, future_ind_pass_3 sg, ….
-    conjugation!("ὑφιστημι", 1, "~φι~ημι", like Ἀφῐστημῐ;
+    // Ὑφῐστημῐ: 1 words (ὑφῐστημῐ). Like Ἀφῐστημῐ, except in 105 cells: future_ind_pass_1 sg, future_ind_pass_1 pl, future_ind_pass_2 sg, future_ind_pass_2 du, future_ind_pass_2 pl, future_ind_pass_3 sg, ….
+    conjugation!("ὑφῐστημῐ", 1, "~φῐ~ημῐ", like Ἀφῐστημῐ;
     future_ind_pass_1: "~πο~ᾰθησομαι", _, "~πο~ᾰθησομεθᾰ";
     future_ind_pass_2: "~πο~ᾰθησῃ|~πο~ᾰθησει", "~πο~ᾰθησεσθον", "~πο~ᾰθησεσθε";
     future_ind_pass_3: "~πο~ᾰθησεται", _, "~πο~ᾰθησονται";
@@ -14994,8 +13997,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: "~~ηξᾱς", "~~ηξᾰμενος", "~~ᾰγεις";
     participle_perf: "~νε~ωγως", "~~ηρρηγμενος", _;
     ),
-    // Ἀμφιστημι: 1 words (ἀμφιστημι). Like Ἀπᾰνῐστημῐ, except in 254 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("ἀμφιστημι", 1, "~ι~ημι", like Ἀπᾰνῐστημῐ;
+    // Ἀμφῑστημῐ: 1 words (ἀμφῑστημῐ). Like Ἀπᾰνῐστημῐ, except in 254 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("ἀμφῑστημῐ", 1, "~ῑ~ημῐ", like Ἀπᾰνῐστημῐ;
     ind_act_1: "~ῑ~ημῐ", _, "~ῑ~ᾰμεν";
     ind_act_2: "~ῑ~ης", "~ῑ~ᾰτον", "~ῑ~ᾰτε";
     ind_act_3: "~ῑ~ησῐ|~ῑ~ησῐν", _, "~ῑ~ᾱσῐ|~ῑ~ᾱσῐν";
@@ -15426,105 +14429,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: _, "~κ~εμενος", "~κτε~εις";
     participle_perf: _, "~κ%ε~ειμενος", _;
     ),
-    // Ἀναρρωννυμι: 1 words (ἀναρρωννυμι). Like Προσερχομαι, except in 235 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("ἀναρρωννυμι", 1, "~α~ννυμι", like Προσερχομαι;
-    ind_act_1: "~ᾰ~ννῡμῐ", _, "~ᾰ~ννῠμεν";
-    ind_act_2: "~ᾰ~ννῡς", "~ᾰ~ννῠτον", "~ᾰ~ννῠτε";
-    ind_act_3: "~ᾰ~ννῡσῐ|~ᾰ~ννῡσῐν", _, "~ᾰ~ννῠᾱσῐ|~ᾰ~ννῠᾱσῐν";
-    ind_mid_1: "~ᾰ~ννῠμαι", _, "~ᾰ~ννῠμεθᾰ";
-    ind_mid_2: "~ᾰ~ννῠσαι", "~ᾰ~ννῠσθον", "~ᾰ~ννῠσθε";
-    ind_mid_3: "~ᾰ~ννῠται", _, "~ᾰ~ννῠνται";
-    subj_act_1: "~ᾰ~ννῠω", _, "~ᾰ~ννῠωμεν";
-    subj_act_2: "~ᾰ~ννῠῃς", "~ᾰ~ννῠητον", "~ᾰ~ννῠητε";
-    subj_act_3: "~ᾰ~ννῠῃ", _, "~ᾰ~ννῠωσῐ|~ᾰ~ννῠωσῐν";
-    subj_mid_1: "~ᾰ~ννῠωμαι", _, "~ᾰ~ννῠωμεθᾰ";
-    subj_mid_2: "~ᾰ~ννῠῃ", "~ᾰ~ννῠησθον", "~ᾰ~ννῠησθε";
-    subj_mid_3: "~ᾰ~ννῠηται", _, "~ᾰ~ννῠωνται";
-    subj_pass_2: "~ᾰ~ννῠῃ", _, _;
-    opt_act_1: "~ᾰ~ννῠοιμῐ", _, "~ᾰ~ννῠοιμεν";
-    opt_act_2: "~ᾰ~ννῠοις", "~ᾰ~ννῠοιτον", "~ᾰ~ννῠοιτε";
-    opt_act_3: "~ᾰ~ννῠοι", "~ᾰ~ννῠοιτην", "~ᾰ~ννῠοιεν";
-    opt_mid_1: "~ᾰ~ννῠοιμην", _, "~ᾰ~ννῠοιμεθᾰ";
-    opt_mid_2: "~ᾰ~ννῠοιο", "~ᾰ~ννῠοισθον", "~ᾰ~ννῠοισθε";
-    opt_mid_3: "~ᾰ~ννῠοιτο", "~ᾰ~ννῠοισθην", "~ᾰ~ννῠοιντο";
-    imp_act_2: "~ᾰ~ννῡ", _, _;
-    imp_act_3: "~ᾰ~ννῠτω", "~ᾰ~ννῠτων", "~ᾰ~ννῠντων";
-    imp_mid_2: "~ᾰ~ννῠσο", _, "~ᾰ~ννῠσθε";
-    imp_mid_3: "~ᾰ~ννῠσθω", "~ᾰ~ννῠσθων", "~ᾰ~ννῠσθων";
-    imperfect_act_1: "~ε~ννῡν", _, "~ε~ννῠμεν";
-    imperfect_act_2: "~ε~ννῡς", "~ε~ννῠτον", "~ε~ννῠτε";
-    imperfect_act_3: "~ε~ννῡ", "~ε~ννῠτην", "~ε~ννῠσᾰν";
-    imperfect_mid_1: "~ε~ννῠμην", _, "~ε~ννῠμεθᾰ";
-    imperfect_mid_2: "~ε~ννῠσο", "~ε~ννῠσθον", "~ε~ννῠσθε";
-    imperfect_mid_3: "~ε~ννῠτο", "~ε~ννῠσθην", "~ε~ννῠντο";
-    future_ind_act_1: "~ᾰ~σω", _, "~ᾰ~σομεν";
-    future_ind_act_2: "~ᾰ~σεις", "~ᾰ~σετον", "~ᾰ~σετε";
-    future_ind_act_3: "~ᾰ~σει", _, "~ᾰ~σουσῐ|~ᾰ~σουσῐν";
-    future_ind_mid_1: "~ᾰ~σομαι", _, "~ᾰ~σομεθᾰ";
-    future_ind_mid_2: "~ᾰ~σῃ|~ᾰ~σει", "~ᾰ~σεσθον", "~ᾰ~σεσθε";
-    future_ind_mid_3: "~ᾰ~σεται", _, "~ᾰ~σονται";
-    future_ind_pass_1: "~ᾰ~σθησομαι", _, "~ᾰ~σθησομεθᾰ";
-    future_ind_pass_2: "~ᾰ~σθησῃ|~ᾰ~σθησει", "~ᾰ~σθησεσθον", "~ᾰ~σθησεσθε";
-    future_ind_pass_3: "~ᾰ~σθησεται", _, "~ᾰ~σθησονται";
-    future_opt_act_1: "~ᾰ~σοιμῐ", _, "~ᾰ~σοιμεν";
-    future_opt_act_2: "~ᾰ~σοις", "~ᾰ~σοιτον", "~ᾰ~σοιτε";
-    future_opt_act_3: "~ᾰ~σοι", "~ᾰ~σοιτην", "~ᾰ~σοιεν";
-    future_opt_mid_1: "~ᾰ~σοιμην", _, "~ᾰ~σοιμεθᾰ";
-    future_opt_mid_2: "~ᾰ~σοιο", "~ᾰ~σοισθον", "~ᾰ~σοισθε";
-    future_opt_mid_3: "~ᾰ~σοιτο", "~ᾰ~σοισθην", "~ᾰ~σοιντο";
-    future_opt_pass_1: "~ᾰ~σθησοιμην", _, "~ᾰ~σθησοιμεθᾰ";
-    future_opt_pass_2: "~ᾰ~σθησοιο", "~ᾰ~σθησοισθον", "~ᾰ~σθησοισθε";
-    future_opt_pass_3: "~ᾰ~σθησοιτο", "~ᾰ~σθησοισθην", "~ᾰ~σθησοιντο";
-    aorist_ind_act_1: "~ε~σᾰ", _, "~ε~σᾰμεν";
-    aorist_ind_act_2: "~ε~σᾰς", "~ε~σᾰτον", "~ε~σᾰτε";
-    aorist_ind_act_3: "~ε~σε|~ε~σεν", "~ε~σᾰτην", "~ε~σᾰν";
-    aorist_ind_mid_1: "~ε~σᾰμην", _, "~ε~σᾰμεθᾰ";
-    aorist_ind_mid_2: "~ε~σω", "~ε~σᾰσθον", "~ε~σᾰσθε";
-    aorist_ind_mid_3: "~ε~σᾰτο", "~ε~σᾰσθην", "~ε~σᾰντο";
-    aorist_ind_pass_1: "~ε~σθην", _, "~ε~σθημεν";
-    aorist_ind_pass_2: "~ε~σθης", "~ε~σθητον", "~ε~σθητε";
-    aorist_ind_pass_3: "~ε~σθη", "~ε~σθητην", "~ε~σθησᾰν";
-    aorist_subj_act_1: "~ᾰ~σω", _, "~ᾰ~σωμεν";
-    aorist_subj_act_2: "~ᾰ~σῃς", "~ᾰ~σητον", "~ᾰ~σητε";
-    aorist_subj_act_3: "~ᾰ~σῃ", _, "~ᾰ~σωσῐ|~ᾰ~σωσῐν";
-    aorist_subj_mid_1: "~ᾰ~σωμαι", _, "~ᾰ~σωμεθᾰ";
-    aorist_subj_mid_2: "~ᾰ~σῃ", "~ᾰ~σησθον", "~ᾰ~σησθε";
-    aorist_subj_mid_3: "~ᾰ~σηται", _, "~ᾰ~σωνται";
-    aorist_subj_pass_1: "~ᾰ~σθω", _, "~ᾰ~σθωμεν";
-    aorist_subj_pass_2: "~ᾰ~σθῃς", "~ᾰ~σθητον", "~ᾰ~σθητε";
-    aorist_subj_pass_3: "~ᾰ~σθῃ", _, "~ᾰ~σθωσῐ|~ᾰ~σθωσῐν";
-    aorist_opt_act_1: "~ᾰ~σαιμῐ", _, "~ᾰ~σαιμεν";
-    aorist_opt_act_2: "~ᾰ~σειᾰς|~ᾰ~σαις", "~ᾰ~σαιτον", "~ᾰ~σαιτε";
-    aorist_opt_act_3: "~ᾰ~σειε|~ᾰ~σειεν|~ᾰ~σαι", "~ᾰ~σαιτην", "~ᾰ~σειᾰν|~ᾰ~σαιεν";
-    aorist_opt_mid_1: "~ᾰ~σαιμην", _, "~ᾰ~σαιμεθᾰ";
-    aorist_opt_mid_2: "~ᾰ~σαιο", "~ᾰ~σαισθον", "~ᾰ~σαισθε";
-    aorist_opt_mid_3: "~ᾰ~σαιτο", "~ᾰ~σαισθην", "~ᾰ~σαιντο";
-    aorist_opt_pass_1: "~ᾰ~σθειην", _, "~ᾰ~σθεῑμεν|~ᾰ~σθειημεν";
-    aorist_opt_pass_2: "~ᾰ~σθειης", "~ᾰ~σθεῑτον|~ᾰ~σθειητον", "~ᾰ~σθεῑτε|~ᾰ~σθειητε";
-    aorist_opt_pass_3: "~ᾰ~σθειη", "~ᾰ~σθειτην|~ᾰ~σθειητην", "~ᾰ~σθεῑεν|~ᾰ~σθειησᾰν";
-    aorist_imp_act_2: "~ᾰ~σον", "~ᾰ~σᾰτον", "~ᾰ~σᾰτε";
-    aorist_imp_act_3: "~ᾰ~σᾰτω", "~ᾰ~σᾰτων", "~ᾰ~σᾰντων";
-    aorist_imp_mid_2: "~ᾰ~σαι", "~ᾰ~σᾰσθον", "~ᾰ~σᾰσθε";
-    aorist_imp_mid_3: "~ᾰ~σᾰσθω", "~ᾰ~σᾰσθων", _;
-    aorist_imp_pass_2: "~ᾰ~σθητῐ", _, _;
-    aorist_imp_pass_3: "~ᾰ~σθητω", "~ᾰ~σθητων", "~ᾰ~σθεντων";
-    perfect_ind_mid_1: "~ε~μαι", _, "~ε~μεθᾰ";
-    perfect_ind_mid_2: "~ε~σαι", "~ε~σθον", "~ε~σθε";
-    perfect_ind_mid_3: "~ε~ται", _, "~ε~νται";
-    perfect_imp_mid_2: "~ε~σο", _, _;
-    perfect_imp_mid_3: "~ε~σθω", "~ε~σθων", _;
-    pluperfect_mid_1: "~ε~μην", _, "~ε~μεθᾰ";
-    pluperfect_mid_2: "~ε~σο", "~ε~σθον", "~ε~σθε";
-    pluperfect_mid_3: "~ε~το", "~ε~σθην", "~ε~ντο";
-    infinitive_pres: "~ᾰ~ννῠναι", "~ᾰ~ννῠσθαι", _;
-    infinitive_fut: "~ᾰ~σειν", "~ᾰ~σεσθαι", "~ᾰ~σθησεσθαι";
-    infinitive_aor: "~ᾰ~σαι", "~ᾰ~σᾰσθαι", "~ᾰ~σθηναι";
-    infinitive_perf: _, "~ε~σθαι", _;
-    participle_pres: "~ᾰ~ννῡς", "~ᾰ~ννῠμενος", _;
-    participle_fut: "~ᾰ~σων", "~ᾰ~σομενος", "~ᾰ~σθησομενος";
-    participle_aor: "~ᾰ~σᾱς", "~ᾰ~σᾰμενος", "~ᾰ~σθεις";
-    participle_perf: _, "~ε~μενος", _;
-    ),
     // Ἐκτιθημῐ: 1 words (ἐκτιθημῐ). Like Ὑπεκτιθεμαι, except in 172 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
     conjugation!("ἐκτιθημῐ", 1, "~κτι~ημῐ", like Ὑπεκτιθεμαι;
     ind_act_1: "~κτι~ημῐ", _, "~κτι~εμεν";
@@ -15603,38 +14507,26 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     participle_aor: "~κ~εις", _, _;
     participle_perf: "~κ%ε~εικως", _, _;
     ),
-    // Προϊστημῐ: 1 words (προϊστημῐ). Like Σῠνιστημῐ, except in 163 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("προϊστημῐ", 1, "~ϊ~ημῐ", like Σῠνιστημῐ;
-    ind_act_1: "~ϊ~ημῐ", _, "~ϊ~ᾰμεν";
-    ind_act_2: "~ϊ~ης", "~ϊ~ᾰτον", "~ϊ~ᾰτε";
-    ind_act_3: "~ϊ~ησῐ|~ϊ~ησῐν", _, "~ϊ~ᾱσῐ|~ϊ~ᾱσῐν";
-    ind_mid_1: "~ϊ~ᾰμαι", _, "~ϊ~ᾰμεθᾰ";
-    ind_mid_2: "~ϊ~ᾰσαι", "~ϊ~ᾰσθον", "~ϊ~ᾰσθε";
-    ind_mid_3: "~ϊ~ᾰται", _, "~ϊ~ᾰνται";
-    subj_act_1: "~ϊ~ω", _, "~ϊ~ωμεν";
-    subj_act_2: "~ϊ~ῃς", "~ϊ~ητον", "~ϊ~ητε";
-    subj_act_3: "~ϊ~ῃ", _, "~ϊ~ωσῐ|~ϊ~ωσῐν";
-    subj_mid_1: "~ϊ~ωμαι", _, "~ϊ~ωμεθᾰ";
-    subj_mid_2: "~ϊ~ῃ", "~ϊ~ησθον", "~ϊ~ησθε";
-    subj_mid_3: "~ϊ~ηται", _, "~ϊ~ωνται";
-    subj_pass_2: "~ϊ~ῃ", _, _;
-    opt_act_1: "~ϊ~αιην", _, "~ϊ~αῑμεν|~ϊ~αιημεν";
-    opt_act_2: "~ϊ~αιης", "~ϊ~αῑτον|~ϊ~αιητον", "~ϊ~αῑτε|~ϊ~αιητε";
-    opt_act_3: "~ϊ~αιη", "~ϊ~αιτην|~ϊ~αιητην", "~ϊ~αῑεν|~ϊ~αιησᾰν";
-    opt_mid_1: "~ϊ~αιμην", _, "~ϊ~αιμεθᾰ";
-    opt_mid_2: "~ϊ~αιο", "~ϊ~αισθον", "~ϊ~αισθε";
-    opt_mid_3: "~ϊ~αιτο", "~ϊ~αισθην", "~ϊ~αιντο";
-    imp_act_2: "~ϊ~η", _, _;
-    imp_act_3: "~ϊ~ᾰτω", "~ϊ~ᾰτων", "~ϊ~ᾰντων";
-    imp_mid_2: "~ϊ~ᾰσο|~ϊ~ω", _, "~ϊ~ᾰσθε";
-    imp_mid_3: "~ϊ~ᾰσθω", "~ϊ~ᾰσθων", "~ϊ~ᾰσθων";
-    imp_pass_2: "~ϊ~ᾰσο|~ϊ~ω", _, _;
-    imperfect_act_1: "~ϊ~ην", _, "~ϊ~ᾰμεν";
-    imperfect_act_2: "~ϊ~ης", "~ϊ~ᾰτον", "~ϊ~ᾰτε";
-    imperfect_act_3: "~ϊ~η", "~ϊ~ᾰτην", "~ϊ~ᾰσᾰν";
-    imperfect_mid_1: "~ϊ~ᾰμην", _, "~ϊ~ᾰμεθᾰ";
-    imperfect_mid_2: "~ϊ~ᾰσο", "~ϊ~ᾰσθον", "~ϊ~ᾰσθε";
-    imperfect_mid_3: "~ϊ~ᾰτο", "~ϊ~ᾰσθην", "~ϊ~ᾰντο";
+    // Προϊστημῐ: 1 words (προϊστημῐ). Like Δῐϊστημῐ, except in 152 cells: future_ind_act_1 sg, future_ind_act_1 pl, future_ind_act_2 sg, future_ind_act_2 du, future_ind_act_2 pl, future_ind_act_3 sg, ….
+    conjugation!("προϊστημῐ", 1, "~ϊ~ημῐ", like Δῐϊστημῐ;
+    future_ind_act_1: "~~ησω", _, "~~ησομεν";
+    future_ind_act_2: "~~ησεις", "~~ησετον", "~~ησετε";
+    future_ind_act_3: "~~ησει", _, "~~ησουσῐ|~~ησουσῐν";
+    future_ind_mid_1: "~~ησομαι", _, "~~ησομεθᾰ";
+    future_ind_mid_2: "~~ησῃ|~~ησει", "~~ησεσθον", "~~ησεσθε";
+    future_ind_mid_3: "~~ησεται", _, "~~ησονται";
+    future_ind_pass_1: "~~ᾰθησομαι", _, "~~ᾰθησομεθᾰ";
+    future_ind_pass_2: "~~ᾰθησῃ|~~ᾰθησει", "~~ᾰθησεσθον", "~~ᾰθησεσθε";
+    future_ind_pass_3: "~~ᾰθησεται", _, "~~ᾰθησονται";
+    future_opt_act_1: "~~ησοιμῐ", _, "~~ησοιμεν";
+    future_opt_act_2: "~~ησοις", "~~ησοιτον", "~~ησοιτε";
+    future_opt_act_3: "~~ησοι", "~~ησοιτην", "~~ησοιεν";
+    future_opt_mid_1: "~~ησοιμην", _, "~~ησοιμεθᾰ";
+    future_opt_mid_2: "~~ησοιο", "~~ησοισθον", "~~ησοισθε";
+    future_opt_mid_3: "~~ησοιτο", "~~ησοισθην", "~~ησοιντο";
+    future_opt_pass_1: "~~ᾰθησοιμην", _, "~~ᾰθησοιμεθᾰ";
+    future_opt_pass_2: "~~ᾰθησοιο", "~~ᾰθησοισθον", "~~ᾰθησοισθε";
+    future_opt_pass_3: "~~ᾰθησοιτο", "~~ᾰθησοισθην", "~~ᾰθησοιντο";
     aorist_ind_act_1: "~ὐ~ησᾰ|~ε~ησᾰ|~ὐ~ην|~ε~ην", _, "~ὐ~ησᾰμεν|~ε~ησᾰμεν|~ὐ~ημεν|~ε~ημεν";
     aorist_ind_act_2: "~ὐ~ησᾰς|~ε~ησᾰς|~ὐ~ης|~ε~ης", "~ὐ~ησᾰτον|~ε~ησᾰτον|~ὐ~ητον|~ε~ητον", "~ὐ~ησᾰτε|~ε~ησᾰτε|~ὐ~ητε|~ε~ητε";
     aorist_ind_act_3: "~ὐ~ησε|~ὐ~ησεν|~ε~ησε|~ε~ησεν|~ὐ~η|~ε~η", "~ὐ~ησᾰτην|~ε~ησᾰτην|~ὐ~ητην|~ε~ητην", "~ὐ~ησᾰν|~ε~ησᾰν";
@@ -15644,37 +14536,40 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 235] = [
     aorist_ind_pass_1: "~ὐ~ᾰθην|~ε~ᾰθην", _, "~ὐ~ᾰθημεν|~ε~ᾰθημεν";
     aorist_ind_pass_2: "~ὐ~ᾰθης|~ε~ᾰθης", "~ὐ~ᾰθητον|~ε~ᾰθητον", "~ὐ~ᾰθητε|~ε~ᾰθητε";
     aorist_ind_pass_3: "~ὐ~ᾰθη|~ε~ᾰθη", "~ὐ~ᾰθητην|~ε~ᾰθητην", "~ὐ~ᾰθησᾰν|~ε~ᾰθησᾰν";
+    aorist_subj_act_1: "~~ησω|~~ω", _, "~~ησωμεν|~~ωμεν";
+    aorist_subj_act_2: "~~ησῃς|~~ῃς", "~~ησητον|~~ητον", "~~ησητε|~~ητε";
+    aorist_subj_act_3: "~~ησῃ|~~ῃ", "~~ησητον|~~ητον", "~~ησωσῐ|~~ησωσῐν|~~ωσῐ|~~ωσῐν";
+    aorist_subj_mid_1: "~~ησωμαι|~~ωμαι", _, "~~ησωμεθᾰ|~~ωμεθᾰ";
+    aorist_subj_mid_2: "~~ησῃ|~~ῃ", "~~ησησθον|~~ησθον", "~~ησησθε|~~ησθε";
+    aorist_subj_mid_3: "~~ησηται|~~ηται", "~~ησησθον|~~ησθον", "~~ησωνται|~~ωνται";
     aorist_subj_pass_1: "~~ᾰθω", _, "~~ᾰθωμεν";
     aorist_subj_pass_2: "~~ᾰθῃς", "~~ᾰθητον", "~~ᾰθητε";
-    aorist_subj_pass_3: "~~ᾰθῃ", derived, "~~ᾰθωσῐ|~~ᾰθωσῐν";
+    aorist_subj_pass_3: "~~ᾰθῃ", _, "~~ᾰθωσῐ|~~ᾰθωσῐν";
+    aorist_opt_act_1: "~~ησαιμῐ|~~αιην", _, "~~ησαιμεν|~~αῑμεν|~~αιημεν";
+    aorist_opt_act_2: "~~ησειᾰς|~~ησαις|~~αιης", "~~ησαιτον|~~αῑτον|~~αιητον", "~~ησαιτε|~~αῑτε|~~αιητε";
+    aorist_opt_act_3: "~~ησειε|~~ησειεν|~~ησαι|~~αιη", "~~ησαιτην|~~αιτην|~~αιητην", "~~ησειᾰν|~~ησαιεν|~~αῑεν|~~αιησᾰν";
+    aorist_opt_mid_1: "~~ησαιμην|~~αιμην", _, "~~ησαιμεθᾰ|~~αιμεθᾰ";
+    aorist_opt_mid_2: "~~ησαιο|~~αῑο", "~~ησαισθον|~~αῑσθον", "~~ησαισθε|~~αῑσθε";
+    aorist_opt_mid_3: "~~ησαιτο|~~αῑτο", "~~ησαισθην|~~αισθην", "~~ησαιντο|~~αῑντο";
     aorist_opt_pass_1: "~~ᾰθειην", _, "~~ᾰθεῑμεν|~~ᾰθειημεν";
     aorist_opt_pass_2: "~~ᾰθειης", "~~ᾰθεῑτον|~~ᾰθειητον", "~~ᾰθεῑτε|~~ᾰθειητε";
     aorist_opt_pass_3: "~~ᾰθειη", "~~ᾰθειτην|~~ᾰθειητην", "~~ᾰθεῑεν|~~ᾰθειησᾰν";
-    aorist_imp_pass_2: "~~ᾰθητῐ", derived, derived;
+    aorist_imp_act_2: "~~ησον|~~ηθῐ", "~~ησᾰτον|~~ητον", "~~ησᾰτε|~~ητε";
+    aorist_imp_act_3: "~~ησᾰτω|~~ητω", "~~ησᾰτων|~~ητων", "~~ησᾰντων|~~ᾰντων";
+    aorist_imp_mid_2: "~~ησαι|~~ω", "~~ησᾰσθον|~~ᾰσθον", "~~ησᾰσθε|~~ᾰσθε";
+    aorist_imp_mid_3: "~~ησᾰσθω|~~ᾰσθω", "~~ησᾰσθων|~~ᾰσθων", "~~ησᾰσθων|~~ᾰσθων";
+    aorist_imp_pass_2: "~~ᾰθητῐ", _, _;
     aorist_imp_pass_3: "~~ᾰθητω", "~~ᾰθητων", "~~ᾰθεντων";
-    perfect_ind_act_1: "~ε~ηκᾰ", _, "~ε~ηκᾰμεν";
-    perfect_ind_act_2: "~ε~ηκᾰς", "~ε~ηκᾰτον", "~ε~ηκᾰτε";
-    perfect_ind_act_3: "~ε~ηκε|~ε~ηκεν", derived, "~ε~ηκᾱσῐ|~ε~ηκᾱσῐν";
-    perfect_subj_act_1: "~ε~ηκω", _, "~ε~ηκωμεν";
-    perfect_subj_act_2: "~ε~ηκῃς", "~ε~ηκητον", "~ε~ηκητε";
-    perfect_subj_act_3: "~ε~ηκῃ", derived, "~ε~ηκωσῐ|~ε~ηκωσῐν";
-    perfect_opt_act_1: "~ε~ηκοιμῐ|~ε~ηκοιην", _, "~ε~ηκοιμεν";
-    perfect_opt_act_2: "~ε~ηκοις|~ε~ηκοιης", "~ε~ηκοιτον", "~ε~ηκοιτε";
-    perfect_opt_act_3: "~ε~ηκοι|~ε~ηκοιη", "~ε~ηκοιτην", "~ε~ηκοιεν";
-    perfect_imp_act_2: "~ε~ηκε", "~ε~ηκετον", "~ε~ηκετε";
-    perfect_imp_act_3: "~ε~ηκετω", "~ε~ηκετων", "~ε~ηκοντων";
     pluperfect_act_1: derived, _, derived;
     pluperfect_act_2: derived, derived, derived;
     pluperfect_act_3: derived, derived, derived;
-    infinitive_pres: "~ϊ~ᾰναι", "~ϊ~ᾰσθαι", _;
-    infinitive_aor: _, _, "~~ᾰθηναι";
-    infinitive_perf: "~ε~ηκεναι", _, _;
-    participle_pres: "~ϊ~ᾱς", "~ϊ~ᾰμενος", _;
-    participle_aor: _, _, "~~ᾰθεις";
-    participle_perf: "~ε~ηκως", _, _;
+    infinitive_fut: "~~ησειν", "~~ησεσθαι", "~~ᾰθησεσθαι";
+    infinitive_aor: "~~ησαι|~~ηναι", "~~ησᾰσθαι|~~ᾰσθαι", "~~ᾰθηναι";
+    participle_fut: "~~ησων", "~~ησομενος", "~~ᾰθησομενος";
+    participle_aor: "~~ησᾱς|~~ᾱς", "~~ησᾰμενος|~~ᾰμενος", "~~ᾰθεις";
     ),
-    // Λλυμι: 1 words (λλυμι). Like Ἀρνυμαι, except in 155 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
-    conjugation!("λλυμι", 1, "~λυμι", like Ἀρνυμαι;
+    // Λλῡμῐ: 1 words (λλῡμῐ). Like Ἀρνυμαι, except in 155 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    conjugation!("λλῡμῐ", 1, "~λῡμῐ", like Ἀρνυμαι;
     ind_act_1: "~λῡμῐ", _, "~λῠμεν";
     ind_act_2: "~λῡς", "~λῠτον", "~λῠτε";
     ind_act_3: "~λῡσῐ|~λῡσῐν", _, "~λῠᾱσῐ|~λῠᾱσῐν";

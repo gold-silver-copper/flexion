@@ -4,7 +4,7 @@
 
 use std::borrow::Cow;
 
-/// 25 words.
+/// 21 words.
 pub(super) static SPELLINGS: &[(Cow<'static, str>, Cow<'static, str>)] = flexion::spellings! {
     "complusculi" => "complūsculī",
     "ecquinam" => "ecquīnam",
@@ -13,8 +13,6 @@ pub(super) static SPELLINGS: &[(Cow<'static, str>, Cow<'static, str>)] = flexion
     "nequis" => "nēquis",
     "nosmet" => "nōsmet",
     "nullus" => "nūllus",
-    "qualis" => "quālis",
-    "qualiscumque" => "quāliscumque",
     "quicumque" => "quīcumque",
     "quicunque" => "quīcunque",
     "quidam" => "quīdam",
@@ -23,9 +21,7 @@ pub(super) static SPELLINGS: &[(Cow<'static, str>, Cow<'static, str>)] = flexion
     "quinam" => "quīnam",
     "quivis" => "quīvīs",
     "quiviscumque" => "quīvīscumque",
-    "se" => "sē",
     "semet" => "sēmet",
-    "sese" => "sēsē",
     "siquis" => "sīquis",
     "tutemet" => "tūtemet",
     "ullus" => "ūllus",

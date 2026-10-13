@@ -77,7 +77,6 @@ pub(super) static RELATIONS: [Relation<'static>; 44] = [
         "" => [1 12, 0 4],
         "ι" => [1 12],
         "ς" => [0 4],
-        "ες" => [0 4],
     } listed {}, true, None),
     // GEN_M_SG, from GEN_N_SG. Few or no words have it: changed as GEN_N_PL is into GEN_M_PL.
     relation!(GEN_M_SG, [GEN_N_SG], [("~", "~")], rules {
@@ -188,7 +187,6 @@ pub(super) static RELATIONS: [Relation<'static>; 44] = [
         "" => [1 12, 0 4],
         "ι" => [1 12],
         "ς" => [0 4],
-        "ες" => [0 4],
     } listed {}, true, None),
     // ACC_F_SG, from NOM_F_SG.
     relation!(ACC_F_SG, [NOM_F_SG], [("~", "~ν")], rules {
@@ -203,7 +201,6 @@ pub(super) static RELATIONS: [Relation<'static>; 44] = [
         "" => [1 12, 0 5],
         "υς" => [1 12],
         "ᾰς" => [0 4],
-        "ρᾰς" => [0 4],
     } listed {}, true, None),
     // ACC_N_SG, from NOM_N_SG.
     relation!(ACC_N_SG, [NOM_N_SG], [("~", "~")], rules {

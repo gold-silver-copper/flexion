@@ -47,8 +47,8 @@ grammar needs of:
   cell's form, changed);
 - `relations.rs`: which cell each cell's form is told from, and the rules on that
   form's ending that change it;
-- `laws.rs`: sound laws where a stem meets its ending (or along a tier), each with the
-  words whose forms it gives and the forms it gets wrong;
+- `laws.rs`: sound laws where a stem meets its ending or a literal before it (along a
+  tier, or on a copied letter), each with the words whose forms it gives and the forms it gets wrong;
 - `rules.rs`: which paradigm a word takes, as rules on its ending, each with how many of
   the dictionary's words with that ending follow each paradigm, and the words no rule
   gets right, listed;
@@ -70,11 +70,11 @@ reason (the rule and its counts).
 
 | | words | paradigms | sound laws | rules | listed words | irregular forms |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 108894 | 187 | 18 | 1686 | 4540 | 1938 |
-| adjective | 67695 | 40 | 4 | 349 | 1636 | 160 |
-| verb | 46911 | 342 | 54 | 2229 | 4848 | 645 |
-| pronoun | 42 | 11 | 0 | 9 | 15 | 388 |
-| numeral | 77 | 4 | 4 | 8 | 19 | 157 |
+| noun | 108894 | 185 | 18 | 1908 | 4571 | 1965 |
+| adjective | 67695 | 40 | 4 | 470 | 1643 | 145 |
+| verb | 46911 | 334 | 54 | 2703 | 4917 | 765 |
+| pronoun | 42 | 11 | 0 | 9 | 14 | 376 |
+| numeral | 77 | 4 | 4 | 11 | 19 | 56 |
 
 *Words*: the dictionary's words the grammar is learned from. *Sound laws*: changes
 where a stem meets its ending (or farther, along a tier). *Rules*: the endings that
@@ -95,24 +95,24 @@ parts. *Features given*: top-1 from the headword, told the word's inherent featu
 (its gender, as `.gender(…)` tells it). *Seen* and *unseen cells*: top-1 on the cells
 some training word of the word's paradigm has a form in, and on the others, derived
 from other cells (with the number of forms). *Floor*: the CoNLL–SIGMORPHON 2017
-shared task's non-neural baseline (letters only). *Attested*: top-1 of the shipped
+shared task's non-neural baseline (letters only), and on the unseen cells. *Attested*: top-1 of the shipped
 grammar on the dictionary's own words, typed in full.
 
-| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | features given | seen cells | unseen cells | floor | attested |
+| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | features given | seen cells | unseen cells | floor (unseen) | attested |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 2611 | 30201 | **95.03%** ± 0.8 | 99.51% | 0.004 | 95.03% | 96.19% | 97.57% | 95.03% (30193) | 87.50% (8) | 94.72% | 99.96% |
-| adjective | 3466 | 171225 | **99.76%** ± 0.2 | 99.99% | 0.002 | 99.76% |  |  | 99.76% (171213) | 0.00% (12) | 99.78% | 100.00% |
-| verb | 1304 | 21858 | **96.04%** ± 1.1 | 99.49% | 0.009 | 96.04% | 98.93% | 95.74% | 96.06% (21827) | 83.87% (31) | 96.17% | 100.00% |
-| pronoun | 4 | 192 | **55.21%** ± 48.7 | 55.21% | 0.307 | 55.21% |  |  | 55.21% (192) |  | 55.21% | 100.00% |
-| numeral | 4 | 156 | **94.23%** ± 22.8 | 94.23% | 0.058 | 94.23% |  |  | 94.23% (156) |  | 100.00% | 100.00% |
+| noun | 2611 | 30201 | **95.07%** ± 0.8 | 99.45% | 0.006 | 95.07% | 96.19% | 97.53% | 95.08% (30193) | 50.00% (8) | 94.72% (87.50%) | 100.00% |
+| adjective | 3466 | 171225 | **99.75%** ± 0.2 | 99.99% | 0.002 | 99.75% |  |  | 99.76% (171213) | 0.00% (12) | 99.78% (91.67%) | 100.00% |
+| verb | 1304 | 21858 | **96.04%** ± 1.1 | 99.49% | 0.009 | 96.04% | 98.93% | 95.77% | 96.07% (21829) | 68.97% (29) | 96.17% (41.38%) | 100.00% |
+| pronoun | 4 | 192 | **55.21%** ± 48.7 | 55.21% | 0.402 | 55.21% |  |  | 55.21% (192) |  | 55.21% (0.00%) | 100.00% |
+| numeral | 4 | 156 | **94.23%** ± 22.8 | 94.23% | 0.058 | 94.23% |  |  | 94.23% (156) |  | 100.00% (0.00%) | 100.00% |
 
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 40870 | 1593005 |
-| adjective | 6996 | 320771 |
-| verb | 18297 | 947012 |
-| pronoun | 1985 | 68270 |
-| numeral | 1556 | 52915 |
+| noun | 53144 | 1998512 |
+| adjective | 5755 | 279326 |
+| verb | 22808 | 1145459 |
+| pronoun | 904 | 41482 |
+| numeral | 830 | 34495 |
 
 ## Data and license
 

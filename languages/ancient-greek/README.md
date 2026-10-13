@@ -43,8 +43,8 @@ grammar needs of:
   cell's form, changed);
 - `relations.rs`: which cell each cell's form is told from, and the rules on that
   form's ending that change it;
-- `laws.rs`: sound laws where a stem meets its ending (along a tier, or on a copied
-  letter), each with the words whose forms it gives and the forms it gets wrong;
+- `laws.rs`: sound laws where a stem meets its ending or a literal before it (along a
+  tier, or on a copied letter), each with the words whose forms it gives and the forms it gets wrong;
 - `rules.rs`: which paradigm a word takes, as rules on its ending, each with how many of
   the dictionary's words with that ending follow each paradigm, and the words no rule
   gets right, listed;
@@ -66,10 +66,10 @@ reason (the rule and its counts).
 
 | | words | paradigms | sound laws | rules | listed words | irregular forms |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 8133 | 157 | 5 | 557 | 2719 | 2968 |
-| adjective | 4691 | 89 | 45 | 395 | 1987 | 4193 |
-| verb | 2655 | 235 | 17 | 192 | 1876 | 52789 |
-| pronoun | 58 | 24 | 0 | 11 | 33 | 411 |
+| noun | 8133 | 113 | 5 | 564 | 2422 | 2408 |
+| adjective | 4691 | 59 | 46 | 397 | 1241 | 2592 |
+| verb | 2655 | 225 | 42 | 198 | 1517 | 39002 |
+| pronoun | 58 | 24 | 0 | 11 | 33 | 400 |
 | numeral | 19 | 8 | 0 | 4 | 5 | 0 |
 
 *Words*: the dictionary's words the grammar is learned from. *Sound laws*: changes
@@ -96,19 +96,19 @@ grammar on the dictionary's own words, typed in full.
 
 | | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | features given | seen cells | unseen cells | floor (unseen) | attested |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 810 | 11700 | **67.94%** ± 3.2 | 83.72% | 0.089 | 82.64% | 91.15% | 68.74% | 67.95% (11695) | 40.00% (5) | 49.22% (0.00%) | 99.92% |
-| adjective | 476 | 22436 | **69.53%** ± 4.1 | 86.81% | 0.095 | 78.16% | 90.49% |  | 69.53% (22428) | 50.00% (8) | 50.81% (50.00%) | 99.94% |
-| verb | 257 | 64204 | **59.30%** ± 6.0 | 71.78% | 0.085 | 67.97% | 71.39% |  | 59.80% (63148) | 28.98% (1056) | 46.00% (23.20%) | 96.32% |
-| pronoun | 11 | 375 | **2.40%** ± 9.0 | 13.07% | 0.588 | 24.00% |  |  | 2.52% (357) | 0.00% (18) | 35.73% (11.11%) | 100.00% |
+| noun | 810 | 11700 | **67.51%** ± 3.2 | 84.08% | 0.063 | 82.11% | 90.05% | 68.20% | 67.50% (11695) | 100.00% (5) | 49.22% (0.00%) | 99.92% |
+| adjective | 476 | 22436 | **72.00%** ± 4.0 | 87.63% | 0.088 | 78.33% | 86.62% |  | 72.01% (22426) | 40.00% (10) | 50.81% (40.00%) | 99.94% |
+| verb | 257 | 64204 | **63.42%** ± 5.9 | 74.56% | 0.121 | 70.55% | 72.91% |  | 63.83% (63148) | 38.64% (1056) | 46.00% (23.20%) | 98.87% |
+| pronoun | 11 | 375 | **2.40%** ± 9.0 | 13.07% | 0.631 | 24.00% |  |  | 2.52% (357) | 0.00% (18) | 35.73% (11.11%) | 100.00% |
 | numeral | 2 | 30 | **100.00%** ± 0.0 | 100.00% | 0.175 | 100.00% |  |  | 100.00% (30) |  | 100.00% (0.00%) | 92.08% |
 
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 19138 | 852818 |
-| adjective | 14138 | 705939 |
-| verb | 38735 | 3729197 |
-| pronoun | 1692 | 73589 |
-| numeral | 1024 | 41781 |
+| noun | 17371 | 763773 |
+| adjective | 11340 | 553598 |
+| verb | 35174 | 3171796 |
+| pronoun | 1656 | 70449 |
+| numeral | 1024 | 39922 |
 
 ## Data and license
 

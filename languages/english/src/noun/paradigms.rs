@@ -2,7 +2,9 @@
 //!
 //! A pattern is the form with `~` where the stem goes: `~а` is the stem and
 //! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first.
+//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
+//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
+//! as the copy laws in `laws.rs` change it.
 
 use flexion::Paradigm;
 
@@ -10,11 +12,12 @@ use flexion::Paradigm;
 /// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
 /// they share them), the declension it is like (if any), then a row of patterns
 /// per line (`derived`: the form comes from another cell's, see
-/// `relations.rs`; `_`: the form is the declension's it is like):
+/// `relations.rs`; `_`, or a row left out: the form is the declension's it is like,
+/// or, in a declension like no other, derived):
 /// `noun` (sg, pl)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident)?;
-     noun: $c0:tt, $c1:tt;
+     $(noun: $c0:tt, $c1:tt;)?
     ) => {
         Paradigm {
             name: ::std::borrow::Cow::Borrowed($name),
@@ -23,8 +26,8 @@ macro_rules! declension {
             parent: like!($($parent)?),
             inherent: ::std::borrow::Cow::Borrowed(&[]),
             table: ::std::borrow::Cow::Borrowed(concat!(
-                flexion::cell!($c0), "\t",
-                flexion::cell!($c1), "\t",
+                $(flexion::cell!($c0),)? "\t",
+                $(flexion::cell!($c1),)? "\t",
             )),
         }
     };
@@ -43,7 +46,7 @@ macro_rules! like {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `line`: 195,352 words.
+    /// Like `line`: 195,355 words.
     Line,
     /// Like `body`: 12,168 words.
     Body,
@@ -63,7 +66,7 @@ pub enum Declension {
     Aura,
     /// Like `lexicon`: 438 words.
     Lexicon,
-    /// Like `apse`: 412 words.
+    /// Like `apse`: 408 words.
     Apse,
     /// Like `folium`: 375 words.
     Folium,
@@ -227,6 +230,8 @@ pub enum Declension {
     Vraka,
     /// Like `corpus`: 4 words.
     Corpus,
+    /// Like `alma`: 4 words.
+    Alma,
     /// Like `fondaco`: 4 words.
     Fondaco,
     /// Like `seder`: 4 words.
@@ -275,8 +280,6 @@ pub enum Declension {
     Chochem,
     /// Like `heemraad`: 3 words.
     Heemraad,
-    /// Like `dghajsa`: 3 words.
-    Dghajsa,
     /// Like `agaz`: 3 words.
     Agaz,
     /// Like `apikoros`: 3 words.
@@ -400,6 +403,7 @@ impl Declension {
         Declension::Perek,
         Declension::Vraka,
         Declension::Corpus,
+        Declension::Alma,
         Declension::Fondaco,
         Declension::Seder,
         Declension::Hakim,
@@ -424,7 +428,6 @@ impl Declension {
         Declension::Muhajir,
         Declension::Chochem,
         Declension::Heemraad,
-        Declension::Dghajsa,
         Declension::Agaz,
         Declension::Apikoros,
         Declension::Dars,
@@ -456,524 +459,524 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 130] = [
-    // Line: 195,352 words (free, encyclopedia, portmanteau, encyclopaedia, cat, word).
-    declension!("line", 195352, "~";
-        noun: "~", "~s";
+    // Line: 195,355 words (free, encyclopedia, portmanteau, encyclopaedia, cat, word).
+    declension!("line", 195355, "~";
+    noun: "~", "~s";
     ),
     // Body: 12,168 words (dictionary, lexicography, etymology, abbacy, abditory, abecedary).
     declension!("body", 12168, "~y";
-        noun: "~y", "~ies";
+    noun: "~y", "~ies";
     ),
     // Wash: 7,184 words (march, abbess, abjectness, ableness, abortiveness, abraxas). Like Line, except in 1 cell: noun pl.
     declension!("wash", 7184, "~", like Line;
-        noun: _, "~es";
+    noun: _, "~es";
     ),
     // Silverfish: 2,576 words (semantics, craft, abatis, abatvoix, english, bpd). Like Line, except in 1 cell: noun pl.
     declension!("silverfish", 2576, "~", like Line;
-        noun: _, "~";
+    noun: _, "~";
     ),
     // Man: 1,731 words (chairman, man, hardwareman, woman, englishman, hammerman).
     declension!("man", 1731, "~a~";
-        noun: "~a~", "~e~";
+    noun: "~a~", "~e~";
     ),
     // Synthesis: 1,682 words (abiogenesis, gnosis, acidosis, analysis, basis, crisis). Like Man, except in 1 cell: noun sg.
     declension!("synthesis", 1682, "~i~", like Man;
-        noun: "~i~", _;
+    noun: "~i~", _;
     ),
     // Medium: 1,457 words (abomasum, millennium, credendum, haustorium, corrigendum, phylum).
     declension!("medium", 1457, "~um";
-        noun: "~um", "~a";
+    noun: "~um", "~a";
     ),
     // Focus: 797 words (thesaurus, abaciscus, abaculus, abacus, acarus, stylus).
     declension!("focus", 797, "~us";
-        noun: "~us", "~i";
+    noun: "~us", "~i";
     ),
     // Aura: 533 words (fabella, pupa, vertebra, abolla, familia, larva). Like Line, except in 1 cell: noun pl.
     declension!("aura", 533, "~", like Line;
-        noun: _, "~e";
+    noun: _, "~e";
     ),
     // Lexicon: 438 words (hexahedron, tetrahedron, pyramidion, eidolon, polyhedron, lexicon). Like Medium, except in 1 cell: noun sg.
     declension!("lexicon", 438, "~on", like Medium;
-        noun: "~on", _;
+    noun: "~on", _;
     ),
-    // Apse: 412 words (handful, culdesac, nymphe, acne, apse, rabbi).
-    declension!("apse", 412, "~~";
-        noun: "~~", "~~s|~s~";
+    // Apse: 408 words (handful, culdesac, nymphe, acne, apse, rabbi).
+    declension!("apse", 408, "~~";
+    noun: "~~", "~~s|~s~";
     ),
     // Folium: 375 words (asylum, plenum, polygonum, fulcrum, petroleum, promontorium). Like Medium, except in 1 cell: noun pl.
     declension!("folium", 375, "~um", like Medium;
-        noun: _, "~ums|~a";
+    noun: _, "~ums|~a";
     ),
     // Tempo: 222 words (tempo, secondo, cicisbeo, generalissimo, castrato, pizzicato).
     declension!("tempo", 222, "~o";
-        noun: "~o", "~os|~i";
+    noun: "~o", "~os|~i";
     ),
     // Skeleton: 188 words (oxymoron, colon, epsilon, semicolon, omicron, upsilon). Like Lexicon, except in 1 cell: noun pl.
     declension!("skeleton", 188, "~on", like Lexicon;
-        noun: _, "~ons|~a";
+    noun: _, "~ons|~a";
     ),
     // Gondola: 185 words (acciaccatura, aria, balalaika, mozzarella, lasagna, influenza).
     declension!("gondola", 185, "~a";
-        noun: "~a", "~as";
+    noun: "~a", "~as";
     ),
     // Glans: 178 words (absis, pyramis, pes, enteritis, glans, encephalitis). Like Apse, except in 1 cell: noun pl.
     declension!("glans", 178, "~~", like Apse;
-        noun: _, "~de~";
+    noun: _, "~de~";
     ),
     // Omphalos: 172 words (mythos, ouroboros, eromenos, logos, kourotrophos, psogos). Like Focus, except in 1 cell: noun sg.
     declension!("omphalos", 172, "~s", like Focus;
-        noun: "~s", _;
+    noun: "~s", _;
     ),
     // Matrix: 155 words (hallux, generatrix, matrix, appendix, calx, faux).
     declension!("matrix", 155, "~x";
-        noun: "~x", "~ces";
+    noun: "~x", "~ces";
     ),
     // Virus: 144 words (acanthus, citrus, octopus, phosphorus, foetus, onus). Like Focus, except in 1 cell: noun pl.
     declension!("virus", 144, "~us", like Focus;
-        noun: _, "~uses|~i";
+    noun: _, "~uses|~i";
     ),
     // Foreperson: 144 words (chairperson, craftsperson, salesperson, spokesperson, tradesperson, anchorperson).
     declension!("foreperson", 144, "~rs~n";
-        noun: "~rs~n", "~rs~ns|~~ple";
+    noun: "~rs~n", "~rs~ns|~~ple";
     ),
     // Stigma: 114 words (smegma, schema, stigma, lymphoma, stoma, problema). Like Line, except in 1 cell: noun pl.
     declension!("stigma", 114, "~", like Line;
-        noun: _, "~ta";
+    noun: _, "~ta";
     ),
     // Leaf: 98 words (aardwolf, wolf, self, calf, elf, half).
     declension!("leaf", 98, "~f";
-        noun: "~f", "~ves";
+    noun: "~f", "~ves";
     ),
     // Tasto: 96 words (glissando, zucchino, gelato, corno, spaghetto, graffito). Like Focus, except in 1 cell: noun sg.
     declension!("tasto", 96, "~o", like Focus;
-        noun: "~o", _;
+    noun: "~o", _;
     ),
     // Separatrix: 95 words (phalanx, hyrax, sphinx, unix, calix, borax). Like Matrix, except in 1 cell: noun pl.
     declension!("separatrix", 95, "~x", like Matrix;
-        noun: _, "~xes|~ces";
+    noun: _, "~xes|~ces";
     ),
     // Madrich: 77 words (ars, kibbutz, hassid, minyan, zuz, gaon). Like Line, except in 1 cell: noun pl.
     declension!("madrich", 77, "~", like Line;
-        noun: _, "~im";
+    noun: _, "~im";
     ),
     // Life: 74 words (wife, life, knife, alewife, jackknife, housewife).
     declension!("life", 74, "~f~";
-        noun: "~f~", "~v~s";
+    noun: "~f~", "~v~s";
     ),
     // Dodman: 72 words (madam, madame, dragoman, hetman, pitman, walkman). Like Man, except in 1 cell: noun pl.
     declension!("dodman", 72, "~a~", like Man;
-        noun: _, "~a~s|~e~";
+    noun: _, "~a~s|~e~";
     ),
     // Padrone: 67 words (seme, simile, padre, facsimile, doge, evzone). Like Wash, except in 1 cell: noun sg.
     declension!("padrone", 67, "~e", like Wash;
-        noun: "~e", _;
+    noun: "~e", _;
     ),
     // Dry: 54 words (why, dry, only, sammy, jimmy, andy). Like Body, except in 1 cell: noun pl.
     declension!("dry", 54, "~y", like Body;
-        noun: _, "~ys|~ies";
+    noun: _, "~ys|~ies";
     ),
     // Pecten: 51 words (abdomen, shekel, lumen, stamen, mater, acumen).
     declension!("pecten", 51, "~e~";
-        noun: "~e~", "~e~s";
+    noun: "~e~", "~e~s";
     ),
     // Foot: 48 words (tooth, foot, goose, tenderfoot, bucktooth, leadfoot).
     declension!("foot", 48, "~oo~";
-        noun: "~oo~", "~ee~";
+    noun: "~oo~", "~ee~";
     ),
     // Apex: 41 words (apex, pollex, vertex, pontifex, vortex, codex).
     declension!("apex", 41, "~~x";
-        noun: "~~x", "~ic~s";
+    noun: "~~x", "~ic~s";
     ),
     // Turf: 41 words (handkerchief, turf, roof, dwarf, oaf, grief). Like Leaf, except in 1 cell: noun pl.
     declension!("turf", 41, "~f", like Leaf;
-        noun: _, "~fs|~ves";
+    noun: _, "~fs|~ves";
     ),
     // Atlas: 39 words (atlas, clitoris, adonis, adenitis, aegis, pancreatitis). Like Apse, except in 1 cell: noun pl.
     declension!("atlas", 39, "~~", like Apse;
-        noun: _, "~~es|~de~";
+    noun: _, "~~es|~de~";
     ),
     // Aliyah: 38 words (chuppah, genizah, torah, kehillah, megillah, mezuzah).
     declension!("aliyah", 38, "~ah";
-        noun: "~ah", "~ahs|~ot|~oth";
+    noun: "~ah", "~ahs|~ot|~oth";
     ),
     // Child: 36 words (child, grandchild, lovechild, godchild, stepchild, schoolchild). Like Line, except in 1 cell: noun pl.
     declension!("child", 36, "~", like Line;
-        noun: _, "~ren";
+    noun: _, "~ren";
     ),
     // Blin: 35 words (sent, triumvir, garda, kroon, monsignor, hetaira). Like Line, except in 1 cell: noun pl.
     declension!("blin", 35, "~", like Line;
-        noun: _, "~i";
+    noun: _, "~i";
     ),
     // Tekufah: 35 words (tzedakah, matzah, massebah, sufganiyah, petuhah, petuchah). Like Aliyah, except in 1 cell: noun pl.
     declension!("tekufah", 35, "~ah", like Aliyah;
-        noun: _, "~ot";
+    noun: _, "~ot";
     ),
     // Mouse: 33 words (mouse, dormouse, louse, woodlouse, titmouse, flittermouse).
     declension!("mouse", 33, "~ous~";
-        noun: "~ous~", "~ic~";
+    noun: "~ous~", "~ic~";
     ),
     // Index: 30 words (index, duplex, murex, carnifex, narthex, cortex). Like Apex, except in 1 cell: noun pl.
     declension!("index", 30, "~~x", like Apex;
-        noun: _, "~~xes|~ic~s";
+    noun: _, "~~xes|~ic~s";
     ),
     // Metazoan: 30 words (bryozoan, metazoan, protozoan, micrometazoan, cubozoan, hydrozoan).
     declension!("metazoan", 30, "~n";
-        noun: "~n", "~|~ns";
+    noun: "~n", "~|~ns";
     ),
     // Mage: 28 words (dilettante, duce, mage, genie, zampone, cognoscente). Like Focus, except in 1 cell: noun sg.
     declension!("mage", 28, "~e", like Focus;
-        noun: "~e", _;
+    noun: "~e", _;
     ),
     // Person: 25 words (person, conperson, layperson, floorperson, linesperson, catperson). Like Foreperson, except in 1 cell: noun pl.
     declension!("person", 25, "~rs~n", like Foreperson;
-        noun: _, "~~ple";
+    noun: _, "~~ple";
     ),
     // Abendmusik: 25 words (ox, ahlspiess, ubermensch, luftmensch, frau, herr). Like Line, except in 1 cell: noun pl.
     declension!("abendmusik", 25, "~", like Line;
-        noun: _, "~en";
+    noun: _, "~en";
     ),
     // Eros: 24 words (pons, dens, eros, gens, paries, veritas). Like Apse, except in 1 cell: noun pl.
     declension!("eros", 24, "~~", like Apse;
-        noun: _, "~te~";
+    noun: _, "~te~";
     ),
     // Apsis: 24 words (apoapsis, periapsis, conjunctivitis, mastoiditis, gingivitis, tonsillitis). Like Synthesis, except in 1 cell: noun pl.
     declension!("apsis", 24, "~i~", like Synthesis;
-        noun: _, "~ide~|~e~";
+    noun: _, "~ide~|~e~";
     ),
     // Jynx: 24 words (larynx, pharynx, coccyx, meninx, salpinx, grex). Like Matrix, except in 1 cell: noun pl.
     declension!("jynx", 24, "~x", like Matrix;
-        noun: _, "~ges";
+    noun: _, "~ges";
     ),
     // Quiz: 22 words (quiz, lez, fez, spaz, schnoz, whiz). Like Line, except in 1 cell: noun pl.
     declension!("quiz", 22, "~", like Line;
-        noun: _, "~zes";
+    noun: _, "~zes";
     ),
     // Chamois: 21 words (pancreas, chamois, bris, cosmos, demos, elvis). Like Omphalos, except in 1 cell: noun pl.
     declension!("chamois", 21, "~s", like Omphalos;
-        noun: _, "~ses|~i";
+    noun: _, "~ses|~i";
     ),
     // Alumna: 20 words (suka, alumna, sastruga, squadrista, pisanka, capicola). Like Focus, except in 1 cell: noun sg.
     declension!("alumna", 20, "~a", like Focus;
-        noun: "~a", _;
+    noun: "~a", _;
     ),
     // Exotic: 20 words (cornu, exotic, genu, vas, lev, geas). Like Line, except in 1 cell: noun pl.
     declension!("exotic", 20, "~", like Line;
-        noun: _, "~a";
+    noun: _, "~a";
     ),
     // Lira: 20 words (lira, zucchina, libbra, frottola, farinata, braciola). Like Aura, except in 1 cell: noun sg.
     declension!("lira", 20, "~a", like Aura;
-        noun: "~a", _;
+    noun: "~a", _;
     ),
     // Tableau: 19 words (beau, tableau, adieu, gateau, milieu, bateau). Like Line, except in 1 cell: noun pl.
     declension!("tableau", 19, "~", like Line;
-        noun: _, "~x";
+    noun: _, "~x";
     ),
     // Staff: 18 words (staff, backstaff, flagstaff, distaff, quarterstaff, pikestaff).
     declension!("staff", 18, "~ff";
-        noun: "~ff", "~ffs|~ves";
+    noun: "~ff", "~ffs|~ves";
     ),
     // Trolley: 17 words (smiley, whiskey, coney, phoney, slavey, flunkey).
     declension!("trolley", 17, "~~y";
-        noun: "~~y", "~~ys|~i~s";
+    noun: "~~y", "~~ys|~i~s";
     ),
     // Clavis: 17 words (penis, clavis, appendicitis, pelvis, dermatitis, proboscis). Like Synthesis, except in 1 cell: noun pl.
     declension!("clavis", 17, "~i~", like Synthesis;
-        noun: _, "~i~es|~e~";
+    noun: _, "~i~es|~e~";
     ),
     // Genus: 17 words (genus, vulnus, latus, ulcus, viscus, nothogenus). Like Focus, except in 1 cell: noun pl.
     declension!("genus", 17, "~us", like Focus;
-        noun: _, "~era";
+    noun: _, "~era";
     ),
     // Schutzstaffel: 17 words (ee, pease, frikadelle, kartoffel, ursprache, kanone). Like Line, except in 1 cell: noun pl.
     declension!("schutzstaffel", 17, "~", like Line;
-        noun: _, "~n";
+    noun: _, "~n";
     ),
     // Footful: 17 words (blackfoot, webfoot, crowfoot, coltsfoot, flatfoot, spadefoot). Like Foot, except in 1 cell: noun pl.
     declension!("footful", 17, "~oo~", like Foot;
-        noun: _, "~oo~s|~ee~";
+    noun: _, "~oo~s|~ee~";
     ),
     // Bitumen: 16 words (nomen, rumen, numen, bitumen, crimen, foramen). Like Pecten, except in 1 cell: noun pl.
     declension!("bitumen", 16, "~e~", like Pecten;
-        noun: _, "~i~a";
+    noun: _, "~i~a";
     ),
     // Pedale: 14 words (quale, centrale, insigne, memorabile, marginale, radiale). Like Padrone, except in 1 cell: noun pl.
     declension!("pedale", 14, "~e", like Padrone;
-        noun: _, "~ia";
+    noun: _, "~ia";
     ),
     // Pocketful: 14 words (passerby, pocketful, tubful, courtmartial, swagful, courtful). Like Apse, except in 1 cell: noun pl.
     declension!("pocketful", 14, "~~", like Apse;
-        noun: _, "~s~";
+    noun: _, "~s~";
     ),
     // Umbo: 13 words (umbo, confessio, comedo, regio, divisio, pernio). Like Line, except in 1 cell: noun pl.
     declension!("umbo", 13, "~", like Line;
-        noun: _, "~nes";
+    noun: _, "~nes";
     ),
     // Mitzva: 13 words (mitzva, tzedaka, halacha, moshava, matza, sefira). Like Gondola, except in 1 cell: noun pl.
     declension!("mitzva", 13, "~a", like Gondola;
-        noun: _, "~ot";
+    noun: _, "~ot";
     ),
     // Bes: 12 words (es, dis, bes, lis, tas, dorcas). Like Line, except in 1 cell: noun pl.
     declension!("bes", 12, "~", like Line;
-        noun: _, "~ses";
+    noun: _, "~ses";
     ),
     // Stirps: 12 words (urbs, polis, erinys, labrys, stirps, prytanis). Like Man, except in 1 cell: noun sg.
     declension!("stirps", 12, "~~", like Man;
-        noun: "~~", _;
+    noun: "~~", _;
     ),
     // Money: 11 words (money, covey, fogey, curtsey, jarvey, cartooney). Like Trolley, except in 1 cell: noun pl.
     declension!("money", 11, "~~y", like Trolley;
-        noun: _, "~i~s|~~ys";
+    noun: _, "~i~s|~~ys";
     ),
     // Ply: 11 words (ply, malagasy, zloty, romany, military, goby). Like Body, except in 1 cell: noun pl.
     declension!("ply", 11, "~y", like Body;
-        noun: _, "~y|~ies";
+    noun: _, "~y|~ies";
     ),
     // Toxotes: 11 words (erastes, toxotes, agonothetes, metretes, protostates, bouleutes).
     declension!("toxotes", 11, "~es";
-        noun: "~es", "~ai";
+    noun: "~es", "~ai";
     ),
     // Bellyful: 11 words (bellyful, lorryful, skyful, styful, bodyful, galleryful).
     declension!("bellyful", 11, "~y~";
-        noun: "~y~", "~y~s|~ies~";
+    noun: "~y~", "~y~s|~ies~";
     ),
     // Ordo: 10 words (ordo, imago, cardo, propago, suffrago, margo). Like Tempo, except in 1 cell: noun pl.
     declension!("ordo", 10, "~o", like Tempo;
-        noun: _, "~ines";
+    noun: _, "~ines";
     ),
     // Amban: 9 words (microsporidian, larin, bilaterian, moneran, amban, haemosporidian). Like Metazoan, except in 1 cell: noun pl.
     declension!("amban", 9, "~n", like Metazoan;
-        noun: _, "~ns|~";
+    noun: _, "~ns|~";
     ),
     // Godi: 8 words (yahudi, jinni, godi, tortellini, jihadi, jehadi).
     declension!("godi", 8, "~i";
-        noun: "~i", "~is";
+    noun: "~i", "~is";
     ),
     // Vort: 8 words (morena, vort, mokoro, lubok, chok, vershok).
     declension!("vort", 8, "~o~";
-        noun: "~o~", "~o~s";
+    noun: "~o~", "~o~s";
     ),
     // Intaglio: 7 words (intaglio, finocchio, passaggio, libeccio, fenochio, fenocchio). Like Silverfish, except in 1 cell: noun sg.
     declension!("intaglio", 7, "~o", like Silverfish;
-        noun: "~o", _;
+    noun: "~o", _;
     ),
     // Kotlet: 7 words (kotlet, kabanos, varenyk, nalysnyk, nalesnyk, syrnyk). Like Line, except in 1 cell: noun pl.
     declension!("kotlet", 7, "~", like Line;
-        noun: _, "~y";
+    noun: _, "~y";
     ),
     // Melamed: 7 words (kofer, melamed, yored, shomer, poseq, misnaged). Like Pecten, except in 1 cell: noun pl.
     declension!("melamed", 7, "~e~", like Pecten;
-        noun: _, "~~im";
+    noun: _, "~~im";
     ),
     // Fomes: 6 words (eques, stipes, limes, termes, fomes, vicecomes). Like Apse, except in 1 cell: noun pl.
     declension!("fomes", 6, "~~", like Apse;
-        noun: _, "~it~";
+    noun: _, "~it~";
     ),
     // Asclepiades: 6 words (hermes, cerastes, psaltes, asclepiades, protopsaltis, mystes).
     declension!("asclepiades", 6, "~~s";
-        noun: "~~s", "~a~";
+    noun: "~~s", "~a~";
     ),
     // Kore: 6 words (kore, arche, spithame, hekte, oinokhoe, drakhme). Like Padrone, except in 1 cell: noun pl.
     declension!("kore", 6, "~e", like Padrone;
-        noun: _, "~ai";
+    noun: _, "~ai";
     ),
     // Kylix: 6 words (phylax, kylix, somatophylax, nomophylax, larnax, khoinix). Like Matrix, except in 1 cell: noun pl.
     declension!("kylix", 6, "~x", like Matrix;
-        noun: _, "~kes";
+    noun: _, "~kes";
     ),
     // Krouzek: 6 words (chervonets, tchervonets, strelets, popovets, bezpopovets, krouzek). Like Pecten, except in 1 cell: noun pl.
     declension!("krouzek", 6, "~e~", like Pecten;
-        noun: _, "~~y";
+    noun: _, "~~y";
     ),
     // Notzri: 5 words (ashkenazi, illui, losse, ashkephardi, notzri). Like Line, except in 1 cell: noun pl.
     declension!("notzri", 5, "~", like Line;
-        noun: _, "~m";
+    noun: _, "~m";
     ),
     // Abies: 5 words (cyclops, stapes, sapiens, abies, prophases). Like Apse, except in 1 cell: noun pl.
     declension!("abies", 5, "~~", like Apse;
-        noun: _, "~~";
+    noun: _, "~~";
     ),
     // Asparagus: 5 words (asparagus, quadriporticus, actus, fluctus, zoodetritus). Like Focus, except in 1 cell: noun pl.
     declension!("asparagus", 5, "~us", like Focus;
-        noun: _, "~us|~i";
+    noun: _, "~us|~i";
     ),
     // Speso: 5 words (stelo, speso, denaskulo, spesmilo, esperantido). Like Line, except in 1 cell: noun pl.
     declension!("speso", 5, "~", like Line;
-        noun: _, "~j";
+    noun: _, "~j";
     ),
     // Tupilak: 5 words (inuk, umiak, inuksuk, tupilak, lisowczyk).
     declension!("tupilak", 5, "~k";
-        noun: "~k", "~ks";
+    noun: "~k", "~ks";
     ),
     // Vomitus: 5 words (vomitus, generalissimus, pangasius, cytofilius, systylius). Like Medium, except in 1 cell: noun sg.
     declension!("vomitus", 5, "~us", like Medium;
-        noun: "~us", _;
+    noun: "~us", _;
     ),
     // Formans: 5 words (definiens, explanans, accidens, explicans, formans). Like Omphalos, except in 1 cell: noun pl.
     declension!("formans", 5, "~s", like Omphalos;
-        noun: _, "~tia";
+    noun: _, "~tia";
     ),
     // Perek: 5 words (sefer, perek, pesher, pereq, shoresh). Like Pecten, except in 1 cell: noun pl.
     declension!("perek", 5, "~e~", like Pecten;
-        noun: _, "~a~im";
+    noun: _, "~a~im";
     ),
     // Vraka: 5 words (mantinada, xueta, vraka, archontia, flaouna). Like Wash, except in 1 cell: noun sg.
     declension!("vraka", 5, "~a", like Wash;
-        noun: "~a", _;
+    noun: "~a", _;
     ),
     // Corpus: 4 words (corpus, pectus, subcorpus, metacorpus). Like Focus, except in 1 cell: noun pl.
     declension!("corpus", 4, "~us", like Focus;
-        noun: _, "~ora";
+    noun: _, "~ora";
+    ),
+    // Alma: 4 words (alma, kopiyka, dghajsa, kopiika).
+    declension!("alma", 4, "~~a";
+    noun: "~~a", "~~as";
     ),
     // Fondaco: 4 words (arco, fondaco, attacco, intrico). Like Tempo, except in 1 cell: noun pl.
     declension!("fondaco", 4, "~o", like Tempo;
-        noun: _, "~hi";
+    noun: _, "~hi";
     ),
     // Seder: 4 words (seder, heder, cheder, metapelet).
     declension!("seder", 4, "~e~e~";
-        noun: "~e~e~", "~e~e~s";
+    noun: "~e~e~", "~e~e~s";
     ),
     // Hakim: 4 words (hanif, sharif, hakim, zahid).
     declension!("hakim", 4, "~a~i~";
-        noun: "~a~i~", "~a~i~s";
+    noun: "~a~i~", "~a~i~s";
     ),
     // Menorah: 4 words (menorah, sephirah, neginah, sefirah). Like Aliyah, except in 1 cell: noun pl.
     declension!("menorah", 4, "~ah", like Aliyah;
-        noun: _, "~oth";
+    noun: _, "~oth";
     ),
     // Ceras: 4 words (teras, ceras, hemiteras, orthoceras). Like Omphalos, except in 1 cell: noun pl.
     declension!("ceras", 4, "~s", like Omphalos;
-        noun: _, "~ta";
+    noun: _, "~ta";
     ),
     // Bocal: 4 words (metical, bocal, crenel, sanguicel).
     declension!("bocal", 4, "~l";
-        noun: "~l", "~ls";
+    noun: "~l", "~ls";
     ),
     // Bolgia: 4 words (loggia, bolgia, paracusia, coenesthesia).
     declension!("bolgia", 4, "~ia";
-        noun: "~ia", "~ias";
+    noun: "~ia", "~ias";
     ),
     // Knyfe: 4 words (lowlife, huswife, knyfe, spife). Like Life, except in 1 cell: noun pl.
     declension!("knyfe", 4, "~f~", like Life;
-        noun: _, "~f~s|~v~s";
+    noun: _, "~f~s|~v~s";
     ),
     // Mzee: 4 words (mwalimu, mzee, mzungu, mganga).
     declension!("mzee", 4, "m~";
-        noun: "m~", "m~s|wa~";
+    noun: "m~", "m~s|wa~";
     ),
     // Tripus: 4 words (pleiopus, pleopus, tripus, lagopus).
     declension!("tripus", 4, "~u~";
-        noun: "~u~", "~ode~";
+    noun: "~u~", "~ode~";
     ),
     // Silrada: 4 words (barma, kotleta, zmijovka, silrada). Like Gondola, except in 1 cell: noun pl.
     declension!("silrada", 4, "~a", like Gondola;
-        noun: _, "~y";
+    noun: _, "~y";
     ),
     // Hawzah: 4 words (muslimah, muhafazah, wilayah, hawzah).
     declension!("hawzah", 4, "~h";
-        noun: "~h", "~hs|~t";
+    noun: "~h", "~hs|~t";
     ),
     // Chous: 4 words (medimnus, chous, gemmun, khous). Like Man, except in 1 cell: noun sg.
     declension!("chous", 4, "~u~", like Man;
-        noun: "~u~", _;
+    noun: "~u~", _;
     ),
     // Wunderkind: 3 words (lied, wunderkind, tagelied). Like Line, except in 1 cell: noun pl.
     declension!("wunderkind", 3, "~", like Line;
-        noun: _, "~er";
+    noun: _, "~er";
     ),
     // Caput: 3 words (femur, caput, omuramba). Like Tripus, except in 1 cell: noun pl.
     declension!("caput", 3, "~u~", like Tripus;
-        noun: _, "~u~s";
+    noun: _, "~u~s";
     ),
     // Rebetiko: 3 words (braccio, rebetiko, filakto). Like Medium, except in 1 cell: noun sg.
     declension!("rebetiko", 3, "~o", like Medium;
-        noun: "~o", _;
+    noun: "~o", _;
     ),
     // Palea: 3 words (longa, palea, vulsella). Like Gondola, except in 1 cell: noun pl.
     declension!("palea", 3, "~a", like Gondola;
-        noun: _, "~ae";
+    noun: _, "~ae";
     ),
     // Ibis: 3 words (ibis, precis, rhipsalis). Like Synthesis, except in 1 cell: noun pl.
     declension!("ibis", 3, "~i~", like Synthesis;
-        noun: _, "~i~";
+    noun: _, "~i~";
     ),
     // Biceps: 3 words (biceps, forceps, gonoforceps).
     declension!("biceps", 3, "~e~~";
-        noun: "~e~~", "~e~~";
+    noun: "~e~~", "~e~~";
     ),
     // Dromos: 3 words (temenos, dromos, prochoos).
     declension!("dromos", 3, "~os";
-        noun: "~os", "~oi|~i";
+    noun: "~os", "~oi|~i";
     ),
     // Krone: 3 words (krone, tengwa, kransekage). Like Line, except in 1 cell: noun pl.
     declension!("krone", 3, "~", like Line;
-        noun: _, "~r";
+    noun: _, "~r";
     ),
     // Muhajir: 3 words (muhajir, mujahid, mujahed). Like Line, except in 1 cell: noun pl.
     declension!("muhajir", 3, "~", like Line;
-        noun: _, "~een";
+    noun: _, "~een";
     ),
     // Chochem: 3 words (karbovanets, lishenets, chochem). Like Man, except in 1 cell: noun sg.
     declension!("chochem", 3, "~e~", like Man;
-        noun: "~e~", _;
+    noun: "~e~", _;
     ),
     // Heemraad: 3 words (raad, heemraad, reaal). Like Man, except in 1 cell: noun pl.
     declension!("heemraad", 3, "~a~", like Man;
-        noun: _, "~~en|~a~s";
-    ),
-    // Dghajsa: 3 words (kopiyka, dghajsa, kopiika).
-    declension!("dghajsa", 3, "~~a";
-        noun: "~~a", "~~as";
+    noun: _, "~~en|~a~s";
     ),
     // Agaz: 3 words (arroz, ajimez, agaz).
     declension!("agaz", 3, "~z";
-        noun: "~z", "~zes|~ces";
+    noun: "~z", "~zes|~ces";
     ),
     // Apikoros: 3 words (apikoros, poritz, epikoros). Like Vort, except in 1 cell: noun pl.
     declension!("apikoros", 3, "~o~", like Vort;
-        noun: _, "~~im";
+    noun: _, "~~im";
     ),
     // Dars: 3 words (fals, hadd, dars).
     declension!("dars", 3, "~a~~";
-        noun: "~a~~", "~u~u~";
+    noun: "~a~~", "~u~u~";
     ),
     // Isicoco: 3 words (isibongo, isangoma, isicoco).
     declension!("isicoco", 3, "~s~";
-        noun: "~s~", "~s~s|~z~";
+    noun: "~s~", "~s~s|~z~";
     ),
     // Mosotho: 3 words (mosotho, motswana, mosarwa).
     declension!("mosotho", 3, "mo~";
-        noun: "mo~", "ba~";
+    noun: "mo~", "ba~";
     ),
     // Colstaff: 3 words (bookstaff, colstaff, colestaff). Like Leaf, except in 1 cell: noun sg.
     declension!("colstaff", 3, "~ff", like Leaf;
-        noun: "~ff", _;
+    noun: "~ff", _;
     ),
     // Brocha: 3 words (brocha, drasha, tefila). Like Gondola, except in 1 cell: noun pl.
     declension!("brocha", 3, "~a", like Gondola;
-        noun: _, "~os";
+    noun: _, "~os";
     ),
     // Seacatch: 3 words (holluschick, seecatch, seacatch). Like Line, except in 1 cell: noun pl.
     declension!("seacatch", 3, "~", like Line;
-        noun: _, "~ie";
+    noun: _, "~ie";
     ),
     // Valenok: 3 words (pirozhok, valenok, piroshok). Like Vort, except in 1 cell: noun pl.
     declension!("valenok", 3, "~o~", like Vort;
-        noun: _, "~~i";
+    noun: _, "~~i";
     ),
     // Forefemur: 3 words (forefemur, mesofemur, metafemur). Like Tripus, except in 1 cell: noun pl.
     declension!("forefemur", 3, "~u~", like Tripus;
-        noun: _, "~o~a";
+    noun: _, "~o~a";
     ),
     // Khariji: 3 words (nasibi, rafidi, khariji).
     declension!("khariji", 3, "~~i";
-        noun: "~~i", "~~is|~wa~";
+    noun: "~~i", "~~is|~wa~";
     ),
     // Ibhaca: 3 words (igqirha, itongo, ibhaca).
     declension!("ibhaca", 3, "i~";
-        noun: "i~", "ama~";
+    noun: "i~", "ama~";
     ),
     // Gadol: 3 words (naphil, gadol, saraph). Like Man, except in 1 cell: noun pl.
     declension!("gadol", 3, "~a~", like Man;
-        noun: _, "~e~im";
+    noun: _, "~e~im";
     ),
 ];

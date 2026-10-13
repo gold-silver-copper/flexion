@@ -5,12 +5,14 @@
 use flexion::Choice;
 use flexion::Compound::{self, *};
 
-/// 2 rules and 0 listed first parts.
+/// 3 rules and 1 listed first parts.
 pub(super) const COMPOUND: Choice<'static, Compound> = flexion::choice! {
     rules {
         "" => [Each 9, Last 2],
         "е" => [Last 2],
+        "й" => [Each 8],
     }
     listed {
+        "кое" => Last,
     }
 };
