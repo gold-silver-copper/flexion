@@ -8,8 +8,9 @@ use std::borrow::Cow;
 
 /// One way of inflecting: the lemma's pattern, and a pattern per cell (see
 /// [`crate::pattern`]). Named after its commonest word. A paradigm can be
-/// *like* another (its parent): the cells its own table leaves empty are the
-/// parent's.
+/// *like* others, block by block of cells (its present like one paradigm's,
+/// its aorist like another's): the cells its own table leaves empty are the
+/// block's paradigm's.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Paradigm<'a> {
     /// The commonest word that inflects this way (`книга`).
@@ -19,8 +20,10 @@ pub struct Paradigm<'a> {
     /// The lemma's pattern: which words can inflect this way at all
     /// (`~а` takes words in `-а`).
     pub lemma: Cow<'a, str>,
-    /// The paradigm (its place among its part of speech's) this one is like.
-    pub parent: Option<u16>,
+    /// The paradigms (their places among its part of speech's) this one is
+    /// like, by block: `(first cell, paradigm)`, sorted, a block running to
+    /// the next's first cell; [`LIKE_NONE`] for a block like none.
+    pub like: Cow<'a, [(u16, u16)]>,
     /// The values of its part of speech's inherent features its words have,
     /// as `(feature, value)` by their places: Sanskrit `साधन` is neuter.
     pub inherent: Cow<'a, [(u8, u8)]>,
@@ -33,6 +36,9 @@ pub struct Paradigm<'a> {
 /// What a paradigm's table writes for a cell whose form comes from another
 /// cell's (see [`Relation`]).
 pub const DERIVED: &str = "=";
+
+/// In [`Paradigm::like`], a block like no other paradigm.
+pub const LIKE_NONE: u16 = u16::MAX;
 
 /// What a paradigm has in a cell.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -150,6 +156,14 @@ impl<'a> Paradigm<'a> {
             .all(|(f, v)| self.inherent.iter().all(|(g, w)| g != f || w == v))
     }
 
+    /// The paradigm `cell`'s block is like, if any.
+    pub fn parent(&self, cell: usize) -> Option<u16> {
+        let cell = u16::try_from(cell).ok()?;
+        let at = self.like.partition_point(|&(first, _)| first <= cell);
+        let (_, p) = *self.like.get(at.checked_sub(1)?)?;
+        (p != LIKE_NONE).then_some(p)
+    }
+
     /// What its own table has in `cell`; `None` where it is the parent's
     /// (at a paradigm like no other, derived).
     pub fn own(&self, cell: usize) -> Option<Form<'_>> {
@@ -169,7 +183,7 @@ impl<'a> Paradigm<'a> {
             if let Some(form) = paradigm.own(cell) {
                 return Some(form);
             }
-            match paradigm.parent {
+            match paradigm.parent(cell) {
                 Some(p) => paradigm = family.get(usize::from(p))?,
                 None => return Some(Form::Derived),
             }

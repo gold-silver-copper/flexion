@@ -15,7 +15,7 @@ pub use grammar::{
     restore, sharpen,
 };
 pub use orthography::{Casing, Orthography, Stress, Written, recase};
-pub use paradigm::{DERIVED, Form, Paradigm, Relation};
+pub use paradigm::{DERIVED, Form, LIKE_NONE, Paradigm, Relation};
 pub use sound_law;
 pub use stress::{
     Accent, AccentPattern, Finals, Place, Prosody, StressClass, Syllable, place as stress_place,

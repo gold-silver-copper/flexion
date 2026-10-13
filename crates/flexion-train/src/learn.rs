@@ -438,7 +438,12 @@ pub fn learn<'s>(
         if !crate::off("copies") {
             copies(paradigms, &grammar.relations);
         }
-        inherit(paradigms);
+        let blocks: Vec<usize> = shape
+            .coordinates
+            .iter()
+            .map(|c| c.first().map_or(0, |&g| usize::from(g)))
+            .collect();
+        inherit(paradigms, &blocks);
     }
     crate::tick("stats");
     let stats = Stats {
@@ -479,10 +484,13 @@ fn compound(w: &Word) -> Option<(String, Compound)> {
     ))
 }
 
-/// Make each paradigm like the earlier (commoner) one it shares the most
-/// cells with, when that is at least half of them: its own table keeps only
-/// the cells that differ. Every paradigm still has the same forms.
-fn inherit(paradigms: &mut [Paradigm<'_>]) {
+/// Each paradigm is like a commoner one with as many stem pieces, block by
+/// block of cells (`blocks`: per cell, its block; a part of speech's group,
+/// such as a tense): in each block, the one it shares the most cells with,
+/// if that is at least half the cells it writes there. It then writes only
+/// the cells that differ; in a block like none, only those not derived.
+/// Neighbouring blocks like the same paradigm are one.
+fn inherit(paradigms: &mut [Paradigm<'_>], blocks: &[usize]) {
     let cells: Vec<Vec<String>> = paradigms
         .iter()
         .map(|p| p.table.split('\t').map(str::to_string).collect())
@@ -491,54 +499,76 @@ fn inherit(paradigms: &mut [Paradigm<'_>]) {
         .iter()
         .map(|p| pattern::pieces(&p.lemma))
         .collect();
+    let block_of = |c: usize| blocks.get(c).copied().unwrap_or(0);
     for (i, paradigm) in paradigms.iter_mut().enumerate() {
         let (Some(mine), Some(&my_pieces)) = (cells.get(i), pieces.get(i)) else {
             continue;
         };
-        let shared = |j: usize| {
-            cells.get(j).map_or(0, |theirs| {
-                mine.iter()
-                    .zip(theirs)
-                    .filter(|(a, b)| a == b && !a.is_empty())
-                    .count()
-            })
+        let width = mine.len().saturating_sub(1);
+        // Per block, the paradigm it is like.
+        let mut like: Vec<(usize, Option<usize>)> = Vec::new();
+        let mut c = 0;
+        while c < width {
+            let block = block_of(c);
+            let end = (c..width).find(|&d| block_of(d) != block).unwrap_or(width);
+            let own = mine.get(c..end).unwrap_or_default();
+            let shared = |j: usize| {
+                cells
+                    .get(j)
+                    .and_then(|t| t.get(c..end))
+                    .map_or(0, |theirs| {
+                        own.iter()
+                            .zip(theirs)
+                            .filter(|(a, b)| a == b && !a.is_empty())
+                            .count()
+                    })
+            };
+            let filled = own.iter().filter(|x| !x.is_empty()).count();
+            let parent = (0..i)
+                .filter(|&j| pieces.get(j) == Some(&my_pieces))
+                .map(|j| (shared(j), std::cmp::Reverse(j)))
+                .max()
+                .filter(|&(n, _)| n > 0 && 2 * n >= filled)
+                .map(|(_, std::cmp::Reverse(j))| j);
+            if like.last().is_none_or(|l| l.1 != parent) {
+                like.push((c, parent));
+            }
+            c = end;
+        }
+        let parent_of = |c: usize| {
+            like.iter()
+                .take_while(|(first, _)| *first <= c)
+                .last()
+                .and_then(|l| l.1)
         };
-        let best = (0..i)
-            .filter(|&j| pieces.get(j) == Some(&my_pieces))
-            .map(|j| (shared(j), j))
-            .max_by(|a, b| a.0.cmp(&b.0).then(b.1.cmp(&a.1)));
-        let filled = mine.iter().filter(|c| !c.is_empty()).count();
-        let Some((n, j)) = best.filter(|&(n, _)| n > 0 && 2 * n >= filled) else {
-            // Like no other: its derived cells needn't be written.
-            let table: String = mine
-                .iter()
-                .take(mine.len().saturating_sub(1))
-                .map(|m| {
-                    if m == DERIVED {
-                        "\t".to_string()
-                    } else {
-                        format!("{m}\t")
-                    }
-                })
-                .collect();
-            paradigm.table = Cow::Owned(table);
-            continue;
-        };
-        let Some(theirs) = cells.get(j) else { continue };
-        let _ = n;
         let table: String = mine
             .iter()
-            .zip(theirs.iter().map(Some).chain(std::iter::repeat(None)))
-            .take(mine.len().saturating_sub(1))
-            .map(|(m, t)| {
-                if t == Some(m) {
+            .take(width)
+            .enumerate()
+            .map(|(c, m)| {
+                let theirs = parent_of(c).and_then(|j| cells.get(j)?.get(c));
+                let inherited = match theirs {
+                    Some(t) => t == m,
+                    None => m == DERIVED,
+                };
+                if inherited {
                     "\t".to_string()
                 } else {
                     format!("{m}\t")
                 }
             })
             .collect();
-        paradigm.parent = u16::try_from(j).ok();
+        paradigm.like = Cow::Owned(
+            like.into_iter()
+                .filter(|l| l.0 > 0 || l.1.is_some())
+                .filter_map(|(first, parent)| {
+                    Some((
+                        u16::try_from(first).ok()?,
+                        parent.map_or(Some(flexion::LIKE_NONE), |p| u16::try_from(p).ok())?,
+                    ))
+                })
+                .collect(),
+        );
         paradigm.table = Cow::Owned(table);
     }
 }
@@ -1496,7 +1526,7 @@ fn paradigms<'s>(
             name: Cow::Owned(name),
             words: n,
             lemma: Cow::Owned(lemma.clone()),
-            parent: None,
+            like: Cow::Borrowed(&[]),
             inherent: Cow::Borrowed(&[]),
             table: Cow::Owned(table),
         });
