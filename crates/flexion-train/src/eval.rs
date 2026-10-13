@@ -207,8 +207,14 @@ pub fn score<P: Label, A: Label, F: Label>(
 
 /// The share of `test`'s forms (typed as their headwords) the shared task's
 /// non-neural baseline gets right (see [`crate::baseline`]), learned from
-/// `train`'s headwords and forms. Letters only: stress and accents aside.
-pub fn floor(orthography: &flexion::Orthography<'_>, train: &[&Lexeme], test: &[&Lexeme]) -> f64 {
+/// `train`'s headwords and forms, and the share of those in `unseen` cells
+/// (see [`Score::unseen`]). Letters only: stress and accents aside.
+pub fn floor(
+    orthography: &flexion::Orthography<'_>,
+    train: &[&Lexeme],
+    test: &[&Lexeme],
+    unseen: impl Fn(&Lexeme, usize) -> bool,
+) -> (f64, f64) {
     let letters = |s: &str| orthography.read(s).letters;
     let pairs: Vec<(String, usize, String)> = train
         .iter()
@@ -223,18 +229,39 @@ pub fn floor(orthography: &flexion::Orthography<'_>, train: &[&Lexeme], test: &[
     let baseline = crate::baseline::Baseline::learn(
         pairs.iter().map(|(l, c, f)| (l.as_str(), *c, f.as_str())),
     );
-    let (mut right, mut all) = (0usize, 0usize);
+    let (mut right, mut all, mut right_unseen, mut all_unseen) = (0usize, 0usize, 0usize, 0usize);
     for l in test {
         let lemma = letters(&l.lemma);
         for (cell, forms) in l.cells.iter().enumerate() {
             let Some(want) = forms.first() else {
                 continue;
             };
+            let ok = usize::from(baseline.inflect(&lemma, cell) == letters(want));
             all += 1;
-            right += usize::from(baseline.inflect(&lemma, cell) == letters(want));
+            right += ok;
+            if unseen(l, cell) {
+                all_unseen += 1;
+                right_unseen += ok;
+            }
         }
     }
-    ratio(right, all)
+    (ratio(right, all), ratio(right_unseen, all_unseen))
+}
+
+/// Whether cell `cell` of `l` (typed as its headword) is one its likeliest
+/// paradigm's training words have no form in (`seen`: per paradigm, those
+/// they have).
+pub fn unseen<P: Label, A: Label, F: Label>(
+    grammar: &flexion::Grammar<'_, P, A, F>,
+    seen: &[Vec<bool>],
+    l: &Lexeme,
+    cell: usize,
+) -> bool {
+    grammar
+        .readings(&l.lemma, &flexion::Known::default())
+        .first()
+        .and_then(|r| seen.get(r.value.index()))
+        .is_some_and(|h| !h.get(cell).copied().unwrap_or(false))
 }
 
 /// The sharpness (see [`flexion::Grammar::sharpness`]) that makes `grammar`'s

@@ -336,8 +336,9 @@ fn change(a: &str, b: &str) -> (String, String) {
             .count()
     };
     // The longest run; of equally long, the one beginning earliest.
-    let (n, j, k) = (0..=3usize)
-        .flat_map(|j| (0..=3usize).map(move |k| (j, k)))
+    let edge = if crate::off("edges") { 0 } else { 3 };
+    let (n, j, k) = (0..=edge)
+        .flat_map(|j| (0..=edge).map(move |k| (j, k)))
         .map(|(j, k)| (shared(j, k), j, k))
         .max_by_key(|&(n, j, k)| (n, std::cmp::Reverse(j + k)))
         .unwrap_or((0, 0, 0));

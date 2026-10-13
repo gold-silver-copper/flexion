@@ -69,14 +69,16 @@ pub fn learn<'a, L: Label + Hash + Ord>(
             .cmp(&b.0.chars().count())
             .then_with(|| a.0.cmp(b.0))
     });
-    // Kept rules, by ending.
-    let mut kept: HashMap<&str, &BTreeMap<L, u32>> = HashMap::default();
+    // Kept rules, by ending, with what the runtime makes of each (see
+    // [`flexion::blend`]).
+    let mut kept: HashMap<&str, Vec<(L, f64)>> = HashMap::default();
     for (ending, c) in &by_length {
         if winner(c).is_none() {
             continue;
         }
+        let list: Vec<(L, u32)> = c.iter().map(|(&l, &n)| (l, n)).collect();
         if ending.is_empty() {
-            kept.insert(ending.as_str(), c);
+            kept.insert(ending.as_str(), flexion::blend(&list, &[], settings.smoothing));
             continue;
         }
         let total: u32 = c.values().sum();
@@ -84,11 +86,12 @@ pub fn learn<'a, L: Label + Hash + Ord>(
             continue;
         }
         // The rule deciding these words now: the longest kept ending.
-        let Some(current) = endings(ending).skip(1).find_map(|e| kept.get(e).copied()) else {
+        let Some(current) = endings(ending).skip(1).find_map(|e| kept.get(e)) else {
             continue;
         };
-        if saved_bits(c, current) >= settings.rule_bits {
-            kept.insert(ending.as_str(), c);
+        if saved_bits(&list, current, settings.smoothing) >= settings.rule_bits {
+            let dist = flexion::blend(&list, current, settings.smoothing);
+            kept.insert(ending.as_str(), dist);
         }
     }
     let mut rules: Vec<Rule<'a, L>> = kept
@@ -166,19 +169,25 @@ pub fn learn_starts<'a, L: Label + Hash + Ord>(
     }
 }
 
-/// The bits saved telling the values of words counted `own` by their own
-/// counts rather than by `broader`'s (each smoothed by half a word).
-fn saved_bits<L: Ord>(own: &BTreeMap<L, u32>, broader: &BTreeMap<L, u32>) -> f64 {
-    let n: f64 = own.values().map(|&x| f64::from(x)).sum();
-    let m: f64 = broader.values().map(|&x| f64::from(x)).sum();
-    #[allow(clippy::cast_precision_loss)]
-    let k = (broader.len().max(own.len()) as f64) + 1.0;
+/// The bits saved telling the values of the words counted `own` by a rule of
+/// their own rather than by the broader rule's distribution `broader`, each
+/// word told as the runtime would without it (leave one out), so a rule
+/// keeps only what it says of words it hasn't seen.
+fn saved_bits<L: Label>(own: &[(L, u32)], broader: &[(L, f64)], smoothing: f32) -> f64 {
+    let p = |dist: &[(L, f64)], l: L| dist.iter().find(|e| e.0 == l).map_or(0.0, |e| e.1);
     own.iter()
-        .map(|(l, &x)| {
-            let x = f64::from(x);
-            let p_own = x / n;
-            let q = (broader.get(l).map_or(0.0, |&y| f64::from(y)) + 0.5) / (m + 0.5 * k);
-            x * (p_own / q).log2()
+        .filter(|&&(_, x)| x > 0)
+        .map(|&(l, x)| {
+            let without: Vec<(L, u32)> = own
+                .iter()
+                .map(|&(m, y)| (m, if m == l { y - 1 } else { y }))
+                .collect();
+            let told = p(&flexion::blend(&without, broader, smoothing), l);
+            let before = p(broader, l);
+            if told <= 0.0 || before <= 0.0 {
+                return 0.0;
+            }
+            f64::from(x) * (told / before).log2()
         })
         .sum()
 }

@@ -782,8 +782,10 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         }
         // The likeliest few: along a line of cells each told from the last,
         // alternatives would multiply.
-        out.sort_by(|a, b| b.1.total_cmp(&a.1));
-        out.truncate(KEEP);
+        if std::env::var("FLEXION_OFF").map_or(true, |v| !v.contains("cap")) {
+            out.sort_by(|a, b| b.1.total_cmp(&a.1));
+            out.truncate(KEEP);
+        }
         out
     }
 
@@ -1000,7 +1002,8 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         let unlawed = inf
             .paradigm
             .unlawed(&self.paradigms, cell, &inf.stems)
-            .filter(|_| self.laws.is_some());
+            .filter(|_| self.laws.is_some())
+            .filter(|_| std::env::var("FLEXION_OFF").map_or(true, |v| !v.contains("carry")));
         let mut out: Vec<(Option<crate::Stress>, f32)> = Vec::new();
         // The form's letters, to place the stress in.
         for (reading, places) in classes {

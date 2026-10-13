@@ -297,9 +297,13 @@ fn try_language(
                 &learned.seen,
             );
             let pct = |(f, r): (usize, usize)| 100.0 * r as f64 / f.max(1) as f64;
+            let (floor, floor_unseen) = eval::floor(&g.orthography, &main, &test, |l, c| {
+                eval::unseen(g, &learned.seen, l, c)
+            });
             println!(
-                "  floor {:.2}%; seen cells {:.2}% ({}), unseen cells {:.2}% ({})",
-                100.0 * eval::floor(&g.orthography, &main, &test),
+                "  floor {:.2}% (unseen cells {:.2}%); seen cells {:.2}% ({}), unseen cells {:.2}% ({})",
+                100.0 * floor,
+                100.0 * floor_unseen,
                 pct(s.seen),
                 s.seen.0,
                 pct(s.unseen),

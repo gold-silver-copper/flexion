@@ -1656,7 +1656,8 @@ fn accent<'s>(
                 let (built, ending) = par.built(paradigms, laws, c, &stems).into_iter().next()?;
                 let before = par
                     .unlawed(paradigms, c, &stems)
-                    .filter(|(b, _)| *b != built);
+                    .filter(|(b, _)| *b != built)
+                    .filter(|_| !crate::off("carry"));
                 Some((f.stress?, f.letters.clone(), ending, before))
             })
             .collect();

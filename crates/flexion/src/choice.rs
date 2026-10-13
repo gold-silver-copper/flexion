@@ -206,22 +206,7 @@ impl<'a, L: Label> Choice<'a, L> {
         // Smooth down the chain, broadest rule first.
         let mut dist: Vec<(L, f64)> = Vec::new();
         for rule in &chain {
-            let total = f64::from(rule.total());
-            let prior = f64::from(smoothing);
-            let denom = total + if dist.is_empty() { 0.0 } else { prior };
-            if denom <= 0.0 {
-                continue;
-            }
-            let mut next: Vec<(L, f64)> =
-                dist.iter().map(|&(l, q)| (l, prior * q / denom)).collect();
-            for &(l, n) in rule.counts.iter() {
-                let own = f64::from(n) / denom;
-                match next.iter_mut().find(|e| e.0 == l) {
-                    Some(e) => e.1 += own,
-                    None => next.push((l, own)),
-                }
-            }
-            dist = next;
+            dist = blend(&rule.counts, &dist, smoothing);
         }
         dist.retain(|&(l, p)| p > 0.0 && fits(l));
         let mass: f64 = dist.iter().map(|&(_, p)| p).sum();
@@ -250,6 +235,42 @@ impl<'a, L: Label> Choice<'a, L> {
         });
         out
     }
+}
+
+/// How much of each of its counts a rule leaves to the broader rule
+/// (absolute discounting): a rule of few words leans on the broader one
+/// more than a rule of many.
+pub const DISCOUNT: f64 = 0.5;
+
+/// A rule's distribution: its `counts`, each less [`DISCOUNT`], and the
+/// broader rule's distribution `parent` (none for the broadest) with the
+/// weight that leaves, plus `smoothing` words' worth.
+pub fn blend<L: Label>(counts: &[(L, u32)], parent: &[(L, f64)], smoothing: f32) -> Vec<(L, f64)> {
+    let n: f64 = counts.iter().map(|&(_, c)| f64::from(c)).sum();
+    if parent.is_empty() {
+        return if n > 0.0 {
+            counts.iter().map(|&(l, c)| (l, f64::from(c) / n)).collect()
+        } else {
+            Vec::new()
+        };
+    }
+    let b = f64::from(smoothing);
+    #[allow(clippy::cast_precision_loss)]
+    let k = counts.iter().filter(|e| e.1 > 0).count() as f64;
+    let denom = n + b;
+    if denom <= 0.0 {
+        return parent.to_vec();
+    }
+    let lean = (DISCOUNT * k + b) / denom;
+    let mut out: Vec<(L, f64)> = parent.iter().map(|&(l, q)| (l, lean * q)).collect();
+    for &(l, c) in counts {
+        let own = (f64::from(c) - DISCOUNT).max(0.0) / denom;
+        match out.iter_mut().find(|e| e.0 == l) {
+            Some(e) => e.1 += own,
+            None => out.push((l, own)),
+        }
+    }
+    out
 }
 
 #[cfg(test)]

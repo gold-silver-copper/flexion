@@ -81,7 +81,9 @@ pub fn build<'s>(
         let citation = (!parts.is_empty()).then(|| score(Input::Citation(&parts)));
         let features = (!part.inherent.is_empty()).then(|| score(Input::Features));
         let main: Vec<&Lexeme> = train.iter().filter(|l| l.source == 0).collect();
-        let floor = eval::floor(&orthography, &main, &test);
+        let (floor, floor_unseen) = eval::floor(&orthography, &main, &test, |l, c| {
+            eval::unseen(g, &scored.seen, l, c)
+        });
         let mut shipped = learned(&d.lexemes);
         shipped.grammar.sharpness = sharpness;
         // Attested: an even sample of the dictionary's own words (of
