@@ -26,28 +26,44 @@ pub fn learn<'s>(
     let mut sample: Vec<&Vec<Option<&str>>> = forms.iter().collect();
     sample.sort_by_key(|f| std::cmp::Reverse(f.iter().flatten().count()));
     sample.truncate(SAMPLE);
-    // How well cell `s`'s form tells cell `c`'s: the share of words whose
-    // change is the commonest after the source's last two letters; of equal
-    // shares, the one telling more words' forms as they are.
+    // How well cell `s`'s form tells cell `c`'s, on words it wasn't read
+    // from: the changes after each source's last two letters read off one
+    // half of the words, the commonest of them tried on the other half; of
+    // equal counts, the source telling more words' forms as they are.
     let score = |s: usize, c: usize| -> (usize, usize) {
-        let mut counts: HashMap<(String, (String, String)), usize> = HashMap::default();
-        let mut same = 0;
-        for f in &sample {
-            if let (Some(Some(a)), Some(Some(b))) = (f.get(s), f.get(c)) {
-                let end: String = a.chars().rev().take(2).collect();
-                *counts.entry((end, change(a, b))).or_default() += 1;
-                same += usize::from(a == b);
+        let pairs: Vec<(&str, (String, String))> = sample
+            .iter()
+            .filter_map(|f| {
+                let (a, b) = (f.get(s).copied().flatten()?, f.get(c).copied().flatten()?);
+                Some((a, change(a, b)))
+            })
+            .collect();
+        let end = |a: &str| -> String { a.chars().rev().take(2).collect() };
+        let mut counts: HashMap<(String, &(String, String)), usize> = HashMap::default();
+        let mut overall: HashMap<&(String, String), usize> = HashMap::default();
+        for (a, ch) in pairs.iter().step_by(2) {
+            *counts.entry((end(a), ch)).or_default() += 1;
+            *overall.entry(ch).or_default() += 1;
+        }
+        let mut best: HashMap<String, (usize, &(String, String))> = HashMap::default();
+        for ((e, ch), n) in &counts {
+            let b = best.entry(e.clone()).or_insert((0, ch));
+            if (*n, std::cmp::Reverse(*ch)) > (b.0, std::cmp::Reverse(b.1)) {
+                *b = (*n, ch);
             }
         }
-        let mut best: HashMap<&str, usize> = HashMap::default();
-        for ((end, _), n) in &counts {
-            let b = best.entry(end.as_str()).or_default();
-            *b = (*b).max(*n);
+        let commonest = overall
+            .iter()
+            .max_by_key(|(ch, n)| (**n, std::cmp::Reverse(**ch)))
+            .map(|(ch, _)| *ch);
+        let mut right = 0;
+        let mut same = 0;
+        for (a, ch) in pairs.iter().skip(1).step_by(2) {
+            let told = best.get(&end(a)).map(|b| b.1).or(commonest);
+            right += usize::from(told == Some(ch));
+            same += usize::from(ch.0 == ch.1);
         }
-        (
-            best.values().sum(),
-            if crate::off("tie") { 0 } else { same },
-        )
+        (right, same)
     };
     // The tree, grown from the root: each time the cell told best from one
     // already in it.
@@ -154,11 +170,11 @@ fn edge<'s>(
 /// it on one dimension, changed as words change a cell into one differing
 /// from it the same way: the future subjunctive from the future indicative,
 /// as the present subjunctive from the present indicative. The pair nearest
-/// the cell (fewest other dimensions apart), then the one most words have,
-/// is chosen, preferring a pair a relation already tells one from the other
-/// (whose changes it then makes, see [`flexion::Relation::analogy`]); a cell
-/// told so can be told from in turn. A cell no such pair tells is the
-/// nearest cell's form, as it is.
+/// the cell (fewest other dimensions apart), then the one changing in the
+/// fewest ways, then one a relation already tells (whose changes it then
+/// makes, see [`flexion::Relation::analogy`]), then the one most words have,
+/// is chosen; a cell told so can be told from in turn. A cell no such pair
+/// tells is the nearest cell's form, as it is.
 pub fn analogies<'s>(
     forms: &[Vec<Option<&str>>],
     coordinates: &[Vec<u16>],
@@ -198,16 +214,18 @@ pub fn analogies<'s>(
         }
         (n, last)
     };
-    // How many words have both cells.
-    let mut both: HashMap<(usize, usize), usize> = HashMap::default();
+    // How many words have both cells, and how many ways the first's form
+    // changes into the second's.
+    let mut both: HashMap<(usize, usize), (usize, usize)> = HashMap::default();
     let mut both = |x: usize, y: usize| {
         *both.entry((x, y)).or_insert_with(|| {
-            forms
+            let pairs: Vec<(&str, &str)> = forms
                 .iter()
-                .filter(|f| {
-                    f.get(x).copied().flatten().is_some() && f.get(y).copied().flatten().is_some()
-                })
-                .count()
+                .filter_map(|f| Some((f.get(x).copied().flatten()?, f.get(y).copied().flatten()?)))
+                .collect();
+            let ways: crate::HashSet<(String, String)> =
+                pairs.iter().map(|(a, b)| change(a, b)).collect();
+            (pairs.len(), ways.len())
         })
     };
     let mut told = vec![false; cells];
@@ -224,10 +242,17 @@ pub fn analogies<'s>(
                 continue;
             }
             // (other dimensions apart, fewer words, source, from, to)
-            // (other dimensions apart, not a relation's pair, fewer words,
-            // source, from, to)
-            let mut best: Option<(usize, bool, std::cmp::Reverse<usize>, usize, usize, usize)> =
-                None;
+            // (other dimensions apart, ways it changes, not a relation's
+            // pair, fewer words, source, from, to)
+            let mut best: Option<(
+                usize,
+                usize,
+                bool,
+                std::cmp::Reverse<usize>,
+                usize,
+                usize,
+                usize,
+            )> = None;
             for s in 0..cells {
                 if !told.get(s).copied().unwrap_or(false) {
                     continue;
@@ -247,12 +272,13 @@ pub fn analogies<'s>(
                     let Some(&b) = cell_at.get(target.as_slice()).filter(|&&b| has(b)) else {
                         continue;
                     };
-                    let n = both(a, b);
+                    let (n, ways) = both(a, b);
                     if n == 0 {
                         continue;
                     }
                     let key = (
                         apart(a, s).0,
+                        ways,
                         !edges.contains(&(a, b)),
                         std::cmp::Reverse(n),
                         s,
@@ -264,7 +290,7 @@ pub fn analogies<'s>(
                     }
                 }
             }
-            let Some((_, fresh, _, s, a, b)) = best else {
+            let Some((_, _, fresh, _, s, a, b)) = best else {
                 continue;
             };
             // A relation's pair: its changes; else the pair's own.

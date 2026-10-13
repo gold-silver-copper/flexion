@@ -90,7 +90,7 @@ pub static GRAMMAR: Grammar<'static, Declension, accent::AccentClass> = Grammar 
     marks: Some(marks::MARKS),
     irregular: irregular::IRREGULAR,
     smoothing: 2.0,
-    sharpness: 0.5,
+    sharpness: 4.0,
 };
 
 /// A pronoun form: which cell of its declension.

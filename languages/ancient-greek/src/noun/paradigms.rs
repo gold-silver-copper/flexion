@@ -3,7 +3,8 @@
 //! A pattern is the form with `~` where the stem goes: `~а` is the stem and
 //! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
 //! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`).
+//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
+//! as the copy laws in `laws.rs` change it.
 
 use flexion::Paradigm;
 

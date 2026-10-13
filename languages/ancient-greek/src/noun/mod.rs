@@ -61,7 +61,7 @@ pub static GRAMMAR: Grammar<'static, Declension, accent::AccentClass> = Grammar 
     marks: Some(marks::MARKS),
     irregular: irregular::IRREGULAR,
     smoothing: 2.0,
-    sharpness: 1.0,
+    sharpness: 1.25,
 };
 
 /// A noun form: which cell of its declension.

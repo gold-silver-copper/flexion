@@ -180,12 +180,13 @@ pub static CLASSES: [StressClass<'static>; 4] = [
 
 use AccentClass::*;
 
-/// Which class a word is of: 3 rules and 3 listed words.
+/// Which class a word is of: 4 rules and 3 listed words.
 pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
     rules {
         "" => [Δῠο 12, Δευτερος 5, Τρεῑς 1, Εἱς 1],
         "ι" => [Δῠο 11],
         "σ" => [Δευτερος 5, Τρεῑς 1, Εἱς 1],
+        "εσ" => [Δευτερος 4],
     }
     listed {
         "δυο" => Δῠο,

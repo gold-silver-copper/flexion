@@ -99,7 +99,7 @@ impl Layout {
                     .zip(&combo)
                     .filter_map(|(f, &v)| f.values.get(v));
                 let (mut parts, mut consts): (Vec<String>, Vec<String>) =
-                    values.map(|v| (snake(v.name), short(v))).unzip();
+                    values.map(|v| (short(v).to_lowercase(), short(v))).unzip();
                 if rest.is_empty() || gi > 0 {
                     parts.insert(0, ident(g.name));
                     consts.insert(0, g.name.to_string());
@@ -139,7 +139,7 @@ impl Layout {
             if cells.iter().all(|c| c == "_") {
                 continue;
             }
-            let _ = writeln!(s, "        {}: {};", row.label, cells.join(", "));
+            let _ = writeln!(s, "    {}: {};", row.label, cells.join(", "));
         }
         s + "    ),\n"
     }
@@ -529,7 +529,7 @@ fn grammar_files(
     // relations.rs
     if !g.relations.is_empty() {
         let mut r = format!(
-            "//! Where a cell's form comes from: another cell's form of the word, its end\n//! changed. A {one} that writes `derived` in a cell takes the form this way,\n//! and so does a word whose form of the other cell is listed but not this\n//! one's. Each relation lists its changes (`\"ī\" => \"istī\"`), numbered in\n//! order, and the rules on that form's ending choosing one.\n\nuse super::cell::*;\nuse flexion::Relation;\nuse std::borrow::Cow;\n\npub(super) static RELATIONS: [Relation<'static>; {}] = [\n",
+            "//! Where a cell's form comes from: another cell's form of the word, changed.\n//! A {one} that writes `derived` in a cell takes the form this way, and so\n//! does a word whose form of the other cell is listed but not this one's.\n//! Each relation lists its changes, as patterns around the letters they keep\n//! (`(\"~ī\", \"~istī\")`, numbered in order), and the rules on that form's\n//! ending choosing one.\n\nuse super::cell::*;\nuse flexion::Relation;\nuse std::borrow::Cow;\n\n/// Writes one relation: its cell, the cells it comes from (by the word's\n/// feature, in order, if several), its changes, then the rules choosing one\n/// and the words they get wrong (`none`: the form itself), whether it tells\n/// listed words' forms, and the pair of cells it is by analogy with.\nmacro_rules! relation {{\n    ($cell:ident, [$($from:ident),*], [$(($old:literal, $new:literal)),*], none, $listed:literal, $analogy:expr) => {{\n        Relation {{\n            cell: $cell,\n            from: Cow::Borrowed(&[$($from),*]),\n            changes: flexion::changes![$(($old, $new)),*],\n            change: None,\n            listed: $listed,\n            analogy: $analogy,\n        }}\n    }};\n    ($cell:ident, [$($from:ident),*], [$(($old:literal, $new:literal)),*], rules {{ $($rules:tt)* }} listed {{ $($words:tt)* }}, $listed:literal, $analogy:expr) => {{\n        Relation {{\n            cell: $cell,\n            from: Cow::Borrowed(&[$($from),*]),\n            changes: flexion::changes![$(($old, $new)),*],\n            change: Some(flexion::choice! {{ rules {{ $($rules)* }} listed {{ $($words)* }} }}),\n            listed: $listed,\n            analogy: $analogy,\n        }}\n    }};\n}}\n\npub(super) static RELATIONS: [Relation<'static>; {}] = [\n",
             g.relations.len()
         );
         for rel in g.relations.iter() {
@@ -543,11 +543,30 @@ fn grammar_files(
                 .iter()
                 .map(|(old, new)| format!("({}, {})", Lit(old), Lit(new)))
                 .collect();
-            let change = rel.change.as_ref().map_or("None".to_string(), |choice| {
-                format!(
-                    "Some({}        }})",
-                    choice_macro("rules", choice, |l| l.to_string())
-                )
+            let change = rel.change.as_ref().map_or("none".to_string(), |choice| {
+                let mut c = String::from("rules {\n");
+                for rule in choice.rules.iter() {
+                    let counts: Vec<String> = rule
+                        .counts
+                        .iter()
+                        .map(|&(l, n)| format!("{l} {n}"))
+                        .collect();
+                    let _ = writeln!(
+                        c,
+                        "        {} => [{}],",
+                        Lit(&rule.ending),
+                        counts.join(", ")
+                    );
+                }
+                c.push_str("    } listed {");
+                for (w, l) in choice.exceptions.iter() {
+                    let _ = write!(c, "\n        {} => {l},", Lit(w));
+                }
+                if !choice.exceptions.is_empty() {
+                    c.push_str("\n    ");
+                }
+                c.push('}');
+                c
             });
             let (analogy, why) = match rel.analogy {
                 Some((a, b)) => (
@@ -566,7 +585,7 @@ fn grammar_files(
             };
             let _ = writeln!(
                 r,
-                "    // {cell}, from {}{feature}.{why}\n    Relation {{\n        cell: {cell},\n        from: Cow::Borrowed(&[{}]),\n        changes: flexion::changes![{}],\n        change: {change},\n        listed: {},\n        analogy: {analogy},\n    }},",
+                "    // {cell}, from {}{feature}.{why}\n    relation!({cell}, [{}], [{}], {change}, {}, {analogy}),",
                 from.join(" or "),
                 from.join(", "),
                 changes.join(", "),

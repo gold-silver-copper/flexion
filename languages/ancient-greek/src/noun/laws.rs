@@ -1,8 +1,8 @@
-//! Sound laws where a stem meets its ending (`+`): every form a declension
-//! builds goes through them, in order, so one declension serves words whose
-//! stems change its endings. Each with the words whose forms it gives, and
-//! how many of the dictionary's forms it gets wrong (those are listed in
-//! `irregular.rs`).
+//! Sound laws where a stem meets its ending (`+`), or on a letter a `%`
+//! copies (`°`): every form a declension builds goes through them, in order, so
+//! one declension serves words whose stems change its endings. Each with the
+//! words whose forms it gives, and how many of the dictionary's forms it
+//! gets wrong (those are listed in `irregular.rs`).
 
 use flexion::sound_law::compiled::*;
 

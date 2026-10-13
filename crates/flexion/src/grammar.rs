@@ -423,7 +423,8 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                             &word.letters,
                             &key,
                         );
-                        if spellings.len() > 1 {
+                        // A word whose forms are listed is spelled as listed.
+                        if spellings.len() > 1 && !self.irregular.has(&key) {
                             otherwise = spellings.pop();
                         }
                         if let Some(first) = spellings.pop() {

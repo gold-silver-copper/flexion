@@ -36,6 +36,7 @@ pub(super) static RELATIONS: [Relation<'static>; 44] = [
         rules {
             "" => [1 12, 0 4],
             "ᾰς" => [0 4],
+            "ρᾰς" => [0 4],
             "ᾱς" => [1 12],
         }
         listed {
@@ -112,6 +113,7 @@ pub(super) static RELATIONS: [Relation<'static>; 44] = [
         rules {
             "" => [1 12, 0 4],
             "ᾰς" => [0 4],
+            "ρᾰς" => [0 4],
             "ᾱς" => [1 12],
         }
         listed {
@@ -130,6 +132,7 @@ pub(super) static RELATIONS: [Relation<'static>; 44] = [
             "" => [1 12, 0 4],
             "ι" => [1 12],
             "ς" => [0 4],
+            "ες" => [0 4],
         }
         listed {
         }
@@ -147,6 +150,7 @@ pub(super) static RELATIONS: [Relation<'static>; 44] = [
             "" => [1 12, 0 4],
             "ι" => [1 12],
             "ς" => [0 4],
+            "ες" => [0 4],
         }
         listed {
         }
@@ -163,6 +167,7 @@ pub(super) static RELATIONS: [Relation<'static>; 44] = [
         rules {
             "" => [1 12, 0 4],
             "ᾰς" => [0 4],
+            "ρᾰς" => [0 4],
             "ᾱς" => [1 12],
         }
         listed {
@@ -409,6 +414,7 @@ pub(super) static RELATIONS: [Relation<'static>; 44] = [
         rules {
             "" => [1 12, 0 5],
             "ᾰς" => [0 4],
+            "ρᾰς" => [0 4],
             "ᾱς" => [1 12],
         }
         listed {
