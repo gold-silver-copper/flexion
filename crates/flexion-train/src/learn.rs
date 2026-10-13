@@ -107,11 +107,23 @@ pub fn learn<'s>(
         .cloned()
         .collect();
     let lexemes = lexemes.as_slice();
+    // A word is spelled as its table writes it (`ὑποκρῠ́πτω`, where the
+    // headword says `ὑποκρύπτω`): its forms carry those marks.
+    let letters = |l: &Lexeme| {
+        let headword = orthography.read(&l.full).letters;
+        shape
+            .lemma_cell
+            .and_then(|c| l.cells.get(c))
+            .and_then(|fs| fs.first())
+            .map(|f| orthography.read(f).letters)
+            .filter(|t| orthography.key(t) == orthography.key(&headword))
+            .unwrap_or(headword)
+    };
     let words: Vec<Word> = lexemes
         .iter()
         .map(|l| Word {
             key: key(l),
-            letters: orthography.read(&l.full).letters,
+            letters: letters(l),
             senses: l.senses,
             vulgar: l.vulgar,
             dictionaries: dictionaries
