@@ -320,8 +320,10 @@ fn held_cells(
                 abbreviate(&cells, 8)
             );
         }
-        let (held, kept) = measure::default_probe(&groups, train, spec == "auto-all")
-            .ok_or("no stem group to hold")?;
+        let Some((held, kept)) = measure::default_probe(&groups, train, spec == "auto-all") else {
+            println!("  no cells share a stem other than the lemma's: none held");
+            return Ok(Vec::new());
+        };
         let kept: Vec<&str> = kept
             .iter()
             .filter_map(|&c| names.get(c))

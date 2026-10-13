@@ -4,7 +4,6 @@
 //! two groupings of words agree, and what kind of error a wrong answer is.
 //! Nothing here is read by the learner.
 
-use crate::HashMap;
 use crate::eval::hash;
 use crate::extract::Lexeme;
 use unicode_normalization::UnicodeNormalization;
@@ -57,9 +56,10 @@ pub fn word_stem(lemma: &str, forms: &[String]) -> usize {
         .unwrap_or(0)
 }
 
-/// A group of cells whose forms share a stem: across the training words,
-/// any two of them differ by one change of endings (`amāvī`, `amāveram`:
-/// `-ī` → `-eram`) in nearly every word.
+/// A group of cells whose forms share a stem other than the lemma's: in
+/// the training words where one of two of them leaves the lemma's stem
+/// (`regō`: `rēxī`, `rēxeram`), mostly both do, and their forms begin
+/// alike for longer than either does with the lemma.
 #[derive(Debug, Clone, PartialEq)]
 pub struct StemGroup {
     pub cells: Vec<usize>,
@@ -81,11 +81,16 @@ impl StemGroup {
     }
 }
 
+/// A word's forms per cell, for stem grouping: the form, plain; whether it
+/// is off the word's stem (see [`word_stem`]); and how long a beginning it
+/// shares with the lemma.
+type Row = Vec<Option<(String, bool, usize)>>;
+
 /// The training words a stem grouping is computed on, at most.
 const SAMPLE: usize = 1000;
-/// Two cells share a stem when one change of endings relates them in at
-/// least this share of the words having both.
-const SAME_STEM: f64 = 0.9;
+/// Two cells share a stem when, of the words where either leaves the
+/// lemma's stem, at least this share have both leave it together.
+const SAME_STEM: f64 = 0.5;
 
 /// The cells of a part of speech grouped by shared stems (see
 /// [`StemGroup`]), the lemma's cell aside, largest weight first. Computed
@@ -95,8 +100,9 @@ pub fn stem_groups(lexemes: &[Lexeme], cells: usize, lemma_cell: Option<usize>) 
     let mut sample: Vec<&Lexeme> = lexemes.iter().filter(|l| l.source == 0).collect();
     sample.sort_by_key(|l| (hash(&l.key), l.order));
     sample.truncate(SAMPLE);
-    // Per word: its forms, plain, per cell; and which are off its stem.
-    let mut words: Vec<Vec<Option<(String, bool)>>> = Vec::new();
+    // Per word and cell: its form, plain; whether it is off the word's
+    // stem; and how long a beginning it shares with the lemma.
+    let mut words: Vec<Row> = Vec::new();
     for l in &sample {
         let lemma = lemma_cell
             .and_then(|c| l.cells.get(c))
@@ -115,8 +121,8 @@ pub fn stem_groups(lexemes: &[Lexeme], cells: usize, lemma_cell: Option<usize>) 
             .map(|c| {
                 let f = l.cells.get(c)?.first()?;
                 let p = plain(f);
-                let off = common_start(&lemma, &p) < stem;
-                Some((p, off))
+                let shared = common_start(&lemma, &p);
+                Some((p, shared < stem, shared))
             })
             .collect();
         words.push(row);
@@ -144,7 +150,7 @@ pub fn stem_groups(lexemes: &[Lexeme], cells: usize, lemma_cell: Option<usize>) 
             let (mut n, mut off) = (0usize, 0usize);
             for w in &words {
                 for &c in &cells {
-                    if let Some(Some((_, o))) = w.get(c) {
+                    if let Some(Some((_, o, _))) = w.get(c) {
                         n += 1;
                         off += usize::from(*o);
                     }
@@ -168,24 +174,24 @@ pub fn stem_groups(lexemes: &[Lexeme], cells: usize, lemma_cell: Option<usize>) 
     out
 }
 
-/// Whether one change of endings relates cells `a` and `b` in at least
-/// [`SAME_STEM`] of the words with forms in both (and at least ten words).
-fn same_stem(words: &[Vec<Option<(String, bool)>>], a: usize, b: usize) -> bool {
-    let mut changes: HashMap<(String, String), usize> = HashMap::default();
-    let mut n = 0usize;
+/// Whether cells `a` and `b` share a stem other than the lemma's: of the
+/// words where either form is off the word's stem, at least [`SAME_STEM`]
+/// (and at least ten words) have both off, beginning alike for longer than
+/// either begins like the lemma.
+fn same_stem(words: &[Row], a: usize, b: usize) -> bool {
+    let (mut either, mut both) = (0usize, 0usize);
     for w in words {
-        let (Some(Some((x, _))), Some(Some((y, _)))) = (w.get(a), w.get(b)) else {
+        let (Some(Some((x, off_x, lx))), Some(Some((y, off_y, ly)))) = (w.get(a), w.get(b)) else {
             continue;
         };
-        let k = common_start(x, y);
-        let tail = |s: &str| s.chars().skip(k).collect::<String>();
-        *changes.entry((tail(x), tail(y))).or_default() += 1;
-        n += 1;
+        if *off_x || *off_y {
+            either += 1;
+            both += usize::from(*off_x && *off_y && common_start(x, y) > *lx.max(ly));
+        }
     }
-    let top = changes.values().copied().max().unwrap_or(0);
     #[allow(clippy::cast_precision_loss)]
-    let share = top as f64 / n.max(1) as f64;
-    n >= 10 && share >= SAME_STEM
+    let share = both as f64 / either.max(1) as f64;
+    both >= 10 && share >= SAME_STEM
 }
 
 /// The default held-out-cells probe, from the stem group of largest weight
@@ -481,6 +487,51 @@ mod tests {
         assert_eq!(kind("rēxī", "regī", false, false, 3), Kind::Stem);
         assert_eq!(kind("книги", "книгы", false, false, 4), Kind::Ending);
         assert_eq!(kind("rēxī", "rexī", false, false, 3), Kind::Length);
+    }
+
+    #[test]
+    fn cells_that_leave_the_lemma_s_stem_together_are_one_group() {
+        // Cells: lemma, present 2 sg, 3 sg, 1 pl, perfect 1 sg, 2 sg. Half the
+        // words have a perfect stem of their own (`reg-ō`, `rēx-ī`).
+        let word = |i: usize, own: bool| {
+            let root = format!(
+                "t{}r",
+                "abcdefghijklmnopqrstuvwxyz".chars().nth(i).unwrap_or('z')
+            );
+            let perfect = if own {
+                format!("q{root}s")
+            } else {
+                format!("{root}av")
+            };
+            let cells = [
+                format!("{root}o"),
+                format!("{root}as"),
+                format!("{root}at"),
+                format!("{root}amus"),
+                format!("{perfect}i"),
+                format!("{perfect}isti"),
+            ];
+            Lexeme {
+                lemma: format!("{root}o"),
+                full: format!("{root}o"),
+                key: format!("{root}o"),
+                cells: cells.iter().map(|f| vec![f.clone()]).collect(),
+                inherent: Vec::new(),
+                weight: 1.0,
+                order: i,
+                senses: 1,
+                source: 0,
+                vulgar: false,
+                editors: crate::extract::Editors::default(),
+            }
+        };
+        let words: Vec<Lexeme> = (0..24).map(|i| word(i, i % 2 == 0)).collect();
+        let groups = stem_groups(&words, 6, Some(0));
+        assert_eq!(groups.first().map(|g| g.cells.clone()), Some(vec![4, 5]));
+        assert_eq!(
+            default_probe(&groups, &words, false),
+            Some((vec![5], vec![4]))
+        );
     }
 
     #[test]
