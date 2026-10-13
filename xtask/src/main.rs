@@ -627,5 +627,7 @@ fn place_letter(p: flexion::Place) -> char {
         flexion::Place::Stem => 's',
         flexion::Place::Ending => 'E',
         flexion::Place::Recessive => 'r',
+        flexion::Place::Last => 'L',
+        flexion::Place::NextToLast => 'N',
     }
 }

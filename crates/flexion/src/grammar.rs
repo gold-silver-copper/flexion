@@ -419,8 +419,13 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         match (self.spelling(&word.letters, &key), &self.marks) {
             (Some(letters), _) => word.letters = letters.to_string(),
             (None, Some(marks)) if !known.full => {
-                let mut spellings =
-                    restorations(&self.orthography, marks, self.smoothing, &word.letters, &key);
+                let mut spellings = restorations(
+                    &self.orthography,
+                    marks,
+                    self.smoothing,
+                    &word.letters,
+                    &key,
+                );
                 if spellings.len() > 1 {
                     otherwise = spellings.pop();
                 }

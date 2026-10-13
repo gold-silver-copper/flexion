@@ -22,11 +22,21 @@ pub enum Place {
     Ending,
     /// As far from the word's end as the law allows (Greek verbs).
     Recessive,
+    /// On the word's last syllable (Greek `λυθῇς`).
+    Last,
+    /// On the word's next-to-last syllable (Greek `λελυμένος`).
+    NextToLast,
 }
 
 impl Place {
     /// Every place, in order.
-    pub const ALL: [Place; 3] = [Place::Stem, Place::Ending, Place::Recessive];
+    pub const ALL: [Place; 5] = [
+        Place::Stem,
+        Place::Ending,
+        Place::Recessive,
+        Place::Last,
+        Place::NextToLast,
+    ];
 }
 
 /// What a form's ending says about its last syllable.
@@ -65,12 +75,14 @@ impl AccentPattern<'_> {
 impl std::str::FromStr for Place {
     type Err = ();
 
-    /// By its name: `Stem`, `Ending`, `Recessive`.
+    /// By its name: `Stem`, `Ending`, `Recessive`, `Last`, `NextToLast`.
     fn from_str(name: &str) -> Result<Self, ()> {
         match name {
             "Stem" => Ok(Place::Stem),
             "Ending" => Ok(Place::Ending),
             "Recessive" => Ok(Place::Recessive),
+            "Last" => Ok(Place::Last),
+            "NextToLast" => Ok(Place::NextToLast),
             _ => Err(()),
         }
     }
@@ -325,6 +337,8 @@ pub fn place(
                     .position(|s| s.at >= ending)
                     .unwrap_or(last),
                 Place::Recessive => 0,
+                Place::Last => last,
+                Place::NextToLast => last.saturating_sub(1),
             };
             let on_ending = syllables.get(last).is_some_and(|s| s.at >= ending);
             let kind = if finals.circumflex && on_ending {
@@ -346,6 +360,8 @@ pub fn place(
                 Place::Stem => (stem.min(last), 0),
                 Place::Ending => (on_ending(), u8::from(finals.circumflex)),
                 Place::Recessive => (0, 0),
+                Place::Last => (last, u8::from(finals.circumflex)),
+                Place::NextToLast => (last.saturating_sub(1), 0),
             };
             Some(Stress {
                 vowel: u8::try_from(vowel).ok()?,

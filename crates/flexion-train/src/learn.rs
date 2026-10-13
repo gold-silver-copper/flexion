@@ -1870,7 +1870,7 @@ fn accent<'s>(
         .collect();
     // Per cell, how many words each place fits: of the places that fit a
     // word, it is read as the one most words share.
-    let mut usual_place: Vec<[u32; 3]> = vec![[0; 3]; shape.cells];
+    let mut usual_place: Vec<[u32; Place::ALL.len()]> = vec![[0; Place::ALL.len()]; shape.cells];
     for s in &seen {
         for (c, p) in s.places.iter().enumerate() {
             if let (Some(m), Some(counts)) = (p, usual_place.get_mut(c)) {
@@ -1883,7 +1883,7 @@ fn accent<'s>(
         }
     }
     let read = |c: usize, mask: Option<u8>| -> Place {
-        let counts = usual_place.get(c).copied().unwrap_or([0; 3]);
+        let counts = usual_place.get(c).copied().unwrap_or([0; Place::ALL.len()]);
         Place::ALL
             .iter()
             .enumerate()

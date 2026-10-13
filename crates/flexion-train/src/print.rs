@@ -797,7 +797,8 @@ fn accent_file(
          //! which rule places the accent, and the syllable its stem is accented on,\n\
          //! counted from the lemma's end. `Stem`: where the lemma has it (persistent);\n\
          //! `Ending`: on the ending's first syllable; `Recessive`: as far from the end\n\
-         //! as the law of limitation allows. The law then moves it where it must, and\n\
+         //! as the law of limitation allows; `Last`, `NextToLast`: on that syllable of\n\
+         //! the word. The law then moves it where it must, and\n\
          //! chooses acute or circumflex by the syllables' length.\n\n\
          use flexion::{AccentPattern, Choice, StressClass};\n\
          use std::borrow::Cow;\n",
@@ -1140,7 +1141,35 @@ fn api_code(
         let v = call(&cell_variant(name, g.name), &paths);
         let _ = writeln!(s, "    /// {}\n    {v},", g.group.doc);
     }
-    s.push_str("}\n\nimpl Cell {\n    /// Its place in a paradigm.\n    pub const fn index(self) -> usize {\n        let cell = match self {\n");
+    // A feature's values are written bare where no other feature has a value
+    // of the same name.
+    let mut features: Vec<&Feature> = cells
+        .groups
+        .iter()
+        .flat_map(|g| g.features.iter().copied())
+        .collect();
+    features.sort_by_key(|f| f.name);
+    features.dedup_by_key(|f| f.name);
+    let bare: Vec<&str> = features
+        .iter()
+        .filter(|f| {
+            f.values.iter().all(|v| {
+                features
+                    .iter()
+                    .filter(|o| o.name != f.name)
+                    .all(|o| o.values.iter().all(|w| w.name != v.name))
+            })
+        })
+        .map(|f| f.name)
+        .collect();
+    let uses: String = bare
+        .iter()
+        .map(|f| format!("        use crate::{f}::*;\n"))
+        .collect();
+    let _ = write!(
+        s,
+        "}}\n\nimpl Cell {{\n    /// Its place in a paradigm.\n    pub const fn index(self) -> usize {{\n{uses}        let cell = match self {{\n"
+    );
     for g in &cells.groups {
         let v = cell_variant(name, g.name);
         for cell in g.offset..g.offset + g.len() {
@@ -1149,11 +1178,12 @@ fn api_code(
                 .iter()
                 .zip(g.values(cell))
                 .map(|(f, x)| {
-                    format!(
-                        "crate::{}::{}",
-                        f.name,
-                        f.values.get(x).map_or("", |v| v.name)
-                    )
+                    let value = f.values.get(x).map_or("", |v| v.name);
+                    if bare.contains(&f.name) {
+                        value.to_string()
+                    } else {
+                        format!("crate::{}::{value}", f.name)
+                    }
                 })
                 .collect();
             let constant = layout.names.get(cell).map_or("", String::as_str);
