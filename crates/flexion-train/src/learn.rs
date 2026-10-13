@@ -182,8 +182,17 @@ pub fn learn<'s>(
         for (w, a) in words.iter().zip(analyses.iter_mut()) {
             let value = w.inherent.get(*f).copied().filter(|&v| v != u8::MAX);
             let value = value.or_else(|| infer(w, referrals));
+            // Learned from the words whose forms it decides: those whose
+            // cells it chooses between differ.
+            let decides = referrals.iter().any(|r| {
+                let forms: Vec<Option<&str>> =
+                    r.from.iter().map(|&c| first_form(w, usize::from(c))).collect();
+                forms.iter().all(Option::is_some) && forms.windows(2).any(|p| p.first() != p.get(1))
+            });
             if let Some(v) = value {
-                feature_examples.push((w.key.clone(), v));
+                if decides {
+                    feature_examples.push((w.key.clone(), v));
+                }
                 refer(w, a, referrals, v);
             }
         }
@@ -318,7 +327,8 @@ pub fn learn<'s>(
     crate::tick("marks");
     let marks = marks(&orthography, &words, settings);
     if let Some(marks) = &marks {
-        spellings = words
+        // Every word's: those inflecting behind a prefix too.
+        spellings = all_words
             .iter()
             .filter(|w| {
                 flexion::restore(&orthography, marks, settings.smoothing, &w.key, &w.key).0
