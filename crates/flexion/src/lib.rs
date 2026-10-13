@@ -10,15 +10,15 @@ mod stress;
 
 pub use choice::{Choice, Reading, Rule, Side, Status, by_ending, tolerance};
 pub use grammar::{
-    Compound, Grammar, Irregular, Known, Placement, Prefix, Prefixes, Separation, WORD_END,
+    Compound, Grammar, Irregular, Known, Placement, Prefix, Prefixes, Separation, WORD_END, around,
     restore, sharpen,
 };
 pub use orthography::{Casing, Orthography, Stress, Written, recase};
 pub use paradigm::{DERIVED, Form, Paradigm, Relation};
 pub use sound_law;
 pub use stress::{
-    Accent, AccentPattern, Finals, Place, Prosody, StressClass, Syllable, place as stress_place,
-    position as stress_position, positions as stress_positions,
+    Accent, AccentPattern, Finals, Place, Prosody, StressClass, Syllable, carry as stress_carry,
+    place as stress_place, position as stress_position, positions as stress_positions,
 };
 
 use std::fmt;

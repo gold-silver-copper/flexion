@@ -44,7 +44,10 @@ pub fn learn<'s>(
             let b = best.entry(end.as_str()).or_default();
             *b = (*b).max(*n);
         }
-        (best.values().sum(), same)
+        (
+            best.values().sum(),
+            if crate::off("tie") { 0 } else { same },
+        )
     };
     // The tree, grown from the root: each time the cell told best from one
     // already in it.

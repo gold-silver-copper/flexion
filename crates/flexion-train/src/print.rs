@@ -502,7 +502,7 @@ fn grammar_files(
         "::{self, *}"
     };
     let r = format!(
-        "//! Which {one} a word takes. The rule with the longest ending the word has\n//! decides, giving each {one} with how many of the dictionary's words with\n//! that ending follow it; the words no rule gets right are listed. A rule is\n//! kept only when it pays for itself: it must describe the words it covers\n//! in fewer bits than the broader rule does, by more than the rule costs.\n\nuse super::paradigms::{ty}{uses};\nuse flexion::Choice;\n\n{}",
+        "//! Which {one} a word takes. The rule with the longest ending the word has\n//! decides (`#` is the word's start: `#lux` is the word `lux`), giving each\n//! {one} with how many of the dictionary's words with that ending follow it; the words no rule gets right are listed. A rule is\n//! kept only when it pays for itself: it must describe the words it covers\n//! in fewer bits than the broader rule does, by more than the rule costs.\n\nuse super::paradigms::{ty}{uses};\nuse flexion::Choice;\n\n{}",
         choice_const(&one.to_uppercase(), ty, "words", &g.paradigm, name_of)
     );
     files.push((format!("{dir}/rules.rs"), r));
@@ -603,7 +603,7 @@ fn grammar_files(
     // marks.rs
     if let Some(marks) = &g.marks {
         let r = format!(
-            "//! How a letter typed without its mark is written. Each rule reads the letter\n//! before it, the letter and the letters after it (`#` is the word's start or\n//! end): the longest one that matches decides (`tatio#` → `ā`, as in `-ātiō`;\n//! `#de` → `ē`, as in `dē-`; `ae` → `e`, a diphthong), giving each way of writing\n//! the letter with how many of the dictionary's letters in that place are\n//! written so.\n\nuse flexion::Choice;\n\n/// {} rules.\npub(super) const MARKS: Choice<'static, char> = {}}};\n",
+            "//! How a letter typed without its mark is written. Each rule reads the letter,\n//! then in turn the letters after it and before it, outward (`#` is the\n//! word's start or end): the longest one that matches decides (`atti` → `ā`,\n//! as in `-ātiō`; `e#d` → `ē`, as in `dē-`), giving each way of writing the\n//! letter with how many of the dictionary's letters in that place are written\n//! so.\n\nuse flexion::Choice;\n\n/// {} rules.\npub(super) const MARKS: Choice<'static, char> = {}}};\n",
             thousands(marks.rules.len()),
             choice_macro("starts", marks, |c| format!("{c:?}"))
         );

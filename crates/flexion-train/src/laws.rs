@@ -178,7 +178,12 @@ impl Change {
                     let v = list(earlier);
                     format!("{{[{v}]}}{{![{v}]*}}")
                 };
-                [format!("{target}{BOUNDARY}{ending}"), to, before, String::new()]
+                [
+                    format!("{target}{BOUNDARY}{ending}"),
+                    to,
+                    before,
+                    String::new(),
+                ]
             }
             // The letter is the ending's: the stem's are as the dictionary
             // writes them.
@@ -354,7 +359,10 @@ pub fn learn<'s>(
     let candidates: Vec<(Change, u32)> = candidates
         .into_iter()
         .flat_map(|(change, n)| {
-            let twin = change.after(&vowels).map(|c| (c, n));
+            let twin = change
+                .after(&vowels)
+                .map(|c| (c, n))
+                .filter(|_| !crate::off("twins"));
             std::iter::once((change, n)).chain(twin)
         })
         .collect();
@@ -973,7 +981,7 @@ fn same(built: &str, form: &str) -> bool {
 }
 
 /// The paradigms that still have words, and the assignment renumbered.
-fn drop_empty<'s>(
+pub(crate) fn drop_empty<'s>(
     paradigms: Vec<Paradigm<'s>>,
     assignment: Vec<u16>,
 ) -> (Vec<Paradigm<'s>>, Vec<u16>) {

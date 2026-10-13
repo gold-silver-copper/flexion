@@ -98,15 +98,27 @@ pub enum Placement {
 }
 
 impl Prefixes<'_> {
-    /// The letters of a prefix (looked up as `prefix`) kept in front of
-    /// `rest` (letters), as they meet (see [`Prefixes::junctions`]), and
-    /// where `rest`'s letters after its first start in them.
-    pub fn join(&self, prefix: &str, rest: &str) -> (String, usize) {
+    /// The rest of `form` (letters) kept behind `prefix` (looked up as `key`),
+    /// as it is before they meet (see [`Prefixes::join`]); `None` where it
+    /// isn't.
+    pub fn unjoin(&self, key: &str, prefix: &str, form: &str) -> Option<String> {
+        self.junctions
+            .iter()
+            .filter(|(k, _, joined)| k == key && form.starts_with(joined.as_ref()))
+            .max_by_key(|(_, _, joined)| joined.len())
+            .and_then(|(_, head, joined)| Some(format!("{head}{}", form.get(joined.len()..)?)))
+            .or_else(|| form.strip_prefix(prefix).map(str::to_string))
+    }
+
+    /// The letters of `prefix` (looked up as `key`) kept in front of `rest`
+    /// (letters), as they meet (see [`Prefixes::junctions`]), and where
+    /// `rest`'s letters after its first start in them.
+    pub fn join(&self, key: &str, prefix: &str, rest: &str) -> (String, usize) {
         let head_len = rest.chars().next().map_or(0, char::len_utf8);
         let (head, tail) = rest.split_at(head_len);
         let at = self
             .junctions
-            .binary_search_by(|(p, h, _)| (p.as_ref(), h.as_ref()).cmp(&(prefix, head)))
+            .binary_search_by(|(p, h, _)| (p.as_ref(), h.as_ref()).cmp(&(key, head)))
             .ok()
             .and_then(|i| self.junctions.get(i));
         match at {
@@ -268,7 +280,8 @@ pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
     pub capitalized: bool,
     /// Indexed by `P`.
     pub paradigms: Cow<'a, [Paradigm<'a>]>,
-    /// Which paradigm a word follows.
+    /// Which paradigm a word follows, by the word written after
+    /// [`WORD_END`] (`#lux`: the whole word `lux`, not `pollux`).
     pub paradigm: Choice<'a, P>,
     /// Per cell (at most one each, by cell), where its form comes from when
     /// a paradigm derives it, or the word's form of the cell it comes from
@@ -290,11 +303,10 @@ pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
     /// them: `(key, letters)`, sorted. A caller who types `fox` means `fōx`;
     /// marks a paradigm writes (the `ō` of `ratiō`) aren't listed.
     pub spellings: Cow<'a, [(Cow<'a, str>, Cow<'a, str>)]>,
-    /// How a letter typed without its mark is written, by the letter before
-    /// it, it and the letters after it (rules on the beginning of that, the
-    /// word's ends written [`WORD_END`]: Latin `tatio#` → `ā`, as in `-ātiō`;
-    /// `#de` → `ē`, as in `dē-`; `ae` → `e`, a diphthong): the spelling of a
-    /// word that isn't listed.
+    /// How a letter typed without its mark is written, by the letters around
+    /// it (rules on the beginning of [`around`]: Latin `atti` → `ā`, as in
+    /// `-ātiō`; `e#d` → `ē`, as in `dē-`): the spelling of a word that isn't
+    /// listed.
     pub marks: Option<Choice<'a, char>>,
     /// Forms no rule gives, as the dictionary writes them: `(word, cell,
     /// form)`, sorted by word and cell. They are the answer for that word.
@@ -406,8 +418,20 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                     .copied()
                     .unwrap_or(Placement::Before);
                 let drop = prefixes.drops.get(cell).map_or("", |d| d.as_ref());
+                // The forms given, kept behind the prefix: the rest's.
+                let key_of = self.orthography.key(prefix);
+                let given: Vec<(usize, String)> = known
+                    .forms
+                    .iter()
+                    .filter_map(|&(c, f)| {
+                        let letters = self.orthography.read(f).letters;
+                        Some((c, prefixes.unjoin(&key_of, prefix, &letters)?))
+                    })
+                    .collect();
+                let given: Vec<(usize, &str)> =
+                    given.iter().map(|(c, f)| (*c, f.as_str())).collect();
                 let base = Known {
-                    forms: &[],
+                    forms: &given,
                     ..*known
                 };
                 for c in top(self.unsharpened(rest, cell, &base)) {
@@ -499,10 +523,11 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     fn kept(&self, prefixes: &Prefixes<'_>, prefix: &str, rest: &str, form: &str) -> String {
         let o = &self.orthography;
         let written = o.read(form);
-        let (letters, rest_at) = prefixes.join(&o.key(prefix), &written.letters);
-        let from_end = written
-            .stress
-            .map(|s| o.vowel_count(&written.letters).saturating_sub(usize::from(s.vowel)));
+        let (letters, rest_at) = prefixes.join(&o.key(prefix), prefix, &written.letters);
+        let from_end = written.stress.map(|s| {
+            o.vowel_count(&written.letters)
+                .saturating_sub(usize::from(s.vowel))
+        });
         let mut stress = from_end.and_then(|n| {
             let vowel = o.vowel_count(&letters).checked_sub(n)?;
             Some(crate::Stress {
@@ -522,7 +547,11 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 // The augment: the form begins otherwise than the word.
                 let augmented = written.letters.chars().next() != rest.chars().next();
                 let syllables = p.syllables(o, &letters, long);
-                let boundary = if augmented { rest_at } else { prefix.len().min(rest_at) };
+                let boundary = if augmented {
+                    rest_at
+                } else {
+                    prefix.len().min(rest_at)
+                };
                 let wall = syllables
                     .iter()
                     .rposition(|syl| syl.at < boundary)
@@ -726,7 +755,10 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             })
         };
         let fits = |p: P| self.paradigm_of(p).is_some_and(agrees);
-        let mut readings = self.paradigm.read(key, self.smoothing, fits);
+        // Rules read the word from its end to its start (`#`).
+        let mut readings = self
+            .paradigm
+            .read(&format!("{WORD_END}{key}"), self.smoothing, fits);
         if readings.is_empty() {
             // No rule knows a paradigm the word fits: every paradigm it does,
             // by how many words follow it.
@@ -822,6 +854,10 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         let classes = accent
             .class
             .read(&self.orthography.key(letters), self.smoothing, fits);
+        let unlawed = inf
+            .paradigm
+            .unlawed(&self.paradigms, cell, &inf.stems)
+            .filter(|_| self.laws.is_some());
         let mut out: Vec<(Option<crate::Stress>, f32)> = Vec::new();
         // The form's letters, to place the stress in.
         for reading in classes.iter().take(KEEP * KEEP) {
@@ -840,7 +876,15 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                     .vowel
                     .and_then(|v| positions.checked_sub(1)?.checked_sub(usize::from(v))),
             };
-            let s = stress::place(o, form, ending, finals, place, k.unwrap_or(0));
+            // Placed before the sound laws, and carried through them
+            // (`ποιέ+ομεν` → `ποιοῦμεν`).
+            let s = match &unlawed {
+                Some((before, at)) if before != form => {
+                    stress::place(o, before, *at, finals, place, k.unwrap_or(0))
+                        .and_then(|s| stress::carry(o, before, form, s))
+                }
+                _ => stress::place(o, form, ending, finals, place, k.unwrap_or(0)),
+            };
             match out.iter_mut().find(|e| e.0 == s) {
                 Some(e) => e.1 += reading.probability,
                 None => out.push((s, reading.probability)),
@@ -850,6 +894,36 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             out.push((None, 1.0));
         }
         out
+    }
+}
+
+/// What a rule on how letter `at` (in chars) of `key` is written reads: the
+/// letter, then in turn the letters after it and before it, outward, the
+/// word's ends written [`WORD_END`] (`fōx`'s `o`: `ox#f#`).
+pub fn around(key: &str, at: usize) -> String {
+    let chars: Vec<char> = key.chars().collect();
+    let after = chars
+        .get(at.saturating_add(1)..)
+        .unwrap_or_default()
+        .iter()
+        .copied()
+        .chain([WORD_END]);
+    let before = chars
+        .get(..at)
+        .unwrap_or_default()
+        .iter()
+        .rev()
+        .copied()
+        .chain([WORD_END]);
+    let (mut after, mut before) = (after.fuse(), before.fuse());
+    let mut out: String = chars.get(at).copied().into_iter().collect();
+    loop {
+        let (a, b) = (after.next(), before.next());
+        if a.is_none() && b.is_none() {
+            return out;
+        }
+        out.extend(a);
+        out.extend(b);
     }
 }
 
@@ -866,15 +940,12 @@ pub fn restore(
     let o = orthography;
     let mut p = 1.0;
     let mut out = String::with_capacity(letters.len().saturating_add(8));
-    let mut before = WORD_END;
-    for ((i, k), c) in key.char_indices().zip(letters.chars()) {
+    for ((at, k), c) in key.chars().enumerate().zip(letters.chars()) {
         let markable = c == k && o.folded.iter().any(|e| e.1 == c);
-        let around = format!("{before}{}{WORD_END}", key.get(i..).unwrap_or(""));
-        before = k;
         let reading = markable
             .then(|| {
                 marks
-                    .read(&around, smoothing, |m| o.fold(m) == c)
+                    .read(&around(key, at), smoothing, |m| o.fold(m) == c)
                     .into_iter()
                     .next()
             })

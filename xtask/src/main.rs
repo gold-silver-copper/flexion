@@ -5,7 +5,7 @@
 //! - `readme`: rewrite a built crate's README, keeping its report;
 //! - `try`: learn on nine tenths of the words and score the held-out tenth
 //!   (`--quick`: without fitting the sharpness, from the headword and the
-//!   principal parts only);
+//!   principal parts only; `--fold N`: score tenth N instead of the first);
 //! - `inspect`: a word's readings and forms, and a sample of irregular forms.
 
 use flexion_train::extract::{self, Lexeme, PosData};
@@ -14,7 +14,7 @@ use flexion_train::{choose, eval, learn, script};
 use std::path::PathBuf;
 use std::time::Instant;
 
-const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|inspect> <language> [--pos <part of speech>] [--errors N] [--quick]";
+const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|inspect> <language> [--pos <part of speech>] [--errors N] [--quick] [--fold N]";
 
 fn main() {
     if let Err(e) = run() {
@@ -53,7 +53,17 @@ fn run() -> Result<(), String> {
             let errors = flag("--errors")
                 .map_or(Ok(0), |e| e.parse::<usize>().map_err(|_| "bad --errors"))?;
             let quick = args.iter().any(|a| a == "--quick");
-            try_language(&lang, flag("--pos").as_deref(), settings, errors, quick)
+            let fold = flag("--fold").map_or(Ok(eval::TEST), |f| {
+                f.parse::<u64>().map_err(|_| "bad --fold")
+            })? % 10;
+            try_language(
+                &lang,
+                flag("--pos").as_deref(),
+                settings,
+                errors,
+                quick,
+                fold,
+            )
         }
         "inspect" => inspect(
             &lang,
@@ -135,7 +145,9 @@ fn try_language(
     settings: choose::Settings,
     errors: usize,
     quick: bool,
+    fold: u64,
 ) -> Result<(), String> {
+    let dev = eval::dev_of(fold);
     let data = load(lang)?;
     let script = script::Script::new(&lang.spelling);
     for (part, d) in lang.parts.iter().zip(&data) {
@@ -146,7 +158,7 @@ fn try_language(
         let train: Vec<Lexeme> = d
             .lexemes
             .iter()
-            .filter(|l| eval::bucket(&l.key) != eval::TEST)
+            .filter(|l| eval::bucket(&l.key) != fold)
             .cloned()
             .collect();
         // The sharpness, fitted on the dev tenth with a grammar that hasn't
@@ -156,12 +168,12 @@ fn try_language(
         } else {
             let fit: Vec<Lexeme> = train
                 .iter()
-                .filter(|l| eval::bucket(&l.key) != eval::DEV)
+                .filter(|l| eval::bucket(&l.key) != dev)
                 .cloned()
                 .collect();
             let dev: Vec<&Lexeme> = train
                 .iter()
-                .filter(|l| eval::bucket(&l.key) == eval::DEV && l.source == 0)
+                .filter(|l| eval::bucket(&l.key) == dev && l.source == 0)
                 .collect();
             let g = learn::learn(script.orthography(), &shape, &fit, settings).grammar;
             eval::fit_sharpness(&g, &g.orthography, &dev)
@@ -169,7 +181,7 @@ fn try_language(
         let test: Vec<&Lexeme> = d
             .lexemes
             .iter()
-            .filter(|l| eval::bucket(&l.key) == eval::TEST && l.source == 0)
+            .filter(|l| eval::bucket(&l.key) == fold && l.source == 0)
             .collect();
         let t = Instant::now();
         let mut learned = learn::learn(script.orthography(), &shape, &train, settings);
@@ -287,12 +299,13 @@ fn try_language(
         for input in inputs {
             let s = eval::score(g, &g.orthography, &test, input, &learned.seen);
             println!(
-                "  held-out {input:?}: {} words, {} forms, top-1 {:.2}% (letters {:.2}%), top-3 {:.2}%, calibration error {:.3}",
+                "  held-out {input:?}: {} words, {} forms, top-1 {:.2}% (letters {:.2}%), top-3 {:.2}%, reciprocal rank {:.3}, calibration error {:.3}",
                 test.len(),
                 s.forms,
                 100.0 * s.accuracy(),
                 100.0 * s.letters as f64 / s.forms.max(1) as f64,
                 100.0 * s.top3_accuracy(),
+                s.reciprocal_rank(),
                 s.calibration_error()
             );
             let bins: Vec<String> = s

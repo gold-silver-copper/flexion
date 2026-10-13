@@ -141,6 +141,7 @@ pub fn learn<'s>(
     let (all_words, all_lexemes) = (words.as_slice(), lexemes);
     // Words that separate a particle are the grammar of the rest of them:
     // their bases are learned with the other words.
+    crate::tick("prefixes");
     let (prefixes, bases) = prefixes(all_words);
     let separated: crate::HashSet<&str> = bases.iter().map(|(k, _)| k.as_str()).collect();
     let mut words: Vec<Word> = all_words
@@ -170,9 +171,12 @@ pub fn learn<'s>(
             }
         }
     }
+    crate::tick("referrals");
     let found = referrals(&words, shape);
     let mut analyses: Vec<Analyzed> = words.iter().map(|w| analyze(w, shape)).collect();
-    reduplicate(&mut analyses, shape.cells);
+    if !crate::off("redup") {
+        reduplicate(&mut analyses, shape.cells);
+    }
     let mut feature_examples: Vec<(String, u8)> = Vec::new();
     if let Some((f, referrals)) = &found {
         for (w, a) in words.iter().zip(analyses.iter_mut()) {
@@ -199,15 +203,20 @@ pub fn learn<'s>(
         })
         .collect();
     let root = shape.lemma_cell.unwrap_or(0);
+    crate::tick("relations");
     let mut relations = crate::relations::learn(&usual, shape.cells, root, settings);
     if let Some((_, referrals)) = &found {
         relations.retain(|r| !referrals.iter().any(|q| q.cell == r.cell));
         relations.extend(referrals.iter().cloned());
     }
     // The cells no relation tells (too few words have them): by analogy.
-    let told = crate::relations::analogies(&usual, &shape.coordinates, &relations, root, settings);
-    relations.extend(told);
+    if !crate::off("analogy") {
+        let told =
+            crate::relations::analogies(&usual, &shape.coordinates, &relations, root, settings);
+        relations.extend(told);
+    }
     relations.sort_by_key(|r| r.cell);
+    crate::tick("paradigms");
     let (paradigms, assignment) = paradigms(&words, &analyses, shape);
     // Paradigms that differ only by a change where stem meets ending are
     // one paradigm and a sound law.
@@ -228,8 +237,21 @@ pub fn learn<'s>(
                 .collect(),
         })
         .collect();
-    let (laws, program, mut paradigms, assignment) =
+    crate::tick("laws");
+    let (laws, program, paradigms, assignment) =
         crate::laws::learn(&orthography, &law_words, paradigms, assignment);
+    let (mut paradigms, assignment) = if crate::off("rehome") {
+        (paradigms, assignment)
+    } else {
+        crate::tick("rehome");
+        rehome(
+            &orthography,
+            &law_words,
+            paradigms,
+            assignment,
+            program.as_ref(),
+        )
+    };
     inherent(&words, &assignment, &mut paradigms);
     let mut seen = vec![vec![false; shape.cells]; paradigms.len()];
     for (w, &p) in words.iter().zip(&assignment) {
@@ -239,20 +261,31 @@ pub fn learn<'s>(
             }
         }
     }
+    // Read from the word's end to its start (`#lux`, not `pollux`).
+    let anchored = |key: &str| {
+        if crate::off("anchor") {
+            key.to_string()
+        } else {
+            format!("{}{key}", flexion::WORD_END)
+        }
+    };
     let paradigm_examples: Vec<(String, u16)> = words
         .iter()
         .zip(&assignment)
-        .map(|(w, &p)| (w.key.clone(), p))
+        .map(|(w, &p)| (anchored(&w.key), p))
         .collect();
     let fits = |word: &str, p: u16| {
+        let word = word.strip_prefix(flexion::WORD_END).unwrap_or(word);
         paradigms
             .get(usize::from(p))
             .is_some_and(|x| x.stems(&orthography, word).is_some())
     };
+    crate::tick("choice");
     let paradigm_choice = choose::learn(&paradigm_examples, settings, fits);
     let (accent, stress_labels) = if orthography.stress_marks.is_empty() {
         (None, HashMap::default())
     } else {
+        crate::tick("accent");
         let (a, labels) = accent(
             &orthography,
             &words,
@@ -282,6 +315,7 @@ pub fn learn<'s>(
     spellings.dedup_by(|a, b| a.0 == b.0);
     // How a letter typed without its mark is written, by what follows it;
     // the words it doesn't spell are listed.
+    crate::tick("marks");
     let marks = marks(&orthography, &words, settings);
     if let Some(marks) = &marks {
         spellings = words
@@ -327,6 +361,7 @@ pub fn learn<'s>(
     };
     // A word the grammar gets wrong is listed in its choices: its paradigm,
     // its stress pattern and stem vowel. Forms still wrong are irregular.
+    crate::tick("irregular1");
     let wrong: std::collections::BTreeSet<String> =
         irregular(&grammar, all_lexemes, all_words, |_| true)
             .into_iter()
@@ -338,7 +373,7 @@ pub fn learn<'s>(
     }
     for key in &wrong {
         if let Some(&p) = paradigm_of.get(key.as_str()) {
-            list(&mut grammar.paradigm, key, p);
+            list(&mut grammar.paradigm, &anchored(key), p);
         }
         if let (Some(a), Some(&class)) = (grammar.accent.as_mut(), stress_labels.get(key)) {
             list(&mut a.class, key, class);
@@ -360,14 +395,17 @@ pub fn learn<'s>(
     };
     // A word's listed forms are its principal parts: the forms no relation
     // tells from another listed one. The forms told wrong are listed too.
+    crate::tick("irregular2");
     let wrong = irregular(&grammar, all_lexemes, all_words, |w| !made(w));
     if let Cow::Owned(relations) = &mut grammar.relations {
         for r in relations.iter_mut() {
             r.listed = tells_listed(r, &wrong, all_words, grammar.smoothing);
         }
     }
+    crate::tick("roots");
     let mut irregular = roots(&grammar, &wrong);
     grammar.irregular = flexion::Irregular::new(&irregular);
+    crate::tick("rounds");
     for _ in 0..ROUNDS {
         let listed: crate::HashSet<String> = irregular.iter().map(|(k, _, _)| k.clone()).collect();
         let more = self::irregular(&grammar, all_lexemes, all_words, |w| {
@@ -384,9 +422,12 @@ pub fn learn<'s>(
     irregular.sort();
     grammar.irregular = flexion::Irregular::new(&irregular);
     if let Cow::Owned(paradigms) = &mut grammar.paradigms {
-        copies(paradigms, &grammar.relations);
+        if !crate::off("copies") {
+            copies(paradigms, &grammar.relations);
+        }
         inherit(paradigms);
     }
+    crate::tick("stats");
     let stats = Stats {
         words: all_words.len(),
         paradigms: grammar.paradigms.len(),
@@ -615,18 +656,34 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
     // the two become (Greek `ἀπο` and the augment's `ἐ`: `ἀπε`), as most
     // words have it; kept where that isn't just the prefix written before
     // the form, and MIN_WORDS words have it.
-    let mut met: BTreeMap<(String, String), BTreeMap<String, crate::HashSet<&str>>> = BTreeMap::new();
+    let mut met: BTreeMap<(String, String), BTreeMap<String, crate::HashSet<&str>>> =
+        BTreeMap::new();
+    // Per prefix, the words that keep it in front of a form beginning
+    // otherwise than their rest does (the augment of `ἀπ-έ-λυον`, `λύω`):
+    // what a rule on a word's ending can't see.
+    let mut augmented: BTreeMap<&str, crate::HashSet<&str>> = BTreeMap::new();
     for (w, p, pk, base) in &pairs {
         for c in 0..cells {
             let (Some(mine), Some(theirs)) = (form(w, c), form(base, c)) else {
                 continue;
             };
             let theirs = theirs.strip_prefix(drop(c)).unwrap_or(theirs);
-            let Some(head) = theirs.chars().next() else { continue };
+            let Some(head) = theirs.chars().next() else {
+                continue;
+            };
             let tail = theirs.get(head.len_utf8()..).unwrap_or("");
             let Some(joined) = mine.strip_suffix(tail) else {
                 continue;
             };
+            // Something put before the rest's form: it begins otherwise
+            // than the rest, and goes on as the rest begins.
+            let first = base.letters.chars().next();
+            if first != Some(head) && tail.chars().next() == first {
+                augmented
+                    .entry(pk.as_str())
+                    .or_default()
+                    .insert(w.key.as_str());
+            }
             if joined != format!("{p}{head}") {
                 met.entry((pk.clone(), head.to_string()))
                     .or_default()
@@ -636,12 +693,21 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
             }
         }
     }
+    let augmenting = |pk: &str| {
+        augmented
+            .get(pk)
+            .is_some_and(|w| w.len() >= MIN_WORDS as usize)
+    };
     let junctions: Vec<(Cow<'a, str>, Cow<'a, str>, Cow<'a, str>)> = met
         .into_iter()
+        .filter(|((pk, _), _)| augmenting(pk))
         .filter_map(|((pk, head), joined)| {
             let (joined, by) = joined.into_iter().max_by_key(|e| e.1.len())?;
-            (by.len() >= MIN_WORDS as usize)
-                .then_some((Cow::Owned(pk), Cow::Owned(head), Cow::Owned(joined)))
+            (by.len() >= MIN_WORDS as usize).then_some((
+                Cow::Owned(pk),
+                Cow::Owned(head),
+                Cow::Owned(joined),
+            ))
         })
         .collect();
     let joining = flexion::Prefixes {
@@ -654,33 +720,36 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
     // A form of a word keeping prefix `p` (key `pk`) in front, without it:
     // the rest's form, with what the cell takes off put back.
     let unjoin = |pk: &str, p: &str, c: usize, mine: &str| -> Option<String> {
-        let rest = junctions
-            .iter()
-            .filter(|(k, _, joined)| k == pk && mine.starts_with(joined.as_ref()))
-            .max_by_key(|(_, _, joined)| joined.len())
-            .and_then(|(_, head, joined)| Some(format!("{head}{}", mine.get(joined.len()..)?)))
-            .or_else(|| mine.strip_prefix(p).map(str::to_string))?;
+        let rest = joining.unjoin(pk, p, mine)?;
         (drop(c).is_empty() || !rest.starts_with(drop(c))).then(|| format!("{}{rest}", drop(c)))
     };
-    // Inseparable: every form, without the prefix, is the rest's form where
-    // the dictionary has the rest.
+    // Inseparable: its forms (all, where the words separate prefixes; four
+    // in five, where they join them), without the prefix, are the rest's
+    // forms where the dictionary has the rest.
     let keeps = |w: &Word, p: &str, pk: &str, rest: &str| {
         let base = by_key.get(rest);
-        let mut seen = 0;
+        let (mut seen, mut kept) = (0usize, 0usize);
         for c in 0..cells {
             let Some(mine) = form(w, c) else { continue };
+            seen += 1;
             let Some(unjoined) = unjoin(pk, p, c, mine) else {
-                return false;
+                continue;
             };
             if let Some(theirs) = base.and_then(|b| form(b, c)) {
                 let t = theirs.strip_prefix(drop(c)).unwrap_or(theirs);
-                if joining.join(pk, t).0 != mine && theirs != unjoined {
-                    return false;
+                if joining.join(pk, p, t).0 != mine && theirs != unjoined {
+                    continue;
                 }
             }
-            seen += 1;
+            kept += 1;
         }
+        let joins = augmenting(pk);
         seen > 0
+            && if joins {
+                5 * kept >= 4 * seen
+            } else {
+                kept == seen
+            }
     };
     let mut inseparable: HashMap<&str, String> = HashMap::default();
     let mut proven: BTreeMap<String, u32> = BTreeMap::new();
@@ -689,7 +758,9 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
         .filter(|w| !separable.contains_key(w.key.as_str()))
     {
         for n in PREFIX_LETTERS {
-            let Some((p, pk, rest)) = split(w, n) else { break };
+            let Some((p, pk, rest)) = split(w, n) else {
+                break;
+            };
             if by_key.contains_key(rest.as_str()) && keeps(w, &p, &pk, &rest) {
                 *proven.entry(pk).or_default() += 1;
                 break;
@@ -712,7 +783,10 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
     }
     counted.retain(|p, (s, _)| *s >= MIN_WORDS || proven.get(p).is_some_and(|&n| n >= MIN_WORDS));
     let separates = counted.values().any(|(s, _)| *s >= MIN_WORDS);
-    if !separates && junctions.is_empty() {
+    if !separates {
+        counted.retain(|p, _| augmenting(p) && !crate::off("junction"));
+    }
+    if counted.is_empty() {
         return (None, Vec::new());
     }
     // Every word that begins with a prefix: what it does with it.
@@ -744,6 +818,7 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
             base.letters = rest;
             base.key = rest_key;
             for (c, forms) in base.cells.iter_mut().enumerate() {
+                let mut unexplained = false;
                 for f in forms.iter_mut() {
                     let rest = match separation {
                         Separation::Separable => f
@@ -754,10 +829,16 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
                             .map(str::to_string),
                         _ => unjoin(&pk, &prefix, c, &f.letters),
                     };
-                    if let Some(rest) = rest {
-                        f.letters = rest;
-                        f.stress = None;
+                    match rest {
+                        Some(rest) => {
+                            f.letters = rest;
+                            f.stress = None;
+                        }
+                        None => unexplained = true,
                     }
+                }
+                if unexplained {
+                    forms.clear();
                 }
             }
             bases.push((w.key.clone(), base));
@@ -833,11 +914,13 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
     (Some(prefixes), bases)
 }
 
+/// The most letters around a letter a rule on how it is written reads.
+const MARK_CONTEXT: usize = 12;
+
 /// How a letter typed without its mark is written (see
 /// [`flexion::Grammar::marks`]): learned from every letter of the words that
-/// a mark could stand on, by the letter before it and the letters from it
-/// on. `None`
-/// where no word writes such a mark.
+/// a mark could stand on, by the letters around it (see [`flexion::around`]).
+/// `None` where no word writes such a mark.
 fn marks<'a>(
     orthography: &Orthography<'_>,
     words: &[Word],
@@ -847,24 +930,24 @@ fn marks<'a>(
     let mut examples: Vec<(String, char)> = Vec::new();
     let mut marked = false;
     for w in words {
-        let mut before = flexion::WORD_END;
-        for ((i, k), l) in w.key.char_indices().zip(w.letters.chars()) {
-            if markable(k)
-                && let Some(rest) = w.key.get(i..)
-            {
+        for (at, (k, l)) in w.key.chars().zip(w.letters.chars()).enumerate() {
+            if markable(k) {
                 marked |= l != k;
-                examples.push((format!("{before}{rest}{}", flexion::WORD_END), l));
+                examples.push((flexion::around(&w.key, at), l));
             }
-            before = k;
         }
     }
     if !marked {
         return None;
     }
+    let settings = Settings {
+        longest: MARK_CONTEXT,
+        ..settings
+    };
     let mut choice = choose::learn_starts(&examples, settings, |around, m| {
         around
             .chars()
-            .nth(1)
+            .next()
             .is_some_and(|c| orthography.fold(m) == c)
     });
     // What the rules get wrong is a word's own spelling, listed with it.
@@ -1446,6 +1529,60 @@ fn roots(
 /// The fewest words a paradigm or a stress pattern is learned from.
 const MIN_WORDS: u32 = 3;
 
+/// Paradigms the laws left with fewer than MIN_WORDS words go: each of their
+/// words inflects like the paradigm (of those kept) building the most of its
+/// forms, the others listed.
+fn rehome<'s>(
+    orthography: &Orthography<'_>,
+    words: &[crate::laws::Word<'_>],
+    paradigms: Vec<Paradigm<'s>>,
+    mut assignment: Vec<u16>,
+    laws: Option<&sound_law::Program<'_>>,
+) -> (Vec<Paradigm<'s>>, Vec<u16>) {
+    let mut count = vec![0u32; paradigms.len()];
+    for &a in &assignment {
+        if let Some(n) = count.get_mut(usize::from(a)) {
+            *n += 1;
+        }
+    }
+    let kept = |p: usize| count.get(p).is_some_and(|&n| n >= MIN_WORDS);
+    for (w, slot) in words.iter().zip(assignment.iter_mut()) {
+        if kept(usize::from(*slot)) {
+            continue;
+        }
+        let built = |p: usize| {
+            let Some(par) = paradigms.get(p) else {
+                return 0;
+            };
+            let Some(stems) = par.stems(orthography, w.letters) else {
+                return 0;
+            };
+            w.forms
+                .iter()
+                .enumerate()
+                .filter(|(c, f)| {
+                    f.is_some_and(|f| {
+                        par.built(&paradigms, laws, *c, &stems)
+                            .first()
+                            .is_some_and(|(b, _)| b == f)
+                    })
+                })
+                .count()
+        };
+        let best = (0..paradigms.len())
+            .filter(|&p| kept(p))
+            .map(|p| (built(p), std::cmp::Reverse(p)))
+            .max()
+            .filter(|&(n, _)| n > 0);
+        if let Some((_, std::cmp::Reverse(p))) = best
+            && let Ok(p) = u16::try_from(p)
+        {
+            *slot = p;
+        }
+    }
+    crate::laws::drop_empty(paradigms, assignment)
+}
+
 /// A paradigm's name: its commonest word that no sense makes vulgar or
 /// offensive, judged by how many dictionaries have it and how many senses
 /// its entry has (the dumps give no frequencies; then the shortest, then
@@ -1494,9 +1631,10 @@ fn accent<'s>(
     shape: &Shape,
     settings: Settings,
 ) -> (Accent<'s, u16>, HashMap<String, u16>) {
-    // Per word: per cell, its accent, letters and where the ending starts;
-    // and where its lemma accents its stem.
-    type Fact = (flexion::Stress, String, usize);
+    // Per word: per cell, its accent, letters and where the ending starts,
+    // and the same before the sound laws; and where its lemma accents its
+    // stem.
+    type Fact = (flexion::Stress, String, usize, Option<(String, usize)>);
     let mut facts: Vec<(u16, Vec<Option<Fact>>, Option<usize>)> = Vec::with_capacity(words.len());
     for (w, &p) in words.iter().zip(assignment) {
         let Some(par) = paradigms.get(usize::from(p)) else {
@@ -1508,8 +1646,11 @@ fn accent<'s>(
         let cells: Vec<Option<Fact>> = (0..shape.cells)
             .map(|c| {
                 let f = form(c)?;
-                let (_, ending) = par.built(paradigms, laws, c, &stems).into_iter().next()?;
-                Some((f.stress?, f.letters.clone(), ending))
+                let (built, ending) = par.built(paradigms, laws, c, &stems).into_iter().next()?;
+                let before = par
+                    .unlawed(paradigms, c, &stems)
+                    .filter(|(b, _)| *b != built);
+                Some((f.stress?, f.letters.clone(), ending, before))
             })
             .collect();
         // The lemma's accent; else where the cells accented before their
@@ -1524,7 +1665,7 @@ fn accent<'s>(
                 .map(|s| flexion::stress_position(orthography, &f.letters, s)),
             None => {
                 let mut votes: BTreeMap<usize, u32> = BTreeMap::new();
-                for (s, letters, ending) in cells.iter().flatten() {
+                for (s, letters, ending, _) in cells.iter().flatten() {
                     if vowel_at(orthography, letters, s.vowel) < *ending {
                         *votes
                             .entry(flexion::stress_position(orthography, letters, *s))
@@ -1536,16 +1677,24 @@ fn accent<'s>(
         };
         facts.push((p, cells, stem));
     }
+    // Placed before the sound laws, and carried through them.
     let explains = |fact: &Fact, finals: Finals, place: Place, stem: Option<usize>| {
-        (place != Place::Stem || stem.is_some())
-            && flexion::stress_place(
+        let at = |letters: &str, ending: usize| {
+            flexion::stress_place(
                 orthography,
-                &fact.1,
-                fact.2,
+                letters,
+                ending,
                 finals,
                 place,
                 stem.unwrap_or(0),
-            ) == Some(fact.0)
+            )
+        };
+        let placed = match &fact.3 {
+            Some((before, ending)) => at(before, *ending)
+                .and_then(|s| flexion::stress_carry(orthography, before, &fact.1, s)),
+            None => at(&fact.1, fact.2),
+        };
+        (place != Place::Stem || stem.is_some()) && placed == Some(fact.0)
     };
     let explained = |fact: &Fact, long: bool, stem: Option<usize>| {
         [false, true].iter().any(|&circumflex| {
