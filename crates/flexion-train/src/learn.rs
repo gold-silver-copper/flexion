@@ -1559,36 +1559,32 @@ fn accent<'s>(
     // more words' accents.
     let long_finals: Vec<u16> = (0..shape.cells)
         .filter(|&c| {
-            let (mut short, mut long) = (0u32, 0u32);
-            for (_, cells, stem) in &facts {
-                if let Some(Some(fact)) = cells.get(c) {
-                    short += u32::from(either(fact, false, *stem));
-                    long += u32::from(either(fact, true, *stem));
-                }
-            }
-            long > short
+            let with = facts
+                .iter()
+                .filter_map(|(_, cells, stem)| Some((cells.get(c)?.as_ref()?, *stem)));
+            let gain =
+                with.map(|(f, s)| i32::from(either(f, true, s)) - i32::from(either(f, false, s)));
+            gain.sum::<i32>() > 0
         })
         .filter_map(|c| u16::try_from(c).ok())
         .collect();
     let is_long = |c: usize| u16::try_from(c).is_ok_and(|c| long_finals.binary_search(&c).is_ok());
     // Per paradigm, the cells whose ending's last syllable, accented, most
     // often takes the circumflex: of the accents the choice of kind decides.
-    let mut votes: BTreeMap<(u16, usize), (u32, u32)> = BTreeMap::new();
+    let mut votes: BTreeMap<(u16, usize), i32> = BTreeMap::new();
     for (p, cells, stem) in &facts {
         for (c, fact) in cells.iter().enumerate() {
             let Some(fact) = fact else { continue };
             let acute = explained(fact, false, is_long(c), *stem);
             let circ = explained(fact, true, is_long(c), *stem);
-            let vote = votes.entry((*p, c)).or_default();
             if acute != circ {
-                vote.0 += u32::from(acute);
-                vote.1 += u32::from(circ);
+                *votes.entry((*p, c)).or_default() += if circ { 1 } else { -1 };
             }
         }
     }
     let mut circumflex: Vec<Vec<u16>> = vec![Vec::new(); paradigms.len()];
-    for (&(p, c), &(acute, circ)) in &votes {
-        if circ > acute
+    for (&(p, c), &n) in &votes {
+        if n > 0
             && let (Some(cells), Ok(c)) = (circumflex.get_mut(usize::from(p)), u16::try_from(c))
         {
             cells.push(c);

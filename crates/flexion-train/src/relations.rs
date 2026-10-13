@@ -213,10 +213,7 @@ pub fn analogies<'s>(
             if told.get(c).copied().unwrap_or(true) {
                 continue;
             }
-            // (other dimensions apart, ways it changes, not a relation's
-            // pair, fewer words), and (source, from, to)
-            type Rank = (usize, usize, bool, std::cmp::Reverse<usize>);
-            let mut best: Option<(Rank, usize, usize, usize)> = None;
+            let mut best = None;
             for s in 0..cells {
                 if !told.get(s).copied().unwrap_or(false) {
                     continue;
@@ -237,17 +234,10 @@ pub fn analogies<'s>(
                     if n == 0 {
                         continue;
                     }
-                    let key = (
-                        (
-                            apart(a, s).0,
-                            ways,
-                            !edges.contains(&(a, b)),
-                            std::cmp::Reverse(n),
-                        ),
-                        s,
-                        a,
-                        b,
-                    );
+                    // Other dimensions apart, ways it changes, not a
+                    // relation's pair, fewer words; and source, from, to.
+                    let fresh = !edges.contains(&(a, b));
+                    let key = ((apart(a, s).0, ways, fresh, std::cmp::Reverse(n)), s, a, b);
                     if best.is_none_or(|b| key < b) {
                         best = Some(key);
                     }
