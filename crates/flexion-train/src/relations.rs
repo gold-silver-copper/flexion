@@ -214,10 +214,8 @@ pub fn analogies<'s>(
                 continue;
             }
             let mut best = None;
-            for s in 0..cells {
-                if !told.get(s).copied().unwrap_or(false) {
-                    continue;
-                }
+            // From a cell words have, never one itself told by analogy.
+            for s in (0..cells).filter(|&s| has(s) && told.get(s).copied().unwrap_or(false)) {
                 let (1, k) = apart(s, c) else { continue };
                 let (Some(&from), Some(&to)) = (at(s).get(k), at(c).get(k)) else {
                     continue;
@@ -271,7 +269,7 @@ pub fn analogies<'s>(
     // A cell no pair of cells tells: the form of the nearest one, as it is.
     for c in (0..cells).filter(|&c| !told.get(c).copied().unwrap_or(true)) {
         let nearest = (0..cells)
-            .filter(|&s| told.get(s).copied().unwrap_or(false))
+            .filter(|&s| has(s) && told.get(s).copied().unwrap_or(false))
             .min_by_key(|&s| {
                 (
                     apart(s, c).0,

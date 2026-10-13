@@ -405,7 +405,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             .into_iter()
             .take(KEEP)
             .map(|inf| {
-                let classes = self.accent_classes(&word, &inf);
+                let classes = self.accent_classes(&word, &inf, cells);
                 (inf, classes, Built::default())
             })
             .collect();
@@ -878,7 +878,12 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
 
     /// The accent classes of the word `word` read as `inf`, by how likely:
     /// those whose pattern puts the lemma's accent where the caller wrote it.
-    fn accent_classes(&self, word: &Written, inf: &Inflection<'_, 'a, '_, P>) -> Vec<Class> {
+    fn accent_classes(
+        &self,
+        word: &Written,
+        inf: &Inflection<'_, 'a, '_, P>,
+        cells: &[usize],
+    ) -> Vec<Class> {
         let Some(accent) = &self.accent else {
             return Vec::new();
         };
@@ -910,7 +915,19 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             .into_iter()
             .filter_map(|r| {
                 let class = accent.class_of(r.value)?;
-                let places = accent.places(class.pattern);
+                // Each cell's place: all at once for a table, else the
+                // cells asked for and the lemma's.
+                let places = if cells.len() * 4 > self.cells {
+                    accent.places(class.pattern)
+                } else {
+                    let mut places = vec![None; self.cells];
+                    for &c in cells.iter().chain(&self.lemma_cell) {
+                        if let Some(slot) = places.get_mut(c) {
+                            *slot = accent.place(class.pattern, c);
+                        }
+                    }
+                    places
+                };
                 let on_stem = self
                     .lemma_cell
                     .and_then(|c| places.get(c).copied().flatten())
