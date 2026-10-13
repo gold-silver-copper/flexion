@@ -21,8 +21,9 @@ allows.
 ```rust
 use ancient_greek::*;
 
-// Vowel length is marked on α, ι, υ, as Wiktionary's tables do.
-assert_eq!(noun("ἄνθρωπος", Case::Genitive, Number::Singular), "ᾰ̓νθρώπου");
+// Vowel length is marked on α, ι, υ, as Wiktionary's tables do, except
+// where a breathing takes the letter (`ᾰ̓` is written `ἀ`).
+assert_eq!(noun("ἄνθρωπος", Case::Genitive, Number::Singular), "ἀνθρώπου");
 assert_eq!(noun("δῶρον", Case::Nominative, Number::Plural), "δῶρᾰ");
 ```
 
