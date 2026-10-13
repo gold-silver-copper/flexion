@@ -15,21 +15,21 @@ use std::borrow::Cow;
 /// out: the place of the pattern it is like).
 macro_rules! pattern {
     ($name:literal, $words:literal $(, like $parent:literal)?;
-     $(nominative_masculine: $c0:tt, $c1:tt, $c2:tt;)?
-     $(nominative_feminine: $c3:tt, $c4:tt, $c5:tt;)?
-     $(nominative_neuter: $c6:tt, $c7:tt, $c8:tt;)?
-     $(genitive_masculine: $c9:tt, $c10:tt, $c11:tt;)?
-     $(genitive_feminine: $c12:tt, $c13:tt, $c14:tt;)?
-     $(genitive_neuter: $c15:tt, $c16:tt, $c17:tt;)?
-     $(dative_masculine: $c18:tt, $c19:tt, $c20:tt;)?
-     $(dative_feminine: $c21:tt, $c22:tt, $c23:tt;)?
-     $(dative_neuter: $c24:tt, $c25:tt, $c26:tt;)?
-     $(accusative_masculine: $c27:tt, $c28:tt, $c29:tt;)?
-     $(accusative_feminine: $c30:tt, $c31:tt, $c32:tt;)?
-     $(accusative_neuter: $c33:tt, $c34:tt, $c35:tt;)?
-     $(vocative_masculine: $c36:tt, $c37:tt, $c38:tt;)?
-     $(vocative_feminine: $c39:tt, $c40:tt, $c41:tt;)?
-     $(vocative_neuter: $c42:tt, $c43:tt, $c44:tt;)?
+     $(nom_m: $c0:tt, $c1:tt, $c2:tt;)?
+     $(nom_f: $c3:tt, $c4:tt, $c5:tt;)?
+     $(nom_n: $c6:tt, $c7:tt, $c8:tt;)?
+     $(gen_m: $c9:tt, $c10:tt, $c11:tt;)?
+     $(gen_f: $c12:tt, $c13:tt, $c14:tt;)?
+     $(gen_n: $c15:tt, $c16:tt, $c17:tt;)?
+     $(dat_m: $c18:tt, $c19:tt, $c20:tt;)?
+     $(dat_f: $c21:tt, $c22:tt, $c23:tt;)?
+     $(dat_n: $c24:tt, $c25:tt, $c26:tt;)?
+     $(acc_m: $c27:tt, $c28:tt, $c29:tt;)?
+     $(acc_f: $c30:tt, $c31:tt, $c32:tt;)?
+     $(acc_n: $c33:tt, $c34:tt, $c35:tt;)?
+     $(voc_m: $c36:tt, $c37:tt, $c38:tt;)?
+     $(voc_f: $c39:tt, $c40:tt, $c41:tt;)?
+     $(voc_n: $c42:tt, $c43:tt, $c44:tt;)?
     ) => {
         AccentPattern {
             name: Cow::Borrowed($name),
@@ -100,43 +100,43 @@ macro_rules! like {
 pub static PATTERNS: [AccentPattern<'static>; 4] = [
     // 0, `ὁδε`: 41 words.
     pattern!("ὁδε", 41;
-        nominative_masculine: Stem, Stem, Stem;
-        nominative_feminine: Stem, Stem, Stem;
-        nominative_neuter: Stem, Stem, Stem;
-        genitive_masculine: Stem, Stem, Stem;
-        genitive_feminine: Stem, Stem, Recessive;
-        genitive_neuter: Stem, Stem, Stem;
-        dative_masculine: Stem, Stem, Stem;
-        dative_feminine: Stem, Stem, Stem;
-        dative_neuter: Stem, Stem, Stem;
-        accusative_masculine: Stem, Stem, Stem;
-        accusative_feminine: Stem, Stem, Stem;
-        accusative_neuter: Stem, Stem, Stem;
-        vocative_masculine: Stem, Stem, Stem;
-        vocative_feminine: Stem, Stem, Stem;
-        vocative_neuter: Stem, Stem, Stem;
+    nom_m: Stem, Stem, Stem;
+    nom_f: Stem, Stem, Stem;
+    nom_n: Stem, Stem, Stem;
+    gen_m: Stem, Stem, Stem;
+    gen_f: Stem, Stem, Recessive;
+    gen_n: Stem, Stem, Stem;
+    dat_m: Stem, Stem, Stem;
+    dat_f: Stem, Stem, Stem;
+    dat_n: Stem, Stem, Stem;
+    acc_m: Stem, Stem, Stem;
+    acc_f: Stem, Stem, Stem;
+    acc_n: Stem, Stem, Stem;
+    voc_m: Stem, Stem, Stem;
+    voc_f: Stem, Stem, Stem;
+    voc_n: Stem, Stem, Stem;
     ),
     // 1, `μηδεις`: 10 words. Like 0 (`ὁδε`), except in 9 cells.
     pattern!("μηδεις", 10, like 0;
-        genitive_masculine: Ending, _, _;
-        genitive_feminine: Ending, _, _;
-        genitive_neuter: Ending, _, _;
-        dative_masculine: Ending, _, _;
-        dative_feminine: Ending, _, _;
-        dative_neuter: Ending, _, _;
-        accusative_masculine: Ending, _, _;
-        accusative_feminine: Ending, _, _;
-        accusative_neuter: Ending, _, _;
+    gen_m: Ending, _, _;
+    gen_f: Ending, _, _;
+    gen_n: Ending, _, _;
+    dat_m: Ending, _, _;
+    dat_f: Ending, _, _;
+    dat_n: Ending, _, _;
+    acc_m: Ending, _, _;
+    acc_f: Ending, _, _;
+    acc_n: Ending, _, _;
     ),
     // 2, `αὐτος`: 3 words. Like 0 (`ὁδε`), except in 1 cell.
     pattern!("αὐτος", 3, like 0;
-        genitive_feminine: _, _, Stem;
+    gen_f: _, _, Stem;
     ),
     // 3, `σαυτοῡ`: 3 words. Like 1 (`μηδεις`), except in 3 cells.
     pattern!("σαυτοῡ", 3, like 1;
-        genitive_neuter: Stem, _, _;
-        dative_neuter: Stem, _, _;
-        accusative_neuter: Stem, _, _;
+    gen_n: Stem, _, _;
+    dat_n: Stem, _, _;
+    acc_n: Stem, _, _;
     ),
 ];
 

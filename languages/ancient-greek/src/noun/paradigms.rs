@@ -14,18 +14,18 @@ use flexion::Paradigm;
 /// per line (`derived`: the form comes from another cell's, see
 /// `relations.rs`; `_`, or a row left out: the form is the declension's it is like,
 /// or, in a declension like no other, derived):
-/// `nominative` (sg, du, pl)
-/// `genitive` (sg, du, pl)
-/// `dative` (sg, du, pl)
-/// `accusative` (sg, du, pl)
-/// `vocative` (sg, du, pl)
+/// `nom` (sg, du, pl)
+/// `gen_` (sg, du, pl)
+/// `dat` (sg, du, pl)
+/// `acc` (sg, du, pl)
+/// `voc` (sg, du, pl)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident)?;
-     $(nominative: $c0:tt, $c1:tt, $c2:tt;)?
-     $(genitive: $c3:tt, $c4:tt, $c5:tt;)?
-     $(dative: $c6:tt, $c7:tt, $c8:tt;)?
-     $(accusative: $c9:tt, $c10:tt, $c11:tt;)?
-     $(vocative: $c12:tt, $c13:tt, $c14:tt;)?
+     $(nom: $c0:tt, $c1:tt, $c2:tt;)?
+     $(gen_: $c3:tt, $c4:tt, $c5:tt;)?
+     $(dat: $c6:tt, $c7:tt, $c8:tt;)?
+     $(acc: $c9:tt, $c10:tt, $c11:tt;)?
+     $(voc: $c12:tt, $c13:tt, $c14:tt;)?
     ) => {
         Paradigm {
             name: ::std::borrow::Cow::Borrowed($name),
@@ -570,331 +570,331 @@ impl flexion::Label for Declension {
 pub(super) static DECLENSIONS: [Paradigm<'static>; 157] = [
     // Τρᾰγος: 1,193 words (λῠκος, κοσμος, ἱππος, ἐρωμενος, σπογγος, ἀγγελος).
     declension!("τρᾰγος", 1193, "~ος";
-        nominative: "~ος", "~ω", "~οι";
-        genitive: "~ου", "~οιν", "~ων";
-        dative: "~ῳ", _, "~οις";
-        accusative: "~ον", _, "~ους";
-        vocative: "~ε", _, _;
+    nom: "~ος", "~ω", "~οι";
+    gen_: "~ου", "~οιν", "~ων";
+    dat: "~ῳ", _, "~οις";
+    acc: "~ον", _, "~ους";
+    voc: "~ε", _, _;
     ),
-    // Μορῐον: 1,025 words (ἀστρον, παιδῐον, δενδρον, μῠστηρῐον, ἐργον, εἰδωλον). Like Τρᾰγος, except in 4 cells: nominative sg, nominative pl, accusative pl, vocative sg.
+    // Μορῐον: 1,025 words (ἀστρον, παιδῐον, δενδρον, μῠστηρῐον, ἐργον, εἰδωλον). Like Τρᾰγος, except in 4 cells: nom sg, nom pl, acc pl, voc sg.
     declension!("μορῐον", 1025, "~ον", [gender: Neuter], like Τρᾰγος;
-        nominative: "~ον", _, "~ᾰ";
-        accusative: _, _, "~ᾰ";
-        vocative: "~ον", _, _;
+    nom: "~ον", _, "~ᾰ";
+    acc: _, _, "~ᾰ";
+    voc: "~ον", _, _;
     ),
     // Οὐσῐᾱ: 546 words (δημοκρᾰτῐᾱ, χωρᾱ, μελῳδῐᾱ, φῐλῐᾱ, σοφῐᾱ, ἡγεμονῐᾱ).
     declension!("οὐσῐᾱ", 546, "~ᾱ", [gender: Feminine];
-        nominative: "~ᾱ", "~ᾱ", "~αι";
-        genitive: "~ᾱς", "~αιν", "~ων";
-        dative: "~ᾳ", _, "~αις";
-        accusative: "~ᾱν", _, "~ᾱς";
-        vocative: "~ᾱ", _, _;
+    nom: "~ᾱ", "~ᾱ", "~αι";
+    gen_: "~ᾱς", "~αιν", "~ων";
+    dat: "~ᾳ", _, "~αις";
+    acc: "~ᾱν", _, "~ᾱς";
+    voc: "~ᾱ", _, _;
     ),
     // Θεμᾰ: 531 words (μελῐ, γρᾰμμᾰ, δερμᾰ, σῑγμᾰ, βαπτισμᾰ, στομᾰ).
     declension!("θεμᾰ", 531, "~";
-        nominative: "~", "~τε", "~τᾰ";
-        genitive: "~τος", "~τοιν", "~των";
-        dative: "~τῐ", _, "~σῐ|~σῐν";
-        accusative: "~", _, "~τᾰ";
-        vocative: "~", _, _;
+    nom: "~", "~τε", "~τᾰ";
+    gen_: "~τος", "~τοιν", "~των";
+    dat: "~τῐ", _, "~σῐ|~σῐν";
+    acc: "~", _, "~τᾰ";
+    voc: "~", _, _;
     ),
-    // Νῠμφη: 518 words (νῑκη, δῑνη, κορη, γῠνη, ἐλεημοσῠνη, εἰρηνη). Like Οὐσῐᾱ, except in 5 cells: nominative sg, genitive sg, dative sg, accusative sg, vocative sg.
+    // Νῠμφη: 518 words (νῑκη, δῑνη, κορη, γῠνη, ἐλεημοσῠνη, εἰρηνη). Like Οὐσῐᾱ, except in 5 cells: nom sg, gen_ sg, dat sg, acc sg, voc sg.
     declension!("νῠμφη", 518, "~η", [gender: Feminine], like Οὐσῐᾱ;
-        nominative: "~η", _, _;
-        genitive: "~ης", _, _;
-        dative: "~ῃ", _, _;
-        accusative: "~ην", _, _;
-        vocative: "~η", _, _;
+    nom: "~η", _, _;
+    gen_: "~ης", _, _;
+    dat: "~ῃ", _, _;
+    acc: "~ην", _, _;
+    voc: "~η", _, _;
     ),
-    // Μερῐσμος: 483 words (λαιμος, μᾰστος, θεος, καιρος, νεκρος, ὀφθᾰλμος). Like Τρᾰγος, except in 3 cells: genitive sg, genitive du, dative pl.
+    // Μερῐσμος: 483 words (λαιμος, μᾰστος, θεος, καιρος, νεκρος, ὀφθᾰλμος). Like Τρᾰγος, except in 3 cells: gen_ sg, gen_ du, dat pl.
     declension!("μερῐσμος", 483, "~ος", [gender: Masculine], like Τρᾰγος;
-        genitive: "~οῡ", "~οῑν", _;
-        dative: _, _, "~οῑς";
+    gen_: "~οῡ", "~οῑν", _;
+    dat: _, _, "~οῑς";
     ),
     // Δῐαιρεσῐς: 433 words (πολῐς, γνωσῐς, κῠβερνησῐς, μορφωσῐς, φῠσῐς, κρῐσῐς).
     declension!("δῐαιρεσῐς", 433, "~ῐς", [gender: Feminine];
-        nominative: "~ῐς", "~ει", "~εις";
-        genitive: "~εως", "~εοιν", "~εων";
-        dative: "~ει", _, "~εσῐ|~εσῐν";
-        accusative: "~ῐν", _, "~εις";
-        vocative: "~ῐ", _, _;
+    nom: "~ῐς", "~ει", "~εις";
+    gen_: "~εως", "~εοιν", "~εων";
+    dat: "~ει", _, "~εσῐ|~εσῐν";
+    acc: "~ῐν", _, "~εις";
+    voc: "~ῐ", _, _;
     ),
-    // Κᾰτᾰσκευη: 302 words (μηχᾰνη, μουσῐκη, γρᾰμμᾰτῐκη, φωνη, κεφᾰλη, ἡδονη). Like Νῠμφη, except in 2 cells: genitive du, dative pl.
+    // Κᾰτᾰσκευη: 302 words (μηχᾰνη, μουσῐκη, γρᾰμμᾰτῐκη, φωνη, κεφᾰλη, ἡδονη). Like Νῠμφη, except in 2 cells: gen_ du, dat pl.
     declension!("κᾰτᾰσκευη", 302, "~η", [gender: Feminine], like Νῠμφη;
-        genitive: _, "~αῑν", _;
-        dative: _, _, "~αῑς";
+    gen_: _, "~αῑν", _;
+    dat: _, _, "~αῑς";
     ),
-    // Γενετης: 204 words (προφητης, κλεπτης, πολῑτης, ἱπποτοξοτης, τρωγλοδῠτης, σῠβᾰρῑτης). Like Νῠμφη, except in 3 cells: nominative sg, genitive sg, vocative sg.
+    // Γενετης: 204 words (προφητης, κλεπτης, πολῑτης, ἱπποτοξοτης, τρωγλοδῠτης, σῠβᾰρῑτης). Like Νῠμφη, except in 3 cells: nom sg, gen_ sg, voc sg.
     declension!("γενετης", 204, "~ης", [gender: Masculine], like Νῠμφη;
-        nominative: "~ης", _, _;
-        genitive: "~ου", _, _;
-        vocative: "~ᾰ", _, _;
+    nom: "~ης", _, _;
+    gen_: "~ου", _, _;
+    voc: "~ᾰ", _, _;
     ),
     // Κερκῐς: 185 words (παῑς, λεπῐς, πᾰτρῐς, ἑλληνῐς, περσῐς, γρᾰφῐς).
     declension!("κερκῐς", 185, "~ς", [gender: Feminine];
-        nominative: "~ς", "~δε", "~δες";
-        genitive: "~δος", "~δοιν", "~δων";
-        dative: "~δῐ", _, "~σῐ|~σῐν";
-        accusative: "~δᾰ", _, "~δᾰς";
-        vocative: "~", _, _;
+    nom: "~ς", "~δε", "~δες";
+    gen_: "~δος", "~δοιν", "~δων";
+    dat: "~δῐ", _, "~σῐ|~σῐν";
+    acc: "~δᾰ", _, "~δᾰς";
+    voc: "~", _, _;
     ),
     // Κορᾰξ: 183 words (χᾰλῐξ, πτερῠξ, γλαῡξ, ἑλῐξ, κῐλῐξ, νῠξ).
     declension!("κορᾰξ", 183, "~ξ";
-        nominative: "~ξ", "~κε", "~κες";
-        genitive: "~κος", "~κοιν", "~κων";
-        dative: "~κῐ", _, "~ξῐ|~ξῐν";
-        accusative: "~κᾰ", _, "~κᾰς";
-        vocative: "~ξ", _, _;
+    nom: "~ξ", "~κε", "~κες";
+    gen_: "~κος", "~κοιν", "~κων";
+    dat: "~κῐ", _, "~ξῐ|~ξῐν";
+    acc: "~κᾰ", _, "~κᾰς";
+    voc: "~ξ", _, _;
     ),
-    // Κλεις: 165 words (μῠκης, κρης, σκληροτης, μᾰρτῠς, θης, κλεις). Like Κερκῐς, except in 1 cell: vocative sg.
+    // Κλεις: 165 words (μῠκης, κρης, σκληροτης, μᾰρτῠς, θης, κλεις). Like Κερκῐς, except in 1 cell: voc sg.
     declension!("κλεις", 165, "~ς", like Κερκῐς;
-        vocative: "~ς", _, _;
+    voc: "~ς", _, _;
     ),
-    // Τρᾰπεζᾰ: 133 words (θᾰλᾰσσᾰ, ῥῐζᾰ, θᾰλᾰττᾰ, δοξᾰ, γλωττᾰ, μελῐττᾰ). Like Νῠμφη, except in 3 cells: nominative sg, accusative sg, vocative sg.
+    // Τρᾰπεζᾰ: 133 words (θᾰλᾰσσᾰ, ῥῐζᾰ, θᾰλᾰττᾰ, δοξᾰ, γλωττᾰ, μελῐττᾰ). Like Νῠμφη, except in 3 cells: nom sg, acc sg, voc sg.
     declension!("τρᾰπεζᾰ", 133, "~ᾰ", [gender: Feminine], like Νῠμφη;
-        nominative: "~ᾰ", _, _;
-        accusative: "~ᾰν", _, _;
-        vocative: "~ᾰ", _, _;
+    nom: "~ᾰ", _, _;
+    acc: "~ᾰν", _, _;
+    voc: "~ᾰ", _, _;
     ),
-    // Ἐπῐφᾰνειᾰ: 116 words (βᾰσῐλειᾰ, ἀσθενειᾰ, μᾰχαιρᾰ, βοηθειᾰ, συγγενειᾰ, ὀρθοεπειᾰ). Like Τρᾰπεζᾰ, except in 2 cells: genitive sg, dative sg.
+    // Ἐπῐφᾰνειᾰ: 116 words (βᾰσῐλειᾰ, ἀσθενειᾰ, μᾰχαιρᾰ, βοηθειᾰ, συγγενειᾰ, ὀρθοεπειᾰ). Like Τρᾰπεζᾰ, except in 2 cells: gen_ sg, dat sg.
     declension!("ἐπῐφᾰνειᾰ", 116, "~ᾰ", [gender: Feminine], like Τρᾰπεζᾰ;
-        genitive: "~ᾱς", _, _;
-        dative: "~ᾳ", _, _;
+    gen_: "~ᾱς", _, _;
+    dat: "~ᾳ", _, _;
     ),
     // Γενος: 109 words (σκῠλος, κλεος, ἐθνος, πληθος, τελος, στηθος).
     declension!("γενος", 109, "~ος", [gender: Neuter];
-        nominative: "~ος", "~ει", "~η";
-        genitive: "~ους", "~οῑν", "~ων";
-        dative: "~ει", _, "~εσῐ|~εσῐν";
-        accusative: "~ος", _, "~η";
-        vocative: "~ος", _, _;
+    nom: "~ος", "~ει", "~η";
+    gen_: "~ους", "~οῑν", "~ων";
+    dat: "~ει", _, "~εσῐ|~εσῐν";
+    acc: "~ος", _, "~η";
+    voc: "~ος", _, _;
     ),
     // Αἰων: 96 words (ἑλλην, αἰων, λεγεων, ἀγων, σᾱπων, λᾰκων).
     declension!("αἰων", 96, "~ν", [gender: Masculine];
-        nominative: "~ν", "~νε", "~νες";
-        genitive: "~νος", "~νοιν", "~νων";
-        dative: "~νῐ", _, "~σῐ|~σῐν";
-        accusative: "~νᾰ", _, "~νᾰς";
-        vocative: "~ν", _, _;
+    nom: "~ν", "~νε", "~νες";
+    gen_: "~νος", "~νοιν", "~νων";
+    dat: "~νῐ", _, "~σῐ|~σῐν";
+    acc: "~νᾰ", _, "~νᾰς";
+    voc: "~ν", _, _;
     ),
-    // Χορευτης: 87 words (ἐρᾰστης, ποιητης, βᾰπτῐστης, κρῐτης, κωλοβᾰθρῐστης, σοφῐστης). Like Κᾰτᾰσκευη, except in 3 cells: nominative sg, genitive sg, vocative sg.
+    // Χορευτης: 87 words (ἐρᾰστης, ποιητης, βᾰπτῐστης, κρῐτης, κωλοβᾰθρῐστης, σοφῐστης). Like Κᾰτᾰσκευη, except in 3 cells: nom sg, gen_ sg, voc sg.
     declension!("χορευτης", 87, "~ης", [gender: Masculine], like Κᾰτᾰσκευη;
-        nominative: "~ης", _, _;
-        genitive: "~οῡ", _, _;
-        vocative: "~ᾰ", _, _;
+    nom: "~ης", _, _;
+    gen_: "~οῡ", _, _;
+    voc: "~ᾰ", _, _;
     ),
     // Ἱππευς: 81 words (βᾰσῐλευς, ἀρχιερευς, γραμμᾰτευς, αἰολευς, ἀμφισσευς, ἀντῐκυρευς).
     declension!("ἱππευς", 81, "~ευς", [gender: Masculine];
-        nominative: "~ευς", "~η", "~ης|~εῑς";
-        genitive: "~εως", "~εοιν", "~εων";
-        dative: "~εῑ", _, "~εῡσῐ|~εῡσῐν";
-        accusative: "~εᾱ", _, "~εᾱς";
-        vocative: "~εῡ", _, "~ης|~εῑς";
+    nom: "~ευς", "~η", "~ης|~εῑς";
+    gen_: "~εως", "~εοιν", "~εων";
+    dat: "~εῑ", _, "~εῡσῐ|~εῡσῐν";
+    acc: "~εᾱ", _, "~εᾱς";
+    voc: "~εῡ", _, "~ης|~εῑς";
     ),
     // Χᾰρᾰκτηρ: 72 words (μᾰρτῠρ, πᾰνθηρ, ἰβηρ, χειρ, ἐορ, κρᾱτηρ).
     declension!("χᾰρᾰκτηρ", 72, "~";
-        nominative: "~", "~ε", "~ες";
-        genitive: "~ος", "~οιν", "~ων";
-        dative: "~ῐ", _, "~σῐ|~σῐν";
-        accusative: "~ᾰ", _, "~ᾰς";
-        vocative: "~", _, _;
+    nom: "~", "~ε", "~ες";
+    gen_: "~ος", "~οιν", "~ων";
+    dat: "~ῐ", _, "~σῐ|~σῐν";
+    acc: "~ᾰ", _, "~ᾰς";
+    voc: "~", _, _;
     ),
     // Κεραιᾱ: 71 words (προφητειᾱ, πορνειᾱ, παιδειᾱ, δουλειᾱ, ξῠλειᾱ, νηστειᾱ).
     declension!("κεραιᾱ", 71, "~~ᾱ", [gender: Feminine];
-        nominative: "~~ᾱ", "~~ᾱ", "~ῑα~";
-        genitive: "~~ᾱς", "~~αιν", "~~ων";
-        dative: "~~ᾳ", _, "~~αις";
-        accusative: "~~ᾱν", _, "~~ᾱς";
-        vocative: "~~ᾱ", _, _;
+    nom: "~~ᾱ", "~~ᾱ", "~ῑα~";
+    gen_: "~~ᾱς", "~~αιν", "~~ων";
+    dat: "~~ᾳ", _, "~~αις";
+    acc: "~~ᾱν", _, "~~ᾱς";
+    voc: "~~ᾱ", _, _;
     ),
     // Σημεῑον: 62 words (θεῑον, πανδοχεῑον, πᾰνδοκεῑον, στοιχεῑον, ἀγγεῑον, βᾰλᾰνεῑον).
     declension!("σημεῑον", 62, "~ῑον", [gender: Neuter];
-        nominative: "~ῑον", "~ιω", "~ῑᾰ";
-        genitive: "~ιου", "~ιοιν", "~ιων";
-        dative: "~ιῳ", _, "~ιοις";
-        accusative: "~ῑον", _, "~ῑᾰ";
-        vocative: "~ῑον", _, _;
+    nom: "~ῑον", "~ιω", "~ῑᾰ";
+    gen_: "~ιου", "~ιοιν", "~ιων";
+    dat: "~ιῳ", _, "~ιοις";
+    acc: "~ῑον", _, "~ῑᾰ";
+    voc: "~ῑον", _, _;
     ),
-    // Κᾰλπῐς: 62 words (πελασγῐωτῐς, σπᾰρτῐᾱτῐς, σῠβᾰρῑτῐς, σμῠρῐς, ἀσπρῐς, εὐνῐς). Like Κερκῐς, except in 1 cell: accusative sg.
+    // Κᾰλπῐς: 62 words (πελασγῐωτῐς, σπᾰρτῐᾱτῐς, σῠβᾰρῑτῐς, σμῠρῐς, ἀσπρῐς, εὐνῐς). Like Κερκῐς, except in 1 cell: acc sg.
     declension!("κᾰλπῐς", 62, "~ς", like Κερκῐς;
-        accusative: "~ν", _, _;
+    acc: "~ν", _, _;
     ),
-    // Φορᾱ: 54 words (παιδῐᾱ, πᾰτρῐᾱ, γενεᾱ, θεᾱ, στρᾰτῐᾱ, σκῐᾱ). Like Οὐσῐᾱ, except in 2 cells: genitive du, dative pl.
+    // Φορᾱ: 54 words (παιδῐᾱ, πᾰτρῐᾱ, γενεᾱ, θεᾱ, στρᾰτῐᾱ, σκῐᾱ). Like Οὐσῐᾱ, except in 2 cells: gen_ du, dat pl.
     declension!("φορᾱ", 54, "~ᾱ", [gender: Feminine], like Οὐσῐᾱ;
-        genitive: _, "~αῑν", _;
-        dative: _, _, "~αῑς";
+    gen_: _, "~αῑν", _;
+    dat: _, _, "~αῑς";
     ),
-    // Δᾰμᾰλης: 53 words (βελγης, δακης, μῐνῠης, ὀδρῠσης, πῐσῐδης, σᾰκης). Like Γενετης, except in 1 cell: vocative sg.
+    // Δᾰμᾰλης: 53 words (βελγης, δακης, μῐνῠης, ὀδρῠσης, πῐσῐδης, σᾰκης). Like Γενετης, except in 1 cell: voc sg.
     declension!("δᾰμᾰλης", 53, "~ης", [gender: Masculine], like Γενετης;
-        vocative: "~η", _, _;
+    voc: "~η", _, _;
     ),
-    // Κοχλῐᾱς: 49 words (νεᾱνῐᾱς, γᾰλᾰξῐᾱς, καικιᾱς, κῠβᾱς, τᾰμῐᾱς, κοχλῐᾱς). Like Οὐσῐᾱ, except in 2 cells: nominative sg, genitive sg.
+    // Κοχλῐᾱς: 49 words (νεᾱνῐᾱς, γᾰλᾰξῐᾱς, καικιᾱς, κῠβᾱς, τᾰμῐᾱς, κοχλῐᾱς). Like Οὐσῐᾱ, except in 2 cells: nom sg, gen_ sg.
     declension!("κοχλῐᾱς", 49, "~ᾱς", [gender: Masculine], like Οὐσῐᾱ;
-        nominative: "~ᾱς", _, _;
-        genitive: "~ου", _, _;
+    nom: "~ᾱς", _, _;
+    gen_: "~ου", _, _;
     ),
-    // Ὀργῐᾰ: 49 words (κᾰστᾰνειᾰ, κᾰστᾰνᾰ, ὀργῐᾰ, γαρσᾰνᾰ, αἱρεσῐᾰ, δῐονῡσῐᾰ). Like Μορῐον, except in 7 cells: nominative sg, nominative du, genitive sg, genitive du, dative sg, accusative sg, ….
+    // Ὀργῐᾰ: 49 words (κᾰστᾰνειᾰ, κᾰστᾰνᾰ, ὀργῐᾰ, γαρσᾰνᾰ, αἱρεσῐᾰ, δῐονῡσῐᾰ). Like Μορῐον, except in 7 cells: nom sg, nom du, gen_ sg, gen_ du, dat sg, acc sg, ….
     declension!("ὀργῐᾰ", 49, "~ᾰ", [gender: Neuter], like Μορῐον;
-        nominative: "~ᾰ", derived, _;
-        genitive: derived, derived, _;
-        dative: derived, _, _;
-        accusative: derived, _, _;
-        vocative: derived, _, _;
+    nom: "~ᾰ", derived, _;
+    gen_: derived, derived, _;
+    dat: derived, _, _;
+    acc: derived, _, _;
+    voc: derived, _, _;
     ),
-    // Ζῠγον: 45 words (πτερον, ὀνομᾰστῐκον, ᾠον, ἑρπετον, ζῠγον, φῠτον). Like Μορῐον, except in 3 cells: genitive sg, genitive du, dative pl.
+    // Ζῠγον: 45 words (πτερον, ὀνομᾰστῐκον, ᾠον, ἑρπετον, ζῠγον, φῠτον). Like Μορῐον, except in 3 cells: gen_ sg, gen_ du, dat pl.
     declension!("ζῠγον", 45, "~ον", [gender: Neuter], like Μορῐον;
-        genitive: "~οῡ", "~οῑν", _;
-        dative: _, _, "~οῑς";
+    gen_: "~οῡ", "~οῑν", _;
+    dat: _, _, "~οῑς";
     ),
-    // Φᾰος: 40 words (δᾰσος, πεος, σκᾰφος, φᾰος, πᾰχος, κᾰμπος). Like Γενος, except in 7 cells: nominative du, nominative pl, genitive sg, genitive du, genitive pl, dative sg, ….
+    // Φᾰος: 40 words (δᾰσος, πεος, σκᾰφος, φᾰος, πᾰχος, κᾰμπος). Like Γενος, except in 7 cells: nom du, nom pl, gen_ sg, gen_ du, gen_ pl, dat sg, ….
     declension!("φᾰος", 40, "~ος", [gender: Neuter], like Γενος;
-        nominative: _, "~εε", "~εᾰ";
-        genitive: "~εος", "~εοιν", "~εων";
-        dative: "~εϊ", _, _;
-        accusative: _, _, "~εᾰ";
+    nom: _, "~εε", "~εᾰ";
+    gen_: "~εος", "~εοιν", "~εων";
+    dat: "~εϊ", _, _;
+    acc: _, _, "~εᾰ";
     ),
-    // Ὀλῐνοι: 40 words (πᾰρᾰβολᾱνοι, ἰσοι, μοσσῡνοικοι, ἡνῐοχοι, σῐνδοι, ἰστροι). Like Ὀργῐᾰ, except in 3 cells: nominative sg, nominative pl, accusative pl.
+    // Ὀλῐνοι: 40 words (πᾰρᾰβολᾱνοι, ἰσοι, μοσσῡνοικοι, ἡνῐοχοι, σῐνδοι, ἰστροι). Like Ὀργῐᾰ, except in 3 cells: nom sg, nom pl, acc pl.
     declension!("ὀλῐνοι", 40, "~οι", [gender: Masculine], like Ὀργῐᾰ;
-        nominative: "~οι", _, "~οι";
-        accusative: _, _, "~ους";
+    nom: "~οι", _, "~οι";
+    acc: _, _, "~ους";
     ),
     // Κροσσαι: 39 words (ἑβδομηκοντᾰκωμηται, τεσσᾰρεσκαιδεκᾰτῑται, ὀᾰσῑται, ἰσκαι, κρουπεζαι, ὀζολαι). Like Γενετης, except in 0 cells: .
     declension!("κροσσαι", 39, "~αι", like Γενετης;
     ),
     // Κᾰνων: 34 words (ἡγεμων, τεκτων, μᾰκεδων, μαιων, μῠρμῐδων, παιων).
     declension!("κᾰνων", 34, "~ων";
-        nominative: "~ων", "~ονε", "~ονες";
-        genitive: "~ονος", "~ονοιν", "~ονων";
-        dative: "~ονῐ", _, "~οσῐ|~οσῐν";
-        accusative: "~ονᾰ", _, "~ονᾰς";
-        vocative: "~ων", _, _;
+    nom: "~ων", "~ονε", "~ονες";
+    gen_: "~ονος", "~ονοιν", "~ονων";
+    dat: "~ονῐ", _, "~οσῐ|~οσῐν";
+    acc: "~ονᾰ", _, "~ονᾰς";
+    voc: "~ων", _, _;
     ),
     // Ῥητωρ: 33 words (κῠων, ἀλεκτωρ, καστωρ, ῥητωρ, δωτωρ, στατωρ).
     declension!("ῥητωρ", 33, "~ω~";
-        nominative: "~ω~", "~ο~ε", "~ο~ες";
-        genitive: "~ο~ος", "~ο~οιν", "~ο~ων";
-        dative: "~ο~ῐ", _, "~ο~σῐ|~ο~σῐν";
-        accusative: "~ο~ᾰ", _, "~ο~ᾰς";
-        vocative: "~ο~", _, _;
+    nom: "~ω~", "~ο~ε", "~ο~ες";
+    gen_: "~ο~ος", "~ο~οιν", "~ο~ων";
+    dat: "~ο~ῐ", _, "~ο~σῐ|~ο~σῐν";
+    acc: "~ο~ᾰ", _, "~ο~ᾰς";
+    voc: "~ο~", _, _;
     ),
     // Κολλοψ: 32 words (αἰθῐοψ, κῠκλωψ, δολοψ, αἰγῐλωψ, ἀγχιλωψ, ὀψ).
     declension!("κολλοψ", 32, "~ψ";
-        nominative: "~ψ", "~πε", "~πες";
-        genitive: "~πος", "~ποιν", "~πων";
-        dative: "~πῐ", _, "~ψῐ|~ψῐν";
-        accusative: "~πᾰ", _, "~πᾰς";
-        vocative: "~ψ", _, _;
+    nom: "~ψ", "~πε", "~πες";
+    gen_: "~πος", "~ποιν", "~πων";
+    dat: "~πῐ", _, "~ψῐ|~ψῐν";
+    acc: "~πᾰ", _, "~πᾰς";
+    voc: "~ψ", _, _;
     ),
     // Ἀμβροσια: 30 words (ἱστορια, ἰδια, ἀπορια, ἀρτηρια, ἀμνηστια, ἀμβροσια).
     declension!("ἀμβροσια", 30, "~ια", [gender: Feminine];
-        nominative: "~ῐᾱ", "~ῐᾱ", "~ῐαι";
-        genitive: "~ῐᾱς", "~ῐαιν", "~ῐων";
-        dative: "~ῐᾳ", _, "~ῐαις";
-        accusative: "~ῐᾱν", _, "~ῐᾱς";
-        vocative: "~ῐᾱ", _, _;
+    nom: "~ῐᾱ", "~ῐᾱ", "~ῐαι";
+    gen_: "~ῐᾱς", "~ῐαιν", "~ῐων";
+    dat: "~ῐᾳ", _, "~ῐαις";
+    acc: "~ῐᾱν", _, "~ῐᾱς";
+    voc: "~ῐᾱ", _, _;
     ),
     // Στᾰχῠς: 30 words (λῐβῠς, λῐγῠς, γενῠς, ἐγχελῠς, ῥᾰπῠς, ῥᾰφῠς).
     declension!("στᾰχῠς", 30, "~ῠς";
-        nominative: "~ῠς", "~ῠε|~ῡ", "~ῠες|~ῡς";
-        genitive: "~ῠος", "~ῠοιν", "~ῠων";
-        dative: "~ῠϊ|~υι", _, "~ῠσῐ|~ῠσῐν";
-        accusative: "~ῠν", "~ῠε|~ῡ", "~ῡς|~ῠᾰς";
-        vocative: "~ῠ", "~ῠε|~ῡ", "~ῠες|~ῡς";
+    nom: "~ῠς", "~ῠε|~ῡ", "~ῠες|~ῡς";
+    gen_: "~ῠος", "~ῠοιν", "~ῠων";
+    dat: "~ῠϊ|~υι", _, "~ῠσῐ|~ῠσῐν";
+    acc: "~ῠν", "~ῠε|~ῡ", "~ῡς|~ῠᾰς";
+    voc: "~ῠ", "~ῠε|~ῡ", "~ῠες|~ῡς";
     ),
     // Ναῡλος: 28 words (ταῡρος, δοῡλος, σαῡρος, πλοῡτος, καρδοῡχος, οὐολοῡσκος).
     declension!("ναῡλος", 28, "~ῡ~ος", [gender: Masculine];
-        nominative: "~ῡ~ος", "~υ~ω", "~ῡ~οι";
-        genitive: "~υ~ου", "~υ~οιν", "~υ~ων";
-        dative: "~υ~ῳ", _, "~υ~οις";
-        accusative: "~ῡ~ον", _, "~υ~ους";
-        vocative: "~ῡ~ε", _, _;
+    nom: "~ῡ~ος", "~υ~ω", "~ῡ~οι";
+    gen_: "~υ~ου", "~υ~οιν", "~υ~ων";
+    dat: "~υ~ῳ", _, "~υ~οις";
+    acc: "~ῡ~ον", _, "~υ~ους";
+    voc: "~ῡ~ε", _, _;
     ),
-    // Ῥωμαῑος: 26 words (ἰουδαῑος, φαρισαῑος, ῥωμαῑος, ἀνδρεῑος, ἑβραῑος, χᾰλδαῑος). Like Σημεῑον, except in 4 cells: nominative sg, nominative pl, accusative pl, vocative sg.
+    // Ῥωμαῑος: 26 words (ἰουδαῑος, φαρισαῑος, ῥωμαῑος, ἀνδρεῑος, ἑβραῑος, χᾰλδαῑος). Like Σημεῑον, except in 4 cells: nom sg, nom pl, acc pl, voc sg.
     declension!("ῥωμαῑος", 26, "~ῑος", [gender: Masculine], like Σημεῑον;
-        nominative: "~ῑος", _, "~ῑοι";
-        accusative: _, _, "~ιους";
-        vocative: "~ῑε", _, _;
+    nom: "~ῑος", _, "~ῑοι";
+    acc: _, _, "~ιους";
+    voc: "~ῑε", _, _;
     ),
-    // Ἀξων: 25 words (ἀρχιτεκτων, βιστων, χᾱων, λῠκᾱων, βρᾰχῑων, ἀκμων). Like Κᾰνων, except in 1 cell: vocative sg.
+    // Ἀξων: 25 words (ἀρχιτεκτων, βιστων, χᾱων, λῠκᾱων, βρᾰχῑων, ἀκμων). Like Κᾰνων, except in 1 cell: voc sg.
     declension!("ἀξων", 25, "~ων", [gender: Masculine], like Κᾰνων;
-        vocative: "~ον", _, _;
+    voc: "~ον", _, _;
     ),
-    // Δᾰνᾰοι: 24 words (δᾰνᾰοι, τῐβᾰρηνοι, μεθοδῐκοι, πᾰλαιοι, ἐμπειρῐκοι, στοιχειωμᾰτῐκοι). Like Ὀλῐνοι, except in 1 cell: dative pl.
+    // Δᾰνᾰοι: 24 words (δᾰνᾰοι, τῐβᾰρηνοι, μεθοδῐκοι, πᾰλαιοι, ἐμπειρῐκοι, στοιχειωμᾰτῐκοι). Like Ὀλῐνοι, except in 1 cell: dat pl.
     declension!("δᾰνᾰοι", 24, "~οι", [gender: Masculine], like Ὀλῐνοι;
-        dative: _, _, "~οῑς";
+    dat: _, _, "~οῑς";
     ),
     // Λεων: 22 words (θερᾰπων, λεων, δρᾰκων, γερων, ὁρῐζων, χᾰμαιλεων).
     declension!("λεων", 22, "~ων", [gender: Masculine];
-        nominative: "~ων", "~οντε", "~οντες";
-        genitive: "~οντος", "~οντοιν", "~οντων";
-        dative: "~οντῐ", _, "~ουσῐ|~ουσῐν";
-        accusative: "~οντᾰ", _, "~οντᾰς";
-        vocative: "~ον", _, _;
+    nom: "~ων", "~οντε", "~οντες";
+    gen_: "~οντος", "~οντοιν", "~οντων";
+    dat: "~οντῐ", _, "~ουσῐ|~ουσῐν";
+    acc: "~οντᾰ", _, "~οντᾰς";
+    voc: "~ον", _, _;
     ),
-    // Σᾰρξ: 21 words (σᾰρξ, θρᾳξ, φρῠξ, λῠγξ, προιξ, σφηξ). Like Κορᾰξ, except in 1 cell: genitive du.
+    // Σᾰρξ: 21 words (σᾰρξ, θρᾳξ, φρῠξ, λῠγξ, προιξ, σφηξ). Like Κορᾰξ, except in 1 cell: gen_ du.
     declension!("σᾰρξ", 21, "~ξ", like Κορᾰξ;
-        genitive: _, "~κοῑν", _;
+    gen_: _, "~κοῑν", _;
     ),
     // Ὑποθεσις: 19 words (ὑποθεσις, ἀρσις, ὑβρις, ἀνεσις, ἀσκησις, ἀμαυρωσις). Like Δῐαιρεσῐς, except in 0 cells: .
     declension!("ὑποθεσις", 19, "~ις", [gender: Feminine], like Δῐαιρεσῐς;
     ),
-    // Πους: 18 words (πους, ὀκτωπους, πολυπους, τρῐπους, ἀπους, δᾰσῠπους). Like Κερκῐς, except in 2 cells: nominative sg, vocative sg.
+    // Πους: 18 words (πους, ὀκτωπους, πολυπους, τρῐπους, ἀπους, δᾰσῠπους). Like Κερκῐς, except in 2 cells: nom sg, voc sg.
     declension!("πους", 18, "~υς", [gender: Masculine], like Κερκῐς;
-        nominative: "~υς", _, _;
-        vocative: "~υς", _, _;
+    nom: "~υς", _, _;
+    voc: "~υς", _, _;
     ),
     // Λᾰτρῐς: 16 words (ὀκρῐς, λᾰτρῐς, μηνῐς, πορτῐς, ἀρδῐς, κᾰπετῐς).
     declension!("λᾰτρῐς", 16, "~ῐς";
-        nominative: "~ῐς", "~ῐε", "~ῐες";
-        genitive: "~ῐος", "~ῐοιν", "~ῐων";
-        dative: "~ῑ", _, "~ῐσῐ|~ῐσῐν";
-        accusative: "~ῐν", _, "~ῑς|~ῐᾰς";
-        vocative: "~ῐ", _, _;
+    nom: "~ῐς", "~ῐε", "~ῐες";
+    gen_: "~ῐος", "~ῐοιν", "~ῐων";
+    dat: "~ῑ", _, "~ῐσῐ|~ῐσῐν";
+    acc: "~ῐν", _, "~ῑς|~ῐᾰς";
+    voc: "~ῐ", _, _;
     ),
     // Ἀστραγᾰλος: 15 words (ἰταλος, ἰθακος, ὑμνογραφος, ἱπποποταμος, ἰαμβος, ἀρακος).
     declension!("ἀστραγᾰλος", 15, "~α~ος";
-        nominative: "~ᾰ~ος", "~ᾰ~ω", "~ᾰ~οι";
-        genitive: "~ᾰ~ου", "~ᾰ~οιν", "~ᾰ~ων";
-        dative: "~ᾰ~ῳ", _, "~ᾰ~οις";
-        accusative: "~ᾰ~ον", _, "~ᾰ~ους";
-        vocative: "~ᾰ~ε", _, _;
+    nom: "~ᾰ~ος", "~ᾰ~ω", "~ᾰ~οι";
+    gen_: "~ᾰ~ου", "~ᾰ~οιν", "~ᾰ~ων";
+    dat: "~ᾰ~ῳ", _, "~ᾰ~οις";
+    acc: "~ᾰ~ον", _, "~ᾰ~ους";
+    voc: "~ᾰ~ε", _, _;
     ),
-    // Περᾰς: 15 words (φως, τερᾰς, χᾰρῐς, κρεᾰς, πᾰγκρεᾰς, ἐρῠσῐπελᾰς). Like Θεμᾰ, except in 3 cells: nominative sg, accusative sg, vocative sg.
+    // Περᾰς: 15 words (φως, τερᾰς, χᾰρῐς, κρεᾰς, πᾰγκρεᾰς, ἐρῠσῐπελᾰς). Like Θεμᾰ, except in 3 cells: nom sg, acc sg, voc sg.
     declension!("περᾰς", 15, "~ς", like Θεμᾰ;
-        nominative: "~ς", _, _;
-        accusative: "~ς", _, _;
-        vocative: "~ς", _, _;
+    nom: "~ς", _, _;
+    acc: "~ς", _, _;
+    voc: "~ς", _, _;
     ),
     // Πνεῡμᾰ: 14 words (πνεῡμᾰ, καῡμᾰ, ῥεῡμᾰ, θαῡμᾰ, ζεῡγμᾰ, τραῡμᾰ).
     declension!("πνεῡμᾰ", 14, "~ῡ~", [gender: Neuter];
-        nominative: "~ῡ~", "~υ~τε", "~υ~τᾰ";
-        genitive: "~υ~τος", "~υ~τοιν", "~υ~των";
-        dative: "~υ~τῐ", _, "~υ~σῐ|~υ~σῐν";
-        accusative: "~ῡ~", _, "~υ~τᾰ";
-        vocative: "~ῡ~", _, _;
+    nom: "~ῡ~", "~υ~τε", "~υ~τᾰ";
+    gen_: "~υ~τος", "~υ~τοιν", "~υ~των";
+    dat: "~υ~τῐ", _, "~υ~σῐ|~υ~σῐν";
+    acc: "~ῡ~", _, "~υ~τᾰ";
+    voc: "~ῡ~", _, _;
     ),
-    // Ἰκρῐα: 14 words (γενεσια, μουστακια, σαγματοπασμαγαδια, εὐληρα, βρῡτεα, ἰσα). Like Ὀργῐᾰ, except in 1 cell: nominative sg.
+    // Ἰκρῐα: 14 words (γενεσια, μουστακια, σαγματοπασμαγαδια, εὐληρα, βρῡτεα, ἰσα). Like Ὀργῐᾰ, except in 1 cell: nom sg.
     declension!("ἰκρῐα", 14, "~α", [gender: Neuter], like Ὀργῐᾰ;
-        nominative: "~α", _, _;
+    nom: "~α", _, _;
     ),
-    // Νηδῡς: 14 words (βοῡς, δελφῡς, ὀφρῡς, γρᾱῡς, λῐγνῡς, ἐδητῡς). Like Στᾰχῠς, except in 4 cells: nominative sg, dative sg, accusative sg, vocative sg.
+    // Νηδῡς: 14 words (βοῡς, δελφῡς, ὀφρῡς, γρᾱῡς, λῐγνῡς, ἐδητῡς). Like Στᾰχῠς, except in 4 cells: nom sg, dat sg, acc sg, voc sg.
     declension!("νηδῡς", 14, "~ῡς", like Στᾰχῠς;
-        nominative: "~ῡς", _, _;
-        dative: "~ῠϊ|~υῑ", _, _;
-        accusative: "~ῡν", _, _;
-        vocative: "~ῡ", _, _;
+    nom: "~ῡς", _, _;
+    dat: "~ῠϊ|~υῑ", _, _;
+    acc: "~ῡν", _, _;
+    voc: "~ῡ", _, _;
     ),
-    // Σηψ: 13 words (ὠψ, γρῡψ, θρῑψ, θωψ, κλωψ, σκωψ). Like Κολλοψ, except in 1 cell: genitive du.
+    // Σηψ: 13 words (ὠψ, γρῡψ, θρῑψ, θωψ, κλωψ, σκωψ). Like Κολλοψ, except in 1 cell: gen_ du.
     declension!("σηψ", 13, "~ψ", like Κολλοψ;
-        genitive: _, "~ποῑν", _;
+    gen_: _, "~ποῑν", _;
     ),
     // Ἀποστασις: 13 words (ὑπαρξις, ἀναβρωσις, ἀποταξις, ὑποταξις, ὑπερταξις, ἀναχωρησις).
     declension!("ἀποστασις", 13, "~α~ις", [gender: Feminine];
-        nominative: "~ᾰ~ῐς", "~ᾰ~ει", "~ᾰ~εις";
-        genitive: "~ᾰ~εως", "~ᾰ~εοιν", "~ᾰ~εων";
-        dative: "~ᾰ~ει", _, "~ᾰ~εσῐ|~ᾰ~εσῐν";
-        accusative: "~ᾰ~ῐν", _, "~ᾰ~εις";
-        vocative: "~ᾰ~ῐ", _, _;
+    nom: "~ᾰ~ῐς", "~ᾰ~ει", "~ᾰ~εις";
+    gen_: "~ᾰ~εως", "~ᾰ~εοιν", "~ᾰ~εων";
+    dat: "~ᾰ~ει", _, "~ᾰ~εσῐ|~ᾰ~εσῐν";
+    acc: "~ᾰ~ῐν", _, "~ᾰ~εις";
+    voc: "~ᾰ~ῐ", _, _;
     ),
     // Ἀσαῑοι: 13 words (βοττῐαῑοι, ἀραμαῑοι, ἀρδιαῑοι, ἀσαῑοι, θᾰμᾰναῑοι, νῐψαῑοι). Like Ῥωμαῑος, except in 0 cells: .
     declension!("ἀσαῑοι", 13, "~ῑοι", [gender: Masculine], like Ῥωμαῑος;
@@ -904,686 +904,686 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 157] = [
     ),
     // Ἁλως: 12 words (νεως, γᾰλως, τᾰως, λᾰγως, ἑως, λεως).
     declension!("ἁλως", 12, "~ως";
-        nominative: "~ως", "~ω", "~ῳ";
-        genitive: "~ω", "~ῳν", "~ων";
-        dative: "~ῳ", _, "~ῳς";
-        accusative: "~ω|~ων", _, "~ως";
-        vocative: "~ως", _, _;
+    nom: "~ως", "~ω", "~ῳ";
+    gen_: "~ω", "~ῳν", "~ων";
+    dat: "~ῳ", _, "~ῳς";
+    acc: "~ω|~ων", _, "~ως";
+    voc: "~ως", _, _;
     ),
-    // Κηρ: 12 words (κηρ, ἐᾰρ, θενᾰρ, ὀνᾰρ, νεκτᾰρ, μελᾰν). Like Χᾰρᾰκτηρ, except in 3 cells: nominative pl, accusative sg, accusative pl.
+    // Κηρ: 12 words (κηρ, ἐᾰρ, θενᾰρ, ὀνᾰρ, νεκτᾰρ, μελᾰν). Like Χᾰρᾰκτηρ, except in 3 cells: nom pl, acc sg, acc pl.
     declension!("κηρ", 12, "~", [gender: Neuter], like Χᾰρᾰκτηρ;
-        nominative: _, _, "~ᾰ";
-        accusative: "~", _, "~ᾰ";
+    nom: _, _, "~ᾰ";
+    acc: "~", _, "~ᾰ";
     ),
     // Ῥως: 12 words (ἑξηκοντᾰ, ὀσσε, ὑφεν, ῥᾰββῑ, ῥᾰββονῑ, ῥᾰββουνῑ).
     declension!("ῥως", 12, "~";
-        nominative: "~", "~", "~";
-        genitive: "~", "~", "~";
-        dative: "~", _, "~";
-        accusative: "~", _, "~";
-        vocative: "~", _, _;
+    nom: "~", "~", "~";
+    gen_: "~", "~", "~";
+    dat: "~", _, "~";
+    acc: "~", _, "~";
+    voc: "~", _, _;
     ),
     // Στοῑχος: 12 words (χοῑρος, ἑταῑρος, στοῑχος, τοῑχος, σχοῑνος, ῥοῑζος).
     declension!("στοῑχος", 12, "~ῑ~ος", [gender: Masculine];
-        nominative: "~ῑ~ος", "~ι~ω", "~ῑ~οι";
-        genitive: "~ι~ου", "~ι~οιν", "~ι~ων";
-        dative: "~ι~ῳ", _, "~ι~οις";
-        accusative: "~ῑ~ον", _, "~ι~ους";
-        vocative: "~ῑ~ε", _, _;
+    nom: "~ῑ~ος", "~ι~ω", "~ῑ~οι";
+    gen_: "~ι~ου", "~ι~οιν", "~ι~ων";
+    dat: "~ι~ῳ", _, "~ι~οις";
+    acc: "~ῑ~ον", _, "~ι~ους";
+    voc: "~ῑ~ε", _, _;
     ),
     // Ἀλωπεκιᾱ: 12 words (ὑποψιᾱ, ἀβλεψιᾱ, ἀκηδιᾱ, ἀτροφιᾱ, ἀναιμιᾱ, ἀλωπεκιᾱ). Like Ἀμβροσια, except in 0 cells: .
     declension!("ἀλωπεκιᾱ", 12, "~ιᾱ", [gender: Feminine], like Ἀμβροσια;
     ),
     // Πτερῠξ: 11 words (λᾰτᾰξ, ὀρτῠξ, μᾰστῑξ, τεττῑξ, λᾰλᾰξ, πομφολῠξ).
     declension!("πτερῠξ", 11, "~ξ";
-        nominative: "~ξ", "~γε", "~γες";
-        genitive: "~γος", "~γοιν", "~γων";
-        dative: "~γῐ", _, "~ξῐ|~ξῐν";
-        accusative: "~γᾰ", _, "~γᾰς";
-        vocative: "~ξ", _, _;
+    nom: "~ξ", "~γε", "~γες";
+    gen_: "~γος", "~γοιν", "~γων";
+    dat: "~γῐ", _, "~ξῐ|~ξῐν";
+    acc: "~γᾰ", _, "~γᾰς";
+    voc: "~ξ", _, _;
     ),
     // Ἀραχνη: 11 words (ἀγαπη, ἀπατη, ἀναγκη, ἀραχνη, ἀγκαλη, ὑπογεγραμμενη).
     declension!("ἀραχνη", 11, "~α~η", [gender: Feminine];
-        nominative: "~ᾰ~η", "~ᾰ~ᾱ", "~ᾰ~αι";
-        genitive: "~ᾰ~ης", "~ᾰ~αιν", "~ᾰ~ων";
-        dative: "~ᾰ~ῃ", _, "~ᾰ~αις";
-        accusative: "~ᾰ~ην", _, "~ᾰ~ᾱς";
-        vocative: "~ᾰ~η", _, _;
+    nom: "~ᾰ~η", "~ᾰ~ᾱ", "~ᾰ~αι";
+    gen_: "~ᾰ~ης", "~ᾰ~αιν", "~ᾰ~ων";
+    dat: "~ᾰ~ῃ", _, "~ᾰ~αις";
+    acc: "~ᾰ~ην", _, "~ᾰ~ᾱς";
+    voc: "~ᾰ~η", _, _;
     ),
-    // Τρωες: 11 words (πῑερες, τρωες, κηφηνες, ἁλτηρες, αἰγες, ἀνᾰξῠρῐδες). Like Ὀργῐᾰ, except in 4 cells: nominative sg, nominative pl, dative pl, accusative pl.
+    // Τρωες: 11 words (πῑερες, τρωες, κηφηνες, ἁλτηρες, αἰγες, ἀνᾰξῠρῐδες). Like Ὀργῐᾰ, except in 4 cells: nom sg, nom pl, dat pl, acc pl.
     declension!("τρωες", 11, "~ες", like Ὀργῐᾰ;
-        nominative: "~ες", _, "~ες";
-        dative: _, _, "~σῐ|~σῐν";
-        accusative: _, _, "~ᾰς";
+    nom: "~ες", _, "~ες";
+    dat: _, _, "~σῐ|~σῐν";
+    acc: _, _, "~ᾰς";
     ),
     // Ὑπομνημα: 11 words (ὑποστρωμα, ὑπομνημα, ὑποδημα, ἀγνοημα, ἁρμα, ἁλμα).
     declension!("ὑπομνημα", 11, "~α", [gender: Neuter];
-        nominative: "~ᾰ", "~ᾰτε", "~ᾰτᾰ";
-        genitive: "~ᾰτος", "~ᾰτοιν", "~ᾰτων";
-        dative: "~ᾰτῐ", _, "~ᾰσῐ|~ᾰσῐν";
-        accusative: "~ᾰ", _, "~ᾰτᾰ";
-        vocative: "~ᾰ", _, _;
+    nom: "~ᾰ", "~ᾰτε", "~ᾰτᾰ";
+    gen_: "~ᾰτος", "~ᾰτοιν", "~ᾰτων";
+    dat: "~ᾰτῐ", _, "~ᾰσῐ|~ᾰσῐν";
+    acc: "~ᾰ", _, "~ᾰτᾰ";
+    voc: "~ᾰ", _, _;
     ),
     // Ἀντονομασια: 10 words (ἀνθρακια, ἀναρχια, ἁμαρτια, ἱπποκρατια, ἀντονομασια, ἁρματοδρομια).
     declension!("ἀντονομασια", 10, "~α~ια", [gender: Feminine];
-        nominative: "~ᾰ~ῐᾱ", "~ᾰ~ῐᾱ", "~ᾰ~ῐαι";
-        genitive: "~ᾰ~ῐᾱς", "~ᾰ~ῐαιν", "~ᾰ~ῐων";
-        dative: "~ᾰ~ῐᾳ", _, "~ᾰ~ῐαις";
-        accusative: "~ᾰ~ῐᾱν", _, "~ᾰ~ῐᾱς";
-        vocative: "~ᾰ~ῐᾱ", _, _;
+    nom: "~ᾰ~ῐᾱ", "~ᾰ~ῐᾱ", "~ᾰ~ῐαι";
+    gen_: "~ᾰ~ῐᾱς", "~ᾰ~ῐαιν", "~ᾰ~ῐων";
+    dat: "~ᾰ~ῐᾳ", _, "~ᾰ~ῐαις";
+    acc: "~ᾰ~ῐᾱν", _, "~ᾰ~ῐᾱς";
+    voc: "~ᾰ~ῐᾱ", _, _;
     ),
     // Ἰδιον: 10 words (ἰδιον, ἰσχιον, ἀγγουριον, ἱστιον, ἰπνιον, ἰνιον).
     declension!("ἰδιον", 10, "~ιον", [gender: Neuter];
-        nominative: "~ῐον", "~ῐω", "~ῐᾰ";
-        genitive: "~ῐου", "~ῐοιν", "~ῐων";
-        dative: "~ῐῳ", _, "~ῐοις";
-        accusative: "~ῐον", _, "~ῐᾰ";
-        vocative: "~ῐον", _, _;
+    nom: "~ῐον", "~ῐω", "~ῐᾰ";
+    gen_: "~ῐου", "~ῐοιν", "~ῐων";
+    dat: "~ῐῳ", _, "~ῐοις";
+    acc: "~ῐον", _, "~ῐᾰ";
+    voc: "~ῐον", _, _;
     ),
-    // Ἱεραρχης: 10 words (σαϊτης, ἰλαρχης, ἱλαστης, ἱεραρχης, ἀναλεκτης, ἀκροβατης). Like Ἀραχνη, except in 3 cells: nominative sg, genitive sg, vocative sg.
+    // Ἱεραρχης: 10 words (σαϊτης, ἰλαρχης, ἱλαστης, ἱεραρχης, ἀναλεκτης, ἀκροβατης). Like Ἀραχνη, except in 3 cells: nom sg, gen_ sg, voc sg.
     declension!("ἱεραρχης", 10, "~α~ης", like Ἀραχνη;
-        nominative: "~ᾰ~ης", _, _;
-        genitive: "~ᾰ~ου", _, _;
-        vocative: "~ᾰ~ᾰ", _, _;
+    nom: "~ᾰ~ης", _, _;
+    gen_: "~ᾰ~ου", _, _;
+    voc: "~ᾰ~ᾰ", _, _;
     ),
     // Λευκη: 10 words (πευκη, δουλη, βλαυτη, σενδουκη, λευκη, ζευγλη).
     declension!("λευκη", 10, "~υ~η", [gender: Feminine];
-        nominative: "~υ~η", "~υ~ᾱ", "~ῡ~αι";
-        genitive: "~υ~ης", "~υ~αιν", "~υ~ων";
-        dative: "~υ~ῃ", _, "~υ~αις";
-        accusative: "~υ~ην", _, "~υ~ᾱς";
-        vocative: "~υ~η", _, _;
+    nom: "~υ~η", "~υ~ᾱ", "~ῡ~αι";
+    gen_: "~υ~ης", "~υ~αιν", "~υ~ων";
+    dat: "~υ~ῃ", _, "~υ~αις";
+    acc: "~υ~ην", _, "~υ~ᾱς";
+    voc: "~υ~η", _, _;
     ),
-    // Ἀκανθα: 10 words (ἁμαξα, ἱλαειρα, ἀκανθα, ὑπατεια, ἀσφαλεια, ἀγαθοποιϊα). Like Ἱεραρχης, except in 4 cells: nominative sg, genitive sg, dative sg, accusative sg.
+    // Ἀκανθα: 10 words (ἁμαξα, ἱλαειρα, ἀκανθα, ὑπατεια, ἀσφαλεια, ἀγαθοποιϊα). Like Ἱεραρχης, except in 4 cells: nom sg, gen_ sg, dat sg, acc sg.
     declension!("ἀκανθα", 10, "~α~α", [gender: Feminine], like Ἱεραρχης;
-        nominative: "~ᾰ~ᾰ", _, _;
-        genitive: "~ᾰ~ᾱς", _, _;
-        dative: "~ᾰ~ᾳ", _, _;
-        accusative: "~ᾰ~ᾰν", _, _;
+    nom: "~ᾰ~ᾰ", _, _;
+    gen_: "~ᾰ~ᾱς", _, _;
+    dat: "~ᾰ~ᾳ", _, _;
+    acc: "~ᾰ~ᾰν", _, _;
     ),
-    // Πεπερῐ: 9 words (σῐνᾱπῐ, κομμῐ, πεπερῐ, κιννᾰβᾰρῐ, στῐμμῐ, κῐκῐ). Like Δῐαιρεσῐς, except in 5 cells: nominative sg, nominative pl, accusative sg, accusative pl, vocative pl.
+    // Πεπερῐ: 9 words (σῐνᾱπῐ, κομμῐ, πεπερῐ, κιννᾰβᾰρῐ, στῐμμῐ, κῐκῐ). Like Δῐαιρεσῐς, except in 5 cells: nom sg, nom pl, acc sg, acc pl, voc pl.
     declension!("πεπερῐ", 9, "~ῐ", [gender: Neuter], like Δῐαιρεσῐς;
-        nominative: "~ῐ", _, "~η|~εᾰ";
-        accusative: "~ῐ", _, "~η|~εᾰ";
-        vocative: _, _, "~η|~εᾰ";
+    nom: "~ῐ", _, "~η|~εᾰ";
+    acc: "~ῐ", _, "~η|~εᾰ";
+    voc: _, _, "~η|~εᾰ";
     ),
     // Φρην: 9 words (φρην, ὑμην, ποιμην, πῠθμην, ἀδην, αὐχην).
     declension!("φρην", 9, "~ην";
-        nominative: "~ην", "~ενε", "~ενες";
-        genitive: "~ενος", "~ενοιν", "~ενων";
-        dative: "~ενῐ", _, "~εσῐ|~εσῐν";
-        accusative: "~ενᾰ", _, "~ενᾰς";
-        vocative: "~ην", _, _;
+    nom: "~ην", "~ενε", "~ενες";
+    gen_: "~ενος", "~ενοιν", "~ενων";
+    dat: "~ενῐ", _, "~εσῐ|~εσῐν";
+    acc: "~ενᾰ", _, "~ενᾰς";
+    voc: "~ην", _, _;
     ),
     // Κοιτη: 9 words (χαιτη, κοιτη, ἐρεικη, θοινη, βαιτη, μαινη).
     declension!("κοιτη", 9, "~ι~η", [gender: Feminine];
-        nominative: "~ι~η", "~ι~ᾱ", "~ῑ~αι";
-        genitive: "~ι~ης", "~ι~αιν", "~ι~ων";
-        dative: "~ι~ῃ", _, "~ι~αις";
-        accusative: "~ι~ην", _, "~ι~ᾱς";
-        vocative: "~ι~η", _, _;
+    nom: "~ι~η", "~ι~ᾱ", "~ῑ~αι";
+    gen_: "~ι~ης", "~ι~αιν", "~ι~ων";
+    dat: "~ι~ῃ", _, "~ι~αις";
+    acc: "~ι~ην", _, "~ι~ᾱς";
+    voc: "~ι~η", _, _;
     ),
-    // Θηρ: 9 words (κᾱρ, θηρ, ψᾱρ, φωρ, σηρ, φηρ). Like Χᾰρᾰκτηρ, except in 1 cell: genitive du.
+    // Θηρ: 9 words (κᾱρ, θηρ, ψᾱρ, φωρ, σηρ, φηρ). Like Χᾰρᾰκτηρ, except in 1 cell: gen_ du.
     declension!("θηρ", 9, "~", like Χᾰρᾰκτηρ;
-        genitive: _, "~οῑν", _;
+    gen_: _, "~οῑν", _;
     ),
-    // Ἀλειτης: 9 words (ὠρειτης, παικτης, σωρειτης, σᾰμᾰρειτης, ἀρσενοκοιτης, μητροκοιτης). Like Κοιτη, except in 3 cells: nominative sg, genitive sg, vocative sg.
+    // Ἀλειτης: 9 words (ὠρειτης, παικτης, σωρειτης, σᾰμᾰρειτης, ἀρσενοκοιτης, μητροκοιτης). Like Κοιτη, except in 3 cells: nom sg, gen_ sg, voc sg.
     declension!("ἀλειτης", 9, "~ι~ης", [gender: Masculine], like Κοιτη;
-        nominative: "~ι~ης", _, _;
-        genitive: "~ι~ου", _, _;
-        vocative: "~ῑ~ᾰ", _, _;
+    nom: "~ι~ης", _, _;
+    gen_: "~ι~ου", _, _;
+    voc: "~ῑ~ᾰ", _, _;
     ),
     // Κωμῡς: 9 words (ἑλμῐνς, ὀρνῑς, κωμῡς, κορῠς, γελγῑς, δελλῑς).
     declension!("κωμῡς", 9, "~ς";
-        nominative: "~ς", "~θε", "~θες";
-        genitive: "~θος", "~θοιν", "~θων";
-        dative: "~θῐ", _, "~σῐ|~σῐν";
-        accusative: "~θᾰ", _, "~θᾰς";
-        vocative: "~ς", _, _;
+    nom: "~ς", "~θε", "~θες";
+    gen_: "~θος", "~θοιν", "~θων";
+    dat: "~θῐ", _, "~σῐ|~σῐν";
+    acc: "~θᾰ", _, "~θᾰς";
+    voc: "~ς", _, _;
     ),
     // Πλᾰτεῑᾰ: 9 words (μυῑᾰ, πλᾰτεῑᾰ, γαῑᾰ, μαῑᾰ, βᾰρεῑᾰ, ὀξεῑᾰ).
     declension!("πλᾰτεῑᾰ", 9, "~ῑᾰ", [gender: Feminine];
-        nominative: "~ῑᾰ", "~ιᾱ", "~ῑαι";
-        genitive: "~ιᾱς", "~ιαιν", "~ιων";
-        dative: "~ιᾳ", _, "~ιαις";
-        accusative: "~ῑᾰν", _, "~ιᾱς";
-        vocative: "~ῑᾰ", _, _;
+    nom: "~ῑᾰ", "~ιᾱ", "~ῑαι";
+    gen_: "~ιᾱς", "~ιαιν", "~ιων";
+    dat: "~ιᾳ", _, "~ιαις";
+    acc: "~ῑᾰν", _, "~ιᾱς";
+    voc: "~ῑᾰ", _, _;
     ),
     // Ἀσπις: 9 words (ἀσπις, ἀγρωστις, ἀκις, ἁλουργις, ἱππουρις, ἀμις).
     declension!("ἀσπις", 9, "~ις", [gender: Feminine];
-        nominative: "~ῐς", "~ῐδε", "~ῐδες";
-        genitive: "~ῐδος", "~ῐδοιν", "~ῐδων";
-        dative: "~ῐδῐ", _, "~ῐσῐ|~ῐσῐν";
-        accusative: "~ῐδᾰ", _, "~ῐδᾰς";
-        vocative: "~ῐ", _, _;
+    nom: "~ῐς", "~ῐδε", "~ῐδες";
+    gen_: "~ῐδος", "~ῐδοιν", "~ῐδων";
+    dat: "~ῐδῐ", _, "~ῐσῐ|~ῐσῐν";
+    acc: "~ῐδᾰ", _, "~ῐδᾰς";
+    voc: "~ῐ", _, _;
     ),
-    // Σησᾰμοειδες: 9 words (νευροειδες, μονοειδες, τρῐχομᾰνες, ἡμεροκᾰλλες, σησᾰμοειδες, ὠκῐμοειδες). Like Γενος, except in 6 cells: nominative sg, nominative du, genitive sg, dative sg, accusative sg, vocative sg.
+    // Σησᾰμοειδες: 9 words (νευροειδες, μονοειδες, τρῐχομᾰνες, ἡμεροκᾰλλες, σησᾰμοειδες, ὠκῐμοειδες). Like Γενος, except in 6 cells: nom sg, nom du, gen_ sg, dat sg, acc sg, voc sg.
     declension!("σησᾰμοειδες", 9, "~ες", [gender: Neuter], like Γενος;
-        nominative: "~ες", "~εῑ", _;
-        genitive: "~οῡς", _, _;
-        dative: "~εῑ", _, _;
-        accusative: "~ες", _, _;
-        vocative: "~ες", _, _;
+    nom: "~ες", "~εῑ", _;
+    gen_: "~οῡς", _, _;
+    dat: "~εῑ", _, _;
+    acc: "~ες", _, _;
+    voc: "~ες", _, _;
     ),
-    // Γερᾰς: 9 words (ἁλς, ὑς, ὀϊς, γερᾰς, δεπᾰς, ψεφᾰς). Like Κηρ, except in 5 cells: nominative sg, dative sg, dative pl, accusative sg, vocative sg.
+    // Γερᾰς: 9 words (ἁλς, ὑς, ὀϊς, γερᾰς, δεπᾰς, ψεφᾰς). Like Κηρ, except in 5 cells: nom sg, dat sg, dat pl, acc sg, voc sg.
     declension!("γερᾰς", 9, "~ς", like Κηρ;
-        nominative: "~ς", _, _;
-        dative: "~ϊ", _, "~σῐ";
-        accusative: "~ς", _, _;
-        vocative: "~ς", _, _;
+    nom: "~ς", _, _;
+    dat: "~ϊ", _, "~σῐ";
+    acc: "~ς", _, _;
+    voc: "~ς", _, _;
     ),
-    // Νεῡρον: 8 words (προῡμνον, νεῡρον, βοῡστον, τεῡτλον, σοῡσον, λοῡσσον). Like Ναῡλος, except in 4 cells: nominative sg, nominative pl, accusative pl, vocative sg.
+    // Νεῡρον: 8 words (προῡμνον, νεῡρον, βοῡστον, τεῡτλον, σοῡσον, λοῡσσον). Like Ναῡλος, except in 4 cells: nom sg, nom pl, acc pl, voc sg.
     declension!("νεῡρον", 8, "~ῡ~ον", [gender: Neuter], like Ναῡλος;
-        nominative: "~ῡ~ον", _, "~ῡ~ᾰ";
-        accusative: _, _, "~ῡ~ᾰ";
-        vocative: "~ῡ~ον", _, _;
+    nom: "~ῡ~ον", _, "~ῡ~ᾰ";
+    acc: _, _, "~ῡ~ᾰ";
+    voc: "~ῡ~ον", _, _;
     ),
     // Ἀμεθυστος: 8 words (ἀργυρος, δρυτομος, ἀνδρογυνος, ἰθυφαλλος, ἀμεθυστος, ἀργυροτοξος).
     declension!("ἀμεθυστος", 8, "~υ~ος";
-        nominative: "~ῠ~ος", "~ῠ~ω", "~ῠ~οι";
-        genitive: "~ῠ~ου", "~ῠ~οιν", "~ῠ~ων";
-        dative: "~ῠ~ῳ", _, "~ῠ~οις";
-        accusative: "~ῠ~ον", _, "~ῠ~ους";
-        vocative: "~ῠ~ε", _, _;
+    nom: "~ῠ~ος", "~ῠ~ω", "~ῠ~οι";
+    gen_: "~ῠ~ου", "~ῠ~οιν", "~ῠ~ων";
+    dat: "~ῠ~ῳ", _, "~ῠ~οις";
+    acc: "~ῠ~ον", _, "~ῠ~ους";
+    voc: "~ῠ~ε", _, _;
     ),
     // Ἀναθεμα: 8 words (ἁμαρτημα, ἱλασμα, ἀγαλμα, ἁρπαγμα, ἀναθεμα, ὑφασμα).
     declension!("ἀναθεμα", 8, "~α~α", [gender: Neuter];
-        nominative: "~ᾰ~ᾰ", "~ᾰ~ᾰτε", "~ᾰ~ᾰτᾰ";
-        genitive: "~ᾰ~ᾰτος", "~ᾰ~ᾰτοιν", "~ᾰ~ᾰτων";
-        dative: "~ᾰ~ᾰτῐ", _, "~ᾰ~ᾰσῐ|~ᾰ~ᾰσῐν";
-        accusative: "~ᾰ~ᾰ", _, "~ᾰ~ᾰτᾰ";
-        vocative: "~ᾰ~ᾰ", _, _;
+    nom: "~ᾰ~ᾰ", "~ᾰ~ᾰτε", "~ᾰ~ᾰτᾰ";
+    gen_: "~ᾰ~ᾰτος", "~ᾰ~ᾰτοιν", "~ᾰ~ᾰτων";
+    dat: "~ᾰ~ᾰτῐ", _, "~ᾰ~ᾰσῐ|~ᾰ~ᾰσῐν";
+    acc: "~ᾰ~ᾰ", _, "~ᾰ~ᾰτᾰ";
+    voc: "~ᾰ~ᾰ", _, _;
     ),
-    // Ῥᾱξ: 7 words (φλοξ, αἰξ, σφᾰξ, ῥᾱξ, στρῐξ, ῥωξ). Like Πτερῠξ, except in 1 cell: genitive du.
+    // Ῥᾱξ: 7 words (φλοξ, αἰξ, σφᾰξ, ῥᾱξ, στρῐξ, ῥωξ). Like Πτερῠξ, except in 1 cell: gen_ du.
     declension!("ῥᾱξ", 7, "~ξ", like Πτερῠξ;
-        genitive: _, "~γοῑν", _;
+    gen_: _, "~γοῑν", _;
     ),
     // Ἀληθεια: 7 words (ἀληθεια, ἀγνοια, ἀμελεια, ἀσεβεια, ἀρουρα, ἀδεια). Like Ἐπῐφᾰνειᾰ, except in 0 cells: .
     declension!("ἀληθεια", 7, "~α", [gender: Feminine], like Ἐπῐφᾰνειᾰ;
     ),
     // Ἰδιωτης: 7 words (ὑποκριτης, ἀγωνιστης, ἰδιωτης, ἀκοντιστης, ὑψιβρεμετης, ἰᾰμιδης).
     declension!("ἰδιωτης", 7, "~ι~ης";
-        nominative: "~ῐ~ης", "~ῐ~ᾱ", "~ῐ~αι";
-        genitive: "~ῐ~οῡ", "~ῐ~αῑν", "~ῐ~ων";
-        dative: "~ῐ~ῃ", _, "~ῐ~αῑς";
-        accusative: "~ῐ~ην", _, "~ῐ~ᾱς";
-        vocative: "~ῐ~ᾰ", _, _;
+    nom: "~ῐ~ης", "~ῐ~ᾱ", "~ῐ~αι";
+    gen_: "~ῐ~οῡ", "~ῐ~αῑν", "~ῐ~ων";
+    dat: "~ῐ~ῃ", _, "~ῐ~αῑς";
+    acc: "~ῐ~ην", _, "~ῐ~ᾱς";
+    voc: "~ῐ~ᾰ", _, _;
     ),
     // Ἀδᾰμᾱς: 7 words (κορῠβᾱς, γῐγᾱς, ἐλεφᾱς, ἀδᾰμᾱς, λῠκᾰβᾱς, ἀλῐβᾱς).
     declension!("ἀδᾰμᾱς", 7, "~ᾱς", [gender: Masculine];
-        nominative: "~ᾱς", "~ᾰντε", "~ᾰντες";
-        genitive: "~ᾰντος", "~ᾰντοιν", "~ᾰντων";
-        dative: "~ᾰντῐ", _, "~ᾱσῐ|~ᾱσῐν";
-        accusative: "~ᾰντᾰ", _, "~ᾰντᾰς";
-        vocative: "~ᾰν", _, _;
+    nom: "~ᾱς", "~ᾰντε", "~ᾰντες";
+    gen_: "~ᾰντος", "~ᾰντοιν", "~ᾰντων";
+    dat: "~ᾰντῐ", _, "~ᾱσῐ|~ᾱσῐν";
+    acc: "~ᾰντᾰ", _, "~ᾰντᾰς";
+    voc: "~ᾰν", _, _;
     ),
-    // Ἠχω: 7 words (ἠχω, τυτω, κῐττω, πῑπω, μοτω, φειδω). Like Μερῐσμος, except in 5 cells: nominative sg, genitive sg, dative sg, accusative sg, vocative sg.
+    // Ἠχω: 7 words (ἠχω, τυτω, κῐττω, πῑπω, μοτω, φειδω). Like Μερῐσμος, except in 5 cells: nom sg, gen_ sg, dat sg, acc sg, voc sg.
     declension!("ἠχω", 7, "~ω", [gender: Feminine], like Μερῐσμος;
-        nominative: "~ω", _, _;
-        genitive: "~οῡς", _, _;
-        dative: "~οῑ", _, _;
-        accusative: "~ω", _, _;
-        vocative: "~οῑ", _, _;
+    nom: "~ω", _, _;
+    gen_: "~οῡς", _, _;
+    dat: "~οῑ", _, _;
+    acc: "~ω", _, _;
+    voc: "~οῑ", _, _;
     ),
-    // Μωλῠ: 7 words (δᾰκρῠ, μωλῠ, νᾱπῠ, μῐσῠ, βρᾰθῠ, σωρῠ). Like Στᾰχῠς, except in 5 cells: nominative sg, nominative pl, accusative sg, accusative pl, vocative pl.
+    // Μωλῠ: 7 words (δᾰκρῠ, μωλῠ, νᾱπῠ, μῐσῠ, βρᾰθῠ, σωρῠ). Like Στᾰχῠς, except in 5 cells: nom sg, nom pl, acc sg, acc pl, voc pl.
     declension!("μωλῠ", 7, "~ῠ", [gender: Neuter], like Στᾰχῠς;
-        nominative: "~ῠ", _, "~ῠᾰ";
-        accusative: "~ῠ", _, "~ῠᾰ";
-        vocative: _, _, derived;
+    nom: "~ῠ", _, "~ῠᾰ";
+    acc: "~ῠ", _, "~ῠᾰ";
+    voc: _, _, derived;
     ),
     // Χεῑμᾰ: 7 words (χεῑμᾰ, δεῑγμᾰ, σεῑσμᾰ, λεῑμμᾰ, λαῑτμᾰ, πεῑσμᾰ).
     declension!("χεῑμᾰ", 7, "~ῑ~", [gender: Neuter];
-        nominative: "~ῑ~", "~ι~τε", "~ι~τᾰ";
-        genitive: "~ι~τος", "~ι~τοιν", "~ι~των";
-        dative: "~ι~τῐ", _, "~ι~σῐ|~ι~σῐν";
-        accusative: "~ῑ~", _, "~ι~τᾰ";
-        vocative: "~ῑ~", _, _;
+    nom: "~ῑ~", "~ι~τε", "~ι~τᾰ";
+    gen_: "~ι~τος", "~ι~τοιν", "~ι~των";
+    dat: "~ι~τῐ", _, "~ι~σῐ|~ι~σῐν";
+    acc: "~ῑ~", _, "~ι~τᾰ";
+    voc: "~ῑ~", _, _;
     ),
-    // Ναυτης: 7 words (ναυτης, θραυστης, κοκκοθραυστης, ἀργοναυτης, ἐμφῠτευτης, ψευστης). Like Λευκη, except in 3 cells: nominative sg, genitive sg, vocative sg.
+    // Ναυτης: 7 words (ναυτης, θραυστης, κοκκοθραυστης, ἀργοναυτης, ἐμφῠτευτης, ψευστης). Like Λευκη, except in 3 cells: nom sg, gen_ sg, voc sg.
     declension!("ναυτης", 7, "~υ~ης", [gender: Masculine], like Λευκη;
-        nominative: "~υ~ης", _, _;
-        genitive: "~υ~ου", _, _;
-        vocative: "~ῡ~ᾰ", _, _;
+    nom: "~υ~ης", _, _;
+    gen_: "~υ~ου", _, _;
+    voc: "~ῡ~ᾰ", _, _;
     ),
-    // Ἀναγωγη: 7 words (ἀστραπη, ἀνατροπη, ἀνατροφη, ἀναγωγη, ἀναστροφη, ἀναβολη). Like Ἀραχνη, except in 2 cells: genitive du, dative pl.
+    // Ἀναγωγη: 7 words (ἀστραπη, ἀνατροπη, ἀνατροφη, ἀναγωγη, ἀναστροφη, ἀναβολη). Like Ἀραχνη, except in 2 cells: gen_ du, dat pl.
     declension!("ἀναγωγη", 7, "~α~η", [gender: Feminine], like Ἀραχνη;
-        genitive: _, "~ᾰ~αῑν", _;
-        dative: _, _, "~ᾰ~αῑς";
+    gen_: _, "~ᾰ~αῑν", _;
+    dat: _, _, "~ᾰ~αῑς";
     ),
-    // Βᾰσκᾱς: 7 words (πᾰξᾰμᾱς, μᾰρῐκᾱς, ἀττᾰγᾱς, μᾰσουχᾱς, βᾰσκᾱς, χαλιφᾱς). Like Φορᾱ, except in 3 cells: nominative sg, nominative pl, genitive sg.
+    // Βᾰσκᾱς: 7 words (πᾰξᾰμᾱς, μᾰρῐκᾱς, ἀττᾰγᾱς, μᾰσουχᾱς, βᾰσκᾱς, χαλιφᾱς). Like Φορᾱ, except in 3 cells: nom sg, nom pl, gen_ sg.
     declension!("βᾰσκᾱς", 7, "~ᾱς", [gender: Masculine], like Φορᾱ;
-        nominative: "~ᾱς", _, "~αῑ";
-        genitive: "~ᾱ", _, _;
+    nom: "~ᾱς", _, "~αῑ";
+    gen_: "~ᾱ", _, _;
     ),
     // Πᾰτηρ: 6 words (ἀνηρ, μητηρ, πᾰτηρ, ἀστηρ, θῠγᾰτηρ, ἐνᾰτηρ).
     declension!("πᾰτηρ", 6, "~η~";
-        nominative: "~η~", "~ε~ε", "~ε~ες";
-        genitive: "~~ος", "~ε~οιν", "~ε~ων";
-        dative: "~~ῐ", _, "~~ᾰσῐ";
-        accusative: "~ε~ᾰ", _, "~ε~ᾰς";
-        vocative: "~ε~", _, _;
+    nom: "~η~", "~ε~ε", "~ε~ες";
+    gen_: "~~ος", "~ε~οιν", "~ε~ων";
+    dat: "~~ῐ", _, "~~ᾰσῐ";
+    acc: "~ε~ᾰ", _, "~ε~ᾰς";
+    voc: "~ε~", _, _;
     ),
     // Ἰλυς: 6 words (ἰχθυς, ἰσχυς, ἰτυς, ἀχλυς, ἀρκυς, ἰλυς). Like Νηδῡς, except in 0 cells: .
     declension!("ἰλυς", 6, "~υς", like Νηδῡς;
     ),
-    // Μοῑρᾰ: 6 words (μοῑρᾰ, στεῑρᾰ, πεῑρᾰ, σφαῑρᾰ, σπεῑρᾰ, ἀγρεῑφνᾰ). Like Ἀλειτης, except in 4 cells: nominative sg, genitive sg, dative sg, accusative sg.
+    // Μοῑρᾰ: 6 words (μοῑρᾰ, στεῑρᾰ, πεῑρᾰ, σφαῑρᾰ, σπεῑρᾰ, ἀγρεῑφνᾰ). Like Ἀλειτης, except in 4 cells: nom sg, gen_ sg, dat sg, acc sg.
     declension!("μοῑρᾰ", 6, "~ῑ~ᾰ", [gender: Feminine], like Ἀλειτης;
-        nominative: "~ῑ~ᾰ", _, _;
-        genitive: "~ι~ᾱς", _, _;
-        dative: "~ι~ᾳ", _, _;
-        accusative: "~ῑ~ᾰν", _, _;
+    nom: "~ῑ~ᾰ", _, _;
+    gen_: "~ι~ᾱς", _, _;
+    dat: "~ι~ᾳ", _, _;
+    acc: "~ῑ~ᾰν", _, _;
     ),
-    // Σφην: 6 words (μην, χην, σπλην, κλων, σφην, ψην). Like Αἰων, except in 1 cell: genitive du.
+    // Σφην: 6 words (μην, χην, σπλην, κλων, σφην, ψην). Like Αἰων, except in 1 cell: gen_ du.
     declension!("σφην", 6, "~ν", [gender: Masculine], like Αἰων;
-        genitive: _, "~νοῑν", _;
+    gen_: _, "~νοῑν", _;
     ),
     // Μητρως: 6 words (τρως, ἡρως, δμως, πᾰτρως, θως, μητρως).
     declension!("μητρως", 6, "~ως", [gender: Masculine];
-        nominative: "~ως", "~ωε", "~ωες";
-        genitive: "~ωος", "~ωοιν", "~ωων";
-        dative: "~ῳ|~ωϊ", _, "~ωσῐ|~ωσῐν";
-        accusative: "~ω", _, "~ωᾰς";
-        vocative: "~ως", _, _;
+    nom: "~ως", "~ωε", "~ωες";
+    gen_: "~ωος", "~ωοιν", "~ωων";
+    dat: "~ῳ|~ωϊ", _, "~ωσῐ|~ωσῐν";
+    acc: "~ω", _, "~ωᾰς";
+    voc: "~ως", _, _;
     ),
-    // Κῠᾰρ: 6 words (οὐθᾰρ, ἡπᾰρ, φρεᾱρ, στεᾱρ, δελεᾰρ, κῠᾰρ). Like Θεμᾰ, except in 3 cells: nominative sg, accusative sg, vocative sg.
+    // Κῠᾰρ: 6 words (οὐθᾰρ, ἡπᾰρ, φρεᾱρ, στεᾱρ, δελεᾰρ, κῠᾰρ). Like Θεμᾰ, except in 3 cells: nom sg, acc sg, voc sg.
     declension!("κῠᾰρ", 6, "~ρ", [gender: Neuter], like Θεμᾰ;
-        nominative: "~ρ", _, _;
-        accusative: "~ρ", _, _;
-        vocative: "~ρ", _, _;
+    nom: "~ρ", _, _;
+    acc: "~ρ", _, _;
+    voc: "~ρ", _, _;
     ),
     // Ἀνισον: 6 words (ἀλφιτον, ἀνισον, ἀγκιστρον, ἀντιθετον, ἱστορικον, ἀριστερον).
     declension!("ἀνισον", 6, "~ι~ον", [gender: Neuter];
-        nominative: "~ῐ~ον", "~ῐ~ω", "~ῐ~ᾰ";
-        genitive: "~ῐ~ου", "~ῐ~οιν", "~ῐ~ων";
-        dative: "~ῐ~ῳ", _, "~ῐ~οις";
-        accusative: "~ῐ~ον", _, "~ῐ~ᾰ";
-        vocative: "~ῐ~ον", _, _;
+    nom: "~ῐ~ον", "~ῐ~ω", "~ῐ~ᾰ";
+    gen_: "~ῐ~ου", "~ῐ~οιν", "~ῐ~ων";
+    dat: "~ῐ~ῳ", _, "~ῐ~οις";
+    acc: "~ῐ~ον", _, "~ῐ~ᾰ";
+    voc: "~ῐ~ον", _, _;
     ),
-    // Ἀριθμος: 6 words (ἀριθμος, ἀφορισμος, ἱστορικος, ἁγνισμος, σιρος, ἀκιδωτος). Like Ἀνισον, except in 7 cells: nominative sg, nominative pl, genitive sg, genitive du, dative pl, accusative pl, ….
+    // Ἀριθμος: 6 words (ἀριθμος, ἀφορισμος, ἱστορικος, ἁγνισμος, σιρος, ἀκιδωτος). Like Ἀνισον, except in 7 cells: nom sg, nom pl, gen_ sg, gen_ du, dat pl, acc pl, ….
     declension!("ἀριθμος", 6, "~ι~ος", [gender: Masculine], like Ἀνισον;
-        nominative: "~ῐ~ος", _, "~ῐ~οι";
-        genitive: "~ῐ~οῡ", "~ῐ~οῑν", _;
-        dative: _, _, "~ῐ~οῑς";
-        accusative: _, _, "~ῐ~ους";
-        vocative: "~ῐ~ε", _, _;
+    nom: "~ῐ~ος", _, "~ῐ~οι";
+    gen_: "~ῐ~οῡ", "~ῐ~οῑν", _;
+    dat: _, _, "~ῐ~οῑς";
+    acc: _, _, "~ῐ~ους";
+    voc: "~ῐ~ε", _, _;
     ),
     // Πτῠξ: 6 words (ὀνῠξ, ψῑξ, σᾰρδονῠξ, στῐξ, βηξ, πτῠξ).
     declension!("πτῠξ", 6, "~ξ";
-        nominative: "~ξ", "~χε", "~χες";
-        genitive: "~χος", "~χοῑν", "~χων";
-        dative: "~χῐ", _, "~ξῐ|~ξῐν";
-        accusative: "~χᾰ", _, "~χᾰς";
-        vocative: "~ξ", _, _;
+    nom: "~ξ", "~χε", "~χες";
+    gen_: "~χος", "~χοῑν", "~χων";
+    dat: "~χῐ", _, "~ξῐ|~ξῐν";
+    acc: "~χᾰ", _, "~χᾰς";
+    voc: "~ξ", _, _;
     ),
-    // Πηχῠς: 6 words (ἡμῐσῠς, υἱῠς, πελεκῠς, πρεσβῠς, πηχῠς, τρῐβρᾰχῠς). Like Δῐαιρεσῐς, except in 3 cells: nominative sg, accusative sg, vocative sg.
+    // Πηχῠς: 6 words (ἡμῐσῠς, υἱῠς, πελεκῠς, πρεσβῠς, πηχῠς, τρῐβρᾰχῠς). Like Δῐαιρεσῐς, except in 3 cells: nom sg, acc sg, voc sg.
     declension!("πηχῠς", 6, "~ῠς", [gender: Masculine], like Δῐαιρεσῐς;
-        nominative: "~ῠς", _, _;
-        accusative: "~ῠν", _, _;
-        vocative: "~ῠ", _, _;
+    nom: "~ῠς", _, _;
+    acc: "~ῠν", _, _;
+    voc: "~ῠ", _, _;
     ),
-    // Παῡλᾰ: 6 words (μοῡσᾰ, βοῡλλᾰ, πᾰνδοῡρᾰ, παῡλᾰ, γοῡρνᾰ, κοῡπᾰ). Like Λευκη, except in 3 cells: nominative sg, accusative sg, vocative sg.
+    // Παῡλᾰ: 6 words (μοῡσᾰ, βοῡλλᾰ, πᾰνδοῡρᾰ, παῡλᾰ, γοῡρνᾰ, κοῡπᾰ). Like Λευκη, except in 3 cells: nom sg, acc sg, voc sg.
     declension!("παῡλᾰ", 6, "~ῡ~ᾰ", [gender: Feminine], like Λευκη;
-        nominative: "~ῡ~ᾰ", _, _;
-        accusative: "~ῡ~ᾰν", _, _;
-        vocative: "~ῡ~ᾰ", _, _;
+    nom: "~ῡ~ᾰ", _, _;
+    acc: "~ῡ~ᾰν", _, _;
+    voc: "~ῡ~ᾰ", _, _;
     ),
-    // Γεῑσον: 6 words (δεῑπνον, σπεῑρον, κλεῑθρον, σεῑστρον, ῥεῑθρον, γεῑσον). Like Στοῑχος, except in 4 cells: nominative sg, nominative pl, accusative pl, vocative sg.
+    // Γεῑσον: 6 words (δεῑπνον, σπεῑρον, κλεῑθρον, σεῑστρον, ῥεῑθρον, γεῑσον). Like Στοῑχος, except in 4 cells: nom sg, nom pl, acc pl, voc sg.
     declension!("γεῑσον", 6, "~ῑ~ον", [gender: Neuter], like Στοῑχος;
-        nominative: "~ῑ~ον", _, "~ῑ~ᾰ";
-        accusative: _, _, "~ῑ~ᾰ";
-        vocative: "~ῑ~ον", _, _;
+    nom: "~ῑ~ον", _, "~ῑ~ᾰ";
+    acc: _, _, "~ῑ~ᾰ";
+    voc: "~ῑ~ον", _, _;
     ),
-    // Γλωχῑς: 6 words (ὠδῑς, γλωχῑς, στᾰμῑς, ἑρμῑς, ὀρκῡς, τελμῑς). Like Αἰων, except in 2 cells: nominative sg, vocative sg.
+    // Γλωχῑς: 6 words (ὠδῑς, γλωχῑς, στᾰμῑς, ἑρμῑς, ὀρκῡς, τελμῑς). Like Αἰων, except in 2 cells: nom sg, voc sg.
     declension!("γλωχῑς", 6, "~ς", like Αἰων;
-        nominative: "~ς", _, _;
-        vocative: "~ς", _, _;
+    nom: "~ς", _, _;
+    voc: "~ς", _, _;
     ),
-    // Πᾰπᾱς: 6 words (πᾰπᾱς, γᾰλᾰτᾱς, κᾰδῡτᾱς, γενετᾱς, σᾰκτᾱς, πᾰππᾱς). Like Κοχλῐᾱς, except in 1 cell: vocative sg.
+    // Πᾰπᾱς: 6 words (πᾰπᾱς, γᾰλᾰτᾱς, κᾰδῡτᾱς, γενετᾱς, σᾰκτᾱς, πᾰππᾱς). Like Κοχλῐᾱς, except in 1 cell: voc sg.
     declension!("πᾰπᾱς", 6, "~ᾱς", [gender: Masculine], like Κοχλῐᾱς;
-        vocative: "~ᾰ", _, _;
+    voc: "~ᾰ", _, _;
     ),
     // Ἀναξ: 5 words (ἀνθραξ, ἀβαξ, ἀναξ, ὑραξ, ἁρπαξ).
     declension!("ἀναξ", 5, "~αξ", [gender: Masculine];
-        nominative: "~ᾰξ", "~ᾰκε", "~ᾰκες";
-        genitive: "~ᾰκος", "~ᾰκοιν", "~ᾰκων";
-        dative: "~ᾰκῐ", _, "~ᾰξῐ|~ᾰξῐν";
-        accusative: "~ᾰκᾰ", _, "~ᾰκᾰς";
-        vocative: "~ᾰξ", _, _;
+    nom: "~ᾰξ", "~ᾰκε", "~ᾰκες";
+    gen_: "~ᾰκος", "~ᾰκοιν", "~ᾰκων";
+    dat: "~ᾰκῐ", _, "~ᾰξῐ|~ᾰξῐν";
+    acc: "~ᾰκᾰ", _, "~ᾰκᾰς";
+    voc: "~ᾰξ", _, _;
     ),
-    // Ἀηρ: 5 words (γᾰστηρ, ἀηρ, φρᾱτηρ, αἰθηρ, ἀθηρ). Like Πᾰτηρ, except in 4 cells: genitive sg, dative sg, dative pl, vocative sg.
+    // Ἀηρ: 5 words (γᾰστηρ, ἀηρ, φρᾱτηρ, αἰθηρ, ἀθηρ). Like Πᾰτηρ, except in 4 cells: gen_ sg, dat sg, dat pl, voc sg.
     declension!("ἀηρ", 5, "~η~", like Πᾰτηρ;
-        genitive: "~ε~ος", _, _;
-        dative: "~ε~ῐ", _, "~ε~σῐ|~ε~σῐν";
-        vocative: "~η~", _, _;
+    gen_: "~ε~ος", _, _;
+    dat: "~ε~ῐ", _, "~ε~σῐ|~ε~σῐν";
+    voc: "~η~", _, _;
     ),
-    // Ἰδιος: 5 words (ἁγιος, ἰδιος, ἀνεψιος, ἁλιος, ἀπιος). Like Ἰδιον, except in 4 cells: nominative sg, nominative pl, accusative pl, vocative sg.
+    // Ἰδιος: 5 words (ἁγιος, ἰδιος, ἀνεψιος, ἁλιος, ἀπιος). Like Ἰδιον, except in 4 cells: nom sg, nom pl, acc pl, voc sg.
     declension!("ἰδιος", 5, "~ιος", [gender: Masculine], like Ἰδιον;
-        nominative: "~ῐος", _, "~ῐοι";
-        accusative: _, _, "~ῐους";
-        vocative: "~ῐε", _, _;
+    nom: "~ῐος", _, "~ῐοι";
+    acc: _, _, "~ῐους";
+    voc: "~ῐε", _, _;
     ),
-    // Ἀστερισκος: 5 words (ἁλιαιετος, ἀνθρωπισκος, ἀργιλλος, ἀστερισκος, ἀγχινοος). Like Ἀριθμος, except in 3 cells: genitive sg, genitive du, dative pl.
+    // Ἀστερισκος: 5 words (ἁλιαιετος, ἀνθρωπισκος, ἀργιλλος, ἀστερισκος, ἀγχινοος). Like Ἀριθμος, except in 3 cells: gen_ sg, gen_ du, dat pl.
     declension!("ἀστερισκος", 5, "~ι~ος", like Ἀριθμος;
-        genitive: "~ῐ~ου", "~ῐ~οιν", _;
-        dative: _, _, "~ῐ~οις";
+    gen_: "~ῐ~ου", "~ῐ~οιν", _;
+    dat: _, _, "~ῐ~οις";
     ),
     // Ἰσχας: 5 words (ἀρκας, ἱπποφοβας, ἁλας, ἰσχας, ἀελλας).
     declension!("ἰσχας", 5, "~ας";
-        nominative: "~ᾰς", "~ᾰδε", "~ᾰδες";
-        genitive: "~ᾰδος", "~ᾰδοιν", "~ᾰδων";
-        dative: "~ᾰδῐ", _, "~ᾰσῐ|~ᾰσῐν";
-        accusative: "~ᾰδᾰ", _, "~ᾰδᾰς";
-        vocative: "~ᾰς", _, _;
+    nom: "~ᾰς", "~ᾰδε", "~ᾰδες";
+    gen_: "~ᾰδος", "~ᾰδοιν", "~ᾰδων";
+    dat: "~ᾰδῐ", _, "~ᾰσῐ|~ᾰσῐν";
+    acc: "~ᾰδᾰ", _, "~ᾰδᾰς";
+    voc: "~ᾰς", _, _;
     ),
     // Ἀνατασις: 5 words (ἀναστασις, ἀγανακτησις, ἀναταξις, ἀνατασις, ἀναβασις).
     declension!("ἀνατασις", 5, "~α~α~ις", [gender: Feminine];
-        nominative: "~ᾰ~ᾰ~ῐς", "~ᾰ~ᾰ~ει", "~ᾰ~ᾰ~εις";
-        genitive: "~ᾰ~ᾰ~εως", "~ᾰ~ᾰ~εοιν", "~ᾰ~ᾰ~εων";
-        dative: "~ᾰ~ᾰ~ει", _, "~ᾰ~ᾰ~εσῐ|~ᾰ~ᾰ~εσῐν";
-        accusative: "~ᾰ~ᾰ~ῐν", _, "~ᾰ~ᾰ~εις";
-        vocative: "~ᾰ~ᾰ~ῐ", _, _;
+    nom: "~ᾰ~ᾰ~ῐς", "~ᾰ~ᾰ~ει", "~ᾰ~ᾰ~εις";
+    gen_: "~ᾰ~ᾰ~εως", "~ᾰ~ᾰ~εοιν", "~ᾰ~ᾰ~εων";
+    dat: "~ᾰ~ᾰ~ει", _, "~ᾰ~ᾰ~εσῐ|~ᾰ~ᾰ~εσῐν";
+    acc: "~ᾰ~ᾰ~ῐν", _, "~ᾰ~ᾰ~εις";
+    voc: "~ᾰ~ᾰ~ῐ", _, _;
     ),
     // Ἀντιθεσις: 5 words (ὑποκρισις, ἀντιθεσις, ἀντιπτωσις, ὑποκιστις, ἀφιξις).
     declension!("ἀντιθεσις", 5, "~ι~ις", [gender: Feminine];
-        nominative: "~ῐ~ῐς", "~ῐ~ει", "~ῐ~εις";
-        genitive: "~ῐ~εως", "~ῐ~εοιν", "~ῐ~εων";
-        dative: "~ῐ~ει", _, "~ῐ~εσῐ|~ῐ~εσῐν";
-        accusative: "~ῐ~ῐν", _, "~ῐ~εις";
-        vocative: "~ῐ~ῐ", _, _;
+    nom: "~ῐ~ῐς", "~ῐ~ει", "~ῐ~εις";
+    gen_: "~ῐ~εως", "~ῐ~εοιν", "~ῐ~εων";
+    dat: "~ῐ~ει", _, "~ῐ~εσῐ|~ῐ~εσῐν";
+    acc: "~ῐ~ῐν", _, "~ῐ~εις";
+    voc: "~ῐ~ῐ", _, _;
     ),
     // Δαιμων: 5 words (δαιμων, μειζων, γειτων, ποτᾰμογειτων, σεισων).
     declension!("δαιμων", 5, "~ι~ων", [gender: Masculine];
-        nominative: "~ι~ων", "~ι~ονε", "~ι~ονες";
-        genitive: "~ι~ονος", "~ι~ονοιν", "~ι~ονων";
-        dative: "~ι~ονῐ", _, "~ι~οσῐ|~ι~οσῐν";
-        accusative: "~ι~ονᾰ", _, "~ι~ονᾰς";
-        vocative: "~ῑ~ον", _, _;
+    nom: "~ι~ων", "~ι~ονε", "~ι~ονες";
+    gen_: "~ι~ονος", "~ι~ονοιν", "~ι~ονων";
+    dat: "~ι~ονῐ", _, "~ι~οσῐ|~ι~οσῐν";
+    acc: "~ι~ονᾰ", _, "~ι~ονᾰς";
+    voc: "~ῑ~ον", _, _;
     ),
     // Γεῡσῐς: 5 words (παῡσῐς, λοῡσῐς, ῥεῡσῐς, ζεῡξῐς, γεῡσῐς).
     declension!("γεῡσῐς", 5, "~ῡ~ῐς", [gender: Feminine];
-        nominative: "~ῡ~ῐς", "~υ~ει", "~υ~εις";
-        genitive: "~υ~εως", "~υ~εοιν", "~υ~εων";
-        dative: "~υ~ει", _, "~υ~εσῐ|~υ~εσῐν";
-        accusative: "~ῡ~ῐν", _, "~υ~εις";
-        vocative: "~ῡ~ῐ", _, _;
+    nom: "~ῡ~ῐς", "~υ~ει", "~υ~εις";
+    gen_: "~υ~εως", "~υ~εοιν", "~υ~εων";
+    dat: "~υ~ει", _, "~υ~εσῐ|~υ~εσῐν";
+    acc: "~ῡ~ῐν", _, "~υ~εις";
+    voc: "~ῡ~ῐ", _, _;
     ),
     // Νοῡς: 5 words (νοῡς, πλοῡς, θῠγατρῐδοῡς, ῥοῡς, λουτροχοῡς).
     declension!("νοῡς", 5, "~οῡς", [gender: Masculine];
-        nominative: "~οῡς", "~ω|~ω", "~οῑ";
-        genitive: "~οῡ", "~οῑν", "~ων";
-        dative: "~ῳ", _, "~οῑς";
-        accusative: "~οῡν", "~ω|~ω", "~οῡς";
-        vocative: "~οῡ", "~ω|~ω", _;
+    nom: "~οῡς", "~ω|~ω", "~οῑ";
+    gen_: "~οῡ", "~οῑν", "~ων";
+    dat: "~ῳ", _, "~οῑς";
+    acc: "~οῡν", "~ω|~ω", "~οῡς";
+    voc: "~οῡ", "~ω|~ω", _;
     ),
     // Λῐψ: 5 words (χᾰλῠψ, φλεψ, χερνῐψ, φᾰψ, λῐψ).
     declension!("λῐψ", 5, "~ψ";
-        nominative: "~ψ", "~βε", "~βες";
-        genitive: "~βος", "~βοῑν", "~βων";
-        dative: "~βῐ", _, "~ψῐ|~ψῐν";
-        accusative: "~βᾰ", _, "~βᾰς";
-        vocative: "~ψ", _, _;
+    nom: "~ψ", "~βε", "~βες";
+    gen_: "~βος", "~βοῑν", "~βων";
+    dat: "~βῐ", _, "~ψῐ|~ψῐν";
+    acc: "~βᾰ", _, "~βᾰς";
+    voc: "~ψ", _, _;
     ),
     // Ἀγκυλη: 5 words (ἀφροσυνη, ἀργυροθηκη, ὑδρομυλη, ἀγκυλη, ἱπποσυνη).
     declension!("ἀγκυλη", 5, "~υ~η", [gender: Feminine];
-        nominative: "~ῠ~η", "~ῠ~ᾱ", "~ῠ~αι";
-        genitive: "~ῠ~ης", "~ῠ~αιν", "~ῠ~ων";
-        dative: "~ῠ~ῃ", _, "~ῠ~αις";
-        accusative: "~ῠ~ην", _, "~ῠ~ᾱς";
-        vocative: "~ῠ~η", _, _;
+    nom: "~ῠ~η", "~ῠ~ᾱ", "~ῠ~αι";
+    gen_: "~ῠ~ης", "~ῠ~αιν", "~ῠ~ων";
+    dat: "~ῠ~ῃ", _, "~ῠ~αις";
+    acc: "~ῠ~ην", _, "~ῠ~ᾱς";
+    voc: "~ῠ~η", _, _;
     ),
     // Τεῡχος: 5 words (τεῡχος, γλεῡκος, ψεῡδος, ζεῡγος, κεῡθος).
     declension!("τεῡχος", 5, "~ῡ~ος", [gender: Neuter];
-        nominative: "~ῡ~ος", "~υ~ει", "~υ~η";
-        genitive: "~υ~ους", "~υ~οῑν", "~υ~ων";
-        dative: "~υ~ει", _, "~υ~εσῐ|~υ~εσῐν";
-        accusative: "~ῡ~ος", _, "~υ~η";
-        vocative: "~ῡ~ος", _, _;
+    nom: "~ῡ~ος", "~υ~ει", "~υ~η";
+    gen_: "~υ~ους", "~υ~οῑν", "~υ~ων";
+    dat: "~υ~ει", _, "~υ~εσῐ|~υ~εσῐν";
+    acc: "~ῡ~ος", _, "~υ~η";
+    voc: "~ῡ~ος", _, _;
     ),
-    // Χλουνης: 5 words (τῠμβαυλης, χλουνης, σῐδευνης, χοραυλης, πρωταυλης). Like Ναυτης, except in 1 cell: vocative sg.
+    // Χλουνης: 5 words (τῠμβαυλης, χλουνης, σῐδευνης, χοραυλης, πρωταυλης). Like Ναυτης, except in 1 cell: voc sg.
     declension!("χλουνης", 5, "~υ~ης", [gender: Masculine], like Ναυτης;
-        vocative: "~υ~η", _, _;
+    voc: "~υ~η", _, _;
     ),
     // Λεῑμᾰξ: 5 words (χοῑνῐξ, κᾰταῑτῠξ, μεῑρᾰξ, λεῑμᾰξ, βαῑβῠξ).
     declension!("λεῑμᾰξ", 5, "~ῑ~ξ";
-        nominative: "~ῑ~ξ", "~ι~κε", "~ι~κες";
-        genitive: "~ι~κος", "~ι~κοιν", "~ι~κων";
-        dative: "~ι~κῐ", _, "~ι~ξῐ|~ι~ξῐν";
-        accusative: "~ι~κᾰ", _, "~ι~κᾰς";
-        vocative: "~ῑ~ξ", _, _;
+    nom: "~ῑ~ξ", "~ι~κε", "~ι~κες";
+    gen_: "~ι~κος", "~ι~κοιν", "~ι~κων";
+    dat: "~ι~κῐ", _, "~ι~ξῐ|~ι~ξῐν";
+    acc: "~ι~κᾰ", _, "~ι~κᾰς";
+    voc: "~ῑ~ξ", _, _;
     ),
     // Φῡσᾱς: 5 words (πελεκᾱς, πῡρᾰμοῡς, φῡσᾱς, πλᾰκοῡς, ἀλλᾱς).
     declension!("φῡσᾱς", 5, "~ς", [gender: Masculine];
-        nominative: "~ς", "~ντε", "~ντες";
-        genitive: "~ντος", "~ντοιν", "~ντων";
-        dative: "~ντῐ", _, "~σῐ|~σῐν";
-        accusative: "~ντᾰ", _, "~ντᾰς";
-        vocative: "~ν", _, _;
+    nom: "~ς", "~ντε", "~ντες";
+    gen_: "~ντος", "~ντοιν", "~ντων";
+    dat: "~ντῐ", _, "~σῐ|~σῐν";
+    acc: "~ντᾰ", _, "~ντᾰς";
+    voc: "~ν", _, _;
     ),
     // Ἱσπανος: 4 words (ἰατρος, λαϊκος, ἱσπανος, ἀρχαγος).
     declension!("ἱσπανος", 4, "~α~ος", [gender: Masculine];
-        nominative: "~ᾱ~ος", "~ᾱ~ω", "~ᾱ~οι";
-        genitive: "~ᾱ~οῡ", "~ᾱ~οῑν", "~ᾱ~ων";
-        dative: "~ᾱ~ῳ", _, "~ᾱ~οῑς";
-        accusative: "~ᾱ~ον", _, "~ᾱ~ους";
-        vocative: "~ᾱ~ε", _, _;
+    nom: "~ᾱ~ος", "~ᾱ~ω", "~ᾱ~οι";
+    gen_: "~ᾱ~οῡ", "~ᾱ~οῑν", "~ᾱ~ων";
+    dat: "~ᾱ~ῳ", _, "~ᾱ~οῑς";
+    acc: "~ᾱ~ον", _, "~ᾱ~ους";
+    voc: "~ᾱ~ε", _, _;
     ),
     // Ἁγνεια: 4 words (ἰουδαια, ἁγνεια, ἀνδρεια, ὑστεραια). Like Κεραιᾱ, except in 0 cells: .
     declension!("ἁγνεια", 4, "~~α", [gender: Feminine], like Κεραιᾱ;
     ),
-    // Πῠρᾰ: 4 words (πῠρᾰ, πολῑτῐκᾰ, ἐσθλᾰ, τρωϊκᾰ). Like Ὀργῐᾰ, except in 1 cell: dative pl.
+    // Πῠρᾰ: 4 words (πῠρᾰ, πολῑτῐκᾰ, ἐσθλᾰ, τρωϊκᾰ). Like Ὀργῐᾰ, except in 1 cell: dat pl.
     declension!("πῠρᾰ", 4, "~ᾰ", [gender: Neuter], like Ὀργῐᾰ;
-        dative: _, _, "~οῑς";
+    dat: _, _, "~οῑς";
     ),
-    // Λαυρᾱ: 4 words (σαυρᾱ, λαυρᾱ, κᾰρουχᾱ, βρουτζᾱ). Like Λευκη, except in 5 cells: nominative sg, genitive sg, dative sg, accusative sg, vocative sg.
+    // Λαυρᾱ: 4 words (σαυρᾱ, λαυρᾱ, κᾰρουχᾱ, βρουτζᾱ). Like Λευκη, except in 5 cells: nom sg, gen_ sg, dat sg, acc sg, voc sg.
     declension!("λαυρᾱ", 4, "~υ~ᾱ", [gender: Feminine], like Λευκη;
-        nominative: "~υ~ᾱ", _, _;
-        genitive: "~υ~ᾱς", _, _;
-        dative: "~υ~ᾳ", _, _;
-        accusative: "~υ~ᾱν", _, _;
-        vocative: "~υ~ᾱ", _, _;
+    nom: "~υ~ᾱ", _, _;
+    gen_: "~υ~ᾱς", _, _;
+    dat: "~υ~ᾳ", _, _;
+    acc: "~υ~ᾱν", _, _;
+    voc: "~υ~ᾱ", _, _;
     ),
     // Ἀελλα: 4 words (ὑαινα, ὑποτεινουσα, ἀγχουσα, ἀελλα). Like Τρᾰπεζᾰ, except in 0 cells: .
     declension!("ἀελλα", 4, "~α", [gender: Feminine], like Τρᾰπεζᾰ;
     ),
     // Πλευμων: 4 words (πλευμων, πνευμων, μουσμων, ἰχνευμων).
     declension!("πλευμων", 4, "~υ~ων", [gender: Masculine];
-        nominative: "~υ~ων", "~υ~ονε", "~υ~ονες";
-        genitive: "~υ~ονος", "~υ~ονοιν", "~υ~ονων";
-        dative: "~υ~ονῐ", _, "~υ~οσῐ|~υ~οσῐν";
-        accusative: "~υ~ονᾰ", _, "~υ~ονᾰς";
-        vocative: "~ῡ~ον", _, _;
+    nom: "~υ~ων", "~υ~ονε", "~υ~ονες";
+    gen_: "~υ~ονος", "~υ~ονοιν", "~υ~ονων";
+    dat: "~υ~ονῐ", _, "~υ~οσῐ|~υ~οσῐν";
+    acc: "~υ~ονᾰ", _, "~υ~ονᾰς";
+    voc: "~ῡ~ον", _, _;
     ),
     // Ἀκανθις: 4 words (ἁμαμηλις, ὑπογραφις, ἀκανθις, ἀσταφις).
     declension!("ἀκανθις", 4, "~α~ις", [gender: Feminine];
-        nominative: "~ᾰ~ῐς", "~ᾰ~ῐδε", "~ᾰ~ῐδες";
-        genitive: "~ᾰ~ῐδος", "~ᾰ~ῐδοιν", "~ᾰ~ῐδων";
-        dative: "~ᾰ~ῐδῐ", _, "~ᾰ~ῐσῐ|~ᾰ~ῐσῐν";
-        accusative: "~ᾰ~ῐδᾰ", _, "~ᾰ~ῐδᾰς";
-        vocative: "~ᾰ~ῐ", _, _;
+    nom: "~ᾰ~ῐς", "~ᾰ~ῐδε", "~ᾰ~ῐδες";
+    gen_: "~ᾰ~ῐδος", "~ᾰ~ῐδοιν", "~ᾰ~ῐδων";
+    dat: "~ᾰ~ῐδῐ", _, "~ᾰ~ῐσῐ|~ᾰ~ῐσῐν";
+    acc: "~ᾰ~ῐδᾰ", _, "~ᾰ~ῐδᾰς";
+    voc: "~ᾰ~ῐ", _, _;
     ),
     // Ἀκροβυστια: 4 words (ἀσφυξια, ἀκροβυστια, ἀμβλυωπια, ἀσυμμετρια).
     declension!("ἀκροβυστια", 4, "~υ~ια", [gender: Feminine];
-        nominative: "~ῠ~ῐᾱ", "~ῠ~ῐᾱ", "~ῠ~ῐαι";
-        genitive: "~ῠ~ῐᾱς", "~ῠ~ῐαιν", "~ῠ~ῐων";
-        dative: "~ῠ~ῐᾳ", _, "~ῠ~ῐαις";
-        accusative: "~ῠ~ῐᾱν", _, "~ῠ~ῐᾱς";
-        vocative: "~ῠ~ῐᾱ", _, _;
+    nom: "~ῠ~ῐᾱ", "~ῠ~ῐᾱ", "~ῠ~ῐαι";
+    gen_: "~ῠ~ῐᾱς", "~ῠ~ῐαιν", "~ῠ~ῐων";
+    dat: "~ῠ~ῐᾳ", _, "~ῠ~ῐαις";
+    acc: "~ῠ~ῐᾱν", _, "~ῠ~ῐᾱς";
+    voc: "~ῠ~ῐᾱ", _, _;
     ),
     // Ἱματιον: 4 words (ἱματιον, ἀκουσματιον, ἀνακτοριον, ἰναριον).
     declension!("ἱματιον", 4, "~α~ιον", [gender: Neuter];
-        nominative: "~ᾰ~ῐον", "~ᾰ~ῐω", "~ᾰ~ῐᾰ";
-        genitive: "~ᾰ~ῐου", "~ᾰ~ῐοιν", "~ᾰ~ῐων";
-        dative: "~ᾰ~ῐῳ", _, "~ᾰ~ῐοις";
-        accusative: "~ᾰ~ῐον", _, "~ᾰ~ῐᾰ";
-        vocative: "~ᾰ~ῐον", _, _;
+    nom: "~ᾰ~ῐον", "~ᾰ~ῐω", "~ᾰ~ῐᾰ";
+    gen_: "~ᾰ~ῐου", "~ᾰ~ῐοιν", "~ᾰ~ῐων";
+    dat: "~ᾰ~ῐῳ", _, "~ᾰ~ῐοις";
+    acc: "~ᾰ~ῐον", _, "~ᾰ~ῐᾰ";
+    voc: "~ᾰ~ῐον", _, _;
     ),
-    // Ἀστυρον: 4 words (ἀσυνδετον, ἀστυρον, ὑδνοφυλλον, ἰχθυοπωλεῑον). Like Ἀμεθυστος, except in 4 cells: nominative sg, nominative pl, accusative pl, vocative sg.
+    // Ἀστυρον: 4 words (ἀσυνδετον, ἀστυρον, ὑδνοφυλλον, ἰχθυοπωλεῑον). Like Ἀμεθυστος, except in 4 cells: nom sg, nom pl, acc pl, voc sg.
     declension!("ἀστυρον", 4, "~υ~ον", [gender: Neuter], like Ἀμεθυστος;
-        nominative: "~ῠ~ον", _, "~ῠ~ᾰ";
-        accusative: _, _, "~ῠ~ᾰ";
-        vocative: "~ῠ~ον", _, _;
+    nom: "~ῠ~ον", _, "~ῠ~ᾰ";
+    acc: _, _, "~ῠ~ᾰ";
+    voc: "~ῠ~ον", _, _;
     ),
     // Σικανος: 4 words (σικανος, ἀντιπατρος, ἀρχιδαμος, ἁλιβαπτος).
     declension!("σικανος", 4, "~ι~α~ος", [gender: Masculine];
-        nominative: "~ῐ~ᾰ~ος", "~ῐ~ᾰ~ω", "~ῐ~ᾰ~οι";
-        genitive: "~ῐ~ᾰ~ου", "~ῐ~ᾰ~οιν", "~ῐ~ᾰ~ων";
-        dative: "~ῐ~ᾰ~ῳ", _, "~ῐ~ᾰ~οις";
-        accusative: "~ῐ~ᾰ~ον", _, "~ῐ~ᾰ~ους";
-        vocative: "~ῐ~ᾰ~ε", _, _;
+    nom: "~ῐ~ᾰ~ος", "~ῐ~ᾰ~ω", "~ῐ~ᾰ~οι";
+    gen_: "~ῐ~ᾰ~ου", "~ῐ~ᾰ~οιν", "~ῐ~ᾰ~ων";
+    dat: "~ῐ~ᾰ~ῳ", _, "~ῐ~ᾰ~οις";
+    acc: "~ῐ~ᾰ~ον", _, "~ῐ~ᾰ~ους";
+    voc: "~ῐ~ᾰ~ε", _, _;
     ),
     // Κηρῠξ: 4 words (κοκκῠξ, κηρῠξ, ψευδοκηρῠξ, ἱεροκηρῠξ).
     declension!("κηρῠξ", 4, "~ῠξ", [gender: Masculine];
-        nominative: "~ῠξ", "~ῡκε", "~ῡκες";
-        genitive: "~ῡκος", "~ῡκοιν", "~ῡκων";
-        dative: "~ῡκῐ", _, "~ῡξῐ|~ῡξῐν";
-        accusative: "~ῡκᾰ", _, "~ῡκᾰς";
-        vocative: "~ῠξ", _, _;
+    nom: "~ῠξ", "~ῡκε", "~ῡκες";
+    gen_: "~ῡκος", "~ῡκοιν", "~ῡκων";
+    dat: "~ῡκῐ", _, "~ῡξῐ|~ῡξῐν";
+    acc: "~ῡκᾰ", _, "~ῡκᾰς";
+    voc: "~ῠξ", _, _;
     ),
-    // Ζωᾱ: 4 words (γονᾱ, δρᾰχμᾱ, σφᾰγᾱ, ζωᾱ). Like Φορᾱ, except in 3 cells: genitive pl, dative pl, accusative pl.
+    // Ζωᾱ: 4 words (γονᾱ, δρᾰχμᾱ, σφᾰγᾱ, ζωᾱ). Like Φορᾱ, except in 3 cells: gen_ pl, dat pl, acc pl.
     declension!("ζωᾱ", 4, "~ᾱ", [gender: Feminine], like Φορᾱ;
-        genitive: _, _, "~ᾱων|~ᾱν";
-        dative: _, _, "~αῑς|~αῑσῐ|~αῑσῐν";
-        accusative: _, _, "~ᾰς";
+    gen_: _, _, "~ᾱων|~ᾱν";
+    dat: _, _, "~αῑς|~αῑσῐ|~αῑσῐν";
+    acc: _, _, "~ᾰς";
     ),
-    // Γαλη: 3 words (γη, μῡγᾰλη, γαλη). Like Κᾰτᾰσκευη, except in 1 cell: nominative pl.
+    // Γαλη: 3 words (γη, μῡγᾰλη, γαλη). Like Κᾰτᾰσκευη, except in 1 cell: nom pl.
     declension!("γαλη", 3, "~η", [gender: Feminine], like Κᾰτᾰσκευη;
-        nominative: _, _, "~αῑ";
+    nom: _, _, "~αῑ";
     ),
     // Ἀνακυκλωσις: 3 words (ἀποκαλυψις, ἀνακυκλωσις, ἀνακυκλησις).
     declension!("ἀνακυκλωσις", 3, "~α~υ~ις", [gender: Feminine];
-        nominative: "~ᾰ~ῠ~ῐς", "~ᾰ~ῠ~ει", "~ᾰ~ῠ~εις";
-        genitive: "~ᾰ~ῠ~εως", "~ᾰ~ῠ~εοιν", "~ᾰ~ῠ~εων";
-        dative: "~ᾰ~ῠ~ει", _, "~ᾰ~ῠ~εσῐ|~ᾰ~ῠ~εσῐν";
-        accusative: "~ᾰ~ῠ~ῐν", _, "~ᾰ~ῠ~εις";
-        vocative: "~ᾰ~ῠ~ῐ", _, _;
+    nom: "~ᾰ~ῠ~ῐς", "~ᾰ~ῠ~ει", "~ᾰ~ῠ~εις";
+    gen_: "~ᾰ~ῠ~εως", "~ᾰ~ῠ~εοιν", "~ᾰ~ῠ~εων";
+    dat: "~ᾰ~ῠ~ει", _, "~ᾰ~ῠ~εσῐ|~ᾰ~ῠ~εσῐν";
+    acc: "~ᾰ~ῠ~ῐν", _, "~ᾰ~ῠ~εις";
+    voc: "~ᾰ~ῠ~ῐ", _, _;
     ),
     // Ἀμανιτης: 3 words (ἰσραηλιτης, ἱεραπολιτης, ἀμανιτης).
     declension!("ἀμανιτης", 3, "~α~ι~ης", [gender: Masculine];
-        nominative: "~ᾱ~ῑ~ης", "~ᾱ~ῑ~ᾱ", "~ᾱ~ῑ~αι";
-        genitive: "~ᾱ~ῑ~ου", "~ᾱ~ῑ~αιν", "~ᾱ~ῑ~ων";
-        dative: "~ᾱ~ῑ~ῃ", _, "~ᾱ~ῑ~αις";
-        accusative: "~ᾱ~ῑ~ην", _, "~ᾱ~ῑ~ᾱς";
-        vocative: "~ᾱ~ῑ~ᾰ", _, _;
+    nom: "~ᾱ~ῑ~ης", "~ᾱ~ῑ~ᾱ", "~ᾱ~ῑ~αι";
+    gen_: "~ᾱ~ῑ~ου", "~ᾱ~ῑ~αιν", "~ᾱ~ῑ~ων";
+    dat: "~ᾱ~ῑ~ῃ", _, "~ᾱ~ῑ~αις";
+    acc: "~ᾱ~ῑ~ην", _, "~ᾱ~ῑ~ᾱς";
+    voc: "~ᾱ~ῑ~ᾰ", _, _;
     ),
     // Ἀθανασια: 3 words (ἀμαζονομαχια, ἀταραξια, ἀθανασια).
     declension!("ἀθανασια", 3, "~α~α~ια", [gender: Feminine];
-        nominative: "~ᾰ~ᾰ~ῐᾱ", "~ᾰ~ᾰ~ῐᾱ", "~ᾰ~ᾰ~ῐαι";
-        genitive: "~ᾰ~ᾰ~ῐᾱς", "~ᾰ~ᾰ~ῐαιν", "~ᾰ~ᾰ~ῐων";
-        dative: "~ᾰ~ᾰ~ῐᾳ", _, "~ᾰ~ᾰ~ῐαις";
-        accusative: "~ᾰ~ᾰ~ῐᾱν", _, "~ᾰ~ᾰ~ῐᾱς";
-        vocative: "~ᾰ~ᾰ~ῐᾱ", _, _;
+    nom: "~ᾰ~ᾰ~ῐᾱ", "~ᾰ~ᾰ~ῐᾱ", "~ᾰ~ᾰ~ῐαι";
+    gen_: "~ᾰ~ᾰ~ῐᾱς", "~ᾰ~ᾰ~ῐαιν", "~ᾰ~ᾰ~ῐων";
+    dat: "~ᾰ~ᾰ~ῐᾳ", _, "~ᾰ~ᾰ~ῐαις";
+    acc: "~ᾰ~ᾰ~ῐᾱν", _, "~ᾰ~ᾰ~ῐᾱς";
+    voc: "~ᾰ~ᾰ~ῐᾱ", _, _;
     ),
-    // Θῑς: 3 words (ῥῑς, ἰς, θῑς). Like Γλωχῑς, except in 1 cell: genitive du.
+    // Θῑς: 3 words (ῥῑς, ἰς, θῑς). Like Γλωχῑς, except in 1 cell: gen_ du.
     declension!("θῑς", 3, "~ς", like Γλωχῑς;
-        genitive: _, "~νοῑν", _;
+    gen_: _, "~νοῑν", _;
     ),
-    // Μῡς: 3 words (σῡς, δρῡς, μῡς). Like Νηδῡς, except in 2 cells: genitive du, dative sg.
+    // Μῡς: 3 words (σῡς, δρῡς, μῡς). Like Νηδῡς, except in 2 cells: gen_ du, dat sg.
     declension!("μῡς", 3, "~ῡς", like Νηδῡς;
-        genitive: _, "~ῠοῑν", _;
-        dative: "~ῠϊ|~υι", _, _;
+    gen_: _, "~ῠοῑν", _;
+    dat: "~ῠϊ|~υι", _, _;
     ),
     // Ἀγορα: 3 words (ἰα, ἀγορα, ἀρα). Like Φορᾱ, except in 0 cells: .
     declension!("ἀγορα", 3, "~α", [gender: Feminine], like Φορᾱ;
     ),
     // Νεῑκος: 3 words (τεῑχος, χεῑλος, νεῑκος).
     declension!("νεῑκος", 3, "~ῑ~ος", [gender: Neuter];
-        nominative: "~ῑ~ος", "~ι~ει", "~ι~η";
-        genitive: "~ι~ους", "~ι~οῑν", "~ι~ων";
-        dative: "~ι~ει", _, "~ι~εσῐ|~ι~εσῐν";
-        accusative: "~ῑ~ος", _, "~ι~η";
-        vocative: "~ῑ~ος", _, _;
+    nom: "~ῑ~ος", "~ι~ει", "~ι~η";
+    gen_: "~ι~ους", "~ι~οῑν", "~ι~ων";
+    dat: "~ι~ει", _, "~ι~εσῐ|~ι~εσῐν";
+    acc: "~ῑ~ος", _, "~ι~η";
+    voc: "~ῑ~ος", _, _;
     ),
     // Ἀσις: 3 words (ἀκρις, ἀκοιτις, ἀσις). Like Λᾰτρῐς, except in 0 cells: .
     declension!("ἀσις", 3, "~ις", [gender: Feminine], like Λᾰτρῐς;
     ),
-    // Πειθω: 3 words (λεχω, πειθω, κερδω). Like Ἠχω, except in 1 cell: genitive sg.
+    // Πειθω: 3 words (λεχω, πειθω, κερδω). Like Ἠχω, except in 1 cell: gen_ sg.
     declension!("πειθω", 3, "~ω", [gender: Feminine], like Ἠχω;
-        genitive: "~οος|~οῡς", _, _;
+    gen_: "~οος|~οῡς", _, _;
     ),
-    // Πεῑνᾰ: 3 words (πεῑσᾰ, χλαῑνᾰ, πεῑνᾰ). Like Μοῑρᾰ, except in 2 cells: genitive sg, dative sg.
+    // Πεῑνᾰ: 3 words (πεῑσᾰ, χλαῑνᾰ, πεῑνᾰ). Like Μοῑρᾰ, except in 2 cells: gen_ sg, dat sg.
     declension!("πεῑνᾰ", 3, "~ῑ~ᾰ", [gender: Feminine], like Μοῑρᾰ;
-        genitive: "~ι~ης", _, _;
-        dative: "~ι~ῃ", _, _;
+    gen_: "~ι~ης", _, _;
+    dat: "~ι~ῃ", _, _;
     ),
-    // Ἀβατον: 3 words (ἀνδραποδον, ἀσαρον, ἀβατον). Like Ἀστραγᾰλος, except in 4 cells: nominative sg, nominative pl, accusative pl, vocative sg.
+    // Ἀβατον: 3 words (ἀνδραποδον, ἀσαρον, ἀβατον). Like Ἀστραγᾰλος, except in 4 cells: nom sg, nom pl, acc pl, voc sg.
     declension!("ἀβατον", 3, "~α~ον", [gender: Neuter], like Ἀστραγᾰλος;
-        nominative: "~ᾰ~ον", _, "~ᾰ~ᾰ";
-        accusative: _, _, "~ᾰ~ᾰ";
-        vocative: "~ᾰ~ον", _, _;
+    nom: "~ᾰ~ον", _, "~ᾰ~ᾰ";
+    acc: _, _, "~ᾰ~ᾰ";
+    voc: "~ᾰ~ον", _, _;
     ),
-    // Ἐγκᾰτᾰ: 3 words (ἐγκᾰτᾰ, κεδμᾰτᾰ, ἰχθῠημᾰτᾰ). Like Τρωες, except in 4 cells: nominative sg, nominative pl, genitive pl, accusative pl.
+    // Ἐγκᾰτᾰ: 3 words (ἐγκᾰτᾰ, κεδμᾰτᾰ, ἰχθῠημᾰτᾰ). Like Τρωες, except in 4 cells: nom sg, nom pl, gen_ pl, acc pl.
     declension!("ἐγκᾰτᾰ", 3, "~τᾰ", [gender: Neuter], like Τρωες;
-        nominative: "~τᾰ", _, "~τᾰ";
-        genitive: _, _, "~των";
-        accusative: _, _, "~τᾰ";
+    nom: "~τᾰ", _, "~τᾰ";
+    gen_: _, _, "~των";
+    acc: _, _, "~τᾰ";
     ),
-    // Ἰασπις: 3 words (ἰασπις, ἰσατις, ἀγλαοφωτις). Like Ἀκανθις, except in 1 cell: accusative sg.
+    // Ἰασπις: 3 words (ἰασπις, ἰσατις, ἀγλαοφωτις). Like Ἀκανθις, except in 1 cell: acc sg.
     declension!("ἰασπις", 3, "~α~ις", [gender: Feminine], like Ἀκανθις;
-        accusative: "~ᾰ~ῐν", _, _;
+    acc: "~ᾰ~ῐν", _, _;
     ),
     // Ὑπαλλαγη: 3 words (ἀνταλλαγη, ἀνασκαφη, ὑπαλλαγη).
     declension!("ὑπαλλαγη", 3, "~α~α~η", [gender: Feminine];
-        nominative: "~ᾰ~ᾰ~η", "~ᾰ~ᾰ~ᾱ", "~ᾰ~ᾰ~αι";
-        genitive: "~ᾰ~ᾰ~ης", "~ᾰ~ᾰ~αῑν", "~ᾰ~ᾰ~ων";
-        dative: "~ᾰ~ᾰ~ῃ", _, "~ᾰ~ᾰ~αῑς";
-        accusative: "~ᾰ~ᾰ~ην", _, "~ᾰ~ᾰ~ᾱς";
-        vocative: "~ᾰ~ᾰ~η", _, _;
+    nom: "~ᾰ~ᾰ~η", "~ᾰ~ᾰ~ᾱ", "~ᾰ~ᾰ~αι";
+    gen_: "~ᾰ~ᾰ~ης", "~ᾰ~ᾰ~αῑν", "~ᾰ~ᾰ~ων";
+    dat: "~ᾰ~ᾰ~ῃ", _, "~ᾰ~ᾰ~αῑς";
+    acc: "~ᾰ~ᾰ~ην", _, "~ᾰ~ᾰ~ᾱς";
+    voc: "~ᾰ~ᾰ~η", _, _;
     ),
-    // Λυρτος: 3 words (νεκυϊσμος, ἰχθυουλκος, λυρτος). Like Ἀμεθυστος, except in 3 cells: genitive sg, genitive du, dative pl.
+    // Λυρτος: 3 words (νεκυϊσμος, ἰχθυουλκος, λυρτος). Like Ἀμεθυστος, except in 3 cells: gen_ sg, gen_ du, dat pl.
     declension!("λυρτος", 3, "~υ~ος", [gender: Masculine], like Ἀμεθυστος;
-        genitive: "~ῠ~οῡ", "~ῠ~οῑν", _;
-        dative: _, _, "~ῠ~οῑς";
+    gen_: "~ῠ~οῡ", "~ῠ~οῑν", _;
+    dat: _, _, "~ῠ~οῑς";
     ),
-    // Δᾰσῠ: 3 words (ὀξῠ, δᾰσῠ, πλᾰτῠ). Like Φᾰος, except in 5 cells: nominative sg, nominative du, dative sg, accusative sg, vocative sg.
+    // Δᾰσῠ: 3 words (ὀξῠ, δᾰσῠ, πλᾰτῠ). Like Φᾰος, except in 5 cells: nom sg, nom du, dat sg, acc sg, voc sg.
     declension!("δᾰσῠ", 3, "~ῠ", like Φᾰος;
-        nominative: "~ῠ", "~εῑ", _;
-        dative: "~εῑ", _, _;
-        accusative: "~ῠ", _, _;
-        vocative: "~ῠ", _, _;
+    nom: "~ῠ", "~εῑ", _;
+    dat: "~εῑ", _, _;
+    acc: "~ῠ", _, _;
+    voc: "~ῠ", _, _;
     ),
-    // Λαλλαι: 3 words (κᾰλανδαι, χαρωνῑται, λαλλαι). Like Ἀραχνη, except in 7 cells: nominative sg, nominative du, genitive sg, genitive du, dative sg, accusative sg, ….
+    // Λαλλαι: 3 words (κᾰλανδαι, χαρωνῑται, λαλλαι). Like Ἀραχνη, except in 7 cells: nom sg, nom du, gen_ sg, gen_ du, dat sg, acc sg, ….
     declension!("λαλλαι", 3, "~α~αι", like Ἀραχνη;
-        nominative: "~α~αι", derived, _;
-        genitive: derived, derived, _;
-        dative: derived, _, _;
-        accusative: derived, _, _;
-        vocative: derived, _, _;
+    nom: "~α~αι", derived, _;
+    gen_: derived, derived, _;
+    dat: derived, _, _;
+    acc: derived, _, _;
+    voc: derived, _, _;
     ),
     // Βαλσαμον: 3 words (ἀρτολαγανον, βαλσαμον, ἀλαβαστρον).
     declension!("βαλσαμον", 3, "~α~α~ον", [gender: Neuter];
-        nominative: "~ᾰ~ᾰ~ον", "~ᾰ~ᾰ~ω", "~ᾰ~ᾰ~ᾰ";
-        genitive: "~ᾰ~ᾰ~ου", "~ᾰ~ᾰ~οιν", "~ᾰ~ᾰ~ων";
-        dative: "~ᾰ~ᾰ~ῳ", _, "~ᾰ~ᾰ~οις";
-        accusative: "~ᾰ~ᾰ~ον", _, "~ᾰ~ᾰ~ᾰ";
-        vocative: "~ᾰ~ᾰ~ον", _, _;
+    nom: "~ᾰ~ᾰ~ον", "~ᾰ~ᾰ~ω", "~ᾰ~ᾰ~ᾰ";
+    gen_: "~ᾰ~ᾰ~ου", "~ᾰ~ᾰ~οιν", "~ᾰ~ᾰ~ων";
+    dat: "~ᾰ~ᾰ~ῳ", _, "~ᾰ~ᾰ~οις";
+    acc: "~ᾰ~ᾰ~ον", _, "~ᾰ~ᾰ~ᾰ";
+    voc: "~ᾰ~ᾰ~ον", _, _;
     ),
-    // Ἐντεᾰ: 3 words (ἐντεᾰ, δηνεᾰ, τειρεᾰ). Like Ὀργῐᾰ, except in 1 cell: dative pl.
+    // Ἐντεᾰ: 3 words (ἐντεᾰ, δηνεᾰ, τειρεᾰ). Like Ὀργῐᾰ, except in 1 cell: dat pl.
     declension!("ἐντεᾰ", 3, "~ᾰ", [gender: Neuter], like Ὀργῐᾰ;
-        dative: _, _, "~σῐ|~σῐν";
+    dat: _, _, "~σῐ|~σῐν";
     ),
-    // Παστα: 3 words (χεδροπα, παστα, ἀλμενιχιακα). Like Ἰκρῐα, except in 1 cell: dative pl.
+    // Παστα: 3 words (χεδροπα, παστα, ἀλμενιχιακα). Like Ἰκρῐα, except in 1 cell: dat pl.
     declension!("παστα", 3, "~α", [gender: Neuter], like Ἰκρῐα;
-        dative: _, _, "~οῑς";
+    dat: _, _, "~οῑς";
     ),
-    // Γᾰμφηλαι: 3 words (γᾰμφηλαι, ταυρεασται, δοκηται). Like Ὀργῐᾰ, except in 4 cells: nominative sg, nominative pl, dative pl, accusative pl.
+    // Γᾰμφηλαι: 3 words (γᾰμφηλαι, ταυρεασται, δοκηται). Like Ὀργῐᾰ, except in 4 cells: nom sg, nom pl, dat pl, acc pl.
     declension!("γᾰμφηλαι", 3, "~αι", like Ὀργῐᾰ;
-        nominative: "~αι", _, "~αι";
-        dative: _, _, "~αῑς";
-        accusative: _, _, "~ᾱς";
+    nom: "~αι", _, "~αι";
+    dat: _, _, "~αῑς";
+    acc: _, _, "~ᾱς";
     ),
-    // Θεωσῐς: 3 words (θεωσῐς, ἀλθησῐς, ζαχαρῐς). Like Δῐαιρεσῐς, except in 6 cells: nominative du, nominative pl, genitive du, dative sg, dative pl, accusative pl.
+    // Θεωσῐς: 3 words (θεωσῐς, ἀλθησῐς, ζαχαρῐς). Like Δῐαιρεσῐς, except in 6 cells: nom du, nom pl, gen_ du, dat sg, dat pl, acc pl.
     declension!("θεωσῐς", 3, "~ῐς", [gender: Feminine], like Δῐαιρεσῐς;
-        nominative: _, derived, "~εες";
-        genitive: _, derived, _;
-        dative: "~εϊ", _, "~εσῐ";
-        accusative: _, _, "~εᾰς";
+    nom: _, derived, "~εες";
+    gen_: _, derived, _;
+    dat: "~εϊ", _, "~εσῐ";
+    acc: _, _, "~εᾰς";
     ),
     // Ἀσφαλισις: 3 words (ἀνακουφισις, ἀνταποκρισις, ἀσφαλισις).
     declension!("ἀσφαλισις", 3, "~α~ι~ις", [gender: Feminine];
-        nominative: "~ᾰ~ῐ~ῐς", "~ᾰ~ῐ~ει", "~ᾰ~ῐ~εις";
-        genitive: "~ᾰ~ῐ~εως", "~ᾰ~ῐ~εοιν", "~ᾰ~ῐ~εων";
-        dative: "~ᾰ~ῐ~ει", _, "~ᾰ~ῐ~εσῐ|~ᾰ~ῐ~εσῐν";
-        accusative: "~ᾰ~ῐ~ῐν", _, "~ᾰ~ῐ~εις";
-        vocative: "~ᾰ~ῐ~ῐ", _, _;
+    nom: "~ᾰ~ῐ~ῐς", "~ᾰ~ῐ~ει", "~ᾰ~ῐ~εις";
+    gen_: "~ᾰ~ῐ~εως", "~ᾰ~ῐ~εοιν", "~ᾰ~ῐ~εων";
+    dat: "~ᾰ~ῐ~ει", _, "~ᾰ~ῐ~εσῐ|~ᾰ~ῐ~εσῐν";
+    acc: "~ᾰ~ῐ~ῐν", _, "~ᾰ~ῐ~εις";
+    voc: "~ᾰ~ῐ~ῐ", _, _;
     ),
 ];

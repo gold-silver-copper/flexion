@@ -15,11 +15,11 @@ use std::borrow::Cow;
 /// out: the place of the pattern it is like).
 macro_rules! pattern {
     ($name:literal, $words:literal $(, like $parent:literal)?;
-     $(nominative: $c0:tt, $c1:tt, $c2:tt;)?
-     $(genitive: $c3:tt, $c4:tt, $c5:tt;)?
-     $(dative: $c6:tt, $c7:tt, $c8:tt;)?
-     $(accusative: $c9:tt, $c10:tt, $c11:tt;)?
-     $(vocative: $c12:tt, $c13:tt, $c14:tt;)?
+     $(nom: $c0:tt, $c1:tt, $c2:tt;)?
+     $(gen_: $c3:tt, $c4:tt, $c5:tt;)?
+     $(dat: $c6:tt, $c7:tt, $c8:tt;)?
+     $(acc: $c9:tt, $c10:tt, $c11:tt;)?
+     $(voc: $c12:tt, $c13:tt, $c14:tt;)?
     ) => {
         AccentPattern {
             name: Cow::Borrowed($name),
@@ -60,56 +60,56 @@ macro_rules! like {
 pub static PATTERNS: [AccentPattern<'static>; 10] = [
     // 0, `σημεῑον`: 6,012 words.
     pattern!("σημεῑον", 6012;
-        nominative: Stem, Stem, Stem;
-        genitive: Stem, Stem, Stem;
-        dative: Stem, Stem, Stem;
-        accusative: Stem, Stem, Stem;
-        vocative: Stem, Stem, Stem;
+    nom: Stem, Stem, Stem;
+    gen_: Stem, Stem, Stem;
+    dat: Stem, Stem, Stem;
+    acc: Stem, Stem, Stem;
+    voc: Stem, Stem, Stem;
     ),
     // 1, `νῠμφη`: 1,802 words. Like 0 (`σημεῑον`), except in 1 cell.
     pattern!("νῠμφη", 1802, like 0;
-        genitive: _, _, Ending;
+    gen_: _, _, Ending;
     ),
     // 2, `τεῡχος`: 112 words. Like 1 (`νῠμφη`), except in 2 cells.
     pattern!("τεῡχος", 112, like 1;
-        genitive: _, Ending, _;
-        dative: _, Ending, _;
+    gen_: _, Ending, _;
+    dat: _, Ending, _;
     ),
     // 3, `κλεις`: 92 words. Like 2 (`τεῡχος`), except in 3 cells.
     pattern!("κλεις", 92, like 2;
-        genitive: Ending, _, _;
-        dative: Ending, _, Ending;
+    gen_: Ending, _, _;
+    dat: Ending, _, Ending;
     ),
     // 4, `ἀνηρ`: 35 words. Like 0 (`σημεῑον`), except in 2 cells.
     pattern!("ἀνηρ", 35, like 0;
-        nominative: _, _, Recessive;
-        vocative: _, _, Recessive;
+    nom: _, _, Recessive;
+    voc: _, _, Recessive;
     ),
     // 5, `δᾰνᾰοι`: 34 words. Like 1 (`νῠμφη`), except in 4 cells.
     pattern!("δᾰνᾰοι", 34, like 1;
-        nominative: _, _, Ending;
-        dative: _, _, Ending;
-        accusative: _, _, Ending;
-        vocative: _, _, Ending;
+    nom: _, _, Ending;
+    dat: _, _, Ending;
+    acc: _, _, Ending;
+    voc: _, _, Ending;
     ),
     // 6, `πᾰτηρ`: 13 words. Like 0 (`σημεῑον`), except in 1 cell.
     pattern!("πᾰτηρ", 13, like 0;
-        vocative: Recessive, _, _;
+    voc: Recessive, _, _;
     ),
     // 7, `λᾱθῠρῐς`: 13 words. Like 0 (`σημεῑον`), except in 3 cells.
     pattern!("λᾱθῠρῐς", 13, like 0;
-        genitive: _, _, Recessive;
-        dative: _, _, Recessive;
-        accusative: _, _, Recessive;
+    gen_: _, _, Recessive;
+    dat: _, _, Recessive;
+    acc: _, _, Recessive;
     ),
     // 8, `ὁμολογιᾱ`: 12 words. Like 4 (`ἀνηρ`), except in 1 cell.
     pattern!("ὁμολογιᾱ", 12, like 4;
-        genitive: _, _, Ending;
+    gen_: _, _, Ending;
     ),
     // 9, `οὐς`: 8 words. Like 0 (`σημεῑον`), except in 3 cells.
     pattern!("οὐς", 8, like 0;
-        genitive: Ending, _, _;
-        dative: Ending, _, Ending;
+    gen_: Ending, _, _;
+    dat: Ending, _, Ending;
     ),
 ];
 

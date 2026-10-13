@@ -1,921 +1,405 @@
-//! Where a cell's form comes from: another cell's form of the word, its end
-//! changed. A declension that writes `derived` in a cell takes the form this way,
-//! and so does a word whose form of the other cell is listed but not this
-//! one's. Each relation lists its changes (`"ī" => "istī"`), numbered in
-//! order, and the rules on that form's ending choosing one.
+//! Where a cell's form comes from: another cell's form of the word, changed.
+//! A declension that writes `derived` in a cell takes the form this way, and so
+//! does a word whose form of the other cell is listed but not this one's.
+//! Each relation lists its changes, as patterns around the letters they keep
+//! (`("~ī", "~istī")`, numbered in order), and the rules on that form's
+//! ending choosing one.
 
 use super::cell::*;
 use flexion::Relation;
 use std::borrow::Cow;
 
+/// Writes one relation: its cell, the cells it comes from (by the word's
+/// feature, in order, if several), its changes, then the rules choosing one
+/// and the words they get wrong (`none`: the form itself), whether it tells
+/// listed words' forms, and the pair of cells it is by analogy with.
+macro_rules! relation {
+    ($cell:ident, [$($from:ident),*], [$(($old:literal, $new:literal)),*], none, $listed:literal, $analogy:expr) => {
+        Relation {
+            cell: $cell,
+            from: Cow::Borrowed(&[$($from),*]),
+            changes: flexion::changes![$(($old, $new)),*],
+            change: None,
+            listed: $listed,
+            analogy: $analogy,
+        }
+    };
+    ($cell:ident, [$($from:ident),*], [$(($old:literal, $new:literal)),*], rules { $($rules:tt)* } listed { $($words:tt)* }, $listed:literal, $analogy:expr) => {
+        Relation {
+            cell: $cell,
+            from: Cow::Borrowed(&[$($from),*]),
+            changes: flexion::changes![$(($old, $new)),*],
+            change: Some(flexion::choice! { rules { $($rules)* } listed { $($words)* } }),
+            listed: $listed,
+            analogy: $analogy,
+        }
+    };
+}
+
 pub(super) static RELATIONS: [Relation<'static>; 44] = [
     // NOM_M_DU, from ACC_M_DU.
-    Relation {
-        cell: NOM_M_DU,
-        from: Cow::Borrowed(&[ACC_M_DU]),
-        changes: flexion::changes![("~", "~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 37],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(NOM_M_DU, [ACC_M_DU], [("~", "~")], rules {
+        "" => [0 37],
+    } listed {}, true, None),
     // NOM_M_PL, from NOM_M_SG.
-    Relation {
-        cell: NOM_M_PL,
-        from: Cow::Borrowed(&[NOM_M_SG]),
-        changes: flexion::changes![("~ς", "~ι"), ("~ᾱς", "~ᾰντες"), ("ὁ~", "οἱ~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 26, 1 2, 2 2],
-            "ος" => [0 26],
-            "ᾱς" => [1 2],
-        }
-        listed {
-            "πᾱς" => 1,
-            "ἁπᾱς" => 1,
-            "ὁ" => 2,
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(NOM_M_PL, [NOM_M_SG], [("~ς", "~ι"), ("~ᾱς", "~ᾰντες"), ("ὁ~", "οἱ~")], rules {
+        "" => [0 26, 1 2, 2 2],
+        "ος" => [0 26],
+        "ᾱς" => [1 2],
+    } listed {
+        "πᾱς" => 1,
+        "ἁπᾱς" => 1,
+        "ὁ" => 2,
+    }, true, None),
     // NOM_F_SG, from ACC_F_SG.
-    Relation {
-        cell: NOM_F_SG,
-        from: Cow::Borrowed(&[ACC_F_SG]),
-        changes: flexion::changes![("~ν", "~"), ("την~", "ἡ~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 29, 1 2],
-        }
-        listed {
-            "την" => 1,
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(NOM_F_SG, [ACC_F_SG], [("~ν", "~"), ("την~", "ἡ~")], rules {
+        "" => [0 29, 1 2],
+    } listed {
+        "την" => 1,
+    }, true, None),
     // NOM_F_DU, from ACC_F_DU.
-    Relation {
-        cell: NOM_F_DU,
-        from: Cow::Borrowed(&[ACC_F_DU]),
-        changes: flexion::changes![("~", "~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 37],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(NOM_F_DU, [ACC_F_DU], [("~", "~")], rules {
+        "" => [0 37],
+    } listed {}, true, None),
     // NOM_F_PL, from NOM_M_PL.
-    Relation {
-        cell: NOM_F_PL,
-        from: Cow::Borrowed(&[NOM_M_PL]),
-        changes: flexion::changes![
-            ("~", "~"),
-            ("~οι", "~αι"),
-            ("~οῡτοι", "~αῡται"),
-            ("~ᾰντες", "~ᾱσαι"),
-            ("ο~", "α~")
-        ],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [1 23, 0 7, 4 5, 2 2, 3 2],
-            "ι" => [1 23, 2 2, 0 1],
-            "ῡτοι" => [2 2],
-            "ς" => [0 6, 3 2, 4 1],
-            "τες" => [3 2],
-            "ῑς" => [0 4],
-            "ἱ" => [4 2],
-        }
-        listed {
-            "οἱδε" => 4,
-            "οἱπερ" => 4,
-            "οἱτῐνες" => 4,
-            "τοιοῡτοι" => 2,
-            "τοσοῡτοι" => 2,
-            "ὁσᾰπλᾰσῐοι" => 0,
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(NOM_F_PL, [NOM_M_PL], [("~", "~"), ("~οι", "~αι"), ("~οῡτοι", "~αῡται"), ("~ᾰντες", "~ᾱσαι"), ("ο~", "α~")], rules {
+        "" => [1 23, 0 7, 4 5, 2 2, 3 2],
+        "ι" => [1 23, 2 2, 0 1],
+        "ῡτοι" => [2 2],
+        "ς" => [0 6, 3 2, 4 1],
+        "τες" => [3 2],
+        "ῑς" => [0 4],
+        "ἱ" => [4 2],
+    } listed {
+        "οἱδε" => 4,
+        "οἱπερ" => 4,
+        "οἱτῐνες" => 4,
+        "τοιοῡτοι" => 2,
+        "τοσοῡτοι" => 2,
+        "ὁσᾰπλᾰσῐοι" => 0,
+    }, true, None),
     // NOM_N_SG, from ACC_N_SG.
-    Relation {
-        cell: NOM_N_SG,
-        from: Cow::Borrowed(&[ACC_N_SG]),
-        changes: flexion::changes![("~", "~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 36],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(NOM_N_SG, [ACC_N_SG], [("~", "~")], rules {
+        "" => [0 36],
+    } listed {}, true, None),
     // NOM_N_DU, from ACC_M_DU.
-    Relation {
-        cell: NOM_N_DU,
-        from: Cow::Borrowed(&[ACC_M_DU]),
-        changes: flexion::changes![("~", "~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 37],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
-    // NOM_N_PL, from ACC_N_PL.
-    Relation {
-        cell: NOM_N_PL,
-        from: Cow::Borrowed(&[ACC_N_PL]),
-        changes: flexion::changes![("~", "~"), ("~ᾱς", "~εῑς")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 37, 1 4],
-            "ς" => [1 4],
-            "ᾱς" => [1 4],
-            "ᾰ" => [0 34],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(NOM_N_DU, [ACC_M_DU], [("~", "~")], rules {
+        "" => [0 37],
+    } listed {}, true, None),
+    // NOM_N_PL, from NOM_M_PL.
+    relation!(NOM_N_PL, [NOM_M_PL], [("~", "~"), ("~ες", "~ᾰ"), ("~οι", "~ᾰ"), ("~οῡτοι", "~αῡτᾰ"), ("οἱ~", "τᾰ~"), ("οἱ~", "ἁ~")], rules {
+        "" => [2 24, 1 5, 0 4, 3 2, 4 2, 5 2],
+        "ι" => [2 24, 3 2],
+        "ῡτοι" => [3 2],
+        "ς" => [1 5, 0 4],
+        "ες" => [1 5],
+        "ῑς" => [0 4],
+    } listed {
+        "οἱ" => 4,
+        "οἱ" => 5,
+        "οἱδε" => 4,
+        "οἱπερ" => 5,
+        "τοιοῡτοι" => 3,
+        "τοσοῡτοι" => 3,
+    }, true, None),
     // GEN_M_SG, from DAT_M_SG.
-    Relation {
-        cell: GEN_M_SG,
-        from: Cow::Borrowed(&[DAT_M_SG]),
-        changes: flexion::changes![
-            ("~ι", "~ῡ"),
-            ("~ῐ", "~ος"),
-            ("~ῳ", "~ου"),
-            ("~ῳ", "~οῡ"),
-            ("ᾡ~", "οὑ~")
-        ],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [2 23, 3 13, 1 5, 0 2, 4 2],
-            "ι" => [0 2],
-            "ῐ" => [1 5],
-            "ῳ" => [2 23, 3 13],
-            "ιῳ" => [2 4],
-            "ρῳ" => [2 6],
-            "τῳ" => [3 12, 2 6],
-            "ουτῳ" => [2 3],
-            "ωυτῳ" => [3 4],
-        }
-        listed {
-            "αὐτοτᾰτῳ" => 2,
-            "ἑκᾰστῳ" => 2,
-            "ἑῳ" => 3,
-            "ὁποστῳ" => 2,
-            "ᾡ" => 4,
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(GEN_M_SG, [DAT_M_SG], [("~ι", "~ῡ"), ("~ῐ", "~ος"), ("~ῳ", "~ου"), ("~ῳ", "~οῡ"), ("ᾡ~", "οὑ~")], rules {
+        "" => [2 23, 3 13, 1 5, 0 2, 4 2],
+        "ι" => [0 2],
+        "ῐ" => [1 5],
+        "ῳ" => [2 23, 3 13],
+        "ιῳ" => [2 4],
+        "ρῳ" => [2 6],
+        "τῳ" => [3 12, 2 6],
+        "ουτῳ" => [2 3],
+        "ωυτῳ" => [3 4],
+    } listed {
+        "αὐτοτᾰτῳ" => 2,
+        "ἑκᾰστῳ" => 2,
+        "ἑῳ" => 3,
+        "ὁποστῳ" => 2,
+        "ᾡ" => 4,
+    }, true, None),
     // GEN_M_DU, from GEN_M_SG.
-    Relation {
-        cell: GEN_M_DU,
-        from: Cow::Borrowed(&[GEN_M_SG]),
-        changes: flexion::changes![("~ς", "~ιν"), ("~υ", "~ιν"), ("~ῡ", "~ῑν")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [1 23, 2 7, 0 4],
-            "ς" => [0 4],
-            "ος" => [0 4],
-            "υ" => [1 23],
-            "ῡ" => [2 7],
-            "οῡ" => [2 7],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
-    // GEN_M_PL, from DAT_M_SG.
-    Relation {
-        cell: GEN_M_PL,
-        from: Cow::Borrowed(&[DAT_M_SG]),
-        changes: flexion::changes![("~ῐ", "~ων"), ("~ῳ", "~ων"), ("ᾡ~", "ὡν~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [1 30, 0 4, 2 2],
-            "ῐ" => [0 4],
-            "ῳ" => [1 30],
-        }
-        listed {
-            "ᾡ" => 2,
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(GEN_M_DU, [GEN_M_SG], [("~ς", "~ιν"), ("~υ", "~ιν"), ("~ῡ", "~ῑν")], rules {
+        "" => [1 23, 2 7, 0 4],
+        "ς" => [0 4],
+        "ος" => [0 4],
+        "υ" => [1 23],
+        "ῡ" => [2 7],
+        "οῡ" => [2 7],
+    } listed {}, true, None),
+    // GEN_M_PL, from ACC_N_PL.
+    relation!(GEN_M_PL, [ACC_N_PL], [("~αῡτᾰ", "~ουτων"), ("~ᾰ", "~ων"), ("~ᾱς", "~ων"), ("~ῑᾰ", "~ιων"), ("ἁ~", "ὡν~")], rules {
+        "" => [1 29, 2 4, 3 4, 0 3, 4 2],
+        "ς" => [2 4],
+        "ᾱς" => [2 4],
+        "ᾰ" => [1 29, 3 4, 0 3],
+        "ρᾰ" => [1 6],
+        "τᾰ" => [1 11, 0 3],
+        "ῡτᾰ" => [0 3],
+        "αῡτᾰ" => [0 3],
+        "ῑᾰ" => [3 4],
+        "οῑᾰ" => [3 4],
+    } listed {
+        "ἁ" => 4,
+    }, true, None),
     // GEN_F_SG, from DAT_F_SG.
-    Relation {
-        cell: GEN_F_SG,
-        from: Cow::Borrowed(&[DAT_F_SG]),
-        changes: flexion::changes![("~ι", "~ῡ"), ("~ᾳ", "~ᾱς"), ("~ῃ", "~ης"), ("~ῐ", "~ος")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [2 26, 1 13, 0 2, 3 2],
-            "ι" => [0 2],
-            "ᾳ" => [1 13],
-            "ῃ" => [2 26],
-            "ῐ" => [3 2],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
-    // GEN_F_DU, from ACC_F_DU.
-    Relation {
-        cell: GEN_F_DU,
-        from: Cow::Borrowed(&[ACC_F_DU]),
-        changes: flexion::changes![
-            ("~ε", "~οιν"),
-            ("~ω", "~οιν"),
-            ("~ω", "~ῳν"),
-            ("~ᾱ", "~αιν"),
-            ("~ᾱ", "~αῑν"),
-            ("ἁ~", "αἱν~")
-        ],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [3 21, 4 6, 1 5, 0 2, 2 2, 5 2],
-            "ε" => [0 2],
-            "ω" => [1 5, 2 2],
-            "τω" => [1 3],
-            "ᾱ" => [3 21, 4 6],
-            "ιᾱ" => [3 5],
-            "ρᾱ" => [3 6],
-            "τᾱ" => [4 5, 3 3],
-        }
-        listed {
-            "αὐτοτᾰτᾱ" => 3,
-            "νω" => 2,
-            "σφω" => 2,
-            "ἁ" => 5,
-            "ἑκᾰστᾱ" => 3,
-            "ἑᾱ" => 4,
-            "ὁποστᾱ" => 3,
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(GEN_F_SG, [DAT_F_SG], [("~ι", "~ῡ"), ("~ᾳ", "~ᾱς"), ("~ῃ", "~ης"), ("~ῐ", "~ος")], rules {
+        "" => [2 26, 1 13, 0 2, 3 2],
+        "ι" => [0 2],
+        "ᾳ" => [1 13],
+        "ῃ" => [2 26],
+        "ῐ" => [3 2],
+    } listed {}, true, None),
+    // GEN_F_DU, from GEN_M_SG.
+    relation!(GEN_F_DU, [GEN_M_SG], [("~ου", "~αιν"), ("~οῡ", "~αῑν"), ("~ς", "~ιν"), ("~υ", "~ιν"), ("οὑ~", "αἱν~")], rules {
+        "" => [0 18, 1 6, 3 5, 2 2, 4 2],
+        "ς" => [2 2],
+        "υ" => [0 18, 3 5],
+        "ρου" => [0 6],
+        "υτου" => [3 3],
+        "ῡ" => [1 6],
+        "οῡ" => [1 6],
+    } listed {
+        "οὑ" => 4,
+        "ἐκεινου" => 3,
+        "ὁσᾰπλᾰσῐου" => 3,
+    }, true, None),
     // GEN_F_PL, from GEN_M_PL.
-    Relation {
-        cell: GEN_F_PL,
-        from: Cow::Borrowed(&[GEN_M_PL]),
-        changes: flexion::changes![("~", "~"), ("~ᾰντων", "~ᾱσων")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 41, 1 2],
-            "ντων" => [1 2],
-        }
-        listed {
-            "πᾰντων" => 1,
-            "ἁπᾰντων" => 1,
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(GEN_F_PL, [GEN_M_PL], [("~", "~"), ("~ᾰντων", "~ᾱσων")], rules {
+        "" => [0 41, 1 2],
+        "ντων" => [1 2],
+    } listed {
+        "πᾰντων" => 1,
+        "ἁπᾰντων" => 1,
+    }, true, None),
     // GEN_N_SG, from GEN_M_SG.
-    Relation {
-        cell: GEN_N_SG,
-        from: Cow::Borrowed(&[GEN_M_SG]),
-        changes: flexion::changes![("~", "~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 47],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(GEN_N_SG, [GEN_M_SG], [("~", "~")], rules {
+        "" => [0 47],
+    } listed {}, true, None),
     // GEN_N_DU, from GEN_M_DU.
-    Relation {
-        cell: GEN_N_DU,
-        from: Cow::Borrowed(&[GEN_M_DU]),
-        changes: flexion::changes![("~", "~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 41],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(GEN_N_DU, [GEN_M_DU], [("~", "~")], rules {
+        "" => [0 41],
+    } listed {}, true, None),
     // GEN_N_PL, from GEN_M_PL.
-    Relation {
-        cell: GEN_N_PL,
-        from: Cow::Borrowed(&[GEN_M_PL]),
-        changes: flexion::changes![("~", "~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 45],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
-    // DAT_M_SG, from ACC_M_SG.
-    Relation {
-        cell: DAT_M_SG,
-        from: Cow::Borrowed(&[ACC_M_SG]),
-        changes: flexion::changes![
-            ("~ε", "~οι"),
-            ("~ον", "~ῳ"),
-            ("~ᾰ", "~ῐ"),
-            ("~ῑον", "~ιῳ"),
-            ("~ῡτον", "~υτῳ"),
-            ("ὁν~", "ᾡ~")
-        ],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [1 28, 2 5, 3 4, 4 3, 0 2, 5 2],
-            "ε" => [0 2],
-            "ν" => [1 28, 3 4, 4 3, 5 1],
-            "ρον" => [1 6],
-            "τον" => [1 15, 4 3],
-            "υτον" => [1 8],
-            "ῡτον" => [4 3],
-            "οῡτον" => [4 3],
-            "ῑον" => [3 4],
-            "οῑον" => [3 4],
-            "ᾰ" => [2 5],
-        }
-        listed {
-            "ὁν" => 5,
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(GEN_N_PL, [GEN_M_PL], [("~", "~")], rules {
+        "" => [0 45],
+    } listed {}, true, None),
+    // DAT_M_SG, from ACC_M_PL.
+    relation!(DAT_M_SG, [ACC_M_PL], [("~ους", "~ῳ"), ("~ᾰς", "~ῐ")], rules {
+        "" => [0 30, 1 4],
+        "υς" => [0 30],
+        "ᾰς" => [1 4],
+    } listed {}, true, None),
     // DAT_M_DU, from GEN_M_DU.
-    Relation {
-        cell: DAT_M_DU,
-        from: Cow::Borrowed(&[GEN_M_DU]),
-        changes: flexion::changes![("~", "~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 41],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(DAT_M_DU, [GEN_M_DU], [("~", "~")], rules {
+        "" => [0 41],
+    } listed {}, true, None),
     // DAT_M_PL, from GEN_M_SG.
-    Relation {
-        cell: DAT_M_PL,
-        from: Cow::Borrowed(&[GEN_M_SG]),
-        changes: flexion::changes![
-            ("~νος", "~σῐ"),
-            ("~υ", "~ις"),
-            ("~ᾰντος", "~ᾱσῐ"),
-            ("~ῡ", "~ῑς")
-        ],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [1 23, 3 7, 0 2, 2 2],
-            "ς" => [0 2, 2 2],
-            "νος" => [0 2],
-            "τος" => [2 2],
-            "υ" => [1 23],
-            "ῡ" => [3 7],
-            "οῡ" => [3 7],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(DAT_M_PL, [GEN_M_SG], [("~νος", "~σῐ"), ("~υ", "~ις"), ("~ᾰντος", "~ᾱσῐ"), ("~ῡ", "~ῑς")], rules {
+        "" => [1 23, 3 7, 0 2, 2 2],
+        "ς" => [0 2, 2 2],
+        "νος" => [0 2],
+        "τος" => [2 2],
+        "υ" => [1 23],
+        "ῡ" => [3 7],
+        "οῡ" => [3 7],
+    } listed {}, true, None),
     // DAT_F_SG, from DAT_M_SG.
-    Relation {
-        cell: DAT_F_SG,
-        from: Cow::Borrowed(&[DAT_M_SG]),
-        changes: flexion::changes![
-            ("~", "~"),
-            ("~ουτῳ", "~αυτῃ"),
-            ("~ᾰντῐ", "~ᾱσῃ"),
-            ("~ῳ", "~ᾳ"),
-            ("~ῳ", "~ῃ"),
-            ("ᾡ~", "ᾑ~")
-        ],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [4 21, 3 11, 0 7, 5 3, 1 2, 2 2],
-            "ι" => [0 2],
-            "ῐ" => [0 2, 2 2, 5 1],
-            "τῐ" => [2 2],
-            "ῳ" => [4 21, 3 11, 1 2, 0 1],
-            "ιῳ" => [3 4],
-            "οιῳ" => [3 4],
-            "ρῳ" => [3 6],
-            "ερῳ" => [3 6],
-            "τῳ" => [4 15, 1 2],
-            "ουτῳ" => [1 2],
-        }
-        listed {
-            "οἱῳ" => 3,
-            "τοιουτῳ" => 1,
-            "τοσουτῳ" => 1,
-            "ὁσᾰπλᾰσῐῳ" => 0,
-            "ᾡ" => 5,
-            "ᾡπερ" => 5,
-            "ᾡτῐνῐ" => 5,
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(DAT_F_SG, [DAT_M_SG], [("~", "~"), ("~ουτῳ", "~αυτῃ"), ("~ᾰντῐ", "~ᾱσῃ"), ("~ῳ", "~ᾳ"), ("~ῳ", "~ῃ"), ("ᾡ~", "ᾑ~")], rules {
+        "" => [4 21, 3 11, 0 7, 5 3, 1 2, 2 2],
+        "ι" => [0 2],
+        "ῐ" => [0 2, 2 2, 5 1],
+        "τῐ" => [2 2],
+        "ῳ" => [4 21, 3 11, 1 2, 0 1],
+        "ιῳ" => [3 4],
+        "οιῳ" => [3 4],
+        "ρῳ" => [3 6],
+        "ερῳ" => [3 6],
+        "τῳ" => [4 15, 1 2],
+        "ουτῳ" => [1 2],
+    } listed {
+        "οἱῳ" => 3,
+        "τοιουτῳ" => 1,
+        "τοσουτῳ" => 1,
+        "ὁσᾰπλᾰσῐῳ" => 0,
+        "ᾡ" => 5,
+        "ᾡπερ" => 5,
+        "ᾡτῐνῐ" => 5,
+    }, true, None),
     // DAT_F_DU, from GEN_F_DU.
-    Relation {
-        cell: DAT_F_DU,
-        from: Cow::Borrowed(&[GEN_F_DU]),
-        changes: flexion::changes![("~", "~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 41],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
-    // DAT_F_PL, from DAT_M_PL.
-    Relation {
-        cell: DAT_F_PL,
-        from: Cow::Borrowed(&[DAT_M_PL]),
-        changes: flexion::changes![
-            ("~", "~"),
-            ("~οις", "~αις"),
-            ("~ουτοις", "~αυταις"),
-            ("~οῑς", "~αῑς"),
-            ("~ῐ", "~αις"),
-            ("ο~", "α~"),
-            ("το~", "τα~")
-        ],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [1 21, 0 7, 3 4, 5 3, 2 2, 4 2, 6 2],
-            "ν" => [0 2],
-            "ις" => [1 21, 2 2, 0 1],
-            "υτοις" => [2 2],
-            "ῑς" => [3 4, 6 1],
-            "ῐ" => [0 4, 4 2, 5 1],
-            "ᾱσῐ" => [4 2],
-        }
-        listed {
-            "οἱς" => 5,
-            "οἱσπερ" => 5,
-            "οἱστῐσῐ" => 5,
-            "τοιουτοις" => 2,
-            "τοσουτοις" => 2,
-            "τοῑς" => 6,
-            "τοῑσδε" => 6,
-            "ὁσᾰπλᾰσῐοις" => 0,
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(DAT_F_DU, [GEN_F_DU], [("~", "~")], rules {
+        "" => [0 41],
+    } listed {}, true, None),
+    // DAT_F_PL, from GEN_F_SG.
+    relation!(DAT_F_PL, [GEN_F_SG], [("~ης", "~αις"), ("~ης", "~αῑς"), ("~νος", "~σῐ"), ("~ᾱς", "~αις"), ("ἡ~", "αἱ~")], rules {
+        "" => [0 13, 3 12, 1 6, 2 2, 4 2],
+        "ης" => [0 13, 1 6],
+        "σης" => [0 5],
+        "ὐτης" => [1 2],
+        "ος" => [2 2],
+        "ᾱς" => [3 12],
+    } listed {
+        "αὑτης" => 1,
+        "της" => 1,
+        "ἑης" => 1,
+        "ἑᾱυτης" => 1,
+    }, true, None),
     // DAT_N_SG, from DAT_M_SG.
-    Relation {
-        cell: DAT_N_SG,
-        from: Cow::Borrowed(&[DAT_M_SG]),
-        changes: flexion::changes![("~", "~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 47],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(DAT_N_SG, [DAT_M_SG], [("~", "~")], rules {
+        "" => [0 47],
+    } listed {}, true, None),
     // DAT_N_DU, from GEN_M_DU.
-    Relation {
-        cell: DAT_N_DU,
-        from: Cow::Borrowed(&[GEN_M_DU]),
-        changes: flexion::changes![("~", "~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 41],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(DAT_N_DU, [GEN_M_DU], [("~", "~")], rules {
+        "" => [0 41],
+    } listed {}, true, None),
     // DAT_N_PL, from DAT_M_PL.
-    Relation {
-        cell: DAT_N_PL,
-        from: Cow::Borrowed(&[DAT_M_PL]),
-        changes: flexion::changes![("~", "~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 45],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
-    // ACC_M_SG, from NOM_M_SG.
-    Relation {
-        cell: ACC_M_SG,
-        from: Cow::Borrowed(&[NOM_M_SG]),
-        changes: flexion::changes![
-            ("~ις", "~νᾰ"),
-            ("~ς", "~ν"),
-            ("~ᾱς", "~ᾰντᾰ"),
-            ("ὁ~", "τον~")
-        ],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [1 26, 0 2, 2 2, 3 2],
-            "ις" => [0 2],
-            "ος" => [1 25],
-            "ᾱς" => [2 2],
-        }
-        listed {
-            "μηδεις" => 0,
-            "οὐδεις" => 0,
-            "πᾱς" => 2,
-            "ἁπᾱς" => 2,
-            "ὁ" => 3,
-        }
-            }),
-        listed: false,
-        analogy: None,
-    },
+    relation!(DAT_N_PL, [DAT_M_PL], [("~", "~")], rules {
+        "" => [0 45],
+    } listed {}, true, None),
+    // ACC_M_SG, from DAT_M_SG.
+    relation!(ACC_M_SG, [DAT_M_SG], [("~ιῳ", "~ῑον"), ("~οι", "~ε"), ("~υτῳ", "~ῡτον"), ("~ῐ", "~ᾰ"), ("~ῳ", "~ον"), ("ᾡ~", "ὁν~")], rules {
+        "" => [4 28, 3 5, 0 4, 2 3, 1 2, 5 2],
+        "ι" => [1 2],
+        "ῐ" => [3 5],
+        "ῳ" => [4 28, 0 4, 2 3],
+        "ιῳ" => [0 4],
+        "οιῳ" => [0 4],
+        "ρῳ" => [4 6],
+        "τῳ" => [4 15, 2 3],
+        "ουτῳ" => [2 3],
+    } listed {
+        "ᾡ" => 5,
+    }, true, None),
     // ACC_M_DU, from ACC_M_PL.
-    Relation {
-        cell: ACC_M_DU,
-        from: Cow::Borrowed(&[ACC_M_PL]),
-        changes: flexion::changes![("~ους", "~ω"), ("~ᾰς", "~ε")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 31, 1 4],
-            "υς" => [0 31],
-            "ᾰς" => [1 4],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
-    // ACC_M_PL, from DAT_M_SG.
-    Relation {
-        cell: ACC_M_PL,
-        from: Cow::Borrowed(&[DAT_M_SG]),
-        changes: flexion::changes![("~ῐ", "~ᾰς"), ("~ῳ", "~ους")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [1 30, 0 4],
-            "ῐ" => [0 4],
-            "ῳ" => [1 30],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
-    // ACC_F_SG, from DAT_F_SG.
-    Relation {
-        cell: ACC_F_SG,
-        from: Cow::Borrowed(&[DAT_F_SG]),
-        changes: flexion::changes![
-            ("~οι", "~ε"),
-            ("~ᾳ", "~ᾰν"),
-            ("~ᾳ", "~ᾱν"),
-            ("~ῃ", "~ην"),
-            ("~ῃ", "~ᾰν"),
-            ("~ῐ", "~ᾰ"),
-            ("ᾑ~", "ἡν~")
-        ],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [3 24, 2 11, 0 2, 1 2, 4 2, 5 2, 6 2],
-            "ι" => [0 2],
-            "ᾳ" => [2 11, 1 2],
-            "ρᾳ" => [2 6],
-            "ῃ" => [3 24, 4 2],
-            "ᾱσῃ" => [4 2],
-            "τῃ" => [3 18],
-            "ῐ" => [5 2],
-        }
-        listed {
-            "μηδεμῐᾳ" => 1,
-            "οὐδεμιᾳ" => 1,
-            "πᾱσῃ" => 4,
-            "ἁπᾱσῃ" => 4,
-            "ᾑ" => 6,
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
-    // ACC_F_DU, from ACC_M_DU.
-    Relation {
-        cell: ACC_F_DU,
-        from: Cow::Borrowed(&[ACC_M_DU]),
-        changes: flexion::changes![("~", "~"), ("~ω", "~ᾱ"), ("ὡ~", "ἁ~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [1 25, 0 11, 2 3],
-            "ε" => [0 3, 2 1],
-            "ω" => [1 25, 0 8],
-            "νω" => [0 2],
-            "ρω" => [1 6],
-            "ουτω" => [0 3],
-        }
-        listed {
-            "σφω" => 0,
-            "τω" => 0,
-            "ὁσᾰπλᾰσῐω" => 0,
-            "ὡ" => 2,
-            "ὡπερ" => 2,
-            "ὡτῐνε" => 2,
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(ACC_M_DU, [ACC_M_PL], [("~ους", "~ω"), ("~ᾰς", "~ε")], rules {
+        "" => [0 31, 1 4],
+        "υς" => [0 31],
+        "ᾰς" => [1 4],
+    } listed {}, true, None),
+    // ACC_M_PL, from ACC_N_PL.
+    relation!(ACC_M_PL, [ACC_N_PL], [("~", "~"), ("~", "~ς"), ("~αῡτᾰ", "~ουτους"), ("~ᾰ", "~ους"), ("~ῑᾰ", "~ιους")], rules {
+        "" => [3 24, 1 5, 0 4, 4 4, 2 3],
+        "ς" => [0 4],
+        "ᾱς" => [0 4],
+        "νᾰ" => [1 3],
+        "ρᾰ" => [3 6],
+        "ντᾰ" => [1 2],
+        "ῡτᾰ" => [2 3],
+        "αῡτᾰ" => [2 3],
+        "ῑᾰ" => [4 4],
+        "οῑᾰ" => [4 4],
+    } listed {}, true, None),
+    // ACC_F_SG, from GEN_F_SG.
+    relation!(ACC_F_SG, [GEN_F_SG], [("~ης", "~ᾰν"), ("~ος", "~ᾰ"), ("~οῡ", "~ε"), ("~ς", "~ν"), ("~ᾱς", "~ᾰν")], rules {
+        "" => [3 36, 0 2, 1 2, 2 2, 4 2],
+        "ης" => [3 24, 0 2],
+        "ᾱσης" => [0 2],
+        "της" => [3 18],
+        "ος" => [1 2],
+        "ρᾱς" => [3 6],
+        "ῡ" => [2 2],
+    } listed {
+        "μηδεμῐᾱς" => 4,
+        "οὐδεμιᾱς" => 4,
+        "πᾱσης" => 0,
+        "τῐνος" => 1,
+        "ἁπᾱσης" => 0,
+        "ὁσᾰπλᾰσῐονος" => 1,
+    }, true, None),
+    // ACC_F_DU, from GEN_F_SG.
+    relation!(ACC_F_DU, [GEN_F_SG], [("~αυτης", "~ουτω"), ("~ης", "~ω"), ("~ης", "~ᾱ"), ("~ος", "~ε"), ("~ς", "~")], rules {
+        "" => [2 14, 4 12, 0 2, 1 2, 3 2],
+        "ης" => [2 14, 0 2, 1 2],
+        "αυτης" => [0 2],
+        "ος" => [3 2],
+        "ᾱς" => [4 12],
+    } listed {
+        "της" => 1,
+        "τοιαυτης" => 0,
+        "τοσαυτης" => 0,
+        "ἐκεινης" => 1,
+    }, true, None),
     // ACC_F_PL, from GEN_F_SG.
-    Relation {
-        cell: ACC_F_PL,
-        from: Cow::Borrowed(&[GEN_F_SG]),
-        changes: flexion::changes![("~", "~"), ("~ης", "~ᾱς"), ("~ος", "~ᾰς"), ("ἡ~", "ἁ~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [1 20, 0 11, 2 2, 3 2],
-            "ης" => [1 20],
-            "ος" => [2 2],
-            "ᾱς" => [0 11],
-        }
-        listed {
-            "ἡς" => 3,
-            "ἡσπερ" => 3,
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
-    // ACC_N_SG, from DAT_M_SG.
-    Relation {
-        cell: ACC_N_SG,
-        from: Cow::Borrowed(&[DAT_M_SG]),
-        changes: flexion::changes![
-            ("~ιῳ", "~ῑον"),
-            ("~οι", "~ε"),
-            ("~υτῳ", "~ῡτο"),
-            ("~ῐ", "~"),
-            ("~ῳ", "~ο"),
-            ("~ῳ", "~ον"),
-            ("ᾡ~", "ὁ~")
-        ],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [5 19, 4 6, 0 4, 2 3, 1 2, 3 2, 6 2],
-            "ι" => [1 2],
-            "ῐ" => [3 2],
-            "ῳ" => [5 19, 4 6, 0 4, 2 3],
-            "ιῳ" => [0 4],
-            "οιῳ" => [0 4],
-            "ρῳ" => [5 6],
-            "τῳ" => [4 6, 5 6, 2 3],
-            "ουτῳ" => [2 3],
-        }
-        listed {
-            "αὐτῳ" => 4,
-            "αὑτῳ" => 4,
-            "ταὐτῳ" => 4,
-            "τῳ" => 4,
-            "ἑωυτῳ" => 4,
-            "ἑᾱυτῳ" => 4,
-            "ᾡ" => 6,
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(ACC_F_PL, [GEN_F_SG], [("~", "~"), ("~ης", "~ᾱς"), ("~ος", "~ᾰς"), ("ἡ~", "ἁ~")], rules {
+        "" => [1 20, 0 11, 2 2, 3 2],
+        "ης" => [1 20],
+        "ος" => [2 2],
+        "ᾱς" => [0 11],
+    } listed {
+        "ἡς" => 3,
+        "ἡσπερ" => 3,
+    }, true, None),
+    // ACC_N_SG, from ACC_M_SG.
+    relation!(ACC_N_SG, [ACC_M_SG], [("~", "~"), ("~ν", "~"), ("~ᾰ", "~")], rules {
+        "" => [0 26, 1 11, 2 3],
+        "ν" => [0 23, 1 11],
+        "ρον" => [0 6],
+        "τον" => [1 9, 0 6],
+        "ῡτον" => [1 3],
+        "ῑον" => [0 4],
+        "ᾰ" => [2 3],
+        "νᾰ" => [2 3],
+    } listed {
+        "αὐτοτᾰτον" => 0,
+        "ἐκεῑνον" => 1,
+        "ἐμαυτον" => 0,
+        "ἐμεωυτον" => 0,
+        "ἐμωυτον" => 0,
+        "ἑκᾰστον" => 0,
+        "ὁν" => 1,
+        "ὁποστον" => 0,
+    }, true, None),
     // ACC_N_DU, from ACC_M_DU.
-    Relation {
-        cell: ACC_N_DU,
-        from: Cow::Borrowed(&[ACC_M_DU]),
-        changes: flexion::changes![("~", "~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 41],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
-    // ACC_N_PL, from ACC_M_SG.
-    Relation {
-        cell: ACC_N_PL,
-        from: Cow::Borrowed(&[ACC_M_SG]),
-        changes: flexion::changes![
-            ("~", "~"),
-            ("~ον", "~ᾰ"),
-            ("~οῡτον", "~αῡτᾰ"),
-            ("ὁν~", "ἁ~")
-        ],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [1 27, 0 5, 3 3, 2 2],
-            "ν" => [1 27, 2 2, 3 1],
-            "ῡτον" => [2 2],
-            "ᾰ" => [0 5, 3 1],
-        }
-        listed {
-            "τοιοῡτον" => 2,
-            "τοσοῡτον" => 2,
-            "ὁν" => 3,
-            "ὁνπερ" => 3,
-            "ὁντῐνᾰ" => 3,
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(ACC_N_DU, [ACC_M_DU], [("~", "~")], rules {
+        "" => [0 41],
+    } listed {}, true, None),
+    // ACC_N_PL, from NOM_N_PL.
+    relation!(ACC_N_PL, [NOM_N_PL], [("~", "~"), ("~εῑς", "~ᾱς")], rules {
+        "" => [0 37, 1 4],
+        "ς" => [1 4],
+        "ῑς" => [1 4],
+        "ᾰ" => [0 34],
+    } listed {}, true, None),
     // VOC_M_SG, from NOM_M_SG.
-    Relation {
-        cell: VOC_M_SG,
-        from: Cow::Borrowed(&[NOM_M_SG]),
-        changes: flexion::changes![("~", "~"), ("~ος", "~ε")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [1 20, 0 4],
-            "ρος" => [1 6],
-            "ᾱς" => [0 2],
-        }
-        listed {
-            "οὑτος" => 0,
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(VOC_M_SG, [NOM_M_SG], [("~", "~"), ("~ος", "~ε")], rules {
+        "" => [1 20, 0 4],
+        "ρος" => [1 6],
+        "ᾱς" => [0 2],
+    } listed {
+        "οὑτος" => 0,
+    }, true, None),
     // VOC_M_DU, from ACC_M_DU.
-    Relation {
-        cell: VOC_M_DU,
-        from: Cow::Borrowed(&[ACC_M_DU]),
-        changes: flexion::changes![("~", "~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 25],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(VOC_M_DU, [ACC_M_DU], [("~", "~")], rules {
+        "" => [0 25],
+    } listed {}, true, None),
     // VOC_M_PL, from NOM_M_PL.
-    Relation {
-        cell: VOC_M_PL,
-        from: Cow::Borrowed(&[NOM_M_PL]),
-        changes: flexion::changes![("~", "~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 27],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(VOC_M_PL, [NOM_M_PL], [("~", "~")], rules {
+        "" => [0 27],
+    } listed {}, true, None),
     // VOC_F_SG, from NOM_F_SG.
-    Relation {
-        cell: VOC_F_SG,
-        from: Cow::Borrowed(&[NOM_F_SG]),
-        changes: flexion::changes![("~", "~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 23],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(VOC_F_SG, [NOM_F_SG], [("~", "~")], rules {
+        "" => [0 23],
+    } listed {}, true, None),
     // VOC_F_DU, from ACC_F_DU.
-    Relation {
-        cell: VOC_F_DU,
-        from: Cow::Borrowed(&[ACC_F_DU]),
-        changes: flexion::changes![("~", "~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 25],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(VOC_F_DU, [ACC_F_DU], [("~", "~")], rules {
+        "" => [0 25],
+    } listed {}, true, None),
     // VOC_F_PL, from NOM_F_PL.
-    Relation {
-        cell: VOC_F_PL,
-        from: Cow::Borrowed(&[NOM_F_PL]),
-        changes: flexion::changes![("~", "~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 27],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(VOC_F_PL, [NOM_F_PL], [("~", "~")], rules {
+        "" => [0 27],
+    } listed {}, true, None),
     // VOC_N_SG, from ACC_N_SG.
-    Relation {
-        cell: VOC_N_SG,
-        from: Cow::Borrowed(&[ACC_N_SG]),
-        changes: flexion::changes![("~", "~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 24],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(VOC_N_SG, [ACC_N_SG], [("~", "~")], rules {
+        "" => [0 24],
+    } listed {}, true, None),
     // VOC_N_DU, from VOC_M_DU.
-    Relation {
-        cell: VOC_N_DU,
-        from: Cow::Borrowed(&[VOC_M_DU]),
-        changes: flexion::changes![("~", "~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 26],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(VOC_N_DU, [VOC_M_DU], [("~", "~")], rules {
+        "" => [0 26],
+    } listed {}, true, None),
     // VOC_N_PL, from NOM_N_PL.
-    Relation {
-        cell: VOC_N_PL,
-        from: Cow::Borrowed(&[NOM_N_PL]),
-        changes: flexion::changes![("~", "~")],
-        change: Some(flexion::choice! {
-        rules {
-            "" => [0 27],
-        }
-        listed {
-        }
-            }),
-        listed: true,
-        analogy: None,
-    },
+    relation!(VOC_N_PL, [NOM_N_PL], [("~", "~")], rules {
+        "" => [0 27],
+    } listed {}, true, None),
 ];

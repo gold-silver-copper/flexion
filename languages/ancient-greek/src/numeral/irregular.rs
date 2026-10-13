@@ -5,10 +5,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 6 forms.
+/// 0 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
-    table: Cow::Borrowed(
-        r#"εισ	9	ἑνός	12	μῐᾶς	15	ἑνός	18	ἑνῐ́	21	μῐᾷ	24	ἑνῐ́
-"#,
-    ),
+    table: Cow::Borrowed(r#""#),
 };

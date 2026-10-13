@@ -423,8 +423,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                             &word.letters,
                             &key,
                         );
-                        // A word whose forms are listed is spelled as listed.
-                        if spellings.len() > 1 && !self.irregular.has(&key) {
+                        if spellings.len() > 1 {
                             otherwise = spellings.pop();
                         }
                         if let Some(first) = spellings.pop() {
@@ -649,6 +648,13 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 ..*known
             };
             for (out, more) in lists.iter_mut().zip(self.unsharpened(&typed, cells, &full)) {
+                // A listed form is the answer however the word is spelled.
+                if out
+                    .iter()
+                    .any(|c| c.status == Status::Listed && c.paradigm.is_empty())
+                {
+                    continue;
+                }
                 for mut c in more {
                     c.probability *= p;
                     add(out, c);
