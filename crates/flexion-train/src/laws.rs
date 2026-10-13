@@ -132,20 +132,12 @@ impl Change {
     /// A change at the stem's edge made only where one of `vowels` comes
     /// earlier in the stem; `None` for any other.
     fn after(&self, vowels: &[char]) -> Option<Change> {
-        match self {
-            Change::Edge {
-                stem,
-                ending,
-                to,
-                keep,
-                earlier,
-            } if earlier.is_empty() && !vowels.is_empty() => Some(Change::Edge {
-                stem: stem.clone(),
-                ending: ending.clone(),
-                to: to.clone(),
-                keep: *keep,
-                earlier: vowels.to_vec(),
-            }),
+        let mut twin = self.clone();
+        match &mut twin {
+            Change::Edge { earlier, .. } if earlier.is_empty() && !vowels.is_empty() => {
+                *earlier = vowels.to_vec();
+                Some(twin)
+            }
             _ => None,
         }
     }
@@ -418,7 +410,6 @@ pub fn learn<'s>(
             std::iter::once((change, n)).chain(twin)
         })
         .collect();
-    let t = std::time::Instant::now();
     let (laws, moved) = greedy(
         &candidates,
         readings,
@@ -426,11 +417,6 @@ pub fn learn<'s>(
         &cells_of,
         assignment.clone(),
         &rank,
-    );
-    eprintln!(
-        "LAWTIME greedy {:.2}s {} candidates",
-        t.elapsed().as_secs_f64(),
-        candidates.len()
     );
     let mut laws: Vec<Law> = laws
         .into_iter()
