@@ -496,7 +496,7 @@ fn grammar_files(
         let _ = writeln!(
             p,
             "/// A view: per cell (in the cells' order), the cell of the {one} it is\n/// like that it reads (`{name}`: one value read as another).\nconst {}: [u16; {}] = [{}];\n",
-            name.to_uppercase(),
+            const_name(name),
             map.len(),
             cells.join(", ")
         );
@@ -577,7 +577,7 @@ fn grammar_files(
                     .reads
                     .as_ref()
                     .and_then(|r| learned.views.iter().find(|v| v.1.as_slice() == r.as_ref()))
-                    .map_or(String::new(), |v| format!(" as {}", v.0.to_uppercase()));
+                    .map_or(String::new(), |v| format!(" as {}", const_name(&v.0)));
                 format!(", like {q}{view}")
             })
         );
