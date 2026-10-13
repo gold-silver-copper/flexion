@@ -236,6 +236,27 @@ fn try_language(
         if !g.spellings.is_empty() {
             println!("  {} spellings listed", g.spellings.len());
         }
+        // TEMPORARY: the words with the most listed forms.
+        if std::env::var_os("TOP_IRREGULAR").is_some() {
+            let mut by: std::collections::BTreeMap<&str, usize> = std::collections::BTreeMap::new();
+            for (w, _, _) in &learned.irregular {
+                *by.entry(w.as_str()).or_default() += 1;
+            }
+            let mut v: Vec<(&str, usize)> = by.into_iter().collect();
+            v.sort_by(|a, b| b.1.cmp(&a.1));
+            let prefixed = g.prefixes.as_ref();
+            let split = v
+                .iter()
+                .filter(|(w, _)| prefixed.and_then(|p| p.split(w)).is_some())
+                .map(|e| e.1)
+                .sum::<usize>();
+            println!(
+                "  irregular: {} words; {} forms of words with a prefix; top {:?}",
+                v.len(),
+                split,
+                &v[..v.len().min(15)]
+            );
+        }
         let by: Vec<String> = g
             .relations
             .iter()

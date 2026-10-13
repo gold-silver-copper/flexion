@@ -441,10 +441,10 @@ mod tests {
         dropped: "",
         mark_monosyllables: true,
         folded: &[
-            ('ᾰ', 'α'),
-            ('ᾱ', 'α'),
             ('ἀ', 'α'),
             ('ἁ', 'α'),
+            ('ᾰ', 'α'),
+            ('ᾱ', 'α'),
             ('ῐ', 'ι'),
             ('ῑ', 'ι'),
         ],
@@ -493,6 +493,8 @@ mod tests {
             GREEK.read("\u{1F14}λυον"),
             GREEK.read("ε\u{313}\u{301}λυον")
         );
+        // A breathing on `ᾰ`, which no character writes: `ἀ`.
+        assert_eq!(GREEK.read("ᾰ\u{313}να").letters, "\u{1F00}να");
     }
 
     #[test]

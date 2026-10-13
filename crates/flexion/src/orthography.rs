@@ -87,6 +87,44 @@ impl Orthography<'_> {
         letters.chars().map(|c| self.fold(c)).collect()
     }
 
+    /// `word` in Unicode's composed form (NFC), a mark a lookup ignores
+    /// that can't join its letter joining it without the letter's own (`ᾰ`
+    /// with a breathing, which no character writes, is `ἀ`), so that each
+    /// letter is one character.
+    fn composed(&self, word: &str) -> String {
+        let nfc: Vec<char> = word.nfc().collect();
+        let mut out = String::with_capacity(word.len());
+        let mut i = 0;
+        while let Some(&c) = nfc.get(i) {
+            let joined = nfc
+                .get(i + 1)
+                .filter(|m| {
+                    unicode_normalization::char::is_combining_mark(**m)
+                        && !self.stress_marks.contains(**m)
+                })
+                .and_then(|&m| {
+                    let plain = self.fold(c);
+                    let pair: String = [plain, m].iter().collect();
+                    let mut one = pair.nfc();
+                    match (plain != c, one.next(), one.next()) {
+                        (true, Some(x), None) => Some(x),
+                        _ => None,
+                    }
+                });
+            match joined {
+                Some(x) => {
+                    out.push(x);
+                    i += 2;
+                }
+                None => {
+                    out.push(c);
+                    i += 1;
+                }
+            }
+        }
+        out
+    }
+
     /// How many vowels `letters` has.
     pub fn vowel_count(&self, letters: &str) -> usize {
         letters.chars().filter(|&c| self.is_vowel(c)).count()
@@ -97,7 +135,7 @@ impl Orthography<'_> {
     /// [`Written::stress`], letters are lowercased where the language folds
     /// case.
     pub fn read(&self, word: &str) -> Written {
-        let word: &str = &word.nfc().collect::<String>();
+        let word: &str = &self.composed(word);
         let casing = casing(word);
         // The word's stress is its last stress mark (a compound's head,
         // `мастер-цили́ндр`); marks before it are dropped.
