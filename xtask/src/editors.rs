@@ -82,10 +82,14 @@ pub fn labels(lang: &str, pos: &str, e: &Editors) -> Vec<(&'static str, String)>
                 .or_else(|| e.template("ru-noun-table").next());
             if let Some(a) = a {
                 let positional: Vec<&str> = (1..=4).map_while(|i| arg(a, &i.to_string())).collect();
-                let letter = positional.iter().find(|v| stress_letter(v));
-                let rest: Vec<&&str> = positional.iter().filter(|v| !stress_letter(v)).collect();
-                let lemma = rest.first().copied().copied();
-                let declension = rest.get(1).copied().copied().unwrap_or("");
+                // `[stress letter] lemma declension …`: only the first may
+                // be a letter (a declension `f` is the feminine's).
+                let letter = positional.first().filter(|v| stress_letter(v));
+                let rest = positional
+                    .get(usize::from(letter.is_some())..)
+                    .unwrap_or(&[]);
+                let lemma = rest.first().copied();
+                let declension = rest.get(1).copied().unwrap_or("");
                 let stress = match letter {
                     Some(l) => (*l).to_string(),
                     None => lemma.map_or("a", default_letter).to_string(),
@@ -328,6 +332,12 @@ mod tests {
         assert_eq!(
             labels("russian", "noun", &stolovaya).get(1),
             Some(&("adjectival", "yes".into()))
+        );
+        // A declension `f` is no stress letter.
+        let tetrad = editors(&[("ru-noun+", &[("1", "тетра́дь"), ("2", "f")])], &[]);
+        assert_eq!(
+            labels("russian", "noun", &tetrad).first(),
+            Some(&("stress", "a".into()))
         );
         let pisat = editors(&[("ru-conj", &[("1", "impf"), ("2", "6c+p")])], &[]);
         assert_eq!(
