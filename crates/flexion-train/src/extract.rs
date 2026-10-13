@@ -4,7 +4,7 @@
 
 use crate::cells::Cells;
 use crate::kaikki::{self, Entry};
-use crate::spec::{FormSource, Language};
+use crate::spec::{FormSource, Language, PartOfSpeech};
 use flexion::Orthography;
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
@@ -49,69 +49,6 @@ pub struct Lexeme {
 #[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 pub struct PosData {
     pub lexemes: Vec<Lexeme>,
-    /// What each edition added, in the order the language lists them.
-    #[serde(default)]
-    pub editions: Vec<EditionStats>,
-}
-
-/// What one edition gave a part of speech, and how well it agrees with the
-/// main dump on the words both have.
-#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
-pub struct EditionStats {
-    pub code: String,
-    /// Entries read.
-    pub entries: usize,
-    /// Words (lookup keys) the main dump doesn't have.
-    pub new_words: usize,
-    /// Words both have.
-    pub shared_words: usize,
-    /// Entries kept for training.
-    pub kept: usize,
-    /// On shared words, cells both fill; of those, how many have the
-    /// edition's first form among the main dump's forms, exactly and in
-    /// letters (stress and length marks aside).
-    pub compared: usize,
-    pub same: usize,
-    pub same_letters: usize,
-}
-
-/// Lexemes grouped by lookup key: what a caller asking for that word means.
-pub struct Word<'a> {
-    pub key: &'a str,
-    pub lexemes: Vec<&'a Lexeme>,
-}
-
-impl Word<'_> {
-    /// Every plain attested form of a cell, across entries.
-    pub fn attested(&self, cell: usize) -> Vec<&str> {
-        let mut out: Vec<&str> = Vec::new();
-        for l in &self.lexemes {
-            for f in l.cells.get(cell).into_iter().flatten() {
-                if !out.contains(&f.as_str()) {
-                    out.push(f);
-                }
-            }
-        }
-        out
-    }
-
-    pub fn lemma(&self) -> &str {
-        self.lexemes.first().map_or("", |l| l.lemma.as_str())
-    }
-}
-
-pub fn words(data: &PosData) -> Vec<Word<'_>> {
-    let mut by_key: BTreeMap<&str, Vec<&Lexeme>> = BTreeMap::new();
-    for l in &data.lexemes {
-        by_key.entry(&l.key).or_default().push(l);
-    }
-    by_key
-        .into_iter()
-        .map(|(key, mut lexemes)| {
-            lexemes.sort_by_key(|l| l.order);
-            Word { key, lexemes }
-        })
-        .collect()
 }
 
 /// Read every configured part of speech from a dump in one pass.
@@ -120,13 +57,7 @@ pub fn extract(
     spelling: &Orthography<'_>,
     dump: &Path,
 ) -> Result<Vec<PosData>, String> {
-    let cells = all_cells(lang)?;
-    let mut out = vec![PosData::default(); lang.parts.len()];
-    let mut order = 0usize;
-    let stats = kaikki::for_each_entry(dump, |entry| {
-        order += 1;
-        read_entry(lang, spelling, &cells, &mut out, &entry, order, None);
-    })?;
+    let (out, stats) = read_dump(lang, spelling, dump, 0, None)?;
     eprintln!(
         "read {} lines ({} unparsable); lexemes: {}",
         stats.lines,
@@ -151,48 +82,35 @@ pub fn add_edition(
         .get(index)
         .ok_or(format!("{}: no edition {index}", lang.name))?;
     let source = u8::try_from(index + 1).map_err(|_| "too many editions")?;
-    let cells = all_cells(lang)?;
-    let mut read = vec![PosData::default(); lang.parts.len()];
     // Entries order after every main-dump entry, so a word's main entries
     // stay its first.
-    let mut order = data
+    let order = data
         .iter()
         .flat_map(|d| d.lexemes.iter().map(|l| l.order))
         .max()
         .unwrap_or(0);
-    let stats = kaikki::for_each_entry(dump, |entry| {
-        order += 1;
-        read_entry(
-            lang,
-            spelling,
-            &cells,
-            &mut read,
-            &entry,
-            order,
-            Some((source, edition.code)),
-        );
-    })?;
-    for ((d, r), c) in data.iter_mut().zip(read).zip(&cells) {
-        let mut s = EditionStats {
-            code: edition.code.to_string(),
-            entries: r.lexemes.len(),
-            ..EditionStats::default()
-        };
+    let (read, stats) = read_dump(lang, spelling, dump, order, Some((source, edition.code)))?;
+    // How the edition agrees with the main dump on the words both have:
+    // of the cells both fill, how many have its first form among the main
+    // dump's, exactly and in letters (stress and length marks aside).
+    let mut report = Vec::new();
+    for ((d, r), p) in data.iter_mut().zip(read).zip(&lang.parts) {
         let mut main: BTreeMap<&str, Vec<&Lexeme>> = BTreeMap::new();
         for l in d.lexemes.iter().filter(|l| l.source == 0) {
             main.entry(&l.key).or_default().push(l);
         }
-        let (mut new_keys, mut shared_keys) = (BTreeSet::new(), BTreeSet::new());
+        let (mut new_words, mut shared) = (BTreeSet::new(), BTreeSet::new());
+        let (mut compared, mut same, mut same_letters) = (0, 0, 0);
         let mut kept = Vec::new();
         for l in &r.lexemes {
             let Some(m) = main.get(l.key.as_str()) else {
-                new_keys.insert(&l.key);
+                new_words.insert(&l.key);
                 kept.push(l.clone());
                 continue;
             };
-            shared_keys.insert(&l.key);
+            shared.insert(&l.key);
             let letters = |f: &str| spelling.read(f).letters;
-            for (cell, forms) in l.cells.iter().enumerate().take(c.total) {
+            for (cell, forms) in l.cells.iter().enumerate() {
                 let Some(first) = forms.first() else {
                     continue;
                 };
@@ -203,52 +121,59 @@ pub fn add_edition(
                 if theirs.is_empty() {
                     continue;
                 }
-                s.compared += 1;
-                if theirs.contains(&first) {
-                    s.same += 1;
-                }
+                compared += 1;
+                same += usize::from(theirs.contains(&first));
                 let mine = letters(first);
-                if theirs.iter().any(|t| letters(t) == mine) {
-                    s.same_letters += 1;
-                }
+                same_letters += usize::from(theirs.iter().any(|t| letters(t) == mine));
             }
             if edition.merge == crate::spec::Merge::All {
                 kept.push(l.clone());
             }
         }
-        s.new_words = new_keys.len();
-        s.shared_words = shared_keys.len();
-        s.kept = kept.len();
+        let share = |n: usize| 100.0 * n as f64 / compared.max(1) as f64;
+        report.push(format!(
+            "  {}: {} entries, {} new words, {} shared ({compared} cells compared: {:.1}% same, {:.1}% same letters), {} kept",
+            p.name,
+            r.lexemes.len(),
+            new_words.len(),
+            shared.len(),
+            share(same),
+            share(same_letters),
+            kept.len()
+        ));
         d.lexemes.extend(kept);
-        d.editions.push(s);
     }
     eprintln!(
-        "{}: read {} lines ({} unparsable); lexemes now: {}",
+        "{}: read {} lines ({} unparsable); lexemes now: {}\n{}",
         edition.code,
         stats.lines,
         stats.failures,
-        summary(lang, data)
+        summary(lang, data),
+        report.join("\n")
     );
-    for (p, d) in lang.parts.iter().zip(data.iter()) {
-        if let Some(s) = d.editions.last() {
-            eprintln!(
-                "  {}: {} entries, {} new words, {} shared ({} cells compared: {:.1}% same, {:.1}% same letters), {} kept",
-                p.name,
-                s.entries,
-                s.new_words,
-                s.shared_words,
-                s.compared,
-                100.0 * s.same as f64 / s.compared.max(1) as f64,
-                100.0 * s.same_letters as f64 / s.compared.max(1) as f64,
-                s.kept
-            );
-        }
-    }
     Ok(())
 }
 
-fn all_cells(lang: &Language) -> Result<Vec<Cells<'_>>, String> {
-    lang.parts.iter().map(|p| Cells::new(lang, p)).collect()
+/// Read a dump's entries into every part of speech, numbered on from
+/// `order`. `edition` is `(source, code)` for another edition's dump.
+fn read_dump(
+    lang: &Language,
+    spelling: &Orthography<'_>,
+    dump: &Path,
+    mut order: usize,
+    edition: Option<(u8, &str)>,
+) -> Result<(Vec<PosData>, kaikki::Stats), String> {
+    let cells = lang
+        .parts
+        .iter()
+        .map(|p| Cells::new(lang, p))
+        .collect::<Result<Vec<_>, _>>()?;
+    let mut out = vec![PosData::default(); lang.parts.len()];
+    let stats = kaikki::for_each_entry(dump, |entry| {
+        order += 1;
+        read_entry(lang, spelling, &cells, &mut out, &entry, order, edition);
+    })?;
+    Ok((out, stats))
 }
 
 fn summary(lang: &Language, data: &[PosData]) -> String {
@@ -260,8 +185,7 @@ fn summary(lang: &Language, data: &[PosData]) -> String {
         .join(", ")
 }
 
-/// Read one entry into every part of speech it belongs to. `edition` is
-/// `(source, code)` for an entry of another edition.
+/// Read one entry into every part of speech it belongs to.
 fn read_entry(
     lang: &Language,
     spelling: &Orthography<'_>,
@@ -274,7 +198,7 @@ fn read_entry(
     if entry.lang_code != lang.wiktionary {
         return;
     }
-    for (pi, part) in lang.parts.iter().enumerate() {
+    for ((part, c), sink) in lang.parts.iter().zip(cells).zip(out) {
         if !part.wiktionary.contains(&entry.pos.as_str()) {
             continue;
         }
@@ -303,10 +227,7 @@ fn read_entry(
         if !read {
             continue;
         }
-        let (Some(c), Some(sink)) = (cells.get(pi), out.get_mut(pi)) else {
-            continue;
-        };
-        if let Some(mut lex) = lexeme(lang, spelling, pi, c, &repaired, order) {
+        if let Some(mut lex) = lexeme(lang, spelling, part, c, &repaired, order) {
             lex.source = edition.map_or(0, |(s, _)| s);
             sink.lexemes.push(lex);
         }
@@ -316,12 +237,11 @@ fn read_entry(
 fn lexeme(
     lang: &Language,
     spelling: &Orthography<'_>,
-    pi: usize,
+    part: &PartOfSpeech,
     cells: &Cells,
     entry: &Entry,
     order: usize,
 ) -> Option<Lexeme> {
-    let part = lang.parts.get(pi)?;
     let fold = |s: &str| {
         if lang.spelling.fold_case {
             s.to_lowercase()
@@ -359,7 +279,7 @@ fn lexeme(
         // forms only the groups that come from the head line.
         let head = f.source.is_none();
         let wanted = |g: &crate::spec::Group| !tables || g.from_head == head;
-        for cell in cells.match_tags_where(&f.tags, &wanted) {
+        for cell in cells.match_tags(&f.tags, &wanted) {
             if let Some(slot) = forms.get_mut(cell)
                 && !slot.contains(&form)
             {
@@ -431,7 +351,8 @@ fn lexeme(
     }
 
     for f in &entry.forms {
-        if f.source.is_some() && lemma_cell.is_some_and(|c| cells.match_tags(&f.tags).contains(&c))
+        if f.source.is_some()
+            && lemma_cell.is_some_and(|c| cells.match_tags(&f.tags, &|_| true).contains(&c))
         {
             inherent_tags.extend(f.tags.iter().cloned());
         }
@@ -492,6 +413,6 @@ fn form_of_cells(entry: &Entry, cells: &Cells) -> Vec<usize> {
     entry
         .senses
         .iter()
-        .flat_map(|s| cells.match_tags(&s.tags))
+        .flat_map(|s| cells.match_tags(&s.tags, &|_| true))
         .collect()
 }

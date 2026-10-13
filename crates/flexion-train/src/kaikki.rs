@@ -44,14 +44,6 @@ pub enum Category {
     Named { name: String },
 }
 
-impl Category {
-    pub fn name(&self) -> &str {
-        match self {
-            Category::Name(n) | Category::Named { name: n } => n,
-        }
-    }
-}
-
 #[derive(Debug, Clone, Default, Deserialize)]
 pub struct Form {
     pub form: String,

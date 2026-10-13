@@ -71,25 +71,6 @@ impl<'a> Cells<'a> {
         })
     }
 
-    pub fn group_of(&self, cell: usize) -> Option<&GroupCells<'a>> {
-        self.groups
-            .iter()
-            .find(|g| cell >= g.offset && cell < g.offset + g.len())
-    }
-
-    /// `noun.gen.pl`
-    pub fn name(&self, cell: usize) -> String {
-        let Some(g) = self.group_of(cell) else {
-            return format!("cell{cell}");
-        };
-        let values = g.features.iter().zip(g.values(cell));
-        let shorts = values.filter_map(|(f, v)| Some(f.values.get(v)?.short));
-        std::iter::once(g.name)
-            .chain(shorts)
-            .collect::<Vec<_>>()
-            .join(".")
-    }
-
     pub fn find(&self, group: &str, values: &[&str]) -> Option<usize> {
         let g = self.groups.iter().find(|g| g.name == group)?;
         if values.len() != g.features.len() {
@@ -104,13 +85,9 @@ impl<'a> Cells<'a> {
         Some(g.index(&idx))
     }
 
-    /// Every cell a form with these tags fills.
-    pub fn match_tags(&self, tags: &[String]) -> Vec<usize> {
-        self.match_tags_where(tags, &|_| true)
-    }
-
-    /// [`Cells::match_tags`], in the groups `wanted` accepts.
-    pub fn match_tags_where(
+    /// Every cell a form with these tags fills, in the groups `wanted`
+    /// accepts.
+    pub fn match_tags(
         &self,
         tags: &[String],
         wanted: &dyn Fn(&crate::spec::Group) -> bool,
