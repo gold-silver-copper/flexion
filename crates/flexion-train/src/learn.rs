@@ -465,19 +465,22 @@ fn compound(w: &Word) -> Option<(String, Compound)> {
 /// is the middle), where it writes the usual form only (not one with
 /// alternatives).
 fn inherit(paradigms: &mut [Paradigm<'_>], relations: &[Relation<'_>]) {
-    let copied: Vec<(usize, usize)> = relations
+    let copied: Vec<(usize, usize, bool)> = relations
         .iter()
         .filter(|r| r.analogy.is_none() && r.changes.iter().all(|(old, new)| old == new))
-        .filter_map(|r| Some((usize::from(r.cell), r.source()?)))
+        .filter_map(|r| Some((usize::from(r.cell), r.source()?, r.change.is_none())))
         .collect();
     let cells: Vec<Vec<String>> = paradigms
         .iter()
         .map(|p| {
             let written: Vec<&str> = p.table.split('\t').collect();
+            // A copy with no changes copies every form; one read off a
+            // change, the usual one only.
             let copy = |c: usize, m: &str| {
-                let from =
-                    |&(cell, from): &(usize, usize)| cell == c && written.get(from) == Some(&m);
-                m != DERIVED && !m.contains('|') && copied.iter().any(from)
+                let from = |&(cell, from, all): &(usize, usize, bool)| {
+                    cell == c && written.get(from) == Some(&m) && (all || !m.contains('|'))
+                };
+                m != DERIVED && copied.iter().any(from)
             };
             let cells = written.iter().enumerate();
             cells
@@ -1206,33 +1209,77 @@ fn paradigms<'s>(
         }
         chosen.push(best.3);
     }
-    // A paradigm needs MIN_WORDS words; a word of a rarer one inflects like
-    // the paradigm that builds the most of its forms (its other forms are
-    // then listed as irregular).
-    let mut members: HashMap<usize, u32> = HashMap::default();
-    for &c in &chosen {
-        *members.entry(c).or_default() += 1;
-    }
-    let supported = |s: usize| members.get(&s).copied().unwrap_or(0) >= MIN_WORDS;
-    let (by_lemma, by_last) = index(&supported);
-    for (i, w) in words.iter().enumerate() {
-        if chosen.get(i).is_none_or(|&c| supported(c)) {
-            continue;
+    // A paradigm is kept where it pays for itself (see `crate::bits`): from
+    // the one with fewest words up, its words go to the paradigm that builds
+    // the most of their forms when listing the forms it doesn't build costs
+    // less than stating the paradigm.
+    let mut alphabet: crate::HashSet<char> = crate::HashSet::default();
+    for w in words {
+        for f in w.cells.iter().flatten() {
+            alphabet.extend(f.letters.chars());
         }
-        let mut best: Option<((usize, u32), usize)> = None;
-        for (lp, stems) in fitting(&by_last, &w.letters) {
-            for &cand in by_lemma.get(lp).into_iter().flatten() {
-                let built = (0..shape.cells)
-                    .filter(|&c| builds(cand, i, c, &stems))
-                    .count();
-                let key = (built, members.get(&cand).copied().unwrap_or(0));
-                if best.is_none_or(|(b, _)| key > b) {
-                    best = Some((key, cand));
+    }
+    let prices = crate::bits::Prices::new(alphabet.len(), shape.cells);
+    let mut members: BTreeMap<usize, Vec<usize>> = BTreeMap::new();
+    for (i, &c) in chosen.iter().enumerate() {
+        members.entry(c).or_default().push(i);
+    }
+    let mut order: Vec<usize> = members.keys().copied().collect();
+    order.sort_by_key(|s| (members.get(s).map_or(0, Vec::len), *s));
+    let mut kept: crate::HashSet<usize> = order.iter().copied().collect();
+    for s in order {
+        kept.remove(&s);
+        let (by_lemma, by_last) = index(&|c| kept.contains(&c));
+        let mine = members.get(&s).cloned().unwrap_or_default();
+        // Each word's best other paradigm, and the forms it lists there.
+        let mut moves: Vec<(usize, usize)> = Vec::with_capacity(mine.len());
+        let mut listed = 0.0;
+        let mut stated = crate::bits::ITEM;
+        for &i in &mine {
+            let Some(w) = words.get(i) else { continue };
+            let mut best: Option<((usize, usize), usize, Vec<String>)> = None;
+            for (lp, stems) in fitting(&by_last, &w.letters) {
+                for &cand in by_lemma.get(lp).into_iter().flatten() {
+                    let built = (0..shape.cells)
+                        .filter(|&c| builds(cand, i, c, &stems))
+                        .count();
+                    let key = (built, members.get(&cand).map_or(0, Vec::len));
+                    if best.as_ref().is_none_or(|b| key > b.0) {
+                        let owned = stems.iter().map(|x| (*x).to_string()).collect();
+                        best = Some((key, cand, owned));
+                    }
                 }
             }
+            let stems: Vec<&str> = best
+                .as_ref()
+                .map_or(Vec::new(), |b| b.2.iter().map(String::as_str).collect());
+            for c in 0..shape.cells {
+                let Some(form) = first_form(w, c) else {
+                    continue;
+                };
+                if best.as_ref().is_none_or(|b| !builds(b.1, i, c, &stems)) {
+                    listed += prices.listed(form);
+                    // What the paradigm states there instead, once.
+                    if i == mine.first().copied().unwrap_or(i) {
+                        let p = signatures.get(s).and_then(|x| x.1.get(c)?.as_deref());
+                        stated += prices.cell + p.map_or(0.0, |p| prices.text(p));
+                    }
+                }
+            }
+            if let Some(b) = best {
+                moves.push((i, b.1));
+            }
         }
-        if let (Some((_, cand)), Some(slot)) = (best, chosen.get_mut(i)) {
-            *slot = cand;
+        if moves.len() == mine.len() && listed < stated {
+            for (i, cand) in moves {
+                if let Some(slot) = chosen.get_mut(i) {
+                    *slot = cand;
+                }
+                members.entry(cand).or_default().push(i);
+            }
+            members.remove(&s);
+        } else {
+            kept.insert(s);
         }
     }
     // Paradigms: the chosen signatures, most words first.

@@ -61,12 +61,16 @@ pub fn learn<'s>(
         }
         (right, same)
     };
+    // A cell whose form is an earlier one's for nearly every word is that
+    // cell's form, stated once (with all its forms); the tree is grown on
+    // the others.
+    let same = sameness(forms, cells, root);
     // The tree, grown from the root: each time the cell told best from one
     // already in it.
     let mut parent: Vec<Option<usize>> = vec![None; cells];
     // The cells not in it yet: each with its best score so far, and source.
     let mut waiting: Vec<(usize, (usize, usize), usize)> = (0..cells)
-        .filter(|&c| c != root)
+        .filter(|&c| c != root && same.get(c).copied().flatten().is_none())
         .map(|c| (c, score(root, c), root))
         .collect();
     while let Some(&(c, _, s)) = waiting
@@ -85,11 +89,55 @@ pub fn learn<'s>(
         }
     }
     // Each edge's changes, and the rules on the source's ending choosing one.
-    parent
+    let copies = same.iter().enumerate().filter_map(|(c, s)| {
+        Some(copy(
+            u16::try_from(c).ok()?,
+            vec![u16::try_from((*s)?).ok()?],
+            None,
+        ))
+    });
+    let mut out: Vec<Relation<'s>> = parent
         .iter()
         .enumerate()
         .filter_map(|(c, &s)| edge(forms, s?, c, settings))
-        .collect()
+        .chain(copies)
+        .collect();
+    out.sort_by_key(|r| r.cell);
+    out
+}
+
+/// The share of the words having both cells' forms that must have the same
+/// form in both for the later cell to be the earlier one's.
+const SAME_SHARE: f64 = 0.95;
+/// The fewest words having both, for that.
+const SAME_WORDS: usize = 5;
+
+/// Per cell, the earlier cell (not itself a copy) whose form it is for
+/// [`SAME_SHARE`] of the words having both: the one sharing it most often.
+fn sameness(forms: &[Vec<Option<&str>>], cells: usize, root: usize) -> Vec<Option<usize>> {
+    let mut same: Vec<Option<usize>> = vec![None; cells];
+    for c in (0..cells).filter(|&c| c != root) {
+        let best = (0..c)
+            .filter(|&s| same.get(s).copied().flatten().is_none())
+            .filter_map(|s| {
+                let both = forms.iter().filter_map(|f| {
+                    Some((f.get(s).copied().flatten()?, f.get(c).copied().flatten()?))
+                });
+                let (n, equal) = both.fold((0usize, 0usize), |(n, e), (a, b)| {
+                    (n + 1, e + usize::from(a == b))
+                });
+                // Counts of words; exact as floats.
+                #[allow(clippy::cast_precision_loss)]
+                let share = equal as f64 / n.max(1) as f64;
+                (n >= SAME_WORDS && share >= SAME_SHARE).then_some((equal, std::cmp::Reverse(s)))
+            })
+            .max()
+            .map(|(_, std::cmp::Reverse(s))| s);
+        if let Some(slot) = same.get_mut(c) {
+            *slot = best;
+        }
+    }
+    same
 }
 
 /// The relation telling cell `c` from cell `s`: the changes of the end of
