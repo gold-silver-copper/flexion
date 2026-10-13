@@ -11,6 +11,7 @@ flexion = { workspace = true }
 flexion-train = { workspace = true }
 flexion-configs = { path = "../crates/flexion-configs" }
 serde_json = { workspace = true }
+unicode-normalization = { workspace = true }
 
 [lints]
 workspace = true

@@ -563,6 +563,7 @@ mod tests {
                 .collect(),
             senses: vec![],
             head_templates: vec![],
+            inflection_templates: vec![],
             tags: vec![],
             categories: vec![],
             hyphenations: vec![],
