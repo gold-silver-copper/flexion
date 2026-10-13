@@ -130,19 +130,16 @@ impl Script {
                 }
             }
         }
-        let mark_kind = |m: char| {
-            s.stress_marks
-                .chars()
-                .position(|x| x == m)
-                .and_then(|k| u8::try_from(k).ok())
-        };
         let prosody = (!s.long_vowels.is_empty()).then(|| Prosody {
             diphthongs: s.diphthongs.clone(),
             hiatus,
             long,
             short_finals: s.short_finals.clone(),
             acute: 0,
-            circumflex: s.circumflex.and_then(mark_kind).unwrap_or(0),
+            circumflex: s
+                .circumflex
+                .and_then(|m| marks.iter().position(|&x| x == m))
+                .map_or(0, |k| u8::try_from(k).unwrap_or(0)),
         });
         stressed.sort_by_key(|e| e.0);
         folded.sort_unstable();

@@ -142,9 +142,9 @@ impl Change {
         }
     }
 
-    /// Whether it may apply where a build has `window` around its boundary:
-    /// a law on a tier, wherever its letter is; on a copy, wherever it is
-    /// copied.
+    /// Whether its rule may change a build with `window` around its
+    /// boundary, a quick test before running it: a law on a tier, wherever
+    /// its letter is; on a copy, wherever it is copied.
     fn applies(&self, (before, after): &(String, String), built: &str) -> bool {
         match self {
             Change::Edge { stem, ending, .. } => {
