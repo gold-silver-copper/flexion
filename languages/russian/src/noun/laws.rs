@@ -1,14 +1,15 @@
 //! Sound laws where a stem meets its ending (`+`), where a form's first
-//! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), or on a letter a
-//! `%` copies (`°`): every form a declension builds goes through them, in order, so
-//! one declension serves words whose stems change its endings. Each with the
-//! words whose forms it gives, and how many of the dictionary's forms it
-//! gets wrong (those are listed in `irregular.rs`).
+//! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), on a letter a
+//! `%` copies (`°`), or on a class letter an ending writes (harmony, by the
+//! nearest letter of a tier before it as written): every form a declension builds
+//! goes through them, in order, so one declension serves words whose stems change
+//! its endings. Each with the words whose forms it gives, and how many of
+//! the dictionary's forms it gets wrong (those are listed in `irregular.rs`).
 
 use flexion::sound_law::compiled::*;
 
 const RULES: &[CompiledRule<'static>] = &[
-    // к+ы → к+и: 9,368 words (собака, зонтик, бортник, бредник), 5 forms wrong.
+    // к+ы → к+и: 9,369 words (собака, зонтик, бортник, бредник), 5 forms wrong.
     CompiledRule {
         name: B("law0"),
         left: Pattern {
@@ -68,7 +69,7 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("иц+о")]),
     },
-    // г+ы → г+и: 2,031 words (бочаг, гонг, четверг, носорог), 1 forms wrong.
+    // г+ы → г+и: 2,034 words (бочаг, гонг, четверг, носорог), 1 forms wrong.
     CompiledRule {
         name: B("law2"),
         left: Pattern {
@@ -188,7 +189,7 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ч+ы")]),
     },
-    // [щ|ц|ч|ш|ж|к|г|х]+ям → +ам: 88 words (ночь, помочь, печь, рожь), 6 forms wrong.
+    // [щ|ц|ч|ш|ж|к|г|х]+ям → +ам: 84 words (ночь, помочь, печь, рожь), 6 forms wrong.
     CompiledRule {
         name: B("law6"),
         left: Pattern {
@@ -435,7 +436,7 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ч+я")]),
     },
-    // ч+ог → ч+ег: 22 words (лесничий, что, рабочий, ничто), 0 forms wrong.
+    // ч+ог → ч+ег: 20 words (лесничий, рабочий, ничто, городничий), 0 forms wrong.
     CompiledRule {
         name: B("law13"),
         left: Pattern {

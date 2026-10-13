@@ -47,7 +47,7 @@ pub(super) static RELATIONS: [Relation<'static>; 2] = [
         "y" => [2 87, 0 4],
         "ay" => [0 4],
         "ly" => [2 85],
-    } listed {}, true, None),
+    } listed {}, false, None),
     // ADVERB_SUP, from ADVERB_COMP.
     relation!(ADVERB_SUP, [ADVERB_COMP], [("~e", "~t"), ("~r", "~st"), ("~tter", "~st")], rules {
         "" => [1 127, 0 3, 2 2],

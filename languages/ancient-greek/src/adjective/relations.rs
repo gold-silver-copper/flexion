@@ -1409,9 +1409,7 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "ὑπουργων" => 20,
     }, true, None),
     // NOM_N_DU, from NOM_M_DU.
-    relation!(NOM_N_DU, [NOM_M_DU], [("~", "~")], rules {
-        "" => [0 4669],
-    } listed {}, true, None),
+    relation!(NOM_N_DU, [NOM_M_DU], [], none, true, None),
     // NOM_N_PL, from ACC_M_SG.
     relation!(NOM_N_PL, [ACC_M_SG], [("~", "~"), ("~ν", "~δᾰ"), ("~ν", "~τᾰ"), ("~ν", "~ᾰ"), ("~ον", "~ᾰ"), ("~ονδε", "~ᾰδε"), ("~οῡν", "~ᾱ"), ("~υν", "~δᾰ"), ("~ω", "~ᾰ"), ("~ῠν", "~εᾰ"), ("~ῠν", "~η")], rules {
         "" => [4 3462, 0 1161, 9 23, 6 6, 1 4, 3 4, 8 4, 10 4, 5 3, 7 3, 2 2],
@@ -2305,17 +2303,11 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "ὁρων" => 7,
     }, true, None),
     // GEN_N_SG, from GEN_M_SG.
-    relation!(GEN_N_SG, [GEN_M_SG], [("~", "~")], rules {
-        "" => [0 4687],
-    } listed {}, true, None),
+    relation!(GEN_N_SG, [GEN_M_SG], [], none, true, None),
     // GEN_N_DU, from GEN_M_DU.
-    relation!(GEN_N_DU, [GEN_M_DU], [("~", "~")], rules {
-        "" => [0 4670],
-    } listed {}, true, None),
+    relation!(GEN_N_DU, [GEN_M_DU], [], none, true, None),
     // GEN_N_PL, from GEN_M_PL.
-    relation!(GEN_N_PL, [GEN_M_PL], [("~", "~")], rules {
-        "" => [0 4686],
-    } listed {}, true, None),
+    relation!(GEN_N_PL, [GEN_M_PL], [], none, true, None),
     // DAT_M_SG, from NOM_M_DU.
     relation!(DAT_M_SG, [NOM_M_DU], [("~", "~"), ("~ε", "~ϊ"), ("~ε", "~ῐ"), ("~ω", "~ῳ"), ("~ωδε", "~ῳδε")], rules {
         "" => [3 3466, 2 886, 0 311, 1 4, 4 3],
@@ -2331,9 +2323,7 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "εῑ" => [0 256],
     } listed {}, true, None),
     // DAT_M_DU, from GEN_M_DU.
-    relation!(DAT_M_DU, [GEN_M_DU], [("~", "~")], rules {
-        "" => [0 4672],
-    } listed {}, true, None),
+    relation!(DAT_M_DU, [GEN_M_DU], [], none, true, None),
     // DAT_M_PL, from NOM_M_DU.
     relation!(DAT_M_PL, [NOM_M_DU], [("~δε", "~σῐ"), ("~ε", "~σῐ"), ("~ι", "~σῐ"), ("~κε", "~ξῐ"), ("~νε", "~σῐ"), ("~ντε", "~ισῐ"), ("~ντε", "~σῐ"), ("~ντε", "~υσῐ"), ("~ντε", "~ῑσῐ"), ("~ντε", "~ῡσῐ"), ("~πε", "~ψῐ"), ("~τε", "~σῐ"), ("~τρῐχε", "~θρῐξῐ"), ("~χε", "~ξῐ"), ("~ω", "~οις"), ("~ω", "~οῑς"), ("~ω", "~ῳς"), ("~ωδε", "~οῑσδε"), ("~ᾰντε", "~ᾱσῐ"), ("~ῑ", "~σῐ"), ("~ῠντε", "~ῡσῐ")], rules {
         "" => [14 2422, 15 1037, 19 256, 7 250, 18 169, 8 90, 9 83, 6 82, 4 71, 2 55, 11 55, 5 30, 0 23, 1 13, 16 6, 20 6, 3 5, 10 5, 12 3, 13 3, 17 3],
@@ -2993,9 +2983,7 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "ὑπηοιᾱ" => 5,
     }, true, None),
     // DAT_F_DU, from GEN_F_DU.
-    relation!(DAT_F_DU, [GEN_F_DU], [("~", "~")], rules {
-        "" => [0 4672],
-    } listed {}, true, None),
+    relation!(DAT_F_DU, [GEN_F_DU], [], none, true, None),
     // DAT_F_PL, from NOM_F_DU.
     relation!(DAT_F_PL, [NOM_F_DU], [("~δε", "~σῐ"), ("~ε", "~σῐ"), ("~ι", "~σῐ"), ("~κε", "~ξῐ"), ("~νε", "~σῐ"), ("~πε", "~ψῐ"), ("~τε", "~σῐ"), ("~τρῐχε", "~θρῐξῐ"), ("~χε", "~ξῐ"), ("~ω", "~οις"), ("~ω", "~οῑς"), ("~ω", "~ῳς"), ("~ᾰντε", "~ᾱσῐ"), ("~ᾱ", "~αις"), ("~ᾱ", "~αῑς"), ("~ᾱδε", "~αῑσδε"), ("~ῑ", "~σῐ")], rules {
         "" => [13 2188, 9 1026, 14 980, 16 232, 4 66, 10 57, 2 51, 0 24, 1 13, 3 5, 5 5, 6 5, 11 5, 7 3, 8 3, 15 3, 12 2],
@@ -3421,17 +3409,11 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "ῥῡσᾱ" => 14,
     }, true, None),
     // DAT_N_SG, from DAT_M_SG.
-    relation!(DAT_N_SG, [DAT_M_SG], [("~", "~")], rules {
-        "" => [0 4687],
-    } listed {}, true, None),
+    relation!(DAT_N_SG, [DAT_M_SG], [], none, true, None),
     // DAT_N_DU, from GEN_M_DU.
-    relation!(DAT_N_DU, [GEN_M_DU], [("~", "~")], rules {
-        "" => [0 4670],
-    } listed {}, true, None),
+    relation!(DAT_N_DU, [GEN_M_DU], [], none, true, None),
     // DAT_N_PL, from DAT_M_PL.
-    relation!(DAT_N_PL, [DAT_M_PL], [("~", "~")], rules {
-        "" => [0 4686],
-    } listed {}, true, None),
+    relation!(DAT_N_PL, [DAT_M_PL], [], none, true, None),
     // ACC_M_SG, from NOM_M_SG.
     relation!(ACC_M_SG, [NOM_M_SG], [("~", "~τᾰ"), ("~", "~ᾰ"), ("~ην", "~ενᾰ"), ("~θρῐξ", "~τρῐχᾰ"), ("~ις", "~ντᾰ"), ("~ξ", "~κᾰ"), ("~ξ", "~χᾰ"), ("~ς", "~"), ("~ς", "~δᾰ"), ("~ς", "~ν"), ("~ς", "~τᾰ"), ("~σδε", "~νδε"), ("~υς", "~δᾰ"), ("~υς", "~ντᾰ"), ("~ψ", "~πᾰ"), ("~ων", "~οντᾰ"), ("~ων", "~ονᾰ"), ("~ων", "~οῡντᾰ"), ("~ωρ", "~ορᾰ"), ("~ως", "~οτᾰ"), ("~ᾱς", "~ᾰντᾰ"), ("~ᾱς", "~ᾰνᾰ"), ("~ῡς", "~ῠντᾰ")], rules {
         "" => [9 3516, 15 329, 7 289, 20 169, 4 120, 16 64, 17 58, 19 48, 0 24, 8 8, 12 8, 18 6, 22 6, 5 5, 10 5, 14 5, 1 4, 13 4, 21 4, 3 3, 6 3, 11 3, 2 2],
@@ -3616,9 +3598,7 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "ῥᾳων" => 16,
     }, true, None),
     // ACC_M_DU, from NOM_M_DU.
-    relation!(ACC_M_DU, [NOM_M_DU], [("~", "~")], rules {
-        "" => [0 4672],
-    } listed {}, true, None),
+    relation!(ACC_M_DU, [NOM_M_DU], [], none, true, None),
     // ACC_M_PL, from NOM_M_DU.
     relation!(ACC_M_PL, [NOM_M_DU], [("~", "~ς"), ("~ε", "~ᾰς"), ("~ω", "~ους"), ("~ω", "~οῡς"), ("~ωδε", "~ουσδε"), ("~ῠε", "~ῡς")], rules {
         "" => [2 3451, 1 888, 0 318, 3 6, 5 4, 4 3],
@@ -3691,9 +3671,7 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "ὀκρῐς" => 7,
     }, true, None),
     // ACC_F_DU, from NOM_F_DU.
-    relation!(ACC_F_DU, [NOM_F_DU], [("~", "~")], rules {
-        "" => [0 4672],
-    } listed {}, true, None),
+    relation!(ACC_F_DU, [NOM_F_DU], [], none, true, None),
     // ACC_F_PL, from NOM_F_DU.
     relation!(ACC_F_PL, [NOM_F_DU], [("~", "~ς"), ("~δε", "~σδε"), ("~ε", "~ᾰς"), ("~ω", "~ους"), ("~ῠε", "~ῡς")], rules {
         "" => [0 3455, 3 1083, 2 124, 4 4, 1 3],
@@ -3715,17 +3693,11 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "ἱλεω" => 0,
     }, true, None),
     // ACC_N_SG, from NOM_N_SG.
-    relation!(ACC_N_SG, [NOM_N_SG], [("~", "~")], rules {
-        "" => [0 4686],
-    } listed {}, true, None),
+    relation!(ACC_N_SG, [NOM_N_SG], [], none, true, None),
     // ACC_N_DU, from NOM_M_DU.
-    relation!(ACC_N_DU, [NOM_M_DU], [("~", "~")], rules {
-        "" => [0 4669],
-    } listed {}, true, None),
+    relation!(ACC_N_DU, [NOM_M_DU], [], none, true, None),
     // ACC_N_PL, from NOM_N_PL.
-    relation!(ACC_N_PL, [NOM_N_PL], [("~", "~")], rules {
-        "" => [0 4686],
-    } listed {}, true, None),
+    relation!(ACC_N_PL, [NOM_N_PL], [], none, true, None),
     // VOC_M_SG, from ACC_M_SG.
     relation!(VOC_M_SG, [ACC_M_SG], [("~", "~ς"), ("~δᾰ", "~"), ("~δᾰ", "~ς"), ("~δᾰ", "~υς"), ("~η", "~ες"), ("~ιονᾰ", "~ῑον"), ("~κᾰ", "~ξ"), ("~ν", "~"), ("~ν", "~ς"), ("~ντᾰ", "~ις"), ("~ντᾰ", "~υς"), ("~ον", "~ε"), ("~οντᾰ", "~ων"), ("~οτᾰ", "~ως"), ("~οῡντᾰ", "~ων"), ("~πᾰ", "~ψ"), ("~τρῐχᾰ", "~θρῐξ"), ("~τᾰ", "~"), ("~τᾰ", "~ς"), ("~χᾰ", "~ξ"), ("~ᾰ", "~"), ("~ᾰντᾰ", "~ᾱς"), ("~ῠντᾰ", "~ῡς")], rules {
         "" => [11 3464, 12 328, 4 284, 21 167, 9 90, 20 73, 14 58, 17 58, 13 48, 7 44, 3 8, 8 6, 22 6, 0 5, 2 5, 6 5, 15 5, 18 5, 10 4, 1 3, 16 3, 19 3, 5 2],
@@ -3781,13 +3753,9 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "ὀκρῐδᾰ" => 1,
     }, true, None),
     // VOC_M_DU, from NOM_M_DU.
-    relation!(VOC_M_DU, [NOM_M_DU], [("~", "~")], rules {
-        "" => [0 4668],
-    } listed {}, true, None),
+    relation!(VOC_M_DU, [NOM_M_DU], [], none, true, None),
     // VOC_M_PL, from NOM_M_PL.
-    relation!(VOC_M_PL, [NOM_M_PL], [("~", "~")], rules {
-        "" => [0 4685],
-    } listed {}, true, None),
+    relation!(VOC_M_PL, [NOM_M_PL], [], none, true, None),
     // VOC_F_SG, from NOM_F_SG.
     relation!(VOC_F_SG, [NOM_F_SG], [("~", "~"), ("~ης", "~ες"), ("~ιων", "~ῑον"), ("~ος", "~ε"), ("~ς", "~"), ("~ων", "~ον"), ("~ωρ", "~ορ"), ("~ᾱς", "~ᾰν")], rules {
         "" => [0 3225, 3 1087, 1 285, 5 58, 4 13, 6 6, 2 2, 7 2],
@@ -3817,25 +3785,15 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "ἑκτωρ" => 0,
     }, true, None),
     // VOC_F_DU, from NOM_F_DU.
-    relation!(VOC_F_DU, [NOM_F_DU], [("~", "~")], rules {
-        "" => [0 4667],
-    } listed {}, true, None),
+    relation!(VOC_F_DU, [NOM_F_DU], [], none, true, None),
     // VOC_F_PL, from NOM_F_PL.
-    relation!(VOC_F_PL, [NOM_F_PL], [("~", "~")], rules {
-        "" => [0 4684],
-    } listed {}, true, None),
+    relation!(VOC_F_PL, [NOM_F_PL], [], none, true, None),
     // VOC_N_SG, from NOM_N_SG.
-    relation!(VOC_N_SG, [NOM_N_SG], [("~", "~")], rules {
-        "" => [0 4680],
-    } listed {}, true, None),
+    relation!(VOC_N_SG, [NOM_N_SG], [], none, true, None),
     // VOC_N_DU, from NOM_M_DU.
-    relation!(VOC_N_DU, [NOM_M_DU], [("~", "~")], rules {
-        "" => [0 4665],
-    } listed {}, true, None),
+    relation!(VOC_N_DU, [NOM_M_DU], [], none, true, None),
     // VOC_N_PL, from NOM_N_PL.
-    relation!(VOC_N_PL, [NOM_N_PL], [("~", "~")], rules {
-        "" => [0 4680],
-    } listed {}, true, None),
+    relation!(VOC_N_PL, [NOM_N_PL], [], none, true, None),
     // COMPARATIVE, from VOC_M_SG.
     relation!(COMPARATIVE, [VOC_M_SG], [("~", "~εστερος"), ("~", "~τερος"), ("~ε", "~αιτερος"), ("~ε", "~οτερος"), ("~ε", "~τερος"), ("~ε", "~ωτερος"), ("~ν", "~στερος"), ("~οῡ", "~εωτερος"), ("~ρε", "~ῑων"), ("~ς", "~στερος"), ("~ς", "~τερος"), ("~ῑε", "~ιοτερος"), ("~ῡλε", "~υλοτερος"), ("~ῡργε", "~υργοτερος"), ("~ῡρε", "~υροτερος"), ("~ῡχε", "~υχοτερος")], rules {
         "" => [5 1893, 3 941, 9 271, 11 73, 1 33, 6 30, 0 28, 14 6, 10 5, 15 4, 2 3, 7 3, 12 3, 4 2, 8 2, 13 2],

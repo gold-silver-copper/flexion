@@ -11,17 +11,17 @@ use flexion::Choice;
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
         "" => [Singulus 62, Bīnus 34, Sescentī 9, Nōnusdecimus 7, Mīlle 2, Trēs 1, Duo 1, Nūlla 1, Milliō 1],
-        "e" => [Mīlle 2],
-        "i" => [Sescentī 9],
-        "ti" => [Sescentī 9],
+        "e" => [Mīlle 2] regular,
+        "i" => [Sescentī 9] regular,
+        "ti" => [Sescentī 9] regular,
         "s" => [Singulus 62, Bīnus 34, Nōnusdecimus 7, Trēs 1],
-        "lus" => [Singulus 7],
-        "mus" => [Singulus 46, Nōnusdecimus 7],
-        "cimus" => [Nōnusdecimus 7, Singulus 3],
-        "sdecimus" => [Nōnusdecimus 7],
-        "simus" => [Singulus 41],
-        "nus" => [Bīnus 34, Singulus 2],
-        "enus" => [Bīnus 27],
+        "lus" => [Singulus 7] regular,
+        "mus" => [Singulus 46, Nōnusdecimus 7] regular,
+        "cimus" => [Nōnusdecimus 7, Singulus 3] regular,
+        "sdecimus" => [Nōnusdecimus 7] regular,
+        "simus" => [Singulus 41] regular,
+        "nus" => [Bīnus 34, Singulus 2] regular,
+        "enus" => [Bīnus 27] regular,
     }
     listed {
         "#duo" => Duo,

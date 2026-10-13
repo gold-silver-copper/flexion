@@ -10,10 +10,13 @@ use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
 /// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), then a row of patterns
-/// per line (`derived`: the form comes from another cell's, see
-/// `relations.rs`; `_`, or a row left out: the form is the declension's it is like,
-/// or, in a declension like no other, derived):
+/// they share them), the declension it is like (if any), the stem slots
+/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
+/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
+/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
+/// from another cell's, see `relations.rs`; `_`, or a row left out: the
+/// form is its stem slot's, or the declension's it is like, or, in a declension like
+/// no other, derived):
 /// `nom_m` (sg, pl)
 /// `nom_f` (sg, pl)
 /// `nom_n` (sg, pl)
@@ -33,7 +36,8 @@ use flexion::Paradigm;
 /// `voc_f` (sg, pl)
 /// `voc_n` (sg, pl)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+     $(stem numeral: $s0:tt;)?
      $(nom_m: $c0:tt, $c1:tt;)?
      $(nom_f: $c2:tt, $c3:tt;)?
      $(nom_n: $c4:tt, $c5:tt;)?
@@ -58,6 +62,7 @@ macro_rules! declension {
             words: $words,
             lemma: ::std::borrow::Cow::Borrowed($lemma),
             parent: like!($($parent)?),
+            reads: view!($($($view)?)?),
             inherent: ::std::borrow::Cow::Borrowed(&[]),
             table: ::std::borrow::Cow::Borrowed(concat!(
                 $(flexion::cell!($c0),)? "\t",
@@ -97,6 +102,9 @@ macro_rules! declension {
                 $(flexion::cell!($c34),)? "\t",
                 $(flexion::cell!($c35),)? "\t",
             )),
+            stems: ::std::borrow::Cow::Borrowed(concat!(
+                $(flexion::cell!($s0),)? "\t",
+            )),
         }
     };
 }
@@ -110,6 +118,38 @@ macro_rules! like {
         Some(Declension::$parent as u16)
     };
 }
+
+/// The cells a declension reads in the one it is like, by the view's name (see
+/// the views below); none: the same cells.
+macro_rules! view {
+    () => {
+        None
+    };
+    ($view:ident) => {
+        Some(::std::borrow::Cow::Borrowed(&$view))
+    };
+}
+
+/// A view: per cell (in the cells' order), the cell of the declension it is
+/// like that it reads (`sg_as_pl`: one value read as another).
+const SG_AS_PL: [u16; 36] = [
+    1, 1, 3, 3, 5, 5, 7, 7, 9, 9, 11, 11, 13, 13, 15, 15, 17, 17, 19, 19, 21, 21, 23, 23, 25, 25,
+    27, 27, 29, 29, 31, 31, 33, 33, 35, 35,
+];
+
+/// A view: per cell (in the cells' order), the cell of the declension it is
+/// like that it reads (`pl_as_sg`: one value read as another).
+const PL_AS_SG: [u16; 36] = [
+    0, 0, 2, 2, 4, 4, 6, 6, 8, 8, 10, 10, 12, 12, 14, 14, 16, 16, 18, 18, 20, 20, 22, 22, 24, 24,
+    26, 26, 28, 28, 30, 30, 32, 32, 34, 34,
+];
+
+/// A view: per cell (in the cells' order), the cell of the declension it is
+/// like that it reads (`m_as_f`: one value read as another).
+const M_AS_F: [u16; 36] = [
+    2, 3, 2, 3, 4, 5, 8, 9, 8, 9, 10, 11, 14, 15, 14, 15, 16, 17, 20, 21, 20, 21, 22, 23, 26, 27,
+    26, 27, 28, 29, 32, 33, 32, 33, 34, 35,
+];
 
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -170,31 +210,29 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 9] = [
     nom_f: "~a", "~ae";
     nom_n: "~um", _;
     gen_m: _, "~ōrum";
-    gen_f: "~ae", "~ārum";
+    gen_f: _, "~ārum";
     dat_m: "~ō", "~īs";
-    dat_f: "~ae", _;
     acc_m: _, "~ōs";
     acc_f: "~am", "~ās";
     abl_f: "~ā", _;
     voc_m: "~e", _;
     ),
-    // Bīnus: 34 words (novēnus, sēnus, trīnus, bīnus, ternus, centēnus). Like Singulus, except in 3 cells: gen_m pl, gen_f pl, gen_n pl.
+    // Bīnus: 34 words (novēnus, sēnus, trīnus, bīnus, ternus, centēnus). Like Singulus, except in 2 cells: gen_m pl, gen_f pl.
     declension!("bīnus", 34, "~us", like Singulus;
     gen_m: _, "~um|~ōrum";
     gen_f: _, "~um|~ārum";
-    gen_n: _, "~um|~ōrum";
     ),
-    // Sescentī: 9 words (ducentī, nōngentī, trecentī, quadringentī, quīngentī, sescentī). Like Singulus, except in 10 cells: nom_m sg, nom_f sg, nom_n sg, nom_n pl, gen_f sg, dat_m sg, ….
-    declension!("sescentī", 9, "~ī", like Singulus;
-    nom_m: "~ī", _;
+    // Sescentī: 9 words (ducentī, nōngentī, trecentī, quadringentī, quīngentī, sescentī). Like Singulus, except in 9 cells: nom_f sg, nom_n pl, gen_m sg, gen_f sg, dat_m sg, acc_m sg, ….
+    declension!("sescentī", 9, "~ī", like Singulus as SG_AS_PL;
     nom_f: derived, _;
-    nom_n: derived, "~a";
+    nom_n: _, "~a";
+    gen_m: derived, _;
     gen_f: derived, _;
     dat_m: derived, _;
-    dat_f: derived, _;
+    acc_m: derived, _;
     acc_f: derived, _;
-    abl_f: derived, _;
-    voc_m: derived, _;
+    acc_n: _, "~a";
+    voc_n: _, "~a";
     ),
     // Nōnusdecimus: 7 words (octāvusdecimus, quārtusdecimus, quīntusdecimus, sextusdecimus, tertiusdecimus, nōnusdecimus).
     declension!("nōnusdecimus", 7, "~us~us";
@@ -202,29 +240,28 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 9] = [
     nom_f: "~a~a", "~ae~ae";
     nom_n: "~um~um", _;
     gen_m: _, "~ōrum~ōrum";
-    gen_f: "~ae~ae", "~ārum~ārum";
+    gen_f: _, "~ārum~ārum";
     dat_m: "~ō~ō", "~īs~īs";
-    dat_f: "~ae~ae", _;
     acc_m: _, "~ōs~ōs";
     acc_f: "~am~am", "~ās~ās";
     abl_f: "~ā~ā", _;
     voc_m: "~e~e", _;
     ),
-    // Mīlle: 2 words (mīlle, sēsquimīlle). Like Singulus, except in 17 cells: nom_m sg, nom_m pl, nom_f sg, nom_f pl, nom_n sg, gen_m sg, ….
-    declension!("mīlle", 2, "~", like Singulus;
+    // Mīlle: 2 words (mīlle, sēsquimīlle). Like Sescentī, except in 12 cells: nom_m sg, nom_m pl, nom_f sg, nom_n sg, gen_m sg, gen_f sg, ….
+    declension!("mīlle", 2, "~", like Sescentī as PL_AS_SG;
     nom_m: "~", derived;
-    nom_f: "~", derived;
+    nom_f: "~", _;
     nom_n: "~", _;
-    gen_m: "~", derived;
-    gen_f: "~", derived;
-    dat_m: "~", derived;
+    gen_m: "~", _;
+    gen_f: "~", _;
+    gen_n: "~", _;
+    dat_m: "~", _;
     dat_f: "~", _;
-    acc_m: _, derived;
-    acc_f: "~", derived;
+    acc_f: "~", _;
     abl_f: "~", _;
     voc_m: "~", _;
     ),
-    // Trēs: 1 words (trēs). Like Sescentī, except in 9 cells: nom_m sg, nom_m pl, nom_f pl, nom_n pl, gen_m pl, gen_f pl, ….
+    // Trēs: 1 words (trēs). Like Sescentī, except in 11 cells: nom_m sg, nom_m pl, nom_f pl, nom_n pl, gen_m pl, gen_f pl, ….
     declension!("trēs", 1, "~ēs", like Sescentī;
     nom_m: "~ēs", "~ēs";
     nom_f: _, "~ēs";
@@ -234,42 +271,49 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 9] = [
     dat_m: _, "~ibus";
     acc_m: _, "~īs|~ēs";
     acc_f: _, "~īs|~ēs";
+    acc_n: _, "~ia";
+    voc_n: _, "~ia";
     ),
-    // Duo: 1 words (duo). Like Sescentī, except in 8 cells: nom_m sg, nom_m pl, nom_n pl, gen_m pl, gen_n pl, dat_m pl, ….
+    // Duo: 1 words (duo). Like Sescentī, except in 10 cells: nom_m sg, nom_m pl, nom_n pl, gen_m pl, dat_m pl, dat_f pl, ….
     declension!("duo", 1, "~o", like Sescentī;
     nom_m: "~o", "~o";
     nom_n: _, "~o";
     gen_m: _, "~ōrum|~um";
-    gen_n: _, "~ōrum|~um";
     dat_m: _, "~ōbus";
     dat_f: _, "~ābus";
     acc_m: _, "~ōs|~o";
+    acc_n: _, "~o";
+    abl_f: _, "~ābus";
+    voc_n: _, "~o";
     ),
-    // Nūlla: 1 words (nūlla). Like Singulus, except in 12 cells: nom_m sg, nom_m pl, nom_n sg, gen_m sg, gen_m pl, gen_f sg, ….
-    declension!("nūlla", 1, "~a", like Singulus;
-    nom_m: "~a", "~ae";
+    // Nūlla: 1 words (nūlla). Like Singulus, except in 9 cells: nom_n sg, gen_m sg, gen_f sg, gen_n sg, dat_m sg, dat_m pl, ….
+    declension!("nūlla", 1, "~a", like Singulus as M_AS_F;
     nom_n: "~a", _;
-    gen_m: "~ĭus", "~ārum";
+    gen_m: "~ĭus", _;
     gen_f: "~ĭus", _;
-    dat_m: "~ī", _;
+    gen_n: "~ĭus", _;
+    dat_m: "~ī", "~īs";
     dat_f: "~ī", _;
-    acc_m: "~am", "~ās";
-    abl_m: "~ā", _;
+    abl_n: "~ā", _;
     voc_m: "~a", _;
     ),
-    // Milliō: 1 words (milliō). Like Mīlle, except in 17 cells: nom_m pl, nom_f pl, nom_n pl, gen_m sg, gen_m pl, gen_f sg, ….
-    declension!("milliō", 1, "~", like Mīlle;
-    nom_m: _, "~nēs";
-    nom_f: _, "~nēs";
-    nom_n: _, "~nia";
+    // Milliō: 1 words (milliō).
+    declension!("milliō", 1, "~";
+    nom_m: "~", "~nēs";
+    nom_f: "~", "~nēs";
+    nom_n: "~", "~nia";
     gen_m: "~nis", "~nium";
     gen_f: "~nis", "~nium";
+    gen_n: "~nis", _;
     dat_m: "~nī", "~nibus";
     dat_f: "~nī", _;
     acc_m: "~nem", "~nīs|~nēs";
     acc_f: "~nem", "~nīs|~nēs";
+    acc_n: _, "~nia";
     abl_m: "~nī|~ne", _;
     abl_f: "~nī|~ne", _;
     abl_n: "~nī|~ne", _;
+    voc_m: "~", _;
+    voc_n: _, "~nia";
     ),
 ];

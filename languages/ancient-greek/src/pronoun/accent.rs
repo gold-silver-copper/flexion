@@ -293,49 +293,44 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
 
 /// Per declension, the cells whose ending takes the circumflex when accented on
 /// its last syllable (`θεοῦ`).
-pub static CIRCUMFLEX: [Cow<'static, [u16]>; 24] = [
-    Cow::Borrowed(&[
-        GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
-        DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
-    ]), // Ὁσος
+pub static CIRCUMFLEX: [Cow<'static, [u16]>; 21] = [
+    Cow::Borrowed(&[]), // Ὁσος
     Cow::Borrowed(&[]), // Οἱος
     Cow::Borrowed(&[
         GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
         DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
-    ]), // Ἑαυτοῡ
+    ]), // Αὐτος
+    Cow::Borrowed(&[
+        GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
+        DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
+    ]), // Αὑτοῡ
     Cow::Borrowed(&[]), // Τοῑος
     Cow::Borrowed(&[GEN_M_DU, GEN_F_DU, GEN_N_DU, DAT_M_DU, DAT_F_DU, DAT_N_DU]), // Σφω
-    Cow::Borrowed(&[GEN_M_SG, GEN_F_SG, GEN_N_SG, DAT_M_SG, DAT_F_SG, DAT_N_SG]), // Ἐμαυτοῡ
     Cow::Borrowed(&[
         NOM_M_PL, NOM_F_PL, NOM_N_PL, GEN_M_PL, GEN_F_PL, GEN_N_PL, DAT_M_PL, DAT_F_PL, DAT_N_PL,
         ACC_M_PL, ACC_F_PL, ACC_N_PL, VOC_M_PL, VOC_F_PL, VOC_N_PL,
-    ]), // Ἡμεῑς
+    ]), // Σφεῑς
+    Cow::Borrowed(&[GEN_M_SG, GEN_F_SG, GEN_N_SG, DAT_M_SG, DAT_F_SG, DAT_N_SG]), // Ἐμαυτοῡ
+    Cow::Borrowed(&[GEN_F_SG, GEN_F_PL, DAT_F_SG]), // Μηδεις
+    Cow::Borrowed(&[NOM_M_SG, NOM_N_SG, GEN_F_PL, ACC_N_SG, VOC_M_SG, VOC_N_SG]), // Ἁπᾱς
+    Cow::Borrowed(&[]), // Ὁδε
+    Cow::Borrowed(&[]), // Ὁστῐς
     Cow::Borrowed(&[
         GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
         DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
     ]), // Ὁ
     Cow::Borrowed(&[GEN_M_SG, GEN_F_SG, GEN_N_SG, VOC_M_SG, VOC_F_SG, VOC_N_SG]), // Σῠ
     Cow::Borrowed(&[]), // Τῐς
-    Cow::Borrowed(&[
-        GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
-        DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
-    ]), // Ὁς
-    Cow::Borrowed(&[]), // Ὁστῐς
-    Cow::Borrowed(&[GEN_F_SG, GEN_F_PL, DAT_F_SG]), // Οὐδεις
     Cow::Borrowed(&[GEN_M_SG, GEN_F_SG, GEN_N_SG]), // Ἱ
-    Cow::Borrowed(&[NOM_M_SG, NOM_N_SG, GEN_F_PL, ACC_N_SG, VOC_M_SG, VOC_N_SG]), // Πᾱς
     Cow::Borrowed(&[
         NOM_M_PL, NOM_F_PL, NOM_N_PL, GEN_M_SG, GEN_M_PL, GEN_F_SG, GEN_F_PL, GEN_N_SG, GEN_N_PL,
         DAT_M_SG, DAT_F_SG, DAT_N_SG, ACC_M_PL, ACC_F_PL, ACC_N_PL, VOC_M_PL, VOC_F_PL, VOC_N_PL,
     ]), // Οὑ
-    Cow::Borrowed(&[GEN_F_PL]), // Ἁπᾱς
-    Cow::Borrowed(&[]), // Ὁδε
-    Cow::Borrowed(&[GEN_F_SG, DAT_F_SG]), // Μηδεις
-    Cow::Borrowed(&[]), // Ἀλληλων
-    Cow::Borrowed(&[]), // Ὁσπερ
     Cow::Borrowed(&[
-        NOM_M_PL, NOM_F_PL, NOM_N_PL, GEN_M_PL, GEN_F_PL, GEN_N_PL, ACC_M_PL, ACC_F_PL, ACC_N_PL,
-    ]), // Σφεῑς
+        GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
+        DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
+    ]), // Ἑαυτοῡ
+    Cow::Borrowed(&[]), // Ἀλληλων
     Cow::Borrowed(&[]), // Ἐνῐοι
     Cow::Borrowed(&[]), // Ὁσᾰπλᾰσῐων
 ];

@@ -1,16 +1,220 @@
 //! Sound laws where a stem meets its ending (`+`), where a form's first
-//! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), or on a letter a
-//! `%` copies (`°`): every form a conjugation builds goes through them, in order, so
-//! one conjugation serves words whose stems change its endings. Each with the
-//! words whose forms it gives, and how many of the dictionary's forms it
-//! gets wrong (those are listed in `irregular.rs`).
+//! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), on a letter a
+//! `%` copies (`°`), or on a class letter an ending writes (harmony, by the
+//! nearest letter of a tier before it as written): every form a conjugation builds
+//! goes through them, in order, so one conjugation serves words whose stems change
+//! its endings. Each with the words whose forms it gives, and how many of
+//! the dictionary's forms it gets wrong (those are listed in `irregular.rs`).
 
 use flexion::sound_law::compiled::*;
 
 const RULES: &[CompiledRule<'static>] = &[
-    // [्|े|ा|ि|ी|ौ|ो|ू|ए]+ा → +: 38 words (हन्ति, अस्ति, वस्ते, एति), 0 forms wrong.
+    // A → न after ख, घ, च, छ, ज, ट, ठ, ड, ण, त, द, ध, न, ब, ल, श, स, ी, none; ण after र, ष, ृ (the nearest of ख, घ, च, छ, ज, ट, ठ, ड, ण, त, द, ध, न, ब, र, ल, श, ष, स, ी, ृ before it, as written): 642 words (आद, आप, निन्दति, खादति), 0 forms wrong.
     CompiledRule {
         name: B("law0"),
+        left: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Class(B(&[
+                        B("ख"),
+                        B("घ"),
+                        B("च"),
+                        B("छ"),
+                        B("ज"),
+                        B("ट"),
+                        B("ठ"),
+                        B("ड"),
+                        B("ण"),
+                        B("त"),
+                        B("द"),
+                        B("ध"),
+                        B("न"),
+                        B("ब"),
+                        B("र"),
+                        B("ल"),
+                        B("श"),
+                        B("ष"),
+                        B("स"),
+                        B("ी"),
+                        B("\u{943}"),
+                    ])),
+                    quantifier: Quantifier::Optional,
+                    capture: Some(0),
+                },
+                Atom {
+                    matcher: Matcher::NotClass(B(&[
+                        B("ख"),
+                        B("घ"),
+                        B("च"),
+                        B("छ"),
+                        B("ज"),
+                        B("ट"),
+                        B("ठ"),
+                        B("ड"),
+                        B("ण"),
+                        B("त"),
+                        B("द"),
+                        B("ध"),
+                        B("न"),
+                        B("ब"),
+                        B("र"),
+                        B("ल"),
+                        B("श"),
+                        B("ष"),
+                        B("स"),
+                        B("ी"),
+                        B("\u{943}"),
+                    ])),
+                    quantifier: Quantifier::ZeroOrMore,
+                    capture: Some(1),
+                },
+            ]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Class(B(&[B("A")])),
+                quantifier: Quantifier::One,
+                capture: Some(2),
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::AgreeingCapture {
+            capture: 2,
+            key: 0,
+            entries: B(&[
+                (B("A"), B("ख"), B("न")),
+                (B("A"), B("घ"), B("न")),
+                (B("A"), B("च"), B("न")),
+                (B("A"), B("छ"), B("न")),
+                (B("A"), B("ज"), B("न")),
+                (B("A"), B("ट"), B("न")),
+                (B("A"), B("ठ"), B("न")),
+                (B("A"), B("ड"), B("न")),
+                (B("A"), B("ण"), B("न")),
+                (B("A"), B("त"), B("न")),
+                (B("A"), B("द"), B("न")),
+                (B("A"), B("ध"), B("न")),
+                (B("A"), B("न"), B("न")),
+                (B("A"), B("ब"), B("न")),
+                (B("A"), B("र"), B("ण")),
+                (B("A"), B("ल"), B("न")),
+                (B("A"), B("श"), B("न")),
+                (B("A"), B("ष"), B("ण")),
+                (B("A"), B("स"), B("न")),
+                (B("A"), B("ी"), B("न")),
+                (B("A"), B("\u{943}"), B("ण")),
+                (B("A"), B(""), B("न")),
+            ]),
+        }]),
+        capture_count: 3,
+        direction: Direction::LeftToRight,
+        application: Application::Iterative,
+        required: B(&[]),
+    },
+    // B → ष after क, र, ि, ी, ु, े, ो, ौ; स after त, म, व, स, ा; ध after द; ज after none (the nearest of क, त, द, म, र, व, स, ा, ि, ी, ु, े, ो, ौ before it, as written): 140 words (भाति, द्राति, धृष्णोति, जानाति), 0 forms wrong.
+    CompiledRule {
+        name: B("law1"),
+        left: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Class(B(&[
+                        B("क"),
+                        B("त"),
+                        B("द"),
+                        B("म"),
+                        B("र"),
+                        B("व"),
+                        B("स"),
+                        B("ा"),
+                        B("ि"),
+                        B("ी"),
+                        B("\u{941}"),
+                        B("\u{947}"),
+                        B("ो"),
+                        B("ौ"),
+                    ])),
+                    quantifier: Quantifier::Optional,
+                    capture: Some(0),
+                },
+                Atom {
+                    matcher: Matcher::NotClass(B(&[
+                        B("क"),
+                        B("त"),
+                        B("द"),
+                        B("म"),
+                        B("र"),
+                        B("व"),
+                        B("स"),
+                        B("ा"),
+                        B("ि"),
+                        B("ी"),
+                        B("\u{941}"),
+                        B("\u{947}"),
+                        B("ो"),
+                        B("ौ"),
+                    ])),
+                    quantifier: Quantifier::ZeroOrMore,
+                    capture: Some(1),
+                },
+            ]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Class(B(&[B("B")])),
+                quantifier: Quantifier::One,
+                capture: Some(2),
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::AgreeingCapture {
+            capture: 2,
+            key: 0,
+            entries: B(&[
+                (B("B"), B("क"), B("ष")),
+                (B("B"), B("त"), B("स")),
+                (B("B"), B("द"), B("ध")),
+                (B("B"), B("म"), B("स")),
+                (B("B"), B("र"), B("ष")),
+                (B("B"), B("व"), B("स")),
+                (B("B"), B("स"), B("स")),
+                (B("B"), B("ा"), B("स")),
+                (B("B"), B("ि"), B("ष")),
+                (B("B"), B("ी"), B("ष")),
+                (B("B"), B("\u{941}"), B("ष")),
+                (B("B"), B("\u{947}"), B("ष")),
+                (B("B"), B("ो"), B("ष")),
+                (B("B"), B("ौ"), B("ष")),
+                (B("B"), B(""), B("ज")),
+            ]),
+        }]),
+        capture_count: 3,
+        direction: Direction::LeftToRight,
+        application: Application::Iterative,
+        required: B(&[]),
+    },
+    // [ा|े|ो|ू|ए]+ा → +: 6 words (एति, अश्रोत्, अभूत्, अगात्), 0 forms wrong.
+    CompiledRule {
+        name: B("law2"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -20,12 +224,8 @@ const RULES: &[CompiledRule<'static>] = &[
             atoms: B(&[
                 Atom {
                     matcher: Matcher::Class(B(&[
-                        B("\u{94d}"),
-                        B("\u{947}"),
                         B("ा"),
-                        B("ि"),
-                        B("ी"),
-                        B("ौ"),
+                        B("\u{947}"),
                         B("ो"),
                         B("\u{942}"),
                         B("ए"),
@@ -58,171 +258,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("+ा")]),
     },
-    // ण → न after अ, आ, इ, उ, च, स unless र, ष comes between: 9 words (पास्यति, तप्स्यति, नोत्स्यति, सत्स्यति), 0 forms wrong.
-    CompiledRule {
-        name: B("law1"),
-        left: Pattern {
-            atoms: B(&[
-                Atom {
-                    matcher: Matcher::Class(B(&[B("अ"), B("आ"), B("इ"), B("उ"), B("च"), B("स")])),
-                    quantifier: Quantifier::One,
-                    capture: Some(0),
-                },
-                Atom {
-                    matcher: Matcher::NotClass(B(&[
-                        B("अ"),
-                        B("आ"),
-                        B("इ"),
-                        B("उ"),
-                        B("च"),
-                        B("स"),
-                        B("र"),
-                        B("ष"),
-                    ])),
-                    quantifier: Quantifier::ZeroOrMore,
-                    capture: Some(1),
-                },
-                Atom {
-                    matcher: Matcher::Literal(B("+")),
-                    quantifier: Quantifier::One,
-                    capture: None,
-                },
-                Atom {
-                    matcher: Matcher::NotClass(B(&[
-                        B("अ"),
-                        B("आ"),
-                        B("इ"),
-                        B("उ"),
-                        B("च"),
-                        B("स"),
-                        B("र"),
-                        B("ष"),
-                    ])),
-                    quantifier: Quantifier::ZeroOrMore,
-                    capture: Some(2),
-                },
-            ]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ण")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("न"))]),
-        capture_count: 3,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("+"), B("ण")]),
-    },
-    // ी+म → +म after a vowel earlier in the stem: 21 words (अद्राक्षीत्, रोरवीति, पापतीति, बोभवीति), 0 forms wrong.
-    CompiledRule {
-        name: B("law2"),
-        left: Pattern {
-            atoms: B(&[
-                Atom {
-                    matcher: Matcher::Class(B(&[
-                        B("अ"),
-                        B("आ"),
-                        B("इ"),
-                        B("ई"),
-                        B("उ"),
-                        B("ऊ"),
-                        B("ऋ"),
-                        B("ए"),
-                        B("ऐ"),
-                        B("ओ"),
-                    ])),
-                    quantifier: Quantifier::One,
-                    capture: None,
-                },
-                Atom {
-                    matcher: Matcher::NotClass(B(&[
-                        B("अ"),
-                        B("आ"),
-                        B("इ"),
-                        B("ई"),
-                        B("उ"),
-                        B("ऊ"),
-                        B("ऋ"),
-                        B("ए"),
-                        B("ऐ"),
-                        B("ओ"),
-                    ])),
-                    quantifier: Quantifier::ZeroOrMore,
-                    capture: None,
-                },
-            ]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ी+म")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("+म"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ी+म")]),
-    },
-    // ी+न् → +ुः: 20 words (अद्राक्षीत्, रोरवीति, पापतीति, अताप्सीत्), 0 forms wrong.
+    // अ‹अ → आ: 13 words (अस्ति, अत्ति, अजति, अर्हति), 0 forms wrong.
     CompiledRule {
         name: B("law3"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ी+न\u{94d}")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("+\u{941}ः"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ी+न\u{94d}")]),
-    },
-    // अ‹अ → आ: 15 words (अस्ति, अत्ति, अजति, अर्हति), 0 forms wrong.
-    CompiledRule {
-        name: B("law4"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -260,69 +298,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("अ‹")]),
     },
-    // क्+स → क्+ष: 10 words (रिणक्ति, वक्ति, वृक्ते, नेनेक्ति), 0 forms wrong.
+    // अ‹उ → औ: 8 words (उच्यति, उज्झति, उभ्नाति, उनत्ति), 0 forms wrong.
     CompiledRule {
-        name: B("law5"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("क\u{94d}+स")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("क\u{94d}+ष"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("क\u{94d}+स")]),
-    },
-    // ्+न → +न: 10 words (हन्ति, अस्ति, वस्ते, शास्ति), 0 forms wrong.
-    CompiledRule {
-        name: B("law6"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("\u{94d}+न")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("+न"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("\u{94d}+न")]),
-    },
-    // अ‹उ → औ: 9 words (उच्यति, उज्झति, उभ्नाति, उच्छति), 0 forms wrong.
-    CompiledRule {
-        name: B("law7"),
+        name: B("law4"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -360,69 +338,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("अ‹")]),
     },
-    // े+म् → +यम्: 8 words (क्षेति, बिभेति, जिह्रेति, चिकेति), 0 forms wrong.
+    // [ष|स]+ीष → +: 5 words (अताप्सीत्, अभार्षीत्, अजैषीत्, अवाक्षीत्), 0 forms wrong.
     CompiledRule {
-        name: B("law8"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("\u{947}+म\u{94d}")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("+यम\u{94d}"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("\u{947}+म\u{94d}")]),
-    },
-    // ्+ै → +ै: 8 words (हन्ति, अस्ति, वस्ते, शास्ति), 0 forms wrong.
-    CompiledRule {
-        name: B("law9"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("\u{94d}+\u{948}")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("+\u{948}"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("\u{94d}+\u{948}")]),
-    },
-    // [्|ा|ि]+े → +: 5 words (हन्ति, सस्ति, तक्ति, उच्छ्वसिति), 0 forms wrong.
-    CompiledRule {
-        name: B("law10"),
+        name: B("law5"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -431,12 +349,12 @@ const RULES: &[CompiledRule<'static>] = &[
         target: Pattern {
             atoms: B(&[
                 Atom {
-                    matcher: Matcher::Class(B(&[B("\u{94d}"), B("ा"), B("ि")])),
+                    matcher: Matcher::Class(B(&[B("ष"), B("स")])),
                     quantifier: Quantifier::One,
                     capture: Some(0),
                 },
                 Atom {
-                    matcher: Matcher::Literal(B("+\u{947}")),
+                    matcher: Matcher::Literal(B("+ीष")),
                     quantifier: Quantifier::One,
                     capture: None,
                 },
@@ -458,41 +376,11 @@ const RULES: &[CompiledRule<'static>] = &[
         capture_count: 1,
         direction: Direction::LeftToRight,
         application: Application::All,
-        required: B(&[B("+\u{947}")]),
-    },
-    // े+स → े+ष: 7 words (क्षेति, बिभेति, जिह्रेति, चिकेति), 0 forms wrong.
-    CompiledRule {
-        name: B("law11"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("\u{947}+स")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("\u{947}+ष"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("\u{947}+स")]),
+        required: B(&[B("+ीष")]),
     },
     // अ‹इ → ऐ: 6 words (इच्छति, इङ्गति, इरस्यति, इयर्ति), 0 forms wrong.
     CompiledRule {
-        name: B("law12"),
+        name: B("law6"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -524,256 +412,6 @@ const RULES: &[CompiledRule<'static>] = &[
         replacement: B(&[ReplacementPart::MappedCapture {
             capture: 0,
             entries: B(&[(B("इ"), B("ऐ"))]),
-        }]),
-        capture_count: 1,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("अ‹")]),
-    },
-    // क्+ध → +ग्ध: 5 words (वक्ति, वृक्ते, भिषक्ति, पिङ्क्ते), 0 forms wrong.
-    CompiledRule {
-        name: B("law13"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("क\u{94d}+ध")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("+ग\u{94d}ध"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("क\u{94d}+ध")]),
-    },
-    // ि+न → +न: 5 words (रोदिति, अनिति, श्वसिति, उच्छ्वसिति), 0 forms wrong.
-    CompiledRule {
-        name: B("law14"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ि+न")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("+न"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ि+न")]),
-    },
-    // ि+स → ि+ष: 5 words (रोदिति, अनिति, श्वसिति, उच्छ्वसिति), 0 forms wrong.
-    CompiledRule {
-        name: B("law15"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ि+स")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ि+ष"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ि+स")]),
-    },
-    // ी+तम → +्तम: 5 words (पापतीति, अहासीत्, अतांसीत्, अयासीत्), 0 forms wrong.
-    CompiledRule {
-        name: B("law16"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ी+तम")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("+\u{94d}तम"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ी+तम")]),
-    },
-    // ी+ता → +्ता: 5 words (पापतीति, अहासीत्, अतांसीत्, अयासीत्), 0 forms wrong.
-    CompiledRule {
-        name: B("law17"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ी+ता")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("+\u{94d}ता"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ी+ता")]),
-    },
-    // े+न → +यन: 7 words (क्षेति, बिभेति, जिह्रेति, चिकेति), 0 forms wrong.
-    CompiledRule {
-        name: B("law18"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("\u{947}+न")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("+यन"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("\u{947}+न")]),
-    },
-    // े+ै → +यै: 5 words (क्षेति, बिभेति, चिकेति, आक्षेति), 0 forms wrong.
-    CompiledRule {
-        name: B("law19"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("\u{947}+\u{948}")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("+य\u{948}"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("\u{947}+\u{948}")]),
-    },
-    // अ‹ऋ → आर्: 5 words (ऋघायति, ऋणोति, ऋच्छति, ऋध्नोति), 0 forms wrong.
-    CompiledRule {
-        name: B("law20"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[
-                Atom {
-                    matcher: Matcher::Literal(B("अ‹")),
-                    quantifier: Quantifier::One,
-                    capture: None,
-                },
-                Atom {
-                    matcher: Matcher::Class(B(&[B("ऋ")])),
-                    quantifier: Quantifier::One,
-                    capture: Some(0),
-                },
-            ]),
-            anchored_at_start: true,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::MappedCapture {
-            capture: 0,
-            entries: B(&[(B("ऋ"), B("आर\u{94d}"))]),
         }]),
         capture_count: 1,
         direction: Direction::LeftToRight,

@@ -10,10 +10,13 @@ use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
 /// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), then a row of patterns
-/// per line (`derived`: the form comes from another cell's, see
-/// `relations.rs`; `_`, or a row left out: the form is the declension's it is like,
-/// or, in a declension like no other, derived):
+/// they share them), the declension it is like (if any), the stem slots
+/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
+/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
+/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
+/// from another cell's, see `relations.rs`; `_`, or a row left out: the
+/// form is its stem slot's, or the declension's it is like, or, in a declension like
+/// no other, derived):
 /// `nom_m` (anim, inan)
 /// `nom_f` (anim, inan)
 /// `nom_n` (anim, inan)
@@ -39,7 +42,8 @@ use flexion::Paradigm;
 /// `prep_n` (anim, inan)
 /// `prep_pl` (anim, inan)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+     $(stem pronoun: $s0:tt;)?
      $(nom_m: $c0:tt, $c1:tt;)?
      $(nom_f: $c2:tt, $c3:tt;)?
      $(nom_n: $c4:tt, $c5:tt;)?
@@ -70,6 +74,7 @@ macro_rules! declension {
             words: $words,
             lemma: ::std::borrow::Cow::Borrowed($lemma),
             parent: like!($($parent)?),
+            reads: view!($($($view)?)?),
             inherent: ::std::borrow::Cow::Borrowed(&[]),
             table: ::std::borrow::Cow::Borrowed(concat!(
                 $(flexion::cell!($c0),)? "\t",
@@ -121,6 +126,9 @@ macro_rules! declension {
                 $(flexion::cell!($c46),)? "\t",
                 $(flexion::cell!($c47),)? "\t",
             )),
+            stems: ::std::borrow::Cow::Borrowed(concat!(
+                $(flexion::cell!($s0),)? "\t",
+            )),
         }
     };
 }
@@ -132,6 +140,17 @@ macro_rules! like {
     };
     ($parent:ident) => {
         Some(Declension::$parent as u16)
+    };
+}
+
+/// The cells a declension reads in the one it is like, by the view's name (see
+/// the views below); none: the same cells.
+macro_rules! view {
+    () => {
+        None
+    };
+    ($view:ident) => {
+        Some(::std::borrow::Cow::Borrowed(&$view))
     };
 }
 
@@ -152,19 +171,17 @@ pub enum Declension {
     Другой,
     /// Like `наш`: 2 words.
     Наш,
-    /// Like `этот`: 1 words.
-    Этот,
+    /// Like `тот`: 2 words.
+    Тот,
     /// Like `сам`: 1 words.
     Сам,
-    /// Like `тот`: 1 words.
-    Тот,
     /// Like `иже`: 1 words.
     Иже,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 11] = [
+    pub const ALL: [Declension; 10] = [
         Declension::Оный,
         Declension::Свой,
         Declension::Чей,
@@ -172,9 +189,8 @@ impl Declension {
         Declension::Некий,
         Declension::Другой,
         Declension::Наш,
-        Declension::Этот,
-        Declension::Сам,
         Declension::Тот,
+        Declension::Сам,
         Declension::Иже,
     ];
 
@@ -193,7 +209,7 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 11] = [
+pub(super) static DECLENSIONS: [Paradigm<'static>; 10] = [
     // Оный: 7 words (самый, который, каждый, некоторый, подобный, оный).
     declension!("оный", 7, "~ый";
     nom_m: _, "~ый";
@@ -266,48 +282,43 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 11] = [
     acc_f: "~у", _;
     prep_m: "~ем", _;
     ),
-    // Этот: 1 words (этот). Like Некий, except in 5 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, acc_f anim.
-    declension!("этот", 1, "~от", like Некий;
+    // Тот: 2 words (этот, тот). Like Оный, except in 8 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_pl anim, dat_pl anim, ….
+    declension!("тот", 2, "~от", like Оный;
     nom_m: _, "~от";
     nom_f: "~а", _;
     nom_n: "~о", _;
-    nom_pl: "~и", _;
-    acc_f: "~у", _;
-    ),
-    // Сам: 1 words (сам). Like Этот, except in 3 cells: nom_m inan, acc_f anim, acc_f inan.
-    declension!("сам", 1, "~", like Этот;
-    nom_m: _, "~";
-    acc_f: "~у|~оё", "~у|~оё";
-    ),
-    // Тот: 1 words (тот). Like Этот, except in 4 cells: nom_pl anim, gen_pl anim, dat_pl anim, ins_pl anim.
-    declension!("тот", 1, "~от", like Этот;
     nom_pl: "~е", _;
     gen_pl: "~ех", _;
     dat_pl: "~ем", _;
+    acc_f: "~у", _;
     ins_pl: "~еми", _;
     ),
-    // Иже: 1 words (иже).
-    declension!("иже", 1, "и~";
+    // Сам: 1 words (сам). Like Некий, except in 5 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, acc_f anim.
+    declension!("сам", 1, "~", like Некий;
+    nom_m: _, "~";
+    nom_f: "~а", _;
+    nom_n: "~о", _;
+    nom_pl: "~и", _;
+    acc_f: "~у|~оё", _;
+    ),
+    // Иже: 1 words (иже). Like Оный, except in 24 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    declension!("иже", 1, "и~", like Оный;
     nom_m: _, "и~";
     nom_f: "я~", _;
     nom_n: "е~", _;
-    nom_pl: "и~|я~", "и~|я~";
-    gen_m: "его~|него~", "его~|него~";
-    gen_f: "ея~|нея~", "ея~|нея~";
-    gen_n: "его~|него~", "его~|него~";
-    gen_pl: "их~|них~", "их~|них~";
-    dat_m: "ему~|нему~", "ему~|нему~";
+    nom_pl: "и~|я~", _;
+    gen_m: "его~|него~", _;
+    gen_f: "ея~|нея~", _;
+    gen_pl: "их~|них~", _;
+    dat_m: "ему~|нему~", _;
     dat_f: "ей~|ней~", "ей~|ней~";
-    dat_n: "ему~|нему~", "ему~|нему~";
-    dat_pl: "им~|ним~", "им~|ним~";
-    acc_m: "его~|него~", "и~|ни~";
-    acc_f: "ю~|ню~", "ю~|ню~";
+    dat_pl: "им~|ним~", _;
+    acc_m: _, "и~|ни~";
+    acc_f: "ю~|ню~", _;
     acc_n: "е~|не~", "е~|не~";
-    acc_pl: "их~|них~", "и~|я~|ни~|ня~";
-    ins_m: "им~|ним~", "им~|ним~";
+    acc_pl: _, "и~|я~|ни~|ня~";
     ins_f: "ею~|нею~", "ею~|нею~";
-    ins_n: "им~|ним~", "им~|ним~";
-    ins_pl: "ими~|ними~", "ими~|ними~";
+    ins_pl: "ими~|ними~", _;
     prep_m: "нем~", _;
     prep_f: "ней~", "ней~";
     prep_pl: "них~", "них~";

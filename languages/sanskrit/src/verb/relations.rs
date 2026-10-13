@@ -81,7 +81,7 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
         "वेवेक्षि" => 4,
         "शिनक्षि" => 4,
         "हंसि" => 0,
-    }, true, None),
+    }, false, None),
     // IND_ACT_1_DU, from OPT_ACT_1_PL.
     relation!(IND_ACT_1_DU, [OPT_ACT_1_PL], [("~याम", "~वः"), ("~ुयाम", "~्वः"), ("~ेम", "~ावः"), ("~ैम", "~ावः"), ("~्याम", "~िवः")], rules {
         "" => [2 479, 0 106, 1 13, 4 4, 3 2],
@@ -424,7 +424,7 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
         "मृक्षे" => 0,
         "रुन्त्से" => 2,
         "शिङ्क्षे" => 1,
-    }, true, None),
+    }, false, None),
     // IND_MID_3_DU, from IND_MID_2_DU.
     relation!(IND_MID_3_DU, [IND_MID_2_DU], [("~थे", "~ते")], rules {
         "" => [0 698],
@@ -611,10 +611,8 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
     relation!(IMP_MID_2_PL, [IND_MID_2_PL], [("~े", "~म्")], rules {
         "" => [0 698],
     } listed {}, true, None),
-    // IMP_MID_3_SG, from IND_MID_3_SG.
-    relation!(IMP_MID_3_SG, [IND_MID_3_SG], [("~े", "~ाम्")], rules {
-        "" => [0 698],
-    } listed {}, true, None),
+    // IMP_MID_3_SG, from IMP_ACT_3_DU.
+    relation!(IMP_MID_3_SG, [IMP_ACT_3_DU], [], none, true, None),
     // IMP_MID_3_DU, from IND_MID_2_DU.
     relation!(IMP_MID_3_DU, [IND_MID_2_DU], [("~थे", "~ताम्")], rules {
         "" => [0 698],
@@ -664,7 +662,7 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
         "वपिथ" => 10,
         "वीकुरुथ" => 11,
         "श्वसिथ" => 10,
-    }, true, None),
+    }, false, None),
     // OPT_ACT_1_DU, from IND_ACT_2_PL.
     relation!(OPT_ACT_1_DU, [IND_ACT_2_PL], [("~क्थ", "~ज्याव"), ("~ग्ध", "~ह्याव"), ("~ङ्क्थ", "~ञ्च्याव"), ("~ङ्क्थ", "~ञ्ज्याव"), ("~ठ", "~याव"), ("~त्थ", "~द्याव"), ("~थ", "~याव"), ("~थ", "~ेव"), ("~ष्ठ", "~श्याव"), ("~ाथ", "~ैव"), ("~िथ", "~्याव"), ("~ुथ", "~्याव")], rules {
         "" => [7 479, 6 76, 5 9, 4 6, 3 5, 10 4, 2 3, 0 2, 1 2, 8 2, 9 2, 11 2],
@@ -706,7 +704,7 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
         "वपिथ" => 10,
         "वीकुरुथ" => 11,
         "श्वसिथ" => 10,
-    }, true, None),
+    }, false, None),
     // OPT_ACT_1_PL, from OPT_ACT_1_DU.
     relation!(OPT_ACT_1_PL, [OPT_ACT_1_DU], [("~व", "~म")], rules {
         "" => [0 606],
@@ -861,17 +859,11 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
         "" => [0 698],
     } listed {}, true, None),
     // SUBJ_ACT_1_SG, from IMP_ACT_1_SG.
-    relation!(SUBJ_ACT_1_SG, [IMP_ACT_1_SG], [("~", "~")], rules {
-        "" => [0 581],
-    } listed {}, true, None),
+    relation!(SUBJ_ACT_1_SG, [IMP_ACT_1_SG], [], none, true, None),
     // SUBJ_ACT_1_DU, from IMP_ACT_1_DU.
-    relation!(SUBJ_ACT_1_DU, [IMP_ACT_1_DU], [("~", "~")], rules {
-        "" => [0 581],
-    } listed {}, true, None),
+    relation!(SUBJ_ACT_1_DU, [IMP_ACT_1_DU], [], none, true, None),
     // SUBJ_ACT_1_PL, from IMP_ACT_1_PL.
-    relation!(SUBJ_ACT_1_PL, [IMP_ACT_1_PL], [("~", "~")], rules {
-        "" => [0 581],
-    } listed {}, true, None),
+    relation!(SUBJ_ACT_1_PL, [IMP_ACT_1_PL], [], none, true, None),
     // SUBJ_ACT_2_SG, from SUBJ_MID_2_SG.
     relation!(SUBJ_ACT_2_SG, [SUBJ_MID_2_SG], [("~से", "~ः")], rules {
         "" => [0 525],
@@ -897,17 +889,11 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
         "" => [0 581],
     } listed {}, true, None),
     // SUBJ_MID_1_SG, from IMP_MID_1_SG.
-    relation!(SUBJ_MID_1_SG, [IMP_MID_1_SG], [("~", "~")], rules {
-        "" => [0 670],
-    } listed {}, true, None),
+    relation!(SUBJ_MID_1_SG, [IMP_MID_1_SG], [], none, true, None),
     // SUBJ_MID_1_DU, from IMP_MID_1_DU.
-    relation!(SUBJ_MID_1_DU, [IMP_MID_1_DU], [("~", "~")], rules {
-        "" => [0 670],
-    } listed {}, true, None),
+    relation!(SUBJ_MID_1_DU, [IMP_MID_1_DU], [], none, true, None),
     // SUBJ_MID_1_PL, from IMP_MID_1_PL.
-    relation!(SUBJ_MID_1_PL, [IMP_MID_1_PL], [("~", "~")], rules {
-        "" => [0 670],
-    } listed {}, true, None),
+    relation!(SUBJ_MID_1_PL, [IMP_MID_1_PL], [], none, true, None),
     // SUBJ_MID_2_SG, from IMP_MID_1_PL.
     relation!(SUBJ_MID_2_SG, [IMP_MID_1_PL], [("~महै", "~से"), ("~ामहै", "~से")], rules {
         "" => [0 598, 1 72],
@@ -1110,56 +1096,11 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
         "आस्त" => 17,
         "व्यकुरुत" => 15,
         "सम्प्रादत्त" => 7,
-    }, true, None),
-    // IMPERFECT_ACT_1_DU, from IMPERFECT_ACT_2_PL.
-    relation!(IMPERFECT_ACT_1_DU, [IMPERFECT_ACT_2_PL], [("~क्त", "~ज्व"), ("~ग्ध", "~ह्व"), ("~ङ्क्त", "~ञ्च्व"), ("~ङ्क्त", "~ञ्ज्व"), ("~ट", "~व"), ("~त", "~न्व"), ("~त", "~व"), ("~त", "~ाव"), ("~त्त", "~द्व"), ("~धत्त", "~दध्व"), ("~ष्ट", "~श्व"), ("~ुत", "~्व")], rules {
-        "" => [7 433, 6 66, 11 12, 8 9, 4 6, 3 5, 2 4, 0 2, 1 2, 5 2, 9 2, 10 2],
-        "ट" => [4 6, 10 2],
-        "छत" => [7 12],
-        "जत" => [7 18],
-        "दत" => [7 15],
-        "यत" => [7 210],
-        "रत" => [7 21],
-        "षत" => [7 37],
-        "ात" => [6 8],
-        "ित" => [6 6],
-        "ीत" => [6 23],
-        "ुत" => [6 13, 11 12],
-        "ृत" => [6 6],
-        "्त" => [8 9, 6 7, 3 5, 2 4, 0 2, 9 2],
-        "क्त" => [3 5, 2 4, 0 2, 6 1],
-        "त्त" => [8 9, 6 2, 9 2],
-        "ध" => [1 2],
-    } listed {
-        "अकुरुत" => 11,
-        "अकृणुत" => 11,
-        "अकृन्त्त" => 6,
-        "अगत" => 5,
-        "अङ्क्त" => 2,
-        "अचिनुत" => 11,
-        "अतक्त" => 6,
-        "अतङ्क्त" => 2,
-        "अतनुत" => 11,
-        "अतृणुत" => 11,
-        "अदिदिष्ट" => 10,
-        "अदुनुत" => 11,
-        "अधत्त" => 9,
-        "अपापत्त" => 6,
-        "अपृङ्क्त" => 2,
-        "अबोभूत" => 6,
-        "अब्रूत" => 6,
-        "अरिङ्क्त" => 2,
-        "अवनुत" => 11,
-        "अशृणुत" => 11,
-        "अश्रद्धत्त" => 9,
-        "असनुत" => 11,
-        "असुनुत" => 11,
-        "अहत" => 5,
-        "अहिनुत" => 11,
-        "ऐत" => 6,
-        "औष्ट" => 10,
-        "व्यकुरुत" => 11,
-    }, true, None),
+    }, false, None),
+    // IMPERFECT_ACT_1_DU, from IMPERFECT_MID_1_DU.
+    relation!(IMPERFECT_ACT_1_DU, [IMPERFECT_MID_1_DU], [("~हि", "~")], rules {
+        "" => [0 498],
+    } listed {}, true, None),
     // IMPERFECT_ACT_1_PL, from IMPERFECT_ACT_1_DU.
     relation!(IMPERFECT_ACT_1_PL, [IMPERFECT_ACT_1_DU], [("~व", "~म")], rules {
         "" => [0 555],
@@ -1212,13 +1153,65 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
         "व्यकुरुत" => 18,
         "सम्प्रादत्त" => 7,
     }, true, None),
-    // IMPERFECT_ACT_2_DU, from IMPERFECT_ACT_2_PL.
-    relation!(IMPERFECT_ACT_2_DU, [IMPERFECT_ACT_2_PL], [("~", "~म्")], rules {
+    // IMPERFECT_ACT_2_DU, from IMP_ACT_2_DU.
+    relation!(IMPERFECT_ACT_2_DU, [IMP_ACT_2_DU], [("~", "~"), ("~", "अ~"), ("~", "अच्~"), ("अ~", "आ~"), ("इ~", "ऐ~"), ("ई~", "ऐ~"), ("उ~", "औ~"), ("उल्~", "उद~"), ("ऋ~", "आर्~")], rules {
+        "" => [1 483, 3 14, 0 9, 6 9, 4 6, 8 5, 2 3, 5 3, 7 2],
+    } listed {
+        "अक्षतम्" => 3,
+        "अङ्कयतम्" => 3,
+        "अङ्क्तम्" => 3,
+        "अङ्खयतम्" => 3,
+        "अजतम्" => 3,
+        "अञ्चतम्" => 3,
+        "अततम्" => 3,
+        "अत्तम्" => 3,
+        "अनितम्" => 3,
+        "अर्चतम्" => 3,
+        "अर्पयतम्" => 3,
+        "अर्हतम्" => 3,
+        "अवतम्" => 3,
+        "अस्यतम्" => 3,
+        "आक्रोशतम्" => 0,
+        "आगच्छतम्" => 0,
+        "आचरतम्" => 0,
+        "आनयतम्" => 0,
+        "आप्नुतम्" => 0,
+        "आमयतम्" => 0,
+        "आयातम्" => 0,
+        "इङ्गतम्" => 4,
+        "इङ्गयतम्" => 4,
+        "इच्छतम्" => 4,
+        "इतम्" => 4,
+        "इरस्यतम्" => 4,
+        "इष्णीतम्" => 4,
+        "ईर्तम्" => 5,
+        "ईर्ष्यतम्" => 5,
+        "ईहतम्" => 5,
+        "उक्षतम्" => 6,
+        "उच्छतम्" => 6,
+        "उच्यतम्" => 6,
+        "उज्झतम्" => 6,
+        "उड्डापयतम्" => 6,
+        "उन्त्तम्" => 6,
+        "उपविशतम्" => 6,
+        "उभ्नीतम्" => 6,
+        "उल्लसतम्" => 7,
+        "उल्लिखतम्" => 7,
+        "उष्टम्" => 6,
+        "ऋघायतम्" => 8,
+        "ऋच्छतम्" => 8,
+        "ऋणुतम्" => 8,
+        "ऋध्नुतम्" => 8,
+        "ऋध्यतम्" => 8,
+        "छिक्कतम्" => 2,
+        "छिन्त्तम्" => 2,
+        "छृन्त्तम्" => 2,
+        "पक्षतम्" => 0,
+        "यक्षतम्" => 0,
+    }, true, None),
+    // IMPERFECT_ACT_2_PL, from IMPERFECT_ACT_2_DU.
+    relation!(IMPERFECT_ACT_2_PL, [IMPERFECT_ACT_2_DU], [("~म्", "~")], rules {
         "" => [0 555],
-    } listed {}, true, None),
-    // IMPERFECT_ACT_2_PL, from IMPERFECT_MID_3_SG.
-    relation!(IMPERFECT_ACT_2_PL, [IMPERFECT_MID_3_SG], [("~", "~")], rules {
-        "" => [0 498],
     } listed {}, true, None),
     // IMPERFECT_ACT_3_SG, from IMPERFECT_ACT_2_SG.
     relation!(IMPERFECT_ACT_3_SG, [IMPERFECT_ACT_2_SG], [("~", "~"), ("~ः", "~त्")], rules {
@@ -1237,8 +1230,8 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
         "अहिनः" => 0,
         "ऐयः" => 0,
     }, true, None),
-    // IMPERFECT_ACT_3_DU, from IMPERFECT_ACT_2_PL.
-    relation!(IMPERFECT_ACT_3_DU, [IMPERFECT_ACT_2_PL], [("~", "~ाम्")], rules {
+    // IMPERFECT_ACT_3_DU, from IMPERFECT_ACT_2_DU.
+    relation!(IMPERFECT_ACT_3_DU, [IMPERFECT_ACT_2_DU], [("~म्", "~ाम्")], rules {
         "" => [0 555],
     } listed {}, true, None),
     // IMPERFECT_ACT_3_PL, from IMPERFECT_ACT_1_DU.
@@ -1281,48 +1274,93 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
         "व्यकुर्व" => 0,
         "सम्प्रादद्व" => 10,
     }, true, None),
-    // IMPERFECT_MID_1_SG, from IMPERFECT_MID_3_PL.
-    relation!(IMPERFECT_MID_1_SG, [IMPERFECT_MID_3_PL], [("~त", "~ि"), ("~न्त", "~े"), ("~ात", "~े")], rules {
-        "" => [1 521, 0 92, 2 6],
-        "चत" => [0 3],
-        "जत" => [0 9],
-        "णत" => [0 10],
-        "दत" => [0 9],
-        "धत" => [0 4],
-        "नत" => [0 8],
-        "यत" => [0 3],
-        "रत" => [0 4],
-        "वत" => [0 21],
-        "षत" => [0 4],
-        "सत" => [0 5],
-        "हत" => [0 5],
-        "ात" => [2 6],
-        "्त" => [1 521],
-    } listed {}, true, None),
-    // IMPERFECT_MID_1_DU, from IMPERFECT_MID_3_PL.
-    relation!(IMPERFECT_MID_1_DU, [IMPERFECT_MID_3_PL], [("~त", "~वहि"), ("~त", "~हि"), ("~त", "~िवहि"), ("~त", "~ीवहि"), ("~त", "~्वहि"), ("~न्त", "~ावहि"), ("~न्वत", "~ण्वहि"), ("~्रत", "~ृवहि")], rules {
-        "" => [5 521, 4 43, 3 19, 1 16, 0 6, 7 3, 2 2, 6 2],
-        "चत" => [4 3],
-        "जत" => [4 9],
-        "णत" => [3 10],
-        "दत" => [4 8, 2 1],
-        "धत" => [4 4],
-        "नत" => [3 7],
-        "रत" => [7 3, 4 1],
-        "वत" => [1 16, 6 2],
-        "शत" => [4 2],
-        "षत" => [4 4],
-        "सत" => [4 5],
-        "हत" => [4 4, 3 1],
-        "ात" => [0 6],
-        "्त" => [5 521],
+    // IMPERFECT_MID_1_SG, from OPT_MID_1_SG.
+    relation!(IMPERFECT_MID_1_SG, [OPT_MID_1_SG], [("~ण्वीय", "अ~न्वि"), ("~य", "~"), ("~य", "अ~"), ("~ीय", "~ि"), ("~ीय", "अ~ि"), ("~ीय", "अच्~ि"), ("अ~य", "आ~"), ("अ~ीय", "आ~ि"), ("इ~य", "ऐ~"), ("इ~ीय", "ऐ~ि"), ("ई~य", "ऐ~"), ("ई~ीय", "ऐ~ि"), ("उ~य", "औ~"), ("उ~ीय", "औ~ि"), ("उत्~य", "उद~"), ("उल्~य", "उद~"), ("ऊ~य", "औ~"), ("ऋ~य", "आर्~"), ("सम्~य", "सम~")], rules {
+        "" => [2 464, 4 72, 1 10, 6 10, 12 7, 8 4, 10 3, 11 3, 16 3, 17 3, 0 2, 3 2, 5 2, 7 2, 9 2, 13 2, 14 2, 15 2, 18 2],
+        "ीय" => [4 72, 11 3, 0 2, 3 2, 5 2, 7 2, 9 2, 13 2],
+        "ेय" => [2 463, 1 10, 6 10, 12 7, 8 4, 10 3, 16 3, 17 3, 14 2, 15 2, 18 2],
+        "उच्येय" => [12 2],
     } listed {
-        "अजिहत" => 3,
-        "अमिमत" => 3,
-        "अरुदत" => 2,
-        "अवपत" => 2,
-        "अवृन्वत" => 6,
-        "अशृन्वत" => 6,
+        "अक्षेय" => 6,
+        "अङ्कयेय" => 6,
+        "अङ्खयेय" => 6,
+        "अजेय" => 6,
+        "अञ्चेय" => 6,
+        "अञ्जीय" => 7,
+        "अतेय" => 6,
+        "अदीय" => 7,
+        "अर्चेय" => 6,
+        "अर्पयेय" => 6,
+        "अवेय" => 6,
+        "अस्येय" => 6,
+        "आक्रोशेय" => 1,
+        "आगच्छेय" => 1,
+        "आचरेय" => 1,
+        "आनयेय" => 1,
+        "आप्नुवीय" => 3,
+        "आमन्त्रयेय" => 1,
+        "आमयेय" => 1,
+        "आयेय" => 1,
+        "आसीय" => 3,
+        "इङ्गयेय" => 8,
+        "इङ्गेय" => 8,
+        "इच्छेय" => 8,
+        "इन्धीय" => 9,
+        "इरस्येय" => 8,
+        "इष्णीय" => 9,
+        "ईक्षेय" => 10,
+        "ईडीय" => 11,
+        "ईरीय" => 11,
+        "ईर्ष्येय" => 10,
+        "ईशीय" => 11,
+        "ईहेय" => 10,
+        "उक्षेय" => 12,
+        "उच्येय" => 12,
+        "उज्झेय" => 12,
+        "उड्डापयेय" => 12,
+        "उत्तिष्ठेय" => 14,
+        "उत्पद्येय" => 14,
+        "उद्येय" => 12,
+        "उन्दीय" => 13,
+        "उपविशेय" => 12,
+        "उभ्नीय" => 13,
+        "उल्लसेय" => 15,
+        "उल्लिखेय" => 15,
+        "ऊर्देय" => 16,
+        "ऊहेय" => 16,
+        "ऊह्येय" => 16,
+        "ऋघायेय" => 17,
+        "ऋच्छेय" => 17,
+        "ऋध्येय" => 17,
+        "छिन्दीय" => 5,
+        "छृन्दीय" => 5,
+        "पक्षेय" => 1,
+        "पर्देय" => 1,
+        "यक्षेय" => 1,
+        "वृण्वीय" => 0,
+        "शृण्वीय" => 0,
+        "सम्बुध्येय" => 18,
+        "सम्मीलेय" => 18,
+    }, true, None),
+    // IMPERFECT_MID_1_DU, from IMPERFECT_MID_1_SG.
+    relation!(IMPERFECT_MID_1_DU, [IMPERFECT_MID_1_SG], [("~", "~वहि"), ("~न्वि", "~ण्वहि"), ("~ि", "~हि"), ("~ि", "~ीवहि"), ("~ि", "~्वहि"), ("~े", "~ावहि"), ("~्रि", "~ृवहि")], rules {
+        "" => [5 527, 4 43, 3 19, 2 16, 6 3, 0 2, 1 2],
+        "ि" => [4 43, 3 19, 2 16, 6 3, 0 2, 1 2],
+        "जि" => [4 9],
+        "णि" => [3 10],
+        "दि" => [4 8, 0 1],
+        "नि" => [3 7],
+        "रि" => [6 3, 4 1],
+        "वि" => [2 16, 1 2],
+        "सि" => [4 5],
+        "े" => [5 527],
+    } listed {
+        "अजिहि" => 3,
+        "अमिमि" => 3,
+        "अरुदि" => 0,
+        "अवपि" => 0,
+        "अवृन्वि" => 1,
+        "अशृन्वि" => 1,
     }, true, None),
     // IMPERFECT_MID_1_PL, from IMPERFECT_MID_1_DU.
     relation!(IMPERFECT_MID_1_PL, [IMPERFECT_MID_1_DU], [("~वहि", "~महि")], rules {
@@ -1348,24 +1386,72 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
         "आद्ध्वम्" => 4,
         "ऐन्द्ध्वम्" => 6,
     }, true, None),
-    // IMPERFECT_MID_2_DU, from IMPERFECT_MID_3_PL.
-    relation!(IMPERFECT_MID_2_DU, [IMPERFECT_MID_3_PL], [("~त", "~थाम्"), ("~त", "~ाथाम्"), ("~न्त", "~ेथाम्")], rules {
-        "" => [2 521, 1 92, 0 6],
-        "चत" => [1 3],
-        "जत" => [1 9],
-        "णत" => [1 10],
-        "दत" => [1 9],
-        "धत" => [1 4],
-        "नत" => [1 8],
-        "यत" => [1 3],
-        "रत" => [1 4],
-        "वत" => [1 21],
-        "षत" => [1 4],
-        "सत" => [1 5],
-        "हत" => [1 5],
-        "ात" => [0 6],
-        "्त" => [2 521],
-    } listed {}, true, None),
+    // IMPERFECT_MID_2_DU, from IMP_MID_2_DU.
+    relation!(IMPERFECT_MID_2_DU, [IMP_MID_2_DU], [("~", "~"), ("~", "अ~"), ("~", "अच्~"), ("~ण्वाथाम्", "अ~न्वाथाम्"), ("अ~", "आ~"), ("इ~", "ऐ~"), ("ई~", "ऐ~"), ("उ~", "औ~"), ("उत्~", "उद~"), ("उल्~", "उद~"), ("ऊ~", "औ~"), ("ऋ~", "आर्~"), ("सम्~", "सम~")], rules {
+        "" => [1 537, 0 12, 4 12, 7 9, 5 6, 6 6, 2 3, 10 3, 11 3, 3 2, 8 2, 9 2, 12 2],
+    } listed {
+        "अक्षेथाम्" => 4,
+        "अङ्कयेथाम्" => 4,
+        "अङ्खयेथाम्" => 4,
+        "अजेथाम्" => 4,
+        "अञ्चेथाम्" => 4,
+        "अञ्जाथाम्" => 4,
+        "अतेथाम्" => 4,
+        "अदाथाम्" => 4,
+        "अर्चेथाम्" => 4,
+        "अर्पयेथाम्" => 4,
+        "अवेथाम्" => 4,
+        "अस्येथाम्" => 4,
+        "आक्रोशेथाम्" => 0,
+        "आगच्छेथाम्" => 0,
+        "आचरेथाम्" => 0,
+        "आनयेथाम्" => 0,
+        "आप्नुवाथाम्" => 0,
+        "आमन्त्रयेथाम्" => 0,
+        "आमयेथाम्" => 0,
+        "आयाथाम्" => 0,
+        "आसाथाम्" => 0,
+        "इङ्गयेथाम्" => 5,
+        "इङ्गेथाम्" => 5,
+        "इच्छेथाम्" => 5,
+        "इन्धाथाम्" => 5,
+        "इरस्येथाम्" => 5,
+        "इष्णाथाम्" => 5,
+        "ईक्षेथाम्" => 6,
+        "ईडाथाम्" => 6,
+        "ईराथाम्" => 6,
+        "ईर्ष्येथाम्" => 6,
+        "ईशाथाम्" => 6,
+        "ईहेथाम्" => 6,
+        "उक्षेथाम्" => 7,
+        "उच्येथाम्" => 7,
+        "उज्झेथाम्" => 7,
+        "उड्डापयेथाम्" => 7,
+        "उत्तिष्ठेथाम्" => 8,
+        "उत्पद्येथाम्" => 8,
+        "उद्येथाम्" => 7,
+        "उन्दाथाम्" => 7,
+        "उपविशेथाम्" => 7,
+        "उभ्नाथाम्" => 7,
+        "उल्लसेथाम्" => 9,
+        "उल्लिखेथाम्" => 9,
+        "ऊर्देथाम्" => 10,
+        "ऊहेथाम्" => 10,
+        "ऊह्येथाम्" => 10,
+        "ऋघायेथाम्" => 11,
+        "ऋच्छेथाम्" => 11,
+        "ऋध्येथाम्" => 11,
+        "छिक्केथाम्" => 2,
+        "छिन्दाथाम्" => 2,
+        "छृन्दाथाम्" => 2,
+        "पक्षेथाम्" => 0,
+        "पर्देथाम्" => 0,
+        "यक्षेथाम्" => 0,
+        "वृण्वाथाम्" => 3,
+        "शृण्वाथाम्" => 3,
+        "सम्बुध्येथाम्" => 12,
+        "सम्मीलेथाम्" => 12,
+    }, true, None),
     // IMPERFECT_MID_2_PL, from IMP_MID_2_PL.
     relation!(IMPERFECT_MID_2_PL, [IMP_MID_2_PL], [("~", "~"), ("~", "अ~"), ("~", "अच्~"), ("अ~", "आ~"), ("इ~", "ऐ~"), ("ई~", "ऐ~"), ("उ~", "औ~"), ("उत्~", "उद~"), ("उल्~", "उद~"), ("ऊ~", "औ~"), ("ऋ~", "आर्~"), ("सम्~", "सम~")], rules {
         "" => [1 538, 0 12, 3 12, 6 9, 4 6, 5 6, 10 4, 2 3, 9 3, 7 2, 8 2, 11 2],
@@ -1431,62 +1517,36 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
         "सम्बुध्यध्वम्" => 11,
         "सम्मीलध्वम्" => 11,
     }, true, None),
-    // IMPERFECT_MID_3_SG, from IMPERFECT_MID_2_SG.
-    relation!(IMPERFECT_MID_3_SG, [IMPERFECT_MID_2_SG], [("~ठाः", "~ट"), ("~थाः", "~त"), ("~ाः", "~")], rules {
-        "" => [1 607, 0 8, 2 6],
-        "ठाः" => [0 8],
-        "थाः" => [1 607],
-        "धाः" => [2 4],
-    } listed {}, true, None),
+    // IMPERFECT_MID_3_SG, from IMPERFECT_ACT_2_PL.
+    relation!(
+        IMPERFECT_MID_3_SG,
+        [IMPERFECT_ACT_2_PL],
+        [],
+        none,
+        true,
+        None
+    ),
     // IMPERFECT_MID_3_DU, from IMPERFECT_MID_2_DU.
     relation!(IMPERFECT_MID_3_DU, [IMPERFECT_MID_2_DU], [("~थाम्", "~ताम्")], rules {
         "" => [0 621],
     } listed {}, true, None),
-    // IMPERFECT_MID_3_PL, from IMPERFECT_MID_3_SG.
-    relation!(IMPERFECT_MID_3_PL, [IMPERFECT_MID_3_SG], [("~", "~"), ("~क्त", "~जत"), ("~ग्ध", "~हत"), ("~ङ्क्त", "~ञ्चत"), ("~ङ्क्त", "~ञ्जत"), ("~त", "~न्त"), ("~त", "~वत"), ("~त्त", "~दत"), ("~द्ध", "~धत"), ("~ष्ट", "~शत"), ("~ित", "~त"), ("~ीत", "~त"), ("~ुत", "~्वत"), ("~ृत", "~्रत"), ("~्ट", "~त"), ("~्त", "~त")], rules {
-        "" => [5 522, 11 19, 12 12, 7 8, 15 8, 6 7, 0 6, 1 4, 4 4, 13 3, 14 3, 2 2, 3 2, 8 2, 9 2, 10 2],
-        "ट" => [14 3, 9 2],
-        "जत" => [5 23],
-        "दत" => [5 19],
-        "यत" => [5 263],
-        "रत" => [5 23],
-        "षत" => [5 38],
-        "ात" => [0 6, 5 1],
-        "ित" => [10 2],
-        "ीत" => [11 19],
-        "ुत" => [12 12, 6 7],
-        "ृत" => [13 3],
-        "्त" => [7 8, 15 8, 1 4, 4 4, 3 2],
-        "क्त" => [1 4, 4 4, 3 2, 15 1],
-        "त्त" => [7 8, 15 1],
-        "स्त" => [15 5],
-        "ध" => [2 2, 8 2],
+    // IMPERFECT_MID_3_PL, from IMPERFECT_MID_1_SG.
+    relation!(IMPERFECT_MID_3_PL, [IMPERFECT_MID_1_SG], [("~ि", "~त"), ("~े", "~न्त"), ("~े", "~ात")], rules {
+        "" => [1 521, 0 92, 2 6],
+        "ि" => [0 92],
+        "े" => [1 521, 2 6],
     } listed {
-        "अकृन्त्त" => 15,
-        "अतक्त" => 15,
-        "अतिघ्नुत" => 6,
-        "अतुत" => 6,
-        "अदभ्नुत" => 6,
-        "अदिदिष्ट" => 9,
-        "अधृष्णुत" => 6,
-        "अपृङ्क्त" => 3,
-        "अप्सात" => 5,
-        "अभुङ्क्त" => 4,
-        "अयुङ्क्त" => 4,
-        "अरिङ्क्त" => 3,
-        "अरुदित" => 10,
-        "अवपित" => 10,
-        "अवृङ्क्त" => 4,
-        "असाध्नुत" => 6,
-        "आङ्क्त" => 4,
-        "आप्नुत" => 6,
-        "आर्णुत" => 6,
-        "ऐष्ट" => 9,
+        "अद्रे" => 2,
+        "अपे" => 2,
+        "अभे" => 2,
+        "अये" => 2,
+        "अवे" => 2,
+        "आये" => 2,
     }, true, None),
-    // FUTURE_ACT_1_SG, from CONDITIONAL_ACT_2_PL.
-    relation!(FUTURE_ACT_1_SG, [CONDITIONAL_ACT_2_PL], [("अ~त", "~ामि"), ("आ~त", "अ~ामि")], rules {
+    // FUTURE_ACT_1_SG, from CONDITIONAL_ACT_1_SG.
+    relation!(FUTURE_ACT_1_SG, [CONDITIONAL_ACT_1_SG], [("अ~म्", "~ामि"), ("आ~म्", "अ~ामि")], rules {
         "" => [0 159, 1 3],
-    } listed {}, true, None),
+    } listed {}, false, None),
     // FUTURE_ACT_1_DU, from FUTURE_ACT_1_SG.
     relation!(FUTURE_ACT_1_DU, [FUTURE_ACT_1_SG], [("~मि", "~वः")], rules {
         "" => [0 172],
@@ -1555,46 +1615,46 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
     relation!(FUTURE_MID_3_PL, [FUTURE_MID_1_SG], [("~े", "~न्ते")], rules {
         "" => [0 175],
     } listed {}, true, None),
-    // CONDITIONAL_ACT_1_SG, from CONDITIONAL_ACT_2_PL.
-    relation!(CONDITIONAL_ACT_1_SG, [CONDITIONAL_ACT_2_PL], [("~त", "~म्")], rules {
-        "" => [0 169],
-    } listed {}, true, None),
-    // CONDITIONAL_ACT_1_DU, from CONDITIONAL_ACT_2_PL.
-    relation!(CONDITIONAL_ACT_1_DU, [CONDITIONAL_ACT_2_PL], [("~त", "~ाव")], rules {
-        "" => [0 169],
-    } listed {}, true, None),
-    // CONDITIONAL_ACT_1_PL, from CONDITIONAL_ACT_2_PL.
-    relation!(CONDITIONAL_ACT_1_PL, [CONDITIONAL_ACT_2_PL], [("~त", "~ाम")], rules {
-        "" => [0 169],
-    } listed {}, true, None),
-    // CONDITIONAL_ACT_2_SG, from CONDITIONAL_ACT_2_PL.
-    relation!(CONDITIONAL_ACT_2_SG, [CONDITIONAL_ACT_2_PL], [("~त", "~ः")], rules {
-        "" => [0 169],
-    } listed {}, true, None),
-    // CONDITIONAL_ACT_2_DU, from CONDITIONAL_ACT_2_PL.
-    relation!(CONDITIONAL_ACT_2_DU, [CONDITIONAL_ACT_2_PL], [("~", "~म्")], rules {
-        "" => [0 169],
-    } listed {}, true, None),
-    // CONDITIONAL_ACT_2_PL, from CONDITIONAL_MID_3_SG.
-    relation!(CONDITIONAL_ACT_2_PL, [CONDITIONAL_MID_3_SG], [("~", "~")], rules {
+    // CONDITIONAL_ACT_1_SG, from CONDITIONAL_MID_1_SG.
+    relation!(CONDITIONAL_ACT_1_SG, [CONDITIONAL_MID_1_SG], [("~े", "~म्")], rules {
         "" => [0 166],
     } listed {}, true, None),
-    // CONDITIONAL_ACT_3_SG, from CONDITIONAL_ACT_2_PL.
-    relation!(CONDITIONAL_ACT_3_SG, [CONDITIONAL_ACT_2_PL], [("~", "~्")], rules {
+    // CONDITIONAL_ACT_1_DU, from CONDITIONAL_ACT_1_SG.
+    relation!(CONDITIONAL_ACT_1_DU, [CONDITIONAL_ACT_1_SG], [("~म्", "~ाव")], rules {
         "" => [0 169],
     } listed {}, true, None),
-    // CONDITIONAL_ACT_3_DU, from CONDITIONAL_ACT_2_PL.
-    relation!(CONDITIONAL_ACT_3_DU, [CONDITIONAL_ACT_2_PL], [("~", "~ाम्")], rules {
+    // CONDITIONAL_ACT_1_PL, from CONDITIONAL_ACT_1_SG.
+    relation!(CONDITIONAL_ACT_1_PL, [CONDITIONAL_ACT_1_SG], [("~म्", "~ाम")], rules {
         "" => [0 169],
     } listed {}, true, None),
-    // CONDITIONAL_ACT_3_PL, from CONDITIONAL_ACT_2_PL.
-    relation!(CONDITIONAL_ACT_3_PL, [CONDITIONAL_ACT_2_PL], [("~त", "~न्")], rules {
+    // CONDITIONAL_ACT_2_SG, from CONDITIONAL_ACT_1_SG.
+    relation!(CONDITIONAL_ACT_2_SG, [CONDITIONAL_ACT_1_SG], [("~म्", "~ः")], rules {
+        "" => [0 169],
+    } listed {}, true, None),
+    // CONDITIONAL_ACT_2_DU, from CONDITIONAL_ACT_1_SG.
+    relation!(CONDITIONAL_ACT_2_DU, [CONDITIONAL_ACT_1_SG], [("~म्", "~तम्")], rules {
+        "" => [0 169],
+    } listed {}, true, None),
+    // CONDITIONAL_ACT_2_PL, from CONDITIONAL_ACT_1_SG.
+    relation!(CONDITIONAL_ACT_2_PL, [CONDITIONAL_ACT_1_SG], [("~म्", "~त")], rules {
+        "" => [0 169],
+    } listed {}, true, None),
+    // CONDITIONAL_ACT_3_SG, from CONDITIONAL_ACT_1_SG.
+    relation!(CONDITIONAL_ACT_3_SG, [CONDITIONAL_ACT_1_SG], [("~म्", "~त्")], rules {
+        "" => [0 169],
+    } listed {}, true, None),
+    // CONDITIONAL_ACT_3_DU, from CONDITIONAL_ACT_1_SG.
+    relation!(CONDITIONAL_ACT_3_DU, [CONDITIONAL_ACT_1_SG], [("~म्", "~ताम्")], rules {
+        "" => [0 169],
+    } listed {}, true, None),
+    // CONDITIONAL_ACT_3_PL, from CONDITIONAL_ACT_1_SG.
+    relation!(CONDITIONAL_ACT_3_PL, [CONDITIONAL_ACT_1_SG], [("~म्", "~न्")], rules {
         "" => [0 169],
     } listed {}, true, None),
     // CONDITIONAL_MID_1_SG, from IMPERFECT_MID_2_PL.
     relation!(CONDITIONAL_MID_1_SG, [IMPERFECT_MID_2_PL], [("~ध्वम्", "~िष्ये")], rules {
         "" => [0 122],
-    } listed {}, true, None),
+    } listed {}, false, None),
     // CONDITIONAL_MID_1_DU, from CONDITIONAL_MID_1_SG.
     relation!(CONDITIONAL_MID_1_DU, [CONDITIONAL_MID_1_SG], [("~े", "~ावहि")], rules {
         "" => [0 171],
@@ -1615,10 +1675,15 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
     relation!(CONDITIONAL_MID_2_PL, [CONDITIONAL_MID_1_SG], [("~े", "~ध्वम्")], rules {
         "" => [0 171],
     } listed {}, true, None),
-    // CONDITIONAL_MID_3_SG, from CONDITIONAL_MID_1_SG.
-    relation!(CONDITIONAL_MID_3_SG, [CONDITIONAL_MID_1_SG], [("~े", "~त")], rules {
-        "" => [0 171],
-    } listed {}, true, None),
+    // CONDITIONAL_MID_3_SG, from CONDITIONAL_ACT_2_PL.
+    relation!(
+        CONDITIONAL_MID_3_SG,
+        [CONDITIONAL_ACT_2_PL],
+        [],
+        none,
+        true,
+        None
+    ),
     // CONDITIONAL_MID_3_DU, from CONDITIONAL_MID_1_SG.
     relation!(CONDITIONAL_MID_3_DU, [CONDITIONAL_MID_1_SG], [("~", "~ताम्")], rules {
         "" => [0 171],
@@ -1725,7 +1790,7 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
         "विवेद" => 10,
         "वेद" => 10,
         "शुशोच" => 11,
-    }, true, None),
+    }, false, None),
     // PERFECT_ACT_2_PL, from PERFECT_ACT_2_DU.
     relation!(PERFECT_ACT_2_PL, [PERFECT_ACT_2_DU], [("~थुः", "~")], rules {
         "" => [0 223],
@@ -1830,9 +1895,7 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
         "" => [0 218],
     } listed {}, true, None),
     // PERFECT_MID_3_SG, from PERFECT_MID_1_SG.
-    relation!(PERFECT_MID_3_SG, [PERFECT_MID_1_SG], [("~", "~")], rules {
-        "" => [0 218],
-    } listed {}, true, None),
+    relation!(PERFECT_MID_3_SG, [PERFECT_MID_1_SG], [], none, true, None),
     // PERFECT_MID_3_DU, from PERFECT_MID_1_SG.
     relation!(PERFECT_MID_3_DU, [PERFECT_MID_1_SG], [("~े", "~ाते")], rules {
         "" => [0 218],
@@ -1865,7 +1928,7 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
         "अवृवहि" => 3,
         "अस्थिवहि" => 1,
         "अहृष्वहि" => 4,
-    }, true, None),
+    }, false, None),
     // AORIST_ACT_1_PL, from AORIST_ACT_1_DU.
     relation!(AORIST_ACT_1_PL, [AORIST_ACT_1_DU], [("~व", "~म")], rules {
         "" => [0 101],
@@ -1888,7 +1951,7 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
         "अनौत्त" => 3,
         "अभाक्त" => 2,
         "अवार्क्त" => 2,
-    }, true, None),
+    }, false, None),
     // AORIST_ACT_2_DU, from AORIST_ACT_1_DU.
     relation!(AORIST_ACT_2_DU, [AORIST_ACT_1_DU], [("~क्ष्व", "~ष्टम्"), ("~ज्व", "~क्तम्"), ("~द्व", "~त्तम्"), ("~ध्व", "~द्धम्"), ("~व", "~टम्"), ("~व", "~तम्"), ("~श्व", "~ष्टम्"), ("~ष्व", "~तम्"), ("~स्व", "~तम्"), ("~ाव", "~तम्")], rules {
         "" => [4 31, 9 24, 5 20, 7 6, 0 4, 1 3, 2 3, 3 2, 6 2, 8 2],

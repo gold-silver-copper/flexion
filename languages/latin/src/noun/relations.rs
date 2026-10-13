@@ -756,7 +756,7 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "īnsigne" => 15,
         "ōs" => 43,
         "ūdō" => 5,
-    }, true, None),
+    }, false, None),
     // GEN_SG, from DAT_SG.
     relation!(GEN_SG, [DAT_SG], [("~", "~"), ("~", "~s"), ("~ae", "~ēs"), ("~i", "~os"), ("~uī", "~ūs"), ("~ī", "~is"), ("~ī", "~os"), ("~ō", "~ī"), ("~ōque", "~īque")], rules {
         "" => [5 5967, 7 5268, 0 3639, 4 515, 2 87, 6 32, 1 9, 8 3, 3 2],
@@ -1215,7 +1215,7 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "ōre" => 4,
         "ōre" => 5,
         "ūnicorne" => 4,
-    }, true, None),
+    }, false, None),
     // DAT_SG, from NOM_PL.
     relation!(DAT_SG, [NOM_PL], [("~", "~"), ("~", "~e"), ("~a", "~ī"), ("~a", "~ō"), ("~ae", "~ō"), ("~aque", "~ōque"), ("~es", "~ī"), ("~ia", "~le"), ("~ia", "~ī"), ("~s", "~ī"), ("~ua", "~ū"), ("~ē", "~ō"), ("~ēs", "~eī"), ("~ēs", "~ī"), ("~ĕs", "~ī"), ("~ī", "~ō"), ("~īm", "~"), ("~ūs", "~uī")], rules {
         "" => [13 5353, 0 3574, 3 2738, 15 2437, 17 513, 2 410, 8 147, 9 55, 6 30, 14 9, 10 6, 1 5, 5 3, 11 3, 12 3, 4 2, 7 2, 16 2],
@@ -1522,7 +1522,7 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "īnsignia" => 8,
         "ōra" => 2,
         "ōra" => 3,
-    }, true, None),
+    }, false, None),
     // DAT_PL, from ACC_PL.
     relation!(DAT_PL, [ACC_PL], [("~", "~"), ("~a", "~bus"), ("~a", "~ibus"), ("~a", "~īs"), ("~aque", "~īsque"), ("~as", "~ibus"), ("~s", "~bus"), ("~ua", "~ibus"), ("~ās", "~īs"), ("~ē", "~īs"), ("~ēs", "~ibus"), ("~īs", "~ibus"), ("~ōs", "~īs"), ("~ūs", "~ibus"), ("~ūs", "~ubus"), ("~ūs", "~īs")], rules {
         "" => [10 5403, 8 3656, 3 2856, 12 2486, 13 508, 2 416, 1 188, 6 60, 5 38, 0 6, 14 6, 7 5, 11 5, 4 4, 9 3, 15 2],
@@ -1849,7 +1849,7 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "īnsignia" => 1,
         "ōra" => 2,
         "ōra" => 3,
-    }, true, None),
+    }, false, None),
     // ACC_SG, from ABL_SG.
     relation!(ACC_SG, [ABL_SG], [("~", "~"), ("~", "~m"), ("~", "~n"), ("~", "~s"), ("~e", "~"), ("~e", "~a"), ("~e", "~im"), ("~e", "~in"), ("~e", "~n"), ("~ere", "~us"), ("~ice", "~ex"), ("~ine", "~en"), ("~ite", "~ut"), ("~le", "~"), ("~ore", "~ur"), ("~ore", "~us"), ("~re", "~s"), ("~te", "~"), ("~te", "~r"), ("~te", "~s"), ("~ā", "~am"), ("~ālī", "~al"), ("~ārī", "~ar"), ("~ē", "~em"), ("~ī", "~e"), ("~ī", "~em"), ("~ī", "~im"), ("~ī", "~in"), ("~ō", "~om"), ("~ō", "~on"), ("~ō", "~os"), ("~ō", "~um"), ("~ō", "~us"), ("~ōque", "~umque"), ("~ū", "~um"), ("~ū", "~ŭ")], rules {
         "" => [1 5281, 31 4932, 20 3408, 34 515, 29 322, 2 223, 11 155, 17 136, 24 111, 23 84, 26 79, 4 42, 5 39, 9 22, 15 20, 22 18, 25 16, 21 15, 0 13, 16 9, 3 7, 35 7, 32 6, 6 5, 27 5, 13 4, 28 4, 7 3, 8 3, 12 3, 10 2, 14 2, 18 2, 19 2, 30 2, 33 2],
@@ -3012,11 +3012,9 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "ōdinolytae" => 2,
         "ōdēī" => 9,
         "ōogenesis" => 5,
-    }, true, None),
+    }, false, None),
     // ABL_PL, from DAT_PL.
-    relation!(ABL_PL, [DAT_PL], [("~", "~")], rules {
-        "" => [0 15656],
-    } listed {}, true, None),
+    relation!(ABL_PL, [DAT_PL], [], none, true, None),
     // VOC_SG, from NOM_SG.
     relation!(VOC_SG, [NOM_SG], [("~", "~"), ("~ius", "~ī"), ("~os", "~e"), ("~s", "~"), ("~us", "~"), ("~us", "~e")], rules {
         "" => [0 13015, 5 2203, 2 145, 3 140, 1 19, 4 2],
@@ -3413,11 +3411,9 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "ēvocātus" => 5,
         "īdōlolatrēs" => 3,
         "ōtus" => 5,
-    }, true, None),
+    }, false, None),
     // VOC_PL, from NOM_PL.
-    relation!(VOC_PL, [NOM_PL], [("~", "~")], rules {
-        "" => [0 15654],
-    } listed {}, true, None),
+    relation!(VOC_PL, [NOM_PL], [], none, true, None),
     // NOUN_LOCATIVE_SG, from GEN_SG.
     relation!(NOUN_LOCATIVE_SG, [GEN_SG], [("~", "~"), ("~is", "~ī")], rules {
         "" => [0 14, 1 5],
@@ -3425,7 +3421,5 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "ī" => [0 9],
     } listed {}, true, None),
     // NOUN_LOCATIVE_PL, from DAT_PL.
-    relation!(NOUN_LOCATIVE_PL, [DAT_PL], [("~", "~")], rules {
-        "" => [0 14],
-    } listed {}, true, None),
+    relation!(NOUN_LOCATIVE_PL, [DAT_PL], [], none, true, None),
 ];

@@ -10,10 +10,13 @@ use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
 /// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), then a row of patterns
-/// per line (`derived`: the form comes from another cell's, see
-/// `relations.rs`; `_`, or a row left out: the form is the declension's it is like,
-/// or, in a declension like no other, derived):
+/// they share them), the declension it is like (if any), the stem slots
+/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
+/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
+/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
+/// from another cell's, see `relations.rs`; `_`, or a row left out: the
+/// form is its stem slot's, or the declension's it is like, or, in a declension like
+/// no other, derived):
 /// `nom_m` (anim, inan)
 /// `nom_f` (anim, inan)
 /// `nom_n` (anim, inan)
@@ -39,7 +42,10 @@ use flexion::Paradigm;
 /// `prep_n` (anim, inan)
 /// `prep_pl` (anim, inan)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+     $(stem numeral_nom_m_anim: $s0:tt;)?
+     $(stem numeral: $s1:tt;)?
+     $(stem numeral_ins: $s2:tt;)?
      $(nom_m: $c0:tt, $c1:tt;)?
      $(nom_f: $c2:tt, $c3:tt;)?
      $(nom_n: $c4:tt, $c5:tt;)?
@@ -70,6 +76,7 @@ macro_rules! declension {
             words: $words,
             lemma: ::std::borrow::Cow::Borrowed($lemma),
             parent: like!($($parent)?),
+            reads: view!($($($view)?)?),
             inherent: ::std::borrow::Cow::Borrowed(&[]),
             table: ::std::borrow::Cow::Borrowed(concat!(
                 $(flexion::cell!($c0),)? "\t",
@@ -121,6 +128,11 @@ macro_rules! declension {
                 $(flexion::cell!($c46),)? "\t",
                 $(flexion::cell!($c47),)? "\t",
             )),
+            stems: ::std::borrow::Cow::Borrowed(concat!(
+                $(flexion::cell!($s0),)? "\t",
+                $(flexion::cell!($s1),)? "\t",
+                $(flexion::cell!($s2),)? "\t",
+            )),
         }
     };
 }
@@ -135,11 +147,29 @@ macro_rules! like {
     };
 }
 
+/// The cells a declension reads in the one it is like, by the view's name (see
+/// the views below); none: the same cells.
+macro_rules! view {
+    () => {
+        None
+    };
+    ($view:ident) => {
+        Some(::std::borrow::Cow::Borrowed(&$view))
+    };
+}
+
+/// A view: per cell (in the cells' order), the cell of the declension it is
+/// like that it reads (`m_as_n`: one value read as another).
+const M_AS_N: [u16; 48] = [
+    4, 5, 2, 3, 4, 5, 6, 7, 12, 13, 10, 11, 12, 13, 14, 15, 20, 21, 18, 19, 20, 21, 22, 23, 28, 29,
+    26, 27, 28, 29, 30, 31, 36, 37, 34, 35, 36, 37, 38, 39, 44, 45, 42, 43, 44, 45, 46, 47,
+];
+
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `один`: 61 words.
-    Один,
+    /// Like `биллион`: 61 words.
+    Биллион,
     /// Like `пятеро`: 7 words.
     Пятеро,
     /// Like `пятьсот`: 5 words.
@@ -151,7 +181,7 @@ pub enum Declension {
 impl Declension {
     /// Every declension, in order.
     pub const ALL: [Declension; 4] = [
-        Declension::Один,
+        Declension::Биллион,
         Declension::Пятеро,
         Declension::Пятьсот,
         Declension::Пятьдесят,
@@ -173,64 +203,46 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 4] = [
-    // Один: 61 words (шесть, один, два, три, четыре, пять).
-    declension!("один", 61, "~";
+    // Биллион: 61 words (шесть, один, два, три, четыре, пять).
+    declension!("биллион", 61, "~";
     nom_m: _, "~";
     nom_pl: "~|~ы", "~|~ы";
     gen_m: "~а", _;
-    gen_f: "~а", _;
     gen_pl: "~а|~ов", "~а|~ов";
     dat_m: "~у", _;
-    dat_f: "~у", _;
     dat_pl: "~у|~ам", "~у|~ам";
-    acc_m: "~", _;
-    acc_f: "~", _;
-    acc_n: "~", _;
     acc_pl: "~|~ы", "~|~ы";
     ins_m: "~ом", _;
-    ins_f: "~ом", _;
     ins_pl: "~ом|~ами", "~ом|~ами";
     prep_m: "~е", _;
-    prep_f: "~е", _;
     prep_pl: "~е|~ах", "~е|~ах";
     ),
-    // Пятеро: 7 words (четверо, шестеро, семеро, восьмеро, десятеро, пятеро). Like Один, except in 24 cells: nom_m inan, nom_pl anim, nom_pl inan, gen_m anim, gen_f anim, gen_pl anim, ….
-    declension!("пятеро", 7, "~о", like Один;
+    // Пятеро: 7 words (четверо, шестеро, семеро, восьмеро, десятеро, пятеро). Like Биллион, except in 9 cells: nom_m inan, nom_pl anim, nom_pl inan, gen_m anim, dat_m anim, acc_pl anim, ….
+    declension!("пятеро", 7, "~о", like Биллион as M_AS_N;
+    stem numeral: "~ы- like пятеро";
+    stem numeral_ins: "~ыми- like пятеро";
     nom_m: _, "~о";
-    nom_pl: derived, derived;
+    nom_pl: "~о", "~о";
     gen_m: derived, _;
-    gen_f: derived, _;
-    gen_pl: "~ых", derived;
     dat_m: derived, _;
-    dat_f: derived, _;
-    dat_pl: "~ым", derived;
-    acc_m: derived, _;
-    acc_f: derived, _;
-    acc_n: derived, _;
-    acc_pl: "~ых", derived;
+    acc_pl: "~ых", "~о";
     ins_m: derived, _;
-    ins_f: derived, _;
-    ins_pl: "~ыми", derived;
     prep_m: derived, _;
-    prep_f: derived, _;
-    prep_pl: "~ых", derived;
     ),
     // Пятьсот: 5 words (пятьсот, шестьсот, семьсот, восемьсот, девятьсот).
     declension!("пятьсот", 5, "~ь~о~";
-    nom_m: _, "~ь~о~";
+    stem numeral_nom_m_anim: "~ь~о~- like пятьсот";
+    stem numeral_ins: "~ью~~ами- like пятеро";
     gen_pl: "~и~о~|~и~~а", "~и~о~|~и~~а";
-    dat_pl: "~и~~ам", _;
-    acc_pl: "~ь~о~", _;
-    ins_pl: "~ью~~ами", _;
-    prep_pl: "~и~~ах", _;
+    dat_pl: "~и~~ам", "~и~~ам";
+    prep_pl: "~и~~ах", "~и~~ах";
     ),
     // Пятьдесят: 4 words (пятьдесят, шестьдесят, семьдесят, восемьдесят).
     declension!("пятьдесят", 4, "~ь~";
     nom_m: _, "~ь~";
-    gen_pl: "~и~и", _;
-    dat_pl: "~и~и", _;
-    acc_pl: "~ь~", _;
-    ins_pl: "~ью~ью", _;
-    prep_pl: "~и~и", _;
+    gen_m: "~и~и", _;
+    dat_m: "~и~и", _;
+    ins_m: "~ью~ью", _;
+    prep_m: "~и~и", _;
     ),
 ];

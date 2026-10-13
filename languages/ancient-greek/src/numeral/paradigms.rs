@@ -10,10 +10,13 @@ use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
 /// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), then a row of patterns
-/// per line (`derived`: the form comes from another cell's, see
-/// `relations.rs`; `_`, or a row left out: the form is the declension's it is like,
-/// or, in a declension like no other, derived):
+/// they share them), the declension it is like (if any), the stem slots
+/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
+/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
+/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
+/// from another cell's, see `relations.rs`; `_`, or a row left out: the
+/// form is its stem slot's, or the declension's it is like, or, in a declension like
+/// no other, derived):
 /// `nom_m` (sg, du, pl)
 /// `nom_f` (sg, du, pl)
 /// `nom_n` (sg, du, pl)
@@ -30,7 +33,8 @@ use flexion::Paradigm;
 /// `voc_f` (sg, du, pl)
 /// `voc_n` (sg, du, pl)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+     $(stem numeral: $s0:tt;)?
      $(nom_m: $c0:tt, $c1:tt, $c2:tt;)?
      $(nom_f: $c3:tt, $c4:tt, $c5:tt;)?
      $(nom_n: $c6:tt, $c7:tt, $c8:tt;)?
@@ -52,6 +56,7 @@ macro_rules! declension {
             words: $words,
             lemma: ::std::borrow::Cow::Borrowed($lemma),
             parent: like!($($parent)?),
+            reads: view!($($($view)?)?),
             inherent: ::std::borrow::Cow::Borrowed(&[]),
             table: ::std::borrow::Cow::Borrowed(concat!(
                 $(flexion::cell!($c0),)? "\t",
@@ -100,6 +105,9 @@ macro_rules! declension {
                 $(flexion::cell!($c43),)? "\t",
                 $(flexion::cell!($c44),)? "\t",
             )),
+            stems: ::std::borrow::Cow::Borrowed(concat!(
+                $(flexion::cell!($s0),)? "\t",
+            )),
         }
     };
 }
@@ -114,13 +122,31 @@ macro_rules! like {
     };
 }
 
+/// The cells a declension reads in the one it is like, by the view's name (see
+/// the views below); none: the same cells.
+macro_rules! view {
+    () => {
+        None
+    };
+    ($view:ident) => {
+        Some(::std::borrow::Cow::Borrowed(&$view))
+    };
+}
+
+/// A view: per cell (in the cells' order), the cell of the declension it is
+/// like that it reads (`pl_as_du`: one value read as another).
+const PL_AS_DU: [u16; 45] = [
+    0, 1, 1, 3, 4, 4, 6, 7, 7, 9, 10, 10, 12, 13, 13, 15, 16, 16, 18, 19, 19, 21, 22, 22, 24, 25,
+    25, 27, 28, 28, 30, 31, 31, 33, 34, 34, 36, 37, 37, 39, 40, 40, 42, 43, 43,
+];
+
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
     /// Like `χῑλῐοι`: 11 words.
     Χῑλῐοι,
-    /// Like `τεσσᾰρες`: 2 words.
-    Τεσσᾰρες,
+    /// Like `πισῠρες`: 3 words.
+    Πισῠρες,
     /// Like `δῠο`: 1 words.
     Δῠο,
     /// Like `τρεῑς`: 1 words.
@@ -131,21 +157,18 @@ pub enum Declension {
     Εἱς,
     /// Like `δευτερος`: 1 words.
     Δευτερος,
-    /// Like `πισῠρες`: 1 words.
-    Πισῠρες,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 8] = [
+    pub const ALL: [Declension; 7] = [
         Declension::Χῑλῐοι,
-        Declension::Τεσσᾰρες,
+        Declension::Πισῠρες,
         Declension::Δῠο,
         Declension::Τρεῑς,
         Declension::Δεκᾰτεσσᾰρες,
         Declension::Εἱς,
         Declension::Δευτερος,
-        Declension::Πισῠρες,
     ];
 
     /// Its table.
@@ -163,7 +186,7 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 8] = [
+pub(super) static DECLENSIONS: [Paradigm<'static>; 7] = [
     // Χῑλῐοι: 11 words (δῐσχῑλῐοι, χῑλῐοι, τρῐσχῑλῐοι, τρῐᾱκοσῐοι, τετρᾰκοσῐοι, δῐᾱκοσῐοι).
     declension!("χῑλῐοι", 11, "~οι";
     nom_m: "~οι", _, "~οι";
@@ -175,8 +198,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 8] = [
     acc_m: _, _, "~ους";
     acc_f: _, _, "~ᾱς";
     ),
-    // Τεσσᾰρες: 2 words (τεσσᾰρες, τεττᾰρες). Like Χῑλῐοι, except in 8 cells: nom_m sg, nom_m pl, nom_f pl, dat_m pl, dat_f pl, dat_n pl, ….
-    declension!("τεσσᾰρες", 2, "~ες", like Χῑλῐοι;
+    // Πισῠρες: 3 words (τεσσᾰρες, τεττᾰρες, πισῠρες). Like Χῑλῐοι, except in 8 cells: nom_m sg, nom_m pl, nom_f pl, dat_m pl, dat_f pl, dat_n pl, ….
+    declension!("πισῠρες", 3, "~ες", like Χῑλῐοι;
     nom_m: "~ες", _, "~ες";
     nom_f: _, _, "~ες";
     dat_m: _, _, "~σῐ|~σῐν";
@@ -185,19 +208,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 8] = [
     acc_m: _, _, "~ᾰς";
     acc_f: _, _, "~ᾰς";
     ),
-    // Δῠο: 1 words (δῠο). Like Χῑλῐοι, except in 17 cells: nom_m sg, nom_m du, nom_m pl, nom_f du, nom_f pl, nom_n pl, ….
-    declension!("δῠο", 1, "~ο", like Χῑλῐοι;
-    nom_m: "~ο", "~ο", derived;
-    nom_f: _, "~ο", derived;
-    nom_n: _, _, derived;
-    gen_m: _, "~οῑν|~εῑν", derived;
+    // Δῠο: 1 words (δῠο). Like Χῑλῐοι, except in 9 cells: nom_m sg, nom_m du, nom_f du, gen_m du, gen_f du, gen_n du, ….
+    declension!("δῠο", 1, "~ο", like Χῑλῐοι as PL_AS_DU;
+    nom_m: "~ο", "~ο", _;
+    nom_f: _, "~ο", _;
+    gen_m: _, "~οῑν|~εῑν", _;
     gen_f: _, "~οῑν|~εῑν", _;
     gen_n: _, "~οῑν|~εῑν", _;
     dat_m: _, "~οῑν|~εῑν|~σῐ|~σῐν", _;
-    dat_f: _, "~οῑν|~εῑν|~σῐ|~σῐν", derived;
-    dat_n: _, "~οῑν|~εῑν|~σῐ|~σῐν", derived;
-    acc_m: _, _, derived;
-    acc_f: _, _, derived;
+    dat_f: _, "~οῑν|~εῑν|~σῐ|~σῐν", _;
+    dat_n: _, "~οῑν|~εῑν|~σῐ|~σῐν", _;
     ),
     // Τρεῑς: 1 words (τρεῑς). Like Χῑλῐοι, except in 10 cells: nom_m sg, nom_m pl, nom_f pl, nom_n pl, gen_m pl, dat_m pl, ….
     declension!("τρεῑς", 1, "~εῑς", like Χῑλῐοι;
@@ -248,17 +268,5 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 8] = [
     acc_m: "~ον", _, _;
     acc_f: "~ᾱν", _, _;
     voc_m: "~ε", _, _;
-    ),
-    // Πισῠρες: 1 words (πισῠρες). Like Δεκᾰτεσσᾰρες, except in 10 cells: nom_m sg, nom_m pl, nom_f pl, nom_n pl, gen_m pl, dat_m pl, ….
-    declension!("πισῠρες", 1, "~ι~ῠ~ες", like Δεκᾰτεσσᾰρες;
-    nom_m: "~ι~ῠ~ες", _, "~ῐ~ῠ~ες";
-    nom_f: _, _, "~ῐ~ῠ~ες";
-    nom_n: _, _, "~ῐ~ῠ~ᾰ";
-    gen_m: _, _, "~ῐ~ῠ~ων";
-    dat_m: _, _, "~ι~υ~εσσι|~ι~υ~οισι|~ι~υ~ῃσι|~ι~υ~αις";
-    dat_f: _, _, "~ι~υ~εσσι|~ι~υ~οισι|~ι~υ~ῃσι|~ι~υ~αις";
-    dat_n: _, _, "~ι~υ~εσσι|~ι~υ~οισι";
-    acc_m: _, _, "~ῐ~ῠ~ᾰς";
-    acc_f: _, _, "~ῐ~ῠ~ᾰς";
     ),
 ];

@@ -10,13 +10,17 @@ use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
 /// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), then a row of patterns
-/// per line (`derived`: the form comes from another cell's, see
-/// `relations.rs`; `_`, or a row left out: the form is the declension's it is like,
-/// or, in a declension like no other, derived):
+/// they share them), the declension it is like (if any), the stem slots
+/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
+/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
+/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
+/// from another cell's, see `relations.rs`; `_`, or a row left out: the
+/// form is its stem slot's, or the declension's it is like, or, in a declension like
+/// no other, derived):
 /// `adverb` (pos, comp, sup)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+     $(stem adverb: $s0:tt;)?
      $(adverb: $c0:tt, $c1:tt, $c2:tt;)?
     ) => {
         Paradigm {
@@ -24,11 +28,15 @@ macro_rules! declension {
             words: $words,
             lemma: ::std::borrow::Cow::Borrowed($lemma),
             parent: like!($($parent)?),
+            reads: view!($($($view)?)?),
             inherent: ::std::borrow::Cow::Borrowed(&[]),
             table: ::std::borrow::Cow::Borrowed(concat!(
                 $(flexion::cell!($c0),)? "\t",
                 $(flexion::cell!($c1),)? "\t",
                 $(flexion::cell!($c2),)? "\t",
+            )),
+            stems: ::std::borrow::Cow::Borrowed(concat!(
+                $(flexion::cell!($s0),)? "\t",
             )),
         }
     };
@@ -44,10 +52,21 @@ macro_rules! like {
     };
 }
 
+/// The cells a declension reads in the one it is like, by the view's name (see
+/// the views below); none: the same cells.
+macro_rules! view {
+    () => {
+        None
+    };
+    ($view:ident) => {
+        Some(::std::borrow::Cow::Borrowed(&$view))
+    };
+}
+
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `handsomely`: 12,450 words.
+    /// Like `handsomely`: 12,455 words.
     Handsomely,
     /// Like `sharply`: 87 words.
     Sharply,
@@ -55,18 +74,15 @@ pub enum Declension {
     Down,
     /// Like `low`: 37 words.
     Low,
-    /// Like `likely`: 5 words.
-    Likely,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 5] = [
+    pub const ALL: [Declension; 4] = [
         Declension::Handsomely,
         Declension::Sharply,
         Declension::Down,
         Declension::Low,
-        Declension::Likely,
     ];
 
     /// Its table.
@@ -84,9 +100,9 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 5] = [
-    // Handsomely: 12,450 words (free, abaft, abandonedly, abasedly, abashedly, abeam).
-    declension!("handsomely", 12450, "~";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 4] = [
+    // Handsomely: 12,455 words (free, abaft, abandonedly, abasedly, abashedly, abeam).
+    declension!("handsomely", 12455, "~";
     adverb: "~", "more ~", "most ~";
     ),
     // Sharply: 87 words (early, silly, quickly, slowly, goodly, easy).
@@ -100,9 +116,5 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 5] = [
     // Low: 37 words (slow, close, small, thick, hard, light).
     declension!("low", 37, "~";
     adverb: "~", "~er", "~est";
-    ),
-    // Likely: 5 words (ghastly, likely, wildly, brazenly, cheerly).
-    declension!("likely", 5, "~y";
-    adverb: "~y", "more ~y|~ier", "most ~y|~iest";
     ),
 ];

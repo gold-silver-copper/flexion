@@ -10,10 +10,13 @@ use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
 /// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), then a row of patterns
-/// per line (`derived`: the form comes from another cell's, see
-/// `relations.rs`; `_`, or a row left out: the form is the declension's it is like,
-/// or, in a declension like no other, derived):
+/// they share them), the declension it is like (if any), the stem slots
+/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
+/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
+/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
+/// from another cell's, see `relations.rs`; `_`, or a row left out: the
+/// form is its stem slot's, or the declension's it is like, or, in a declension like
+/// no other, derived):
 /// `nom_m` (anim, inan)
 /// `nom_f` (anim, inan)
 /// `nom_n` (anim, inan)
@@ -40,7 +43,9 @@ use flexion::Paradigm;
 /// `prep_pl` (anim, inan)
 /// `short_adjective` (m, f, n, pl)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+     $(stem adjective: $s0:tt;)?
+     $(stem short_adjective_m: $s1:tt;)?
      $(nom_m: $c0:tt, $c1:tt;)?
      $(nom_f: $c2:tt, $c3:tt;)?
      $(nom_n: $c4:tt, $c5:tt;)?
@@ -72,6 +77,7 @@ macro_rules! declension {
             words: $words,
             lemma: ::std::borrow::Cow::Borrowed($lemma),
             parent: like!($($parent)?),
+            reads: view!($($($view)?)?),
             inherent: ::std::borrow::Cow::Borrowed(&[]),
             table: ::std::borrow::Cow::Borrowed(concat!(
                 $(flexion::cell!($c0),)? "\t",
@@ -127,6 +133,10 @@ macro_rules! declension {
                 $(flexion::cell!($c50),)? "\t",
                 $(flexion::cell!($c51),)? "\t",
             )),
+            stems: ::std::borrow::Cow::Borrowed(concat!(
+                $(flexion::cell!($s0),)? "\t",
+                $(flexion::cell!($s1),)? "\t",
+            )),
         }
     };
 }
@@ -141,26 +151,61 @@ macro_rules! like {
     };
 }
 
+/// The cells a declension reads in the one it is like, by the view's name (see
+/// the views below); none: the same cells.
+macro_rules! view {
+    () => {
+        None
+    };
+    ($view:ident) => {
+        Some(::std::borrow::Cow::Borrowed(&$view))
+    };
+}
+
+/// A view: per cell (in the cells' order), the cell of the declension it is
+/// like that it reads (`ins_as_prep`: one value read as another).
+const INS_AS_PREP: [u16; 52] = [
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
+    26, 27, 28, 29, 30, 31, 40, 41, 42, 43, 44, 45, 46, 47, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+    50, 51,
+];
+
+/// A view: per cell (in the cells' order), the cell of the declension it is
+/// like that it reads (`anim_as_inan`: one value read as another).
+const ANIM_AS_INAN: [u16; 52] = [
+    1, 1, 3, 3, 5, 5, 7, 7, 9, 9, 11, 11, 13, 13, 15, 15, 17, 17, 19, 19, 21, 21, 23, 23, 25, 25,
+    27, 27, 29, 29, 31, 31, 33, 33, 35, 35, 37, 37, 39, 39, 41, 41, 43, 43, 45, 45, 47, 47, 48, 49,
+    50, 51,
+];
+
+/// A view: per cell (in the cells' order), the cell of the declension it is
+/// like that it reads (`m_as_n`: one value read as another).
+const M_AS_N: [u16; 52] = [
+    4, 5, 2, 3, 4, 5, 6, 7, 12, 13, 10, 11, 12, 13, 14, 15, 20, 21, 18, 19, 20, 21, 22, 23, 28, 29,
+    26, 27, 28, 29, 30, 31, 36, 37, 34, 35, 36, 37, 38, 39, 44, 45, 42, 43, 44, 45, 46, 47, 50, 49,
+    50, 51,
+];
+
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `сведущий`: 24,315 words.
+    /// Like `сведущий`: 24,314 words.
     Сведущий,
-    /// Like `уместный`: 11,284 words.
+    /// Like `уместный`: 11,409 words.
     Уместный,
     /// Like `устарелый`: 9,274 words.
     Устарелый,
-    /// Like `пылкий`: 8,180 words.
+    /// Like `пылкий`: 8,178 words.
     Пылкий,
     /// Like `снижающийся`: 5,127 words.
     Снижающийся,
-    /// Like `подверженный`: 3,679 words.
+    /// Like `подверженный`: 3,683 words.
     Подверженный,
     /// Like `вольный`: 2,209 words.
     Вольный,
     /// Like `казнённый`: 987 words.
     Казнённый,
-    /// Like `прямой`: 647 words.
+    /// Like `прямой`: 645 words.
     Прямой,
     /// Like `непринуждённый`: 453 words.
     Непринуждённый,
@@ -172,12 +217,10 @@ pub enum Declension {
     Лисий,
     /// Like `средний`: 177 words.
     Средний,
-    /// Like `родственный`: 134 words.
-    Родственный,
-    /// Like `иродов`: 68 words.
-    Иродов,
     /// Like `горький`: 68 words.
     Горький,
+    /// Like `иродов`: 64 words.
+    Иродов,
     /// Like `бойкий`: 21 words.
     Бойкий,
     /// Like `куцый`: 19 words.
@@ -196,6 +239,8 @@ pub enum Declension {
     Чёрный,
     /// Like `твёрдый`: 6 words.
     Твёрдый,
+    /// Like `сланцевый`: 6 words.
+    Сланцевый,
     /// Like `должен`: 5 words.
     Должен,
     /// Like `тяжкий`: 5 words.
@@ -206,29 +251,49 @@ pub enum Declension {
     Злой,
     /// Like `лёгкий`: 4 words.
     Лёгкий,
-    /// Like `заёбанный`: 4 words.
-    Заёбанный,
     /// Like `высокий`: 3 words.
     Высокий,
     /// Like `дешёвый`: 3 words.
     Дешёвый,
     /// Like `зелёный`: 3 words.
     Зелёный,
+    /// Like `достойный`: 3 words.
+    Достойный,
     /// Like `катин`: 3 words.
     Катин,
     /// Like `крутенек`: 3 words.
     Крутенек,
-    /// Like `сланцевый`: 3 words.
-    Сланцевый,
     /// Like `жерёбый`: 3 words.
     Жерёбый,
-    /// Like `теплонагревательный`: 3 words.
-    Теплонагревательный,
+    /// Like `сукотая`: 3 words.
+    Сукотая,
+    /// Like `трёхгодовой`: 2 words.
+    Трёхгодовой,
+    /// Like `прищепленный`: 1 words.
+    Прищепленный,
+    /// Like `считавши`: 1 words.
+    Считавши,
+    /// Like `сербохорватский`: 1 words.
+    Сербохорватский,
+    /// Like `нелюдимый`: 1 words.
+    Нелюдимый,
+    /// Like `малосодержательный`: 1 words.
+    Малосодержательный,
+    /// Like `нелицемерный`: 1 words.
+    Нелицемерный,
+    /// Like `притекающий`: 1 words.
+    Притекающий,
+    /// Like `худущий`: 1 words.
+    Худущий,
+    /// Like `незатопленный`: 1 words.
+    Незатопленный,
+    /// Like `трёхоперационный`: 1 words.
+    Трёхоперационный,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 40] = [
+    pub const ALL: [Declension; 50] = [
         Declension::Сведущий,
         Declension::Уместный,
         Declension::Устарелый,
@@ -243,9 +308,8 @@ impl Declension {
         Declension::Тайный,
         Declension::Лисий,
         Declension::Средний,
-        Declension::Родственный,
-        Declension::Иродов,
         Declension::Горький,
+        Declension::Иродов,
         Declension::Бойкий,
         Declension::Куцый,
         Declension::Дядин,
@@ -255,20 +319,31 @@ impl Declension {
         Declension::Длинношеий,
         Declension::Чёрный,
         Declension::Твёрдый,
+        Declension::Сланцевый,
         Declension::Должен,
         Declension::Тяжкий,
         Declension::Горячий,
         Declension::Злой,
         Declension::Лёгкий,
-        Declension::Заёбанный,
         Declension::Высокий,
         Declension::Дешёвый,
         Declension::Зелёный,
+        Declension::Достойный,
         Declension::Катин,
         Declension::Крутенек,
-        Declension::Сланцевый,
         Declension::Жерёбый,
-        Declension::Теплонагревательный,
+        Declension::Сукотая,
+        Declension::Трёхгодовой,
+        Declension::Прищепленный,
+        Declension::Считавши,
+        Declension::Сербохорватский,
+        Declension::Нелюдимый,
+        Declension::Малосодержательный,
+        Declension::Нелицемерный,
+        Declension::Притекающий,
+        Declension::Худущий,
+        Declension::Незатопленный,
+        Declension::Трёхоперационный,
     ];
 
     /// Its table.
@@ -286,9 +361,9 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 40] = [
-    // Сведущий: 24,315 words (деревообрабатывающий, близорукий, великий, будущий, лесообрабатывающий, настоящий).
-    declension!("сведущий", 24315, "~ий";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 50] = [
+    // Сведущий: 24,314 words (деревообрабатывающий, близорукий, великий, будущий, лесообрабатывающий, настоящий).
+    declension!("сведущий", 24314, "~ий";
     nom_m: _, "~ий";
     nom_f: "~ая", _;
     nom_n: "~ее", _;
@@ -298,16 +373,14 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 40] = [
     gen_pl: "~их", _;
     dat_m: "~ему", _;
     dat_pl: "~им", _;
-    acc_m: "~его", "~ий";
     acc_f: "~ую", _;
-    acc_pl: "~их", "~ие";
     ins_f: "~ей|~ею", "~ей|~ею";
     ins_pl: "~ими", _;
     prep_m: "~ем", _;
     short_adjective: "~", "~а", "~е", "~и";
     ),
-    // Уместный: 11,284 words (браный, славный, крохотный, деревянный, древесный, лесоводственный).
-    declension!("уместный", 11284, "~~ый";
+    // Уместный: 11,409 words (браный, славный, крохотный, деревянный, древесный, лесоводственный).
+    declension!("уместный", 11409, "~~ый";
     nom_m: _, "~~ый";
     nom_f: "~~ая", _;
     nom_n: "~~ое", _;
@@ -317,15 +390,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 40] = [
     gen_pl: "~~ых", _;
     dat_m: "~~ому", _;
     dat_pl: "~~ым", _;
-    acc_m: "~~ого", "~~ый";
     acc_f: "~~ую", _;
-    acc_pl: "~~ых", "~~ые";
     ins_f: "~~ой|~~ою", "~~ой|~~ою";
     ins_pl: "~~ыми", _;
     prep_m: "~~ом", _;
     short_adjective: "~е~", "~~а", "~~о", "~~ы";
     ),
-    // Устарелый: 9,274 words (слабый, ласковый, деревянистый, лесистый, лесотундровый, тундровый). Like Сведущий, except in 18 cells: nom_m inan, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, gen_pl anim, ….
+    // Устарелый: 9,274 words (слабый, ласковый, деревянистый, лесистый, лесотундровый, тундровый). Like Сведущий, except in 14 cells: nom_m inan, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, gen_pl anim, ….
     declension!("устарелый", 9274, "~ый", like Сведущий;
     nom_m: _, "~ый";
     nom_n: "~ое", _;
@@ -335,26 +406,22 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 40] = [
     gen_pl: "~ых", _;
     dat_m: "~ому", _;
     dat_pl: "~ым", _;
-    acc_m: "~ого", "~ый";
-    acc_pl: "~ых", "~ые";
     ins_f: "~ой|~ою", "~ой|~ою";
     ins_pl: "~ыми", _;
     prep_m: "~ом", _;
     short_adjective: _, _, "~о", "~ы";
     ),
-    // Пылкий: 8,180 words (русский, тайский, жалкий, лесоводческий, лесохимический, лесотехнический). Like Уместный, except in 12 cells: nom_m inan, nom_pl anim, gen_pl anim, dat_pl anim, acc_m inan, acc_pl anim, ….
-    declension!("пылкий", 8180, "~~ий", like Уместный;
+    // Пылкий: 8,178 words (русский, тайский, жалкий, лесоводческий, лесохимический, лесотехнический). Like Уместный, except in 8 cells: nom_m inan, nom_pl anim, gen_pl anim, dat_pl anim, ins_m anim, ins_pl anim, ….
+    declension!("пылкий", 8178, "~~ий", like Уместный as INS_AS_PREP;
     nom_m: _, "~~ий";
     nom_pl: "~~ие", _;
     gen_pl: "~~их", _;
     dat_pl: "~~им", _;
-    acc_m: _, "~~ий";
-    acc_pl: "~~их", "~~ие";
-    ins_f: derived, derived;
+    ins_m: derived, _;
     ins_pl: "~~ими", _;
     short_adjective: "~о~", _, _, "~~и";
     ),
-    // Снижающийся: 5,127 words (снижающийся, невзрывающийся, неразорвавшийся, учащийся, трудящийся, полуразвалившийся). Like Уместный, except in 22 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    // Снижающийся: 5,127 words (снижающийся, невзрывающийся, неразорвавшийся, учащийся, трудящийся, полуразвалившийся). Like Уместный, except in 18 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
     declension!("снижающийся", 5127, "~ий~", like Уместный;
     nom_m: _, "~ий~";
     nom_f: "~ая~", _;
@@ -365,16 +432,14 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 40] = [
     gen_pl: "~их~", _;
     dat_m: "~ему~", _;
     dat_pl: "~им~", _;
-    acc_m: "~его~", "~ий~";
     acc_f: "~ую~", _;
-    acc_pl: "~их~", "~ие~";
     ins_f: "~ей~|~ею~", "~ей~|~ею~";
     ins_pl: "~ими~", _;
     prep_m: "~ем~", _;
     short_adjective: derived, derived, derived, derived;
     ),
-    // Подверженный: 3,679 words (использованный, ученный, неприготовленный, непривязанный, неупакованный, неутрамбованный). Like Устарелый, except in 18 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
-    declension!("подверженный", 3679, "~ный", like Устарелый;
+    // Подверженный: 3,683 words (использованный, ученный, неприготовленный, непривязанный, неупакованный, неутрамбованный). Like Устарелый, except in 14 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    declension!("подверженный", 3683, "~ный", like Устарелый;
     nom_m: _, "~ный";
     nom_f: "~ная", _;
     nom_n: "~ное", _;
@@ -384,14 +449,12 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 40] = [
     gen_pl: "~ных", _;
     dat_m: "~ному", _;
     dat_pl: "~ным", _;
-    acc_m: "~ного", "~ный";
     acc_f: "~ную", _;
-    acc_pl: "~ных", "~ные";
     ins_f: "~ной|~ною", "~ной|~ною";
     ins_pl: "~ными", _;
     prep_m: "~ном", _;
     ),
-    // Вольный: 2,209 words (примирительный, буквальный, утомительный, охуительный, действительный, изумительный). Like Уместный, except in 21 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    // Вольный: 2,209 words (примирительный, буквальный, утомительный, охуительный, действительный, изумительный). Like Уместный, except in 17 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
     declension!("вольный", 2209, "~ь~ый", like Уместный;
     nom_m: _, "~ь~ый";
     nom_f: "~ь~ая", _;
@@ -402,15 +465,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 40] = [
     gen_pl: "~ь~ых", _;
     dat_m: "~ь~ому", _;
     dat_pl: "~ь~ым", _;
-    acc_m: "~ь~ого", "~ь~ый";
     acc_f: "~ь~ую", _;
-    acc_pl: "~ь~ых", "~ь~ые";
     ins_f: "~ь~ой|~ь~ою", "~ь~ой|~ь~ою";
     ins_pl: "~ь~ыми", _;
     prep_m: "~ь~ом", _;
     short_adjective: _, "~ь~а", "~ь~о", "~ь~ы";
     ),
-    // Казнённый: 987 words (соединённый, обызвествлённый, одушевлённый, объединённый, приобретённый, неприкреплённый). Like Уместный, except in 22 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    // Казнённый: 987 words (соединённый, обызвествлённый, одушевлённый, объединённый, приобретённый, неприкреплённый). Like Уместный, except in 18 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
     declension!("казнённый", 987, "~ё~ный", like Уместный;
     nom_m: _, "~ё~ный";
     nom_f: "~ё~ная", _;
@@ -421,30 +482,26 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 40] = [
     gen_pl: "~ё~ных", _;
     dat_m: "~ё~ному", _;
     dat_pl: "~ё~ным", _;
-    acc_m: "~ё~ного", "~ё~ный";
     acc_f: "~ё~ную", _;
-    acc_pl: "~ё~ных", "~ё~ные";
     ins_f: "~ё~ной|~ё~ною", "~ё~ной|~ё~ною";
     ins_pl: "~ё~ными", _;
     prep_m: "~ё~ном", _;
     short_adjective: "~ё~", "~е~а", "~е~о", "~е~ы";
     ),
-    // Прямой: 647 words (большой, баской, морской, городской, лесовой, былой). Like Устарелый, except in 2 cells: nom_m inan, acc_m inan.
-    declension!("прямой", 647, "~ой", like Устарелый;
+    // Прямой: 645 words (большой, баской, морской, городской, лесовой, былой). Like Устарелый, except in 1 cell: nom_m inan.
+    declension!("прямой", 645, "~ой", like Устарелый;
     nom_m: _, "~ой";
-    acc_m: _, "~ой";
     ),
     // Непринуждённый: 453 words (сверхъестественный, неодушевлённый, несдержанный, неожиданный, недисциплинированный, непредвиденный). Like Подверженный, except in 3 cells: short_adjective f, short_adjective n, short_adjective pl.
     declension!("непринуждённый", 453, "~ный", like Подверженный;
     short_adjective: _, "~на", "~но", "~ны";
     ),
-    // Показной: 449 words (лесной, лесостепной, дровяной, губной, стальной, нефтяной). Like Уместный, except in 4 cells: nom_m inan, acc_m inan, ins_f anim, ins_f inan.
+    // Показной: 449 words (лесной, лесостепной, дровяной, губной, стальной, нефтяной). Like Уместный, except in 3 cells: nom_m inan, ins_f anim, ins_f inan.
     declension!("показной", 449, "~~ой", like Уместный;
     nom_m: _, "~~ой";
-    acc_m: _, "~~ой";
     ins_f: derived, derived;
     ),
-    // Тайный: 264 words (покойный, спокойный, семейный, случайный, партийный, комедийный). Like Уместный, except in 21 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    // Тайный: 264 words (покойный, спокойный, семейный, случайный, партийный, комедийный). Like Уместный, except in 17 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
     declension!("тайный", 264, "~й~ый", like Уместный;
     nom_m: _, "~й~ый";
     nom_f: "~й~ая", _;
@@ -455,15 +512,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 40] = [
     gen_pl: "~й~ых", _;
     dat_m: "~й~ому", _;
     dat_pl: "~й~ым", _;
-    acc_m: "~й~ого", "~й~ый";
     acc_f: "~й~ую", _;
-    acc_pl: "~й~ых", "~й~ые";
     ins_f: "~й~ой|~й~ою", "~й~ой|~й~ою";
     ins_pl: "~й~ыми", _;
     prep_m: "~й~ом", _;
     short_adjective: _, "~й~а", "~й~о", "~й~ы";
     ),
-    // Лисий: 224 words (бабий, лесничий, третий, собачий, заячий, рыбий). Like Сведущий, except in 20 cells: nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, gen_pl anim, ….
+    // Лисий: 224 words (бабий, лесничий, третий, собачий, заячий, рыбий). Like Сведущий, except in 17 cells: nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, gen_pl anim, ….
     declension!("лисий", 224, "~ий", like Сведущий;
     nom_f: "~ья", _;
     nom_n: "~ье", _;
@@ -473,99 +528,70 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 40] = [
     gen_pl: "~ьих", _;
     dat_m: "~ьему", _;
     dat_pl: "~ьим", _;
-    acc_m: "~ьего", _;
     acc_f: "~ью", _;
-    acc_pl: "~ьих", "~ьи";
     ins_f: "~ьей|~ьею", "~ьей|~ьею";
     ins_pl: "~ьими", _;
     prep_m: "~ьем", _;
     short_adjective: derived, derived, derived, derived;
     ),
-    // Средний: 177 words (субботний, средний, последний, задний, предпоследний, посторонний). Like Пылкий, except in 11 cells: nom_f anim, nom_n anim, gen_m anim, gen_f anim, dat_m anim, acc_m anim, ….
+    // Средний: 177 words (субботний, средний, последний, задний, предпоследний, посторонний). Like Пылкий, except in 10 cells: nom_f anim, nom_n anim, gen_m anim, gen_f anim, dat_m anim, acc_f anim, ….
     declension!("средний", 177, "~~ий", like Пылкий;
     nom_f: "~~яя", _;
     nom_n: "~~ее", _;
     gen_m: "~~его", _;
     gen_f: "~~ей", _;
     dat_m: "~~ему", _;
-    acc_m: "~~его", _;
     acc_f: "~~юю", _;
     prep_m: "~~ем", _;
     short_adjective: "~е~", "~~я", "~~е", _;
     ),
-    // Родственный: 134 words (государственный, собственный, медленный, священный, художественный, производственный). Like Непринуждённый, except in 1 cell: short_adjective m.
-    declension!("родственный", 134, "~ный", like Непринуждённый;
-    short_adjective: "~ен|~", _, _, _;
+    // Горький: 68 words (горький, малюсенький, целёхонький, близёхонький, близёшенький, сладенький). Like Вольный, except in 6 cells: nom_m inan, nom_pl anim, gen_pl anim, dat_pl anim, ins_pl anim, short_adjective pl.
+    declension!("горький", 68, "~ь~ий", like Вольный;
+    nom_m: _, "~ь~ий";
+    nom_pl: "~ь~ие", _;
+    gen_pl: "~ь~их", _;
+    dat_pl: "~ь~им", _;
+    ins_pl: "~ь~ими", _;
+    short_adjective: _, _, _, "~ь~и";
     ),
-    // Иродов: 68 words (сукин, христов, адамов, хуев, булев, отцов). Like Устарелый, except in 14 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, dat_m anim, ….
-    declension!("иродов", 68, "~", like Устарелый;
+    // Иродов: 64 words (сукин, христов, адамов, хуев, булев, отцов). Like Устарелый, except in 11 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, dat_m anim, ….
+    declension!("иродов", 64, "~", like Устарелый;
     nom_m: _, "~";
     nom_f: "~а", _;
     nom_n: "~о", _;
     nom_pl: "~ы", _;
     gen_m: "~а", _;
     dat_m: "~у", _;
-    acc_m: "~а", "~";
     acc_f: "~у", _;
-    acc_pl: _, "~ы";
     short_adjective: derived, derived, derived, derived;
     ),
-    // Горький: 68 words (горький, малюсенький, целёхонький, близёхонький, близёшенький, сладенький). Like Вольный, except in 9 cells: nom_m inan, nom_pl anim, gen_pl anim, dat_pl anim, acc_m inan, acc_pl anim, ….
-    declension!("горький", 68, "~ь~ий", like Вольный;
-    nom_m: _, "~ь~ий";
-    nom_pl: "~ь~ие", _;
-    gen_pl: "~ь~их", _;
-    dat_pl: "~ь~им", _;
-    acc_m: _, "~ь~ий";
-    acc_pl: "~ь~их", "~ь~ие";
-    ins_pl: "~ь~ими", _;
-    short_adjective: _, _, _, "~ь~и";
-    ),
-    // Бойкий: 21 words (бойкий, клейкий, стойкий, износостойкий, огнестойкий, морозостойкий). Like Тайный, except in 9 cells: nom_m inan, nom_pl anim, gen_pl anim, dat_pl anim, acc_m inan, acc_pl anim, ….
+    // Бойкий: 21 words (бойкий, клейкий, стойкий, износостойкий, огнестойкий, морозостойкий). Like Тайный, except in 6 cells: nom_m inan, nom_pl anim, gen_pl anim, dat_pl anim, ins_pl anim, short_adjective pl.
     declension!("бойкий", 21, "~й~ий", like Тайный;
     nom_m: _, "~й~ий";
     nom_pl: "~й~ие", _;
     gen_pl: "~й~их", _;
     dat_pl: "~й~им", _;
-    acc_m: _, "~й~ий";
-    acc_pl: "~й~их", "~й~ие";
     ins_pl: "~й~ими", _;
     short_adjective: _, _, _, "~й~и";
     ),
-    // Куцый: 19 words (бледнолицый, куцый, круглолицый, пухлолицый, багроволицый, белолицый). Like Сведущий, except in 9 cells: nom_m inan, nom_pl anim, gen_pl anim, dat_pl anim, acc_m inan, acc_pl anim, ….
+    // Куцый: 19 words (бледнолицый, куцый, круглолицый, пухлолицый, багроволицый, белолицый). Like Сведущий, except in 6 cells: nom_m inan, nom_pl anim, gen_pl anim, dat_pl anim, ins_pl anim, short_adjective pl.
     declension!("куцый", 19, "~ый", like Сведущий;
     nom_m: _, "~ый";
     nom_pl: "~ые", _;
     gen_pl: "~ых", _;
     dat_pl: "~ым", _;
-    acc_m: _, "~ый";
-    acc_pl: "~ых", "~ые";
     ins_pl: "~ыми", _;
     short_adjective: _, _, _, "~ы";
     ),
-    // Дядин: 14 words (мамин, женин, никитин, дядин, бабушкин, папин). Like Иродов, except in 3 cells: gen_m anim, dat_m anim, acc_m anim.
+    // Дядин: 14 words (мамин, женин, никитин, дядин, бабушкин, папин). Like Иродов, except in 2 cells: gen_m anim, dat_m anim.
     declension!("дядин", 14, "~", like Иродов;
     gen_m: "~ого", _;
     dat_m: "~ому", _;
-    acc_m: "~ого", _;
     ),
-    // Рад: 12 words (широк, мал, рад, велик, намерен, наслышан). Like Устарелый, except in 18 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
-    declension!("рад", 12, "~", like Устарелый;
-    nom_m: _, "~";
-    nom_f: derived, _;
-    nom_n: derived, _;
-    nom_pl: derived, _;
-    gen_m: derived, _;
-    gen_f: derived, _;
-    gen_pl: derived, _;
-    dat_m: derived, _;
-    dat_pl: derived, _;
-    acc_m: derived, "~";
-    acc_f: derived, _;
-    acc_pl: derived, derived;
+    // Рад: 12 words (широк, мал, рад, велик, намерен, наслышан). Like Устарелый, except in 4 cells: nom_m anim, nom_m inan, ins_f anim, ins_f inan.
+    declension!("рад", 12, "~", like Устарелый as ANIM_AS_INAN;
+    nom_m: derived, "~";
     ins_f: derived, derived;
-    ins_pl: derived, _;
-    prep_m: derived, _;
     ),
     // Синий: 10 words (синий, лососий, тёмно-синий, крокодилий, сверхдальний, выхухолий). Like Сведущий, except in 4 cells: nom_f anim, acc_f anim, short_adjective m, short_adjective f.
     declension!("синий", 10, "~ий", like Сведущий;
@@ -592,15 +618,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 40] = [
     gen_pl: "~ё~~ых", _;
     dat_m: "~ё~~ому", _;
     dat_pl: "~ё~~ым", _;
-    acc_m: "~ё~~ого", "~ё~~ый";
     acc_f: "~ё~~ую", _;
-    acc_pl: "~ё~~ых", "~ё~~ые";
     ins_f: "~ё~~ой|~ё~~ою", "~ё~~ой|~ё~~ою";
     ins_pl: "~ё~~ыми", _;
     prep_m: "~ё~~ом", _;
     short_adjective: "~ё~е~", "~е~~а", "~е~~о", "~е~~ы";
     ),
-    // Твёрдый: 6 words (жёлтый, твёрдый, мёртвый, тяжёлый, пёстрый, супертяжёлый). Like Казнённый, except in 18 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    // Твёрдый: 6 words (жёлтый, твёрдый, мёртвый, тяжёлый, пёстрый, супертяжёлый). Like Казнённый, except in 14 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
     declension!("твёрдый", 6, "~ё~ый", like Казнённый;
     nom_m: _, "~ё~ый";
     nom_f: "~ё~ая", _;
@@ -611,29 +635,20 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 40] = [
     gen_pl: "~ё~ых", _;
     dat_m: "~ё~ому", _;
     dat_pl: "~ё~ым", _;
-    acc_m: "~ё~ого", "~ё~ый";
     acc_f: "~ё~ую", _;
-    acc_pl: "~ё~ых", "~ё~ые";
     ins_f: "~ё~ой|~ё~ою", "~ё~ой|~ё~ою";
     ins_pl: "~ё~ыми", _;
     prep_m: "~ё~ом", _;
     ),
-    // Должен: 5 words (должен, тесен, грешен, длинен, годен). Like Показной, except in 18 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
-    declension!("должен", 5, "~е~", like Показной;
-    nom_m: _, "~е~";
-    nom_f: derived, _;
-    nom_n: derived, _;
-    nom_pl: derived, _;
-    gen_m: derived, _;
-    gen_f: derived, _;
-    gen_pl: derived, _;
-    dat_m: derived, _;
-    dat_pl: derived, _;
-    acc_m: derived, derived;
-    acc_f: derived, _;
-    acc_pl: derived, derived;
-    ins_pl: derived, _;
-    prep_m: derived, _;
+    // Сланцевый: 6 words (сланцевый, нахлыстовый, дёгтевый, народно-разговорный, теплонагревательный, малоуютный). Like Показной, except in 3 cells: nom_m inan, acc_m anim, acc_pl anim.
+    declension!("сланцевый", 6, "~~ый", like Показной;
+    nom_m: _, "~~ый";
+    acc_m: "~~ый", _;
+    acc_pl: "~~ые", _;
+    ),
+    // Должен: 5 words (должен, тесен, грешен, длинен, годен). Like Показной, except in 4 cells: nom_m anim, nom_m inan, short_adjective n, short_adjective pl.
+    declension!("должен", 5, "~е~", like Показной as ANIM_AS_INAN;
+    nom_m: derived, "~е~";
     short_adjective: _, _, "~~о|~~о", "~~ы|~~ы";
     ),
     // Тяжкий: 5 words (тяжкий, лёжкий, нелёжкий, нетяжкий, сторожкий). Like Пылкий, except in 3 cells: ins_f anim, ins_f inan, short_adjective m.
@@ -645,38 +660,30 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 40] = [
     declension!("горячий", 4, "~ий", like Сведущий;
     short_adjective: _, _, "~о", _;
     ),
-    // Злой: 4 words (злой, смешной, незлой, пресмешной). Like Уместный, except in 3 cells: nom_m inan, acc_m inan, short_adjective m.
+    // Злой: 4 words (злой, смешной, незлой, пресмешной). Like Уместный, except in 2 cells: nom_m inan, short_adjective m.
     declension!("злой", 4, "~~ой", like Уместный;
     nom_m: _, "~~ой";
-    acc_m: _, "~~ой";
     short_adjective: "~о~", _, _, _;
     ),
-    // Лёгкий: 4 words (лёгкий, жёсткий, нелёгкий, прелёгкий). Like Чёрный, except in 10 cells: nom_m inan, nom_pl anim, gen_pl anim, dat_pl anim, acc_m inan, acc_pl anim, ….
+    // Лёгкий: 4 words (лёгкий, жёсткий, нелёгкий, прелёгкий). Like Чёрный, except in 7 cells: nom_m inan, nom_pl anim, gen_pl anim, dat_pl anim, ins_pl anim, short_adjective m, ….
     declension!("лёгкий", 4, "~ё~~ий", like Чёрный;
     nom_m: _, "~ё~~ий";
     nom_pl: "~ё~~ие", _;
     gen_pl: "~ё~~их", _;
     dat_pl: "~ё~~им", _;
-    acc_m: _, "~ё~~ий";
-    acc_pl: "~ё~~их", "~ё~~ие";
     ins_pl: "~ё~~ими", _;
     short_adjective: "~ё~о~", _, _, "~е~~и";
     ),
-    // Заёбанный: 4 words (заёбанный, проёбанный, поёбанный, разъёбанный). Like Казнённый, except in 3 cells: short_adjective f, short_adjective n, short_adjective pl.
-    declension!("заёбанный", 4, "~ё~ный", like Казнённый;
-    short_adjective: _, "~ё~а|~е~а", "~ё~о", "~ё~ы";
+    // Высокий: 3 words (противосвёртывающий, всемилостивейший, бывалошний). Like Устарелый, except in 6 cells: nom_m inan, nom_pl anim, gen_pl anim, dat_pl anim, ins_pl anim, short_adjective pl.
+    declension!("высокий", 3, "~ий", like Устарелый;
+    nom_m: _, "~ий";
+    nom_pl: "~ие", _;
+    gen_pl: "~их", _;
+    dat_pl: "~им", _;
+    ins_pl: "~ими", _;
+    short_adjective: _, _, _, "~и";
     ),
-    // Высокий: 3 words (противосвёртывающий, всемилостивейший, бывалошний). Like Горячий, except in 8 cells: nom_n anim, gen_m anim, gen_f anim, dat_m anim, acc_m anim, ins_f anim, ….
-    declension!("высокий", 3, "~ий", like Горячий;
-    nom_n: "~ое", _;
-    gen_m: "~ого", _;
-    gen_f: "~ой", _;
-    dat_m: "~ому", _;
-    acc_m: "~ого", _;
-    ins_f: "~ой|~ою", "~ой|~ою";
-    prep_m: "~ом", _;
-    ),
-    // Дешёвый: 3 words (дешёвый, недешёвый, ультрадешёвый). Like Уместный, except in 22 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    // Дешёвый: 3 words (дешёвый, недешёвый, ультрадешёвый). Like Уместный, except in 18 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
     declension!("дешёвый", 3, "~ешё~ый", like Уместный;
     nom_m: _, "~ешё~ый";
     nom_f: "~ешё~ая", _;
@@ -687,9 +694,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 40] = [
     gen_pl: "~ешё~ых", _;
     dat_m: "~ешё~ому", _;
     dat_pl: "~ешё~ым", _;
-    acc_m: "~ешё~ого", "~ешё~ый";
     acc_f: "~ешё~ую", _;
-    acc_pl: "~ешё~ых", "~ешё~ые";
     ins_f: "~ешё~ой|~ешё~ою", "~ешё~ой|~ешё~ою";
     ins_pl: "~ешё~ыми", _;
     prep_m: "~ешё~ом", _;
@@ -699,6 +704,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 40] = [
     declension!("зелёный", 3, "~ё~ый", like Твёрдый;
     short_adjective: "~е~", _, _, "~е~ы|~е~ы";
     ),
+    // Достойный: 3 words (достойный, ейный, недостойный). Like Тайный, except in 1 cell: short_adjective m.
+    declension!("достойный", 3, "~й~ый", like Тайный;
+    short_adjective: "~и~", _, _, _;
+    ),
     // Катин: 3 words (сашин, катин, танин). Like Иродов, except in 6 cells: nom_n anim, acc_m inan, acc_pl inan, ins_f anim, ins_f inan, prep_m anim.
     declension!("катин", 3, "~", like Иродов;
     nom_n: derived, _;
@@ -707,25 +716,165 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 40] = [
     ins_f: derived, derived;
     prep_m: "~е", _;
     ),
-    // Крутенек: 3 words (крутенек, радёхонек, радёшенек). Like Должен, except in 4 cells: acc_m inan, short_adjective f, short_adjective n, short_adjective pl.
+    // Крутенек: 3 words (крутенек, радёхонек, радёшенек). Like Должен, except in 3 cells: short_adjective f, short_adjective n, short_adjective pl.
     declension!("крутенек", 3, "~е~", like Должен;
-    acc_m: _, "~е~";
     short_adjective: _, "~ь~а", "~ь~о", "~ь~и";
-    ),
-    // Сланцевый: 3 words (сланцевый, нахлыстовый, дёгтевый). Like Устарелый, except in 2 cells: acc_m anim, acc_pl anim.
-    declension!("сланцевый", 3, "~ый", like Устарелый;
-    acc_m: "~ый", _;
-    acc_pl: "~ые", _;
     ),
     // Жерёбый: 3 words (успешливый, посажёный, жерёбый). Like Устарелый, except in 2 cells: acc_m inan, acc_pl inan.
     declension!("жерёбый", 3, "~ый", like Устарелый;
     acc_m: _, "~ого|~ый";
     acc_pl: _, "~ых";
     ),
-    // Теплонагревательный: 3 words (народно-разговорный, теплонагревательный, малоуютный). Like Уместный, except in 4 cells: acc_m anim, acc_pl anim, ins_f anim, ins_f inan.
-    declension!("теплонагревательный", 3, "~~ый", like Уместный;
-    acc_m: "~~ый", _;
-    acc_pl: "~~ые", _;
+    // Сукотая: 3 words (бесприданная, сукотная, сукотая). Like Устарелый, except in 5 cells: nom_m anim, nom_m inan, nom_n anim, short_adjective m, short_adjective n.
+    declension!("сукотая", 3, "~ая", like Устарелый as M_AS_N;
+    nom_m: derived, "~ая";
+    nom_n: derived, _;
+    short_adjective: derived, _, derived, _;
+    ),
+    // Трёхгодовой: 2 words (трёхгодовой, трёхчасовой). Like Снижающийся, except in 14 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    declension!("трёхгодовой", 2, "~ё~ой", like Снижающийся;
+    nom_m: _, "~е~ой";
+    nom_f: "~е~ая", _;
+    nom_n: "~е~ое", _;
+    nom_pl: "~е~ые", _;
+    gen_m: "~е~ого", _;
+    gen_f: "~е~ой", _;
+    gen_pl: "~е~ых", _;
+    dat_m: "~е~ому", _;
+    dat_pl: "~е~ым", _;
+    acc_f: "~е~ую", _;
+    ins_f: "~е~ой|~е~ою", "~е~ой|~е~ою";
+    ins_pl: "~е~ыми", _;
+    prep_m: "~е~ом", _;
+    ),
+    // Прищепленный: 1 words (прищепленный). Like Казнённый, except in 5 cells: ins_f anim, ins_f inan, short_adjective f, short_adjective n, short_adjective pl.
+    declension!("прищепленный", 1, "~е~ный", like Казнённый;
     ins_f: derived, derived;
+    short_adjective: _, "~ё~а", "~ё~о", "~ё~ы";
+    ),
+    // Считавши: 1 words (считавши). Like Непринуждённый, except in 15 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    declension!("считавши", 1, "~вши", like Непринуждённый;
+    nom_m: _, "~нный";
+    nom_f: "~нная", _;
+    nom_n: "~нное", _;
+    nom_pl: "~нные", _;
+    gen_m: "~нного", _;
+    gen_f: "~нной", _;
+    gen_pl: "~нных", _;
+    dat_m: "~нному", _;
+    dat_pl: "~нным", _;
+    acc_f: "~нную", _;
+    ins_f: "~нной|~нною", "~нной|~нною";
+    ins_pl: "~нными", _;
+    prep_m: "~нном", _;
+    short_adjective: "~н", _, _, _;
+    ),
+    // Сербохорватский: 1 words (сербохорватский). Like Снижающийся, except in 14 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    declension!("сербохорватский", 1, "~~ий", like Снижающийся;
+    nom_m: _, "~-~ий";
+    nom_f: "~-~ая", _;
+    nom_n: "~-~ое", _;
+    nom_pl: "~-~ие", _;
+    gen_m: "~-~ого", _;
+    gen_f: "~-~ой", _;
+    gen_pl: "~-~их", _;
+    dat_m: "~-~ому", _;
+    dat_pl: "~-~им", _;
+    acc_f: "~-~ую", _;
+    ins_f: "~-~ой|~-~ою", "~-~ой|~-~ою";
+    ins_pl: "~-~ими", _;
+    prep_m: "~-~ом", _;
+    ),
+    // Нелюдимый: 1 words (нелюдимый). Like Уместный, except in 18 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    declension!("нелюдимый", 1, "~д~ый", like Уместный;
+    nom_m: _, "~б~ый";
+    nom_f: "~б~ая", _;
+    nom_n: "~б~ое", _;
+    nom_pl: "~б~ые", _;
+    gen_m: "~б~ого", _;
+    gen_f: "~б~ой", _;
+    gen_pl: "~б~ых", _;
+    dat_m: "~б~ому", _;
+    dat_pl: "~б~ым", _;
+    acc_f: "~б~ую", _;
+    ins_f: "~б~ой|~б~ою", "~б~ой|~б~ою";
+    ins_pl: "~б~ыми", _;
+    prep_m: "~б~ом", _;
+    short_adjective: "~б~", "~б~а", "~б~о", "~б~ы";
+    ),
+    // Малосодержательный: 1 words (малосодержательный). Like Чёрный, except in 18 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    declension!("малосодержательный", 1, "~со~ь~ый", like Чёрный;
+    nom_m: _, "~~ь~ый";
+    nom_f: "~~ь~ая", _;
+    nom_n: "~~ь~ое", _;
+    nom_pl: "~~ь~ые", _;
+    gen_m: "~~ь~ого", _;
+    gen_f: "~~ь~ой", _;
+    gen_pl: "~~ь~ых", _;
+    dat_m: "~~ь~ому", _;
+    dat_pl: "~~ь~ым", _;
+    acc_f: "~~ь~ую", _;
+    ins_f: "~~ь~ой|~~ь~ою", "~~ь~ой|~~ь~ою";
+    ins_pl: "~~ь~ыми", _;
+    prep_m: "~~ь~ом", _;
+    short_adjective: "~~е~", "~~ь~а", "~~ь~о", "~~ь~ы";
+    ),
+    // Нелицемерный: 1 words (нелицемерный). Like Чёрный, except in 18 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    declension!("нелицемерный", 1, "~иц~~ый", like Чёрный;
+    nom_m: _, "~~ци~ый";
+    nom_f: "~~ци~ая", _;
+    nom_n: "~~ци~ое", _;
+    nom_pl: "~~ци~ые", _;
+    gen_m: "~~ци~ого", _;
+    gen_f: "~~ци~ой", _;
+    gen_pl: "~~ци~ых", _;
+    dat_m: "~~ци~ому", _;
+    dat_pl: "~~ци~ым", _;
+    acc_f: "~~ци~ую", _;
+    ins_f: "~~ци~ой|~~ци~ою", "~~ци~ой|~~ци~ою";
+    ins_pl: "~~ци~ыми", _;
+    prep_m: "~~ци~ом", _;
+    short_adjective: derived, derived, derived, derived;
+    ),
+    // Притекающий: 1 words (притекающий). Like Снижающийся, except in 14 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    declension!("притекающий", 1, "~~ий", like Снижающийся;
+    nom_m: _, "~к~ий";
+    nom_f: "~к~ая", _;
+    nom_n: "~к~ее", _;
+    nom_pl: "~к~ие", _;
+    gen_m: "~к~его", _;
+    gen_f: "~к~ей", _;
+    gen_pl: "~к~их", _;
+    dat_m: "~к~ему", _;
+    dat_pl: "~к~им", _;
+    acc_f: "~к~ую", _;
+    ins_f: "~к~ей|~к~ею", "~к~ей|~к~ею";
+    ins_pl: "~к~ими", _;
+    prep_m: "~к~ем", _;
+    ),
+    // Худущий: 1 words (худущий). Like Уместный, except in 18 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    declension!("худущий", 1, "~у~ий", like Уместный;
+    nom_m: _, "~ю~ий";
+    nom_f: "~ю~ая", _;
+    nom_n: "~ю~ее", _;
+    nom_pl: "~ю~ие", _;
+    gen_m: "~ю~его", _;
+    gen_f: "~ю~ей", _;
+    gen_pl: "~ю~их", _;
+    dat_m: "~ю~ему", _;
+    dat_pl: "~ю~им", _;
+    acc_f: "~ю~ую", _;
+    ins_f: "~ю~ей|~ю~ею", "~ю~ей|~ю~ею";
+    ins_pl: "~ю~ими", _;
+    prep_m: "~ю~ем", _;
+    short_adjective: "~ю~", "~ю~а", "~ю~е", "~ю~и";
+    ),
+    // Незатопленный: 1 words (незатопленный). Like Устарелый, except in 4 cells: short_adjective m, short_adjective f, short_adjective n, short_adjective pl.
+    declension!("незатопленный", 1, "~ный", like Устарелый;
+    short_adjective: derived, derived, derived, derived;
+    ),
+    // Трёхоперационный: 1 words (трёхоперационный). Like Трёхгодовой, except in 1 cell: nom_m inan.
+    declension!("трёхоперационный", 1, "~ё~ый", like Трёхгодовой;
+    nom_m: _, "~е~ый";
     ),
 ];

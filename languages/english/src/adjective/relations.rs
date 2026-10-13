@@ -148,5 +148,5 @@ pub(super) static RELATIONS: [Relation<'static>; 2] = [
         "tter" => [0 11, 2 2],
     } listed {
         "better" => 2,
-    }, true, None),
+    }, false, None),
 ];

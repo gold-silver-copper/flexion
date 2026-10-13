@@ -117,7 +117,7 @@ pub(super) static RELATIONS: [Relation<'static>; 35] = [
         "ae" => [1 8],
         "ue" => [0 8],
         "s" => [0 25],
-    } listed {}, true, None),
+    } listed {}, false, None),
     // GEN_M_PL, from NOM_F_PL.
     relation!(GEN_M_PL, [NOM_F_PL], [("~a", "~ium"), ("~ae", "~ōrum"), ("~aec", "~ōrunc"), ("~aecumque", "~ōrumcumque"), ("~aelibet", "~ōrumlibet"), ("~aequae", "~ōrumquōrum"), ("~aequaelibet", "~ōrumquōrumlibet"), ("~aeque", "~ōrumque"), ("~aevīs", "~ōrumvīs"), ("~ēs", "~ium")], rules {
         "" => [1 27, 0 4, 2 3, 3 3, 5 3, 9 3, 4 2, 6 2, 7 2, 8 2],
@@ -131,7 +131,7 @@ pub(super) static RELATIONS: [Relation<'static>; 35] = [
         "t" => [4 2, 6 2],
     } listed {
         "quaequaelibet" => 6,
-    }, true, None),
+    }, false, None),
     // GEN_F_SG, from DAT_F_SG.
     relation!(GEN_F_SG, [DAT_F_SG], [("~", "~"), ("~", "~us"), ("~cui", "~uscuius"), ("~cuilibet", "~uscuiuslibet"), ("~cumque", "~uscumque"), ("~ibimet", "~uīmet"), ("~quam", "~usquam"), ("~ī", "~ĭus"), ("~īc", "~ĭusce")], rules {
         "" => [0 9, 7 9, 1 6, 2 3, 5 3, 8 3, 3 2, 4 2, 6 2],
@@ -161,13 +161,9 @@ pub(super) static RELATIONS: [Relation<'static>; 35] = [
         "quaequaelibet" => 6,
     }, true, None),
     // GEN_N_SG, from GEN_M_SG.
-    relation!(GEN_N_SG, [GEN_M_SG], [("~", "~")], rules {
-        "" => [0 65],
-    } listed {}, true, None),
+    relation!(GEN_N_SG, [GEN_M_SG], [], none, true, None),
     // GEN_N_PL, from GEN_M_PL.
-    relation!(GEN_N_PL, [GEN_M_PL], [("~", "~")], rules {
-        "" => [0 64],
-    } listed {}, true, None),
+    relation!(GEN_N_PL, [GEN_M_PL], [], none, true, None),
     // DAT_M_SG, from NOM_M_PL.
     relation!(DAT_M_SG, [NOM_M_PL], [("i~", "e~"), ("quī~", "cui~"), ("q~aequae", "c~icui"), ("q~aequaelibet", "c~icuilibet"), ("q~ī", "c~i"), ("~", "~"), ("~quī", "~cui"), ("~quīnam", "~cuinam"), ("~sce", "~c"), ("~ī", "~ō")], rules {
         "" => [5 15, 1 12, 6 8, 9 8, 8 3, 0 2, 2 2, 3 2, 4 2, 7 2],
@@ -192,7 +188,7 @@ pub(super) static RELATIONS: [Relation<'static>; 35] = [
         "quīvīs" => 1,
         "vestrī" => 9,
         "vostrī" => 9,
-    }, true, None),
+    }, false, None),
     // DAT_M_PL, from NOM_M_PL.
     relation!(DAT_M_PL, [NOM_M_PL], [("~", "~"), ("~", "~s"), ("~a", "~ibus"), ("~aequae", "~ibusquibus"), ("~aequaelibet", "~ibusquibuslibet"), ("~smet", "~bīsmet"), ("~vīs", "~svīs"), ("~ēs", "~ibus"), ("~ī", "~ibus"), ("~īcumque", "~ibuscumque")], rules {
         "" => [1 23, 8 6, 2 4, 0 3, 7 3, 3 2, 4 2, 5 2, 6 2, 9 2],
@@ -208,24 +204,18 @@ pub(super) static RELATIONS: [Relation<'static>; 35] = [
         "quīcumque" => 9,
         "suī" => 1,
         "tuī" => 1,
-    }, true, None),
+    }, false, None),
     // DAT_F_SG, from DAT_M_SG.
     relation!(DAT_F_SG, [DAT_M_SG], [("~", "~"), ("~ō", "~ae")], rules {
         "" => [0 62, 1 8],
         "ō" => [1 8],
     } listed {}, true, None),
     // DAT_F_PL, from DAT_M_PL.
-    relation!(DAT_F_PL, [DAT_M_PL], [("~", "~")], rules {
-        "" => [0 68],
-    } listed {}, true, None),
+    relation!(DAT_F_PL, [DAT_M_PL], [], none, true, None),
     // DAT_N_SG, from DAT_M_SG.
-    relation!(DAT_N_SG, [DAT_M_SG], [("~", "~")], rules {
-        "" => [0 71],
-    } listed {}, true, None),
+    relation!(DAT_N_SG, [DAT_M_SG], [], none, true, None),
     // DAT_N_PL, from DAT_M_PL.
-    relation!(DAT_N_PL, [DAT_M_PL], [("~", "~")], rules {
-        "" => [0 69],
-    } listed {}, true, None),
+    relation!(DAT_N_PL, [DAT_M_PL], [], none, true, None),
     // ACC_M_SG, from ABL_F_SG.
     relation!(ACC_M_SG, [ABL_F_SG], [("~", "~"), ("~ā", "~em"), ("~ā", "~um"), ("~āc", "~unc"), ("~ācumque", "~emcumque"), ("~ānam", "~emnam"), ("~āvīs", "~umvīs"), ("~ōquam", "~emquam"), ("~ōquō", "~idquid"), ("~ōquōlibet", "~idquidlibet")], rules {
         "" => [2 19, 1 10, 0 5, 3 4, 5 3, 4 2, 6 2, 7 2, 8 2, 9 2],
@@ -314,11 +304,9 @@ pub(super) static RELATIONS: [Relation<'static>; 35] = [
         "quemcumque" => 3,
         "quemque" => 5,
         "ūnumquemque" => 5,
-    }, true, None),
+    }, false, None),
     // ACC_N_PL, from NOM_N_PL.
-    relation!(ACC_N_PL, [NOM_N_PL], [("~", "~")], rules {
-        "" => [0 72],
-    } listed {}, true, None),
+    relation!(ACC_N_PL, [NOM_N_PL], [], none, true, None),
     // ABL_M_SG, from ACC_M_PL.
     relation!(ABL_M_SG, [ACC_M_PL], [("~aequae", "~ōquō"), ("~aequaelibet", "~ōquōlibet"), ("~s", "~"), ("~sce", "~c"), ("~scumque", "~cumque"), ("~slibet", "~libet"), ("~snam", "~nam"), ("~sque", "~que"), ("~svīs", "~vīs")], rules {
         "" => [2 30, 4 4, 3 3, 6 3, 8 3, 0 2, 1 2, 5 2, 7 2],
@@ -333,11 +321,9 @@ pub(super) static RELATIONS: [Relation<'static>; 35] = [
         "cuiōsvīs" => 8,
         "quōsvīs" => 8,
         "utrōsvīs" => 8,
-    }, true, None),
+    }, false, None),
     // ABL_M_PL, from DAT_M_PL.
-    relation!(ABL_M_PL, [DAT_M_PL], [("~", "~")], rules {
-        "" => [0 68],
-    } listed {}, true, None),
+    relation!(ABL_M_PL, [DAT_M_PL], [], none, true, None),
     // ABL_F_SG, from ABL_M_SG.
     relation!(ABL_F_SG, [ABL_M_SG], [("quō~", "quā~"), ("~", "~"), ("~ō", "~ā"), ("~ōc", "~āc"), ("~ōnam", "~ānam"), ("~ōvīs", "~āvīs")], rules {
         "" => [2 30, 1 13, 0 12, 3 4, 4 2, 5 2],
@@ -355,18 +341,12 @@ pub(super) static RELATIONS: [Relation<'static>; 35] = [
         "quōquō" => 1,
         "quōvīs" => 0,
     }, true, None),
-    // ABL_F_PL, from DAT_F_PL.
-    relation!(ABL_F_PL, [DAT_F_PL], [("~", "~")], rules {
-        "" => [0 68],
-    } listed {}, true, None),
+    // ABL_F_PL, from DAT_M_PL.
+    relation!(ABL_F_PL, [DAT_M_PL], [], none, true, None),
     // ABL_N_SG, from ABL_M_SG.
-    relation!(ABL_N_SG, [ABL_M_SG], [("~", "~")], rules {
-        "" => [0 70],
-    } listed {}, true, None),
-    // ABL_N_PL, from ABL_M_PL.
-    relation!(ABL_N_PL, [ABL_M_PL], [("~", "~")], rules {
-        "" => [0 69],
-    } listed {}, true, None),
+    relation!(ABL_N_SG, [ABL_M_SG], [], none, true, None),
+    // ABL_N_PL, from DAT_M_PL.
+    relation!(ABL_N_PL, [DAT_M_PL], [], none, true, None),
     // VOC_M_SG, from NOM_M_SG.
     relation!(VOC_M_SG, [NOM_M_SG], [("~", "~"), ("~us", "~e")], rules {
         "" => [0 19, 1 7],
@@ -374,23 +354,13 @@ pub(super) static RELATIONS: [Relation<'static>; 35] = [
         "us" => [1 7],
     } listed {}, true, None),
     // VOC_M_PL, from NOM_M_PL.
-    relation!(VOC_M_PL, [NOM_M_PL], [("~", "~")], rules {
-        "" => [0 35],
-    } listed {}, true, None),
+    relation!(VOC_M_PL, [NOM_M_PL], [], none, true, None),
     // VOC_F_SG, from NOM_F_SG.
-    relation!(VOC_F_SG, [NOM_F_SG], [("~", "~")], rules {
-        "" => [0 28],
-    } listed {}, true, None),
+    relation!(VOC_F_SG, [NOM_F_SG], [], none, true, None),
     // VOC_F_PL, from NOM_F_PL.
-    relation!(VOC_F_PL, [NOM_F_PL], [("~", "~")], rules {
-        "" => [0 35],
-    } listed {}, true, None),
+    relation!(VOC_F_PL, [NOM_F_PL], [], none, true, None),
     // VOC_N_SG, from NOM_N_SG.
-    relation!(VOC_N_SG, [NOM_N_SG], [("~", "~")], rules {
-        "" => [0 28],
-    } listed {}, true, None),
+    relation!(VOC_N_SG, [NOM_N_SG], [], none, true, None),
     // VOC_N_PL, from NOM_N_PL.
-    relation!(VOC_N_PL, [NOM_N_PL], [("~", "~")], rules {
-        "" => [0 35],
-    } listed {}, true, None),
+    relation!(VOC_N_PL, [NOM_N_PL], [], none, true, None),
 ];

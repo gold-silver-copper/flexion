@@ -814,7 +814,7 @@ fn stems_file<P: flexion::Label, A: flexion::Label, F: flexion::Label>(
         };
         let _ = writeln!(
             s,
-            "    // {} like {}: {} words.\n    EndingTable {{\n        name: Cow::Borrowed({:?}),\n        words: {},\n        slot: {},\n        table: Cow::Borrowed(concat!(",
+            "    // {} like {}: {} words.\n    EndingTable {{\n        name: Cow::Borrowed({:?}),\n        words: {},\n        slot: {},",
             slot.name,
             t.name,
             thousands(t.words),
@@ -825,24 +825,34 @@ fn stems_file<P: flexion::Label, A: flexion::Label, F: flexion::Label>(
         // A line per row of cells, in the slot's order.
         let patterns: Vec<&str> = t.table.split('\t').collect();
         let mut row: Option<usize> = None;
-        let mut line = String::new();
+        let mut lines: Vec<String> = Vec::new();
         for (k, &c) in slot.cells.iter().enumerate() {
             let here = layout
                 .rows
                 .iter()
                 .position(|r| r.cells.contains(&usize::from(c)));
-            if here != row && !line.is_empty() {
-                let _ = writeln!(s, "            {line:?},");
-                line.clear();
+            if here != row || lines.is_empty() {
+                lines.push(String::new());
             }
             row = here;
-            line.push_str(patterns.get(k).copied().unwrap_or(""));
-            line.push('\t');
+            if let Some(line) = lines.last_mut() {
+                line.push_str(patterns.get(k).copied().unwrap_or(""));
+                line.push('\t');
+            }
         }
-        if !line.is_empty() {
-            let _ = writeln!(s, "            {line:?},");
+        match lines.as_slice() {
+            [line] => {
+                let _ = writeln!(s, "        table: Cow::Borrowed({line:?}),");
+            }
+            _ => {
+                s.push_str("        table: Cow::Borrowed(concat!(\n");
+                for line in &lines {
+                    let _ = writeln!(s, "            {line:?},");
+                }
+                s.push_str("        )),\n");
+            }
         }
-        s.push_str("        )),\n    },\n");
+        s.push_str("    },\n");
     }
     s.push_str("];\n");
     s

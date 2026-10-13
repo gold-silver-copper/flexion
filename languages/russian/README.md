@@ -48,7 +48,8 @@ grammar needs of:
 - `relations.rs`: which cell each cell's form is told from, and the rules on that
   form's ending that change it;
 - `laws.rs`: sound laws where a stem meets its ending or a literal before it (along a
-  tier, or on a copied letter), each with the words whose forms it gives and the forms it gets wrong;
+  tier, on a copied letter, or on a class letter an ending writes: harmony), each with the
+  words whose forms it gives and the forms it gets wrong;
 - `rules.rs`: which paradigm a word takes, as rules on its ending, each with how many of
   the dictionary's words with that ending follow each paradigm, and the words no rule
   gets right, listed;
@@ -58,7 +59,11 @@ grammar needs of:
 - `compounds.rs`: whether a word written in parts inflects each part;
 - `marks.rs` and `spellings.rs`: how a word typed without its marks (vowel length,
   `ё`) is spelled;
-- `irregular.rs`: the forms no paradigm gives;
+- `stems.rs`: the stem slots (the cells a word builds on one stem, learned from the
+  words that put different stems in different cells) and the ending tables paradigms
+  share over a slot (`ἐ~ᾰ`, `~ω`), each named after its commonest word;
+- `irregular.rs`: what no paradigm gives a word: the stem it lists for a slot, built
+  with an ending table (`aorist`, `ἀγγειλ- like λυω`), and the forms no stem gives;
 - a module per principal part, where a part of speech is built on them: each cell
   belongs to one part's system and is inflected from that part.
 
@@ -70,11 +75,11 @@ reason (the rule and its counts).
 
 | | words | paradigms | sound laws | rules | listed words | irregular forms |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 108894 | 185 | 18 | 1908 | 4571 | 2191 |
-| adjective | 67695 | 40 | 4 | 470 | 1643 | 145 |
-| verb | 46911 | 334 | 54 | 2703 | 4918 | 674 |
-| pronoun | 42 | 11 | 0 | 9 | 14 | 376 |
-| numeral | 77 | 4 | 4 | 11 | 19 | 56 |
+| noun | 108894 | 205 | 18 | 1912 | 4565 | 1642 |
+| adjective | 67695 | 50 | 4 | 463 | 1546 | 140 |
+| verb | 46911 | 340 | 53 | 2710 | 4898 | 549 |
+| pronoun | 42 | 10 | 0 | 10 | 13 | 373 |
+| numeral | 77 | 4 | 4 | 11 | 19 | 76 |
 
 *Words*: the dictionary's words the grammar is learned from. *Sound laws*: changes
 where a stem meets its ending (or farther, along a tier). *Rules*: the endings that
@@ -92,27 +97,32 @@ The margin after top-1 is a 95% interval, counting words. *Lemma in full*: top-1
 with every mark the dictionary's table writes, and said to be so (`spelled_in_full`).
 *Principal parts given*: top-1 of the other forms, given the dictionary's principal
 parts. *Features given*: top-1 from the headword, told the word's inherent features
-(its gender, as `.gender(…)` tells it). *Seen* and *unseen cells*: top-1 on the cells
-some training word of the word's paradigm has a form in, and on the others, derived
+(its gender, as `.gender(…)` tells it). *Among the candidates*: the right answer is
+among its answers at all. *Every cell right*: the share of words with every form right.
+*Log loss*: bits per form, −log₂ of the probability it gives the right answer (a form
+it doesn't give costs 5 bits a letter). *1 / 2 / 3 forms given*: top-1 of the other
+forms, typed in full, given that many of the word's forms chosen at random.
+*Seen* and *unseen cells*: top-1 on the cells some training word of the word's
+paradigm has a form in, and on the others, derived
 from other cells (with the number of forms). *Floor*: the CoNLL–SIGMORPHON 2017
 shared task's non-neural baseline (letters only), and on the unseen cells. *Attested*: top-1 of the shipped
 grammar on the dictionary's own words, typed in full.
 
-| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | features given | seen cells | unseen cells | floor (unseen) | attested |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 2611 | 30201 | **95.08%** ± 0.8 | 99.45% | 0.007 | 95.08% | 96.20% | 97.53% | 95.08% (30193) | 100.00% (8) | 94.72% (87.50%) | 100.00% |
-| adjective | 3466 | 171225 | **99.75%** ± 0.2 | 99.98% | 0.002 | 99.75% |  |  | 99.76% (171213) | 0.00% (12) | 99.78% (91.67%) | 100.00% |
-| verb | 1304 | 21858 | **96.05%** ± 1.1 | 99.49% | 0.009 | 96.05% | 98.92% | 95.79% | 96.07% (21829) | 79.31% (29) | 96.17% (41.38%) | 100.00% |
-| pronoun | 4 | 192 | **55.21%** ± 48.7 | 55.21% | 0.402 | 55.21% |  |  | 55.21% (192) |  | 55.21% (0.00%) | 100.00% |
-| numeral | 4 | 156 | **94.23%** ± 22.8 | 94.23% | 0.058 | 94.23% |  |  | 94.23% (156) |  | 100.00% (0.00%) | 100.00% |
+| | held-out words | forms | top-1 | top-3 | among the candidates | every cell right | calibration error | log loss | lemma in full | principal parts given | 1 / 2 / 3 forms given | features given | seen cells | unseen cells | floor (unseen) | attested |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 2611 | 30201 | **95.10%** ± 0.8 | 99.45% | 99.56% | 77.98% | 0.007 | 0.369 | 95.10% | 96.20% | 96.35 / 96.47 / 96.63 | 97.53% | 95.10% (30193) | 100.00% (8) | 94.72% (87.50%) | 100.00% |
+| adjective | 3466 | 171225 | **99.75%** ± 0.2 | 99.99% | 99.99% | 98.04% | 0.003 | 0.014 | 99.75% |  | 99.82 / 99.85 / 99.85 |  | 99.76% (171213) | 0.00% (12) | 99.78% (91.67%) | 100.00% |
+| verb | 1304 | 21858 | **96.07%** ± 1.1 | 99.49% | 99.52% | 86.89% | 0.005 | 0.361 | 96.07% | 99.00% | 96.90 / 97.38 / 98.15 | 95.80% | 96.09% (21829) | 79.31% (29) | 96.17% (41.38%) | 100.00% |
+| pronoun | 4 | 192 | **55.21%** ± 48.7 | 97.92% | 97.92% | 50.00% | 0.284 | 1.462 | 55.21% |  | 95.74 / 95.65 / 95.56 |  | 55.21% (192) |  | 55.21% (0.00%) | 100.00% |
+| numeral | 4 | 156 | **94.23%** ± 22.8 | 94.23% | 94.23% | 75.00% | 0.005 | 2.157 | 94.23% |  | 94.08 / 93.92 / 93.75 |  | 94.23% (156) |  | 100.00% (0.00%) | 100.00% |
 
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 39460 | 1570064 |
-| adjective | 5755 | 279315 |
-| verb | 17248 | 919660 |
-| pronoun | 904 | 41482 |
-| numeral | 830 | 34495 |
+| noun | 40219 | 1604130 |
+| adjective | 5734 | 282885 |
+| verb | 17470 | 938463 |
+| pronoun | 901 | 42188 |
+| numeral | 890 | 38992 |
 
 ## Data and license
 

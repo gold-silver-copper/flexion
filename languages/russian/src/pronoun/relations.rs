@@ -53,9 +53,7 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "никое" => 1,
     }, true, None),
     // NOM_F_INAN, from NOM_F_ANIM.
-    relation!(NOM_F_INAN, [NOM_F_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(NOM_F_INAN, [NOM_F_ANIM], [], none, true, None),
     // NOM_N_ANIM, from NOM_M_INAN.
     relation!(NOM_N_ANIM, [NOM_M_INAN], [("~", "~е"), ("~ей", "~ьё"), ("~ий", "~ое"), ("~й", "~е"), ("~й", "~ё"), ("~т", "~"), ("~ый", "~ое")], rules {
         "" => [3 9, 6 7, 2 4, 1 3, 4 3, 0 2, 5 2],
@@ -71,9 +69,7 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "твой" => 4,
     }, true, None),
     // NOM_N_INAN, from NOM_N_ANIM.
-    relation!(NOM_N_INAN, [NOM_N_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(NOM_N_INAN, [NOM_N_ANIM], [], none, true, None),
     // NOM_PL_ANIM, from NOM_M_INAN.
     relation!(NOM_PL_ANIM, [NOM_M_INAN], [("~", "~и"), ("~ей", "~ьи"), ("~й", "~е"), ("~й", "~и"), ("~ой", "~ие"), ("~ой", "~ые")], rules {
         "" => [2 11, 3 5, 5 4, 0 3, 1 3, 4 3],
@@ -90,11 +86,9 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "любой" => 5,
         "никакой" => 4,
         "таковой" => 5,
-    }, true, None),
+    }, false, None),
     // NOM_PL_INAN, from NOM_PL_ANIM.
-    relation!(NOM_PL_INAN, [NOM_PL_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(NOM_PL_INAN, [NOM_PL_ANIM], [], none, true, None),
     // GEN_M_ANIM, from NOM_F_ANIM.
     relation!(GEN_M_ANIM, [NOM_F_ANIM], [("~а", "~его"), ("~а", "~ого"), ("~ая", "~ого"), ("~я", "~его")], rules {
         "" => [2 17, 3 8, 1 3, 0 2],
@@ -105,27 +99,19 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
     } listed {
         "ваша" => 0,
         "наша" => 0,
-    }, true, None),
+    }, false, None),
     // GEN_M_INAN, from GEN_M_ANIM.
-    relation!(GEN_M_INAN, [GEN_M_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(GEN_M_INAN, [GEN_M_ANIM], [], none, true, None),
     // GEN_F_ANIM, from GEN_M_ANIM.
     relation!(GEN_F_ANIM, [GEN_M_ANIM], [("~го", "~й")], rules {
         "" => [0 31],
-    } listed {}, true, None),
+    } listed {}, false, None),
     // GEN_F_INAN, from GEN_F_ANIM.
-    relation!(GEN_F_INAN, [GEN_F_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(GEN_F_INAN, [GEN_F_ANIM], [], none, true, None),
     // GEN_N_ANIM, from GEN_M_ANIM.
-    relation!(GEN_N_ANIM, [GEN_M_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(GEN_N_ANIM, [GEN_M_ANIM], [], none, true, None),
     // GEN_N_INAN, from GEN_M_ANIM.
-    relation!(GEN_N_INAN, [GEN_M_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(GEN_N_INAN, [GEN_M_ANIM], [], none, true, None),
     // GEN_PL_ANIM, from NOM_PL_ANIM.
     relation!(GEN_PL_ANIM, [NOM_PL_ANIM], [("~", "~х"), ("~е", "~х")], rules {
         "" => [1 18, 0 13],
@@ -133,51 +119,33 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "и" => [0 12],
     } listed {
         "те" => 0,
-    }, true, None),
+    }, false, None),
     // GEN_PL_INAN, from GEN_PL_ANIM.
-    relation!(GEN_PL_INAN, [GEN_PL_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(GEN_PL_INAN, [GEN_PL_ANIM], [], none, true, None),
     // DAT_M_ANIM, from GEN_M_ANIM.
     relation!(DAT_M_ANIM, [GEN_M_ANIM], [("~го", "~му")], rules {
         "" => [0 32],
     } listed {}, true, None),
     // DAT_M_INAN, from DAT_M_ANIM.
-    relation!(DAT_M_INAN, [DAT_M_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(DAT_M_INAN, [DAT_M_ANIM], [], none, true, None),
     // DAT_F_ANIM, from GEN_F_ANIM.
-    relation!(DAT_F_ANIM, [GEN_F_ANIM], [("~", "~")], rules {
-        "" => [0 32],
-    } listed {}, true, None),
+    relation!(DAT_F_ANIM, [GEN_F_ANIM], [], none, true, None),
     // DAT_F_INAN, from GEN_F_ANIM.
-    relation!(DAT_F_INAN, [GEN_F_ANIM], [("~", "~")], rules {
-        "" => [0 32],
-    } listed {}, true, None),
+    relation!(DAT_F_INAN, [GEN_F_ANIM], [], none, true, None),
     // DAT_N_ANIM, from DAT_M_ANIM.
-    relation!(DAT_N_ANIM, [DAT_M_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(DAT_N_ANIM, [DAT_M_ANIM], [], none, true, None),
     // DAT_N_INAN, from DAT_M_ANIM.
-    relation!(DAT_N_INAN, [DAT_M_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(DAT_N_INAN, [DAT_M_ANIM], [], none, true, None),
     // DAT_PL_ANIM, from GEN_PL_ANIM.
     relation!(DAT_PL_ANIM, [GEN_PL_ANIM], [("~х", "~м")], rules {
         "" => [0 32],
     } listed {}, true, None),
     // DAT_PL_INAN, from DAT_PL_ANIM.
-    relation!(DAT_PL_INAN, [DAT_PL_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(DAT_PL_INAN, [DAT_PL_ANIM], [], none, true, None),
     // ACC_M_ANIM, from GEN_M_ANIM.
-    relation!(ACC_M_ANIM, [GEN_M_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
-    // ACC_M_INAN, from NOM_M_INAN.
-    relation!(ACC_M_INAN, [NOM_M_INAN], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(ACC_M_ANIM, [GEN_M_ANIM], [], none, true, None),
+    // ACC_M_INAN, from NOM_M_ANIM.
+    relation!(ACC_M_INAN, [NOM_M_ANIM], [], none, true, None),
     // ACC_F_ANIM, from NOM_F_ANIM.
     relation!(ACC_F_ANIM, [NOM_F_ANIM], [("~а", "~у"), ("~ая", "~ую"), ("~я", "~ю")], rules {
         "" => [1 18, 2 9, 0 5],
@@ -187,57 +155,33 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "оя" => [2 5],
     } listed {}, true, None),
     // ACC_F_INAN, from ACC_F_ANIM.
-    relation!(ACC_F_INAN, [ACC_F_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(ACC_F_INAN, [ACC_F_ANIM], [], none, true, None),
     // ACC_N_ANIM, from NOM_N_ANIM.
-    relation!(ACC_N_ANIM, [NOM_N_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(ACC_N_ANIM, [NOM_N_ANIM], [], none, true, None),
     // ACC_N_INAN, from NOM_N_ANIM.
-    relation!(ACC_N_INAN, [NOM_N_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(ACC_N_INAN, [NOM_N_ANIM], [], none, true, None),
     // ACC_PL_ANIM, from GEN_PL_ANIM.
-    relation!(ACC_PL_ANIM, [GEN_PL_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(ACC_PL_ANIM, [GEN_PL_ANIM], [], none, true, None),
     // ACC_PL_INAN, from NOM_PL_ANIM.
-    relation!(ACC_PL_INAN, [NOM_PL_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(ACC_PL_INAN, [NOM_PL_ANIM], [], none, true, None),
     // INS_M_ANIM, from DAT_PL_ANIM.
-    relation!(INS_M_ANIM, [DAT_PL_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(INS_M_ANIM, [DAT_PL_ANIM], [], none, true, None),
     // INS_M_INAN, from DAT_PL_ANIM.
-    relation!(INS_M_INAN, [DAT_PL_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(INS_M_INAN, [DAT_PL_ANIM], [], none, true, None),
     // INS_F_ANIM, from GEN_F_ANIM.
-    relation!(INS_F_ANIM, [GEN_F_ANIM], [("~", "~")], rules {
-        "" => [0 32],
-    } listed {}, true, None),
+    relation!(INS_F_ANIM, [GEN_F_ANIM], [], none, true, None),
     // INS_F_INAN, from GEN_F_ANIM.
-    relation!(INS_F_INAN, [GEN_F_ANIM], [("~", "~")], rules {
-        "" => [0 32],
-    } listed {}, true, None),
+    relation!(INS_F_INAN, [GEN_F_ANIM], [], none, true, None),
     // INS_N_ANIM, from DAT_PL_ANIM.
-    relation!(INS_N_ANIM, [DAT_PL_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(INS_N_ANIM, [DAT_PL_ANIM], [], none, true, None),
     // INS_N_INAN, from DAT_PL_ANIM.
-    relation!(INS_N_INAN, [DAT_PL_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(INS_N_INAN, [DAT_PL_ANIM], [], none, true, None),
     // INS_PL_ANIM, from GEN_PL_ANIM.
     relation!(INS_PL_ANIM, [GEN_PL_ANIM], [("~х", "~ми")], rules {
         "" => [0 32],
     } listed {}, true, None),
     // INS_PL_INAN, from INS_PL_ANIM.
-    relation!(INS_PL_INAN, [INS_PL_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(INS_PL_INAN, [INS_PL_ANIM], [], none, true, None),
     // PREP_M_ANIM, from GEN_F_ANIM.
     relation!(PREP_M_ANIM, [GEN_F_ANIM], [("~ей", "~ём"), ("~й", "~м")], rules {
         "" => [1 24, 0 7],
@@ -250,31 +194,17 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "никоей" => 1,
     }, true, None),
     // PREP_M_INAN, from PREP_M_ANIM.
-    relation!(PREP_M_INAN, [PREP_M_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(PREP_M_INAN, [PREP_M_ANIM], [], none, true, None),
     // PREP_F_ANIM, from GEN_F_ANIM.
-    relation!(PREP_F_ANIM, [GEN_F_ANIM], [("~", "~")], rules {
-        "" => [0 32],
-    } listed {}, true, None),
+    relation!(PREP_F_ANIM, [GEN_F_ANIM], [], none, true, None),
     // PREP_F_INAN, from GEN_F_ANIM.
-    relation!(PREP_F_INAN, [GEN_F_ANIM], [("~", "~")], rules {
-        "" => [0 32],
-    } listed {}, true, None),
+    relation!(PREP_F_INAN, [GEN_F_ANIM], [], none, true, None),
     // PREP_N_ANIM, from PREP_M_ANIM.
-    relation!(PREP_N_ANIM, [PREP_M_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(PREP_N_ANIM, [PREP_M_ANIM], [], none, true, None),
     // PREP_N_INAN, from PREP_M_ANIM.
-    relation!(PREP_N_INAN, [PREP_M_ANIM], [("~", "~")], rules {
-        "" => [0 33],
-    } listed {}, true, None),
+    relation!(PREP_N_INAN, [PREP_M_ANIM], [], none, true, None),
     // PREP_PL_ANIM, from GEN_PL_ANIM.
-    relation!(PREP_PL_ANIM, [GEN_PL_ANIM], [("~", "~")], rules {
-        "" => [0 32],
-    } listed {}, true, None),
+    relation!(PREP_PL_ANIM, [GEN_PL_ANIM], [], none, true, None),
     // PREP_PL_INAN, from GEN_PL_ANIM.
-    relation!(PREP_PL_INAN, [GEN_PL_ANIM], [("~", "~")], rules {
-        "" => [0 32],
-    } listed {}, true, None),
+    relation!(PREP_PL_INAN, [GEN_PL_ANIM], [], none, true, None),
 ];

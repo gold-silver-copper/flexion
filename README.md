@@ -41,41 +41,43 @@ version of these crates before PR #10 (a model, not a grammar), from the bare le
 
 | language | part of speech | top-1 from the headword | lemma in full | principal parts given | features given | seen cells | unseen cells | floor | baseline | attested | calibration error |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| english | noun | **98.59%** ± 0.2 | 98.59% | 100.00% |  | 98.59% (47466) |  | 98.39% | 97.14% | 100.00% | 0.001 |
-| english | verb | **97.83%** ± 0.4 | 97.83% | 99.71% |  | 97.83% (20745) |  | 98.24% | 97.91% | 100.00% | 0.004 |
-| english | adjective | **96.91%** ± 0.4 | 96.91% | 100.00% |  | 96.91% (18715) |  | 95.02% | 96.69% | 100.00% | 0.003 |
-| english | adverb | **99.34%** ± 0.5 | 99.34% | 100.00% |  | 99.34% (3621) |  | 98.90% |  | 100.00% | 0.006 |
-| russian | noun | **95.08%** ± 0.8 | 95.08% | 96.20% | 97.53% | 95.08% (30193) | 100.00% (8) | 94.72% | 84.48% | 100.00% | 0.007 |
-| russian | adjective | **99.75%** ± 0.2 | 99.75% |  |  | 99.76% (171213) | 0.00% (12) | 99.78% | 96.60% | 100.00% | 0.002 |
-| russian | verb | **96.05%** ± 1.1 | 96.05% | 98.92% | 95.79% | 96.07% (21829) | 79.31% (29) | 96.17% | 92.37% | 100.00% | 0.009 |
-| latin | noun | **66.41%** ± 2.3 | 93.45% | 98.35% | 67.19% | 66.43% (18401) | 0.00% (6) | 59.45% | 68.91% | 100.00% | 0.031 |
-| latin | adjective | **82.54%** ± 1.4 | 99.28% | 99.51% |  | 82.54% (102281) | 0.00% (1) | 71.85% | 87.22% | 100.00% | 0.014 |
-| latin | verb | **70.47%** ± 3.6 | 85.24% | 97.17% |  | 70.44% (60845) | 84.13% (126) | 65.34% | 75.18% | 100.00% | 0.048 |
-| ancient-greek | noun | **67.50%** ± 3.2 | 85.52% | 93.83% | 68.20% | 67.49% (11695) | 100.00% (5) | 49.22% | 57.82% | 99.92% | 0.061 |
-| ancient-greek | adjective | **72.00%** ± 4.0 | 85.65% | 94.62% |  | 72.01% (22426) | 40.00% (10) | 50.81% | 63.66% | 99.94% | 0.060 |
-| ancient-greek | verb | **63.22%** ± 5.9 | 72.09% | 74.38% |  | 63.41% (63654) | 41.09% (550) | 46.07% | 54.26% | 100.00% | 0.071 |
-| sanskrit | noun | **92.13%** ± 2.2 | 92.13% |  | 97.03% | 92.13% (13801) |  | 91.70% | 93.55% | 100.00% | 0.012 |
-| sanskrit | adjective | **91.25%** ± 4.0 | 91.25% |  |  | 91.29% (13449) | 0.00% (7) | 89.95% | 91.21% | 100.00% | 0.034 |
-| sanskrit | verb | **88.14%** ± 6.8 | 88.14% | 88.40% |  | 88.47% (7210) | 0.00% (27) | 90.01% | 90.13% | 100.00% | 0.052 |
+| english | noun | **98.58%** ± 0.2 | 98.58% | 100.00% |  | 98.58% (47466) |  | 98.39% | 97.14% | 100.00% | 0.001 |
+| english | verb | **97.80%** ± 0.4 | 97.80% | 99.71% |  | 97.80% (20745) |  | 98.24% | 97.91% | 100.00% | 0.005 |
+| english | adjective | **96.91%** ± 0.4 | 96.91% | 100.00% |  | 96.91% (18715) |  | 95.02% | 96.69% | 100.00% | 0.004 |
+| english | adverb | **99.34%** ± 0.5 | 99.34% | 100.00% |  | 99.34% (3621) |  | 98.90% |  | 100.00% | 0.002 |
+| russian | noun | **95.10%** ± 0.8 | 95.10% | 96.20% | 97.53% | 95.10% (30193) | 100.00% (8) | 94.72% | 84.48% | 100.00% | 0.007 |
+| russian | adjective | **99.75%** ± 0.2 | 99.75% |  |  | 99.76% (171213) | 0.00% (12) | 99.78% | 96.60% | 100.00% | 0.003 |
+| russian | verb | **96.07%** ± 1.1 | 96.07% | 99.00% | 95.80% | 96.09% (21829) | 79.31% (29) | 96.17% | 92.37% | 100.00% | 0.005 |
+| latin | noun | **66.38%** ± 2.3 | 93.38% | 98.74% | 67.21% | 66.40% (18401) | 0.00% (6) | 59.45% | 68.91% | 100.00% | 0.032 |
+| latin | adjective | **82.53%** ± 1.4 | 99.28% | 99.52% |  | 82.53% (102281) | 0.00% (1) | 71.85% | 87.22% | 100.00% | 0.025 |
+| latin | verb | **70.47%** ± 3.6 | 85.25% | 98.56% |  | 70.44% (60850) | 87.60% (121) | 65.34% | 75.18% | 100.00% | 0.034 |
+| ancient-greek | noun | **67.48%** ± 3.2 | 85.52% | 93.95% | 68.19% | 67.48% (11700) |  | 49.22% | 57.82% | 99.92% | 0.061 |
+| ancient-greek | adjective | **72.07%** ± 4.0 | 85.73% | 94.63% |  | 72.09% (22426) | 40.00% (10) | 50.81% | 63.66% | 99.94% | 0.059 |
+| ancient-greek | verb | **66.66%** ± 5.8 | 75.77% | 80.86% |  | 67.02% (63800) | 10.40% (404) | 46.07% | 54.26% | 100.00% | 0.081 |
+| sanskrit | noun | **92.10%** ± 2.2 | 92.10% |  | 97.30% | 92.10% (13801) |  | 91.70% | 93.55% | 100.00% | 0.017 |
+| sanskrit | adjective | **92.00%** ± 3.9 | 92.00% |  |  | 92.06% (13447) | 11.11% (9) | 89.95% | 91.21% | 100.00% | 0.022 |
+| sanskrit | verb | **90.05%** ± 6.3 | 90.05% | 90.77% |  | 90.45% (6953) | 80.28% (284) | 90.01% | 90.13% | 100.00% | 0.054 |
 
 Where the grammar is below the baseline or the floor, and why:
 
 - **Latin, from the headword.** A headword doesn't write vowel length (`fox` for `fōx`);
   the grammar restores it by rules on the letters around each vowel (`-ātiō`, `dē-`, a
-  diphthong), and offers the second likeliest spelling too (top-3: nouns 85.3%, verbs
-  90.4%), but a stem's own lengths are lexical: `iūdex`, `bōlus` and `grūs` come back as
-  `iudex`, `bolus`, `grus`. Typed in full the same grammars reach 93.5% (nouns), 99.3%
-  (adjectives), 85.2% (verbs), and with the principal parts 97–99%. Over all ten tenths
-  the verbs score 71.8% ± 0.9 from the headword and 97.8% ± 0.3 with principal parts.
+  diphthong), and offers the second likeliest spelling too (top-3: nouns 86.5%, verbs
+  91.6%), but a stem's own lengths are lexical: `iūdex`, `bōlus` and `grūs` come back as
+  `iudex`, `bolus`, `grus`. Typed in full the same grammars reach 93.4% (nouns), 99.3%
+  (adjectives), 85.3% (verbs), and with the principal parts 98.6–99.5%. Over all ten tenths
+  the verbs scored 71.8% ± 0.9 from the headword and 97.8% ± 0.3 with principal parts
+  (PR #12's grammar; one tenth now: 70.5% and 98.6%).
 - **Ancient Greek verbs.** The augment (a law where the form's first letters meet the
   stem: `ἐ‹ἀ → ἠ`), the perfect's reduplication (a copied letter, `%ε~κα`) and the augment
   behind a preverb (`ἀπο + ἐ → ἀπε`) are learned now, and the accent can sit on a fixed
   syllable from the word's end (`λυθῇς`, `λελυμένος`). What's left is mostly stems: a verb's
   aorist or perfect stem (`ἀγγέλλω` → `ἠγγέλθην`) follows from no ending, so a new verb's
-  is a guess, and known verbs list it.
+  is a guess; known verbs list it with the ending table it takes, and a principal part
+  given fixes its stem (80.9% with them, 74.4% before stems were learned).
 - **Sanskrit.** The `n` → `ṇ` rule is a law (`तर्काणाम्`), and a noun's gender, given,
-  takes it from 92.1% to 97.0%. The verbs are small (a tenth is ~300 words): over all ten
-  tenths they score 85.3% ± 1.5, the tenths ranging from 82.6% to 89.3%. Few full perfect
+  takes it from 92.1% to 97.3%. The verbs are small (a tenth is ~300 words): over all ten
+  tenths they score 87.8% ± 1.6, the tenths ranging from 84.5% to 91.3%. Few full perfect
   tables leave the reduplicated perfect unlearned.
 - **Russian** has no stress any more (stripped from input, never written), so its
   numbers aren't comparable with the baseline's, which placed stress.
@@ -198,25 +200,29 @@ adiuvo	175	adiūtus
 ## What it costs
 
 A clean debug build of each crate, one at a time (one machine; CI's numbers are in its
-compile-cost job), and one call (release: a word's candidates for one cell, over a few words and their first 40 cells):
+compile-cost job), and one call (release: a word's candidates for one cell, over 30 words
+and their first 40 cells; `cargo xtask bench <language> --pos <part>`), on words the
+grammar was learned from and on held-out words:
 
-| crate | source MB | build seconds | peak MB | `.rlib` MB | one call |
-|---|---:|---:|---:|---:|---:|
-| english | 0.9 | 3 | 573 | 41 | 10 µs (nouns), 5 µs (verbs) |
-| russian | 2.9 | 6 | 881 | 66 | 16 µs (nouns), 22 µs (verbs) |
-| latin | 1.9 | 4 | 774 | 57 | 12 µs (nouns), 18 µs (verbs) |
-| ancient-greek | 4.9 | 4 | 835 | 71 | 36 µs (nouns), 67 µs (verbs) |
-| sanskrit | 0.8 | 2 | 488 | 36 | 6 µs (nouns), 16 µs (verbs) |
+| crate | source MB | build seconds | peak MB | `.rlib` MB | one call, nouns | one call, verbs |
+|---|---:|---:|---:|---:|---:|---:|
+| english | 0.9 | 3 | 548 | 42 | 9 / 9 µs | 10 / 10 µs |
+| russian | 3.0 | 6 | 912 | 69 | 16 / 17 µs | 36 / 38 µs |
+| latin | 2.0 | 5 | 785 | 61 | 21 / 23 µs | 32 / 40 µs |
+| ancient-greek | 4.7 | 6 | 855 | 73 | 44 / 81 µs | 52 / 146 µs |
+| sanskrit | 0.9 | 2 | 441 | 38 | 5 / 7 µs | 19 / 25 µs |
 
-Ancient Greek's verbs, 624 cells each, are most of its size: their irregular forms
-(1.3 MB, mostly principal parts of verbs whose stems follow from no ending) and their
-paradigms (1.2 MB). Nothing is computed before the first answer, and the same
-entries always give the same crate, byte for byte.
+Ancient Greek's verbs, 624 cells each, are most of its size: their paradigms (1.2 MB,
+292 conjugations) and their irregular forms (1.0 MB: 1,827 listed stems with the ending
+table each builds on, and 32,105 forms no stem and table give). Nothing is computed
+before the first answer, and the same entries always give the same crate, byte for byte.
 
 ## How the grammar is learned
 
-Everything below is learned from the dictionary's inflection tables, and kept only where
-it pays for itself.
+Everything below is learned from the dictionary's inflection tables, the same way for
+every language, and kept only where it pays for itself: what an item costs to write
+down (its letters and references, in bits) against what it saves in listing the words
+it describes (`crates/flexion-train/src/bits.rs`).
 
 - **Paradigms.** A word's forms are aligned on the letters they all keep (the stem
   pieces); what's left is a pattern per form: `~а`, `~о~` (a vowel the other forms drop),
@@ -225,7 +231,21 @@ it pays for itself.
   means in the most dictionaries, with the most senses). A word missing some forms joins
   the fullest paradigm that builds the forms it has. A paradigm states the inherent
   features its words share (`[gender: Neuter]`), and is *like* the commoner paradigm it
-  shares the most cells with: it writes only the cells that differ (`_` for the rest).
+  shares the most cells with: it writes only the cells that differ (`_` for the rest). It
+  may be like it through a *view*: one feature's value read as another (a Latin deponent
+  is like `agitō` with its active cells read as the passive ones: `like Agitō as
+  ACT_AS_PASS`). A paradigm of more than one word is kept where it costs fewer bits than
+  listing the forms the next paradigm doesn't build; a word whose table only another
+  paradigm nearly builds is listed there. A cell whose form is another cell's for nearly
+  every word is that cell's, stated once (Greek middle = passive outside the aorist and
+  future).
+- **Stems and ending tables.** A part of speech's cells fall into stem slots, learned
+  from where words' stems change together (Greek verbs: the twelve tense stems the
+  dictionary's own conjugation template has). Per slot, the ending tables paradigms share
+  are named after their commonest word; a word the paradigms don't build lists one stem
+  per slot and the table that builds on it, not every form (`αγοραζω  perfect  ἠγορᾰσ-
+  like ἐλπω`: ἀγοράζω builds its perfect on `ἠγορᾰσ-` with ἐλπω's endings). A form the
+  caller gives fixes its slot's stem.
 - **Sound laws.** A built form marks where its stem meets its ending (`+`). Where a word's
   paradigm, or a more general one, would build its forms but for a change there, the
   change is a law: Russian `[к|г|х|ш|ч|ж|щ]+ы → +и`, Greek `γ+σ → +ξ`, `κ+θ → +χθ`. A law
@@ -238,7 +258,12 @@ it pays for itself.
   same law takes the letter written without its breathing (inside a compound). A law
   is kept when it gives forms of five or more words in two or more cells and breaks
   fewer than one in twenty of the forms it gives; the words it explains
-  join the more general paradigm, and the forms it breaks are listed. Laws run in
+  join the more general paradigm, and the forms it breaks are listed. A law may read its
+  own earlier output and map a class of letters by the class letter that triggers it, so
+  vowel harmony through stacked suffixes is one law: Turkish `I` → ı/i/u/ü and `A` →
+  a/e by the word's last vowel, Finnish `A` → a/ä with `e`, `i` transparent; endings then
+  print with class letters (`~lAr`). Contexts grow one letter at a time while a law
+  breaks too much, and every law is checked on held-out words. Laws run in
   [`sound-law`](crates/sound-law).
 - **Relations.** Each cell's form is told from another cell's (the one that predicts it
   best: a tree on the lemma's cell), its end changed by rules read off that form's ending
@@ -254,10 +279,10 @@ it pays for itself.
   rule the word has decides, with how many of the dictionary's words with that ending
   take each paradigm. A rule is kept only when it describes its words in fewer bits
   than the broader rule does, by more than the rule costs (minimum description length). Words no rule gets
-  right are listed. A rule's status follows Yang's Tolerance Principle: a rule with few
-  enough exceptions is productive (`regular`); otherwise speakers vary (`unsettled`).
-  (The principle wants a core of frequent words; with no frequencies in the dumps it is
-  applied to every word of the rule.)
+  right are listed. A rule's status follows Yang's Tolerance Principle, judged as a learner
+  meets it: on the 250, 500, 1,000 and 2,000 commonest words (in the most dictionaries,
+  with the most senses) that have its ending; a rule with few enough exceptions there is
+  productive (`regular`, printed on the rule); otherwise speakers vary (`unsettled`).
 - **Compounds and prefixes.** A word written in parts inflects its last part or each part
   (Russian `диван-кровать`). German verbs inflect behind their prefixes: separable ones
   go where the form puts them (`fing an`), inseparable ones stay in front and take off
@@ -276,7 +301,9 @@ it pays for itself.
   probability says how much of the spelling was a guess.
 - **Irregular forms.** Whatever no rule gives is listed, as the dictionary writes it.
 - **Calibration.** Probabilities are sharpened by one power per part of speech, fitted on
-  a tenth of the words the grammar didn't learn from, typed as their headwords.
+  a tenth of the words the grammar didn't learn from, typed as their headwords; an answer
+  of a status whose answers are right less often than they say keeps only the share it
+  earns (`trust`), the rest is "none of these".
 
 The trainer builds the same values the crates hold, and prints them; a test prints
 grammars learned from real entries, compiles them, and checks that they answer exactly
