@@ -8,6 +8,7 @@ use crate::spec::{FormSource, Language};
 use flexion::Orthography;
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
+use unicode_normalization::UnicodeNormalization;
 
 /// The longest lemma or form read, in bytes (see the format's edit record).
 const MAX_WORD: usize = 255;
@@ -383,6 +384,30 @@ fn lexeme(
     let key_of = |f: &str| spelling.key(&spelling.read(f).letters);
     let lemma_key = key_of(&lemma);
     let same_word = |f: &String| key_of(f) == lemma_key;
+    // An inflected form with an entry of its own (`γέγονε`, the perfect's
+    // third person singular of `γίγνομαι`) repeats its lemma's table: a
+    // sense calls it a form of another word, and its table has it in that
+    // form's cell. It is no word of its own. Marks lookup ignores don't
+    // count, in the letter or written apart (`ᾰ̓μείνων` is `ἀμείνων`).
+    let s = &lang.spelling;
+    let marks = [s.stress_marks, s.fold_marks, s.unmark_marks, s.strip_marks];
+    let bare = |f: &str| {
+        let plain: String = f
+            .nfd()
+            .filter(|c| !marks.iter().any(|m| m.contains(*c)))
+            .collect();
+        key_of(&plain)
+    };
+    let headword = bare(&lemma);
+    let has_headword = |c: usize| {
+        Some(c) != lemma_cell
+            && forms
+                .get(c)
+                .is_some_and(|fs| fs.iter().any(|f| bare(f) == headword))
+    };
+    if form_of_cells(entry, cells).into_iter().any(has_headword) {
+        return None;
+    }
     let canonical = entry
         .forms
         .iter()
@@ -455,4 +480,18 @@ fn lexeme(
                 .any(|t| matches!(t.as_str(), "vulgar" | "offensive" | "derogatory" | "slur"))
         }),
     })
+}
+
+/// The cells in which, by its senses, an entry is a form of another word:
+/// none unless every sense says it is one.
+fn form_of_cells(entry: &Entry, cells: &Cells) -> Vec<usize> {
+    let form_of = |s: &kaikki::Sense| s.tags.iter().any(|t| t == "form-of");
+    if entry.senses.is_empty() || !entry.senses.iter().all(form_of) {
+        return Vec::new();
+    }
+    entry
+        .senses
+        .iter()
+        .flat_map(|s| cells.match_tags(&s.tags))
+        .collect()
 }

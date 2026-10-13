@@ -158,6 +158,22 @@ fn a_word_the_dictionary_lacks_takes_its_paradigm_with_evidence() {
 }
 
 #[test]
+fn an_inflected_form_with_its_own_table_is_no_word() {
+    // `γέγονε` (a form of `γίγνομαι`) has an entry with its lemma's table;
+    // the comparative `βελτίων` (of `ἀγαθός`) has one with its own.
+    let lang = flexion_configs::ancient_greek::language();
+    let script = Script::new(&lang.spelling);
+    let data = data(&lang, &script);
+    let words: Vec<&str> = data
+        .iter()
+        .flat_map(|d| &d.lexemes)
+        .map(|l| l.lemma.as_str())
+        .collect();
+    assert!(!words.contains(&"γέγονε"), "{words:?}");
+    assert!(words.contains(&"βελτίων"), "{words:?}");
+}
+
+#[test]
 fn a_printed_grammar_answers_as_the_grammar_it_was_printed_from() {
     // Russian has referrals, compounds and sound laws; Ancient Greek, accent;
     // Latin, restored vowel length.
