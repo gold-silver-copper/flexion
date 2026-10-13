@@ -241,18 +241,10 @@ pub fn analogies<'s>(
             if told.get(c).copied().unwrap_or(true) {
                 continue;
             }
-            // (other dimensions apart, fewer words, source, from, to)
             // (other dimensions apart, ways it changes, not a relation's
-            // pair, fewer words, source, from, to)
-            let mut best: Option<(
-                usize,
-                usize,
-                bool,
-                std::cmp::Reverse<usize>,
-                usize,
-                usize,
-                usize,
-            )> = None;
+            // pair, fewer words), and (source, from, to)
+            type Rank = (usize, usize, bool, std::cmp::Reverse<usize>);
+            let mut best: Option<(Rank, usize, usize, usize)> = None;
             for s in 0..cells {
                 if !told.get(s).copied().unwrap_or(false) {
                     continue;
@@ -277,10 +269,12 @@ pub fn analogies<'s>(
                         continue;
                     }
                     let key = (
-                        apart(a, s).0,
-                        ways,
-                        !edges.contains(&(a, b)),
-                        std::cmp::Reverse(n),
+                        (
+                            apart(a, s).0,
+                            ways,
+                            !edges.contains(&(a, b)),
+                            std::cmp::Reverse(n),
+                        ),
                         s,
                         a,
                         b,
@@ -290,7 +284,7 @@ pub fn analogies<'s>(
                     }
                 }
             }
-            let Some((_, _, fresh, _, s, a, b)) = best else {
+            let Some(((_, _, fresh, _), s, a, b)) = best else {
                 continue;
             };
             // A relation's pair: its changes; else the pair's own.
