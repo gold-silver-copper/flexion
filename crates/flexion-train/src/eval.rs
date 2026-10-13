@@ -17,12 +17,7 @@ pub fn dev_of(test: u64) -> u64 {
 
 /// A stable tenth for a word: FNV-1a of its key, mod 10.
 pub fn bucket(key: &str) -> u64 {
-    let mut h: u64 = 0xcbf2_9ce4_8422_2325;
-    for b in key.bytes() {
-        h ^= u64::from(b);
-        h = h.wrapping_mul(0x0100_0000_01b3);
-    }
-    h % 10
+    hash(key) % 10
 }
 
 /// How a held-out word is typed.
@@ -40,6 +35,9 @@ pub enum Input<'p> {
     /// As the headword, with the word's inherent features (its gender)
     /// given.
     Features,
+    /// In full, with `k` of the word's forms given, chosen by a hash of the
+    /// word and the cell (see [`given_cells`]); those cells aren't scored.
+    Given(usize),
 }
 
 /// Scores for one input mode.
@@ -63,6 +61,58 @@ pub struct Score {
     /// one) has some training word's form in, and on the others.
     pub seen: (usize, usize),
     pub unseen: (usize, usize),
+    /// The right answer among the candidates at all, at any place.
+    pub among: usize,
+    /// Summed over forms: −log₂ of the probability the grammar gives the
+    /// right answer, at most its listing cost (see [`Outcome::bits`]).
+    pub bits: f64,
+    /// Words scored (with at least one form), and those with every scored
+    /// form right.
+    pub words: usize,
+    pub whole: usize,
+}
+
+/// What became of one scored form.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Outcome {
+    /// The word: its place among the lexemes scored.
+    pub word: usize,
+    pub cell: usize,
+    /// The right answer's place among the candidates (0: the first), if it
+    /// is one.
+    pub rank: Option<usize>,
+    /// The first candidate's probability.
+    pub top: f32,
+    /// The probability of the right answer: summed over the candidates that
+    /// write it.
+    pub probability: f32,
+    /// The first candidate's letters are right (its stress aside).
+    pub letters: bool,
+    /// The cell is one the word's likeliest paradigm has training forms in.
+    pub seen: bool,
+    /// −log₂ [`Outcome::probability`], at most the right answer's listing
+    /// cost: [`LETTER_BITS`] per letter and one more for its end. A form no
+    /// candidate writes costs its listing.
+    pub bits: f64,
+}
+
+impl Outcome {
+    pub fn right(&self) -> bool {
+        self.rank == Some(0)
+    }
+}
+
+/// What a listed form costs per letter, in bits, in the log loss: one of 32
+/// symbols. A fixed cost, the same for every language, so that held-out
+/// bits compare across grammars and runs.
+pub const LETTER_BITS: f64 = 5.0;
+
+/// The cost of listing `form` whole: [`LETTER_BITS`] for each letter and
+/// for its end.
+pub fn listing_bits(form: &str) -> f64 {
+    #[allow(clippy::cast_precision_loss)]
+    let letters = form.chars().count() as f64;
+    LETTER_BITS * (letters + 1.0)
 }
 
 impl Score {
@@ -72,6 +122,62 @@ impl Score {
 
     pub fn top3_accuracy(&self) -> f64 {
         ratio(self.top3, self.forms)
+    }
+
+    /// The share of forms whose right answer is among the candidates at all.
+    pub fn among_accuracy(&self) -> f64 {
+        ratio(self.among, self.forms)
+    }
+
+    /// The share of words with every scored form right.
+    pub fn whole_words(&self) -> f64 {
+        ratio(self.whole, self.words)
+    }
+
+    /// Held-out log loss: bits per form (see [`Outcome::bits`]).
+    pub fn log_loss(&self) -> f64 {
+        #[allow(clippy::cast_precision_loss)]
+        let n = self.forms.max(1) as f64;
+        self.bits / n
+    }
+
+    /// Tally outcomes (in word order, as [`outcomes`] gives them).
+    pub fn of(outcomes: &[Outcome]) -> Score {
+        let mut s = Score::default();
+        let mut word: Option<(usize, bool)> = None;
+        for o in outcomes {
+            let right = o.right();
+            s.forms += 1;
+            s.right += usize::from(right);
+            s.letters += usize::from(o.letters);
+            s.top3 += usize::from(o.rank.is_some_and(|r| r < 3));
+            s.among += usize::from(o.rank.is_some());
+            if let Some(r) = o.rank {
+                #[allow(clippy::cast_precision_loss)]
+                let place = (r + 1) as f64;
+                s.reciprocal += 1.0 / place;
+            }
+            let split = if o.seen { &mut s.seen } else { &mut s.unseen };
+            split.0 += 1;
+            split.1 += usize::from(right);
+            s.bits += o.bits;
+            s.calibrate(f64::from(o.top), right);
+            word = match word {
+                Some((w, all)) if w == o.word => Some((w, all && right)),
+                other => {
+                    if let Some((_, all)) = other {
+                        s.words += 1;
+                        s.whole += usize::from(all);
+                    }
+                    Some((o.word, right))
+                }
+            };
+        }
+        if let Some((_, all)) = word {
+            s.words += 1;
+            s.whole += usize::from(all);
+        }
+        s
     }
 
     /// The mean reciprocal rank of the right answer.
@@ -134,10 +240,75 @@ pub fn score<P: Label, A: Label, F: Label>(
     input: Input<'_>,
     seen: &[Vec<bool>],
 ) -> Score {
-    let mut s = Score::default();
-    for l in lexemes {
+    Score::of(&outcomes(
+        grammar,
+        orthography,
+        lexemes,
+        input,
+        seen,
+        |_| true,
+    ))
+}
+
+/// The held-out bits of `lexemes` under `grammar`, typed as `input`: summed
+/// over every form the dictionary lists, −log₂ of the probability of the
+/// right answer, at most its listing cost (see [`Outcome::bits`]).
+pub fn held_out_bits<P: Label, A: Label, F: Label>(
+    grammar: &flexion::Grammar<'_, P, A, F>,
+    lexemes: &[&Lexeme],
+    input: Input<'_>,
+) -> f64 {
+    outcomes(grammar, &grammar.orthography, lexemes, input, &[], |_| true)
+        .iter()
+        .map(|o| o.bits)
+        .sum()
+}
+
+/// The cells given for `k` forms given ([`Input::Given`]): `k` of the
+/// cells `l` has forms in (the lemma's aside), those with the lowest hash
+/// of the word and the cell. None when the word has no more than `k` such
+/// cells (nothing would be left to score).
+pub fn given_cells(l: &Lexeme, k: usize, lemma_cell: Option<usize>) -> Option<Vec<usize>> {
+    let mut cells: Vec<(u64, usize)> = l
+        .cells
+        .iter()
+        .enumerate()
+        .filter(|&(c, fs)| !fs.is_empty() && Some(c) != lemma_cell)
+        .map(|(c, _)| (hash(&format!("{}\u{1f}{c}", l.key)), c))
+        .collect();
+    if cells.len() <= k {
+        return None;
+    }
+    cells.sort_unstable();
+    Some(cells.into_iter().take(k).map(|(_, c)| c).collect())
+}
+
+/// FNV-1a of a string.
+pub fn hash(s: &str) -> u64 {
+    let mut h: u64 = 0xcbf2_9ce4_8422_2325;
+    for b in s.bytes() {
+        h ^= u64::from(b);
+        h = h.wrapping_mul(0x0100_0000_01b3);
+    }
+    h
+}
+
+/// Every scored form of `lexemes` (held out) in the cells `scored` accepts,
+/// against the dictionary's first form, typed as `input`, word by word.
+/// `seen`: per paradigm, the cells its training words have forms in (empty:
+/// every cell counts as seen).
+pub fn outcomes<P: Label, A: Label, F: Label>(
+    grammar: &flexion::Grammar<'_, P, A, F>,
+    orthography: &flexion::Orthography<'_>,
+    lexemes: &[&Lexeme],
+    input: Input<'_>,
+    seen: &[Vec<bool>],
+    scored: impl Fn(usize) -> bool,
+) -> Vec<Outcome> {
+    let mut out = Vec::new();
+    for (word, l) in lexemes.iter().enumerate() {
         let typed = match input {
-            Input::Full | Input::Citation(_) => l.full.clone(),
+            Input::Full | Input::Citation(_) | Input::Given(_) => l.full.clone(),
             Input::Headword | Input::Features => l.lemma.clone(),
         };
         let inherent: Vec<(u8, u8)> = l
@@ -147,9 +318,13 @@ pub fn score<P: Label, A: Label, F: Label>(
             .filter(|&(_, &v)| input == Input::Features && v != u8::MAX)
             .filter_map(|(f, &v)| Some((u8::try_from(f).ok()?, v)))
             .collect();
-        let parts = match input {
-            Input::Citation(parts) => parts,
-            _ => &[],
+        let parts: Vec<usize> = match input {
+            Input::Citation(parts) => parts.to_vec(),
+            Input::Given(k) => match given_cells(l, k, grammar.lemma_cell) {
+                Some(cells) => cells,
+                None => continue,
+            },
+            _ => Vec::new(),
         };
         let given: Vec<(usize, &str)> = parts
             .iter()
@@ -166,38 +341,40 @@ pub fn score<P: Label, A: Label, F: Label>(
             .and_then(|r| seen.get(r.value.index()));
         let table = grammar.table(&typed, &known);
         for (cell, forms) in l.cells.iter().enumerate() {
-            let Some(want) = forms.first().filter(|_| !parts.contains(&cell)) else {
+            let Some(want) = forms
+                .first()
+                .filter(|_| !parts.contains(&cell) && scored(cell))
+            else {
                 continue;
             };
             let candidates = table.get(cell).map_or(&[][..], Vec::as_slice);
             let same = |form: &str| same_form(orthography, form, want);
-            let right = candidates.first().is_some_and(|c| same(&c.form));
-            s.forms += 1;
-            s.right += usize::from(right);
-            let split = if has.is_none_or(|h| h.get(cell).copied().unwrap_or(false)) {
-                &mut s.seen
-            } else {
-                &mut s.unseen
-            };
-            split.0 += 1;
-            split.1 += usize::from(right);
             let letters = |form: &str| orthography.read(form).letters;
+            let probability: f32 = candidates
+                .iter()
+                .filter(|c| same(&c.form))
+                .map(|c| c.probability)
+                .sum();
+            let listing = listing_bits(want);
+            let bits = if probability > 0.0 {
+                (-f64::from(probability).log2()).min(listing)
+            } else {
+                listing
+            };
             let first = candidates.first();
-            s.letters += usize::from(first.is_some_and(|c| letters(&c.form) == letters(want)));
-            let place = candidates.iter().position(|c| same(&c.form));
-            s.top3 += usize::from(place.is_some_and(|p| p < 3));
-            if let Some(place) = place {
-                #[allow(clippy::cast_precision_loss)]
-                let rank = (place + 1) as f64;
-                s.reciprocal += 1.0 / rank;
-            }
-            s.calibrate(
-                candidates.first().map_or(0.0, |c| f64::from(c.probability)),
-                right,
-            );
+            out.push(Outcome {
+                word,
+                cell,
+                rank: candidates.iter().position(|c| same(&c.form)),
+                top: first.map_or(0.0, |c| c.probability),
+                probability,
+                letters: first.is_some_and(|c| letters(&c.form) == letters(want)),
+                seen: has.is_none_or(|h| h.get(cell).copied().unwrap_or(false)),
+                bits,
+            });
         }
     }
-    s
+    out
 }
 
 /// The share of `test`'s forms (typed as their headwords) the shared task's

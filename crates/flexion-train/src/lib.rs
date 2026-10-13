@@ -16,6 +16,7 @@ pub mod extract;
 pub mod kaikki;
 pub mod laws;
 pub mod learn;
+pub mod measure;
 pub mod pipeline;
 pub mod print;
 pub mod relations;

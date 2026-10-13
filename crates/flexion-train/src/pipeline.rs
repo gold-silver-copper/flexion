@@ -24,6 +24,9 @@ pub struct Measured {
     /// From the headword with the word's inherent features (its gender)
     /// given, where the part of speech has them.
     pub features: Option<Score>,
+    /// With 1, 2 and 3 of the word's forms given, chosen at random (see
+    /// [`eval::Input::Given`]).
+    pub given: Vec<Score>,
     /// The longest-suffix rule's share right (see [`eval::floor`]).
     pub floor: f64,
     /// Its share right on the unseen cells (see [`eval::Score::unseen`]).
@@ -82,6 +85,7 @@ pub fn build<'s>(
         let headword = score(Input::Headword);
         let citation = (!parts.is_empty()).then(|| score(Input::Citation(&parts)));
         let features = (!part.inherent.is_empty()).then(|| score(Input::Features));
+        let given = (1..=3).map(|k| score(Input::Given(k))).collect();
         let main: Vec<&Lexeme> = train.iter().filter(|l| l.source == 0).collect();
         let (floor, floor_unseen) = eval::floor(&orthography, &main, &test, |l, c| {
             eval::unseen(g, &scored.seen, l, c)
@@ -121,6 +125,7 @@ pub fn build<'s>(
             headword,
             citation,
             features,
+            given,
             floor,
             floor_unseen,
             attested,
@@ -161,14 +166,18 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
          with every mark the dictionary's table writes, and said to be so (`spelled_in_full`).\n\
          *Principal parts given*: top-1 of the other forms, given the dictionary's principal\n\
          parts. *Features given*: top-1 from the headword, told the word's inherent features\n\
-         (its gender, as `.gender(…)` tells it). *Seen* and *unseen cells*: top-1 on the cells\n\
+         (its gender, as `.gender(…)` tells it). *Among the candidates*: the right answer is\n\
+         among its answers at all. *Every cell right*: the share of words with every form right.\n\
+         *Log loss*: bits per form, −log₂ of the probability it gives the right answer (a form\n\
+         it doesn't give costs 5 bits a letter). *1 / 2 / 3 forms given*: top-1 of the other\n\
+         forms, typed in full, given that many of the word's forms chosen at random. *Seen* and *unseen cells*: top-1 on the cells\n\
          some training word of the word's paradigm has a form in, and on the others, derived\n\
          from other cells (with the number of forms). *Floor*: the CoNLL–SIGMORPHON 2017\n\
          shared task's non-neural baseline (letters only), and on the unseen cells. *Attested*: top-1 of the shipped\n\
          grammar on the dictionary's own words, typed in full.\n\n",
     );
     s.push_str(
-        "| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | features given | seen cells | unseen cells | floor (unseen) | attested |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n",
+        "| | held-out words | forms | top-1 | top-3 | among the candidates | every cell right | calibration error | log loss | lemma in full | principal parts given | 1 / 2 / 3 forms given | features given | seen cells | unseen cells | floor (unseen) | attested |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n",
     );
     // `right` of `forms`, as a percentage with the count of forms.
     let share = |(forms, right): (usize, usize)| {
@@ -186,20 +195,33 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
     };
     for m in measured {
         let p = m.headword.accuracy();
+        let given = if m.given.iter().all(|s| s.forms == 0) {
+            String::new()
+        } else {
+            m.given
+                .iter()
+                .map(|s| format!("{:.2}", 100.0 * s.accuracy()))
+                .collect::<Vec<_>>()
+                .join(" / ")
+        };
         #[allow(clippy::cast_precision_loss)]
         let noise = 1.96 * (p * (1.0 - p) / m.test_words.max(1) as f64).sqrt();
         let _ = writeln!(
             s,
-            "| {} | {} | {} | **{:.2}%** ± {:.1} | {:.2}% | {:.3} | {:.2}% | {} | {} | {} | {} | {:.2}% ({:.2}%) | {:.2}% |",
+            "| {} | {} | {} | **{:.2}%** ± {:.1} | {:.2}% | {:.2}% | {:.2}% | {:.3} | {:.3} | {:.2}% | {} | {} | {} | {} | {} | {:.2}% ({:.2}%) | {:.2}% |",
             m.name,
             m.test_words,
             m.headword.forms,
             100.0 * p,
             100.0 * noise,
             100.0 * m.headword.top3_accuracy(),
+            100.0 * m.headword.among_accuracy(),
+            100.0 * m.headword.whole_words(),
             m.headword.calibration_error(),
+            m.headword.log_loss(),
             100.0 * m.full.accuracy(),
             accuracy(&m.citation),
+            given,
             accuracy(&m.features),
             share(m.headword.seen),
             share(m.headword.unseen),
