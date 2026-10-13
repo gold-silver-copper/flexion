@@ -239,6 +239,24 @@ fn try_language(
         if !g.spellings.is_empty() {
             println!("  {} spellings listed", g.spellings.len());
         }
+        let regular: Vec<&str> = g
+            .paradigm
+            .rules
+            .iter()
+            .filter(|r| r.regular)
+            .map(|r| r.ending.as_ref())
+            .collect();
+        println!(
+            "  paradigm rules regular: {} of {} (verdicts agree across vocabularies {:.0}%); shortest: {:?}",
+            regular.len(),
+            g.paradigm.rules.len(),
+            100.0 * learned.stability,
+            regular
+                .iter()
+                .filter(|e| e.chars().count() <= 2)
+                .take(12)
+                .collect::<Vec<_>>()
+        );
         let by: Vec<String> = g
             .relations
             .iter()

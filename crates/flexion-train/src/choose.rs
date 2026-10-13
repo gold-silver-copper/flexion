@@ -111,6 +111,7 @@ pub fn learn<'a, L: Label + Hash + Ord>(
             Some(Rule {
                 ending: Cow::Owned(ending.to_string()),
                 counts: Cow::Owned(list),
+                regular: false,
             })
         })
         .collect();
@@ -161,6 +162,7 @@ pub fn learn_starts<'a, L: Label + Hash + Ord>(
         .map(|r| Rule {
             ending: Cow::Owned(back(&r.ending)),
             counts: r.counts.clone(),
+            regular: r.regular,
         })
         .collect();
     rules.sort_by(|a, b| a.ending.cmp(&b.ending));
@@ -207,6 +209,71 @@ pub fn endings(word: &str) -> impl Iterator<Item = &str> {
         .into_iter()
         .skip(first)
         .filter_map(move |i| word.get(i..))
+}
+
+/// The vocabularies a rule is judged on: the commonest this many words.
+const VOCABULARIES: [usize; 4] = [250, 500, 1000, 2000];
+
+/// Judges each rule of `choice` by Yang's Tolerance Principle as a learner
+/// meets it: on bounded vocabularies of the commonest words (Yang's Guide
+/// p. 5; 2018 pp. 802–803), not the whole dictionary. `examples` are the
+/// words the choice was learned from, `rank` their commonness (0 the
+/// commonest). A rule is regular when it tolerates its exceptions in most
+/// vocabularies that hold at least two of its words; one no vocabulary
+/// judges takes its broader rule's verdict. Returns how often the verdicts
+/// agree across vocabularies (stability, Guide p. 10).
+pub fn judge<L: Label + Hash + Ord>(
+    choice: &mut Choice<'_, L>,
+    examples: &[(String, L)],
+    rank: &[usize],
+) -> f64 {
+    let mut order: Vec<usize> = (0..examples.len()).collect();
+    order.sort_by_key(|&i| (rank.get(i).copied().unwrap_or(usize::MAX), i));
+    let Cow::Owned(rules) = &mut choice.rules else {
+        return 1.0;
+    };
+    let mut verdicts: HashMap<String, bool> = HashMap::default();
+    let mut by_length: Vec<usize> = (0..rules.len()).collect();
+    by_length.sort_by_key(|&i| rules.get(i).map_or(0, |r| r.ending.chars().count()));
+    let (mut agree, mut judged) = (0.0, 0.0);
+    for i in by_length {
+        let Some(rule) = rules.get_mut(i) else {
+            continue;
+        };
+        let (mut yes, mut no) = (0u32, 0u32);
+        for k in VOCABULARIES {
+            let mut counts: BTreeMap<L, u32> = BTreeMap::new();
+            for (word, value) in order.iter().take(k).filter_map(|&j| examples.get(j)) {
+                if word.ends_with(rule.ending.as_ref()) {
+                    *counts.entry(*value).or_default() += 1;
+                }
+            }
+            let n: u32 = counts.values().sum();
+            if n < 2 {
+                continue;
+            }
+            let top = counts.values().copied().max().unwrap_or(0);
+            if flexion::tolerates(f64::from(n), f64::from(n - top)) {
+                yes += 1;
+            } else {
+                no += 1;
+            }
+        }
+        let broader = endings(&rule.ending)
+            .skip(1)
+            .find_map(|e| verdicts.get(e).copied());
+        rule.regular = match yes.cmp(&no) {
+            std::cmp::Ordering::Greater => true,
+            std::cmp::Ordering::Less => false,
+            std::cmp::Ordering::Equal => broader.unwrap_or(false),
+        };
+        if yes + no > 0 {
+            agree += f64::from(yes.max(no)) / f64::from(yes + no);
+            judged += 1.0;
+        }
+        verdicts.insert(rule.ending.to_string(), rule.regular);
+    }
+    if judged > 0.0 { agree / judged } else { 1.0 }
 }
 
 #[cfg(test)]

@@ -917,7 +917,12 @@ fn rules<L: flexion::Label>(choice: &flexion::Choice<'_, L>, name: impl Fn(L) ->
             .iter()
             .map(|&(l, n)| format!("{} {n}", name(l)))
             .collect();
-        format!("        {} => [{}],\n", Lit(&r.ending), counts.join(", "))
+        let regular = if r.regular { " regular" } else { "" };
+        format!(
+            "        {} => [{}]{regular},\n",
+            Lit(&r.ending),
+            counts.join(", ")
+        )
     };
     choice.rules.iter().map(rule).collect()
 }

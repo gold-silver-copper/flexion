@@ -45,6 +45,9 @@ pub struct Learned<'s> {
     /// The sound laws at the stem's edge, with their evidence.
     pub laws: Vec<crate::laws::Law>,
     pub stats: Stats,
+    /// How often the paradigm rules' productivity verdicts agree across the
+    /// vocabularies they are judged on.
+    pub stability: f64,
 }
 
 /// Counts for the report.
@@ -274,7 +277,26 @@ pub fn learn<'s>(
             .get(usize::from(p))
             .is_some_and(|x| x.stems(&orthography, word).is_some())
     };
-    let paradigm_choice = choose::learn(&paradigm_examples, settings, fits);
+    let mut paradigm_choice = choose::learn(&paradigm_examples, settings, fits);
+    // Which rules are productive, judged on the commonest words: in the
+    // most dictionaries, with the most senses.
+    let mut by_commonness: Vec<usize> = (0..words.len()).collect();
+    by_commonness.sort_by_key(|&i| {
+        words.get(i).map(|w| {
+            (
+                std::cmp::Reverse(w.dictionaries),
+                std::cmp::Reverse(w.senses),
+                w.key.clone(),
+            )
+        })
+    });
+    let mut rank = vec![0; words.len()];
+    for (r, &i) in by_commonness.iter().enumerate() {
+        if let Some(slot) = rank.get_mut(i) {
+            *slot = r;
+        }
+    }
+    let stability = choose::judge(&mut paradigm_choice, &paradigm_examples, &rank);
     let (accent, stress_labels) = (!orthography.stress_marks.is_empty())
         .then(|| {
             let laws = program.as_ref();
@@ -437,6 +459,7 @@ pub fn learn<'s>(
         seen,
         laws,
         stats,
+        stability,
     }
 }
 

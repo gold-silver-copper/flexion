@@ -8,7 +8,7 @@ mod paradigm;
 pub mod pattern;
 mod stress;
 
-pub use choice::{Choice, DISCOUNT, Reading, Rule, Side, Status, blend, by_ending};
+pub use choice::{Choice, DISCOUNT, Reading, Rule, Side, Status, blend, by_ending, tolerates};
 pub use grammar::{
     Compound, Grammar, Irregular, Known, Placement, Prefix, Prefixes, Separation, WORD_END,
     restore, sharpen,
@@ -160,24 +160,27 @@ impl std::error::Error for UnknownValue {}
 #[macro_export]
 macro_rules! choice {
     (
-        rules { $( $ending:literal => [ $( $value:tt $count:literal ),* $(,)? ] ),* $(,)? }
+        rules { $( $ending:literal => [ $( $value:tt $count:literal ),* $(,)? ] $($regular:ident)? ),* $(,)? }
         listed { $( $word:literal => $listed:tt ),* $(,)? }
     ) => {
-        $crate::choice!(@ $crate::Side::End; $( $ending => [ $( $value $count ),* ] ),*; $( $word => $listed ),*)
+        $crate::choice!(@ $crate::Side::End; $( $ending => [ $( $value $count ),* ] ($($regular)?) ),*; $( $word => $listed ),*)
     };
     (
-        starts { $( $ending:literal => [ $( $value:tt $count:literal ),* $(,)? ] ),* $(,)? }
+        starts { $( $ending:literal => [ $( $value:tt $count:literal ),* $(,)? ] $($regular:ident)? ),* $(,)? }
         listed { $( $word:literal => $listed:tt ),* $(,)? }
     ) => {
-        $crate::choice!(@ $crate::Side::Start; $( $ending => [ $( $value $count ),* ] ),*; $( $word => $listed ),*)
+        $crate::choice!(@ $crate::Side::Start; $( $ending => [ $( $value $count ),* ] ($($regular)?) ),*; $( $word => $listed ),*)
     };
-    (@ $side:expr; $( $ending:literal => [ $( $value:tt $count:literal ),* ] ),*; $( $word:literal => $listed:tt ),*) => {
+    (@regular regular) => { true };
+    (@regular) => { false };
+    (@ $side:expr; $( $ending:literal => [ $( $value:tt $count:literal ),* ] ($($regular:ident)?) ),*; $( $word:literal => $listed:tt ),*) => {
         $crate::Choice {
             side: $side,
             rules: ::std::borrow::Cow::Borrowed(&[ $(
                 $crate::Rule {
                     ending: ::std::borrow::Cow::Borrowed($ending),
                     counts: ::std::borrow::Cow::Borrowed(&[ $( ($value, $count) ),* ]),
+                    regular: $crate::choice!(@regular $($regular)?),
                 }
             ),* ]),
             exceptions: ::std::borrow::Cow::Borrowed(&[ $(
