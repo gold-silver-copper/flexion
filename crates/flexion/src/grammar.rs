@@ -209,13 +209,7 @@ impl Irregular<'_> {
 
     /// The form of `cell` for the word looked up as `word`, if listed.
     pub fn get(&self, word: &str, cell: u16) -> Option<&str> {
-        let mut parts = self.line(word)?.split('\t').skip(1);
-        while let (Some(c), Some(f)) = (parts.next(), parts.next()) {
-            if c.parse::<u16>().ok() == Some(cell) {
-                return Some(f);
-            }
-        }
-        None
+        listed_in(self.line(word)?, cell)
     }
 
     /// Whether the word looked up as `word` has listed forms.
@@ -223,23 +217,23 @@ impl Irregular<'_> {
         self.line(word).is_some()
     }
 
-    /// The word's line.
+    /// The word's line (a search through the whole table: a caller asking
+    /// for several cells looks it up once).
     fn line(&self, word: &str) -> Option<&str> {
         let table = self.table.as_ref();
-        let bytes = table.as_bytes();
         let (mut low, mut high) = (0, table.len());
         while low < high {
-            let middle = low + (high - low) / 2;
-            let start = bytes
+            let middle = (low + (high - low) / 2..=high)
+                .find(|&i| table.is_char_boundary(i))
+                .unwrap_or(high);
+            let start = table
                 .get(..middle)?
-                .iter()
-                .rposition(|&b| b == b'\n')
+                .rfind('\n')
                 .map_or(0, |i| i + 1)
                 .max(low);
-            let end = bytes
+            let end = table
                 .get(start..)?
-                .iter()
-                .position(|&b| b == b'\n')
+                .find('\n')
                 .map_or(table.len(), |i| start + i);
             let line = table.get(start..end)?;
             match line.split('\t').next()?.cmp(word) {
@@ -250,6 +244,17 @@ impl Irregular<'_> {
         }
         None
     }
+}
+
+/// The form of `cell` in a word's line of the irregular table, if listed.
+fn listed_in(line: &str, cell: u16) -> Option<&str> {
+    let mut parts = line.split('\t').skip(1);
+    while let (Some(c), Some(f)) = (parts.next(), parts.next()) {
+        if c.parse::<u16>().ok() == Some(cell) {
+            return Some(f);
+        }
+    }
+    None
 }
 
 /// What the caller knows about a word besides its lemma: forms of it, such
@@ -463,17 +468,22 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             Some((prefixes, prefix, rest, separable, inseparable, rests))
         });
         let whole = whole * behind.as_ref().map_or(1.0, |b| 1.0 - b.3 - b.4);
-        let listed_word = self.irregular.has(&key);
+        let line = self.irregular.line(&key);
         let mut lists = Vec::with_capacity(cells.len());
         for (i, &cell) in cells.iter().enumerate() {
-            if let Some(form) = self.irregular_form(&key, cell) {
+            let at = |c: usize| {
+                line.zip(u16::try_from(c).ok())
+                    .and_then(|(l, c)| listed_in(l, c))
+            };
+            if let Some(form) = at(cell) {
                 lists.push(vec![listed(crate::recase(form, casing), 1.0)]);
                 continue;
             }
             // A form of a word whose forms are listed, but not this one: told
             // from the listed form of the cell it comes from.
-            if let Some((letters, ending)) = listed_word
-                .then(|| self.told_from_listed(&key, cell, self.relations.len()))
+            if let Some((letters, ending)) = line
+                .is_some()
+                .then(|| self.told_from_listed(&at, cell, self.relations.len()))
                 .flatten()
             {
                 let stresses = match readings.first() {
@@ -647,15 +657,23 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         o.write(&letters, stress, written.casing)
     }
 
-    /// The letters of `cell` for the word looked up as `key`, told from the
-    /// listed form of the cell it comes from (or one told so in turn, at
-    /// most `steps` away), and where the change starts.
-    fn told_from_listed(&self, key: &str, cell: usize, steps: usize) -> Option<(String, usize)> {
+    /// The letters of `cell` for a word whose listed forms `listed` gives by
+    /// cell, told from the listed form of the cell it comes from (or one
+    /// told so in turn, at most `steps` away), and where the change starts.
+    fn told_from_listed<'l>(
+        &self,
+        listed: &impl Fn(usize) -> Option<&'l str>,
+        cell: usize,
+        steps: usize,
+    ) -> Option<(String, usize)> {
         let relation = self.relation(cell).filter(|r| r.listed)?;
         let from = relation.source()?;
-        let source = match self.irregular_form(key, from) {
-            Some(listed) => self.orthography.read(listed).letters,
-            None => self.told_from_listed(key, from, steps.checked_sub(1)?)?.0,
+        let source = match listed(from) {
+            Some(form) => self.orthography.read(form).letters,
+            None => {
+                self.told_from_listed(listed, from, steps.checked_sub(1)?)?
+                    .0
+            }
         };
         self.changing(relation).told(&source, self.smoothing)
     }
