@@ -61,15 +61,14 @@ pub struct Prefixes<'a> {
     pub drops: Cow<'a, [Cow<'a, str>]>,
     /// How a prefix kept in front meets the rest's form: `(prefix, head,
     /// joined)`, the prefix (as it is looked up) and the form's first letter
-    /// becoming `joined`
-    /// (Greek `ἀπο` and the augment's `ἐ`: `ἀπε`, `ἀπέλυον`), sorted. Where
-    /// none is listed, the prefix is written before the form.
+    /// becoming `joined` (Greek `ἀπο` and the augment's `ἐ`: `ἀπε`,
+    /// `ἀπέλυον`), sorted. Where none is listed, the prefix is written before
+    /// the form.
     pub junctions: Cow<'a, [Junction<'a>]>,
 }
 
-/// How a prefix meets a form: `(prefix, head, joined)` (see
-/// [`Prefixes::junctions`]).
-pub type Junction<'a> = (Cow<'a, str>, Cow<'a, str>, Cow<'a, str>);
+/// How a prefix meets a form: `(prefix, head, joined)`.
+type Junction<'a> = (Cow<'a, str>, Cow<'a, str>, Cow<'a, str>);
 
 /// A prefix, and of the dictionary's words that begin with it, how many
 /// separate it, how many keep it in front, of how many.
@@ -424,8 +423,8 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 let each = p(Compound::Each);
                 let parts = (each > 0.0).then(|| {
                     (
-                        self.unsharpened(first, cells, &Known::default()),
-                        self.unsharpened(rest, cells, known),
+                        top(self.unsharpened(first, cells, &Known::default())),
+                        top(self.unsharpened(rest, cells, known)),
                     )
                 });
                 (p(Compound::Last), parts.map(|parts| (parts, each)))
@@ -460,7 +459,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 forms: &given,
                 ..*known
             };
-            let rests = self.unsharpened(rest, cells, &base);
+            let rests = top(self.unsharpened(rest, cells, &base));
             Some((prefixes, prefix, rest, separable, inseparable, rests))
         });
         let whole = whole * behind.as_ref().map_or(1.0, |b| 1.0 - b.3 - b.4);
@@ -501,7 +500,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                     .copied()
                     .unwrap_or(Placement::Before);
                 let drop = prefixes.drops.get(cell).map_or("", |d| d.as_ref());
-                for c in top(rests.get(i).cloned().unwrap_or_default()) {
+                for c in rests.get(i).cloned().unwrap_or_default() {
                     let separated = match placement {
                         Placement::Before => format!("{prefix}{}", c.form),
                         Placement::After => format!("{} {prefix}", c.form),
@@ -527,10 +526,8 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 }
             }
             if let Some(((firsts, rests), p)) = &each {
-                let firsts = top(firsts.get(i).cloned().unwrap_or_default());
-                let rests = top(rests.get(i).cloned().unwrap_or_default());
-                for a in &firsts {
-                    for b in &rests {
+                for a in firsts.get(i).into_iter().flatten() {
+                    for b in rests.get(i).into_iter().flatten() {
                         out.push(Candidate {
                             form: format!("{}{JOINER}{}", a.form, b.form),
                             also: Vec::new(),
@@ -1045,11 +1042,13 @@ fn add<'g>(out: &mut Vec<Candidate<'g>>, candidate: Candidate<'g>) {
     }
 }
 
-/// The likeliest few of `candidates`.
-fn top(mut candidates: Vec<Candidate<'_>>) -> Vec<Candidate<'_>> {
-    candidates.sort_by(|a, b| b.probability.total_cmp(&a.probability));
-    candidates.truncate(KEEP - 1);
-    candidates
+/// The likeliest few candidates of each list.
+fn top(mut lists: Vec<Vec<Candidate<'_>>>) -> Vec<Vec<Candidate<'_>>> {
+    for list in &mut lists {
+        list.sort_by(|a, b| b.probability.total_cmp(&a.probability));
+        list.truncate(KEEP - 1);
+    }
+    lists
 }
 
 /// Raise probabilities to `power` and make them sum to what they summed to
