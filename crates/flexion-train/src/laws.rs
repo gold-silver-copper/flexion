@@ -461,10 +461,7 @@ pub fn learn<'s>(
     let candidates: Vec<(Change, u32)> = candidates
         .into_iter()
         .flat_map(|(change, n)| {
-            let twin = change
-                .after(&vowels)
-                .map(|c| (c, n))
-                .filter(|_| !crate::off("twins"));
+            let twin = change.after(&vowels).map(|c| (c, n));
             std::iter::once((change, n)).chain(twin)
         })
         .collect();

@@ -123,17 +123,7 @@ pub fn analyze(lemma: &str, forms: &[&str]) -> Analysis {
     // Where each kept letter is in each word: of the ways to place them,
     // the one breaking them into the fewest runs (`λυ` in `λέλυκα` is one
     // run after `λε`, not `λ` … `υ`).
-    let places: Vec<Option<Vec<usize>>> = all
-        .iter()
-        .map(|w| {
-            if crate::off("skeleton") {
-                let (keep, pos) = lcs(&sub, w);
-                (keep.len() == sub.len()).then_some(pos)
-            } else {
-                embed(&sub, w)
-            }
-        })
-        .collect();
+    let places: Vec<Option<Vec<usize>>> = all.iter().map(|w| embed(&sub, w)).collect();
     // Kept letters stay one stem piece while they are adjacent in every word.
     let mut runs: Vec<Vec<usize>> = Vec::new();
     for k in 0..sub.len() {

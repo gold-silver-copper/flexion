@@ -13,6 +13,8 @@ use std::borrow::Cow;
 const SAMPLE: usize = 300;
 /// The fewest words a change of an ending is learned from.
 const MIN_WORDS: usize = 2;
+/// The most letters a change reaches past the shared run, at each edge.
+const EDGE: usize = 3;
 
 /// Per cell but the root, the relation telling it from another cell's form.
 /// `forms`: per word, per cell, its usual form's letters.
@@ -356,9 +358,8 @@ fn change(a: &str, b: &str) -> (String, String) {
             .count()
     };
     // The longest run; of equally long, the one beginning earliest.
-    let edge = if crate::off("edges") { 0 } else { 3 };
-    let (n, j, k) = (0..=edge)
-        .flat_map(|j| (0..=edge).map(move |k| (j, k)))
+    let (n, j, k) = (0..=EDGE)
+        .flat_map(|j| (0..=EDGE).map(move |k| (j, k)))
         .map(|(j, k)| (shared(j, k), j, k))
         .max_by_key(|&(n, j, k)| (n, std::cmp::Reverse(j + k)))
         .unwrap_or((0, 0, 0));

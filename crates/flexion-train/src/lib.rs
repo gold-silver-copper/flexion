@@ -25,7 +25,6 @@ pub mod spec;
 
 use spec::{Language, PartOfSpeech};
 
-/// The shape of a part of speech's cells, from its config.
 /// The cells of a part of speech's principal parts after its lemma.
 pub fn parts(lang: &Language, part: &PartOfSpeech) -> Result<Vec<usize>, String> {
     let cells = cells::Cells::new(lang, part)?;
@@ -39,28 +38,7 @@ pub fn parts(lang: &Language, part: &PartOfSpeech) -> Result<Vec<usize>, String>
         .collect()
 }
 
-/// TEMPORARY ablation switch: `FLEXION_OFF=name,name`.
-#[must_use]
-pub fn off(name: &str) -> bool {
-    std::env::var("FLEXION_OFF").is_ok_and(|v| v.split(',').any(|f| f == name))
-}
-
-/// TEMPORARY: with `FLEXION_TIMING`, print the time since the last tick.
-pub fn tick(name: &str) {
-    use std::sync::Mutex;
-    static LAST: Mutex<Option<std::time::Instant>> = Mutex::new(None);
-    if std::env::var_os("FLEXION_TIMING").is_none() {
-        return;
-    }
-    if let Ok(mut last) = LAST.lock() {
-        let now = std::time::Instant::now();
-        if let Some(l) = *last {
-            eprintln!("  [{:.1}s] → {name}", (now - l).as_secs_f64());
-        }
-        *last = Some(now);
-    }
-}
-
+/// The shape of a part of speech's cells, from its config.
 pub fn shape(lang: &Language, part: &PartOfSpeech) -> Result<learn::Shape, String> {
     let cells = cells::Cells::new(lang, part)?;
     let lemma_cell = match &part.lemma {

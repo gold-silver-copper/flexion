@@ -344,23 +344,6 @@ pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
 /// where their endings start, by how likely.
 type Built = std::collections::HashMap<usize, Vec<(Vec<(String, usize)>, f32)>>;
 
-thread_local! {
-    /// TEMPORARY profiling: seconds in inflections, build, stresses, kept.
-    pub static PROF: std::cell::RefCell<[f64; 4]> = const { std::cell::RefCell::new([0.0; 4]) };
-}
-
-fn prof<T>(i: usize, f: impl FnOnce() -> T) -> T {
-    let t = std::time::Instant::now();
-    let out = f();
-    let e = t.elapsed().as_secs_f64();
-    PROF.with(|p| {
-        if let Some(x) = p.borrow_mut().get_mut(i) {
-            *x += e;
-        }
-    });
-    out
-}
-
 /// A listed word's cells told from its listed forms so far.
 type Told = std::collections::HashMap<usize, Option<(String, usize)>>;
 
@@ -441,13 +424,9 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             word.casing
         };
         let given = self.given(known);
-        let mut inflections = prof(0, || {
-            self.inflections(&word.letters, &key, &given, known.inherent)
-        });
+        let mut inflections = self.inflections(&word.letters, &key, &given, known.inherent);
         if inflections.is_empty() {
-            inflections = prof(0, || {
-                self.inflections(&word.letters, &key, &[], known.inherent)
-            });
+            inflections = self.inflections(&word.letters, &key, &[], known.inherent);
         }
         // A word written in parts: as one word, or part by part.
         let (whole, each) = match (&self.compound, lemma.split_once(JOINER)) {
@@ -603,11 +582,9 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 .zip(built.iter_mut())
                 .zip(&classes)
                 .flat_map(|((inf, built), classes)| {
-                    prof(1, || {
-                        self.build(inf.paradigm, &inf.stems, &key, known.inherent, cell, built)
-                    })
-                    .into_iter()
-                    .map(move |b| (inf, classes, b))
+                    self.build(inf.paradigm, &inf.stems, &key, known.inherent, cell, built)
+                        .into_iter()
+                        .map(move |b| (inf, classes, b))
                 })
                 .collect();
             for (inf, classes, (forms, p_cell)) in readings {
@@ -620,9 +597,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                     count: r.count(inf.reading.value),
                     total: r.total(),
                 });
-                for (stress, p_stress) in prof(2, || {
-                    self.stresses(&word, inf, classes, cell, first, *ending)
-                }) {
+                for (stress, p_stress) in self.stresses(&word, inf, classes, cell, first, *ending) {
                     let write = |f: &str| self.orthography.write(f, stress, casing);
                     let candidate = Candidate {
                         form: write(first),
@@ -837,10 +812,8 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         }
         // The likeliest few: along a line of cells each told from the last,
         // alternatives would multiply.
-        if std::env::var("FLEXION_OFF").map_or(true, |v| !v.contains("cap")) {
-            out.sort_by(|a, b| b.1.total_cmp(&a.1));
-            out.truncate(KEEP);
-        }
+        out.sort_by(|a, b| b.1.total_cmp(&a.1));
+        out.truncate(KEEP);
         out
     }
 

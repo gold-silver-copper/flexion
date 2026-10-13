@@ -153,7 +153,6 @@ pub fn learn<'s>(
     let (all_words, all_lexemes) = (words.as_slice(), lexemes);
     // Words that separate a particle are the grammar of the rest of them:
     // their bases are learned with the other words.
-    crate::tick("prefixes");
     let (prefixes, bases) = prefixes(all_words);
     let separated: crate::HashSet<&str> = bases.iter().map(|(k, _)| k.as_str()).collect();
     let mut words: Vec<Word> = all_words
@@ -183,12 +182,9 @@ pub fn learn<'s>(
             }
         }
     }
-    crate::tick("referrals");
     let found = referrals(&words, shape);
     let mut analyses: Vec<Analyzed> = words.iter().map(|w| analyze(w, shape)).collect();
-    if !crate::off("redup") {
-        reduplicate(&mut analyses, shape.cells);
-    }
+    reduplicate(&mut analyses, shape.cells);
     let mut feature_examples: Vec<(String, u8)> = Vec::new();
     if let Some((f, referrals)) = &found {
         for (w, a) in words.iter().zip(analyses.iter_mut()) {
@@ -227,20 +223,15 @@ pub fn learn<'s>(
         })
         .collect();
     let root = shape.lemma_cell.unwrap_or(0);
-    crate::tick("relations");
     let mut relations = crate::relations::learn(&usual, shape.cells, root, settings);
     if let Some((_, referrals)) = &found {
         relations.retain(|r| !referrals.iter().any(|q| q.cell == r.cell));
         relations.extend(referrals.iter().cloned());
     }
     // The cells no relation tells (too few words have them): by analogy.
-    if !crate::off("analogy") {
-        let told =
-            crate::relations::analogies(&usual, &shape.coordinates, &relations, root, settings);
-        relations.extend(told);
-    }
+    let told = crate::relations::analogies(&usual, &shape.coordinates, &relations, root, settings);
+    relations.extend(told);
     relations.sort_by_key(|r| r.cell);
-    crate::tick("paradigms");
     let (paradigms, assignment) = paradigms(&words, &analyses, shape);
     // Paradigms that differ only by a change where stem meets ending are
     // one paradigm and a sound law.
@@ -261,21 +252,15 @@ pub fn learn<'s>(
                 .collect(),
         })
         .collect();
-    crate::tick("laws");
     let (laws, program, paradigms, assignment) =
         crate::laws::learn(&orthography, &law_words, paradigms, assignment);
-    let (mut paradigms, assignment) = if crate::off("rehome") {
-        (paradigms, assignment)
-    } else {
-        crate::tick("rehome");
-        rehome(
-            &orthography,
-            &law_words,
-            paradigms,
-            assignment,
-            program.as_ref(),
-        )
-    };
+    let (mut paradigms, assignment) = rehome(
+        &orthography,
+        &law_words,
+        paradigms,
+        assignment,
+        program.as_ref(),
+    );
     inherent(&words, &assignment, &mut paradigms);
     let mut seen = vec![vec![false; shape.cells]; paradigms.len()];
     for (w, &p) in words.iter().zip(&assignment) {
@@ -286,13 +271,7 @@ pub fn learn<'s>(
         }
     }
     // Read from the word's end to its start (`#lux`, not `pollux`).
-    let anchored = |key: &str| {
-        if crate::off("anchor") {
-            key.to_string()
-        } else {
-            format!("{}{key}", flexion::WORD_END)
-        }
-    };
+    let anchored = |key: &str| format!("{}{key}", flexion::WORD_END);
     let paradigm_examples: Vec<(String, u16)> = words
         .iter()
         .zip(&assignment)
@@ -304,12 +283,10 @@ pub fn learn<'s>(
             .get(usize::from(p))
             .is_some_and(|x| x.stems(&orthography, word).is_some())
     };
-    crate::tick("choice");
     let paradigm_choice = choose::learn(&paradigm_examples, settings, fits);
     let (accent, stress_labels) = if orthography.stress_marks.is_empty() {
         (None, HashMap::default())
     } else {
-        crate::tick("accent");
         let (a, labels) = accent(
             &orthography,
             &words,
@@ -339,7 +316,6 @@ pub fn learn<'s>(
     spellings.dedup_by(|a, b| a.0 == b.0);
     // How a letter typed without its mark is written, by what follows it;
     // the words it doesn't spell are listed.
-    crate::tick("marks");
     let marks = marks(&orthography, &words, settings);
     if let Some(marks) = &marks {
         // Every word's: those inflecting behind a prefix too, and those
@@ -389,7 +365,6 @@ pub fn learn<'s>(
     };
     // A word the grammar gets wrong is listed in its choices: its paradigm,
     // its stress pattern and stem vowel. Forms still wrong are irregular.
-    crate::tick("irregular1");
     let wrong: std::collections::BTreeSet<String> =
         irregular(&grammar, all_lexemes, all_words, |_| true)
             .into_iter()
@@ -423,17 +398,14 @@ pub fn learn<'s>(
     };
     // A word's listed forms are its principal parts: the forms no relation
     // tells from another listed one. The forms told wrong are listed too.
-    crate::tick("irregular2");
     let wrong = irregular(&grammar, all_lexemes, all_words, |w| !made(w));
     if let Cow::Owned(relations) = &mut grammar.relations {
         for r in relations.iter_mut() {
             r.listed = tells_listed(r, &wrong, all_words, grammar.smoothing);
         }
     }
-    crate::tick("roots");
     let mut irregular = roots(&grammar, &wrong);
     grammar.irregular = flexion::Irregular::new(&irregular);
-    crate::tick("rounds");
     for _ in 0..ROUNDS {
         let listed: crate::HashSet<String> = irregular.iter().map(|(k, _, _)| k.clone()).collect();
         let more = self::irregular(&grammar, all_lexemes, all_words, |w| {
@@ -450,12 +422,9 @@ pub fn learn<'s>(
     irregular.sort();
     grammar.irregular = flexion::Irregular::new(&irregular);
     if let Cow::Owned(paradigms) = &mut grammar.paradigms {
-        if !crate::off("copies") {
-            copies(paradigms, &grammar.relations);
-        }
+        copies(paradigms, &grammar.relations);
         inherit(paradigms);
     }
-    crate::tick("stats");
     let stats = Stats {
         words: all_words.len(),
         paradigms: grammar.paradigms.len(),
@@ -706,7 +675,7 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
             // Something put before the rest's form: it begins otherwise
             // than the rest, and goes on as the rest begins.
             let first = base.letters.chars().next();
-            if first != Some(head) && (crate::off("strict") || tail.chars().next() == first) {
+            if first != Some(head) && tail.chars().next() == first {
                 augmented
                     .entry(pk.as_str())
                     .or_default()
@@ -812,7 +781,7 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
     counted.retain(|p, (s, _)| *s >= MIN_WORDS || proven.get(p).is_some_and(|&n| n >= MIN_WORDS));
     let separates = counted.values().any(|(s, _)| *s >= MIN_WORDS);
     if !separates {
-        counted.retain(|p, _| augmenting(p) && !crate::off("junction"));
+        counted.retain(|p, _| augmenting(p));
     }
     if counted.is_empty() {
         return (None, Vec::new());
@@ -2134,8 +2103,6 @@ fn irregular(
                         let (Some(l), Some(w)) = (lexemes.get(i), words.get(i)) else {
                             continue;
                         };
-                        let started = std::time::Instant::now();
-                        let _guard = SlowWord(started, w.key.clone());
                         let plain = grammar
                             .orthography
                             .write(&w.key, None, flexion::Casing::Lower);
@@ -2179,22 +2146,6 @@ fn irregular(
     let mut out: Vec<(String, usize, String)> = found.into_iter().flatten().collect();
     out.sort();
     out
-}
-
-/// TEMPORARY: reports a word slower than a second (with `FLEXION_TIMING`).
-struct SlowWord(std::time::Instant, String);
-
-impl Drop for SlowWord {
-    fn drop(&mut self) {
-        let t = self.0.elapsed().as_secs_f64();
-        let p = flexion::PROF.with(|p| std::mem::take(&mut *p.borrow_mut()));
-        if t > 1.0 && std::env::var_os("FLEXION_TIMING").is_some() {
-            eprintln!(
-                "  slow word {} {t:.1}s (inflections {:.1}, build {:.1}, stresses {:.1}, place {:.1})",
-                self.1, p[0], p[1], p[2], p[3]
-            );
-        }
-    }
 }
 
 /// Threads the learner uses at most.
