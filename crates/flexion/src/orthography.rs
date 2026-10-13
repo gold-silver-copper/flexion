@@ -1,8 +1,8 @@
 //! How a language writes: which letters carry a syllable, how stress is
 //! marked, and how a typed word is read into letters and stress.
 
-use unicode_normalization::UnicodeNormalization;
 use std::fmt;
+use unicode_normalization::UnicodeNormalization;
 
 /// A language's writing conventions, as far as inflection needs them.
 ///

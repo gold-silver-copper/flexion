@@ -2046,6 +2046,8 @@ fn irregular(
                         let (Some(l), Some(w)) = (lexemes.get(i), words.get(i)) else {
                             continue;
                         };
+                        let started = std::time::Instant::now();
+                        let _guard = SlowWord(started, w.key.clone());
                         let plain = grammar
                             .orthography
                             .write(&w.key, None, flexion::Casing::Lower);
@@ -2089,6 +2091,22 @@ fn irregular(
     let mut out: Vec<(String, usize, String)> = found.into_iter().flatten().collect();
     out.sort();
     out
+}
+
+/// TEMPORARY: reports a word slower than a second (with `FLEXION_TIMING`).
+struct SlowWord(std::time::Instant, String);
+
+impl Drop for SlowWord {
+    fn drop(&mut self) {
+        let t = self.0.elapsed().as_secs_f64();
+        let p = flexion::PROF.with(|p| std::mem::take(&mut *p.borrow_mut()));
+        if t > 1.0 && std::env::var_os("FLEXION_TIMING").is_some() {
+            eprintln!(
+                "  slow word {} {t:.1}s (inflections {:.1}, build {:.1}, stresses {:.1}, place {:.1})",
+                self.1, p[0], p[1], p[2], p[3]
+            );
+        }
+    }
 }
 
 /// Threads the learner uses at most.

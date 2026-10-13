@@ -321,6 +321,30 @@ pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
     pub sharpness: f32,
 }
 
+/// A reading's forms of the cells built so far: per cell, its forms with
+/// where their endings start, by how likely.
+type Built = std::collections::HashMap<usize, Vec<(Vec<(String, usize)>, f32)>>;
+
+thread_local! {
+    /// TEMPORARY profiling: seconds in inflections, build, stresses, kept.
+    pub static PROF: std::cell::RefCell<[f64; 4]> = const { std::cell::RefCell::new([0.0; 4]) };
+}
+
+fn prof<T>(i: usize, f: impl FnOnce() -> T) -> T {
+    let t = std::time::Instant::now();
+    let out = f();
+    let e = t.elapsed().as_secs_f64();
+    PROF.with(|p| {
+        if let Some(x) = p.borrow_mut().get_mut(i) {
+            *x += e;
+        }
+    });
+    out
+}
+
+/// A listed word's cells told from its listed forms so far.
+type Told = std::collections::HashMap<usize, Option<(String, usize)>>;
+
 /// One way of reading the word: a paradigm with the word's stems.
 struct Inflection<'g, 'a, 'w, P: Label> {
     reading: Reading<'g, 'a, P>,
@@ -383,9 +407,13 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             word.casing
         };
         let given = self.given(known);
-        let mut inflections = self.inflections(&word.letters, &key, &given, known.inherent);
+        let mut inflections = prof(0, || {
+            self.inflections(&word.letters, &key, &given, known.inherent)
+        });
         if inflections.is_empty() {
-            inflections = self.inflections(&word.letters, &key, &[], known.inherent);
+            inflections = prof(0, || {
+                self.inflections(&word.letters, &key, &[], known.inherent)
+            });
         }
         // A word written in parts: as one word, or part by part.
         let (whole, each) = match (&self.compound, lemma.split_once(JOINER)) {
@@ -442,6 +470,16 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             (prefixes, prefix, rest, separable, inseparable, rests)
         });
         let whole = whole * behind.as_ref().map_or(1.0, |b| 1.0 - b.3 - b.4);
+        // A listed word's cells told from its listed forms, each once.
+        let mut told: Option<Told> = self.irregular.has(&key).then(Told::default);
+        // Each reading's accent classes, read once.
+        let classes: Vec<Vec<(Reading<'_, 'a, A>, Vec<Option<Place>>)>> = inflections
+            .iter()
+            .take(KEEP)
+            .map(|inf| self.accent_classes(&word, inf))
+            .collect();
+        // Each reading's forms, cell by cell, built once.
+        let mut built: Vec<Built> = vec![Built::default(); inflections.len().min(KEEP)];
         let mut lists = Vec::with_capacity(cells.len());
         for (i, &cell) in cells.iter().enumerate() {
             if let Some(form) = self.irregular_form(&key, cell) {
@@ -450,9 +488,19 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             }
             // A form of a word whose forms are listed, but not this one: told
             // from the listed form of the cell it comes from.
-            if let Some((letters, ending)) = self.from_listed(&key, cell, 0) {
+            if let Some((letters, ending)) = told
+                .as_mut()
+                .and_then(|told| self.from_listed(&key, cell, told))
+            {
                 let stresses = match inflections.first() {
-                    Some(inf) => self.stresses(&word, inf, cell, &letters, ending),
+                    Some(inf) => self.stresses(
+                        &word,
+                        inf,
+                        classes.first().map_or(&[][..], Vec::as_slice),
+                        cell,
+                        &letters,
+                        ending,
+                    ),
                     None => vec![(None, 1.0)],
                 };
                 lists.push(
@@ -516,11 +564,19 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             }
             // A cell few or no words of the dictionary have is told by analogy.
             let unattested = self.relation(cell).is_some_and(|r| r.analogy.is_some());
-            for (inf, (forms, p_cell)) in inflections.iter().take(KEEP).flat_map(|inf| {
-                self.build(inf.paradigm, &inf.stems, &key, known.inherent, cell, 0)
+            let readings: Vec<_> = inflections
+                .iter()
+                .zip(built.iter_mut())
+                .zip(&classes)
+                .flat_map(|((inf, built), classes)| {
+                    prof(1, || {
+                        self.build(inf.paradigm, &inf.stems, &key, known.inherent, cell, built)
+                    })
                     .into_iter()
-                    .map(move |b| (inf, b))
-            }) {
+                    .map(move |b| (inf, classes, b))
+                })
+                .collect();
+            for (inf, classes, (forms, p_cell)) in readings {
                 let Some(((first, ending), also)) = forms.split_first() else {
                     continue;
                 };
@@ -530,7 +586,9 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                     count: r.count(inf.reading.value),
                     total: r.total(),
                 });
-                for (stress, p_stress) in self.stresses(&word, inf, cell, first, *ending) {
+                for (stress, p_stress) in prof(2, || {
+                    self.stresses(&word, inf, classes, cell, first, *ending)
+                }) {
                     let write = |f: &str| self.orthography.write(f, stress, casing);
                     let candidate = Candidate {
                         form: write(first),
@@ -602,20 +660,25 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
 
     /// The letters of `cell` for the word looked up as `key`, told from the
     /// listed form of the cell it comes from (or one told so in turn), and
-    /// where the change starts.
-    pub fn from_listed(&self, key: &str, cell: usize, depth: usize) -> Option<(String, usize)> {
-        if depth == 0 && !self.irregular.has(key) {
-            return None;
+    /// where the change starts; `told`: the cells told so far.
+    fn from_listed(&self, key: &str, cell: usize, told: &mut Told) -> Option<(String, usize)> {
+        if let Some(t) = told.get(&cell) {
+            return t.clone();
         }
-        let relation = self
+        told.insert(cell, None);
+        let t = self
             .relation(cell)
-            .filter(|r| r.listed && depth < self.cells)?;
-        let from = relation.source()?;
-        let source = match self.irregular_form(key, from) {
-            Some(listed) => self.orthography.read(listed).letters,
-            None => self.from_listed(key, from, depth + 1)?.0,
-        };
-        self.changing(relation).told(&source, self.smoothing)
+            .filter(|r| r.listed)
+            .and_then(|relation| {
+                let from = relation.source()?;
+                let source = match self.irregular_form(key, from) {
+                    Some(listed) => self.orthography.read(listed).letters,
+                    None => self.from_listed(key, from, told)?.0,
+                };
+                self.changing(relation).told(&source, self.smoothing)
+            });
+        told.insert(cell, t.clone());
+        t
     }
 
     /// The relation whose changes `relation` makes: its own, or, for one by
@@ -651,13 +714,34 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         key: &str,
         inherent: &[(u8, u8)],
         cell: usize,
-        depth: usize,
+        built: &mut Built,
+    ) -> Vec<(Vec<(String, usize)>, f32)> {
+        if let Some(forms) = built.get(&cell) {
+            return forms.clone();
+        }
+        // A cell on the way to itself (none, as relations are learned) has
+        // no form.
+        built.insert(cell, Vec::new());
+        let forms = self.build_new(paradigm, stems, key, inherent, cell, built);
+        built.insert(cell, forms.clone());
+        forms
+    }
+
+    /// [`Grammar::build`] of a cell not built yet.
+    fn build_new(
+        &self,
+        paradigm: &Paradigm<'a>,
+        stems: &[&str],
+        key: &str,
+        inherent: &[(u8, u8)],
+        cell: usize,
+        built: &mut Built,
     ) -> Vec<(Vec<(String, usize)>, f32)> {
         if !paradigm.derives(&self.paradigms, cell) {
             let forms = paradigm.built(&self.paradigms, self.laws.as_ref(), cell, stems);
             return vec![(forms, 1.0)];
         }
-        let Some(relation) = self.relation(cell).filter(|_| depth < self.cells) else {
+        let Some(relation) = self.relation(cell) else {
             return Vec::new();
         };
         let sources: Vec<(u16, f32)> = match relation.from.as_ref() {
@@ -683,9 +767,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         let relation = self.changing(relation);
         let mut out = Vec::new();
         for (from, p) in sources {
-            for (forms, q) in
-                self.build(paradigm, stems, key, inherent, usize::from(from), depth + 1)
-            {
+            for (forms, q) in self.build(paradigm, stems, key, inherent, usize::from(from), built) {
                 if relation.change.is_none() {
                     out.push((forms, p * q));
                     continue;
@@ -698,6 +780,10 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 }
             }
         }
+        // The likeliest few: along a line of cells each told from the last,
+        // alternatives would multiply.
+        out.sort_by(|a, b| b.1.total_cmp(&a.1));
+        out.truncate(KEEP);
         out
     }
 
@@ -787,7 +873,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 return false;
             };
             given.iter().all(|(cell, form)| {
-                self.build(p, &stems, key, inherent, *cell, 0)
+                self.build(p, &stems, key, inherent, *cell, &mut Built::default())
                     .iter()
                     .any(|(forms, _)| forms.iter().any(|(built, _)| *built == form.letters))
             })
@@ -848,10 +934,57 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     /// Where the form of `cell` is stressed, with probabilities, for an
     /// inflection whose cell ending starts at byte `ending`. One unstressed
     /// reading when the language writes no stress.
+    /// The accent classes of the word `word` read as `inf`, by how likely:
+    /// those whose pattern puts the lemma's accent where the caller wrote it.
+    fn accent_classes(
+        &self,
+        word: &Written,
+        inf: &Inflection<'_, 'a, '_, P>,
+    ) -> Vec<(Reading<'_, 'a, A>, Vec<Option<Place>>)> {
+        let Some(accent) = &self.accent else {
+            return Vec::new();
+        };
+        let letters = word.letters.as_str();
+        let o = &self.orthography;
+        // Where the lemma's own ending starts: an accent the caller wrote
+        // says which patterns the word can follow.
+        let lemma_ending = pattern::ending_start(&inf.paradigm.lemma, &inf.stems);
+        let lemma_finals = self
+            .lemma_cell
+            .map(|c| accent.finals(inf.reading.value.index(), c))
+            .unwrap_or_default();
+        let given = word.stress;
+        let given_at = given.map(|g| stress::position(o, letters, g));
+        let fits = |a: A| {
+            accent.class_of(a).is_some_and(|class| {
+                let place = self.lemma_cell.and_then(|c| accent.place(class.pattern, c));
+                let (Some(g), Some(place)) = (given, place) else {
+                    return true;
+                };
+                let at = given_at.unwrap_or(0);
+                stress::place(o, letters, lemma_ending, lemma_finals, place, at) == Some(g)
+            })
+        };
+        let mut classes = accent.class.read(&o.key(letters), self.smoothing, fits);
+        classes.truncate(KEEP * KEEP);
+        // Each class's places, cell by cell.
+        classes
+            .into_iter()
+            .map(|r| {
+                let places = accent
+                    .class_of(r.value)
+                    .map(|c| accent.places(c.pattern))
+                    .unwrap_or_default();
+                (r, places)
+            })
+            .collect()
+    }
+
     fn stresses(
         &self,
         word: &Written,
         inf: &Inflection<'_, 'a, '_, P>,
+        classes: &[(Reading<'_, 'a, A>, Vec<Option<Place>>)],
         cell: usize,
         form: &str,
         ending: usize,
@@ -862,54 +995,29 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         let letters = word.letters.as_str();
         let o = &self.orthography;
         let positions = stress::positions(o, letters);
-        // Where the lemma's own ending starts: an accent the caller wrote
-        // says which patterns the word can follow, and where its stem is
-        // accented.
-        let lemma_ending = pattern::ending_start(&inf.paradigm.lemma, &inf.stems);
-        let paradigm = inf.reading.value.index();
-        let lemma_finals = self
-            .lemma_cell
-            .map(|c| accent.finals(paradigm, c))
-            .unwrap_or_default();
-        let finals = accent.finals(paradigm, cell);
-        let class_place = |class: &crate::StressClass<'_>| {
-            let c = self.lemma_cell?;
-            accent.place(class.pattern, c)
-        };
-        let given = word.stress;
-        let given_at = given.map(|g| stress::position(o, letters, g));
-        // A class fits an accent the caller wrote when its pattern puts the
-        // lemma's accent there.
-        let fits = |a: A| {
-            accent.class_of(a).is_some_and(|class| {
-                let (Some(g), Some(place)) = (given, class_place(class)) else {
-                    return true;
-                };
-                let at = given_at.unwrap_or(0);
-                stress::place(o, letters, lemma_ending, lemma_finals, place, at) == Some(g)
-            })
-        };
-        let classes = accent
-            .class
-            .read(&self.orthography.key(letters), self.smoothing, fits);
+        let finals = accent.finals(inf.reading.value.index(), cell);
+        let given_at = word.stress.map(|g| stress::position(o, letters, g));
         let unlawed = inf
             .paradigm
             .unlawed(&self.paradigms, cell, &inf.stems)
             .filter(|_| self.laws.is_some());
         let mut out: Vec<(Option<crate::Stress>, f32)> = Vec::new();
         // The form's letters, to place the stress in.
-        for reading in classes.iter().take(KEEP * KEEP) {
+        for (reading, places) in classes {
             let Some(class) = accent.class_of(reading.value) else {
                 continue;
             };
-            let Some(place) = accent.place(class.pattern, cell) else {
+            let Some(place) = places.get(cell).copied().flatten() else {
                 continue;
             };
+            let class_place = self
+                .lemma_cell
+                .and_then(|c| places.get(c).copied().flatten());
             // The stem's accented syllable: the one written, when the
             // lemma's accent is on its stem; else the class's, from the
             // lemma's end.
             let k = match given_at {
-                Some(at) if class_place(class) == Some(Place::Stem) => Some(at),
+                Some(at) if class_place == Some(Place::Stem) => Some(at),
                 _ => class
                     .vowel
                     .and_then(|v| positions.checked_sub(1)?.checked_sub(usize::from(v))),

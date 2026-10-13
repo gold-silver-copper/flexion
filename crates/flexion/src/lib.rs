@@ -9,6 +9,7 @@ pub mod pattern;
 mod stress;
 
 pub use choice::{Choice, Reading, Rule, Side, Status, by_ending, tolerance};
+pub use grammar::PROF;
 pub use grammar::{
     Compound, Grammar, Irregular, Known, Placement, Prefix, Prefixes, Separation, WORD_END,
     restore, sharpen,

@@ -67,10 +67,12 @@ impl std::str::FromStr for Place {
 
     /// By its name: `Stem`, `Ending`, `Recessive`.
     fn from_str(name: &str) -> Result<Self, ()> {
-        Place::ALL
-            .into_iter()
-            .find(|p| format!("{p:?}") == name)
-            .ok_or(())
+        match name {
+            "Stem" => Ok(Place::Stem),
+            "Ending" => Ok(Place::Ending),
+            "Recessive" => Ok(Place::Recessive),
+            _ => Err(()),
+        }
     }
 }
 
@@ -124,6 +126,26 @@ impl<'a, A: Label> Accent<'a, A> {
 
     pub fn pattern_of(&self, class: &StressClass<'_>) -> Option<&AccentPattern<'a>> {
         self.patterns.get(usize::from(class.pattern))
+    }
+
+    /// The places of every cell's accent in pattern `pattern`, its own or
+    /// its parent's.
+    pub fn places(&self, pattern: u16) -> Vec<Option<Place>> {
+        let mut out: Vec<Option<Place>> = Vec::new();
+        let mut p = self.patterns.get(usize::from(pattern));
+        // Parents come before their children, so this ends.
+        for _ in 0..=self.patterns.len() {
+            let Some(pat) = p else { break };
+            for (cell, field) in pat.places.split('\t').enumerate() {
+                match out.get_mut(cell) {
+                    Some(slot @ None) => *slot = field.parse().ok(),
+                    Some(Some(_)) => {}
+                    None => out.push(field.parse().ok()),
+                }
+            }
+            p = pat.parent.and_then(|q| self.patterns.get(usize::from(q)));
+        }
+        out
     }
 
     /// The place of `cell`'s accent in pattern `pattern`, its own or its
@@ -467,7 +489,10 @@ mod tests {
     fn a_word_reads_the_same_however_composed() {
         // `ἔλυον` typed as one letter or as `ε` with its breathing and
         // accent after it.
-        assert_eq!(GREEK.read("\u{1F14}λυον"), GREEK.read("ε\u{313}\u{301}λυον"));
+        assert_eq!(
+            GREEK.read("\u{1F14}λυον"),
+            GREEK.read("ε\u{313}\u{301}λυον")
+        );
     }
 
     #[test]
