@@ -727,16 +727,13 @@ fn library(lang: &Language, parts: &[Part<'_, '_>]) -> Result<String, String> {
     }
     s.push('\n');
     // The features the parts of speech use.
-    let mut used: Vec<&str> = Vec::new();
-    for part in parts {
-        let features = part.spec.groups.iter().flat_map(|g| g.features.iter());
-        for f in features.chain(&part.spec.inherent) {
-            if !used.contains(f) {
-                used.push(f);
-            }
-        }
-    }
-    for f in lang.features.iter().filter(|f| used.contains(&f.name)) {
+    let used = |f: &&Feature| {
+        parts.iter().any(|p| {
+            let mut groups = p.spec.groups.iter();
+            p.spec.inherent.contains(&f.name) || groups.any(|g| g.features.contains(&f.name))
+        })
+    };
+    for f in lang.features.iter().filter(used) {
         feature_enum(&mut s, f);
     }
     for part in parts {
@@ -1033,12 +1030,11 @@ fn prefixes_file(p: &flexion::Prefixes<'_>, layout: &Layout) -> String {
     }
     s.push_str("    ]),\n    placement: Cow::Borrowed(&[\n");
     for (c, place) in p.placement.iter().enumerate() {
-        let name = layout.names.get(c).map_or("", String::as_str);
-        let _ = writeln!(s, "        {place:?}, // {name}");
+        let _ = writeln!(s, "        {place:?}, // {}", layout.name(c));
     }
     s.push_str("    ]),\n    drops: Cow::Borrowed(&[\n");
     for (c, d) in p.drops.iter().enumerate() {
-        let name = layout.names.get(c).map_or("", String::as_str);
+        let name = layout.name(c);
         let _ = writeln!(s, "        Cow::Borrowed({}), // {name}", Lit(d));
     }
     s.push_str(
@@ -1175,7 +1171,7 @@ fn api_code(
                     }
                 })
                 .collect();
-            let constant = layout.names.get(cell).map_or("", String::as_str);
+            let constant = layout.name(cell);
             let _ = writeln!(
                 s,
                 "            Cell::{} => cell::{constant},",

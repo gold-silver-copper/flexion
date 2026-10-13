@@ -4,7 +4,7 @@
 
 use crate::cells::Cells;
 use crate::kaikki::{self, Entry};
-use crate::spec::{FormSource, Language};
+use crate::spec::{FormSource, Language, PartOfSpeech};
 use flexion::Orthography;
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
@@ -57,13 +57,7 @@ pub fn extract(
     spelling: &Orthography<'_>,
     dump: &Path,
 ) -> Result<Vec<PosData>, String> {
-    let cells = all_cells(lang)?;
-    let mut out = vec![PosData::default(); lang.parts.len()];
-    let mut order = 0usize;
-    let stats = kaikki::for_each_entry(dump, |entry| {
-        order += 1;
-        read_entry(lang, spelling, &cells, &mut out, &entry, order, None);
-    })?;
+    let (out, stats) = read_dump(lang, spelling, dump, 0, None)?;
     eprintln!(
         "read {} lines ({} unparsable); lexemes: {}",
         stats.lines,
@@ -88,32 +82,19 @@ pub fn add_edition(
         .get(index)
         .ok_or(format!("{}: no edition {index}", lang.name))?;
     let source = u8::try_from(index + 1).map_err(|_| "too many editions")?;
-    let cells = all_cells(lang)?;
-    let mut read = vec![PosData::default(); lang.parts.len()];
     // Entries order after every main-dump entry, so a word's main entries
     // stay its first.
-    let mut order = data
+    let order = data
         .iter()
         .flat_map(|d| d.lexemes.iter().map(|l| l.order))
         .max()
         .unwrap_or(0);
-    let stats = kaikki::for_each_entry(dump, |entry| {
-        order += 1;
-        read_entry(
-            lang,
-            spelling,
-            &cells,
-            &mut read,
-            &entry,
-            order,
-            Some((source, edition.code)),
-        );
-    })?;
+    let (read, stats) = read_dump(lang, spelling, dump, order, Some((source, edition.code)))?;
     // How the edition agrees with the main dump on the words both have:
     // of the cells both fill, how many have its first form among the main
     // dump's, exactly and in letters (stress and length marks aside).
     let mut report = Vec::new();
-    for (((d, r), c), p) in data.iter_mut().zip(read).zip(&cells).zip(&lang.parts) {
+    for ((d, r), p) in data.iter_mut().zip(read).zip(&lang.parts) {
         let mut main: BTreeMap<&str, Vec<&Lexeme>> = BTreeMap::new();
         for l in d.lexemes.iter().filter(|l| l.source == 0) {
             main.entry(&l.key).or_default().push(l);
@@ -129,7 +110,7 @@ pub fn add_edition(
             };
             shared.insert(&l.key);
             let letters = |f: &str| spelling.read(f).letters;
-            for (cell, forms) in l.cells.iter().enumerate().take(c.total) {
+            for (cell, forms) in l.cells.iter().enumerate() {
                 let Some(first) = forms.first() else {
                     continue;
                 };
@@ -173,8 +154,26 @@ pub fn add_edition(
     Ok(())
 }
 
-fn all_cells(lang: &Language) -> Result<Vec<Cells<'_>>, String> {
-    lang.parts.iter().map(|p| Cells::new(lang, p)).collect()
+/// Read a dump's entries into every part of speech, numbered on from
+/// `order`. `edition` is `(source, code)` for another edition's dump.
+fn read_dump(
+    lang: &Language,
+    spelling: &Orthography<'_>,
+    dump: &Path,
+    mut order: usize,
+    edition: Option<(u8, &str)>,
+) -> Result<(Vec<PosData>, kaikki::Stats), String> {
+    let cells = lang
+        .parts
+        .iter()
+        .map(|p| Cells::new(lang, p))
+        .collect::<Result<Vec<_>, _>>()?;
+    let mut out = vec![PosData::default(); lang.parts.len()];
+    let stats = kaikki::for_each_entry(dump, |entry| {
+        order += 1;
+        read_entry(lang, spelling, &cells, &mut out, &entry, order, edition);
+    })?;
+    Ok((out, stats))
 }
 
 fn summary(lang: &Language, data: &[PosData]) -> String {
@@ -186,8 +185,7 @@ fn summary(lang: &Language, data: &[PosData]) -> String {
         .join(", ")
 }
 
-/// Read one entry into every part of speech it belongs to. `edition` is
-/// `(source, code)` for an entry of another edition.
+/// Read one entry into every part of speech it belongs to.
 fn read_entry(
     lang: &Language,
     spelling: &Orthography<'_>,
@@ -200,7 +198,7 @@ fn read_entry(
     if entry.lang_code != lang.wiktionary {
         return;
     }
-    for (pi, part) in lang.parts.iter().enumerate() {
+    for ((part, c), sink) in lang.parts.iter().zip(cells).zip(out) {
         if !part.wiktionary.contains(&entry.pos.as_str()) {
             continue;
         }
@@ -229,10 +227,7 @@ fn read_entry(
         if !read {
             continue;
         }
-        let (Some(c), Some(sink)) = (cells.get(pi), out.get_mut(pi)) else {
-            continue;
-        };
-        if let Some(mut lex) = lexeme(lang, spelling, pi, c, &repaired, order) {
+        if let Some(mut lex) = lexeme(lang, spelling, part, c, &repaired, order) {
             lex.source = edition.map_or(0, |(s, _)| s);
             sink.lexemes.push(lex);
         }
@@ -242,12 +237,11 @@ fn read_entry(
 fn lexeme(
     lang: &Language,
     spelling: &Orthography<'_>,
-    pi: usize,
+    part: &PartOfSpeech,
     cells: &Cells,
     entry: &Entry,
     order: usize,
 ) -> Option<Lexeme> {
-    let part = lang.parts.get(pi)?;
     let fold = |s: &str| {
         if lang.spelling.fold_case {
             s.to_lowercase()
