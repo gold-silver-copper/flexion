@@ -185,8 +185,11 @@ pub fn learn<'s>(
             // Learned from the words whose forms it decides: those whose
             // cells it chooses between differ.
             let decides = referrals.iter().any(|r| {
-                let forms: Vec<Option<&str>> =
-                    r.from.iter().map(|&c| first_form(w, usize::from(c))).collect();
+                let forms: Vec<Option<&str>> = r
+                    .from
+                    .iter()
+                    .map(|&c| first_form(w, usize::from(c)))
+                    .collect();
                 forms.iter().all(Option::is_some) && forms.windows(2).any(|p| p.first() != p.get(1))
             });
             if let Some(v) = value {
@@ -1105,61 +1108,133 @@ fn analyze(w: &Word, shape: &Shape) -> Analyzed {
     }
 }
 
-/// The letters before each stem piece of `pattern` copying its first letter,
-/// with a vowel after (`λε~` of `λυ`): reduplication. Per piece, the place
-/// (in chars) of the copying letter in the pattern.
-fn copies_of(pattern: &str, stems: &[String]) -> Vec<usize> {
-    let chars: Vec<char> = pattern.chars().collect();
-    let mut out = Vec::new();
-    let mut piece = 0;
-    for (i, &c) in chars.iter().enumerate() {
-        if c != '~' {
-            continue;
-        }
-        let first = stems.get(piece).and_then(|s| s.chars().next());
-        piece += 1;
-        let Some(at) = i.checked_sub(2) else { continue };
-        if chars.get(at).copied() == first && chars.get(at + 1).is_some_and(|&v| v != '~') {
-            out.push(at);
-        }
-    }
-    out
+/// Per stem piece of `pattern` (chars), its first letter and the letter
+/// before it that may copy it, a letter between them (`λ` of `λε~`, `λυ`):
+/// its place in the pattern, and the letter between.
+fn before(pattern: &[char], stems: &[String]) -> Vec<(char, Option<(usize, char)>)> {
+    let letter = |at: Option<usize>| {
+        let c = *pattern.get(at?)?;
+        (c != '~' && c != pattern::COPY).then_some(c)
+    };
+    let mut pieces = stems.iter();
+    pattern
+        .iter()
+        .enumerate()
+        .filter(|&(_, &c)| c == '~')
+        .filter_map(|(i, _)| {
+            let first = pieces.next().and_then(|s| s.chars().next())?;
+            let at = i.checked_sub(2);
+            let between = letter(at).and(letter(i.checked_sub(1)));
+            Some((first, at.zip(between)))
+        })
+        .collect()
 }
 
-/// Reduplication in the cells that have it: a letter before a stem piece
-/// that is its first letter (and a vowel after it) is written as a copy
-/// ([`pattern::COPY`]), in a cell where words beginning with at least three
-/// different letters copy them.
+/// Reduplication in a cell: the first letters its words copy, and the
+/// letters between a copy and its stem piece (`ε`), with how many words
+/// have each.
+#[derive(Default)]
+struct Copying {
+    letters: crate::HashSet<char>,
+    between: HashMap<char, u32>,
+}
+
+impl Copying {
+    /// Whether enough of its words have `between` after their copy.
+    fn usual(&self, between: char) -> bool {
+        self.between
+            .get(&between)
+            .is_some_and(|&n| n as usize >= crate::laws::MIN_WORDS)
+    }
+
+    /// Where the letter of `pattern` copying a stem piece beginning with
+    /// `first` is, at `place` (see [`before`]): the letter itself, or one
+    /// `copies` takes for a copy of it, before a usual letter between.
+    fn at(
+        &self,
+        pattern: &[char],
+        first: char,
+        place: Option<(usize, char)>,
+        copies: &crate::HashSet<(char, char)>,
+    ) -> Option<usize> {
+        let (at, between) = place?;
+        let y = *pattern.get(at)?;
+        (y == first || (copies.contains(&(first, y)) && self.usual(between))).then_some(at)
+    }
+}
+
+/// Reduplication in the cells that have it (words beginning with at least
+/// three different letters copy them, a letter between): the letter before
+/// a stem piece that copies its first letter is written as a copy
+/// ([`pattern::COPY`]); so is a letter another is copied as (Greek `φ` as
+/// `π`: `πεφίληκα`), where [`crate::laws::MIN_WORDS`] words copy it so and
+/// fewer copy it as itself. A sound law then changes the copy (see
+/// [`pattern::COPIED`]).
 fn reduplicate(analyses: &mut [Analyzed], cells: usize) {
-    let mut letters: Vec<crate::HashSet<char>> = vec![crate::HashSet::default(); cells];
-    for a in analyses.iter() {
-        for (cell, p) in a.cells.iter().enumerate() {
+    let mut cell: Vec<Copying> = (0..cells).map(|_| Copying::default()).collect();
+    // The words copying each letter as itself.
+    let mut plain: HashMap<char, crate::HashSet<usize>> = HashMap::default();
+    for (w, a) in analyses.iter().enumerate() {
+        for (p, copying) in a.cells.iter().zip(cell.iter_mut()) {
             let Some(p) = p else { continue };
-            if !copies_of(usual(p), &a.stems).is_empty()
-                && let (Some(set), Some(first)) = (
-                    letters.get_mut(cell),
-                    a.stems.first().and_then(|s| s.chars().next()),
-                )
-            {
-                set.insert(first);
+            let chars: Vec<char> = usual(p).chars().collect();
+            for (first, place) in before(&chars, &a.stems) {
+                if let Some((at, between)) = place
+                    && chars.get(at) == Some(&first)
+                {
+                    copying.letters.insert(first);
+                    *copying.between.entry(between).or_default() += 1;
+                    plain.entry(first).or_default().insert(w);
+                }
             }
         }
     }
-    for a in analyses.iter_mut() {
-        for (cell, p) in a.cells.iter_mut().enumerate() {
-            let (Some(p), Some(set)) = (p.as_mut(), letters.get(cell)) else {
+    let copies = |c: &Copying| c.letters.len() >= 3;
+    // The letters each letter is copied as instead, and the words doing so.
+    let mut mapped: HashMap<(char, char), crate::HashSet<usize>> = HashMap::default();
+    for (w, a) in analyses.iter().enumerate() {
+        for (p, copying) in a.cells.iter().zip(&cell) {
+            let Some(p) = p.as_deref().filter(|_| copies(copying)) else {
                 continue;
             };
-            if set.len() < 3 || p.contains(DERIVED) {
+            let chars: Vec<char> = usual(p).chars().collect();
+            for (first, place) in before(&chars, &a.stems) {
+                if let Some((at, between)) = place
+                    && let Some(&y) = chars.get(at)
+                    && y != first
+                    && copying.usual(between)
+                {
+                    mapped.entry((first, y)).or_default().insert(w);
+                }
+            }
+        }
+    }
+    let mapped: crate::HashSet<(char, char)> = mapped
+        .into_iter()
+        .filter(|((x, _), words)| {
+            words.len() >= crate::laws::MIN_WORDS
+                && words.len() > plain.get(x).map_or(0, crate::HashSet::len)
+        })
+        .map(|(pair, _)| pair)
+        .collect();
+    for a in analyses.iter_mut() {
+        for (p, copying) in a.cells.iter_mut().zip(&cell) {
+            let Some(p) = p.as_mut() else { continue };
+            if !copies(copying) || p.contains(DERIVED) {
                 continue;
             }
             let rewritten: Vec<String> = pattern::variants(p)
                 .map(|v| {
-                    let at = copies_of(v, &a.stems);
-                    v.chars()
-                        .enumerate()
-                        .map(|(i, c)| if at.contains(&i) { pattern::COPY } else { c })
-                        .collect()
+                    let mut chars: Vec<char> = v.chars().collect();
+                    for (first, place) in before(&chars, &a.stems) {
+                        if let Some(c) = copying
+                            .at(&chars, first, place, &mapped)
+                            .and_then(|at| chars.get_mut(at))
+                        {
+                            *c = pattern::COPY;
+                        }
+                    }
+                    chars.into_iter().collect()
                 })
                 .collect();
             *p = rewritten.join("|");

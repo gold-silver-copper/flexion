@@ -352,7 +352,7 @@ fn grammar_files(
 
     // paradigms.rs
     let mut p = format!(
-        "//! The {many}, commonest first, each named after a word that follows it.\n//!\n//! A pattern is the form with `~` where the stem goes: `~а` is the stem and\n//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other\n//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`\n//! is the first letter of the stem piece after it (reduplication: `%ε~κα`).\n\nuse flexion::Paradigm;\n\n"
+        "//! The {many}, commonest first, each named after a word that follows it.\n//!\n//! A pattern is the form with `~` where the stem goes: `~а` is the stem and\n//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other\n//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`\n//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),\n//! as the copy laws in `laws.rs` change it.\n\nuse flexion::Paradigm;\n\n"
     );
     // The table macro.
     let _ = writeln!(
@@ -624,7 +624,7 @@ fn grammar_files(
     // laws.rs
     if let Some(program) = &g.laws {
         let mut l = format!(
-            "//! Sound laws where a stem meets its ending (`+`): every form a {one}\n//! builds goes through them, in order, so one {one} serves words whose\n//! stems change its endings. Each with the words whose forms it gives, and\n//! how many of the dictionary's forms it gets wrong (those are listed in\n//! `irregular.rs`).\n\nuse flexion::sound_law::compiled::*;\n\nconst RULES: &[CompiledRule<'static>] = &[\n"
+            "//! Sound laws where a stem meets its ending (`+`), or on a letter a `%`\n//! copies (`°`): every form a {one} builds goes through them, in order, so\n//! one {one} serves words whose stems change its endings. Each with the\n//! words whose forms it gives, and how many of the dictionary's forms it\n//! gets wrong (those are listed in `irregular.rs`).\n\nuse flexion::sound_law::compiled::*;\n\nconst RULES: &[CompiledRule<'static>] = &[\n"
         );
         for (law, rule) in learned.laws.iter().zip(program.rules()) {
             let _ = writeln!(
@@ -1309,8 +1309,8 @@ pub fn readme(lang: &Language, report: &str) -> String {
            cell's form, changed);\n\
          - `relations.rs`: which cell each cell's form is told from, and the rules on that\n  \
            form's ending that change it;\n\
-         - `laws.rs`: sound laws where a stem meets its ending (or along a tier), each with the\n  \
-           words whose forms it gives and the forms it gets wrong;\n\
+         - `laws.rs`: sound laws where a stem meets its ending (along a tier, or on a copied\n  \
+           letter), each with the words whose forms it gives and the forms it gets wrong;\n\
          - `rules.rs`: which paradigm a word takes, as rules on its ending, each with how many of\n  \
            the dictionary's words with that ending follow each paradigm, and the words no rule\n  \
            gets right, listed;\n\

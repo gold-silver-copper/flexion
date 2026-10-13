@@ -200,14 +200,13 @@ impl<'a> Paradigm<'a> {
         stems: &[&str],
     ) -> Option<(String, usize)> {
         let p = pattern::variants(self.pattern(family, cell)?).next()?;
-        let marked = pattern::fill_marked(p, stems);
-        let ending = marked.find(pattern::BOUNDARY).unwrap_or(0);
-        Some((marked.replace(pattern::BOUNDARY, ""), ending))
+        Some((pattern::fill(p, stems), pattern::ending_start(p, stems)))
     }
 
     /// The forms of `cell` for these stems, the usual one first, each with
     /// where its ending starts: the patterns filled, then `laws` applied at
-    /// the stem's edge (see [`pattern::BOUNDARY`]).
+    /// the stem's edge (see [`pattern::BOUNDARY`]) and to copied letters
+    /// (see [`pattern::COPIED`]).
     pub fn built(
         &self,
         family: &[Paradigm<'a>],
@@ -221,11 +220,7 @@ impl<'a> Paradigm<'a> {
         pattern::variants(p)
             .map(|v| match laws {
                 None => (pattern::fill(v, stems), pattern::ending_start(v, stems)),
-                Some(laws) => {
-                    let marked = laws.apply(&pattern::fill_marked(v, stems));
-                    let ending = marked.find(pattern::BOUNDARY).unwrap_or(0);
-                    (marked.replace(pattern::BOUNDARY, ""), ending)
-                }
+                Some(laws) => pattern::unmarked(&laws.apply(&pattern::fill_marked(v, stems))),
             })
             .collect()
     }

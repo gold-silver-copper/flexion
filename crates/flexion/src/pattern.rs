@@ -137,13 +137,18 @@ fn place<'w>(
 /// see (`ε+ο` → `+ου`). Never part of a word.
 pub const BOUNDARY: char = '+';
 
+/// Before a letter a [`COPY`] wrote, in a built form, for sound laws to see
+/// (`°φεφιλ+ηκα` → `πεφιλ+ηκα`: the copy of an aspirate is plain). Never
+/// part of a word.
+pub const COPIED: char = '°';
+
 /// [`fill`], with [`BOUNDARY`] after the last stem piece (at the start, for
-/// a pattern with none).
+/// a pattern with none) and [`COPIED`] before each copied letter.
 pub fn fill_marked(pattern: &str, stems: &[&str]) -> String {
     match pattern.rfind('~') {
         Some(at) => {
             let (head, tail) = pattern.split_at(at + 1);
-            format!("{}{BOUNDARY}{tail}", fill(head, stems))
+            format!("{}{BOUNDARY}{tail}", build(head, stems, true))
         }
         None => format!("{BOUNDARY}{pattern}"),
     }
@@ -153,6 +158,11 @@ pub fn fill_marked(pattern: &str, stems: &[&str]) -> String {
 /// the first letter of the stem piece after each [`COPY`]. Missing stem
 /// pieces leave their place empty.
 pub fn fill(pattern: &str, stems: &[&str]) -> String {
+    build(pattern, stems, false)
+}
+
+/// [`fill`], with [`COPIED`] before each copied letter if `marked`.
+fn build(pattern: &str, stems: &[&str], marked: bool) -> String {
     let mut out = String::with_capacity(pattern.len().saturating_add(16));
     for (i, lit) in pattern.split('~').enumerate() {
         if let Some(s) = i.checked_sub(1).and_then(|i| stems.get(i)) {
@@ -161,13 +171,26 @@ pub fn fill(pattern: &str, stems: &[&str]) -> String {
         let next = stems.get(i).and_then(|s| s.chars().next());
         for c in lit.chars() {
             match (c, next) {
-                (COPY, Some(n)) => out.push(n),
+                (COPY, Some(n)) => {
+                    if marked {
+                        out.push(COPIED);
+                    }
+                    out.push(n);
+                }
                 (COPY, None) => {}
                 _ => out.push(c),
             }
         }
     }
     out
+}
+
+/// A form built marked (see [`fill_marked`]) as a word: its marks taken
+/// out, and where its ending starts.
+pub fn unmarked(built: &str) -> (String, usize) {
+    let word: String = built.chars().filter(|&c| c != COPIED).collect();
+    let ending = word.find(BOUNDARY).unwrap_or(0);
+    (word.replace(BOUNDARY, ""), ending)
 }
 
 /// Where the ending starts in a form `pattern` builds: the byte after the
@@ -203,6 +226,12 @@ mod tests {
         assert_eq!(bind("%ε~κα", "πεπαιδευκα"), Some(vec!["παιδευ"]));
         assert_eq!(bind("%ε~κα", "πεπαιδευκ"), None);
         assert_eq!(bind("%ε~κα", "τεπαιδευκα"), None);
+        // Marked for sound laws: where the stem ends, and what was copied.
+        assert_eq!(fill_marked("ἐ%ε~κη", &["φιλη"]), "ἐ°φεφιλη+κη");
+        assert_eq!(
+            unmarked("ἐ°φεφιλη+κη"),
+            ("ἐφεφιληκη".to_string(), "ἐφεφιλη".len())
+        );
         // Matching letters a lookup reads alike, the stems are the word's.
         let plain = |a: char, b: char| a == b || (a, b) == ('o', 'ō') || (a, b) == ('ō', 'o');
         assert_eq!(bind_by("~tiō", "ratio", plain), Some(vec!["ra"]));
