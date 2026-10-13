@@ -171,13 +171,24 @@ impl Layout {
     }
 }
 
-/// Each cell's name, its constant in lowercase (`gen_pl`).
+/// Each cell's name: its constant in lowercase, after its group's name
+/// (`present_ind_act_1_sg`, `noun_gen_pl`).
 pub fn cell_names(cells: &Cells<'_>) -> Vec<String> {
-    Layout::new(cells)
+    let mut names: Vec<String> = Layout::new(cells)
         .names
         .into_iter()
         .map(|n| n.to_lowercase())
-        .collect()
+        .collect();
+    // The first group's cells are named without it: named with it here.
+    for g in &cells.groups {
+        let group = underscored(g.name).to_lowercase();
+        for name in names.iter_mut().skip(g.offset).take(g.len()) {
+            if *name != group && !name.starts_with(&format!("{group}_")) {
+                *name = format!("{group}_{name}");
+            }
+        }
+    }
+    names
 }
 
 /// A cell's constant: `gen_pl` → `GEN_PL`, `non_past_1_sg` → `NON_PAST_1_SG`.
@@ -716,7 +727,7 @@ fn stems_file<P: flexion::Label, A: flexion::Label, F: flexion::Label>(
     one: &str,
 ) -> String {
     let mut s = format!(
-        "//! The stem slots: the cells a word builds on one stem, learned from the\n//! words that put different stems in different cells; and the ending tables a\n//! word that lists its stem for a slot (see `irregular.rs`) builds the slot's\n//! cells with. A table is a {one}'s patterns over the slot's cells with the\n//! slot's stem as their one piece (`~`): what every cell's form keeps of the\n//! word, and what all its endings begin with. Each table is named after the\n//! commonest word built with it.\n\nuse super::cell::*;\nuse flexion::{{EndingTable, Slot}};\nuse std::borrow::Cow;\n\n"
+        "//! The stem slots: the cells a word builds on one stem, learned from the\n//! words that put different stems in different cells; and the ending tables a\n//! word that lists its stem for a slot (see `irregular.rs`) builds the slot's\n//! cells with: per cell of the slot, in the slot's order, a tab after each, a\n//! {one}'s pattern with the slot's stem as its one piece (`~`), the stem being\n//! what every cell's form keeps of the word and what all its endings begin\n//! with. Each table is named after the commonest word built with it.\n\nuse super::cell::*;\nuse flexion::{{EndingTable, Slot}};\nuse std::borrow::Cow;\n\n"
     );
     let _ = writeln!(
         s,
@@ -724,12 +735,26 @@ fn stems_file<P: flexion::Label, A: flexion::Label, F: flexion::Label>(
         g.slots.len()
     );
     for slot in g.slots.iter() {
-        let cells: Vec<&str> = slot.cells.iter().map(|&c| layout.name(c)).collect();
+        // A line per row of cells.
+        let mut lines: Vec<String> = Vec::new();
+        let mut row: Option<usize> = None;
+        for &c in slot.cells.iter() {
+            let here = layout
+                .rows
+                .iter()
+                .position(|r| r.cells.contains(&usize::from(c)));
+            let name = layout.name(c);
+            match lines.last_mut() {
+                Some(line) if here == row => line.push_str(&format!(" {name},")),
+                _ => lines.push(format!("{name},")),
+            }
+            row = here;
+        }
         let _ = writeln!(
             s,
-            "    Slot {{\n        name: Cow::Borrowed({:?}),\n        cells: Cow::Borrowed(&[\n            {},\n        ]),\n    }},",
+            "    Slot {{\n        name: Cow::Borrowed({:?}),\n        cells: Cow::Borrowed(&[\n            {}\n        ]),\n    }},",
             slot.name,
-            cells.join(",\n            ")
+            lines.join("\n            ")
         );
     }
     s.push_str("];\n\n");
@@ -752,28 +777,25 @@ fn stems_file<P: flexion::Label, A: flexion::Label, F: flexion::Label>(
             t.words,
             t.slot
         );
-        // A line per row of cells.
+        // A line per row of cells, in the slot's order.
         let patterns: Vec<&str> = t.table.split('\t').collect();
         let mut row: Option<usize> = None;
         let mut line = String::new();
-        let mut names: Vec<&str> = Vec::new();
         for (k, &c) in slot.cells.iter().enumerate() {
             let here = layout
                 .rows
                 .iter()
                 .position(|r| r.cells.contains(&usize::from(c)));
             if here != row && !line.is_empty() {
-                let _ = writeln!(s, "            {line:?}, // {}", names.join(", "));
+                let _ = writeln!(s, "            {line:?},");
                 line.clear();
-                names.clear();
             }
             row = here;
             line.push_str(patterns.get(k).copied().unwrap_or(""));
             line.push('\t');
-            names.push(layout.name(c));
         }
         if !line.is_empty() {
-            let _ = writeln!(s, "            {line:?}, // {}", names.join(", "));
+            let _ = writeln!(s, "            {line:?},");
         }
         s.push_str("        )),\n    },\n");
     }

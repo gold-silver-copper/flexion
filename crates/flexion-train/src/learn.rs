@@ -1603,7 +1603,9 @@ fn listing(
 /// them (`on_stems`: the forms still listed, `(word, cell, form)`) costs
 /// fewer bits with the stems than the word's listing of `forms` only; a
 /// word judged with the words made of it (`base`: the word a word is made
-/// of, or itself), which take its stems.
+/// of, or itself), which take its stems. An ending table is kept where the
+/// words built with it save more than stating it costs; a word using a
+/// table not kept lists its forms.
 fn cheaper(
     grammar: &Grammar<'_, u16, u16, u8>,
     forms: &[(String, usize, String)],
@@ -1623,9 +1625,48 @@ fn cheaper(
     for (k, _, stem, _) in &stems {
         bits.entry(base(k)).or_default().1 += prices.text(stem) + refs;
     }
+    // What stating each table costs: an item, and its patterns.
+    let cost = |slot: &str, name: &str| -> f64 {
+        let s = grammar.slots.iter().position(|s| s.name == slot);
+        let table = grammar
+            .tables
+            .iter()
+            .find(|t| Some(usize::from(t.slot)) == s && t.name == name);
+        table.map_or(0.0, |t| {
+            crate::bits::ITEM + t.table.split('\t').map(|p| prices.text(p)).sum::<f64>()
+        })
+    };
+    let mut on: crate::HashSet<String> = bits
+        .iter()
+        .filter(|(_, b)| b.1 < b.0)
+        .map(|(k, _)| k.clone())
+        .collect();
+    // Tables that don't pay go, from the one saving least, until all pay.
+    loop {
+        let mut saved: BTreeMap<(&str, &str), (f64, crate::HashSet<String>)> = BTreeMap::new();
+        for (k, slot, _, name) in &stems {
+            let group = base(k);
+            if !on.contains(&group) {
+                continue;
+            }
+            let entry = saved.entry((slot.as_str(), name.as_str())).or_default();
+            if entry.1.insert(group.clone()) {
+                entry.0 += bits.get(&group).map_or(0.0, |b| b.0 - b.1);
+            }
+        }
+        let worst = saved
+            .iter()
+            .map(|(t, (s, groups))| (s - cost(t.0, t.1), t, groups))
+            .filter(|(net, ..)| *net <= 0.0)
+            .min_by(|a, b| a.0.total_cmp(&b.0).then_with(|| a.1.cmp(b.1)));
+        let Some((_, _, groups)) = worst else { break };
+        for g in groups.clone() {
+            on.remove(&g);
+        }
+    }
     stems
         .into_iter()
-        .filter(|(k, ..)| bits.get(&base(k)).is_some_and(|b| b.1 < b.0))
+        .filter(|(k, ..)| on.contains(&base(k)))
         .collect()
 }
 

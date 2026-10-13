@@ -608,22 +608,25 @@ fn recurring(
     }
 }
 
-/// A slot's name: the shortest beginning (whole parts of names) most of its
-/// cells' names share, else its first cell's name; not one of `taken`.
+/// A slot's name: the parts of its first cell's name (`aorist`, `subj`,
+/// `pass`) most of its cells' names have, in order (`aorist_pass`), where
+/// that is no other slot's; else its first cell's name.
 fn slot_name(cells: &[usize], names: &[String], taken: &[String]) -> String {
     let of = |c: usize| names.get(c).map_or("", String::as_str);
     let first = cells.first().map_or("", |&c| of(c));
-    let mut parts: Vec<&str> = Vec::new();
-    for part in first.split('_') {
-        parts.push(part);
-        let prefix = parts.join("_");
-        let sharing = cells
-            .iter()
-            .filter(|&&c| of(c) == prefix || of(c).starts_with(&format!("{prefix}_")))
-            .count();
-        if 2 * sharing > cells.len() && !taken.contains(&prefix) {
-            return prefix;
-        }
+    let shared: Vec<&str> = first
+        .split('_')
+        .filter(|part| {
+            let having = cells
+                .iter()
+                .filter(|&&c| of(c).split('_').any(|p| p == *part))
+                .count();
+            2 * having > cells.len()
+        })
+        .collect();
+    let name = shared.join("_");
+    if !name.is_empty() && !taken.contains(&name) {
+        return name;
     }
     let mut name = first.to_string();
     while taken.contains(&name) {
@@ -666,11 +669,21 @@ pub fn tables<'s>(
             list.push(c);
         }
     }
+    // Named biggest first: the commonest name goes to the slot most of
+    // whose cells have it.
     let mut taken: Vec<String> = Vec::new();
-    let mut slots = Vec::with_capacity(count);
-    for list in &cells {
-        let name = slot_name(list, names, &taken);
+    let mut named: Vec<String> = vec![String::new(); count];
+    let mut by_size: Vec<usize> = (0..count).collect();
+    by_size.sort_by_key(|&s| (std::cmp::Reverse(cells.get(s).map_or(0, Vec::len)), s));
+    for s in by_size {
+        let name = slot_name(cells.get(s).map_or(&[][..], Vec::as_slice), names, &taken);
         taken.push(name.clone());
+        if let Some(n) = named.get_mut(s) {
+            *n = name;
+        }
+    }
+    let mut slots = Vec::with_capacity(count);
+    for (list, name) in cells.iter().zip(named) {
         slots.push(flexion::Slot {
             name: std::borrow::Cow::Owned(name),
             cells: list
