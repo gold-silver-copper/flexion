@@ -140,22 +140,26 @@ impl<'a, A: Label> Accent<'a, A> {
         self.patterns.get(usize::from(class.pattern))
     }
 
+    /// Pattern `pattern`, then its parent, and so on.
+    fn line(&self, pattern: u16) -> impl Iterator<Item = &AccentPattern<'a>> {
+        let parent = |p: &&AccentPattern<'a>| self.patterns.get(usize::from(p.parent?));
+        // Parents come before their children, so this ends.
+        std::iter::successors(self.patterns.get(usize::from(pattern)), parent)
+            .take(self.patterns.len() + 1)
+    }
+
     /// The places of every cell's accent in pattern `pattern`, its own or
     /// its parent's.
     pub fn places(&self, pattern: u16) -> Vec<Option<Place>> {
         let mut out: Vec<Option<Place>> = Vec::new();
-        let mut p = self.patterns.get(usize::from(pattern));
-        // Parents come before their children, so this ends.
-        for _ in 0..=self.patterns.len() {
-            let Some(pat) = p else { break };
-            for (cell, field) in pat.places.split('\t').enumerate() {
+        for p in self.line(pattern) {
+            for (cell, field) in p.places.split('\t').enumerate() {
                 match out.get_mut(cell) {
                     Some(slot @ None) => *slot = field.parse().ok(),
                     Some(Some(_)) => {}
                     None => out.push(field.parse().ok()),
                 }
             }
-            p = pat.parent.and_then(|q| self.patterns.get(usize::from(q)));
         }
         out
     }
@@ -163,15 +167,7 @@ impl<'a, A: Label> Accent<'a, A> {
     /// The place of `cell`'s accent in pattern `pattern`, its own or its
     /// parent's.
     pub fn place(&self, pattern: u16, cell: usize) -> Option<Place> {
-        let mut p = self.patterns.get(usize::from(pattern))?;
-        // Parents come before their children, so this ends.
-        for _ in 0..=self.patterns.len() {
-            if let Some(place) = p.own(cell) {
-                return Some(place);
-            }
-            p = self.patterns.get(usize::from(p.parent?))?;
-        }
-        None
+        self.line(pattern).find_map(|p| p.own(cell))
     }
 }
 

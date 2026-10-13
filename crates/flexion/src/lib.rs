@@ -8,7 +8,7 @@ mod paradigm;
 pub mod pattern;
 mod stress;
 
-pub use choice::{Choice, DISCOUNT, Reading, Rule, Side, Status, blend, by_ending, tolerance};
+pub use choice::{Choice, DISCOUNT, Reading, Rule, Side, Status, blend, by_ending};
 pub use grammar::{
     Compound, Grammar, Irregular, Known, Placement, Prefix, Prefixes, Separation, WORD_END,
     restore, sharpen,

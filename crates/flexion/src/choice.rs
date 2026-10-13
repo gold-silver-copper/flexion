@@ -116,24 +116,15 @@ impl<'a, L: Label> Rule<'a, L> {
     /// Whether the rule's commonest value is productive: its exceptions are
     /// at most `N / ln N` of its `N` words (Yang 2016).
     pub fn productive(&self) -> bool {
-        let total = self.total();
-        let top = self.counts.first().map_or(0, |&(_, n)| n);
-        f64::from(total.saturating_sub(top)) <= tolerance(total)
+        let n = f64::from(self.total());
+        let exceptions = n - f64::from(self.counts.first().map_or(0, |&(_, c)| c));
+        exceptions <= if n < 2.0 { 0.0 } else { n / n.ln() }
     }
 }
 
 /// The order of rules: by ending, read from its last letter back.
 pub fn by_ending(a: &str, b: &str) -> std::cmp::Ordering {
     a.chars().rev().cmp(b.chars().rev())
-}
-
-/// The Tolerance Principle's threshold: a rule over `n` words stays
-/// productive with up to `n / ln n` exceptions.
-pub fn tolerance(n: u32) -> f64 {
-    if n < 2 {
-        return 0.0;
-    }
-    f64::from(n) / f64::from(n).ln()
 }
 
 impl<'a, L: Label> Choice<'a, L> {
@@ -317,12 +308,14 @@ mod tests {
 
     #[test]
     fn tolerance_follows_yang() {
-        assert!((tolerance(1000) - 144.76).abs() < 0.01);
-        let even = Rule {
+        let rule = |counts: Vec<(u16, u32)>| Rule {
             ending: "".into(),
-            counts: Cow::Owned(vec![(0u16, 837), (1, 516)]),
+            counts: Cow::Owned(counts),
         };
+        // Of 1000 words, up to 1000 / ln 1000 = 144.8 exceptions.
+        assert!(rule(vec![(0, 856), (1, 144)]).productive());
+        assert!(!rule(vec![(0, 854), (1, 146)]).productive());
         // Polish masculine genitives in -a and -u: neither is productive.
-        assert!(!even.productive());
+        assert!(!rule(vec![(0, 837), (1, 516)]).productive());
     }
 }

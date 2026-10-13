@@ -154,25 +154,19 @@ impl<'a> Paradigm<'a> {
 
     /// What it has in `cell`, its own or its parent's (`family`: its part of
     /// speech's paradigms); a cell no paradigm up the line writes is derived.
-    pub fn form<'s>(&'s self, family: &'s [Paradigm<'a>], cell: usize) -> Option<Form<'s>> {
-        let mut paradigm = self;
+    pub fn form<'s>(&'s self, family: &'s [Paradigm<'a>], cell: usize) -> Form<'s> {
+        let parent = |p: &&'s Paradigm<'a>| family.get(usize::from(p.parent?));
         // Parents come before their children, so this ends.
-        for _ in 0..=family.len() {
-            if let Some(form) = paradigm.own(cell) {
-                return Some(form);
-            }
-            match paradigm.parent {
-                Some(p) => paradigm = family.get(usize::from(p))?,
-                None => return Some(Form::Derived),
-            }
-        }
-        None
+        std::iter::successors(Some(self), parent)
+            .take(family.len() + 1)
+            .find_map(|p| p.own(cell))
+            .unwrap_or(Form::Derived)
     }
 
     /// The cell's pattern (all its alternatives); `None` for a derived
     /// cell.
     pub fn pattern<'s>(&'s self, family: &'s [Paradigm<'a>], cell: usize) -> Option<&'s str> {
-        match self.form(family, cell)? {
+        match self.form(family, cell) {
             Form::Pattern(p) => Some(p),
             Form::Derived => None,
         }
