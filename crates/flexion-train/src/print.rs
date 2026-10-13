@@ -355,8 +355,30 @@ fn grammar_files(
     files.push((format!("{dir}/mod.rs"), m));
 
     // paradigms.rs
+    // The class letters a harmony law writes (`A` of `~lAr`).
+    let classes: Vec<String> = learned
+        .laws
+        .iter()
+        .filter_map(|l| match &l.change {
+            crate::laws::Change::Harmony { map, .. } => Some(map),
+            _ => None,
+        })
+        .flat_map(|map| {
+            let mut letters: Vec<char> = map.iter().map(|e| e.0).collect();
+            letters.dedup();
+            letters
+        })
+        .map(|c| format!("`{c}`"))
+        .collect();
+    let harmony = match classes.as_slice() {
+        [] => String::new(),
+        _ => format!(
+            " A capital ({})\n//! is a class letter: a harmony law in `laws.rs` writes it, by the\n//! letter before it.",
+            classes.join(", ")
+        ),
+    };
     let mut p = format!(
-        "//! The {many}, commonest first, each named after a word that follows it.\n//!\n//! A pattern is the form with `~` where the stem goes: `~а` is the stem and\n//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other\n//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`\n//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),\n//! as the copy laws in `laws.rs` change it.\n\nuse flexion::Paradigm;\n\n"
+        "//! The {many}, commonest first, each named after a word that follows it.\n//!\n//! A pattern is the form with `~` where the stem goes: `~а` is the stem and\n//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other\n//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`\n//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),\n//! as the copy laws in `laws.rs` change it.{harmony}\n\nuse flexion::Paradigm;\n\n"
     );
     // The table macro (a table with no rows needs none).
     if !g.paradigms.is_empty() {
@@ -630,7 +652,7 @@ fn grammar_files(
     // laws.rs
     if let Some(program) = &g.laws {
         let mut l = format!(
-            "//! Sound laws where a stem meets its ending (`+`), where a form's first\n//! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), or on a letter a\n//! `%` copies (`°`): every form a {one} builds goes through them, in order, so\n//! one {one} serves words whose stems change its endings. Each with the\n//! words whose forms it gives, and how many of the dictionary's forms it\n//! gets wrong (those are listed in `irregular.rs`).\n\nuse flexion::sound_law::compiled::*;\n\nconst RULES: &[CompiledRule<'static>] = &[\n"
+            "//! Sound laws where a stem meets its ending (`+`), where a form's first\n//! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), on a letter a\n//! `%` copies (`°`), or on a class letter an ending writes (harmony, by the\n//! nearest letter of a tier before it as written): every form a {one} builds\n//! goes through them, in order, so one {one} serves words whose stems change\n//! its endings. Each with the words whose forms it gives, and how many of\n//! the dictionary's forms it gets wrong (those are listed in `irregular.rs`).\n\nuse flexion::sound_law::compiled::*;\n\nconst RULES: &[CompiledRule<'static>] = &[\n"
         );
         for (law, rule) in learned.laws.iter().zip(program.rules()) {
             let _ = writeln!(
@@ -1332,7 +1354,8 @@ pub fn readme(lang: &Language, report: &str) -> String {
          - `relations.rs`: which cell each cell's form is told from, and the rules on that\n  \
            form's ending that change it;\n\
          - `laws.rs`: sound laws where a stem meets its ending or a literal before it (along a\n  \
-           tier, or on a copied letter), each with the words whose forms it gives and the forms it gets wrong;\n\
+           tier, on a copied letter, or on a class letter an ending writes: harmony), each with the\n  \
+           words whose forms it gives and the forms it gets wrong;\n\
          - `rules.rs`: which paradigm a word takes, as rules on its ending, each with how many of\n  \
            the dictionary's words with that ending follow each paradigm, and the words no rule\n  \
            gets right, listed;\n\

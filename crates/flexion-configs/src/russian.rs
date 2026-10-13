@@ -101,6 +101,7 @@ pub fn language() -> Language {
                 inherent: vec!["Gender", "Animacy"],
                 capitalized: false,
                 lemmas_from: vec![],
+                max_words: None,
             },
             PartOfSpeech {
                 name: "adjective",
@@ -130,6 +131,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 // A participle is a verb's form too, stressed as the verb is.
                 lemmas_from: vec![("verb", "participle")],
+                max_words: None,
             },
             PartOfSpeech {
                 name: "verb",
@@ -185,6 +187,7 @@ pub fn language() -> Language {
                 inherent: vec!["Aspect"],
                 capitalized: false,
                 lemmas_from: vec![],
+                max_words: None,
             },
             PartOfSpeech {
                 name: "pronoun",
@@ -204,6 +207,7 @@ pub fn language() -> Language {
                 inherent: vec![],
                 capitalized: false,
                 lemmas_from: vec![],
+                max_words: None,
             },
             PartOfSpeech {
                 name: "numeral",
@@ -229,6 +233,7 @@ pub fn language() -> Language {
                 inherent: vec![],
                 capitalized: false,
                 lemmas_from: vec![],
+                max_words: None,
             },
         ],
         // Stress is left out: Wiktionary's stress marks (the acute, and the

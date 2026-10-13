@@ -500,6 +500,9 @@ fn apply_rule(rule: &CompiledRule, input: &str, s: &mut Search) -> Option<String
     }
     s.captures.clear();
     s.captures.resize(rule.capture_count, None);
+    if rule.application == Application::Iterative {
+        return apply_iterative(rule, input, s);
+    }
     if rule.target.atoms.is_empty() {
         return apply_insertion_rule(rule, input, s);
     }
@@ -518,6 +521,65 @@ fn apply_rule(rule: &CompiledRule, input: &str, s: &mut Search) -> Option<String
     }
     output.push_str(&input[cursor..]);
     Some(output)
+}
+
+/// An [`Application::Iterative`] rule: each match (or insertion) written
+/// before the next is sought, past it in the rule's direction, so the
+/// context it has passed reads the rule's output and the context ahead its
+/// input. Every match consumes input, and an insertion tries each boundary
+/// once, so this ends.
+fn apply_iterative(rule: &CompiledRule, input: &str, s: &mut Search) -> Option<String> {
+    let mut word = input.to_owned();
+    let mut changed = false;
+    let insertion = rule.target.atoms.is_empty();
+    let rtl = rule.direction == Direction::RightToLeft;
+    // Where the next match may start (left to right) or must end by.
+    let mut at = if rtl { word.len() } else { 0 };
+    while !s.budget.exhausted {
+        let found = if insertion {
+            insertion_captures(rule, &word, at, s).map(|captures| FoundMatch {
+                start: at,
+                end: at,
+                captures,
+            })
+        } else if rtl {
+            find_previous_match(rule, &word, at, s)
+        } else {
+            find_next_match(rule, &word, at, s)
+        };
+        match found {
+            Some(found) => {
+                let mut next = String::with_capacity(word.len());
+                next.push_str(word.get(..found.start).unwrap_or_default());
+                render_replacement(rule, &word, &found.captures, &mut next);
+                let written = next.len() - found.start;
+                next.push_str(word.get(found.end..).unwrap_or_default());
+                changed |= next != word;
+                word = next;
+                at = if rtl {
+                    found.start
+                } else {
+                    found.start + written
+                };
+            }
+            None if !insertion => break,
+            None => {}
+        }
+        // An insertion tries the next boundary it hasn't passed.
+        if insertion {
+            let step = if rtl {
+                word.get(..at).and_then(|w| w.chars().next_back())
+            } else {
+                word.get(at..).and_then(|w| w.chars().next())
+            };
+            match step {
+                Some(c) if rtl => at -= c.len_utf8(),
+                Some(c) => at += c.len_utf8(),
+                None => break,
+            }
+        }
+    }
+    changed.then_some(word)
 }
 
 fn apply_insertion_rule(rule: &CompiledRule, input: &str, s: &mut Search) -> Option<String> {
@@ -719,13 +781,46 @@ fn is_excluded(
 /// Matches of a left context ending at `end`, those starting leftmost
 /// first.
 fn left(context: &Pattern, input: &str, end: usize, s: &mut Search, next: &mut Next) -> bool {
-    let first = if context.atoms.is_empty() { end } else { 0 };
+    let first = if context.atoms.is_empty() {
+        end
+    } else {
+        earliest(context, input, end)
+    };
     boundaries(input, first..=end).any(|start| {
         may_start(context, input, start)
             && pattern(context, input, start, s, &mut |s, at| {
                 at == end && next(s, at)
             })
     })
+}
+
+/// Where a match of a left context ending at `end` can start, at the
+/// earliest. A context that is a letter (or none) and then letters off a
+/// tier (`{t:V?}{g:!V*}`: the nearest vowel before, or none) can't start
+/// before the last tier letter before `end`, less its first letter's
+/// length: its gap can't cross that letter. Any other: the start of the
+/// form.
+fn earliest(context: &Pattern, input: &str, end: usize) -> usize {
+    let [first, gap] = context.atoms.as_ref() else {
+        return 0;
+    };
+    let (Matcher::Class(on), Matcher::NotClass(off)) = (&first.matcher, &gap.matcher) else {
+        return 0;
+    };
+    if !matches!(first.quantifier, Quantifier::One | Quantifier::Optional)
+        || gap.quantifier != Quantifier::ZeroOrMore
+    {
+        return 0;
+    }
+    let begins = |i: usize| {
+        let rest = input.get(i..).unwrap_or_default();
+        off.iter().any(|m| rest.starts_with(m.as_ref()))
+    };
+    let last = (0..end)
+        .rev()
+        .find(|&i| input.is_char_boundary(i) && begins(i));
+    let longest = on.iter().map(|m| m.len()).max().unwrap_or(0);
+    last.map_or(0, |i| (i + 1).saturating_sub(longest))
 }
 
 /// Matches of a pattern from `start`, greediest first, each passed on to
@@ -839,6 +934,10 @@ fn unit_ends<'m, 'p>(
                 .filter(|text| rest.starts_with(text))
                 .map(|text| at + text.len()),
         ),
+        Matcher::NotAhead(members) => (
+            &[],
+            (!members.iter().any(|m| rest.starts_with(m.as_ref()))).then_some(at),
+        ),
     };
     members
         .iter()
@@ -876,6 +975,19 @@ fn render_replacement(
             ReplacementPart::MappedCapture { capture, entries } => {
                 if let Some((_, mapped)) = captured(input, captures, *capture)
                     .and_then(|c| entries.iter().find(|(source, _)| source == c))
+                {
+                    output.push_str(mapped);
+                }
+            }
+            // An optional key that matched nothing is the empty key.
+            ReplacementPart::AgreeingCapture {
+                capture,
+                key,
+                entries,
+            } => {
+                let k = captured(input, captures, *key).unwrap_or_default();
+                if let Some((_, _, mapped)) = captured(input, captures, *capture)
+                    .and_then(|c| entries.iter().find(|(source, x, _)| source == c && x == k))
                 {
                     output.push_str(mapped);
                 }

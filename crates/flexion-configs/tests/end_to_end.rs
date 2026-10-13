@@ -174,12 +174,43 @@ fn an_inflected_form_with_its_own_table_is_no_word() {
 }
 
 #[test]
+fn harmony_is_one_law_and_endings_name_its_class_letters() {
+    // Turkish suffix vowels agree with the vowel before them as written,
+    // through a chain of suffixes (`ev-ler-imiz-de`): laws on a tier, the
+    // endings written once (`~lAr`). (On the whole dictionary it is one law
+    // on the vowels; a hundred words show less.)
+    let lang = flexion_configs::turkish::language();
+    let script = Script::new(&lang.spelling);
+    let data = data(&lang, &script);
+    let grammars = grammars(&lang, &script, &data);
+    let noun = &grammars[0];
+    let harmony: Vec<&flexion_train::laws::Law> = noun
+        .laws
+        .iter()
+        .filter(|l| matches!(l.change, flexion_train::laws::Change::Harmony { .. }))
+        .collect();
+    assert!(!harmony.is_empty(), "{:?}", noun.laws);
+    let tables: Vec<&str> = noun
+        .grammar
+        .paradigms
+        .iter()
+        .map(|p| p.table.as_ref())
+        .collect();
+    assert!(tables.iter().any(|t| t.contains("~lAr")), "{tables:?}");
+    // Words the dictionary lacks: locative plural with `our` (cell 57).
+    let g = &noun.grammar;
+    assert_eq!(g.best("gölüm", 57, &Known::default()), "gölümlerimizde");
+    assert_eq!(g.best("tarum", 57, &Known::default()), "tarumlarımızda");
+}
+
+#[test]
 fn a_printed_grammar_answers_as_the_grammar_it_was_printed_from() {
     // Russian has referrals, compounds and sound laws; Ancient Greek, accent;
-    // Latin, restored vowel length.
+    // Latin, restored vowel length; Turkish, harmony.
     print_and_compare(flexion_configs::russian::language());
     print_and_compare(flexion_configs::ancient_greek::language());
     print_and_compare(flexion_configs::latin::language());
+    print_and_compare(flexion_configs::turkish::language());
 }
 
 /// Print `lang`'s fixture grammar as a crate and check, by compiling and
@@ -218,10 +249,16 @@ fn print_and_compare(lang: Language) {
     )
     .expect("manifest");
     // Its test: every word's every cell, and every candidate's probability,
-    // as the grammar in memory answers them.
-    let mut test = String::from("use flexion::Known;\n\n#[test]\nfn answers() {\n");
+    // as the grammar in memory answers them: a table of answers per part of
+    // speech, and a loop over it (a crate of asserts compiles slowly).
+    let mut test = String::from(
+        "use flexion::Known;\n\ntype Answer = (&'static str, usize, &'static [(u8, u8)], &'static [&'static str], &'static [f32]);\n\n",
+    );
+    let mut checks = String::new();
     for (part, (d, learned)) in lang.parts.iter().zip(data.iter().zip(&learned)) {
         let g = &learned.grammar;
+        let table = part.name.to_uppercase();
+        let _ = writeln!(test, "const {table}: &[Answer] = &[");
         for l in &d.lexemes {
             // Asked without its gender, and (in its first cell: the gender
             // picks the paradigm) with it where the dictionary says.
@@ -253,19 +290,24 @@ fn print_and_compare(lang: Language) {
                         candidates.iter().map(|c| format!("{:?}f32", c.1)).collect();
                     let _ = writeln!(
                         test,
-                        "    let c = {crate_name}::{}::GRAMMAR.candidates({:?}, {cell}, &Known {{ inherent: &{ask:?}, ..Known::default() }});\n    \
-                         assert_eq!(c.iter().map(|c| c.form.as_str()).collect::<Vec<&str>>(), {forms:?} as [&str; {}]);\n    \
-                         assert_eq!(c.iter().map(|c| c.probability).collect::<Vec<f32>>(), [{}]);",
-                        part.name,
+                        "    ({:?}, {cell}, &{ask:?}, &{forms:?}, &[{}]),",
                         l.full,
-                        forms.len(),
                         probabilities.join(", ")
                     );
                 }
             }
         }
+        test.push_str("];\n\n");
+        let _ = writeln!(
+            checks,
+            "    for (word, cell, ask, forms, probabilities) in {table} {{\n        \
+             let c = {crate_name}::{}::GRAMMAR.candidates(word, *cell, &Known {{ inherent: ask, ..Known::default() }});\n        \
+             assert_eq!(c.iter().map(|c| c.form.as_str()).collect::<Vec<&str>>(), *forms, \"{{word}} {{cell}}\");\n        \
+             assert_eq!(c.iter().map(|c| c.probability).collect::<Vec<f32>>(), *probabilities, \"{{word}} {{cell}}\");\n    }}",
+            part.name
+        );
     }
-    test.push_str("}\n");
+    let _ = write!(test, "#[test]\nfn answers() {{\n{checks}}}\n");
     std::fs::create_dir_all(dir.join("tests")).expect("tests dir");
     std::fs::write(dir.join("tests/answers.rs"), test).expect("test written");
     let status = Command::new(env!("CARGO"))

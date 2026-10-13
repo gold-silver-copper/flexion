@@ -121,6 +121,11 @@ pub struct PartOfSpeech {
     /// verb's `participle` group, so a typed `ахнувший` reads as the verb
     /// table writes it, `а́хнувший`.
     pub lemmas_from: Vec<(&'static str, &'static str)>,
+    /// The most words to learn from, the commonest (most senses) first,
+    /// where the dictionary has far more than a grammar needs (Durrett &
+    /// DeNero 2013 fn. 6: the first 6,000 Finnish noun tables did as well
+    /// as all of them). `None`: every word.
+    pub max_words: Option<usize>,
 }
 
 /// A group of cells that is one generated function: the product of its

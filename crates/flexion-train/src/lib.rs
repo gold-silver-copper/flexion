@@ -77,6 +77,7 @@ pub fn shape(lang: &Language, part: &PartOfSpeech) -> Result<learn::Shape, Strin
         cells: cells.total,
         lemma_cell,
         capitalized: part.capitalized,
+        max_words: part.max_words,
         inherent: part
             .inherent
             .iter()

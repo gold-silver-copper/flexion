@@ -31,8 +31,8 @@ assert_eq!(program.apply("stra"), "astr");
 ```
 
 Rules are global and ordered. Every match of one rule is selected from the same
-input form, so newly emitted text is not fed back into that rule. The next rule
-sees the complete result. A rule that needs a literal the word doesn't contain
+input form, so newly emitted text is not fed back into that rule, unless the
+rule is `[iterative]` (see below). The next rule sees the complete result. A rule that needs a literal the word doesn't contain
 (anywhere outside its optional and `*` parts) leaves the word as it is without
 searching it.
 
@@ -43,8 +43,12 @@ tables and runs them with this crate. A built form marks where its stem meets it
 with `+`, and a law rewrites the letters around it (Greek `"ε+ο" => "+ου"`, Russian
 `"{x:[к|г|х]}+ы" => "{x}+и"`), or changes a letter of the ending by the nearest letter of a
 tier before it (Sanskrit `"न" => "ण" / "{t:[र|ष|ृ]}{a:![…]*}+{b:![…]*}" _ ""`, unless `्`
-follows). The trainer builds rules at runtime and compiles them; a generated crate holds
-the compiled program as static data (see below), so it never compiles anything.
+follows). Harmony is an `[iterative]` rule with an agreement map: an ending writes a class
+letter once (Turkish `-lAr`, `-ImIz`), and the rule fills it by the nearest vowel before it as
+written (`"{x:[A|I]}" => "{x|law0[t]}" / "{t:[a|e|ı|i|o|ö|u|ü]?}{g:![…]*}" _ ""`), so
+`ev+lArImIzdA` is `evlerimizde`. The trainer builds rules at runtime and compiles them; a
+generated crate holds the compiled program as static data (see below), so it never compiles
+anything.
 
 ## Programs as static data
 
@@ -116,6 +120,32 @@ const VOICING: RuleSet<'static> = sound_laws! {
 Map outputs may be empty and several sources may share an output. Sources must
 be nonempty and unique.
 
+An agreement map is keyed by a second capture as well: `{x|MAP[t]}` emits the
+output for `x`'s value and `t`'s. Compilation proves it covers every pair. An
+optional capture that matched nothing has the empty value, so `("A", "")`
+says what a word with no trigger gets. One harmony law maps target × trigger:
+
+```rust
+# use sound_law::{RuleSet, sound_laws};
+const HARMONY: RuleSet<'static> = sound_laws! {
+    classes {
+        V = ["a", "e", "o", "i"];
+    }
+    agreements {
+        AGREE = [
+            ("A", "a") => "a", ("A", "o") => "a",
+            ("A", "e") => "e", ("A", "i") => "e", ("A", "") => "e",
+        ];
+    }
+    rules {
+        // The nearest vowel before `A`, as written, or none.
+        harmony[iterative]: "{x:[A]}" => "{x|AGREE[t]}" / "{t:V?}{gap:!V*}" _ "";
+    }
+};
+# assert_eq!(HARMONY.apply("kotlAndA").unwrap(), "kotlanda");
+# assert_eq!(HARMONY.apply("srbA").unwrap(), "srbe");
+```
+
 ## Pattern language
 
 | Form | Meaning |
@@ -130,6 +160,7 @@ be nonempty and unique.
 | `{C-[p\|t]}` | class difference using an inline set |
 | `{x:.}` | any one Unicode scalar value, captured as `x` |
 | `{x:!V}` | one scalar value that does not begin a member of `V` |
+| `{?!V}` | nothing, where no member of `V` begins (reads ahead) |
 | `{cluster:C+}` | one or more `C` segments, captured together |
 | `{maybe:C?}` | zero or one `C` segment |
 | `{run:C*}` | zero or more `C` segments |
@@ -145,7 +176,8 @@ cannot infer a language's segment inventory outside declared classes.
 Class intersection and difference bind before union and otherwise evaluate
 left-to-right. Parenthesized or nested matcher expressions are not supported.
 
-Replacement strings use `{capture}` references. Referencing captures in any
+Replacement strings use `{capture}` references, `{capture|MAP}` and
+`{capture|MAP[key]}`. Referencing captures in any
 order makes metathesis and arbitrary reordering straightforward:
 
 ```text
@@ -186,6 +218,18 @@ spans win. `[once]` keeps only the first selected span. Options combine as
 uses the same direction and count policy over original Unicode-scalar
 boundaries.
 
+`[iterative]` writes each match before seeking the next, past it in the rule's
+direction: the context the rule has passed reads its output, the context ahead
+its input (an output strictly local map; with a starred gap, one on a tier).
+Harmony then runs through stacked suffixes, each vowel agreeing with the one
+before it as written: `buzlArIn` → `buzların`, where a simultaneous rule reads
+the stem's `u` through the unwritten `A` and gives `buzlarun`.
+`[rtl, iterative]` reads its output on the right. An iterative insertion tries
+each original boundary once.
+
+A rule can read stress written as a mark: `{?!STRESS}` after a vowel is "this
+vowel is unstressed", at the word's end too.
+
 ## Execution APIs
 
 - `RuleSet::compile` validates names, classes, patterns, captures, and
@@ -220,8 +264,9 @@ inserted result.
 - One run produces one deterministic result. Sporadic/probabilistic rules and
   branching result sets are not modeled.
 - Classes and maps are finite inventories. There is no phonological feature
-  matrix, feature mutation, normalization policy, syllabifier, stress model,
-  tone-bearing-unit model, or autosegmental propagation.
+  matrix, feature mutation, normalization policy, syllabifier, stress model or
+  tone-bearing-unit model; propagation (harmony) is an `[iterative]` rule on a
+  tier written as a starred gap.
 - Inline alternatives contain literal sequences; class expressions provide
   finite union/intersection/difference. Nested matcher groups, arbitrary
   lookaround, and quantified groups containing several matcher atoms are not

@@ -44,6 +44,7 @@ pub fn language() -> Language {
                 inherent: vec![],
                 capitalized: false,
                 lemmas_from: vec![],
+                max_words: None,
             },
             PartOfSpeech {
                 name: "verb",
@@ -57,6 +58,7 @@ pub fn language() -> Language {
                 inherent: vec![],
                 capitalized: false,
                 lemmas_from: vec![],
+                max_words: None,
             },
             PartOfSpeech {
                 name: "adjective",
@@ -77,6 +79,7 @@ pub fn language() -> Language {
                 inherent: vec![],
                 capitalized: false,
                 lemmas_from: vec![],
+                max_words: None,
             },
             PartOfSpeech {
                 name: "adverb",
@@ -97,6 +100,7 @@ pub fn language() -> Language {
                 inherent: vec![],
                 capitalized: false,
                 lemmas_from: vec![],
+                max_words: None,
             },
         ],
         spelling: Spelling {
