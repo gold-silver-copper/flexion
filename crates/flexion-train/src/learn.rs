@@ -342,14 +342,17 @@ pub fn learn<'s>(
     crate::tick("marks");
     let marks = marks(&orthography, &words, settings);
     if let Some(marks) = &marks {
-        // Every word's: those inflecting behind a prefix too.
+        // Every word's: those inflecting behind a prefix too, and those
+        // whose headword leaves off marks its forms have.
         spellings = all_words
             .iter()
-            .filter(|w| {
+            .zip(all_lexemes)
+            .filter(|(w, l)| {
                 flexion::restore(&orthography, marks, settings.smoothing, &w.key, &w.key).0
                     != w.letters
+                    || orthography.read(&l.full).letters != w.letters
             })
-            .map(|w| (Cow::Owned(w.key.clone()), Cow::Owned(w.letters.clone())))
+            .map(|(w, _)| (Cow::Owned(w.key.clone()), Cow::Owned(w.letters.clone())))
             .collect();
         spellings.sort();
         spellings.dedup_by(|a, b| a.0 == b.0);
