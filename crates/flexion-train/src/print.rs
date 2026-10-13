@@ -378,7 +378,7 @@ fn grammar_files(
     let (rows, table) = layout.macro_rows();
     let _ = writeln!(
         p,
-        "macro_rules! {one} {{\n    ($name:literal, $words:literal, $lemma:literal{features} $(, like $like:tt)?;\n{rows}    ) => {{\n        Paradigm {{\n            name: ::std::borrow::Cow::Borrowed($name),\n            words: $words,\n            lemma: ::std::borrow::Cow::Borrowed($lemma),\n            like: like!($($like)?),\n            inherent: ::std::borrow::Cow::Borrowed(&[{values}]),\n            table: ::std::borrow::Cow::Borrowed(concat!(\n{table}            )),\n        }}\n    }};\n}}\n\n/// The {many} a {one} is like: one, by its name, or one per block of cells,\n/// by the block's first cell (`_`: like none).\nmacro_rules! like {{\n    () => {{\n        ::std::borrow::Cow::Borrowed(&[])\n    }};\n    ($parent:ident) => {{\n        ::std::borrow::Cow::Borrowed(&[(0, {ty}::$parent as u16)])\n    }};\n    ([$($cell:ident $parent:tt),*]) => {{\n        ::std::borrow::Cow::Borrowed(&[$((super::cell::$cell, like!(@ $parent))),*])\n    }};\n    (@ _) => {{\n        flexion::LIKE_NONE\n    }};\n    (@ $parent:ident) => {{\n        {ty}::$parent as u16\n    }};\n}}\n"
+        "macro_rules! {one} {{\n    ($name:literal, $words:literal, $lemma:literal{features} $(, like $parent:ident)?;\n{rows}    ) => {{\n        Paradigm {{\n            name: ::std::borrow::Cow::Borrowed($name),\n            words: $words,\n            lemma: ::std::borrow::Cow::Borrowed($lemma),\n            parent: like!($($parent)?),\n            inherent: ::std::borrow::Cow::Borrowed(&[{values}]),\n            table: ::std::borrow::Cow::Borrowed(concat!(\n{table}            )),\n        }}\n    }};\n}}\n\n/// The {one} a {one} is like, by its name.\nmacro_rules! like {{\n    () => {{\n        None\n    }};\n    ($parent:ident) => {{\n        Some({ty}::$parent as u16)\n    }};\n}}\n"
     );
     if g.paradigms.iter().any(|p| !p.inherent.is_empty()) {
         let _ = writeln!(
@@ -423,32 +423,9 @@ fn grammar_files(
             .get(i)
             .map(|m| m.iter().map(String::as_str).take(6).collect())
             .unwrap_or_default();
-        // A child: like others, block by block, except in the cells it writes.
-        let name = |q: u16| -> &str {
-            if q == flexion::LIKE_NONE {
-                "_"
-            } else {
-                variants.get(usize::from(q)).map_or("_", String::as_str)
-            }
-        };
-        let blocks: Vec<(u16, &str, String)> = par
-            .like
-            .iter()
-            .enumerate()
-            .map(|(k, &(first, q))| {
-                let end = par.like.get(k + 1).map_or(g.cells, |n| usize::from(n.0));
-                let groups: Vec<&str> = cells
-                    .groups
-                    .iter()
-                    .filter(|gr| gr.offset >= usize::from(first) && gr.offset < end)
-                    .map(|gr| gr.name)
-                    .collect();
-                (first, name(q), groups.join(", "))
-            })
-            .collect();
-        let like = if blocks.iter().all(|b| b.1 == "_") {
-            String::new()
-        } else {
+        let parent = par.parent.and_then(|q| variants.get(usize::from(q)));
+        // A child: like its parent, except in the cells it writes.
+        let like = parent.map_or(String::new(), |q| {
             let own: Vec<String> = (0..g.cells)
                 .filter(|&c| par.own(c).is_some())
                 .map(|c| {
@@ -467,35 +444,13 @@ fn grammar_files(
                 .collect();
             let more = if own.len() > 6 { ", …" } else { "" };
             let named: Vec<&str> = own.iter().take(6).map(String::as_str).collect();
-            let cells_word = if own.len() == 1 { "cell" } else { "cells" };
-            let whom = match blocks.as_slice() {
-                [(0, q, _)] => (*q).to_string(),
-                many => many
-                    .iter()
-                    .map(|(_, q, groups)| {
-                        let q = if *q == "_" { "none" } else { q };
-                        format!("{q} in {groups}")
-                    })
-                    .collect::<Vec<_>>()
-                    .join("; "),
-            };
+            let cells = if own.len() == 1 { "cell" } else { "cells" };
             format!(
-                " Like {whom}, except in {} {cells_word}: {}{more}.",
+                " Like {q}, except in {} {cells}: {}{more}.",
                 own.len(),
                 named.join(", ")
             )
-        };
-        let like_arg = match blocks.as_slice() {
-            [] => String::new(),
-            [(0, q, _)] => format!(", like {q}"),
-            many => format!(
-                ", like [{}]",
-                many.iter()
-                    .map(|(first, q, _)| format!("{} {q}", layout.name(*first)))
-                    .collect::<Vec<_>>()
-                    .join(", ")
-            ),
-        };
+        });
         let _ = writeln!(
             p,
             "    // {}: {} words ({}).{like}",
@@ -526,7 +481,7 @@ fn grammar_files(
             } else {
                 format!(", [{}]", values.join(", "))
             },
-            like_arg
+            parent.map_or(String::new(), |q| format!(", like {q}"))
         );
         p.push_str(&layout.table(|c| match par.own(c) {
             Some(flexion::Form::Pattern(p)) => Lit(p).to_string(),
