@@ -415,7 +415,7 @@ fn grammar_files(
     if !g.paradigms.is_empty() {
         let _ = writeln!(
             p,
-            "/// Writes one {one}: the word it is named after, how many words follow it,\n/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if\n/// they share them), the {one} it is like (if any), then a row of patterns\n/// per line (`derived`: the form comes from another cell's, see\n/// `relations.rs`; `_`, or a row left out: the form is the {one}'s it is like,\n/// or, in a {one} like no other, derived):"
+            "/// Writes one {one}: the word it is named after, how many words follow it,\n/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if\n/// they share them), the {one} it is like (if any), the stem slots\n/// it states with a stem and an ending table (`stem aorist: \"~σ- like λυω\"`:\n/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see\n/// `stems.rs`), then a row of patterns per line (`derived`: the form comes\n/// from another cell's, see `relations.rs`; `_`, or a row left out: the\n/// form is its stem slot's, or the {one}'s it is like, or, in a {one} like\n/// no other, derived):"
         );
         for row in &layout.rows {
             let cols = if row.columns.is_empty() {
@@ -434,9 +434,19 @@ fn grammar_files(
             )
         };
         let (rows, table) = layout.macro_rows();
+        // A row per stem slot, before the cells' rows.
+        let stem_rows: String = g
+            .slots
+            .iter()
+            .enumerate()
+            .map(|(i, slot)| format!("     $(stem {}: $s{i}:tt;)?\n", slot.name))
+            .collect();
+        let stems: String = (0..g.slots.len())
+            .map(|i| format!("                $(flexion::cell!($s{i}),)? \"\\t\",\n"))
+            .collect();
         let _ = writeln!(
             p,
-            "macro_rules! {one} {{\n    ($name:literal, $words:literal, $lemma:literal{features} $(, like $parent:ident)?;\n{rows}    ) => {{\n        Paradigm {{\n            name: ::std::borrow::Cow::Borrowed($name),\n            words: $words,\n            lemma: ::std::borrow::Cow::Borrowed($lemma),\n            parent: like!($($parent)?),\n            inherent: ::std::borrow::Cow::Borrowed(&[{values}]),\n            table: ::std::borrow::Cow::Borrowed(concat!(\n{table}            )),\n        }}\n    }};\n}}\n\n/// The {one} a {one} is like, by its name.\nmacro_rules! like {{\n    () => {{\n        None\n    }};\n    ($parent:ident) => {{\n        Some({ty}::$parent as u16)\n    }};\n}}\n"
+            "macro_rules! {one} {{\n    ($name:literal, $words:literal, $lemma:literal{features} $(, like $parent:ident)?;\n{stem_rows}{rows}    ) => {{\n        Paradigm {{\n            name: ::std::borrow::Cow::Borrowed($name),\n            words: $words,\n            lemma: ::std::borrow::Cow::Borrowed($lemma),\n            parent: like!($($parent)?),\n            inherent: ::std::borrow::Cow::Borrowed(&[{values}]),\n            table: ::std::borrow::Cow::Borrowed(concat!(\n{table}            )),\n            stems: ::std::borrow::Cow::Borrowed(concat!(\n{stems}            )),\n        }}\n    }};\n}}\n\n/// The {one} a {one} is like, by its name.\nmacro_rules! like {{\n    () => {{\n        None\n    }};\n    ($parent:ident) => {{\n        Some({ty}::$parent as u16)\n    }};\n}}\n"
         );
         if g.paradigms.iter().any(|p| !p.inherent.is_empty()) {
             let _ = writeln!(
@@ -542,6 +552,12 @@ fn grammar_files(
             },
             parent.map_or(String::new(), |q| format!(", like {q}"))
         );
+        // The slots it states with a stem and an ending table.
+        for (slot, entry) in g.slots.iter().zip(par.stems.split('\t')) {
+            if !entry.is_empty() {
+                let _ = writeln!(p, "    stem {}: {};", slot.name, Lit(entry));
+            }
+        }
         p.push_str(&layout.table(|c| match par.own(c) {
             Some(flexion::Form::Pattern(p)) => Lit(p).to_string(),
             Some(flexion::Form::Derived) => "derived".to_string(),

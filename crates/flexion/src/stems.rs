@@ -81,6 +81,17 @@ pub fn build(
         .collect()
 }
 
+/// `pattern` (with one stem piece; alternatives after `|`) with `stem` (a
+/// pattern over a word's stem pieces) in its stem piece's place: an ending
+/// table's pattern and a paradigm's stem for its slot (`ἐ~ᾰ`, `~σ`) make the
+/// paradigm's pattern (`ἐ~σᾰ`).
+pub fn compose(stem: &str, pattern: &str) -> String {
+    let variants: Vec<String> = pattern::variants(pattern)
+        .map(|v| v.replacen('~', stem, 1))
+        .collect();
+    variants.join("|")
+}
+
 /// The stem `pattern` (with one stem piece) builds `form` on (letters),
 /// through `laws`: what the pattern leaves of the form, or that with its
 /// first letter `lemma`'s (a template before the stem may change the
@@ -228,5 +239,49 @@ mod tests {
             Some("ἀγγειλ")
         );
         assert_eq!(stem_of("ἐ~α", "ἠγγειλα", "ἀγγελλω", None), None);
+    }
+
+    #[test]
+    fn a_paradigm_states_a_slot_with_a_stem_and_a_table() {
+        let slots = [Slot {
+            name: Cow::Borrowed("aorist"),
+            cells: Cow::Borrowed(&[1, 2, 3]),
+        }];
+        let tables = [EndingTable {
+            name: Cow::Borrowed("λυω"),
+            words: 1,
+            slot: 0,
+            table: Cow::Borrowed("ἐ~α\t~ω|~ωμι\t\t"),
+        }];
+        let space = crate::Space {
+            slots: &slots,
+            tables: &tables,
+        };
+        let paradigm = |table: &'static str, stems: &'static str, parent| crate::Paradigm {
+            name: Cow::Borrowed("λυω"),
+            words: 1,
+            lemma: Cow::Borrowed("~ω"),
+            parent,
+            inherent: Cow::Borrowed(&[]),
+            table: Cow::Borrowed(table),
+            stems: Cow::Borrowed(stems),
+        };
+        let family = [
+            paradigm("~ω\tἐ~ξα\t~ξω\t~ξαι\t", "", None),
+            // Like the first, but its aorist on `~σ` with `λυω`'s table; its
+            // own cell wins, and a cell the table leaves out is its parent's.
+            paradigm("\t\t~σω\t\t", "~σ- like λυω\t", Some(0)),
+        ];
+        let child = family.get(1).expect("a child");
+        let at = |cell| {
+            child
+                .pattern_in(&family, space, cell)
+                .map(|p| p.into_owned())
+        };
+        assert_eq!(at(1).as_deref(), Some("ἐ~σα"));
+        assert_eq!(at(2).as_deref(), Some("~σω"));
+        assert_eq!(at(3).as_deref(), Some("~ξαι"));
+        assert_eq!(at(0).as_deref(), Some("~ω"));
+        assert_eq!(compose("~σ", "~ω|~ωμι"), "~σω|~σωμι");
     }
 }

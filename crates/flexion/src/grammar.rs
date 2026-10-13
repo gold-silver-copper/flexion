@@ -810,6 +810,14 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         (!forms.is_empty()).then_some((forms, table.name.as_ref(), stem))
     }
 
+    /// Its stem slots and ending tables, as paradigms state slots with.
+    pub fn space(&self) -> crate::Space<'_, 'a> {
+        crate::Space {
+            slots: &self.slots,
+            tables: &self.tables,
+        }
+    }
+
     /// The slot `cell` is in, and its place among the slot's cells.
     fn slot_of(&self, cell: usize) -> Option<(usize, usize)> {
         self.slots
@@ -840,7 +848,13 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 continue;
             }
             // A form the paradigm builds fixes nothing it doesn't.
-            let built = paradigm.built(&self.paradigms, self.laws.as_ref(), *cell, stems);
+            let built = paradigm.built_in(
+                &self.paradigms,
+                self.space(),
+                self.laws.as_ref(),
+                *cell,
+                stems,
+            );
             if built.iter().any(|(b, _)| b == form) {
                 continue;
             }
@@ -853,11 +867,12 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             let Some(slot) = self.slots.get(s) else {
                 continue;
             };
-            let patterns: Vec<Option<&str>> = slot
+            let owned: Vec<Option<Cow<'_, str>>> = slot
                 .cells
                 .iter()
-                .map(|&c| paradigm.pattern(&self.paradigms, usize::from(c)))
+                .map(|&c| paradigm.pattern_in(&self.paradigms, self.space(), usize::from(c)))
                 .collect();
+            let patterns: Vec<Option<&str>> = owned.iter().map(|p| p.as_deref()).collect();
             let found = crate::stems::factor(&patterns).and_then(|(_, table)| {
                 let p = table.split('\t').nth(position).filter(|p| !p.is_empty())?;
                 let stem = crate::stems::stem_of(p, form, lemma, self.laws.as_ref())?;
@@ -927,8 +942,15 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             let p = table.split('\t').nth(position).filter(|p| !p.is_empty())?;
             Some(crate::stems::build(p, stem, self.laws.as_ref()))
         });
-        let forms = on_given
-            .unwrap_or_else(|| paradigm.built(&self.paradigms, self.laws.as_ref(), cell, stems));
+        let forms = on_given.unwrap_or_else(|| {
+            paradigm.built_in(
+                &self.paradigms,
+                self.space(),
+                self.laws.as_ref(),
+                cell,
+                stems,
+            )
+        });
         if !forms.is_empty() {
             out.push((forms, 1.0));
         } else if let Some(relation) = self.relation(cell) {

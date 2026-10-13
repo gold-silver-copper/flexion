@@ -534,21 +534,38 @@ pub fn learn<'s>(
         &base_of,
     );
     let irregular = listing(&mut grammar, &stems, &wrong, words_of, &made, &mut unsure);
-    // Only the ending tables a listed stem is built with are the grammar's.
-    if let Cow::Owned(tables) = &mut grammar.tables {
-        let slots = &grammar.slots;
-        tables.retain(|t| {
-            let slot = slots
-                .get(usize::from(t.slot))
-                .map_or("", |s| s.name.as_ref());
-            stems
-                .iter()
-                .any(|(_, s, _, name)| s == slot && name == t.name.as_ref())
-        });
-    }
+    // The ending tables listed stems are built with; paradigms stated
+    // through stem slots where that pays; the tables either uses are the
+    // grammar's.
+    let slot_index = |name: &str| grammar.slots.iter().position(|s| s.name == name);
+    let listed_tables: crate::HashSet<(u16, String)> = stems
+        .iter()
+        .filter_map(|(_, slot, _, table)| {
+            Some((u16::try_from(slot_index(slot)?).ok()?, table.clone()))
+        })
+        .collect();
+    let all_tables = grammar.tables.to_vec();
+    let mut used: Vec<usize> = Vec::new();
     if let Cow::Owned(paradigms) = &mut grammar.paradigms {
         inherit(paradigms, &grammar.relations);
+        used = crate::stems::state(
+            paradigms,
+            &grammar.slots,
+            &all_tables,
+            &listed_tables,
+            &prices,
+        );
     }
+    grammar.tables = Cow::Owned(
+        all_tables
+            .into_iter()
+            .enumerate()
+            .filter(|(i, t)| {
+                used.contains(i) || listed_tables.contains(&(t.slot, t.name.to_string()))
+            })
+            .map(|(_, t)| t)
+            .collect(),
+    );
     let stats = Stats {
         words: all_words.len(),
         paradigms: grammar.paradigms.len(),
@@ -1468,6 +1485,7 @@ fn paradigms<'s>(
             parent: None,
             inherent: Cow::Borrowed(&[]),
             table: Cow::Owned(table),
+            stems: Cow::Borrowed(""),
         })
     });
     let id = |c: usize| order.iter().position(|e| e.0 == c);

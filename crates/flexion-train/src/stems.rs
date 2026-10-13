@@ -17,6 +17,7 @@
 //! p. 109).
 
 use crate::{HashMap, HashSet};
+use std::collections::BTreeMap;
 
 /// How many roots an ending (or template) must recur in, at a cell, to be
 /// taken off a form there; and an alternation, to count for a split.
@@ -753,6 +754,121 @@ pub fn tables<'s>(
         }
     }
     Tables { slots, tables, of }
+}
+
+/// `paradigms` (each like its parent except in the cells it writes, see
+/// [`flexion::Paradigm`]) stated through the stem slots where that costs
+/// fewer bits (see `crate::bits`): a paradigm whose patterns over a slot are
+/// an ending table's on one stem (see [`flexion::factor`]) states the stem
+/// and the table (`~σ- like λυω`) instead of the cells it writes there. A
+/// table no listed stem uses (`listed`: `(slot, table)`) is stated only if
+/// the paradigms using it save more than it costs. The tables used, by
+/// their places in `tables`.
+pub fn state(
+    paradigms: &mut [flexion::Paradigm<'_>],
+    slots: &[flexion::Slot<'_>],
+    tables: &[flexion::EndingTable<'_>],
+    listed: &HashSet<(u16, String)>,
+    prices: &crate::bits::Prices,
+) -> Vec<usize> {
+    let frozen: Vec<flexion::Paradigm<'_>> = paradigms.to_vec();
+    let resolved = |p: usize, cells: &[u16]| -> Vec<Option<&str>> {
+        let Some(par) = frozen.get(p) else {
+            return Vec::new();
+        };
+        cells
+            .iter()
+            .map(|&c| par.pattern(&frozen, usize::from(c)))
+            .collect()
+    };
+    // Per table, the paradigm slots that would state it, with the bits each
+    // saves.
+    let mut uses: BTreeMap<usize, Vec<(usize, usize, String, f64)>> = BTreeMap::new();
+    for (p, par) in frozen.iter().enumerate() {
+        for (s, slot) in slots.iter().enumerate() {
+            let mine = resolved(p, &slot.cells);
+            if mine.iter().all(Option::is_none) {
+                continue;
+            }
+            if let Some(q) = par.parent
+                && resolved(usize::from(q), &slot.cells) == mine
+            {
+                continue;
+            }
+            let Some((stem, table)) = flexion::factor(&mine) else {
+                continue;
+            };
+            let Some(t) = tables
+                .iter()
+                .position(|t| usize::from(t.slot) == s && t.table == table)
+            else {
+                continue;
+            };
+            // What it writes there now, against the stem and a table.
+            let written: f64 = slot
+                .cells
+                .iter()
+                .filter_map(|&c| match par.own(usize::from(c)) {
+                    Some(flexion::Form::Pattern(x)) => Some(prices.text(x) + prices.cell),
+                    _ => None,
+                })
+                .sum();
+            let stating = prices.text(&stem) + crate::bits::log2(tables.len());
+            if stating < written {
+                uses.entry(t)
+                    .or_default()
+                    .push((p, s, stem, written - stating));
+            }
+        }
+    }
+    let mut used = Vec::new();
+    for (t, list) in uses {
+        let Some(table) = tables.get(t) else { continue };
+        let free = listed.contains(&(table.slot, table.name.to_string()));
+        let cost = crate::bits::ITEM + table.table.split('\t').map(|x| prices.text(x)).sum::<f64>();
+        let saved: f64 = list.iter().map(|e| e.3).sum();
+        if !free && saved <= cost {
+            continue;
+        }
+        used.push(t);
+        for (p, s, stem, _) in list {
+            let parent = frozen.get(p).and_then(|par| par.parent).map(usize::from);
+            let Some(slot) = slots.get(s) else { continue };
+            let mine = resolved(p, &slot.cells);
+            let theirs = parent.map(|q| resolved(q, &slot.cells));
+            let Some(par) = paradigms.get_mut(p) else {
+                continue;
+            };
+            // The slot's cells: the table's, but those it leaves to another
+            // cell's form, which say so where the parent has a pattern.
+            let mut cells: Vec<String> = par.table.split('\t').map(str::to_string).collect();
+            for (k, &c) in slot.cells.iter().enumerate() {
+                let Some(cell) = cells.get_mut(usize::from(c)) else {
+                    continue;
+                };
+                let derived = mine.get(k).is_some_and(Option::is_none);
+                let parent_has = theirs
+                    .as_ref()
+                    .and_then(|t| t.get(k))
+                    .is_some_and(Option::is_some);
+                *cell = if derived && parent_has {
+                    flexion::DERIVED.to_string()
+                } else {
+                    String::new()
+                };
+            }
+            par.table = std::borrow::Cow::Owned(cells.join("\t"));
+            let mut entries: Vec<String> = par.stems.split('\t').map(str::to_string).collect();
+            entries.resize(slots.len() + 1, String::new());
+            if let Some(e) = entries.get_mut(s) {
+                *e = format!("{stem}{}{}", flexion::LIKE, table.name);
+            }
+            entries.truncate(slots.len());
+            let joined: String = entries.iter().map(|e| format!("{e}\t")).collect();
+            par.stems = std::borrow::Cow::Owned(joined);
+        }
+    }
+    used
 }
 
 /// A word the grammar builds wrong, as the lister reads it: its key, and
