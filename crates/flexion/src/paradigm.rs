@@ -65,10 +65,11 @@ pub struct Relation<'a> {
     /// Russian accusative is the genitive of an animate noun, the
     /// nominative of an inanimate one).
     pub from: Cow<'a, [u16]>,
-    /// The changes of the end of that form, `(old, new)`: `("ī", "istī")`.
+    /// The changes of that form, as patterns `(old, new)` around the letters
+    /// they keep (`~`): `("~ī", "~istī")`; the augment, `("~", "ἐ~")`.
     pub changes: Cow<'a, [(Cow<'a, str>, Cow<'a, str>)]>,
-    /// Which change, read off that form's ending (its letters); `None`: the
-    /// form itself.
+    /// Which change, read off that form's ending (its letters), of those
+    /// fitting it with the longest beginning; `None`: the form itself.
     pub change: Option<Choice<'a, u16>>,
     /// It tells the form of a word whose form of the cell it comes from is
     /// listed (a principal part), rather than the word's paradigm.
@@ -102,11 +103,18 @@ impl Relation<'_> {
     /// The forms `form` gives (its letters), each with where its change
     /// starts and how likely it is.
     pub fn apply(&self, form: &str, smoothing: f32) -> Vec<(String, usize, f32)> {
-        let fits = |c: u16| {
+        let start = |p: &str| p.split('~').next().map_or(0, str::len);
+        let fitting = |c: u16| {
             self.changes
                 .get(usize::from(c))
-                .is_some_and(|(old, _)| form.ends_with(old.as_ref()))
+                .filter(|(old, _)| pattern::bind(old, form).is_some())
+                .map(|(old, _)| start(old))
         };
+        // Of the changes fitting the form, those saying most of its start.
+        let longest = (0..self.changes.len())
+            .filter_map(|c| fitting(u16::try_from(c).ok()?))
+            .max();
+        let fits = |c: u16| fitting(c).is_some() && fitting(c) == longest;
         let readings = self
             .change
             .iter()
@@ -114,8 +122,9 @@ impl Relation<'_> {
         let out: Vec<(String, usize, f32)> = readings
             .filter_map(|r| {
                 let (old, new) = self.changes.get(usize::from(r.value))?;
-                let stem = form.strip_suffix(old.as_ref())?;
-                Some((format!("{stem}{new}"), stem.len(), r.probability))
+                let stems = pattern::bind(old, form)?;
+                let at = pattern::ending_start(new, &stems);
+                Some((pattern::fill(new, &stems), at, r.probability))
             })
             .collect();
         // No change, or none fits its ending: the form itself (as a guess).

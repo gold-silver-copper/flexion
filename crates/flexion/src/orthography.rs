@@ -1,6 +1,7 @@
 //! How a language writes: which letters carry a syllable, how stress is
 //! marked, and how a typed word is read into letters and stress.
 
+use unicode_normalization::UnicodeNormalization;
 use std::fmt;
 
 /// A language's writing conventions, as far as inflection needs them.
@@ -91,9 +92,12 @@ impl Orthography<'_> {
         letters.chars().filter(|&c| self.is_vowel(c)).count()
     }
 
-    /// Read a typed word: stress marks become [`Written::stress`], letters
-    /// are lowercased where the language folds case.
+    /// Read a typed word, however its letters and marks are composed (it is
+    /// read in Unicode's composed form, NFC): stress marks become
+    /// [`Written::stress`], letters are lowercased where the language folds
+    /// case.
     pub fn read(&self, word: &str) -> Written {
+        let word: &str = &word.nfc().collect::<String>();
         let casing = casing(word);
         // The word's stress is its last stress mark (a compound's head,
         // `мастер-цили́ндр`); marks before it are dropped.
@@ -192,7 +196,7 @@ impl Orthography<'_> {
                 vowel = vowel.saturating_add(1);
             }
         }
-        recase(&out, casing)
+        recase(&out, casing).nfc().collect()
     }
 }
 

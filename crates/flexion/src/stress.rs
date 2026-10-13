@@ -408,6 +408,8 @@ mod tests {
         stress_marks: "\u{301}\u{342}",
         stressed: &[
             ('ά', 'α', 0),
+            ('έ', 'ε', 0),
+            ('ό', 'ο', 0),
             ('ύ', 'υ', 0),
             ('ώ', 'ω', 0),
             ('ῶ', 'ω', 1),
@@ -455,10 +457,17 @@ mod tests {
         };
         // Contraction: on the first vowel, a circumflex; on the second, an
         // acute.
-        assert_eq!(carried("ποιε\u{301}ομεν", "ποιουμεν"), "ποιοῦμεν");
-        assert_eq!(carried("ποιεο\u{301}μενος", "ποιουμενος"), "ποιούμενος");
+        assert_eq!(carried("ποιέομεν", "ποιουμεν"), "ποιοῦμεν");
+        assert_eq!(carried("ποιεόμενος", "ποιουμενος"), "ποιούμενος");
         // Elsewhere it stays on its vowel.
-        assert_eq!(carried("λε\u{301}γσω", "λεξω"), "λε\u{301}ξω");
+        assert_eq!(carried("λέγσω", "λεξω"), "λέξω");
+    }
+
+    #[test]
+    fn a_word_reads_the_same_however_composed() {
+        // `ἔλυον` typed as one letter or as `ε` with its breathing and
+        // accent after it.
+        assert_eq!(GREEK.read("\u{1F14}λυον"), GREEK.read("ε\u{313}\u{301}λυον"));
     }
 
     #[test]

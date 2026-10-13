@@ -25,8 +25,6 @@ pub struct Settings {
     pub min_gain: u32,
     /// See [`flexion::Choice::read`].
     pub smoothing: f32,
-    /// The longest ending (or beginning) a rule looks at, in letters.
-    pub longest: usize,
 }
 
 impl Default for Settings {
@@ -35,7 +33,6 @@ impl Default for Settings {
             rule_bits: 4.0,
             min_gain: 2,
             smoothing: 2.0,
-            longest: MAX_ENDING,
         }
     }
 }
@@ -51,7 +48,7 @@ pub fn learn<'a, L: Label + Hash + Ord>(
     // Every ending's counts.
     let mut counts: HashMap<String, BTreeMap<L, u32>> = HashMap::default();
     for (word, value) in examples {
-        for ending in endings_up_to(word, settings.longest) {
+        for ending in endings(word) {
             *counts
                 .entry(ending.to_string())
                 .or_default()
@@ -87,10 +84,7 @@ pub fn learn<'a, L: Label + Hash + Ord>(
             continue;
         }
         // The rule deciding these words now: the longest kept ending.
-        let Some(current) = endings_up_to(ending, settings.longest)
-            .skip(1)
-            .find_map(|e| kept.get(e).copied())
-        else {
+        let Some(current) = endings(ending).skip(1).find_map(|e| kept.get(e).copied()) else {
             continue;
         };
         if saved_bits(c, current) >= settings.rule_bits {
@@ -192,17 +186,12 @@ fn saved_bits<L: Ord>(own: &BTreeMap<L, u32>, broader: &BTreeMap<L, u32>) -> f64
 /// A word's endings, longest first, down to the empty one: at most
 /// [`MAX_ENDING`] letters (the whole word if it is shorter).
 pub fn endings(word: &str) -> impl Iterator<Item = &str> {
-    endings_up_to(word, MAX_ENDING)
-}
-
-/// [`endings`], up to `longest` letters.
-fn endings_up_to(word: &str, longest: usize) -> impl Iterator<Item = &str> {
     let starts: Vec<usize> = word
         .char_indices()
         .map(|(i, _)| i)
         .chain(std::iter::once(word.len()))
         .collect();
-    let first = starts.len().saturating_sub(longest.saturating_add(1));
+    let first = starts.len().saturating_sub(MAX_ENDING.saturating_add(1));
     starts
         .into_iter()
         .skip(first)

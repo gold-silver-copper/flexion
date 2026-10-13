@@ -303,10 +303,11 @@ pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
     /// them: `(key, letters)`, sorted. A caller who types `fox` means `fōx`;
     /// marks a paradigm writes (the `ō` of `ratiō`) aren't listed.
     pub spellings: Cow<'a, [(Cow<'a, str>, Cow<'a, str>)]>,
-    /// How a letter typed without its mark is written, by the letters around
-    /// it (rules on the beginning of [`around`]: Latin `atti` → `ā`, as in
-    /// `-ātiō`; `e#d` → `ē`, as in `dē-`): the spelling of a word that isn't
-    /// listed.
+    /// How a letter typed without its mark is written, by the letter before
+    /// it, it and the letters after it (rules on the beginning of that, the
+    /// word's ends written [`WORD_END`]: Latin `tatio#` → `ā`, as in `-ātiō`;
+    /// `#de` → `ē`, as in `dē-`; `ae` → `e`, a diphthong): the spelling of a
+    /// word that isn't listed.
     pub marks: Option<Choice<'a, char>>,
     /// Forms no rule gives, as the dictionary writes them: `(word, cell,
     /// form)`, sorted by word and cell. They are the answer for that word.
@@ -336,14 +337,35 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     /// caller knows (readings that disagree with it are dropped, unless all
     /// do).
     pub fn candidates(&self, lemma: &str, cell: usize, known: &Known<'_>) -> Vec<Candidate<'_>> {
-        let mut out = self.unsharpened(lemma, cell, known);
-        sharpen(out.iter_mut().map(|c| &mut c.probability), self.sharpness);
-        out.sort_by(|a, b| b.probability.total_cmp(&a.probability));
-        out
+        self.sharpened(self.unsharpened(lemma, &[cell], known))
+            .pop()
+            .unwrap_or_default()
     }
 
-    /// [`Grammar::candidates`] before sharpening, in no order.
-    fn unsharpened(&self, lemma: &str, cell: usize, known: &Known<'_>) -> Vec<Candidate<'_>> {
+    /// The forms of every cell for `lemma`, as [`Grammar::candidates`]
+    /// gives each, read once.
+    pub fn table(&self, lemma: &str, known: &Known<'_>) -> Vec<Vec<Candidate<'_>>> {
+        let cells: Vec<usize> = (0..self.cells).collect();
+        self.sharpened(self.unsharpened(lemma, &cells, known))
+    }
+
+    /// Each list of candidates sharpened and sorted, likeliest first.
+    fn sharpened<'g>(&self, mut lists: Vec<Vec<Candidate<'g>>>) -> Vec<Vec<Candidate<'g>>> {
+        for out in &mut lists {
+            sharpen(out.iter_mut().map(|c| &mut c.probability), self.sharpness);
+            out.sort_by(|a, b| b.probability.total_cmp(&a.probability));
+        }
+        lists
+    }
+
+    /// [`Grammar::candidates`] of each of `cells`, before sharpening, in no
+    /// order.
+    fn unsharpened(
+        &self,
+        lemma: &str,
+        cells: &[usize],
+        known: &Known<'_>,
+    ) -> Vec<Vec<Candidate<'_>>> {
         let mut word = self.orthography.read(lemma);
         let key = self.orthography.key(&word.letters);
         // A word typed without some of its marks: as listed, or as its
@@ -360,25 +382,10 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         } else {
             word.casing
         };
-        if let Some(form) = self.irregular_form(&key, cell) {
-            return vec![listed(crate::recase(form, casing), 1.0)];
-        }
         let given = self.given(known);
         let mut inflections = self.inflections(&word.letters, &key, &given, known.inherent);
         if inflections.is_empty() {
             inflections = self.inflections(&word.letters, &key, &[], known.inherent);
-        }
-        // A form of a word whose forms are listed, but not this one: told
-        // from the listed form of the cell it comes from.
-        if let Some((letters, ending)) = self.from_listed(&key, cell, 0) {
-            let stresses = match inflections.first() {
-                Some(inf) => self.stresses(&word, inf, cell, &letters, ending),
-                None => vec![(None, 1.0)],
-            };
-            return stresses
-                .into_iter()
-                .map(|(stress, p)| listed(self.orthography.write(&letters, stress, casing), p))
-                .collect();
         }
         // A word written in parts: as one word, or part by part.
         let (whole, each) = match (&self.compound, lemma.split_once(JOINER)) {
@@ -391,50 +398,82 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                         .find(|r| r.value == c)
                         .map_or(0.0, |r| r.probability)
                 };
-                (p(Compound::Last), Some((first, rest, p(Compound::Each))))
+                let each = p(Compound::Each);
+                let parts = (each > 0.0).then(|| {
+                    (
+                        self.unsharpened(first, cells, &Known::default()),
+                        self.unsharpened(rest, cells, known),
+                    )
+                });
+                (p(Compound::Last), parts.map(|parts| (parts, each)))
             }
             _ => (1.0, None),
         };
-        let mut out: Vec<Candidate<'_>> = Vec::new();
         // A word that begins with a prefix: the rest of it, the prefix where
         // the cell puts it; or a word of its own.
-        let whole = match self
+        let split = self
             .prefixes
             .as_ref()
             .and_then(|p| Some((p, p.split(&key)?)))
-        {
-            Some((prefixes, (letters, separable, inseparable)))
-                if separable + inseparable > 0.0 =>
-            {
-                let at = word
-                    .letters
-                    .char_indices()
-                    .nth(letters)
-                    .map_or(word.letters.len(), |(i, _)| i);
-                let (prefix, rest) = word.letters.split_at(at);
+            .filter(|(_, (_, separable, inseparable))| separable + inseparable > 0.0);
+        let behind = split.map(|(prefixes, (letters, separable, inseparable))| {
+            let at = word
+                .letters
+                .char_indices()
+                .nth(letters)
+                .map_or(word.letters.len(), |(i, _)| i);
+            let (prefix, rest) = word.letters.split_at(at);
+            // The forms given, kept behind the prefix: the rest's.
+            let key_of = self.orthography.key(prefix);
+            let given: Vec<(usize, String)> = known
+                .forms
+                .iter()
+                .filter_map(|&(c, f)| {
+                    let letters = self.orthography.read(f).letters;
+                    Some((c, prefixes.unjoin(&key_of, prefix, &letters)?))
+                })
+                .collect();
+            let given: Vec<(usize, &str)> = given.iter().map(|(c, f)| (*c, f.as_str())).collect();
+            let base = Known {
+                forms: &given,
+                ..*known
+            };
+            let rests = self.unsharpened(rest, cells, &base);
+            (prefixes, prefix, rest, separable, inseparable, rests)
+        });
+        let whole = whole * behind.as_ref().map_or(1.0, |b| 1.0 - b.3 - b.4);
+        let mut lists = Vec::with_capacity(cells.len());
+        for (i, &cell) in cells.iter().enumerate() {
+            if let Some(form) = self.irregular_form(&key, cell) {
+                lists.push(vec![listed(crate::recase(form, casing), 1.0)]);
+                continue;
+            }
+            // A form of a word whose forms are listed, but not this one: told
+            // from the listed form of the cell it comes from.
+            if let Some((letters, ending)) = self.from_listed(&key, cell, 0) {
+                let stresses = match inflections.first() {
+                    Some(inf) => self.stresses(&word, inf, cell, &letters, ending),
+                    None => vec![(None, 1.0)],
+                };
+                lists.push(
+                    stresses
+                        .into_iter()
+                        .map(|(stress, p)| {
+                            listed(self.orthography.write(&letters, stress, casing), p)
+                        })
+                        .collect(),
+                );
+                continue;
+            }
+            let mut out: Vec<Candidate<'_>> = Vec::new();
+            if let Some((prefixes, prefix, rest, separable, inseparable, rests)) = &behind {
                 let placement = prefixes
                     .placement
                     .get(cell)
                     .copied()
                     .unwrap_or(Placement::Before);
                 let drop = prefixes.drops.get(cell).map_or("", |d| d.as_ref());
-                // The forms given, kept behind the prefix: the rest's.
-                let key_of = self.orthography.key(prefix);
-                let given: Vec<(usize, String)> = known
-                    .forms
-                    .iter()
-                    .filter_map(|&(c, f)| {
-                        let letters = self.orthography.read(f).letters;
-                        Some((c, prefixes.unjoin(&key_of, prefix, &letters)?))
-                    })
-                    .collect();
-                let given: Vec<(usize, &str)> =
-                    given.iter().map(|(c, f)| (*c, f.as_str())).collect();
-                let base = Known {
-                    forms: &given,
-                    ..*known
-                };
-                for c in top(self.unsharpened(rest, cell, &base)) {
+                for c in top(rests.get(i).cloned().unwrap_or_default()) {
                     let separated = match placement {
                         Placement::Before => format!("{prefix}{}", c.form),
                         Placement::After => format!("{} {prefix}", c.form),
@@ -445,7 +484,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                         rest,
                         c.form.strip_prefix(drop).unwrap_or(&c.form),
                     );
-                    for (form, p) in [(separated, separable), (kept, inseparable)] {
+                    for (form, p) in [(separated, *separable), (kept, *inseparable)] {
                         if p <= 0.0 {
                             continue;
                         }
@@ -458,61 +497,60 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                         add(&mut out, candidate);
                     }
                 }
-                whole * (1.0 - separable - inseparable)
             }
-            _ => whole,
-        };
-        if let Some((first, rest, p)) = each.filter(|e| e.2 > 0.0) {
-            let firsts = top(self.unsharpened(first, cell, &Known::default()));
-            let rests = top(self.unsharpened(rest, cell, known));
-            for a in &firsts {
-                for b in &rests {
-                    out.push(Candidate {
-                        form: format!("{}{JOINER}{}", a.form, b.form),
-                        also: Vec::new(),
-                        probability: p * a.probability * b.probability,
-                        status: b.status,
-                        paradigm: b.paradigm,
-                        evidence: b.evidence,
-                    });
+            if let Some(((firsts, rests), p)) = &each {
+                let firsts = top(firsts.get(i).cloned().unwrap_or_default());
+                let rests = top(rests.get(i).cloned().unwrap_or_default());
+                for a in &firsts {
+                    for b in &rests {
+                        out.push(Candidate {
+                            form: format!("{}{JOINER}{}", a.form, b.form),
+                            also: Vec::new(),
+                            probability: p * a.probability * b.probability,
+                            status: b.status,
+                            paradigm: b.paradigm,
+                            evidence: b.evidence,
+                        });
+                    }
                 }
             }
-        }
-        // A cell few or no words of the dictionary have is told by analogy.
-        let unattested = self.relation(cell).is_some_and(|r| r.analogy.is_some());
-        for (inf, (forms, p_cell)) in inflections.iter().take(KEEP).flat_map(|inf| {
-            self.build(inf.paradigm, &inf.stems, &key, known.inherent, cell, 0)
-                .into_iter()
-                .map(move |b| (inf, b))
-        }) {
-            let Some(((first, ending), also)) = forms.split_first() else {
-                continue;
-            };
-            let also: Vec<&String> = also.iter().map(|(f, _)| f).collect();
-            let evidence = inf.reading.rule.map(|r| Evidence {
-                ending: r.ending.as_ref(),
-                count: r.count(inf.reading.value),
-                total: r.total(),
-            });
-            for (stress, p_stress) in self.stresses(&word, inf, cell, first, *ending) {
-                let write = |f: &str| self.orthography.write(f, stress, casing);
-                let candidate = Candidate {
-                    form: write(first),
-                    also: also.iter().map(|f| write(f)).collect(),
-                    probability: spelled * whole * p_cell * inf.reading.probability * p_stress,
-                    status: if unattested {
-                        Status::Unattested
-                    } else {
-                        inf.reading.status
-                    },
-                    paradigm: inf.paradigm.name.as_ref(),
-                    evidence,
+            // A cell few or no words of the dictionary have is told by analogy.
+            let unattested = self.relation(cell).is_some_and(|r| r.analogy.is_some());
+            for (inf, (forms, p_cell)) in inflections.iter().take(KEEP).flat_map(|inf| {
+                self.build(inf.paradigm, &inf.stems, &key, known.inherent, cell, 0)
+                    .into_iter()
+                    .map(move |b| (inf, b))
+            }) {
+                let Some(((first, ending), also)) = forms.split_first() else {
+                    continue;
                 };
-                add(&mut out, candidate);
+                let also: Vec<&String> = also.iter().map(|(f, _)| f).collect();
+                let evidence = inf.reading.rule.map(|r| Evidence {
+                    ending: r.ending.as_ref(),
+                    count: r.count(inf.reading.value),
+                    total: r.total(),
+                });
+                for (stress, p_stress) in self.stresses(&word, inf, cell, first, *ending) {
+                    let write = |f: &str| self.orthography.write(f, stress, casing);
+                    let candidate = Candidate {
+                        form: write(first),
+                        also: also.iter().map(|f| write(f)).collect(),
+                        probability: spelled * whole * p_cell * inf.reading.probability * p_stress,
+                        status: if unattested {
+                            Status::Unattested
+                        } else {
+                            inf.reading.status
+                        },
+                        paradigm: inf.paradigm.name.as_ref(),
+                        evidence,
+                    };
+                    add(&mut out, candidate);
+                }
             }
+            out.retain(|c| c.probability > 0.0);
+            lists.push(out);
         }
-        out.retain(|c| c.probability > 0.0);
-        out
+        lists
     }
 
     /// The form `form` (written) of the word `rest` with `prefix` kept in
@@ -897,36 +935,6 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     }
 }
 
-/// What a rule on how letter `at` (in chars) of `key` is written reads: the
-/// letter, then in turn the letters after it and before it, outward, the
-/// word's ends written [`WORD_END`] (`fōx`'s `o`: `ox#f#`).
-pub fn around(key: &str, at: usize) -> String {
-    let chars: Vec<char> = key.chars().collect();
-    let after = chars
-        .get(at.saturating_add(1)..)
-        .unwrap_or_default()
-        .iter()
-        .copied()
-        .chain([WORD_END]);
-    let before = chars
-        .get(..at)
-        .unwrap_or_default()
-        .iter()
-        .rev()
-        .copied()
-        .chain([WORD_END]);
-    let (mut after, mut before) = (after.fuse(), before.fuse());
-    let mut out: String = chars.get(at).copied().into_iter().collect();
-    loop {
-        let (a, b) = (after.next(), before.next());
-        if a.is_none() && b.is_none() {
-            return out;
-        }
-        out.extend(a);
-        out.extend(b);
-    }
-}
-
 /// The spelling of a word typed as `letters` (looked up as `key`) whose
 /// unmarked letters `marks` marks as it says (see [`Grammar::marks`]), and how
 /// likely it is.
@@ -940,12 +948,15 @@ pub fn restore(
     let o = orthography;
     let mut p = 1.0;
     let mut out = String::with_capacity(letters.len().saturating_add(8));
-    for ((at, k), c) in key.chars().enumerate().zip(letters.chars()) {
+    let mut before = WORD_END;
+    for ((i, k), c) in key.char_indices().zip(letters.chars()) {
         let markable = c == k && o.folded.iter().any(|e| e.1 == c);
+        let around = format!("{before}{}{WORD_END}", key.get(i..).unwrap_or(""));
+        before = k;
         let reading = markable
             .then(|| {
                 marks
-                    .read(&around(key, at), smoothing, |m| o.fold(m) == c)
+                    .read(&around, smoothing, |m| o.fold(m) == c)
                     .into_iter()
                     .next()
             })

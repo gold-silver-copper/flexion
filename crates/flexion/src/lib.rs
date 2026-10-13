@@ -10,7 +10,7 @@ mod stress;
 
 pub use choice::{Choice, Reading, Rule, Side, Status, by_ending, tolerance};
 pub use grammar::{
-    Compound, Grammar, Irregular, Known, Placement, Prefix, Prefixes, Separation, WORD_END, around,
+    Compound, Grammar, Irregular, Known, Placement, Prefix, Prefixes, Separation, WORD_END,
     restore, sharpen,
 };
 pub use orthography::{Casing, Orthography, Stress, Written, recase};
