@@ -392,10 +392,13 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         } else {
             word.casing
         };
-        let given = self.given(known);
-        let mut inflections = self.inflections(&word.letters, &key, &given, known.inherent);
+        let mut inflections = self.inflections(&word.letters, &key, known);
         if inflections.is_empty() {
-            inflections = self.inflections(&word.letters, &key, &[], known.inherent);
+            let none = Known {
+                forms: &[],
+                ..*known
+            };
+            inflections = self.inflections(&word.letters, &key, &none);
         }
         // The likeliest few readings, each with its accent classes and its
         // forms, cell by cell, built once.
@@ -702,8 +705,8 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         // no form.
         built.insert(cell, Vec::new());
         let mut out = Vec::new();
-        if !paradigm.derives(&self.paradigms, cell) {
-            let forms = paradigm.built(&self.paradigms, self.laws.as_ref(), cell, stems);
+        let forms = paradigm.built(&self.paradigms, self.laws.as_ref(), cell, stems);
+        if !forms.is_empty() {
             out.push((forms, 1.0));
         } else if let Some(relation) = self.relation(cell) {
             let sources: Vec<(u16, f32)> = match (relation.from.as_ref(), &self.feature) {
@@ -756,7 +759,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             letters = listed.to_string();
         }
         let mut readings: Vec<Reading<'_, 'a, P>> = self
-            .inflections(&letters, &key, &self.given(known), known.inherent)
+            .inflections(&letters, &key, known)
             .into_iter()
             .map(|i| i.reading)
             .collect();
@@ -765,15 +768,6 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             self.sharpness,
         );
         readings
-    }
-
-    /// The forms the caller gave, read.
-    fn given(&self, known: &Known<'_>) -> Vec<(usize, Written)> {
-        known
-            .forms
-            .iter()
-            .map(|&(c, f)| (c, self.orthography.read(f)))
-            .collect()
     }
 
     /// The dictionary's spelling of a word typed as `letters` without some
@@ -808,16 +802,21 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     }
 
     /// The paradigms the word `letters` (looked up as `key`) can follow,
-    /// likeliest first, agreeing with `given` forms; a paradigm whose words
-    /// have other `inherent` feature values than these is less likely (by
-    /// [`OTHER_VALUES`]).
+    /// likeliest first, agreeing with the forms `known` gives; a paradigm
+    /// whose words have other inherent feature values than it gives is less
+    /// likely (by [`OTHER_VALUES`]).
     fn inflections<'g, 'w>(
         &'g self,
         letters: &'w str,
         key: &str,
-        given: &[(usize, Written)],
-        inherent: &[(u8, u8)],
+        known: &Known<'_>,
     ) -> Vec<Inflection<'g, 'a, 'w, P>> {
+        let inherent = known.inherent;
+        let given: Vec<(usize, String)> = known
+            .forms
+            .iter()
+            .map(|&(c, f)| (c, self.orthography.read(f).letters))
+            .collect();
         let agrees = |p: &Paradigm<'a>| {
             let Some(stems) = p.stems(&self.orthography, letters) else {
                 return false;
@@ -825,7 +824,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             given.iter().all(|(cell, form)| {
                 self.build(p, &stems, key, inherent, *cell, &mut Built::default())
                     .iter()
-                    .any(|(forms, _)| forms.iter().any(|(built, _)| *built == form.letters))
+                    .any(|(forms, _)| forms.iter().any(|(built, _)| built == form))
             })
         };
         let fits = |p: P| self.paradigms.get(p.index()).is_some_and(agrees);

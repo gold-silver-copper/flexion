@@ -44,15 +44,6 @@ pub enum Form<'t> {
     Derived,
 }
 
-impl std::fmt::Display for Form<'_> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Form::Pattern(p) => f.write_str(p),
-            Form::Derived => f.write_str("derived"),
-        }
-    }
-}
-
 /// A cell whose form comes from another cell's form of the word: from which
 /// cell (by the value of a feature of the word, when that decides), and how
 /// the end of that form changes (Latin `amāvī` → `amāvistī`). Used where a
@@ -139,7 +130,8 @@ impl<'a> Paradigm<'a> {
     /// The stem pieces of a lemma (its letters) that can inflect this way,
     /// matching letters as `orthography` looks them up.
     pub fn stems<'w>(&self, orthography: &Orthography<'_>, lemma: &'w str) -> Option<Stems<'w>> {
-        pattern::bind_by(&self.lemma, lemma, |a, b| orthography.same_letter(a, b))
+        let o = orthography;
+        pattern::bind_by(&self.lemma, lemma, |a, b| a == b || o.fold(a) == o.fold(b))
     }
 
     /// Whether words with these inherent feature values (`(feature, value)`)
@@ -186,15 +178,10 @@ impl<'a> Paradigm<'a> {
         }
     }
 
-    /// Whether the paradigm takes the cell's form from another cell.
-    pub fn derives(&self, family: &[Paradigm<'a>], cell: usize) -> bool {
-        self.form(family, cell) == Some(Form::Derived)
-    }
-
     /// The forms of `cell` for these stems, the usual one first, each with
     /// where its ending starts: the patterns filled, then `laws` applied at
     /// the stem's edge (see [`pattern::BOUNDARY`]) and to copied letters
-    /// (see [`pattern::COPIED`]).
+    /// (see [`pattern::COPIED`]). None for a derived cell.
     pub fn built(
         &self,
         family: &[Paradigm<'a>],

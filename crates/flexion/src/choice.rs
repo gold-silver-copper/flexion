@@ -148,32 +148,6 @@ impl<'a, L: Label> Choice<'a, L> {
             .map(|&(_, l)| l)
     }
 
-    /// The rules whose ending (or beginning) `word` has, least specific
-    /// first.
-    pub fn chain(&self, word: &str) -> Vec<&Rule<'a, L>> {
-        let cuts = word.char_indices().map(|(i, _)| i).chain([word.len()]);
-        let mut chain: Vec<&Rule<'a, L>> = cuts
-            .filter_map(|i| {
-                let at = match self.side {
-                    Side::End => {
-                        let affix = word.get(i..)?;
-                        self.rules.binary_search_by(|r| by_ending(&r.ending, affix))
-                    }
-                    Side::Start => {
-                        let affix = word.get(..i)?;
-                        self.rules
-                            .binary_search_by(|r| r.ending.as_ref().cmp(affix))
-                    }
-                };
-                self.rules.get(at.ok()?)
-            })
-            .collect();
-        if self.side == Side::End {
-            chain.reverse();
-        }
-        chain
-    }
-
     /// What `word` is, most likely first: the listed values if the
     /// dictionary has the word, else the rules' counts. A specific rule's
     /// counts lean on the broader rules' by `smoothing` words' worth (a
@@ -199,7 +173,28 @@ impl<'a, L: Label> Choice<'a, L> {
                 })
                 .collect();
         }
-        let chain = self.chain(word);
+        // The rules whose ending (or beginning) the word has, least specific
+        // first.
+        let cuts = word.char_indices().map(|(i, _)| i).chain([word.len()]);
+        let mut chain: Vec<&Rule<'a, L>> = cuts
+            .filter_map(|i| {
+                let at = match self.side {
+                    Side::End => {
+                        let affix = word.get(i..)?;
+                        self.rules.binary_search_by(|r| by_ending(&r.ending, affix))
+                    }
+                    Side::Start => {
+                        let affix = word.get(..i)?;
+                        self.rules
+                            .binary_search_by(|r| r.ending.as_ref().cmp(affix))
+                    }
+                };
+                self.rules.get(at.ok()?)
+            })
+            .collect();
+        if self.side == Side::End {
+            chain.reverse();
+        }
         let Some(&decisive) = chain.last() else {
             return Vec::new();
         };

@@ -1,7 +1,6 @@
 //! How a language writes: which letters carry a syllable, how stress is
 //! marked, and how a typed word is read into letters and stress.
 
-use std::fmt;
 use unicode_normalization::UnicodeNormalization;
 
 /// A language's writing conventions, as far as inflection needs them.
@@ -77,11 +76,6 @@ impl Orthography<'_> {
         }
     }
 
-    /// Whether a lookup reads `a` and `b` as the same letter.
-    pub fn same_letter(&self, a: char, b: char) -> bool {
-        a == b || self.fold(a) == self.fold(b)
-    }
-
     /// The key a word is looked up by: its letters, folded.
     pub fn key(&self, letters: &str) -> String {
         letters.chars().map(|c| self.fold(c)).collect()
@@ -92,35 +86,27 @@ impl Orthography<'_> {
     /// with a breathing, which no character writes, is `ἀ`), so that each
     /// letter is one character.
     fn composed(&self, word: &str) -> String {
-        let nfc: Vec<char> = word.nfc().collect();
         let mut out = String::with_capacity(word.len());
-        let mut i = 0;
-        while let Some(&c) = nfc.get(i) {
-            let joined = nfc
-                .get(i + 1)
-                .filter(|m| {
-                    unicode_normalization::char::is_combining_mark(**m)
-                        && !self.stress_marks.contains(**m)
+        let mut chars = word.nfc().peekable();
+        while let Some(c) = chars.next() {
+            let joined = chars
+                .peek()
+                .filter(|&&m| {
+                    unicode_normalization::char::is_combining_mark(m)
+                        && !self.stress_marks.contains(m)
                 })
                 .and_then(|&m| {
                     let plain = self.fold(c);
-                    let pair: String = [plain, m].iter().collect();
-                    let mut one = pair.nfc();
+                    let mut one = [plain, m].into_iter().nfc();
                     match (plain != c, one.next(), one.next()) {
                         (true, Some(x), None) => Some(x),
                         _ => None,
                     }
                 });
-            match joined {
-                Some(x) => {
-                    out.push(x);
-                    i += 2;
-                }
-                None => {
-                    out.push(c);
-                    i += 1;
-                }
+            if joined.is_some() {
+                chars.next();
             }
+            out.push(joined.unwrap_or(c));
         }
         out
     }
@@ -181,28 +167,18 @@ impl Orthography<'_> {
                 vowels = vowels.saturating_add(1);
             }
         }
-        if stress.is_none() {
-            stress = self.implicit_stress(&letters);
-        }
+        // A letter like `ё` stresses a word that marks none.
+        let implicit = || {
+            let at = letters.find(|c| self.implicit.contains(c))?;
+            let vowel = u8::try_from(self.vowel_count(letters.get(..at)?)).ok()?;
+            Some(Stress { vowel, kind: 0 })
+        };
+        let stress = stress.or_else(implicit);
         Written {
             letters,
             stress,
             casing,
         }
-    }
-
-    /// The stress a letter like `ё` gives a word that marks none.
-    fn implicit_stress(&self, letters: &str) -> Option<Stress> {
-        let mut vowel: u8 = 0;
-        for c in letters.chars() {
-            if self.implicit.contains(c) {
-                return Some(Stress { vowel, kind: 0 });
-            }
-            if self.is_vowel(c) {
-                vowel = vowel.saturating_add(1);
-            }
-        }
-        None
     }
 
     /// Write `letters` with `stress` marked (if the language marks it and the
@@ -238,12 +214,6 @@ impl Orthography<'_> {
     }
 }
 
-impl fmt::Display for Written {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_str(&self.letters)
-    }
-}
-
 fn lower(c: char) -> char {
     let mut l = c.to_lowercase();
     match (l.next(), l.next()) {
@@ -253,18 +223,16 @@ fn lower(c: char) -> char {
 }
 
 fn casing(word: &str) -> Casing {
-    let mut letters = word.chars().filter(|c| c.is_alphabetic());
-    let Some(first) = letters.next() else {
-        return Casing::Lower;
-    };
-    if !first.is_uppercase() {
-        return Casing::Lower;
-    }
-    let rest: Vec<char> = letters.collect();
-    if !rest.is_empty() && rest.iter().all(|c| c.is_uppercase()) {
-        Casing::Upper
-    } else {
-        Casing::Title
+    let letters: Vec<char> = word.chars().filter(|c| c.is_alphabetic()).collect();
+    match letters.split_first() {
+        Some((first, rest)) if first.is_uppercase() => {
+            if !rest.is_empty() && rest.iter().all(|c| c.is_uppercase()) {
+                Casing::Upper
+            } else {
+                Casing::Title
+            }
+        }
+        _ => Casing::Lower,
     }
 }
 
