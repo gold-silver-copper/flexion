@@ -49,69 +49,6 @@ pub struct Lexeme {
 #[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 pub struct PosData {
     pub lexemes: Vec<Lexeme>,
-    /// What each edition added, in the order the language lists them.
-    #[serde(default)]
-    pub editions: Vec<EditionStats>,
-}
-
-/// What one edition gave a part of speech, and how well it agrees with the
-/// main dump on the words both have.
-#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
-pub struct EditionStats {
-    pub code: String,
-    /// Entries read.
-    pub entries: usize,
-    /// Words (lookup keys) the main dump doesn't have.
-    pub new_words: usize,
-    /// Words both have.
-    pub shared_words: usize,
-    /// Entries kept for training.
-    pub kept: usize,
-    /// On shared words, cells both fill; of those, how many have the
-    /// edition's first form among the main dump's forms, exactly and in
-    /// letters (stress and length marks aside).
-    pub compared: usize,
-    pub same: usize,
-    pub same_letters: usize,
-}
-
-/// Lexemes grouped by lookup key: what a caller asking for that word means.
-pub struct Word<'a> {
-    pub key: &'a str,
-    pub lexemes: Vec<&'a Lexeme>,
-}
-
-impl Word<'_> {
-    /// Every plain attested form of a cell, across entries.
-    pub fn attested(&self, cell: usize) -> Vec<&str> {
-        let mut out: Vec<&str> = Vec::new();
-        for l in &self.lexemes {
-            for f in l.cells.get(cell).into_iter().flatten() {
-                if !out.contains(&f.as_str()) {
-                    out.push(f);
-                }
-            }
-        }
-        out
-    }
-
-    pub fn lemma(&self) -> &str {
-        self.lexemes.first().map_or("", |l| l.lemma.as_str())
-    }
-}
-
-pub fn words(data: &PosData) -> Vec<Word<'_>> {
-    let mut by_key: BTreeMap<&str, Vec<&Lexeme>> = BTreeMap::new();
-    for l in &data.lexemes {
-        by_key.entry(&l.key).or_default().push(l);
-    }
-    by_key
-        .into_iter()
-        .map(|(key, mut lexemes)| {
-            lexemes.sort_by_key(|l| l.order);
-            Word { key, lexemes }
-        })
-        .collect()
 }
 
 /// Read every configured part of speech from a dump in one pass.
@@ -172,25 +109,25 @@ pub fn add_edition(
             Some((source, edition.code)),
         );
     })?;
-    for ((d, r), c) in data.iter_mut().zip(read).zip(&cells) {
-        let mut s = EditionStats {
-            code: edition.code.to_string(),
-            entries: r.lexemes.len(),
-            ..EditionStats::default()
-        };
+    // How the edition agrees with the main dump on the words both have:
+    // of the cells both fill, how many have its first form among the main
+    // dump's, exactly and in letters (stress and length marks aside).
+    let mut report = Vec::new();
+    for (((d, r), c), p) in data.iter_mut().zip(read).zip(&cells).zip(&lang.parts) {
         let mut main: BTreeMap<&str, Vec<&Lexeme>> = BTreeMap::new();
         for l in d.lexemes.iter().filter(|l| l.source == 0) {
             main.entry(&l.key).or_default().push(l);
         }
-        let (mut new_keys, mut shared_keys) = (BTreeSet::new(), BTreeSet::new());
+        let (mut new_words, mut shared) = (BTreeSet::new(), BTreeSet::new());
+        let (mut compared, mut same, mut same_letters) = (0, 0, 0);
         let mut kept = Vec::new();
         for l in &r.lexemes {
             let Some(m) = main.get(l.key.as_str()) else {
-                new_keys.insert(&l.key);
+                new_words.insert(&l.key);
                 kept.push(l.clone());
                 continue;
             };
-            shared_keys.insert(&l.key);
+            shared.insert(&l.key);
             let letters = |f: &str| spelling.read(f).letters;
             for (cell, forms) in l.cells.iter().enumerate().take(c.total) {
                 let Some(first) = forms.first() else {
@@ -203,47 +140,36 @@ pub fn add_edition(
                 if theirs.is_empty() {
                     continue;
                 }
-                s.compared += 1;
-                if theirs.contains(&first) {
-                    s.same += 1;
-                }
+                compared += 1;
+                same += usize::from(theirs.contains(&first));
                 let mine = letters(first);
-                if theirs.iter().any(|t| letters(t) == mine) {
-                    s.same_letters += 1;
-                }
+                same_letters += usize::from(theirs.iter().any(|t| letters(t) == mine));
             }
             if edition.merge == crate::spec::Merge::All {
                 kept.push(l.clone());
             }
         }
-        s.new_words = new_keys.len();
-        s.shared_words = shared_keys.len();
-        s.kept = kept.len();
+        let share = |n: usize| 100.0 * n as f64 / compared.max(1) as f64;
+        report.push(format!(
+            "  {}: {} entries, {} new words, {} shared ({compared} cells compared: {:.1}% same, {:.1}% same letters), {} kept",
+            p.name,
+            r.lexemes.len(),
+            new_words.len(),
+            shared.len(),
+            share(same),
+            share(same_letters),
+            kept.len()
+        ));
         d.lexemes.extend(kept);
-        d.editions.push(s);
     }
     eprintln!(
-        "{}: read {} lines ({} unparsable); lexemes now: {}",
+        "{}: read {} lines ({} unparsable); lexemes now: {}\n{}",
         edition.code,
         stats.lines,
         stats.failures,
-        summary(lang, data)
+        summary(lang, data),
+        report.join("\n")
     );
-    for (p, d) in lang.parts.iter().zip(data.iter()) {
-        if let Some(s) = d.editions.last() {
-            eprintln!(
-                "  {}: {} entries, {} new words, {} shared ({} cells compared: {:.1}% same, {:.1}% same letters), {} kept",
-                p.name,
-                s.entries,
-                s.new_words,
-                s.shared_words,
-                s.compared,
-                100.0 * s.same as f64 / s.compared.max(1) as f64,
-                100.0 * s.same_letters as f64 / s.compared.max(1) as f64,
-                s.kept
-            );
-        }
-    }
     Ok(())
 }
 
@@ -359,7 +285,7 @@ fn lexeme(
         // forms only the groups that come from the head line.
         let head = f.source.is_none();
         let wanted = |g: &crate::spec::Group| !tables || g.from_head == head;
-        for cell in cells.match_tags_where(&f.tags, &wanted) {
+        for cell in cells.match_tags(&f.tags, &wanted) {
             if let Some(slot) = forms.get_mut(cell)
                 && !slot.contains(&form)
             {
@@ -431,7 +357,8 @@ fn lexeme(
     }
 
     for f in &entry.forms {
-        if f.source.is_some() && lemma_cell.is_some_and(|c| cells.match_tags(&f.tags).contains(&c))
+        if f.source.is_some()
+            && lemma_cell.is_some_and(|c| cells.match_tags(&f.tags, &|_| true).contains(&c))
         {
             inherent_tags.extend(f.tags.iter().cloned());
         }
@@ -492,6 +419,6 @@ fn form_of_cells(entry: &Entry, cells: &Cells) -> Vec<usize> {
     entry
         .senses
         .iter()
-        .flat_map(|s| cells.match_tags(&s.tags))
+        .flat_map(|s| cells.match_tags(&s.tags, &|_| true))
         .collect()
 }

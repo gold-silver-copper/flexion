@@ -150,53 +150,6 @@ impl Change {
         }
     }
 
-    /// What it makes of a form built marked at the stem's edge; `None` where
-    /// it doesn't apply. A law on a tier runs as its compiled rule.
-    fn rewrite(&self, built: &str) -> Option<String> {
-        match self {
-            Change::Edge {
-                stem: letters,
-                ending: first,
-                to,
-                keep,
-                earlier,
-            } => {
-                let (stem, ending) = built.split_once(BOUNDARY)?;
-                let rest = ending.strip_prefix(first.as_str())?;
-                let letter = letters.iter().find(|l| stem.ends_with(l.as_str()))?;
-                let head = stem.strip_suffix(letter.as_str())?;
-                if !earlier.is_empty() && !head.chars().any(|c| earlier.contains(&c)) {
-                    return None;
-                }
-                let kept = if *keep { letter.as_str() } else { "" };
-                Some(format!("{head}{kept}{to}{rest}"))
-            }
-            Change::Tier { .. } => compile(std::slice::from_ref(self)).map(|p| p.apply(built)),
-            Change::Copy { letter, to } => {
-                let copy = format!("{COPIED}{letter}");
-                built
-                    .contains(&copy)
-                    .then(|| built.replace(&copy, &to.to_string()))
-            }
-            Change::Front {
-                literal,
-                stem,
-                to,
-                plain,
-            } => {
-                let rest = built.strip_prefix(&format!("{literal}{FRONT}"))?;
-                let mut letters = rest.chars();
-                let first = letters.next()?;
-                match plain.iter().find(|(c, _)| *c == first) {
-                    Some((_, plain)) => Some(format!("{plain}{}", letters.as_str())),
-                    None => rest
-                        .strip_prefix(stem.as_str())
-                        .map(|rest| format!("{to}{rest}")),
-                }
-            }
-        }
-    }
-
     /// Whether it may apply where a build has `window` around its boundary:
     /// a law on a tier, wherever its letter is; on a copy, wherever it is
     /// copied.
@@ -208,7 +161,9 @@ impl Change {
             }
             Change::Tier { letter, .. } => built.contains(*letter),
             Change::Copy { letter, .. } => built.contains(&format!("{COPIED}{letter}")),
-            Change::Front { .. } => self.rewrite(built).is_some(),
+            Change::Front { literal, stem, .. } => {
+                built.starts_with(&format!("{literal}{FRONT}{stem}"))
+            }
         }
     }
 
@@ -310,17 +265,15 @@ pub fn compile(changes: &[Change]) -> Option<Program<'static>> {
             (name, rule, map)
         })
         .collect();
-    let entries: Vec<(&str, Vec<(&str, &str)>)> = texts
+    let pairs: Vec<Vec<(&str, &str)>> = texts
         .iter()
-        .filter(|(_, _, map)| !map.is_empty())
-        .map(|(name, _, map)| {
-            let pairs = map.iter().map(|(a, b)| (a.as_str(), b.as_str())).collect();
-            (name.as_str(), pairs)
-        })
+        .map(|(_, _, map)| map.iter().map(|(a, b)| (a.as_str(), b.as_str())).collect())
         .collect();
-    let maps: Vec<Map<'_>> = entries
+    let maps: Vec<Map<'_>> = texts
         .iter()
-        .map(|(name, pairs)| Map::new(name, pairs))
+        .zip(&pairs)
+        .filter(|(_, pairs)| !pairs.is_empty())
+        .map(|((name, ..), pairs)| Map::new(name, pairs))
         .collect();
     let rules: Vec<Rule<'_>> = texts
         .iter()
@@ -465,6 +418,7 @@ pub fn learn<'s>(
             std::iter::once((change, n)).chain(twin)
         })
         .collect();
+    let t = std::time::Instant::now();
     let (laws, moved) = greedy(
         &candidates,
         readings,
@@ -473,9 +427,14 @@ pub fn learn<'s>(
         assignment.clone(),
         &rank,
     );
-    let laws: Vec<Law> = laws
+    eprintln!(
+        "LAWTIME greedy {:.2}s {} candidates",
+        t.elapsed().as_secs_f64(),
+        candidates.len()
+    );
+    let mut laws: Vec<Law> = laws
         .into_iter()
-        .filter(|(l, users, forms)| pays(l, users, *forms))
+        .filter(|(l, users, forms)| pays(users.len(), l.breaks, *forms))
         .map(|(mut law, users, _)| {
             law.words = u32::try_from(users.len()).unwrap_or(u32::MAX);
             law.examples = users
@@ -486,7 +445,6 @@ pub fn learn<'s>(
             law
         })
         .collect();
-    let mut laws = laws;
     plain(orthography, &mut laws);
     let changes: Vec<Change> = laws.iter().map(|l| l.change.clone()).collect();
     let program = (!laws.is_empty()).then(|| compile(&changes)).flatten();
@@ -656,13 +614,8 @@ fn greedy(
     let form = |w: usize, k: usize| forms.get(w).and_then(|f| f.get(k)).copied().unwrap_or("");
     let mut laws: Vec<(Law, Vec<At>)> = Vec::new();
     for (change, _) in candidates {
-        // A law on a tier runs as its rule, once compiled.
-        let program = match change {
-            Change::Tier { .. } => match compile(std::slice::from_ref(change)) {
-                Some(p) => Some(p),
-                None => continue,
-            },
-            Change::Edge { .. } | Change::Copy { .. } | Change::Front { .. } => None,
+        let Some(program) = compile(std::slice::from_ref(change)) else {
+            continue;
         };
         let mut at: Vec<At> = index
             .iter()
@@ -686,10 +639,7 @@ fn greedy(
             else {
                 continue;
             };
-            let after = match &program {
-                Some(p) => p.apply(built),
-                None => change.rewrite(built).unwrap_or_else(|| built.clone()),
-            };
+            let after = program.apply(built);
             if after == *built {
                 continue;
             }
@@ -711,11 +661,7 @@ fn greedy(
             .collect();
         fixed_cells.sort_unstable();
         fixed_cells.dedup();
-        #[allow(clippy::cast_precision_loss)]
-        let worth = fixed_words.len() >= MIN_WORDS
-            && fixed_cells.len() >= MIN_CELLS
-            && f64::from(breaks) <= BREAKS * fixed.len() as f64;
-        if !worth {
+        if fixed_cells.len() < MIN_CELLS || !pays(fixed_words.len(), breaks, fixed.len()) {
             continue;
         }
         for ((w, r, k), after) in changes {
@@ -791,11 +737,11 @@ fn greedy(
     (laws, assignment)
 }
 
-/// Whether a law pays for itself: it gives `forms` of enough words
-/// (`users`) and breaks few.
+/// Whether a law pays for itself: it gives `forms` of enough `words`, and
+/// breaks few.
 #[allow(clippy::cast_precision_loss)]
-fn pays(law: &Law, users: &[usize], forms: usize) -> bool {
-    users.len() >= MIN_WORDS && f64::from(law.breaks) <= BREAKS * forms as f64
+fn pays(words: usize, breaks: u32, forms: usize) -> bool {
+    words >= MIN_WORDS && f64::from(breaks) <= BREAKS * forms as f64
 }
 
 /// The letters around a build's boundary: up to two before, two after.
@@ -1343,7 +1289,6 @@ mod tests {
             to: "ἠ".into(),
             plain: vec![('α', "η".into()), ('ᾰ', "η".into())],
         };
-        assert_eq!(unbreathed.rewrite("ἐ‹ᾰρχ+ον").as_deref(), Some("ηρχ+ον"));
         let law = Law {
             change: perfect.clone(),
             words: 0,
@@ -1364,34 +1309,27 @@ mod tests {
             earlier: Vec::new(),
         };
         assert_eq!(class, [(velar.clone(), 5)]);
-        // The learner's rewrite agrees with the compiled rules.
         // Contraction where a vowel comes earlier in the stem: not in `πλε`.
         let vowels: Vec<char> = "αεηιουω".chars().collect();
         let contract = edge("ε", "ο", "+ου").after(&vowels).expect("an edge law");
-        assert_eq!(contract.rewrite("πλε+ομεν"), None);
-        for (change, built) in [
-            (velar, "книг+ы"),
-            (edge("ε", "ο", "+ου"), "ποιε+ομεν"),
-            (edge("γ", "σ", "+ξ"), "λεγ+σω"),
-            (contract.clone(), "φιλε+ομεν"),
-            (contract.clone(), "ποιε+ομεν"),
-            (contract, "πλε+ομεν"),
-            (plain.clone(), "ἐ°φεφιλη+κη"),
-            (plain, "°λελυ+κα"),
-            (augment.clone(), "ἐ‹ἀγ+ον"),
-            (augment, "ἐ‹λυ+ον"),
-            (perfect.clone(), "°ἀε‹ἀρ+χα"),
+        for (change, built, after) in [
+            (velar, "книг+ы", "книг+и"),
+            (edge("γ", "σ", "+ξ"), "λεγ+σω", "λε+ξω"),
+            (contract.clone(), "φιλε+ομεν", "φιλ+ουμεν"),
+            (contract, "πλε+ομεν", "πλε+ομεν"),
+            (plain.clone(), "ἐ°φεφιλη+κη", "ἐπεφιλη+κη"),
+            (plain, "°λελυ+κα", "°λελυ+κα"),
+            (augment.clone(), "ἐ‹ἀγ+ον", "ἠγ+ον"),
+            (augment, "ἐ‹λυ+ον", "ἐ‹λυ+ον"),
+            (perfect.clone(), "°ἀε‹ἀρ+χα", "ἠρ+χα"),
             // The pluperfect's literal is another.
-            (perfect, "ἐ°ἀε‹ἀρ+χειν"),
+            (perfect, "ἐ°ἀε‹ἀρ+χειν", "ἐ°ἀε‹ἀρ+χειν"),
             // A stem written without its breathing, inside a compound.
-            (unbreathed.clone(), "ἐ‹ᾰρχ+ον"),
-            (unbreathed, "ἐ‹ἀρχ+ον"),
+            (unbreathed.clone(), "ἐ‹ᾰρχ+ον", "ηρχ+ον"),
+            (unbreathed, "ἐ‹ἀρχ+ον", "ἠρχ+ον"),
         ] {
             let program = compile(std::slice::from_ref(&change)).expect("compiles");
-            assert_eq!(
-                change.rewrite(built).unwrap_or_else(|| built.to_string()),
-                program.apply(built)
-            );
+            assert_eq!(program.apply(built), after, "{change:?} on {built}");
         }
     }
 }

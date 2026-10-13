@@ -123,11 +123,8 @@ impl Layout {
     }
 
     /// A cell's constant.
-    fn name(&self, cell: u16) -> String {
-        self.names
-            .get(usize::from(cell))
-            .cloned()
-            .unwrap_or_default()
+    fn name(&self, cell: impl Into<usize>) -> &str {
+        self.names.get(cell.into()).map_or("", String::as_str)
     }
 
     /// A table's rows, each cell written by `cell` (`_`: written elsewhere),
@@ -176,8 +173,7 @@ impl Layout {
 
 /// A cell's constant: `gen_pl` → `GEN_PL`, `non_past_1_sg` → `NON_PAST_1_SG`.
 fn const_name(s: &str) -> String {
-    let mut out = underscored(s).to_ascii_uppercase();
-    out = out.trim_start_matches('_').to_string();
+    let mut out = underscored(s).trim_start_matches('_').to_ascii_uppercase();
     if out.chars().next().is_none_or(|c| c.is_ascii_digit()) {
         out.insert(0, 'C');
     }
@@ -300,7 +296,7 @@ fn grammar_files(
         if on {
             format!("Some({value})")
         } else {
-            "None".to_string()
+            "None".into()
         }
     };
     let _ = writeln!(
@@ -533,7 +529,7 @@ fn grammar_files(
             g.relations.len()
         );
         for rel in g.relations.iter() {
-            let from: Vec<String> = rel.from.iter().map(|&c| layout.name(c)).collect();
+            let from: Vec<&str> = rel.from.iter().map(|&c| layout.name(c)).collect();
             let feature = match (rel.from.len(), feature_name) {
                 (n, Some(f)) if n > 1 => format!(" (by {}, in order)", f.to_lowercase()),
                 _ => String::new(),
@@ -544,45 +540,29 @@ fn grammar_files(
                 .map(|(old, new)| format!("({}, {})", Lit(old), Lit(new)))
                 .collect();
             let change = rel.change.as_ref().map_or("none".to_string(), |choice| {
-                let mut c = String::from("rules {\n");
-                for rule in choice.rules.iter() {
-                    let counts: Vec<String> = rule
-                        .counts
-                        .iter()
-                        .map(|&(l, n)| format!("{l} {n}"))
-                        .collect();
-                    let _ = writeln!(
-                        c,
-                        "        {} => [{}],",
-                        Lit(&rule.ending),
-                        counts.join(", ")
-                    );
+                let mut listed = listed(choice, |l| l.to_string());
+                if !listed.is_empty() {
+                    listed = format!("\n{listed}    ");
                 }
-                c.push_str("    } listed {");
-                for (w, l) in choice.exceptions.iter() {
-                    let _ = write!(c, "\n        {} => {l},", Lit(w));
-                }
-                if !choice.exceptions.is_empty() {
-                    c.push_str("\n    ");
-                }
-                c.push('}');
-                c
+                format!(
+                    "rules {{\n{}    }} listed {{{listed}}}",
+                    rules(choice, |l| l.to_string())
+                )
             });
-            let (analogy, why) = match rel.analogy {
-                Some((a, b)) => (
-                    format!("Some(({}, {}))", layout.name(a), layout.name(b)),
-                    if a == b {
-                        " Few or no words have it: as it is.".to_string()
+            let (analogy, why) = rel
+                .analogy
+                .map_or(("None".into(), String::new()), |(a, b)| {
+                    let (a, b) = (layout.name(a), layout.name(b));
+                    let how = if a == b {
+                        "as it is".to_string()
                     } else {
-                        format!(
-                            " Few or no words have it: changed as {} is into {}.",
-                            layout.name(a),
-                            layout.name(b)
-                        )
-                    },
-                ),
-                None => ("None".to_string(), String::new()),
-            };
+                        format!("changed as {a} is into {b}")
+                    };
+                    (
+                        format!("Some(({a}, {b}))"),
+                        format!(" Few or no words have it: {how}."),
+                    )
+                });
             let _ = writeln!(
                 r,
                 "    // {cell}, from {}{feature}.{why}\n    relation!({cell}, [{}], [{}], {change}, {}, {analogy}),",
@@ -900,7 +880,7 @@ fn accent_file(
         a.circumflex.len()
     );
     for (cells, p) in a.circumflex.iter().zip(paradigms) {
-        let names: Vec<String> = cells.iter().map(|&c| layout.name(c)).collect();
+        let names: Vec<&str> = cells.iter().map(|&c| layout.name(c)).collect();
         let _ = writeln!(s, "    Cow::Borrowed(&[{}]), // {p}", names.join(", "));
     }
     s.push_str("];\n\n");
@@ -911,7 +891,7 @@ fn accent_file(
             "/// The accent patterns",
         );
     }
-    let finals: Vec<String> = a.long_finals.iter().map(|&c| layout.name(c)).collect();
+    let finals: Vec<&str> = a.long_finals.iter().map(|&c| layout.name(c)).collect();
     let _ = writeln!(
         s,
         "/// The cells whose final `-αι`, `-οι` counts as long.\npub static LONG_FINALS: [u16; {}] = [{}];",
@@ -929,26 +909,35 @@ fn choice_macro<L: flexion::Label>(
     choice: &flexion::Choice<'_, L>,
     name: impl Fn(L) -> String,
 ) -> String {
-    let mut s = format!("flexion::choice! {{\n    {block} {{\n");
-    for rule in choice.rules.iter() {
-        let counts: Vec<String> = rule
+    format!(
+        "flexion::choice! {{\n    {block} {{\n{}    }}\n    listed {{\n{}    }}\n",
+        rules(choice, &name),
+        listed(choice, &name)
+    )
+}
+
+/// A choice's rules as `flexion::choice!` reads them, a line each, each
+/// value written by `name`.
+fn rules<L: flexion::Label>(choice: &flexion::Choice<'_, L>, name: impl Fn(L) -> String) -> String {
+    let rule = |r: &flexion::Rule<'_, L>| {
+        let counts: Vec<String> = r
             .counts
             .iter()
             .map(|&(l, n)| format!("{} {n}", name(l)))
             .collect();
-        let _ = writeln!(
-            s,
-            "        {} => [{}],",
-            Lit(&rule.ending),
-            counts.join(", ")
-        );
-    }
-    s.push_str("    }\n    listed {\n");
-    for (w, l) in choice.exceptions.iter() {
-        let _ = writeln!(s, "        {} => {},", Lit(w), name(*l));
-    }
-    s.push_str("    }\n");
-    s
+        format!("        {} => [{}],\n", Lit(&r.ending), counts.join(", "))
+    };
+    choice.rules.iter().map(rule).collect()
+}
+
+/// A choice's listed words, a line each.
+fn listed<L: flexion::Label>(
+    choice: &flexion::Choice<'_, L>,
+    name: impl Fn(L) -> String,
+) -> String {
+    let word =
+        |(w, l): &(std::borrow::Cow<'_, str>, L)| format!("        {} => {},\n", Lit(w), name(*l));
+    choice.exceptions.iter().map(word).collect()
 }
 
 /// A choice as a constant `name` of `ty`s, saying how many rules and listed
