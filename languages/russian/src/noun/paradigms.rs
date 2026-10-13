@@ -2,7 +2,9 @@
 //!
 //! A pattern is the form with `~` where the stem goes: `~а` is the stem and
 //! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first.
+//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
+//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
+//! as the copy laws in `laws.rs` change it.
 
 use flexion::Paradigm;
 
@@ -10,23 +12,24 @@ use flexion::Paradigm;
 /// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
 /// they share them), the declension it is like (if any), then a row of patterns
 /// per line (`derived`: the form comes from another cell's, see
-/// `relations.rs`; `_`: the form is the declension's it is like):
-/// `nominative` (sg, pl)
-/// `genitive` (sg, pl)
-/// `dative` (sg, pl)
-/// `accusative` (sg, pl)
-/// `instrumental` (sg, pl)
-/// `prepositional` (sg, pl)
+/// `relations.rs`; `_`, or a row left out: the form is the declension's it is like,
+/// or, in a declension like no other, derived):
+/// `nom` (sg, pl)
+/// `gen_` (sg, pl)
+/// `dat` (sg, pl)
+/// `acc` (sg, pl)
+/// `ins` (sg, pl)
+/// `prep` (sg, pl)
 /// `noun_second_case` (part, loc)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident)?;
-     nominative: $c0:tt, $c1:tt;
-     genitive: $c2:tt, $c3:tt;
-     dative: $c4:tt, $c5:tt;
-     accusative: $c6:tt, $c7:tt;
-     instrumental: $c8:tt, $c9:tt;
-     prepositional: $c10:tt, $c11:tt;
-     noun_second_case: $c12:tt, $c13:tt;
+     $(nom: $c0:tt, $c1:tt;)?
+     $(gen_: $c2:tt, $c3:tt;)?
+     $(dat: $c4:tt, $c5:tt;)?
+     $(acc: $c6:tt, $c7:tt;)?
+     $(ins: $c8:tt, $c9:tt;)?
+     $(prep: $c10:tt, $c11:tt;)?
+     $(noun_second_case: $c12:tt, $c13:tt;)?
     ) => {
         Paradigm {
             name: ::std::borrow::Cow::Borrowed($name),
@@ -35,20 +38,20 @@ macro_rules! declension {
             parent: like!($($parent)?),
             inherent: ::std::borrow::Cow::Borrowed(&[$($(feature!($f: $v)),*)?]),
             table: ::std::borrow::Cow::Borrowed(concat!(
-                flexion::cell!($c0), "\t",
-                flexion::cell!($c1), "\t",
-                flexion::cell!($c2), "\t",
-                flexion::cell!($c3), "\t",
-                flexion::cell!($c4), "\t",
-                flexion::cell!($c5), "\t",
-                flexion::cell!($c6), "\t",
-                flexion::cell!($c7), "\t",
-                flexion::cell!($c8), "\t",
-                flexion::cell!($c9), "\t",
-                flexion::cell!($c10), "\t",
-                flexion::cell!($c11), "\t",
-                flexion::cell!($c12), "\t",
-                flexion::cell!($c13), "\t",
+                $(flexion::cell!($c0),)? "\t",
+                $(flexion::cell!($c1),)? "\t",
+                $(flexion::cell!($c2),)? "\t",
+                $(flexion::cell!($c3),)? "\t",
+                $(flexion::cell!($c4),)? "\t",
+                $(flexion::cell!($c5),)? "\t",
+                $(flexion::cell!($c6),)? "\t",
+                $(flexion::cell!($c7),)? "\t",
+                $(flexion::cell!($c8),)? "\t",
+                $(flexion::cell!($c9),)? "\t",
+                $(flexion::cell!($c10),)? "\t",
+                $(flexion::cell!($c11),)? "\t",
+                $(flexion::cell!($c12),)? "\t",
+                $(flexion::cell!($c13),)? "\t",
             )),
         }
     };
@@ -113,7 +116,7 @@ pub enum Declension {
     Барашек,
     /// Like `чайка`: 474 words.
     Чайка,
-    /// Like `накладная`: 414 words.
+    /// Like `накладная`: 415 words.
     Накладная,
     /// Like `постав`: 397 words.
     Постав,
@@ -133,7 +136,7 @@ pub enum Declension {
     Аниец,
     /// Like `червь`: 232 words.
     Червь,
-    /// Like `шоколадница`: 214 words.
+    /// Like `шоколадница`: 218 words.
     Шоколадница,
     /// Like `счёты`: 203 words.
     Счёты,
@@ -145,7 +148,7 @@ pub enum Declension {
     Лососёвые,
     /// Like `умелец`: 174 words.
     Умелец,
-    /// Like `второе`: 160 words.
+    /// Like `второе`: 161 words.
     Второе,
     /// Like `сватья`: 151 words.
     Сватья,
@@ -173,10 +176,10 @@ pub enum Declension {
     Гривна,
     /// Like `нападки`: 100 words.
     Нападки,
-    /// Like `выдача`: 89 words.
-    Выдача,
     /// Like `гусёк`: 89 words.
     Гусёк,
+    /// Like `выдача`: 85 words.
+    Выдача,
     /// Like `спальня`: 85 words.
     Спальня,
     /// Like `достопримечательность`: 79 words.
@@ -447,15 +450,11 @@ pub enum Declension {
     Морячка,
     /// Like `пол-леса`: 3 words.
     Поллеса,
-    /// Like `мастерская`: 1 words.
-    Мастерская,
-    /// Like `чужое`: 1 words.
-    Чужое,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 187] = [
+    pub const ALL: [Declension; 185] = [
         Declension::Приём,
         Declension::Полнота,
         Declension::Скопление,
@@ -504,8 +503,8 @@ impl Declension {
         Declension::Камень,
         Declension::Гривна,
         Declension::Нападки,
-        Declension::Выдача,
         Declension::Гусёк,
+        Declension::Выдача,
         Declension::Спальня,
         Declension::Достопримечательность,
         Declension::Штрафной,
@@ -641,8 +640,6 @@ impl Declension {
         Declension::Получеловек,
         Declension::Морячка,
         Declension::Поллеса,
-        Declension::Мастерская,
-        Declension::Чужое,
     ];
 
     /// Its table.
@@ -660,1875 +657,1045 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 187] = [
+pub(super) static DECLENSIONS: [Paradigm<'static>; 185] = [
     // Приём: 37,696 words (указ, зонт, кот, зонтик, бортник, бочаг).
     declension!("приём", 37696, "~", [gender: Masculine];
-        nominative: "~", "~ы";
-        genitive: "~а", "~ов";
-        dative: "~у", "~ам";
-        accusative: derived, derived;
-        instrumental: "~ом", "~ами";
-        prepositional: "~е", "~ах";
-        noun_second_case: "~у", "~у";
+    nom: "~", "~ы";
+    gen_: "~а", "~ов";
+    dat: "~у", "~ам";
+    ins: "~ом", "~ами";
+    prep: "~е", "~ах";
+    noun_second_case: _, "~у";
     ),
-    // Полнота: 12,550 words (собака, буява, былица, масленица, царица, вата).
-    declension!("полнота", 12550, "~а", [gender: Feminine];
-        nominative: "~а", "~ы";
-        genitive: "~ы", "~";
-        dative: "~е", "~ам";
-        accusative: "~у", derived;
-        instrumental: "~ой|~ою", "~ами";
-        prepositional: "~е", "~ах";
-        noun_second_case: derived, derived;
+    // Полнота: 12,550 words (собака, буява, былица, масленица, царица, вата). Like Приём, except in 7 cells: nom sg, gen_ sg, gen_ pl, dat sg, acc sg, ins sg, ….
+    declension!("полнота", 12550, "~а", [gender: Feminine], like Приём;
+    nom: "~а", _;
+    gen_: "~ы", "~";
+    dat: "~е", _;
+    acc: "~у", _;
+    ins: "~ой|~ою", _;
+    noun_second_case: _, derived;
     ),
     // Скопление: 9,055 words (произношение, лезвие, распятие, деревенение, лесонасаждение, ведение).
     declension!("скопление", 9055, "~е", [gender: Neuter, animacy: Inanimate];
-        nominative: "~е", "~я";
-        genitive: "~я", "~й";
-        dative: "~ю", "~ям";
-        accusative: derived, derived;
-        instrumental: "~ем", "~ями";
-        prepositional: "~и", "~ях";
-        noun_second_case: derived, derived;
+    nom: "~е", "~я";
+    gen_: "~я", "~й";
+    dat: "~ю", "~ям";
+    ins: "~ем", "~ями";
+    prep: "~и", "~ях";
     ),
-    // Склонность: 7,532 words (знать, весь, гласность, деревянность, дверь, ртуть). Like Скопление, except in 7 cells: nominative sg, nominative pl, genitive sg, genitive pl, dative sg, instrumental sg, ….
+    // Склонность: 7,532 words (знать, весь, гласность, деревянность, дверь, ртуть). Like Скопление, except in 7 cells: nom sg, nom pl, gen_ sg, gen_ pl, dat sg, ins sg, ….
     declension!("склонность", 7532, "~ь", [gender: Feminine, animacy: Inanimate], like Скопление;
-        nominative: "~ь", "~и";
-        genitive: "~и", "~ей";
-        dative: "~и", _;
-        accusative: _, _;
-        instrumental: "~ью", _;
-        prepositional: _, _;
-        noun_second_case: _, "~и";
+    nom: "~ь", "~и";
+    gen_: "~и", "~ей";
+    dat: "~и", _;
+    ins: "~ью", _;
+    noun_second_case: _, "~и";
     ),
     // Стрелка: 6,677 words (водка, цыпка, жилка, деревянка, лесопилка, доска).
     declension!("стрелка", 6677, "~~а", [gender: Feminine];
-        nominative: "~~а", "~~и";
-        genitive: "~~и", "~о~";
-        dative: "~~е", "~~ам";
-        accusative: "~~у", derived;
-        instrumental: "~~ой|~~ою", "~~ами";
-        prepositional: "~~е", "~~ах";
-        noun_second_case: derived, derived;
+    nom: "~~а", "~~и";
+    gen_: "~~и", "~о~";
+    dat: "~~е", "~~ам";
+    acc: "~~у", _;
+    ins: "~~ой|~~ою", "~~ами";
+    prep: "~~е", "~~ах";
     ),
-    // Химия: 6,582 words (анархия, лесохимия, библия, биология, академия, армия). Like Склонность, except in 5 cells: nominative sg, genitive pl, accusative sg, instrumental sg, noun_second_case loc.
+    // Химия: 6,582 words (анархия, лесохимия, библия, биология, академия, армия). Like Склонность, except in 5 cells: nom sg, gen_ pl, acc sg, ins sg, noun_second_case loc.
     declension!("химия", 6582, "~я", [gender: Feminine, animacy: Inanimate], like Склонность;
-        nominative: "~я", _;
-        genitive: _, "~й";
-        dative: _, _;
-        accusative: "~ю", _;
-        instrumental: "~ей|~ею", _;
-        prepositional: _, _;
-        noun_second_case: _, derived;
+    nom: "~я", _;
+    gen_: _, "~й";
+    acc: "~ю", _;
+    ins: "~ей|~ею", _;
+    noun_second_case: _, derived;
     ),
     // Какао: 3,419 words (пальто, все, брачущиеся, брачующиеся, адажио, какао).
     declension!("какао", 3419, "~";
-        nominative: "~", "~";
-        genitive: "~", "~";
-        dative: "~", "~";
-        accusative: derived, derived;
-        instrumental: "~", "~";
-        prepositional: "~", "~";
-        noun_second_case: derived, derived;
+    nom: "~", "~";
+    gen_: "~", "~";
+    dat: "~", "~";
+    ins: "~", "~";
+    prep: "~", "~";
     ),
     // Хлопанье: 2,662 words (запястье, воскресенье, варенье, воспитанье, отчаянье, уединенье).
     declension!("хлопанье", 2662, "~ье", [gender: Neuter, animacy: Inanimate];
-        nominative: "~ье", "~ья";
-        genitive: "~ья", "~ий";
-        dative: "~ью", "~ьям";
-        accusative: derived, derived;
-        instrumental: "~ьем", "~ьями";
-        prepositional: "~ье", "~ьях";
-        noun_second_case: derived, derived;
+    nom: "~ье", "~ья";
+    gen_: "~ья", "~ий";
+    dat: "~ью", "~ьям";
+    ins: "~ьем", "~ьями";
+    prep: "~ье", "~ьях";
     ),
-    // Дорожка: 2,522 words (кошка, быличка, палочка, ручка, мошка, бабочка). Like Стрелка, except in 1 cell: genitive pl.
+    // Дорожка: 2,522 words (кошка, быличка, палочка, ручка, мошка, бабочка). Like Стрелка, except in 1 cell: gen_ pl.
     declension!("дорожка", 2522, "~~а", like Стрелка;
-        nominative: _, _;
-        genitive: _, "~е~";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~е~";
     ),
-    // Сходство: 2,331 words (буево, бёрдо, око, лето, жало, горло). Like Приём, except in 5 cells: nominative sg, nominative pl, genitive pl, noun_second_case part, noun_second_case loc.
+    // Сходство: 2,331 words (буево, бёрдо, око, лето, жало, горло). Like Приём, except in 4 cells: nom sg, nom pl, gen_ pl, noun_second_case loc.
     declension!("сходство", 2331, "~о", [gender: Neuter, animacy: Inanimate], like Приём;
-        nominative: "~о", "~а";
-        genitive: _, "~";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: derived, derived;
+    nom: "~о", "~а";
+    gen_: _, "~";
+    noun_second_case: _, derived;
     ),
-    // Агнец: 2,159 words (левантинец, древоточец, марганец, самозванец, разночинец, ньюйоркец). Like Стрелка, except in 7 cells: nominative sg, nominative pl, genitive sg, genitive pl, dative sg, accusative sg, ….
+    // Агнец: 2,159 words (левантинец, древоточец, марганец, самозванец, разночинец, ньюйоркец). Like Стрелка, except in 7 cells: nom sg, nom pl, gen_ sg, gen_ pl, dat sg, acc sg, ….
     declension!("агнец", 2159, "~е~", [gender: Masculine], like Стрелка;
-        nominative: "~е~", "~~ы";
-        genitive: "~~а", "~~ев";
-        dative: "~~у", _;
-        accusative: derived, _;
-        instrumental: "~~ем", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~е~", "~~ы";
+    gen_: "~~а", "~~ев";
+    dat: "~~у", _;
+    acc: derived, _;
+    ins: "~~ем", _;
     ),
-    // Медведь: 1,983 words (сшиватель, апрель, июнь, июль, олень, автомобиль). Like Скопление, except in 5 cells: nominative sg, nominative pl, genitive pl, prepositional sg, noun_second_case part.
+    // Медведь: 1,983 words (сшиватель, апрель, июнь, июль, олень, автомобиль). Like Скопление, except in 4 cells: nom sg, nom pl, gen_ pl, prep sg.
     declension!("медведь", 1983, "~ь", [gender: Masculine], like Скопление;
-        nominative: "~ь", "~и";
-        genitive: _, "~ей";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: "~е", _;
-        noun_second_case: "~ю", _;
+    nom: "~ь", "~и";
+    gen_: _, "~ей";
+    prep: "~е", _;
     ),
-    // Рожок: 1,052 words (щенок, бесёнок, лесок, замок, носок, подросток). Like Агнец, except in 6 cells: nominative sg, nominative pl, genitive pl, instrumental sg, noun_second_case part, noun_second_case loc.
+    // Рожок: 1,052 words (щенок, бесёнок, лесок, замок, носок, подросток). Like Агнец, except in 5 cells: nom sg, nom pl, gen_ pl, ins sg, noun_second_case loc.
     declension!("рожок", 1052, "~о~", [gender: Masculine], like Агнец;
-        nominative: "~о~", "~~и";
-        genitive: _, "~~ов";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~~ом", _;
-        prepositional: _, _;
-        noun_second_case: "~~у", "~~у";
+    nom: "~о~", "~~и";
+    gen_: _, "~~ов";
+    ins: "~~ом", _;
+    noun_second_case: _, "~~у";
     ),
-    // Товарищ: 932 words (харч, туш, треш, товарищ, дервиш, путч). Like Сходство, except in 4 cells: nominative sg, nominative pl, genitive pl, instrumental sg.
-    declension!("товарищ", 932, "~", [gender: Masculine], like Сходство;
-        nominative: "~", "~и";
-        genitive: _, "~ей";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~ем", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    // Товарищ: 932 words (харч, туш, треш, товарищ, дервиш, путч). Like Приём, except in 4 cells: nom pl, gen_ pl, ins sg, noun_second_case loc.
+    declension!("товарищ", 932, "~", [gender: Masculine], like Приём;
+    nom: _, "~и";
+    gen_: _, "~ей";
+    ins: "~ем", _;
+    noun_second_case: _, derived;
     ),
-    // Гений: 651 words (калий, меркурий, гений, гравий, бериллий, гелий). Like Медведь, except in 3 cells: nominative sg, genitive pl, prepositional sg.
-    declension!("гений", 651, "~й", [gender: Masculine], like Медведь;
-        nominative: "~й", _;
-        genitive: _, "~ев";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: "~и", _;
-        noun_second_case: _, _;
+    // Гений: 651 words (калий, меркурий, гений, гравий, бериллий, гелий). Like Скопление, except in 3 cells: nom sg, nom pl, gen_ pl.
+    declension!("гений", 651, "~й", [gender: Masculine], like Скопление;
+    nom: "~й", "~и";
+    gen_: _, "~ев";
     ),
-    // Змей: 650 words (май, гей, вертухай, елей, герой, случай). Like Гений, except in 1 cell: prepositional sg.
+    // Змей: 650 words (май, гей, вертухай, елей, герой, случай). Like Гений, except in 1 cell: prep sg.
     declension!("змей", 650, "~й", [gender: Masculine], like Гений;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: "~е", _;
-        noun_second_case: _, _;
+    prep: "~е", _;
     ),
-    // Барашек: 639 words (отец, горошек, свинец, купец, творец, дворец). Like Рожок, except in 2 cells: nominative sg, noun_second_case loc.
+    // Барашек: 639 words (отец, горошек, свинец, купец, творец, дворец). Like Рожок, except in 2 cells: nom sg, noun_second_case loc.
     declension!("барашек", 639, "~е~", [gender: Masculine], like Рожок;
-        nominative: "~е~", _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, derived;
+    nom: "~е~", _;
+    noun_second_case: _, derived;
     ),
     // Чайка: 474 words (копейка, скамейка, перестройка, ищейка, лайка, австрийка).
     declension!("чайка", 474, "~й~а", [gender: Feminine];
-        nominative: "~й~а", "~й~и";
-        genitive: "~й~и", "~е~";
-        dative: "~й~е", "~й~ам";
-        accusative: "~й~у", derived;
-        instrumental: "~й~ой|~й~ою", "~й~ами";
-        prepositional: "~й~е", "~й~ах";
-        noun_second_case: derived, derived;
+    nom: "~й~а", "~й~и";
+    gen_: "~й~и", "~е~";
+    dat: "~й~е", "~й~ам";
+    acc: "~й~у", _;
+    ins: "~й~ой|~й~ою", "~й~ами";
+    prep: "~й~е", "~й~ах";
     ),
-    // Накладная: 414 words (деревообделочная, детская, гостиная, ванная, кладовая, уборная).
-    declension!("накладная", 414, "~ая", [gender: Feminine];
-        nominative: "~ая", "~ые";
-        genitive: "~ой", "~ых";
-        dative: "~ой", "~ым";
-        accusative: "~ую", derived;
-        instrumental: "~ой|~ою", "~ыми";
-        prepositional: "~ой", "~ых";
-        noun_second_case: derived, derived;
+    // Накладная: 415 words (деревообделочная, детская, гостиная, ванная, кладовая, уборная).
+    declension!("накладная", 415, "~ая", [gender: Feminine];
+    nom: "~ая", "~ые";
+    gen_: "~ой", "~ых";
+    dat: "~ой", "~ым";
+    acc: "~ую", _;
+    ins: "~ой|~ою", "~ыми";
+    prep: "~ой", "~ых";
     ),
-    // Постав: 397 words (дом, лес, город, пояс, гидраргирум, адрес). Like Приём, except in 1 cell: nominative pl.
+    // Постав: 397 words (дом, лес, город, пояс, гидраргирум, адрес). Like Приём, except in 1 cell: nom pl.
     declension!("постав", 397, "~", [gender: Masculine], like Приём;
-        nominative: _, "~а";
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: _, "~а";
     ),
-    // Господин: 395 words (господин, англичанин, россиянин, опочанин, гражданин, новоангличанин). Like Сходство, except in 6 cells: nominative sg, nominative pl, genitive sg, dative sg, instrumental sg, prepositional sg.
+    // Господин: 395 words (господин, англичанин, россиянин, опочанин, гражданин, новоангличанин). Like Сходство, except in 6 cells: nom sg, nom pl, gen_ sg, dat sg, ins sg, prep sg.
     declension!("господин", 395, "~ин", [gender: Masculine, animacy: Animate], like Сходство;
-        nominative: "~ин", "~е";
-        genitive: "~ина", _;
-        dative: "~ину", _;
-        accusative: _, _;
-        instrumental: "~ином", _;
-        prepositional: "~ине", _;
-        noun_second_case: _, _;
+    nom: "~ин", "~е";
+    gen_: "~ина", _;
+    dat: "~ину", _;
+    ins: "~ином", _;
+    prep: "~ине", _;
     ),
-    // Ложе: 327 words (солнце, вече, училище, кладбище, ложе, пристанище). Like Сходство, except in 2 cells: nominative sg, instrumental sg.
+    // Ложе: 327 words (солнце, вече, училище, кладбище, ложе, пристанище). Like Сходство, except in 2 cells: nom sg, ins sg.
     declension!("ложе", 327, "~е", [animacy: Inanimate], like Сходство;
-        nominative: "~е", _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~ем", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~е", _;
+    ins: "~ем", _;
     ),
-    // Зелёный: 278 words (белый, чёрный, гласный, беспризорный, коридорный, левый). Like Накладная, except in 6 cells: nominative sg, genitive sg, dative sg, accusative sg, instrumental sg, prepositional sg.
+    // Зелёный: 278 words (белый, чёрный, гласный, беспризорный, коридорный, левый). Like Накладная, except in 6 cells: nom sg, gen_ sg, dat sg, acc sg, ins sg, prep sg.
     declension!("зелёный", 278, "~ый", [gender: Masculine], like Накладная;
-        nominative: "~ый", _;
-        genitive: "~ого", _;
-        dative: "~ому", _;
-        accusative: derived, _;
-        instrumental: "~ым", _;
-        prepositional: "~ом", _;
-        noun_second_case: _, _;
+    nom: "~ый", _;
+    gen_: "~ого", _;
+    dat: "~ому", _;
+    acc: derived, _;
+    ins: "~ым", _;
+    prep: "~ом", _;
     ),
-    // Ключ: 276 words (борщ, карандаш, врач, сыч, нож, меч). Like Товарищ, except in 1 cell: instrumental sg.
+    // Ключ: 276 words (борщ, карандаш, врач, сыч, нож, меч). Like Товарищ, except in 1 cell: ins sg.
     declension!("ключ", 276, "~", [gender: Masculine], like Товарищ;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~ом", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    ins: "~ом", _;
     ),
     // Люлька: 264 words (пенька, пиписька, кухонька, батенька, калька, свистулька).
     declension!("люлька", 264, "~ь~а";
-        nominative: "~ь~а", "~ь~и";
-        genitive: "~ь~и", "~е~";
-        dative: "~ь~е", "~ь~ам";
-        accusative: "~ь~у", derived;
-        instrumental: "~ь~ой|~ь~ою", "~ь~ами";
-        prepositional: "~ь~е", "~ь~ах";
-        noun_second_case: derived, derived;
+    nom: "~ь~а", "~ь~и";
+    gen_: "~ь~и", "~е~";
+    dat: "~ь~е", "~ь~ам";
+    acc: "~ь~у", _;
+    ins: "~ь~ой|~ь~ою", "~ь~ами";
+    prep: "~ь~е", "~ь~ах";
     ),
-    // Баня: 253 words (братыня, неделя, буря, няня, княгиня, тётя). Like Химия, except in 3 cells: genitive pl, dative sg, prepositional sg.
+    // Баня: 253 words (братыня, неделя, буря, няня, княгиня, тётя). Like Химия, except in 3 cells: gen_ pl, dat sg, prep sg.
     declension!("баня", 253, "~я", like Химия;
-        nominative: _, _;
-        genitive: _, "~ь";
-        dative: "~е", _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: "~е", _;
-        noun_second_case: _, _;
+    gen_: _, "~ь";
+    dat: "~е", _;
+    prep: "~е", _;
     ),
-    // Аниец: 250 words (австриец, австралиец, ариец, белогвардеец, китаец, византиец). Like Чайка, except in 7 cells: nominative sg, nominative pl, genitive sg, genitive pl, dative sg, accusative sg, ….
+    // Аниец: 250 words (австриец, австралиец, ариец, белогвардеец, китаец, византиец). Like Чайка, except in 7 cells: nom sg, nom pl, gen_ sg, gen_ pl, dat sg, acc sg, ….
     declension!("аниец", 250, "~е~", [gender: Masculine, animacy: Animate], like Чайка;
-        nominative: "~е~", "~й~ы";
-        genitive: "~й~а", "~й~ев";
-        dative: "~й~у", _;
-        accusative: derived, _;
-        instrumental: "~й~ем", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~е~", "~й~ы";
+    gen_: "~й~а", "~й~ев";
+    dat: "~й~у", _;
+    acc: derived, _;
+    ins: "~й~ем", _;
     ),
-    // Червь: 232 words (царь, рубль, кремль, дождь, январь, февраль). Like Медведь, except in 1 cell: instrumental sg.
+    // Червь: 232 words (царь, рубль, кремль, дождь, январь, февраль). Like Медведь, except in 1 cell: ins sg.
     declension!("червь", 232, "~ь", [gender: Masculine], like Медведь;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~ём", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    ins: "~ём", _;
     ),
-    // Шоколадница: 214 words (пицца, мульча, грыжа, мрежа, туча, цареубийца). Like Полнота, except in 1 cell: instrumental sg.
-    declension!("шоколадница", 214, "~а", like Полнота;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~ей|~ею", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    // Шоколадница: 218 words (пицца, кожа, мульча, грыжа, мрежа, туча). Like Полнота, except in 1 cell: ins sg.
+    declension!("шоколадница", 218, "~а", like Полнота;
+    ins: "~ей|~ею", _;
     ),
-    // Счёты: 203 words (часы, роды, древоеды, щипцы, боеприпасы, французы). Like Приём, except in 7 cells: nominative sg, genitive sg, dative sg, instrumental sg, prepositional sg, noun_second_case part, ….
+    // Счёты: 203 words (часы, роды, древоеды, щипцы, боеприпасы, французы). Like Приём, except in 6 cells: nom sg, gen_ sg, dat sg, ins sg, prep sg, noun_second_case loc.
     declension!("счёты", 203, "~ы", [gender: Masculine], like Приём;
-        nominative: "~ы", _;
-        genitive: derived, _;
-        dative: derived, _;
-        accusative: _, _;
-        instrumental: derived, _;
-        prepositional: derived, _;
-        noun_second_case: derived, derived;
+    nom: "~ы", _;
+    gen_: derived, _;
+    dat: derived, _;
+    ins: derived, _;
+    prep: derived, _;
+    noun_second_case: _, derived;
     ),
-    // Русский: 201 words (русский, сербскохорватский, английский, рабочий, норвежский, китайский). Like Зелёный, except in 7 cells: nominative sg, nominative pl, genitive pl, dative pl, instrumental sg, instrumental pl, ….
+    // Русский: 201 words (русский, сербскохорватский, английский, рабочий, норвежский, китайский). Like Зелёный, except in 7 cells: nom sg, nom pl, gen_ pl, dat pl, ins sg, ins pl, ….
     declension!("русский", 201, "~ий", [gender: Masculine], like Зелёный;
-        nominative: "~ий", "~ие";
-        genitive: _, "~их";
-        dative: _, "~им";
-        accusative: _, _;
-        instrumental: "~им", "~ими";
-        prepositional: _, "~их";
-        noun_second_case: _, _;
+    nom: "~ий", "~ие";
+    gen_: _, "~их";
+    dat: _, "~им";
+    ins: "~им", "~ими";
+    prep: _, "~их";
     ),
-    // Батарея: 194 words (статуя, стая, шея, идея, затея, фея). Like Баня, except in 1 cell: genitive pl.
+    // Батарея: 194 words (статуя, стая, шея, идея, затея, фея). Like Баня, except in 1 cell: gen_ pl.
     declension!("батарея", 194, "~я", [gender: Feminine], like Баня;
-        nominative: _, _;
-        genitive: _, "~й";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~й";
     ),
-    // Лососёвые: 192 words (данные, чаевые, присные, месячные, наличные, родные). Like Счёты, except in 6 cells: nominative sg, nominative pl, genitive pl, dative pl, instrumental pl, prepositional pl.
+    // Лососёвые: 192 words (данные, чаевые, присные, месячные, наличные, родные). Like Счёты, except in 6 cells: nom sg, nom pl, gen_ pl, dat pl, ins pl, prep pl.
     declension!("лососёвые", 192, "~е", like Счёты;
-        nominative: "~е", "~е";
-        genitive: _, "~х";
-        dative: _, "~м";
-        accusative: _, _;
-        instrumental: _, "~ми";
-        prepositional: _, "~х";
-        noun_second_case: _, _;
+    nom: "~е", "~е";
+    gen_: _, "~х";
+    dat: _, "~м";
+    ins: _, "~ми";
+    prep: _, "~х";
     ),
-    // Умелец: 174 words (палец, комсомолец, земледелец, бразилец, владелец, анголец). Like Люлька, except in 7 cells: nominative sg, nominative pl, genitive sg, genitive pl, dative sg, accusative sg, ….
+    // Умелец: 174 words (палец, комсомолец, земледелец, бразилец, владелец, анголец). Like Люлька, except in 7 cells: nom sg, nom pl, gen_ sg, gen_ pl, dat sg, acc sg, ….
     declension!("умелец", 174, "~е~", [gender: Masculine], like Люлька;
-        nominative: "~е~", "~ь~ы";
-        genitive: "~ь~а", "~ь~ев";
-        dative: "~ь~у", _;
-        accusative: derived, _;
-        instrumental: "~ь~ем", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~е~", "~ь~ы";
+    gen_: "~ь~а", "~ь~ев";
+    dat: "~ь~у", _;
+    acc: derived, _;
+    ins: "~ь~ем", _;
     ),
-    // Второе: 160 words (былое, существительное, числительное, многое, прилагательное, шампанское). Like Зелёный, except in 1 cell: nominative sg.
-    declension!("второе", 160, "~ое", [gender: Neuter, animacy: Inanimate], like Зелёный;
-        nominative: "~ое", _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    // Второе: 161 words (былое, существительное, числительное, многое, прилагательное, шампанское). Like Зелёный, except in 1 cell: nom sg.
+    declension!("второе", 161, "~ое", [gender: Neuter, animacy: Inanimate], like Зелёный;
+    nom: "~ое", _;
     ),
-    // Сватья: 151 words (гостья, авиаэскадрилья, эскадрилья, келья, тортилья, колдунья). Like Хлопанье, except in 6 cells: nominative sg, nominative pl, genitive sg, dative sg, accusative sg, instrumental sg.
+    // Сватья: 151 words (гостья, авиаэскадрилья, эскадрилья, келья, тортилья, колдунья). Like Хлопанье, except in 6 cells: nom sg, nom pl, gen_ sg, dat sg, acc sg, ins sg.
     declension!("сватья", 151, "~ья", [gender: Feminine], like Хлопанье;
-        nominative: "~ья", "~ьи";
-        genitive: "~ьи", _;
-        dative: "~ье", _;
-        accusative: "~ью", _;
-        instrumental: "~ьей|~ьею", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~ья", "~ьи";
+    gen_: "~ьи", _;
+    dat: "~ье", _;
+    acc: "~ью", _;
+    ins: "~ьей|~ьею", _;
     ),
-    // Латы: 150 words (цимбалы, каникулы, ножницы, шахматы, именины, бакенбарды). Like Счёты, except in 1 cell: genitive pl.
+    // Латы: 150 words (цимбалы, каникулы, ножницы, шахматы, именины, бакенбарды). Like Счёты, except in 1 cell: gen_ pl.
     declension!("латы", 150, "~ы", [gender: Feminine, animacy: Inanimate], like Счёты;
-        nominative: _, _;
-        genitive: _, "~";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~";
     ),
-    // Молочко: 148 words (семечко, колено, батько, яичко, окошко, зёрнышко). Like Барашек, except in 3 cells: nominative sg, genitive pl, noun_second_case part.
+    // Молочко: 148 words (семечко, колено, батько, яичко, окошко, зёрнышко). Like Барашек, except in 2 cells: nom sg, gen_ pl.
     declension!("молочко", 148, "~~о", [animacy: Inanimate], like Барашек;
-        nominative: "~~о", _;
-        genitive: _, "~е~";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: derived, _;
+    nom: "~~о", _;
+    gen_: _, "~е~";
     ),
-    // Мостки: 147 words (древпластики, духи, щипчики, мозги, падонки, очки). Like Товарищ, except in 6 cells: nominative sg, genitive sg, genitive pl, dative sg, instrumental sg, prepositional sg.
+    // Мостки: 147 words (древпластики, духи, щипчики, мозги, падонки, очки). Like Товарищ, except in 6 cells: nom sg, gen_ sg, gen_ pl, dat sg, ins sg, prep sg.
     declension!("мостки", 147, "~и", [gender: Masculine, animacy: Inanimate], like Товарищ;
-        nominative: "~и", _;
-        genitive: "~и", "~ов";
-        dative: "~и", _;
-        accusative: _, _;
-        instrumental: "~и", _;
-        prepositional: "~и", _;
-        noun_second_case: _, _;
+    nom: "~и", _;
+    gen_: "~и", "~ов";
+    dat: "~и", _;
+    ins: "~и", _;
+    prep: "~и", _;
     ),
-    // Заря: 127 words (ступня, стезя, простыня, тля, хуйня, броня). Like Баня, except in 2 cells: genitive pl, instrumental sg.
+    // Заря: 127 words (ступня, стезя, простыня, тля, хуйня, броня). Like Баня, except in 2 cells: gen_ pl, ins sg.
     declension!("заря", 127, "~я", [gender: Feminine], like Баня;
-        nominative: _, _;
-        genitive: _, "~ей";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~ёй|~ёю", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~ей";
+    ins: "~ёй|~ёю", _;
     ),
     // Орлёнок: 124 words (телёнок, октябрёнок, поросёнок, жеребёнок, ягнёнок, козлёнок).
     declension!("орлёнок", 124, "~ёнок", [gender: Masculine, animacy: Animate];
-        nominative: "~ёнок", "~ята";
-        genitive: "~ёнка", "~ят";
-        dative: "~ёнку", "~ятам";
-        accusative: derived, derived;
-        instrumental: "~ёнком", "~ятами";
-        prepositional: "~ёнке", "~ятах";
-        noun_second_case: derived, derived;
+    nom: "~ёнок", "~ята";
+    gen_: "~ёнка", "~ят";
+    dat: "~ёнку", "~ятам";
+    ins: "~ёнком", "~ятами";
+    prep: "~ёнке", "~ятах";
     ),
-    // Подворотня: 120 words (вишня, песня, бушня, пригоршня, башня, пекарня). Like Дорожка, except in 6 cells: nominative sg, dative pl, accusative sg, instrumental sg, instrumental pl, prepositional pl.
+    // Подворотня: 120 words (вишня, песня, бушня, пригоршня, башня, пекарня). Like Дорожка, except in 6 cells: nom sg, dat pl, acc sg, ins sg, ins pl, prep pl.
     declension!("подворотня", 120, "~~я", [gender: Feminine, animacy: Inanimate], like Дорожка;
-        nominative: "~~я", _;
-        genitive: _, _;
-        dative: _, "~~ям";
-        accusative: "~~ю", _;
-        instrumental: "~~ей|~~ею", "~~ями";
-        prepositional: _, "~~ях";
-        noun_second_case: _, _;
+    nom: "~~я", _;
+    dat: _, "~~ям";
+    acc: "~~ю", _;
+    ins: "~~ей|~~ею", "~~ями";
+    prep: _, "~~ях";
     ),
-    // Жнивьё: 115 words (питьё, ружьё, битьё, враньё, сырьё, жильё). Like Хлопанье, except in 3 cells: nominative sg, genitive pl, instrumental sg.
+    // Жнивьё: 115 words (питьё, ружьё, битьё, враньё, сырьё, жильё). Like Хлопанье, except in 3 cells: nom sg, gen_ pl, ins sg.
     declension!("жнивьё", 115, "~ьё", [gender: Neuter, animacy: Inanimate], like Хлопанье;
-        nominative: "~ьё", _;
-        genitive: _, "~ей";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~ьём", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~ьё", _;
+    gen_: _, "~ей";
+    ins: "~ьём", _;
     ),
-    // Ясли: 113 words (люди, кости, черви, внутренности, вожжи, ясли). Like Склонность, except in 6 cells: nominative sg, genitive sg, dative sg, instrumental sg, prepositional sg, noun_second_case loc.
-    declension!("ясли", 113, "~и", [animacy: Inanimate], like Склонность;
-        nominative: "~и", _;
-        genitive: derived, _;
-        dative: derived, _;
-        accusative: _, _;
-        instrumental: derived, _;
-        prepositional: derived, _;
-        noun_second_case: _, derived;
+    // Ясли: 113 words (люди, кости, черви, внутренности, вожжи, ясли). Like Медведь, except in 5 cells: nom sg, gen_ sg, dat sg, ins sg, prep sg.
+    declension!("ясли", 113, "~и", [animacy: Inanimate], like Медведь;
+    nom: "~и", _;
+    gen_: derived, _;
+    dat: derived, _;
+    ins: derived, _;
+    prep: derived, _;
     ),
-    // Кормчий: 107 words (лесничий, посторонний, нищий, военнослужащий, домашний, желающий). Like Русский, except in 3 cells: genitive sg, dative sg, prepositional sg.
+    // Кормчий: 107 words (лесничий, посторонний, нищий, военнослужащий, домашний, желающий). Like Русский, except in 3 cells: gen_ sg, dat sg, prep sg.
     declension!("кормчий", 107, "~ий", [gender: Masculine, animacy: Animate], like Русский;
-        nominative: _, _;
-        genitive: "~его", _;
-        dative: "~ему", _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: "~ем", _;
-        noun_second_case: _, _;
+    gen_: "~его", _;
+    dat: "~ему", _;
+    prep: "~ем", _;
     ),
-    // Камень: 107 words (бредень, оборотень, камень, парень, полдень, кашель). Like Подворотня, except in 7 cells: nominative sg, genitive sg, genitive pl, dative sg, accusative sg, instrumental sg, ….
+    // Камень: 107 words (бредень, оборотень, камень, парень, полдень, кашель). Like Подворотня, except in 6 cells: nom sg, gen_ sg, gen_ pl, dat sg, acc sg, ins sg.
     declension!("камень", 107, "~е~ь", [gender: Masculine], like Подворотня;
-        nominative: "~е~ь", _;
-        genitive: "~~я", "~~ей";
-        dative: "~~ю", _;
-        accusative: derived, _;
-        instrumental: "~~ем", _;
-        prepositional: _, _;
-        noun_second_case: "~~ю", _;
+    nom: "~е~ь", _;
+    gen_: "~~я", "~~ей";
+    dat: "~~ю", _;
+    acc: derived, _;
+    ins: "~~ем", _;
     ),
-    // Гривна: 106 words (сосна, домна, царевна, гривна, кошма, плюсна). Like Дорожка, except in 2 cells: nominative pl, genitive sg.
+    // Гривна: 106 words (сосна, домна, царевна, гривна, кошма, плюсна). Like Дорожка, except in 2 cells: nom pl, gen_ sg.
     declension!("гривна", 106, "~~а", [gender: Feminine], like Дорожка;
-        nominative: _, "~~ы";
-        genitive: "~~ы", _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: _, "~~ы";
+    gen_: "~~ы", _;
     ),
-    // Нападки: 100 words (лесопосадки, плавки, сутки, сливки, колготки, поминки). Like Стрелка, except in 6 cells: nominative sg, genitive sg, dative sg, accusative sg, instrumental sg, prepositional sg.
+    // Нападки: 100 words (лесопосадки, плавки, сутки, сливки, колготки, поминки). Like Стрелка, except in 6 cells: nom sg, gen_ sg, dat sg, acc sg, ins sg, prep sg.
     declension!("нападки", 100, "~~и", [gender: Feminine, animacy: Inanimate], like Стрелка;
-        nominative: "~~и", _;
-        genitive: derived, _;
-        dative: derived, _;
-        accusative: derived, _;
-        instrumental: derived, _;
-        prepositional: derived, _;
-        noun_second_case: _, _;
+    nom: "~~и", _;
+    gen_: derived, _;
+    dat: derived, _;
+    acc: derived, _;
+    ins: derived, _;
+    prep: derived, _;
     ),
-    // Выдача: 89 words (кожа, тёща, пища, вельможа, рожа, ложа). Like Шоколадница, except in 2 cells: nominative pl, genitive sg.
-    declension!("выдача", 89, "~а", like Шоколадница;
-        nominative: _, "~и";
-        genitive: "~и", _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
-    ),
-    // Гусёк: 89 words (мотылёк, хорёк, кошелёк, королёк, огонёк, уголёк). Like Умелец, except in 5 cells: nominative sg, nominative pl, genitive pl, instrumental sg, noun_second_case part.
+    // Гусёк: 89 words (мотылёк, хорёк, кошелёк, королёк, огонёк, уголёк). Like Умелец, except in 4 cells: nom sg, nom pl, gen_ pl, ins sg.
     declension!("гусёк", 89, "~ё~", [gender: Masculine], like Умелец;
-        nominative: "~ё~", "~ь~и";
-        genitive: _, "~ь~ов";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~ь~ом", _;
-        prepositional: _, _;
-        noun_second_case: "~ь~у", _;
+    nom: "~ё~", "~ь~и";
+    gen_: _, "~ь~ов";
+    ins: "~ь~ом", _;
     ),
-    // Спальня: 85 words (лесопильня, спальня, читальня, колокольня, коптильня, наковальня). Like Люлька, except in 6 cells: nominative sg, dative pl, accusative sg, instrumental sg, instrumental pl, prepositional pl.
+    // Выдача: 85 words (тёща, пища, вельможа, гуща, роща, толща). Like Шоколадница, except in 2 cells: nom pl, gen_ sg.
+    declension!("выдача", 85, "~а", like Шоколадница;
+    nom: _, "~и";
+    gen_: "~и", _;
+    ),
+    // Спальня: 85 words (лесопильня, спальня, читальня, колокольня, коптильня, наковальня). Like Люлька, except in 6 cells: nom sg, dat pl, acc sg, ins sg, ins pl, prep pl.
     declension!("спальня", 85, "~ь~я", [gender: Feminine, animacy: Inanimate], like Люлька;
-        nominative: "~ь~я", _;
-        genitive: _, _;
-        dative: _, "~ь~ям";
-        accusative: "~ь~ю", _;
-        instrumental: "~ь~ей|~ь~ею", "~ь~ями";
-        prepositional: _, "~ь~ях";
-        noun_second_case: _, _;
+    nom: "~ь~я", _;
+    dat: _, "~ь~ям";
+    acc: "~ь~ю", _;
+    ins: "~ь~ей|~ь~ею", "~ь~ями";
+    prep: _, "~ь~ях";
     ),
-    // Достопримечательность: 79 words (лошадь, дочь, мать, сельдь, свекровь, достопримечательность). Like Склонность, except in 2 cells: accusative sg, noun_second_case loc.
+    // Достопримечательность: 79 words (лошадь, дочь, мать, сельдь, свекровь, достопримечательность). Like Склонность, except in 2 cells: acc sg, noun_second_case loc.
     declension!("достопримечательность", 79, "~ь", [gender: Feminine, animacy: Animate], like Склонность;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: "~ь", _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, derived;
+    acc: "~ь", _;
+    noun_second_case: _, derived;
     ),
-    // Штрафной: 79 words (больной, голубой, часовой, золотой, вестовой, немой). Like Зелёный, except in 1 cell: nominative sg.
+    // Штрафной: 79 words (больной, голубой, часовой, золотой, вестовой, немой). Like Зелёный, except in 1 cell: nom sg.
     declension!("штрафной", 79, "~ой", [gender: Masculine], like Зелёный;
-        nominative: "~ой", _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~ой", _;
     ),
-    // Абзац: 76 words (месяц, раж, принц, абзац, кош, кварц). Like Приём, except in 3 cells: genitive pl, instrumental sg, noun_second_case part.
+    // Абзац: 76 words (месяц, раж, принц, абзац, кош, кварц). Like Приём, except in 2 cells: gen_ pl, ins sg.
     declension!("абзац", 76, "~", [gender: Masculine], like Приём;
-        nominative: _, _;
-        genitive: _, "~ев";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~ем", _;
-        prepositional: _, _;
-        noun_second_case: derived, _;
+    gen_: _, "~ев";
+    ins: "~ем", _;
     ),
-    // Кулички: 74 words (сумерки, бачки, шашки, кусачки, детишки, корточки). Like Нападки, except in 1 cell: genitive pl.
+    // Кулички: 74 words (сумерки, бачки, шашки, кусачки, детишки, корточки). Like Нападки, except in 1 cell: gen_ pl.
     declension!("кулички", 74, "~~и", like Нападки;
-        nominative: _, _;
-        genitive: _, "~е~";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~е~";
     ),
-    // Дух: 70 words (гулаг, воздух, гальбик, восток, урюк, маниок). Like Приём, except in 1 cell: nominative pl.
+    // Дух: 70 words (гулаг, воздух, гальбик, восток, урюк, маниок). Like Приём, except in 1 cell: nom pl.
     declension!("дух", 70, "~", [gender: Masculine, animacy: Inanimate], like Приём;
-        nominative: _, "~и";
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: _, "~и";
     ),
-    // Ядро: 63 words (брашно, говно, деревцо, ядро, масло, вёдро). Like Молочко, except in 1 cell: nominative pl.
+    // Ядро: 63 words (брашно, говно, деревцо, ядро, масло, вёдро). Like Молочко, except in 1 cell: nom pl.
     declension!("ядро", 63, "~~о", [gender: Neuter, animacy: Inanimate], like Молочко;
-        nominative: _, "~~а";
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: _, "~~а";
     ),
     // Внучонок: 57 words (медвежонок, индюшонок, крольчонок, внучонок, волчонок, мышонок).
     declension!("внучонок", 57, "~онок", [gender: Masculine, animacy: Animate];
-        nominative: "~онок", "~ата";
-        genitive: "~онка", "~ат";
-        dative: "~онку", "~атам";
-        accusative: derived, derived;
-        instrumental: "~онком", "~атами";
-        prepositional: "~онке", "~атах";
-        noun_second_case: derived, derived;
+    nom: "~онок", "~ата";
+    gen_: "~онка", "~ат";
+    dat: "~онку", "~атам";
+    ins: "~онком", "~атами";
+    prep: "~онке", "~атах";
     ),
-    // Раз: 53 words (солдат, цыган, раз, гусар, вольт, погон). Like Приём, except in 2 cells: genitive pl, noun_second_case loc.
+    // Раз: 53 words (солдат, цыган, раз, гусар, вольт, погон). Like Приём, except in 2 cells: gen_ pl, noun_second_case loc.
     declension!("раз", 53, "~", [gender: Masculine], like Приём;
-        nominative: _, _;
-        genitive: _, "~";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, derived;
+    gen_: _, "~";
+    noun_second_case: _, derived;
     ),
-    // Недра: 52 words (ребята, врата, дрова, уста, внучата, правнучата). Like Латы, except in 2 cells: nominative sg, nominative pl.
+    // Недра: 52 words (ребята, врата, дрова, уста, внучата, правнучата). Like Латы, except in 2 cells: nom sg, nom pl.
     declension!("недра", 52, "~а", like Латы;
-        nominative: "~а", "~а";
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~а", "~а";
     ),
-    // Свеча: 45 words (левша, ханжа, вожжа, свеча, юноша, саранча). Like Выдача, except in 2 cells: genitive pl, instrumental sg.
+    // Свеча: 45 words (левша, ханжа, вожжа, свеча, юноша, саранча). Like Выдача, except in 2 cells: gen_ pl, ins sg.
     declension!("свеча", 45, "~а", like Выдача;
-        nominative: _, _;
-        genitive: _, "~ей";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~ой|~ою", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~ей";
+    ins: "~ой|~ою", _;
     ),
-    // Каракуля: 45 words (постеля, батя, дядя, доля, ходуля, сводня). Like Баня, except in 1 cell: genitive pl.
+    // Каракуля: 45 words (постеля, батя, дядя, доля, ходуля, сводня). Like Баня, except in 1 cell: gen_ pl.
     declension!("каракуля", 45, "~я", like Баня;
-        nominative: _, _;
-        genitive: _, "~ей";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~ей";
     ),
-    // Котище: 40 words (дружище, когтище, волчище, хуище, козлище, третье). Like Ложе, except in 1 cell: nominative pl.
+    // Котище: 40 words (дружище, когтище, волчище, хуище, козлище, третье). Like Ложе, except in 1 cell: nom pl.
     declension!("котище", 40, "~е", [gender: Masculine], like Ложе;
-        nominative: _, "~и";
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: _, "~и";
     ),
     // Делёж: 38 words (падёж, пиздёж, чертёж, грабёж, платёж, мухлёж).
     declension!("делёж", 38, "~ё~", [gender: Masculine, animacy: Inanimate];
-        nominative: "~ё~", "~е~и";
-        genitive: "~е~а", "~е~ей";
-        dative: "~е~у", "~е~ам";
-        accusative: derived, derived;
-        instrumental: "~е~ом", "~е~ами";
-        prepositional: "~е~е", "~е~ах";
-        noun_second_case: derived, derived;
+    nom: "~ё~", "~е~и";
+    gen_: "~е~а", "~е~ей";
+    dat: "~е~у", "~е~ам";
+    ins: "~е~ом", "~е~ами";
+    prep: "~е~е", "~е~ах";
     ),
-    // Съезжая: 37 words (прихожая, телеведущая, неверующая, купчая, составляющая, заведующая). Like Русский, except in 6 cells: nominative sg, genitive sg, dative sg, accusative sg, instrumental sg, prepositional sg.
+    // Съезжая: 37 words (прихожая, телеведущая, неверующая, купчая, составляющая, заведующая). Like Русский, except in 6 cells: nom sg, gen_ sg, dat sg, acc sg, ins sg, prep sg.
     declension!("съезжая", 37, "~ая", [gender: Feminine], like Русский;
-        nominative: "~ая", _;
-        genitive: "~ей", _;
-        dative: "~ей", _;
-        accusative: "~ую", _;
-        instrumental: "~ей|~ею", _;
-        prepositional: "~ей", _;
-        noun_second_case: _, _;
+    nom: "~ая", _;
+    gen_: "~ей", _;
+    dat: "~ей", _;
+    acc: "~ую", _;
+    ins: "~ей|~ею", _;
+    prep: "~ей", _;
     ),
-    // Помочь: 36 words (мочь, тушь, нощь, пещь, помощь, немощь). Like Склонность, except in 3 cells: dative pl, instrumental pl, prepositional pl.
+    // Помочь: 36 words (мочь, тушь, нощь, пещь, помощь, немощь). Like Склонность, except in 3 cells: dat pl, ins pl, prep pl.
     declension!("помочь", 36, "~ь", [gender: Feminine, animacy: Inanimate], like Склонность;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, "~ам";
-        accusative: _, _;
-        instrumental: _, "~ами";
-        prepositional: _, "~ах";
-        noun_second_case: _, _;
+    dat: _, "~ам";
+    ins: _, "~ами";
+    prep: _, "~ах";
     ),
-    // Отец: 33 words (ветер, узел, пепел, дятел, овен, домысел). Like Барашек, except in 1 cell: nominative pl.
+    // Отец: 33 words (ветер, узел, пепел, дятел, овен, домысел). Like Барашек, except in 1 cell: nom pl.
     declension!("отец", 33, "~е~", [gender: Masculine], like Барашек;
-        nominative: _, "~~ы";
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: _, "~~ы";
     ),
-    // Бой: 33 words (чай, бой, рой, слой, край, буй). Like Змей, except in 1 cell: genitive pl.
+    // Бой: 33 words (чай, бой, рой, слой, край, буй). Like Змей, except in 1 cell: gen_ pl.
     declension!("бой", 33, "~й", [gender: Masculine, animacy: Inanimate], like Змей;
-        nominative: _, _;
-        genitive: _, "~ёв";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~ёв";
     ),
-    // Горючее: 33 words (настоящее, будущее, горючее, грядущее, прочее, болеутоляющее). Like Кормчий, except in 1 cell: nominative sg.
+    // Горючее: 33 words (настоящее, будущее, горючее, грядущее, прочее, болеутоляющее). Like Кормчий, except in 1 cell: nom sg.
     declension!("горючее", 33, "~ее", [gender: Neuter, animacy: Inanimate], like Кормчий;
-        nominative: "~ее", _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~ее", _;
     ),
-    // Дрязги: 31 words (брюки, ладоши, лыжи, вериги, пики, брызги). Like Выдача, except in 2 cells: nominative sg, instrumental sg.
+    // Дрязги: 31 words (брюки, ладоши, лыжи, вериги, пики, брызги). Like Выдача, except in 2 cells: nom sg, ins sg.
     declension!("дрязги", 31, "~и", [gender: Feminine, animacy: Inanimate], like Выдача;
-        nominative: "~и", _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~ой", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~и", _;
+    ins: "~ой", _;
     ),
-    // Шов: 30 words (рот, свёкор, лоб, сон, хохол, угол). Like Рожок, except in 2 cells: nominative pl, noun_second_case part.
+    // Шов: 30 words (рот, свёкор, лоб, сон, хохол, угол). Like Рожок, except in 1 cell: nom pl.
     declension!("шов", 30, "~о~", [gender: Masculine], like Рожок;
-        nominative: _, "~~ы";
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: derived, _;
+    nom: _, "~~ы";
     ),
-    // Ладья: 30 words (семья, ладья, статья, судья, скамья, голья). Like Сватья, except in 2 cells: genitive pl, instrumental sg.
+    // Ладья: 30 words (семья, ладья, статья, судья, скамья, голья). Like Сватья, except in 2 cells: gen_ pl, ins sg.
     declension!("ладья", 30, "~ья", like Сватья;
-        nominative: _, _;
-        genitive: _, "~ей";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~ьёй|~ьёю", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~ей";
+    ins: "~ьёй|~ьёю", _;
     ),
-    // Член: 30 words (клон, тип, член, кат, кекс, бас). Like Приём, except in 4 cells: accusative sg, accusative pl, noun_second_case part, noun_second_case loc.
+    // Член: 30 words (клон, тип, член, кат, кекс, бас). Like Приём, except in 3 cells: acc sg, acc pl, noun_second_case loc.
     declension!("член", 30, "~", [gender: Masculine, animacy: Inanimate], like Приём;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: "~а|~", "~ов|~ы";
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: derived, derived;
+    acc: "~а|~", "~ов|~ы";
+    noun_second_case: _, derived;
     ),
-    // Деревня: 29 words (торговля, сабля, капля, туфля, чапля, цапля). Like Подворотня, except in 1 cell: genitive pl.
+    // Деревня: 29 words (торговля, сабля, капля, туфля, чапля, цапля). Like Подворотня, except in 1 cell: gen_ pl.
     declension!("деревня", 29, "~~я", [gender: Feminine], like Подворотня;
-        nominative: _, _;
-        genitive: _, "~е~ь";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~е~ь";
     ),
-    // Верея: 29 words (змея, колея, чешуя, швея, струя, алия). Like Батарея, except in 1 cell: instrumental sg.
+    // Верея: 29 words (змея, колея, чешуя, швея, струя, алия). Like Батарея, except in 1 cell: ins sg.
     declension!("верея", 29, "~я", [gender: Feminine], like Батарея;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~ёй|~ёю", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    ins: "~ёй|~ёю", _;
     ),
-    // Кешью: 29 words (порося, кешью, чапаев, гэта, мюсли, пол-москвы). Like Какао, except in 2 cells: accusative sg, accusative pl.
+    // Кешью: 29 words (порося, кешью, чапаев, гэта, мюсли, пол-москвы). Like Какао, except in 2 cells: acc sg, acc pl.
     declension!("кешью", 29, "~", like Какао;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: "~", "~";
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    acc: "~", "~";
     ),
-    // Порубка: 29 words (скоблянка, меньшевичка, связистка, отклейка, порубка, самосброска). Like Свеча, except in 1 cell: genitive pl.
+    // Порубка: 29 words (скоблянка, меньшевичка, связистка, отклейка, порубка, самосброска). Like Свеча, except in 1 cell: gen_ pl.
     declension!("порубка", 29, "~а", [gender: Feminine], like Свеча;
-        nominative: _, _;
-        genitive: _, "~а";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~а";
     ),
-    // Егерь: 27 words (учитель, якорь, флигель, лагерь, тополь, соболь). Like Медведь, except in 2 cells: nominative pl, noun_second_case part.
+    // Егерь: 27 words (учитель, якорь, флигель, лагерь, тополь, соболь). Like Медведь, except in 1 cell: nom pl.
     declension!("егерь", 27, "~ь", [gender: Masculine], like Медведь;
-        nominative: _, "~я";
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: derived, _;
+    nom: _, "~я";
     ),
     // Поллитра: 26 words (пол-очка, пол-литра, пол-оборота, пол-августа, пол-автобуса, пол-аршина).
     declension!("пол-литра", 26, "~-~а";
-        nominative: "~-~а", "~у~ы";
-        genitive: "~у~а", "~у~ов";
-        dative: "~у~у", "~у~ам";
-        accusative: derived, derived;
-        instrumental: "~у~ом", "~у~ами";
-        prepositional: "~у~е", "~у~ах";
-        noun_second_case: derived, derived;
+    nom: "~-~а", "~у~ы";
+    gen_: "~у~а", "~у~ов";
+    dat: "~у~у", "~у~ам";
+    ins: "~у~ом", "~у~ами";
+    prep: "~у~е", "~у~ах";
     ),
-    // Голец: 24 words (лев, телец, стрелец, жилец, делец, малец). Like Умелец, except in 2 cells: genitive pl, instrumental sg.
+    // Голец: 24 words (лев, телец, стрелец, жилец, делец, малец). Like Умелец, except in 2 cells: gen_ pl, ins sg.
     declension!("голец", 24, "~е~", [gender: Masculine], like Умелец;
-        nominative: _, _;
-        genitive: _, "~ь~ов";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~ь~ом", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~ь~ов";
+    ins: "~ь~ом", _;
     ),
-    // Домашние: 24 words (немногие, сколькие, брюхоногие, близкие, древние, домашние). Like Горючее, except in 1 cell: accusative sg.
+    // Домашние: 24 words (немногие, сколькие, брюхоногие, близкие, древние, домашние). Like Горючее, except in 1 cell: acc sg.
     declension!("домашние", 24, "~ие", like Горючее;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: "~ее", _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    acc: "~ее", _;
     ),
     // Звезда: 23 words (звезда, пчела, жена, сестра, медсестра, береста).
     declension!("звезда", 23, "~е~а", [gender: Feminine];
-        nominative: "~е~а", "~ё~ы";
-        genitive: "~е~ы", "~ё~";
-        dative: "~е~е", "~ё~ам";
-        accusative: "~е~у", derived;
-        instrumental: "~е~ой|~е~ою", "~ё~ами";
-        prepositional: "~е~е", "~ё~ах";
-        noun_second_case: derived, derived;
+    nom: "~е~а", "~ё~ы";
+    gen_: "~е~ы", "~ё~";
+    dat: "~е~е", "~ё~ам";
+    acc: "~е~у", _;
+    ins: "~е~ой|~е~ою", "~ё~ами";
+    prep: "~е~е", "~ё~ах";
     ),
-    // Лицо: 23 words (существо, лицо, божество, чадо, чмо, падло). Like Сходство, except in 1 cell: accusative sg.
+    // Лицо: 23 words (существо, лицо, божество, чадо, чмо, падло). Like Сходство, except in 1 cell: acc sg.
     declension!("лицо", 23, "~о", [gender: Neuter, animacy: Animate], like Сходство;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: "~о", _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    acc: "~о", _;
     ),
-    // Котёл: 22 words (пёс, козёл, орёл, овёс, осёл, костёр). Like Отец, except in 2 cells: nominative sg, noun_second_case part.
+    // Котёл: 22 words (пёс, козёл, орёл, овёс, осёл, костёр). Like Отец, except in 1 cell: nom sg.
     declension!("котёл", 22, "~ё~", [gender: Masculine], like Отец;
-        nominative: "~ё~", _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: derived, _;
+    nom: "~ё~", _;
     ),
     // Ребро: 22 words (сребро, серебро, ведро, ребро, весло, зерно).
     declension!("ребро", 22, "~е~~о", [gender: Neuter, animacy: Inanimate];
-        nominative: "~е~~о", "~ё~~а";
-        genitive: "~е~~а", "~ё~е~";
-        dative: "~е~~у", "~ё~~ам";
-        accusative: derived, derived;
-        instrumental: "~е~~ом", "~ё~~ами";
-        prepositional: "~е~~е", "~ё~~ах";
-        noun_second_case: derived, derived;
+    nom: "~е~~о", "~ё~~а";
+    gen_: "~е~~а", "~ё~е~";
+    dat: "~е~~у", "~ё~~ам";
+    ins: "~е~~ом", "~ё~~ами";
+    prep: "~е~~е", "~ё~~ах";
     ),
-    // Маракуйя: 22 words (аллилуйя, секвойя, паранойя, папайя, пирайя, майя). Like Баня, except in 1 cell: genitive pl.
+    // Маракуйя: 22 words (аллилуйя, секвойя, паранойя, папайя, пирайя, майя). Like Баня, except in 1 cell: gen_ pl.
     declension!("маракуйя", 22, "~я", [gender: Feminine], like Баня;
-        nominative: _, _;
-        genitive: _, "~";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~";
     ),
-    // Деньги: 21 words (деньги, четвереньки, грабельки, хахоньки, ахоньки, ясельки). Like Кулички, except in 5 cells: nominative sg, nominative pl, dative pl, instrumental pl, prepositional pl.
+    // Деньги: 21 words (деньги, четвереньки, грабельки, хахоньки, ахоньки, ясельки). Like Кулички, except in 5 cells: nom sg, nom pl, dat pl, ins pl, prep pl.
     declension!("деньги", 21, "~ь~и", [gender: Feminine, animacy: Inanimate], like Кулички;
-        nominative: "~ь~и", "~ь~и";
-        genitive: _, _;
-        dative: _, "~ь~ам";
-        accusative: _, _;
-        instrumental: _, "~ь~ами";
-        prepositional: _, "~ь~ах";
-        noun_second_case: _, _;
+    nom: "~ь~и", "~ь~и";
+    dat: _, "~ь~ам";
+    ins: _, "~ь~ами";
+    prep: _, "~ь~ах";
     ),
-    // Устье: 21 words (платье, устье, подмастерье, подполье, уголье, отребье). Like Скопление, except in 2 cells: genitive pl, prepositional sg.
+    // Устье: 21 words (платье, устье, подмастерье, подполье, уголье, отребье). Like Скопление, except in 2 cells: gen_ pl, prep sg.
     declension!("устье", 21, "~е", [animacy: Inanimate], like Скопление;
-        nominative: _, _;
-        genitive: _, "~ев";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: "~е", _;
-        noun_second_case: _, _;
+    gen_: _, "~ев";
+    prep: "~е", _;
     ),
-    // Клин: 19 words (брат, лист, муж, клин, стул, струп). Like Приём, except in 6 cells: nominative pl, genitive pl, dative pl, instrumental pl, prepositional pl, noun_second_case part.
+    // Клин: 19 words (брат, лист, муж, клин, стул, струп). Like Приём, except in 5 cells: nom pl, gen_ pl, dat pl, ins pl, prep pl.
     declension!("клин", 19, "~", [gender: Masculine], like Приём;
-        nominative: _, "~ья";
-        genitive: _, "~ьев";
-        dative: _, "~ьям";
-        accusative: _, _;
-        instrumental: _, "~ьями";
-        prepositional: _, "~ьях";
-        noun_second_case: derived, _;
+    nom: _, "~ья";
+    gen_: _, "~ьев";
+    dat: _, "~ьям";
+    ins: _, "~ьями";
+    prep: _, "~ьях";
     ),
-    // Сенцы: 19 words (японцы, плоскогубцы, плоскозубцы, шлёпанцы, сланцы, святцы). Like Счёты, except in 1 cell: genitive pl.
+    // Сенцы: 19 words (японцы, плоскогубцы, плоскозубцы, шлёпанцы, сланцы, святцы). Like Счёты, except in 1 cell: gen_ pl.
     declension!("сенцы", 19, "~ы", [gender: Masculine], like Счёты;
-        nominative: _, _;
-        genitive: _, "~ев";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~ев";
     ),
-    // Ископаемое: 18 words (насекомое, животное, земноводное, парнокопытное, ракообразное, позвоночное). Like Второе, except in 1 cell: accusative sg.
+    // Ископаемое: 18 words (насекомое, животное, земноводное, парнокопытное, ракообразное, позвоночное). Like Второе, except in 1 cell: acc sg.
     declension!("ископаемое", 18, "~ое", [gender: Neuter, animacy: Animate], like Второе;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: "~ое", _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    acc: "~ое", _;
     ),
-    // Боёк: 18 words (паёк, чаёк, ручеёк, кофеёк, боёк, буёк). Like Аниец, except in 4 cells: nominative sg, nominative pl, genitive pl, instrumental sg.
+    // Боёк: 18 words (паёк, чаёк, ручеёк, кофеёк, боёк, буёк). Like Аниец, except in 4 cells: nom sg, nom pl, gen_ pl, ins sg.
     declension!("боёк", 18, "~ё~", [gender: Masculine], like Аниец;
-        nominative: "~ё~", "~й~и";
-        genitive: _, "~й~ов";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~й~ом", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~ё~", "~й~и";
+    gen_: _, "~й~ов";
+    ins: "~й~ом", _;
     ),
-    // Меринос: 18 words (квакер, чернорубашечник, виолончелист, солитер, кастрат, бахмат). Like Член, except in 2 cells: accusative sg, accusative pl.
+    // Меринос: 18 words (квакер, чернорубашечник, виолончелист, солитер, кастрат, бахмат). Like Член, except in 2 cells: acc sg, acc pl.
     declension!("меринос", 18, "~", [gender: Masculine], like Член;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: "~", "~ы";
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    acc: "~", "~ы";
     ),
-    // Детище: 17 words (чудовище, чудище, детище, посмешище, уёбище, страшилище). Like Ложе, except in 1 cell: accusative sg.
+    // Детище: 17 words (чудовище, чудище, детище, посмешище, уёбище, страшилище). Like Ложе, except in 1 cell: acc sg.
     declension!("детище", 17, "~е", [animacy: Animate], like Ложе;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: "~е", _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    acc: "~е", _;
     ),
-    // Колёсико: 16 words (колёсико, древко, очко, брюшко, личико, пивко). Like Сходство, except in 2 cells: nominative pl, genitive pl.
+    // Колёсико: 16 words (колёсико, древко, очко, брюшко, личико, пивко). Like Сходство, except in 2 cells: nom pl, gen_ pl.
     declension!("колёсико", 16, "~о", like Сходство;
-        nominative: _, "~и";
-        genitive: _, "~ов";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: _, "~и";
+    gen_: _, "~ов";
     ),
-    // Анкара: 15 words (ковурма, дисна, полумгла, мста, ангара, анкара). Like Полнота, except in 1 cell: genitive pl.
+    // Анкара: 15 words (ковурма, дисна, полумгла, мста, ангара, анкара). Like Полнота, except in 1 cell: gen_ pl.
     declension!("анкара", 15, "~а", [gender: Feminine], like Полнота;
-        nominative: _, _;
-        genitive: _, "~а";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~а";
     ),
-    // День: 15 words (день, ремень, пень, кремень, плетень, трудодень). Like Камень, except in 3 cells: instrumental sg, noun_second_case part, noun_second_case loc.
+    // День: 15 words (день, ремень, пень, кремень, плетень, трудодень). Like Камень, except in 2 cells: ins sg, noun_second_case loc.
     declension!("день", 15, "~е~ь", [gender: Masculine], like Камень;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~~ём", _;
-        prepositional: _, _;
-        noun_second_case: derived, "~~ю";
+    ins: "~~ём", _;
+    noun_second_case: _, "~~ю";
     ),
-    // Зло: 15 words (окно, зло, сукно, волокно, жалко, тягло). Like Ядро, except in 1 cell: genitive pl.
+    // Зло: 15 words (окно, зло, сукно, волокно, жалко, тягло). Like Ядро, except in 1 cell: gen_ pl.
     declension!("зло", 15, "~~о", [gender: Neuter, animacy: Inanimate], like Ядро;
-        nominative: _, _;
-        genitive: _, "~о~";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~о~";
     ),
-    // Бойня: 15 words (кофейня, бойня, водогрейня, воскобойня, двойня, маслобойня). Like Чайка, except in 6 cells: nominative sg, dative pl, accusative sg, instrumental sg, instrumental pl, prepositional pl.
+    // Бойня: 15 words (кофейня, бойня, водогрейня, воскобойня, двойня, маслобойня). Like Чайка, except in 6 cells: nom sg, dat pl, acc sg, ins sg, ins pl, prep pl.
     declension!("бойня", 15, "~й~я", [gender: Feminine, animacy: Inanimate], like Чайка;
-        nominative: "~й~я", _;
-        genitive: _, _;
-        dative: _, "~й~ям";
-        accusative: "~й~ю", _;
-        instrumental: "~й~ей|~й~ею", "~й~ями";
-        prepositional: _, "~й~ях";
-        noun_second_case: _, _;
+    nom: "~й~я", _;
+    dat: _, "~й~ям";
+    acc: "~й~ю", _;
+    ins: "~й~ей|~й~ею", "~й~ями";
+    prep: _, "~й~ях";
     ),
-    // Побои: 15 words (обои, побои, помои, прелиминарии, покои, фотообои). Like Ясли, except in 1 cell: genitive pl.
+    // Побои: 15 words (обои, побои, помои, прелиминарии, покои, фотообои). Like Ясли, except in 1 cell: gen_ pl.
     declension!("побои", 15, "~и", [gender: Masculine], like Ясли;
-        nominative: _, _;
-        genitive: _, "~ев";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~ев";
     ),
-    // Перо: 14 words (дерево, перо, крыло, сено, авиазвено, звено). Like Клин, except in 2 cells: nominative sg, noun_second_case loc.
+    // Перо: 14 words (дерево, перо, крыло, сено, авиазвено, звено). Like Клин, except in 2 cells: nom sg, noun_second_case loc.
     declension!("перо", 14, "~о", [gender: Neuter, animacy: Inanimate], like Клин;
-        nominative: "~о", _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, derived;
+    nom: "~о", _;
+    noun_second_case: _, derived;
     ),
-    // Кокцинеллида: 14 words (ебала, ламиина, иссида, кокцинеллида, алеохарина, циксиида). Like Полнота, except in 1 cell: accusative pl.
+    // Кокцинеллида: 14 words (ебала, ламиина, иссида, кокцинеллида, алеохарина, циксиида). Like Полнота, except in 1 cell: acc pl.
     declension!("кокцинеллида", 14, "~а", [animacy: Animate], like Полнота;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, "~ы";
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    acc: _, "~ы";
     ),
     // Губоцветные: 14 words (вересковые, водяниковые, верескоцветные, буковые, букоцветные, мальпигиевые).
     declension!("губоцветные", 14, "~е", [gender: Feminine, animacy: Inanimate];
-        nominative: "~е", derived;
-        genitive: "~х", derived;
-        dative: "~м", derived;
-        accusative: derived, derived;
-        instrumental: "~ми", derived;
-        prepositional: "~х", derived;
-        noun_second_case: derived, derived;
+    nom: "~е", _;
+    gen_: "~х", _;
+    dat: "~м", _;
+    ins: "~ми", _;
+    prep: "~х", _;
     ),
-    // Перешеек: 14 words (боец, перешеек, хуец, закраек, зашеек, опоек). Like Боёк, except in 1 cell: nominative sg.
+    // Перешеек: 14 words (боец, перешеек, хуец, закраек, зашеек, опоек). Like Боёк, except in 1 cell: nom sg.
     declension!("перешеек", 14, "~е~", [gender: Masculine], like Боёк;
-        nominative: "~е~", _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~е~", _;
     ),
-    // Сердце: 13 words (сердце, деревце, полотенце, блюдце, оконце, волоконце). Like Ядро, except in 2 cells: nominative sg, instrumental sg.
+    // Сердце: 13 words (сердце, деревце, полотенце, блюдце, оконце, волоконце). Like Ядро, except in 2 cells: nom sg, ins sg.
     declension!("сердце", 13, "~~е", [gender: Neuter, animacy: Inanimate], like Ядро;
-        nominative: "~~е", _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~~ем", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~~е", _;
+    ins: "~~ем", _;
     ),
-    // Гнездо: 13 words (озеро, колесо, село, чело, решето, гнездо). Like Делёж, except in 6 cells: nominative sg, nominative pl, genitive pl, dative pl, instrumental pl, prepositional pl.
+    // Гнездо: 13 words (озеро, колесо, село, чело, решето, гнездо). Like Делёж, except in 6 cells: nom sg, nom pl, gen_ pl, dat pl, ins pl, prep pl.
     declension!("гнездо", 13, "~е~о", [gender: Neuter, animacy: Inanimate], like Делёж;
-        nominative: "~е~о", "~ё~а";
-        genitive: _, "~ё~";
-        dative: _, "~ё~ам";
-        accusative: _, _;
-        instrumental: _, "~ё~ами";
-        prepositional: _, "~ё~ах";
-        noun_second_case: _, _;
+    nom: "~е~о", "~ё~а";
+    gen_: _, "~ё~";
+    dat: _, "~ё~ам";
+    ins: _, "~ё~ами";
+    prep: _, "~ё~ах";
     ),
     // Котёночек: 13 words (цыплёночек, котёночек, жеребёночек, козлёночек, утёночек, ягнёночек).
     declension!("котёночек", 13, "~ёноче~", [gender: Masculine];
-        nominative: "~ёноче~", "~ят~и";
-        genitive: "~ёноч~а", "~ято~";
-        dative: "~ёноч~у", "~ят~ам";
-        accusative: derived, derived;
-        instrumental: "~ёноч~ом", "~ят~ами";
-        prepositional: "~ёноч~е", "~ят~ах";
-        noun_second_case: derived, derived;
+    nom: "~ёноче~", "~ят~и";
+    gen_: "~ёноч~а", "~ято~";
+    dat: "~ёноч~у", "~ят~ам";
+    ins: "~ёноч~ом", "~ят~ами";
+    prep: "~ёноч~е", "~ят~ах";
     ),
-    // Фекалии: 12 words (химикалии, фекалии, авиалинии, гениталии, сатурналии, реалии). Like Ясли, except in 1 cell: genitive pl.
+    // Фекалии: 12 words (химикалии, фекалии, авиалинии, гениталии, сатурналии, реалии). Like Ясли, except in 1 cell: gen_ pl.
     declension!("фекалии", 12, "~и", [gender: Feminine], like Ясли;
-        nominative: _, _;
-        genitive: _, "~й";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~й";
     ),
-    // Кольцо: 12 words (письмо, дерьмо, кольцо, крыльцо, сельцо, автокольцо). Like Голец, except in 3 cells: nominative sg, nominative pl, genitive pl.
-    declension!("кольцо", 12, "~ь~о", [gender: Neuter, animacy: Inanimate], like Голец;
-        nominative: "~ь~о", "~ь~а";
-        genitive: _, "~е~";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    // Кольцо: 12 words (письмо, дерьмо, кольцо, крыльцо, сельцо, автокольцо). Like Гусёк, except in 3 cells: nom sg, nom pl, gen_ pl.
+    declension!("кольцо", 12, "~ь~о", [gender: Neuter, animacy: Inanimate], like Гусёк;
+    nom: "~ь~о", "~ь~а";
+    gen_: _, "~е~";
     ),
-    // Рыльце: 12 words (зеркальце, щупальце, дельце, рыльце, сальце, мыльце). Like Кольцо, except in 2 cells: nominative sg, instrumental sg.
+    // Рыльце: 12 words (зеркальце, щупальце, дельце, рыльце, сальце, мыльце). Like Кольцо, except in 2 cells: nom sg, ins sg.
     declension!("рыльце", 12, "~ь~е", [gender: Neuter, animacy: Inanimate], like Кольцо;
-        nominative: "~ь~е", _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~ь~ем", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~ь~е", _;
+    ins: "~ь~ем", _;
     ),
-    // Мощи: 11 words (щи, клещи, мощи, беруши, марши, кириши). Like Счёты, except in 3 cells: nominative sg, nominative pl, genitive pl.
+    // Мощи: 11 words (щи, клещи, мощи, беруши, марши, кириши). Like Счёты, except in 3 cells: nom sg, nom pl, gen_ pl.
     declension!("мощи", 11, "~и", like Счёты;
-        nominative: "~и", "~и";
-        genitive: _, "~ей";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~и", "~и";
+    gen_: _, "~ей";
     ),
-    // Валенок: 11 words (ботинок, чулок, турок, валенок, глазок, зубок). Like Молочко, except in 2 cells: nominative sg, genitive pl.
-    declension!("валенок", 11, "~о~", [gender: Masculine], like Молочко;
-        nominative: "~о~", _;
-        genitive: _, "~о~";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    // Валенок: 11 words (ботинок, чулок, турок, валенок, глазок, зубок). Like Рожок, except in 2 cells: gen_ pl, noun_second_case loc.
+    declension!("валенок", 11, "~о~", [gender: Masculine], like Рожок;
+    gen_: _, "~о~";
+    noun_second_case: _, derived;
     ),
-    // Счёт: 11 words (мёд, счёт, шёлк, жёрнов, жёлоб, аэрожёлоб). Like Делёж, except in 7 cells: nominative pl, genitive sg, genitive pl, dative sg, instrumental sg, prepositional sg, ….
+    // Счёт: 11 words (мёд, счёт, шёлк, жёрнов, жёлоб, аэрожёлоб). Like Делёж, except in 7 cells: nom pl, gen_ sg, gen_ pl, dat sg, ins sg, prep sg, ….
     declension!("счёт", 11, "~ё~", [gender: Masculine, animacy: Inanimate], like Делёж;
-        nominative: _, "~е~а";
-        genitive: "~ё~а", "~е~ов";
-        dative: "~ё~у", _;
-        accusative: _, _;
-        instrumental: "~ё~ом", _;
-        prepositional: "~ё~е", _;
-        noun_second_case: _, "~е~у";
+    nom: _, "~е~а";
+    gen_: "~ё~а", "~е~ов";
+    dat: "~ё~у", _;
+    ins: "~ё~ом", _;
+    prep: "~ё~е", _;
+    noun_second_case: _, "~е~у";
     ),
-    // Прения: 11 words (прения, условия, переживания, усилия, воспоминания, взаимоотношения). Like Фекалии, except in 2 cells: nominative sg, nominative pl.
+    // Прения: 11 words (прения, условия, переживания, усилия, воспоминания, взаимоотношения). Like Фекалии, except in 2 cells: nom sg, nom pl.
     declension!("прения", 11, "~я", [gender: Neuter, animacy: Inanimate], like Фекалии;
-        nominative: "~я", "~я";
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~я", "~я";
     ),
-    // Тельце: 11 words (тельце, весельце, дульце, жальце, зальце, одеяльце). Like Рыльце, except in 1 cell: genitive pl.
+    // Тельце: 11 words (тельце, весельце, дульце, жальце, зальце, одеяльце). Like Рыльце, except in 1 cell: gen_ pl.
     declension!("тельце", 11, "~ь~е", [gender: Neuter, animacy: Inanimate], like Рыльце;
-        nominative: _, _;
-        genitive: _, "~ь~ев|~е~";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~ь~ев|~е~";
     ),
     // Племя: 10 words (имя, время, знамя, вымя, пламя, племя).
     declension!("племя", 10, "~я", [gender: Neuter, animacy: Inanimate];
-        nominative: "~я", "~ена";
-        genitive: "~ени", "~ён";
-        dative: "~ени", "~енам";
-        accusative: derived, derived;
-        instrumental: "~енем", "~енами";
-        prepositional: "~ени", "~енах";
-        noun_second_case: derived, derived;
+    nom: "~я", "~ена";
+    gen_: "~ени", "~ён";
+    dat: "~ени", "~енам";
+    ins: "~енем", "~енами";
+    prep: "~ени", "~енах";
     ),
-    // Хлопья: 10 words (хлопья, лохмотья, объедья, брусья, коренья, стручья). Like Прения, except in 1 cell: genitive pl.
+    // Хлопья: 10 words (хлопья, лохмотья, объедья, брусья, коренья, стручья). Like Прения, except in 1 cell: gen_ pl.
     declension!("хлопья", 10, "~я", [animacy: Inanimate], like Прения;
-        nominative: _, _;
-        genitive: _, "~ев";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~ев";
     ),
-    // Болотце: 10 words (болотце, коленце, ведёрце, корытце, долотце, донце). Like Сердце, except in 1 cell: genitive pl.
+    // Болотце: 10 words (болотце, коленце, ведёрце, корытце, долотце, донце). Like Сердце, except in 1 cell: gen_ pl.
     declension!("болотце", 10, "~~е", [gender: Neuter, animacy: Inanimate], like Сердце;
-        nominative: _, _;
-        genitive: _, "~~ев|~е~";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~~ев|~е~";
     ),
-    // Кукла: 9 words (мгла, кукла, мошна, княжна, свёкла, свекла). Like Гривна, except in 1 cell: genitive pl.
+    // Кукла: 9 words (мгла, кукла, мошна, княжна, свёкла, свекла). Like Гривна, except in 1 cell: gen_ pl.
     declension!("кукла", 9, "~~а", like Гривна;
-        nominative: _, _;
-        genitive: _, "~о~";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~о~";
     ),
-    // Плечо: 8 words (яблоко, молоко, млеко, веко, плечо, брюхо). Like Сходство, except in 1 cell: nominative pl.
+    // Плечо: 8 words (яблоко, молоко, млеко, веко, плечо, брюхо). Like Сходство, except in 1 cell: nom pl.
     declension!("плечо", 8, "~о", [animacy: Inanimate], like Сходство;
-        nominative: _, "~и";
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: _, "~и";
     ),
-    // Горе: 8 words (море, горе, поле, перекати-поле, муде, биополе). Like Егерь, except in 1 cell: nominative sg.
+    // Горе: 8 words (море, горе, поле, перекати-поле, муде, биополе). Like Егерь, except in 1 cell: nom sg.
     declension!("горе", 8, "~е", [gender: Neuter, animacy: Inanimate], like Егерь;
-        nominative: "~е", _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~е", _;
     ),
-    // Герц: 8 words (герц, гигагерц, килогерц, мегагерц, миллигерц, кольбац). Like Товарищ, except in 2 cells: nominative pl, genitive pl.
-    declension!("герц", 8, "~", [gender: Masculine, animacy: Inanimate], like Товарищ;
-        nominative: _, "~ы";
-        genitive: _, "~";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    // Герц: 8 words (герц, гигагерц, килогерц, мегагерц, миллигерц, кольбац). Like Раз, except in 1 cell: ins sg.
+    declension!("герц", 8, "~", [gender: Masculine, animacy: Inanimate], like Раз;
+    ins: "~ем", _;
     ),
-    // Калашников: 8 words (калашников, басков, топтыгин, обещалкин, сердечкин, собакин). Like Зелёный, except in 5 cells: nominative sg, nominative pl, genitive sg, dative sg, prepositional sg.
+    // Калашников: 8 words (калашников, басков, топтыгин, обещалкин, сердечкин, собакин). Like Зелёный, except in 5 cells: nom sg, nom pl, gen_ sg, dat sg, prep sg.
     declension!("калашников", 8, "~", [gender: Masculine], like Зелёный;
-        nominative: "~", "~ы";
-        genitive: "~а", _;
-        dative: "~у", _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: "~е", _;
-        noun_second_case: _, _;
+    nom: "~", "~ы";
+    gen_: "~а", _;
+    dat: "~у", _;
+    prep: "~е", _;
     ),
     // Плюхино: 8 words (мотовство, плюхино, плюхново, кабаново, клементьево, бахтино).
     declension!("плюхино", 8, "~о", [gender: Neuter, animacy: Inanimate];
-        nominative: "~о", "~а|~о";
-        genitive: "~а|~о", "~о";
-        dative: "~у|~о", "~ам|~о";
-        accusative: derived, derived;
-        instrumental: "~ом|~о", "~ами|~о";
-        prepositional: "~е|~о", "~ах|~о";
-        noun_second_case: derived, derived;
+    nom: "~о", "~а|~о";
+    gen_: "~а|~о", "~о";
+    dat: "~у|~о", "~ам|~о";
+    ins: "~ом|~о", "~ами|~о";
+    prep: "~е|~о", "~ах|~о";
     ),
     // Полюбки: 8 words (пол-ёмкости, пол-линии, пол-ложки, пол-области, пол-юбки, пол-осьмухи).
     declension!("пол-юбки", 8, "~-~и";
-        nominative: "~-~и", "~у~и";
-        genitive: "~у~и", "~у~ей";
-        dative: "~у~и", "~у~ям";
-        accusative: derived, derived;
-        instrumental: "~у~ью", "~у~ями";
-        prepositional: "~у~и", "~у~ях";
-        noun_second_case: derived, derived;
+    nom: "~-~и", "~у~и";
+    gen_: "~у~и", "~у~ей";
+    dat: "~у~и", "~у~ям";
+    ins: "~у~ью", "~у~ями";
+    prep: "~у~и", "~у~ях";
     ),
-    // Ложь: 7 words (церковь, рожь, вошь, ложь, любовь, нелюбовь). Like Подворотня, except in 6 cells: nominative sg, genitive pl, dative sg, accusative sg, instrumental sg, prepositional sg.
-    declension!("ложь", 7, "~о~ь", [gender: Feminine], like Подворотня;
-        nominative: "~о~ь", _;
-        genitive: _, "~~ей";
-        dative: "~~и", _;
-        accusative: derived, _;
-        instrumental: "~о~ью", _;
-        prepositional: "~~и", _;
-        noun_second_case: _, _;
+    // Ложь: 7 words (церковь, рожь, вошь, ложь, любовь, нелюбовь). Like Камень, except in 5 cells: nom sg, gen_ sg, dat sg, ins sg, prep sg.
+    declension!("ложь", 7, "~о~ь", [gender: Feminine], like Камень;
+    nom: "~о~ь", _;
+    gen_: "~~и", _;
+    dat: "~~и", _;
+    ins: "~о~ью", _;
+    prep: "~~и", _;
     ),
-    // Лапоть: 7 words (локоть, дёготь, ноготь, уголь, коготь, лапоть). Like Камень, except in 2 cells: nominative sg, noun_second_case part.
+    // Лапоть: 7 words (локоть, дёготь, ноготь, уголь, коготь, лапоть). Like Камень, except in 1 cell: nom sg.
     declension!("лапоть", 7, "~о~ь", [gender: Masculine, animacy: Inanimate], like Камень;
-        nominative: "~о~ь", _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: derived, _;
+    nom: "~о~ь", _;
     ),
-    // Череда: 7 words (середа, железа, слеза, пелена, череда, желна). Like Звезда, except in 4 cells: nominative pl, dative pl, instrumental pl, prepositional pl.
+    // Череда: 7 words (середа, железа, слеза, пелена, череда, желна). Like Звезда, except in 4 cells: nom pl, dat pl, ins pl, prep pl.
     declension!("череда", 7, "~е~а", [gender: Feminine], like Звезда;
-        nominative: _, "~е~ы";
-        genitive: _, _;
-        dative: _, "~е~ам";
-        accusative: _, _;
-        instrumental: _, "~е~ами";
-        prepositional: _, "~е~ах";
-        noun_second_case: _, _;
+    nom: _, "~е~ы";
+    dat: _, "~е~ам";
+    ins: _, "~е~ами";
+    prep: _, "~е~ах";
     ),
-    // Сиверко: 7 words (ведёрко, сиверко, железко, весёлко, одеялко, морозко). Like Молочко, except in 1 cell: genitive pl.
+    // Сиверко: 7 words (ведёрко, сиверко, железко, весёлко, одеялко, морозко). Like Молочко, except in 1 cell: gen_ pl.
     declension!("сиверко", 7, "~~о", like Молочко;
-        nominative: _, _;
-        genitive: _, "~о~";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~о~";
     ),
-    // Передняя: 7 words (передняя, преисподняя, ближняя, замужняя, незамужняя, несовершеннолетняя). Like Съезжая, except in 2 cells: nominative sg, accusative sg.
+    // Передняя: 7 words (передняя, преисподняя, ближняя, замужняя, незамужняя, несовершеннолетняя). Like Съезжая, except in 2 cells: nom sg, acc sg.
     declension!("передняя", 7, "~яя", [gender: Feminine], like Съезжая;
-        nominative: "~яя", _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: "~юю", _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~яя", _;
+    acc: "~юю", _;
     ),
-    // Семя: 7 words (бремя, темя, семя, стремя, беремя, льносемя). Like Племя, except in 1 cell: genitive pl.
+    // Семя: 7 words (бремя, темя, семя, стремя, беремя, льносемя). Like Племя, except in 1 cell: gen_ pl.
     declension!("семя", 7, "~я", [gender: Neuter, animacy: Inanimate], like Племя;
-        nominative: _, _;
-        genitive: _, "~ян";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~ян";
     ),
-    // Стекло: 7 words (стекло, бронестекло, стегно, пекло, наностекло, оргстекло). Like Ребро, except in 1 cell: genitive pl.
+    // Стекло: 7 words (стекло, бронестекло, стегно, пекло, наностекло, оргстекло). Like Ребро, except in 1 cell: gen_ pl.
     declension!("стекло", 7, "~е~~о", [gender: Neuter, animacy: Inanimate], like Ребро;
-        nominative: _, _;
-        genitive: _, "~ё~о~";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~ё~о~";
     ),
-    // Заём: 7 words (заём, наём, поднаём, перенаём, госзаём, сберзаём). Like Боёк, except in 1 cell: nominative pl.
+    // Заём: 7 words (заём, наём, поднаём, перенаём, госзаём, сберзаём). Like Боёк, except in 1 cell: nom pl.
     declension!("заём", 7, "~ё~", [gender: Masculine, animacy: Inanimate], like Боёк;
-        nominative: _, "~й~ы";
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: _, "~й~ы";
     ),
-    // Весна: 7 words (десна, весна, метла, ветла, гидрометла, блесна). Like Ребро, except in 6 cells: nominative sg, nominative pl, genitive sg, dative sg, accusative sg, instrumental sg.
+    // Весна: 7 words (десна, весна, метла, ветла, гидрометла, блесна). Like Ребро, except in 6 cells: nom sg, nom pl, gen_ sg, dat sg, acc sg, ins sg.
     declension!("весна", 7, "~е~~а", [gender: Feminine, animacy: Inanimate], like Ребро;
-        nominative: "~е~~а", "~ё~~ы";
-        genitive: "~е~~ы", _;
-        dative: "~е~~е", _;
-        accusative: "~е~~у", _;
-        instrumental: "~е~~ой|~е~~ою", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~е~~а", "~ё~~ы";
+    gen_: "~е~~ы", _;
+    dat: "~е~~е", _;
+    acc: "~е~~у", _;
+    ins: "~е~~ой|~е~~ою", _;
     ),
-    // Осётр: 7 words (ксёндз, чёлн, осётр, черёд, перёд, клёст). Like Делёж, except in 2 cells: nominative pl, genitive pl.
+    // Осётр: 7 words (ксёндз, чёлн, осётр, черёд, перёд, клёст). Like Делёж, except in 2 cells: nom pl, gen_ pl.
     declension!("осётр", 7, "~ё~", [gender: Masculine], like Делёж;
-        nominative: _, "~е~ы";
-        genitive: _, "~е~ов";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: _, "~е~ы";
+    gen_: _, "~е~ов";
     ),
-    // Полгода: 7 words (полчаса, полгода, полметра, полмиллиона, полкилометра, поллитра). Like Поллитра, except in 1 cell: nominative sg.
+    // Полгода: 7 words (полчаса, полгода, полметра, полмиллиона, полкилометра, поллитра). Like Поллитра, except in 1 cell: nom sg.
     declension!("полгода", 7, "~~а", [animacy: Inanimate], like Поллитра;
-        nominative: "~~а", _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~~а", _;
     ),
-    // Дитё: 7 words (мумиё, дитё, хулиганьё, гадьё, мудачьё, татарьё). Like Егерь, except in 3 cells: nominative sg, accusative sg, instrumental sg.
-    declension!("дитё", 7, "~ё", like Егерь;
-        nominative: "~ё", _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: "~ё", _;
-        instrumental: "~ём", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    // Дитё: 7 words (мумиё, дитё, хулиганьё, гадьё, мудачьё, татарьё). Like Червь, except in 3 cells: nom sg, nom pl, acc sg.
+    declension!("дитё", 7, "~ё", like Червь;
+    nom: "~ё", "~я";
+    acc: "~ё", _;
     ),
-    // Полиюля: 7 words (пол-апреля, пол-имения, пол-июля, пол-июня, пол-лагеря, пол-октября). Like Полюбки, except in 5 cells: nominative sg, genitive sg, dative sg, instrumental sg, prepositional sg.
+    // Полиюля: 7 words (пол-апреля, пол-имения, пол-июля, пол-июня, пол-лагеря, пол-октября). Like Полюбки, except in 5 cells: nom sg, gen_ sg, dat sg, ins sg, prep sg.
     declension!("пол-июля", 7, "~-~я", like Полюбки;
-        nominative: "~-~я", _;
-        genitive: "~у~я", _;
-        dative: "~у~ю", _;
-        accusative: _, _;
-        instrumental: "~у~ем", _;
-        prepositional: "~у~е", _;
-        noun_second_case: _, _;
+    nom: "~-~я", _;
+    gen_: "~у~я", _;
+    dat: "~у~ю", _;
+    ins: "~у~ем", _;
+    prep: "~у~е", _;
     ),
-    // Полигры: 7 words (пол-игры, пол-избы, пол-луковицы, пол-юрты, пол-ягоды, пол-луны). Like Поллитра, except in 5 cells: nominative sg, genitive sg, genitive pl, dative sg, instrumental sg.
+    // Полигры: 7 words (пол-игры, пол-избы, пол-луковицы, пол-юрты, пол-ягоды, пол-луны). Like Поллитра, except in 5 cells: nom sg, gen_ sg, gen_ pl, dat sg, ins sg.
     declension!("пол-игры", 7, "~-~ы", like Поллитра;
-        nominative: "~-~ы", _;
-        genitive: "~у~ы", "~у~";
-        dative: "~у~е", _;
-        accusative: _, _;
-        instrumental: "~у~ой", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~-~ы", _;
+    gen_: "~у~ы", "~у~";
+    dat: "~у~е", _;
+    ins: "~у~ой", _;
     ),
-    // Кто: 6 words (что, кто, кое-кто, никто, ничто, кое-что). Like Зелёный, except in 7 cells: nominative sg, nominative pl, genitive pl, dative pl, instrumental sg, instrumental pl, ….
+    // Кто: 6 words (что, кто, кое-кто, никто, ничто, кое-что). Like Зелёный, except in 7 cells: nom sg, nom pl, gen_ pl, dat pl, ins sg, ins pl, ….
     declension!("кто", 6, "~то", like Зелёный;
-        nominative: "~то", "~то";
-        genitive: _, "~ого";
-        dative: _, "~ому";
-        accusative: _, _;
-        instrumental: "~ем", "~ем";
-        prepositional: _, "~ом";
-        noun_second_case: _, _;
+    nom: "~то", "~то";
+    gen_: _, "~ого";
+    dat: _, "~ому";
+    ins: "~ем", "~ем";
+    prep: _, "~ом";
     ),
     // Млекопитающее: 6 words (млекопитающее, окружающее, обезболивающее, иглокожее, кишечнодышащее, простейшее). Like Домашние, except in 0 cells: .
     declension!("млекопитающее", 6, "~ее", [gender: Neuter, animacy: Animate], like Домашние;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
     ),
-    // Татарин: 6 words (болгарин, татарин, хазарин, угрин, долганин, хариджанин). Like Господин, except in 1 cell: nominative pl.
+    // Татарин: 6 words (болгарин, татарин, хазарин, угрин, долганин, хариджанин). Like Господин, except in 1 cell: nom pl.
     declension!("татарин", 6, "~ин", [gender: Masculine, animacy: Animate], like Господин;
-        nominative: _, "~ы";
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: _, "~ы";
     ),
-    // Чечётка: 6 words (чечётка, метёлка, кержанка, разведёнка, скалолазка, удмуртка). Like Стрелка, except in 1 cell: accusative pl.
+    // Чечётка: 6 words (чечётка, метёлка, кержанка, разведёнка, скалолазка, удмуртка). Like Стрелка, except in 1 cell: acc pl.
     declension!("чечётка", 6, "~~а", [gender: Feminine, animacy: Inanimate], like Стрелка;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, "~о~";
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    acc: _, "~о~";
     ),
-    // Зеленя: 6 words (зеленя, ебеня, труселя, прохоря, чигиря, уборя). Like Прения, except in 1 cell: genitive pl.
+    // Зеленя: 6 words (зеленя, ебеня, труселя, прохоря, чигиря, уборя). Like Прения, except in 1 cell: gen_ pl.
     declension!("зеленя", 6, "~я", [gender: Masculine, animacy: Inanimate], like Прения;
-        nominative: _, _;
-        genitive: _, "~ей";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~ей";
     ),
-    // Исайя: 6 words (исайя, хориоидея, заурея, стеаторея, ципрея, персея). Like Батарея, except in 1 cell: accusative pl.
+    // Исайя: 6 words (исайя, хориоидея, заурея, стеаторея, ципрея, персея). Like Батарея, except in 1 cell: acc pl.
     declension!("исайя", 6, "~я", like Батарея;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, "~й";
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    acc: _, "~й";
     ),
-    // Поллета: 6 words (пол-лета, пол-лица, пол-лота, пол-окна, пол-училища, пол-ящика). Like Поллитра, except in 2 cells: nominative pl, genitive pl.
+    // Поллета: 6 words (пол-лета, пол-лица, пол-лота, пол-окна, пол-училища, пол-ящика). Like Поллитра, except in 2 cells: nom pl, gen_ pl.
     declension!("пол-лета", 6, "~-~а", like Поллитра;
-        nominative: _, "~у~а";
-        genitive: _, "~у~";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: _, "~у~а";
+    gen_: _, "~у~";
     ),
-    // Юноша: 5 words (чукча, раджа, обжа, корча, магараджа). Like Выдача, except in 1 cell: genitive pl.
+    // Юноша: 5 words (чукча, раджа, обжа, корча, магараджа). Like Выдача, except in 1 cell: gen_ pl.
     declension!("юноша", 5, "~а", like Выдача;
-        nominative: _, _;
-        genitive: _, "~ей";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~ей";
     ),
-    // Огонь: 5 words (огонь, угорь, ломоть, артогонь, стоп-огонь). Like Лапоть, except in 1 cell: instrumental sg.
+    // Огонь: 5 words (огонь, угорь, ломоть, артогонь, стоп-огонь). Like Лапоть, except in 1 cell: ins sg.
     declension!("огонь", 5, "~о~ь", [gender: Masculine], like Лапоть;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~~ём", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    ins: "~~ём", _;
     ),
-    // Кухня: 5 words (кухня, куфня, кормокухня, авиакухня, автокухня). Like Подворотня, except in 1 cell: genitive pl.
+    // Кухня: 5 words (кухня, куфня, кормокухня, авиакухня, автокухня). Like Подворотня, except in 1 cell: gen_ pl.
     declension!("кухня", 5, "~~я", [gender: Feminine, animacy: Inanimate], like Подворотня;
-        nominative: _, _;
-        genitive: _, "~о~ь";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~о~ь";
     ),
-    // Козлы: 5 words (ножны, бубны, козлы, люберцы, ливны). Like Кулички, except in 2 cells: nominative sg, nominative pl.
+    // Козлы: 5 words (ножны, бубны, козлы, люберцы, ливны). Like Кулички, except in 2 cells: nom sg, nom pl.
     declension!("козлы", 5, "~~ы", [gender: Feminine, animacy: Inanimate], like Кулички;
-        nominative: "~~ы", "~~ы";
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~~ы", "~~ы";
     ),
-    // Репей: 5 words (соловей, воробей, муравей, ручей, репей). Like Жнивьё, except in 3 cells: nominative sg, nominative pl, genitive pl.
+    // Репей: 5 words (соловей, воробей, муравей, ручей, репей). Like Жнивьё, except in 3 cells: nom sg, nom pl, gen_ pl.
     declension!("репей", 5, "~ей", [gender: Masculine], like Жнивьё;
-        nominative: "~ей", "~ьи";
-        genitive: _, "~ьёв";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~ей", "~ьи";
+    gen_: _, "~ьёв";
     ),
-    // Хозяин: 5 words (хозяин, домохозяин, квартирохозяин, сохозяин, судохозяин). Like Господин, except in 5 cells: nominative pl, genitive pl, dative pl, instrumental pl, prepositional pl.
+    // Хозяин: 5 words (хозяин, домохозяин, квартирохозяин, сохозяин, судохозяин). Like Господин, except in 5 cells: nom pl, gen_ pl, dat pl, ins pl, prep pl.
     declension!("хозяин", 5, "~ин", [gender: Masculine, animacy: Animate], like Господин;
-        nominative: _, "~ева";
-        genitive: _, "~ев";
-        dative: _, "~евам";
-        accusative: _, _;
-        instrumental: _, "~евами";
-        prepositional: _, "~евах";
-        noun_second_case: _, _;
+    nom: _, "~ева";
+    gen_: _, "~ев";
+    dat: _, "~евам";
+    ins: _, "~евами";
+    prep: _, "~евах";
     ),
-    // Бега: 5 words (бега, торока, потроха, холода, севера). Like Недра, except in 1 cell: genitive pl.
+    // Бега: 5 words (бега, торока, потроха, холода, севера). Like Недра, except in 1 cell: gen_ pl.
     declension!("бега", 5, "~а", [gender: Masculine, animacy: Inanimate], like Недра;
-        nominative: _, _;
-        genitive: _, "~ов";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~ов";
     ),
-    // Ботиночек: 5 words (ботиночек, затылочек, катерочек, валеночек, чулочек). Like Молочко, except in 1 cell: nominative sg.
-    declension!("ботиночек", 5, "~е~", [gender: Masculine, animacy: Inanimate], like Молочко;
-        nominative: "~е~", _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    // Ботиночек: 5 words (ботиночек, затылочек, катерочек, валеночек, чулочек). Like Барашек, except in 1 cell: gen_ pl.
+    declension!("ботиночек", 5, "~е~", [gender: Masculine, animacy: Inanimate], like Барашек;
+    gen_: _, "~е~";
     ),
-    // Полкроны: 5 words (полкроны, полстраны, полшколы, ползалупы, полпланеты). Like Полигры, except in 1 cell: nominative sg.
+    // Полкроны: 5 words (полкроны, полстраны, полшколы, ползалупы, полпланеты). Like Полигры, except in 1 cell: nom sg.
     declension!("полкроны", 5, "~~ы", like Полигры;
-        nominative: "~~ы", _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~~ы", _;
     ),
-    // Тиса: 5 words (линда, шила, тиса, драва, пуста). Like Недра, except in 3 cells: dative pl, instrumental pl, prepositional pl.
+    // Тиса: 5 words (линда, шила, тиса, драва, пуста). Like Недра, except in 3 cells: dat pl, ins pl, prep pl.
     declension!("тиса", 5, "~а", [gender: Feminine], like Недра;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, "~а";
-        accusative: _, _;
-        instrumental: _, "~а";
-        prepositional: _, "~а";
-        noun_second_case: _, _;
+    dat: _, "~а";
+    ins: _, "~а";
+    prep: _, "~а";
     ),
-    // Копьё: 4 words (копьё, тряпьё, тупьё, репьё). Like Жнивьё, except in 1 cell: genitive pl.
+    // Копьё: 4 words (копьё, тряпьё, тупьё, репьё). Like Жнивьё, except in 1 cell: gen_ pl.
     declension!("копьё", 4, "~ьё", [gender: Neuter, animacy: Inanimate], like Жнивьё;
-        nominative: _, _;
-        genitive: _, "~ий";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~ий";
     ),
-    // Зуй: 4 words (хуй, зуй, пидрахуй, суй). Like Бой, except in 4 cells: accusative sg, accusative pl, noun_second_case part, noun_second_case loc.
+    // Зуй: 4 words (хуй, зуй, пидрахуй, суй). Like Бой, except in 3 cells: acc sg, acc pl, noun_second_case loc.
     declension!("зуй", 4, "~й", [gender: Masculine], like Бой;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: "~я", "~ёв";
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: derived, "~ю";
+    acc: "~я", "~ёв";
+    noun_second_case: _, "~ю";
     ),
-    // Небо: 4 words (чудо, небо, древо, худо). Like Сходство, except in 5 cells: nominative pl, genitive pl, dative pl, instrumental pl, prepositional pl.
+    // Небо: 4 words (чудо, небо, древо, худо). Like Сходство, except in 5 cells: nom pl, gen_ pl, dat pl, ins pl, prep pl.
     declension!("небо", 4, "~о", [gender: Neuter, animacy: Inanimate], like Сходство;
-        nominative: _, "~еса";
-        genitive: _, "~ес";
-        dative: _, "~есам";
-        accusative: _, _;
-        instrumental: _, "~есами";
-        prepositional: _, "~есах";
-        noun_second_case: _, _;
+    nom: _, "~еса";
+    gen_: _, "~ес";
+    dat: _, "~есам";
+    ins: _, "~есами";
+    prep: _, "~есах";
     ),
-    // Судно: 4 words (судно, агитсудно, авиасудно, фальшдно). Like Бега, except in 5 cells: nominative sg, genitive sg, dative sg, instrumental sg, prepositional sg.
+    // Судно: 4 words (судно, агитсудно, авиасудно, фальшдно). Like Бега, except in 5 cells: nom sg, gen_ sg, dat sg, ins sg, prep sg.
     declension!("судно", 4, "~но", [gender: Neuter, animacy: Inanimate], like Бега;
-        nominative: "~но", _;
-        genitive: "~на", _;
-        dative: "~ну", _;
-        accusative: _, _;
-        instrumental: "~ном", _;
-        prepositional: "~не", _;
-        noun_second_case: _, _;
+    nom: "~но", _;
+    gen_: "~на", _;
+    dat: "~ну", _;
+    ins: "~ном", _;
+    prep: "~не", _;
     ),
-    // Улей: 4 words (улей, жеребей, чирей, ирей). Like Репей, except in 2 cells: genitive pl, instrumental sg.
+    // Улей: 4 words (улей, жеребей, чирей, ирей). Like Репей, except in 2 cells: gen_ pl, ins sg.
     declension!("улей", 4, "~ей", [gender: Masculine, animacy: Inanimate], like Репей;
-        nominative: _, _;
-        genitive: _, "~ьев";
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~ьем", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~ьев";
+    ins: "~ьем", _;
     ),
     // Учащийся: 4 words (учащийся, трудящийся, вольноопределяющийся, праздношатающийся).
     declension!("учащийся", 4, "~ий~", [gender: Masculine, animacy: Animate];
-        nominative: "~ий~", "~ие~";
-        genitive: "~его~", "~их~";
-        dative: "~ему~", "~им~";
-        accusative: derived, derived;
-        instrumental: "~им~", "~ими~";
-        prepositional: "~ем~", "~их~";
-        noun_second_case: derived, derived;
+    nom: "~ий~", "~ие~";
+    gen_: "~его~", "~их~";
+    dat: "~ему~", "~им~";
+    ins: "~им~", "~ими~";
+    prep: "~ем~", "~их~";
     ),
-    // Лишай: 4 words (холуй, лишай, бугай, валуй). Like Бой, except in 2 cells: instrumental sg, noun_second_case part.
+    // Лишай: 4 words (холуй, лишай, бугай, валуй). Like Бой, except in 1 cell: ins sg.
     declension!("лишай", 4, "~й", [gender: Masculine], like Бой;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~ём", _;
-        prepositional: _, _;
-        noun_second_case: derived, _;
+    ins: "~ём", _;
     ),
-    // Капли: 4 words (грабли, капли, чапли, велотуфли). Like Нападки, except in 4 cells: genitive pl, dative pl, instrumental pl, prepositional pl.
+    // Капли: 4 words (грабли, капли, чапли, велотуфли). Like Нападки, except in 4 cells: gen_ pl, dat pl, ins pl, prep pl.
     declension!("капли", 4, "~~и", [gender: Feminine, animacy: Inanimate], like Нападки;
-        nominative: _, _;
-        genitive: _, "~е~ь";
-        dative: _, "~~ям";
-        accusative: _, _;
-        instrumental: _, "~~ями";
-        prepositional: _, "~~ях";
-        noun_second_case: _, _;
+    gen_: _, "~е~ь";
+    dat: _, "~~ям";
+    ins: _, "~~ями";
+    prep: _, "~~ях";
     ),
-    // Пресмыкающееся: 4 words (пресмыкающееся, случившееся, сбывшееся, несбывшееся). Like Учащийся, except in 2 cells: nominative sg, accusative sg.
+    // Пресмыкающееся: 4 words (пресмыкающееся, случившееся, сбывшееся, несбывшееся). Like Учащийся, except in 2 cells: nom sg, acc sg.
     declension!("пресмыкающееся", 4, "~ее~", [gender: Neuter], like Учащийся;
-        nominative: "~ее~", _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: "~ее~", _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~ее~", _;
+    acc: "~ее~", _;
     ),
-    // Остриё: 4 words (остриё, бытиё, востриё, лезвеё). Like Дитё, except in 2 cells: genitive pl, accusative sg.
+    // Остриё: 4 words (остриё, бытиё, востриё, лезвеё). Like Дитё, except in 2 cells: gen_ pl, acc sg.
     declension!("остриё", 4, "~ё", [gender: Neuter, animacy: Inanimate], like Дитё;
-        nominative: _, _;
-        genitive: _, "~ёв";
-        dative: _, _;
-        accusative: derived, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    gen_: _, "~ёв";
+    acc: derived, _;
     ),
-    // Ничья: 4 words (ничья, третья, девичья, моя). Like Съезжая, except in 3 cells: nominative sg, nominative pl, accusative sg.
+    // Ничья: 4 words (ничья, третья, девичья, моя). Like Съезжая, except in 3 cells: nom sg, nom pl, acc sg.
     declension!("ничья", 4, "~я", [gender: Feminine], like Съезжая;
-        nominative: "~я", "~и";
-        genitive: _, _;
-        dative: _, _;
-        accusative: "~ю", _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: "~я", "~и";
+    acc: "~ю", _;
     ),
-    // Яйки: 4 words (обойки, валуйки, яйки, прощайки). Like Кулички, except in 5 cells: nominative sg, nominative pl, dative pl, instrumental pl, prepositional pl.
+    // Яйки: 4 words (обойки, валуйки, яйки, прощайки). Like Кулички, except in 5 cells: nom sg, nom pl, dat pl, ins pl, prep pl.
     declension!("яйки", 4, "~й~и", [animacy: Inanimate], like Кулички;
-        nominative: "~й~и", "~й~и";
-        genitive: _, _;
-        dative: _, "~й~ам";
-        accusative: _, _;
-        instrumental: _, "~й~ами";
-        prepositional: _, "~й~ах";
-        noun_second_case: _, _;
+    nom: "~й~и", "~й~и";
+    dat: _, "~й~ам";
+    ins: _, "~й~ами";
+    prep: _, "~й~ах";
     ),
-    // Сынуля: 4 words (сынуля, саня, меля, игруля). Like Баня, except in 1 cell: accusative pl.
+    // Сынуля: 4 words (сынуля, саня, меля, игруля). Like Баня, except in 1 cell: acc pl.
     declension!("сынуля", 4, "~я", [gender: Masculine, animacy: Animate], like Баня;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, "~и";
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    acc: _, "~и";
     ),
-    // Карло: 4 words (ракло, шарыпово, запевало, карло). Like Сходство, except in 1 cell: nominative pl.
+    // Карло: 4 words (ракло, шарыпово, запевало, карло). Like Сходство, except in 1 cell: nom pl.
     declension!("карло", 4, "~о", like Сходство;
-        nominative: _, "~ы";
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: _, "~ы";
     ),
-    // Дитятко: 4 words (дитятко, старичонко, золотко, мужичонко). Like Сиверко, except in 1 cell: accusative sg.
+    // Дитятко: 4 words (дитятко, старичонко, золотко, мужичонко). Like Сиверко, except in 1 cell: acc sg.
     declension!("дитятко", 4, "~~о", [animacy: Animate], like Сиверко;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: "~~о", _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    acc: "~~о", _;
     ),
-    // Усадьба: 3 words (тьма, тюрьма, потьма). Like Люлька, except in 2 cells: nominative pl, genitive sg.
+    // Усадьба: 3 words (тьма, тюрьма, потьма). Like Люлька, except in 2 cells: nom pl, gen_ sg.
     declension!("усадьба", 3, "~ь~а", [gender: Feminine, animacy: Inanimate], like Люлька;
-        nominative: _, "~ь~ы";
-        genitive: "~ь~ы", _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: _, "~ь~ы";
+    gen_: "~ь~ы", _;
     ),
-    // Дичь: 3 words (мышь, дичь, водомышь). Like Помочь, except in 2 cells: accusative sg, noun_second_case loc.
+    // Дичь: 3 words (мышь, дичь, водомышь). Like Помочь, except in 2 cells: acc sg, noun_second_case loc.
     declension!("дичь", 3, "~ь", [gender: Feminine, animacy: Animate], like Помочь;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: "~ь", _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, derived;
+    acc: "~ь", _;
+    noun_second_case: _, derived;
     ),
-    // Глаз: 3 words (глаз, телеглаз, киноглаз). Like Раз, except in 1 cell: nominative pl.
-    declension!("глаз", 3, "~", [gender: Masculine, animacy: Inanimate], like Раз;
-        nominative: _, "~а";
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    // Глаз: 3 words (глаз, телеглаз, киноглаз). Like Сходство, except in 1 cell: nom sg.
+    declension!("глаз", 3, "~", [gender: Masculine, animacy: Inanimate], like Сходство;
+    nom: "~", _;
     ),
-    // Земля: 3 words (земля, петля, полупетля). Like Деревня, except in 1 cell: instrumental sg.
+    // Земля: 3 words (земля, петля, полупетля). Like Деревня, except in 1 cell: ins sg.
     declension!("земля", 3, "~~я", [gender: Feminine, animacy: Inanimate], like Деревня;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~~ёй|~~ёю", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    ins: "~~ёй|~~ёю", _;
     ),
-    // Путь: 3 words (путь, автопуть, севморпуть). Like Склонность, except in 2 cells: instrumental sg, noun_second_case loc.
+    // Путь: 3 words (путь, автопуть, севморпуть). Like Склонность, except in 2 cells: ins sg, noun_second_case loc.
     declension!("путь", 3, "~ь", [gender: Masculine, animacy: Inanimate], like Склонность;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~ём", _;
-        prepositional: _, _;
-        noun_second_case: _, derived;
+    ins: "~ём", _;
+    noun_second_case: _, derived;
     ),
-    // Лёд: 3 words (лёд, лён, снеголёд). Like Голец, except in 2 cells: nominative sg, noun_second_case loc.
-    declension!("лёд", 3, "~ё~", [gender: Masculine, animacy: Inanimate], like Голец;
-        nominative: "~ё~", _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, "~ь~у";
+    // Лёд: 3 words (лёд, лён, снеголёд). Like Гусёк, except in 2 cells: nom pl, noun_second_case loc.
+    declension!("лёд", 3, "~ё~", [gender: Masculine, animacy: Inanimate], like Гусёк;
+    nom: _, "~ь~ы";
+    noun_second_case: _, "~ь~у";
     ),
-    // Сколько: 3 words (сколько, столько, несколько). Like Счёты, except in 6 cells: nominative sg, nominative pl, genitive pl, dative pl, instrumental pl, prepositional pl.
+    // Сколько: 3 words (сколько, столько, несколько). Like Счёты, except in 6 cells: nom sg, nom pl, gen_ pl, dat pl, ins pl, prep pl.
     declension!("сколько", 3, "~о", like Счёты;
-        nominative: "~о", "~о";
-        genitive: _, "~их|~их";
-        dative: _, "~им|~им";
-        accusative: _, _;
-        instrumental: _, "~ими|~ими";
-        prepositional: _, "~их|~их";
-        noun_second_case: _, _;
+    nom: "~о", "~о";
+    gen_: _, "~их|~их";
+    dat: _, "~им|~им";
+    ins: _, "~ими|~ими";
+    prep: _, "~их|~их";
     ),
-    // Дрянь: 3 words (смерть, дрянь, мразь). Like Склонность, except in 2 cells: accusative pl, noun_second_case loc.
+    // Дрянь: 3 words (смерть, дрянь, мразь). Like Склонность, except in 2 cells: acc pl, noun_second_case loc.
     declension!("дрянь", 3, "~ь", [gender: Feminine, animacy: Inanimate], like Склонность;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, "~ей|~и";
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, derived;
+    acc: _, "~ей|~и";
+    noun_second_case: _, derived;
     ),
-    // Епитимья: 3 words (ектенья, паремья, епитимья). Like Сватья, except in 1 cell: instrumental sg.
+    // Епитимья: 3 words (ектенья, паремья, епитимья). Like Сватья, except in 1 cell: ins sg.
     declension!("епитимья", 3, "~ья", [gender: Feminine, animacy: Inanimate], like Сватья;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~ьёй|~ьёю", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    ins: "~ьёй|~ьёю", _;
     ),
-    // Дверца: 3 words (дверца, шпорца, мадерца). Like Гривна, except in 1 cell: instrumental sg.
+    // Дверца: 3 words (дверца, шпорца, мадерца). Like Гривна, except in 1 cell: ins sg.
     declension!("дверца", 3, "~~а", [gender: Feminine, animacy: Inanimate], like Гривна;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: "~~ей|~~ею", _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    ins: "~~ей|~~ею", _;
     ),
-    // Солнышко: 3 words (солнышко, нещечко, студентишко). Like Молочко, except in 1 cell: accusative sg.
+    // Солнышко: 3 words (солнышко, нещечко, студентишко). Like Молочко, except in 1 cell: acc sg.
     declension!("солнышко", 3, "~~о", [animacy: Animate], like Молочко;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: "~~о", _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    acc: "~~о", _;
     ),
     // Получеловек: 3 words (получеловек, обезьяночеловек, первочеловек).
     declension!("получеловек", 3, "~че~овек", [gender: Masculine, animacy: Animate];
-        nominative: "~че~овек", "~~юди";
-        genitive: "~че~овека", "~~юдей";
-        dative: "~че~овеку", "~~юдям";
-        accusative: derived, derived;
-        instrumental: "~че~овеком", "~~юдьми";
-        prepositional: "~че~овеке", "~~юдях";
-        noun_second_case: derived, derived;
+    nom: "~че~овек", "~~юди";
+    gen_: "~че~овека", "~~юдей";
+    dat: "~че~овеку", "~~юдям";
+    ins: "~че~овеком", "~~юдьми";
+    prep: "~че~овеке", "~~юдях";
     ),
-    // Морячка: 3 words (морячка, рыбачка, тестюшка). Like Дорожка, except in 1 cell: accusative pl.
+    // Морячка: 3 words (морячка, рыбачка, тестюшка). Like Дорожка, except in 1 cell: acc pl.
     declension!("морячка", 3, "~~а", [animacy: Animate], like Дорожка;
-        nominative: _, _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, "~~и";
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    acc: _, "~~и";
     ),
-    // Поллеса: 3 words (пол-леса, пол-округа, пол-острова). Like Поллитра, except in 1 cell: nominative pl.
+    // Поллеса: 3 words (пол-леса, пол-округа, пол-острова). Like Поллитра, except in 1 cell: nom pl.
     declension!("пол-леса", 3, "~-~а", like Поллитра;
-        nominative: _, "~у~а";
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
-    ),
-    // Мастерская: 1 words (узкая). Like Съезжая, except in 4 cells: genitive sg, dative sg, instrumental sg, prepositional sg.
-    declension!("мастерская", 1, "~ая", like Съезжая;
-        nominative: _, _;
-        genitive: "~ой", _;
-        dative: "~ой", _;
-        accusative: _, _;
-        instrumental: "~ой|~ою", _;
-        prepositional: "~ой", _;
-        noun_second_case: _, _;
-    ),
-    // Чужое: 1 words (неизвестное). Like Русский, except in 1 cell: nominative sg.
-    declension!("чужое", 1, "~ое", like Русский;
-        nominative: "~ое", _;
-        genitive: _, _;
-        dative: _, _;
-        accusative: _, _;
-        instrumental: _, _;
-        prepositional: _, _;
-        noun_second_case: _, _;
+    nom: _, "~у~а";
     ),
 ];

@@ -1,313 +1,70 @@
-//! The dictionary's forms no declension gives, as it writes them: a line per form,
-//! the word, its cell's number (see `super::cell`) and the form, sorted by word
-//! and cell. They are the answer for that word and cell.
+//! The dictionary's forms no declension gives, as it writes them: a line per word,
+//! sorted, the word then each listed cell's number (see `super::cell`) and its
+//! form, tab-separated. They are the answer for that word and cell.
 
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 300 forms.
+/// 287 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
-        r#"aliqui	4	aliquod
-aliquis	18	aliquem
-aliquisquam	2	aliquisquam
-aliquisquam	4	aliquidquam
-aliquisquam	18	aliquemquam
-alius	4	aliud
-alius	6	alterīus
-alter	4	alterum
-compluria	21	complūra
-conpluria	21	conplūra
-cuiusvis	0	cuiusvīs
-cuiusvis	3	cuiaevīs
-cuiusvis	4	cuiumvīs
-cuiusvis	6	cuiīvīs
-cuiusvis	8	cuiaevīs
-cuiusvis	12	cuiōvīs
-cuiusvis	14	cuiaevīs
-cuiusvis	30	cuievīs
-ecquis	22	ecquod
-ecquisnam	4	ecquidnam
-ecquisnam	18	ecquemnam
-egomet	2	egomet
-egomet	4	egomet
-egomet	6	meīmet
-egomet	12	mihimet
-egomet	22	mēmet
-hic	2	haec
-hic	4	hoc
-hic	5	haec
-hic	6	huius
-hic	12	huic
-hic	18	hunc
-hic	20	hanc
-hic	21	hās
-hic	23	haec
-hic	24	hōc
-hic	26	hāc
-hic	28	hōc
-hice	1	hīce
-hice	2	haece
-hice	3	haece
-hice	4	hoce
-hice	5	haece
-hice	6	huiusce
-hice	7	hōrunce
-hice	9	hārunce
-hice	11	hōrunce
-hice	12	huīce
-hice	13	hīsce
-hice	18	hunce
-hice	20	hance
-hice	21	hāsce
-hice	23	haece
-hice	24	hōce
-hice	26	hāce
-hice	28	hōce
-idem	1	iīdem
-idem	3	eaedem
-idem	4	idem
-idem	5	eadem
-idem	6	eiusdem
-idem	7	eōrundem
-idem	9	eārundem
-idem	12	eīdem
-idem	13	iīsdem
-idem	18	eundem
-idem	19	eōsdem
-idem	20	eandem
-idem	21	eāsdem
-idem	24	eōdem
-idem	26	eādem
-ipse	4	ipsum
-ipsemet	1	ipsīmet
-ipsemet	3	ipsaemet
-ipsemet	4	ipsummet
-ipsemet	5	ipsamet
-ipsemet	6	ipsīusmet
-ipsemet	7	ipsōrummet
-ipsemet	9	ipsārummet
-ipsemet	12	ipsīmet
-ipsemet	13	ipsīsmet
-ipsemet	19	ipsōsmet
-ipsemet	20	ipsammet
-ipsemet	21	ipsāsmet
-ipsemet	24	ipsōmet
-ipsemet	26	ipsāmet
+        r#"aliqui	2	aliqua
+aliquis	2	aliqua	4	aliquid	22	aliquid
+aliquisquam	2	aliquisquam	12	alicuiquam	22	aliquidquam	24	aliquōquam
+alius	8	alterĭus	12	aliī	22	aliud
+alter	2	altera
+compluria	3	complūra	5	complūra
+conpluria	3	conplūra	5	conplūra
+cuiusvis	0	cuiusvīs	2	cuiavīs	6	cuiīvīs	12	cuiōvīs	14	cuiaevīs	30	cuievīs
+ecquinam	0	ecquīnam
+ecquis	2	ecqua	4	ecquid
+ecquisnam	2	ecquaenam	22	ecquidnam
+egomet	2	egomet	4	egomet	8	meīmet	12	mihimet	24	mēmet
+hic	3	hae	8	huius	12	huic	18	hunc	20	hanc	22	hoc	24	hōc	26	hāc	28	hōc
+hice	1	hīce	8	huiusce	12	huīce	13	hīsce	18	hunce	19	hōsce	20	hance	22	hoce	24	hōce	26	hāce	28	hōce
+idem	2	eadem	3	eaedem	7	eōrundem	8	eiusdem	9	eārundem	13	iīsdem	18	eundem	19	eōsdem	20	eandem	21	eāsdem	22	idem	24	eōdem	26	eādem
+ipse	22	ipsum
+ipsemet	1	ipsīmet	2	ipsamet	3	ipsaemet	7	ipsōrummet	8	ipsĭusmet	9	ipsārummet	12	ipsīmet	13	ipsīsmet	18	ipsummet	19	ipsōsmet	20	ipsammet	21	ipsāsmet	24	ipsōmet	26	ipsāmet
 meus	30	mī
-nequis	18	nēquem
-nescioquis	4	nesciōquid
-nosmet	21	nōsmet
+nequis	2	nēqua
+nescioquis	2	nesciōquae
+nosmet	5	nōsmet
 nullus	12	nūllī
-numquis	18	numquem
-qualis	2	quālis
-qualis	4	quāle
-qualis	5	quālia
-qualis	6	quālis
-qualis	18	quālem
-qualis	24	quālī
-qualiscumque	2	quāliscumque
-qualiscumque	3	quālēscumque
-qualiscumque	4	quālecumque
-qualiscumque	5	quāliacumque
-qualiscumque	6	quāliscumque
-qualiscumque	7	quāliumcumque
-qualiscumque	9	quāliumcumque
-qualiscumque	13	quālibuscumque
-qualiscumque	18	quālemcumque
-qualiscumque	24	quālīcumque
-quicquid	0	quidquid
-quicquidlibet	0	quidquidlibet
-quicquidlibet	6	cuiuscuiuslibet
-quicumque	4	quodcumque
-quicunque	1	quīcunque
-quicunque	3	quaecunque
-quicunque	4	quodcunque
-quicunque	6	cuiuscunque
-quicunque	7	quōruncunque
-quicunque	9	quāruncunque
-quicunque	12	cuicunque
-quicunque	13	quibuscunque
-quicunque	18	quencunque
-quicunque	19	quōscunque
-quicunque	20	quancunque
-quicunque	21	quāscunque
-quicunque	24	quōcunque
-quicunque	26	quācunque
-quidam	1	quīdam
-quidam	2	quaedam
-quidam	3	quaedam
-quidam	4	quiddam
-quidam	5	quaedam
-quidam	6	cuiusdam
-quidam	7	quōrundam
-quidam	8	cuiusdam
-quidam	9	quārundam
-quidam	10	cuiusdam
-quidam	11	quōrundam
-quidam	12	cuidam
-quidam	13	quibusdam
-quidam	14	cuidam
-quidam	15	quibusdam
-quidam	16	cuidam
-quidam	17	quibusdam
-quidam	18	quendam
-quidam	19	quōsdam
-quidam	20	quandam
-quidam	21	quāsdam
-quidam	23	quaedam
-quidam	24	quōdam
-quidam	25	quibusdam
-quidam	26	quādam
-quidam	27	quibusdam
-quidam	28	quōdam
-quidam	29	quibusdam
-quidquid	4	quidquid
-quidquidlibet	4	quidquidlibet
-quidquidlibet	6	cuiuscuiuslibet
-quilibet	4	quodlibet
-quilibet	12	cuilibet
-quilibet	13	quibuslibet
-quilibet	18	quemlibet
-quilibet	20	quamlibet
-quilibet	24	quōlibet
-quilubet	1	quīlubet
-quilubet	3	quaelubet
-quilubet	4	quodlubet
-quilubet	6	cuiuslubet
-quilubet	7	quōrumlubet
-quilubet	9	quārumlubet
-quilubet	12	cuilubet
-quilubet	13	quibuslubet
-quilubet	18	quemlubet
-quilubet	19	quōslubet
-quilubet	20	quamlubet
-quilubet	21	quāslubet
-quilubet	24	quōlubet
-quilubet	26	quālubet
-quis	18	quem
-quispiam	1	quīpiam
-quispiam	3	quaepiam
-quispiam	4	quidpiam
-quispiam	6	cuiuspiam
-quispiam	7	quōrumpiam
-quispiam	9	quārumpiam
-quispiam	12	cuipiam
-quispiam	13	quibuspiam
-quispiam	18	quempiam
-quispiam	19	quōspiam
-quispiam	20	quampiam
-quispiam	21	quāspiam
-quispiam	24	quōpiam
-quispiam	26	quāpiam
-quisquam	2	quisquam
-quisquam	4	quicquam
-quisquam	18	quemquam
-quisquamne	1	quīquamne
-quisquamne	3	quaequamne
-quisquamne	4	quidquamne
-quisquamne	6	cuiusquamne
-quisquamne	7	quōrumquamne
-quisquamne	9	quārumquamne
-quisquamne	12	cuiquamne
-quisquamne	13	quibusquamne
-quisquamne	18	quemquamne
-quisquamne	19	quōsquamne
-quisquamne	20	quamquamne
-quisquamne	21	quāsquamne
-quisquamne	24	quōquamne
-quisquamne	26	quāquamne
-quisque	4	quidque
-quisque	12	cuique
-quisque	13	quibusque
-quisque	20	quamque
-quisque	24	quōque
-quisquidem	1	quīquidem
-quisquidem	3	quaequidem
-quisquidem	4	quidquidem
-quisquidem	6	cuiusquidem
-quisquidem	7	quōrumquidem
-quisquidem	9	quārumquidem
-quisquidem	12	cuiquidem
-quisquidem	13	quibusquidem
-quisquidem	18	quemquidem
-quisquidem	19	quōsquidem
-quisquidem	20	quamquidem
-quisquidem	21	quāsquidem
-quisquidem	24	quōquidem
-quisquidem	26	quāquidem
-quisquis	1	quīquī
-quisquis	2	quisquis
-quisquis	3	quaequae
-quisquis	4	quidquid
-quisquis	7	quōrumquōrum
-quisquis	9	quārumquārum
-quisquis	12	cuicui
-quisquis	13	quibusquibus
-quisquis	18	quemquem
-quisquis	19	quōsquōs
-quisquis	20	quamquam
-quisquis	21	quāsquās
-quisquis	24	quōquō
-quisquis	26	quāquā
-quivis	3	quaevīs
-quivis	4	quidvīs
-quivis	7	quōrunvīs
-quivis	9	quārunvīs
-quivis	12	cuivīs
-quivis	13	quibusvīs
-quivis	18	quenvīs
-quivis	20	quanvīs
-quivis	24	quōvīs
-quiviscumque	4	quodcumque
-quiviscumque	5	quaevīscumque
-seipse	4	seipsum
-semet	7	suīmet
-semet	9	suīmet
-semet	12	sibimet
-semet	13	sibimet
-semet	21	sēmet
-semet	22	sēmet
-semet	25	sēmet
-semet	27	sēmet
-sibi	8	suī
-sibi	22	sē
-siquis	18	sīquem
-temet	0	tūtemet
-temet	2	tūtemet
-tutemet	2	tūtemet
-tutemet	4	tūtemet
+numquis	2	numqua
+qualis	2	quālis	3	quālēs	5	quālia	8	quālis	12	quālī	18	quālem	20	quālem	22	quāle
+qualiscumque	2	quāliscumque	3	quālēscumque	5	quāliacumque	7	quāliumcumque	8	quāliscumque	9	quāliumcumque	12	quālīcumque	13	quālibuscumque	18	quālemcumque	19	quālīscumque	20	quālemcumque	22	quālecumque
+quicquid	0	quidquid	26	quōquō
+quicquidlibet	0	quidquidlibet	26	quōquōlibet
+quicumque	2	quaecumque
+quicunque	1	quīcunque	2	quaecunque	7	quōruncunque	8	cuiuscunque	9	quāruncunque	13	quibuscunque	18	quencunque	19	quōscunque	20	quancunque	22	quodcunque	24	quōcunque
+quidam	0	quīdam	1	quīdam	2	quaedam	3	quaedam	5	quaedam	7	quōrundam	8	cuiusdam	9	quārundam	11	quōrundam	12	cuidam	13	quibusdam	14	cuidam	16	cuidam	18	quendam	19	quōsdam	20	quandam	22	quiddam	23	quaedam	24	quōdam	26	quādam	28	quōdam
+quidquid	2	quidquid	26	quōquō
+quidquidlibet	2	quidquidlibet	26	quōquōlibet
+quilibet	2	quaelibet	8	cuiuslibet	13	quibuslibet	18	quemlibet	22	quodlibet
+quilubet	1	quīlubet	2	quaelubet	7	quōrumlubet	8	cuiuslubet	9	quārumlubet	13	quibuslubet	18	quemlubet	19	quōslubet	20	quamlubet	22	quodlubet	24	quōlubet
+quinam	0	quīnam	7	quōrumnam	8	cuiusnam	9	quārumnam	13	quibusnam
+quis	1	quī	4	quid	22	quid	24	quō
+quispiam	1	quīpiam	2	quaepiam	7	quōrumpiam	8	cuiuspiam	9	quārumpiam	13	quibuspiam	18	quempiam	19	quōspiam	20	quampiam	22	quidpiam	24	quōpiam
+quisquam	2	quisquam	12	cuiquam	22	quicquam	24	quōquam	26	quōquam
+quisquamne	1	quīquamne	2	quaequamne	7	quōrumquamne	8	cuiusquamne	9	quārumquamne	13	quibusquamne	18	quemquamne	19	quōsquamne	20	quamquamne	22	quidquamne	24	quōquamne
+quisque	2	quaeque	8	cuiusque	13	quibusque	18	quemque
+quisquidem	1	quīquidem	2	quaequidem	7	quōrumquidem	8	cuiusquidem	9	quārumquidem	13	quibusquidem	18	quemquidem	19	quōsquidem	20	quamquidem	22	quidquidem	24	quōquidem
+quisquis	1	quīquī	2	quisquis	5	quaequae	9	quārumquārum	12	cuicui	13	quibusquibus	18	quemquem	19	quōsquōs	20	quamquam	21	quāsquās	22	quidquid	24	quōquō	26	quāquā
+quivis	0	quīvīs	2	quaevīs	7	quōrunvīs	8	cuiusvīs	9	quārunvīs	13	quibusvīs	18	quenvīs	20	quanvīs	22	quidvīs
+quiviscumque	2	quaevīscumque	3	quaecumque
+seipse	22	seipsum
+semet	7	suīmet	9	suīmet	12	sibimet	13	sibimet	19	sēmet	23	sēmet	25	sēmet	27	sēmet
+siquis	2	sīqua
+temet	0	tūtemet	12	tibimet	24	temet
+tutemet	2	tūtemet	12	tibimet	24	temet
 ullus	12	ūllī
-unusquisque	2	ūnaquaeque
-unusquisque	4	ūnumquidque
-unusquisque	6	ūnīuscuiusque
-unusquisque	12	ūnīcuique
-unusquisque	20	ūnamquamque
-unusquisque	24	ūnōquōque
-unusquisque	26	ūnāquāque
+unusquisque	2	ūnaquaeque	8	ūnĭuscuiusque	12	ūnīcuique	18	ūnumquemque	20	ūnamquamque	24	ūnōquōque	26	ūnāquāque
 uter	12	utrī
-utercumque	4	utrumcumque
-utercumque	5	utracumque
-utercumque	12	utrīcumque
-utercumque	13	utrīscumque
-utercumque	20	utramcumque
-utercumque	24	utrōcumque
-uterlibet	4	utrumlibet
-uterlibet	5	utralibet
-uterlibet	12	utrīlibet
-uterlibet	13	utrīslibet
-uterlibet	20	utramlibet
-uterlibet	24	utrōlibet
-uterque	4	utrumque
-uterque	5	utraque
-uterque	12	utrīque
-uterque	13	utrīsque
-uterque	20	utramque
-uterque	24	utrōque
-utervis	3	utraevīs
-utervis	4	utrumvīs
-utervis	12	utrīvīs
-vosmet	21	vōsmet
+utercumque	2	utracumque	3	utraecumque	8	utrĭuscumque	13	utrīscumque	18	utrumcumque	21	utrāscumque	26	utrācumque
+uterlibet	2	utralibet	3	utraelibet	8	utrĭuslibet	13	utrīslibet	18	utrumlibet	21	utrāslibet	26	utrālibet
+uterque	2	utraque	3	utraeque	8	utrĭusque	13	utrīsque	18	utrumque	21	utrāsque	26	utrāque
+utervis	2	utravīs	8	utrĭusvīs
+vosmet	5	vōsmet
 "#,
     ),
 };

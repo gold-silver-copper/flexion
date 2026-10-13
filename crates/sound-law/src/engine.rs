@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 use std::fmt;
-use std::ops::Range;
+use std::ops::{Range, RangeInclusive};
 
 use crate::compile::{Atom, CompiledRule, Matcher, Pattern, Quantifier, ReplacementPart};
 use crate::{Application, Direction};
@@ -173,9 +173,10 @@ impl<'a> Program<'a> {
         let mut word = input.to_owned();
         let mut trace = Vec::new();
         let mut budget = WorkBudget::unlimited();
+        let mut search = Search::new(&mut budget);
 
         for rule in self.rules.iter() {
-            if let Some(next) = apply_rule(rule, &word, &mut budget)
+            if let Some(next) = apply_rule(rule, &word, &mut search)
                 && next != word
             {
                 trace.push(TraceStep {
@@ -244,13 +245,14 @@ fn apply_rules_with_budget(
     budget: &mut WorkBudget,
 ) -> Result<String, MatchLimitError> {
     let mut word = input.to_owned();
+    let mut search = Search::new(budget);
     for rule in rules {
-        if let Some(next) = apply_rule(rule, &word, budget) {
+        if let Some(next) = apply_rule(rule, &word, &mut search) {
             word = next;
         }
-        if budget.exhausted {
+        if search.budget.exhausted {
             return Err(MatchLimitError {
-                max_steps: budget.max_steps,
+                max_steps: search.budget.max_steps,
                 rule: rule.name.to_string(),
             });
         }
@@ -454,37 +456,55 @@ impl WorkBudget {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy)]
 struct Span {
     start: usize,
     end: usize,
 }
 
-#[derive(Debug, Clone)]
-struct MatchState {
-    position: usize,
-    captures: Vec<Option<Span>>,
-}
-
-#[derive(Debug, Clone)]
 struct FoundMatch {
     start: usize,
     end: usize,
     captures: Vec<Option<Span>>,
 }
 
+/// What a search changes as it goes: the captures so far, the ends the
+/// atoms being matched have yet to try (a stack, one run per atom), and the
+/// budget. One serves every rule of a program, so matching allocates nothing
+/// once it has grown.
+struct Search<'b> {
+    captures: Vec<Option<Span>>,
+    ends: Vec<usize>,
+    budget: &'b mut WorkBudget,
+}
+
+impl<'b> Search<'b> {
+    fn new(budget: &'b mut WorkBudget) -> Self {
+        Self {
+            captures: Vec::new(),
+            ends: Vec::new(),
+            budget,
+        }
+    }
+}
+
+/// What follows a match up to a position; `true` ends the search.
+type Next<'k> = dyn FnMut(&mut Search<'_>, usize) -> bool + 'k;
+
 /// The word after one rule, or `None` where the rule doesn't match: a rule
 /// costs nothing on a word without its required literals (in flexion, a
 /// word without its trigger).
-fn apply_rule(rule: &CompiledRule, input: &str, budget: &mut WorkBudget) -> Option<String> {
-    if !rule.required.iter().all(|s| input.contains(s.as_ref())) {
+fn apply_rule(rule: &CompiledRule, input: &str, s: &mut Search) -> Option<String> {
+    if !rule.required.iter().all(|r| input.contains(r.as_ref())) {
         return None;
     }
+    s.captures.clear();
+    s.captures.resize(rule.capture_count, None);
     if rule.target.atoms.is_empty() {
-        return apply_insertion_rule(rule, input, budget);
+        return apply_insertion_rule(rule, input, s);
     }
 
-    let matches = select_matches(rule, input, budget);
+    let matches = select_matches(rule, input, s);
     if matches.is_empty() {
         return None;
     }
@@ -500,21 +520,17 @@ fn apply_rule(rule: &CompiledRule, input: &str, budget: &mut WorkBudget) -> Opti
     Some(output)
 }
 
-fn apply_insertion_rule(
-    rule: &CompiledRule,
-    input: &str,
-    budget: &mut WorkBudget,
-) -> Option<String> {
+fn apply_insertion_rule(rule: &CompiledRule, input: &str, s: &mut Search) -> Option<String> {
     let mut insertions = Vec::new();
-    let mut boundaries = boundaries_from(input, 0);
+    let mut boundaries: Vec<usize> = boundaries(input, 0..=input.len()).collect();
     if rule.direction == Direction::RightToLeft {
         boundaries.reverse();
     }
     for boundary in boundaries {
-        if budget.exhausted {
+        if s.budget.exhausted {
             break;
         }
-        if let Some(captures) = insertion_captures(rule, input, boundary, budget) {
+        if let Some(captures) = insertion_captures(rule, input, boundary, s) {
             insertions.push((boundary, captures));
             if rule.application == Application::Once {
                 break;
@@ -552,41 +568,32 @@ fn insertion_captures(
     rule: &CompiledRule,
     input: &str,
     boundary: usize,
-    budget: &mut WorkBudget,
+    s: &mut Search,
 ) -> Option<Vec<Option<Span>>> {
-    if rule.target.anchored_at_start && boundary != 0 {
+    if (rule.target.anchored_at_start && boundary != 0)
+        || (rule.target.anchored_at_end && boundary != input.len())
+    {
         return None;
     }
-    if rule.target.anchored_at_end && boundary != input.len() {
-        return None;
-    }
-
-    let empty_captures = vec![None; rule.capture_count];
-    for left_state in left_context_matches(&rule.left, input, boundary, &empty_captures, budget) {
-        for right_state in
-            match_pattern_from(&rule.right, input, boundary, &left_state.captures, budget)
-        {
-            if !is_excluded(
-                rule,
-                input,
-                boundary,
-                boundary,
-                &right_state.captures,
-                budget,
-            ) {
-                return Some(right_state.captures);
+    let mut found = None;
+    left(&rule.left, input, boundary, s, &mut |s, _| {
+        pattern(&rule.right, input, boundary, s, &mut |s, _| {
+            let keep = !is_excluded(rule, input, boundary, boundary, s);
+            if keep {
+                found = Some(s.captures.clone());
             }
-        }
-    }
-    None
+            keep
+        })
+    });
+    found
 }
 
-fn select_matches(rule: &CompiledRule, input: &str, budget: &mut WorkBudget) -> Vec<FoundMatch> {
+fn select_matches(rule: &CompiledRule, input: &str, s: &mut Search) -> Vec<FoundMatch> {
     let mut selected = Vec::new();
     match rule.direction {
         Direction::LeftToRight => {
             let mut cursor = 0;
-            while let Some(found) = find_next_match(rule, input, cursor, budget) {
+            while let Some(found) = find_next_match(rule, input, cursor, s) {
                 cursor = found.end;
                 selected.push(found);
                 if rule.application == Application::Once {
@@ -596,7 +603,7 @@ fn select_matches(rule: &CompiledRule, input: &str, budget: &mut WorkBudget) -> 
         }
         Direction::RightToLeft => {
             let mut edge = input.len();
-            while let Some(found) = find_previous_match(rule, input, edge, budget) {
+            while let Some(found) = find_previous_match(rule, input, edge, s) {
                 edge = found.start;
                 selected.push(found);
                 if rule.application == Application::Once {
@@ -613,16 +620,13 @@ fn find_next_match(
     rule: &CompiledRule,
     input: &str,
     search_from: usize,
-    budget: &mut WorkBudget,
+    s: &mut Search,
 ) -> Option<FoundMatch> {
-    for start in boundaries_from(input, search_from) {
-        if budget.exhausted {
+    for start in boundaries(input, search_from..=input.len()) {
+        if s.budget.exhausted || (rule.target.anchored_at_start && start != 0) {
             break;
         }
-        if rule.target.anchored_at_start && start != 0 {
-            break;
-        }
-        if let Some(found) = match_at(rule, input, start, None, budget) {
+        if let Some(found) = match_at(rule, input, start, None, s) {
             return Some(found);
         }
     }
@@ -633,69 +637,68 @@ fn find_previous_match(
     rule: &CompiledRule,
     input: &str,
     through: usize,
-    budget: &mut WorkBudget,
+    s: &mut Search,
 ) -> Option<FoundMatch> {
-    for start in boundaries_through(input, through).into_iter().rev() {
-        if budget.exhausted {
+    for start in boundaries(input, 0..=through).rev() {
+        if s.budget.exhausted {
             break;
         }
-        if rule.target.anchored_at_start && start != 0 {
-            continue;
-        }
-        if let Some(found) = match_at(rule, input, start, Some(through), budget) {
+        if let Some(found) = match_at(rule, input, start, Some(through), s) {
             return Some(found);
         }
     }
     None
 }
 
+/// The first match whose target starts at `start`: its left context, the
+/// longest target and its right context, in that order (a left context may
+/// capture what the target refers back to). The target is tested first, on
+/// its own, so most positions cost one comparison.
 fn match_at(
     rule: &CompiledRule,
     input: &str,
     start: usize,
     must_end_by: Option<usize>,
-    budget: &mut WorkBudget,
+    s: &mut Search,
 ) -> Option<FoundMatch> {
-    let empty_captures = vec![None; rule.capture_count];
-    for left_state in left_context_matches(&rule.left, input, start, &empty_captures, budget) {
-        if budget.exhausted {
-            break;
-        }
-        for target_state in
-            match_pattern_from(&rule.target, input, start, &left_state.captures, budget)
-        {
+    if !may_start(&rule.target, input, start) {
+        return None;
+    }
+    let mut found = None;
+    left(&rule.left, input, start, s, &mut |s, _| {
+        pattern(&rule.target, input, start, s, &mut |s, end| {
             // Nullable pieces are useful inside real patterns, but consuming
             // rules must make progress. Pure insertion has a separate path.
-            if target_state.position == start
-                || must_end_by.is_some_and(|edge| target_state.position > edge)
-            {
-                continue;
-            }
-            for right_state in match_pattern_from(
-                &rule.right,
-                input,
-                target_state.position,
-                &target_state.captures,
-                budget,
-            ) {
-                if !is_excluded(
-                    rule,
-                    input,
-                    start,
-                    target_state.position,
-                    &right_state.captures,
-                    budget,
-                ) {
-                    return Some(FoundMatch {
-                        start,
-                        end: target_state.position,
-                        captures: right_state.captures,
-                    });
-                }
-            }
+            end != start
+                && must_end_by.is_none_or(|edge| end <= edge)
+                && pattern(&rule.right, input, end, s, &mut |s, _| {
+                    let keep = !is_excluded(rule, input, start, end, s);
+                    if keep {
+                        found = Some(FoundMatch {
+                            start,
+                            end,
+                            captures: s.captures.clone(),
+                        });
+                    }
+                    keep
+                })
+        })
+    });
+    found
+}
+
+/// Whether a pattern's first atom, if it must match, matches at `at`
+/// (whatever has been captured): a match can't start where it doesn't.
+fn may_start(pattern: &Pattern, input: &str, at: usize) -> bool {
+    match pattern.atoms.first() {
+        Some(atom)
+            if matches!(atom.quantifier, Quantifier::One | Quantifier::OneOrMore)
+                && !matches!(atom.matcher, Matcher::Backreference(_)) =>
+        {
+            unit_ends(&atom.matcher, input, at, &[]).next().is_some()
         }
+        _ => !pattern.anchored_at_start || at == 0,
     }
-    None
 }
 
 fn is_excluded(
@@ -703,217 +706,145 @@ fn is_excluded(
     input: &str,
     target_start: usize,
     target_end: usize,
-    captures: &[Option<Span>],
-    budget: &mut WorkBudget,
+    s: &mut Search,
 ) -> bool {
-    let (Some(left), Some(right)) = (&rule.excluded_left, &rule.excluded_right) else {
+    let (Some(left_pattern), Some(right)) = (&rule.excluded_left, &rule.excluded_right) else {
         return false;
     };
-
-    left_context_matches(left, input, target_start, captures, budget)
-        .into_iter()
-        .any(|left_state| {
-            !match_pattern_from(right, input, target_end, &left_state.captures, budget).is_empty()
-        })
+    left(left_pattern, input, target_start, s, &mut |s, _| {
+        pattern(right, input, target_end, s, &mut |_, _| true)
+    })
 }
 
-fn left_context_matches(
-    pattern: &Pattern,
-    input: &str,
-    target_start: usize,
-    captures: &[Option<Span>],
-    budget: &mut WorkBudget,
-) -> Vec<MatchState> {
-    if pattern.atoms.is_empty() && !pattern.anchored_at_start && !pattern.anchored_at_end {
-        return vec![MatchState {
-            position: target_start,
-            captures: captures.to_vec(),
-        }];
-    }
+/// Matches of a left context ending at `end`, those starting leftmost
+/// first.
+fn left(context: &Pattern, input: &str, end: usize, s: &mut Search, next: &mut Next) -> bool {
+    let first = if context.atoms.is_empty() { end } else { 0 };
+    boundaries(input, first..=end).any(|start| {
+        may_start(context, input, start)
+            && pattern(context, input, start, s, &mut |s, at| {
+                at == end && next(s, at)
+            })
+    })
+}
 
-    let starts: Vec<usize> = if pattern.anchored_at_start {
-        vec![0]
-    } else {
-        boundaries_through(input, target_start)
+/// Matches of a pattern from `start`, greediest first, each passed on to
+/// `next` until it ends the search.
+fn pattern(pattern: &Pattern, input: &str, start: usize, s: &mut Search, next: &mut Next) -> bool {
+    (!pattern.anchored_at_start || start == 0) && atoms(pattern, 0, input, start, s, next)
+}
+
+fn atoms(
+    pattern: &Pattern,
+    index: usize,
+    input: &str,
+    at: usize,
+    s: &mut Search,
+    next: &mut Next,
+) -> bool {
+    if !s.budget.spend() {
+        return false;
+    }
+    let Some(atom) = pattern.atoms.get(index) else {
+        return (!pattern.anchored_at_end || at == input.len()) && next(s, at);
     };
-    let mut matches = Vec::new();
-    for start in starts {
-        if budget.exhausted {
+    let base = s.ends.len();
+    push_ends(atom, input, at, s);
+    let top = s.ends.len();
+    let mut found = false;
+    for i in base..top {
+        let Some(&end) = s.ends.get(i) else { break };
+        let span = Some(Span { start: at, end });
+        let previous = atom
+            .capture
+            .and_then(|c| s.captures.get_mut(c))
+            .map(|slot| std::mem::replace(slot, span));
+        found = atoms(pattern, index + 1, input, end, s, next);
+        if let Some((slot, previous)) = atom
+            .capture
+            .and_then(|c| s.captures.get_mut(c))
+            .zip(previous)
+        {
+            *slot = previous;
+        }
+        if found {
             break;
         }
-        matches.extend(
-            match_pattern_from(pattern, input, start, captures, budget)
-                .into_iter()
-                .filter(|state| state.position == target_start),
-        );
     }
-    matches
+    s.ends.truncate(base);
+    found
 }
 
-fn match_pattern_from(
-    pattern: &Pattern,
-    input: &str,
-    start: usize,
-    captures: &[Option<Span>],
-    budget: &mut WorkBudget,
-) -> Vec<MatchState> {
-    if pattern.anchored_at_start && start != 0 {
-        return Vec::new();
-    }
-    let mut matches = Vec::new();
-    match_atoms(pattern, 0, input, start, captures, &mut matches, budget);
-    matches
-}
-
-fn match_atoms(
-    pattern: &Pattern,
-    atom_index: usize,
-    input: &str,
-    position: usize,
-    captures: &[Option<Span>],
-    matches: &mut Vec<MatchState>,
-    budget: &mut WorkBudget,
-) {
-    if !budget.spend() {
-        return;
-    }
-    if atom_index == pattern.atoms.len() {
-        if !pattern.anchored_at_end || position == input.len() {
-            matches.push(MatchState {
-                position,
-                captures: captures.to_vec(),
-            });
-        }
-        return;
-    }
-
-    let Some(atom) = pattern.atoms.get(atom_index) else {
-        return;
+/// Push the ends `atom` reaches from `at`, each once, greatest first: greedy.
+fn push_ends(atom: &Atom, input: &str, at: usize, s: &mut Search) {
+    let base = s.ends.len();
+    let (zero, many) = match atom.quantifier {
+        Quantifier::One => (false, false),
+        Quantifier::Optional => (true, false),
+        Quantifier::ZeroOrMore => (true, true),
+        Quantifier::OneOrMore => (false, true),
     };
-    for end in repetition_ends(atom, input, position, captures, budget) {
-        let mut next_captures = captures.to_vec();
-        if let Some(slot) = atom.capture.and_then(|c| next_captures.get_mut(c)) {
-            *slot = Some(Span {
-                start: position,
-                end,
-            });
-        }
-        match_atoms(
-            pattern,
-            atom_index + 1,
-            input,
-            end,
-            &next_captures,
-            matches,
-            budget,
-        );
-    }
-}
-
-fn repetition_ends(
-    atom: &Atom,
-    input: &str,
-    start: usize,
-    captures: &[Option<Span>],
-    budget: &mut WorkBudget,
-) -> Vec<usize> {
-    let (minimum, maximum) = match atom.quantifier {
-        Quantifier::One => (1, Some(1)),
-        Quantifier::Optional => (0, Some(1)),
-        Quantifier::ZeroOrMore => (0, None),
-        Quantifier::OneOrMore => (1, None),
-    };
-
-    let mut candidates = Vec::new();
-    let mut frontier = vec![(0usize, start)];
-    let mut visited = HashSet::from([(0usize, start)]);
-
-    while let Some((count, position)) = frontier.pop() {
-        if !budget.spend() {
-            break;
-        }
-        if count >= minimum && maximum.is_none_or(|limit| count <= limit) {
-            candidates.push((count, position));
-        }
-        if maximum.is_some_and(|limit| count >= limit) {
-            continue;
-        }
-
-        for end in unit_ends(&atom.matcher, input, position, captures) {
+    // A class can reach one end along two paths; anything else steps along
+    // one, never back.
+    let check = !many || matches!(atom.matcher, Matcher::Class(_));
+    let (mut position, mut expanded) = (at, base);
+    while s.budget.spend() {
+        for end in unit_ends(&atom.matcher, input, position, &s.captures) {
             // Quantified matchers must make progress. A one-shot empty
             // backreference remains valid, but cannot make `*` loop forever.
-            if end == position && maximum.is_none() {
-                continue;
-            }
-            let next = (count + 1, end);
-            if visited.insert(next) {
-                frontier.push(next);
+            if !(many && end == position)
+                && !(check && s.ends.get(base..).is_some_and(|e| e.contains(&end)))
+            {
+                s.ends.push(end);
             }
         }
+        match s.ends.get(expanded) {
+            Some(&end) if many => (position, expanded) = (end, expanded + 1),
+            _ => break,
+        }
     }
-
-    // Greedy means greatest consumed span first. Count breaks ties for class
-    // inventories whose members admit more than one segmentation.
-    candidates.sort_by(|(left_count, left_end), (right_count, right_end)| {
-        right_end
-            .cmp(left_end)
-            .then_with(|| right_count.cmp(left_count))
-    });
-    candidates.into_iter().map(|(_, end)| end).collect()
+    if zero && !s.ends.get(base..).is_some_and(|e| e.contains(&at)) {
+        s.ends.push(at);
+    }
+    if let Some(ends) = s.ends.get_mut(base..) {
+        ends.sort_unstable_by(|a, b| b.cmp(a));
+    }
 }
 
-fn unit_ends(
-    matcher: &Matcher,
-    input: &str,
-    position: usize,
+/// Where one unit of `matcher` can end, matched at `at`.
+fn unit_ends<'m, 'p>(
+    matcher: &'m Matcher<'p>,
+    input: &'m str,
+    at: usize,
     captures: &[Option<Span>],
-) -> Vec<usize> {
-    let rest = &input[position..];
-    match matcher {
-        Matcher::Literal(literal) => rest
-            .starts_with(literal.as_ref())
-            .then_some(vec![position + literal.len()])
-            .unwrap_or_default(),
-        Matcher::Class(members) => members
-            .iter()
-            .filter(|member| rest.starts_with(member.as_ref()))
-            .map(|member| position + member.len())
-            .collect(),
-        Matcher::NotClass(members) => {
-            if members
-                .iter()
-                .any(|member| rest.starts_with(member.as_ref()))
-            {
-                Vec::new()
-            } else {
-                rest.chars()
-                    .next()
-                    .map(|ch| vec![position + ch.len_utf8()])
-                    .unwrap_or_default()
-            }
-        }
-        Matcher::Any => rest
-            .chars()
-            .next()
-            .map(|ch| vec![position + ch.len_utf8()])
-            .unwrap_or_default(),
-        Matcher::WordBoundary => is_word_boundary(input, position)
-            .then_some(vec![position])
-            .unwrap_or_default(),
-        Matcher::Backreference(capture) => {
-            let Some(captured) = captures
-                .get(*capture)
-                .copied()
-                .flatten()
-                .and_then(|span| input.get(span.start..span.end))
-            else {
-                return Vec::new();
-            };
-            rest.starts_with(captured)
-                .then_some(vec![position + captured.len()])
-                .unwrap_or_default()
-        }
-    }
+) -> impl Iterator<Item = usize> + use<'m, 'p> {
+    let rest = input.get(at..).unwrap_or_default();
+    let next_char = || rest.chars().next().map(|ch| at + ch.len_utf8());
+    let (members, one): (&[Cow<str>], _) = match matcher {
+        Matcher::Class(members) => (members, None),
+        Matcher::Literal(literal) => (
+            &[],
+            rest.starts_with(literal.as_ref())
+                .then(|| at + literal.len()),
+        ),
+        Matcher::NotClass(members) => (
+            &[],
+            next_char().filter(|_| !members.iter().any(|m| rest.starts_with(m.as_ref()))),
+        ),
+        Matcher::Any => (&[], next_char()),
+        Matcher::WordBoundary => (&[], is_word_boundary(input, at).then_some(at)),
+        Matcher::Backreference(capture) => (
+            &[],
+            captured(input, captures, *capture)
+                .filter(|text| rest.starts_with(text))
+                .map(|text| at + text.len()),
+        ),
+    };
+    members
+        .iter()
+        .filter(move |member| rest.starts_with(member.as_ref()))
+        .map(move |member| at + member.len())
+        .chain(one)
 }
 
 fn is_word_boundary(input: &str, position: usize) -> bool {
@@ -959,20 +890,10 @@ fn captured<'i>(input: &'i str, captures: &[Option<Span>], capture: usize) -> Op
     input.get(span.start..span.end)
 }
 
-fn boundaries_from(input: &str, from: usize) -> Vec<usize> {
-    input
-        .char_indices()
-        .map(|(index, _)| index)
-        .chain(std::iter::once(input.len()))
-        .filter(|index| *index >= from)
-        .collect()
-}
-
-fn boundaries_through(input: &str, through: usize) -> Vec<usize> {
-    input
-        .char_indices()
-        .map(|(index, _)| index)
-        .chain(std::iter::once(input.len()))
-        .take_while(|index| *index <= through)
-        .collect()
+/// The character boundaries of `input` in `range`.
+fn boundaries(
+    input: &str,
+    range: RangeInclusive<usize>,
+) -> impl DoubleEndedIterator<Item = usize> + '_ {
+    range.filter(|&index| input.is_char_boundary(index))
 }

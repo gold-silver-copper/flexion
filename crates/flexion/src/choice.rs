@@ -51,6 +51,9 @@ pub enum Status {
     /// No rule here is productive: the words with this ending split too
     /// evenly, and speakers vary.
     Unsettled,
+    /// Few or no words of the dictionary have the cell: the form is made by
+    /// analogy with cells words do have.
+    Unattested,
 }
 
 impl std::fmt::Display for Status {
@@ -59,6 +62,7 @@ impl std::fmt::Display for Status {
             Status::Listed => "listed",
             Status::Regular => "regular",
             Status::Unsettled => "unsettled",
+            Status::Unattested => "unattested",
         })
     }
 }
@@ -112,24 +116,15 @@ impl<'a, L: Label> Rule<'a, L> {
     /// Whether the rule's commonest value is productive: its exceptions are
     /// at most `N / ln N` of its `N` words (Yang 2016).
     pub fn productive(&self) -> bool {
-        let total = self.total();
-        let top = self.counts.first().map_or(0, |&(_, n)| n);
-        f64::from(total.saturating_sub(top)) <= tolerance(total)
+        let n = f64::from(self.total());
+        let exceptions = n - f64::from(self.counts.first().map_or(0, |&(_, c)| c));
+        exceptions <= if n < 2.0 { 0.0 } else { n / n.ln() }
     }
 }
 
 /// The order of rules: by ending, read from its last letter back.
 pub fn by_ending(a: &str, b: &str) -> std::cmp::Ordering {
     a.chars().rev().cmp(b.chars().rev())
-}
-
-/// The Tolerance Principle's threshold: a rule over `n` words stays
-/// productive with up to `n / ln n` exceptions.
-pub fn tolerance(n: u32) -> f64 {
-    if n < 2 {
-        return 0.0;
-    }
-    f64::from(n) / f64::from(n).ln()
 }
 
 impl<'a, L: Label> Choice<'a, L> {
@@ -142,32 +137,6 @@ impl<'a, L: Label> Choice<'a, L> {
             .iter()
             .take_while(move |(w, _)| w.as_ref() == word)
             .map(|&(_, l)| l)
-    }
-
-    /// The rules whose ending (or beginning) `word` has, least specific
-    /// first.
-    pub fn chain(&self, word: &str) -> Vec<&Rule<'a, L>> {
-        let cuts = word.char_indices().map(|(i, _)| i).chain([word.len()]);
-        let mut chain: Vec<&Rule<'a, L>> = cuts
-            .filter_map(|i| {
-                let at = match self.side {
-                    Side::End => {
-                        let affix = word.get(i..)?;
-                        self.rules.binary_search_by(|r| by_ending(&r.ending, affix))
-                    }
-                    Side::Start => {
-                        let affix = word.get(..i)?;
-                        self.rules
-                            .binary_search_by(|r| r.ending.as_ref().cmp(affix))
-                    }
-                };
-                self.rules.get(at.ok()?)
-            })
-            .collect();
-        if self.side == Side::End {
-            chain.reverse();
-        }
-        chain
     }
 
     /// What `word` is, most likely first: the listed values if the
@@ -195,29 +164,35 @@ impl<'a, L: Label> Choice<'a, L> {
                 })
                 .collect();
         }
-        let chain = self.chain(word);
+        // The rules whose ending (or beginning) the word has, least specific
+        // first.
+        let cuts = word.char_indices().map(|(i, _)| i).chain([word.len()]);
+        let mut chain: Vec<&Rule<'a, L>> = cuts
+            .filter_map(|i| {
+                let at = match self.side {
+                    Side::End => {
+                        let affix = word.get(i..)?;
+                        self.rules.binary_search_by(|r| by_ending(&r.ending, affix))
+                    }
+                    Side::Start => {
+                        let affix = word.get(..i)?;
+                        self.rules
+                            .binary_search_by(|r| r.ending.as_ref().cmp(affix))
+                    }
+                };
+                self.rules.get(at.ok()?)
+            })
+            .collect();
+        if self.side == Side::End {
+            chain.reverse();
+        }
         let Some(&decisive) = chain.last() else {
             return Vec::new();
         };
         // Smooth down the chain, broadest rule first.
         let mut dist: Vec<(L, f64)> = Vec::new();
         for rule in &chain {
-            let total = f64::from(rule.total());
-            let prior = f64::from(smoothing);
-            let denom = total + if dist.is_empty() { 0.0 } else { prior };
-            if denom <= 0.0 {
-                continue;
-            }
-            let mut next: Vec<(L, f64)> =
-                dist.iter().map(|&(l, q)| (l, prior * q / denom)).collect();
-            for &(l, n) in rule.counts.iter() {
-                let own = f64::from(n) / denom;
-                match next.iter_mut().find(|e| e.0 == l) {
-                    Some(e) => e.1 += own,
-                    None => next.push((l, own)),
-                }
-            }
-            dist = next;
+            dist = blend(&rule.counts, &dist, smoothing);
         }
         dist.retain(|&(l, p)| p > 0.0 && fits(l));
         let mass: f64 = dist.iter().map(|&(_, p)| p).sum();
@@ -246,6 +221,42 @@ impl<'a, L: Label> Choice<'a, L> {
         });
         out
     }
+}
+
+/// How much of each of its counts a rule leaves to the broader rule
+/// (absolute discounting): a rule of few words leans on the broader one
+/// more than a rule of many.
+pub const DISCOUNT: f64 = 0.5;
+
+/// A rule's distribution: its `counts`, each less [`DISCOUNT`], and the
+/// broader rule's distribution `parent` (none for the broadest) with the
+/// weight that leaves, plus `smoothing` words' worth.
+pub fn blend<L: Label>(counts: &[(L, u32)], parent: &[(L, f64)], smoothing: f32) -> Vec<(L, f64)> {
+    let n: f64 = counts.iter().map(|&(_, c)| f64::from(c)).sum();
+    if parent.is_empty() {
+        return if n > 0.0 {
+            counts.iter().map(|&(l, c)| (l, f64::from(c) / n)).collect()
+        } else {
+            Vec::new()
+        };
+    }
+    let b = f64::from(smoothing);
+    #[allow(clippy::cast_precision_loss)]
+    let k = counts.iter().filter(|e| e.1 > 0).count() as f64;
+    let denom = n + b;
+    if denom <= 0.0 {
+        return parent.to_vec();
+    }
+    let lean = (DISCOUNT * k + b) / denom;
+    let mut out: Vec<(L, f64)> = parent.iter().map(|&(l, q)| (l, lean * q)).collect();
+    for &(l, c) in counts {
+        let own = (f64::from(c) - DISCOUNT).max(0.0) / denom;
+        match out.iter_mut().find(|e| e.0 == l) {
+            Some(e) => e.1 += own,
+            None => out.push((l, own)),
+        }
+    }
+    out
 }
 
 #[cfg(test)]
@@ -297,12 +308,14 @@ mod tests {
 
     #[test]
     fn tolerance_follows_yang() {
-        assert!((tolerance(1000) - 144.76).abs() < 0.01);
-        let even = Rule {
+        let rule = |counts: Vec<(u16, u32)>| Rule {
             ending: "".into(),
-            counts: Cow::Owned(vec![(0u16, 837), (1, 516)]),
+            counts: Cow::Owned(counts),
         };
+        // Of 1000 words, up to 1000 / ln 1000 = 144.8 exceptions.
+        assert!(rule(vec![(0, 856), (1, 144)]).productive());
+        assert!(!rule(vec![(0, 854), (1, 146)]).productive());
         // Polish masculine genitives in -a and -u: neither is productive.
-        assert!(!even.productive());
+        assert!(!rule(vec![(0, 837), (1, 516)]).productive());
     }
 }

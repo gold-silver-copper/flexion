@@ -2,7 +2,9 @@
 //!
 //! A pattern is the form with `~` where the stem goes: `~а` is the stem and
 //! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first.
+//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
+//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
+//! as the copy laws in `laws.rs` change it.
 
 use flexion::Paradigm;
 
@@ -10,11 +12,12 @@ use flexion::Paradigm;
 /// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
 /// they share them), the declension it is like (if any), then a row of patterns
 /// per line (`derived`: the form comes from another cell's, see
-/// `relations.rs`; `_`: the form is the declension's it is like):
+/// `relations.rs`; `_`, or a row left out: the form is the declension's it is like,
+/// or, in a declension like no other, derived):
 /// `adverb` (pos, comp, sup)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident)?;
-     adverb: $c0:tt, $c1:tt, $c2:tt;
+     $(adverb: $c0:tt, $c1:tt, $c2:tt;)?
     ) => {
         Paradigm {
             name: ::std::borrow::Cow::Borrowed($name),
@@ -23,9 +26,9 @@ macro_rules! declension {
             parent: like!($($parent)?),
             inherent: ::std::borrow::Cow::Borrowed(&[]),
             table: ::std::borrow::Cow::Borrowed(concat!(
-                flexion::cell!($c0), "\t",
-                flexion::cell!($c1), "\t",
-                flexion::cell!($c2), "\t",
+                $(flexion::cell!($c0),)? "\t",
+                $(flexion::cell!($c1),)? "\t",
+                $(flexion::cell!($c2),)? "\t",
             )),
         }
     };
@@ -44,92 +47,26 @@ macro_rules! like {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `handsomely`: 8,749 words.
+    /// Like `handsomely`: 12,450 words.
     Handsomely,
-    /// Like `simply`: 1,172 words.
-    Simply,
-    /// Like `technically`: 493 words.
-    Technically,
-    /// Like `evenly`: 473 words.
-    Evenly,
-    /// Like `outside`: 355 words.
-    Outside,
-    /// Like `really`: 286 words.
-    Really,
-    /// Like `mightily`: 279 words.
-    Mightily,
-    /// Like `roundly`: 204 words.
-    Roundly,
-    /// Like `straight`: 187 words.
-    Straight,
-    /// Like `medically`: 109 words.
-    Medically,
-    /// Like `modernly`: 65 words.
-    Modernly,
-    /// Like `darkly`: 60 words.
-    Darkly,
+    /// Like `sharply`: 87 words.
+    Sharply,
+    /// Like `down`: 41 words.
+    Down,
     /// Like `low`: 37 words.
     Low,
-    /// Like `organically`: 35 words.
-    Organically,
-    /// Like `sharply`: 27 words.
-    Sharply,
-    /// Like `down`: 21 words.
-    Down,
-    /// Like `upstairs`: 17 words.
-    Upstairs,
-    /// Like `morally`: 13 words.
-    Morally,
-    /// Like `motivationally`: 6 words.
-    Motivationally,
-    /// Like `moodily`: 6 words.
-    Moodily,
     /// Like `likely`: 5 words.
     Likely,
-    /// Like `meekly`: 5 words.
-    Meekly,
-    /// Like `eepily`: 4 words.
-    Eepily,
-    /// Like `south`: 3 words.
-    South,
-    /// Like `ostensively`: 3 words.
-    Ostensively,
-    /// Like `oozily`: 3 words.
-    Oozily,
-    /// Like `reedily`: 3 words.
-    Reedily,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 27] = [
+    pub const ALL: [Declension; 5] = [
         Declension::Handsomely,
-        Declension::Simply,
-        Declension::Technically,
-        Declension::Evenly,
-        Declension::Outside,
-        Declension::Really,
-        Declension::Mightily,
-        Declension::Roundly,
-        Declension::Straight,
-        Declension::Medically,
-        Declension::Modernly,
-        Declension::Darkly,
-        Declension::Low,
-        Declension::Organically,
         Declension::Sharply,
         Declension::Down,
-        Declension::Upstairs,
-        Declension::Morally,
-        Declension::Motivationally,
-        Declension::Moodily,
+        Declension::Low,
         Declension::Likely,
-        Declension::Meekly,
-        Declension::Eepily,
-        Declension::South,
-        Declension::Ostensively,
-        Declension::Oozily,
-        Declension::Reedily,
     ];
 
     /// Its table.
@@ -147,113 +84,25 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 27] = [
-    // Handsomely: 8,749 words (free, abaft, abandonedly, abasedly, abashedly, abeam).
-    declension!("handsomely", 8749, "~";
-        adverb: "~", "more ~", "most ~";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 5] = [
+    // Handsomely: 12,450 words (free, abaft, abandonedly, abasedly, abashedly, abeam).
+    declension!("handsomely", 12450, "~";
+    adverb: "~", "more ~", "most ~";
     ),
-    // Simply: 1,172 words (square, skew, sound, sweet, solid, side).
-    declension!("simply", 1172, "~~";
-        adverb: "~~", "more ~~", "mo~t s~";
+    // Sharply: 87 words (early, silly, quickly, slowly, goodly, easy).
+    declension!("sharply", 87, "~y";
+    adverb: "~y", "~ier|more ~y", "~iest|most ~y";
     ),
-    // Technically: 493 words (thin, tender, tally, tumultuously, timely, tickle). Like Simply, except in 1 cell: adverb sup.
-    declension!("technically", 493, "~~", like Simply;
-        adverb: _, _, "mos~ t~";
-    ),
-    // Evenly: 473 words (evil, extreme, evenly, exactly, excellent, euphemistically).
-    declension!("evenly", 473, "~~";
-        adverb: "~~", "mor~ e~", "most ~~";
-    ),
-    // Outside: 355 words (offset, ok, outside, okay, often, obliquely).
-    declension!("outside", 355, "~~";
-        adverb: "~~", "m~re o~", "m~st o~";
-    ),
-    // Really: 286 words (retrograde, really, recently, regularly, repeatedly, reasonably). Like Evenly, except in 1 cell: adverb comp.
-    declension!("really", 286, "~~", like Evenly;
-        adverb: _, "mo~ re~", _;
-    ),
-    // Mightily: 279 words (maestoso, main, manifold, mickle, mightily, mathematically).
-    declension!("mightily", 279, "~~";
-        adverb: "~~", "~ore m~", "~ost m~";
-    ),
-    // Roundly: 204 words (rape, room, rough, rotten, rash, rapid). Like Evenly, except in 1 cell: adverb comp.
-    declension!("roundly", 204, "~~", like Evenly;
-        adverb: _, "mo~e r~", _;
-    ),
-    // Straight: 187 words (straight, stiff, start, staccato, stupid, stealthily). Like Simply, except in 1 cell: adverb sup.
-    declension!("straight", 187, "~~", like Simply;
-        adverb: _, _, "mo~ st~";
-    ),
-    // Medically: 109 words (mega, mentally, mechanically, meagerly, meagrely, merrily).
-    declension!("medically", 109, "~~~";
-        adverb: "~~~", "~or~ me~", "~ost m~~";
-    ),
-    // Modernly: 65 words (mockingly, moderately, modestly, monolithically, mournfully, monotonously).
-    declension!("modernly", 65, "~~";
-        adverb: "~~", "~re mo~", "~st mo~";
-    ),
-    // Darkly: 60 words (early, silly, quickly, goodly, easy, kindly).
-    declension!("darkly", 60, "~y";
-        adverb: "~y", "~ier|more ~y", "~iest|most ~y";
+    // Down: 41 words (north, east, south, west, northeast, northwest).
+    declension!("down", 41, "~";
+    adverb: "~", "further ~|farther ~", "furthest ~|farthest ~";
     ),
     // Low: 37 words (slow, close, small, thick, hard, light).
     declension!("low", 37, "~";
-        adverb: "~", "~er", "~est";
-    ),
-    // Organically: 35 words (originally, orderly, ornately, organically, orthogonally, orgasmically).
-    declension!("organically", 35, "~~~";
-        adverb: "~~~", "m~~e or~", "m~st o~~";
-    ),
-    // Sharply: 27 words (slowly, roughly, swiftly, truly, readily, easily).
-    declension!("sharply", 27, "~~y";
-        adverb: "~~y", "~~ier|more ~~y", "~~iest";
-    ),
-    // Down: 21 words (north, east, west, northeast, northwest, down).
-    declension!("down", 21, "~";
-        adverb: "~", "further ~|farther ~", "furthest ~|farthest ~";
-    ),
-    // Upstairs: 17 words (upcountry, upstairs, upgrade, upriver, uphill, upstream).
-    declension!("upstairs", 17, "~~";
-        adverb: "~~", "f~rther u~|farther ~~", "f~rthest u~|farthest ~~";
-    ),
-    // Morally: 13 words (morally, mortally, moralistically, morbidly, mordantly, morbifically).
-    declension!("morally", 13, "~~~";
-        adverb: "~~~", "~~e mor~", "~st mo~~";
-    ),
-    // Motivationally: 6 words (motherly, motherless, motionlessly, motivationally, motheringly, motherlily).
-    declension!("motivationally", 6, "~~~";
-        adverb: "~~~", "~re mo~~", "~s~ mot~";
-    ),
-    // Moodily: 6 words (moodily, moodishly, moonishly, moonily, mooingly, moorishly).
-    declension!("moodily", 6, "~~~";
-        adverb: "~~~", "~re m~o~", "~st m~o~";
+    adverb: "~", "~er", "~est";
     ),
     // Likely: 5 words (ghastly, likely, wildly, brazenly, cheerly).
     declension!("likely", 5, "~y";
-        adverb: "~y", "more ~y|~ier", "most ~y|~iest";
-    ),
-    // Meekly: 5 words (meekly, meetly, meeterly, meechingly, meekishly).
-    declension!("meekly", 5, "~~~~";
-        adverb: "~~~~", "~or~ m~e~", "~ost m~~~";
-    ),
-    // Eepily: 4 words (eerily, eenamost, eelishly, eepily).
-    declension!("eepily", 4, "~~~";
-        adverb: "~~~", "mor~ ~e~", "most ~~~";
-    ),
-    // South: 3 words (south, southwest, southeast).
-    declension!("south", 3, "~~";
-        adverb: "~~", "further ~~|farther ~~", "furthe~t s~|farthe~t s~";
-    ),
-    // Ostensively: 3 words (ostentatiously, ostensively, ostentatively).
-    declension!("ostensively", 3, "~~~";
-        adverb: "~~~", "m~re o~~", "m~~ ost~";
-    ),
-    // Oozily: 3 words (oozingly, oozily, oologically).
-    declension!("oozily", 3, "~~~";
-        adverb: "~~~", "m~re ~o~", "m~st ~o~";
-    ),
-    // Reedily: 3 words (reelingly, reekingly, reedily). Like Eepily, except in 1 cell: adverb comp.
-    declension!("reedily", 3, "~~~", like Eepily;
-        adverb: _, "mo~ r~e~", _;
+    adverb: "~y", "more ~y|~ier", "most ~y|~iest";
     ),
 ];

@@ -8,7 +8,7 @@ mod paradigm;
 pub mod pattern;
 mod stress;
 
-pub use choice::{Choice, Reading, Rule, Side, Status, by_ending, tolerance};
+pub use choice::{Choice, DISCOUNT, Reading, Rule, Side, Status, blend, by_ending};
 pub use grammar::{
     Compound, Grammar, Irregular, Known, Placement, Prefix, Prefixes, Separation, WORD_END,
     restore, sharpen,
@@ -204,7 +204,7 @@ macro_rules! spellings {
 }
 
 /// A cell of a paradigm table, as text: a pattern (`"~а"`), `derived` (see
-/// [`Relation`]), or `_` for the parent's.
+/// [`Relation`]), an accent's place (`Stem`), or `_` for the parent's.
 #[macro_export]
 macro_rules! cell {
     // `concat!` takes literals only: this is `DERIVED`.
@@ -216,5 +216,8 @@ macro_rules! cell {
     };
     ($pattern:literal) => {
         $pattern
+    };
+    ($place:ident) => {
+        stringify!($place)
     };
 }

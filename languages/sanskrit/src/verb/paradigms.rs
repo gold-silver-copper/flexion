@@ -2,7 +2,9 @@
 //!
 //! A pattern is the form with `~` where the stem goes: `~а` is the stem and
 //! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first.
+//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
+//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
+//! as the copy laws in `laws.rs` change it.
 
 use flexion::Paradigm;
 
@@ -10,127 +12,128 @@ use flexion::Paradigm;
 /// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
 /// they share them), the conjugation it is like (if any), then a row of patterns
 /// per line (`derived`: the form comes from another cell's, see
-/// `relations.rs`; `_`: the form is the conjugation's it is like):
-/// `indicative_active_first` (sg, du, pl)
-/// `indicative_active_second` (sg, du, pl)
-/// `indicative_active_third` (sg, du, pl)
-/// `indicative_middle_first` (sg, du, pl)
-/// `indicative_middle_second` (sg, du, pl)
-/// `indicative_middle_third` (sg, du, pl)
-/// `imperative_active_first` (sg, du, pl)
-/// `imperative_active_second` (sg, du, pl)
-/// `imperative_active_third` (sg, du, pl)
-/// `imperative_middle_first` (sg, du, pl)
-/// `imperative_middle_second` (sg, du, pl)
-/// `imperative_middle_third` (sg, du, pl)
-/// `optative_active_first` (sg, du, pl)
-/// `optative_active_second` (sg, du, pl)
-/// `optative_active_third` (sg, du, pl)
-/// `optative_middle_first` (sg, du, pl)
-/// `optative_middle_second` (sg, du, pl)
-/// `optative_middle_third` (sg, du, pl)
-/// `subjunctive_active_first` (sg, du, pl)
-/// `subjunctive_active_second` (sg, du, pl)
-/// `subjunctive_active_third` (sg, du, pl)
-/// `subjunctive_middle_first` (sg, du, pl)
-/// `subjunctive_middle_second` (sg, du, pl)
-/// `subjunctive_middle_third` (sg, du, pl)
-/// `imperfect_active_first` (sg, du, pl)
-/// `imperfect_active_second` (sg, du, pl)
-/// `imperfect_active_third` (sg, du, pl)
-/// `imperfect_middle_first` (sg, du, pl)
-/// `imperfect_middle_second` (sg, du, pl)
-/// `imperfect_middle_third` (sg, du, pl)
-/// `future_active_first` (sg, du, pl)
-/// `future_active_second` (sg, du, pl)
-/// `future_active_third` (sg, du, pl)
-/// `future_middle_first` (sg, du, pl)
-/// `future_middle_second` (sg, du, pl)
-/// `future_middle_third` (sg, du, pl)
-/// `conditional_active_first` (sg, du, pl)
-/// `conditional_active_second` (sg, du, pl)
-/// `conditional_active_third` (sg, du, pl)
-/// `conditional_middle_first` (sg, du, pl)
-/// `conditional_middle_second` (sg, du, pl)
-/// `conditional_middle_third` (sg, du, pl)
-/// `perfect_active_first` (sg, du, pl)
-/// `perfect_active_second` (sg, du, pl)
-/// `perfect_active_third` (sg, du, pl)
-/// `perfect_middle_first` (sg, du, pl)
-/// `perfect_middle_second` (sg, du, pl)
-/// `perfect_middle_third` (sg, du, pl)
-/// `aorist_active_first` (sg, du, pl)
-/// `aorist_active_second` (sg, du, pl)
-/// `aorist_active_third` (sg, du, pl)
-/// `aorist_middle_first` (sg, du, pl)
-/// `aorist_middle_second` (sg, du, pl)
-/// `aorist_middle_third` (sg, du, pl)
+/// `relations.rs`; `_`, or a row left out: the form is the conjugation's it is like,
+/// or, in a conjugation like no other, derived):
+/// `ind_act_1` (sg, du, pl)
+/// `ind_act_2` (sg, du, pl)
+/// `ind_act_3` (sg, du, pl)
+/// `ind_mid_1` (sg, du, pl)
+/// `ind_mid_2` (sg, du, pl)
+/// `ind_mid_3` (sg, du, pl)
+/// `imp_act_1` (sg, du, pl)
+/// `imp_act_2` (sg, du, pl)
+/// `imp_act_3` (sg, du, pl)
+/// `imp_mid_1` (sg, du, pl)
+/// `imp_mid_2` (sg, du, pl)
+/// `imp_mid_3` (sg, du, pl)
+/// `opt_act_1` (sg, du, pl)
+/// `opt_act_2` (sg, du, pl)
+/// `opt_act_3` (sg, du, pl)
+/// `opt_mid_1` (sg, du, pl)
+/// `opt_mid_2` (sg, du, pl)
+/// `opt_mid_3` (sg, du, pl)
+/// `subj_act_1` (sg, du, pl)
+/// `subj_act_2` (sg, du, pl)
+/// `subj_act_3` (sg, du, pl)
+/// `subj_mid_1` (sg, du, pl)
+/// `subj_mid_2` (sg, du, pl)
+/// `subj_mid_3` (sg, du, pl)
+/// `imperfect_act_1` (sg, du, pl)
+/// `imperfect_act_2` (sg, du, pl)
+/// `imperfect_act_3` (sg, du, pl)
+/// `imperfect_mid_1` (sg, du, pl)
+/// `imperfect_mid_2` (sg, du, pl)
+/// `imperfect_mid_3` (sg, du, pl)
+/// `future_act_1` (sg, du, pl)
+/// `future_act_2` (sg, du, pl)
+/// `future_act_3` (sg, du, pl)
+/// `future_mid_1` (sg, du, pl)
+/// `future_mid_2` (sg, du, pl)
+/// `future_mid_3` (sg, du, pl)
+/// `conditional_act_1` (sg, du, pl)
+/// `conditional_act_2` (sg, du, pl)
+/// `conditional_act_3` (sg, du, pl)
+/// `conditional_mid_1` (sg, du, pl)
+/// `conditional_mid_2` (sg, du, pl)
+/// `conditional_mid_3` (sg, du, pl)
+/// `perfect_act_1` (sg, du, pl)
+/// `perfect_act_2` (sg, du, pl)
+/// `perfect_act_3` (sg, du, pl)
+/// `perfect_mid_1` (sg, du, pl)
+/// `perfect_mid_2` (sg, du, pl)
+/// `perfect_mid_3` (sg, du, pl)
+/// `aorist_act_1` (sg, du, pl)
+/// `aorist_act_2` (sg, du, pl)
+/// `aorist_act_3` (sg, du, pl)
+/// `aorist_mid_1` (sg, du, pl)
+/// `aorist_mid_2` (sg, du, pl)
+/// `aorist_mid_3` (sg, du, pl)
 /// `infinitive`
 /// `gerund`
-/// `participle_present` (act, mid)
-/// `participle_future` (act, mid)
-/// `participle_perfect` (act, mid)
+/// `participle_pres` (act, mid)
+/// `participle_fut` (act, mid)
+/// `participle_perf` (act, mid)
 macro_rules! conjugation {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident)?;
-     indicative_active_first: $c0:tt, $c1:tt, $c2:tt;
-     indicative_active_second: $c3:tt, $c4:tt, $c5:tt;
-     indicative_active_third: $c6:tt, $c7:tt, $c8:tt;
-     indicative_middle_first: $c9:tt, $c10:tt, $c11:tt;
-     indicative_middle_second: $c12:tt, $c13:tt, $c14:tt;
-     indicative_middle_third: $c15:tt, $c16:tt, $c17:tt;
-     imperative_active_first: $c18:tt, $c19:tt, $c20:tt;
-     imperative_active_second: $c21:tt, $c22:tt, $c23:tt;
-     imperative_active_third: $c24:tt, $c25:tt, $c26:tt;
-     imperative_middle_first: $c27:tt, $c28:tt, $c29:tt;
-     imperative_middle_second: $c30:tt, $c31:tt, $c32:tt;
-     imperative_middle_third: $c33:tt, $c34:tt, $c35:tt;
-     optative_active_first: $c36:tt, $c37:tt, $c38:tt;
-     optative_active_second: $c39:tt, $c40:tt, $c41:tt;
-     optative_active_third: $c42:tt, $c43:tt, $c44:tt;
-     optative_middle_first: $c45:tt, $c46:tt, $c47:tt;
-     optative_middle_second: $c48:tt, $c49:tt, $c50:tt;
-     optative_middle_third: $c51:tt, $c52:tt, $c53:tt;
-     subjunctive_active_first: $c54:tt, $c55:tt, $c56:tt;
-     subjunctive_active_second: $c57:tt, $c58:tt, $c59:tt;
-     subjunctive_active_third: $c60:tt, $c61:tt, $c62:tt;
-     subjunctive_middle_first: $c63:tt, $c64:tt, $c65:tt;
-     subjunctive_middle_second: $c66:tt, $c67:tt, $c68:tt;
-     subjunctive_middle_third: $c69:tt, $c70:tt, $c71:tt;
-     imperfect_active_first: $c72:tt, $c73:tt, $c74:tt;
-     imperfect_active_second: $c75:tt, $c76:tt, $c77:tt;
-     imperfect_active_third: $c78:tt, $c79:tt, $c80:tt;
-     imperfect_middle_first: $c81:tt, $c82:tt, $c83:tt;
-     imperfect_middle_second: $c84:tt, $c85:tt, $c86:tt;
-     imperfect_middle_third: $c87:tt, $c88:tt, $c89:tt;
-     future_active_first: $c90:tt, $c91:tt, $c92:tt;
-     future_active_second: $c93:tt, $c94:tt, $c95:tt;
-     future_active_third: $c96:tt, $c97:tt, $c98:tt;
-     future_middle_first: $c99:tt, $c100:tt, $c101:tt;
-     future_middle_second: $c102:tt, $c103:tt, $c104:tt;
-     future_middle_third: $c105:tt, $c106:tt, $c107:tt;
-     conditional_active_first: $c108:tt, $c109:tt, $c110:tt;
-     conditional_active_second: $c111:tt, $c112:tt, $c113:tt;
-     conditional_active_third: $c114:tt, $c115:tt, $c116:tt;
-     conditional_middle_first: $c117:tt, $c118:tt, $c119:tt;
-     conditional_middle_second: $c120:tt, $c121:tt, $c122:tt;
-     conditional_middle_third: $c123:tt, $c124:tt, $c125:tt;
-     perfect_active_first: $c126:tt, $c127:tt, $c128:tt;
-     perfect_active_second: $c129:tt, $c130:tt, $c131:tt;
-     perfect_active_third: $c132:tt, $c133:tt, $c134:tt;
-     perfect_middle_first: $c135:tt, $c136:tt, $c137:tt;
-     perfect_middle_second: $c138:tt, $c139:tt, $c140:tt;
-     perfect_middle_third: $c141:tt, $c142:tt, $c143:tt;
-     aorist_active_first: $c144:tt, $c145:tt, $c146:tt;
-     aorist_active_second: $c147:tt, $c148:tt, $c149:tt;
-     aorist_active_third: $c150:tt, $c151:tt, $c152:tt;
-     aorist_middle_first: $c153:tt, $c154:tt, $c155:tt;
-     aorist_middle_second: $c156:tt, $c157:tt, $c158:tt;
-     aorist_middle_third: $c159:tt, $c160:tt, $c161:tt;
-     infinitive: $c162:tt;
-     gerund: $c163:tt;
-     participle_present: $c164:tt, $c165:tt;
-     participle_future: $c166:tt, $c167:tt;
-     participle_perfect: $c168:tt, $c169:tt;
+     $(ind_act_1: $c0:tt, $c1:tt, $c2:tt;)?
+     $(ind_act_2: $c3:tt, $c4:tt, $c5:tt;)?
+     $(ind_act_3: $c6:tt, $c7:tt, $c8:tt;)?
+     $(ind_mid_1: $c9:tt, $c10:tt, $c11:tt;)?
+     $(ind_mid_2: $c12:tt, $c13:tt, $c14:tt;)?
+     $(ind_mid_3: $c15:tt, $c16:tt, $c17:tt;)?
+     $(imp_act_1: $c18:tt, $c19:tt, $c20:tt;)?
+     $(imp_act_2: $c21:tt, $c22:tt, $c23:tt;)?
+     $(imp_act_3: $c24:tt, $c25:tt, $c26:tt;)?
+     $(imp_mid_1: $c27:tt, $c28:tt, $c29:tt;)?
+     $(imp_mid_2: $c30:tt, $c31:tt, $c32:tt;)?
+     $(imp_mid_3: $c33:tt, $c34:tt, $c35:tt;)?
+     $(opt_act_1: $c36:tt, $c37:tt, $c38:tt;)?
+     $(opt_act_2: $c39:tt, $c40:tt, $c41:tt;)?
+     $(opt_act_3: $c42:tt, $c43:tt, $c44:tt;)?
+     $(opt_mid_1: $c45:tt, $c46:tt, $c47:tt;)?
+     $(opt_mid_2: $c48:tt, $c49:tt, $c50:tt;)?
+     $(opt_mid_3: $c51:tt, $c52:tt, $c53:tt;)?
+     $(subj_act_1: $c54:tt, $c55:tt, $c56:tt;)?
+     $(subj_act_2: $c57:tt, $c58:tt, $c59:tt;)?
+     $(subj_act_3: $c60:tt, $c61:tt, $c62:tt;)?
+     $(subj_mid_1: $c63:tt, $c64:tt, $c65:tt;)?
+     $(subj_mid_2: $c66:tt, $c67:tt, $c68:tt;)?
+     $(subj_mid_3: $c69:tt, $c70:tt, $c71:tt;)?
+     $(imperfect_act_1: $c72:tt, $c73:tt, $c74:tt;)?
+     $(imperfect_act_2: $c75:tt, $c76:tt, $c77:tt;)?
+     $(imperfect_act_3: $c78:tt, $c79:tt, $c80:tt;)?
+     $(imperfect_mid_1: $c81:tt, $c82:tt, $c83:tt;)?
+     $(imperfect_mid_2: $c84:tt, $c85:tt, $c86:tt;)?
+     $(imperfect_mid_3: $c87:tt, $c88:tt, $c89:tt;)?
+     $(future_act_1: $c90:tt, $c91:tt, $c92:tt;)?
+     $(future_act_2: $c93:tt, $c94:tt, $c95:tt;)?
+     $(future_act_3: $c96:tt, $c97:tt, $c98:tt;)?
+     $(future_mid_1: $c99:tt, $c100:tt, $c101:tt;)?
+     $(future_mid_2: $c102:tt, $c103:tt, $c104:tt;)?
+     $(future_mid_3: $c105:tt, $c106:tt, $c107:tt;)?
+     $(conditional_act_1: $c108:tt, $c109:tt, $c110:tt;)?
+     $(conditional_act_2: $c111:tt, $c112:tt, $c113:tt;)?
+     $(conditional_act_3: $c114:tt, $c115:tt, $c116:tt;)?
+     $(conditional_mid_1: $c117:tt, $c118:tt, $c119:tt;)?
+     $(conditional_mid_2: $c120:tt, $c121:tt, $c122:tt;)?
+     $(conditional_mid_3: $c123:tt, $c124:tt, $c125:tt;)?
+     $(perfect_act_1: $c126:tt, $c127:tt, $c128:tt;)?
+     $(perfect_act_2: $c129:tt, $c130:tt, $c131:tt;)?
+     $(perfect_act_3: $c132:tt, $c133:tt, $c134:tt;)?
+     $(perfect_mid_1: $c135:tt, $c136:tt, $c137:tt;)?
+     $(perfect_mid_2: $c138:tt, $c139:tt, $c140:tt;)?
+     $(perfect_mid_3: $c141:tt, $c142:tt, $c143:tt;)?
+     $(aorist_act_1: $c144:tt, $c145:tt, $c146:tt;)?
+     $(aorist_act_2: $c147:tt, $c148:tt, $c149:tt;)?
+     $(aorist_act_3: $c150:tt, $c151:tt, $c152:tt;)?
+     $(aorist_mid_1: $c153:tt, $c154:tt, $c155:tt;)?
+     $(aorist_mid_2: $c156:tt, $c157:tt, $c158:tt;)?
+     $(aorist_mid_3: $c159:tt, $c160:tt, $c161:tt;)?
+     $(infinitive: $c162:tt;)?
+     $(gerund: $c163:tt;)?
+     $(participle_pres: $c164:tt, $c165:tt;)?
+     $(participle_fut: $c166:tt, $c167:tt;)?
+     $(participle_perf: $c168:tt, $c169:tt;)?
     ) => {
         Paradigm {
             name: ::std::borrow::Cow::Borrowed($name),
@@ -139,176 +142,176 @@ macro_rules! conjugation {
             parent: like!($($parent)?),
             inherent: ::std::borrow::Cow::Borrowed(&[]),
             table: ::std::borrow::Cow::Borrowed(concat!(
-                flexion::cell!($c0), "\t",
-                flexion::cell!($c1), "\t",
-                flexion::cell!($c2), "\t",
-                flexion::cell!($c3), "\t",
-                flexion::cell!($c4), "\t",
-                flexion::cell!($c5), "\t",
-                flexion::cell!($c6), "\t",
-                flexion::cell!($c7), "\t",
-                flexion::cell!($c8), "\t",
-                flexion::cell!($c9), "\t",
-                flexion::cell!($c10), "\t",
-                flexion::cell!($c11), "\t",
-                flexion::cell!($c12), "\t",
-                flexion::cell!($c13), "\t",
-                flexion::cell!($c14), "\t",
-                flexion::cell!($c15), "\t",
-                flexion::cell!($c16), "\t",
-                flexion::cell!($c17), "\t",
-                flexion::cell!($c18), "\t",
-                flexion::cell!($c19), "\t",
-                flexion::cell!($c20), "\t",
-                flexion::cell!($c21), "\t",
-                flexion::cell!($c22), "\t",
-                flexion::cell!($c23), "\t",
-                flexion::cell!($c24), "\t",
-                flexion::cell!($c25), "\t",
-                flexion::cell!($c26), "\t",
-                flexion::cell!($c27), "\t",
-                flexion::cell!($c28), "\t",
-                flexion::cell!($c29), "\t",
-                flexion::cell!($c30), "\t",
-                flexion::cell!($c31), "\t",
-                flexion::cell!($c32), "\t",
-                flexion::cell!($c33), "\t",
-                flexion::cell!($c34), "\t",
-                flexion::cell!($c35), "\t",
-                flexion::cell!($c36), "\t",
-                flexion::cell!($c37), "\t",
-                flexion::cell!($c38), "\t",
-                flexion::cell!($c39), "\t",
-                flexion::cell!($c40), "\t",
-                flexion::cell!($c41), "\t",
-                flexion::cell!($c42), "\t",
-                flexion::cell!($c43), "\t",
-                flexion::cell!($c44), "\t",
-                flexion::cell!($c45), "\t",
-                flexion::cell!($c46), "\t",
-                flexion::cell!($c47), "\t",
-                flexion::cell!($c48), "\t",
-                flexion::cell!($c49), "\t",
-                flexion::cell!($c50), "\t",
-                flexion::cell!($c51), "\t",
-                flexion::cell!($c52), "\t",
-                flexion::cell!($c53), "\t",
-                flexion::cell!($c54), "\t",
-                flexion::cell!($c55), "\t",
-                flexion::cell!($c56), "\t",
-                flexion::cell!($c57), "\t",
-                flexion::cell!($c58), "\t",
-                flexion::cell!($c59), "\t",
-                flexion::cell!($c60), "\t",
-                flexion::cell!($c61), "\t",
-                flexion::cell!($c62), "\t",
-                flexion::cell!($c63), "\t",
-                flexion::cell!($c64), "\t",
-                flexion::cell!($c65), "\t",
-                flexion::cell!($c66), "\t",
-                flexion::cell!($c67), "\t",
-                flexion::cell!($c68), "\t",
-                flexion::cell!($c69), "\t",
-                flexion::cell!($c70), "\t",
-                flexion::cell!($c71), "\t",
-                flexion::cell!($c72), "\t",
-                flexion::cell!($c73), "\t",
-                flexion::cell!($c74), "\t",
-                flexion::cell!($c75), "\t",
-                flexion::cell!($c76), "\t",
-                flexion::cell!($c77), "\t",
-                flexion::cell!($c78), "\t",
-                flexion::cell!($c79), "\t",
-                flexion::cell!($c80), "\t",
-                flexion::cell!($c81), "\t",
-                flexion::cell!($c82), "\t",
-                flexion::cell!($c83), "\t",
-                flexion::cell!($c84), "\t",
-                flexion::cell!($c85), "\t",
-                flexion::cell!($c86), "\t",
-                flexion::cell!($c87), "\t",
-                flexion::cell!($c88), "\t",
-                flexion::cell!($c89), "\t",
-                flexion::cell!($c90), "\t",
-                flexion::cell!($c91), "\t",
-                flexion::cell!($c92), "\t",
-                flexion::cell!($c93), "\t",
-                flexion::cell!($c94), "\t",
-                flexion::cell!($c95), "\t",
-                flexion::cell!($c96), "\t",
-                flexion::cell!($c97), "\t",
-                flexion::cell!($c98), "\t",
-                flexion::cell!($c99), "\t",
-                flexion::cell!($c100), "\t",
-                flexion::cell!($c101), "\t",
-                flexion::cell!($c102), "\t",
-                flexion::cell!($c103), "\t",
-                flexion::cell!($c104), "\t",
-                flexion::cell!($c105), "\t",
-                flexion::cell!($c106), "\t",
-                flexion::cell!($c107), "\t",
-                flexion::cell!($c108), "\t",
-                flexion::cell!($c109), "\t",
-                flexion::cell!($c110), "\t",
-                flexion::cell!($c111), "\t",
-                flexion::cell!($c112), "\t",
-                flexion::cell!($c113), "\t",
-                flexion::cell!($c114), "\t",
-                flexion::cell!($c115), "\t",
-                flexion::cell!($c116), "\t",
-                flexion::cell!($c117), "\t",
-                flexion::cell!($c118), "\t",
-                flexion::cell!($c119), "\t",
-                flexion::cell!($c120), "\t",
-                flexion::cell!($c121), "\t",
-                flexion::cell!($c122), "\t",
-                flexion::cell!($c123), "\t",
-                flexion::cell!($c124), "\t",
-                flexion::cell!($c125), "\t",
-                flexion::cell!($c126), "\t",
-                flexion::cell!($c127), "\t",
-                flexion::cell!($c128), "\t",
-                flexion::cell!($c129), "\t",
-                flexion::cell!($c130), "\t",
-                flexion::cell!($c131), "\t",
-                flexion::cell!($c132), "\t",
-                flexion::cell!($c133), "\t",
-                flexion::cell!($c134), "\t",
-                flexion::cell!($c135), "\t",
-                flexion::cell!($c136), "\t",
-                flexion::cell!($c137), "\t",
-                flexion::cell!($c138), "\t",
-                flexion::cell!($c139), "\t",
-                flexion::cell!($c140), "\t",
-                flexion::cell!($c141), "\t",
-                flexion::cell!($c142), "\t",
-                flexion::cell!($c143), "\t",
-                flexion::cell!($c144), "\t",
-                flexion::cell!($c145), "\t",
-                flexion::cell!($c146), "\t",
-                flexion::cell!($c147), "\t",
-                flexion::cell!($c148), "\t",
-                flexion::cell!($c149), "\t",
-                flexion::cell!($c150), "\t",
-                flexion::cell!($c151), "\t",
-                flexion::cell!($c152), "\t",
-                flexion::cell!($c153), "\t",
-                flexion::cell!($c154), "\t",
-                flexion::cell!($c155), "\t",
-                flexion::cell!($c156), "\t",
-                flexion::cell!($c157), "\t",
-                flexion::cell!($c158), "\t",
-                flexion::cell!($c159), "\t",
-                flexion::cell!($c160), "\t",
-                flexion::cell!($c161), "\t",
-                flexion::cell!($c162), "\t",
-                flexion::cell!($c163), "\t",
-                flexion::cell!($c164), "\t",
-                flexion::cell!($c165), "\t",
-                flexion::cell!($c166), "\t",
-                flexion::cell!($c167), "\t",
-                flexion::cell!($c168), "\t",
-                flexion::cell!($c169), "\t",
+                $(flexion::cell!($c0),)? "\t",
+                $(flexion::cell!($c1),)? "\t",
+                $(flexion::cell!($c2),)? "\t",
+                $(flexion::cell!($c3),)? "\t",
+                $(flexion::cell!($c4),)? "\t",
+                $(flexion::cell!($c5),)? "\t",
+                $(flexion::cell!($c6),)? "\t",
+                $(flexion::cell!($c7),)? "\t",
+                $(flexion::cell!($c8),)? "\t",
+                $(flexion::cell!($c9),)? "\t",
+                $(flexion::cell!($c10),)? "\t",
+                $(flexion::cell!($c11),)? "\t",
+                $(flexion::cell!($c12),)? "\t",
+                $(flexion::cell!($c13),)? "\t",
+                $(flexion::cell!($c14),)? "\t",
+                $(flexion::cell!($c15),)? "\t",
+                $(flexion::cell!($c16),)? "\t",
+                $(flexion::cell!($c17),)? "\t",
+                $(flexion::cell!($c18),)? "\t",
+                $(flexion::cell!($c19),)? "\t",
+                $(flexion::cell!($c20),)? "\t",
+                $(flexion::cell!($c21),)? "\t",
+                $(flexion::cell!($c22),)? "\t",
+                $(flexion::cell!($c23),)? "\t",
+                $(flexion::cell!($c24),)? "\t",
+                $(flexion::cell!($c25),)? "\t",
+                $(flexion::cell!($c26),)? "\t",
+                $(flexion::cell!($c27),)? "\t",
+                $(flexion::cell!($c28),)? "\t",
+                $(flexion::cell!($c29),)? "\t",
+                $(flexion::cell!($c30),)? "\t",
+                $(flexion::cell!($c31),)? "\t",
+                $(flexion::cell!($c32),)? "\t",
+                $(flexion::cell!($c33),)? "\t",
+                $(flexion::cell!($c34),)? "\t",
+                $(flexion::cell!($c35),)? "\t",
+                $(flexion::cell!($c36),)? "\t",
+                $(flexion::cell!($c37),)? "\t",
+                $(flexion::cell!($c38),)? "\t",
+                $(flexion::cell!($c39),)? "\t",
+                $(flexion::cell!($c40),)? "\t",
+                $(flexion::cell!($c41),)? "\t",
+                $(flexion::cell!($c42),)? "\t",
+                $(flexion::cell!($c43),)? "\t",
+                $(flexion::cell!($c44),)? "\t",
+                $(flexion::cell!($c45),)? "\t",
+                $(flexion::cell!($c46),)? "\t",
+                $(flexion::cell!($c47),)? "\t",
+                $(flexion::cell!($c48),)? "\t",
+                $(flexion::cell!($c49),)? "\t",
+                $(flexion::cell!($c50),)? "\t",
+                $(flexion::cell!($c51),)? "\t",
+                $(flexion::cell!($c52),)? "\t",
+                $(flexion::cell!($c53),)? "\t",
+                $(flexion::cell!($c54),)? "\t",
+                $(flexion::cell!($c55),)? "\t",
+                $(flexion::cell!($c56),)? "\t",
+                $(flexion::cell!($c57),)? "\t",
+                $(flexion::cell!($c58),)? "\t",
+                $(flexion::cell!($c59),)? "\t",
+                $(flexion::cell!($c60),)? "\t",
+                $(flexion::cell!($c61),)? "\t",
+                $(flexion::cell!($c62),)? "\t",
+                $(flexion::cell!($c63),)? "\t",
+                $(flexion::cell!($c64),)? "\t",
+                $(flexion::cell!($c65),)? "\t",
+                $(flexion::cell!($c66),)? "\t",
+                $(flexion::cell!($c67),)? "\t",
+                $(flexion::cell!($c68),)? "\t",
+                $(flexion::cell!($c69),)? "\t",
+                $(flexion::cell!($c70),)? "\t",
+                $(flexion::cell!($c71),)? "\t",
+                $(flexion::cell!($c72),)? "\t",
+                $(flexion::cell!($c73),)? "\t",
+                $(flexion::cell!($c74),)? "\t",
+                $(flexion::cell!($c75),)? "\t",
+                $(flexion::cell!($c76),)? "\t",
+                $(flexion::cell!($c77),)? "\t",
+                $(flexion::cell!($c78),)? "\t",
+                $(flexion::cell!($c79),)? "\t",
+                $(flexion::cell!($c80),)? "\t",
+                $(flexion::cell!($c81),)? "\t",
+                $(flexion::cell!($c82),)? "\t",
+                $(flexion::cell!($c83),)? "\t",
+                $(flexion::cell!($c84),)? "\t",
+                $(flexion::cell!($c85),)? "\t",
+                $(flexion::cell!($c86),)? "\t",
+                $(flexion::cell!($c87),)? "\t",
+                $(flexion::cell!($c88),)? "\t",
+                $(flexion::cell!($c89),)? "\t",
+                $(flexion::cell!($c90),)? "\t",
+                $(flexion::cell!($c91),)? "\t",
+                $(flexion::cell!($c92),)? "\t",
+                $(flexion::cell!($c93),)? "\t",
+                $(flexion::cell!($c94),)? "\t",
+                $(flexion::cell!($c95),)? "\t",
+                $(flexion::cell!($c96),)? "\t",
+                $(flexion::cell!($c97),)? "\t",
+                $(flexion::cell!($c98),)? "\t",
+                $(flexion::cell!($c99),)? "\t",
+                $(flexion::cell!($c100),)? "\t",
+                $(flexion::cell!($c101),)? "\t",
+                $(flexion::cell!($c102),)? "\t",
+                $(flexion::cell!($c103),)? "\t",
+                $(flexion::cell!($c104),)? "\t",
+                $(flexion::cell!($c105),)? "\t",
+                $(flexion::cell!($c106),)? "\t",
+                $(flexion::cell!($c107),)? "\t",
+                $(flexion::cell!($c108),)? "\t",
+                $(flexion::cell!($c109),)? "\t",
+                $(flexion::cell!($c110),)? "\t",
+                $(flexion::cell!($c111),)? "\t",
+                $(flexion::cell!($c112),)? "\t",
+                $(flexion::cell!($c113),)? "\t",
+                $(flexion::cell!($c114),)? "\t",
+                $(flexion::cell!($c115),)? "\t",
+                $(flexion::cell!($c116),)? "\t",
+                $(flexion::cell!($c117),)? "\t",
+                $(flexion::cell!($c118),)? "\t",
+                $(flexion::cell!($c119),)? "\t",
+                $(flexion::cell!($c120),)? "\t",
+                $(flexion::cell!($c121),)? "\t",
+                $(flexion::cell!($c122),)? "\t",
+                $(flexion::cell!($c123),)? "\t",
+                $(flexion::cell!($c124),)? "\t",
+                $(flexion::cell!($c125),)? "\t",
+                $(flexion::cell!($c126),)? "\t",
+                $(flexion::cell!($c127),)? "\t",
+                $(flexion::cell!($c128),)? "\t",
+                $(flexion::cell!($c129),)? "\t",
+                $(flexion::cell!($c130),)? "\t",
+                $(flexion::cell!($c131),)? "\t",
+                $(flexion::cell!($c132),)? "\t",
+                $(flexion::cell!($c133),)? "\t",
+                $(flexion::cell!($c134),)? "\t",
+                $(flexion::cell!($c135),)? "\t",
+                $(flexion::cell!($c136),)? "\t",
+                $(flexion::cell!($c137),)? "\t",
+                $(flexion::cell!($c138),)? "\t",
+                $(flexion::cell!($c139),)? "\t",
+                $(flexion::cell!($c140),)? "\t",
+                $(flexion::cell!($c141),)? "\t",
+                $(flexion::cell!($c142),)? "\t",
+                $(flexion::cell!($c143),)? "\t",
+                $(flexion::cell!($c144),)? "\t",
+                $(flexion::cell!($c145),)? "\t",
+                $(flexion::cell!($c146),)? "\t",
+                $(flexion::cell!($c147),)? "\t",
+                $(flexion::cell!($c148),)? "\t",
+                $(flexion::cell!($c149),)? "\t",
+                $(flexion::cell!($c150),)? "\t",
+                $(flexion::cell!($c151),)? "\t",
+                $(flexion::cell!($c152),)? "\t",
+                $(flexion::cell!($c153),)? "\t",
+                $(flexion::cell!($c154),)? "\t",
+                $(flexion::cell!($c155),)? "\t",
+                $(flexion::cell!($c156),)? "\t",
+                $(flexion::cell!($c157),)? "\t",
+                $(flexion::cell!($c158),)? "\t",
+                $(flexion::cell!($c159),)? "\t",
+                $(flexion::cell!($c160),)? "\t",
+                $(flexion::cell!($c161),)? "\t",
+                $(flexion::cell!($c162),)? "\t",
+                $(flexion::cell!($c163),)? "\t",
+                $(flexion::cell!($c164),)? "\t",
+                $(flexion::cell!($c165),)? "\t",
+                $(flexion::cell!($c166),)? "\t",
+                $(flexion::cell!($c167),)? "\t",
+                $(flexion::cell!($c168),)? "\t",
+                $(flexion::cell!($c169),)? "\t",
             )),
         }
     };
@@ -327,52 +330,48 @@ macro_rules! like {
 /// Every conjugation learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Conjugation {
-    /// Like `वहति`: 272 words.
+    /// Like `वहति`: 265 words.
     वहति,
-    /// Like `लभते`: 112 words.
+    /// Like `लभते`: 110 words.
     लभते,
-    /// Like `अमत`: 107 words.
+    /// Like `अमत`: 99 words.
     अमत,
-    /// Like `धरति`: 99 words.
+    /// Like `धरति`: 95 words.
     धरति,
-    /// Like `एति`: 83 words.
-    एति,
-    /// Like `रमते`: 43 words.
-    रमते,
-    /// Like `आपत्`: 41 words.
+    /// Like `साधयति`: 86 words.
+    साधयति,
+    /// Like `आपत्`: 46 words.
     आपत,
-    /// Like `ईरयति`: 28 words.
-    ईरयति,
-    /// Like `एष्यति`: 28 words.
+    /// Like `रमते`: 42 words.
+    रमते,
+    /// Like `एष्यति`: 36 words.
     एषयति,
+    /// Like `ईरयति`: 27 words.
+    ईरयति,
+    /// Like `खादति`: 26 words.
+    खादति,
     /// Like `ददाति`: 19 words.
     ददाति,
-    /// Like `अवति`: 17 words.
-    अवति,
     /// Like `तनोति`: 16 words.
     तनोति,
-    /// Like `आजीत्`: 11 words.
+    /// Like `ईळे`: 10 words.
+    ईळे,
+    /// Like `आजीत्`: 10 words.
     आजीत,
-    /// Like `धास्यति`: 10 words.
-    धासयति,
-    /// Like `अनंसीत्`: 9 words.
-    अनंसीत,
-    /// Like `भाति`: 8 words.
-    भाति,
     /// Like `आप्नोति`: 8 words.
     आपनोति,
-    /// Like `बध्नाति`: 7 words.
-    बधनाति,
-    /// Like `ददौ`: 7 words.
-    ददौ,
+    /// Like `ररंह`: 8 words.
+    ररंह,
+    /// Like `भाति`: 7 words.
+    भाति,
     /// Like `पिपर्ति`: 7 words.
     पिपरति,
-    /// Like `भनक्ति`: 6 words.
+    /// Like `बध्नाति`: 6 words.
+    बधनाति,
+    /// Like `ददौ`: 6 words.
+    ददौ,
+    /// Like `भनक्ति`: 5 words.
     भनकति,
-    /// Like `उपविशति`: 6 words.
-    उपविशति,
-    /// Like `ईळे`: 5 words.
-    ईळे,
     /// Like `अगात्`: 5 words.
     अगात,
     /// Like `जुहाव`: 5 words.
@@ -381,26 +380,18 @@ pub enum Conjugation {
     इयाय,
     /// Like `चचार`: 5 words.
     चचार,
-    /// Like `आद`: 4 words.
-    आद,
     /// Like `वमति`: 4 words.
     वमति,
     /// Like `वृणीते`: 4 words.
     वृणीते,
-    /// Like `स्रवति`: 4 words.
-    सरवति,
+    /// Like `रवति`: 4 words.
+    रवति,
     /// Like `आनयति`: 4 words.
     आनयति,
-    /// Like `इरस्यति`: 4 words.
-    इरसयति,
     /// Like `चकार`: 3 words.
     चकार,
     /// Like `आचरति`: 3 words.
     आचरति,
-    /// Like `प्रवदति`: 3 words.
-    परवदति,
-    /// Like `मुमोच`: 3 words.
-    मुमोच,
     /// Like `अकार्षीत्`: 3 words.
     अकारषीत,
     /// Like `अधुक्षत्`: 3 words.
@@ -411,44 +402,38 @@ pub enum Conjugation {
 
 impl Conjugation {
     /// Every conjugation, in order.
-    pub const ALL: [Conjugation; 40] = [
+    pub const ALL: [Conjugation; 34] = [
         Conjugation::वहति,
         Conjugation::लभते,
         Conjugation::अमत,
         Conjugation::धरति,
-        Conjugation::एति,
-        Conjugation::रमते,
+        Conjugation::साधयति,
         Conjugation::आपत,
-        Conjugation::ईरयति,
+        Conjugation::रमते,
         Conjugation::एषयति,
+        Conjugation::ईरयति,
+        Conjugation::खादति,
         Conjugation::ददाति,
-        Conjugation::अवति,
         Conjugation::तनोति,
+        Conjugation::ईळे,
         Conjugation::आजीत,
-        Conjugation::धासयति,
-        Conjugation::अनंसीत,
-        Conjugation::भाति,
         Conjugation::आपनोति,
+        Conjugation::ररंह,
+        Conjugation::भाति,
+        Conjugation::पिपरति,
         Conjugation::बधनाति,
         Conjugation::ददौ,
-        Conjugation::पिपरति,
         Conjugation::भनकति,
-        Conjugation::उपविशति,
-        Conjugation::ईळे,
         Conjugation::अगात,
         Conjugation::जुहाव,
         Conjugation::इयाय,
         Conjugation::चचार,
-        Conjugation::आद,
         Conjugation::वमति,
         Conjugation::वृणीते,
-        Conjugation::सरवति,
+        Conjugation::रवति,
         Conjugation::आनयति,
-        Conjugation::इरसयति,
         Conjugation::चकार,
         Conjugation::आचरति,
-        Conjugation::परवदति,
-        Conjugation::मुमोच,
         Conjugation::अकारषीत,
         Conjugation::अधुकषत,
         Conjugation::अचैषीत,
@@ -469,2485 +454,773 @@ impl flexion::Label for Conjugation {
     }
 }
 
-pub(super) static CONJUGATIONS: [Paradigm<'static>; 40] = [
-    // वहति: 272 words (निन्दति, खादति, क्षालयति, वयति, बोधति, भवति).
-    conjugation!("वहति", 272, "~~ति";
-        indicative_active_first: "~~ामि", "~~ावः", "~~ामः";
-        indicative_active_second: "~~सि", "~~थः", "~~थ";
-        indicative_active_third: "~~ति", "~~तः", "~~न्ति";
-        indicative_middle_first: "~~े", "~~ावहे", "~~ामहे";
-        indicative_middle_second: "~~से", "~~ेथे", "~~ध्वे";
-        indicative_middle_third: "~~ते", "~~ेते", "~~न्ते";
-        imperative_active_first: "~~ानि", "~~ाव", "~~ाम";
-        imperative_active_second: "~~", "~~तम्", "~~त";
-        imperative_active_third: "~~तु", "~~ताम्", "~~न्तु";
-        imperative_middle_first: "~~ै", "~~ावहै", "~~ामहै";
-        imperative_middle_second: "~~स्व", "~~ेथाम्", "~~ध्वम्";
-        imperative_middle_third: "~~ताम्", "~~ेताम्", "~~न्ताम्";
-        optative_active_first: "~~ेयम्", "~~ेव", "~~ेम";
-        optative_active_second: "~~ेः", "~~ेतम्", "~~ेत";
-        optative_active_third: "~~ेत्", "~~ेताम्", "~~ेयुः";
-        optative_middle_first: "~~ेय", "~~ेवहि", "~~ेमहि";
-        optative_middle_second: "~~ेथाः", "~~ेयाथाम्", "~~ेध्वम्";
-        optative_middle_third: "~~ेत", "~~ेयाताम्", "~~ेरन्";
-        subjunctive_active_first: "~~ानि", "~~ाव", "~~ाम";
-        subjunctive_active_second: "~~ाः", "~~ाथः", "~~ाथ";
-        subjunctive_active_third: "~~ात्", "~~ातः", "~~ान्";
-        subjunctive_middle_first: "~~ै", "~~ावहै", "~~ामहै";
-        subjunctive_middle_second: "~~ासे", "~~ैथे", "~~ाध्वै";
-        subjunctive_middle_third: "~~ाते", "~~ैते", "~~न्त";
-        imperfect_active_first: "अ~~म्", "अ~~ाव", "अ~~ाम";
-        imperfect_active_second: "अ~~ः", "अ~~तम्", "अ~~त";
-        imperfect_active_third: "अ~~त्", "अ~~ताम्", "अ~~न्";
-        imperfect_middle_first: "अ~~े", "अ~~ावहि", "अ~~ामहि";
-        imperfect_middle_second: "अ~~थाः", "अ~~ेथाम्", "अ~~ध्वम्";
-        imperfect_middle_third: "अ~~त", "अ~~ेताम्", "अ~~न्त";
-        future_active_first: "~~िष्यामि", "~~िष्यावः", "~~िष्यामः";
-        future_active_second: "~~िष्यसि", "~~िष्यथः", "~~िष्यथ";
-        future_active_third: "~~िष्यति", "~~िष्यतः", "~~िष्यन्ति";
-        future_middle_first: "~~िष्ये", "~~िष्यावहे", "~~िष्यामहे";
-        future_middle_second: "~~िष्यसे", "~~िष्येथे", "~~िष्यध्वे";
-        future_middle_third: "~~िष्यते", "~~िष्येते", "~~िष्यन्ते";
-        conditional_active_first: "अ~~िष्यम्", "अ~~िष्याव", "अ~~िष्याम";
-        conditional_active_second: "अ~~िष्यः", "अ~~िष्यतम्", "अ~~िष्यत";
-        conditional_active_third: "अ~~िष्यत्", "अ~~िष्यताम्", "अ~~िष्यन्";
-        conditional_middle_first: "अ~~िष्ये", "अ~~िष्यावहि", "अ~~िष्यामहि";
-        conditional_middle_second: "अ~~िष्यथाः", "अ~~िष्येथाम्", "अ~~िष्यध्वम्";
-        conditional_middle_third: "अ~~िष्यत", "अ~~िष्येताम्", "अ~~िष्यन्त";
-        perfect_active_first: "~िन~", "~िन~िव", "~िन~िम";
-        perfect_active_second: "~िन~िथ", "~िन~थुः", "~िन~";
-        perfect_active_third: "~िन~", "~िन~तुः", "~िन~ुः";
-        perfect_middle_first: "~िन~े", "~िन~िवहे", "~िन~िमहे";
-        perfect_middle_second: "~िन~िषे", "~िन~ाथे", "~िन~िध्वे";
-        perfect_middle_third: "~िन~े", "~िन~ाते", "~िन~िरे";
-        aorist_active_first: "अ~~िषम्", "अ~~िष्व", "अ~~िष्म";
-        aorist_active_second: "अ~~ीः", "अ~~िष्टम्", "अ~~िष्ट";
-        aorist_active_third: "अ~~ीत्", "अ~~िष्टाम्", "अ~~िषुः";
-        aorist_middle_first: "अ~~िषि", "अ~~िष्वहि", "अ~~िष्महि";
-        aorist_middle_second: "अ~~िष्ठाः", "अ~~िषाथाम्", "अ~~िढ्वम्";
-        aorist_middle_third: "अ~~िष्ट", "अ~~िषाताम्", "अ~~िषत";
-        infinitive: "~~ितुम्";
-        gerund: "~~ित्वा";
-        participle_present: "~~त्", "~~मान";
-        participle_future: "~~िष्यत्", "~~िष्यमाण";
-        participle_perfect: "~िन~्वांस्", "~िन~ान";
+pub(super) static CONJUGATIONS: [Paradigm<'static>; 34] = [
+    // वहति: 265 words (निन्दति, वयति, बोधति, भवति, यभति, दहति).
+    conjugation!("वहति", 265, "~ति";
+    ind_act_1: "~ामि", "~ावः", "~ामः|~ामसि";
+    ind_act_2: "~सि", "~थः", "~थ";
+    ind_act_3: "~ति", "~तः", "~न्ति";
+    ind_mid_1: "~े", "~ावहे", "~ामहे";
+    ind_mid_2: "~से", "~ेथे", "~ध्वे";
+    ind_mid_3: "~ते", "~ेते", "~न्ते";
+    imp_act_1: "~ानि", "~ाव", "~ाम";
+    imp_act_2: "~", "~तम्", "~त";
+    imp_act_3: "~तु", "~ताम्", "~न्तु";
+    imp_mid_1: "~ै", "~ावहै", "~ामहै";
+    imp_mid_2: "~स्व", "~ेथाम्", "~ध्वम्";
+    imp_mid_3: "~ताम्", "~ेताम्", "~न्ताम्";
+    opt_act_1: "~ेयम्", "~ेव", "~ेम";
+    opt_act_2: "~ेः", "~ेतम्", "~ेत";
+    opt_act_3: "~ेत्", "~ेताम्", "~ेयुः";
+    opt_mid_1: "~ेय", "~ेवहि", "~ेमहि";
+    opt_mid_2: "~ेथाः", "~ेयाथाम्", "~ेध्वम्";
+    opt_mid_3: "~ेत", "~ेयाताम्", "~ेरन्";
+    subj_act_2: "~ाः|~ासि", "~ाथः", "~ाथ";
+    subj_act_3: "~ात्|~ाति", "~ातः", "~ान्";
+    subj_mid_2: "~ासे|~ासै", "~ैथे", "~ाध्वै";
+    subj_mid_3: "~ाते|~ातै", "~ैते", "~न्त|~ान्तै";
+    imperfect_act_1: "अ~म्", "अ~ाव", "अ~ाम";
+    imperfect_act_2: "अ~ः", "अ~तम्", _;
+    imperfect_act_3: "अ~त्", "अ~ताम्", "अ~न्";
+    imperfect_mid_1: "अ~े", "अ~ावहि", "अ~ामहि";
+    imperfect_mid_2: "अ~थाः", "अ~ेथाम्", "अ~ध्वम्";
+    imperfect_mid_3: "अ~त", "अ~ेताम्", "अ~न्त";
+    future_act_1: "~िष्यामि", "~िष्यावः", "~िष्यामः";
+    future_act_2: "~िष्यसि", "~िष्यथः", "~िष्यथ";
+    future_act_3: "~िष्यति", "~िष्यतः", "~िष्यन्ति";
+    future_mid_1: "~िष्ये", "~िष्यावहे", "~िष्यामहे";
+    future_mid_2: "~िष्यसे", "~िष्येथे", "~िष्यध्वे";
+    future_mid_3: "~िष्यते", "~िष्येते", "~िष्यन्ते";
+    conditional_act_1: "अ~िष्यम्", "अ~िष्याव", "अ~िष्याम";
+    conditional_act_2: "अ~िष्यः", "अ~िष्यतम्", _;
+    conditional_act_3: "अ~िष्यत्", "अ~िष्यताम्", "अ~िष्यन्";
+    conditional_mid_1: "अ~िष्ये", "अ~िष्यावहि", "अ~िष्यामहि";
+    conditional_mid_2: "अ~िष्यथाः", "अ~िष्येथाम्", "अ~िष्यध्वम्";
+    conditional_mid_3: "अ~िष्यत", "अ~िष्येताम्", "अ~िष्यन्त";
+    perfect_act_1: "नि~", "नि~िव", "नि~िम";
+    perfect_act_2: "नि~िथ", "नि~थुः", "नि~";
+    perfect_act_3: "नि~", "नि~तुः", "नि~ुः";
+    perfect_mid_1: "नि~े", "नि~िवहे", "नि~िमहे";
+    perfect_mid_2: "नि~िषे", "नि~ाथे", "नि~िध्वे";
+    perfect_mid_3: _, "नि~ाते", "नि~िरे";
+    aorist_act_1: "अ~िषम्", "अ~िष्व", "अ~िष्म";
+    aorist_act_2: "अ~ीः", "अ~िष्टम्", "अ~िष्ट";
+    aorist_act_3: "अ~ीत्", "अ~िष्टाम्", "अ~िषुः";
+    aorist_mid_1: "अ~िषि", "अ~िष्वहि", "अ~िष्महि";
+    aorist_mid_2: "अ~िष्ठाः", "अ~िषाथाम्", "अ~िढ्वम्";
+    aorist_mid_3: "अ~िष्ट", "अ~िषाताम्", "अ~िषत";
+    infinitive: "~ितुम्";
+    gerund: "~ित्वा";
+    participle_pres: "~त्", "~मान";
+    participle_fut: "~िष्यत्", "~िष्यमाण";
+    participle_perf: "नि~्वांस्", "नि~ान";
     ),
-    // लभते: 112 words (वस्ते, सचते, रोचते, मन्यते, पर्दते, स्वेदते).
-    conjugation!("लभते", 112, "~ते";
-        indicative_active_first: "~ामि", "~ावः", "~ामः";
-        indicative_active_second: "~सि", "~थः", "~थ";
-        indicative_active_third: "~ति", "~तः", "~न्ति";
-        indicative_middle_first: "~े", "~ावहे", "~ामहे";
-        indicative_middle_second: "~से", "~ेथे", "~ध्वे";
-        indicative_middle_third: "~ते", "~ेते", "~न्ते";
-        imperative_active_first: "~ानि", "~ाव", "~ाम";
-        imperative_active_second: "~", "~तम्", "~त";
-        imperative_active_third: "~तु", "~ताम्", "~न्तु";
-        imperative_middle_first: "~ै", "~ावहै", "~ामहै";
-        imperative_middle_second: "~स्व", "~ेथाम्", "~ध्वम्";
-        imperative_middle_third: "~ताम्", "~ेताम्", "~न्ताम्";
-        optative_active_first: "~ेयम्", "~ेव", "~ेम";
-        optative_active_second: "~ेः", "~ेतम्", "~ेत";
-        optative_active_third: "~ेत्", "~ेताम्", "~ेयुः";
-        optative_middle_first: "~ेय", "~ेवहि", "~ेमहि";
-        optative_middle_second: "~ेथाः", "~ेयाथाम्", "~ेध्वम्";
-        optative_middle_third: "~ेत", "~ेयाताम्", "~ेरन्";
-        subjunctive_active_first: "~ानि", "~ाव", "~ाम";
-        subjunctive_active_second: "~ाः", "~ाथः", "~ाथ";
-        subjunctive_active_third: "~ात्", "~ातः", "~ान्";
-        subjunctive_middle_first: "~ै", "~ावहै", "~ामहै";
-        subjunctive_middle_second: "~ासे|~ासै", "~ैथे", "~ाध्वै";
-        subjunctive_middle_third: "~ाते|~ातै", "~ैते", "~न्त|~ान्तै";
-        imperfect_active_first: "अ~म्", "अ~ाव", "अ~ाम";
-        imperfect_active_second: "अ~ः", "अ~तम्", "अ~त";
-        imperfect_active_third: "अ~त्", "अ~ताम्", "अ~न्";
-        imperfect_middle_first: "अ~े", "अ~ावहि", "अ~ामहि";
-        imperfect_middle_second: "अ~थाः", "अ~ेथाम्", "अ~ध्वम्";
-        imperfect_middle_third: "अ~त", "अ~ेताम्", "अ~न्त";
-        future_active_first: "~िष्यामि", "~िष्यावः", "~िष्यामः";
-        future_active_second: "~िष्यसि", "~िष्यथः", "~िष्यथ";
-        future_active_third: "~िष्यति", "~िष्यतः", "~िष्यन्ति";
-        future_middle_first: "~िष्ये", "~िष्यावहे", "~िष्यामहे";
-        future_middle_second: "~िष्यसे", "~िष्येथे", "~िष्यध्वे";
-        future_middle_third: "~िष्यते", "~िष्येते", "~िष्यन्ते";
-        conditional_active_first: "अ~िष्यम्", "अ~िष्याव", "अ~िष्याम";
-        conditional_active_second: "अ~िष्यः", "अ~िष्यतम्", "अ~िष्यत";
-        conditional_active_third: "अ~िष्यत्", "अ~िष्यताम्", "अ~िष्यन्";
-        conditional_middle_first: "अ~िष्ये", "अ~िष्यावहि", "अ~िष्यामहि";
-        conditional_middle_second: "अ~िष्यथाः", "अ~िष्येथाम्", "अ~िष्यध्वम्";
-        conditional_middle_third: "अ~िष्यत", "अ~िष्येताम्", "अ~िष्यन्त";
-        perfect_active_first: "~ामास", "~ामासिव", "~ामासिम";
-        perfect_active_second: "~ामासिथ", "~ामासथुः", "~ामास";
-        perfect_active_third: "~ामास", "~ामासतुः", "~ामासुः";
-        perfect_middle_first: "~ांचक्रे", "~ांचकृवहे", "~ांचकृमहे";
-        perfect_middle_second: "~ांचकृषे", "~ांचक्राथे", "~ांचकृध्वे";
-        perfect_middle_third: "~ांचक्रे", "~ांचक्राते", "~ांचक्रिरे";
-        aorist_active_first: derived, derived, derived;
-        aorist_active_second: derived, derived, derived;
-        aorist_active_third: derived, derived, derived;
-        aorist_middle_first: derived, derived, derived;
-        aorist_middle_second: derived, derived, derived;
-        aorist_middle_third: derived, derived, derived;
-        infinitive: "~ितुम्";
-        gerund: "~ित्वा";
-        participle_present: "~त्", "~मान";
-        participle_future: "~िष्यत्", "~िष्यमाण";
-        participle_perfect: "~ामासिवांस्", "~ांचक्राण";
+    // लभते: 110 words (वस्ते, सचते, रोचते, मन्यते, पर्दते, लभते). Like वहति, except in 40 cells: ind_act_1 pl, subj_act_2 sg, subj_act_3 sg, perfect_act_1 sg, perfect_act_1 du, perfect_act_1 pl, ….
+    conjugation!("लभते", 110, "~ते", like वहति;
+    ind_act_1: _, _, "~ामः";
+    subj_act_2: "~ाः", _, _;
+    subj_act_3: "~ात्", _, _;
+    perfect_act_1: "~ामास", "~ामासिव", "~ामासिम";
+    perfect_act_2: "~ामासिथ", "~ामासथुः", "~ामास";
+    perfect_act_3: "~ामास", "~ामासतुः", "~ामासुः";
+    perfect_mid_1: "~ांचक्रे", "~ांचकृवहे", "~ांचकृमहे";
+    perfect_mid_2: "~ांचकृषे", "~ांचक्राथे", "~ांचकृध्वे";
+    perfect_mid_3: _, "~ांचक्राते", "~ांचक्रिरे";
+    aorist_act_1: derived, derived, derived;
+    aorist_act_2: derived, derived, derived;
+    aorist_act_3: derived, derived, derived;
+    aorist_mid_1: derived, derived, derived;
+    aorist_mid_2: derived, derived, derived;
+    aorist_mid_3: derived, derived, derived;
+    participle_perf: "~ामासिवांस्", "~ांचक्राण";
     ),
-    // अमत: 107 words (अमृत, वेद, देग्धि, द्वेष्टि, आस, ईष्टे).
-    conjugation!("अमत", 107, "~";
-        indicative_active_first: derived, derived, derived;
-        indicative_active_second: derived, derived, derived;
-        indicative_active_third: "~", derived, derived;
-        indicative_middle_first: derived, derived, derived;
-        indicative_middle_second: derived, derived, derived;
-        indicative_middle_third: derived, derived, derived;
-        imperative_active_first: derived, derived, derived;
-        imperative_active_second: derived, derived, derived;
-        imperative_active_third: derived, derived, derived;
-        imperative_middle_first: derived, derived, derived;
-        imperative_middle_second: derived, derived, derived;
-        imperative_middle_third: derived, derived, derived;
-        optative_active_first: derived, derived, derived;
-        optative_active_second: derived, derived, derived;
-        optative_active_third: derived, derived, derived;
-        optative_middle_first: derived, derived, derived;
-        optative_middle_second: derived, derived, derived;
-        optative_middle_third: derived, derived, derived;
-        subjunctive_active_first: derived, derived, derived;
-        subjunctive_active_second: derived, derived, derived;
-        subjunctive_active_third: derived, derived, derived;
-        subjunctive_middle_first: derived, derived, derived;
-        subjunctive_middle_second: derived, derived, derived;
-        subjunctive_middle_third: derived, derived, derived;
-        imperfect_active_first: derived, derived, derived;
-        imperfect_active_second: derived, derived, derived;
-        imperfect_active_third: derived, derived, derived;
-        imperfect_middle_first: derived, derived, derived;
-        imperfect_middle_second: derived, derived, derived;
-        imperfect_middle_third: derived, derived, derived;
-        future_active_first: derived, derived, derived;
-        future_active_second: derived, derived, derived;
-        future_active_third: derived, derived, derived;
-        future_middle_first: derived, derived, derived;
-        future_middle_second: derived, derived, derived;
-        future_middle_third: derived, derived, derived;
-        conditional_active_first: derived, derived, derived;
-        conditional_active_second: derived, derived, derived;
-        conditional_active_third: derived, derived, derived;
-        conditional_middle_first: derived, derived, derived;
-        conditional_middle_second: derived, derived, derived;
-        conditional_middle_third: derived, derived, derived;
-        perfect_active_first: "~", "~िव", "~िम";
-        perfect_active_second: "~िथ", "~थुः", "~";
-        perfect_active_third: "~", "~तुः", "~ुः";
-        perfect_middle_first: "~े", "~िवहे", "~िमहे";
-        perfect_middle_second: "~िषे", "~ाथे", "~िध्वे";
-        perfect_middle_third: "~े", "~ाते", "~िरे";
-        aorist_active_first: derived, derived, derived;
-        aorist_active_second: derived, derived, derived;
-        aorist_active_third: derived, derived, derived;
-        aorist_middle_first: derived, derived, derived;
-        aorist_middle_second: derived, derived, derived;
-        aorist_middle_third: derived, derived, derived;
-        infinitive: derived;
-        gerund: derived;
-        participle_present: derived, derived;
-        participle_future: derived, derived;
-        participle_perfect: "~्वांस्", "~ान";
+    // अमत: 99 words (आद, आप, अमृत, वेद, देग्धि, द्वेष्टि).
+    conjugation!("अमत", 99, "~";
+    ind_act_3: "~", _, _;
+    perfect_act_1: "~", "~िव", "~िम";
+    perfect_act_2: "~िथ", "~थुः", "~";
+    perfect_act_3: "~", "~तुः", "~ुः";
+    perfect_mid_1: "~े", "~िवहे", "~िमहे";
+    perfect_mid_2: "~िषे", "~ाथे", "~िध्वे";
+    perfect_mid_3: _, "~ाते", "~िरे";
+    participle_perf: "~िवांस्", "~ान";
     ),
-    // धरति: 99 words (भरति, भुरति, दुष्यति, द्रायति, ओषति, द्रुह्यति). Like वहति, except in 41 cells: imperative_active_first sg, subjunctive_active_first sg, perfect_active_first sg, perfect_active_first du, perfect_active_first pl, perfect_active_second sg, ….
-    conjugation!("धरति", 99, "~~ति", like वहति;
-        indicative_active_first: _, _, _;
-        indicative_active_second: _, _, _;
-        indicative_active_third: _, _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: "~~ाणि", _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: "~~ाणि", _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, _, _;
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, _;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: _, _, _;
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: "~च~", "~े~िव", "~े~िम";
-        perfect_active_second: "~च~्थ", "~े~थुः", "~े~";
-        perfect_active_third: "~चा~", "~े~तुः", "~े~ुः";
-        perfect_middle_first: "~े~े", "~े~िवहे", "~े~िमहे";
-        perfect_middle_second: "~े~िषे", "~े~ाथे", "~े~िध्वे";
-        perfect_middle_third: "~े~े", "~े~ाते", "~े~िरे";
-        aorist_active_first: "अ~ा~िषम्", "अ~ा~िष्व", "अ~ा~िष्म";
-        aorist_active_second: "अ~ा~ीः", "अ~ा~िष्टम्", "अ~ा~िष्ट";
-        aorist_active_third: "अ~ा~ीत्", "अ~ा~िष्टाम्", "अ~ा~िषुः";
-        aorist_middle_first: "अ~ा~िषि", "अ~ा~िष्वहि", "अ~ा~िष्महि";
-        aorist_middle_second: "अ~ा~िष्ठाः", "अ~ा~िषाथाम्", "अ~ा~िढ्वम्";
-        aorist_middle_third: "अ~ा~िष्ट", "अ~ा~िषाताम्", "अ~ा~िषत";
-        infinitive: _;
-        gerund: _;
-        participle_present: _, "~~माण";
-        participle_future: _, _;
-        participle_perfect: "~े~िवांस्", "~े~ाण";
+    // धरति: 95 words (भरति, भुरति, दुष्यति, द्रायति, ओषति, द्रुह्यति).
+    conjugation!("धरति", 95, "~~ति";
+    ind_act_1: "~~ामि", "~~ावः", "~~ामः";
+    ind_act_2: "~~सि", "~~थः", "~~थ";
+    ind_act_3: "~~ति", "~~तः", "~~न्ति";
+    ind_mid_1: "~~े", "~~ावहे", "~~ामहे";
+    ind_mid_2: "~~से", "~~ेथे", "~~ध्वे";
+    ind_mid_3: "~~ते", "~~ेते", "~~न्ते";
+    imp_act_1: "~~ाणि", "~~ाव", "~~ाम";
+    imp_act_2: "~~", "~~तम्", "~~त";
+    imp_act_3: "~~तु", "~~ताम्", "~~न्तु";
+    imp_mid_1: "~~ै", "~~ावहै", "~~ामहै";
+    imp_mid_2: "~~स्व", "~~ेथाम्", "~~ध्वम्";
+    imp_mid_3: "~~ताम्", "~~ेताम्", "~~न्ताम्";
+    opt_act_1: "~~ेयम्", "~~ेव", "~~ेम";
+    opt_act_2: "~~ेः", "~~ेतम्", "~~ेत";
+    opt_act_3: "~~ेत्", "~~ेताम्", "~~ेयुः";
+    opt_mid_1: "~~ेय", "~~ेवहि", "~~ेमहि";
+    opt_mid_2: "~~ेथाः", "~~ेयाथाम्", "~~ेध्वम्";
+    opt_mid_3: "~~ेत", "~~ेयाताम्", "~~ेरन्";
+    subj_act_2: "~~ाः", "~~ाथः", "~~ाथ";
+    subj_act_3: "~~ात्", "~~ातः", "~~ान्";
+    subj_mid_2: "~~ासे", "~~ैथे", "~~ाध्वै";
+    subj_mid_3: "~~ाते", "~~ैते", "~~न्त";
+    imperfect_act_1: "अ~~म्", "अ~~ाव", "अ~~ाम";
+    imperfect_act_2: "अ~~ः", "अ~~तम्", _;
+    imperfect_act_3: "अ~~त्", "अ~~ताम्", "अ~~न्";
+    imperfect_mid_1: "अ~~े", "अ~~ावहि", "अ~~ामहि";
+    imperfect_mid_2: "अ~~थाः", "अ~~ेथाम्", "अ~~ध्वम्";
+    imperfect_mid_3: "अ~~त", "अ~~ेताम्", "अ~~न्त";
+    future_act_1: "~~िष्यामि", "~~िष्यावः", "~~िष्यामः";
+    future_act_2: "~~िष्यसि", "~~िष्यथः", "~~िष्यथ";
+    future_act_3: "~~िष्यति", "~~िष्यतः", "~~िष्यन्ति";
+    future_mid_1: "~~िष्ये", "~~िष्यावहे", "~~िष्यामहे";
+    future_mid_2: "~~िष्यसे", "~~िष्येथे", "~~िष्यध्वे";
+    future_mid_3: "~~िष्यते", "~~िष्येते", "~~िष्यन्ते";
+    conditional_act_1: "अ~~िष्यम्", "अ~~िष्याव", "अ~~िष्याम";
+    conditional_act_2: "अ~~िष्यः", "अ~~िष्यतम्", _;
+    conditional_act_3: "अ~~िष्यत्", "अ~~िष्यताम्", "अ~~िष्यन्";
+    conditional_mid_1: "अ~~िष्ये", "अ~~िष्यावहि", "अ~~िष्यामहि";
+    conditional_mid_2: "अ~~िष्यथाः", "अ~~िष्येथाम्", "अ~~िष्यध्वम्";
+    conditional_mid_3: "अ~~िष्यत", "अ~~िष्येताम्", "अ~~िष्यन्त";
+    perfect_act_1: "च~~", "~े~िव", "~े~िम";
+    perfect_act_2: "च~~्थ", "~े~थुः", "~े~";
+    perfect_act_3: "~चा~", "~े~तुः", "~े~ुः";
+    perfect_mid_1: "~े~े", "~े~िवहे", "~े~िमहे";
+    perfect_mid_2: "~े~िषे", "~े~ाथे", "~े~िध्वे";
+    perfect_mid_3: _, "~े~ाते", "~े~िरे";
+    aorist_act_1: "अ~ा~िषम्", "अ~ा~िष्व", "अ~ा~िष्म";
+    aorist_act_2: "अ~ा~ीः", "अ~ा~िष्टम्", "अ~ा~िष्ट";
+    aorist_act_3: "अ~ा~ीत्", "अ~ा~िष्टाम्", "अ~ा~िषुः";
+    aorist_mid_1: "अ~ा~िषि", "अ~ा~िष्वहि", "अ~ा~िष्महि";
+    aorist_mid_2: "अ~ा~िष्ठाः", "अ~ा~िषाथाम्", "अ~ा~िढ्वम्";
+    aorist_mid_3: "अ~ा~िष्ट", "अ~ा~िषाताम्", "अ~ा~िषत";
+    infinitive: "~~ितुम्";
+    gerund: "~~ित्वा";
+    participle_pres: "~~त्", "~~माण";
+    participle_fut: "~~िष्यत्", "~~िष्यमाण";
+    participle_perf: "~े~िवांस्", "~े~ाण";
     ),
-    // एति: 83 words (एति, दर्शयति, नाशयति, रन्धयति, जासयति, भाजयति). Like लभते, except in 15 cells: indicative_active_first pl, subjunctive_active_second sg, subjunctive_active_third sg, future_active_first pl, perfect_active_first sg, perfect_active_first du, ….
-    conjugation!("एति", 83, "~ति", like लभते;
-        indicative_active_first: _, _, "~ामः|~ामसि";
-        indicative_active_second: _, _, _;
-        indicative_active_third: _, _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: _, _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: _, _, _;
-        subjunctive_active_second: "~ाः|~ासि", _, _;
-        subjunctive_active_third: "~ात्|~ाति", _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, _, _;
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, _;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: _, _, "~िष्यामः|~िष्यामसि";
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: "~ामास|~ांचकर", "~ामासिव|~ांचकृव", "~ामासिम|~ांचकृम";
-        perfect_active_second: "~ामासिथ|~ांचकर्थ", "~ामासथुः|~ांचक्रथुः", "~ामास|~ांचक्र";
-        perfect_active_third: "~ामास|~ांचकार", "~ामासतुः|~ांचक्रतुः", "~ामासुः|~ांचक्रुः";
-        perfect_middle_first: _, _, _;
-        perfect_middle_second: _, _, _;
-        perfect_middle_third: _, _, _;
-        aorist_active_first: _, _, _;
-        aorist_active_second: _, _, _;
-        aorist_active_third: _, _, _;
-        aorist_middle_first: _, _, _;
-        aorist_middle_second: _, _, _;
-        aorist_middle_third: _, _, _;
-        infinitive: _;
-        gerund: _;
-        participle_present: _, "~मान|~ान";
-        participle_future: _, _;
-        participle_perfect: "~ामासिवांस्|~ांचकृवांस्", _;
+    // साधयति: 86 words (इच्छति, दर्शयति, नाशयति, रन्धयति, जासयति, भाजयति). Like लभते, except in 15 cells: ind_act_1 pl, subj_act_2 sg, subj_act_3 sg, future_act_1 pl, perfect_act_1 sg, perfect_act_1 du, ….
+    conjugation!("साधयति", 86, "~ति", like लभते;
+    ind_act_1: _, _, "~ामः|~ामसि";
+    subj_act_2: "~ाः|~ासि", _, _;
+    subj_act_3: "~ात्|~ाति", _, _;
+    future_act_1: _, _, "~िष्यामः|~िष्यामसि";
+    perfect_act_1: "~ामास|~ांचकर", "~ामासिव|~ांचकृव", "~ामासिम|~ांचकृम";
+    perfect_act_2: "~ामासिथ|~ांचकर्थ", "~ामासथुः|~ांचक्रथुः", "~ामास|~ांचक्र";
+    perfect_act_3: "~ामास|~ांचकार", "~ामासतुः|~ांचक्रतुः", "~ामासुः|~ांचक्रुः";
+    participle_pres: _, "~मान|~ान";
+    participle_perf: "~ामासिवांस्|~ांचकृवांस्", _;
     ),
-    // रमते: 43 words (प्रवते, म्रियते, भाषते, रमते, परीक्षते, त्रपते). Like लभते, except in 3 cells: imperative_active_first sg, subjunctive_active_first sg, participle_present mid.
-    conjugation!("रमते", 43, "~ते", like लभते;
-        indicative_active_first: _, _, _;
-        indicative_active_second: _, _, _;
-        indicative_active_third: _, _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: "~ाणि", _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: "~ाणि", _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, _, _;
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, _;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: _, _, _;
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: _, _, _;
-        perfect_active_second: _, _, _;
-        perfect_active_third: _, _, _;
-        perfect_middle_first: _, _, _;
-        perfect_middle_second: _, _, _;
-        perfect_middle_third: _, _, _;
-        aorist_active_first: _, _, _;
-        aorist_active_second: _, _, _;
-        aorist_active_third: _, _, _;
-        aorist_middle_first: _, _, _;
-        aorist_middle_second: _, _, _;
-        aorist_middle_third: _, _, _;
-        infinitive: _;
-        gerund: _;
-        participle_present: _, "~माण";
-        participle_future: _, _;
-        participle_perfect: _, _;
+    // आपत: 46 words (अगमत्, अद्राक्षीत्, अश्रोत्, अभूत्, अताप्सीत्, अहासीत्). Like अमत, except in 38 cells: ind_act_3 sg, perfect_act_1 sg, perfect_act_1 du, perfect_act_1 pl, perfect_act_2 sg, perfect_act_2 du, ….
+    conjugation!("आपत्", 46, "~त्", like अमत;
+    ind_act_3: "~त्", _, _;
+    perfect_act_1: derived, derived, derived;
+    perfect_act_2: derived, derived, derived;
+    perfect_act_3: derived, derived, derived;
+    perfect_mid_1: derived, derived, derived;
+    perfect_mid_2: derived, derived, derived;
+    perfect_mid_3: _, derived, derived;
+    aorist_act_1: "~म्", "~ाव", "~ाम";
+    aorist_act_2: "~ः", "~तम्", "~त";
+    aorist_act_3: "~त्", "~ताम्", "~न्";
+    aorist_mid_1: "~े", "~ावहि", "~ामहि";
+    aorist_mid_2: "~थाः", "~ेथाम्", "~ध्वम्";
+    aorist_mid_3: "~त", "~ेताम्", "~न्त";
+    participle_perf: derived, derived;
     ),
-    // आपत: 41 words (अगमत्, अद्राक्षीत्, अश्रोत्, अभूत्, अवोचत्, अलेकिष्यत्). Like अमत, except in 39 cells: indicative_active_third sg, perfect_active_first sg, perfect_active_first du, perfect_active_first pl, perfect_active_second sg, perfect_active_second du, ….
-    conjugation!("आपत्", 41, "~त्", like अमत;
-        indicative_active_first: _, _, _;
-        indicative_active_second: _, _, _;
-        indicative_active_third: "~त्", _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: _, _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: _, _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, _, _;
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, _;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: _, _, _;
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: derived, derived, derived;
-        perfect_active_second: derived, derived, derived;
-        perfect_active_third: derived, derived, derived;
-        perfect_middle_first: derived, derived, derived;
-        perfect_middle_second: derived, derived, derived;
-        perfect_middle_third: derived, derived, derived;
-        aorist_active_first: "~म्", "~ाव", "~ाम";
-        aorist_active_second: "~ः", "~तम्", "~त";
-        aorist_active_third: "~त्", "~ताम्", "~न्";
-        aorist_middle_first: "~े", "~ावहि", "~ामहि";
-        aorist_middle_second: "~थाः", "~ेथाम्", "~ध्वम्";
-        aorist_middle_third: "~त", "~ेताम्", "~न्त";
-        infinitive: _;
-        gerund: _;
-        participle_present: _, _;
-        participle_future: _, _;
-        participle_perfect: derived, derived;
+    // रमते: 42 words (म्रियते, भाषते, रमते, परीक्षते, त्रपते, ह्वरते). Like लभते, except in 2 cells: imp_act_1 sg, participle_pres mid.
+    conjugation!("रमते", 42, "~ते", like लभते;
+    imp_act_1: "~ाणि", _, _;
+    participle_pres: _, "~माण";
     ),
-    // ईरयति: 28 words (बर्हयति, धारयति, रोपयति, कारयति, शोषयति, चोरयति). Like एति, except in 3 cells: imperative_active_first sg, subjunctive_active_first sg, participle_present mid.
-    conjugation!("ईरयति", 28, "~ति", like एति;
-        indicative_active_first: _, _, _;
-        indicative_active_second: _, _, _;
-        indicative_active_third: _, _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: "~ाणि", _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: "~ाणि", _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, _, _;
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, _;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: _, _, _;
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: _, _, _;
-        perfect_active_second: _, _, _;
-        perfect_active_third: _, _, _;
-        perfect_middle_first: _, _, _;
-        perfect_middle_second: _, _, _;
-        perfect_middle_third: _, _, _;
-        aorist_active_first: _, _, _;
-        aorist_active_second: _, _, _;
-        aorist_active_third: _, _, _;
-        aorist_middle_first: _, _, _;
-        aorist_middle_second: _, _, _;
-        aorist_middle_third: _, _, _;
-        infinitive: _;
-        gerund: _;
-        participle_present: _, "~माण|~ाण";
-        participle_future: _, _;
-        participle_perfect: _, _;
+    // एषयति: 36 words (करिष्यति, गमिष्यति, पास्यति, भविष्यति, तप्स्यति, भरिष्यति). Like आपत, except in 56 cells: ind_act_3 sg, future_act_1 sg, future_act_1 du, future_act_1 pl, future_act_2 sg, future_act_2 du, ….
+    conjugation!("एष्यति", 36, "~ति", like आपत;
+    ind_act_3: "~ति", _, _;
+    future_act_1: "~ामि", "~ावः", "~ामः|~ामसि";
+    future_act_2: "~सि", "~थः", "~थ";
+    future_act_3: "~ति", "~तः", "~न्ति";
+    future_mid_1: "~े", "~ावहे", "~ामहे";
+    future_mid_2: "~से", "~ेथे", "~ध्वे";
+    future_mid_3: "~ते", "~ेते", "~न्ते";
+    conditional_act_1: "अ~म्", "अ~ाव", "अ~ाम";
+    conditional_act_2: "अ~ः", "अ~तम्", _;
+    conditional_act_3: "अ~त्", "अ~ताम्", "अ~न्";
+    conditional_mid_1: "अ~े", "अ~ावहि", "अ~ामहि";
+    conditional_mid_2: "अ~थाः", "अ~ेथाम्", "अ~ध्वम्";
+    conditional_mid_3: "अ~त", "अ~ेताम्", "अ~न्त";
+    aorist_act_1: derived, derived, derived;
+    aorist_act_2: derived, derived, derived;
+    aorist_act_3: derived, derived, derived;
+    aorist_mid_1: derived, derived, derived;
+    aorist_mid_2: derived, derived, derived;
+    aorist_mid_3: derived, derived, derived;
+    participle_fut: "~त्", "~माण";
     ),
-    // एषयति: 28 words (करिष्यति, गमिष्यति, भविष्यति, भरिष्यति, अञ्चिष्यति, वक्ष्यति). Like आपत, except in 57 cells: indicative_active_third sg, future_active_first sg, future_active_first du, future_active_first pl, future_active_second sg, future_active_second du, ….
-    conjugation!("एष्यति", 28, "~ति", like आपत;
-        indicative_active_first: _, _, _;
-        indicative_active_second: _, _, _;
-        indicative_active_third: "~ति", _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: _, _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: _, _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, _, _;
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, _;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: "~ामि", "~ावः", "~ामः|~ामसि";
-        future_active_second: "~सि", "~थः", "~थ";
-        future_active_third: "~ति", "~तः", "~न्ति";
-        future_middle_first: "~े", "~ावहे", "~ामहे";
-        future_middle_second: "~से", "~ेथे", "~ध्वे";
-        future_middle_third: "~ते", "~ेते", "~न्ते";
-        conditional_active_first: "अ~म्", "अ~ाव", "अ~ाम";
-        conditional_active_second: "अ~ः", "अ~तम्", "अ~त";
-        conditional_active_third: "अ~त्", "अ~ताम्", "अ~न्";
-        conditional_middle_first: "अ~े", "अ~ावहि", "अ~ामहि";
-        conditional_middle_second: "अ~थाः", "अ~ेथाम्", "अ~ध्वम्";
-        conditional_middle_third: "अ~त", "अ~ेताम्", "अ~न्त";
-        perfect_active_first: _, _, _;
-        perfect_active_second: _, _, _;
-        perfect_active_third: _, _, _;
-        perfect_middle_first: _, _, _;
-        perfect_middle_second: _, _, _;
-        perfect_middle_third: _, _, _;
-        aorist_active_first: derived, derived, derived;
-        aorist_active_second: derived, derived, derived;
-        aorist_active_third: derived, derived, derived;
-        aorist_middle_first: derived, derived, derived;
-        aorist_middle_second: derived, derived, derived;
-        aorist_middle_third: derived, derived, derived;
-        infinitive: _;
-        gerund: _;
-        participle_present: _, _;
-        participle_future: "~त्", "~माण";
-        participle_perfect: _, _;
+    // ईरयति: 27 words (बर्हयति, धारयति, रोपयति, कारयति, शोषयति, चोरयति). Like साधयति, except in 2 cells: imp_act_1 sg, participle_pres mid.
+    conjugation!("ईरयति", 27, "~ति", like साधयति;
+    imp_act_1: "~ाणि", _, _;
+    participle_pres: _, "~माण|~ाण";
     ),
-    // ददाति: 19 words (ददाति, दधाति, जानाति, प्रीणाति, श्रद्दधाति, गृणाति).
+    // खादति: 26 words (खादति, क्षालयति, दाम्यति, धावति, गायति, बाधति).
+    conjugation!("खादति", 26, "~ा~ति";
+    ind_act_1: "~ा~ामि", "~ा~ावः", "~ा~ामः";
+    ind_act_2: "~ा~सि", "~ा~थः", "~ा~थ";
+    ind_act_3: "~ा~ति", "~ा~तः", "~ा~न्ति";
+    ind_mid_1: "~ा~े", "~ा~ावहे", "~ा~ामहे";
+    ind_mid_2: "~ा~से", "~ा~ेथे", "~ा~ध्वे";
+    ind_mid_3: "~ा~ते", "~ा~ेते", "~ा~न्ते";
+    imp_act_1: "~ा~ानि", "~ा~ाव", "~ा~ाम";
+    imp_act_2: "~ा~", "~ा~तम्", "~ा~त";
+    imp_act_3: "~ा~तु", "~ा~ताम्", "~ा~न्तु";
+    imp_mid_1: "~ा~ै", "~ा~ावहै", "~ा~ामहै";
+    imp_mid_2: "~ा~स्व", "~ा~ेथाम्", "~ा~ध्वम्";
+    imp_mid_3: "~ा~ताम्", "~ा~ेताम्", "~ा~न्ताम्";
+    opt_act_1: "~ा~ेयम्", "~ा~ेव", "~ा~ेम";
+    opt_act_2: "~ा~ेः", "~ा~ेतम्", "~ा~ेत";
+    opt_act_3: "~ा~ेत्", "~ा~ेताम्", "~ा~ेयुः";
+    opt_mid_1: "~ा~ेय", "~ा~ेवहि", "~ा~ेमहि";
+    opt_mid_2: "~ा~ेथाः", "~ा~ेयाथाम्", "~ा~ेध्वम्";
+    opt_mid_3: "~ा~ेत", "~ा~ेयाताम्", "~ा~ेरन्";
+    subj_act_2: "~ा~ाः", "~ा~ाथः", "~ा~ाथ";
+    subj_act_3: "~ा~ात्", "~ा~ातः", "~ा~ान्";
+    subj_mid_2: "~ा~ासे", "~ा~ैथे", "~ा~ाध्वै";
+    subj_mid_3: "~ा~ाते", "~ा~ैते", "~ा~न्त";
+    imperfect_act_1: "अ~ा~म्", "अ~ा~ाव", "अ~ा~ाम";
+    imperfect_act_2: "अ~ा~ः", "अ~ा~तम्", _;
+    imperfect_act_3: "अ~ा~त्", "अ~ा~ताम्", "अ~ा~न्";
+    imperfect_mid_1: "अ~ा~े", "अ~ा~ावहि", "अ~ा~ामहि";
+    imperfect_mid_2: "अ~ा~थाः", "अ~ा~ेथाम्", "अ~ा~ध्वम्";
+    imperfect_mid_3: "अ~ा~त", "अ~ा~ेताम्", "अ~ा~न्त";
+    future_act_1: "~ा~िष्यामि", "~ा~िष्यावः", "~ा~िष्यामः";
+    future_act_2: "~ा~िष्यसि", "~ा~िष्यथः", "~ा~िष्यथ";
+    future_act_3: "~ा~िष्यति", "~ा~िष्यतः", "~ा~िष्यन्ति";
+    future_mid_1: "~ा~िष्ये", "~ा~िष्यावहे", "~ा~िष्यामहे";
+    future_mid_2: "~ा~िष्यसे", "~ा~िष्येथे", "~ा~िष्यध्वे";
+    future_mid_3: "~ा~िष्यते", "~ा~िष्येते", "~ा~िष्यन्ते";
+    conditional_act_1: "अ~ा~िष्यम्", "अ~ा~िष्याव", "अ~ा~िष्याम";
+    conditional_act_2: "अ~ा~िष्यः", "अ~ा~िष्यतम्", _;
+    conditional_act_3: "अ~ा~िष्यत्", "अ~ा~िष्यताम्", "अ~ा~िष्यन्";
+    conditional_mid_1: "अ~ा~िष्ये", "अ~ा~िष्यावहि", "अ~ा~िष्यामहि";
+    conditional_mid_2: "अ~ा~िष्यथाः", "अ~ा~िष्येथाम्", "अ~ा~िष्यध्वम्";
+    conditional_mid_3: "अ~ा~िष्यत", "अ~ा~िष्येताम्", "अ~ा~िष्यन्त";
+    perfect_act_1: "च~ा~", "च~ा~िव", "च~ा~िम";
+    perfect_act_2: "च~ा~िथ", "च~ा~थुः", "च~ा~";
+    perfect_act_3: "च~ा~", "च~ा~तुः", "च~ा~ुः";
+    perfect_mid_1: "च~ा~े", "च~ा~िवहे", "च~ा~िमहे";
+    perfect_mid_2: "च~ा~िषे", "च~ा~ाथे", "च~ा~िध्वे";
+    perfect_mid_3: _, "च~ा~ाते", "च~ा~िरे";
+    aorist_act_1: "अ~ा~िषम्", "अ~ा~िष्व", "अ~ा~िष्म";
+    aorist_act_2: "अ~ा~ीः", "अ~ा~िष्टम्", "अ~ा~िष्ट";
+    aorist_act_3: "अ~ा~ीत्", "अ~ा~िष्टाम्", "अ~ा~िषुः";
+    aorist_mid_1: "अ~ा~िषि", "अ~ा~िष्वहि", "अ~ा~िष्महि";
+    aorist_mid_2: "अ~ा~िष्ठाः", "अ~ा~िषाथाम्", "अ~ा~िढ्वम्";
+    aorist_mid_3: "अ~ा~िष्ट", "अ~ा~िषाताम्", "अ~ा~िषत";
+    infinitive: "~ा~ितुम्";
+    gerund: "~~ित्वा";
+    participle_pres: "~ा~त्", "~ा~मान";
+    participle_fut: "~ा~िष्यत्", "~ा~िष्यमाण";
+    participle_perf: "च~ा~्वांस्", "च~ा~ान";
+    ),
+    // ददाति: 19 words (ददाति, दधाति, जानाति, श्रद्दधाति, गृणाति, जहाति).
     conjugation!("ददाति", 19, "~ाति";
-        indicative_active_first: "~ामि", "~ीवः", "~ीमः|~ीमसि";
-        indicative_active_second: "~ासि", "~ीथः", "~ीथ";
-        indicative_active_third: "~ाति", "~ीतः", "~न्ति";
-        indicative_middle_first: "~े", "~ीवहे", "~ीमहे";
-        indicative_middle_second: "~ीषे", "~ाथे", "~ीध्वे";
-        indicative_middle_third: "~ीते", "~ाते", "~ते";
-        imperative_active_first: "~ानि", "~ाव", "~ाम";
-        imperative_active_second: "~ीहि", "~ीतम्", "~ीत";
-        imperative_active_third: "~ातु", "~ीताम्", "~न्तु";
-        imperative_middle_first: "~ै", "~ावहै", "~ामहै";
-        imperative_middle_second: "~ीष्व", "~ाथाम्", "~ीध्वम्";
-        imperative_middle_third: "~ीताम्", "~ाताम्", "~ताम्";
-        optative_active_first: "~ीयाम्", "~ीयाव", "~ीयाम";
-        optative_active_second: "~ीयाः", "~ीयातम्", "~ीयात";
-        optative_active_third: "~ीयात्", "~ीयाताम्", "~ीयुः";
-        optative_middle_first: "~ीय", "~ीवहि", "~ीमहि";
-        optative_middle_second: "~ीथाः", "~ीयाथाम्", derived;
-        optative_middle_third: "~ीत", "~ीयाताम्", "~ीरन्";
-        subjunctive_active_first: "~ानि|~ा", "~ाव", "~ाम";
-        subjunctive_active_second: "~ाः|~ासि", "~ाथः", "~ाथ";
-        subjunctive_active_third: "~ात्|~ाति", "~ातः", "~ान्";
-        subjunctive_middle_first: "~ै", "~ावहै", "~ामहै";
-        subjunctive_middle_second: "~ासे|~ासै", "~ैथे", "~ाध्वे|~ाध्वै";
-        subjunctive_middle_third: "~ाते|~ातै", "~ैते", "~ान्त|~ान्तै";
-        imperfect_active_first: "अ~ाम्", "अ~ीव", "अ~ीम";
-        imperfect_active_second: "अ~ाः", "अ~ीतम्", "अ~ीत";
-        imperfect_active_third: "अ~ात्", "अ~ीताम्", "अ~न्";
-        imperfect_middle_first: "अ~ि", "अ~ीवहि", "अ~ीमहि";
-        imperfect_middle_second: "अ~ीथाः", "अ~ाथाम्", "अ~ीध्वम्";
-        imperfect_middle_third: "अ~ीत", "अ~ाताम्", "अ~त";
-        future_active_first: derived, derived, derived;
-        future_active_second: derived, derived, derived;
-        future_active_third: derived, derived, derived;
-        future_middle_first: derived, derived, derived;
-        future_middle_second: derived, derived, derived;
-        future_middle_third: derived, derived, derived;
-        conditional_active_first: derived, derived, derived;
-        conditional_active_second: derived, derived, derived;
-        conditional_active_third: derived, derived, derived;
-        conditional_middle_first: derived, derived, derived;
-        conditional_middle_second: derived, derived, derived;
-        conditional_middle_third: derived, derived, derived;
-        perfect_active_first: derived, derived, derived;
-        perfect_active_second: derived, derived, derived;
-        perfect_active_third: derived, derived, derived;
-        perfect_middle_first: derived, derived, derived;
-        perfect_middle_second: derived, derived, derived;
-        perfect_middle_third: derived, derived, derived;
-        aorist_active_first: derived, derived, derived;
-        aorist_active_second: derived, derived, derived;
-        aorist_active_third: derived, derived, derived;
-        aorist_middle_first: derived, derived, derived;
-        aorist_middle_second: derived, derived, derived;
-        aorist_middle_third: derived, derived, derived;
-        infinitive: derived;
-        gerund: derived;
-        participle_present: "~त्", "~ान";
-        participle_future: derived, derived;
-        participle_perfect: derived, derived;
-    ),
-    // अवति: 17 words (अस्ति, अत्ति, अजति, अवति, अर्हति, अर्चति).
-    conjugation!("अवति", 17, "अ~ति";
-        indicative_active_first: "अ~ामि", "अ~ावः", "अ~ामः|अ~ामसि";
-        indicative_active_second: "अ~सि", "अ~थः", "अ~थ";
-        indicative_active_third: "अ~ति", "अ~तः", "अ~न्ति";
-        indicative_middle_first: "अ~े", "अ~ावहे", "अ~ामहे";
-        indicative_middle_second: "अ~से", "अ~ेथे", "अ~ध्वे";
-        indicative_middle_third: "अ~ते", "अ~ेते", "अ~न्ते";
-        imperative_active_first: "अ~ानि", "अ~ाव", "अ~ाम";
-        imperative_active_second: "अ~", "अ~तम्", "अ~त";
-        imperative_active_third: "अ~तु", "अ~ताम्", "अ~न्तु";
-        imperative_middle_first: "अ~ै", "अ~ावहै", "अ~ामहै";
-        imperative_middle_second: "अ~स्व", "अ~ेथाम्", "अ~ध्वम्";
-        imperative_middle_third: "अ~ताम्", "अ~ेताम्", "अ~न्ताम्";
-        optative_active_first: "अ~ेयम्", "अ~ेव", "अ~ेम";
-        optative_active_second: "अ~ेः", "अ~ेतम्", "अ~ेत";
-        optative_active_third: "अ~ेत्", "अ~ेताम्", "अ~ेयुः";
-        optative_middle_first: "अ~ेय", "अ~ेवहि", "अ~ेमहि";
-        optative_middle_second: "अ~ेथाः", "अ~ेयाथाम्", "अ~ेध्वम्";
-        optative_middle_third: "अ~ेत", "अ~ेयाताम्", "अ~ेरन्";
-        subjunctive_active_first: "अ~ानि", "अ~ाव", "अ~ाम";
-        subjunctive_active_second: "अ~ाः|अ~ासि", "अ~ाथः", "अ~ाथ";
-        subjunctive_active_third: "अ~ात्|अ~ाति", "अ~ातः", "अ~ान्";
-        subjunctive_middle_first: "अ~ै", "अ~ावहै", "अ~ामहै";
-        subjunctive_middle_second: "अ~ासे|अ~ासै", "अ~ैथे", "अ~ाध्वै";
-        subjunctive_middle_third: "अ~ाते|अ~ातै", "अ~ैते", "अ~न्त|अ~ान्तै";
-        imperfect_active_first: "आ~म्", "आ~ाव", "आ~ाम";
-        imperfect_active_second: "आ~ः", "आ~तम्", "आ~त";
-        imperfect_active_third: "आ~त्", "आ~ताम्", "आ~न्";
-        imperfect_middle_first: "आ~े", "आ~ावहि", "आ~ामहि";
-        imperfect_middle_second: "आ~थाः", "आ~ेथाम्", "आ~ध्वम्";
-        imperfect_middle_third: "आ~त", "आ~ेताम्", "आ~न्त";
-        future_active_first: "अ~िष्यामि", "अ~िष्यावः", "अ~िष्यामः";
-        future_active_second: "अ~िष्यसि", "अ~िष्यथः", "अ~िष्यथ";
-        future_active_third: "अ~िष्यति", "अ~िष्यतः", "अ~िष्यन्ति";
-        future_middle_first: "अ~िष्ये", "अ~िष्यावहे", "अ~िष्यामहे";
-        future_middle_second: "अ~िष्यसे", "अ~िष्येथे", "अ~िष्यध्वे";
-        future_middle_third: "अ~िष्यते", "अ~िष्येते", "अ~िष्यन्ते";
-        conditional_active_first: "आ~िष्यम्", "आ~िष्याव", "आ~िष्याम";
-        conditional_active_second: "आ~िष्यः", "आ~िष्यतम्", "आ~िष्यत";
-        conditional_active_third: "आ~िष्यत्", "आ~िष्यताम्", "आ~िष्यन्";
-        conditional_middle_first: "आ~िष्ये", "आ~िष्यावहि", "आ~िष्यामहि";
-        conditional_middle_second: "आ~िष्यथाः", "आ~िष्येथाम्", "आ~िष्यध्वम्";
-        conditional_middle_third: "आ~िष्यत", "आ~िष्येताम्", "आ~िष्यन्त";
-        perfect_active_first: "आ~", "आ~िव", "आ~िम";
-        perfect_active_second: "आ~िथ", "आ~थुः", "आ~";
-        perfect_active_third: "आ~", "आ~तुः", "आ~ुः";
-        perfect_middle_first: "आ~े", "आ~िवहे", "आ~िमहे";
-        perfect_middle_second: "आ~िषे", "आ~ाथे", "आ~िध्वे";
-        perfect_middle_third: "आ~े", "आ~ाते", "आ~िरे";
-        aorist_active_first: "आ~िषम्", "आ~िष्व", "आ~िष्म";
-        aorist_active_second: "आ~ीः", "आ~िष्टम्", "आ~िष्ट";
-        aorist_active_third: "आ~ीत्", "आ~िष्टाम्", "आ~िषुः";
-        aorist_middle_first: "आ~िषि", "आ~िष्वहि", "आ~िष्महि";
-        aorist_middle_second: "आ~िष्ठाः", "आ~िषाथाम्", "आ~िढ्वम्";
-        aorist_middle_third: "आ~िष्ट", "आ~िषाताम्", "आ~िषत";
-        infinitive: "अ~ितुम्";
-        gerund: "अ~ित्वा";
-        participle_present: "अ~त्", "अ~मान";
-        participle_future: "अ~िष्यत्", "अ~िष्यमाण";
-        participle_perfect: "आ~िवांस्", "आ~ान";
+    ind_act_1: "~ामि", "~ीवः", "~ीमः|~ीमसि";
+    ind_act_2: "~ासि", "~ीथः", "~ीथ";
+    ind_act_3: "~ाति", "~ीतः", "~न्ति";
+    ind_mid_1: "~े", "~ीवहे", "~ीमहे";
+    ind_mid_2: "~ीषे", "~ाथे", "~ीध्वे";
+    ind_mid_3: "~ीते", "~ाते", "~ते";
+    imp_act_1: "~ानि", "~ाव", "~ाम";
+    imp_act_2: "~ीहि", "~ीतम्", "~ीत";
+    imp_act_3: "~ातु", "~ीताम्", "~न्तु";
+    imp_mid_1: "~ै", "~ावहै", "~ामहै";
+    imp_mid_2: "~ीष्व", "~ाथाम्", "~ीध्वम्";
+    imp_mid_3: "~ीताम्", "~ाताम्", "~ताम्";
+    opt_act_1: "~ीयाम्", "~ीयाव", "~ीयाम";
+    opt_act_2: "~ीयाः", "~ीयातम्", "~ीयात";
+    opt_act_3: "~ीयात्", "~ीयाताम्", "~ीयुः";
+    opt_mid_1: "~ीय", "~ीवहि", "~ीमहि";
+    opt_mid_2: "~ीथाः", "~ीयाथाम्", _;
+    opt_mid_3: "~ीत", "~ीयाताम्", "~ीरन्";
+    subj_act_1: "~ानि|~ा", _, _;
+    subj_act_2: "~ाः|~ासि", "~ाथः", "~ाथ";
+    subj_act_3: "~ात्|~ाति", "~ातः", "~ान्";
+    subj_mid_2: "~ासे|~ासै", "~ैथे", "~ाध्वे|~ाध्वै";
+    subj_mid_3: "~ाते|~ातै", "~ैते", "~ान्त|~ान्तै";
+    imperfect_act_1: "अ~ाम्", "अ~ीव", "अ~ीम";
+    imperfect_act_2: "अ~ाः", "अ~ीतम्", _;
+    imperfect_act_3: "अ~ात्", "अ~ीताम्", "अ~न्";
+    imperfect_mid_1: "अ~ि", "अ~ीवहि", "अ~ीमहि";
+    imperfect_mid_2: "अ~ीथाः", "अ~ाथाम्", "अ~ीध्वम्";
+    imperfect_mid_3: "अ~ीत", "अ~ाताम्", "अ~त";
+    participle_pres: "~त्", "~ान";
     ),
     // तनोति: 16 words (वृणोति, तनोति, करोति, जुहोति, शृणोति, घृणोति).
     conjugation!("तनोति", 16, "~ोति";
-        indicative_active_first: "~ोमि", "~्वः", "~्मः";
-        indicative_active_second: "~ोषि", "~ुथः", "~ुथ";
-        indicative_active_third: "~ोति", "~ुतः", "~्वन्ति";
-        indicative_middle_first: "~्वे", "~्वहे", "~्महे";
-        indicative_middle_second: "~ुषे", "~्वाथे", "~ुध्वे";
-        indicative_middle_third: "~ुते", "~्वाते", "~्वते";
-        imperative_active_first: "~वानि", "~वाव", "~वाम";
-        imperative_active_second: "~ु", "~ुतम्", "~ुत";
-        imperative_active_third: "~ोतु", "~ुताम्", "~्वन्तु";
-        imperative_middle_first: "~वै", "~वावहै", "~वामहै";
-        imperative_middle_second: "~ुष्व", "~्वाथाम्", "~ुध्वम्";
-        imperative_middle_third: "~ुताम्", "~्वाताम्", "~्वताम्";
-        optative_active_first: "~ुयाम्", "~ुयाव", "~ुयाम";
-        optative_active_second: "~ुयाः", "~ुयातम्", "~ुयात";
-        optative_active_third: "~ुयात्", "~ुयाताम्", "~ुयुः";
-        optative_middle_first: "~्वीय", "~्वीवहि", "~्वीमहि";
-        optative_middle_second: "~्वीथाः", "~्वीयाथाम्", "~्वीध्वम्";
-        optative_middle_third: "~्वीत", "~्वीयाताम्", "~्वीरन्";
-        subjunctive_active_first: "~वानि", "~वाव", "~वाम";
-        subjunctive_active_second: "~वः", "~वथः", "~वथ";
-        subjunctive_active_third: "~वत्", "~वतः", "~वन्";
-        subjunctive_middle_first: "~वै", "~वावहै", "~वामहै";
-        subjunctive_middle_second: "~वसे", "~वैथे", "~वध्वे";
-        subjunctive_middle_third: "~वते", "~वैते", "~वन्त";
-        imperfect_active_first: "अ~वम्", "अ~्व", "अ~्म";
-        imperfect_active_second: "अ~ोः", "अ~ुतम्", "अ~ुत";
-        imperfect_active_third: "अ~ोत्", "अ~ुताम्", "अ~्वन्";
-        imperfect_middle_first: "अ~्वि", "अ~्वहि", "अ~्महि";
-        imperfect_middle_second: "अ~ुथाः", "अ~्वाथाम्", "अ~ुध्वम्";
-        imperfect_middle_third: "अ~ुत", "अ~्वाताम्", "अ~्वत";
-        future_active_first: derived, derived, derived;
-        future_active_second: derived, derived, derived;
-        future_active_third: derived, derived, derived;
-        future_middle_first: derived, derived, derived;
-        future_middle_second: derived, derived, derived;
-        future_middle_third: derived, derived, derived;
-        conditional_active_first: derived, derived, derived;
-        conditional_active_second: derived, derived, derived;
-        conditional_active_third: derived, derived, derived;
-        conditional_middle_first: derived, derived, derived;
-        conditional_middle_second: derived, derived, derived;
-        conditional_middle_third: derived, derived, derived;
-        perfect_active_first: derived, derived, derived;
-        perfect_active_second: derived, derived, derived;
-        perfect_active_third: derived, derived, derived;
-        perfect_middle_first: derived, derived, derived;
-        perfect_middle_second: derived, derived, derived;
-        perfect_middle_third: derived, derived, derived;
-        aorist_active_first: derived, derived, derived;
-        aorist_active_second: derived, derived, derived;
-        aorist_active_third: derived, derived, derived;
-        aorist_middle_first: derived, derived, derived;
-        aorist_middle_second: derived, derived, derived;
-        aorist_middle_third: derived, derived, derived;
-        infinitive: derived;
-        gerund: derived;
-        participle_present: "~्वत्", "~्वान";
-        participle_future: derived, derived;
-        participle_perfect: derived, derived;
+    ind_act_1: "~ोमि", "~्वः", "~्मः";
+    ind_act_2: "~ोषि", "~ुथः", "~ुथ";
+    ind_act_3: "~ोति", "~ुतः", "~्वन्ति";
+    ind_mid_1: "~्वे", "~्वहे", "~्महे";
+    ind_mid_2: "~ुषे", "~्वाथे", "~ुध्वे";
+    ind_mid_3: "~ुते", "~्वाते", "~्वते";
+    imp_act_1: "~वानि", "~वाव", "~वाम";
+    imp_act_2: "~ु", "~ुतम्", "~ुत";
+    imp_act_3: "~ोतु", "~ुताम्", "~्वन्तु";
+    imp_mid_1: "~वै", "~वावहै", "~वामहै";
+    imp_mid_2: "~ुष्व", "~्वाथाम्", "~ुध्वम्";
+    imp_mid_3: "~ुताम्", "~्वाताम्", "~्वताम्";
+    opt_act_1: "~ुयाम्", "~ुयाव", "~ुयाम";
+    opt_act_2: "~ुयाः", "~ुयातम्", "~ुयात";
+    opt_act_3: "~ुयात्", "~ुयाताम्", "~ुयुः";
+    opt_mid_1: "~्वीय", "~्वीवहि", "~्वीमहि";
+    opt_mid_2: "~्वीथाः", "~्वीयाथाम्", "~्वीध्वम्";
+    opt_mid_3: "~्वीत", "~्वीयाताम्", "~्वीरन्";
+    subj_act_2: "~वः", "~वथः", "~वथ";
+    subj_act_3: "~वत्", "~वतः", "~वन्";
+    subj_mid_2: "~वसे", "~वैथे", "~वध्वे";
+    subj_mid_3: "~वते", "~वैते", "~वन्त";
+    imperfect_act_1: "अ~वम्", "अ~्व", "अ~्म";
+    imperfect_act_2: "अ~ोः", "अ~ुतम्", _;
+    imperfect_act_3: "अ~ोत्", "अ~ुताम्", "अ~्वन्";
+    imperfect_mid_1: "अ~्वि", "अ~्वहि", "अ~्महि";
+    imperfect_mid_2: "अ~ुथाः", "अ~्वाथाम्", "अ~ुध्वम्";
+    imperfect_mid_3: "अ~ुत", "अ~्वाताम्", "अ~्वत";
+    participle_pres: "~्वत्", "~्वान";
     ),
-    // आजीत: 11 words (अस्वारीत्, आजीत्, अकाषीत्, आञ्चीत्, अलेखीत्, अजिवीत्). Like आपत, except in 19 cells: indicative_active_third sg, aorist_active_first sg, aorist_active_first du, aorist_active_first pl, aorist_active_second sg, aorist_active_second du, ….
-    conjugation!("आजीत्", 11, "~ीत्", like आपत;
-        indicative_active_first: _, _, _;
-        indicative_active_second: _, _, _;
-        indicative_active_third: "~ीत्", _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: _, _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: _, _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, _, _;
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, _;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: _, _, _;
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: _, _, _;
-        perfect_active_second: _, _, _;
-        perfect_active_third: _, _, _;
-        perfect_middle_first: _, _, _;
-        perfect_middle_second: _, _, _;
-        perfect_middle_third: _, _, _;
-        aorist_active_first: "~िषम्", "~िष्व", "~िष्म";
-        aorist_active_second: "~ीः", "~िष्टम्", "~िष्ट";
-        aorist_active_third: "~ीत्", "~िष्टाम्", "~िषुः";
-        aorist_middle_first: "~िषि", "~िष्वहि", "~िष्महि";
-        aorist_middle_second: "~िष्ठाः", "~िषाथाम्", "~िढ्वम्";
-        aorist_middle_third: "~िष्ट", "~िषाताम्", "~िषत";
-        infinitive: _;
-        gerund: _;
-        participle_present: _, _;
-        participle_future: _, _;
-        participle_perfect: _, _;
+    // ईळे: 10 words (ईष्टे, चष्टे, ईळे, जज्ञे, ईट्टे, शश्ये). Like अमत, except in 11 cells: ind_act_3 sg, perfect_act_1 sg, perfect_act_1 du, perfect_act_1 pl, perfect_act_2 sg, perfect_act_2 du, ….
+    conjugation!("ईळे", 10, "~े", like अमत;
+    ind_act_3: "~े", _, _;
+    perfect_act_1: derived, derived, derived;
+    perfect_act_2: derived, derived, derived;
+    perfect_act_3: derived, derived, derived;
+    participle_perf: derived, _;
     ),
-    // धासयति: 10 words (पास्यति, तप्स्यति, ज्ञास्यति, नोत्स्यति, सत्स्यति, वत्स्यति). Like एषयति, except in 1 cell: participle_future mid.
-    conjugation!("धास्यति", 10, "~ति", like एषयति;
-        indicative_active_first: _, _, _;
-        indicative_active_second: _, _, _;
-        indicative_active_third: _, _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: _, _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: _, _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, _, _;
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, _;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: _, _, _;
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: _, _, _;
-        perfect_active_second: _, _, _;
-        perfect_active_third: _, _, _;
-        perfect_middle_first: _, _, _;
-        perfect_middle_second: _, _, _;
-        perfect_middle_third: _, _, _;
-        aorist_active_first: _, _, _;
-        aorist_active_second: _, _, _;
-        aorist_active_third: _, _, _;
-        aorist_middle_first: _, _, _;
-        aorist_middle_second: _, _, _;
-        aorist_middle_third: _, _, _;
-        infinitive: _;
-        gerund: _;
-        participle_present: _, _;
-        participle_future: _, "~मान";
-        participle_perfect: _, _;
+    // आजीत: 10 words (अस्वारीत्, आजीत्, अकाषीत्, आञ्चीत्, अलेखीत्, अवेदीत्). Like आपत, except in 19 cells: ind_act_3 sg, aorist_act_1 sg, aorist_act_1 du, aorist_act_1 pl, aorist_act_2 sg, aorist_act_2 du, ….
+    conjugation!("आजीत्", 10, "~ीत्", like आपत;
+    ind_act_3: "~ीत्", _, _;
+    aorist_act_1: "~िषम्", "~िष्व", "~िष्म";
+    aorist_act_2: "~ीः", "~िष्टम्", "~िष्ट";
+    aorist_act_3: "~ीत्", "~िष्टाम्", "~िषुः";
+    aorist_mid_1: "~िषि", "~िष्वहि", "~िष्महि";
+    aorist_mid_2: "~िष्ठाः", "~िषाथाम्", "~िढ्वम्";
+    aorist_mid_3: "~िष्ट", "~िषाताम्", "~िषत";
     ),
-    // अनंसीत: 9 words (अताप्सीत्, अहासीत्, अज्ञासीत्, अनौत्सीत्, अरौत्सीत्, अवात्सीत्). Like आपत, except in 19 cells: indicative_active_third sg, aorist_active_first sg, aorist_active_first du, aorist_active_first pl, aorist_active_second sg, aorist_active_second du, ….
-    conjugation!("अनंसीत्", 9, "~सीत्", like आपत;
-        indicative_active_first: _, _, _;
-        indicative_active_second: _, _, _;
-        indicative_active_third: "~सीत्", _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: _, _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: _, _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, _, _;
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, _;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: _, _, _;
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: _, _, _;
-        perfect_active_second: _, _, _;
-        perfect_active_third: _, _, _;
-        perfect_middle_first: _, _, _;
-        perfect_middle_second: _, _, _;
-        perfect_middle_third: _, _, _;
-        aorist_active_first: "~सम्", "~स्व", "~स्म";
-        aorist_active_second: "~सीः", "~स्तम्", "~स्त";
-        aorist_active_third: "~सीत्", "~स्ताम्", "~सुः";
-        aorist_middle_first: derived, derived, derived;
-        aorist_middle_second: derived, derived, derived;
-        aorist_middle_third: derived, derived, derived;
-        infinitive: _;
-        gerund: _;
-        participle_present: _, _;
-        participle_future: _, _;
-        participle_perfect: _, _;
-    ),
-    // भाति: 8 words (भाति, द्राति, वाति, पाति, स्नाति, याति). Like ददाति, except in 54 cells: indicative_active_first du, indicative_active_first pl, indicative_active_second du, indicative_active_second pl, indicative_active_third du, indicative_active_third pl, ….
-    conjugation!("भाति", 8, "~ाति", like ददाति;
-        indicative_active_first: _, "~ावः", "~ामः|~ामसि";
-        indicative_active_second: _, "~ाथः", "~ाथ";
-        indicative_active_third: _, "~ातः", "~ान्ति";
-        indicative_middle_first: "~ै", "~ावहे", "~ामहे";
-        indicative_middle_second: "~ासे", _, "~ाध्वे";
-        indicative_middle_third: "~ाते", _, "~ाते";
-        imperative_active_first: _, _, _;
-        imperative_active_second: "~ाहि", "~ातम्", "~ात";
-        imperative_active_third: _, "~ाताम्", "~ान्तु";
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: "~ास्व", _, "~ाध्वम्";
-        imperative_middle_third: "~ाताम्", _, "~ाताम्";
-        optative_active_first: "~ायाम्", "~ायाव", "~ायाम";
-        optative_active_second: "~ायाः", "~ायातम्", "~ायात";
-        optative_active_third: "~ायात्", "~ायाताम्", "~ायुः";
-        optative_middle_first: "~ेय", "~ेवहि", "~ेमहि";
-        optative_middle_second: "~ेथाः", "~ेयाथाम्", "~ेध्वम्";
-        optative_middle_third: "~ेत", "~ेयाताम्", "~ेरन्";
-        subjunctive_active_first: _, _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, "अ~ाव", "अ~ाम";
-        imperfect_active_second: _, "अ~ातम्", "अ~ात";
-        imperfect_active_third: _, "अ~ाताम्", "अ~ुः|अ~ान्";
-        imperfect_middle_first: "अ~े", "अ~ावहि", "अ~ामहि";
-        imperfect_middle_second: "अ~ाथाः", _, "अ~ाध्वम्";
-        imperfect_middle_third: "अ~ात", _, "अ~ात";
-        future_active_first: _, _, _;
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: _, _, _;
-        perfect_active_second: _, _, _;
-        perfect_active_third: _, _, _;
-        perfect_middle_first: _, _, _;
-        perfect_middle_second: _, _, _;
-        perfect_middle_third: _, _, _;
-        aorist_active_first: _, _, _;
-        aorist_active_second: _, _, _;
-        aorist_active_third: _, _, _;
-        aorist_middle_first: _, _, _;
-        aorist_middle_second: _, _, _;
-        aorist_middle_third: _, _, _;
-        infinitive: _;
-        gerund: _;
-        participle_present: "~ात्", _;
-        participle_future: _, _;
-        participle_perfect: _, _;
-    ),
-    // आपनोति: 8 words (धृष्णोति, शक्नोति, साध्नोति, स्तिघ्नोति, प्रुष्णोति, आप्नोति). Like तनोति, except in 34 cells: indicative_active_first du, indicative_active_first pl, indicative_active_third pl, indicative_middle_first sg, indicative_middle_first du, indicative_middle_first pl, ….
+    // आपनोति: 8 words (धृष्णोति, शक्नोति, साध्नोति, आप्नोति, ऋध्नोति, दभ्नोति). Like तनोति, except in 37 cells: ind_act_1 du, ind_act_1 pl, ind_act_3 pl, ind_mid_1 sg, ind_mid_1 du, ind_mid_1 pl, ….
     conjugation!("आप्नोति", 8, "~ोति", like तनोति;
-        indicative_active_first: _, "~ुवः", "~ुमः";
-        indicative_active_second: _, _, _;
-        indicative_active_third: _, _, "~ुवन्ति";
-        indicative_middle_first: "~ुवे", "~ुवहे", "~ुमहे";
-        indicative_middle_second: _, "~ुवाथे", _;
-        indicative_middle_third: _, "~ुवाते", "~ुवते";
-        imperative_active_first: _, _, _;
-        imperative_active_second: "~ुहि", _, _;
-        imperative_active_third: _, _, "~ुवन्तु";
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, "~ुवाथाम्", _;
-        imperative_middle_third: _, "~ुवाताम्", "~ुवताम्";
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: "~ुवीय", "~ुवीवहि", "~ुवीमहि";
-        optative_middle_second: "~ुवीथाः", "~ुवीयाथाम्", "~ुवीध्वम्";
-        optative_middle_third: "~ुवीत", "~ुवीयाताम्", "~ुवीरन्";
-        subjunctive_active_first: _, _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, "अ~ुव", "अ~ुम";
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, "अ~ुवन्";
-        imperfect_middle_first: "अ~ुवि", "अ~ुवहि", "अ~ुमहि";
-        imperfect_middle_second: _, "अ~ुवाथाम्", _;
-        imperfect_middle_third: _, "अ~ुवाताम्", "अ~ुवत";
-        future_active_first: _, _, _;
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: _, _, _;
-        perfect_active_second: _, _, _;
-        perfect_active_third: _, _, _;
-        perfect_middle_first: _, _, _;
-        perfect_middle_second: _, _, _;
-        perfect_middle_third: _, _, _;
-        aorist_active_first: _, _, _;
-        aorist_active_second: _, _, _;
-        aorist_active_third: _, _, _;
-        aorist_middle_first: _, _, _;
-        aorist_middle_second: _, _, _;
-        aorist_middle_third: _, _, _;
-        infinitive: _;
-        gerund: _;
-        participle_present: "~ुवत्", "~ुवान";
-        participle_future: _, _;
-        participle_perfect: _, _;
+    ind_act_1: _, "~ुवः", "~ुमः|~ुमसि";
+    ind_act_3: _, _, "~ुवन्ति";
+    ind_mid_1: "~ुवे", "~ुवहे", "~ुमहे";
+    ind_mid_2: _, "~ुवाथे", _;
+    ind_mid_3: _, "~ुवाते", "~ुवते";
+    imp_act_2: "~ुहि", _, _;
+    imp_act_3: _, _, "~ुवन्तु";
+    imp_mid_2: _, "~ुवाथाम्", _;
+    imp_mid_3: _, "~ुवाताम्", "~ुवताम्";
+    opt_mid_1: "~ुवीय", "~ुवीवहि", "~ुवीमहि";
+    opt_mid_2: "~ुवीथाः", "~ुवीयाथाम्", "~ुवीध्वम्";
+    opt_mid_3: "~ुवीत", "~ुवीयाताम्", "~ुवीरन्";
+    subj_act_1: "~वानि|~वा", _, _;
+    subj_act_2: "~वः|~वसि", _, _;
+    subj_act_3: "~वत्|~वति", _, _;
+    imperfect_act_1: _, "अ~ुव", "अ~ुम";
+    imperfect_act_3: _, _, "अ~ुवन्";
+    imperfect_mid_1: "अ~ुवि", "अ~ुवहि", "अ~ुमहि";
+    imperfect_mid_2: _, "अ~ुवाथाम्", _;
+    imperfect_mid_3: _, "अ~ुवाताम्", "अ~ुवत";
+    participle_pres: "~ुवत्", "~ुवान";
     ),
-    // बधनाति: 7 words (गृभ्णाति, उभ्नाति, गृह्णाति, इष्णाति, बध्नाति, स्तभ्नाति).
-    conjugation!("बध्नाति", 7, "~्~ाति";
-        indicative_active_first: "~्~ामि", "~्~ीवः", "~्~ीमः|~्~ीमसि";
-        indicative_active_second: "~्~ासि", "~्~ीथः", "~्~ीथ";
-        indicative_active_third: "~्~ाति", "~्~ीतः", "~्~न्ति";
-        indicative_middle_first: "~्~े", "~्~ीवहे", "~्~ीमहे";
-        indicative_middle_second: "~्~ीषे", "~्~ाथे", "~्~ीध्वे";
-        indicative_middle_third: "~्~ीते", "~्~ाते", "~्~ते";
-        imperative_active_first: "~्~ानि", "~्~ाव", "~्~ाम";
-        imperative_active_second: "~ा~", "~्~ीतम्", "~्~ीत";
-        imperative_active_third: "~्~ातु", "~्~ीताम्", "~्~न्तु";
-        imperative_middle_first: "~्~ै", "~्~ावहै", "~्~ामहै";
-        imperative_middle_second: "~्~ीष्व", "~्~ाथाम्", "~्~ीध्वम्";
-        imperative_middle_third: "~्~ीताम्", "~्~ाताम्", "~्~ताम्";
-        optative_active_first: "~्~ीयाम्", "~्~ीयाव", "~्~ीयाम";
-        optative_active_second: "~्~ीयाः", "~्~ीयातम्", "~्~ीयात";
-        optative_active_third: "~्~ीयात्", "~्~ीयाताम्", "~्~ीयुः";
-        optative_middle_first: "~्~ीय", "~्~ीवहि", "~्~ीमहि";
-        optative_middle_second: "~्~ीथाः", "~्~ीयाथाम्", derived;
-        optative_middle_third: "~्~ीत", "~्~ीयाताम्", "~्~ीरन्";
-        subjunctive_active_first: "~्~ानि|~्~ा", "~्~ाव", "~्~ाम";
-        subjunctive_active_second: "~्~ाः|~्~ासि", "~्~ाथः", "~्~ाथ";
-        subjunctive_active_third: "~्~ात्|~्~ाति", "~्~ातः", "~्~ान्";
-        subjunctive_middle_first: "~्~ै", "~्~ावहै", "~्~ामहै";
-        subjunctive_middle_second: "~्~ासे|~्~ासै", "~्~ैथे", "~्~ाध्वे|~्~ाध्वै";
-        subjunctive_middle_third: "~्~ाते|~्~ातै", "~्~ैते", "~्~ान्त|~्~ान्तै";
-        imperfect_active_first: "अ~्~ाम्", "अ~्~ीव", "अ~्~ीम";
-        imperfect_active_second: "अ~्~ाः", "अ~्~ीतम्", "अ~्~ीत";
-        imperfect_active_third: "अ~्~ात्", "अ~्~ीताम्", "अ~्~न्";
-        imperfect_middle_first: "अ~्~ि", "अ~्~ीवहि", "अ~्~ीमहि";
-        imperfect_middle_second: "अ~्~ीथाः", "अ~्~ाथाम्", "अ~्~ीध्वम्";
-        imperfect_middle_third: "अ~्~ीत", "अ~्~ाताम्", "अ~्~त";
-        future_active_first: derived, derived, derived;
-        future_active_second: derived, derived, derived;
-        future_active_third: derived, derived, derived;
-        future_middle_first: derived, derived, derived;
-        future_middle_second: derived, derived, derived;
-        future_middle_third: derived, derived, derived;
-        conditional_active_first: derived, derived, derived;
-        conditional_active_second: derived, derived, derived;
-        conditional_active_third: derived, derived, derived;
-        conditional_middle_first: derived, derived, derived;
-        conditional_middle_second: derived, derived, derived;
-        conditional_middle_third: derived, derived, derived;
-        perfect_active_first: derived, derived, derived;
-        perfect_active_second: derived, derived, derived;
-        perfect_active_third: derived, derived, derived;
-        perfect_middle_first: derived, derived, derived;
-        perfect_middle_second: derived, derived, derived;
-        perfect_middle_third: derived, derived, derived;
-        aorist_active_first: derived, derived, derived;
-        aorist_active_second: derived, derived, derived;
-        aorist_active_third: derived, derived, derived;
-        aorist_middle_first: derived, derived, derived;
-        aorist_middle_second: derived, derived, derived;
-        aorist_middle_third: derived, derived, derived;
-        infinitive: derived;
-        gerund: derived;
-        participle_present: "~्~त्", "~्~ान";
-        participle_future: derived, derived;
-        participle_perfect: derived, derived;
+    // ररंह: 8 words (आस, ततक्ष, ररंह, चकाङ्क्ष, जिहीड, जिहिंस). Like अमत, except in 1 cell: participle_perf act.
+    conjugation!("ररंह", 8, "~", like अमत;
+    participle_perf: "~्वांस्", _;
     ),
-    // ददौ: 7 words (तस्थौ, जज्ञौ, ददौ, पपौ, दधौ, ररौ). Like अमत, except in 5 cells: indicative_active_third sg, perfect_active_first sg, perfect_active_second sg, perfect_active_third sg, participle_perfect act.
-    conjugation!("ददौ", 7, "~ौ", like अमत;
-        indicative_active_first: _, _, _;
-        indicative_active_second: _, _, _;
-        indicative_active_third: "~ौ", _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: _, _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: _, _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, _, _;
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, _;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: _, _, _;
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: "~ौ", _, _;
-        perfect_active_second: "~ाथ|~िथ", _, _;
-        perfect_active_third: "~ौ", _, _;
-        perfect_middle_first: _, _, _;
-        perfect_middle_second: _, _, _;
-        perfect_middle_third: _, _, _;
-        aorist_active_first: _, _, _;
-        aorist_active_second: _, _, _;
-        aorist_active_third: _, _, _;
-        aorist_middle_first: _, _, _;
-        aorist_middle_second: _, _, _;
-        aorist_middle_third: _, _, _;
-        infinitive: _;
-        gerund: _;
-        participle_present: _, _;
-        participle_future: _, _;
-        participle_perfect: "~िवांस्", _;
+    // भाति: 7 words (भाति, द्राति, वाति, पाति, याति, आयाति). Like ददाति, except in 53 cells: ind_act_1 du, ind_act_1 pl, ind_act_2 du, ind_act_2 pl, ind_act_3 du, ind_act_3 pl, ….
+    conjugation!("भाति", 7, "~ाति", like ददाति;
+    ind_act_1: _, "~ावः", "~ामः|~ामसि";
+    ind_act_2: _, "~ाथः", "~ाथ";
+    ind_act_3: _, "~ातः", "~ान्ति";
+    ind_mid_1: "~ै", "~ावहे", "~ामहे";
+    ind_mid_2: "~ासे", _, "~ाध्वे";
+    ind_mid_3: "~ाते", _, "~ाते";
+    imp_act_2: "~ाहि", "~ातम्", "~ात";
+    imp_act_3: _, "~ाताम्", "~ान्तु";
+    imp_mid_2: "~ास्व", _, "~ाध्वम्";
+    imp_mid_3: "~ाताम्", _, "~ाताम्";
+    opt_act_1: "~ायाम्", "~ायाव", "~ायाम";
+    opt_act_2: "~ायाः", "~ायातम्", "~ायात";
+    opt_act_3: "~ायात्", "~ायाताम्", "~ायुः";
+    opt_mid_1: "~ेय", "~ेवहि", "~ेमहि";
+    opt_mid_2: "~ेथाः", "~ेयाथाम्", "~ेध्वम्";
+    opt_mid_3: "~ेत", "~ेयाताम्", "~ेरन्";
+    imperfect_act_1: _, "अ~ाव", "अ~ाम";
+    imperfect_act_2: _, "अ~ातम्", _;
+    imperfect_act_3: _, "अ~ाताम्", "अ~ुः|अ~ान्";
+    imperfect_mid_1: "अ~े", "अ~ावहि", "अ~ामहि";
+    imperfect_mid_2: "अ~ाथाः", _, "अ~ाध्वम्";
+    imperfect_mid_3: "अ~ात", _, "अ~ात";
+    participle_pres: "~ात्", _;
     ),
     // पिपरति: 7 words (पिपर्ति, जागर्ति, बिभर्ति, जिघर्ति, इयर्ति, सिसर्ति).
     conjugation!("पिपर्ति", 7, "~र्ति";
-        indicative_active_first: "~र्मि", "~ृवः", "~ृमः|~ृमसि";
-        indicative_active_second: "~र्षि", "~ृथः", "~ृथ";
-        indicative_active_third: "~र्ति", "~ृतः", "~्रति";
-        indicative_middle_first: "~्रे", "~ृवहे", "~ृमहे";
-        indicative_middle_second: "~ृषे", "~्राथे", "~ृध्वे";
-        indicative_middle_third: "~ृते", "~्राते", "~्रते";
-        imperative_active_first: "~राणि", "~राव", "~राम";
-        imperative_active_second: "~ृहि", "~ृतम्", "~ृत";
-        imperative_active_third: "~र्तु", "~ृताम्", "~्रतु";
-        imperative_middle_first: "~रै", "~रावहै", "~रामहै";
-        imperative_middle_second: "~ृष्व", "~्राथाम्", "~ृध्वम्";
-        imperative_middle_third: "~ृताम्", "~्राताम्", "~्रताम्";
-        optative_active_first: "~ृयाम्", "~ृयाव", "~ृयाम";
-        optative_active_second: "~ृयाः", "~ृयातम्", "~ृयात";
-        optative_active_third: "~ृयात्", "~ृयाताम्", "~ृयुः";
-        optative_middle_first: "~्रीय", "~्रीवहि", "~्रीमहि";
-        optative_middle_second: "~्रीथाः", "~्रीयाथाम्", "~्रीध्वम्";
-        optative_middle_third: "~्रीत", "~्रीयाताम्", "~्रीरन्";
-        subjunctive_active_first: "~राणि|~रा", "~राव", "~राम";
-        subjunctive_active_second: "~रः|~रसि", "~रथः", "~रथ";
-        subjunctive_active_third: "~रत्|~रति", "~रतः", "~रन्";
-        subjunctive_middle_first: "~रै", "~रावहै", "~रामहै";
-        subjunctive_middle_second: "~रसे", "~रैथे", "~रध्वे";
-        subjunctive_middle_third: "~रते", "~रैते", "~रन्त";
-        imperfect_active_first: "अ~रम्", "अ~ृव", "अ~ृम";
-        imperfect_active_second: "अ~ः", "अ~ृतम्", "अ~ृत";
-        imperfect_active_third: "अ~ः", "अ~ृताम्", "अ~रुः";
-        imperfect_middle_first: "अ~्रि", "अ~ृवहि", "अ~ृमहि";
-        imperfect_middle_second: "अ~ृथाः", "अ~्राथाम्", "अ~ृध्वम्";
-        imperfect_middle_third: "अ~ृत", "अ~्राताम्", "अ~्रत";
-        future_active_first: derived, derived, derived;
-        future_active_second: derived, derived, derived;
-        future_active_third: derived, derived, derived;
-        future_middle_first: derived, derived, derived;
-        future_middle_second: derived, derived, derived;
-        future_middle_third: derived, derived, derived;
-        conditional_active_first: derived, derived, derived;
-        conditional_active_second: derived, derived, derived;
-        conditional_active_third: derived, derived, derived;
-        conditional_middle_first: derived, derived, derived;
-        conditional_middle_second: derived, derived, derived;
-        conditional_middle_third: derived, derived, derived;
-        perfect_active_first: derived, derived, derived;
-        perfect_active_second: derived, derived, derived;
-        perfect_active_third: derived, derived, derived;
-        perfect_middle_first: derived, derived, derived;
-        perfect_middle_second: derived, derived, derived;
-        perfect_middle_third: derived, derived, derived;
-        aorist_active_first: derived, derived, derived;
-        aorist_active_second: derived, derived, derived;
-        aorist_active_third: derived, derived, derived;
-        aorist_middle_first: derived, derived, derived;
-        aorist_middle_second: derived, derived, derived;
-        aorist_middle_third: derived, derived, derived;
-        infinitive: derived;
-        gerund: derived;
-        participle_present: "~्रत्", "~्राण";
-        participle_future: derived, derived;
-        participle_perfect: derived, derived;
+    ind_act_1: "~र्मि", "~ृवः", "~ृमः|~ृमसि";
+    ind_act_2: "~र्षि", "~ृथः", "~ृथ";
+    ind_act_3: "~र्ति", "~ृतः", "~्रति";
+    ind_mid_1: "~्रे", "~ृवहे", "~ृमहे";
+    ind_mid_2: "~ृषे", "~्राथे", "~ृध्वे";
+    ind_mid_3: "~ृते", "~्राते", "~्रते";
+    imp_act_1: "~राणि", "~राव", "~राम";
+    imp_act_2: "~ृहि", "~ृतम्", "~ृत";
+    imp_act_3: "~र्तु", "~ृताम्", "~्रतु";
+    imp_mid_1: "~रै", "~रावहै", "~रामहै";
+    imp_mid_2: "~ृष्व", "~्राथाम्", "~ृध्वम्";
+    imp_mid_3: "~ृताम्", "~्राताम्", "~्रताम्";
+    opt_act_1: "~ृयाम्", "~ृयाव", "~ृयाम";
+    opt_act_2: "~ृयाः", "~ृयातम्", "~ृयात";
+    opt_act_3: "~ृयात्", "~ृयाताम्", "~ृयुः";
+    opt_mid_1: "~्रीय", "~्रीवहि", "~्रीमहि";
+    opt_mid_2: "~्रीथाः", "~्रीयाथाम्", "~्रीध्वम्";
+    opt_mid_3: "~्रीत", "~्रीयाताम्", "~्रीरन्";
+    subj_act_1: "~राणि|~रा", _, _;
+    subj_act_2: "~रः|~रसि", "~रथः", "~रथ";
+    subj_act_3: "~रत्|~रति", "~रतः", "~रन्";
+    subj_mid_2: "~रसे", "~रैथे", "~रध्वे";
+    subj_mid_3: "~रते", "~रैते", "~रन्त";
+    imperfect_act_1: "अ~रम्", "अ~ृव", "अ~ृम";
+    imperfect_act_2: "अ~ः", "अ~ृतम्", _;
+    imperfect_act_3: "अ~ः", "अ~ृताम्", "अ~रुः";
+    imperfect_mid_1: "अ~्रि", "अ~ृवहि", "अ~ृमहि";
+    imperfect_mid_2: "अ~ृथाः", "अ~्राथाम्", "अ~ृध्वम्";
+    imperfect_mid_3: "अ~ृत", "अ~्राताम्", "अ~्रत";
+    participle_pres: "~्रत्", "~्राण";
     ),
-    // भनकति: 6 words (भनक्ति, युनक्ति, विनक्ति, तनक्ति, अनक्ति, भुनक्ति).
-    conjugation!("भनक्ति", 6, "~नक्ति";
-        indicative_active_first: "~नज्मि", "~ञ्ज्वः", "~ञ्ज्मः";
-        indicative_active_second: "~नक्षि", "~ङ्क्थः", "~ङ्क्थ";
-        indicative_active_third: "~नक्ति", "~ङ्क्तः", "~ञ्जन्ति";
-        indicative_middle_first: "~ञ्जे", "~ञ्ज्वहे", "~ञ्ज्महे";
-        indicative_middle_second: "~ङ्क्षे", "~ञ्जाथे", "~ङ्ग्ध्वे";
-        indicative_middle_third: "~ङ्क्ते", "~ञ्जाते", "~ञ्जते";
-        imperative_active_first: "~नजानि", "~नजाव", "~नजाम";
-        imperative_active_second: "~ङ्ग्धि", "~ङ्क्तम्", "~ङ्क्त";
-        imperative_active_third: "~नक्तु", "~ङ्क्ताम्", "~ञ्जन्तु";
-        imperative_middle_first: "~नजै", "~नजावहै", "~नजामहै";
-        imperative_middle_second: "~ङ्क्ष्व", "~ञ्जाथाम्", "~ङ्ग्ध्वम्";
-        imperative_middle_third: "~ङ्क्ताम्", "~ञ्जाताम्", "~ञ्जताम्";
-        optative_active_first: "~ञ्ज्याम्", "~ञ्ज्याव", "~ञ्ज्याम";
-        optative_active_second: "~ञ्ज्याः", "~ञ्ज्यातम्", "~ञ्ज्यात";
-        optative_active_third: "~ञ्ज्यात्", "~ञ्ज्याताम्", "~ञ्ज्युः";
-        optative_middle_first: "~ञ्जीय", "~ञ्जीवहि", "~ञ्जीमहि";
-        optative_middle_second: "~ञ्जीथाः", "~ञ्जीयाथाम्", "~ञ्जीध्वम्";
-        optative_middle_third: "~ञ्जीत", "~ञ्जीयाताम्", "~ञ्जीरन्";
-        subjunctive_active_first: "~नजानि", "~नजाव", "~नजाम";
-        subjunctive_active_second: "~नजः", "~नजथः", "~नजथ";
-        subjunctive_active_third: "~नजत्", "~नजतः", "~नजन्";
-        subjunctive_middle_first: "~नजै", "~नजावहै", "~नजामहै";
-        subjunctive_middle_second: "~नजसे", "~नजैथे", "~नजध्वे";
-        subjunctive_middle_third: "~नजते", "~नजैते", "~नजन्त";
-        imperfect_active_first: "अ~नजम्", "अ~ञ्ज्व", "अ~ञ्ज्म";
-        imperfect_active_second: "अ~नक्", "अ~ङ्क्तम्", "अ~ङ्क्त";
-        imperfect_active_third: "अ~नक्", "अ~ङ्क्ताम्", "अ~ञ्जन्";
-        imperfect_middle_first: "अ~ञ्जि", "अ~ञ्ज्वहि", "अ~ञ्ज्महि";
-        imperfect_middle_second: "अ~ङ्क्थाः", "अ~ञ्जाथाम्", "अ~ङ्ग्ध्वम्";
-        imperfect_middle_third: "अ~ङ्क्त", "अ~ञ्जाताम्", "अ~ञ्जत";
-        future_active_first: derived, derived, derived;
-        future_active_second: derived, derived, derived;
-        future_active_third: derived, derived, derived;
-        future_middle_first: derived, derived, derived;
-        future_middle_second: derived, derived, derived;
-        future_middle_third: derived, derived, derived;
-        conditional_active_first: derived, derived, derived;
-        conditional_active_second: derived, derived, derived;
-        conditional_active_third: derived, derived, derived;
-        conditional_middle_first: derived, derived, derived;
-        conditional_middle_second: derived, derived, derived;
-        conditional_middle_third: derived, derived, derived;
-        perfect_active_first: derived, derived, derived;
-        perfect_active_second: derived, derived, derived;
-        perfect_active_third: derived, derived, derived;
-        perfect_middle_first: derived, derived, derived;
-        perfect_middle_second: derived, derived, derived;
-        perfect_middle_third: derived, derived, derived;
-        aorist_active_first: derived, derived, derived;
-        aorist_active_second: derived, derived, derived;
-        aorist_active_third: derived, derived, derived;
-        aorist_middle_first: derived, derived, derived;
-        aorist_middle_second: derived, derived, derived;
-        aorist_middle_third: derived, derived, derived;
-        infinitive: derived;
-        gerund: derived;
-        participle_present: "~ञ्जत्", "~ञ्जान";
-        participle_future: derived, derived;
-        participle_perfect: derived, derived;
+    // बधनाति: 6 words (गृभ्णाति, उभ्नाति, गृह्णाति, इष्णाति, बध्नाति, तभ्नाति).
+    conjugation!("बध्नाति", 6, "~्~ाति";
+    ind_act_1: "~्~ामि", "~्~ीवः", "~्~ीमः|~्~ीमसि";
+    ind_act_2: "~्~ासि", "~्~ीथः", "~्~ीथ";
+    ind_act_3: "~्~ाति", "~्~ीतः", "~्~न्ति";
+    ind_mid_1: "~्~े", "~्~ीवहे", "~्~ीमहे";
+    ind_mid_2: "~्~ीषे", "~्~ाथे", "~्~ीध्वे";
+    ind_mid_3: "~्~ीते", "~्~ाते", "~्~ते";
+    imp_act_1: "~्~ानि", "~्~ाव", "~्~ाम";
+    imp_act_2: "~ा~", "~्~ीतम्", "~्~ीत";
+    imp_act_3: "~्~ातु", "~्~ीताम्", "~्~न्तु";
+    imp_mid_1: "~्~ै", "~्~ावहै", "~्~ामहै";
+    imp_mid_2: "~्~ीष्व", "~्~ाथाम्", "~्~ीध्वम्";
+    imp_mid_3: "~्~ीताम्", "~्~ाताम्", "~्~ताम्";
+    opt_act_1: "~्~ीयाम्", "~्~ीयाव", "~्~ीयाम";
+    opt_act_2: "~्~ीयाः", "~्~ीयातम्", "~्~ीयात";
+    opt_act_3: "~्~ीयात्", "~्~ीयाताम्", "~्~ीयुः";
+    opt_mid_1: "~्~ीय", "~्~ीवहि", "~्~ीमहि";
+    opt_mid_2: "~्~ीथाः", "~्~ीयाथाम्", _;
+    opt_mid_3: "~्~ीत", "~्~ीयाताम्", "~्~ीरन्";
+    subj_act_1: "~्~ानि|~्~ा", _, _;
+    subj_act_2: "~्~ाः|~्~ासि", "~्~ाथः", "~्~ाथ";
+    subj_act_3: "~्~ात्|~्~ाति", "~्~ातः", "~्~ान्";
+    subj_mid_2: "~्~ासे", "~्~ैथे", "~्~ाध्वे";
+    subj_mid_3: "~्~ाते", "~्~ैते", "~्~ान्त";
+    imperfect_act_1: "अ~्~ाम्", "अ~्~ीव", "अ~्~ीम";
+    imperfect_act_2: "अ~्~ाः", "अ~्~ीतम्", _;
+    imperfect_act_3: "अ~्~ात्", "अ~्~ीताम्", "अ~्~न्";
+    imperfect_mid_1: "अ~्~ि", "अ~्~ीवहि", "अ~्~ीमहि";
+    imperfect_mid_2: "अ~्~ीथाः", "अ~्~ाथाम्", "अ~्~ीध्वम्";
+    imperfect_mid_3: "अ~्~ीत", "अ~्~ाताम्", "अ~्~त";
+    participle_pres: "~्~त्", "~्~ान";
     ),
-    // उपविशति: 6 words (उच्यति, उज्झति, उच्छति, उपविशति, उक्षति, उड्डापयति).
-    conjugation!("उपविशति", 6, "उ~ति";
-        indicative_active_first: "उ~ामि", "उ~ावः", "उ~ामः|उ~ामसि";
-        indicative_active_second: "उ~सि", "उ~थः", "उ~थ";
-        indicative_active_third: "उ~ति", "उ~तः", "उ~न्ति";
-        indicative_middle_first: "उ~े", "उ~ावहे", "उ~ामहे";
-        indicative_middle_second: "उ~से", "उ~ेथे", "उ~ध्वे";
-        indicative_middle_third: "उ~ते", "उ~ेते", "उ~न्ते";
-        imperative_active_first: "उ~ानि", "उ~ाव", "उ~ाम";
-        imperative_active_second: "उ~", "उ~तम्", "उ~त";
-        imperative_active_third: "उ~तु", "उ~ताम्", "उ~न्तु";
-        imperative_middle_first: "उ~ै", "उ~ावहै", "उ~ामहै";
-        imperative_middle_second: "उ~स्व", "उ~ेथाम्", "उ~ध्वम्";
-        imperative_middle_third: "उ~ताम्", "उ~ेताम्", "उ~न्ताम्";
-        optative_active_first: "उ~ेयम्", "उ~ेव", "उ~ेम";
-        optative_active_second: "उ~ेः", "उ~ेतम्", "उ~ेत";
-        optative_active_third: "उ~ेत्", "उ~ेताम्", "उ~ेयुः";
-        optative_middle_first: "उ~ेय", "उ~ेवहि", "उ~ेमहि";
-        optative_middle_second: "उ~ेथाः", "उ~ेयाथाम्", "उ~ेध्वम्";
-        optative_middle_third: "उ~ेत", "उ~ेयाताम्", "उ~ेरन्";
-        subjunctive_active_first: "उ~ानि", "उ~ाव", "उ~ाम";
-        subjunctive_active_second: "उ~ाः|उ~ासि", "उ~ाथः", "उ~ाथ";
-        subjunctive_active_third: "उ~ात्|उ~ाति", "उ~ातः", "उ~ान्";
-        subjunctive_middle_first: "उ~ै", "उ~ावहै", "उ~ामहै";
-        subjunctive_middle_second: "उ~ासे|उ~ासै", "उ~ैथे", "उ~ाध्वै";
-        subjunctive_middle_third: "उ~ाते|उ~ातै", "उ~ैते", "उ~न्त|उ~ान्तै";
-        imperfect_active_first: "औ~म्", "औ~ाव", "औ~ाम";
-        imperfect_active_second: "औ~ः", "औ~तम्", "औ~त";
-        imperfect_active_third: "औ~त्", "औ~ताम्", "औ~न्";
-        imperfect_middle_first: "औ~े", "औ~ावहि", "औ~ामहि";
-        imperfect_middle_second: "औ~थाः", "औ~ेथाम्", "औ~ध्वम्";
-        imperfect_middle_third: "औ~त", "औ~ेताम्", "औ~न्त";
-        future_active_first: "उ~िष्यामि", "उ~िष्यावः", "उ~िष्यामः";
-        future_active_second: "उ~िष्यसि", "उ~िष्यथः", "उ~िष्यथ";
-        future_active_third: "उ~िष्यति", "उ~िष्यतः", "उ~िष्यन्ति";
-        future_middle_first: "उ~िष्ये", "उ~िष्यावहे", "उ~िष्यामहे";
-        future_middle_second: "उ~िष्यसे", "उ~िष्येथे", "उ~िष्यध्वे";
-        future_middle_third: "उ~िष्यते", "उ~िष्येते", "उ~िष्यन्ते";
-        conditional_active_first: "औ~िष्यम्", "औ~िष्याव", "औ~िष्याम";
-        conditional_active_second: "औ~िष्यः", "औ~िष्यतम्", "औ~िष्यत";
-        conditional_active_third: "औ~िष्यत्", "औ~िष्यताम्", "औ~िष्यन्";
-        conditional_middle_first: "औ~िष्ये", "औ~िष्यावहि", "औ~िष्यामहि";
-        conditional_middle_second: "औ~िष्यथाः", "औ~िष्येथाम्", "औ~िष्यध्वम्";
-        conditional_middle_third: "औ~िष्यत", "औ~िष्येताम्", "औ~िष्यन्त";
-        perfect_active_first: "उ~ामास", "उ~ामासिव", "उ~ामासिम";
-        perfect_active_second: "उ~ामासिथ", "उ~ामासथुः", "उ~ामास";
-        perfect_active_third: "उ~ामास", "उ~ामासतुः", "उ~ामासुः";
-        perfect_middle_first: "उ~ांचक्रे", "उ~ांचकृवहे", "उ~ांचकृमहे";
-        perfect_middle_second: "उ~ांचकृषे", "उ~ांचक्राथे", "उ~ांचकृध्वे";
-        perfect_middle_third: "उ~ांचक्रे", "उ~ांचक्राते", "उ~ांचक्रिरे";
-        aorist_active_first: derived, derived, derived;
-        aorist_active_second: derived, derived, derived;
-        aorist_active_third: derived, derived, derived;
-        aorist_middle_first: derived, derived, derived;
-        aorist_middle_second: derived, derived, derived;
-        aorist_middle_third: derived, derived, derived;
-        infinitive: "उ~ितुम्";
-        gerund: "उ~ित्वा";
-        participle_present: "उ~त्", "उ~मान";
-        participle_future: "उ~िष्यत्", "उ~िष्यमाण";
-        participle_perfect: "उ~ामासिवांस्", "उ~ांचक्राण";
+    // ददौ: 6 words (तस्थौ, ददौ, पपौ, दधौ, ररौ, पप्रौ). Like अमत, except in 4 cells: ind_act_3 sg, perfect_act_1 sg, perfect_act_2 sg, perfect_act_3 sg.
+    conjugation!("ददौ", 6, "~ौ", like अमत;
+    ind_act_3: "~ौ", _, _;
+    perfect_act_1: "~ौ", _, _;
+    perfect_act_2: "~ाथ|~िथ", _, _;
+    perfect_act_3: "~ौ", _, _;
     ),
-    // ईळे: 5 words (ईळे, जज्ञे, शश्ये, पस्पशे, चके). Like अमत, except in 11 cells: indicative_active_third sg, perfect_active_first sg, perfect_active_first du, perfect_active_first pl, perfect_active_second sg, perfect_active_second du, ….
-    conjugation!("ईळे", 5, "~े", like अमत;
-        indicative_active_first: _, _, _;
-        indicative_active_second: _, _, _;
-        indicative_active_third: "~े", _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: _, _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: _, _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, _, _;
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, _;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: _, _, _;
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: derived, derived, derived;
-        perfect_active_second: derived, derived, derived;
-        perfect_active_third: derived, derived, derived;
-        perfect_middle_first: _, _, _;
-        perfect_middle_second: _, _, _;
-        perfect_middle_third: _, _, _;
-        aorist_active_first: _, _, _;
-        aorist_active_second: _, _, _;
-        aorist_active_third: _, _, _;
-        aorist_middle_first: _, _, _;
-        aorist_middle_second: _, _, _;
-        aorist_middle_third: _, _, _;
-        infinitive: _;
-        gerund: _;
-        participle_present: _, _;
-        participle_future: _, _;
-        participle_perfect: derived, _;
+    // भनकति: 5 words (भनक्ति, युनक्ति, तनक्ति, अनक्ति, भुनक्ति).
+    conjugation!("भनक्ति", 5, "~नक्ति";
+    ind_act_1: "~नज्मि", "~ञ्ज्वः", "~ञ्ज्मः|~ञ्ज्मसि";
+    ind_act_2: "~नक्षि", "~ङ्क्थः", "~ङ्क्थ";
+    ind_act_3: "~नक्ति", "~ङ्क्तः", "~ञ्जन्ति";
+    ind_mid_1: "~ञ्जे", "~ञ्ज्वहे", "~ञ्ज्महे";
+    ind_mid_2: "~ङ्क्षे", "~ञ्जाथे", "~ङ्ग्ध्वे";
+    ind_mid_3: "~ङ्क्ते", "~ञ्जाते", "~ञ्जते";
+    imp_act_1: "~नजानि", "~नजाव", "~नजाम";
+    imp_act_2: "~ङ्ग्धि", "~ङ्क्तम्", "~ङ्क्त";
+    imp_act_3: "~नक्तु", "~ङ्क्ताम्", "~ञ्जन्तु";
+    imp_mid_1: "~नजै", "~नजावहै", "~नजामहै";
+    imp_mid_2: "~ङ्क्ष्व", "~ञ्जाथाम्", "~ङ्ग्ध्वम्";
+    imp_mid_3: "~ङ्क्ताम्", "~ञ्जाताम्", "~ञ्जताम्";
+    opt_act_1: "~ञ्ज्याम्", "~ञ्ज्याव", "~ञ्ज्याम";
+    opt_act_2: "~ञ्ज्याः", "~ञ्ज्यातम्", "~ञ्ज्यात";
+    opt_act_3: "~ञ्ज्यात्", "~ञ्ज्याताम्", "~ञ्ज्युः";
+    opt_mid_1: "~ञ्जीय", "~ञ्जीवहि", "~ञ्जीमहि";
+    opt_mid_2: "~ञ्जीथाः", "~ञ्जीयाथाम्", "~ञ्जीध्वम्";
+    opt_mid_3: "~ञ्जीत", "~ञ्जीयाताम्", "~ञ्जीरन्";
+    subj_act_1: "~नजानि|~नजा", _, _;
+    subj_act_2: "~नजः|~नजसि", "~नजथः", "~नजथ";
+    subj_act_3: "~नजत्|~नजति", "~नजतः", "~नजन्";
+    subj_mid_2: "~नजसे", "~नजैथे", "~नजध्वे";
+    subj_mid_3: "~नजते", "~नजैते", "~नजन्त";
+    imperfect_act_1: "अ~नजम्", "अ~ञ्ज्व", "अ~ञ्ज्म";
+    imperfect_act_2: "अ~नक्", "अ~ङ्क्तम्", _;
+    imperfect_act_3: "अ~नक्", "अ~ङ्क्ताम्", "अ~ञ्जन्";
+    imperfect_mid_1: "अ~ञ्जि", "अ~ञ्ज्वहि", "अ~ञ्ज्महि";
+    imperfect_mid_2: "अ~ङ्क्थाः", "अ~ञ्जाथाम्", "अ~ङ्ग्ध्वम्";
+    imperfect_mid_3: "अ~ङ्क्त", "अ~ञ्जाताम्", "अ~ञ्जत";
+    participle_pres: "~ञ्जत्", "~ञ्जान";
     ),
-    // अगात: 5 words (अधात्, अस्थात्, अदात्, अगात्, अपात्). Like आपत, except in 17 cells: indicative_active_third sg, aorist_active_first sg, aorist_active_second sg, aorist_active_second du, aorist_active_second pl, aorist_active_third sg, ….
+    // अगात: 5 words (अधात्, अस्थात्, अदात्, अगात्, अपात्). Like आपत, except in 17 cells: ind_act_3 sg, aorist_act_1 sg, aorist_act_2 sg, aorist_act_2 du, aorist_act_2 pl, aorist_act_3 sg, ….
     conjugation!("अगात्", 5, "~ात्", like आपत;
-        indicative_active_first: _, _, _;
-        indicative_active_second: _, _, _;
-        indicative_active_third: "~ात्", _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: _, _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: _, _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, _, _;
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, _;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: _, _, _;
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: _, _, _;
-        perfect_active_second: _, _, _;
-        perfect_active_third: _, _, _;
-        perfect_middle_first: _, _, _;
-        perfect_middle_second: _, _, _;
-        perfect_middle_third: _, _, _;
-        aorist_active_first: "~ाम्", _, _;
-        aorist_active_second: "~ाः", "~ातम्", "~ात";
-        aorist_active_third: "~ात्", "~ाताम्", "~ुः";
-        aorist_middle_first: "~ि", "~िवहि", "~िमहि";
-        aorist_middle_second: "~िथाः", "~ाथाम्", "~िध्वम्";
-        aorist_middle_third: "~ित", "~ाताम्", "~िरन्";
-        infinitive: _;
-        gerund: _;
-        participle_present: _, _;
-        participle_future: _, _;
-        participle_perfect: _, _;
+    ind_act_3: "~ात्", _, _;
+    aorist_act_1: "~ाम्", _, _;
+    aorist_act_2: "~ाः", "~ातम्", "~ात";
+    aorist_act_3: "~ात्", "~ाताम्", "~ुः";
+    aorist_mid_1: "~ि", "~िवहि", "~िमहि";
+    aorist_mid_2: "~िथाः", "~ाथाम्", "~िध्वम्";
+    aorist_mid_3: "~ित", "~ाताम्", "~िरन्";
     ),
-    // जुहाव: 5 words (दुद्राव, शुश्राव, तुष्टाव, सुस्राव, जुहाव). Like अमत, except in 21 cells: indicative_active_third sg, perfect_active_first sg, perfect_active_first du, perfect_active_first pl, perfect_active_second sg, perfect_active_second du, ….
+    // जुहाव: 5 words (दुद्राव, शुश्राव, तुष्टाव, सुस्राव, जुहाव). Like अमत, except in 20 cells: ind_act_3 sg, perfect_act_1 sg, perfect_act_1 du, perfect_act_1 pl, perfect_act_2 sg, perfect_act_2 du, ….
     conjugation!("जुहाव", 5, "~ाव", like अमत;
-        indicative_active_first: _, _, _;
-        indicative_active_second: _, _, _;
-        indicative_active_third: "~ाव", _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: _, _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: _, _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, _, _;
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, _;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: _, _, _;
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: "~व|~ाव", "~ुव", "~ुम";
-        perfect_active_second: "~ोथ", "~ुवथुः", "~ुव";
-        perfect_active_third: "~ाव", "~ुवतुः", "~ुवुः";
-        perfect_middle_first: "~ुवे", "~ुवहे", "~ुमहे";
-        perfect_middle_second: "~ुषे", "~ुवाथे", "~ुध्वे";
-        perfect_middle_third: "~ुवे", "~ुवाते", "~ुविरे";
-        aorist_active_first: _, _, _;
-        aorist_active_second: _, _, _;
-        aorist_active_third: _, _, _;
-        aorist_middle_first: _, _, _;
-        aorist_middle_second: _, _, _;
-        aorist_middle_third: _, _, _;
-        infinitive: _;
-        gerund: _;
-        participle_present: _, _;
-        participle_future: _, _;
-        participle_perfect: "~ुवांस्", "~ुवाण";
+    ind_act_3: "~ाव", _, _;
+    perfect_act_1: "~व|~ाव", "~ुव", "~ुम";
+    perfect_act_2: "~ोथ", "~ुवथुः", "~ुव";
+    perfect_act_3: "~ाव", "~ुवतुः", "~ुवुः";
+    perfect_mid_1: "~ुवे", "~ुवहे", "~ुमहे";
+    perfect_mid_2: "~ुषे", "~ुवाथे", "~ुध्वे";
+    perfect_mid_3: _, "~ुवाते", "~ुविरे";
+    participle_perf: "~ुवांस्", "~ुवाण";
     ),
-    // इयाय: 5 words (बिभाय, जिगाय, इयाय, जिघाय, निनाय). Like अमत, except in 21 cells: indicative_active_third sg, perfect_active_first sg, perfect_active_first du, perfect_active_first pl, perfect_active_second sg, perfect_active_second du, ….
+    // इयाय: 5 words (बिभाय, जिगाय, इयाय, जिघाय, निनाय). Like अमत, except in 20 cells: ind_act_3 sg, perfect_act_1 sg, perfect_act_1 du, perfect_act_1 pl, perfect_act_2 sg, perfect_act_2 du, ….
     conjugation!("इयाय", 5, "~ाय", like अमत;
-        indicative_active_first: _, _, _;
-        indicative_active_second: _, _, _;
-        indicative_active_third: "~ाय", _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: _, _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: _, _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, _, _;
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, _;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: _, _, _;
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: "~य|~ाय", "~्यिव", "~्यिम";
-        perfect_active_second: "~ेथ|~यिथ", "~्यथुः", "~्य";
-        perfect_active_third: "~ाय", "~्यतुः", "~्युः";
-        perfect_middle_first: "~्ये", "~्यिवहे", "~्यिमहे";
-        perfect_middle_second: "~्यिषे", "~्याथे", "~्यिध्वे";
-        perfect_middle_third: "~्ये", "~्याते", "~्यिरे";
-        aorist_active_first: _, _, _;
-        aorist_active_second: _, _, _;
-        aorist_active_third: _, _, _;
-        aorist_middle_first: _, _, _;
-        aorist_middle_second: _, _, _;
-        aorist_middle_third: _, _, _;
-        infinitive: _;
-        gerund: _;
-        participle_present: _, _;
-        participle_future: _, _;
-        participle_perfect: "~ीवांस्", "~्यान";
+    ind_act_3: "~ाय", _, _;
+    perfect_act_1: "~य|~ाय", "~्यिव", "~्यिम";
+    perfect_act_2: "~ेथ|~यिथ", "~्यथुः", "~्य";
+    perfect_act_3: "~ाय", "~्यतुः", "~्युः";
+    perfect_mid_1: "~्ये", "~्यिवहे", "~्यिमहे";
+    perfect_mid_2: "~्यिषे", "~्याथे", "~्यिध्वे";
+    perfect_mid_3: _, "~्याते", "~्यिरे";
+    participle_perf: "~ीवांस्", "~्यान";
     ),
-    // चचार: 5 words (जहार, दधार, जगार, चचार, ममार). Like अमत, except in 21 cells: indicative_active_third sg, perfect_active_first sg, perfect_active_first du, perfect_active_first pl, perfect_active_second sg, perfect_active_second du, ….
+    // चचार: 5 words (जहार, दधार, जगार, चचार, ममार). Like अमत, except in 20 cells: ind_act_3 sg, perfect_act_1 sg, perfect_act_1 du, perfect_act_1 pl, perfect_act_2 sg, perfect_act_2 du, ….
     conjugation!("चचार", 5, "~ार", like अमत;
-        indicative_active_first: _, _, _;
-        indicative_active_second: _, _, _;
-        indicative_active_third: "~ार", _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: _, _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: _, _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, _, _;
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, _;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: _, _, _;
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: "~र|~ार", "~्रिव", "~्रिम";
-        perfect_active_second: "~र्थ|~रिथ", "~्रथुः", "~्र";
-        perfect_active_third: "~ार", "~्रतुः", "~्रुः";
-        perfect_middle_first: "~्रे", "~्रिवहे", "~्रिमहे";
-        perfect_middle_second: "~्रिषे", "~्राथे", "~्रिध्वे";
-        perfect_middle_third: "~्रे", "~्राते", "~्रिरे";
-        aorist_active_first: _, _, _;
-        aorist_active_second: _, _, _;
-        aorist_active_third: _, _, _;
-        aorist_middle_first: _, _, _;
-        aorist_middle_second: _, _, _;
-        aorist_middle_third: _, _, _;
-        infinitive: _;
-        gerund: _;
-        participle_present: _, _;
-        participle_future: _, _;
-        participle_perfect: "~ृवांस्", "~्राण";
-    ),
-    // आद: 4 words (आद, आप, आर, आव). Like अमत, except in 1 cell: participle_perfect act.
-    conjugation!("आद", 4, "~", like अमत;
-        indicative_active_first: _, _, _;
-        indicative_active_second: _, _, _;
-        indicative_active_third: _, _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: _, _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: _, _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, _, _;
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, _;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: _, _, _;
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: _, _, _;
-        perfect_active_second: _, _, _;
-        perfect_active_third: _, _, _;
-        perfect_middle_first: _, _, _;
-        perfect_middle_second: _, _, _;
-        perfect_middle_third: _, _, _;
-        aorist_active_first: _, _, _;
-        aorist_active_second: _, _, _;
-        aorist_active_third: _, _, _;
-        aorist_middle_first: _, _, _;
-        aorist_middle_second: _, _, _;
-        aorist_middle_third: _, _, _;
-        infinitive: _;
-        gerund: _;
-        participle_present: _, _;
-        participle_future: _, _;
-        participle_perfect: "~िवांस्", _;
+    ind_act_3: "~ार", _, _;
+    perfect_act_1: "~र|~ार", "~्रिव", "~्रिम";
+    perfect_act_2: "~र्थ|~रिथ", "~्रथुः", "~्र";
+    perfect_act_3: "~ार", "~्रतुः", "~्रुः";
+    perfect_mid_1: "~्रे", "~्रिवहे", "~्रिमहे";
+    perfect_mid_2: "~्रिषे", "~्राथे", "~्रिध्वे";
+    perfect_mid_3: _, "~्राते", "~्रिरे";
+    participle_perf: "~ृवांस्", "~्राण";
     ),
     // वमति: 4 words (वमति, चमति, नमति, गमति).
     conjugation!("वमति", 4, "~मति";
-        indicative_active_first: "~मामि", "~मावः", "~मामः";
-        indicative_active_second: "~मसि", "~मथः", "~मथ";
-        indicative_active_third: "~मति", "~मतः", "~मन्ति";
-        indicative_middle_first: "~मे", "~मावहे", "~मामहे";
-        indicative_middle_second: "~मसे", "~मेथे", "~मध्वे";
-        indicative_middle_third: "~मते", "~मेते", "~मन्ते";
-        imperative_active_first: "~मानि", "~माव", "~माम";
-        imperative_active_second: "~म", "~मतम्", "~मत";
-        imperative_active_third: "~मतु", "~मताम्", "~मन्तु";
-        imperative_middle_first: "~मै", "~मावहै", "~मामहै";
-        imperative_middle_second: "~मस्व", "~मेथाम्", "~मध्वम्";
-        imperative_middle_third: "~मताम्", "~मेताम्", "~मन्ताम्";
-        optative_active_first: "~मेयम्", "~मेव", "~मेम";
-        optative_active_second: "~मेः", "~मेतम्", "~मेत";
-        optative_active_third: "~मेत्", "~मेताम्", "~मेयुः";
-        optative_middle_first: "~मेय", "~मेवहि", "~मेमहि";
-        optative_middle_second: "~मेथाः", "~मेयाथाम्", "~मेध्वम्";
-        optative_middle_third: "~मेत", "~मेयाताम्", "~मेरन्";
-        subjunctive_active_first: "~मानि", "~माव", "~माम";
-        subjunctive_active_second: "~माः", "~माथः", "~माथ";
-        subjunctive_active_third: "~मात्", "~मातः", "~मान्";
-        subjunctive_middle_first: "~मै", "~मावहै", "~मामहै";
-        subjunctive_middle_second: "~मासे", "~मैथे", "~माध्वै";
-        subjunctive_middle_third: "~माते", "~मैते", "~मन्त";
-        imperfect_active_first: "अ~मम्", "अ~माव", "अ~माम";
-        imperfect_active_second: "अ~मः", "अ~मतम्", "अ~मत";
-        imperfect_active_third: "अ~मत्", "अ~मताम्", "अ~मन्";
-        imperfect_middle_first: "अ~मे", "अ~मावहि", "अ~मामहि";
-        imperfect_middle_second: "अ~मथाः", "अ~मेथाम्", "अ~मध्वम्";
-        imperfect_middle_third: "अ~मत", "अ~मेताम्", "अ~मन्त";
-        future_active_first: "~मिष्यामि", "~मिष्यावः", "~मिष्यामः";
-        future_active_second: "~मिष्यसि", "~मिष्यथः", "~मिष्यथ";
-        future_active_third: "~मिष्यति", "~मिष्यतः", "~मिष्यन्ति";
-        future_middle_first: "~मिष्ये", "~मिष्यावहे", "~मिष्यामहे";
-        future_middle_second: "~मिष्यसे", "~मिष्येथे", "~मिष्यध्वे";
-        future_middle_third: "~मिष्यते", "~मिष्येते", "~मिष्यन्ते";
-        conditional_active_first: "अ~मिष्यम्", "अ~मिष्याव", "अ~मिष्याम";
-        conditional_active_second: "अ~मिष्यः", "अ~मिष्यतम्", "अ~मिष्यत";
-        conditional_active_third: "अ~मिष्यत्", "अ~मिष्यताम्", "अ~मिष्यन्";
-        conditional_middle_first: "अ~मिष्ये", "अ~मिष्यावहि", "अ~मिष्यामहि";
-        conditional_middle_second: "अ~मिष्यथाः", "अ~मिष्येथाम्", "अ~मिष्यध्वम्";
-        conditional_middle_third: "अ~मिष्यत", "अ~मिष्येताम्", "अ~मिष्यन्त";
-        perfect_active_first: "~चम", "~ेमिव", "~ेमिम";
-        perfect_active_second: "~चन्थ", "~ेमथुः", "~ेम";
-        perfect_active_third: "~चाम", "~ेमतुः", "~ेमुः";
-        perfect_middle_first: "~ेमे", "~ेमिवहे", "~ेमिमहे";
-        perfect_middle_second: "~ेमिषे", "~ेमाथे", "~ेमिध्वे";
-        perfect_middle_third: "~ेमे", "~ेमाते", "~ेमिरे";
-        aorist_active_first: "अ~मिषम्", "अ~मिष्व", "अ~मिष्म";
-        aorist_active_second: "अ~मीः", "अ~मिष्टम्", "अ~मिष्ट";
-        aorist_active_third: "अ~मीत्", "अ~मिष्टाम्", "अ~मिषुः";
-        aorist_middle_first: "अ~मिषि", "अ~मिष्वहि", "अ~मिष्महि";
-        aorist_middle_second: "अ~मिष्ठाः", "अ~मिषाथाम्", "अ~मिढ्वम्";
-        aorist_middle_third: "अ~मिष्ट", "अ~मिषाताम्", "अ~मिषत";
-        infinitive: "~मितुम्";
-        gerund: "~मित्वा";
-        participle_present: "~मत्", "~ममान";
-        participle_future: "~मिष्यत्", "~मिष्यमाण";
-        participle_perfect: "~ेमिवांस्", "~ेमान";
+    ind_act_1: "~मामि", "~मावः", "~मामः";
+    ind_act_2: "~मसि", "~मथः", "~मथ";
+    ind_act_3: "~मति", "~मतः", "~मन्ति";
+    ind_mid_1: "~मे", "~मावहे", "~मामहे";
+    ind_mid_2: "~मसे", "~मेथे", "~मध्वे";
+    ind_mid_3: "~मते", "~मेते", "~मन्ते";
+    imp_act_1: "~मानि", "~माव", "~माम";
+    imp_act_2: "~म", "~मतम्", "~मत";
+    imp_act_3: "~मतु", "~मताम्", "~मन्तु";
+    imp_mid_1: "~मै", "~मावहै", "~मामहै";
+    imp_mid_2: "~मस्व", "~मेथाम्", "~मध्वम्";
+    imp_mid_3: "~मताम्", "~मेताम्", "~मन्ताम्";
+    opt_act_1: "~मेयम्", "~मेव", "~मेम";
+    opt_act_2: "~मेः", "~मेतम्", "~मेत";
+    opt_act_3: "~मेत्", "~मेताम्", "~मेयुः";
+    opt_mid_1: "~मेय", "~मेवहि", "~मेमहि";
+    opt_mid_2: "~मेथाः", "~मेयाथाम्", "~मेध्वम्";
+    opt_mid_3: "~मेत", "~मेयाताम्", "~मेरन्";
+    subj_act_2: "~माः", "~माथः", "~माथ";
+    subj_act_3: "~मात्", "~मातः", "~मान्";
+    subj_mid_2: "~मासे", "~मैथे", "~माध्वै";
+    subj_mid_3: "~माते", "~मैते", "~मन्त";
+    imperfect_act_1: "अ~मम्", "अ~माव", "अ~माम";
+    imperfect_act_2: "अ~मः", "अ~मतम्", _;
+    imperfect_act_3: "अ~मत्", "अ~मताम्", "अ~मन्";
+    imperfect_mid_1: "अ~मे", "अ~मावहि", "अ~मामहि";
+    imperfect_mid_2: "अ~मथाः", "अ~मेथाम्", "अ~मध्वम्";
+    imperfect_mid_3: "अ~मत", "अ~मेताम्", "अ~मन्त";
+    future_act_1: "~मिष्यामि", "~मिष्यावः", "~मिष्यामः";
+    future_act_2: "~मिष्यसि", "~मिष्यथः", "~मिष्यथ";
+    future_act_3: "~मिष्यति", "~मिष्यतः", "~मिष्यन्ति";
+    future_mid_1: "~मिष्ये", "~मिष्यावहे", "~मिष्यामहे";
+    future_mid_2: "~मिष्यसे", "~मिष्येथे", "~मिष्यध्वे";
+    future_mid_3: "~मिष्यते", "~मिष्येते", "~मिष्यन्ते";
+    conditional_act_1: "अ~मिष्यम्", "अ~मिष्याव", "अ~मिष्याम";
+    conditional_act_2: "अ~मिष्यः", "अ~मिष्यतम्", _;
+    conditional_act_3: "अ~मिष्यत्", "अ~मिष्यताम्", "अ~मिष्यन्";
+    conditional_mid_1: "अ~मिष्ये", "अ~मिष्यावहि", "अ~मिष्यामहि";
+    conditional_mid_2: "अ~मिष्यथाः", "अ~मिष्येथाम्", "अ~मिष्यध्वम्";
+    conditional_mid_3: "अ~मिष्यत", "अ~मिष्येताम्", "अ~मिष्यन्त";
+    perfect_act_1: "~चम", "~ेमिव", "~ेमिम";
+    perfect_act_2: "~चन्थ", "~ेमथुः", "~ेम";
+    perfect_act_3: "~चाम", "~ेमतुः", "~ेमुः";
+    perfect_mid_1: "~ेमे", "~ेमिवहे", "~ेमिमहे";
+    perfect_mid_2: "~ेमिषे", "~ेमाथे", "~ेमिध्वे";
+    perfect_mid_3: _, "~ेमाते", "~ेमिरे";
+    aorist_act_1: "अ~मिषम्", "अ~मिष्व", "अ~मिष्म";
+    aorist_act_2: "अ~मीः", "अ~मिष्टम्", "अ~मिष्ट";
+    aorist_act_3: "अ~मीत्", "अ~मिष्टाम्", "अ~मिषुः";
+    aorist_mid_1: "अ~मिषि", "अ~मिष्वहि", "अ~मिष्महि";
+    aorist_mid_2: "अ~मिष्ठाः", "अ~मिषाथाम्", "अ~मिढ्वम्";
+    aorist_mid_3: "अ~मिष्ट", "अ~मिषाताम्", "अ~मिषत";
+    infinitive: "~मितुम्";
+    gerund: "~मित्वा";
+    participle_pres: "~मत्", "~ममान";
+    participle_fut: "~मिष्यत्", "~मिष्यमाण";
+    participle_perf: "~ेमिवांस्", "~ेमान";
     ),
-    // वृणीते: 4 words (मिमीते, जानीते, जिहीते, वृणीते). Like ददाति, except in 46 cells: indicative_active_first sg, indicative_active_first du, indicative_active_first pl, indicative_active_second sg, indicative_active_second du, indicative_active_second pl, ….
+    // वृणीते: 4 words (मिमीते, जानीते, जिहीते, वृणीते). Like ददाति, except in 43 cells: ind_act_1 sg, ind_act_1 du, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ….
     conjugation!("वृणीते", 4, "~ीते", like ददाति;
-        indicative_active_first: derived, derived, derived;
-        indicative_active_second: derived, derived, derived;
-        indicative_active_third: "~ीते", derived, derived;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: derived, derived, derived;
-        imperative_active_second: derived, derived, derived;
-        imperative_active_third: derived, derived, derived;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: derived, derived, derived;
-        optative_active_second: derived, derived, derived;
-        optative_active_third: derived, derived, derived;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: derived, derived, derived;
-        subjunctive_active_second: derived, derived, derived;
-        subjunctive_active_third: derived, derived, derived;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: derived, derived, derived;
-        imperfect_active_second: derived, derived, derived;
-        imperfect_active_third: derived, derived, derived;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: _, _, _;
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: _, _, _;
-        perfect_active_second: _, _, _;
-        perfect_active_third: _, _, _;
-        perfect_middle_first: _, _, _;
-        perfect_middle_second: _, _, _;
-        perfect_middle_third: _, _, _;
-        aorist_active_first: _, _, _;
-        aorist_active_second: _, _, _;
-        aorist_active_third: _, _, _;
-        aorist_middle_first: _, _, _;
-        aorist_middle_second: _, _, _;
-        aorist_middle_third: _, _, _;
-        infinitive: _;
-        gerund: _;
-        participle_present: derived, _;
-        participle_future: _, _;
-        participle_perfect: _, _;
+    ind_act_1: derived, derived, derived;
+    ind_act_2: derived, derived, derived;
+    ind_act_3: "~ीते", derived, derived;
+    imp_act_1: derived, derived, derived;
+    imp_act_2: derived, derived, derived;
+    imp_act_3: derived, derived, derived;
+    opt_act_1: derived, derived, derived;
+    opt_act_2: derived, derived, derived;
+    opt_act_3: derived, derived, derived;
+    subj_act_1: derived, _, _;
+    subj_act_2: derived, derived, derived;
+    subj_act_3: derived, derived, derived;
+    imperfect_act_1: derived, derived, derived;
+    imperfect_act_2: derived, derived, _;
+    imperfect_act_3: derived, derived, derived;
+    participle_pres: derived, _;
     ),
-    // सरवति: 4 words (स्रवति, द्रवति, चर्वति, तूर्वति).
-    conjugation!("स्रवति", 4, "~~वति";
-        indicative_active_first: "~~वामि", "~~वावः", "~~वामः";
-        indicative_active_second: "~~वसि", "~~वथः", "~~वथ";
-        indicative_active_third: "~~वति", "~~वतः", "~~वन्ति";
-        indicative_middle_first: "~~वे", "~~वावहे", "~~वामहे";
-        indicative_middle_second: "~~वसे", "~~वेथे", "~~वध्वे";
-        indicative_middle_third: "~~वते", "~~वेते", "~~वन्ते";
-        imperative_active_first: "~~वाणि", "~~वाव", "~~वाम";
-        imperative_active_second: "~~व", "~~वतम्", "~~वत";
-        imperative_active_third: "~~वतु", "~~वताम्", "~~वन्तु";
-        imperative_middle_first: "~~वै", "~~वावहै", "~~वामहै";
-        imperative_middle_second: "~~वस्व", "~~वेथाम्", "~~वध्वम्";
-        imperative_middle_third: "~~वताम्", "~~वेताम्", "~~वन्ताम्";
-        optative_active_first: "~~वेयम्", "~~वेव", "~~वेम";
-        optative_active_second: "~~वेः", "~~वेतम्", "~~वेत";
-        optative_active_third: "~~वेत्", "~~वेताम्", "~~वेयुः";
-        optative_middle_first: "~~वेय", "~~वेवहि", "~~वेमहि";
-        optative_middle_second: "~~वेथाः", "~~वेयाथाम्", "~~वेध्वम्";
-        optative_middle_third: "~~वेत", "~~वेयाताम्", "~~वेरन्";
-        subjunctive_active_first: "~~वाणि", "~~वाव", "~~वाम";
-        subjunctive_active_second: "~~वाः", "~~वाथः", "~~वाथ";
-        subjunctive_active_third: "~~वात्", "~~वातः", "~~वान्";
-        subjunctive_middle_first: "~~वै", "~~वावहै", "~~वामहै";
-        subjunctive_middle_second: "~~वासे", "~~वैथे", "~~वाध्वै";
-        subjunctive_middle_third: "~~वाते", "~~वैते", "~~वन्त";
-        imperfect_active_first: "अ~~वम्", "अ~~वाव", "अ~~वाम";
-        imperfect_active_second: "अ~~वः", "अ~~वतम्", "अ~~वत";
-        imperfect_active_third: "अ~~वत्", "अ~~वताम्", "अ~~वन्";
-        imperfect_middle_first: "अ~~वे", "अ~~वावहि", "अ~~वामहि";
-        imperfect_middle_second: "अ~~वथाः", "अ~~वेथाम्", "अ~~वध्वम्";
-        imperfect_middle_third: "अ~~वत", "अ~~वेताम्", "अ~~वन्त";
-        future_active_first: "~~ोष्यामि", "~~ोष्यावः", "~~ोष्यामः";
-        future_active_second: "~~ोष्यसि", "~~ोष्यथः", "~~ोष्यथ";
-        future_active_third: "~~ोष्यति", "~~ोष्यतः", "~~ोष्यन्ति";
-        future_middle_first: "~~ोष्ये", "~~ोष्यावहे", "~~ोष्यामहे";
-        future_middle_second: "~~ोष्यसे", "~~ोष्येथे", "~~ोष्यध्वे";
-        future_middle_third: "~~ोष्यते", "~~ोष्येते", "~~ोष्यन्ते";
-        conditional_active_first: "अ~~ोष्यम्", "अ~~ोष्याव", "अ~~ोष्याम";
-        conditional_active_second: "अ~~ोष्यः", "अ~~ोष्यतम्", "अ~~ोष्यत";
-        conditional_active_third: "अ~~ोष्यत्", "अ~~ोष्यताम्", "अ~~ोष्यन्";
-        conditional_middle_first: "अ~~ोष्ये", "अ~~ोष्यावहि", "अ~~ोष्यामहि";
-        conditional_middle_second: "अ~~ोष्यथाः", "अ~~ोष्येथाम्", "अ~~ोष्यध्वम्";
-        conditional_middle_third: "अ~~ोष्यत", "अ~~ोष्येताम्", "अ~~ोष्यन्त";
-        perfect_active_first: "~ुद~व", "~ुद~ुव", "~ुद~ुम";
-        perfect_active_second: "~ुद~ोथ", "~ुद~ुवथुः", "~ुद~ुव";
-        perfect_active_third: "~ुद~ाव", "~ुद~ुवतुः", "~ुद~ुवुः";
-        perfect_middle_first: "~ुद~ुवे", "~ुद~ुवहे", "~ुद~ुमहे";
-        perfect_middle_second: "~ुद~ुषे", "~ुद~ुवाथे", "~ुद~ुध्वे";
-        perfect_middle_third: "~ुद~ुवे", "~ुद~ुवाते", "~ुद~ुविरे";
-        aorist_active_first: "अ~~ुद्रुवम्", "अ~~ुद्रुवाव", "अ~~ुद्रुवाम";
-        aorist_active_second: "अ~~ुद्रुवः", "अ~~ुद्रुवतम्", "अ~~ुद्रुवत";
-        aorist_active_third: "अ~~ुद्रुवत्", "अ~~ुद्रुवताम्", "अ~~ुद्रुवन्";
-        aorist_middle_first: "अ~~ाविषि", "अ~~ाविष्वहि", "अ~~ाविष्महि";
-        aorist_middle_second: "अ~~ाविष्ठाः", "अ~~ाविषाथाम्", "अ~~ाविढ्वम्";
-        aorist_middle_third: "अ~~ाविष्ट", "अ~~ाविषाताम्", "अ~~ाविषत";
-        infinitive: "~~ोतुम्";
-        gerund: "~~ुत्वा";
-        participle_present: "~~वत्", "~~वमाण";
-        participle_future: "~~ोष्यत्", "~~ोष्यमाण";
-        participle_perfect: "~ुद~ुवांस्", "~ुद~ुवाण";
+    // रवति: 4 words (द्रवति, चर्वति, तूर्वति, रवति).
+    conjugation!("रवति", 4, "~वति";
+    ind_act_1: "~वामि", "~वावः", "~वामः";
+    ind_act_2: "~वसि", "~वथः", "~वथ";
+    ind_act_3: "~वति", "~वतः", "~वन्ति";
+    ind_mid_1: "~वे", "~वावहे", "~वामहे";
+    ind_mid_2: "~वसे", "~वेथे", "~वध्वे";
+    ind_mid_3: "~वते", "~वेते", "~वन्ते";
+    imp_act_1: "~वाणि", "~वाव", "~वाम";
+    imp_act_2: "~व", "~वतम्", "~वत";
+    imp_act_3: "~वतु", "~वताम्", "~वन्तु";
+    imp_mid_1: "~वै", "~वावहै", "~वामहै";
+    imp_mid_2: "~वस्व", "~वेथाम्", "~वध्वम्";
+    imp_mid_3: "~वताम्", "~वेताम्", "~वन्ताम्";
+    opt_act_1: "~वेयम्", "~वेव", "~वेम";
+    opt_act_2: "~वेः", "~वेतम्", "~वेत";
+    opt_act_3: "~वेत्", "~वेताम्", "~वेयुः";
+    opt_mid_1: "~वेय", "~वेवहि", "~वेमहि";
+    opt_mid_2: "~वेथाः", "~वेयाथाम्", "~वेध्वम्";
+    opt_mid_3: "~वेत", "~वेयाताम्", "~वेरन्";
+    subj_act_2: "~वाः", "~वाथः", "~वाथ";
+    subj_act_3: "~वात्", "~वातः", "~वान्";
+    subj_mid_2: "~वासे", "~वैथे", "~वाध्वै";
+    subj_mid_3: "~वाते", "~वैते", "~वन्त";
+    imperfect_act_1: "अ~वम्", "अ~वाव", "अ~वाम";
+    imperfect_act_2: "अ~वः", "अ~वतम्", _;
+    imperfect_act_3: "अ~वत्", "अ~वताम्", "अ~वन्";
+    imperfect_mid_1: "अ~वे", "अ~वावहि", "अ~वामहि";
+    imperfect_mid_2: "अ~वथाः", "अ~वेथाम्", "अ~वध्वम्";
+    imperfect_mid_3: "अ~वत", "अ~वेताम्", "अ~वन्त";
+    future_act_1: "~ोष्यामि", "~ोष्यावः", "~ोष्यामः";
+    future_act_2: "~ोष्यसि", "~ोष्यथः", "~ोष्यथ";
+    future_act_3: "~ोष्यति", "~ोष्यतः", "~ोष्यन्ति";
+    future_mid_1: "~ोष्ये", "~ोष्यावहे", "~ोष्यामहे";
+    future_mid_2: "~ोष्यसे", "~ोष्येथे", "~ोष्यध्वे";
+    future_mid_3: "~ोष्यते", "~ोष्येते", "~ोष्यन्ते";
+    conditional_act_1: "अ~ोष्यम्", "अ~ोष्याव", "अ~ोष्याम";
+    conditional_act_2: "अ~ोष्यः", "अ~ोष्यतम्", _;
+    conditional_act_3: "अ~ोष्यत्", "अ~ोष्यताम्", "अ~ोष्यन्";
+    conditional_mid_1: "अ~ोष्ये", "अ~ोष्यावहि", "अ~ोष्यामहि";
+    conditional_mid_2: "अ~ोष्यथाः", "अ~ोष्येथाम्", "अ~ोष्यध्वम्";
+    conditional_mid_3: "अ~ोष्यत", "अ~ोष्येताम्", "अ~ोष्यन्त";
+    perfect_act_1: "दु~व", "दु~ुव", "दु~ुम";
+    perfect_act_2: "दु~ोथ", "दु~ुवथुः", "दु~ुव";
+    perfect_act_3: "दु~ाव", "दु~ुवतुः", "दु~ुवुः";
+    perfect_mid_1: "दु~ुवे", "दु~ुवहे", "दु~ुमहे";
+    perfect_mid_2: "दु~ुषे", "दु~ुवाथे", "दु~ुध्वे";
+    perfect_mid_3: _, "दु~ुवाते", "दु~ुविरे";
+    aorist_act_1: "अ~ुद्रुवम्", "अ~ुद्रुवाव", "अ~ुद्रुवाम";
+    aorist_act_2: "अ~ुद्रुवः", "अ~ुद्रुवतम्", "अ~ुद्रुवत";
+    aorist_act_3: "अ~ुद्रुवत्", "अ~ुद्रुवताम्", "अ~ुद्रुवन्";
+    aorist_mid_1: "अ~ाविषि", "अ~ाविष्वहि", "अ~ाविष्महि";
+    aorist_mid_2: "अ~ाविष्ठाः", "अ~ाविषाथाम्", "अ~ाविढ्वम्";
+    aorist_mid_3: "अ~ाविष्ट", "अ~ाविषाताम्", "अ~ाविषत";
+    infinitive: "~ोतुम्";
+    gerund: "~ुत्वा";
+    participle_pres: "~वत्", "~वमाण";
+    participle_fut: "~ोष्यत्", "~ोष्यमाण";
+    participle_perf: "दु~ुवांस्", "दु~ुवाण";
     ),
-    // आनयति: 4 words (आनयति, आगच्छति, आक्रोशति, आमयति). Like एति, except in 58 cells: imperfect_active_first sg, imperfect_active_first du, imperfect_active_first pl, imperfect_active_second sg, imperfect_active_second du, imperfect_active_second pl, ….
-    conjugation!("आनयति", 4, "~ति", like एति;
-        indicative_active_first: _, _, _;
-        indicative_active_second: _, _, _;
-        indicative_active_third: _, _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: _, _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: _, _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: "~म्", "~ाव", "~ाम";
-        imperfect_active_second: "~ः", "~तम्", "~त";
-        imperfect_active_third: "~त्", "~ताम्", "~न्";
-        imperfect_middle_first: "~े", "~ावहि", "~ामहि";
-        imperfect_middle_second: "~थाः", "~ेथाम्", "~ध्वम्";
-        imperfect_middle_third: "~त", "~ेताम्", "~न्त";
-        future_active_first: _, _, "~िष्यामः";
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: derived, derived, derived;
-        conditional_active_second: derived, derived, derived;
-        conditional_active_third: derived, derived, derived;
-        conditional_middle_first: derived, derived, derived;
-        conditional_middle_second: derived, derived, derived;
-        conditional_middle_third: derived, derived, derived;
-        perfect_active_first: derived, derived, derived;
-        perfect_active_second: derived, derived, derived;
-        perfect_active_third: derived, derived, derived;
-        perfect_middle_first: derived, derived, derived;
-        perfect_middle_second: derived, derived, derived;
-        perfect_middle_third: derived, derived, derived;
-        aorist_active_first: _, _, _;
-        aorist_active_second: _, _, _;
-        aorist_active_third: _, _, _;
-        aorist_middle_first: _, _, _;
-        aorist_middle_second: _, _, _;
-        aorist_middle_third: _, _, _;
-        infinitive: _;
-        gerund: _;
-        participle_present: _, "~मान";
-        participle_future: _, _;
-        participle_perfect: derived, derived;
+    // आनयति: 4 words (आनयति, आगच्छति, आक्रोशति, आमयति). Like साधयति, except in 55 cells: imperfect_act_1 sg, imperfect_act_1 du, imperfect_act_1 pl, imperfect_act_2 sg, imperfect_act_2 du, imperfect_act_3 sg, ….
+    conjugation!("आनयति", 4, "~ति", like साधयति;
+    imperfect_act_1: "~म्", "~ाव", "~ाम";
+    imperfect_act_2: "~ः", "~तम्", _;
+    imperfect_act_3: "~त्", "~ताम्", "~न्";
+    imperfect_mid_1: "~े", "~ावहि", "~ामहि";
+    imperfect_mid_2: "~थाः", "~ेथाम्", "~ध्वम्";
+    imperfect_mid_3: "~त", "~ेताम्", "~न्त";
+    future_act_1: _, _, "~िष्यामः";
+    conditional_act_1: derived, derived, derived;
+    conditional_act_2: derived, derived, _;
+    conditional_act_3: derived, derived, derived;
+    conditional_mid_1: derived, derived, derived;
+    conditional_mid_2: derived, derived, derived;
+    conditional_mid_3: derived, derived, derived;
+    perfect_act_1: derived, derived, derived;
+    perfect_act_2: derived, derived, derived;
+    perfect_act_3: derived, derived, derived;
+    perfect_mid_1: derived, derived, derived;
+    perfect_mid_2: derived, derived, derived;
+    perfect_mid_3: _, derived, derived;
+    participle_pres: _, "~मान";
+    participle_perf: derived, derived;
     ),
-    // इरसयति: 4 words (इच्छति, इङ्गति, इरस्यति, इङ्गयति).
-    conjugation!("इरस्यति", 4, "इ~ति";
-        indicative_active_first: "इ~ामि", "इ~ावः", "इ~ामः|इ~ामसि";
-        indicative_active_second: "इ~सि", "इ~थः", "इ~थ";
-        indicative_active_third: "इ~ति", "इ~तः", "इ~न्ति";
-        indicative_middle_first: "इ~े", "इ~ावहे", "इ~ामहे";
-        indicative_middle_second: "इ~से", "इ~ेथे", "इ~ध्वे";
-        indicative_middle_third: "इ~ते", "इ~ेते", "इ~न्ते";
-        imperative_active_first: "इ~ानि", "इ~ाव", "इ~ाम";
-        imperative_active_second: "इ~", "इ~तम्", "इ~त";
-        imperative_active_third: "इ~तु", "इ~ताम्", "इ~न्तु";
-        imperative_middle_first: "इ~ै", "इ~ावहै", "इ~ामहै";
-        imperative_middle_second: "इ~स्व", "इ~ेथाम्", "इ~ध्वम्";
-        imperative_middle_third: "इ~ताम्", "इ~ेताम्", "इ~न्ताम्";
-        optative_active_first: "इ~ेयम्", "इ~ेव", "इ~ेम";
-        optative_active_second: "इ~ेः", "इ~ेतम्", "इ~ेत";
-        optative_active_third: "इ~ेत्", "इ~ेताम्", "इ~ेयुः";
-        optative_middle_first: "इ~ेय", "इ~ेवहि", "इ~ेमहि";
-        optative_middle_second: "इ~ेथाः", "इ~ेयाथाम्", "इ~ेध्वम्";
-        optative_middle_third: "इ~ेत", "इ~ेयाताम्", "इ~ेरन्";
-        subjunctive_active_first: "इ~ानि", "इ~ाव", "इ~ाम";
-        subjunctive_active_second: "इ~ाः|इ~ासि", "इ~ाथः", "इ~ाथ";
-        subjunctive_active_third: "इ~ात्|इ~ाति", "इ~ातः", "इ~ान्";
-        subjunctive_middle_first: "इ~ै", "इ~ावहै", "इ~ामहै";
-        subjunctive_middle_second: "इ~ासे|इ~ासै", "इ~ैथे", "इ~ाध्वै";
-        subjunctive_middle_third: "इ~ाते|इ~ातै", "इ~ैते", "इ~न्त|इ~ान्तै";
-        imperfect_active_first: "ऐ~म्", "ऐ~ाव", "ऐ~ाम";
-        imperfect_active_second: "ऐ~ः", "ऐ~तम्", "ऐ~त";
-        imperfect_active_third: "ऐ~त्", "ऐ~ताम्", "ऐ~न्";
-        imperfect_middle_first: "ऐ~े", "ऐ~ावहि", "ऐ~ामहि";
-        imperfect_middle_second: "ऐ~थाः", "ऐ~ेथाम्", "ऐ~ध्वम्";
-        imperfect_middle_third: "ऐ~त", "ऐ~ेताम्", "ऐ~न्त";
-        future_active_first: "इ~िष्यामि", "इ~िष्यावः", "इ~िष्यामः";
-        future_active_second: "इ~िष्यसि", "इ~िष्यथः", "इ~िष्यथ";
-        future_active_third: "इ~िष्यति", "इ~िष्यतः", "इ~िष्यन्ति";
-        future_middle_first: "इ~िष्ये", "इ~िष्यावहे", "इ~िष्यामहे";
-        future_middle_second: "इ~िष्यसे", "इ~िष्येथे", "इ~िष्यध्वे";
-        future_middle_third: "इ~िष्यते", "इ~िष्येते", "इ~िष्यन्ते";
-        conditional_active_first: "ऐ~िष्यम्", "ऐ~िष्याव", "ऐ~िष्याम";
-        conditional_active_second: "ऐ~िष्यः", "ऐ~िष्यतम्", "ऐ~िष्यत";
-        conditional_active_third: "ऐ~िष्यत्", "ऐ~िष्यताम्", "ऐ~िष्यन्";
-        conditional_middle_first: "ऐ~िष्ये", "ऐ~िष्यावहि", "ऐ~िष्यामहि";
-        conditional_middle_second: "ऐ~िष्यथाः", "ऐ~िष्येथाम्", "ऐ~िष्यध्वम्";
-        conditional_middle_third: "ऐ~िष्यत", "ऐ~िष्येताम्", "ऐ~िष्यन्त";
-        perfect_active_first: "इ~ामास", "इ~ामासिव", "इ~ामासिम";
-        perfect_active_second: "इ~ामासिथ", "इ~ामासथुः", "इ~ामास";
-        perfect_active_third: "इ~ामास", "इ~ामासतुः", "इ~ामासुः";
-        perfect_middle_first: "इ~ांचक्रे", "इ~ांचकृवहे", "इ~ांचकृमहे";
-        perfect_middle_second: "इ~ांचकृषे", "इ~ांचक्राथे", "इ~ांचकृध्वे";
-        perfect_middle_third: "इ~ांचक्रे", "इ~ांचक्राते", "इ~ांचक्रिरे";
-        aorist_active_first: derived, derived, derived;
-        aorist_active_second: derived, derived, derived;
-        aorist_active_third: derived, derived, derived;
-        aorist_middle_first: derived, derived, derived;
-        aorist_middle_second: derived, derived, derived;
-        aorist_middle_third: derived, derived, derived;
-        infinitive: "इ~ितुम्";
-        gerund: "इ~ित्वा";
-        participle_present: "इ~त्", "इ~मान";
-        participle_future: "इ~िष्यत्", "इ~िष्यमाण";
-        participle_perfect: "इ~ामासिवांस्", "इ~ांचक्राण";
-    ),
-    // चकार: 3 words (चकार, बभार, जभार). Like चचार, except in 7 cells: perfect_active_first du, perfect_active_first pl, perfect_active_second sg, perfect_middle_first du, perfect_middle_first pl, perfect_middle_second sg, ….
+    // चकार: 3 words (चकार, बभार, जभार). Like चचार, except in 7 cells: perfect_act_1 du, perfect_act_1 pl, perfect_act_2 sg, perfect_mid_1 du, perfect_mid_1 pl, perfect_mid_2 sg, ….
     conjugation!("चकार", 3, "~ार", like चचार;
-        indicative_active_first: _, _, _;
-        indicative_active_second: _, _, _;
-        indicative_active_third: _, _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: _, _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: _, _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, _, _;
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, _;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: _, _, _;
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: _, "~ृव", "~ृम";
-        perfect_active_second: "~र्थ", _, _;
-        perfect_active_third: _, _, _;
-        perfect_middle_first: _, "~ृवहे", "~ृमहे";
-        perfect_middle_second: "~ृषे", _, "~ृध्वे";
-        perfect_middle_third: _, _, _;
-        aorist_active_first: _, _, _;
-        aorist_active_second: _, _, _;
-        aorist_active_third: _, _, _;
-        aorist_middle_first: _, _, _;
-        aorist_middle_second: _, _, _;
-        aorist_middle_third: _, _, _;
-        infinitive: _;
-        gerund: _;
-        participle_present: _, _;
-        participle_future: _, _;
-        participle_perfect: _, _;
+    perfect_act_1: _, "~ृव", "~ृम";
+    perfect_act_2: "~र्थ", _, _;
+    perfect_mid_1: _, "~ृवहे", "~ृमहे";
+    perfect_mid_2: "~ृषे", _, "~ृध्वे";
     ),
-    // आचरति: 3 words (आचरति, पक्षति, यक्षति). Like आनयति, except in 25 cells: imperative_active_first sg, subjunctive_active_first sg, future_active_first sg, future_active_first du, future_active_first pl, future_active_second sg, ….
+    // आचरति: 3 words (आचरति, पक्षति, यक्षति). Like आनयति, except in 24 cells: imp_act_1 sg, future_act_1 sg, future_act_1 du, future_act_1 pl, future_act_2 sg, future_act_2 du, ….
     conjugation!("आचरति", 3, "~ति", like आनयति;
-        indicative_active_first: _, _, _;
-        indicative_active_second: _, _, _;
-        indicative_active_third: _, _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: "~ाणि", _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: "~ाणि", _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, _, _;
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, _;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: derived, derived, derived;
-        future_active_second: derived, derived, derived;
-        future_active_third: derived, derived, derived;
-        future_middle_first: derived, derived, derived;
-        future_middle_second: derived, derived, derived;
-        future_middle_third: derived, derived, derived;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: _, _, _;
-        perfect_active_second: _, _, _;
-        perfect_active_third: _, _, _;
-        perfect_middle_first: _, _, _;
-        perfect_middle_second: _, _, _;
-        perfect_middle_third: _, _, _;
-        aorist_active_first: _, _, _;
-        aorist_active_second: _, _, _;
-        aorist_active_third: _, _, _;
-        aorist_middle_first: _, _, _;
-        aorist_middle_second: _, _, _;
-        aorist_middle_third: _, _, _;
-        infinitive: derived;
-        gerund: derived;
-        participle_present: _, "~माण";
-        participle_future: derived, derived;
-        participle_perfect: _, _;
+    imp_act_1: "~ाणि", _, _;
+    future_act_1: derived, derived, derived;
+    future_act_2: derived, derived, derived;
+    future_act_3: derived, derived, derived;
+    future_mid_1: derived, derived, derived;
+    future_mid_2: derived, derived, derived;
+    future_mid_3: derived, derived, derived;
+    infinitive: derived;
+    gerund: derived;
+    participle_pres: _, "~माण";
+    participle_fut: derived, derived;
     ),
-    // परवदति: 3 words (उपन्यस्यति, प्रवदति, प्रक्षालयति).
-    conjugation!("प्रवदति", 3, "~~ति";
-        indicative_active_first: "~~ामि", "~~ावः", "~~ामः|~~ामसि";
-        indicative_active_second: "~~सि", "~~थः", "~~थ";
-        indicative_active_third: "~~ति", "~~तः", "~~न्ति";
-        indicative_middle_first: "~~े", "~~ावहे", "~~ामहे";
-        indicative_middle_second: "~~से", "~~ेथे", "~~ध्वे";
-        indicative_middle_third: "~~ते", "~~ेते", "~~न्ते";
-        imperative_active_first: "~~ानि", "~~ाव", "~~ाम";
-        imperative_active_second: "~~", "~~तम्", "~~त";
-        imperative_active_third: "~~तु", "~~ताम्", "~~न्तु";
-        imperative_middle_first: "~~ै", "~~ावहै", "~~ामहै";
-        imperative_middle_second: "~~स्व", "~~ेथाम्", "~~ध्वम्";
-        imperative_middle_third: "~~ताम्", "~~ेताम्", "~~न्ताम्";
-        optative_active_first: "~~ेयम्", "~~ेव", "~~ेम";
-        optative_active_second: "~~ेः", "~~ेतम्", "~~ेत";
-        optative_active_third: "~~ेत्", "~~ेताम्", "~~ेयुः";
-        optative_middle_first: "~~ेय", "~~ेवहि", "~~ेमहि";
-        optative_middle_second: "~~ेथाः", "~~ेयाथाम्", "~~ेध्वम्";
-        optative_middle_third: "~~ेत", "~~ेयाताम्", "~~ेरन्";
-        subjunctive_active_first: "~~ानि", "~~ाव", "~~ाम";
-        subjunctive_active_second: "~~ाः|~~ासि", "~~ाथः", "~~ाथ";
-        subjunctive_active_third: "~~ात्|~~ाति", "~~ातः", "~~ान्";
-        subjunctive_middle_first: "~~ै", "~~ावहै", "~~ामहै";
-        subjunctive_middle_second: "~~ासे|~~ासै", "~~ैथे", "~~ाध्वै";
-        subjunctive_middle_third: "~~ाते|~~ातै", "~~ैते", "~~न्त|~~ान्तै";
-        imperfect_active_first: "~ा~म्", "~ा~ाव", "~ा~ाम";
-        imperfect_active_second: "~ा~ः", "~ा~तम्", "~ा~त";
-        imperfect_active_third: "~ा~त्", "~ा~ताम्", "~ा~न्";
-        imperfect_middle_first: "~ा~े", "~ा~ावहि", "~ा~ामहि";
-        imperfect_middle_second: "~ा~थाः", "~ा~ेथाम्", "~ा~ध्वम्";
-        imperfect_middle_third: "~ा~त", "~ा~ेताम्", "~ा~न्त";
-        future_active_first: derived, derived, derived;
-        future_active_second: derived, derived, derived;
-        future_active_third: derived, derived, derived;
-        future_middle_first: derived, derived, derived;
-        future_middle_second: derived, derived, derived;
-        future_middle_third: derived, derived, derived;
-        conditional_active_first: derived, derived, derived;
-        conditional_active_second: derived, derived, derived;
-        conditional_active_third: derived, derived, derived;
-        conditional_middle_first: derived, derived, derived;
-        conditional_middle_second: derived, derived, derived;
-        conditional_middle_third: derived, derived, derived;
-        perfect_active_first: derived, derived, derived;
-        perfect_active_second: derived, derived, derived;
-        perfect_active_third: derived, derived, derived;
-        perfect_middle_first: derived, derived, derived;
-        perfect_middle_second: derived, derived, derived;
-        perfect_middle_third: derived, derived, derived;
-        aorist_active_first: derived, derived, derived;
-        aorist_active_second: derived, derived, derived;
-        aorist_active_third: derived, derived, derived;
-        aorist_middle_first: derived, derived, derived;
-        aorist_middle_second: derived, derived, derived;
-        aorist_middle_third: derived, derived, derived;
-        infinitive: derived;
-        gerund: derived;
-        participle_present: "~~त्", "~~मान";
-        participle_future: derived, derived;
-        participle_perfect: derived, derived;
-    ),
-    // मुमोच: 3 words (मुमोच, शुशोच, रुरोच). Like अमत, except in 21 cells: indicative_active_third sg, perfect_active_first sg, perfect_active_first du, perfect_active_first pl, perfect_active_second sg, perfect_active_second du, ….
-    conjugation!("मुमोच", 3, "~ोच", like अमत;
-        indicative_active_first: _, _, _;
-        indicative_active_second: _, _, _;
-        indicative_active_third: "~ोच", _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: _, _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: _, _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, _, _;
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, _;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: _, _, _;
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: "~ोच", "~ुचिव|~ुच्व", "~ुचिम|~ुच्म";
-        perfect_active_second: "~ोचिथ", "~ुचथुः", "~ुच";
-        perfect_active_third: "~ोच", "~ुचतुः", "~ुचुः";
-        perfect_middle_first: "~ुचे", "~ुचिवहे|~ुच्वहे", "~ुचिमहे|~ुच्महे";
-        perfect_middle_second: "~ुचिषे|~ुक्षे", "~ुचाथे", "~ुचिध्वे|~ुग्ध्वे";
-        perfect_middle_third: "~ुचे", "~ुचाते", "~ुचिरे|~ुच्रे";
-        aorist_active_first: _, _, _;
-        aorist_active_second: _, _, _;
-        aorist_active_third: _, _, _;
-        aorist_middle_first: _, _, _;
-        aorist_middle_second: _, _, _;
-        aorist_middle_third: _, _, _;
-        infinitive: _;
-        gerund: _;
-        participle_present: _, _;
-        participle_future: _, _;
-        participle_perfect: "~ुक्वांस्", "~ुचान";
-    ),
-    // अकारषीत: 3 words (अहार्षीत्, अभार्षीत्, अकार्षीत्). Like आपत, except in 19 cells: indicative_active_third sg, aorist_active_first sg, aorist_active_first du, aorist_active_first pl, aorist_active_second sg, aorist_active_second du, ….
+    // अकारषीत: 3 words (अहार्षीत्, अभार्षीत्, अकार्षीत्). Like आपत, except in 19 cells: ind_act_3 sg, aorist_act_1 sg, aorist_act_1 du, aorist_act_1 pl, aorist_act_2 sg, aorist_act_2 du, ….
     conjugation!("अकार्षीत्", 3, "~ार्षीत्", like आपत;
-        indicative_active_first: _, _, _;
-        indicative_active_second: _, _, _;
-        indicative_active_third: "~ार्षीत्", _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: _, _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: _, _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, _, _;
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, _;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: _, _, _;
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: _, _, _;
-        perfect_active_second: _, _, _;
-        perfect_active_third: _, _, _;
-        perfect_middle_first: _, _, _;
-        perfect_middle_second: _, _, _;
-        perfect_middle_third: _, _, _;
-        aorist_active_first: "~ार्षम्", "~ार्ष्व", "~ार्ष्म";
-        aorist_active_second: "~ार्षीः|~ाः", "~ार्ष्टम्", "~ार्ष्ट";
-        aorist_active_third: "~ार्षीत्|~ाः", "~ार्ष्टाम्", "~ार्षुः";
-        aorist_middle_first: "~ृषि", "~ृष्वहि", "~ृष्महि";
-        aorist_middle_second: "~ृष्ठाः", "~ृषाथाम्", "~ृढ्वम्";
-        aorist_middle_third: "~ृष्ट", "~ृषाताम्", "~ृषत";
-        infinitive: _;
-        gerund: _;
-        participle_present: _, _;
-        participle_future: _, _;
-        participle_perfect: _, _;
+    ind_act_3: "~ार्षीत्", _, _;
+    aorist_act_1: "~ार्षम्", "~ार्ष्व", "~ार्ष्म";
+    aorist_act_2: "~ार्षीः|~ाः", "~ार्ष्टम्", "~ार्ष्ट";
+    aorist_act_3: "~ार्षीत्|~ाः", "~ार्ष्टाम्", "~ार्षुः";
+    aorist_mid_1: "~ृषि", "~ृष्वहि", "~ृष्महि";
+    aorist_mid_2: "~ृष्ठाः", "~ृषाथाम्", "~ृढ्वम्";
+    aorist_mid_3: "~ृष्ट", "~ृषाताम्", "~ृषत";
     ),
-    // अधुकषत: 3 words (अधुक्षत्, अद्रुक्षत्, अरुक्षत्). Like आपत, except in 3 cells: aorist_middle_first sg, aorist_middle_second du, aorist_middle_third du.
+    // अधुकषत: 3 words (अधुक्षत्, अद्रुक्षत्, अरुक्षत्). Like आपत, except in 3 cells: aorist_mid_1 sg, aorist_mid_2 du, aorist_mid_3 du.
     conjugation!("अधुक्षत्", 3, "~त्", like आपत;
-        indicative_active_first: _, _, _;
-        indicative_active_second: _, _, _;
-        indicative_active_third: _, _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: _, _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: _, _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, _, _;
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, _;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: _, _, _;
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: _, _, _;
-        perfect_active_second: _, _, _;
-        perfect_active_third: _, _, _;
-        perfect_middle_first: _, _, _;
-        perfect_middle_second: _, _, _;
-        perfect_middle_third: _, _, _;
-        aorist_active_first: _, _, _;
-        aorist_active_second: _, _, _;
-        aorist_active_third: _, _, _;
-        aorist_middle_first: "~ि", _, _;
-        aorist_middle_second: _, "~ाथाम्", _;
-        aorist_middle_third: _, "~ाताम्", _;
-        infinitive: _;
-        gerund: _;
-        participle_present: _, _;
-        participle_future: _, _;
-        participle_perfect: _, _;
+    aorist_mid_1: "~ि", _, _;
+    aorist_mid_2: _, "~ाथाम्", _;
+    aorist_mid_3: _, "~ाताम्", _;
     ),
-    // अचैषीत: 3 words (अनैषीत्, अजैषीत्, अचैषीत्). Like आपत, except in 19 cells: indicative_active_third sg, aorist_active_first sg, aorist_active_first du, aorist_active_first pl, aorist_active_second sg, aorist_active_second du, ….
+    // अचैषीत: 3 words (अनैषीत्, अजैषीत्, अचैषीत्). Like आपत, except in 19 cells: ind_act_3 sg, aorist_act_1 sg, aorist_act_1 du, aorist_act_1 pl, aorist_act_2 sg, aorist_act_2 du, ….
     conjugation!("अचैषीत्", 3, "~ैषीत्", like आपत;
-        indicative_active_first: _, _, _;
-        indicative_active_second: _, _, _;
-        indicative_active_third: "~ैषीत्", _, _;
-        indicative_middle_first: _, _, _;
-        indicative_middle_second: _, _, _;
-        indicative_middle_third: _, _, _;
-        imperative_active_first: _, _, _;
-        imperative_active_second: _, _, _;
-        imperative_active_third: _, _, _;
-        imperative_middle_first: _, _, _;
-        imperative_middle_second: _, _, _;
-        imperative_middle_third: _, _, _;
-        optative_active_first: _, _, _;
-        optative_active_second: _, _, _;
-        optative_active_third: _, _, _;
-        optative_middle_first: _, _, _;
-        optative_middle_second: _, _, _;
-        optative_middle_third: _, _, _;
-        subjunctive_active_first: _, _, _;
-        subjunctive_active_second: _, _, _;
-        subjunctive_active_third: _, _, _;
-        subjunctive_middle_first: _, _, _;
-        subjunctive_middle_second: _, _, _;
-        subjunctive_middle_third: _, _, _;
-        imperfect_active_first: _, _, _;
-        imperfect_active_second: _, _, _;
-        imperfect_active_third: _, _, _;
-        imperfect_middle_first: _, _, _;
-        imperfect_middle_second: _, _, _;
-        imperfect_middle_third: _, _, _;
-        future_active_first: _, _, _;
-        future_active_second: _, _, _;
-        future_active_third: _, _, _;
-        future_middle_first: _, _, _;
-        future_middle_second: _, _, _;
-        future_middle_third: _, _, _;
-        conditional_active_first: _, _, _;
-        conditional_active_second: _, _, _;
-        conditional_active_third: _, _, _;
-        conditional_middle_first: _, _, _;
-        conditional_middle_second: _, _, _;
-        conditional_middle_third: _, _, _;
-        perfect_active_first: _, _, _;
-        perfect_active_second: _, _, _;
-        perfect_active_third: _, _, _;
-        perfect_middle_first: _, _, _;
-        perfect_middle_second: _, _, _;
-        perfect_middle_third: _, _, _;
-        aorist_active_first: "~ैषम्", "~ैष्व", "~ैष्म";
-        aorist_active_second: "~ैषीः|~ैः", "~ैष्टम्", "~ैष्ट";
-        aorist_active_third: "~ैषीत्|~ैः", "~ैष्टाम्", "~ैषुः";
-        aorist_middle_first: "~ेषि", "~ेष्वहि", "~ेष्महि";
-        aorist_middle_second: "~ेष्ठाः", "~ेषाथाम्", "~ेढ्वम्";
-        aorist_middle_third: "~ेष्ट", "~ेषाताम्", "~ेषत";
-        infinitive: _;
-        gerund: _;
-        participle_present: _, _;
-        participle_future: _, _;
-        participle_perfect: _, _;
+    ind_act_3: "~ैषीत्", _, _;
+    aorist_act_1: "~ैषम्", "~ैष्व", "~ैष्म";
+    aorist_act_2: "~ैषीः|~ैः", "~ैष्टम्", "~ैष्ट";
+    aorist_act_3: "~ैषीत्|~ैः", "~ैष्टाम्", "~ैषुः";
+    aorist_mid_1: "~ेषि", "~ेष्वहि", "~ेष्महि";
+    aorist_mid_2: "~ेष्ठाः", "~ेषाथाम्", "~ेढ्वम्";
+    aorist_mid_3: "~ेष्ट", "~ेषाताम्", "~ेषत";
     ),
 ];

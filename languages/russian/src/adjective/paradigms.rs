@@ -2,7 +2,9 @@
 //!
 //! A pattern is the form with `~` where the stem goes: `~а` is the stem and
 //! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first.
+//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
+//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
+//! as the copy laws in `laws.rs` change it.
 
 use flexion::Paradigm;
 
@@ -10,59 +12,60 @@ use flexion::Paradigm;
 /// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
 /// they share them), the declension it is like (if any), then a row of patterns
 /// per line (`derived`: the form comes from another cell's, see
-/// `relations.rs`; `_`: the form is the declension's it is like):
-/// `nominative_masculine` (anim, inan)
-/// `nominative_feminine` (anim, inan)
-/// `nominative_neuter` (anim, inan)
-/// `nominative_plural` (anim, inan)
-/// `genitive_masculine` (anim, inan)
-/// `genitive_feminine` (anim, inan)
-/// `genitive_neuter` (anim, inan)
-/// `genitive_plural` (anim, inan)
-/// `dative_masculine` (anim, inan)
-/// `dative_feminine` (anim, inan)
-/// `dative_neuter` (anim, inan)
-/// `dative_plural` (anim, inan)
-/// `accusative_masculine` (anim, inan)
-/// `accusative_feminine` (anim, inan)
-/// `accusative_neuter` (anim, inan)
-/// `accusative_plural` (anim, inan)
-/// `instrumental_masculine` (anim, inan)
-/// `instrumental_feminine` (anim, inan)
-/// `instrumental_neuter` (anim, inan)
-/// `instrumental_plural` (anim, inan)
-/// `prepositional_masculine` (anim, inan)
-/// `prepositional_feminine` (anim, inan)
-/// `prepositional_neuter` (anim, inan)
-/// `prepositional_plural` (anim, inan)
+/// `relations.rs`; `_`, or a row left out: the form is the declension's it is like,
+/// or, in a declension like no other, derived):
+/// `nom_m` (anim, inan)
+/// `nom_f` (anim, inan)
+/// `nom_n` (anim, inan)
+/// `nom_pl` (anim, inan)
+/// `gen_m` (anim, inan)
+/// `gen_f` (anim, inan)
+/// `gen_n` (anim, inan)
+/// `gen_pl` (anim, inan)
+/// `dat_m` (anim, inan)
+/// `dat_f` (anim, inan)
+/// `dat_n` (anim, inan)
+/// `dat_pl` (anim, inan)
+/// `acc_m` (anim, inan)
+/// `acc_f` (anim, inan)
+/// `acc_n` (anim, inan)
+/// `acc_pl` (anim, inan)
+/// `ins_m` (anim, inan)
+/// `ins_f` (anim, inan)
+/// `ins_n` (anim, inan)
+/// `ins_pl` (anim, inan)
+/// `prep_m` (anim, inan)
+/// `prep_f` (anim, inan)
+/// `prep_n` (anim, inan)
+/// `prep_pl` (anim, inan)
 /// `short_adjective` (m, f, n, pl)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident)?;
-     nominative_masculine: $c0:tt, $c1:tt;
-     nominative_feminine: $c2:tt, $c3:tt;
-     nominative_neuter: $c4:tt, $c5:tt;
-     nominative_plural: $c6:tt, $c7:tt;
-     genitive_masculine: $c8:tt, $c9:tt;
-     genitive_feminine: $c10:tt, $c11:tt;
-     genitive_neuter: $c12:tt, $c13:tt;
-     genitive_plural: $c14:tt, $c15:tt;
-     dative_masculine: $c16:tt, $c17:tt;
-     dative_feminine: $c18:tt, $c19:tt;
-     dative_neuter: $c20:tt, $c21:tt;
-     dative_plural: $c22:tt, $c23:tt;
-     accusative_masculine: $c24:tt, $c25:tt;
-     accusative_feminine: $c26:tt, $c27:tt;
-     accusative_neuter: $c28:tt, $c29:tt;
-     accusative_plural: $c30:tt, $c31:tt;
-     instrumental_masculine: $c32:tt, $c33:tt;
-     instrumental_feminine: $c34:tt, $c35:tt;
-     instrumental_neuter: $c36:tt, $c37:tt;
-     instrumental_plural: $c38:tt, $c39:tt;
-     prepositional_masculine: $c40:tt, $c41:tt;
-     prepositional_feminine: $c42:tt, $c43:tt;
-     prepositional_neuter: $c44:tt, $c45:tt;
-     prepositional_plural: $c46:tt, $c47:tt;
-     short_adjective: $c48:tt, $c49:tt, $c50:tt, $c51:tt;
+     $(nom_m: $c0:tt, $c1:tt;)?
+     $(nom_f: $c2:tt, $c3:tt;)?
+     $(nom_n: $c4:tt, $c5:tt;)?
+     $(nom_pl: $c6:tt, $c7:tt;)?
+     $(gen_m: $c8:tt, $c9:tt;)?
+     $(gen_f: $c10:tt, $c11:tt;)?
+     $(gen_n: $c12:tt, $c13:tt;)?
+     $(gen_pl: $c14:tt, $c15:tt;)?
+     $(dat_m: $c16:tt, $c17:tt;)?
+     $(dat_f: $c18:tt, $c19:tt;)?
+     $(dat_n: $c20:tt, $c21:tt;)?
+     $(dat_pl: $c22:tt, $c23:tt;)?
+     $(acc_m: $c24:tt, $c25:tt;)?
+     $(acc_f: $c26:tt, $c27:tt;)?
+     $(acc_n: $c28:tt, $c29:tt;)?
+     $(acc_pl: $c30:tt, $c31:tt;)?
+     $(ins_m: $c32:tt, $c33:tt;)?
+     $(ins_f: $c34:tt, $c35:tt;)?
+     $(ins_n: $c36:tt, $c37:tt;)?
+     $(ins_pl: $c38:tt, $c39:tt;)?
+     $(prep_m: $c40:tt, $c41:tt;)?
+     $(prep_f: $c42:tt, $c43:tt;)?
+     $(prep_n: $c44:tt, $c45:tt;)?
+     $(prep_pl: $c46:tt, $c47:tt;)?
+     $(short_adjective: $c48:tt, $c49:tt, $c50:tt, $c51:tt;)?
     ) => {
         Paradigm {
             name: ::std::borrow::Cow::Borrowed($name),
@@ -71,58 +74,58 @@ macro_rules! declension {
             parent: like!($($parent)?),
             inherent: ::std::borrow::Cow::Borrowed(&[]),
             table: ::std::borrow::Cow::Borrowed(concat!(
-                flexion::cell!($c0), "\t",
-                flexion::cell!($c1), "\t",
-                flexion::cell!($c2), "\t",
-                flexion::cell!($c3), "\t",
-                flexion::cell!($c4), "\t",
-                flexion::cell!($c5), "\t",
-                flexion::cell!($c6), "\t",
-                flexion::cell!($c7), "\t",
-                flexion::cell!($c8), "\t",
-                flexion::cell!($c9), "\t",
-                flexion::cell!($c10), "\t",
-                flexion::cell!($c11), "\t",
-                flexion::cell!($c12), "\t",
-                flexion::cell!($c13), "\t",
-                flexion::cell!($c14), "\t",
-                flexion::cell!($c15), "\t",
-                flexion::cell!($c16), "\t",
-                flexion::cell!($c17), "\t",
-                flexion::cell!($c18), "\t",
-                flexion::cell!($c19), "\t",
-                flexion::cell!($c20), "\t",
-                flexion::cell!($c21), "\t",
-                flexion::cell!($c22), "\t",
-                flexion::cell!($c23), "\t",
-                flexion::cell!($c24), "\t",
-                flexion::cell!($c25), "\t",
-                flexion::cell!($c26), "\t",
-                flexion::cell!($c27), "\t",
-                flexion::cell!($c28), "\t",
-                flexion::cell!($c29), "\t",
-                flexion::cell!($c30), "\t",
-                flexion::cell!($c31), "\t",
-                flexion::cell!($c32), "\t",
-                flexion::cell!($c33), "\t",
-                flexion::cell!($c34), "\t",
-                flexion::cell!($c35), "\t",
-                flexion::cell!($c36), "\t",
-                flexion::cell!($c37), "\t",
-                flexion::cell!($c38), "\t",
-                flexion::cell!($c39), "\t",
-                flexion::cell!($c40), "\t",
-                flexion::cell!($c41), "\t",
-                flexion::cell!($c42), "\t",
-                flexion::cell!($c43), "\t",
-                flexion::cell!($c44), "\t",
-                flexion::cell!($c45), "\t",
-                flexion::cell!($c46), "\t",
-                flexion::cell!($c47), "\t",
-                flexion::cell!($c48), "\t",
-                flexion::cell!($c49), "\t",
-                flexion::cell!($c50), "\t",
-                flexion::cell!($c51), "\t",
+                $(flexion::cell!($c0),)? "\t",
+                $(flexion::cell!($c1),)? "\t",
+                $(flexion::cell!($c2),)? "\t",
+                $(flexion::cell!($c3),)? "\t",
+                $(flexion::cell!($c4),)? "\t",
+                $(flexion::cell!($c5),)? "\t",
+                $(flexion::cell!($c6),)? "\t",
+                $(flexion::cell!($c7),)? "\t",
+                $(flexion::cell!($c8),)? "\t",
+                $(flexion::cell!($c9),)? "\t",
+                $(flexion::cell!($c10),)? "\t",
+                $(flexion::cell!($c11),)? "\t",
+                $(flexion::cell!($c12),)? "\t",
+                $(flexion::cell!($c13),)? "\t",
+                $(flexion::cell!($c14),)? "\t",
+                $(flexion::cell!($c15),)? "\t",
+                $(flexion::cell!($c16),)? "\t",
+                $(flexion::cell!($c17),)? "\t",
+                $(flexion::cell!($c18),)? "\t",
+                $(flexion::cell!($c19),)? "\t",
+                $(flexion::cell!($c20),)? "\t",
+                $(flexion::cell!($c21),)? "\t",
+                $(flexion::cell!($c22),)? "\t",
+                $(flexion::cell!($c23),)? "\t",
+                $(flexion::cell!($c24),)? "\t",
+                $(flexion::cell!($c25),)? "\t",
+                $(flexion::cell!($c26),)? "\t",
+                $(flexion::cell!($c27),)? "\t",
+                $(flexion::cell!($c28),)? "\t",
+                $(flexion::cell!($c29),)? "\t",
+                $(flexion::cell!($c30),)? "\t",
+                $(flexion::cell!($c31),)? "\t",
+                $(flexion::cell!($c32),)? "\t",
+                $(flexion::cell!($c33),)? "\t",
+                $(flexion::cell!($c34),)? "\t",
+                $(flexion::cell!($c35),)? "\t",
+                $(flexion::cell!($c36),)? "\t",
+                $(flexion::cell!($c37),)? "\t",
+                $(flexion::cell!($c38),)? "\t",
+                $(flexion::cell!($c39),)? "\t",
+                $(flexion::cell!($c40),)? "\t",
+                $(flexion::cell!($c41),)? "\t",
+                $(flexion::cell!($c42),)? "\t",
+                $(flexion::cell!($c43),)? "\t",
+                $(flexion::cell!($c44),)? "\t",
+                $(flexion::cell!($c45),)? "\t",
+                $(flexion::cell!($c46),)? "\t",
+                $(flexion::cell!($c47),)? "\t",
+                $(flexion::cell!($c48),)? "\t",
+                $(flexion::cell!($c49),)? "\t",
+                $(flexion::cell!($c50),)? "\t",
+                $(flexion::cell!($c51),)? "\t",
             )),
         }
     };
@@ -286,1122 +289,443 @@ impl flexion::Label for Declension {
 pub(super) static DECLENSIONS: [Paradigm<'static>; 40] = [
     // Сведущий: 24,315 words (деревообрабатывающий, близорукий, великий, будущий, лесообрабатывающий, настоящий).
     declension!("сведущий", 24315, "~ий";
-        nominative_masculine: "~ий", "~ий";
-        nominative_feminine: "~ая", "~ая";
-        nominative_neuter: "~ее", "~ее";
-        nominative_plural: "~ие", "~ие";
-        genitive_masculine: "~его", "~его";
-        genitive_feminine: "~ей", "~ей";
-        genitive_neuter: "~его", "~его";
-        genitive_plural: "~их", "~их";
-        dative_masculine: "~ему", "~ему";
-        dative_feminine: "~ей", "~ей";
-        dative_neuter: "~ему", "~ему";
-        dative_plural: "~им", "~им";
-        accusative_masculine: "~его", "~ий";
-        accusative_feminine: "~ую", "~ую";
-        accusative_neuter: "~ее", "~ее";
-        accusative_plural: "~их", "~ие";
-        instrumental_masculine: "~им", "~им";
-        instrumental_feminine: "~ей|~ею", "~ей|~ею";
-        instrumental_neuter: "~им", "~им";
-        instrumental_plural: "~ими", "~ими";
-        prepositional_masculine: "~ем", "~ем";
-        prepositional_feminine: "~ей", "~ей";
-        prepositional_neuter: "~ем", "~ем";
-        prepositional_plural: "~их", "~их";
-        short_adjective: "~", "~а", "~е", "~и";
+    nom_m: _, "~ий";
+    nom_f: "~ая", _;
+    nom_n: "~ее", _;
+    nom_pl: "~ие", _;
+    gen_m: "~его", _;
+    gen_f: "~ей", _;
+    gen_pl: "~их", _;
+    dat_m: "~ему", _;
+    dat_pl: "~им", _;
+    acc_m: "~его", "~ий";
+    acc_f: "~ую", _;
+    acc_pl: "~их", "~ие";
+    ins_f: "~ей|~ею", "~ей|~ею";
+    ins_pl: "~ими", _;
+    prep_m: "~ем", _;
+    short_adjective: "~", "~а", "~е", "~и";
     ),
     // Уместный: 11,284 words (браный, славный, крохотный, деревянный, древесный, лесоводственный).
     declension!("уместный", 11284, "~~ый";
-        nominative_masculine: "~~ый", "~~ый";
-        nominative_feminine: "~~ая", "~~ая";
-        nominative_neuter: "~~ое", "~~ое";
-        nominative_plural: "~~ые", "~~ые";
-        genitive_masculine: "~~ого", "~~ого";
-        genitive_feminine: "~~ой", "~~ой";
-        genitive_neuter: "~~ого", "~~ого";
-        genitive_plural: "~~ых", "~~ых";
-        dative_masculine: "~~ому", "~~ому";
-        dative_feminine: "~~ой", "~~ой";
-        dative_neuter: "~~ому", "~~ому";
-        dative_plural: "~~ым", "~~ым";
-        accusative_masculine: "~~ого", "~~ый";
-        accusative_feminine: "~~ую", "~~ую";
-        accusative_neuter: "~~ое", "~~ое";
-        accusative_plural: "~~ых", "~~ые";
-        instrumental_masculine: "~~ым", "~~ым";
-        instrumental_feminine: "~~ой|~~ою", "~~ой|~~ою";
-        instrumental_neuter: "~~ым", "~~ым";
-        instrumental_plural: "~~ыми", "~~ыми";
-        prepositional_masculine: "~~ом", "~~ом";
-        prepositional_feminine: "~~ой", "~~ой";
-        prepositional_neuter: "~~ом", "~~ом";
-        prepositional_plural: "~~ых", "~~ых";
-        short_adjective: "~е~", "~~а", "~~о", "~~ы";
+    nom_m: _, "~~ый";
+    nom_f: "~~ая", _;
+    nom_n: "~~ое", _;
+    nom_pl: "~~ые", _;
+    gen_m: "~~ого", _;
+    gen_f: "~~ой", _;
+    gen_pl: "~~ых", _;
+    dat_m: "~~ому", _;
+    dat_pl: "~~ым", _;
+    acc_m: "~~ого", "~~ый";
+    acc_f: "~~ую", _;
+    acc_pl: "~~ых", "~~ые";
+    ins_f: "~~ой|~~ою", "~~ой|~~ою";
+    ins_pl: "~~ыми", _;
+    prep_m: "~~ом", _;
+    short_adjective: "~е~", "~~а", "~~о", "~~ы";
     ),
-    // Устарелый: 9,274 words (слабый, ласковый, деревянистый, лесистый, лесотундровый, тундровый).
-    declension!("устарелый", 9274, "~ый";
-        nominative_masculine: "~ый", "~ый";
-        nominative_feminine: "~ая", "~ая";
-        nominative_neuter: "~ое", "~ое";
-        nominative_plural: "~ые", "~ые";
-        genitive_masculine: "~ого", "~ого";
-        genitive_feminine: "~ой", "~ой";
-        genitive_neuter: "~ого", "~ого";
-        genitive_plural: "~ых", "~ых";
-        dative_masculine: "~ому", "~ому";
-        dative_feminine: "~ой", "~ой";
-        dative_neuter: "~ому", "~ому";
-        dative_plural: "~ым", "~ым";
-        accusative_masculine: "~ого", "~ый";
-        accusative_feminine: "~ую", "~ую";
-        accusative_neuter: "~ое", "~ое";
-        accusative_plural: "~ых", "~ые";
-        instrumental_masculine: "~ым", "~ым";
-        instrumental_feminine: "~ой|~ою", "~ой|~ою";
-        instrumental_neuter: "~ым", "~ым";
-        instrumental_plural: "~ыми", "~ыми";
-        prepositional_masculine: "~ом", "~ом";
-        prepositional_feminine: "~ой", "~ой";
-        prepositional_neuter: "~ом", "~ом";
-        prepositional_plural: "~ых", "~ых";
-        short_adjective: "~", "~а", "~о", "~ы";
+    // Устарелый: 9,274 words (слабый, ласковый, деревянистый, лесистый, лесотундровый, тундровый). Like Сведущий, except in 18 cells: nom_m inan, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, gen_pl anim, ….
+    declension!("устарелый", 9274, "~ый", like Сведущий;
+    nom_m: _, "~ый";
+    nom_n: "~ое", _;
+    nom_pl: "~ые", _;
+    gen_m: "~ого", _;
+    gen_f: "~ой", _;
+    gen_pl: "~ых", _;
+    dat_m: "~ому", _;
+    dat_pl: "~ым", _;
+    acc_m: "~ого", "~ый";
+    acc_pl: "~ых", "~ые";
+    ins_f: "~ой|~ою", "~ой|~ою";
+    ins_pl: "~ыми", _;
+    prep_m: "~ом", _;
+    short_adjective: _, _, "~о", "~ы";
     ),
-    // Пылкий: 8,180 words (русский, тайский, жалкий, лесоводческий, лесохимический, лесотехнический). Like Уместный, except in 23 cells: nominative_masculine anim, nominative_masculine inan, nominative_plural anim, nominative_plural inan, genitive_plural anim, genitive_plural inan, ….
+    // Пылкий: 8,180 words (русский, тайский, жалкий, лесоводческий, лесохимический, лесотехнический). Like Уместный, except in 12 cells: nom_m inan, nom_pl anim, gen_pl anim, dat_pl anim, acc_m inan, acc_pl anim, ….
     declension!("пылкий", 8180, "~~ий", like Уместный;
-        nominative_masculine: "~~ий", "~~ий";
-        nominative_feminine: _, _;
-        nominative_neuter: _, _;
-        nominative_plural: "~~ие", "~~ие";
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: _, _;
-        genitive_plural: "~~их", "~~их";
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: _, _;
-        dative_plural: "~~им", "~~им";
-        accusative_masculine: _, "~~ий";
-        accusative_feminine: _, _;
-        accusative_neuter: _, _;
-        accusative_plural: "~~их", "~~ие";
-        instrumental_masculine: "~~им", "~~им";
-        instrumental_feminine: "~~ой", "~~ой";
-        instrumental_neuter: "~~им", "~~им";
-        instrumental_plural: "~~ими", "~~ими";
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: "~~их", "~~их";
-        short_adjective: "~о~", _, _, "~~и";
+    nom_m: _, "~~ий";
+    nom_pl: "~~ие", _;
+    gen_pl: "~~их", _;
+    dat_pl: "~~им", _;
+    acc_m: _, "~~ий";
+    acc_pl: "~~их", "~~ие";
+    ins_f: derived, derived;
+    ins_pl: "~~ими", _;
+    short_adjective: "~о~", _, _, "~~и";
     ),
-    // Снижающийся: 5,127 words (снижающийся, невзрывающийся, неразорвавшийся, учащийся, трудящийся, полуразвалившийся).
-    declension!("снижающийся", 5127, "~ий~";
-        nominative_masculine: "~ий~", "~ий~";
-        nominative_feminine: "~ая~", "~ая~";
-        nominative_neuter: "~ее~", "~ее~";
-        nominative_plural: "~ие~", "~ие~";
-        genitive_masculine: "~его~", "~его~";
-        genitive_feminine: "~ей~", "~ей~";
-        genitive_neuter: "~его~", "~его~";
-        genitive_plural: "~их~", "~их~";
-        dative_masculine: "~ему~", "~ему~";
-        dative_feminine: "~ей~", "~ей~";
-        dative_neuter: "~ему~", "~ему~";
-        dative_plural: "~им~", "~им~";
-        accusative_masculine: "~его~", "~ий~";
-        accusative_feminine: "~ую~", "~ую~";
-        accusative_neuter: "~ее~", "~ее~";
-        accusative_plural: "~их~", "~ие~";
-        instrumental_masculine: "~им~", "~им~";
-        instrumental_feminine: "~ей~|~ею~", "~ей~|~ею~";
-        instrumental_neuter: "~им~", "~им~";
-        instrumental_plural: "~ими~", "~ими~";
-        prepositional_masculine: "~ем~", "~ем~";
-        prepositional_feminine: "~ей~", "~ей~";
-        prepositional_neuter: "~ем~", "~ем~";
-        prepositional_plural: "~их~", "~их~";
-        short_adjective: derived, derived, derived, derived;
+    // Снижающийся: 5,127 words (снижающийся, невзрывающийся, неразорвавшийся, учащийся, трудящийся, полуразвалившийся). Like Уместный, except in 22 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    declension!("снижающийся", 5127, "~ий~", like Уместный;
+    nom_m: _, "~ий~";
+    nom_f: "~ая~", _;
+    nom_n: "~ее~", _;
+    nom_pl: "~ие~", _;
+    gen_m: "~его~", _;
+    gen_f: "~ей~", _;
+    gen_pl: "~их~", _;
+    dat_m: "~ему~", _;
+    dat_pl: "~им~", _;
+    acc_m: "~его~", "~ий~";
+    acc_f: "~ую~", _;
+    acc_pl: "~их~", "~ие~";
+    ins_f: "~ей~|~ею~", "~ей~|~ею~";
+    ins_pl: "~ими~", _;
+    prep_m: "~ем~", _;
+    short_adjective: derived, derived, derived, derived;
     ),
-    // Подверженный: 3,679 words (использованный, ученный, неприготовленный, непривязанный, неупакованный, неутрамбованный).
-    declension!("подверженный", 3679, "~ный";
-        nominative_masculine: "~ный", "~ный";
-        nominative_feminine: "~ная", "~ная";
-        nominative_neuter: "~ное", "~ное";
-        nominative_plural: "~ные", "~ные";
-        genitive_masculine: "~ного", "~ного";
-        genitive_feminine: "~ной", "~ной";
-        genitive_neuter: "~ного", "~ного";
-        genitive_plural: "~ных", "~ных";
-        dative_masculine: "~ному", "~ному";
-        dative_feminine: "~ной", "~ной";
-        dative_neuter: "~ному", "~ному";
-        dative_plural: "~ным", "~ным";
-        accusative_masculine: "~ного", "~ный";
-        accusative_feminine: "~ную", "~ную";
-        accusative_neuter: "~ное", "~ное";
-        accusative_plural: "~ных", "~ные";
-        instrumental_masculine: "~ным", "~ным";
-        instrumental_feminine: "~ной|~ною", "~ной|~ною";
-        instrumental_neuter: "~ным", "~ным";
-        instrumental_plural: "~ными", "~ными";
-        prepositional_masculine: "~ном", "~ном";
-        prepositional_feminine: "~ной", "~ной";
-        prepositional_neuter: "~ном", "~ном";
-        prepositional_plural: "~ных", "~ных";
-        short_adjective: "~", "~а", "~о", "~ы";
+    // Подверженный: 3,679 words (использованный, ученный, неприготовленный, непривязанный, неупакованный, неутрамбованный). Like Устарелый, except in 18 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    declension!("подверженный", 3679, "~ный", like Устарелый;
+    nom_m: _, "~ный";
+    nom_f: "~ная", _;
+    nom_n: "~ное", _;
+    nom_pl: "~ные", _;
+    gen_m: "~ного", _;
+    gen_f: "~ной", _;
+    gen_pl: "~ных", _;
+    dat_m: "~ному", _;
+    dat_pl: "~ным", _;
+    acc_m: "~ного", "~ный";
+    acc_f: "~ную", _;
+    acc_pl: "~ных", "~ные";
+    ins_f: "~ной|~ною", "~ной|~ною";
+    ins_pl: "~ными", _;
+    prep_m: "~ном", _;
     ),
-    // Вольный: 2,209 words (примирительный, буквальный, утомительный, охуительный, действительный, изумительный).
-    declension!("вольный", 2209, "~ь~ый";
-        nominative_masculine: "~ь~ый", "~ь~ый";
-        nominative_feminine: "~ь~ая", "~ь~ая";
-        nominative_neuter: "~ь~ое", "~ь~ое";
-        nominative_plural: "~ь~ые", "~ь~ые";
-        genitive_masculine: "~ь~ого", "~ь~ого";
-        genitive_feminine: "~ь~ой", "~ь~ой";
-        genitive_neuter: "~ь~ого", "~ь~ого";
-        genitive_plural: "~ь~ых", "~ь~ых";
-        dative_masculine: "~ь~ому", "~ь~ому";
-        dative_feminine: "~ь~ой", "~ь~ой";
-        dative_neuter: "~ь~ому", "~ь~ому";
-        dative_plural: "~ь~ым", "~ь~ым";
-        accusative_masculine: "~ь~ого", "~ь~ый";
-        accusative_feminine: "~ь~ую", "~ь~ую";
-        accusative_neuter: "~ь~ое", "~ь~ое";
-        accusative_plural: "~ь~ых", "~ь~ые";
-        instrumental_masculine: "~ь~ым", "~ь~ым";
-        instrumental_feminine: "~ь~ой|~ь~ою", "~ь~ой|~ь~ою";
-        instrumental_neuter: "~ь~ым", "~ь~ым";
-        instrumental_plural: "~ь~ыми", "~ь~ыми";
-        prepositional_masculine: "~ь~ом", "~ь~ом";
-        prepositional_feminine: "~ь~ой", "~ь~ой";
-        prepositional_neuter: "~ь~ом", "~ь~ом";
-        prepositional_plural: "~ь~ых", "~ь~ых";
-        short_adjective: "~е~", "~ь~а", "~ь~о", "~ь~ы";
+    // Вольный: 2,209 words (примирительный, буквальный, утомительный, охуительный, действительный, изумительный). Like Уместный, except in 21 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    declension!("вольный", 2209, "~ь~ый", like Уместный;
+    nom_m: _, "~ь~ый";
+    nom_f: "~ь~ая", _;
+    nom_n: "~ь~ое", _;
+    nom_pl: "~ь~ые", _;
+    gen_m: "~ь~ого", _;
+    gen_f: "~ь~ой", _;
+    gen_pl: "~ь~ых", _;
+    dat_m: "~ь~ому", _;
+    dat_pl: "~ь~ым", _;
+    acc_m: "~ь~ого", "~ь~ый";
+    acc_f: "~ь~ую", _;
+    acc_pl: "~ь~ых", "~ь~ые";
+    ins_f: "~ь~ой|~ь~ою", "~ь~ой|~ь~ою";
+    ins_pl: "~ь~ыми", _;
+    prep_m: "~ь~ом", _;
+    short_adjective: _, "~ь~а", "~ь~о", "~ь~ы";
     ),
-    // Казнённый: 987 words (соединённый, обызвествлённый, одушевлённый, объединённый, приобретённый, неприкреплённый).
-    declension!("казнённый", 987, "~ё~ный";
-        nominative_masculine: "~ё~ный", "~ё~ный";
-        nominative_feminine: "~ё~ная", "~ё~ная";
-        nominative_neuter: "~ё~ное", "~ё~ное";
-        nominative_plural: "~ё~ные", "~ё~ные";
-        genitive_masculine: "~ё~ного", "~ё~ного";
-        genitive_feminine: "~ё~ной", "~ё~ной";
-        genitive_neuter: "~ё~ного", "~ё~ного";
-        genitive_plural: "~ё~ных", "~ё~ных";
-        dative_masculine: "~ё~ному", "~ё~ному";
-        dative_feminine: "~ё~ной", "~ё~ной";
-        dative_neuter: "~ё~ному", "~ё~ному";
-        dative_plural: "~ё~ным", "~ё~ным";
-        accusative_masculine: "~ё~ного", "~ё~ный";
-        accusative_feminine: "~ё~ную", "~ё~ную";
-        accusative_neuter: "~ё~ное", "~ё~ное";
-        accusative_plural: "~ё~ных", "~ё~ные";
-        instrumental_masculine: "~ё~ным", "~ё~ным";
-        instrumental_feminine: "~ё~ной|~ё~ною", "~ё~ной|~ё~ною";
-        instrumental_neuter: "~ё~ным", "~ё~ным";
-        instrumental_plural: "~ё~ными", "~ё~ными";
-        prepositional_masculine: "~ё~ном", "~ё~ном";
-        prepositional_feminine: "~ё~ной", "~ё~ной";
-        prepositional_neuter: "~ё~ном", "~ё~ном";
-        prepositional_plural: "~ё~ных", "~ё~ных";
-        short_adjective: "~ё~", "~е~а", "~е~о", "~е~ы";
+    // Казнённый: 987 words (соединённый, обызвествлённый, одушевлённый, объединённый, приобретённый, неприкреплённый). Like Уместный, except in 22 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    declension!("казнённый", 987, "~ё~ный", like Уместный;
+    nom_m: _, "~ё~ный";
+    nom_f: "~ё~ная", _;
+    nom_n: "~ё~ное", _;
+    nom_pl: "~ё~ные", _;
+    gen_m: "~ё~ного", _;
+    gen_f: "~ё~ной", _;
+    gen_pl: "~ё~ных", _;
+    dat_m: "~ё~ному", _;
+    dat_pl: "~ё~ным", _;
+    acc_m: "~ё~ного", "~ё~ный";
+    acc_f: "~ё~ную", _;
+    acc_pl: "~ё~ных", "~ё~ные";
+    ins_f: "~ё~ной|~ё~ною", "~ё~ной|~ё~ною";
+    ins_pl: "~ё~ными", _;
+    prep_m: "~ё~ном", _;
+    short_adjective: "~ё~", "~е~а", "~е~о", "~е~ы";
     ),
-    // Прямой: 647 words (большой, баской, морской, городской, лесовой, былой). Like Устарелый, except in 3 cells: nominative_masculine anim, nominative_masculine inan, accusative_masculine inan.
+    // Прямой: 647 words (большой, баской, морской, городской, лесовой, былой). Like Устарелый, except in 2 cells: nom_m inan, acc_m inan.
     declension!("прямой", 647, "~ой", like Устарелый;
-        nominative_masculine: "~ой", "~ой";
-        nominative_feminine: _, _;
-        nominative_neuter: _, _;
-        nominative_plural: _, _;
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: _, _;
-        genitive_plural: _, _;
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: _, _;
-        dative_plural: _, _;
-        accusative_masculine: _, "~ой";
-        accusative_feminine: _, _;
-        accusative_neuter: _, _;
-        accusative_plural: _, _;
-        instrumental_masculine: _, _;
-        instrumental_feminine: _, _;
-        instrumental_neuter: _, _;
-        instrumental_plural: _, _;
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: _, _;
-        short_adjective: _, _, _, _;
+    nom_m: _, "~ой";
+    acc_m: _, "~ой";
     ),
     // Непринуждённый: 453 words (сверхъестественный, неодушевлённый, несдержанный, неожиданный, недисциплинированный, непредвиденный). Like Подверженный, except in 3 cells: short_adjective f, short_adjective n, short_adjective pl.
     declension!("непринуждённый", 453, "~ный", like Подверженный;
-        nominative_masculine: _, _;
-        nominative_feminine: _, _;
-        nominative_neuter: _, _;
-        nominative_plural: _, _;
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: _, _;
-        genitive_plural: _, _;
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: _, _;
-        dative_plural: _, _;
-        accusative_masculine: _, _;
-        accusative_feminine: _, _;
-        accusative_neuter: _, _;
-        accusative_plural: _, _;
-        instrumental_masculine: _, _;
-        instrumental_feminine: _, _;
-        instrumental_neuter: _, _;
-        instrumental_plural: _, _;
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: _, _;
-        short_adjective: _, "~на", "~но", "~ны";
+    short_adjective: _, "~на", "~но", "~ны";
     ),
-    // Показной: 449 words (лесной, лесостепной, дровяной, губной, стальной, нефтяной). Like Уместный, except in 5 cells: nominative_masculine anim, nominative_masculine inan, accusative_masculine inan, instrumental_feminine anim, instrumental_feminine inan.
+    // Показной: 449 words (лесной, лесостепной, дровяной, губной, стальной, нефтяной). Like Уместный, except in 4 cells: nom_m inan, acc_m inan, ins_f anim, ins_f inan.
     declension!("показной", 449, "~~ой", like Уместный;
-        nominative_masculine: "~~ой", "~~ой";
-        nominative_feminine: _, _;
-        nominative_neuter: _, _;
-        nominative_plural: _, _;
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: _, _;
-        genitive_plural: _, _;
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: _, _;
-        dative_plural: _, _;
-        accusative_masculine: _, "~~ой";
-        accusative_feminine: _, _;
-        accusative_neuter: _, _;
-        accusative_plural: _, _;
-        instrumental_masculine: _, _;
-        instrumental_feminine: "~~ой", "~~ой";
-        instrumental_neuter: _, _;
-        instrumental_plural: _, _;
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: _, _;
-        short_adjective: _, _, _, _;
+    nom_m: _, "~~ой";
+    acc_m: _, "~~ой";
+    ins_f: derived, derived;
     ),
-    // Тайный: 264 words (покойный, спокойный, семейный, случайный, партийный, комедийный).
-    declension!("тайный", 264, "~й~ый";
-        nominative_masculine: "~й~ый", "~й~ый";
-        nominative_feminine: "~й~ая", "~й~ая";
-        nominative_neuter: "~й~ое", "~й~ое";
-        nominative_plural: "~й~ые", "~й~ые";
-        genitive_masculine: "~й~ого", "~й~ого";
-        genitive_feminine: "~й~ой", "~й~ой";
-        genitive_neuter: "~й~ого", "~й~ого";
-        genitive_plural: "~й~ых", "~й~ых";
-        dative_masculine: "~й~ому", "~й~ому";
-        dative_feminine: "~й~ой", "~й~ой";
-        dative_neuter: "~й~ому", "~й~ому";
-        dative_plural: "~й~ым", "~й~ым";
-        accusative_masculine: "~й~ого", "~й~ый";
-        accusative_feminine: "~й~ую", "~й~ую";
-        accusative_neuter: "~й~ое", "~й~ое";
-        accusative_plural: "~й~ых", "~й~ые";
-        instrumental_masculine: "~й~ым", "~й~ым";
-        instrumental_feminine: "~й~ой|~й~ою", "~й~ой|~й~ою";
-        instrumental_neuter: "~й~ым", "~й~ым";
-        instrumental_plural: "~й~ыми", "~й~ыми";
-        prepositional_masculine: "~й~ом", "~й~ом";
-        prepositional_feminine: "~й~ой", "~й~ой";
-        prepositional_neuter: "~й~ом", "~й~ом";
-        prepositional_plural: "~й~ых", "~й~ых";
-        short_adjective: "~е~", "~й~а", "~й~о", "~й~ы";
+    // Тайный: 264 words (покойный, спокойный, семейный, случайный, партийный, комедийный). Like Уместный, except in 21 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    declension!("тайный", 264, "~й~ый", like Уместный;
+    nom_m: _, "~й~ый";
+    nom_f: "~й~ая", _;
+    nom_n: "~й~ое", _;
+    nom_pl: "~й~ые", _;
+    gen_m: "~й~ого", _;
+    gen_f: "~й~ой", _;
+    gen_pl: "~й~ых", _;
+    dat_m: "~й~ому", _;
+    dat_pl: "~й~ым", _;
+    acc_m: "~й~ого", "~й~ый";
+    acc_f: "~й~ую", _;
+    acc_pl: "~й~ых", "~й~ые";
+    ins_f: "~й~ой|~й~ою", "~й~ой|~й~ою";
+    ins_pl: "~й~ыми", _;
+    prep_m: "~й~ом", _;
+    short_adjective: _, "~й~а", "~й~о", "~й~ы";
     ),
-    // Лисий: 224 words (бабий, лесничий, третий, собачий, заячий, рыбий).
-    declension!("лисий", 224, "~ий";
-        nominative_masculine: "~ий", "~ий";
-        nominative_feminine: "~ья", "~ья";
-        nominative_neuter: "~ье", "~ье";
-        nominative_plural: "~ьи", "~ьи";
-        genitive_masculine: "~ьего", "~ьего";
-        genitive_feminine: "~ьей", "~ьей";
-        genitive_neuter: "~ьего", "~ьего";
-        genitive_plural: "~ьих", "~ьих";
-        dative_masculine: "~ьему", "~ьему";
-        dative_feminine: "~ьей", "~ьей";
-        dative_neuter: "~ьему", "~ьему";
-        dative_plural: "~ьим", "~ьим";
-        accusative_masculine: "~ьего", "~ий";
-        accusative_feminine: "~ью", "~ью";
-        accusative_neuter: "~ье", "~ье";
-        accusative_plural: "~ьих", "~ьи";
-        instrumental_masculine: "~ьим", "~ьим";
-        instrumental_feminine: "~ьей|~ьею", "~ьей|~ьею";
-        instrumental_neuter: "~ьим", "~ьим";
-        instrumental_plural: "~ьими", "~ьими";
-        prepositional_masculine: "~ьем", "~ьем";
-        prepositional_feminine: "~ьей", "~ьей";
-        prepositional_neuter: "~ьем", "~ьем";
-        prepositional_plural: "~ьих", "~ьих";
-        short_adjective: derived, derived, derived, derived;
+    // Лисий: 224 words (бабий, лесничий, третий, собачий, заячий, рыбий). Like Сведущий, except in 20 cells: nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, gen_pl anim, ….
+    declension!("лисий", 224, "~ий", like Сведущий;
+    nom_f: "~ья", _;
+    nom_n: "~ье", _;
+    nom_pl: "~ьи", _;
+    gen_m: "~ьего", _;
+    gen_f: "~ьей", _;
+    gen_pl: "~ьих", _;
+    dat_m: "~ьему", _;
+    dat_pl: "~ьим", _;
+    acc_m: "~ьего", _;
+    acc_f: "~ью", _;
+    acc_pl: "~ьих", "~ьи";
+    ins_f: "~ьей|~ьею", "~ьей|~ьею";
+    ins_pl: "~ьими", _;
+    prep_m: "~ьем", _;
+    short_adjective: derived, derived, derived, derived;
     ),
-    // Средний: 177 words (субботний, средний, последний, задний, предпоследний, посторонний).
-    declension!("средний", 177, "~~ий";
-        nominative_masculine: "~~ий", "~~ий";
-        nominative_feminine: "~~яя", "~~яя";
-        nominative_neuter: "~~ее", "~~ее";
-        nominative_plural: "~~ие", "~~ие";
-        genitive_masculine: "~~его", "~~его";
-        genitive_feminine: "~~ей", "~~ей";
-        genitive_neuter: "~~его", "~~его";
-        genitive_plural: "~~их", "~~их";
-        dative_masculine: "~~ему", "~~ему";
-        dative_feminine: "~~ей", "~~ей";
-        dative_neuter: "~~ему", "~~ему";
-        dative_plural: "~~им", "~~им";
-        accusative_masculine: "~~его", "~~ий";
-        accusative_feminine: "~~юю", "~~юю";
-        accusative_neuter: "~~ее", "~~ее";
-        accusative_plural: "~~их", "~~ие";
-        instrumental_masculine: "~~им", "~~им";
-        instrumental_feminine: "~~ей", "~~ей";
-        instrumental_neuter: "~~им", "~~им";
-        instrumental_plural: "~~ими", "~~ими";
-        prepositional_masculine: "~~ем", "~~ем";
-        prepositional_feminine: "~~ей", "~~ей";
-        prepositional_neuter: "~~ем", "~~ем";
-        prepositional_plural: "~~их", "~~их";
-        short_adjective: "~е~", "~~я", "~~е", "~~и";
+    // Средний: 177 words (субботний, средний, последний, задний, предпоследний, посторонний). Like Пылкий, except in 11 cells: nom_f anim, nom_n anim, gen_m anim, gen_f anim, dat_m anim, acc_m anim, ….
+    declension!("средний", 177, "~~ий", like Пылкий;
+    nom_f: "~~яя", _;
+    nom_n: "~~ее", _;
+    gen_m: "~~его", _;
+    gen_f: "~~ей", _;
+    dat_m: "~~ему", _;
+    acc_m: "~~его", _;
+    acc_f: "~~юю", _;
+    prep_m: "~~ем", _;
+    short_adjective: "~е~", "~~я", "~~е", _;
     ),
     // Родственный: 134 words (государственный, собственный, медленный, священный, художественный, производственный). Like Непринуждённый, except in 1 cell: short_adjective m.
     declension!("родственный", 134, "~ный", like Непринуждённый;
-        nominative_masculine: _, _;
-        nominative_feminine: _, _;
-        nominative_neuter: _, _;
-        nominative_plural: _, _;
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: _, _;
-        genitive_plural: _, _;
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: _, _;
-        dative_plural: _, _;
-        accusative_masculine: _, _;
-        accusative_feminine: _, _;
-        accusative_neuter: _, _;
-        accusative_plural: _, _;
-        instrumental_masculine: _, _;
-        instrumental_feminine: _, _;
-        instrumental_neuter: _, _;
-        instrumental_plural: _, _;
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: _, _;
-        short_adjective: "~ен|~", _, _, _;
+    short_adjective: "~ен|~", _, _, _;
     ),
-    // Иродов: 68 words (сукин, христов, адамов, хуев, булев, отцов).
-    declension!("иродов", 68, "~";
-        nominative_masculine: "~", "~";
-        nominative_feminine: "~а", "~а";
-        nominative_neuter: "~о", "~о";
-        nominative_plural: "~ы", "~ы";
-        genitive_masculine: "~а", "~а";
-        genitive_feminine: "~ой", "~ой";
-        genitive_neuter: "~а", "~а";
-        genitive_plural: "~ых", "~ых";
-        dative_masculine: "~у", "~у";
-        dative_feminine: "~ой", "~ой";
-        dative_neuter: "~у", "~у";
-        dative_plural: "~ым", "~ым";
-        accusative_masculine: "~а", "~";
-        accusative_feminine: "~у", "~у";
-        accusative_neuter: "~о", "~о";
-        accusative_plural: "~ых", "~ы";
-        instrumental_masculine: "~ым", "~ым";
-        instrumental_feminine: "~ой|~ою", "~ой|~ою";
-        instrumental_neuter: "~ым", "~ым";
-        instrumental_plural: "~ыми", "~ыми";
-        prepositional_masculine: "~ом", "~ом";
-        prepositional_feminine: "~ой", "~ой";
-        prepositional_neuter: "~ом", "~ом";
-        prepositional_plural: "~ых", "~ых";
-        short_adjective: derived, derived, derived, derived;
+    // Иродов: 68 words (сукин, христов, адамов, хуев, булев, отцов). Like Устарелый, except in 14 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, dat_m anim, ….
+    declension!("иродов", 68, "~", like Устарелый;
+    nom_m: _, "~";
+    nom_f: "~а", _;
+    nom_n: "~о", _;
+    nom_pl: "~ы", _;
+    gen_m: "~а", _;
+    dat_m: "~у", _;
+    acc_m: "~а", "~";
+    acc_f: "~у", _;
+    acc_pl: _, "~ы";
+    short_adjective: derived, derived, derived, derived;
     ),
-    // Горький: 68 words (горький, малюсенький, целёхонький, близёхонький, близёшенький, сладенький). Like Вольный, except in 20 cells: nominative_masculine anim, nominative_masculine inan, nominative_plural anim, nominative_plural inan, genitive_plural anim, genitive_plural inan, ….
+    // Горький: 68 words (горький, малюсенький, целёхонький, близёхонький, близёшенький, сладенький). Like Вольный, except in 9 cells: nom_m inan, nom_pl anim, gen_pl anim, dat_pl anim, acc_m inan, acc_pl anim, ….
     declension!("горький", 68, "~ь~ий", like Вольный;
-        nominative_masculine: "~ь~ий", "~ь~ий";
-        nominative_feminine: _, _;
-        nominative_neuter: _, _;
-        nominative_plural: "~ь~ие", "~ь~ие";
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: _, _;
-        genitive_plural: "~ь~их", "~ь~их";
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: _, _;
-        dative_plural: "~ь~им", "~ь~им";
-        accusative_masculine: _, "~ь~ий";
-        accusative_feminine: _, _;
-        accusative_neuter: _, _;
-        accusative_plural: "~ь~их", "~ь~ие";
-        instrumental_masculine: "~ь~им", "~ь~им";
-        instrumental_feminine: _, _;
-        instrumental_neuter: "~ь~им", "~ь~им";
-        instrumental_plural: "~ь~ими", "~ь~ими";
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: "~ь~их", "~ь~их";
-        short_adjective: _, _, _, "~ь~и";
+    nom_m: _, "~ь~ий";
+    nom_pl: "~ь~ие", _;
+    gen_pl: "~ь~их", _;
+    dat_pl: "~ь~им", _;
+    acc_m: _, "~ь~ий";
+    acc_pl: "~ь~их", "~ь~ие";
+    ins_pl: "~ь~ими", _;
+    short_adjective: _, _, _, "~ь~и";
     ),
-    // Бойкий: 21 words (бойкий, клейкий, стойкий, износостойкий, огнестойкий, морозостойкий). Like Тайный, except in 20 cells: nominative_masculine anim, nominative_masculine inan, nominative_plural anim, nominative_plural inan, genitive_plural anim, genitive_plural inan, ….
+    // Бойкий: 21 words (бойкий, клейкий, стойкий, износостойкий, огнестойкий, морозостойкий). Like Тайный, except in 9 cells: nom_m inan, nom_pl anim, gen_pl anim, dat_pl anim, acc_m inan, acc_pl anim, ….
     declension!("бойкий", 21, "~й~ий", like Тайный;
-        nominative_masculine: "~й~ий", "~й~ий";
-        nominative_feminine: _, _;
-        nominative_neuter: _, _;
-        nominative_plural: "~й~ие", "~й~ие";
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: _, _;
-        genitive_plural: "~й~их", "~й~их";
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: _, _;
-        dative_plural: "~й~им", "~й~им";
-        accusative_masculine: _, "~й~ий";
-        accusative_feminine: _, _;
-        accusative_neuter: _, _;
-        accusative_plural: "~й~их", "~й~ие";
-        instrumental_masculine: "~й~им", "~й~им";
-        instrumental_feminine: _, _;
-        instrumental_neuter: "~й~им", "~й~им";
-        instrumental_plural: "~й~ими", "~й~ими";
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: "~й~их", "~й~их";
-        short_adjective: _, _, _, "~й~и";
+    nom_m: _, "~й~ий";
+    nom_pl: "~й~ие", _;
+    gen_pl: "~й~их", _;
+    dat_pl: "~й~им", _;
+    acc_m: _, "~й~ий";
+    acc_pl: "~й~их", "~й~ие";
+    ins_pl: "~й~ими", _;
+    short_adjective: _, _, _, "~й~и";
     ),
-    // Куцый: 19 words (бледнолицый, куцый, круглолицый, пухлолицый, багроволицый, белолицый). Like Сведущий, except in 20 cells: nominative_masculine anim, nominative_masculine inan, nominative_plural anim, nominative_plural inan, genitive_plural anim, genitive_plural inan, ….
+    // Куцый: 19 words (бледнолицый, куцый, круглолицый, пухлолицый, багроволицый, белолицый). Like Сведущий, except in 9 cells: nom_m inan, nom_pl anim, gen_pl anim, dat_pl anim, acc_m inan, acc_pl anim, ….
     declension!("куцый", 19, "~ый", like Сведущий;
-        nominative_masculine: "~ый", "~ый";
-        nominative_feminine: _, _;
-        nominative_neuter: _, _;
-        nominative_plural: "~ые", "~ые";
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: _, _;
-        genitive_plural: "~ых", "~ых";
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: _, _;
-        dative_plural: "~ым", "~ым";
-        accusative_masculine: _, "~ый";
-        accusative_feminine: _, _;
-        accusative_neuter: _, _;
-        accusative_plural: "~ых", "~ые";
-        instrumental_masculine: "~ым", "~ым";
-        instrumental_feminine: _, _;
-        instrumental_neuter: "~ым", "~ым";
-        instrumental_plural: "~ыми", "~ыми";
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: "~ых", "~ых";
-        short_adjective: _, _, _, "~ы";
+    nom_m: _, "~ый";
+    nom_pl: "~ые", _;
+    gen_pl: "~ых", _;
+    dat_pl: "~ым", _;
+    acc_m: _, "~ый";
+    acc_pl: "~ых", "~ые";
+    ins_pl: "~ыми", _;
+    short_adjective: _, _, _, "~ы";
     ),
-    // Дядин: 14 words (мамин, женин, никитин, дядин, бабушкин, папин). Like Иродов, except in 9 cells: genitive_masculine anim, genitive_masculine inan, genitive_neuter anim, genitive_neuter inan, dative_masculine anim, dative_masculine inan, ….
+    // Дядин: 14 words (мамин, женин, никитин, дядин, бабушкин, папин). Like Иродов, except in 3 cells: gen_m anim, dat_m anim, acc_m anim.
     declension!("дядин", 14, "~", like Иродов;
-        nominative_masculine: _, _;
-        nominative_feminine: _, _;
-        nominative_neuter: _, _;
-        nominative_plural: _, _;
-        genitive_masculine: "~ого", "~ого";
-        genitive_feminine: _, _;
-        genitive_neuter: "~ого", "~ого";
-        genitive_plural: _, _;
-        dative_masculine: "~ому", "~ому";
-        dative_feminine: _, _;
-        dative_neuter: "~ому", "~ому";
-        dative_plural: _, _;
-        accusative_masculine: "~ого", _;
-        accusative_feminine: _, _;
-        accusative_neuter: _, _;
-        accusative_plural: _, _;
-        instrumental_masculine: _, _;
-        instrumental_feminine: _, _;
-        instrumental_neuter: _, _;
-        instrumental_plural: _, _;
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: _, _;
-        short_adjective: _, _, _, _;
+    gen_m: "~ого", _;
+    dat_m: "~ому", _;
+    acc_m: "~ого", _;
     ),
-    // Рад: 12 words (широк, мал, рад, велик, намерен, наслышан).
-    declension!("рад", 12, "~";
-        nominative_masculine: "~", "~";
-        nominative_feminine: derived, derived;
-        nominative_neuter: derived, derived;
-        nominative_plural: derived, derived;
-        genitive_masculine: derived, derived;
-        genitive_feminine: derived, derived;
-        genitive_neuter: derived, derived;
-        genitive_plural: derived, derived;
-        dative_masculine: derived, derived;
-        dative_feminine: derived, derived;
-        dative_neuter: derived, derived;
-        dative_plural: derived, derived;
-        accusative_masculine: derived, "~";
-        accusative_feminine: derived, derived;
-        accusative_neuter: derived, derived;
-        accusative_plural: derived, derived;
-        instrumental_masculine: derived, derived;
-        instrumental_feminine: derived, derived;
-        instrumental_neuter: derived, derived;
-        instrumental_plural: derived, derived;
-        prepositional_masculine: derived, derived;
-        prepositional_feminine: derived, derived;
-        prepositional_neuter: derived, derived;
-        prepositional_plural: derived, derived;
-        short_adjective: "~", "~а", "~о", "~ы";
+    // Рад: 12 words (широк, мал, рад, велик, намерен, наслышан). Like Устарелый, except in 18 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    declension!("рад", 12, "~", like Устарелый;
+    nom_m: _, "~";
+    nom_f: derived, _;
+    nom_n: derived, _;
+    nom_pl: derived, _;
+    gen_m: derived, _;
+    gen_f: derived, _;
+    gen_pl: derived, _;
+    dat_m: derived, _;
+    dat_pl: derived, _;
+    acc_m: derived, "~";
+    acc_f: derived, _;
+    acc_pl: derived, derived;
+    ins_f: derived, derived;
+    ins_pl: derived, _;
+    prep_m: derived, _;
     ),
-    // Синий: 10 words (синий, лососий, тёмно-синий, крокодилий, сверхдальний, выхухолий). Like Сведущий, except in 6 cells: nominative_feminine anim, nominative_feminine inan, accusative_feminine anim, accusative_feminine inan, short_adjective m, short_adjective f.
+    // Синий: 10 words (синий, лососий, тёмно-синий, крокодилий, сверхдальний, выхухолий). Like Сведущий, except in 4 cells: nom_f anim, acc_f anim, short_adjective m, short_adjective f.
     declension!("синий", 10, "~ий", like Сведущий;
-        nominative_masculine: _, _;
-        nominative_feminine: "~яя", "~яя";
-        nominative_neuter: _, _;
-        nominative_plural: _, _;
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: _, _;
-        genitive_plural: _, _;
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: _, _;
-        dative_plural: _, _;
-        accusative_masculine: _, _;
-        accusative_feminine: "~юю", "~юю";
-        accusative_neuter: _, _;
-        accusative_plural: _, _;
-        instrumental_masculine: _, _;
-        instrumental_feminine: _, _;
-        instrumental_neuter: _, _;
-        instrumental_plural: _, _;
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: _, _;
-        short_adjective: "~ь", "~я", _, _;
+    nom_f: "~яя", _;
+    acc_f: "~юю", _;
+    short_adjective: "~ь", "~я", _, _;
     ),
     // Острый: 9 words (острый, неумный, умный, хитрый, шустрый, нехитрый). Like Уместный, except in 3 cells: short_adjective m, short_adjective n, short_adjective pl.
     declension!("острый", 9, "~~ый", like Уместный;
-        nominative_masculine: _, _;
-        nominative_feminine: _, _;
-        nominative_neuter: _, _;
-        nominative_plural: _, _;
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: _, _;
-        genitive_plural: _, _;
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: _, _;
-        dative_plural: _, _;
-        accusative_masculine: _, _;
-        accusative_feminine: _, _;
-        accusative_neuter: _, _;
-        accusative_plural: _, _;
-        instrumental_masculine: _, _;
-        instrumental_feminine: _, _;
-        instrumental_neuter: _, _;
-        instrumental_plural: _, _;
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: _, _;
-        short_adjective: "~ё~", _, "~~о|~~о", "~~ы|~~ы";
+    short_adjective: "~ё~", _, "~~о|~~о", "~~ы|~~ы";
     ),
     // Длинношеий: 8 words (длинношеий, голошеий, долгошеий, короткошеий, кривошеий, толстошеий). Like Синий, except in 1 cell: short_adjective m.
     declension!("длинношеий", 8, "~ий", like Синий;
-        nominative_masculine: _, _;
-        nominative_feminine: _, _;
-        nominative_neuter: _, _;
-        nominative_plural: _, _;
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: _, _;
-        genitive_plural: _, _;
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: _, _;
-        dative_plural: _, _;
-        accusative_masculine: _, _;
-        accusative_feminine: _, _;
-        accusative_neuter: _, _;
-        accusative_plural: _, _;
-        instrumental_masculine: _, _;
-        instrumental_feminine: _, _;
-        instrumental_neuter: _, _;
-        instrumental_plural: _, _;
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: _, _;
-        short_adjective: "~й", _, _, _;
+    short_adjective: "~й", _, _, _;
     ),
     // Чёрный: 6 words (чёрный, тёмный, тёплый, полутёмный, нечёрный, белочёрный).
     declension!("чёрный", 6, "~ё~~ый";
-        nominative_masculine: "~ё~~ый", "~ё~~ый";
-        nominative_feminine: "~ё~~ая", "~ё~~ая";
-        nominative_neuter: "~ё~~ое", "~ё~~ое";
-        nominative_plural: "~ё~~ые", "~ё~~ые";
-        genitive_masculine: "~ё~~ого", "~ё~~ого";
-        genitive_feminine: "~ё~~ой", "~ё~~ой";
-        genitive_neuter: "~ё~~ого", "~ё~~ого";
-        genitive_plural: "~ё~~ых", "~ё~~ых";
-        dative_masculine: "~ё~~ому", "~ё~~ому";
-        dative_feminine: "~ё~~ой", "~ё~~ой";
-        dative_neuter: "~ё~~ому", "~ё~~ому";
-        dative_plural: "~ё~~ым", "~ё~~ым";
-        accusative_masculine: "~ё~~ого", "~ё~~ый";
-        accusative_feminine: "~ё~~ую", "~ё~~ую";
-        accusative_neuter: "~ё~~ое", "~ё~~ое";
-        accusative_plural: "~ё~~ых", "~ё~~ые";
-        instrumental_masculine: "~ё~~ым", "~ё~~ым";
-        instrumental_feminine: "~ё~~ой|~ё~~ою", "~ё~~ой|~ё~~ою";
-        instrumental_neuter: "~ё~~ым", "~ё~~ым";
-        instrumental_plural: "~ё~~ыми", "~ё~~ыми";
-        prepositional_masculine: "~ё~~ом", "~ё~~ом";
-        prepositional_feminine: "~ё~~ой", "~ё~~ой";
-        prepositional_neuter: "~ё~~ом", "~ё~~ом";
-        prepositional_plural: "~ё~~ых", "~ё~~ых";
-        short_adjective: "~ё~е~", "~е~~а", "~е~~о", "~е~~ы";
+    nom_m: _, "~ё~~ый";
+    nom_f: "~ё~~ая", _;
+    nom_n: "~ё~~ое", _;
+    nom_pl: "~ё~~ые", _;
+    gen_m: "~ё~~ого", _;
+    gen_f: "~ё~~ой", _;
+    gen_pl: "~ё~~ых", _;
+    dat_m: "~ё~~ому", _;
+    dat_pl: "~ё~~ым", _;
+    acc_m: "~ё~~ого", "~ё~~ый";
+    acc_f: "~ё~~ую", _;
+    acc_pl: "~ё~~ых", "~ё~~ые";
+    ins_f: "~ё~~ой|~ё~~ою", "~ё~~ой|~ё~~ою";
+    ins_pl: "~ё~~ыми", _;
+    prep_m: "~ё~~ом", _;
+    short_adjective: "~ё~е~", "~е~~а", "~е~~о", "~е~~ы";
     ),
-    // Твёрдый: 6 words (жёлтый, твёрдый, мёртвый, тяжёлый, пёстрый, супертяжёлый).
-    declension!("твёрдый", 6, "~ё~ый";
-        nominative_masculine: "~ё~ый", "~ё~ый";
-        nominative_feminine: "~ё~ая", "~ё~ая";
-        nominative_neuter: "~ё~ое", "~ё~ое";
-        nominative_plural: "~ё~ые", "~ё~ые";
-        genitive_masculine: "~ё~ого", "~ё~ого";
-        genitive_feminine: "~ё~ой", "~ё~ой";
-        genitive_neuter: "~ё~ого", "~ё~ого";
-        genitive_plural: "~ё~ых", "~ё~ых";
-        dative_masculine: "~ё~ому", "~ё~ому";
-        dative_feminine: "~ё~ой", "~ё~ой";
-        dative_neuter: "~ё~ому", "~ё~ому";
-        dative_plural: "~ё~ым", "~ё~ым";
-        accusative_masculine: "~ё~ого", "~ё~ый";
-        accusative_feminine: "~ё~ую", "~ё~ую";
-        accusative_neuter: "~ё~ое", "~ё~ое";
-        accusative_plural: "~ё~ых", "~ё~ые";
-        instrumental_masculine: "~ё~ым", "~ё~ым";
-        instrumental_feminine: "~ё~ой|~ё~ою", "~ё~ой|~ё~ою";
-        instrumental_neuter: "~ё~ым", "~ё~ым";
-        instrumental_plural: "~ё~ыми", "~ё~ыми";
-        prepositional_masculine: "~ё~ом", "~ё~ом";
-        prepositional_feminine: "~ё~ой", "~ё~ой";
-        prepositional_neuter: "~ё~ом", "~ё~ом";
-        prepositional_plural: "~ё~ых", "~ё~ых";
-        short_adjective: "~ё~", "~е~а", "~е~о", "~е~ы";
+    // Твёрдый: 6 words (жёлтый, твёрдый, мёртвый, тяжёлый, пёстрый, супертяжёлый). Like Казнённый, except in 18 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    declension!("твёрдый", 6, "~ё~ый", like Казнённый;
+    nom_m: _, "~ё~ый";
+    nom_f: "~ё~ая", _;
+    nom_n: "~ё~ое", _;
+    nom_pl: "~ё~ые", _;
+    gen_m: "~ё~ого", _;
+    gen_f: "~ё~ой", _;
+    gen_pl: "~ё~ых", _;
+    dat_m: "~ё~ому", _;
+    dat_pl: "~ё~ым", _;
+    acc_m: "~ё~ого", "~ё~ый";
+    acc_f: "~ё~ую", _;
+    acc_pl: "~ё~ых", "~ё~ые";
+    ins_f: "~ё~ой|~ё~ою", "~ё~ой|~ё~ою";
+    ins_pl: "~ё~ыми", _;
+    prep_m: "~ё~ом", _;
     ),
-    // Должен: 5 words (должен, тесен, грешен, длинен, годен).
-    declension!("должен", 5, "~е~";
-        nominative_masculine: derived, "~е~";
-        nominative_feminine: derived, derived;
-        nominative_neuter: derived, derived;
-        nominative_plural: derived, derived;
-        genitive_masculine: derived, derived;
-        genitive_feminine: derived, derived;
-        genitive_neuter: derived, derived;
-        genitive_plural: derived, derived;
-        dative_masculine: derived, derived;
-        dative_feminine: derived, derived;
-        dative_neuter: derived, derived;
-        dative_plural: derived, derived;
-        accusative_masculine: derived, derived;
-        accusative_feminine: derived, derived;
-        accusative_neuter: derived, derived;
-        accusative_plural: derived, derived;
-        instrumental_masculine: derived, derived;
-        instrumental_feminine: derived, derived;
-        instrumental_neuter: derived, derived;
-        instrumental_plural: derived, derived;
-        prepositional_masculine: derived, derived;
-        prepositional_feminine: derived, derived;
-        prepositional_neuter: derived, derived;
-        prepositional_plural: derived, derived;
-        short_adjective: "~е~", "~~а", "~~о|~~о", "~~ы|~~ы";
+    // Должен: 5 words (должен, тесен, грешен, длинен, годен). Like Показной, except in 18 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    declension!("должен", 5, "~е~", like Показной;
+    nom_m: _, "~е~";
+    nom_f: derived, _;
+    nom_n: derived, _;
+    nom_pl: derived, _;
+    gen_m: derived, _;
+    gen_f: derived, _;
+    gen_pl: derived, _;
+    dat_m: derived, _;
+    dat_pl: derived, _;
+    acc_m: derived, derived;
+    acc_f: derived, _;
+    acc_pl: derived, derived;
+    ins_pl: derived, _;
+    prep_m: derived, _;
+    short_adjective: _, _, "~~о|~~о", "~~ы|~~ы";
     ),
-    // Тяжкий: 5 words (тяжкий, лёжкий, нелёжкий, нетяжкий, сторожкий). Like Пылкий, except in 3 cells: instrumental_feminine anim, instrumental_feminine inan, short_adjective m.
+    // Тяжкий: 5 words (тяжкий, лёжкий, нелёжкий, нетяжкий, сторожкий). Like Пылкий, except in 3 cells: ins_f anim, ins_f inan, short_adjective m.
     declension!("тяжкий", 5, "~~ий", like Пылкий;
-        nominative_masculine: _, _;
-        nominative_feminine: _, _;
-        nominative_neuter: _, _;
-        nominative_plural: _, _;
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: _, _;
-        genitive_plural: _, _;
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: _, _;
-        dative_plural: _, _;
-        accusative_masculine: _, _;
-        accusative_feminine: _, _;
-        accusative_neuter: _, _;
-        accusative_plural: _, _;
-        instrumental_masculine: _, _;
-        instrumental_feminine: "~~ой|~~ою", "~~ой|~~ою";
-        instrumental_neuter: _, _;
-        instrumental_plural: _, _;
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: _, _;
-        short_adjective: "~е~", _, _, _;
+    ins_f: "~~ой|~~ою", "~~ой|~~ою";
+    short_adjective: "~е~", _, _, _;
     ),
     // Горячий: 4 words (хороший, горячий, свежий, нехороший). Like Сведущий, except in 1 cell: short_adjective n.
     declension!("горячий", 4, "~ий", like Сведущий;
-        nominative_masculine: _, _;
-        nominative_feminine: _, _;
-        nominative_neuter: _, _;
-        nominative_plural: _, _;
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: _, _;
-        genitive_plural: _, _;
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: _, _;
-        dative_plural: _, _;
-        accusative_masculine: _, _;
-        accusative_feminine: _, _;
-        accusative_neuter: _, _;
-        accusative_plural: _, _;
-        instrumental_masculine: _, _;
-        instrumental_feminine: _, _;
-        instrumental_neuter: _, _;
-        instrumental_plural: _, _;
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: _, _;
-        short_adjective: _, _, "~о", _;
+    short_adjective: _, _, "~о", _;
     ),
-    // Злой: 4 words (злой, смешной, незлой, пресмешной). Like Показной, except in 3 cells: instrumental_feminine anim, instrumental_feminine inan, short_adjective m.
-    declension!("злой", 4, "~~ой", like Показной;
-        nominative_masculine: _, _;
-        nominative_feminine: _, _;
-        nominative_neuter: _, _;
-        nominative_plural: _, _;
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: _, _;
-        genitive_plural: _, _;
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: _, _;
-        dative_plural: _, _;
-        accusative_masculine: _, _;
-        accusative_feminine: _, _;
-        accusative_neuter: _, _;
-        accusative_plural: _, _;
-        instrumental_masculine: _, _;
-        instrumental_feminine: "~~ой|~~ою", "~~ой|~~ою";
-        instrumental_neuter: _, _;
-        instrumental_plural: _, _;
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: _, _;
-        short_adjective: "~о~", _, _, _;
+    // Злой: 4 words (злой, смешной, незлой, пресмешной). Like Уместный, except in 3 cells: nom_m inan, acc_m inan, short_adjective m.
+    declension!("злой", 4, "~~ой", like Уместный;
+    nom_m: _, "~~ой";
+    acc_m: _, "~~ой";
+    short_adjective: "~о~", _, _, _;
     ),
-    // Лёгкий: 4 words (лёгкий, жёсткий, нелёгкий, прелёгкий). Like Чёрный, except in 21 cells: nominative_masculine anim, nominative_masculine inan, nominative_plural anim, nominative_plural inan, genitive_plural anim, genitive_plural inan, ….
+    // Лёгкий: 4 words (лёгкий, жёсткий, нелёгкий, прелёгкий). Like Чёрный, except in 10 cells: nom_m inan, nom_pl anim, gen_pl anim, dat_pl anim, acc_m inan, acc_pl anim, ….
     declension!("лёгкий", 4, "~ё~~ий", like Чёрный;
-        nominative_masculine: "~ё~~ий", "~ё~~ий";
-        nominative_feminine: _, _;
-        nominative_neuter: _, _;
-        nominative_plural: "~ё~~ие", "~ё~~ие";
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: _, _;
-        genitive_plural: "~ё~~их", "~ё~~их";
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: _, _;
-        dative_plural: "~ё~~им", "~ё~~им";
-        accusative_masculine: _, "~ё~~ий";
-        accusative_feminine: _, _;
-        accusative_neuter: _, _;
-        accusative_plural: "~ё~~их", "~ё~~ие";
-        instrumental_masculine: "~ё~~им", "~ё~~им";
-        instrumental_feminine: _, _;
-        instrumental_neuter: "~ё~~им", "~ё~~им";
-        instrumental_plural: "~ё~~ими", "~ё~~ими";
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: "~ё~~их", "~ё~~их";
-        short_adjective: "~ё~о~", _, _, "~е~~и";
+    nom_m: _, "~ё~~ий";
+    nom_pl: "~ё~~ие", _;
+    gen_pl: "~ё~~их", _;
+    dat_pl: "~ё~~им", _;
+    acc_m: _, "~ё~~ий";
+    acc_pl: "~ё~~их", "~ё~~ие";
+    ins_pl: "~ё~~ими", _;
+    short_adjective: "~ё~о~", _, _, "~е~~и";
     ),
     // Заёбанный: 4 words (заёбанный, проёбанный, поёбанный, разъёбанный). Like Казнённый, except in 3 cells: short_adjective f, short_adjective n, short_adjective pl.
     declension!("заёбанный", 4, "~ё~ный", like Казнённый;
-        nominative_masculine: _, _;
-        nominative_feminine: _, _;
-        nominative_neuter: _, _;
-        nominative_plural: _, _;
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: _, _;
-        genitive_plural: _, _;
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: _, _;
-        dative_plural: _, _;
-        accusative_masculine: _, _;
-        accusative_feminine: _, _;
-        accusative_neuter: _, _;
-        accusative_plural: _, _;
-        instrumental_masculine: _, _;
-        instrumental_feminine: _, _;
-        instrumental_neuter: _, _;
-        instrumental_plural: _, _;
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: _, _;
-        short_adjective: _, "~ё~а|~е~а", "~ё~о", "~ё~ы";
+    short_adjective: _, "~ё~а|~е~а", "~ё~о", "~ё~ы";
     ),
-    // Высокий: 3 words (противосвёртывающий, всемилостивейший, бывалошний). Like Устарелый, except in 20 cells: nominative_masculine anim, nominative_masculine inan, nominative_plural anim, nominative_plural inan, genitive_plural anim, genitive_plural inan, ….
-    declension!("высокий", 3, "~ий", like Устарелый;
-        nominative_masculine: "~ий", "~ий";
-        nominative_feminine: _, _;
-        nominative_neuter: _, _;
-        nominative_plural: "~ие", "~ие";
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: _, _;
-        genitive_plural: "~их", "~их";
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: _, _;
-        dative_plural: "~им", "~им";
-        accusative_masculine: _, "~ий";
-        accusative_feminine: _, _;
-        accusative_neuter: _, _;
-        accusative_plural: "~их", "~ие";
-        instrumental_masculine: "~им", "~им";
-        instrumental_feminine: _, _;
-        instrumental_neuter: "~им", "~им";
-        instrumental_plural: "~ими", "~ими";
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: "~их", "~их";
-        short_adjective: _, _, _, "~и";
+    // Высокий: 3 words (противосвёртывающий, всемилостивейший, бывалошний). Like Горячий, except in 8 cells: nom_n anim, gen_m anim, gen_f anim, dat_m anim, acc_m anim, ins_f anim, ….
+    declension!("высокий", 3, "~ий", like Горячий;
+    nom_n: "~ое", _;
+    gen_m: "~ого", _;
+    gen_f: "~ой", _;
+    dat_m: "~ому", _;
+    acc_m: "~ого", _;
+    ins_f: "~ой|~ою", "~ой|~ою";
+    prep_m: "~ом", _;
     ),
-    // Дешёвый: 3 words (дешёвый, недешёвый, ультрадешёвый).
-    declension!("дешёвый", 3, "~ешё~ый";
-        nominative_masculine: "~ешё~ый", "~ешё~ый";
-        nominative_feminine: "~ешё~ая", "~ешё~ая";
-        nominative_neuter: "~ешё~ое", "~ешё~ое";
-        nominative_plural: "~ешё~ые", "~ешё~ые";
-        genitive_masculine: "~ешё~ого", "~ешё~ого";
-        genitive_feminine: "~ешё~ой", "~ешё~ой";
-        genitive_neuter: "~ешё~ого", "~ешё~ого";
-        genitive_plural: "~ешё~ых", "~ешё~ых";
-        dative_masculine: "~ешё~ому", "~ешё~ому";
-        dative_feminine: "~ешё~ой", "~ешё~ой";
-        dative_neuter: "~ешё~ому", "~ешё~ому";
-        dative_plural: "~ешё~ым", "~ешё~ым";
-        accusative_masculine: "~ешё~ого", "~ешё~ый";
-        accusative_feminine: "~ешё~ую", "~ешё~ую";
-        accusative_neuter: "~ешё~ое", "~ешё~ое";
-        accusative_plural: "~ешё~ых", "~ешё~ые";
-        instrumental_masculine: "~ешё~ым", "~ешё~ым";
-        instrumental_feminine: "~ешё~ой|~ешё~ою", "~ешё~ой|~ешё~ою";
-        instrumental_neuter: "~ешё~ым", "~ешё~ым";
-        instrumental_plural: "~ешё~ыми", "~ешё~ыми";
-        prepositional_masculine: "~ешё~ом", "~ешё~ом";
-        prepositional_feminine: "~ешё~ой", "~ешё~ой";
-        prepositional_neuter: "~ешё~ом", "~ешё~ом";
-        prepositional_plural: "~ешё~ых", "~ешё~ых";
-        short_adjective: "~ёше~", "~еше~а", "~ёше~о", "~ёше~ы";
+    // Дешёвый: 3 words (дешёвый, недешёвый, ультрадешёвый). Like Уместный, except in 22 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
+    declension!("дешёвый", 3, "~ешё~ый", like Уместный;
+    nom_m: _, "~ешё~ый";
+    nom_f: "~ешё~ая", _;
+    nom_n: "~ешё~ое", _;
+    nom_pl: "~ешё~ые", _;
+    gen_m: "~ешё~ого", _;
+    gen_f: "~ешё~ой", _;
+    gen_pl: "~ешё~ых", _;
+    dat_m: "~ешё~ому", _;
+    dat_pl: "~ешё~ым", _;
+    acc_m: "~ешё~ого", "~ешё~ый";
+    acc_f: "~ешё~ую", _;
+    acc_pl: "~ешё~ых", "~ешё~ые";
+    ins_f: "~ешё~ой|~ешё~ою", "~ешё~ой|~ешё~ою";
+    ins_pl: "~ешё~ыми", _;
+    prep_m: "~ешё~ом", _;
+    short_adjective: "~ёше~", "~еше~а", "~ёше~о", "~ёше~ы";
     ),
     // Зелёный: 3 words (зелёный, весёлый, невесёлый). Like Твёрдый, except in 2 cells: short_adjective m, short_adjective pl.
     declension!("зелёный", 3, "~ё~ый", like Твёрдый;
-        nominative_masculine: _, _;
-        nominative_feminine: _, _;
-        nominative_neuter: _, _;
-        nominative_plural: _, _;
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: _, _;
-        genitive_plural: _, _;
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: _, _;
-        dative_plural: _, _;
-        accusative_masculine: _, _;
-        accusative_feminine: _, _;
-        accusative_neuter: _, _;
-        accusative_plural: _, _;
-        instrumental_masculine: _, _;
-        instrumental_feminine: _, _;
-        instrumental_neuter: _, _;
-        instrumental_plural: _, _;
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: _, _;
-        short_adjective: "~е~", _, _, "~е~ы|~е~ы";
+    short_adjective: "~е~", _, _, "~е~ы|~е~ы";
     ),
-    // Катин: 3 words (сашин, катин, танин). Like Иродов, except in 18 cells: nominative_neuter anim, nominative_neuter inan, genitive_neuter anim, genitive_neuter inan, dative_neuter anim, dative_neuter inan, ….
+    // Катин: 3 words (сашин, катин, танин). Like Иродов, except in 6 cells: nom_n anim, acc_m inan, acc_pl inan, ins_f anim, ins_f inan, prep_m anim.
     declension!("катин", 3, "~", like Иродов;
-        nominative_masculine: _, _;
-        nominative_feminine: _, _;
-        nominative_neuter: derived, derived;
-        nominative_plural: _, _;
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: derived, derived;
-        genitive_plural: _, _;
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: derived, derived;
-        dative_plural: _, _;
-        accusative_masculine: _, "~а";
-        accusative_feminine: _, _;
-        accusative_neuter: derived, derived;
-        accusative_plural: _, "~ых";
-        instrumental_masculine: _, _;
-        instrumental_feminine: "~ой", "~ой";
-        instrumental_neuter: derived, derived;
-        instrumental_plural: _, _;
-        prepositional_masculine: "~е", "~е";
-        prepositional_feminine: _, _;
-        prepositional_neuter: derived, derived;
-        prepositional_plural: _, _;
-        short_adjective: _, _, _, _;
+    nom_n: derived, _;
+    acc_m: _, "~а";
+    acc_pl: _, "~ых";
+    ins_f: derived, derived;
+    prep_m: "~е", _;
     ),
-    // Крутенек: 3 words (крутенек, радёхонек, радёшенек). Like Должен, except in 5 cells: nominative_masculine anim, accusative_masculine inan, short_adjective f, short_adjective n, short_adjective pl.
+    // Крутенек: 3 words (крутенек, радёхонек, радёшенек). Like Должен, except in 4 cells: acc_m inan, short_adjective f, short_adjective n, short_adjective pl.
     declension!("крутенек", 3, "~е~", like Должен;
-        nominative_masculine: "~е~", _;
-        nominative_feminine: _, _;
-        nominative_neuter: _, _;
-        nominative_plural: _, _;
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: _, _;
-        genitive_plural: _, _;
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: _, _;
-        dative_plural: _, _;
-        accusative_masculine: _, "~е~";
-        accusative_feminine: _, _;
-        accusative_neuter: _, _;
-        accusative_plural: _, _;
-        instrumental_masculine: _, _;
-        instrumental_feminine: _, _;
-        instrumental_neuter: _, _;
-        instrumental_plural: _, _;
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: _, _;
-        short_adjective: _, "~ь~а", "~ь~о", "~ь~и";
+    acc_m: _, "~е~";
+    short_adjective: _, "~ь~а", "~ь~о", "~ь~и";
     ),
-    // Сланцевый: 3 words (сланцевый, нахлыстовый, дёгтевый). Like Устарелый, except in 2 cells: accusative_masculine anim, accusative_plural anim.
+    // Сланцевый: 3 words (сланцевый, нахлыстовый, дёгтевый). Like Устарелый, except in 2 cells: acc_m anim, acc_pl anim.
     declension!("сланцевый", 3, "~ый", like Устарелый;
-        nominative_masculine: _, _;
-        nominative_feminine: _, _;
-        nominative_neuter: _, _;
-        nominative_plural: _, _;
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: _, _;
-        genitive_plural: _, _;
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: _, _;
-        dative_plural: _, _;
-        accusative_masculine: "~ый", _;
-        accusative_feminine: _, _;
-        accusative_neuter: _, _;
-        accusative_plural: "~ые", _;
-        instrumental_masculine: _, _;
-        instrumental_feminine: _, _;
-        instrumental_neuter: _, _;
-        instrumental_plural: _, _;
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: _, _;
-        short_adjective: _, _, _, _;
+    acc_m: "~ый", _;
+    acc_pl: "~ые", _;
     ),
-    // Жерёбый: 3 words (успешливый, посажёный, жерёбый). Like Устарелый, except in 2 cells: accusative_masculine inan, accusative_plural inan.
+    // Жерёбый: 3 words (успешливый, посажёный, жерёбый). Like Устарелый, except in 2 cells: acc_m inan, acc_pl inan.
     declension!("жерёбый", 3, "~ый", like Устарелый;
-        nominative_masculine: _, _;
-        nominative_feminine: _, _;
-        nominative_neuter: _, _;
-        nominative_plural: _, _;
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: _, _;
-        genitive_plural: _, _;
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: _, _;
-        dative_plural: _, _;
-        accusative_masculine: _, "~ого|~ый";
-        accusative_feminine: _, _;
-        accusative_neuter: _, _;
-        accusative_plural: _, "~ых";
-        instrumental_masculine: _, _;
-        instrumental_feminine: _, _;
-        instrumental_neuter: _, _;
-        instrumental_plural: _, _;
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: _, _;
-        short_adjective: _, _, _, _;
+    acc_m: _, "~ого|~ый";
+    acc_pl: _, "~ых";
     ),
-    // Теплонагревательный: 3 words (народно-разговорный, теплонагревательный, малоуютный). Like Уместный, except in 4 cells: accusative_masculine anim, accusative_plural anim, instrumental_feminine anim, instrumental_feminine inan.
+    // Теплонагревательный: 3 words (народно-разговорный, теплонагревательный, малоуютный). Like Уместный, except in 4 cells: acc_m anim, acc_pl anim, ins_f anim, ins_f inan.
     declension!("теплонагревательный", 3, "~~ый", like Уместный;
-        nominative_masculine: _, _;
-        nominative_feminine: _, _;
-        nominative_neuter: _, _;
-        nominative_plural: _, _;
-        genitive_masculine: _, _;
-        genitive_feminine: _, _;
-        genitive_neuter: _, _;
-        genitive_plural: _, _;
-        dative_masculine: _, _;
-        dative_feminine: _, _;
-        dative_neuter: _, _;
-        dative_plural: _, _;
-        accusative_masculine: "~~ый", _;
-        accusative_feminine: _, _;
-        accusative_neuter: _, _;
-        accusative_plural: "~~ые", _;
-        instrumental_masculine: _, _;
-        instrumental_feminine: "~~ой", "~~ой";
-        instrumental_neuter: _, _;
-        instrumental_plural: _, _;
-        prepositional_masculine: _, _;
-        prepositional_feminine: _, _;
-        prepositional_neuter: _, _;
-        prepositional_plural: _, _;
-        short_adjective: _, _, _, _;
+    acc_m: "~~ый", _;
+    acc_pl: "~~ые", _;
+    ins_f: derived, derived;
     ),
 ];

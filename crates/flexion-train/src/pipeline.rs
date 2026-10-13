@@ -26,6 +26,8 @@ pub struct Measured {
     pub features: Option<Score>,
     /// The longest-suffix rule's share right (see [`eval::floor`]).
     pub floor: f64,
+    /// Its share right on the unseen cells (see [`eval::Score::unseen`]).
+    pub floor_unseen: f64,
     /// The shipped grammar on the dictionary's own words, typed in full.
     pub attested: Score,
 }
@@ -81,7 +83,9 @@ pub fn build<'s>(
         let citation = (!parts.is_empty()).then(|| score(Input::Citation(&parts)));
         let features = (!part.inherent.is_empty()).then(|| score(Input::Features));
         let main: Vec<&Lexeme> = train.iter().filter(|l| l.source == 0).collect();
-        let floor = eval::floor(&orthography, &main, &test);
+        let (floor, floor_unseen) = eval::floor(&orthography, &main, &test, |l, c| {
+            eval::unseen(g, &scored.seen, l, c)
+        });
         let mut shipped = learned(&d.lexemes);
         shipped.grammar.sharpness = sharpness;
         // Attested: an even sample of the dictionary's own words (of
@@ -118,6 +122,7 @@ pub fn build<'s>(
             citation,
             features,
             floor,
+            floor_unseen,
             attested,
         });
         grammars.push(shipped);
@@ -159,11 +164,11 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
          (its gender, as `.gender(…)` tells it). *Seen* and *unseen cells*: top-1 on the cells\n\
          some training word of the word's paradigm has a form in, and on the others, derived\n\
          from other cells (with the number of forms). *Floor*: the CoNLL–SIGMORPHON 2017\n\
-         shared task's non-neural baseline (letters only). *Attested*: top-1 of the shipped\n\
+         shared task's non-neural baseline (letters only), and on the unseen cells. *Attested*: top-1 of the shipped\n\
          grammar on the dictionary's own words, typed in full.\n\n",
     );
     s.push_str(
-        "| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | features given | seen cells | unseen cells | floor | attested |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n",
+        "| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | features given | seen cells | unseen cells | floor (unseen) | attested |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n",
     );
     // `right` of `forms`, as a percentage with the count of forms.
     let share = |(forms, right): (usize, usize)| {
@@ -185,7 +190,7 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
         let noise = 1.96 * (p * (1.0 - p) / m.test_words.max(1) as f64).sqrt();
         let _ = writeln!(
             s,
-            "| {} | {} | {} | **{:.2}%** ± {:.1} | {:.2}% | {:.3} | {:.2}% | {} | {} | {} | {} | {:.2}% | {:.2}% |",
+            "| {} | {} | {} | **{:.2}%** ± {:.1} | {:.2}% | {:.3} | {:.2}% | {} | {} | {} | {} | {:.2}% ({:.2}%) | {:.2}% |",
             m.name,
             m.test_words,
             m.headword.forms,
@@ -199,6 +204,7 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
             share(m.headword.seen),
             share(m.headword.unseen),
             100.0 * m.floor,
+            100.0 * m.floor_unseen,
             100.0 * m.attested.accuracy(),
         );
     }

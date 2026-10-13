@@ -1,479 +1,225 @@
-//! The dictionary's forms no declension gives, as it writes them: a line per form,
-//! the word, its cell's number (see `super::cell`) and the form, sorted by word
-//! and cell. They are the answer for that word and cell.
+//! The dictionary's forms no declension gives, as it writes them: a line per word,
+//! sorted, the word then each listed cell's number (see `super::cell`) and its
+//! form, tab-separated. They are the answer for that word and cell.
 
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 468 forms.
+/// 363 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"abaddir	1	abaddīrēs
-abaddir	2	abaddīris
-abaddir	6	abaddīrem
 abaneth	1	abanēth
-abaneth	3	abanēth
-abaneth	5	abanēth
-accidens	1	accidentia
-accidens	6	accidēns
-accidens	8	accidentī
+accidens	1	accidentia	6	accidēns
 aclys	2	āclydis
 adelphos	3	adelphōn
 adelphotheos	3	adelphotheōn
-ador	1	adōra
-ador	6	ador
+ador	1	adŏra	6	ador
 aetas	7	aetātīs
-aevom	1	aeva
-aevom	2	aevī
+aevom	1	aeva	6	aevom
 aivom	1	aiva
-aivom	2	aivī
-alcohol	1	alcohōla
-alcohol	6	alcohol
+alcohol	1	alcohōla	6	alcohol
 allevator	0	absolūtor
 amazon	1	amāzones
 anagignoscomena	3	anagignōscomenōn
 anas	1	anitēs
-anas	2	anitis
-anas	6	anitem
 apsis	1	apsīdēs
-apsis	2	apsīdis
-apsis	6	apsīdem
 arabs	11	arabes
 arbos	1	arborēs
-arbos	2	arboris
-arbos	6	arborem
-architecton	6	architectona
-architecton	7	architectonās
+architecton	5	architectonibus	6	architectona	7	architectonās	9	architectonibus
 as	1	assēs
-as	2	assis
-as	6	assem
 asinusca	0	atrusca
 atriplex	1	ātriplica
-atriplex	6	ātriplex
 auceps	1	aucupēs
-auceps	2	aucupis
-auceps	6	aucupem
 bahobab	1	bahobāb
-bahobab	3	bahobāb
-bahobab	5	bahobāb
 balneolum	1	balneolae
-balneolum	3	balneolārum
 balneum	1	balneae
-balneum	3	balneārum
-basileus	1	basileī
-basileus	2	basileī
-basileus	3	basileōrum
-basileus	4	basileō
-basileus	5	basileīs
-basileus	7	basileōs
-basileus	8	basileō
-basileus	9	basileīs
-basileus	10	basileu
-basileus	11	basileī
+basileus	1	basileī	2	basileī	3	basileōrum	4	basileō	5	basileīs	6	basileum	7	basileōs	8	basileō	9	basileīs	10	basileu	11	basileī
 bes	1	bessēs
-bes	2	bessis
-bes	6	bessem
 bison	1	bisōntēs
-bison	6	bisōntem
-bos	1	bovēs
-bos	2	bovis
-bos	3	boum
-bos	5	bōbus
-bos	6	bovem
+bos	1	bovēs	3	boum	5	bōbus
 bucellarius	0	buccellārius
-cachrys	1	cachryes
-cachrys	2	cachryos
-cachrys	3	cachryum
-cachrys	6	cachrym
+cachrys	1	cachryes	3	cachryum	8	cachry
 caelum	1	caelī
 calcostegis	0	calcostegos
 callipygia	6	callipȳgian
 canterius	0	canthērius
 caro	1	carnēs
-caro	2	carnis
-caro	6	carnem
-cephenes	7	cēphēnes
+cephenes	5	cēphēnibus	7	cēphēnes	9	cēphēnibus
 cervos	6	cervom
-cetos	1	cētē
-cetos	3	cētōn
-cetos	6	cētos
-cetos	10	cētos
-chamaepitys	6	chamaepityn
+cetos	1	cētē	3	cētōn	6	cētos	10	cētos
 chamaepitys	10	chamaepity
-chaos	6	chaos
-chaos	10	chaos
+chaos	2	chaī	4	chaō	6	chaos	8	chaō	10	chaos
 chelys	1	chelyes
-chelys	2	chelyos
-chelys	6	chelyn
-chrysophrys	2	chrȳsophryos
-chrysophrys	6	chrȳsophryn
+chrysophrys	2	chrȳsophryos	6	chrȳsophryn
 cliens	7	clientīs
 coefficiens	0	coëfficiēns
 coercitio	0	coërcitiō
 colyx	1	colyces
-colyx	2	colycos
-colyx	6	colyca
 comprecatio	1	comprecatiōnēs
-comprecatio	2	comprecatiōnis
-comprecatio	6	comprecatiōnem
 coniunx	1	coniugēs
-coniunx	2	coniugis
-coniunx	6	coniugem
 coniurati	1	coniūrātī
-coniurati	3	coniūrātōrum
-coniurati	5	coniūrātīs
-coniux	0	coniŭx
-coniux	1	coniugēs
-coniux	2	coniugis
-coniux	3	coniugum
-coniux	4	coniugī
-coniux	5	coniugibus
-coniux	6	coniugem
-coniux	7	coniugēs
-coniux	8	coniuge
-coniux	9	coniugibus
-coniux	11	coniugēs
-cor	1	corda
-cor	2	cordis
-corybas	1	corybantēs
-corybas	2	corybantis
-corybas	3	corybantum
-corybas	4	corybantī
-corybas	5	corybantibus
-corybas	7	corybantēs
-corybas	8	corybante
-corybas	9	corybantibus
-corybas	10	corybā
-corybas	11	corybantēs
+coniux	0	coniŭx	1	coniugēs	2	coniugis	3	coniugum	4	coniugī	5	coniugibus	6	coniugem	7	coniugēs	8	coniuge	9	coniugibus	11	coniugēs
+cor	1	corda	6	cor
+corybas	1	corybantēs	2	corybantis	3	corybantum	4	corybantī	5	corybantibus	6	corybantem	7	corybantēs	8	corybante	9	corybantibus	10	corybā	11	corybantēs
 cumspolium	0	āfricia
-cyphi	2	cȳphis
+cyphi	4	cȳphī	6	cȳphi
 daphnon	2	daphnōnis
 deidecus	1	deidecorēs
-deidecus	6	deidecorem
 deipara	0	deïpara
-demeter	2	dēmētros
-demeter	6	dēmētra
-demeter	8	dēmētre
-demeter	10	dēmēter
-deponens	1	dēpōnenta
-deponens	6	dēpōnēns
+demeter	4	dēmētri	10	dēmēter
+deponens	1	dēpōnenta	6	dēpōnēns
 desuetudo	3	dēsuētūdinium
-deus	1	dī
-deus	5	dīs
-deus	7	deōs
-deus	10	deus
+deus	1	dī	2	deī	3	deōrum	4	deō	5	dīs	6	deum	7	deōs	8	deō	9	dīs	10	deus
 dioecesis	3	dioecēseōn
 ebur	1	ebora
-ebur	2	eboris
-echo	1	ēchō
-echo	2	ēchūs
-echo	3	ēchō
-echo	4	ēchō
-echo	5	ēchō
-echo	8	ēchō
-ecus	10	eque
+echo	1	ēchō	2	ēchūs	3	ēchō	6	ēchō	8	ēchō
+ecus	6	ecum	10	eque
 elixir	3	elixirium
 enomotarcha	3	enōmotarchūm
-ens	1	entia
-ens	2	entis
+ens	1	entia	6	ēns
 epar	1	ēpata
-epar	2	ēpatis
 erysipelas	1	erysipelata
-erysipelas	2	erysipelatos
-erysipelas	6	erysipelas
-ethos	1	ēthea
-ethos	2	ētheos
-ethos	5	ēthesi
+ethos	1	ēthea	2	ētheos	5	ēthesi	6	ēthos
 extispex	3	extispicium
 fames	8	famē
-far	1	farra
-far	2	farris
-femur	1	femina
-femur	2	feminis
+far	1	farra	6	far
+femur	1	femina	6	femur
+fides	4	fidĕī	6	fidem	8	fidē
 fruns	1	frundēs
-fruns	2	frundis
-fruns	6	frundem
-gausape	1	gausapa
-gausape	3	gausapōrum
-gausape	5	gausapīs
+gausape	1	gausapa	3	gausapōrum
 gigas	1	gigantes
-gigas	6	giganta
 glans	1	glandēs
-glans	2	glandis
-glans	6	glandem
 glis	3	glīrium
+grips	1	grīpĕs
 grus	1	gruēs
-grus	2	gruis
-grus	6	gruem
-halos	2	halō
-halos	6	halō
+gryps	1	grȳpĕs
+halos	4	halō
 hapsis	1	hapsīdēs
-hapsis	2	hapsīdis
-hapsis	6	hapsīdem
 hepar	1	hēpata
-hepar	2	hēpatis
-herois	1	hērōidēs
-heros	6	hērōa
-heros	7	hērōas
+herois	1	hērōidĕs
+heros	1	hērōĕs
 hiemps	1	hiemēs
-hiemps	2	hiemis
-hiemps	6	hiemem
 hippagogi	7	hippagōgūs
 hippomanes	1	hippomanēs
-hippomanes	6	hippomanem
+homŏ	1	hominēs
 hydrodendrum	0	hydrodendron
 hydromel	3	hydromellum
 hymen	1	hyminēs
-hymen	2	hyminis
-hymen	6	hyminem
-hæmachates	1	hæmachātæ
-hæmachates	2	hæmachātæ
-hæmachates	3	hæmachātārum
-hæmachates	5	hæmachātīs
-hæmachates	7	hæmachātās
-hæmachates	8	hæmachātē
-hæmachates	9	hæmachātīs
+hæmachates	1	hæmachātæ	3	hæmachātārum	5	hæmachātīs	6	hæmachātēn	7	hæmachātās	8	hæmachātē	9	hæmachātīs
 iambicus	0	ïambicus
 iambus	0	ïambus
 ianthis	0	ïanthis
 idus	1	īdūs
-idus	3	īduum
-idus	5	īdibus
-iecur	1	iecinora
-iecur	2	iecinoris
+iecur	1	iecinora	6	iecur
 interrete	8	interrēte
-iocur	1	iocinera
-iocur	2	iocineris
+iocur	1	iocinera	6	iocur
 israelita	0	isrāēlītēs
-iter	1	itinera
-iter	2	itineris
-iugerum	3	jūgerum
-iugerum	5	jūgeribus
-iusiurandum	1	iūraiūranda
-iusiurandum	2	iūrisiūrandī
-iusiurandum	3	iūrumiūrandōrum
-iusiurandum	4	iūrīiūrandō
-iusiurandum	5	iūribusiūrandīs
-iusiurandum	8	iūreiūrandō
-lacte	1	lacta
-lacte	8	lacte
-laestrygon	6	laestrȳgona
+iter	1	itinera	6	iter
+iugerum	3	jūgerum	5	jūgeribus
+iusiurandum	1	iūraiūranda	2	iūrisiūrandī	3	iūrumiūrandōrum	4	iūrīiūrandō	5	iūribusiūrandīs	6	iūsiūrandum	8	iūreiūrandō
+lacte	1	lacta	6	lacte
 laestrygon	10	laestrȳgon
 lentigo	1	lentiginēs
-lentigo	2	lentiginis
-lentigo	6	lentiginem
 lepus	1	leporēs
-lepus	6	leporem
 lexis	7	lexīs
-libanochrus	6	libanochrum
 libanochrus	10	libanochre
-limo	0	līmon
+limo	0	lĭmon
 litotes	1	lītotētes
-litotes	2	lītotētos
-litotes	6	lītotēta
 lucuns	1	lucuntēs
-lucuns	2	lucuntis
-lucuns	6	lucuntem
-magnes	6	magnēta
-magnes	7	magnētas
+lĭmon	1	lĭmŏnēs
+magnes	6	magnēta	7	magnētas
 manna	1	manna
-manna	3	manna
-manna	5	manna
-mas	1	marēs
-mas	2	maris
-mas	6	marem
+mas	1	marēs	8	mare
 microgaster	1	mīcrogastrī
-microgaster	2	mīcrogastrī
-microgaster	6	mīcrogastrum
 mille	1	mīlia
-mille	3	mīlium
-mille	5	mīlibus
 moly	2	mōlyos
 mormyr	1	mormȳrēs
-mormyr	2	mormȳris
-mormyr	6	mormȳrem
-morpheus	2	morpheos
-morpheus	4	morpheō
-morpheus	6	morphea
-morpheus	8	morpheō
-morpheus	10	morpheu
+mormŏriŏn	1	mormŏriōnēs
+morpheus	2	morpheos	4	morpheō	6	morphea	8	morpheō	10	morpheu
 mugil	3	mūgilium
 mus	3	mūrium
 narthex	1	narthēces
-narthex	2	narthēcos
-narthex	6	narthēca
 nix	1	nivēs
-nix	2	nivis
-nix	6	nivem
 nonnulli	1	nonnullī
-nonnulli	3	nonnullōrum
-nonnulli	5	nonnullīs
 nox	1	noctēs
-nox	2	noctis
-nox	6	noctem
 obses	1	obsidēs
-obses	2	obsidis
-obses	6	obsidem
 onomatopoeia	0	onomatopoeïa
-ostrys	1	ostryes
-ostrys	2	ostryos
-ostrys	6	ostrȳn
+onyx	1	onychĕs
+ostrys	1	ostryes	6	ostrȳn
 oxydendrum	0	oxydendron
 pancreas	1	pancreata
-pancreas	6	pancreas
 panerastos	1	panerastōtēs
-panerastos	2	panerastōtis
-panerastos	6	panerastōtem
 par	3	parium
-pascha	3	paschārum
-pascha	6	pascha
+pascha	3	paschārum	6	pascha
 patriarcha	3	patriarchūm
 paxi	7	paxūs
-pecu	5	pecubus
+pecŭ	5	pecubus
 perionyx	1	perionyches
-perionyx	2	perionychos
-perionyx	6	perionycha
-plebes	2	plēbeī
-plebes	5	plēbibus
-plebes	9	plēbibus
+phalanx	1	phalangĕs
+plebes	4	plēbeī
 pleraque	1	plēraque
-pleraque	3	plērōrumque
-pleraque	5	plērīsque
-plerique	1	plērīque
-plerique	3	plērōrumque
-plerique	5	plērīsque
-plerique	7	plērōsque
-plerunque	1	plēraque
-plerunque	2	plērīque
-plerunque	3	plērōrunque
-pnigeus	2	pnigeōs
-pnigeus	5	pnigeīs
-pnigeus	6	pnigeā
-pnigeus	9	pnigeīs
+plerique	1	plērīque	5	plērīsque	7	plērōsque
+plerunque	1	plēraque	3	plērōrunque	6	plērunque
+pnigeus	2	pnigeōs	6	pnigeā
 ponto	3	pontōnium
 poppyzon	6	poppyzonta
 porrum	1	porrī
-praeceps	1	praecipitia
-praeceps	2	praecipitis
+praeceps	1	praecipitia	5	praecipitibus	6	praeceps
 praeses	1	praesidēs
-praeses	2	praesidis
-praeses	6	praesidem
-problema	3	problēmatōrum
-problema	5	problēmatīs
+problema	3	problēmatōrum	5	problēmatīs
 proneptis	0	prŏneptis
 python	2	pȳthōnos
-python	6	pȳthōna
 quadruplex	1	quadruplica
-quadruplex	6	quadruplex
-quantulumcumque	1	quantulacumque
-quantulumcumque	2	quantulīcumque
-quantulumcumque	3	quantulōrumcumque
-quantulumcumque	4	quantulōcumque
-quantulumcumque	5	quantulīscumque
+quantulumcumque	1	quantulacumque	2	quantulīcumque	3	quantulōrumcumque	4	quantulōcumque	5	quantulīscumque	6	quantulumcumque	8	quantulōcumque
 remex	1	rēmigēs
-remex	2	rēmigis
-remex	6	rēmigem
-res	2	reī
-res	4	reī
-respublica	2	reīpūblicae
-respublica	3	rērumpūblicārum
-respublica	5	rēbuspūblicīs
-respublica	6	rempūblicam
-respublica	8	rēpūblicā
+res	3	rērum	4	reī	6	rem	8	rē
+respublica	3	rērumpūblicārum	4	reīpūblicae	5	rēbuspūblicīs	6	rempūblicam	8	rēpūblicā
 rete	8	rēte
-rhinoceros	6	rhīnocerōta
-rhinoceros	7	rhīnocerōtas
-rhus	1	rhoēs
-rhus	2	rhois
-rhus	6	rhūn
+rhinoceros	6	rhīnocerōta	7	rhīnocerōtas
+rhus	1	rhoĕs	6	rhūn	11	rhoēs
 robur	1	rōbora
-robur	2	rōboris
-rosmarinus	1	rōrēsmarīnī
-rosmarinus	2	rōrismarīnī
-rosmarinus	3	rōrummarīnōrum
-rosmarinus	4	rōrīmarīnō
-rosmarinus	5	rōribusmarīnīs
-rosmarinus	6	rōremmarīnum
-rosmarinus	8	rōremarīnō
-rumis	1	rumīs
-sanguis	1	sanguinēs
-sanguis	2	sanguinis
-sanguis	6	sanguinem
-sardonyx	2	sardonychos
-sardonyx	6	sardonycha
-sardonyx	7	sardonychas
+rosmarinus	1	rōrēsmarīnī	2	rōrismarīnī	3	rōrummarīnōrum	4	rōrīmarīnō	5	rōribusmarīnīs	6	rōremmarīnum	8	rōremarīnō
+rumis	1	rumīs	2	rumis	3	rumium	4	rumī	6	rumim	8	rumī
+sanguĭs	1	sanguinēs	6	sanguinem
+sardonyx	1	sardonychĕs
 scazon	6	scazonta
 selinophyllon	0	selinohyllon
 semimas	1	sēmimarēs
-semimas	2	sēmimaris
-semimas	6	sēmimarem
 semis	1	sēmissēs
-semis	2	sēmissis
-semis	6	sēmissem
 senex	1	senēs
-senex	2	senis
-senex	6	senem
 servos	6	servom
 sesquimille	1	sēsquimīlia
-sesquimille	3	sēsquimīlium
-sesquimille	5	sēsquimīlibus
 siser	6	siser
-spadix	6	spādīca
-spadix	7	spādīcas
-species	3	fōrmārum
-species	5	fōrmīs
-spes	2	speī
+spadix	1	spādīcĕs
+species	3	fōrmārum	5	fōrmīs
+spes	4	speī
 sphalma	2	sphalmatos
 stadii	3	stadium
-supellex	1	supellēctilēs
-supellex	2	supellēctilis
-supellex	6	supellēctilem
+supellĕx	1	supellĕctilēs
 sus	1	suēs
-sus	2	suis
-sus	6	suem
 tabla	0	tabula
 taphrenchyma	2	taphrenchymatos
 tetraedrum	0	tetraëdrum
-thauma	2	thaumatos
-thauma	3	thaumatōn
+thauma	3	thaumatōn	4	thaumati	6	thauma	8	thaumati
 thius	10	thī
+thorăx	1	thōrācēs
 tibicinium	0	tībīcĭnĭum
 tius	10	tī
 topazion	1	topaziōntēs
-topazion	6	topaziōntem
-tribrachys	1	tribrachyes
-tribrachys	2	tribrachyos
-tribrachys	3	tribrachyōn
-tribrachys	5	tribrachibus
-tribrachys	6	tribrachyn
-tribrachys	7	tribrachȳs
+tribrachys	1	tribrachyes	3	tribrachyōn	5	tribrachibus	7	tribrachȳs
 trisaeclisenex	1	trisaeclisenēs
-trisaeclisenex	2	trisaeclisenis
-trisaeclisenex	6	trisaeclisenem
 triton	2	trītōnis
 ulex	1	ulīcēs
-ulex	2	ulīcis
-ulex	6	ulīcem
 uter	7	utrīs
-vandalirice	0	vandalirīcus
-vas	3	vāsōrum
-vas	5	vāsīs
+vas	3	vāsōrum	5	vāsīs
 venum	4	vēnuī
 venus	1	venerēs
-venus	6	venerem
-vesper	8	vespere
+vesper	6	vesperum	8	vespere
 vibex	1	vībīcēs
-vibex	2	vībīcis
-vibex	6	vībīcem
 vibix	1	vībīcēs
-vibix	2	vībīcis
-vibix	6	vībīcem
 virus	1	vīra
-vis	2	vīs
-vis	3	vīrium
-vis	5	vīribus
-vis	6	vim
-vis	9	vīribus
+vis	3	vīrium	4	vī
 volucris	3	volucrum
 waldus	1	walda
 "#,

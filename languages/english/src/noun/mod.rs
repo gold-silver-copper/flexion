@@ -52,9 +52,10 @@ pub enum Cell {
 impl Cell {
     /// Its place in a paradigm.
     pub const fn index(self) -> usize {
+        use crate::Number::*;
         let cell = match self {
-            Cell::Form(crate::Number::Singular) => cell::NOUN_SG,
-            Cell::Form(crate::Number::Plural) => cell::NOUN_PL,
+            Cell::Form(Singular) => cell::NOUN_SG,
+            Cell::Form(Plural) => cell::NOUN_PL,
         };
         cell as usize
     }

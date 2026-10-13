@@ -21,16 +21,37 @@ pub const MAX_ENDING: usize = 8;
 pub struct Settings {
     /// Bits a rule costs: what it must save to be kept.
     pub rule_bits: f64,
+    /// Bits a rule costs for each letter of its ending, on top.
+    pub letter_bits: f64,
     /// Words a rule must cover.
     pub min_gain: u32,
     /// See [`flexion::Choice::read`].
     pub smoothing: f32,
 }
 
+impl Settings {
+    /// For a choice of detail (how an ending changes, where an accent
+    /// goes), whose rules pay a bit for each letter they read when this
+    /// doesn't say otherwise.
+    #[must_use]
+    pub fn detail(self) -> Settings {
+        let letter_bits = if self.letter_bits > 0.0 {
+            self.letter_bits
+        } else {
+            1.0
+        };
+        Settings {
+            letter_bits,
+            ..self
+        }
+    }
+}
+
 impl Default for Settings {
     fn default() -> Self {
         Settings {
-            rule_bits: 4.0,
+            rule_bits: 1.0,
+            letter_bits: 0.0,
             min_gain: 2,
             smoothing: 2.0,
         }
@@ -56,40 +77,30 @@ pub fn learn<'a, L: Label + Hash + Ord>(
                 .or_default() += 1;
         }
     }
-    let winner = |c: &BTreeMap<L, u32>| -> Option<L> {
-        // Most words; of equal counts, the lowest value.
-        c.iter()
-            .max_by(|a, b| a.1.cmp(b.1).then_with(|| b.0.cmp(a.0)))
-            .map(|(&l, _)| l)
-    };
     let mut by_length: Vec<(&String, &BTreeMap<L, u32>)> = counts.iter().collect();
-    by_length.sort_by(|a, b| {
-        a.0.chars()
-            .count()
-            .cmp(&b.0.chars().count())
-            .then_with(|| a.0.cmp(b.0))
-    });
-    // Kept rules, by ending.
-    let mut kept: HashMap<&str, &BTreeMap<L, u32>> = HashMap::default();
+    by_length.sort_by_key(|&(e, _)| (e.chars().count(), e));
+    // Kept rules, by ending, with what the runtime makes of each (see
+    // [`flexion::blend`]).
+    let mut kept: HashMap<&str, Vec<(L, f64)>> = HashMap::default();
     for (ending, c) in &by_length {
-        if winner(c).is_none() {
-            continue;
-        }
-        if ending.is_empty() {
-            kept.insert(ending.as_str(), c);
-            continue;
-        }
-        let total: u32 = c.values().sum();
-        if total < settings.min_gain {
-            continue;
-        }
-        // The rule deciding these words now: the longest kept ending.
-        let Some(current) = endings(ending).skip(1).find_map(|e| kept.get(e).copied()) else {
-            continue;
+        let list: Vec<(L, u32)> = c.iter().map(|(&l, &n)| (l, n)).collect();
+        // A rule costs its bits, and more for each letter it reads.
+        #[allow(clippy::cast_precision_loss)]
+        let cost = settings.rule_bits + settings.letter_bits * ending.chars().count() as f64;
+        // The rule deciding these words now: the longest kept ending (the
+        // empty one is always kept).
+        let current = match endings(ending).skip(1).find_map(|e| kept.get(e)) {
+            _ if ending.is_empty() => &[][..],
+            Some(current)
+                if c.values().sum::<u32>() >= settings.min_gain
+                    && saved_bits(&list, current, settings.smoothing) >= cost =>
+            {
+                current
+            }
+            _ => continue,
         };
-        if saved_bits(c, current) >= settings.rule_bits {
-            kept.insert(ending.as_str(), c);
-        }
+        let dist = flexion::blend(&list, current, settings.smoothing);
+        kept.insert(ending.as_str(), dist);
     }
     let mut rules: Vec<Rule<'a, L>> = kept
         .keys()
@@ -134,16 +145,16 @@ pub fn learn<'a, L: Label + Hash + Ord>(
     choice
 }
 
-/// [`learn`], for a choice that reads beginnings (see [`flexion::Side`]):
-/// its rules are learned on the words read backwards.
+/// [`learn`]'s rules, for a choice that reads beginnings (see
+/// [`flexion::Side`]): learned on the words read backwards. No words are
+/// listed.
 pub fn learn_starts<'a, L: Label + Hash + Ord>(
     examples: &[(String, L)],
     settings: Settings,
-    fits: impl Fn(&str, L) -> bool,
 ) -> Choice<'a, L> {
     let back = |s: &str| -> String { s.chars().rev().collect() };
     let reversed: Vec<(String, L)> = examples.iter().map(|(w, l)| (back(w), *l)).collect();
-    let learned = learn(&reversed, settings, |w, l| fits(&back(w), l));
+    let learned = learn(&reversed, settings, |_, _| true);
     let mut rules: Vec<Rule<'a, L>> = learned
         .rules
         .iter()
@@ -153,32 +164,32 @@ pub fn learn_starts<'a, L: Label + Hash + Ord>(
         })
         .collect();
     rules.sort_by(|a, b| a.ending.cmp(&b.ending));
-    let mut exceptions: Vec<(Cow<'a, str>, L)> = learned
-        .exceptions
-        .iter()
-        .map(|(w, l)| (Cow::Owned(back(w)), *l))
-        .collect();
-    exceptions.sort_by(|a, b| a.0.cmp(&b.0).then_with(|| a.1.cmp(&b.1)));
     Choice {
         side: flexion::Side::Start,
         rules: Cow::Owned(rules),
-        exceptions: Cow::Owned(exceptions),
+        exceptions: Cow::Owned(Vec::new()),
     }
 }
 
-/// The bits saved telling the values of words counted `own` by their own
-/// counts rather than by `broader`'s (each smoothed by half a word).
-fn saved_bits<L: Ord>(own: &BTreeMap<L, u32>, broader: &BTreeMap<L, u32>) -> f64 {
-    let n: f64 = own.values().map(|&x| f64::from(x)).sum();
-    let m: f64 = broader.values().map(|&x| f64::from(x)).sum();
-    #[allow(clippy::cast_precision_loss)]
-    let k = (broader.len().max(own.len()) as f64) + 1.0;
+/// The bits saved telling the values of the words counted `own` by a rule of
+/// their own rather than by the broader rule's distribution `broader`, each
+/// word told as the runtime would without it (leave one out), so a rule
+/// keeps only what it says of words it hasn't seen.
+fn saved_bits<L: Label>(own: &[(L, u32)], broader: &[(L, f64)], smoothing: f32) -> f64 {
+    let p = |dist: &[(L, f64)], l: L| dist.iter().find(|e| e.0 == l).map_or(0.0, |e| e.1);
     own.iter()
-        .map(|(l, &x)| {
-            let x = f64::from(x);
-            let p_own = x / n;
-            let q = (broader.get(l).map_or(0.0, |&y| f64::from(y)) + 0.5) / (m + 0.5 * k);
-            x * (p_own / q).log2()
+        .filter(|&&(_, x)| x > 0)
+        .map(|&(l, x)| {
+            let without: Vec<(L, u32)> = own
+                .iter()
+                .map(|&(m, y)| (m, if m == l { y - 1 } else { y }))
+                .collect();
+            let told = p(&flexion::blend(&without, broader, smoothing), l);
+            let before = p(broader, l);
+            if told <= 0.0 || before <= 0.0 {
+                return 0.0;
+            }
+            f64::from(x) * (told / before).log2()
         })
         .sum()
 }

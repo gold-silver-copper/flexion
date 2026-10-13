@@ -1,13 +1,14 @@
-//! Sound laws where a stem meets its ending (`+`): every form a declension
-//! builds goes through them, in order, so one declension serves words whose
-//! stems change its endings. Each with the words whose forms it gives, and
-//! how many of the dictionary's forms it gets wrong (those are listed in
-//! `irregular.rs`).
+//! Sound laws where a stem meets its ending (`+`), where a form's first
+//! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), or on a letter a
+//! `%` copies (`°`): every form a declension builds goes through them, in order, so
+//! one declension serves words whose stems change its endings. Each with the
+//! words whose forms it gives, and how many of the dictionary's forms it
+//! gets wrong (those are listed in `irregular.rs`).
 
 use flexion::sound_law::compiled::*;
 
 const RULES: &[CompiledRule<'static>] = &[
-    // η+δ → η+τ: 59 words (μῠκης, κρης, σκληροτης, θης), 0 forms wrong.
+    // η+δ → η+τ: 68 words (μῠκης, κρης, σκληροτης, θης), 0 forms wrong.
     CompiledRule {
         name: B("law0"),
         left: Pattern {
@@ -37,7 +38,7 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("η+δ")]),
     },
-    // γ+κ → γ+γ: 27 words (μηνῐγξ, φᾰλᾰγξ, σπηλῠγξ, λᾰρῠγξ), 7 forms wrong.
+    // γ+κ → γ+γ: 30 words (μηνῐγξ, φᾰλᾰγξ, σπηλῠγξ, λᾰρῠγξ), 12 forms wrong.
     CompiledRule {
         name: B("law1"),
         left: Pattern {
@@ -67,7 +68,7 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("γ+κ")]),
     },
-    // ω+δ → ω+τ: 7 words (εἱλως, ἐρως, γελως, χρως), 0 forms wrong.
+    // ω+δ → ω+τ: 8 words (εἱλως, ἱδρως, ἐρως, γελως), 0 forms wrong.
     CompiledRule {
         name: B("law2"),
         left: Pattern {
@@ -97,39 +98,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ω+δ")]),
     },
-    // ε+τ → +: 5 words (ὀσσε, βροτε, ἠχε, ὁδε), 0 forms wrong.
-    CompiledRule {
-        name: B("law3"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ε+τ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("+"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ε+τ")]),
-    },
     // ρῠ+κ → ρῠ+γ: 5 words (πτερῠξ, φρῠξ, ὀρῠξ, τρῠξ), 0 forms wrong.
     CompiledRule {
-        name: B("law4"),
+        name: B("law3"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -156,6 +127,46 @@ const RULES: &[CompiledRule<'static>] = &[
         direction: Direction::LeftToRight,
         application: Application::All,
         required: B(&[B("ρῠ+κ")]),
+    },
+    // [ᾱ|ῡ]+δ → +ντ: 5 words (πελεκᾱς, πῡρᾰμοῡς, φῡσᾱς, πλᾰκοῡς), 2 forms wrong.
+    CompiledRule {
+        name: B("law4"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ᾱ"), B("ῡ")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+                Atom {
+                    matcher: Matcher::Literal(B("+δ")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+            ]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[
+            ReplacementPart::Capture(0),
+            ReplacementPart::Literal(B("+ντ")),
+        ]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("+δ")]),
     },
 ];
 

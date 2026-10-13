@@ -1,15 +1,46 @@
-//! Sound laws where a stem meets its ending (`+`): every form a declension
-//! builds goes through them, in order, so one declension serves words whose
-//! stems change its endings. Each with the words whose forms it gives, and
-//! how many of the dictionary's forms it gets wrong (those are listed in
-//! `irregular.rs`).
+//! Sound laws where a stem meets its ending (`+`), where a form's first
+//! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), or on a letter a
+//! `%` copies (`°`): every form a declension builds goes through them, in order, so
+//! one declension serves words whose stems change its endings. Each with the
+//! words whose forms it gives, and how many of the dictionary's forms it
+//! gets wrong (those are listed in `irregular.rs`).
 
 use flexion::sound_law::compiled::*;
 
 const RULES: &[CompiledRule<'static>] = &[
-    // es+ → e+: 6 words (quis, aliquis, ecquis, nēquis), 0 forms wrong.
+    // ss+e → s+: 6 words (quis, aliquis, ecquis, nēquis), 0 forms wrong.
     CompiledRule {
         name: B("law0"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("ss+e")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("s+"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ss+e")]),
+    },
+    // es+ → e+: 6 words (quis, aliquis, ecquis, nēquis), 0 forms wrong.
+    CompiledRule {
+        name: B("law1"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -39,7 +70,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ns+ → +m: 6 words (quis, aliquis, ecquis, nēquis), 0 forms wrong.
     CompiledRule {
-        name: B("law1"),
+        name: B("law2"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -66,36 +97,6 @@ const RULES: &[CompiledRule<'static>] = &[
         direction: Direction::LeftToRight,
         application: Application::All,
         required: B(&[B("ns+")]),
-    },
-    // ss+e → s+: 6 words (quis, aliquis, ecquis, nēquis), 0 forms wrong.
-    CompiledRule {
-        name: B("law2"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ss+e")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("s+"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ss+e")]),
     },
     // us+ → +id: 6 words (quis, aliquis, ecquis, nēquis), 0 forms wrong.
     CompiledRule {

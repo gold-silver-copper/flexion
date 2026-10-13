@@ -6,10 +6,16 @@
 //! ending (`gesagt`). Every form of a paradigm has the same number of stem
 //! pieces, in the same order: they are the letters the word keeps throughout.
 //! A cell with more than one form lists them with `|` (`~ой|~ою`); the first
-//! is the usual one.
+//! is the usual one. A [`COPY`] in a pattern is the first letter of the stem
+//! piece after it: reduplication (`%ε~κα` is `λέλυκα` of `λυ`, `πεπαίδευκα`
+//! of `παιδευ`).
 
 /// The stem pieces of one word, in order.
 pub type Stems<'w> = Vec<&'w str>;
+
+/// In a pattern, the first letter of the stem piece after it (see the module
+/// documentation).
+pub const COPY: char = '%';
 
 /// The pattern's alternatives (`~ой|~ою` → `~ой`, `~ою`), the usual one first.
 pub fn variants(pattern: &str) -> impl Iterator<Item = &str> {
@@ -48,6 +54,13 @@ pub fn bind_by<'w>(
     let inner = inner.get(..suffix(inner, last, same)?)?;
     let mut stems = Vec::with_capacity(rest.len());
     place(inner, middle, same, &mut stems)?;
+    // A copied letter must be the one its stem piece begins with.
+    if pattern.contains(COPY) {
+        let built = fill(pattern, &stems);
+        let agree = built.chars().count() == word.chars().count()
+            && built.chars().zip(word.chars()).all(|(b, w)| same(w, b));
+        return agree.then_some(stems);
+    }
     Some(stems)
 }
 
@@ -56,7 +69,7 @@ fn prefix(text: &str, literal: &str, same: impl Fn(char, char) -> bool) -> Optio
     let mut chars = text.char_indices();
     for l in literal.chars() {
         let (_, c) = chars.next()?;
-        if !same(c, l) {
+        if l != COPY && !same(c, l) {
             return None;
         }
     }
@@ -69,7 +82,7 @@ fn suffix(text: &str, literal: &str, same: impl Fn(char, char) -> bool) -> Optio
     let mut start = text.len();
     for l in literal.chars().rev() {
         let (i, c) = chars.next()?;
-        if !same(c, l) {
+        if l != COPY && !same(c, l) {
             return None;
         }
         start = i;
@@ -124,32 +137,79 @@ fn place<'w>(
 /// see (`ε+ο` → `+ου`). Never part of a word.
 pub const BOUNDARY: char = '+';
 
+/// Before a letter a [`COPY`] wrote, in a built form, for sound laws to see
+/// (`°φεφιλ+ηκα` → `πεφιλ+ηκα`: the copy of an aspirate is plain). Never
+/// part of a word.
+pub const COPIED: char = '°';
+
+/// Where a pattern's first literal meets its first stem piece, in a built
+/// form, for sound laws to see (`ἐ‹ἀγ+ον` → `ἠγ+ον`: the augment lengthens
+/// the stem's vowel). Never part of a word.
+pub const FRONT: char = '‹';
+
+/// Whether `c` marks a built form (see [`fill_marked`]) rather than being a
+/// letter of it.
+pub fn is_mark(c: char) -> bool {
+    c == BOUNDARY || c == COPIED || c == FRONT
+}
+
 /// [`fill`], with [`BOUNDARY`] after the last stem piece (at the start, for
-/// a pattern with none).
+/// a pattern with none), [`COPIED`] before each copied letter, and [`FRONT`]
+/// before the first stem piece where a literal comes before it.
 pub fn fill_marked(pattern: &str, stems: &[&str]) -> String {
     match pattern.rfind('~') {
         Some(at) => {
             let (head, tail) = pattern.split_at(at + 1);
-            format!("{}{BOUNDARY}{tail}", fill(head, stems))
+            format!("{}{BOUNDARY}{tail}", build(head, stems, true))
         }
         None => format!("{BOUNDARY}{pattern}"),
     }
 }
 
-/// Build a form: `pattern` (one alternative) with `stems` at its `~`s.
-/// Missing stem pieces leave their place empty.
+/// Build a form: `pattern` (one alternative) with `stems` at its `~`s, and
+/// the first letter of the stem piece after each [`COPY`]. Missing stem
+/// pieces leave their place empty.
 pub fn fill(pattern: &str, stems: &[&str]) -> String {
+    build(pattern, stems, false)
+}
+
+/// [`fill`], with [`COPIED`] before each copied letter and [`FRONT`] after
+/// a first literal if `marked`.
+fn build(pattern: &str, stems: &[&str], marked: bool) -> String {
     let mut out = String::with_capacity(pattern.len().saturating_add(16));
-    let mut stems = stems.iter();
     for (i, lit) in pattern.split('~').enumerate() {
-        if i > 0
-            && let Some(s) = stems.next()
-        {
+        if let Some(s) = i.checked_sub(1).and_then(|i| stems.get(i)) {
+            if marked && i == 1 && !out.is_empty() {
+                out.push(FRONT);
+            }
             out.push_str(s);
         }
-        out.push_str(lit);
+        let next = stems.get(i).and_then(|s| s.chars().next());
+        for c in lit.chars() {
+            match (c, next) {
+                (COPY, Some(n)) => {
+                    if marked {
+                        out.push(COPIED);
+                    }
+                    out.push(n);
+                }
+                (COPY, None) => {}
+                _ => out.push(c),
+            }
+        }
     }
     out
+}
+
+/// A form built marked (see [`fill_marked`]) as a word: its marks taken
+/// out, and where its ending starts.
+pub fn unmarked(built: &str) -> (String, usize) {
+    let word: String = built
+        .chars()
+        .filter(|&c| c != COPIED && c != FRONT)
+        .collect();
+    let ending = word.find(BOUNDARY).unwrap_or(0);
+    (word.replace(BOUNDARY, ""), ending)
 }
 
 /// Where the ending starts in a form `pattern` builds: the byte after the
@@ -179,6 +239,21 @@ mod tests {
         assert_eq!(ending_start("~~ам", &["молот", "к"]), "молотк".len());
         assert_eq!(ending_start("ge~t", &["sag"]), "gesag".len());
         assert_eq!(variants("~ой|~ою").collect::<Vec<_>>(), vec!["~ой", "~ою"]);
+        // Reduplication copies the stem's first letter.
+        assert_eq!(fill("%ε~κα", &["λυ"]), "λελυκα");
+        assert_eq!(fill("ἐ%ε~κη", &["λυ"]), "ἐλελυκη");
+        assert_eq!(bind("%ε~κα", "πεπαιδευκα"), Some(vec!["παιδευ"]));
+        assert_eq!(bind("%ε~κα", "πεπαιδευκ"), None);
+        assert_eq!(bind("%ε~κα", "τεπαιδευκα"), None);
+        // Marked for sound laws: where the stem ends, and what was copied.
+        // and where a literal before the stem meets it.
+        assert_eq!(fill_marked("ἐ%ε~κη", &["φιλη"]), "ἐ°φε‹φιλη+κη");
+        assert_eq!(
+            unmarked("ἐ°φε‹φιλη+κη"),
+            ("ἐφεφιληκη".to_string(), "ἐφεφιλη".len())
+        );
+        assert_eq!(fill_marked("ἐ~ον", &["ἀγ"]), "ἐ‹ἀγ+ον");
+        assert_eq!(fill_marked("~ον", &["ἀγ"]), "ἀγ+ον");
         // Matching letters a lookup reads alike, the stems are the word's.
         let plain = |a: char, b: char| a == b || (a, b) == ('o', 'ō') || (a, b) == ('ō', 'o');
         assert_eq!(bind_by("~tiō", "ratio", plain), Some(vec!["ra"]));

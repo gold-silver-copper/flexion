@@ -26,7 +26,7 @@ pub struct Paradigm<'a> {
     pub inherent: Cow<'a, [(u8, u8)]>,
     /// What it has in each cell, in the part of speech's cell order, a tab
     /// after each: a pattern (`~а`, alternatives after `|`), [`DERIVED`],
-    /// or nothing, for the parent's.
+    /// or nothing, for the parent's (derived, in a paradigm like no other).
     pub table: Cow<'a, str>,
 }
 
@@ -44,15 +44,6 @@ pub enum Form<'t> {
     Derived,
 }
 
-impl std::fmt::Display for Form<'_> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Form::Pattern(p) => f.write_str(p),
-            Form::Derived => f.write_str("derived"),
-        }
-    }
-}
-
 /// A cell whose form comes from another cell's form of the word: from which
 /// cell (by the value of a feature of the word, when that decides), and how
 /// the end of that form changes (Latin `amāvī` → `amāvistī`). Used where a
@@ -65,14 +56,22 @@ pub struct Relation<'a> {
     /// Russian accusative is the genitive of an animate noun, the
     /// nominative of an inanimate one).
     pub from: Cow<'a, [u16]>,
-    /// The changes of the end of that form, `(old, new)`: `("ī", "istī")`.
+    /// The changes of that form, as patterns `(old, new)` around the letters
+    /// they keep (`~`): `("~ī", "~istī")`; the augment, `("~", "ἐ~")`.
     pub changes: Cow<'a, [(Cow<'a, str>, Cow<'a, str>)]>,
-    /// Which change, read off that form's ending (its letters); `None`: the
-    /// form itself.
+    /// Which change, read off that form's ending (its letters), of those
+    /// fitting it with the longest beginning; `None`: the form itself.
     pub change: Option<Choice<'a, u16>>,
     /// It tells the form of a word whose form of the cell it comes from is
     /// listed (a principal part), rather than the word's paradigm.
     pub listed: bool,
+    /// Few or no words have the cell: the change is the one cell `.0`'s form
+    /// makes into cell `.1`'s, the two differing as `from` and `cell` do (a
+    /// future subjunctive is the future made as the present subjunctive is
+    /// made from the present indicative). Without changes of its own, it
+    /// makes those of the relation telling `.1` from `.0`; with `.0` and
+    /// `.1` the same, none.
+    pub analogy: Option<(u16, u16)>,
 }
 
 impl Relation<'_> {
@@ -95,11 +94,18 @@ impl Relation<'_> {
     /// The forms `form` gives (its letters), each with where its change
     /// starts and how likely it is.
     pub fn apply(&self, form: &str, smoothing: f32) -> Vec<(String, usize, f32)> {
-        let fits = |c: u16| {
+        let start = |p: &str| p.split('~').next().map_or(0, str::len);
+        let fitting = |c: u16| {
             self.changes
                 .get(usize::from(c))
-                .is_some_and(|(old, _)| form.ends_with(old.as_ref()))
+                .filter(|(old, _)| pattern::bind(old, form).is_some())
+                .map(|(old, _)| start(old))
         };
+        // Of the changes fitting the form, those saying most of its start.
+        let longest = (0..self.changes.len())
+            .filter_map(|c| fitting(u16::try_from(c).ok()?))
+            .max();
+        let fits = |c: u16| fitting(c).is_some() && fitting(c) == longest;
         let readings = self
             .change
             .iter()
@@ -107,8 +113,9 @@ impl Relation<'_> {
         let out: Vec<(String, usize, f32)> = readings
             .filter_map(|r| {
                 let (old, new) = self.changes.get(usize::from(r.value))?;
-                let stem = form.strip_suffix(old.as_ref())?;
-                Some((format!("{stem}{new}"), stem.len(), r.probability))
+                let stems = pattern::bind(old, form)?;
+                let at = pattern::ending_start(new, &stems);
+                Some((pattern::fill(new, &stems), at, r.probability))
             })
             .collect();
         // No change, or none fits its ending: the form itself (as a guess).
@@ -123,7 +130,8 @@ impl<'a> Paradigm<'a> {
     /// The stem pieces of a lemma (its letters) that can inflect this way,
     /// matching letters as `orthography` looks them up.
     pub fn stems<'w>(&self, orthography: &Orthography<'_>, lemma: &'w str) -> Option<Stems<'w>> {
-        pattern::bind_by(&self.lemma, lemma, |a, b| orthography.same_letter(a, b))
+        let o = orthography;
+        pattern::bind_by(&self.lemma, lemma, |a, b| a == b || o.fold(a) == o.fold(b))
     }
 
     /// Whether words with these inherent feature values (`(feature, value)`)
@@ -134,7 +142,8 @@ impl<'a> Paradigm<'a> {
             .all(|(f, v)| self.inherent.iter().all(|(g, w)| g != f || w == v))
     }
 
-    /// What its own table has in `cell`; `None` where it is the parent's.
+    /// What its own table has in `cell`; `None` where it is the parent's
+    /// (at a paradigm like no other, derived).
     pub fn own(&self, cell: usize) -> Option<Form<'_>> {
         match self.table.split('\t').nth(cell)? {
             "" => None,
@@ -144,36 +153,29 @@ impl<'a> Paradigm<'a> {
     }
 
     /// What it has in `cell`, its own or its parent's (`family`: its part of
-    /// speech's paradigms).
-    pub fn form<'s>(&'s self, family: &'s [Paradigm<'a>], cell: usize) -> Option<Form<'s>> {
-        let mut paradigm = self;
+    /// speech's paradigms); a cell no paradigm up the line writes is derived.
+    pub fn form<'s>(&'s self, family: &'s [Paradigm<'a>], cell: usize) -> Form<'s> {
+        let parent = |p: &&'s Paradigm<'a>| family.get(usize::from(p.parent?));
         // Parents come before their children, so this ends.
-        for _ in 0..=family.len() {
-            if let Some(form) = paradigm.own(cell) {
-                return Some(form);
-            }
-            paradigm = family.get(usize::from(paradigm.parent?))?;
-        }
-        None
+        std::iter::successors(Some(self), parent)
+            .take(family.len() + 1)
+            .find_map(|p| p.own(cell))
+            .unwrap_or(Form::Derived)
     }
 
     /// The cell's pattern (all its alternatives); `None` for a derived
     /// cell.
     pub fn pattern<'s>(&'s self, family: &'s [Paradigm<'a>], cell: usize) -> Option<&'s str> {
-        match self.form(family, cell)? {
+        match self.form(family, cell) {
             Form::Pattern(p) => Some(p),
             Form::Derived => None,
         }
     }
 
-    /// Whether the paradigm takes the cell's form from another cell.
-    pub fn derives(&self, family: &[Paradigm<'a>], cell: usize) -> bool {
-        self.form(family, cell) == Some(Form::Derived)
-    }
-
     /// The forms of `cell` for these stems, the usual one first, each with
     /// where its ending starts: the patterns filled, then `laws` applied at
-    /// the stem's edge (see [`pattern::BOUNDARY`]).
+    /// the stem's edge (see [`pattern::BOUNDARY`]) and to copied letters
+    /// (see [`pattern::COPIED`]). None for a derived cell.
     pub fn built(
         &self,
         family: &[Paradigm<'a>],
@@ -187,11 +189,7 @@ impl<'a> Paradigm<'a> {
         pattern::variants(p)
             .map(|v| match laws {
                 None => (pattern::fill(v, stems), pattern::ending_start(v, stems)),
-                Some(laws) => {
-                    let marked = laws.apply(&pattern::fill_marked(v, stems));
-                    let ending = marked.find(pattern::BOUNDARY).unwrap_or(0);
-                    (marked.replace(pattern::BOUNDARY, ""), ending)
-                }
+                Some(laws) => pattern::unmarked(&laws.apply(&pattern::fill_marked(v, stems))),
             })
             .collect()
     }

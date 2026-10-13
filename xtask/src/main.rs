@@ -4,7 +4,8 @@
 //! - `build`: learn the language's grammar, measure it, and write its crate;
 //! - `readme`: rewrite a built crate's README, keeping its report;
 //! - `try`: learn on nine tenths of the words and score the held-out tenth
-//!   (`--systems`: as principal parts' systems);
+//!   (`--quick`: without fitting the sharpness, from the headword and the
+//!   principal parts only; `--fold N`: score tenth N instead of the first);
 //! - `inspect`: a word's readings and forms, and a sample of irregular forms.
 
 use flexion_train::extract::{self, Lexeme, PosData};
@@ -13,7 +14,7 @@ use flexion_train::{choose, eval, learn, script};
 use std::path::PathBuf;
 use std::time::Instant;
 
-const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|inspect> <language> [--pos <part of speech>] [--errors N]";
+const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|inspect> <language> [--pos <part of speech>] [--errors N] [--quick] [--fold N]";
 
 fn main() {
     if let Err(e) = run() {
@@ -46,12 +47,26 @@ fn run() -> Result<(), String> {
             if let Some(b) = flag("--rule-bits") {
                 settings.rule_bits = b.parse().map_err(|_| "bad --rule-bits")?;
             }
+            if let Some(b) = flag("--letter-bits") {
+                settings.letter_bits = b.parse().map_err(|_| "bad --letter-bits")?;
+            }
             if let Some(s) = flag("--smoothing") {
                 settings.smoothing = s.parse().map_err(|_| "bad --smoothing")?;
             }
             let errors = flag("--errors")
                 .map_or(Ok(0), |e| e.parse::<usize>().map_err(|_| "bad --errors"))?;
-            try_language(&lang, flag("--pos").as_deref(), settings, errors)
+            let quick = args.iter().any(|a| a == "--quick");
+            let fold = flag("--fold").map_or(Ok(eval::TEST), |f| {
+                f.parse::<u64>().map_err(|_| "bad --fold")
+            })? % 10;
+            try_language(
+                &lang,
+                flag("--pos").as_deref(),
+                settings,
+                errors,
+                quick,
+                fold,
+            )
         }
         "inspect" => inspect(
             &lang,
@@ -132,7 +147,10 @@ fn try_language(
     only: Option<&str>,
     settings: choose::Settings,
     errors: usize,
+    quick: bool,
+    fold: u64,
 ) -> Result<(), String> {
+    let dev = eval::dev_of(fold);
     let data = load(lang)?;
     let script = script::Script::new(&lang.spelling);
     for (part, d) in lang.parts.iter().zip(&data) {
@@ -143,20 +161,22 @@ fn try_language(
         let train: Vec<Lexeme> = d
             .lexemes
             .iter()
-            .filter(|l| eval::bucket(&l.key) != eval::TEST)
+            .filter(|l| eval::bucket(&l.key) != fold)
             .cloned()
             .collect();
         // The sharpness, fitted on the dev tenth with a grammar that hasn't
         // seen it.
-        let sharpness = {
+        let sharpness = if quick {
+            1.0
+        } else {
             let fit: Vec<Lexeme> = train
                 .iter()
-                .filter(|l| eval::bucket(&l.key) != eval::DEV)
+                .filter(|l| eval::bucket(&l.key) != dev)
                 .cloned()
                 .collect();
             let dev: Vec<&Lexeme> = train
                 .iter()
-                .filter(|l| eval::bucket(&l.key) == eval::DEV && l.source == 0)
+                .filter(|l| eval::bucket(&l.key) == dev && l.source == 0)
                 .collect();
             let g = learn::learn(script.orthography(), &shape, &fit, settings).grammar;
             eval::fit_sharpness(&g, &g.orthography, &dev)
@@ -164,7 +184,7 @@ fn try_language(
         let test: Vec<&Lexeme> = d
             .lexemes
             .iter()
-            .filter(|l| eval::bucket(&l.key) == eval::TEST && l.source == 0)
+            .filter(|l| eval::bucket(&l.key) == fold && l.source == 0)
             .collect();
         let t = Instant::now();
         let mut learned = learn::learn(script.orthography(), &shape, &train, settings);
@@ -259,9 +279,13 @@ fn try_language(
                 &learned.seen,
             );
             let pct = |(f, r): (usize, usize)| 100.0 * r as f64 / f.max(1) as f64;
+            let (floor, floor_unseen) = eval::floor(&g.orthography, &main, &test, |l, c| {
+                eval::unseen(g, &learned.seen, l, c)
+            });
             println!(
-                "  floor {:.2}%; seen cells {:.2}% ({}), unseen cells {:.2}% ({})",
-                100.0 * eval::floor(&g.orthography, &main, &test),
+                "  floor {:.2}% (unseen cells {:.2}%); seen cells {:.2}% ({}), unseen cells {:.2}% ({})",
+                100.0 * floor,
+                100.0 * floor_unseen,
                 pct(s.seen),
                 s.seen.0,
                 pct(s.unseen),
@@ -269,8 +293,11 @@ fn try_language(
             );
         }
         let parts = flexion_train::parts(lang, part)?;
-        let mut inputs = vec![eval::Input::Headword, eval::Input::Full];
-        if !part.inherent.is_empty() {
+        let mut inputs = vec![eval::Input::Headword];
+        if !quick {
+            inputs.push(eval::Input::Full);
+        }
+        if !quick && !part.inherent.is_empty() {
             inputs.push(eval::Input::Features);
         }
         if !parts.is_empty() {
@@ -279,12 +306,13 @@ fn try_language(
         for input in inputs {
             let s = eval::score(g, &g.orthography, &test, input, &learned.seen);
             println!(
-                "  held-out {input:?}: {} words, {} forms, top-1 {:.2}% (letters {:.2}%), top-3 {:.2}%, calibration error {:.3}",
+                "  held-out {input:?}: {} words, {} forms, top-1 {:.2}% (letters {:.2}%), top-3 {:.2}%, reciprocal rank {:.3}, calibration error {:.3}",
                 test.len(),
                 s.forms,
                 100.0 * s.accuracy(),
                 100.0 * s.letters as f64 / s.forms.max(1) as f64,
                 100.0 * s.top3_accuracy(),
+                s.reciprocal_rank(),
                 s.calibration_error()
             );
             let bins: Vec<String> = s
@@ -573,5 +601,7 @@ fn place_letter(p: flexion::Place) -> char {
         flexion::Place::Stem => 's',
         flexion::Place::Ending => 'E',
         flexion::Place::Recessive => 'r',
+        flexion::Place::Last => 'L',
+        flexion::Place::NextToLast => 'N',
     }
 }

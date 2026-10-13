@@ -22,11 +22,21 @@ pub enum Place {
     Ending,
     /// As far from the word's end as the law allows (Greek verbs).
     Recessive,
+    /// On the word's last syllable (Greek `λυθῇς`).
+    Last,
+    /// On the word's next-to-last syllable (Greek `λελυμένος`).
+    NextToLast,
 }
 
 impl Place {
     /// Every place, in order.
-    pub const ALL: [Place; 3] = [Place::Stem, Place::Ending, Place::Recessive];
+    pub const ALL: [Place; 5] = [
+        Place::Stem,
+        Place::Ending,
+        Place::Recessive,
+        Place::Last,
+        Place::NextToLast,
+    ];
 }
 
 /// What a form's ending says about its last syllable.
@@ -39,38 +49,42 @@ pub struct Finals {
     pub long: bool,
 }
 
-/// An accent pattern: per cell, the rule that places the accent.
+/// An accent pattern: per cell, the rule that places the accent. A pattern
+/// can be *like* another (its parent): the cells it leaves empty are the
+/// parent's.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AccentPattern<'a> {
     pub name: Cow<'a, str>,
     /// How many of the dictionary's words follow it.
     pub words: u32,
-    /// One place per cell (its name: `Stem`), in the part of speech's cell
-    /// order, a tab after each.
+    /// The pattern (its place among the part of speech's) this one is like.
+    pub parent: Option<u16>,
+    /// One place per cell (its name: `Stem`; nothing for the parent's), in
+    /// the part of speech's cell order, a tab after each.
     pub places: Cow<'a, str>,
 }
 
 impl AccentPattern<'_> {
-    /// The place of `cell`'s accent.
-    pub fn place(&self, cell: usize) -> Option<Place> {
+    /// The place of `cell`'s accent its own table gives; `None` where it is
+    /// the parent's.
+    pub fn own(&self, cell: usize) -> Option<Place> {
         self.places.split('\t').nth(cell)?.parse().ok()
-    }
-
-    /// The table of `places`.
-    pub fn table(places: &[Place]) -> String {
-        places.iter().map(|p| format!("{p:?}\t")).collect()
     }
 }
 
 impl std::str::FromStr for Place {
     type Err = ();
 
-    /// By its name: `Stem`, `Ending`, `Recessive`.
+    /// By its name: `Stem`, `Ending`, `Recessive`, `Last`, `NextToLast`.
     fn from_str(name: &str) -> Result<Self, ()> {
-        Place::ALL
-            .into_iter()
-            .find(|p| format!("{p:?}") == name)
-            .ok_or(())
+        match name {
+            "Stem" => Ok(Place::Stem),
+            "Ending" => Ok(Place::Ending),
+            "Recessive" => Ok(Place::Recessive),
+            "Last" => Ok(Place::Last),
+            "NextToLast" => Ok(Place::NextToLast),
+            _ => Err(()),
+        }
     }
 }
 
@@ -124,6 +138,36 @@ impl<'a, A: Label> Accent<'a, A> {
 
     pub fn pattern_of(&self, class: &StressClass<'_>) -> Option<&AccentPattern<'a>> {
         self.patterns.get(usize::from(class.pattern))
+    }
+
+    /// Pattern `pattern`, then its parent, and so on.
+    fn line(&self, pattern: u16) -> impl Iterator<Item = &AccentPattern<'a>> {
+        let parent = |p: &&AccentPattern<'a>| self.patterns.get(usize::from(p.parent?));
+        // Parents come before their children, so this ends.
+        std::iter::successors(self.patterns.get(usize::from(pattern)), parent)
+            .take(self.patterns.len() + 1)
+    }
+
+    /// The places of every cell's accent in pattern `pattern`, its own or
+    /// its parent's.
+    pub fn places(&self, pattern: u16) -> Vec<Option<Place>> {
+        let mut out: Vec<Option<Place>> = Vec::new();
+        for p in self.line(pattern) {
+            for (cell, field) in p.places.split('\t').enumerate() {
+                match out.get_mut(cell) {
+                    Some(slot @ None) => *slot = field.parse().ok(),
+                    Some(Some(_)) => {}
+                    None => out.push(field.parse().ok()),
+                }
+            }
+        }
+        out
+    }
+
+    /// The place of `cell`'s accent in pattern `pattern`, its own or its
+    /// parent's.
+    pub fn place(&self, pattern: u16, cell: usize) -> Option<Place> {
+        self.line(pattern).find_map(|p| p.own(cell))
     }
 }
 
@@ -289,6 +333,8 @@ pub fn place(
                     .position(|s| s.at >= ending)
                     .unwrap_or(last),
                 Place::Recessive => 0,
+                Place::Last => last,
+                Place::NextToLast => last.saturating_sub(1),
             };
             let on_ending = syllables.get(last).is_some_and(|s| s.at >= ending);
             let kind = if finals.circumflex && on_ending {
@@ -310,6 +356,8 @@ pub fn place(
                 Place::Stem => (stem.min(last), 0),
                 Place::Ending => (on_ending(), u8::from(finals.circumflex)),
                 Place::Recessive => (0, 0),
+                Place::Last => (last, u8::from(finals.circumflex)),
+                Place::NextToLast => (last.saturating_sub(1), 0),
             };
             Some(Stress {
                 vowel: u8::try_from(vowel).ok()?,
@@ -329,6 +377,8 @@ mod tests {
         stress_marks: "\u{301}\u{342}",
         stressed: &[
             ('ά', 'α', 0),
+            ('έ', 'ε', 0),
+            ('ό', 'ο', 0),
             ('ύ', 'υ', 0),
             ('ώ', 'ω', 0),
             ('ῶ', 'ω', 1),
@@ -338,10 +388,10 @@ mod tests {
         dropped: "",
         mark_monosyllables: true,
         folded: &[
-            ('ᾰ', 'α'),
-            ('ᾱ', 'α'),
             ('ἀ', 'α'),
             ('ἁ', 'α'),
+            ('ᾰ', 'α'),
+            ('ᾱ', 'α'),
             ('ῐ', 'ι'),
             ('ῑ', 'ι'),
         ],
@@ -365,6 +415,18 @@ mod tests {
             stem,
         );
         GREEK.write(letters, s, crate::Casing::Lower)
+    }
+
+    #[test]
+    fn a_word_reads_the_same_however_composed() {
+        // `ἔλυον` typed as one letter or as `ε` with its breathing and
+        // accent after it.
+        assert_eq!(
+            GREEK.read("\u{1F14}λυον"),
+            GREEK.read("ε\u{313}\u{301}λυον")
+        );
+        // A breathing on `ᾰ`, which no character writes: `ἀ`.
+        assert_eq!(GREEK.read("ᾰ\u{313}να").letters, "\u{1F00}να");
     }
 
     #[test]

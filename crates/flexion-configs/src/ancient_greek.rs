@@ -4,11 +4,14 @@
 //! [`GreekHooks::repair`]): a verb's tenses and every table's dialect are
 //! named only in the header of each table, not on its forms, and contract
 //! verbs give an uncontracted table (`τιμάω`) beside the contracted Attic one
-//! (`τιμῶ`).
+//! (`τιμῶ`). Periphrastic forms (`λελυμένοι εἴημεν`) are phrases, not forms
+//! of the verb, and are left out; a noun's forms written with the article
+//! (`ἡ κῠ́ων`) are read without it.
 
 use flexion_train::features;
-use flexion_train::kaikki::Entry;
+use flexion_train::kaikki::{Entry, Form};
 use flexion_train::spec::{FormSource, Group, Hooks, Language, PartOfSpeech, Spelling, TagPolicy};
+use unicode_normalization::UnicodeNormalization;
 
 pub fn language() -> Language {
     Language {
@@ -243,6 +246,7 @@ pub fn language() -> Language {
             // Breathings, iota subscript and diaeresis are part of the word but
             // need not be typed to find it; the final sigma is a sigma.
             fold_marks: "\u{313}\u{314}\u{345}\u{308}",
+            initial_marks: "\u{313}\u{314}",
             fold: vec![('ς', 'σ')],
             // Vowel length (macron, breve on α, ι, υ) can be written or not.
             unmark_marks: "\u{304}\u{306}",
@@ -350,7 +354,8 @@ fn finite(
 
 struct GreekHooks;
 
-/// Greek letters and their marks only: no romanizations or table notes.
+/// Greek letters and their marks only: no romanizations, table notes or
+/// phrases.
 fn greek_word(w: &str) -> bool {
     !w.is_empty()
         && w.chars().all(|c| {
@@ -395,7 +400,15 @@ impl Hooks for GreekHooks {
     /// marked `two-tenses` and not trained on. Where a verb has a contracted
     /// table of a tense, its plain table of that tense is the uncontracted
     /// form Attic doesn't use.
-    fn repair(&self, _pos: &str, entry: &mut Entry) {
+    ///
+    /// A cell written as two words lists its variants without the first
+    /// (`λελυμένοι εἴημεν, εἶμεν`; `ταῖς κῠσῐ́, κῠσῐ́ν`). In a noun's table
+    /// the first word is the article, which names only the noun's own gender:
+    /// the form is the last word. Elsewhere the cell is a phrase, which
+    /// [`greek_word`] leaves out: a verb's periphrasis, or an adjective's form
+    /// with the article naming a gender its tags don't (`ἡ πῑ́ειρᾰ`, of
+    /// `πίων`). Its variants go with it.
+    fn repair(&self, pos: &str, entry: &mut Entry) {
         let mut header: Vec<String> = Vec::new();
         let contracted: Vec<String> = entry
             .forms
@@ -440,12 +453,36 @@ impl Hooks for GreekHooks {
                 }
             }
         }
-        // The perfect optative middle is two words (`λελυμένοι εἶμεν`), of
-        // which the dump keeps only the auxiliary: a bare form of `εἰμί` is
-        // no form of this verb.
+        let meta = |f: &Form| {
+            f.tags
+                .iter()
+                .any(|t| matches!(t.as_str(), "table-tags" | "class" | "inflection-template"))
+        };
+        if pos == "noun" {
+            for f in entry.forms.iter_mut().filter(|f| f.source.is_some()) {
+                if let Some((_, form)) = f.form.trim().rsplit_once(' ')
+                    && !meta(f)
+                {
+                    f.form = form.to_string();
+                }
+            }
+        }
+        let mut phrase: Option<(Vec<String>, String, String)> = None;
         entry.forms.retain(|f| {
-            f.source.is_none()
-                || !(f.tags.iter().any(|t| t == "optative") && AUXILIARY.contains(&f.form.trim()))
+            if f.source.is_none() || meta(f) {
+                return true;
+            }
+            let form = f.form.trim();
+            if let (Some((first, _)), Some((_, last))) =
+                (form.split_once(' '), form.rsplit_once(' '))
+            {
+                phrase = Some((f.tags.clone(), first.into(), last.into()));
+                return true;
+            }
+            phrase = phrase.take().filter(|(tags, ..)| *tags == f.tags);
+            !phrase
+                .as_ref()
+                .is_some_and(|(_, first, last)| variant_of_last(form, first, last))
         });
     }
 
@@ -474,21 +511,109 @@ impl Hooks for GreekHooks {
     }
 }
 
-/// The optative of `εἰμί`, the auxiliary of periphrastic forms.
-const AUXILIARY: &[&str] = &[
-    "εἴην",
-    "εἴης",
-    "εἴη",
-    "εἶτον",
-    "εἴτην",
-    "εἶμεν",
-    "εἶτε",
-    "εἶεν",
-    "εἴημεν",
-    "εἴητε",
-    "εἴησαν",
-    "εἴητον",
-    "εἰήτην",
-];
+/// Whether `variant`, written in a cell after the phrase `first … last`,
+/// is a variant of its last word with the first left unwritten (`εἶμεν`
+/// after `λελυμένοι εἴημεν`) rather than a one-word form of the cell
+/// (`λελῦτο` after `λελυμένος εἴη`): its letters are nearer the last word's
+/// than the first's.
+fn variant_of_last(variant: &str, first: &str, last: &str) -> bool {
+    let letters = |w: &str| -> Vec<char> {
+        w.nfd()
+            .filter(|c| !unicode_normalization::char::is_combining_mark(*c))
+            .collect()
+    };
+    let v = letters(variant);
+    distance(&v, &letters(last)) <= distance(&v, &letters(first))
+}
+
+/// Edit distance: the fewest letters to insert, delete or replace.
+fn distance(a: &[char], b: &[char]) -> usize {
+    let mut row: Vec<usize> = (0..=b.len()).collect();
+    for (i, x) in a.iter().enumerate() {
+        let mut next = vec![i + 1];
+        for (y, (diagonal, up)) in b.iter().zip(row.iter().zip(row.iter().skip(1))) {
+            let left = next.last().copied().unwrap_or(0);
+            next.push((diagonal + usize::from(x != y)).min(up + 1).min(left + 1));
+        }
+        row = next;
+    }
+    row.last().copied().unwrap_or(0)
+}
 
 const README: &str = include_str!("../readme/ancient-greek.md");
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The forms `repair` keeps of a table of the part of speech.
+    fn kept(pos: &str, forms: &[(&str, &[&str])]) -> Vec<String> {
+        let mut entry = Entry {
+            word: String::new(),
+            pos: pos.into(),
+            lang_code: "grc".into(),
+            forms: forms
+                .iter()
+                .map(|(form, tags)| Form {
+                    form: (*form).into(),
+                    tags: tags.iter().map(|t| (*t).into()).collect(),
+                    source: Some("conjugation".into()),
+                    ..Form::default()
+                })
+                .collect(),
+            senses: vec![],
+            head_templates: vec![],
+            tags: vec![],
+            categories: vec![],
+            hyphenations: vec![],
+        };
+        GreekHooks.repair(pos, &mut entry);
+        entry.forms.into_iter().map(|f| f.form).collect()
+    }
+
+    #[test]
+    fn a_cell_written_as_two_words_lists_its_variants_without_the_first() {
+        let pl = ["first-person", "middle", "optative", "passive", "plural"];
+        let sg = ["middle", "optative", "passive", "singular", "third-person"];
+        let perfect = kept(
+            "verb",
+            &[
+                ("perfect", &["table-tags"]),
+                ("λελῠμένοι εἴημεν", &pl),
+                ("εἶμεν", &pl),
+                ("λελῠμένος εἴη", &sg),
+                ("λελῠ́οιτο", &sg),
+                ("λελῦτο", &sg),
+            ],
+        );
+        assert_eq!(
+            perfect,
+            [
+                "perfect",
+                "λελῠμένοι εἴημεν",
+                "λελῠμένος εἴη",
+                "λελῠ́οιτο",
+                "λελῦτο"
+            ]
+        );
+        // `ἵημι`'s participle begins as the auxiliary does.
+        let perfect = kept("verb", &[("εἱμένοι εἴημεν", &pl), ("εἶμεν", &pl)]);
+        assert_eq!(perfect, ["εἱμένοι εἴημεν"]);
+        // `εἰμί`'s own optative is no periphrasis.
+        let present = kept(
+            "verb",
+            &[
+                ("present", &["table-tags"]),
+                ("εἴην", &["first-person", "optative", "singular", "active"]),
+            ],
+        );
+        assert_eq!(present, ["present", "εἴην"]);
+        // A noun's article names only its own gender; an adjective's names
+        // one its tags don't.
+        let dat_pl: &[&str] = &["dative", "plural"];
+        let cells = [("ταῖς κῠσῐ́", dat_pl), ("κῠσῐ́ν", dat_pl)];
+        assert_eq!(kept("noun", &cells), ["κῠσῐ́", "κῠσῐ́ν"]);
+        let cells = [("ταῖς τρῐᾱκοντούτῐσῐ", dat_pl), ("τρῐᾱκοντούτῐσῐν", dat_pl)];
+        assert_eq!(kept("adjective", &cells), ["ταῖς τρῐᾱκοντούτῐσῐ"]);
+    }
+}

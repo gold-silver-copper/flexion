@@ -1,13 +1,14 @@
-//! Sound laws where a stem meets its ending (`+`): every form a declension
-//! builds goes through them, in order, so one declension serves words whose
-//! stems change its endings. Each with the words whose forms it gives, and
-//! how many of the dictionary's forms it gets wrong (those are listed in
-//! `irregular.rs`).
+//! Sound laws where a stem meets its ending (`+`), where a form's first
+//! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), or on a letter a
+//! `%` copies (`°`): every form a declension builds goes through them, in order, so
+//! one declension serves words whose stems change its endings. Each with the
+//! words whose forms it gives, and how many of the dictionary's forms it
+//! gets wrong (those are listed in `irregular.rs`).
 
 use flexion::sound_law::compiled::*;
 
 const RULES: &[CompiledRule<'static>] = &[
-    // [r|n|l|x]+n → +: 97 words (sōl, martyr, ēr, massētēr), 0 forms wrong.
+    // [r|n|l|x]+n → +: 96 words (sōl, martyr, ēr, massētēr), 0 forms wrong.
     CompiledRule {
         name: B("law0"),
         left: Pattern {
@@ -47,9 +48,39 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("+n")]),
     },
-    // p+t → p+: 20 words (cyclōps, grȳps, thrīps, ops), 0 forms wrong.
+    // a+e → a+: 8 words (chīlias, manna, dionȳsias, ischias), 0 forms wrong.
     CompiledRule {
         name: B("law1"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("a+e")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("a+"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("a+e")]),
+    },
+    // p+t → p+: 20 words (cyclōps, grȳps, thrīps, ops), 0 forms wrong.
+    CompiledRule {
+        name: B("law2"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -79,7 +110,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // iī+ → i+: 11 words (aquāriī, eximiī, stadiī, rōrāriī), 0 forms wrong.
     CompiledRule {
-        name: B("law2"),
+        name: B("law3"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -109,7 +140,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ca+t → ca+d: 7 words (dorcas, īcas, dyōdecas, duōdecas), 0 forms wrong.
     CompiledRule {
-        name: B("law3"),
+        name: B("law4"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -139,7 +170,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // [n|r|t]+b → +ib: 7 words (vetera, tormina, arōmata, posteriōra), 0 forms wrong.
     CompiledRule {
-        name: B("law4"),
+        name: B("law5"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -179,7 +210,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // b+t → b+: 5 words (urbs, plēbs, arabs, chalybs), 0 forms wrong.
     CompiledRule {
-        name: B("law5"),
+        name: B("law6"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -209,7 +240,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // in+c → in+g: 5 words (sphinx, mēninx, sȳrinx, salpinx), 0 forms wrong.
     CompiledRule {
-        name: B("law6"),
+        name: B("law7"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -239,7 +270,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // y+t → y+: 5 words (mōly, cachrys, chelys, tribrachys), 0 forms wrong.
     CompiledRule {
-        name: B("law7"),
+        name: B("law8"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,

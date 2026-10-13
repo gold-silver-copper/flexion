@@ -5,10 +5,15 @@
 use crate::extract::Lexeme;
 use flexion::Label;
 
-/// The tenth scored and never trained on.
+/// The tenth scored and never trained on (by default; see [`dev_of`]).
 pub const TEST: u64 = 0;
-/// The tenth settings are chosen on.
+/// The tenth settings are chosen on (by default).
 pub const DEV: u64 = 1;
+
+/// The tenth settings are chosen on when tenth `test` is scored: the next.
+pub fn dev_of(test: u64) -> u64 {
+    (test + 1) % 10
+}
 
 /// A stable tenth for a word: FNV-1a of its key, mod 10.
 pub fn bucket(key: &str) -> u64 {
@@ -46,6 +51,9 @@ pub struct Score {
     pub right: usize,
     /// Right among the top three.
     pub top3: usize,
+    /// Summed over forms: one over the right answer's place among the
+    /// candidates (0 where it isn't one).
+    pub reciprocal: f64,
     /// Top candidate's letters right (its stress aside).
     pub letters: usize,
     /// Per probability tenth of the top candidate: `(forms, right, sum of
@@ -64,6 +72,13 @@ impl Score {
 
     pub fn top3_accuracy(&self) -> f64 {
         ratio(self.top3, self.forms)
+    }
+
+    /// The mean reciprocal rank of the right answer.
+    pub fn reciprocal_rank(&self) -> f64 {
+        #[allow(clippy::cast_precision_loss)]
+        let n = self.forms.max(1) as f64;
+        self.reciprocal / n
     }
 
     /// Expected calibration error: how far, on average over forms, the stated
@@ -149,17 +164,15 @@ pub fn score<P: Label, A: Label, F: Label>(
             .readings(&typed, &known)
             .first()
             .and_then(|r| seen.get(r.value.index()));
+        let table = grammar.table(&typed, &known);
         for (cell, forms) in l.cells.iter().enumerate() {
-            let Some(want) = forms.first() else {
+            let Some(want) = forms.first().filter(|_| !parts.contains(&cell)) else {
                 continue;
             };
-            if parts.contains(&cell) {
-                continue;
-            }
-            let candidates = grammar.candidates(&typed, cell, &known);
-            s.forms += 1;
+            let candidates = table.get(cell).map_or(&[][..], Vec::as_slice);
             let same = |form: &str| same_form(orthography, form, want);
             let right = candidates.first().is_some_and(|c| same(&c.form));
+            s.forms += 1;
             s.right += usize::from(right);
             let split = if has.is_none_or(|h| h.get(cell).copied().unwrap_or(false)) {
                 &mut s.seen
@@ -169,12 +182,15 @@ pub fn score<P: Label, A: Label, F: Label>(
             split.0 += 1;
             split.1 += usize::from(right);
             let letters = |form: &str| orthography.read(form).letters;
-            s.letters += usize::from(
-                candidates
-                    .first()
-                    .is_some_and(|c| letters(&c.form) == letters(want)),
-            );
-            s.top3 += usize::from(candidates.iter().take(3).any(|c| same(&c.form)));
+            let first = candidates.first();
+            s.letters += usize::from(first.is_some_and(|c| letters(&c.form) == letters(want)));
+            let place = candidates.iter().position(|c| same(&c.form));
+            s.top3 += usize::from(place.is_some_and(|p| p < 3));
+            if let Some(place) = place {
+                #[allow(clippy::cast_precision_loss)]
+                let rank = (place + 1) as f64;
+                s.reciprocal += 1.0 / rank;
+            }
             s.calibrate(
                 candidates.first().map_or(0.0, |c| f64::from(c.probability)),
                 right,
@@ -186,8 +202,14 @@ pub fn score<P: Label, A: Label, F: Label>(
 
 /// The share of `test`'s forms (typed as their headwords) the shared task's
 /// non-neural baseline gets right (see [`crate::baseline`]), learned from
-/// `train`'s headwords and forms. Letters only: stress and accents aside.
-pub fn floor(orthography: &flexion::Orthography<'_>, train: &[&Lexeme], test: &[&Lexeme]) -> f64 {
+/// `train`'s headwords and forms, and the share of those in `unseen` cells
+/// (see [`Score::unseen`]). Letters only: stress and accents aside.
+pub fn floor(
+    orthography: &flexion::Orthography<'_>,
+    train: &[&Lexeme],
+    test: &[&Lexeme],
+    unseen: impl Fn(&Lexeme, usize) -> bool,
+) -> (f64, f64) {
     let letters = |s: &str| orthography.read(s).letters;
     let pairs: Vec<(String, usize, String)> = train
         .iter()
@@ -202,23 +224,43 @@ pub fn floor(orthography: &flexion::Orthography<'_>, train: &[&Lexeme], test: &[
     let baseline = crate::baseline::Baseline::learn(
         pairs.iter().map(|(l, c, f)| (l.as_str(), *c, f.as_str())),
     );
-    let (mut right, mut all) = (0usize, 0usize);
+    // `(forms, right)` of all, and of the unseen cells.
+    let (mut all, mut unseen_cells) = ((0, 0), (0, 0));
     for l in test {
         let lemma = letters(&l.lemma);
         for (cell, forms) in l.cells.iter().enumerate() {
             let Some(want) = forms.first() else {
                 continue;
             };
-            all += 1;
-            right += usize::from(baseline.inflect(&lemma, cell) == letters(want));
+            let ok = usize::from(baseline.inflect(&lemma, cell) == letters(want));
+            all = (all.0 + 1, all.1 + ok);
+            if unseen(l, cell) {
+                unseen_cells = (unseen_cells.0 + 1, unseen_cells.1 + ok);
+            }
         }
     }
-    ratio(right, all)
+    (ratio(all.1, all.0), ratio(unseen_cells.1, unseen_cells.0))
+}
+
+/// Whether cell `cell` of `l` (typed as its headword) is one its likeliest
+/// paradigm's training words have no form in (`seen`: per paradigm, those
+/// they have).
+pub fn unseen<P: Label, A: Label, F: Label>(
+    grammar: &flexion::Grammar<'_, P, A, F>,
+    seen: &[Vec<bool>],
+    l: &Lexeme,
+    cell: usize,
+) -> bool {
+    grammar
+        .readings(&l.lemma, &flexion::Known::default())
+        .first()
+        .and_then(|r| seen.get(r.value.index()))
+        .is_some_and(|h| !h.get(cell).copied().unwrap_or(false))
 }
 
 /// The sharpness (see [`flexion::Grammar::sharpness`]) that makes `grammar`'s
 /// stated probabilities match how often its answers are right on `words`
-/// (held out, typed as their headwords and in full): the one, of a grid from 0.5 to 4,
+/// (held out, typed as their headwords): the one, of a grid from 0.5 to 4,
 /// with the smallest calibration error.
 pub fn fit_sharpness<P: Label, A: Label, F: Label>(
     grammar: &flexion::Grammar<'_, P, A, F>,
@@ -227,23 +269,18 @@ pub fn fit_sharpness<P: Label, A: Label, F: Label>(
 ) -> f32 {
     // Every scored form's candidates: (probability, right) each.
     let mut forms: Vec<Vec<(f32, bool)>> = Vec::new();
+    // From the headword, as the grammar is most often asked (and scored).
     for l in words {
-        for (typed, full) in [(l.full.as_str(), true), (l.lemma.as_str(), false)] {
-            let known = flexion::Known {
-                full,
-                ..flexion::Known::default()
+        let table = grammar.table(&l.lemma, &flexion::Known::default());
+        for (cell, fs) in l.cells.iter().enumerate() {
+            let Some(want) = fs.first() else {
+                continue;
             };
-            for (cell, fs) in l.cells.iter().enumerate() {
-                let Some(want) = fs.first() else {
-                    continue;
-                };
-                let c = grammar.candidates(typed, cell, &known);
-                forms.push(
-                    c.iter()
-                        .map(|c| (c.probability, same_form(orthography, &c.form, want)))
-                        .collect(),
-                );
-            }
+            let c = table.get(cell).map_or(&[][..], Vec::as_slice);
+            let scored = c
+                .iter()
+                .map(|c| (c.probability, same_form(orthography, &c.form, want)));
+            forms.push(scored.collect());
         }
     }
     let error = |power: f32| {

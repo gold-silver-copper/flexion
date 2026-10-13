@@ -21,8 +21,9 @@ allows.
 ```rust
 use ancient_greek::*;
 
-// Vowel length is marked on α, ι, υ, as Wiktionary's tables do.
-assert_eq!(noun("ἄνθρωπος", Case::Genitive, Number::Singular), "ᾰ̓νθρώπου");
+// Vowel length is marked on α, ι, υ, as Wiktionary's tables do, except
+// where a breathing takes the letter (`ᾰ̓` is written `ἀ`).
+assert_eq!(noun("ἄνθρωπος", Case::Genitive, Number::Singular), "ἀνθρώπου");
 assert_eq!(noun("δῶρον", Case::Nominative, Number::Plural), "δῶρᾰ");
 ```
 
@@ -43,8 +44,8 @@ grammar needs of:
   cell's form, changed);
 - `relations.rs`: which cell each cell's form is told from, and the rules on that
   form's ending that change it;
-- `laws.rs`: sound laws where a stem meets its ending (or along a tier), each with the
-  words whose forms it gives and the forms it gets wrong;
+- `laws.rs`: sound laws where a stem meets its ending or a literal before it (along a
+  tier, or on a copied letter), each with the words whose forms it gives and the forms it gets wrong;
 - `rules.rs`: which paradigm a word takes, as rules on its ending, each with how many of
   the dictionary's words with that ending follow each paradigm, and the words no rule
   gets right, listed;
@@ -66,10 +67,10 @@ reason (the rule and its counts).
 
 | | words | paradigms | sound laws | rules | listed words | irregular forms |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 8165 | 163 | 5 | 676 | 2836 | 3723 |
-| adjective | 4699 | 104 | 46 | 491 | 2149 | 5040 |
-| verb | 2689 | 323 | 29 | 427 | 2416 | 47499 |
-| pronoun | 58 | 27 | 0 | 12 | 36 | 438 |
+| noun | 8133 | 113 | 5 | 563 | 2422 | 2982 |
+| adjective | 4691 | 59 | 46 | 397 | 1251 | 4432 |
+| verb | 2655 | 226 | 42 | 197 | 1507 | 46243 |
+| pronoun | 58 | 24 | 0 | 11 | 33 | 401 |
 | numeral | 19 | 8 | 0 | 4 | 5 | 24 |
 
 *Words*: the dictionary's words the grammar is learned from. *Sound laws*: changes
@@ -91,24 +92,24 @@ parts. *Features given*: top-1 from the headword, told the word's inherent featu
 (its gender, as `.gender(…)` tells it). *Seen* and *unseen cells*: top-1 on the cells
 some training word of the word's paradigm has a form in, and on the others, derived
 from other cells (with the number of forms). *Floor*: the CoNLL–SIGMORPHON 2017
-shared task's non-neural baseline (letters only). *Attested*: top-1 of the shipped
+shared task's non-neural baseline (letters only), and on the unseen cells. *Attested*: top-1 of the shipped
 grammar on the dictionary's own words, typed in full.
 
-| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | features given | seen cells | unseen cells | floor | attested |
+| | held-out words | forms | top-1 | top-3 | calibration error | lemma in full | principal parts given | features given | seen cells | unseen cells | floor (unseen) | attested |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 815 | 11673 | **61.94%** ± 3.3 | 72.01% | 0.120 | 78.80% | 89.50% | 62.59% | 61.89% (11658) | 100.00% (15) | 45.17% | 100.00% |
-| adjective | 477 | 22484 | **59.07%** ± 4.4 | 71.28% | 0.100 | 72.08% | 87.48% |  | 59.07% (22472) | 50.00% (12) | 39.77% | 100.00% |
-| verb | 261 | 64485 | **46.06%** ± 6.0 | 52.26% | 0.065 | 53.64% | 57.88% |  | 46.28% (64145) | 3.53% (340) | 42.64% | 100.00% |
-| pronoun | 11 | 375 | **2.40%** ± 9.0 | 2.40% | 0.629 | 26.67% |  |  | 2.52% (357) | 0.00% (18) | 34.93% | 100.00% |
-| numeral | 2 | 30 | **100.00%** ± 0.0 | 100.00% | 0.284 | 100.00% |  |  | 100.00% (30) |  | 100.00% | 100.00% |
+| noun | 810 | 11700 | **67.50%** ± 3.2 | 84.07% | 0.061 | 85.52% | 93.83% | 68.20% | 67.49% (11695) | 100.00% (5) | 49.22% (0.00%) | 99.92% |
+| adjective | 476 | 22436 | **72.00%** ± 4.0 | 87.84% | 0.060 | 85.65% | 94.62% |  | 72.01% (22426) | 40.00% (10) | 50.81% (40.00%) | 99.94% |
+| verb | 257 | 64204 | **63.22%** ± 5.9 | 75.00% | 0.071 | 72.09% | 74.38% |  | 63.41% (63654) | 41.09% (550) | 46.07% (17.64%) | 100.00% |
+| pronoun | 11 | 375 | **2.40%** ± 9.0 | 13.07% | 0.809 | 24.00% |  |  | 2.52% (357) | 0.00% (18) | 35.73% (11.11%) | 100.00% |
+| numeral | 2 | 30 | **100.00%** ± 0.0 | 100.00% | 0.175 | 100.00% |  |  | 100.00% (30) |  | 100.00% (0.00%) | 100.00% |
 
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 21495 | 923238 |
-| adjective | 20287 | 923158 |
-| verb | 159790 | 9697807 |
-| pronoun | 2585 | 98236 |
-| numeral | 1103 | 43208 |
+| noun | 16321 | 718760 |
+| adjective | 11089 | 535017 |
+| verb | 36559 | 3427758 |
+| pronoun | 1655 | 70393 |
+| numeral | 1027 | 40314 |
 
 ## Data and license
 

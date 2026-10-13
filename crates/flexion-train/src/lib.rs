@@ -25,7 +25,6 @@ pub mod spec;
 
 use spec::{Language, PartOfSpeech};
 
-/// The shape of a part of speech's cells, from its config.
 /// The cells of a part of speech's principal parts after its lemma.
 pub fn parts(lang: &Language, part: &PartOfSpeech) -> Result<Vec<usize>, String> {
     let cells = cells::Cells::new(lang, part)?;
@@ -39,17 +38,40 @@ pub fn parts(lang: &Language, part: &PartOfSpeech) -> Result<Vec<usize>, String>
         .collect()
 }
 
+/// The shape of a part of speech's cells, from its config.
 pub fn shape(lang: &Language, part: &PartOfSpeech) -> Result<learn::Shape, String> {
     let cells = cells::Cells::new(lang, part)?;
-    let lemma_cell = match &part.lemma {
-        Some((g, v)) => Some(
-            cells
-                .find(g, v)
-                .ok_or(format!("{}: no lemma cell {g} {v:?}", part.name))?,
-        ),
-        None => None,
-    };
+    let lemma_cell = part
+        .lemma
+        .as_ref()
+        .map(|(g, v)| {
+            let cell = cells.find(g, v);
+            cell.ok_or(format!("{}: no lemma cell {g} {v:?}", part.name))
+        })
+        .transpose()?;
+    // Each cell's group and feature values, on dimensions shared by name.
+    let mut features: Vec<&str> = Vec::new();
+    for f in cells.groups.iter().flat_map(|g| &g.features) {
+        if !features.contains(&f.name) {
+            features.push(f.name);
+        }
+    }
+    let mut coordinates = vec![Vec::new(); cells.total];
+    for (group, g) in (0u16..).zip(&cells.groups) {
+        for cell in g.offset..g.offset + g.len() {
+            let values = g.values(cell);
+            let value = |name: &str| {
+                let v = g.features.iter().zip(&values).find(|(f, _)| f.name == name);
+                v.map_or(u16::MAX, |(_, &v)| u16::try_from(v).unwrap_or(u16::MAX))
+            };
+            let at = std::iter::once(group).chain(features.iter().map(|n| value(n)));
+            if let Some(slot) = coordinates.get_mut(cell) {
+                *slot = at.collect();
+            }
+        }
+    }
     Ok(learn::Shape {
+        coordinates,
         cells: cells.total,
         lemma_cell,
         capitalized: part.capitalized,

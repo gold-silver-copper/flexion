@@ -169,6 +169,10 @@ pub struct Spelling {
     /// to the letter without it (Greek breathings, iota subscript).
     pub fold_marks: &'static str,
     pub strip_marks: &'static str,
+    /// Combining marks written only on a word's first letter or first vowels
+    /// (Greek breathings): written after a consonant of the word (a
+    /// dictionary's compound, `ὑπἔκρυπτον`), they are dropped.
+    pub initial_marks: &'static str,
     /// Letters written plain when the caller turns marks off (Latin
     /// `ā` → `a`). Lookup ignores them too.
     pub unmark: Vec<(char, char)>,
@@ -272,26 +276,9 @@ pub trait Hooks: Sync + Send {
     }
 }
 
-/// Hooks that change nothing.
-pub struct NoHooks;
-impl Hooks for NoHooks {}
-
 impl Language {
     pub fn feature(&self, name: &str) -> Option<&Feature> {
         self.features.iter().find(|f| f.name == name)
-    }
-
-    /// Citation markers for a part of speech's inherent features: the
-    /// values' short names, per feature.
-    pub fn markers(&self, part: &PartOfSpeech) -> Vec<Vec<&'static str>> {
-        part.inherent
-            .iter()
-            .map(|n| {
-                self.feature(n)
-                    .map(|f| f.values.iter().map(|v| v.short).collect())
-                    .unwrap_or_default()
-            })
-            .collect()
     }
 
     /// Check internal consistency: every name refers to something that exists.

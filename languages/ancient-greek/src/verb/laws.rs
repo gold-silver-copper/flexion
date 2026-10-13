@@ -1,13 +1,14 @@
-//! Sound laws where a stem meets its ending (`+`): every form a conjugation
-//! builds goes through them, in order, so one conjugation serves words whose
-//! stems change its endings. Each with the words whose forms it gives, and
-//! how many of the dictionary's forms it gets wrong (those are listed in
-//! `irregular.rs`).
+//! Sound laws where a stem meets its ending (`+`), where a form's first
+//! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), or on a letter a
+//! `%` copies (`°`): every form a conjugation builds goes through them, in order, so
+//! one conjugation serves words whose stems change its endings. Each with the
+//! words whose forms it gives, and how many of the dictionary's forms it
+//! gets wrong (those are listed in `irregular.rs`).
 
 use flexion::sound_law::compiled::*;
 
 const RULES: &[CompiledRule<'static>] = &[
-    // γ+σ → +ξ: 38 words (λεγω, φευγω, τρωγω, δῐᾰλεγω), 0 forms wrong.
+    // ἐ‹ἀ → ἠ: 96 words (ἀγω, ἀγᾰπᾰω, ἀκουω, ἀγᾰθοποιεω), 0 forms wrong.
     CompiledRule {
         name: B("law0"),
         left: Pattern {
@@ -16,12 +17,19 @@ const RULES: &[CompiledRule<'static>] = &[
             anchored_at_end: false,
         },
         target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("γ+σ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("ἐ‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ἀ"), B("ᾰ"), B("ᾱ"), B("ᾳ")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
             anchored_at_end: false,
         },
         right: Pattern {
@@ -31,13 +39,21 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         excluded_left: None,
         excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("+ξ"))]),
-        capture_count: 0,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[
+                (B("ἀ"), B("ἠ")),
+                (B("ᾰ"), B("η")),
+                (B("ᾱ"), B("η")),
+                (B("ᾳ"), B("η")),
+            ]),
+        }]),
+        capture_count: 1,
         direction: Direction::LeftToRight,
         application: Application::All,
-        required: B(&[B("γ+σ")]),
+        required: B(&[B("ἐ‹")]),
     },
-    // γ+θ → +χθ: 27 words (σῠνᾰγω, λεγω, δῐᾰλεγω, φλεγω), 0 forms wrong.
+    // %ε‹ἀ → ἠ: 21 words (ἀγω, ἀγᾰπᾰω, ἀρχαϊζω, ἀνᾰγκᾰζω), 0 forms wrong.
     CompiledRule {
         name: B("law1"),
         left: Pattern {
@@ -46,12 +62,19 @@ const RULES: &[CompiledRule<'static>] = &[
             anchored_at_end: false,
         },
         target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("γ+θ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("°ἀε‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ἀ"), B("ᾰ"), B("ᾱ"), B("ᾳ"), B("α")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
             anchored_at_end: false,
         },
         right: Pattern {
@@ -61,13 +84,22 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         excluded_left: None,
         excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("+χθ"))]),
-        capture_count: 0,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[
+                (B("ἀ"), B("ἠ")),
+                (B("α"), B("η")),
+                (B("ᾰ"), B("η")),
+                (B("ᾱ"), B("η")),
+                (B("ᾳ"), B("η")),
+            ]),
+        }]),
+        capture_count: 1,
         direction: Direction::LeftToRight,
         application: Application::All,
-        required: B(&[B("γ+θ")]),
+        required: B(&[B("°ἀε‹")]),
     },
-    // ζ+σ → +ξ: 11 words (βᾰζω, κρᾱζω, νυστᾰζω, βρῠᾰζω), 0 forms wrong.
+    // copy of φ → π: 30 words (φοβεω, φῐλεω, φενᾱκῐζω, φωγω), 0 forms wrong.
     CompiledRule {
         name: B("law2"),
         left: Pattern {
@@ -77,7 +109,7 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         target: Pattern {
             atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ζ+σ")),
+                matcher: Matcher::Literal(B("°φ")),
                 quantifier: Quantifier::One,
                 capture: None,
             }]),
@@ -91,15 +123,161 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         excluded_left: None,
         excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("+ξ"))]),
+        replacement: B(&[ReplacementPart::Literal(B("π"))]),
         capture_count: 0,
         direction: Direction::LeftToRight,
         application: Application::All,
-        required: B(&[B("ζ+σ")]),
+        required: B(&[B("°φ")]),
     },
-    // κ+σ → +ξ: 18 words (πεκω, πλεκω, τηκω, περῐπλεκω), 0 forms wrong.
+    // copy of θ → τ: 27 words (θελω, θερᾰπευω, ἐπεντῐθημῐ, τῐθημῐ), 0 forms wrong.
     CompiledRule {
         name: B("law3"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("°θ")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("τ"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("°θ")]),
+    },
+    // ἐ%ε‹ἀ → ἠ: 14 words (ἀγᾰπᾰω, ἀκουω, ἀρχαϊζω, ἀσπᾰζομαι), 0 forms wrong.
+    CompiledRule {
+        name: B("law4"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("ἐ°ἀε‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ἀ"), B("ᾰ"), B("ᾱ"), B("ᾳ"), B("α")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[
+                (B("ἀ"), B("ἠ")),
+                (B("α"), B("η")),
+                (B("ᾰ"), B("η")),
+                (B("ᾱ"), B("η")),
+                (B("ᾳ"), B("η")),
+            ]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ἐ°ἀε‹")]),
+    },
+    // copy of χ → κ: 23 words (χᾰρῐζομαι, χειρουργεω, χορευω, χρῑω), 0 forms wrong.
+    CompiledRule {
+        name: B("law5"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("°χ")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("κ"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("°χ")]),
+    },
+    // ἐ‹ὀ → ὠ: 29 words (ὀρχεομαι, ὀνομᾰζω, ὀζω, ὀρεγω), 0 forms wrong.
+    CompiledRule {
+        name: B("law6"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("ἐ‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ὀ")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[(B("ὀ"), B("ὠ"))]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ἐ‹")]),
+    },
+    // κ+σ → +ξ: 16 words (πεκω, πλεκω, τηκω, κᾰτᾰδῐωκω), 0 forms wrong.
+    CompiledRule {
+        name: B("law7"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -127,129 +305,89 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("κ+σ")]),
     },
-    // ν+σ → ν+: 10 words (πληθῡνω, εὐθῡνω, αἰσχῡνω, πᾰλῡνω), 0 forms wrong.
-    CompiledRule {
-        name: B("law4"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ν+σ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ν+"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ν+σ")]),
-    },
-    // ο+ομ → ο+υμ: 7 words (στραγγᾰλοομαι, χειροομαι, κᾰτοικειοομαι, ἐνᾰντῐοομαι), 0 forms wrong.
-    CompiledRule {
-        name: B("law5"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ο+ομ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ο+υμ"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ο+ομ")]),
-    },
-    // ο+ον → ο+ῡν: 7 words (στραγγᾰλοομαι, χειροομαι, κᾰτοικειοομαι, ἐνᾰντῐοομαι), 0 forms wrong.
-    CompiledRule {
-        name: B("law6"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ο+ον")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ο+ῡν"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ο+ον")]),
-    },
-    // ᾰ+εῑ → ᾰ+σε: 10 words (πυρρᾰζω, στοχᾰζομαι, ὀνομᾰζω, φρᾰζω), 0 forms wrong.
-    CompiledRule {
-        name: B("law7"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ᾰ+εῑ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ᾰ+σε"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ᾰ+εῑ")]),
-    },
-    // ιν+ηθ → +νθ: 9 words (μιαινω, ποιμαινω, χλῑαινω, κερδαινω), 0 forms wrong.
+    // ἐ‹ῥ → ἐρρ: 16 words (ῥεω, ῥωννῡμῐ, ῥοφεω, ῥεμβω), 0 forms wrong.
     CompiledRule {
         name: B("law8"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("ἐ‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ῥ")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[(B("ῥ"), B("ἐρρ"))]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ἐ‹")]),
+    },
+    // %ε‹ἐ → ἠ: 14 words (ἐρεφω, ἐθελω, ἐλεεω, ἐρωτᾰω), 0 forms wrong.
+    CompiledRule {
+        name: B("law9"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("°ἐε‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ἐ"), B("ε")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[(B("ἐ"), B("ἠ")), (B("ε"), B("η"))]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("°ἐε‹")]),
+    },
+    // ιν+ηθ → +νθ: 15 words (σημαινω, ῥαινω, μιαινω, ποιμαινω), 0 forms wrong.
+    CompiledRule {
+        name: B("law10"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -277,219 +415,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ιν+ηθ")]),
     },
-    // λῡ+κ → λ+ελῠκ: 8 words (παραλῡω, λῡω, ἀπολῡω, ἐκλῡω), 0 forms wrong.
-    CompiledRule {
-        name: B("law9"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("λῡ+κ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("λ+ελῠκ"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("λῡ+κ")]),
-    },
-    // λῡ+μ → λ+ελῠμ: 8 words (παραλῡω, λῡω, ἀπολῡω, ἐκλῡω), 0 forms wrong.
-    CompiledRule {
-        name: B("law10"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("λῡ+μ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("λ+ελῠμ"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("λῡ+μ")]),
-    },
-    // λῡ+ν → λ+ελῠν: 8 words (παραλῡω, λῡω, ἀπολῡω, ἐκλῡω), 0 forms wrong.
+    // χ+σ → +ξ: 14 words (ἀρχω, βρεχω, λειχω, ὀμειχω), 0 forms wrong.
     CompiledRule {
         name: B("law11"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("λῡ+ν")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("λ+ελῠν"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("λῡ+ν")]),
-    },
-    // λῡ+σθ → λ+ελῠσθ: 8 words (παραλῡω, λῡω, ἀπολῡω, ἐκλῡω), 0 forms wrong.
-    CompiledRule {
-        name: B("law12"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("λῡ+σθ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("λ+ελῠσθ"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("λῡ+σθ")]),
-    },
-    // λῡ+τ → λ+ελῠτ: 8 words (παραλῡω, λῡω, ἀπολῡω, ἐκλῡω), 0 forms wrong.
-    CompiledRule {
-        name: B("law13"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("λῡ+τ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("λ+ελῠτ"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("λῡ+τ")]),
-    },
-    // μν+ηθ → μ+: 7 words (τεμνω, ἐκτεμνω, ἐκταμνω, περῐτεμνω), 0 forms wrong.
-    CompiledRule {
-        name: B("law14"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("μν+ηθ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("μ+"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("μν+ηθ")]),
-    },
-    // ρο+υθ → ρο+υσθ: 7 words (κρουω, συγκρουω, ξυγκρουω, ἀνακρουω), 0 forms wrong.
-    CompiledRule {
-        name: B("law15"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ρο+υθ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ρο+υσθ"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ρο+υθ")]),
-    },
-    // χ+σ → +ξ: 7 words (βρεχω, λειχω, ἐλεγχω, ψηχω), 0 forms wrong.
-    CompiledRule {
-        name: B("law16"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -517,9 +445,49 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("χ+σ")]),
     },
-    // εν+θ → +ᾰθ: 6 words (ἐκτεινω, τεινω, προτεινω, παρατεινω), 0 forms wrong.
+    // ἐ‹ἐρ → ἠρ: 15 words (ἐρειπω, ἐρευγομαι, ἐρεφω, ἐργᾰζομαι), 0 forms wrong.
     CompiledRule {
-        name: B("law17"),
+        name: B("law12"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("ἐ‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ἐρ")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[(B("ἐρ"), B("ἠρ"))]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ἐ‹")]),
+    },
+    // φ+σ → +ψ: 10 words (οἰφω, νῑφω, κᾰτᾰστρεφω, γλῠφω), 0 forms wrong.
+    CompiledRule {
+        name: B("law13"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -527,7 +495,7 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         target: Pattern {
             atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("εν+θ")),
+                matcher: Matcher::Literal(B("φ+σ")),
                 quantifier: Quantifier::One,
                 capture: None,
             }]),
@@ -541,15 +509,784 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         excluded_left: None,
         excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("+ᾰθ"))]),
+        replacement: B(&[ReplacementPart::Literal(B("+ψ"))]),
         capture_count: 0,
         direction: Direction::LeftToRight,
         application: Application::All,
-        required: B(&[B("εν+θ")]),
+        required: B(&[B("φ+σ")]),
+    },
+    // ἐ‹οἰ → ᾠ: 12 words (οἰφω, οἰκεω, οἰδεω, οἰκοδομεω), 0 forms wrong.
+    CompiledRule {
+        name: B("law14"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("ἐ‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("οἰ")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[(B("οἰ"), B("ᾠ"))]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ἐ‹")]),
+    },
+    // ἐ‹ὑ → ὑ: 11 words (ὑλακτεω, ὑφαινω, ὑμνεω, ὑστερεω), 0 forms wrong.
+    CompiledRule {
+        name: B("law15"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("ἐ‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ὑ"), B("ῠ"), B("ῡ"), B("υ"), B("ϋ")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[
+                (B("ὑ"), B("ὑ")),
+                (B("υ"), B("υ")),
+                (B("ϋ"), B("υ")),
+                (B("ῠ"), B("υ")),
+                (B("ῡ"), B("υ")),
+            ]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ἐ‹")]),
+    },
+    // ν+σ → ν+: 11 words (εὐρῡνω, ἰθῡνω, δῐευθῡνω, εὐθῡνω), 0 forms wrong.
+    CompiledRule {
+        name: B("law16"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("ν+σ")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("ν+"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ν+σ")]),
+    },
+    // %ε‹σκ → ἐσκ: 11 words (σκοπεω, σκηπτω, σκευᾰζω, σκεπᾰζω), 0 forms wrong.
+    CompiledRule {
+        name: B("law17"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("°σε‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("σκ")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[(B("σκ"), B("ἐσκ"))]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("°σε‹")]),
+    },
+    // ἐ‹ὁ → ὡ: 11 words (ὁμοιοω, ὁρῐζω, ὁμολογεω, ὁρμαινω), 0 forms wrong.
+    CompiledRule {
+        name: B("law18"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("ἐ‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ὁ")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[(B("ὁ"), B("ὡ"))]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ἐ‹")]),
+    },
+    // %ε‹ὀ → ὠ: 7 words (ὀρχεομαι, ὀζω, ὀρεγω, ὀφειλω), 0 forms wrong.
+    CompiledRule {
+        name: B("law19"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("°ὀε‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ὀ"), B("ο")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[(B("ὀ"), B("ὠ")), (B("ο"), B("ω"))]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("°ὀε‹")]),
+    },
+    // ἐ‹ε → ε: 8 words (εἰδομαι, εἰρω, εὐδοκεω, εἰσοραω), 0 forms wrong.
+    CompiledRule {
+        name: B("law20"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("ἐ‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ε")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[(B("ε"), B("ε"))]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ἐ‹")]),
+    },
+    // ἐ‹ἁ → ἡ: 11 words (ἁρμοζω, ἁπτω, ἁρπᾰζω, ἁμᾰρτᾰνω), 0 forms wrong.
+    CompiledRule {
+        name: B("law21"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("ἐ‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ἁ"), B("ᾰ"), B("ᾱ"), B("ᾳ")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[
+                (B("ἁ"), B("ἡ")),
+                (B("ᾰ"), B("η")),
+                (B("ᾱ"), B("η")),
+                (B("ᾳ"), B("η")),
+            ]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ἐ‹")]),
+    },
+    // ἐ‹ἰ → ἰ: 8 words (ἰθῡνω, ἰαυω, ἰσχῡω, ἰσχω), 0 forms wrong.
+    CompiledRule {
+        name: B("law22"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("ἐ‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ἰ"), B("ῐ"), B("ῑ"), B("ι"), B("ϊ")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[
+                (B("ἰ"), B("ἰ")),
+                (B("ι"), B("ι")),
+                (B("ϊ"), B("ι")),
+                (B("ῐ"), B("ι")),
+                (B("ῑ"), B("ι")),
+            ]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ἐ‹")]),
+    },
+    // ἐ‹ἱ → ἱ: 8 words (ἱδροω, ἱζω, ἱκνεομαι, ἱστορεω), 0 forms wrong.
+    CompiledRule {
+        name: B("law23"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("ἐ‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ἱ"), B("ῐ"), B("ῑ"), B("ι"), B("ϊ")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[
+                (B("ἱ"), B("ἱ")),
+                (B("ι"), B("ι")),
+                (B("ϊ"), B("ι")),
+                (B("ῐ"), B("ι")),
+                (B("ῑ"), B("ι")),
+            ]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ἐ‹")]),
+    },
+    // %ε‹ζ → ἐζ: 7 words (ζεω, ζω, ζητεω, ζηλοω), 0 forms wrong.
+    CompiledRule {
+        name: B("law24"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("°ζε‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ζ")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[(B("ζ"), B("ἐζ"))]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("°ζε‹")]),
+    },
+    // %ε‹ὑ → ὑ: 7 words (ὑμνεω, ὑστερεω, ὑβρῐζω, ὑᾰλῐζω), 0 forms wrong.
+    CompiledRule {
+        name: B("law25"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("°ὑε‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ὑ"), B("ῠ"), B("ῡ"), B("υ"), B("ϋ")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[
+                (B("ὑ"), B("ὑ")),
+                (B("υ"), B("υ")),
+                (B("ϋ"), B("υ")),
+                (B("ῠ"), B("υ")),
+                (B("ῡ"), B("υ")),
+            ]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("°ὑε‹")]),
+    },
+    // ἐ‹αἰ → ᾐ: 7 words (αἰθω, αἰρω, αἰτεω, αἰσχῡνω), 0 forms wrong.
+    CompiledRule {
+        name: B("law26"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("ἐ‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("αἰ")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[(B("αἰ"), B("ᾐ"))]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ἐ‹")]),
+    },
+    // ἐ‹ἐλ → ἠλ: 7 words (ἐλελῐζω, ἐλεεω, ἐλπῐζω, ἐλαυνω), 0 forms wrong.
+    CompiledRule {
+        name: B("law27"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("ἐ‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ἐλ")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[(B("ἐλ"), B("ἠλ"))]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ἐ‹")]),
+    },
+    // ἐ%ε‹ἐ → ἠ: 7 words (ἐθελω, ἐρωτᾰω, ἐγγῐζω, ἐλπῐζω), 0 forms wrong.
+    CompiledRule {
+        name: B("law28"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("ἐ°ἐε‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ἐ"), B("ε")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[(B("ἐ"), B("ἠ")), (B("ε"), B("η"))]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ἐ°ἐε‹")]),
+    },
+    // ᾱ+ο → +ω: 6 words (δῐψᾱω, νᾱω, δρᾱω, ψᾱω), 0 forms wrong.
+    CompiledRule {
+        name: B("law29"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("ᾱ+ο")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("+ω"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ᾱ+ο")]),
+    },
+    // ἐ‹ἐκ → ἐξε: 7 words (ἐκδῠω, ἐκχεω, ἐκφερω, ἐκλεγω), 0 forms wrong.
+    CompiledRule {
+        name: B("law30"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("ἐ‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ἐκ")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[(B("ἐκ"), B("ἐξε"))]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ἐ‹")]),
+    },
+    // ἐ‹ἡ → ἡ: 5 words (ἡσῠχᾰζω, ἡγεμονευω, ἡβᾰω, ἡδῠνω), 0 forms wrong.
+    CompiledRule {
+        name: B("law31"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("ἐ‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ἡ"), B("ῃ"), B("η")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[(B("ἡ"), B("ἡ")), (B("η"), B("η")), (B("ῃ"), B("η"))]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ἐ‹")]),
+    },
+    // ἐ%ε‹ζ → ἐζ: 6 words (ζεω, ζητεω, ζηλοω, ζῠγοω), 0 forms wrong.
+    CompiledRule {
+        name: B("law32"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("ἐ°ζε‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ζ")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[(B("ζ"), B("ἐζ"))]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ἐ°ζε‹")]),
     },
     // α+εῑ → +ᾰσε: 5 words (σῠνεργαζομαι, κᾰτεργαζομαι, χαζομαι, ἐξεργαζομαι), 0 forms wrong.
     CompiledRule {
-        name: B("law18"),
+        name: B("law33"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -579,7 +1316,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // α+οῑ → +ᾰσοι: 5 words (σῠνεργαζομαι, κᾰτεργαζομαι, χαζομαι, ἐξεργαζομαι), 0 forms wrong.
     CompiledRule {
-        name: B("law19"),
+        name: B("law34"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -609,7 +1346,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // α+οῡ → +ᾰσο: 5 words (σῠνεργαζομαι, κᾰτεργαζομαι, χαζομαι, ἐξεργαζομαι), 0 forms wrong.
     CompiledRule {
-        name: B("law20"),
+        name: B("law35"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -637,9 +1374,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("α+οῡ")]),
     },
-    // κο+μ → κο+μμ: 5 words (κοπτω, δῐᾰκοπτω, περῐκοπτω, σῠγκοπτω), 0 forms wrong.
+    // ᾱ+ω → +ω: 5 words (δῐψᾱω, νᾱω, ψᾱω, ἀπερᾱω), 0 forms wrong.
     CompiledRule {
-        name: B("law21"),
+        name: B("law36"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -647,187 +1384,7 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         target: Pattern {
             atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("κο+μ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("κο+μμ"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("κο+μ")]),
-    },
-    // κο+ν → κο+πᾰ: 5 words (κοπτω, δῐᾰκοπτω, περῐκοπτω, σῠγκοπτω), 0 forms wrong.
-    CompiledRule {
-        name: B("law22"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("κο+ν")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("κο+πᾰ"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("κο+ν")]),
-    },
-    // κο+σ → κο+φ: 5 words (κοπτω, δῐᾰκοπτω, περῐκοπτω, σῠγκοπτω), 0 forms wrong.
-    CompiledRule {
-        name: B("law23"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("κο+σ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("κο+φ"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("κο+σ")]),
-    },
-    // κο+τ → κο+πτ: 5 words (κοπτω, δῐᾰκοπτω, περῐκοπτω, σῠγκοπτω), 0 forms wrong.
-    CompiledRule {
-        name: B("law24"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("κο+τ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("κο+πτ"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("κο+τ")]),
-    },
-    // λο+η → +νοη: 5 words (νοεω, κᾰτᾰνοεω, προνοεω, ἐννοεω), 0 forms wrong.
-    CompiledRule {
-        name: B("law25"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("λο+η")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("+νοη"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("λο+η")]),
-    },
-    // νε+ηθ → νε+υσθ: 5 words (πνεω, δῐᾰπνεω, ἐμπνεω, ἀνᾰπνεω), 0 forms wrong.
-    CompiledRule {
-        name: B("law26"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("νε+ηθ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("νε+υσθ"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("νε+ηθ")]),
-    },
-    // ᾱ+ο → +ω: 5 words (δῐψᾱω, νᾱω, δρᾱω, ψᾱω), 0 forms wrong.
-    CompiledRule {
-        name: B("law27"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ᾱ+ο")),
+                matcher: Matcher::Literal(B("ᾱ+ω")),
                 quantifier: Quantifier::One,
                 capture: None,
             }]),
@@ -845,23 +1402,30 @@ const RULES: &[CompiledRule<'static>] = &[
         capture_count: 0,
         direction: Direction::LeftToRight,
         application: Application::All,
-        required: B(&[B("ᾱ+ο")]),
+        required: B(&[B("ᾱ+ω")]),
     },
-    // ῑβ+ηθ → +ῐβ: 5 words (τρῑβω, δῐᾰτρῑβω, σῠντρῑβω, σῠνθλῑβω), 0 forms wrong.
+    // %ε‹ὁ → ὡ: 5 words (ὁμοιοω, ὁρῐζω, ὁρμαω, ὁπλιζω), 0 forms wrong.
     CompiledRule {
-        name: B("law28"),
+        name: B("law37"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
             anchored_at_end: false,
         },
         target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ῑβ+ηθ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("°ὁε‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ὁ"), B("ο")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
             anchored_at_end: false,
         },
         right: Pattern {
@@ -871,11 +1435,180 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         excluded_left: None,
         excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("+ῐβ"))]),
-        capture_count: 0,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[(B("ὁ"), B("ὡ")), (B("ο"), B("ω"))]),
+        }]),
+        capture_count: 1,
         direction: Direction::LeftToRight,
         application: Application::All,
-        required: B(&[B("ῑβ+ηθ")]),
+        required: B(&[B("°ὁε‹")]),
+    },
+    // %ε‹ῥ → ἐρρ: 5 words (ῥοφεω, ῥᾰπτω, ῥῑπτω, ῥῑπτᾰζω), 0 forms wrong.
+    CompiledRule {
+        name: B("law38"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("°ῥε‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ῥ")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[(B("ῥ"), B("ἐρρ"))]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("°ῥε‹")]),
+    },
+    // ἐ‹α → η: 5 words (αὐξᾰνω, αὐλεω, αὐξω, αὐδᾰω), 0 forms wrong.
+    CompiledRule {
+        name: B("law39"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("ἐ‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("α")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[(B("α"), B("η"))]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ἐ‹")]),
+    },
+    // ἐ%ε‹σκ → ἐσκ: 5 words (σκοπεω, σκευᾰζω, σκεπᾰζω, σκορπῐζω), 0 forms wrong.
+    CompiledRule {
+        name: B("law40"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("ἐ°σε‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("σκ")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[(B("σκ"), B("ἐσκ"))]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ἐ°σε‹")]),
+    },
+    // ἐ%ε‹ὑ → ὑ: 5 words (ὑμνεω, ὑστερεω, ὑβρῐζω, ὑᾰλῐζω), 0 forms wrong.
+    CompiledRule {
+        name: B("law41"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("ἐ°ὑε‹")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("ὑ"), B("ῠ"), B("ῡ"), B("υ"), B("ϋ")])),
+                    quantifier: Quantifier::One,
+                    capture: Some(0),
+                },
+            ]),
+            anchored_at_start: true,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::MappedCapture {
+            capture: 0,
+            entries: B(&[
+                (B("ὑ"), B("ὑ")),
+                (B("υ"), B("υ")),
+                (B("ϋ"), B("υ")),
+                (B("ῠ"), B("υ")),
+                (B("ῡ"), B("υ")),
+            ]),
+        }]),
+        capture_count: 1,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ἐ°ὑε‹")]),
     },
 ];
 

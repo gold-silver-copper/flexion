@@ -1,141 +1,58 @@
-//! The dictionary's forms no declension gives, as it writes them: a line per form,
-//! the word, its cell's number (see `super::cell`) and the form, sorted by word
-//! and cell. They are the answer for that word and cell.
+//! The dictionary's forms no declension gives, as it writes them: a line per word,
+//! sorted, the word then each listed cell's number (see `super::cell`) and its
+//! form, tab-separated. They are the answer for that word and cell.
 
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 476 forms.
+/// 357 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"ales	24	ālitī
-alipes	5	ālipeda
-alipes	7	ālipedum
-alipes	9	ālipedum
-altinas	7	altīnātum
-altinas	9	altīnātum
-anguimanus	1	anguimanī
-anguimanus	3	anguimanae
-anguimanus	4	anguimanum
-anguimanus	5	anguimana
-anguimanus	6	anguimanūs
-anguimanus	8	anguimanūs
-anguimanus	9	anguimanārum
-anguimanus	10	anguimanī
-anguimanus	12	anguimanuī
-anguimanus	13	anguimanīs
-anguimanus	14	anguimanuī
-anguimanus	15	anguimanīs
-anguimanus	16	anguimanō
-anguimanus	17	anguimanīs
-anguimanus	18	anguimanum
-anguimanus	19	anguimanōs
-anguimanus	20	anguimanum
-anguimanus	21	anguimanās
-anguimanus	22	anguimanum
-anguimanus	23	anguimana
-anguimanus	24	anguimanū
-anguimanus	25	anguimanīs
-anguimanus	27	anguimanīs
-anguimanus	28	anguimanō
-anguimanus	29	anguimanīs
-anguimanus	30	anguimanus
-anguimanus	31	anguimanī
-anguimanus	33	anguimanae
-anguimanus	34	anguimanum
-anguimanus	35	anguimana
+alipes	5	ālipeda	7	ālipedum	9	ālipedum
+altinas	7	altīnātum	9	altīnātum
+anguimanus	1	anguimanī	2	anguimanus	3	anguimanae	4	anguimanum	5	anguimana	6	anguimanūs	7	anguimanōrum	9	anguimanārum	10	anguimanī	11	anguimanōrum	12	anguimanuī	13	anguimanīs	14	anguimanuī	15	anguimanīs	16	anguimanō	17	anguimanīs	19	anguimanōs	20	anguimanum	21	anguimanās	22	anguimanum	23	anguimana	24	anguimanū	25	anguimanīs	27	anguimanīs	28	anguimanō	29	anguimanīs	30	anguimanus	31	anguimanī	33	anguimanae	34	anguimanum	35	anguimana
 armentarius	0	arcuārius
-astutus	36	astūtior
-benedicus	36	benedīcentior
-benedicus	37	benedīcentissimus
-benignus	36	benīgnior
-benignus	37	benīgnissimus
+benedicus	36	benedīcentior	37	benedīcentissimus
+benignus	36	benīgnior	37	benīgnissimus
 biluminiporus	0	bilūmenipōrus
 biographicus	0	biolgraphicus
-bonus	36	melior
-bonus	37	optimus
-caelebs	7	caelibum
-caelebs	9	caelibum
-caelebs	24	caelibe
-capenas	7	capēnātum
-capenas	9	capēnātum
+bonus	36	melior	37	optimus
+caelebs	7	caelibum	9	caelibum	24	caelibe
+capenas	7	capēnātum	9	capēnātum
 carcerarius	30	carcerārī
-celer	2	celeris
-celer	37	celerrimus
+celer	2	celeris	37	celerrimus
 chalybeius	0	chalybēïus
 cisgener	5	cisgenera
-coelebs	7	coelibum
-coelebs	9	coelibum
-coelebs	24	coelibe
-coeles	5	coelitia
-coeles	7	coelitium
-coeles	9	coelitium
-coeles	24	coelitī
+coelebs	7	coelibum	9	coelibum	24	coelibe
+coeles	5	coelitia	7	coelitium	9	coelitium	24	coelitī
 coemendus	0	coëmendus
 coemens	0	coëmēns
-coiens	0	coïēns
-coiens	1	coëuntēs
-coiens	5	coëuntia
-coiens	7	coëuntium
-coiens	9	coëuntium
+coiens	0	coïēns	13	coëuntibus
 commissorius	0	commissōrĭus
-compos	7	compotum
-compos	9	compotum
-compos	19	compotēs
+compos	7	compotum	9	compotum	24	compote
 compressus	37	compressimus
-concolor	4	concolor
-concolor	5	concolōra
-concolor	7	concolōrum
-concolor	9	concolōrum
-concolor	11	concolōrum
-concolor	19	concolōrīs
-concolor	22	concolor
-concolor	23	concolōra
-concolor	34	concolor
-concolor	35	concolōra
+concolor	4	concolor	19	concolōrīs
 confertus	36	confertior
-congrex	1	congregēs
-congrex	5	congrega
-congrex	7	congregum
-congrex	9	congregum
-conpos	7	conpotum
-conpos	9	conpotum
-conpos	24	conpote
-cornipes	5	cornipeda
-cornipes	7	cornipedum
-cornipes	9	cornipedum
+congrex	13	congregibus
+conpos	7	conpotum	9	conpotum	24	conpote
+cornipes	5	cornipeda	7	cornipedum	9	cornipedum
 cothurnatus	36	cothurnātius
 culpabilis	36	culpabilius
-defessus	36	defessior
-defessus	37	defessissimus
-deprans	1	dēprandēs
-deprans	5	dēprandia
-deprans	7	dēprandium
-deprans	9	dēprandium
-deses	1	dēsidēs
-deses	5	dēsidia
-deses	7	dēsidium
-deses	9	dēsidium
+defessus	36	defessior	37	defessissimus
+deprans	13	dēprandibus
+deses	13	dēsidibus
 deterior	37	dēterrimus
 deterrimus	36	dēterior
 dicax	0	dĭcāx
 dissolubilis	36	dissolūbilius
 dives	37	dīvitissimus
 elamentabilis	37	ēlāmentābilissumus
-ens	1	entēs
-ens	5	entia
-ens	7	entium
-ens	9	entium
-esaianus	0	ēsāïānus
+ens	13	entibus
+esaianus	0	ĕsāïānus
 esculentus	36	esculentior
-exlex	1	exlēgēs
-exlex	5	exlēgia
-exlex	7	exlēgium
-exlex	9	exlēgium
-exos	1	exossēs
-exos	5	exossia
-exos	7	exossium
-exos	9	exossium
+exlex	13	exlēgibus
+exos	13	exossibus
 exter	37	extrēmus
 favorabilis	36	favōrābilius
 ferinus	37	ferinīssimus
@@ -143,137 +60,64 @@ hawaiensis	0	hawaïēnsis
 hecateius	0	hecatēïus
 huias	24	huiāte
 humidus	36	humidior
-iactantior	0	iactans
+iactantior	0	iactans	24	iactantī
 iambeus	0	ïambēus
 iambicinus	0	ïambicinus
-iens	0	ïēns
-iens	1	euntēs
-iens	5	euntia
-iens	7	euntium
-iens	9	euntium
+iens	0	ïēns	13	euntibus
 immaturus	37	immātūrrimus
-impubes	1	impūberēs
-impubes	5	impūbera
-impubes	7	impūberum
-impubes	9	impūberum
+impubes	13	impūberibus
 inclemens	36	inclementior
 inferus	37	īnfimus
-infrons	1	īnfrondēs
-infrons	5	īnfrondia
-infrons	7	īnfrondium
-infrons	9	īnfrondium
-inimicus	36	inimicior
-inimicus	37	inimicissimus
-inops	7	inopum
-inops	9	inopum
-inpubes	1	inpūberēs
-inpubes	5	inpūberia
-inpubes	7	inpūberium
-inpubes	9	inpūberium
-insalubris	36	insalūbrius
-insalubris	37	insalūberrimus
+infrons	13	īnfrondibus
+inimicus	36	inimicior	37	inimicissimus
+inops	7	inopum	9	inopum
+inpubes	13	inpūberibus
+insalubris	36	insalūbrius	37	insalūberrimus
 insulsus	36	insulsior
 insumptuosus	36	insūmptuōsior
 interior	37	intimus
-interstes	5	interstitia
-interstes	7	interstitium
-interstes	9	interstitium
-interstes	24	interstitī
+interstes	5	interstitia	7	interstitium	9	interstitium	24	interstitī
 intimus	36	interior
 intumus	36	interior
-isaianus	0	īsāïānus
-iuvenis	24	iuvene
-iuvenis	36	iūnior
-ligus	1	ligurēs
-ligus	5	liguria
-ligus	7	ligurium
-ligus	9	ligurium
+isaianus	0	ĭsāïānus
+iuvenis	24	iuvene	36	iūnior
+ligus	13	liguribus
 locuples	24	locuplēte
 ludicer	30	lūdicre
 ludicrus	0	lūdicer
-macropus	1	macropodēs
-macropus	5	macropodia
-macropus	7	macropodium
-macropus	9	macropodium
-magnus	36	maior
-magnus	37	maximus
-maledicus	36	maledīcentior
-maledicus	37	maledīcentissimus
-malus	36	peior
-malus	37	pessimus
+macropus	13	macropodibus
+magnus	36	maior	37	maximus
+maledicus	36	maledīcentior	37	maledīcentissimus
+malus	36	peior	37	pessimus
 marauensis	0	maraüēnsis
-mas	1	marēs
-mas	4	mare
-mas	22	mare
-mas	34	mare
+mas	4	mare	13	maribus
 maximus	36	maior
 mediocris	37	medioximus
-microlepis	1	microlepidēs
-microlepis	5	microlepidia
-microlepis	7	microlepidium
-microlepis	9	microlepidium
-multus	36	plūs
-multus	37	plūrimus
+microlepis	13	microlepidibus
+multus	36	plūs	37	plūrimus
 munitus	36	mūnitior
-necessarius	36	necessarior
-necessarius	37	necessarissimus
-nefrens	1	nefrendēs
-nefrens	5	nefrendia
-nefrens	7	nefrendium
-nefrens	9	nefrendium
-neuter	6	neutrīus
-neuter	8	neutrīus
-neuter	10	neutrīus
-neuter	12	neutrī
-neuter	14	neutrī
-neuter	16	neutrī
+necessarius	36	necessarior	37	necessarissimus
+nefrens	13	nefrendibus
+neuter	6	neutrĭus
 octuplex	19	octuplicēs
-omnipotens	36	omnipotēntior
-omnipotens	37	omnipotēntissimus
+omnipotens	36	omnipotēntior	37	omnipotēntissimus
 oportunus	36	oportunior
 parissumus	36	parior
 particeps	24	participe
-parvus	36	minor
-parvus	37	minimus
+parvus	36	minor	37	minimus
 pauperus	0	pauper
 perceler	2	perceleris
 peritum	0	peritus
-pernox	1	pernoctēs
-pernox	5	pernoctia
-pernox	7	pernoctium
-pernox	9	pernoctium
-pertenuis	5	pertenuïa
-pertenuis	7	pertenuïum
-pertenuis	9	pertenuïum
-pervetus	1	perveterēs
-pervetus	5	pervetera
-pervetus	7	perveterum
-pervetus	9	perveterum
+pernox	13	pernoctibus
+pertenuis	5	pertenuïa	7	pertenuïum	9	pertenuïum
+pervetus	13	perveteribus
 phaethonteus	0	phaëthontēus
-phoenix	5	phoenīca
-phoenix	7	phoenīcum
-phoenix	9	phoenīcum
-phoenix	24	phoenīce
-planus	36	planior
-planus	37	planissimus
-plus	1	plūrēs
-plus	5	plūra
-plus	7	plūrium
-plus	9	plūrium
+phoenix	5	phoenīca	7	phoenīcum	9	phoenīcum	24	phoenīce
+planus	36	planior	37	planissimus
+plus	13	plūribus
 posterus	37	postrēmus
-praepes	7	praepetum
-praepes	9	praepetum
-praepes	24	praepete
-primoris	0	prīmor
-primoris	6	prīmōris
-primoris	8	prīmōris
-primoris	12	prīmōrī
-primoris	14	prīmōrī
-primoris	18	prīmōrem
-primoris	20	prīmōrem
-primoris	24	prīmōrī
-primoris	26	prīmōrī
-princeps	24	prīncipe
+praepes	7	praepetum	9	praepetum	24	praepete
+primoris	0	prīmor	6	prīmōris	8	prīmōris	12	prīmōrī	14	prīmōrī	18	prīmōrem	20	prīmōrem	24	prīmōrī	26	prīmōrī
 prior	37	prīmus
 professurus	0	prŏfessūrus
 proficiscendus	0	prŏficīscendus
@@ -281,209 +125,49 @@ proficiscens	0	prŏficīscēns
 profitens	0	prŏfitēns
 profundens	0	prŏfundēns
 profusurus	0	prŏfūsūrus
-pronubans	19	prōnubantēs
+pronubans	24	prōnubante
 propinandus	0	prŏpīnandus
 propinans	0	prŏpīnāns
 propinaturus	0	prŏpīnātūrus
 propinatus	0	prŏpīnātus
 prosperus	37	prosperrimus
-prudens	36	prudentior
-prudens	37	prudentissimus
-pubes	1	pūberēs
-pubes	5	pūbera
-pubes	7	pūberum
-pubes	9	pūberum
-qualisnam	1	quālēsnam
-qualisnam	4	quālenam
-qualisnam	5	quālianam
-qualisnam	6	quālisnam
-qualisnam	7	quāliumnam
-qualisnam	8	quālisnam
-qualisnam	9	quāliumnam
-qualisnam	10	quālisnam
-qualisnam	12	quālīnam
-qualisnam	13	quālibusnam
-qualisnam	14	quālīnam
-qualisnam	15	quālibusnam
-qualisnam	16	quālīnam
-qualisnam	17	quālibusnam
-qualisnam	18	quālemnam
-qualisnam	19	quālīsnam
-qualisnam	20	quālemnam
-qualisnam	22	quālenam
-qualisnam	25	quālibusnam
-qualisnam	27	quālibusnam
-qualisnam	29	quālibusnam
-qualisnam	34	quālenam
-qualisque	1	quālēsque
-qualisque	4	quāleque
-qualisque	5	quāliaque
-qualisque	6	quālisque
-qualisque	7	quāliumque
-qualisque	8	quālisque
-qualisque	9	quāliumque
-qualisque	10	quālisque
-qualisque	12	quālīque
-qualisque	13	quālibusque
-qualisque	14	quālīque
-qualisque	15	quālibusque
-qualisque	16	quālīque
-qualisque	17	quālibusque
-qualisque	18	quālemque
-qualisque	19	quālīsque
-qualisque	20	quālemque
-qualisque	22	quāleque
-qualisque	25	quālibusque
-qualisque	27	quālibusque
-qualisque	29	quālibusque
-qualisque	34	quāleque
+prudens	36	prudentior	37	prudentissimus
+prĭnceps	24	prĭncipe
+pubes	13	pūberibus
+qualisnam	1	quālēsnam	3	quālēsnam	4	quālenam	5	quālianam	6	quālisnam	7	quāliumnam	9	quāliumnam	12	quālīnam	13	quālibusnam	14	quālīnam	20	quālemnam
+qualisque	1	quālēsque	3	quālēsque	4	quāleque	5	quāliaque	6	quālisque	7	quāliumque	9	quāliumque	12	quālīque	13	quālibusque	14	quālīque	20	quālemque
 quindiuensis	0	quindiüēnsis
-quispiam	1	quīpiam
-quispiam	2	quaepiam
-quispiam	3	quaepiam
-quispiam	4	quodpiam
-quispiam	5	quaepiam
-quispiam	6	cuiuspiam
-quispiam	7	quōrumpiam
-quispiam	8	cuiuspiam
-quispiam	9	quārumpiam
-quispiam	10	cuiuspiam
-quispiam	12	cuipiam
-quispiam	13	quibuspiam
-quispiam	14	cuipiam
-quispiam	15	quibuspiam
-quispiam	16	cuipiam
-quispiam	17	quibuspiam
-quispiam	18	quempiam
-quispiam	19	quōspiam
-quispiam	20	quampiam
-quispiam	21	quāspiam
-quispiam	22	quodpiam
-quispiam	24	quōpiam
-quispiam	25	quibuspiam
-quispiam	26	quāpiam
-quispiam	27	quibuspiam
-quispiam	29	quibuspiam
-quotusquisque	2	quotaquaeque
-quotusquisque	4	quotumquidque
-quotusquisque	5	quotaquaeque
-quotusquisque	6	quotīcuiusque
-quotusquisque	7	quotōrumquōrumque
-quotusquisque	8	quotaecuiusque
-quotusquisque	9	quotārumquārumque
-quotusquisque	10	quotīcuiusque
-quotusquisque	12	quotōcuique
-quotusquisque	14	quotaecuique
-quotusquisque	16	quotōcuique
-quotusquisque	22	quotumquidque
+quispiam	1	quīpiam	2	quaepiam	3	quaepiam	4	quodpiam	5	quaepiam	6	cuiuspiam	7	quōrumpiam	9	quārumpiam	12	cuipiam	13	quibuspiam	14	cuipiam	18	quempiam	19	quōspiam	20	quampiam	21	quāspiam	24	quōpiam	26	quāpiam
+quotusquisque	2	quotaquaeque	3	quotaequaeque	4	quotumquidque	5	quotaquaeque	6	quotīcuiusque	8	quotaecuiusque	9	quotārumquārumque	12	quotōcuique	14	quotaecuique	18	quotumquemque	20	quotamquamque	21	quotāsquāsque	24	quotōquōque
 rhetoricus	36	rhētoricōteros
 senex	6	senis
-senex	8	senis
-senex	12	senī
-senex	14	senī
-senex	18	senem
-senex	20	senem
-senex	24	sene
 serius	37	sērissimus
-sesquialter	6	sēsquialterīus
-sesquialter	8	sēsquialterīus
-sesquialter	10	sēsquialterīus
-sesquialter	12	sēsquialterī
-sesquialter	14	sēsquialterī
-sesquialter	16	sēsquialterī
+sesquialter	6	sēsquialterĭus
 sinister	37	sinistimus
-solutus	36	solutior
-solutus	37	solutissimus
-spadix	5	spādīca
-spadix	7	spādīcum
-spadix	9	spādīcum
-spadix	18	spādīca
-spadix	19	spādīcas
-spadix	20	spādīca
-spadix	24	spādīcī
-spadix	26	spādīcī
-spadix	28	spādīcī
-sphaeroides	5	sphaeroīdia
-sphaeroides	7	sphaeroīdium
-sphaeroides	9	sphaeroīdium
-sphaeroides	11	sphaeroīdium
-sphaeroides	23	sphaeroīdia
-sphaeroides	30	sphaeroīdēs
-sphaeroides	35	sphaeroīdia
+solutus	36	solutior	37	solutissimus
+spadix	1	spādīcĕs	3	spādīcĕs	6	spādīcis	7	spādīcum	8	spādīcis	9	spādīcum	10	spādīcis	12	spādīcī	14	spādīcī	16	spādīcī	19	spādīcas	20	spādīca	24	spādīcī	26	spādīcī	28	spādīcī	33	spādīcĕs
+sphaeroides	4	sphaeroīdēs	30	sphaeroīdēs	32	sphaeroīdēs
 splenicus	0	splēnĭcus
 sublimis	36	sublimior
 superior	37	suprēmus
 superus	37	suprēmus
 supinus	37	supinissimus
 syllogisticus	0	syllŏgistĭcus
-tantusdem	4	tantundem
-tantusdem	5	tantadem
-tantusdem	7	tantōrundem
-tantusdem	9	tantārundem
-tantusdem	18	tantundem
-tantusdem	20	tantandem
-tantusdem	22	tantundem
-tantusdem	23	tantadem
-tantusdem	34	tantundem
-tantusdem	35	tantadem
+tantusdem	4	tantundem	5	tantadem	7	tantōrundem	9	tantārundem	18	tantundem	20	tantandem	23	tantadem	35	tantadem
 tectus	36	tectior
 tenuior	0	tenuïor
-tenuis	5	tenuïa
-tenuis	7	tenuïum
-tenuis	9	tenuïum
-tenuis	36	tenuïor
+tenuis	5	tenuïa	7	tenuïum	9	tenuïum
 tenuissimus	36	tenuïor
 transgener	5	trānsgenera
 uber	24	ūberī
-unusquisque	2	ūnaquaeque
-unusquisque	4	ūnumquodque
-unusquisque	5	ūnaquaeque
-unusquisque	6	ūnīuscuiusque
-unusquisque	7	ūnōrumquōrumque
-unusquisque	8	ūnīuscuiusque
-unusquisque	9	ūnārumquārumque
-unusquisque	10	ūnīuscuiusque
-unusquisque	12	ūnīcuique
-unusquisque	14	ūnīcuique
-unusquisque	16	ūnīcuique
-unusquisque	22	ūnumquodque
-uternam	1	utrīnam
-uternam	2	utranam
-uternam	3	utraenam
-uternam	4	utrumnam
-uternam	5	utranam
-uternam	6	utrīusnam
-uternam	7	utrōrumnam
-uternam	8	utrīusnam
-uternam	9	utrārumnam
-uternam	10	utrīusnam
-uternam	13	utrīsnam
-uternam	15	utrīsnam
-uternam	17	utrīsnam
-uternam	18	utrumnam
-uternam	19	utrōsnam
-uternam	20	utramnam
-uternam	21	utrāsnam
-uternam	22	utrumnam
-uternam	25	utrīsnam
-uternam	26	utrānam
-uternam	27	utrīsnam
-uternam	29	utrīsnam
-uternam	33	utraenam
-uternam	34	utrumnam
-utervis	2	utravīs
-utervis	6	utrīusvīs
-utervis	8	utrīusvīs
-utervis	10	utrīusvīs
+unusquisque	2	ūnaquaeque	3	ūnaequaeque	4	ūnumquodque	5	ūnaquaeque	6	ūnĭuscuiusque	9	ūnārumquārumque	12	ūnīcuique	14	ūnīcuique	18	ūnumquemque	20	ūnamquamque	21	ūnāsquāsque	24	ūnōquōque
+uternam	1	utrīnam	2	utranam	3	utraenam	4	utrumnam	5	utranam	6	utrĭusnam	7	utrōrumnam	9	utrārumnam	12	utrīnam	13	utrīsnam	14	utrīnam	18	utrumnam	20	utramnam	21	utrāsnam	24	utrōnam	26	utrānam
+utervis	2	utravīs	3	utraevīs	6	utrĭusvīs	12	utrīvīs	14	utrīvīs	20	utramvīs	24	utrōvīs
 velox	37	vēlocissimus
 versicolor	24	versicolōre
-vetus	1	veterēs
-vetus	5	vetera
-vetus	7	veterum
-vetus	9	veterum
-vetus	36	vetustior
-vetus	37	vetustissimus
+vetus	13	veteribus	36	vetustior	37	vetustissimus
 viarius	30	viārī
+ăstutus	36	astūtior
 "#,
     ),
 };
