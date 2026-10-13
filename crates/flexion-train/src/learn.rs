@@ -1257,6 +1257,7 @@ fn paradigms<'s>(
         let mine = members.get(&s).cloned().unwrap_or_default();
         // Each word's best other paradigm, and the forms it lists there.
         let mut moves: Vec<(usize, usize)> = Vec::with_capacity(mine.len());
+        let mut near = true;
         let mut listed = 0.0;
         let mut stated = crate::bits::ITEM;
         for &i in &mine {
@@ -1290,12 +1291,19 @@ fn paradigms<'s>(
                     }
                 }
             }
+            let forms = (0..shape.cells)
+                .filter(|&c| first_form(w, c).is_some())
+                .count();
             if let Some(b) = best {
+                // Most of its forms built there, for a word moved anyway.
+                near &= 2 * b.0.0 >= forms;
                 moves.push((i, b.1));
             }
         }
-        // One word's own table generalizes to no other: its word is listed.
-        if moves.len() == mine.len() && (listed < stated || mine.len() < 2) {
+        // One word's own table generalizes to no other: where another
+        // paradigm builds most of its forms, its word is listed there.
+        let alone = mine.len() < 2 && near;
+        if moves.len() == mine.len() && (listed < stated || alone) {
             for (i, cand) in moves {
                 if let Some(slot) = chosen.get_mut(i) {
                     *slot = cand;
