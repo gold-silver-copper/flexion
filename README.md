@@ -213,8 +213,11 @@ it pays for itself.
   tier): Sanskrit `न → ण` after `र`, `ष`, `ृ` unless a dental, palatal or retroflex comes
   between. Which letters make the change, block it, or stop it after it, is learned. A
   law can also change a copied letter (reduplication, `%`): Greek copies `φ` as `π`
-  (`πεφίληκα`). A law is kept when it gives forms of five or more words in two or more
-  cells and breaks fewer than one in twenty of the forms it gives; the words it explains
+  (`πεφίληκα`); or join a form's first literal with the stem's first letters (`‹`): the
+  Greek augment lengthens a vowel (`ἐ‹ἀ → ἠ`, `ἐ‹αἰ → ᾐ`: `ἦγον`, `ᾔτουν`), and the
+  same law takes the letter written without its breathing (inside a compound). A law
+  is kept when it gives forms of five or more words in two or more cells and breaks
+  fewer than one in twenty of the forms it gives; the words it explains
   join the more general paradigm, and the forms it breaks are listed. Laws run in
   [`sound-law`](crates/sound-law).
 - **Relations.** Each cell's form is told from another cell's (the one that predicts it

@@ -64,8 +64,12 @@ pub struct Prefixes<'a> {
     /// becoming `joined`
     /// (Greek `ἀπο` and the augment's `ἐ`: `ἀπε`, `ἀπέλυον`), sorted. Where
     /// none is listed, the prefix is written before the form.
-    pub junctions: Cow<'a, [(Cow<'a, str>, Cow<'a, str>, Cow<'a, str>)]>,
+    pub junctions: Cow<'a, [Junction<'a>]>,
 }
+
+/// How a prefix meets a form: `(prefix, head, joined)` (see
+/// [`Prefixes::junctions`]).
+pub type Junction<'a> = (Cow<'a, str>, Cow<'a, str>, Cow<'a, str>);
 
 /// A prefix, and of the dictionary's words that begin with it, how many
 /// separate it, how many keep it in front, of how many.
@@ -422,12 +426,15 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                             self.smoothing,
                             &word.letters,
                             &key,
-                        );
-                        // A word whose forms are listed is spelled as listed.
-                        if spellings.len() > 1 && !self.irregular.has(&key) {
-                            otherwise = spellings.pop();
+                        )
+                        .into_iter();
+                        let first = spellings.next();
+                        // A word whose forms are listed is spelled the
+                        // likeliest way only.
+                        if !self.irregular.has(&key) {
+                            otherwise = spellings.next();
                         }
-                        if let Some(first) = spellings.pop() {
+                        if let Some(first) = first {
                             (word.letters, spelled) = first;
                         }
                     }
@@ -506,7 +513,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         // A listed word's cells told from its listed forms, each once.
         let mut told: Option<Told> = self.irregular.has(&key).then(Told::default);
         // Each reading's accent classes, read once.
-        let classes: Vec<Vec<(Reading<'_, 'a, A>, Vec<Option<Place>>)>> = inflections
+        let classes: Vec<Vec<_>> = inflections
             .iter()
             .take(KEEP)
             .map(|inf| self.accent_classes(&word, inf))
@@ -523,7 +530,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             // from the listed form of the cell it comes from.
             if let Some((letters, ending)) = told
                 .as_mut()
-                .and_then(|told| self.from_listed(&key, cell, told))
+                .and_then(|told| self.told_from_listed(&key, cell, told))
             {
                 let stresses = match inflections.first() {
                     Some(inf) => self.stresses(
@@ -708,7 +715,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     /// The letters of `cell` for the word looked up as `key`, told from the
     /// listed form of the cell it comes from (or one told so in turn), and
     /// where the change starts; `told`: the cells told so far.
-    fn from_listed(&self, key: &str, cell: usize, told: &mut Told) -> Option<(String, usize)> {
+    fn told_from_listed(&self, key: &str, cell: usize, told: &mut Told) -> Option<(String, usize)> {
         if let Some(t) = told.get(&cell) {
             return t.clone();
         }
@@ -720,7 +727,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 let from = relation.source()?;
                 let source = match self.irregular_form(key, from) {
                     Some(listed) => self.orthography.read(listed).letters,
-                    None => self.from_listed(key, from, told)?.0,
+                    None => self.told_from_listed(key, from, told)?.0,
                 };
                 self.changing(relation).told(&source, self.smoothing)
             });

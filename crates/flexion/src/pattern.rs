@@ -142,8 +142,20 @@ pub const BOUNDARY: char = '+';
 /// part of a word.
 pub const COPIED: char = '°';
 
+/// Where a pattern's first literal meets its first stem piece, in a built
+/// form, for sound laws to see (`ἐ‹ἀγ+ον` → `ἠγ+ον`: the augment lengthens
+/// the stem's vowel). Never part of a word.
+pub const FRONT: char = '‹';
+
+/// Whether `c` marks a built form (see [`fill_marked`]) rather than being a
+/// letter of it.
+pub fn is_mark(c: char) -> bool {
+    c == BOUNDARY || c == COPIED || c == FRONT
+}
+
 /// [`fill`], with [`BOUNDARY`] after the last stem piece (at the start, for
-/// a pattern with none) and [`COPIED`] before each copied letter.
+/// a pattern with none), [`COPIED`] before each copied letter, and [`FRONT`]
+/// before the first stem piece where a literal comes before it.
 pub fn fill_marked(pattern: &str, stems: &[&str]) -> String {
     match pattern.rfind('~') {
         Some(at) => {
@@ -161,11 +173,15 @@ pub fn fill(pattern: &str, stems: &[&str]) -> String {
     build(pattern, stems, false)
 }
 
-/// [`fill`], with [`COPIED`] before each copied letter if `marked`.
+/// [`fill`], with [`COPIED`] before each copied letter and [`FRONT`] after
+/// a first literal if `marked`.
 fn build(pattern: &str, stems: &[&str], marked: bool) -> String {
     let mut out = String::with_capacity(pattern.len().saturating_add(16));
     for (i, lit) in pattern.split('~').enumerate() {
         if let Some(s) = i.checked_sub(1).and_then(|i| stems.get(i)) {
+            if marked && i == 1 && !out.is_empty() {
+                out.push(FRONT);
+            }
             out.push_str(s);
         }
         let next = stems.get(i).and_then(|s| s.chars().next());
@@ -188,7 +204,10 @@ fn build(pattern: &str, stems: &[&str], marked: bool) -> String {
 /// A form built marked (see [`fill_marked`]) as a word: its marks taken
 /// out, and where its ending starts.
 pub fn unmarked(built: &str) -> (String, usize) {
-    let word: String = built.chars().filter(|&c| c != COPIED).collect();
+    let word: String = built
+        .chars()
+        .filter(|&c| c != COPIED && c != FRONT)
+        .collect();
     let ending = word.find(BOUNDARY).unwrap_or(0);
     (word.replace(BOUNDARY, ""), ending)
 }
@@ -227,11 +246,14 @@ mod tests {
         assert_eq!(bind("%ε~κα", "πεπαιδευκ"), None);
         assert_eq!(bind("%ε~κα", "τεπαιδευκα"), None);
         // Marked for sound laws: where the stem ends, and what was copied.
-        assert_eq!(fill_marked("ἐ%ε~κη", &["φιλη"]), "ἐ°φεφιλη+κη");
+        // and where a literal before the stem meets it.
+        assert_eq!(fill_marked("ἐ%ε~κη", &["φιλη"]), "ἐ°φε‹φιλη+κη");
         assert_eq!(
-            unmarked("ἐ°φεφιλη+κη"),
+            unmarked("ἐ°φε‹φιλη+κη"),
             ("ἐφεφιληκη".to_string(), "ἐφεφιλη".len())
         );
+        assert_eq!(fill_marked("ἐ~ον", &["ἀγ"]), "ἐ‹ἀγ+ον");
+        assert_eq!(fill_marked("~ον", &["ἀγ"]), "ἀγ+ον");
         // Matching letters a lookup reads alike, the stems are the word's.
         let plain = |a: char, b: char| a == b || (a, b) == ('o', 'ō') || (a, b) == ('ō', 'o');
         assert_eq!(bind_by("~tiō", "ratio", plain), Some(vec!["ra"]));
