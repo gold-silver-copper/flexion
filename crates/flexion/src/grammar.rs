@@ -6,6 +6,7 @@ use crate::choice::{Choice, Reading, Status};
 use crate::orthography::{Casing, Orthography, Written};
 use crate::paradigm::{Paradigm, Relation};
 use crate::pattern;
+use crate::stems::{EndingTable, Slot};
 use crate::stress::{self, Accent, Place};
 use crate::{Candidate, Evidence, Label};
 use std::borrow::Cow;
@@ -166,30 +167,48 @@ impl Prefixes<'_> {
 }
 
 /// The forms no rule gives, as a table: a line per word, sorted, its key
-/// (see [`Orthography::key`]) then each listed cell's number and form, all
-/// tab-separated, cells in order.
+/// (see [`Orthography::key`]), then each listed stem's slot and the stem
+/// with its ending table (`aorist`, `ἀγγειλ- like λυω`: see
+/// [`crate::LIKE`]), then each listed cell's number and form, all
+/// tab-separated, slots and cells in order.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct Irregular<'a> {
     pub table: Cow<'a, str>,
 }
 
+/// A listed stem: `(word, slot, stem, table)`.
+pub type ListedStem = (String, String, String, String);
+
 impl Irregular<'_> {
-    /// The table of `forms`: `(word, cell, form)`.
-    pub fn new(forms: &[(String, usize, String)]) -> Irregular<'static> {
+    /// The table of `forms`, `(word, cell, form)`, and `stems`.
+    pub fn new(forms: &[(String, usize, String)], stems: &[ListedStem]) -> Irregular<'static> {
         let mut rows: Vec<(&str, usize, &str)> = forms
             .iter()
             .map(|(w, c, f)| (w.as_str(), *c, f.as_str()))
             .collect();
         rows.sort_unstable();
         rows.dedup_by(|a, b| a.0 == b.0 && a.1 == b.1);
+        let mut stems: Vec<&ListedStem> = stems.iter().collect();
+        stems.sort();
+        stems.dedup_by(|a, b| a.0 == b.0 && a.1 == b.1);
+        let mut words: Vec<&str> = rows
+            .iter()
+            .map(|r| r.0)
+            .chain(stems.iter().map(|s| s.0.as_str()))
+            .collect();
+        words.sort_unstable();
+        words.dedup();
         let mut table = String::new();
-        for word in rows.chunk_by(|a, b| a.0 == b.0) {
-            let Some((w, _, _)) = word.first() else {
-                continue;
-            };
+        let (mut r, mut s) = (0, 0);
+        for w in words {
             table.push_str(w);
-            for (_, c, f) in word {
+            while let Some((_, slot, stem, like)) = stems.get(s).filter(|e| e.0 == w) {
+                table.push_str(&format!("\t{slot}\t{stem}{}{like}", crate::LIKE));
+                s += 1;
+            }
+            while let Some((_, c, f)) = rows.get(r).filter(|e| e.0 == w) {
                 table.push_str(&format!("\t{c}\t{f}"));
+                r += 1;
             }
             table.push('\n');
         }
@@ -200,7 +219,24 @@ impl Irregular<'_> {
 
     /// How many forms the table lists.
     pub fn len(&self) -> usize {
-        self.table.lines().map(|l| l.split('\t').count() / 2).sum()
+        self.entries()
+            .filter(|(c, _)| c.parse::<u16>().is_ok())
+            .count()
+    }
+
+    /// How many stems the table lists.
+    pub fn stems(&self) -> usize {
+        self.entries()
+            .filter(|(c, _)| c.parse::<u16>().is_err())
+            .count()
+    }
+
+    /// Every line's entries: `(cell, form)` and `(slot, stem with table)`.
+    fn entries(&self) -> impl Iterator<Item = (&str, &str)> {
+        self.table.lines().flat_map(|l| {
+            let mut parts = l.split('\t').skip(1);
+            std::iter::from_fn(move || Some((parts.next()?, parts.next()?)))
+        })
     }
 
     pub fn is_empty(&self) -> bool {
@@ -244,6 +280,18 @@ impl Irregular<'_> {
         }
         None
     }
+}
+
+/// The stem a word's line of the irregular table lists for the slot named
+/// `slot`, and its ending table's name.
+fn stem_in<'l>(line: &'l str, slot: &str) -> Option<(&'l str, &'l str)> {
+    let mut parts = line.split('\t').skip(1);
+    while let (Some(s), Some(entry)) = (parts.next(), parts.next()) {
+        if s == slot {
+            return crate::stems::listed_stem(entry);
+        }
+    }
+    None
 }
 
 /// The form of `cell` in a word's line of the irregular table, if listed.
@@ -314,8 +362,12 @@ pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
     /// `#de` → `ē`, as in `dē-`; `ae` → `e`, a diphthong): the spelling of a
     /// word that isn't listed.
     pub marks: Option<Choice<'a, char>>,
-    /// Forms no rule gives, as the dictionary writes them: `(word, cell,
-    /// form)`, sorted by word and cell. They are the answer for that word.
+    /// The stem slots: the cells words build on one stem each.
+    pub slots: Cow<'a, [Slot<'a>]>,
+    /// The ending tables slots' cells are built with, on a listed stem.
+    pub tables: Cow<'a, [EndingTable<'a>]>,
+    /// Forms no rule gives, as the dictionary writes them, and stems words
+    /// list (see [`Irregular`]). They are the answer for that word.
     pub irregular: Irregular<'a>,
     /// How many words' worth a broader rule's counts add to a specific
     /// rule's (see [`Choice::read`]).
@@ -329,9 +381,17 @@ pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
     pub trust: Trust,
 }
 
+/// A cell's forms, the usual first, each with where its ending starts.
+type Forms = Vec<(String, usize)>;
+
 /// A reading's forms of the cells built so far: per cell, its forms with
-/// where their endings start, by how likely.
-type Built = std::collections::HashMap<usize, Vec<(Vec<(String, usize)>, f32)>>;
+/// where their endings start, by how likely; and the stems the forms the
+/// caller gives fix, per slot: `(slot, ending table, stem)`.
+#[derive(Default)]
+struct Built {
+    cells: std::collections::HashMap<usize, Vec<(Forms, f32)>>,
+    fixed: Vec<(usize, String, String)>,
+}
 
 /// An accent class a word may be of: how likely, its accent's place in
 /// each cell, and the position (see [`stress::position`]) its stem accents.
@@ -402,6 +462,12 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         } else {
             word.casing
         };
+        // The forms the caller gives, as letters.
+        let given: Vec<(usize, String)> = known
+            .forms
+            .iter()
+            .map(|&(c, f)| (c, self.orthography.read(f).letters))
+            .collect();
         let mut inflections = self.inflections(&word.letters, &key, known);
         if inflections.is_empty() {
             let none = Known {
@@ -417,7 +483,11 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             .take(KEEP)
             .map(|inf| {
                 let classes = self.accent_classes(&word, &inf, cells);
-                (inf, classes, Built::default())
+                let built = Built {
+                    fixed: self.fixed(inf.paradigm, &inf.stems, &given, &word.letters),
+                    ..Built::default()
+                };
+                (inf, classes, built)
             })
             .collect();
         // A word written in parts: as one word, or part by part.
@@ -476,30 +546,64 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         let whole = whole * behind.as_ref().map_or(1.0, |b| 1.0 - b.3 - b.4);
         let line = self.irregular.line(&key);
         let mut lists = Vec::with_capacity(cells.len());
+        // Where a word's line lists a form, or a stem the cell is built on:
+        // its letters.
+        let have = |c: usize| -> Option<String> {
+            let line = line?;
+            match listed_in(line, u16::try_from(c).ok()?) {
+                Some(form) => Some(self.orthography.read(form).letters),
+                None => self.stem_built(line, c)?.0.into_iter().next().map(|f| f.0),
+            }
+        };
+        // The stress of a listed word's letters `letters` of `cell` (its
+        // ending starting at `ending`), by its likeliest reading.
+        let lead = line
+            .and(readings.first())
+            .map(|(inf, classes, _)| (inf.reading.value, classes.clone()));
+        let stressed = |cell: usize, letters: &str, ending: usize| match &lead {
+            Some((value, classes)) => self.stresses(*value, classes, cell, letters, ending),
+            None => vec![(None, 1.0)],
+        };
         for (i, &cell) in cells.iter().enumerate() {
-            let at = |c: usize| {
-                line.zip(u16::try_from(c).ok())
-                    .and_then(|(l, c)| listed_in(l, c))
-            };
-            if let Some(form) = at(cell) {
+            let listed_form = line
+                .zip(u16::try_from(cell).ok())
+                .and_then(|(l, c)| listed_in(l, c));
+            if let Some(form) = listed_form {
                 lists.push(vec![listed(crate::recase(form, casing), 1.0)]);
+                continue;
+            }
+            // A cell of a slot whose stem the word lists: built on it, with
+            // the slot's ending table.
+            if let Some((forms, table, stem)) = line.and_then(|l| self.stem_built(l, cell))
+                && let Some(((first, ending), also)) = forms.split_first()
+            {
+                let stresses = stressed(cell, first, *ending);
+                lists.push(
+                    stresses
+                        .into_iter()
+                        .map(|(stress, p)| {
+                            let write = |f: &str| self.orthography.write(f, stress, casing);
+                            Candidate {
+                                form: write(first),
+                                also: also.iter().map(|(f, _)| write(f)).collect(),
+                                paradigm: table,
+                                stem: Some(stem),
+                                ..listed(String::new(), p)
+                            }
+                        })
+                        .collect(),
+                );
                 continue;
             }
             // A form of a word whose forms are listed, but not this one: told
             // from the listed form of the cell it comes from.
             if let Some((letters, ending)) = line
                 .is_some()
-                .then(|| self.told_from_listed(&at, cell, self.relations.len()))
+                .then(|| self.told_from_listed(&have, cell, self.relations.len()))
                 .flatten()
             {
-                let stresses = match readings.first() {
-                    Some((inf, classes, _)) => {
-                        self.stresses(inf.reading.value, classes, cell, &letters, ending)
-                    }
-                    None => vec![(None, 1.0)],
-                };
                 lists.push(
-                    stresses
+                    stressed(cell, &letters, ending)
                         .into_iter()
                         .map(|(stress, p)| {
                             listed(self.orthography.write(&letters, stress, casing), p)
@@ -551,6 +655,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                             status: b.status,
                             paradigm: b.paradigm,
                             evidence: b.evidence,
+                            stem: b.stem,
                         });
                     }
                 }
@@ -584,6 +689,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                             },
                             paradigm: inf.paradigm.name.as_ref(),
                             evidence,
+                            stem: None,
                         };
                         add(&mut out, candidate);
                     }
@@ -663,25 +769,113 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         o.write(&letters, stress, written.casing)
     }
 
-    /// The letters of `cell` for a word whose listed forms `listed` gives by
-    /// cell, told from the listed form of the cell it comes from (or one
-    /// told so in turn, at most `steps` away), and where the change starts.
-    fn told_from_listed<'l>(
+    /// The letters of `cell` for a word whose listed forms (or forms built on
+    /// its listed stems) `listed` gives by cell, as letters, told from that
+    /// of the cell it comes from (or one told so in turn, at most `steps`
+    /// away), and where the change starts.
+    fn told_from_listed(
         &self,
-        listed: &impl Fn(usize) -> Option<&'l str>,
+        listed: &impl Fn(usize) -> Option<String>,
         cell: usize,
         steps: usize,
     ) -> Option<(String, usize)> {
         let relation = self.relation(cell).filter(|r| r.listed)?;
         let from = relation.source()?;
         let source = match listed(from) {
-            Some(form) => self.orthography.read(form).letters,
+            Some(letters) => letters,
             None => {
                 self.told_from_listed(listed, from, steps.checked_sub(1)?)?
                     .0
             }
         };
         self.changing(relation).told(&source, self.smoothing)
+    }
+
+    /// The forms (letters, each with where its ending starts) of `cell` for
+    /// a word whose irregular `line` lists the stem of the cell's slot,
+    /// built with the stem's ending table; the table's name, and the stem.
+    fn stem_built<'l>(&'l self, line: &'l str, cell: usize) -> Option<(Forms, &'l str, &'l str)> {
+        let (s, slot) = self
+            .slots
+            .iter()
+            .enumerate()
+            .find(|(_, s)| s.position(cell).is_some())?;
+        let position = slot.position(cell)?;
+        let (stem, name) = stem_in(line, &slot.name)?;
+        let table = self
+            .tables
+            .iter()
+            .find(|t| usize::from(t.slot) == s && t.name == name)?;
+        let forms = table.build(position, stem, self.laws.as_ref());
+        (!forms.is_empty()).then_some((forms, table.name.as_ref(), stem))
+    }
+
+    /// The slot `cell` is in, and its place among the slot's cells.
+    fn slot_of(&self, cell: usize) -> Option<(usize, usize)> {
+        self.slots
+            .iter()
+            .enumerate()
+            .find_map(|(s, slot)| Some((s, slot.position(cell)?)))
+    }
+
+    /// The stems the forms the caller gives (`given`, as letters) fix, per
+    /// slot, for a word `lemma` (letters) read as `paradigm`: `(slot, ending
+    /// table, stem)`. A given form's stem is what the paradigm's own table
+    /// for the slot (see [`crate::factor`]) leaves of it, where the table
+    /// builds it; the stem's first letter may be the lemma's, where a
+    /// template before the stem changed it (an augment). Another paradigm's
+    /// table is that paradigm's reading's to use, not this one's; a form
+    /// the paradigm builds itself fixes nothing.
+    fn fixed(
+        &self,
+        paradigm: &Paradigm<'a>,
+        stems: &[&str],
+        given: &[(usize, String)],
+        lemma: &str,
+    ) -> Vec<(usize, String, String)> {
+        let mut out: Vec<(usize, String, String)> = Vec::new();
+        for (cell, form) in given {
+            // A word written in parts has no one stem.
+            if lemma.contains(JOINER) || form.contains(JOINER) {
+                continue;
+            }
+            // A form the paradigm builds fixes nothing it doesn't.
+            let built = paradigm.built(&self.paradigms, self.laws.as_ref(), *cell, stems);
+            if built.iter().any(|(b, _)| b == form) {
+                continue;
+            }
+            let Some((s, position)) = self.slot_of(*cell) else {
+                continue;
+            };
+            if out.iter().any(|f| f.0 == s) {
+                continue;
+            }
+            let Some(slot) = self.slots.get(s) else {
+                continue;
+            };
+            let patterns: Vec<Option<&str>> = slot
+                .cells
+                .iter()
+                .map(|&c| paradigm.pattern(&self.paradigms, usize::from(c)))
+                .collect();
+            let found = crate::stems::factor(&patterns).and_then(|(_, table)| {
+                let p = table.split('\t').nth(position).filter(|p| !p.is_empty())?;
+                let stem = crate::stems::stem_of(p, form, lemma, self.laws.as_ref())?;
+                Some((table, stem))
+            });
+            if let Some((table, stem)) = found {
+                out.push((s, table, stem));
+            }
+        }
+        out
+    }
+
+    /// The letters of `cell` the word looked up as `key` builds on the stem
+    /// it lists for the cell's slot, if it lists one (the usual form).
+    pub fn stem_form(&self, key: &str, cell: usize) -> Option<String> {
+        let line = self.irregular.line(key)?;
+        let (forms, _, _) = self.stem_built(line, cell)?;
+        forms.into_iter().next().map(|f| f.0)
     }
 
     /// The relation whose changes `relation` makes: its own, or, for one by
@@ -719,14 +913,22 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         cell: usize,
         built: &mut Built,
     ) -> Vec<(Vec<(String, usize)>, f32)> {
-        if let Some(forms) = built.get(&cell) {
+        if let Some(forms) = built.cells.get(&cell) {
             return forms.clone();
         }
         // A cell on the way to itself (none, as relations are learned) has
         // no form.
-        built.insert(cell, Vec::new());
+        built.cells.insert(cell, Vec::new());
         let mut out = Vec::new();
-        let forms = paradigm.built(&self.paradigms, self.laws.as_ref(), cell, stems);
+        // A cell of a slot a given form fixes the stem of: built on that
+        // stem; else as the paradigm builds it.
+        let on_given = self.slot_of(cell).and_then(|(s, position)| {
+            let (_, table, stem) = built.fixed.iter().find(|f| f.0 == s)?;
+            let p = table.split('\t').nth(position).filter(|p| !p.is_empty())?;
+            Some(crate::stems::build(p, stem, self.laws.as_ref()))
+        });
+        let forms = on_given
+            .unwrap_or_else(|| paradigm.built(&self.paradigms, self.laws.as_ref(), cell, stems));
         if !forms.is_empty() {
             out.push((forms, 1.0));
         } else if let Some(relation) = self.relation(cell) {
@@ -767,7 +969,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             out.sort_by(|a, b| b.1.total_cmp(&a.1));
             out.truncate(KEEP);
         }
-        built.insert(cell, out.clone());
+        built.cells.insert(cell, out.clone());
         out
     }
 
@@ -1078,6 +1280,7 @@ fn listed(form: String, probability: f32) -> Candidate<'static> {
         status: Status::Listed,
         paradigm: "",
         evidence: None,
+        stem: None,
     }
 }
 

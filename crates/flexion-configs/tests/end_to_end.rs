@@ -206,11 +206,13 @@ fn harmony_is_one_law_and_endings_name_its_class_letters() {
 #[test]
 fn a_printed_grammar_answers_as_the_grammar_it_was_printed_from() {
     // Russian has referrals, compounds and sound laws; Ancient Greek, accent;
-    // Latin, restored vowel length; Turkish, harmony.
+    // Latin, restored vowel length; Turkish, harmony; English, verbs that
+    // list a stem.
     print_and_compare(flexion_configs::russian::language());
     print_and_compare(flexion_configs::ancient_greek::language());
     print_and_compare(flexion_configs::latin::language());
     print_and_compare(flexion_configs::turkish::language());
+    print_and_compare(flexion_configs::english::language());
 }
 
 /// Print `lang`'s fixture grammar as a crate and check, by compiling and
@@ -234,6 +236,16 @@ fn print_and_compare(lang: Language) {
         lang.name != "russian" || (printed("noun/laws.rs") && printed("noun/relations.rs")),
         "the Russian nouns have their sound laws and relations"
     );
+    // English verbs have stem slots (`sing` and `sang` are built on two
+    // stems), and a word that lists a stem and its ending table.
+    assert!(
+        lang.name != "english"
+            || (printed("verb/stems.rs")
+                && files.iter().any(|(path, text)| {
+                    path.ends_with("verb/irregular.rs") && text.contains(flexion::LIKE)
+                })),
+        "the English verbs have their stem slots and a listed stem"
+    );
     let dir = PathBuf::from(env!("CARGO_TARGET_TMPDIR")).join(format!("printed-{}", lang.name));
     flexion_train::print::write(&dir, &files).expect("written");
     // A crate of its own, depending on this workspace's runtime.
@@ -252,7 +264,7 @@ fn print_and_compare(lang: Language) {
     // as the grammar in memory answers them: a table of answers per part of
     // speech, and a loop over it (a crate of asserts compiles slowly).
     let mut test = String::from(
-        "use flexion::Known;\n\ntype Answer = (&'static str, usize, &'static [(u8, u8)], &'static [&'static str], &'static [f32]);\n\n",
+        "use flexion::Known;\n\ntype Answer = (&'static str, usize, &'static [(u8, u8)], &'static [(usize, &'static str)], &'static [&'static str], &'static [f32]);\n\n",
     );
     let mut checks = String::new();
     for (part, (d, learned)) in lang.parts.iter().zip(data.iter().zip(&learned)) {
@@ -269,15 +281,36 @@ fn print_and_compare(lang: Language) {
                 .filter(|&(_, &v)| v != u8::MAX)
                 .filter_map(|(f, &v)| Some((u8::try_from(f).ok()?, v)))
                 .collect();
+            // A form of its last stem slot given (a principal part), where
+            // its part of speech has more than one slot.
+            let given: Vec<(usize, &str)> = g
+                .slots
+                .last()
+                .filter(|_| g.slots.len() > 1)
+                .and_then(|slot| slot.cells.first())
+                .and_then(|&c| {
+                    Some((
+                        usize::from(c),
+                        l.cells.get(usize::from(c))?.first()?.as_str(),
+                    ))
+                })
+                .into_iter()
+                .collect();
             for cell in 0..g.cells {
                 let asks: &[&[(u8, u8)]] = if cell > 0 || inherent.is_empty() {
                     &[&[]]
                 } else {
                     &[&[], &inherent]
                 };
-                for &ask in asks {
+                let gives: &[&[(usize, &str)]] = if given.is_empty() {
+                    &[&[]]
+                } else {
+                    &[&[], &given]
+                };
+                for (&ask, &give) in asks.iter().flat_map(|a| gives.iter().map(move |f| (a, f))) {
                     let known = Known {
                         inherent: ask,
+                        forms: give,
                         ..Known::default()
                     };
                     let candidates: Vec<(String, f32)> = g
@@ -290,7 +323,7 @@ fn print_and_compare(lang: Language) {
                         candidates.iter().map(|c| format!("{:?}f32", c.1)).collect();
                     let _ = writeln!(
                         test,
-                        "    ({:?}, {cell}, &{ask:?}, &{forms:?}, &[{}]),",
+                        "    ({:?}, {cell}, &{ask:?}, &{give:?}, &{forms:?}, &[{}]),",
                         l.full,
                         probabilities.join(", ")
                     );
@@ -300,8 +333,8 @@ fn print_and_compare(lang: Language) {
         test.push_str("];\n\n");
         let _ = writeln!(
             checks,
-            "    for (word, cell, ask, forms, probabilities) in {table} {{\n        \
-             let c = {crate_name}::{}::GRAMMAR.candidates(word, *cell, &Known {{ inherent: ask, ..Known::default() }});\n        \
+            "    for (word, cell, ask, give, forms, probabilities) in {table} {{\n        \
+             let c = {crate_name}::{}::GRAMMAR.candidates(word, *cell, &Known {{ inherent: ask, forms: give, ..Known::default() }});\n        \
              assert_eq!(c.iter().map(|c| c.form.as_str()).collect::<Vec<&str>>(), *forms, \"{{word}} {{cell}}\");\n        \
              assert_eq!(c.iter().map(|c| c.probability).collect::<Vec<f32>>(), *probabilities, \"{{word}} {{cell}}\");\n    }}",
             part.name
