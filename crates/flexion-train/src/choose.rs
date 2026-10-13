@@ -31,23 +31,21 @@ pub struct Settings {
 
 impl Settings {
     /// For a choice of detail (how an ending changes, where an accent
-    /// goes), whose rules pay for each letter they read
-    /// ([`DETAIL_LETTER_BITS`]) when this doesn't say otherwise.
+    /// goes), whose rules pay a bit for each letter they read when this
+    /// doesn't say otherwise.
     #[must_use]
     pub fn detail(self) -> Settings {
+        let letter_bits = if self.letter_bits > 0.0 {
+            self.letter_bits
+        } else {
+            1.0
+        };
         Settings {
-            letter_bits: if self.letter_bits > 0.0 {
-                self.letter_bits
-            } else {
-                DETAIL_LETTER_BITS
-            },
+            letter_bits,
             ..self
         }
     }
 }
-
-/// See [`Settings::detail`].
-pub const DETAIL_LETTER_BITS: f64 = 1.0;
 
 impl Default for Settings {
     fn default() -> Self {
@@ -79,49 +77,30 @@ pub fn learn<'a, L: Label + Hash + Ord>(
                 .or_default() += 1;
         }
     }
-    let winner = |c: &BTreeMap<L, u32>| -> Option<L> {
-        // Most words; of equal counts, the lowest value.
-        c.iter()
-            .max_by(|a, b| a.1.cmp(b.1).then_with(|| b.0.cmp(a.0)))
-            .map(|(&l, _)| l)
-    };
     let mut by_length: Vec<(&String, &BTreeMap<L, u32>)> = counts.iter().collect();
-    by_length.sort_by(|a, b| {
-        a.0.chars()
-            .count()
-            .cmp(&b.0.chars().count())
-            .then_with(|| a.0.cmp(b.0))
-    });
+    by_length.sort_by_key(|&(e, _)| (e.chars().count(), e));
     // Kept rules, by ending, with what the runtime makes of each (see
     // [`flexion::blend`]).
     let mut kept: HashMap<&str, Vec<(L, f64)>> = HashMap::default();
     for (ending, c) in &by_length {
-        if winner(c).is_none() {
-            continue;
-        }
         let list: Vec<(L, u32)> = c.iter().map(|(&l, &n)| (l, n)).collect();
-        if ending.is_empty() {
-            kept.insert(
-                ending.as_str(),
-                flexion::blend(&list, &[], settings.smoothing),
-            );
-            continue;
-        }
-        let total: u32 = c.values().sum();
-        if total < settings.min_gain {
-            continue;
-        }
-        // The rule deciding these words now: the longest kept ending.
-        let Some(current) = endings(ending).skip(1).find_map(|e| kept.get(e)) else {
-            continue;
-        };
         // A rule costs its bits, and more for each letter it reads.
         #[allow(clippy::cast_precision_loss)]
         let cost = settings.rule_bits + settings.letter_bits * ending.chars().count() as f64;
-        if saved_bits(&list, current, settings.smoothing) >= cost {
-            let dist = flexion::blend(&list, current, settings.smoothing);
-            kept.insert(ending.as_str(), dist);
-        }
+        // The rule deciding these words now: the longest kept ending (the
+        // empty one is always kept).
+        let current = match endings(ending).skip(1).find_map(|e| kept.get(e)) {
+            _ if ending.is_empty() => &[][..],
+            Some(current)
+                if c.values().sum::<u32>() >= settings.min_gain
+                    && saved_bits(&list, current, settings.smoothing) >= cost =>
+            {
+                current
+            }
+            _ => continue,
+        };
+        let dist = flexion::blend(&list, current, settings.smoothing);
+        kept.insert(ending.as_str(), dist);
     }
     let mut rules: Vec<Rule<'a, L>> = kept
         .keys()
@@ -166,16 +145,16 @@ pub fn learn<'a, L: Label + Hash + Ord>(
     choice
 }
 
-/// [`learn`], for a choice that reads beginnings (see [`flexion::Side`]):
-/// its rules are learned on the words read backwards.
+/// [`learn`]'s rules, for a choice that reads beginnings (see
+/// [`flexion::Side`]): learned on the words read backwards. No words are
+/// listed.
 pub fn learn_starts<'a, L: Label + Hash + Ord>(
     examples: &[(String, L)],
     settings: Settings,
-    fits: impl Fn(&str, L) -> bool,
 ) -> Choice<'a, L> {
     let back = |s: &str| -> String { s.chars().rev().collect() };
     let reversed: Vec<(String, L)> = examples.iter().map(|(w, l)| (back(w), *l)).collect();
-    let learned = learn(&reversed, settings, |w, l| fits(&back(w), l));
+    let learned = learn(&reversed, settings, |_, _| true);
     let mut rules: Vec<Rule<'a, L>> = learned
         .rules
         .iter()
@@ -185,16 +164,10 @@ pub fn learn_starts<'a, L: Label + Hash + Ord>(
         })
         .collect();
     rules.sort_by(|a, b| a.ending.cmp(&b.ending));
-    let mut exceptions: Vec<(Cow<'a, str>, L)> = learned
-        .exceptions
-        .iter()
-        .map(|(w, l)| (Cow::Owned(back(w)), *l))
-        .collect();
-    exceptions.sort_by(|a, b| a.0.cmp(&b.0).then_with(|| a.1.cmp(&b.1)));
     Choice {
         side: flexion::Side::Start,
         rules: Cow::Owned(rules),
-        exceptions: Cow::Owned(exceptions),
+        exceptions: Cow::Owned(Vec::new()),
     }
 }
 

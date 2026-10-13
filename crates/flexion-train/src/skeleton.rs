@@ -124,8 +124,9 @@ pub fn analyze(lemma: &str, forms: &[&str]) -> Analysis {
     // the one breaking them into the fewest runs (`λυ` in `λέλυκα` is one
     // run after `λε`, not `λ` … `υ`).
     let places: Vec<Option<Vec<usize>>> = all.iter().map(|w| embed(&sub, w)).collect();
-    // Kept letters stay one stem piece while they are adjacent in every word.
-    let mut runs: Vec<Vec<usize>> = Vec::new();
+    // Kept letters stay one stem piece while they are adjacent in every word:
+    // each piece's first and last letter.
+    let mut runs: Vec<(usize, usize)> = Vec::new();
     for k in 0..sub.len() {
         let together = k > 0
             && places
@@ -133,21 +134,18 @@ pub fn analyze(lemma: &str, forms: &[&str]) -> Analysis {
                 .flatten()
                 .all(|p| matches!((p.get(k - 1), p.get(k)), (Some(&x), Some(&y)) if y == x + 1));
         match runs.last_mut() {
-            Some(run) if together => run.push(k),
-            _ => runs.push(vec![k]),
+            Some(run) if together => run.1 = k,
+            _ => runs.push((k, k)),
         }
     }
     let stems: Vec<String> = runs
         .iter()
-        .map(|r| r.iter().filter_map(|&k| sub.get(k)).collect())
+        .map(|&(first, end)| sub.get(first..=end).unwrap_or_default().iter().collect())
         .collect();
     let pattern = |w: &[char], p: &[usize]| -> String {
         let mut out = String::new();
         let mut last = 0usize;
-        for r in &runs {
-            let (Some(&first), Some(&end)) = (r.first(), r.last()) else {
-                continue;
-            };
+        for &(first, end) in &runs {
             let (Some(&s), Some(&e)) = (p.get(first), p.get(end)) else {
                 continue;
             };

@@ -166,16 +166,13 @@ pub fn score<P: Label, A: Label, F: Label>(
             .and_then(|r| seen.get(r.value.index()));
         let table = grammar.table(&typed, &known);
         for (cell, forms) in l.cells.iter().enumerate() {
-            let Some(want) = forms.first() else {
+            let Some(want) = forms.first().filter(|_| !parts.contains(&cell)) else {
                 continue;
             };
-            if parts.contains(&cell) {
-                continue;
-            }
-            let candidates = table.get(cell).cloned().unwrap_or_default();
-            s.forms += 1;
+            let candidates = table.get(cell).map_or(&[][..], Vec::as_slice);
             let same = |form: &str| same_form(orthography, form, want);
             let right = candidates.first().is_some_and(|c| same(&c.form));
+            s.forms += 1;
             s.right += usize::from(right);
             let split = if has.is_none_or(|h| h.get(cell).copied().unwrap_or(false)) {
                 &mut s.seen
@@ -185,13 +182,11 @@ pub fn score<P: Label, A: Label, F: Label>(
             split.0 += 1;
             split.1 += usize::from(right);
             let letters = |form: &str| orthography.read(form).letters;
-            s.letters += usize::from(
-                candidates
-                    .first()
-                    .is_some_and(|c| letters(&c.form) == letters(want)),
-            );
-            s.top3 += usize::from(candidates.iter().take(3).any(|c| same(&c.form)));
-            if let Some(place) = candidates.iter().position(|c| same(&c.form)) {
+            let first = candidates.first();
+            s.letters += usize::from(first.is_some_and(|c| letters(&c.form) == letters(want)));
+            let place = candidates.iter().position(|c| same(&c.form));
+            s.top3 += usize::from(place.is_some_and(|p| p < 3));
+            if let Some(place) = place {
                 #[allow(clippy::cast_precision_loss)]
                 let rank = (place + 1) as f64;
                 s.reciprocal += 1.0 / rank;
@@ -229,7 +224,8 @@ pub fn floor(
     let baseline = crate::baseline::Baseline::learn(
         pairs.iter().map(|(l, c, f)| (l.as_str(), *c, f.as_str())),
     );
-    let (mut right, mut all, mut right_unseen, mut all_unseen) = (0usize, 0usize, 0usize, 0usize);
+    // `(forms, right)` of all, and of the unseen cells.
+    let (mut all, mut unseen_cells) = ((0, 0), (0, 0));
     for l in test {
         let lemma = letters(&l.lemma);
         for (cell, forms) in l.cells.iter().enumerate() {
@@ -237,15 +233,13 @@ pub fn floor(
                 continue;
             };
             let ok = usize::from(baseline.inflect(&lemma, cell) == letters(want));
-            all += 1;
-            right += ok;
+            all = (all.0 + 1, all.1 + ok);
             if unseen(l, cell) {
-                all_unseen += 1;
-                right_unseen += ok;
+                unseen_cells = (unseen_cells.0 + 1, unseen_cells.1 + ok);
             }
         }
     }
-    (ratio(right, all), ratio(right_unseen, all_unseen))
+    (ratio(all.1, all.0), ratio(unseen_cells.1, unseen_cells.0))
 }
 
 /// Whether cell `cell` of `l` (typed as its headword) is one its likeliest
@@ -286,12 +280,11 @@ pub fn fit_sharpness<P: Label, A: Label, F: Label>(
                 let Some(want) = fs.first() else {
                     continue;
                 };
-                let c = table.get(cell).cloned().unwrap_or_default();
-                forms.push(
-                    c.iter()
-                        .map(|c| (c.probability, same_form(orthography, &c.form, want)))
-                        .collect(),
-                );
+                let c = table.get(cell).map_or(&[][..], Vec::as_slice);
+                let scored = c
+                    .iter()
+                    .map(|c| (c.probability, same_form(orthography, &c.form, want)));
+                forms.push(scored.collect());
             }
         }
     }
