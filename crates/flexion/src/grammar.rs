@@ -411,31 +411,24 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     ) -> Vec<Vec<Candidate<'_>>> {
         let mut word = self.orthography.read(lemma);
         let key = self.orthography.key(&word.letters);
-        // A word typed without some of its marks: as listed, or as its
-        // letters say.
+        // A word typed without some of its marks: as listed (even typed in
+        // full: the dictionary's headword may leave off marks its forms
+        // have), or as its letters say.
         let mut spelled = 1.0;
         let mut otherwise: Option<(String, f32)> = None;
-        if !known.full {
-            match self.spelling(&word.letters, &key) {
-                Some(letters) => word.letters = letters.to_string(),
-                None => {
-                    if let Some(marks) = &self.marks {
-                        let mut spellings = restorations(
-                            &self.orthography,
-                            marks,
-                            self.smoothing,
-                            &word.letters,
-                            &key,
-                        );
-                        if spellings.len() > 1 {
-                            otherwise = spellings.pop();
-                        }
-                        if let Some(first) = spellings.pop() {
-                            (word.letters, spelled) = first;
-                        }
-                    }
+        match (self.spelling(&word.letters, &key), &self.marks) {
+            (Some(letters), _) => word.letters = letters.to_string(),
+            (None, Some(marks)) if !known.full => {
+                let mut spellings =
+                    restorations(&self.orthography, marks, self.smoothing, &word.letters, &key);
+                if spellings.len() > 1 {
+                    otherwise = spellings.pop();
+                }
+                if let Some(first) = spellings.pop() {
+                    (word.letters, spelled) = first;
                 }
             }
+            (None, _) => {}
         }
         let casing = if self.capitalized {
             Casing::Title
@@ -851,7 +844,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     pub fn readings(&self, lemma: &str, known: &Known<'_>) -> Vec<Reading<'_, 'a, P>> {
         let mut letters = self.orthography.read(lemma).letters;
         let key = self.orthography.key(&letters);
-        if let Some(listed) = self.spelling(&letters, &key).filter(|_| !known.full) {
+        if let Some(listed) = self.spelling(&letters, &key) {
             letters = listed.to_string();
         }
         let mut readings: Vec<Reading<'_, 'a, P>> = self
